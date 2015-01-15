@@ -1,0 +1,112 @@
+<!--
+  This file is part of the "FnordMetric" project
+    Copyright (c) 2014 Laura Schlimmer
+    Copyright (c) 2014 Paul Asmuth, Google Inc.
+
+  FnordMetric is free software: you can redistribute it and/or modify it under
+  the terms of the GNU General Public License v3.0. You should have received a
+  copy of the GNU General Public License along with this program. If not, see
+  <http://www.gnu.org/licenses/>.
+-->
+<template id="fn-dropdown-demo-base-tpl">
+  <section>
+    <h1><i>Example 1 &raquo;</i> Dropdown</h1>
+    <fn-dropdown style="margin-bottom: 30px;">
+      <fn-dropdown-header >Rollup</fn-dropdown-header>
+      <fn-dropdown-item>Value</fn-dropdown-item>
+      <fn-dropdown-item>Count</fn-dropdown-item>
+      <fn-dropdown-item>Sum</fn-dropdown-item>
+      <fn-dropdown-item>Min</fn-dropdown-item>
+      <fn-dropdown-item>Max</fn-dropdown-item>
+      <fn-dropdown-item>Median</fn-dropdown-item>
+    </fn-dropdown>
+
+    <h1><i>Example 2 &raquo;</i> Dropdown with Static Header</h1>
+    <fn-dropdown style="margin-bottom: 30px;">
+      <fn-dropdown-header data-changeable='false'>Categories</fn-dropdown-header>
+      <fn-dropdown-item>&#10003; Unread</fn-dropdown-item>
+      <fn-dropdown-item>&#10003; Promotions</fn-dropdown-item>
+      <fn-dropdown-item>&#10003; Updates</fn-dropdown-item>
+    </fn-dropdown>
+  </section>
+
+  <section>
+    <h1><i>Example 3 &raquo;</i> Fancy Dropdown</h1>
+    <fn-dropdown data-style="fancy">
+      <fn-dropdown-header>Categories</fn-dropdown-header>
+      <fn-dropdown-item>&#10003; Unread</fn-dropdown-item>
+      <fn-dropdown-item>&#10003; Promotions</fn-dropdown-item>
+      <fn-dropdown-item>&#10003; Updates</fn-dropdown-item>
+    </fn-dropdown>
+
+  </section>
+  <section>
+    <h1><i>Example 4 &raquo;</i> Labeled Dropdown</h1>
+    <fn-dropdown data-style="fancy labeled">
+      <fn-dropdown-header>Filter</fn-dropdown-header>
+      <fn-dropdown-label>Filter by Tag</fn-dropdown-label>
+      <fn-dropdown-item>4 hours</fn-dropdown-item>
+      <fn-dropdown-item>12 hours</fn-dropdown-item>
+      <fn-dropdown-item>24 hours</fn-dropdown-item>
+    </fn-dropdown>
+  </section>
+
+  <section>
+    <h1><i>Example 4 &raquo;</i> Inline Dropdown</h1>
+    <span>Show the last
+      <fn-dropdown data-style="inline">
+        <fn-dropdown-header>hour</fn-dropdown-header>
+        <fn-dropdown-item>4 hours</fn-dropdown-item>
+        <fn-dropdown-item>12 hours</fn-dropdown-item>
+        <fn-dropdown-item>24 hours</fn-dropdown-item>
+      </fn-dropdown>
+    </span>
+
+  </section>
+
+  <section>
+    <h1><i>Example 4 &raquo;</i> Searchable Dropdown</h1>
+    <fn-dropdown data-searchable data-placeholder="Select a Country">
+      <fn-dropdown-item data-value="Spain">Spain</fn-dropdown-item>
+      <fn-dropdown-item data-value="Italy">Italy</fn-dropdown-item>
+      <fn-dropdown-item data-value="Netherlands">Netherlands</fn-dropdown-item>
+      <fn-dropdown-item data-value="United Kingdom">United Kingdom</fn-dropdown-item>
+      <fn-dropdown-item data-value="Denmark">Denmark</fn-dropdown-item>
+      <fn-dropdown-item data-value="Sweden">Sweden</fn-dropdown-item>
+      <fn-dropdown-item data-value="Germany">Germany</fn-dropdown-item>
+      <fn-dropdown-item data-value="France">France</fn-dropdown-item>
+      <fn-dropdown-item data-value="Portugal">Portugal</fn-dropdown-item>
+      <fn-dropdown-item data-value="Austria">Austria</fn-dropdown-item>
+    </fn-dropdown>
+
+  </section>
+
+
+  <section>
+    <h1><i>Example 5 &raquo;</i> Disabled Dropdowns</h1>
+    <fn-dropdown data-state='disabled' style="margin-bottom:30px;">
+      <fn-dropdown-header>Age</fn-dropdown-header>
+    </fn-dropdown>
+    <fn-dropdown data-style="fancy" data-state='disabled' style="margin-bottom:30px;">
+      <fn-dropdown-header>Age</fn-dropdown-header>
+    </fn-dropdown>
+
+
+    <h1><i>Example 6 &raquo;</i> Dropdowns with Error State</h1>
+    <fn-dropdown data-state="error" style="margin-bottom:30px;">
+      <fn-dropdown-header>Dropdown</fn-dropdown-header>
+      <fn-dropdown-item>Choice 1</fn-dropdown-item>
+      <fn-dropdown-item>Choice 2</fn-dropdown-item>
+      <fn-dropdown-item>Choice 3</fn-dropdown-item>
+    </fn-dropdown>
+
+    <fn-dropdown data-state="error" data-style="fancy">
+      <fn-dropdown-header>Dropdown</fn-dropdown-header>
+      <fn-dropdown-item>Choice 1</fn-dropdown-item>
+      <fn-dropdown-item>Choice 2</fn-dropdown-item>
+      <fn-dropdown-item>Choice 3</fn-dropdown-item>
+    </fn-dropdown>
+
+
+  </section>
+</template>
