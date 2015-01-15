@@ -1,0 +1,343 @@
+<!--
+  This file is part of the "FnordMetric" project
+    Copyright (c) 2014 Laura Schlimmer
+    Copyright (c) 2014 Paul Asmuth, Google Inc.
+
+  FnordMetric is free software: you can redistribute it and/or modify it under
+  the terms of the GNU General Public License v3.0. You should have received a
+  copy of the GNU General Public License along with this program. If not, see
+  <http://www.gnu.org/licenses/>.
+-->
+<style type='text/css'>
+  fn-input {
+    display:block;
+  }
+</style>
+<template id="fn-input-base-tpl">
+  <style type='text/css'>
+    /**
+     * Adapted from: Semantic UI:
+     *   https://github.com/Semantic-Org/Semantic-UI
+     *   http://www.semantic-ui.com/
+     */
+    * {
+      font-family: 'Helvetica Neue',Arial,Helvetica,sans-serif;
+      font-size: 14px;
+      line-height: 1.33;
+      color: rgba(0,0,0,.8);
+    }
+
+    .field {
+      position: relative;
+      max-width: 100%;
+      clear: both;
+      margin: 0em 0em 1em;
+      display:block;
+      opacity: 1;
+    }
+
+    .field:last-child {
+      margin-bottom: 0em;
+    }
+
+    label {
+      display: block;
+      margin: 0em 0em 0.2857rem 0em;
+      color: rgba(0, 0, 0, 0.8);
+      font-size: 0.9285em;
+      font-weight: 700;
+      text-transform: none;
+    }
+
+    .field > input {
+      margin: 0em;
+      width: 100%;
+      outline: none;
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
+      text-align: left;
+      line-height: 1.2142em;
+      font-family: "Helvetica Neue", "Helvetica", Arial;
+      padding: 0.67861em 1em;
+      background: #ffffff;
+      border: 1px solid rgba(0, 0, 0, 0.15);
+      color: rgba(0, 0, 0, 0.8);
+      border-radius: 0.2857rem;
+      -webkit-transition: background-color 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+              transition: background-color 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+      box-shadow: none;
+    }
+
+    input::-webkit-input-placeholder {
+      color: rgba(0, 0, 0, 0.4);
+      font-weight: 500;
+    }
+
+    input::-moz-placeholder {
+      color: rgba(0, 0, 0, 0.4);
+      font-weight: 500;
+    }
+    input:focus {
+      border-color: rgba(39, 41, 43, 0.3);
+      background: '';
+      color: rgba(0, 0, 0, 0.8);
+      box-shadow: none;
+    }
+    input:focus input::-webkit-input-placeholder {
+      color: rgba(0, 0, 0, 0.8);
+    }
+    input:focus input::-moz-placeholder {
+      color: rgba(0, 0, 0, 0.8);
+    }
+
+    /*--------------------
+        Error
+    ---------------------*/
+    .field[data-state="error"] > label {
+      color: #d95c5c;
+    }
+
+    .field[data-state='error'] input {
+      background-color: #fff0f0;
+      border-color: #dbb1b1;
+      color: #d95c5c;
+      box-shadow: none;
+    }
+    /* Error Placeholder */
+    .field[data-state='error'] input::-webkit-input-placeholder {
+      color: rgba(255, 80, 80, 0.4);
+    }
+    .field[data-state='error'] input::-moz-placeholder {
+      color: rgba(255, 80, 80, 0.4);
+    }
+
+    /* Focused Error Placeholder */
+    .field[data-state='error'] input:focus::-webkit-input-placeholder {
+      color: rgba(255, 80, 80, 0.7);
+    }
+    .field[data-state='error'] input:focus::-moz-placeholder {
+      color: rgba(255, 80, 80, 0.7);
+    }
+
+    /*--------------------
+        Disabled
+    ---------------------*/
+    .field[data-disabled='true'] {
+      opacity: 0.5;
+    }
+
+    /*--------------------
+        Inline
+    ---------------------*/
+    .field.inline {
+      display: inline-block;
+      float: none;
+      margin: 0em 1em 0em 0em;
+      padding: 0em;
+    }
+
+    .field.inline label,
+    .field.inline input{
+      display: inline-block;
+      width: auto;
+      margin-top: 0em;
+      margin-bottom: 0em;
+      vertical-align: middle;
+    }
+
+    /*--------------------
+        Size
+    ---------------------*/
+    .field.mini {
+      font-size: 0.8125rem;
+    }
+    .field.small {
+      font-size: 0.875rem;
+    }
+    .field {
+      font-size: 1rem;
+    }
+    .field.large {
+      font-size: 1.125rem;
+    }
+    .field.big {
+      font-size: 1.25rem;
+    }
+    .field.huge {
+      font-size: 1.375rem;
+    }
+    .field.massive {
+      font-size: 1.5rem;
+    }
+    .field.mini input {
+      font-size: 0.8125rem;
+    }
+    .field.small input {
+      font-size: 0.875rem;
+    }
+    .field input {
+      font-size: 1rem;
+    }
+    .field.large input {
+      font-size: 1.125rem;
+    }
+    .field.big input {
+      font-size: 1.25rem;
+    }
+    .field.huge input {
+      font-size: 1.375rem;
+    }
+    .field.massive input {
+      font-size: 1.5rem;
+    }
+    .field.mini input::-webkit-input-placeholder {
+      font-size: 0.8125rem;
+    }
+    .field.small input::-webkit-input-placeholder {
+      font-size: 0.875rem;
+    }
+    .field input::-webkit-input-placeholder {
+      font-size: 1rem;
+    }
+    .field.large input::-webkit-input-placeholder {
+      font-size: 1.125rem;
+    }
+    .field.big input::-webkit-input-placeholder {
+      font-size: 1.25rem;
+    }
+    .field.huge input::-webkit-input-placeholder {
+      font-size: 1.375rem;
+    }
+    .field.massive input::-webkit-input-placeholder {
+      font-size: 1.5rem;
+    }
+    .field.mini input::-moz-placeholder {
+      font-size: 0.8125rem;
+    }
+    .field.small input::-moz-placeholder {
+      font-size: 0.875rem;
+    }
+    .field input::-moz-placeholder {
+      font-size: 1rem;
+    }
+    .field.large input::-moz-placeholder {
+      font-size: 1.125rem;
+    }
+    .field.huge input::-moz-placeholder {
+      font-size: 1.375rem;
+    }
+    .field.massive input::-moz-placeholder {
+      font-size: 1.5rem;
+    }
+    .field.mini input:focus::-webkit-input-placeholder {
+      font-size: 0.8125rem;
+    }
+    .field.massive input:focus::-webkit-input-placeholder {
+      font-size: 1.5rem;
+    }
+
+  </style>
+  <div class="field">
+    <label>
+      <content select="fn-input-label"></content>
+    </label>
+    <input type="text" />
+  </div>
+</template>
+<script type="text/javascript">
+  var InputComponent = function() {
+    this.createdCallback = function() {
+      var shadow = this.createShadowRoot();
+      var tpl = Fnord.getTemplate("fn-input", "base");
+      shadow.appendChild(tpl);
+      var base = this;
+
+      /* options */
+      if (this.hasAttribute('data-placeholder')) {this.setPlaceholder();}
+      if (this.hasAttribute('data-value')) {this.setValue();}
+      if (this.hasAttribute('data-state')) {this.setState();}
+      if (this.hasAttribute('data-readonly')) {this.setReadonly();}
+      if (this.hasAttribute('data-disabled')) {this.disable();}
+      if (this.hasAttribute('data-style')) {this.setStyle();}
+
+      this.attributeChangedCallback();
+
+      this.shadowRoot.querySelector('input').addEventListener('keyup', 
+        function(e) {
+        //Enter
+        if (e.keyCode == 13) {
+          var ev = new CustomEvent("fn-input-submit", {
+            bubbles: true,
+            cancelable: true,
+            detail: this.value
+          });
+          base.setAttribute('data-value', this.value);
+          this.dispatchEvent(ev);
+        }
+      }, false);
+    }
+
+    this.attributeChangedCallback = function(attr, old_val, new_val) {
+      switch (attr) {
+        case 'data-value':
+          this.setValue();
+          break;
+        case 'data-placeholder':
+          this.setPlaceholder();
+          break;
+        case 'data-state':
+          this.setState();
+          break;
+        case 'data-readonly':
+          this.setReadonly();
+          break;
+        case 'data-disabled':
+          this.disable();
+          break;
+        case 'data-style':
+          this.setStyle();
+          break;
+        default:
+          break;
+      }
+    };
+
+    this.setValue = function() {
+      var value = this.getAttribute('data-value');
+      this.shadowRoot.querySelector("input").value = value;
+    };
+
+    this.setPlaceholder = function() {
+      var placeholder = this.getAttribute('data-placeholder');
+      this.shadowRoot.querySelector('input').setAttribute(
+        'placeholder', placeholder);
+    };
+
+    this.setState = function() {
+      var field = this.shadowRoot.querySelector(".field");
+      field.setAttribute('data-state', this.getAttribute('data-state'));
+    };
+
+    this.setStyle = function() {
+      var field= this.shadowRoot.querySelector(".field");
+      field.className += " " + this.getAttribute('data-style');
+    }
+
+    this.setReadonly = function() {
+      var input = this.shadowRoot.querySelector("input");
+      input.readOnly = this.getAttribute('data-readonly');
+    }
+
+    this.disable = function() {
+      var input = this.shadowRoot.querySelector("input");
+      var field = this.shadowRoot.querySelector(".field");
+      var state = this.getAttribute('data-disabled');
+      input.readOnly = state;
+      field.setAttribute('data-disabled', state);
+    }
+  }
+
+  window.addEventListener('fn-ready', function() {
+    Fnord.registerComponent('fn-input', InputComponent);
+  }, false);
+</script>

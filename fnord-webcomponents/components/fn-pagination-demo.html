@@ -1,0 +1,50 @@
+<!--
+  This file is part of the "FnordMetric" project
+    Copyright (c) 2014 Laura Schlimmer
+    Copyright (c) 2014 Paul Asmuth, Google Inc.
+
+  FnordMetric is free software: you can redistribute it and/or modify it under
+  the terms of the GNU General Public License v3.0. You should have received a
+  copy of the GNU General Public License along with this program. If not, see
+  <http://www.gnu.org/licenses/>.
+-->
+<template id='fn-pagination-demo-base-tpl'>
+  <section>
+    <h1><i>Example 1 &raquo;</i> Static Pagination</h1>
+    <ul class='fn-pagination'>
+      <li class='fn-pagination-icon-prev'><a href="#"></a></li>
+      <li class='fn-pagination-item'><a href="#">1</a></li>
+      <li class='fn-pagination-item'><a href="#">2</a></li>
+      <li class='fn-pagination-item'><a href="#">3</a></li>
+      <li class='fn-pagination-item'><a href="#">4</a></li>
+      <li class='fn-pagination-item'><a href="#">5</a></li>
+      <li class='fn-pagination-icon-next'><a href="#"></a></li>
+    </ul>
+  </section>
+  <section>
+    <h1><i>Example 2 &raquo;</i> Interactive Pagination</h1>
+    <fn-pagination data-active-page='1' data-last-page='10' data-show-pages='5'>
+    </fn-pagination>
+  </section>
+  <section>
+    <h1><i>Example 3 &raquo;</i> Circling Pagination </h1>
+    <fn-pagination data-active-page='1' data-last-page='10' data-show-pages='4' data-circling>
+    </fn-pagination>
+  </section>
+  <section>
+    <h1><i>Example 3 &raquo;</i> Custom Active Page </h1>
+    <fn-pagination data-active-page='7' data-last-page='10' data-show-pages='5'>
+    </fn-pagination>
+  </section>
+
+
+  <script type='text/javascript'>
+    var pag_elem = document.querySelector('fn-pagination');
+    pag_elem.addEventListener('fn-pagination-click', function(e) {
+      console.log(this);
+      console.log(e);
+    }, false);
+  </script>
+</template>
+
+

@@ -1,0 +1,221 @@
+<!--
+  This file is part of the "FnordMetric" project
+    Copyright (c) 2014 Laura Schlimmer
+    Copyright (c) 2014 Paul Asmuth, Google Inc.
+
+  FnordMetric is free software: you can redistribute it and/or modify it under
+  the terms of the GNU General Public License v3.0. You should have received a
+  copy of the GNU General Public License along with this program. If not, see
+  <http://www.gnu.org/licenses/>.
+  only if attribute future-selectable is set future dates are selectable
+  same holds true for past-selectable
+-->
+<style type='text/css'>
+  fn-daterangepicker {
+    display:block;
+  }
+</style>
+<template id='fn-daterangepicker-base-tpl'>
+  <style type='text/css'>
+    .wrapper {
+      font-family: 'Helvetica Neue',Arial,Helvetica,sans-serif;
+      font-size: 14px;
+      height: 24px;
+    }
+
+    .fa {
+      color: rgb(84, 87, 88);
+      font: normal normal normal 14px/1 FontAwesome;
+      font-size: inherit;
+      text-rendering: auto;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      height: 22px;
+      line-height: 22px;
+    }
+
+    .fa-chevron-left {
+      border-right: 1px solid #ececec;
+      margin-right: 5px;
+      padding-right: 15px;
+    }
+
+    .fa-chevron-right {
+      border-left: 1px solid #ececec;
+      margin-left: 5px;
+      padding-left: 15px;
+    }
+
+    .fa:hover {
+      color: #009fe9;
+      cursor: pointer;
+    }
+
+    span {
+      font-size: inherit;
+      color: rgba(0,0,0,.8);
+      padding: 0 10px;
+      font-weight: 500;
+      line-height: 24px;
+      display: inline-block;
+    }
+
+
+
+  </style>
+  <div class="wrapper">
+    <i class='fa fa-chevron-left'></i>
+    <span></span>
+    <i class='fa fa-chevron-right'></i>
+  </div>
+</template>
+
+<script type="text/javascript">
+  var DateRangePicker = function() {
+    this.createdCallback = function() {
+      var shadow = this.createShadowRoot();
+      var tpl = Fnord.getTemplate("fn-daterangepicker", "base");
+      shadow.appendChild(tpl);
+
+      var base = this;
+
+      this.init();
+
+      this.shadowRoot.querySelector(".fa-chevron-left").addEventListener(
+        'click',
+        function() {
+          base.selectPreviousDateRange();
+        },
+        false);
+
+      this.shadowRoot.querySelector(".fa-chevron-right").addEventListener(
+        'click',
+        function() {
+          base.selectNextDateRange();
+        },
+        false);
+
+    };
+
+    this.init = function() {
+      var timestamp = this.getAttribute('data-endtime');
+      var date_range = this.getAttribute('data-daterange');
+
+      if (timestamp == null) {
+        this.setAttribute('data-endtime', Date.now());
+      }
+
+      if (date_range == null) {
+        //1 hour
+        this.setAttribute('data-daterange', 3600000);
+      }
+    };
+
+
+    this.attributeChangedCallback = function(attr, old_val, new_val) {
+      if (attr == "data-endtime" || attr == "data-daterange") {
+        this.updateDateTitle();
+      }
+    };
+
+    this.getDateTimeString = function(timestamp) {
+      var timestamp = timestamp == undefined?
+        new Date() : new Date(parseInt(timestamp, 10));
+
+      var month = timestamp.getMonth();
+      month = this.appendLeadingZero(month +1);
+      var day = this.appendLeadingZero(timestamp.getDate());
+      var hours = this.appendLeadingZero(timestamp.getHours());
+      var minutes = this.appendLeadingZero(timestamp.getMinutes());
+      return (
+        month + "/" + day + "/" +
+        timestamp.getFullYear() + "  " + hours +
+        ":" + minutes);
+    }
+
+    this.appendLeadingZero = function(num) {
+      var num = num;
+      if (typeof num == 'string') {
+        return (num.length > 1)? num : "0" + num;
+      }
+      return (num > 9)? num : "0" + num;
+    }
+
+
+    this.updateDateTitle = function() {
+      var timestamp = parseInt(this.getAttribute('data-endtime'), 10);
+      var date_range = parseInt(this.getAttribute('data-daterange'), 10);
+
+      var start_timestamp = timestamp - date_range;
+
+      var title = this.shadowRoot.querySelector("span");
+      title.innerHTML = 
+        this.getDateTimeString(start_timestamp)
+        + " &mdash; " +
+        this.getDateTimeString(timestamp);
+    };
+
+    this.selectPreviousDateRange = function() {
+      var date_range = parseInt(this.getAttribute('data-daterange'), 10);
+      var end_time = parseInt(this.getAttribute('data-endtime'), 10);
+      end_time = end_time - date_range;
+
+      var fireEvent = false;
+      var selectable = this.getAttribute('data-selectable');
+      if (selectable == "past") {
+        if (end_time <= Date.now()) {
+          fireEvent = true;
+        }
+      } else if (selectable == "future") {
+        if (end_time >= Date.now()) {
+          fireEvent = true;
+        }
+      } else {
+        fireEvent = true;
+      }
+
+      if (fireEvent) {
+        this.setAttribute('data-endtime', end_time);
+        this.fireSelectPreviousDateRangeEvent();
+      }
+    };
+
+    this.selectNextDateRange = function() {
+      var date_range = parseInt(this.getAttribute('data-daterange'), 10);
+      var end_time = parseInt(this.getAttribute('data-endtime'), 10);
+      end_time = end_time + date_range;
+
+      var fireEvent = false;
+      var selectable = this.getAttribute('data-selectable');
+      if (selectable == "past") {
+        if (end_time <= Date.now()) {
+          fireEvent = true;
+        }
+      } else if (selectable == "future") {
+        if (end_time >= Date.now()) {
+          fireEvent = true;
+        }
+      } else {
+        fireEvent = true;
+      }
+
+      if (fireEvent) {
+        this.setAttribute('data-endtime', end_time);
+        this.fireSelectNextDateRangeEvent();
+      }
+    };
+
+    this.fireSelectPreviousDateRangeEvent = function() {
+      this.dispatchEvent(new Event("fn-daterangepicker-select-previous"));
+    };
+
+    this.fireSelectNextDateRangeEvent = function() {
+      this.dispatchEvent(new Event("fn-daterangepicker-select-next"));
+    };
+  };
+
+  window.addEventListener('fn-ready', function() {
+    var daterange_picker = Fnord.registerComponent(
+      'fn-daterangepicker', DateRangePicker);
+  }, false);
+</script>

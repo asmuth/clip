@@ -1,0 +1,76 @@
+-- done
+fn-blink
+fn-codeeditor
+fn-icon
+fn-loader
+fn-table
+
+--needs review
+fn-divier || semantic divider -> <fn-divider>, <div class="fn-divider">
+fn-button semantic button -> <fn-button>, <button class="fn-button">
+fn-message || semantic message -> <fn-message>, <div class="fn-message">
+fn-checkbox || semantic checkbox -> <fn-checkbox>, <input type="checkbox" class="fn-checkbox">
+fn-dropdown || semantic dropdown -> <fn-dropdown>, <select class="fn-dropdown">
+fn-modal || semantic modal -> <fn-modal>, <div class="fn-modal">
+fn-search || semantic search -> <fn-search>, <input type="search" class="fn-search">
+fn-daterangepicker
+fn-search
+fn-splitpane
+fn-form || input/form -> komplex, muessen wir drueber redeen
+fn-progress
+fn-tabs
+fn-tooltip || semantic popup -> Fnord.tooltip
+fn-breadcrum || semantic breadcrumb -> <fn-breadcrumb>, <ul class="fn-breadcrumb">
+fn-wizard || semantic step
+message box (http://dev.sencha.com/extjs/5.0.0/examples/kitchensink/#message-box)
+fn-accordion
+fn-menu || menu -> komplex, muessen wir drueber reden
+
+
+-- needs polish
+fn-datepicker
+fn-timeinput
+fn-pagination http://getbootstrap.com/components/#pagination (fix circled tooltip prev)
+
+
+ 
+-- die werden komplex
+fn-label || label -> <fn-label>, <span class="fn-label">
+fn-toolbar
+fn-tabbar
+ 
+-- nice to have
+fn-rating
+fn-reveal
+fn-card
+fn-comment
+fn-feed
+ 
+-- machen wir selbst
+fn-video
+fn-pager
+
+
+---
+flyoout menu from toolbar  (like osx top toolbar)
+multi-level flyout menu (like windows start button
+flyout form fn-menu?
+treecontrol
+colorpicker
+carousel
+hbox
+vbox
+flexbox (hana openui5)
+fullscreen modal
+multi select (https://openui5.hana.ondemand.com/explored.html#/sample/sap.m.sample.MultiComboBox/preview)
+complex tooltip (https://openui5.hana.ondemand.com/#test-resources/sap/ui/ux3/demokit/QuickView.html, https://openui5.hana.ondemand.com/#test-resources/sap/ui/ux3/demokit/ToolPopup.html)
+file upload
+in place edit
+range select / slider
+switch
+removable tag (https://openui5.hana.ondemand.com/explored.html#/sample/sap.m.sample.Tokenizer/preview)
+panel (header + body like extjs)
+resizable table
+"notification" (like growl)
+vertical toolbar
+multi input w/ autocomplete (like gmail TO field input)

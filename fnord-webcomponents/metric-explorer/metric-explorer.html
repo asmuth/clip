@@ -1,0 +1,54 @@
+<!--
+  This file is part of the "FnordMetric" project
+    Copyright (c) 2014 Laura Schlimmer
+    Copyright (c) 2014 Paul Asmuth, Google Inc.
+
+  FnordMetric is free software: you can redistribute it and/or modify it under
+  the terms of the GNU General Public License v3.0. You should have received a
+  copy of the GNU General Public License along with this program. If not, see
+  <http://www.gnu.org/licenses/>.
+-->
+<html>
+  <head>
+    <title>Metric Explorer</title>
+    <link rel="stylesheet" href="../fnord.css" type="text/css">
+    <link rel="stylesheet" href="../3rdparty/fontawesome.css" type="text/css">
+    <link rel="stylesheet" href="fn-metric-explorer.css" type="text/css">
+  </head>
+  <body>
+    <link rel="import" href="metric-explorer-components/metric-explorer-list.html" data-component="metric-explorer-list">
+    <link rel="import" href="../components/fn-appbar.html" data-component="fn-appbar">
+    <link rel="import" href="../components/fn-button.html" data-component="fn-button">
+    <link rel="import" href="../components/fn-loader.html" data-component="fn-loader">
+    <link rel="import" href="../components/fn-menu.html" data-component="fn-menu">
+    <link rel="import" href="../components/fn-search.html" data-component="fn-search">
+    <link rel="import" href="../components/fn-table.html" data-component="fn-table">
+    <link rel="import" href="../components/fn-progressbar.html" data-component="fn-progressbar">
+    <link rel="import" href="../components/fn-dropdown.html" data-component="fn-dropdown">
+    <link rel="stylesheet" href="../themes/midnight-blue.css" type="text/css">
+
+
+    <div id="metric-explorer-viewport">
+    </div>
+
+
+  </body>
+</html>
+
+<script type='text/javascript'>
+
+  var views = {
+    "metric-explorer-list" : "<metric-explorer-list></metric-explorer-list>",
+    "metric-explorer-preview" : "<metric-explorer-preview></metric-explorer-preview>"
+  }
+
+  function open(name) {
+    var viewport = document.querySelector("#metric-explorer-viewport");
+    viewport.innerHTML = views[name];
+  }
+
+  window.addEventListener('fn-ready' ,function() {
+    open("metric-explorer-list");
+  }, false)
+</script>
+<script type='text/javascript' src='../fnord.js'></script>

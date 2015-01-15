@@ -1,0 +1,357 @@
+/**
+ * Adapted from: Semantic UI:
+ *   https://github.com/Semantic-Org/Semantic-UI
+ *   http://www.semantic-ui.com/
+ */
+/*******************************
+            Standard
+*******************************/
+fn-cards,
+.fn-cards {
+  display:block;
+  margin: 1em -0.5em 0em;
+}
+
+fn-card,
+.fn-card {
+  display: block;
+}
+
+fn-cards:first-child,
+fn-card:first-child,
+.fn-cards:first-child,
+.fn-card:first-child {
+  margin-top: 0em;
+}
+fn-cards:last-child,
+fn-card:last-child,
+.fn-cards:last-child,
+.fn-card:last-child {
+  margin-bottom: 0em;
+}
+
+/* Clearing */
+fn-cards:after,
+fn-card:after,
+.fn-cards:after,
+.fn-card:after {
+  display: block;
+  content: ' ';
+  height: 0px;
+  clear: both;
+  overflow: hidden;
+  visibility: hidden;
+}
+
+fn-cards > fn-card,
+.fn-cards > .fn-card {
+  float:left;
+  margin: 0 .5em 1.5em;
+}
+
+/*--------------
+      Card
+---------------*/
+
+fn-cards > fn-card,
+.fn-cards > .fn-card,
+fn-card,
+.fn-card {
+  max-width: 100%;
+  position: relative;
+  display: block;
+  width: 290px;
+  min-height: 0px;
+  background: #ffffff;
+  padding: 0em;
+  border: none;
+  border-radius: 0.2857rem;
+  box-shadow: 0px 0.2em 0px 0px #d4d4d5, 0px 0px 0px 1px #d4d4d5;
+  -webkit-transition: box-shadow 0.2s ease;
+          transition: box-shadow 0.2s ease;
+  z-index: '';
+}
+fn-card,
+.fn-card {
+  margin: 1em 0em;
+}
+fn-cards > fn-card a,
+.fn-cards > .fn-card a,
+fn-card a,
+.fn-card a {
+  cursor: pointer;
+}
+
+/*--------------
+  Rounded Edges
+---------------*/
+
+fn-cards > fn-card > :first-child,
+.fn-cards > .fn-card > :first-child,
+fn-card > :first-child,
+.fn-card > :first-child {
+  border-radius: 0.2857rem 0.2857rem 0em 0em !important;
+}
+fn-cards > fn-card > :last-child,
+.fn-cards > .fn-card > :last-child,
+fn-card > :last-child,
+.fn-card > :last-child {
+  border-radius: 0em 0em 0.2857rem 0.2857rem !important;
+}
+
+/*--------------
+     Images
+---------------*/
+
+fn-cards > fn-card > fn-card-image,
+.fn-cards > .fn-card > .fn-card-image,
+fn-card > fn-card-image,
+.fn-card > .fn-card-image  {
+  display: block;
+  position: relative;
+  padding: 0em;
+  background: rgba(0, 0, 0, 0.05);
+}
+fn-cards > fn-card > fn-card-image img,
+.fn-cards > .fn-card > .fn-card-image img,
+fn-card > fn-card-image img,
+.fn-card > .fn-card-image img,
+fn-cards > fn-card > fn-card-image i,
+.fn-cards > .fn-card > .fn-card-image i,
+fn-card > fn-card-image i,
+.fn-card > .fn-card-image i {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 0.2857rem 0.2857rem 0em 0em;
+  border: none;
+}
+fn-cards > fn-card > fn-card-image:only-child > img,
+.fn-cards > .fn-card > .fn-card-image:only-child > img,
+fn-cards > fn-card > fn-card-image:only-child > i,
+.fn-cards > .fn-card > .fn-card-image:only-child > i,
+fn-card > fn-card-image:only-child > img,
+.fn-card > .fn-card-image:only-child > img,
+fn-card > fn-card-image:only-child > i,
+.fn-card > .fn-card-image:only-child > i {
+  border-radius: 0.2857rem;
+}
+
+/*--------------
+     Content
+---------------*/
+
+fn-cards > fn-card > fn-card-content,
+.fn-cards > .fn-card > .fn-card-content,
+fn-card > fn-card-content,
+.fn-card > .fn-card-content {
+  display:block;
+  background: none;
+  margin: 0em;
+  padding: 1em 1em;
+  box-shadow: none;
+  font-size: 1em;
+  border: none;
+  border-radius: 0em;
+}
+fn-cards > fn-card > fn-card-content:after,
+.fn-cards > .fn-card > .fn-card-content:after,
+fn-card > fn-card-content:after,
+.fn-card > .fn-card-content:after {
+  display: block;
+  content: ' ';
+  height: 0px;
+  clear: both;
+  overflow: hidden;
+  visibility: hidden;
+}
+fn-cards > fn-card > fn-card-content > fn-card-content-header,
+.fn-cards > .fn-card > .fn-card-content > .fn-card-content-header,
+fn-card > fn-card-content > fn-card-content-header,
+.fn-card > .fn-card-content > .fn-card-content-header {
+  display: block;
+  margin: 0em;
+  font-family: 'Helvetica Neue', Arial, Helvetica, sans-serif;
+  color: rgba(0, 0, 0, 0.85);
+  font-weight: bold;
+  font-size: 1.2em;
+  margin-top: -0.165em;
+  line-height: 1.33em;
+}
+
+fn-cards > fn-card > fn-card-content > fn-card-meta + fn-card-content-description,
+.fn-cards > .fn-card > .fn-card-content > .fn-card-meta + .fn-card-content-description,
+fn-cards > fn-card > fn-card-content > fn-card-content-header + fn-card-content-description,
+.fn-cards > .fn-card > .fn-card-content > .fn-card-content-header + .fn-card-content-description
+fn-card > fn-card-content > fn-card-meta + fn-card-content-description,
+.fn-card > .fn-card-content > .fn-card-meta + .fn-card-content-description,
+fn-card > fn-card-content > fn-card-content-header + fn-card-content-description,
+.fn-card > .fn-card-content > .fn-card-content-header + .fn-card-content-description {
+  margin-top: 0.5em;
+}
+
+/*--------------
+  Content Image
+---------------*/
+fn-cards > fn-card > fn-card-content img,
+.fn-cards > .fn-card > .fn-card-content img,
+fn-card > fn-card-content img,
+.fn-card > .fn-card-content img {
+  display: inline-block;
+  vertical-align: middle;
+  width: 2em;
+}
+fn-cards > fn-card > fn-card-content img.fn-card-avatar,
+.fn-cards > .fn-card > .fn-card-content img.fn-card-avatar,
+fn-card > fn-card-content img.fn-card-avatar,
+.fn-card > .fn-card-content img.fn-card-avatar {
+  width: 2em;
+  height: 2em;
+  border-radius: 500rem;
+}
+
+/*--------------
+   Description
+---------------*/
+
+fn-cards > fn-card > fn-card-content > fn-card-content-description,
+.fn-cards > .fn-card > .fn-card-content > .fn-card-content-description,
+fn-card > fn-card-content > fn-card-content-description,
+.fn-card > .fn-card-content > .fn-card-content-description {
+  display: block;
+  clear: both;
+  color: rgba(0, 0, 0, 0.5);
+}
+
+/*--------------
+    Paragraph
+---------------*/
+
+fn-cards > fn-card > fn-card-content > p,
+.fn-cards > .fn-card > .fn-card-content > p,
+fn-card > fn-card-content > p,
+.fn-card > .fn-card-content > p {
+  margin: 0em 0em 0.5em;
+}
+fn-cards > fn-card > fn-card-content > p:last-child,
+.fn-cards > .fn-card > .fn-card-content > p:last-child,
+fn-card > fn-card-content > p:last-child,
+.fn-card > .fn-card-content > p:last-child {
+  margin-bottom: 0em;
+}
+/*--------------
+      Meta
+---------------*/
+fn-cards > fn-card fn-card-meta,
+.fn-cards > .fn-card > .fn-card-meta,
+fn-card fn-card-meta,
+.fn-card > .fn-card-meta {
+  display:block;
+  font-size: 0.9em;
+  color: rgba(0, 0, 0, 0.4);
+}
+fn-cards > fn-card > fn-card-meta *,
+.fn-cards > .fn-card > .fn-card-meta *,
+fn-card > fn-card-meta *,
+.fn-card > .fn-card-meta * {
+  margin-right: 0.3em;
+}
+fn-cards > fn-card > fn-card-meta:last-child,
+.fn-cards > .fn-card > .fn-card-meta:last-child,
+fn-card > fn-card-meta:last-child,
+.fn-card > .fn-card-meta:last-child  {
+  margin-right: 0em;
+}
+.ui.cards > .card .meta [class*="right floated"],
+.ui.card .meta [class*="right floated"] {
+  margin-right: 0em;
+  margin-left: 0.3em;
+}
+/*--------------
+      Links
+---------------*/
+
+
+/* Generic */
+fn-cards > fn-card > fn-card-content a,
+.fn-cards > .fn-card > .fn-card-content a,
+fn-card > fn-card-content a,
+.fn-card > .fn-card-content a {
+  color: '';
+  -webkit-transition: color 0.2s ease;
+          transition: color 0.2s ease;
+}
+fn-cards > fn-card > fn-card-content a:hover,
+.fn-cards > .fn-card > .fn-card-content a:hover,
+fn-card > fn-card-content a:hover,
+.fn-card > .fn-card-content a:hover {
+  color: '';
+}
+
+/* Header */
+.ui.cards > .card > .content > a.header,
+.ui.card > .content > a.header {
+  color: rgba(0, 0, 0, 0.85);
+}
+.ui.cards > .card > .content > a.header:hover,
+.ui.card > .content > a.header:hover {
+  color: #00b2f3;
+}
+
+/* Meta */
+.ui.cards > .card .meta > a:not(.ui),
+.ui.card .meta > a:not(.ui) {
+  color: rgba(0, 0, 0, 0.4);
+}
+.ui.cards > .card .meta > a:not(.ui):hover,
+.ui.card .meta > a:not(.ui):hover {
+  color: rgba(0, 0, 0, 0.8);
+}
+
+/*--------------
+     Buttons
+---------------*/
+
+fn-cards > fn-card > .buttons:last-child,
+fn-card > .buttons:last-child,
+fn-cards > fn-card  .button:last-child,
+fn-card  > .button:last-child {
+  margin: 0em -1px -0.2em;
+  width: -webkit-calc(100% +  2px );
+  width: calc(100% +  2px );
+}
+
+/*----------------
+  Extra Content
+-----------------*/
+
+fn-cards > fn-card > fn-card-extra-content,
+.fn-cards > .fn-card > .fn-card-extra-content,
+fn-card > fn-card-extra-content,
+.fn-card > .fn-card-extra-content {
+  display:block;
+  max-width: 100%;
+  min-height: 0em !important;
+  position: static;
+  background: none;
+  width: auto;
+  margin: 0em 0em;
+  padding: 0.75em 1em;
+  top: 0em;
+  left: 0em;
+  color: rgba(0, 0, 0, 0.4);
+  box-shadow: none;
+  -webkit-transition: color 0.2s ease;
+          transition: color 0.2s ease;
+  border-top: 1px solid rgba(0, 0, 0, 0.05);
+}
+.ui.cards > .card > .extra a:not(.ui),
+.ui.card > .extra a:not(.ui) {
+  color: rgba(0, 0, 0, 0.4);
+}
+.ui.cards > .card > .extra a:not(.ui):hover,
+.ui.card > .extra a:not(.ui):hover {
+  color: #00b2f3;
+}
+
+
