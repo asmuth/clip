@@ -101,8 +101,13 @@
 
       table.addEventListener('fn-table-row-click', function(e) {
         var metric_key = e.srcElement.getAttribute('metric-key');
-        open("metric", metric_key);
-        console.log("clicked" + metric_key)
+        var end = Math.round(Date.now() / 1000);
+        var start = end - 3600;
+        var raw_url = 
+          "metric?key="+ encodeURIComponent(metric_key) +
+          "&view=value&start_time=" + start +
+          "&end_time=" + end;
+        openUrl(raw_url, true)
       }, false);
     }
 

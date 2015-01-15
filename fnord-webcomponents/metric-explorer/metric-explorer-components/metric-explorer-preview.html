@@ -125,9 +125,7 @@
             <fn-dropdown-item data-value=86400>24 hours</fn-dropdown-item>
           </fn-dropdown>
         </div>
-        <div class="group group_by">
-          <b>Group by</b>
-        </div>
+
       </fn-controls-section>
       <fn-controls-section data-position='right'>
         <div class='group timerange'>
@@ -181,31 +179,49 @@
       var tpl = Fnord.getTemplate("fn-metric-explorer-preview", "base");
       this.appendChild(tpl);
 
-      this.params = parseUrlHash(window.location.hash).q_params;
+      if (this.getAttribute('data-url') != null) {
+        this.onUrlChange(true)
+      }
+    }
 
-      this.setHeader()
-      this.init(this.params.k);
+    this.attributeChangedCallback = function(attr, old_val, new_val) {
+      if (attr == 'data-url') {
+        var init = (old_val == null);
+
+        this.onUrlChange(init);
+      }
+    }
+
+    this.onUrlChange = function(init) {
+      this.params = parseUrlQueryString(this.getAttribute("data-url"));
+
+      //var queryUrl = generateQueryUrl(this.params.query_params);
+      this.setHeader();
+
+      if (init) {
+        this.init();
+        //this.handleAggregationDisplay();
+      }
+
+      //this.runQuery
     }
 
     this.setHeader = function() {
-      this.querySelector("h1 span").innerHTML = this.params.k
+      this.querySelector("h1 span").innerHTML =
+        this.params.query_params.innerViewValue;
     }
 
-    this.init = function(metric ) {
-      var url = "https://rpc.fnrd.net/cm-stats/metrics/list?filter=" + encodeURIComponent(metric);
-      var base = this;
-      Fnord.httpGet(url, function(r) {
-        if (r.status == 200) {
-          var json = JSON.parse(r.response);
-          json.metrics.map(function(m) {
-            base.columns = m.labels.join(",");
-          });
-        }
+    this.init = function() {
+      var url = 
+        "https://rpc.fnrd.net/cm-stats/metrics/list?filter=" +
+        encodeURIComponent(this.params.query_params.innerViewValue);
+
+
         /*base.updateUrlParams(
           base.addRequiredURLParamsForView(
             base.getQueryParamOrDefaultValue("view")));*/
-        base.initControls();
-      });
+      this.initControls();
+
     };
 
 
@@ -237,14 +253,14 @@
     this.getQueryParamOrDefaultValue = function(key) {
       var defaults = {
         view : "value",
-        columns: this.columns,
+
         end_time : Math.round(Date.now() / 1000),
         /* 5 minutes  */
         time_range : 3600,
         /* 10, 5 seconds */
         t_step : 10,
-        t_window : 5,
-        by: this.columns
+        t_window : 5
+
       }
 
       if (key == "time_range") {
@@ -276,31 +292,7 @@
       var t_step_val = this.getQueryParamOrDefaultValue("t_step");
       time_step.setAttribute('data-preselected', t_step_val);
 
-      var group_by_field = this.querySelector(".group.group_by");
-      var columns = this.getQueryParamOrDefaultValue("columns").split(",");
-      var by = this.getQueryParamOrDefaultValue("by").split(",");
-      columns.map(function(c) {
-        var button = document.createElement("fn-button");
-        button.innerHTML = c;
-        if (by.indexOf(c) > -1) {
-          button.setAttribute("data-active", "active");
-        }
-        group_by_field.appendChild(button);
-        button.addEventListener("fn-button-click", function() {
-          var isActive = this.hasAttribute("data-active");
-          var columns = base.getQueryParamOrDefaultValue("by");
-          if (isActive) {
-            this.removeAttribute("data-active");
-            columns = FnordMetric.util.removeFromCSV(columns, this.innerText);
-          } else {
-            this.setAttribute("data-active", "active");
-            columns = FnordMetric.util.addToCSV(columns, this.innerText);
-          }
-          base.updateUrlParams({"by": columns});
-        });
-      });
-
-      var time_range_val = parseInt(
+     var time_range_val = parseInt(
         this.getQueryParamOrDefaultValue("time_range"), 10);
       var end_time = parseInt(this.getQueryParamOrDefaultValue("end_time"), 10);
 
