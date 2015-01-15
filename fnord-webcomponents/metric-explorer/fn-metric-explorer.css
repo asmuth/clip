@@ -9,7 +9,15 @@
   <http://www.gnu.org/licenses/>.
 */
 
+#metric-explorer-viewport {
+  background-color: #fff;
+}
+
 metric-explorer-list {
   display: block;
+  width: 100%;
+}
+
+metric-explorer-list fn-table /deep/ table {
   width: 100%;
 }

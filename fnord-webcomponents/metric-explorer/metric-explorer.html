@@ -37,9 +37,14 @@
 
 <script type='text/javascript'>
 
+  var views = {
+    "metric-explorer-list" : "<metric-explorer-list></metric-explorer-list>",
+    "metric-explorer-preview" : "<metric-explorer-preview></metric-explorer-preview>"
+  }
+
   function open(name) {
     var viewport = document.querySelector("#metric-explorer-viewport");
-    viewport.innerHTML = "<metric-explorer-list></metric-explorer-list>";
+    viewport.innerHTML = views[name];
   }
 
   window.addEventListener('fn-ready' ,function() {
