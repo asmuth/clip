@@ -49,7 +49,7 @@
         return function(e) {
           var term = e.srcElement.getValue();
           var res = [];
-          var url = "https://rpc.fnrd.net/cm-stats/metrics/list?filter=" + term;
+          var url = baseUrl + "/list?filter=" + term;
           Fnord.httpGet(url, function(r) {
             if (r.status == 200) {
               var json = JSON.parse(r.response);
@@ -69,10 +69,11 @@
     }
 
 
+
     this.loadMetricList = function() {
       var loader = this.querySelector("fn-loader");
       var table = this.querySelector("fn-table");
-      var url = "https://rpc.fnrd.net/cm-stats/metrics/list";
+      var url = baseUrl + "/list";
 
       Fnord.httpGet(url, function(r) {
         if (r.status === 200) {

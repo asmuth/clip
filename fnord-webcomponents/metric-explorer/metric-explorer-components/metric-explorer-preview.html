@@ -11,28 +11,48 @@
 
 <template id="fn-metric-explorer-preview-base-tpl">
   <style type='text/css'>
+
+    h1.page_header {
+      margin-left: 5px;
+    }
+
     fn-button#auto_refresh[auto-refresh-on='on'] {
       color : #009fe9;
     }
+
+    .group.group_by {
+      display: none;
+    }
+
+    .group.group_by.active {
+      display: block;
+    }
+
     .group.group_by fn-button[data-active='active'] {
       background: rgb(226, 232, 237);
     }
+
     .group.group_by fn-button {
       float: left;
     }
+
     .group.aggregation_time_window {
       border-right: 1px solid rgb(226, 232, 237);
     }
+
     .group.aggregation_time_window fn-dropdown {
       float:left;
       margin-right: 20px;
     }
+
     .group.aggregation_time_window fn-dropdown:last-child {
       margin-right: 0;
     }
+
     .group.aggregation_type {
       border-right: 1px solid rgb(226, 232, 237);
     }
+
     .group b {
       font-weight: normal;
       font-size: 80%;
@@ -42,18 +62,22 @@
       margin-bottom: 6px;
       opacity: 0.7;
     }
+
     .group {
       height: 100%;
       float: left;
       padding: 14px 20px 0 20px;
     }
+
     fn-controls[type='secondary'] fn-button {
       box-shadow:none;
     }
+
     #result_pane fn-message {
       display:none;
       margin: 2em 4em;
     }
+
     #result_pane fn-message.active {
       display: block;
     }
@@ -66,9 +90,7 @@
   </style>
   <fn-loader>
     <h1 class="page_header">
-      <fn-button id="metric-list">
-        <i>Metric</i>
-      </fn-button>
+      <a href="#">Metric</a>
       &rsaquo;
       <span></span>
     </h1>
@@ -123,12 +145,15 @@
         </div>
         <div class="group scale">
           <b>Scale</b>
-          <fn-checkbox data-style="small" id="log_scale">
+          <fn-checkbox data-style="small" id="inv_scale">
             <fn-checkbox-label>Inverted</fn-checkbox-label>
           </fn-checkbox>
-          <fn-checkbox data-style="small" id="inv_scale">
+          <fn-checkbox data-style="small" id="log_scale">
             <fn-checkbox-label>Logarithmic</fn-checkbox-label>
           </fn-checkbox>
+        </div>
+        <div class="group group_by">
+          <b>Group by</b>
         </div>
       </fn-controls-section>
       <fn-controls-section data-position='right'>
@@ -209,26 +234,24 @@
       }
 
       this.updateChart();
-      this.updateTable();
+      //this.updateTable();
     }
 
     this.updateChart = function() {
       var url = this.buildQueryUrl("svg");
       var iframe = this.querySelector("#chart.result_pane iframe");
-      console.log(iframe);
       iframe.src = url;
     }
 
     this.updateTable = function() {
       var url = this.buildQueryUrl("json");
       Fnord.httpGet(url, function(r) {
-        console.log(r);
       });
     }
 
     this.buildQueryUrl = function(format) {
       var url =
-        "https://rpc.fnrd.net/cm-stats/metrics/timeseries" +
+        baseUrl + "/timeseries" +
         "?metric=" + this.params.query_params.innerViewValue +
         "&from=" + this.getQueryParamOrDefaultValue("start_time") +
         "&until=" + this.getQueryParamOrDefaultValue("end_time");
@@ -268,13 +291,26 @@
     }
 
     this.init = function() {
-      this.updateUrlParams(
-          this.addRequiredURLParamsForView(
-            this.getQueryParamOrDefaultValue("view")));
+      var base = this;
+      var url =
+        baseUrl + "/list?filter=" +
+        encodeURIComponent(this.params.query_params.innerViewValue);
 
-      this.setHeader();
-      this.initControls();
-      this.handleAggregationDisplay();
+      Fnord.httpGet(url, function(r) {
+        if (r.status == 200) {
+          var json = JSON.parse(r.response);
+          json.metrics.map(function(m) {
+            base.columns = m.labels.join(",");
+          });
+        }
+        base.updateUrlParams(
+          base.addRequiredURLParamsForView(
+            base.getQueryParamOrDefaultValue("view")));
+        base.initBasicControls();
+        base.handleGroupByControls();
+        base.setHeader();
+        base.handleAggregationDisplay();
+      });
 
     };
 
@@ -313,6 +349,17 @@
         }
       }
 
+      var group_by = this.params.query_params.by;
+      if (group_by == undefined) {
+        new_params.by = this.columns;
+        update = true;
+      }
+      var param_columns = this.params.query_params.columns;
+      if (param_columns == undefined) {
+        new_params.columns = this.columns;
+        update = true;
+      }
+
       return new_params;
     };
 
@@ -323,6 +370,7 @@
           this.params.query_params[key] = new_params[key].toString();
         }
       }
+
       var path = setUrlFromQueryString("metric", this.params.query_params, true);
       this.setAttribute("data-url", path);
     };
@@ -341,13 +389,15 @@
     this.getQueryParamOrDefaultValue = function(key) {
       var defaults = {
         view : "value",
+        columns : this.columns,
         end_time : Math.round(Date.now() / 1000),
         /* 5 minutes  */
         time_range : 3600,
         /* 10, 5 seconds */
         t_step : 10,
         t_window : 5,
-        scale : null
+        scale : null,
+        by: this.columns
       }
 
       if (key == "time_range") {
@@ -366,8 +416,51 @@
       return value;
     };
 
-    this.initControls = function() {
+    this.splitColumns = function(columns) {
+      if (columns.length == 0) {return [];}
+
+      return columns.split(",");
+    }
+
+    this.handleGroupByControls = function() {
       var base = this;
+
+      var group_by_field = this.querySelector(".group.group_by");
+
+      var columns = this.splitColumns(this.getQueryParamOrDefaultValue("columns"));
+      var by = this.splitColumns(this.getQueryParamOrDefaultValue("by"));
+
+      if (columns.length > 0 ) {
+        group_by_field.className += " active";
+      }
+
+      columns.map(function(c) {
+        var button = document.createElement("fn-button");
+        button.innerHTML = c;
+        if (by.indexOf(c) > -1) {
+          button.setAttribute("data-active", "active");
+        }
+        group_by_field.appendChild(button);
+        button.addEventListener("fn-button-click", function() {
+          var isActive = this.hasAttribute("data-active");
+          var columns = base.getQueryParamOrDefaultValue("by");
+          if (isActive) {
+            this.removeAttribute("data-active");
+            columns = FnordMetric.util.removeFromCSV(columns, this.innerText);
+          } else {
+            this.setAttribute("data-active", "active");
+            columns = FnordMetric.util.addToCSV(columns, this.innerText);
+          }
+          base.updateUrlParams({"by": columns});
+        });
+      });
+
+
+    }
+
+    this.initBasicControls = function() {
+      var base = this;
+
       var rollup = this.querySelector("#rollup");
       var view = this.getQueryParamOrDefaultValue("view");
       rollup.setAttribute('data-preselected', view);
@@ -404,6 +497,10 @@
       daterangepicker.setAttribute('data-endtime', (end_time * 1000));
 
       //set controls event listeners
+      this.querySelector("h1.page_header").onclick = function(e) {
+        e.preventDefault();
+        openUrl("metrics", true);
+      }
 
       rollup.addEventListener("fn-dropdown-item-click", function(e) {
         var view = e.srcElement.getAttribute('data-value');
@@ -422,6 +519,23 @@
         var value = e.srcElement.getAttribute('data-value');
         base.updateUrlParams({"t_step": value});
       }, false);
+
+      log_scale.addEventListener("fn-checkbox-select", function(e) {
+        base.updateUrlParams({"scale" : "log"});
+      }, false);
+
+      inv_scale.addEventListener("fn-checkbox-select", function(e) {
+        base.updateUrlParams({"scale" : "inv"});
+      }, false);
+
+      log_scale.addEventListener("fn-checkbox-unselect", function(e) {
+        base.updateUrlParams({"scale" : ""});
+      }, false);
+
+      inv_scale.addEventListener("fn-checkbox-unselect", function(e) {
+        base.updateUrlParams({"scale" : ""});
+      }, false);
+
 
       time_range.addEventListener("fn-dropdown-item-click", function(e) {
         var endtime = base.getQueryParamOrDefaultValue("end_time");
