@@ -173,20 +173,7 @@
       this.attributeChangedCallback();
 
       this.addEventListener('click', function() {
-        if (this.hasAttribute('data-active')) {
-          this.removeAttribute('data-active');
-          this.shadowRoot.querySelector(
-            ".field").removeAttribute("data-active");
-        } else {
-          this.setAttribute('data-active', 'active');
-          this.shadowRoot.querySelector(
-            ".field").setAttribute('data-active', 'active');
-           var ev = new CustomEvent("fn-checkbox-submit", {
-            bubbles: true,
-            cancelable: true
-          });
-          this.dispatchEvent(ev);
-        }
+        this.toggleActiveState();
       }, false);
 
     };
@@ -206,6 +193,25 @@
           break;
       }
     };
+
+    this.toggleActiveState = function() {
+      var field = this.shadowRoot.querySelector(".field");
+
+      if (field.hasAttribute('data-active')) {
+        this.removeAttribute('data-active');
+        this.removeAttribute('data-preselected');
+        field.removeAttribute('data-active');
+      } else {
+        this.setAttribute('data-active', 'active');
+        field.setAttribute('data-active', 'active');
+
+        var ev = new CustomEvent("fn-checkbox-submit", {
+            bubbles: true,
+            cancelable: true
+        });
+        this.dispatchEvent(ev);
+      }
+    }
 
     this.setInputType = function() {
       var type = this.getAttribute('data-type');
