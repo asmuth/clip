@@ -220,7 +220,6 @@
     this.attributeChangedCallback = function(attr, old_val, new_val) {
       if (attr == 'data-url') {
         var init = (old_val == null);
-
         this.onUrlChange(init);
       }
     }
@@ -235,7 +234,32 @@
 
       this.updateChart();
       //this.updateTable();
-    }
+    };
+
+    this.init = function() {
+      var base = this;
+      var url =
+        baseUrl + "/list?filter=" +
+        encodeURIComponent(this.params.query_params.innerViewValue);
+
+      Fnord.httpGet(url, function(r) {
+        if (r.status == 200) {
+          var json = JSON.parse(r.response);
+          json.metrics.map(function(m) {
+            base.columns = m.labels.join(",");
+          });
+        }
+        base.updateUrlParams(
+          base.addRequiredURLParamsForView(
+            base.getQueryParamOrDefaultValue("view")));
+        base.handleBasicControls();
+        base.handleGroupByControls();
+        base.handleDateTimeControls();
+        base.setHeader();
+        base.handleAggregationDisplay();
+      });
+    };
+
 
     this.updateChart = function() {
       var url = this.buildQueryUrl("svg");
@@ -254,15 +278,9 @@
         baseUrl + "/timeseries" +
         "?metric=" + this.params.query_params.innerViewValue +
         "&from=" + this.getQueryParamOrDefaultValue("start_time") +
-        "&until=" + this.getQueryParamOrDefaultValue("end_time");
-
-
-      if (this.params.query_params.scale == "log") {
-        url += "&logarithmic=true";
-      }
-      if (this.params.query_params.scale == "inv") {
-        url += "&inverted=true";
-      }
+        "&until=" + this.getQueryParamOrDefaultValue("end_time") +
+        "&logarithmic=" + this.getQueryParamOrDefaultValue("logarithmic") +
+        "&inverted=" + this.getQueryParamOrDefaultValue("inverted");
 
       var view = this.getQueryParamOrDefaultValue("view");
       if (view != 'value') {
@@ -281,7 +299,7 @@
         "&scale=0.8" +
         "&axis_right=true" +
         "&legend=toprightinside";
-
+      console.log(url);
       return url;
     }
 
@@ -290,29 +308,6 @@
         this.params.query_params.innerViewValue;
     }
 
-    this.init = function() {
-      var base = this;
-      var url =
-        baseUrl + "/list?filter=" +
-        encodeURIComponent(this.params.query_params.innerViewValue);
-
-      Fnord.httpGet(url, function(r) {
-        if (r.status == 200) {
-          var json = JSON.parse(r.response);
-          json.metrics.map(function(m) {
-            base.columns = m.labels.join(",");
-          });
-        }
-        base.updateUrlParams(
-          base.addRequiredURLParamsForView(
-            base.getQueryParamOrDefaultValue("view")));
-        base.initBasicControls();
-        base.handleGroupByControls();
-        base.setHeader();
-        base.handleAggregationDisplay();
-      });
-
-    };
 
     this.handleAggregationDisplay = function() {
       var view = this.getQueryParamOrDefaultValue("view");
@@ -375,17 +370,6 @@
       this.setAttribute("data-url", path);
     };
 
-    this.updateDateTimeElems = function(end_time) {
-      var params = parseUrlQueryString(this.getAttribute("data-url"));
-      var date_range = this.getQueryParamOrDefaultValue("time_range");
-      var start_time = parseInt(end_time, 10) - parseInt(date_range, 10);
-      this.updateUrlParams({"end_time" : end_time, "start_time" : start_time});
-      var datepicker = this.querySelector("fn-datepicker");
-      datepicker.setAttribute("data-timestamp", end_time * 1000);
-      var daterangepicker = this.querySelector("fn-daterangepicker");
-      daterangepicker.setAttribute("data-endtime", end_time * 1000);
-    };
-
     this.getQueryParamOrDefaultValue = function(key) {
       var defaults = {
         view : "value",
@@ -396,7 +380,8 @@
         /* 10, 5 seconds */
         t_step : 10,
         t_window : 5,
-        scale : null,
+        logarithmic : false,
+        inverted: false,
         by: this.columns
       }
 
@@ -415,6 +400,8 @@
 
       return value;
     };
+
+/************************* controls handle functions **************************/
 
     this.splitColumns = function(columns) {
       if (columns.length == 0) {return [];}
@@ -454,34 +441,24 @@
           base.updateUrlParams({"by": columns});
         });
       });
+    };
+
+    this.updateDateTimeElems = function(end_time) {
+      var params = parseUrlQueryString(this.getAttribute("data-url"));
+      var date_range = this.getQueryParamOrDefaultValue("time_range");
+      var start_time = parseInt(end_time, 10) - parseInt(date_range, 10);
+      this.updateUrlParams({"end_time" : end_time, "start_time" : start_time});
+      var datepicker = this.querySelector("fn-datepicker");
+      datepicker.setAttribute("data-timestamp", end_time * 1000);
+      var daterangepicker = this.querySelector("fn-daterangepicker");
+      daterangepicker.setAttribute("data-endtime", end_time * 1000);
+    };
 
 
-    }
-
-    this.initBasicControls = function() {
+    this.handleDateTimeControls = function() {
       var base = this;
 
-      var rollup = this.querySelector("#rollup");
-      var view = this.getQueryParamOrDefaultValue("view");
-      rollup.setAttribute('data-preselected', view);
-
-      var time_window = this.querySelector("#time_window");
-      var t_window_val = this.getQueryParamOrDefaultValue("t_window");
-      time_window.setAttribute('data-preselected', t_window_val);
-
-      var time_step = this.querySelector("#time_step");
-      var t_step_val = this.getQueryParamOrDefaultValue("t_step");
-      time_step.setAttribute('data-preselected', t_step_val);
-
-      var scale_val = this.getQueryParamOrDefaultValue("scale");
-      var log_scale = this.querySelector("#log_scale");
-      var inv_scale = this.querySelector("#inv_scale");
-      if (scale_val == "log") {
-        log_scale.setAttribute("data-preselected", true);
-      } else if (scale_val == "inv") {
-        inv_scale.setAttribute("data-preselected", true);
-      }
-
+      /* init */
       var time_range_val = parseInt(
         this.getQueryParamOrDefaultValue("time_range"), 10);
       var end_time = parseInt(this.getQueryParamOrDefaultValue("end_time"), 10);
@@ -496,47 +473,7 @@
       daterangepicker.setAttribute('data-daterange', (time_range_val * 1000));
       daterangepicker.setAttribute('data-endtime', (end_time * 1000));
 
-      //set controls event listeners
-      this.querySelector("h1.page_header").onclick = function(e) {
-        e.preventDefault();
-        openUrl("metrics", true);
-      }
-
-      rollup.addEventListener("fn-dropdown-item-click", function(e) {
-        var view = e.srcElement.getAttribute('data-value');
-        var new_params = base.addRequiredURLParamsForView(view);
-        new_params.view = view;
-        base.updateUrlParams(new_params);
-        base.handleAggregationDisplay();
-      }, false);
-
-      time_window.addEventListener("fn-dropdown-item-click", function(e) {
-        var value = e.srcElement.getAttribute('data-value');
-        base.updateUrlParams({"t_window": value});
-      }, false);
-
-      time_step.addEventListener("fn-dropdown-item-click", function(e) {
-        var value = e.srcElement.getAttribute('data-value');
-        base.updateUrlParams({"t_step": value});
-      }, false);
-
-      log_scale.addEventListener("fn-checkbox-select", function(e) {
-        base.updateUrlParams({"scale" : "log"});
-      }, false);
-
-      inv_scale.addEventListener("fn-checkbox-select", function(e) {
-        base.updateUrlParams({"scale" : "inv"});
-      }, false);
-
-      log_scale.addEventListener("fn-checkbox-unselect", function(e) {
-        base.updateUrlParams({"scale" : ""});
-      }, false);
-
-      inv_scale.addEventListener("fn-checkbox-unselect", function(e) {
-        base.updateUrlParams({"scale" : ""});
-      }, false);
-
-
+      /* handle events */
       time_range.addEventListener("fn-dropdown-item-click", function(e) {
         var endtime = base.getQueryParamOrDefaultValue("end_time");
         var date_range = parseInt(e.srcElement.getAttribute('data-value'));
@@ -565,10 +502,74 @@
           endtime = Math.round(endtime / 1000);
           base.updateDateTimeElems(endtime);
       }, false);
-
     }
 
-  }
+    this.handleBasicControls = function() {
+      var base = this;
+
+      /* init */
+      var rollup = this.querySelector("#rollup");
+      var view = this.getQueryParamOrDefaultValue("view");
+      rollup.setAttribute('data-preselected', view);
+
+      var time_window = this.querySelector("#time_window");
+      var t_window_val = this.getQueryParamOrDefaultValue("t_window");
+      time_window.setAttribute('data-preselected', t_window_val);
+
+      var time_step = this.querySelector("#time_step");
+      var t_step_val = this.getQueryParamOrDefaultValue("t_step");
+      time_step.setAttribute('data-preselected', t_step_val);
+
+      var log_scale = this.querySelector("#log_scale");
+      var inv_scale = this.querySelector("#inv_scale");
+      if (this.getQueryParamOrDefaultValue("logarithmic")) {
+        log_scale.setAttribute("data-preselected", true);
+      }
+      if (this.getQueryParamOrDefaultValue("inverted")) {
+        inv_scale.setAttribute("data-preselected", true);
+      }
+
+      /* handle Events */
+      this.querySelector("h1.page_header").onclick = function(e) {
+        e.preventDefault();
+        openUrl("metrics", true);
+      };
+
+      rollup.addEventListener("fn-dropdown-item-click", function(e) {
+        var view = e.srcElement.getAttribute('data-value');
+        var new_params = base.addRequiredURLParamsForView(view);
+        new_params.view = view;
+        base.updateUrlParams(new_params);
+        base.handleAggregationDisplay();
+      }, false);
+
+      time_window.addEventListener("fn-dropdown-item-click", function(e) {
+        var value = e.srcElement.getAttribute('data-value');
+        base.updateUrlParams({"t_window": value});
+      }, false);
+
+      time_step.addEventListener("fn-dropdown-item-click", function(e) {
+        var value = e.srcElement.getAttribute('data-value');
+        base.updateUrlParams({"t_step": value});
+      }, false);
+
+      log_scale.addEventListener("fn-checkbox-select", function(e) {
+        base.updateUrlParams({"logarithmic" : true});
+      }, false);
+
+      inv_scale.addEventListener("fn-checkbox-select", function(e) {
+        base.updateUrlParams({"inverted" : true});
+      }, false);
+
+      log_scale.addEventListener("fn-checkbox-unselect", function(e) {
+        base.updateUrlParams({"loagrithmic" : false});
+      }, false);
+
+      inv_scale.addEventListener("fn-checkbox-unselect", function(e) {
+        base.updateUrlParams({"inverted" : true});
+      }, false);
+    };
+  };
 
   window.addEventListener('fn-ready', function() {
     Fnord.registerComponent('fn-metric-explorer-preview', MetricExplorerPreview);
