@@ -123,6 +123,38 @@
     }
   };
 
+  function setUrlFromQueryString(hash, query_params, push_state) {
+    if (hash === undefined || hash === "undefined") {
+      window.location.hash = "";
+      return;
+    }
+    var path = "#" + hash;
+
+    if ("innerView" in query_params && query_params.innerView != undefined) {
+      path += "?" + encodeURIComponent(query_params.innerView) + "=";
+      path +=
+        encodeURIComponent(query_params.innerViewValue);
+
+      for (var param in query_params) {
+        if (param != "innerView" && 
+            param != "innerViewValue" &&
+            query_params[param] != undefined &&
+            query_params[param].length > 0) {
+
+          path += 
+            "&" + encodeURIComponent(param) +
+            "=" + encodeURIComponent(query_params[param]);
+        }
+      }
+    }
+
+    if (push_state) {
+      window.history.pushState({url:path}, "#", path);
+    }
+    window.location.hash = path;
+    return path;
+  }
+
   window.addEventListener('fn-ready' ,function() {
     var fragment = window.location.hash;
     if (fragment) {

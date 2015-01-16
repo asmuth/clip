@@ -127,10 +127,10 @@
         </div>
         <div class="group scale">
           <b>Scale</b>
-          <fn-checkbox>
+          <fn-checkbox data-style="small">
             <fn-checkbox-label>Inverted</fn-checkbox-label>
           </fn-checkbox>
-          <fn-checkbox>
+          <fn-checkbox data-style="small">
             <fn-checkbox-label>Logarithmic</fn-checkbox-label>
           </fn-checkbox>
         </div>
@@ -234,15 +234,13 @@
 
 
     this.updateUrlParams = function(new_params) {
-      var params = FnordMetric.util.parseQueryString(
-        this.getAttribute("data-url"));
+      var params = parseUrlQueryString(this.getAttribute("data-url"));
       for (var key in new_params) {
         if (new_params[key] != undefined) {
           params.query_params[key] = new_params[key].toString();
         }
       }
-      var path =FnordMetric.util.setURLQueryString(
-          "metric", params.query_params, false, true);
+      var path = setURLFromQueryString("metric", params.query_params, true);
       this.setAttribute("data-url", path);
     };
 
