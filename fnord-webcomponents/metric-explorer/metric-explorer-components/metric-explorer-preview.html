@@ -127,10 +127,10 @@
         </div>
         <div class="group scale">
           <b>Scale</b>
-          <fn-checkbox data-style="small">
+          <fn-checkbox data-style="small" id="log_scale">
             <fn-checkbox-label>Inverted</fn-checkbox-label>
           </fn-checkbox>
-          <fn-checkbox data-style="small">
+          <fn-checkbox data-style="small" id="inv_scale">
             <fn-checkbox-label>Logarithmic</fn-checkbox-label>
           </fn-checkbox>
         </div>
@@ -204,11 +204,9 @@
       this.params = parseUrlQueryString(this.getAttribute("data-url"));
 
       //var queryUrl = generateQueryUrl(this.params.query_params);
-      this.setHeader();
 
       if (init) {
         this.init();
-        //this.handleAggregationDisplay();
       }
 
       //this.runQuery
@@ -220,33 +218,68 @@
     }
 
     this.init = function() {
-      var url = 
-        "https://rpc.fnrd.net/cm-stats/metrics/list?filter=" +
-        encodeURIComponent(this.params.query_params.innerViewValue);
+      this.updateUrlParams(
+          this.addRequiredURLParamsForView(
+            this.getQueryParamOrDefaultValue("view")));
 
-
-        /*base.updateUrlParams(
-          base.addRequiredURLParamsForView(
-            base.getQueryParamOrDefaultValue("view")));*/
+      this.setHeader();
       this.initControls();
+      this.handleAggregationDisplay();
 
+    };
+
+    this.handleAggregationDisplay = function() {
+      var view = this.getQueryParamOrDefaultValue("view");
+      console.log(view);
+      var time_window = this.querySelector("#time_window");
+      var time_step = this.querySelector("#time_step");
+      if (view == "value" || view.substr(0,6) == "rollup") {
+        time_window.setAttribute("data-state", "disabled");
+        time_step.setAttribute("data-state", "disabled");
+      } else {
+        time_window.removeAttribute("data-state");
+        time_step.removeAttribute("data-state");
+      }
+    };
+
+    /* returns all missing params */
+    this.addRequiredURLParamsForView = function(view) {
+      var new_params = {};
+      var update = false;
+      if (view == "count" ||
+          view == "sum"   ||
+          view == "mean"  ||
+          view == "min"   ||
+          view == "max" ) {
+
+        var time_window = this.params.query_params.t_window;
+        if (time_window == undefined) {
+          new_params.t_window = this.getQueryParamOrDefaultValue("t_window");
+          update = true;
+        }
+        var t_step = this.params.query_params.t_step;
+        if (t_step == undefined) {
+          new_params.t_step = this.getQueryParamOrDefaultValue("t_step");
+          update = true;
+        }
+      }
+
+      return new_params;
     };
 
 
     this.updateUrlParams = function(new_params) {
-      var params = parseUrlQueryString(this.getAttribute("data-url"));
       for (var key in new_params) {
         if (new_params[key] != undefined) {
-          params.query_params[key] = new_params[key].toString();
+          this.params.query_params[key] = new_params[key].toString();
         }
       }
-      var path = setURLFromQueryString("metric", params.query_params, true);
+      var path = setUrlFromQueryString("metric", this.params.query_params, true);
       this.setAttribute("data-url", path);
     };
 
     this.updateDateTimeElems = function(end_time) {
-      var params = FnordMetric.util.parseQueryString(
-          this.getAttribute("data-url"));
+      var params = parseUrlQueryString(this.getAttribute("data-url"));
       var date_range = this.getQueryParamOrDefaultValue("time_range");
       var start_time = parseInt(end_time, 10) - parseInt(date_range, 10);
       this.updateUrlParams({"end_time" : end_time, "start_time" : start_time});
@@ -259,14 +292,13 @@
     this.getQueryParamOrDefaultValue = function(key) {
       var defaults = {
         view : "value",
-
         end_time : Math.round(Date.now() / 1000),
         /* 5 minutes  */
         time_range : 3600,
         /* 10, 5 seconds */
         t_step : 10,
-        t_window : 5
-
+        t_window : 5,
+        scale : null
       }
 
       if (key == "time_range") {
@@ -279,8 +311,9 @@
         }
       }
 
-      var value = (this.params[key] == undefined)?
-        defaults[key] : params.query_params[key];
+      var value = (this.params.query_params[key] == undefined)?
+        defaults[key] : this.params.query_params[key];
+
       return value;
     };
 
@@ -298,7 +331,16 @@
       var t_step_val = this.getQueryParamOrDefaultValue("t_step");
       time_step.setAttribute('data-preselected', t_step_val);
 
-     var time_range_val = parseInt(
+      var scale_val = this.getQueryParamOrDefaultValue("scale");
+      var log_scale = this.querySelector("#log_scale");
+      var inv_scale = this.querySelector("#inv_scale");
+      if (scale_val == "log") {
+        log_scale.setAttribute("data-active", "active");
+      } else if (scale_val == "inv") {
+        inv_scale.setAttribute("data-active", "active");
+      }
+
+      var time_range_val = parseInt(
         this.getQueryParamOrDefaultValue("time_range"), 10);
       var end_time = parseInt(this.getQueryParamOrDefaultValue("end_time"), 10);
 
@@ -313,6 +355,7 @@
       daterangepicker.setAttribute('data-endtime', (end_time * 1000));
 
       //set controls event listeners
+
       rollup.addEventListener("fn-dropdown-item-click", function(e) {
         var view = e.srcElement.getAttribute('data-value');
         var new_params = base.addRequiredURLParamsForView(view);
@@ -326,7 +369,7 @@
         base.updateUrlParams({"t_window": value});
       }, false);
 
-      time_step.addEventListener("fn-dropdown-select", function(e) {
+      time_step.addEventListener("fn-dropdown-item-click", function(e) {
         var value = e.srcElement.getAttribute('data-value');
         base.updateUrlParams({"t_step": value});
       }, false);
