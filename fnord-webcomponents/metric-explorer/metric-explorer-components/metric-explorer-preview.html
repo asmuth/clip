@@ -57,12 +57,8 @@
     #result_pane fn-message.active {
       display: block;
     }
-    .result_pane {
-      display:none;
-    }
-    .result_pane.active {
-      display:block;
-    }
+
+
     .result_pane fn-pager.table {
       float:right;
       margin-right: 5px;
@@ -173,10 +169,14 @@
       <fn-controls-section>
     </fn-controls>
     <fn-loader id="result_pane" data-transparent>
-      <div id="result_pane_chart">
+      <fn-message data-state='error'></fn-message>
+      <div class="result_pane" id="chart">
+        <iframe width="100%" frameborder="0" height="260" scrolling="no"></iframe>
       </div>
-      <fn-table data-per-page='25' style="width:100%;">
-      </fn-table>
+      <div class="result_pane" id="table">
+        <fn-table data-per-page='25' style="width:100%;">
+        </fn-table>
+      </div>
     </fn-loader>
   </fn-loader>
 </template>
@@ -202,14 +202,64 @@
 
     this.onUrlChange = function(init) {
       this.params = parseUrlQueryString(this.getAttribute("data-url"));
-
       //var queryUrl = generateQueryUrl(this.params.query_params);
 
       if (init) {
         this.init();
       }
 
-      //this.runQuery
+      this.updateChart();
+      this.updateTable();
+    }
+
+    this.updateChart = function() {
+      var url = this.buildQueryUrl("svg");
+      var iframe = this.querySelector("#chart.result_pane iframe");
+      console.log(iframe);
+      iframe.src = url;
+    }
+
+    this.updateTable = function() {
+      var url = this.buildQueryUrl("json");
+      Fnord.httpGet(url, function(r) {
+        console.log(r);
+      });
+    }
+
+    this.buildQueryUrl = function(format) {
+      var url =
+        "https://rpc.fnrd.net/cm-stats/metrics/timeseries" +
+        "?metric=" + this.params.query_params.innerViewValue +
+        "&from=" + this.getQueryParamOrDefaultValue("start_time") +
+        "&until=" + this.getQueryParamOrDefaultValue("end_time");
+
+
+      if (this.params.query_params.scale == "log") {
+        url += "&logarithmic=true";
+      }
+      if (this.params.query_params.scale == "inv") {
+        url += "&inverted=true";
+      }
+
+      var view = this.getQueryParamOrDefaultValue("view");
+      if (view != 'value') {
+        url +=
+          "&aggr_fn=" + view +
+          "&aggr_window=" + this.getQueryParamOrDefaultValue("t_window") +
+          "&aggr_step=" + this.getQueryParamOrDefaultValue("t_step");
+      }
+
+      url +=
+        "&format=" + format +
+        "&min=0" +
+        "&height=260" +
+        "&width=1200" +
+        "&grid=both" +
+        "&scale=0.8" +
+        "&axis_right=true" +
+        "&legend=toprightinside";
+
+      return url;
     }
 
     this.setHeader = function() {
@@ -230,7 +280,6 @@
 
     this.handleAggregationDisplay = function() {
       var view = this.getQueryParamOrDefaultValue("view");
-      console.log(view);
       var time_window = this.querySelector("#time_window");
       var time_step = this.querySelector("#time_step");
       if (view == "value" || view.substr(0,6) == "rollup") {
@@ -335,9 +384,9 @@
       var log_scale = this.querySelector("#log_scale");
       var inv_scale = this.querySelector("#inv_scale");
       if (scale_val == "log") {
-        log_scale.setAttribute("data-active", "active");
+        log_scale.setAttribute("data-preselected", true);
       } else if (scale_val == "inv") {
-        inv_scale.setAttribute("data-active", "active");
+        inv_scale.setAttribute("data-preselected", true);
       }
 
       var time_range_val = parseInt(
