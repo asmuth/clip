@@ -168,6 +168,7 @@
       if (this.hasAttribute('data-type')) {this.setInputType();}
       if (this.hasAttribute('data-state')) {this.setState();}
       if (this.hasAttribute('data-style')) {this.setStyle();}
+      if (this.hasAttribute('data-preselected')) {this.setPreselection(); }
 
       this.attributeChangedCallback();
 
@@ -198,6 +199,9 @@
         case 'data-state':
           this.setState();
           break;
+        case 'data-preselected':
+          this.setPreselection();
+          break;
         default:
           break;
       }
@@ -221,6 +225,15 @@
     this.setStyle = function() {
       var field = this.shadowRoot.querySelector(".field");
       field.className += " " + this.getAttribute('data-style');
+    };
+
+    this.setPreselection = function() {
+      var field = this.shadowRoot.querySelector(".field");
+      if (this.getAttribute('data-preselected')) {
+        field.setAttribute('data-active', 'active');
+      } else {
+        field.removeAttribute('data-active');
+      }
     }
   };
 
