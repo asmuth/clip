@@ -201,11 +201,18 @@
         this.removeAttribute('data-active');
         this.removeAttribute('data-preselected');
         field.removeAttribute('data-active');
+
+        var ev = new CustomEvent("fn-checkbox-unselect", {
+            bubbles: true,
+            cancelable: true
+        });
+        this.dispatchEvent(ev);
+
       } else {
         this.setAttribute('data-active', 'active');
         field.setAttribute('data-active', 'active');
 
-        var ev = new CustomEvent("fn-checkbox-submit", {
+        var ev = new CustomEvent("fn-checkbox-select", {
             bubbles: true,
             cancelable: true
         });
