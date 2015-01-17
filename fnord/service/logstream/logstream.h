@@ -67,7 +67,12 @@ protected:
 
   uint64_t head_offset_;
   stats::Counter<uint64_t> stat_head_offset_;
+
+#ifndef FNORD_NOTRACE
+  Random rnd_;
+#endif
 };
+
 
 } // namespace logstream_service
 } // namespace fnord

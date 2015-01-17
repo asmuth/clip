@@ -9,6 +9,7 @@
  */
 #include <algorithm>
 #include "fnord/base/inspect.h"
+#include "fnord/base/logging.h"
 #include "fnord/json/json.h"
 #include "fnord/sstable/sstablereader.h"
 #include "fnord/service/logstream/logstream.h"
@@ -51,12 +52,32 @@ uint64_t LogStream::append(const std::string& entry) {
 
 std::vector<LogStreamEntry> LogStream::fetch(uint64_t offset, int batch_size) {
   std::vector<LogStreamEntry> entries;
+#ifndef FNORD_NOTRACE
+  auto request_id = rnd_.hex64();
+#endif
+
+#ifndef FNORD_NOTRACE
+  fnord::logTrace(
+      "fnord.localfeed",
+      "request id=$0 feed=$1 offset=$2 batch_size=$3",
+      request_id,
+      name_,
+      offset,
+      batch_size);
+#endif
 
   std::shared_ptr<TableRef> table(nullptr);
   {
     std::unique_lock<std::mutex> l(tables_mutex_);
 
+#ifndef FNORD_NOTRACE
     if (tables_.empty()) {
+      fnord::logTrace(
+          "fnord.localfeed",
+          "request id=$0: feed has no tables",
+          request_id);
+#endif
+
       return entries;
     }
 
@@ -76,6 +97,14 @@ std::vector<LogStreamEntry> LogStream::fetch(uint64_t offset, int batch_size) {
     RAISEF(kIndexError, "invalid offset: $0 (stream: $1)", offset, name_);
   }
 
+#ifndef FNORD_NOTRACE
+  fnord::logTrace(
+      "fnord.localfeed",
+      "request id=$0: choosing table: $1",
+      request_id,
+      table->file_path);
+#endif
+
   std::unique_ptr<sstable::Cursor> cursor;
   std::unique_ptr<sstable::SSTableReader> reader;
 
@@ -89,12 +118,39 @@ std::vector<LogStreamEntry> LogStream::fetch(uint64_t offset, int batch_size) {
   }
 
   if (offset > 0) {
+#ifndef FNORD_NOTRACE
+    fnord::logTrace(
+        "fnord.localfeed",
+        "request id=$0: seeking to table_offset=$1 logical_offset=$2",
+        request_id,
+        offset - table->offset,
+        offset);
+#endif
+
     if (!cursor->trySeekTo(offset - table->offset)) {
+#ifndef FNORD_NOTRACE
+      fnord::logTrace(
+          "fnord.localfeed",
+          "request id=$0: seek to target offset failed",
+          request_id);
+#endif
+
       return entries;
     }
   }
 
   for (int i = 0; i < batch_size; i++) {
+#ifndef FNORD_NOTRACE
+    fnord::logTrace(
+        "fnord.localfeed",
+        "request id=$0: reading entry at table_offset=$1 "
+            "table_real_offset=$1 logical_offset=$2",
+        request_id,
+        cursor->position(),
+        cursor->position() + reader->bodyOffset(),
+        table->offset + cursor->position());
+#endif
+
     if (!cursor->valid()) {
       break;
     }
@@ -109,6 +165,14 @@ std::vector<LogStreamEntry> LogStream::fetch(uint64_t offset, int batch_size) {
       break;
     }
   }
+
+#ifndef FNORD_NOTRACE
+  fnord::logTrace(
+      "fnord.localfeed",
+      "request id=$0: returning $1 entries",
+      request_id,
+      entries.size());
+#endif
 
   return entries;
 }

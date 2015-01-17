@@ -33,6 +33,19 @@ const char* logLevelToStr(LogLevel log_level) {
   }
 }
 
+LogLevel strToLogLevel(const String& log_level) {
+  if (log_level == "EMERGENCY") return LogLevel::kEmergency;
+  if (log_level == "ALERT") return LogLevel::kAlert;
+  if (log_level == "CRITICAL") return LogLevel::kCritical;
+  if (log_level == "ERROR") return LogLevel::kError;
+  if (log_level == "WARNING") return LogLevel::kWarning;
+  if (log_level == "NOTICE") return LogLevel::kNotice;
+  if (log_level == "INFO") return LogLevel::kInfo;
+  if (log_level == "DEBUG") return LogLevel::kDebug;
+  if (log_level == "TRACE") return LogLevel::kTrace;
+  RAISEF(kIllegalArgumentError, "unknown log level: $0", log_level);
+}
+
 Logger* Logger::get() {
   static Logger singleton;
   return &singleton;

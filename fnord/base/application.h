@@ -16,6 +16,7 @@
 #include <string>
 #include <unordered_map>
 #include <vector>
+#include "fnord/base/logging.h"
 
 namespace fnord {
 
@@ -24,7 +25,7 @@ public:
 
   static void init();
 
-  static void logToStderr();
+  static void logToStderr(LogLevel min_log_level = LogLevel::kInfo);
 
 };
 
