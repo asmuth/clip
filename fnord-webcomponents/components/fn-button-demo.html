@@ -40,8 +40,8 @@
     <fn-button data-state='disabled'>Next</fn-button>
     <h3><i>Example 2 &raquo;</i> Active</h3>
     <fn-button data-state='active'>Auto Refresh</fn-button>
-
-
+    <h3><i>Example 3 &raquo;</i> Toggle</h3>
+    <fn-button data-toggle id="toggle">Off</fn-button>
   </section>
 
 
@@ -90,4 +90,23 @@
       </fn-button-group>
     </div>
   </section>
- </template>
+  <section>
+    <h1>Sizes</h1>
+    <fn-button data-size='mini'>Mini</fn-button>
+    <fn-button data-size='tiny'>Tiny</fn-button>
+    <fn-button data-size='small'>Small</fn-button>
+    <fn-button data-size='medium'>Medium</fn-button>
+    <fn-button data-size='large'>Large</fn-button>
+    <fn-button data-size='big'>Big</fn-button>
+  </section>
+  <script type='text/javascript'>
+    document.querySelector("#toggle").addEventListener("fn-button-click", function() {
+      if (this.hasAttribute('data-state')) {
+        this.removeAttribute('data-state');
+      } else {
+        this.setAttribute('data-state', 'active');
+      }
+    }, false);
+  </script>
+</template>
+
