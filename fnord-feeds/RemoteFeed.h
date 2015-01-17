@@ -24,7 +24,7 @@ public:
 
   RemoteFeed(
       const String& name,
-      fnord::comm::RPCChannel* rpc_channel,
+      fnord::RPCChannel* rpc_channel,
       int batch_size = kDefaultBatchSize,
       int buffer_size = kDefaultBufferSize);
 
@@ -43,7 +43,7 @@ protected:
   void fillBuffer();
 
   std::string name_;
-  fnord::comm::RPCChannel* rpc_channel_;
+  fnord::RPCChannel* rpc_channel_;
   int batch_size_;
   int buffer_size_;
   uint64_t offset_;
@@ -51,7 +51,7 @@ protected:
   std::mutex fetch_mutex_;
   Deque<FeedEntry> fetch_buf_;
   std::unique_ptr<
-      comm::RPC<
+      RPC<
           std::vector<FeedEntry>,
           std::tuple<String, uint64_t, int>>> cur_fetch_rpc_;
 };

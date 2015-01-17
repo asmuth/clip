@@ -14,7 +14,7 @@ namespace fnord {
 namespace feeds {
 
 RemoteFeedFactory::RemoteFeedFactory(
-    comm::RPCChannel* rpc_channel) :
+    RPCChannel* rpc_channel) :
     rpc_channel_(rpc_channel) {}
 
 std::unique_ptr<RemoteFeed> RemoteFeedFactory::getFeed(

@@ -25,11 +25,11 @@
 namespace fnord {
 namespace json {
 
-class JSONRPCHTTPChannel : public comm::RPCChannel {
+class JSONRPCHTTPChannel : public RPCChannel {
 public:
 
   JSONRPCHTTPChannel(
-      comm::LBGroup* lb_group,
+      comm::ServerGroup* lb_group,
       fnord::TaskScheduler* scheduler);
 
   template <class RPCType>
@@ -40,7 +40,7 @@ public:
   http::HTTPConnectionPool* httpConnectionPool();
 
 protected:
-  comm::LBGroup* lb_group_;
+  comm::ServerGroup* lb_group_;
   http::HTTPConnectionPool conn_pool_;
   TaskScheduler* scheduler_;
 };

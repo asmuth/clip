@@ -57,7 +57,7 @@ void JSONRPC::ReflectionTarget<ClassType>::rpc(RPCCallType rpc_call) {
   self_->registerMethod(mname, [rpc_call, service] (
       JSONRPCRequest* req,
       JSONRPCResponse* res) {
-      comm::RPC<
+      RPC<
         typename RPCCallType::RPCReturnType,
         typename RPCCallType::RPCArgPackType> rpc(
         rpc_call.method()->name(),

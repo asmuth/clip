@@ -13,7 +13,7 @@ namespace fnord {
 namespace json {
 
 JSONRPCHTTPChannel::JSONRPCHTTPChannel(
-    comm::LBGroup* lb_group,
+    comm::ServerGroup* lb_group,
     fnord::TaskScheduler* scheduler) :
     lb_group_(lb_group),
     conn_pool_(scheduler),

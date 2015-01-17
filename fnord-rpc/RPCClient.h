@@ -7,28 +7,36 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#ifndef _FNORD_FEEDS_FEEDFACTORY_H
-#define _FNORD_FEEDS_FEEDFACTORY_H
+#ifndef _FNORD_RPCCLIENT_H
+#define _FNORD_RPCCLIENT_H
 #include <functional>
 #include <stdlib.h>
 #include <string>
 #include <unordered_map>
 #include <vector>
-#include <mutex>
+#include "fnord/base/autoref.h"
+#include "fnord/base/thread/taskscheduler.h"
+#include "fnord/base/uri.h"
 #include "fnord-rpc/RPC.h"
-#include "fnord-feeds/RemoteFeed.h"
+#include "fnord/net/http/httpconnectionpool.h"
 
 namespace fnord {
-namespace feeds {
 
-class RemoteFeedFactory {
+class RPCClient {
 public:
-  RemoteFeedFactory(RPCChannel* rpc_channel);
-  std::unique_ptr<RemoteFeed> getFeed(const std::string& name);
-protected:
-  RPCChannel* rpc_channel_;
+  virtual ~RPCClient() {}
+
+  virtual void call(const URI& uri, RefPtr<AnyRPC> rpc) = 0;
+
 };
 
-}
-}
+class HTTPRPCClient : public RPCClient {
+public:
+  HTTPRPCClient(TaskScheduler* sched);
+  void call(const URI& uri, RefPtr<AnyRPC> rpc) override;
+protected:
+  fnord::http::HTTPConnectionPool http_pool_;
+};
+
+} // namespace fnord
 #endif

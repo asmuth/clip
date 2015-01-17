@@ -16,7 +16,7 @@ namespace feeds {
 
 RemoteFeed::RemoteFeed(
     const String& name,
-    fnord::comm::RPCChannel* rpc_channel,
+    fnord::RPCChannel* rpc_channel,
     int batch_size /* = kDefaultBatchSize */,
     int buffer_size /* = kDefaultBufferSize */) :
     name_(name),
@@ -28,12 +28,12 @@ RemoteFeed::RemoteFeed(
 Future<bool> RemoteFeed::appendEntry(const String& entry) {
   Promise<bool> promise;
 
-  auto rpc = fnord::comm::mkRPC(
+  auto rpc = fnord::mkRPC(
       &FeedService::append,
       name_,
       entry);
 
-  rpc->call(rpc_channel_);
+  //rpc->call(rpc_channel_);
 
   rpc->onSuccess([promise] (const decltype(rpc)::ValueType& r) mutable {
     promise.success(true);
@@ -50,13 +50,13 @@ Future<Option<FeedEntry>>
     RemoteFeed::fetchEntry(const FeedOffset& offset) {
   Promise<Option<FeedEntry>> promise;
 
-  auto rpc = fnord::comm::mkRPC(
+  auto rpc = fnord::mkRPC(
       &FeedService::fetch,
       name_,
       offset,
       (int) 1);
 
-  rpc->call(rpc_channel_);
+  //rpc->call(rpc_channel_);
 
   rpc->onSuccess([promise] (const decltype(rpc)::ValueType& r) mutable {
     if (r.result().size() == 1) {
@@ -79,13 +79,13 @@ Future<Vector<FeedEntry>>
     int batch_size) {
   Promise<Vector<FeedEntry>> promise;
 
-  auto rpc = fnord::comm::mkRPC(
+  auto rpc = fnord::mkRPC(
       &FeedService::fetch,
       name_,
       offset,
       (int) batch_size);
 
-  rpc->call(rpc_channel_);
+  //rpc->call(rpc_channel_);
 
   rpc->onSuccess([promise] (const decltype(rpc)::ValueType& r) mutable {
     Vector<FeedEntry> entries;
@@ -121,7 +121,7 @@ void RemoteFeed::insertDone() {
 
   if (insert_buf_.size() > 0) {
     // FIXPAUL: batch insert
-    cur_insert_rpc_ = fnord::comm::mkRPC(
+    cur_insert_rpc_ = fnord::mkRPC(
         &FeedService::append,
         name(),
         insert_buf_.back());
@@ -138,7 +138,7 @@ void RemoteFeed::maybeFillBuffer() {
     return;
   }
 
-  cur_fetch_rpc_ = fnord::comm::mkRPC(
+  cur_fetch_rpc_ = fnord::mkRPC(
       &FeedService::fetch,
       name(),
       offset_,

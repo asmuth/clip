@@ -13,9 +13,9 @@
 namespace fnord {
 namespace comm {
 
-LBGroup::LBGroup() {}
+ServerGroup::ServerGroup() {}
 
-std::string LBGroup::getServerForNextRequest() {
+std::string ServerGroup::getServerForNextRequest() {
   std::unique_lock<std::mutex> lk(mutex_);
 
   if (servers_.empty()) {
@@ -30,25 +30,25 @@ std::string LBGroup::getServerForNextRequest() {
   return servers_[picked_index].addr;
 }
 
-void LBGroup::addServer(const std::string& addr) {
+void ServerGroup::addServer(const std::string& addr) {
   std::unique_lock<std::mutex> lk(mutex_);
   servers_.emplace_back(addr);
 }
 
-void LBGroup::removeServer(const std::string& addr) {
+void ServerGroup::removeServer(const std::string& addr) {
 }
 
-void LBGroup::markServerAsDown(const std::string& addr) {
+void ServerGroup::markServerAsDown(const std::string& addr) {
 }
 
-LBGroup::Server::Server(
+ServerGroup::Server::Server(
     const std::string& _addr) :
     addr(_addr),
     state(S_UP) {}
 
-RoundRobinLBGroup::RoundRobinLBGroup() : last_index_(0) {}
+RoundRobinServerGroup::RoundRobinServerGroup() : last_index_(0) {}
 
-int RoundRobinLBGroup::pickServerForNextRequest(
+int RoundRobinServerGroup::pickServerForNextRequest(
     const std::vector<Server>& servers) {
   auto s = servers.size();
 

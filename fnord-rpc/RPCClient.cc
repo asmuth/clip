@@ -7,20 +7,17 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#ifndef _FNORD_COMM_RPCCHANNEL_H
-#define _FNORD_COMM_RPCCHANNEL_H
-#include <functional>
-#include <stdlib.h>
-#include <string>
-#include <unordered_map>
-#include <vector>
+#include "fnord-rpc/RPCClient.h"
 
 namespace fnord {
 
-class RPCChannel {
-public:
-  virtual ~RPCChannel() {}
-};
+HTTPRPCClient::HTTPRPCClient(
+    TaskScheduler* sched) :
+    http_pool_(sched) {}
 
-} // namsepace fnord
-#endif
+void HTTPRPCClient::call(const URI& uri, RefPtr<AnyRPC> rpc) {
+
+}
+
+} // namespace fnord
+

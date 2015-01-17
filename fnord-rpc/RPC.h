@@ -22,7 +22,6 @@
 #include "fnord/base/thread/wakeup.h"
 
 namespace fnord {
-namespace comm {
 class RPCChannel;
 
 class AnyRPC : public RefCounted {
@@ -62,7 +61,6 @@ public:
   RPC(const std::string& method, const ArgPackType& arguments);
   RPC(const RPC<ResultType, ArgPackType>& other);
 
-  void call(RPCChannel* channel);
   void ready(const ResultType& result) noexcept;
 
   void onSuccess(Function<void(const RPC<ResultType, ArgPackType>& rpc)> fn);
@@ -95,9 +93,7 @@ AutoRef<RPC<ReturnType, std::tuple<ArgTypes...>>> mkRPC(
   ReturnType (ClassType::* method)(ArgTypes...),
   ArgTypes... args);
 
-} // namespace comm
 } // namsepace fnord
 
-
-#include "rpc_impl.h"
+#include "RPC_impl.h"
 #endif

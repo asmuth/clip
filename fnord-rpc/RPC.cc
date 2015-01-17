@@ -10,7 +10,6 @@
 #include "fnord-rpc/RPC.h"
 
 namespace fnord {
-namespace comm {
 
 AnyRPC::AnyRPC(
     const std::string& method) :
@@ -70,5 +69,4 @@ const Status& AnyRPC::status() const {
   return status_;
 }
 
-}
 }

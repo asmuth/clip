@@ -13,7 +13,6 @@
 #include "fnord/json/jsonrpchttpchannel.h"
 
 namespace fnord {
-namespace comm {
 
 template <typename ResultType, typename ArgPackType>
 RPC<ResultType, ArgPackType>::RPC(
@@ -21,21 +20,6 @@ RPC<ResultType, ArgPackType>::RPC(
   const ArgPackType& args) :
   AnyRPC(method),
   args_(args) {}
-
-template <typename ResultType, typename ArgPackType>
-void RPC<ResultType, ArgPackType>::call(RPCChannel* chan) {
-  auto local_chan = dynamic_cast<LocalRPCChannel*>(chan);
-  if (local_chan) {
-    return local_chan->call(this);
-  }
-
-  auto jsonrpchttp_chan = dynamic_cast<json::JSONRPCHTTPChannel*>(chan);
-  if (jsonrpchttp_chan) {
-    return jsonrpchttp_chan->call(this);
-  }
-
-  RAISE(kRPCError, "invalid RPC channel");
-}
 
 template <typename ResultType, typename ArgPackType>
 void RPC<ResultType, ArgPackType>::ready(const ResultType& result) noexcept {
@@ -103,6 +87,5 @@ AutoRef<RPC<ReturnType, std::tuple<ArgTypes...>>> mkRPC(
       std::tuple<typename std::decay<ArgTypes>::type...>(args...));
 }
 
-} // namespace comm
 } // namsepace fnord
 

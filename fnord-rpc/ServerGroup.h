@@ -21,9 +21,9 @@
 namespace fnord {
 namespace comm {
 
-class LBGroup {
+class ServerGroup {
 public:
-  LBGroup();
+  ServerGroup();
 
   std::string getServerForNextRequest();
 
@@ -54,9 +54,9 @@ private:
   std::vector<Server> servers_;
 };
 
-class RoundRobinLBGroup : public LBGroup {
+class RoundRobinServerGroup : public ServerGroup {
 public:
-  RoundRobinLBGroup();
+  RoundRobinServerGroup();
 protected:
   int pickServerForNextRequest(const std::vector<Server>& servers) override;
   unsigned last_index_;
