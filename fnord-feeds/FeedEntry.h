@@ -18,6 +18,7 @@ namespace logstream_service {
 struct LogStreamEntry {
   uint64_t offset;
   uint64_t next_offset;
+  DateTime time;
   std::string data;
 
   template <typename T>

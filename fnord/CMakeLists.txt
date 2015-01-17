@@ -233,37 +233,6 @@ add_executable(fnord-keyvalue-service-example
     $<TARGET_OBJECTS:fnord-stats>
     service/keyvalue/keyvalueservice_example.cc)
 
-# service: logstream
-add_library(fnord-logstream-service OBJECT
-    service/logstream/feed.cc
-    service/logstream/feedfactory.cc
-    service/logstream/logstream.cc
-    service/logstream/logstreamservice.cc)
-
-add_executable(fnord-logstream-service-example
-    $<TARGET_OBJECTS:fnord-base>
-    $<TARGET_OBJECTS:fnord-comm>
-    $<TARGET_OBJECTS:fnord-logstream-service>
-    $<TARGET_OBJECTS:fnord-http>
-    $<TARGET_OBJECTS:fnord-json>
-    $<TARGET_OBJECTS:fnord-net>
-    $<TARGET_OBJECTS:fnord-stats>
-    $<TARGET_OBJECTS:fnord-sstable>
-    $<TARGET_OBJECTS:fnord-util>
-    service/logstream/logstreamservice_example.cc)
-
-add_executable(tests/test-logstream-service
-    $<TARGET_OBJECTS:fnord-base>
-    $<TARGET_OBJECTS:fnord-comm>
-    $<TARGET_OBJECTS:fnord-logstream-service>
-    $<TARGET_OBJECTS:fnord-http>
-    $<TARGET_OBJECTS:fnord-json>
-    $<TARGET_OBJECTS:fnord-net>
-    $<TARGET_OBJECTS:fnord-stats>
-    $<TARGET_OBJECTS:fnord-sstable>
-    $<TARGET_OBJECTS:fnord-util>
-    service/logstream/logstreamservice_test.cc)
-
 # service: ping
 add_library(fnord-ping-service OBJECT
     service/ping/pingservice.cc)
