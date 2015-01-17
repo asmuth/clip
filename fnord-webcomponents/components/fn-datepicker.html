@@ -49,8 +49,7 @@
     }
 
     fn-input-time {
-      margin-left: 41px;
-      margin-top: 7px;
+      margin: 7px auto;
       display:block;
     }
 
@@ -78,6 +77,7 @@
       line-height: 20px;
       text-align:center;
       color: #60707f;
+      cursor: default;
     }
 
     table td.selectable{
@@ -123,7 +123,6 @@
       var input = this.shadowRoot.querySelector("fn-input");
       var widget = this.shadowRoot.querySelector("#datepicker_widget");
 
-
       if (this.hasAttribute('data-timestamp')) {this.setTimeValues();}
 
       this.attributeChangedCallback();
@@ -149,6 +148,8 @@
       document.addEventListener('click', function() {
         base.resetDatepicker();
       }, false);
+
+
 
       this.addEventListener('click', function(e) {
         e.stopPropagation();
@@ -179,7 +180,6 @@
     this.renderTimeInput = function() {
       var widget = this.shadowRoot.querySelector("#datepicker_widget");
       var time_input = document.createElement("fn-input-time");
-
       var selected_date = this.getSelectedDate();
 
       time_input.setAttribute('data-hours-value', selected_date.getHours());
