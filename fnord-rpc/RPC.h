@@ -35,7 +35,7 @@ public:
 
   const std::string& method() const;
 
-  void ready() noexcept;
+  void success(Buffer&& result) noexcept;
   void error(const std::exception& e);
   void error(const Status& status);
 
@@ -44,12 +44,15 @@ public:
   const Status& status() const;
 
 protected:
+  void ready() noexcept;
+
   Status status_;
   String method_;
   bool is_ready_;
   bool autodelete_;
   std::mutex mutex_;
   Wakeup ready_wakeup_;
+  Buffer encoded_request_;
 };
 
 template <typename _ResultType, typename _ArgPackType>
@@ -57,30 +60,29 @@ class RPC : public AnyRPC {
 public:
   typedef _ResultType ResultType;
   typedef _ArgPackType ArgPackType;
+  typedef Function<ScopedPtr<ResultType> (const Buffer&)> DecodeFnType;
 
+  template <class Codec>
   RPC(const std::string& method, const ArgPackType& arguments);
-  RPC(const RPC<ResultType, ArgPackType>& other);
 
-  void ready(const ResultType& result) noexcept;
+  RPC(const std::string& method, Buffer&& encoded, DecodeFnType decoder);
+  RPC(const RPC<ResultType, ArgPackType>& other);
 
   void onSuccess(Function<void(const RPC<ResultType, ArgPackType>& rpc)> fn);
   void onError(Function<void(const Status& status)> fn);
 
-  const ArgPackType& args() const;
   const ResultType& result() const;
 
 protected:
-
-  ArgPackType args_;
-  ResultType result_;
+  ScopedPtr<ResultType> result_;
 };
 
-template <class ReturnType, typename... ArgTypes>
+template <class Encoder, class ReturnType, typename... ArgTypes>
 AutoRef<RPC<ReturnType, std::tuple<ArgTypes...>>> mkRPC(
     const std::string& method,
     ArgTypes... args);
 
-template <class MethodCall>
+template <class Encoder, class MethodCall>
 AutoRef<
     RPC<
         typename MethodCall::ReturnType,
@@ -88,7 +90,11 @@ AutoRef<
     const MethodCall* method,
     typename MethodCall::ArgPackType args);
 
-template <typename ClassType, typename ReturnType, typename... ArgTypes>
+template <
+    class Encoder,
+    typename ClassType,
+    typename ReturnType,
+    typename... ArgTypes>
 AutoRef<RPC<ReturnType, std::tuple<ArgTypes...>>> mkRPC(
   ReturnType (ClassType::* method)(ArgTypes...),
   ArgTypes... args);

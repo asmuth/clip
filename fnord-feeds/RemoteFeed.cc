@@ -28,6 +28,7 @@ RemoteFeed::RemoteFeed(
 Future<bool> RemoteFeed::appendEntry(const String& entry) {
   Promise<bool> promise;
 
+/*
   auto rpc = fnord::mkRPC(
       &FeedService::append,
       name_,
@@ -42,14 +43,14 @@ Future<bool> RemoteFeed::appendEntry(const String& entry) {
   rpc->onError([promise] (const Status& status) mutable {
     promise.failure(status);
   });
-
+*/
   return promise.future();
 }
 
 Future<Option<FeedEntry>>
     RemoteFeed::fetchEntry(const FeedOffset& offset) {
   Promise<Option<FeedEntry>> promise;
-
+/*
   auto rpc = fnord::mkRPC(
       &FeedService::fetch,
       name_,
@@ -69,7 +70,7 @@ Future<Option<FeedEntry>>
   rpc->onError([promise] (const Status& status) mutable {
     promise.failure(status);
   });
-
+*/
   return promise.future();
 }
 
@@ -79,6 +80,7 @@ Future<Vector<FeedEntry>>
     int batch_size) {
   Promise<Vector<FeedEntry>> promise;
 
+/*
   auto rpc = fnord::mkRPC(
       &FeedService::fetch,
       name_,
@@ -95,7 +97,7 @@ Future<Vector<FeedEntry>>
   rpc->onError([promise] (const Status& status) mutable {
     promise.failure(status);
   });
-
+*/
   return promise.future();
 }
 

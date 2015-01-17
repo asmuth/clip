@@ -15,27 +15,24 @@
 namespace fnord {
 
 template <typename ResultType, typename ArgPackType>
+template <typename Codec>
 RPC<ResultType, ArgPackType>::RPC(
   const std::string& method,
   const ArgPackType& args) :
-  AnyRPC(method),
-  args_(args) {}
+  AnyRPC(method) {}
 
+/*
 template <typename ResultType, typename ArgPackType>
 void RPC<ResultType, ArgPackType>::ready(const ResultType& result) noexcept {
   result_ = result;
   AnyRPC::ready();
 }
+*/
 
 template <typename ResultType, typename ArgPackType>
 const ResultType& RPC<ResultType, ArgPackType>::result() const {
   status_.raiseIfError();
-  return result_;
-}
-
-template <typename ResultType, typename ArgPackType>
-const ArgPackType&  RPC<ResultType, ArgPackType>::args() const {
-  return args_;
+  return *result_;
 }
 
 template <typename ResultType, typename ArgPackType>
@@ -58,7 +55,7 @@ void RPC<ResultType, ArgPackType>::onError(
   });
 }
 
-template <class ReturnType, typename... ArgTypes>
+template <class Codec, class ReturnType, typename... ArgTypes>
 AutoRef<RPC<ReturnType, std::tuple<ArgTypes...>>> mkRPC(
     const std::string& method,
     ArgTypes... args) {
@@ -68,7 +65,7 @@ AutoRef<RPC<ReturnType, std::tuple<ArgTypes...>>> mkRPC(
           std::make_tuple(args...)));
 }
 
-template <class MethodCall>
+template <class Codec, class MethodCall>
 AutoRef<RPC<typename MethodCall::ReturnType, typename MethodCall::ArgPackType>>
     mkRPC(const MethodCall* method, typename MethodCall::ArgPackType args) {
   return AutoRef<
@@ -78,7 +75,11 @@ AutoRef<RPC<typename MethodCall::ReturnType, typename MethodCall::ArgPackType>>
               typename MethodCall::ArgPackType>(method->name(), args));
 }
 
-template <typename ClassType, typename ReturnType, typename... ArgTypes>
+template <
+    class Codec,
+    typename ClassType,
+    typename ReturnType,
+    typename... ArgTypes>
 AutoRef<RPC<ReturnType, std::tuple<ArgTypes...>>> mkRPC(
   ReturnType (ClassType::* method)(ArgTypes...),
   ArgTypes... args) {
