@@ -189,7 +189,7 @@
         </fn-button>
       </fn-controls-section>
       <fn-controls-section data-position='right'>
-        <fn-daterangepicker past-selectable='selectable'>
+        <fn-daterangepicker data-selectable='past'>
         </fn-daterangepicker>
       <fn-controls-section>
     </fn-controls>
@@ -232,7 +232,7 @@
         this.init();
       }
 
-      this.updateChart();
+      //this.updateChart();
       //this.updateTable();
     };
 
@@ -242,13 +242,14 @@
         baseUrl + "/list?filter=" +
         encodeURIComponent(this.params.query_params.innerViewValue);
 
-      Fnord.httpGet(url, function(r) {
+      /*Fnord.httpGet(url, function(r) {
         if (r.status == 200) {
           var json = JSON.parse(r.response);
           json.metrics.map(function(m) {
             base.columns = m.labels.join(",");
           });
-        }
+        }*/
+        base.columns = [];
         base.updateUrlParams(
           base.addRequiredURLParamsForView(
             base.getQueryParamOrDefaultValue("view")));
@@ -257,7 +258,7 @@
         base.handleDateTimeControls();
         base.setHeader();
         base.handleAggregationDisplay();
-      });
+      /*});*/
     };
 
 
@@ -299,7 +300,7 @@
         "&scale=0.8" +
         "&axis_right=true" +
         "&legend=toprightinside";
-      console.log(url);
+
       return url;
     }
 
@@ -457,7 +458,6 @@
 
     this.handleDateTimeControls = function() {
       var base = this;
-
       /* init */
       var time_range_val = parseInt(
         this.getQueryParamOrDefaultValue("time_range"), 10);
