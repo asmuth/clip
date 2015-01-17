@@ -15,7 +15,7 @@
 #include <unordered_map>
 #include <vector>
 #include <mutex>
-#include "fnord/comm/rpc.h"
+#include "fnord-rpc/RPC.h"
 #include "fnord-feeds/RemoteFeed.h"
 
 namespace fnord {

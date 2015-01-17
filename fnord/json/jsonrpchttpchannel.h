@@ -13,7 +13,7 @@
 #include <stdlib.h>
 #include <string>
 #include <vector>
-#include "fnord/comm/lbgroup.h"
+#include "fnord-rpc/ServerGroup.h"
 #include "fnord/comm/rpcchannel.h"
 #include "fnord/json/json.h"
 #include "fnord/json/jsonrpcrequest.h"
@@ -49,5 +49,5 @@ protected:
 } // namsepace fnord
 #endif
 
-#include "fnord/comm/rpc.h"
+#include "fnord-rpc/RPC.h"
 #include "jsonrpchttpchannel_impl.h"

@@ -11,7 +11,7 @@
 #define _FNORD_FEEDS_FEED_H
 #include "fnord/base/stdtypes.h"
 #include "fnord/base/option.h"
-#include "fnord/comm/rpc.h"
+#include "fnord-rpc/RPC.h"
 #include "fnord-feeds/FeedEntry.h"
 
 namespace fnord {

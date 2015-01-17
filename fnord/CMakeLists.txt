@@ -99,9 +99,7 @@ add_library(fnord-cli OBJECT
 
 # comm
 add_library(fnord-comm OBJECT
-    comm/lbgroup.cc
     comm/queue.cc
-    comm/rpc.cc
     comm/rpcservicemap.cc)
 
 # http
@@ -146,14 +144,14 @@ add_library(fnord-json OBJECT
     json/jsonrpcresponse.cc
     json/jsonutil.cc)
 
-add_executable(tests/test-json
-    $<TARGET_OBJECTS:fnord-base>
-    $<TARGET_OBJECTS:fnord-comm>
-    $<TARGET_OBJECTS:fnord-http>
-    $<TARGET_OBJECTS:fnord-net>
-    $<TARGET_OBJECTS:fnord-json>
-    $<TARGET_OBJECTS:fnord-stats>
-    json/json_test.cc)
+#add_executable(tests/test-json
+#    $<TARGET_OBJECTS:fnord-base>
+#    $<TARGET_OBJECTS:fnord-comm>
+#    $<TARGET_OBJECTS:fnord-http>
+#    $<TARGET_OBJECTS:fnord-net>
+#    $<TARGET_OBJECTS:fnord-json>
+#    $<TARGET_OBJECTS:fnord-stats>
+#    json/json_test.cc)
 
 # service: metric
 add_library(fnord-metric-service OBJECT
@@ -183,17 +181,17 @@ add_library(fnord-metric-service OBJECT
     service/metric/timeseriesquery.cc
     service/metric/sample.cc)
 
-add_executable(fnord-metric-service-example
-    $<TARGET_OBJECTS:fnord-base>
-    $<TARGET_OBJECTS:fnord-chart>
-    $<TARGET_OBJECTS:fnord-metric-service>
-    $<TARGET_OBJECTS:fnord-http>
-    $<TARGET_OBJECTS:fnord-net>
-    $<TARGET_OBJECTS:fnord-comm>
-    $<TARGET_OBJECTS:fnord-json>
-    $<TARGET_OBJECTS:fnord-sstable>
-    $<TARGET_OBJECTS:fnord-util>
-    service/metric/metricservice_example.cc)
+#add_executable(fnord-metric-service-example
+#    $<TARGET_OBJECTS:fnord-base>
+#    $<TARGET_OBJECTS:fnord-chart>
+#    $<TARGET_OBJECTS:fnord-metric-service>
+#    $<TARGET_OBJECTS:fnord-http>
+#    $<TARGET_OBJECTS:fnord-net>
+#    $<TARGET_OBJECTS:fnord-comm>
+#    $<TARGET_OBJECTS:fnord-json>
+#    $<TARGET_OBJECTS:fnord-sstable>
+#    $<TARGET_OBJECTS:fnord-util>
+#    service/metric/metricservice_example.cc)
 
 # net
 add_library(fnord-net OBJECT
@@ -203,48 +201,6 @@ add_library(fnord-net OBJECT
     net/udpsocket.cc
     net/inetaddr.cc
     net/tcpconnection.cc)
-
-# service: groups
-add_library(fnord-groups-service OBJECT
-    service/groups/groupsservice.cc)
-
-add_executable(fnord-groups-service-example
-    $<TARGET_OBJECTS:fnord-base>
-    $<TARGET_OBJECTS:fnord-comm>
-    $<TARGET_OBJECTS:fnord-groups-service>
-    $<TARGET_OBJECTS:fnord-http>
-    $<TARGET_OBJECTS:fnord-json>
-    $<TARGET_OBJECTS:fnord-net>
-    $<TARGET_OBJECTS:fnord-stats>
-    service/groups/groupsservice_example.cc)
-
-# service: keyvalue
-add_library(fnord-keyvalue-service OBJECT
-    service/keyvalue/keyvalueservice.cc)
-
-add_executable(fnord-keyvalue-service-example
-    $<TARGET_OBJECTS:fnord-base>
-    $<TARGET_OBJECTS:fnord-comm>
-    $<TARGET_OBJECTS:fnord-keyvalue-service>
-    $<TARGET_OBJECTS:fnord-http>
-    $<TARGET_OBJECTS:fnord-json>
-    $<TARGET_OBJECTS:fnord-net>
-    $<TARGET_OBJECTS:fnord-stats>
-    service/keyvalue/keyvalueservice_example.cc)
-
-# service: ping
-add_library(fnord-ping-service OBJECT
-    service/ping/pingservice.cc)
-
-add_executable(fnord-ping-service-example
-    $<TARGET_OBJECTS:fnord-base>
-    $<TARGET_OBJECTS:fnord-comm>
-    $<TARGET_OBJECTS:fnord-ping-service>
-    $<TARGET_OBJECTS:fnord-http>
-    $<TARGET_OBJECTS:fnord-json>
-    $<TARGET_OBJECTS:fnord-net>
-    $<TARGET_OBJECTS:fnord-stats>
-    service/ping/pingservice_example.cc)
 
 # redis
 add_library(fnord-redis OBJECT

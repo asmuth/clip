@@ -14,7 +14,7 @@
 #include <set>
 #include <string>
 #include <unordered_map>
-#include "fnord/comm/rpc.h"
+#include "fnord-rpc/RPC.h"
 #include "fnord/reflect/reflect.h"
 
 namespace fnord {
