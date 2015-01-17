@@ -99,7 +99,6 @@ add_library(fnord-cli OBJECT
 
 # comm
 add_library(fnord-comm OBJECT
-    comm/feed.cc
     comm/lbgroup.cc
     comm/queue.cc
     comm/rpc.cc

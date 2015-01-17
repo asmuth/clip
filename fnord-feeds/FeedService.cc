@@ -14,9 +14,9 @@
 #include "fnord-feeds/FeedService.h"
 
 namespace fnord {
-namespace logstream_service {
+namespace feeds {
 
-LogStreamService::LogStreamService(
+FeedService::FeedService(
     fnord::FileRepository file_repo,
     const String& stats_path /* = "/feeds" */) :
     file_repo_(file_repo),
@@ -27,12 +27,12 @@ LogStreamService::LogStreamService(
   });
 }
 
-uint64_t LogStreamService::append(std::string stream_key, std::string entry) {
+uint64_t FeedService::append(std::string stream_key, std::string entry) {
   auto stream = openStream(stream_key, true);
   return stream->append(entry);
 }
 
-std::vector<LogStreamEntry> LogStreamService::fetch(
+std::vector<FeedEntry> FeedService::fetch(
       std::string stream_key,
       uint64_t offset,
       int batch_size) {
@@ -40,7 +40,7 @@ std::vector<LogStreamEntry> LogStreamService::fetch(
   return stream->fetch(offset, batch_size);
 }
 
-LogStream* LogStreamService::openStream(const std::string& name, bool create) {
+LogStream* FeedService::openStream(const std::string& name, bool create) {
   std::unique_lock<std::mutex> l(streams_mutex_);
 
   LogStream* stream = nullptr;
@@ -60,7 +60,7 @@ LogStream* LogStreamService::openStream(const std::string& name, bool create) {
   return stream;
 }
 
-void LogStreamService::reopenTable(const std::string& file_path) {
+void FeedService::reopenTable(const std::string& file_path) {
   fnord::sstable::SSTableRepair repair(file_path);
   if (!repair.checkAndRepair(true)) {
     RAISEF(kRuntimeError, "corrupt sstable: $0", file_path);

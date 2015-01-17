@@ -18,9 +18,9 @@
 #include "fnord-feeds/FeedService.h"
 #include "fnord/test/unittest.h"
 
-UNIT_TEST(LogStreamServiceTest);
+UNIT_TEST(FeedServiceTest);
 
-TEST_CASE(LogStreamServiceTest, IntegrationTest, [] () {
+TEST_CASE(FeedServiceTest, IntegrationTest, [] () {
   auto log_path = "/tmp/__fnord_logstream_service_test";
   fnord::FileUtil::mkdir_p(log_path);
   fnord::FileRepository repo(log_path);
@@ -32,7 +32,7 @@ TEST_CASE(LogStreamServiceTest, IntegrationTest, [] () {
   const int kNumRuns = 10;
   const int kBatchSize = 23;
 
-  auto checkall = [&] (fnord::logstream_service::LogStreamService* ls, int i) {
+  auto checkall = [&] (fnord::feeds::FeedService* ls, int i) {
     int n = 0;
     for (size_t offset = 0; ;) {
       auto entries = ls->fetch("teststream", offset, kBatchSize);
@@ -53,7 +53,7 @@ TEST_CASE(LogStreamServiceTest, IntegrationTest, [] () {
 
   int i = 0;
   for (int r = 0; r < kNumRuns; ++r) {
-    fnord::logstream_service::LogStreamService ls_service{
+    fnord::feeds::FeedService ls_service{
         fnord::FileRepository(log_path)};
 
     if (r > 0) {

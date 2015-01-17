@@ -21,7 +21,7 @@
 
 using fnord::json::JSONRPC;
 using fnord::json::JSONRPCHTTPAdapter;
-using fnord::logstream_service::LogStreamService;
+using fnord::feeds::FeedService;
 
 int main() {
   fnord::Application::init();
@@ -33,7 +33,7 @@ int main() {
   auto log_path = "/tmp/cm-logs";
   fnord::FileUtil::mkdir_p(log_path);
 
-  LogStreamService ls_service{fnord::FileRepository(log_path)};
+  FeedService ls_service{fnord::FileRepository(log_path)};
   rpc.registerService(&ls_service);
 
   fnord::thread::EventLoop event_loop;

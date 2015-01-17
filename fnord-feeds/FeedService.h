@@ -7,8 +7,8 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#ifndef _FNORD_LOGSTREAM_SERVICE_H
-#define _FNORD_LOGSTREAM_SERVICE_H
+#ifndef _FNORD_FEEDS_H
+#define _FNORD_FEEDS_H
 #include <mutex>
 #include <stdlib.h>
 #include <set>
@@ -20,12 +20,12 @@
 #include "fnord/reflect/reflect.h"
 
 namespace fnord {
-namespace logstream_service {
+namespace feeds {
 
-class LogStreamService {
+class FeedService {
   friend class LogStream;
 public:
-  LogStreamService(
+  FeedService(
       fnord::FileRepository file_repo,
       const String& stats_path = "/feeds");
 
@@ -53,7 +53,7 @@ public:
    *
    * @param start_offset the start offset to read from
    */
-  std::vector<LogStreamEntry> fetch(
+  std::vector<FeedEntry> fetch(
       std::string stream,
       uint64_t offset,
       int batch_size);
@@ -74,16 +74,16 @@ protected:
 
 template <> template <class T>
 void fnord::reflect::MetaClass<
-    fnord::logstream_service::LogStreamService>::reflect(T* t) {
+    fnord::feeds::FeedService>::reflect(T* t) {
   t->method(
-      "LogStreamService.append",
-      &fnord::logstream_service::LogStreamService::append,
+      "FeedService.append",
+      &fnord::feeds::FeedService::append,
       "stream",
       "entry");
 
   t->method(
-      "LogStreamService.fetch",
-      &fnord::logstream_service::LogStreamService::fetch,
+      "FeedService.fetch",
+      &fnord::feeds::FeedService::fetch,
       "stream",
       "offset",
       "batch_size");

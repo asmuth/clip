@@ -7,24 +7,24 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#ifndef _FNORD_LOGSTREAM_SERVICE_FEEDFACTORY_H
-#define _FNORD_LOGSTREAM_SERVICE_FEEDFACTORY_H
+#ifndef _FNORD_FEEDS_FEEDFACTORY_H
+#define _FNORD_FEEDS_FEEDFACTORY_H
 #include <functional>
 #include <stdlib.h>
 #include <string>
 #include <unordered_map>
 #include <vector>
 #include <mutex>
-#include "fnord/comm/feed.h"
 #include "fnord/comm/rpc.h"
+#include "fnord-feeds/RemoteFeed.h"
 
 namespace fnord {
-namespace logstream_service {
+namespace feeds {
 
-class LogStreamServiceFeedFactory : public fnord::comm::FeedFactory {
+class RemoteFeedFactory {
 public:
-  LogStreamServiceFeedFactory(comm::RPCChannel* rpc_channel);
-  std::unique_ptr<fnord::comm::Feed> getFeed(const std::string& name) override;
+  RemoteFeedFactory(comm::RPCChannel* rpc_channel);
+  std::unique_ptr<RemoteFeed> getFeed(const std::string& name);
 protected:
   comm::RPCChannel* rpc_channel_;
 };

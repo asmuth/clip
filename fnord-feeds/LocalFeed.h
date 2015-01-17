@@ -7,8 +7,8 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#ifndef _FNORD_LOGSTREAM_SERVICE_LOGSTREAM_H
-#define _FNORD_LOGSTREAM_SERVICE_LOGSTREAM_H
+#ifndef _FNORD_FEEDS_LOGSTREAM_H
+#define _FNORD_FEEDS_LOGSTREAM_H
 #include <mutex>
 #include <stdlib.h>
 #include <set>
@@ -21,8 +21,8 @@
 #include "fnord/stats/counter.h"
 
 namespace fnord {
-namespace logstream_service {
-class LogStreamService;
+namespace feeds {
+class FeedService;
 
 class LogStream {
 public:
@@ -30,11 +30,11 @@ public:
 
   LogStream(
       const std::string& name,
-      LogStreamService* base);
+      FeedService* base);
 
   uint64_t append(const std::string& entry);
 
-  std::vector<LogStreamEntry> fetch(uint64_t offset, int batch_size);
+  std::vector<FeedEntry> fetch(uint64_t offset, int batch_size);
 
   struct TableHeader {
     uint64_t offset;
@@ -61,7 +61,7 @@ protected:
   size_t getTableBodySize(const std::string& file_path);
 
   std::string name_;
-  LogStreamService* base_;
+  FeedService* base_;
   std::vector<std::shared_ptr<TableRef>> tables_;
   std::mutex tables_mutex_;
 

@@ -17,11 +17,11 @@
 #include "fnord/stats/stats.h"
 
 namespace fnord {
-namespace logstream_service {
+namespace feeds {
 
 LogStream::LogStream(
     const std::string& name,
-    LogStreamService* base) :
+    FeedService* base) :
     name_(name),
     base_(base) {
   exportStat(
@@ -50,8 +50,8 @@ uint64_t LogStream::append(const std::string& entry) {
   return head_offset_;
 }
 
-std::vector<LogStreamEntry> LogStream::fetch(uint64_t offset, int batch_size) {
-  std::vector<LogStreamEntry> entries;
+std::vector<FeedEntry> LogStream::fetch(uint64_t offset, int batch_size) {
+  std::vector<FeedEntry> entries;
 #ifndef FNORD_NOTRACE
   auto request_id = rnd_.hex64();
 #endif
@@ -159,7 +159,7 @@ std::vector<LogStreamEntry> LogStream::fetch(uint64_t offset, int batch_size) {
       break;
     }
 
-    LogStreamEntry entry;
+    FeedEntry entry;
     entry.offset = table->offset + cursor->position();
     entry.next_offset = table->offset + cursor->nextPosition();
     entry.data = cursor->getDataString();

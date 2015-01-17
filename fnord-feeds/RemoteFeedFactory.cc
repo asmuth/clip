@@ -11,16 +11,16 @@
 #include "fnord-feeds/RemoteFeedFactory.h"
 
 namespace fnord {
-namespace logstream_service {
+namespace feeds {
 
-LogStreamServiceFeedFactory::LogStreamServiceFeedFactory(
+RemoteFeedFactory::RemoteFeedFactory(
     comm::RPCChannel* rpc_channel) :
     rpc_channel_(rpc_channel) {}
 
-std::unique_ptr<fnord::comm::Feed> LogStreamServiceFeedFactory::getFeed(
+std::unique_ptr<RemoteFeed> RemoteFeedFactory::getFeed(
     const std::string& name) {
-  return std::unique_ptr<fnord::comm::Feed>(
-      new fnord::logstream_service::LogStreamServiceFeed(name, rpc_channel_));
+  return std::unique_ptr<RemoteFeed>(
+      new fnord::feeds::RemoteFeed(name, rpc_channel_));
 }
 
 }
