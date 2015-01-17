@@ -92,25 +92,19 @@
   fn-controls[type='secondary'] /deep/ .controls_inner {
     height: 39px;
     margin: 0px;
-    line-height: 39px;
+    line-height:39px;
     border-bottom: 1px solid #dbdedf;
     font-size: 90%;
-    padding: 0 20px;
+    padding: 3px 20px;
     text-align: right;
   }
 
-  fn-controls[type='secondary'] /deep/ fn-button {
-    margin-right: 20px;
-    height: 22px;
-    line-height: 22px;
-    margin-top: 10px;
-    color: #545758;
+  fn-controls[type='secondary'] /deep/ fn-daterangepicker /deep/ i {
+    height: 35px;
+    line-height: 35px;
   }
 
-  fn-controls[type='secondary'] /deep/ fn-button:hover {
-    text-decoration: underline;
-    cursor: pointer;
-  }
+
 
   fn-controls[type='secondary'] /deep/ fn-button /deep/ i {
     position: relative;
@@ -128,10 +122,6 @@
     font-weight:500;
   }
 
-  fn-controls[type='secondary'] /deep/ fn-button + fn-button {
-    border-left: 1px solid #ececec;
-    padding-left: 20px;
-  }
 
   fn-controls[type='secondary'] /deep/ fn-button[auto-refresh-on='on'] {
     color : #009fe9;
