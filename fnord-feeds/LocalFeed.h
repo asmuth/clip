@@ -16,7 +16,7 @@
 #include <unordered_map>
 #include "fnord/base/io/filerepository.h"
 #include "fnord/reflect/reflect.h"
-#include "fnord/service/logstream/logstreamentry.h"
+#include "fnord-feeds/FeedEntry.h"
 #include "fnord/sstable/sstablewriter.h"
 #include "fnord/stats/counter.h"
 

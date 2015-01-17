@@ -5,7 +5,7 @@ include_directories(../)
 add_library(fnord-feeds OBJECT
     LocalFeed.cc
     RemoteFeed.cc
-    FeedFactory.cc
+    RemoteFeedFactory.cc
     FeedService.cc)
 
 add_executable(fnord-logstream-service-example

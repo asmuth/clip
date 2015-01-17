@@ -11,6 +11,7 @@
 #define _FNORD_LOGSTREAM_SERVICE_LOGSTREAMENTRY_H
 #include <stdlib.h>
 #include <string>
+#include "fnord/base/datetime.h"
 
 namespace fnord {
 namespace logstream_service {

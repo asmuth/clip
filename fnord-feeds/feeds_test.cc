@@ -15,7 +15,7 @@
 #include "fnord/base/io/fileutil.h"
 #include "fnord/json/jsonrpc.h"
 #include "fnord/json/jsonrpchttpadapter.h"
-#include "fnord/service/logstream/logstreamservice.h"
+#include "fnord-feeds/FeedService.h"
 #include "fnord/test/unittest.h"
 
 UNIT_TEST(LogStreamServiceTest);

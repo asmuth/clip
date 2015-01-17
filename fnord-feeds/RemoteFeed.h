@@ -12,7 +12,7 @@
 #include "fnord/base/stdtypes.h"
 #include "fnord/comm/feed.h"
 #include "fnord/comm/rpc.h"
-#include "fnord/service/logstream/logstreamentry.h"
+#include "fnord-feeds/FeedEntry.h"
 
 namespace fnord {
 namespace logstream_service {

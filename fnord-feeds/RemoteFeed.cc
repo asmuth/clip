@@ -7,8 +7,8 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#include "fnord/service/logstream/logstreamservice.h"
-#include "fnord/service/logstream/feed.h"
+#include "fnord-feeds/FeedService.h"
+#include "fnord-feeds/RemoteFeed.h"
 
 namespace fnord {
 namespace logstream_service {
