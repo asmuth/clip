@@ -58,7 +58,7 @@ std::vector<LogStreamEntry> LogStream::fetch(uint64_t offset, int batch_size) {
 
 #ifndef FNORD_NOTRACE
   fnord::logTrace(
-      "fnord.localfeed",
+      "fnord.feeds.localfeed",
       "request id=$0 feed=$1 offset=$2 batch_size=$3",
       request_id,
       name_,
@@ -73,7 +73,7 @@ std::vector<LogStreamEntry> LogStream::fetch(uint64_t offset, int batch_size) {
 #ifndef FNORD_NOTRACE
     if (tables_.empty()) {
       fnord::logTrace(
-          "fnord.localfeed",
+          "fnord.feeds.localfeed",
           "request id=$0: feed has no tables",
           request_id);
 #endif
@@ -99,7 +99,7 @@ std::vector<LogStreamEntry> LogStream::fetch(uint64_t offset, int batch_size) {
 
 #ifndef FNORD_NOTRACE
   fnord::logTrace(
-      "fnord.localfeed",
+      "fnord.feeds.localfeed",
       "request id=$0: choosing table: $1",
       request_id,
       table->file_path);
@@ -120,7 +120,7 @@ std::vector<LogStreamEntry> LogStream::fetch(uint64_t offset, int batch_size) {
   if (offset > 0) {
 #ifndef FNORD_NOTRACE
     fnord::logTrace(
-        "fnord.localfeed",
+        "fnord.feeds.localfeed",
         "request id=$0: seeking to table_offset=$1 logical_offset=$2",
         request_id,
         offset - table->offset,
@@ -130,7 +130,7 @@ std::vector<LogStreamEntry> LogStream::fetch(uint64_t offset, int batch_size) {
     if (!cursor->trySeekTo(offset - table->offset)) {
 #ifndef FNORD_NOTRACE
       fnord::logTrace(
-          "fnord.localfeed",
+          "fnord.feeds.localfeed",
           "request id=$0: seek to target offset failed",
           request_id);
 #endif
@@ -142,9 +142,9 @@ std::vector<LogStreamEntry> LogStream::fetch(uint64_t offset, int batch_size) {
   for (int i = 0; i < batch_size; i++) {
 #ifndef FNORD_NOTRACE
     fnord::logTrace(
-        "fnord.localfeed",
+        "fnord.feeds.localfeed",
         "request id=$0: reading entry at table_offset=$1 "
-            "table_real_offset=$1 logical_offset=$2",
+            "table_real_offset=$2 logical_offset=$3",
         request_id,
         cursor->position(),
         cursor->position() + reader->bodyOffset(),
@@ -152,6 +152,10 @@ std::vector<LogStreamEntry> LogStream::fetch(uint64_t offset, int batch_size) {
 #endif
 
     if (!cursor->valid()) {
+      if (i == 0) {
+        RAISEF(kIndexError, "invalid offset: $0 (stream: $1)", offset, name_);
+      }
+
       break;
     }
 
@@ -168,7 +172,7 @@ std::vector<LogStreamEntry> LogStream::fetch(uint64_t offset, int batch_size) {
 
 #ifndef FNORD_NOTRACE
   fnord::logTrace(
-      "fnord.localfeed",
+      "fnord.feeds.localfeed",
       "request id=$0: returning $1 entries",
       request_id,
       entries.size());
