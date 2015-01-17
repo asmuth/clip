@@ -16,8 +16,12 @@
       margin-left: 5px;
     }
 
-    fn-button#auto_refresh[auto-refresh-on='on'] {
-      color : #009fe9;
+    h1.page_header a {
+      color: #999;
+    }
+
+    h1.page_header a:hover {
+      color: #666 !important;
     }
 
     .group.group_by {
@@ -69,9 +73,7 @@
       padding: 14px 20px 0 20px;
     }
 
-    fn-controls[type='secondary'] fn-button {
-      box-shadow:none;
-    }
+
 
     #result_pane fn-message {
       display:none;
@@ -179,11 +181,11 @@
     </fn-controls>
     <fn-controls type='secondary'>
       <fn-controls-section data-position='left'>
-        <fn-button id="embed_btn">
+        <fn-button id="embed_btn" data-size='small'>
           <i class='fa fa-share'></i>
           Embed
         </fn-button>
-        <fn-button id="auto_refresh">
+        <fn-button id="auto_refresh" data-toggle data-size='small'>
           <i class='fa fa-refresh'></i>
           Auto Refresh
         </fn-button>
@@ -191,7 +193,7 @@
       <fn-controls-section data-position='right'>
         <fn-daterangepicker data-selectable='past'>
         </fn-daterangepicker>
-      <fn-controls-section>
+      </fn-controls-section>
     </fn-controls>
     <fn-loader id="result_pane" data-transparent>
       <fn-message data-state='error'></fn-message>
@@ -402,6 +404,16 @@
       return value;
     };
 
+    this.onRefresh = function() {
+      console.log("on Refresh");
+      var end_time = Date.now();
+      var time_range = this.getQueryParamOrDefaultValue('time_range');
+      var start_time = end_time - time_range;
+      this.updateUrlParams({
+        'end_time' : end_time,
+        'start_time' : start_time});
+    }
+
 /************************* controls handle functions **************************/
 
     this.splitColumns = function(columns) {
@@ -567,6 +579,17 @@
 
       inv_scale.addEventListener("fn-checkbox-unselect", function(e) {
         base.updateUrlParams({"inverted" : true});
+      }, false);
+
+      var interval_id;
+      this.querySelector("#auto_refresh").addEventListener('fn-button-click', function() {
+        if (this.getAttribute('data-state') == "active") {
+          window.clearInterval(interval_id);
+          this.removeAttribute('data-state');
+        } else {
+          interval_id = window.setInterval(function() {base.onRefresh(); }, 30000);
+          this.setAttribute('data-state', 'active');
+        }
       }, false);
     };
   };
