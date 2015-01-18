@@ -58,6 +58,9 @@ template <typename ResultType, typename ArgPackType>
 template <typename Codec>
 void RPC<ResultType, ArgPackType>::encode() {
   Codec::encodeRPCRequest(this, &encoded_request_);
+  decode_fn_ = [this] (const Buffer& buffer) {
+    Codec::decodeRPCResponse(this, buffer);
+  };
 }
 
 template <class Codec, class ReturnType, typename... ArgTypes>

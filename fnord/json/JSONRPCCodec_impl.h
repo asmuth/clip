@@ -7,30 +7,19 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#ifndef _FNORD_JSON_JSONRPCCODEC_H
-#define _FNORD_JSON_JSONRPCCODEC_H
-#include <functional>
-#include <stdlib.h>
-#include <string>
-#include <unordered_map>
-#include <vector>
-
 namespace fnord {
 namespace json {
 
-class JSONRPCCodec {
-public:
+template <typename RPCType>
+void JSONRPCCodec::encodeRPCRequest(RPCType* rpc, Buffer* buffer) {
+  buffer->append("fnord");
+}
 
-  template <typename RPCType>
-  static void encodeRPCRequest(RPCType* rpc, Buffer* buffer);
+template <typename RPCType>
+void JSONRPCCodec::decodeRPCResponse(RPCType* rpc, const Buffer& buffer) {
+  fnord::iputs("decode: $0", buffer.toString());
+}
 
-  template <typename RPCType>
-  static void decodeRPCResponse(RPCType* rpc, const Buffer& buffer);
-
-};
 
 } // namespace json
 } // namsepace fnord
-
-#include "JSONRPCCodec_impl.h"
-#endif

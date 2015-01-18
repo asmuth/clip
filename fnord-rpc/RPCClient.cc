@@ -34,6 +34,23 @@ void HTTPRPCClient::call(const URI& uri, RefPtr<AnyRPC> rpc) {
 #endif
 
   http_future.onSuccess([uri, rpc] (const http::HTTPResponse& resp) {
+    if (resp.statusCode() < 200 || resp.statusCode() >= 300) {
+      auto errmsg = StringUtil::format(
+          "got non-200 HTTP response code: $0",
+          resp.body().toString());
+
+#ifndef FNORD_NOTRACE
+    fnord::logTrace(
+        "fnord.http.rpcclient",
+        "RPC via HTTP request id=$0: Failed: $1",
+        (void*) rpc.get(),
+        errmsg);
+#endif
+
+      rpc->error(Status(eRPCError, errmsg));
+      return;
+    }
+
 #ifndef FNORD_NOTRACE
     fnord::logTrace(
         "fnord.http.rpcclient",
@@ -41,7 +58,7 @@ void HTTPRPCClient::call(const URI& uri, RefPtr<AnyRPC> rpc) {
         (void*) rpc.get(),
         123);
 #endif
-    fnord::iputs("got response!!", 1);
+    rpc->ready(resp.body());
   });
 
   http_future.onFailure([uri, rpc] (const Status& status) mutable{
@@ -53,7 +70,6 @@ void HTTPRPCClient::call(const URI& uri, RefPtr<AnyRPC> rpc) {
         status);
 #endif
 
-    fnord::iputs("got error!!", 1);
     rpc->error(status);
   });
 }

@@ -43,8 +43,12 @@ void AnyRPC::onReady(std::function<void()> callback) {
   ready_wakeup_.onWakeup(0, callback);
 }
 
-void AnyRPC::ready(Buffer&& result) noexcept {
-  decode_fn_(result);
+void AnyRPC::ready(const Buffer& result) noexcept {
+  try {
+    decode_fn_(result);
+  } catch (const std::exception& e) {
+    error(e);
+  }
 }
 
 void AnyRPC::ready() noexcept {

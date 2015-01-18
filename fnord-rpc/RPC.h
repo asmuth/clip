@@ -35,7 +35,7 @@ public:
 
   const std::string& method() const;
 
-  void ready(Buffer&& result) noexcept;
+  void ready(const Buffer& result) noexcept;
   void error(const std::exception& e);
   void error(const Status& status);
 
