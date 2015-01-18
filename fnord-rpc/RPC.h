@@ -35,13 +35,15 @@ public:
 
   const std::string& method() const;
 
-  void success(Buffer&& result) noexcept;
+  void ready(Buffer&& result) noexcept;
   void error(const std::exception& e);
   void error(const Status& status);
 
   bool isSuccess() const;
   bool isFailure() const;
   const Status& status() const;
+
+  const Buffer& encoded();
 
 protected:
   void ready() noexcept;
@@ -53,6 +55,7 @@ protected:
   std::mutex mutex_;
   Wakeup ready_wakeup_;
   Buffer encoded_request_;
+  Function<void(const Buffer&)> decode_fn_;
 };
 
 template <typename _ResultType, typename _ArgPackType>
@@ -62,18 +65,23 @@ public:
   typedef _ArgPackType ArgPackType;
   typedef Function<ScopedPtr<ResultType> (const Buffer&)> DecodeFnType;
 
-  template <class Codec>
   RPC(const std::string& method, const ArgPackType& arguments);
-
-  RPC(const std::string& method, Buffer&& encoded, DecodeFnType decoder);
+  //RPC(const std::string& method, Buffer&& encoded, DecodeFnType decoder);
   RPC(const RPC<ResultType, ArgPackType>& other);
 
   void onSuccess(Function<void(const RPC<ResultType, ArgPackType>& rpc)> fn);
   void onError(Function<void(const Status& status)> fn);
 
+  template <typename Codec>
+  void encode();
+
+  void success(ScopedPtr<ResultType> result) noexcept;
+
   const ResultType& result() const;
+  const ArgPackType& args() const;
 
 protected:
+  ArgPackType args_;
   ScopedPtr<ResultType> result_;
 };
 

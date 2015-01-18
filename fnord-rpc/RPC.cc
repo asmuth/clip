@@ -22,6 +22,14 @@ AnyRPC::AnyRPC(
 
 AnyRPC::~AnyRPC() {}
 
+const Buffer& AnyRPC::encoded() {
+  if (encoded_request_.size() == 0) {
+    RAISE(kRPCError, "RPC request must be encoded first");
+  }
+
+  return encoded_request_;
+}
+
 const std::string& AnyRPC::method() const {
   return method_;
 };
@@ -35,8 +43,8 @@ void AnyRPC::onReady(std::function<void()> callback) {
   ready_wakeup_.onWakeup(0, callback);
 }
 
-void AnyRPC::success(Buffer&& result) noexcept {
-  ready();
+void AnyRPC::ready(Buffer&& result) noexcept {
+  decode_fn_(result);
 }
 
 void AnyRPC::ready() noexcept {

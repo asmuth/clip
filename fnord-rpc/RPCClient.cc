@@ -19,8 +19,7 @@ HTTPRPCClient::HTTPRPCClient(
 void HTTPRPCClient::call(const URI& uri, RefPtr<AnyRPC> rpc) {
   http::HTTPRequest http_req(http::HTTPRequest::M_POST, uri.path());
 
-  auto rpc_serialized = "fnord";
-  http_req.addBody(rpc_serialized);
+  http_req.addBody(rpc->encoded());
   http_req.setHeader("Host", uri.hostAndPort());
 
   auto http_future = http_pool_.executeRequest(http_req);

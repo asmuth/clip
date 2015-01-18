@@ -15,19 +15,18 @@
 namespace fnord {
 
 template <typename ResultType, typename ArgPackType>
-template <typename Codec>
 RPC<ResultType, ArgPackType>::RPC(
   const std::string& method,
   const ArgPackType& args) :
-  AnyRPC(method) {}
+  AnyRPC(method),
+  args_(args) {}
 
-/*
 template <typename ResultType, typename ArgPackType>
-void RPC<ResultType, ArgPackType>::ready(const ResultType& result) noexcept {
+void RPC<ResultType, ArgPackType>::success(
+    ScopedPtr<ResultType> result) noexcept {
   result_ = result;
   AnyRPC::ready();
 }
-*/
 
 template <typename ResultType, typename ArgPackType>
 const ResultType& RPC<ResultType, ArgPackType>::result() const {
@@ -55,24 +54,36 @@ void RPC<ResultType, ArgPackType>::onError(
   });
 }
 
+template <typename ResultType, typename ArgPackType>
+template <typename Codec>
+void RPC<ResultType, ArgPackType>::encode() {
+  Codec::encodeRPCRequest(this, &encoded_request_);
+}
+
 template <class Codec, class ReturnType, typename... ArgTypes>
 AutoRef<RPC<ReturnType, std::tuple<ArgTypes...>>> mkRPC(
     const std::string& method,
     ArgTypes... args) {
-  return AutoRef<RPC<ReturnType, std::tuple<ArgTypes...>>>(
+  auto rpc = AutoRef<RPC<ReturnType, std::tuple<ArgTypes...>>>(
       new RPC<ReturnType, std::tuple<ArgTypes...>>(
           method,
           std::make_tuple(args...)));
+
+  rpc->template encode<Codec>();
+  return rpc;
 }
 
 template <class Codec, class MethodCall>
 AutoRef<RPC<typename MethodCall::ReturnType, typename MethodCall::ArgPackType>>
     mkRPC(const MethodCall* method, typename MethodCall::ArgPackType args) {
-  return AutoRef<
+  auto rpc = AutoRef<
       RPC<typename MethodCall::ReturnType, typename MethodCall::ArgPackType>>(
           new RPC<
               typename MethodCall::ReturnType,
               typename MethodCall::ArgPackType>(method->name(), args));
+
+  rpc->template encode<Codec>();
+  return rpc;
 }
 
 template <
@@ -83,7 +94,7 @@ template <
 AutoRef<RPC<ReturnType, std::tuple<ArgTypes...>>> mkRPC(
   ReturnType (ClassType::* method)(ArgTypes...),
   ArgTypes... args) {
-  return mkRPC(
+  return mkRPC<Codec>(
       fnord::reflect::reflectMethod(method),
       std::tuple<typename std::decay<ArgTypes>::type...>(args...));
 }
