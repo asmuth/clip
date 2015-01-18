@@ -20,20 +20,41 @@ namespace feeds {
 
 class RemoteFeedWriter {
 public:
-  static const int kDefaultBatchSize = 1024;
-  static const int kDefaultBufferSize = 8192;
+  static const int kDefaultMaxBufferSize = 8192;
 
   RemoteFeedWriter(
       RPCClient* rpc_client,
-      int batch_size = kDefaultBatchSize,
-      int buffer_size = kDefaultBufferSize);
+      size_t max_buffer_size = kDefaultMaxBufferSize);
 
   void appendEntry(const String& entry_data);
 
+  void addTargetFeed(
+      URI url,
+      String feed_name,
+      unsigned max_concurrent_request);
+
 protected:
+
+  class TargetFeed : public RefCounted {
+  public:
+    URI rpc_url;
+    String feed_name;
+    unsigned max_concurrent_requests;
+    std::atomic<unsigned> cur_requests;
+  };
+
+  void flushBuffer();
+  void flushBuffer(RefPtr<TargetFeed> feed);
+
   fnord::RPCClient* rpc_client_;
-  int batch_size_;
-  int buffer_size_;
+  size_t max_buffer_size_;
+
+  std::mutex write_queue_mutex_;
+  Deque<String> write_queue_;
+
+  std::mutex target_feeds_mutex_;
+  Vector<RefPtr<TargetFeed>> target_feeds_;
+  size_t sequence_;
 };
 
 }

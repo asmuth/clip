@@ -39,6 +39,8 @@ std::string URI::urlDecode(const std::string& str) {
   return decoded;
 }
 
+URI::URI() : port_(0) {}
+
 URI::URI(const std::string& uri_str) : port_(0) {
   parse(uri_str);
 }
