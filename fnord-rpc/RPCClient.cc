@@ -56,7 +56,7 @@ void HTTPRPCClient::call(const URI& uri, RefPtr<AnyRPC> rpc) {
         "fnord.http.rpcclient",
         "RPC via HTTP request id=$0: Success, got $1 bytes response",
         (void*) rpc.get(),
-        123);
+        resp.body().size());
 #endif
     rpc->ready(resp.body());
   });
