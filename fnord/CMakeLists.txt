@@ -99,8 +99,7 @@ add_library(fnord-cli OBJECT
 
 # comm
 add_library(fnord-comm OBJECT
-    comm/queue.cc
-    comm/rpcservicemap.cc)
+    comm/queue.cc)
 
 # http
 add_library(fnord-http OBJECT
@@ -139,7 +138,6 @@ add_library(fnord-json OBJECT
     json/jsonpointer.cc
     json/jsonrpc.cc
     json/jsonrpchttpadapter.cc
-    json/jsonrpchttpchannel.cc
     json/jsonrpcrequest.cc
     json/jsonrpcresponse.cc
     json/jsonutil.cc)

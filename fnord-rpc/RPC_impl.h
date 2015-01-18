@@ -8,9 +8,6 @@
  * <http://www.gnu.org/licenses/>.
  */
 #include "fnord/reflect/reflect.h"
-#include "fnord/comm/localrpcchannel.h"
-#include "fnord/comm/rpcchannel.h"
-#include "fnord/json/jsonrpchttpchannel.h"
 
 namespace fnord {
 
