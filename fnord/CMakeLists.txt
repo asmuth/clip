@@ -64,13 +64,13 @@ add_library(fnord-base OBJECT
 #    $<TARGET_OBJECTS:fnord-io>
 #    io/inputstream_test.cc)
 
-add_executable(tests/test-uri
-    $<TARGET_OBJECTS:fnord-base>
-    base/uri_test.cc)
-
-add_executable(tests/test-stringutil
-    $<TARGET_OBJECTS:fnord-base>
-    base/stringutil_test.cc)
+# add_executable(tests/test-uri
+#     $<TARGET_OBJECTS:fnord-base>
+#     base/uri_test.cc)
+# 
+# add_executable(tests/test-stringutil
+#     $<TARGET_OBJECTS:fnord-base>
+#     base/stringutil_test.cc)
 
 # chart
 add_library(fnord-chart OBJECT
@@ -92,6 +92,8 @@ add_executable(tests/test-chart
     $<TARGET_OBJECTS:fnord-base>
     $<TARGET_OBJECTS:fnord-chart>
     chart/chart_test.cc)
+
+target_link_libraries(tests/test-chart ${CMAKE_THREAD_LIBS_INIT})
 
 # cli
 add_library(fnord-cli OBJECT
@@ -142,14 +144,16 @@ add_library(fnord-json OBJECT
     json/jsonrpcresponse.cc
     json/jsonutil.cc)
 
-#add_executable(tests/test-json
-#    $<TARGET_OBJECTS:fnord-base>
-#    $<TARGET_OBJECTS:fnord-comm>
-#    $<TARGET_OBJECTS:fnord-http>
-#    $<TARGET_OBJECTS:fnord-net>
-#    $<TARGET_OBJECTS:fnord-json>
-#    $<TARGET_OBJECTS:fnord-stats>
-#    json/json_test.cc)
+add_executable(tests/test-json
+    $<TARGET_OBJECTS:fnord-base>
+    $<TARGET_OBJECTS:fnord-comm>
+    $<TARGET_OBJECTS:fnord-http>
+    $<TARGET_OBJECTS:fnord-net>
+    $<TARGET_OBJECTS:fnord-json>
+    $<TARGET_OBJECTS:fnord-stats>
+    json/json_test.cc)
+
+target_link_libraries(tests/test-json ${CMAKE_THREAD_LIBS_INIT})
 
 # service: metric
 add_library(fnord-metric-service OBJECT
@@ -179,17 +183,19 @@ add_library(fnord-metric-service OBJECT
     service/metric/timeseriesquery.cc
     service/metric/sample.cc)
 
-#add_executable(fnord-metric-service-example
-#    $<TARGET_OBJECTS:fnord-base>
-#    $<TARGET_OBJECTS:fnord-chart>
-#    $<TARGET_OBJECTS:fnord-metric-service>
-#    $<TARGET_OBJECTS:fnord-http>
-#    $<TARGET_OBJECTS:fnord-net>
-#    $<TARGET_OBJECTS:fnord-comm>
-#    $<TARGET_OBJECTS:fnord-json>
-#    $<TARGET_OBJECTS:fnord-sstable>
-#    $<TARGET_OBJECTS:fnord-util>
-#    service/metric/metricservice_example.cc)
+add_executable(fnord-metric-service-example
+    $<TARGET_OBJECTS:fnord-base>
+    $<TARGET_OBJECTS:fnord-chart>
+    $<TARGET_OBJECTS:fnord-metric-service>
+    $<TARGET_OBJECTS:fnord-http>
+    $<TARGET_OBJECTS:fnord-net>
+    $<TARGET_OBJECTS:fnord-comm>
+    $<TARGET_OBJECTS:fnord-json>
+    $<TARGET_OBJECTS:fnord-sstable>
+    $<TARGET_OBJECTS:fnord-util>
+    service/metric/metricservice_example.cc)
+
+target_link_libraries(fnord-metric-service-example ${CMAKE_THREAD_LIBS_INIT})
 
 # net
 add_library(fnord-net OBJECT
@@ -210,12 +216,12 @@ add_library(fnord-redis OBJECT
     net/redis/redisconnection.cc
     net/redis/redisqueue.cc)
 
-add_executable(tests/test-redis
-    $<TARGET_OBJECTS:fnord-base>
-    $<TARGET_OBJECTS:fnord-comm>
-    $<TARGET_OBJECTS:fnord-net>
-    $<TARGET_OBJECTS:fnord-redis>
-    net/redis/redis_test.cc)
+#add_executable(tests/test-redis
+#    $<TARGET_OBJECTS:fnord-base>
+#    $<TARGET_OBJECTS:fnord-comm>
+#    $<TARGET_OBJECTS:fnord-net>
+#    $<TARGET_OBJECTS:fnord-redis>
+#    net/redis/redis_test.cc)
 
 
 # sstable
