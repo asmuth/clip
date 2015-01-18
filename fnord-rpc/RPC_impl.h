@@ -24,8 +24,13 @@ RPC<ResultType, ArgPackType>::RPC(
 template <typename ResultType, typename ArgPackType>
 void RPC<ResultType, ArgPackType>::success(
     ScopedPtr<ResultType> result) noexcept {
-  result_ = result;
+  result_ = std::move(result);
   AnyRPC::ready();
+}
+
+template <typename ResultType, typename ArgPackType>
+const ArgPackType& RPC<ResultType, ArgPackType>::args() const {
+  return args_;
 }
 
 template <typename ResultType, typename ArgPackType>
