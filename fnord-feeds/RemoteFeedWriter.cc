@@ -62,12 +62,12 @@ void RemoteFeedWriter::flushBuffer() {
     if (target_feeds_[idx]->cur_requests <
         target_feeds_[idx]->max_concurrent_requests) {
       auto feed = target_feeds_[idx];
-      feed->cur_requests++;
       lk.unlock();
       flushBuffer(feed);
       return;
     }
   }
+
 }
 
 void RemoteFeedWriter::flushBuffer(RefPtr<TargetFeed> target) {
@@ -93,6 +93,7 @@ void RemoteFeedWriter::flushBuffer(RefPtr<TargetFeed> target) {
       target->feed_name,
       entry);
 
+  target->cur_requests++;
   rpc_client_->call(target->rpc_url, rpc.get());
 
   rpc->onSuccess([this, target] (const decltype(rpc)::ValueType& r) mutable {
