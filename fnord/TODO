@@ -1,13 +1,10 @@
 
 -> timeouts
--> rpcchannel (rcpclient + servergroup_
--> remotefeedwriter should use servergroup
+-> rpcchannel (rcpclient + servergroup_)
 -> rpc numRetries/retryStrategie, onRetry(Duration delay) (instead of ready()/onError!)
 -> rpc timeout
 -> httprpcservlect<codec>
 -> http servlet should return response future!
-
-from timespec impl
 
 metricdb: insert distribution value
 metric http api: histogram endpoint

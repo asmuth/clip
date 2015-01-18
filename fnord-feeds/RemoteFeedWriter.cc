@@ -32,6 +32,7 @@ void RemoteFeedWriter::appendEntry(const String& entry_data) {
   write_queue_.emplace_front(entry_data);
   lk.unlock();
 
+  stat_entries_written_total_.incr(1);
   flushBuffer();
 }
 
@@ -98,11 +99,13 @@ void RemoteFeedWriter::flushBuffer(RefPtr<TargetFeed> target) {
 
   rpc->onSuccess([this, target] (const decltype(rpc)::ValueType& r) mutable {
     target->cur_requests--;
+    stat_entries_written_success_.incr(1);
     flushBuffer();
   });
 
   rpc->onError([this, target, entry] (const Status& status) {
     target->cur_requests--;
+    stat_entries_written_error_.incr(1);
 
     fnord::logError(
         "fnord.feeds.remotefeedwriter",
@@ -114,9 +117,39 @@ void RemoteFeedWriter::flushBuffer(RefPtr<TargetFeed> target) {
     ScopedLock<std::mutex> lk(write_queue_mutex_);
     write_queue_.emplace_back(entry);
     lk.unlock();
+    stat_entries_written_retry_.incr(1);
     flushBuffer();
   });
 }
+
+void RemoteFeedWriter::exportStats(
+    const String& path_prefix /* = "/fnord/feeds/writer/" */,
+    stats::StatsRepository* stats_repo /* = nullptr */) {
+  if (stats_repo == nullptr) {
+    stats_repo = stats::StatsRepository::get();
+  }
+
+  stats_repo->exportStat(
+      FileUtil::joinPaths(path_prefix, "entries_written_total"),
+      &stat_entries_written_total_,
+      stats::ExportMode::EXPORT_DELTA);
+
+  stats_repo->exportStat(
+      FileUtil::joinPaths(path_prefix, "entries_written_success"),
+      &stat_entries_written_success_,
+      stats::ExportMode::EXPORT_DELTA);
+
+  stats_repo->exportStat(
+      FileUtil::joinPaths(path_prefix, "entries_written_error"),
+      &stat_entries_written_error_,
+      stats::ExportMode::EXPORT_DELTA);
+
+  stats_repo->exportStat(
+      FileUtil::joinPaths(path_prefix, "entries_written_retry"),
+      &stat_entries_written_retry_,
+      stats::ExportMode::EXPORT_DELTA);
+}
+
 
 }
 }

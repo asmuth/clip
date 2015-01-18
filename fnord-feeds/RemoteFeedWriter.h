@@ -33,6 +33,10 @@ public:
       String feed_name,
       unsigned max_concurrent_request);
 
+  void exportStats(
+      const String& path_prefix = "/fnord/feeds/writer/",
+      stats::StatsRepository* stats_repo = nullptr);
+
 protected:
 
   class TargetFeed : public RefCounted {
@@ -55,6 +59,12 @@ protected:
   std::mutex target_feeds_mutex_;
   Vector<RefPtr<TargetFeed>> target_feeds_;
   size_t sequence_;
+
+  fnord::stats::Counter<uint64_t> stat_entries_written_total_;
+  fnord::stats::Counter<uint64_t> stat_entries_written_success_;
+  fnord::stats::Counter<uint64_t> stat_entries_written_error_;
+  fnord::stats::Counter<uint64_t> stat_entries_written_retry_;
+
 };
 
 }
