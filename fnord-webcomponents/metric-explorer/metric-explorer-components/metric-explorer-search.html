@@ -10,6 +10,23 @@
 -->
 
 <template id="fn-metric-explorer-search-base-tpl">
+  <style type='text/css'>
+    fn-table {
+      width: 100%;
+    }
+
+    fn-table /deep/ table > thead > tr > td,
+    fn-table /deep/ table > thead > tr > th,
+    fn-table /deep/ table > tbody > tr > td,
+    fn-table /deep/ table > tbody > tr > th {
+      font-size: 92%;
+    }
+
+    fn-pager {
+      float:right;
+      margin: 5px 5px 5px 0;
+    }
+  </style>
   <fn-loader data-loading data-loader-type="loader3">
     <div class="navigation">
       <h1 class="page_header"><i>Metrics</i> &rsaquo; Search</h1>
@@ -50,7 +67,7 @@
         return function(e) {
           var term = e.srcElement.getValue();
           var res = [];
-          var url = "https://rpc.fnrd.net/cm-stats/metrics/list?filter=" + term;
+          var url = baseUrl + "/list?filter=" + term;
           Fnord.httpGet(url, function(r) {
             if (r.status == 200) {
               var json = JSON.parse(r.response);
@@ -91,7 +108,7 @@
     this.loadMetricList = function(key) {
       var loader = this.querySelector("fn-loader");
       var table = this.querySelector("fn-table");
-      var url = "https://rpc.fnrd.net/cm-stats/metrics/list?filter=" + key;
+      var url = baseUrl + "/list?filter=" + key;
       var base = this;
 
       Fnord.httpGet(url, function(r) {

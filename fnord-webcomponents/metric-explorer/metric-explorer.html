@@ -18,6 +18,7 @@
     <link rel="stylesheet" href="../components/fn-button.css" type="text/css">
     <link rel="stylesheet" href="../components/fn-input.css" type="text/css">
     <link rel="stylesheet" href="../components/fn-table.css" type="text/css">
+    <link rel="stylesheet" href="../components/fn-pager.css" type="text/css">
   </head>
   <body>
     <link rel="import" href="metric-explorer-components/metric-explorer-list.html" data-component="fn-metric-explorer-list">
@@ -37,6 +38,7 @@
     <link rel="import" href="../components/fn-input.html" data-component="fn-input">
     <link rel="import" href="../components/fn-checkbox.html" data-component="fn-checkbox">
     <link rel="import" href="../components/fn-timeinput.html" data-component="fn-input-time">
+    <link rel="import" href="../components/fn-pager.html" data-component="fn-pager">
     <link rel="stylesheet" href="../themes/midnight-blue.css" type="text/css">
 
 
@@ -48,18 +50,19 @@
 </html>
 
 <script type='text/javascript'>
-  var baseUrl = "https://rpc.fnrd.net/cm-stats/metrics";
+  //var baseUrl = "https://rpc.fnrd.net/cm-stats/metrics";
+  var baseUrl = "http://127.0.0.1:8000/metrics/";
   var views = {
     "metrics" : "<fn-metric-explorer-list></fn-metric-explorer-list>",
     "metric" : "<fn-metric-explorer-preview></fn-metric-explorer-preview>",
-    "search" : "<fn-metric-explorer-search></fn-metric-explorer-search>"
+    "search" : "<fn-metric-explorer-list></fn-metric-explorer-list>"
   }
 
 
   var routes = {
     "metrics": "fn-metric-explorer-list",
     "metric": "fn-metric-explorer-preview",
-    "search": "fn-metric-explorer-search"
+    "search": "fn-metric-explorer-list"
   };
 
   var default_route = "metrics";
@@ -70,6 +73,7 @@
     var query_params = url["query_params"];
 
     var view_name = routes[url["path"]];
+
     if (view_name == undefined) {
       alert("no route found for: " + url["path"]);
       return;
