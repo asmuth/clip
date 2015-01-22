@@ -470,7 +470,7 @@ bool SValue::tryTimeConversion() {
   time_t ts = getInteger();
   data_.type = T_TIMESTAMP;
   // FIXPAUL take a smart guess if this is milli, micro, etc
-  data_.u.t_timestamp = ts * 1000000;
+  data_.u.t_timestamp = ts * 1000000llu;
   return true;
 }
 
