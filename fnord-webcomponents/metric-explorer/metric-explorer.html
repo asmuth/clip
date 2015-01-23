@@ -20,6 +20,7 @@
     <link rel="stylesheet" href="../components/fn-table.css" type="text/css">
     <link rel="stylesheet" href="../components/fn-pager.css" type="text/css">
     <link rel="stylesheet" href="../components/fn-message.css" type="text/css">
+    <link rel="stylesheet" href="../components/fn-modal.css" type="text/css">
   </head>
   <body>
     <link rel="import" href="metric-explorer-components/metric-explorer-list.html" data-component="fn-metric-explorer-list">
@@ -41,6 +42,7 @@
     <link rel="import" href="../components/fn-timeinput.html" data-component="fn-input-time">
     <link rel="import" href="../components/fn-pager.html" data-component="fn-pager">
     <link rel="import" href="../components/fn-message.html" data-component="fn-message">
+    <link rel="import" href="../components/fn-modal.html" data-component="fn-modal">
     <link rel="stylesheet" href="../themes/midnight-blue.css" type="text/css">
 
 
@@ -87,7 +89,11 @@
 
     var viewport = document.querySelector("#metric-explorer-viewport");
     var view = document.createElement(view_name);
-    view.setAttribute("data-url", raw_url);
+
+    raw_url = "#" + raw_url;
+    if (view.getAttribute('data-url') != raw_url) {
+      view.setAttribute("data-url", raw_url);
+    }
     viewport.innerHTML = "";
     viewport.appendChild(view);
 

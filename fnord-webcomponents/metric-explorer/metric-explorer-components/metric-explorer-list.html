@@ -161,7 +161,7 @@
       var base = this;
       var loader = this.querySelector("fn-loader");
       var table = this.querySelector("fn-table");
-      var url = baseUrl + "/list" + url_query;
+      var url = baseUrl + "list" + url_query;
 
       Fnord.httpGet(url, function(r) {
         if (r.status === 200) {
@@ -220,7 +220,7 @@
       var end = Math.round(Date.now() / 1000);
       var start = end - 3600;
       var raw_url = 
-        "metric?key="+ encodeURIComponent(metric_key) +
+        "#metric?key="+ encodeURIComponent(metric_key) +
         "&view=value&start_time=" + start +
         "&end_time=" + end;
       openUrl(raw_url, true)

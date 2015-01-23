@@ -84,11 +84,23 @@
       display: block;
     }
 
+    #table.result_pane {
+      padding-top: 4%;
+    }
 
-    .result_pane fn-pager.table {
+    fn-table /deep/ table > thead > tr > td,
+    fn-table /deep/ table > thead > tr > th,
+    fn-table /deep/ table > tbody > tr > td,
+    fn-table /deep/ table > tbody > tr > th {
+      font-size: 92%;
+    }
+
+
+    .result_pane fn-pager {
       float:right;
       margin-right: 5px;
     }
+
   </style>
   <fn-loader>
     <h1 class="page_header">
@@ -198,13 +210,27 @@
     <fn-loader id="result_pane" data-transparent>
       <fn-message data-state='error'></fn-message>
       <div class="result_pane" id="chart">
-        <iframe width="100%" frameborder="0" height="260" scrolling="no"></iframe>
+        <iframe width="100%" frameborder="0" height="360" scrolling="no"></iframe>
       </div>
       <div class="result_pane" id="table">
+        <fn-pager data-for data-first-item="1" data-per-page="25" data-circling></fn-pager>
         <fn-table data-per-page='25' style="width:100%;">
         </fn-table>
       </div>
     </fn-loader>
+    <fn-modal id="embed">
+      <fn-modal-header>Embed</fn-modal-header>
+      <fn-modal-content>
+        <div class="header">Copy this into your HTML Page</div>
+        <code>
+          &lt;iframe<br />&nbsp;&nbsp;&nbsp;&nbsp;width="800"<br />
+          &nbsp;&nbsp;&nbsp;&nbsp;height="400"<br />
+          &nbsp;&nbsp;&nbsp;&nbsp;frameBorder="0"<br />
+          &nbsp;&nbsp;&nbsp;&nbsp;src="<span id="src"></span>"
+          &gt;<br />&lt;/iframe&gt;
+        </code>
+      </fn-modal-content>
+    </fn-modal>
   </fn-loader>
 </template>
 
@@ -215,7 +241,7 @@
       this.appendChild(tpl);
 
       if (this.getAttribute('data-url') != null) {
-        this.onUrlChange(true)
+        this.onUrlChange(true);
       }
 
     }
@@ -242,7 +268,7 @@
     this.init = function() {
       var base = this;
       var url =
-        baseUrl + "/list?filter=" +
+        baseUrl + "list?filter=" +
         encodeURIComponent(this.params.query_params.innerViewValue);
 
       Fnord.httpGet(url, function(r) {
@@ -272,10 +298,36 @@
     }
 
     this.updateTable = function() {
-      var url = this.buildQueryUrl("json");
+     // var url = this.buildQueryUrl("json");
+      var url = baseUrl + "list";
+      var table = this.querySelector("#table.result_pane fn-table");
+      var base = this;
+      table.innerHTML = "";
       Fnord.httpGet(url, function(r) {
-        console.log(r);
+        if (r.status == 200) {
+          JSON.parse(r.response).metrics.forEach(function(m) {
+
+            var tr_elem = document.createElement("tr");
+            tr_elem.setAttribute('metric-key', m.key);
+            var cells = [
+              m.key,
+              m.labels.join(", "),
+              m.last_insert,
+              m.total_bytes];
+
+            cells.map(function(cell) {
+              var td_elem = document.createElement("td");
+              td_elem.innerHTML = cell;
+              tr_elem.appendChild(td_elem);
+            });
+
+            table.appendChild(tr_elem);
+          });
+          table.renderTable();
+          base.querySelector("fn-pager").forElement(table);
+        }
       });
+
     }
 
     this.buildQueryUrl = function(format) {
@@ -298,7 +350,7 @@
       url +=
         "&format=" + format +
         "&min=0" +
-        "&height=260" +
+        "&height=360" +
         "&width=" + (document.body.offsetWidth - 20) +
         "&grid=both" +
         "&scale=0.8" +
@@ -372,7 +424,9 @@
       }
 
       var path = setUrlFromQueryString("metric", this.params.query_params, true);
-      this.setAttribute("data-url", path);
+      if (this.getAttribute('data-url') != path) {
+        this.setAttribute("data-url", path);
+      }
     };
 
     this.getQueryParamOrDefaultValue = function(key) {
@@ -575,11 +629,11 @@
       }, false);
 
       log_scale.addEventListener("fn-checkbox-unselect", function(e) {
-        base.updateUrlParams({"loagrithmic" : false});
+        base.updateUrlParams({"logarithmic" : false});
       }, false);
 
       inv_scale.addEventListener("fn-checkbox-unselect", function(e) {
-        base.updateUrlParams({"inverted" : true});
+        base.updateUrlParams({"inverted" : false});
       }, false);
 
       var interval_id;
@@ -591,6 +645,12 @@
           interval_id = window.setInterval(function() {base.onRefresh(); }, 30000);
           this.setAttribute('data-state', 'active');
         }
+      }, false);
+
+      var modal = this.querySelector("fn-modal");
+      this.querySelector("#embed_btn").addEventListener('fn-button-click', function() {
+        modal.querySelector("span").innerHTML = baseUrl + base.getAttribute('data-url');
+        modal.show();
       }, false);
     };
   };
