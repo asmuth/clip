@@ -217,6 +217,7 @@
       if (this.getAttribute('data-url') != null) {
         this.onUrlChange(true)
       }
+
     }
 
     this.attributeChangedCallback = function(attr, old_val, new_val) {
@@ -234,8 +235,8 @@
         this.init();
       }
 
-      //this.updateChart();
-      //this.updateTable();
+      this.updateChart();
+      this.updateTable();
     };
 
     this.init = function() {
@@ -244,13 +245,13 @@
         baseUrl + "/list?filter=" +
         encodeURIComponent(this.params.query_params.innerViewValue);
 
-      /*Fnord.httpGet(url, function(r) {
+      Fnord.httpGet(url, function(r) {
         if (r.status == 200) {
           var json = JSON.parse(r.response);
           json.metrics.map(function(m) {
             base.columns = m.labels.join(",");
           });
-        }*/
+        }
         base.columns = [];
         base.updateUrlParams(
           base.addRequiredURLParamsForView(
@@ -260,7 +261,7 @@
         base.handleDateTimeControls();
         base.setHeader();
         base.handleAggregationDisplay();
-      /*});*/
+      });
     };
 
 
@@ -273,12 +274,13 @@
     this.updateTable = function() {
       var url = this.buildQueryUrl("json");
       Fnord.httpGet(url, function(r) {
+        console.log(r);
       });
     }
 
     this.buildQueryUrl = function(format) {
       var url =
-        baseUrl + "/timeseries" +
+        baseUrl + "timeseries" +
         "?metric=" + this.params.query_params.innerViewValue +
         "&from=" + this.getQueryParamOrDefaultValue("start_time") +
         "&until=" + this.getQueryParamOrDefaultValue("end_time") +
@@ -297,7 +299,7 @@
         "&format=" + format +
         "&min=0" +
         "&height=260" +
-        "&width=1200" +
+        "&width=" + (document.body.offsetWidth - 20) +
         "&grid=both" +
         "&scale=0.8" +
         "&axis_right=true" +
@@ -405,7 +407,6 @@
     };
 
     this.onRefresh = function() {
-      console.log("on Refresh");
       var end_time = Date.now();
       var time_range = this.getQueryParamOrDefaultValue('time_range');
       var start_time = end_time - time_range;

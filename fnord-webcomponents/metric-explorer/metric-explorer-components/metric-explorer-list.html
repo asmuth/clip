@@ -11,6 +11,28 @@
 
 <template id="fn-metric-explorer-list-base-tpl">
   <style type='text/css'>
+    fn-message {
+      display: none;
+      width: 40%;
+      min-width: 550px;
+      margin: auto;
+    }
+
+    fn-message-text {
+      line-height: 1.7;
+    }
+    fn-loader {
+      padding-top: 0;
+    }
+
+    fn-message.active {
+      display:block;
+    }
+
+    fn-message.active + .list.ui {
+      display: none;
+    }
+
     fn-table {
       width: 100%;
     }
@@ -28,19 +50,32 @@
     }
   </style>
   <fn-loader data-loading data-loader-type="loader3">
-    <div class="navigation">
-      <h1 class="page_header"><i>Metrics</i> &rsaquo; </h1>
-      <fn-search data-placeholder="Search...">
-        <fn-search-icon><i class="fa fa-search"></i></fn-search-icon>
-      </fn-search>
+    <fn-message data-state='error'>
+      <fn-message-header>
+        Server Error
+      </fn-message-header>
+      <fn-message-text>
+        We're sorry. The server encountered an error and was unable to complete 
+        your request.
+        <br />
+        <span></span>
+      </fn-message-text>
+    </fn-message>
+    <div class="list ui">
+      <div class="navigation">
+        <h1 class="page_header"><i>Metrics</i> &rsaquo; </h1>
+        <fn-search data-placeholder="Search...">
+          <fn-search-icon><i class="fa fa-search"></i></fn-search-icon>
+        </fn-search>
+      </div>
+      <fn-pager data-for data-first-item="1" data-per-page="25" data-circling></fn-pager>
+      <fn-table data-per-page="25" data-page-"0" data-clickable>
+        <fn-table-column data-sortable>Metric</fn-table-column>
+        <fn-table-column>Labels</fn-table-column>
+        <fn-table-column data-sortable>Last Insert</fn-table-column>
+        <fn-table-column data-sortable>Total Stored Bytes</fn-table-column>
+      </fn-table>
     </div>
-    <fn-pager data-for data-first-item="1" data-per-page="25" data-circling></fn-pager>
-    <fn-table data-per-page="25" data-page-"0" data-clickable>
-      <fn-table-column data-sortable>Metric</fn-table-column>
-      <fn-table-column>Labels</fn-table-column>
-      <fn-table-column data-sortable>Last Insert</fn-table-column>
-      <fn-table-column data-sortable>Total Stored Bytes</fn-table-column>
-    </fn-table>
   </fn-loader>
 </template>
 
@@ -68,15 +103,17 @@
       var params = parseUrlQueryString(this.getAttribute('data-url'));
       var metric_url = "";
       var header = "All Metrics";
+      var openPreview = false;
 
       if (params.path == "search" &&
           params.query_params &&
           params.query_params.innerViewValue) {
             metric_url = "?filter=" + params.query_params.innerViewValue;
             header = "Search " + params.query_params.innerViewValue;
+            openPreview = true;
       }
 
-      this.loadMetricList(metric_url);
+      this.loadMetricList(metric_url, openPreview);
       this.setHeader(header);
       this.initSearch();
     };
@@ -120,7 +157,7 @@
     };
 
 
-    this.loadMetricList = function(url_query) {
+    this.loadMetricList = function(url_query, openPreview) {
       var base = this;
       var loader = this.querySelector("fn-loader");
       var table = this.querySelector("fn-table");
@@ -130,7 +167,7 @@
         if (r.status === 200) {
           var metrics = JSON.parse(r.response).metrics;
 
-          if (metrics.length == 1) {
+          if (metrics.length == 1 && openPreview) {
             base.openMetricPreview(metrics[0].key);
             return;
           }
@@ -153,9 +190,12 @@
             table.appendRow(tr_elem);
 
           });
-          loader.removeAttribute("data-loading")
+          base.querySelector("fn-message").className = "";
           base.initTablePager(metrics.length);
+        } else {
+          base.renderServerError(r.statusText, r.status);
         }
+        loader.removeAttribute("data-loading");
       });
 
       table.addEventListener('fn-table-row-click', function(e) {
@@ -186,6 +226,15 @@
       openUrl(raw_url, true)
 
     };
+
+    this.renderServerError = function(text, statusCode) {
+      var msg = this.querySelector("fn-message");
+      msg.className = "active";
+      msg.setAttribute('data-state', 'error');
+      this.querySelector("fn-loader").style.paddingTop = "50px";
+      msg.querySelector("fn-message-text span").innerHTML =
+        statusCode + " " + text;
+    }
   };
 
   window.addEventListener('fn-ready', function() {
