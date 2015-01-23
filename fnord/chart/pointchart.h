@@ -210,6 +210,10 @@ template <typename TX, typename TY, typename TZ>
 void PointChart3D<TX, TY, TZ>::render(
     RenderTarget* target,
     Viewport* viewport) const {
+  if (x_domain_.get() == nullptr || y_domain_.get() == nullptr) {
+    RAISE(kRuntimeError, "could not build domains");
+  }
+
   x_domain_.get()->build();
   y_domain_.get()->build();
 

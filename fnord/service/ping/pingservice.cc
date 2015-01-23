@@ -23,7 +23,7 @@ std::string PingService::ping(std::string echo) {
 }
 
 void PingService::ping_async(
-    fnord::comm::RPC<std::string, std::tuple<std::string>>* rpc) {
+    fnord::RPC<std::string, std::tuple<std::string>>* rpc) {
   auto res = StringUtil::format("pong: $0", std::get<0>(rpc->args()));
 
   auto t = std::thread([rpc, res] () {

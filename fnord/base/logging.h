@@ -177,7 +177,7 @@ const char* logLevelToStr(LogLevel log_level);
  * Return the log level from the human readable string representation. This
  * will raise an exception if no such log level is known
  */
-LogLevel strToLogLevel(const char* log_level);
+LogLevel strToLogLevel(const String& log_level);
 
 }
 

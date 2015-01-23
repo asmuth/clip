@@ -14,7 +14,7 @@
 #include <set>
 #include <string>
 #include <unordered_map>
-#include "fnord/comm/rpc.h"
+#include "fnord-rpc/RPC.h"
 #include "fnord/reflect/reflect.h"
 
 namespace fnord {
@@ -25,7 +25,7 @@ public:
   PingService();
 
   std::string ping(std::string echo);
-  void ping_async(fnord::comm::RPC<std::string, std::tuple<std::string>>* rpc);
+  void ping_async(fnord::RPC<std::string, std::tuple<std::string>>* rpc);
 
   template <typename T>
   static void reflect(T* meta) {

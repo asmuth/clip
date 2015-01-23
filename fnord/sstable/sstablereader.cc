@@ -115,6 +115,10 @@ size_t SSTableReader::bodySize() const {
   return header_.bodySize();
 }
 
+size_t SSTableReader::bodyOffset() const {
+  return header_.headerSize();
+}
+
 size_t SSTableReader::headerSize() const {
   return header_.userdataSize();
 }

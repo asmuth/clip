@@ -14,11 +14,15 @@ namespace fnord {
 RefCounted::RefCounted() : refcount_(0) {}
 
 void RefCounted::incRef() {
-  refcount_++;
+  std::atomic_fetch_add_explicit(&refcount_, 1u, std::memory_order_relaxed);
 }
 
 bool RefCounted::decRef() {
-  if (refcount_.fetch_sub(1) == 1) {
+  if (std::atomic_fetch_sub_explicit(
+          &refcount_,
+          1u,
+          std::memory_order_release) == 1) {
+    std::atomic_thread_fence(std::memory_order_acquire);
     delete this;
     return true;
   }

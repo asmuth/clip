@@ -267,7 +267,7 @@ void HTTPServerConnection::finishResponse() {
     return;
   }
 
-  if (cur_request_->keepalive()) {
+  if (false && cur_request_->keepalive()) {
     std::lock_guard<std::mutex> lk(mutex_);
     nextRequest();
   } else {

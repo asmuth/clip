@@ -7,7 +7,7 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#include "fnord/comm/rpc.h"
+#include "fnord-rpc/RPC.h"
 #include "fnord/json/jsonrpcrequest.h"
 #include "fnord/json/jsonrpcresponse.h"
 
@@ -57,7 +57,7 @@ void JSONRPC::ReflectionTarget<ClassType>::rpc(RPCCallType rpc_call) {
   self_->registerMethod(mname, [rpc_call, service] (
       JSONRPCRequest* req,
       JSONRPCResponse* res) {
-      comm::RPC<
+      RPC<
         typename RPCCallType::RPCReturnType,
         typename RPCCallType::RPCArgPackType> rpc(
         rpc_call.method()->name(),

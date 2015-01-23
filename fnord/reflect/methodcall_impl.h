@@ -110,7 +110,7 @@ void MethodCallLookup<ClassType, ReturnType, ArgTypes...>::tryMethod(
     return;
   }
 
-  if (memcmp(m1_raw, m2_raw, sizeof(m1) != 0)) {
+  if (memcmp(m1_raw, m2_raw, sizeof(m1)) != 0) {
     return;
   }
 

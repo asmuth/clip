@@ -1,6 +1,10 @@
 
-
-from timespec impl
+-> timeouts
+-> rpcchannel (rcpclient + servergroup_)
+-> rpc numRetries/retryStrategie, onRetry(Duration delay) (instead of ready()/onError!)
+-> rpc timeout
+-> httprpcservlect<codec>
+-> http servlet should return response future!
 
 metricdb: insert distribution value
 metric http api: histogram endpoint

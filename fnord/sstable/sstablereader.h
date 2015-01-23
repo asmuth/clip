@@ -65,7 +65,19 @@ public:
   void readFooter(uint32_t type, void** data, size_t* size);
   Buffer readFooter(uint32_t type);
 
+  /**
+   * Returns the body size in bytes
+   */
   size_t bodySize() const;
+
+  /**
+   * Returns the body offset (the position of the first body byte in the file)
+   */
+  size_t bodyOffset() const;
+
+  /**
+   * Returns the size of the userdata blob stored in the sstable header in bytes
+   **/
   size_t headerSize() const;
 
 private:

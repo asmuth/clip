@@ -22,6 +22,7 @@ public:
   static std::string urlEncode(const std::string& str);
   static std::string urlDecode(const std::string& str);
 
+  URI();
   URI(const std::string& uri_str);
   void parse(const std::string& uri_str);
 

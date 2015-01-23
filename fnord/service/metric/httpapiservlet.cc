@@ -509,7 +509,7 @@ void HTTPAPIServlet::applyChartStyles(
     }
 
     // param: logarithmic
-    if (param.first == "logarithmic") {
+    if (param.first == "logarithmic" && param.second == "true") {
       for (const auto& chart : *charts) {
         auto ydomain = dynamic_cast<chart::ContinuousDomain<double>*>(
             chart->getDomain(chart::AnyDomain::DIM_Y));
@@ -523,7 +523,7 @@ void HTTPAPIServlet::applyChartStyles(
     }
 
     // param: inverted
-    if (param.first == "inverted") {
+    if (param.first == "inverted" && param.second == "true") {
       for (const auto& chart : *charts) {
         auto ydomain = dynamic_cast<chart::ContinuousDomain<double>*>(
             chart->getDomain(chart::AnyDomain::DIM_Y));
