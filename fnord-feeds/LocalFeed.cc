@@ -117,6 +117,10 @@ std::vector<FeedEntry> LogStream::fetch(uint64_t offset, int batch_size) {
     cursor = table->writer->getCursor();
   }
 
+  if (offset == std::numeric_limits<uint64_t>::max()) {
+    offset = head_offset_;
+  }
+
   if (offset > 0) {
 #ifndef FNORD_NOTRACE
     fnord::logTrace(

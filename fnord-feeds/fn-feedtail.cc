@@ -134,7 +134,11 @@ int main(int argc, const char** argv) {
     std::string offset_str;
     uint64_t offset = 0;
     if (URI::getParam(params, "offset", &offset_str)) {
-      offset = std::stoul(offset_str);
+      if (offset_str == "HEAD") {
+        offset = std::numeric_limits<uint64_t>::max();
+      } else {
+        offset = std::stoul(offset_str);
+      }
     }
 
     feed_reader.addSourceFeed(
