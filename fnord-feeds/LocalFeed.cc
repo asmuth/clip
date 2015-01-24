@@ -163,6 +163,7 @@ std::vector<FeedEntry> LogStream::fetch(uint64_t offset, int batch_size) {
     entry.offset = table->offset + cursor->position();
     entry.next_offset = table->offset + cursor->nextPosition();
     entry.data = cursor->getDataString();
+    entry.time = 0;
     entries.emplace_back(std::move(entry));
 
     if (!cursor->next()) {

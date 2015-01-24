@@ -34,9 +34,24 @@ void RemoteFeedReader::addSourceFeed(
 
 Option<FeedEntry> RemoteFeedReader::fetchNextEntry() {
   ScopedLock<std::mutex> lk(mutex_);
+  int idx = -1;
 
-  for (const auto& source : sources_) {
+  for (int i = 0; i < sources_.size(); ++i) {
+    const auto& source = sources_[i];
+
     maybeFillBuffer(source.get());
+
+    if (source->read_buffer.size() > 0) {
+      idx = i;
+    }
+  }
+
+  if (idx < 0) {
+    return None<FeedEntry>();
+  } else {
+    const auto entry = sources_[idx]->read_buffer.front();
+    sources_[idx]->read_buffer.pop_front();
+    return Some(entry);
   }
 }
 
@@ -67,8 +82,18 @@ void RemoteFeedReader::maybeFillBuffer(SourceFeed* source) {
 
   rpc->onSuccess([this, source] (const decltype(rpc)::ValueType& r) mutable {
     ScopedLock<std::mutex> lk(mutex_);
+
+    for (const auto& entry : r.result()) {
+      source->read_buffer.emplace_back(entry);
+    }
+
     source->is_fetching = false;
-    lk.unlock();
+
+    if (source->read_buffer.size() > 0) {
+      source->next_offset = source->read_buffer.back().next_offset;
+      lk.unlock();
+      data_available_wakeup_.wakeup();
+    }
   });
 
   rpc->onError([this, source] (const Status& status) {
@@ -83,6 +108,8 @@ void RemoteFeedReader::maybeFillBuffer(SourceFeed* source) {
         source->rpc_url.toString(),
         source->feed_name,
         status);
+
+    data_available_wakeup_.wakeup();
   });
 }
 
