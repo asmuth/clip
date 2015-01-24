@@ -48,16 +48,35 @@ Option<FeedEntry> RemoteFeedReader::fetchNextEntry() {
   ScopedLock<std::mutex> lk(mutex_);
   int idx = -1;
   uint64_t min_stream_time = std::numeric_limits<uint64_t>::max();
+  Duration max_spread(3600 * kMicrosPerSecond);
 
   for (int i = 0; i < sources_.size(); ++i) {
     const auto& source = sources_[i];
 
     maybeFillBuffer(source.get());
 
-    if (source->read_buffer.size() > 0 &&
-        source->stream_time.unixMicros() < min_stream_time) {
-      idx = i;
+    if (source->stream_time.unixMicros() < min_stream_time) {
       min_stream_time = source->stream_time.unixMicros();
+
+      if (source->read_buffer.size() > 0) {
+        idx = i;
+      } else {
+        idx = -1;
+      }
+    }
+  }
+
+  if (idx == -1) {
+    min_stream_time += max_spread.microseconds();
+
+    for (int i = 0; i < sources_.size(); ++i) {
+      const auto& source = sources_[i];
+
+      if (source->stream_time.unixMicros() < min_stream_time &&
+          source->read_buffer.size() > 0) {
+        min_stream_time = source->stream_time.unixMicros();
+        idx = i;
+      }
     }
   }
 
