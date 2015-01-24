@@ -44,6 +44,8 @@ public:
   DateTime lowWatermark() const;
   DateTime highWatermark() const;
 
+  void setTimeBackfill(Function<DateTime (const FeedEntry& entry)> fn);
+
 protected:
 
   class SourceFeed : public RefCounted {
@@ -64,6 +66,9 @@ protected:
 
   Wakeup data_available_wakeup_;
   mutable std::mutex mutex_;
+
+  Function<DateTime (const FeedEntry& entry)> time_backfill_fn_;
+
   //fnord::stats::Counter<uint64_t> stat_entries_written_total_;
   //fnord::stats::Counter<uint64_t> stat_entries_written_success_;
   //fnord::stats::Counter<uint64_t> stat_entries_written_error_;

@@ -17,7 +17,8 @@ namespace feeds {
 
 RemoteFeedReader::RemoteFeedReader(
     RPCClient* rpc_client) :
-    rpc_client_(rpc_client) {}
+    rpc_client_(rpc_client),
+    time_backfill_fn_(nullptr) {}
 
 void RemoteFeedReader::addSourceFeed(
     URI rpc_url,
@@ -84,16 +85,18 @@ void RemoteFeedReader::maybeFillBuffer(SourceFeed* source) {
   rpc->onSuccess([this, source] (const decltype(rpc)::ValueType& r) mutable {
     ScopedLock<std::mutex> lk(mutex_);
 
-    for (const auto& entry : r.result()) {
-      if (source->stream_time.unixMicros() == 0) {
-        // backfill
+    for (const auto& e : r.result()) {
+      auto entry = e;
+
+      if (entry.time.unixMicros() == 0 && time_backfill_fn_) {
+        entry.time = time_backfill_fn_(entry);
       }
 
       if (entry.time > source->stream_time) {
         source->stream_time = entry.time;
       }
 
-      source->read_buffer.emplace_back(entry);
+      source->read_buffer.emplace_back(std::move(entry));
     }
 
     source->is_fetching = false;
@@ -175,6 +178,11 @@ DateTime RemoteFeedReader::lowWatermark() const {
 
 DateTime RemoteFeedReader::highWatermark() const {
   return watermarks().second;
+}
+
+void RemoteFeedReader::setTimeBackfill(
+    Function<DateTime (const FeedEntry& entry)> fn) {
+  time_backfill_fn_ = fn;
 }
 
 void RemoteFeedReader::exportStats(
