@@ -126,7 +126,10 @@ int main(int argc, const char** argv) {
 
     std::string feed;
     if (!URI::getParam(params, "feed", &feed)) {
-      RAISE(kIllegalArgumentError, "feed url missing ?feed query param");
+      RAISEF(
+          kIllegalArgumentError,
+          "feed url missing ?feed query param: $0",
+          uri_raw);
     }
 
     feed_urls.emplace(feed, uri_raw.substr(0, uri_raw.find("?")));
