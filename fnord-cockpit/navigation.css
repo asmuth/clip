@@ -18,9 +18,10 @@ ul.navigation li {
 }
 
 .menu {
+  position: fixed;
   float:left;
-  height: calc(100vh - 31px);
-  width: 15rem;
+  height: 100%;
+  width: 200px;;
   background: #fff;
   font-weight: 400;
   border: 1px solid rgba(39,41,43,.15);
@@ -48,9 +49,7 @@ ul.navigation li {
   border-bottom: 1px solid rgba(0,0,0,.05)
 }
 
-.menu a.item:last-child {
-  border-bottom: none;
-}
+
 
 .menu a.item:hover{
   background-color: rgba(0,0,0,.03);
