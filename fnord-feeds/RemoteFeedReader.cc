@@ -127,7 +127,7 @@ void RemoteFeedReader::maybeFillBuffer(SourceFeed* source) {
     for (const auto& e : r.result()) {
       auto entry = e;
 
-      if (entry.time.unixMicros() == 0 && time_backfill_fn_) {
+      if (time_backfill_fn_) {
         entry.time = time_backfill_fn_(entry);
       }
 
