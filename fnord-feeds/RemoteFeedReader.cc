@@ -29,6 +29,7 @@ void RemoteFeedReader::addSourceFeed(
   source->max_buffer_size = max_buffer_size;
   source->is_fetching = false;
   source->next_offset = 0;
+  source->stream_time = 0;
   sources_.emplace_back(source);
 }
 
@@ -84,6 +85,14 @@ void RemoteFeedReader::maybeFillBuffer(SourceFeed* source) {
     ScopedLock<std::mutex> lk(mutex_);
 
     for (const auto& entry : r.result()) {
+      if (source->stream_time.unixMicros() == 0) {
+        // backfill
+      }
+
+      if (entry.time > source->stream_time) {
+        source->stream_time = entry.time;
+      }
+
       source->read_buffer.emplace_back(entry);
     }
 
@@ -135,6 +144,23 @@ void RemoteFeedReader::waitForNextEntry() {
 
   /* wait until there is any data available */
   data_available_wakeup_.waitForWakeup(wakeup_gen);
+}
+
+DateTime RemoteFeedReader::streamTime() const {
+  ScopedLock<std::mutex> lk(mutex_);
+
+  if (sources_.size() == 0) {
+    return 0;
+  }
+
+  uint64_t stream_time = std::numeric_limits<uint64_t>::max();
+  for (const auto& source : sources_) {
+    if (source->stream_time.unixMicros() < stream_time) {
+      stream_time = source->stream_time.unixMicros();
+    }
+  }
+
+  return stream_time;
 }
 
 void RemoteFeedReader::exportStats(

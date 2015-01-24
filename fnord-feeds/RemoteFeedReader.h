@@ -36,6 +36,8 @@ public:
       const String& path_prefix = "/fnord/feeds/reader/",
       stats::StatsRepository* stats_repo = nullptr);
 
+  DateTime streamTime() const;
+
 protected:
 
   class SourceFeed : public RefCounted {
@@ -46,6 +48,7 @@ protected:
     Deque<FeedEntry> read_buffer;
     bool is_fetching;
     uint64_t next_offset;
+    DateTime stream_time;
   };
 
   void maybeFillBuffer(SourceFeed* source);
@@ -54,7 +57,7 @@ protected:
   RefPtrVector<SourceFeed> sources_;
 
   Wakeup data_available_wakeup_;
-  std::mutex mutex_;
+  mutable std::mutex mutex_;
   //fnord::stats::Counter<uint64_t> stat_entries_written_total_;
   //fnord::stats::Counter<uint64_t> stat_entries_written_success_;
   //fnord::stats::Counter<uint64_t> stat_entries_written_error_;
