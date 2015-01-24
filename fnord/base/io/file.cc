@@ -115,6 +115,18 @@ size_t File::read(Buffer* buf) {
   return read(buf->data(), buf->size());
 }
 
+void File::write(const void* buf, size_t buf_len) {
+  int res = ::write(fd_, buf, buf_len);
+
+  if (res < 0 || res != buf_len) {
+    RAISE_ERRNO(kIOError, "write(%i) failed", fd_);
+  }
+}
+
+void File::write(const Buffer& buf) {
+  write(buf.data(), buf.size());
+}
+
 File File::clone() const {
   int new_fd = dup(fd_);
 
