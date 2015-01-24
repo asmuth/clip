@@ -15,6 +15,8 @@
 namespace fnord {
 namespace feeds {
 
+// TODO: retry timeout after error?
+
 RemoteFeedReader::RemoteFeedReader(
     RPCClient* rpc_client) :
     rpc_client_(rpc_client),
