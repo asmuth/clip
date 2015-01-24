@@ -54,6 +54,8 @@ public:
 
   void setTimeBackfill(Function<DateTime (const FeedEntry& entry)> fn);
 
+  void setMaxSpread(Duration duration);
+
 protected:
 
   class SourceFeed : public RefCounted {
@@ -78,6 +80,7 @@ protected:
   mutable std::mutex mutex_;
 
   Function<DateTime (const FeedEntry& entry)> time_backfill_fn_;
+  Duration max_spread_;
 
   //fnord::stats::Counter<uint64_t> stat_entries_written_total_;
   //fnord::stats::Counter<uint64_t> stat_entries_written_success_;

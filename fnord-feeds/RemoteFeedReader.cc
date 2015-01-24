@@ -20,7 +20,8 @@ namespace feeds {
 RemoteFeedReader::RemoteFeedReader(
     RPCClient* rpc_client) :
     rpc_client_(rpc_client),
-    time_backfill_fn_(nullptr) {}
+    time_backfill_fn_(nullptr),
+    max_spread_(1 * kMicrosPerSecond) {}
 
 void RemoteFeedReader::addSourceFeed(
     URI rpc_url,
@@ -50,7 +51,6 @@ Option<FeedEntry> RemoteFeedReader::fetchNextEntry() {
   ScopedLock<std::mutex> lk(mutex_);
   int idx = -1;
   uint64_t min_stream_time = std::numeric_limits<uint64_t>::max();
-  Duration max_spread(3600 * kMicrosPerSecond);
 
   for (int i = 0; i < sources_.size(); ++i) {
     const auto& source = sources_[i];
@@ -69,7 +69,7 @@ Option<FeedEntry> RemoteFeedReader::fetchNextEntry() {
   }
 
   if (idx == -1) {
-    min_stream_time += max_spread.microseconds();
+    min_stream_time += max_spread_.microseconds();
 
     for (int i = 0; i < sources_.size(); ++i) {
       const auto& source = sources_[i];
@@ -231,6 +231,10 @@ DateTime RemoteFeedReader::highWatermark() const {
 void RemoteFeedReader::setTimeBackfill(
     Function<DateTime (const FeedEntry& entry)> fn) {
   time_backfill_fn_ = fn;
+}
+
+void RemoteFeedReader::setMaxSpread(Duration duration) {
+  max_spread_ = duration;
 }
 
 void RemoteFeedReader::exportStats(

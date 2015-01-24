@@ -78,6 +78,15 @@ int main(int argc, const char** argv) {
       "<num>");
 
   flags.defineFlag(
+      "max_spread_secs",
+      fnord::cli::FlagParser::T_INTEGER,
+      false,
+      NULL,
+      "10",
+      "max_spread_secs",
+      "<num>");
+
+  flags.defineFlag(
       "loglevel",
       fnord::cli::FlagParser::T_STRING,
       false,
@@ -104,9 +113,11 @@ int main(int argc, const char** argv) {
   size_t batch_size = flags.getInt("batch_size");
   size_t buffer_size = flags.getInt("buffer_size");
   size_t commit_size = flags.getInt("commit_size");
+  size_t max_spread_secs = flags.getInt("max_spread_secs");
 
   /* set up input feed reader */
   feeds::RemoteFeedReader feed_reader(&rpc_client);
+  feed_reader.setMaxSpread(max_spread_secs * kMicrosPerSecond);
 
   /* get source urls */
   Vector<String> uris = flags.getArgv();
