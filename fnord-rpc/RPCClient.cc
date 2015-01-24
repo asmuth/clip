@@ -27,7 +27,7 @@ void HTTPRPCClient::call(const URI& uri, RefPtr<AnyRPC> rpc) {
 #ifndef FNORD_NOTRACE
   fnord::logTrace(
       "fnord.http.rpcclient",
-      "executing RPC via HTTP request id=$2 method=$1 uri=$0",
+      "executing RPC via HTTP request\n    id=$2\n    method=$1\n    uri=$0",
       uri.toString(),
       rpc->method(),
       (void*) rpc.get());

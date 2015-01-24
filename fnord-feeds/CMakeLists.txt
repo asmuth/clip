@@ -6,6 +6,7 @@ add_library(fnord-feeds OBJECT
     LocalFeed.cc
     RemoteFeed.cc
     RemoteFeedFactory.cc
+    RemoteFeedReader.cc
     RemoteFeedWriter.cc
     FeedService.cc)
 

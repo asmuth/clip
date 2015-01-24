@@ -58,6 +58,9 @@ protected:
 template <typename T>
 using RefPtr = AutoRef<T>;
 
+template <typename T>
+using RefPtrVector = Vector<AutoRef<T>>;
+
 } // namespace fnord
 
 #include "autoref_impl.h"
