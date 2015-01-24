@@ -144,10 +144,9 @@ std::vector<FeedEntry> LogStream::fetch(uint64_t offset, int batch_size) {
     fnord::logTrace(
         "fnord.feeds.localfeed",
         "request id=$0: reading entry at table_offset=$1 "
-            "table_real_offset=$2 logical_offset=$3",
+            "logical_offset=$2",
         request_id,
         cursor->position(),
-        cursor->position() + reader->bodyOffset(),
         table->offset + cursor->position());
 #endif
 
