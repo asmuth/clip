@@ -61,9 +61,16 @@ void TimeseriesQuery::run(
   from_ = from;
   until_ = until;
 
+  auto from_with_padding = from.unixMicros();
+  if (aggr_fn != AggregationFunction::kNoAggregation) {
+    if (from_with_padding > aggr_window.microseconds()) {
+      from_with_padding -= aggr_window.microseconds();
+    }
+  }
+
   metric_service->scanSamples(
       metric_key,
-      from,
+      DateTime(from_with_padding),
       until,
       [this] (Sample* sample) -> bool {
         processSample(sample, false);
