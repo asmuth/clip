@@ -30,6 +30,7 @@ public:
   void addSourceFeed(
       URI rpc_url,
       String feed_name,
+      uint64_t initial_offset,
       size_t max_buffer_size = kDefaultMaxBufferSize);
 
   void exportStats(
@@ -40,6 +41,11 @@ public:
    * Return the <low, high> time watermarks
    */
   Pair<DateTime, DateTime> watermarks() const;
+
+  /**
+   * Return the current <feed_name, offset> stream offsets
+   */
+  Vector<Pair<String, uint64_t>> streamOffsets() const;
 
   DateTime lowWatermark() const;
   DateTime highWatermark() const;
@@ -56,6 +62,7 @@ protected:
     Deque<FeedEntry> read_buffer;
     bool is_fetching;
     uint64_t next_offset;
+    uint64_t consumed_offset;
     DateTime stream_time;
   };
 

@@ -23,13 +23,21 @@ RemoteFeedReader::RemoteFeedReader(
 void RemoteFeedReader::addSourceFeed(
     URI rpc_url,
     String feed_name,
+    uint64_t initial_offset,
     size_t max_buffer_size /* = kDefaultMaxBufferSize */) {
+  for (const auto& source : sources_) {
+    if (source->feed_name == feed_name) {
+      RAISEF(kIndexError, "feed '$0' already exists", feed_name);
+    }
+  }
+
   auto source = new SourceFeed();
   source->rpc_url = rpc_url;
   source->feed_name = feed_name;
   source->max_buffer_size = max_buffer_size;
   source->is_fetching = false;
-  source->next_offset = 0;
+  source->next_offset = initial_offset;
+  source->consumed_offset = initial_offset;
   source->stream_time = 0;
   sources_.emplace_back(source);
 }
@@ -62,6 +70,7 @@ Option<FeedEntry> RemoteFeedReader::fetchNextEntry() {
       source->stream_time = entry.time;
     }
 
+    source->consumed_offset = entry.next_offset;
     return Some(entry);
   }
 }
@@ -152,6 +161,17 @@ void RemoteFeedReader::waitForNextEntry() {
 
   /* wait until there is any data available */
   data_available_wakeup_.waitForWakeup(wakeup_gen);
+}
+
+Vector<Pair<String, uint64_t>> RemoteFeedReader::streamOffsets() const {
+  ScopedLock<std::mutex> lk(mutex_);
+
+  Vector<Pair<String, uint64_t>> offsets;
+  for (const auto& source : sources_) {
+    offsets.emplace_back(source->feed_name, source->consumed_offset);
+  }
+
+  return offsets;
 }
 
 Pair<DateTime, DateTime> RemoteFeedReader::watermarks() const {
