@@ -37,22 +37,31 @@ void RemoteFeedReader::addSourceFeed(
 Option<FeedEntry> RemoteFeedReader::fetchNextEntry() {
   ScopedLock<std::mutex> lk(mutex_);
   int idx = -1;
+  uint64_t min_stream_time = std::numeric_limits<uint64_t>::max();
 
   for (int i = 0; i < sources_.size(); ++i) {
     const auto& source = sources_[i];
 
     maybeFillBuffer(source.get());
 
-    if (source->read_buffer.size() > 0) {
+    if (source->read_buffer.size() > 0 &&
+        source->stream_time.unixMicros() < min_stream_time) {
       idx = i;
+      min_stream_time = source->stream_time.unixMicros();
     }
   }
 
   if (idx < 0) {
     return None<FeedEntry>();
   } else {
-    const auto entry = sources_[idx]->read_buffer.front();
-    sources_[idx]->read_buffer.pop_front();
+    const auto& source = sources_[idx];
+    auto entry = source->read_buffer.front();
+    source->read_buffer.pop_front();
+
+    if (entry.time > source->stream_time) {
+      source->stream_time = entry.time;
+    }
+
     return Some(entry);
   }
 }
@@ -90,10 +99,6 @@ void RemoteFeedReader::maybeFillBuffer(SourceFeed* source) {
 
       if (entry.time.unixMicros() == 0 && time_backfill_fn_) {
         entry.time = time_backfill_fn_(entry);
-      }
-
-      if (entry.time > source->stream_time) {
-        source->stream_time = entry.time;
       }
 
       source->read_buffer.emplace_back(std::move(entry));
