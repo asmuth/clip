@@ -20,6 +20,7 @@ namespace feeds {
 
 class RemoteFeedReader {
 public:
+  static const size_t kDefaultBatchSize = 1024;
   static const size_t kDefaultMaxBufferSize = 8192;
 
   RemoteFeedReader(RPCClient* rpc_client);
@@ -31,6 +32,7 @@ public:
       URI rpc_url,
       String feed_name,
       uint64_t initial_offset,
+      size_t batch_size = kDefaultBatchSize,
       size_t max_buffer_size = kDefaultMaxBufferSize);
 
   void exportStats(
@@ -59,6 +61,7 @@ protected:
     URI rpc_url;
     String feed_name;
     unsigned max_buffer_size;
+    unsigned batch_size;
     Deque<FeedEntry> read_buffer;
     bool is_fetching;
     uint64_t next_offset;

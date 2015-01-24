@@ -24,6 +24,7 @@ void RemoteFeedReader::addSourceFeed(
     URI rpc_url,
     String feed_name,
     uint64_t initial_offset,
+    size_t batch_size /* = kDefaultBatchSize */,
     size_t max_buffer_size /* = kDefaultMaxBufferSize */) {
   for (const auto& source : sources_) {
     if (source->feed_name == feed_name) {
@@ -34,6 +35,7 @@ void RemoteFeedReader::addSourceFeed(
   auto source = new SourceFeed();
   source->rpc_url = rpc_url;
   source->feed_name = feed_name;
+  source->batch_size = batch_size;
   source->max_buffer_size = max_buffer_size;
   source->is_fetching = false;
   source->next_offset = initial_offset;
@@ -96,7 +98,7 @@ void RemoteFeedReader::maybeFillBuffer(SourceFeed* source) {
       &FeedService::fetch,
       source->feed_name,
       source->next_offset,
-      (int) source->max_buffer_size);
+      (int) source->batch_size);
 
   rpc_client_->call(source->rpc_url, rpc.get());
 
