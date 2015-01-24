@@ -146,21 +146,35 @@ void RemoteFeedReader::waitForNextEntry() {
   data_available_wakeup_.waitForWakeup(wakeup_gen);
 }
 
-DateTime RemoteFeedReader::streamTime() const {
+Pair<DateTime, DateTime> RemoteFeedReader::watermarks() const {
   ScopedLock<std::mutex> lk(mutex_);
 
   if (sources_.size() == 0) {
-    return 0;
+    return std::make_pair(DateTime(0), DateTime(0));
   }
 
-  uint64_t stream_time = std::numeric_limits<uint64_t>::max();
+  uint64_t low = std::numeric_limits<uint64_t>::max();
+  uint64_t high = 0;
+
   for (const auto& source : sources_) {
-    if (source->stream_time.unixMicros() < stream_time) {
-      stream_time = source->stream_time.unixMicros();
+    if (source->stream_time.unixMicros() < low) {
+      low = source->stream_time.unixMicros();
+    }
+
+    if (source->stream_time.unixMicros() > high) {
+      high = source->stream_time.unixMicros();
     }
   }
 
-  return stream_time;
+  return std::make_pair(DateTime(low), DateTime(high));
+}
+
+DateTime RemoteFeedReader::lowWatermark() const {
+  return watermarks().first;
+}
+
+DateTime RemoteFeedReader::highWatermark() const {
+  return watermarks().second;
 }
 
 void RemoteFeedReader::exportStats(

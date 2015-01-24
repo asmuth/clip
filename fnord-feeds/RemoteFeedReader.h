@@ -36,7 +36,13 @@ public:
       const String& path_prefix = "/fnord/feeds/reader/",
       stats::StatsRepository* stats_repo = nullptr);
 
-  DateTime streamTime() const;
+  /**
+   * Return the <low, high> time watermarks
+   */
+  Pair<DateTime, DateTime> watermarks() const;
+
+  DateTime lowWatermark() const;
+  DateTime highWatermark() const;
 
 protected:
 
