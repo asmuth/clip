@@ -241,6 +241,46 @@ JSONObject fromJSONImpl(
   return JSONObject(begin, begin + begin->size);
 }
 
+template <>
+HashMap<String, String> fromJSONImpl(
+    std::vector<JSONToken>::const_iterator begin,
+    std::vector<JSONToken>::const_iterator end) {
+  HashMap<String, String> map;
+
+  if (begin == end || begin + begin->size > end) {
+    RAISE(kIndexError);
+  }
+
+  if (begin->type != json::JSON_OBJECT_BEGIN) {
+    RAISEF(kParseError, "expected JSON_OBJECT_BEGIN, got: $0", begin->type);
+  }
+
+  for (++begin; begin != end;) {
+    String key;
+
+    switch (begin->type) {
+      case json::JSON_STRING:
+        key = begin->data;
+        ++begin;
+
+      default:
+        RAISEF(kParseError, "expected JSON_STRING, got: $0", begin->type);
+    }
+
+    switch (begin->type) {
+      case json::JSON_STRING:
+        map[key] = begin->data;
+        ++begin;
+
+      default:
+        RAISEF(kParseError, "expected JSON_STRING, got: $0", begin->type);
+    }
+  }
+
+  return map;
+}
+
+
 } // namespace json
 
 template <>

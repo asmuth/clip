@@ -255,6 +255,18 @@ void toJSONImpl(const JSONObject& obj, O* target) {
   }
 }
 
+template <typename O>
+void toJSONImpl(const HashMap<String, String>& val, O* target) {
+  target->emplace_back(json::JSON_OBJECT_BEGIN);
+
+  for (const auto& pair : val) {
+    target->emplace_back(json::JSON_STRING, pair.first);
+    target->emplace_back(json::JSON_STRING, pair.second);
+  }
+
+  target->emplace_back(json::JSON_OBJECT_END);
+}
+
 }
 }
 #endif
