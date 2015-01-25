@@ -9,83 +9,654 @@
   <http://www.gnu.org/licenses/>.
 -->
 
-<template id="metric-explorer-preview-base-tpl">
+<template id="fn-metric-explorer-preview-base-tpl">
+  <style type='text/css'>
+
+    h1.page_header {
+      margin-left: 5px;
+    }
+
+    h1.page_header a {
+      color: #999;
+    }
+
+    h1.page_header a:hover {
+      color: #666 !important;
+    }
+
+    .group.group_by {
+      display: none;
+    }
+
+    .group.group_by.active {
+      display: block;
+    }
+
+    .group.group_by fn-button[data-active='active'] {
+      background: rgb(226, 232, 237);
+    }
+
+    .group.group_by fn-button {
+      float: left;
+    }
+
+    .group.aggregation_time_window {
+      border-right: 1px solid rgb(226, 232, 237);
+    }
+
+    .group.aggregation_time_window fn-dropdown {
+      float:left;
+      margin-right: 20px;
+    }
+
+    .group.aggregation_time_window fn-dropdown:last-child {
+      margin-right: 0;
+    }
+
+    .group.aggregation_type {
+      border-right: 1px solid rgb(226, 232, 237);
+    }
+
+    .group b {
+      font-weight: normal;
+      font-size: 80%;
+      line-height: 12px;
+      font-weight: 500;
+      display: block;
+      margin-bottom: 6px;
+      opacity: 0.7;
+    }
+
+    .group {
+      height: 100%;
+      float: left;
+      padding: 14px 20px 0 20px;
+    }
+
+
+
+    #result_pane fn-message {
+      display:none;
+      margin: 2em 4em;
+    }
+
+    #result_pane fn-message.active {
+      display: block;
+    }
+
+    #table.result_pane {
+      padding-top: 4%;
+    }
+
+    fn-table /deep/ table > thead > tr > td,
+    fn-table /deep/ table > thead > tr > th,
+    fn-table /deep/ table > tbody > tr > td,
+    fn-table /deep/ table > tbody > tr > th {
+      font-size: 92%;
+    }
+
+
+    .result_pane fn-pager {
+      float:right;
+      margin-right: 5px;
+    }
+
+  </style>
   <fn-loader>
     <h1 class="page_header">
-      <fn-button id="metric-list">
-        <i>Metric</i>
-      </fn-button>
+      <a href="#">Metric</a>
       &rsaquo;
       <span></span>
     </h1>
-    <fnordmetric-controls type='primary'>
-      <fnordmetric-controls-section data-position='left'>
+    <fn-controls type='primary'>
+      <fn-controls-section data-position='left'>
         <div class='group aggregation_type'>
           <b>Rollup</b>
-          <fn-dropdown id='rollup'>
+          <fn-dropdown id='rollup' data-style="input small">
+            <fn-dropdown-header>Value</fn-dropdown-header>
+            <fn-dropdown-item data-value='value'>Value</fn-dropdown-item>
+            <fn-dropdown-item data-value='sum'>Sum</fn-dropdown-item>
+            <fn-dropdown-item data-value='min'>Min</fn-dropdown-item>
+            <fn-dropdown-item data-value='max'>Max</fn-dropdown-item>
           </fn-dropdown>
         </div>
         <div class='group aggregation_time_window'>
           <b>Time Window / Step</b>
-          <fn-dropdown id='time_window'>
+          <fn-dropdown id='time_window' data-style="input small">
+            <fn-dropdown-header>5 seconds</fn-dropdown-header>
+            <fn-dropdown-item data-value=1>1 second</fn-dropdown-item>
+            <fn-dropdown-item data-value=5>5 seconds</fn-dropdown-item>
+            <fn-dropdown-item data-value=10>10 seconds</fn-dropdown-item>
+            <fn-dropdown-item data-value=20>20 seconds</fn-dropdown-item>
+            <fn-dropdown-item data-value=30>30 seconds</fn-dropdown-item>
+            <fn-dropdown-item data-value=60>1 minute</fn-dropdown-item>
+            <fn-dropdown-item data-value=300>5 minutes</fn-dropdown-item>
+            <fn-dropdown-item data-value=900>15 minutes</fn-dropdown-item>
+            <fn-dropdown-item data-value=1800>30 minutes</fn-dropdown-item>
+            <fn-dropdown-item data-value=3600>1 hour</fn-dropdown-item>
+            <fn-dropdown-item data-value=7200>2 hours</fn-dropdown-item>
+            <fn-dropdown-item data-value=21600>6 hours</fn-dropdown-item>
+            <fn-dropdown-item data-value=43200>12 hours</fn-dropdown-item>
+            <fn-dropdown-item data-value=86400>24 hours</fn-dropdown-item>
           </fn-dropdown>
-          <fn-dropdown id='time_step'>
+          <fn-dropdown id='time_step' data-style="input small">
+            <fn-dropdown-header>5 seconds</fn-dropdown-header>
+            <fn-dropdown-item data-value=1>1 second</fn-dropdown-item>
+            <fn-dropdown-item data-value=5>5 seconds</fn-dropdown-item>
+            <fn-dropdown-item data-value=10>10 seconds</fn-dropdown-item>
+            <fn-dropdown-item data-value=20>20 seconds</fn-dropdown-item>
+            <fn-dropdown-item data-value=30>30 seconds</fn-dropdown-item>
+            <fn-dropdown-item data-value=60>1 minute</fn-dropdown-item>
+            <fn-dropdown-item data-value=300>5 minutes</fn-dropdown-item>
+            <fn-dropdown-item data-value=900>15 minutes</fn-dropdown-item>
+            <fn-dropdown-item data-value=1800>30 minutes</fn-dropdown-item>
+            <fn-dropdown-item data-value=3600>1 hour</fn-dropdown-item>
+            <fn-dropdown-item data-value=7200>2 hours</fn-dropdown-item>
+            <fn-dropdown-item data-value=21600>6 hours</fn-dropdown-item>
+            <fn-dropdown-item data-value=43200>12 hours</fn-dropdown-item>
+            <fn-dropdown-item data-value=86400>24 hours</fn-dropdown-item>
           </fn-dropdown>
+        </div>
+        <div class="group scale">
+          <b>Scale</b>
+          <fn-checkbox data-style="small" id="inv_scale">
+            <fn-checkbox-label>Inverted</fn-checkbox-label>
+          </fn-checkbox>
+          <fn-checkbox data-style="small" id="log_scale">
+            <fn-checkbox-label>Logarithmic</fn-checkbox-label>
+          </fn-checkbox>
         </div>
         <div class="group group_by">
           <b>Group by</b>
         </div>
-      </fnordmetric-controls-section>
-      <fnordmetric-controls-section data-position='right'>
+      </fn-controls-section>
+      <fn-controls-section data-position='right'>
         <div class='group timerange'>
           <b>Show The Last...</b>
-          <fn-dropdown id='timerange'>
+          <fn-dropdown id='timerange' data-style="input small">
+            <fn-dropdown-header>1 hour</fn-dropdown-header>
+            <fn-dropdown-item data-value=300>5 minutes</fn-dropdown-item>
+            <fn-dropdown-item data-value=900>15 minutes</fn-dropdown-item>
+            <fn-dropdown-item data-value=1800>30 minutes</fn-dropdown-item>
+            <fn-dropdown-item data-value=3600>1 hour</fn-dropdown-item>
+            <fn-dropdown-item data-value=14400>4 hours</fn-dropdown-item>
+            <fn-dropdown-item data-value=43200>12 hours</fn-dropdown-item>
+            <fn-dropdown-item data-value=86400>1 day</fn-dropdown-item>
           </fn-dropdown>
         </div>
         <div class='group date'>
           <b>End Time</b>
-          <fn-datepicker time-select='input'>
+          <fn-datepicker data-time-select data-selectable="past">
           </fn-datepicker>
         </div>
-      </fnordmetric-controls-section>
-    </fnordmetric-controls>
-    <fnordmetric-controls type='secondary'>
-      <fnordmetric-controls-section data-position='left'>
-        <fn-button id="embed_btn">
+      </fn-controls-section>
+    </fn-controls>
+    <fn-controls type='secondary'>
+      <fn-controls-section data-position='left'>
+        <fn-button id="embed_btn" data-size='small'>
           <i class='fa fa-share'></i>
           Embed
         </fn-button>
-        <fn-button id="auto_refresh">
+        <fn-button id="auto_refresh" data-toggle data-size='small'>
           <i class='fa fa-refresh'></i>
           Auto Refresh
         </fn-button>
-      </fnordmetric-controls-section>
-      <fnordmetric-controls-section data-position='right'>
-        <fn-daterangepicker past-selectable='selectable'>
+      </fn-controls-section>
+      <fn-controls-section data-position='right'>
+        <fn-daterangepicker data-selectable='past'>
         </fn-daterangepicker>
-      <fnordmetric-controls-section>
-    </fnordmetric-controls>
+      </fn-controls-section>
+    </fn-controls>
     <fn-loader id="result_pane" data-transparent>
-      <div id="result_pane_chart">
+      <fn-message data-state='error'></fn-message>
+      <div class="result_pane" id="chart">
+        <iframe width="100%" frameborder="0" height="360" scrolling="no"></iframe>
       </div>
-      <fn-table data-per-page='25' style="width:100%;">
-      </fn-table>
+      <div class="result_pane" id="table">
+        <fn-pager data-for data-first-item="1" data-per-page="25" data-circling></fn-pager>
+        <fn-table data-per-page='25' style="width:100%;">
+        </fn-table>
+      </div>
     </fn-loader>
+    <fn-modal id="embed">
+      <fn-modal-header>Embed</fn-modal-header>
+      <fn-modal-content>
+        <div class="header">Copy this into your HTML Page</div>
+        <code>
+          &lt;iframe<br />&nbsp;&nbsp;&nbsp;&nbsp;width="800"<br />
+          &nbsp;&nbsp;&nbsp;&nbsp;height="400"<br />
+          &nbsp;&nbsp;&nbsp;&nbsp;frameBorder="0"<br />
+          &nbsp;&nbsp;&nbsp;&nbsp;src="<span id="src"></span>"
+          &gt;<br />&lt;/iframe&gt;
+        </code>
+      </fn-modal-content>
+    </fn-modal>
   </fn-loader>
 </template>
 
 <script type='text/javascript'>
   var MetricExplorerPreview = function() {
     this.createdCallback = function() {
-      var tpl = Fnord.getTemplate("metric-explorer-preview", "base");
+      var tpl = Fnord.getTemplate("fn-metric-explorer-preview", "base");
       this.appendChild(tpl);
+
+      if (this.getAttribute('data-url') != null) {
+        this.onUrlChange(true);
+      }
 
     }
 
-  }
+    this.attributeChangedCallback = function(attr, old_val, new_val) {
+      if (attr == 'data-url') {
+        var init = (old_val == null);
+        this.onUrlChange(init);
+      }
+    }
+
+    this.onUrlChange = function(init) {
+      this.params = parseUrlQueryString(this.getAttribute("data-url"));
+      //var queryUrl = generateQueryUrl(this.params.query_params);
+
+      if (init) {
+        this.init();
+      }
+
+      this.updateChart();
+      this.updateTable();
+    };
+
+    this.init = function() {
+      var base = this;
+      var url =
+        baseUrl + "list?filter=" +
+        encodeURIComponent(this.params.query_params.innerViewValue);
+
+      Fnord.httpGet(url, function(r) {
+        if (r.status == 200) {
+          var json = JSON.parse(r.response);
+          json.metrics.map(function(m) {
+            base.columns = m.labels.join(",");
+          });
+        }
+        base.columns = [];
+        base.updateUrlParams(
+          base.addRequiredURLParamsForView(
+            base.getQueryParamOrDefaultValue("view")));
+        base.handleBasicControls();
+        base.handleGroupByControls();
+        base.handleDateTimeControls();
+        base.setHeader();
+        base.handleAggregationDisplay();
+      });
+    };
+
+
+    this.updateChart = function() {
+      var url = this.buildQueryUrl("svg");
+      var iframe = this.querySelector("#chart.result_pane iframe");
+      iframe.src = url;
+    }
+
+    this.updateTable = function() {
+     // var url = this.buildQueryUrl("json");
+      var url = baseUrl + "list";
+      var table = this.querySelector("#table.result_pane fn-table");
+      var base = this;
+      table.innerHTML = "";
+      Fnord.httpGet(url, function(r) {
+        if (r.status == 200) {
+          JSON.parse(r.response).metrics.forEach(function(m) {
+
+            var tr_elem = document.createElement("tr");
+            tr_elem.setAttribute('metric-key', m.key);
+            var cells = [
+              m.key,
+              m.labels.join(", "),
+              m.last_insert,
+              m.total_bytes];
+
+            cells.map(function(cell) {
+              var td_elem = document.createElement("td");
+              td_elem.innerHTML = cell;
+              tr_elem.appendChild(td_elem);
+            });
+
+            table.appendChild(tr_elem);
+          });
+          table.renderTable();
+          base.querySelector("fn-pager").forElement(table);
+        }
+      });
+
+    }
+
+    this.buildQueryUrl = function(format) {
+      var url =
+        baseUrl + "timeseries" +
+        "?metric=" + this.params.query_params.innerViewValue +
+        "&from=" + this.getQueryParamOrDefaultValue("start_time") +
+        "&until=" + this.getQueryParamOrDefaultValue("end_time") +
+        "&logarithmic=" + this.getQueryParamOrDefaultValue("logarithmic") +
+        "&inverted=" + this.getQueryParamOrDefaultValue("inverted");
+
+      var view = this.getQueryParamOrDefaultValue("view");
+      if (view != 'value') {
+        url +=
+          "&aggr_fn=" + view +
+          "&aggr_window=" + this.getQueryParamOrDefaultValue("t_window") +
+          "&aggr_step=" + this.getQueryParamOrDefaultValue("t_step");
+      }
+
+      url +=
+        "&format=" + format +
+        "&min=0" +
+        "&height=360" +
+        "&width=" + (document.body.offsetWidth - 20) +
+        "&grid=both" +
+        "&scale=0.8" +
+        "&axis_right=true" +
+        "&legend=toprightinside";
+
+      return url;
+    }
+
+    this.setHeader = function() {
+      this.querySelector("h1 span").innerHTML =
+        this.params.query_params.innerViewValue;
+    }
+
+
+    this.handleAggregationDisplay = function() {
+      var view = this.getQueryParamOrDefaultValue("view");
+      var time_window = this.querySelector("#time_window");
+      var time_step = this.querySelector("#time_step");
+      if (view == "value" || view.substr(0,6) == "rollup") {
+        time_window.setAttribute("data-state", "disabled");
+        time_step.setAttribute("data-state", "disabled");
+      } else {
+        time_window.removeAttribute("data-state");
+        time_step.removeAttribute("data-state");
+      }
+    };
+
+    /* returns all missing params */
+    this.addRequiredURLParamsForView = function(view) {
+      var new_params = {};
+      var update = false;
+      if (view == "count" ||
+          view == "sum"   ||
+          view == "mean"  ||
+          view == "min"   ||
+          view == "max" ) {
+
+        var time_window = this.params.query_params.t_window;
+        if (time_window == undefined) {
+          new_params.t_window = this.getQueryParamOrDefaultValue("t_window");
+          update = true;
+        }
+        var t_step = this.params.query_params.t_step;
+        if (t_step == undefined) {
+          new_params.t_step = this.getQueryParamOrDefaultValue("t_step");
+          update = true;
+        }
+      }
+
+      var group_by = this.params.query_params.by;
+      if (group_by == undefined) {
+        new_params.by = this.columns;
+        update = true;
+      }
+      var param_columns = this.params.query_params.columns;
+      if (param_columns == undefined) {
+        new_params.columns = this.columns;
+        update = true;
+      }
+
+      return new_params;
+    };
+
+
+    this.updateUrlParams = function(new_params) {
+      for (var key in new_params) {
+        if (new_params[key] != undefined) {
+          this.params.query_params[key] = new_params[key].toString();
+        }
+      }
+
+      var path = setUrlFromQueryString("metric", this.params.query_params, true);
+      if (this.getAttribute('data-url') != path) {
+        this.setAttribute("data-url", path);
+      }
+    };
+
+    this.getQueryParamOrDefaultValue = function(key) {
+      var defaults = {
+        view : "value",
+        columns : this.columns,
+        end_time : Math.round(Date.now() / 1000),
+        /* 5 minutes  */
+        time_range : 3600,
+        /* 10, 5 seconds */
+        t_step : 10,
+        t_window : 5,
+        logarithmic : false,
+        inverted: false,
+        by: this.columns
+      }
+
+      if (key == "time_range") {
+        var end_time = parseInt(this.getQueryParamOrDefaultValue("end_time"), 10);
+        var start_time = parseInt(this.params['start_time'], 10);
+        if (!isNaN(start_time)) {
+          return end_time - start_time;
+        } else {
+          return defaults['time_range'];
+        }
+      }
+
+      var value = (this.params.query_params[key] == undefined)?
+        defaults[key] : this.params.query_params[key];
+
+      return value;
+    };
+
+    this.onRefresh = function() {
+      var end_time = Date.now();
+      var time_range = this.getQueryParamOrDefaultValue('time_range');
+      var start_time = end_time - time_range;
+      this.updateUrlParams({
+        'end_time' : end_time,
+        'start_time' : start_time});
+    }
+
+/************************* controls handle functions **************************/
+
+    this.splitColumns = function(columns) {
+      if (columns.length == 0) {return [];}
+
+      return columns.split(",");
+    }
+
+    this.handleGroupByControls = function() {
+      var base = this;
+
+      var group_by_field = this.querySelector(".group.group_by");
+
+      var columns = this.splitColumns(this.getQueryParamOrDefaultValue("columns"));
+      var by = this.splitColumns(this.getQueryParamOrDefaultValue("by"));
+
+      if (columns.length > 0 ) {
+        group_by_field.className += " active";
+      }
+
+      columns.map(function(c) {
+        var button = document.createElement("fn-button");
+        button.innerHTML = c;
+        if (by.indexOf(c) > -1) {
+          button.setAttribute("data-active", "active");
+        }
+        group_by_field.appendChild(button);
+        button.addEventListener("fn-button-click", function() {
+          var isActive = this.hasAttribute("data-active");
+          var columns = base.getQueryParamOrDefaultValue("by");
+          if (isActive) {
+            this.removeAttribute("data-active");
+            columns = FnordMetric.util.removeFromCSV(columns, this.innerText);
+          } else {
+            this.setAttribute("data-active", "active");
+            columns = FnordMetric.util.addToCSV(columns, this.innerText);
+          }
+          base.updateUrlParams({"by": columns});
+        });
+      });
+    };
+
+    this.updateDateTimeElems = function(end_time) {
+      var params = parseUrlQueryString(this.getAttribute("data-url"));
+      var date_range = this.getQueryParamOrDefaultValue("time_range");
+      var start_time = parseInt(end_time, 10) - parseInt(date_range, 10);
+      this.updateUrlParams({"end_time" : end_time, "start_time" : start_time});
+      var datepicker = this.querySelector("fn-datepicker");
+      datepicker.setAttribute("data-timestamp", end_time * 1000);
+      var daterangepicker = this.querySelector("fn-daterangepicker");
+      daterangepicker.setAttribute("data-endtime", end_time * 1000);
+    };
+
+
+    this.handleDateTimeControls = function() {
+      var base = this;
+      /* init */
+      var time_range_val = parseInt(
+        this.getQueryParamOrDefaultValue("time_range"), 10);
+      var end_time = parseInt(this.getQueryParamOrDefaultValue("end_time"), 10);
+
+      var time_range = this.querySelector("#timerange");
+      time_range.setAttribute('data-preselected', time_range_val);
+
+      var datepicker = this.querySelector("fn-datepicker");
+      datepicker.setAttribute('data-timestamp', (end_time * 1000));
+
+      var daterangepicker = this.querySelector("fn-daterangepicker");
+      daterangepicker.setAttribute('data-daterange', (time_range_val * 1000));
+      daterangepicker.setAttribute('data-endtime', (end_time * 1000));
+
+      /* handle events */
+      time_range.addEventListener("fn-dropdown-item-click", function(e) {
+        var endtime = base.getQueryParamOrDefaultValue("end_time");
+        var date_range = parseInt(e.srcElement.getAttribute('data-value'));
+        var starttime = parseInt(endtime, 10) - date_range;
+        base.updateUrlParams({"start_time": starttime});
+        //check
+        daterangepicker.setAttribute("data-daterange", (date_range * 1000));
+      }, false);
+
+      datepicker.addEventListener('fn-datepicker-select', function() {
+        var timestamp = parseInt(this.getAttribute("data-timestamp"), 10);
+        timestamp = Math.round(timestamp / 1000);
+        base.updateDateTimeElems(timestamp);
+      }, false);
+
+      daterangepicker.addEventListener('fn-daterangepicker-select-previous', 
+        function() {
+          var endtime = parseInt(this.getAttribute("data-endtime"), 10);
+          endtime = Math.round(endtime / 1000);
+          base.updateDateTimeElems(endtime);
+      }, false);
+
+      daterangepicker.addEventListener('fn-daterangepicker-select-next',
+        function() {
+          var endtime = parseInt(this.getAttribute("data-endtime"), 10);
+          endtime = Math.round(endtime / 1000);
+          base.updateDateTimeElems(endtime);
+      }, false);
+    }
+
+    this.handleBasicControls = function() {
+      var base = this;
+
+      /* init */
+      var rollup = this.querySelector("#rollup");
+      var view = this.getQueryParamOrDefaultValue("view");
+      rollup.setAttribute('data-preselected', view);
+
+      var time_window = this.querySelector("#time_window");
+      var t_window_val = this.getQueryParamOrDefaultValue("t_window");
+      time_window.setAttribute('data-preselected', t_window_val);
+
+      var time_step = this.querySelector("#time_step");
+      var t_step_val = this.getQueryParamOrDefaultValue("t_step");
+      time_step.setAttribute('data-preselected', t_step_val);
+
+      var log_scale = this.querySelector("#log_scale");
+      var inv_scale = this.querySelector("#inv_scale");
+      if (this.getQueryParamOrDefaultValue("logarithmic")) {
+        log_scale.setAttribute("data-preselected", true);
+      }
+      if (this.getQueryParamOrDefaultValue("inverted")) {
+        inv_scale.setAttribute("data-preselected", true);
+      }
+
+      /* handle Events */
+      this.querySelector("h1.page_header").onclick = function(e) {
+        e.preventDefault();
+        openUrl("metrics", true);
+      };
+
+      rollup.addEventListener("fn-dropdown-item-click", function(e) {
+        var view = e.srcElement.getAttribute('data-value');
+        var new_params = base.addRequiredURLParamsForView(view);
+        new_params.view = view;
+        base.updateUrlParams(new_params);
+        base.handleAggregationDisplay();
+      }, false);
+
+      time_window.addEventListener("fn-dropdown-item-click", function(e) {
+        var value = e.srcElement.getAttribute('data-value');
+        base.updateUrlParams({"t_window": value});
+      }, false);
+
+      time_step.addEventListener("fn-dropdown-item-click", function(e) {
+        var value = e.srcElement.getAttribute('data-value');
+        base.updateUrlParams({"t_step": value});
+      }, false);
+
+      log_scale.addEventListener("fn-checkbox-select", function(e) {
+        base.updateUrlParams({"logarithmic" : true});
+      }, false);
+
+      inv_scale.addEventListener("fn-checkbox-select", function(e) {
+        base.updateUrlParams({"inverted" : true});
+      }, false);
+
+      log_scale.addEventListener("fn-checkbox-unselect", function(e) {
+        base.updateUrlParams({"logarithmic" : false});
+      }, false);
+
+      inv_scale.addEventListener("fn-checkbox-unselect", function(e) {
+        base.updateUrlParams({"inverted" : false});
+      }, false);
+
+      var interval_id;
+      this.querySelector("#auto_refresh").addEventListener('fn-button-click', function() {
+        if (this.getAttribute('data-state') == "active") {
+          window.clearInterval(interval_id);
+          this.removeAttribute('data-state');
+        } else {
+          interval_id = window.setInterval(function() {base.onRefresh(); }, 30000);
+          this.setAttribute('data-state', 'active');
+        }
+      }, false);
+
+      var modal = this.querySelector("fn-modal");
+      this.querySelector("#embed_btn").addEventListener('fn-button-click', function() {
+        modal.querySelector("span").innerHTML = baseUrl + base.getAttribute('data-url');
+        modal.show();
+      }, false);
+    };
+  };
 
   window.addEventListener('fn-ready', function() {
-    Fnord.registerComponent('metric-explorer-preview', MetricExplorerPreview);
+    Fnord.registerComponent('fn-metric-explorer-preview', MetricExplorerPreview);
   }, false);
 </script>
 

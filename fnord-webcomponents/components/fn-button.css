@@ -119,7 +119,25 @@ fn-button[data-state='active'],
   box-shadow: 0px 0px 0px 1px rgba(39, 41, 43, 0.15) inset, 0px 0px 0px 0px rgba(39, 41, 43, 0.15) inset;
 }
 
+/*--------------
+     Toggle
+---------------*/
 
+
+/* Toggle (Modifies active state to give affordances) */
+fn-button[data-toggle][data-state='active'],
+.fn-button[data-toggle][data-state='active'] {
+  background-color: #3b83c0 !important;
+  box-shadow: none !important;
+  text-shadow: none;
+  color: #ffffff !important;
+}
+fn-button[data-toggle][data-state='active']:hover,
+.fn-button[data-toggle][data-state='active']:hover {
+  background-color:  #458ac6 !important;
+  text-shadow: none;
+  color: #ffffff !important;
+}
 
 /*******************************
      Button Groups
@@ -158,8 +176,48 @@ fn-button-group[data-split-evenly] {
   width: 100%;
 }
 
+/*-------------------
+        Sizes
+--------------------*/
 
+.fn-button-group .fn-button[data-size='mini'],
+.fn-button[data-size='mini'],
+fn-button-group fn-button[data-size='mini'],
+fn-button[data-size='mini'] {
+  font-size: 0.71428571rem;
+}
 
+.fn-button-group .fn-button[data-size='tiny'],
+.fn-button[data-size='tiny'],
+fn-button-group fn-button[data-size='tiny'],
+fn-button[data-size='tiny'] {
+  font-size: 0.85714286rem;
+}
 
+.fn-button-group .fn-button[data-size='small'],
+.fn-button[data-size='small'],
+fn-button-group fn-button[data-size='small'],
+fn-button[data-size='small'] {
+  font-size:  0.92857143rem;
+}
 
+.fn-button-group .fn-button,
+.fn-button,
+fn-button-group fn-button,
+fn-button {
+  font-size: 1rem;
+}
+
+.fn-button-group .fn-button[data-size='large'],
+.fn-button[data-size='large'],
+fn-button-group fn-button[data-size='large'],
+fn-button[data-size='large'] {
+  font-size: 1.14285714rem;
+}
+.fn-button-group .fn-button[data-size='big'],
+.fn-button[data-size='big'],
+fn-button-group fn-button[data-size='big'],
+fn-button[data-size='big']  {
+  font-size: 1.28571429rem;
+}
 

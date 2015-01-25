@@ -13,10 +13,19 @@
     <title>Metric Explorer</title>
     <link rel="stylesheet" href="../fnord.css" type="text/css">
     <link rel="stylesheet" href="../3rdparty/fontawesome.css" type="text/css">
+    <link rel="stylesheet" href="../3rdparty/fontawesome.woff" type="text/css">
     <link rel="stylesheet" href="fn-metric-explorer.css" type="text/css">
+    <link rel="stylesheet" href="../components/fn-button.css" type="text/css">
+    <link rel="stylesheet" href="../components/fn-input.css" type="text/css">
+    <link rel="stylesheet" href="../components/fn-table.css" type="text/css">
+    <link rel="stylesheet" href="../components/fn-pager.css" type="text/css">
+    <link rel="stylesheet" href="../components/fn-message.css" type="text/css">
+    <link rel="stylesheet" href="../components/fn-modal.css" type="text/css">
   </head>
   <body>
-    <link rel="import" href="metric-explorer-components/metric-explorer-list.html" data-component="metric-explorer-list">
+    <link rel="import" href="metric-explorer-components/metric-explorer-list.html" data-component="fn-metric-explorer-list">
+    <link rel="import" href="metric-explorer-components/metric-explorer-search.html" data-component="fn-metric-explorer-search">
+    <link rel="import" href="metric-explorer-components/metric-explorer-preview.html" data-component="fn-metric-explorer-preview">
     <link rel="import" href="../components/fn-appbar.html" data-component="fn-appbar">
     <link rel="import" href="../components/fn-button.html" data-component="fn-button">
     <link rel="import" href="../components/fn-loader.html" data-component="fn-loader">
@@ -25,6 +34,15 @@
     <link rel="import" href="../components/fn-table.html" data-component="fn-table">
     <link rel="import" href="../components/fn-progressbar.html" data-component="fn-progressbar">
     <link rel="import" href="../components/fn-dropdown.html" data-component="fn-dropdown">
+    <link rel="import" href="../components/fn-controls.html" data-component="fn-controls">
+    <link rel="import" href="../components/fn-datepicker.html" data-component="fn-datepicker">
+    <link rel="import" href="../components/fn-daterangepicker.html" data-component="fn-daterangepicker">
+    <link rel="import" href="../components/fn-input.html" data-component="fn-input">
+    <link rel="import" href="../components/fn-checkbox.html" data-component="fn-checkbox">
+    <link rel="import" href="../components/fn-timeinput.html" data-component="fn-input-time">
+    <link rel="import" href="../components/fn-pager.html" data-component="fn-pager">
+    <link rel="import" href="../components/fn-message.html" data-component="fn-message">
+    <link rel="import" href="../components/fn-modal.html" data-component="fn-modal">
     <link rel="stylesheet" href="../themes/midnight-blue.css" type="text/css">
 
 
@@ -36,19 +54,128 @@
 </html>
 
 <script type='text/javascript'>
-
+  //var baseUrl = "https://rpc.fnrd.net/cm-stats/metrics";
+  var baseUrl = "http://127.0.0.1:8000/metrics/";
   var views = {
-    "metric-explorer-list" : "<metric-explorer-list></metric-explorer-list>",
-    "metric-explorer-preview" : "<metric-explorer-preview></metric-explorer-preview>"
+    "metrics" : "<fn-metric-explorer-list></fn-metric-explorer-list>",
+    "metric" : "<fn-metric-explorer-preview></fn-metric-explorer-preview>",
+    "search" : "<fn-metric-explorer-list></fn-metric-explorer-list>"
   }
 
-  function open(name) {
+
+  var routes = {
+    "metrics": "fn-metric-explorer-list",
+    "metric": "fn-metric-explorer-preview",
+    "search": "fn-metric-explorer-list"
+  };
+
+  var default_route = "metrics";
+
+
+  function openUrl(raw_url, push_state) {
+    var url = parseUrlQueryString(raw_url);
+    var query_params = url["query_params"];
+
+    var view_name = routes[url["path"]];
+
+    if (view_name == undefined) {
+      alert("no route found for: " + url["path"]);
+      return;
+    }
+
+    if (typeof push_state == "undefined" || push_state === true) {
+      window.history.pushState({url: raw_url}, "", "#" + raw_url);
+    }
+
     var viewport = document.querySelector("#metric-explorer-viewport");
-    viewport.innerHTML = views[name];
+    var view = document.createElement(view_name);
+
+    raw_url = "#" + raw_url;
+    if (view.getAttribute('data-url') != raw_url) {
+      view.setAttribute("data-url", raw_url);
+    }
+    viewport.innerHTML = "";
+    viewport.appendChild(view);
+
+  };
+
+
+  function parseUrlQueryString(qstr) {
+    if (qstr == null) {return;}
+    var path;
+    var query_params = {};
+
+    if (qstr.indexOf("?") >= 0) {
+      path = qstr.substr(0, qstr.indexOf("?"));
+      path = path.replace("#", "");
+
+      var params_str = qstr.substr(qstr.indexOf("?") + 1);
+      var raw_params = params_str.split('&');
+
+      /* set first param which defines view's view (metric, search ...) */
+      var param = raw_params[0].split('=');
+      query_params.innerView = decodeURIComponent(param[0]);
+      query_params.innerViewValue = decodeURIComponent(param[1]);
+
+      for (var i = 1; i < raw_params.length; i++) {
+        var param = (raw_params[i].split('=') != "undefined") ? 
+          raw_params[i].split('=') : "";
+        if (param[0] != "undefined") {
+          query_params[decodeURIComponent(param[0])] =
+             (param[1] != "undefined") ? 
+             decodeURIComponent(param[1]) : "";
+        }
+      }
+
+    } else {
+      path = qstr != "undefined" ? qstr : "";
+    }
+    return {
+      "path": path,
+      "query_params": query_params
+    }
+  };
+
+  function setUrlFromQueryString(hash, query_params, push_state) {
+    if (hash === undefined || hash === "undefined") {
+      window.location.hash = "";
+      return;
+    }
+    var path = "#" + hash;
+
+    if ("innerView" in query_params && query_params.innerView != undefined) {
+      path += "?" + encodeURIComponent(query_params.innerView) + "=";
+      path +=
+        encodeURIComponent(query_params.innerViewValue);
+
+      for (var param in query_params) {
+        if (param != "innerView" && 
+            param != "innerViewValue" &&
+            query_params[param] != undefined &&
+            query_params[param].length > 0) {
+
+          path += 
+            "&" + encodeURIComponent(param) +
+            "=" + encodeURIComponent(query_params[param]);
+        }
+      }
+    }
+
+    if (push_state) {
+      window.history.pushState({url:path}, "#", path);
+    }
+    window.location.hash = path;
+    return path;
   }
 
   window.addEventListener('fn-ready' ,function() {
-    open("metric-explorer-list");
+    var fragment = window.location.hash;
+    if (fragment) {
+      openUrl(fragment.substring(1));
+    } else {
+      openUrl(default_route);
+    }
+
   }, false)
 </script>
 <script type='text/javascript' src='../fnord.js'></script>

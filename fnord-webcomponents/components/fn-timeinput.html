@@ -10,36 +10,73 @@
 
   todo: add seconds-selectable and render third input if attr is set
 -->
-<template id="fn-timeinput-base-tpl">
+<template id="fn-input-time-base-tpl">
   <style>
     #timeinput_container {
       margin:auto;
-      height: 30px;
-      width: 126px;
+      height: 35px;
+      width: 114px;
     }
 
     input {
       float: left;
-      width: 30px;
-      height: 25px;
-      line-height: 25px;
-      padding: 0 8px;
-      font-size: 12px;
-      border-radius: 4px;
-      border: 1px solid #b3c2d0;
-      color: #545758;
-      background: #fff;
+      width: 50px;
+      font-size: 1rem;
+      outline: none;
+      -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
+      text-align: left;
+      line-height: 1.2142em;
+      font-family: "Helvetica Neue", "Helvetica", Arial;
+      padding: 0.60861em 1em;
+      background: #ffffff;
+      border: 1px solid rgba(0, 0, 0, 0.15);
+      color: rgba(0, 0, 0, 0.8);
+      border-radius: 0.2857rem;
+      -webkit-transition: background-color 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+              transition: background-color 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+      box-shadow: none;
+
     }
 
-    input.highlighted {
-      border: 1px solid rgba(230, 126, 34,1.0);
-      background: rgba(230, 126, 34,0.1);
+    input::-webkit-input-placeholder {
+      color: rgba(0, 0, 0, 0.4);
+    }
+    input::-moz-placeholder {
+      color: rgba(0, 0, 0, 0.4);
+    }
+    input:focus {
+      border-color: rgba(39, 41, 43, 0.3);
+      background: '';
+      color: rgba(0, 0, 0, 0.8);
+      box-shadow: none;
+    }
+    input:focus input::-webkit-input-placeholder {
+      color: rgba(0, 0, 0, 0.8);
+    }
+    input:focus input::-moz-placeholder {
+      color: rgba(0, 0, 0, 0.8);
+    }
+
+    input:active {
+      border-color: rgba(0, 0, 0, 0.3);
+      background: #fafafa;
+      color: rgba(0, 0, 0, 0.8);
+      box-shadow: none;
+    }
+
+    input.error {
+      background-color: #fff0f0;
+      border-color: #dbb1b1;
+      color: #d95c5c;
+      box-shadow: none;
     }
 
     b {
+      line-height: 1.2142em;
+      padding-top: 0.60861em;
       float:left;
-      margin-left: 5px;
-      margin-right: 5px;
+      margin: 0 5px;
+
     }
   </style>
 
@@ -52,13 +89,23 @@
 <script type="text/javascript">
   var TimeInputComponent = function() {
     this.createdCallback = function() {
-      var tpl = Fnord.getTemplate("fn-timeinput", "base");
+      var tpl = Fnord.getTemplate("fn-input-time", "base");
       var shadow = this.createShadowRoot();
       var base = this;
       shadow.appendChild(tpl);
 
       var hours_input = this.shadowRoot.querySelector("#hours");
       var minutes_input = this.shadowRoot.querySelector("#minutes");
+
+      if (this.hasAttribute('data-hours-value')) {
+        this.setHoursValue(this.getAttribute('data-hours-value'));
+      }
+      if (this.hasAttribute('data-minutes-value')) {
+        this.setMinutesValue(this.getAttribute('data-minutes-value'));
+      }
+      if (this.hasAttribute('data-state')) {
+        this.setState();
+      }
 
       hours_input.addEventListener('focus', function() {
         base.validateHoursInput();
@@ -67,6 +114,14 @@
         base.validateMinutesInput();
       }, false);
     };
+
+    this.attributeChangedCallback = function(attr, old_val, new_val) {
+      if (attr == "data-minutes-value") {
+        this.setMinutesValue(new_val);
+      } else if (attr == "data-hours-value") {
+        this.setHoursValue(new_val);
+      }
+    }
 
     this.validateHoursInput = function() {
       var base = this;
@@ -77,15 +132,16 @@
         if (e.keyCode == 13 ) {
           var value = parseInt(this.value);
           if (value > 23) {
-            this.className = "highlighted";
+            this.className = "error";
             return;
           }
           this.className = "";
+          base.setAttribute('data-hours-value', value);
           base.fireTimeInputSubmitEvent();
           return;
         }
-        if (!FnordMetric.util.isNavKey(e.keyCode) &&
-          !FnordMetric.util.isNumKey(e.keyCode)) {
+        if (!base.isNavKey(e.keyCode) &&
+          !base.isNumKey(e.keyCode)) {
             e.preventDefault();
         }
       }, false);
@@ -100,28 +156,63 @@
         if (e.keyCode == 13 ) {
           var value = parseInt(this.value);
           if (value > 59) {
-            this.className = "highlighted";
+            this.className = "error";
             return;
           }
           this.className = "";
+          base.setAttribute('data-minutes-value', value);
           base.fireTimeInputSubmitEvent();
           return;
         }
-        if (!FnordMetric.util.isNavKey(e.keyCode) &&
-          !FnordMetric.util.isNumKey(e.keyCode)) {
+        if (!base.isNavKey(e.keyCode) &&
+          !base.isNumKey(e.keyCode)) {
             e.preventDefault();
         }
       }, false);
     };
 
+    this.appendLeadingZero = function (num) {
+      var num = num;
+      if (typeof num == 'string') {
+        return (num.length > 1)? num : "0" + num;
+      }
+      return (num > 9)? num : "0" + num;
+    };
+
+    this.isNavKey = function(keycode) {
+      return (
+          keycode == 8 ||
+          keycode == 9 ||
+          keycode == 37 ||
+          keycode == 39 ||
+          keycode == 46);
+    };
+
+    this.isNumKey = function(keycode) {
+      return (
+        (keycode >= 48 && keycode <= 57));
+    };
+
+
     this.setHoursValue = function(value) {
       var input = this.shadowRoot.querySelector("#hours");
-      input.value = FnordMetric.util.appendLeadingZero(value);
+
+      if (parseInt(value, 10) > 23) {
+        input.className = "error";
+      }
+
+      input.value = this.appendLeadingZero(value);
+
     };
 
     this.setMinutesValue = function(value) {
       var input = this.shadowRoot.querySelector("#minutes");
-      input.value = FnordMetric.util.appendLeadingZero(value);
+
+      if (parseInt(value, 10) > 59) {
+        input.className = "error";
+      }
+
+      input.value = this.appendLeadingZero(value);
     };
 
     this.getValues = function() {
@@ -131,12 +222,12 @@
     };
 
     this.fireTimeInputSubmitEvent = function() {
-      this.dispatchEvent(new Event("fn-timeinput-submit"));
+      this.dispatchEvent(new Event("fn-input-time-submit"));
     };
   }
 
   window.addEventListener('fn-ready', function() {
-    var timeinput = Fnord.registerComponent('fn-timeinput', TimeInputComponent);
+    var timeinput = Fnord.registerComponent('fn-input-time', TimeInputComponent);
   }, false);
 </script>
 

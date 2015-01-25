@@ -13,11 +13,40 @@
   background-color: #fff;
 }
 
-metric-explorer-list {
+fn-metric-explorer-list,
+fn-metric-explorer-search {
   display: block;
   width: 100%;
 }
 
-metric-explorer-list fn-table /deep/ table {
+fn-metric-explorer-list fn-table /deep/ table,
+fn-metric-explorer-search fn-table /deep/ table {
   width: 100%;
+}
+
+fn-metric-explorer-list .navigation,
+fn-metric-explorer-search .navigation {
+  height: 58px;
+  padding: 0 10px;
+}
+
+fn-metric-explorer-list .navigation h1,
+fn-metric-explorer-search .navigation h1 {
+  float:left
+}
+
+fn-metric-explorer-list .navigation fn-search,
+fn-metric-explorer-search .navigation fn-search {
+  height: 35px;
+  width: 18%;
+  min-width: 150px;
+  float: right;
+  margin-top: 12.5px;
+}
+
+fn-metric-explorer-list .navigation fn-search /deep/ ul,
+fn-metric-explorer-search .navigation fn-search /deep/ ul {
+  width: 100%;
+  min-width: 150px;
+  overflow: hidden;
 }

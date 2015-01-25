@@ -64,8 +64,8 @@
       line-height: 1;
       width: 17px;
       height: 17px;
-      top: 0;
-      left: 0;
+      top: -1px;
+      left: -1px;
       content: '';
       background: #fff;
       border-radius: .25em;
@@ -79,7 +79,7 @@
     .field[data-type='checkbox'] label:after {
       position: absolute;
       top: 0;
-      left: 0;
+      left: 1px;
       line-height: 17px;
       width: 17px;
       height: 17px;
@@ -93,7 +93,8 @@
 
     .field[data-active] label:after {
       opacity: 1;
-      content: 'x';
+      font-family: FontAwesome;
+      content: '\f00d';
     }
 
     .field[data-type='radio'] label:before {
@@ -112,10 +113,10 @@
       border: none;
       line-height: 14px;
       top: 1px;
-      left: 0;
+      left: 1px;
       font-size: 9px;
-      width: 14px;
-      height: 14px;
+      width: 15px;
+      height: 15px;
       border-radius: 500rem;
       -webkit-transform: scale(0.42857143);
       -ms-transform: scale(0.42857143);
@@ -137,6 +138,17 @@
       color: #d95c5c;
     }
 
+    .field.small label {
+      font-size: 0.9em;
+    }
+
+    .field label:after,
+    .field[data-type='checkbox'] label:after {
+      width: 15px;
+      height: 15px;
+    }
+
+
   </style>
 
   <div class="field">
@@ -155,24 +167,13 @@
 
       if (this.hasAttribute('data-type')) {this.setInputType();}
       if (this.hasAttribute('data-state')) {this.setState();}
+      if (this.hasAttribute('data-style')) {this.setStyle();}
+      if (this.hasAttribute('data-preselected')) {this.setPreselection(); }
 
       this.attributeChangedCallback();
 
       this.addEventListener('click', function() {
-        if (this.hasAttribute('data-active')) {
-          this.removeAttribute('data-active');
-          this.shadowRoot.querySelector(
-            ".field").removeAttribute("data-active");
-        } else {
-          this.setAttribute('data-active', 'active');
-          this.shadowRoot.querySelector(
-            ".field").setAttribute('data-active', 'active');
-           var ev = new CustomEvent("fn-checkbox-submit", {
-            bubbles: true,
-            cancelable: true
-          });
-          this.dispatchEvent(ev);
-        }
+        this.toggleActiveState();
       }, false);
 
     };
@@ -185,10 +186,39 @@
         case 'data-state':
           this.setState();
           break;
+        case 'data-preselected':
+          this.setPreselection();
+          break;
         default:
           break;
       }
     };
+
+    this.toggleActiveState = function() {
+      var field = this.shadowRoot.querySelector(".field");
+
+      if (field.hasAttribute('data-active')) {
+        this.removeAttribute('data-active');
+        this.removeAttribute('data-preselected');
+        field.removeAttribute('data-active');
+
+        var ev = new CustomEvent("fn-checkbox-unselect", {
+            bubbles: true,
+            cancelable: true
+        });
+        this.dispatchEvent(ev);
+
+      } else {
+        this.setAttribute('data-active', 'active');
+        field.setAttribute('data-active', 'active');
+
+        var ev = new CustomEvent("fn-checkbox-select", {
+            bubbles: true,
+            cancelable: true
+        });
+        this.dispatchEvent(ev);
+      }
+    }
 
     this.setInputType = function() {
       var type = this.getAttribute('data-type');
@@ -204,6 +234,20 @@
       var field = this.shadowRoot.querySelector(".field");
       field.setAttribute('data-state', this.getAttribute('data-state'));
     };
+
+    this.setStyle = function() {
+      var field = this.shadowRoot.querySelector(".field");
+      field.className += " " + this.getAttribute('data-style');
+    };
+
+    this.setPreselection = function() {
+      var field = this.shadowRoot.querySelector(".field");
+      if (this.getAttribute('data-preselected')) {
+        field.setAttribute('data-active', 'active');
+      } else {
+        field.removeAttribute('data-active');
+      }
+    }
   };
 
   window.addEventListener('fn-ready', function() {
