@@ -44,7 +44,10 @@
         }
       }
 
-
+      Fnord.httpGet(url, function(r) {
+        console.log(r);
+        //http://localhost:9999/logjoin_stats.php
+      });
       this.shadowRoot.querySelector("iframe").setAttribute("src", url);
     };
 
