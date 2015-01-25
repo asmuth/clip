@@ -33,7 +33,7 @@ a {
 
 ul.fn-cockpit-navigation {
   background: #fff;
-  border-bottom: 1px solid #ddd
+  border-bottom: 1px solid #ddd;
   padding: 0.5em 16px;
   list-style-type: none;
   line-height: 1;
