@@ -1,3 +1,16 @@
+<?php
+  $base_path = dirname(__FILE__);
+  include($base_path . "/../fnord-webcomponents/fnord.css");
+  include($base_path . "/../fnord-webcomponents/components/fn-input.css");
+  include($base_path . "/../fnord-webcomponents/3rdparty/fontawesome.css");
+  include($base_path . "/../fnord-webcomponents/components/fn-button.css");
+  include($base_path . "/../fnord-webcomponents/components/fn-input.css");
+  include($base_path . "/../fnord-webcomponents/components/fn-table.css");
+  include($base_path . "/../fnord-webcomponents/components/fn-pager.css");
+  include($base_path . "/../fnord-webcomponents/components/fn-message.css");
+  include($base_path . "/../fnord-webcomponents/components/fn-modal.css");
+?>
+
 html {
   height: 100%;
   font-size: 14px;
@@ -21,10 +34,6 @@ body {
 
 .viewport {
 }
-
-<?php
-  include("../3rdparty/libfnord/fnord-webcomponents/components/fn-input.css");
-?>
 
 a {
   text-decoration: none;
@@ -207,3 +216,4 @@ h1.small {
   font-style: normal;
   color: #555;
 }
+

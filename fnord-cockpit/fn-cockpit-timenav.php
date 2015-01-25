@@ -11,13 +11,6 @@
  * only if attribute future-selectable is set future dates are selectable
  * same holds true for past-selectable
  */
-
-include("../3rdparty/libfnord/fnord-cockpit/fn-cockpit-timenav.html");
-include("../3rdparty/libfnord/fnord-webcomponents/components/fn-input.html");
-include("../3rdparty/libfnord/fnord-webcomponents/components/fn-datepicker.html");
-include("../3rdparty/libfnord/fnord-webcomponents/components/fn-daterangepicker.html");
-include("../3rdparty/libfnord/fnord-webcomponents/components/fn-dropdown.html");
-
 class TimeNavigation {
 
   function __construct() {
