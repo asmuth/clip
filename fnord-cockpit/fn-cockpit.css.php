@@ -1,3 +1,31 @@
+html {
+  height: 100%;
+  font-size: 14px;
+  font-family: 'Helvetica Neue',Arial,Helvetica,sans-serif;
+}
+body {
+  padding: 0;
+  margin: 0;
+  font-size: 14px;
+  font-family: 'Helvetica Neue',Arial,Helvetica,sans-serif;
+  line-height: 1.33;
+  color: rgba(0,0,0,.8);
+  height: 100%;
+}
+
+.clear {
+  clear: both;
+}
+
+.viewport {
+  margin: 0 0 0 200px;
+  text-align:center;
+}
+
+<?php
+  include("../3rdparty/libfnord/fnord-webcomponents/components/fn-input.css");
+?>
+
 a {
   text-decoration: none;
   color: rgba(0,0,0,.8);
