@@ -106,13 +106,11 @@
       }
     };
 
-
     this.attributeChangedCallback = function(attr, new_val, old_val) {
       if (attr == 'data-url') {
         this.init();
       }
     };
-
 
     this.init = function() {
       var params = parseUrlQueryString(this.getAttribute('data-url'));
