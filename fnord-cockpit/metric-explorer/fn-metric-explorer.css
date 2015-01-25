@@ -8,11 +8,6 @@
   copy of the GNU General Public License along with this program. If not, see
   <http://www.gnu.org/licenses/>.
 */
-
-#metric-explorer-viewport {
-  background-color: #fff;
-}
-
 fn-metric-explorer-list,
 fn-metric-explorer-search {
   display: block;
@@ -24,19 +19,9 @@ fn-metric-explorer-search fn-table /deep/ table {
   width: 100%;
 }
 
-fn-metric-explorer-list .navigation,
-fn-metric-explorer-search .navigation {
-  height: 58px;
-  padding: 0 10px;
-}
-
-fn-metric-explorer-list .navigation h1,
-fn-metric-explorer-search .navigation h1 {
-  float:left
-}
-
 fn-metric-explorer-list .navigation fn-search,
 fn-metric-explorer-search .navigation fn-search {
+  display: none;
   height: 35px;
   width: 18%;
   min-width: 150px;

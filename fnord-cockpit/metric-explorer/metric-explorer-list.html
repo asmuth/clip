@@ -35,6 +35,15 @@
 
     fn-table {
       width: 100%;
+      border-top: 1px solid #ddd;
+      border-radius: 0;
+    }
+
+    fn-table /deep/ table {
+      border-radius: 0;
+      border-top: none;
+      margin-top: 2px;
+      margin-bottom: 0;
     }
 
     fn-table /deep/ table > thead > tr > td,
@@ -42,6 +51,9 @@
     fn-table /deep/ table > tbody > tr > td,
     fn-table /deep/ table > tbody > tr > th {
       font-size: 92%;
+      background: transparent;
+      border-radius: 0;
+      border-top: none;
     }
 
     fn-pager {
@@ -49,6 +61,7 @@
       margin: 5px 5px 5px 0;
     }
   </style>
+
   <fn-loader data-loading data-loader-type="loader3">
     <fn-message data-state='error'>
       <fn-message-header>
@@ -63,18 +76,20 @@
     </fn-message>
     <div class="list ui">
       <div class="navigation">
-        <h1 class="page_header"><i>Metrics</i> &rsaquo; </h1>
+        <h1 class="small">Metrics &rsaquo; </h1>
         <fn-search data-placeholder="Search...">
           <fn-search-icon><i class="fa fa-search"></i></fn-search-icon>
         </fn-search>
       </div>
+      <div style="border-top: 1px solid #bbb; background: #fff;">
+        <fn-table data-per-page="25" data-page-"0" data-clickable>
+          <fn-table-column data-sortable>Metric</fn-table-column>
+          <fn-table-column>Labels</fn-table-column>
+          <fn-table-column data-sortable>Last Insert</fn-table-column>
+          <fn-table-column data-sortable>Total Stored Bytes</fn-table-column>
+        </fn-table>
+      </div>
       <fn-pager data-for data-first-item="1" data-per-page="25" data-circling></fn-pager>
-      <fn-table data-per-page="25" data-page-"0" data-clickable>
-        <fn-table-column data-sortable>Metric</fn-table-column>
-        <fn-table-column>Labels</fn-table-column>
-        <fn-table-column data-sortable>Last Insert</fn-table-column>
-        <fn-table-column data-sortable>Total Stored Bytes</fn-table-column>
-      </fn-table>
     </div>
   </fn-loader>
 </template>
