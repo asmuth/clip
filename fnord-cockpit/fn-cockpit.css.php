@@ -18,8 +18,6 @@ body {
 }
 
 .viewport {
-  margin: 0 0 0 200px;
-  text-align:center;
 }
 
 <?php
