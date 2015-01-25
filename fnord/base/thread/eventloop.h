@@ -31,6 +31,7 @@ public:
   EventLoop();
   ~EventLoop();
   void run();
+  void shutdown();
 
 protected:
 

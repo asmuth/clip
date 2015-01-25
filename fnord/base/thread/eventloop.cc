@@ -188,5 +188,9 @@ void EventLoop::run() {
   }
 }
 
+void EventLoop::shutdown() {
+  running_ = false;
+}
+
 }
 }
