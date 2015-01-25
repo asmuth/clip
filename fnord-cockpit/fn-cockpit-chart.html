@@ -1,0 +1,65 @@
+<!--
+  This file is part of the "FnordMetric" project
+    Copyright (c) 2014 Laura Schlimmer
+    Copyright (c) 2014 Paul Asmuth, Google Inc.
+
+  FnordMetric is free software: you can redistribute it and/or modify it under
+  the terms of the GNU General Public License v3.0. You should have received a
+  copy of the GNU General Public License along with this program. If not, see
+  <http://www.gnu.org/licenses/>.
+  only if attribute future-selectable is set future dates are selectable
+  same holds true for past-selectable
+-->
+<template id='fn-cockpit-chart-base-tpl'>
+  <iframe width="100%" height="160" frameborder="0" scrolling="no"></iframe>
+</template>
+<script type='text/javascript'>
+  var CockpitChartComponent = function() {
+    this.createdCallback = function() {
+      var tpl = Fnord.getTemplate("fn-cockpit-chart", "base");
+      var shadow = this.createShadowRoot();
+      shadow.appendChild(tpl);
+
+      if (this.hasAttribute('data-url')) {
+        this.initUrl();
+      }
+    };
+
+    this.attributeChangedCallback = function(attr, old_val, new_Val) {
+      if (attr == 'data-url') {
+        this.render();
+      }
+    };
+
+    this.initUrl = function() {
+      var url = this.getAttribute('data-url');
+
+      url = url.replace(
+        "%%width%%",  document.body.querySelector(".viewport").offsetWidth - 40);
+      url = url.replace("%%from%%", this.getAttribute('data-from'));
+      url = url.replace("%%until%%", this.getAttribute('data-until'));
+
+      this.shadowRoot.querySelector("iframe").setAttribute("src", url);
+    };
+
+    this.render = function() {
+      var url = this.getAttribute('data-url');
+
+      if (url) {
+        this.shadowRoot.querySelector("iframe").setAttribute('scr', url);
+      }
+    };
+
+    this.updateUrl = function(key, value) {
+      var iframe = this.shadowRoot.querySelector("iframe");
+      var url = iframe.getAttribute("src");
+      var regex = new RegExp(key + '=.+&');
+      var param = key + "=" + value + "&";
+      iframe.setAttribute('src', url.replace(regex, param));
+    };
+  };
+
+  window.addEventListener('fn-ready', function() {
+    Fnord.registerComponent('fn-cockpit-chart', CockpitChartComponent);
+  }, false);
+</script>
