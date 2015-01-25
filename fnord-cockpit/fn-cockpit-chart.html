@@ -34,10 +34,16 @@
     this.initUrl = function() {
       var url = this.getAttribute('data-url');
 
-      url = url.replace(
-        "%%width%%",  document.body.querySelector(".viewport").offsetWidth - 40);
-      url = url.replace("%%from%%", this.getAttribute('data-from'));
-      url = url.replace("%%until%%", this.getAttribute('data-until'));
+      if (this.hasAttribute('data-width')) {
+        var size = this.getAttribute('data-width');
+        if (size[size.length - 1] == "%") {
+          var val = parseInt(size.substr(0, size.length -1), 10);
+
+          url = url.replace(
+            "%%width%%",  Math.round(this.parentNode.offsetWidth * (val / 100)));
+        }
+      }
+
 
       this.shadowRoot.querySelector("iframe").setAttribute("src", url);
     };

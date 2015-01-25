@@ -13,11 +13,26 @@
  */
 
 function fn_format_timestamp($ts) {
-  return "TS: " . $ts;
+  $date = new DateTime();
+  $date->setTimestamp(get_unix_timestamp(intval($ts)));
+  return $date->format('Y-m-d H:i:s');
 }
 
-function fn_format_duration($ts) {
-  return "DUR: " . $ts;
+function get_unix_timestamp($ts) {
+  //2100
+  while ($ts > 4099680000) {
+    $ts = $ts / 1000;
+  }
+  return $ts;
+}
+
+function fn_format_duration($ts, $seconds) {
+  $dur = $ts / $seconds;
+  if ($dur < 60) {
+    return $dur . "s";
+  } else {
+    return $dur / 60 . "m";
+  }
 }
 
 function fn_format_bytes($bytes) {
