@@ -259,9 +259,13 @@ HashMap<String, String> fromJSONImpl(
     String key;
 
     switch (begin->type) {
+      case json::JSON_OBJECT_END:
+        return map;
+
       case json::JSON_STRING:
         key = begin->data;
         ++begin;
+        break;
 
       default:
         RAISEF(kParseError, "expected JSON_STRING, got: $0", begin->type);
@@ -271,6 +275,12 @@ HashMap<String, String> fromJSONImpl(
       case json::JSON_STRING:
         map[key] = begin->data;
         ++begin;
+        break;
+
+      case json::JSON_NULL:
+        map[key] = "";
+        ++begin;
+        break;
 
       default:
         RAISEF(kParseError, "expected JSON_STRING, got: $0", begin->type);
