@@ -29,6 +29,7 @@ struct FeedEntry {
     meta->prop(&FeedEntry::offset, 1, "offset", false);
     meta->prop(&FeedEntry::next_offset, 2, "next_offset", false);
     meta->prop(&FeedEntry::data, 3, "data", false);
+    meta->prop(&FeedEntry::time, 4, "time", false);
   }
 };
 

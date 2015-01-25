@@ -74,7 +74,7 @@ template <>
 std::string StringUtil::toString(double value) {
   char buf[128]; // FIXPAUL
   *buf = 0;
-  snprintf(buf, sizeof(buf), "%g", value);
+  snprintf(buf, sizeof(buf), "%f", value);
   return buf;
 }
 

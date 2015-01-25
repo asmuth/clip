@@ -7,12 +7,10 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#ifndef _FNORDMETRIC_UTIL_FILE_H_
-#define _FNORDMETRIC_UTIL_FILE_H_
-#include <functional>
-#include <stdlib.h>
-#include <stdint.h>
-#include <string>
+#ifndef _FNORDMETRIC_UTIL_FILEUTIL_H_
+#define _FNORDMETRIC_UTIL_FILEUTIL_H_
+#include "fnord/base/buffer.h"
+#include "fnord/base/stdtypes.h"
 
 namespace fnord {
 
@@ -40,6 +38,11 @@ public:
   static bool isDirectory(const std::string& dirname);
 
   /**
+   * Return the size of the file
+   */
+  static size_t size(const std::string& filename);
+
+  /**
    * Join two paths
    */
   static std::string joinPaths(const std::string& p1, const std::string p2);
@@ -57,6 +60,11 @@ public:
   static void rm(const std::string& filename);
 
   /**
+   * Move a file
+   */
+  static void mv(const std::string& src, const std::string& dst);
+
+  /**
    * Truncate a file
    */
   static void truncate(const std::string& filename, size_t size);
@@ -64,12 +72,22 @@ public:
   /**
    * Read a while file
    */
-  static std::string read(const std::string& filename);
+  static Buffer read(const std::string& filename);
+
+  /**
+   * Write a while file
+   */
+  static void write(const std::string& filename, const Buffer& data);
 
   /**
    * Copy a file
    */
   static void cp(const std::string& src, const std::string& destination);
+
+  /**
+   * Return the size of a directory (like du -c)
+   */
+  static size_t du_c(const std::string& path);
 
 };
 

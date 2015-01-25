@@ -52,6 +52,11 @@ protected:
       http::HTTPResponse* response,
       URI* uri);
 
+  void valueQuery(
+      http::HTTPRequest* request,
+      http::HTTPResponse* response,
+      URI* uri);
+
   void renderMetricJSON(
       fnord::metric_service::IMetric* metric,
       json::JSONOutputStream* json) const;

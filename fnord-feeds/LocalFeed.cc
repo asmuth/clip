@@ -117,6 +117,10 @@ std::vector<FeedEntry> LogStream::fetch(uint64_t offset, int batch_size) {
     cursor = table->writer->getCursor();
   }
 
+  if (offset == std::numeric_limits<uint64_t>::max()) {
+    offset = head_offset_;
+  }
+
   if (offset > 0) {
 #ifndef FNORD_NOTRACE
     fnord::logTrace(
@@ -144,10 +148,9 @@ std::vector<FeedEntry> LogStream::fetch(uint64_t offset, int batch_size) {
     fnord::logTrace(
         "fnord.feeds.localfeed",
         "request id=$0: reading entry at table_offset=$1 "
-            "table_real_offset=$2 logical_offset=$3",
+            "logical_offset=$2",
         request_id,
         cursor->position(),
-        cursor->position() + reader->bodyOffset(),
         table->offset + cursor->position());
 #endif
 
@@ -163,6 +166,7 @@ std::vector<FeedEntry> LogStream::fetch(uint64_t offset, int batch_size) {
     entry.offset = table->offset + cursor->position();
     entry.next_offset = table->offset + cursor->nextPosition();
     entry.data = cursor->getDataString();
+    entry.time = 0;
     entries.emplace_back(std::move(entry));
 
     if (!cursor->next()) {

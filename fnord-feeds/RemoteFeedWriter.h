@@ -18,7 +18,7 @@
 namespace fnord {
 namespace feeds {
 
-class RemoteFeedWriter {
+class RemoteFeedWriter : public RefCounted {
 public:
   static const int kDefaultMaxBufferSize = 8192;
 
