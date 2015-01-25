@@ -165,6 +165,7 @@ void RemoteFeedReader::maybeFillBuffer(SourceFeed* source) {
 void RemoteFeedReader::waitForNextEntry() {
   ScopedLock<std::mutex> lk(mutex_);
   bool is_data_available = false;
+  bool is_any_fetching = false;
 
   for (const auto& source : sources_) {
     maybeFillBuffer(source.get());
@@ -172,10 +173,18 @@ void RemoteFeedReader::waitForNextEntry() {
     if (source->read_buffer.size() > 0) {
       is_data_available = true;
     }
+
+    if (source->is_fetching) {
+      is_any_fetching = true;
+    }
   }
 
   /* fastpath if there is data available on any feed */
   if (is_data_available) {
+    return;
+  }
+
+  if (!is_any_fetching) {
     return;
   }
 
