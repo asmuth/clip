@@ -77,7 +77,7 @@ protected:
   RefPtrVector<SourceFeed> sources_;
 
   Wakeup data_available_wakeup_;
-  mutable std::recursive_mutex mutex_;
+  mutable std::mutex mutex_;
 
   Function<DateTime (const FeedEntry& entry)> time_backfill_fn_;
   Duration max_spread_;
