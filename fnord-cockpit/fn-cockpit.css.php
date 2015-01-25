@@ -33,7 +33,7 @@ a {
 
 ul.fn-cockpit-navigation {
   background: #fff;
-  border-bottom: 1px solid #ddd;
+  border-bottom: 1px solid #ddd
   padding: 0.5em 16px;
   list-style-type: none;
   line-height: 1;
@@ -172,4 +172,38 @@ h1 {
 
 h1.small {
   margin:0; padding:0; line-height: 40px; margin-left: 16px; font-size: 110%;
+}
+
+.titlebar {
+  font-size: 18px;
+  padding: 7px 14px 8px 14px;
+  background: #fff;
+  line-height:40px;
+  border-top: 1px solid #ddd;
+}
+
+.titlebar .dropdown{
+  float:right;
+}
+
+.titlebar .number{
+  float:right;
+  font-size:80%;
+  margin-left:20px;
+}
+
+.titlebar .number span{
+  font-weight:bold;
+  font-size: 140%;
+}
+
+.titlebar h3 {
+  margin:0;
+  padding:0;
+  font-weight:400;
+}
+
+.titlebar i {
+  font-style: normal;
+  color: #555;
 }
