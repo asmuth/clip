@@ -44,7 +44,7 @@ protected:
   fd_set op_write_;
   fd_set op_error_;
   int max_fd_;
-  volatile bool running_;
+  std::atomic<bool> running_;
   int runq_wakeup_pipe_[2];
   std::list<std::function<void()>> runq_;
   std::mutex runq_mutex_;
