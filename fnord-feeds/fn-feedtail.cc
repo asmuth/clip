@@ -176,11 +176,11 @@ int main(int argc, const char** argv) {
   DateTime last_iter;
   uint64_t rate_limit_micros = 1 * kMicrosPerSecond;
 
-  for (int i = 0; i < commit_size; ++i) {
+  for (;;) {
     last_iter = WallClock::now();
     feed_reader.waitForNextEntry();
 
-    for (;;) {
+    for (int i = 0; i < commit_size; ++i) {
       auto entry = feed_reader.fetchNextEntry();
 
       if (entry.isEmpty()) {
