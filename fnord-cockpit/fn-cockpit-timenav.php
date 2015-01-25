@@ -76,10 +76,15 @@ class TimeNavigation {
 
 }
 
-$timeNav = new TimeNavigation();
+function fn_render_timenav() {
+  $timeNav = new TimeNavigation();
 ?>
 
 <fn-time-navigation
     data-selectable="past" 
     data-from=<?= $timeNav->startTimeMilli(); ?>
     data-until=<?= $timeNav->endTimeMilli(); ?>></fn-time-navigation>
+
+<?
+ }
+?>
