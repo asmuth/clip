@@ -109,6 +109,8 @@
         //1 hour
         this.setAttribute('data-daterange', 3600000);
       }
+
+      this.updateDateTitle();
     };
 
 
@@ -145,7 +147,7 @@
     this.updateDateTitle = function() {
       var timestamp = parseInt(this.getAttribute('data-endtime'), 10);
       var date_range = parseInt(this.getAttribute('data-daterange'), 10);
-
+      console.log(timestamp, date_range);
       var start_timestamp = timestamp - date_range;
 
       var title = this.shadowRoot.querySelector("span");
