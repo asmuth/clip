@@ -23,6 +23,7 @@ void HTTPAPIServlet::handleHTTPRequest(
     fnord::http::HTTPResponse* res) {
   URI uri(req->uri());
 
+  res->addHeader("Access-Control-Allow-Origin", "*");
   try {
     if (StringUtil::endsWith(uri.path(), "/insert")) {
       return insertSample(req, res, &uri);
