@@ -36,6 +36,8 @@ public:
       const fnord::DateTime& time_end,
       std::function<bool (Sample* sample)> callback) = 0;
 
+  virtual Sample getSample() = 0;
+
   const std::string& key() const;
   virtual size_t totalBytes() const = 0;
   virtual DateTime lastInsertTime() const = 0;

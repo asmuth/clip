@@ -33,6 +33,7 @@ public:
   bool next();
   bool valid();
 
+  void seekToMostRecentSample();
   uint64_t time();
 
   template <typename T>

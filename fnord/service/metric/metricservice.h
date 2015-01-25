@@ -55,6 +55,9 @@ public:
       const fnord::DateTime& time_end,
       std::function<bool (Sample* sample)> callback);
 
+
+  Sample getMostRecentSample(const std::string& metric_key);
+
   IMetricRepository* metricRepository() const;
 
 protected:

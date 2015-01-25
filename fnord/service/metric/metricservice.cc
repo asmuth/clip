@@ -62,6 +62,16 @@ void MetricService::scanSamples(
   }
 }
 
+Sample MetricService::getMostRecentSample(const std::string& metric_key) {
+  auto metric = metric_repo_->findMetric(metric_key);
+
+  if (metric == nullptr) {
+    RAISEF(kIndexError, "unknown metric: $0", metric_key);
+  }
+
+  return metric->getSample();
+}
+
 IMetricRepository* MetricService::metricRepository() const {
   return metric_repo_.get();
 }

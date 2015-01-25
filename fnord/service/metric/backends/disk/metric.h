@@ -45,6 +45,8 @@ public:
       const fnord::DateTime& time_end,
       std::function<bool (Sample* sample)> callback) override;
 
+  Sample getSample() override;
+
   void compact(CompactionPolicy* compaction = nullptr);
 
   void setLiveTableMaxSize(size_t max_size);

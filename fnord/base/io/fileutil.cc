@@ -51,6 +51,16 @@ bool FileUtil::isDirectory(const std::string& filename) {
   return S_ISDIR(fstat.st_mode);
 }
 
+size_t FileUtil::size(const std::string& filename) {
+  struct stat fstat;
+
+  if (stat(filename.c_str(), &fstat) < 0) {
+    RAISE_ERRNO(kIOError, "fstat('%s') failed", filename.c_str());
+  }
+
+  return fstat.st_size;
+}
+
 /* The mkdir_p method was adapted from bash 4.1 */
 void FileUtil::mkdir_p(const std::string& dirname) {
   char const* begin = dirname.c_str();
@@ -174,5 +184,24 @@ void FileUtil::write(const std::string& filename, const Buffer& data) {
 void FileUtil::cp(const std::string& src, const std::string& destination) {
   RAISE(kNotYetImplementedError);
 }
+
+size_t FileUtil::du_c(const std::string& path) {
+  size_t size = 0;
+
+  FileUtil::ls(path, [&path, &size] (const String& file) -> bool {
+    auto filename = FileUtil::joinPaths(path, file);
+
+    if (FileUtil::isDirectory(filename)) {
+      size += FileUtil::du_c(filename);
+    } else {
+      size += FileUtil::size(filename);
+    }
+
+    return true;
+  });
+
+  return size;
+}
+
 
 }

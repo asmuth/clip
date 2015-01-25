@@ -87,6 +87,15 @@ int main(int argc, const char** argv) {
       "<num>");
 
   flags.defineFlag(
+      "print_time",
+      fnord::cli::FlagParser::T_SWITCH,
+      false,
+      NULL,
+      NULL,
+      "print_time",
+      "");
+
+  flags.defineFlag(
       "loglevel",
       fnord::cli::FlagParser::T_STRING,
       false,
@@ -114,6 +123,7 @@ int main(int argc, const char** argv) {
   size_t buffer_size = flags.getInt("buffer_size");
   size_t commit_size = flags.getInt("commit_size");
   size_t max_spread_secs = flags.getInt("max_spread_secs");
+  size_t print_time = flags.isSet("print_time");
 
   /* set up input feed reader */
   feeds::RemoteFeedReader feed_reader(&rpc_client);
@@ -166,18 +176,22 @@ int main(int argc, const char** argv) {
   DateTime last_iter;
   uint64_t rate_limit_micros = 1 * kMicrosPerSecond;
 
-  for (int i = 0; i < commit_size; ++i) {
+  for (;;) {
     last_iter = WallClock::now();
     feed_reader.waitForNextEntry();
 
-    for (;;) {
+    for (int i = 0; i < commit_size; ++i) {
       auto entry = feed_reader.fetchNextEntry();
 
       if (entry.isEmpty()) {
         break;
       }
 
-      fnord::iputs("$0", entry.get().data);
+      if (print_time) {
+        fnord::iputs("[$0] $1", entry.get().time, entry.get().data);
+      } else {
+        fnord::iputs("$0", entry.get().data);
+      }
     }
 
     if (flags.isSet("statefile")) {

@@ -38,6 +38,11 @@ public:
   static bool isDirectory(const std::string& dirname);
 
   /**
+   * Return the size of the file
+   */
+  static size_t size(const std::string& filename);
+
+  /**
    * Join two paths
    */
   static std::string joinPaths(const std::string& p1, const std::string p2);
@@ -78,6 +83,11 @@ public:
    * Copy a file
    */
   static void cp(const std::string& src, const std::string& destination);
+
+  /**
+   * Return the size of a directory (like du -c)
+   */
+  static size_t du_c(const std::string& path);
 
 };
 
