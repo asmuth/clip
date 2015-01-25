@@ -1,4 +1,3 @@
--> remotefeedwriter make max_spread configurable
 -> timeouts
 -> rpcchannel (rcpclient + servergroup_)
 -> rpc numRetries/retryStrategie, onRetry(Duration delay) (instead of ready()/onError!)

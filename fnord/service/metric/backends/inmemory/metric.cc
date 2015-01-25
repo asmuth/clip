@@ -7,6 +7,7 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
+#include <fnord/base/exception.h>
 #include <fnord/base/wallclock.h>
 #include <fnord/service/metric/backends/inmemory/metric.h>
 
@@ -66,6 +67,18 @@ void Metric::scanSamples(
       break;
     }
   }
+}
+
+Sample Metric::getSample() {
+  std::lock_guard<std::mutex> lock_holder(values_mutex_);
+
+  if (values_.empty()) {
+    RAISE(kIndexError, "metric has no samples");
+  }
+
+  const auto& memsample = values_.back();
+
+  return Sample(memsample.time, memsample.value, memsample.labels);
 }
 
 size_t Metric::totalBytes() const {

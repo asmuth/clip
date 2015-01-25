@@ -25,11 +25,18 @@ MetricCursor::MetricCursor(
     token_index_(token_index),
     table_index_(0) {}
 
+void MetricCursor::seekToMostRecentSample() {
+  table_index_ = snapshot_->tables().size() - 1;
+  table_cur_ = snapshot_->tables()[table_index_]->cursor();
+
+  // FIXPAUL: this is too slow!
+  while (table_cur_->next());
+}
+
 bool MetricCursor::next() {
   if (tableCursor()->next()) {
     return true;
   }
-
 
   while (table_index_ < (snapshot_->tables().size() - 1)) {
     table_cur_ = snapshot_->tables()[++table_index_]->cursor();

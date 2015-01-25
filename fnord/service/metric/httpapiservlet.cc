@@ -36,6 +36,10 @@ void HTTPAPIServlet::handleHTTPRequest(
       return timeseriesQuery(req, res, &uri);
     }
 
+    if (StringUtil::endsWith(uri.path(), "/value")) {
+      return valueQuery(req, res, &uri);
+    }
+
     if (StringUtil::endsWith(uri.path(), "/histogram")) {
       //return timeseriesQuery(req, res, &uri);
     }
@@ -280,10 +284,7 @@ void HTTPAPIServlet::timeseriesQuery(
 
     /* param: format */
     if (param.first == "format") {
-      std::string format_param;
-      if (fnord::URI::getParam(params, "format", &format_param)) {
-        resp_format = formatFromString(format_param);
-      }
+      resp_format = formatFromString(param.second);
       continue;
     }
 
@@ -378,6 +379,56 @@ void HTTPAPIServlet::timeseriesQuery(
 
       response->setStatus(http::kStatusOK);
       response->addHeader("Content-Type", "text/html");
+      response->addBody(out);
+      break;
+    }
+
+    /* unknown format */
+    default: {
+      response->setStatus(http::kStatusBadRequest);
+      response->addBody("unknown format");
+      break;
+    }
+
+  }
+}
+
+void HTTPAPIServlet::valueQuery(
+    http::HTTPRequest* request,
+    http::HTTPResponse* response,
+    URI* uri) {
+  auto params = uri->queryParams();
+
+  /* response format */
+  auto resp_format = ResponseFormat::kCSV;
+  std::string format_param;
+  if (fnord::URI::getParam(params, "format", &format_param)) {
+    resp_format = formatFromString(format_param);
+  }
+
+  /* metric key */
+  std::string metric_key;
+  if (!fnord::URI::getParam(params, "metric", &metric_key)) {
+    RAISE(kIllegalArgumentError, "missing metric parameter");
+  }
+
+  auto smpl = metric_service_->getMostRecentSample(metric_key);
+
+  /* render results */
+  switch (resp_format) {
+
+    /* format: csv */
+    case ResponseFormat::kCSV: {
+      Buffer out;
+
+      out.append(
+          StringUtil::format(
+              "$0;$1;$2\n",
+              metric_key,
+              smpl.time(),
+              smpl.value()));
+
+      response->setStatus(http::kStatusOK);
       response->addBody(out);
       break;
     }

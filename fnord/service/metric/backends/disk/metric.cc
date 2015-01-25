@@ -204,6 +204,26 @@ void Metric::scanSamples(
   }
 }
 
+Sample Metric::getSample() {
+  auto snapshot = getSnapshot();
+  if (snapshot.get() == nullptr) {
+    RAISE(kIndexError, "metric has no samples");
+  }
+
+  MetricCursor cursor(snapshot, &token_index_);
+  if (!cursor.valid()) {
+    RAISE(kIndexError, "invalid metric cusor");
+  }
+
+  cursor.seekToMostRecentSample();
+
+  auto smpl_reader = cursor.sample<double>();
+  return Sample(
+      cursor.time(),
+      smpl_reader->value(),
+      smpl_reader->labels());
+}
+
 void Metric::compact(CompactionPolicy* compaction /* = nullptr */) {
   if (!compaction_mutex_.try_lock()) {
     return;

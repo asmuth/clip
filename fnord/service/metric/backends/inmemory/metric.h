@@ -31,6 +31,8 @@ public:
       const DateTime& time_end,
       std::function<bool (Sample* sample)> callback) override;
 
+  Sample getSample() override;
+
   size_t totalBytes() const override;
   DateTime lastInsertTime() const override;
   std::set<std::string> labels() const override;
