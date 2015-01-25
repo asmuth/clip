@@ -189,6 +189,7 @@ h1.small {
   background: #fff;
   line-height:40px;
   border-top: 1px solid #ddd;
+  overflow: hidden;
 }
 
 .titlebar .dropdown{
@@ -207,8 +208,9 @@ h1.small {
 }
 
 .titlebar h3 {
-  margin:0;
-  padding:0;
+  padding: 0;
+  margin: 0;
+  line-height: 43px;
   font-weight:400;
 }
 
