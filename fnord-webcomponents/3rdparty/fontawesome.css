@@ -4,6 +4,13 @@
  */
 /* FONT PATH
  * -------------------------- */
+@font-face {
+  font-family: 'FontAwesome';
+  src: url('/fontawesome.woff?v=4.2.0');
+  src: url('/fontawesome.woff?v=4.2.0') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
 * /deep/ .fa {
   display: inline-block;
   font: normal normal normal 14px/1 FontAwesome;
