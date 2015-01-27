@@ -19,6 +19,7 @@
 #include <fnordmetric/util/runtimeexception.h>
 #include <fnordmetric/sql/backends/csv/csvbackend.h>
 #include <fnordmetric/sql/backends/mysql/mysqlbackend.h>
+#include <fnordmetric/sql/backends/crate/cratebackend.h>
 
 namespace fnordmetric {
 namespace cli {
@@ -167,6 +168,10 @@ void CLI::execute(Environment* env) {
   query_service.registerBackend(
       std::unique_ptr<fnordmetric::query::Backend>(
           new fnordmetric::query::csv_backend::CSVBackend));
+
+  query_service.registerBackend(
+      std::unique_ptr<fnordmetric::query::Backend>(
+          new fnordmetric::query::crate_backend::CrateBackend));
 
   query_service.executeQuery(
       input,

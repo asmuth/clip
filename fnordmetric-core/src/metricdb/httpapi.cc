@@ -15,6 +15,7 @@
 #include <fnordmetric/util/stringutil.h>
 #include <fnordmetric/sql/backends/csv/csvbackend.h>
 #include <fnordmetric/sql/backends/mysql/mysqlbackend.h>
+#include <fnordmetric/sql/backends/crate/cratebackend.h>
 
 namespace fnordmetric {
 namespace metricdb {
@@ -253,6 +254,10 @@ void HTTPAPI::executeQuery(
     query_service.registerBackend(
         std::unique_ptr<fnordmetric::query::Backend>(
             new fnordmetric::query::csv_backend::CSVBackend));
+
+    query_service.registerBackend(
+        std::unique_ptr<fnordmetric::query::Backend>(
+            new fnordmetric::query::crate_backend::CrateBackend));
   }
 
   query::QueryService::kFormat resp_format = query::QueryService::FORMAT_JSON;

@@ -21,6 +21,7 @@
 #include <fnordmetric/metricdb/metricrepository.h>
 #include <fnordmetric/metricdb/backends/disk/metricrepository.h>
 #include <fnordmetric/metricdb/backends/inmemory/metricrepository.h>
+#include <fnordmetric/metricdb/backends/crate/metricrepository.h>
 #include <fnordmetric/metricdb/statsd.h>
 #include <fnordmetric/net/udpserver.h>
 #include <fnordmetric/util/exceptionhandler.h>
@@ -67,6 +68,20 @@ static IMetricRepository* openBackend(
         datadir.c_str());
 
     return new disk_backend::MetricRepository(datadir, backend_scheduler);
+  }
+
+  /* open crate backend */
+  if (backend_type == "crate") {
+      if (!env()->flags()->isSet("host")) {
+        RAISE(
+            kUsageError,
+            "the --host flag must be set when using the crate backend");
+      }
+      auto host = env()->flags()->getString("host");
+      env()->logger()->printf(
+          "INFO",
+          "Opening crate backend at %s", host.c_str());
+      return new crate_backend::MetricRepository(host);
   }
 
   RAISE(
@@ -185,7 +200,7 @@ int main(int argc, const char** argv) {
       false,
       NULL,
       "disk",
-      "One of 'disk', 'inmemory', 'mysql' or 'hbase'. Default: 'disk'",
+      "One of 'disk', 'inmemory', 'mysql', 'hbase' or 'crate'. Default: 'disk'",
       "<name>");
 
   env()->flags()->defineFlag(
@@ -196,6 +211,15 @@ int main(int argc, const char** argv) {
       NULL,
       "Store the database in this directory (disk backend only)",
       "<path>");
+
+  env()->flags()->defineFlag(
+      "host",
+      cli::FlagParser::T_STRING,
+      false,
+      NULL,
+      "http://localhost:4200",
+      "Crate host (crate backend only). Default: http://localhost:4200",
+      "<host>");
 
   env()->flags()->defineFlag(
       "disable_external_sources",
