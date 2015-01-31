@@ -16,11 +16,11 @@
 #include <string.h>
 #include <vector>
 #include <assert.h>
-#include <fnordmetric/sql/parser/astnode.h>
-#include <fnordmetric/sql/parser/token.h>
-#include <fnordmetric/sql/runtime/queryplannode.h>
-#include <fnordmetric/sql/runtime/symboltable.h>
-#include <fnordmetric/sql/runtime/compile.h>
+#include <sql/parser/astnode.h>
+#include <sql/parser/token.h>
+#include <sql/runtime/queryplannode.h>
+#include <sql/runtime/symboltable.h>
+#include <sql/runtime/compile.h>
 
 namespace fnordmetric {
 namespace query {

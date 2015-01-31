@@ -14,9 +14,9 @@
 #include <string>
 #include <vector>
 #include <memory>
-#include <fnordmetric/sql/runtime/runtime.h>
-#include <fnordmetric/sql/runtime/queryplannode.h>
-#include <fnordmetric/chartsql/drawstatement.h>
+#include <sql/runtime/runtime.h>
+#include <sql/runtime/queryplannode.h>
+#include <chartsql/drawstatement.h>
 #include <fnord-chart/canvas.h>
 
 namespace fnordmetric {

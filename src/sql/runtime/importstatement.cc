@@ -7,11 +7,11 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#include <fnordmetric/sql/parser/token.h>
-#include <fnordmetric/sql/runtime/compile.h>
-#include <fnordmetric/sql/runtime/execute.h>
-#include <fnordmetric/sql/runtime/importstatement.h>
-#include <fnordmetric/sql/svalue.h>
+#include <sql/parser/token.h>
+#include <sql/runtime/compile.h>
+#include <sql/runtime/execute.h>
+#include <sql/runtime/importstatement.h>
+#include <sql/svalue.h>
 #include <fnord-base/exception.h>
 
 namespace fnordmetric {

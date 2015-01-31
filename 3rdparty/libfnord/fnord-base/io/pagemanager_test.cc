@@ -7,9 +7,9 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#include <fnordmetric/io/fileutil.h>
-#include <fnordmetric/io/pagemanager.h>
-#include <fnordmetric/util/unittest.h>
+#include <io/fileutil.h>
+#include <io/pagemanager.h>
+#include <util/unittest.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>

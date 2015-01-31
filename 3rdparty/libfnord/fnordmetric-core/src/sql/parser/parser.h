@@ -14,8 +14,8 @@
 #include <vector>
 #include <memory>
 #include <fnord-base/exception.h>
-#include <fnordmetric/sql/parser/token.h>
-#include <fnordmetric/sql/parser/astnode.h>
+#include <sql/parser/token.h>
+#include <sql/parser/astnode.h>
 
 namespace fnordmetric {
 namespace query {

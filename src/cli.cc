@@ -15,8 +15,8 @@
 #include <fnord-base/exceptionhandler.h>
 #include <fnord-base/random.h>
 #include <fnord/system/signalhandler.h>
-#include <fnordmetric/environment.h>
-#include <fnordmetric/cli/cli.h>
+#include <environment.h>
+#include <cli/cli.h>
 
 using namespace fnordmetric;
 

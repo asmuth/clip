@@ -7,12 +7,12 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#include <fnordmetric/chartsql/domainconfig.h>
-#include <fnordmetric/chartsql/drawstatement.h>
-#include <fnordmetric/chartsql/areachartbuilder.h>
-#include <fnordmetric/chartsql/barchartbuilder.h>
-#include <fnordmetric/chartsql/linechartbuilder.h>
-#include <fnordmetric/chartsql/pointchartbuilder.h>
+#include <chartsql/domainconfig.h>
+#include <chartsql/drawstatement.h>
+#include <chartsql/areachartbuilder.h>
+#include <chartsql/barchartbuilder.h>
+#include <chartsql/linechartbuilder.h>
+#include <chartsql/pointchartbuilder.h>
 
 namespace fnordmetric {
 namespace query {

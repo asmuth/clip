@@ -10,7 +10,7 @@
 #ifndef _FNORDMETRIC_FFS_COWBLOB_H
 #define _FNORDMETRIC_FFS_COWBLOB_H
 #include "object.h"
-#include <fnordmetric/io/pagemanager.h>
+#include <io/pagemanager.h>
 
 namespace fnordmetric {
 namespace ffs {

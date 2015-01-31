@@ -7,8 +7,8 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#include <fnordmetric/sql/runtime/tablerepository.h>
-#include <fnordmetric/sql/runtime/importstatement.h>
+#include <sql/runtime/tablerepository.h>
+#include <sql/runtime/importstatement.h>
 #include <fnord-base/exception.h>
 #include <fnord-base/uri.h>
 

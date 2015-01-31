@@ -9,7 +9,7 @@
  */
 #ifndef _FNORDMETRIC_SQLEXTENSIONS_AREACHARTBUILDER_H
 #define _FNORDMETRIC_SQLEXTENSIONS_AREACHARTBUILDER_H
-#include <fnordmetric/chartsql/chartbuilder.h>
+#include <chartsql/chartbuilder.h>
 
 namespace fnordmetric {
 namespace query {

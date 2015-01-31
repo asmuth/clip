@@ -8,8 +8,8 @@
  * <http://www.gnu.org/licenses/>.
  */
 #include <fnord-base/exception.h>
-#include <fnordmetric/sql/backends/metricservice/metrictablerepository.h>
-#include <fnordmetric/sql/backends/metricservice/metrictableref.h>
+#include <sql/backends/metricservice/metrictablerepository.h>
+#include <sql/backends/metricservice/metrictableref.h>
 
 namespace fnordmetric {
 namespace query {

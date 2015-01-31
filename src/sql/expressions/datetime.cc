@@ -11,8 +11,8 @@
 #include <assert.h>
 #include <math.h>
 #include <string.h>
-#include <fnordmetric/sql/expressions/datetime.h>
-#include <fnordmetric/sql/svalue.h>
+#include <sql/expressions/datetime.h>
+#include <sql/svalue.h>
 
 namespace fnordmetric {
 namespace query {

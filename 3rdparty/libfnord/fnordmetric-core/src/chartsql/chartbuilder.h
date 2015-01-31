@@ -16,12 +16,12 @@
 #include <fnord-chart/canvas.h>
 #include <fnord-chart/barchart.h>
 #include <fnord-chart/series.h>
-#include <fnordmetric/sql/runtime/compile.h>
-#include <fnordmetric/sql/runtime/execute.h>
-#include <fnordmetric/sql/runtime/rowsink.h>
-#include <fnordmetric/sql/runtime/resultlist.h>
-#include <fnordmetric/sql/runtime/queryplannode.h>
-#include <fnordmetric/chartsql/seriesadapter.h>
+#include <sql/runtime/compile.h>
+#include <sql/runtime/execute.h>
+#include <sql/runtime/rowsink.h>
+#include <sql/runtime/resultlist.h>
+#include <sql/runtime/queryplannode.h>
+#include <chartsql/seriesadapter.h>
 
 namespace fnordmetric {
 namespace query {

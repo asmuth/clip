@@ -11,7 +11,7 @@
 #define _FNORDMETRIC_FFS_OBJECTREF_H
 #include <fnord-base/exception.h>
 #include "object.h"
-#include <fnordmetric/io/pagemanager.h>
+#include <io/pagemanager.h>
 
 namespace fnordmetric {
 namespace ffs {

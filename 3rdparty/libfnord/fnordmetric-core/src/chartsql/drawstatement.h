@@ -11,10 +11,10 @@
 #ifndef _FNORDMETRIC_QUERY_DRAWSTATEMENT_H
 #define _FNORDMETRIC_QUERY_DRAWSTATEMENT_H
 #include <stdlib.h>
-#include <fnordmetric/sql/runtime/compile.h>
-#include <fnordmetric/sql/runtime/execute.h>
-#include <fnordmetric/sql/runtime/queryplannode.h>
-#include <fnordmetric/sql/runtime/resultlist.h>
+#include <sql/runtime/compile.h>
+#include <sql/runtime/execute.h>
+#include <sql/runtime/queryplannode.h>
+#include <sql/runtime/resultlist.h>
 #include <fnord-base/exception.h>
 #include <fnord-chart/canvas.h>
 #include <fnord-chart/drawable.h>

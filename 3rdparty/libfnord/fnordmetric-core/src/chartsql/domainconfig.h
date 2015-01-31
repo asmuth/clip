@@ -14,7 +14,7 @@
 #include <assert.h>
 #include <fnord-chart/domain.h>
 #include <fnord-chart/drawable.h>
-#include <fnordmetric/sql/svalue.h>
+#include <sql/svalue.h>
 
 namespace fnordmetric {
 namespace query {

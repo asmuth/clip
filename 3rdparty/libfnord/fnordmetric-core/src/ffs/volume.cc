@@ -7,7 +7,7 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#include <fnordmetric/ffs/volume.h>
+#include <ffs/volume.h>
 #include <fnord-base/exception.h>
 #include <stdlib.h>
 #include <stdio.h>

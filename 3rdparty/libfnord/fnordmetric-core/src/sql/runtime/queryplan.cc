@@ -7,7 +7,7 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#include <fnordmetric/sql/runtime/queryplan.h>
+#include <sql/runtime/queryplan.h>
 
 namespace fnordmetric {
 namespace query {

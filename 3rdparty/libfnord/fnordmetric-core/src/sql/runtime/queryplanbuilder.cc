@@ -8,20 +8,20 @@
  * <http://www.gnu.org/licenses/>.
  */
 #include <stdlib.h>
-#include <fnordmetric/sql/parser/astnode.h>
-#include <fnordmetric/sql/parser/astutil.h>
-#include <fnordmetric/sql/runtime/queryplanbuilder.h>
-#include <fnordmetric/sql/runtime/queryplannode.h>
-#include <fnordmetric/sql/runtime/tablelessselect.h>
-#include <fnordmetric/sql/runtime/tablescan.h>
-#include <fnordmetric/sql/runtime/tablerepository.h>
-#include <fnordmetric/sql/runtime/limitclause.h>
-#include <fnordmetric/sql/runtime/orderby.h>
-#include <fnordmetric/sql/runtime/groupby.h>
-#include <fnordmetric/sql/runtime/groupovertimewindow.h>
-#include <fnordmetric/sql/runtime/runtime.h>
-#include <fnordmetric/sql/runtime/symboltable.h>
-#include <fnordmetric/sql/runtime/importstatement.h>
+#include <sql/parser/astnode.h>
+#include <sql/parser/astutil.h>
+#include <sql/runtime/queryplanbuilder.h>
+#include <sql/runtime/queryplannode.h>
+#include <sql/runtime/tablelessselect.h>
+#include <sql/runtime/tablescan.h>
+#include <sql/runtime/tablerepository.h>
+#include <sql/runtime/limitclause.h>
+#include <sql/runtime/orderby.h>
+#include <sql/runtime/groupby.h>
+#include <sql/runtime/groupovertimewindow.h>
+#include <sql/runtime/runtime.h>
+#include <sql/runtime/symboltable.h>
+#include <sql/runtime/importstatement.h>
 
 namespace fnordmetric {
 namespace query {

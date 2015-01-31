@@ -10,9 +10,9 @@
 #include <stdlib.h>
 #include <string.h>
 #include <vector>
-#include <fnordmetric/sql/parser/astnode.h>
-#include <fnordmetric/sql/runtime/compile.h>
-#include <fnordmetric/sql/svalue.h>
+#include <sql/parser/astnode.h>
+#include <sql/runtime/compile.h>
+#include <sql/svalue.h>
 #include <fnord-base/exception.h>
 
 namespace fnordmetric {

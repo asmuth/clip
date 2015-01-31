@@ -7,9 +7,9 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#include <fnordmetric/sql/runtime/runtime.h>
-#include <fnordmetric/sql/runtime/resultlist.h>
-#include <fnordmetric/sql/backends/csv/csvbackend.h>
+#include <sql/runtime/runtime.h>
+#include <sql/runtime/resultlist.h>
+#include <sql/backends/csv/csvbackend.h>
 
 namespace fnordmetric {
 namespace query {

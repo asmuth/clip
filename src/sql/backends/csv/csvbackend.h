@@ -10,8 +10,8 @@
 #ifndef _FNORDMETRIC_CSVBACKEND_H
 #define _FNORDMETRIC_CSVBACKEND_H
 #include <memory>
-#include <fnordmetric/sql/backends/backend.h>
-#include <fnordmetric/sql/backends/csv/csvtableref.h>
+#include <sql/backends/backend.h>
+#include <sql/backends/csv/csvtableref.h>
 
 namespace fnordmetric {
 namespace query {

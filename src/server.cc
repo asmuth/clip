@@ -30,10 +30,10 @@
 #include <fnord/service/keyvalue/keyvalueservice.h>
 #include <fnord/service/keyvalue/keyvalueserviceadapter.h>
 #include <fnord/system/signalhandler.h>
-#include <fnordmetric/cli/flagparser.h>
-#include <fnordmetric/environment.h>
-#include <fnordmetric/adminui.h>
-#include <fnordmetric/httpapi.h>
+#include <cli/flagparser.h>
+#include <environment.h>
+#include <adminui.h>
+#include <httpapi.h>
 
 using namespace fnordmetric;
 

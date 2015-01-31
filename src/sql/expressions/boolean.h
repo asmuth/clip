@@ -9,7 +9,7 @@
  */
 #ifndef _FNORDMETRIC_SQL_EXPRESSIONS_BOOLEAN_H
 #define _FNORDMETRIC_SQL_EXPRESSIONS_BOOLEAN_H
-#include <fnordmetric/sql/svalue.h>
+#include <sql/svalue.h>
 
 namespace fnordmetric {
 namespace query {

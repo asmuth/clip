@@ -12,7 +12,7 @@
 #include <memory>
 #include <vector>
 #include <fnord-base/uri.h>
-#include <fnordmetric/sql/backends/tableref.h>
+#include <sql/backends/tableref.h>
 
 namespace fnordmetric {
 namespace query {

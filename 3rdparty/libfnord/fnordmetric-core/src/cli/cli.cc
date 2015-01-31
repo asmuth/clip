@@ -14,11 +14,11 @@
 #include <fnord-base/exceptionhandler.h>
 #include <fnord/io/inputstream.h>
 #include <fnord/io/outputstream.h>
-#include <fnordmetric/environment.h>
-#include <fnordmetric/cli/cli.h>
-#include <fnordmetric/cli/flagparser.h>
-#include <fnordmetric/sql/backends/csv/csvbackend.h>
-#include <fnordmetric/sql/backends/mysql/mysqlbackend.h>
+#include <environment.h>
+#include <cli/cli.h>
+#include <cli/flagparser.h>
+#include <sql/backends/csv/csvbackend.h>
+#include <sql/backends/mysql/mysqlbackend.h>
 
 namespace fnordmetric {
 namespace cli {

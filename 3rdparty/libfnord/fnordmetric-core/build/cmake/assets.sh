@@ -2,7 +2,7 @@
 set -e
 
 mkdir -p stage/src
-echo "#include <fnordmetric/util/assets.h>" > stage/src/asset_bundle.cc
+echo "#include <util/assets.h>" > stage/src/asset_bundle.cc
 
 asset_file() {
   (cd ../../.. && cat $@ | xxd -i)

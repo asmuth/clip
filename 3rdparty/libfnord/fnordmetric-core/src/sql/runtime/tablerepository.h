@@ -14,8 +14,8 @@
 #include <unordered_map>
 #include <memory>
 #include <vector>
-#include <fnordmetric/sql/backends/backend.h>
-#include <fnordmetric/sql/backends/tableref.h>
+#include <sql/backends/backend.h>
+#include <sql/backends/tableref.h>
 
 namespace fnordmetric {
 namespace query {

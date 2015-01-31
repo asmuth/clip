@@ -12,12 +12,12 @@
 #include <stdlib.h>
 #include <string>
 #include <vector>
-#include <fnordmetric/sql/parser/astutil.h>
-#include <fnordmetric/sql/parser/astnode.h>
-#include <fnordmetric/sql/parser/token.h>
-#include <fnordmetric/sql/runtime/queryplannode.h>
-#include <fnordmetric/sql/runtime/compile.h>
-#include <fnordmetric/sql/runtime/execute.h>
+#include <sql/parser/astutil.h>
+#include <sql/parser/astnode.h>
+#include <sql/parser/token.h>
+#include <sql/runtime/queryplannode.h>
+#include <sql/runtime/compile.h>
+#include <sql/runtime/execute.h>
 
 namespace fnordmetric {
 namespace query {

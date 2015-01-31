@@ -11,7 +11,7 @@
 #include <assert.h>
 #include <math.h>
 #include <string.h>
-#include <fnordmetric/sql/expressions/boolean.h>
+#include <sql/expressions/boolean.h>
 #include <fnord-base/exception.h>
 
 namespace fnordmetric {

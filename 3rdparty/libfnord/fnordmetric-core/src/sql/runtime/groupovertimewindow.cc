@@ -7,9 +7,9 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#include <fnordmetric/sql/runtime/groupovertimewindow.h>
-#include <fnordmetric/sql/runtime/compile.h>
-#include <fnordmetric/sql/runtime/execute.h>
+#include <sql/runtime/groupovertimewindow.h>
+#include <sql/runtime/compile.h>
+#include <sql/runtime/execute.h>
 
 namespace fnordmetric {
 namespace query {

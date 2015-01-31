@@ -7,8 +7,8 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#include <fnordmetric/sql/runtime/resultlist.h>
-#include <fnordmetric/chartsql/seriesadapter.h>
+#include <sql/runtime/resultlist.h>
+#include <chartsql/seriesadapter.h>
 #include <fnord-base/exception.h>
 
 namespace fnordmetric {

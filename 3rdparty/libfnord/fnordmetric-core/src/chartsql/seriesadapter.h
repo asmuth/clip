@@ -16,10 +16,10 @@
 #include <fnord-chart/barchart.h>
 #include <fnord-chart/series.h>
 #include <fnord-base/exception.h>
-#include <fnordmetric/sql/runtime/compile.h>
-#include <fnordmetric/sql/runtime/execute.h>
-#include <fnordmetric/sql/runtime/rowsink.h>
-#include <fnordmetric/sql/runtime/queryplannode.h>
+#include <sql/runtime/compile.h>
+#include <sql/runtime/execute.h>
+#include <sql/runtime/rowsink.h>
+#include <sql/runtime/queryplannode.h>
 
 namespace fnordmetric {
 namespace query {

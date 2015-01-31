@@ -7,7 +7,7 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#include <fnordmetric/sql/parser/token.h>
+#include <sql/parser/token.h>
 #include <fnord-base/exception.h>
 #include <fnord-base/inspect.h>
 #include <string.h>

@@ -13,8 +13,8 @@
 #include <memory>
 #include <unordered_map>
 #include <string>
-#include <fnordmetric/sql/backends/csv/csvinputstream.h>
-#include <fnordmetric/sql/backends/tableref.h>
+#include <sql/backends/csv/csvinputstream.h>
+#include <sql/backends/tableref.h>
 
 namespace fnordmetric {
 namespace query {

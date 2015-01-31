@@ -10,8 +10,8 @@
 #ifndef _FNORDMETRIC_MYSQLBACKEND_MYSQLTABLEREF_H
 #define _FNORDMETRIC_MYSQLBACKEND_MYSQLTABLEREF_H
 #include <memory>
-#include <fnordmetric/sql/backends/mysql/mysqlconnection.h>
-#include <fnordmetric/sql/backends/tableref.h>
+#include <sql/backends/mysql/mysqlconnection.h>
+#include <sql/backends/tableref.h>
 
 namespace fnordmetric {
 namespace query {

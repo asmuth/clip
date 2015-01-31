@@ -14,7 +14,7 @@
 #include <string.h>
 #include <vector>
 #include <fnord-base/exception.h>
-#include <fnordmetric/types.h>
+#include <types.h>
 
 namespace fnordmetric {
 namespace query {

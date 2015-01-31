@@ -9,7 +9,7 @@
  */
 #ifndef _FNORDMETRIC_SQL_EXPRESSIONS_DATETIME_H
 #define _FNORDMETRIC_SQL_EXPRESSIONS_DATETIME_H
-#include <fnordmetric/sql/svalue.h>
+#include <sql/svalue.h>
 
 namespace fnordmetric {
 namespace query {

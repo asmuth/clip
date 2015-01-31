@@ -12,8 +12,8 @@
 #include <fnord-chart/rendertarget.h>
 #include <fnord/io/inputstream.h>
 #include <fnord-json/jsonoutputstream.h>
-#include <fnordmetric/chartsql/query.h>
-#include <fnordmetric/sql/runtime/defaultruntime.h>
+#include <chartsql/query.h>
+#include <sql/runtime/defaultruntime.h>
 
 namespace fnordmetric {
 namespace query {

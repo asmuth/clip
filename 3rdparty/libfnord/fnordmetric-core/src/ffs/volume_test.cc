@@ -7,9 +7,9 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#include <fnordmetric/ffs/cowblob.h>
-#include <fnordmetric/ffs/volume.h>
-#include <fnordmetric/util/unittest.h>
+#include <ffs/cowblob.h>
+#include <ffs/volume.h>
+#include <util/unittest.h>
 
 using namespace fnordmetric::ffs;
 

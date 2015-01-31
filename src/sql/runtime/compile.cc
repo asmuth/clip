@@ -8,11 +8,11 @@
  * <http://www.gnu.org/licenses/>.
  */
 #include <stdlib.h>
-#include <fnordmetric/sql/parser/astnode.h>
-#include <fnordmetric/sql/parser/token.h>
-#include <fnordmetric/sql/runtime/compile.h>
-#include <fnordmetric/sql/runtime/symboltable.h>
-#include <fnordmetric/sql/svalue.h>
+#include <sql/parser/astnode.h>
+#include <sql/parser/token.h>
+#include <sql/runtime/compile.h>
+#include <sql/runtime/symboltable.h>
+#include <sql/svalue.h>
 
 namespace fnordmetric {
 namespace query {

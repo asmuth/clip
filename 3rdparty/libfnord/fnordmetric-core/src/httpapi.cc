@@ -9,12 +9,12 @@
  */
 #include <fnord-base/stringutil.h>
 #include <fnord-metricdb/metricrepository.h>
-#include <fnordmetric/environment.h>
-#include <fnordmetric/httpapi.h>
-#include <fnordmetric/chartsql/queryservice.h>
-#include <fnordmetric/sql/backends/metricservice/metrictablerepository.h>
-#include <fnordmetric/sql/backends/csv/csvbackend.h>
-#include <fnordmetric/sql/backends/mysql/mysqlbackend.h>
+#include <environment.h>
+#include <httpapi.h>
+#include <chartsql/queryservice.h>
+#include <sql/backends/metricservice/metrictablerepository.h>
+#include <sql/backends/csv/csvbackend.h>
+#include <sql/backends/mysql/mysqlbackend.h>
 
 namespace fnordmetric {
 

@@ -57,6 +57,8 @@ set(FNORDMETRIC_SOURCES
 
 include_directories(${PROJECT_BINARY_DIR})
 include_directories(../3rdparty/libfnord)
+include_directories(../src)
+
 
 if(APPLE)
   set(CMAKE_CXX_FLAGS "-std=c++0x -stdlib=libc++ ${CMAKE_CXX_FLAGS}")

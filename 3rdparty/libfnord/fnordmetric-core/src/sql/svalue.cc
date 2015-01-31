@@ -14,9 +14,9 @@
 #include <ctime>
 #include <stdint.h>
 #include <fnord-base/inspect.h>
-#include <fnordmetric/sql/parser/token.h>
-#include <fnordmetric/sql/svalue.h>
-#include <fnordmetric/util/format.h>
+#include <sql/parser/token.h>
+#include <sql/svalue.h>
+#include <util/format.h>
 
 namespace fnordmetric {
 namespace query {
