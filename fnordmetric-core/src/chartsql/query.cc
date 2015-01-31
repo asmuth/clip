@@ -17,7 +17,7 @@
 #include <fnordmetric/sql/runtime/tablerepository.h>
 #include <fnordmetric/sql/runtime/importstatement.h>
 #include <fnordmetric/chartsql/drawstatement.h>
-#include <fnord/base/exception.h>
+#include <fnord-base/exception.h>
 
 namespace fnordmetric {
 namespace query {

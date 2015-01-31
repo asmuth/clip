@@ -13,7 +13,7 @@
 #include <string>
 #include <vector>
 #include <memory>
-#include <fnord/base/exception.h>
+#include <fnord-base/exception.h>
 #include <fnordmetric/sql/parser/token.h>
 #include <fnordmetric/sql/parser/astnode.h>
 

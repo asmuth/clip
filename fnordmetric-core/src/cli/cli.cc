@@ -10,8 +10,8 @@
 #include <vector>
 #include <string>
 #include <memory>
-#include <fnord/base/exception.h>
-#include <fnord/base/exceptionhandler.h>
+#include <fnord-base/exception.h>
+#include <fnord-base/exceptionhandler.h>
 #include <fnord/io/inputstream.h>
 #include <fnord/io/outputstream.h>
 #include <fnordmetric/environment.h>

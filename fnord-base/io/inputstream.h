@@ -11,7 +11,7 @@
 #define _FNORDMETRIC_INPUTSTREAM_H
 #include <memory>
 #include <string>
-#include "fnord/base/buffer.h"
+#include "fnord-base/buffer.h"
 
 namespace fnord {
 

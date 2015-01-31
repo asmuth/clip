@@ -11,9 +11,9 @@
 #include <fnord/service/metric/backends/disk/metric.h>
 #include <fnord/service/metric/backends/disk/tableref.h>
 #include <fnord/service/metric/backends/disk/samplewriter.h>
-#include <fnord/base/exception.h>
-#include <fnord/base/freeondestroy.h>
-#include <fnord/base/wallclock.h>
+#include <fnord-base/exception.h>
+#include <fnord-base/freeondestroy.h>
+#include <fnord-base/wallclock.h>
 #include <string.h>
 
 using namespace fnord;

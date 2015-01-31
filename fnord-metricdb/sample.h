@@ -12,7 +12,7 @@
 #include <stdlib.h>
 #include <string>
 #include <vector>
-#include <fnord/base/datetime.h>
+#include <fnord-base/datetime.h>
 
 using fnord::DateTime;
 

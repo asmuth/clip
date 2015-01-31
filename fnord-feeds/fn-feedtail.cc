@@ -9,14 +9,14 @@
  */
 #include <stdlib.h>
 #include <unistd.h>
-#include "fnord/base/io/filerepository.h"
-#include "fnord/base/io/fileutil.h"
-#include "fnord/base/application.h"
-#include "fnord/base/logging.h"
-#include "fnord/base/random.h"
-#include "fnord/base/thread/eventloop.h"
-#include "fnord/base/thread/threadpool.h"
-#include "fnord/base/wallclock.h"
+#include "fnord-base/io/filerepository.h"
+#include "fnord-base/io/fileutil.h"
+#include "fnord-base/application.h"
+#include "fnord-base/logging.h"
+#include "fnord-base/random.h"
+#include "fnord-base/thread/eventloop.h"
+#include "fnord-base/thread/threadpool.h"
+#include "fnord-base/wallclock.h"
 #include "fnord-rpc/ServerGroup.h"
 #include "fnord-rpc/RPC.h"
 #include "fnord-rpc/RPCClient.h"

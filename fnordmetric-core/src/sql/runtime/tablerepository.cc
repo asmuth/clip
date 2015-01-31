@@ -9,8 +9,8 @@
  */
 #include <fnordmetric/sql/runtime/tablerepository.h>
 #include <fnordmetric/sql/runtime/importstatement.h>
-#include <fnord/base/exception.h>
-#include <fnord/base/uri.h>
+#include <fnord-base/exception.h>
+#include <fnord-base/uri.h>
 
 namespace fnordmetric {
 namespace query {

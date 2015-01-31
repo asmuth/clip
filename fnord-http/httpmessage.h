@@ -12,9 +12,9 @@
 #include <vector>
 #include <string>
 #include <utility>
-#include <fnord/base/buffer.h>
-#include <fnord/base/io/inputstream.h>
-#include <fnord/base/io/outputstream.h>
+#include <fnord-base/buffer.h>
+#include <fnord-base/io/inputstream.h>
+#include <fnord-base/io/outputstream.h>
 
 namespace fnord {
 namespace http {

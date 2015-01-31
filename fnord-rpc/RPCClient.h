@@ -14,9 +14,9 @@
 #include <string>
 #include <unordered_map>
 #include <vector>
-#include "fnord/base/autoref.h"
-#include "fnord/base/thread/taskscheduler.h"
-#include "fnord/base/uri.h"
+#include "fnord-base/autoref.h"
+#include "fnord-base/thread/taskscheduler.h"
+#include "fnord-base/uri.h"
 #include "fnord-rpc/RPC.h"
 #include "fnord/net/http/httpconnectionpool.h"
 

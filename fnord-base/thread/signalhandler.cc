@@ -8,7 +8,7 @@
  * <http://www.gnu.org/licenses/>.
  */
 #include <signal.h>
-#include "fnord/base/thread/signalhandler.h"
+#include "fnord-base/thread/signalhandler.h"
 
 namespace fnord {
 namespace thread {

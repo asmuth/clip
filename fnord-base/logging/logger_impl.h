@@ -9,7 +9,7 @@
  */
 #ifndef _FNORDMETRIC_UTIL_LOGGER_IMPL_H
 #define _FNORDMETRIC_UTIL_LOGGER_IMPL_H
-#include "fnord/base/stringutil.h"
+#include "fnord-base/stringutil.h"
 
 namespace fnord {
 

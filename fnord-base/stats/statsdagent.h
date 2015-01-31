@@ -10,7 +10,7 @@
 #ifndef _FNORD_STATS_STATSDAGENT_H_
 #define _FNORD_STATS_STATSDAGENT_H_
 #include <thread>
-#include "fnord/base/stdtypes.h"
+#include "fnord-base/stdtypes.h"
 #include "fnord/net/inetaddr.h"
 #include "fnord/net/udpsocket.h"
 #include "fnord/stats/stat.h"

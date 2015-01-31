@@ -10,7 +10,7 @@
 
 #ifndef _FNORDMETRIC_CLI_H
 #define _FNORDMETRIC_CLI_H
-#include <fnord/base/exception.h>
+#include <fnord-base/exception.h>
 #include <fnord/io/outputstream.h>
 #include <fnordmetric/chartsql/queryservice.h>
 

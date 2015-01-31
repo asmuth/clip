@@ -7,8 +7,8 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#include <fnord/base/exception.h>
-#include <fnord/base/fnv.h>
+#include <fnord-base/exception.h>
+#include <fnord-base/fnv.h>
 #include <fnord/sstable/sstablereader.h>
 #include <fnord/sstable/sstablerepair.h>
 

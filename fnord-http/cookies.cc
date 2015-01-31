@@ -8,7 +8,7 @@
  * <http://www.gnu.org/licenses/>.
  */
 #include "fnord/net/http/cookies.h"
-#include "fnord/base/inspect.h"
+#include "fnord-base/inspect.h"
 
 namespace fnord {
 namespace http {

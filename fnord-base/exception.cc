@@ -10,7 +10,7 @@
 #include <stdio.h>
 #include <stdarg.h>
 #include <string.h>
-#include <fnord/base/exception.h>
+#include <fnord-base/exception.h>
 
 namespace fnord {
 

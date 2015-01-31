@@ -9,10 +9,10 @@
  */
 #include <stdlib.h>
 #include <assert.h>
-#include <fnord/base/exception.h>
-#include <fnord/base/exceptionhandler.h>
-#include <fnord/base/inspect.h>
-#include <fnord/base/logging.h>
+#include <fnord-base/exception.h>
+#include <fnord-base/exceptionhandler.h>
+#include <fnord-base/inspect.h>
+#include <fnord-base/logging.h>
 
 namespace fnord {
 

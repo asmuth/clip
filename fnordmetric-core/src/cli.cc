@@ -12,8 +12,8 @@
 #include <string.h>
 #include <string>
 #include <vector>
-#include <fnord/base/exceptionhandler.h>
-#include <fnord/base/random.h>
+#include <fnord-base/exceptionhandler.h>
+#include <fnord-base/random.h>
 #include <fnord/system/signalhandler.h>
 #include <fnordmetric/environment.h>
 #include <fnordmetric/cli/cli.h>

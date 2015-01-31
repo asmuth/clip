@@ -8,7 +8,7 @@
  * <http://www.gnu.org/licenses/>.
  */
 #include <assert.h>
-#include "fnord/base/exception.h"
+#include "fnord-base/exception.h"
 #include "fnord/net/http/httpresponsefuture.h"
 
 namespace fnord {

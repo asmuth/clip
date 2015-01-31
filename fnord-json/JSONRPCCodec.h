@@ -14,7 +14,7 @@
 #include <string>
 #include <unordered_map>
 #include <vector>
-#include "fnord/base/buffer.h"
+#include "fnord-base/buffer.h"
 #include "fnord/json/json.h"
 
 namespace fnord {

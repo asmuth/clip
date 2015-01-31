@@ -6,8 +6,8 @@
  */
 #include <stdlib.h>
 #include <stdio.h>
-#include "fnord/base/exception.h"
-#include "fnord/base/uri.h"
+#include "fnord-base/exception.h"
+#include "fnord-base/uri.h"
 #include "fnord/test/unittest.h"
 
 using namespace fnord;

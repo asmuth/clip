@@ -7,7 +7,7 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#include <fnord/base/ieee754.h>
+#include <fnord-base/ieee754.h>
 #include <fnord/service/metric/backends/disk/tokenindex.h>
 #include <fnord/service/metric/backends/disk/samplereader.h>
 

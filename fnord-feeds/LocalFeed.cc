@@ -8,8 +8,8 @@
  * <http://www.gnu.org/licenses/>.
  */
 #include <algorithm>
-#include "fnord/base/inspect.h"
-#include "fnord/base/logging.h"
+#include "fnord-base/inspect.h"
+#include "fnord-base/logging.h"
 #include "fnord/json/json.h"
 #include "fnord/sstable/sstablereader.h"
 #include "fnord-feeds/LocalFeed.h"

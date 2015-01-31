@@ -8,8 +8,8 @@
  * <http://www.gnu.org/licenses/>.
  */
 #include <unistd.h>
-#include "fnord/base/inspect.h"
-#include "fnord/base/logging.h"
+#include "fnord-base/inspect.h"
+#include "fnord-base/logging.h"
 #include "fnord/stats/statsdagent.h"
 
 namespace fnord {

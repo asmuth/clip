@@ -12,7 +12,7 @@
 #include <memory>
 #include <vector>
 
-#include "fnord/base/buffer.h"
+#include "fnord-base/buffer.h"
 #include "fnord/net/http/httpmessage.h"
 
 namespace fnord {

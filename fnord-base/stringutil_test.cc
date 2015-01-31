@@ -6,7 +6,7 @@
  */
 #include <stdlib.h>
 #include <stdio.h>
-#include "fnord/base/stringutil.h"
+#include "fnord-base/stringutil.h"
 #include "fnord/test/unittest.h"
 
 using namespace fnord;

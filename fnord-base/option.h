@@ -13,8 +13,8 @@
 #include <memory>
 #include <mutex>
 #include <stdlib.h>
-#include "fnord/base/inspect.h"
-#include "fnord/base/exception.h"
+#include "fnord-base/inspect.h"
+#include "fnord-base/exception.h"
 
 namespace fnord {
 

@@ -11,8 +11,8 @@
 #define _FNORDMETRIC_METRICDB_DISK_BACKEND_METRIC_H_
 #include <string>
 #include <vector>
-#include <fnord/base/datetime.h>
-#include <fnord/base/io/filerepository.h>
+#include <fnord-base/datetime.h>
+#include <fnord-base/io/filerepository.h>
 #include <fnord/service/metric/backends/disk/compactionpolicy.h>
 #include <fnord/service/metric/backends/disk/labelindex.h>
 #include <fnord/service/metric/backends/disk/metriccursor.h>

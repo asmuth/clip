@@ -10,8 +10,8 @@
 #ifndef _FNORDMETRIC_HTTPSTATS_H
 #define _FNORDMETRIC_HTTPSTATS_H
 
-#include "fnord/base/io/fileutil.h"
-#include "fnord/base/stdtypes.h"
+#include "fnord-base/io/fileutil.h"
+#include "fnord-base/stdtypes.h"
 #include "fnord/stats/counter.h"
 #include "fnord/stats/multicounter.h"
 #include "fnord/stats/statsrepository.h"

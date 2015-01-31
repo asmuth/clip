@@ -9,9 +9,9 @@
  */
 #ifndef _FNORDMETRIC_HTTPCLIENT_H
 #define _FNORDMETRIC_HTTPCLIENT_H
-#include "fnord/base/uri.h"
+#include "fnord-base/uri.h"
 #include "fnord/net/http/httpresponsefuture.h"
-#include "fnord/base/thread/taskscheduler.h"
+#include "fnord-base/thread/taskscheduler.h"
 
 namespace fnord {
 namespace http {

@@ -8,9 +8,9 @@
  * <http://www.gnu.org/licenses/>.
  */
 #include <string.h>
-#include "fnord/base/bufferutil.h"
-#include "fnord/base/exception.h"
-#include "fnord/base/inspect.h"
+#include "fnord-base/bufferutil.h"
+#include "fnord-base/exception.h"
+#include "fnord-base/inspect.h"
 #include "fnord/net/http/httpparser.h"
 
 namespace fnord {

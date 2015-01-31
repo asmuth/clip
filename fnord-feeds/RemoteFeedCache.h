@@ -16,9 +16,9 @@
 #include <string>
 #include <unordered_map>
 #include <vector>
-#include "fnord/base/option.h"
-#include "fnord/base/stdtypes.h"
-#include "fnord/base/thread/future.h"
+#include "fnord-base/option.h"
+#include "fnord-base/stdtypes.h"
+#include "fnord-base/thread/future.h"
 
 namespace fnord {
 namespace comm {

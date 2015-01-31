@@ -12,7 +12,7 @@
 #include <vector>
 #include <string>
 #include <utility>
-#include <fnord/base/io/outputstream.h>
+#include <fnord-base/io/outputstream.h>
 #include <fnord/net/http/httpresponse.h>
 #include <fnord/net/http/httprequest.h>
 

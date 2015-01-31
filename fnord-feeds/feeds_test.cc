@@ -8,11 +8,11 @@
  * <http://www.gnu.org/licenses/>.
  */
 #include <stdlib.h>
-#include "fnord/base/stringutil.h"
+#include "fnord-base/stringutil.h"
 #include "fnord/net/http/httprouter.h"
 #include "fnord/net/http/httpserver.h"
-#include "fnord/base/io/filerepository.h"
-#include "fnord/base/io/fileutil.h"
+#include "fnord-base/io/filerepository.h"
+#include "fnord-base/io/fileutil.h"
 #include "fnord/json/jsonrpc.h"
 #include "fnord/json/jsonrpchttpadapter.h"
 #include "fnord-feeds/FeedService.h"

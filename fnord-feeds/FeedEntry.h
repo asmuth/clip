@@ -11,7 +11,7 @@
 #define _FNORD_FEEDS_LOGSTREAMENTRY_H
 #include <stdlib.h>
 #include <string>
-#include "fnord/base/datetime.h"
+#include "fnord-base/datetime.h"
 
 namespace fnord {
 namespace feeds {

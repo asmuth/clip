@@ -19,7 +19,7 @@
 #include <errno.h>
 #include "acceptor.h"
 #include "eventloop.h"
-#include <fnord/base/exception.h>
+#include <fnord-base/exception.h>
 
 namespace fnordmetric {
 namespace ev {

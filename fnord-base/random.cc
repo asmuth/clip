@@ -8,9 +8,9 @@
  * <http://www.gnu.org/licenses/>.
  */
 #include <assert.h>
-#include <fnord/base/inspect.h>
-#include <fnord/base/random.h>
-#include <fnord/base/stringutil.h>
+#include <fnord-base/inspect.h>
+#include <fnord-base/random.h>
+#include <fnord-base/stringutil.h>
 
 namespace fnord {
 

@@ -10,10 +10,10 @@
 #ifndef _FNORDMETRIC_UTIL_LOGGER_H
 #define _FNORDMETRIC_UTIL_LOGGER_H
 #include <atomic>
-#include "fnord/base/datetime.h"
-#include "fnord/base/stdtypes.h"
-#include "fnord/base/logging/loglevel.h"
-#include "fnord/base/logging/logtarget.h"
+#include "fnord-base/datetime.h"
+#include "fnord-base/stdtypes.h"
+#include "fnord-base/logging/loglevel.h"
+#include "fnord-base/logging/logtarget.h"
 
 #ifndef FNORD_LOGGER_MAX_LISTENERS
 #define FNORD_LOGGER_MAX_LISTENERS 64
@@ -63,5 +63,5 @@ protected:
 
 } // namespace fnord
 
-#include "fnord/base/logging/logger_impl.h"
+#include "fnord-base/logging/logger_impl.h"
 #endif

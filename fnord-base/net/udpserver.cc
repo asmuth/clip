@@ -13,7 +13,7 @@
 #include <sys/socket.h>
 #include <string.h>
 #include <unistd.h>
-#include <fnord/base/exception.h>
+#include <fnord-base/exception.h>
 #include <fnord/net/udpserver.h>
 
 namespace fnord {

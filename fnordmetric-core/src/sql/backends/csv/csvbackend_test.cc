@@ -7,7 +7,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-#include <fnord/base/exception.h>
+#include <fnord-base/exception.h>
 #include <fnordmetric/util/unittest.h>
 #include <fnordmetric/sql/backends/csv/csvinputstream.h>
 #include <fnordmetric/sql/backends/csv/csvtableref.h>

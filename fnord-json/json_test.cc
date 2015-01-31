@@ -10,7 +10,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-#include "fnord/base/io/inputstream.h"
+#include "fnord-base/io/inputstream.h"
 #include "fnord/json/flatjsonreader.h"
 #include "fnord/json/jsondocument.h"
 #include "fnord/json/jsonutil.h"

@@ -8,7 +8,7 @@
  * <http://www.gnu.org/licenses/>.
  */
 #include <memory>
-#include <fnord/base/exception.h>
+#include <fnord-base/exception.h>
 #include <fnord/io/inputstream.h>
 #include <fnordmetric/sql/backends/csv/csvbackend.h>
 #include <fnordmetric/sql/backends/csv/csvtableref.h>

@@ -11,8 +11,8 @@
 #define _FNORD_STATS_COUNTER_H
 #include <stdlib.h>
 #include <stdint.h>
-#include "fnord/base/datetime.h"
-#include "fnord/base/hash.h"
+#include "fnord-base/datetime.h"
+#include "fnord-base/hash.h"
 #include "fnord/stats/stat.h"
 
 namespace fnord {

@@ -15,7 +15,7 @@
 #include <fnordmetric/sql/runtime/execute.h>
 #include <fnordmetric/sql/runtime/queryplannode.h>
 #include <fnordmetric/sql/runtime/resultlist.h>
-#include <fnord/base/exception.h>
+#include <fnord-base/exception.h>
 #include <fnord/chart/canvas.h>
 #include <fnord/chart/drawable.h>
 

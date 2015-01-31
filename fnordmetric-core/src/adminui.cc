@@ -9,7 +9,7 @@
  */
 #include <fnordmetric/environment.h>
 #include <fnordmetric/adminui.h>
-#include <fnord/base/uri.h>
+#include <fnord-base/uri.h>
 
 namespace fnordmetric {
 

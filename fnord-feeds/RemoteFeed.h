@@ -9,8 +9,8 @@
  */
 #ifndef _FNORD_FEEDS_FEED_H
 #define _FNORD_FEEDS_FEED_H
-#include "fnord/base/stdtypes.h"
-#include "fnord/base/option.h"
+#include "fnord-base/stdtypes.h"
+#include "fnord-base/option.h"
 #include "fnord-rpc/RPC.h"
 #include "fnord-feeds/FeedEntry.h"
 

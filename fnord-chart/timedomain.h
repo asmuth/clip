@@ -9,7 +9,7 @@
  */
 #ifndef _FNORDMETRIC_TIMEDOMAIN_H
 #define _FNORDMETRIC_TIMEDOMAIN_H
-#include "fnord/base/datetime.h"
+#include "fnord-base/datetime.h"
 #include "fnord/chart/continuousdomain.h"
 
 namespace fnord {

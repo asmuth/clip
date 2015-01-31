@@ -7,10 +7,10 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#include "fnord/base/logging.h"
-#include "fnord/base/logging/logoutputstream.h"
-#include "fnord/base/stringutil.h"
-#include "fnord/base/wallclock.h"
+#include "fnord-base/logging.h"
+#include "fnord-base/logging/logoutputstream.h"
+#include "fnord-base/stringutil.h"
+#include "fnord-base/wallclock.h"
 
 using fnord::OutputStream;
 

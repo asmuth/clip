@@ -13,7 +13,7 @@
 #include <string>
 #include <vector>
 #include <functional>
-#include "fnord/base/io/inputstream.h"
+#include "fnord-base/io/inputstream.h"
 #include "fnord/json/json.h"
 #include "fnord/json/jsonpointer.h"
 

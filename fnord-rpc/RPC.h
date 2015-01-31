@@ -16,10 +16,10 @@
 #include <string>
 #include <unordered_map>
 #include <vector>
-#include "fnord/base/status.h"
-#include "fnord/base/stdtypes.h"
-#include "fnord/base/thread/future.h"
-#include "fnord/base/thread/wakeup.h"
+#include "fnord-base/status.h"
+#include "fnord-base/stdtypes.h"
+#include "fnord-base/thread/future.h"
+#include "fnord-base/thread/wakeup.h"
 
 namespace fnord {
 class RPCChannel;

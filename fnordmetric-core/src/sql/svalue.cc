@@ -13,7 +13,7 @@
 #include <string>
 #include <ctime>
 #include <stdint.h>
-#include <fnord/base/inspect.h>
+#include <fnord-base/inspect.h>
 #include <fnordmetric/sql/parser/token.h>
 #include <fnordmetric/sql/svalue.h>
 #include <fnordmetric/util/format.h>

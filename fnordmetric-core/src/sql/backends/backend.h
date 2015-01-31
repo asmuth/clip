@@ -11,7 +11,7 @@
 #define _FNORDMETRIC_SQL_BACKEND_H
 #include <memory>
 #include <vector>
-#include <fnord/base/uri.h>
+#include <fnord-base/uri.h>
 #include <fnordmetric/sql/backends/tableref.h>
 
 namespace fnordmetric {

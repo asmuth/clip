@@ -10,7 +10,7 @@
 #ifndef _FNORDMETRIC_UTIL_EXCEPTIONHANDLER_H
 #define _FNORDMETRIC_UTIL_EXCEPTIONHANDLER_H
 #include <mutex>
-#include "fnord/base/stdtypes.h"
+#include "fnord-base/stdtypes.h"
 
 namespace fnord {
 

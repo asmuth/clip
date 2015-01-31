@@ -8,7 +8,7 @@
  * <http://www.gnu.org/licenses/>.
  */
 #include <sys/time.h>
-#include "fnord/base/wallclock.h"
+#include "fnord-base/wallclock.h"
 
 namespace fnord {
 

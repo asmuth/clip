@@ -11,7 +11,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h>
-#include <fnord/base/exception.h>
+#include <fnord-base/exception.h>
 #include <fnord/net/http/httpclient.h>
 #include <fnord/net/http/httpconnectionpool.h>
 #include <fnord/net/http/httpparser.h>
@@ -19,10 +19,10 @@
 #include <fnord/net/http/httpresponse.h>
 #include <fnord/net/http/httpresponsehandler.h>
 #include <fnord/net/http/httpclientconnection.h>
-#include <fnord/base/io/inputstream.h>
+#include <fnord-base/io/inputstream.h>
 #include <fnord/test/unittest.h>
-#include <fnord/base/thread/eventloop.h>
-#include <fnord/base/thread/threadpool.h>
+#include <fnord-base/thread/eventloop.h>
+#include <fnord-base/thread/threadpool.h>
 
 using namespace fnord::http;
 using fnord::StringInputStream;

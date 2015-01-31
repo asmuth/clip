@@ -8,7 +8,7 @@
  * <http://www.gnu.org/licenses/>.
  */
 #include "fnord/service/ping/pingservice.h"
-#include "fnord/base/stringutil.h"
+#include "fnord-base/stringutil.h"
 #include "fnord/reflect/reflect.h"
 #include <thread>
 #include <unistd.h>

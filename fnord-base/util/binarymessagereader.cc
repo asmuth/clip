@@ -8,7 +8,7 @@
  * <http://www.gnu.org/licenses/>.
  */
 #include <fnord/util/binarymessagereader.h>
-#include <fnord/base/exception.h>
+#include <fnord-base/exception.h>
 
 namespace fnord {
 namespace util {

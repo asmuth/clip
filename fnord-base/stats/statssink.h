@@ -10,7 +10,7 @@
 #ifndef _FNORD_STATS_STATSSINK_H
 #define _FNORD_STATS_STATSSINK_H
 #include <stdlib.h>
-#include "fnord/base/stdtypes.h"
+#include "fnord-base/stdtypes.h"
 
 namespace fnord {
 namespace stats {

@@ -9,7 +9,7 @@
  */
 #ifndef _FNORDMETRIC_HTTPRESPONSEHANDLER_H
 #define _FNORDMETRIC_HTTPRESPONSEHANDLER_H
-#include "fnord/base/thread/wakeup.h"
+#include "fnord-base/thread/wakeup.h"
 #include <memory>
 
 namespace fnord {

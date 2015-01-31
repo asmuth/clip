@@ -20,7 +20,7 @@
 #include "fnord/chart/drawable.h"
 #include "fnord/chart/rendertarget.h"
 #include "fnord/chart/seriesjoin.h"
-#include <fnord/base/exception.h>
+#include <fnord-base/exception.h>
 
 namespace fnord {
 namespace chart {

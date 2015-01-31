@@ -19,7 +19,7 @@
 #include <fnordmetric/sql/runtime/tablerepository.h>
 #include <fnordmetric/sql/runtime/compile.h>
 #include <fnordmetric/sql/runtime/execute.h>
-#include <fnord/base/exception.h>
+#include <fnord-base/exception.h>
 
 namespace fnordmetric {
 namespace query {

@@ -8,8 +8,8 @@
  * <http://www.gnu.org/licenses/>.
  */
 #include <stdlib.h>
-#include <fnord/base/ieee754.h>
-#include <fnord/base/exception.h>
+#include <fnord-base/ieee754.h>
+#include <fnord-base/exception.h>
 #include <fnord/service/metric/backends/disk/binaryformat.h>
 #include <fnord/service/metric/backends/disk/samplewriter.h>
 #include <fnord/service/metric/backends/disk/tokenindex.h>

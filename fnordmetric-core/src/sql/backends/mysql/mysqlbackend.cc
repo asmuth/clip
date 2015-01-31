@@ -11,7 +11,7 @@
 #include <fnordmetric/sql/backends/mysql/mysqlbackend.h>
 #include <fnordmetric/sql/backends/mysql/mysqlconnection.h>
 #include <fnordmetric/sql/backends/mysql/mysqltableref.h>
-#include <fnord/base/exception.h>
+#include <fnord-base/exception.h>
 #include <memory>
 #include <mutex>
 

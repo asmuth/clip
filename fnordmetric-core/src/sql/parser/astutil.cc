@@ -11,7 +11,7 @@
 #include <fnordmetric/sql/parser/astutil.h>
 #include <fnordmetric/sql/parser/token.h>
 #include <fnordmetric/sql/runtime/tablerepository.h>
-#include <fnord/base/exception.h>
+#include <fnord-base/exception.h>
 
 namespace fnordmetric {
 namespace query {

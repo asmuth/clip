@@ -11,7 +11,7 @@
 #define _FNORD_STATS_MOVINGAVERAGE_H
 #include <stdlib.h>
 #include <stdint.h>
-#include "fnord/base/datetime.h"
+#include "fnord-base/datetime.h"
 
 namespace fnord {
 namespace stats {

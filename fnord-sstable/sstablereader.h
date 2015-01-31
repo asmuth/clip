@@ -13,10 +13,10 @@
 #include <string>
 #include <vector>
 #include <memory>
-#include <fnord/base/buffer.h>
-#include <fnord/base/exception.h>
-#include <fnord/base/io/file.h>
-#include <fnord/base/io/mmappedfile.h>
+#include <fnord-base/buffer.h>
+#include <fnord-base/exception.h>
+#include <fnord-base/io/file.h>
+#include <fnord-base/io/mmappedfile.h>
 #include <fnord/sstable/binaryformat.h>
 #include <fnord/sstable/fileheaderreader.h>
 #include <fnord/sstable/cursor.h>

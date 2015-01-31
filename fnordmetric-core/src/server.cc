@@ -12,10 +12,10 @@
 #include <string.h>
 #include <string>
 #include <vector>
-#include <fnord/base/exception.h>
-#include <fnord/base/exceptionhandler.h>
-#include <fnord/base/inspect.h>
-#include <fnord/base/random.h>
+#include <fnord-base/exception.h>
+#include <fnord-base/exceptionhandler.h>
+#include <fnord-base/inspect.h>
+#include <fnord-base/random.h>
 #include <fnord/net/http/httpserver.h>
 #include <fnord/io/fileutil.h>
 #include <fnord/io/inputstream.h>

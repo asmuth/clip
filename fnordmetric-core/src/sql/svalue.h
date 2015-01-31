@@ -13,7 +13,7 @@
 #include <string>
 #include <string.h>
 #include <vector>
-#include <fnord/base/exception.h>
+#include <fnord-base/exception.h>
 #include <fnordmetric/types.h>
 
 namespace fnordmetric {

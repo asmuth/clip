@@ -12,9 +12,9 @@
 #include <errno.h>
 #include <exception>
 #include <string>
-#include "fnord/base/stringutil.h"
-#include "fnord/base/stdtypes.h"
-#include "fnord/base/io/outputstream.h"
+#include "fnord-base/stringutil.h"
+#include "fnord-base/stdtypes.h"
+#include "fnord-base/io/outputstream.h"
 
 const char kBufferOverflowError[] = "BufferOverflowError";
 const char kConcurrentModificationError[] = "ConcurrentModificationError";

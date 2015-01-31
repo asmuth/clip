@@ -9,7 +9,7 @@
  */
 #ifndef _FNORDMETRIC_TYPES_H
 #define _FNORDMETRIC_TYPES_H
-#include <fnord/base/datetime.h>
+#include <fnord-base/datetime.h>
 
 namespace fnordmetric {
 

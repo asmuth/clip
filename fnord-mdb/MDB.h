@@ -12,8 +12,8 @@
 #include <memory>
 #include <vector>
 #include <liblmdb/lmdb.h>
-#include "fnord/base/logging.h"
-#include "fnord/base/autoref.h"
+#include "fnord-base/logging.h"
+#include "fnord-base/autoref.h"
 #include "fnord-mdb/MDBTransaction.h"
 
 namespace fnord {

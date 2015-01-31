@@ -9,7 +9,7 @@
  */
 #include <stdlib.h>
 #include "pointchart.h"
-#include <fnord/base/exception.h>
+#include <fnord-base/exception.h>
 
 namespace fnord {
 namespace chart {

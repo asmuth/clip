@@ -10,8 +10,8 @@
 #include <stdlib.h>
 #include <stack>
 #include <string>
-#include "fnord/base/inspect.h"
-#include "fnord/base/datetime.h"
+#include "fnord-base/inspect.h"
+#include "fnord-base/datetime.h"
 #include "fnord/json/json.h"
 #include "fnord/json/jsoninputstream.h"
 

@@ -13,7 +13,7 @@
 #include <string>
 #include <vector>
 #include <set>
-#include <fnord/base/datetime.h>
+#include <fnord-base/datetime.h>
 #include <fnord/service/metric/sample.h>
 
 namespace fnord {

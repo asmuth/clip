@@ -10,7 +10,7 @@
 #ifndef _FNORD_NET_TCPSERVER_H
 #define _FNORD_NET_TCPSERVER_H
 
-#include "fnord/base/thread/taskscheduler.h"
+#include "fnord-base/thread/taskscheduler.h"
 #include "fnord/net/tcpconnection.h"
 
 namespace fnord {

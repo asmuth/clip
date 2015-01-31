@@ -12,7 +12,7 @@
 #include <stdlib.h>
 #include <assert.h>
 #include <unordered_map>
-#include <fnord/base/exception.h>
+#include <fnord-base/exception.h>
 #include <fnord/chart/canvas.h>
 #include <fnord/chart/barchart.h>
 #include <fnord/chart/series.h>

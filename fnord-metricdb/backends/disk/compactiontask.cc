@@ -8,7 +8,7 @@
  * <http://www.gnu.org/licenses/>.
  */
 #include <unistd.h>
-#include <fnord/base/wallclock.h>
+#include <fnord-base/wallclock.h>
 #include <fnord/service/metric/backends/disk/compactiontask.h>
 #include <fnord/service/metric/backends/disk/metricrepository.h>
 

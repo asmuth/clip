@@ -12,10 +12,10 @@
 #include <mutex>
 #include <stdlib.h>
 #include <string>
-#include "fnord/base/datetime.h"
+#include "fnord-base/datetime.h"
 #include "fnord/service/metric/metricrepository.h"
 #include "fnord/stats/counter.h"
-#include "fnord/base/thread/taskscheduler.h"
+#include "fnord-base/thread/taskscheduler.h"
 
 namespace fnord {
 namespace metric_service {

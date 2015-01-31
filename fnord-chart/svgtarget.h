@@ -15,7 +15,7 @@
 #include <string>
 #include "fnord/chart/rendertarget.h"
 #include "fnord/chart/styles/style_default.h"
-#include "fnord/base/io/outputstream.h"
+#include "fnord-base/io/outputstream.h"
 
 namespace fnord {
 namespace chart {

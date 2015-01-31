@@ -9,7 +9,7 @@
  */
 #ifndef _FNORD_STATS_STATSHTTPSERVLET_H
 #define _FNORD_STATS_STATSHTTPSERVLET_H
-#include "fnord/base/autoref.h"
+#include "fnord-base/autoref.h"
 #include "fnord/net/http/httpservice.h"
 #include "fnord/stats/statsrepository.h"
 

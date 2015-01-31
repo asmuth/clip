@@ -11,8 +11,8 @@
 #include <stdio.h>
 #include <string.h>
 #include <math.h>
-#include <fnord/base/wallclock.h>
-#include <fnord/base/io/fileutil.h>
+#include <fnord-base/wallclock.h>
+#include <fnord-base/io/fileutil.h>
 #include <fnord/service/metric/backends/disk/metric.h>
 #include <fnord/test/unittest.h>
 

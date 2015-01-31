@@ -13,10 +13,10 @@
 #include <memory>
 #include <mutex>
 #include <stdlib.h>
-#include "fnord/base/duration.h"
-#include "fnord/base/exception.h"
-#include "fnord/base/inspect.h"
-#include "fnord/base/thread/wakeup.h"
+#include "fnord-base/duration.h"
+#include "fnord-base/exception.h"
+#include "fnord-base/inspect.h"
+#include "fnord-base/thread/wakeup.h"
 
 namespace fnord {
 

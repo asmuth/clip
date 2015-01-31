@@ -7,9 +7,9 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#include <fnord/base/buffer.h>
+#include <fnord-base/buffer.h>
 #include <fnord/net/udpserver.h>
-#include <fnord/base/thread/taskscheduler.h>
+#include <fnord-base/thread/taskscheduler.h>
 
 namespace fnord {
 namespace statsd {

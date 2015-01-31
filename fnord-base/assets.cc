@@ -8,9 +8,9 @@
  * <http://www.gnu.org/licenses/>.
  */
 #include <stdlib.h>
-#include "fnord/base/assets.h"
-#include "fnord/base/exception.h"
-#include "fnord/base/io/inputstream.h"
+#include "fnord-base/assets.h"
+#include "fnord-base/exception.h"
+#include "fnord-base/io/inputstream.h"
 
 namespace fnord {
 

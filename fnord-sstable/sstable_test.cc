@@ -10,7 +10,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-#include <fnord/base/io/file.h>
+#include <fnord-base/io/file.h>
 #include <fnordmetric/util/unittest.h>
 #include <fnord/sstable/sstablewriter.h>
 #include <fnord/sstable/rowoffsetindex.h>

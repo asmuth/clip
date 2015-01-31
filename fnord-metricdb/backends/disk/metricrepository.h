@@ -12,8 +12,8 @@
 #include <fnord/service/metric/backends/disk/compactiontask.h>
 #include <fnord/service/metric/backends/disk/metric.h>
 #include <fnord/service/metric/metricrepository.h>
-#include <fnord/base/io/filerepository.h>
-#include <fnord/base/thread/taskscheduler.h>
+#include <fnord-base/io/filerepository.h>
+#include <fnord-base/thread/taskscheduler.h>
 
 namespace fnord {
 namespace metric_service {

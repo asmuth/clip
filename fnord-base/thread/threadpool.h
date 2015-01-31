@@ -13,10 +13,10 @@
 #include <condition_variable>
 #include <functional>
 #include <list>
-#include "fnord/base/thread/task.h"
-#include "fnord/base/thread/taskscheduler.h"
-#include "fnord/base/thread/wakeup.h"
-#include "fnord/base/exceptionhandler.h"
+#include "fnord-base/thread/task.h"
+#include "fnord-base/thread/taskscheduler.h"
+#include "fnord-base/thread/wakeup.h"
+#include "fnord-base/exceptionhandler.h"
 
 namespace fnord {
 namespace thread {

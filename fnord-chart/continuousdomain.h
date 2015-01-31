@@ -9,8 +9,8 @@
  */
 #ifndef _FNORDMETRIC_CONTINUOUSDOMAIN_H
 #define _FNORDMETRIC_CONTINUOUSDOMAIN_H
-#include "fnord/base/exception.h"
-#include "fnord/base/stringutil.h"
+#include "fnord-base/exception.h"
+#include "fnord-base/stringutil.h"
 #include "fnord/chart/domain.h"
 
 namespace fnord {

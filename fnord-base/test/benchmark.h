@@ -11,7 +11,7 @@
 #define _FNORD_TEST_BENCHMARK_H
 #include <stdlib.h>
 #include <stdint.h>
-#include "fnord/base/datetime.h"
+#include "fnord-base/datetime.h"
 
 namespace fnord {
 

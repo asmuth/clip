@@ -11,7 +11,7 @@
 #include <unistd.h>
 #include <fcntl.h>
 #include "csvinputstream.h"
-#include "fnord/base/exception.h"
+#include "fnord-base/exception.h"
 #include "fnord/io/inputstream.h"
 
 namespace fnordmetric {

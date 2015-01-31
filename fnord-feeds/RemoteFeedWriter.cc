@@ -7,7 +7,7 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#include "fnord/base/logging.h"
+#include "fnord-base/logging.h"
 #include "fnord/json/JSONRPCCodec.h"
 #include "fnord-feeds/FeedService.h"
 #include "fnord-feeds/RemoteFeedWriter.h"

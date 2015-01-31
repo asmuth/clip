@@ -9,7 +9,7 @@
  */
 #ifndef _FNORDMETRIC_DISCRETEDOMAIN_H
 #define _FNORDMETRIC_DISCRETEDOMAIN_H
-#include "fnord/base/stringutil.h"
+#include "fnord-base/stringutil.h"
 #include "fnord/chart/domain.h"
 
 namespace fnord {
