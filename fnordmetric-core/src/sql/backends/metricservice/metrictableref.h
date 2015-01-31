@@ -9,7 +9,7 @@
  */
 #ifndef _FNORDMETRIC_METRICDB_METRICTABLEREF_H
 #define _FNORDMETRIC_METRICDB_METRICTABLEREF_H
-#include <fnord/service/metric/metric.h>
+#include <fnord-metricdb/metric.h>
 #include <fnordmetric/sql/backends/tableref.h>
 #include <stdlib.h>
 #include <string>

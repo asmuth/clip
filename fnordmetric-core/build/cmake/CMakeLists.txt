@@ -67,29 +67,29 @@ set(FNORDMETRIC_SOURCES
     stage/src/fnord/service/groups/groupsserviceadapter.cc
     stage/src/fnord/service/keyvalue/keyvalueservice.cc
     stage/src/fnord/service/keyvalue/keyvalueserviceadapter.cc
-    stage/src/fnord/service/metric/backends/disk/compactiontask.cc
-    stage/src/fnord/service/metric/backends/disk/metric.cc
-    stage/src/fnord/service/metric/backends/disk/metriccursor.cc
-    stage/src/fnord/service/metric/backends/disk/metricsnapshot.cc
-    stage/src/fnord/service/metric/backends/disk/metricrepository.cc
-    stage/src/fnord/service/metric/backends/disk/labelindex.cc
-    stage/src/fnord/service/metric/backends/disk/labelindexreader.cc
-    stage/src/fnord/service/metric/backends/disk/labelindexwriter.cc
-    stage/src/fnord/service/metric/backends/disk/samplereader.cc
-    stage/src/fnord/service/metric/backends/disk/samplewriter.cc
-    stage/src/fnord/service/metric/backends/disk/tableheaderreader.cc
-    stage/src/fnord/service/metric/backends/disk/tableheaderwriter.cc
-    stage/src/fnord/service/metric/backends/disk/tableref.cc
-    stage/src/fnord/service/metric/backends/disk/tokenindex.cc
-    stage/src/fnord/service/metric/backends/disk/tokenindexreader.cc
-    stage/src/fnord/service/metric/backends/disk/tokenindexwriter.cc
-    stage/src/fnord/service/metric/backends/inmemory/metric.cc
-    stage/src/fnord/service/metric/backends/inmemory/metricrepository.cc
-    stage/src/fnord/service/metric/metric.cc
-    stage/src/fnord/service/metric/metricrepository.cc
-    stage/src/fnord/service/metric/metricservice.cc
-    stage/src/fnord/service/metric/metricserviceadapter.cc
-    stage/src/fnord/service/metric/sample.cc
+    stage/src/fnord-metricdb/backends/disk/compactiontask.cc
+    stage/src/fnord-metricdb/backends/disk/metric.cc
+    stage/src/fnord-metricdb/backends/disk/metriccursor.cc
+    stage/src/fnord-metricdb/backends/disk/metricsnapshot.cc
+    stage/src/fnord-metricdb/backends/disk/metricrepository.cc
+    stage/src/fnord-metricdb/backends/disk/labelindex.cc
+    stage/src/fnord-metricdb/backends/disk/labelindexreader.cc
+    stage/src/fnord-metricdb/backends/disk/labelindexwriter.cc
+    stage/src/fnord-metricdb/backends/disk/samplereader.cc
+    stage/src/fnord-metricdb/backends/disk/samplewriter.cc
+    stage/src/fnord-metricdb/backends/disk/tableheaderreader.cc
+    stage/src/fnord-metricdb/backends/disk/tableheaderwriter.cc
+    stage/src/fnord-metricdb/backends/disk/tableref.cc
+    stage/src/fnord-metricdb/backends/disk/tokenindex.cc
+    stage/src/fnord-metricdb/backends/disk/tokenindexreader.cc
+    stage/src/fnord-metricdb/backends/disk/tokenindexwriter.cc
+    stage/src/fnord-metricdb/backends/inmemory/metric.cc
+    stage/src/fnord-metricdb/backends/inmemory/metricrepository.cc
+    stage/src/fnord-metricdb/metric.cc
+    stage/src/fnord-metricdb/metricrepository.cc
+    stage/src/fnord-metricdb/metricservice.cc
+    stage/src/fnord-metricdb/metricserviceadapter.cc
+    stage/src/fnord-metricdb/sample.cc
     stage/src/fnord/sstable/cursor.cc
     stage/src/fnord/sstable/fileheaderreader.cc
     stage/src/fnord/sstable/fileheaderwriter.cc

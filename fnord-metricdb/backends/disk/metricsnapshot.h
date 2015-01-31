@@ -9,7 +9,7 @@
  */
 #ifndef _FNORDMETRIC_METRICDB_METRICSNAPSHOT_H_
 #define _FNORDMETRIC_METRICDB_METRICSNAPSHOT_H_
-#include <fnord/service/metric/backends/disk/tableref.h>
+#include <fnord-metricdb/backends/disk/tableref.h>
 #include <string>
 #include <vector>
 

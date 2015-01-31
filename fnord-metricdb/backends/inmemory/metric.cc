@@ -9,7 +9,7 @@
  */
 #include <fnord-base/exception.h>
 #include <fnord-base/wallclock.h>
-#include <fnord/service/metric/backends/inmemory/metric.h>
+#include <fnord-metricdb/backends/inmemory/metric.h>
 
 namespace fnord {
 namespace metric_service {

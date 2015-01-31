@@ -13,11 +13,11 @@
 #include "fnord-base/thread/eventloop.h"
 #include "fnord-http/httpserver.h"
 #include "fnord-http/httprouter.h"
-#include "fnord-base/net/statsd/statsd.h"
+#include "fnord-base/stats/statsd.h"
 #include "fnord-json/jsonrpc.h"
 #include "fnord-json/jsonrpchttpadapter.h"
-#include "fnord/service/metric/metricservice.h"
-#include "fnord/service/metric/httpapiservlet.h"
+#include "fnord-metricdb/metricservice.h"
+#include "fnord-metricdb/httpapiservlet.h"
 #include "fnord-base/thread/threadpool.h"
 
 using fnord::http::HTTPServer;

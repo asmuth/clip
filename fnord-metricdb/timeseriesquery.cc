@@ -10,7 +10,7 @@
 #include <algorithm>
 #include <fnord-base/exception.h>
 #include <fnord-base/inspect.h>
-#include <fnord/service/metric/timeseriesquery.h>
+#include <fnord-metricdb/timeseriesquery.h>
 
 namespace fnord {
 namespace metric_service {

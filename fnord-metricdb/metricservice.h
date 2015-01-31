@@ -13,7 +13,7 @@
 #include <stdlib.h>
 #include <string>
 #include "fnord-base/datetime.h"
-#include "fnord/service/metric/metricrepository.h"
+#include "fnord-metricdb/metricrepository.h"
 #include "fnord-base/stats/counter.h"
 #include "fnord-base/thread/taskscheduler.h"
 

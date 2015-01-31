@@ -14,6 +14,7 @@ add_library(fnord-feeds OBJECT
 add_executable(fn-feedtail
     $<TARGET_OBJECTS:fnord-base>
     $<TARGET_OBJECTS:fnord-http>
+    $<TARGET_OBJECTS:fnord-rpc>
     $<TARGET_OBJECTS:fnord-json>
     $<TARGET_OBJECTS:fnord-sstable>
     $<TARGET_OBJECTS:fnord-feeds>

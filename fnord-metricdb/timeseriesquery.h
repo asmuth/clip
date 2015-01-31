@@ -12,8 +12,8 @@
 #include <fnord-base/datetime.h>
 #include <fnord-base/stdtypes.h>
 #include <fnord-chart/series.h>
-#include <fnord/service/metric/sample.h>
-#include <fnord/service/metric/metricservice.h>
+#include <fnord-metricdb/sample.h>
+#include <fnord-metricdb/metricservice.h>
 
 namespace fnord {
 namespace metric_service {

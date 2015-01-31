@@ -9,7 +9,7 @@
  */
 #ifndef _FNORDMETRIC_METRICDB_COMPACTIONPOLICY_H_
 #define _FNORDMETRIC_METRICDB_COMPACTIONPOLICY_H_
-#include <fnord/service/metric/backends/disk/tableref.h>
+#include <fnord-metricdb/backends/disk/tableref.h>
 
 namespace fnord {
 namespace metric_service {

@@ -9,8 +9,8 @@
  */
 #ifndef _FNORDMETRIC_METRICDB_INMEMORY_BACKEND_METRICREPOSITORY_H_
 #define _FNORDMETRIC_METRICDB_INMEMORY_BACKEND_METRICREPOSITORY_H_
-#include <fnord/service/metric/backends/inmemory/metric.h>
-#include <fnord/service/metric/metricrepository.h>
+#include <fnord-metricdb/backends/inmemory/metric.h>
+#include <fnord-metricdb/metricrepository.h>
 
 namespace fnord {
 namespace metric_service {

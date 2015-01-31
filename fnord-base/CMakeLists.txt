@@ -60,6 +60,7 @@ add_library(fnord-base OBJECT
     stats/statsdagent.cc
     stats/statsrepository.cc
     stats/statssink.cc
+    stats/statsd.cc
     thread/eventloop.cc
     thread/signalhandler.cc
     thread/threadpool.cc

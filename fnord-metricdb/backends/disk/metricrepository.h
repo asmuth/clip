@@ -9,9 +9,9 @@
  */
 #ifndef _FNORDMETRIC_METRICDB_DISK_BACKEND_METRICREPOSITORY_H_
 #define _FNORDMETRIC_METRICDB_DISK_BACKEND_METRICREPOSITORY_H_
-#include <fnord/service/metric/backends/disk/compactiontask.h>
-#include <fnord/service/metric/backends/disk/metric.h>
-#include <fnord/service/metric/metricrepository.h>
+#include <fnord-metricdb/backends/disk/compactiontask.h>
+#include <fnord-metricdb/backends/disk/metric.h>
+#include <fnord-metricdb/metricrepository.h>
 #include <fnord-base/io/filerepository.h>
 #include <fnord-base/thread/taskscheduler.h>
 

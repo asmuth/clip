@@ -7,16 +7,16 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#include <fnord/service/metric/backends/disk/labelindex.h>
-#include <fnord/service/metric/backends/disk/labelindexreader.h>
-#include <fnord/service/metric/backends/disk/labelindexwriter.h>
-#include <fnord/service/metric/backends/disk/samplereader.h>
-#include <fnord/service/metric/backends/disk/tableref.h>
-#include <fnord/service/metric/backends/disk/tableheaderreader.h>
-#include <fnord/service/metric/backends/disk/tableheaderwriter.h>
-#include <fnord/service/metric/backends/disk/tokenindex.h>
-#include <fnord/service/metric/backends/disk/tokenindexwriter.h>
-#include <fnord/service/metric/backends/disk/tokenindexreader.h>
+#include <fnord-metricdb/backends/disk/labelindex.h>
+#include <fnord-metricdb/backends/disk/labelindexreader.h>
+#include <fnord-metricdb/backends/disk/labelindexwriter.h>
+#include <fnord-metricdb/backends/disk/samplereader.h>
+#include <fnord-metricdb/backends/disk/tableref.h>
+#include <fnord-metricdb/backends/disk/tableheaderreader.h>
+#include <fnord-metricdb/backends/disk/tableheaderwriter.h>
+#include <fnord-metricdb/backends/disk/tokenindex.h>
+#include <fnord-metricdb/backends/disk/tokenindexwriter.h>
+#include <fnord-metricdb/backends/disk/tokenindexreader.h>
 #include <fnord-sstable/sstablereader.h>
 
 using namespace fnord;

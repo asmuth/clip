@@ -13,14 +13,14 @@
 #include <vector>
 #include <fnord-base/datetime.h>
 #include <fnord-base/io/filerepository.h>
-#include <fnord/service/metric/backends/disk/compactionpolicy.h>
-#include <fnord/service/metric/backends/disk/labelindex.h>
-#include <fnord/service/metric/backends/disk/metriccursor.h>
-#include <fnord/service/metric/backends/disk/metricsnapshot.h>
-#include <fnord/service/metric/backends/disk/samplereader.h>
-#include <fnord/service/metric/backends/disk/tokenindex.h>
-#include <fnord/service/metric/metric.h>
-#include <fnord/service/metric/sample.h>
+#include <fnord-metricdb/backends/disk/compactionpolicy.h>
+#include <fnord-metricdb/backends/disk/labelindex.h>
+#include <fnord-metricdb/backends/disk/metriccursor.h>
+#include <fnord-metricdb/backends/disk/metricsnapshot.h>
+#include <fnord-metricdb/backends/disk/samplereader.h>
+#include <fnord-metricdb/backends/disk/tokenindex.h>
+#include <fnord-metricdb/metric.h>
+#include <fnord-metricdb/sample.h>
 
 using namespace fnord;
 namespace fnord {

@@ -9,7 +9,7 @@
  */
 #include <fnord-sstable/sstablerepair.h>
 #include <fnord-base/thread/task.h>
-#include <fnord/service/metric/backends/disk/metricrepository.h>
+#include <fnord-metricdb/backends/disk/metricrepository.h>
 
 namespace fnord {
 namespace metric_service {

@@ -9,7 +9,7 @@
  */
 #include <fnordmetric/environment.h>
 #include <fnordmetric/io/fileutil.h>
-#include <fnord/service/metric/metric.h>
+#include <fnord-metricdb/metric.h>
 #include <fnordmetric/util/unittest.h>
 #include <fnordmetric/util/wallclock.h>
 #include <stdlib.h>

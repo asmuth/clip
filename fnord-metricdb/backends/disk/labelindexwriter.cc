@@ -7,7 +7,7 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#include <fnord/service/metric/backends/disk/labelindexwriter.h>
+#include <fnord-metricdb/backends/disk/labelindexwriter.h>
 
 namespace fnord {
 namespace metric_service {

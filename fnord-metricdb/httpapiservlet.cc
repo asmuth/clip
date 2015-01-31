@@ -8,7 +8,7 @@
  * <http://www.gnu.org/licenses/>.
  */
 #include "fnord-base/wallclock.h"
-#include "fnord/service/metric/httpapiservlet.h"
+#include "fnord-metricdb/httpapiservlet.h"
 #include "fnord-chart/axisdefinition.h"
 
 namespace fnord {

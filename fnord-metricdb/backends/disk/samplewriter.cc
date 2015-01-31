@@ -10,9 +10,9 @@
 #include <stdlib.h>
 #include <fnord-base/ieee754.h>
 #include <fnord-base/exception.h>
-#include <fnord/service/metric/backends/disk/binaryformat.h>
-#include <fnord/service/metric/backends/disk/samplewriter.h>
-#include <fnord/service/metric/backends/disk/tokenindex.h>
+#include <fnord-metricdb/backends/disk/binaryformat.h>
+#include <fnord-metricdb/backends/disk/samplewriter.h>
+#include <fnord-metricdb/backends/disk/tokenindex.h>
 
 namespace fnord {
 namespace metric_service {
