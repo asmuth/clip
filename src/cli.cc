@@ -14,7 +14,6 @@
 #include <vector>
 #include <fnord-base/exceptionhandler.h>
 #include <fnord-base/random.h>
-#include <fnord/system/signalhandler.h>
 #include <environment.h>
 #include <cli/cli.h>
 
@@ -25,14 +24,9 @@ static const char kCrashErrorMsg[] =
     "github.com/paulasmuth/fnordmetric";
 
 int main(int argc, const char** argv) {
-  /* setup environment */
-  fnord::CatchAndAbortExceptionHandler ehandler(kCrashErrorMsg);
-  ehandler.installGlobalHandlers();
-  fnord::system::SignalHandler::ignoreSIGHUP();
-  fnord::system::SignalHandler::ignoreSIGPIPE();
-  fnord::Random::init();
+  fnord::Application::init();
+  fnord::Application::logToStderr();
 
-  /* execute commandline */
   cli::CLI::parseArgs(env(), argc, argv);
   cli::CLI::executeSafely(env());
   return 0;

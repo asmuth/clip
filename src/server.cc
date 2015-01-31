@@ -17,22 +17,15 @@
 #include <fnord-base/inspect.h>
 #include <fnord-base/random.h>
 #include <fnord-http/httpserver.h>
-#include <fnord/io/fileutil.h>
-#include <fnord/io/inputstream.h>
-#include <fnord/io/outputstream.h>
+#include <fnord-base/io/fileutil.h>
+#include <fnord-base/io/inputstream.h>
+#include <fnord-base/io/outputstream.h>
 #include <fnord-base/net/udpserver.h>
 #include <fnord-base/stats/statsd.h>
-#include <fnord/thread/threadpool.h>
+#include <fnord-base/thread/threadpool.h>
 #include <fnord-metricdb/metricservice.h>
-#include <fnord-metricdb/metricserviceadapter.h>
-#include <fnord/service/groups/groupsservice.h>
-#include <fnord/service/groups/groupsserviceadapter.h>
-#include <fnord/service/keyvalue/keyvalueservice.h>
-#include <fnord/service/keyvalue/keyvalueserviceadapter.h>
-#include <fnord/system/signalhandler.h>
-#include <cli/flagparser.h>
+#include <fnord-base/cli/flagparser.h>
 #include <environment.h>
-#include <adminui.h>
 #include <httpapi.h>
 
 using namespace fnordmetric;
@@ -45,10 +38,6 @@ using fnord::json::JSONRPC;
 using fnord::json::JSONRPCHTTPAdapter;
 using fnord::metric_service::MetricService;
 using fnord::metric_service::MetricServiceAdapter;
-using fnord::groups_service::GroupsService;
-using fnord::groups_service::GroupsServiceAdapter;
-using fnord::keyvalue_service::KeyValueService;
-using fnord::keyvalue_service::KeyValueServiceAdapter;
 using fnord::thread::Task;
 using fnord::thread::TaskScheduler;
 using fnord::statsd::StatsdServer;

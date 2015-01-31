@@ -24,9 +24,6 @@ namespace fnordmetric {
 namespace cli {
 
 void CLI::parseArgs(Environment* env, const std::vector<std::string>& argv) {
-  fnord::Application::init();
-  fnord::Application::logToStderr();
-
   auto flags = env->flags();
 
   // Execute queries from the commandline:
