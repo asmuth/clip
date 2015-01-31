@@ -4,4 +4,4 @@ if [[ "$1" == "clean" ]]; then
   exit 0
 fi
 
-make all
+make build
