@@ -18,7 +18,7 @@
 
 using namespace fnord::metric_service::disk_backend;
 using namespace fnord::metric_service;
-using namespace fnord::io;
+using namespace fnord;
 
 UNIT_TEST(DiskBackendTest);
 

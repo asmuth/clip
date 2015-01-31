@@ -10,7 +10,7 @@
 #include "fnord-base/io/inputstream.h"
 #include "fnord-base/test/unittest.h"
 
-using namespace fnord::io;
+using namespace fnord;
 
 UNIT_TEST(FileInputStreamTest);
 
