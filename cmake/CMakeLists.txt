@@ -40,7 +40,7 @@ set(FNORDMETRIC_SOURCES
     $<TARGET_OBJECTS:fnord-metricdb>
     $<TARGET_OBJECTS:fnord-sstable>
     ../src/environment.cc
-    ../src/queryendpoint.cc)
+    ../src/chartsql/queryendpoint.cc
     #stage/src/fnordmetric/util/assets.cc
     #stage/src/fnordmetric/sql/backends/csv/csvbackend.cc
     #stage/src/fnordmetric/sql/backends/csv/csvinputstream.cc
@@ -78,8 +78,8 @@ set(FNORDMETRIC_SOURCES
     #stage/src/fnordmetric/sql_extensions/domainconfig.cc
     #stage/src/fnordmetric/sql_extensions/drawstatement.cc
     #stage/src/fnordmetric/sql_extensions/seriesadapter.cc
-    #stage/src/fnordmetric/query/query.cc
-    #stage/src/fnordmetric/query/queryservice.cc
+    ../src/chartsql/query.cc
+    ../src/chartsql/queryservice.cc)
 
 #add_executable(fnordmetric-cli ${FNORDMETRIC_SOURCES} ../src/cli.cc)
 #target_link_libraries(fnordmetric-cli m)

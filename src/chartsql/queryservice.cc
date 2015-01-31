@@ -8,7 +8,8 @@
  * <http://www.gnu.org/licenses/>.
  */
 #include <fnord-chart/svgtarget.h>
-#include <fnord/io/inputstream.h>
+#include <fnord-base/io/inputstream.h>
+#include <fnord-base/logging.h>
 #include <fnord-json/jsonoutputstream.h>
 #include <environment.h>
 #include <chartsql/query.h>
@@ -23,9 +24,9 @@ namespace query {
 QueryService::QueryService() {}
 
 void QueryService::executeQuery(
-    std::shared_ptr<fnord::io::InputStream> input_stream,
+    std::shared_ptr<fnord::InputStream> input_stream,
     kFormat output_format,
-    std::shared_ptr<fnord::io::OutputStream> output_stream) {
+    std::shared_ptr<fnord::OutputStream> output_stream) {
   std::unique_ptr<TableRepository> table_repo(new TableRepository());
   executeQuery(
       input_stream,
@@ -35,9 +36,9 @@ void QueryService::executeQuery(
 }
 
 void QueryService::executeQuery(
-    std::shared_ptr<fnord::io::InputStream> input_stream,
+    std::shared_ptr<fnord::InputStream> input_stream,
     kFormat output_format,
-    std::shared_ptr<fnord::io::OutputStream> output_stream,
+    std::shared_ptr<fnord::OutputStream> output_stream,
     std::unique_ptr<TableRepository> table_repo,
     int width /* = -1 */,
     int height /* = -1 */) {
@@ -45,10 +46,10 @@ void QueryService::executeQuery(
   input_stream->readUntilEOF(&query_string);
 
   if (fnordmetric::env()->verbose()) {
-    fnordmetric::env()->logger()->printf(
-        "DEBUG",
-        "Executing ChartSQL query: %s",
-        query_string.c_str());
+    fnord::logDebug(
+        "fnordmetric",
+        "Executing ChartSQL query: $0",
+        query_string);
   }
 
   try {
@@ -164,7 +165,7 @@ void QueryService::renderJSON(
 
     for (int i = 0; i < query->getNumCharts(); ++i) {
       std::string svg_data;
-      auto string_stream = fnord::io::StringOutputStream::fromString(&svg_data);
+      auto string_stream = fnord::StringOutputStream::fromString(&svg_data);
       fnord::chart::SVGTarget svg_target(string_stream.get());
       auto chart = query->getChart(i);
       chart->setDimensions(width, height);
@@ -201,7 +202,7 @@ void QueryService::renderJSON(
 
 void QueryService::renderTables(
     Query* query,
-    fnord::io::OutputStream* out) const {
+    fnord::OutputStream* out) const {
   for (int i = 0; i < query->getNumResultLists(); ++i) {
     const auto result_list = query->getResultList(i);
     result_list->debugPrint();

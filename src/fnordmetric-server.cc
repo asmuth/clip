@@ -30,8 +30,8 @@
 #include <fnord-json/jsonrpc.h>
 #include <fnord-metricdb/metricservice.h>
 #include <fnord-metricdb/httpapiservlet.h>
-#include <environment.h>
-#include <queryendpoint.h>
+#include "environment.h"
+#include "chartsql/queryendpoint.h"
 
 using fnord::metric_service::MetricService;
 using namespace fnordmetric;
@@ -46,7 +46,7 @@ static MetricService makeMetricService(
 
   /* open inmemory backend */
   if (backend_type == "inmemory") {
-    fnord::logInfo("fnordmetric-server", "Opening new inmemory backend");
+    fnord::logInfo("fnordmetric", "Opening new inmemory backend");
     return MetricService::newWithInMemoryBackend();
   }
 
@@ -68,7 +68,7 @@ static MetricService makeMetricService(
       RAISEF(kIOError, "File $0 is not a directory", datadir);
     }
 
-    fnord::logInfo("fnordmetric-server", "Opening disk backend at $0", datadir);
+    fnord::logInfo("fnordmetric", "Opening disk backend at $0", datadir);
     return MetricService::newWithDiskBackend(datadir, backend_scheduler);
   }
 
@@ -215,7 +215,7 @@ int main(int argc, const char** argv) {
       auto statsd_port = env()->flags()->getInt("statsd_port");
 
       fnord::logInfo(
-          "fnordmetric-server",
+          "fnordmetric",
           "Starting StatsD server on port $0",
           statsd_port);
 
@@ -225,7 +225,7 @@ int main(int argc, const char** argv) {
     /* start event loop */
     evloop.run();
   } catch (const fnord::Exception& e) {
-    fnord::logError("fnordmetric-server", e, "FATAL ERROR");
+    fnord::logError("fnordmetric", e, "FATAL ERROR");
 
     if (e.getTypeName() == kUsageError) {
       printUsage();
