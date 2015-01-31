@@ -40,13 +40,24 @@ set(FNORDMETRIC_SOURCES
     $<TARGET_OBJECTS:fnord-metricdb>
     $<TARGET_OBJECTS:fnord-sstable>
     ../src/environment.cc
+    ../src/chartsql/areachartbuilder.cc
+    ../src/chartsql/barchartbuilder.cc
+    ../src/chartsql/domainconfig.cc
+    ../src/chartsql/drawstatement.cc
+    ../src/chartsql/linechartbuilder.cc
+    ../src/chartsql/pointchartbuilder.cc
     ../src/chartsql/queryendpoint.cc
+    ../src/chartsql/query.cc
+    ../src/chartsql/queryservice.cc
+    ../src/chartsql/seriesadapter.cc
     ../src/sql/backends/csv/csvbackend.cc
     ../src/sql/backends/csv/csvinputstream.cc
     ../src/sql/backends/csv/csvtableref.cc
     ../src/sql/backends/mysql/mysqlbackend.cc
     ../src/sql/backends/mysql/mysqlconnection.cc
     ../src/sql/backends/mysql/mysqltableref.cc
+    ../src/sql/backends/metricservice/metrictableref.cc
+    ../src/sql/backends/metricservice/metrictablerepository.cc
     ../src/sql/expressions/aggregate.cc
     ../src/sql/expressions/boolean.cc
     ../src/sql/expressions/datetime.cc
@@ -69,16 +80,7 @@ set(FNORDMETRIC_SOURCES
     ../src/sql/runtime/symboltable.cc
     ../src/sql/runtime/tablerepository.cc
     ../src/sql/runtime/tablescan.cc
-    ../src/sql/svalue.cc
-    #stage/src/fnordmetric/sql_extensions/areachartbuilder.cc
-    #stage/src/fnordmetric/sql_extensions/barchartbuilder.cc
-    #stage/src/fnordmetric/sql_extensions/linechartbuilder.cc
-    #stage/src/fnordmetric/sql_extensions/pointchartbuilder.cc
-    #stage/src/fnordmetric/sql_extensions/domainconfig.cc
-    #stage/src/fnordmetric/sql_extensions/drawstatement.cc
-    #stage/src/fnordmetric/sql_extensions/seriesadapter.cc
-    ../src/chartsql/query.cc
-    ../src/chartsql/queryservice.cc)
+    ../src/sql/svalue.cc)
 
 #add_executable(fnordmetric-cli ${FNORDMETRIC_SOURCES} ../src/cli.cc)
 #target_link_libraries(fnordmetric-cli m)
