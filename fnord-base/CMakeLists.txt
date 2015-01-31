@@ -28,36 +28,37 @@ endif()
 
 # base
 add_library(fnord-base OBJECT
-    base/application.cc
-    base/autoref.cc
-    base/assets.cc
-    base/buffer.cc
-    base/bufferutil.cc
-    base/datetime.cc
-    base/duration.cc
-    base/exception.cc
-    base/exceptionhandler.cc
-    base/fnv.cc
-    base/ieee754.cc
-    base/inspect.cc
-    base/io/file.cc
-    base/io/fileutil.cc
-    base/io/filerepository.cc
-    base/io/inputstream.cc
-    base/io/outputstream.cc
-    base/io/mmappedfile.cc
-    base/io/pagemanager.cc
-    base/logging.cc
-    base/logging/logoutputstream.cc
-    base/random.cc
-    base/status.cc
-    base/stringutil.cc
-    base/thread/eventloop.cc
-    base/thread/signalhandler.cc
-    base/thread/threadpool.cc
-    base/thread/wakeup.cc
-    base/uri.cc
-    base/wallclock.cc)
+    application.cc
+    autoref.cc
+    assets.cc
+    buffer.cc
+    bufferutil.cc
+    cli/flagparser.cc
+    datetime.cc
+    duration.cc
+    exception.cc
+    exceptionhandler.cc
+    fnv.cc
+    ieee754.cc
+    inspect.cc
+    io/file.cc
+    io/fileutil.cc
+    io/filerepository.cc
+    io/inputstream.cc
+    io/outputstream.cc
+    io/mmappedfile.cc
+    io/pagemanager.cc
+    logging.cc
+    logging/logoutputstream.cc
+    random.cc
+    status.cc
+    stringutil.cc
+    thread/eventloop.cc
+    thread/signalhandler.cc
+    thread/threadpool.cc
+    thread/wakeup.cc
+    uri.cc
+    wallclock.cc)
 
 #add_executable(tests/test-inputstream
 #    $<TARGET_OBJECTS:fnord-base>
@@ -73,62 +74,54 @@ add_library(fnord-base OBJECT
 #     base/stringutil_test.cc)
 
 # chart
-add_library(fnord-chart OBJECT
-    chart/axisdefinition.cc
-    chart/areachart.cc
-    chart/barchart.cc
-    chart/linechart.cc
-    chart/pointchart.cc
-    chart/canvas.cc
-    chart/domain.cc
-    chart/domainprovider.cc
-    chart/drawable.cc
-    chart/griddefinition.cc
-    chart/legenddefinition.cc
-    chart/series.cc
-    chart/timedomain.cc)
+#add_library(fnord-chart OBJECT
+#    chart/axisdefinition.cc
+#    chart/areachart.cc
+#    chart/barchart.cc
+#    chart/linechart.cc
+#    chart/pointchart.cc
+#    chart/canvas.cc
+#    chart/domain.cc
+#    chart/domainprovider.cc
+#    chart/drawable.cc
+#    chart/griddefinition.cc
+#    chart/legenddefinition.cc
+#    chart/series.cc
+#    chart/timedomain.cc)
 
-add_executable(tests/test-chart
-    $<TARGET_OBJECTS:fnord-base>
-    $<TARGET_OBJECTS:fnord-chart>
-    chart/chart_test.cc)
-
+#add_executable(tests/test-chart
+#    $<TARGET_OBJECTS:fnord-base>
+#    $<TARGET_OBJECTS:fnord-chart>
+#    chart/chart_test.cc)
+#
 target_link_libraries(tests/test-chart ${CMAKE_THREAD_LIBS_INIT})
 
-# cli
-add_library(fnord-cli OBJECT
-    cli/flagparser.cc)
-
-# comm
-add_library(fnord-comm OBJECT
-    comm/queue.cc)
-
 # http
-add_library(fnord-http OBJECT
-    net/http/cookies.cc
-    net/http/httpclient.cc
-    net/http/httpclientconnection.cc
-    net/http/httpconnectionpool.cc
-    net/http/httpgenerator.cc
-    net/http/httpmessage.cc
-    net/http/httpparser.cc
-    net/http/httprequest.cc
-    net/http/httpresponse.cc
-    net/http/httpresponsefuture.cc
-    net/http/httprouter.cc
-    net/http/httpserver.cc
-    net/http/httpserverconnection.cc
-    net/http/httpservice.cc)
-
-add_executable(tests/test-http
-    $<TARGET_OBJECTS:fnord-base>
-    $<TARGET_OBJECTS:fnord-comm>
-    $<TARGET_OBJECTS:fnord-net>
-    $<TARGET_OBJECTS:fnord-http>
-    $<TARGET_OBJECTS:fnord-stats>
-    net/http/http_test.cc)
-
-target_link_libraries(tests/test-http ${CMAKE_THREAD_LIBS_INIT})
+#add_library(fnord-http OBJECT
+#    net/http/cookies.cc
+#    net/http/httpclient.cc
+#    net/http/httpclientconnection.cc
+#    net/http/httpconnectionpool.cc
+#    net/http/httpgenerator.cc
+#    net/http/httpmessage.cc
+#    net/http/httpparser.cc
+#    net/http/httprequest.cc
+#    net/http/httpresponse.cc
+#    net/http/httpresponsefuture.cc
+#    net/http/httprouter.cc
+#    net/http/httpserver.cc
+#    net/http/httpserverconnection.cc
+#    net/http/httpservice.cc)
+#
+#add_executable(tests/test-http
+#    $<TARGET_OBJECTS:fnord-base>
+#    $<TARGET_OBJECTS:fnord-comm>
+#    $<TARGET_OBJECTS:fnord-net>
+#    $<TARGET_OBJECTS:fnord-http>
+#    $<TARGET_OBJECTS:fnord-stats>
+#    net/http/http_test.cc)
+#
+#target_link_libraries(tests/test-http ${CMAKE_THREAD_LIBS_INIT})
 
 # json
 add_library(fnord-json OBJECT
