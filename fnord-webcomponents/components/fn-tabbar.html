@@ -1,0 +1,79 @@
+<!--
+  This file is part of the "FnordMetric" project
+    Copyright (c) 2014 Laura Schlimmer
+    Copyright (c) 2014 Paul Asmuth, Google Inc.
+
+  FnordMetric is free software: you can redistribute it and/or modify it under
+  the terms of the GNU General Public License v3.0. You should have received a
+  copy of the GNU General Public License along with this program. If not, see
+  <http://www.gnu.org/licenses/>
+-->
+<style>
+  fn-tabbar /deep/ .outer {
+    height: 39px;
+    margin: 0px;
+    line-height: 39px;
+    border-bottom: 1px solid #dbdedf;
+    font-size: 90%;
+    padding: 0 20px;
+
+  }
+
+  fn-tab {
+    float:left;
+    text-decoration: none;
+    padding-right: 13px;
+    padding-left: 13px;
+    margin-right: 50px;
+    color: #444;
+    border: 1px solid #444;
+    background-color: #fff;
+  }
+
+  fn-tab:hover {
+    cursor:pointer;
+  }
+
+  fn-tab[data-active='active'] {
+    background-color: rgb(226, 232, 237);
+  }
+
+</style>
+
+<template id='fn-tabbar-base-tpl'>
+  <div class='outer'>
+    <div class='tabbar_inner'>
+      <content />
+    </div>
+  </div>
+</template>
+
+<script type='text/javascript'>
+  var TabBarComponent = function() {
+    this.createdCallback = function() {
+      var shadow = this.createShadowRoot();
+      var tpl = Fnord.getTemplate("fn-tabbar", "base");
+      shadow.appendChild(tpl);
+
+      var base = this;
+      var tabs = this.querySelectorAll("fn-tab");
+      for (var i = 0; i <tabs.length; i++) {
+        tabs[i].addEventListener('click', function() {
+          var current_tab = base.querySelector("fn-tab[data-active='active']");
+          current_tab.removeAttribute("data-active");
+          this.setAttribute("data-active", "active");
+          base.fireClickTabEvent();
+        }, false);
+      }
+    }
+
+    this.fireClickTabEvent = function() {
+      this.dispatchEvent(new Event("fn-tabbar-click"));
+    };
+
+  };
+
+  window.addEventListener('fn-ready', function() {
+    var tabbar = Fnord.registerComponent("fn-tabbar", TabBarComponent);
+  }, false);
+</script>

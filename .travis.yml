@@ -1,0 +1,4 @@
+rvm: 1.9.3
+script: ./fnordmetric-core/run_specs.sh
+services:
+  - redis-server

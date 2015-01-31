@@ -1,0 +1,63 @@
+-> timeouts
+-> rpcchannel (rcpclient + servergroup_)
+-> rpc numRetries/retryStrategie, onRetry(Duration delay) (instead of ready()/onError!)
+-> rpc timeout
+-> httprpcservlect<codec>
+-> http servlet should return response future!
+
+metricdb: insert distribution value
+metric http api: histogram endpoint
+metric http api: rollup endpoint
+metric http api: list subdirectory (non-)recursive
+metric: mean/median aggregation
+metric: percentile aggregation
+charts: axis ticks+labels inside/outside
+charts: control no of ticks on grid/axis
+charts: png render target
+charts: stacked areas
+
+better inetaddr:resolve iface:
+  -> future<inteaddr> resolve(string);
+  -> future<inetaddr> resolve(url); // resolves service port e.g. http->80, https->443
+-> datetime -> walltime (or unixtime?), audit usage vs monotonic/tai time
+
+-> queueworker abstraction (max concurrent jobs)
+
+-> RPC::convertToFuture impl
+
+-> spinlock
+
+-> stringview class
+
+-> benchmark + microoptimize StringUtil::split
+-> benchmark + microoptimize URI#decode for long urls
+-> use msgpack for rpcs because JSON#readString is slow
+-> InetAddr#resolve blocks...
+
+-> logstreamservice delete
+-> logstreamservice getcuroffset
+
+-> spinlock in http{client,server} connection
+-> http server conn keepalie fixx
+
+-> use redis async conn on eventloop instead of blocking conn
+
+-> httpconnpoool: leaks connections, add idle timeout
+-> cancelable wait
+
+-> http connection timeouts + retry options
+
+-> thread pool: max queue size + max thread size
+-> thread pool wait()
+
+-> timeout impl
+-> eventloop shutdown
+
+-> ratio of item visits to queries (only item visits but no queries -> fraud)
+-> number of userids per source ip
+-> session too long
+
+-> sstable row format improvements
+-> proper logger iface
+-> exception refactoring
+-> fix StringUtil::toString (should take const& param)

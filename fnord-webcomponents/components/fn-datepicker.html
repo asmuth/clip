@@ -1,0 +1,469 @@
+<!--
+  This file is part of the "FnordMetric" project
+    Copyright (c) 2014 Laura Schlimmer
+    Copyright (c) 2014 Paul Asmuth, Google Inc.
+
+  FnordMetric is free software: you can redistribute it and/or modify it under
+  the terms of the GNU General Public License v3.0. You should have received a
+  copy of the GNU General Public License along with this program. If not, see
+  <http://www.gnu.org/licenses/>.
+-->
+<style type='text/css'>
+  fn-datepicker {
+    display: block;
+  }
+
+  fn-datepicker:hover {
+    cursor: pointer;
+  }
+</style>
+<template id='fn-datepicker-base-tpl'>
+  <style type='text/css'>
+    fn-input {
+      width: 218px;
+      display:block;
+    }
+
+    fn-input:hover {
+      cursor: pointer;
+    }
+
+    #datepicker_widget[data-active='active'] {
+      position:absolute;
+      display:inline-block;
+      background: #fff;
+      width: 216px;
+      outline: 0;
+      font-family: 'Helvetica Neue',Arial,Helvetica,sans-serif;
+      font-size: 14px;
+      color: rgba(0,0,0,.8);
+      z-index: 100;
+      cursor: pointer;
+      box-shadow: 0 1px 4px 0 rgba(0,0,0,.15);
+      border: 1px solid rgba(39,41,43,.15);
+      border-radius: 0 0 .2857rem .2857rem;
+      -webkit-transition: opacity .2s ease;
+      transition: opacity .2s ease;
+      z-index: 11;
+      will-change: transform,opacity;
+    }
+
+    fn-input-time {
+      margin: 7px auto;
+      display:block;
+    }
+
+    table {
+      margin: 7px 9px 9px;
+      width: 200px;
+      border: 1px solid rgb(226, 232, 237);
+      border-radius: 3px;
+      border-collapse: collapse;
+      font-size: 1rem;
+    }
+
+    table th {
+      width: 25px;
+      height: 20px;
+      line-height: 20px;
+      text-align: center;
+      font-weight: normal;
+      color: #60707f;
+    }
+
+    table td {
+      width: 25px;
+      height: 20px;
+      line-height: 20px;
+      text-align:center;
+      color: #60707f;
+      cursor: default;
+    }
+
+    table td.selectable{
+      color: #444;
+    }
+
+    table td.selectable:hover {
+      cursor: pointer;
+    }
+
+    table td.highlight {
+      background-color: #f6f8fa;
+    }
+
+    table td.highlight_border {
+      border: 1px solid rgb(226, 232, 237);
+    }
+
+    .fa {
+      color:  #60707f;
+      padding-left: 5px;
+      padding-right: 5px;
+    }
+
+    .fa:hover {
+      cursor:pointer;
+    }
+
+  </style>
+  <fn-input data-readonly='true' data-style='small'>
+  </fn-input>
+  <div id="datepicker_widget">
+  </div>
+</template>
+<script type="text/javascript">
+  var DatePickerComponent = function() {
+    this.createdCallback = function() {
+      var shadow = this.createShadowRoot();
+      var tpl = Fnord.getTemplate("fn-datepicker", "base");
+      var base = this;
+      shadow.appendChild(tpl);
+
+      var input = this.shadowRoot.querySelector("fn-input");
+      var widget = this.shadowRoot.querySelector("#datepicker_widget");
+
+      if (this.hasAttribute('data-timestamp')) {this.setTimeValues();}
+
+      this.attributeChangedCallback();
+
+      input.addEventListener('click', function() {
+        if (!widget.hasAttribute('data-active')) {
+          base.setAttribute('active', 'active');
+
+          //timeInput is optional and set by data-time-select attribute
+          if (base.hasAttribute('data-time-select')) {
+            console.log("render time input");
+            base.renderTimeInput();
+          }
+
+          var selected_date = base.getSelectedDate();
+          var selected_year = selected_date.getFullYear();
+          var selected_month = selected_date.getMonth();
+
+          base.renderCalendar(selected_year, selected_month);
+        }
+
+      }, false);
+
+      document.addEventListener('click', function() {
+        base.resetDatepicker();
+      }, false);
+
+
+
+      this.addEventListener('click', function(e) {
+        e.stopPropagation();
+      });
+    };
+
+    this.attributeChangedCallback = function(attr, old_val, new_val) {
+      if (attr == "data-timestamp") {
+        this.setTimeValues();
+      }
+    };
+
+    this.setTimeValues = function() {
+      var value = parseInt(this.getAttribute('data-timestamp'), 10);
+      var str = this.createDateTimeString(value);
+      this.shadowRoot.querySelector("fn-input").setAttribute(
+        'data-value', str);
+    }
+
+    this.getSelectedDate = function() {
+      if (this.hasAttribute('data-timestamp')) {
+        return (new Date(parseInt(this.getAttribute('data-timestamp'), 10)));
+      } else {
+        return (new Date());
+      }
+    }
+
+    this.renderTimeInput = function() {
+      var widget = this.shadowRoot.querySelector("#datepicker_widget");
+      var time_input = document.createElement("fn-input-time");
+      var selected_date = this.getSelectedDate();
+
+      time_input.setAttribute('data-hours-value', selected_date.getHours());
+      time_input.setAttribute('data-minutes-value', selected_date.getMinutes());
+      widget.appendChild(time_input);
+      var base = this;
+
+      time_input.addEventListener('fn-input-time-submit', function() {
+        base.onSelect();
+      }, false);
+    }
+
+    this.renderCalendar = function(year, month) {
+      var widget = this.shadowRoot.querySelector("#datepicker_widget");
+
+      var table_elem = widget.querySelector("table");
+      if (table_elem == null) {
+        table_elem = document.createElement("table");
+      } else {
+        table_elem.innerHTML = "";
+      }
+      widget.appendChild(table_elem);
+
+      this.renderWeekHeader();
+      this.renderMonthHeader(year, month);
+      this.renderWeeks(year, month);
+
+      widget.setAttribute("data-active", "active");
+    };
+
+    this.renderWeekHeader = function() {
+      var table_elem = this.shadowRoot.querySelector("table");
+      var header_elem = document.createElement("tr");
+
+      var weekdays =
+        ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'];
+
+      weekdays.map(function(day) {
+        var header_cell = document.createElement("th");
+        header_cell.innerHTML = day;
+        header_elem.appendChild(header_cell);
+      });
+
+      table_elem.appendChild(header_elem);
+    };
+
+    this.renderMonthHeader = function(year, month) {
+      var human_months = [
+      "January",
+      "February",
+      "March",
+      "April",
+      "May",
+      "June",
+      "July",
+      "August",
+      "September",
+      "October",
+      "November",
+      "December"];
+
+      var base = this;
+      var table_elem = this.shadowRoot.querySelector("table");
+
+      var header_elem = document.createElement("tr");
+      var cell_elem = document.createElement("td");
+      cell_elem.colSpan = "7";
+
+      var month_title = document.createElement("b");
+      month_title.className = "datepicker_title";
+      month_title.innerHTML =
+        human_months[month] + " " + year;
+
+      /* tooltip to select previous month */
+      var prev_selector = document.createElement("i");
+      prev_selector.className = "fa fa-chevron-left";
+
+      /* tooltip to select next month */
+      var next_selector = document.createElement("i");
+      next_selector.className = "fa fa-chevron-right";
+
+      cell_elem.appendChild(prev_selector);
+      cell_elem.appendChild(month_title);
+      cell_elem.appendChild(next_selector);
+      header_elem.appendChild(cell_elem);
+      table_elem.appendChild(header_elem);
+
+      prev_selector.addEventListener('click', function() {
+        year = (month == 0)? year-1 : year;
+        month = (month + 11) % 12;
+        base.renderCalendar(year, month);
+      }, false);
+
+      next_selector.addEventListener('click', function() {
+        year = (month == 11)? year+1 : year;
+        month = (month + 1) % 12;
+        base.renderCalendar(year, month);
+      }, false);
+    };
+
+    this.renderWeeks = function(year, month) {
+      var table_elem = this.shadowRoot.querySelector("table");
+
+      var days_in_month = new Date(year, (month + 1), 0).getDate();
+      var first_weekday = new Date(year + "-" + (month+1) + "-01").getDay();
+      var num_rows = 6;
+      var date = 1;
+
+      for (var cur_row = 0; cur_row < num_rows; cur_row++) {
+        var row_elem = document.createElement("tr");
+        for (var day = 0; day < 7; day++) {
+          var cell_elem = document.createElement("td");
+          if (this.isInMonth(day, first_weekday, date, days_in_month, cur_row)) {
+            if (this.isSelectable(date, month, year)) {
+              cell_elem.innerHTML = date;
+              cell_elem.className = this.cellName(date, month, year);
+              this.handleDateLinks(cell_elem, date, month, year);
+            } else {
+              cell_elem.innerHTML = date;
+            }
+            date++;
+          }
+          row_elem.appendChild(cell_elem);
+        }
+        table_elem.appendChild(row_elem);
+      }
+    };
+
+    this.isInMonth = function(day, first_day, date, days_in_month, cur_row) {
+      if (cur_row > 0 && cur_row < 4) {return true}
+      if (cur_row == 0) {
+        /* the calendar has the same number of rows for each month */
+        if (first_day == 0) {
+          return false;
+        } else if (day < first_day) {
+          return false;
+        } else {
+          return true;
+        }
+      } else if (cur_row >= 4) {
+        if (date <= days_in_month) {
+          return true;
+        } else {
+          return false;
+        }
+      }
+    };
+
+    this.isSelectable = function(date, month, year) {
+      if (!(this.hasAttribute('data-selectable'))) {return true;}
+      var now = new Date();
+      var cur_year = now.getFullYear();
+      var cur_month = now.getMonth();
+      var cur_date = now.getDate();
+      var period = this.getAttribute('data-selectable');
+
+      if (period == "past") {
+        if (month == cur_month) {
+          return date <= cur_date;
+        }
+        return (year <= cur_year && month < cur_month);
+      }
+
+      if (period == "future") {
+        if (month == cur_month) {
+          return date >= cur_date;
+        }
+        return (year >= cur_year && month > cur_month);
+      }
+    };
+
+    this.cellName = function(date, month, year) {
+      var selected_date = this.getSelectedDate();
+      var selected_year = selected_date.getFullYear();
+      var selected_month = selected_date.getMonth();
+      var selected_date = selected_date.getDate();
+
+      var now = new Date();
+      var cur_year = now.getFullYear();
+      var cur_month = now.getMonth();
+      var cur_date = now.getDate();
+
+      var name = "selectable ";
+      /* date is today */
+      if (date == cur_date && month == cur_month && year == cur_year) {
+        name += " highlight_border";
+      }
+      /* date is selected date */
+      if (date == selected_date && 
+          month == selected_month && 
+          year == selected_year) {
+            name += " highlight";
+      }
+      return name;
+    };
+
+    this.handleDateLinks = function(elem, date, month, year) {
+      var base = this;
+      elem.addEventListener('click', function() {
+        base.onSelect(date, month, year);
+      }, false);
+    };
+
+    this.appendLeadingZero = function(num) {
+      if (typeof num == 'string') {
+        return (num.length > 1)? num : "0" + num;
+      }
+      return (num > 9)? num : "0" + num;
+    }
+
+    this.createDateTimeString = function(timestamp) {
+      var timestamp = new Date(timestamp);
+      var month = timestamp.getMonth();
+      var string =
+          this.appendLeadingZero(month + 1) +
+          "/" +
+          this.appendLeadingZero(timestamp.getDate()) + 
+          "/" + timestamp.getFullYear() + "  " + 
+          this.appendLeadingZero(timestamp.getHours()) +
+          ":" + 
+          this.appendLeadingZero(timestamp.getMinutes());
+
+      return string;
+    };
+
+    this.onSelect = function(date, month, year) {
+      var input = this.shadowRoot.querySelector("fn-input");
+      var selected_date = this.getSelectedDate();
+
+      var hours = "00";
+      var minutes = "01";
+      if (this.hasAttribute('data-time-select')) {
+        var time_input = this.shadowRoot.querySelector("fn-input-time");
+        hours = time_input.getAttribute('data-hours-value');
+        minutes = time_input.getAttribute('data-minutes-value');
+      }
+
+      /* fallback for time inputs */
+      var date = (date == undefined) ? 
+        selected_date.getDate() : date;
+      var month = (month == undefined)?
+        selected_date.getMonth() : month;
+      var year = (year == undefined) ?
+        selected_date.getFullYear() : year;
+
+      var ts = new Date(year, month, date, hours, minutes).getTime();
+
+      var fireEvent;
+      var selectable = this.getAttribute('data-selectable');
+      if (selectable == "past") {
+        fireEvent = (ts <= Date.now());
+      } else if (selectable == 'future') {
+        fireEvent = (ts >= Date.now());
+      } else {
+        fireEvent = true;
+      }
+
+      if (fireEvent) {
+        this.setAttribute('data-timestamp', ts);
+        this.resetDatepicker();
+        this.fireSelectDateEvent();
+      };
+    };
+
+    this.resetDatepicker = function() {
+      var widget = this.shadowRoot.querySelector("#datepicker_widget");
+      var table_elem = this.shadowRoot.querySelector("table");
+      var base = this;
+
+      widget.removeAttribute("data-active");
+      widget.innerHTML = "";
+      //fixme
+      document.removeEventListener('click', base.resetDatepicker, false);
+    };
+
+    this.fireSelectDateEvent = function() {
+      this.dispatchEvent(new Event('fn-datepicker-select'));
+    };
+  };
+
+  window.addEventListener('fn-ready', function() {
+    Fnord.registerComponent('fn-datepicker', DatePickerComponent);
+  }, false);
+</script>
+
+

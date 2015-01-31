@@ -1,0 +1,48 @@
+<statement>         ::=
+  <select statement>
+  <semicolon>
+
+<select statement>  ::=
+    SELECT
+    <select list>
+    <from clause>
+    [ <where clause> ]
+    [ <group by clause> ]
+    [ <having clause> ]
+    [ <pivot clause> ]
+    [ <order by clause> ]
+
+<select list>      ::=
+    <asterisk>
+  | <select sublist> [ { <comma> <select sublist> }... ]
+
+<select sublist>   ::=
+    <derived column>
+  | <table name> <period> <asterisk>
+
+<derived column>   ::=
+    <value expression> [ [ AS ] <column name> ]
+
+<from clause>      ::=
+    FROM <table name> [ { <comma> <table name> }... ]
+
+<where clause>     ::=
+    WHERE <value expression>
+
+<group by clause>  ::=
+    GROUP BY <value expression> [ { <comma> <value expression> }... ]
+
+<having clause>     ::=
+    HAVING <value expression>
+
+<order by clause>    ::=
+    ORDER BY <<sort specification> [ { <comma> <sort specification> }... ]
+
+<sort specification>    ::=   <sort key> [ <ordering specification> ]
+
+<ordering specification>    ::=
+    <value expression>
+    ASC | DESC
+
+// my brains explode defining this in bnf :(
+<value expression> ::= ???
