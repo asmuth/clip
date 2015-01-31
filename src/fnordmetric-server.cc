@@ -9,38 +9,30 @@
  */
 #include <stdlib.h>
 #include <stdio.h>
-#include <string.h>
-#include <string>
-#include <vector>
+#include <fnord-base/application.h>
+#include <fnord-base/cli/flagparser.h>
 #include <fnord-base/exception.h>
 #include <fnord-base/exceptionhandler.h>
 #include <fnord-base/inspect.h>
 #include <fnord-base/random.h>
-#include <fnord-http/httpserver.h>
 #include <fnord-base/io/fileutil.h>
 #include <fnord-base/io/inputstream.h>
 #include <fnord-base/io/outputstream.h>
+#include <fnord-base/logging.h>
 #include <fnord-base/net/udpserver.h>
 #include <fnord-base/stats/statsd.h>
+#include <fnord-base/stdtypes.h>
 #include <fnord-base/thread/threadpool.h>
+#include <fnord-http/httpserver.h>
 #include <fnord-metricdb/metricservice.h>
-#include <fnord-base/cli/flagparser.h>
 #include <environment.h>
-#include <httpapi.h>
 
+using fnord::metric_service::MetricService;
 using namespace fnordmetric;
 
 static const char kCrashErrorMsg[] =
     "FnordMetric crashed :( -- Please report a bug at "
     "github.com/paulasmuth/fnordmetric";
-
-using fnord::json::JSONRPC;
-using fnord::json::JSONRPCHTTPAdapter;
-using fnord::metric_service::MetricService;
-using fnord::metric_service::MetricServiceAdapter;
-using fnord::thread::Task;
-using fnord::thread::TaskScheduler;
-using fnord::statsd::StatsdServer;
 
 static MetricService makeMetricService(
     const std::string& backend_type,
@@ -48,9 +40,7 @@ static MetricService makeMetricService(
 
   /* open inmemory backend */
   if (backend_type == "inmemory") {
-    env()->logger()->printf(
-        "INFO",
-        "Opening new inmemory backend -- SHOULD ONlY BE USED FOR TESTING");
+    fnord::logInfo("fnordmetric-server", "Opening new inmemory backend");
     return MetricService::newWithInMemoryBackend();
   }
 
@@ -63,75 +53,35 @@ static MetricService makeMetricService(
     }
 
     auto datadir = env()->flags()->getString("datadir");
-    env()->logger()->printf(
-        "INFO",
-        "Opening disk backend at %s",
-        datadir.c_str());
 
+    if (!fnord::FileUtil::exists(datadir)) {
+      RAISEF(kIOError, "File $0 does not exist", datadir);
+    }
+
+    if (!fnord::FileUtil::isDirectory(datadir)) {
+      RAISEF(kIOError, "File $0 is not a directory", datadir);
+    }
+
+    fnord::logInfo("fnordmetric-server", "Opening disk backend at $0", datadir);
     return MetricService::newWithDiskBackend(datadir, backend_scheduler);
   }
 
-  RAISE(
-      kUsageError,
-      "unknown backend type: %s",
-      backend_type.c_str());
+  RAISEF(kUsageError, "unknown backend type: $0", backend_type);
 }
 
 static int startServer() {
-  fnord::thread::ThreadPool server_pool(
-      std::unique_ptr<fnord::ExceptionHandler>(
-          new fnord::CatchAndAbortExceptionHandler(kCrashErrorMsg)));
-
-  fnord::thread::ThreadPool worker_pool(
-      std::unique_ptr<fnord::ExceptionHandler>(
-          new fnord::CatchAndPrintExceptionHandler(nullptr)));
-
-  JSONRPC json_rpc;
+  fnord::thread::ThreadPool server_pool;
+  fnord::thread::ThreadPool worker_pool;
 
   /* setup MetricService */
-  if (env()->flags()->isSet("datadir")) {
-    auto datadir = env()->flags()->getString("datadir");
-
-    if (!fnord::io::FileUtil::exists(datadir)) {
-      env()->logger()->printf(
-          "FATAL",
-          "File %s does not exist",
-          datadir.c_str());
-
-      return 1;
-    }
-
-    if (!fnord::io::FileUtil::isDirectory(datadir)) {
-      env()->logger()->printf(
-          "FATAL",
-          "File %s is not a directory",
-          datadir.c_str());
-
-      return 1;
-    }
-  }
-
   auto metric_service = makeMetricService(
       env()->flags()->getString("storage_backend"),
       &server_pool);
 
-  MetricServiceAdapter::registerJSONRPC(&metric_service, &json_rpc);
-
-  /* Setup GroupsService */
-  GroupsService groups_service;
-  GroupsServiceAdapter::registerJSONRPC(&groups_service, &json_rpc);
-
-  /* Setup KeyValueService */
-  KeyValueService keyvalue_service;
-  KeyValueServiceAdapter::registerJSONRPC(&keyvalue_service, &json_rpc);
-
   /* Setup statsd server */
-  if (env()->flags()->isSet("statsd_port")) {
+  /*if (env()->flags()->isSet("statsd_port")) {
     auto port = env()->flags()->getInt("statsd_port");
-    env()->logger()->printf(
-        "INFO",
-        "Starting statsd server on port %i",
-        port);
+    fnord::logInfo("Starting statsd server on port $0", port);
 
     auto statsd_server = new StatsdServer(&server_pool, &worker_pool);
     statsd_server->onSample([&metric_service] (
@@ -139,9 +89,8 @@ static int startServer() {
         double value,
         const std::vector<std::pair<std::string, std::string>>& labels) {
       if (env()->verbose()) {
-        env()->logger()->printf(
-            "DEBUG",
-            "statsd sample: %s=%f %s",
+        fnord::logDebug(
+            "statsd sample: $0=$1 $2",
             key.c_str(),
             value,
             fnord::inspect(labels).c_str());
@@ -151,11 +100,11 @@ static int startServer() {
     });
 
     statsd_server->listen(port);
-  }
+  }*/
 
 
   /* Setup http server */
-  if (env()->flags()->isSet("http_port")) {
+  /*if (env()->flags()->isSet("http_port")) {
     auto port = env()->flags()->getInt("http_port");
     env()->logger()->printf(
         "INFO",
@@ -172,13 +121,13 @@ static int startServer() {
     http_server->addHandler(JSONRPCHTTPAdapter::make(&json_rpc));
     http_server->addHandler(std::unique_ptr<http::HTTPHandler>(http_api));
     http_server->listen(port);
-  }
+  }*/
 
   return 0;
 }
 
 static void printUsage() {
-  auto err_stream = fnord::io::OutputStream::getStderr();
+  auto err_stream = fnord::OutputStream::getStderr();
   err_stream->printf("usage: fnordmetric-server [options]\n");
   err_stream->printf("\noptions:\n");
   env()->flags()->printUsage(err_stream.get());
@@ -187,11 +136,8 @@ static void printUsage() {
 }
 
 int main(int argc, const char** argv) {
-  fnord::CatchAndAbortExceptionHandler ehandler(kCrashErrorMsg);
-  ehandler.installGlobalHandlers();
-  fnord::system::SignalHandler::ignoreSIGHUP();
-  fnord::system::SignalHandler::ignoreSIGPIPE();
-  fnord::Random::init();
+  fnord::Application::init();
+  fnord::Application::logToStderr();
 
   env()->flags()->defineFlag(
       "http_port",
@@ -263,17 +209,10 @@ int main(int argc, const char** argv) {
   try {
     return startServer();
   } catch (const fnord::Exception& e) {
-    auto err_stream = fnord::io::OutputStream::getStderr();
-    auto msg = e.getMessage();
-    err_stream->printf("[ERROR] ");
-    err_stream->write(msg.c_str(), msg.size());
-    err_stream->printf("\n");
+    fnord::logError("fnordmetric-server", e, "FATAL ERROR");
 
     if (e.getTypeName() == kUsageError) {
-      err_stream->printf("\n");
       printUsage();
-    } else {
-      env()->logger()->exception("FATAL", "Fatal error", e);
     }
 
     return 1;

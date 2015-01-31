@@ -2,7 +2,7 @@ all: build test
 
 build:
 	mkdir -p build
-	(cd build && cmake -GNinja -DCMAKE_BUILD_TYPE=Release ../cmake && ninja)
+	(cd build && cmake -DCMAKE_BUILD_TYPE=Release ../cmake && make)
 
 build-dbg:
 	mkdir -p build-dbg

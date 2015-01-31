@@ -13,7 +13,32 @@ project(fnordmetric)
 
 option(ENABLE_TESTS "Build unit tests [default: off]" OFF)
 
+include_directories(${PROJECT_BINARY_DIR})
+include_directories(../3rdparty/libfnord)
+include_directories(../src)
+
+add_subdirectory(../3rdparty/libfnord/fnord-base "${CMAKE_CURRENT_BINARY_DIR}/libfnord-base")
+add_subdirectory(../3rdparty/libfnord/fnord-chart "${CMAKE_CURRENT_BINARY_DIR}/libfnord-chart")
+add_subdirectory(../3rdparty/libfnord/fnord-http "${CMAKE_CURRENT_BINARY_DIR}/libfnord-http")
+add_subdirectory(../3rdparty/libfnord/fnord-json "${CMAKE_CURRENT_BINARY_DIR}/libfnord-json")
+add_subdirectory(../3rdparty/libfnord/fnord-metricdb "${CMAKE_CURRENT_BINARY_DIR}/libfnord-metricdb")
+add_subdirectory(../3rdparty/libfnord/fnord-sstable "${CMAKE_CURRENT_BINARY_DIR}/libfnord-sstable")
+
+find_package(Threads)
+
+if(APPLE)
+  set(CMAKE_CXX_FLAGS "-std=c++0x -stdlib=libc++ ${CMAKE_CXX_FLAGS}")
+else()
+  set(CMAKE_CXX_FLAGS "-std=c++0x ${CMAKE_CXX_FLAGS}")
+endif()
+
 set(FNORDMETRIC_SOURCES
+    $<TARGET_OBJECTS:fnord-base>
+    $<TARGET_OBJECTS:fnord-chart>
+    $<TARGET_OBJECTS:fnord-http>
+    $<TARGET_OBJECTS:fnord-json>
+    $<TARGET_OBJECTS:fnord-metricdb>
+    $<TARGET_OBJECTS:fnord-sstable>
     ../src/environment.cc)
     #stage/src/fnordmetric/util/assets.cc
     #stage/src/fnordmetric/sql/backends/csv/csvbackend.cc
@@ -55,33 +80,20 @@ set(FNORDMETRIC_SOURCES
     #stage/src/fnordmetric/query/query.cc
     #stage/src/fnordmetric/query/queryservice.cc
 
-include_directories(${PROJECT_BINARY_DIR})
-include_directories(../3rdparty/libfnord)
-include_directories(../src)
+#add_executable(fnordmetric-cli ${FNORDMETRIC_SOURCES} ../src/cli.cc)
+#target_link_libraries(fnordmetric-cli m)
+#target_link_libraries(fnordmetric-cli ${CMAKE_THREAD_LIBS_INIT})
+#install(TARGETS fnordmetric-cli DESTINATION bin)
 
-
-if(APPLE)
-  set(CMAKE_CXX_FLAGS "-std=c++0x -stdlib=libc++ ${CMAKE_CXX_FLAGS}")
-else()
-  set(CMAKE_CXX_FLAGS "-std=c++0x ${CMAKE_CXX_FLAGS}")
-endif()
-
-add_executable(fnordmetric-cli ${FNORDMETRIC_SOURCES} ../src/cli.cc)
-target_link_libraries(fnordmetric-cli m)
-install(TARGETS fnordmetric-cli DESTINATION bin)
-
-add_executable(fnordmetric-server ${FNORDMETRIC_SOURCES} ../src/server.cc)
+add_executable(fnordmetric-server ${FNORDMETRIC_SOURCES} ../src/fnordmetric-server.cc)
 target_link_libraries(fnordmetric-server m)
-install(TARGETS fnordmetric-server DESTINATION bin)
-
-find_package(Threads)
-target_link_libraries(fnordmetric-cli ${CMAKE_THREAD_LIBS_INIT})
 target_link_libraries(fnordmetric-server ${CMAKE_THREAD_LIBS_INIT})
+install(TARGETS fnordmetric-server DESTINATION bin)
 
 find_package(MySQL)
 if(MYSQL_FOUND)
   set(FNORD_ENABLE_MYSQL true)
-  target_link_libraries(fnordmetric-cli ${MYSQL_CLIENT_LIBS})
+  #target_link_libraries(fnordmetric-cli ${MYSQL_CLIENT_LIBS})
   target_link_libraries(fnordmetric-server ${MYSQL_CLIENT_LIBS})
 else()
   message("WARNING: libmysqlclient not found, FnordMetric will be compiled without MySQL support")
