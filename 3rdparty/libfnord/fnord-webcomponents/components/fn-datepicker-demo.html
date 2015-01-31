@@ -1,0 +1,47 @@
+<!--
+  This file is part of the "FnordMetric" project
+    Copyright (c) 2014 Laura Schlimmer
+    Copyright (c) 2014 Paul Asmuth, Google Inc.
+
+  FnordMetric is free software: you can redistribute it and/or modify it under
+  the terms of the GNU General Public License v3.0. You should have received a
+  copy of the GNU General Public License along with this program. If not, see
+  <http://www.gnu.org/licenses/>.
+-->
+<style type='text/css'>
+  fn-datepicker#left {
+    float:left;
+    width: auto;
+  }
+  .info_box {
+    float:left;
+    width: 40%;
+    margin-left: 10px;
+  }
+</style>
+<template id="fn-datepicker-demo-base-tpl">
+  <section style="height:130px;">
+    <h1><i>Example 1 &raquo;</i> Basic</h1>
+    <fn-datepicker id='left'></fn-datepicker>
+    <div class="info_box">Current date and time are per default preselected</div>
+  </section>
+  <section>
+    <h1><i>Example 2 &raquo;</i> With Time Input</h1>
+    <fn-datepicker data-time-select></fn-datepicker>
+  </section>
+  <section>
+    <h1><i>Example 3 &raquo;</i> Datepicker with Preselected Date</h1>
+    <fn-datepicker data-time-select data-timestamp='1418135883935'></fn-datepicker>
+  </section>
+  <section style="height:130px;">
+    <h1><i>Example 4 &raquo;</i> Datepicker with restricted data selection</h1>
+    <fn-datepicker id="left" data-time-select data-timestamp='1418135883935' data-selectable='past'>
+    </fn-datepicker>
+    <div class="info_box">
+      Both future and past dates are selectable if no data-selectable attribute is set
+    </div>
+  </section>
+
+
+
+</template>

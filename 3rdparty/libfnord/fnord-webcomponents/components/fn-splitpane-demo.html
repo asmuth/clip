@@ -1,0 +1,37 @@
+<!--
+  This file is part of the "FnordMetric" project
+    Copyright (c) 2014 Laura Schlimmer
+    Copyright (c) 2014 Paul Asmuth, Google Inc.
+
+  FnordMetric is free software: you can redistribute it and/or modify it under
+  the terms of the GNU General Public License v3.0. You should have received a
+  copy of the GNU General Public License along with this program. If not, see
+  <http://www.gnu.org/licenses/>.
+-->
+
+<template id="fn-splitpane-demo-base-tpl">
+
+  <section>
+    <button type="button" class="btn" id="data-split-btn" style="float:right;">Change View</button>
+    <h1><i>fn-splitpane &rsaquo;</i> Simple Split Pane</h1>
+
+    <fn-splitpane id="splitpane-example-1" data-split-direction="vertical" data-split-position="30" style="height:400px;">
+      <fn-splitpane-left>
+        <div style="background:#3498db; height:100%;"></div>
+      </fn-splitpane-left>
+      <fn-splitpane-right>
+        <div style="background:#8e44ad; height:100%;"></div>
+      </fn-splitpane-right>
+    </fn-splitpane>
+
+    <script type="text/javascript">
+      document.querySelector("#data-split-btn").addEventListener(
+        "click",
+        function() {
+          document.querySelector("#splitpane-example-1").toggleSplitDirection();
+        },
+        false);
+    </script>
+  </section>
+
+</template>

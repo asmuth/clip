@@ -1,0 +1,47 @@
+<!--
+  This file is part of the "FnordMetric" project
+    Copyright (c) 2014 Laura Schlimmer
+    Copyright (c) 2014 Paul Asmuth, Google Inc.
+
+  FnordMetric is free software: you can redistribute it and/or modify it under
+  the terms of the GNU General Public License v3.0. You should have received a
+  copy of the GNU General Public License along with this program. If not, see
+  <http://www.gnu.org/licenses/>.
+-->
+<template id='fn-flexbox-demo-base-tpl'>
+  <style type='text/css'>
+    fn-loader {
+      height: 100%;
+      width: 100%;
+
+    }
+    .viewport {
+      height: 100%;
+      border: 1px solid black;
+    }
+  </style>
+  <section>
+    <fn-loader data-resolved>
+      <fn-flexbox>
+        <fn-flexbox-item data-height='fixed'>
+          <fn-navigation>
+            <fn-navigation-item>
+              <fn-navigation-icon><i class="fa fa-home"></i></fn-navigation-icon>
+              <fn-navigation-text>Home</fn-navigation-text>
+            </fn-navigation-item>
+            <fn-navigation-item>
+              <fn-navigation-icon><i class="fa fa-envelope"></i></fn-navigation-icon>
+              <fn-navigation-text>Messages</fn-navigation-text>
+            </fn-navigation-item>
+            <fn-navigation-item data-position='right' data-search>
+            </fn-navigation-item>
+          </fn-navigation>
+        </fn-flexbox-item>
+        <fn-flexbox-item data-height="full">
+          <div class="viewport"></div>
+        </fn-flexbox-item>
+      </fn-flexbox>
+    </fn-loader>
+
+  </section>
+</template>

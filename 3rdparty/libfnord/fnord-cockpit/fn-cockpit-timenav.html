@@ -1,0 +1,192 @@
+<style type='text/css'>
+  fn-time-navigation {
+    border-bottom: 1px solid rgba(0,0,0,.1);
+    padding-top: 8px;
+    height: 60px;
+    display:block;
+  }
+</style>
+<template id="fn-time-navigation-base-tpl">
+  <style type='text/css'>
+    .group {
+      float:left;
+    }
+
+    .group b {
+      font-size: 80%;
+      line-height: 12px;
+      font-weight: 500;
+      display: block;
+      margin-bottom: 6px;
+      opacity: 0.7;
+      height: 34px;
+    }
+
+    .group fn-daterangepicker /deep/ .wrapper * {
+      float: left;
+    }
+  </style>
+
+<!--
+  <div class="group">
+    <b>End Time</b>
+    <fn-datepicker></fn-datepicker>
+  </div>
+  <div class="group">
+    <b>Time Range</b>
+    <fn-daterangepicker></fn-daterangepicker>
+  </div>
+-->
+  <div class="group">
+    <b>Show The Last...</b>
+    <fn-dropdown data-style="input small">
+      <fn-dropdown-header>5 Minutes</fn-dropdown-header>
+      <fn-dropdown-item data-value=300000>5 minutes</fn-dropdown-item>
+      <fn-dropdown-item data-value=900000>15 minutes</fn-dropdown-item>
+      <fn-dropdown-item data-value=1800000>30 minutes</fn-dropdown-item>
+      <fn-dropdown-item data-value=3600000>1 hour</fn-dropdown-item>
+      <fn-dropdown-item data-value=14400000>4 hours</fn-dropdown-item>
+      <fn-dropdown-item data-value=43200000>12 hours</fn-dropdown-item>
+      <fn-dropdown-item data-value=86400000>1 day</fn-dropdown-item>
+    </fn-dropdown>
+  </div>
+</template>
+
+<script type='text/javascript'>
+  var TimeNavigationComponent = function() {
+    this.createdCallback = function() {
+      var tpl = Fnord.getTemplate("fn-time-navigation", "base");
+      var shadow= this.createShadowRoot();
+      shadow.appendChild(tpl);
+
+      this.setEventListeners();
+
+      this.endTime = (this.hasAttribute('data-until')) ?
+        parseInt(this.getAttribute('data-until'), 10) : new Date().getTime();
+
+      this.startTime = (this.hasAttribute('data-from')) ?
+        parseInt(this.getAttribute('data-from'), 10) : this.endTime - 300000;
+
+      this.range = this.endTime - this.startTime;
+
+
+      if (this.hasAttribute('data-selectable')) {this.setSelectable(); }
+
+      if (this.hasAttribute('data-from') || this.hasAttribute('data-until')) {
+        this.setDateTimeElems();
+      }
+    };
+
+    this.attributeChangedCallback = function(attr, old_val, new_val) {
+      switch (attr) {
+        case "data-from":
+        case "data-until":
+          this.setDateTimeElems();
+          break;
+
+        case "data-selectable":
+          this.setSelectable();
+          break;
+
+        default:
+        break;
+      }
+    };
+
+
+    this.setDateTimeElems = function() {
+      var datepicker = this.shadowRoot.querySelector("fn-datepicker");
+      var daterangepicker = this.shadowRoot.querySelector("fn-daterangepicker");
+      var dropdown = this.shadowRoot.querySelector("fn-dropdown");
+
+      datepicker.setAttribute('data-timestamp', this.endTime);
+      daterangepicker.setAttribute('data-daterange', this.range);
+      daterangepicker.setAttribute('data-endtime', this.endTime);
+      dropdown.setAttribute('data-preselected', this.range);
+    };
+
+    this.setSelectable = function() {
+      var selectable = this.getAttribute('data-selectable');
+      this.shadowRoot.querySelector("fn-datepicker").setAttribute(
+        'data-selectable', selectable);
+
+      this.shadowRoot.querySelector("fn-daterangepicker").setAttribute(
+        'data-selectable', selectable);
+    }
+
+    this.setEventListeners = function() {
+      var base = this;
+      var daterangepicker = this.shadowRoot.querySelector("fn-daterangepicker");
+      daterangepicker.addEventListener("fn-daterangepicker-select-previous",
+        function() {
+          base.updateEndtimeAndReload(
+            parseInt(this.getAttribute('data-endtime'), 10));
+        },
+      false);
+
+      daterangepicker.addEventListener("fn-daterangepicker-select-next",
+        function() {
+          base.updateEndtimeAndReload(
+            parseInt(this.getAttribute('data-endtime'), 10));
+        },
+      false);
+
+      this.shadowRoot.querySelector("fn-datepicker").addEventListener(
+        "fn-datepicker-select", function() {
+          base.updateEndtimeAndReload(
+            parseInt(this.getAttribute('data-timestamp'), 10));
+        },
+      false);
+
+      this.shadowRoot.querySelector("fn-dropdown").addEventListener(
+        "fn-dropdown-item-click", function(e) {
+          base.updateRangeAndReload(
+            parseInt(e.srcElement.getAttribute('data-value'), 10));
+        },
+      false);
+    };
+
+    this.updateEndtimeAndReload = function(endTime) {
+      var endTime = Math.round(endTime / 1000);
+      var startTime = endTime - (Math.round(this.range / 1000));
+      this.updateUrlAndReload({"from_ts" : startTime, "until_ts" : endTime});
+    };
+
+    this.updateRangeAndReload = function(range) {
+      var endTime = Math.round(this.endTime / 1000);
+      var startTime = endTime - (Math.round(range / 1000));
+      this.updateUrlAndReload({"from_ts" : startTime, "until_ts" : endTime});
+    };
+
+    this.updateUrlAndReload = function(params) {
+      var hash;
+      var add;
+      if (window.location.hash.length == 0) {
+        hash = "?";
+        add = true;
+      } else {
+        hash = window.location.hash;
+        add = false;
+      }
+
+      var reg = new RegExp(key + '=\d+&');
+
+      for (var key in params) {
+        var param = key + "=" + params[key] + "&";
+        if (add) {
+          hash += param;
+        } else {
+          hash = hash.replace(reg, param);
+        }
+      }
+      window.location.href = 
+        "http://" + window.location.host + window.location.pathname + hash;
+
+    };
+  };
+
+
+  window.addEventListener('fn-ready', function() {
+    Fnord.registerComponent("fn-time-navigation", TimeNavigationComponent);
+  }, false);
+</script>

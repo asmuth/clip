@@ -1,0 +1,236 @@
+<!--
+  This file is part of the "FnordMetric" project
+    Copyright (c) 2014 Laura Schlimmer
+    Copyright (c) 2014 Paul Asmuth, Google Inc.
+
+  FnordMetric is free software: you can redistribute it and/or modify it under
+  the terms of the GNU General Public License v3.0. You should have received a
+  copy of the GNU General Public License along with this program. If not, see
+  <http://www.gnu.org/licenses/>.
+-->
+<style type='text/css'>
+  fn-splitpane {
+    display: block;
+  }
+
+</style>
+<template id="fn-splitpane-base-tpl">
+  <style>
+    #splitter {
+      box-sizing: content-box;
+      overflow: hidden;
+      position: relative;
+      display:block;
+      height: 100%;
+      width: 100%;
+    }
+
+    #splitter .pane {
+      position: absolute;
+      box-sizing: border-box;
+      color: #959595;
+      box-sizing: content-box;
+      overflow: hidden;
+      outline: none;
+      display:block;
+      height: 100%;
+    }
+
+    .resizer_tooltip {
+      display:block;
+      z-index: 100;
+      background: #d7e4f2;
+      position:absolute;
+
+    }
+
+    .resizer_tooltip:hover {
+      background: #d7e4f2;
+    }
+
+
+  </style>
+  <div id="splitter">
+    <div class="pane left">
+      <content select="fn-splitpane-left"></content>
+    </div>
+    <div class="resizer_tooltip"></div>
+    <div class="pane right">
+      <content select="fn-splitpane-right"></content>
+    </div>
+  </div>
+</template>
+
+<script type="text/javascript">
+  var SplitPaneComponent = function() {
+    this.createdCallback = function() {
+      var shadow = this.createShadowRoot();
+      var tpl = Fnord.getTemplate("fn-splitpane", "base");
+      shadow.appendChild(tpl);
+      this.renderView();
+      this.initResizerTooltip();
+    };
+
+
+    this.renderView = function() {
+      if (this.getAttribute("data-split-direction") == "horizontal") {
+        this.renderHorizontalView();
+      } else {
+        this.renderVerticalView();
+      }
+    };
+
+    this.toggleSplitDirection = function() {
+      if (this.getAttribute('data-split-direction') == "vertical") {
+        this.setAttribute('data-split-direction', 'horizontal');
+        this.renderHorizontalView();
+      } else {
+        this.setAttribute('data-split-direction', 'vertical');
+        this.renderVerticalView();
+      }
+    }
+
+
+
+    this.initResizerTooltip = function() {
+      var base = this;
+      var resizer_tooltip = this.shadowRoot.querySelector(".resizer_tooltip");
+      resizer_tooltip.setAttribute("draggable", "true");
+
+      var benchmark_x;
+      var benchmark_y;
+
+      resizer_tooltip.addEventListener('dragstart', function(e) {
+        this.style.background = "transparent";
+        benchmark_x = e.clientX;
+        benchmark_y = e.clientY;
+      }, false);
+
+      resizer_tooltip.addEventListener('drag', function(e) {
+        e.preventDefault();
+        this.style.background = "";
+        if (base.getAttribute("data-split-direction") == "horizontal") {
+          //include window/pageYOffset ??
+          base.resizeHorizontalView(benchmark_y - e.clientY);
+          benchmark_y = e.clientY;
+        } else {
+          base.resizeVerticalView(benchmark_x - e.clientX);
+          benchmark_x = e.clientX;
+        }
+      }, false);
+    };
+
+
+    this.resizeVerticalView = function(offset) {
+      var min_width = this.getAttribute('data-min-position-vertical');
+      if (min_width != null) {
+        min_width = parseInt(min_width, 10);
+      } else {
+        min_width = 0;
+      }
+
+      var left_pane = this.shadowRoot.querySelector(".left");
+      var right_pane = this.shadowRoot.querySelector(".right");
+      var resizer_tooltip = this.shadowRoot.querySelector(".resizer_tooltip");
+
+      var left_pane_width = left_pane.offsetWidth - offset;
+      var right_pane_width = this.offsetWidth - left_pane_width;
+
+      if (left_pane_width > min_width && right_pane_width > min_width) {
+        left_pane.style.width = left_pane_width + "px";
+        right_pane.style.width = right_pane_width + "px";
+        right_pane.style.marginLeft = left_pane_width + "px";
+        resizer_tooltip.style.marginLeft = left_pane_width + "px";
+      }
+    };
+
+    this.resizeHorizontalView = function(offset) {
+      var min_height = this.getAttribute('data-min-position-horizontal');
+      if (min_height != null) {
+        min_height = parseInt(min_height, 10);
+      } else {
+        min_height = 0;
+      }
+
+      var left_pane = this.shadowRoot.querySelector(".left");
+      var right_pane = this.shadowRoot.querySelector(".right");
+      var resizer_tooltip = this.shadowRoot.querySelector(".resizer_tooltip");
+
+      var left_pane_height = left_pane.offsetHeight - offset;
+      var right_pane_height = this.offsetHeight- left_pane_height;
+
+      if (left_pane_height > min_height && right_pane_height > min_height) {
+        left_pane.style.height = left_pane_height + "px";
+        right_pane.style.height = right_pane_height + "px";
+        right_pane.style.marginTop = left_pane_height + "px";
+        resizer_tooltip.style.marginTop = left_pane_height + "px";
+      }
+    };
+
+    this.getPaneWidths = function() {
+      var pos = this.getAttribute('data-split-position');
+      if (pos != null) {
+        return {
+          left : pos + "%",
+          right: 100 - parseInt(pos, 10) + "%"
+        };
+      }
+
+      return {
+        left : "50%",
+        right : "50%"
+      };
+    }
+
+    this.renderVerticalView = function() {
+      var left_pane = this.shadowRoot.querySelector(".left");
+      var right_pane = this.shadowRoot.querySelector(".right");
+      var resizer_tooltip = this.shadowRoot.querySelector(".resizer_tooltip");
+
+      var widths = this.getPaneWidths();
+      var left_pane_height = "100%";
+
+      left_pane.style.width = widths.left;
+      left_pane.style.height = left_pane_height;
+
+      right_pane.style.width = widths.right;
+      right_pane.style.height = left_pane_height;
+      right_pane.style.marginLeft = widths.left;
+      right_pane.style.marginTop = "";
+      right_pane.style.overflowY = "auto";
+
+      resizer_tooltip.style.height = left_pane_height;
+      resizer_tooltip.style.marginLeft = widths.left;
+      resizer_tooltip.style.marginTop = "";
+      resizer_tooltip.style.width = "5px";
+      resizer_tooltip.style.cursor = "ew-resize";
+    };
+
+    this.renderHorizontalView = function() {
+      var left_pane = this.shadowRoot.querySelector(".left");
+      var right_pane = this.shadowRoot.querySelector(".right");
+      var resizer_tooltip = this.shadowRoot.querySelector(".resizer_tooltip");
+
+      var height = this.offsetHeight / 2;
+      var width = this.offsetWidth;
+
+      left_pane.style.width = width + "px";
+      left_pane.style.height = height + "px";
+
+      right_pane.style.width = width + "px";
+      right_pane.style.height = height + "px";
+      right_pane.style.marginLeft = "0px";
+      right_pane.style.marginTop = (height +3) + "px";
+
+      resizer_tooltip.style.marginTop = height + "px";
+      resizer_tooltip.style.marginLeft = "0px";
+      resizer_tooltip.style.width = width + "px";
+      resizer_tooltip.style.height = "5px";
+      resizer_tooltip.style.cursor = "ns-resize";
+    };
+  };
+
+  window.addEventListener('fn-ready', function() {
+    var splitpane = Fnord.registerComponent("fn-splitpane", SplitPaneComponent);
+  });
+</script>

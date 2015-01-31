@@ -1,0 +1,160 @@
+<!--
+  This file is part of the "FnordMetric" project
+    Copyright (c) 2014 Laura Schlimmer
+    Copyright (c) 2014 Paul Asmuth, Google Inc.
+
+  FnordMetric is free software: you can redistribute it and/or modify it under
+  the terms of the GNU General Public License v3.0. You should have received a
+  copy of the GNU General Public License along with this program. If not, see
+  <http://www.gnu.org/licenses/>.
+-->
+<style type="text/css">
+  fn-loader {
+    position: absolute;
+  }
+
+  fn-appbar {
+    position: relative;
+  }
+
+
+</style>
+
+<template id="fnordmetric-app-base-tpl">
+  <style type='text/css'>
+    fn-appbar fn-button {
+      box-shadow :none;
+    }
+  </style>
+
+  <fn-loader id="app-loader" data-loading>
+    <fn-flexbox>
+      <fn-flexbox-item data-height='fixed'>
+        <fn-appbar>
+          <div class="le_fnord">F</div>
+
+          <fn-appbar-section data-position="left" style="border-right: none;">
+            <fn-button data-url="query">
+              <fn-icon data-icon="file"></fn-icon> New Query
+            </fn-button>
+            <fn-button data-url="metrics">
+              <fn-icon data-icon="database"></fn-icon> Metrics
+            </fn-button>
+            <!--<fn-button data-url="console">
+              <fn-icon data-icon="area-chart"></fn-icon> Console
+            </fn-button>-->
+          </fn-appbar-section>
+
+          <fn-appbar-section data-position="right">
+            <fn-search>
+              <fn-search-icon><i class="fa fa-search"></i></fn-search-icon>
+            </fn-search>
+          </fn-appbar-section>
+        </fn-appbar>
+      </fn-flexbox-item>
+      <fn-flexbox-item data-height='full'>
+        <div id="fnordmetric-viewport">
+        </div>
+      </fn-flexbox-item>
+    </fn-flexbox>
+  </fn-loader>
+</template>
+
+<script type="text/javascript">
+  var FnordMetricAppComponent = function() {
+    this.routes = {
+      "console": "fnordmetric-console",
+      "metrics": "fnordmetric-metric-list",
+      "metric": "fnordmetric-metric-preview",
+      "search": "fnordmetric-metric-search",
+      "query": "fnordmetric-query-editor"
+    };
+
+    this.default_route = "metrics";
+
+    this.createdCallback = function() {
+      this.className += " resolved";
+      this.appendChild(Fnord.getTemplate("fnordmetric-app", "base"));
+
+      var nav_buttons = this.querySelectorAll("fn-button");
+      for (var i = 0; i < nav_buttons.length; ++i) {
+        nav_buttons[i].addEventListener("fn-button-click", function() {
+          var app = document.querySelector("fnordmetric-app");
+          app.openUrl(this.getAttribute("data-url"));
+        }, false);
+      }
+
+      var onSearchSubmit = (function(base) {
+        return function(e) {
+          var url = "search?q=" + encodeURIComponent(e.srcElement.getValue());
+          base.openUrl(url, true);
+        }
+      })(this);
+
+      var onSearchAutocomplete = (function(base) {
+        return function(e) {
+          var term = e.srcElement.getValue();
+          var res = [];
+          var url = "/metrics?filter=" + term;
+          Fnord.httpGet(url, function(r) {
+            if (r.status == 200) {
+              var json = JSON.parse(r.response);
+              json.metrics.map(function(metric) {
+                res.push({query : metric.key});
+              });
+              e.srcElement.autocomplete(term, res);
+            }
+          });
+        }
+      })(this);
+
+      var nav_search = this.querySelector("fn-search");
+      nav_search.addEventListener("fn-search-submit", onSearchSubmit);
+      nav_search.addEventListener("fn-search-autocomplete", onSearchAutocomplete);
+
+      window.onpopstate = (function(base) {
+        return function(e) {
+          e.preventDefault();
+
+          if (e.state != null && typeof e.state.url != "undefined") {
+            base.openUrl(e.state.url);
+          }
+        };
+      })(this);
+
+      var fragment = window.location.hash;
+      if (fragment) {
+        this.openUrl(fragment.substring(1));
+      } else {
+        this.openUrl(this.default_route);
+      }
+    };
+
+    this.openUrl = function(raw_url, push_state) {
+      var url = FnordMetric.util.parseQueryString(raw_url);
+      var query_params = url["query_params"];
+
+      var view_name = this.routes[url["path"]];
+      if (view_name == undefined) {
+        alert("no route found for: " + url["path"]);
+        return;
+      }
+
+      if (typeof push_state == "undefined" || push_state === true) {
+        window.history.pushState({url: raw_url}, "", "#" + raw_url);
+      }
+
+      var viewport = document.querySelector("#fnordmetric-viewport");
+      var view = document.createElement(view_name);
+      view.setAttribute("data-url", raw_url);
+      viewport.innerHTML = "";
+      viewport.appendChild(view);
+
+      document.querySelector("#app-loader").removeAttribute("data-loading");
+    };
+  };
+
+  window.addEventListener("fn-ready", function() {
+    Fnord.registerComponent("fnordmetric-app", FnordMetricAppComponent);
+  }, false);
+</script>

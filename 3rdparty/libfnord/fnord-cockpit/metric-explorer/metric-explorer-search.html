@@ -1,0 +1,168 @@
+<!--
+  This file is part of the "FnordMetric" project
+    Copyright (c) 2014 Laura Schlimmer
+    Copyright (c) 2014 Paul Asmuth, Google Inc.
+
+  FnordMetric is free software: you can redistribute it and/or modify it under
+  the terms of the GNU General Public License v3.0. You should have received a
+  copy of the GNU General Public License along with this program. If not, see
+  <http://www.gnu.org/licenses/>.
+-->
+
+<template id="fn-metric-explorer-search-base-tpl">
+  <style type='text/css'>
+    fn-table {
+      width: 100%;
+    }
+
+    fn-table /deep/ table > thead > tr > td,
+    fn-table /deep/ table > thead > tr > th,
+    fn-table /deep/ table > tbody > tr > td,
+    fn-table /deep/ table > tbody > tr > th {
+      font-size: 92%;
+    }
+
+    fn-pager {
+      float:right;
+      margin: 5px 5px 5px 0;
+    }
+  </style>
+  <fn-loader data-loading data-loader-type="loader3">
+    <div class="navigation">
+      <h1 class="page_header"><i>Metrics</i> &rsaquo; Search</h1>
+      <fn-search data-placeholder="Search...">
+        <fn-search-icon><i class="fa fa-search"></i></fn-search-icon>
+      </fn-search>
+    </div>
+    <fn-table data-per-page="25" data-clickable style="width: 100%;">
+      <fn-table-column>Metric</fn-table-column>
+      <fn-table-column>Labels</fn-table-column>
+      <fn-table-column>Last Insert</fn-table-column>
+      <fn-table-column>Total Stored Bytes</fn-table-column>
+    </fn-table>
+  </fn-loader>
+</template>
+
+<script type='text/javascript'>
+  var MetricExplorerSearch = function() {
+    this.createdCallback = function() {
+      var tpl = Fnord.getTemplate("fn-metric-explorer-search", "base");
+      this.appendChild(tpl);
+
+      if (this.getAttribute('data-url') != null) {
+        this.parseUrlAndLoad();
+      }
+
+      var base = this;
+
+      var onSearchSubmit = (function(base) {
+        return function(e) {
+          var url = "q=" + encodeURIComponent(e.srcElement.getValue());
+          open("search", url);
+        }
+      })(this);
+
+
+      var onSearchAutocomplete = (function(base) {
+        return function(e) {
+          var term = e.srcElement.getValue();
+          var res = [];
+          var url = baseUrl + "/list?filter=" + term;
+          Fnord.httpGet(url, function(r) {
+            if (r.status == 200) {
+              var json = JSON.parse(r.response);
+              json.metrics.map(function(metric) {
+                res.push({query : metric.key});
+              });
+              e.srcElement.autocomplete(term, res);
+            }
+          });
+        }
+      })(this);
+
+      var search = this.querySelector("fn-search");
+      search.addEventListener("fn-search-submit", onSearchSubmit);
+      search.addEventListener("fn-search-autocomplete", onSearchAutocomplete);
+    };
+
+    this.attributeChangedCallback = function(attr, old_val, new_val) {
+      if (attr == 'data-url') {
+        this.parseUrlAndLoad();
+      }
+    };
+
+    this.parseUrlAndLoad = function() {
+      var q_params = 
+        parseUrlQueryString(this.getAttribute("data-url")).query_params;
+
+      if (q_params && q_params.innerViewValue) {
+        this.loadMetricList(q_params.innerViewValue);
+
+        this.querySelector(".navigation h1").innerHTML += " " + q_params.innerViewValue;
+
+      } else {
+        this.loadMetricList("");
+      }
+    }
+
+    this.loadMetricList = function(key) {
+      var loader = this.querySelector("fn-loader");
+      var table = this.querySelector("fn-table");
+      var url = baseUrl + "/list?filter=" + key;
+      var base = this;
+
+      Fnord.httpGet(url, function(r) {
+        if (r.status === 200) {
+          var metrics = JSON.parse(r.response).metrics;
+
+          if (metrics.length === 1) {
+            base.openMetricPreview(key);
+            return;
+          }
+
+          metrics.forEach(function(m) {
+            var tr_elem = document.createElement("tr");
+            tr_elem.setAttribute('metric-key', m.key);
+            var cells = [
+              m.key,
+              m.labels.join(", "),
+              m.last_insert,
+              m.total_bytes];
+
+            cells.map(function(cell) {
+              var td_elem = document.createElement("td");
+              td_elem.innerHTML = cell;
+              tr_elem.appendChild(td_elem);
+            });
+
+            table.appendRow(tr_elem);
+
+          });
+          loader.removeAttribute("data-loading")
+        }
+      });
+
+
+      table.addEventListener('fn-table-row-click', function(e) {
+        var metric_key = e.srcElement.getAttribute('metric-key');
+        base.openMetricPreview(metric_key);
+      }, false);
+    }
+
+    this.openMetricPreview = function(metric_key) {
+      var end = Math.round(Date.now() / 1000);
+      var start = end - 3600;
+      var raw_url = 
+        "metric?key="+ encodeURIComponent(metric_key) +
+        "&view=value&start_time=" + start +
+        "&end_time=" + end;
+      openUrl(raw_url, true)
+
+    }
+
+  }
+
+  window.addEventListener('fn-ready', function() {
+    Fnord.registerComponent('fn-metric-explorer-search', MetricExplorerSearch);
+  }, false);
+</script>
