@@ -2,11 +2,11 @@ all: build test
 
 build:
 	mkdir -p build
-	(cd build && cmake -GNinja -DCMAKE_BUILD_TYPE=Release .. && ninja)
+	(cd build && cmake -GNinja -DCMAKE_BUILD_TYPE=Release ../cmake && ninja)
 
 build-dbg:
 	mkdir -p build-dbg
-	(cd build-dbg && cmake -GNinja -DCMAKE_BUILD_TYPE=Debug .. && ninja)
+	(cd build-dbg && cmake -GNinja -DCMAKE_BUILD_TYPE=Debug ../cmake && ninja)
 
 test: build
 	@find build/tests -name "test-*" -exec ./{} \;
