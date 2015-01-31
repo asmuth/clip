@@ -17,4 +17,11 @@ test-dbg: build-dbg
 clean:
 	rm -rf build build-dbg
 
-.PHONY: clean build build-dbg test
+install: build
+	(cd build/cmake && make install)
+
+devserver: build-dbg
+	mkdir -p /tmp/fnordmetric-data
+	./build-dbg/fnordmetric-server --datadir /tmp/fnordmetric-data --verbose
+
+.PHONY: clean build build-dbg test test-dbg clean install devserver
