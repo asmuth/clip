@@ -39,7 +39,8 @@ set(FNORDMETRIC_SOURCES
     $<TARGET_OBJECTS:fnord-json>
     $<TARGET_OBJECTS:fnord-metricdb>
     $<TARGET_OBJECTS:fnord-sstable>
-    ../src/environment.cc)
+    ../src/environment.cc
+    ../src/queryendpoint.cc)
     #stage/src/fnordmetric/util/assets.cc
     #stage/src/fnordmetric/sql/backends/csv/csvbackend.cc
     #stage/src/fnordmetric/sql/backends/csv/csvinputstream.cc

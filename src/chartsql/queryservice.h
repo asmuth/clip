@@ -10,10 +10,10 @@
 #ifndef _FNORDMETRIC_QUERYSERVICE_H
 #define _FNORDMETRIC_QUERYSERVICE_H
 #include <fnord-chart/rendertarget.h>
-#include <fnord/io/inputstream.h>
+#include <fnord-base/io/inputstream.h>
 #include <fnord-json/jsonoutputstream.h>
-#include <chartsql/query.h>
-#include <sql/runtime/defaultruntime.h>
+#include "chartsql/query.h"
+#include "sql/runtime/defaultruntime.h"
 
 namespace fnordmetric {
 namespace query {
@@ -44,9 +44,9 @@ public:
    * @param output_stream The output stream to write the results
    */
   void executeQuery(
-      std::shared_ptr<fnord::io::InputStream> input_stream,
+      std::shared_ptr<fnord::InputStream> input_stream,
       kFormat output_format,
-      std::shared_ptr<fnord::io::OutputStream> output_stream);
+      std::shared_ptr<fnord::OutputStream> output_stream);
 
   /**
    * Execute a query. This may raise an exception.
@@ -56,9 +56,9 @@ public:
    * @param output_stream The output stream to write the results
    */
   void executeQuery(
-      std::shared_ptr<fnord::io::InputStream> input_stream,
+      std::shared_ptr<fnord::InputStream> input_stream,
       kFormat output_format,
-      std::shared_ptr<fnord::io::OutputStream> output_stream,
+      std::shared_ptr<fnord::OutputStream> output_stream,
       std::unique_ptr<TableRepository> table_repo,
       int width = -1,
       int height = -1);
@@ -82,7 +82,7 @@ protected:
       int width,
       int height) const;
 
-  void renderTables(Query* query, fnord::io::OutputStream* out) const;
+  void renderTables(Query* query, fnord::OutputStream* out) const;
 
   DefaultRuntime runtime_;
 };

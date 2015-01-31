@@ -31,6 +31,7 @@
 #include <fnord-metricdb/metricservice.h>
 #include <fnord-metricdb/httpapiservlet.h>
 #include <environment.h>
+#include <queryendpoint.h>
 
 using fnord::metric_service::MetricService;
 using namespace fnordmetric;
@@ -162,9 +163,7 @@ int main(int argc, const char** argv) {
   fnord::thread::EventLoop evloop;
   fnord::thread::ThreadPool server_pool;
   fnord::thread::ThreadPool worker_pool;
-
   fnord::json::JSONRPC rpc;
-  fnord::json::JSONRPCHTTPAdapter rpc_http(&rpc);
 
   try {
     /* setup MetricService */
@@ -185,10 +184,14 @@ int main(int argc, const char** argv) {
 
     fnord::metric_service::HTTPAPIServlet metrics_api(&metric_service);
     http_router.addRouteByPrefixMatch("/metrics", &metrics_api);
+
+    fnord::json::JSONRPCHTTPAdapter rpc_http(&rpc);
     http_router.addRouteByPrefixMatch("/rpc", &rpc_http);
-    //auto http_api = new HTTPAPI(metric_service.metricRepository());
+
+    QueryEndpoint query_api(metric_service.metricRepository());
+    http_router.addRouteByPrefixMatch("/query", &query_api);
+
     //http_server->addHandler(AdminUI::getHandler());
-    //http_server->addHandler(std::unique_ptr<http::HTTPHandler>(http_api));
 
     /* set up statsd server */
     fnord::statsd::StatsdServer statsd_server(&evloop, &evloop);

@@ -11,7 +11,7 @@
 #define _FNORDMETRIC_METRICDB_HTTPINTERFACE_H
 #include <memory>
 #include <fnord-base/uri.h>
-#include <fnord-http/httphandler.h>
+#include <fnord-http/httpservice.h>
 #include <fnord-http/httprequest.h>
 #include <fnord-http/httpresponse.h>
 #include <fnord-json/jsonoutputstream.h>
@@ -21,40 +21,16 @@ namespace fnordmetric {
 class IMetric;
 class IMetricRepository;
 
-class HTTPAPI : public http::HTTPHandler {
+class QueryEndpoint : public http::HTTPService {
 public:
 
-  HTTPAPI(fnord::metric_service::IMetricRepository* metric_repo);
+  QueryEndpoint(fnord::metric_service::IMetricRepository* metric_repo);
 
-  bool handleHTTPRequest(
+  void handleHTTPRequest(
       http::HTTPRequest* request,
       http::HTTPResponse* response) override;
 
 protected:
-
-  void renderMetricList(
-      http::HTTPRequest* request,
-      http::HTTPResponse* response,
-      fnord::URI* uri);
-
-  void renderMetricSampleScan(
-      http::HTTPRequest* request,
-      http::HTTPResponse* response,
-      fnord::URI* uri);
-
-  void insertSample(
-      http::HTTPRequest* request,
-      http::HTTPResponse* response,
-      fnord::URI* uri);
-
-  void executeQuery(
-      http::HTTPRequest* request,
-      http::HTTPResponse* response,
-      fnord::URI* uri);
-
-  void renderMetricJSON(
-      fnord::metric_service::IMetric* metric,
-      json::JSONOutputStream* json) const;
 
   fnord::metric_service::IMetricRepository* metric_repo_;
 };

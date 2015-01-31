@@ -13,7 +13,7 @@
 #include <string>
 #include <vector>
 #include <memory>
-#include "fnord/io/inputstream.h"
+#include "fnord-base/io/inputstream.h"
 
 namespace fnordmetric {
 namespace query {
@@ -38,7 +38,7 @@ public:
    * Create a new CSVInputStream from the provided InputStream.
    */
   explicit CSVInputStream(
-      std::unique_ptr<fnord::io::RewindableInputStream>&& input_stream,
+      std::unique_ptr<fnord::RewindableInputStream>&& input_stream,
       char column_seperator = ',',
       char row_seperator = '\n',
       char quote_char = '"');
@@ -63,7 +63,7 @@ public:
   /**
    * Return the input stream
    */
-  const fnord::io::RewindableInputStream& getInputStream() const;
+  const fnord::RewindableInputStream& getInputStream() const;
 
 protected:
 
@@ -72,7 +72,7 @@ protected:
    */
   std::string readNextColumn();
 
-  std::unique_ptr<fnord::io::RewindableInputStream> input_;
+  std::unique_ptr<fnord::RewindableInputStream> input_;
   const char column_seperator_;
   const char row_seperator_;
   const char quote_char_;
