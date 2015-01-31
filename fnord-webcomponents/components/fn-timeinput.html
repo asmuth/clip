@@ -10,16 +10,22 @@
 
   todo: add seconds-selectable and render third input if attr is set
 -->
-<template id="fn-input-time-base-tpl">
+<template id="fn-timeinput-base-tpl">
   <style>
     #timeinput_container {
       margin:auto;
+<<<<<<< HEAD
       height: 35px;
       width: 114px;
+=======
+      height: 30px;
+      width: 126px;
+>>>>>>> 401a974820d725476578f94e11b1b84a1a15caaf
     }
 
     input {
       float: left;
+<<<<<<< HEAD
       width: 50px;
       font-size: 1rem;
       outline: none;
@@ -69,14 +75,35 @@
       border-color: #dbb1b1;
       color: #d95c5c;
       box-shadow: none;
+=======
+      width: 30px;
+      height: 25px;
+      line-height: 25px;
+      padding: 0 8px;
+      font-size: 12px;
+      border-radius: 4px;
+      border: 1px solid #b3c2d0;
+      color: #545758;
+      background: #fff;
+    }
+
+    input.highlighted {
+      border: 1px solid rgba(230, 126, 34,1.0);
+      background: rgba(230, 126, 34,0.1);
+>>>>>>> 401a974820d725476578f94e11b1b84a1a15caaf
     }
 
     b {
       line-height: 1.2142em;
       padding-top: 0.60861em;
       float:left;
+<<<<<<< HEAD
       margin: 0 5px;
 
+=======
+      margin-left: 5px;
+      margin-right: 5px;
+>>>>>>> 401a974820d725476578f94e11b1b84a1a15caaf
     }
   </style>
 
@@ -89,7 +116,7 @@
 <script type="text/javascript">
   var TimeInputComponent = function() {
     this.createdCallback = function() {
-      var tpl = Fnord.getTemplate("fn-input-time", "base");
+      var tpl = Fnord.getTemplate("fn-timeinput", "base");
       var shadow = this.createShadowRoot();
       var base = this;
       shadow.appendChild(tpl);
@@ -97,6 +124,7 @@
       var hours_input = this.shadowRoot.querySelector("#hours");
       var minutes_input = this.shadowRoot.querySelector("#minutes");
 
+<<<<<<< HEAD
       if (this.hasAttribute('data-hours-value')) {
         this.setHoursValue(this.getAttribute('data-hours-value'));
       }
@@ -107,6 +135,8 @@
         this.setState();
       }
 
+=======
+>>>>>>> 401a974820d725476578f94e11b1b84a1a15caaf
       hours_input.addEventListener('focus', function() {
         base.validateHoursInput();
       }, false);
@@ -115,6 +145,7 @@
       }, false);
     };
 
+<<<<<<< HEAD
     this.attributeChangedCallback = function(attr, old_val, new_val) {
       if (attr == "data-minutes-value") {
         this.setMinutesValue(new_val);
@@ -215,6 +246,64 @@
       input.value = this.appendLeadingZero(value);
     };
 
+=======
+    this.validateHoursInput = function() {
+      var base = this;
+      var input = this.shadowRoot.querySelector("#hours");
+      input.maxLength = "2";
+
+      input.addEventListener('keypress', function(e) {
+        if (e.keyCode == 13 ) {
+          var value = parseInt(this.value);
+          if (value > 23) {
+            this.className = "highlighted";
+            return;
+          }
+          this.className = "";
+          base.fireTimeInputSubmitEvent();
+          return;
+        }
+        if (!FnordMetric.util.isNavKey(e.keyCode) &&
+          !FnordMetric.util.isNumKey(e.keyCode)) {
+            e.preventDefault();
+        }
+      }, false);
+    };
+
+    this.validateMinutesInput = function() {
+      var base = this;
+      var input = this.shadowRoot.querySelector("#minutes");
+      input.maxLength = "2";
+
+      input.addEventListener('keypress', function(e) {
+        if (e.keyCode == 13 ) {
+          var value = parseInt(this.value);
+          if (value > 59) {
+            this.className = "highlighted";
+            return;
+          }
+          this.className = "";
+          base.fireTimeInputSubmitEvent();
+          return;
+        }
+        if (!FnordMetric.util.isNavKey(e.keyCode) &&
+          !FnordMetric.util.isNumKey(e.keyCode)) {
+            e.preventDefault();
+        }
+      }, false);
+    };
+
+    this.setHoursValue = function(value) {
+      var input = this.shadowRoot.querySelector("#hours");
+      input.value = FnordMetric.util.appendLeadingZero(value);
+    };
+
+    this.setMinutesValue = function(value) {
+      var input = this.shadowRoot.querySelector("#minutes");
+      input.value = FnordMetric.util.appendLeadingZero(value);
+    };
+
+>>>>>>> 401a974820d725476578f94e11b1b84a1a15caaf
     this.getValues = function() {
       return {
         'hours' : this.shadowRoot.querySelector("#hours").value,
@@ -222,12 +311,16 @@
     };
 
     this.fireTimeInputSubmitEvent = function() {
+<<<<<<< HEAD
       this.dispatchEvent(new Event("fn-input-time-submit"));
+=======
+      this.dispatchEvent(new Event("fn-timeinput-submit"));
+>>>>>>> 401a974820d725476578f94e11b1b84a1a15caaf
     };
   }
 
   window.addEventListener('fn-ready', function() {
-    var timeinput = Fnord.registerComponent('fn-input-time', TimeInputComponent);
+    var timeinput = Fnord.registerComponent('fn-timeinput', TimeInputComponent);
   }, false);
 </script>
 
