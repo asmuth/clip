@@ -1,6 +1,0 @@
-source 'https://rubygems.org'
-
-gem "sinatra", "1.3.3"
-gem "sinatra-static", "0.1.1"
-gem "redcarpet", "2.2.2"
-gem "rake"
