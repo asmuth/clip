@@ -14,7 +14,7 @@
 #include "fnord/sstable/sstablereader.h"
 #include "fnord-feeds/LocalFeed.h"
 #include "fnord-feeds/FeedService.h"
-#include "fnord/stats/stats.h"
+#include "fnord-base/stats/stats.h"
 
 namespace fnord {
 namespace feeds {

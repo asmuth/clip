@@ -18,7 +18,7 @@
 #include "fnord-base/reflect/reflect.h"
 #include "fnord-feeds/FeedEntry.h"
 #include "fnord/sstable/sstablewriter.h"
-#include "fnord/stats/counter.h"
+#include "fnord-base/stats/counter.h"
 
 namespace fnord {
 namespace feeds {

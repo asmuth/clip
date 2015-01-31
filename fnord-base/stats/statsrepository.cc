@@ -7,7 +7,7 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#include "fnord/stats/statsrepository.h"
+#include "fnord-base/stats/statsrepository.h"
 
 namespace fnord {
 namespace stats {

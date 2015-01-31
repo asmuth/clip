@@ -8,7 +8,7 @@
  * <http://www.gnu.org/licenses/>.
  */
 #include "fnord-base/stringutil.h"
-#include "fnord/stats/statssink.h"
+#include "fnord-base/stats/statssink.h"
 
 namespace fnord {
 namespace stats {

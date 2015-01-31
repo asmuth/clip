@@ -18,7 +18,7 @@
 #include "fnord-http/httprequest.h"
 #include "fnord-http/httpresponsefuture.h"
 #include "fnord-http/httpstats.h"
-#include "fnord/stats/statsrepository.h"
+#include "fnord-base/stats/statsrepository.h"
 
 namespace fnord {
 namespace http {

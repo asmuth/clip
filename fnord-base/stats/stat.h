@@ -10,7 +10,7 @@
 #ifndef _FNORD_STATS_STAT_H
 #define _FNORD_STATS_STAT_H
 #include "fnord-base/autoref.h"
-#include "fnord/stats/statssink.h"
+#include "fnord-base/stats/statssink.h"
 
 namespace fnord {
 namespace stats {

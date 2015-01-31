@@ -12,9 +12,9 @@
 
 #include "fnord-base/io/fileutil.h"
 #include "fnord-base/stdtypes.h"
-#include "fnord/stats/counter.h"
-#include "fnord/stats/multicounter.h"
-#include "fnord/stats/statsrepository.h"
+#include "fnord-base/stats/counter.h"
+#include "fnord-base/stats/multicounter.h"
+#include "fnord-base/stats/statsrepository.h"
 
 namespace fnord {
 namespace http {

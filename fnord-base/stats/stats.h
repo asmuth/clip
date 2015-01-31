@@ -9,6 +9,6 @@
  */
 #ifndef _FNORD_STATS_H
 #define _FNORD_STATS_H
-#include "fnord/stats/counter.h"
-#include "fnord/stats/statsrepository.h"
+#include "fnord-base/stats/counter.h"
+#include "fnord-base/stats/statsrepository.h"
 #endif

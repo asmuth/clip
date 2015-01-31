@@ -10,7 +10,7 @@
 #include <unistd.h>
 #include "fnord-base/inspect.h"
 #include "fnord-base/logging.h"
-#include "fnord/stats/statsdagent.h"
+#include "fnord-base/stats/statsdagent.h"
 
 namespace fnord {
 namespace stats {

@@ -13,8 +13,8 @@
 #include "fnord-base/stdtypes.h"
 #include "fnord-base/net/inetaddr.h"
 #include "fnord-base/net/udpsocket.h"
-#include "fnord/stats/stat.h"
-#include "fnord/stats/statsrepository.h"
+#include "fnord-base/stats/stat.h"
+#include "fnord-base/stats/statsrepository.h"
 
 namespace fnord {
 namespace stats {

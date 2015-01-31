@@ -13,7 +13,7 @@
 #include <stdint.h>
 #include "fnord-base/datetime.h"
 #include "fnord-base/hash.h"
-#include "fnord/stats/stat.h"
+#include "fnord-base/stats/stat.h"
 
 namespace fnord {
 namespace stats {
