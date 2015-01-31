@@ -9,7 +9,7 @@
  */
 #include <memory>
 #include <fnord-base/exception.h>
-#include <fnord/io/inputstream.h>
+#include <fnord-base/io/inputstream.h>
 #include <sql/backends/csv/csvbackend.h>
 #include <sql/backends/csv/csvtableref.h>
 #include <sql/parser/astnode.h>

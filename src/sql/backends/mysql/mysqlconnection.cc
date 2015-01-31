@@ -8,6 +8,7 @@
  * <http://www.gnu.org/licenses/>.
  */
 #include <environment.h>
+#include <fnord-base/logging.h>
 #include <sql/backends/mysql/mysqlconnection.h>
 
 namespace fnordmetric {
@@ -150,11 +151,7 @@ void MySQLConnection::executeQuery(
     std::function<bool (const std::vector<std::string>&)> row_callback) {
 #ifdef FNORD_ENABLE_MYSQL
   if (env()->verbose()) {
-    fnord::util::LogEntry entry;
-    entry.append("__severity__", "DEBUG");
-    entry.append("__message__", "Executing MySQL query");
-    entry.append("query", query);
-    env()->logger()->log(entry);
+    fnord::logDebug("fnordmetric", "Executing MySQL query: $0", query);
   }
 
   MYSQL_RES* result = nullptr;

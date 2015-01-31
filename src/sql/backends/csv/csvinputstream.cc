@@ -12,7 +12,7 @@
 #include <fcntl.h>
 #include "csvinputstream.h"
 #include "fnord-base/exception.h"
-#include "fnord/io/inputstream.h"
+#include "fnord-base/io/inputstream.h"
 
 namespace fnordmetric {
 namespace query {
@@ -23,7 +23,7 @@ std::unique_ptr<CSVInputStream> CSVInputStream::openFile(
     char column_seperator /* = ',' */,
     char row_seperator /* = '\n' */,
     char quote_char /* = '"' */) {
-  auto file = fnord::io::FileInputStream::openFile(file_path);
+  auto file = fnord::FileInputStream::openFile(file_path);
   file->readByteOrderMark();
 
   auto csv_file = new CSVInputStream(
@@ -36,7 +36,7 @@ std::unique_ptr<CSVInputStream> CSVInputStream::openFile(
 }
 
 CSVInputStream::CSVInputStream(
-    std::unique_ptr<fnord::io::RewindableInputStream>&& input_stream,
+    std::unique_ptr<fnord::RewindableInputStream>&& input_stream,
     char column_seperator /* = ',' */,
     char row_seperator /* = '\n' */,
     char quote_char /* = '"' */) :
@@ -94,7 +94,7 @@ void CSVInputStream::rewind() {
   input_->rewind();
 }
 
-const fnord::io::RewindableInputStream& CSVInputStream::getInputStream()
+const fnord::RewindableInputStream& CSVInputStream::getInputStream()
     const {
   return *input_;
 }

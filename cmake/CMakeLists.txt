@@ -41,36 +41,35 @@ set(FNORDMETRIC_SOURCES
     $<TARGET_OBJECTS:fnord-sstable>
     ../src/environment.cc
     ../src/chartsql/queryendpoint.cc
-    #stage/src/fnordmetric/util/assets.cc
-    #stage/src/fnordmetric/sql/backends/csv/csvbackend.cc
-    #stage/src/fnordmetric/sql/backends/csv/csvinputstream.cc
-    #stage/src/fnordmetric/sql/backends/csv/csvtableref.cc
-    #stage/src/fnordmetric/sql/backends/mysql/mysqlbackend.cc
-    #stage/src/fnordmetric/sql/backends/mysql/mysqlconnection.cc
-    #stage/src/fnordmetric/sql/backends/mysql/mysqltableref.cc
-    #stage/src/fnordmetric/sql/expressions/aggregate.cc
-    #stage/src/fnordmetric/sql/expressions/boolean.cc
-    #stage/src/fnordmetric/sql/expressions/datetime.cc
-    #stage/src/fnordmetric/sql/expressions/math.cc
-    #stage/src/fnordmetric/sql/parser/astnode.cc
-    #stage/src/fnordmetric/sql/parser/astutil.cc
-    #stage/src/fnordmetric/sql/parser/parser.cc
-    #stage/src/fnordmetric/sql/parser/token.cc
-    #stage/src/fnordmetric/sql/parser/tokenize.cc
-    #stage/src/fnordmetric/sql/runtime/compile.cc
-    #stage/src/fnordmetric/sql/runtime/defaultruntime.cc
-    #stage/src/fnordmetric/sql/runtime/execute.cc
-    #stage/src/fnordmetric/sql/runtime/groupovertimewindow.cc
-    #stage/src/fnordmetric/sql/runtime/orderby.cc
-    #stage/src/fnordmetric/sql/runtime/importstatement.cc
-    #stage/src/fnordmetric/sql/runtime/queryplan.cc
-    #stage/src/fnordmetric/sql/runtime/queryplanbuilder.cc
-    #stage/src/fnordmetric/sql/runtime/queryplannode.cc
-    #stage/src/fnordmetric/sql/runtime/runtime.cc
-    #stage/src/fnordmetric/sql/runtime/symboltable.cc
-    #stage/src/fnordmetric/sql/runtime/tablerepository.cc
-    #stage/src/fnordmetric/sql/runtime/tablescan.cc
-    #stage/src/fnordmetric/sql/svalue.cc
+    ../src/sql/backends/csv/csvbackend.cc
+    ../src/sql/backends/csv/csvinputstream.cc
+    ../src/sql/backends/csv/csvtableref.cc
+    ../src/sql/backends/mysql/mysqlbackend.cc
+    ../src/sql/backends/mysql/mysqlconnection.cc
+    ../src/sql/backends/mysql/mysqltableref.cc
+    ../src/sql/expressions/aggregate.cc
+    ../src/sql/expressions/boolean.cc
+    ../src/sql/expressions/datetime.cc
+    ../src/sql/expressions/math.cc
+    ../src/sql/parser/astnode.cc
+    ../src/sql/parser/astutil.cc
+    ../src/sql/parser/parser.cc
+    ../src/sql/parser/token.cc
+    ../src/sql/parser/tokenize.cc
+    ../src/sql/runtime/compile.cc
+    ../src/sql/runtime/defaultruntime.cc
+    ../src/sql/runtime/execute.cc
+    ../src/sql/runtime/groupovertimewindow.cc
+    ../src/sql/runtime/orderby.cc
+    ../src/sql/runtime/importstatement.cc
+    ../src/sql/runtime/queryplan.cc
+    ../src/sql/runtime/queryplanbuilder.cc
+    ../src/sql/runtime/queryplannode.cc
+    ../src/sql/runtime/runtime.cc
+    ../src/sql/runtime/symboltable.cc
+    ../src/sql/runtime/tablerepository.cc
+    ../src/sql/runtime/tablescan.cc
+    ../src/sql/svalue.cc
     #stage/src/fnordmetric/sql_extensions/areachartbuilder.cc
     #stage/src/fnordmetric/sql_extensions/barchartbuilder.cc
     #stage/src/fnordmetric/sql_extensions/linechartbuilder.cc
