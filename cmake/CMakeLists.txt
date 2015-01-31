@@ -56,8 +56,7 @@ set(FNORDMETRIC_SOURCES
     #stage/src/fnordmetric/query/queryservice.cc
 
 include_directories(${PROJECT_BINARY_DIR})
-include_directories(stage/src)
-include_directories(stage/assets)
+include_directories(../3rdparty/libfnord)
 
 if(APPLE)
   set(CMAKE_CXX_FLAGS "-std=c++0x -stdlib=libc++ ${CMAKE_CXX_FLAGS}")
