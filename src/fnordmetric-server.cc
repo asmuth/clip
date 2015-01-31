@@ -23,8 +23,13 @@
 #include <fnord-base/stats/statsd.h>
 #include <fnord-base/stdtypes.h>
 #include <fnord-base/thread/threadpool.h>
+#include <fnord-base/thread/eventloop.h>
 #include <fnord-http/httpserver.h>
+#include <fnord-http/httprouter.h>
+#include <fnord-json/json.h>
+#include <fnord-json/jsonrpc.h>
 #include <fnord-metricdb/metricservice.h>
+#include <fnord-metricdb/httpapiservlet.h>
 #include <environment.h>
 
 using fnord::metric_service::MetricService;
@@ -70,59 +75,7 @@ static MetricService makeMetricService(
 }
 
 static int startServer() {
-  fnord::thread::ThreadPool server_pool;
-  fnord::thread::ThreadPool worker_pool;
-
-  /* setup MetricService */
-  auto metric_service = makeMetricService(
-      env()->flags()->getString("storage_backend"),
-      &server_pool);
-
   /* Setup statsd server */
-  /*if (env()->flags()->isSet("statsd_port")) {
-    auto port = env()->flags()->getInt("statsd_port");
-    fnord::logInfo("Starting statsd server on port $0", port);
-
-    auto statsd_server = new StatsdServer(&server_pool, &worker_pool);
-    statsd_server->onSample([&metric_service] (
-        const std::string& key,
-        double value,
-        const std::vector<std::pair<std::string, std::string>>& labels) {
-      if (env()->verbose()) {
-        fnord::logDebug(
-            "statsd sample: $0=$1 $2",
-            key.c_str(),
-            value,
-            fnord::inspect(labels).c_str());
-      }
-
-      metric_service.insertSample(key, value, labels);
-    });
-
-    statsd_server->listen(port);
-  }*/
-
-
-  /* Setup http server */
-  /*if (env()->flags()->isSet("http_port")) {
-    auto port = env()->flags()->getInt("http_port");
-    env()->logger()->printf(
-        "INFO",
-        "Starting HTTP server on port %i",
-        port);
-
-    auto http_api = new HTTPAPI(metric_service.metricRepository());
-
-    auto http_server = new fnord::http::HTTPServer(
-        &server_pool,
-        &worker_pool);
-
-    http_server->addHandler(AdminUI::getHandler());
-    http_server->addHandler(JSONRPCHTTPAdapter::make(&json_rpc));
-    http_server->addHandler(std::unique_ptr<http::HTTPHandler>(http_api));
-    http_server->listen(port);
-  }*/
-
   return 0;
 }
 
@@ -206,8 +159,68 @@ int main(int argc, const char** argv) {
     return 0;
   }
 
+  fnord::thread::EventLoop evloop;
+  fnord::thread::ThreadPool server_pool;
+  fnord::thread::ThreadPool worker_pool;
+
+  fnord::json::JSONRPC rpc;
+  fnord::json::JSONRPCHTTPAdapter rpc_http(&rpc);
+
   try {
-    return startServer();
+    /* setup MetricService */
+    auto metric_service = makeMetricService(
+        env()->flags()->getString("storage_backend"),
+        &server_pool);
+
+    /* start http server */
+    auto http_port = env()->flags()->getInt("http_port");
+    fnord::logInfo(
+        "fnordmeric-server",
+        "Starting HTTP server on port $0",
+        http_port);
+
+    fnord::http::HTTPRouter http_router;
+    fnord::http::HTTPServer http_server(&http_router, &evloop);
+    http_server.listen(http_port);
+
+    fnord::metric_service::HTTPAPIServlet metrics_api(&metric_service);
+    http_router.addRouteByPrefixMatch("/metrics", &metrics_api);
+    http_router.addRouteByPrefixMatch("/rpc", &rpc_http);
+    //auto http_api = new HTTPAPI(metric_service.metricRepository());
+    //http_server->addHandler(AdminUI::getHandler());
+    //http_server->addHandler(std::unique_ptr<http::HTTPHandler>(http_api));
+
+    /* set up statsd server */
+    fnord::statsd::StatsdServer statsd_server(&evloop, &evloop);
+    statsd_server.onSample([&metric_service] (
+        const std::string& key,
+        double value,
+        const std::vector<std::pair<std::string, std::string>>& labels) {
+      if (env()->verbose()) {
+        fnord::logDebug(
+            "statsd sample: $0=$1 $2",
+            key,
+            value,
+            fnord::inspect(labels).c_str());
+      }
+
+      metric_service.insertSample(key, value, labels);
+    });
+
+    /* start statsd server */
+    if (env()->flags()->isSet("statsd_port")) {
+      auto statsd_port = env()->flags()->getInt("statsd_port");
+
+      fnord::logInfo(
+          "fnordmetric-server",
+          "Starting StatsD server on port $0",
+          statsd_port);
+
+      statsd_server.listen(statsd_port);
+    }
+
+    /* start event loop */
+    evloop.run();
   } catch (const fnord::Exception& e) {
     fnord::logError("fnordmetric-server", e, "FATAL ERROR");
 
