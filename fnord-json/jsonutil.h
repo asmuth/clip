@@ -9,7 +9,7 @@
  */
 #ifndef _FNORD_JSONUTIL_H
 #define _FNORD_JSONUTIL_H
-#include "fnord/json/jsontypes.h"
+#include "fnord-json/jsontypes.h"
 
 namespace fnord {
 namespace json {

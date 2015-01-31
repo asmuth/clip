@@ -20,7 +20,7 @@
 #include "fnord/chart/series.h"
 #include "fnord/chart/svgtarget.h"
 #include "fnord-base/io/fileutil.h"
-#include "fnord/test/unittest.h"
+#include "fnord-base/test/unittest.h"
 
 UNIT_TEST(ChartTest);
 

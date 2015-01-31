@@ -13,7 +13,7 @@
 #include <functional>
 #include <string>
 #include "fnord-base/io/outputstream.h"
-#include "fnord/json/jsonoutputstream.h"
+#include "fnord-json/jsonoutputstream.h"
 
 namespace fnord {
 namespace json {

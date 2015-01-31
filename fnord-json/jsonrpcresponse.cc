@@ -7,7 +7,7 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#include "fnord/json/jsonrpcresponse.h"
+#include "fnord-json/jsonrpcresponse.h"
 
 namespace fnord {
 namespace json {

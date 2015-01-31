@@ -13,7 +13,7 @@
 #include <unordered_map>
 #include <vector>
 #include "fnord-base/buffer.h"
-#include "fnord/json/jsontypes.h"
+#include "fnord-json/jsontypes.h"
 #include "fnord-base/reflect/reflect.h"
 
 namespace fnord {

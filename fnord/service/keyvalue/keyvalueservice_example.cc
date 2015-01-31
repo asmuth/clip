@@ -11,8 +11,8 @@
 #include "fnord-base/application.h"
 #include "fnord-http/httprouter.h"
 #include "fnord-http/httpserver.h"
-#include "fnord/json/jsonrpc.h"
-#include "fnord/json/jsonrpchttpadapter.h"
+#include "fnord-json/jsonrpc.h"
+#include "fnord-json/jsonrpchttpadapter.h"
 #include "fnord/service/keyvalue/keyvalueservice.h"
 #include "fnord-base/thread/threadpool.h"
 

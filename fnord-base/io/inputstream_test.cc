@@ -8,7 +8,7 @@
 #include <stdio.h>
 #include "fnord-base/exception.h"
 #include "fnord-base/io/inputstream.h"
-#include "fnord/test/unittest.h"
+#include "fnord-base/test/unittest.h"
 
 using namespace fnord::io;
 

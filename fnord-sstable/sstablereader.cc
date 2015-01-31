@@ -10,8 +10,8 @@
 #include <fnord-base/fnv.h>
 #include <fnord-base/exception.h>
 #include <fnord-base/inspect.h>
-#include <fnord/sstable/binaryformat.h>
-#include <fnord/sstable/sstablereader.h>
+#include <fnord-sstable/binaryformat.h>
+#include <fnord-sstable/sstablereader.h>
 
 namespace fnord {
 namespace sstable {

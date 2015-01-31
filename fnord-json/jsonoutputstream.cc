@@ -9,7 +9,7 @@
  */
 #include <fnord-base/stringutil.h>
 #include <fnord-base/inspect.h>
-#include <fnord/json/jsonoutputstream.h>
+#include <fnord-json/jsonoutputstream.h>
 #include <stdlib.h>
 #include <stdint.h>
 #include <stdio.h>

@@ -9,7 +9,7 @@
  */
 #ifndef _FNORDMETRIC_METRICDB_SAMPLEWRITER_H
 #define _FNORDMETRIC_METRICDB_SAMPLEWRITER_H
-#include <fnord/util/binarymessagewriter.h>
+#include <fnord-base/util/binarymessagewriter.h>
 #include <stdlib.h>
 #include <stdint.h>
 #include <string>

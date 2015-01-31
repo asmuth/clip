@@ -10,10 +10,10 @@
 #include <string.h>
 #include <fnord-base/exception.h>
 #include <fnord-base/fnv.h>
-#include <fnord/sstable/binaryformat.h>
-#include <fnord/sstable/fileheaderwriter.h>
-#include <fnord/sstable/fileheaderreader.h>
-#include <fnord/sstable/sstablewriter.h>
+#include <fnord-sstable/binaryformat.h>
+#include <fnord-sstable/fileheaderwriter.h>
+#include <fnord-sstable/fileheaderreader.h>
+#include <fnord-sstable/sstablewriter.h>
 
 namespace fnord {
 namespace sstable {

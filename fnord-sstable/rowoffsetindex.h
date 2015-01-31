@@ -9,7 +9,7 @@
  */
 #ifndef _FNORD_SSTABLE_ROWOFFSETINDEX_H
 #define _FNORD_SSTABLE_ROWOFFSETINDEX_H
-#include <fnord/sstable/index.h>
+#include <fnord-sstable/index.h>
 #include <stdlib.h>
 #include <string>
 #include <vector>

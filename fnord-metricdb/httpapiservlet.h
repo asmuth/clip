@@ -16,7 +16,7 @@
 #include "fnord-http/httpservice.h"
 #include "fnord/service/metric/metricservice.h"
 #include "fnord/service/metric/timeseriesquery.h"
-#include "fnord/json/json.h"
+#include "fnord-json/json.h"
 
 namespace fnord {
 namespace metric_service {

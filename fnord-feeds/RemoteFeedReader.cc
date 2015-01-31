@@ -9,7 +9,7 @@
  */
 #include "fnord-feeds/RemoteFeedReader.h"
 #include "fnord-base/logging.h"
-#include "fnord/json/JSONRPCCodec.h"
+#include "fnord-json/JSONRPCCodec.h"
 #include "fnord-feeds/FeedService.h"
 
 namespace fnord {

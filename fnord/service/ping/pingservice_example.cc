@@ -12,8 +12,8 @@
 #include "fnord-base/inspect.h"
 #include "fnord-http/httprouter.h"
 #include "fnord-http/httpserver.h"
-#include "fnord/json/jsonrpc.h"
-#include "fnord/json/jsonrpchttpadapter.h"
+#include "fnord-json/jsonrpc.h"
+#include "fnord-json/jsonrpchttpadapter.h"
 #include "fnord/service/ping/pingservice.h"
 #include "fnord-base/thread/eventloop.h"
 

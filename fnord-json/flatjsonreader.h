@@ -11,8 +11,8 @@
 #define _FNORD_JSON_FLATJSONREADER_H
 #include <stdlib.h>
 #include <string>
-#include "fnord/json/json.h"
-#include "fnord/json/jsoninputstream.h"
+#include "fnord-json/json.h"
+#include "fnord-json/jsoninputstream.h"
 
 namespace fnord {
 namespace json {

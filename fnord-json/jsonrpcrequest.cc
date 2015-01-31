@@ -8,8 +8,8 @@
  * <http://www.gnu.org/licenses/>.
  */
 #include "fnord-base/exception.h"
-#include "fnord/json/jsonrpcrequest.h"
-#include "fnord/json/jsonutil.h"
+#include "fnord-json/jsonrpcrequest.h"
+#include "fnord-json/jsonutil.h"
 
 namespace fnord {
 namespace json {

@@ -13,8 +13,8 @@
 #include <stdlib.h>
 #include <string>
 #include <vector>
-#include "fnord/json/jsoninputstream.h"
-#include "fnord/json/jsonpointer.h"
+#include "fnord-json/jsoninputstream.h"
+#include "fnord-json/jsonpointer.h"
 
 namespace fnord {
 namespace json {

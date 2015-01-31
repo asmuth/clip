@@ -9,7 +9,7 @@
  */
 #ifndef _FNORDMETRIC_METRICDB_TOKENINDEXWRITER_H
 #define _FNORDMETRIC_METRICDB_TOKENINDEXWRITER_H
-#include <fnord/util/binarymessagewriter.h>
+#include <fnord-base/util/binarymessagewriter.h>
 #include <fnord/service/metric/backends/disk/tokenindex.h>
 #include <stdlib.h>
 #include <stdint.h>

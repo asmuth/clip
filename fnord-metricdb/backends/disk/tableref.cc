@@ -17,7 +17,7 @@
 #include <fnord/service/metric/backends/disk/tokenindex.h>
 #include <fnord/service/metric/backends/disk/tokenindexwriter.h>
 #include <fnord/service/metric/backends/disk/tokenindexreader.h>
-#include <fnord/sstable/sstablereader.h>
+#include <fnord-sstable/sstablereader.h>
 
 using namespace fnord;
 namespace fnord {

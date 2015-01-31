@@ -9,7 +9,7 @@
  */
 #include <fnord/chart/svgtarget.h>
 #include <fnord/io/inputstream.h>
-#include <fnord/json/jsonoutputstream.h>
+#include <fnord-json/jsonoutputstream.h>
 #include <fnordmetric/environment.h>
 #include <fnordmetric/chartsql/query.h>
 #include <fnordmetric/chartsql/queryservice.h>

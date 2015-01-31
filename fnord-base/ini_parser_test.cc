@@ -9,7 +9,7 @@
  */
 
 #include "fnord-base/ini_parser.h"
-#include "fnord/test/unittest.h"
+#include "fnord-base/test/unittest.h"
 
 using namespace fnord;
 

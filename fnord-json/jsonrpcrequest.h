@@ -13,7 +13,7 @@
 #include <string>
 #include <vector>
 #include "fnord-base/inspect.h"
-#include "fnord/json/json.h"
+#include "fnord-json/json.h"
 
 namespace fnord {
 namespace json {

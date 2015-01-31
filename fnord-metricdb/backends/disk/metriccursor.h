@@ -11,7 +11,7 @@
 #define _FNORD_METRICDB_DISK_BACKEND_METRICCURSOR_H
 #include <fnord/service/metric/backends/disk/metricsnapshot.h>
 #include <fnord/service/metric/backends/disk/samplereader.h>
-#include <fnord/util/binarymessagereader.h>
+#include <fnord-base/util/binarymessagereader.h>
 #include <stdlib.h>
 #include <string>
 #include <vector>

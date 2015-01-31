@@ -13,8 +13,8 @@
 #include "fnord-base/inspect.h"
 #include "fnord-base/datetime.h"
 #include "fnord-base/traits.h"
-#include "fnord/json/jsonutil.h"
-#include "fnord/json/jsonoutputstream.h"
+#include "fnord-json/jsonutil.h"
+#include "fnord-json/jsonoutputstream.h"
 #include "fnord-base/reflect/indexsequence.h"
 #include "fnord-base/reflect/reflect.h"
 

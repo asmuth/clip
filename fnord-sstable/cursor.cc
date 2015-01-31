@@ -7,7 +7,7 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#include <fnord/sstable/cursor.h>
+#include <fnord-sstable/cursor.h>
 
 namespace fnord {
 namespace sstable {

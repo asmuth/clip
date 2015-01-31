@@ -10,8 +10,8 @@
 #ifndef _FNORDMETRIC_METRICDB_TABLEREF_H_
 #define _FNORDMETRIC_METRICDB_TABLEREF_H_
 #include <string>
-#include <fnord/sstable/sstablereader.h>
-#include <fnord/sstable/sstablewriter.h>
+#include <fnord-sstable/sstablereader.h>
+#include <fnord-sstable/sstablewriter.h>
 #include <fnord/service/metric/backends/disk/samplewriter.h>
 #include <fnord/service/metric/sample.h>
 

@@ -8,8 +8,8 @@
  * <http://www.gnu.org/licenses/>.
  */
 #include "fnord-rpc/RPC.h"
-#include "fnord/json/jsonrpcrequest.h"
-#include "fnord/json/jsonrpcresponse.h"
+#include "fnord-json/jsonrpcrequest.h"
+#include "fnord-json/jsonrpcresponse.h"
 
 namespace fnord {
 namespace json {

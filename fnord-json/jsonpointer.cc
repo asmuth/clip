@@ -11,7 +11,7 @@
 #include <string>
 #include "fnord-base/inspect.h"
 #include "fnord-base/stringutil.h"
-#include "fnord/json/jsonpointer.h"
+#include "fnord-json/jsonpointer.h"
 
 namespace fnord {
 namespace json {

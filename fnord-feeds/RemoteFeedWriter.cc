@@ -8,7 +8,7 @@
  * <http://www.gnu.org/licenses/>.
  */
 #include "fnord-base/logging.h"
-#include "fnord/json/JSONRPCCodec.h"
+#include "fnord-json/JSONRPCCodec.h"
 #include "fnord-feeds/FeedService.h"
 #include "fnord-feeds/RemoteFeedWriter.h"
 

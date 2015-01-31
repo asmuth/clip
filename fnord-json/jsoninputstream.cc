@@ -10,7 +10,7 @@
 #include "fnord-base/exception.h"
 #include "fnord-base/inspect.h"
 #include "fnord-base/stringutil.h"
-#include "fnord/json/jsoninputstream.h"
+#include "fnord-json/jsoninputstream.h"
 
 namespace fnord {
 namespace json {

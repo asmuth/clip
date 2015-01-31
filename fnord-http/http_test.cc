@@ -20,7 +20,7 @@
 #include <fnord-http/httpresponsehandler.h>
 #include <fnord-http/httpclientconnection.h>
 #include <fnord-base/io/inputstream.h>
-#include <fnord/test/unittest.h>
+#include <fnord-base/test/unittest.h>
 #include <fnord-base/thread/eventloop.h>
 #include <fnord-base/thread/threadpool.h>
 

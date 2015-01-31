@@ -8,9 +8,9 @@
  * <http://www.gnu.org/licenses/>.
  */
 #include "fnord-base/inspect.h"
-#include "fnord/json/json.h"
-#include "fnord/sstable/sstablereader.h"
-#include "fnord/sstable/sstablerepair.h"
+#include "fnord-json/json.h"
+#include "fnord-sstable/sstablereader.h"
+#include "fnord-sstable/sstablerepair.h"
 #include "fnord-feeds/FeedService.h"
 
 namespace fnord {

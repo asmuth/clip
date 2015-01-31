@@ -11,7 +11,7 @@
 #define _FNORD_JSON_JSONARGUMENTLIST_H
 #include <functional>
 #include <stdlib.h>
-#include "fnord/json/json.h"
+#include "fnord-json/json.h"
 
 namespace fnord {
 namespace json {

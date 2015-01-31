@@ -10,8 +10,8 @@
 #include <algorithm>
 #include "fnord-base/inspect.h"
 #include "fnord-base/logging.h"
-#include "fnord/json/json.h"
-#include "fnord/sstable/sstablereader.h"
+#include "fnord-json/json.h"
+#include "fnord-sstable/sstablereader.h"
 #include "fnord-feeds/LocalFeed.h"
 #include "fnord-feeds/FeedService.h"
 #include "fnord-base/stats/stats.h"

@@ -10,7 +10,7 @@
 #ifndef _FNORDMETRIC_METRICDB_LABELINDEXREADER_H
 #define _FNORDMETRIC_METRICDB_LABELINDEXREADER_H
 #include <fnord/service/metric/backends/disk/labelindex.h>
-#include <fnord/util/binarymessagereader.h>
+#include <fnord-base/util/binarymessagereader.h>
 #include <stdlib.h>
 #include <stdint.h>
 #include <string>

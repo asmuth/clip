@@ -14,7 +14,7 @@
 #include <fnord-base/wallclock.h>
 #include <fnord-base/io/fileutil.h>
 #include <fnord/service/metric/backends/disk/metric.h>
-#include <fnord/test/unittest.h>
+#include <fnord-base/test/unittest.h>
 
 using namespace fnord::metric_service::disk_backend;
 using namespace fnord::metric_service;

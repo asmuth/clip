@@ -12,8 +12,8 @@
 #include <string.h>
 #include <fnord-base/io/file.h>
 #include <fnordmetric/util/unittest.h>
-#include <fnord/sstable/sstablewriter.h>
-#include <fnord/sstable/rowoffsetindex.h>
+#include <fnord-sstable/sstablewriter.h>
+#include <fnord-sstable/rowoffsetindex.h>
 
 using namespace fnord::sstable;
 using namespace fnord::io;
