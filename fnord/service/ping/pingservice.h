@@ -15,7 +15,7 @@
 #include <string>
 #include <unordered_map>
 #include "fnord-rpc/RPC.h"
-#include "fnord/reflect/reflect.h"
+#include "fnord-base/reflect/reflect.h"
 
 namespace fnord {
 namespace ping_service {

@@ -15,8 +15,8 @@
 #include "fnord-base/traits.h"
 #include "fnord/json/jsonutil.h"
 #include "fnord/json/jsonoutputstream.h"
-#include "fnord/reflect/indexsequence.h"
-#include "fnord/reflect/reflect.h"
+#include "fnord-base/reflect/indexsequence.h"
+#include "fnord-base/reflect/reflect.h"
 
 namespace fnord {
 namespace json {

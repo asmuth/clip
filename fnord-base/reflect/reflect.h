@@ -9,7 +9,7 @@
  */
 #ifndef _FNORD_REFLECT_H
 #define _FNORD_REFLECT_H
-#include "fnord/reflect/metaclass.h"
-#include "fnord/reflect/methodcall.h"
-#include "fnord/reflect/property.h"
+#include "fnord-base/reflect/metaclass.h"
+#include "fnord-base/reflect/methodcall.h"
+#include "fnord-base/reflect/property.h"
 #endif
