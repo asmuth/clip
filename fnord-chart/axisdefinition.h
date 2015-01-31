@@ -12,8 +12,8 @@
 #include <utility>
 #include <string>
 #include <vector>
-#include "fnord/chart/domain.h"
-#include "fnord/chart/domainprovider.h"
+#include "fnord-chart/domain.h"
+#include "fnord-chart/domainprovider.h"
 
 namespace fnord {
 namespace chart {

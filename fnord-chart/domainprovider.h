@@ -12,7 +12,7 @@
 #include <algorithm>
 #include <stdlib.h>
 #include <math.h>
-#include "fnord/chart/domain.h"
+#include "fnord-chart/domain.h"
 #include "fnord-base/exception.h"
 
 namespace fnord {

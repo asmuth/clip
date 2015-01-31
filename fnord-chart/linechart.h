@@ -10,13 +10,13 @@
 #ifndef _FNORDMETRIC_LINECHART_H
 #define _FNORDMETRIC_LINECHART_H
 #include <stdlib.h>
-#include "fnord/chart/axisdefinition.h"
-#include "fnord/chart/continuousdomain.h"
-#include "fnord/chart/domain.h"
-#include "fnord/chart/drawable.h"
-#include "fnord/chart/canvas.h"
-#include "fnord/chart/colorpalette.h"
-#include "fnord/chart/rendertarget.h"
+#include "fnord-chart/axisdefinition.h"
+#include "fnord-chart/continuousdomain.h"
+#include "fnord-chart/domain.h"
+#include "fnord-chart/drawable.h"
+#include "fnord-chart/canvas.h"
+#include "fnord-chart/colorpalette.h"
+#include "fnord-chart/rendertarget.h"
 
 namespace fnord {
 namespace chart {

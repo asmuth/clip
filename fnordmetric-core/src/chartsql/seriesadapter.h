@@ -12,9 +12,9 @@
 #include <stdlib.h>
 #include <assert.h>
 #include <unordered_map>
-#include <fnord/chart/canvas.h>
-#include <fnord/chart/barchart.h>
-#include <fnord/chart/series.h>
+#include <fnord-chart/canvas.h>
+#include <fnord-chart/barchart.h>
+#include <fnord-chart/series.h>
 #include <fnord-base/exception.h>
 #include <fnordmetric/sql/runtime/compile.h>
 #include <fnordmetric/sql/runtime/execute.h>

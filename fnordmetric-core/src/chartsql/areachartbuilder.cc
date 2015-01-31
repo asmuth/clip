@@ -9,7 +9,7 @@
  */
 #include <fnordmetric/chartsql/areachartbuilder.h>
 #include <fnordmetric/chartsql/drawstatement.h>
-#include <fnord/chart/areachart.h>
+#include <fnord-chart/areachart.h>
 
 namespace fnordmetric {
 namespace query {

@@ -11,7 +11,7 @@
 #define _FNORDMETRIC_METRICDB_TIMESERIESQUERY_H_
 #include <fnord-base/datetime.h>
 #include <fnord-base/stdtypes.h>
-#include <fnord/chart/series.h>
+#include <fnord-chart/series.h>
 #include <fnord/service/metric/sample.h>
 #include <fnord/service/metric/metricservice.h>
 

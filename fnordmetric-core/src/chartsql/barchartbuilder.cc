@@ -9,7 +9,7 @@
  */
 #include <fnordmetric/chartsql/barchartbuilder.h>
 #include <fnordmetric/chartsql/drawstatement.h>
-#include <fnord/chart/barchart.h>
+#include <fnord-chart/barchart.h>
 
 namespace fnordmetric {
 namespace query {

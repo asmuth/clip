@@ -9,7 +9,7 @@
  */
 #include "fnord-base/wallclock.h"
 #include "fnord/service/metric/httpapiservlet.h"
-#include "fnord/chart/axisdefinition.h"
+#include "fnord-chart/axisdefinition.h"
 
 namespace fnord {
 namespace metric_service {

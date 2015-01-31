@@ -57,7 +57,6 @@ add_library(fnord-base OBJECT
     random.cc
     status.cc
     stringutil.cc
-    stats/statshttpservlet.cc
     stats/statsdagent.cc
     stats/statsrepository.cc
     stats/statssink.cc

@@ -38,7 +38,8 @@ add_library(fnord-http OBJECT
     httprouter.cc
     httpserver.cc
     httpserverconnection.cc
-    httpservice.cc)
+    httpservice.cc
+    statshttpservlet.cc)
 
 add_executable(tests/test-http
     $<TARGET_OBJECTS:fnord-base>

@@ -10,15 +10,15 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-#include "fnord/chart/axisdefinition.h"
-#include "fnord/chart/areachart.h"
-#include "fnord/chart/barchart.h"
-#include "fnord/chart/canvas.h"
-#include "fnord/chart/domain.h"
-#include "fnord/chart/linechart.h"
-#include "fnord/chart/pointchart.h"
-#include "fnord/chart/series.h"
-#include "fnord/chart/svgtarget.h"
+#include "fnord-chart/axisdefinition.h"
+#include "fnord-chart/areachart.h"
+#include "fnord-chart/barchart.h"
+#include "fnord-chart/canvas.h"
+#include "fnord-chart/domain.h"
+#include "fnord-chart/linechart.h"
+#include "fnord-chart/pointchart.h"
+#include "fnord-chart/series.h"
+#include "fnord-chart/svgtarget.h"
 #include "fnord-base/io/fileutil.h"
 #include "fnord-base/test/unittest.h"
 

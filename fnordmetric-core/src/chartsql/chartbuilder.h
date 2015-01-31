@@ -13,9 +13,9 @@
 #include <assert.h>
 #include <unordered_map>
 #include <fnord-base/exception.h>
-#include <fnord/chart/canvas.h>
-#include <fnord/chart/barchart.h>
-#include <fnord/chart/series.h>
+#include <fnord-chart/canvas.h>
+#include <fnord-chart/barchart.h>
+#include <fnord-chart/series.h>
 #include <fnordmetric/sql/runtime/compile.h>
 #include <fnordmetric/sql/runtime/execute.h>
 #include <fnordmetric/sql/runtime/rowsink.h>

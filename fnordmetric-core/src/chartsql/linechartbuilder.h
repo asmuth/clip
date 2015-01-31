@@ -10,7 +10,7 @@
 #ifndef _FNORDMETRIC_SQLEXTENSIONS_LINECHARTBUILDER_H
 #define _FNORDMETRIC_SQLEXTENSIONS_LINECHARTBUILDER_H
 #include <fnordmetric/chartsql/chartbuilder.h>
-#include <fnord/chart/linechart.h>
+#include <fnord-chart/linechart.h>
 
 namespace fnordmetric {
 namespace query {

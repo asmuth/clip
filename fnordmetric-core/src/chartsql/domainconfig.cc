@@ -8,8 +8,8 @@
  * <http://www.gnu.org/licenses/>.
  */
 #include <fnordmetric/chartsql/domainconfig.h>
-#include <fnord/chart/continuousdomain.h>
-#include <fnord/chart/timedomain.h>
+#include <fnord-chart/continuousdomain.h>
+#include <fnord-chart/timedomain.h>
 
 namespace fnordmetric {
 namespace query {

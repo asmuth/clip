@@ -9,10 +9,10 @@
  */
 #ifndef _FNORD_METRIC_SERVICE_HTTPAPISERVLET_H
 #define _FNORD_METRIC_SERVICE_HTTPAPISERVLET_H
-#include "fnord/chart/areachart.h"
-#include "fnord/chart/canvas.h"
-#include "fnord/chart/linechart.h"
-#include "fnord/chart/svgtarget.h"
+#include "fnord-chart/areachart.h"
+#include "fnord-chart/canvas.h"
+#include "fnord-chart/linechart.h"
+#include "fnord-chart/svgtarget.h"
 #include "fnord-http/httpservice.h"
 #include "fnord/service/metric/metricservice.h"
 #include "fnord/service/metric/timeseriesquery.h"

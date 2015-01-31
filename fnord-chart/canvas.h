@@ -13,9 +13,9 @@
 #include <vector>
 #include <string>
 #include <tuple>
-#include "fnord/chart/axisdefinition.h"
-#include "fnord/chart/drawable.h"
-#include "fnord/chart/legenddefinition.h"
+#include "fnord-chart/axisdefinition.h"
+#include "fnord-chart/drawable.h"
+#include "fnord-chart/legenddefinition.h"
 
 namespace fnord {
 namespace chart {

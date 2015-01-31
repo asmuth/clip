@@ -16,8 +16,8 @@
 #include <fnordmetric/sql/runtime/queryplannode.h>
 #include <fnordmetric/sql/runtime/resultlist.h>
 #include <fnord-base/exception.h>
-#include <fnord/chart/canvas.h>
-#include <fnord/chart/drawable.h>
+#include <fnord-chart/canvas.h>
+#include <fnord-chart/drawable.h>
 
 namespace fnordmetric {
 namespace query {

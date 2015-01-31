@@ -12,8 +12,8 @@
 #include <algorithm>
 #include <stdlib.h>
 #include <assert.h>
-#include <fnord/chart/domain.h>
-#include <fnord/chart/drawable.h>
+#include <fnord-chart/domain.h>
+#include <fnord-chart/drawable.h>
 #include <fnordmetric/sql/svalue.h>
 
 namespace fnordmetric {

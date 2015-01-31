@@ -9,7 +9,7 @@
  */
 #ifndef _FNORDMETRIC_QUERYSERVICE_H
 #define _FNORDMETRIC_QUERYSERVICE_H
-#include <fnord/chart/rendertarget.h>
+#include <fnord-chart/rendertarget.h>
 #include <fnord/io/inputstream.h>
 #include <fnord-json/jsonoutputstream.h>
 #include <fnordmetric/chartsql/query.h>

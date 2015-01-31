@@ -7,7 +7,7 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#include "fnord/chart/griddefinition.h"
+#include "fnord-chart/griddefinition.h"
 
 namespace fnord {
 namespace chart {
