@@ -30,6 +30,7 @@
 #include <fnord-json/jsonrpc.h>
 #include <fnord-metricdb/metricservice.h>
 #include <fnord-metricdb/httpapiservlet.h>
+#include "adminui.h"
 #include "environment.h"
 #include "chartsql/queryendpoint.h"
 
@@ -191,7 +192,8 @@ int main(int argc, const char** argv) {
     QueryEndpoint query_api(metric_service.metricRepository());
     http_router.addRouteByPrefixMatch("/query", &query_api);
 
-    //http_server->addHandler(AdminUI::getHandler());
+    AdminUI admin_ui;
+    http_router.addRouteByPrefixMatch("/", &admin_ui);
 
     /* set up statsd server */
     fnord::statsd::StatsdServer statsd_server(&evloop, &evloop);

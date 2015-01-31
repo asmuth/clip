@@ -11,8 +11,8 @@
 #include <fnord-base/uri.h>
 #include <fnord-base/stringutil.h>
 #include <fnord-base/io/fileutil.h>
-#include <fnord/webui/bundle.h>
-#include <fnord/webui/httpmount.h>
+#include "bundle.h"
+#include "httpmount.h"
 
 namespace fnord {
 namespace webui {
@@ -27,10 +27,10 @@ HTTPMount::HTTPMount(
     app_components_base_url_(
         FileUtil::joinPaths(base_url, "__components__") + "/") {}
 
-bool HTTPMount::handleHTTPRequest(
+void HTTPMount::handleHTTPRequest(
     http::HTTPRequest* request,
     http::HTTPResponse* response) {
-  fnord::URI uri(request->getUrl());
+  fnord::URI uri(request->uri());
   auto path = uri.path();
 
   bundle_->build(app_url_); // FIXPAUL
@@ -39,21 +39,21 @@ bool HTTPMount::handleHTTPRequest(
     response->setStatus(http::kStatusOK);
     response->addHeader("Content-Type", "text/html; charset=utf-8");
     response->addBody(bundle_->applicationHTML());
-    return true;
+    return;
   }
 
   if (path == app_js_url_) {
     response->setStatus(http::kStatusOK);
     response->addHeader("Content-Type", "application/javascript");
     response->addBody(bundle_->applicationJS());
-    return true;
+    return;
   }
 
   if (path == app_css_url_) {
     response->setStatus(http::kStatusOK);
     response->addHeader("Content-Type", "text/css");
     response->addBody(bundle_->applicationCSS());
-    return true;
+    return;
   }
 
   if (StringUtil::beginsWith(path, app_components_base_url_)) {
@@ -63,11 +63,9 @@ bool HTTPMount::handleHTTPRequest(
       response->setStatus(http::kStatusOK);
       response->addHeader("Content-Type", "text/plain"); // FIXPAUL
       response->addBody(fnord::Assets::getAsset(component_path));
-      return true;
+      return;
     }
   }
-
-  return false;
 }
 
 } // namespace webui

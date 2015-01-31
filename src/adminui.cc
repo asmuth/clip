@@ -13,15 +13,11 @@
 
 namespace fnordmetric {
 
-std::unique_ptr<http::HTTPHandler> AdminUI::getHandler() {
-  return std::unique_ptr<http::HTTPHandler>(new AdminUI());
-}
-
-AdminUI::AdminUI() :
+AdminUI::AdminUI(
+    std::string path_prefix /* = "/admin" */) :
     webui_bundle_("FnordMetric"),
-    webui_mount_(&webui_bundle_, "/admin") {
+    webui_mount_(&webui_bundle_, path_prefix) {
   webui_bundle_.addComponent("fnord/3rdparty/codemirror.js");
-
   webui_bundle_.addComponent("fnord/3rdparty/fontawesome.woff");
   webui_bundle_.addComponent("fnord/3rdparty/fontawesome.css");
   webui_bundle_.addComponent("fnord/3rdparty/reset.css");
@@ -72,37 +68,20 @@ AdminUI::AdminUI() :
 
 }
 
-bool AdminUI::handleHTTPRequest(
+void AdminUI::handleHTTPRequest(
     http::HTTPRequest* request,
     http::HTTPResponse* response) {
-
-  if (env()->verbose()) {
-    fnord::util::LogEntry log_entry;
-    log_entry.append("__severity__", "DEBUG");
-    log_entry.printf(
-        "__message__",
-        "HTTP request: %s %s",
-        request->getMethod().c_str(),
-        request->getUrl().c_str());
-
-    env()->logger()->log(log_entry);
-  }
-
-  if (webui_mount_.handleHTTPRequest(request, response)) {
-    return true;
-  }
-
-  fnord::URI uri(request->getUrl());
+  fnord::URI uri(request->uri());
   auto path = uri.path();
 
   if (path == "/") {
     response->setStatus(http::kStatusFound);
     response->addHeader("Content-Type", "text/html; charset=utf-8");
     response->addHeader("Location", "/admin");
-    return true;
+    return;
   }
 
-  return false;
+  webui_mount_.handleHTTPRequest(request, response);
 }
 
 

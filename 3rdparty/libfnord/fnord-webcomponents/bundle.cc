@@ -11,7 +11,7 @@
 #include "fnord-base/exception.h"
 #include "fnord-base/stringutil.h"
 #include "fnord-base/io/fileutil.h"
-#include "fnord/webui/bundle.h"
+#include "bundle.h"
 
 namespace fnord {
 namespace webui {

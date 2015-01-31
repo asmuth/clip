@@ -39,6 +39,9 @@ set(FNORDMETRIC_SOURCES
     $<TARGET_OBJECTS:fnord-json>
     $<TARGET_OBJECTS:fnord-metricdb>
     $<TARGET_OBJECTS:fnord-sstable>
+    ../3rdparty/libfnord/fnord-webcomponents/bundle.cc
+    ../3rdparty/libfnord/fnord-webcomponents/httpmount.cc
+    ../src/adminui.cc
     ../src/environment.cc
     ../src/chartsql/areachartbuilder.cc
     ../src/chartsql/barchartbuilder.cc

@@ -10,23 +10,21 @@
 #ifndef _FNORDMETRIC_WEBINTERFACE_H
 #define _FNORDMETRIC_WEBINTERFACE_H
 #include <memory>
-#include <fnord-http/httphandler.h>
+#include <fnord-http/httpservice.h>
 #include <fnord-http/httprequest.h>
 #include <fnord-http/httpresponse.h>
-#include <fnord/webui/bundle.h>
-#include <fnord/webui/httpmount.h>
+#include <fnord-webcomponents/bundle.h>
+#include <fnord-webcomponents/httpmount.h>
 
 using namespace fnord;
 namespace fnordmetric {
 
-class AdminUI : public fnord::http::HTTPHandler {
+class AdminUI : public fnord::http::HTTPService {
 public:
 
-  static std::unique_ptr<http::HTTPHandler> getHandler();
+  AdminUI(String path_prefix = "/admin");
 
-  AdminUI();
-
-  bool handleHTTPRequest(
+  void handleHTTPRequest(
       http::HTTPRequest* request,
       http::HTTPResponse* response) override;
 
