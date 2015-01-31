@@ -16,7 +16,7 @@
 #include <fnord-base/inspect.h>
 #include <fnordmetric/sql/parser/token.h>
 #include <fnordmetric/sql/svalue.h>
-#include <fnordmetric/util/format.h>
+#include <fnordmetric/format.h>
 
 namespace fnordmetric {
 namespace query {
