@@ -10,9 +10,9 @@
 #ifndef _FNORDMETRIC_HTTPROUTER_H
 #define _FNORDMETRIC_HTTPROUTER_H
 
-#include "fnord/net/http/httphandler.h"
-#include "fnord/net/http/httprequest.h"
-#include "fnord/net/http/httpresponse.h"
+#include "fnord-http/httphandler.h"
+#include "fnord-http/httprequest.h"
+#include "fnord-http/httpresponse.h"
 #include "fnord-base/thread/taskscheduler.h"
 
 namespace fnord {

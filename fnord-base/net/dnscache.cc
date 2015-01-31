@@ -7,7 +7,7 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#include "fnord/net/dnscache.h"
+#include "fnord-base/net/dnscache.h"
 
 namespace fnord {
 namespace net {

@@ -13,8 +13,8 @@
 #include <string>
 #include <utility>
 #include <fnord-base/io/outputstream.h>
-#include <fnord/net/http/httpresponse.h>
-#include <fnord/net/http/httprequest.h>
+#include <fnord-http/httpresponse.h>
+#include <fnord-http/httprequest.h>
 
 using fnord::OutputStream;
 

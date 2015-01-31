@@ -9,9 +9,9 @@
  */
 #include <fnord-base/exception.h>
 #include <fnord-base/inspect.h>
-#include <fnord/net/http/httpgenerator.h>
-#include <fnord/net/http/httpclientconnection.h>
-#include <fnord/net/http/httpresponsehandler.h>
+#include <fnord-http/httpgenerator.h>
+#include <fnord-http/httpclientconnection.h>
+#include <fnord-http/httpresponsehandler.h>
 
 namespace fnord {
 namespace http {

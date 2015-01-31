@@ -11,8 +11,8 @@
 #include <fnord-base/inspect.h>
 #include <fnord-base/logging.h>
 #include <fnord-base/wallclock.h>
-#include "fnord/net/http/httpserverconnection.h"
-#include <fnord/net/http/httpserver.h>
+#include "fnord-http/httpserverconnection.h"
+#include <fnord-http/httpserver.h>
 
 /*
 TODO:

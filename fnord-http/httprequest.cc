@@ -8,9 +8,9 @@
  * <http://www.gnu.org/licenses/>.
  */
 #include <fnord-base/exception.h>
-#include <fnord/net/http/cookies.h>
-#include <fnord/net/http/httpparser.h>
-#include <fnord/net/http/httprequest.h>
+#include <fnord-http/cookies.h>
+#include <fnord-http/httpparser.h>
+#include <fnord-http/httprequest.h>
 
 namespace fnord {
 namespace http {

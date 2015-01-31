@@ -8,7 +8,7 @@
  * <http://www.gnu.org/licenses/>.
  */
 #include "fnord-base/exception.h"
-#include "fnord/net/http/httpconnectionpool.h"
+#include "fnord-http/httpconnectionpool.h"
 
 namespace fnord {
 namespace http {

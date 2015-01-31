@@ -10,9 +10,9 @@
 #ifndef _FNORDMETRIC_HTTPRESPONSEFUTURE_H
 #define _FNORDMETRIC_HTTPRESPONSEFUTURE_H
 #include "fnord-base/status.h"
-#include "fnord/net/http/httpresponse.h"
-#include "fnord/net/http/httpresponsehandler.h"
-#include "fnord/net/http/httpclientconnection.h"
+#include "fnord-http/httpresponse.h"
+#include "fnord-http/httpresponsehandler.h"
+#include "fnord-http/httpclientconnection.h"
 #include "fnord-base/thread/future.h"
 #include "fnord-base/thread/wakeup.h"
 #include <memory>

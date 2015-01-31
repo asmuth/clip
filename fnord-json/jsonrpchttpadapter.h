@@ -13,9 +13,9 @@
 #include <stdlib.h>
 #include <string>
 #include <vector>
-#include "fnord/net/http/httprequest.h"
-#include "fnord/net/http/httpresponse.h"
-#include "fnord/net/http/httpservice.h"
+#include "fnord-http/httprequest.h"
+#include "fnord-http/httpresponse.h"
+#include "fnord-http/httpservice.h"
 
 namespace fnord {
 namespace json {

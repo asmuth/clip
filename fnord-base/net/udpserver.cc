@@ -14,7 +14,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <fnord-base/exception.h>
-#include <fnord/net/udpserver.h>
+#include <fnord-base/net/udpserver.h>
 
 namespace fnord {
 namespace net {

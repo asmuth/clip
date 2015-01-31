@@ -15,7 +15,7 @@
 
 #include "fnord-base/exception.h"
 #include "fnord-base/inspect.h"
-#include "fnord/net/tcpserver.h"
+#include "fnord-base/net/tcpserver.h"
 
 namespace fnord {
 namespace net {

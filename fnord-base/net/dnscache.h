@@ -12,7 +12,7 @@
 #include <mutex>
 #include <string>
 #include <unordered_map>
-#include "fnord/net/inetaddr.h"
+#include "fnord-base/net/inetaddr.h"
 
 namespace fnord {
 namespace net {

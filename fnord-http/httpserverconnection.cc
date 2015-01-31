@@ -10,8 +10,8 @@
 #include "fnord-base/exception.h"
 #include "fnord-base/inspect.h"
 #include "fnord-base/logging.h"
-#include "fnord/net/http/httpserverconnection.h"
-#include "fnord/net/http/httpgenerator.h"
+#include "fnord-http/httpserverconnection.h"
+#include "fnord-http/httpgenerator.h"
 
 namespace fnord {
 

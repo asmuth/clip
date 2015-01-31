@@ -16,7 +16,7 @@
 #include <unistd.h>
 #include "fnord-base/exception.h"
 #include "fnord-base/inspect.h"
-#include "fnord/net/tcpconnection.h"
+#include "fnord-base/net/tcpconnection.h"
 
 namespace fnord {
 namespace net {

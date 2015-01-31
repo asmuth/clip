@@ -9,8 +9,8 @@
  */
 #include <stdlib.h>
 #include "fnord-base/application.h"
-#include "fnord/net/http/httprouter.h"
-#include "fnord/net/http/httpserver.h"
+#include "fnord-http/httprouter.h"
+#include "fnord-http/httpserver.h"
 #include "fnord/json/jsonrpc.h"
 #include "fnord/json/jsonrpchttpadapter.h"
 #include "fnord/service/keyvalue/keyvalueservice.h"

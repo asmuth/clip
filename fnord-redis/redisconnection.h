@@ -15,7 +15,7 @@
 #include "fnord-base/option.h"
 #include "fnord-base/status.h"
 #include "fnord-base/logging.h"
-#include "fnord/net/inetaddr.h"
+#include "fnord-base/net/inetaddr.h"
 #include "fnord-base/thread/future.h"
 #include "fnord-base/thread/taskscheduler.h"
 

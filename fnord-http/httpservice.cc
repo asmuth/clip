@@ -9,8 +9,8 @@
  */
 #include <fnord-base/inspect.h>
 #include <fnord-base/logging.h>
-#include "fnord/net/http/httpserverconnection.h"
-#include <fnord/net/http/httpservice.h>
+#include "fnord-http/httpserverconnection.h"
+#include <fnord-http/httpservice.h>
 
 namespace fnord {
 namespace http {

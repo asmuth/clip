@@ -9,9 +9,9 @@
  */
 #include <stdlib.h>
 #include <memory>
-#include "fnord/net/http/httpserverconnection.h"
-#include "fnord/net/http/httprouter.h"
-#include "fnord/net/http/httpservice.h"
+#include "fnord-http/httpserverconnection.h"
+#include "fnord-http/httprouter.h"
+#include "fnord-http/httpservice.h"
 
 namespace fnord {
 namespace http {

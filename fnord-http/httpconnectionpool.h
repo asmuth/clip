@@ -14,10 +14,10 @@
 #include <string>
 #include "fnord-base/stdtypes.h"
 #include "fnord-base/thread/taskscheduler.h"
-#include "fnord/net/dnscache.h"
-#include "fnord/net/http/httprequest.h"
-#include "fnord/net/http/httpresponsefuture.h"
-#include "fnord/net/http/httpstats.h"
+#include "fnord-base/net/dnscache.h"
+#include "fnord-http/httprequest.h"
+#include "fnord-http/httpresponsefuture.h"
+#include "fnord-http/httpstats.h"
 #include "fnord/stats/statsrepository.h"
 
 namespace fnord {

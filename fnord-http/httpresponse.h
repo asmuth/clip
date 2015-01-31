@@ -10,9 +10,9 @@
 #ifndef _FNORDMETRIC_WEB_HTTPRESPONSE_H
 #define _FNORDMETRIC_WEB_HTTPRESPONSE_H
 #include <fnord-base/datetime.h>
-#include <fnord/net/http/httpmessage.h>
-#include <fnord/net/http/httprequest.h>
-#include <fnord/net/http/status.h>
+#include <fnord-http/httpmessage.h>
+#include <fnord-http/httprequest.h>
+#include <fnord-http/status.h>
 #include <string>
 
 namespace fnord {

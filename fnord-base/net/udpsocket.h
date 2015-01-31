@@ -11,7 +11,7 @@
 #define _FNORD_NET_UDPSOCKET_H
 #include <stdlib.h>
 #include "fnord-base/buffer.h"
-#include "fnord/net/inetaddr.h"
+#include "fnord-base/net/inetaddr.h"
 #include "fnord-base/thread/taskscheduler.h"
 
 namespace fnord {

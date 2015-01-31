@@ -8,9 +8,9 @@
  * <http://www.gnu.org/licenses/>.
  */
 #include "fnord-base/exception.h"
-#include "fnord/net/http/httpclient.h"
-#include "fnord/net/http/httpclientconnection.h"
-#include "fnord/net/tcpconnection.h"
+#include "fnord-http/httpclient.h"
+#include "fnord-http/httpclientconnection.h"
+#include "fnord-base/net/tcpconnection.h"
 
 namespace fnord {
 namespace http {

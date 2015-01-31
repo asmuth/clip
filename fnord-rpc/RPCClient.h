@@ -18,7 +18,7 @@
 #include "fnord-base/thread/taskscheduler.h"
 #include "fnord-base/uri.h"
 #include "fnord-rpc/RPC.h"
-#include "fnord/net/http/httpconnectionpool.h"
+#include "fnord-http/httpconnectionpool.h"
 
 namespace fnord {
 

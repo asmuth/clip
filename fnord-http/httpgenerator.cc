@@ -8,7 +8,7 @@
  * <http://www.gnu.org/licenses/>.
  */
 #include <fnord-base/stringutil.h>
-#include <fnord/net/http/httpgenerator.h>
+#include <fnord-http/httpgenerator.h>
 
 using fnord::OutputStream;
 

@@ -13,7 +13,7 @@
 #include <vector>
 
 #include "fnord-base/buffer.h"
-#include "fnord/net/http/httpmessage.h"
+#include "fnord-http/httpmessage.h"
 
 namespace fnord {
 namespace http {

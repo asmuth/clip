@@ -8,7 +8,7 @@
  * <http://www.gnu.org/licenses/>.
  */
 #include <fnord-base/buffer.h>
-#include <fnord/net/udpserver.h>
+#include <fnord-base/net/udpserver.h>
 #include <fnord-base/thread/taskscheduler.h>
 
 namespace fnord {

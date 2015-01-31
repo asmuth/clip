@@ -13,12 +13,12 @@
 #include <vector>
 #include <fnord-base/autoref.h>
 #include <fnord-base/stdtypes.h>
-#include <fnord/net/http/httphandler.h>
-#include <fnord/net/http/httpparser.h>
-#include <fnord/net/http/httprequest.h>
-#include <fnord/net/http/httpresponse.h>
-#include <fnord/net/http/httpstats.h>
-#include <fnord/net/tcpconnection.h>
+#include <fnord-http/httphandler.h>
+#include <fnord-http/httpparser.h>
+#include <fnord-http/httprequest.h>
+#include <fnord-http/httpresponse.h>
+#include <fnord-http/httpstats.h>
+#include <fnord-base/net/tcpconnection.h>
 #include <fnord-base/thread/taskscheduler.h>
 
 namespace fnord {

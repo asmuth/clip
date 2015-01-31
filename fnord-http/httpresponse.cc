@@ -11,9 +11,9 @@
 #include <fnord-base/inspect.h>
 #include <fnord-base/stringutil.h>
 #include <fnord-base/uri.h>
-#include <fnord/net/http/cookies.h>
-#include <fnord/net/http/httpresponse.h>
-#include <fnord/net/http/httpparser.h>
+#include <fnord-http/cookies.h>
+#include <fnord-http/httpresponse.h>
+#include <fnord-http/httpparser.h>
 
 namespace fnord {
 namespace http {

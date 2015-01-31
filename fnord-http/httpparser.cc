@@ -11,7 +11,7 @@
 #include "fnord-base/bufferutil.h"
 #include "fnord-base/exception.h"
 #include "fnord-base/inspect.h"
-#include "fnord/net/http/httpparser.h"
+#include "fnord-http/httpparser.h"
 
 namespace fnord {
 namespace http {

@@ -9,7 +9,7 @@
  */
 #include <algorithm>
 #include <fnord-base/inspect.h>
-#include <fnord/net/http/httprequest.h>
+#include <fnord-http/httprequest.h>
 
 using fnord::InputStream;
 using fnord::OutputStream;

@@ -10,7 +10,7 @@
 #include <fnord-base/exception.h>
 #include <fnord-base/inspect.h>
 #include <fnord-base/logging.h>
-#include <fnord/net/statsd/statsd.h>
+#include <fnord-base/net/statsd/statsd.h>
 
 namespace fnord {
 namespace statsd {

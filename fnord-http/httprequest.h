@@ -10,7 +10,7 @@
 #ifndef _FNORDMETRIC_WEB_HTTPREQUEST_H
 #define _FNORDMETRIC_WEB_HTTPREQUEST_H
 #include <fnord-base/uri.h>
-#include <fnord/net/http/httpmessage.h>
+#include <fnord-http/httpmessage.h>
 #include <string>
 
 namespace fnord {

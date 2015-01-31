@@ -9,7 +9,7 @@
  */
 #include "fnord-base/exception.h"
 #include "fnord-base/thread/taskscheduler.h"
-#include "fnord/net/redis/redisconnection.h"
+#include "fnord-base/net/redis/redisconnection.h"
 
 namespace fnord {
 namespace redis {

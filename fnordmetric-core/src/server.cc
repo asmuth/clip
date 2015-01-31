@@ -16,12 +16,12 @@
 #include <fnord-base/exceptionhandler.h>
 #include <fnord-base/inspect.h>
 #include <fnord-base/random.h>
-#include <fnord/net/http/httpserver.h>
+#include <fnord-http/httpserver.h>
 #include <fnord/io/fileutil.h>
 #include <fnord/io/inputstream.h>
 #include <fnord/io/outputstream.h>
-#include <fnord/net/udpserver.h>
-#include <fnord/net/statsd/statsd.h>
+#include <fnord-base/net/udpserver.h>
+#include <fnord-base/net/statsd/statsd.h>
 #include <fnord/thread/threadpool.h>
 #include <fnord/service/metric/metricservice.h>
 #include <fnord/service/metric/metricserviceadapter.h>
