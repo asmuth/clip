@@ -1,4 +1,4 @@
-all: build test
+all: build
 
 build:
 	mkdir -p build
@@ -17,8 +17,8 @@ test-dbg: build-dbg
 clean:
 	rm -rf build build-dbg .dev_assets
 
-install: build
-	(cd build/cmake && make install)
+install:
+	(cd build && make install)
 
 devserver: build-dbg
 	mkdir -p /tmp/fnordmetric-data
