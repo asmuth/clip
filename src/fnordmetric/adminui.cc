@@ -63,9 +63,6 @@ AdminUI::AdminUI(
   webui_bundle_.addComponent("fnordmetric/fnordmetric-webui-util.js");
   webui_bundle_.addComponent(
     "fnordmetric/fnordmetric-embed-query-popup.html");
-  webui_bundle_.addComponent(
-      "fnordmetric-plugins/hosts/fnordmetric-plugin-hosts.html");
-
 }
 
 void AdminUI::handleHTTPRequest(

@@ -18,7 +18,9 @@ fn_assets_add() {
     exit 1
   fi;
 
-  uniq=$(echo $ASSETS_FILE | sed -e 's/[^a-zA-Z0-9]/_/g')
+  uniq=$(echo $1 | sed -e 's/[^a-zA-Z0-9]/_/g')
+
+  echo "Packing asset: $1"
 
   (
     echo "static const unsigned char __${uniq}_data[] = {"
