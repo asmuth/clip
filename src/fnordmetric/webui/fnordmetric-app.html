@@ -17,6 +17,10 @@
     position: relative;
   }
 
+  fn-flexbox-item.overflow {
+    overflow: visible;
+  }
+
 
 </style>
 
@@ -29,7 +33,7 @@
 
   <fn-loader id="app-loader" data-loading>
     <fn-flexbox>
-      <fn-flexbox-item data-height='fixed'>
+      <fn-flexbox-item class="overflow" data-height='fixed'>
         <fn-appbar>
           <div class="le_fnord">F</div>
 
@@ -95,7 +99,7 @@
         return function(e) {
           var term = e.srcElement.getValue();
           var res = [];
-          var url = "/metrics?filter=" + term;
+          var url = "/metrics/list?filter=" + term;
           Fnord.httpGet(url, function(r) {
             if (r.status == 200) {
               var json = JSON.parse(r.response);
