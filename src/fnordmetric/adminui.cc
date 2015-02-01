@@ -15,6 +15,7 @@ namespace fnordmetric {
 
 AdminUI::AdminUI(
     std::string path_prefix /* = "/admin" */) :
+    path_prefix_(path_prefix),
     webui_bundle_("FnordMetric"),
     webui_mount_(&webui_bundle_, path_prefix) {
   webui_bundle_.addComponent("fnord/3rdparty/codemirror.js");
@@ -74,8 +75,15 @@ void AdminUI::handleHTTPRequest(
   if (path == "/") {
     response->setStatus(http::kStatusFound);
     response->addHeader("Content-Type", "text/html; charset=utf-8");
-    response->addHeader("Location", "/admin");
+    response->addHeader("Location", path_prefix_);
     return;
+  }
+
+  if (path == "/fontawesome.woff") {
+    request->setURI(
+        StringUtil::format(
+            "$0/__components__/fnord/3rdparty/fontawesome.woff",
+            path_prefix_));
   }
 
   webui_mount_.handleHTTPRequest(request, response);

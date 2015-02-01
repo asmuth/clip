@@ -29,6 +29,7 @@ public:
       http::HTTPResponse* response) override;
 
 private:
+  std::string path_prefix_;
   fnord::webui::Bundle webui_bundle_;
   fnord::webui::HTTPMount webui_mount_;
 };
