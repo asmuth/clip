@@ -55,6 +55,7 @@
       }
 
       var base = this;
+      var sort;
 
       this.forEachColumn(function(col, index) {
         var th_elem = document.createElement("th");
@@ -65,6 +66,12 @@
           th_elem.className += " sortable ";
           if (col.getAttribute("data-sort-state") != null) {
             th_elem.className += col.getAttribute("data-sort-state");
+          }
+          if (col.hasAttribute('data-presort')) {
+            col.removeAttribute('data-presort');
+            sort = function() {
+              base.resortRows(index,col.getAttribute('data-sortable'),col.getAttribute('data-presort'));
+            }
           }
           base.observeSortableColumns(th_elem);
         }
@@ -148,7 +155,7 @@
         tr_elem.setAttribute("data-row-index", index);
         tbody.appendChild(tr_elem);
       });
-    }
+    };
 
     this.rowsPerPage = function() {
       if (this.getAttribute("data-per-page") != null) {
@@ -156,7 +163,7 @@
       } else {
         return -1;
       }
-    }
+    };
 
     this.currentPage = function() {
       if (this.getAttribute("data-page") != null) {
@@ -164,7 +171,7 @@
       } else {
         return 0;
       }
-    }
+    };
 
     this.forEachRowWithPagination = function(cb) {
       var all_rows = this.querySelectorAll("tr");
@@ -187,20 +194,20 @@
       for (var i = begin; i < end; ++i) {
         cb(all_rows[i], i);
       }
-    }
+    };
 
     this.forEachColumn = function(cb) {
       var col_elems = this.querySelectorAll("fn-table-column");
       for (var i = 0; i < col_elems.length; ++i) {
         cb(col_elems[i], i);
       }
-    }
+    };
 
     this.attributeChangedCallback = function(attr, old_val, new_val) {
       if (attr == "data-page" || attr == "data-per-page") {
         this.renderRows();
       }
-    }
+    };
 
     this.observeSortableColumns = function(column) {
       var base = this;
@@ -209,18 +216,24 @@
           this.getAttribute('data-column-index'),
           this.getAttribute('data-sortable'));
       }
-    }
+    };
 
-
-    this.resortRows = function(column_index, type) {
-      console.log(type);
+    this.resortRows = function(column_index, type, sort_direction) {
+      console.log("resort rows");
       var col_elems = this.querySelectorAll("fn-table-column");
       if (column_index >= col_elems.length) {
         return;
       }
 
       var column = col_elems[column_index];
-      if (column.getAttribute("data-sort-state") == "asc") {
+
+      if (sort_direction == "asc") {
+        column.setAttribute("data-sort-state", "asc");
+        this.resortRowsWithOrder(column_index, "asc");
+      } else if (sort_direction == "desc") {
+        column.setAttribute("data-sort-state", "desc");
+        this.resortRowsWithOrder(column_index, "desc");
+      } else if (column.getAttribute("data-sort-state") == "asc") {
         column.setAttribute("data-sort-state", "desc");
         this.resortRowsWithOrder(column_index, "desc");
       } else {
@@ -230,11 +243,15 @@
 
       this.setAttribute("data-page", "0");
       this.renderTable();
-    }
+    };
 
     this.resortRowsWithOrder = function(column_index, order) {
-      var tbody = this.querySelector("table");
-
+      var tbody;
+      if (this.querySelector("table tbody") != null) {
+        tbody = this.querySelector("table tbody");
+      } else {
+        tbody = this.querySelector("table");
+      }
 
       var sort_fn = this.rowSortFunction;
       if (!sort_fn) {
@@ -252,7 +269,7 @@
 
       /* naive bubble sort */
       var n = tbody.children.length;
-
+      console.log(n);
       while (true) {
         var swapped = false;
         for (var i = 1; i < n; ++i) {
@@ -266,7 +283,7 @@
           break;
         }
       }
-    }
+    };
 
     this.appendRowFromArray = function(cols) {
       var tr = document.createElement("tr");

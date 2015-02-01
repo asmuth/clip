@@ -13,9 +13,6 @@
     display: block;
   }
 
-  fn-datepicker:hover {
-    cursor: pointer;
-  }
 </style>
 <template id='fn-datepicker-base-tpl'>
   <style type='text/css'>
@@ -24,7 +21,7 @@
       display:block;
     }
 
-    fn-input:hover {
+    fn-input /deep/ input {
       cursor: pointer;
     }
 
@@ -35,7 +32,7 @@
       width: 216px;
       outline: 0;
       font-family: 'Helvetica Neue',Arial,Helvetica,sans-serif;
-      font-size: 14px;
+      font-size: 1rem;
       color: rgba(0,0,0,.8);
       z-index: 100;
       cursor: pointer;
@@ -46,6 +43,10 @@
       transition: opacity .2s ease;
       z-index: 11;
       will-change: transform,opacity;
+    }
+
+    #datepicker_widget.small {
+      font-size: 0.875rem;
     }
 
     fn-input-time {
@@ -59,12 +60,13 @@
       border: 1px solid rgb(226, 232, 237);
       border-radius: 3px;
       border-collapse: collapse;
-      font-size: 1rem;
+      font-size: 1em;
     }
+
 
     table th {
       width: 25px;
-      height: 20px;
+      height: 28px;
       line-height: 20px;
       text-align: center;
       font-weight: normal;
@@ -125,6 +127,10 @@
 
       if (this.hasAttribute('data-timestamp')) {this.setTimeValues();}
 
+      if (this.hasAttribute('data-size')) {
+        widget.className += " " + this.getAttribute('data-size');
+      }
+
       this.attributeChangedCallback();
 
       input.addEventListener('click', function() {
@@ -182,6 +188,10 @@
       var widget = this.shadowRoot.querySelector("#datepicker_widget");
       var time_input = document.createElement("fn-input-time");
       var selected_date = this.getSelectedDate();
+
+      if (this.hasAttribute('data-size')) {
+        time_input.setAttribute('data-size', this.getAttribute('data-size'));
+      }
 
       time_input.setAttribute('data-hours-value', selected_date.getHours());
       time_input.setAttribute('data-minutes-value', selected_date.getMinutes());
@@ -248,6 +258,7 @@
       var header_elem = document.createElement("tr");
       var cell_elem = document.createElement("td");
       cell_elem.colSpan = "7";
+      cell_elem.style.height = "25px";
 
       var month_title = document.createElement("b");
       month_title.className = "datepicker_title";

@@ -25,23 +25,33 @@
   fn-controls[type='primary-small'] /deep/ .controls_inner {
     margin-top: 5px;
     height: 76px;
+    overflow: visible;
+    background: #fff;
+  }
+
+  fn-controls[type='primary'][data-style="blue"] /deep/ .controls_inner {
     border-top: 2px solid rgb(226, 232, 237);
     border-bottom: 2px solid rgb(226, 232, 237);
     background-color: #f6f8fa;
     color: #60707f;
-    overflow: visible;
   }
 
   fn-controls[type='primary-small'] /deep/ .controls_inner {
-    height: 22px;
-    padding: 10px 0;
+    height: 65px;
+    padding: 0;
+    margin-top: 0;
   }
+
 
   fn-controls[type='primary']  /deep/ .group,
   fn-controls[type='primary-small']  /deep/ .group {
     float: left;
     padding: 14px 20px 0 20px;
     overflow: visible;
+  }
+
+  fn-controls[type='primary-small']  /deep/ .group {
+    padding: 7px 8px;
   }
 
   fn-controls[type='primary']  /deep/ .group b {

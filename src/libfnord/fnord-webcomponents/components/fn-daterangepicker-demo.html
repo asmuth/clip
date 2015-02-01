@@ -17,13 +17,32 @@
 
   <section>
     <h1>Daterangepicker with restricted date selection</h1>
-    <h3><i>Example 1 &raquo;</i> Past</h3>
+    <h3><i>Example 2 &raquo;</i> Past</h3>
     <fn-daterangepicker data-selectable='past'></fn-daterangepicker>
-    <h3><i>Example 2 &raquo;</i> Future</h3>
+    <h3><i>Example 3 &raquo;</i> Future</h3>
     <fn-daterangepicker data-selectable='future'></fn-daterangepicker>
-
+  </section>
+  <section>
+    <h1><i>Example 4 &raquo;</i> Sizes</h1>
+    <fn-daterangepicker data-size="small"></fn-daterangepicker>
+  </section>
+  <section>
+    <h3><i>Example 5 &raquo;</i> Combined with fn-tooltip</h3>
+    <fn-daterangepicker id="picker_with_tooltip" data-selectable="past"></fn-daterangepicker>
+    <fn-tooltip id="tooltip_for_picker">
+      Please select a date in the past
+    </fn-tooltip>
   </section>
 
 
+  <script type='text/javascript'>
+    var picker = document.getElementById("picker_with_tooltip");
+    var chevron_right = picker.shadowRoot.getElementById("right");
+    var tooltip = document.getElementById("tooltip_for_picker");
+
+    tooltip.initShowIf(chevron_right, function() {
+      return (!(picker.nextIsSelectable()));
+    });
+  </script>
 
 </template>

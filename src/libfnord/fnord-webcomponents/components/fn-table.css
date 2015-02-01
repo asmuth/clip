@@ -8,7 +8,8 @@
 fn-table /deep/ table {
   width: 100%;
   background: #ffffff;
-  margin: 1em 0em;
+  /*margin: 1em 0em;*/
+  margin-top: 0em;
   border: 1px solid #d0d0d0;
   box-shadow: none;
   border-radius: 0.25rem;

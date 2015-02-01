@@ -20,14 +20,22 @@
   <style type='text/css'>
     .wrapper {
       font-family: 'Helvetica Neue',Arial,Helvetica,sans-serif;
-      font-size: 14px;
+      font-size: 1rem;
       height: 100%;
+    }
+
+    .wrapper.tiny {
+      font-size: 0.8125rem;
+    }
+
+    .wrapper.small {
+      font-size: 0.875rem;
     }
 
     .fa {
       color: rgb(84, 87, 88);
-      font: normal normal normal 14px/1 FontAwesome;
-      font-size: inherit;
+      font-family: FontAwesome;
+      font-size: 0.9em;
       text-rendering: auto;
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
@@ -35,25 +43,36 @@
 
     .fa-chevron-left {
       border-right: 1px solid #ececec;
-      margin-right: 5px;
-      padding-right: 15px;
+      padding-right: 12px;
     }
 
     .fa-chevron-right {
       border-left: 1px solid #ececec;
-      margin-left: 5px;
-      padding-left: 15px;
+      padding-left: 12px;
     }
 
-    .fa:hover {
+    .wrapper.small .fa-chevron-right {
+      padding-left: 6px;
+    }
+
+    .wrapper.small .fa-chevron-left {
+      padding-right: 6px;
+    }
+
+    .wrapper.small span {
+      padding: 0 3px;
+    }
+
+
+    .fa:not(.off):hover {
       color: #009fe9;
       cursor: pointer;
     }
 
     span {
-      font-size: inherit;
+      font-size: 1em;
       color: rgba(0,0,0,.8);
-      padding: 0 10px;
+      padding: 0 7px;
       font-weight: 500;
       line-height: 24px;
       display: inline-block;
@@ -63,9 +82,9 @@
 
   </style>
   <div class="wrapper">
-    <i class='fa fa-chevron-left'></i>
+    <i class='fa fa-chevron-left' id="left"></i>
     <span></span>
-    <i class='fa fa-chevron-right'></i>
+    <i class='fa fa-chevron-right' id="right"></i>
   </div>
 </template>
 
@@ -80,19 +99,33 @@
 
       this.init();
 
-      this.shadowRoot.querySelector(".fa-chevron-left").addEventListener(
-        'click',
-        function() {
-          base.selectPreviousDateRange();
-        },
-        false);
+      if (this.hasAttribute('data-size')) {
+        this.shadowRoot.querySelector(".wrapper").className += 
+          " " + this.getAttribute('data-size');
+      }
 
-      this.shadowRoot.querySelector(".fa-chevron-right").addEventListener(
-        'click',
-        function() {
+      var chevron_left = this.shadowRoot.querySelector(".fa-chevron-left");
+      var chevron_right = this.shadowRoot.querySelector(".fa-chevron-right");
+
+      chevron_left.addEventListener('click', function() {
+        if (!(this.classList.contains("off"))) {
+          base.selectPreviousDateRange();
+        }
+      }, false);
+
+      chevron_left.addEventListener('mouseover', function() {
+        base.hoverChevronLeft(this);
+      }, false);
+
+      chevron_right.addEventListener('click', function() {
+        if (!(this.classList.contains("off"))) {
           base.selectNextDateRange();
-        },
-        false);
+        }
+      }, false);
+
+      chevron_right.addEventListener('mouseover', function() {
+        base.hoverChevronRight(this);
+      }, false);
 
     };
 
@@ -146,7 +179,6 @@
     this.updateDateTitle = function() {
       var timestamp = parseInt(this.getAttribute('data-endtime'), 10);
       var date_range = parseInt(this.getAttribute('data-daterange'), 10);
-      console.log(timestamp, date_range);
       var start_timestamp = timestamp - date_range;
 
       var title = this.shadowRoot.querySelector("span");
@@ -156,52 +188,64 @@
         this.getDateTimeString(timestamp);
     };
 
-    this.selectPreviousDateRange = function() {
+    this.previousIsSelectable = function() {
       var date_range = parseInt(this.getAttribute('data-daterange'), 10);
       var end_time = parseInt(this.getAttribute('data-endtime'), 10);
       end_time = end_time - date_range;
-
-      var fireEvent = false;
       var selectable = this.getAttribute('data-selectable');
-      if (selectable == "past") {
-        if (end_time <= Date.now()) {
-          fireEvent = true;
-        }
-      } else if (selectable == "future") {
-        if (end_time >= Date.now()) {
-          fireEvent = true;
-        }
-      } else {
-        fireEvent = true;
-      }
 
-      if (fireEvent) {
-        this.setAttribute('data-endtime', end_time);
+
+      return (
+        (selectable == null) ||
+        (selectable == "past" && end_time <= Date.now()) ||
+        (selectable == "future" && end_time >= Date.now()));
+    }
+
+    this.nextIsSelectable = function() {
+      var date_range = parseInt(this.getAttribute('data-daterange'), 10);
+      var end_time = parseInt(this.getAttribute('data-endtime'), 10);
+      end_time = end_time + date_range;
+
+      var selectable = this.getAttribute('data-selectable');
+
+      return (
+        (selectable == null) ||
+        (selectable == "past" && end_time <= Date.now()) ||
+        (selectable == "future" && end_time >= Date.now()));
+    }
+
+    this.hoverChevronLeft = function(elem) {
+      if (this.previousIsSelectable()) {
+        elem.classList.remove("off");
+      } else {
+        elem.classList.add("off");
+      }
+    };
+
+    this.hoverChevronRight = function(elem) {
+      if (this.nextIsSelectable()) {
+        elem.classList.remove("off");
+      } else {
+        elem.classList.add("off");
+      }
+    };
+
+    this.selectPreviousDateRange = function() {
+      if (this.previousIsSelectable()) {
+        this.setAttribute(
+          'data-endtime',
+          parseInt(this.getAttribute('data-endtime'), 10) -
+          parseInt(this.getAttribute('data-daterange'), 10));
         this.fireSelectPreviousDateRangeEvent();
       }
     };
 
     this.selectNextDateRange = function() {
-      var date_range = parseInt(this.getAttribute('data-daterange'), 10);
-      var end_time = parseInt(this.getAttribute('data-endtime'), 10);
-      end_time = end_time + date_range;
-
-      var fireEvent = false;
-      var selectable = this.getAttribute('data-selectable');
-      if (selectable == "past") {
-        if (end_time <= Date.now()) {
-          fireEvent = true;
-        }
-      } else if (selectable == "future") {
-        if (end_time >= Date.now()) {
-          fireEvent = true;
-        }
-      } else {
-        fireEvent = true;
-      }
-
-      if (fireEvent) {
-        this.setAttribute('data-endtime', end_time);
+      if (this.nextIsSelectable()) {
+        this.setAttribute(
+          'data-endtime',
+          parseInt(this.getAttribute('data-endtime'), 10) +
+          parseInt(this.getAttribute('data-daterange'), 10));
         this.fireSelectNextDateRangeEvent();
       }
     };
