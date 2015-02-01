@@ -22,6 +22,9 @@ namespace metric_service {
 
 class MetricService {
 public:
+
+  static MetricService newWithBackend(IMetricRepository* backend);
+
   static MetricService newWithInMemoryBackend();
 
   static MetricService newWithDiskBackend(

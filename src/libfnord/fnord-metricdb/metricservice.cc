@@ -15,19 +15,19 @@ namespace fnord {
 namespace metric_service {
 
 MetricService MetricService::newWithInMemoryBackend() {
-  std::unique_ptr<IMetricRepository> metric_repo(
-      new inmemory_backend::MetricRepository());
-
-  return MetricService(std::move(metric_repo));
+  return newWithBackend(new inmemory_backend::MetricRepository());
 }
 
 MetricService MetricService::newWithDiskBackend(
     const std::string& datadir_path,
     fnord::TaskScheduler* scheduler) {
-  std::unique_ptr<IMetricRepository> metric_repo(
+  return newWithBackend(
       new disk_backend::MetricRepository(datadir_path, scheduler));
+}
 
-  return MetricService(std::move(metric_repo));
+MetricService MetricService::newWithBackend(IMetricRepository* metric_repo) {
+  return MetricService(
+      std::move(std::unique_ptr<IMetricRepository>(metric_repo)));
 }
 
 MetricService::MetricService(

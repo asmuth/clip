@@ -9,11 +9,13 @@
  */
 #ifndef _FNORDMETRIC_CRATEBACKEND_H
 #define _FNORDMETRIC_CRATEBACKEND_H
+#include <fnord-metricdb/backends/crate/crateconnection.h>
 #include <fnordmetric/sql/backends/backend.h>
-#include <fnordmetric/sql/backends/crate/crateconnection.h>
 
 #include <mutex>
 #include <vector>
+
+using fnord::metric_service::crate_backend::CrateConnection;
 
 namespace fnordmetric {
 namespace query {
@@ -26,7 +28,7 @@ public:
 
   bool openTables(
       const std::vector<std::string>& table_names,
-      const util::URI& source_uri,
+      const fnord::URI& source_uri,
       std::vector<std::unique_ptr<TableRef>>* target) override;
 
 protected:

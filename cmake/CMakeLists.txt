@@ -61,6 +61,8 @@ set(FNORDMETRIC_SOURCES
     ../src/fnordmetric/sql/backends/mysql/mysqltableref.cc
     ../src/fnordmetric/sql/backends/metricservice/metrictableref.cc
     ../src/fnordmetric/sql/backends/metricservice/metrictablerepository.cc
+    ../src/fnordmetric/sql/backends/crate/cratebackend.cc
+    ../src/fnordmetric/sql/backends/crate/cratetableref.cc
     ../src/fnordmetric/sql/expressions/aggregate.cc
     ../src/fnordmetric/sql/expressions/boolean.cc
     ../src/fnordmetric/sql/expressions/datetime.cc

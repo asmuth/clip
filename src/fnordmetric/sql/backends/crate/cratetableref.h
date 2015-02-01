@@ -7,9 +7,10 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-
-#include <fnordmetric/sql/backends/crate/crateconnection.h>
+#include <fnord-metricdb/backends/crate/crateconnection.h>
 #include <fnordmetric/sql/backends/tableref.h>
+
+using fnord::metric_service::crate_backend::CrateConnection;
 
 namespace fnordmetric {
 namespace query {

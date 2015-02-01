@@ -7,48 +7,49 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-
-#include <fnordmetric/sql/backends/crate/crateconnection.h>
-#include <fnordmetric/environment.h>
-#include <curl/curl.h>
+#include <fnord-metricdb/backends/crate/crateconnection.h>
 
 #include <fstream>
 #include <sstream>
 #include <iostream>
 #include <functional>
 
-namespace fnordmetric {
-namespace query {
+using fnord::URI;
+
+namespace fnord {
+namespace metric_service {
 namespace crate_backend {
 
-static size_t WriteCallback(char *data, size_t size, size_t nmemb, std::string *buffer)
-{
-   int result = 0;
-   if (buffer != NULL) {
-     buffer->append(data, size * nmemb);
-     result = size * nmemb;
-   }
-   return result;
+static size_t WriteCallback(
+    char *data,
+    size_t size,
+    size_t nmemb,
+    std::string *buffer) {
+  int result = 0;
+  if (buffer != NULL) {
+    buffer->append(data, size * nmemb);
+    result = size * nmemb;
+  }
+
+  return result;
 }
 
-CrateConnection::CrateConnection(const util::URI& uri) : _uri(uri){
+CrateConnection::CrateConnection(const URI& uri) : _uri(uri){
 #ifdef FNORD_ENABLE_CRATE
    _url = "http://";
    _url.append(_uri.host());
    _url.append(":");
    _url.append(std::to_string(_uri.port()));
    _url.append("/_sql");
-   env()->logger()->printf(
-           "INFO",
-           "uri %s", _uri.toString().c_str());
+   fnord::logInfo("fnordmetric", "crate uri: $0", _uri.toString());
 #else
-   RAISE(kRuntimeError, "FnordMetric was compiled without libcurl or without rapidjson. Crate is not available");
+   RAISE(kRuntimeError, "FnordMetric was compiled without crate support");
 #endif
 }
 
 std::string CrateConnection::executeQuery(
     std::string query,
-    std::vector<SValue> args
+    std::vector<std::string> args
     ) const {
 #ifdef FNORD_ENABLE_CRATE
     rapidjson::Document json;
@@ -120,14 +121,14 @@ std::string CrateConnection::executeQuery(
     }
     return readBuffer;
 #else
-   RAISE(kRuntimeError, "FnordMetric was compiled without libcurl or without rapidjson. Crate is not available");
+   RAISE(kRuntimeError, "FnordMetric was compiled without crate support");
 #endif
 }
 
 void CrateConnection::executeQuery(
         std::string query,
-        std::vector<SValue> args,
-        std::function<bool (const rapidjson::Value&)> row_callback) const {
+        std::vector<std::string> args,
+        std::function<bool (const json::JSONObject&)> row_callback) const {
 #ifdef FNORD_ENABLE_CRATE
     std::string response = executeQuery(query, args);
     rapidjson::Document d;
@@ -142,15 +143,15 @@ void CrateConnection::executeQuery(
         }
     }
 #else
-   RAISE(kRuntimeError, "FnordMetric was compiled without libcurl or without rapidjson. Crate is not available");
+   RAISE(kRuntimeError, "FnordMetric was compiled without crate support");
 #endif
 }
 
 void CrateConnection::executeQuery(
         std::string query,
-        std::function<bool (const rapidjson::Value&)> row_callback) const {
+        std::function<bool (const json::JSONObject&)> row_callback) const {
 #ifdef FNORD_ENABLE_CRATE
-    std::vector<SValue> args;
+    std::vector<std::string> args;
     std::string response = executeQuery(query, args);
     rapidjson::Document d;
     d.Parse(response.c_str());
@@ -164,7 +165,7 @@ void CrateConnection::executeQuery(
         }
     }
 #else
-   RAISE(kRuntimeError, "FnordMetric was compiled without libcurl or without rapidjson. Crate is not available");
+   RAISE(kRuntimeError, "FnordMetric was compiled without crate support");
 #endif
 }
 
@@ -188,7 +189,7 @@ std::vector<std::vector<std::string>> CrateConnection::describeTable(const std::
   }
   return columns;
 #else
-   RAISE(kRuntimeError, "FnordMetric was compiled without libcurl or without rapidjson. Crate is not available");
+   RAISE(kRuntimeError, "FnordMetric was compiled without crate support");
 #endif
 }
 

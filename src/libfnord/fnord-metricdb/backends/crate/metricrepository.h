@@ -7,20 +7,20 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#include <fnordmetric/metricdb/backends/crate/metric.h>
-#include <fnordmetric/metricdb/metricrepository.h>
-#include <fnordmetric/sql/backends/crate/crateconnection.h>
+#include <fnord-metricdb/metricrepository.h>
+#include <fnord-metricdb/backends/crate/metric.h>
+#include <fnord-metricdb/backends/crate/crateconnection.h>
 
-namespace fnordmetric {
-namespace metricdb {
+namespace fnord {
+namespace metric_service {
 namespace crate_backend {
 
-class MetricRepository : public fnordmetric::metricdb::IMetricRepository {
+class MetricRepository : public IMetricRepository {
 public:
-    MetricRepository(std::string host);
+  MetricRepository(std::string host);
 protected:
-    Metric * createMetric(const std::string& key) override;
-    CrateConnection connection_;
+  Metric* createMetric(const std::string& key) override;
+  CrateConnection connection_;
 };
 
 }

@@ -7,45 +7,44 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-
 #ifndef _FNORDMETRIC_CRATEBACKEND_CRATECONNECTION_H
 #define _FNORDMETRIC_CRATEBACKEND_CRATECONNECTION_H
-#include <fnordmetric/util/uri.h>
 #include <functional>
-#include "rapidjson/document.h"
-#include "rapidjson/writer.h"
-#include "rapidjson/stringbuffer.h"
+#include <fnord-base/uri.h>
+#include <fnord-json/json.h>
 #include <fnordmetric/sql/svalue.h>
 
-namespace fnordmetric {
-namespace query {
+using namespace fnord;
+
+namespace fnord {
+namespace metric_service {
 namespace crate_backend {
 
 class CrateConnection {
 public:
 
-  CrateConnection(const util::URI& uri);
+  CrateConnection(const URI& uri);
 
-  void connect(const util::URI& uri);
+  void connect(const URI& uri);
 
-  std::vector<std::vector<std::string>> describeTable(const std::string& table_name);
+  std::vector<std::vector<std::string>> describeTable(
+      const std::string& table_name);
 
   std::string executeQuery(
       std::string query,
-      std::vector<SValue> args) const;
+      std::vector<std::string> args) const;
 
   void executeQuery(
       std::string query,
-      std::vector<SValue> args,
-      std::function<bool (const rapidjson::Value&)> row_callback) const;
+      std::vector<std::string> args,
+      std::function<bool (const json::JSONObject&)> row_callback) const;
 
   void executeQuery(
       std::string query,
-      std::function<bool (const rapidjson::Value&)> row_callback) const;
+      std::function<bool (const json::JSONObject&)> row_callback) const;
 
 private:
-
-  const util::URI& _uri;
+  const URI& _uri;
   std::string _url;
 };
 

@@ -30,6 +30,8 @@
 #include <fnord-json/jsonrpc.h>
 #include <fnord-metricdb/metricservice.h>
 #include <fnord-metricdb/httpapiservlet.h>
+#include <fnord-metricdb/httpapiservlet.h>
+#include <fnord-metricdb/backends/crate/metricrepository.h>
 #include "adminui.h"
 #include "environment.h"
 #include "chartsql/queryendpoint.h"
@@ -80,12 +82,13 @@ static MetricService makeMetricService(
            "the --crate_host flag must be set when using the crate backend");
      }
 
-    auto host = env()->flags()->getString("host");
+    auto crate_host = env()->flags()->getString("crate_host");
     fnord::logInfo(
         "fnordmetric",
-        "Opening crate backend at $0", host);
+        "Opening crate backend at $0", crate_host);
 
-    return new crate_backend::MetricRepository(host);
+    return MetricService::newWithBackend(
+        new fnord::metric_service::crate_backend::MetricRepository(crate_host));
   }
 
   RAISEF(kUsageError, "unknown backend type: $0", backend_type);

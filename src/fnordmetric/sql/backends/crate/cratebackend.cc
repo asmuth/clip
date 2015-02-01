@@ -7,12 +7,12 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-
 #include <fnordmetric/environment.h>
 #include <fnordmetric/sql/backends/crate/cratebackend.h>
 #include <fnordmetric/sql/backends/crate/cratetableref.h>
 #include <fnordmetric/sql/runtime/tablescan.h>
 #include <iostream>
+
 namespace fnordmetric {
 namespace query {
 namespace crate_backend {
@@ -24,7 +24,7 @@ CrateBackend* CrateBackend::singleton() {
 
 bool CrateBackend::openTables(
     const std::vector<std::string>& table_names,
-    const util::URI& source_uri,
+    const fnord::URI& source_uri,
     std::vector<std::unique_ptr<TableRef>>* target) {
     CrateConnection conn = CrateConnection(source_uri);
     for (const auto& tbl : table_names) {

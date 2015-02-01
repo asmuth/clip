@@ -7,20 +7,20 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-
+#ifndef _FNORD_METRICDB_BACKENDS_CRATE_METRIC_H_
+#define _FNORD_METRICDB_BACKENDS_CRATE_METRIC_H_
 #include <atomic>
 #include <mutex>
-#include <fnordmetric/metricdb/metric.h>
-#include <fnordmetric/sql/backends/crate/crateconnection.h>
+#include <fnord-metricdb/metric.h>
+#include <fnord-metricdb/backends/crate/crateconnection.h>
 
-namespace fnordmetric {
-namespace metricdb {
+namespace fnord {
+namespace metric_service {
 namespace crate_backend {
 
-using fnord::util::DateTime;
-using query::crate_backend::CrateConnection;
+using fnord::DateTime;
 
-class Metric : public fnordmetric::metricdb::IMetric {
+class Metric : public IMetric {
 public:
   Metric(const std::string& key, CrateConnection connection);
 
@@ -29,14 +29,12 @@ public:
       const DateTime& time_end,
       std::function<bool (Sample* sample)> callback) override;
 
+  Sample getSample() override;
+
   size_t totalBytes() const override;
   DateTime lastInsertTime() const override;
   std::set<std::string> labels() const override;
   bool hasLabel(const std::string& label) const override;
-  size_t count(
-    const DateTime& time_begin,
-    const DateTime& time_end
-  ) const;
 
 protected:
 
@@ -51,3 +49,4 @@ protected:
 }
 }
 }
+#endif
