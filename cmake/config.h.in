@@ -1,1 +1,2 @@
 #cmakedefine FNORD_ENABLE_MYSQL
+#cmakedefine FNORD_ENABLE_CRATE
