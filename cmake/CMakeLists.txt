@@ -85,12 +85,20 @@ set(FNORDMETRIC_SOURCES
     ../src/fnordmetric/sql/runtime/tablescan.cc
     ../src/fnordmetric/sql/svalue.cc)
 
+
+set_source_files_properties(assets PROPERTIES GENERATED true)
+add_custom_target(fnordmetric-assets COMMAND ASSETS_FILE=${CMAKE_BINARY_DIR}/fnordmetric-assets.cc ./assets.sh WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
+
 #add_executable(fnordmetric-cli ${FNORDMETRIC_SOURCES} ../src/fnordmetric/cli.cc)
 #target_link_libraries(fnordmetric-cli m)
 #target_link_libraries(fnordmetric-cli ${CMAKE_THREAD_LIBS_INIT})
 #install(TARGETS fnordmetric-cli DESTINATION bin)
 
-add_executable(fnordmetric-server ${FNORDMETRIC_SOURCES} ../src/fnordmetric/fnordmetric-server.cc)
+add_executable(fnordmetric-server
+    ${FNORDMETRIC_SOURCES}
+    ../src/fnordmetric/fnordmetric-server.cc
+    ${CMAKE_BINARY_DIR}/fnordmetric-assets.cc)
+add_dependencies(fnordmetric-server fnordmetric-assets)
 target_link_libraries(fnordmetric-server m)
 target_link_libraries(fnordmetric-server ${CMAKE_THREAD_LIBS_INIT})
 install(TARGETS fnordmetric-server DESTINATION bin)
