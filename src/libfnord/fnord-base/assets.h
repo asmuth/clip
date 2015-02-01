@@ -12,6 +12,7 @@
 #include <string>
 #include <unordered_map>
 #include <vector>
+#include <mutex>
 
 namespace fnord {
 
@@ -33,8 +34,16 @@ public:
   static std::string getAsset(const std::string& filename);
 
 protected:
-  static std::unordered_map<
-      std::string, std::pair<const unsigned char*, size_t>>* global_map();
+
+  struct AssetMap {
+    std::mutex mutex;
+    std::unordered_map<
+        std::string,
+        std::pair<const unsigned char*, size_t>> assets;
+  };
+
+  static AssetMap* globalMap();
+
 };
 
 } // namespace fnord

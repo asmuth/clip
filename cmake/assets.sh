@@ -2,9 +2,8 @@
 set -e
 source $(dirname $0)/../src/libfnord/fnord-base/assets.sh
 
-assets_init
-
-# fnord/3rdparty/codemirror.js
+fn_assets_init
+fn_assets_add "fnord/3rdparty/codemirror.js" "src/libfnord/fnord-webcomponents/3rdparty/codemirror.js" # 
 
 #(
 #  asset_uniq "fnordmetric_webui_fnordmetric_webui_css"

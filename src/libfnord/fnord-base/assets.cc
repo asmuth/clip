@@ -14,9 +14,10 @@
 
 namespace fnord {
 
-static std::unordered_map<
-    std::string, std::pair<const unsigned char*, size_t>> asset_lib;
-static std::mutex asset_lib_mutex;
+Assets::AssetMap* Assets::globalMap() {
+  static AssetMap map;
+  return &map;
+}
 
 Assets::AssetFile::AssetFile(
     const std::string& name,
@@ -29,8 +30,9 @@ void Assets::registerAsset(
     const std::string& filename,
     const unsigned char* data,
     size_t size) {
-  std::lock_guard<std::mutex> lock_holder(asset_lib_mutex);
-  asset_lib.emplace(filename, std::make_pair(data, size));
+  auto asset_map = Assets::globalMap();
+  std::lock_guard<std::mutex> lock_holder(asset_map->mutex);
+  asset_map->assets.emplace(filename, std::make_pair(data, size));
 }
 
 std::string Assets::getAsset(const std::string& filename) {
@@ -48,10 +50,11 @@ std::string Assets::getAsset(const std::string& filename) {
   }
 #endif
 
-  std::lock_guard<std::mutex> lock_holder(asset_lib_mutex);
-  const auto asset = asset_lib.find(filename);
+  auto asset_map = Assets::globalMap();
+  std::lock_guard<std::mutex> lock_holder(asset_map->mutex);
+  const auto asset = asset_map->assets.find(filename);
 
-  if (asset != asset_lib.end()) {
+  if (asset != asset_map->assets.end()) {
     const auto& data = asset->second;
     return std::string((const char*) data.first, data.second);
   }
