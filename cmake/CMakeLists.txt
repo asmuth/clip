@@ -86,7 +86,10 @@ set(FNORDMETRIC_SOURCES
     ../src/fnordmetric/sql/svalue.cc)
 
 set_source_files_properties(fnordmetric-assets PROPERTIES GENERATED true)
-add_custom_target(fnordmetric-assets COMMAND ASSETS_FILE=${CMAKE_BINARY_DIR}/fnordmetric-assets.cc ./cmake/assets.sh WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/..)
+
+add_custom_target(fnordmetric-assets
+    COMMAND ./src/libfnord/fnord-base/assets.sh ${CMAKE_BINARY_DIR}/fnordmetric-assets.cc < ./cmake/assets.txt
+    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/..)
 
 #add_executable(fnordmetric-cli ${FNORDMETRIC_SOURCES} ../src/fnordmetric/cli.cc)
 #target_link_libraries(fnordmetric-cli m)
