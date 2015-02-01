@@ -3,6 +3,7 @@ set -e
 source $(dirname $0)/../src/libfnord/fnord-base/assets.sh
 
 fn_assets_init
+fn_assets_add "fnord/fnord.js" "src/libfnord/fnord-webcomponents/fnord.js"
 fn_assets_add "fnord/3rdparty/codemirror.js" "src/libfnord/fnord-webcomponents/3rdparty/codemirror.js"
 fn_assets_add "fnord/3rdparty/fontawesome.woff" "src/libfnord/fnord-webcomponents/3rdparty/fontawesome.woff"
 fn_assets_add "fnord/3rdparty/fontawesome.css" "src/libfnord/fnord-webcomponents/3rdparty/fontawesome.css"
@@ -14,7 +15,6 @@ fn_assets_add "fnord/components/fn-tabbar.css" "src/libfnord/fnord-webcomponents
 fn_assets_add "fnord/components/fn-message.css" "src/libfnord/fnord-webcomponents/components/fn-message.css"
 fn_assets_add "fnord/components/fn-tooltip.css" "src/libfnord/fnord-webcomponents/components/fn-tooltip.css"
 fn_assets_add "fnord/themes/midnight-blue.css" "src/libfnord/fnord-webcomponents/themes/midnight-blue.css"
-fn_assets_add "fnord/fnord.js" "src/libfnord/fnord-webcomponents/fnord.js"
 fn_assets_add "fnord/components/fn-appbar.html" "src/libfnord/fnord-webcomponents/components/fn-appbar.html"
 fn_assets_add "fnord/components/fn-button.html" "src/libfnord/fnord-webcomponents/components/fn-button.html"
 fn_assets_add "fnord/components/fn-button-group.html" "src/libfnord/fnord-webcomponents/components/fn-button-group.html"
