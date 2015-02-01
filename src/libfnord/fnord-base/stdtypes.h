@@ -16,6 +16,7 @@
 #include <list>
 #include <memory>
 #include <mutex>
+#include <set>
 #include <stack>
 #include <string>
 #include <unordered_map>
@@ -34,6 +35,9 @@ using ScopedLock = std::unique_lock<T>;
 
 template <typename T>
 using Vector = std::vector<T>;
+
+template <typename T>
+using Set = std::set<T>;
 
 template <typename T>
 using List = std::list<T>;
