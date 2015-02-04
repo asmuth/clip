@@ -49,7 +49,7 @@
       font-size: 0.875rem;
     }
 
-    fn-input-time {
+    fn-timeinput {
       margin: 7px auto;
       display:block;
     }
@@ -62,7 +62,6 @@
       border-collapse: collapse;
       font-size: 1em;
     }
-
 
     table th {
       width: 25px;
@@ -139,7 +138,6 @@
 
           //timeInput is optional and set by data-time-select attribute
           if (base.hasAttribute('data-time-select')) {
-            console.log("render time input");
             base.renderTimeInput();
           }
 
@@ -148,6 +146,8 @@
           var selected_month = selected_date.getMonth();
 
           base.renderCalendar(selected_year, selected_month);
+        } else {
+          base.resetDatepicker();
         }
 
       }, false);
@@ -186,7 +186,7 @@
 
     this.renderTimeInput = function() {
       var widget = this.shadowRoot.querySelector("#datepicker_widget");
-      var time_input = document.createElement("fn-input-time");
+      var time_input = document.createElement("fn-timeinput");
       var selected_date = this.getSelectedDate();
 
       if (this.hasAttribute('data-size')) {
@@ -198,7 +198,7 @@
       widget.appendChild(time_input);
       var base = this;
 
-      time_input.addEventListener('fn-input-time-submit', function() {
+      time_input.addEventListener('fn-timeinput-submit', function() {
         base.onSelect();
       }, false);
     }
@@ -424,9 +424,9 @@
       var hours = "00";
       var minutes = "01";
       if (this.hasAttribute('data-time-select')) {
-        var time_input = this.shadowRoot.querySelector("fn-input-time");
-        hours = time_input.getAttribute('data-hours-value');
-        minutes = time_input.getAttribute('data-minutes-value');
+        var time_values = this.shadowRoot.querySelector("fn-timeinput").getValues();
+        hours = time_values.hours;
+        minutes = time_values.minutes;
       }
 
       /* fallback for time inputs */

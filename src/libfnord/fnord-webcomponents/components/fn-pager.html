@@ -90,11 +90,11 @@
 
     this.forElement = function(elem) {
       var page = elem.getAttribute('data-page');
-      page = (page == null)? 0 : parseInt(page, 10);
+      page = (page == null)? 1 : parseInt(page, 10);
       this.current_page = page;
 
       var end = elem.getNumberOfItems();
-      end = (end == null)? 0 : parseInt(end, 10);
+      end = (end == null)? 1 : parseInt(end, 10);
       this.end = end;
 
       var per_page = elem.getAttribute('data-per-page');
@@ -109,11 +109,11 @@
 
     this.init = function() {
       var page = this.getAttribute('data-current-page');
-      page = (page == null)? 0 : parseInt(page, 10);
+      page = (page == null)? 1 : parseInt(page, 10);
       this.current_page = page;
 
       var end = this.getAttribute('data-last-item');
-      end = (end == null)? 0 : parseInt(end, 10);
+      end = (end == null)? 1 : parseInt(end, 10);
       this.end = end;
 
       var per_page = this.getAttribute('data-per-page');
@@ -126,7 +126,7 @@
       var per_page = this.per_page;
       var end = this.end;
 
-      var start = (current_page) * per_page + 1;
+      var start = (current_page - 1) * per_page + 1;
       var current_end = start + per_page - 1;
 
       if (current_end > end) {
@@ -142,27 +142,27 @@
       var forward_tooltip = this.shadowRoot.querySelector(".forward");
       var base = this;
 
-      var pages = Math.ceil((this.end -1) / this.per_page);
+      var pages = Math.ceil(this.end / this.per_page);
 
       backward_tooltip.onclick = function() {
         var current_page = base.current_page;
         if (current_page > 0 || base.hasAttribute('data-circling')) {
-          var new_page = ((current_page + pages) % (pages + 1));
+          var new_page = ((current_page + pages) % pages);
           cb(new_page, caller);
-          base.current_page = new_page;
+          base.current_page = new_page + 1;
           base.renderTitle();
         }
       };
 
       forward_tooltip.onclick = function() {
         var current_page = base.current_page;
-        if (current_page < pages - 1) {
+        if (current_page < pages) {
           base.current_page = current_page + 1;
           base.renderTitle();
           cb(current_page, caller);
         } else {
           if (base.hasAttribute('data-circling')) {
-            base.current_page = 0;
+            base.current_page = 1;
             base.renderTitle();
             cb(0, caller);
           }
