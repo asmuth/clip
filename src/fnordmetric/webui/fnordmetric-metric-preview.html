@@ -29,7 +29,6 @@
       display: block;
     }
 
-
     .group.group_by fn-button[data-active='active'] {
       background: rgb(226, 232, 237);
     }
@@ -180,7 +179,7 @@
         </div>
         <div class='group date'>
           <b>End Time</b>
-          <fn-datepicker data-time-select data-selectable="past">
+          <fn-datepicker data-size="small" data-time-select data-selectable="past">
           </fn-datepicker>
         </div>
       </fnordmetric-controls-section>
@@ -211,7 +210,7 @@
       </div>
       <div class="result_pane" id="table">
         <fn-table data-per-page='25' data-page='0' style="width:100%;"></fn-table>
-        <fn-pager class='table' data-first-item='1' data-per-page='25' data-current-page='0' data-for data-circling></fn-pager>
+        <fn-pager class='table' data-first-item='1' data-per-page='25' data-for data-circling></fn-pager>
       </div>
     </fn-loader>
   </fn-loader>
