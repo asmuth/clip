@@ -22,7 +22,7 @@
       }, false);
 
       elem.addEventListener('mouseout', function() {
-        base.hide();
+        //base.hide();
       }, false);
     }
 
@@ -85,6 +85,8 @@
       if (position == "bottom") {
         var t_top = pos.height + scroll_y + 13;
         if (!(relative)) {t_top += pos.top - 5;}
+        console.log(t_top);
+        console.log(pos.top + pos.height);
         return t_top;
       }
 
