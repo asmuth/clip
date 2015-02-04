@@ -80,21 +80,17 @@
       var position = this.getAttribute('data-position');
       var pos = target.getBoundingClientRect();
       var relative = this.hasAttribute('data-relative');
-      var scroll_y = window.scrollY;
+      var scroll_x = window.scrollX;
 
       if (position == "bottom") {
-        var t_top = pos.height + scroll_y + 13;
-        if (!(relative)) {t_top += pos.top - 5;}
-        console.log(t_top);
-        console.log(pos.top + pos.height);
-        return t_top;
+        return pos.top + pos.height + scroll_x + 8;
       }
 
       if (position == "left" || position == "right") {
-        return pos.top + scroll_y;
+        return pos.top + scroll_x;
       }
 
-      return (pos.top - this.offsetHeight + scroll_y - 8);
+      return (pos.top - this.offsetHeight + scroll_x - 8);
     };
 
     this.hide = function() {
