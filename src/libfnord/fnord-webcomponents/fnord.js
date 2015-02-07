@@ -265,5 +265,8 @@ Fnord.isGenericParam = function(key) {
   return (genericParamKeys.indexOf(key) > -1);
 }
 
+Fnord.openUrl = function(url) {
+  alert("openurl is not defined!");
+}
 
 Fnord.ready();
