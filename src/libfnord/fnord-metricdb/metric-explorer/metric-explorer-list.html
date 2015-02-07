@@ -144,7 +144,7 @@
       var onSearchSubmit = (function(base) {
         return function(e) {
           var url = "search?q=" + encodeURIComponent(e.srcElement.getValue());
-          openUrl(url);
+          Fnord.openUrl(url);
         }
       })(this);
 
@@ -243,8 +243,7 @@
         "&aggr_fn=sum&&aggr_window=5&aggr_step=10&from=" + start +
         "&until=" + end +
         "&scale=0.8";
-      openUrl(raw_url, true)
-
+      Fnord.openUrl(raw_url);
     };
 
     this.renderServerError = function(text, statusCode) {

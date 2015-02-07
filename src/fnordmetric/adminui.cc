@@ -55,6 +55,7 @@ AdminUI::AdminUI(
   webui_bundle_.addComponent("fnord-metricdb/metric-explorer-list.html");
   webui_bundle_.addComponent("fnord-metricdb/metric-explorer-preview.html");
   webui_bundle_.addComponent("fnord-metricdb/metric-explorer-search.html");
+  webui_bundle_.addComponent("fnord-metricdb/metric-control.html");
   webui_bundle_.addComponent("fnord-metricdb/fn-metric-explorer.css");
   webui_bundle_.addComponent("fnordmetric/fnordmetric-app.html");
   webui_bundle_.addComponent("fnordmetric/fnordmetric-console.html");

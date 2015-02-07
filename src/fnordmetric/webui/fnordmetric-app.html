@@ -159,6 +159,11 @@
 
       document.querySelector("#app-loader").removeAttribute("data-loading");
     };
+
+    var self_ = this;
+    Fnord.openUrl = function(url) {
+      self_.openUrl.apply(self_, [url]);
+    }
   };
 
   window.addEventListener("fn-ready", function() {
