@@ -25,6 +25,7 @@ devserver: build-dbg
 	rm -rf .dev_assets
 	mkdir -p .dev_assets/fnord
 	ln -s ../../src/libfnord/fnord-webcomponents/components .dev_assets/fnord/components
+	ln -s ../src/libfnord/fnord-metricdb/metric-explorer .dev_assets/fnord-metricdb
 	ln -s ../../src/libfnord/fnord-webcomponents/3rdparty .dev_assets/fnord/3rdparty
 	ln -s ../../src/libfnord/fnord-webcomponents/themes .dev_assets/fnord/themes
 	ln -s ../../src/libfnord/fnord-webcomponents/fnord.js .dev_assets/fnord/fnord.js
