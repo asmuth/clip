@@ -13,7 +13,7 @@
     display: block;
   }
 
-  fn-dropdown[data-style="inline"] {
+  fn-dropdown[data-style~="inline"] {
     display: inline-block;
   }
 
@@ -81,7 +81,7 @@
       font-style: normal;
       text-align: center;
       width: auto;
-      margin: 0 0 0 1em;
+      margin: 0 0 0 0.5em;
     }
 
 
@@ -130,7 +130,7 @@
       border: none;
       height: auto;
       border-top: none;
-      line-height: 1.2em;
+      line-height: 1.2rem;
       color: rgba(0, 0, 0, 0.8);
       padding: 0.65rem 1.25rem !important;
       font-size: 1rem;
@@ -264,6 +264,27 @@
       box-shadow: 0px 4px 6px 0px rgba(0, 0, 0, 0.08);
     }
 
+    /*--------------
+      Sizes
+    ---------------*/
+    #dropdown_ui {
+      font-size: 1rem;
+    }
+
+    #dropdown_ui.small {
+      font-size: 0.875rem;
+    }
+
+    #dropdown_ui.small i.icon {
+      margin: 0 0 0 .2em;
+    }
+
+    #dropdown_ui.small ul#menu li.item {
+      font-size: 0.875rem;
+      line-height: 0.9rem;
+    }
+
+
      /*--------------
       Small Input like
     ---------------*/
@@ -271,14 +292,6 @@
       min-width: 130px;
       font-size: 0.9rem;
     }
-    #dropdown_ui.input.small ul#menu {
-      min-width: 130px;
-    }
-
-    #dropdown_ui.input.small ul#menu li.item {
-      font-size: 0.9rem;
-    }
-
 
     /*--------------
       Compact Input like
@@ -317,6 +330,11 @@
       margin-top: 0.25em;
       border-radius: 0.2857rem;
     }
+
+    #dropdown_ui.small.inline ul#menu{
+      margin-top: 0.18em;
+    }
+
 
     /*--------------
       Labeled
@@ -439,9 +457,6 @@
     #dropdown_ui[data-state='disabled'] li.item:hover {
       opacity: 0.8;
     }
-
-
-
   </style>
 
   <div id="dropdown_ui">

@@ -7,19 +7,7 @@
   the terms of the GNU General Public License v3.0. You should have received a
   copy of the GNU General Public License along with this program. If not, see
   <http://www.gnu.org/licenses/>
--->
-<style>
-  fn-tabbar /deep/ .outer {
-    height: 39px;
-    margin: 0px;
-    line-height: 39px;
-    border-bottom: 1px solid #dbdedf;
-    font-size: 90%;
-    padding: 0 20px;
-
-  }
-
-  fn-tab {
+    fn-tab {
     float:left;
     text-decoration: none;
     padding-right: 13px;
@@ -38,33 +26,65 @@
     background-color: rgb(226, 232, 237);
   }
 
-</style>
-
+-->
 <template id='fn-tabbar-base-tpl'>
-  <div class='outer'>
-    <div class='tabbar_inner'>
-      <content />
-    </div>
-  </div>
 </template>
 
 <script type='text/javascript'>
   var TabBarComponent = function() {
     this.createdCallback = function() {
-      var shadow = this.createShadowRoot();
-      var tpl = Fnord.getTemplate("fn-tabbar", "base");
-      shadow.appendChild(tpl);
 
+      var active_tab = this.querySelector("fn-tab[data-active='active']");
+
+      if (active_tab == null) {
+        var tabs = this.querySelectorAll("fn-tab");
+        if (tabs && tabs[0]) {
+          tabs[0].setAttribute('data-active', 'active');
+          active_tab = tabs[0];
+        }
+      }
+
+      if (this.hasAttribute('data-content-attached')) {
+        var index = active_tab.getAttribute('data-index');
+        this.setContent(index);
+      }
+      this.observeTabs();
+    };
+
+    this.setContent = function(index) {
+      var active_content = this.querySelector("fn-tab-content[data-active='active']");
+
+      if (active_content) {
+        active_content.removeAttribute('data-active');
+      }
+
+      var tab_content =
+        this.querySelector("fn-tab-content[data-index='" + index + "']");
+
+      if (tab_content) {
+        tab_content.setAttribute('data-active', 'active');
+      }
+    };
+
+    this.observeTabs = function() {
       var base = this;
       var tabs = this.querySelectorAll("fn-tab");
-      for (var i = 0; i <tabs.length; i++) {
+      for (var i = 0; i < tabs.length; i++) {
         tabs[i].addEventListener('click', function() {
           var current_tab = base.querySelector("fn-tab[data-active='active']");
           current_tab.removeAttribute("data-active");
           this.setAttribute("data-active", "active");
+
+          if (base.hasAttribute('data-content-attached')) {
+            var index = this.getAttribute('data-index');
+            if (index) {
+              base.setContent(index);
+            }
+          }
           base.fireClickTabEvent();
         }, false);
       }
+
     }
 
     this.fireClickTabEvent = function() {

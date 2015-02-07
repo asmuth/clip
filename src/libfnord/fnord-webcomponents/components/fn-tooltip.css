@@ -5,7 +5,7 @@
  */
 fn-tooltip {
   display: none;
-  position: absolute;
+  position: fixed;
   z-index: 900;
   border: 1px solid #cccccc;
   max-width: 250px;

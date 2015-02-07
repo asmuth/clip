@@ -1,0 +1,343 @@
+<!--
+  This file is part of the "FnordMetric" project
+    Copyright (c) 2014 Laura Schlimmer
+    Copyright (c) 2014 Paul Asmuth, Google Inc.
+
+  FnordMetric is free software: you can redistribute it and/or modify it under
+  the terms of the GNU General Public License v3.0. You should have received a
+  copy of the GNU General Public License along with this program. If not, see
+  <http://www.gnu.org/licenses/>.
+-->
+<template id="fn-calendar-base-tpl">
+  <style type='text/css'>
+    table {
+      border: 1px solid rgb(226, 232, 237);
+      border-radius: 3px;
+      font-size: 1rem;
+      line-height: 1rem;
+    }
+
+    table th {
+      padding: 6px;
+      line-height: 1.3em;
+      text-align: center;
+      font-weight: normal;
+      color: #60707f;
+    }
+
+    table td {
+      padding: 6px;
+      line-height: 1.3em;
+      text-align:center;
+      color: #60707f;
+      cursor: default;
+    }
+
+    table td.selectable{
+      color: #444;
+    }
+
+    table td.selectable:hover {
+      cursor: pointer;
+    }
+
+    table td.highlight {
+      background-color: #f6f8fa;
+    }
+
+    table td.highlight_border {
+      border: 1px solid rgb(226, 232, 237);
+    }
+
+    .fa {
+      color:  #60707f;
+      padding-left: 5px;
+      padding-right: 5px;
+    }
+
+    .fa:hover {
+      cursor:pointer;
+    }
+
+    /***********************
+      Sizes
+    ***********************/
+    table.small  {
+      font-size: 0.875rem;
+    }
+
+  </style>
+
+  <table>
+    <tr>
+      <th>Mo</th>
+      <th>Tu</th>
+      <th>We</th>
+      <th>Th</th>
+      <th>Fr</th>
+      <th>Sa</th>
+      <th>Su</th>
+    <tr>
+    <tr>
+      <td><i class='fa fa-chevron-left'></i></td>
+      <td colspan='5'>
+        <b id='month_header'></b>
+      </td>
+      <td><i class='fa fa-chevron-right'></i></td>
+    </tr>
+    <tr id='week0'></tr>
+    <tr id='week1'></tr>
+    <tr id='week2'></tr>
+    <tr id='week3'></tr>
+    <tr id='week4'></tr>
+    <tr id='week5'></tr>
+  </table>
+</template>
+<script type='text/javascript'>
+  var CalendarComponent = function() {
+    this.createdCallback = function() {
+      var shadow = this.createShadowRoot();
+      var tpl = Fnord.getTemplate("fn-calendar", "base");
+      shadow.appendChild(tpl);
+      this.init();
+    }
+
+    this.attributeChangedCallback = function(attr, old_val, new_val) {
+      switch (attr) {
+        case 'data-timestamp':
+          this.render(this.getTimeStamp());
+          break;
+        case 'data-style':
+          this.setStyle(new_val);
+          break;
+        default:
+          break;
+      }
+    };
+
+    this.init = function() {
+      this.render(this.getTimeStamp());
+
+      var style = this.getAttribute('data-style');
+      if (style) {
+        this.setStyle(style);
+      }
+
+      this.observeMonthSelectors();
+    };
+
+    this.observeMonthSelectors = function() {
+      var base = this;
+      this.shadowRoot.querySelector(".fa-chevron-left").onclick = function() {
+        base.render(base.getMonthTimeStamp(base.date.month - 1, base.date.year));
+      };
+
+      this.shadowRoot.querySelector(".fa-chevron-right").onclick = function() {
+        base.render(base.getMonthTimeStamp(base.date.month + 1, base.date.year));
+      };
+    }
+
+
+    this.getTimeStamp = function() {
+      //TODO add timezone
+      var timestamp = parseInt(this.getAttribute('data-timestamp'));
+      //1st January 2100
+      var thresholdSeconds = 4102444800;
+
+      if (isNaN(timestamp)) {
+        return Date.now();
+      }
+
+      if (timestamp < thresholdSeconds) {
+        return timestamp * 1000;
+      }
+
+      return timestamp;
+    };
+
+    this.getMonthTimeStamp = function(month, year) {
+      return (new Date(year, month).getTime());
+    }
+
+    this.getDateObject = function(timestamp) {
+      var date = new Date(timestamp);
+      var month = date.getMonth();
+      var year = date.getFullYear();
+      var num_days = this.daysInMonth(month + 1, year);
+      var first_day = new Date(year + "-" + (month + 1) + "-01").getDay();
+
+      return {
+        'date': date.getDate(),
+        'day' : date.getDay(),
+        'month' : month,
+        'year' : year,
+        'num_days' : num_days,
+        'first_day': first_day
+      }
+    };
+
+
+    this.daysInMonth = function(month, year) {
+      if (month == 2) {
+        return (28 + this.leapYearOffset());
+      }
+
+      return (31 - (month - 1) % 7 % 2);
+    };
+
+    this.leapYearOffset = function(year) {
+      if (((year % 4 == 0) && (year % 100 != 0)) || (year % 400 == 0)) {
+        return 1;
+      }
+
+      return 0;
+    };
+
+    this.setStyle = function(style) {
+      this.shadowRoot.querySelector("table").classList.add(style);
+    }
+
+    //updates the date object
+    this.render = function(timestamp) {
+      this.date = this.getDateObject(timestamp);
+      this.renderMonthHeader();
+      this.renderWeeks();
+    };
+
+    this.renderMonthHeader = function() {
+      var human_month = [
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December"
+      ];
+
+      this.shadowRoot.getElementById('month_header').innerHTML = 
+        human_month[this.date.month] + " " + this.date.year;
+    };
+
+    this.renderWeeks = function() {
+      var current_date = 1;
+
+      for (var week = 0; week < 6; week++) {
+        var tr_elem = this.shadowRoot.getElementById("week" + week);
+        tr_elem.innerHTML = "";
+
+        for (var day = 0; day < 7; day++) {
+          var td_elem = document.createElement("td");
+
+          if (this.isRenderable(day, week, current_date)) {
+
+            if (this.isSelectable(current_date)) {
+              td_elem.innerHTML = current_date;
+              td_elem.className = this.tdClassName(current_date);
+
+              this.handleDateLinks(td_elem, current_date);
+            } else {
+
+              td_elem.innerHTML = current_date;
+            }
+            current_date++;
+          }
+          tr_elem.appendChild(td_elem);
+        }
+      }
+    };
+
+    /**
+      * Checks if date is in month as every month has the same num of rows
+      * @day - day of the week (0-6)
+      * @week - number of week tr_elem (0-5)
+      * @date - date that is to be rendered (1-31)
+      */
+    this.isRenderable = function(day, week, date) {
+      if (week > 0 && week < 4) {
+        return true;
+      }
+
+      if (week == 0) {
+        if (this.date.first_day == 0) {
+          return false;
+        }
+        if (day < this.date.first_day) {
+          return false;
+        }
+        return true;
+      }
+
+      //week >= 4
+      if (date <= this.date.num_days) {
+        return true;
+      }
+      return false;
+    };
+
+    this.isSelectable = function(date) {
+      var now = this.getDateObject(Date.now());
+      var period = this.getAttribute('data-selectable');
+
+      if (period == "past") {
+        if (this.date.month == now.month) {
+          return date <= now.date;
+        }
+        return (this.date.year <= now.year && this.date.month < now.month);
+      }
+
+      if (period == "future") {
+        if (this.date.month == now.month) {
+          return date >= now.date;
+        }
+        return (this.date.year >= now.year && this.date.month > now.month);
+      }
+
+      return true;
+    };
+
+    this.tdClassName = function(date) {
+      var selected = this.getDateObject(this.getTimeStamp());
+      var now = this.getDateObject(Date.now());
+      var name = "selectable ";
+
+      /* date is today */
+      if (date == now.date && this.date.month == now.month && this.date.year == now.year) {
+        name += " highlight_border";
+      }
+      /* date is selected date */
+      if (date == selected.date &&
+          this.date.month == selected.month && 
+          this.date.year == selected.year) {
+            name += " highlight";
+      }
+      console.log(name);
+      return name;
+    };
+
+    this.handleDateLinks = function(td_elem, date) {
+      var base = this;
+      var month = this.date.month;
+      var year = this.date.year;
+
+      td_elem.onclick = function() {
+        base.fireDateSelectEvent(date, month, year);
+      };
+    };
+
+    this.fireDateSelectEvent = function(date, month, year) {
+      console.log("selected date", date, month, year);
+    }
+
+
+  };
+
+  window.addEventListener('fn-ready', function() {
+    Fnord.registerComponent('fn-calendar', CalendarComponent);
+  }, false);
+</script>

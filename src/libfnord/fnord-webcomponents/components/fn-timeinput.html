@@ -10,6 +10,11 @@
 
   todo: add seconds-selectable and render third input if attr is set
 -->
+<style type='text/css'>
+  fn-timeinput {
+    display:block;
+  }
+</style>
 <template id="fn-timeinput-base-tpl">
   <style>
     #timeinput_container {
@@ -20,14 +25,11 @@
 
     input {
       float: left;
-      width: 50px;
-      font-size: 1rem;
       outline: none;
       -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
       text-align: left;
       line-height: 1.2142em;
       font-family: "Helvetica Neue", "Helvetica", Arial;
-      padding: 0.60861em 1em;
       background: #ffffff;
       border: 1px solid rgba(0, 0, 0, 0.15);
       color: rgba(0, 0, 0, 0.8);
@@ -35,7 +37,6 @@
       -webkit-transition: background-color 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
               transition: background-color 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
       box-shadow: none;
-
     }
 
     input::-webkit-input-placeholder {
@@ -64,10 +65,6 @@
       box-shadow: none;
     }
 
-    input[data-size='small'] {
-      font-size: 0.875rem;
-    }
-
     input.error {
       background-color: #fff0f0;
       border-color: #dbb1b1;
@@ -75,13 +72,34 @@
       box-shadow: none;
     }
 
-
     b {
       line-height: 1.2142em;
       padding-top: 0.60861em;
       float:left;
       margin: 0 5px;
     }
+
+    /*********************
+        Sizes
+    *********************/
+    #timeinput_container input {
+      width: 50px;
+      font-size: 1rem;
+      padding: 0.60861em 1em;
+    }
+
+    #timeinput_container.small {
+      height: 30px;
+      width: 98px;
+    }
+
+    #timeinput_container.small input{
+      font-size: 0.875rem;
+      width: 20px;
+      padding: 0.5em 0.8em;
+    }
+
+
   </style>
 
   <div id="timeinput_container">
@@ -129,12 +147,18 @@
         this.setHoursValue(new_val);
         break;
 
+        case 'data-size':
+        this.setSize(new_val);
+        break;
 
         default:
         break;
       }
     }
 
+    this.setSize = function(size) {
+      this.shadowRoot.querySelector("#timeinput_container").classList.add(size);
+    }
 
     this.validateHoursInput = function() {
       var base = this;
@@ -244,8 +268,8 @@
           base.fireTimeInputSubmitEvent();
           return;
         }
-        if (!FnordMetric.util.isNavKey(e.keyCode) &&
-          !FnordMetric.util.isNumKey(e.keyCode)) {
+        if (!base.isNavKey(e.keyCode) &&
+          !base.isNumKey(e.keyCode)) {
             e.preventDefault();
         }
       }, false);
@@ -267,21 +291,21 @@
           base.fireTimeInputSubmitEvent();
           return;
         }
-        if (!FnordMetric.util.isNavKey(e.keyCode) &&
-          !FnordMetric.util.isNumKey(e.keyCode)) {
+        if (!base.isNavKey(e.keyCode) &&
+          !base.isNumKey(e.keyCode)) {
             e.preventDefault();
         }
       }, false);
     };
 
     this.setHoursValue = function(value) {
-      var input = this.shadowRoot.querySelector("#hours");
-      input.value = FnordMetric.util.appendLeadingZero(value);
+      this.shadowRoot.querySelector(
+        "#hours").value = this.appendLeadingZero(value);
     };
 
     this.setMinutesValue = function(value) {
-      var input = this.shadowRoot.querySelector("#minutes");
-      input.value = FnordMetric.util.appendLeadingZero(value);
+      this.shadowRoot.querySelector(
+        "#minutes").value = this.appendLeadingZero(value);
     };
 
     this.getValues = function() {

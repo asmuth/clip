@@ -18,7 +18,7 @@
     this.init = function(elem) {
       var base = this;
       elem.addEventListener('mouseover', function() {
-        base.show(this);
+          base.show(this);
       }, false);
 
       elem.addEventListener('mouseout', function() {
@@ -39,37 +39,59 @@
       }, false);
     }
 
+
     this.show = function(elem) {
       this.setAttribute('data-active', 'active');
+
+      this.style.left = this.getLeftValue(elem) + "px";
+      this.style.top = this.getTopValue(elem) + "px";
+
+    };
+
+    this.getLeftValue = function(target) {
+      var width = this.offsetWidth;
+      var target_width = target.offsetWidth;
+      var target_middle = Math.round(target_width / 2);
+      var pos = target.getBoundingClientRect();
+      var scroll_x = window.scrollX;
       var position = this.getAttribute('data-position');
-      var pos = elem.getBoundingClientRect();
+      var pointer_pos = this.getAttribute('data-pointer');
+
+      if (position == "right") {
+        return pos.left + target_width + 7;
+      }
+
+      if (position == "left") {
+        return pos.left - width - 7
+      }
+
+      if (pointer_pos == "right") {
+        return (pos.left - width + target_middle + 15);
+      }
+
+      if (pointer_pos == "center") {
+        return pos.left - ((width - target_width) / 2);
+      }
+
+      return (pos.left + target_middle - 15);
+    }
+
+    this.getTopValue = function(target) {
+      var position = this.getAttribute('data-position');
+      var pos = target.getBoundingClientRect();
       var relative = this.hasAttribute('data-relative');
-      var scroll_y = window.scrollY;
       var scroll_x = window.scrollX;
 
-      var left = (window.innerWidth - pos.left > this.offsetWidth) ? pos.left : window.innerWidth - elem.offsetWidth - this.offsetWidth;
-
-      switch (position) {
-        case 'bottom':
-          var t_top = pos.height + scroll_y + 13;
-          if (!(relative)) {t_top += pos.top - 5;}
-          this.style.top = t_top + "px";
-          this.style.left = pos.left + "px";
-          break;
-        case 'left':
-          this.style.top = pos.top + scroll_y + "px";
-          this.style.left = (pos.left - pos.width - 8) + "px";
-          break;
-        case 'right':
-          this.style.top = pos.top + scroll_y + "px";
-          this.style.left = (pos.left + pos.width + 8) + "px";
-          break;
-        default:
-          this.style.top = (pos.top - this.offsetHeight + scroll_y - 8) + "px";
-          this.style.left = left + "px";
-          break;
+      if (position == "bottom") {
+        return pos.top + pos.height + scroll_x + 8;
       }
-    }
+
+      if (position == "left" || position == "right") {
+        return pos.top + scroll_x;
+      }
+
+      return (pos.top - this.offsetHeight + scroll_x - 8);
+    };
 
     this.hide = function() {
       this.removeAttribute('data-active');
