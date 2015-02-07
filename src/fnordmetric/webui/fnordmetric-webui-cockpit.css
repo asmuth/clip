@@ -1,0 +1,68 @@
+body, html {
+  height: 100%;
+}
+
+fnordmetric-app,
+#fnordmetric-viewport {
+  display: block;
+  font-size: 95%;
+}
+
+h1.page_header {
+  margin: 0 0 0 20px;
+}
+
+.le_fnord {
+  display: none;
+}
+
+/* fn-appbar */
+fn-appbar /deep/ .appbar_outer {
+  background: #fff;
+  height: 32px;
+  border-bottom: 1px solid #e4e5e9;
+}
+
+fnordmetric-app fn-appbar /deep/ fn-appbar-section {
+  line-height: 32px;
+  padding: 0;
+  margin: 0;
+}
+
+fn-appbar fn-button fn-icon {
+  display: none;
+}
+
+fn-appbar fn-button {
+  color: #444;
+  font-weight: normal;
+  cursor: pointer;
+  font-size: 13px;
+  padding: 0 5px;
+}
+
+fn-appbar fn-button:hover {
+  background: transparent!important;
+  background-color: none!important;
+  border: none;
+}
+
+fn-metric-explorer-list .navigation,
+fn-metric-explorer-preview .navigation {
+  background: #f6f6f8;
+  height: 36px;
+  overflow: hidden;
+  padding: 0 14px;
+}
+
+fn-metric-explorer-list .navigation h1 {
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 38px;
+  margin: 0;
+}
+
+fn-metric-explorer-list fn-table /deep/ table {
+  border-left: none;
+  border-right: none;
+}
