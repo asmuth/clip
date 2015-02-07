@@ -42,7 +42,6 @@
 
     this.attributeChangedCallback = function(attr, old_val, new_val) {
       if (attr = 'data-url') {
-        console.log(new_val);
         this.loadMetricList();
       }
     };
@@ -61,7 +60,7 @@
 
       this.updateHeader(search_term);
 
-      var url = "/metrics?filter=" + search_term;
+      var url = "/metrics/list?filter=" + search_term;
 
       var base = this;
 

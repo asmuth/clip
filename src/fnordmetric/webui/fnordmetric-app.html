@@ -17,6 +17,14 @@
     position: relative;
   }
 
+  fn-appbar fn-search /deep/ ul {
+    margin: -8px 1px;
+  }
+
+  fn-flexbox-item.overflow {
+    overflow: visible;
+  }
+
 
 </style>
 
@@ -29,7 +37,7 @@
 
   <fn-loader id="app-loader" data-loading>
     <fn-flexbox>
-      <fn-flexbox-item data-height='fixed'>
+      <fn-flexbox-item class="overflow" data-height='fixed'>
         <fn-appbar>
           <div class="le_fnord">F</div>
 
@@ -94,7 +102,7 @@
         return function(e) {
           var term = e.srcElement.getValue();
           var res = [];
-          var url = "/metrics?filter=" + term;
+          var url = "/metrics/list?filter=" + term;
           Fnord.httpGet(url, function(r) {
             if (r.status == 200) {
               var json = JSON.parse(r.response);
@@ -151,6 +159,11 @@
 
       document.querySelector("#app-loader").removeAttribute("data-loading");
     };
+
+    var self_ = this;
+    Fnord.openUrl = function(url) {
+      self_.openUrl.apply(self_, [url]);
+    }
   };
 
   window.addEventListener("fn-ready", function() {

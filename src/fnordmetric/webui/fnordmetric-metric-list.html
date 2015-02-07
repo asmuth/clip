@@ -77,7 +77,7 @@
       var base = this;
       var app = document.querySelector("fnordmetric-app");
 
-      Fnord.httpGet("/metrics", function(r) {
+      Fnord.httpGet("/metrics/list", function(r) {
         if (r.status == 200) {
           var json = JSON.parse(r.response);
 

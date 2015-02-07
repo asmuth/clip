@@ -1,0 +1,652 @@
+<!--
+  This file is part of the "FnordMetric" project
+    Copyright (c) 2014 Laura Schlimmer
+    Copyright (c) 2014 Paul Asmuth, Google Inc.
+
+  FnordMetric is free software: you can redistribute it and/or modify it under
+  the terms of the GNU General Public License v3.0. You should have received a
+  copy of the GNU General Public License along with this program. If not, see
+  <http://www.gnu.org/licenses/>.
+-->
+<style type='text/css'>
+  fn-metric-control {
+    display:block;
+    width: 100%;
+    height: 70px;
+    background: #fff;
+  }
+</style>
+<template id="fn-metric-control-base-tpl">
+  <style type='text/css'>
+    .left {
+      float: left;
+    }
+
+    .right {
+      float:right;
+    }
+
+    .group {
+      height: 100%;
+      float: left;
+      padding: 8px 20px 10px 20px;
+    }
+
+    .right fn-button {
+      margin: 25px 20px 0 0;
+    }
+
+    .group.group_by {
+      display: none;
+    }
+
+    .group.group_by.active {
+      display: block;
+    }
+
+    .group.group_by fn-button[data-active='active'] {
+      background: rgb(226, 232, 237);
+    }
+
+    .group.group_by fn-button {
+      float: left;
+    }
+
+    .group.aggregation_time_window {
+      border-right: 1px solid rgb(226, 232, 237);
+    }
+
+    .group.aggregation_time_window fn-dropdown {
+      float:left;
+      margin-right: 20px;
+    }
+
+    .group.aggregation_time_window fn-dropdown:last-child {
+      margin-right: 0;
+    }
+
+    .group.aggregation_type {
+      border-right: 1px solid rgb(226, 232, 237);
+    }
+
+    .group b {
+      font-weight: normal;
+      font-size: 80%;
+      line-height: 12px;
+      font-weight: 500;
+      display: block;
+      margin-bottom: 6px;
+      opacity: 0.7;
+    }
+
+    .group.scale fn-input /deep/ input {
+      width: 40px;
+      padding: 0.67861em 0.8em !important;
+    }
+
+    fn-tooltip {
+      display: none;
+      position: absolute;
+      z-index: 900;
+      border: 1px solid #cccccc;
+      max-width: 250px;
+      background-color: #ffffff;
+      padding: 0.833em 1em;
+      font-weight: normal;
+      font-style: normal;
+      color: rgba(0, 0, 0, 0.8);
+      border-radius: 0.2857rem;
+      box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+      font-family: 'Helvetica Neue', Arial, Helvetica, sans-serif;
+      font-size: 12px;
+      line-height: 1.1em;
+      margin:0;
+    }
+
+    fn-tooltip:before {
+      position: absolute;
+      content: '';
+      width: 0.75em;
+      height: 0.75em;
+      background: #ffffff;
+      -webkit-transform: rotate(45deg);
+          -ms-transform: rotate(45deg);
+              transform: rotate(45deg);
+      z-index: 2;
+      box-shadow: 1px 1px 0px 0px #b3b3b3;
+    }
+
+    fn-tooltip[data-active] {
+      display: block;
+    }
+
+    fn-tooltip:before {
+      bottom: -0.325em;
+      left: 1em;
+      top: auto;
+      right: auto;
+      margin-left: 0em;
+    }
+
+    .metric {
+      float:left;
+      height: 70px;
+      width: 250px;
+    }
+
+    .metric > .view {
+      display: none;
+      min-width: 200px;
+      width: 100%;
+    }
+
+    .metric > .view.active {
+      display: block;
+    }
+
+
+    .metric > .view > h3 {
+      font-size: 1rem;
+      padding: 0;
+      margin: 18px 0 0 15px;
+      white-space: nowrap;
+      overflow: hidden;
+    }
+
+    .metric .view fn-search {
+      width: 235px;
+      margin: 7px 0 0 20px;
+      display: block;
+    }
+
+    .metric fn-search /deep/ .icon {
+      margin-top: 0.65em;
+    }
+
+    .metric fn-search /deep/ ul {
+      margin-top: 34px;
+    }
+
+    .metric .view .fa {
+      opacity: 0.7;
+      margin: 4px 0 0 4px;
+      font-size:0.9em;
+    }
+    .metric .view .fa:hover {
+      cursor: pointer;
+    }
+
+    fn-button {
+      cursor: pointer;
+      display: inline-block;
+      min-height: 1em;
+      outline: none;
+      border: none;
+      vertical-align: baseline;
+      color: rgba(0, 0, 0, 0.6);
+      font-family: 'Helvetica Neue', Arial, Helvetica, sans-serif;
+      background: transparent !important;
+      background-image: none;
+      font-weight: normal;
+      box-shadow: 0px 0px 0px 1px rgba(39, 41, 43, 0.15) inset;
+      margin: 0em 0.25em 0em 0em;
+      padding: 0.78571em 1.5em 0.78571em;
+      text-transform: none;
+      text-shadow: none;
+      font-weight: bold;
+      line-height: 1;
+      font-style: normal;
+      text-align: center;
+      font-size: 1rem;
+      text-decoration: none;
+      background-image: none;
+      border-radius: 0.2857rem;
+      -webkit-user-select: none;
+         -moz-user-select: none;
+          -ms-user-select: none;
+              user-select: none;
+      -webkit-transition: opacity 0.1s ease, background-color 0.1s ease, color 0.1s ease, box-shadow 0.1s ease, background 0.1s ease;
+              transition: opacity 0.1s ease, background-color 0.1s ease, color 0.1s ease, box-shadow 0.1s ease, background 0.1s ease;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    fn-button:hover {
+      background: #fafafa !important;
+      color: rgba(0, 0, 0, 0.8) !important;
+      box-shadow: 0px 0px 0px 1px rgba(39, 41, 43, 0.15) inset, 0px 0px 0px 0px rgba(39, 41, 43, 0.15) inset;
+    }
+
+    fn-button:focus {
+      background-color: '';
+      background-image: '';
+      box-shadow: 0px 0px 0px 1px transparent inset, 0px 0px 1px rgba(81, 167, 232, 0.8) inset, 0px 0px 3px 2px rgba(81, 167, 232, 0.8);
+      color: rgba(0, 0, 0, 0.8);
+    }
+
+    fn-button i {
+      display: inline-block;
+      opacity: 1;
+      margin: 0 .25rem 0 0;
+      width: 1.23em;
+      height: .9em;
+      font-family: Icons;
+      font-style: normal;
+      line-height: 1;
+      font-weight: 400;
+      text-decoration: inherit;
+      text-align: center;
+      speak: none;
+      font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      -webkit-backface-visibility: hidden;
+      backface-visibility: hidden;
+    }
+
+    fn-button[data-size='tiny'] {
+      font-size: 0.85714286rem;
+    }
+
+    /*******************************
+     Active
+    *******************************/
+    fn-button[data-state='active'],
+    .fn-button[data-state='active'] {
+      background: #fafafa !important;
+      color: rgba(0, 0, 0, 0.8) !important;
+      box-shadow: 0px 0px 0px 1px rgba(39, 41, 43, 0.15) inset, 0px 0px 0px 0px rgba(39, 41, 43, 0.15) inset;
+    }
+
+    fn-tooltip[data-pointer='right']:before {
+      bottom: -0.325em;
+      right: 1em;
+      top: auto;
+      left: auto;
+      margin-left: 0em;
+    }
+
+  </style>
+  <div class="left">
+    <div class="metric">
+      <div class="view" name="header">
+        <i class="fa fa-pencil-square-o" name="edit_btn"></i>
+        <h3 class="small"></h3>
+      </div>
+      <div class="view active" name="search">
+        <i class="fa fa-times" name="close_btn"></i>
+        <fn-search data-size="small" class="" data-placeholder="Search Metric...">
+          <fn-search-icon><i class="fa fa-search"></i></fn-search-icon>
+        </fn-search>
+      </div>
+    </div>
+    <div class='group aggregation_type'>
+      <b>Rollup</b>
+      <fn-dropdown id='rollup' data-style="input small">
+        <fn-dropdown-header>Sum</fn-dropdown-header>
+        <fn-dropdown-item data-value='value'>Value</fn-dropdown-item>
+        <fn-dropdown-item data-value='sum'>Sum</fn-dropdown-item>
+        <fn-dropdown-item data-value='min'>Min</fn-dropdown-item>
+        <fn-dropdown-item data-value='max'>Max</fn-dropdown-item>
+      </fn-dropdown>
+    </div>
+    <div class='group aggregation_time_window'>
+      <b>Time Window / Step</b>
+      <fn-dropdown id='time_window' data-style="input small">
+        <fn-dropdown-header>5 seconds</fn-dropdown-header>
+        <fn-dropdown-item data-value=1>1 second</fn-dropdown-item>
+        <fn-dropdown-item data-value=5>5 seconds</fn-dropdown-item>
+        <fn-dropdown-item data-value=10>10 seconds</fn-dropdown-item>
+        <fn-dropdown-item data-value=20>20 seconds</fn-dropdown-item>
+        <fn-dropdown-item data-value=30>30 seconds</fn-dropdown-item>
+        <fn-dropdown-item data-value=60>1 minute</fn-dropdown-item>
+        <fn-dropdown-item data-value=300>5 minutes</fn-dropdown-item>
+        <fn-dropdown-item data-value=900>15 minutes</fn-dropdown-item>
+        <fn-dropdown-item data-value=1800>30 minutes</fn-dropdown-item>
+        <fn-dropdown-item data-value=3600>1 hour</fn-dropdown-item>
+        <fn-dropdown-item data-value=7200>2 hours</fn-dropdown-item>
+        <fn-dropdown-item data-value=21600>6 hours</fn-dropdown-item>
+        <fn-dropdown-item data-value=43200>12 hours</fn-dropdown-item>
+        <fn-dropdown-item data-value=86400>24 hours</fn-dropdown-item>
+      </fn-dropdown>
+      <fn-dropdown id='time_step' data-style="input small">
+        <fn-dropdown-header>10 seconds</fn-dropdown-header>
+        <fn-dropdown-item data-value=1>1 second</fn-dropdown-item>
+        <fn-dropdown-item data-value=5>5 seconds</fn-dropdown-item>
+        <fn-dropdown-item data-value=10>10 seconds</fn-dropdown-item>
+        <fn-dropdown-item data-value=20>20 seconds</fn-dropdown-item>
+        <fn-dropdown-item data-value=30>30 seconds</fn-dropdown-item>
+        <fn-dropdown-item data-value=60>1 minute</fn-dropdown-item>
+        <fn-dropdown-item data-value=300>5 minutes</fn-dropdown-item>
+        <fn-dropdown-item data-value=900>15 minutes</fn-dropdown-item>
+        <fn-dropdown-item data-value=1800>30 minutes</fn-dropdown-item>
+        <fn-dropdown-item data-value=3600>1 hour</fn-dropdown-item>
+        <fn-dropdown-item data-value=7200>2 hours</fn-dropdown-item>
+        <fn-dropdown-item data-value=21600>6 hours</fn-dropdown-item>
+        <fn-dropdown-item data-value=43200>12 hours</fn-dropdown-item>
+        <fn-dropdown-item data-value=86400>24 hours</fn-dropdown-item>
+      </fn-dropdown>
+    </div>
+    <div class="group scale">
+      <b>Scale</b>
+      <fn-input id="scale_input" class="left" data-style="small" data-placeholder=0.8></fn-input>
+    </div>
+    <div class="group group_by">
+      <b>Group by</b>
+    </div>
+  </div>
+  <div class='right'>
+    <fn-button id="control_btn" data-size="tiny">
+      <i class="fa fa-times"></i>
+    </fn-button>
+  </div>
+  <fn-tooltip id='tooltip_aggr'>
+    There's no time-window aggregation for the current rollup
+  </fn-tooltip>
+  <fn-tooltip data-pointer='right' id="control_tooltip">
+  </fn-tooltip>
+</template>
+
+<script type='text/javascript'>
+  var MetricControlComponent = function() {
+    this.createdCallback = function() {
+      var tpl = Fnord.getTemplate("fn-metric-control", "base");
+      var shadow = this.createShadowRoot();
+      shadow.appendChild(tpl);
+
+      var state = this.getAttribute('data-state');
+
+      if (state == "initialised" && typeof this.params == 'object') {
+        this.init(true);
+      } else if (state == 'select-metrc') {
+        //new metric_control that hasn't been intialised yet
+        this.init(false)
+      }
+    };
+
+    this.attributeChangedCallback = function(attr, old_val, new_val) {
+      if (attr == "data-state") {
+        if (new_val == "initialised" && typeof this.params == 'object') {
+          return this.init(true);
+        }
+
+        if (new_val == "select-metric") {
+          this.init(false);
+        }
+      }
+    };
+
+    this.handleAggregationDisplay = function() {
+      var base = this;
+      var elems = [
+        this.shadowRoot.getElementById("time_window"),
+        this.shadowRoot.getElementById("time_step")
+      ];
+
+      elems.forEach(function(elem) {
+        if (base.params.aggr_fn == "value" ) {
+          elem.setAttribute('data-state', 'disabled');
+        } else {
+          elem.removeAttribute('data-state');
+        }
+      });
+    };
+
+    this.init = function(dataInitialised) {
+      if (!this.basicInit) {
+        this.basicInit = true;
+        this.setControlButton();
+        this.handleSelectMetricControls();
+      }
+
+      if (dataInitialised) {
+        this.handleControls();
+        this.handleAggregationDisplay();
+      }
+    };
+
+    this.columnsReloaded = function() {
+      if (this.params.columns.length > 0) {
+        this.handleGroupByControls();
+      }
+    };
+
+    this.setControlButton = function() {
+      if (this.getAttribute('data-index') == 0) {
+        this.setAddButton();
+      } else {
+        this.setRemoveButton();
+      }
+    };
+
+    this.setAddButton = function() {
+      var base = this;
+      var button = this.shadowRoot.getElementById('control_btn');
+      var tooltip = this.shadowRoot.getElementById("control_tooltip");
+      tooltip.innerHTML = "Add Metric";
+      tooltip.init(button);
+
+      button.querySelector("i").classList.add("fa-plus");
+      button.addEventListener('fn-button-click', function() {
+        base.setHeaderMetricView();
+        base.fireAddMetricEvent();
+      }, false);
+    };
+
+    this.setRemoveButton = function() {
+      var base = this;
+      var button = this.shadowRoot.getElementById('control_btn');
+      var tooltip = this.shadowRoot.getElementById("control_tooltip");
+      tooltip.innerHTML = "Remove Metric";
+      tooltip.init(button);
+
+      button.addEventListener('fn-button-click', function() {
+        base.fireRemoveMetricEvent();
+      }, false);
+    };
+
+    this.handleSelectMetricControls = function() {
+      var base = this;
+      var search = this.shadowRoot.querySelector(".metric .view fn-search");
+
+      this.shadowRoot.querySelector(
+        ".metric .view i[name='edit_btn']").onclick = function() {
+          base.toggleMetricView();
+        }
+
+      this.shadowRoot.querySelector(
+        ".metric .view i[name='close_btn']").onclick = function() {
+          base.toggleMetricView();
+        }
+
+      search.addEventListener('fn-search-autocomplete', function() {
+        var term = this.getValue();
+        var that = this;
+        var res = [];
+        var url = baseUrl + "/list?filter=" + term;
+        Fnord.httpGet(url, function(r) {
+          if (r.status == 200) {
+            var json = JSON.parse(r.response);
+            json.metrics.map(function(metric) {
+              res.push({query : metric.key});
+            });
+            that.autocomplete(term, res);
+          }
+        });
+      }, false);
+
+      search.addEventListener('fn-search-submit', function() {
+        if (base.getAttribute('data-state') == 'initialised') {
+          //change metric
+          base.params.name = this.getValue();
+          base.attributeChangedEvent("name");
+          base.setHeader();
+          base.setHeaderMetricView();
+        } else {
+          //select new metric
+          base.fireNewMetricEvent(this.getValue());
+        }
+
+      }, false);
+    };
+
+    this.toggleMetricView = function() {
+      this.shadowRoot.querySelector(
+        ".metric .view[name='header']").classList.toggle("active");
+
+      this.shadowRoot.querySelector(
+        ".metric .view[name='search']").classList.toggle("active");
+    };
+
+    this.setHeaderMetricView = function() {
+      this.shadowRoot.querySelector(
+        ".metric .view[name='search']").classList.remove("active");
+
+      this.shadowRoot.querySelector(
+        ".metric .view[name='header']").classList.add("active");
+    };
+
+    this.setHeader = function() {
+      this.shadowRoot.querySelector("h3").innerHTML = this.params.name;
+    };
+
+    this.handleControls = function() {
+      var base = this;
+      this.setHeader();
+      this.setHeaderMetricView();
+
+      var rollup = this.shadowRoot.getElementById("rollup");
+      rollup.setAttribute('data-preselected', this.params.aggr_fn);
+
+      var time_window = this.shadowRoot.getElementById("time_window");
+      time_window.setAttribute('data-preselected', this.params.aggr_window);
+
+      var time_step = this.shadowRoot.getElementById("time_step");
+      time_step.setAttribute('data-preselected', this.params.aggr_step);
+
+      var scale_input = this.shadowRoot.getElementById("scale_input");
+      scale_input.setAttribute('data-value', this.params.scale);
+      scale_input.setAttribute('data-placeholder', this.params.scale);
+
+      var tooltip_aggr = this.shadowRoot.getElementById("tooltip_aggr");
+      tooltip_aggr.initShowIf(time_window, function() {
+        return (time_window.getAttribute('data-state') == 'disabled');
+      });
+
+      tooltip_aggr.initShowIf(time_step, function() {
+        return (time_step.getAttribute('data-state') == 'disabled');
+      });
+
+      rollup.addEventListener("fn-dropdown-item-click", function(e) {
+        base.params.aggr_fn = e.srcElement.getAttribute('data-value');
+        base.handleAggregationDisplay();
+        base.attributeChangedEvent("aggr_fn");
+      }, false);
+
+      time_window.addEventListener("fn-dropdown-item-click", function(e) {
+        base.params.aggr_window = e.srcElement.getAttribute('data-value');
+        base.attributeChangedEvent("aggr_window");
+      }, false);
+
+      time_step.addEventListener("fn-dropdown-item-click", function(e) {
+        base.params.aggr_step = e.srcElement.getAttribute('data-value');
+        base.attributeChangedEvent("aggr_step");
+      }, false);
+
+      scale_input.addEventListener('fn-input-submit', function(e) {
+        base.params.scale = e.detail;
+        base.attributeChangedEvent("scale");
+      }, false);
+    };
+
+    this.splitColumns = function(columns) {
+      if (columns.length == 0) {return [];}
+
+      return columns.split(",");
+    };
+
+    this.addToCSV = function(csv, value) {
+      if (csv.length == 0) {return value;}
+      //value already included
+      if (csv.indexOf(value) > - 1) {return csv;}
+
+      return (csv += "," + value);
+    };
+
+    this.removeFromCSV = function(csv, value) {
+      if (csv == value || csv.length == 0) {return "";}
+
+      var regex = new RegExp("," + value);
+      return (csv.replace(regex, ""));
+    };
+
+    this.handleGroupByControls = function() {
+      var base = this;
+      var group_by_field = this.shadowRoot.querySelector(".group.group_by");
+      var columns = this.splitColumns(this.params.columns);
+      var group_by = this.splitColumns(this.params.group_by);
+
+      if (columns.length > 0 ) {
+        group_by_field.classList.add("active");
+      }
+
+      columns.map(function(c) {
+        var button = document.createElement("fn-button");
+        button.innerHTML = c;
+        button.setAttribute('data-value', c);
+        button.setAttribute('data-size', 'tiny');
+
+        if (group_by.indexOf(c) > -1) {
+          button.setAttribute("data-active", "active");
+        }
+
+        group_by_field.appendChild(button);
+        button.addEventListener("fn-button-click", function() {
+          var group_by_csv = base.params.group_by;
+          if (this.getAttribute("data-state") == "active") {
+            this.removeAttribute("data-state");
+            group_by_csv = base.removeFromCSV(group_by_csv, this.getAttribute('data-value'));
+          } else {
+            this.setAttribute("data-state", "active");
+            group_by_csv = base.addToCSV(group_by_csv, this.getAttribute('data-value'));
+          }
+          base.params.group_by = group_by_csv;
+          base.attributeChangedEvent("group_by");
+        });
+      });
+    };
+
+    this.fireNewMetricEvent = function(name) {
+      var metricEvent = new CustomEvent(
+        'fn-metric-control-new-metric', {
+          'detail': {'name': name},
+          bubbles: true,
+          cancelable: true
+        }
+      );
+
+      this.dispatchEvent(metricEvent);
+    };
+
+    this.fireAddMetricEvent = function() {
+      this.dispatchEvent(new Event('fn-metric-control-add-metric'));
+    };
+
+    this.fireRemoveMetricEvent = function() {
+      this.dispatchEvent(new Event('fn-metric-control-remove-metric'));
+    };
+
+    this.attributeChangedEvent = function(attr) {
+      var attrEvent = new CustomEvent(
+        'fn-metric-control-attr-changed', {
+        "detail" : {"key": attr},
+        bubbels: true,
+        cancelable: true
+      });
+
+      this.dispatchEvent(attrEvent);
+    };
+  };
+
+  window.addEventListener("fn-ready", function() {
+    Fnord.registerComponent("fn-metric-control", MetricControlComponent);
+  }, false);
+</script>

@@ -34,8 +34,6 @@
       margin-top: 10px;
     }
 
-
-
     .group {
       height: 100%;
       float: left;
@@ -128,8 +126,6 @@
       font-weight: 500;
       margin-bottom: 10px;
     }
-
-
   </style>
   <fn-loader>
     <div class="navigation">
@@ -317,7 +313,7 @@
     this.updateData = function(format) {
       var base = this;
       format = format ? format : "svg";
-      var url = baseUrl + "timeseries?" + this.buildQueryUrl(format);
+      var url = "/metrics/timeseries?" + this.buildQueryUrl(format);
 
       Fnord.httpGet(url, function(r) {
         if (r.status == 200) {
@@ -498,7 +494,7 @@
     };
 
     this.setMetricColumns = function(metric_control) {
-      var url = baseUrl + "list?filter=" + encodeURIComponent(metric_control.params.name);
+      var url = "/metrics/list?filter=" + encodeURIComponent(metric_control.params.name);
       metric_control.params.group_by = this.getMetricUrlParamOrDefault(
         "group_by", metric_control.params.index);
 
@@ -760,7 +756,7 @@
 
       embed_btn.addEventListener('fn-button-click', function() {
         modal.querySelector("span").innerHTML =
-          baseUrl + base.buildQueryUrl(base.getAttribute('data-format'));
+          "/metrics/" + base.buildQueryUrl(base.getAttribute('data-format'));
         modal.show();
       }, false);
     };
