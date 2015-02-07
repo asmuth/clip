@@ -35,7 +35,7 @@
 
           <fn-appbar-section data-position="left" style="border-right: none;">
             <fn-button data-url="query">
-              <fn-icon data-icon="file"></fn-icon> New Query
+              <fn-icon data-icon="file"></fn-icon> ChartSQL
             </fn-button>
             <fn-button data-url="metrics">
               <fn-icon data-icon="database"></fn-icon> Metrics
@@ -64,9 +64,8 @@
   var FnordMetricAppComponent = function() {
     this.routes = {
       "console": "fnordmetric-console",
-      "metrics": "fnordmetric-metric-list",
-      "metric": "fnordmetric-metric-preview",
-      "search": "fnordmetric-metric-search",
+      "metrics": "fn-metric-explorer-list",
+      "metric": "fn-metric-explorer-preview",
       "query": "fnordmetric-query-editor"
     };
 
