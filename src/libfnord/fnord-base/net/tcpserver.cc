@@ -59,6 +59,12 @@ void TCPServer::listen(int port) {
     return;
   }
 
+  opt = 1;
+  if (setsockopt(ssock_, SOL_SOCKET, SO_REUSEPORT, &opt, sizeof(opt)) < 0) {
+    RAISE_ERRNO(kIOError, "setsockopt(SO_REUSEPORT) failed");
+    return;
+  }
+
   int flags = fcntl(ssock_, F_GETFL, 0);
   flags = flags | O_NONBLOCK;
 

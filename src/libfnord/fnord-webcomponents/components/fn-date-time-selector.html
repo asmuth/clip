@@ -1,0 +1,45 @@
+<!--
+  This file is part of the "FnordMetric" project
+    Copyright (c) 2014 Laura Schlimmer
+    Copyright (c) 2014 Paul Asmuth, Google Inc.
+
+  FnordMetric is free software: you can redistribute it and/or modify it under
+  the terms of the GNU General Public License v3.0. You should have received a
+  copy of the GNU General Public License along with this program. If not, see
+  <http://www.gnu.org/licenses/>.
+-->
+<template id='fn-date-time-selector-base-tpl'>
+  <style type='text/css'>
+  </style>
+
+  <div class="wrapper">
+    <i class="fa fa-chevron-left"></i>
+    <div id="range"></div>
+    <div id="until"></div>
+    <i class="fa fa-chevron-right"></i>
+  </div>
+</template>
+<script type='text/javascript'>
+  var DateTimeSelector = function() {
+    this.createdCallback = function() {
+      var shadow = this.createShadowRoot();
+      var tpl = Fnord.getTemplate('fn-date-time-selector', 'base');
+      shadow.appendChild(tpl);
+
+      if (this.getAttribute('data-resolved') == 'resolved') {
+        this.render();
+      }
+    }
+
+    this.render = function() {
+      var dropdown = this.querySelector("fn-dropdown");
+      console.log(dropdown);
+      this.shadowRoot.getElementById('range').appendChild(dropdown);
+    }
+
+  };
+
+  window.addEventListener('fn-ready', function() {
+    Fnord.registerComponent('fn-date-time-selector', DateTimeSelector);
+  }, false);
+</script>

@@ -1,31 +1,28 @@
 #/bin/bash
+# usage:
+#   echo "myasset.ext:/path/to/real/myasset.ext" | assets.sh output_asset_pack.cc
 set -e
 
-fn_assets_init() {
-  if [[ -z $ASSETS_FILE ]]; then
-    echo "ASSETS_FILE env var must be set"
-    exit 1
-  fi;
+ASSETS_FILE=$1
 
-  echo "#include <fnord-base/assets.h>" > $ASSETS_FILE
-}
+if [[ -z $ASSETS_FILE ]]; then
+  echo "usage: $0 [output_asset_pack.cc]"
+  exit 1
+fi;
 
-# $1 => asset logical/fake path
-# $2 => asset real path
-fn_assets_add() {
-  if [[ -z $ASSETS_FILE ]]; then
-    echo "ASSETS_FILE env var must be set"
-    exit 1
-  fi;
+echo "#include <fnord-base/assets.h>" > $ASSETS_FILE
 
-  uniq=$(echo $1 | sed -e 's/[^a-zA-Z0-9]/_/g')
+while read line; do
+  logical_path=$(echo $line | sed -e 's/:.*//')
+  real_path=$(echo $line | sed -e 's/.*://')
+  uniq=$(echo $logical_path | sed -e 's/[^a-zA-Z0-9]/_/g')
 
-  echo "Packing asset: $1"
+  echo "Packing asset: $logical_path"
 
   (
     echo "static const unsigned char __${uniq}_data[] = {"
-    (cat $2 | xxd -i)
+    (cat $real_path | xxd -i)
     echo "};"
-    echo "static fnord::Assets::AssetFile __${uniq}(\"$1\", __${uniq}_data, sizeof(__${uniq}_data));"
+    echo "static fnord::Assets::AssetFile __${uniq}(\"$logical_path\", __${uniq}_data, sizeof(__${uniq}_data));"
   ) >> $ASSETS_FILE
-}
+done

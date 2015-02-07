@@ -35,9 +35,11 @@ public:
 
 protected:
 
+  void wakeup();
+
   void poll();
   void setupRunQWakeupPipe();
-  void runQWakeup();
+  void onRunQWakeup();
   void appendToRunQ(std::function<void()> task);
 
   fd_set op_read_;
