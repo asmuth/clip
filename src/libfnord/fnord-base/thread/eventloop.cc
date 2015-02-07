@@ -54,7 +54,7 @@ void EventLoop::setupRunQWakeupPipe() {
     max_fd_ = runq_wakeup_pipe_[0];
   }
 
-  callbacks_[runq_wakeup_pipe_[0]] = std::bind(&EventLoop::runQWakeup, this);
+  callbacks_[runq_wakeup_pipe_[0]] = std::bind(&EventLoop::onRunQWakeup, this);
 }
 
 void EventLoop::run(std::function<void()> task) {
@@ -69,7 +69,7 @@ void EventLoop::appendToRunQ(std::function<void()> task) {
   std::unique_lock<std::mutex> lk(runq_mutex_);
   runq_.emplace_back(task);
   lk.unlock();
-  write(runq_wakeup_pipe_[1], "\x0", 1);
+  wakeup();
 }
 
 void EventLoop::runOnReadable(std::function<void()> task, int fd) {
@@ -154,6 +154,10 @@ void EventLoop::poll() {
   }
 }
 
+void EventLoop::wakeup() {
+  write(runq_wakeup_pipe_[1], "\x0", 1);
+}
+
 void EventLoop::runOnWakeup(
     std::function<void()> task,
     Wakeup* wakeup,
@@ -163,7 +167,7 @@ void EventLoop::runOnWakeup(
   });
 }
 
-void EventLoop::runQWakeup() {
+void EventLoop::onRunQWakeup() {
   FD_SET(runq_wakeup_pipe_[0], &op_read_);
 
   static char devnull[512];
@@ -190,6 +194,7 @@ void EventLoop::run() {
 
 void EventLoop::shutdown() {
   running_ = false;
+  wakeup();
 }
 
 }

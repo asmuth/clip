@@ -30,6 +30,14 @@ public:
     return data_;
   }
 
+  inline void* begin() const {
+    return data_;
+  }
+
+  inline void* end() const {
+    return ((char *) data_) + size_;
+  }
+
   inline void* ptr() const {
     return data_;
   }

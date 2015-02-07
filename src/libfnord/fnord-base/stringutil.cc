@@ -36,6 +36,12 @@ std::string StringUtil::toString(unsigned value) {
 }
 
 template <>
+std::string StringUtil::toString(unsigned short value) {
+  return std::to_string(value);
+}
+
+
+template <>
 std::string StringUtil::toString(long value) {
   return std::to_string(value);
 }
