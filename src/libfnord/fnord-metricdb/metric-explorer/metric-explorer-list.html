@@ -153,7 +153,7 @@
         return function(e) {
           var term = e.srcElement.getValue();
           var res = [];
-          var url = baseUrl + "/list?filter=" + term;
+          var url = "/metrics/list?filter=" + term;
           Fnord.httpGet(url, function(r) {
             if (r.status == 200) {
               var json = JSON.parse(r.response);
@@ -176,7 +176,7 @@
       var base = this;
       var loader = this.querySelector("fn-loader");
       var table = this.querySelector("fn-table table");
-      var url = baseUrl + "list" + url_query;
+      var url = "/metrics/list" + url_query;
 
       Fnord.httpGet(url, function(r) {
         if (r.status === 200) {
