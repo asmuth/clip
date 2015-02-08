@@ -146,7 +146,7 @@
         case 'data-style':
           this.setStyle(new_val);
           break;
-        case 'data-preselected':
+        case 'data-selected':
           this.render(this.getTimeStamp('data-timestamp'));
           break;
         default:
@@ -354,8 +354,8 @@
         name += " highlight_border";
       }
       /* date is selected date */
-      if (this.hasAttribute('data-preselected')) {
-        var selected = this.getDateObject(this.getTimeStamp('data-preselected'));
+      if (this.hasAttribute('data-selected')) {
+        var selected = this.getDateObject(this.getTimeStamp('data-selected'));
         if (date == selected.date &&
             this.date.month == selected.month && 
             this.date.year == selected.year) {

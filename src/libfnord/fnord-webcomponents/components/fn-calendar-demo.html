@@ -31,10 +31,10 @@
     <h1><i>Example 1 &raquo;</i> Preselected Dates</h1>
 
     <!-- Default Selection -->
-    <fn-calendar class="left" data-style='small' data-preselected></fn-calendar>
+    <fn-calendar class="left" data-style='small' data-selected></fn-calendar>
 
     <!-- Specified Selection -->
-    <fn-calendar class="left margin" data-style='small' data-preselected=1423958400></fn-calendar>
+    <fn-calendar class="left margin" data-style='small' data-selected=1423958400></fn-calendar>
   </section>
 
   <section>
@@ -48,7 +48,7 @@
 
   <script type='text/javascript'>
     var calendar = document.createElement("fn-calendar");
-    calendar.setAttribute('data-preselected', 1423008000);
+    calendar.setAttribute('data-selected', 1423008000);
     calendar.setAttribute('data-style', 'small');
     document.body.querySelector("#dynamic_calendar").appendChild(calendar);
 
@@ -76,7 +76,7 @@
     <fn-calendar class="left"></fn-calendar>
 
     <!-- Blue Small -->
-    <fn-calendar class="left margin" data-style='small blue' data-preselected=1423008000>
+    <fn-calendar class="left margin" data-style='small blue' data-selected=1423008000>
     </fn-calendar>
   </section>
 </template>
