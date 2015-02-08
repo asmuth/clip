@@ -40,6 +40,11 @@
       text-align: left;
     }
 
+    .wrapper .header:hover,
+    .wrapper .fa:hover {
+      cursor: pointer;
+    }
+
     .wrapper .header .text {
       font-weight: bold;
       display: inline-block;
@@ -96,6 +101,7 @@
       if (this.getAttribute('data-resolved') == 'resolved') {
         this.setPrecision();
         this.render();
+        this.observeActions();
       }
 
 
@@ -133,6 +139,28 @@
       calendar.setAttribute('data-selected', date.timestamp);
       calendar.setAttribute('data-timestamp', date.timestamp);
     };
+
+    this.observeActions = function() {
+      this.shadowRoot.querySelector(".fa-chevron-left").onclick = function() {
+        console.log("select prev");
+      };
+
+      this.shadowRoot.querySelector(".fa-chevron-right").onclick = function() {
+        console.log("select next");
+      };
+
+      this.shadowRoot.querySelector("fn-dropdown").addEventListener(
+        'fn-dropdown-item-click', function(e) {
+          console.log(this);
+          console.log(e.srcElement.getAttribute('data-value'));
+        },
+      false);
+
+      this.shadowRoot.querySelector(".header").onclick = function() {
+        console.log("open widget");
+      };
+
+    }
 
     this.setPrecision = function() {
       var precision = this.getAttribute('data-precision');
