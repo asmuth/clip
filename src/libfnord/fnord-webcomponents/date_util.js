@@ -27,7 +27,7 @@ DateUtil.getDateTimeDescr = function(date) {
 
   var descr =
     date.year + "-" +
-    DateUtil.appendLeadingZero(date.month) + "-" +
+    DateUtil.appendLeadingZero(date.month + 1) + "-" +
     DateUtil.appendLeadingZero(date.date);
 
   if (date.precision == 'date') {

@@ -196,6 +196,7 @@
     };
 
     this.openWidget = function() {
+      console.log("open widget");
       var widget = this.shadowRoot.querySelector(".widget");
       var pos = this.shadowRoot.querySelector(".wrapper").getBoundingClientRect();
 
@@ -203,6 +204,7 @@
         widget.style.marginTop = pos.height + 5 + "px";
       }
 
+      widget.setAttribute('data-selected', this.getAttribute('data-until'));
       widget.classList.add("active");
 
       //center widget relative to wrapper_elem
@@ -210,6 +212,7 @@
     }
 
     this.closeWidget = function() {
+      console.log("close function");
       this.shadowRoot.querySelector(".widget").classList.remove("active");
     }
 
@@ -253,12 +256,16 @@
 
       widget.onclick = function(e) {
         e.stopPropagation();
-      }
+      };
 
-      document.onclick = function() {
-        base.closeWidget();
-      }
-
+      widget.querySelector("fn-calendar").addEventListener('fn-calendar-select',
+        function(e) {
+          base.closeWidget();
+          base.setAttribute('data-until', e.detail.timestamp);
+          base.fireEvent(
+            'fn-date-time-selector-until', {"until" : e.detail.timestamp});
+        },
+      false);
 
     };
 
