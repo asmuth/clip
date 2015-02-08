@@ -16,7 +16,6 @@
 <template id="fn-calendar-base-tpl">
   <style type='text/css'>
     table {
-      border: 1px solid rgb(226, 232, 237);
       border-radius: 3px;
       font-size: 1rem;
       line-height: 1rem;
@@ -27,35 +26,23 @@
       line-height: 1.3em;
       text-align: center;
       font-weight: normal;
-      color: #60707f;
+      color: inherit;
     }
 
     table td {
       padding: 6px;
       line-height: 1.3em;
       text-align:center;
-      color: #60707f;
       cursor: default;
-    }
-
-    table td.selectable{
-      color: #444;
+      color: inherit;
     }
 
     table td.selectable:hover {
       cursor: pointer;
     }
 
-    table td.highlight {
-      background-color: #f6f8fa;
-    }
-
-    table td.highlight_border {
-      border: 1px solid rgb(226, 232, 237);
-    }
-
     .fa {
-      color:  #60707f;
+      color: inherit;
       padding-left: 5px;
       padding-right: 5px;
     }
@@ -71,6 +58,50 @@
       font-size: 0.875rem;
     }
 
+    /**********************
+      Colors
+    ***********************/
+    table {
+      border: 1px solid rgba(0, 0, 0, 0.1);
+      color: rgba(0, 0, 0, 0.8);
+    }
+
+    table tr.week td {
+     color: rgba(0, 0, 0, 0.6); 
+    }
+
+    table tr.week td.selectable {
+      color: rgba(0, 0, 0, 0.85);
+    }
+
+    table td.highlight {
+      background-color: #f0f0f0;
+    }
+
+    table td.highlight_border {
+      border: 1px solid rgba(0, 0, 0, 0.1);
+    }
+
+    table.blue {
+      border: 1px solid rgb(226, 232, 237);
+      color: #60707f;
+    }
+
+    table.blue tr.week td {
+      color: rgba(96, 112, 127, .7);
+    }
+
+    table.blue tr.week td.selectable {
+      color: rgba(96, 112, 127, 1);
+    }
+
+    table.blue td.highlight {
+      background-color: rgb(226, 232, 237);
+    }
+
+    table.blue td.highlight_border {
+      border: 1px solid rgb(226, 232, 237);
+    }
   </style>
 
   <table>
@@ -90,12 +121,12 @@
       </td>
       <td><i class='fa fa-chevron-right'></i></td>
     </tr>
-    <tr id='week0'></tr>
-    <tr id='week1'></tr>
-    <tr id='week2'></tr>
-    <tr id='week3'></tr>
-    <tr id='week4'></tr>
-    <tr id='week5'></tr>
+    <tr class="week" id='week0'></tr>
+    <tr class="week" id='week1'></tr>
+    <tr class="week" id='week2'></tr>
+    <tr class="week" id='week3'></tr>
+    <tr class="week" id='week4'></tr>
+    <tr class="week" id='week5'></tr>
   </table>
 </template>
 <script type='text/javascript'>

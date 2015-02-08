@@ -58,14 +58,25 @@
     }, false);
   </script>
 
+  <section class="floating">
+    <h1><i>Example 4 &raquo;</i> Defined Date Selection Ranges</h1>
+
+    <!-- Only Past Dates Are Selectable -->
+    <fn-calendar class="left" data-style='small' data-selectable='past'></fn-calendar>
+
+    <!-- Only Future Dates Are Selectable -->
+    <fn-calendar class="left margin" data-style='small blue' data-selectable='future'></fn-calendar>
+
+  </section>
+
   <section class="floating big">
     <h1><i>Example 4 &raquo;</i> Sizes and Themes</h1>
+
     <!-- Basic Default Size -->
     <fn-calendar class="left"></fn-calendar>
 
     <!-- Blue Small -->
-    <fn-calendar class="left margin" data-style='small blue'></fn-calendar>
-
-
+    <fn-calendar class="left margin" data-style='small blue' data-preselected=1423008000>
+    </fn-calendar>
   </section>
 </template>
