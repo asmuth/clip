@@ -167,7 +167,9 @@
       </div>
     </div>
 
-    <fn-metric-control data-index="0"></fn-metric-control>
+    <div class="metric-controls">
+      <fn-metric-control data-index="0"></fn-metric-control>
+    </div>
 
     <fn-loader id="result_pane_loader" data-loading data-resolved="data-resolved" data-transparent>
       <fn-message>
@@ -562,7 +564,6 @@
       var base = this;
       var controls = this.querySelectorAll("fn-metric-control");
       var new_control = document.createElement("fn-metric-control");
-      var ref_elem = this.querySelector("fn-controls[type='secondary']");
       var index = index;
 
       if (!index && controls) {
@@ -572,7 +573,8 @@
 
       new_control.setAttribute('data-state', 'select-metric');
       new_control.setAttribute('data-index', index);
-      ref_elem.parentNode.insertBefore(new_control, ref_elem);
+
+      this.querySelector(".metric-controls").appendChild(new_control);
 
       if (setEventListener) {
         new_control.addEventListener('fn-metric-control-new-metric', function(e) {
