@@ -22,12 +22,12 @@ h1.page_header {
 /* fn-appbar */
 fn-appbar /deep/ .appbar_outer {
   background: #fff;
-  height: 32px;
+  height: 30px;
   border-bottom: 1px solid #e4e5e9;
 }
 
 fnordmetric-app fn-appbar /deep/ fn-appbar-section {
-  line-height: 32px;
+  line-height: 30px;
   padding: 0;
   margin: 0;
 }
