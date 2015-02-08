@@ -274,4 +274,13 @@ Fnord.setUrlHash = function(url_hash) {
   window.location.hash = url_hash;
 }
 
+Fnord.appendLeadingZero = function (num) {
+  var num = num;
+  if (typeof num == 'string') {
+    return (num.length > 1)? num : "0" + num;
+  }
+  return (num > 9)? num : "0" + num;
+};
+
+
 Fnord.ready();

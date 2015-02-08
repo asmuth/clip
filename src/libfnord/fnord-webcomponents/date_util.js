@@ -19,14 +19,7 @@ DateUtil.millisPerMinute = DateUtil.millisPerSecond * DateUtil.secondsPerMinute;
 DateUtil.millisPerHour = DateUtil.secondsPerHour * DateUtil.millisPerSecond;
 DateUtil.millisPerDay = DateUtil.secondsPerDay * DateUtil.millisPerSecond;
 
-DateUtil.appendLeadingZero = function(num) {
-  if (typeof num == 'string') {
-    return (num.length > 1)? num : "0" + num;
-  }
-  return (num > 9)? num : "0" + num;
-}
-
- /**
+/**
   * @date DateObject as returned by DateUtil.getDateObject
   */
 DateUtil.getDateTimeDescr = function(date) {
@@ -36,24 +29,24 @@ DateUtil.getDateTimeDescr = function(date) {
 
   var descr =
     date.year + "-" +
-    DateUtil.appendLeadingZero(date.month + 1) + "-" +
-    DateUtil.appendLeadingZero(date.date);
+    Fnord.appendLeadingZero(date.month + 1) + "-" +
+    Fnord.appendLeadingZero(date.date);
 
   if (date.precision == 'date') {
     return descr;
   }
 
-  descr += " " + DateUtil.appendLeadingZero(date.hours);
+  descr += " " + Fnord.appendLeadingZero(date.hours);
   if (date.precision == 'hour') {
     return descr;
   }
 
-  descr += ":" + DateUtil.appendLeadingZero(date.minutes);
+  descr += ":" + Fnord.appendLeadingZero(date.minutes);
   if (date.precision == 'minute') {
     return descr;
   }
 
-  descr += ":" + DateUtil.appendLeadingZero(date.seconds);
+  descr += ":" + Fnord.appendLeadingZero(date.seconds);
   return descr;
 }
 
