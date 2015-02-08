@@ -49,7 +49,7 @@ AdminUI::AdminUI(
   webui_bundle_.addComponent("fnord/components/fn-pager.html");
   webui_bundle_.addComponent("fnord/components/fn-tooltip.html");
   webui_bundle_.addComponent("fnord/components/fn-flexbox.html");
-  webui_bundle_.addComponent("fnord/components/fn-tooltip.html");
+  webui_bundle_.addComponent("fnord/components/fn-date-time-selector.html");
   webui_bundle_.addComponent("fnord-metricdb/metric-explorer-list.html");
   webui_bundle_.addComponent("fnord-metricdb/metric-explorer-preview.html");
   webui_bundle_.addComponent("fnord-metricdb/metric-explorer-search.html");
