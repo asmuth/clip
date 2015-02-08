@@ -253,7 +253,7 @@
 
     this.update = function() {
       var url_hash = "#metric?" + this.buildQueryUrl();
-      setUrlHash(url_hash);
+      Fnord.setUrlHash(url_hash);
       this.updateData(this.getAttribute('data-format'));
     };
 
