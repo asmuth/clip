@@ -177,15 +177,16 @@
         <fn-dropdown-item data-value=43200>12 hours</fn-dropdown-item>
         <fn-dropdown-item data-value=86400>24 hours</fn-dropdown-item>
       </fn-dropdown>
-    </div>
 
-    <div class="group scale">
-      <b>Scale: </b>
-      <fn-input id="scale_input" class="left" data-style="small" data-placeholder=0.8></fn-input>
-    </div>
+      <b style="margin-left: 7px;">Scale: </b>
+      <fn-dropdown id="scale_input" data-style="inline small" data-placeholder=0.8>
+        <fn-dropdown-header>1.0</fn-dropdown-header>
+      </fn-dropdown>
 
-    <div class="group group_by">
-      <b>Group by: </b>
+      <b style="margin-left: 7px;">Group By: </b>
+      <fn-dropdown id="scale_input" data-style="inline small" data-placeholder=0.8>
+        <fn-dropdown-header>&nbsp;&mdash;&nbsp;</fn-dropdown-header>
+      </fn-dropdown>
     </div>
 
     <fn-button id="control_btn" data-size="tiny" style="float: right;">
