@@ -90,7 +90,23 @@ fn-metric-control /deep/ fn-dropdown /deep/ #dropdown_ui {
   font-size: 13px;
 }
 
-fn-metric-control /deep/ .metric-control {
+fn-metric-control /deep/ .metric-control .group b {
+  font-size: 13px;
+}
+
+fn-metric-control /deep/ fn-button {
+  border: none;
+  box-shadow: none;
+  line-height: 36px;
+  padding: 0 10px;
+  margin: 0;
+}
+
+fn-metric-control /deep/ fn-button:hover {
+  border-radius: 0;
+  border-top: none;
+  border-bottom: none;
+}
 
 fn-table /deep/ tr th {
   border-bottom: 1px solid #dee0e3;
