@@ -80,14 +80,6 @@
       display: block;
     }
 
-    .metric > .view > h3 {
-      font-size: 1rem;
-      padding: 0;
-      margin: 18px 0 0 15px;
-      white-space: nowrap;
-      overflow: hidden;
-    }
-
     .metric .view fn-search {
       width: 235px;
       margin: 7px 0 0 20px;
@@ -122,15 +114,8 @@
   </style>
   <div class="metric-control">
     <div class="metric">
-      <div class="view" name="header">
-        <i class="fa fa-pencil-square-o" name="edit_btn"></i>
+      <div class="view active" name="header">
         <h3 class="small"></h3>
-      </div>
-      <div class="view active" name="search">
-        <i class="fa fa-times" name="close_btn"></i>
-        <fn-search data-size="small" class="" data-placeholder="Search Metric...">
-          <fn-search-icon><i class="fa fa-search"></i></fn-search-icon>
-        </fn-search>
       </div>
     </div>
     <div class='metric-control-group'>
@@ -250,7 +235,6 @@
       if (!this.basicInit) {
         this.basicInit = true;
         this.setControlButton();
-        this.handleSelectMetricControls();
       }
 
       if (dataInitialised) {
@@ -278,7 +262,6 @@
       var button = this.querySelector('.control_btn');
       button.querySelector("i").classList.add("fa-plus");
       button.addEventListener('fn-button-click', function() {
-        base.setHeaderMetricView();
         base.fireAddMetricEvent();
       }, false);
     };
@@ -292,67 +275,6 @@
       }, false);
     };
 
-    this.handleSelectMetricControls = function() {
-      var base = this;
-      var search = this.querySelector(".metric .view fn-search");
-
-      this.querySelector(
-        ".metric .view i[name='edit_btn']").onclick = function() {
-          base.toggleMetricView();
-        }
-
-      this.querySelector(
-        ".metric .view i[name='close_btn']").onclick = function() {
-          base.toggleMetricView();
-        }
-
-      search.addEventListener('fn-search-autocomplete', function() {
-        var term = this.getValue();
-        var that = this;
-        var res = [];
-        var url = baseUrl + "/list?filter=" + term;
-        Fnord.httpGet(url, function(r) {
-          if (r.status == 200) {
-            var json = JSON.parse(r.response);
-            json.metrics.map(function(metric) {
-              res.push({query : metric.key});
-            });
-            that.autocomplete(term, res);
-          }
-        });
-      }, false);
-
-      search.addEventListener('fn-search-submit', function() {
-        if (base.getAttribute('data-state') == 'initialised') {
-          //change metric
-          base.params.name = this.getValue();
-          base.attributeChangedEvent("name");
-          base.setHeader();
-          base.setHeaderMetricView();
-        } else {
-          //select new metric
-          base.fireNewMetricEvent(this.getValue());
-        }
-
-      }, false);
-    };
-
-    this.toggleMetricView = function() {
-      this.querySelector(
-        ".metric .view[name='header']").classList.toggle("active");
-
-      this.querySelector(
-        ".metric .view[name='search']").classList.toggle("active");
-    };
-
-    this.setHeaderMetricView = function() {
-      this.querySelector(
-        ".metric .view[name='search']").classList.remove("active");
-
-      this.querySelector(
-        ".metric .view[name='header']").classList.add("active");
-    };
-
     this.setHeader = function() {
       this.querySelector("h3").innerHTML = this.params.name;
     };
@@ -360,7 +282,6 @@
     this.handleControls = function() {
       var base = this;
       this.setHeader();
-      this.setHeaderMetricView();
 
       var rollup = this.querySelector(".rollup");
       rollup.setAttribute('data-preselected', this.params.aggr_fn);
