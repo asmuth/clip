@@ -98,6 +98,7 @@
         this.render();
       }
 
+
     }
 
     this.attributeChangedCallback = function(attr, old_val, new_val) {
@@ -117,19 +118,18 @@
     this.render = function() {
       var dropdown = this.querySelector("fn-dropdown");
       var calendar = this.shadowRoot.querySelector("fn-calendar");
-
       var date_range = this.getAttribute('data-range');
-      var until = this.getTimeStamp('data-until');
-      until = until ? new Date(until) : new Date();
-      var date = this.getDateObject(until);
-
       date_range = date_range ? date_range : 900;
+      var until = new Date(this.getTimestamp('data-until'));
+      var date = DateUtil.getDateObject(until, this.precision);
+
 
       dropdown.setAttribute('data-preselected', date_range);
       this.shadowRoot.getElementById('range').appendChild(dropdown);
 
       this.shadowRoot.getElementById("endtime_descr").innerHTML =
-        this.getDateTimeDescr(date);
+        DateUtil.getDateTimeDescr(date);
+
       calendar.setAttribute('data-selected', date.timestamp);
       calendar.setAttribute('data-timestamp', date.timestamp);
     };
@@ -145,93 +145,8 @@
       }
     }
 
-    this.getTimeStamp = function(attr) {
-      //TODO add timezone
-      var timestamp = parseInt(this.getAttribute(attr));
-      //1st January 2100
-      var thresholdSeconds = 4102444800;
-
-      if (isNaN(timestamp)) {
-        return Date.now();
-      }
-
-      if (timestamp < thresholdSeconds) {
-        return timestamp * 1000;
-      }
-
-      return timestamp;
-    };
-
-    this.appendLeadingZero = function(num) {
-      if (typeof num == 'string') {
-        return (num.length > 1)? num : "0" + num;
-      }
-      return (num > 9)? num : "0" + num;
-    }
-
-    /**
-      * @date DateObject as returned by getDateObject
-      */
-    this.getDateTimeDescr = function(date) {
-      if (this.equalDatesForPrecision(new Date().getTime(), date.timestamp)) {
-        return "now"
-      }
-
-      return (
-        date.year + "-" + this.appendLeadingZero(date.month) + "-" +
-        this.appendLeadingZero(date.date) + " " +
-        this.appendLeadingZero(date.hours) + ":" +
-        this.appendLeadingZero(date.minutes)
-      );
-
-    }
-
-    /**
-      * @date Javascript Date instance
-      */
-    this.getDateObject = function(Date) {
-      var date = {
-        'timestamp' : Date.getTime(),
-        'year': Date.getFullYear(),
-        'month': Date.getMonth(),
-        'date' : Date.getDate(),
-        'hours' : Date.getHours()
-      }
-
-      if (this.precision == 'hour') {
-        return date;
-      }
-
-      if (this.precision == "minute") {
-        date.minutes = Date.getMinutes();
-        return date;
-      }
-
-      if (this.precision == "second") {
-        date.minutes = Date.getMinutes();
-        date.seconds = Date.getSeconds();
-        return date;
-      }
-    };
-
-    /**
-      * @ts = milliseconds timestamp
-      */
-    this.equalDatesForPrecision = function(ts1, ts2) {
-      if (this.precision == "hour") {
-        return (Math.ceil(ts1 / 360000) === Math.ceil(ts2 / 360000));
-      }
-
-      if (this.precision == "minute") {
-        return (Math.ceil(ts1 / 60000) === Math.ceil(ts2 / 60000));
-      }
-
-      if (this.precision == "second") {
-        console.log(Math.ceil(ts1 / 1000), Math.ceil(ts2 / 1000));
-        return (Math.ceil(ts1 / 1000) === Math.ceil(ts2 / 1000));
-      }
-
-      return false;
+    this.getTimestamp = function(attr) {
+      return DateUtil.parseTimestamp(this.getAttribute(attr));
     };
 
   };

@@ -174,76 +174,11 @@
       this.shadowRoot.querySelector(".fa-chevron-right").onclick = function() {
         base.render(base.getMonthTimeStamp(base.date.month + 1, base.date.year));
       };
-    }
-
-
-    this.getTimeStamp = function(attr) {
-      //TODO add timezone
-      var timestamp = parseInt(this.getAttribute(attr));
-      //1st January 2100
-      var thresholdSeconds = 4102444800;
-
-      if (isNaN(timestamp)) {
-        return Date.now();
-      }
-
-      if (timestamp < thresholdSeconds) {
-        return timestamp * 1000;
-      }
-
-      return timestamp;
-    };
-
-    this.getMonthTimeStamp = function(month, year) {
-      return (new Date(year, month).getTime());
-    }
-
-    this.getDateObject = function(timestamp) {
-      var date = new Date(timestamp);
-      var month = date.getMonth();
-      var year = date.getFullYear();
-      var num_days = this.daysInMonth(month + 1, year);
-      var first_day = new Date(year + "-" + (month + 1) + "-01").getDay();
-
-      return {
-        'date': date.getDate(),
-        'day' : date.getDay(),
-        'month' : month,
-        'year' : year,
-        'num_days' : num_days,
-        'first_day': first_day
-      }
-    };
-
-
-    this.daysInMonth = function(month, year) {
-      if (month == 2) {
-        return (28 + this.leapYearOffset());
-      }
-
-      return (31 - (month - 1) % 7 % 2);
-    };
-
-    this.leapYearOffset = function(year) {
-      if (((year % 4 == 0) && (year % 100 != 0)) || (year % 400 == 0)) {
-        return 1;
-      }
-
-      return 0;
-    };
-
-    this.setStyle = function(styleStr) {
-      var table = this.shadowRoot.querySelector("table");
-      var styles = styleStr.split(" ");
-
-      styles.forEach(function(style) {
-        table.classList.add(style);
-      });
     };
 
     //updates the date object
     this.render = function(timestamp) {
-      this.date = this.getDateObject(timestamp);
+      this.date = DateUtil.getDateObject(timestamp, 'date', true);
       this.renderMonthHeader();
       this.renderWeeks();
     };
@@ -296,6 +231,23 @@
       }
     };
 
+    this.getTimeStamp = function(attr) {
+      return DateUtil.parseTimestamp(this.getAttribute(attr));
+    };
+
+    this.getMonthTimeStamp = function(month, year) {
+      return (new Date(year, month).getTime());
+    };
+
+    this.setStyle = function(styleStr) {
+      var table = this.shadowRoot.querySelector("table");
+      var styles = styleStr.split(" ");
+
+      styles.forEach(function(style) {
+        table.classList.add(style);
+      });
+    };
+
     /**
       * Checks if date is in month as every month has the same num of rows
       * @day - day of the week (0-6)
@@ -325,7 +277,7 @@
     };
 
     this.isSelectable = function(date) {
-      var now = this.getDateObject(Date.now());
+      var now = DateUtil.getDateObject(Date.now(), 'date', false);
       var period = this.getAttribute('data-selectable');
 
       if (period == "past") {
@@ -346,7 +298,7 @@
     };
 
     this.tdClassName = function(date) {
-      var now = this.getDateObject(Date.now());
+      var now = DateUtil.getDateObject(Date.now(), 'date', false);
       var name = "selectable ";
 
       /* date is today */
@@ -355,7 +307,9 @@
       }
       /* date is selected date */
       if (this.hasAttribute('data-selected')) {
-        var selected = this.getDateObject(this.getTimeStamp('data-selected'));
+        var selected = DateUtil.getDateObject(
+          this.getTimeStamp('data-selected'), 'date', false);
+
         if (date == selected.date &&
             this.date.month == selected.month && 
             this.date.year == selected.year) {
@@ -388,7 +342,6 @@
 
       this.dispatchEvent(dateEvent);
     };
-
 
   };
 
