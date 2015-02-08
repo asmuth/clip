@@ -13,6 +13,7 @@
     display:block;
     height: 36px;
     border-bottom: 1px solid #dee0e3;
+    overflow: hidden;
   }
 </style>
 <template id="fn-metric-control-base-tpl">
@@ -134,7 +135,7 @@
     </div>
     <div class='metric-control-group'>
       <b>Aggregate: </b>
-      <fn-dropdown id='rollup' data-style="inline small">
+      <fn-dropdown class='rollup' data-style="inline small">
         <fn-dropdown-header>Sum</fn-dropdown-header>
         <fn-dropdown-item data-value='value'>Value</fn-dropdown-item>
         <fn-dropdown-item data-value='sum'>Sum</fn-dropdown-item>
@@ -142,7 +143,7 @@
         <fn-dropdown-item data-value='max'>Max</fn-dropdown-item>
       </fn-dropdown>
       <b style="margin-left: 7px;">Window: </sub></b>
-      <fn-dropdown id='time_window' data-style="inline small">
+      <fn-dropdown class='time_window' data-style="inline small">
         <fn-dropdown-header>5 seconds</fn-dropdown-header>
         <fn-dropdown-item data-value=1>1 second</fn-dropdown-item>
         <fn-dropdown-item data-value=5>5 seconds</fn-dropdown-item>
@@ -160,7 +161,7 @@
         <fn-dropdown-item data-value=86400>24 hours</fn-dropdown-item>
       </fn-dropdown>
       <b style="margin-left: 7px;">Step: </b>
-      <fn-dropdown id='time_step' data-style="inline small">
+      <fn-dropdown class='time_step' data-style="inline small">
         <fn-dropdown-header>10 seconds</fn-dropdown-header>
         <fn-dropdown-item data-value=1>1 second</fn-dropdown-item>
         <fn-dropdown-item data-value=5>5 seconds</fn-dropdown-item>
@@ -179,24 +180,24 @@
       </fn-dropdown>
 
       <b style="margin-left: 7px;">Scale: </b>
-      <fn-dropdown id="scale_input" data-style="inline small" data-placeholder=0.8>
+      <fn-dropdown class="scale" data-style="inline small" data-placeholder=0.8>
         <fn-dropdown-header>1.0</fn-dropdown-header>
       </fn-dropdown>
 
       <b style="margin-left: 7px;">Group By: </b>
-      <fn-dropdown id="scale_input" data-style="inline small" data-placeholder=0.8>
+      <fn-dropdown class="groupby" data-style="inline small" data-placeholder=0.8>
         <fn-dropdown-header>&nbsp;&mdash;&nbsp;</fn-dropdown-header>
       </fn-dropdown>
     </div>
 
-    <fn-button id="control_btn" data-size="tiny" style="float: right;">
+    <fn-button class="control_btn" data-size="tiny" style="float: right;">
       <i class="fa fa-times"></i>
     </fn-button>
   </div>
-  <fn-tooltip id='tooltip_aggr'>
+  <fn-tooltip class='tooltip_aggr'>
     There's no time-window aggregation for the current rollup
   </fn-tooltip>
-  <fn-tooltip data-pointer='right' id="control_tooltip">
+  <fn-tooltip data-pointer='right' class="control_tooltip">
   </fn-tooltip>
 </template>
 
@@ -231,8 +232,8 @@
     this.handleAggregationDisplay = function() {
       var base = this;
       var elems = [
-        this.getElementById("time_window"),
-        this.getElementById("time_step")
+        this.querySelector(".time_window"),
+        this.querySelector(".time_step")
       ];
 
       elems.forEach(function(elem) {
@@ -245,6 +246,7 @@
     };
 
     this.init = function(dataInitialised) {
+      console.log(this);
       if (!this.basicInit) {
         this.basicInit = true;
         this.setControlButton();
@@ -273,7 +275,7 @@
 
     this.setAddButton = function() {
       var base = this;
-      var button = this.getElementById('control_btn');
+      var button = this.querySelector('.control_btn');
       button.querySelector("i").classList.add("fa-plus");
       button.addEventListener('fn-button-click', function() {
         base.setHeaderMetricView();
@@ -283,10 +285,7 @@
 
     this.setRemoveButton = function() {
       var base = this;
-      var button = this.getElementById('control_btn');
-      var tooltip = this.getElementById("control_tooltip");
-      tooltip.innerHTML = "Remove Metric";
-      tooltip.init(button);
+      var button = this.querySelector('.control_btn');
 
       button.addEventListener('fn-button-click', function() {
         base.fireRemoveMetricEvent();
@@ -363,27 +362,14 @@
       this.setHeader();
       this.setHeaderMetricView();
 
-      var rollup = this.getElementById("rollup");
+      var rollup = this.querySelector(".rollup");
       rollup.setAttribute('data-preselected', this.params.aggr_fn);
 
-      var time_window = this.getElementById("time_window");
+      var time_window = this.querySelector(".time_window");
       time_window.setAttribute('data-preselected', this.params.aggr_window);
 
-      var time_step = this.getElementById("time_step");
+      var time_step = this.querySelector(".time_step");
       time_step.setAttribute('data-preselected', this.params.aggr_step);
-
-      var scale_input = this.getElementById("scale_input");
-      scale_input.setAttribute('data-value', this.params.scale);
-      scale_input.setAttribute('data-placeholder', this.params.scale);
-
-      var tooltip_aggr = this.getElementById("tooltip_aggr");
-      tooltip_aggr.initShowIf(time_window, function() {
-        return (time_window.getAttribute('data-state') == 'disabled');
-      });
-
-      tooltip_aggr.initShowIf(time_step, function() {
-        return (time_step.getAttribute('data-state') == 'disabled');
-      });
 
       rollup.addEventListener("fn-dropdown-item-click", function(e) {
         base.params.aggr_fn = e.srcElement.getAttribute('data-value');
@@ -401,10 +387,12 @@
         base.attributeChangedEvent("aggr_step");
       }, false);
 
+/*
       scale_input.addEventListener('fn-input-submit', function(e) {
         base.params.scale = e.detail;
         base.attributeChangedEvent("scale");
       }, false);
+*/
     };
 
     this.splitColumns = function(columns) {
