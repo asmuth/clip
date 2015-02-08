@@ -8,6 +8,11 @@
   copy of the GNU General Public License along with this program. If not, see
   <http://www.gnu.org/licenses/>.
 -->
+<style type='text/css'>
+  fn-calendar {
+    display: block;
+  }
+</style>
 <template id="fn-calendar-base-tpl">
   <style type='text/css'>
     table {
@@ -105,10 +110,13 @@
     this.attributeChangedCallback = function(attr, old_val, new_val) {
       switch (attr) {
         case 'data-timestamp':
-          this.render(this.getTimeStamp());
+          this.render(this.getTimeStamp(attr));
           break;
         case 'data-style':
           this.setStyle(new_val);
+          break;
+        case 'data-preselected':
+          this.render(this.getTimeStamp('data-timestamp'));
           break;
         default:
           break;
@@ -116,7 +124,7 @@
     };
 
     this.init = function() {
-      this.render(this.getTimeStamp());
+      this.render(this.getTimeStamp('data-timestamp'));
 
       var style = this.getAttribute('data-style');
       if (style) {
@@ -138,9 +146,9 @@
     }
 
 
-    this.getTimeStamp = function() {
+    this.getTimeStamp = function(attr) {
       //TODO add timezone
-      var timestamp = parseInt(this.getAttribute('data-timestamp'));
+      var timestamp = parseInt(this.getAttribute(attr));
       //1st January 2100
       var thresholdSeconds = 4102444800;
 
@@ -193,9 +201,14 @@
       return 0;
     };
 
-    this.setStyle = function(style) {
-      this.shadowRoot.querySelector("table").classList.add(style);
-    }
+    this.setStyle = function(styleStr) {
+      var table = this.shadowRoot.querySelector("table");
+      var styles = styleStr.split(" ");
+
+      styles.forEach(function(style) {
+        table.classList.add(style);
+      });
+    };
 
     //updates the date object
     this.render = function(timestamp) {
@@ -302,7 +315,6 @@
     };
 
     this.tdClassName = function(date) {
-      var selected = this.getDateObject(this.getTimeStamp());
       var now = this.getDateObject(Date.now());
       var name = "selectable ";
 
@@ -311,12 +323,15 @@
         name += " highlight_border";
       }
       /* date is selected date */
-      if (date == selected.date &&
-          this.date.month == selected.month && 
-          this.date.year == selected.year) {
-            name += " highlight";
+      if (this.hasAttribute('data-preselected')) {
+        var selected = this.getDateObject(this.getTimeStamp('data-preselected'));
+        if (date == selected.date &&
+            this.date.month == selected.month && 
+            this.date.year == selected.year) {
+              name += " highlight";
+        }
       }
-      console.log(name);
+
       return name;
     };
 
@@ -331,8 +346,17 @@
     };
 
     this.fireDateSelectEvent = function(date, month, year) {
-      console.log("selected date", date, month, year);
-    }
+      var timestamp = new Date(year, month, date).getTime();
+      var dateEvent = new CustomEvent(
+        'fn-calendar-select', {
+          'detail': {'timestamp': timestamp},
+          bubbles: true,
+          cancealable: true
+        }
+      );
+
+      this.dispatchEvent(dateEvent);
+    };
 
 
   };

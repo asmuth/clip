@@ -9,13 +9,63 @@
   <http://www.gnu.org/licenses/>.
 -->
 <template id="fn-calendar-demo-base-tpl">
-  <section>
-    <h1><i>Example 1 &raquo;</i> Basic</h1>
-    <fn-calendar></fn-calendar>
-  </section>
-  <section>
-    <h1><i>Example 2 &raquo;</i> Small Calendar</h1>
-    <fn-calendar data-style='small'></fn-calendar>
+  <style type='text/css'>
+    .left {
+      float:left;
+    }
+
+    .left.margin {
+      margin-left: 10px;
+    }
+
+    section.floating {
+      min-height: 300px;
+    }
+
+    section.floating.big {
+      min-height: 314px;
+    }
+  </style>
+
+  <section class="floating">
+    <h1><i>Example 1 &raquo;</i> Preselected Dates</h1>
+
+    <!-- Default Selection -->
+    <fn-calendar class="left" data-style='small' data-preselected></fn-calendar>
+
+    <!-- Specified Selection -->
+    <fn-calendar class="left margin" data-style='small' data-preselected=1423958400></fn-calendar>
   </section>
 
+  <section>
+    <h1><i>Example 2 &raquo;</i> Specified Month/Year</h1>
+    <fn-calendar data-style='small' data-timestamp=1123113600></fn-calendar>
+  </section>
+
+  <section id="dynamic_calendar">
+    <h1><i>Example 3 &raquo;</i> Dynamically Created with Click Event</h1>
+  </section>
+
+  <script type='text/javascript'>
+    var calendar = document.createElement("fn-calendar");
+    calendar.setAttribute('data-preselected', 1423008000);
+    calendar.setAttribute('data-style', 'small');
+    document.body.querySelector("#dynamic_calendar").appendChild(calendar);
+
+    calendar.addEventListener('fn-calendar-select', function(e) {
+      var date = new Date(e.detail.timestamp);
+      alert("Yeah, you just selected " + date);
+    }, false);
+  </script>
+
+  <section class="floating big">
+    <h1><i>Example 4 &raquo;</i> Sizes and Themes</h1>
+    <!-- Basic Default Size -->
+    <fn-calendar class="left"></fn-calendar>
+
+    <!-- Blue Small -->
+    <fn-calendar class="left margin" data-style='small blue'></fn-calendar>
+
+
+  </section>
 </template>
