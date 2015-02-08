@@ -39,6 +39,7 @@ fnordmetric/fnordmetric-app.html:src/fnordmetric/webui/fnordmetric-app.html
 fnordmetric/fnordmetric-console.html:src/fnordmetric/webui/fnordmetric-console.html
 fnordmetric/fnordmetric-query-editor.html:src/fnordmetric/webui/fnordmetric-query-editor.html
 fnordmetric/fnordmetric-webui.html:src/fnordmetric/webui/fnordmetric-webui.html
-fnordmetric/fnordmetric-webui.css:src/fnordmetric/webui/fnordmetric-webui.css
+fnordmetric/fnordmetric-webui-midnightblue.css:src/fnordmetric/webui/fnordmetric-webui-midnightblue.css
+fnordmetric/fnordmetric-webui-cockpit.css:src/fnordmetric/webui/fnordmetric-webui-cockpit.css
 fnordmetric/fnordmetric-webui-util.js:src/fnordmetric/webui/fnordmetric-webui-util.js
 fnordmetric/fnordmetric-embed-query-popup.html:src/fnordmetric/webui/fnordmetric-embed-query-popup.html
