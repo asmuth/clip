@@ -59,6 +59,7 @@ fn-metric-explorer-preview .navigation {
   background: #f6f6f8;
   height: 36px;
   padding: 0 14px;
+  margin: 0;
   border-bottom: 1px solid #d6d6d8;
   box-shadow: 0 1px 1px rgba(0,0,0,.08);
 }
@@ -73,6 +74,12 @@ fn-metric-explorer-list .navigation h1 {
 fn-metric-explorer-preview .navigation .item,
 fn-metric-explorer-preview .navigation fn-dropdown /deep/ fn-dropdown-header {
   font-size: 13px;
+}
+
+fn-metric-explorer-preview .navigation .item {
+  line-height: 36px;
+  padding: 0;
+  margin: 0 15px 0 0;
 }
 
 fn-metric-explorer-list fn-table {
@@ -117,12 +124,29 @@ fn-metric-control /deep/ fn-button {
   margin: 0;
 }
 
+fn-metric-control /deep/ .metric h3::before {
+  font-family: FontAwesome;
+  line-height: 1;
+  height: 1em;
+  vertical-align:middle;
+  font-weight: normal;
+  padding-right: 0.5em;
+  font-size: 10px;
+  color: #06c;
+  margin-left: -2px;
+  margin-right: 5px;
+  content: "\f0c8";
+}
+
 fn-metric-control /deep/ .metric h3 {
   margin: 0;
   padding: 0 15px;
   display: inline;
   line-height: 36px;
   font-size: 13px;
+  white-space: nowrap;
+  overflow: hidden;
+  font-weight: normal;
 }
 
 fn-metric-control /deep/ .metric i.fa {
