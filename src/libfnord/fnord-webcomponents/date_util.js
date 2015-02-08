@@ -18,20 +18,34 @@ DateUtil.appendLeadingZero = function(num) {
 }
 
  /**
-  * @date DateObject as returned by getDateObject
+  * @date DateObject as returned by DateUtil.getDateObject
   */
 DateUtil.getDateTimeDescr = function(date) {
   if (DateUtil.isNow(date.timestamp, date.precision)) {
     return "now";
   }
 
-  return (
-    date.year + "-" + DateUtil.appendLeadingZero(date.month) + "-" +
-    DateUtil.appendLeadingZero(date.date) + " " +
-    DateUtil.appendLeadingZero(date.hours) + ":" +
-    DateUtil.appendLeadingZero(date.minutes)
-  );
+  var descr =
+    date.year + "-" +
+    DateUtil.appendLeadingZero(date.month) + "-" +
+    DateUtil.appendLeadingZero(date.date);
 
+  if (date.precision == 'date') {
+    return descr;
+  }
+
+  descr += " " + DateUtil.appendLeadingZero(date.hours);
+  if (date.precision == 'hour') {
+    return descr;
+  }
+
+  descr += ":" + DateUtil.appendLeadingZero(date.minutes);
+  if (date.precision == 'minute') {
+    return descr;
+  }
+
+  descr += ":" + DateUtil.appendLeadingZero(date.seconds);
+  return descr;
 }
 
 DateUtil.isNow = function(timestamp, precision) {
