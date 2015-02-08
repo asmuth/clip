@@ -15,25 +15,72 @@
 </style>
 <template id='fn-date-time-selector-base-tpl'>
   <style type='text/css'>
+    .wrapper {
+      font-family: 'Helvetica Neue',Arial,Helvetica,sans-serif;
+      font-size: 1rem;
+      color: rgba(0,0,0,.8);
+
+    }
+
     .wrapper * {
       float: left;
     }
 
-    fn-calendar {
+    .wrapper .dropdown {
+      margin: 0 5px;
+    }
+
+    .wrapper .header {
+      margin: 0 5px;
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      line-height: 1em;
+      font-size: 0.875em;
+      text-align: left;
+    }
+
+    .wrapper .header .text {
+      font-weight: bold;
+      display: inline-block;
+    }
+
+    .wrapper .header i.fa {
+      margin: 0em 0.5em 0em 0.25em;
+      vertical-align: top;
+    }
+
+    .widget {
       display: none;
     }
 
-    fn-calendar.active {
+    .widget.active {
       display: block;
     }
+
+    .fa {
+      font-size: 0.9em !important;
+      display: inline-block;
+      line-height: 1;
+      height: 1em;
+      backface-visibility: hidden;
+      font-weight: 400 !important;
+      font-style: normal;
+      text-align: center;
+    }
+
+
   </style>
 
   <div class="wrapper">
     <i class="fa fa-chevron-left"></i>
     <div class="dropdown" id="range"></div>
-    <div id="picker">
-      <b id="endtime_descr"></b>
+    <div class="header">
+      <div class="text" id="endtime_descr"></div>
       <i class="fa fa-caret-down"></i>
+    </div>
+    <div class="widget">
+      <fn-timeinput></fn-timeinput>
       <fn-calendar data-style='small' data-selectable='past'></fn-calendar>
     </div>
     <i class="fa fa-chevron-right"></i>
@@ -47,26 +94,145 @@
       shadow.appendChild(tpl);
 
       if (this.getAttribute('data-resolved') == 'resolved') {
+        this.setPrecision();
         this.render();
       }
+
     }
+
+    this.attributeChangedCallback = function(attr, old_val, new_val) {
+      switch (attr) {
+        case 'data-until':
+          this.render();
+          break;
+        case 'data-precision':
+          this.setPrecision();
+          this.render();
+          break;
+        default:
+          break;
+      }
+    };
 
     this.render = function() {
       var dropdown = this.querySelector("fn-dropdown");
-      var picker = this.shadowRoot.getElementById("picker");
       var calendar = this.shadowRoot.querySelector("fn-calendar");
 
       var date_range = this.getAttribute('data-range');
-      var until = this.getAttribute('data-until');
+      var until = this.getTimeStamp('data-until');
+      until = until ? new Date(until) : new Date();
+      var date = this.getDateObject(until);
 
       date_range = date_range ? date_range : 900;
-      until = until ? new Date(until) : new Date();
 
       dropdown.setAttribute('data-preselected', date_range);
       this.shadowRoot.getElementById('range').appendChild(dropdown);
 
-      calendar.setAttribute('data-selected', until.getTime());
+      this.shadowRoot.getElementById("endtime_descr").innerHTML =
+        this.getDateTimeDescr(date);
+      calendar.setAttribute('data-selected', date.timestamp);
+      calendar.setAttribute('data-timestamp', date.timestamp);
+    };
+
+    this.setPrecision = function() {
+      var precision = this.getAttribute('data-precision');
+      var allowed_precisions = ["hour", "minute", "second"];
+
+      if (allowed_precisions.indexOf(precision) > - 1) {
+        this.precision = precision;
+      } else {
+        this.precision = "minute";
+      }
     }
+
+    this.getTimeStamp = function(attr) {
+      //TODO add timezone
+      var timestamp = parseInt(this.getAttribute(attr));
+      //1st January 2100
+      var thresholdSeconds = 4102444800;
+
+      if (isNaN(timestamp)) {
+        return Date.now();
+      }
+
+      if (timestamp < thresholdSeconds) {
+        return timestamp * 1000;
+      }
+
+      return timestamp;
+    };
+
+    this.appendLeadingZero = function(num) {
+      if (typeof num == 'string') {
+        return (num.length > 1)? num : "0" + num;
+      }
+      return (num > 9)? num : "0" + num;
+    }
+
+    /**
+      * @date DateObject as returned by getDateObject
+      */
+    this.getDateTimeDescr = function(date) {
+      if (this.equalDatesForPrecision(new Date().getTime(), date.timestamp)) {
+        return "now"
+      }
+
+      return (
+        date.year + "-" + this.appendLeadingZero(date.month) + "-" +
+        this.appendLeadingZero(date.date) + " " +
+        this.appendLeadingZero(date.hours) + ":" +
+        this.appendLeadingZero(date.minutes)
+      );
+
+    }
+
+    /**
+      * @date Javascript Date instance
+      */
+    this.getDateObject = function(Date) {
+      var date = {
+        'timestamp' : Date.getTime(),
+        'year': Date.getFullYear(),
+        'month': Date.getMonth(),
+        'date' : Date.getDate(),
+        'hours' : Date.getHours()
+      }
+
+      if (this.precision == 'hour') {
+        return date;
+      }
+
+      if (this.precision == "minute") {
+        date.minutes = Date.getMinutes();
+        return date;
+      }
+
+      if (this.precision == "second") {
+        date.minutes = Date.getMinutes();
+        date.seconds = Date.getSeconds();
+        return date;
+      }
+    };
+
+    /**
+      * @ts = milliseconds timestamp
+      */
+    this.equalDatesForPrecision = function(ts1, ts2) {
+      if (this.precision == "hour") {
+        return (Math.ceil(ts1 / 360000) === Math.ceil(ts2 / 360000));
+      }
+
+      if (this.precision == "minute") {
+        return (Math.ceil(ts1 / 60000) === Math.ceil(ts2 / 60000));
+      }
+
+      if (this.precision == "second") {
+        console.log(Math.ceil(ts1 / 1000), Math.ceil(ts2 / 1000));
+        return (Math.ceil(ts1 / 1000) === Math.ceil(ts2 / 1000));
+      }
+
+      return false;
+    };
 
   };
 
