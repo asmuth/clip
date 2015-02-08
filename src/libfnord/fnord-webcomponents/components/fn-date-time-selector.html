@@ -215,6 +215,8 @@
 
     this.observeActions = function() {
       var base = this;
+      var widget = this.shadowRoot.querySelector(".widget");
+
       this.shadowRoot.querySelector(".fa-chevron-left").onclick = function() {
         var until =
           parseInt(base.getAttribute('data-until'), 10) -
@@ -240,9 +242,24 @@
         },
       false);
 
-      this.shadowRoot.querySelector(".header").onclick = function() {
-        base.openWidget();
+      this.shadowRoot.querySelector(".header").onclick = function(e) {
+        e.stopPropagation();
+        if (widget.classList.contains("active")) {
+          base.closeWidget();
+        } else {
+          base.openWidget();
+        }
       };
+
+      widget.onclick = function(e) {
+        e.stopPropagation();
+      }
+
+      document.onclick = function() {
+        base.closeWidget();
+      }
+
+
     };
 
     this.fireEvent = function(name, detail) {
