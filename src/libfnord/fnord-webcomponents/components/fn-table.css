@@ -60,8 +60,7 @@ fn-table /deep/ thead th {
   line-height: 1em;
 }
 
-.fn-table thead th,
-fn-table /deep/ thead th.sortable:before {
+fn-table /deep/ thead th.sortable:after {
   font-family: FontAwesome;
   line-height: 1;
   height: 1em;
@@ -70,13 +69,14 @@ fn-table /deep/ thead th.sortable:before {
   padding-right: 0.5em;
   font-size: 1em;
   content: "\f0d8";
+  float: right;
 }
 
-fn-table /deep/ thead th.sortable.desc:before {
+fn-table /deep/ thead th.sortable.desc:after {
   content: "\f0d7";
 }
 
-fn-table /deep/ thead th.sortable.asc:before {
+fn-table /deep/ thead th.sortable.asc:after {
   content: "\f0d8";
 }
 

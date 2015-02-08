@@ -1,4 +1,16 @@
 <!--
+
+fn-metric-explorer-preview /deep/ #result_pane_loader {
+  background: #f6f6f8;
+}
+
+fn-metric-explorer-preview /deep/ .result_pane {
+  background: #fff;
+  padding: 10px 10px 10px 0px;
+  margin: 3px;
+  border: 1px solid #ddd;
+  text-align: center;
+}
   This file is part of the "FnordMetric" project
     Copyright (c) 2014 Laura Schlimmer
     Copyright (c) 2014 Paul Asmuth, Google Inc.
@@ -27,42 +39,6 @@
       margin-left: 0;
     }
 
-    .navigation .item .text {
-      font-size: 0.95em;
-    }
-
-    .navigation .item fn-dropdown {
-      margin-top: 10px;
-    }
-
-    .group {
-      height: 100%;
-      float: left;
-      padding: 14px 20px 0 20px;
-    }
-
-    .group b {
-      font-weight: normal;
-      font-size: 80%;
-      line-height: 12px;
-      font-weight: 500;
-      display: block;
-      margin-bottom: 6px;
-      opacity: 0.7;
-    }
-
-    .group.timenav {
-      padding: 0;
-    }
-
-    .group.timenav * {
-      float:left;
-    }
-
-    .group.timenav fn-datepicker {
-      margin: 3px 10px 0 10px;
-    }
-
     #result_pane_loader fn-message {
       display:none;
     }
@@ -77,6 +53,7 @@
       padding: 10px 0 20px;
       background: #fff;
       display: none;
+      text-align: cente;
     }
 
     .result_pane.active {
@@ -253,7 +230,7 @@
 
     this.update = function() {
       var url_hash = "#metric?" + this.buildQueryUrl();
-      setUrlHash(url_hash);
+      Fnord.setUrlHash(url_hash);
       this.updateData(this.getAttribute('data-format'));
     };
 
