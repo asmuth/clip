@@ -121,8 +121,6 @@
       if (this.getAttribute('data-resolved') == 'resolved') {
         this.init();
       }
-
-
     }
 
     this.attributeChangedCallback = function(attr, old_val, new_val) {
@@ -145,6 +143,8 @@
     this.checkUntilAttr = function() {
       var until = DateUtil.parseTimestamp(this.getAttribute('data-until'));
       this.setAttribute('data-until', until);
+
+      this.timestamp = DateUtil.getTimestampObj(until);
     };
 
     this.checkRangeAttr = function() {
@@ -178,15 +178,21 @@
     };
 
     this.updateUntil = function() {
-      var until = new Date(parseInt(this.getAttribute('data-until'), 10));
-      var date = DateUtil.getDateObject(until, this.getAttribute('data-precision'));
+      var date = DateUtil.getDateObject(
+        this.timestamp.date + this.timestamp.time, 
+        this.getAttribute('data-precision'));
+
       var calendar = this.shadowRoot.querySelector("fn-calendar");
 
+      //TODO timedescr from timestamp
       this.shadowRoot.getElementById("endtime_descr").innerHTML =
         DateUtil.getDateTimeDescr(date);
 
-      calendar.setAttribute('data-selected', date.timestamp);
-      calendar.setAttribute('data-timestamp', date.timestamp);
+      calendar.setAttribute('data-selected', this.timestamp.date);
+      calendar.setAttribute('data-timestamp', this.timestamp.date);
+      this.shadowRoot.querySelector("fn-timeinput").setAttribute(
+        'data-timestamp', this.timestamp.time);
+
     };
 
     this.render = function() {
@@ -264,6 +270,12 @@
           base.setAttribute('data-until', e.detail.timestamp);
           base.fireEvent(
             'fn-date-time-selector-until', {"until" : e.detail.timestamp});
+        },
+      false);
+
+      widget.querySelector("fn-timeinput").addEventListener('fn-timeinput-submit',
+        function(e) {
+          console.log(e);
         },
       false);
 

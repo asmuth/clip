@@ -10,6 +10,15 @@
  */
 DateUtil = {};
 
+//Time Constants
+DateUtil.secondsPerMinute = 60;
+DateUtil.secondsPerHour = 3600;
+DateUtil.secondsPerDay = 86400;
+DateUtil.millisPerSecond = 1000;
+DateUtil.millisPerMinute = DateUtil.millisPerSecond * DateUtil.secondsPerMinute;
+DateUtil.millisPerHour = DateUtil.secondsPerHour * DateUtil.millisPerSecond;
+DateUtil.millisPerDay = DateUtil.secondsPerDay * DateUtil.millisPerSecond;
+
 DateUtil.appendLeadingZero = function(num) {
   if (typeof num == 'string') {
     return (num.length > 1)? num : "0" + num;
@@ -159,5 +168,22 @@ DateUtil.leapYearOffset = function(year) {
 
   return 0;
 };
+
+//Milliseconds since midnight
+DateUtil.getTimeTimestamp = function(timestamp) {
+  var date = new Date(timestamp);
+  return (
+    date.getHours() * DateUtil.millisPerHour +
+    date.getMinutes() * DateUtil.millisPerMinute +
+    date.getSeconds() * DateUtil.millisPerSecond);
+}
+
+DateUtil.getTimestampObj = function(timestamp) {
+  var time_ts = DateUtil.getTimeTimestamp(timestamp);
+  return {
+    'time': time_ts,
+    'date': timestamp - time_ts
+  }
+}
 
 

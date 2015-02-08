@@ -315,7 +315,13 @@
     };
 
     this.fireTimeInputSubmitEvent = function() {
-      this.dispatchEvent(new Event("fn-timeinput-submit"));
+      var submitEvent = new CustomEvent('fn-timeinput-submit', {
+        'detail' : this.getValues(),
+        bubbles: true,
+        cancealable : true
+      })
+
+      this.dispatchEvent(submitEvent);
     };
   }
 
