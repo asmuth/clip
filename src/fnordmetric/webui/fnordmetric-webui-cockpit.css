@@ -51,8 +51,9 @@ fn-metric-explorer-list .navigation,
 fn-metric-explorer-preview .navigation {
   background: #f6f6f8;
   height: 36px;
-  overflow: hidden;
   padding: 0 14px;
+  border-bottom: 1px solid #d6d6d8;
+  box-shadow: 0 1px 1px rgba(0,0,0,.08);
 }
 
 fn-metric-explorer-list .navigation h1 {
@@ -62,7 +63,21 @@ fn-metric-explorer-list .navigation h1 {
   margin: 0;
 }
 
+fn-metric-explorer-list fn-table {
+  border-top: none;
+}
+
 fn-metric-explorer-list fn-table /deep/ table {
   border-left: none;
   border-right: none;
+  border-bottom: none;
+}
+
+fn-table /deep/ tr th {
+  border-bottom: 1px solid #dee0e3;
+  font-weight: 500;
+}
+
+fn-table /deep/ td {
+  border-bottom: 1px solid #eaedf1;
 }
