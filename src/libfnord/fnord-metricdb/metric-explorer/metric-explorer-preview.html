@@ -20,6 +20,7 @@
     .navigation .item {
       vertical-align: middle;
       margin-left: 0.8%;
+      float: left;
     }
 
     .navigation .item:first-child {
@@ -113,11 +114,6 @@
       display:block;
     }
 
-    fn-metric-control {
-      border-bottom: 1px solid #ddd;
-      border-top: 1px solid #ddd;
-    }
-
     fn-modal-content code {
       word-wrap: break-word;
     }
@@ -130,13 +126,14 @@
   <fn-loader>
     <div class="navigation">
       <div class="item left">
-        <span class="text">View</span>
+        <span class="text">Display: </span>
         <fn-dropdown data-style="inline small" id="view" >
           <fn-dropdown-header>Chart</fn-dropdown-header>
           <fn-dropdown-item data-value='svg'>Chart</fn-dropdown-item>
           <fn-dropdown-item data-value='csv'>Raw</fn-dropdown-item>
         </fn-dropdown>
       </div>
+
       <div class="item left">
         <span class="text">Chart Settings</span>
         <fn-dropdown data-style="inline small" id="chart_settings">
@@ -146,16 +143,17 @@
           <fn-dropdown-item data-value='inverted'>Inverted</fn-dropdown-item>
         </fn-dropdown>
       </div>
-      <fn-button id="embed_btn" class="item left" data-size='tiny'>
+
+      <fn-button id="embed_btn" class="item left" data-size='tiny' style="display:none;">
         <i class='fa fa-share'></i>Embed
       </fn-button>
-      <fn-button id="auto_refresh" class="item left" data-toggle data-size='tiny'>
+      <fn-button id="auto_refresh" class="item left" data-toggle data-size='tiny' style="display:none;">
         <i class='fa fa-refresh'></i>Auto Refresh
       </fn-button>
 
       <div class="item right">
         <fn-date-time-selector>
-          <fn-dropdown id='timerange' data-style="input small">
+          <fn-dropdown id='timerange' data-style="inline">
             <fn-dropdown-header>1 hour</fn-dropdown-header>
             <fn-dropdown-item data-value=300>5 minutes</fn-dropdown-item>
             <fn-dropdown-item data-value=900>15 minutes</fn-dropdown-item>

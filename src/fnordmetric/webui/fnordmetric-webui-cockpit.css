@@ -29,6 +29,10 @@ fnordmetric-app fn-appbar /deep/ fn-appbar-section {
   margin: 0;
 }
 
+fnordmetric-app fn-appbar /deep/ fn-appbar-section.search {
+  display: none;
+}
+
 fn-appbar fn-button fn-icon {
   display: none;
 }
@@ -63,6 +67,11 @@ fn-metric-explorer-list .navigation h1 {
   margin: 0;
 }
 
+fn-metric-explorer-preview .navigation .item,
+fn-metric-explorer-preview .navigation fn-dropdown /deep/ fn-dropdown-header {
+  font-size: 13px;
+}
+
 fn-metric-explorer-list fn-table {
   border-top: none;
 }
@@ -72,6 +81,13 @@ fn-metric-explorer-list fn-table /deep/ table {
   border-right: none;
   border-bottom: none;
 }
+
+fn-metric-control /deep/ .metric-control,
+fn-metric-control /deep/ fn-dropdown /deep/ #dropdown_ui {
+  font-size: 13px;
+}
+
+fn-metric-control /deep/ .metric-control {
 
 fn-table /deep/ tr th {
   border-bottom: 1px solid #dee0e3;

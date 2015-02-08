@@ -11,21 +11,13 @@
 <style type='text/css'>
   fn-metric-control {
     display:block;
-    width: 100%;
-    height: 70px;
-    background: #fff;
+    height: 36px;
+    overflow: hidden;
+    border-bottom: 1px solid #dee0e3;
   }
 </style>
 <template id="fn-metric-control-base-tpl">
   <style type='text/css'>
-    .left {
-      float: left;
-    }
-
-    .right {
-      float:right;
-    }
-
     .group {
       height: 100%;
       float: left;
@@ -56,26 +48,14 @@
       border-right: 1px solid rgb(226, 232, 237);
     }
 
-    .group.aggregation_time_window fn-dropdown {
-      float:left;
-      margin-right: 20px;
-    }
-
-    .group.aggregation_time_window fn-dropdown:last-child {
-      margin-right: 0;
-    }
-
     .group.aggregation_type {
       border-right: 1px solid rgb(226, 232, 237);
     }
 
     .group b {
       font-weight: normal;
-      font-size: 80%;
       line-height: 12px;
       font-weight: 500;
-      display: block;
-      margin-bottom: 6px;
       opacity: 0.7;
     }
 
@@ -265,7 +245,7 @@
     }
 
   </style>
-  <div class="left">
+  <div class="metric-control">
     <div class="metric">
       <div class="view" name="header">
         <i class="fa fa-pencil-square-o" name="edit_btn"></i>
@@ -280,7 +260,7 @@
     </div>
     <div class='group aggregation_type'>
       <b>Rollup</b>
-      <fn-dropdown id='rollup' data-style="input small">
+      <fn-dropdown id='rollup' data-style="inline">
         <fn-dropdown-header>Sum</fn-dropdown-header>
         <fn-dropdown-item data-value='value'>Value</fn-dropdown-item>
         <fn-dropdown-item data-value='sum'>Sum</fn-dropdown-item>
@@ -289,8 +269,8 @@
       </fn-dropdown>
     </div>
     <div class='group aggregation_time_window'>
-      <b>Time Window / Step</b>
-      <fn-dropdown id='time_window' data-style="input small">
+      <b>T<sub>Window</sub></b>
+      <fn-dropdown id='time_window' data-style="inline">
         <fn-dropdown-header>5 seconds</fn-dropdown-header>
         <fn-dropdown-item data-value=1>1 second</fn-dropdown-item>
         <fn-dropdown-item data-value=5>5 seconds</fn-dropdown-item>
@@ -307,7 +287,8 @@
         <fn-dropdown-item data-value=43200>12 hours</fn-dropdown-item>
         <fn-dropdown-item data-value=86400>24 hours</fn-dropdown-item>
       </fn-dropdown>
-      <fn-dropdown id='time_step' data-style="input small">
+      <b>T<sub>Step</sub></b>
+      <fn-dropdown id='time_step' data-style="inline">
         <fn-dropdown-header>10 seconds</fn-dropdown-header>
         <fn-dropdown-item data-value=1>1 second</fn-dropdown-item>
         <fn-dropdown-item data-value=5>5 seconds</fn-dropdown-item>
@@ -332,8 +313,7 @@
     <div class="group group_by">
       <b>Group by</b>
     </div>
-  </div>
-  <div class='right'>
+
     <fn-button id="control_btn" data-size="tiny">
       <i class="fa fa-times"></i>
     </fn-button>
