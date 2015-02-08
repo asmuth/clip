@@ -186,4 +186,21 @@ DateUtil.getTimestampObj = function(timestamp) {
   }
 }
 
+/**
+  * @timestamp = milliseconds since midnight
+  */
+DateUtil.getTimeObjFromTimestamp = function(timestamp) {
+  var hours = Math.floor(timestamp / DateUtil.millisPerHour);
+  timestamp = timestamp - (hours * DateUtil.millisPerHour);
+
+  var minutes = Math.floor(timestamp / DateUtil.millisPerMinute);
+  timestamp = timestamp - (minutes * DateUtil.millisPerMinute);
+
+  return {
+    'hours' : hours,
+    'minutes' : minutes,
+    'seconds' : Math.floor(timestamp / DateUtil.millisPerSecond)
+  }
+}
+
 
