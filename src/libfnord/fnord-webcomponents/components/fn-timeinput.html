@@ -37,6 +37,7 @@
       -webkit-transition: background-color 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
               transition: background-color 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
       box-shadow: none;
+      box-sizing: border-box;
     }
 
     input::-webkit-input-placeholder {
@@ -120,31 +121,38 @@
       var minutes_input = this.shadowRoot.querySelector("#minutes");
 
       if (this.hasAttribute('data-hours-value')) {
-        this.setHoursValue(this.getAttribute('data-hours-value'));
+        this.setValue(this.getAttribute('data-hours-value'), 'hours');
       }
       if (this.hasAttribute('data-minutes-value')) {
-        this.setMinutesValue(this.getAttribute('data-minutes-value'));
+        this.setValue(this.getAttribute('data-minutes-value'), 'minutes');
+      }
+      if (this.hasAttribute('data-timestamp')) {
+        this.setValues(this.getAttribute('data-timestamp'));
       }
       if (this.hasAttribute('data-state')) {
         this.setState();
       }
 
       hours_input.addEventListener('focus', function() {
-        base.validateHoursInput();
+        base.validateInput('hours');
       }, false);
       minutes_input.addEventListener('focus', function() {
-        base.validateMinutesInput();
+        base.validateInput('minutes');
       }, false);
     };
 
     this.attributeChangedCallback = function(attr, old_val, new_val) {
       switch (attr) {
         case "data-minutes-value":
-        this.setMinutesValue(new_val);
+        this.setValue(new_val, 'minutes');
         break;
 
         case "data-hours-value":
-        this.setHoursValue(new_val);
+        this.setValue(new_val, 'hours');
+        break;
+
+        case 'data-timestamp':
+        this.setValues(new_val);
         break;
 
         case 'data-size':
@@ -160,60 +168,41 @@
       this.shadowRoot.querySelector("#timeinput_container").classList.add(size);
     }
 
-    this.validateHoursInput = function() {
-      var base = this;
-      var input = this.shadowRoot.querySelector("#hours");
-      input.maxLength = "2";
-
-      input.addEventListener('keypress', function(e) {
-        if (e.keyCode == 13 ) {
-          var value = parseInt(this.value);
-          if (value > 23) {
-            this.className = "error";
-            return;
-          }
-          this.className = "";
-          base.setAttribute('data-hours-value', value);
-          base.fireTimeInputSubmitEvent();
-          return;
-        }
-        if (!base.isNavKey(e.keyCode) &&
-          !base.isNumKey(e.keyCode)) {
-            e.preventDefault();
-        }
-      }, false);
-    };
-
-    this.validateMinutesInput = function() {
-      var base = this;
-      var input = this.shadowRoot.querySelector("#minutes");
-      input.maxLength = "2";
-
-      input.addEventListener('keypress', function(e) {
-        if (e.keyCode == 13 ) {
-          var value = parseInt(this.value);
-          if (value > 59) {
-            this.className = "error";
-            return;
-          }
-          this.className = "";
-          base.setAttribute('data-minutes-value', value);
-          base.fireTimeInputSubmitEvent();
-          return;
-        }
-        if (!base.isNavKey(e.keyCode) &&
-          !base.isNumKey(e.keyCode)) {
-            e.preventDefault();
-        }
-      }, false);
-    };
-
-    this.appendLeadingZero = function (num) {
-      var num = num;
-      if (typeof num == 'string') {
-        return (num.length > 1)? num : "0" + num;
+    this.types = {
+      'hours' : {
+        'selector' : '#hours',
+        'max_value' : 23,
+        'attr' : 'data-hours-value'
+      },
+      'minutes' : {
+        'selector' : '#minutes',
+        'max_value' : 59,
+        'attr' : 'data-minutes-value'
       }
-      return (num > 9)? num : "0" + num;
+    };
+
+    this.validateInput = function(type) {
+      var base = this;
+      var input = this.shadowRoot.querySelector(this.types[type]['selector']);
+      input.maxLength = "2";
+
+      input.addEventListener('keypress', function(e) {
+        if (e.keyCode == 13 ) {
+          var value = parseInt(this.value);
+          if (value > base.types[type]['max_value']) {
+            this.className = "error";
+            return;
+          }
+          this.className = "";
+          base.setAttribute(base.types[type]['attr'], value);
+          base.fireTimeInputSubmitEvent();
+          return;
+        }
+        if (!base.isNavKey(e.keyCode) &&
+          !base.isNumKey(e.keyCode)) {
+            e.preventDefault();
+        }
+      }, false);
     };
 
     this.isNavKey = function(keycode) {
@@ -230,88 +219,32 @@
         (keycode >= 48 && keycode <= 57));
     };
 
+    this.setValue = function(value, type) {
+      var input = this.shadowRoot.querySelector(this.types[type]['selector']);
 
-    this.setHoursValue = function(value) {
-      var input = this.shadowRoot.querySelector("#hours");
-
-      if (parseInt(value, 10) > 23) {
+      if (parseInt(value, 10) > this.types[type]['max_value']) {
         input.className = "error";
       }
 
-      input.value = this.appendLeadingZero(value);
+      input.value = Fnord.appendLeadingZero(value);
 
     };
 
-    this.setMinutesValue = function(value) {
-      var input = this.shadowRoot.querySelector("#minutes");
-
-      if (parseInt(value, 10) > 59) {
-        input.className = "error";
-      }
-
-      input.value = this.appendLeadingZero(value);
-    };
-
-    this.validateHoursInput = function() {
-      var base = this;
-      var input = this.shadowRoot.querySelector("#hours");
-      input.maxLength = "2";
-
-      input.addEventListener('keypress', function(e) {
-        if (e.keyCode == 13 ) {
-          var value = parseInt(this.value);
-          if (value > 23) {
-            this.className = "highlighted";
-            return;
-          }
-          this.className = "";
-          base.fireTimeInputSubmitEvent();
-          return;
-        }
-        if (!base.isNavKey(e.keyCode) &&
-          !base.isNumKey(e.keyCode)) {
-            e.preventDefault();
-        }
-      }, false);
-    };
-
-    this.validateMinutesInput = function() {
-      var base = this;
-      var input = this.shadowRoot.querySelector("#minutes");
-      input.maxLength = "2";
-
-      input.addEventListener('keypress', function(e) {
-        if (e.keyCode == 13 ) {
-          var value = parseInt(this.value);
-          if (value > 59) {
-            this.className = "highlighted";
-            return;
-          }
-          this.className = "";
-          base.fireTimeInputSubmitEvent();
-          return;
-        }
-        if (!base.isNavKey(e.keyCode) &&
-          !base.isNumKey(e.keyCode)) {
-            e.preventDefault();
-        }
-      }, false);
-    };
-
-    this.setHoursValue = function(value) {
-      this.shadowRoot.querySelector(
-        "#hours").value = this.appendLeadingZero(value);
-    };
-
-    this.setMinutesValue = function(value) {
-      this.shadowRoot.querySelector(
-        "#minutes").value = this.appendLeadingZero(value);
-    };
+    this.setValues = function(timestamp) {
+      var time = DateUtil.getTimeObjFromTimestamp(timestamp);
+      this.setValue(time.hours, 'hours');
+      this.setValue(time.minutes, 'minutes');
+    }
 
     this.getValues = function() {
+      var hours = this.shadowRoot.querySelector("#hours").value;
+      var minutes = this.shadowRoot.querySelector("#minutes").value;
+
       return {
-        'hours' : this.shadowRoot.querySelector("#hours").value,
-        'minutes' : this.shadowRoot.querySelector("#minutes").value};
+        'hours' : hours,
+        'minutes' : minutes,
+        'timestamp' : DateUtil.getTimestampFromTimeObj(
+          {'hours': hours, 'minutes': minutes})};
     };
 
     this.fireTimeInputSubmitEvent = function() {

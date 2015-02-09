@@ -196,4 +196,24 @@ DateUtil.getTimeObjFromTimestamp = function(timestamp) {
   }
 }
 
+/**
+  * returns seconds since midnight
+  */
+DateUtil.getTimestampFromTimeObj = function(timeObj) {
+  var timestamp = 0;
+  if (timeObj.hours) {
+    timestamp += timeObj.hours * DateUtil.millisPerHour;
+  }
+
+  if (timeObj.minutes) {
+    timestamp += timeObj.minutes * DateUtil.millisPerMinute;
+  }
+
+  if (timeObj.seconds) {
+    timestamp += timeObj.seconds * DateUtil.millisPerSecond;
+  }
+
+  return timestamp;
+}
+
 
