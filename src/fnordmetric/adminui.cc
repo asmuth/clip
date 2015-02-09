@@ -29,6 +29,7 @@ AdminUI::AdminUI(
   webui_bundle_.addComponent("fnord/components/fn-message.css");
   webui_bundle_.addComponent("fnord/components/fn-tooltip.css");
   webui_bundle_.addComponent("fnord/fnord.js");
+  webui_bundle_.addComponent("fnord/date_util.js");
   webui_bundle_.addComponent("fnord/components/fn-appbar.html");
   webui_bundle_.addComponent("fnord/components/fn-button.html");
   webui_bundle_.addComponent("fnord/components/fn-button-group.html");
@@ -50,6 +51,7 @@ AdminUI::AdminUI(
   webui_bundle_.addComponent("fnord/components/fn-tooltip.html");
   webui_bundle_.addComponent("fnord/components/fn-flexbox.html");
   webui_bundle_.addComponent("fnord/components/fn-date-time-selector.html");
+  webui_bundle_.addComponent("fnord/components/fn-calendar.html");
   webui_bundle_.addComponent("fnord-metricdb/metric-explorer-list.html");
   webui_bundle_.addComponent("fnord-metricdb/metric-explorer-preview.html");
   webui_bundle_.addComponent("fnord-metricdb/metric-explorer-search.html");

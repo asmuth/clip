@@ -1,4 +1,5 @@
 fnord/fnord.js:src/libfnord/fnord-webcomponents/fnord.js
+fnord/date_util.js:src/libfnord/fnord-webcomponents/date_util.js
 fnord/3rdparty/codemirror.js:src/libfnord/fnord-webcomponents/3rdparty/codemirror.js
 fnord/3rdparty/fontawesome.woff:src/libfnord/fnord-webcomponents/3rdparty/fontawesome.woff
 fnord/3rdparty/fontawesome.css:src/libfnord/fnord-webcomponents/3rdparty/fontawesome.css

@@ -29,6 +29,7 @@ devserver: build-dbg
 	ln -s ../../src/libfnord/fnord-webcomponents/3rdparty .dev_assets/fnord/3rdparty
 	ln -s ../../src/libfnord/fnord-webcomponents/themes .dev_assets/fnord/themes
 	ln -s ../../src/libfnord/fnord-webcomponents/fnord.js .dev_assets/fnord/fnord.js
+	ln -s ../../src/libfnord/fnord-webcomponents/date_util.js .dev_assets/fnord/date_util.js
 	ln -s ../src/fnordmetric/webui .dev_assets/fnordmetric
 	DEV_ASSET_PATH=./.dev_assets ./build-dbg/fnordmetric-server --datadir /tmp/fnordmetric-data --verbose
 
