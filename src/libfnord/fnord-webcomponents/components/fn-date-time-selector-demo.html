@@ -10,8 +10,15 @@
 -->
 <template id='fn-date-time-selector-demo-base-tpl'>
   <section>
-    <h1><i>Example 1 &raquo;</i> Basic</h1>
-    <fn-date-time-selector data-range='3600000' data-resolved='resolved'>
+    <h1><i>Example 1 &raquo;</i> Basic with Default Values</h1>
+
+    <!--
+      Default values:
+        data-range: 900000 (15minutes)
+        date-until: Date.now()
+        data-precision: minutes
+    -->
+    <fn-date-time-selector data-resolved='resolved'>
       <fn-dropdown data-style="inline small">
         <fn-dropdown-item data-value=300000>5 minutes</fn-dropdown-item>
         <fn-dropdown-item data-value=900000>15 minutes</fn-dropdown-item>
@@ -26,6 +33,8 @@
 
  <section>
     <h1><i>Example 1 &raquo;</i> Selected EndDateTime</h1>
+
+    <!-- DateTimeSelector returns timestamps in milliseconds but takes as input timestamps in seconds, too -->
     <fn-date-time-selector data-range='3600000' data-resolved='resolved' data-until='1423060200'>
       <fn-dropdown data-style="inline small">
         <fn-dropdown-item data-value=300000>5 minutes</fn-dropdown-item>
@@ -41,6 +50,8 @@
 
   <section>
     <h1><i>Example 1 &raquo;</i> Second Precision</h1>
+
+    <!-- Time Description is rendered as hh:mm:ss -->
     <fn-date-time-selector  data-precision="second" data-resolved='resolved' data-until='1423060200'>
       <fn-dropdown data-style="inline small">
         <fn-dropdown-item data-value=300000>5 minutes</fn-dropdown-item>
