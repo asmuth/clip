@@ -1,16 +1,4 @@
 <!--
-
-fn-metric-explorer-preview /deep/ #result_pane_loader {
-  background: #f6f6f8;
-}
-
-fn-metric-explorer-preview /deep/ .result_pane {
-  background: #fff;
-  padding: 10px 10px 10px 0px;
-  margin: 3px;
-  border: 1px solid #ddd;
-  text-align: center;
-}
   This file is part of the "FnordMetric" project
     Copyright (c) 2014 Laura Schlimmer
     Copyright (c) 2014 Paul Asmuth, Google Inc.
@@ -128,7 +116,7 @@ fn-metric-explorer-preview /deep/ .result_pane {
         <i class='fa fa-refresh'></i>Auto Refresh
       </fn-button>
 
-      <div class="item right">
+      <div class="item" style="height: 36px; line-height: 36px; float: right;">
         <fn-date-time-selector data-resolved='resolved'>
           <fn-dropdown id='timerange' data-style="inline small">
             <fn-dropdown-header>1 hour</fn-dropdown-header>
@@ -190,7 +178,7 @@ fn-metric-explorer-preview /deep/ .result_pane {
       document.addEventListener("DOMContentLoaded", function() {
         var loader = this.querySelector("#result_pane_loader"); 
         var height =
-          (window.innerHeight - loader.getBoundingClientRect().top - 30) + "px"
+          (window.innerHeight - loader.getBoundingClientRect().top) + "px"
         loader.style.height = height;
         this.querySelector(
           ".result_pane[data-format='csv']").style.height = height;
@@ -288,6 +276,7 @@ fn-metric-explorer-preview /deep/ .result_pane {
     };
 
     this.updateData = function(format) {
+      console.log("update data");
       var base = this;
       format = format ? format : "svg";
       var url = "/metrics/timeseries?" + this.buildQueryUrl(format);

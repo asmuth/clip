@@ -232,7 +232,6 @@ fn-dropdown.input fn-dropdown-header,
 fn-dropdown.input .fn-dropdown-header,
 fn-dropdown.input fn-dropdown-item.header[data-active],
 .fn-dropdown.input .fn-dropdown-item.header[data-active] {
-  cursor: pointer;
   word-wrap: break-word;
   white-space: normal;
   outline: 0;
@@ -486,20 +485,26 @@ fn-dropdown.input.small fn-dropdown-header,
 /*--------------------
         Error
 ----------------------*/
-fn-dropdown.error,
-fn-dropdown.error fn-dropdown-item {
+fn-dropdown.error fn-dropdown-item.header[data-active],
+.fn-dropdown.error .fn-dropdown-item.header[data-active],
+fn-dropdown.error fn-dropdown-header,
+.fn-dropdown.error .fn-dropdown-header {
   color: #a94442;
 }
 
-fn-dropdown.input.error,
-.fn-dropdown.input.error {
+fn-dropdown.input.error fn-dropdown-item.header[data-active],
+.fn-dropdown.input.error .fn-dropdown-item.header[data-active],
+fn-dropdown.input.error fn-dropdown-header,
+.fn-dropdown.input.error .fn-dropdown-header  {
   background: #fff0f0;
   border-color: #dbb1b1;
 }
 
-fn-dropdown.error:hover,
-.fn-dropdown.error:hover {
-  border-color: #dbb1b1;
+fn-dropdown.error fn-dropdown-item.header[data-active]:hover,
+.fn-dropdown.error .fn-dropdown-item.header[data-active]:hover,
+fn-dropdown.error fn-dropdown-header:hover,
+.fn-dropdown.error .fn-dropdown-header:hover {
+  border-color: #dbb1b1 !important;
 }
 
 fn-dropdown.error fn-dropdown-menu,
@@ -507,7 +512,7 @@ fn-dropdown.error fn-dropdown-menu,
   border-color: #dbb1b1;
 }
 
-fn-dropdown.error fn-dropdown-menu-item,
+fn-dropdown.error .fn-dropdown-menu-item,
 .fn-dropdown.error .fn-dropdown-menu-item {
   color: #d95c5c;
 }
@@ -519,7 +524,7 @@ fn-dropdown.error fn-dropdown-menu-item.hover,
   background-color: #fff2f2;
 }
 
-fn-dropdown.error fn-dropdown-menu-item.active,
+fn-dropdown.error .fn-dropdown-menu-item.active,
 .fn-dropdown.error .fn-dropdown-menu-item.active {
   background-color: #fdcfcf;
 }
@@ -529,14 +534,17 @@ fn-dropdown.error fn-dropdown-menu-item.active,
 ---------------*/
 fn-dropdown.disabled,
 .fn-dropdown.disabled {
-  cursor: auto;
+  cursor: default;
   opacity: 0.5;
 }
 
-fn-dropdown.disabled fn-dropdown-menu-item:hover,
-fn-dropdown.disabled fn-dropdown-menu-item.hover,
-.fn-dropdown.disabled .fn-dropdown-menu-item:hover,
-.fn-dropdown.disabled fn-dropdown-menu-item.hover {
-  opacity: 0.8;
+fn-dropdown.input fn-dropdown-header:hover,
+fn-dropdown.input .fn-dropdown-header:hover,
+fn-dropdown.input fn-dropdown-item.header[data-active]:hover,
+.fn-dropdown.input .fn-dropdown-item.header[data-active]:hover {
+  border-color: rgba(39,41,43,.15);
+  box-shadow: none;
 }
+
+
 

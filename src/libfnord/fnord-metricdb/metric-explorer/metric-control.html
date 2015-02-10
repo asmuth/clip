@@ -233,7 +233,6 @@
     };
 
     this.init = function(dataInitialised) {
-      console.log(this);
       if (!this.basicInit) {
         this.basicInit = true;
         this.setControlButton();
@@ -246,7 +245,7 @@
     };
 
     this.columnsReloaded = function() {
-      if (this.params.columns.length > 0) {
+      if (this.params.columns && this.params.columns.length > 0) {
         this.handleGroupByControls();
       }
     };
