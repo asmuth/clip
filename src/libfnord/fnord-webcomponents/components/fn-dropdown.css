@@ -196,6 +196,12 @@ fn-dropdown-icon,
   backface-visibility: hidden;
 }
 
+fn-dropdown-descr,
+.fn-dropdown-descr {
+  margin: 0em 0em 0em 1em;
+  color: rgba(0, 0, 0, 0.4);
+}
+
 /*--------------
   Labe
 ---------------*/

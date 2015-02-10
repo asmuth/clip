@@ -111,10 +111,29 @@
 
     <!-- A Dropdown Menu Item Can Contain An Icon -->
     <h3><i>Example 1 &raquo;</i> Icon</h3>
-    <fn-dropdown class="input">
+
+    <!-- fn-dropdown-icon class -->
+    <fn-dropdown class="input below">
       <fn-dropdown-item><i class="fn-dropdown-icon fa fa-bus"></i> Bus</fn-dropdown-item>
       <fn-dropdown-item><i class="fn-dropdown-icon fa fa-taxi"></i> Taxi</fn-dropdown-item>
       <fn-dropdown-item><i class="fn-dropdown-icon fa fa-bicycle"></i> Bicycle</fn-dropdown-item>
+    </fn-dropdown>
+    <br />
+
+    <!-- fn-dropdown-icon tag-->
+    <fn-dropdown class="input">
+      <fn-dropdown-item>
+        <fn-dropdown-icon><i class="fa fa-bus"></i></fn-dropdown-icon>
+        Bus
+      </fn-dropdown-item>
+      <fn-dropdown-item>
+        <fn-dropdown-icon><i class="fa fa-taxi"></i></fn-dropdown-icon>
+        Taxi
+      </fn-dropdown-item>
+      <fn-dropdown-item>
+        <fn-dropdown-icon><i class="fa fa-bicycle"></i></fn-dropdown-icon>
+        Bicycle
+      </fn-dropdown-item>
     </fn-dropdown>
 
     <!-- A Dropdown Menu Can Contain A Label -->
@@ -124,6 +143,24 @@
       <fn-dropdown-item>4 hours</fn-dropdown-item>
       <fn-dropdown-item>12 hours</fn-dropdown-item>
       <fn-dropdown-item>24 hours</fn-dropdown-item>
+    </fn-dropdown>
+
+    <!-- A Dropdown Menu Item Can Contain A Description -->
+    <h3><i>Example 3 &raquo;</i> Item Description</h3>
+    <fn-dropdown class="input">
+      <fn-dropdown-label>Filter Messages</fn-dropdown-label>
+      <fn-dropdown-item>
+        Unread
+        <fn-dropdown-descr>7 new</fn-dropdown-descr>
+      </fn-dropdown-item>
+      <fn-dropdown-item>
+        Starred
+        <fn-dropdown-descr>2 new</fn-dropdown-descr>
+      </fn-dropdown-item>
+      <fn-dropdown-item>
+        Social
+        <fn-dropdown-descr>5 new</fn-dropdown-descr>
+      </fn-dropdown-item>
     </fn-dropdown>
   </section>
 
