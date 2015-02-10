@@ -10,6 +10,11 @@
 -->
 <template id="fn-dropdown-demo-base-tpl">
   <section>
+    <style type='text/css'>
+      .below {
+        margin-bottom: 20px;
+      }
+    </style>
     <h1>Styles</h1>
 
     <!-- Standard Dropdown -->
@@ -37,18 +42,28 @@
     <!-- 'Input' Style Dropdown -->
     <h3><i>Example 2 &raquo;</i> Input Like</h3>
     <!-- Default -->
-    <fn-dropdown class="input">
+    <fn-dropdown class="input below">
       <fn-dropdown-item>&#10003; Unread</fn-dropdown-item>
       <fn-dropdown-item>&#10003; Promotions</fn-dropdown-item>
       <fn-dropdown-item>&#10003; Updates</fn-dropdown-item>
     </fn-dropdown>
+    <br />
+
+    <!-- Header Elem is displayed if no item is selected -->
+    <fn-dropdown class="input below">
+      <fn-dropdown-header>Advanced</fn-dropdown-header>
+      <fn-dropdown-item>Inverted</fn-dropdown-item>
+      <fn-dropdown-item>Logarithmic</fn-dropdown-item>
+    </fn-dropdown>
+    <br />
 
     <!-- Small -->
-    <fn-dropdown class="input small">
+    <fn-dropdown class="input small below">
       <fn-dropdown-item>Unread</fn-dropdown-item>
       <fn-dropdown-item>Promotions</fn-dropdown-item>
       <fn-dropdown-item>Updates</fn-dropdown-item>
     </fn-dropdown>
+    <br />
 
     <!-- Compact -->
     <fn-dropdown class="input compact">
