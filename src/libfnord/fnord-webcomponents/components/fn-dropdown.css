@@ -38,8 +38,9 @@ fn-dropdown::selection,
 fn-dropdown-item,
 fn-dropdown-header,
 .fn-dropdown-item,
-.fn-dropdown-header{
-  white-space: nowrap;
+.fn-dropdown-header,
+.fn-menu-item {
+  line-height: 1em;
 }
 
 fn-dropdown-header,
@@ -86,22 +87,7 @@ fn-dropdown-item[data-active],
   display: inline-block;
 }
 
-/*--------------
-  Dropdown Icon
----------------*/
-fn-dropdown-icon,
-.fn-dropdown-icon {
-  display: inline-block;
-  line-height: 1;
-  height: 1em;
-  -webkit-backface-visibility: hidden;
-  backface-visibility: hidden;
-  font-weight: 400;
-  font-style: normal;
-  text-align: center;
-  width: auto;
-  margin: 0 0 0 0.5em;
-}
+
 
 /*--------------
   Input Dropdown
@@ -187,6 +173,46 @@ fn-dropdown-input,
   z-index: 12;
 }
 
+/*--------------
+   Icon Item
+---------------*/
+fn-dropdown-icon,
+.fn-dropdown-icon {
+  display: inline-block;
+  opacity: 1;
+  margin: 0 .25rem 0 0;
+  width: 1.23em;
+  height: .9em;
+  font-family: Icons;
+  font-style: normal;
+  line-height: 1;
+  font-weight: 400;
+  text-decoration: inherit;
+  text-align: center;
+  speak: none;
+  font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
+
+/*--------------
+  Labe
+---------------*/
+fn-dropdown-label,
+.fn-dropdown-label {
+  display: none;
+}
+.fn-dropdown-menu-label {
+  margin: 1rem 0rem 0.75rem;
+  padding: 0em 1.25rem;
+  color: rgba(0, 0, 0, 0.85);
+  font-size: 0.8em;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+
 /*******************************
       Dropdown Styles
 *******************************/
@@ -194,16 +220,12 @@ fn-dropdown-input,
 /*--------------
   Input like
 ---------------*/
-fn-dropdown.input {
-  line-height: 1.2em;
-}
 
 /* Displays like a input/select box */
 fn-dropdown.input fn-dropdown-header,
 fn-dropdown.input .fn-dropdown-header,
 fn-dropdown.input fn-dropdown-item.header[data-active],
 .fn-dropdown.input .fn-dropdown-item.header[data-active] {
-  padding: 0.65em 1.25em;
   cursor: pointer;
   word-wrap: break-word;
   white-space: normal;
@@ -218,6 +240,19 @@ fn-dropdown.input fn-dropdown-item.header[data-active],
   -webkit-transition: border-radius .1s ease,width .2s ease,box-shadow .2s ease,border .2s ease;
   transition: border-radius .1s ease,width .2s ease,box-shadow .2s ease,border .2s ease;
   min-width: 180px;
+  padding-left: 1.1em;
+  padding-right: 1.1em;
+}
+
+fn-dropdown.input fn-dropdown-header,
+.fn-dropdown.input .fn-dropdown-header,
+fn-dropdown.input fn-dropdown-item.header[data-active],
+.fn-dropdown.input .fn-dropdown-item.header[data-active],
+fn-dropdown.input .fn-dropdown-menu-item,
+.fn-dropdown.input .fn-dropdown-menu-item {
+  padding-top: 0.8em !important;
+  padding-bottom: 0.8em;
+  line-height: 1em;
 }
 
 fn-dropdown.input fn-dropdown-header:hover,
@@ -237,17 +272,7 @@ fn-dropdown.input fn-dropdown-item.header:after,
   float:right;
 }
 
-fn-dropdown.input fn-dropdown-icon,
-.fn-dropdown.input .fn-dropdown-icon{
-  position: absolute;
-  top: auto;
-  margin: 0em;
-  width: auto;
-  right: 1.1em;
-  opacity: 0.8;
-  -webkit-transition: opacity 0.2s ease;
-  transition: opacity 0.2s ease;
-}
+
 
 /* Input Style Menu */
 fn-dropdown.input .fn-dropdown-menu,
@@ -337,12 +362,6 @@ fn-dropdown.inline,
   color: inherit;
 }
 
-fn-dropdown.inline fn-dropdown-icon,
-.fn-dropdown.inline .fn-dropdown-icon {
-  margin: 0em 0.5em 0em 0.25em;
-  vertical-align: top;
-}
-
 fn-dropdown.inline fn-dropdown-item,
 .fn-dropdown.inline .fn-dropdown-item {
   font-weight: bold;
@@ -360,18 +379,7 @@ fn-dropdown.inline.small fn-dropdown-menu,
   margin-top: 0.18em;
 }
 
-/*--------------
-  Labeled
----------------*/
-fn-dropdown-menu-item.labeled,
-.fn-dropdown-menu-item.labeled{
-  margin: 1rem 0rem 0.75rem;
-  padding: 0em 1.25rem;
-  color: rgba(0, 0, 0, 0.85);
-  font-size: 0.8em;
-  font-weight: bold;
-  text-transform: uppercase;
-}
+
 
 /*--------------
   Searchable
@@ -404,9 +412,7 @@ fn-dropdown-menu-item.labeled,
   color: #545758
 }
 
-#dropdown_ui.search i.icon {
-  display: none;
-}
+
 
  #dropdown_ui.search ul#menu {
   overflow-x: hidden;
@@ -449,10 +455,6 @@ fn-dropdown.small,
 .fn-dropdown.small {
   font-size: 0.875em;
   line-height: 0.9em;
-}
-
-fn-dropdown.small fn-dropdown-icon {
-  margin: 0 0 0 .2em;
 }
 
 /* Input Style */

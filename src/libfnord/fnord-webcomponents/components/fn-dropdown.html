@@ -110,7 +110,7 @@
           list_elem.classList.add("active");
         }
 
-        list_elem.innerHTML = items[i].innerText;
+        list_elem.innerHTML = items[i].innerHTML;
         menu.appendChild(list_elem);
         list_elem.addEventListener('click', onItemClick, false);
       }
@@ -118,11 +118,11 @@
 
 
 
-    this.renderListLabel = function(label, list_elem) {
-      var list_item = document.createElement("li");
-      list_item.className = "label";
-      list_item.innerHTML = label;
-      list_elem.appendChild(list_item);
+    this.renderListLabel = function(label, menu) {
+      var list_elem = document.createElement("li");
+      list_elem.className = "fn-dropdown-menu-label";
+      list_elem.innerHTML = label;
+      menu.appendChild(list_elem);
     };
 
     this.onItemClick = function(item, shadow) {

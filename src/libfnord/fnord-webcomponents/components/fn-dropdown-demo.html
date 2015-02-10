@@ -43,9 +43,11 @@
     <h3><i>Example 2 &raquo;</i> Input Like</h3>
     <!-- Default -->
     <fn-dropdown class="input below">
-      <fn-dropdown-item>&#10003; Unread</fn-dropdown-item>
-      <fn-dropdown-item>&#10003; Promotions</fn-dropdown-item>
-      <fn-dropdown-item>&#10003; Updates</fn-dropdown-item>
+      <fn-dropdown-item>Important</fn-dropdown-item>
+      <fn-dropdown-item>Starres</fn-dropdown-item>
+      <fn-dropdown-item>Unread</fn-dropdown-item>
+      <fn-dropdown-item>Promotions</fn-dropdown-item>
+      <fn-dropdown-item>Social</fn-dropdown-item>
     </fn-dropdown>
     <br />
 
@@ -59,18 +61,18 @@
 
     <!-- Small -->
     <fn-dropdown class="input small below">
-      <fn-dropdown-item>Unread</fn-dropdown-item>
-      <fn-dropdown-item>Promotions</fn-dropdown-item>
-      <fn-dropdown-item>Updates</fn-dropdown-item>
+      <fn-dropdown-item>Edit</fn-dropdown-item>
+      <fn-dropdown-item>Remove</fn-dropdown-item>
+      <fn-dropdown-item>Hide</fn-dropdown-item>
     </fn-dropdown>
     <br />
 
     <!-- Compact -->
-    <fn-dropdown class="input compact">
+    <!--<fn-dropdown class="input compact">
       <fn-dropdown-item>&#10003; Unread</fn-dropdown-item>
       <fn-dropdown-item>&#10003; Promotions</fn-dropdown-item>
       <fn-dropdown-item>&#10003; Updates</fn-dropdown-item>
-    </fn-dropdown>
+    </fn-dropdown>-->
 
 
     <!-- Inline Dropdown -->
@@ -94,7 +96,7 @@
     </span>
   </section>
 
- <!-- <section>
+  <section>
     <h1>Multi Selectable Dropdown</h1>
     <fn-dropdown data-style='input small' data-select='checkbox'>
       <fn-dropdown-header>Linear</fn-dropdown-header>
@@ -105,19 +107,20 @@
   </section>
 
   <section>
-    <h1>Header and Label Options</h1>
-    <h3><i>Example 1 &raquo;</i> Static Header</h3>
-    <fn-dropdown style="margin-bottom: 30px;">
-      <fn-dropdown-header data-display-selection='false'>Categories</fn-dropdown-header>
-      <fn-dropdown-item>&#10003; Unread</fn-dropdown-item>
-      <fn-dropdown-item>&#10003; Promotions</fn-dropdown-item>
-      <fn-dropdown-item>&#10003; Updates</fn-dropdown-item>
+    <h1>Content Options</h1>
+
+    <!-- A Dropdown Menu Item Can Contain An Icon -->
+    <h3><i>Example 1 &raquo;</i> Icon</h3>
+    <fn-dropdown class="input">
+      <fn-dropdown-item><i class="fn-dropdown-icon fa fa-bus"></i> Bus</fn-dropdown-item>
+      <fn-dropdown-item><i class="fn-dropdown-icon fa fa-taxi"></i> Taxi</fn-dropdown-item>
+      <fn-dropdown-item><i class="fn-dropdown-icon fa fa-bicycle"></i> Bicycle</fn-dropdown-item>
     </fn-dropdown>
 
-    <h3><i>Example 2 &raquo;</i> Labeled Dropdown</h3>
-    <fn-dropdown data-style="input">
-      <fn-dropdown-header>Filter</fn-dropdown-header>
-      <fn-dropdown-label>Filter by Tag</fn-dropdown-label>
+    <!-- A Dropdown Menu Can Contain A Label -->
+    <h3><i>Example 2 &raquo;</i> Label</h3>
+    <fn-dropdown class="input">
+      <fn-dropdown-label>Show the Last</fn-dropdown-label>
       <fn-dropdown-item>4 hours</fn-dropdown-item>
       <fn-dropdown-item>12 hours</fn-dropdown-item>
       <fn-dropdown-item>24 hours</fn-dropdown-item>
@@ -188,5 +191,5 @@
     </fn-dropdown>
 
 
-  </section>-->
+  </section>
 </template>
