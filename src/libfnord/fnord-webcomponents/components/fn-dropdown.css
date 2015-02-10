@@ -87,7 +87,6 @@ fn-dropdown-menu,
   margin: 0;
   padding: 0;
   background: #fff;
-  min-width: 100%;
   white-space: nowrap;
   font-size: 1rem;
   text-shadow: none;
@@ -103,7 +102,7 @@ fn-dropdown-menu,
 
 fn-dropdown-menu[data-active],
 .fn-dropdown-menu[data-active]{
-  display: block;
+  display: inline-block;
 }
 
 
@@ -111,7 +110,6 @@ fn-dropdown-menu-item,
 .fn-dropdown-menu-item {
   position: relative;
   cursor: pointer;
-  display: block;
   border: none;
   height: auto;
   border-top: none;
@@ -126,10 +124,9 @@ fn-dropdown-menu-item,
   margin: 0;
   padding: 0;
   border: 0;
-  font-size: 100%;
   font: inherit;
   vertical-align: baseline;
-
+  overflow: hidden;
 }
 
 fn-dropdown-menu-item.active,
@@ -481,7 +478,7 @@ fn-dropdown.disabled,
 fn-dropdown.disabled fn-dropdown-menu-item:hover,
 fn-dropdown.disabled fn-dropdown-menu-item.hover,
 .fn-dropdown.disabled .fn-dropdown-menu-item:hover,
-.fn-dropdown.disabled .fn-dropdown-menu-item.hover {
+.fn-dropdown.disabled fn-dropdown-menu-item.hover {
   opacity: 0.8;
 }
 
