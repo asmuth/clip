@@ -20,29 +20,31 @@
       this.appendChild(tpl);
       var base = this;
 
-      /* options */
-      if (this.hasAttribute('data-searchable')) {this.renderSearchInput();}
-
-
-      this.attributeChangedCallback();
-      this.observeHeaderItem();
-
       document.addEventListener('click', function() {
         base.hideDropdown();
       }, false);
 
+      if (this.getAttribute('data-resolved') == 'resolved') {
+        this.init();
+      }
     };
 
     this.attributeChangedCallback = function(attr, old_val, new_val) {
-      switch (attr) {
-        case "data-active":
-          this.renderDropdown();
-          break;
-
-        default:
-          break;
+      if (attr == 'data-resolved' && new_val == 'resolved') {
+        this.init();
       }
     };
+
+    this.init = function() {
+      /* options */
+      if (this.querySelector('fn-dropdown-input')) {
+      this.renderSearchable();
+        return;
+      }
+
+      this.attributeChangedCallback();
+      this.observeHeaderItem();
+    }
 
     this.observeHeaderItem = function(prev_active_item) {
       var base = this;
@@ -86,6 +88,7 @@
       if (this.classList.contains("disabled")) {
         return;
       }
+
       var menu = this.querySelector(".fn-dropdown-menu");
       var items = this.querySelectorAll("fn-dropdown-item");
 
@@ -116,8 +119,6 @@
       }
     };
 
-
-
     this.renderListLabel = function(label, menu) {
       var list_elem = document.createElement("li");
       list_elem.className = "fn-dropdown-menu-label";
@@ -144,8 +145,12 @@
       this.hideDropdown();
     };
 
-    this.renderSearchInput = function() {
+    this.renderSearchable = function() {
+      console.log("render searchable");
       this.search_item = "";
+
+      var dropdown_input = this.querySelector("fn-dropdown-input");
+      console.log("dropdown_input");
       var input = document.createElement("input");
       var placeholder = this.getAttribute('data-placeholder');
       if (placeholder != null) {

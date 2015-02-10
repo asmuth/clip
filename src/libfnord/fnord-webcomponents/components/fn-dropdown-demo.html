@@ -20,7 +20,7 @@
     <!-- Standard Dropdown -->
     <h3><i>Example 1 &raquo;</i> Basic</h3>
     <!-- Default -->
-    <fn-dropdown>
+    <fn-dropdown data-resolved='resolved'>
       <fn-dropdown-item data-active>Value</fn-dropdown-item>
       <fn-dropdown-item>Count</fn-dropdown-item>
       <fn-dropdown-item>Sum</fn-dropdown-item>
@@ -30,7 +30,7 @@
     </fn-dropdown>
 
     <!-- Small -->
-   <fn-dropdown class="small" style="margin-left: 10px;">
+   <fn-dropdown data-resolved='resolved' class="small" style="margin-left: 10px;">
       <fn-dropdown-item>Value</fn-dropdown-item>
       <fn-dropdown-item data-active='active'>Count</fn-dropdown-item>
       <fn-dropdown-item>Sum</fn-dropdown-item>
@@ -42,7 +42,7 @@
     <!-- 'Input' Style Dropdown -->
     <h3><i>Example 2 &raquo;</i> Input Like</h3>
     <!-- Default -->
-    <fn-dropdown class="input below">
+    <fn-dropdown class="input below" data-resolved='resolved'>
       <fn-dropdown-item>Important</fn-dropdown-item>
       <fn-dropdown-item>Starres</fn-dropdown-item>
       <fn-dropdown-item>Unread</fn-dropdown-item>
@@ -52,7 +52,7 @@
     <br />
 
     <!-- Header Elem is displayed if no item is selected -->
-    <fn-dropdown class="input below">
+    <fn-dropdown class="input below" data-resolved='resolved'>
       <fn-dropdown-header>Advanced</fn-dropdown-header>
       <fn-dropdown-item>Inverted</fn-dropdown-item>
       <fn-dropdown-item>Logarithmic</fn-dropdown-item>
@@ -60,7 +60,7 @@
     <br />
 
     <!-- Small -->
-    <fn-dropdown class="input small below">
+    <fn-dropdown class="input small below" data-resolved='resolved'>
       <fn-dropdown-item>Edit</fn-dropdown-item>
       <fn-dropdown-item>Remove</fn-dropdown-item>
       <fn-dropdown-item>Hide</fn-dropdown-item>
@@ -68,7 +68,7 @@
     <br />
 
     <!-- Compact -->
-    <!--<fn-dropdown class="input compact">
+    <!--<fn-dropdown class="input compact" data-resolved='resolved'>
       <fn-dropdown-item>&#10003; Unread</fn-dropdown-item>
       <fn-dropdown-item>&#10003; Promotions</fn-dropdown-item>
       <fn-dropdown-item>&#10003; Updates</fn-dropdown-item>
@@ -79,7 +79,7 @@
     <h3><i>Example 4 &raquo;</i> Inline</h3>
     <!-- Default -->
     <span>Show the last
-      <fn-dropdown class="inline">
+      <fn-dropdown class="inline" data-resolved='resolved'>
         <fn-dropdown-item>4 hours</fn-dropdown-item>
         <fn-dropdown-item>12 hours</fn-dropdown-item>
         <fn-dropdown-item>24 hours</fn-dropdown-item>
@@ -88,7 +88,7 @@
 
     <!-- Small -->
     <span>Format
-      <fn-dropdown class="inline small">
+      <fn-dropdown class="inline small" data-resolved='resolved'>
         <fn-dropdown-item>SVG</fn-dropdown-item>
         <fn-dropdown-item>JSON</fn-dropdown-item>
         <fn-dropdown-item>CSV</fn-dropdown-item>
@@ -98,7 +98,7 @@
 
   <section>
     <h1>Multi Selectable Dropdown</h1>
-    <fn-dropdown data-style='input small' data-select='checkbox'>
+    <fn-dropdown data-style='input small' data-select='checkbox' data-resolved='resolved'>
       <fn-dropdown-header>Linear</fn-dropdown-header>
       <fn-dropdown-item>Linear</fn-dropdown-item>
       <fn-dropdown-item>Inverted</fn-dropdown-item>
@@ -113,7 +113,7 @@
     <h3><i>Example 1 &raquo;</i> Icon</h3>
 
     <!-- fn-dropdown-icon class -->
-    <fn-dropdown class="input below">
+    <fn-dropdown class="input below" data-resolved='resolved'>
       <fn-dropdown-item><i class="fn-dropdown-icon fa fa-bus"></i> Bus</fn-dropdown-item>
       <fn-dropdown-item><i class="fn-dropdown-icon fa fa-taxi"></i> Taxi</fn-dropdown-item>
       <fn-dropdown-item><i class="fn-dropdown-icon fa fa-bicycle"></i> Bicycle</fn-dropdown-item>
@@ -121,7 +121,7 @@
     <br />
 
     <!-- fn-dropdown-icon tag-->
-    <fn-dropdown class="input">
+    <fn-dropdown class="input" data-resolved='resolved'>
       <fn-dropdown-item>
         <fn-dropdown-icon><i class="fa fa-bus"></i></fn-dropdown-icon>
         Bus
@@ -138,7 +138,7 @@
 
     <!-- A Dropdown Menu Can Contain A Label -->
     <h3><i>Example 2 &raquo;</i> Label</h3>
-    <fn-dropdown class="input">
+    <fn-dropdown class="input" data-resolved='resolved'>
       <fn-dropdown-label>Show the Last</fn-dropdown-label>
       <fn-dropdown-item>4 hours</fn-dropdown-item>
       <fn-dropdown-item>12 hours</fn-dropdown-item>
@@ -147,7 +147,7 @@
 
     <!-- A Dropdown Menu Item Can Contain A Description -->
     <h3><i>Example 3 &raquo;</i> Item Description</h3>
-    <fn-dropdown class="input">
+    <fn-dropdown class="input" data-resolved='resolved'>
       <fn-dropdown-label>Filter Messages</fn-dropdown-label>
       <fn-dropdown-item>
         Unread
@@ -168,7 +168,8 @@
   <section>
     <h1>Searchable Dropdown</h1>
     <h3><i>Example 1 &raquo;</i> Full Width Input</h3>
-    <fn-dropdown data-searchable data-placeholder="Select a Country">
+    <fn-dropdown data-resolved='resolved'>
+      <fn-dropdown-input data-placeholder='Select a Country'></fn-dropdown-input>
       <fn-dropdown-item data-value="Spain">Spain</fn-dropdown-item>
       <fn-dropdown-item data-value="Italy">Italy</fn-dropdown-item>
       <fn-dropdown-item data-value="Netherlands">Netherlands</fn-dropdown-item>
@@ -182,7 +183,8 @@
     </fn-dropdown>
 
     <h3><i>Example 2 &raquo;</i> Custom Width Input</h3>
-    <fn-dropdown data-searchable data-placeholder="Year" style="width:150px;">
+    <fn-dropdown data-resolved='resolved' style="width:150px;">
+      <fn-dropdown-input data-placeholder='Year'></fn-dropdown-input>
       <fn-dropdown-item data-value="2000">2000</fn-dropdown-item>
       <fn-dropdown-item data-value="2001">2001</fn-dropdown-item>
       <fn-dropdown-item data-value="2002">2002</fn-dropdown-item>
@@ -202,18 +204,19 @@
     <h1>States</h1>
     <h3><i>Example 1 &raquo;</i> Disabled Basic Dropdown</h3>
     <fn-dropdown class='disabled below'>
-      <fn-dropdown-header>Age</fn-dropdown-header>
+      <fn-dropdown-header>Advanced</fn-dropdown-header>
+      <fn-dropdown-item>Sum</fn-dropdown-item>
     </fn-dropdown>
 
     <h3><i>Example 2 &raquo;</i> Disabled Input like Dropdown</h3>
     <fn-dropdown class="input disabled below">
-      <fn-dropdown-header>Age</fn-dropdown-header>
+      <fn-dropdown-header>Time Window</fn-dropdown-header>
+      <fn-dropdown-item>5 seconds</fn-dropdown-item>
     </fn-dropdown>
 
 
     <h3><i>Example 3 &raquo;</i> Basic Dropdown with Error State</h3>
     <fn-dropdown class="error below">
-      <fn-dropdown-header>Dropdown</fn-dropdown-header>
       <fn-dropdown-item>Choice 1</fn-dropdown-item>
       <fn-dropdown-item>Choice 2</fn-dropdown-item>
       <fn-dropdown-item>Choice 3</fn-dropdown-item>
@@ -221,10 +224,9 @@
 
     <h3><i>Example 4 &raquo;</i> Input like Dropdown with Error State</h3>
     <fn-dropdown class="error input">
-      <fn-dropdown-header>Dropdown</fn-dropdown-header>
-      <fn-dropdown-item>Choice 1</fn-dropdown-item>
-      <fn-dropdown-item>Choice 2</fn-dropdown-item>
-      <fn-dropdown-item>Choice 3</fn-dropdown-item>
+      <fn-dropdown-header>Gender</fn-dropdown-header>
+      <fn-dropdown-item>Female</fn-dropdown-item>
+      <fn-dropdown-item>Male</fn-dropdown-item>
     </fn-dropdown>
 
 
