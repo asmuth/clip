@@ -8,17 +8,6 @@
   copy of the GNU General Public License along with this program. If not, see
   <http://www.gnu.org/licenses/>.
 -->
-<style>
-  fn-dropdown {
-    display: block;
-  }
-
-  fn-dropdown[data-style~="inline"] {
-    display: inline-block;
-  }
-
-</style>
-
 <template id="fn-dropdown-base-tpl">
   <ul class="fn-dropdown-menu">
   </ul>
@@ -37,7 +26,7 @@
       if (this.hasAttribute('data-searchable')) {this.renderSearchInput();}
 
       this.attributeChangedCallback();
-      this.observeActions();
+      this.observeHeaderItem();
 
       document.addEventListener('click', function() {
         base.hideDropdown();
@@ -56,44 +45,55 @@
       }
     };
 
-    this.observeActions = function() {
+    this.observeHeaderItem = function(prev_active_item) {
       var base = this;
       var header_elem = this.querySelector("fn-dropdown-header");
 
       if (!header_elem) {
         header_elem = this.querySelector("fn-dropdown-item[data-active]");
+        header_elem.classList.add("header");
       }
 
       if (!header_elem) {
         header_elem = this.querySelector("fn-dropdown-item");
         header_elem.setAttribute('data-active', 'active');
+        header_elem.classList.add("header");
       }
 
-      header_elem.addEventListener('click', function(e) {
+      var onClick = function(e) {
         e.stopPropagation();
-        base.toggleDisplayDropdown();
-      }, false);
+        base.renderDropdown();
+      };
+
+      if (prev_active_item) {
+        prev_active_item.removeEventListener('click', onClick, false);
+      }
+
+      header_elem.addEventListener('click', onClick, false);
     };
 
-    this.toggleDisplayDropdown = function() {
-      var menu = this.querySelector(".fn-dropdown-menu");
-      if (menu.hasAttribute("data-active")) {
-        this.hideDropdown();
-      } else {
-        if (!this.classList.contains("disabled")) {
-          this.renderDropdown();
-        }
+    this.updateHeader = function(text) {
+      var header = this.querySelector("fn-dropdown-header");
+
+      if (header) {
+        header.innerText = text;
       }
     };
+
+    this.hasHeaderElem = function() {
+      return this.querySelector("fn-dropdown-header") != null;
+    }
 
     this.hideDropdown = function() {
       this.querySelector(".fn-dropdown-menu").removeAttribute('data-active');
     };
 
     this.renderDropdown = function() {
+      if (this.classList.contains("disabled")) {
+        return;
+      }
       var menu = this.querySelector(".fn-dropdown-menu");
       var items = this.querySelectorAll("fn-dropdown-item");
-      console.log(items);
 
       menu.innerHTML = "";
       menu.setAttribute("data-active", "active");
@@ -120,6 +120,36 @@
         menu.appendChild(list_elem);
         list_elem.addEventListener('click', onItemClick, false);
       }
+    };
+
+    this.renderListLabel = function(label, list_elem) {
+      var list_item = document.createElement("li");
+      list_item.className = "label";
+      list_item.innerHTML = label;
+      list_elem.appendChild(list_item);
+    };
+
+    this.onItemClick = function(item, shadow) {
+      var prev_active_item = this.querySelector("fn-dropdown-item[data-active]")
+      prev_active_item.removeAttribute('data-active');
+
+      item.setAttribute("data-active", 'active');
+
+
+      var ev = new CustomEvent("fn-dropdown-item-click", {
+        bubbles: true,
+        cancelable: true
+      });
+      this.dispatchEvent(ev);
+
+      if (this.hasHeaderElem()) {
+        this.updateHeader();
+      } else {
+        //header item changes and thus needs a new event listener
+        this.observeHeaderItem(prev_active_item);
+      }
+
+      this.hideDropdown();
     };
 
     this.renderSearchInput = function() {
@@ -159,40 +189,7 @@
       }, false);
     };
 
-    
-    this.renderListLabel = function(label, list_elem) {
-      var list_item = document.createElement("li");
-      list_item.className = "label";
-      list_item.innerHTML = label;
-      list_elem.appendChild(list_item);
-    };
 
-    this.onItemClick = function(base, item, shadow) {
-      var active_items = base.querySelectorAll("fn-dropdown-item[data-active]");
-      for (var i = 0; i < active_items.length; ++i) {
-        active_items[i].removeAttribute("data-active");
-      }
-
-      item.setAttribute("data-active", true);
-
-      var ev = new CustomEvent("fn-dropdown-item-click", {
-        bubbles: true,
-        cancelable: true
-      });
-      item.dispatchEvent(ev);
-
-      base.updateHeader();
-      base.hideDropdown();
-    };
-
-    this.updateHeader = function(text) {
-      var header = this.querySelector("fn-dropdown-header");
-      if (header != null && header.getAttribute('data-display-selection') == 'false') {return;}
-
-      if (this.hasAttribute('data-searchable')) {
-        this.shadowRoot.querySelector("input").value = text;
-      }
-    };
 
     /* Searchable Dropdown Key Navigation */
     this.keyNavigationUp = function() {
