@@ -11,8 +11,11 @@
 <template id="fn-dropdown-demo-base-tpl">
   <section>
     <h1>Styles</h1>
+
+    <!-- Standard Dropdown -->
     <h3><i>Example 1 &raquo;</i> Basic</h3>
-    <fn-dropdown style="margin-bottom: 30px;">
+    <!-- Default -->
+    <fn-dropdown>
       <fn-dropdown-item data-active>Value</fn-dropdown-item>
       <fn-dropdown-item>Count</fn-dropdown-item>
       <fn-dropdown-item>Sum</fn-dropdown-item>
@@ -20,57 +23,55 @@
       <fn-dropdown-item>Max</fn-dropdown-item>
       <fn-dropdown-item>Median</fn-dropdown-item>
     </fn-dropdown>
-    <fn-dropdown data-style="small" style="margin-bottom: 30px;">
-      <fn-dropdown-header>Rollup</fn-dropdown-header>
+
+    <!-- Small -->
+   <fn-dropdown class="small" style="margin-left: 10px;">
       <fn-dropdown-item>Value</fn-dropdown-item>
-      <fn-dropdown-item>Count</fn-dropdown-item>
+      <fn-dropdown-item data-active='active'>Count</fn-dropdown-item>
       <fn-dropdown-item>Sum</fn-dropdown-item>
       <fn-dropdown-item>Min</fn-dropdown-item>
       <fn-dropdown-item>Max</fn-dropdown-item>
       <fn-dropdown-item>Median</fn-dropdown-item>
     </fn-dropdown>
 
-
+    <!-- 'Input' Style Dropdown -->
     <h3><i>Example 2 &raquo;</i> Input Like</h3>
-    <fn-dropdown data-style="input">
-      <fn-dropdown-header>Categories</fn-dropdown-header>
+    <!-- Default -->
+    <fn-dropdown class="input">
       <fn-dropdown-item>&#10003; Unread</fn-dropdown-item>
       <fn-dropdown-item>&#10003; Promotions</fn-dropdown-item>
       <fn-dropdown-item>&#10003; Updates</fn-dropdown-item>
     </fn-dropdown>
 
-    <h3><i>Example 2 &raquo;</i> Small Input Like</h3>
-    <fn-dropdown data-style="input small">
-      <fn-dropdown-header>Categories</fn-dropdown-header>
+    <!-- Small -->
+    <fn-dropdown class="input small">
+      <fn-dropdown-item>Unread</fn-dropdown-item>
+      <fn-dropdown-item>Promotions</fn-dropdown-item>
+      <fn-dropdown-item>Updates</fn-dropdown-item>
+    </fn-dropdown>
+
+    <!-- Compact -->
+    <fn-dropdown class="input compact">
       <fn-dropdown-item>&#10003; Unread</fn-dropdown-item>
       <fn-dropdown-item>&#10003; Promotions</fn-dropdown-item>
       <fn-dropdown-item>&#10003; Updates</fn-dropdown-item>
     </fn-dropdown>
 
 
-    <h3><i>Example 3 &raquo;</i> Compact</h3>
-    <fn-dropdown data-style="input compact">
-      <fn-dropdown-header>Categories</fn-dropdown-header>
-      <fn-dropdown-item>&#10003; Unread</fn-dropdown-item>
-      <fn-dropdown-item>&#10003; Promotions</fn-dropdown-item>
-      <fn-dropdown-item>&#10003; Updates</fn-dropdown-item>
-    </fn-dropdown>
-
-
+    <!-- Inline Dropdown -->
     <h3><i>Example 4 &raquo;</i> Inline</h3>
+    <!-- Default -->
     <span>Show the last
-      <fn-dropdown data-style="inline">
-        <fn-dropdown-header>hour</fn-dropdown-header>
+      <fn-dropdown class="inline">
         <fn-dropdown-item>4 hours</fn-dropdown-item>
         <fn-dropdown-item>12 hours</fn-dropdown-item>
         <fn-dropdown-item>24 hours</fn-dropdown-item>
       </fn-dropdown>
     </span>
 
-    <h3><i>Example 4 &raquo;</i> Small Inline</h3>
+    <!-- Small -->
     <span>Format
-      <fn-dropdown data-style="inline small">
-        <fn-dropdown-header>SVG</fn-dropdown-header>
+      <fn-dropdown class="inline small">
         <fn-dropdown-item>SVG</fn-dropdown-item>
         <fn-dropdown-item>JSON</fn-dropdown-item>
         <fn-dropdown-item>CSV</fn-dropdown-item>
@@ -78,7 +79,7 @@
     </span>
   </section>
 
-  <section>
+ <!-- <section>
     <h1>Multi Selectable Dropdown</h1>
     <fn-dropdown data-style='input small' data-select='checkbox'>
       <fn-dropdown-header>Linear</fn-dropdown-header>
@@ -172,5 +173,5 @@
     </fn-dropdown>
 
 
-  </section>
+  </section>-->
 </template>
