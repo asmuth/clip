@@ -8,33 +8,22 @@
   copy of the GNU General Public License along with this program. If not, see
   <http://www.gnu.org/licenses/>.
 -->
-<style type='text/css'>
-  fn-input.error {
-    width: 30%;
-    float:left;
-    margin-right: 10px;
-  }
-
-  fn-input.error:last-child {
-    margin-right: 0px;
-  }
-
-  section#sizes fn-input {
-    width: 40%;
-  }
-</style>
-<template id="fn-form-demo-base-tpl">
+<template id="fn-input-demo-base-tpl">
   <section>
     <h1>Input</h1>
     <h3><i>Example 1 &raquo;</i> Basic</h3>
+    <!-- Basic Input With Placeholder -->
     <fn-input data-placeholder="Username"></fn-input>
-    <fn-input data-placeholder="First Name" data-value="Anna">
-    </fn-input>
-    <h3><i>Example 2 &raquo;</i> Labeled Input</h3>
-    <fn-input>
-      <fn-input-label>First Name</fn-input-label>
-    </fn-input>
 
+    <!-- Basic Input With Placeholder And Value -->
+    <fn-input data-placeholder="First Name" data-value="Anna"></fn-input>
+
+
+    <h3><i>Example 2 &raquo;</i> Labeled Input</h3>
+
+    <!-- Basic Input With Label -->
+    <fn-input-label>First Name</fn-input-label>
+    <fn-input></fn-input>
   </section>
 
   <section>
@@ -74,7 +63,7 @@
   </section>
 
   <section>
-    <h1>Styles</h1>
+    <h1>Options</h1>
     <h3><i>Example 1 &raquo;</i> Inline</h3>
     <fn-input data-style="inline">
       <fn-input-label>Last Name</fn-input-label>
@@ -82,31 +71,7 @@
     <div style="clear:both; width:100%; margin-bottom:20px;"></div>
     <h3><i>Example 2 &raquo;</i> Inline Group</h3>
     FIXME Inline field group
-
   </section>
-
-  <section id="sizes">
-    <h1>Sizes</h1>
-    <h3><i>Example 1 &raquo;</i> Mini</h3>
-    <fn-input data-placeholder='First Name' data-style="mini">
-      <fn-input-label>First Name</fn-input-label>
-    </fn-input>
-    <h3><i>Example 1 &raquo;</i> Small</h3>
-    <fn-input data-placeholder='First Name' data-style="small">
-      <fn-input-label>First Name</fn-input-label>
-    </fn-input>
-    <h3><i>Example 3 &raquo;</i> Regular</h3>
-    <fn-input data-placeholder='First Name'>
-      <fn-input-label>First Name</fn-input-label>
-    </fn-input>
-    <h3><i>Example 3 &raquo;</i> Large</h3>
-    <fn-input data-placeholder='First Name' data-style="large">
-      <fn-input-label>First Name</fn-input-label>
-    </fn-input>
-
-  </section>
-
-
 
   <section>
     <h1>Variations</h1>
