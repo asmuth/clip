@@ -32,18 +32,6 @@
       </fn-dropdown-items>
     </fn-dropdown>
 
-    <!-- Small with automatically created Header Element -->
-    <fn-dropdown data-resolved class="small" style="margin-left: 10px;">
-      <fn-dropdown-items>
-        <fn-dropdown-item>Value</fn-dropdown-item>
-        <fn-dropdown-item data-selected='selected'>Count</fn-dropdown-item>
-        <fn-dropdown-item>Sum</fn-dropdown-item>
-        <fn-dropdown-item>Min</fn-dropdown-item>
-        <fn-dropdown-item>Max</fn-dropdown-item>
-        <fn-dropdown-item>Median</fn-dropdown-item>
-      </fn-dropdown-items>
-    </fn-dropdown>
-
     <!-- 'Input' Style Dropdown -->
     <h3><i>Example 2 &raquo;</i> Input Like</h3>
     <!-- Default -->
@@ -66,16 +54,6 @@
       <fn-dropdown-items>
         <fn-dropdown-item>Inverted</fn-dropdown-item>
         <fn-dropdown-item>Logarithmic</fn-dropdown-item>
-      </fn-dropdown-items>
-    </fn-dropdown>
-    <br />
-
-    <!-- Small -->
-    <fn-dropdown data-resolved class="input small below">
-      <fn-dropdown-items>
-        <fn-dropdown-item>Edit</fn-dropdown-item>
-        <fn-dropdown-item>Remove</fn-dropdown-item>
-        <fn-dropdown-item>Hide</fn-dropdown-item>
       </fn-dropdown-items>
     </fn-dropdown>
     <br />
@@ -103,21 +81,10 @@
       </fn-dropdown>
     </span>
 
-    <!-- Small -->
-    <span>Format
-      <fn-dropdown data-resolved class="inline small">
-        <fn-dropdown-items>
-          <fn-dropdown-item>SVG</fn-dropdown-item>
-          <fn-dropdown-item>JSON</fn-dropdown-item>
-          <fn-dropdown-item>CSV</fn-dropdown-item>
-        </fn-dropdown-items>
-      </fn-dropdown>
-    </span>
-  </section>
 
    <section>
     <h1>Multi Selectable Dropdown</h1>
-    <fn-dropdown data-resolved class='input small' data-select='checkbox'>
+    <fn-dropdown data-resolved class='input' data-select='checkbox'>
       <fn-dropdown-header>Linear</fn-dropdown-header>
       <fn-dropdown-items>
         <fn-dropdown-item>Linear</fn-dropdown-item>
@@ -248,7 +215,7 @@
         menu.appendChild(item);
       });
 
-      dropdown.classList.add("input", "small");
+      dropdown.classList.add("input");
       dropdown.appendChild(menu);
       document.body.querySelector("#dd_append").appendChild(dropdown);
       dropdown.setAttribute('data-resolved', 'resolved');
