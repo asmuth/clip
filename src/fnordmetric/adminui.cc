@@ -28,6 +28,7 @@ AdminUI::AdminUI(
   webui_bundle_.addComponent("fnord/components/fn-tabbar.css");
   webui_bundle_.addComponent("fnord/components/fn-message.css");
   webui_bundle_.addComponent("fnord/components/fn-tooltip.css");
+  webui_bundle_.addComponent("fnord/components/fn-dropdown.css");
   webui_bundle_.addComponent("fnord/fnord.js");
   webui_bundle_.addComponent("fnord/date_util.js");
   webui_bundle_.addComponent("fnord/components/fn-appbar.html");
