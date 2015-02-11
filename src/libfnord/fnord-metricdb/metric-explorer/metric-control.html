@@ -111,16 +111,16 @@
     <div class='metric-control-group'>
       <b>Aggregate: </b>
       <fn-dropdown class="inline small" name='rollup'>
-        <fn-dropdown-menu>
+        <fn-dropdown-items>
           <fn-dropdown-item data-value='value'>Value</fn-dropdown-item>
           <fn-dropdown-item data-value='sum'>Sum</fn-dropdown-item>
           <fn-dropdown-item data-value='min'>Min</fn-dropdown-item>
           <fn-dropdown-item data-value='max'>Max</fn-dropdown-item>
-        </fn-dropdown-menu>
+        </fn-dropdown-items>
       </fn-dropdown>
       <b style="margin-left: 7px;">Window: </sub></b>
       <fn-dropdown class="inline small" name='time_window'>
-        <fn-dropdown-menu>
+        <fn-dropdown-items>
           <fn-dropdown-item data-value=1>1 second</fn-dropdown-item>
           <fn-dropdown-item data-value=5>5 seconds</fn-dropdown-item>
           <fn-dropdown-item data-value=10>10 seconds</fn-dropdown-item>
@@ -135,11 +135,11 @@
           <fn-dropdown-item data-value=21600>6 hours</fn-dropdown-item>
           <fn-dropdown-item data-value=43200>12 hours</fn-dropdown-item>
           <fn-dropdown-item data-value=86400>24 hours</fn-dropdown-item>
-        </fn-dropdown-menu>
+        </fn-dropdown-items>
       </fn-dropdown>
       <b style="margin-left: 7px;">Step: </b>
       <fn-dropdown class="inline small" name='time_step'>
-        <fn-dropdown-menu>
+        <fn-dropdown-items>
           <fn-dropdown-item data-value=1>1 second</fn-dropdown-item>
           <fn-dropdown-item data-value=5>5 seconds</fn-dropdown-item>
           <fn-dropdown-item data-value=10>10 seconds</fn-dropdown-item>
@@ -154,23 +154,13 @@
           <fn-dropdown-item data-value=21600>6 hours</fn-dropdown-item>
           <fn-dropdown-item data-value=43200>12 hours</fn-dropdown-item>
           <fn-dropdown-item data-value=86400>24 hours</fn-dropdown-item>
-        </fn-dropdown-menu>
-      </fn-dropdown>
-
-      <b style="margin-left: 7px;">Scale: </b>
-      <fn-dropdown class="inline small" name='scale'>
-        <fn-dropdown-menu>
-          <fn-dropdown-item data-value=0.5>0.5</fn-dropdown-item>
-          <fn-dropdown-item data-value=0.8>0.8</fn-dropdown-item>
-          <fn-dropdown-item data-value=1.0>1.0</fn-dropdown-item>
-          <fn-dropdown-item data-value=1.5>1.5</fn-dropdown-item>
-        </fn-dropdown-menu>
+        </fn-dropdown-items>
       </fn-dropdown>
 
       <b style="margin-left: 7px;">Group By: </b>
       <fn-dropdown class="inline small groupby">
-        <fn-dropdown-menu>
-        </fn-dropdown-menu>
+        <fn-dropdown-items>
+        </fn-dropdown-items>
       </fn-dropdown>
     </div>
 
@@ -293,10 +283,6 @@
       time_step.setAttribute('data-preselected', this.params.aggr_step);
       time_step.setAttribute('data-resolved', 'resolved');
 
-      var scale = this.querySelector("fn-dropdown[name='scale']");
-      scale.setAttribute('data-preselected', this.params.scale);
-      scale.setAttribute('data-resolved', 'resolved');
-
       rollup.addEventListener("fn-dropdown-item-click", function(e) {
         base.params.aggr_fn = e.srcElement.getAttribute('data-value');
         base.handleAggregationDisplay();
@@ -311,11 +297,6 @@
       time_step.addEventListener("fn-dropdown-item-click", function(e) {
         base.params.aggr_step = e.srcElement.getAttribute('data-value');
         base.attributeChangedEvent("aggr_step");
-      }, false);
-
-      scale.addEventListener('fn-dropdown-item-click', function(e) {
-        base.params.scale = e.srcElement.getAttribute('data-value');;
-        base.attributeChangedEvent("scale");
       }, false);
 
     };
