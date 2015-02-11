@@ -8,43 +8,27 @@
   copy of the GNU General Public License along with this program. If not, see
   <http://www.gnu.org/licenses/>.
 -->
-<template id="fn-dropdown-base-tpl">
-  <fn-dropdown-menu style="display:none">
-  </fn-dropdown-menu>
-</template>
-
 <script type="text/javascript">
   var DropDownComponent = function() {
     this.createdCallback = function() {
-      var tpl = Fnord.getTemplate("fn-dropdown", "base");
-      this.appendChild(tpl);
       var base = this;
 
+      //Remove?
       document.addEventListener('click', function() {
         base.hideDropdown();
       }, false);
 
 
       if (this.hasAttribute('data-resolved')) {
-        this.init();
+        this.initHeaderItem();
       }
     };
 
     this.attributeChangedCallback = function(attr, old_val, new_val) {
       if (attr == 'data-resolved') {
-        this.init();
+        this.initHeaderItem();
       }
     };
-
-    this.init = function() {
-      /* options */
-      if (this.querySelector('fn-dropdown-input')) {
-      this.renderSearchable();
-        return;
-      }
-
-      this.initHeaderItem();
-    }
 
     // Checks if a header_elem exists and renders one if not
     this.initHeaderItem = function() {
@@ -86,7 +70,10 @@
     };
 
     this.hideDropdown = function() {
-      this.querySelector("fn-dropdown-menu").removeAttribute('data-active');
+      var items = this.querySelector("fn-dropdown-items");
+      if (items) {
+        items.removeAttribute('data-active');
+      }
     };
 
     this.showDropdown = function() {
@@ -94,7 +81,7 @@
         return;
       }
 
-      var menu = this.querySelector("fn-dropdown-menu");
+      var menu = this.querySelector("fn-dropdown-items");
       menu.setAttribute('data-active', 'active');
 
       if (!this.eventListeners) {
@@ -176,12 +163,12 @@
         }
 
       } else if (direction == 'down') {
-        this.querySelector(".fn-dropdown-menu-item").classList.add("hover");
+        this.querySelector(".fn-dropdown-items-item").classList.add("hover");
       }
     };
 
     this.keyNavigationSubmit = function() {
-      var shadow_elem = this.querySelector(".fn-dropdown-menu-item.hover");
+      var shadow_elem = this.querySelector(".fn-dropdown-items-item.hover");
       var index = shadow_elem.getAttribute('data-index');
       var active_item = this.querySelector("fn-dropdown-item[data-active]");
 

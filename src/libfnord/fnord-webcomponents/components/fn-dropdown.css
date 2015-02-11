@@ -17,8 +17,6 @@ fn-dropdown,
   line-height: 1em;
   outline: none;
   text-align: left;
-  font-family: 'Helvetica Neue',Arial,Helvetica,sans-serif;
-  font-size: 1rem;
   color: rgba(0,0,0,.8);
   tap-highlight-color: rgba(0, 0, 0, 0);
   -webkit-transition: border-radius 0.1s ease, width 0.2s ease;
@@ -49,10 +47,10 @@ fn-dropdown-header:after,
 }
 
 /*--------------
-      Menu
+    Items
 ---------------*/
-fn-dropdown-menu,
-.fn-dropdown-menu {
+fn-dropdown-items,
+.fn-dropdown-items {
   display: none;
   list-style: none;
   cursor: pointer;
@@ -75,24 +73,17 @@ fn-dropdown-menu,
   will-change: transform,opacity;
 }
 
-fn-dropdown-menu[data-active],
-.fn-dropdown-menu[data-active] {
+fn-dropdown-items[data-active],
+.fn-dropdown-items[data-active] {
   display: inline-block;
 }
 
 
 /*--------------
-    Menu Item
+    Item
 ---------------*/
 fn-dropdown-item,
 .fn-dropdown-item {
-  display:none;
-  -webkit-transition: color .2s ease;
-  transition: color .2s ease;
-}
-
-fn-dropdown-menu[data-active] fn-dropdown-item,
-.fn-dropdown-menu[data-active] .fn-dropdown-item {
   display: list-item;
   list-style: none;
   position: relative;
@@ -232,8 +223,8 @@ fn-dropdown.input fn-dropdown-header:after,
 }
 
 /* Input Style Menu */
-fn-dropdown.input fn-dropdown-menu,
-.fn-dropdown.input .fn-dropdown-menu  {
+fn-dropdown.input fn-dropdown-items,
+.fn-dropdown.input .fn-dropdown-items  {
   overflow-x: hidden;
   overflow-y: auto;
   -webkit-backface-visibility: hidden;
@@ -262,7 +253,8 @@ fn-dropdown.input fn-dropdown-item,
 
 fn-dropdown.input fn-dropdown-item:first-child,
 .fn-dropdown.input .fn-dropdown-item:first-child,
-fn-dropdown.input fn-dropdown-label + fn-dropdown-item {
+fn-dropdown.input fn-dropdown-label + fn-dropdown-item,
+.fn-dropdown.input .fn-dropdown-label + .fn-dropdown-item {
   border-top: none;
 }
 
@@ -286,50 +278,14 @@ fn-dropdown.inline fn-dropdown-header,
   font-weight: bold;
 }
 
-fn-dropdown.inline fn-dropdown-menu,
-.fn-dropdown.inline .fn-dropdown-menu {
+fn-dropdown.inline fn-dropdown-items,
+.fn-dropdown.inline .fn-dropdown-items {
   cursor: auto;
   margin-top: 0.25em;
   border-radius: 0.2857rem;
 }
 
 
-/*******************************
-      Dropdown Sizes
-*******************************/
-fn-dropdown,
-.fn-dropdown {
-  font-size: 1em;
-}
-
-fn-dropdown.small,
-.fn-dropdown.small {
-  font-size: 0.875em;
-  line-height: 0.9em;
-}
-
-/* Input Style */
-fn-dropdown.input.small,
-.fn-dropdown.input.small {
-  font-size: 0.9em;
-  line-height: 0.9em;
-}
-
-fn-dropdown.input.small fn-dropdown-header,
-.fn-dropdown.input.small .fn-dropdown-header {
-  min-width: 130px;
-}
-
-fn-dropdown.search.small,
-.fn-dropdown.search.small {
-  line-height: 0.85rem;
-  font-size: 0.875rem;
-}
-
-fn-dropdown.inline.small fn-dropdown-menu,
-.fn-dropdown.inline.small .fn-dropdown-menu {
-  margin-top: 0.18em;
-}
 
 /*******************************
       Dropdown States
@@ -353,13 +309,13 @@ fn-dropdown.error fn-dropdown-header:hover,
   border-color: #dbb1b1 !important;
 }
 
-fn-dropdown.error fn-dropdown-menu,
-.fn-dropdown.error .fn-dropdown-menu {
+fn-dropdown.error fn-dropdown-items,
+.fn-dropdown.error .fn-dropdown-items {
   border-color: #dbb1b1;
 }
 
 fn-dropdown.error fn-dropdown-item,
-.fn-dropdown.error .fn-dropdown-menu-item {
+.fn-dropdown.error .fn-dropdown-item {
   color: #d95c5c;
 }
 
@@ -369,7 +325,7 @@ fn-dropdown.error fn-dropdown-item.hover {
 }
 
 fn-dropdown.error fn-dropdown-item[data-selected],
-.fn-dropdown.error .fn-dropdown-menu-item[data-selected]{
+.fn-dropdown.error .fn-dropdown-item[data-selected]{
   background-color: #fdcfcf;
 }
 
