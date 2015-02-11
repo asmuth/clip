@@ -8,14 +8,13 @@
   copy of the GNU General Public License along with this program. If not, see
   <http://www.gnu.org/licenses/>.
 -->
-<template id="fn-input-base-tpl">
-  <input type="text" />
-</template>
 <script type="text/javascript">
   var InputComponent = function() {
     this.createdCallback = function() {
-      var tpl = Fnord.getTemplate("fn-input", "base");
-      this.appendChild(tpl);
+      //input should be inserted before icon etc. element
+      var input = document.createElement("input");
+      input.type = 'text';
+      this.insertBefore(input, this.firstChild);
       var base = this;
 
       // input options
