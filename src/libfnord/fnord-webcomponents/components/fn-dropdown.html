@@ -89,47 +89,6 @@
       menu.setAttribute('data-active', 'active');
     }
 
-    this.renderDropdown = function() {
-      var menu = this.querySelector("fn-dropdown-menu");
-      var items = this.querySelectorAll("fn-dropdown-item");
-
-      menu.innerHTML = "";
-      menu.setAttribute("data-active", "active");
-      menu.setAttribute('data-rendered', 'rendered');
-
-      var label = this.querySelector("fn-dropdown-label");
-      if (label) {this.renderListLabel(label.innerHTML, menu)};
-
-      for (var i = 0; i < items.length; i++) {
-        var list_elem = document.createElement("li");
-
-        var onItemClick = (function(base, item) {
-          return function(e) {
-            e.stopPropagation();
-            base.onItemClick(item, e.srcElement);
-          };
-        })(this, items[i]);
-
-        list_elem.className = "fn-dropdown-menu-item";
-        if (items[i].hasAttribute('data-active')) {
-          list_elem.classList.add("active");
-        }
-
-        list_elem.innerHTML = items[i].innerHTML;
-        list_elem.setAttribute('data-index', i);
-        items[i].setAttribute('data-index', i);
-        menu.appendChild(list_elem);
-        list_elem.addEventListener('click', onItemClick, false);
-      }
-    };
-
-    this.renderListLabel = function(label, menu) {
-      var list_elem = document.createElement("li");
-      list_elem.className = "fn-dropdown-menu-label";
-      list_elem.innerHTML = label;
-      menu.appendChild(list_elem);
-    };
-
     this.onItemClick = function(item, shadow) {
       var prev_active_item = this.querySelector("fn-dropdown-item[data-active]");
       if (prev_active_item) {
