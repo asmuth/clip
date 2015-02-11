@@ -92,22 +92,15 @@
     <div class="navigation">
       <div class="item left">
         <span class="text">Display: </span>
-        <fn-dropdown data-style="inline small" id="view" >
-          <fn-dropdown-header>Chart</fn-dropdown-header>
-          <fn-dropdown-item data-value='svg'>Chart</fn-dropdown-item>
-          <fn-dropdown-item data-value='csv'>Raw</fn-dropdown-item>
+        <fn-dropdown data-resolved class="inline small" id="view">
+          <fn-dropdown-menu>
+            <fn-dropdown-item data-value='svg'>Chart</fn-dropdown-item>
+            <fn-dropdown-item data-value='csv'>Raw</fn-dropdown-item>
+          </fn-dropdown-menu>
         </fn-dropdown>
       </div>
 
-      <div class="item left">
-        <span class="text">Chart Settings</span>
-        <fn-dropdown data-style="inline small" id="chart_settings">
-          <fn-dropdown-header>Linear</fn-dropdown-header>
-          <fn-dropdown-item data-value='linear'>Linar</fn-dropdown-item>
-          <fn-dropdown-item data-value='logarithmic'>Logarithmic</fn-dropdown-item>
-          <fn-dropdown-item data-value='inverted'>Inverted</fn-dropdown-item>
-        </fn-dropdown>
-      </div>
+
 
       <fn-button id="embed_btn" class="item left" data-size='tiny' style="display:none;">
         <i class='fa fa-share'></i>Embed
@@ -119,14 +112,15 @@
       <div class="item" style="height: 36px; line-height: 36px; float: right;">
         <fn-date-time-selector data-resolved='resolved'>
           <fn-dropdown id='timerange' data-style="inline small">
-            <fn-dropdown-header>1 hour</fn-dropdown-header>
-            <fn-dropdown-item data-value=300>5 minutes</fn-dropdown-item>
-            <fn-dropdown-item data-value=900>15 minutes</fn-dropdown-item>
-            <fn-dropdown-item data-value=1800>30 minutes</fn-dropdown-item>
-            <fn-dropdown-item data-value=3600>1 hour</fn-dropdown-item>
-            <fn-dropdown-item data-value=14400>4 hours</fn-dropdown-item>
-            <fn-dropdown-item data-value=43200>12 hours</fn-dropdown-item>
-            <fn-dropdown-item data-value=86400>1 day</fn-dropdown-item>
+            <fn-dropdown-menu>
+              <fn-dropdown-item data-value=300>5 minutes</fn-dropdown-item>
+              <fn-dropdown-item data-value=900>15 minutes</fn-dropdown-item>
+              <fn-dropdown-item data-value=1800>30 minutes</fn-dropdown-item>
+              <fn-dropdown-item data-value=3600>1 hour</fn-dropdown-item>
+              <fn-dropdown-item data-value=14400>4 hours</fn-dropdown-item>
+              <fn-dropdown-item data-value=43200>12 hours</fn-dropdown-item>
+              <fn-dropdown-item data-value=86400>1 day</fn-dropdown-item>
+            </fn-dropdown-menu>
           </fn-dropdown>
         </fn-date-time-selector>
       </div>
@@ -670,19 +664,11 @@
     this.handleGenericControls = function() {
       var base = this;
       /* init */
-      var log_scale = this.querySelector("#log_scale");
-      var inv_scale = this.querySelector("#inv_scale");
       var embed_btn = this.querySelector("#embed_btn");
       var autorefresh_btn = this.querySelector("#auto_refresh");
       var modal = this.querySelector("fn-modal");
       var interval_id;
 
-      if (this.getGenericParamOrDefault("logarithmic") === "true") {
-        log_scale.setAttribute("data-preselected", true);
-      }
-      if (this.getGenericParamOrDefault("inverted") === "true") {
-        inv_scale.setAttribute("data-preselected", true);
-      }
 
       this.querySelector("fn-tooltip#ttp_embed").init(embed_btn);
       this.querySelector("fn-tooltip#ttp_refresh").init(autorefresh_btn);

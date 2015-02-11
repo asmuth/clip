@@ -44,14 +44,6 @@
       float: left;
     }
 
-    .metric-control-group.aggregation_time_window {
-      border-right: 1px solid rgb(226, 232, 237);
-    }
-
-    .metric-control-group.aggregation_type {
-      border-right: 1px solid rgb(226, 232, 237);
-    }
-
     .metric-control-group b {
       font-weight: normal;
       line-height: 12px;
@@ -59,10 +51,6 @@
       opacity: 0.7;
     }
 
-    .metric-control-group.scale fn-input /deep/ input {
-      width: 40px;
-      padding: 0.67861em 0.8em !important;
-    }
 
     .metric {
       float:left;
@@ -122,58 +110,67 @@
     </div>
     <div class='metric-control-group'>
       <b>Aggregate: </b>
-      <fn-dropdown class='rollup' data-style="inline small">
-        <fn-dropdown-header>Sum</fn-dropdown-header>
-        <fn-dropdown-item data-value='value'>Value</fn-dropdown-item>
-        <fn-dropdown-item data-value='sum'>Sum</fn-dropdown-item>
-        <fn-dropdown-item data-value='min'>Min</fn-dropdown-item>
-        <fn-dropdown-item data-value='max'>Max</fn-dropdown-item>
+      <fn-dropdown class="inline small" name='rollup'>
+        <fn-dropdown-menu>
+          <fn-dropdown-item data-value='value'>Value</fn-dropdown-item>
+          <fn-dropdown-item data-value='sum'>Sum</fn-dropdown-item>
+          <fn-dropdown-item data-value='min'>Min</fn-dropdown-item>
+          <fn-dropdown-item data-value='max'>Max</fn-dropdown-item>
+        </fn-dropdown-menu>
       </fn-dropdown>
       <b style="margin-left: 7px;">Window: </sub></b>
-      <fn-dropdown class='time_window' data-style="inline small">
-        <fn-dropdown-header>5 seconds</fn-dropdown-header>
-        <fn-dropdown-item data-value=1>1 second</fn-dropdown-item>
-        <fn-dropdown-item data-value=5>5 seconds</fn-dropdown-item>
-        <fn-dropdown-item data-value=10>10 seconds</fn-dropdown-item>
-        <fn-dropdown-item data-value=20>20 seconds</fn-dropdown-item>
-        <fn-dropdown-item data-value=30>30 seconds</fn-dropdown-item>
-        <fn-dropdown-item data-value=60>1 minute</fn-dropdown-item>
-        <fn-dropdown-item data-value=300>5 minutes</fn-dropdown-item>
-        <fn-dropdown-item data-value=900>15 minutes</fn-dropdown-item>
-        <fn-dropdown-item data-value=1800>30 minutes</fn-dropdown-item>
-        <fn-dropdown-item data-value=3600>1 hour</fn-dropdown-item>
-        <fn-dropdown-item data-value=7200>2 hours</fn-dropdown-item>
-        <fn-dropdown-item data-value=21600>6 hours</fn-dropdown-item>
-        <fn-dropdown-item data-value=43200>12 hours</fn-dropdown-item>
-        <fn-dropdown-item data-value=86400>24 hours</fn-dropdown-item>
+      <fn-dropdown class="inline small" name='time_window'>
+        <fn-dropdown-menu>
+          <fn-dropdown-item data-value=1>1 second</fn-dropdown-item>
+          <fn-dropdown-item data-value=5>5 seconds</fn-dropdown-item>
+          <fn-dropdown-item data-value=10>10 seconds</fn-dropdown-item>
+          <fn-dropdown-item data-value=20>20 seconds</fn-dropdown-item>
+          <fn-dropdown-item data-value=30>30 seconds</fn-dropdown-item>
+          <fn-dropdown-item data-value=60>1 minute</fn-dropdown-item>
+          <fn-dropdown-item data-value=300>5 minutes</fn-dropdown-item>
+          <fn-dropdown-item data-value=900>15 minutes</fn-dropdown-item>
+          <fn-dropdown-item data-value=1800>30 minutes</fn-dropdown-item>
+          <fn-dropdown-item data-value=3600>1 hour</fn-dropdown-item>
+          <fn-dropdown-item data-value=7200>2 hours</fn-dropdown-item>
+          <fn-dropdown-item data-value=21600>6 hours</fn-dropdown-item>
+          <fn-dropdown-item data-value=43200>12 hours</fn-dropdown-item>
+          <fn-dropdown-item data-value=86400>24 hours</fn-dropdown-item>
+        </fn-dropdown-menu>
       </fn-dropdown>
       <b style="margin-left: 7px;">Step: </b>
-      <fn-dropdown class='time_step' data-style="inline small">
-        <fn-dropdown-header>10 seconds</fn-dropdown-header>
-        <fn-dropdown-item data-value=1>1 second</fn-dropdown-item>
-        <fn-dropdown-item data-value=5>5 seconds</fn-dropdown-item>
-        <fn-dropdown-item data-value=10>10 seconds</fn-dropdown-item>
-        <fn-dropdown-item data-value=20>20 seconds</fn-dropdown-item>
-        <fn-dropdown-item data-value=30>30 seconds</fn-dropdown-item>
-        <fn-dropdown-item data-value=60>1 minute</fn-dropdown-item>
-        <fn-dropdown-item data-value=300>5 minutes</fn-dropdown-item>
-        <fn-dropdown-item data-value=900>15 minutes</fn-dropdown-item>
-        <fn-dropdown-item data-value=1800>30 minutes</fn-dropdown-item>
-        <fn-dropdown-item data-value=3600>1 hour</fn-dropdown-item>
-        <fn-dropdown-item data-value=7200>2 hours</fn-dropdown-item>
-        <fn-dropdown-item data-value=21600>6 hours</fn-dropdown-item>
-        <fn-dropdown-item data-value=43200>12 hours</fn-dropdown-item>
-        <fn-dropdown-item data-value=86400>24 hours</fn-dropdown-item>
+      <fn-dropdown class="inline small" name='time_step'>
+        <fn-dropdown-menu>
+          <fn-dropdown-item data-value=1>1 second</fn-dropdown-item>
+          <fn-dropdown-item data-value=5>5 seconds</fn-dropdown-item>
+          <fn-dropdown-item data-value=10>10 seconds</fn-dropdown-item>
+          <fn-dropdown-item data-value=20>20 seconds</fn-dropdown-item>
+          <fn-dropdown-item data-value=30>30 seconds</fn-dropdown-item>
+          <fn-dropdown-item data-value=60>1 minute</fn-dropdown-item>
+          <fn-dropdown-item data-value=300>5 minutes</fn-dropdown-item>
+          <fn-dropdown-item data-value=900>15 minutes</fn-dropdown-item>
+          <fn-dropdown-item data-value=1800>30 minutes</fn-dropdown-item>
+          <fn-dropdown-item data-value=3600>1 hour</fn-dropdown-item>
+          <fn-dropdown-item data-value=7200>2 hours</fn-dropdown-item>
+          <fn-dropdown-item data-value=21600>6 hours</fn-dropdown-item>
+          <fn-dropdown-item data-value=43200>12 hours</fn-dropdown-item>
+          <fn-dropdown-item data-value=86400>24 hours</fn-dropdown-item>
+        </fn-dropdown-menu>
       </fn-dropdown>
 
       <b style="margin-left: 7px;">Scale: </b>
-      <fn-dropdown class="scale" data-style="inline small" data-placeholder=0.8>
-        <fn-dropdown-header>1.0</fn-dropdown-header>
+      <fn-dropdown class="inline small" name='scale'>
+        <fn-dropdown-menu>
+          <fn-dropdown-item data-value=0.5>0.5</fn-dropdown-item>
+          <fn-dropdown-item data-value=0.8>0.8</fn-dropdown-item>
+          <fn-dropdown-item data-value=1.0>1.0</fn-dropdown-item>
+          <fn-dropdown-item data-value=1.5>1.5</fn-dropdown-item>
+        </fn-dropdown-menu>
       </fn-dropdown>
 
       <b style="margin-left: 7px;">Group By: </b>
-      <fn-dropdown class="groupby" data-style="inline small" data-placeholder=0.8>
-        <fn-dropdown-header>&nbsp;&mdash;&nbsp;</fn-dropdown-header>
+      <fn-dropdown class="inline small groupby">
+        <fn-dropdown-menu>
+        </fn-dropdown-menu>
       </fn-dropdown>
     </div>
 
@@ -284,14 +281,21 @@
       var base = this;
       this.setHeader();
 
-      var rollup = this.querySelector(".rollup");
+      var rollup = this.querySelector("fn-dropdown[name='rollup']");
       rollup.setAttribute('data-preselected', this.params.aggr_fn);
+      rollup.setAttribute('data-resolved', 'resolved');
 
-      var time_window = this.querySelector(".time_window");
+      var time_window = this.querySelector("fn-dropdown[name='time_window']");
       time_window.setAttribute('data-preselected', this.params.aggr_window);
+      time_window.setAttribute('data-resolved', 'resolved');
 
-      var time_step = this.querySelector(".time_step");
+      var time_step = this.querySelector("fn-dropdown[name='time_step']");
       time_step.setAttribute('data-preselected', this.params.aggr_step);
+      time_step.setAttribute('data-resolved', 'resolved');
+
+      var scale = this.querySelector("fn-dropdown[name='scale']");
+      scale.setAttribute('data-preselected', this.params.scale);
+      scale.setAttribute('data-resolved', 'resolved');
 
       rollup.addEventListener("fn-dropdown-item-click", function(e) {
         base.params.aggr_fn = e.srcElement.getAttribute('data-value');
@@ -309,12 +313,11 @@
         base.attributeChangedEvent("aggr_step");
       }, false);
 
-/*
-      scale_input.addEventListener('fn-input-submit', function(e) {
-        base.params.scale = e.detail;
+      scale.addEventListener('fn-dropdown-item-click', function(e) {
+        base.params.scale = e.srcElement.getAttribute('data-value');;
         base.attributeChangedEvent("scale");
       }, false);
-*/
+
     };
 
     this.splitColumns = function(columns) {
