@@ -51,9 +51,17 @@
       var base = this;
       var selected_item = this.querySelector("fn-dropdown-item[data-selected]");
       var header_elem = this.querySelector("fn-dropdown-header");
+      var preselection = this.getAttribute('data-preselected');
 
       if (!selected_item) {
-        selected_item = this.querySelector("fn-dropdown-item");
+        if (preselection) {
+          selected_item = this.findItemByValue(preselection);
+        }
+
+        if (!selected_item) {
+          selected_item = this.querySelector("fn-dropdown-item");
+        }
+
         selected_item.setAttribute('data-selected', 'selected');
       }
 
@@ -96,6 +104,11 @@
 
       //this.handleKeyNavigation('show');
     };
+
+    this.findItemByValue = function(value) {
+      return (this.querySelector(
+        "fn-dropdown-item[data-value='" + value + "']"));
+    }
 
     this.setItemEventListeners = function() {
       var base = this;
