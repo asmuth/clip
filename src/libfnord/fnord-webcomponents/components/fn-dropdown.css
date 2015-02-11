@@ -160,5 +160,18 @@ fn-dropdown-descr,
   color: rgba(0, 0, 0, 0.4);
 }
 
-
+/*--------------
+  Label
+---------------*/
+fn-dropdown-label,
+.fn-dropdown-label {
+  display: list-item;
+  margin: 1rem 0rem 0.75rem;
+  padding: 0em 1.25rem;
+  color: rgba(0, 0, 0, 0.85);
+  font-size: 0.8em;
+  font-weight: bold;
+  text-transform: uppercase;
+  cursor: default;
+}
 
