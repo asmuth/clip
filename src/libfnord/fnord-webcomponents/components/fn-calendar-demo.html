@@ -18,6 +18,10 @@
       margin-left: 10px;
     }
 
+    .small {
+      font-size: 12px;
+    }
+
     section.floating {
       min-height: 300px;
     }
@@ -31,10 +35,10 @@
     <h1><i>Example 1 &raquo;</i> Preselected Dates</h1>
 
     <!-- Default Selection -->
-    <fn-calendar class="left" data-style='small' data-selected></fn-calendar>
+    <fn-calendar class="left" data-selected></fn-calendar>
 
     <!-- Specified Selection -->
-    <fn-calendar class="left margin" data-style='small' data-selected=1423958400></fn-calendar>
+    <fn-calendar class="left margin" data-selected=1423958400></fn-calendar>
   </section>
 
   <section>
@@ -62,11 +66,16 @@
     <h1><i>Example 4 &raquo;</i> Defined Date Selection Ranges</h1>
 
     <!-- Only Past Dates Are Selectable -->
-    <fn-calendar class="left" data-style='small' data-selectable='past'></fn-calendar>
+    <fn-calendar class="left" data-selectable='past'></fn-calendar>
 
     <!-- Only Future Dates Are Selectable -->
-    <fn-calendar class="left margin" data-style='small blue' data-selectable='future'></fn-calendar>
+    <fn-calendar class="left margin" data-selectable='future'></fn-calendar>
 
+  </section>
+
+  <section class="floating">
+    <h1><i>Example 5 &raquo;</i> Customised Size</h1>
+    <fn-calendar class="left small"></fn-calendar>
   </section>
 
 </template>
