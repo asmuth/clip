@@ -149,6 +149,13 @@ DateUtil.getNewMonthTimestamp = function(base_month, base_year, offset) {
   return date.getTime();
 }
 
+DateUtil.isSameDay = function(ts1, ts2) {
+  var day1 = new Date(ts1).setHours('0','0','0','0');
+  var day2 = new Date(ts2).setHours('0','0','0','0');
+
+  return (day1 === day2);
+}
+
 DateUtil.parseTimestamp = function(timestamp) {
   //TODO add timezone
   var timestamp = parseInt(timestamp);

@@ -19,6 +19,8 @@
       border-radius: 3px;
       font-size: 1em;
       line-height: 1em;
+      border: 1px solid rgba(0, 0, 0, 0.1);
+      color: rgba(0, 0, 0, 0.8);
     }
 
     table tr {
@@ -56,13 +58,8 @@
     }
 
     /**********************
-      Colors
+      States
     ***********************/
-    table {
-      border: 1px solid rgba(0, 0, 0, 0.1);
-      color: rgba(0, 0, 0, 0.8);
-    }
-
     table tr.week td {
      color: rgba(0, 0, 0, 0.6); 
     }
@@ -79,7 +76,9 @@
       border: 1px solid rgba(0, 0, 0, 0.1);
     }
 
-
+    table td.bright {
+      opacity: 0.6;
+    }
   </style>
 
   <table>
@@ -181,11 +180,11 @@
 
         for (var day = 0; day < 7; day++) {
           if (current_date > this.date.num_days) {
-            return this.renderLastWeeks(day, week);
+            return this.renderLastWeeks(day, week, tr_elem);
           }
 
           tr_elem.appendChild(
-            this.renderDayElem(current_date, this.date.month_timestamp));
+            this.renderDayElem(current_date, this.date.month_timestamp, true));
           current_date++;
         }
       }
@@ -213,29 +212,39 @@
       return current_date;
     }
 
-    this.renderLastWeeks = function(day, week) {
+    this.renderLastWeeks = function(day, week, tr_elem) {
       var next_month =
         DateUtil.getNewMonthTimestamp(this.date.month, this.date.year, 1);
       var current_date = 1;
-      for (; week < 6; week++) {
+
+      //render partially current month, next month week
+      for (; day < 7; day++) {
+        tr_elem.appendChild(
+          this.renderDayElem(current_date, next_month));
+
+        current_date++;
+      }
+
+      //render completly next month week
+      for (week++; week < 6; week++) {
         var tr_elem = this.shadowRoot.getElementById("week" + week);
         tr_elem.innerHTML = "";
 
-        for (; day < 7; day++) {
+        for (day = 0; day < 7; day++) {
           tr_elem.appendChild(
             this.renderDayElem(current_date, next_month));
           current_date++;
         }
-        day = 0;
       }
     }
 
-    this.renderDayElem = function(date, timestamp) {
+    this.renderDayElem = function(date, month_timestamp) {
       var td_elem = document.createElement("td");
+      var timestamp = month_timestamp + (date - 1) * DateUtil.millisPerDay;
 
       if (this.isSelectable(date, timestamp)) {
-        td_elem.className = this.tdClassName(date, timestamp);
-        this.handleDateLinks(td_elem, date);
+        td_elem.className = "selectable " + this.tdClassName(date, month_timestamp);
+        this.handleDateLinks(td_elem, date, month_timestamp);
       }
 
       td_elem.innerHTML = date;
@@ -259,22 +268,26 @@
       return true;
     };
 
-    this.tdClassName = function(date, timestamp) {
-      var now = DateUtil.getDateObject(Date.now(), 'date', false);
-      var name = "selectable ";
+    this.tdClassName = function(date, month_timestamp) {
+      var now = Date.now();
+      var timestamp = month_timestamp + (date - 1) * DateUtil.millisPerDay;
+      var name = "";
+
+      /* date isn't in current month */
+      if (month_timestamp !== this.date.month_timestamp) {
+        name += " bright";
+      }
 
       /* date is today */
-      if (date == now.date && this.date.month == now.month && this.date.year == now.year) {
+      if (DateUtil.isSameDay(now, timestamp)) {
         name += " highlight_border";
       }
-      /* date is selected date */
-      if (this.hasAttribute('data-selected')) {
-        var selected = DateUtil.getDateObject(
-          this.getTimeStamp('data-selected'), 'date', false);
 
-        if (date == selected.date &&
-            this.date.month == selected.month && 
-            this.date.year == selected.year) {
+
+      if (this.hasAttribute('data-selected')) {
+        var selected = this.getTimeStamp('data-selected');
+        /* date is selected date */
+        if (DateUtil.isSameDay(selected, timestamp)) {
               name += " highlight";
         }
       }
@@ -282,24 +295,29 @@
       return name;
     };
 
-    this.handleDateLinks = function(td_elem, date) {
+    this.handleDateLinks = function(td_elem, date, month_timestamp) {
       var base = this;
+      var timestamp = month_timestamp + (date - 1) * DateUtil.millisPerDay;
       var month = this.date.month;
       var year = this.date.year;
 
       td_elem.onclick = function() {
+        console.log(timestamp);
         base.fireDateSelectEvent(date, month, year);
       };
     };
 
-    this.datesOfPrevMonth = function(month, year) {
+    //timestamp -> beginning of last month
+    this.datesOfPrevMonth = function(timestamp) {
       var dates = [];
 
       if (this.date.first_day == 0) {
         return dates;
       }
 
-      var num_days = DateUtil.daysInMonth(month + 1, year);
+      var date = new Date(timestamp);
+      var num_days = DateUtil.daysInMonth(date.getMonth() + 1, date.getYear());
+      console.log(num_days);
 
       for (var i = this.date.first_day - 1; i >= 0; i--) {
         dates.push(num_days - i);
