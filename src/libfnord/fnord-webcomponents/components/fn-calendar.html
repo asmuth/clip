@@ -112,8 +112,9 @@
       var shadow = this.createShadowRoot();
       var tpl = Fnord.getTemplate("fn-calendar", "base");
       shadow.appendChild(tpl);
+
       this.init();
-    }
+    };
 
     this.attributeChangedCallback = function(attr, old_val, new_val) {
       switch (attr) {
@@ -133,18 +134,21 @@
       this.observeMonthSelectors();
     };
 
+    //render previous/next month onclick
     this.observeMonthSelectors = function() {
       var base = this;
       this.shadowRoot.querySelector(".fa-chevron-left").onclick = function() {
-        base.render(base.getMonthTimeStamp(base.date.month - 1, base.date.year));
+        base.render(
+          DateUtil.getMonthTimestamp(base.date.month, base.date.year, -1));
       };
 
       this.shadowRoot.querySelector(".fa-chevron-right").onclick = function() {
-        base.render(base.getMonthTimeStamp(base.date.month + 1, base.date.year));
+        base.render(
+          DateUtil.getMonthTimestamp(base.date.month, base.date.year, 1));
       };
     };
 
-    //updates the date object
+    // update date object and render header and weeks
     this.render = function(timestamp) {
       this.date = DateUtil.getDateObject(timestamp, 'date', true);
       this.renderMonthHeader();
@@ -179,30 +183,35 @@
         tr_elem.innerHTML = "";
 
         for (var day = 0; day < 7; day++) {
+          //all days of current month are rendered
           if (current_date > this.date.num_days) {
             return this.renderLastWeeks(day, week, tr_elem);
           }
 
           tr_elem.appendChild(
             this.renderDayElem(current_date, this.date.month_timestamp, true));
+
           current_date++;
         }
       }
     };
 
+    //returns last rendered date of current month
     this.renderFirstWeek = function() {
       var prev_month =
-        DateUtil.getNewMonthTimestamp(this.date.month, this.date.year, -1);
+        DateUtil.getMonthTimestamp(this.date.month, this.date.year, -1);
       var prev_dates = this.datesOfPrevMonth(prev_month);
       var current_date = 1;
       var tr_elem = this.shadowRoot.getElementById("week0");
       tr_elem.innerHTML = '';
 
+      //render last days of previous month
       for (var i = 0; i < prev_dates.length; i++) {
         tr_elem.appendChild(
           this.renderDayElem(prev_dates[i], prev_month));
       };
 
+      //render first days of current month
       for (day = prev_dates.length; day < 7; day ++) {
         tr_elem.appendChild(
           this.renderDayElem(current_date, this.date.month_timestamp));
@@ -210,14 +219,14 @@
       }
 
       return current_date;
-    }
+    };
 
     this.renderLastWeeks = function(day, week, tr_elem) {
       var next_month =
-        DateUtil.getNewMonthTimestamp(this.date.month, this.date.year, 1);
+        DateUtil.getMonthTimestamp(this.date.month, this.date.year, 1);
       var current_date = 1;
 
-      //render partially current month, next month week
+      //add for remaining weekdays of week days of next month
       for (; day < 7; day++) {
         tr_elem.appendChild(
           this.renderDayElem(current_date, next_month));
@@ -225,7 +234,7 @@
         current_date++;
       }
 
-      //render completly next month week
+      //render week with days of next month
       for (week++; week < 6; week++) {
         var tr_elem = this.shadowRoot.getElementById("week" + week);
         tr_elem.innerHTML = "";
@@ -236,7 +245,7 @@
           current_date++;
         }
       }
-    }
+    };
 
     this.renderDayElem = function(date, month_timestamp) {
       var td_elem = document.createElement("td");
@@ -250,7 +259,7 @@
       td_elem.innerHTML = date;
 
       return td_elem;
-    }
+    };
 
     this.isSelectable = function(date, month_timestamp) {
       var now = Date.now();
@@ -273,38 +282,25 @@
       var timestamp = month_timestamp + (date - 1) * DateUtil.millisPerDay;
       var name = "";
 
-      /* date isn't in current month */
+      // date isn't in current month
       if (month_timestamp !== this.date.month_timestamp) {
         name += " bright";
       }
 
-      /* date is today */
+      // date is today
       if (DateUtil.isSameDay(now, timestamp)) {
         name += " highlight_border";
       }
 
-
       if (this.hasAttribute('data-selected')) {
         var selected = this.getTimeStamp('data-selected');
-        /* date is selected date */
+        // date is selected date
         if (DateUtil.isSameDay(selected, timestamp)) {
               name += " highlight";
         }
       }
 
       return name;
-    };
-
-    this.handleDateLinks = function(td_elem, date, month_timestamp) {
-      var base = this;
-      var timestamp = month_timestamp + (date - 1) * DateUtil.millisPerDay;
-      var month = this.date.month;
-      var year = this.date.year;
-
-      td_elem.onclick = function() {
-        console.log(timestamp);
-        base.fireDateSelectEvent(date, month, year);
-      };
     };
 
     //timestamp -> beginning of last month
@@ -317,27 +313,28 @@
 
       var date = new Date(timestamp);
       var num_days = DateUtil.daysInMonth(date.getMonth() + 1, date.getYear());
-      console.log(num_days);
 
       for (var i = this.date.first_day - 1; i >= 0; i--) {
         dates.push(num_days - i);
       }
 
       return dates;
-    }
+    };
 
     this.getTimeStamp = function(attr) {
       return DateUtil.parseTimestamp(this.getAttribute(attr));
     };
 
-    this.getMonthTimeStamp = function(month, year) {
-      return (new Date(year, month).getTime());
+    this.handleDateLinks = function(td_elem, date, month_timestamp) {
+      var base = this;
+      var timestamp = month_timestamp + (date - 1) * DateUtil.millisPerDay;
+
+      td_elem.onclick = function() {
+        base.fireDateSelectEvent(timestamp);
+      };
     };
 
-
-
-    this.fireDateSelectEvent = function(date, month, year) {
-      var timestamp = new Date(year, month, date).getTime();
+    this.fireDateSelectEvent = function(timestamp) {
       var dateEvent = new CustomEvent(
         'fn-calendar-select', {
           'detail': {'timestamp': timestamp},
@@ -348,7 +345,6 @@
 
       this.dispatchEvent(dateEvent);
     };
-
   };
 
   window.addEventListener('fn-ready', function() {

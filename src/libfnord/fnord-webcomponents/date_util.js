@@ -19,9 +19,7 @@ DateUtil.millisPerMinute = DateUtil.millisPerSecond * DateUtil.secondsPerMinute;
 DateUtil.millisPerHour = DateUtil.secondsPerHour * DateUtil.millisPerSecond;
 DateUtil.millisPerDay = DateUtil.secondsPerDay * DateUtil.millisPerSecond;
 
-/**
-  * @date DateObject as returned by DateUtil.getDateObject
-  */
+// @date DateObject as returned by DateUtil.getDateObject
 DateUtil.getDateTimeDescr = function(date) {
   if (DateUtil.isNow(date.timestamp, date.precision)) {
     return "now";
@@ -48,20 +46,18 @@ DateUtil.getDateTimeDescr = function(date) {
 
   descr += ":" + Fnord.appendLeadingZero(date.seconds);
   return descr;
-}
+};
 
 DateUtil.isNow = function(timestamp, precision) {
   return (DateUtil.equalDatesForPrecision(
     new Date().getTime(), timestamp, precision));
-}
+};
 
 DateUtil.isInstanceOfDate = function(date) {
   return (date !== null && typeof date === 'object' && date instanceof Date)
-}
+};
 
-/**
-  * @date Javascript Date instance or timestamp
-  */
+// @date Javascript Date instance or timestamp
 DateUtil.getDateObject = function(date, precision, advanced) {
   if (!DateUtil.isInstanceOfDate(date)) {
     date = new Date(date);
@@ -111,9 +107,7 @@ DateUtil.getDateObject = function(date, precision, advanced) {
   return dateObj;
 };
 
-/**
-  * @ts = milliseconds timestamp
-  */
+// @ts = milliseconds timestamp
 DateUtil.equalDatesForPrecision = function(ts1, ts2, precision) {
   if (precision == "hour") {
     return (Math.ceil(ts1 / 360000) === Math.ceil(ts2 / 360000));
@@ -131,7 +125,7 @@ DateUtil.equalDatesForPrecision = function(ts1, ts2, precision) {
 };
 
 //offset = distance to new month
-DateUtil.getNewMonthTimestamp = function(base_month, base_year, offset) {
+DateUtil.getMonthTimestamp = function(base_month, base_year, offset) {
   var month = base_month + offset;
   var year = base_year;
 
@@ -140,27 +134,26 @@ DateUtil.getNewMonthTimestamp = function(base_month, base_year, offset) {
     month = 11;
   }
 
-  if (month == 11) {
+  if (month == 12) {
     year = year + 1;
     month = 0;
   }
 
-  var date = new Date(year, month, '01', '00', '00');
-  return date.getTime();
-}
+  return (new Date(year, month).getTime());
+};
 
 DateUtil.isSameDay = function(ts1, ts2) {
   var day1 = new Date(ts1).setHours('0','0','0','0');
   var day2 = new Date(ts2).setHours('0','0','0','0');
 
   return (day1 === day2);
-}
+};
 
 DateUtil.parseTimestamp = function(timestamp) {
   //TODO add timezone
   var timestamp = parseInt(timestamp);
-  //1st January 2100
-  var thresholdSeconds = 4102444800;
+  //1st January 3000
+  var thresholdSeconds = 32503680000;
 
   if (isNaN(timestamp)) {
     return Date.now();
@@ -171,7 +164,6 @@ DateUtil.parseTimestamp = function(timestamp) {
   }
 
   return timestamp;
-
 };
 
 
@@ -198,7 +190,7 @@ DateUtil.getTimeTimestamp = function(timestamp) {
     date.getHours() * DateUtil.millisPerHour +
     date.getMinutes() * DateUtil.millisPerMinute +
     date.getSeconds() * DateUtil.millisPerSecond);
-}
+};
 
 DateUtil.getTimestampObj = function(timestamp) {
   var time_ts = DateUtil.getTimeTimestamp(timestamp);
@@ -206,11 +198,9 @@ DateUtil.getTimestampObj = function(timestamp) {
     'time': time_ts,
     'date': timestamp - time_ts
   }
-}
+};
 
-/**
-  * @timestamp = milliseconds since midnight
-  */
+// @timestamp = milliseconds since midnight
 DateUtil.getTimeObjFromTimestamp = function(timestamp) {
   var hours = Math.floor(timestamp / DateUtil.millisPerHour);
   timestamp = timestamp - (hours * DateUtil.millisPerHour);
@@ -223,11 +213,9 @@ DateUtil.getTimeObjFromTimestamp = function(timestamp) {
     'minutes' : minutes,
     'seconds' : Math.floor(timestamp / DateUtil.millisPerSecond)
   }
-}
+};
 
-/**
-  * returns seconds since midnight
-  */
+// returns seconds since midnight
 DateUtil.getTimestampFromTimeObj = function(timeObj) {
   var timestamp = 0;
   if (timeObj.hours) {
@@ -243,6 +231,4 @@ DateUtil.getTimestampFromTimeObj = function(timeObj) {
   }
 
   return timestamp;
-}
-
-
+};
