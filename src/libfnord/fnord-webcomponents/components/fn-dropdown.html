@@ -32,6 +32,10 @@
 
     // Checks if a header_elem exists and renders one if not
     this.initHeaderItem = function() {
+      if (this.querySelector("fn-dropdown-input") != null) {
+        return this.renderSearchable();
+      }
+
       var base = this;
       var selected_item = this.querySelector("fn-dropdown-item[data-selected]");
       var header_elem = this.querySelector("fn-dropdown-header");
@@ -122,7 +126,7 @@
       this.fireClickEvent(item);
     };
 
-    /* Currently only working on input */
+    // Currently only working on input
     this.handleKeyNavigation = function(elem) {
       var base = this;
       elem.addEventListener('keyup', function(e) {
@@ -151,19 +155,18 @@
 
       if (hover_elem) {
         if (direction == 'down') {
-          next_elem = hover_elem.nextSibling;
+          next_elem = hover_elem.nextElementSibling;
         } else {
-          next_elem = hover_elem.previousSibling;
+          next_elem = hover_elem.previousElementSibling;
         }
 
         if (next_elem) {
           hover_elem.classList.remove("hover");
           next_elem.classList.add("hover");
-          this.querySelector("ul").scrollTop = next_elem.offsetTop;
         }
 
       } else if (direction == 'down') {
-        this.querySelector(".fn-dropdown-items-item").classList.add("hover");
+        this.querySelector("fn-dropdown-item").classList.add("hover");
       }
     };
 
@@ -193,37 +196,31 @@
         return;
       }
 
+      var base = this;
       var input = document.createElement("fn-input");
       var placeholder = dropdown_input.getAttribute('data-placeholder');
-      if (placeholder != null) {
-        input.placeholder = placeholder;
+      var selected_item = this.querySelector("fn-dropdown-item[data-selected");
+
+      if (placeholder) {
+        input.setAttribute('data-placeholder', placeholder);
+      }
+
+      if (selected_item) {
+        input.setAttribute('data-value', selected_item.innerHTML);
       }
 
       dropdown_input.appendChild(input);
-      this.setSearchInputValue();
-
-      var base = this;
-
-      input.addEventListener('click', function() {
-        console.log("click");
+      input.addEventListener('click', function(e) {
+        e.stopPropagation();
+        base.showDropdown();
         base.search_item = "";
+
       }, false);
 
       this.handleKeyNavigation(input);
     };
 
-    this.setSearchInputValue = function() {
-      var input_header = this.querySelector("fn-dropdown-input fn-input-header");
-      var active_item = this.querySelector("fn-dropdown-item[data-active]");
 
-      if (active_item) {
-        if (!input_header) {
-          input_header = document.createElement("fn-input-header");
-          this.querySelector("fn-dropdown-input").appendChild(input_header);
-        }
-        input_header.innerHTML = active_item.innerHTML;
-      }
-    };
 
     this.fireClickEvent = function(item) {
       var ev = new CustomEvent("fn-dropdown-item-click", {

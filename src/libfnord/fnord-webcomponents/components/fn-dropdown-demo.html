@@ -9,14 +9,13 @@
   <http://www.gnu.org/licenses/>.
 -->
 <template id="fn-dropdown-demo-base-tpl">
-  <section>
-    <style type='text/css'>
+  <style type='text/css'>
       .below {
         margin-bottom: 20px;
       }
     </style>
+  <section>
     <h1>Styles</h1>
-
     <!-- Standard Dropdown -->
     <h3><i>Example 1 &raquo;</i> Basic</h3>
     <!-- Default -->
@@ -31,6 +30,7 @@
         <fn-dropdown-item>Median</fn-dropdown-item>
       </fn-dropdown-items>
     </fn-dropdown>
+
 
     <!-- 'Input' Style Dropdown -->
     <h3><i>Example 2 &raquo;</i> Input Like</h3>
@@ -80,9 +80,9 @@
         </fn-dropdown-items>
       </fn-dropdown>
     </span>
+  </section>
 
-
-   <section>
+  <section>
     <h1>Multi Selectable Dropdown</h1>
     <fn-dropdown data-resolved class='input' data-select='checkbox'>
       <fn-dropdown-header>Linear</fn-dropdown-header>
@@ -163,34 +163,38 @@
 
   <section>
     <h1>Searchable Dropdown</h1>
-    <h3><i>Example 1 &raquo;</i> Full Width Input</h3>
-    <fn-dropdown data-resolved='resolve' class="search">
+    <h3><i>Example 1 &raquo;</i> With Placeholder</h3>
+    <fn-dropdown data-resolved class="search">
       <fn-dropdown-input data-placeholder='Select a Country'></fn-dropdown-input>
-      <fn-dropdown-item data-value="Spain">Spain</fn-dropdown-item>
-      <fn-dropdown-item data-value="Italy">Italy</fn-dropdown-item>
-      <fn-dropdown-item data-value="Netherlands">Netherlands</fn-dropdown-item>
-      <fn-dropdown-item data-value="United Kingdom">United Kingdom</fn-dropdown-item>
-      <fn-dropdown-item data-value="Denmark">Denmark</fn-dropdown-item>
-      <fn-dropdown-item data-value="Sweden">Sweden</fn-dropdown-item>
-      <fn-dropdown-item data-value="Germany">Germany</fn-dropdown-item>
-      <fn-dropdown-item data-value="France">France</fn-dropdown-item>
-      <fn-dropdown-item data-value="Portugal">Portugal</fn-dropdown-item>
-      <fn-dropdown-item data-value="Austria">Austria</fn-dropdown-item>
+      <fn-dropdown-items>
+        <fn-dropdown-item data-value="Spain">Spain</fn-dropdown-item>
+        <fn-dropdown-item data-value="Italy">Italy</fn-dropdown-item>
+        <fn-dropdown-item data-value="Netherlands">Netherlands</fn-dropdown-item>
+        <fn-dropdown-item data-value="United Kingdom">United Kingdom</fn-dropdown-item>
+        <fn-dropdown-item data-value="Denmark">Denmark</fn-dropdown-item>
+        <fn-dropdown-item data-value="Sweden">Sweden</fn-dropdown-item>
+        <fn-dropdown-item data-value="Germany">Germany</fn-dropdown-item>
+        <fn-dropdown-item data-value="France">France</fn-dropdown-item>
+        <fn-dropdown-item data-value="Portugal">Portugal</fn-dropdown-item>
+        <fn-dropdown-item data-value="Austria">Austria</fn-dropdown-item>
+      </fn-dropdown-items>
     </fn-dropdown>
 
-    <h3><i>Example 2 &raquo;</i> Custom Width Input</h3>
+    <h3><i>Example 2 &raquo;</i> With Selected Value</h3>
     <fn-dropdown data-resolved='resolve' class="search small" style="width:150px;">
       <fn-dropdown-input data-placeholder='Year'></fn-dropdown-input>
-      <fn-dropdown-item data-value="2000">2000</fn-dropdown-item>
-      <fn-dropdown-item data-active data-value="2001">2001</fn-dropdown-item>
-      <fn-dropdown-item data-value="2002">2002</fn-dropdown-item>
-      <fn-dropdown-item data-value="2003">2003</fn-dropdown-item>
-      <fn-dropdown-item data-value="2004">2004</fn-dropdown-item>
-      <fn-dropdown-item data-value="2005">2005</fn-dropdown-item>
-      <fn-dropdown-item data-value="2006">2006</fn-dropdown-item>
-      <fn-dropdown-item data-value="2007">2007</fn-dropdown-item>
-      <fn-dropdown-item data-value="2008">2008</fn-dropdown-item>
-      <fn-dropdown-item data-value="2009">2009</fn-dropdown-item>
+      <fn-dropdown-items>
+        <fn-dropdown-item data-value="2000">2000</fn-dropdown-item>
+        <fn-dropdown-item data-selected data-value="2001">2001</fn-dropdown-item>
+        <fn-dropdown-item data-value="2002">2002</fn-dropdown-item>
+        <fn-dropdown-item data-value="2003">2003</fn-dropdown-item>
+        <fn-dropdown-item data-value="2004">2004</fn-dropdown-item>
+        <fn-dropdown-item data-value="2005">2005</fn-dropdown-item>
+        <fn-dropdown-item data-value="2006">2006</fn-dropdown-item>
+        <fn-dropdown-item data-value="2007">2007</fn-dropdown-item>
+        <fn-dropdown-item data-value="2008">2008</fn-dropdown-item>
+        <fn-dropdown-item data-value="2009">2009</fn-dropdown-item>
+      </fn-dropdown-items>
     </fn-dropdown>
 
   </section>

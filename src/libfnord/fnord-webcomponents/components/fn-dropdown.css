@@ -285,6 +285,13 @@ fn-dropdown.inline fn-dropdown-items,
   border-radius: 0.2857rem;
 }
 
+/*--------------
+  Searchable
+---------------*/
+fn-dropdown.search fn-dropdown-items,
+.fn-dropdown.search .fn-dropdown-items{
+  width: 100%;
+}
 
 
 /*******************************
