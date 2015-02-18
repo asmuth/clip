@@ -121,9 +121,6 @@
         case 'data-timestamp':
           this.render(this.getTimeStamp(attr));
           break;
-        case 'data-style':
-          this.setStyle(new_val);
-          break;
         case 'data-selected':
           this.render(this.getTimeStamp('data-timestamp'));
           break;
@@ -134,12 +131,6 @@
 
     this.init = function() {
       this.render(this.getTimeStamp('data-timestamp'));
-
-      var style = this.getAttribute('data-style');
-      if (style) {
-        this.setStyle(style);
-      }
-
       this.observeMonthSelectors();
     };
 
@@ -182,98 +173,93 @@
     };
 
     this.renderWeeks = function() {
-      var current_date = 1;
+      var current_date = this.renderFirstWeek();
 
-      for (var week = 0; week < 6; week++) {
+      for (var week = 1; week < 6; week++) {
         var tr_elem = this.shadowRoot.getElementById("week" + week);
         tr_elem.innerHTML = "";
 
         for (var day = 0; day < 7; day++) {
-          var td_elem = document.createElement("td");
-
-          if (this.isInCurrentMonth(day, week, current_date)) {
-
-            if (this.isSelectable(current_date)) {
-              td_elem.innerHTML = current_date;
-              td_elem.className = this.tdClassName(current_date);
-
-              this.handleDateLinks(td_elem, current_date);
-            } else {
-
-              td_elem.innerHTML = current_date;
-            }
-            current_date++;
-            
+          if (current_date > this.date.num_days) {
+            return this.renderLastWeeks(day, week);
           }
-          tr_elem.appendChild(td_elem);
+
+          tr_elem.appendChild(
+            this.renderDayElem(current_date, this.date.month_timestamp));
+          current_date++;
         }
       }
     };
 
-    this.getTimeStamp = function(attr) {
-      return DateUtil.parseTimestamp(this.getAttribute(attr));
-    };
+    this.renderFirstWeek = function() {
+      var prev_month =
+        DateUtil.getNewMonthTimestamp(this.date.month, this.date.year, -1);
+      var prev_dates = this.datesOfPrevMonth(prev_month);
+      var current_date = 1;
+      var tr_elem = this.shadowRoot.getElementById("week0");
+      tr_elem.innerHTML = '';
 
-    this.getMonthTimeStamp = function(month, year) {
-      return (new Date(year, month).getTime());
-    };
+      for (var i = 0; i < prev_dates.length; i++) {
+        tr_elem.appendChild(
+          this.renderDayElem(prev_dates[i], prev_month));
+      };
 
-    this.setStyle = function(styleStr) {
-      var table = this.shadowRoot.querySelector("table");
-      var styles = styleStr.split(" ");
-
-      styles.forEach(function(style) {
-        table.classList.add(style);
-      });
-    };
-
-    /**
-      * Checks if date is in month as every month has the same num of rows
-      * @day - day of the week (0-6)
-      * @week - number of week tr_elem (0-5)
-      * @date - date that is to be rendered (1-31)
-      */
-    this.isInCurrentMonth = function(day, week, date) {
-      if (week > 0 && week < 4) {
-        return true;
+      for (day = prev_dates.length; day < 7; day ++) {
+        tr_elem.appendChild(
+          this.renderDayElem(current_date, this.date.month_timestamp));
+        current_date++;
       }
 
-      if (week == 0) {
-        if (day < this.date.first_day) {
-          return false;
+      return current_date;
+    }
+
+    this.renderLastWeeks = function(day, week) {
+      var next_month =
+        DateUtil.getNewMonthTimestamp(this.date.month, this.date.year, 1);
+      var current_date = 1;
+      for (; week < 6; week++) {
+        var tr_elem = this.shadowRoot.getElementById("week" + week);
+        tr_elem.innerHTML = "";
+
+        for (; day < 7; day++) {
+          tr_elem.appendChild(
+            this.renderDayElem(current_date, next_month));
+          current_date++;
         }
-        return true;
+        day = 0;
+      }
+    }
+
+    this.renderDayElem = function(date, timestamp) {
+      var td_elem = document.createElement("td");
+
+      if (this.isSelectable(date, timestamp)) {
+        td_elem.className = this.tdClassName(date, timestamp);
+        this.handleDateLinks(td_elem, date);
       }
 
-      //week >= 4
-      if (date <= this.date.num_days) {
-        return true;
-      }
-      return false;
-    };
+      td_elem.innerHTML = date;
 
-    this.isSelectable = function(date) {
-      var now = DateUtil.getDateObject(Date.now(), 'date', false);
+      return td_elem;
+    }
+
+    this.isSelectable = function(date, month_timestamp) {
+      var now = Date.now();
+      var timestamp = month_timestamp + (date - 1) * DateUtil.millisPerDay;
       var period = this.getAttribute('data-selectable');
 
       if (period == "past") {
-        if (this.date.month == now.month) {
-          return date <= now.date;
-        }
-        return (this.date.year <= now.year && this.date.month < now.month);
+        return (timestamp < now);
       }
 
       if (period == "future") {
-        if (this.date.month == now.month) {
-          return date >= now.date;
-        }
-        return (this.date.year >= now.year && this.date.month > now.month);
+        return (timestamp > now);
       }
 
       return true;
     };
 
-    this.tdClassName = function(date) {
+    this.tdClassName = function(date, timestamp) {
       var now = DateUtil.getDateObject(Date.now(), 'date', false);
       var name = "selectable ";
 
@@ -305,6 +291,32 @@
         base.fireDateSelectEvent(date, month, year);
       };
     };
+
+    this.datesOfPrevMonth = function(month, year) {
+      var dates = [];
+
+      if (this.date.first_day == 0) {
+        return dates;
+      }
+
+      var num_days = DateUtil.daysInMonth(month + 1, year);
+
+      for (var i = this.date.first_day - 1; i >= 0; i--) {
+        dates.push(num_days - i);
+      }
+
+      return dates;
+    }
+
+    this.getTimeStamp = function(attr) {
+      return DateUtil.parseTimestamp(this.getAttribute(attr));
+    };
+
+    this.getMonthTimeStamp = function(month, year) {
+      return (new Date(year, month).getTime());
+    };
+
+
 
     this.fireDateSelectEvent = function(date, month, year) {
       var timestamp = new Date(year, month, date).getTime();

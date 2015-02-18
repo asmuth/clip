@@ -83,10 +83,10 @@ DateUtil.getDateObject = function(date, precision, advanced) {
   if (advanced) {
     dateObj.num_days = DateUtil.daysInMonth(dateObj.month + 1, dateObj.year);
 
-    var first_day = new Date(
-      dateObj.year + "-" + (dateObj.month + 1) + "-01").getDay();
+    var first_day = new Date(dateObj.year + "-" + (dateObj.month + 1) + "-01");
     //counting from 0 where Monday = 0 and Sunday = 6
-    dateObj.first_day = (first_day == 0) ? 6 : first_day - 1;
+    dateObj.first_day = (first_day.getDay() == 0) ? 6 : first_day.getDay() - 1;
+    dateObj.month_timestamp = first_day.getTime();
   }
 
   if (precision == 'date') {
@@ -129,6 +129,25 @@ DateUtil.equalDatesForPrecision = function(ts1, ts2, precision) {
 
   return false;
 };
+
+//offset = distance to new month
+DateUtil.getNewMonthTimestamp = function(base_month, base_year, offset) {
+  var month = base_month + offset;
+  var year = base_year;
+
+  if (month == 0) {
+    year = year - 1;
+    month = 11;
+  }
+
+  if (month == 11) {
+    year = year + 1;
+    month = 0;
+  }
+
+  var date = new Date(year, month, '01', '00', '00');
+  return date.getTime();
+}
 
 DateUtil.parseTimestamp = function(timestamp) {
   //TODO add timezone
