@@ -121,6 +121,11 @@ fn-dropdown-item.hover,
   color: rgba(0, 0, 0, 0.8);
 }
 
+fn-dropdown-item.hidden,
+.fn-dropdown-item.hidden {
+  display: none;
+}
+
 
 /*--------------
    Icon Item

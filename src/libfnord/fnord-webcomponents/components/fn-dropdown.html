@@ -126,10 +126,26 @@
       this.fireClickEvent(item);
     };
 
+    this.showFilteredDropdownItems = function(value) {
+      var items = this.querySelectorAll("fn-dropdown-item");
+      var value = value.toLowerCase();
+
+      for (var i = 0; i < items.length; i++) {
+        if (items[i].innerText.toLowerCase().indexOf(value) > -1) {
+          items[i].classList.remove('hidden');
+        } else {
+          items[i].classList.add('hidden');
+        }
+      }
+
+      this.showDropdown();
+    };
+
     // Currently only working on input
     this.handleKeyNavigation = function(elem) {
       var base = this;
       elem.addEventListener('keyup', function(e) {
+        console.log(e.keyCode);
         switch (e.keyCode) {
           case 38:
             base.keyNavigation('up');
@@ -141,8 +157,7 @@
             base.keyNavigationSubmit();
             break;
           default:
-            //base.search_item = this.value.toLowerCase();
-            //base.showDropdown();
+            base.showFilteredDropdownItems(this.getValue());
             break;
         }
       }, false);
@@ -212,7 +227,6 @@
         e.stopPropagation();
         base.showDropdown();
         base.search_item = "";
-
       }, false);
 
       this.handleKeyNavigation(input);

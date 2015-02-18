@@ -60,6 +60,10 @@
       this.querySelector("input").value = this.getAttribute('data-value');
     };
 
+    this.getValue = function() {
+      return (this.querySelector("input").value);
+    };
+
     this.setPlaceholder = function() {
       this.querySelector('input').setAttribute(
         'placeholder', this.getAttribute('data-placeholder'));
