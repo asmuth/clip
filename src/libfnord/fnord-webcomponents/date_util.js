@@ -82,8 +82,11 @@ DateUtil.getDateObject = function(date, precision, advanced) {
 
   if (advanced) {
     dateObj.num_days = DateUtil.daysInMonth(dateObj.month + 1, dateObj.year);
-    dateObj.first_day = new Date(
+
+    var first_day = new Date(
       dateObj.year + "-" + (dateObj.month + 1) + "-01").getDay();
+    //counting from 0 where Monday = 0 and Sunday = 6
+    dateObj.first_day = (first_day == 0) ? 6 : first_day - 1;
   }
 
   if (precision == 'date') {

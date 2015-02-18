@@ -21,8 +21,12 @@
       line-height: 1em;
     }
 
+    table tr {
+      height: 1.98em;
+    }
+
     table th {
-      padding: 6px;
+      padding: 0.4em;
       line-height: 1.3em;
       text-align: center;
       font-weight: normal;
@@ -30,7 +34,7 @@
     }
 
     table td {
-      padding: 6px;
+      padding: 0.4em;
       line-height: 1.3em;
       text-align:center;
       cursor: default;
@@ -43,8 +47,8 @@
 
     .fa {
       color: inherit;
-      padding-left: 5px;
-      padding-right: 5px;
+      padding-left: 0.4em;
+      padding-right: 0.4em;
     }
 
     .fa:hover {
@@ -87,7 +91,7 @@
       <th>Fr</th>
       <th>Sa</th>
       <th>Su</th>
-    <tr>
+    </tr>
     <tr>
       <td><i class='fa fa-chevron-left'></i></td>
       <td colspan='5'>
@@ -187,7 +191,7 @@
         for (var day = 0; day < 7; day++) {
           var td_elem = document.createElement("td");
 
-          if (this.isRenderable(day, week, current_date)) {
+          if (this.isInCurrentMonth(day, week, current_date)) {
 
             if (this.isSelectable(current_date)) {
               td_elem.innerHTML = current_date;
@@ -199,6 +203,7 @@
               td_elem.innerHTML = current_date;
             }
             current_date++;
+            
           }
           tr_elem.appendChild(td_elem);
         }
@@ -228,15 +233,12 @@
       * @week - number of week tr_elem (0-5)
       * @date - date that is to be rendered (1-31)
       */
-    this.isRenderable = function(day, week, date) {
+    this.isInCurrentMonth = function(day, week, date) {
       if (week > 0 && week < 4) {
         return true;
       }
 
       if (week == 0) {
-        if (this.date.first_day == 0) {
-          return false;
-        }
         if (day < this.date.first_day) {
           return false;
         }
