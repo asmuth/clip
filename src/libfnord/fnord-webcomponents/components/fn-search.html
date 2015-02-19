@@ -57,25 +57,10 @@
       }, false);
 
       window.addEventListener('click', function() {
-        //base.closeDropDownMenu();
+        base.closeDropdown();
       }, false);
 
     };
-
-    this.attributeChangedCallback = function(attr, old_val, new_val) {
-      switch (attr) {
-        case 'data-style':
-          this.shadowRoot.querySelector("input").className += new_val;
-          break;
-        case 'data-placeholder':
-          this.shadowRoot.querySelector("input").placeholder = new_val;
-          break;
-        case 'data-size':
-          this.shadowRoot.querySelector("input").className += " " + new_val;
-        default:
-          break;
-      }
-    }
 
     this.getValue = function() {
       var input = this.querySelector("fn-input");
