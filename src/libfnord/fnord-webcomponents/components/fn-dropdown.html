@@ -105,7 +105,7 @@
     this.findItemByValue = function(value) {
       return (this.querySelector(
         "fn-dropdown-item[data-value='" + value + "']"));
-    }
+    };
 
     this.setItemEventListeners = function() {
       var base = this;
@@ -159,7 +159,7 @@
       }
 
       if (selected_item) {
-        input.setAttribute('data-value', selected_item.innerHTML);
+        input.setAttribute('data-value', selected_item.innerText);
       }
 
       dropdown_input.appendChild(input);
