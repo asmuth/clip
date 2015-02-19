@@ -6,7 +6,8 @@
  /*******************************
             Dropdown
 *******************************/
-fn-search {
+fn-search,
+.fn-search {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
@@ -22,7 +23,8 @@ fn-search {
           transition: border-radius 0.1s ease, width 0.2s ease;
 }
 
-fn-search fn-input {
+fn-search fn-input,
+.fn-search .fn-input {
   width: 100%;
 }
 
@@ -31,7 +33,8 @@ fn-search fn-input fn-input-icon:hover,
   cursor:pointer;
 }
 
-fn-search ul {
+fn-search ul,
+.fn-search ul {
   display: none;
   list-style: none;
   cursor: pointer;
@@ -55,11 +58,13 @@ fn-search ul {
   will-change: transform,opacity;
 }
 
-fn-search ul[data-active] {
+fn-search ul[data-active],
+.fn-search ul[data-active] {
   display: block;
 }
 
-fn-search ul li {
+fn-search ul li,
+.fn-search ul li {
   border: none;
   height: auto;
   border-top: none;
@@ -80,15 +85,15 @@ fn-search ul li {
 }
 
 fn-search ul li[data-selected],
-.fn-dropdown-item[data-selected] {
+.fn-search ul li[data-selected] {
   font-weight: bold !important;
   color: rgba(0, 0, 0, 0.8) !important;
 }
 
 fn-search ul li:hover,
-fn-dropdown-item.hover,
-.fn-dropdown-item:hover,
-.fn-dropdown-item.hover {
+fn-search ul li.hover,
+.fn-search ul li:hover,
+.fn-search ul li.hover {
   background-color: rgba(0, 0, 0, 0.05);
   color: rgba(0, 0, 0, 0.8);
 }
