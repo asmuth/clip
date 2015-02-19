@@ -28,20 +28,8 @@
       margin: 25px 20px 0 0;
     }
 
-    .metric-control-group.group_by {
+    .hidden {
       display: none;
-    }
-
-    .metric-control-group.group_by.active {
-      display: block;
-    }
-
-    .metric-control-group.group_by fn-button[data-active='active'] {
-      background: rgb(226, 232, 237);
-    }
-
-    .metric-control-group.group_by fn-button {
-      float: left;
     }
 
     .metric-control-group b {
@@ -50,7 +38,6 @@
       font-weight: 500;
       opacity: 0.7;
     }
-
 
     .metric {
       float:left;
@@ -158,7 +145,7 @@
       </fn-dropdown>
 
       <b style="margin-left: 7px;">Group By: </b>
-      <fn-dropdown class="inline groupby">
+      <fn-dropdown class="inline hidden" name='group_by'>
         <fn-dropdown-items>
         </fn-dropdown-items>
       </fn-dropdown>
@@ -322,26 +309,27 @@
 
     this.handleGroupByControls = function() {
       var base = this;
-      var group_by_field = this.querySelector(".group.group_by");
+      var dropdown = this.querySelector("fn-dropdown[name='group_by']");
+      var dropdown_items = dropdown.querySelector("fn-dropdown-items");
       var columns = this.splitColumns(this.params.columns);
       var group_by = this.splitColumns(this.params.group_by);
 
       if (columns.length > 0 ) {
-        group_by_field.classList.add("active");
+        dropdown.classList.remove("hidden");
       }
 
       columns.map(function(c) {
-        var button = document.createElement("fn-button");
-        button.innerHTML = c;
-        button.setAttribute('data-value', c);
-        button.setAttribute('data-size', 'tiny');
+        var item = document.createElement("fn-dropdown-item");
+        item.innerHTML = c;
+        item.setAttribute('data-value', c);
 
         if (group_by.indexOf(c) > -1) {
-          button.setAttribute("data-active", "active");
+          item.setAttribute("data-selected", "selected");
         }
 
-        group_by_field.appendChild(button);
-        button.addEventListener("fn-button-click", function() {
+        dropdown_items.appendChild(item);
+
+        /*button.addEventListener("fn-button-click", function() {
           var group_by_csv = base.params.group_by;
           if (this.getAttribute("data-state") == "active") {
             this.removeAttribute("data-state");
@@ -352,7 +340,13 @@
           }
           base.params.group_by = group_by_csv;
           base.attributeChangedEvent("group_by");
-        });
+        });*/
+      });
+
+      dropdown.setAttribute('data-resolved', 'resolved');
+
+      dropdown.addEventListener('fn-dropdown-item-click', function(e) {
+        console.log(e.srcElement.getAttribute('data-value'));
       });
     };
 
