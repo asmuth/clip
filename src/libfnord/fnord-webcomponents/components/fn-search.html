@@ -35,7 +35,7 @@
         switch (e.keyCode) {
           //Enter
           case 13:
-            base.submitSearch(base.getActiveListElem().innerText);
+            base.submitSearch();
             break;
           //Up Arrow
           case 38:
@@ -112,8 +112,21 @@
     };
 
     this.submitSearch = function(value) {
-      if (value) {
-        this.querySelector("fn-input").setAttribute('data-value', value);
+      var active_elem = this.getActiveListElem();
+      var input = this.querySelector("fn-input");
+      var updateInput = true;
+
+      if (!value) {
+        if (active_elem) {
+          value = active_elem.innerText
+        } else {
+          value = input.getValue();
+          updateInput = false;
+        }
+      }
+
+      if (updateInput) {
+        input.setAttribute('data-value', value);
       }
 
       this.closeDropdown();
