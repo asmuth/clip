@@ -205,12 +205,10 @@
 
     this.handleAggregationDisplay = function() {
       var base = this;
-      var elems = [
-        this.querySelector(".time_window"),
-        this.querySelector(".time_step")
-      ];
+      var elem_names = ["time_window", "time_step"];
 
-      elems.forEach(function(elem) {
+      elem_names.map(function(name) {
+        var elem = base.querySelector("fn-dropdown[name='" + name + "']");
         if (base.params.aggr_fn == "value" ) {
           elem.setAttribute('data-state', 'disabled');
         } else {
