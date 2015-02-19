@@ -88,7 +88,7 @@
       }
 
       //remove global event listener
-      if (this.keyEventListener.target == window) {
+      if (this.keyEventListener && this.keyEventListener.target == window) {
         this.handleKeyNavigation(false);
       }
     };
