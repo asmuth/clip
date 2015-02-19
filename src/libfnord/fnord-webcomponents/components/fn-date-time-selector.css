@@ -1,0 +1,81 @@
+/**
+ * Adapted from: Semantic UI:
+ *   https://github.com/Semantic-Org/Semantic-UI
+ *   http://www.semantic-ui.com/
+ */
+.wrapper {
+      font-family: 'Helvetica Neue',Arial,Helvetica,sans-serif;
+      font-size: 1rem;
+      color: rgba(0,0,0,.8);
+      height: 1rem;
+      display: inline-block;
+    }
+
+    .wrapper .dropdown {
+      margin: 0 5px;
+      display: inline-block;
+    }
+
+    .wrapper .header {
+      margin: 0 5px;
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      line-height: 1em;
+      font-size: 0.875em;
+      text-align: left;
+      display: inline-block;
+    }
+
+    .wrapper .header:hover,
+    .wrapper .fa:hover {
+      cursor: pointer;
+    }
+
+    .wrapper .header .text {
+      font-weight: bold;
+      display: inline-block;
+    }
+
+    .wrapper .header i.fa {
+      margin: 0em 0.5em 0em 0.25em;
+      vertical-align: top;
+    }
+
+    .widget {
+      display: none;
+    }
+
+    .widget.active {
+      display: block;
+      position: fixed;
+      background: #fff;
+      box-shadow: 0 1px 4px 0 rgba(0,0,0,.15);
+      border: 1px solid rgba(39,41,43,.15);
+      border-radius: 0 0 .2857rem .2857rem;
+      -webkit-transition: opacity .2s ease;
+      transition: opacity .2s ease;
+      z-index: 101;
+      padding: 0.5em;
+    }
+
+    .widget fn-timeinput {
+      float: none;
+      display:block;
+      margin-bottom: 0.5em;
+    }
+
+    .widget fn-calendar {
+      float: none;
+    }
+
+    .fa {
+      font-size: 0.9em !important;
+      display: inline-block;
+      line-height: 1;
+      height: 1em;
+      backface-visibility: hidden;
+      font-weight: 400 !important;
+      font-style: normal;
+      text-align: center;
+    }
