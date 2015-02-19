@@ -87,7 +87,10 @@
         items.removeAttribute('data-active');
       }
 
-      this.handleKeyNavigation();
+      //remove global event listener
+      if (this.keyEventListener.target == window) {
+        this.handleKeyNavigation(false);
+      }
     };
 
     this.showDropdown = function() {
@@ -103,7 +106,10 @@
         this.setItemEventListeners();
       }
 
-      this.handleKeyNavigation();
+      //set global event listener if not searchable
+      if (!this.keyEventListener || this.keyEventListener.target == window) {
+        this.handleKeyNavigation(true);
+      }
     };
 
     this.findItemByValue = function(value) {
@@ -153,6 +159,86 @@
       item.dispatchEvent(ev);
     };
 
+
+    /*********************** Key Navigation **********************************/
+
+    this.handleKeyNavigation = function(set) {
+      var input = this.querySelector("fn-input");
+      //set key event for input if searchable and for window otherwise
+      var elem = input ? input : window;
+      var base = this;
+
+      var listener = function(e) {
+        e.preventDefault();
+        switch (e.keyCode) {
+          case 38:
+            base.keyNavigation('up');
+            break;
+          case 40:
+            base.keyNavigation('down');
+            break;
+          case 13:
+            base.onItemClick(base.querySelector("fn-dropdown-item.hover"));
+            break;
+          default:
+            if (input) {
+              base.showFilteredDropdownItems(input.getValue());
+            }
+            break;
+        }
+      }
+
+      if (set) {
+        elem.addEventListener('keyup', listener, false);
+        this.keyEventListener = {'set' : true, 'target' : elem};
+      } else {
+        elem.removeEventListener('keyup', listener, false);
+        this.keyEventListener.set = false;
+      }
+    }
+
+    this.keyNavigation = function(direction) {
+      var hover_elem = this.querySelector("fn-dropdown-item.hover");
+      var ref_elem;
+      var elem = null;
+      var items = this.querySelectorAll("fn-dropdown-item");
+
+      if (!hover_elem) {
+        if (direction == 'down') {
+          //filtered Dropdown can contain hidden items
+          if (items[0].classList.contains('hidden')) {
+            hover_elem = items[0];
+          } else {
+            items[0].classList.add('hover');
+            return;
+          }
+        }
+      }
+
+      ref_elem = hover_elem;
+      for (var i = 0; i < items.length; i++) {
+        if (direction == 'down') {
+          elem = ref_elem.nextElementSibling;
+          if (!elem) {
+            elem = items[0];
+          }
+        } else {
+          elem = ref_elem.previousElementSibling;
+          if (!elem) {
+            return;
+          }
+        }
+
+        if (elem.classList.contains('hidden')) {
+          ref_elem = elem;
+        } else {
+          elem.classList.add('hover');
+          hover_elem.classList.remove('hover');
+          return;
+        }
+      }
+    };
+
     /******************** Searchable Dropdown *************************/
 
     this.renderSearchable = function() {
@@ -177,11 +263,11 @@
       dropdown_input.appendChild(input);
       input.addEventListener('click', function(e) {
         e.stopPropagation();
+        this.setAttribute('data-value', "");
         base.showDropdown();
-        base.search_item = "";
       }, false);
 
-      this.handleKeyNavigation();
+      this.handleKeyNavigation(true);
     };
 
     this.showFilteredDropdownItems = function(value) {
@@ -198,88 +284,6 @@
 
       this.showDropdown();
     };
-
-
-    this.handleKeyNavigation = function() {
-      var input = this.querySelector("fn-input");
-      var elem = input ? input : window;
-      var base = this;
-
-      var listener = function(e) {
-        e.preventDefault();
-        switch (e.keyCode) {
-          case 38:
-            base.keyNavigation('up');
-            break;
-          case 40:
-            base.keyNavigation('down');
-            break;
-          case 13:
-            base.onItemClick(base.querySelector("fn-dropdown-item.hover"));
-            break;
-          default:
-            if (input) {
-              base.showFilteredDropdownItems(input.getValue());
-            }
-            break;
-        }
-      }
-
-      if (this.keyEventListener) {
-        elem.removeEventListener('keyup', listener, false);
-        this.keyEventListener = false;
-      } else {
-        elem.addEventListener('keyup', listener, false);
-        this.keyEventListener = true;
-      }
-    }
-
-    this.keyNavigation = function(direction) {
-      console.log("key nav");
-      var hover_elem = this.querySelector("fn-dropdown-item.hover");
-      var ref_elem = hover_elem;
-      var elem = null;
-      var items = this.querySelectorAll("fn-dropdown-item");
-
-      console.log(hover_elem);
-
-      if (!hover_elem) {
-        if (direction == 'down') {
-          if (items[0].classList.contains('hidden')) {
-            hover_elem = items[0];
-          } else {
-            console.log("take first item");
-            items[0].classList.add('hover');
-            return;
-          }
-        }
-      }
-
-      console.log("loop");
-
-      for (var i = 0; i < items.length; i++) {
-        console.log(ref_elem);
-        if (direction == 'down') {
-          elem = ref_elem.nextElementSibling;
-        } else {
-          elem = ref_elem.previousElementSibling;
-        }
-
-        if (!elem) {
-          console.log("elem = null");
-        }
-
-        if (elem.classList.contains('hidden')) {
-          ref_elem = elem;
-        } else {
-          console.log('elem', elem);
-          elem.classList.add('hover');
-          hover_elem.classList.remove('hover');
-          return;
-        }
-      }
-    };
-
   };
 
   window.addEventListener("fn-ready", function() {
