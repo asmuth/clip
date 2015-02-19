@@ -39,12 +39,13 @@
     </fn-search>
 
     <script type="text/javascript">
-      document.querySelector("#search-example-2").addEventListener(
+      var search_2 = document.querySelector("#search-example-2");
+      search_2.addEventListener(
           "fn-search-autocomplete",
           function(e) {
-            var term = e.srcElement.getValue();
+            var term = e.detail.value;
             var res = [{query :"asdasd"}, {query : "2353242"}, {query : "234234"}];
-            e.srcElement.autocomplete(term, res);
+            search_2.autocomplete(term, res);
           },
           false);
 

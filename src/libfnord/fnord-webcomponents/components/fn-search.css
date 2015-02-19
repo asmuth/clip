@@ -1,0 +1,79 @@
+/**
+ * Partially Adapted from: Semantic UI:
+ *   https://github.com/Semantic-Org/Semantic-UI
+ *   http://www.semantic-ui.com/
+ */
+ /*******************************
+            Dropdown
+*******************************/
+fn-search {
+  display:block;
+  position: relative;
+}
+
+fn-search fn-input {
+  width: 100%;
+}
+
+fn-search fn-input fn-input-icon:hover,
+.fn-search .fn-input .fn-input-icon:hover {
+  cursor:pointer;
+}
+
+fn-search ul {
+  list-style: none;
+  cursor: pointer;
+  position: absolute;
+  outline: 0;
+  top: 100%;
+  left: 0;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  white-space: nowrap;
+  text-shadow: none;
+  text-align: left;
+  box-shadow: 0 1px 4px 0 rgba(0,0,0,.15);
+  border: 1px solid rgba(39,41,43,.15);
+  border-radius: 0 0 .2857rem .2857rem;
+  -webkit-transition: opacity .2s ease;
+  transition: opacity .2s ease;
+  z-index: 11;
+  background-color: #fff;
+  will-change: transform,opacity;
+}
+
+fn-search ul li {
+  border: none;
+  height: auto;
+  border-top: none;
+  color: rgba(0, 0, 0, 0.8);
+  padding: 0.65em 0.7em 0.65em 0.7em!important;
+  text-transform: none;
+  font-weight: normal;
+  box-shadow: none;
+  -webkit-touch-callout: none;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font: inherit;
+  line-height: inherit;
+  vertical-align: baseline;
+  overflow: hidden;
+  text-align:left;
+}
+
+fn-search ul li[data-selected],
+.fn-dropdown-item[data-selected] {
+  font-weight: bold !important;
+  color: rgba(0, 0, 0, 0.8) !important;
+}
+
+fn-search ul li:hover,
+fn-dropdown-item.hover,
+.fn-dropdown-item:hover,
+.fn-dropdown-item.hover {
+  background-color: rgba(0, 0, 0, 0.05);
+  color: rgba(0, 0, 0, 0.8);
+}
+

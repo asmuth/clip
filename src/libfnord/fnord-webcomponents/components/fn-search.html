@@ -11,37 +11,24 @@
 <script type="text/javascript">
   var SearchComponent = function() {
     this.createdCallback = function() {
-
-      var input = this.shadowRoot.querySelector("input");
+      var input = this.querySelector("fn-input");
+      var icon = this.querySelector("fn-input-icon");
       var base = this;
       var min_length = 1;
 
-      if (this.hasAttribute('data-style')) {
-        input.className += this.getAttribute('data-style');
+      if (!input) {
+        input = document.createElement("fn-input");
+        this.insertBefore(input, this.firstChild);
       }
 
-      if (this.hasAttribute('data-size')) {
-        this.shadowRoot.querySelector('.wrapper').className += " " + this.getAttribute('data-size');
+      if (icon) {
+        icon.addEventListener('click', function() {
+          base.submitSearch();
+        }, false);
       }
 
-      if (this.getAttribute('data-placeholder') != null) {
-        input.placeholder = this.getAttribute('data-placeholder');
-      }
-
-      this.shadowRoot.querySelector('.icon').onclick = function() {
-        base.submitSearch();
-      }
-
-      input.addEventListener('focus', function() {
-        this.value = "";
-      }, false);
-
-      input.addEventListener('input', function() {
-        if (this.value.length >= min_length) {
-          base.fireAutoCompleteEvent();
-        } else {
-          base.closeDropDownMenu();
-        }
+      input.addEventListener('click', function() {
+        input.setAttribute('data-value', "");
       }, false);
 
       input.addEventListener('keydown', function(e) {
@@ -62,12 +49,18 @@
             break;
 
           default:
+            var value = this.getValue();
+            if (value.length >= min_length) {
+              base.fireAutocompleteEvent(value);
+            } else {
+              //clse dropdown
+            }
             break;
         }
       }, false);
 
       window.addEventListener('click', function() {
-        base.closeDropDownMenu();
+        //base.closeDropDownMenu();
       }, false);
 
     };
@@ -155,12 +148,17 @@
     };
 
 
-    this.openDropDownMenu = function(items) {
-      var list = this.shadowRoot.querySelector("ul");
+    this.renderDropdown = function(items) {
+      var base = this;
+      var list = this.querySelector("ul");
+      if (!list) {
+        list = document.createElement("ul");
+        this.appendChild(list);
+      }
+
       list.innerHTML = "";
       list.style.display = "block";
 
-      var base = this;
       items.map(function(item) {
         var list_elem = document.createElement("li");
         list_elem.innerHTML = "<a href='#'>" + item.query + "</a>";
@@ -181,20 +179,22 @@
       });
     };
 
-    this.closeDropDownMenu = function() {
-      var list = this.shadowRoot.querySelector("ul");
-      list.innerHTML = "";
-      list.style.display = "none";
-    };
+
 
     this.autocomplete = function(term, items) {
-      if (term == this.getValue() && items.length > 0) {
-        this.openDropDownMenu(items);
+      if (term == this.querySelector("fn-input").getValue() && items.length > 0) {
+        this.renderDropdown(items);
       }
     };
 
-    this.fireAutoCompleteEvent = function() {
-      this.dispatchEvent(new Event('fn-search-autocomplete'));
+    this.fireAutocompleteEvent = function(value) {
+      var autocompleteEvent = new CustomEvent('fn-search-autocomplete', {
+        'detail' : {'value' : value},
+        cancelable: true,
+        bubbles: true
+      });
+
+      this.dispatchEvent(autocompleteEvent);
     };
 
     this.fireSearchSubmitEvent = function() {
