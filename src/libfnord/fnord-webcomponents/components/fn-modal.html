@@ -8,90 +8,42 @@
   copy of the GNU General Public License along with this program. If not, see
   <http://www.gnu.org/licenses/>.
 -->
-<style type='text/css'>
-  fn-modal {
-    display:none;
-  }
-</style>
-<template id="fn-modal-base-tpl">
-  <style type='text/css'>
-    .dimmer {
-      position: absolute;
-      top: 0em !important;
-      left: 0em !important;
-      width: 100%;
-      height: 100%;
-      text-align: center;
-      vertical-align: middle;
-      background: rgba(0, 0, 0, 0.85);
-      opacity: 1;
-      line-height: 1;
-      -webkit-animation-fill-mode: both;
-              animation-fill-mode: both;
-      -webkit-animation-duration: 0.5s;
-              animation-duration: 0.5s;
-      -webkit-transition: background-color 0.5s linear;
-              transition: background-color 0.5s linear;
-      -webkit-user-select: none;
-         -moz-user-select: none;
-          -ms-user-select: none;
-              user-select: none;
-      z-index: 10;
-    }
-
-
-  </style>
-
-  <div class="dimmer">
-  </div>
-</template>
 <script type='text/javascript'>
   var ModalComponent = function() {
     this.createdCallback = function() {
-      //var shadow = this.createShadowRoot();
-      var tpl = Fnord.getTemplate("fn-modal", "base");
-      //shadow.appendChild(tpl);
       var base = this;
 
-      var close_icon = this.querySelector("fn-modal-close-icon");
+      //customisable
+      this.closeElems = [
+        this.querySelector("fn-modal-close-icon"), this.parentNode
+      ];
 
-
-
-
-      /*this.shadowRoot.querySelector('.dimmer').onclick = function() {
-        base.close();
-      }*/
-
-      if (close_icon) {
-        close_icon.onclick = function() {
-          base.close();
+      this.closeElems.forEach(function(elem) {
+        if (elem) {
+          elem.onclick = function() {
+            base.close();
+          }
         }
-      }
+      });
     }
 
     this.show = function() {
-      this.setAttribute('data-active', 'active');
+      var dimmer = this.parentNode;
+      if (dimmer && dimmer.tagName == 'FN-MODAL-DIMMER') {
+        dimmer.setAttribute('data-active', 'active');
+      } else {
+        this.setAttribute('data-active', 'active');
+      }
     };
 
     this.close = function() {
-      this.style.display = "none";
+      var dimmer = this.parentNode;
+      if (dimmer) {
+        dimmer.removeAttribute('data-active');
+      } else {
+        this.removeAttribute('data-active');
+      }
     };
-
-    this.setOptions = function() {
-      if (this.hasAttribute('data-not-closable')) {
-        this.shadowRoot.querySelector('.close_icon').className += " hidden";
-      }
-    }
-
-    this.setElementStyles = function() {
-      var modal_text = this.querySelector('fn-modal-text');
-      if (modal_text != null) {
-        var text_style = modal_text.getAttribute('data-style');
-        if (text_style != null) {
-          this.shadowRoot.querySelector('.text').className += " " + text_style;
-        }
-      }
-    }
   };
 
   window.addEventListener('fn-ready', function() {

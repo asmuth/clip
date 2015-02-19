@@ -12,12 +12,15 @@
   <section>
     <h1><i>Example 1 &raquo;</i> Basic</h1>
     <fn-button id="btn_1">Show Modal</fn-button>
-    <fn-modal id="modal_1">
-      <fn-modal-header>Simple Modal</fn-modal-header>
-      <fn-modal-content>
-        Check out the other modal type that have more logic added
-      </fn-modal-content>
-    </fn-modal>
+    <fn-modal-dimmer>
+      <fn-modal id="modal_1">
+        <fn-modal-close-icon></fn-modal-close-icon>
+        <fn-modal-header>Simple Modal</fn-modal-header>
+        <fn-modal-content>
+          Check out the other modal type that have more logic added
+        </fn-modal-content>
+      </fn-modal>
+    </fn-modal-dimmer>
   </section>
 
   <section>
@@ -25,16 +28,18 @@
     <fn-button id="btn_2">Show</fn-button>
     <fn-modal data-type='actions icon' id="modal_2">
       <fn-modal-header>Confirm</fn-modal-header>
-      <fn-modal-content-icon>
-        <i class="fa fa-question-circle"></i>
-      </fn-modal-content-icon>
-      <fn-modal-text>
-        Are you sure you want to logout?
-      </fn-modal-text>
-      <fn-modal-actions>
+      <fn-modal-content>
+        <fn-modal-content-icon>
+          <i class="fa fa-question-circle"></i>
+        </fn-modal-content-icon>
+        <fn-modal-text>
+          Are you sure you want to logout?
+        </fn-modal-text>
+      </fn-modal-content>
+      <fn-modal-footer>
         <fn-button>Yes</fn-button>
         <fn-button>No</fn-button>
-      </fn-modal-actions>
+      </fn-modal-footer>
     </fn-modal>
   </section>
 
@@ -43,12 +48,12 @@
     <fn-button id="btn_3">Show</fn-button>
     <fn-modal data-type='actions' id="modal_3">
       <fn-modal-header>Status</fn-modal-header>
-      <fn-modal-text>
+      <fn-modal-content>
         Changes saved successfully
-      </fn-modal-text>
-      <fn-modal-actions>
+      </fn-modal-content>
+      <fn-modal-footer>
         <fn-button>Ok</fn-button>
-      </fn-modal-actions>
+      </fn-modal-footer>
     </fn-modal>
   </section>
 
@@ -57,15 +62,15 @@
     <fn-button id="btn_4">Show</fn-button>
     <fn-modal data-type='actions input' id="modal_4">
       <fn-modal-header>Confirm</fn-modal-header>
-      <fn-modal-text>
-        Please enter your name
-      </fn-modal-text>
-      <fn-modal-input>
+      <fn-modal-content>
+        <fn-modal-text>
+          Please enter your name
+        </fn-modal-text>
         <fn-input></fn-input>
-      </fn-modal-input>
-      <fn-modal-actions>
+      </fn-modal-content>
+      <fn-modal-footer>
         <fn-button>Ok</fn-button>
-      </fn-modal-actions>
+      </fn-modal-footer>
     </fn-modal>
   </section>
 
@@ -78,9 +83,9 @@
         <fn-progressbar data-label='Uploading'>
         </fn-progressbar>
       </fn-modal-content>
-      <fn-modal-actions>
+      <fn-modal-footer>
         <fn-button>Cancel</fn-button>
-      </fn-modal-actions>
+      </fn-modal-footer>
     </fn-modal>
   </section>
 
@@ -88,22 +93,20 @@
     <h1><i>Example 6 &raquo;</i> Modal Without Close Button</h1>
     <fn-button id="btn_6">Show</fn-button>
     <fn-modal data-type='actions icon' data-not-closable id="modal_6">
-      <fn-modal-content-icon>
-        <i class="fa fa-question-circle"></i>
-      </fn-modal-content-icon>
-      <fn-modal-text data-style='bold'>
-        How old are you?
-      </fn-modal-text>
-      <fn-modal-actions>
+      <fn-modal-content>
+        <fn-modal-icon>
+          <i class="fa fa-question-circle"></i>
+        </fn-modal-icon>
+        <fn-modal-text data-style='bold'>
+          How old are you?
+        </fn-modal-text>
+      </fn-modal-content>
+      <fn-modal-footer>
         <fn-button>Under 18</fn-button>
         <fn-button>18 or older</fn-button>
-      </fn-modal-actions>
+      </fn-modal-footer>
     </fn-modal>
   </section>
-
-
-
-
 
 
   <script type='text/javascript'>
@@ -114,6 +117,7 @@
 
     var modal2 = document.querySelector("#modal_2");
     document.querySelector("#btn_2").addEventListener('fn-button-click', function () {
+      console.log("show modal 2");
       modal2.show();
     }, false);
 
