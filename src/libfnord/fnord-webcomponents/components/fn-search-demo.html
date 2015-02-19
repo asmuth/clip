@@ -49,10 +49,11 @@
           },
           false);
 
-      document.querySelector("#search-example-2").addEventListener(
+      search_2.addEventListener(
         "fn-search-submit",
         function(e) {
-          var search_term = e.srcElement.getValue();
+          console.log(e);
+          var search_term = e.detail.value;
           alert("Search for:" + search_term);
         },
         false);

@@ -7,8 +7,19 @@
             Dropdown
 *******************************/
 fn-search {
-  display:block;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
   position: relative;
+  cursor: pointer;
+  display: inline-block;
+  line-height: 1em;
+  outline: none;
+  text-align: left;
+  color: rgba(0,0,0,.8);
+  tap-highlight-color: rgba(0, 0, 0, 0);
+  -webkit-transition: border-radius 0.1s ease, width 0.2s ease;
+          transition: border-radius 0.1s ease, width 0.2s ease;
 }
 
 fn-search fn-input {
@@ -21,6 +32,7 @@ fn-search fn-input fn-input-icon:hover,
 }
 
 fn-search ul {
+  display: none;
   list-style: none;
   cursor: pointer;
   position: absolute;
@@ -41,6 +53,10 @@ fn-search ul {
   z-index: 11;
   background-color: #fff;
   will-change: transform,opacity;
+}
+
+fn-search ul[data-active] {
+  display: block;
 }
 
 fn-search ul li {

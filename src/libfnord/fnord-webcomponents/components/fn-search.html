@@ -23,7 +23,7 @@
 
       if (icon) {
         icon.addEventListener('click', function() {
-          base.submitSearch();
+          base.submitSearch(input.getValue());
         }, false);
       }
 
@@ -35,25 +35,22 @@
         switch (e.keyCode) {
           //Enter
           case 13:
-            base.submitSearch();
+            base.submitSearch(this.getValue());
             break;
-
           //Up Arrow
           case 38:
             base.dropDownMoveUp();
             break;
-
           //Down Arrow
           case 40:
             base.dropDownMoveDown();
             break;
-
           default:
             var value = this.getValue();
             if (value.length >= min_length) {
               base.fireAutocompleteEvent(value);
             } else {
-              //clse dropdown
+              base.closeDropdown();
             }
             break;
         }
@@ -81,16 +78,18 @@
     }
 
     this.getValue = function() {
-      var input = this.shadowRoot.querySelector("input");
-      return input.value;
+      var input = this.querySelector("fn-input");
+      return input.getValue();
     };
 
     this.getActiveListElem = function() {
-      var active_elem = this.shadowRoot.querySelectorAll("li[data-active='true']");
+      var active_elem = this.querySelector("li[data-selected]");
 
-      if (active_elem !== null) {
-        return active_elem[0];
+      if (!active_elem) {
+        active_elem = this.querySelectorAll("li")[0];
       }
+
+      return active_elem;
     };
 
     this.updateDataActiveAttr = function(new_elem, old_elem) {
@@ -135,16 +134,13 @@
       this.updateDataActiveAttr(new_active_elem, active_elem);
     };
 
-    this.submitSearch = function(query) {
-      var active_elem = this.getActiveListElem();
-      if (active_elem !== undefined) {
-        this.shadowRoot.querySelector("input").value = active_elem.innerText;
+    this.submitSearch = function(value) {
+      if (value) {
+        this.querySelector("fn-input").setAttribute('data-value', value);
       }
-      if (query !== undefined) {
-        this.shadowRoot.querySelector("input").value = query;
-      }
-      this.closeDropDownMenu();
-      this.fireSearchSubmitEvent();
+
+      this.closeDropdown();
+      this.fireSubmitEvent(value);
     };
 
 
@@ -157,11 +153,11 @@
       }
 
       list.innerHTML = "";
-      list.style.display = "block";
+      list.setAttribute('data-active', 'active');
 
       items.map(function(item) {
         var list_elem = document.createElement("li");
-        list_elem.innerHTML = "<a href='#'>" + item.query + "</a>";
+        list_elem.innerHTML = item.query;
         list.appendChild(list_elem);
 
         list_elem.onclick = function(e) {
@@ -172,14 +168,19 @@
 
         list_elem.addEventListener('mouseover', function() {
           var active_elem = base.getActiveListElem();
-          if (active_elem !== undefined) {
-            active_elem.setAttribute('data-active', 'false');
+          if (active_elem) {
+            active_elem.removeAttribute('data-selected');
           }
         }, false);
       });
     };
 
-
+    this.closeDropdown = function() {
+      var list = this.querySelector("ul");
+      if (list) {
+        list.removeAttribute('data-active');
+      }
+    };
 
     this.autocomplete = function(term, items) {
       if (term == this.querySelector("fn-input").getValue() && items.length > 0) {
@@ -197,8 +198,14 @@
       this.dispatchEvent(autocompleteEvent);
     };
 
-    this.fireSearchSubmitEvent = function() {
-      this.dispatchEvent(new Event('fn-search-submit'));
+    this.fireSubmitEvent = function(value) {
+      var submitEvent = new CustomEvent('fn-search-submit', {
+        'detail' : {'value' : value},
+        cancelable: true,
+        bubbles: true
+      });
+
+      this.dispatchEvent(submitEvent);
     };
 
   };
