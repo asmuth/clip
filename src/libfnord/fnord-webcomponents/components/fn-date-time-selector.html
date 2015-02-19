@@ -8,22 +8,20 @@
   copy of the GNU General Public License along with this program. If not, see
   <http://www.gnu.org/licenses/>.
 -->
-<style type='text/css'>
-  fn-date-time-selector {
-    display: block;
-  }
-</style>
 <script type='text/javascript'>
   var DateTimeSelector = function() {
     this.createdCallback = function() {
 
-      if (this.getAttribute('data-resolved') == 'resolved') {
+      if (this.hasAttribute('data-resolved')) {
         this.init();
       }
     }
 
     this.attributeChangedCallback = function(attr, old_val, new_val) {
       switch (attr) {
+          case 'data-resolved':
+          this.init();
+          break;
         case 'data-until':
           this.checkUntilAttr(false);
           this.updateUntil();
@@ -34,6 +32,7 @@
         case 'data-range':
           this.checkRangeAttr();
           this.updateRange();
+          break;
         default:
           break;
       }
@@ -63,52 +62,63 @@
     };
 
     this.init = function() {
+      this.renderWidget();
       this.checkRangeAttr();
       this.checkUntilAttr();
       this.checkPrecisionAttr();
-      this.render();
       this.updateRange();
+      this.updateUntil();
       this.observeActions();
     };
 
     this.updateRange = function() {
-      this.shadowRoot.querySelector("fn-dropdown").setAttribute(
-        'data-preselected', this.getAttribute('data-range'));
+      var dropdown = this.querySelector("fn-dropdown");
+
+      dropdown.setAttribute('data-preselected', this.getAttribute('data-range'));
+      dropdown.setAttribute('data-resolved', 'resolved');
     };
 
+    this.renderWidget = function() {
+      var header = this.querySelector("fn-date-time-selector-header");
+      var widget = this.querySelector("fn-date-time-selector-widget");
+
+      if (!header) {
+        header = document.createElement("fn-date-time-selector-header");
+        this.insertBefore(header, this.querySelector("fn-dropdown").nextElementSibling);
+      }
+
+      if (!widget) {
+        widget = document.createElement("fn-date-time-selector-widget");
+        this.insertBefore(widget, header.nextElementSibling);
+
+        widget.appendChild(document.createElement("fn-timeinput"));
+        widget.appendChild(document.createElement("fn-calendar"));
+      }
+    }
+
     this.updateUntil = function() {
+      var header = this.querySelector("fn-date-time-selector-header");
+      var calendar = this.querySelector("fn-calendar");
+      var timeinput = this.querySelector("fn-timeinput");
+
       var date = DateUtil.getDateObject(
-        this.timestamp.date + this.timestamp.time, 
+        this.timestamp.date + this.timestamp.time,
         this.getAttribute('data-precision'));
 
-      var calendar = this.shadowRoot.querySelector("fn-calendar");
 
       //TODO timedescr from timestamp
-      this.shadowRoot.getElementById("endtime_descr").innerHTML =
-        DateUtil.getDateTimeDescr(date);
+      header.innerHTML = DateUtil.getDateTimeDescr(date);
 
       calendar.setAttribute('data-selected', this.timestamp.date);
       calendar.setAttribute('data-timestamp', this.timestamp.date);
-      this.shadowRoot.querySelector("fn-timeinput").setAttribute(
+      timeinput.setAttribute(
         'data-timestamp', this.timestamp.time);
-
-
     };
 
-    this.render = function() {
-      this.shadowRoot.getElementById('range').appendChild(
-        this.querySelector("fn-dropdown"));
-
-    };
 
     this.openWidget = function() {
-      console.log("open widget");
-      var widget = this.shadowRoot.querySelector(".widget");
-      var pos = this.shadowRoot.querySelector(".wrapper").getBoundingClientRect();
-
-      if (widget.style.marginTop.length == 0) {
-        widget.style.marginTop = pos.height + 5 + "px";
-      }
+      var widget = this.querySelector("fn-date-time-selector-widget");
+      var pos = this.getBoundingClientRect();
 
       widget.setAttribute('data-selected', this.getAttribute('data-until'));
       widget.classList.add("active");
@@ -118,7 +128,7 @@
     }
 
     this.closeWidget = function(timestamp) {
-      this.shadowRoot.querySelector(".widget").classList.remove("active");
+      this.querySelector("fn-date-time-selector-widget").classList.remove("active");
       if (timestamp) {
         this.setAttribute('data-until', timestamp);
         this.fireEvent(
@@ -128,27 +138,33 @@
 
     this.observeActions = function() {
       var base = this;
-      var widget = this.shadowRoot.querySelector(".widget");
+      var widget = this.querySelector("fn-date-time-selector-widget");
       var timeinput = widget.querySelector("fn-timeinput");
       var calendar = widget.querySelector("fn-calendar");
+      var icon_left = this.querySelector("fn-date-time-selector-icon.left");
+      var icon_right = this.querySelector("fn-date-time-selector-icon.right");
 
-      this.shadowRoot.querySelector(".fa-chevron-left").onclick = function() {
-        var until =
-          parseInt(base.getAttribute('data-until'), 10) -
-          parseInt(base.getAttribute('data-range'), 10);
-        base.setAttribute('data-until', until);
-        base.fireEvent('fn-date-time-selector-until', {"until" :until});
-      };
+      if (icon_left) {
+        icon_left.onclick = function() {
+          var until =
+            parseInt(base.getAttribute('data-until'), 10) -
+            parseInt(base.getAttribute('data-range'), 10);
+          base.setAttribute('data-until', until);
+          base.fireEvent('fn-date-time-selector-until', {"until" :until});
+        };
+      }
 
-      this.shadowRoot.querySelector(".fa-chevron-right").onclick = function() {
-        var until =
+      if (icon_right) {
+        icon_right.onclick = function() {
+          var until =
           parseInt(base.getAttribute('data-until'), 10) +
           parseInt(base.getAttribute('data-range'), 10);
-        base.setAttribute('data-until', until);
-        base.fireEvent('fn-date-time-selector-until', {"until" :until});
-      };
+          base.setAttribute('data-until', until);
+          base.fireEvent('fn-date-time-selector-until', {"until" :until});
+        };
+      }
 
-      this.shadowRoot.querySelector("fn-dropdown").addEventListener(
+      this.querySelector("fn-dropdown").addEventListener(
         'fn-dropdown-item-click', function(e) {
           var range = e.srcElement.getAttribute('data-value');
           base.setAttribute(
@@ -157,7 +173,7 @@
         },
       false);
 
-      this.shadowRoot.querySelector(".header").onclick = function(e) {
+      this.querySelector("fn-date-time-selector-header").onclick = function(e) {
         e.stopPropagation();
         if (widget.classList.contains("active")) {
           base.closeWidget();
@@ -183,7 +199,6 @@
             parseInt(calendar.getAttribute('data-selected'), 10));
         },
       false);
-
     };
 
     this.fireEvent = function(name, detail) {
