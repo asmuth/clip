@@ -13,12 +13,6 @@
     this.createdCallback = function() {
       var base = this;
 
-      //Remove?
-      document.addEventListener('click', function() {
-        base.hideDropdown();
-      }, false);
-
-
       if (this.hasAttribute('data-resolved')) {
         this.initHeaderItem();
       }
@@ -178,6 +172,7 @@
             base.keyNavigation('down');
             break;
           case 13:
+            console.log("enter");
             base.onItemClick(base.querySelector("fn-dropdown-item.hover"));
             break;
           default:
@@ -189,9 +184,11 @@
       }
 
       if (set) {
+        console.log("add event listener");
         elem.addEventListener('keyup', listener, false);
         this.keyEventListener = {'set' : true, 'target' : elem};
       } else {
+        console.log("remove event listener");
         elem.removeEventListener('keyup', listener, false);
         this.keyEventListener.set = false;
       }

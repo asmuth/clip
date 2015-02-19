@@ -523,10 +523,13 @@
     };
 
     this.addMetricControl = function(index, setEventListener) {
+      console.log("add metric control");
       var base = this;
       var controls = this.querySelectorAll("fn-metric-control");
       var new_control = document.createElement("fn-metric-control");
       var index = index;
+
+      console.log(controls[0].params);
 
       if (!index && controls) {
         index = parseInt(
