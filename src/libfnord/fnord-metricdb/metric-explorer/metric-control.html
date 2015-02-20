@@ -47,38 +47,11 @@
       overflow: hidden;
     }
 
-    .metric > .view {
-      display: none;
+    .metric > .header {
       min-width: 200px;
       width: 100%;
     }
 
-    .metric > .view.active {
-      display: block;
-    }
-
-    .metric .view fn-search {
-      width: 235px;
-      margin: 7px 0 0 20px;
-      display: block;
-    }
-
-    .metric fn-search /deep/ .icon {
-      margin-top: 0.65em;
-    }
-
-    .metric fn-search /deep/ ul {
-      margin-top: 34px;
-    }
-
-    .metric .view .fa {
-      opacity: 0.7;
-      margin: 4px 0 0 4px;
-      font-size:0.9em;
-    }
-    .metric .view .fa:hover {
-      cursor: pointer;
-    }
 
     fn-tooltip[data-pointer='right']:before {
       bottom: -0.325em;
@@ -91,7 +64,7 @@
   </style>
   <div class="metric-control">
     <div class="metric">
-      <div class="view active" name="header">
+      <div class="header">
         <h3 class="small"></h3>
       </div>
     </div>
