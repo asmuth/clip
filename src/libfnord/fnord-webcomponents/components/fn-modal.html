@@ -25,6 +25,10 @@
           }
         }
       });
+
+      this.onclick = function(e) {
+        e.stopPropagation();
+      };
     }
 
     this.show = function() {
