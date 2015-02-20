@@ -219,12 +219,12 @@
 
       //init mainMetric
       this.initMetricControl(
-        this.querySelector("fn-metric-control"), 0, this.params.metric0.name);
+        this.querySelector("fn-metric-control"), this.params.metric0.name, 0);
 
       //init subMetrics
       for (var i = 1; i < parseInt(this.params.metrics, 10); i++) {
         this.initMetricControl(
-          this.addMetricControl(i, false), i, this.params["metric" + i]["name"]);
+          this.addMetricControl(i, false), this.params["metric" + i]["name"], i);
       }
     };
 
@@ -487,8 +487,13 @@
       });
     };
 
-    this.initMetricControl = function(metric, index, name) {
+    this.initMetricControl = function(metric, name, index) {
       var base = this;
+
+      if (!index) {
+        index = metric.getAttribute('data-index');
+      }
+
       var aggr_fn = this.getMetricUrlParamOrDefault("aggr_fn", index);
 
       var metric_params = {
@@ -533,20 +538,16 @@
         }, false);
       } else {
         metric.addEventListener('fn-metric-control-add-metric', function() {
-          base.addMetricControl(null, true);
+          base.renderSelectMetricModal();
         }, false);
       }
     };
 
-    this.addMetricControl = function(index, setEventListener) {
+    this.addMetricControl = function(index) {
       var base = this;
       var controls = this.querySelectorAll("fn-metric-control");
       var new_control = document.createElement("fn-metric-control");
       var index = index;
-
-      console.log(controls[0].params);
-
-      this.renderSelectMetricModal();
 
       if (!index && controls) {
         index = parseInt(
@@ -557,17 +558,6 @@
       new_control.setAttribute('data-index', index);
 
       this.querySelector(".metric-controls").appendChild(new_control);
-
-      if (setEventListener) {
-        new_control.addEventListener('fn-metric-control-new-metric', function(e) {
-          base.initMetricControl(this, index, e.detail.name);
-          base.update();
-        }, false);
-
-        new_control.addEventListener('fn-metric-control-remove-metric', function() {
-          base.removeMetricControl(index);
-        }, false);
-      }
 
       return new_control;
     };
@@ -588,6 +578,7 @@
     };
 
     this.renderSelectMetricModal = function() {
+      var base = this;
       var modal = this.querySelector("fn-modal[name='select_metric']");
       var table = modal.querySelector("fn-table");
       table.querySelector("table").innerHTML = "";
@@ -597,6 +588,7 @@
           var metrics = JSON.parse(r.response).metrics;
           metrics.forEach(function(metric) {
             var tr_elem = document.createElement("tr");
+            tr_elem.setAttribute('metric-key', metric.key);
             tr_elem.innerHTML = "<td>" + metric.key + "</td>";
             table.appendRow(tr_elem);
           });
@@ -605,7 +597,10 @@
       });
 
       table.addEventListener('fn-table-row-click', function(e) {
-        console.log(e. e.srcElement);
+        var key = e.srcElement.getAttribute('metric-key');
+        var control = base.addMetricControl(null, true);
+        base.initMetricControl(control, key);
+        modal.close();
       }, false);
     }
 
