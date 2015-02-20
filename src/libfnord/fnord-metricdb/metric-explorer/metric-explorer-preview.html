@@ -288,7 +288,6 @@
     };
 
     this.updateData = function(format) {
-      console.log("update data");
       var base = this;
       format = format ? format : "svg";
       var url = "/metrics/timeseries?" + this.buildQueryUrl(format);
@@ -512,8 +511,10 @@
 
 
       if (this.params["metric" + index] == undefined) {
+        console.log("set this.params");
         this.params["metric" + index] = metric_params;
         this.params.metrics += 1;
+        this.update();
       }
 
       metric.params = metric_params;
