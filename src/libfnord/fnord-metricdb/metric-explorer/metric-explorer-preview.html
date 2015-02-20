@@ -112,7 +112,7 @@
       </fn-button>
 
       <div class="item" style="height: 36px; line-height: 36px; float: right;">
-        <fn-date-time-selector data-resolved='resolved'>
+        <fn-date-time-selector>
           <fn-date-time-selector-icon class='left'></fn-date-time-selector-icon>
           <fn-dropdown id='timerange' data-style="inline small">
             <fn-dropdown-items>
@@ -637,70 +637,27 @@
       return value;
     }
 
-    this.updateDateTimeElems = function(end_time) {
-      var params = parseUrlQueryString(this.getAttribute("data-url"));
-      var date_range = this.getGenericParamOrDefault("time_range");
-      var start_time = parseInt(end_time, 10) - parseInt(date_range, 10);
-      this.updateGenericParams({"until" : end_time, "from" : start_time});
-      var datepicker = this.querySelector("fn-datepicker");
-      datepicker.setAttribute("data-timestamp", end_time * 1000);
-      var daterangepicker = this.querySelector("fn-daterangepicker");
-      daterangepicker.setAttribute("data-endtime", end_time * 1000);
-    };
-
-
     this.handleDateTimeControls = function() {
-      /*var base = this;
-      // init 
-      var time_range_val = parseInt(
-        this.getGenericParamOrDefault("time_range"), 10);
-      var end_time = parseInt(this.getGenericParamOrDefault("until"), 10);
+      var base = this;
+      var selector = this.querySelector("fn-date-time-selector");
+      var range = parseInt(this.getGenericParamOrDefault("time_range"), 10);
+      var until = parseInt(this.getGenericParamOrDefault("until"), 10);
 
-      var time_range = this.querySelector("#timerange");
-      time_range.setAttribute('data-preselected', time_range_val);
+      selector.setAttribute('data-until', until);
+      selector.setAttribute('data-range', range);
+      selector.setAttribute('data-resolved', 'resolved');
 
-      var datepicker = this.querySelector("fn-datepicker");
-      datepicker.setAttribute('data-timestamp', (end_time * 1000));
-
-      var daterangepicker = this.querySelector("fn-daterangepicker");
-      daterangepicker.setAttribute('data-daterange', (time_range_val * 1000));
-      daterangepicker.setAttribute('data-endtime', (end_time * 1000));
-      var chevron_right = daterangepicker.shadowRoot.querySelector(".fa-chevron-right");
-
-      var tooltip = this.querySelector("#ttp_endtime");
-      tooltip.initShowIf(chevron_right, function() {
-        return !(daterangepicker.nextIsSelectable());
-      });
-
-      time_range.addEventListener("fn-dropdown-item-click", function(e) {
-        var endtime = base.getGenericParamOrDefault("until");
-        var date_range = parseInt(e.srcElement.getAttribute('data-value'));
-        var starttime = parseInt(endtime, 10) - date_range;
-        base.updateGenericParams({"from": starttime});
-        //check
-        daterangepicker.setAttribute("data-daterange", (date_range * 1000));
+      selector.addEventListener('fn-date-time-selector-until', function(e) {
+        var until = Math.round(parseInt(e.detail.until, 10) / 1000);
+        var from = until - base.getGenericParamOrDefault("time_range");
+        base.updateGenericParams({'until': until, 'from' : from});
       }, false);
 
-      datepicker.addEventListener('fn-datepicker-select', function() {
-        var timestamp = parseInt(this.getAttribute("data-timestamp"), 10);
-        timestamp = Math.round(timestamp / 1000);
-        base.updateDateTimeElems(timestamp);
+      selector.addEventListener('fn-date-time-selector-range', function(e) {
+        var until = base.getGenericParamOrDefault("until");
+        var from = until - parseInt(e.detail.range, 10)
+        base.updateGenericParams({'from' : from});
       }, false);
-
-      daterangepicker.addEventListener('fn-daterangepicker-select-previous', 
-        function() {
-          var endtime = parseInt(this.getAttribute("data-endtime"), 10);
-          endtime = Math.round(endtime / 1000);
-          base.updateDateTimeElems(endtime);
-      }, false);
-
-      daterangepicker.addEventListener('fn-daterangepicker-select-next',
-        function() {
-          var endtime = parseInt(this.getAttribute("data-endtime"), 10);
-          endtime = Math.round(endtime / 1000);
-          base.updateDateTimeElems(endtime);
-      }, false);*/
-
     };
 
     this.handleGenericControls = function() {
