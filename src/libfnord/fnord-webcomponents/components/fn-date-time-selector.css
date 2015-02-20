@@ -33,19 +33,18 @@ fn-date-time-selector-icon.right:before {
 }
 
 fn-date-time-selector fn-dropdown {
-  margin: 0 5px;
+  margin: 0 0.5em;
   display: inline-block;
 }
 
 fn-date-time-selector-header {
-  margin: 0;
   padding: 0;
   box-sizing: border-box;
   line-height: 1em;
   text-align: left;
   display: inline-block;
   font-weight: bold;
-  padding-left: 5px;
+  margin: 0 0.5em;
   white-space: nowrap;
 }
 
@@ -58,7 +57,16 @@ fn-date-time-selector-header:after {
   font-family: FontAwesome;
   content: "\f0d7";
   vertical-align: top;
-  margin-left: 1%;
+  display: inline-block;
+  line-height: inherit;
+  font-weight: 401;
+  font-style: normal;
+  text-align: center;
+  width: auto;
+  margin: 0 0 0 0.5em;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  vertical-align: middle;
 }
 
 fn-date-time-selector-widget {
