@@ -18,6 +18,10 @@
     }
 
     this.attributeChangedCallback = function(attr, old_val, new_val) {
+      if ((attr != 'data-resolved') && !this.hasAttribute('data-resolved')) {
+        return;
+      }
+
       switch (attr) {
           case 'data-resolved':
           this.init();
