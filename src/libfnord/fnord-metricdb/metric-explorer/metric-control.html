@@ -39,19 +39,13 @@
       opacity: 0.7;
     }
 
-    .metric {
+    .header {
       float:left;
       width: 250px;
       border-right: 1px solid #d4d4d5;
       white-space: nowrap;
       overflow: hidden;
     }
-
-    .metric > .header {
-      min-width: 200px;
-      width: 100%;
-    }
-
 
     fn-tooltip[data-pointer='right']:before {
       bottom: -0.325em;
@@ -63,10 +57,8 @@
 
   </style>
   <div class="metric-control">
-    <div class="metric">
-      <div class="header">
-        <h3 class="small"></h3>
-      </div>
+    <div class="header">
+      <h3 class="small"></h3>
     </div>
     <div class='metric-control-group'>
       <b>Aggregate: </b>
@@ -187,7 +179,21 @@
         this.handleControls();
         this.handleAggregationDisplay();
       }
+
+      if (this.hasAttribute('data-index')) {
+        this.setColorIndex();
+      }
     };
+
+    this.setColorIndex = function() {
+      var index = this.getAttribute('data-index');
+      var header = this.querySelector(".header h3");
+      if (index == 0 || !header) {
+        return;
+      }
+
+      header.classList.add("color" + index % 6);
+    }
 
     this.columnsReloaded = function() {
       if (this.params.columns && this.params.columns.length > 0) {

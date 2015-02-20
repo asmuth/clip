@@ -124,7 +124,7 @@ fn-metric-control /deep/ fn-button {
   margin: 0;
 }
 
-fn-metric-control /deep/ .metric h3::before {
+fn-metric-control .header h3::before {
   font-family: FontAwesome;
   line-height: 1;
   height: 1em;
@@ -138,7 +138,33 @@ fn-metric-control /deep/ .metric h3::before {
   content: "\f0c8";
 }
 
-fn-metric-control /deep/ .metric h3 {
+fn-metric-control .header h3.color0::before {
+  color: #4572a7;
+}
+
+fn-metric-control .header h3.color1::before {
+  color: #aa4643;
+}
+
+fn-metric-control .header h3.color2::before {
+  color: #89a54e;
+}
+
+fn-metric-control .header h3.color3::before {
+  color: #80699b;
+}
+
+fn-metric-control .header h3.color4::before {
+  color: #3d96ae;
+}
+
+fn-metric-control .header h3.color5::before {
+  color: #db843d;
+}
+
+
+
+fn-metric-control .header h3 {
   margin: 0;
   padding: 0 15px;
   display: inline;
@@ -149,14 +175,14 @@ fn-metric-control /deep/ .metric h3 {
   font-weight: normal;
 }
 
-fn-metric-control /deep/ .metric i.fa {
+fn-metric-control .header i.fa {
   float: right;
   line-height: 30px;
   padding: 0;
   margin: 0 10px 0 0;
 }
 
-fn-metric-control /deep/ fn-button:hover {
+fn-metric-control fn-button:hover {
   border-radius: 0;
   border-top: none;
   border-bottom: none;
