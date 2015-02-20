@@ -83,9 +83,13 @@
       word-wrap: break-word;
     }
 
-    fn-modal-content .header {
-      font-weight: 500;
-      margin-bottom: 10px;
+    fn-modal[name='select_metric'] {
+      width: 25%;
+      left: 65%;
+    }
+
+    fn-modal[name='select_metric'] fn-table {
+      width: 100%;
     }
   </style>
   <fn-loader>
@@ -99,8 +103,6 @@
           </fn-dropdown-items>
         </fn-dropdown>
       </div>
-
-
 
       <fn-button id="embed_btn" class="item left" data-size='tiny' style="display:none;">
         <i class='fa fa-share'></i>Embed
@@ -140,20 +142,34 @@
       <div class="result_pane" data-format="csv">
       </div>
     </fn-loader>
-    <fn-modal id="embed">
-      <fn-modal-header>Embed</fn-modal-header>
+    <fn-modal-dimmer>
+      <fn-modal id="embed">
+        <fn-modal-close-icon></fn-modal-close-icon>
+        <fn-modal-header>Embed</fn-modal-header>
+        <fn-modal-content>
+          <div class="header">Copy this into your HTML Page</div>
+          <code>
+            &lt;iframe<br />&nbsp;&nbsp;&nbsp;&nbsp;width="800"<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;height="400"<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;frameBorder="0"<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;src="<span id="src"></span>"
+            &gt;<br />&lt;/iframe&gt;
+          </code>
+        </fn-modal-content>
+      </fn-modal>
+    </fn-modal-dimmer>
+  </fn-loader>
+
+  <fn-modal-dimmer>
+    <fn-modal name='select_metric'>
+      <fn-modal-close-icon></fn-modal-close-icon>
+      <fn-modal-header>Select Metric</fn-modal-header>
       <fn-modal-content>
-        <div class="header">Copy this into your HTML Page</div>
-        <code>
-          &lt;iframe<br />&nbsp;&nbsp;&nbsp;&nbsp;width="800"<br />
-          &nbsp;&nbsp;&nbsp;&nbsp;height="400"<br />
-          &nbsp;&nbsp;&nbsp;&nbsp;frameBorder="0"<br />
-          &nbsp;&nbsp;&nbsp;&nbsp;src="<span id="src"></span>"
-          &gt;<br />&lt;/iframe&gt;
-        </code>
+        <fn-table data-clickable></fn-table>
       </fn-modal-content>
     </fn-modal>
-  </fn-loader>
+  </fn-modal-dimmer>
+
   <fn-tooltip data-pointer="right" id='ttp_endtime'>
     Please select a date in the past
   </fn-tooltip>
@@ -523,13 +539,14 @@
     };
 
     this.addMetricControl = function(index, setEventListener) {
-      console.log("add metric control");
       var base = this;
       var controls = this.querySelectorAll("fn-metric-control");
       var new_control = document.createElement("fn-metric-control");
       var index = index;
 
       console.log(controls[0].params);
+
+      this.renderSelectMetricModal();
 
       if (!index && controls) {
         index = parseInt(
@@ -568,6 +585,28 @@
       }
 
       this.update();
+    };
+
+    this.renderSelectMetricModal = function() {
+      var modal = this.querySelector("fn-modal[name='select_metric']");
+      var table = modal.querySelector("fn-table");
+      table.querySelector("table").innerHTML = "";
+
+      Fnord.httpGet('/metrics/list', function(r) {
+        if (r.status == 200) {
+          var metrics = JSON.parse(r.response).metrics;
+          metrics.forEach(function(metric) {
+            var tr_elem = document.createElement("tr");
+            tr_elem.innerHTML = "<td>" + metric.key + "</td>";
+            table.appendRow(tr_elem);
+          });
+        }
+        modal.show();
+      });
+
+      table.addEventListener('fn-table-row-click', function(e) {
+        console.log(e. e.srcElement);
+      }, false);
     }
 
 /************************* Generic Controls **************************/
