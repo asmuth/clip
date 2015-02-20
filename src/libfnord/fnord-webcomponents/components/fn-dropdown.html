@@ -82,7 +82,8 @@
       }
 
       //remove global event listener
-      if (this.keyEventListener && this.keyEventListener.target == window) {
+      if (this.keyEventListener && this.keyEventListener.target.tagName != 'FN-INPUT') {
+        console.log("remove event listener");
         this.handleKeyNavigation(false);
       }
     };
@@ -125,6 +126,10 @@
     };
 
     this.onItemClick = function(item) {
+      if (!item) {
+        return;
+      }
+
       var prev_item = this.querySelector("fn-dropdown-item[data-selected]");
       var input_elem = this.querySelector("fn-input");
 
@@ -159,7 +164,7 @@
     this.handleKeyNavigation = function(set) {
       var input = this.querySelector("fn-input");
       //set key event for input if searchable and for window otherwise
-      var elem = input ? input : window;
+      var elem = input ? input : document.body;
       var base = this;
 
       var listener = function(e) {
@@ -172,7 +177,7 @@
             base.keyNavigation('down');
             break;
           case 13:
-            console.log("enter");
+            console.log(this, "enter");
             base.onItemClick(base.querySelector("fn-dropdown-item.hover"));
             break;
           default:
@@ -184,11 +189,11 @@
       }
 
       if (set) {
-        console.log("add event listener");
+        console.log(elem, "add event listener");
         elem.addEventListener('keyup', listener, false);
         this.keyEventListener = {'set' : true, 'target' : elem};
       } else {
-        console.log("remove event listener");
+        console.log(elem, "remove event listener");
         elem.removeEventListener('keyup', listener, false);
         this.keyEventListener.set = false;
       }
