@@ -34,6 +34,11 @@
       } else {
         this.setAttribute('data-active', 'active');
       }
+
+      //place modal
+      var height = this.getBoundingClientRect().height;
+      var mtop = ((window.innerHeight - height) / 3);
+      this.style.marginTop = mtop + "px";
     };
 
     this.close = function() {

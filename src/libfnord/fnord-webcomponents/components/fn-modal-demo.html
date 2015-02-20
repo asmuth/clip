@@ -26,86 +26,100 @@
   <section>
     <h1><i>Example 2 &raquo;</i> Icon and Multi Button Modal</h1>
     <fn-button id="btn_2">Show</fn-button>
-    <fn-modal data-type='actions icon' id="modal_2">
-      <fn-modal-header>Confirm</fn-modal-header>
-      <fn-modal-content>
-        <fn-modal-content-icon>
-          <i class="fa fa-question-circle"></i>
-        </fn-modal-content-icon>
-        <fn-modal-text>
-          Are you sure you want to logout?
-        </fn-modal-text>
-      </fn-modal-content>
-      <fn-modal-footer>
-        <fn-button>Yes</fn-button>
-        <fn-button>No</fn-button>
-      </fn-modal-footer>
-    </fn-modal>
+    <fn-modal-dimmer>
+      <fn-modal-close-icon></fn-modal-close-icon>
+      <fn-modal data-type='actions icon' id="modal_2">
+        <fn-modal-header>Confirm</fn-modal-header>
+        <fn-modal-content>
+          <fn-modal-content-icon>
+            <i class="fa fa-question-circle"></i>
+          </fn-modal-content-icon>
+          <fn-modal-text>
+            Are you sure you want to logout?
+          </fn-modal-text>
+        </fn-modal-content>
+        <fn-modal-footer>
+          <fn-button>Yes</fn-button>
+          <fn-button>No</fn-button>
+        </fn-modal-footer>
+      </fn-modal>
+    </fn-modal-dimmer>
   </section>
 
   <section>
     <h1><i>Example 3 &raquo;</i> Single Button Modal</h1>
     <fn-button id="btn_3">Show</fn-button>
-    <fn-modal data-type='actions' id="modal_3">
-      <fn-modal-header>Status</fn-modal-header>
-      <fn-modal-content>
-        Changes saved successfully
-      </fn-modal-content>
-      <fn-modal-footer>
-        <fn-button>Ok</fn-button>
-      </fn-modal-footer>
-    </fn-modal>
+    <fn-modal-dimmer>
+      <fn-modal data-type='actions' id="modal_3">
+        <fn-modal-close-icon></fn-modal-close-icon>
+        <fn-modal-header>Status</fn-modal-header>
+        <fn-modal-content>
+          Changes saved successfully
+        </fn-modal-content>
+        <fn-modal-footer>
+          <fn-button>Ok</fn-button>
+        </fn-modal-footer>
+      </fn-modal>
+    </fn-modal-dimmer>
   </section>
 
   <section>
     <h1><i>Example 4 &raquo;</i> Input Modal</h1>
     <fn-button id="btn_4">Show</fn-button>
-    <fn-modal data-type='actions input' id="modal_4">
-      <fn-modal-header>Confirm</fn-modal-header>
-      <fn-modal-content>
-        <fn-modal-text>
-          Please enter your name
-        </fn-modal-text>
-        <fn-input></fn-input>
-      </fn-modal-content>
-      <fn-modal-footer>
-        <fn-button>Ok</fn-button>
-      </fn-modal-footer>
-    </fn-modal>
+    <fn-modal-dimmer>
+      <fn-modal data-type='actions input' id="modal_4">
+        <fn-modal-close-icon></fn-modal-close-icon>
+        <fn-modal-header>Confirm</fn-modal-header>
+        <fn-modal-content>
+          <fn-modal-text>
+            Please enter your name
+          </fn-modal-text>
+          <fn-input></fn-input>
+        </fn-modal-content>
+        <fn-modal-footer>
+          <fn-button>Ok</fn-button>
+        </fn-modal-footer>
+      </fn-modal>
+    </fn-modal-dimmer>
   </section>
 
   <section>
     <h1><i>Example 5 &raquo;</i> Custom Content Modal</h1>
     <fn-button id="btn_5">Show</fn-button>
-    <fn-modal data-type='actions' id="modal_5">
-      <fn-modal-header>Saving your data, please wait</fn-modal-header>
-      <fn-modal-content>
-        <fn-progressbar data-label='Uploading'>
-        </fn-progressbar>
-      </fn-modal-content>
-      <fn-modal-footer>
-        <fn-button>Cancel</fn-button>
-      </fn-modal-footer>
-    </fn-modal>
+    <fn-modal-dimmer>
+      <fn-modal data-type='actions' id="modal_5">
+        <fn-modal-close-icon></fn-modal-close-icon>
+        <fn-modal-header>Saving your data, please wait</fn-modal-header>
+        <fn-modal-content>
+          <fn-progressbar data-label='Uploading'>
+          </fn-progressbar>
+        </fn-modal-content>
+        <fn-modal-footer>
+          <fn-button>Cancel</fn-button>
+        </fn-modal-footer>
+      </fn-modal>
+    </fn-modal-dimmer>
   </section>
 
   <section>
     <h1><i>Example 6 &raquo;</i> Modal Without Close Button</h1>
     <fn-button id="btn_6">Show</fn-button>
-    <fn-modal data-type='actions icon' data-not-closable id="modal_6">
-      <fn-modal-content>
-        <fn-modal-icon>
-          <i class="fa fa-question-circle"></i>
-        </fn-modal-icon>
-        <fn-modal-text data-style='bold'>
-          How old are you?
-        </fn-modal-text>
-      </fn-modal-content>
-      <fn-modal-footer>
-        <fn-button>Under 18</fn-button>
-        <fn-button>18 or older</fn-button>
-      </fn-modal-footer>
-    </fn-modal>
+    <fn-modal-dimmer>
+      <fn-modal data-type='actions icon' id="modal_6">
+        <fn-modal-content>
+          <fn-modal-icon>
+            <i class="fa fa-question-circle"></i>
+          </fn-modal-icon>
+          <fn-modal-text data-style='bold'>
+            How old are you?
+          </fn-modal-text>
+        </fn-modal-content>
+        <fn-modal-footer>
+          <fn-button>Under 18</fn-button>
+          <fn-button>18 or older</fn-button>
+        </fn-modal-footer>
+      </fn-modal>
+    </fn-modal-dimmer>
   </section>
 
 

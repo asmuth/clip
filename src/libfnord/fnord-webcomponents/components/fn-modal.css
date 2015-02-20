@@ -12,7 +12,6 @@ fn-modal {
   display: none;
   position: fixed;
   z-index: 1001;
-  top: 50%;
   left: 50%;
   text-align: left;
   width: 90%;
