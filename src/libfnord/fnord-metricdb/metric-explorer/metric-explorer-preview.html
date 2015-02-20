@@ -558,7 +558,6 @@
       new_control.setAttribute('data-index', index);
 
       this.querySelector(".metric-controls").appendChild(new_control);
-
       return new_control;
     };
 
@@ -596,13 +595,17 @@
         modal.show();
       });
 
-      table.addEventListener('fn-table-row-click', function(e) {
-        var key = e.srcElement.getAttribute('metric-key');
-        var control = base.addMetricControl(null, true);
-        base.initMetricControl(control, key);
-        modal.close();
-      }, false);
-    }
+      if (!table.rowClickListener) {
+        table.rowClickListener = true;
+
+        table.addEventListener('fn-table-row-click', function(e) {
+          var key = e.srcElement.getAttribute('metric-key');
+          var control = base.addMetricControl(null, true);
+          base.initMetricControl(control, key);
+          modal.close();
+        }, false);
+      }
+    };
 
 /************************* Generic Controls **************************/
     this.getGenericParamOrDefault = function(key) {
@@ -707,7 +710,6 @@
       var autorefresh_btn = this.querySelector("#auto_refresh");
       var modal = this.querySelector("fn-modal");
       var interval_id;
-
 
       this.querySelector("fn-tooltip#ttp_embed").init(embed_btn);
       this.querySelector("fn-tooltip#ttp_refresh").init(autorefresh_btn);
