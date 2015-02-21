@@ -301,6 +301,8 @@
         dropdown.classList.remove("hidden");
       }
 
+      console.log(group_by);
+
       columns.map(function(c) {
         var item = document.createElement("fn-dropdown-item");
         item.innerHTML = "<fn-checkbox></fn-checkbox>" + c;
@@ -308,44 +310,26 @@
 
         if (group_by.indexOf(c) > -1) {
           item.setAttribute("data-selected", "selected");
+          item.querySelector("fn-checkbox").setAttribute('data-preselected', 'active');
         }
 
         dropdown_items.appendChild(item);
-
-        item.addEventListener('fn-dropdown-item-click', function(e) {
-          base.params.group_by = base.addToCSV(
-            base.params.group_by, e.srcElement.getAttribute('data-value'));
-          base.attributeChangedEvent('group_by');
-          console.log(base.params.group_by);
-        }, false);
-
-        item.addEventListener('fn-dropdown-item-unselect', function(e) {
-          base.params.group_by = base.removeFromCSV(
-            base.params.group_by, e.srcElement.getAttribute('data-value'));
-          base.attributeChangedEvent('group_by');
-          console.log(base.params.group_by);
-
-        }, false);
-
-        /*button.addEventListener("fn-button-click", function() {
-          var group_by_csv = base.params.group_by;
-          if (this.getAttribute("data-state") == "active") {
-            this.removeAttribute("data-state");
-            group_by_csv = base.removeFromCSV(group_by_csv, this.getAttribute('data-value'));
-          } else {
-            this.setAttribute("data-state", "active");
-            group_by_csv = base.addToCSV(group_by_csv, this.getAttribute('data-value'));
-          }
-          base.params.group_by = group_by_csv;
-          base.attributeChangedEvent("group_by");
-        });*/
       });
 
       dropdown.setAttribute('data-resolved', 'resolved');
 
       dropdown.addEventListener('fn-dropdown-item-click', function(e) {
-        console.log(e.srcElement.getAttribute('data-value'));
-      });
+        base.params.group_by = base.addToCSV(
+            base.params.group_by, e.srcElement.getAttribute('data-value'));
+        base.attributeChangedEvent('group_by');
+      }, false);
+
+      dropdown.addEventListener('fn-dropdown-item-unselect', function(e) {
+          base.params.group_by = base.removeFromCSV(
+            base.params.group_by, e.srcElement.getAttribute('data-value'));
+          base.attributeChangedEvent('group_by');
+      }, false);
+
     };
 
     this.fireNewMetricEvent = function(name) {

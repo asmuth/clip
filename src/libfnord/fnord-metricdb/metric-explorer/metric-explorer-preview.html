@@ -218,6 +218,9 @@
 
       this.classList.add("resizable");
 
+      this.onResize();
+      this.update();
+
       document.addEventListener("DOMContentLoaded", function() {
         base.onResize();
       }, false);
