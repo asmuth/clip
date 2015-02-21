@@ -88,8 +88,9 @@
       }
 
       //remove global event listener
-      if (this.keyEventListener && this.keyEventListener.target.tagName != 'FN-INPUT') {
-        this.handleKeyNavigation(false);
+      if (!this.querySelector("fn-input")) {
+        //this.handleKeyNavigation(window, false)
+        this.unsetKeyNavigation(window);
       }
     };
 
@@ -107,8 +108,9 @@
       }
 
       //set global event listener if not searchable
-      if (!this.keyEventListener || this.keyEventListener.target == window) {
-        this.handleKeyNavigation(true);
+      if (!this.querySelector("fn-input")) {
+        //this.handleKeyNavigation(window, true);
+        this.setKeyNavigation(window);
       }
     };
 
@@ -165,42 +167,39 @@
 
 
     /*********************** Key Navigation **********************************/
-
-    this.handleKeyNavigation = function(set) {
+    this.onKeyDown = function(e) {
       var input = this.querySelector("fn-input");
-      //set key event for input if searchable and for window otherwise
-      var elem = input ? input : document.body;
-      var base = this;
+      switch (e.keyCode) {
+        case 38:
+          this.keyNavigation('up');
+          break;
+        case 40:
+          this.keyNavigation('down');
+          break;
+        case 13:
+          this.onItemClick(this.querySelector("fn-dropdown-item.hover"));
+          break;
+        default:
+          if (input) {
+            this.showFilteredDropdownItems(input.getValue());
+          }
+          break;
+      }
+    }
 
-      var listener = function(e) {
+    this.setKeyNavigation = function(elem) {
+      var that = this;
+      this.keydown_handler = function(e) {
+        that.onKeyDown.apply(that, [e]);
         e.preventDefault();
-        switch (e.keyCode) {
-          case 38:
-            base.keyNavigation('up');
-            break;
-          case 40:
-            base.keyNavigation('down');
-            break;
-          case 13:
-            base.onItemClick(base.querySelector("fn-dropdown-item.hover"));
-            break;
-          default:
-            if (input) {
-              base.showFilteredDropdownItems(input.getValue());
-            }
-            break;
-        }
-      }
+        return false;
+      };
 
-      if (set) {
-        //console.log(elem, "add event listener");
-        elem.addEventListener('keyup', listener, false);
-        this.keyEventListener = {'set' : true, 'target' : elem};
-      } else {
-        //console.log(elem, "remove event listener");
-        elem.removeEventListener('keyup', listener, false);
-        this.keyEventListener.set = false;
-      }
+      elem.addEventListener('keydown', this.keydown_handler, false);
+    }
+
+    this.unsetKeyNavigation = function(elem) {
+      elem.removeEventListener('keydown', this.keydown_handler, false);
     }
 
     this.keyNavigation = function(direction) {
@@ -273,7 +272,7 @@
         base.showDropdown();
       }, false);
 
-      this.handleKeyNavigation(true);
+      this.setKeyNavigation(input);
     };
 
     this.showFilteredDropdownItems = function(value) {
