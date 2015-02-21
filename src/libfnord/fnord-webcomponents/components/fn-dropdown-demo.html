@@ -96,22 +96,36 @@
     </fn-dropdown>
 
     <h3><i>Example 2 &raquo;</i> Multi Selectable</h3>
-    <fn-dropdown data-resolved class='input' data-select='checkbox'>
+    <fn-dropdown data-resolved class='input checkbox'>
       <fn-dropdown-items>
-        <fn-dropdown-item>
+        <fn-dropdown-item data-value='inv'>
           <fn-checkbox></fn-checkbox>
           Inverted
         </fn-dropdown-item>
-        <fn-dropdown-item>
+        <fn-dropdown-item data-value='log'>
           <fn-checkbox></fn-checkbox>
           Logarithmic
         </fn-dropdown-item>
-        <fn-dropdown-item>
+        <fn-dropdown-item data-value='scl'>
           <fn-checkbox></fn-checkbox>
           Scaled
         </fn-dropdown-item>
       </fn-dropdown-items>
     </fn-dropdown>
+
+    <script type='text/javascript'>
+      var dropdown = document.body.querySelector("fn-dropdown.input.checkbox");
+
+      dropdown.addEventListener('fn-dropdown-item-click', function(e) {
+        var value = e.srcElement.getAttribute('data-value');
+        console.log("selected: " + e.detail.text + " (data-value=" + value + ")");
+      }, false);
+
+      dropdown.addEventListener('fn-dropdown-item-unselect', function(e) {
+        var value = e.srcElement.getAttribute('data-value');
+        console.log("unselected: " + e.detail.text + " (data-value=" + value + ")");
+      }, false);
+    </script>
   </section>
 
   <section>

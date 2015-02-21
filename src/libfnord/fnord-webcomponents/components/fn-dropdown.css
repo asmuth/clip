@@ -107,6 +107,11 @@ fn-dropdown-item,
   text-align:left;
 }
 
+fn-dropdown.checkbox fn-dropdown-item,
+.fn-dropdown.checkbox .fn-dropdown-item {
+  cursor: auto;
+}
+
 fn-dropdown-item[data-selected],
 .fn-dropdown-item[data-selected] {
   font-weight: bold !important;
@@ -223,7 +228,6 @@ fn-dropdown.input fn-dropdown-header:hover,
 /* Search Icon */
 fn-dropdown.input fn-dropdown-header:after,
 .fn-dropdown.input .fn-dropdown-header:after {
-  margin: 0;
   float:right;
 }
 

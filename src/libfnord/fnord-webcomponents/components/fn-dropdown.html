@@ -57,20 +57,39 @@
 
     // Copies the selected items html to the header_elem
     this.setHeaderValue = function() {
-      var selected_item = this.querySelector("fn-dropdown-item[data-selected]");
       var header = this.querySelector("fn-dropdown-header");
+      var innerHTML = "";
 
-      if (!selected_item) {
-        //fn-dropdown has initial not selectable header
-        if (header.innerHTML.length > 0) {
-          return;
+      //multi selectable dropdown
+      if (this.classList.contains('checkbox')) {
+        var selected_items = this.querySelectorAll("fn-dropdown-item[data-selected]");
+
+        for (var i = 0; i < selected_items.length; i++) {
+          if (i > 0) {
+            innerHTML += ", ";
+          }
+
+          innerHTML += selected_items[i].innerText
         }
 
-        //set first fn-dropdown-item as header value
-        selected_item = this.querySelector("fn-dropdown-item");
+      } else {
+
+        var selected_item = this.querySelector("fn-dropdown-item[data-selected]");
+        if (!selected_item) {
+          //fn-dropdown has initial not selectable header
+          if (header.innerHTML.length > 0) {
+            return;
+          }
+
+          //set first fn-dropdown-item as header value
+          innerHTML = this.querySelector("fn-dropdown-item").innerHTML;
+        } else {
+          //set selected_item's html as header (standard case)
+          innerHTML = selected_item.innerHTML;
+        }
       }
 
-      header.innerHTML = selected_item.innerHTML;
+      header.innerHTML = innerHTML;
     };
 
     this.toggleDropdown = function() {
@@ -89,7 +108,6 @@
 
       //remove global event listener
       if (!this.querySelector("fn-input")) {
-        //this.handleKeyNavigation(window, false)
         this.unsetKeyNavigation(window);
       }
     };
@@ -109,7 +127,6 @@
 
       //set global event listener if not searchable
       if (!this.querySelector("fn-input")) {
-        //this.handleKeyNavigation(window, true);
         this.setKeyNavigation(window);
       }
     };
@@ -132,19 +149,36 @@
       this.eventListeners = true;
     };
 
+
     this.onItemClick = function(item) {
       if (!item) {
         return;
       }
 
-      var prev_item = this.querySelector("fn-dropdown-item[data-selected]");
       var input_elem = this.querySelector("fn-input");
+      var selected = true;
 
-      if (prev_item) {
-        prev_item.removeAttribute('data-selected');
+      //multi-selectable dropdown with checkboxes
+      if (this.classList.contains('checkbox')) {
+        var checkbox = item.querySelector("fn-checkbox");
+
+        //checkbox has been unselected
+        if (!checkbox.hasAttribute('data-active')) {
+          selected = false;
+          item.removeAttribute('data-selected');
+        }
+
+      } else {
+        var prev_item = this.querySelector("fn-dropdown-item[data-selected]");
+
+        if (prev_item) {
+          prev_item.removeAttribute('data-selected');
+        }
       }
 
-      item.setAttribute("data-selected", 'selected');
+      if (selected) {
+        item.setAttribute("data-selected", 'selected');
+      }
 
       if (input_elem) {
         input_elem.setAttribute('data-value', item.innerHTML);
@@ -152,12 +186,14 @@
         this.setHeaderValue();
       }
 
+      this.fireClickEvent(item, selected);
       this.hideDropdown();
-      this.fireClickEvent(item);
     };
 
-    this.fireClickEvent = function(item) {
-      var ev = new CustomEvent("fn-dropdown-item-click", {
+    this.fireClickEvent = function(item, selected) {
+      var name = (selected) ? "fn-dropdown-item-click" : "fn-dropdown-item-unselect";
+
+      var ev = new CustomEvent(name, {
         detail : {'text' : item.innerText},
         bubbles: true,
         cancelable: true
@@ -177,7 +213,7 @@
           this.keyNavigation('down');
           break;
         case 13:
-          this.onItemClick(this.querySelector("fn-dropdown-item.hover"));
+          this.onItemClick(this.querySelector("fn-dropdown-item.hover"), true);
           break;
         default:
           if (input) {
