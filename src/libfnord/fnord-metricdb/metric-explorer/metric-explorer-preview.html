@@ -38,7 +38,7 @@
     }
 
     .result_pane {
-      padding: 10px 0 20px;
+      padding: 10px 0 0 10px;
       background: #fff;
       display: none;
       text-align: cente;
@@ -114,7 +114,7 @@
       <div class="item" style="height: 36px; line-height: 36px; float: right;">
         <fn-date-time-selector>
           <fn-date-time-selector-icon class='left'></fn-date-time-selector-icon>
-          <fn-dropdown id='timerange' data-style="inline small">
+          <fn-dropdown id='timerange' class="inline">
             <fn-dropdown-items>
               <fn-dropdown-item data-value=300>5 minutes</fn-dropdown-item>
               <fn-dropdown-item data-value=900>15 minutes</fn-dropdown-item>
@@ -186,16 +186,6 @@
       if (this.getAttribute('data-url') != null) {
         this.init()
       }
-
-      document.addEventListener("DOMContentLoaded", function() {
-        var loader = this.querySelector("#result_pane_loader"); 
-        var height =
-          (window.innerHeight - loader.getBoundingClientRect().top) + "px"
-        loader.style.height = height;
-        this.querySelector(
-          ".result_pane[data-format='csv']").style.height = height;
-      }, false);
-
     };
 
     this.attributeChangedCallback = function(attr, old_val, new_val) {
@@ -212,8 +202,8 @@
     };
 
     this.init = function() {
+      var base = this;
       this.params = Fnord.parseMetricQueryUrl(this.getAttribute("data-url"));
-      this.updateData(this.getAttribute('data-format'));
       this.handleGenericControls();
       this.handleDateTimeControls();
 
@@ -226,6 +216,11 @@
         this.initMetricControl(
           this.addMetricControl(i, false), this.params["metric" + i]["name"], i);
       }
+
+      document.addEventListener("DOMContentLoaded", function() {
+        base.setLoaderHeight();
+        base.updateData(base.getAttribute('data-format'));
+      }, false);
     };
 
     this.update = function() {
@@ -271,6 +266,7 @@
         }
       }
 
+      console.log(this.querySelector("#result_pane_loader").offsetHeight);
       url +=
         "&from=" + this.getGenericParamOrDefault("from") +
         "&until=" + this.getGenericParamOrDefault("until") +
@@ -278,14 +274,22 @@
         "&inverted=" + this.getGenericParamOrDefault("inverted") +
         "&format=" + format +
         "&min=" + this.getGenericParamOrDefault("min") +
-        "&height=" + (document.body.offsetHeight - 255) +
-        "&width=" + (document.body.offsetWidth - 20) +
+        "&height=" + (this.querySelector("#result_pane_loader").offsetHeight - 20) +
+        "&width=" + (this.querySelector("#result_pane_loader").offsetWidth - 20) +
         "&grid=both" +
         "&axis_right=true" +
         "&legend=toprightinside";
 
       return url;
     };
+
+    this.setLoaderHeight = function() {
+      var loader = this.querySelector("#result_pane_loader");
+      var height =
+          (window.innerHeight - loader.getBoundingClientRect().top) + "px";
+      loader.style.height = height;
+      console.log('height', height, 'top', loader.getBoundingClientRect().top);
+    }
 
     this.updateData = function(format) {
       var base = this;
@@ -511,7 +515,6 @@
 
 
       if (this.params["metric" + index] == undefined) {
-        console.log("set this.params");
         this.params["metric" + index] = metric_params;
         this.params.metrics += 1;
         this.update();
@@ -559,6 +562,7 @@
       new_control.setAttribute('data-index', index);
 
       this.querySelector(".metric-controls").appendChild(new_control);
+      this.setLoaderHeight();
       return new_control;
     };
 
@@ -567,6 +571,7 @@
         this.querySelector("fn-metric-control[data-index='" + index + "']");
 
       metric_control.parentNode.removeChild(metric_control);
+      this.setLoaderHeight();
 
       if (this.params["metric" + index]) {
         //metric has been initialised
