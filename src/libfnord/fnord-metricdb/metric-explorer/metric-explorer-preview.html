@@ -205,7 +205,6 @@
       var base = this;
       this.params = Fnord.parseMetricQueryUrl(this.getAttribute("data-url"));
       this.handleGenericControls();
-      this.handleDateTimeControls();
 
       //init mainMetric
       this.initMetricControl(
@@ -646,16 +645,29 @@
       this.updateGenericParams({'height': height, 'width' : width});
     };
 
-    this.handleDateTimeControls = function() {
+    /* handles controls for generic params */
+    this.handleGenericControls = function() {
       var base = this;
+      /* init */
+      var embed_btn = this.querySelector("#embed_btn");
+      var autorefresh_btn = this.querySelector("#auto_refresh");
+      var modal = this.querySelector("fn-modal");
+
       var selector = this.querySelector("fn-date-time-selector");
       var range = parseInt(this.getGenericParamOrDefault("time_range"), 10);
       var until = parseInt(this.getGenericParamOrDefault("until"), 10);
+
+      var interval_id;
 
       selector.setAttribute('data-until', until);
       selector.setAttribute('data-range', range);
       selector.setAttribute('data-resolved', 'resolved');
 
+      this.querySelector("fn-tooltip#ttp_embed").init(embed_btn);
+      this.querySelector("fn-tooltip#ttp_refresh").init(autorefresh_btn);
+
+      /* handle Events */
+      //date
       selector.addEventListener('fn-date-time-selector-until', function(e) {
         var until = Math.round(parseInt(e.detail.until, 10) / 1000);
         var from = until - base.getGenericParamOrDefault("time_range");
@@ -667,20 +679,8 @@
         var from = until - parseInt(e.detail.range, 10)
         base.updateGenericParams({'from' : from});
       }, false);
-    };
 
-    this.handleGenericControls = function() {
-      var base = this;
-      /* init */
-      var embed_btn = this.querySelector("#embed_btn");
-      var autorefresh_btn = this.querySelector("#auto_refresh");
-      var modal = this.querySelector("fn-modal");
-      var interval_id;
-
-      this.querySelector("fn-tooltip#ttp_embed").init(embed_btn);
-      this.querySelector("fn-tooltip#ttp_refresh").init(autorefresh_btn);
-
-      /* handle Events */
+      //format
       this.querySelector(
         "fn-dropdown#view").addEventListener('fn-dropdown-item-click', function(e) {
           base.setAttribute("data-format", e.srcElement.getAttribute('data-value'));
@@ -709,5 +709,3 @@
     Fnord.registerComponent('fn-metric-explorer-preview', MetricExplorerPreview);
   }, false);
 </script>
-
-
