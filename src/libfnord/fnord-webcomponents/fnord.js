@@ -47,6 +47,18 @@ Fnord.ready = function() {
   document.body.removeAttribute("data-unresolved");
 };
 
+Fnord.onWindowResize = function() {
+  var items = document.body.querySelectorAll(".resizable");
+
+  for (var i = 0; i < items.length; i++) {
+    try {
+      items[i].onResize();
+    } catch (e) {
+      console.log("function doesn't exists");
+    }
+  }
+}
+
 Fnord.httpGet = function(url, callback) {
   var http = new XMLHttpRequest();
   http.open("GET", url, true);
@@ -284,3 +296,6 @@ Fnord.appendLeadingZero = function (num) {
 
 
 Fnord.ready();
+window.onresize = function() {
+  Fnord.onWindowResize();
+}
