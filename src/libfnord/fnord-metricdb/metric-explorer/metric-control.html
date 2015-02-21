@@ -150,8 +150,12 @@
         }
 
         if (new_val == "select-metric") {
-          this.init(false);
+          return this.init(false);
         }
+      }
+
+      if (attr == 'data-index') {
+        this.setColorIndex();
       }
     };
 
