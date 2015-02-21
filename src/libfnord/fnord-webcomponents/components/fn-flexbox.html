@@ -39,19 +39,15 @@
     }
 
     this.setItemSizes = function() {
-      var height = this.offsetHeight;
-      console.log(height);
       var fixed_height = 0;
       var fixed_height_items =
         this.querySelectorAll("fn-flexbox-item[data-height='fixed']");
 
       for (var i = 0; i < fixed_height_items.length; i++) {
         fixed_height += fixed_height_items[i].offsetHeight;
-        var height = height - fixed_height_items[i].offsetHeight;
       }
 
       var full_height_item = this.querySelector("fn-flexbox-item[data-height='full']");
-      //growing_item.style.height = (height - 1) + "px";
       full_height_item.style.height = "calc(100% - " + fixed_height + "px)";
     };
 
