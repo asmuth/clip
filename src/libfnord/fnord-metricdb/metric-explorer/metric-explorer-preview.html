@@ -27,11 +27,11 @@
       margin-left: 0;
     }
 
-    #result_pane_loader fn-message {
+    fn-loader[name='result_pane'] fn-message {
       display:none;
     }
 
-    #result_pane_loader fn-message.active {
+    fn-loader[name='result_pane'] fn-message.active {
       display: block;
       margin: auto;
       margin-top: 25px;
@@ -92,7 +92,7 @@
       width: 100%;
     }
   </style>
-  <fn-loader>
+  <fn-loader name='metric_explorer_preview'>
     <div class="navigation">
       <div class="item left">
         <span class="text">Display: </span>
@@ -134,7 +134,7 @@
       <fn-metric-control data-index="0"></fn-metric-control>
     </div>
 
-    <fn-loader id="result_pane_loader" data-loading data-resolved="data-resolved" data-transparent>
+    <fn-loader name='result_pane' data-loading data-resolved="data-resolved" data-transparent>
       <fn-message>
       </fn-message>
       <div class="result_pane active" data-format="svg">
@@ -217,13 +217,11 @@
           this.addMetricControl(i, false), this.params["metric" + i]["name"], i);
       }
 
-      document.addEventListener("DOMContentLoaded", function() {
-        base.updateDimensions();
-      }, false);
+      this.classList.add("resizable");
 
-      window.onresize = function() {
-        base.updateDimensions();
-      }
+      document.addEventListener("DOMContentLoaded", function() {
+        base.onResize();
+      }, false);
     };
 
     this.update = function() {
@@ -325,7 +323,7 @@
     };
 
     this.hideActiveResult = function() {
-      var active_elem = this.querySelector("#result_pane_loader .active")
+      var active_elem = this.querySelector("fn-loader[name='result_pane'] .active")
       if (active_elem) {
         active_elem.classList.remove("active");
       }
@@ -337,7 +335,7 @@
       pane.classList.add("active");
       pane.innerHTML = "";
       pane.innerHTML = resp;
-      this.querySelector("#result_pane_loader").removeAttribute("data-loading");
+      this.querySelector("fn-loader[name='result_pane']").removeAttribute("data-loading");
     };
 
     this.renderCsvAsTable = function(csv) {
@@ -377,7 +375,7 @@
       base.renderPagerFor(fn_table, container, row_count);
       fn_table.renderTable();
 
-      this.querySelector("#result_pane_loader").removeAttribute("data-loading");
+      this.querySelector("fn-loader[name='result_pane']").removeAttribute("data-loading");
     };
 
     this.renderTableRow = function(entries, table) {
@@ -430,7 +428,7 @@
     };
 
     this.renderError = function(response) {
-      var loader = this.querySelector("#result_pane_loader");
+      var loader = this.querySelector("fn-loader[name='result_pane']");
       var msg_elem = loader.querySelector("fn-message");
       var header_elem = document.createElement("fn-message-header");
       var text_elem = document.createElement("fn-message-text");
@@ -557,16 +555,16 @@
       new_control.setAttribute('data-index', index);
 
       this.querySelector(".metric-controls").appendChild(new_control);
-      this.updateDimensions();
+      this.onResize();
       return new_control;
     };
 
     this.removeMetricControl = function(index) {
-      var metric_control = 
+      var metric_control =
         this.querySelector("fn-metric-control[data-index='" + index + "']");
 
       metric_control.parentNode.removeChild(metric_control);
-      this.updateDimensions();
+      this.onResize();
 
       if (this.params["metric" + index]) {
         //metric has been initialised
@@ -638,16 +636,15 @@
       return value;
     };
 
-    this.updateDimensions = function() {
+    this.onResize= function() {
       var padding = 20;
-      var loader = this.querySelector("#result_pane_loader");
-      var height = window.innerHeight - loader.getBoundingClientRect().top;
-      var width = window.innerWidth;
+      var result_loader = this.querySelector("fn-loader[name='result_pane']");
+      var height = 
+        window.innerHeight - result_loader.getBoundingClientRect().top - padding;
+      var width = window.innerWidth - padding;
 
-      loader.style.height = height + "px";
-      loader.style.width = width + "px";
       this.updateGenericParams({
-        'height': (height - padding), 'width' : (width - padding)});
+        'height': height, 'width' : width});
     };
 
     this.handleDateTimeControls = function() {
