@@ -10,38 +10,69 @@
 -->
 <template id='fn-flexbox-demo-base-tpl'>
   <style type='text/css'>
-    fn-loader {
-      height: 100%;
-      width: 100%;
-
+    section.flexbox {
+      height: 300px;
     }
+
+    /* make fb-flexbox occupy the sections remaining height */
+    fn-flexbox {
+      height: calc(100% - 44px);
+    }
+
     .viewport {
-      height: 100%;
-      border: 1px solid black;
+      height: auto;
+      border-top: 1px solid rgba(39, 41, 43, 0.15);
     }
-  </style>
-  <section>
-    <fn-loader data-resolved>
-      <fn-flexbox>
-        <fn-flexbox-item data-height='fixed'>
-          <fn-navigation>
-            <fn-navigation-item>
-              <fn-navigation-icon><i class="fa fa-home"></i></fn-navigation-icon>
-              <fn-navigation-text>Home</fn-navigation-text>
-            </fn-navigation-item>
-            <fn-navigation-item>
-              <fn-navigation-icon><i class="fa fa-envelope"></i></fn-navigation-icon>
-              <fn-navigation-text>Messages</fn-navigation-text>
-            </fn-navigation-item>
-            <fn-navigation-item data-position='right' data-search>
-            </fn-navigation-item>
-          </fn-navigation>
-        </fn-flexbox-item>
-        <fn-flexbox-item data-height="full">
-          <div class="viewport"></div>
-        </fn-flexbox-item>
-      </fn-flexbox>
-    </fn-loader>
 
+  </style>
+  <section class='flexbox'>
+    <!--
+      fn-flexbox can contain several fixed height items and one full
+      width item that fills out the remaining space
+    -->
+    <h1><i>Example 1 &raquo;</i> Basic Flexbox With Fixed And Auto Height Items</h1>
+    <fn-flexbox>
+      <fn-flexbox-item data-height='fixed'>
+        <fn-navigation>
+          <fn-navigation-item>
+            <fn-navigation-icon><i class="fa fa-home"></i></fn-navigation-icon>
+            <fn-navigation-text>Home</fn-navigation-text>
+          </fn-navigation-item>
+          <fn-navigation-item>
+            <fn-navigation-icon><i class="fa fa-envelope"></i></fn-navigation-icon>
+            <fn-navigation-text>Messages</fn-navigation-text>
+          </fn-navigation-item>
+          <fn-navigation-item data-position='right' data-search>
+          </fn-navigation-item>
+        </fn-navigation>
+      </fn-flexbox-item>
+      <fn-flexbox-item data-height="full">
+        <div class="viewport"></div>
+      </fn-flexbox-item>
+    </fn-flexbox>
+  </section>
+
+  <section class='flexbox'>
+    <!-- Simply Add class='resizable' to make fn-flexbox resizable -->
+    <h1><i>Example 2 &raquo;</i> Resizable Flexbox</h1>
+    <fn-flexbox class='resizable'>
+      <fn-flexbox-item data-height='fixed'>
+        <fn-navigation>
+          <fn-navigation-item>
+            <fn-navigation-icon><i class="fa fa-home"></i></fn-navigation-icon>
+            <fn-navigation-text>Home</fn-navigation-text>
+          </fn-navigation-item>
+          <fn-navigation-item>
+            <fn-navigation-icon><i class="fa fa-envelope"></i></fn-navigation-icon>
+            <fn-navigation-text>Messages</fn-navigation-text>
+          </fn-navigation-item>
+          <fn-navigation-item data-position='right' data-search>
+          </fn-navigation-item>
+        </fn-navigation>
+      </fn-flexbox-item>
+      <fn-flexbox-item data-height="full">
+        <div class="viewport"></div>
+      </fn-flexbox-item>
+    </fn-flexbox>
   </section>
 </template>
