@@ -83,13 +83,33 @@
   </section>
 
   <section>
-    <h1>Multi Selectable Dropdown</h1>
-    <fn-dropdown data-resolved class='input' data-select='checkbox'>
-      <fn-dropdown-header>Linear</fn-dropdown-header>
+    <h1>Header And Select Options</h1>
+    <h3><i>Example 1 &raquo;</i> Initial Not Selectable Header</h3>
+    <fn-dropdown data-resolved class='input'>
+      <fn-dropdown-header>Select Payment</fn-dropdown-header>
       <fn-dropdown-items>
-        <fn-dropdown-item>Linear</fn-dropdown-item>
-        <fn-dropdown-item>Inverted</fn-dropdown-item>
-        <fn-dropdown-item>Logarithmic</fn-dropdown-item>
+        <fn-dropdown-item data-value="Visa">Visa</fn-dropdown-item>
+        <fn-dropdown-item data-value="paypal">PayPal</fn-dropdown-item>
+        <fn-dropdown-item data-value="mastercard">MasterCard</fn-dropdown-item>
+        <fn-dropdown-item data-value="amex">AmericanExpress</fn-dropdown-item>
+      </fn-dropdown-items>
+    </fn-dropdown>
+
+    <h3><i>Example 2 &raquo;</i> Multi Selectable</h3>
+    <fn-dropdown data-resolved class='input' data-select='checkbox'>
+      <fn-dropdown-items>
+        <fn-dropdown-item>
+          <fn-checkbox></fn-checkbox>
+          Inverted
+        </fn-dropdown-item>
+        <fn-dropdown-item>
+          <fn-checkbox></fn-checkbox>
+          Logarithmic
+        </fn-dropdown-item>
+        <fn-dropdown-item>
+          <fn-checkbox></fn-checkbox>
+          Scaled
+        </fn-dropdown-item>
       </fn-dropdown-items>
     </fn-dropdown>
   </section>

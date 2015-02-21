@@ -39,12 +39,6 @@
         if (preselection) {
           selected_item = this.findItemByValue(preselection);
         }
-
-        if (!selected_item) {
-          selected_item = this.querySelector("fn-dropdown-item");
-        }
-
-        selected_item.setAttribute('data-selected', 'selected');
       }
 
       if (!header_elem) {
@@ -63,8 +57,20 @@
 
     // Copies the selected items html to the header_elem
     this.setHeaderValue = function() {
-      this.querySelector("fn-dropdown-header").innerHTML =
-        this.querySelector("fn-dropdown-item[data-selected]").innerHTML;
+      var selected_item = this.querySelector("fn-dropdown-item[data-selected]");
+      var header = this.querySelector("fn-dropdown-header");
+
+      if (!selected_item) {
+        //fn-dropdown has initial not selectable header
+        if (header.innerHTML.length > 0) {
+          return;
+        }
+
+        //set first fn-dropdown-item as header value
+        selected_item = this.querySelector("fn-dropdown-item");
+      }
+
+      header.innerHTML = selected_item.innerHTML;
     };
 
     this.toggleDropdown = function() {
@@ -83,7 +89,6 @@
 
       //remove global event listener
       if (this.keyEventListener && this.keyEventListener.target.tagName != 'FN-INPUT') {
-        console.log("remove event listener");
         this.handleKeyNavigation(false);
       }
     };
@@ -177,7 +182,6 @@
             base.keyNavigation('down');
             break;
           case 13:
-            console.log(this, "enter");
             base.onItemClick(base.querySelector("fn-dropdown-item.hover"));
             break;
           default:
@@ -189,11 +193,11 @@
       }
 
       if (set) {
-        console.log(elem, "add event listener");
+        //console.log(elem, "add event listener");
         elem.addEventListener('keyup', listener, false);
         this.keyEventListener = {'set' : true, 'target' : elem};
       } else {
-        console.log(elem, "remove event listener");
+        //console.log(elem, "remove event listener");
         elem.removeEventListener('keyup', listener, false);
         this.keyEventListener.set = false;
       }
