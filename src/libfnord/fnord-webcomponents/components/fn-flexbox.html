@@ -36,6 +36,11 @@
       document.addEventListener("DOMContentLoaded", function() {
         base.setItemSizes();
       });
+
+      window.onresize = function() {
+        console.log("resize");
+        base.setItemSizes();
+      }
     }
 
     this.setItemSizes = function() {
