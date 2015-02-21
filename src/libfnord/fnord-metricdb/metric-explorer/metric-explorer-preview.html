@@ -218,9 +218,12 @@
       }
 
       document.addEventListener("DOMContentLoaded", function() {
-        base.setLoaderHeight();
-        base.updateData(base.getAttribute('data-format'));
+        base.updateDimensions();
       }, false);
+
+      window.onresize = function() {
+        base.updateDimensions();
+      }
     };
 
     this.update = function() {
@@ -266,7 +269,7 @@
         }
       }
 
-      console.log(this.querySelector("#result_pane_loader").offsetHeight);
+
       url +=
         "&from=" + this.getGenericParamOrDefault("from") +
         "&until=" + this.getGenericParamOrDefault("until") +
@@ -274,22 +277,14 @@
         "&inverted=" + this.getGenericParamOrDefault("inverted") +
         "&format=" + format +
         "&min=" + this.getGenericParamOrDefault("min") +
-        "&height=" + (this.querySelector("#result_pane_loader").offsetHeight - 20) +
-        "&width=" + (this.querySelector("#result_pane_loader").offsetWidth - 20) +
+        "&height=" + this.getGenericParamOrDefault("height") +
+        "&width=" + this.getGenericParamOrDefault("width") +
         "&grid=both" +
         "&axis_right=true" +
         "&legend=toprightinside";
 
       return url;
     };
-
-    this.setLoaderHeight = function() {
-      var loader = this.querySelector("#result_pane_loader");
-      var height =
-          (window.innerHeight - loader.getBoundingClientRect().top) + "px";
-      loader.style.height = height;
-      console.log('height', height, 'top', loader.getBoundingClientRect().top);
-    }
 
     this.updateData = function(format) {
       var base = this;
@@ -562,7 +557,7 @@
       new_control.setAttribute('data-index', index);
 
       this.querySelector(".metric-controls").appendChild(new_control);
-      this.setLoaderHeight();
+      this.updateDimensions();
       return new_control;
     };
 
@@ -571,7 +566,7 @@
         this.querySelector("fn-metric-control[data-index='" + index + "']");
 
       metric_control.parentNode.removeChild(metric_control);
-      this.setLoaderHeight();
+      this.updateDimensions();
 
       if (this.params["metric" + index]) {
         //metric has been initialised
@@ -641,7 +636,19 @@
         this.params[key] : defaults[key];
 
       return value;
-    }
+    };
+
+    this.updateDimensions = function() {
+      var padding = 20;
+      var loader = this.querySelector("#result_pane_loader");
+      var height = window.innerHeight - loader.getBoundingClientRect().top;
+      var width = window.innerWidth;
+
+      loader.style.height = height + "px";
+      loader.style.width = width + "px";
+      this.updateGenericParams({
+        'height': (height - padding), 'width' : (width - padding)});
+    };
 
     this.handleDateTimeControls = function() {
       var base = this;
