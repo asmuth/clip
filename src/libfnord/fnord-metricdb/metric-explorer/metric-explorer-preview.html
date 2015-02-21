@@ -639,12 +639,11 @@
     this.onResize= function() {
       var padding = 20;
       var result_loader = this.querySelector("fn-loader[name='result_pane']");
-      var height = 
+      var height =
         window.innerHeight - result_loader.getBoundingClientRect().top - padding;
       var width = window.innerWidth - padding;
 
-      this.updateGenericParams({
-        'height': height, 'width' : width});
+      this.updateGenericParams({'height': height, 'width' : width});
     };
 
     this.handleDateTimeControls = function() {
@@ -687,22 +686,6 @@
           base.setAttribute("data-format", e.srcElement.getAttribute('data-value'));
         },
       false);
-
-    /*  log_scale.addEventListener("fn-checkbox-select", function(e) {
-        base.updateGenericParams({"logarithmic" : true});
-      }, false);
-
-      inv_scale.addEventListener("fn-checkbox-select", function(e) {
-        base.updateGenericParams({"inverted" : true});
-      }, false);
-
-      log_scale.addEventListener("fn-checkbox-unselect", function(e) {
-        base.updateGenericParams({"logarithmic" : false});
-      }, false);
-
-      inv_scale.addEventListener("fn-checkbox-unselect", function(e) {
-        base.updateGenericParams({"inverted" : false});
-      }, false);*/
 
       autorefresh_btn.addEventListener('fn-button-click', function() {
         if (this.getAttribute('data-state') == "active") {
