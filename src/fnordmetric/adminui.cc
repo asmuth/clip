@@ -53,6 +53,7 @@ AdminUI::AdminUI(
   webui_bundle_.addComponent("fnord/components/fn-pager.html");
   webui_bundle_.addComponent("fnord/components/fn-tooltip.html");
   webui_bundle_.addComponent("fnord/components/fn-flexbox.html");
+  webui_bundle_.addComponent("fnord/components/fn-checkbox.html");
   webui_bundle_.addComponent("fnord/components/fn-date-time-selector.html");
   webui_bundle_.addComponent("fnord/components/fn-calendar.html");
   webui_bundle_.addComponent("fnord-metricdb/metric-explorer-list.html");

@@ -110,7 +110,7 @@
       </fn-dropdown>
 
       <b style="margin-left: 7px;">Group By: </b>
-      <fn-dropdown class="inline hidden" name='group_by'>
+      <fn-dropdown class="inline checkbox hidden" name='group_by'>
         <fn-dropdown-items>
         </fn-dropdown-items>
       </fn-dropdown>
@@ -303,7 +303,7 @@
 
       columns.map(function(c) {
         var item = document.createElement("fn-dropdown-item");
-        item.innerHTML = c;
+        item.innerHTML = "<fn-checkbox></fn-checkbox>" + c;
         item.setAttribute('data-value', c);
 
         if (group_by.indexOf(c) > -1) {
@@ -311,6 +311,21 @@
         }
 
         dropdown_items.appendChild(item);
+
+        item.addEventListener('fn-dropdown-item-click', function(e) {
+          base.params.group_by = base.addToCSV(
+            base.params.group_by, e.srcElement.getAttribute('data-value'));
+          base.attributeChangedEvent('group_by');
+          console.log(base.params.group_by);
+        }, false);
+
+        item.addEventListener('fn-dropdown-item-unselect', function(e) {
+          base.params.group_by = base.removeFromCSV(
+            base.params.group_by, e.srcElement.getAttribute('data-value'));
+          base.attributeChangedEvent('group_by');
+          console.log(base.params.group_by);
+
+        }, false);
 
         /*button.addEventListener("fn-button-click", function() {
           var group_by_csv = base.params.group_by;
