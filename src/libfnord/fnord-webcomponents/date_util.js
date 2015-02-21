@@ -48,11 +48,14 @@ DateUtil.getDateTimeDescr = function(date) {
   return descr;
 };
 
+
+//returns true if @timestamp is equal to the current timestamp (for the given @precision)
 DateUtil.isNow = function(timestamp, precision) {
   return (DateUtil.equalDatesForPrecision(
     new Date().getTime(), timestamp, precision));
 };
 
+//returns true if @date is a JS Date Object and false otherwise
 DateUtil.isInstanceOfDate = function(date) {
   return (date !== null && typeof date === 'object' && date instanceof Date)
 };
@@ -107,7 +110,8 @@ DateUtil.getDateObject = function(date, precision, advanced) {
   return dateObj;
 };
 
-// @ts = milliseconds timestamp
+// compares two milliseconds timestamps and checks if they are equal for the
+// given precision
 DateUtil.equalDatesForPrecision = function(ts1, ts2, precision) {
   if (precision == "hour") {
     return (Math.ceil(ts1 / 360000) === Math.ceil(ts2 / 360000));
@@ -124,7 +128,8 @@ DateUtil.equalDatesForPrecision = function(ts1, ts2, precision) {
   return false;
 };
 
-//offset = distance to new month
+// determines month and year if @offset != 0 and
+// returns the timestamp for the first day of the month
 DateUtil.getMonthTimestamp = function(base_month, base_year, offset) {
   var month = base_month + offset;
   var year = base_year;
@@ -142,6 +147,7 @@ DateUtil.getMonthTimestamp = function(base_month, base_year, offset) {
   return (new Date(year, month).getTime());
 };
 
+//checks if two timestamps are from the same day
 DateUtil.isSameDay = function(ts1, ts2) {
   var day1 = new Date(ts1).setHours('0','0','0','0');
   var day2 = new Date(ts2).setHours('0','0','0','0');
@@ -149,6 +155,7 @@ DateUtil.isSameDay = function(ts1, ts2) {
   return (day1 === day2);
 };
 
+//returns a millisecond timestamp
 DateUtil.parseTimestamp = function(timestamp) {
   //TODO add timezone
   var timestamp = parseInt(timestamp);
@@ -166,7 +173,6 @@ DateUtil.parseTimestamp = function(timestamp) {
   return timestamp;
 };
 
-
 DateUtil.daysInMonth = function(month, year) {
   if (month == 2) {
     return (28 + DateUtil.leapYearOffset());
@@ -176,6 +182,7 @@ DateUtil.daysInMonth = function(month, year) {
 };
 
 DateUtil.leapYearOffset = function(year) {
+  //year is leap year
   if (((year % 4 == 0) && (year % 100 != 0)) || (year % 400 == 0)) {
     return 1;
   }
@@ -183,7 +190,7 @@ DateUtil.leapYearOffset = function(year) {
   return 0;
 };
 
-//Milliseconds since midnight
+//returns milliseconds since midnight for @timestamp
 DateUtil.getTimeTimestamp = function(timestamp) {
   var date = new Date(timestamp);
   return (
