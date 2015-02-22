@@ -200,6 +200,7 @@
     this.renderFirstWeek = function() {
       var prev_month =
         DateUtil.getMonthTimestamp(this.date.month, this.date.year, -1);
+
       var prev_dates = this.datesOfPrevMonth(prev_month);
       var current_date = 1;
       var tr_elem = this.shadowRoot.getElementById("week0");
@@ -251,8 +252,10 @@
       var td_elem = document.createElement("td");
       var timestamp = month_timestamp + (date - 1) * DateUtil.millisPerDay;
 
-      if (this.isSelectable(date, timestamp)) {
-        td_elem.className = "selectable " + this.tdClassName(date, month_timestamp);
+      td_elem.className = this.tdClassName(date, month_timestamp);
+
+      if (this.isSelectable(date, month_timestamp)) {
+        td_elem.classList.add("selectable");
         this.handleDateLinks(td_elem, date, month_timestamp);
       }
 
