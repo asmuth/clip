@@ -27,19 +27,36 @@
       margin: 5px 5px 5px 0;
     }
   </style>
-  <fn-loader data-loading data-loader-type="loader3">
-    <div class="navigation">
-      <h1 class="page_header"><i>Metrics</i> &rsaquo; Search</h1>
-      <fn-search data-placeholder="Search...">
-        <fn-search-icon><i class="fa fa-search"></i></fn-search-icon>
-      </fn-search>
+  <fn-loader data-transparent data-loading data-loader-type="loader3">
+    <fn-message class="overview" data-state='error'>
+      <fn-message-header>
+        Server Error
+      </fn-message-header>
+      <fn-message-text>
+        Unable to connect to Server
+        <br />
+        <span></span>
+      </fn-message-text>
+    </fn-message>
+    <div class="list ui">
+      <div class="navigation">
+        <h1 class="small left" style="float:left;" >Metrics &rsaquo; </h1>
+        <fn-search data-size="small" data-placeholder="Search...">
+          <fn-input class="icon" data-placeholder="Search...">
+            <fn-input-icon><i class="fa fa-search"></i></fn-input-icon>
+          </fn-input>
+        </fn-search>
+      </div>
+      <fn-table data-per-page="25" data-page="0" data-clickable>
+        <fn-table-column data-sortable data-presort="asc">Metric</fn-table-column>
+        <fn-table-column>Labels</fn-table-column>
+        <fn-table-column data-sortable>Last Insert</fn-table-column>
+        <fn-table-column data-sortable>Total Stored Bytes</fn-table-column>
+        <table>
+        </table>
+      </fn-table>
+      <fn-pager data-for data-first-item="1" data-per-page="25" data-circling></fn-pager>
     </div>
-    <fn-table data-per-page="25" data-clickable style="width: 100%;">
-      <fn-table-column>Metric</fn-table-column>
-      <fn-table-column>Labels</fn-table-column>
-      <fn-table-column>Last Insert</fn-table-column>
-      <fn-table-column>Total Stored Bytes</fn-table-column>
-    </fn-table>
   </fn-loader>
 </template>
 
