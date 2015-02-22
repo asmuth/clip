@@ -17,9 +17,6 @@
     position: relative;
   }
 
-  fn-appbar fn-search /deep/ ul {
-    margin: -8px 1px;
-  }
 
   fn-flexbox-item.overflow {
     overflow: visible;
@@ -55,7 +52,9 @@
 
           <fn-appbar-section data-position="right" class="search">
             <fn-search>
-              <fn-search-icon><i class="fa fa-search"></i></fn-search-icon>
+              <fn-input>
+                <fn-input-icon><i class="fa fa-search"></i></fn-input-icon>
+              </fn-input>
             </fn-search>
           </fn-appbar-section>
         </fn-appbar>

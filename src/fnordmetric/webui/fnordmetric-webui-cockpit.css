@@ -52,6 +52,7 @@ fn-appbar fn-button:hover {
   background: transparent!important;
   background-color: none!important;
   border: none;
+  box-shadow:none;
 }
 
 fn-metric-explorer-list .navigation,
@@ -72,7 +73,7 @@ fn-metric-explorer-list .navigation h1 {
 }
 
 fn-metric-explorer-preview .navigation .item,
-fn-metric-explorer-preview .navigation fn-dropdown /deep/ fn-dropdown-header {
+fn-metric-explorer-preview .navigation fn-dropdow fn-dropdown-header {
   font-size: 13px;
 }
 
