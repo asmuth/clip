@@ -29,7 +29,11 @@
     }
 
     .hidden {
-      display: none;
+      display: none !important;
+    }
+
+    .inline {
+      display: inline-block;
     }
 
     .metric-control-group b {
@@ -109,11 +113,13 @@
         </fn-dropdown-items>
       </fn-dropdown>
 
-      <b style="margin-left: 7px;">Group By: </b>
-      <fn-dropdown class="inline checkbox hidden" name='group_by'>
-        <fn-dropdown-items>
-        </fn-dropdown-items>
-      </fn-dropdown>
+      <div class="hidden inline" name="group_by">
+        <b style="margin-left: 7px;">Group By: </b>
+        <fn-dropdown class="inline checkbox">
+          <fn-dropdown-items>
+          </fn-dropdown-items>
+        </fn-dropdown>
+      </div>
     </div>
 
     <fn-button class="control_btn" data-size="tiny" style="float: right;">
@@ -292,16 +298,17 @@
 
     this.handleGroupByControls = function() {
       var base = this;
-      var dropdown = this.querySelector("fn-dropdown[name='group_by']");
-      var dropdown_items = dropdown.querySelector("fn-dropdown-items");
+      var parent_elem = this.querySelector("div[name='group_by']");
+      var dropdown = parent_elem.querySelector("fn-dropdown");
+      var dropdown_items = parent_elem.querySelector("fn-dropdown-items");
       var columns = this.splitColumns(this.params.columns);
       var group_by = this.splitColumns(this.params.group_by);
 
       if (columns.length > 0 ) {
-        dropdown.classList.remove("hidden");
+        console.log("remove hidden");
+        parent_elem.classList.remove("hidden");
       }
 
-      console.log(group_by);
 
       columns.map(function(c) {
         var item = document.createElement("fn-dropdown-item");
