@@ -33,13 +33,6 @@
       var base = this;
       var selected_item = this.querySelector("fn-dropdown-item[data-selected]");
       var header_elem = this.querySelector("fn-dropdown-header");
-      var preselection = this.getAttribute('data-preselected');
-
-      if (!selected_item) {
-        if (preselection) {
-          selected_item = this.findItemByValue(preselection);
-        }
-      }
 
       if (!header_elem) {
         header_elem = document.createElement("fn-dropdown-header");
@@ -76,13 +69,20 @@
 
         var selected_item = this.querySelector("fn-dropdown-item[data-selected]");
         if (!selected_item) {
-          //fn-dropdown has initial not selectable header
-          if (header.innerHTML.length > 0) {
-            return;
-          }
 
-          //set first fn-dropdown-item as header value
-          innerHTML = this.querySelector("fn-dropdown-item").innerHTML;
+          var preselection = this.getAttribute('data-preselected');
+          //preselected value
+          if (preselection) {
+            innerHTML = this.findItemByValue(preselection).innerHTML;
+          } else {
+            //fn-dropdown has initial not selectable header
+            if (header.innerHTML.length > 0) {
+              return;
+            }
+
+            //set first fn-dropdown-item as header value
+           innerHTML = this.querySelector("fn-dropdown-item").innerHTML;
+          }
         } else {
           //set selected_item's html as header (standard case)
           innerHTML = selected_item.innerHTML;
