@@ -102,8 +102,14 @@
 
     this.hideDropdown = function() {
       var items = this.querySelector("fn-dropdown-items");
+      var hover_item = this.querySelector("fn-dropdown-item.hover");
+
       if (items) {
         items.removeAttribute('data-active');
+      }
+
+      if (hover_item) {
+        hover_item.classList.remove('hover');
       }
 
       //remove global event listener
