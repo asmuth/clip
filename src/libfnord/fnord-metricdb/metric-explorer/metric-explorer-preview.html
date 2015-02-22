@@ -194,7 +194,7 @@
           this.init();
           break;
         case 'data-format' :
-          this.updateData(new_val);
+          this.updateGenericParams({'format' :new_val});
           break;
         default:
           break;
@@ -226,24 +226,16 @@
       }, false);
     };
 
-    this.update = function() {
-      var url_hash = "#metric?" + this.buildQueryUrl();
-      Fnord.setUrlHash(url_hash);
-      this.updateData(this.getAttribute('data-format'));
-    };
+    this.update = function(format) {
+      var urls = this.buildQueryUrl(format);
 
-    this.updateGenericParams = function(new_params) {
-      for (var key in new_params) {
-        if (new_params[key] != undefined) {
-          this.params[key] = new_params[key].toString();
-        }
-      }
-
-      this.update();
+      Fnord.setUrlHash("#metric?" + urls.url);
+      this.updateData(urls.query_url);
     };
 
     this.buildQueryUrl = function(format) {
       var url = "";
+      var query_url = "";
 
       for (var i = 0; i < parseInt(this.params.metrics, 10); i++) {
         var metric_params = this.params["metric" + i];
@@ -269,13 +261,16 @@
         }
       }
 
-
       url +=
         "&from=" + this.getGenericParamOrDefault("from") +
         "&until=" + this.getGenericParamOrDefault("until") +
+        "&format=" + this.getGenericParamOrDefault("format");
+
+      //params that can't be set by controls aren't visible in url
+      query_url = url;
+      query_url +=
         "&logarithmic=" + this.getGenericParamOrDefault("logarithmic") +
         "&inverted=" + this.getGenericParamOrDefault("inverted") +
-        "&format=" + format +
         "&min=" + this.getGenericParamOrDefault("min") +
         "&height=" + this.getGenericParamOrDefault("height") +
         "&width=" + this.getGenericParamOrDefault("width") +
@@ -283,13 +278,13 @@
         "&axis_right=true" +
         "&legend=toprightinside";
 
-      return url;
+      return {'url' :url, 'query_url' : query_url};
     };
 
-    this.updateData = function(format) {
+    this.updateData = function(query_url) {
       var base = this;
-      format = format ? format : "svg";
-      var url = "/metrics/timeseries?" + this.buildQueryUrl(format);
+      var url = "/metrics/timeseries?" + query_url;
+      var format = this.getGenericParamOrDefault('format');
 
       Fnord.httpGet(url, function(r) {
         if (r.status == 200) {
@@ -619,7 +614,8 @@
         aggr_window : 5,
         logarithmic : false,
         inverted: false,
-        min: 0
+        min: 0,
+        format: 'svg'
       }
 
       if (key == "time_range") {
@@ -636,6 +632,16 @@
         this.params[key] : defaults[key];
 
       return value;
+    };
+
+    this.updateGenericParams = function(new_params) {
+      for (var key in new_params) {
+        if (new_params[key] != undefined) {
+          this.params[key] = new_params[key].toString();
+        }
+      }
+
+      this.update();
     };
 
     this.onResize= function() {
