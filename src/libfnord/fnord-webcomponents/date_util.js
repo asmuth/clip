@@ -134,7 +134,7 @@ DateUtil.getMonthTimestamp = function(base_month, base_year, offset) {
   var month = base_month + offset;
   var year = base_year;
 
-  if (month == 0) {
+  if (month == -1) {
     year = year - 1;
     month = 11;
   }
