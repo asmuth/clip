@@ -642,12 +642,8 @@
     };
 
     this.onResize= function() {
-      console.log("on resize");
       var padding = 20;
       var result_loader = this.querySelector("fn-loader[name='result_pane']");
-      var controls = this.querySelector(".metric-controls").getBoundingClientRect();
-      console.log(controls);
-      console.log(result_loader.offsetHeight);
       var height =
         window.innerHeight - result_loader.getBoundingClientRect().top - padding;
       var width = window.innerWidth - padding;
