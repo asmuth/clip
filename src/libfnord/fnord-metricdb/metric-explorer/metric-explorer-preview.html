@@ -38,7 +38,7 @@
     }
 
     .result_pane {
-      padding: 10px 0 0 10px;
+      padding: 10px;
       background: #fff;
       display: none;
       text-align: cente;
@@ -47,6 +47,12 @@
     .result_pane.active {
       display: block;
     }
+
+
+    .result_pane fn-table {
+      display:block;
+    }
+
 
     #raw.result_pane {
       padding: 10px 10px 20px;
@@ -62,21 +68,6 @@
 
     fn-datepicker /deep/ #datepicker_widget {
       left: 170px;
-    }
-
-    .result_pane .table_ui {
-      height: 100%;
-      float:left;
-      margin-left: 10px;
-    }
-
-    .result_pane .table_ui fn-pager {
-      margin-top: 5px;
-      float:right;
-    }
-
-    .result_pane fn-table {
-      display:block;
     }
 
     fn-modal-content code {
@@ -96,7 +87,7 @@
     <div class="navigation">
       <div class="item left">
         <span class="text">Display: </span>
-        <fn-dropdown data-resolved class="inline small" id="view">
+        <fn-dropdown data-resolved class="inline small" name="format">
           <fn-dropdown-items>
             <fn-dropdown-item data-value='svg'>Chart</fn-dropdown-item>
             <fn-dropdown-item data-value='csv'>Raw</fn-dropdown-item>
@@ -140,8 +131,16 @@
       <div class="result_pane active" data-format="svg">
       </div>
       <div class="result_pane" data-format="csv">
+        <fn-table data-page='0' data-per-page='25'>
+          <fn-table-column>Metric</fn-table-column>
+          <fn-table-column>Time</fn-table-column>
+          <fn-table-column>Value</fn-table-column>
+          <table></table>
+        </fn-table>
+        <fn-pager data-for data-first-item='1' data-circling data-per-page='25'></fn-pager>
       </div>
     </fn-loader>
+
     <fn-modal-dimmer>
       <fn-modal id="embed">
         <fn-modal-close-icon></fn-modal-close-icon>
@@ -220,6 +219,7 @@
 
       document.addEventListener("DOMContentLoaded", function() {
         base.onResize();
+        base.DOMLoaded = true;
       }, false);
     };
 
@@ -335,91 +335,39 @@
     this.renderCsvAsTable = function(csv) {
       var base = this;
       var pane = this.querySelector(".result_pane[data-format='csv']");
-      var container = this.createNewTableContainer();
-      var fn_table = container.querySelector("fn-table");
+      var fn_table = pane.querySelector("fn-table");
       var table = fn_table.querySelector("table");
+      var pager = pane.querySelector("fn-pager");
       var data_points = csv.split(/\n/);
-      var metric = csv.substr(0, csv.indexOf(";"));
       var row_count = 0;
 
       this.hideActiveResult();
+
+      table.innerHTML = "";
       pane.classList.add("active");
-      pane.innerHTML = "";
-      pane.appendChild(container);
 
       data_points.forEach(function(point) {
         if (point.length > 0) {
           var entries = point.split(";");
+          var tr_elem = document.createElement("tr");
+          entries.forEach(function(entry) {
+            var td_elem = document.createElement("td");
+            td_elem.innerHTML = entry;
+            tr_elem.appendChild(td_elem);
+          });
 
-          if (entries[0] != metric) {
-            base.renderPagerFor(fn_table, container, row_count);
-            fn_table.renderTable();
-
-            metric = entries[0];
-            container = base.createNewTableContainer();
-            fn_table = container.querySelector("fn-table");
-            table = fn_table.querySelector("table");
-            pane.appendChild(container);
-          }
+          table.appendChild(tr_elem);
           row_count++;
-          base.renderTableRow(entries, table);
         }
       });
 
-      base.renderPagerFor(fn_table, container, row_count);
+      pager.setAttribute('data-last-item', row_count);
+      pager.forElement(fn_table);
       fn_table.renderTable();
 
       this.querySelector("fn-loader[name='result_pane']").removeAttribute("data-loading");
     };
 
-    this.renderTableRow = function(entries, table) {
-      var tr_elem = document.createElement("tr");
-      entries.forEach(function(entry) {
-        var td_elem = document.createElement("td");
-        td_elem.innerHTML = entry;
-        tr_elem.appendChild(td_elem);
-      });
-
-      table.appendChild(tr_elem);
-    };
-
-    this.renderPagerFor = function(table_elem, parent_elem, list_size) {
-      var pager = document.createElement("fn-pager");
-
-      Fnord.setAttributes({
-        'data-for': '',
-        'data-first-item': 1,
-        'data-per-page': 25,
-        'data-circling': '',
-        'data-last-item': list_size
-      }, pager);
-
-      parent_elem.appendChild(pager);
-      pager.forElement(table_elem);
-    };
-
-    this.createNewTableContainer = function() {
-      var container = document.createElement("div");
-      var table = document.createElement("fn-table");
-      var columns = ["Metric", "Time", "Value"];
-
-      container.className = "table_ui";
-      Fnord.setAttributes({
-        'data-per-page': 25,
-        'data-page': 0
-      }, table);
-
-      columns.forEach(function(c) {
-        var table_column = document.createElement("fn-table-column");
-        table_column.innerHTML = c;
-        table.appendChild(table_column);
-      });
-
-      table.appendChild(document.createElement("table"));
-      container.appendChild(table);
-
-      return container;
-    };
 
     this.renderError = function(response) {
       var loader = this.querySelector("fn-loader[name='result_pane']");
@@ -549,7 +497,12 @@
       new_control.setAttribute('data-index', index);
 
       this.querySelector(".metric-controls").appendChild(new_control);
-      this.onResize();
+
+      //only call onResize if DOMContent has already been loaded
+      if (this.DOMLoaded) {
+        this.onResize();
+      }
+
       return new_control;
     };
 
@@ -658,6 +611,7 @@
       var embed_btn = this.querySelector("#embed_btn");
       var autorefresh_btn = this.querySelector("#auto_refresh");
       var modal = this.querySelector("fn-modal");
+      var format_dropdown = this.querySelector("fn-dropdown[name='format']");
 
       var selector = this.querySelector("fn-date-time-selector");
       var range = parseInt(this.getGenericParamOrDefault("time_range"), 10);
@@ -668,6 +622,9 @@
       selector.setAttribute('data-until', until);
       selector.setAttribute('data-range', range);
       selector.setAttribute('data-resolved', 'resolved');
+
+      format_dropdown.setAttribute('data-preselected', this.getGenericParamOrDefault('format'));
+      format_dropdown.setAttribute('data-resolved', 'resolved');
 
       this.querySelector("fn-tooltip#ttp_embed").init(embed_btn);
       this.querySelector("fn-tooltip#ttp_refresh").init(autorefresh_btn);
@@ -687,11 +644,9 @@
       }, false);
 
       //format
-      this.querySelector(
-        "fn-dropdown#view").addEventListener('fn-dropdown-item-click', function(e) {
-          base.setAttribute("data-format", e.srcElement.getAttribute('data-value'));
-        },
-      false);
+      format_dropdown.addEventListener('fn-dropdown-item-click', function(e) {
+        base.setAttribute("data-format", e.srcElement.getAttribute('data-value'));
+      }, false);
 
       autorefresh_btn.addEventListener('fn-button-click', function() {
         if (this.getAttribute('data-state') == "active") {
