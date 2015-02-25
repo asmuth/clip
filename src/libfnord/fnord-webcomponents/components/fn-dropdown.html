@@ -71,9 +71,13 @@
         if (!selected_item) {
 
           var preselection = this.getAttribute('data-preselected');
-          //preselected value
+          //set preselected item
           if (preselection) {
-            innerHTML = this.findItemByValue(preselection).innerHTML;
+            var preselected_item = this.findItemByValue(preselection);
+
+            preselected_item.setAttribute('data-selected', 'selected');
+            innerHTML = preselected_item.innerHTML;
+
           } else {
             //fn-dropdown has initial not selectable header
             if (header.innerHTML.length > 0) {
