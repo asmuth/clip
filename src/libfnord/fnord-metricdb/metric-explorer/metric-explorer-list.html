@@ -183,7 +183,7 @@
           var metrics = JSON.parse(r.response).metrics;
 
           if (metrics.length == 1 && openPreview) {
-            base.openMetricPreview(metrics[0].key);
+            Fnord.openMetricPreview(metrics[0].key);
             return;
           }
 
@@ -218,7 +218,7 @@
         var metric_key = e.srcElement.getAttribute('metric-key');
         var end = Math.round(Date.now() / 1000);
         var start = end - 3600;
-        base.openMetricPreview(metric_key);
+        Fnord.openMetricPreview(metric_key);
       }, false);
     };
 
@@ -234,17 +234,6 @@
       }, false);
     };
 
-
-    this.openMetricPreview = function(metric_key) {
-      var end = Math.round(Date.now() / 1000);
-      var start = end - 3600;
-      var raw_url = 
-        "metric?metric="+ encodeURIComponent(metric_key) +
-        "&aggr_fn=sum&&aggr_window=5&aggr_step=10&from=" + start +
-        "&until=" + end +
-        "&scale=0.8";
-      Fnord.openUrl(raw_url);
-    };
 
     this.renderServerError = function(text, statusCode) {
       var msg = this.querySelector("fn-message");

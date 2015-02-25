@@ -112,7 +112,7 @@
       </fn-button>
 
       <div class="item" style="height: 36px; line-height: 36px; float: right;">
-        <fn-date-time-selector>
+        <fn-date-time-selector data-selectable='past'>
           <fn-date-time-selector-icon class='left'></fn-date-time-selector-icon>
           <fn-dropdown id='timerange' class="inline">
             <fn-dropdown-items>
@@ -217,9 +217,6 @@
       }
 
       this.classList.add("resizable");
-
-      this.onResize();
-      this.update();
 
       document.addEventListener("DOMContentLoaded", function() {
         base.onResize();
@@ -645,8 +642,12 @@
     };
 
     this.onResize= function() {
+      console.log("on resize");
       var padding = 20;
       var result_loader = this.querySelector("fn-loader[name='result_pane']");
+      var controls = this.querySelector(".metric-controls").getBoundingClientRect();
+      console.log(controls);
+      console.log(result_loader.offsetHeight);
       var height =
         window.innerHeight - result_loader.getBoundingClientRect().top - padding;
       var width = window.innerWidth - padding;
