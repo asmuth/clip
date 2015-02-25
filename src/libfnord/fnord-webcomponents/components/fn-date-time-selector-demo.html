@@ -11,12 +11,14 @@
 <template id='fn-date-time-selector-demo-base-tpl'>
   <section>
     <h1><i>Example 1 &raquo;</i> Basic with Default Values</h1>
+
     <!--
       Default values:
         data-range: 900000 (15minutes)
         date-until: Date.now()
         data-precision: minutes
     -->
+
     <fn-date-time-selector data-resolved='resolved'>
       <fn-date-time-selector-icon class='left'></fn-date-time-selector-icon>
       <fn-dropdown class="inline">
@@ -35,9 +37,11 @@
     </fn-date-time-selector>
   </section>
 
- <section>
-    <h1><i>Example 1 &raquo;</i> Selected EndDateTime</h1>
+  <section>
+    <h1><i>Example 2 &raquo;</i> Selected EndDateTime</h1>
+
     <!-- DateTimeSelector returns timestamps in milliseconds but takes as input timestamps in seconds, too -->
+
     <fn-date-time-selector data-range='3600000' data-resolved='resolved' data-until='1423060200'>
       <fn-date-time-selector-icon class='left'></fn-date-time-selector-icon>
       <fn-dropdown class="inline">
@@ -56,10 +60,33 @@
     </fn-date-time-selector>
   </section>
 
+   <section>
+    <h1><i>Example 3 &raquo;</i> Only Past Dates Selectable</h1>
+
+    <!-- Dates after Date.now() aren't selectable and thus don't trigger any event -->
+    <!-- dat-selectable='future' is supoorted as well -->
+
+    <fn-date-time-selector data-range='3600000' data-resolved='resolved' data-selectable='past'>
+      <fn-date-time-selector-icon class='left'></fn-date-time-selector-icon>
+      <fn-dropdown class="inline">
+        <fn-dropdown-items>
+          <fn-dropdown-item data-value=300000>5 minutes</fn-dropdown-item>
+          <fn-dropdown-item data-value=900000>15 minutes</fn-dropdown-item>
+          <fn-dropdown-item data-value=1800000>30 minutes</fn-dropdown-item>
+          <fn-dropdown-item data-value=3600000>1 hour</fn-dropdown-item>
+          <fn-dropdown-item data-value=14400000>4 hours</fn-dropdown-item>
+          <fn-dropdown-item data-value=43200000>12 hours</fn-dropdown-item>
+          <fn-dropdown-item data-value=86400000>1 day</fn-dropdown-item>
+        </fn-dropdown-items>
+      </fn-dropdown>
+      <fn-date-time-selector-header></fn-date-time-selector-header>
+      <fn-date-time-selector-icon class='right'></fn-date-time-selector-icon>
+    </fn-date-time-selector>
   <section>
-    <h1><i>Example 1 &raquo;</i> Second Precision</h1>
+    <h1><i>Example 4 &raquo;</i> Second Precision</h1>
 
     <!-- Time Description is rendered as hh:mm:ss -->
+
     <fn-date-time-selector  data-precision="second" data-resolved='resolved' data-until='1423060200'>
       <fn-date-time-selector-icon class='left'></fn-date-time-selector-icon>
       <fn-dropdown class="inline">

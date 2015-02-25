@@ -85,6 +85,8 @@
     this.renderWidget = function() {
       var header = this.querySelector("fn-date-time-selector-header");
       var widget = this.querySelector("fn-date-time-selector-widget");
+      var calendar;
+      var select_restriction = this.getAttribute('data-selectable');
 
       if (!header) {
         header = document.createElement("fn-date-time-selector-header");
@@ -93,10 +95,18 @@
 
       if (!widget) {
         widget = document.createElement("fn-date-time-selector-widget");
+        calendar = document.createElement("fn-calendar");
+
         this.insertBefore(widget, header.nextElementSibling);
 
         widget.appendChild(document.createElement("fn-timeinput"));
-        widget.appendChild(document.createElement("fn-calendar"));
+        widget.appendChild(calendar);
+      } else {
+        calendar = widget.querySelector("fn-calendar");
+      }
+
+      if (select_restriction) {
+        calendar.setAttribute('data-selectable', select_restriction);
       }
     }
 
@@ -131,12 +141,51 @@
       widget.style.marginLeft = ((pos.width - widget.offsetWidth) / 2) + "px";
     }
 
-    this.closeWidget = function(timestamp) {
+    this.closeWidget = function(until) {
+      var range = this.getAttribute('data-range');
       this.querySelector("fn-date-time-selector-widget").classList.remove("active");
-      if (timestamp) {
-        this.setAttribute('data-until', timestamp);
+
+      console.log(range, until);
+      if (until && this.isSelectable(range, until)) {
+        this.setAttribute('data-until', until);
         this.fireEvent(
-            'fn-date-time-selector-until', {"until" : timestamp})
+            'fn-date-time-selector-until', {"until" : until})
+      }
+    };
+
+    //checks if until and from matches the data-selectable condition
+    this.isSelectable = function(range, until) {
+      var condition = this.getAttribute('data-selectable');
+
+      if (!condition) {
+        return true;
+      }
+
+      if (condition == 'future') {
+        return (until - range > Date.now());
+      }
+
+      if (condition == 'past') {
+        return (until <= Date.now());
+      }
+
+      //not supported data-selectable attribute
+      return true;
+    }
+
+    this.onIconClick = function(direction) {
+      var range = parseInt(this.getAttribute('data-range'), 10);
+      var until = parseInt(this.getAttribute('data-until'), 10);
+
+      if (direction == 'left') {
+        until = until - range;
+      } else if (direction == 'right') {
+        until = until + range;
+      }
+
+      if (this.isSelectable(range, until)) {
+        this.setAttribute('data-until', until);
+        this.fireEvent('fn-date-time-selector-until', {"until" :until});
       }
     }
 
@@ -150,22 +199,14 @@
 
       if (icon_left) {
         icon_left.onclick = function() {
-          var until =
-            parseInt(base.getAttribute('data-until'), 10) -
-            parseInt(base.getAttribute('data-range'), 10);
-          base.setAttribute('data-until', until);
-          base.fireEvent('fn-date-time-selector-until', {"until" :until});
+          base.onIconClick('left');
         };
       }
 
       if (icon_right) {
         icon_right.onclick = function() {
-          var until =
-          parseInt(base.getAttribute('data-until'), 10) +
-          parseInt(base.getAttribute('data-range'), 10);
-          base.setAttribute('data-until', until);
-          base.fireEvent('fn-date-time-selector-until', {"until" :until});
-        };
+          base.onIconClick('right');
+        }
       }
 
       this.querySelector("fn-dropdown").addEventListener(
