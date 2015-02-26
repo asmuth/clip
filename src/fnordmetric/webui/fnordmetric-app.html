@@ -50,8 +50,16 @@
             </fn-button>-->
           </fn-appbar-section>
 
-          <fn-appbar-section data-position="right" class="search">
-            <fn-search>
+          <fn-appbar-section data-position="right">
+            <fn-button name="embed" data-size='tiny'>
+              <i class='fa fa-share'></i>Embed
+            </fn-button>
+            <fn-tooltip data-pointer='right' id="ttp_embed">Embed</fn-tooltip>
+            <fn-button name="auto_refresh" data-toggle data-size='tiny'>
+              <i class='fa fa-refresh'></i>Auto Refresh
+            </fn-button>
+            <fn-tooltip data-pointer='right' id="ttp_refresh">Auto Refresh</fn-tooltip>
+            <fn-search class="hidden">
               <fn-input>
                 <fn-input-icon><i class="fa fa-search"></i></fn-input-icon>
               </fn-input>
@@ -83,7 +91,7 @@
       this.className += " resolved";
       this.appendChild(Fnord.getTemplate("fnordmetric-app", "base"));
 
-      var nav_buttons = this.querySelectorAll("fn-button");
+      var nav_buttons = this.querySelectorAll("fn-button[data-url]");
       for (var i = 0; i < nav_buttons.length; ++i) {
         nav_buttons[i].addEventListener("fn-button-click", function() {
           var app = document.querySelector("fnordmetric-app");
@@ -154,11 +162,18 @@
       var viewport = document.querySelector("#fnordmetric-viewport");
       var view = document.createElement(view_name);
       view.setAttribute("data-url", raw_url);
+
       viewport.innerHTML = "";
       viewport.appendChild(view);
 
+      if (typeof view.initAppbar == 'function') {
+        view.initAppbar(
+          this.querySelector("fn-appbar-section[data-position='right']"));
+      }
+
       document.querySelector("#app-loader").removeAttribute("data-loading");
     };
+
 
     this.openMetricPreview = function(metric_key) {
       var end = Math.round(Date.now() / 1000);

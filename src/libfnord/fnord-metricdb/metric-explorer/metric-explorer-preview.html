@@ -100,13 +100,6 @@
         </fn-dropdown>
       </div>
 
-      <fn-button id="embed_btn" class="item left" data-size='tiny' style="display:none;">
-        <i class='fa fa-share'></i>Embed
-      </fn-button>
-      <fn-button id="auto_refresh" class="item left" data-toggle data-size='tiny' style="display:none;">
-        <i class='fa fa-refresh'></i>Auto Refresh
-      </fn-button>
-
       <div class="item" style="height: 36px; line-height: 36px; float: right;">
         <fn-date-time-selector data-selectable='past'>
           <fn-date-time-selector-icon class='left'></fn-date-time-selector-icon>
@@ -177,8 +170,6 @@
   <fn-tooltip data-pointer="right" id='ttp_endtime'>
     Please select a date in the past
   </fn-tooltip>
-  <fn-tooltip data-pointer='right' id="ttp_embed">Embed</fn-tooltip>
-  <fn-tooltip data-pointer='right' id="ttp_refresh">Auto Refresh</fn-tooltip>
 </template>
 
 <script type='text/javascript'>
@@ -225,6 +216,39 @@
       document.addEventListener("DOMContentLoaded", function() {
         base.onResize();
         base.DOMLoaded = true;
+      }, false);
+    };
+
+    this.initAppbar = function(appbar) {
+      console.log("init appbar");
+      var embed_btn = appbar.querySelector("fn-button[name='embed']");
+      var autorefresh_btn = appbar.querySelector("fn-button[name='auto_refresh']");
+      var modal = this.querySelector("fn-modal");
+
+      var interval_id;
+      var base = this;
+
+      embed_btn.classList.remove("hidden");
+      embed_btn.classList.remove("hidden");
+      appbar.querySelector("fn-search").classList.add("hidden");
+
+      appbar.querySelector("fn-tooltip#ttp_embed").init(embed_btn);
+      appbar.querySelector("fn-tooltip#ttp_refresh").init(autorefresh_btn);
+
+      autorefresh_btn.addEventListener('fn-button-click', function() {
+        if (this.getAttribute('data-state') == "active") {
+          window.clearInterval(interval_id);
+          this.removeAttribute('data-state');
+        } else {
+          interval_id = window.setInterval(function() {base.onRefresh(); }, 30000);
+          this.setAttribute('data-state', 'active');
+        }
+      }, false);
+
+      embed_btn.addEventListener('fn-button-click', function() {
+        modal.querySelector("span").innerHTML =
+          "/metrics/" + base.buildQueryUrl(base.getAttribute('data-format'));
+        modal.show();
       }, false);
     };
 
@@ -659,20 +683,17 @@
       this.updateGenericParams({'height': height, 'width' : width});
     };
 
+
+
     /* handles controls for generic params */
     this.handleGenericControls = function() {
       var base = this;
       /* init */
-      var embed_btn = this.querySelector("#embed_btn");
-      var autorefresh_btn = this.querySelector("#auto_refresh");
-      var modal = this.querySelector("fn-modal");
       var format_dropdown = this.querySelector("fn-dropdown[name='format']");
 
       var selector = this.querySelector("fn-date-time-selector");
       var range = parseInt(this.getGenericParamOrDefault("time_range"), 10);
       var until = parseInt(this.getGenericParamOrDefault("until"), 10);
-
-      var interval_id;
 
       selector.setAttribute('data-until', until);
       selector.setAttribute('data-range', range);
@@ -680,10 +701,6 @@
 
       format_dropdown.setAttribute('data-preselected', this.getGenericParamOrDefault('format'));
       format_dropdown.setAttribute('data-resolved', 'resolved');
-
-      this.querySelector("fn-tooltip#ttp_embed").init(embed_btn);
-      this.querySelector("fn-tooltip#ttp_refresh").init(autorefresh_btn);
-
       /* handle Events */
       //date
       selector.addEventListener('fn-date-time-selector-until', function(e) {
@@ -701,22 +718,6 @@
       //format
       format_dropdown.addEventListener('fn-dropdown-item-click', function(e) {
         base.setAttribute("data-format", e.srcElement.getAttribute('data-value'));
-      }, false);
-
-      autorefresh_btn.addEventListener('fn-button-click', function() {
-        if (this.getAttribute('data-state') == "active") {
-          window.clearInterval(interval_id);
-          this.removeAttribute('data-state');
-        } else {
-          interval_id = window.setInterval(function() {base.onRefresh(); }, 30000);
-          this.setAttribute('data-state', 'active');
-        }
-      }, false);
-
-      embed_btn.addEventListener('fn-button-click', function() {
-        modal.querySelector("span").innerHTML =
-          "/metrics/" + base.buildQueryUrl(base.getAttribute('data-format'));
-        modal.show();
       }, false);
     };
   };

@@ -32,7 +32,7 @@ fnordmetric-app fn-appbar /deep/ fn-appbar-section {
   margin: 0;
 }
 
-fnordmetric-app fn-appbar /deep/ fn-appbar-section.search {
+fnordmetric-app fn-appbar /deep/ fn-appbar-section .hidden {
   display: none;
 }
 
