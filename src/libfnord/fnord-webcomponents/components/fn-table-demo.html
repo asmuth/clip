@@ -193,4 +193,23 @@
     pagination.forElement(table5);
   </script>
 
+  <section>
+    <h1><i>Example 6 &raquo;</i> Number of Rows Adjusted to Fit Specific Height</h1>
+    <fn-table name='fitted_size'>
+      <fn-table-column>Type</fn-table-column>
+      <table>
+        <tr><td>30kg Bag</td></tr>
+        <tr><td>Golf Bag</td></tr>
+        <tr><td>20kg Bag</td></tr>
+        <tr><td>Bike</td></tr>
+        <tr><td>30kg Bag<td></tr>
+      </table>
+    </fn-table>
+
+    <script type='text/javascript'>
+      document.querySelector(
+        "fn-table[name='fitted_size']").setDataPerPageForHeight(200);
+    </script>
+  </section>
+
 </template>
