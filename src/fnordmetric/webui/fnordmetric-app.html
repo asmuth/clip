@@ -54,11 +54,11 @@
             <fn-button name="embed" data-size='tiny'>
               <i class='fa fa-share'></i>Embed
             </fn-button>
-            <fn-tooltip data-pointer='right' id="ttp_embed">Embed</fn-tooltip>
+            <fn-tooltip data-position='bottom' data-pointer='right' id="ttp_embed">Embed</fn-tooltip>
             <fn-button name="auto_refresh" data-toggle data-size='tiny'>
               <i class='fa fa-refresh'></i>Auto Refresh
             </fn-button>
-            <fn-tooltip data-pointer='right' id="ttp_refresh">Auto Refresh</fn-tooltip>
+            <fn-tooltip data-position='bottom' data-pointer='right' id="ttp_refresh">Auto Refresh</fn-tooltip>
             <fn-search class="hidden">
               <fn-input>
                 <fn-input-icon><i class="fa fa-search"></i></fn-input-icon>
@@ -148,6 +148,8 @@
     this.openUrl = function(raw_url, push_state) {
       var url = FnordMetric.util.parseQueryString(raw_url);
       var query_params = url["query_params"];
+      var custom_appbar =
+        this.querySelector("fn-appbar-section[data-position='right']");
 
       var view_name = this.routes[url["path"]];
       if (view_name == undefined) {
@@ -167,8 +169,9 @@
       viewport.appendChild(view);
 
       if (typeof view.initAppbar == 'function') {
-        view.initAppbar(
-          this.querySelector("fn-appbar-section[data-position='right']"));
+        view.initAppbar(custom_appbar);
+      } else {
+        custom_appbar.classList.add("hidden");
       }
 
       document.querySelector("#app-loader").removeAttribute("data-loading");

@@ -220,7 +220,6 @@
     };
 
     this.initAppbar = function(appbar) {
-      console.log("init appbar");
       var embed_btn = appbar.querySelector("fn-button[name='embed']");
       var autorefresh_btn = appbar.querySelector("fn-button[name='auto_refresh']");
       var modal = this.querySelector("fn-modal");
@@ -228,6 +227,7 @@
       var interval_id;
       var base = this;
 
+      appbar.classList.remove("hidden");
       embed_btn.classList.remove("hidden");
       embed_btn.classList.remove("hidden");
       appbar.querySelector("fn-search").classList.add("hidden");
