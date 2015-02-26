@@ -81,7 +81,7 @@
           </fn-input>
         </fn-search>
       </div>
-      <fn-table data-per-page="25" data-page="0" data-clickable>
+      <fn-table data-page="0" data-clickable>
         <fn-table-column data-sortable data-presort="asc">Metric</fn-table-column>
         <fn-table-column>Labels</fn-table-column>
         <fn-table-column data-sortable>Last Insert</fn-table-column>
@@ -89,7 +89,7 @@
         <table>
         </table>
       </fn-table>
-      <fn-pager data-for data-first-item="1" data-per-page="25" data-circling></fn-pager>
+      <fn-pager data-for data-first-item="1" data-circling></fn-pager>
     </div>
   </fn-loader>
 </template>
@@ -206,11 +206,15 @@
           });
           base.querySelector("fn-table").renderTable();
           base.querySelector("fn-message").className = "";
+
+          base.setTableHeight(loader);
           base.initTablePager(metrics.length);
+          loader.removeAttribute("data-loading");
+
         } else {
           base.renderServerError(r.statusText, r.status);
+          loader.removeAttribute("data-loading");
         }
-        loader.removeAttribute("data-loading");
       });
 
       table.addEventListener('fn-table-row-click', function(e) {
@@ -221,6 +225,15 @@
       }, false);
     };
 
+    this.setTableHeight = function(ref_elem) {
+      var fn_table = this.querySelector("fn-table");
+      var pager = this.querySelector("fn-pager");
+      var data_per_page;
+
+      var height = ref_elem.offsetHeight;
+      data_per_page = fn_table.setDataPerPageForHeight(height);
+      pager.setAttribute('data-per-page', data_per_page);
+    };
 
     this.initTablePager = function(list_size) {
       var pager = this.querySelector("fn-pager");
@@ -232,7 +245,6 @@
 
       }, false);
     };
-
 
     this.renderServerError = function(text, statusCode) {
       var msg = this.querySelector("fn-message");

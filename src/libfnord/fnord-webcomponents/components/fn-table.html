@@ -310,9 +310,9 @@
       var row_height = this.shadowRoot.querySelector("tbody td").offsetHeight;
       var data_per_page;
 
-      //rows haven't been rendered yet
+      //rows haven't been rendered yet, return default
       if (row_height == 0) {
-        return;
+        return 25;
       }
 
       if (header) {
