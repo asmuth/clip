@@ -172,9 +172,9 @@
       elem_names.map(function(name) {
         var elem = base.querySelector("fn-dropdown[name='" + name + "']");
         if (base.params.aggr_fn == "value" ) {
-          elem.setAttribute('data-state', 'disabled');
+          elem.classList.add("disabled");
         } else {
-          elem.removeAttribute('data-state');
+          elem.classList.remove("disabled");
         }
       });
     };
@@ -305,7 +305,6 @@
       var group_by = this.splitColumns(this.params.group_by);
 
       if (columns.length > 0 ) {
-        console.log("remove hidden");
         parent_elem.classList.remove("hidden");
       }
 
