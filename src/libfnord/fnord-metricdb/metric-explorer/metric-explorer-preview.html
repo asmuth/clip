@@ -53,6 +53,11 @@
       display:block;
     }
 
+    .result_pane fn-pager {
+      margin-top: 5px;
+      float: right;
+    }
+
 
     #raw.result_pane {
       padding: 10px 10px 20px;
@@ -87,7 +92,7 @@
     <div class="navigation">
       <div class="item left">
         <span class="text">Display: </span>
-        <fn-dropdown data-resolved class="inline small" name="format">
+        <fn-dropdown class="inline small" name="format">
           <fn-dropdown-items>
             <fn-dropdown-item data-value='svg'>Chart</fn-dropdown-item>
             <fn-dropdown-item data-value='csv'>Raw</fn-dropdown-item>
@@ -131,7 +136,7 @@
       <div class="result_pane active" data-format="svg">
       </div>
       <div class="result_pane" data-format="csv">
-        <fn-table data-page='0' data-per-page='25'>
+        <fn-table data-page='0'>
           <fn-table-column>Metric</fn-table-column>
           <fn-table-column>Time</fn-table-column>
           <fn-table-column>Value</fn-table-column>
@@ -223,57 +228,89 @@
       }, false);
     };
 
-    this.update = function(format) {
-      var urls = this.buildQueryUrl(format);
+    this.update = function() {
+      var urls = this.buildQueryUrl();
 
       Fnord.setUrlHash("#metric?" + urls.url);
       this.updateData(urls.query_url);
     };
 
-    this.buildQueryUrl = function(format) {
+    this.buildMetricQueryUrl = function() {
+      var param_str = "";
       var url = "";
       var query_url = "";
 
       for (var i = 0; i < parseInt(this.params.metrics, 10); i++) {
         var metric_params = this.params["metric" + i];
+        var aggr_fn = "";
 
         for (var key in metric_params) {
+          param_str = "";
+
           if (!metric_params[key] ||
               metric_params[key].length == 0 ||
-              metric_params[key] == "undefined") {continue;}
+              metric_params[key] == "undefined" ||
+              aggr_fn == 'value' && (key == 'aggr_step' || key == 'aggr_window')) {
+                continue;
+          }
 
           if (key == "name") {
             //name is first param
-            url += (i == 0)? "" : "&";
-            url += "metric=" + encodeURIComponent(metric_params[key]);
+            if ( i > 0) {
+              param_str += "&";
+            }
+
+            param_str += "metric=" + encodeURIComponent(metric_params[key]);
+
           } else if (key == "aggr_fn") {
+            aggr_fn = metric_params[key];
             //value is automatically returned if aggr_fn isn't set
             if (metric_params[key] != "value") {
+              param_str += "&" + key + "=" + metric_params[key];
+            } else {
               url += "&" + key + "=" + metric_params[key];
             }
+
           } else if (Fnord.isMetricParam(key)) {
             //all other metric params
-            url += "&" + key + "=" + metric_params[key];
+            param_str += "&" + key + "=" + metric_params[key];
           }
+
+          url += param_str;
+          query_url += param_str;
         }
       }
 
-      url +=
-        "&from=" + this.getGenericParamOrDefault("from") +
-        "&until=" + this.getGenericParamOrDefault("until") +
-        "&format=" + this.getGenericParamOrDefault("format");
+      return {'url' : url, 'query_url' : query_url};
+    }
+
+    this.buildQueryUrl = function() {
+      var params = ["from", "until", "format"];
+      var queryParams = [
+        "logarithmic", "inverted", "min", "height",
+        "width", "grid", "axis_right", "legend"
+      ];
+
+      var metricUrl = this.buildMetricQueryUrl();
+      var param_str = "";
+      var url = "";
+      var query_url = "";
+
+      for (var i = 0; i < params.length; i++) {
+        param_str +=
+          "&" + params[i] + "=" + this.getGenericParamOrDefault(params[i]);
+      }
+
+      url = metricUrl.url + param_str;
+      query_url = metricUrl.query_url + param_str;
 
       //params that can't be set by controls aren't visible in url
-      query_url = url;
-      query_url +=
-        "&logarithmic=" + this.getGenericParamOrDefault("logarithmic") +
-        "&inverted=" + this.getGenericParamOrDefault("inverted") +
-        "&min=" + this.getGenericParamOrDefault("min") +
-        "&height=" + this.getGenericParamOrDefault("height") +
-        "&width=" + this.getGenericParamOrDefault("width") +
-        "&grid=both" +
-        "&axis_right=true" +
-        "&legend=toprightinside";
+
+      for (var i = 0; i < queryParams.length; i++) {
+        query_url +=
+          "&" + queryParams[i] + "=" +
+          this.getGenericParamOrDefault(queryParams[i]);
+      }
 
       return {'url' :url, 'query_url' : query_url};
     };
@@ -342,9 +379,9 @@
       var row_count = 0;
 
       this.hideActiveResult();
+      pane.classList.add("active");
 
       table.innerHTML = "";
-      pane.classList.add("active");
 
       data_points.forEach(function(point) {
         if (point.length > 0) {
@@ -361,13 +398,30 @@
         }
       });
 
+
       pager.setAttribute('data-last-item', row_count);
       pager.forElement(fn_table);
       fn_table.renderTable();
 
-      this.querySelector("fn-loader[name='result_pane']").removeAttribute("data-loading");
+      this.querySelector("fn-loader[name='result_pane']").removeAttribute(
+        "data-loading");
+
+      this.setTableHeight();
     };
 
+    this.setTableHeight = function() {
+      var fn_table = this.querySelector(".result_pane fn-table");
+      var pager = this.querySelector(".result_pane fn-pager");
+      var data_per_page;
+
+      var height =
+        parseInt(this.getGenericParamOrDefault("height"), 10) -
+        pager.offsetHeight;
+
+
+      data_per_page = fn_table.setDataPerPageForHeight(height);
+      pager.setAttribute('data-per-page', data_per_page);
+    };
 
     this.renderError = function(response) {
       var loader = this.querySelector("fn-loader[name='result_pane']");
@@ -398,7 +452,7 @@
         "aggr_fn": "sum",
         "aggr_window": "5",
         "aggr_step": "10",
-        "scale" : "0.8",
+        "scale" : "1.0",
         "group_by" : ""
       }
 
@@ -441,12 +495,10 @@
         "index" : index
       }
 
-      if (aggr_fn != "value") {
-        metric_params.aggr_window =
-          this.getMetricUrlParamOrDefault("aggr_window", index);
-        metric_params.aggr_step =
-          this.getMetricUrlParamOrDefault("aggr_step", index);
-      }
+      metric_params.aggr_window =
+        this.getMetricUrlParamOrDefault("aggr_window", index);
+      metric_params.aggr_step =
+        this.getMetricUrlParamOrDefault("aggr_step", index);
 
 
       if (this.params["metric" + index] == undefined) {
@@ -565,7 +617,10 @@
         logarithmic : false,
         inverted: false,
         min: 0,
-        format: 'svg'
+        format: 'svg',
+        grid: 'both',
+        axis_right: true,
+        legend: 'toprightinside'
       }
 
       if (key == "time_range") {
