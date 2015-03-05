@@ -64,12 +64,8 @@
   <fn-loader data-transparent data-loading data-loader-type="loader3">
     <fn-message class="overview" data-state='error'>
       <fn-message-header>
-        Server Error
       </fn-message-header>
       <fn-message-text>
-        Unable to connect to Server
-        <br />
-        <span></span>
       </fn-message-text>
     </fn-message>
     <div class="list ui">
@@ -181,6 +177,11 @@
         if (r.status === 200) {
           var metrics = JSON.parse(r.response).metrics;
 
+          if (metrics.length == 0) {
+            base.renderMessage("No Metric", "Empty Metric List", '');
+            return;
+          }
+
           if (metrics.length == 1 && openPreview) {
             Fnord.openMetricPreview(metrics[0].key);
             return;
@@ -212,8 +213,8 @@
           loader.removeAttribute("data-loading");
 
         } else {
-          base.renderServerError(r.statusText, r.status);
-          loader.removeAttribute("data-loading");
+          base.renderMessage(
+            "Server Error", r.status + " " + r.statusText, 'error');
         }
       });
 
@@ -246,13 +247,17 @@
       }, false);
     };
 
-    this.renderServerError = function(text, statusCode) {
+    this.renderMessage = function(header, text, state) {
       var msg = this.querySelector("fn-message");
+      var loader = this.querySelector("fn-loader");
+
       msg.className = "active";
-      msg.setAttribute('data-state', 'error');
-      this.querySelector("fn-loader").style.paddingTop = "50px";
-      msg.querySelector("fn-message-text span").innerHTML =
-        "statusCode: "+ statusCode;
+      msg.setAttribute('data-state', state);
+      msg.querySelector("fn-message-header").innerHTML = header;
+      msg.querySelector("fn-message-text").innerHTML = text;
+
+      loader.style.paddingTop = "50px";
+      loader.removeAttribute('data-loading');
     };
   };
 
