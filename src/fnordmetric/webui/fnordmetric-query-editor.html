@@ -49,6 +49,10 @@
 
     }
 
+    fn-splitpane {
+      height: 100%;
+    }
+
     .navbar fn-button#execute {
       color: #009fe9;
       float:right;
@@ -69,14 +73,10 @@
 
     }
 
-    fn-loader#result fn-message {
-      display: none;
+    fn-loader[name='result'] fn-message {
       margin: 20px 15px;
     }
 
-    fn-loader#result fn-message.active {
-      display: block;
-    }
 
     .result_card[data-active] {
       display: block;
@@ -121,7 +121,7 @@
 
   </style>
   <fn-loader data-loading data-loader-type="loader3">
-    <fn-splitpane id="splitpane" data-split-direction="vertical" data-split-position='30' data-min-position-vertical='420' data-min-position-horizontal='200'>
+    <fn-splitpane id="splitpane" data-split-direction="vertical" data-split-position='30' data-width='420' data-height='200'>
       <fn-splitpane-left>
         <div class="navbar">
           <div class="button_like" id="editor">
@@ -139,9 +139,10 @@
         </div>
         <fn-codeeditor></fn-codeeditor>
       </fn-splitpane-left>
+      <fn-splitpane-resizer></fn-splitpane-resizer>
       <fn-splitpane-right>
-        <fn-loader id="result" data-loader-type="loader3">
-          <fn-message data-state="error"></fn-message>
+        <fn-loader name="result" data-loader-type="loader3">
+          <fn-message data-state="error" name='error' class="hidden"></fn-message>
           <div class="result_card" id="chart">
             <div class="controls">
               <div class="button_like">Result Chart</div>
@@ -159,7 +160,7 @@
             <fn-pager data-for data-circling></fn-pager>
             <fn-table data-per-page="25" data-page='0'></fn-table>
           </div>
-          <fn-message id="info"></fn-message>
+          <fn-message name="info" class="hidden"></fn-message>
         </fn-loader>
       </fn-splitpane-right>
     </fn-splitpane>
@@ -191,6 +192,8 @@
     };
 
     this.init = function() {
+      var base = this;
+
       this.querySelector("fn-loader").removeAttribute("data-loading");
       this.initButtons();
 
@@ -207,8 +210,10 @@
     };
 
     this.initUrl = function() {
+      var data_url = this.getAttribute('data-url');
+      if (data_url.length <= 5) {return;}
       var params =
-        FnordMetric.util.parseUrlQueryString(this.getAttribute('data-url'));
+        FnordMetric.util.parseUrlQueryString(data_url);
       var query = params.query_params.innerViewValue;
 
       this.querySelector('fn-codeeditor').setValue(query);
@@ -238,9 +243,10 @@
     };
 
     this.updateUrl = function() {
-      var url = FnordMetric.util.setURLQueryString("query", this.getParams(), true);
-      this.setAttribute('data-url', url);
-      this.runQuery(query);
+      var params = this.getParams();
+
+      this.setAttribute('data-url', FnordMetric.util.setURLQueryString("query", params, true));
+      this.runQuery(params.innerViewValue);
     };
 
     this.runQuery = function(query) {
@@ -248,8 +254,7 @@
       this.renderLoadingState();
       Fnord.httpPost("/query", query, function(r, duration) {
         if (r.status == 200 && r.statusText == "OK") {
-          var res = JSON.parse(r.response, duration);
-          base.renderResult(res, duration);
+          base.renderResult(JSON.parse(r.response), duration);
         } else {
           /* server error */
           base.renderError(
@@ -261,9 +266,11 @@
     };
 
     this.renderLoadingState = function() {
-      var loader = this.querySelector("fn-loader#result");
-      loader.setAttribute("data-loading", "data-loading");
+      var loader = this.querySelector("fn-loader[name='result']");
       var result_cards = this.querySelectorAll(".result_card");
+
+      loader.setAttribute("data-loading", "data-loading");
+
       for (var i = 0; i < result_cards.length; i++) {
         result_cards[i].removeAttribute('data-active');
       }
@@ -273,22 +280,28 @@
       if (response.status == "error") {
         this.renderError(response.error);
       } else {
+
+        this.querySelector("fn-message[name='error']").classList.add("hidden");
+
         if (response.charts != undefined) {
           this.renderChart(response.charts);
         }
         if (response.tables != undefined) {
           this.renderTable(response.tables);
         }
+
         this.renderExecutionInfo(response.info, duration);
       }
     };
 
     this.renderError = function(error_message) {
-      var loader = this.querySelector("fn-loader#result");
-      loader.removeAttribute('data-loading');
-      var message = loader.querySelector("fn-message");
-      message.className = "active";
+      var loader = this.querySelector("fn-loader[name='result']");
+      var message = loader.querySelector("fn-message[name='error']");
+
+      message.classList.remove("hidden");
       message.innerHTML = error_message;
+      loader.querySelector("fn-message[name='info']").classList.add("hidden");
+      loader.removeAttribute('data-loading');
     };
 
     this.renderChart = function(charts, loader) {
@@ -300,7 +313,7 @@
     }
 
     this.renderTable = function(tables, loader) {
-      var loader = this.querySelector("fn-loader#result");
+      var loader = this.querySelector("fn-loader[name='result']");
 
       var result_card = this.querySelector("#table.result_card");
       result_card.setAttribute('data-active', 'active');
@@ -333,10 +346,10 @@
     };
 
     this.renderExecutionInfo = function(info, duration) {
-      var message = this.querySelector("fn-message#info");
-      message.className ="active";
+      var message = this.querySelector("fn-message[name='info']");
+      message.classList.remove("hidden");
       message.innerHTML =
-        "The query execution took " + (duration/1000) + 
+        "The query execution took " + (duration/1000) +
         " seconds and returned " + info[0].num_rows + " rows.";
     }
 
@@ -367,15 +380,6 @@
       this.querySelector("#ttp_query").init(exec_btn);
       this.querySelector("#ttp_view").init(split_btn);
       this.querySelector("#ttp_refresh").init(refresh_btn);
-
-
-      var popup = this.querySelector("fnordmetric-embed-query-popup");
-      var embed_btn = this.querySelector("fn-button#embed");
-      embed_btn.onclick = function() {
-        var url = base.getAttribute('data-url');
-        console.log(url);
-        popup.show(url);
-      }
     };
   };
 
