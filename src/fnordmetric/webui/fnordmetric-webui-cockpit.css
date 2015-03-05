@@ -206,3 +206,25 @@ fn-table /deep/ thead th.sortable:after {
   line-height: 32px;
   margin-right: 10px;
 }
+
+fn-modal-content fn-tab-content .header {
+  width: auto;
+  border: none;
+  float: none;
+  margin: 5px 0 5px;
+  font-weight: 500;
+}
+
+fn-modal-content fn-tab-content .header:not(:first-child) {
+  margin-top: 20px;
+}
+
+.indent {
+  margin-left: 20px;
+}
+
+fn-modal-content code {
+  word-wrap: break-word;
+}
+
+

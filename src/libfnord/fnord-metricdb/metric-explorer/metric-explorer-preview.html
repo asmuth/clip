@@ -74,10 +74,6 @@
       left: 170px;
     }
 
-    fn-modal-content code {
-      word-wrap: break-word;
-    }
-
     fn-modal[name='select_metric'] {
       width: 25%;
       left: 65%;
@@ -87,20 +83,6 @@
       width: 100%;
     }
 
-    fn-tab-content .header {
-      width: auto;
-      border: none;
-      float: none;
-      margin: 5px 0 10px;
-    }
-
-    fn-tab-content .header:not(:first-child) {
-      margin-top: 20px;
-    }
-
-    .indent {
-      margin-left: 20px;
-    }
   </style>
   <fn-loader name='metric_explorer_preview'>
     <div class="navigation">
@@ -153,49 +135,7 @@
       </div>
     </fn-loader>
 
-    <fn-modal-dimmer>
-      <fn-modal name="embed">
-        <fn-modal-close-icon></fn-modal-close-icon>
-        <fn-modal-header>Embed</fn-modal-header>
-        <fn-modal-content>
-          <fn-tabbar data-content-attached>
-            <fn-tab data-index='0'>IFrame</fn-tab>
-            <fn-tab data-index='1'>URL</fn-tab>
-            <fn-tab data-index='2'>HTML</fn-tab>
-            <fn-tab-content data-index='0'>
-              <div class="header">Copy this into your HTML Page</div>
-              <code>
-                &lt;iframe<br />
-                <div class='indent'>
-                  width="800"<br />
-                  height="400"<br />
-                  frameBorder="0"<br />
-                  src="<span name="src"></span>"
-                </div>
-                &gt;<br />&lt;/iframe&gt;
-              </code>
-            </fn-tab-content>
-            <fn-tab-content data-index='1'>
-              <div class="header">Embed URL</div>
-              <code name='src'></code>
-            </fn-tab-content>
-            <fn-tab-content data-index='2'>
-              <div class="header">Copy this into the header of your HTML Page</div>
-              <code>
-                &lt;script href="<span name='location'></span>
-                /s/fnordmetric.js" type="text/javascript"&gt;&lt;script&gt;
-              </code>
 
-              <div class="header">Copy this into the body of your HTML Page</div>
-              <code>
-                &lt;fm-chart&gt;<br /><div class="indent" name='src'></div>
-                &lt;/fm-chart&gt;
-              </code>
-            </fn-tab-content>
-          </fn-tabbar>
-        </fn-modal-content>
-      </fn-modal>
-    </fn-modal-dimmer>
   </fn-loader>
 
   <fn-modal-dimmer>
@@ -239,7 +179,7 @@
 
     this.init = function() {
       var base = this;
-      this.params = Fnord.parseMetricQueryUrl(this.getAttribute("data-url"));
+      this.params = FnordMetric.util.parseMetricQueryUrl(this.getAttribute("data-url"));
       this.handleGenericControls();
 
       //init mainMetric
@@ -261,54 +201,23 @@
     };
 
     this.initAppbar = function(appbar) {
-      var embed_btn = appbar.querySelector("fn-button[name='embed']");
-      var autorefresh_btn = appbar.querySelector("fn-button[name='auto_refresh']");
-      var modal = this.querySelector("fn-modal[name='embed']");
-
-      var src_elems = modal.querySelectorAll("[name='src']");
-      var location_elems = modal.querySelectorAll("[name='location']");
-      var origin = document.location.origin;
-
-      var interval_id;
       var base = this;
 
-      appbar.classList.remove("hidden");
-      embed_btn.classList.remove("hidden");
-      embed_btn.classList.remove("hidden");
-      appbar.querySelector("fn-search").classList.add("hidden");
+      var onRefresh = function() {
+        return base.onRefresh();
+      };
 
-      appbar.querySelector("fn-tooltip#ttp_embed").init(embed_btn);
-      appbar.querySelector("fn-tooltip#ttp_refresh").init(autorefresh_btn);
+      var onEmbed = function() {
+        return base.buildQueryUrl().query_url;
+      };
 
-      autorefresh_btn.addEventListener('fn-button-click', function() {
-        if (this.getAttribute('data-state') == "active") {
-          window.clearInterval(interval_id);
-          this.removeAttribute('data-state');
-        } else {
-          interval_id = window.setInterval(function() {base.onRefresh(); }, 30000);
-          this.setAttribute('data-state', 'active');
-        }
-      }, false);
-
-      for (var i = 0; i < location_elems.length; i++) {
-        location_elems[i].innerHTML = origin;
-      }
-
-      embed_btn.addEventListener('fn-button-click', function() {
-        var url =  base.buildQueryUrl().query_url;
-
-        for (var i = 0; i < src_elems.length; i++) {
-          src_elems[i].innerHTML = origin + "/metrics/timeseries?" + url;
-        }
-
-        modal.show();
-      }, false);
+      FnordMetric.util.initAppbar(appbar, onRefresh, onEmbed);
     };
 
     this.update = function() {
       var urls = this.buildQueryUrl();
 
-      Fnord.setUrlHash("#metric?" + urls.url);
+      FnordMetric.util.setUrlHash("#metric?" + urls.url);
       this.updateData(urls.query_url);
     };
 
@@ -348,7 +257,7 @@
               url += "&" + key + "=" + metric_params[key];
             }
 
-          } else if (Fnord.isMetricParam(key)) {
+          } else if (FnordMetric.util.isMetricParam(key)) {
             //all other metric params
             param_str += "&" + key + "=" + metric_params[key];
           }
@@ -422,9 +331,9 @@
     };
 
     this.onRefresh = function() {
-      var end_time = Date.now();
+      var until = Date.now();
       var time_range = this.getGenericParamOrDefault('time_range');
-      var start_time = end_time - time_range;
+      var from = until - time_range;
       this.updateGenericParams({
         'until' : until,
         'from' : from});

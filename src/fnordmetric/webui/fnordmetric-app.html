@@ -71,8 +71,50 @@
         <div id="fnordmetric-viewport">
         </div>
       </fn-flexbox-item>
+
     </fn-flexbox>
   </fn-loader>
+  <fn-modal-dimmer>
+    <fn-modal name="embed">
+      <fn-modal-close-icon></fn-modal-close-icon>
+      <fn-modal-header>Embed</fn-modal-header>
+      <fn-modal-content>
+        <fn-tabbar data-content-attached>
+          <fn-tab data-index='0'>IFrame</fn-tab>
+          <fn-tab data-index='1'>HTML</fn-tab>
+          <fn-tab data-index='2'>URL</fn-tab>
+          <fn-tab-content data-index='0'>
+            <div class="header">Copy this into your HTML Page</div>
+            <code>
+              &lt;iframe<br />
+              <div class='indent'>
+                frameBorder="0"<br />
+                src="<span name="src"></span>"
+              </div>
+              &gt;<br />&lt;/iframe&gt;
+            </code>
+          </fn-tab-content>
+          <fn-tab-content data-index='1'>
+            <div class="header">Copy this into the header of your HTML Page</div>
+            <code>
+              &lt;script href="<span name='location'></span>/s/fnordmetric.js"
+              type="text/javascript"&gt;&lt;script&gt;
+            </code>
+
+            <div class="header">Copy this into the body of your HTML Page</div>
+            <code>
+              &lt;fm-chart&gt;<br /><div class="indent" name='src'></div>
+              &lt;/fm-chart&gt;
+            </code>
+          </fn-tab-content>
+          <fn-tab-content data-index='2'>
+            <div class="header">Embed URL</div>
+            <code name='src'></code>
+          </fn-tab-content>
+        </fn-tabbar>
+      </fn-modal-content>
+    </fn-modal>
+  </fn-modal-dimmer>
 </template>
 
 <script type="text/javascript">
@@ -130,7 +172,6 @@
       window.onpopstate = (function(base) {
         return function(e) {
           e.preventDefault();
-
           if (e.state != null && typeof e.state.url != "undefined") {
             base.openUrl(e.state.url);
           }
@@ -146,7 +187,7 @@
     };
 
     this.openUrl = function(raw_url, push_state) {
-      var url = FnordMetric.util.parseQueryString(raw_url);
+      var url = FnordMetric.util.parseUrlQueryString(raw_url);
       var query_params = url["query_params"];
       var custom_appbar =
         this.querySelector("fn-appbar-section[data-position='right']");
@@ -168,7 +209,7 @@
       viewport.innerHTML = "";
       viewport.appendChild(view);
 
-      if (typeof view.initAppbar == 'function') {
+     if (typeof view.initAppbar == 'function') {
         view.initAppbar(custom_appbar);
       } else {
         custom_appbar.classList.add("hidden");
@@ -178,27 +219,9 @@
     };
 
 
-    this.openMetricPreview = function(metric_key) {
-      var end = Math.round(Date.now() / 1000);
-      var start = end - 3600;
-      var raw_url =
-        "metric?metric="+ encodeURIComponent(metric_key) +
-        "&aggr_fn=sum&&aggr_window=5&aggr_step=10&from=" + start +
-        "&until=" + end +
-        "&scale=1.0";
-
-      window.location.hash = raw_url;
-      location.reload();
-    };
-
-
     var self_ = this;
-    Fnord.openUrl = function(url) {
+    FnordMetric.openUrl = function(url) {
       self_.openUrl.apply(self_, [url]);
-    };
-
-    Fnord.openMetricPreview = function(metric_key) {
-      self_.openMetricPreview.apply(self_, [metric_key]);
     };
 
   };

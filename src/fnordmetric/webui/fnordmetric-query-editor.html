@@ -163,7 +163,6 @@
         </fn-loader>
       </fn-splitpane-right>
     </fn-splitpane>
-    <fnordmetric-embed-query-popup></fnordmetric-embed-query-popup>
   </fn-loader>
   <fn-tooltip data-position="bottom" data-relative id="ttp_view">
     Change View
@@ -178,55 +177,68 @@
 
 <script type="text/javascript">
   var FnordMetricQueryEditorComponent = function() {
-
     this.createdCallback = function() {
       var tpl = Fnord.getTemplate("fnordmetric-query-editor", "base");
       this.appendChild(tpl);
-      var base = this;
 
-      var loader = this.querySelector("fn-loader");
-      loader.removeAttribute("data-loading");
+      this.init();
+    };
+
+    this.attributeChangedCallback = function(attr, old_val, new_val) {
+      if (attr == "data-url" && old_val == null) {
+        this.initUrl();
+      }
+    };
+
+    this.init = function() {
+      this.querySelector("fn-loader").removeAttribute("data-loading");
       this.initButtons();
 
-      var codeeditor = this.querySelector('fn-codeeditor');
       if (this.getAttribute('data-url') != null) {
-        var params =
-          FnordMetric.util.parseQueryString(this.getAttribute('data-url'));
-        var query = params.query_params.innerViewValue;
-        codeeditor.setValue(query);
-        this.runQuery(query);
+        this.initUrl();
       }
 
-      codeeditor.addEventListener('keydown', function(e) {
+      this.querySelector('fn-codeeditor').addEventListener('keydown', function(e) {
         if ((e.ctrlKey || e.metaKey) && e.keyCode == 13) {
           e.preventDefault();
           base.updateUrl();
         }
       }, false);
-
-      this.attributeChangedCallback();
     };
 
-    this.attributeChangedCallback = function(attr, old_val, new_val) {
-      if (attr == "data-url") {
-        if (old_val == null) {
-          var params =
-            FnordMetric.util.parseQueryString(new_val);
-          var query = params.query_params.innerViewValue;
-          var splitpane = this.querySelector("fn-splitpane");
-          splitpane.querySelector("fn-codeeditor").setValue(query);
-          this.runQuery(query);
-        }
-      }
-    }
+    this.initUrl = function() {
+      var params =
+        FnordMetric.util.parseUrlQueryString(this.getAttribute('data-url'));
+      var query = params.query_params.innerViewValue;
+
+      this.querySelector('fn-codeeditor').setValue(query);
+      this.runQuery(query);
+    };
+
+    this.initAppbar = function(appbar) {
+      console.log("init appbar");
+      var base = this;
+
+      FnordMetric.util.initAppbar(appbar, base.onRefresh, function() {
+        return FnordMetric.util.buildUrlQueryStr(base.getParams());
+      });
+    };
+
+    this.onRefresh = function() {
+      console.log("auto refresh");
+    };
+
+    this.getParams = function() {
+      var query = this.querySelector("fn-codeeditor").getValue();
+
+      return {
+        innerView : "sql_editor",
+        innerViewValue : query
+      };
+    };
 
     this.updateUrl = function() {
-      var code_editor = this.querySelector("fn-codeeditor");
-      var query = code_editor.getValue();
-      var params = {
-        innerView : "sql_editor",
-        innerViewValue : query};
-      var url = FnordMetric.util.setURLQueryString("query", params, true);
+      var url = FnordMetric.util.setURLQueryString("query", this.getParams(), true);
       this.setAttribute('data-url', url);
       this.runQuery(query);
     };
@@ -255,7 +267,7 @@
       for (var i = 0; i < result_cards.length; i++) {
         result_cards[i].removeAttribute('data-active');
       }
-    }
+    };
 
     this.renderResult = function(response, duration) {
       if (response.status == "error") {
