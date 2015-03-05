@@ -12,10 +12,37 @@
 <template id="fn-splitpane-demo-base-tpl">
 
   <section>
-    <button type="button" class="btn" id="data-split-btn" style="float:right;">Change View</button>
-    <h1><i>fn-splitpane &rsaquo;</i> Simple Split Pane</h1>
+    <!-- SplitPane with initial left width of 30% -->
+    <fn-button name='example1' style="float:right;">Change View</fn-button>
+    <h1><i>Example 1 &rsaquo;</i> SplitPane with initial width</h1>
 
-    <fn-splitpane id="splitpane-example-1" data-split-direction="vertical" data-split-position="30" style="height:400px;">
+    <fn-splitpane name='example1' data-split-direction="vertical" data-split-position="30" style="height:400px;">
+      <fn-splitpane-left >
+        <div style="background:#3498db; height:100%;"></div>
+      </fn-splitpane-left>
+      <fn-splitpane-resizer></fn-splitpane-resizer>
+      <fn-splitpane-right>
+        <div style="background:#8e44ad; height:100%;"></div>
+      </fn-splitpane-right>
+    </fn-splitpane>
+
+    <!-- Change Splitpane Direction -->
+    <script type="text/javascript">
+      document.querySelector("fn-button[name='example1']").addEventListener(
+        "fn-button-click",
+        function() {
+          document.querySelector("fn-splitpane[name='example1']").toggleSplitDirection();
+        },
+        false);
+    </script>
+  </section>
+
+  <section>
+    <!-- SplitPane with min width and height -->
+    <fn-button name='example2' style="float:right;">Change View</fn-button>
+    <h1><i>Example 2 &rsaquo;</i> SplitPane with Minimum Height and Width</h1>
+
+    <fn-splitpane name='example2' data-split-direction="vertical" data-height="70" data-width="200" style="height:400px;">
       <fn-splitpane-left >
         <div style="background:#3498db; height:100%;"></div>
       </fn-splitpane-left>
@@ -26,13 +53,14 @@
     </fn-splitpane>
 
     <script type="text/javascript">
-      document.querySelector("#data-split-btn").addEventListener(
+      document.querySelector("fn-button[name='example2']").addEventListener(
         "click",
         function() {
-          document.querySelector("#splitpane-example-1").toggleSplitDirection();
+          document.querySelector("fn-splitpane[name='example2']").toggleSplitDirection();
         },
         false);
     </script>
+
   </section>
 
 </template>

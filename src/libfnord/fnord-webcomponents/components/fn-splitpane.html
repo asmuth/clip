@@ -36,9 +36,7 @@
         this.setAttribute('data-split-direction', 'vertical');
         this.renderVerticalView();
       }
-    }
-
-
+    };
 
     this.initResizerTooltip = function() {
       var base = this;
@@ -68,9 +66,9 @@
       }, false);
     };
 
-
     this.resizeVerticalView = function(offset) {
-      var min_width = this.getAttribute('data-min-position-vertical');
+      var min_width = this.getAttribute('data-width');
+
       if (min_width != null) {
         min_width = parseInt(min_width, 10);
       } else {
@@ -93,7 +91,7 @@
     };
 
     this.resizeHorizontalView = function(offset) {
-      var min_height = this.getAttribute('data-min-position-horizontal');
+      var min_height = this.getAttribute('data-height');
       if (min_height != null) {
         min_height = parseInt(min_height, 10);
       } else {
@@ -128,7 +126,7 @@
         left : "50%",
         right : "50%"
       };
-    }
+    };
 
     this.renderVerticalView = function() {
       var left_pane = this.querySelector("fn-splitpane-left");
