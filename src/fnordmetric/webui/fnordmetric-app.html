@@ -185,7 +185,7 @@
         this.openUrl(this.default_route);
       }
     };
-
+    
     this.openUrl = function(raw_url, push_state) {
       var url = FnordMetric.util.parseUrlQueryString(raw_url);
       var query_params = url["query_params"];
@@ -209,7 +209,7 @@
       viewport.innerHTML = "";
       viewport.appendChild(view);
 
-     if (typeof view.initAppbar == 'function') {
+      if (typeof view.initAppbar == 'function') {
         view.initAppbar(custom_appbar);
       } else {
         custom_appbar.classList.add("hidden");
@@ -217,7 +217,6 @@
 
       document.querySelector("#app-loader").removeAttribute("data-loading");
     };
-
 
     var self_ = this;
     FnordMetric.openUrl = function(url) {
