@@ -33,6 +33,7 @@ AdminUI::AdminUI(
   webui_bundle_.addComponent("fnord/components/fn-search.css");
   webui_bundle_.addComponent("fnord/components/fn-input.css");
   webui_bundle_.addComponent("fnord/components/fn-search.css");
+  webui_bundle_.addComponent("fnord/components/fn-splitpane.css");
   webui_bundle_.addComponent("fnord/fnord.js");
   webui_bundle_.addComponent("fnord/date_util.js");
   webui_bundle_.addComponent("fnord/components/fn-appbar.html");
