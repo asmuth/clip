@@ -15,7 +15,8 @@
       if (this.hasAttribute('data-resolved')) {
         this.init();
       }
-    }
+
+    };
 
     this.attributeChangedCallback = function(attr, old_val, new_val) {
       if ((attr != 'data-resolved') && !this.hasAttribute('data-resolved')) {
@@ -108,6 +109,10 @@
       if (select_restriction) {
         calendar.setAttribute('data-selectable', select_restriction);
       }
+
+      widget.onDocumentClick = function() {
+        this.removeAttribute('data-active');
+      }
     }
 
     this.updateUntil = function() {
@@ -135,7 +140,7 @@
       var pos = this.getBoundingClientRect();
 
       widget.setAttribute('data-selected', this.getAttribute('data-until'));
-      widget.classList.add("active");
+      widget.setAttribute('data-active', 'active');
 
       //center widget relative to wrapper_elem
       widget.style.marginLeft = ((pos.width - widget.offsetWidth) / 2) + "px";
@@ -143,9 +148,8 @@
 
     this.closeWidget = function(until) {
       var range = this.getAttribute('data-range');
-      this.querySelector("fn-date-time-selector-widget").classList.remove("active");
+      this.querySelector("fn-date-time-selector-widget").removeAttribute("data-active");
 
-      console.log(range, until);
       if (until && this.isSelectable(range, until)) {
         this.setAttribute('data-until', until);
         this.fireEvent(

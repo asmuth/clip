@@ -83,7 +83,7 @@ fn-date-time-selector-widget {
   padding: 0.5em;
 }
 
-fn-date-time-selector-widget.active {
+fn-date-time-selector-widget[data-active] {
   display: block;
 }
 
