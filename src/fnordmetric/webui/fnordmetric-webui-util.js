@@ -20,7 +20,7 @@ if (typeof FnordMetric.util == "undefined") {
   * extracts the params from the url
   * @param qstr like metric_list?metric=/osx/load_avg_15m&view=value
   */
-FnordMetric.util.parseQueryString = function(qstr) {
+FnordMetric.util.parseUrlQueryString = function(qstr) {
   if (qstr == null) {return;}
   var path;
   var query_params = {};
@@ -50,11 +50,13 @@ FnordMetric.util.parseQueryString = function(qstr) {
   } else {
     path = qstr != "undefined" ? qstr : "";
   }
+
   return {
     "path": path,
     "query_params": query_params
-  };
-}
+  }
+};
+
 
 /**
   * builds a querystring from the query_params, attachs it to the hash
@@ -96,75 +98,78 @@ FnordMetric.util.setURLQueryString = function(hash, query_params, push_state) {
   return path;
 }
 
-
-/**
-  * @param offset in seconds
-  */
-FnordMetric.util.parseTimeOffset = function(offset) {
-  if (offset < 60) {
-    var label = (offset == 1)? " second ago" : " seconds ago";
-    return offset + label;
-  } else if (offset < 3600) {
-    var time = Math.floor(offset / 60);
-    var label = (time == 1)? " minute ago" : " minutes ago";
-    return time + label;
-  } else if (offset < 86400) {
-    var time =  Math.floor(offset / 3600);
-    var label = (time == 1)? " hour ago" : " hours ago";
-    return time + label;
-  } else {
-    var time = Math.floor(offset / 86400);
-    var label = (time == 1)? " day ago" : " days ago";
-    return time + label;
-  }
+FnordMetric.util.isMetricParam = function(key) {
+  var metricParamKeys = ["aggr_fn", "aggr_window", "aggr_step", "scale", "group_by"];
+  return (metricParamKeys.indexOf(key) > -1);
 }
 
-/**
-  * creates a time description like 
-  * '2 hours ago - Nov 8 2014 11:33:11
-  * @param timestamp unix ts in seconds, milli or microseconds
-  */
-FnordMetric.util.parseTimestamp = function(timestamp) {
-  if (timestamp == 0) {
-    return "0";
-  }
-
-  var months = [
-    "Jan","Feb", "Mar","Apr", "May", "Jun",
-    "Jul", "Aug", "Sep", "Oct","Nov", "Dec"];
-
-  var timestamp = Math.floor(timestamp / 1000);
-
-  var now = Date.now();
-  var date = new Date(timestamp);
-
-  var offset =  Math.floor(
-    (now - timestamp) / 1000);
-
-  var time_str = FnordMetric.util.parseTimeOffset(offset);
-
-
-  var minutes = date.getMinutes();
-  if (minutes < 10) {
-    minutes = "0" + minutes;
-  }
-
-  var seconds = date.getSeconds();
-  if (seconds < 10) {
-    seconds = "0" + seconds;
-  }
-
-  time_str +=
-    " - " + 
-    months[date.getMonth()] + 
-    " " + date.getDate() +
-    " " + date.getFullYear() +
-    " " + date.getHours() +
-    ":" + minutes +
-    ":" + seconds
-
-  return time_str;
+FnordMetric.util.isGenericParam = function(key) {
+  //params that can be changed
+  var genericParamKeys = ["from", "until", "logarithmic", "inverted", "metrics", "format"];
+  return (genericParamKeys.indexOf(key) > -1);
 }
+
+
+FnordMetric.util.openUrl = function(url) {
+  alert("openurl is not defined!");
+}
+
+FnordMetric.util.setUrlHash = function(url_hash) {
+  window.history.pushState({url: url_hash}, "#", url_hash);
+  window.location.hash = url_hash;
+}
+
+
+
+
+FnordMetric.util.parseMetricQueryUrl = function(qstr) {
+  if (qstr == null) {return;}
+  var path;
+  var params = {};
+  var metricCollector = {};
+  var metricIndex = 0;
+
+  if (qstr.indexOf("?") >= 0) {
+    path = qstr.substr(0, qstr.indexOf("?"));
+    path = path.replace("#", "");
+
+    var params_str = qstr.substr(qstr.indexOf("?") + 1);
+    var raw_params = params_str.split('&');
+
+    /*set main metric */
+    var metric = raw_params[0].split('=');
+    if (metric[0] != "metric") {return;}
+
+    metricCollector.name = decodeURIComponent(metric[1]);
+
+    for (var i = 1; i < raw_params.length; i++) {
+      var param = raw_params[i].split("=");
+      if (!param[0]) {continue;}
+
+      var key = decodeURIComponent(param[0]);
+      var value = decodeURIComponent(param[1]);
+
+      if (FnordMetric.util.isMetricParam(key)) {
+        metricCollector[key] = value;
+      } else if (key == "metric") {
+        //new submetric
+        params["metric" + metricIndex] = metricCollector;
+        metricIndex++;
+        mainMetric = false;
+        metricCollector = {};
+        metricCollector.name = value;
+      } else if (FnordMetric.util.isGenericParam(key)) {
+        params[key] = value;
+      }
+    }
+
+    params["metric" + metricIndex] = metricCollector;
+    params.metrics = metricIndex + 1;
+  }
+
+  return params;
+};
+
 
 /**
   * builds a ChartSQL query from url params
@@ -282,29 +287,5 @@ FnordMetric.util.generateSQLQueryFromParams = function(params) {
   return query;
 }
 
-FnordMetric.util.addToCSV = function(list, value) {
-  if (list.length == 0) {
-    return value;
-  }
-  if (value.length == 0) {
-    return list;
-  }
-  if (list.indexOf(value) > -1 ) {
-    return list;
-  }
-  var values = list.split(",");
-  values.push(value);
-  list = values.join(",");
-  return list;
-}
 
-FnordMetric.util.removeFromCSV = function(list, value) {
-  var values = list.split(",");
-  for (var i = 0; i < values.length; i ++) {
-    if (values[i] == value) {
-      values.splice(i, 1);
-      return values.join(",");
-    }
-  }
-  return list;
-}
+
