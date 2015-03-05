@@ -223,6 +223,10 @@ fn-modal-content fn-tab-content .header:not(:first-child) {
   margin-left: 20px;
 }
 
+.hidden {
+  display: none;
+}
+
 fn-modal-content code {
   word-wrap: break-word;
 }

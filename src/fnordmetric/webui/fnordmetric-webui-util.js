@@ -57,6 +57,28 @@ FnordMetric.util.parseUrlQueryString = function(qstr) {
   }
 };
 
+FnordMetric.util.buildUrlQueryStr = function(query_params) {
+  var qstr = "";
+
+  if ("innerView" in query_params && query_params.innerView != undefined) {
+    qstr += encodeURIComponent(query_params.innerView) + "=";
+    qstr += encodeURIComponent(query_params.innerViewValue);
+
+    for (var param in query_params) {
+      if (param != "innerView" && 
+          param != "innerViewValue" &&
+          query_params[param] != undefined &&
+          query_params[param].length > 0) {
+
+        qstr += 
+          "&" + encodeURIComponent(param) +
+          "=" + encodeURIComponent(query_params[param]);
+      }
+    }
+  }
+
+  return qstr;
+}
 
 /**
   * builds a querystring from the query_params, attachs it to the hash
@@ -71,25 +93,7 @@ FnordMetric.util.setURLQueryString = function(hash, query_params, push_state) {
     window.location.hash = "";
     return;
   }
-  var path = "#" + hash;
-
-  if ("innerView" in query_params && query_params.innerView != undefined) {
-    path += "?" + encodeURIComponent(query_params.innerView) + "=";
-    path +=
-      encodeURIComponent(query_params.innerViewValue);
-
-    for (var param in query_params) {
-      if (param != "innerView" && 
-          param != "innerViewValue" &&
-          query_params[param] != undefined &&
-          query_params[param].length > 0) {
-
-        path += 
-          "&" + encodeURIComponent(param) +
-          "=" + encodeURIComponent(query_params[param]);
-      }
-    }
-  }
+  var path = "#" + hash + "?" + FnordMetric.util.buildUrlQueryStr(query_params);
 
   if (push_state) {
     window.history.pushState({url:path}, "#", path);
@@ -118,9 +122,6 @@ FnordMetric.util.setUrlHash = function(url_hash) {
   window.history.pushState({url: url_hash}, "#", url_hash);
   window.location.hash = url_hash;
 }
-
-
-
 
 FnordMetric.util.parseMetricQueryUrl = function(qstr) {
   if (qstr == null) {return;}
@@ -285,6 +286,64 @@ FnordMetric.util.generateSQLQueryFromParams = function(params) {
     draw_stm + select_expr + from_expr +
     where_expr + group_expr + ";";
   return query;
+}
+
+FnordMetric.util.openMetricPreview = function(metric_key) {
+  var end = Math.round(Date.now() / 1000);
+  var start = end - 3600;
+  var raw_url =
+    "metric?metric="+ encodeURIComponent(metric_key) +
+    "&aggr_fn=sum&&aggr_window=5&aggr_step=10&from=" + start +
+    "&until=" + end +
+    "&scale=1.0";
+
+  window.location.hash = raw_url;
+  location.reload();
+};
+
+FnordMetric.util.initAppbar = function(appbar, onRefresh, getUrl) {
+  var embed_btn = appbar.querySelector("fn-button[name='embed']");
+  var autorefresh_btn = appbar.querySelector("fn-button[name='auto_refresh']");
+  var modal = document.querySelector("fn-modal[name='embed']");
+
+  var src_elems = modal.querySelectorAll("[name='src']");
+  var location_elems = modal.querySelectorAll("[name='location']");
+  var origin = document.location.origin;
+
+  var interval_id;
+  var base = this;
+
+  appbar.classList.remove("hidden");
+  embed_btn.classList.remove("hidden");
+  embed_btn.classList.remove("hidden");
+  appbar.querySelector("fn-search").classList.add("hidden");
+
+  appbar.querySelector("fn-tooltip#ttp_embed").init(embed_btn);
+  appbar.querySelector("fn-tooltip#ttp_refresh").init(autorefresh_btn);
+
+  autorefresh_btn.addEventListener('fn-button-click', function() {
+    if (this.getAttribute('data-state') == "active") {
+      window.clearInterval(interval_id);
+      this.removeAttribute('data-state');
+    } else {
+      interval_id = window.setInterval(function() {onRefresh(); }, 30000);
+      this.setAttribute('data-state', 'active');
+    }
+  }, false);
+
+  for (var i = 0; i < location_elems.length; i++) {
+    location_elems[i].innerHTML = origin;
+  }
+
+  embed_btn.addEventListener('fn-button-click', function() {
+    var url =  getUrl();
+
+    for (var i = 0; i < src_elems.length; i++) {
+      src_elems[i].innerHTML = origin + "/metrics/timeseries?" + url;
+    }
+
+    modal.show();
+  }, false);
 }
 
 
