@@ -309,11 +309,11 @@
       Fnord.httpGet(url, function(r) {
         if (r.status == 200) {
           if (format == "svg") {
-            return base.renderChart(r.response);
+            return PreviewRenderer.renderChart.apply(base, [r.response]);
           }
 
           if (r.response.length > 0) {
-            return base.renderCsvAsTable(r.response);
+            return PreviewRenderer.renderCsvAsTable.apply(base, [r.response]);
           }
 
           //no data points don't cause an error if format is csv
@@ -322,11 +322,11 @@
             'statusText': r.statusText,
             'response': "Empty Table"
           }
-          return base.renderError(resp);
+          return PreviewRenderer.renderError.apply(this, [resp]);
 
         }
 
-        return base.renderError(r);
+        return PreviewRenderer.renderError.apply(this, [r]);
       });
     };
 
@@ -337,94 +337,6 @@
       this.updateGenericParams({
         'until' : until,
         'from' : from});
-    };
-
-    this.hideActiveResult = function() {
-      var active_elem = this.querySelector("fn-loader[name='result_pane'] .active")
-      if (active_elem) {
-        active_elem.classList.remove("active");
-      }
-    }
-
-    this.renderChart = function(resp) {
-      var pane = this.querySelector(".result_pane[data-format='svg']");
-      this.hideActiveResult();
-      pane.classList.add("active");
-      pane.innerHTML = "";
-      pane.innerHTML = resp;
-      this.querySelector("fn-loader[name='result_pane']").removeAttribute("data-loading");
-    };
-
-    this.renderCsvAsTable = function(csv) {
-      var base = this;
-      var pane = this.querySelector(".result_pane[data-format='csv']");
-      var fn_table = pane.querySelector("fn-table");
-      var table = fn_table.querySelector("table");
-      var pager = pane.querySelector("fn-pager");
-      var data_points = csv.split(/\n/);
-      var row_count = 0;
-
-      this.hideActiveResult();
-      pane.classList.add("active");
-
-      table.innerHTML = "";
-
-      data_points.forEach(function(point) {
-        if (point.length > 0) {
-          var entries = point.split(";");
-          var tr_elem = document.createElement("tr");
-          entries.forEach(function(entry) {
-            var td_elem = document.createElement("td");
-            td_elem.innerHTML = entry;
-            tr_elem.appendChild(td_elem);
-          });
-
-          table.appendChild(tr_elem);
-          row_count++;
-        }
-      });
-
-
-      pager.setAttribute('data-last-item', row_count);
-      pager.forElement(fn_table);
-      fn_table.renderTable();
-
-      this.querySelector("fn-loader[name='result_pane']").removeAttribute(
-        "data-loading");
-
-      this.setTableHeight();
-    };
-
-    this.setTableHeight = function() {
-      var fn_table = this.querySelector(".result_pane fn-table");
-      var pager = this.querySelector(".result_pane fn-pager");
-      var data_per_page;
-
-      var height =
-        parseInt(this.getGenericParamOrDefault("height"), 10) -
-        pager.offsetHeight;
-
-
-      data_per_page = fn_table.setDataPerPageForHeight(height);
-      pager.setAttribute('data-per-page', data_per_page);
-    };
-
-    this.renderError = function(response) {
-      var loader = this.querySelector("fn-loader[name='result_pane']");
-      var msg_elem = loader.querySelector("fn-message");
-      var header_elem = document.createElement("fn-message-header");
-      var text_elem = document.createElement("fn-message-text");
-
-      header_elem.innerHTML = response.statusText;
-      text_elem.innerHTML =
-        "statusCode: " + response.status + " " + response.response;
-      msg_elem.innerHTML = "";
-      msg_elem.appendChild(header_elem);
-      msg_elem.appendChild(text_elem);
-
-      this.hideActiveResult();
-      msg_elem.classList.add("active");
-      loader.removeAttribute("data-loading");
     };
 
 /*********************** Metric Controls *****************************/
@@ -448,39 +360,6 @@
 
       return defaults[key] ;
     };
-
-    
-    this.renderSelectMetricModal = function() {
-      var base = this;
-      var modal = this.querySelector("fn-modal[name='select_metric']");
-      var table = modal.querySelector("fn-table");
-      table.querySelector("table").innerHTML = "";
-
-      Fnord.httpGet('/metrics/list', function(r) {
-        if (r.status == 200) {
-          var metrics = JSON.parse(r.response).metrics;
-          metrics.forEach(function(metric) {
-            var tr_elem = document.createElement("tr");
-            tr_elem.setAttribute('metric-key', metric.key);
-            tr_elem.innerHTML = "<td>" + metric.key + "</td>";
-            table.appendRow(tr_elem);
-          });
-        }
-        modal.show();
-      });
-
-      if (!table.rowClickListener) {
-        table.rowClickListener = true;
-
-        table.addEventListener('fn-table-row-click', function(e) {
-          var key = e.srcElement.getAttribute('metric-key');
-          var control = MetricHandler.addControl.apply(base, [null, true]);
-          MetricHandler.initControl.apply(base, [control, key]);
-          modal.close();
-        }, false);
-      }
-    };
-
 /************************* Generic Controls **************************/
     this.getGenericParamOrDefault = function(key) {
       var defaults = {

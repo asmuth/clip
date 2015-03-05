@@ -9,12 +9,11 @@
   <http://www.gnu.org/licenses/>.
 */
 
+/*
+  handles metric controls in metric-explorer-preview
+*/
 if (typeof MetricHandler == "undefined") {
   MetricHandler = {};
-}
-
-MetricHandler.Foo = function() {
-  console.log("foo");
 }
 
 MetricHandler.setColumns = function(metric_control) {
@@ -159,5 +158,3 @@ MetricHandler.renderSelectModal = function() {
     }, false);
   }
 };
-
-
