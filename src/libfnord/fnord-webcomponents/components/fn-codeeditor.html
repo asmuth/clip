@@ -342,14 +342,16 @@
       var shadow = this.createShadowRoot();
       var tpl = Fnord.getTemplate("fn-codeeditor", "base");
       shadow.appendChild(tpl);
+      var textarea = this.shadowRoot.querySelector("textarea");
 
       var codemirror = CodeMirror.fromTextArea(
-          this.shadowRoot.querySelector("textarea"), 
+          textarea,
           {
             autofocus: false,
             lineNumbers: true,
             lineWrapping: true
-          });
+          }
+      );
 
       // FIXME horrible horrible hack to work around a bug in codemirror where
       // the editor can't be rendered properly before the browser has actually
@@ -370,9 +372,9 @@
       };
 
       this.setValue = function(value) {
+        if (!value) {return;}
         codemirror.setValue(value);
       }
-
     };
 
   };
