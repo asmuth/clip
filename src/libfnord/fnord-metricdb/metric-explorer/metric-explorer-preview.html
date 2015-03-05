@@ -58,7 +58,6 @@
       float: right;
     }
 
-
     #raw.result_pane {
       padding: 10px 10px 20px;
     }
@@ -86,6 +85,21 @@
 
     fn-modal[name='select_metric'] fn-table {
       width: 100%;
+    }
+
+    fn-tab-content .header {
+      width: auto;
+      border: none;
+      float: none;
+      margin: 5px 0 10px;
+    }
+
+    fn-tab-content .header:not(:first-child) {
+      margin-top: 20px;
+    }
+
+    .indent {
+      margin-left: 20px;
     }
   </style>
   <fn-loader name='metric_explorer_preview'>
@@ -140,18 +154,45 @@
     </fn-loader>
 
     <fn-modal-dimmer>
-      <fn-modal id="embed">
+      <fn-modal name="embed">
         <fn-modal-close-icon></fn-modal-close-icon>
         <fn-modal-header>Embed</fn-modal-header>
         <fn-modal-content>
-          <div class="header">Copy this into your HTML Page</div>
-          <code>
-            &lt;iframe<br />&nbsp;&nbsp;&nbsp;&nbsp;width="800"<br />
-            &nbsp;&nbsp;&nbsp;&nbsp;height="400"<br />
-            &nbsp;&nbsp;&nbsp;&nbsp;frameBorder="0"<br />
-            &nbsp;&nbsp;&nbsp;&nbsp;src="<span id="src"></span>"
-            &gt;<br />&lt;/iframe&gt;
-          </code>
+          <fn-tabbar data-content-attached>
+            <fn-tab data-index='0'>IFrame</fn-tab>
+            <fn-tab data-index='1'>URL</fn-tab>
+            <fn-tab data-index='2'>HTML</fn-tab>
+            <fn-tab-content data-index='0'>
+              <div class="header">Copy this into your HTML Page</div>
+              <code>
+                &lt;iframe<br />
+                <div class='indent'>
+                  width="800"<br />
+                  height="400"<br />
+                  frameBorder="0"<br />
+                  src="<span name="src"></span>"
+                </div>
+                &gt;<br />&lt;/iframe&gt;
+              </code>
+            </fn-tab-content>
+            <fn-tab-content data-index='1'>
+              <div class="header">Embed URL</div>
+              <code name='src'></code>
+            </fn-tab-content>
+            <fn-tab-content data-index='2'>
+              <div class="header">Copy this into the header of your HTML Page</div>
+              <code>
+                &lt;script href="<span name='location'></span>
+                /s/fnordmetric.js" type="text/javascript"&gt;&lt;script&gt;
+              </code>
+
+              <div class="header">Copy this into the body of your HTML Page</div>
+              <code>
+                &lt;fm-chart&gt;<br /><div class="indent" name='src'></div>
+                &lt;/fm-chart&gt;
+              </code>
+            </fn-tab-content>
+          </fn-tabbar>
         </fn-modal-content>
       </fn-modal>
     </fn-modal-dimmer>
@@ -222,7 +263,11 @@
     this.initAppbar = function(appbar) {
       var embed_btn = appbar.querySelector("fn-button[name='embed']");
       var autorefresh_btn = appbar.querySelector("fn-button[name='auto_refresh']");
-      var modal = this.querySelector("fn-modal");
+      var modal = this.querySelector("fn-modal[name='embed']");
+
+      var src_elems = modal.querySelectorAll("[name='src']");
+      var location_elems = modal.querySelectorAll("[name='location']");
+      var origin = document.location.origin;
 
       var interval_id;
       var base = this;
@@ -245,9 +290,17 @@
         }
       }, false);
 
+      for (var i = 0; i < location_elems.length; i++) {
+        location_elems[i].innerHTML = origin;
+      }
+
       embed_btn.addEventListener('fn-button-click', function() {
-        modal.querySelector("span").innerHTML =
-          "/metrics/" + base.buildQueryUrl(base.getAttribute('data-format'));
+        var url =  base.buildQueryUrl().query_url;
+
+        for (var i = 0; i < src_elems.length; i++) {
+          src_elems[i].innerHTML = origin + "/metrics/timeseries?" + url;
+        }
+
         modal.show();
       }, false);
     };
