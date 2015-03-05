@@ -204,8 +204,23 @@ Fnord.parseTimestamp = function(timestamp) {
   return time_str;
 }
 
+Fnord.closeOpenDropdowns = function() {
+  var active_items = document.body.querySelectorAll("fn-dropdown-items[data-active]");
+
+  for (var i = 0; i < active_items.length; i++) {
+    var dropdown = active_items[i].parentNode;
+
+    if (dropdown.tagName == 'FN-DROPDOWN') {
+      dropdown.hideDropdown();
+    }
+  }
+}
+
 
 Fnord.ready();
+
 window.onresize = function() {
   Fnord.onWindowResize();
 }
+
+document.body.addEventListener('click', Fnord.closeOpenDropdowns, false);
