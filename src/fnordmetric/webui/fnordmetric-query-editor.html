@@ -224,13 +224,15 @@
       console.log("init appbar");
       var base = this;
 
-      FnordMetric.util.initAppbar(appbar, base.onRefresh, function() {
-        return FnordMetric.util.buildUrlQueryStr(base.getParams());
-      });
-    };
+      var onRefresh = function() {
+        return base.updateUrl();
+      }
 
-    this.onRefresh = function() {
-      console.log("auto refresh");
+      var onEmbed = function() {
+        return FnordMetric.util.buildUrlQueryStr(base.getParams());
+      }
+
+      FnordMetric.util.initAppbar(appbar, onRefresh, onEmbed);
     };
 
     this.getParams = function() {
@@ -356,8 +358,8 @@
 
     this.initButtons = function() {
       var base = this;
-      var app = document.querySelector("fnordmetric-app");
       var splitpane = this.querySelector("fn-splitpane");
+      var refresh_btn = this.querySelector("fn-button#refresh");
 
       var exec_btn = this.querySelector("fn-button#execute");
       exec_btn.onclick = function() {
@@ -369,13 +371,9 @@
         splitpane.toggleSplitDirection();
       }
 
-      var refresh_btn = this.querySelector("fn-button#refresh");
-      refresh_btn.onclick = function() {
-        var url = base.getAttribute('data-url');
-        if (url != null) {
-          app.openUrl(url);
-        }
-      }
+      refresh_btn.addEventListener(
+        'fn-button-click', function() {base.updateUrl();}, false);
+
 
       this.querySelector("#ttp_query").init(exec_btn);
       this.querySelector("#ttp_view").init(split_btn);
