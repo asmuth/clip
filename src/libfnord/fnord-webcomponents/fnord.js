@@ -205,13 +205,11 @@ Fnord.parseTimestamp = function(timestamp) {
 }
 
 Fnord.closeOpenDropdowns = function() {
-  var active_items = document.body.querySelectorAll("fn-dropdown-items[data-active]");
+  var active_items = document.body.querySelectorAll("[data-active]");
 
   for (var i = 0; i < active_items.length; i++) {
-    var dropdown = active_items[i].parentNode;
-
-    if (dropdown.tagName == 'FN-DROPDOWN') {
-      dropdown.hideDropdown();
+    if (typeof active_items[i].onDocumentClick == 'function') {
+      active_items[i].onDocumentClick();
     }
   }
 }

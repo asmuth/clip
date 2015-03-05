@@ -24,6 +24,10 @@
       }
     };
 
+    this.onDocumentClick = function() {
+      this.hideDropdown();
+    }
+
     // Checks if a header_elem exists and renders one if not
     this.initHeaderItem = function() {
       if (this.querySelector("fn-dropdown-input")) {
