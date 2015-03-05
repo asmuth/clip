@@ -73,8 +73,8 @@ fn-dropdown-items,
   will-change: transform,opacity;
 }
 
-fn-dropdown-items[data-active],
-.fn-dropdown-items[data-active] {
+fn-dropdown[data-active] fn-dropdown-items,
+.fn-dropdown[data-active] .fn-dropdown-items{
   display: inline-block;
 }
 
