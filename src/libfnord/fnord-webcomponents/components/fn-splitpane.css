@@ -1,0 +1,50 @@
+/*
+  This file is part of the "FnordMetric" project
+    Copyright (c) 2014 Laura Schlimmer
+    Copyright (c) 2014 Paul Asmuth, Google Inc.
+
+  FnordMetric is free software: you can redistribute it and/or modify it under
+  the terms of the GNU General Public License v3.0. You should have received a
+  copy of the GNU General Public License along with this program. If not, see
+  <http://www.gnu.org/licenses/>.
+*/
+
+fn-splitpane,
+.fn-splitpane {
+  display:block;
+  box-sizing: content-box;
+  overflow: hidden;
+  position: relative;
+  display:block;
+  height: 100%;
+  width: 100%;
+}
+
+fn-splitpane-left,
+.fn-splitpane-left,
+fn-splitpane-right,
+.fn-splitpane-right {
+  position: absolute;
+  box-sizing: border-box;
+  box-sizing: content-box;
+  overflow: hidden;
+  outline: none;
+  display:block;
+  height: 100%;
+
+}
+
+fn-splitpane-resizer,
+.fn-splitpane-resizer {
+  display:block;
+  z-index: 100;
+  background: #d7e4f2;
+  position:absolute;
+
+}
+
+fn-splitpane-resizer:hover,
+.fn-splitpane-resizer:hover {
+  background: #d7e4f2;
+}
+

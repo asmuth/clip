@@ -8,65 +8,14 @@
   copy of the GNU General Public License along with this program. If not, see
   <http://www.gnu.org/licenses/>.
 -->
-<style type='text/css'>
-  fn-splitpane {
-    display: block;
-  }
 
-</style>
 <template id="fn-splitpane-base-tpl">
-  <style>
-    #splitter {
-      box-sizing: content-box;
-      overflow: hidden;
-      position: relative;
-      display:block;
-      height: 100%;
-      width: 100%;
-    }
-
-    #splitter .pane {
-      position: absolute;
-      box-sizing: border-box;
-      color: #959595;
-      box-sizing: content-box;
-      overflow: hidden;
-      outline: none;
-      display:block;
-      height: 100%;
-    }
-
-    .resizer_tooltip {
-      display:block;
-      z-index: 100;
-      background: #d7e4f2;
-      position:absolute;
-
-    }
-
-    .resizer_tooltip:hover {
-      background: #d7e4f2;
-    }
-
-
-  </style>
-  <div id="splitter">
-    <div class="pane left">
-      <content select="fn-splitpane-left"></content>
-    </div>
-    <div class="resizer_tooltip"></div>
-    <div class="pane right">
-      <content select="fn-splitpane-right"></content>
-    </div>
-  </div>
 </template>
 
 <script type="text/javascript">
   var SplitPaneComponent = function() {
     this.createdCallback = function() {
-      var shadow = this.createShadowRoot();
-      var tpl = Fnord.getTemplate("fn-splitpane", "base");
-      shadow.appendChild(tpl);
+
       this.renderView();
       this.initResizerTooltip();
     };
