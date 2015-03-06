@@ -7,25 +7,6 @@
   the terms of the GNU General Public License v3.0. You should have received a
   copy of the GNU General Public License along with this program. If not, see
   <http://www.gnu.org/licenses/>
-    fn-tab {
-    float:left;
-    text-decoration: none;
-    padding-right: 13px;
-    padding-left: 13px;
-    margin-right: 50px;
-    color: #444;
-    border: 1px solid #444;
-    background-color: #fff;
-  }
-
-  fn-tab:hover {
-    cursor:pointer;
-  }
-
-  fn-tab[data-active='active'] {
-    background-color: rgb(226, 232, 237);
-  }
-
 -->
 <template id='fn-tabbar-base-tpl'>
 </template>
@@ -48,6 +29,11 @@
         var index = active_tab.getAttribute('data-index');
         this.setContent(index);
       }
+
+      if (this.hasAttribute('data-evenly-sized')) {
+        this.setTabWidth();
+      }
+
       this.observeTabs();
     };
 
@@ -65,6 +51,19 @@
         tab_content.setAttribute('data-active', 'active');
       }
     };
+
+    this.setTabWidth = function() {
+      var tabs = this.querySelectorAll("fn-tab");
+
+      if (tabs.length == 0) {
+        return;
+      }
+
+      var width = 100 / tabs.length;
+      for (var i = 0; i < tabs.length; i++) {
+        tabs[i].style.width = width + "%";
+      }
+    }
 
     this.observeTabs = function() {
       var base = this;

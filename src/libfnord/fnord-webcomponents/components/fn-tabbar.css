@@ -20,19 +20,20 @@ fn-tabbar,
   line-height: 1.33;
   color: rgba(0,0,0,.8);
 }
+
 fn-tabbar fn-tab,
 .fn-tabbar .fn-tab {
   display: inline-block;
-  padding: .76em .95em;
+  padding: .76em 1.4em;
+  margin: 0 0 0 -4px;
   background-color: transparent;
   border-left: 1px solid transparent;
   border-right: 1px solid transparent;
   border-top: 1px solid transparent;
-  padding-left: 1.4em;
-  padding-right: 1.4em;
   color: rgba(0, 0, 0, 0.8);
   vertical-align: middle;
   line-height: 1;
+  text-align: center;
   text-decoration: none;
   box-sizing: border-box;
   -webkit-tap-highlight-color: transparent;
@@ -43,6 +44,12 @@ fn-tabbar fn-tab,
   -webkit-transition: opacity .2s ease,background .2s ease,box-shadow .2s ease;
   transition: opacity .2s ease,background .2s ease,box-shadow .2s ease;
 }
+
+fn-tabbar fn-tab:first-child,
+.fn-tabbar .fn-tab:first-child {
+  margin-left: 0;
+}
+
 fn-tabbar fn-tab:before,
 .fn-tabbar .fn-tab:before {
   display: none;
