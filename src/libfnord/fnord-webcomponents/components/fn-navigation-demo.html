@@ -20,7 +20,7 @@
         <fn-navigation-icon><i class="fa fa-heart"></i></fn-navigation-icon>
         <fn-navigation-text>Likes</fn-navigation-text>
       </fn-navigation-item>
-      <fn-navigation-item data-position='right'>
+      <fn-navigation-item class='right'>
         <fn-navigation-icon><i class="fa fa-home"></i></fn-navigation-icon>
         <fn-navigation-text>Home</fn-navigation-text>
       </fn-navigation-item>
@@ -28,17 +28,20 @@
   </section>
 
   <section>
-    <h1><i>Example 1 &raquo;</i> Navigation Menu with Searchbar</h1>
+    <h1><i>Example 2 &raquo;</i> Navigation Menu with Searchbar</h1>
     <fn-navigation style="width: 40%;">
-      <fn-navigation-item>
+      <fn-navigation-item class="left">
         <fn-navigation-icon><i class="fa fa-home"></i></fn-navigation-icon>
         <fn-navigation-text>Home</fn-navigation-text>
       </fn-navigation-item>
-      <fn-navigation-item>
+      <fn-navigation-item class="left">
         <fn-navigation-icon><i class="fa fa-envelope"></i></fn-navigation-icon>
         <fn-navigation-text>Messages</fn-navigation-text>
       </fn-navigation-item>
-      <fn-navigation-item data-position='right' data-search>
+      <fn-navigation-item class="right">
+        <fn-search data-style='transparent'>
+          <fn-input class='transparent' data-placeholder="Search..."></fn-input>
+        </fn-search>
       </fn-navigation-item>
     </fn-navigation>
   </section>

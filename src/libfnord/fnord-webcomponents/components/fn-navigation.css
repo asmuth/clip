@@ -57,7 +57,7 @@ fn-navigation-item,
   position: relative;
   display: inline-block;
   padding: 0.78571em 0.95em;
-  margin: 0 0 0 -4px;
+  margin: 0 0 0 -3px;
   border-top: 0em solid transparent;
   background: none;
   vertical-align: middle;
@@ -186,7 +186,6 @@ fn-navigation-item fn-search,
   vertical-align:middle;
   display: inline-block;
   min-width: 120px;
-  height: 2.5em;
 }
 
 .navigation .item.search {
