@@ -1,0 +1,205 @@
+/**
+ * Adapted from: Semantic UI:
+ *   https://github.com/Semantic-Org/Semantic-UI
+ *   http://www.semantic-ui.com/
+ */
+
+/*--------------
+ Navigation
+---------------*/
+fn-navigation,
+.fn-navigation {
+  display: block;
+  margin: 0;
+  background: #ffffff;
+  line-height: 1.33;
+  font-weight: normal;
+  box-shadow: 0px 0px 0px 1px rgba(39, 41, 43, 0.15), 0px 1px 2px 0 rgba(0, 0, 0, 0.05);
+  border-radius: 0.2857rem;
+}
+
+fn-navigation:after,
+.fn-navigation:after {
+  content: '';
+  display: block;
+  height: 0px;
+  clear: both;
+  visibility: hidden;
+}
+
+fn-navigation:first-child,
+.fn-navigation:first-child {
+  margin-top: 0rem;
+}
+
+fn-navigation:last-child
+.fn-navigation:last-child {
+  margin-bottom: 0rem;
+}
+
+/*--------------
+ Navigation Item
+---------------*/
+
+/* Text Color */
+fn-navigation-item,
+.fn-navigation-item {
+  color: rgba(0, 0, 0, 0.8);
+}
+
+fn-navigation-item fn-navigation-item,
+.fn-navigation-item .fn-navigation-item {
+  color: rgba(0, 0, 0, 0.5);
+}
+
+fn-navigation-item,
+.fn-navigation-item {
+  position: relative;
+  display: inline-block;
+  padding: 0.78571em 0.95em;
+  margin: 0 0 0 -4px;
+  border-top: 0em solid transparent;
+  background: none;
+  vertical-align: middle;
+  line-height: 1;
+  text-decoration: none;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+  -webkit-transition: opacity 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+          transition: opacity 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+}
+
+fn-navigation-item:before,
+.fn-navigation-item:before {
+  position: absolute;
+  content: '';
+  top: 0%;
+  right: 0px;
+  width: 1px;
+  height: 100%;
+  background: -webkit-linear-gradient(rgba(0, 0, 0, 0.05) 0%, rgba(0, 0, 0, 0.1) 50%, rgba(0, 0, 0, 0.05) 100%);
+  background: linear-gradient(rgba(0, 0, 0, 0.05) 0%, rgba(0, 0, 0, 0.1) 50%, rgba(0, 0, 0, 0.05) 100%);
+}
+
+fn-navigation-item:first-child,
+.fn-navigation-item:first-child {
+  border-radius: 0.2857rem 0px 0px 0.2857rem;
+  margin: 0;
+}
+
+/* Floated Content */
+fn-navigation-item.left,
+.fn-navigation-item.left {
+  float: left;
+}
+fn-navigation-item.right,
+.fn-navigation-item.right {
+  float: right;
+}
+
+fn-navigation-item.right:before,
+.fn-navigation-item.right:before {
+  right: auto;
+  left: 0px;
+}
+
+
+/*--------------
+  Text
+---------------*/
+fn-navigation-text,
+.fn-navigation-text{
+  display: inline-block;
+  position: relative;
+}
+
+
+/*--------------
+  Icons
+---------------*/
+
+fn-navigation-icon,
+.fn-navigation-icon {
+  display:inline-block;
+  opacity: 0.75;
+  float: none;
+  margin: 0em 0.25em 0em 0em;
+  width: 1.23em;
+  height: .9em;
+  font-style: normal;
+  line-height: 1;
+  font-weight: 400;
+  text-decoration: inherit;
+  text-align: center;
+  speak: none;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
+
+.ui.menu .item > .dropdown.icon {
+  float: right;
+  margin-left: 1em;
+}
+
+/*--------------
+  Hover
+---------------*/
+fn-navigation-item:hover,
+.fn-navigation-item:hover {
+  cursor: pointer;
+  background: rgba(0, 0, 0, 0.03);
+  color: rgba(0, 0, 0, 0.8);
+}
+
+/*--------------
+  Pressed
+---------------*/
+fn-navigation-item:active,
+.fn-navigation-item:active {
+  background: rgba(0, 0, 0, 0.03);
+  color: rgba(0, 0, 0, 0.8);
+}
+
+/*--------------
+  Active
+---------------*/
+fn-navigation-item[data-active],
+.fn-navigation-item[data-active] {
+  background: rgba(0, 0, 0, 0.03);
+  color: rgba(0, 0, 0, 0.8);
+  font-weight: normal;
+  box-shadow: 0em 2px 0em inset;
+}
+
+fn-navigation-item[data-active] fn-navigation-icon,
+.fn-navigation-item[data-active] .fn-navigation-icon {
+  opacity: 1;
+}
+
+fn-navigation-item fn-search,
+.fn-navigation-item .fn-search{
+  position: relative;
+  vertical-align:middle;
+  display: inline-block;
+  min-width: 120px;
+  height: 2.5em;
+}
+
+.navigation .item.search {
+  padding: 0;
+  padding-left:10px;
+}
+
+.navigation .item.search[data-active] {
+  background: none;
+  box-shadow: none;
+}
+
+.navigation .item.search:hover {
+  background: none;
+}
+
