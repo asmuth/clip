@@ -16,10 +16,12 @@
       input.type = 'text';
       this.insertBefore(input, this.firstChild);
       var base = this;
+      var type;
 
       // input options
       if (this.hasAttribute('data-placeholder')) {this.setPlaceholder();}
       if (this.hasAttribute('data-value')) {this.setValue();}
+      if (type = this.getAttribute('data-type')) {this.setInputType(type);}
       if (this.hasAttribute('data-readonly') || this.hasAttribute('data-disabled')) {
         this.setReadonly();
       }
@@ -47,6 +49,11 @@
         case 'data-placeholder':
           this.setPlaceholder();
           break;
+        case 'data-type':
+          if (new_val) {
+            this.setType(new_val);
+          }
+          break;
         case 'data-readonly':
         case 'data-disabled':
           this.setReadonly();
@@ -68,6 +75,10 @@
       this.querySelector('input').setAttribute(
         'placeholder', this.getAttribute('data-placeholder'));
     };
+
+    this.setInputType = function(type) {
+      this.querySelector('input').type = type;
+    }
 
     this.setReadonly = function() {
       this.querySelector("input").readOnly = true;
