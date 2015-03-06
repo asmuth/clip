@@ -14,71 +14,17 @@
 <script type='text/javascript'>
   var NavigationComponent = function() {
     this.createdCallback = function() {
-
-
-      this.render();
-    };
-
-    this.render = function() {
       var base = this;
-      var navigation = this.shadowRoot.querySelector(".navigation");
-      var items = this.querySelectorAll('fn-navigation-item');
+      var items = this.querySelectorAll("fn-navigation-item");
       for (var i = 0; i < items.length; i++) {
-        var item = document.createElement("div");
-        item.className = "item";
-
-        if (items[i].hasAttribute('data-position')) {
-          item.className += " " + items[i].getAttribute('data-position');
-        }
-
-        var icon = items[i].querySelector("fn-navigation-icon");
-        if (icon) {
-          var icon_elem = document.createElement("div");
-          icon_elem.className = "icon";
-          icon_elem.innerHTML = icon.innerHTML;
-          item.appendChild(icon_elem);
-        }
-
-        var text = items[i].querySelector('fn-navigation-text');
-        if (text) {
-          var text_elem = document.createElement("div");
-          text_elem.className = "text";
-          text_elem.innerHTML = text.innerHTML;
-          item.appendChild(text_elem);
-        }
-
-        if (items[i].hasAttribute('data-search')) {
-          var search = document.createElement("fn-search");
-          var search_icon = document.createElement("fn-search-icon");
-          search_icon.innerHTML = "<i class='fa fa-search'></i>";
-          search.appendChild(search_icon);
-          search.setAttribute('data-style', 'transparent');
-          search.setAttribute('data-placeholder', 'Search...');
-
-          item.className += " search";
-          item.appendChild(search);
-
-
-          search.addEventListener('fn-search-autocomplete', function() {
-            console.log("autocomplete");
-            /*var term = search.getValue();
-            var res = [{query :"asdasd"}, {query : "2353242"}, {query : "234234"}];
-            search.autocomplete(term, res);*/
-
-          }, false);
-
-        }
-
-
-        item.addEventListener('click', function() {
+        items[i].addEventListener('click', function() {
           base.onItemClick(this);
         }, false);
-        navigation.appendChild(item);
       }
-    }
+    };
 
     this.onItemClick = function(item) {
-      var active_item = this.shadowRoot.querySelector(".item[data-active]");
+      var active_item = this.querySelector("fn-navigation-item[data-active]");
       if (active_item) {
         active_item.removeAttribute('data-active');
       }
