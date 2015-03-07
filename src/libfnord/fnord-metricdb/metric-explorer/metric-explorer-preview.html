@@ -322,11 +322,11 @@
             'statusText': r.statusText,
             'response': "Empty Table"
           }
-          return PreviewRenderer.renderError.apply(this, [resp]);
+          return PreviewRenderer.renderError.apply(base, [resp]);
 
         }
 
-        return PreviewRenderer.renderError.apply(this, [r]);
+        return PreviewRenderer.renderError.apply(base, [r]);
       });
     };
 

@@ -100,7 +100,3 @@ PreviewRenderer.renderError = function(response) {
   msg_elem.classList.add("active");
   loader.removeAttribute("data-loading");
 };
-
-
-
-
