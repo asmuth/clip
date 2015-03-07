@@ -75,8 +75,6 @@ AdminUI::AdminUI(
   webui_bundle_.addComponent("fnordmetric/fnordmetric-webui-cockpit.css");
 
   webui_bundle_.addComponent("fnordmetric/fnordmetric-webui-util.js");
-  webui_bundle_.addComponent(
-    "fnordmetric/fnordmetric-embed-query-popup.html");
 }
 
 void AdminUI::handleHTTPRequest(
