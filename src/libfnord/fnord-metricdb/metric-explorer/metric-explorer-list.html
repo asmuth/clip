@@ -139,7 +139,7 @@
       var onSearchSubmit = (function(base) {
         return function(e) {
           var url = "search?q=" + encodeURIComponent(e.srcElement.getValue());
-          Fnord.openUrl(url);
+          FnordMetric.openUrl(url);
         }
       })(this);
 

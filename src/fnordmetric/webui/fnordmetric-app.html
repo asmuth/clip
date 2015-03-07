@@ -50,7 +50,7 @@
             </fn-button>-->
           </fn-appbar-section>
 
-          <fn-appbar-section data-position="right">
+          <fn-appbar-section data-position="right" name='custom'>
             <fn-button name="embed" data-size='tiny'>
               <i class='fa fa-share'></i>Embed
             </fn-button>
@@ -190,7 +190,7 @@
       var url = FnordMetric.util.parseUrlQueryString(raw_url);
       var query_params = url["query_params"];
       var custom_appbar =
-        this.querySelector("fn-appbar-section[data-position='right']");
+        document.body.querySelector("fn-appbar-section[name='custom']");
 
       var view_name = this.routes[url["path"]];
       if (view_name == undefined) {
