@@ -14,89 +14,54 @@
 <script type="text/javascript">
   var MenuComponent = function() {
     this.createdCallback = function() {
+      var option = this.getAttribute('data-option');
+
+      if (option == 'accordion') {
+        this.handleAccordionMenu();
+      }
+
+      this.observeItems();
     };
 
-    this.renderMenu = function(in_elem, out_elem) {
-      for (var i = 0; i < in_elem.children.length; ++i) {
-        var elem = in_elem.children[i];
-        var base = this;
+    this.attributeChangedCallback = function(attr, old_val, new_val) {
+      if (attr == 'data-option' && new_val == 'accordion') {
+        this.handleAccordionMenu();
+        return;
+      }
 
-        if (elem.tagName == "FN-MENU-ITEM") {
-          var onItemClick = (function(base, item) {
-            return function(e) {
-              base.clickItem(item, e.srcElement);
-            };
-          })(this, elem);
+      if (attr == 'data-resolved') {
+        this.observeItems();
+      }
+    };
 
-          var li_elem = document.createElement("li");
-          li_elem.className = "item";
-          li_elem.innerHTML = elem.innerHTML;
-          li_elem.addEventListener("click", onItemClick, false);
-          out_elem.appendChild(li_elem);
+    this.handleAccordionMenu = function() {
+      var base = this;
+      var title_elems = this.querySelectorAll("fn-menu-title");
 
-          li_elem.onclick = base.fireButtonClickEvent;
-        }
+      for (var i = 0; i < title_elems.length; i++) {
+        title_elems[i].addEventListener('click', function() {
+          base.toggleAccordionSection(this);
+        }, false);
+      }
+    };
 
-        if (elem.tagName == "FN-SUBMENU") {
-          var ul_elem = document.createElement("ul");
-          this.renderMenu(elem, ul_elem);
+    this.observeItems = function() {
+      var base = this;
+      var items = this.querySelectorAll("fn-menu-item");
 
-          var li_elem = document.createElement("li");
-          li_elem.className = "submenu";
-
-          var type = this.getAttribute('data-type');
-          if (type != null) {
-            li_elem.className += " " +  type;
-          }
-
-          var submenu_title = elem.querySelector("fn-submenu-title");
-          if (submenu_title) {
-            var title_elem = document.createElement("div");
-            title_elem.className = "submenu_title";
-            title_elem.innerHTML = submenu_title.innerHTML;
-            li_elem.appendChild(title_elem);
-
-            if (type == 'accordion') {
-              title_elem.onclick = function() {
-                base.toggleAccordionSubmenu(this);
-              }
-            }
-          }
-
-          li_elem.appendChild(ul_elem);
-          out_elem.appendChild(li_elem);
-
-        }
+      for (var i = 0; i < items.length; i++) {
+        items[i].addEventListener('click', function() {
+          base.onItemClick(this);
+        }, false);
       }
     }
 
-    this.toggleAccordionSubmenu = function(elem) {
-      var active_submenu = this.shadowRoot.querySelector("li[data-active]");
+    this.onItemClick = function(item) {
+      var active_items = this.querySelectorAll("fn-menu-item[data-active]");
 
-      if (!(elem.parentNode.hasAttribute('data-active'))) {
-        console.log("set attribute");
-        elem.parentNode.setAttribute('data-active', 'active');
-      }
-
-      if (active_submenu) {
-        active_submenu.removeAttribute('data-active');
-      }
-    }
-
-    this.clickItem = function(item, shadow) {
-      var active_items = this.querySelectorAll("li.item[data-active]");
       for (var i = 0; i < active_items.length; ++i) {
         active_items[i].removeAttribute("data-active");
       }
-
-      var active_shadow_items = this.shadowRoot.querySelectorAll(
-          "li.item[data-active]");
-      for (var i = 0; i < active_shadow_items.length; ++i) {
-        active_shadow_items[i].removeAttribute("data-active");
-      }
-
-      shadow.setAttribute("data-active", true);
-      item.setAttribute("data-active", true);
 
       var ev = new CustomEvent("fn-menu-item-click", {
         bubbles: true,
@@ -105,6 +70,17 @@
       item.dispatchEvent(ev);
     }
 
+    this.toggleAccordionSection = function(elem) {
+      var active_section = this.querySelector("fn-menu-section[data-active]");
+
+      if (!(elem.parentNode.hasAttribute('data-active'))) {
+        elem.parentNode.setAttribute('data-active', 'active');
+      }
+
+      if (active_section) {
+        active_section.removeAttribute('data-active');
+      }
+    }
   };
 
   window.addEventListener("fn-ready", function() {
