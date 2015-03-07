@@ -12,6 +12,8 @@ fn-menu,
   font-weight: normal;
   box-shadow: 0px 0px 0px 1px rgba(39, 41, 43, 0.15), 0px 1px 2px 0 rgba(0, 0, 0, 0.05);
   border-radius: 0.2857rem;
+  overflow-x: hidden;
+  overflow-y: auto;
 }
 
 fn-menu::after,
