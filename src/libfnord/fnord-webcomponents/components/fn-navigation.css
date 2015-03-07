@@ -167,16 +167,16 @@ fn-navigation-item:active,
 /*--------------
   Active
 ---------------*/
-fn-navigation-item[data-active],
-.fn-navigation-item[data-active] {
+fn-navigation-item[data-active]:not(.static),
+.fn-navigation-item[data-active]:not(.static) {
   background: rgba(0, 0, 0, 0.03);
   color: rgba(0, 0, 0, 0.8);
   font-weight: normal;
   box-shadow: 0em 2px 0em inset;
 }
 
-fn-navigation-item[data-active] fn-navigation-icon,
-.fn-navigation-item[data-active] .fn-navigation-icon {
+fn-navigation-item[data-active]:not(.static) fn-navigation-icon,
+.fn-navigation-item[data-active]:not(.static) .fn-navigation-icon {
   opacity: 1;
 }
 

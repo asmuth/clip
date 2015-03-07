@@ -10,6 +10,7 @@
 -->
 <template id='fn-navigation-demo-base-tpl'>
   <section>
+    <!-- Add class static to navigation item if you don't want to set active styles -->
     <h1><i>Example 1 &raquo;</i> Navigation Menu</h1>
     <fn-navigation>
       <fn-navigation-item>
@@ -20,9 +21,13 @@
         <fn-navigation-icon><i class="fa fa-heart"></i></fn-navigation-icon>
         <fn-navigation-text>Likes</fn-navigation-text>
       </fn-navigation-item>
-      <fn-navigation-item class='right'>
+      <fn-navigation-item>
         <fn-navigation-icon><i class="fa fa-home"></i></fn-navigation-icon>
         <fn-navigation-text>Home</fn-navigation-text>
+      </fn-navigation-item>
+      <fn-navigation-item class="right static">
+        <fn-navigation-icon><i class="fa fa-sign-in"></i></fn-navigation-icon>
+        <fn-navigation-text>Login</fn-navigation-text>
       </fn-navigation-item>
     </fn-navigation>
   </section>
