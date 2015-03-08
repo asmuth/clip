@@ -106,8 +106,8 @@ fn-navigation[data-evenly-sized] fn-navigation-item:last-child,
 
 fn-navigation.inline fn-navigation-item:last-child:before,
 .fn-navigation.inline .fn-navigation-item:last-child:before,
-fn-navigation[data-evenly-sized] fn-navigation-item:last-child,
-.fn-navigation[data-evenly-sized] .fn-navigation-item:last-child {
+fn-navigation[data-evenly-sized] fn-navigation-item:last-child:before,
+.fn-navigation[data-evenly-sized] .fn-navigation-item:last-child:before {
   width: 0px;
 }
 
