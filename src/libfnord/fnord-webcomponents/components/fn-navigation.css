@@ -18,6 +18,11 @@ fn-navigation,
   border-radius: 0.2857rem;
 }
 
+fn-navigation.inline,
+.fn-naivgation.inline {
+  display: inline-block;
+}
+
 fn-navigation:after,
 .fn-navigation:after {
   content: '';
@@ -57,7 +62,7 @@ fn-navigation-item,
   position: relative;
   display: inline-block;
   padding: 0.78571em 0.95em;
-  margin: 0 0 0 -3px;
+  margin: 0 0 0 -4px;
   border-top: 0em solid transparent;
   background: none;
   vertical-align: middle;
@@ -90,6 +95,17 @@ fn-navigation-item:first-child,
   border-radius: 0.2857rem 0px 0px 0.2857rem;
   margin: 0;
 }
+
+fn-navigation.inline fn-navigation-item:last-child,
+.fn-navigation.inline .fn-navigation-item:last-child {
+  border-radius: 0px 0.2857rem 0.2857rem 0px;
+}
+
+fn-navigation.inline fn-navigation-item:last-child:before,
+.fn-navigation.inline .fn-navigation-item:last-child:before {
+  width: 0px;
+}
+
 
 /* Floated Content */
 fn-navigation-item.left,
