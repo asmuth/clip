@@ -92,6 +92,11 @@ fn-menu-item:hover,
   color: rgba(0, 0, 0, 0.8);
 }
 
+fn-menu-item[data-active] {
+  background: rgba(0,0,0,.03);
+  border-radius: 0;
+  box-shadow: 2px 0 0 inset;
+}
 
 /*--------------
  Menu Section
@@ -176,6 +181,8 @@ fn-menu-section fn-menu-item[data-active],
 .fn-menu-section fn-menu-item[data-active] {
   color: rgba(0,0,0,.8);
   font-weight: 500;
+  background: transparent;
+  box-shadow: none;
 }
 
 fn-menu-section fn-menu-item:hover,

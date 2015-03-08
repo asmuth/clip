@@ -63,6 +63,8 @@
         active_items[i].removeAttribute("data-active");
       }
 
+      item.setAttribute("data-active", "active");
+
       var ev = new CustomEvent("fn-menu-item-click", {
         bubbles: true,
         cancelable: true
