@@ -148,8 +148,8 @@ fn-navigation-icon,
 /*--------------
   Hover
 ---------------*/
-fn-navigation-item:hover,
-.fn-navigation-item:hover {
+fn-navigation-item:not(.static):hover,
+.fn-navigation-item:not(.static):hover {
   cursor: pointer;
   background: rgba(0, 0, 0, 0.03);
   color: rgba(0, 0, 0, 0.8);
@@ -167,16 +167,16 @@ fn-navigation-item:active,
 /*--------------
   Active
 ---------------*/
-fn-navigation-item[data-active]:not(.static),
-.fn-navigation-item[data-active]:not(.static) {
+fn-navigation-item[data-active]:not(.inactive),
+.fn-navigation-item[data-active]:not(.inactive) {
   background: rgba(0, 0, 0, 0.03);
   color: rgba(0, 0, 0, 0.8);
   font-weight: normal;
   box-shadow: 0em 2px 0em inset;
 }
 
-fn-navigation-item[data-active]:not(.static) fn-navigation-icon,
-.fn-navigation-item[data-active]:not(.static) .fn-navigation-icon {
+fn-navigation-item[data-active]:not(.inactive) fn-navigation-icon,
+.fn-navigation-item[data-active]:not(.inactive) .fn-navigation-icon {
   opacity: 1;
 }
 
