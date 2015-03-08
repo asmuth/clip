@@ -16,12 +16,32 @@
     this.createdCallback = function() {
       var base = this;
       var items = this.querySelectorAll("fn-navigation-item");
+
+      if (this.hasAttribute('data-evenly-sized')) {
+        this.setItemsWidth();
+      }
+
       for (var i = 0; i < items.length; i++) {
         if (!items[i].classList.contains("static")) {
           items[i].addEventListener('click', function() {
             base.onItemClick(this);
           }, false);
         }
+      }
+    };
+
+    this.attributeChangedCallback = function(attr, old_val, new_val) {
+      if (attr == 'data-evenly-sized') {
+        this.setItemsWidth();
+      }
+    };
+
+    this.setItemsWidth = function() {
+      var items = this.querySelectorAll("fn-navigation-item");
+      var width = (100 / items.length) + "%";
+
+      for (var i = 0; i < items.length; i++) {
+        items[i].style.width = width;
       }
     };
 

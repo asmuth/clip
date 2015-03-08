@@ -68,6 +68,7 @@ fn-navigation-item,
   vertical-align: middle;
   line-height: 1;
   text-decoration: none;
+  text-align: center;
   box-sizing: border-box;
   -webkit-tap-highlight-color: transparent;
   -webkit-user-select: none;
@@ -97,12 +98,16 @@ fn-navigation-item:first-child,
 }
 
 fn-navigation.inline fn-navigation-item:last-child,
-.fn-navigation.inline .fn-navigation-item:last-child {
+.fn-navigation.inline .fn-navigation-item:last-child,
+fn-navigation[data-evenly-sized] fn-navigation-item:last-child,
+.fn-navigation[data-evenly-sized] .fn-navigation-item:last-child {
   border-radius: 0px 0.2857rem 0.2857rem 0px;
 }
 
 fn-navigation.inline fn-navigation-item:last-child:before,
-.fn-navigation.inline .fn-navigation-item:last-child:before {
+.fn-navigation.inline .fn-navigation-item:last-child:before,
+fn-navigation[data-evenly-sized] fn-navigation-item:last-child,
+.fn-navigation[data-evenly-sized] .fn-navigation-item:last-child {
   width: 0px;
 }
 
