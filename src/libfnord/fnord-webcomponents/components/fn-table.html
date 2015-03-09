@@ -333,16 +333,6 @@
       return data_per_page;
     };
 
-    this.fireSortEvent = function(column) {
-      var sortEvent = new CustomEvent("fn-table-column-sort", {
-        detail: {},
-        bubbles: true,
-        cancelable: true
-      });
-
-      column.dispatchEvent(sortEvent);
-    }
-
     /* pagination element functions */
     this.getNumberOfItems = function() {
       return this.querySelectorAll("tr").length;
