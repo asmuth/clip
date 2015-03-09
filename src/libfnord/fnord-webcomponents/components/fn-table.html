@@ -64,6 +64,8 @@
           th_elem.setAttribute('data-column-index', index);
           th_elem.setAttribute('data-sortable', col.getAttribute('data-sortable'));
           th_elem.className += " sortable ";
+
+
           if (col.getAttribute("data-sort-state") != null) {
             th_elem.className += col.getAttribute("data-sort-state");
           }
@@ -73,7 +75,8 @@
               base.resortRows(index,col.getAttribute('data-sortable'),col.getAttribute('data-presort'));
             }
           }
-          base.observeSortableColumns(th_elem);
+
+          base.observeSortableColumns(th_elem, col);
         }
 
         th_elem.innerHTML = col.innerHTML;
@@ -209,12 +212,17 @@
       }
     };
 
-    this.observeSortableColumns = function(column) {
+    this.observeSortableColumns = function(th_elem, column) {
       var base = this;
-      column.onclick = function() {
+
+      th_elem.onclick = function() {
+        if (typeof base.customResortRows == 'function') {
+          base.customResortRows(column);
+        } else {
         base.resortRows(
           this.getAttribute('data-column-index'),
           this.getAttribute('data-sortable'));
+        }
       }
     };
 
@@ -323,6 +331,16 @@
 
       this.setAttribute('data-per-page', data_per_page);
       return data_per_page;
+    };
+
+    this.fireSortEvent = function(column) {
+      var sortEvent = new CustomEvent("fn-table-column-sort", {
+        detail: {},
+        bubbles: true,
+        cancelable: true
+      });
+
+      column.dispatchEvent(sortEvent);
     }
 
     /* pagination element functions */
