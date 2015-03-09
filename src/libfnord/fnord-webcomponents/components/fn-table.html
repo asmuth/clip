@@ -67,7 +67,7 @@
 
 
           if (col.getAttribute("data-sort-state") != null) {
-            th_elem.className += col.getAttribute("data-sort-state");
+            th_elem.classList.add(col.getAttribute("data-sort-state"), "active");
           }
           if (col.hasAttribute('data-presort')) {
             col.removeAttribute('data-presort');
@@ -216,11 +216,12 @@
       var base = this;
 
       th_elem.onclick = function() {
+        var index = this.getAttribute('data-column-index');
         if (typeof base.customResortRows == 'function') {
-          base.customResortRows(column);
+          base.customResortRows(column, index);
         } else {
         base.resortRows(
-          this.getAttribute('data-column-index'),
+          index,
           this.getAttribute('data-sortable'));
         }
       }

@@ -70,6 +70,7 @@ fn-table /deep/ thead th.sortable:after {
   font-size: 1em;
   content: "\f0d8";
   float: right;
+  opacity: 0.5;
 }
 
 fn-table /deep/ thead th.sortable.desc:after {
@@ -80,7 +81,11 @@ fn-table /deep/ thead th.sortable.asc:after {
   content: "\f0d8";
 }
 
-fn-table /deep/ thead th.sortable:hover:before {
+fn-table /deep/ thead th.sortable.active:after {
+  opacity: 1;
+}
+
+fn-table /deep/ thead th.sortable:hover:after {
   cursor:pointer;
 }
 
