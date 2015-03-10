@@ -147,7 +147,7 @@
       backward_tooltip.onclick = function() {
         var current_page = base.current_page;
         if (current_page > 0 || base.hasAttribute('data-circling')) {
-          var new_page = ((current_page + pages) % (pages + 1));
+          var new_page = (current_page + pages - 1) % pages;
           cb(new_page, caller);
           base.current_page = new_page;
           base.renderTitle();
@@ -156,10 +156,10 @@
 
       forward_tooltip.onclick = function() {
         var current_page = base.current_page;
-        if (current_page < pages -1) {
+        if (current_page < pages - 1) {
           base.current_page = current_page + 1;
           base.renderTitle();
-          cb(current_page, caller);
+          cb(current_page + 1, caller);
         } else {
           if (base.hasAttribute('data-circling')) {
             base.current_page = 0;
