@@ -172,8 +172,8 @@
 
     this.pageEvent = function(current_page, base) {
       var page_event = new CustomEvent("fn-pager-turn", {detail : current_page});
-      this.dispatchEvent(page_event);
-    }
+      base.dispatchEvent(page_event);
+    };
 
   };
   window.addEventListener('fn-ready', function() {
