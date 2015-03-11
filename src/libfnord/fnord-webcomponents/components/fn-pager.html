@@ -119,6 +119,8 @@
       var per_page = this.getAttribute('data-per-page');
       per_page = (per_page == null)? 1 : parseInt(per_page, 10);
       this.per_page = per_page;
+
+      this.pages = Math.ceil((end - 1) / per_page);
     };
 
     this.renderTitle = function() {
@@ -137,12 +139,13 @@
         "<b>" + start + "</b> - <b>" + current_end + "</b> of <b>" + end + "</b>";
     };
 
+
     this.observeTooltips = function(cb, caller) {
       var backward_tooltip = this.shadowRoot.querySelector(".backward");
       var forward_tooltip = this.shadowRoot.querySelector(".forward");
       var base = this;
 
-      var pages = Math.ceil((this.end - 1) / this.per_page);
+      var pages = this.pages;
 
       backward_tooltip.onclick = function() {
         var current_page = base.current_page;
