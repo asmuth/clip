@@ -16,6 +16,7 @@ fn-input,
   display: inline-block;
   color: rgba(0, 0, 0, 0.8);
 }
+
 fn-input input,
 .fn-input input {
   margin: 0em;
@@ -24,7 +25,6 @@ fn-input input,
   -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
   text-align: left;
   line-height: 1.2142em;
-  font-family: 'Lato', 'Helvetica Neue', Arial, Helvetica, sans-serif;
   padding: 0.67861em 1em;
   background: #ffffff;
   border: 1px solid rgba(0, 0, 0, 0.15);
@@ -33,6 +33,7 @@ fn-input input,
   -webkit-transition: background-color 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
           transition: background-color 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
   box-shadow: none;
+  font-size: 1em;
 }
 
 /*--------------------
