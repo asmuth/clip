@@ -82,25 +82,12 @@
       if (this.hasAttribute('data-for')) {
         //set classname
       } else {
-        this.init();
         this.renderTitle();
         this.observeTooltips(this.pageEvent, this);
       }
     };
 
     this.forElement = function(elem) {
-      var page = elem.getAttribute('data-page');
-      page = (page == null)? 0 : parseInt(page, 10);
-      this.current_page = page;
-
-      var end = elem.getNumberOfItems();
-      end = (end == null)? 0 : parseInt(end, 10);
-      this.end = end;
-
-      var per_page = elem.getAttribute('data-per-page');
-      per_page = (per_page == null)? 1 : parseInt(per_page, 10);
-      this.per_page = per_page;
-
       var callback = elem.paginationEvent;
 
       this.renderTitle();
@@ -108,22 +95,50 @@
     };
 
     this.init = function() {
-      var page = this.getAttribute('data-current-page');
-      page = (page == null)? 0 : parseInt(page, 10);
-      this.current_page = page;
-
-      var end = this.getAttribute('data-last-item');
-      end = (end == null)? 0 : parseInt(end, 10);
-      this.end = end;
-
-      var per_page = this.getAttribute('data-per-page');
-      per_page = (per_page == null)? 1 : parseInt(per_page, 10);
-      this.per_page = per_page;
-
-      this.pages = Math.ceil((end - 1) / per_page);
+      this.initCurrentPage();
+      this.initLastItem();
+      this.initNumPerPage();
+      this.initNumPages();
     };
 
+    this.initCurrentPage = function() {
+      var curr_page = parseInt(this.getAttribute('data-current-page'), 10);
+
+      if (isNaN(curr_page)) {
+        curr_page = 0;
+      }
+
+      this.current_page = curr_page;
+    };
+
+    this.initLastItem = function() {
+      var end = parseInt(this.getAttribute('data-last-item'), 10);
+
+      if (isNaN(end)) {
+        end = 0;
+      }
+
+      this.end = end;
+    };
+
+    this.initNumPerPage = function() {
+      var per_page = parseInt(this.getAttribute('data-per-page'), 10);
+
+      if (isNaN(per_page)) {
+        per_page = 1;
+      }
+
+      this.per_page = per_page;
+    };
+
+    this.initNumPages = function() {
+      this.pages = Math.ceil((this.end - 1) / this.per_page);
+    };
+
+
     this.renderTitle = function() {
+      this.init();
+
       var current_page = this.current_page;
       var per_page = this.per_page;
       var end = this.end;
@@ -160,7 +175,7 @@
         if (current_page > 0 || base.hasAttribute('data-circling')) {
           var new_page = (current_page + pages - 1) % pages;
           cb(new_page, caller);
-          base.current_page = new_page;
+          base.setAttribute('data-current-page', new_page);
           base.renderTitle();
         }
       };
@@ -168,12 +183,12 @@
       forward_tooltip.onclick = function() {
         var current_page = base.current_page;
         if (current_page < pages - 1) {
-          base.current_page = current_page + 1;
+          base.setAttribute('data-current-page', current_page + 1);
           base.renderTitle();
           cb(current_page + 1, caller);
         } else {
           if (base.hasAttribute('data-circling')) {
-            base.current_page = 0;
+            base.setAttribute('data-current-page', 0);
             base.renderTitle();
             cb(0, caller);
           }
