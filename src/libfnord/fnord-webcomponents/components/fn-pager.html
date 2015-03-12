@@ -127,6 +127,7 @@
       var current_page = this.current_page;
       var per_page = this.per_page;
       var end = this.end;
+      var title = this.shadowRoot.querySelector(".title");
 
       var start = (current_page) * per_page + 1;
       var current_end = start + per_page - 1;
@@ -134,9 +135,16 @@
       if (current_end > end) {
         current_end = end;
       }
-      var title = this.shadowRoot.querySelector(".title");
+
+
       title.innerHTML =
-        "<b>" + start + "</b> - <b>" + current_end + "</b> of <b>" + end + "</b>";
+        "<b>" + start + "</b> - <b>" + current_end;
+
+      if (this.getAttribute('data-title') == 'semi') {
+        return;
+      }
+
+      title.innerHTML +=  "</b> of <b>" + end + "</b>";
     };
 
 
