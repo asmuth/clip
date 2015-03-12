@@ -82,14 +82,22 @@
       if (this.hasAttribute('data-for')) {
         //set classname
       } else {
+        this.init();
         this.renderTitle();
         this.observeTooltips(this.pageEvent, this);
       }
     };
 
+    this.attributeChangedCallback = function() {
+      this.initLastItem();
+      this.initNumPerPage();
+      this.initNumPages();
+    }
+
     this.forElement = function(elem) {
       var callback = elem.paginationEvent;
 
+      this.init();
       this.renderTitle();
       this.observeTooltips(callback, elem);
     };
@@ -137,8 +145,6 @@
 
 
     this.renderTitle = function() {
-      this.init();
-
       var current_page = this.current_page;
       var per_page = this.per_page;
       var end = this.end;
@@ -168,27 +174,29 @@
       var forward_tooltip = this.shadowRoot.querySelector(".forward");
       var base = this;
 
-      var pages = this.pages;
-
       backward_tooltip.onclick = function() {
+        var pages = base.pages;
         var current_page = base.current_page;
+
         if (current_page > 0 || base.hasAttribute('data-circling')) {
           var new_page = (current_page + pages - 1) % pages;
           cb(new_page, caller);
-          base.setAttribute('data-current-page', new_page);
+          base.current_page = new_page;
           base.renderTitle();
         }
       };
 
       forward_tooltip.onclick = function() {
+        var pages = base.pages;
         var current_page = base.current_page;
+
         if (current_page < pages - 1) {
-          base.setAttribute('data-current-page', current_page + 1);
+          base.current_page =  current_page + 1;
           base.renderTitle();
           cb(current_page + 1, caller);
         } else {
           if (base.hasAttribute('data-circling')) {
-            base.setAttribute('data-current-page', 0);
+            base.current_page = 0;
             base.renderTitle();
             cb(0, caller);
           }
