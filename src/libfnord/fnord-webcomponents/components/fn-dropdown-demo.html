@@ -50,7 +50,7 @@
          It is displayed if no item is selected
     -->
     <fn-dropdown data-resolved class="input below">
-      <fn-dropdown-header data-static>Advanced</fn-dropdown-header>
+      <fn-dropdown-header>Advanced</fn-dropdown-header>
       <fn-dropdown-items>
         <fn-dropdown-item>Inverted</fn-dropdown-item>
         <fn-dropdown-item>Logarithmic</fn-dropdown-item>
@@ -94,6 +94,19 @@
         <fn-dropdown-item data-value="amex">AmericanExpress</fn-dropdown-item>
       </fn-dropdown-items>
     </fn-dropdown>
+
+    <!-- A Static header is always displayed and isn't selectable -->
+    <h3><i>Example 2 &raquo;</i> Static Header</h3>
+    <fn-dropdown data-resolved class='input'>
+      <fn-dropdown-header data-static>Select Payment</fn-dropdown-header>
+      <fn-dropdown-items>
+        <fn-dropdown-item data-value="Visa">Visa</fn-dropdown-item>
+        <fn-dropdown-item data-value="paypal">PayPal</fn-dropdown-item>
+        <fn-dropdown-item data-value="mastercard">MasterCard</fn-dropdown-item>
+        <fn-dropdown-item data-value="amex">AmericanExpress</fn-dropdown-item>
+      </fn-dropdown-items>
+    </fn-dropdown>
+
 
     <h3><i>Example 2 &raquo;</i> Multi Selectable</h3>
     <fn-dropdown data-resolved class='input checkbox'>
