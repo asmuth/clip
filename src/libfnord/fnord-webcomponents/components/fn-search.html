@@ -36,7 +36,7 @@
         switch (e.keyCode) {
           //Enter
           case 13:
-            base.submitSearch();
+            base.onDropdownItemClick();
             break;
           //Up Arrow
           case 38:
@@ -162,11 +162,14 @@
     };
 
     this.onDropdownItemClick = function(item) {
-      this.submitSearch(item.innerText);
+      if (item) {
+        this.submitSearch(item.innerText);
+      } else {
+        this.submitSearch();
+      }
     };
 
     this.renderDropdown = function(items) {
-      console.log("render driodiwn");
       var base = this;
       var list = this.querySelector("ul");
       if (!list) {
