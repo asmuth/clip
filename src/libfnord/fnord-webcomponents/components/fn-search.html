@@ -133,7 +133,24 @@
       this.fireSubmitEvent(value);
     };
 
+    this.createDropdownItem = function(item) {
+      console.log("create dropdown item");
+      var li = document.createElement("li");
+      li.innerHTML = item.query;
+
+      if (item.value) {
+        li.setAttribute('data-value', item.value);
+      }
+
+      return li;
+    };
+
+    this.onDropdownItemClick = function(item) {
+      this.submitSearch(item.innerText);
+    };
+
     this.renderDropdown = function(items) {
+      console.log("render driodiwn");
       var base = this;
       var list = this.querySelector("ul");
       if (!list) {
@@ -145,14 +162,13 @@
       list.setAttribute('data-active', 'active');
 
       items.map(function(item) {
-        var list_elem = document.createElement("li");
-        list_elem.innerHTML = item.query;
+        var list_elem = base.createDropdownItem(item);
         list.appendChild(list_elem);
 
         list_elem.onclick = function(e) {
           e.stopPropagation();
           e.preventDefault();
-          base.submitSearch(this.innerText);
+          base.onDropdownItemClick(this);
         }
 
         list_elem.addEventListener('mouseover', function() {
@@ -172,7 +188,7 @@
     };
 
     this.autocomplete = function(term, items) {
-      if (term == this.querySelector("fn-input").getValue() && items.length > 0) {
+      if (term.toLowerCase() == this.querySelector("fn-input").getValue().toLowerCase() && items.length > 0) {
         this.renderDropdown(items);
       }
     };
