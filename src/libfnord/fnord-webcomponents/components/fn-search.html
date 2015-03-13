@@ -14,7 +14,8 @@
       var input = this.querySelector("fn-input");
       var icon = this.querySelector("fn-input-icon");
       var base = this;
-      var min_length = 1;
+
+      var value_length = 0;
 
       if (!input) {
         input = document.createElement("fn-input");
@@ -45,10 +46,18 @@
           case 40:
             base.keyNavigation('down', true);
             break;
+          //Shift
+          case 16:
+          case 20:
+            break;
+
           default:
             var value = this.getValue();
-            if (value.length >= min_length) {
+            if (value.length >= base.getMinLength() && value.length != value_length) {
+
+              value_length = value.length;
               base.fireAutocompleteEvent(value);
+
             } else {
               base.closeDropdown();
             }
@@ -61,6 +70,14 @@
       }, false);
 
     };
+
+    this.getMinLength = function() {
+      if (this.minLength && !isNaN(this.minLength)) {
+        return this.minLength;
+      }
+
+      return 1;
+    }
 
     this.getValue = function() {
       var input = this.querySelector("fn-input");
@@ -134,12 +151,11 @@
     };
 
     this.createDropdownItem = function(item) {
-      console.log("create dropdown item");
       var li = document.createElement("li");
       li.innerHTML = item.query;
 
-      if (item.value) {
-        li.setAttribute('data-value', item.value);
+      if (item.data_value) {
+        li.setAttribute('data-value', item.data_value);
       }
 
       return li;
