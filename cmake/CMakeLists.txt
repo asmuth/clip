@@ -43,6 +43,8 @@ set(FNORDMETRIC_SOURCES
     ../src/libfnord/fnord-webcomponents/httpmount.cc
     ../src/fnordmetric/adminui.cc
     ../src/fnordmetric/environment.cc
+    ../src/fnordmetric/beacons/BeaconHTTPAPIServlet.cc
+    ../src/fnordmetric/beacons/BeaconService.cc
     ../src/fnordmetric/chartsql/areachartbuilder.cc
     ../src/fnordmetric/chartsql/barchartbuilder.cc
     ../src/fnordmetric/chartsql/domainconfig.cc

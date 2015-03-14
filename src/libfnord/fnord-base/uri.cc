@@ -8,6 +8,7 @@
  * <http://www.gnu.org/licenses/>.
  */
 #include <fnord-base/exception.h>
+#include <fnord-base/inspect.h>
 #include <fnord-base/uri.h>
 
 namespace fnord {
@@ -306,6 +307,11 @@ void URI::parseQueryString(
       break;
     }
   }
+}
+
+template <>
+std::string inspect<URI>(const URI& uri) {
+  return uri.toString();
 }
 
 } // namespace fnord

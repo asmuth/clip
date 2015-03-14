@@ -22,6 +22,7 @@
 #include <fnord-base/net/udpserver.h>
 #include <fnord-base/stats/statsd.h>
 #include <fnord-base/stdtypes.h>
+#include <fnord-base/uri.h>
 #include <fnord-base/thread/threadpool.h>
 #include <fnord-base/thread/eventloop.h>
 #include <fnord-http/httpserver.h>
@@ -35,6 +36,8 @@
 #include "adminui.h"
 #include "environment.h"
 #include "chartsql/queryendpoint.h"
+#include "beacons/BeaconService.h"
+#include "beacons/BeaconHTTPAPIServlet.h"
 
 using fnord::metric_service::MetricService;
 using namespace fnordmetric;
@@ -49,7 +52,7 @@ static MetricService makeMetricService(
 
   /* open inmemory backend */
   if (backend_type == "inmemory") {
-    fnord::logInfo("fnordmetric", "Opening new inmemory backend");
+    fnord::logInfo("fnordmetric", "Opening new inmemory metric backend");
     return MetricService::newWithInMemoryBackend();
   }
 
@@ -71,7 +74,7 @@ static MetricService makeMetricService(
       RAISEF(kIOError, "File $0 is not a directory", datadir);
     }
 
-    fnord::logInfo("fnordmetric", "Opening disk backend at $0", datadir);
+    fnord::logInfo("fnordmetric", "Opening disk metric backend at $0", datadir);
     return MetricService::newWithDiskBackend(datadir, backend_scheduler);
   }
 
@@ -85,13 +88,47 @@ static MetricService makeMetricService(
     auto crate_host = env()->flags()->getString("crate_host");
     fnord::logInfo(
         "fnordmetric",
-        "Opening crate backend at $0", crate_host);
+        "Opening crate metric backend at $0", crate_host);
 
     return MetricService::newWithBackend(
         new fnord::metric_service::crate_backend::MetricRepository(crate_host));
   }
 
-  RAISEF(kUsageError, "unknown backend type: $0", backend_type);
+  RAISEF(kUsageError, "unknown metric backend type: $0", backend_type);
+}
+
+static BeaconService makeBeaconService(
+    const std::string& backend_type,
+    TaskScheduler* backend_scheduler) {
+  /* open inmemory backend */
+  if (backend_type == "inmemory") {
+    fnord::logInfo("fnordmetric", "Opening new inmemory beacon backend");
+    return BeaconService{};
+  }
+
+  /* open disk backend */
+  if (backend_type == "disk") {
+    if (!env()->flags()->isSet("datadir")) {
+      RAISE(
+          kUsageError,
+          "the --datadir flag must be set when using the disk backend");
+    }
+
+    auto datadir = env()->flags()->getString("datadir");
+
+    if (!fnord::FileUtil::exists(datadir)) {
+      RAISEF(kIOError, "File $0 does not exist", datadir);
+    }
+
+    if (!fnord::FileUtil::isDirectory(datadir)) {
+      RAISEF(kIOError, "File $0 is not a directory", datadir);
+    }
+
+    fnord::logInfo("fnordmetric", "Opening disk beacon backend at $0", datadir);
+    return BeaconService{};
+  }
+
+  RAISEF(kUsageError, "unknown beacon backend type: $0", backend_type);
 }
 
 static int startServer() {
@@ -199,6 +236,11 @@ int main(int argc, const char** argv) {
         env()->flags()->getString("storage_backend"),
         &server_pool);
 
+    /* setup BeaconService */
+    auto beacon_service = makeBeaconService(
+        env()->flags()->getString("storage_backend"),
+        &server_pool);
+
     /* start http server */
     auto http_port = env()->flags()->getInt("http_port");
     fnord::logInfo(
@@ -212,6 +254,9 @@ int main(int argc, const char** argv) {
 
     fnord::metric_service::HTTPAPIServlet metrics_api(&metric_service);
     http_router.addRouteByPrefixMatch("/metrics", &metrics_api);
+
+    BeaconHTTPAPIServlet beacons_api(&beacon_service);
+    http_router.addRouteByPrefixMatch("/beacons", &beacons_api);
 
     fnord::json::JSONRPCHTTPAdapter rpc_http(&rpc);
     http_router.addRouteByPrefixMatch("/rpc", &rpc_http);
