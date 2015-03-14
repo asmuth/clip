@@ -33,6 +33,10 @@ void BeaconHTTPAPIServlet::handleHTTPRequest(
       return listBeacons(req, res, &uri);
     }
 
+    if (StringUtil::endsWith(uri.path(), "/history")) {
+      return fetchBeaconHistory(req, res, &uri);
+    }
+
     res->setStatus(fnord::http::kStatusNotFound);
     res->addBody("not found");
   } catch (const Exception& e) {
@@ -84,6 +88,71 @@ void BeaconHTTPAPIServlet::listBeacons(
       jsons.addObjectEntry("expect_next");
       jsons.addString(StringUtil::toString(expect_next.get().unixMicros()));
     }
+
+    jsons.addComma();
+    jsons.addObjectEntry("status");
+    jsons.addString(status == BeaconStatus::HEALTHY ? "healthy" : "unhealthy");
+
+    if (!status_text.isEmpty()) {
+      jsons.addComma();
+      jsons.addObjectEntry("status_text");
+      jsons.addString(status_text.get());
+    }
+
+    if (!status_url.isEmpty()) {
+      jsons.addComma();
+      jsons.addObjectEntry("status_uri");
+      jsons.addString(status_url.get().toString());
+    }
+
+    jsons.endObject();
+    return true;
+  });
+
+  jsons.endArray();
+  jsons.endObject();
+}
+
+void BeaconHTTPAPIServlet::fetchBeaconHistory(
+    http::HTTPRequest* request,
+    http::HTTPResponse* response,
+    URI* uri) {
+  auto params = uri->queryParams();
+
+  String beacon_key;
+  if (!fnord::URI::getParam(params, "key", &beacon_key)) {
+    response->addBody("error: missing ?key=... parameter");
+    response->setStatus(http::kStatusBadRequest);
+    return;
+  }
+
+  response->setStatus(http::kStatusOK);
+  response->addHeader("Content-Type", "application/json; charset=utf-8");
+  json::JSONOutputStream jsons(response->getBodyOutputStream());
+
+  jsons.beginObject();
+  jsons.addObjectEntry("key");
+  jsons.addString(beacon_key);
+  jsons.addComma();
+  jsons.addObjectEntry("history");
+  jsons.beginArray();
+
+  int i = 0;
+  auto begin = DateTime::epoch();
+  auto end = DateTime{};
+  beacon_service_->fetchBeaconHistory(beacon_key, begin, end, [&jsons, &i] (
+      const DateTime& time,
+      BeaconStatus status,
+      const Option<String>& status_text,
+      const Option<URI>& status_url) -> bool {
+    if (++i > 1) {
+      jsons.addComma();
+    }
+
+    jsons.beginObject();
+
+    jsons.addObjectEntry("time");
+    jsons.addString(StringUtil::toString(time.unixMicros()));
 
     jsons.addComma();
     jsons.addObjectEntry("status");

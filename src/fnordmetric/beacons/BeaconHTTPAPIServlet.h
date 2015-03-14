@@ -42,6 +42,11 @@ protected:
       http::HTTPResponse* response,
       URI* uri);
 
+  void fetchBeaconHistory(
+      http::HTTPRequest* request,
+      http::HTTPResponse* response,
+      URI* uri);
+
   RefPtr<BeaconService> beacon_service_;
 };
 

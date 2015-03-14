@@ -40,6 +40,12 @@ public:
       const Option<String>& status_text,
       const Option<URI>& status_url)> BeaconListCallbackFn;
 
+  typedef Function<bool (
+      const DateTime& time,
+      BeaconStatus status,
+      const Option<String>& status_text,
+      const Option<URI>& status_url)> BeaconHistoryCallbackFn;
+
   /**
    * List all beacons
    */
@@ -61,11 +67,11 @@ public:
   /**
    * Return all samples for the provided metric and time range
    */
-  //void fetchBeaconHistory(
-  //    const std::string& beacon_key,
-  //    const fnord::DateTime& time_begin,
-  //    const fnord::DateTime& time_end,
-  //    std::function<bool (Sample* sample)> callback);
+  void fetchBeaconHistory(
+      const std::string& beacon_key,
+      const fnord::DateTime& time_begin,
+      const fnord::DateTime& time_end,
+      BeaconHistoryCallbackFn callback);
 
 protected:
 

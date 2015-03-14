@@ -65,4 +65,23 @@ void BeaconService::listBeacons(
   }
 }
 
+void BeaconService::fetchBeaconHistory(
+    const std::string& beacon_key,
+    const fnord::DateTime& time_begin,
+    const fnord::DateTime& time_end,
+    BeaconHistoryCallbackFn callback) {
+  std::unique_lock<std::mutex> lk(beacons_mutex_);
+
+  auto iter = beacons_.find(beacon_key);
+  if (iter == beacons_.end()) {
+    RAISEF(kIndexError, "beacon not found: $0", beacon_key);
+  }
+
+  for (const auto& s : iter->second) {
+    if (!callback(s.time, s.status, s.status_text, s.status_url)) {
+      break;
+    }
+  }
+}
+
 } // namespace fnordmetric
