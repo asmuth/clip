@@ -24,7 +24,7 @@ namespace fnordmetric {
 class BeaconHTTPAPIServlet : public fnord::http::HTTPService {
 public:
 
-  BeaconHTTPAPIServlet(BeaconService* beacon_service);
+  BeaconHTTPAPIServlet(RefPtr<BeaconService> beacon_service);
 
   void handleHTTPRequest(
       fnord::http::HTTPRequest* req,
@@ -37,7 +37,12 @@ protected:
       http::HTTPResponse* response,
       URI* uri);
 
-  BeaconService* beacon_service_;
+  void listBeacons(
+      http::HTTPRequest* request,
+      http::HTTPResponse* response,
+      URI* uri);
+
+  RefPtr<BeaconService> beacon_service_;
 };
 
 }

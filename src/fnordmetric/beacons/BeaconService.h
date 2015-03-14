@@ -12,6 +12,7 @@
 #include <mutex>
 #include <stdlib.h>
 #include <string>
+#include <fnord-base/autoref.h>
 #include "fnord-base/datetime.h"
 #include <fnord-base/duration.h>
 #include <fnord-base/option.h>
@@ -24,16 +25,28 @@ namespace fnordmetric {
 
 enum class BeaconStatus {
   HEALTHY,
-  UNHEALTHY
+  UNHEALTHY,
+  ANY
 };
 
-class BeaconService {
+class BeaconService : public RefCounted {
 public:
 
+  typedef Function<bool (
+      const String& key,
+      BeaconStatus status,
+      const DateTime& last_seen,
+      const Option<DateTime>& expect_next,
+      const Option<String>& status_text,
+      const Option<URI>& status_url)> BeaconListCallbackFn;
+
   /**
-   * List all metrics
+   * List all beacons
    */
-  //std::vector<IMetric*> listBeacons() const;
+  void listBeacons(
+      const String& prefix,
+      BeaconStatus status,
+      BeaconListCallbackFn fn) const;
 
   /**
    * Update a beacon
@@ -57,12 +70,14 @@ public:
 protected:
 
   struct BeaconSample {
+    DateTime time;
     BeaconStatus status;
     Option<String> status_text;
     Option<URI> status_url;
     Option<Duration> expect_next;
   };
 
+  mutable std::mutex beacons_mutex_;
   HashMap<String, List<BeaconSample>> beacons_;
 };
 

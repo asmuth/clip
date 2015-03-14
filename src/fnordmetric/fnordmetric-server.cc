@@ -97,13 +97,13 @@ static MetricService makeMetricService(
   RAISEF(kUsageError, "unknown metric backend type: $0", backend_type);
 }
 
-static BeaconService makeBeaconService(
+static RefPtr<BeaconService> makeBeaconService(
     const std::string& backend_type,
     TaskScheduler* backend_scheduler) {
   /* open inmemory backend */
   if (backend_type == "inmemory") {
     fnord::logInfo("fnordmetric", "Opening new inmemory beacon backend");
-    return BeaconService{};
+    return RefPtr<BeaconService>(new BeaconService());
   }
 
   /* open disk backend */
@@ -125,7 +125,7 @@ static BeaconService makeBeaconService(
     }
 
     fnord::logInfo("fnordmetric", "Opening disk beacon backend at $0", datadir);
-    return BeaconService{};
+    return RefPtr<BeaconService>(new BeaconService());
   }
 
   RAISEF(kUsageError, "unknown beacon backend type: $0", backend_type);
@@ -255,7 +255,7 @@ int main(int argc, const char** argv) {
     fnord::metric_service::HTTPAPIServlet metrics_api(&metric_service);
     http_router.addRouteByPrefixMatch("/metrics", &metrics_api);
 
-    BeaconHTTPAPIServlet beacons_api(&beacon_service);
+    BeaconHTTPAPIServlet beacons_api(beacon_service);
     http_router.addRouteByPrefixMatch("/beacons", &beacons_api);
 
     fnord::json::JSONRPCHTTPAdapter rpc_http(&rpc);

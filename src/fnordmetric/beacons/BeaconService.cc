@@ -19,13 +19,50 @@ void BeaconService::updateBeacon(
     Option<URI> status_url,
     Option<Duration> expect_next) {
   BeaconSample smpl;
+  smpl.time = DateTime();
   smpl.status = status;
   smpl.status_text = status_text;
   smpl.status_url = status_url;
   smpl.expect_next = expect_next;
 
   // FIXPAUL hack ;) ;) ;)
+  std::unique_lock<std::mutex> lk(beacons_mutex_);
   beacons_[beacon_key].emplace_back(smpl);
+}
+
+void BeaconService::listBeacons(
+    const String& prefix,
+    BeaconStatus status,
+    BeaconListCallbackFn fn) const {
+  std::unique_lock<std::mutex> lk(beacons_mutex_);
+
+  for (const auto& p : beacons_) {
+    if (p.second.size() == 0) {
+      continue;
+    }
+
+    if (prefix.length() > 0 && !StringUtil::beginsWith(p.first, prefix)) {
+      continue;
+    }
+
+    const auto& b = p.second.back();
+
+    Option<DateTime> expect_next;
+    if (!b.expect_next.isEmpty()) {
+      expect_next = Some(DateTime(
+          b.time.unixMicros() + b.expect_next.get().microseconds()));
+    }
+
+    if (!fn(
+          p.first,
+          b.status,
+          b.time,
+          expect_next,
+          b.status_text,
+          b.status_url)) {
+      break;
+    }
+  }
 }
 
 } // namespace fnordmetric

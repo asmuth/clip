@@ -14,7 +14,7 @@
 namespace fnordmetric {
 
 BeaconHTTPAPIServlet::BeaconHTTPAPIServlet(
-    BeaconService* beacon_service) :
+    RefPtr<BeaconService> beacon_service) :
     beacon_service_(beacon_service) {}
 
 void BeaconHTTPAPIServlet::handleHTTPRequest(
@@ -29,12 +29,84 @@ void BeaconHTTPAPIServlet::handleHTTPRequest(
       return updateBeacon(req, res, &uri);
     }
 
+    if (StringUtil::endsWith(uri.path(), "/list")) {
+      return listBeacons(req, res, &uri);
+    }
+
     res->setStatus(fnord::http::kStatusNotFound);
     res->addBody("not found");
   } catch (const Exception& e) {
     res->setStatus(http::kStatusInternalServerError);
     res->addBody(StringUtil::format("error: $0", e.getMessage()));
   }
+}
+
+void BeaconHTTPAPIServlet::listBeacons(
+    http::HTTPRequest* request,
+    http::HTTPResponse* response,
+    URI* uri) {
+  auto params = uri->queryParams();
+
+  response->setStatus(http::kStatusOK);
+  response->addHeader("Content-Type", "application/json; charset=utf-8");
+  json::JSONOutputStream jsons(response->getBodyOutputStream());
+
+  jsons.beginObject();
+  jsons.addObjectEntry("beacons");
+  jsons.beginArray();
+
+  String prefix;
+  fnord::URI::getParam(params, "prefix", &prefix);
+
+  int i = 0;
+  beacon_service_->listBeacons(prefix, BeaconStatus::ANY, [&jsons, &i] (
+      const String& key,
+      BeaconStatus status,
+      const DateTime& last_seen,
+      const Option<DateTime>& expect_next,
+      const Option<String>& status_text,
+      const Option<URI>& status_url) -> bool {
+    if (++i > 1) {
+      jsons.addComma();
+    }
+
+    jsons.beginObject();
+
+    jsons.addObjectEntry("key");
+    jsons.addString(key);
+
+    jsons.addComma();
+    jsons.addObjectEntry("last_seen");
+    jsons.addString(StringUtil::toString(last_seen.unixMicros()));
+
+    if (!expect_next.isEmpty()) {
+      jsons.addComma();
+      jsons.addObjectEntry("expect_next");
+      jsons.addString(StringUtil::toString(expect_next.get().unixMicros()));
+    }
+
+    jsons.addComma();
+    jsons.addObjectEntry("status");
+    jsons.addString(status == BeaconStatus::HEALTHY ? "healthy" : "unhealthy");
+
+    if (!status_text.isEmpty()) {
+      jsons.addComma();
+      jsons.addObjectEntry("status_text");
+      jsons.addString(status_text.get());
+    }
+
+    if (!status_url.isEmpty()) {
+      jsons.addComma();
+      jsons.addObjectEntry("status_uri");
+      jsons.addString(status_url.get().toString());
+    }
+
+    jsons.endObject();
+    return true;
+  });
+
+  jsons.endArray();
+  jsons.endObject();
 }
 
 void BeaconHTTPAPIServlet::updateBeacon(
