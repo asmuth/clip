@@ -13,6 +13,7 @@
 #include <string>
 #include <vector>
 #include <memory>
+#include "fnord-base/buffer.h"
 
 namespace fnord {
 namespace sstable {
@@ -31,8 +32,10 @@ public:
 
   virtual void getKey(void** data, size_t* size) = 0;
   virtual std::string getKeyString();
+  virtual Buffer getKeyBuffer();
   virtual void getData(void** data, size_t* size) = 0;
   virtual std::string getDataString();
+  virtual Buffer getDataBuffer();
 
   virtual size_t position() const = 0;
   virtual size_t nextPosition() = 0;

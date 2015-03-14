@@ -26,6 +26,7 @@ namespace fnord {
 
 using String = std::string;
 using WString = std::wstring;
+using UTF32String = std::string;
 
 template <typename T>
 using ScopedPtr = std::unique_ptr<T>;

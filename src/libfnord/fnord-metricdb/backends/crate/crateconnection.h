@@ -12,7 +12,6 @@
 #include <functional>
 #include <fnord-base/uri.h>
 #include <fnord-json/json.h>
-#include <fnordmetric/sql/svalue.h>
 
 using namespace fnord;
 

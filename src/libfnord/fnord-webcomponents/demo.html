@@ -26,11 +26,6 @@
     <link rel="stylesheet" href="components/fn-pager.css" type="text/css">
     <link rel="stylesheet" href="components/fn-input.css" type='text/css'>
     <link rel="stylesheet" href="components/fn-card.css" type='text/css'>
-    <link rel="stylesheet" href="components/fn-dropdown.css" type="text/css">
-    <link rel="stylesheet" href="components/fn-search.css" type="text/css">
-    <link rel="stylesheet" href="components/fn-splitpane.css" type="text/css">
-    <link rel="stylesheet" href="components/fn-navigation.css" type="text/css"
-    <link rel="stylesheet" href="components/fn-date-time-selector.css" type="text/css">
     <link rel="stylesheet" href="3rdparty/fontawesome.css" type="text/css">
     <link rel="stylesheet" href="components/fn-statistic.css" type='text/css'>
     <style type="text/css">
@@ -151,9 +146,9 @@
     <link rel="import" href="components/fn-dropdown-demo.html" data-component="fn-dropdown-demo">
     <link rel="import" href="components/fn-datepicker.html" data-component="fn-datepicker">
     <link rel="import" href="components/fn-datepicker-demo.html" data-component="fn-datepicker-demo">
-    <link rel="import" href="components/fn-timeinput.html" data-component="fn-timeinput">
+    <link rel="import" href="components/fn-timeinput.html" data-component="fn-input-time">
     <link rel="import" href="components/fn-input.html" data-component="fn-input">
-    <link rel="import" href="components/fn-input-demo.html" data-component="fn-input-demo">
+    <link rel="import" href="components/fn-form-demo.html" data-component="fn-form-demo">
     <link rel="import" href="components/fn-checkbox.html" data-component="fn-checkbox">
     <link rel="import" href="components/fn-daterangepicker.html" data-component="fn-daterangepicker">
     <link rel="import" href="components/fn-daterangepicker-demo.html" data-component="fn-daterangepicker-demo">
@@ -209,7 +204,7 @@
             Elements
           </fn-submenu-title>
           <fn-menu-item data-target-demo="fn-button">fn-button</fn-menu-item>
-          <fn-menu-item data-target-demo="fn-input">fn-input</fn-menu-item>
+          <fn-menu-item data-target-demo="fn-form">fn-form</fn-menu-item>
           <fn-menu-item data-target-demo="fn-table">fn-table</fn-menu-item>
           <fn-menu-item data-target-demo="fn-splitpane">fn-splitpane</fn-menu-item>
           <fn-menu-item data-target-demo="fn-codeeditor">fn-codeeditor</fn-menu-item>
@@ -261,7 +256,6 @@
     </div>
 
     <script type="text/javascript" src="fnord.js"></script>
-    <script type="text/javascript" src="date_util.js"></script>
     <script type="text/javascript">
       function openDemo(name) {
         var tpl = Fnord.getTemplate(name + "-demo", "base");

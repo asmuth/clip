@@ -29,13 +29,8 @@ fn-metric-explorer-search .navigation fn-search {
   width: 13%;
   min-width: 190px;
   float: right;
-  margin: 2px 10px 0 0;
+  margin: 6px 10px 0 0;
 }
-
-fn-metric-explorer-list .navigation fn-search fn-input input {
-  padding: 0.5em 1em;
-}
-
 
 fn-metric-explorer-list .navigation fn-search /deep/ ul,
 fn-metric-explorer-search .navigation fn-search /deep/ ul {

@@ -19,6 +19,7 @@
 #include <vector>
 #include <atomic>
 #include <fnord-base/exception.h>
+#include <fnord-base/autoref.h>
 
 namespace fnord {
 namespace io {
@@ -111,7 +112,7 @@ protected:
 class MmapPageManager : public PageManager {
 protected:
   // FIXPAUL replace with io::MmapedFile
-  class MmappedFile {
+  class MmappedFile : public RefCounted {
   public:
     MmappedFile(void* __data, const size_t __size);
     MmappedFile(const MmappedFile& copy) = delete;
@@ -119,10 +120,6 @@ protected:
     ~MmappedFile();
     void* const data;
     const size_t size;
-    void incrRefs();
-    void decrRefs();
-  protected:
-    std::atomic_int refs;
   };
 
 public:
@@ -134,7 +131,11 @@ public:
 
   class MmappedPageRef : public PageManager::PageRef {
   public:
-    MmappedPageRef(const PageManager::Page& page, MmappedFile* file, size_t sys_page_size);
+    MmappedPageRef(
+        const PageManager::Page& page,
+        RefPtr<MmappedFile> file,
+        size_t sys_page_size);
+
     MmappedPageRef(MmappedPageRef&& move);
     MmappedPageRef(const MmappedPageRef& copy) = delete;
     MmappedPageRef& operator=(const MmappedPageRef& copy) = delete;
@@ -143,7 +144,7 @@ public:
   protected:
     size_t sys_page_size_;
     void* getPtr() const override;
-    MmappedFile* file_;
+    RefPtr<MmappedFile> file_;
   };
 
   /**
@@ -185,12 +186,12 @@ protected:
    * Returns a mmap()ed memory region backend by the managed file spans until
    * at least last_byte
    */
-  MmappedFile* getMmappedFile(uint64_t last_byte);
+  RefPtr<MmappedFile> getMmappedFile(uint64_t last_byte);
 
   const std::string filename_;
   size_t used_bytes_;
   size_t file_size_;
-  MmappedFile* current_mapping_;
+  RefPtr<MmappedFile> current_mapping_;
   std::mutex mmap_mutex_;
   size_t sys_page_size_;
 };

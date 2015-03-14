@@ -17,6 +17,7 @@
 #include "fnord-base/io/outputstream.h"
 
 const char kBufferOverflowError[] = "BufferOverflowError";
+const char kEncodingError[] = "EncodingError";
 const char kConcurrentModificationError[] = "ConcurrentModificationError";
 const char kDivideByZeroError[] = "DivideByZeroError";
 const char kFlagError[] = "FlagError";

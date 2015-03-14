@@ -12,6 +12,32 @@
 namespace fnord {
 namespace json {
 
+Option<String> JSONUtil::objectGetString(
+    JSONObject::const_iterator begin,
+    JSONObject::const_iterator end,
+    const std::string& key) {
+  auto iter = objectLookup(begin, end, key);
+
+  if (iter != end && iter->type == JSON_STRING) {
+    return Some(iter->data);
+  } else {
+    return None<String>();
+  }
+}
+
+Option<uint64_t> JSONUtil::objectGetUInt64(
+    JSONObject::const_iterator begin,
+    JSONObject::const_iterator end,
+    const std::string& key) {
+  auto iter = objectLookup(begin, end, key);
+
+  if (iter != end && (iter->type == JSON_STRING || iter->type == JSON_NUMBER)) {
+    return Some<uint64_t>(std::stoul(iter->data));
+  } else {
+    return None<uint64_t>();
+  }
+}
+
 JSONObject::const_iterator JSONUtil::objectLookup(
     JSONObject::const_iterator begin,
     JSONObject::const_iterator end,

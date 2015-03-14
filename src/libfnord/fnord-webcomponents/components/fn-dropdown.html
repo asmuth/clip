@@ -55,6 +55,11 @@
     // Copies the selected items html to the header_elem
     this.setHeaderValue = function() {
       var header = this.querySelector("fn-dropdown-header");
+
+      if (header.hasAttribute('data-static')) {
+        return;
+      }
+
       var innerHTML = "";
 
       //multi selectable dropdown

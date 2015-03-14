@@ -168,6 +168,36 @@ bool StringUtil::endsWith(const std::string& str, const std::string& suffix) {
       suffix) == 0;
 }
 
+bool StringUtil::isHexString(const std::string& str) {
+  for (const auto& c : str) {
+    if ((c >= '0' && c <= '9') ||
+        (c >= 'a' && c <= 'f') ||
+        (c >= 'A' && c <= 'F')) {
+      continue;
+    }
+
+    return false;
+  }
+
+  return true;
+}
+
+void StringUtil::toLower(std::string* str) {
+  auto& str_ref = *str;
+
+  for (int i = 0; i < str_ref.length(); ++i) {
+    str_ref[i] = std::tolower(str_ref[i]);
+  }
+}
+
+void StringUtil::toUpper(std::string* str) {
+  auto& str_ref = *str;
+
+  for (int i = 0; i < str_ref.length(); ++i) {
+    str_ref[i] = std::toupper(str_ref[i]);
+  }
+}
+
 std::string StringUtil::hexPrint(
     const void* data,
     size_t size,

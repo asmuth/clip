@@ -34,4 +34,15 @@ add_library(fnord-sstable OBJECT
     rowoffsetindex.cc
     sstablereader.cc
     sstablerepair.cc
-    sstablewriter.cc)
+    sstablewriter.cc
+    SSTableScan.cc
+    SSTableColumnSchema.cc
+    SSTableColumnReader.cc
+    SSTableColumnWriter.cc)
+
+add_executable(fn-sstablescan
+    $<TARGET_OBJECTS:fnord-base>
+    $<TARGET_OBJECTS:fnord-sstable>
+    fn-sstablescan.cc)
+
+target_link_libraries(fn-sstablescan ${CMAKE_THREAD_LIBS_INIT})

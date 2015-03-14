@@ -172,3 +172,8 @@ TEST_CASE(URITest, TestWeirdUrls, [] () {
       "c=f9765c4564e077c0cb~4ae4a27f81fa&e=q&qstr:de=x" \
           "xx&is=p~40938238~1,p~70579299~2");
 });
+
+TEST_CASE(URITest, TestWeirdUrlDecode, [] () {
+  EXPECT_EQ(URI::urlDecode("8%+elasthan"), "8% elasthan");
+});
+

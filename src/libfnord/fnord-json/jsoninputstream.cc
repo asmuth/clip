@@ -152,11 +152,19 @@ void JSONInputStream::readString(std::string* dst) {
         return;
 
       case '\\':
-        escaped = !escaped;
+        if (escaped) {
+          *dst += cur_;
+          escaped = false;
+        } else {
+          escaped = true;
+        }
         break;
 
       case '"':
-        if (!escaped) {
+        if (escaped) {
+          escaped = false;
+          /* fallthrough */
+        } else {
           advanceCursor();
           return;
         }

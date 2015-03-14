@@ -14,6 +14,7 @@
 #include <stdint.h>
 #include <string>
 #include <vector>
+#include <locale>
 #include "fnord-base/stdtypes.h"
 
 namespace fnord {
@@ -71,6 +72,13 @@ public:
       const std::string& suffix);
 
   /**
+   * Check if the provided string contains only 0-9a-zA-Z
+   *
+   * @param str the string to check
+   */
+  static bool isHexString(const std::string& str);
+
+  /**
    * Replace all occurences of pattern with replacement in str
    *
    * @param str the str that should be modified
@@ -93,6 +101,20 @@ public:
    * Join the provided string array with the provided join string
    */
   static String join(const Vector<String>& list, const String& join);
+
+  /**
+   * Converts the provided string to all lowercase
+   *
+   * @param str the str that should be modified
+   */
+  static void toLower(std::string* str);
+
+  /**
+   * Converts the provided string to all uppercase
+   *
+   * @param str the str that should be modified
+   */
+  static void toUpper(std::string* str);
 
   /**
    * Print the contents of the pointed to memory as a series of hexadecimal
@@ -213,6 +235,7 @@ public:
    */
   template <typename T>
   static std::string formatNumberScientific(T value);
+
 
   static std::wstring convertUTF8To16(const std::string& str);
   static std::string convertUTF16To8(const std::wstring& str);

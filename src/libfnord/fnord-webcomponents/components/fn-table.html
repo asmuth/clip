@@ -64,8 +64,10 @@
           th_elem.setAttribute('data-column-index', index);
           th_elem.setAttribute('data-sortable', col.getAttribute('data-sortable'));
           th_elem.className += " sortable ";
+
+
           if (col.getAttribute("data-sort-state") != null) {
-            th_elem.className += col.getAttribute("data-sort-state");
+            th_elem.classList.add(col.getAttribute("data-sort-state"), "active");
           }
           if (col.hasAttribute('data-presort')) {
             col.removeAttribute('data-presort');
@@ -73,7 +75,8 @@
               base.resortRows(index,col.getAttribute('data-sortable'),col.getAttribute('data-presort'));
             }
           }
-          base.observeSortableColumns(th_elem);
+
+          base.observeSortableColumns(th_elem, col);
         }
 
         th_elem.innerHTML = col.innerHTML;
@@ -209,12 +212,18 @@
       }
     };
 
-    this.observeSortableColumns = function(column) {
+    this.observeSortableColumns = function(th_elem, column) {
       var base = this;
-      column.onclick = function() {
+
+      th_elem.onclick = function() {
+        var index = this.getAttribute('data-column-index');
+        if (typeof base.customResortRows == 'function') {
+          base.customResortRows(column, index);
+        } else {
         base.resortRows(
-          this.getAttribute('data-column-index'),
+          index,
           this.getAttribute('data-sortable'));
+        }
       }
     };
 
@@ -323,7 +332,7 @@
 
       this.setAttribute('data-per-page', data_per_page);
       return data_per_page;
-    }
+    };
 
     /* pagination element functions */
     this.getNumberOfItems = function() {

@@ -30,6 +30,8 @@ public:
   void rewind();
   void seekTo(size_t pos);
 
+  size_t remaining() const;
+
 protected:
   void const* ptr_;
   size_t size_;

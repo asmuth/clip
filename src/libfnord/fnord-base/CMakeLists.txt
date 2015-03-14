@@ -24,6 +24,8 @@ else()
   set(CMAKE_CXX_FLAGS "-std=c++0x -pthread ${CMAKE_CXX_FLAGS}")
 endif()
 
+set(CMAKE_C_FLAGS "-std=c11 ${CMAKE_C_FLAGS}")
+
 # base
 add_library(fnord-base OBJECT
     application.cc
@@ -39,6 +41,7 @@ add_library(fnord-base OBJECT
     fnv.cc
     ieee754.cc
     inspect.cc
+    InternMap.cc
     io/file.cc
     io/fileutil.cc
     io/filerepository.cc
@@ -46,6 +49,7 @@ add_library(fnord-base OBJECT
     io/outputstream.cc
     io/mmappedfile.cc
     io/pagemanager.cc
+    Language.cc
     logging.cc
     logging/logoutputstream.cc
     net/dnscache.cc
@@ -66,8 +70,11 @@ add_library(fnord-base OBJECT
     thread/threadpool.cc
     thread/wakeup.cc
     uri.cc
+    UTF8.cc
     util/binarymessagereader.cc
     util/binarymessagewriter.cc
+    util/SimpleRateLimit.cc
+    VFS.cc
     wallclock.cc)
 
 add_executable(tests/test-inputstream
@@ -81,6 +88,10 @@ add_executable(tests/test-uri
 add_executable(tests/test-stringutil
     $<TARGET_OBJECTS:fnord-base>
     stringutil_test.cc)
+
+add_executable(tests/test-internmap
+    $<TARGET_OBJECTS:fnord-base>
+    InternMap_test.cc)
 
 ## redis
 #add_library(fnord-redis OBJECT

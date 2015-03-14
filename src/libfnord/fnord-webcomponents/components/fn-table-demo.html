@@ -73,7 +73,7 @@
 
   <!-- Example 1: Clickable Sortable Table -->
   <section>
-    <h1><i>Example 2 &raquo;</i> Clickable Sortable Table</h1>
+    <h1><i>Example 2 &raquo;</i> Clickable Table With Custom Sort Function</h1>
     <fn-table id="example-table-2" data-clickable>
       <fn-table-column data-sortable='num'>A</fn-table-column>
       <fn-table-column>B</fn-table-column>
@@ -87,6 +87,11 @@
     </fn-table>
     <script type="text/javascript">
       var tbl2 = document.body.querySelector("#example-table-2");
+
+      tbl2.customResortRows = function(column, index) {
+        alert("Resort Rows");
+      }
+
       tbl2.addEventListener("fn-table-row-click", function(e) {
         alert(e.srcElement.getAttribute("data-row-id"));
       }, false);

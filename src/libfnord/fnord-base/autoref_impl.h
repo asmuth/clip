@@ -31,6 +31,18 @@ AutoRef<T>::AutoRef(AutoRef<T>&& other) : ref_(other.ref_) {
 }
 
 template <typename T>
+AutoRef<T>& AutoRef<T>::operator=(const AutoRef<T>& other) {
+  if (ref_ != nullptr) {
+    ref_->decRef();
+  }
+
+  ref_ = other.ref_;
+  ref_->incRef();
+
+  return *this;
+}
+
+template <typename T>
 AutoRef<T>::~AutoRef() {
   if (ref_ != nullptr) {
     ref_->decRef();

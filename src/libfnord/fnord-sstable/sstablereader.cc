@@ -18,9 +18,13 @@ namespace sstable {
 
 SSTableReader::SSTableReader(
     File&& file) :
-    mmap_(new io::MmappedFile(std::move(file))),
+    SSTableReader(new io::MmappedFile(std::move(file))) {}
+
+SSTableReader::SSTableReader(
+    RefPtr<VFSFile> vfs_file) :
+    mmap_(vfs_file),
     file_size_(mmap_->size()),
-    header_(mmap_->ptr(), file_size_) {
+    header_(mmap_->data(), file_size_) {
   if (!header_.verify()) {
     RAISE(kIllegalStateError, "corrupt sstable header");
   }
@@ -124,7 +128,7 @@ size_t SSTableReader::headerSize() const {
 }
 
 SSTableReader::SSTableReaderCursor::SSTableReaderCursor(
-    std::shared_ptr<io::MmappedFile> mmap,
+    RefPtr<VFSFile> mmap,
     size_t begin,
     size_t limit) :
     mmap_(std::move(mmap)),

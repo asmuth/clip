@@ -31,7 +31,7 @@ public:
   class SSTableReaderCursor : public sstable::Cursor {
   public:
     SSTableReaderCursor(
-        std::shared_ptr<io::MmappedFile> file,
+        RefPtr<VFSFile> file,
         size_t begin,
         size_t limit);
 
@@ -44,13 +44,14 @@ public:
     size_t position() const override;
     size_t nextPosition() override;
   protected:
-    std::shared_ptr<io::MmappedFile> mmap_;
+    RefPtr<VFSFile> mmap_;
     size_t pos_;
     size_t begin_;
     size_t limit_;
   };
 
   SSTableReader(File&& file);
+  SSTableReader(RefPtr<VFSFile> vfs_file);
   SSTableReader(const SSTableReader& other) = delete;
   SSTableReader& operator=(const SSTableReader& other) = delete;
   ~SSTableReader();
@@ -81,7 +82,7 @@ public:
   size_t headerSize() const;
 
 private:
-  std::shared_ptr<io::MmappedFile> mmap_;
+  RefPtr<VFSFile> mmap_;
   uint64_t file_size_;
   FileHeaderReader header_;
 };

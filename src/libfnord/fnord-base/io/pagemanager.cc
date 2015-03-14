@@ -104,17 +104,16 @@ MmapPageManager::MmapPageManager(MmapPageManager&& move) :
     filename_(move.filename_),
     file_size_(move.file_size_),
     used_bytes_(move.used_bytes_),
-    current_mapping_(move.current_mapping_),
+    current_mapping_(std::move(move.current_mapping_)),
     sys_page_size_(move.sys_page_size_) {
   move.file_size_ = 0;
   move.used_bytes_ = 0;
-  move.current_mapping_ = nullptr;
 }
 
 MmapPageManager::~MmapPageManager() {
-  if (current_mapping_ != nullptr) {
-    current_mapping_->decrRefs();
-  }
+  //if (current_mapping_ != nullptr) {
+  //  current_mapping_->decrRefs();
+  //}
 }
 
 void MmapPageManager::shrinkFile() {
@@ -177,9 +176,10 @@ std::unique_ptr<PageManager::PageRef> MmapPageManager::getPageImpl(
   return std::unique_ptr<PageManager::PageRef>(page_ref);
 }
 
-MmapPageManager::MmappedFile* MmapPageManager::getMmappedFile(
+RefPtr<MmapPageManager::MmappedFile> MmapPageManager::getMmappedFile(
     uint64_t last_byte) {
-  if (current_mapping_ == nullptr || last_byte > current_mapping_->size) {
+  if (current_mapping_.get() == nullptr ||
+      last_byte > current_mapping_->size) {
     /* align mmap size to the next larger block boundary */
     auto file = fnord::File::openFile(
         filename_,
@@ -201,11 +201,7 @@ MmapPageManager::MmappedFile* MmapPageManager::getMmappedFile(
       }
     }
 
-    if (current_mapping_ != nullptr) {
-      current_mapping_->decrRefs();
-    }
-
-    current_mapping_ = new MmappedFile(addr, mmap_size);
+    current_mapping_ = RefPtr<MmappedFile>(new MmappedFile(addr, mmap_size));
   }
 
   return current_mapping_;
@@ -215,33 +211,19 @@ MmapPageManager::MmappedFile::MmappedFile(
   void* __data,
   const size_t __size) :
   data(__data),
-  size(__size),
-  refs(1) {}
+  size(__size) {}
 
 MmapPageManager::MmappedFile::~MmappedFile() {
   munmap(data, size);
 }
 
-void MmapPageManager::MmappedFile::incrRefs() {
-  refs++;
-}
-
-void MmapPageManager::MmappedFile::decrRefs() {
-  if (refs.fetch_sub(1) == 1) {
-    assert(refs.load() == 0);
-    delete this;
-  }
-}
-
 MmapPageManager::MmappedPageRef::MmappedPageRef(
     const PageManager::Page& page,
-    MmappedFile* file,
+    RefPtr<MmappedFile> file,
     size_t sys_page_size) :
     PageRef(page),
     file_(file),
-    sys_page_size_(sys_page_size) {
-  file_->incrRefs();
-}
+    sys_page_size_(sys_page_size) {}
 
 MmapPageManager::MmappedPageRef::MmappedPageRef(
     MmapPageManager::MmappedPageRef&& move) :
@@ -262,9 +244,7 @@ void MmapPageManager::MmappedPageRef::sync(bool async /* = false */) const {
   msync((void *) sptr, ssize, async ? MS_SYNC : MS_ASYNC);
 }
 
-MmapPageManager::MmappedPageRef::~MmappedPageRef() {
-  file_->decrRefs();
-}
+MmapPageManager::MmappedPageRef::~MmappedPageRef() {}
 
 }
 }

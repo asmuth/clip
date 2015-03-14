@@ -127,6 +127,10 @@ void File::write(const Buffer& buf) {
   write(buf.data(), buf.size());
 }
 
+void File::write(const String& buf) {
+  write(buf.c_str(), buf.length());
+}
+
 File File::clone() const {
   int new_fd = dup(fd_);
 

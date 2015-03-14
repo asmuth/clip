@@ -259,22 +259,30 @@ TEST_CASE(JSONTest, TestJSONReEncodingViaReflectionWithObject, [] () {
   EXPECT_EQ(orig_str, reenc_str);
 });
 
-/*
-TEST_CASE(JSONTest, TestParseJSON, [] () {
-  auto json = fnord::json::parseJSON(R"(
-    {
-       "jsonrpc":"2.0",
-       "id":"0",
-       "result":[
-          {
-             "a":"0",
-             "b":"c",
-             "data":"xxx|bbb|v=3&1,2,4~5,"
-          }
-       ]
-    }
-  )");
+struct TestJSONObject {
+  std::string data;
 
-  EXPECT_EQ(json.size(), 17);
+  template <typename T>
+  static void reflect(T* meta) {
+    meta->prop(&TestJSONObject::data, 1, "data", false);
+  }
+};
+
+
+TEST_CASE(JSONTest, ParseMultiLevelEscaping, [] () {
+  auto orig_str = R"({"str":"fub \\\"blah\\\" bar"})";
+  auto doc = fnord::json::parseJSON(orig_str);
+  EXPECT_EQ(doc.size(), 4);
+  EXPECT_EQ(doc[2].type, fnord::json::JSON_STRING);
+  EXPECT_EQ(doc[2].data, "fub \\\"blah\\\" bar");
 });
-*/
+
+TEST_CASE(JSONTest, TestJSONReencoding1, [] () {
+  auto orig_str = R"({"customer":"xxx","docid":{"set_id":"p","item_id":"123"},"attributes":{"title~en":"12- blubb silver version","description~en":"925 blah blahb blah -- \"12\" represents 12 different chinese zodiac sign animals 鼠 Rat is symbol of Charm  those who born in 1948、1960、1972、1984 、1996 and 2008 are belonged to Rat  product description: it is a pendant with 2 faces 1 face is shinny well-polished silver surface the other face is matt look finishing with a raw feeling therefore, this big pendant can be wear in both sides to match your apparel!  the pendant is linked by a 100cm/ 40 inch long silver plated chain.  pendant size: 8.5cm x 7cm, about 15 gr.  the necklace would be received with our gift packing especially for rat @\"12\" series!!  ******************************************************  you are welcome to visit my web-site","category2":"999"}})";
+  auto doc = fnord::json::parseJSON(orig_str);
+  TestJSONObject obj;
+  obj.data = fnord::json::toJSONString(doc);
+  auto obj_json = fnord::json::toJSONString(obj);
+  auto obj2 = fnord::json::fromJSON<TestJSONObject>(obj_json);
+  EXPECT_EQ(obj2.data, orig_str);
+});

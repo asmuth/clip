@@ -40,6 +40,10 @@ bool FileHeaderReader::verify() {
     return false;
   }
 
+  if (userdata_size_ == 0) {
+    return true;
+  }
+
   const void* userdata;
   size_t userdata_size;
   readUserdata(&userdata, &userdata_size);

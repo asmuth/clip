@@ -18,6 +18,11 @@ fn-navigation,
   border-radius: 0.2857rem;
 }
 
+fn-navigation.inline,
+.fn-naivgation.inline {
+  display: inline-block;
+}
+
 fn-navigation:after,
 .fn-navigation:after {
   content: '';
@@ -57,12 +62,13 @@ fn-navigation-item,
   position: relative;
   display: inline-block;
   padding: 0.78571em 0.95em;
-  margin: 0 0 0 -3px;
+  margin: 0 0 0 -4px;
   border-top: 0em solid transparent;
   background: none;
   vertical-align: middle;
   line-height: 1;
   text-decoration: none;
+  text-align: center;
   box-sizing: border-box;
   -webkit-tap-highlight-color: transparent;
   -webkit-user-select: none;
@@ -90,6 +96,21 @@ fn-navigation-item:first-child,
   border-radius: 0.2857rem 0px 0px 0.2857rem;
   margin: 0;
 }
+
+fn-navigation.inline fn-navigation-item:last-child,
+.fn-navigation.inline .fn-navigation-item:last-child,
+fn-navigation[data-evenly-sized] fn-navigation-item:last-child,
+.fn-navigation[data-evenly-sized] .fn-navigation-item:last-child {
+  border-radius: 0px 0.2857rem 0.2857rem 0px;
+}
+
+fn-navigation.inline fn-navigation-item:last-child:before,
+.fn-navigation.inline .fn-navigation-item:last-child:before,
+fn-navigation[data-evenly-sized] fn-navigation-item:last-child:before,
+.fn-navigation[data-evenly-sized] .fn-navigation-item:last-child:before {
+  width: 0px;
+}
+
 
 /* Floated Content */
 fn-navigation-item.left,
@@ -148,8 +169,8 @@ fn-navigation-icon,
 /*--------------
   Hover
 ---------------*/
-fn-navigation-item:hover,
-.fn-navigation-item:hover {
+fn-navigation-item:not(.static):hover,
+.fn-navigation-item:not(.static):hover {
   cursor: pointer;
   background: rgba(0, 0, 0, 0.03);
   color: rgba(0, 0, 0, 0.8);
@@ -167,16 +188,16 @@ fn-navigation-item:active,
 /*--------------
   Active
 ---------------*/
-fn-navigation-item[data-active]:not(.static),
-.fn-navigation-item[data-active]:not(.static) {
+fn-navigation-item[data-active]:not(.inactive),
+.fn-navigation-item[data-active]:not(.inactive) {
   background: rgba(0, 0, 0, 0.03);
   color: rgba(0, 0, 0, 0.8);
   font-weight: normal;
   box-shadow: 0em 2px 0em inset;
 }
 
-fn-navigation-item[data-active]:not(.static) fn-navigation-icon,
-.fn-navigation-item[data-active]:not(.static) .fn-navigation-icon {
+fn-navigation-item[data-active]:not(.inactive) fn-navigation-icon,
+.fn-navigation-item[data-active]:not(.inactive) .fn-navigation-icon {
   opacity: 1;
 }
 

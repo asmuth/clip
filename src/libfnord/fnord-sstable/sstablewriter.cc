@@ -14,6 +14,7 @@
 #include <fnord-sstable/fileheaderwriter.h>
 #include <fnord-sstable/fileheaderreader.h>
 #include <fnord-sstable/sstablewriter.h>
+#include <fnord-sstable/SSTableColumnWriter.h>
 
 namespace fnord {
 namespace sstable {
@@ -23,7 +24,10 @@ std::unique_ptr<SSTableWriter> SSTableWriter::create(
     IndexProvider index_provider,
     void const* header,
     size_t header_size) {
-  auto file = File::openFile(filename, File::O_READ);
+  auto file = File::openFile(
+      filename,
+      File::O_READ | File::O_WRITE | File::O_CREATE);
+
   auto file_size = file.size();
   if (file_size > 0) {
     RAISE(kIllegalStateError, "file size must be 0");
@@ -115,6 +119,12 @@ uint64_t SSTableWriter::appendRow(
   return appendRow(key.data(), key.size(), value.data(), value.size());
 }
 
+uint64_t SSTableWriter::appendRow(
+    const std::string& key,
+    const SSTableColumnWriter& value) {
+  return appendRow(key.data(), key.size(), value.data(), value.size());
+}
+
 // FIXPAUL lock
 void SSTableWriter::writeHeader(void const* userdata, size_t userdata_size) {
   if (header_size_ > 0) {
@@ -137,6 +147,10 @@ void SSTableWriter::writeHeader(void const* userdata, size_t userdata_size) {
       userdata_size);
 
   page->sync();
+}
+
+void SSTableWriter::writeIndex(uint32_t index_type, const Buffer& buf) {
+  writeIndex(index_type, buf.data(), buf.size());
 }
 
 void SSTableWriter::writeIndex(uint32_t index_type, void* data, size_t size) {

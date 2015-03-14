@@ -1,0 +1,237 @@
+/**
+ * Adapted from: Semantic UI:
+ *   https://github.com/Semantic-Org/Semantic-UI
+ *   http://www.semantic-ui.com/
+ */
+
+fn-menu,
+.fn-menu {
+  display: block;
+  margin: 1rem 0rem;
+  background: #ffffff;
+  font-weight: normal;
+  box-shadow: 0px 0px 0px 1px rgba(39, 41, 43, 0.15), 0px 1px 2px 0 rgba(0, 0, 0, 0.05);
+  border-radius: 0.2857rem;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+fn-menu::after,
+.fn-menu::after {
+  content: '';
+  display: block;
+  height: 0px;
+  clear: both;
+  visibility: hidden;
+}
+
+fn-menu:first-child,
+.fn-menu:first-child {
+  margin-top: 0rem;
+  border-top:none;
+}
+
+fn-menu:last-child,
+.fn-menu:last-child{
+  margin-bottom: 0rem;
+}
+
+/*--------------
+ Menu Item
+---------------*/
+fn-menu-item,
+.fn-menu-item {
+  background: none;
+  display: block;
+  height: auto!important;
+  border-top: none;
+  border-left: 0 solid transparent;
+  border-right: none;
+  position: relative;
+  display: block;
+  padding: 0.78571em 0.95em;
+  border-top: none;
+  background: none;
+  vertical-align: middle;
+  line-height: 1;
+  text-decoration: none;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+  -webkit-transition: opacity 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+          transition: opacity 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+  font-size: 1rem;
+  line-height: 1.3;
+  font-weight: 500;
+}
+
+fn-menu-item:first-child::before,
+.fn-menu-item:first-child::before {
+  height: 0px;
+}
+
+fn-menu-item::before,
+.fn-menu-item::before {
+  position: absolute;
+  content: '';
+  top: 0%;
+  left: 0px;
+  width: 100%;
+  background: -webkit-linear-gradient(left, rgba(0, 0, 0, 0.03) 0%, rgba(0, 0, 0, 0.1) 1.5em, rgba(0, 0, 0, 0.03) 100%);
+  background: linear-gradient(to right, rgba(0, 0, 0, 0.03) 0%, rgba(0, 0, 0, 0.1) 1.5em, rgba(0, 0, 0, 0.03) 100%);
+  height: 1px;
+}
+
+fn-menu-item:hover,
+.fn-menu-item:hover {
+  cursor: pointer;
+  background: rgba(0, 0, 0, 0.03);
+  color: rgba(0, 0, 0, 0.8);
+}
+
+fn-menu-item[data-active] {
+  background: rgba(0,0,0,.03);
+  border-radius: 0;
+  box-shadow: 2px 0 0 inset;
+}
+
+/*--------------
+ Menu Section
+---------------*/
+fn-menu-section {
+  position: relative;
+  display:block;
+  padding: .78571em .95em;
+}
+
+fn-menu-section:first-child,
+.fn-menu-section:first-child {
+  border-radius: 0.2857rem 0.2857rem 0px 0px;
+}
+
+fn-menu-section:last-child,
+.fn-menu-section:last-child {
+  border-radius: 0px 0px 0.2857rem 0.2857rem;
+}
+
+fn-menu-section::before,
+.fn-menu-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background: -webkit-linear-gradient(left, rgba(0, 0, 0, 0.03) 0%, rgba(0, 0, 0, 0.1) 1.5em, rgba(0, 0, 0, 0.03) 100%);
+  background: linear-gradient(to right, rgba(0, 0, 0, 0.03) 0%, rgba(0, 0, 0, 0.1) 1.5em, rgba(0, 0, 0, 0.03) 100%);
+  height: 1px;
+}
+
+fn-menu-section:first-child::before,
+.fn-menu-section:first-child::before {
+  height: 0px;
+}
+
+/*--------------
+ Menu Title
+---------------*/
+fn-menu-title,
+.fn-menu-title {
+  padding-bottom: 4px;
+  line-height: 1.3;
+  font-weight: 500;
+  font-size: 1rem;
+  background: none;
+  display: block;
+  height: auto!important;
+  border-top: none;
+  border-left: 0 solid transparent;
+  border-right: none;
+  position: relative;
+  display: block;
+  border-top: none;
+  background: none;
+  vertical-align: middle;
+  line-height: 1;
+  text-decoration: none;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+  -webkit-transition: opacity 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+          transition: opacity 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+}
+
+/*--------------------
+ Menu Section Items
+--------------------*/
+fn-menu-section fn-menu-item,
+.fn-menu-section fn-menu-item {
+  background: 0 0;
+  padding: .5rem 1rem;
+  font-size: .9rem;
+  color: rgba(0,0,0,.5);
+}
+
+fn-menu-section fn-menu-item[data-active],
+.fn-menu-section fn-menu-item[data-active] {
+  color: rgba(0,0,0,.8);
+  font-weight: 500;
+  background: transparent;
+  box-shadow: none;
+}
+
+fn-menu-section fn-menu-item:hover,
+.fn-menu-section fn-menu-item:hover {
+  color: rgba(0, 0, 0, 0.85);
+  cursor: pointer;
+  background: #fff;
+}
+
+fn-menu-section fn-menu-item::before,
+.fn-menu-section fn-menu-item::before {
+  height: 0px;
+}
+
+/*--------------------
+ Accordion Menu Section
+--------------------*/
+fn-menu[data-option='accordion'] fn-menu-section fn-menu-item,
+.fn-menu[data-option='accordion'] .fn-menu-section .fn-menu-item{
+  display:none;
+}
+
+fn-menu[data-option='accordion'] fn-menu-section[data-active] fn-menu-item,
+.fn-menu[data-option='accordion'] .fn-menu-section[data-active] .fn-menu-item{
+  display:block;
+}
+
+fn-menu[data-option='accordion'] fn-menu-section,
+.fn-menu[data-option='accordion'] .fn-menu-section{
+  padding: 0;
+}
+
+fn-menu[data-option='accordion'] fn-menu-title,
+.fn-menu[data-option='accordion'] .fn-menu-title {
+  padding: 0.78571em 0.95em;
+}
+
+fn-menu[data-option='accordion'] fn-menu-title:hover,
+.fn-menu[data-option='accordion'] .fn-menu-title:hover{
+  cursor: pointer;
+  background: rgba(0, 0, 0, 0.03);
+  color: rgba(0, 0, 0, 0.8);
+}
+
+fn-menu[data-option='accordion'] fn-menu-section fn-menu-item,
+.fn-menu[data-option='accordion'] .fn-menu-section .fn-menu-item{
+  padding: .5rem 1rem .5rem 2rem;
+}
+
+ul.menu li.submenu[data-option='accordion'] > ul {
+  padding-bottom: .95em;
+}

@@ -28,12 +28,28 @@
       margin: 25px 20px 0 0;
     }
 
-    .hidden {
-      display: none !important;
+    .metric-control-group.group_by {
+      display: none;
     }
 
-    .inline {
-      display: inline-block;
+    .metric-control-group.group_by.active {
+      display: block;
+    }
+
+    .metric-control-group.group_by fn-button[data-active='active'] {
+      background: rgb(226, 232, 237);
+    }
+
+    .metric-control-group.group_by fn-button {
+      float: left;
+    }
+
+    .metric-control-group.aggregation_time_window {
+      border-right: 1px solid rgb(226, 232, 237);
+    }
+
+    .metric-control-group.aggregation_type {
+      border-right: 1px solid rgb(226, 232, 237);
     }
 
     .metric-control-group b {
@@ -43,12 +59,50 @@
       opacity: 0.7;
     }
 
-    .header {
+    .metric-control-group.scale fn-input /deep/ input {
+      width: 40px;
+      padding: 0.67861em 0.8em !important;
+    }
+
+    .metric {
       float:left;
       width: 250px;
       border-right: 1px solid #d4d4d5;
       white-space: nowrap;
       overflow: hidden;
+    }
+
+    .metric > .view {
+      display: none;
+      min-width: 200px;
+      width: 100%;
+    }
+
+    .metric > .view.active {
+      display: block;
+    }
+
+    .metric .view fn-search {
+      width: 235px;
+      margin: 7px 0 0 20px;
+      display: block;
+    }
+
+    .metric fn-search /deep/ .icon {
+      margin-top: 0.65em;
+    }
+
+    .metric fn-search /deep/ ul {
+      margin-top: 34px;
+    }
+
+    .metric .view .fa {
+      opacity: 0.7;
+      margin: 4px 0 0 4px;
+      font-size:0.9em;
+    }
+    .metric .view .fa:hover {
+      cursor: pointer;
     }
 
     fn-tooltip[data-pointer='right']:before {
@@ -61,65 +115,66 @@
 
   </style>
   <div class="metric-control">
-    <div class="header">
-      <h3 class="small"></h3>
+    <div class="metric">
+      <div class="view active" name="header">
+        <h3 class="small"></h3>
+      </div>
     </div>
     <div class='metric-control-group'>
       <b>Aggregate: </b>
-      <fn-dropdown class="inline" name='rollup'>
-        <fn-dropdown-items>
-          <fn-dropdown-item data-value='value'>Value</fn-dropdown-item>
-          <fn-dropdown-item data-value='sum'>Sum</fn-dropdown-item>
-          <fn-dropdown-item data-value='min'>Min</fn-dropdown-item>
-          <fn-dropdown-item data-value='max'>Max</fn-dropdown-item>
-        </fn-dropdown-items>
+      <fn-dropdown class='rollup' data-style="inline small">
+        <fn-dropdown-header>Sum</fn-dropdown-header>
+        <fn-dropdown-item data-value='value'>Value</fn-dropdown-item>
+        <fn-dropdown-item data-value='sum'>Sum</fn-dropdown-item>
+        <fn-dropdown-item data-value='min'>Min</fn-dropdown-item>
+        <fn-dropdown-item data-value='max'>Max</fn-dropdown-item>
       </fn-dropdown>
       <b style="margin-left: 7px;">Window: </sub></b>
-      <fn-dropdown class="inline" name='time_window'>
-        <fn-dropdown-items>
-          <fn-dropdown-item data-value=1>1 second</fn-dropdown-item>
-          <fn-dropdown-item data-value=5>5 seconds</fn-dropdown-item>
-          <fn-dropdown-item data-value=10>10 seconds</fn-dropdown-item>
-          <fn-dropdown-item data-value=20>20 seconds</fn-dropdown-item>
-          <fn-dropdown-item data-value=30>30 seconds</fn-dropdown-item>
-          <fn-dropdown-item data-value=60>1 minute</fn-dropdown-item>
-          <fn-dropdown-item data-value=300>5 minutes</fn-dropdown-item>
-          <fn-dropdown-item data-value=900>15 minutes</fn-dropdown-item>
-          <fn-dropdown-item data-value=1800>30 minutes</fn-dropdown-item>
-          <fn-dropdown-item data-value=3600>1 hour</fn-dropdown-item>
-          <fn-dropdown-item data-value=7200>2 hours</fn-dropdown-item>
-          <fn-dropdown-item data-value=21600>6 hours</fn-dropdown-item>
-          <fn-dropdown-item data-value=43200>12 hours</fn-dropdown-item>
-          <fn-dropdown-item data-value=86400>24 hours</fn-dropdown-item>
-        </fn-dropdown-items>
+      <fn-dropdown class='time_window' data-style="inline small">
+        <fn-dropdown-header>5 seconds</fn-dropdown-header>
+        <fn-dropdown-item data-value=1>1 second</fn-dropdown-item>
+        <fn-dropdown-item data-value=5>5 seconds</fn-dropdown-item>
+        <fn-dropdown-item data-value=10>10 seconds</fn-dropdown-item>
+        <fn-dropdown-item data-value=20>20 seconds</fn-dropdown-item>
+        <fn-dropdown-item data-value=30>30 seconds</fn-dropdown-item>
+        <fn-dropdown-item data-value=60>1 minute</fn-dropdown-item>
+        <fn-dropdown-item data-value=300>5 minutes</fn-dropdown-item>
+        <fn-dropdown-item data-value=900>15 minutes</fn-dropdown-item>
+        <fn-dropdown-item data-value=1800>30 minutes</fn-dropdown-item>
+        <fn-dropdown-item data-value=3600>1 hour</fn-dropdown-item>
+        <fn-dropdown-item data-value=7200>2 hours</fn-dropdown-item>
+        <fn-dropdown-item data-value=21600>6 hours</fn-dropdown-item>
+        <fn-dropdown-item data-value=43200>12 hours</fn-dropdown-item>
+        <fn-dropdown-item data-value=86400>24 hours</fn-dropdown-item>
       </fn-dropdown>
       <b style="margin-left: 7px;">Step: </b>
-      <fn-dropdown class="inline" name='time_step'>
-        <fn-dropdown-items>
-          <fn-dropdown-item data-value=1>1 second</fn-dropdown-item>
-          <fn-dropdown-item data-value=5>5 seconds</fn-dropdown-item>
-          <fn-dropdown-item data-value=10>10 seconds</fn-dropdown-item>
-          <fn-dropdown-item data-value=20>20 seconds</fn-dropdown-item>
-          <fn-dropdown-item data-value=30>30 seconds</fn-dropdown-item>
-          <fn-dropdown-item data-value=60>1 minute</fn-dropdown-item>
-          <fn-dropdown-item data-value=300>5 minutes</fn-dropdown-item>
-          <fn-dropdown-item data-value=900>15 minutes</fn-dropdown-item>
-          <fn-dropdown-item data-value=1800>30 minutes</fn-dropdown-item>
-          <fn-dropdown-item data-value=3600>1 hour</fn-dropdown-item>
-          <fn-dropdown-item data-value=7200>2 hours</fn-dropdown-item>
-          <fn-dropdown-item data-value=21600>6 hours</fn-dropdown-item>
-          <fn-dropdown-item data-value=43200>12 hours</fn-dropdown-item>
-          <fn-dropdown-item data-value=86400>24 hours</fn-dropdown-item>
-        </fn-dropdown-items>
+      <fn-dropdown class='time_step' data-style="inline small">
+        <fn-dropdown-header>10 seconds</fn-dropdown-header>
+        <fn-dropdown-item data-value=1>1 second</fn-dropdown-item>
+        <fn-dropdown-item data-value=5>5 seconds</fn-dropdown-item>
+        <fn-dropdown-item data-value=10>10 seconds</fn-dropdown-item>
+        <fn-dropdown-item data-value=20>20 seconds</fn-dropdown-item>
+        <fn-dropdown-item data-value=30>30 seconds</fn-dropdown-item>
+        <fn-dropdown-item data-value=60>1 minute</fn-dropdown-item>
+        <fn-dropdown-item data-value=300>5 minutes</fn-dropdown-item>
+        <fn-dropdown-item data-value=900>15 minutes</fn-dropdown-item>
+        <fn-dropdown-item data-value=1800>30 minutes</fn-dropdown-item>
+        <fn-dropdown-item data-value=3600>1 hour</fn-dropdown-item>
+        <fn-dropdown-item data-value=7200>2 hours</fn-dropdown-item>
+        <fn-dropdown-item data-value=21600>6 hours</fn-dropdown-item>
+        <fn-dropdown-item data-value=43200>12 hours</fn-dropdown-item>
+        <fn-dropdown-item data-value=86400>24 hours</fn-dropdown-item>
       </fn-dropdown>
 
-      <div class="hidden inline" name="group_by">
-        <b style="margin-left: 7px;">Group By: </b>
-        <fn-dropdown class="inline checkbox">
-          <fn-dropdown-items>
-          </fn-dropdown-items>
-        </fn-dropdown>
-      </div>
+      <b style="margin-left: 7px;">Scale: </b>
+      <fn-dropdown class="scale" data-style="inline small" data-placeholder=0.8>
+        <fn-dropdown-header>1.0</fn-dropdown-header>
+      </fn-dropdown>
+
+      <b style="margin-left: 7px;">Group By: </b>
+      <fn-dropdown class="groupby" data-style="inline small" data-placeholder=0.8>
+        <fn-dropdown-header>&nbsp;&mdash;&nbsp;</fn-dropdown-header>
+      </fn-dropdown>
     </div>
 
     <fn-button class="control_btn" data-size="tiny" style="float: right;">
@@ -156,30 +211,29 @@
         }
 
         if (new_val == "select-metric") {
-          return this.init(false);
+          this.init(false);
         }
-      }
-
-      if (attr == 'data-index') {
-        this.setColorIndex();
       }
     };
 
     this.handleAggregationDisplay = function() {
       var base = this;
-      var elem_names = ["time_window", "time_step"];
+      var elems = [
+        this.querySelector(".time_window"),
+        this.querySelector(".time_step")
+      ];
 
-      elem_names.map(function(name) {
-        var elem = base.querySelector("fn-dropdown[name='" + name + "']");
+      elems.forEach(function(elem) {
         if (base.params.aggr_fn == "value" ) {
-          elem.classList.add("disabled");
+          elem.setAttribute('data-state', 'disabled');
         } else {
-          elem.classList.remove("disabled");
+          elem.removeAttribute('data-state');
         }
       });
     };
 
     this.init = function(dataInitialised) {
+      console.log(this);
       if (!this.basicInit) {
         this.basicInit = true;
         this.setControlButton();
@@ -189,24 +243,10 @@
         this.handleControls();
         this.handleAggregationDisplay();
       }
-
-      if (this.hasAttribute('data-index')) {
-        this.setColorIndex();
-      }
     };
 
-    this.setColorIndex = function() {
-      var index = this.getAttribute('data-index');
-      var header = this.querySelector(".header h3");
-      if (index == 0 || !header) {
-        return;
-      }
-
-      header.classList.add("color" + index % 6);
-    }
-
     this.columnsReloaded = function() {
-      if (this.params.columns && this.params.columns.length > 0) {
+      if (this.params.columns.length > 0) {
         this.handleGroupByControls();
       }
     };
@@ -245,17 +285,14 @@
       var base = this;
       this.setHeader();
 
-      var rollup = this.querySelector("fn-dropdown[name='rollup']");
+      var rollup = this.querySelector(".rollup");
       rollup.setAttribute('data-preselected', this.params.aggr_fn);
-      rollup.setAttribute('data-resolved', 'resolved');
 
-      var time_window = this.querySelector("fn-dropdown[name='time_window']");
+      var time_window = this.querySelector(".time_window");
       time_window.setAttribute('data-preselected', this.params.aggr_window);
-      time_window.setAttribute('data-resolved', 'resolved');
 
-      var time_step = this.querySelector("fn-dropdown[name='time_step']");
+      var time_step = this.querySelector(".time_step");
       time_step.setAttribute('data-preselected', this.params.aggr_step);
-      time_step.setAttribute('data-resolved', 'resolved');
 
       rollup.addEventListener("fn-dropdown-item-click", function(e) {
         base.params.aggr_fn = e.srcElement.getAttribute('data-value');
@@ -273,6 +310,12 @@
         base.attributeChangedEvent("aggr_step");
       }, false);
 
+/*
+      scale_input.addEventListener('fn-input-submit', function(e) {
+        base.params.scale = e.detail;
+        base.attributeChangedEvent("scale");
+      }, false);
+*/
     };
 
     this.splitColumns = function(columns) {
@@ -298,44 +341,38 @@
 
     this.handleGroupByControls = function() {
       var base = this;
-      var parent_elem = this.querySelector("div[name='group_by']");
-      var dropdown = parent_elem.querySelector("fn-dropdown");
-      var dropdown_items = parent_elem.querySelector("fn-dropdown-items");
+      var group_by_field = this.querySelector(".group.group_by");
       var columns = this.splitColumns(this.params.columns);
       var group_by = this.splitColumns(this.params.group_by);
 
       if (columns.length > 0 ) {
-        parent_elem.classList.remove("hidden");
+        group_by_field.classList.add("active");
       }
 
-
       columns.map(function(c) {
-        var item = document.createElement("fn-dropdown-item");
-        item.innerHTML = "<fn-checkbox></fn-checkbox>" + c;
-        item.setAttribute('data-value', c);
+        var button = document.createElement("fn-button");
+        button.innerHTML = c;
+        button.setAttribute('data-value', c);
+        button.setAttribute('data-size', 'tiny');
 
         if (group_by.indexOf(c) > -1) {
-          item.setAttribute("data-selected", "selected");
-          item.querySelector("fn-checkbox").setAttribute('data-preselected', 'active');
+          button.setAttribute("data-active", "active");
         }
 
-        dropdown_items.appendChild(item);
+        group_by_field.appendChild(button);
+        button.addEventListener("fn-button-click", function() {
+          var group_by_csv = base.params.group_by;
+          if (this.getAttribute("data-state") == "active") {
+            this.removeAttribute("data-state");
+            group_by_csv = base.removeFromCSV(group_by_csv, this.getAttribute('data-value'));
+          } else {
+            this.setAttribute("data-state", "active");
+            group_by_csv = base.addToCSV(group_by_csv, this.getAttribute('data-value'));
+          }
+          base.params.group_by = group_by_csv;
+          base.attributeChangedEvent("group_by");
+        });
       });
-
-      dropdown.setAttribute('data-resolved', 'resolved');
-
-      dropdown.addEventListener('fn-dropdown-item-click', function(e) {
-        base.params.group_by = base.addToCSV(
-            base.params.group_by, e.srcElement.getAttribute('data-value'));
-        base.attributeChangedEvent('group_by');
-      }, false);
-
-      dropdown.addEventListener('fn-dropdown-item-unselect', function(e) {
-          base.params.group_by = base.removeFromCSV(
-            base.params.group_by, e.srcElement.getAttribute('data-value'));
-          base.attributeChangedEvent('group_by');
-      }, false);
-
     };
 
     this.fireNewMetricEvent = function(name) {

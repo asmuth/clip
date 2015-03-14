@@ -81,6 +81,7 @@ public:
   size_t read(Buffer* buf);
 
   void write(const Buffer& buf);
+  void write(const String& buf);
   void write(const void* buf, size_t buf_len);
 
   int fd() const;

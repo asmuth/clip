@@ -11,6 +11,8 @@
 #define _FNORD_IO_MMAPPED_FILE_H_
 #include <fnord-base/exception.h>
 #include <fnord-base/io/file.h>
+#include <fnord-base/VFS.h>
+#include <fnord-base/autoref.h>
 #include <stdlib.h>
 #include <stdint.h>
 #include <string>
@@ -18,7 +20,7 @@
 namespace fnord {
 namespace io {
 
-class MmappedFile {
+class MmappedFile : public VFSFile {
 public:
   MmappedFile() = delete;
   MmappedFile(File&& file);
@@ -26,7 +28,7 @@ public:
   MmappedFile& operator=(const MmappedFile& copy) = delete;
   ~MmappedFile();
 
-  inline void* data() const {
+  void* data() const {
     return data_;
   }
 
@@ -42,20 +44,8 @@ public:
     return data_;
   }
 
-  inline size_t size() const {
+  size_t size() const {
     return size_;
-  }
-
-  template <typename T>
-  inline T* structAt(size_t pos) const {
-#ifndef NDEBUG
-    if (pos >= size_) {
-      abort();
-      RAISE(kIndexError, "position out of bounds");
-    }
-#endif
-
-    return (T*) (((char *) data_) + pos);
   }
 
   bool isWritable() const;

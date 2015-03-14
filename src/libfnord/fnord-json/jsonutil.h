@@ -9,6 +9,7 @@
  */
 #ifndef _FNORD_JSONUTIL_H
 #define _FNORD_JSONUTIL_H
+#include "fnord-base/option.h"
 #include "fnord-json/jsontypes.h"
 
 namespace fnord {
@@ -18,6 +19,16 @@ class JSONUtil {
 public:
 
   static JSONObject::const_iterator objectLookup(
+      JSONObject::const_iterator begin,
+      JSONObject::const_iterator end,
+      const std::string& key);
+
+  static Option<String> objectGetString(
+      JSONObject::const_iterator begin,
+      JSONObject::const_iterator end,
+      const std::string& key);
+
+  static Option<uint64_t> objectGetUInt64(
       JSONObject::const_iterator begin,
       JSONObject::const_iterator end,
       const std::string& key);

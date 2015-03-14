@@ -58,6 +58,10 @@ void BinaryMessageReader::seekTo(size_t pos) {
   pos_ = pos;
 }
 
+size_t BinaryMessageReader::remaining() const {
+  return size_ - pos_;
+}
+
 
 }
 }
