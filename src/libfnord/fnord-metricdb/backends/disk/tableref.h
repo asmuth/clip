@@ -34,7 +34,6 @@ public:
   static std::unique_ptr<TableRef> createTable(
       const std::string& filename,
       const std::string& metric_key,
-      fnord::File&& file,
       uint64_t generation,
       const std::vector<uint64_t>& parents);
 

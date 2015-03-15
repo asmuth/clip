@@ -156,14 +156,9 @@ std::shared_ptr<MetricSnapshot> Metric::createSnapshot(bool writable) {
   if (writable) {
     // open new file
     auto fileref = file_repo_->createFile();
-    auto file = File::openFile(
-        fileref.absolute_path,
-        File::O_READ | File::O_WRITE | File::O_CREATE);
-
     snapshot->appendTable(TableRef::createTable(
         fileref.absolute_path,
         key_,
-        std::move(file),
         ++max_generation_,
         parents));
   }

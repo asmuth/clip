@@ -19,10 +19,17 @@ FileRepository::FileRepository(
 
 FileRepository::FileRef FileRepository::createFile() const {
   FileRef fileref;
-  fileref.logical_filename = rnd_.alphanumericString(32);
-  fileref.absolute_path = FileUtil::joinPaths(
-      basedir_,
-      fileref.logical_filename);
+
+  for (;;) {
+    fileref.logical_filename = rnd_.alphanumericString(32);
+    fileref.absolute_path = FileUtil::joinPaths(
+        basedir_,
+        fileref.logical_filename);
+
+    if (!FileUtil::exists(fileref.absolute_path)) {
+      break;
+    }
+  }
 
   return fileref;
 }
