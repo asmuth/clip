@@ -62,23 +62,12 @@ DateUtil.isInstanceOfDate = function(date) {
 };
 
 // @date Javascript Date instance or timestamp
-DateUtil.getDateObject = function(date, precision, advanced, utc_offset) {
+DateUtil.getDateObject = function(date, precision, advanced) {
   if (!DateUtil.isInstanceOfDate(date)) {
     date = new Date(date);
 
     if (date == 'Invalid Date') {
       return;
-    }
-  }
-
-  //difference between utc and local time
-  var timezoneOffset = date.getTimezoneOffset();
-
-  if (utc_offset) {
-    utc_offset = parseInt(utc_offset);
-    if (utc_offset != timezoneOffset) {
-      var offset = (utc_offset - timezoneOffset) * DateUtil.millisPerMinute;
-      date.setTime(date.getTime() - offset);
     }
   }
 
@@ -89,13 +78,13 @@ DateUtil.getDateObject = function(date, precision, advanced, utc_offset) {
     'month': date.getMonth(),
     'date' : date.getDate(),
     'day' : date.getDate(),
-    'utc_offset' : utc_offset ? utc_offset : 0
   }
 
   if (advanced) {
     dateObj.num_days = DateUtil.daysInMonth(dateObj.month + 1, dateObj.year);
 
     var first_day = new Date(dateObj.year + "-" + (dateObj.month + 1) + "-01");
+
     //counting from 0 where Monday = 0 and Sunday = 6
     dateObj.first_day = (first_day.getDay() == 0) ? 6 : first_day.getDay() - 1;
     dateObj.month_timestamp = first_day.getTime();
@@ -212,7 +201,19 @@ DateUtil.getTimeTimestamp = function(timestamp) {
     date.getSeconds() * DateUtil.millisPerSecond);
 };
 
-DateUtil.getTimestampObj = function(timestamp) {
+DateUtil.getTimestampObj = function(timestamp, utc_offset) {
+  if (utc_offset) {
+    //difference between utc and local time
+    var timezoneOffset = new Date().getTimezoneOffset();
+    var utc_offset = parseInt(utc_offset);
+
+    if (utc_offset != timezoneOffset) {
+      var offset = (utc_offset - timezoneOffset) * DateUtil.millisPerMinute;
+      //date.setTime(date.getTime() - offset);
+      timestamp = timestamp - offset;
+    }
+  }
+
   var time_ts = DateUtil.getTimeTimestamp(timestamp);
   return {
     'time': time_ts,
