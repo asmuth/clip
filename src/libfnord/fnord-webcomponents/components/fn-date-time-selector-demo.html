@@ -38,7 +38,7 @@
   </section>
 
   <section>
-    <h1><i>Example 2 &raquo;</i> Selected EndDateTime</h1>
+    <h1><i>Example 2 &raquo;</i> Selected Enddate and Time</h1>
 
     <!-- DateTimeSelector returns timestamps in milliseconds but takes as input timestamps in seconds, too -->
 
@@ -63,7 +63,14 @@
   <section>
     <h1><i>Example 3 &raquo;</i> UTC Offset</h1>
 
-    <fn-date-time-selector data-range='3600000' data-resolved='resolved' data-until='1426596428505' data-utc-offset='+60'>
+    <!--
+      date-utc-offset takes the difference between UTC and the timezone that should be used in minutes
+      e.g. GMT+2 => data-utc-offset='-120'
+
+      If data-utc-offset isn't set all dates and times are displayed in (the browser's) local time
+    -->
+
+    <fn-date-time-selector data-range='3600000' data-resolved='resolved' data-until='1426596428505' data-utc-offset='-120'>
       <fn-date-time-selector-icon class='left'></fn-date-time-selector-icon>
       <fn-dropdown class="inline">
         <fn-dropdown-items>
@@ -82,7 +89,7 @@
   </section>
 
   <section>
-    <h1><i>Example 3 &raquo;</i> Only Past Dates Selectable</h1>
+    <h1><i>Example 4 &raquo;</i> Restricted Date Selection (here: past dates)</h1>
 
     <!-- Dates after Date.now() aren't selectable and thus don't trigger any event -->
     <!-- dat-selectable='future' is supoorted as well -->
@@ -106,7 +113,7 @@
   </section>
 
   <section>
-    <h1><i>Example 4 &raquo;</i> Second Precision</h1>
+    <h1><i>Example 5 &raquo;</i> Time With Second Precision</h1>
 
     <!-- Time Description is rendered as hh:mm:ss -->
 
