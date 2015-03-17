@@ -25,6 +25,7 @@ DateUtil.getDateTimeDescr = function(date) {
     return "now";
   }
 
+
   var descr =
     date.year + "-" +
     Fnord.appendLeadingZero(date.month + 1) + "-" +
@@ -67,6 +68,17 @@ DateUtil.getDateObject = function(date, precision, advanced, utc_offset) {
 
     if (date == 'Invalid Date') {
       return;
+    }
+  }
+
+  //difference between utc and local time
+  var timezoneOffset = date.getTimezoneOffset();
+
+  if (utc_offset) {
+    utc_offset = parseInt(utc_offset);
+    if (utc_offset != timezoneOffset) {
+      var offset = (utc_offset - timezoneOffset) * DateUtil.millisPerMinute;
+      date.setTime(date.getTime() - offset);
     }
   }
 
