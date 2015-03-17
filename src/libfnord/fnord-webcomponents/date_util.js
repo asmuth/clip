@@ -61,7 +61,7 @@ DateUtil.isInstanceOfDate = function(date) {
 };
 
 // @date Javascript Date instance or timestamp
-DateUtil.getDateObject = function(date, precision, advanced) {
+DateUtil.getDateObject = function(date, precision, advanced, utc_offset) {
   if (!DateUtil.isInstanceOfDate(date)) {
     date = new Date(date);
 
@@ -77,6 +77,7 @@ DateUtil.getDateObject = function(date, precision, advanced) {
     'month': date.getMonth(),
     'date' : date.getDate(),
     'day' : date.getDate(),
+    'utc_offset' : utc_offset ? utc_offset : 0
   }
 
   if (advanced) {
