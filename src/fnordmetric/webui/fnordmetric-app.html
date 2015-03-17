@@ -199,7 +199,8 @@
       }
 
       if (typeof push_state == "undefined" || push_state === true) {
-        window.history.pushState({url: raw_url}, "", "#" + raw_url);
+        var push_url = window.location.origin + window.location.pathname + "#" + raw_url;
+        window.history.pushState({url: raw_url}, "", push_url);
       }
 
       var viewport = document.querySelector("#fnordmetric-viewport");
