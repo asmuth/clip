@@ -122,11 +122,16 @@
 
       var date = DateUtil.getDateObject(
         this.timestamp.date + this.timestamp.time,
-        this.getAttribute('data-precision'));
+        this.getAttribute('data-precision'),
+        false,
+        this.getAttribute('data-utc-offset')
+      );
+
 
 
       //TODO timedescr from timestamp
       header.innerHTML = DateUtil.getDateTimeDescr(date);
+      console.log(date);
 
       calendar.setAttribute('data-selected', this.timestamp.date);
       calendar.setAttribute('data-timestamp', this.timestamp.date);

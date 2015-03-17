@@ -60,7 +60,28 @@
     </fn-date-time-selector>
   </section>
 
-   <section>
+  <section>
+    <h1><i>Example 3 &raquo;</i> UTC Offset</h1>
+
+    <fn-date-time-selector data-range='3600000' data-resolved='resolved' data-until='1426596428505' data-utc-offset='+60'>
+      <fn-date-time-selector-icon class='left'></fn-date-time-selector-icon>
+      <fn-dropdown class="inline">
+        <fn-dropdown-items>
+          <fn-dropdown-item data-value=300000>5 minutes</fn-dropdown-item>
+          <fn-dropdown-item data-value=900000>15 minutes</fn-dropdown-item>
+          <fn-dropdown-item data-value=1800000>30 minutes</fn-dropdown-item>
+          <fn-dropdown-item data-value=3600000>1 hour</fn-dropdown-item>
+          <fn-dropdown-item data-value=14400000>4 hours</fn-dropdown-item>
+          <fn-dropdown-item data-value=43200000>12 hours</fn-dropdown-item>
+          <fn-dropdown-item data-value=86400000>1 day</fn-dropdown-item>
+        </fn-dropdown-items>
+      </fn-dropdown>
+      <fn-date-time-selector-header></fn-date-time-selector-header>
+      <fn-date-time-selector-icon class='right'></fn-date-time-selector-icon>
+    </fn-date-time-selector>
+  </section>
+
+  <section>
     <h1><i>Example 3 &raquo;</i> Only Past Dates Selectable</h1>
 
     <!-- Dates after Date.now() aren't selectable and thus don't trigger any event -->
