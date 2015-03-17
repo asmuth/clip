@@ -47,7 +47,9 @@
       var until = DateUtil.parseTimestamp(this.getAttribute('data-until'));
       this.setAttribute('data-until', until);
 
-      this.timestamp = DateUtil.getTimestampObj(until);
+      this.timestamp = DateUtil.getTimestampObj(
+        until, this.getAttribute('data-utc-offset')
+      );
     };
 
     this.checkRangeAttr = function() {
@@ -120,18 +122,15 @@
       var calendar = this.querySelector("fn-calendar");
       var timeinput = this.querySelector("fn-timeinput");
 
+
       var date = DateUtil.getDateObject(
         this.timestamp.date + this.timestamp.time,
         this.getAttribute('data-precision'),
-        false,
-        this.getAttribute('data-utc-offset')
+        false
       );
-
-
 
       //TODO timedescr from timestamp
       header.innerHTML = DateUtil.getDateTimeDescr(date);
-      console.log(date);
 
       calendar.setAttribute('data-selected', this.timestamp.date);
       calendar.setAttribute('data-timestamp', this.timestamp.date);
