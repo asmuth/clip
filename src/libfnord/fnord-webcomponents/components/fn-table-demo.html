@@ -133,4 +133,100 @@
     </script>
   </section>
 
+
+  <!-- Example 4: Paginated Table -->
+  <section>
+    <h1><i>Example 4 &raquo;</i> Paginated Table</h1>
+    <fn-pager data-for data-current-page='0' data-last-item='10' data-per-page='3'></fn-pager>
+    <fn-table id="example-table-4" data-per-page="3" data-page="0">
+      <fn-table-column>A</fn-table-column>
+      <fn-table-column>B</fn-table-column>
+      <fn-table-column>C</fn-table-column>
+      <table>
+        <tr><td>0</td><td>Z</td><td>a</td></tr>
+        <tr><td>1</td><td>G</td><td>a</td></tr>
+        <tr><td>2</td><td>H</td><td>a</td></tr>
+        <tr><td>3</td><td>Y</td><td>a</td></tr>
+        <tr><td>4</td><td>U</td><td>a</td></tr>
+        <tr><td>5</td><td>D</td><td>a</td></tr>
+        <tr><td>6</td><td>E</td><td>a</td></tr>
+        <tr><td>7</td><td>Y</td><td>a</td></tr>
+        <tr><td>8</td><td>R</td><td>a</td></tr>
+        <tr><td>9</td><td>A</td><td>a</td></tr>
+      </table>
+    </fn-table>
+
+    <fn-pagination data-for data-circling></fn-pagination>
+    <fn-table id="example-table-5" data-per-page="3" data-page="0">
+      <fn-table-column>A</fn-table-column>
+      <fn-table-column>B</fn-table-column>
+      <table>
+        <tr><td>0</td><td>Z</td></tr>
+        <tr><td>1</td><td>G</td></tr>
+        <tr><td>2</td><td>H</td></tr>
+        <tr><td>3</td><td>Y</td></tr>
+        <tr><td>4</td><td>U</td></tr>
+        <tr><td>5</td><td>D</td></tr>
+        <tr><td>6</td><td>E</td></tr>
+        <tr><td>7</td><td>Y</td></tr>
+        <tr><td>8</td><td>R</td></tr>
+        <tr><td>9</td><td>A</td></tr>
+      </table>
+    </fn-table>
+
+  </section>
+
+  <script type='text/javascript'>
+    var pager = document.querySelector('fn-pager');
+    var table4 = document.querySelector("fn-table#example-table-4");
+    pager.forElement(table4);
+
+    var pagination = document.querySelector("fn-pagination");
+    var table5 = document.querySelector("fn-table#example-table-5");
+    pagination.forElement(table5);
+  </script>
+
+   <section>
+    <h1><i>Example 5 &raquo;</i> Presorted Table</h1>
+    <fn-table>
+      <fn-table-column data-presort="asc" data-sortable="lex">Server</fn-table-column>
+      <fn-table-column data-sortable="num">Last Insert</fn-table-column>
+      <table>
+        <tr><td>foo.1</td><td>1422274724</td></tr>
+        <tr><td>am.net</td><td>1422274822</td></tr>
+        <tr><td>exp.foo.net</td><td>1422274768</td></tr>
+      </table>
+    </fn-table>
+  </section>
+
+  <script type='text/javascript'>
+    var pager = document.querySelector('fn-pager');
+    var table4 = document.querySelector("fn-table#example-table-4");
+    pager.forElement(table4);
+
+    var pagination = document.querySelector("fn-pagination");
+    var table5 = document.querySelector("fn-table#example-table-5");
+    pagination.forElement(table5);
+  </script>
+
+  <section>
+    <h1><i>Example 6 &raquo;</i> Number of Rows Adjusted to Fit Specific Height</h1>
+    <fn-table name='fitted_size'>
+      <fn-table-column>Type</fn-table-column>
+      <table>
+        <tr><td>30kg Bag</td></tr>
+        <tr><td>Golf Bag</td></tr>
+        <tr><td>20kg Bag</td></tr>
+        <tr><td>Bike</td></tr>
+        <tr><td>30kg Bag<td></tr>
+      </table>
+    </fn-table>
+
+    <script type='text/javascript'>
+      document.querySelector(
+        "fn-table[name='fitted_size']").setDataPerPageForHeight(200);
+    </script>
+  </section>
+
+
 </template>
