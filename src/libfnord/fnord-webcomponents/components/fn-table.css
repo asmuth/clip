@@ -26,6 +26,10 @@ fn-table table[name='visible'] {
   display: table;
 }
 
+fn-table-column {
+  display: none;
+}
+
 .fn-table[data-page],
 fn-table[data-page] /deep/ table {
   margin-top: 0;

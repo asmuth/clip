@@ -83,6 +83,11 @@
       });
 
       //this.shadowRoot.innerHTML = "";
+      var old_tbl = this.querySelector("table[name='visible']");
+      if (old_tbl) {
+        this.removeChild(old_tbl);
+      }
+
       this.appendChild(tpl);
       this.renderRows();
     };
@@ -133,6 +138,7 @@
       })(this);
 
       var is_selectable = this.getAttribute("data-selectable") != null;
+
       this.forEachRowWithPagination(function(row, index) {
         var tr_elem = document.createElement("tr");
         tr_elem.addEventListener("click", onRowClick, false);
@@ -176,7 +182,7 @@
     };
 
     this.forEachRowWithPagination = function(cb) {
-      var all_rows = this.querySelectorAll("tr");
+      var all_rows = this.querySelectorAll("tbody tr");
       var rows_per_page = this.rowsPerPage();
       var begin;
       var end;
