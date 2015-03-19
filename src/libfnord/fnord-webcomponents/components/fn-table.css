@@ -18,6 +18,14 @@ fn-table /deep/ table {
   border-spacing: 0px;
 }
 
+fn-table table {
+  display: none;
+}
+
+fn-table table[name='visible'] {
+  display: table;
+}
+
 .fn-table[data-page],
 fn-table[data-page] /deep/ table {
   margin-top: 0;

@@ -19,7 +19,7 @@
 </style>
 
 <template id="fn-table-base-tpl">
-  <table>
+  <table name='visible'>
     <thead>
       <tr></tr>
     </thead>
@@ -35,7 +35,6 @@
         this.appendChild(document.createElement("table"));
       }
 
-      this.createShadowRoot();
       this.renderTable();
       this.setAttribute("data-resolved", "data-resolved");
     };
@@ -83,13 +82,13 @@
         header_row.appendChild(th_elem);
       });
 
-      this.shadowRoot.innerHTML = "";
-      this.shadowRoot.appendChild(tpl);
+      //this.shadowRoot.innerHTML = "";
+      this.appendChild(tpl);
       this.renderRows();
     };
 
     this.renderRows = function() {
-      var tbody = this.shadowRoot.querySelector("table > tbody");
+      var tbody = this.querySelector("table[name='visible'] > tbody");
       tbody.innerHTML = "";
 
       var onRowClick = (function(base) {
@@ -315,8 +314,8 @@
       * Set data-per-page so that the table fits the max height
       */
     this.setDataPerPageForHeight = function(height) {
-      var header = this.shadowRoot.querySelector("thead th");
-      var row_height = this.shadowRoot.querySelector("tbody td").offsetHeight;
+      var header = this.querySelector("table[name='visible'] thead th");
+      var row_height = this.querySelector("table[name='visible'] tbody td").offsetHeight;
       var data_per_page;
 
       //rows haven't been rendered yet, return default
