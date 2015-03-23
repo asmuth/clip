@@ -14,7 +14,18 @@
 <script type='text/javascript'>
   var CheckBoxComponent = function() {
     this.createdCallback = function() {
-      var tpl = Fnord.getTemplate("fn-checkbox", "base");
+
+      if (!this.querySelector("input")) {
+        var tpl = Fnord.getTemplate("fn-checkbox", "base");
+
+        var first_child = this.firstChild;
+
+        if (first_child) {
+          this.insertBefore(tpl, first_child);
+        } else{
+          this.appendChild(tpl);
+        }
+      }
 
       if (this.hasAttribute('data-type')) {this.setInputType();}
       if (this.hasAttribute('data-state')) {this.setState();}
