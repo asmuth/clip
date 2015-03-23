@@ -15,22 +15,12 @@
   var CheckBoxComponent = function() {
     this.createdCallback = function() {
 
-      if (!this.querySelector("input")) {
-        var tpl = Fnord.getTemplate("fn-checkbox", "base");
 
-        var first_child = this.firstChild;
 
-        if (first_child) {
-          this.insertBefore(tpl, first_child);
-        } else{
-          this.appendChild(tpl);
-        }
-      }
-
-      if (this.hasAttribute('data-type')) {this.setInputType();}
+     /* if (this.hasAttribute('data-type')) {this.setInputType();}
       if (this.hasAttribute('data-state')) {this.setState();}
       if (this.hasAttribute('data-style')) {this.setStyle();}
-      if (this.hasAttribute('data-preselected')) {this.setPreselection(); }
+      if (this.hasAttribute('data-preselected')) {this.setPreselection(); }*/
 
       this.attributeChangedCallback();
 
@@ -57,12 +47,10 @@
     };
 
     this.toggleActiveState = function() {
-      var field = this.shadowRoot.querySelector(".field");
 
-      if (field.hasAttribute('data-active')) {
+      if (this.hasAttribute('data-active')) {
         this.removeAttribute('data-active');
         this.removeAttribute('data-preselected');
-        field.removeAttribute('data-active');
 
         var ev = new CustomEvent("fn-checkbox-unselect", {
             bubbles: true,
@@ -72,7 +60,7 @@
 
       } else {
         this.setAttribute('data-active', 'active');
-        field.setAttribute('data-active', 'active');
+
 
         var ev = new CustomEvent("fn-checkbox-select", {
             bubbles: true,
