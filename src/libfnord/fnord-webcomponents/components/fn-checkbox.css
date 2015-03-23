@@ -8,17 +8,30 @@ fn-checkbox {
   position: relative;
   display: inline-block;
   height: 17px;
-  font-size: 1rem;
-  line-height: 15px;
-  min-width: 17px;
+  width: 17px;
+  font-size: 14px;
+  line-height: 1em;
   -webkit-backface-visibility: hidden;
           backface-visibility: hidden;
-  outline: none;
   vertical-align: middle;
-  font-family: 'Helvetica Neue',Arial,Helvetica,sans-serif;
-  font-size: 14px;
-  line-height: 1.33;
   color: rgba(0,0,0,.8);
+  -webkit-transition: color .2s ease;
+  transition: color .2s ease;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  display: inline-block;
+  outline: 0;
+  background: #fff;
+  border-radius: .25em;
+  -webkit-transition: background-color .3s ease,border .3s ease,box-shadow .3s ease;
+  transition: background-color .3s ease,border .3s ease,box-shadow .3s ease;
+  border: 1px solid #d4d4d5;
+  content: '';
+  top: -1px;
+  left: -1px;
+  cursor: pointer;
 }
 
 fn-checkbox input {
@@ -37,35 +50,7 @@ fn-checkbox input {
   vertical-align:top;
 }
 
-fn-checkbox {
-  cursor: pointer;
-  color: rgba(0,0,0,.8);
-  -webkit-transition: color .2s ease;
-  transition: color .2s ease;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-  font-size: 1em;
-  display:block;
-  padding-left: 1.75em;
-  outline: 0;
-}
-
-fn-checkbox input:before {
-  position: absolute;
-  line-height: 1;
-  width: 17px;
-  height: 17px;
-  top: -1px;
-  left: -1px;
-  content: '';
-  background: #fff;
-  border-radius: .25em;
-  -webkit-transition: background-color .3s ease,border .3s ease,box-shadow .3s ease;
-  transition: background-color .3s ease,border .3s ease,box-shadow .3s ease;
-  border: 1px solid #d4d4d5;
-  content: '';
+fn-checkbox-label {
 }
 
 fn-checkbox input:after,
