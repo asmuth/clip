@@ -16,6 +16,11 @@
       if (this.hasAttribute('data-resolved')) {
         this.initHeaderItem();
       }
+
+      //close dropdown only if click event is outside
+      this.addEventListener('click', function(e) {
+        e.stopPropagation();
+      }, false);
     };
 
     this.attributeChangedCallback = function(attr, old_val, new_val) {
@@ -71,7 +76,7 @@
             innerHTML += ", ";
           }
 
-          innerHTML += selected_items[i].innerText
+          innerHTML += selected_items[i].innerText;
         }
 
       } else {
@@ -97,8 +102,15 @@
            innerHTML = this.querySelector("fn-dropdown-item").innerHTML;
           }
         } else {
-          //set selected_item's html as header (standard case)
-          innerHTML = selected_item.innerHTML;
+          //set items input value as html header
+          if (selected_item.hasAttribute('data-input-select')) {
+            var input = selected_item.querySelector("input");
+            innerHTML = input.value;
+
+          } else {
+            //set selected_item's html as header (standard case)
+            innerHTML = selected_item.innerHTML;
+          }
         }
       }
 
@@ -154,12 +166,38 @@
 
     this.setItemEventListeners = function() {
       var base = this;
-      var items = this.querySelectorAll("fn-dropdown-item");
+      var items = this.querySelectorAll("fn-dropdown-item:not([data-input-select])");
+      var input_items = this.querySelectorAll('fn-dropdown-item[data-input-select]');
 
       for (var i = 0; i < items.length; i++) {
         items[i].onclick = function() {
           base.onItemClick(this);
-          console.log(this);
+        }
+      }
+
+
+      for (var i = 0; i < input_items.length; i++) {
+        input_items[i].addEventListener('click', function(e) {
+          e.stopPropagation;
+        }, false);
+
+        var input = input_items[i].querySelector("input");
+        var checkbox = input_items[i].querySelector("fn-checkbox");
+        var item = input_items[i];
+
+        if (input) {
+          input.addEventListener('keydown', function(e) {
+            e.stopPropagation();
+
+            if (e.keyCode == 13) {
+              if (checkbox) {
+                checkbox.setAttribute('data-active', 'active');
+              }
+
+              base.onItemClick(item);
+
+            }
+          }, false);
         }
       }
 
