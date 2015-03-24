@@ -159,6 +159,7 @@
       for (var i = 0; i < items.length; i++) {
         items[i].onclick = function() {
           base.onItemClick(this);
+          console.log(this);
         }
       }
 
@@ -184,6 +185,7 @@
           selected = false;
           item.removeAttribute('data-selected');
 
+          //not completely unselectable dropdown
           if (this.hasAttribute('data-force-select') &&
               !this.querySelector('fn-dropdown-item[data-selected]')) {
 
@@ -191,7 +193,6 @@
 
             if (default_select) {
               default_select.setAttribute('data-selected', 'selected');
-              selected = true;
               checkbox = default_select.querySelector('fn-checkbox');
 
               if (checkbox) {
