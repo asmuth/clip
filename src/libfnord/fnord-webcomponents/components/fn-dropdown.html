@@ -26,7 +26,7 @@
 
     this.onDocumentClick = function() {
       this.hideDropdown();
-    }
+    };
 
     // Checks if a header_elem exists and renders one if not
     this.initHeaderItem = function() {
@@ -105,6 +105,7 @@
       header.innerHTML = innerHTML;
     };
 
+
     this.toggleDropdown = function() {
       if (this.hasAttribute('data-active')) {
         this.hideDropdown();
@@ -179,8 +180,25 @@
 
         //checkbox has been unselected
         if (!checkbox.hasAttribute('data-active')) {
+
           selected = false;
           item.removeAttribute('data-selected');
+
+          if (this.hasAttribute('data-force-select') &&
+              !this.querySelector('fn-dropdown-item[data-selected]')) {
+
+            var default_select = this.querySelector('fn-dropdown-item[data-default]');
+
+            if (default_select) {
+              default_select.setAttribute('data-selected', 'selected');
+              selected = true;
+              checkbox = default_select.querySelector('fn-checkbox');
+
+              if (checkbox) {
+                checkbox.setAttribute('data-active', 'active');
+              }
+            }
+          }
         }
 
       } else {
