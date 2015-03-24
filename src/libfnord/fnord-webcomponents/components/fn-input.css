@@ -11,14 +11,16 @@
 ---------------------*/
 
 fn-input,
-.fn-input {
+.fn-input,
+input.fn-input {
   position: relative;
   display: inline-block;
   color: rgba(0, 0, 0, 0.8);
 }
 
 fn-input input,
-.fn-input input {
+.fn-input input,
+input.fn-input {
   margin: 0em;
   width: 100%;
   outline: none;
@@ -41,11 +43,13 @@ fn-input input,
 ---------------------*/
 /* browsers require these rules separate */
 fn-input input::-webkit-input-placeholder,
-.fn-input input::-webkit-input-placeholder {
+.fn-input input::-webkit-input-placeholder,
+input.fn-input::-webkit-input-placeholder{
   color: rgba(0, 0, 0, 0.4);
 }
 fn-input input::-moz-placeholder,
-.fn-input input::-moz-placeholder {
+.fn-input input::-moz-placeholder,
+input.fn-input::-moz-placeholder{
   color: rgba(0, 0, 0, 0.4);
 }
 
@@ -57,7 +61,8 @@ fn-input input::-moz-placeholder,
 ---------------------*/
 
 fn-input input:active,
-.fn-input input:active {
+.fn-input input:active,
+input.fn-input:active{
   border-color: rgba(0, 0, 0, 0.3);
   background: #fafafa;
   color: rgba(0, 0, 0, 0.8);
@@ -68,19 +73,22 @@ fn-input input:active,
         Focus
 ---------------------*/
 fn-input input:focus,
-.fn-input input:focus {
+.fn-input input:focus,
+input.fn-input:focus {
   border-color: rgba(39, 41, 43, 0.3);
   background: #ffffff;
   color: rgba(0, 0, 0, 0.8);
   box-shadow: none;
 }
 fn-input input:focus input::-webkit-input-placeholder,
-.fn-input input:focus input::-webkit-input-placeholder {
+.fn-input input:focus input::-webkit-input-placeholder,
+input.fn-input:focus input::-webkit-input-placeholder{
   color: rgba(0, 0, 0, 0.8);
 }
 
 fn-input input:focus input::-moz-placeholder,
-.fn-input input:focus input::-moz-placeholder {
+.fn-input input:focus input::-moz-placeholder,
+input.fn-input:focus input::-moz-placeholder{
   color: rgba(0, 0, 0, 0.8);
 }
 
@@ -88,7 +96,8 @@ fn-input input:focus input::-moz-placeholder,
         Error
 ---------------------*/
 fn-input.error input,
-.fn-input.error input {
+.fn-input.error input,
+input.fn-input.error {
   background-color: #fff0f0;
   border-color: #dbb1b1;
   color: #d95c5c;
@@ -97,18 +106,21 @@ fn-input.error input,
 
 /* Error Placeholder */
 fn-input.error input ::-webkit-input-placeholder,
-.fn-input.error input ::-webkit-input-placeholder{
+.fn-input.error input ::-webkit-input-placeholder,
+input ::-webkit-input-placeholder.fn-input.error {
   color: rgba(255, 80, 80, 0.4);
 }
 
 fn-input.error input ::-moz-placeholder,
-.fn-input.error input ::-moz-placeholder {
+.fn-input.error input ::-moz-placeholder,
+input ::-moz-placeholder,fn-input.error {
   color: rgba(255, 80, 80, 0.4);
 }
 
 /* Focused Error Placeholder */
-fn-input.error input :focus::-webkit-input-placeholder,
-.fn-input.error input :focus::-webkit-input-placeholder {
+fn-input.error input:focus::-webkit-input-placeholder,
+.fn-input.error input:focus::-webkit-input-placeholder,
+input.fn-input.error:focus::-webkit-input-placeholder{
   color: rgba(255, 80, 80, 0.7);
 }
 
@@ -124,7 +136,8 @@ fn-input.error input :focus::-moz-placeholder,
       Transparent
 ---------------------*/
 fn-input.transparent input,
-.fn-input.transparent input {
+.fn-input.transparent input,
+input.fn-input.transparent {
   border-color: transparent;
   background-color: transparent;
   padding: 0em;
