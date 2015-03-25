@@ -135,7 +135,7 @@
 
       if (!value) {
         if (active_elem) {
-          value = active_elem.innerText
+          value = active_elem.textContent;
         } else {
           value = input.getValue();
           updateInput = false;
@@ -163,7 +163,7 @@
 
     this.onDropdownItemClick = function(item) {
       if (item) {
-        this.submitSearch(item.innerText);
+        this.submitSearch(item.textContent);
       } else {
         this.submitSearch();
       }
