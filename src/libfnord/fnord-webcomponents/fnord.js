@@ -24,6 +24,7 @@ Fnord.getTemplate = function(component, template) {
       return null;
     }
 
+    console.log(template_import);
     template = template_import.import.querySelector(template_selector);
   }
 
