@@ -219,7 +219,8 @@
 
       this.querySelector("fn-dropdown").addEventListener(
         'fn-dropdown-item-click', function(e) {
-          var range = e.srcElement.getAttribute('data-value');
+          var target = e.srcElement || e.target;
+          var range = target.getAttribute('data-value');
           base.setAttribute(
             'data-range', range);
           base.fireEvent('fn-date-time-selector-range', {"range": range});
