@@ -266,7 +266,7 @@
       var name = (selected) ? "fn-dropdown-item-click" : "fn-dropdown-item-unselect";
 
       var ev = new CustomEvent(name, {
-        detail : {'text' : item.innerText},
+        detail : {'text' : item.textContent},
         bubbles: true,
         cancelable: true
       });
@@ -370,7 +370,7 @@
       }
 
       if (selected_item) {
-        input.setAttribute('data-value', selected_item.innerText);
+        input.setAttribute('data-value', selected_item.textContent);
       }
 
       dropdown_input.appendChild(input);
@@ -388,7 +388,7 @@
       var value = value.toLowerCase();
 
       for (var i = 0; i < items.length; i++) {
-        if (items[i].innerText.toLowerCase().indexOf(value) > -1) {
+        if (items[i].textContent.toLowerCase().indexOf(value) > -1) {
           items[i].classList.remove('hidden');
         } else {
           items[i].classList.add('hidden');
