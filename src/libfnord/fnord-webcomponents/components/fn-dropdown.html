@@ -76,7 +76,7 @@
             innerHTML += ", ";
           }
 
-          innerHTML += selected_items[i].innerText;
+          innerHTML += selected_items[i].innerText || selected_items[i].textContent;
         }
 
       } else {
