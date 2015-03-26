@@ -296,10 +296,21 @@
       }
 
       if (this.hasAttribute('data-selected')) {
-        var selected = this.getTimeStamp('data-selected');
-        // date is selected date
-        if (DateUtil.isSameDay(selected, timestamp)) {
-              name += " highlight";
+        var selected_dates = [this.getTimeStamp('data-selected')];
+
+        //multiple selections
+        for (var i = 1; i < 11; i++) {
+          if (this.hasAttribute('data-selected-' + i)) {
+            selected_dates.push(this.getTimeStamp('data-selected-' + i));
+          }
+        }
+
+        for (var i = 0; i < selected_dates.length; i++) {
+          // date is selected date
+          if (DateUtil.isSameDay(selected_dates[i], timestamp)) {
+            name += " highlight";
+            break;
+          }
         }
       }
 

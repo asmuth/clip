@@ -87,7 +87,9 @@ fn-date-time-selector-widget,
 }
 
 fn-date-time-selector-widget[data-active],
-.fn-date-time-selector-widget[data-active] {
+.fn-date-time-selector-widget[data-active],
+fn-date-time-selector-widget.active,
+.fn-date-time-selector-widget.active {
   display: block;
 }
 
