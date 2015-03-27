@@ -307,21 +307,13 @@
         if (timestamp >= from && timestamp <= until ||
             DateUtil.isSameDay(from, timestamp) ||
             DateUtil.isSameDay(until, timestamp)) {
-          console.log(timestamp, from ,until);
-            name+= " colored";
+              name+= " colored";
         }
 
       }
 
       if (this.hasAttribute('data-selected')) {
         var selected_dates = [this.getTimeStamp('data-selected')];
-
-        //multiple selections
-        for (var i = 1; i < 11; i++) {
-          if (this.hasAttribute('data-selected-' + i)) {
-            selected_dates.push(this.getTimeStamp('data-selected-' + i));
-          }
-        }
 
         for (var i = 0; i < selected_dates.length; i++) {
           // date is selected date
@@ -332,7 +324,6 @@
         }
       }
 
-      console.log(name);
       return name;
     };
 
