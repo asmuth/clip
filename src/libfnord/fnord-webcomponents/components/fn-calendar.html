@@ -21,6 +21,7 @@
       line-height: 1em;
       border: 1px solid rgba(0, 0, 0, 0.1);
       color: rgba(0, 0, 0, 0.8);
+      border-collapse: collapse;
     }
 
     table tr {
@@ -36,7 +37,7 @@
     }
 
     table td {
-      padding: 0.4em;
+      padding: 0.45em 0.5em;
       line-height: 1.3em;
       text-align:center;
       cursor: default;
@@ -78,6 +79,10 @@
 
     table td.bright {
       opacity: 0.6;
+    }
+
+    table td.colored {
+      background-color: #f0f0f0;
     }
   </style>
 
@@ -295,6 +300,19 @@
         name += " highlight_border";
       }
 
+      if (this.hasAttribute('data-from') && this.hasAttribute('data-until')) {
+        var from = this.getTimeStamp('data-from');
+        var until = this.getTimeStamp('data-until');
+
+        if (timestamp >= from && timestamp <= until ||
+            DateUtil.isSameDay(from, timestamp) ||
+            DateUtil.isSameDay(until, timestamp)) {
+          console.log(timestamp, from ,until);
+            name+= " colored";
+        }
+
+      }
+
       if (this.hasAttribute('data-selected')) {
         var selected_dates = [this.getTimeStamp('data-selected')];
 
@@ -314,6 +332,7 @@
         }
       }
 
+      console.log(name);
       return name;
     };
 
