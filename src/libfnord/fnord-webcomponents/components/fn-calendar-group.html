@@ -1,0 +1,197 @@
+<!--
+  This file is part of the "FnordMetric" project
+    Copyright (c) 2015 Laura Schlimmer
+    Copyright (c) 2015 Paul Asmuth, Google Inc.
+
+  FnordMetric is free software: you can redistribute it and/or modify it under
+  the terms of the GNU General Public License v3.0. You should have received a
+  copy of the GNU General Public License along with this program. If not, see
+  <http://www.gnu.org/licenses/>.
+-->
+<template id="fn-calendar-group-base-tpl">
+  <style type='text/css'>
+    table {
+      font-size: 1em;
+      line-height: 1em;
+      color: rgba(0, 0, 0, 0.8);
+      border-collapse: collapse;
+      border-spacing: 0;
+    }
+
+    td {
+      line-height: 1.3em;
+      text-align:center;
+      cursor: default;
+      color: inherit;
+    }
+
+    table tr {
+      height: 1.98em;
+    }
+
+    table th {
+      padding: 0.4em;
+      line-height: 1.3em;
+      text-align: center;
+      font-weight: normal;
+      color: inherit;
+    }
+
+    table.calendar {
+      border: 1px solid rgba(0, 0, 0, 0.1);
+      border-radius: 3px;
+    }
+
+    table.calendar td {
+      padding: 0.45em 0.5em;
+    }
+
+    table td.selectable:hover {
+      cursor: pointer;
+    }
+
+    .fa {
+      color: inherit;
+      padding-left: 0.4em;
+      padding-right: 0.4em;
+    }
+
+    .fa:hover {
+      cursor:pointer;
+    }
+
+    .month_picker {
+      vertical-align: top;
+    }
+
+    .month_picker .picker {
+      padding: 3px 5px;
+      background-color: #f0f0f0;
+      font-size: 0.8em;
+    }
+
+    /**********************
+      States
+    ***********************/
+    table tr.week td {
+     color: rgba(0, 0, 0, 0.6); 
+    }
+
+    table tr.week td.selectable {
+      color: rgba(0, 0, 0, 0.85);
+    }
+
+    table td.highlight {
+      background-color: #f0f0f0;
+    }
+
+    table td.highlight_border {
+      border: 1px solid rgba(0, 0, 0, 0.1);
+    }
+
+    table td.bright {
+      opacity: 0.6;
+    }
+
+    table td.colored {
+      background-color: #f0f0f0;
+    }
+  </style>
+
+  <table id="group">
+    <tr>
+      <td id='prev_month_picker' class='month_picker'>
+        <div class='picker'><i class='fa fa-chevron-left'></i></div>
+      </td>
+
+      <td id='calendar0'>
+        <table class='calendar'>
+          <thead>
+            <tr class="month_header"><td></td></tr>
+          </thead>
+          <tr>
+            <th>M</th>
+            <th>T</th>
+            <th>W</th>
+            <th>T</th>
+            <th>F</th>
+            <th>S</th>
+            <th>S</th>
+          </tr>
+          <tr class="week" id='week0'></tr>
+          <tr class="week" id='week1'></tr>
+          <tr class="week" id='week2'></tr>
+          <tr class="week" id='week3'></tr>
+          <tr class="week" id='week4'></tr>
+          <tr class="week" id='week5'></tr>
+        </table>
+      </td>
+
+      <td id='calendar1'>
+        <table class='calendar'>
+          <thead>
+            <tr class="month_header"><td></td></tr>
+          </thead>
+          <tr>
+            <th>M</th>
+            <th>T</th>
+            <th>W</th>
+            <th>T</th>
+            <th>F</th>
+            <th>S</th>
+            <th>S</th>
+          </tr>
+          <tr class="week" id='week0'></tr>
+          <tr class="week" id='week1'></tr>
+          <tr class="week" id='week2'></tr>
+          <tr class="week" id='week3'></tr>
+          <tr class="week" id='week4'></tr>
+          <tr class="week" id='week5'></tr>
+        </table>
+      </td>
+
+      <td id='calendar2'>
+        <table class='calendar'>
+          <thead>
+            <tr class="month_header"><td></td></tr>
+          </thead>
+          <tr>
+            <th>M</th>
+            <th>T</th>
+            <th>W</th>
+            <th>T</th>
+            <th>F</th>
+            <th>S</th>
+            <th>S</th>
+          </tr>
+          <tr class="week" id='week0'></tr>
+          <tr class="week" id='week1'></tr>
+          <tr class="week" id='week2'></tr>
+          <tr class="week" id='week3'></tr>
+          <tr class="week" id='week4'></tr>
+          <tr class="week" id='week5'></tr>
+        </table>
+      </td>
+
+      <td id='next_month_picker' class='month_picker'>
+        <div class='picker'><i class='fa fa-chevron-right'></i></div>
+      </td>
+
+    </tr>
+  </table>
+</template>
+<script type='text/javascript'>
+  var CalendarGroup = function() {
+    this.createdCallback = function() {
+      var shadow = this.createShadowRoot();
+      var tpl = Fnord.getTemplate("fn-calendar-group", "base");
+      shadow.appendChild(tpl);
+
+    }
+
+  }
+
+  window.addEventListener('fn-ready', function() {
+    Fnord.registerComponent('fn-calendar-group', CalendarGroup);
+  }, true);
+</script>
