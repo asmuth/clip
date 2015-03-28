@@ -12,6 +12,7 @@ Fnord = {
   components: {}
 };
 
+
 Fnord.getTemplate = function(component, template) {
   var template_selector = "#" + component + "-" + template + "-tpl";
 

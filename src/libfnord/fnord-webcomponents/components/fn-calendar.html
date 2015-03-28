@@ -124,11 +124,12 @@
     this.attributeChangedCallback = function(attr, old_val, new_val) {
       switch (attr) {
         case 'data-timestamp':
-          this.render(this.getTimeStamp(attr));
-          break;
+          return this.render(this.getTimeStamp(attr));
+
         case 'data-selected':
-          this.render(this.getTimeStamp('data-timestamp'));
-          break;
+        case 'data-from':
+        case 'data-until':
+          return this.render(this.getTimeStamp('data-timestamp'));
         default:
           break;
       }
@@ -203,6 +204,10 @@
 
     //returns last rendered date of current month
     this.renderFirstWeek = function() {
+      //inidcates whether days of prev months should be displayed or not
+      var preview = this.hasAttribute('data-preview')?
+        this.getAttribute('data-preview') : true;
+
       var prev_month =
         DateUtil.getMonthTimestamp(this.date.month, this.date.year, -1);
 
@@ -214,13 +219,13 @@
       //render last days of previous month
       for (var i = 0; i < prev_dates.length; i++) {
         tr_elem.appendChild(
-          this.renderDayElem(prev_dates[i], prev_month));
+          this.renderDayElem(prev_dates[i], prev_month, preview));
       };
 
       //render first days of current month
       for (day = prev_dates.length; day < 7; day ++) {
         tr_elem.appendChild(
-          this.renderDayElem(current_date, this.date.month_timestamp));
+          this.renderDayElem(current_date, this.date.month_timestamp, true));
         current_date++;
       }
 
@@ -228,6 +233,10 @@
     };
 
     this.renderLastWeeks = function(day, week, tr_elem) {
+      //inidcates whether days of next months should be displayed or not
+      var preview = this.hasAttribute('data-preview')?
+        this.getAttribute('data-preview') : true;
+
       var next_month =
         DateUtil.getMonthTimestamp(this.date.month, this.date.year, 1);
       var current_date = 1;
@@ -235,7 +244,7 @@
       //add for remaining weekdays of week days of next month
       for (; day < 7; day++) {
         tr_elem.appendChild(
-          this.renderDayElem(current_date, next_month));
+          this.renderDayElem(current_date, next_month, preview));
 
         current_date++;
       }
@@ -247,24 +256,29 @@
 
         for (day = 0; day < 7; day++) {
           tr_elem.appendChild(
-            this.renderDayElem(current_date, next_month));
+            this.renderDayElem(current_date, next_month, preview));
+
           current_date++;
         }
       }
     };
 
-    this.renderDayElem = function(date, month_timestamp) {
+    this.renderDayElem = function(date, month_timestamp, displayed) {
       var td_elem = document.createElement("td");
-      var timestamp = month_timestamp + (date - 1) * DateUtil.millisPerDay;
 
-      td_elem.className = this.tdClassName(date, month_timestamp);
+      if (displayed && displayed != "false") {
+        var timestamp = month_timestamp + (date - 1) * DateUtil.millisPerDay;
 
-      if (this.isSelectable(date, month_timestamp)) {
-        td_elem.classList.add("selectable");
-        this.handleDateLinks(td_elem, date, month_timestamp);
+        td_elem.className = this.tdClassName(date, month_timestamp);
+
+        if (this.isSelectable(date, month_timestamp)) {
+          td_elem.classList.add("selectable");
+          this.handleDateLinks(td_elem, date, month_timestamp);
+        }
+
+
+        td_elem.innerHTML = date;
       }
-
-      td_elem.innerHTML = date;
 
       return td_elem;
     };
@@ -359,14 +373,17 @@
       var timestamp = month_timestamp + (date - 1) * DateUtil.millisPerDay;
 
       td_elem.onclick = function() {
-        base.fireDateSelectEvent(timestamp);
+        base.fireDateSelectEvent(timestamp, this.classList.toString());
       };
     };
 
-    this.fireDateSelectEvent = function(timestamp) {
+    this.fireDateSelectEvent = function(timestamp, classList) {
       var dateEvent = new CustomEvent(
         'fn-calendar-select', {
-          'detail': {'timestamp': timestamp},
+          'detail': {
+            'timestamp': timestamp,
+            'classList' : classList
+          },
           bubbles: true,
           cancealable: true
         }

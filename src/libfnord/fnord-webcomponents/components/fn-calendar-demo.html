@@ -18,9 +18,7 @@
       margin-left: 10px;
     }
 
-    .small {
-      font-size: 12px;
-    }
+
 
     section.floating {
       min-height: 330px;
@@ -44,9 +42,9 @@
     <!-- Dates between from and until are highlighted -->
     <fn-calendar class='left' data-until=1427383392 data-from=1427182392></fn-calendar>
 
-    <fn-calendar class='left margin' data-from=1427182392></fn-calendar>
+    <fn-calendar class='left margin' data-from=1427182392 data-timestamp=1427182392></fn-calendar>
 
-    <fn-calendar class='left margin' data-until=1427383392></fn-calendar>
+    <fn-calendar class='left margin' data-until=1424954661 data-timestamp=1424954661></fn-calendar>
   </section>
 
   <section>
@@ -82,8 +80,8 @@
   </section>
 
   <section class="floating">
-    <h1><i>Example 6 &raquo;</i> Customised Size</h1>
-    <fn-calendar data-timestamp='1410652800' class="left small"></fn-calendar>
+    <h1><i>Example 6 &raquo;</i> Without month preview</h1>
+    <fn-calendar  data-preview=false class="left"></fn-calendar>
   </section>
 
 </template>
