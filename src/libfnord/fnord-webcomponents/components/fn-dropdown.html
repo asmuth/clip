@@ -135,6 +135,8 @@
         hover_item.classList.remove('hover');
       }
 
+      this.fireCloseEvent();
+
       //remove global event listener
       if (!this.querySelector("fn-input")) {
         this.unsetKeyNavigation(window);
@@ -276,6 +278,15 @@
       });
       item.dispatchEvent(ev);
     };
+
+    this.fireCloseEvent = function() {
+      var ev = new CustomEvent('fn-dropdown-close', {
+        bubbles: true,
+        cancelable: true
+      });
+
+      this.dispatchEvent(ev);
+    }
 
 
     /*********************** Key Navigation **********************************/
