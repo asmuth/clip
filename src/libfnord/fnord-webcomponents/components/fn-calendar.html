@@ -300,11 +300,16 @@
         name += " highlight_border";
       }
 
-      if (this.hasAttribute('data-from') && this.hasAttribute('data-until')) {
-        var from = this.getTimeStamp('data-from');
-        var until = this.getTimeStamp('data-until');
+      if (this.hasAttribute('data-from') || this.hasAttribute('data-until')) {
 
-        if (timestamp >= from && timestamp <= until ||
+        var from = this.hasAttribute('data-from') ?
+          this.getTimeStamp('data-from') : null;
+        var until = this.hasAttribute('data-until') ?
+          this.getTimeStamp('data-until') : null;
+
+        if ((from && until && timestamp >= from && timestamp <= until) ||
+            (from && !until && timestamp >= from) ||
+            (until && !from && timestamp <= until) ||
             DateUtil.isSameDay(from, timestamp) ||
             DateUtil.isSameDay(until, timestamp)) {
               name+= " colored";
