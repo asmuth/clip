@@ -96,7 +96,7 @@
       <th>Sa</th>
       <th>Su</th>
     </tr>
-    <tr>
+    <tr name="month_header">
       <td><i class='fa fa-chevron-left'></i></td>
       <td colspan='5'>
         <b id='month_header'></b>
@@ -137,7 +137,10 @@
 
     this.init = function() {
       this.render(this.getTimeStamp('data-timestamp'));
-      this.observeMonthSelectors();
+
+      if (this.getAttribute('data-month-header') != "false") {
+        this.observeMonthSelectors();
+      }
     };
 
     //render previous/next month onclick
@@ -177,8 +180,15 @@
         "December"
       ];
 
-      this.shadowRoot.getElementById('month_header').innerHTML = 
-        human_month[this.date.month] + " " + this.date.year;
+      if (this.getAttribute('data-month-header') != "false") {
+        this.shadowRoot.getElementById('month_header').innerHTML = 
+          human_month[this.date.month] + " " + this.date.year;
+      } else {
+        //without month header
+        this.shadowRoot.querySelector("table tbody").removeChild(
+          this.shadowRoot.querySelector("tr[name='month_header']")
+        );
+      }
     };
 
     this.renderWeeks = function() {
