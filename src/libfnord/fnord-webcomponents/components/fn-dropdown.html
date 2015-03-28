@@ -217,11 +217,10 @@
       if (this.classList.contains('checkbox')) {
         var checkbox = item.querySelector("fn-checkbox");
 
-        //checkbox has been unselected
-        if (!checkbox.hasAttribute('data-active')) {
-
+        if (item.hasAttribute('data-selected')) {
           selected = false;
           item.removeAttribute('data-selected');
+          checkbox.removeAttribute('data-active');
 
           //not completely unselectable dropdown
           if (this.hasAttribute('data-force-select') &&
@@ -238,6 +237,8 @@
               }
             }
           }
+        } else {
+          checkbox.setAttribute('data-active', 'active');
         }
 
       } else {
@@ -259,7 +260,10 @@
       }
 
       this.fireClickEvent(item, selected);
-      this.hideDropdown();
+
+      if (!this.hasAttribute('data-open-onclick')) {
+        this.hideDropdown();
+      }
     };
 
     this.fireClickEvent = function(item, selected) {
