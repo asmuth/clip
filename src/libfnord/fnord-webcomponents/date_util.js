@@ -19,6 +19,22 @@ DateUtil.millisPerMinute = DateUtil.millisPerSecond * DateUtil.secondsPerMinute;
 DateUtil.millisPerHour = DateUtil.secondsPerHour * DateUtil.millisPerSecond;
 DateUtil.millisPerDay = DateUtil.secondsPerDay * DateUtil.millisPerSecond;
 
+DateUtil.humanMonth =  [
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December"
+];
+
+
 // @date DateObject as returned by DateUtil.getDateObject
 DateUtil.getDateTimeDescr = function(date) {
   if (DateUtil.isNow(date.timestamp, date.precision)) {

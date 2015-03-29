@@ -186,7 +186,26 @@
       var shadow = this.createShadowRoot();
       var tpl = Fnord.getTemplate("fn-calendar-group", "base");
       shadow.appendChild(tpl);
+      this.init();
+    }
 
+    this.init = function() {
+      this.render(
+        DateUtil.parseTimestamp(this.getAttribute('data-from'),
+        DateUtil.parseTimestamp(this.getAttribute('data-until')
+      );
+    }
+
+    this.render = function(from, until) {
+      this.from = DateUtil.getDateObject(from, 'date', true);
+      this.until = DateUtil.getDateObject(until, 'date', true);
+      
+      this.renderMonthHeaders();
+
+    }
+
+    this.renderMonthHeaders = function() {
+      
     }
 
   }
