@@ -211,6 +211,17 @@
       this.init();
     }
 
+    this.attributeChangedCallback = function(attr, old_val, new_val) {
+      switch (attr) {
+        case 'data-from':
+          return this.render(DateUtil.parseTimestamp(new_val));
+        case 'data-until':
+          return this.render(DateUtil.parseTimestamp(this.getAttribute('data-from')));
+        default:
+          break;
+      }
+    };
+
     this.init = function() {
       this.render(
         DateUtil.parseTimestamp(this.getAttribute('data-from'))
@@ -342,7 +353,7 @@
 
     this.fireDateSelectEvent = function(timestamp, classList) {
       var ev = new CustomEvent('fn-calendar-group-select', {
-        'details' : {
+        'detail' : {
           'timestamp' : timestamp,
           'classList' : classList
         },
@@ -436,6 +447,12 @@
       var now = Date.now();
       var timestamp = month_timestamp + (date - 1) * DateUtil.millisPerDay;
       var period = this.getAttribute('data-selectable');
+      var select = this.getAttribute('data-select');
+
+      if (select == 'until') {
+        var from = DateUtil.parseTimestamp(this.getAttribute('data-from'));
+        return timestamp >= from;
+      }
 
       if (period == "past") {
         return (timestamp < now);
