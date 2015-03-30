@@ -196,18 +196,39 @@
 
     this.init = function() {
       this.render(
-        DateUtil.parseTimestamp(this.getAttribute('data-from')),
-        DateUtil.parseTimestamp(this.getAttribute('data-until'))
+        DateUtil.parseTimestamp(this.getAttribute('data-from'))
       );
+
+      this.observeMonthSelectors();
+    };
+
+    this.observeMonthSelectors = function() {
+      var _this = this;
+      this.shadowRoot.getElementById('prev_month_picker').addEventListener('click',
+        function() {
+          _this.render(
+            DateUtil.getMonthTimestamp(_this.firstDate.month, _this.firstDate.year, -1));
+        },
+      false);
+
+      this.shadowRoot.getElementById('next_month_picker').addEventListener('click',
+        function() {
+          _this.render(
+            DateUtil.getMonthTimestamp(_this.lastDate.month, _this.lastDate.year, -1));
+        },
+      false);
+
     }
 
-    this.render = function(from, until) {
-      var date0 = DateUtil.getDateObject(from, 'date', true);
+    this.render = function(date) {
+      var date0 = DateUtil.getDateObject(date, 'date', true);
       var date1 = DateUtil.getDateObject(
         DateUtil.getMonthTimestamp(date0.month, date0.year, 1), 'date', true);
       var date2 = DateUtil.getDateObject(
         DateUtil.getMonthTimestamp(date0.month, date0.year, 2), 'date', true);
 
+      this.firstDate = date0;
+      this.lastDate = date2;
 
       this.renderMonthHeaders(date0);
 
