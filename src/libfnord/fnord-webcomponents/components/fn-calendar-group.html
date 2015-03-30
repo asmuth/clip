@@ -23,11 +23,13 @@
       text-align:center;
       cursor: default;
       color: inherit;
+      padding: 0;
+      vertical-align: top;
     }
 
-    table tr {
+    /*table tr {
       height: 1.98em;
-    }
+    }*/
 
     table th {
       padding: 0.4em;
@@ -37,9 +39,12 @@
       color: inherit;
     }
 
-    table.calendar {
-      border: 1px solid rgba(0, 0, 0, 0.1);
-      border-radius: 3px;
+    td.border {
+      border-left: 1px solid rgba(0, 0, 0, 0.1);
+    }
+
+    td.border.bottom {
+      border-bottom: 1px solid rgba(0, 0, 0, 0.1);
     }
 
     table.calendar td {
@@ -53,6 +58,10 @@
     tr.month_header td {
       text-align: center;
       background-color: rgba(0, 0, 0, 0.1);
+    }
+
+    tr.month_picker td {
+      padding: 0;
     }
 
     .fa {
@@ -70,9 +79,10 @@
     }
 
     .month_picker .picker {
-      padding: 3px 5px;
-      background-color: #f0f0f0;
+      padding: 10px 5px 9px;
+      color: rgba(0, 0, 0, 0.8);
       font-size: 0.8em;
+      background-color: rgba(0, 0, 0, 0.1);
     }
 
     /**********************
@@ -109,8 +119,8 @@
         <div class='picker'><i class='fa fa-chevron-left'></i></div>
       </td>
 
-      <td>
-        <table class='calendar' id='0'>
+      <td class='border bottom'>
+        <table class='calendar' id='0' cellspacing='0' cellpadding='0'>
           <thead>
             <tr class="month_header"><td colspan='8'></td></tr>
           </thead>
@@ -132,8 +142,8 @@
         </table>
       </td>
 
-      <td>
-        <table class='calendar' id='1'>
+      <td class='border bottom'>
+        <table class='calendar' id='1' cellspacing='0' cellpadding='0'>
           <thead>
             <tr class="month_header"><td colspan='8'></td></tr>
           </thead>
@@ -155,8 +165,8 @@
         </table>
       </td>
 
-      <td>
-        <table class='calendar' id='2'>
+      <td class='border bottom'>
+        <table class='calendar' id='2' cellspacing='0' cellpadding='0'>
           <thead>
             <tr class="month_header"><td colspan='8'></td></tr>
           </thead>
@@ -178,7 +188,7 @@
         </table>
       </td>
 
-      <td id='next_month_picker' class='month_picker'>
+      <td id='next_month_picker' class='month_picker border'>
         <div class='picker'><i class='fa fa-chevron-right'></i></div>
       </td>
 
@@ -230,20 +240,20 @@
       this.firstDate = date0;
       this.lastDate = date2;
 
-      this.renderMonthHeaders(date0);
+      this.renderMonthHeaders(date0, date1, date2);
 
       this.renderWeeks(0, date0);
       this.renderWeeks(1, date1);
       this.renderWeeks(2, date2);
     }
 
-    this.renderMonthHeaders = function(date) {
+    this.renderMonthHeaders = function(date0, date1, date2) {
       var headers = this.shadowRoot.querySelectorAll(".month_header td");
 
-      for (var i = 0; i < headers.length; i++) {
-        headers[i].innerHTML = 
-          DateUtil.humanMonth[(date.month + i)] + " " + date.year;
-      }
+      headers[0].innerHTML = DateUtil.humanMonth[date0.month] + " " + date0.year;
+      headers[1].innerHTML = DateUtil.humanMonth[date1.month] + " " + date1.year;
+      headers[2].innerHTML = DateUtil.humanMonth[date2.month] + " " + date2.year;
+
     };
 
     this.renderWeeks = function(id, date) {
@@ -301,7 +311,7 @@
       if (displayed && displayed != "false") {
         var timestamp = month_timestamp + (date - 1) * DateUtil.millisPerDay;
 
-        //td_elem.className = this.tdClassName(date, month_timestamp);
+        td_elem.className = this.tdClassName(date, month_timestamp);
 
         /*if (this.isSelectable(date, month_timestamp)) {
           td_elem.classList.add("selectable");
@@ -343,6 +353,56 @@
           current_date++;
         }
       }
+    };
+
+    this.tdClassName = function(date, month_timestamp) {
+      var now = Date.now();
+      var timestamp = month_timestamp + (date - 1) * DateUtil.millisPerDay;
+      var name = "";
+
+      // date isn't in current month
+     /* if (month_timestamp !== this.date.month_timestamp) {
+        name += " bright";
+      }*/
+
+      // date is today
+      if (DateUtil.isSameDay(now, timestamp)) {
+        name += " highlight_border";
+      }
+
+      if (this.hasAttribute('data-from') || this.hasAttribute('data-until')) {
+
+        var from = this.hasAttribute('data-from') ?
+          DateUtil.parseTimestamp(this.getAttribute('data-from')) : null;
+
+        var until = this.hasAttribute('data-until') ?
+          DateUtil.parseTimestamp(this.getAttribute('data-until')) : null;
+
+
+        if ((from && until && timestamp >= from && timestamp <= until) ||
+            (from && !until && timestamp >= from) ||
+            (until && !from && timestamp <= until) ||
+            DateUtil.isSameDay(from, timestamp) ||
+            DateUtil.isSameDay(until, timestamp)) {
+              name+= " colored";
+        }
+
+      }
+
+      if (this.hasAttribute('data-selected')) {
+        var selected_dates = [DateUtil.parseTimestamp(this.getAttribute('data-selected'))];
+
+        for (var i = 0; i < selected_dates.length; i++) {
+          // date is selected date
+          if (DateUtil.isSameDay(selected_dates[i], timestamp)) {
+            name += " highlight";
+            break;
+          }
+        }
+      }
+
+      console.log(name);
+      return name;
 
     }
 
