@@ -65,10 +65,29 @@ fn-segment-editor-element:first-child,
 }
 
 fn-segment-editor-element-title,
-.fn-segment-editor-element-title {
+.fn-segment-editor-element-title,
+fn-segment-editor-multiselect-title,
+.fn-segment-editor-multiselect-title {
   display: block;
   float: left;
   font-weight: 500;
+}
+
+fn-segment-editor-multiselect-title,
+.fn-segment-editor-multiselect-title {
+  line-height: 2.3em;
+  margin: 0 2em 0 0.3em;
+}
+
+fn-segment-editor-multiselect [data-editor='fn-segment-editor-checkbox'],
+.fn-segment-editor-multiselect [data-editor='fn-segment-editor-checkbox'] {
+  margin-top:0.6em;
+  float: left;
+}
+
+fn-segment-editor-multiselect [data-editor='fn-segment-editor-select'],
+.fn-segment-editor-multiselect [data-editor='fn-segment-editor-select'] {
+  float: left;
 }
 
 fn-segment-editor-element-text,
@@ -118,3 +137,44 @@ fn-segment-editor-footer .fn-button,
   float: right;
 }
 
+fn-segment-editor-header.segment-editor-error input,
+.fn-segment-editor-header.segment-editor-error input {
+  background-color: #fff0f0;
+  border-color: #dbb1b1;
+  color: #d95c5c;
+  box-shadow: none;
+}
+
+.segment-editor-error fn-checkbox,
+.segment-editor-error .fn-checkbox{
+  background: #fff0f0;
+  border-color: #dbb1b1;
+  color: #d95c5c;
+}
+
+fn-segment-editor-error-text,
+.fn-segment-editor-error-text {
+  display: none;
+  color: #d95c5c;
+  font-style: italic;
+  font-size: 0.9em;
+}
+
+.segment-editor-error fn-segment-editor-error-text,
+.segment-editor-error .fn-segment-editor-error-text {
+  display: inline-block;
+}
+
+fn-segment-editor-header input + fn-segment-editor-error-text,
+.fn-segment-editor-header input + .fn-segment-editor-error-text,
+fn-segment-editor-header input.fn-input + fn-segment-editor-error-text,
+.fn-segment-editor-header input.fn-input + .fn-segment-editor-error-text {
+  margin-left: 10px;
+  margin-top: 0.55em;
+}
+
+fn-dropdown + fn-segment-editor-error-text,
+.fn-dropdown + .fn-segment-editor-error-text {
+  margin-left: 10px;
+  margin-top: 0.4em;
+}

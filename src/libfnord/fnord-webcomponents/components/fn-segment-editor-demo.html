@@ -25,7 +25,7 @@
       <fn-segment-editor-element data-clickable data-value='fr_mobile'>
         <fn-segment-editor-element-title>French Mobile</fn-segment-editor-element-title>
         <fn-segment-editor-element-text>
-          Language: French, Device Type: Mobile, Tablet
+          <span>Language:</span> <span>French</span>  Device Type: <span>Mobile, Tablet</span>
         </fn-segment-editor-element-text>
         <fn-segment-editor-remove-icon data-editor='fn-segment-editor-element-remove'></fn-segment-editor-remove-icon>
       </fn-segment-editor-element>
@@ -70,7 +70,7 @@
         <fn-checkbox data-editor='fn-segment-editor-checkbox'></fn-checkbox>
         <fn-segment-editor-multiselect-title>
           Language
-        <fn-segment-editor-multiselect-title>
+        </fn-segment-editor-multiselect-title>
         <fn-dropdown class='input' data-resolved data-editor='fn-segment-editor-select'>
           <fn-dropdown-items>
             <fn-dropdown-item data-selected data-value='en'>English</fn-dropdown-item>
@@ -86,7 +86,7 @@
         <fn-checkbox data-editor='fn-segment-editor-checkbox'></fn-checkbox>
         <fn-segment-editor-multiselect-title>
           Device Type
-        <fn-segment-editor-multiselect-title>
+        </fn-segment-editor-multiselect-title>
 
         <fn-dropdown class='input checkbox' data-multiselect data-resolved data-editor='fn-segment-editor-select'>
           <fn-dropdown-items>
@@ -121,5 +121,67 @@
       }, false);
     </script>
   </section>
+
+  <section>
+    <h1><i>Example 3 &raquo;</i> Error Highlights And Messages</h1>
+    <fn-segment-editor data-resolved data-multiselect style='width: 50%;'>
+      <fn-segment-editor-header class='segment-editor-error'>
+        <fn-segment-editor-header-title>Name</fn-segment-editor-header-title>
+        <input class='fn-input ' data-editor='fn-segment-editor-name' />
+        <fn-segment-editor-error-text>Please insert a name</fn-segment-editor-error-text>
+      </fn-segment-editor-header>
+
+      <fn-segment-editor-multiselect class='segment-editor-error' data-key='lang'>
+        <fn-checkbox data-editor='fn-segment-editor-checkbox'></fn-checkbox>
+        <fn-segment-editor-multiselect-title>
+          Language
+        </fn-segment-editor-multiselect-title>
+        <fn-dropdown class='input' data-resolved data-editor='fn-segment-editor-select'>
+          <fn-dropdown-items>
+            <fn-dropdown-item data-selected data-value='en'>English</fn-dropdown-item>
+            <fn-dropdown-item data-value='fr'>French</fn-dropdown-item>
+            <fn-dropdown-item data-value='de'>German</fn-dropdown-item>
+            <fn-dropdown-item data-value='nl'>Dutch</fn-dropdown-item>
+          </fn-dropdown-items>
+        </fn-dropdown>
+
+        <fn-segment-editor-error-text>Please select at least one Parameter</fn-segment-editor-error-text>
+      </fn-segment-editor-multiselect>
+
+      <fn-segment-editor-multiselect data-key='device'>
+
+        <fn-checkbox data-editor='fn-segment-editor-checkbox'></fn-checkbox>
+        <fn-segment-editor-multiselect-title>
+          Device Type
+        </fn-segment-editor-multiselect-title>
+
+        <fn-dropdown class='input checkbox' data-multiselect data-resolved data-editor='fn-segment-editor-select'>
+          <fn-dropdown-items>
+            <fn-dropdown-item data-selected data-value='desktop'>
+              <fn-checkbox data-active></fn-checkbox>
+              Desktop
+            </fn-dropdown-item>
+            <fn-dropdown-item data-value='mobile'>
+              <fn-checkbox></fn-checkbox>
+              Mobile
+            </fn-dropdown-item>
+            <fn-dropdown-item data-value='tablet'>
+              <fn-checkbox></fn-checkbox>
+              Tablet
+            </fn-dropdown-item>
+          </fn-dropdown-items>
+        </fn-dropdown>
+
+      </fn-segment-editor-multiselect>
+
+      <fn-segment-editor-footer>
+        <fn-button data-editor='fn-segment-editor-save'>Save</fn-button>
+      </fn-segment-editor-footer>
+
+    </fn-segment-editor>
+  </section>
+
+
+
 
 </template>

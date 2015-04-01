@@ -8,6 +8,7 @@
   copy of the GNU General Public License along with this program. If not, see
   <http://www.gnu.org/licenses/>.
 -->
+
 <template id="fn-segment-editor-base-tpl">
 </template>
 
@@ -45,26 +46,55 @@
       var json = {};
       json[selection.name] = selection.selection;
 
-      return (JSON.stringify(json));
+      return (JSON.stringify([selection]));
     }
+
+    this.removeErrors = function() {
+      var error_elems = this.querySelectorAll("segment-editor-error");
+
+      for (var i = 0; i < error_elems.length; i++) {
+        error_elems[i].classList.remove('segment-editor-error');
+      }
+    }
+
+    this.setError = function(selector) {
+      var elem = this.querySelector(selector);
+
+      elem.classList.add("segment-editor-error");
+
+      this.removeErrorOnAction(elem);
+    } 
 
     /**
       * validates the selection
       * Note: you may want to override this function to customize the validation
+      *
+      * return true if valid and false otherwise
+      * invalid elements are marked
       */
-    this.isValidSelection = function(selection) {
-      return (selection.name && Object.keys(selection.selection).length > 0)
+    this.validateSelection = function(selection) {
+      var isValid = true;
+      if (!selection.name) {
+        isValid = false;
+
+        this.setError("fn-segment-editor-header");
+      }
+
+      if (!Object.keys(selection.selection).length > 0) {
+        isValid = false;
+
+        this.setError("fn-segment-editor-multiselect");
+      }
+
+      return isValid;
     }
 
     this.onSaveMultiselect = function() {
       var selection = this.getSelection();
 
-      if (this.isValidSelection(selection)) {
+      if (this.validateSelection(selection)) {
         var json = this.generateJson(selection);
-        console.log("is valid");
         this.fireSaveMultiselectEvent(json);
-      } else {
-        //TODO mark as invalid
       }
     };
 
@@ -113,6 +143,12 @@
       }
     };
 
+    this.removeErrorOnAction = function(elem) {
+      elem.addEventListener('click', function() {
+        elem.classList.remove('segment-editor-error');
+      }, false);
+    }
+
     this.fireSaveMultiselectEvent = function(json) {
       var ev = new CustomEvent('fn-segment-editor-multiselect-save', {
         'detail' : {'selection' : json},
@@ -121,6 +157,32 @@
       });
 
       this.dispatchEvent(ev);
+    };
+
+    this.renderSegmentElement = function(json) {
+      var footer = this.querySelector("fn-segment-editor-footer");
+      var segments = JSON.parse(json);
+      var _this = this;
+
+      segments.forEach(function(segment) {
+        var element = document.createElement("fn-segment-editor-element");
+        var title = document.createElement("fn-segment-editor-element-title");
+        var text = document.createElement("fn-segment-editor-element-text");
+        var icon = document.createElement("fn-segment-editor-remove-icon");
+
+        icon.setAttribute('data-editor', 'fn-segment-editor-element-remove');
+        title.innerHTML = segment.name;
+
+        for (var key in segment.selection) {
+          text.innerHTML += key + ": " + segment.selection[key] + ", ";
+        }
+
+        element.appendChild(title);
+        element.appendChild(text);
+        element.appendChild(icon);
+
+        _this.insertBefore(element, footer);
+      });
     }
 
     /****************************** fn-segment-overview **********************/
@@ -201,9 +263,15 @@
       elem.dispatchEvent(ev);
     };
 
+    this.createSegmentEditorMultiselect = function(json) {
+      console.log("create multiselect");
+      console.log(tpl);
+    }
+
   };
 
   window.addEventListener('fn-ready', function() {
     Fnord.registerComponent('fn-segment-editor', SegmentEditor);
+    //Fnord.registerComponent('fn-segment-editor-element'
   }, false);
 </script>
