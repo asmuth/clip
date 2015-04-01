@@ -56,7 +56,7 @@ fn-modal > :last-child,
 fn-modal-dimmer,
 .fn-modal-dimmer {
   display: none;
-  position: absolute;
+  position: fixed;
   top: 0em !important;
   left: 0em !important;
   width: 100%;
