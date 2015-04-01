@@ -211,21 +211,16 @@
       this.init();
     }
 
-    this.attributeChangedCallback = function(attr, old_val, new_val) {
-      switch (attr) {
-        case 'data-from':
-          return this.render(DateUtil.parseTimestamp(new_val));
-        case 'data-until':
-          return this.render(DateUtil.parseTimestamp(this.getAttribute('data-from')));
-        default:
-          break;
-      }
-    };
+
+    this.getStartTimestamp = function() {
+      var timestamp = (this.hasAttribute('data-timestamp')) ?
+        this.getAttribute('data-timestamp') : this.getAttribute('data-from');
+
+      return DateUtil.parseTimestamp(timestamp);
+    }
 
     this.init = function() {
-      this.render(
-        DateUtil.parseTimestamp(this.getAttribute('data-from'))
-      );
+      this.render(this.getStartTimestamp());
 
       this.observeMonthSelectors();
     };
@@ -249,6 +244,10 @@
     }
 
     this.render = function(date) {
+      if (!date) {
+        date = this.getStartTimestamp();
+      }
+
       var date0 = DateUtil.getDateObject(date, 'date', true);
       var date1 = DateUtil.getDateObject(
         DateUtil.getMonthTimestamp(date0.month, date0.year, 1), 'date', true);
@@ -448,22 +447,28 @@
       var timestamp = month_timestamp + (date - 1) * DateUtil.millisPerDay;
       var period = this.getAttribute('data-selectable');
       var select = this.getAttribute('data-select');
+      var selectable = true;
 
       if (select == 'until') {
         var from = DateUtil.parseTimestamp(this.getAttribute('data-from'));
-        return timestamp >= from;
+        selectable = timestamp >= from || DateUtil.isSameDay(from, timestamp);
       }
 
       if (period == "past") {
-        return (timestamp < now);
+        selectable = selectable && timestamp < now;
       }
 
       if (period == "future") {
-        return (timestamp > now);
+        selectable = selectable && timestamp > now;
       }
 
-      return true;
+      return selectable;
     };
+
+    this.setSelectability = function(select) {
+      var rows = this.querySelectorAll(".week");
+      console.log(rows);
+    }
 
     //timestamp -> beginning of last month
     this.datesOfPrevMonth = function(timestamp, date) {
