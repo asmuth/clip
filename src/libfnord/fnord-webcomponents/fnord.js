@@ -128,6 +128,18 @@ Fnord.setAttributes = function(attrs, elem) {
   }
 }
 
+Fnord.getParentByTagname = function(tagname, elem) {
+  var tagname = tagname.toUpperCase();
+
+  while (true) {
+    if (elem.parentNode.tagName == tagname) {
+      return elem.parentNode;
+    }
+
+    elem = elem.parentNode;
+  }
+}
+
 Fnord.appendLeadingZero = function (num) {
   var num = num;
   if (typeof num == 'string') {
