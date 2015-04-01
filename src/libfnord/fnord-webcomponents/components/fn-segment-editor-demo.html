@@ -12,17 +12,17 @@
 
   <section>
 
-    <fn-segment-editor data-overview style="width: 50%;">
+    <fn-segment-editor data-overview data-resolved style="width: 50%;">
       <fn-segment-editor-header>
         <fn-segment-editor-header-title>Segments</fn-segment-editor-header-title>
       </fn-segment-editor-header>
 
-      <fn-segment-editor-element data-clickable>
+      <fn-segment-editor-element data-clickable data-value='all'>
         <fn-segment-editor-element-title>All Traffic</fn-segment-editor-element-title>
         <fn-segment-editor-remove-icon name='fn-segment-editor-element-remove'></fn-segment-editor-remove-icon>
       </fn-segment-editor-element>
 
-      <fn-segment-editor-element data-clickable>
+      <fn-segment-editor-element data-clickable data-value='fr_mobile'>
         <fn-segment-editor-element-title>French Mobile</fn-segment-editor-element-title>
         <fn-segment-editor-element-text>
           Language: French, Device Type: Mobile, Tablet
@@ -31,11 +31,31 @@
       </fn-segment-editor-element>
 
       <fn-segment-editor-footer>
-        <fn-button>Add Segment</fn-button>
+        <fn-button name='fn-segment-editor-add'>Add Segment</fn-button>
       </fn-segment-editor-footer>
 
     </fn-segment-editor>
 
+    <script type='text/javascript'>
+      var editor_overview = document.body.querySelector("fn-segment-editor[data-overview]");
+
+      editor_overview.addEventListener('fn-segment-editor-add', function() {
+        console.log("Add Segment");
+      }, false);
+
+      editor_overview.addEventListener('fn-segment-editor-remove', function(e) {
+        var target = e.srcElement || e.target;
+        var value = e.detail.value;
+
+        console.log("Remove Segment: ", target, " with value: " + value);
+      }, false)
+
+      editor_overview.addEventListener('fn-segment-editor-element-click', function(e) {
+        var target = e.srcElement || e.target;
+
+        console.log("Clicked: ", target);
+      }, false);
+    </script>
   </section>
 
   <section>
@@ -95,7 +115,6 @@
 
     <script type='text/javascript'>
       var editor = document.body.querySelector("fn-segment-editor[data-multiselect]");
-      console.log(editor);
 
       editor.addEventListener('fn-segment-editor-multiselect-save', function(e) {
         console.log(e);

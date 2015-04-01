@@ -28,9 +28,18 @@
 
     this.init = function() {
       if (this.hasAttribute('data-multiselect')) {
-        this.observeSaveButton();
+        return this.observeSaveButton();
+      }
+
+      if (this.hasAttribute('data-overview')) {
+        this.observeAddButton();
+        this.observeClickableSegments();
+        this.observeRemovableSegments();
+        return;
       }
     };
+
+    /************************ fn-segment-multiselect ************************/
 
     this.generateJson = function(selection) {
       var json = {};
@@ -38,7 +47,6 @@
 
       return (JSON.stringify(json));
     }
-
 
     /**
       * validates the selection
@@ -114,6 +122,84 @@
 
       this.dispatchEvent(ev);
     }
+
+    /****************************** fn-segment-overview **********************/
+
+    this.observeAddButton = function() {
+      var btn = this.querySelector("[name='fn-segment-editor-add']");
+      var _this = this;
+
+      if (btn) {
+        btn.addEventListener('click', function(e) {
+          _this.fireAddSegmentEvent();
+        }, false);
+      }
+    }
+
+    this.observeClickableSegments = function() {
+      var _this = this;
+      var c_segments = this.querySelectorAll(
+        "fn-segment-editor-element[data-clickable]");
+
+      for (var i = 0; i < c_segments.length; i++) {
+        c_segments[i].addEventListener('click', function() {
+          _this.fireSegmentClickEvent(this);
+        }, false);
+      }
+    };
+
+    this.observeRemovableSegments = function() {
+      var _this = this;
+      var r_icons = this.querySelectorAll(
+        "[name='fn-segment-editor-element-remove']");
+
+      for (var i = 0; i < r_icons.length; i++) {
+        r_icons[i].addEventListener('click', function(e) {
+          e.stopPropagation();
+
+          var element = Fnord.getParentByTagname("fn-segment-editor-element", this);
+
+          if (element) {
+            _this.onRemoveSegment(element);
+          }
+
+        }, false);
+      }
+    };
+
+    this.fireAddSegmentEvent = function() {
+      var ev = new CustomEvent('fn-segment-editor-add', {
+        cancelable: true,
+        bubbles: true
+      });
+
+      this.dispatchEvent(ev);
+    };
+
+    this.onRemoveSegment = function(segment) {
+      this.fireRemoveSegmentEvent(segment);
+
+      this.removeChild(segment);
+    }
+
+    this.fireRemoveSegmentEvent = function(elem) {
+      var ev = new CustomEvent('fn-segment-editor-remove', {
+        'detail' : {'value' : elem.getAttribute('data-value')},
+        cancelable: true,
+        bubbles: true
+      });
+
+      elem.dispatchEvent(ev);
+    }
+
+    this.fireSegmentClickEvent = function(elem) {
+      var ev = new CustomEvent('fn-segment-editor-element-click', {
+        cancelable: true,
+        bubbles: true
+      });
+
+      elem.dispatchEvent(ev);
+    };
 
   };
 
