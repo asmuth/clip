@@ -21,10 +21,10 @@ fn-segment-editor-header,
 fn-segment-editor-header-title,
 .fn-segment-editor-header-title {
   font-size: 1.3em;
-  line-height: 1.3em;
+  line-height: 1.8em;
   font-weight: bold;
   color: rgba(0, 0, 0, 0.85);
-  float:left; 
+  float:left;
 }
 
 fn-segment-editor-header input,
@@ -32,7 +32,8 @@ fn-segment-editor-header input,
 fn-segment-editor-header input.fn-input,
 .fn-segment-editor-header input.fn-input {
   display: inline-block;
-  float: right;
+  float: left;
+  margin-left: 1em;
   width: 70%;
   font-weight: normal;
 }
