@@ -19,7 +19,7 @@
 
       <fn-segment-editor-element data-clickable data-value='all'>
         <fn-segment-editor-element-title>All Traffic</fn-segment-editor-element-title>
-        <fn-segment-editor-remove-icon name='fn-segment-editor-element-remove'></fn-segment-editor-remove-icon>
+        <fn-segment-editor-remove-icon data-editor='fn-segment-editor-element-remove'></fn-segment-editor-remove-icon>
       </fn-segment-editor-element>
 
       <fn-segment-editor-element data-clickable data-value='fr_mobile'>
@@ -27,11 +27,11 @@
         <fn-segment-editor-element-text>
           Language: French, Device Type: Mobile, Tablet
         </fn-segment-editor-element-text>
-        <fn-segment-editor-remove-icon name='fn-segment-editor-element-remove'></fn-segment-editor-remove-icon>
+        <fn-segment-editor-remove-icon data-editor='fn-segment-editor-element-remove'></fn-segment-editor-remove-icon>
       </fn-segment-editor-element>
 
       <fn-segment-editor-footer>
-        <fn-button name='fn-segment-editor-add'>Add Segment</fn-button>
+        <fn-button data-editor='fn-segment-editor-add'>Add Segment</fn-button>
       </fn-segment-editor-footer>
 
     </fn-segment-editor>
@@ -63,15 +63,15 @@
     <fn-segment-editor data-resolved data-multiselect style='width: 50%;'>
       <fn-segment-editor-header>
         <fn-segment-editor-header-title>Name</fn-segment-editor-header-title>
-        <input class='fn-input' name='fn-segment-editor-name' />
+        <input class='fn-input' data-editor='fn-segment-editor-name' />
       </fn-segment-editor-header>
 
       <fn-segment-editor-multiselect data-key='lang'>
-        <fn-checkbox name='fn-segment-editor-checkbox'></fn-checkbox>
+        <fn-checkbox data-editor='fn-segment-editor-checkbox'></fn-checkbox>
         <fn-segment-editor-multiselect-title>
           Language
         <fn-segment-editor-multiselect-title>
-        <fn-dropdown class='input' data-resolved name='fn-segment-editor-select'>
+        <fn-dropdown class='input' data-resolved data-editor='fn-segment-editor-select'>
           <fn-dropdown-items>
             <fn-dropdown-item data-selected data-value='en'>English</fn-dropdown-item>
             <fn-dropdown-item data-value='fr'>French</fn-dropdown-item>
@@ -83,12 +83,12 @@
 
       <fn-segment-editor-multiselect data-key='device'>
 
-        <fn-checkbox name='fn-segment-editor-checkbox'></fn-checkbox>
+        <fn-checkbox data-editor='fn-segment-editor-checkbox'></fn-checkbox>
         <fn-segment-editor-multiselect-title>
           Device Type
         <fn-segment-editor-multiselect-title>
 
-        <fn-dropdown class='input checkbox' data-multiselect data-resolved name='fn-segment-editor-select'>
+        <fn-dropdown class='input checkbox' data-multiselect data-resolved data-editor='fn-segment-editor-select'>
           <fn-dropdown-items>
             <fn-dropdown-item data-selected data-value='desktop'>
               <fn-checkbox data-active></fn-checkbox>
@@ -108,7 +108,7 @@
       </fn-segment-editor-multiselect>
 
       <fn-segment-editor-footer>
-        <fn-button name='fn-segment-editor-save'>Save</fn-button>
+        <fn-button data-editor='fn-segment-editor-save'>Save</fn-button>
       </fn-segment-editor-footer>
 
     </fn-segment-editor>

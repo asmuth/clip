@@ -31,7 +31,8 @@ fn-modal,
 fn-modal-dimmer[data-active] fn-modal,
 fn-modal[data-active],
 .fn-modal-dimmer[data-active] .fn-modal,
-.fn-modal[data-active]{
+.fn-modal[data-active],
+fn-modal-dimmer .fn-modal {
   display: block;
 }
 

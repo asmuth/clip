@@ -69,7 +69,7 @@
     };
 
     this.getSelection = function() {
-      var name = this.querySelector("input[name='fn-segment-editor-name']").value;
+      var name = this.querySelector("input[data-editor='fn-segment-editor-name']").value;
       var multiselects = this.querySelectorAll("fn-segment-editor-multiselect");
       var selection = {};
 
@@ -77,13 +77,13 @@
       selection.selection = {};
 
       for (var i = 0; i < multiselects.length; i++) {
-        var checkbox = multiselects[i].querySelector("[name='fn-segment-editor-checkbox']");
+        var checkbox = multiselects[i].querySelector("[data-editor='fn-segment-editor-checkbox']");
 
         if (!checkbox || (checkbox && !checkbox.hasAttribute('data-active'))) {
           continue;
         }
 
-        var select_elem = multiselects[i].querySelector("[name='fn-segment-editor-select']");
+        var select_elem = multiselects[i].querySelector("[data-editor='fn-segment-editor-select']");
         var selected = select_elem.querySelectorAll("[data-selected]");
 
         var key = multiselects[i].getAttribute('data-key');
@@ -103,7 +103,7 @@
     };
 
     this.observeSaveButton = function() {
-      var btn = this.querySelector("[name='fn-segment-editor-save']");
+      var btn = this.querySelector("[data-editor='fn-segment-editor-save']");
       var _this = this;
 
       if (btn) {
@@ -126,7 +126,7 @@
     /****************************** fn-segment-overview **********************/
 
     this.observeAddButton = function() {
-      var btn = this.querySelector("[name='fn-segment-editor-add']");
+      var btn = this.querySelector("[data-editor='fn-segment-editor-add']");
       var _this = this;
 
       if (btn) {
@@ -151,7 +151,7 @@
     this.observeRemovableSegments = function() {
       var _this = this;
       var r_icons = this.querySelectorAll(
-        "[name='fn-segment-editor-element-remove']");
+        "[data-editor='fn-segment-editor-element-remove']");
 
       for (var i = 0; i < r_icons.length; i++) {
         r_icons[i].addEventListener('click', function(e) {
