@@ -162,7 +162,8 @@ DateUtil.getMonthTimestamp = function(base_month, base_year, offset) {
     month = 0;
   }
 
-  return (new Date(year, month).getTime());
+  var d = new Date(year, month);
+  return d.getTime() - d.getTimezoneOffset() * 60;
 };
 
 //checks if two timestamps are from the same day
