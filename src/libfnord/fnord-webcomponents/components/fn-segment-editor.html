@@ -1,0 +1,123 @@
+<!--
+  This file is part of the "FnordMetric" project
+    Copyright (c) 2015 Laura Schlimmer
+    Copyright (c) 2015 Paul Asmuth, Google Inc.
+
+  FnordMetric is free software: you can redistribute it and/or modify it under
+  the terms of the GNU General Public License v3.0. You should have received a
+  copy of the GNU General Public License along with this program. If not, see
+  <http://www.gnu.org/licenses/>.
+-->
+<template id="fn-segment-editor-base-tpl">
+</template>
+
+<script type='text/javascript'>
+  var SegmentEditor = function() {
+    this.createdCallback = function() {
+
+      if (this.hasAttribute('data-resolved')) {
+        this.init();
+      }
+    }
+
+    this.attributeChangedCallback = function(attr, old_val, new_val) {
+      if (attr == 'data-resolved' && new_val == 'resolved') {
+        this.init();
+      }
+    }
+
+    this.init = function() {
+      if (this.hasAttribute('data-multiselect')) {
+        this.observeSaveButton();
+      }
+    };
+
+    this.generateJson = function(selection) {
+      var json = {};
+      json[selection.name] = selection.selection;
+
+      return (JSON.stringify(json));
+    }
+
+
+    /**
+      * validates the selection
+      * Note: you may want to override this function to customize the validation
+      */
+    this.isValidSelection = function(selection) {
+      return (selection.name && Object.keys(selection.selection).length > 0)
+    }
+
+    this.onSaveMultiselect = function() {
+      var selection = this.getSelection();
+
+      if (this.isValidSelection(selection)) {
+        var json = this.generateJson(selection);
+        console.log("is valid");
+        this.fireSaveMultiselectEvent(json);
+      } else {
+        //TODO mark as invalid
+      }
+    };
+
+    this.getSelection = function() {
+      var name = this.querySelector("input[name='fn-segment-editor-name']").value;
+      var multiselects = this.querySelectorAll("fn-segment-editor-multiselect");
+      var selection = {};
+
+      selection.name = name;
+      selection.selection = {};
+
+      for (var i = 0; i < multiselects.length; i++) {
+        var checkbox = multiselects[i].querySelector("[name='fn-segment-editor-checkbox']");
+
+        if (!checkbox || (checkbox && !checkbox.hasAttribute('data-active'))) {
+          continue;
+        }
+
+        var select_elem = multiselects[i].querySelector("[name='fn-segment-editor-select']");
+        var selected = select_elem.querySelectorAll("[data-selected]");
+
+        var key = multiselects[i].getAttribute('data-key');
+        var value = [];
+
+        for (var j = 0; j < selected.length; j++) {
+          value.push(selected[j].getAttribute('data-value'));
+        }
+
+        //string or null
+        if (key && value.length > 0) {
+          selection.selection[key] = value;
+        }
+      }
+
+      return selection;
+    };
+
+    this.observeSaveButton = function() {
+      var btn = this.querySelector("[name='fn-segment-editor-save']");
+      var _this = this;
+
+      if (btn) {
+        btn.addEventListener('click', function() {
+          _this.onSaveMultiselect();
+        }, false);
+      }
+    };
+
+    this.fireSaveMultiselectEvent = function(json) {
+      var ev = new CustomEvent('fn-segment-editor-multiselect-save', {
+        'detail' : {'selection' : json},
+        bubbles: true,
+        cancelable: true
+      });
+
+      this.dispatchEvent(ev);
+    }
+
+  };
+
+  window.addEventListener('fn-ready', function() {
+    Fnord.registerComponent('fn-segment-editor', SegmentEditor);
+  }, false);
+</script>

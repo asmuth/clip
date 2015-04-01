@@ -1,0 +1,106 @@
+<!--
+  This file is part of the "FnordMetric" project
+    Copyright (c) 2015 Laura Schlimmer
+    Copyright (c) 2015 Paul Asmuth, Google Inc.
+
+  FnordMetric is free software: you can redistribute it and/or modify it under
+  the terms of the GNU General Public License v3.0. You should have received a
+  copy of the GNU General Public License along with this program. If not, see
+  <http://www.gnu.org/licenses/>.
+-->
+<template id="fn-segment-editor-demo-base-tpl">
+
+  <section>
+
+    <fn-segment-editor data-overview style="width: 50%;">
+      <fn-segment-editor-header>
+        <fn-segment-editor-header-title>Segments</fn-segment-editor-header-title>
+      </fn-segment-editor-header>
+
+      <fn-segment-editor-element data-clickable>
+        <fn-segment-editor-element-title>All Traffic</fn-segment-editor-element-title>
+        <fn-segment-editor-remove-icon name='fn-segment-editor-element-remove'></fn-segment-editor-remove-icon>
+      </fn-segment-editor-element>
+
+      <fn-segment-editor-element data-clickable>
+        <fn-segment-editor-element-title>French Mobile</fn-segment-editor-element-title>
+        <fn-segment-editor-element-text>
+          Language: French, Device Type: Mobile, Tablet
+        </fn-segment-editor-element-text>
+        <fn-segment-editor-remove-icon name='fn-segment-editor-element-remove'></fn-segment-editor-remove-icon>
+      </fn-segment-editor-element>
+
+      <fn-segment-editor-footer>
+        <fn-button>Add Segment</fn-button>
+      </fn-segment-editor-footer>
+
+    </fn-segment-editor>
+
+  </section>
+
+  <section>
+
+    <fn-segment-editor data-resolved data-multiselect style='width: 50%;'>
+      <fn-segment-editor-header>
+        <fn-segment-editor-header-title>Name</fn-segment-editor-header-title>
+        <input class='fn-input' name='fn-segment-editor-name' />
+      </fn-segment-editor-header>
+
+      <fn-segment-editor-multiselect data-key='lang'>
+        <fn-checkbox name='fn-segment-editor-checkbox'></fn-checkbox>
+        <fn-segment-editor-multiselect-title>
+          Language
+        <fn-segment-editor-multiselect-title>
+        <fn-dropdown class='input' data-resolved name='fn-segment-editor-select'>
+          <fn-dropdown-items>
+            <fn-dropdown-item data-selected data-value='en'>English</fn-dropdown-item>
+            <fn-dropdown-item data-value='fr'>French</fn-dropdown-item>
+            <fn-dropdown-item data-value='de'>German</fn-dropdown-item>
+            <fn-dropdown-item data-value='nl'>Dutch</fn-dropdown-item>
+          </fn-dropdown-items>
+        </fn-dropdown>
+      </fn-segment-editor-multiselect>
+
+      <fn-segment-editor-multiselect data-key='device'>
+
+        <fn-checkbox name='fn-segment-editor-checkbox'></fn-checkbox>
+        <fn-segment-editor-multiselect-title>
+          Device Type
+        <fn-segment-editor-multiselect-title>
+
+        <fn-dropdown class='input checkbox' data-multiselect data-resolved name='fn-segment-editor-select'>
+          <fn-dropdown-items>
+            <fn-dropdown-item data-selected data-value='desktop'>
+              <fn-checkbox data-active></fn-checkbox>
+              Desktop
+            </fn-dropdown-item>
+            <fn-dropdown-item data-value='mobile'>
+              <fn-checkbox></fn-checkbox>
+              Mobile
+            </fn-dropdown-item>
+            <fn-dropdown-item data-value='tablet'>
+              <fn-checkbox></fn-checkbox>
+              Tablet
+            </fn-dropdown-item>
+          </fn-dropdown-items>
+        </fn-dropdown>
+
+      </fn-segment-editor-multiselect>
+
+      <fn-segment-editor-footer>
+        <fn-button name='fn-segment-editor-save'>Save</fn-button>
+      </fn-segment-editor-footer>
+
+    </fn-segment-editor>
+
+    <script type='text/javascript'>
+      var editor = document.body.querySelector("fn-segment-editor[data-multiselect]");
+      console.log(editor);
+
+      editor.addEventListener('fn-segment-editor-multiselect-save', function(e) {
+        console.log(e);
+      }, false);
+    </script>
+  </section>
+
+</template>
