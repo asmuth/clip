@@ -8,7 +8,8 @@
              Modal
 *******************************/
 
-fn-modal {
+fn-modal,
+.fn-modal {
   display: none;
   position: fixed;
   z-index: 1001;
@@ -28,17 +29,22 @@ fn-modal {
 }
 
 fn-modal-dimmer[data-active] fn-modal,
-fn-modal[data-active] {
+fn-modal[data-active],
+.fn-modal-dimmer[data-active] .fn-modal,
+.fn-modal[data-active]{
   display: block;
 }
 
 fn-modal > :first-child:not(fn-modal-close-icon),
-fn-modal > fn-modal-close-icon:first-child + * {
+fn-modal > fn-modal-close-icon:first-child + *,
+.fn-modal > :first-child:not(.fn-modal-close-icon),
+.fn-modal > .fn-modal-close-icon:first-child + *{
   border-top-left-radius: 0.2857rem;
   border-top-right-radius: 0.2857rem;
 }
 
-fn-modal > :last-child {
+fn-modal > :last-child,
+.fn-modal > :last-child {
   border-bottom-left-radius: 0.2857rem;
   border-bottom-right-radius: 0.2857rem;
 }
@@ -46,7 +52,8 @@ fn-modal > :last-child {
 /*--------------
   Dimmer
 ---------------*/
-fn-modal-dimmer {
+fn-modal-dimmer,
+.fn-modal-dimmer {
   display: none;
   position: absolute;
   top: 0em !important;
@@ -72,7 +79,8 @@ fn-modal-dimmer {
   z-index: 1000;
 }
 
-fn-modal-dimmer[data-active] {
+fn-modal-dimmer[data-active],
+.fn-modal-dimmer[data-active] {
   display: block;
   opacity: 1;
 }
@@ -80,7 +88,8 @@ fn-modal-dimmer[data-active] {
      Close Icon
 ---------------*/
 
-fn-modal-close-icon {
+fn-modal-close-icon,
+.fn-modal-close-icon {
   cursor: pointer;
   position: absolute;
   top: -2.5rem;
@@ -93,12 +102,14 @@ fn-modal-close-icon {
   padding: 0.625rem 0rem 0rem 0rem;
 }
 
-fn-modal-close-icon:after {
+fn-modal-close-icon:after,
+.fn-modal-close-icon:after {
   font-family: FontAwesome;
   content: "\f00d";
 }
 
-fn-modal-close-icon:hover {
+fn-modal-close-icon:hover,
+.fn-modal-close-icon:hover {
   opacity: 1;
 }
 
@@ -106,7 +117,8 @@ fn-modal-close-icon:hover {
      Header
 ---------------*/
 
-fn-modal-header {
+fn-modal-header,
+.fn-modal-header {
   display: block;
   background: -webkit-linear-gradient(transparent, rgba(0, 0, 0, 0.05)) #ffffff;
   background: linear-gradient(transparent, rgba(0, 0, 0, 0.05)) #ffffff;
@@ -124,7 +136,8 @@ fn-modal-header {
      Content
 ---------------*/
 
-fn-modal-content {
+fn-modal-content,
+.fn-modal-content {
   display: table;
   table-layout: fixed;
   width: 100%;
@@ -135,23 +148,28 @@ fn-modal-content {
 }
 
 /* Image */
-fn-modal-image {
+fn-modal-image,
+.fn-modal-image {
   display: table-cell;
   width: '';
   vertical-align: top;
 }
 
-fn-modal-image.top {
+fn-modal-image.top,
+.fn-modal-image.top {
   vertical-align: top;
 }
 
 /* Description */
-fn-modal-description {
+fn-modal-description,
+.fn-modal-description {
   display: table-cell;
   vertical-align: top;
 }
 fn-modal-icon + fn-modal-description,
-fn-modal-image + fn-modal-description {
+fn-modal-image + fn-modal-description,
+.fn-modal-icon + .fn-modal-description,
+.fn-modal-image + .fn-modal-description{
   min-width: '';
   width: 80%;
   padding-left: 2em;
@@ -161,14 +179,16 @@ fn-modal-image + fn-modal-description {
     Footer
 ---------------*/
 
-fn-modal-footer {
+fn-modal-footer,
+.fn-modal-footer {
   display: block;
   background: #efefef;
   padding: 1rem 2rem;
   border-top: 1px solid rgba(39, 41, 43, 0.15);
   text-align: right;
 }
-fn-modal-footer > .button {
+fn-modal-footer > .button,
+.fn-modal-footer > .button {
   margin-left: 0.75em;
 }
 
@@ -179,31 +199,36 @@ fn-modal-footer > .button {
 
 /* Modal Width */
 @media only screen and (max-width: 767px) {
-  fn-modal {
+  fn-modal,
+  .fn-modal {
     width: 95%;
     margin: 0em 0em 0em -47.5%;
   }
 }
 @media only screen and (min-width: 768px) {
-  fn-modal {
+  fn-modal,
+  .fn-modal {
     width: 88%;
     margin: 0em 0em 0em -44%;
   }
 }
 @media only screen and (min-width: 992px) {
-  fn-modal {
+  fn-modal,
+  .fn-modal {
     width: 74%;
     margin: 0em 0em 0em -37%;
   }
 }
 @media only screen and (min-width: 1400px) {
-  fn-modal {
+  fn-modal,
+  .fn-modal {
     width: 56%;
     margin: 0em 0em 0em -28%;
   }
 }
 @media only screen and (min-width: 1920px) {
-  fn-modal {
+  fn-modal,
+  .fn-modal {
     width: 42%;
     margin: 0em 0em 0em -21%;
   }
@@ -211,10 +236,12 @@ fn-modal-footer > .button {
 
 /* Tablet and Mobile */
 @media only screen and (max-width: 992px) {
-  fn-modal-header {
+  fn-modal-header,
+  .fn-modal-header {
     padding-right: 2.25rem;
   }
-  fn-modal-close-icon {
+  fn-modal-close-icon,
+  .fn-modal-close-icon  {
     top: 0.905rem;
     right: 1rem;
     color: rgba(0, 0, 0, 0.8);
@@ -223,20 +250,24 @@ fn-modal-footer > .button {
 
 /* Mobile */
 @media only screen and (max-width: 767px) {
-  fn-modal-header {
+  fn-modal-header,
+  .fn-modal-header {
     padding: 0.75rem 1rem !important;
     padding-right: 2.25rem !important;
   }
-  fn-modal-content {
+  fn-modal-content,
+  .fn-modal-content {
     display: block;
     padding: 1rem !important;
   }
-  fn-modal-close-icon {
+  fn-modal-close-icon,
+  .fn-modal-close-icon {
     top: 0.5rem !important;
     right: 0.5rem !important;
   }
   /*rtl:ignore*/
-  fn-modal-image {
+  fn-modal-image,
+  .fn-modal-image {
     display: block;
     max-width: 100%;
     margin: 0em auto !important;
@@ -248,14 +279,16 @@ fn-modal-footer > .button {
     text-align: center;
   }
   /*rtl:ignore*/
-  fn-modal-description {
+  fn-modal-description,
+  .fn-modal-description {
     display: block;
     width: 100% !important;
     margin: 0em !important;
     padding: 1rem 0rem !important;
     box-shadow: none;
   }
-  fn-modal-footer {
+  fn-modal-footer,
+  .fn-modal-footer {
     padding: 1rem 1rem -1rem !important;
   }
 }
