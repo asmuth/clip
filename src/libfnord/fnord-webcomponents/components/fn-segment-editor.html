@@ -34,7 +34,7 @@
       <fn-segment-select class='segment-active'>
         <fn-segment-header>
           <fn-segment-header-title>Name</fn-segment-header-title>
-          <input class='fn-input' />
+          <input class='fn-input' data-segment-name />
         </fn-segment-header>
 
         <fn-segment-options></fn-segment-options>
@@ -119,7 +119,41 @@
         _this.toggleView();
       }
 
-      //save_btn.onclick = _this.toggleView;
+      save_btn.onclick = function() {
+        _this.onSaveSegment();
+      }
+    };
+
+    this.onSaveSegment = function() {
+      var fn_segment_select = this.querySelector("fn-segment-select");
+      var options = fn_segment_select.querySelectorAll("fn-segment-option");
+
+      var segment = {
+        'name' : fn_segment_select.querySelector("input[data-segment-name]").value,
+        'selection' : [],
+        'removable' : true,
+        'editable' : true
+      };
+
+      for (var i = 0; i < options.length; i++) {
+        //is not selected
+        if (!options[i].querySelector("fn-checkbox").hasAttribute('data-active')) {
+          continue;
+        }
+
+        var option_elem = options[i].querySelector("[data-segment-option]");
+
+        segment.selection.push({
+          'key' : options[i].getAttribute('data-key'),
+          'value' : option_elem.getValue().split(",")
+        });
+
+      }
+
+      this.addSegment(segment);
+      this.toggleView();
+      this.fireNewSegmentEvent(segment);
+      console.log(segment);
     }
 
     this.renderSegmentOptions = function() {
@@ -130,6 +164,8 @@
 
       for (var i = 0; i < options.length; i++) {
         var fn_segment_option = document.createElement("fn-segment-option");
+        fn_segment_option.setAttribute('data-key', options[i].getAttribute('data-key'));
+        fn_segment_option.setAttribute('data-title', options[i].getAttribute('data-title'));
 
         var html = [
           "<fn-checkbox></fn-checkbox><fn-segment-title>",
@@ -179,7 +215,18 @@
       fn_segment.innerHTML = html.join("");
       fn_segments.appendChild(fn_segment);
     }
-  }
+
+    this.fireNewSegmentEvent = function(segment) {
+      var ev = new CustomEvent('fn-segment-new', {
+        'detail' : {'segment' : JSON.stringify(segment)},
+        'bubbles': true,
+        'cancelable' : true
+      });
+
+      this.dispatchEvent(ev);
+    };
+  };
+
   window.addEventListener('fn-ready', function() {
     Fnord.registerComponent('fn-segment-editor', SegmentEditor);
     //Fnord.registerComponent('fn-segment-editor-element'
