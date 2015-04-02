@@ -33,6 +33,25 @@
       this.hideDropdown();
     };
 
+
+    /**
+      * Returns either the selected items data-value attr or text content as csv
+      */
+    this.getValue = function() {
+      var items = this.querySelectorAll("fn-dropdown-item[data-selected]");
+      var value = [];
+
+      for (var i = 0; i < items.length; i++) {
+        if (items[i].hasAttribute('data-value')) {
+          value.push(items[i].getAttribute('data-value'));
+        } else {
+          value.push(items[i].textContent);
+        }
+      }
+
+      return value.join(",");
+    }
+
     // Checks if a header_elem exists and renders one if not
     this.initHeaderItem = function() {
       if (this.querySelector("fn-dropdown-input")) {
