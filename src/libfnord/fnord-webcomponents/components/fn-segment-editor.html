@@ -10,12 +10,12 @@
 -->
 
 <template id="fn-segment-editor-base-tpl">
-  <fn-input class='icon'>
-    <input class='segment-clickable' data-action='open-segment-editor' readonly type='text' />
-    <fn-input-icon class='segment-clickable' data-action='open-segment-editor'><i class='fa fa-plus'></i></fn-input-icon>
-  </fn-input>
+  <fn-segment-editor-field class='segment-clickable' class='icon' data-action='open-segment-editor' >
+    <fn-segment-add-icon class='segment-clickable' data-action='open-segment-editor'>
+    </fn-segment-add-icon>
+  </fn-segment-editor-field>
 
-  <fn-modal-dimmer data-active>
+  <fn-modal-dimmer>
     <fn-modal>
       <fn-modal-close-icon></fn-modal-close-icon>
 
@@ -70,7 +70,9 @@
       var tpl = Fnord.getTemplate("fn-segment-editor", "base");
       this.appendChild(tpl);
 
-      this.init();
+      if (this.hasAttribute('data-resolved')) {
+        this.init();
+      }
     };
 
     this.attributeChangedCallback = function(attr, old_val, new_val) {
@@ -81,18 +83,12 @@
 
     this.init = function() {
       var _this = this;
-      var elems = this.querySelectorAll("[data-action='open-segment-editor']");
-
-      for (var i = 0; i < elems.length; i++) {
-        elems[i].onclick = function() {
+      this.querySelector(
+        "[data-action='open-segment-editor']").onclick = function() {
           _this.toggleVisibility();
-        }
       }
 
-      if (this.hasAttribute('data-resolved')) {
-        this.renderSegmentOptions();
-      }
-
+      this.renderSegmentOptions();
       this.handleViewVisibility();
     };
 
@@ -229,6 +225,8 @@
       segments.forEach(function(segment) {
         _this.addSegment(segment);
       }, false);
+
+      _this.addInputValues(segments);
     };
 
 
@@ -285,6 +283,18 @@
       fn_segments.appendChild(fn_segment);
     };
 
+
+    this.addInputValues = function(segments) {
+      var input = this.querySelector("[data-action='open-segment-editor']");
+      var values = [];
+
+      segments.forEach(function(segment) {
+        console.log(segment);
+        values.push(segment.name);
+      });
+
+      input.value += values.join(" | ");
+    }
 
     /*********************** Visibility & Views *******************************/
 

@@ -1,3 +1,20 @@
+fn-segment-editor-field {
+  display: inline-block;
+  text-align: left;
+  line-height: 1.2142em;
+  padding: 0.67861em 1em;
+  background: #ffffff;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  color: rgba(0, 0, 0, 0.8);
+  border-radius: 0.2857rem;
+  box-shadow: none;
+  min-width: 150px;
+}
+
+fn-segment-editor-field fn-segment-add-icon {
+  float: right;
+}
+
 fn-segment-overview,
 fn-segment-select,
 fn-segment-edit {
@@ -89,6 +106,7 @@ fn-segment-text-value {
   margin: 0 10px 0 0;
 }
 
+fn-segment-add-icon,
 fn-segment-edit-icon,
 fn-segment-remove-icon {
   cursor: pointer;
@@ -99,6 +117,7 @@ fn-segment-remove-icon {
   opacity: 0.7;
 }
 
+fn-segment-add-icon:hover,
 fn-segment-edit-icon:hover,
 fn-segment-remove-icon:hover {
   opacity: 1;
@@ -106,6 +125,11 @@ fn-segment-remove-icon:hover {
 
 fn-segment-remove-icon + fn-segment-edit-icon {
   margin-right: 10px;
+}
+
+fn-segment-add-icon:after {
+  font-family: FontAwesome;
+  content: "\f067"
 }
 
 fn-segment-remove-icon:after {
