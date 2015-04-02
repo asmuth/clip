@@ -33,26 +33,43 @@
       </fn-segment-overview>
 
       <fn-segment-select>
-        <fn-segment-header>
-          <fn-segment-header-title>Name</fn-segment-header-title>
-          <input class='fn-input' data-segment-name />
-        </fn-segment-header>
-
-        <fn-segment-options></fn-segment-options>
-
-        <fn-segment-footer>
-          <fn-button data-action='save-segment'>Save</fn-button>
-          <fn-button data-action='cancel-segment'>Cancel</fn-button>
-        </fn-segment-footer>
       </fn-segment-select>
+
+      <template name='fn-segment-select'>
+        <fn-segment-select>
+          <fn-segment-header>
+            <fn-segment-header-title>Name</fn-segment-header-title>
+            <input class='fn-input' data-segment-name />
+
+            <fn-segment-error-message>Please insert a name</fn-segment-error-message>
+          </fn-segment-header>
+
+          <fn-segment-error-message>
+            Please select at least one option
+          </fn-segment-error-message>
+
+          <fn-segment-options></fn-segment-options>
+
+          <fn-segment-footer>
+            <fn-button data-action='save-segment'>Save</fn-button>
+            <fn-button data-action='cancel-segment'>Cancel</fn-button>
+          </fn-segment-footer>
+        </fn-segment-select>
+      </template>
 
       <fn-segment-edit>
         <fn-segment-header>
           <fn-segment-header-title>Name</fn-segment-header-title>
           <input class='fn-input' data-segment-name />
+
+          <fn-segment-error-message>Please insert a name</fn-segment-error-message>
         </fn-segment-header>
 
         <fn-segment-options></fn-segment-options>
+
+        <fn-segment-error-message>
+          Please select at least one option
+        </fn-segment-error-message>
 
         <fn-segment-footer>
           <fn-button data-action='replace-segment'>Save</fn-button>
@@ -127,7 +144,41 @@
       }
 
       return this.availableColors[index % this.availableColors.length];
-    }
+    };
+
+    /**
+      * Checks if the segment has a name and at least one option
+      * Marks missing elements
+      *
+      * @return {boolean}
+      */
+    this.validateSegment = function(segment) {
+      var valid = true;
+
+      if (segment.name.length == 0) {
+        valid = false;
+
+        this.querySelector(".segment-active fn-segment-header").classList
+          .add("segment-error");
+      }
+
+      if (segment.selection.length == 0) {
+        valid = false;
+
+        this.querySelector(".segment-active").classList.add("segment-error");
+      }
+
+      return valid;
+    };
+
+
+    this.removeErrorMessages = function() {
+      var errors = this.querySelectorAll(".segment-error");
+
+      for (var i = 0; i < errors.length; i++) {
+        errors[i].classList.remove("segment-error");
+      }
+    };
 
     /**
       * Collects the segment parameters from the html elements
@@ -173,10 +224,16 @@
     /******************************** Save ********************************/
 
     this.onSaveSegment = function() {
+      this.removeErrorMessages();
+
       var fn_segment_select = this.querySelector("fn-segment-select");
       var segment = this.getSegmentSelection(fn_segment_select);
-      var segments = JSON.parse(this.getAttribute('data-segments'));
 
+      if (!this.validateSegment(segment)) {
+        return;
+      }
+
+      var segments = JSON.parse(this.getAttribute('data-segments'));
       segments.push(segment);
 
       this.setAttribute('data-segments', JSON.stringify(segments));
@@ -227,10 +284,11 @@
     };
 
 
-    /*********************** Render Options View *****************************/
+    /*********************** Render Select View *****************************/
 
     this.renderSegmentOptions = function() {
-      var fn_segment_options = this.querySelector("fn-segment-options");
+      var select_tpl = this.querySelector("template[name='fn-segment-select']");
+      var fn_segment_options = select_tpl.content.querySelector("fn-segment-options");
       var tpl = this.querySelector("template[name='fn-segment-options']");
 
       var options = tpl.content.querySelectorAll("fn-segment-option");
@@ -340,7 +398,7 @@
     };
 
 
-    /********************** Renders Edit View ********************************/
+    /********************** Render Edit View ********************************/
 
     /**
       * Renders the edit view for the given segment
@@ -374,6 +432,7 @@
         .onclick = function() {
 
           var edited_segment = _this.getSegmentSelection(fn_segment_edit);
+          //_this.validateSegment(edited_segment);
           _this.fireEditSegmentEvent(segment, edited_segment);
           _this.editSegment(segment.name, edited_segment);
           _this.changeView("fn-segment-overview");
@@ -447,6 +506,25 @@
       modal.show();
     };
 
+
+    /**
+      * Copies the segment select template into the actual element
+      */
+    this.showSegmentSelect = function() {
+      var tpl = this.querySelector("template[name='fn-segment-select']");
+      var segment_tpl = tpl.content.querySelector("fn-segment-select");
+      var segment_select = this.querySelector("fn-segment-select");
+      var _this = this;
+
+      segment_select.innerHTML = segment_tpl.innerHTML;
+      this.changeView("fn-segment-select");
+
+      segment_select.querySelector("[data-action='save-segment']")
+        .onclick = function() {
+          _this.onSaveSegment();
+      }
+    }
+
     this.changeView = function(selector) {
       var view = this.querySelector(selector);
 
@@ -460,17 +538,13 @@
 
     this.handleViewVisibility = function() {
       var add_btn = this.querySelector("[data-action='add-segment']");
-      var save_btn = this.querySelector("[data-action='save-segment']");
       var cancel_btns = this.querySelectorAll("[data-action='cancel-segment']");
       var _this = this;
 
       add_btn.onclick = function() {
-        _this.changeView("fn-segment-select");
+        _this.showSegmentSelect();
       }
 
-      save_btn.onclick = function() {
-        _this.onSaveSegment();
-      }
 
       for (var i = 0; i < cancel_btns.length; i++) {
         cancel_btns[i].onclick = function() {
