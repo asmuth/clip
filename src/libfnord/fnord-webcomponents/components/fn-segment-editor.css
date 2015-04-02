@@ -1,14 +1,6 @@
-/*fn-segment-editor,
-.fn-segment-editor {
-  display: block;
-  background: #ffffff;
-  border: none;
-  box-shadow: 0 1px 2px 1px rgba(0, 0, 0, 0.3);
-  border-radius: 0.2857rem;
-}*/
-
 fn-segment-overview,
-fn-segment-select {
+fn-segment-select,
+fn-segment-edit {
   display: none;
   background: #ffffff;
   border: none;
@@ -17,7 +9,8 @@ fn-segment-select {
 }
 
 fn-segment-overview.segment-active,
-fn-segment-select.segment-active {
+fn-segment-select.segment-active,
+fn-segment-edit.segment-active {
   display: block;
 }
 
@@ -60,6 +53,10 @@ fn-segments {
   display: block;
 }
 
+fn-segments:empty {
+  height: 4.3em;
+}
+
 fn-segment,
 fn-segment-option {
   display: block;
@@ -75,7 +72,6 @@ fn-segment {
 fn-segment:first-child {
   border-top: none;
 }
-
 
 fn-segment-title {
   font-weight: 500;
@@ -137,144 +133,3 @@ fn-segment-footer fn-button {
 fn-checkbox + fn-segment-title {
   margin-left: 5px;
 }
-/*
-fn-segment-editor-multiselect,
-.fn-segment-editor-multiselect,
-fn-segment-editor-element,
-.fn-segment-editor-element {
-  display: block;
-  padding: 1.2em 2em;
-  overflow: auto;
-}
-
-fn-segment-editor-element,
-.fn-segment-editor-element {
-  padding: 0.8em 2em;
-  border-top: 1px solid rgba(39, 41, 43, 0.15);
-}
-
-fn-segment-editor-element[data-clickable]:hover,
-.fn-segment-editor-element[data-clickable]:hover {
-  background-color: rgba(0,0,0,0.03);
-  cursor: pointer;
-}
-
-fn-segment-editor-element:first-child,
-.fn-segment-editor-element:first-child {
-  border-top: none;
-}
-
-fn-segment-editor-element-title,
-.fn-segment-editor-element-title,
-fn-segment-editor-multiselect-title,
-.fn-segment-editor-multiselect-title {
-  display: block;
-  float: left;
-  font-weight: 500;
-}
-
-fn-segment-editor-multiselect-title,
-.fn-segment-editor-multiselect-title {
-  line-height: 2.3em;
-  margin: 0 2em 0 0.3em;
-}
-
-fn-segment-editor-multiselect [data-editor='fn-segment-editor-checkbox'],
-.fn-segment-editor-multiselect [data-editor='fn-segment-editor-checkbox'] {
-  margin-top:0.6em;
-  float: left;
-}
-
-fn-segment-editor-multiselect [data-editor='fn-segment-editor-select'],
-.fn-segment-editor-multiselect [data-editor='fn-segment-editor-select'] {
-  float: left;
-}
-
-fn-segment-editor-element-text,
-.fn-segment-editor-element-text {
-  margin-left: 1.5em;
-  display: block;
-  float: left;
-}
-
-fn-segment-editor-element fn-button,
-.fn-segment-editor-elemen fn-button,
-fn-segment-editor-element button,
-.fn-segment-editor-element button,
-fn-segment-editor-element fn-segment-editor-remove-icon,
-.fn-segment-editor-element fn-segment-editor-remove-icon {
-  float: right;
-}
-
-fn-segment-editor-remove-icon,
-.fn-segment-editor-remove-icon {
-  display: block;
-  cursor: pointer;
-  font-size: 1.25em;
-  color: rgba(0, 0, 0, 0.6);
-}
-
-fn-segment-editor-remove-icon:after,
-.fn-segment-editor-remove-icon:after {
-  font-family: FontAwesome;
-  content: "\f00d";
-}
-
-fn-segment-editor-footer,
-.fn-segment-editor-footer {
-  display:block;
-  padding: 0.7em 2em;
-  border-top: 1px solid rgba(39, 41, 43, 0.15);
-  overflow: auto;
-}
-
-fn-segment-editor-footer button,
-.fn-segment-editor-footer button,
-fn-segment-editor-footer fn-button,
-.fn-segment-editor-footer fn-button,
-fn-segment-editor-footer .fn-button,
-.fn-segment-editor-footer .fn-button {
-  float: right;
-}
-
-fn-segment-editor-header.segment-editor-error input,
-.fn-segment-editor-header.segment-editor-error input {
-  background-color: #fff0f0;
-  border-color: #dbb1b1;
-  color: #d95c5c;
-  box-shadow: none;
-}
-
-.segment-editor-error fn-checkbox,
-.segment-editor-error .fn-checkbox{
-  background: #fff0f0;
-  border-color: #dbb1b1;
-  color: #d95c5c;
-}
-
-fn-segment-editor-error-text,
-.fn-segment-editor-error-text {
-  display: none;
-  color: #d95c5c;
-  font-style: italic;
-  font-size: 0.9em;
-}
-
-.segment-editor-error fn-segment-editor-error-text,
-.segment-editor-error .fn-segment-editor-error-text {
-  display: inline-block;
-}
-
-fn-segment-editor-header input + fn-segment-editor-error-text,
-.fn-segment-editor-header input + .fn-segment-editor-error-text,
-fn-segment-editor-header input.fn-input + fn-segment-editor-error-text,
-.fn-segment-editor-header input.fn-input + .fn-segment-editor-error-text {
-  margin-left: 10px;
-  margin-top: 0.55em;
-}
-
-fn-dropdown + fn-segment-editor-error-text,
-.fn-dropdown + .fn-segment-editor-error-text {
-  margin-left: 10px;
-  margin-top: 0.4em;
-}*/
