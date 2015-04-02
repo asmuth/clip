@@ -11,12 +11,18 @@
 <script type="text/javascript">
   var InputComponent = function() {
     this.createdCallback = function() {
-      //input should be inserted before icon etc. element
-      var input = document.createElement("input");
-      input.type = 'text';
-      this.insertBefore(input, this.firstChild);
+
+      var input = this.querySelector("input");
       var base = this;
       var type;
+
+      if (!input) {
+        //input should be inserted before icon etc. element
+        input = document.createElement("input");
+        input.type = 'text';
+        this.insertBefore(input, this.firstChild);
+      }
+
 
       // input options
       if (this.hasAttribute('data-placeholder')) {this.setPlaceholder();}
