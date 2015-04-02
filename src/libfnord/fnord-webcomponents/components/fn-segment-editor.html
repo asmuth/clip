@@ -65,11 +65,11 @@
           <fn-segment-error-message>Please insert a name</fn-segment-error-message>
         </fn-segment-header>
 
-        <fn-segment-options></fn-segment-options>
-
         <fn-segment-error-message>
           Please select at least one option
         </fn-segment-error-message>
+
+        <fn-segment-options></fn-segment-options>
 
         <fn-segment-footer>
           <fn-button data-action='replace-segment'>Save</fn-button>
@@ -432,10 +432,13 @@
         .onclick = function() {
 
           var edited_segment = _this.getSegmentSelection(fn_segment_edit);
-          //_this.validateSegment(edited_segment);
-          _this.fireEditSegmentEvent(segment, edited_segment);
-          _this.editSegment(segment.name, edited_segment);
-          _this.changeView("fn-segment-overview");
+          _this.removeErrorMessages();
+
+          if (_this.validateSegment(edited_segment)) {
+            _this.fireEditSegmentEvent(segment, edited_segment);
+            _this.editSegment(segment.name, edited_segment);
+            _this.changeView("fn-segment-overview");
+          }
         }
     };
 
@@ -446,7 +449,8 @@
     this.initSegmentEdit = function() {
       var fn_segment_edit = this.querySelector("fn-segment-edit");
       var fn_segment_edit_options = fn_segment_edit.querySelector("fn-segment-options");
-      var fn_segment_options = this.querySelector("fn-segment-select fn-segment-options");
+      var tpl = this.querySelector("template[name='fn-segment-select");
+      var fn_segment_options = tpl.content.querySelector("fn-segment-select fn-segment-options");
 
       fn_segment_edit_options.innerHTML = fn_segment_options.innerHTML;
       fn_segment_edit.setAttribute('data-resolved', 'resolved');

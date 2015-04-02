@@ -221,3 +221,11 @@ fn-segment-header.segment-error fn-segment-error-message {
   display: block;
   padding: 1em 2em 0em;
 }
+
+fn-segment-option fn-checkbox ~ fn-dropdown fn-dropdown-header {
+  opacity: 0.6;
+}
+
+fn-segment-option fn-checkbox[data-active] ~ fn-dropdown fn-dropdown-header {
+  opacity: 1;
+}
