@@ -197,3 +197,27 @@ fn-segment-footer fn-button {
 fn-checkbox + fn-segment-title {
   margin-left: 5px;
 }
+
+fn-segment-error-message {
+  display: none;
+  color: #d95c5c;
+  font-size: 0.9em;
+  font-style: italic;
+}
+
+fn-segment-header.segment-error fn-segment-error-message {
+  margin-top: 0.8em;
+  margin-left: 5px;
+  padding: 0;
+  text-align: left;
+  display: inline-block;
+}
+
+.segment-error fn-segment-header:not(.segment-error) fn-segment-error-message {
+  display: none;
+}
+
+.segment-error fn-segment-error-message {
+  display: block;
+  padding: 1em 2em 0em;
+}
