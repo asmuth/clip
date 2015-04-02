@@ -60,12 +60,16 @@ fn-segments {
   display: block;
 }
 
-fn-segment {
+fn-segment,
+fn-segment-option {
   display: block;
   padding: 1.5em 2em;
-  border-top: 1px solid rgba(39, 41, 43, 0.15);
   line-height: 1.3em;
   background-color: #fff;
+}
+
+fn-segment {
+  border-top: 1px solid rgba(39, 41, 43, 0.15);
 }
 
 fn-segment:first-child {
@@ -128,6 +132,10 @@ fn-segment-footer {
 fn-segment-footer fn-button {
   float: right;
   font-size: 0.9em;
+}
+
+fn-checkbox + fn-segment-title {
+  margin-left: 5px;
 }
 /*
 fn-segment-editor-multiselect,
