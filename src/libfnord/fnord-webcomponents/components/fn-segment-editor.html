@@ -100,17 +100,33 @@
       }
     };
 
+    /**
+      * Indicates whether the segment is removable or not
+      */
     this.isRemovable = function(segment) {
       return true;
     }
 
+    /**
+      * Indicates whether the segment is editable or not
+      */
     this.isEditable = function(segment) {
       return true;
     }
 
+
+    /**
+      * Get a color for a new segment
+      * NOTE: you may want to set this.availableColors to customise the colors
+      */
     this.getSegmentColor = function(segment) {
-      //FIXME
-      return "#444";
+      var index = JSON.parse(this.getAttribute('data-segments')).length;
+
+      if (!this.availableColors || this.availableColors.constructor !== Array) {
+        this.availableColors = ["#4572a7", "#aa4643", "#89a54e", "#80699b"];
+      }
+
+      return this.availableColors[index % this.availableColors.length];
     }
 
     /**
