@@ -99,7 +99,9 @@
         base.toggleDropdown();
       };
 
-      this.setHeaderValue();
+      if (!header_elem.hasAttribute('data-blank')) {
+        this.setHeaderValue();
+      }
       header_elem.addEventListener('click', onClick, false);
     };
 

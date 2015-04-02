@@ -97,8 +97,20 @@
       </fn-dropdown-items>
     </fn-dropdown>
 
+    <!-- An initial blank header is displayed at the beginning -->
+    <h3><i>Example 2 &raquo;</i> Initial Blank Header</h3>
+    <fn-dropdown data-resolved class='input'>
+      <fn-dropdown-header data-blank></fn-dropdown-header>
+      <fn-dropdown-items>
+        <fn-dropdown-item data-value="Visa">Visa</fn-dropdown-item>
+        <fn-dropdown-item data-value="paypal">PayPal</fn-dropdown-item>
+        <fn-dropdown-item data-value="mastercard">MasterCard</fn-dropdown-item>
+        <fn-dropdown-item data-value="amex">AmericanExpress</fn-dropdown-item>
+      </fn-dropdown-items>
+    </fn-dropdown>
+
     <!-- A Static header is always displayed and isn't selectable -->
-    <h3><i>Example 2 &raquo;</i> Static Header</h3>
+    <h3><i>Example 3 &raquo;</i> Static Header</h3>
     <fn-dropdown data-resolved class='input'>
       <fn-dropdown-header data-static>Select Payment</fn-dropdown-header>
       <fn-dropdown-items>
@@ -111,7 +123,7 @@
 
 
     <!-- A Multi-Selectable Dropdown has checkboxes so that multiple items can be selected -->
-    <h3><i>Example 3 &raquo;</i> Multi Selectable</h3>
+    <h3><i>Example 4 &raquo;</i> Multi Selectable</h3>
     <fn-dropdown data-resolved class='input checkbox'>
       <fn-dropdown-items>
         <fn-dropdown-item data-value='inv'>
@@ -144,7 +156,7 @@
     </script>
 
     <!-- At least the data-default item is always selected -->
-    <h3><i>Example 4 &raquo;</i> No unselectable Multi-Select</h3>
+    <h3><i>Example 5 &raquo;</i> No unselectable Multi-Select</h3>
     <fn-dropdown data-force-select data-resolved class='input checkbox'>
       <fn-dropdown-items>
         <fn-dropdown-item data-default data-selected>
@@ -159,7 +171,7 @@
       </fn-drodpown-items>
     </fn-dropdown>
 
-    <h3><i>Example 5 &raquo;</i> Input Select</h3>
+    <h3><i>Example 6 &raquo;</i> Input Select</h3>
     <fn-dropdown data-resolved class='input'>
       <fn-dropdown-items>
         <fn-dropdown-item>All (1-100)</fn-dropdown-item>
@@ -169,7 +181,7 @@
       </fn-dropdown-items>
     </fn-dropdown>
 
-    <h3><i>Example 6 &raquo;</i> Open Dropdown</h3>
+    <h3><i>Example 7 &raquo;</i> Open Dropdown</h3>
     <fn-dropdown data-resolved data-open-onclick class='input checkbox'>
       <fn-dropdown-items>
         <fn-dropdown-item data-default data-selected>
