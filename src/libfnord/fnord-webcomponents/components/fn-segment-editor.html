@@ -340,7 +340,7 @@
       var _this = this;
 
       btn.onclick = function() {
-        _this.removeChild(fn_segment);
+        _this.querySelector("fn-segments").removeChild(fn_segment);
         _this.fireRemoveSegmentEvent(fn_segment.getAttribute('data-name'));
       }
     };
