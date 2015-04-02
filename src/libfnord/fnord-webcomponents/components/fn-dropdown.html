@@ -35,7 +35,9 @@
 
 
     /**
-      * Returns either the selected items data-value attr or text content as csv
+      * Returns either the selected items data-value attr or text content
+      *
+      * @return {String} csv
       */
     this.getValue = function() {
       var items = this.querySelectorAll("fn-dropdown-item[data-selected]");
@@ -50,6 +52,31 @@
       }
 
       return value.join(",");
+    };
+
+    /**
+      * Marks for each value the matching dropdown-item as selected
+      *
+      * @param {Array} values
+      */
+    this.setValue = function(values) {
+      var _this = this;
+
+      values.forEach(function(v) {
+        var item = _this.querySelector("fn-dropdown-item[data-value='" + v + "']");
+
+        if (item) {
+          item.setAttribute('data-selected', 'selected');
+
+          var checkbox = item.querySelector("fn-checkbox");
+
+          if (checkbox) {
+            checkbox.setAttribute('data-active', 'active');
+          }
+        }
+      });
+
+      this.setHeaderValue();
     }
 
     // Checks if a header_elem exists and renders one if not
