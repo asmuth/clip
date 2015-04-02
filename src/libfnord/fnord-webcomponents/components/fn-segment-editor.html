@@ -41,6 +41,7 @@
 
         <fn-segment-footer>
           <fn-button data-action='save-segment'>Save</fn-button>
+          <fn-button data-action='cancel-segment'>Cancel</fn-button>
         </fn-segment-footer>
       </fn-segment-select>
 
@@ -113,6 +114,7 @@
     this.handleViewVisibility = function() {
       var add_btn = this.querySelector("[data-action='add-segment']");
       var save_btn = this.querySelector("[data-action='save-segment']");
+      var cancel_btn = this.querySelector("[data-action='cancel-segment']");
       var _this = this;
 
       add_btn.onclick = function() {
@@ -121,6 +123,10 @@
 
       save_btn.onclick = function() {
         _this.onSaveSegment();
+      }
+
+      cancel_btn.onclick = function() {
+        _this.toggleView();
       }
     };
 
@@ -191,6 +197,7 @@
     this.addSegment = function(segment) {
       var fn_segments = this.querySelector("fn-segments");
       var fn_segment = document.createElement("fn-segment");
+      var _this = this;
 
       var html = ["<fn-segment-title>", segment.name, "</fn-segment-title>"];
 
@@ -204,16 +211,24 @@
 
       if (segment.removable) {
         html.push("<fn-segment-remove-icon></fn-segment-remove-icon>");
-        //add event listener
+        _this.observeRemovableSegment(fn_segment);
       }
 
       if (segment.editable) {
         html.push("<fn-segment-edit-icon></fn-segment-edit-icon>");
-        //add event listener
+        _this.observeCancelableSegment(fn_segment);
       }
 
       fn_segment.innerHTML = html.join("");
       fn_segments.appendChild(fn_segment);
+    };
+
+    this.observeRemovableSegment = function(fn_segment) {
+      console.log("observe removable");
+    }
+
+    this.observeCancelableSegment = function(fn_segment) {
+
     }
 
     this.fireNewSegmentEvent = function(segment) {
