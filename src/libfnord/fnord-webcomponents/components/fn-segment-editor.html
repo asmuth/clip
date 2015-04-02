@@ -93,11 +93,13 @@
       }
     };
 
+
     this.attributeChangedCallback = function(attr, old_val, new_val) {
       if (attr == 'data-resolved' && new_val == 'resolved') {
         this.init();
       }
     };
+
 
     this.init = function() {
       var _this = this;
@@ -122,14 +124,14 @@
       */
     this.isRemovable = function(segment) {
       return true;
-    }
+    };
 
     /**
       * Indicates whether the segment is editable or not
       */
     this.isEditable = function(segment) {
       return true;
-    }
+    };
 
 
     /**
@@ -220,7 +222,6 @@
       return segment;
     };
 
-
     /******************************** Save ********************************/
 
     this.onSaveSegment = function() {
@@ -283,7 +284,6 @@
       this.renderPreviewValues();
     };
 
-
     /*********************** Render Select View *****************************/
 
     this.renderSegmentOptions = function() {
@@ -309,7 +309,6 @@
         fn_segment_options.appendChild(fn_segment_option);
       }
     };
-
 
     /********************* Render Overview *********************************/
 
@@ -346,6 +345,7 @@
       this.addPreviewValues(segments);
       this.setAttribute('data-segments', JSON.stringify(segments_attr));
     };
+
 
     this.getHTMLForSegmentValues = function(selection) {
       var html = [];
@@ -396,7 +396,6 @@
       fn_segment.setAttribute('data-name', segment.name);
       fn_segments.appendChild(fn_segment);
     };
-
 
     /********************** Render Edit View ********************************/
 
@@ -456,7 +455,6 @@
       fn_segment_edit.setAttribute('data-resolved', 'resolved');
     };
 
-
     /************************** Render Preview ******************************/
 
     this.addPreviewValues = function(segments) {
@@ -499,7 +497,6 @@
       this.addPreviewValues(segments);
     };
 
-
     /*********************** Visibility & Views *******************************/
 
     this.showEditor = function() {
@@ -527,7 +524,7 @@
         .onclick = function() {
           _this.onSaveSegment();
       }
-    }
+    };
 
     this.changeView = function(selector) {
       var view = this.querySelector(selector);
@@ -556,7 +553,6 @@
         }
       }
     };
-
 
     /*************************** Events ************************************/
 
