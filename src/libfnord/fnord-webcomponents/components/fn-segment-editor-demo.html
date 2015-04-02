@@ -11,6 +11,56 @@
 <template id="fn-segment-editor-demo-base-tpl">
 
   <section>
+    <fn-segment-editor id='editor1'>
+      <template name='fn-segment-options'>
+        <fn-segment-option data-key='lang' data-title='Language'>
+          <fn-dropdown>
+            <fn-dropdown-items>
+              <fn-dropdown-item data-value='de' data-title='German'>
+                German
+              </fn-dropdown-item>
+              <fn-dropdown-item data-value='fr' data-title='French'>
+                French
+              </fn-dropdown-item>
+            </fn-dropdown-items>
+          </fn-dropdown>
+        </fn-segment-option>
+
+        <fn-segment-option data-key='device_type' data-title='Device Type'>
+          <fn-dropdown>
+            <fn-dropdown-items>
+              <fn-dropdown-item data-value='desktop' data-title='Desktop'>
+                Desktop
+              </fn-dropdown-item>
+              <fn-dropdown-item data-value='mobile' data-title='Mobile'>
+                Mobile
+              </fn-dropdown-item>
+            </fn-dropdown-items>
+          </fn-dropdown>
+        </fn-segment-option>
+      </template>
+    </fn-segment-editor>
+
+    <script type='text/javascript'>
+      var editor = document.getElementById('editor1');
+      var segments = [
+        {
+          'name' : 'French Mobile',
+          'selection' : [
+            {'key' : 'lang', 'value' : ['fr']},
+            {'key' : 'device', 'value' : ['mobile', 'tablet']},
+          ],
+          'removable' : true,
+          'editable' : true
+        }
+      ];
+
+      editor.addSegments(JSON.stringify(segments));
+    </script>
+  </section>
+
+
+  <!--<section>
 
     <fn-segment-editor data-overview data-resolved style="width: 50%;">
       <fn-segment-editor-header>
@@ -56,11 +106,11 @@
         console.log("Clicked: ", target);
       }, false);
     </script>
-  </section>
+  </section> 
 
-  <section>
+  <section> -->
 
-    <fn-segment-editor data-resolved data-multiselect style='width: 50%;'>
+<!--    <fn-segment-editor data-resolved data-multiselect style='width: 50%;'>
       <fn-segment-editor-header>
         <fn-segment-editor-header-title>Name</fn-segment-editor-header-title>
         <input class='fn-input' data-editor='fn-segment-editor-name' />
@@ -179,7 +229,7 @@
       </fn-segment-editor-footer>
 
     </fn-segment-editor>
-  </section>
+  </section> -->
 
 
 

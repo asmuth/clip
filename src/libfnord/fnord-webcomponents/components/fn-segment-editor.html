@@ -10,15 +10,51 @@
 -->
 
 <template id="fn-segment-editor-base-tpl">
+  <fn-input class='icon'>
+    <input class='segment-clickable' data-action='open-segment-editor' readonly type='text' />
+    <fn-input-icon class='segment-clickable' data-action='open-segment-editor'><i class='fa fa-plus'></i></fn-input-icon>
+  </fn-input>
+
+  <fn-modal-dimmer data-active>
+    <fn-modal>
+      <fn-modal-close-icon></fn-modal-close-icon>
+
+      <fn-segment-overview class='segment-active'>
+        <fn-segment-header>
+          <fn-segment-header-title>Segments</fn-segment-header-title>
+        </fn-segment-header>
+
+        <fn-segments></fn-segments>
+
+        <fn-segment-footer>
+          <fn-button>Add Segment</fn-button>
+        </fn-segment-footer>
+      </fn-segment-overview>
+
+      <fn-segment-select>
+        <fn-segment-header>
+          <fn-segment-header-title>Name</fn-segment-header-title>
+          <input class='fn-input' />
+        </fn-segment-header>
+
+        <fn-segment-options></fn-segment-options>
+
+        <fn-segment-footer>
+          <fn-button>Save</fn-button>
+        </fn-segment-footer>
+      </fn-segment-select>
+
+    </fn-modal>
+  </fn-modal-dimmer>
 </template>
 
 <script type='text/javascript'>
   var SegmentEditor = function() {
     this.createdCallback = function() {
+      var tpl = Fnord.getTemplate("fn-segment-editor", "base");
+      this.appendChild(tpl);
 
-      if (this.hasAttribute('data-resolved')) {
-        this.init();
-      }
+      this.init();
     }
 
     this.attributeChangedCallback = function(attr, old_val, new_val) {
@@ -28,248 +64,69 @@
     }
 
     this.init = function() {
-      if (this.hasAttribute('data-multiselect')) {
-        return this.observeSaveButton();
-      }
-
-      if (this.hasAttribute('data-overview')) {
-        this.observeAddButton();
-        this.observeClickableSegments();
-        this.observeRemovableSegments();
-        return;
-      }
-    };
-
-    /************************ fn-segment-multiselect ************************/
-
-    this.generateJson = function(selection) {
-      var json = {};
-      json[selection.name] = selection.selection;
-
-      return (JSON.stringify([selection]));
-    }
-
-    this.removeErrors = function() {
-      var error_elems = this.querySelectorAll("segment-editor-error");
-
-      for (var i = 0; i < error_elems.length; i++) {
-        error_elems[i].classList.remove('segment-editor-error');
-      }
-    }
-
-    this.setError = function(selector) {
-      var elem = this.querySelector(selector);
-
-      elem.classList.add("segment-editor-error");
-
-      this.removeErrorOnAction(elem);
-    } 
-
-    /**
-      * validates the selection
-      * Note: you may want to override this function to customize the validation
-      *
-      * return true if valid and false otherwise
-      * invalid elements are marked
-      */
-    this.validateSelection = function(selection) {
-      var isValid = true;
-      if (!selection.name) {
-        isValid = false;
-
-        this.setError("fn-segment-editor-header");
-      }
-
-      if (!Object.keys(selection.selection).length > 0) {
-        isValid = false;
-
-        this.setError("fn-segment-editor-multiselect");
-      }
-
-      return isValid;
-    }
-
-    this.onSaveMultiselect = function() {
-      var selection = this.getSelection();
-
-      if (this.validateSelection(selection)) {
-        var json = this.generateJson(selection);
-        this.fireSaveMultiselectEvent(json);
-      }
-    };
-
-    this.getSelection = function() {
-      var name = this.querySelector("input[data-editor='fn-segment-editor-name']").value;
-      var multiselects = this.querySelectorAll("fn-segment-editor-multiselect");
-      var selection = {};
-
-      selection.name = name;
-      selection.selection = {};
-
-      for (var i = 0; i < multiselects.length; i++) {
-        var checkbox = multiselects[i].querySelector("[data-editor='fn-segment-editor-checkbox']");
-
-        if (!checkbox || (checkbox && !checkbox.hasAttribute('data-active'))) {
-          continue;
-        }
-
-        var select_elem = multiselects[i].querySelector("[data-editor='fn-segment-editor-select']");
-        var selected = select_elem.querySelectorAll("[data-selected]");
-
-        var key = multiselects[i].getAttribute('data-key');
-        var value = [];
-
-        for (var j = 0; j < selected.length; j++) {
-          value.push(selected[j].getAttribute('data-value'));
-        }
-
-        //string or null
-        if (key && value.length > 0) {
-          selection.selection[key] = value;
-        }
-      }
-
-      return selection;
-    };
-
-    this.observeSaveButton = function() {
-      var btn = this.querySelector("[data-editor='fn-segment-editor-save']");
       var _this = this;
+      var elems = this.querySelectorAll("[data-action='open-segment-editor']");
 
-      if (btn) {
-        btn.addEventListener('click', function() {
-          _this.onSaveMultiselect();
-        }, false);
+      for (var i = 0; i < elems.length; i++) {
+        elems[i].onclick = function() {
+          _this.toggleVisibility();
+        }
+      }
+
+      this.handleViewVisibilty();
+    };
+
+    this.toggleVisibility = function() {
+      var dimmer = this.querySelector("fn-modal-dimmer");
+      var modal = this.querySelector("fn-modal");
+
+      if (dimmer.hasAttribute('data-active')) {
+        modal.close();
+      } else {
+        modal.show();
       }
     };
 
-    this.removeErrorOnAction = function(elem) {
-      elem.addEventListener('click', function() {
-        elem.classList.remove('segment-editor-error');
-      }, false);
+    this.handleViewVisibility = function() {
+
     }
 
-    this.fireSaveMultiselectEvent = function(json) {
-      var ev = new CustomEvent('fn-segment-editor-multiselect-save', {
-        'detail' : {'selection' : json},
-        bubbles: true,
-        cancelable: true
-      });
-
-      this.dispatchEvent(ev);
-    };
-
-    this.renderSegmentElement = function(json) {
-      var footer = this.querySelector("fn-segment-editor-footer");
+    this.addSegments = function(json) {
       var segments = JSON.parse(json);
       var _this = this;
 
       segments.forEach(function(segment) {
-        var element = document.createElement("fn-segment-editor-element");
-        var title = document.createElement("fn-segment-editor-element-title");
-        var text = document.createElement("fn-segment-editor-element-text");
-        var icon = document.createElement("fn-segment-editor-remove-icon");
-
-        icon.setAttribute('data-editor', 'fn-segment-editor-element-remove');
-        title.innerHTML = segment.name;
-
-        for (var key in segment.selection) {
-          text.innerHTML += key + ": " + segment.selection[key] + ", ";
-        }
-
-        element.appendChild(title);
-        element.appendChild(text);
-        element.appendChild(icon);
-
-        _this.insertBefore(element, footer);
-      });
+        _this.addSegment(segment);
+      }, false);
     }
 
-    /****************************** fn-segment-overview **********************/
+    this.addSegment = function(segment) {
+      var fn_segments = this.querySelector("fn-segments");
+      var fn_segment = document.createElement("fn-segment");
 
-    this.observeAddButton = function() {
-      var btn = this.querySelector("[data-editor='fn-segment-editor-add']");
-      var _this = this;
+      var html = ["<fn-segment-title>", segment.name, "</fn-segment-title>"];
 
-      if (btn) {
-        btn.addEventListener('click', function(e) {
-          _this.fireAddSegmentEvent();
-        }, false);
+      segment.selection.forEach(function(s) {
+        html.push(
+          "<fn-segment-text-title>", s.key, ":",
+          "</fn-segment-text-title>", "<fn-segment-text-value>", s.value.join(", "),
+          "</fn-segment-text-value>"
+        );
+      });
+
+      if (segment.removable) {
+        html.push("<fn-segment-remove-icon></fn-segment-remove-icon>");
       }
-    }
 
-    this.observeClickableSegments = function() {
-      var _this = this;
-      var c_segments = this.querySelectorAll(
-        "fn-segment-editor-element[data-clickable]");
-
-      for (var i = 0; i < c_segments.length; i++) {
-        c_segments[i].addEventListener('click', function() {
-          _this.fireSegmentClickEvent(this);
-        }, false);
+      if (segment.editable) {
+        html.push("<fn-segment-edit-icon></fn-segment-edit-icon>");
       }
-    };
 
-    this.observeRemovableSegments = function() {
-      var _this = this;
-      var r_icons = this.querySelectorAll(
-        "[data-editor='fn-segment-editor-element-remove']");
-
-      for (var i = 0; i < r_icons.length; i++) {
-        r_icons[i].addEventListener('click', function(e) {
-          e.stopPropagation();
-
-          var element = Fnord.getParentByTagname("fn-segment-editor-element", this);
-
-          if (element) {
-            _this.onRemoveSegment(element);
-          }
-
-        }, false);
-      }
-    };
-
-    this.fireAddSegmentEvent = function() {
-      var ev = new CustomEvent('fn-segment-editor-add', {
-        cancelable: true,
-        bubbles: true
-      });
-
-      this.dispatchEvent(ev);
-    };
-
-    this.onRemoveSegment = function(segment) {
-      this.fireRemoveSegmentEvent(segment);
-
-      this.removeChild(segment);
+      console.log(html.join(""));
+      fn_segment.innerHTML = html.join("");
+      fn_segments.appendChild(fn_segment);
     }
-
-    this.fireRemoveSegmentEvent = function(elem) {
-      var ev = new CustomEvent('fn-segment-editor-remove', {
-        'detail' : {'value' : elem.getAttribute('data-value')},
-        cancelable: true,
-        bubbles: true
-      });
-
-      elem.dispatchEvent(ev);
-    }
-
-    this.fireSegmentClickEvent = function(elem) {
-      var ev = new CustomEvent('fn-segment-editor-element-click', {
-        cancelable: true,
-        bubbles: true
-      });
-
-      elem.dispatchEvent(ev);
-    };
-
-    this.createSegmentEditorMultiselect = function(json) {
-      console.log("create multiselect");
-      console.log(tpl);
-    }
-
-  };
-
+  }
   window.addEventListener('fn-ready', function() {
     Fnord.registerComponent('fn-segment-editor', SegmentEditor);
     //Fnord.registerComponent('fn-segment-editor-element'
