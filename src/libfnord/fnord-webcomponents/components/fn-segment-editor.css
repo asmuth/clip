@@ -18,8 +18,8 @@ fn-segment-editor-field-values {
 
 fn-segment-circle {
   display: inline-block;
-  width: 0.9em;
-  height: 0.9em;
+  width: 8px;
+  height: 8px;
   border-radius: 50%;
 }
 
