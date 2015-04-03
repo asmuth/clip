@@ -1,0 +1,67 @@
+<!--
+  This file is part of the "FnordMetric" project
+    Copyright (c) 2014 Laura Schlimmer
+    Copyright (c) 2014 Paul Asmuth, Google Inc.
+
+  FnordMetric is free software: you can redistribute it and/or modify it under
+  the terms of the GNU General Public License v3.0. You should have received a
+  copy of the GNU General Public License along with this program. If not, see
+  <http://www.gnu.org/licenses/>.
+-->
+
+<template id="fn-navigation-base-tpl">
+</template>
+<script type='text/javascript'>
+  var NavigationComponent = function() {
+    this.createdCallback = function() {
+      var base = this;
+      var items = this.querySelectorAll("fn-navigation-item");
+
+      if (this.hasAttribute('data-evenly-sized')) {
+        this.setItemsWidth();
+      }
+
+      for (var i = 0; i < items.length; i++) {
+        if (!items[i].classList.contains("static")) {
+          items[i].addEventListener('click', function() {
+            base.onItemClick(this);
+          }, false);
+        }
+      }
+    };
+
+    this.attributeChangedCallback = function(attr, old_val, new_val) {
+      if (attr == 'data-evenly-sized') {
+        this.setItemsWidth();
+      }
+    };
+
+    this.setItemsWidth = function() {
+      var items = this.querySelectorAll("fn-navigation-item");
+      var width = (100 / items.length) + "%";
+
+      for (var i = 0; i < items.length; i++) {
+        items[i].style.width = width;
+      }
+    };
+
+    this.onItemClick = function(item) {
+      var active_item = this.querySelector("fn-navigation-item[data-active]");
+      if (active_item) {
+        active_item.removeAttribute('data-active');
+      }
+
+      item.setAttribute('data-active', 'active');
+
+      var ev = new CustomEvent('fn-navigation-item-click', {
+        bubbles: true,
+        cancelable: true
+      });
+      item.dispatchEvent(ev);
+    }
+  }
+
+  window.addEventListener('fn-ready', function() {
+    Fnord.registerComponent('fn-navigation', NavigationComponent);
+  }, false);
+</script>

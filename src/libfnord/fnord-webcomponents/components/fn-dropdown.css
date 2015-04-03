@@ -1,0 +1,356 @@
+/**
+ * Adapted from: Semantic UI:
+ *   https://github.com/Semantic-Org/Semantic-UI
+ *   http://www.semantic-ui.com/
+ */
+ /*******************************
+            Dropdown
+*******************************/
+fn-dropdown,
+.fn-dropdown {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  position: relative;
+  cursor: pointer;
+  display: inline-block;
+  line-height: 1em;
+  outline: none;
+  text-align: left;
+  color: rgba(0,0,0,.8);
+  tap-highlight-color: rgba(0, 0, 0, 0);
+  -webkit-transition: border-radius 0.1s ease, width 0.2s ease;
+          transition: border-radius 0.1s ease, width 0.2s ease;
+}
+
+/*******************************
+        Content
+*******************************/
+/*--------------
+  Header Elem
+---------------*/
+fn-dropdown-header:after,
+.fn-dropdown-header:after {
+  font-size: inherit;
+  font-family: FontAwesome;
+  content: "\f0d7";
+  display: inline-block;
+  line-height: inherit;
+  font-weight: 401;
+  font-style: normal;
+  text-align: center;
+  width: auto;
+  margin: 0 0 0 0.5em;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  vertical-align:middle;
+}
+
+/*--------------
+    Items
+---------------*/
+fn-dropdown-items,
+.fn-dropdown-items {
+  display: none;
+  list-style: none;
+  cursor: pointer;
+  position: absolute;
+  outline: 0;
+  top: 100%;
+  left: 0;
+  margin: 0;
+  padding: 0;
+  white-space: nowrap;
+  text-shadow: none;
+  text-align: left;
+  box-shadow: 0 1px 4px 0 rgba(0,0,0,.15);
+  border: 1px solid rgba(39,41,43,.15);
+  border-radius: 0 0 .2857rem .2857rem;
+  -webkit-transition: opacity .2s ease;
+  transition: opacity .2s ease;
+  z-index: 11;
+  background-color: #fff;
+  will-change: transform,opacity;
+}
+
+fn-dropdown[data-active] fn-dropdown-items,
+.fn-dropdown[data-active] .fn-dropdown-items{
+  display: inline-block;
+}
+
+
+/*--------------
+    Item
+---------------*/
+fn-dropdown-item,
+.fn-dropdown-item {
+  display: list-item;
+  list-style: none;
+  position: relative;
+  cursor: pointer;
+  border: none;
+  height: auto;
+  border-top: none;
+  color: rgba(0, 0, 0, 0.8);
+  padding: 0.65em 0.7em 0.65em 0.7em!important;
+  text-transform: none;
+  font-weight: normal;
+  box-shadow: none;
+  -webkit-touch-callout: none;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font: inherit;
+  line-height: inherit;
+  vertical-align: baseline;
+  overflow: hidden;
+  text-align:left;
+}
+
+
+fn-dropdown-item[data-selected],
+.fn-dropdown-item[data-selected] {
+  font-weight: bold !important;
+  color: rgba(0, 0, 0, 0.8) !important;
+}
+
+fn-dropdown-item:hover,
+fn-dropdown-item.hover,
+.fn-dropdown-item:hover,
+.fn-dropdown-item.hover {
+  background-color: rgba(0, 0, 0, 0.05);
+  color: rgba(0, 0, 0, 0.8);
+}
+
+fn-dropdown-item.hidden,
+.fn-dropdown-item.hidden {
+  display: none;
+}
+
+
+/*--------------
+   Icon Item
+---------------*/
+fn-dropdown-icon,
+.fn-dropdown-icon {
+  display: inline-block;
+  opacity: 1;
+  margin: 0 .25rem 0 0;
+  width: 1.23em;
+  height: .9em;
+  font-family: Icons;
+  font-style: normal;
+  line-height: 1;
+  font-weight: 400;
+  text-decoration: inherit;
+  text-align: center;
+  speak: none;
+  font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
+
+fn-dropdown-descr,
+.fn-dropdown-descr {
+  margin: 0em 0em 0em 1em;
+  color: rgba(0, 0, 0, 0.4);
+}
+
+/*--------------
+  Label
+---------------*/
+fn-dropdown-label,
+.fn-dropdown-label {
+  display: list-item;
+  margin: 1rem 0rem 0.75rem;
+  padding: 0em 1.25rem;
+  color: rgba(0, 0, 0, 0.85);
+  font-size: 0.8em;
+  font-weight: bold;
+  text-transform: uppercase;
+  cursor: default;
+}
+
+/*-----------------
+  Item With Input
+-------------------*/
+fn-dropdown-item input.fn-input,
+.fn-dropdown-item input.fn-input,
+fn-dropdown-item fn-input input,
+.fn-dropdown-item .fn-input input {
+  padding: 0.6em 1em;
+  margin-top: 0.5em;
+  font-size: 0.92em;
+}
+
+
+/*******************************
+      Dropdown Styles
+*******************************/
+
+/*--------------
+  Input like
+---------------*/
+
+/* Displays like a input/select box */
+fn-dropdown.input fn-dropdown-header,
+.fn-dropdown.input .fn-dropdown-header {
+  word-wrap: break-word;
+  white-space: normal;
+  outline: 0;
+  -webkit-transform: rotateZ(0deg);
+  transform: rotateZ(0deg);
+  background: #fff;
+  display: inline-block;
+  box-shadow: none;
+  border: 1px solid rgba(39,41,43,.15);
+  border-radius: .2857rem;
+  -webkit-transition: border-radius .1s ease,width .2s ease,box-shadow .2s ease,border .2s ease;
+  transition: border-radius .1s ease,width .2s ease,box-shadow .2s ease,border .2s ease;
+  min-width: 180px;
+  padding: 0.65em 1.1em;
+  line-height: 1em;
+}
+
+fn-dropdown.input fn-dropdown-header:hover,
+.fn-dropdown.input .fn-dropdown-header:hover {
+  border-color: rgba(39, 41, 43, 0.3);
+  box-shadow: 0px 0px 4px 0px rgba(0, 0, 0, 0.08);
+}
+
+/* Search Icon */
+fn-dropdown.input fn-dropdown-header:after,
+.fn-dropdown.input .fn-dropdown-header:after {
+  float:right;
+}
+
+/* Input Style Menu */
+fn-dropdown.input fn-dropdown-items,
+.fn-dropdown.input .fn-dropdown-items  {
+  overflow-x: hidden;
+  overflow-y: auto;
+  -webkit-backface-visibility: hidden;
+          backface-visibility: hidden;
+  -webkit-overflow-scrolling: touch;
+  border-top: none !important;
+  width: calc(100% - 1px);
+  margin: 0px 1px;
+  outline: none;
+  box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.08);
+  -webkit-transition: box-shadow 0.2s ease, border 0.2s ease;
+  transition: box-shadow 0.2s ease, border 0.2s ease;
+}
+
+fn-dropdown.input fn-dropdown-item,
+.fn-dropdown.input .fn-dropdown-item {
+  border-top: 1px solid rgba(0, 0, 0, 0.05);
+  padding-left: 1.1em !important;
+
+/* Add in spacing for scroll bar */
+  padding-right: -webkit-calc(2.1em) !important;
+  padding-right: calc(2.1em) !important;
+  white-space: normal;
+  word-wrap: normal;
+}
+
+fn-dropdown.input fn-dropdown-item:first-child,
+.fn-dropdown.input .fn-dropdown-item:first-child,
+fn-dropdown.input fn-dropdown-label + fn-dropdown-item,
+.fn-dropdown.input .fn-dropdown-label + .fn-dropdown-item {
+  border-top: none;
+}
+
+fn-dropdown.input fn-dropdown-item:hover,
+.fn-dropdown.input .fn-dropdown-item:hover {
+  box-shadow: 0px 0px 2px 0px rgba(0, 0, 0, 0.05);
+}
+
+/*--------------
+  Inline
+---------------*/
+fn-dropdown.inline,
+.fn-dropdown.inline{
+  cursor: pointer;
+  display: inline-block;
+  color: inherit;
+}
+
+fn-dropdown.inline fn-dropdown-header,
+.fn-dropdown.inline .fn-dropdown-header {
+  font-weight: bold;
+}
+
+fn-dropdown.inline fn-dropdown-items,
+.fn-dropdown.inline .fn-dropdown-items {
+  cursor: auto;
+  margin-top: 0.25em;
+  border-radius: 0.2857rem;
+}
+
+/*--------------
+  Searchable
+---------------*/
+fn-dropdown.search fn-dropdown-items,
+.fn-dropdown.search .fn-dropdown-items{
+  width: 100%;
+}
+
+
+/*******************************
+      Dropdown States
+*******************************/
+/*--------------------
+        Error
+----------------------*/
+fn-dropdown.error fn-dropdown-header,
+.fn-dropdown.error .fn-dropdown-header {
+  color: #a94442;
+}
+
+fn-dropdown.input.error fn-dropdown-header,
+.fn-dropdown.input.error .fn-dropdown-header  {
+  background: #fff0f0;
+  border-color: #dbb1b1;
+}
+
+fn-dropdown.error fn-dropdown-header:hover,
+.fn-dropdown.error .fn-dropdown-header:hover {
+  border-color: #dbb1b1 !important;
+}
+
+fn-dropdown.error fn-dropdown-items,
+.fn-dropdown.error .fn-dropdown-items {
+  border-color: #dbb1b1;
+}
+
+fn-dropdown.error fn-dropdown-item,
+.fn-dropdown.error .fn-dropdown-item {
+  color: #d95c5c;
+}
+
+fn-dropdown.error fn-dropdown-item :hover,
+fn-dropdown.error fn-dropdown-item.hover {
+  background-color: #fff2f2;
+}
+
+fn-dropdown.error fn-dropdown-item[data-selected],
+.fn-dropdown.error .fn-dropdown-item[data-selected]{
+  background-color: #fdcfcf;
+}
+
+/*--------------
+  Disabled
+---------------*/
+fn-dropdown.disabled,
+.fn-dropdown.disabled {
+  cursor: default;
+  opacity: 0.5;
+}
+
+fn-dropdown.input fn-dropdown-header:hover,
+fn-dropdown.input .fn-dropdown-header:hover {
+  border-color: rgba(39,41,43,.15);
+  box-shadow: none;
+}
+

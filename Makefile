@@ -1,26 +1,36 @@
-# This file is part of the "FnordMetric" project
-#   Copyright (c) 2014 Paul Asmuth, Google Inc.
-#
-# Licensed under the MIT license (see LICENSE).
-
 all: build
 
 build:
-	(cd fnordmetric-webui && make build)
-	(cd fnordmetric-core && make build)
+	mkdir -p build
+	(cd build && cmake -DCMAKE_BUILD_TYPE=Release ../cmake && make)
 
-install:
-	(cd fnordmetric-core && make install)
+build-dbg:
+	mkdir -p build-dbg
+	(cd build-dbg && cmake -GNinja -DCMAKE_BUILD_TYPE=Debug ../cmake && ninja)
 
-test:
-	(cd fnordmetric-core && make test)
+test: build
+	@find build/tests -name "test-*" -exec ./{} \;
+
+test-dbg: build-dbg
+	@find build-dbg/tests -name "test-*" -exec ./{} \;
 
 clean:
-	(cd fnordmetric-webui && make clean)
-	(cd fnordmetric-core && make clean)
+	rm -rf build build-dbg .dev_assets
 
-doc:
-	find doc/examples -name "*.sql" | while read file; do PATH=./build:$$PATH fnordmetric -f svg -o $${file/.sql/.svg}.html $$file; done
-	(cd doc/web && rake build)
+install:
+	(cd build && make install)
 
-.PHONY: all test clean doc build
+devserver: build-dbg
+	mkdir -p /tmp/fnordmetric-data
+	rm -rf .dev_assets
+	mkdir -p .dev_assets/fnord
+	ln -s ../../src/libfnord/fnord-webcomponents/components .dev_assets/fnord/components
+	ln -s ../src/libfnord/fnord-metricdb/metric-explorer .dev_assets/fnord-metricdb
+	ln -s ../../src/libfnord/fnord-webcomponents/3rdparty .dev_assets/fnord/3rdparty
+	ln -s ../../src/libfnord/fnord-webcomponents/themes .dev_assets/fnord/themes
+	ln -s ../../src/libfnord/fnord-webcomponents/fnord.js .dev_assets/fnord/fnord.js
+	ln -s ../../src/libfnord/fnord-webcomponents/date_util.js .dev_assets/fnord/date_util.js
+	ln -s ../src/fnordmetric/webui .dev_assets/fnordmetric
+	DEV_ASSET_PATH=./.dev_assets ./build-dbg/fnordmetric-server --datadir /tmp/fnordmetric-data --verbose
+
+.PHONY: clean build build-dbg test test-dbg clean install devserver

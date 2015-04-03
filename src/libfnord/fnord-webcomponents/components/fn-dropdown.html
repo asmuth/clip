@@ -1,0 +1,468 @@
+<!--
+  This file is part of the "FnordMetric" project
+    Copyright (c) 2014 Laura Schlimmer
+    Copyright (c) 2014 Paul Asmuth, Google Inc.
+
+  FnordMetric is free software: you can redistribute it and/or modify it under
+  the terms of the GNU General Public License v3.0. You should have received a
+  copy of the GNU General Public License along with this program. If not, see
+  <http://www.gnu.org/licenses/>.
+-->
+<script type="text/javascript">
+  var DropDownComponent = function() {
+    this.createdCallback = function() {
+      var base = this;
+
+      if (this.hasAttribute('data-resolved')) {
+        this.initHeaderItem();
+      }
+
+      //close dropdown only if click event is outside
+      this.addEventListener('click', function(e) {
+        e.stopPropagation();
+      }, false);
+    };
+
+    this.attributeChangedCallback = function(attr, old_val, new_val) {
+      if (attr == 'data-resolved') {
+        this.initHeaderItem();
+      }
+    };
+
+    this.onDocumentClick = function() {
+      this.hideDropdown();
+    };
+
+
+    /**
+      * Returns either the selected items data-value attr or text content
+      *
+      * @return {String} csv
+      */
+    this.getValue = function() {
+      var items = this.querySelectorAll("fn-dropdown-item[data-selected]");
+      var value = [];
+
+      for (var i = 0; i < items.length; i++) {
+        if (items[i].hasAttribute('data-value')) {
+          value.push(items[i].getAttribute('data-value'));
+        } else {
+          value.push(items[i].textContent);
+        }
+      }
+
+      return value.join(",");
+    };
+
+    /**
+      * Marks for each value the matching dropdown-item as selected
+      *
+      * @param {Array} values
+      */
+    this.setValue = function(values) {
+      var _this = this;
+
+      values.forEach(function(v) {
+        var item = _this.querySelector("fn-dropdown-item[data-value='" + v + "']");
+
+        if (item) {
+          item.setAttribute('data-selected', 'selected');
+
+          var checkbox = item.querySelector("fn-checkbox");
+
+          if (checkbox) {
+            checkbox.setAttribute('data-active', 'active');
+          }
+        }
+      });
+
+      this.setHeaderValue();
+    }
+
+    // Checks if a header_elem exists and renders one if not
+    this.initHeaderItem = function() {
+      if (this.querySelector("fn-dropdown-input")) {
+        return this.renderSearchable();
+      }
+
+      var base = this;
+      var selected_item = this.querySelector("fn-dropdown-item[data-selected]");
+      var header_elem = this.querySelector("fn-dropdown-header");
+
+      if (!header_elem) {
+        header_elem = document.createElement("fn-dropdown-header");
+        this.insertBefore(header_elem, this.firstChild);
+      }
+
+      var onClick = function(e) {
+        e.stopPropagation();
+        base.toggleDropdown();
+      };
+
+      if (!header_elem.hasAttribute('data-blank')) {
+        this.setHeaderValue();
+      }
+      header_elem.addEventListener('click', onClick, false);
+    };
+
+    // Copies the selected items html to the header_elem
+    this.setHeaderValue = function() {
+      var header = this.querySelector("fn-dropdown-header");
+
+      if (header.hasAttribute('data-static')) {
+        return;
+      }
+
+      var innerHTML = "";
+
+      //multi selectable dropdown
+      if (this.classList.contains('checkbox')) {
+        var selected_items = this.querySelectorAll("fn-dropdown-item[data-selected]");
+
+        for (var i = 0; i < selected_items.length; i++) {
+          if (i > 0) {
+            innerHTML += ", ";
+          }
+
+          innerHTML += selected_items[i].innerText || selected_items[i].textContent;
+        }
+
+      } else {
+
+        var selected_item = this.querySelector("fn-dropdown-item[data-selected]");
+        if (!selected_item) {
+
+          var preselection = this.getAttribute('data-preselected');
+          //set preselected item
+          if (preselection) {
+            var preselected_item = this.findItemByValue(preselection);
+
+            preselected_item.setAttribute('data-selected', 'selected');
+            innerHTML = preselected_item.innerHTML;
+
+          } else {
+            //fn-dropdown has initial not selectable header
+            if (header.innerHTML.length > 0) {
+              return;
+            }
+
+            //set first fn-dropdown-item as header value
+           innerHTML = this.querySelector("fn-dropdown-item").innerHTML;
+          }
+        } else {
+          //set items input value as html header
+          if (selected_item.hasAttribute('data-input-select')) {
+            var input = selected_item.querySelector("input");
+            innerHTML = input.value;
+
+          } else {
+            //set selected_item's html as header (standard case)
+            innerHTML = selected_item.innerHTML;
+          }
+        }
+      }
+
+      header.innerHTML = innerHTML;
+    };
+
+
+    this.toggleDropdown = function() {
+      if (this.hasAttribute('data-active')) {
+        this.hideDropdown();
+      } else {
+        this.showDropdown();
+      }
+    };
+
+    this.hideDropdown = function() {
+      var hover_item = this.querySelector("fn-dropdown-item.hover");
+
+      this.removeAttribute('data-active');
+
+      if (hover_item) {
+        hover_item.classList.remove('hover');
+      }
+
+      this.fireCloseEvent();
+
+      //remove global event listener
+      if (!this.querySelector("fn-input")) {
+        this.unsetKeyNavigation(window);
+      }
+    };
+
+    this.showDropdown = function() {
+      if (this.classList.contains("disabled")) {
+        return;
+      }
+
+      this.setAttribute('data-active', 'active');
+
+      if (!this.eventListeners) {
+        //set eventListeners only once
+        this.setItemEventListeners();
+      }
+
+      //set global event listener if not searchable
+      if (!this.querySelector("fn-input")) {
+        this.setKeyNavigation(window);
+      }
+    };
+
+    this.findItemByValue = function(value) {
+      return (this.querySelector(
+        "fn-dropdown-item[data-value='" + value + "']"));
+    };
+
+    this.setItemEventListeners = function() {
+      var base = this;
+      var items = this.querySelectorAll("fn-dropdown-item:not([data-input-select])");
+      var input_items = this.querySelectorAll('fn-dropdown-item[data-input-select]');
+
+      for (var i = 0; i < items.length; i++) {
+        items[i].onclick = function() {
+          base.onItemClick(this);
+        }
+      }
+
+
+      for (var i = 0; i < input_items.length; i++) {
+        input_items[i].addEventListener('click', function(e) {
+          e.stopPropagation;
+        }, false);
+
+        var input = input_items[i].querySelector("input");
+        var checkbox = input_items[i].querySelector("fn-checkbox");
+        var item = input_items[i];
+
+        if (input) {
+          input.addEventListener('keydown', function(e) {
+            e.stopPropagation();
+
+            if (e.keyCode == 13) {
+              if (checkbox) {
+                checkbox.setAttribute('data-active', 'active');
+              }
+
+              base.onItemClick(item);
+
+            }
+          }, false);
+        }
+      }
+
+      this.eventListeners = true;
+    };
+
+
+    this.onItemClick = function(item) {
+      if (!item) {
+        return;
+      }
+
+      var input_elem = this.querySelector("fn-input");
+      var selected = true;
+
+      //multi-selectable dropdown with checkboxes
+      if (this.classList.contains('checkbox')) {
+        var checkbox = item.querySelector("fn-checkbox");
+
+        if (item.hasAttribute('data-selected')) {
+          selected = false;
+          item.removeAttribute('data-selected');
+          checkbox.removeAttribute('data-active');
+
+          //not completely unselectable dropdown
+          if (this.hasAttribute('data-force-select') &&
+              !this.querySelector('fn-dropdown-item[data-selected]')) {
+
+            var default_select = this.querySelector('fn-dropdown-item[data-default]');
+
+            if (default_select) {
+              default_select.setAttribute('data-selected', 'selected');
+              checkbox = default_select.querySelector('fn-checkbox');
+
+              if (checkbox) {
+                checkbox.setAttribute('data-active', 'active');
+              }
+            }
+          }
+        } else {
+          checkbox.setAttribute('data-active', 'active');
+        }
+
+      } else {
+        var prev_item = this.querySelector("fn-dropdown-item[data-selected]");
+
+        if (prev_item) {
+          prev_item.removeAttribute('data-selected');
+        }
+      }
+
+      if (selected) {
+        item.setAttribute("data-selected", 'selected');
+      }
+
+      if (input_elem) {
+        input_elem.setAttribute('data-value', item.innerHTML);
+      } else {
+        this.setHeaderValue();
+      }
+
+      this.fireClickEvent(item, selected);
+
+      if (!this.hasAttribute('data-open-onclick')) {
+        this.hideDropdown();
+      }
+    };
+
+    this.fireClickEvent = function(item, selected) {
+      var name = (selected) ? "fn-dropdown-item-click" : "fn-dropdown-item-unselect";
+
+      var ev = new CustomEvent(name, {
+        detail : {'text' : item.textContent},
+        bubbles: true,
+        cancelable: true
+      });
+      item.dispatchEvent(ev);
+    };
+
+    this.fireCloseEvent = function() {
+      var ev = new CustomEvent('fn-dropdown-close', {
+        bubbles: true,
+        cancelable: true
+      });
+
+      this.dispatchEvent(ev);
+    }
+
+
+    /*********************** Key Navigation **********************************/
+    this.onKeyDown = function(e) {
+      var input = this.querySelector("fn-input");
+      switch (e.keyCode) {
+        case 38:
+          this.keyNavigation('up');
+          break;
+        case 40:
+          this.keyNavigation('down');
+          break;
+        case 13:
+          this.onItemClick(this.querySelector("fn-dropdown-item.hover"), true);
+          break;
+        default:
+          if (input) {
+            this.showFilteredDropdownItems(input.getValue());
+          }
+          break;
+      }
+    }
+
+    this.setKeyNavigation = function(elem) {
+      var that = this;
+      this.keydown_handler = function(e) {
+        that.onKeyDown.apply(that, [e]);
+        e.preventDefault();
+        return false;
+      };
+
+      elem.addEventListener('keydown', this.keydown_handler, false);
+    }
+
+    this.unsetKeyNavigation = function(elem) {
+      elem.removeEventListener('keydown', this.keydown_handler, false);
+    }
+
+    this.keyNavigation = function(direction) {
+      var hover_elem = this.querySelector("fn-dropdown-item.hover");
+      var ref_elem;
+      var elem = null;
+      var items = this.querySelectorAll("fn-dropdown-item");
+
+      if (!hover_elem) {
+        if (direction == 'down') {
+          //filtered Dropdown can contain hidden items
+          if (items[0].classList.contains('hidden')) {
+            hover_elem = items[0];
+          } else {
+            items[0].classList.add('hover');
+            return;
+          }
+        }
+      }
+
+      ref_elem = hover_elem;
+      for (var i = 0; i < items.length; i++) {
+        if (direction == 'down') {
+          elem = ref_elem.nextElementSibling;
+          if (!elem) {
+            elem = items[0];
+          }
+        } else {
+          elem = ref_elem.previousElementSibling;
+          if (!elem) {
+            return;
+          }
+        }
+
+        if (elem.classList.contains('hidden')) {
+          ref_elem = elem;
+        } else {
+          elem.classList.add('hover');
+          hover_elem.classList.remove('hover');
+          return;
+        }
+      }
+    };
+
+    /******************** Searchable Dropdown *************************/
+
+    this.renderSearchable = function() {
+      var dropdown_input = this.querySelector("fn-dropdown-input");
+      if (!dropdown_input) {
+        return;
+      }
+
+      var base = this;
+      var input = document.createElement("fn-input");
+      var placeholder = dropdown_input.getAttribute('data-placeholder');
+      var selected_item = this.querySelector("fn-dropdown-item[data-selected");
+
+      if (placeholder) {
+        input.setAttribute('data-placeholder', placeholder);
+      }
+
+      if (selected_item) {
+        input.setAttribute('data-value', selected_item.textContent);
+      }
+
+      dropdown_input.appendChild(input);
+      input.addEventListener('click', function(e) {
+        e.stopPropagation();
+        this.setAttribute('data-value', "");
+        base.showDropdown();
+      }, false);
+
+      this.setKeyNavigation(input);
+    };
+
+    this.showFilteredDropdownItems = function(value) {
+      var items = this.querySelectorAll("fn-dropdown-item");
+      var value = value.toLowerCase();
+
+      for (var i = 0; i < items.length; i++) {
+        if (items[i].textContent.toLowerCase().indexOf(value) > -1) {
+          items[i].classList.remove('hidden');
+        } else {
+          items[i].classList.add('hidden');
+        }
+      }
+
+      this.showDropdown();
+    };
+  };
+
+  window.addEventListener("fn-ready", function() {
+    Fnord.registerComponent("fn-dropdown", DropDownComponent);
+  }, false);
+</script>

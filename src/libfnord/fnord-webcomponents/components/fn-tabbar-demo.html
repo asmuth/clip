@@ -1,0 +1,61 @@
+<!--
+  This file is part of the "FnordMetric" project
+    Copyright (c) 2014 Laura Schlimmer
+    Copyright (c) 2014 Paul Asmuth, Google Inc.
+
+  FnordMetric is free software: you can redistribute it and/or modify it under
+  the terms of the GNU General Public License v3.0. You should have received a
+  copy of the GNU General Public License along with this program. If not, see
+  <http://www.gnu.org/licenses/>.
+-->
+<template id="fn-tabbar-demo-base-tpl">
+  <style type='text/css'>
+    fn-tabbar {
+      width: 40%;
+    }
+  </style>
+  <section>
+    <h1><i>Example 1 &raquo;</i> Static</h1>
+    <fn-tabbar>
+      <fn-tab>IFrame</fn-tab>
+      <fn-tab>HTML</fn-tab>
+      <fn-tab>URL</fn-tab>
+    </fn-tabbar>
+  </section>
+
+  <section>
+    <h1><i>Example 2 &raquo;</i> Selected Tab</h1>
+    <fn-tabbar>
+      <fn-tab>IFrame</fn-tab>
+      <fn-tab data-active='active'>HTML</fn-tab>
+      <fn-tab>URL</fn-tab>
+    </fn-tabbar>
+  </section>
+
+  <section>
+    <!-- Content is assigned to Tab by data-index -->
+    <h1><i>Example 3 &raquo;</i> Content Tabbar</h1>
+    <fn-tabbar data-content-attached>
+      <fn-tab data-index='0'>IFrame</fn-tab>
+      <fn-tab data-index='1' data-active='active'>HTML</fn-tab>
+      <fn-tab data-index='2'>URL</fn-tab>
+      <fn-tab-content data-index='0'>This is the first tabs's content</fn-tab-content>
+      <fn-tab-content data-index='1'>This is the second tab's content</fn-tab-content>
+      <fn-tab-content data-index='2'>This is the third tab's content</fn-tab-content>
+    </fn-tabbar>
+  </section>
+
+  <section>
+    <!-- Tab Width is equally set to fill tabbar width -->
+    <h1><i>Example 4 &raquo;</i> Evenly Sized Tab Width</h1>
+    <fn-tabbar data-content-attached data-evenly-sized>
+      <fn-tab data-index='0'>IFrame</fn-tab>
+      <fn-tab data-index='1' data-active='active'>HTML</fn-tab>
+      <fn-tab data-index='2'>URL</fn-tab>
+      <fn-tab-content data-index='0'>This is the first tabs's content</fn-tab-content>
+      <fn-tab-content data-index='1'>This is the second tab's content</fn-tab-content>
+      <fn-tab-content data-index='2'>This is the third tab's content</fn-tab-content>
+    </fn-tabbar>
+  </section>
+</template>
+

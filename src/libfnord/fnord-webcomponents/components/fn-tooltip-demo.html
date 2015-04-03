@@ -1,0 +1,144 @@
+<!--
+  This file is part of the "FnordMetric" project
+    Copyright (c) 2014 Laura Schlimmer
+    Copyright (c) 2014 Paul Asmuth, Google Inc.
+
+  FnordMetric is free software: you can redistribute it and/or modify it under
+  the terms of the GNU General Public License v3.0. You should have received a
+  copy of the GNU General Public License along with this program. If not, see
+  <http://www.gnu.org/licenses/>.
+-->
+<template id="fn-tooltip-demo-base-tpl">
+  <section>
+    <h1>Basic</h1>
+    <h3><i>Example 1 &raquo;</i> Tooltip Top</h3>
+    <fn-button id="btn11">
+      <i class="fa fa-share"></i>
+    </fn-button>
+    <fn-button id="btn12">
+      <i class="fa fa-share"></i>
+    </fn-button>
+    <fn-button id="btn13">
+      <i class="fa fa-share"></i>
+    </fn-button>
+
+    <h3><i>Example 2 &raquo;</i> Tooltip Bottom</h3>
+    <fn-button id="btn21">
+      <i class="fa fa-share"></i>
+    </fn-button>
+    <fn-button id="btn22">
+      <i class="fa fa-share"></i>
+    </fn-button>
+    <fn-button id="btn23">
+      <i class="fa fa-share"></i>
+    </fn-button>
+
+    <h3><i>Example 3 &raquo;</i> Tooltip Left</h3>
+    <fn-button id="btn3">
+      <i class="fa fa-share"></i>
+    </fn-button>
+
+    <h3><i>Example 4 &raquo;</i> Tooltip Right</h3>
+    <fn-button id="btn4">
+      <i class="fa fa-share"></i>
+    </fn-button>
+  </section>
+  <section>
+    <h1>Title Tooltip</h1>
+    <fn-button id="btn5">
+      <i class="fa fa-check"></i>
+    </fn-button>
+
+  </section>
+  <section>
+    <h1>Variations</h1>
+    <h3><i>Example 1 &raquo;</i> Width</h3>
+    <fn-button id="btn6">
+      <i class="fa fa-heart"></i>
+    </fn-button>
+    <fn-button id="btn7">
+      <i class="fa fa-heart"></i>
+    </fn-button>
+  </section>
+  <section>
+    <h1>Size</h1>
+    <fn-button id="btn8">
+      <i class="fa fa-heart"></i>
+    </fn-button>
+    <fn-button id="btn9">
+      <i class="fa fa-heart"></i>
+    </fn-button>
+    <fn-button id="btn10">
+      <i class="fa fa-heart"></i>
+    </fn-button>
+  </section>
+
+  <fn-tooltip id="ttp11">Embed</fn-tooltip>
+  <fn-tooltip data-pointer="center" id="ttp12">Embed</fn-tooltip>
+  <fn-tooltip data-pointer="right" id="ttp13">Embed</fn-tooltip>
+
+  <fn-tooltip data-position="bottom" id="ttp21">Embed</fn-tooltip>
+  <fn-tooltip data-position="bottom" data-pointer='center' id="ttp22">Embed</fn-tooltip>
+  <fn-tooltip data-position="bottom" data-pointer='right' id="ttp23">Embed</fn-tooltip>
+
+  <fn-tooltip data-position="left" id="ttp3">Embed</fn-tooltip>
+  <fn-tooltip data-position="right" id="ttp4">Embed</fn-tooltip>
+  <fn-tooltip id="ttp5">
+    <fn-tooltip-header>Book</fn-tooltip-header>
+    Hereby you commit the booking
+  </fn-tooltip>
+  <fn-tooltip data-variation="wide" id="ttp6">
+    This is a wide pop-up for lots of content.
+    It provides some additional space thus when inserting a lot of words, 
+    the paragraphs will be pretty wide.
+  </fn-tooltip>
+  <fn-tooltip data-variation="extra-wide" id="ttp7">
+    Wide isn't big enough for your content? 
+    Try this extra wide tooltip for more content.
+    It provides some additional space thus when inserting a lot of words, 
+    the paragraphs will be pretty wide.
+  </fn-tooltip>
+  <fn-tooltip data-size="small" id="ttp8">This is small</fn-tooltip>
+  <fn-tooltip data-size="large" id="ttp9">...this large</fn-tooltip>
+  <fn-tooltip data-size="huge" id="ttp10">...and this is a huge tooltip</fn-tooltip>
+
+  <script type='text/javascript'>
+    document.body.querySelector("#ttp11").init(document.body.querySelector(
+      "#btn11"));
+    document.body.querySelector("#ttp12").init(document.body.querySelector(
+      "#btn12"));
+    document.body.querySelector("#ttp13").init(document.body.querySelector(
+      "#btn13"));
+
+    document.body.querySelector("#ttp21").init(document.body.querySelector(
+      "#btn21"));
+    document.body.querySelector("#ttp22").init(document.body.querySelector(
+      "#btn22"));
+    document.body.querySelector("#ttp23").init(document.body.querySelector(
+      "#btn23"));
+
+    document.body.querySelector("#ttp3").init(document.body.querySelector(
+      "#btn3"));
+
+    document.body.querySelector("#ttp4").init(document.body.querySelector(
+      "#btn4"));
+
+    document.body.querySelector("#ttp5").init(document.body.querySelector(
+      "#btn5"));
+
+    document.body.querySelector("#ttp6").init(document.body.querySelector(
+      "#btn6"));
+    document.body.querySelector("#ttp7").init(document.body.querySelector(
+      "#btn7"));
+    document.body.querySelector("#ttp8").init(document.body.querySelector(
+      "#btn8"));
+    document.body.querySelector("#ttp9").init(document.body.querySelector(
+      "#btn9"));
+    document.body.querySelector("#ttp10").init(document.body.querySelector(
+      "#btn10"));
+
+  </script>
+
+</template>
+
+

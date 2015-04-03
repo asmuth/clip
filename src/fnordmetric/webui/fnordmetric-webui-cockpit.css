@@ -1,0 +1,234 @@
+body, html {
+  height: 100%;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 14px;
+  line-height: 22px;
+}
+
+fnordmetric-app,
+#fnordmetric-viewport {
+  display: block;
+  font-size: 95%;
+}
+
+h1.page_header {
+  margin: 0 0 0 20px;
+}
+
+.le_fnord {
+  display: none;
+}
+
+/* fn-appbar */
+fn-appbar /deep/ .appbar_outer {
+  background: #fff;
+  height: 30px;
+  border-bottom: 1px solid #e4e5e9;
+}
+
+fnordmetric-app fn-appbar /deep/ fn-appbar-section {
+  line-height: 30px;
+  padding: 0;
+  margin: 0;
+}
+
+fnordmetric-app fn-appbar /deep/ fn-appbar-section.hidden {
+  display: none;
+}
+
+fnordmetric-app fn-appbar /deep/ fn-appbar-section .hidden {
+  display: none;
+}
+
+fn-appbar fn-button fn-icon {
+  display: none;
+}
+
+fn-appbar fn-button {
+  color: #444;
+  font-weight: normal;
+  cursor: pointer;
+  font-size: 13px;
+  padding: 0 5px;
+}
+
+fn-appbar fn-button:hover {
+  background: transparent!important;
+  background-color: none!important;
+  border: none;
+  box-shadow:none;
+}
+
+fn-metric-explorer-list .navigation,
+fn-metric-explorer-preview .navigation {
+  background: #f6f6f8;
+  height: 36px;
+  padding: 0 14px;
+  margin: 0;
+  border-bottom: 1px solid #d6d6d8;
+  box-shadow: 0 1px 1px rgba(0,0,0,.08);
+}
+
+fn-metric-explorer-list .navigation h1 {
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 38px;
+  margin: 0;
+}
+
+fn-metric-explorer-preview .navigation .item,
+fn-metric-explorer-preview .navigation fn-dropdow fn-dropdown-header {
+  font-size: 13px;
+}
+
+fn-metric-explorer-preview .navigation .item {
+  line-height: 36px;
+  padding: 0;
+  margin: 0 15px 0 0;
+}
+
+fn-metric-explorer-list fn-table {
+  border-top: none;
+}
+
+fn-metric-explorer-list fn-table /deep/ table > thead > tr > td,
+fn-metric-explorer-list fn-table /deep/ table > thead > tr > th,
+fn-metric-explorer-list fn-table /deep/ table > tbody > tr > td,
+fn-metric-explorer-list fn-table /deep/ table > tbody > tr > th {
+  font-size: 13px;
+  line-height: 32px;
+  padding: 0 0 0 15px;
+}
+
+fn-metric-explorer-list fn-table /deep/ table > thead > tr > td,
+fn-metric-explorer-list fn-table /deep/ table > thead > tr > th {
+  font-weight: 600;
+  border-right: 1px solid #eaedf1;
+}
+
+fn-metric-explorer-list fn-table /deep/ table {
+  border-left: none;
+  border-right: none;
+  border-bottom: none;
+}
+
+fn-metric-control /deep/ .metric-control,
+fn-metric-control /deep/ fn-dropdown /deep/ #dropdown_ui {
+  font-size: 13px;
+}
+
+fn-metric-control /deep/ .metric-control .group b {
+  font-size: 13px;
+}
+
+fn-metric-control /deep/ fn-button {
+  border: none;
+  box-shadow: none;
+  line-height: 36px;
+  padding: 0 10px;
+  margin: 0;
+}
+
+fn-metric-control .header h3::before {
+  font-family: FontAwesome;
+  line-height: 1;
+  height: 1em;
+  vertical-align:middle;
+  font-weight: normal;
+  padding-right: 0.5em;
+  font-size: 10px;
+  color: #06c;
+  margin-left: -2px;
+  margin-right: 5px;
+  content: "\f0c8";
+}
+
+fn-metric-control .header h3.color0::before {
+  color: #4572a7;
+}
+
+fn-metric-control .header h3.color1::before {
+  color: #aa4643;
+}
+
+fn-metric-control .header h3.color2::before {
+  color: #89a54e;
+}
+
+fn-metric-control .header h3.color3::before {
+  color: #80699b;
+}
+
+fn-metric-control .header h3.color4::before {
+  color: #3d96ae;
+}
+
+fn-metric-control .header h3.color5::before {
+  color: #db843d;
+}
+
+
+
+fn-metric-control .header h3 {
+  margin: 0;
+  padding: 0 15px;
+  display: inline;
+  line-height: 36px;
+  font-size: 13px;
+  white-space: nowrap;
+  overflow: hidden;
+  font-weight: normal;
+}
+
+fn-metric-control .header i.fa {
+  float: right;
+  line-height: 30px;
+  padding: 0;
+  margin: 0 10px 0 0;
+}
+
+fn-metric-control fn-button:hover {
+  border-radius: 0;
+  border-top: none;
+  border-bottom: none;
+}
+
+fn-table /deep/ tr th {
+  border-bottom: 1px solid #dee0e3;
+  font-weight: 500;
+}
+
+fn-table /deep/ td {
+  border-bottom: 1px solid #eaedf1;
+}
+
+fn-table /deep/ thead th.sortable:after {
+  line-height: 32px;
+  margin-right: 10px;
+}
+
+fn-modal-content fn-tab-content .header {
+  width: auto;
+  border: none;
+  float: none;
+  margin: 5px 0 5px;
+  font-weight: 500;
+}
+
+fn-modal-content fn-tab-content .header:not(:first-child) {
+  margin-top: 20px;
+}
+
+.indent {
+  margin-left: 20px;
+}
+
+.hidden {
+  display: none;
+}
+
+fn-modal-content code {
+  word-wrap: break-word;
+}
+
+

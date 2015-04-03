@@ -1,0 +1,61 @@
+/**
+ * Adapted from: Semantic UI:
+ *   https://github.com/Semantic-Org/Semantic-UI
+ *   http://www.semantic-ui.com/
+ */
+
+fn-pager,
+.fn-pager {
+  display:block;
+  line-height: 1.3em;
+  color: rgba(0,0,0,.8);
+}
+
+fn-pager-title,
+.fn-pager-title {
+  float:left;
+  display:inline;
+  padding: 6px 10px 6px 0;
+}
+
+.fn-pager-title b {
+  font-weight: 500;
+}
+
+fn-pager-tooltip-for,
+fn-pager-tooltip-back,
+.fn-pager-tooltip-back,
+.fn-pager-tooltip-for {
+  display:inline;
+  float:left;
+  padding: 6px 12px;
+  margin-left: -1px;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  line-height: 1.3em;
+}
+
+fn-pager-tooltip-back,
+.fn-pager-tooltip-back {
+  border-top-left-radius: 4px;
+  border-bottom-left-radius: 4px;
+}
+
+fn-pager-tooltip-for,
+.fn-pager-tooltip-for {
+  border-top-right-radius: 4px;
+  border-bottom-right-radius: 4px;
+}
+
+fn-pager-tooltip-back:before,
+.fn-pager-tooltip-back:before {
+  line-height: 1.3em;
+  font-family: FontAwesome;
+  content: "\f100";
+}
+
+fn-pager-tooltip-for:before,
+.fn-pager-tooltip-for:before {
+  font-family: FontAwesome;
+  content: "\f101";
+}

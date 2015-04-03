@@ -1,0 +1,373 @@
+<!--
+  This file is part of the "FnordMetric" project
+    Copyright (c) 2014 Laura Schlimmer
+    Copyright (c) 2014 Paul Asmuth, Google Inc.
+
+  FnordMetric is free software: you can redistribute it and/or modify it under
+  the terms of the GNU General Public License v3.0. You should have received a
+  copy of the GNU General Public License along with this program. If not, see
+  <http://www.gnu.org/licenses/>.
+-->
+<template id="fn-dropdown-demo-base-tpl">
+  <style type='text/css'>
+      .below {
+        margin-bottom: 20px;
+      }
+    </style>
+  <section>
+    <h1>Styles</h1>
+    <!-- Standard Dropdown -->
+    <h3><i>Example 1 &raquo;</i> Basic</h3>
+    <!-- Default -->
+    <fn-dropdown data-resolved>
+      <fn-dropdown-header>Value</fn-dropdown-header>
+      <fn-dropdown-items>
+        <fn-dropdown-item data-selected>Value</fn-dropdown-item>
+        <fn-dropdown-item>Count</fn-dropdown-item>
+        <fn-dropdown-item>Sum</fn-dropdown-item>
+        <fn-dropdown-item>Min</fn-dropdown-item>
+        <fn-dropdown-item>Max</fn-dropdown-item>
+        <fn-dropdown-item>Median</fn-dropdown-item>
+      </fn-dropdown-items>
+    </fn-dropdown>
+
+
+    <!-- 'Input' Style Dropdown -->
+    <h3><i>Example 2 &raquo;</i> Input Like</h3>
+    <!-- Default -->
+    <fn-dropdown data-resolved class="input below">
+      <fn-dropdown-items>
+        <fn-dropdown-item>Important</fn-dropdown-item>
+        <fn-dropdown-item>Starred</fn-dropdown-item>
+        <fn-dropdown-item>Unread</fn-dropdown-item>
+        <fn-dropdown-item>Promotions</fn-dropdown-item>
+        <fn-dropdown-item>Social</fn-dropdown-item>
+      </fn-dropdown-items>
+    </fn-dropdown>
+    <br />
+
+    <!-- Header Elem doesn't have to be a selectable item
+         It is displayed if no item is selected
+    -->
+    <fn-dropdown data-resolved class="input below">
+      <fn-dropdown-header>Advanced</fn-dropdown-header>
+      <fn-dropdown-items>
+        <fn-dropdown-item>Inverted</fn-dropdown-item>
+        <fn-dropdown-item>Logarithmic</fn-dropdown-item>
+      </fn-dropdown-items>
+    </fn-dropdown>
+    <br />
+
+    <!-- Compact -->
+    <fn-dropdown data-resolved class="input compact">
+      <fn-dropdown-items>
+        <fn-dropdown-item>&#10003; Unread</fn-dropdown-item>
+        <fn-dropdown-item>&#10003; Promotions</fn-dropdown-item>
+        <fn-dropdown-item>&#10003; Updates</fn-dropdown-item>
+      </fn-dropdown-items>
+    </fn-dropdown>
+
+
+    <!-- Inline Dropdown -->
+    <h3><i>Example 4 &raquo;</i> Inline</h3>
+    <!-- Default -->
+    <span>Show the last
+      <fn-dropdown data-resolved class="inline">
+        <fn-dropdown-items>
+          <fn-dropdown-item>4 hours</fn-dropdown-item>
+          <fn-dropdown-item>12 hours</fn-dropdown-item>
+          <fn-dropdown-item>24 hours</fn-dropdown-item>
+        </fn-dropdown-items>
+      </fn-dropdown>
+    </span>
+  </section>
+
+  <section>
+    <h1>Header And Select Options</h1>
+
+    <!-- An Initial Not Selectable Header is displayed if no item is selected -->
+    <h3><i>Example 1 &raquo;</i> Initial Not Selectable Header</h3>
+    <fn-dropdown data-resolved class='input'>
+      <fn-dropdown-header>Select Payment</fn-dropdown-header>
+      <fn-dropdown-items>
+        <fn-dropdown-item data-value="Visa">Visa</fn-dropdown-item>
+        <fn-dropdown-item data-value="paypal">PayPal</fn-dropdown-item>
+        <fn-dropdown-item data-value="mastercard">MasterCard</fn-dropdown-item>
+        <fn-dropdown-item data-value="amex">AmericanExpress</fn-dropdown-item>
+      </fn-dropdown-items>
+    </fn-dropdown>
+
+    <!-- An initial blank header is displayed at the beginning -->
+    <h3><i>Example 2 &raquo;</i> Initial Blank Header</h3>
+    <fn-dropdown data-resolved class='input'>
+      <fn-dropdown-header data-blank></fn-dropdown-header>
+      <fn-dropdown-items>
+        <fn-dropdown-item data-value="Visa">Visa</fn-dropdown-item>
+        <fn-dropdown-item data-value="paypal">PayPal</fn-dropdown-item>
+        <fn-dropdown-item data-value="mastercard">MasterCard</fn-dropdown-item>
+        <fn-dropdown-item data-value="amex">AmericanExpress</fn-dropdown-item>
+      </fn-dropdown-items>
+    </fn-dropdown>
+
+    <!-- A Static header is always displayed and isn't selectable -->
+    <h3><i>Example 3 &raquo;</i> Static Header</h3>
+    <fn-dropdown data-resolved class='input'>
+      <fn-dropdown-header data-static>Select Payment</fn-dropdown-header>
+      <fn-dropdown-items>
+        <fn-dropdown-item data-value="Visa">Visa</fn-dropdown-item>
+        <fn-dropdown-item data-value="paypal">PayPal</fn-dropdown-item>
+        <fn-dropdown-item data-value="mastercard">MasterCard</fn-dropdown-item>
+        <fn-dropdown-item data-value="amex">AmericanExpress</fn-dropdown-item>
+      </fn-dropdown-items>
+    </fn-dropdown>
+
+
+    <!-- A Multi-Selectable Dropdown has checkboxes so that multiple items can be selected -->
+    <h3><i>Example 4 &raquo;</i> Multi Selectable</h3>
+    <fn-dropdown data-resolved class='input checkbox'>
+      <fn-dropdown-items>
+        <fn-dropdown-item data-value='inv'>
+          <fn-checkbox></fn-checkbox>
+          Inverted
+        </fn-dropdown-item>
+        <fn-dropdown-item data-value='log'>
+          <fn-checkbox></fn-checkbox>
+          Logarithmic
+        </fn-dropdown-item>
+        <fn-dropdown-item data-value='scl'>
+          <fn-checkbox></fn-checkbox>
+          Scaled
+        </fn-dropdown-item>
+      </fn-dropdown-items>
+    </fn-dropdown>
+
+    <script type='text/javascript'>
+      var dropdown = document.body.querySelector("fn-dropdown.input.checkbox");
+
+      dropdown.addEventListener('fn-dropdown-item-click', function(e) {
+        var value = e.srcElement.getAttribute('data-value');
+        console.log("selected: " + e.detail.text + " (data-value=" + value + ")");
+      }, false);
+
+      dropdown.addEventListener('fn-dropdown-item-unselect', function(e) {
+        var value = e.srcElement.getAttribute('data-value');
+        console.log("unselected: " + e.detail.text + " (data-value=" + value + ")");
+      }, false);
+    </script>
+
+    <!-- At least the data-default item is always selected -->
+    <h3><i>Example 5 &raquo;</i> No unselectable Multi-Select</h3>
+    <fn-dropdown data-force-select data-resolved class='input checkbox'>
+      <fn-dropdown-items>
+        <fn-dropdown-item data-default data-selected>
+          <fn-checkbox data-active></fn-checkbox> Desktop
+        </fn-dropdown-item>
+        <fn-dropdown-item>
+          <fn-checkbox></fn-checkbox> Tablet
+        </fn-dropdown-item>
+        <fn-dropdown-item>
+          <fn-checkbox></fn-checkbox> Mobile
+        </fn-dropdown-item>
+      </fn-drodpown-items>
+    </fn-dropdown>
+
+    <h3><i>Example 6 &raquo;</i> Input Select</h3>
+    <fn-dropdown data-resolved class='input'>
+      <fn-dropdown-items>
+        <fn-dropdown-item>All (1-100)</fn-dropdown-item>
+        <fn-dropdown-item data-input-select>
+          Select <input class='fn-input'></input>
+        </fn-dropdown-item>
+      </fn-dropdown-items>
+    </fn-dropdown>
+
+    <h3><i>Example 7 &raquo;</i> Open Dropdown</h3>
+    <fn-dropdown data-resolved data-open-onclick class='input checkbox'>
+      <fn-dropdown-items>
+        <fn-dropdown-item data-default data-selected>
+          <fn-checkbox data-active></fn-checkbox> Desktop
+        </fn-dropdown-item>
+        <fn-dropdown-item>
+          <fn-checkbox></fn-checkbox> Tablet
+        </fn-dropdown-item>
+        <fn-dropdown-item>
+          <fn-checkbox></fn-checkbox> Mobile
+        </fn-dropdown-item>
+      </fn-drodpown-items>
+    </fn-dropdown>
+
+
+  </section>
+
+  <section>
+    <h1>Content Options</h1>
+
+    <!-- A Dropdown Menu Item Can Contain An Icon -->
+    <h3><i>Example 1 &raquo;</i> Icon</h3>
+
+    <!-- fn-dropdown-icon class -->
+    <fn-dropdown class="input below" data-resolved>
+      <fn-dropdown-items>
+        <fn-dropdown-item><i class="fn-dropdown-icon fa fa-bus"></i> Bus</fn-dropdown-item>
+        <fn-dropdown-item><i class="fn-dropdown-icon fa fa-taxi"></i> Taxi</fn-dropdown-item>
+        <fn-dropdown-item><i class="fn-dropdown-icon fa fa-bicycle"></i> Bicycle</fn-dropdown-item>
+      </fn-dropdown-items>
+    </fn-dropdown>
+    <br />
+
+    <!-- fn-dropdown-icon tag-->
+    <fn-dropdown class="input" data-resolved>
+      <fn-dropdown-items>
+        <fn-dropdown-item>
+          <fn-dropdown-icon><i class="fa fa-bus"></i></fn-dropdown-icon>
+          Bus
+        </fn-dropdown-item>
+        <fn-dropdown-item>
+          <fn-dropdown-icon><i class="fa fa-taxi"></i></fn-dropdown-icon>
+          Taxi
+        </fn-dropdown-item>
+        <fn-dropdown-item>
+          <fn-dropdown-icon><i class="fa fa-bicycle"></i></fn-dropdown-icon>
+          Bicycle
+        </fn-dropdown-item>
+      </fn-dropdown-items>
+    </fn-dropdown>
+
+    <!-- A Dropdown Menu Can Contain A Label -->
+    <h3><i>Example 2 &raquo;</i> Label</h3>
+    <fn-dropdown class="input" data-resolved>
+      <fn-dropdown-items>
+        <fn-dropdown-label>Show the Last</fn-dropdown-label>
+        <fn-dropdown-item>4 hours</fn-dropdown-item>
+        <fn-dropdown-item>12 hours</fn-dropdown-item>
+        <fn-dropdown-item>24 hours</fn-dropdown-item>
+      </fn-dropdown-items>
+    </fn-dropdown>
+
+    <!-- A Dropdown Menu Item Can Contain A Description -->
+    <h3><i>Example 3 &raquo;</i> Item Description</h3>
+    <fn-dropdown class="input" data-resolved>
+      <fn-dropdown-items>
+        <fn-dropdown-label>Filter Messages</fn-dropdown-label>
+        <fn-dropdown-item>
+          Unread
+          <fn-dropdown-descr>7 new</fn-dropdown-descr>
+        </fn-dropdown-item>
+        <fn-dropdown-item>
+          Starred
+          <fn-dropdown-descr>2 new</fn-dropdown-descr>
+        </fn-dropdown-item>
+        <fn-dropdown-item>
+          Social
+          <fn-dropdown-descr>5 new</fn-dropdown-descr>
+        </fn-dropdown-item>
+      </fn-dropdown-items>
+    </fn-dropdown>
+  </section>
+
+
+  <section>
+    <h1>Searchable Dropdown</h1>
+    <h3><i>Example 1 &raquo;</i> With Placeholder</h3>
+    <fn-dropdown data-resolved class="search">
+      <fn-dropdown-input data-placeholder='Select a Country'></fn-dropdown-input>
+      <fn-dropdown-items>
+        <fn-dropdown-item data-value="Spain">Spain</fn-dropdown-item>
+        <fn-dropdown-item data-value="Italy">Italy</fn-dropdown-item>
+        <fn-dropdown-item data-value="Netherlands">Netherlands</fn-dropdown-item>
+        <fn-dropdown-item data-value="United Kingdom">United Kingdom</fn-dropdown-item>
+        <fn-dropdown-item data-value="Denmark">Denmark</fn-dropdown-item>
+        <fn-dropdown-item data-value="Sweden">Sweden</fn-dropdown-item>
+        <fn-dropdown-item data-value="Germany">Germany</fn-dropdown-item>
+        <fn-dropdown-item data-value="France">France</fn-dropdown-item>
+        <fn-dropdown-item data-value="Portugal">Portugal</fn-dropdown-item>
+        <fn-dropdown-item data-value="Austria">Austria</fn-dropdown-item>
+      </fn-dropdown-items>
+    </fn-dropdown>
+
+    <h3><i>Example 2 &raquo;</i> With Selected Value</h3>
+    <fn-dropdown data-resolved='resolve' class="search small" style="width:150px;">
+      <fn-dropdown-input data-placeholder='Payment Method'></fn-dropdown-input>
+      <fn-dropdown-items>
+        <fn-dropdown-item data-value="Visa">Visa</fn-dropdown-item>
+        <fn-dropdown-item data-selected data-value="paypal">PayPal</fn-dropdown-item>
+        <fn-dropdown-item data-value="mastercard">MasterCard</fn-dropdown-item>
+        <fn-dropdown-item data-value="amex">AmericanExpress</fn-dropdown-item>
+      </fn-dropdown-items>
+    </fn-dropdown>
+
+  </section>
+
+  <section id="dd_append">
+    <!--
+      Set data-resolved='resolved' when all Children are appendend
+      and all Classes/Attributes are set
+    -->
+    <h1>Client Side Appended</h1>
+    <!-- Get Text Value by event.detail.text and item element by e.srcElement -->
+    <h3><i>Example 1 &raquo;</i> With Click Event</h3>
+    <script type='text/javascript'>
+      var values = ["Bus", "Train", "Car", "Bike"];
+      var dropdown = document.createElement("fn-dropdown");
+      var menu = document.createElement("fn-dropdown-items");
+
+      values.forEach(function(val) {
+        var item = document.createElement("fn-dropdown-item");
+        item.innerHTML = val;
+        item.setAttribute('data-value', val);
+        menu.appendChild(item);
+      });
+
+      dropdown.classList.add("input");
+      dropdown.appendChild(menu);
+      document.body.querySelector("#dd_append").appendChild(dropdown);
+      dropdown.setAttribute('data-resolved', 'resolved');
+
+      dropdown.addEventListener('fn-dropdown-item-click', function(e) {
+        alert(
+          "You selected " + e.srcElement.getAttribute('data-value') + " :)");
+      });
+    </script>
+  </section>
+
+
+  <section>
+    <h1>States</h1>
+    <h3><i>Example 1 &raquo;</i> Disabled Basic Dropdown</h3>
+    <fn-dropdown data-resolved class='disabled below'>
+      <fn-dropdown-header>Advanced</fn-dropdown-header>
+      <fn-dropdown-items>
+        <fn-dropdown-item>Sum</fn-dropdown-item>
+      </fn-dropdown-items>
+    </fn-dropdown>
+
+    <h3><i>Example 2 &raquo;</i> Disabled Input like Dropdown</h3>
+    <fn-dropdown data-resolved class="input disabled below">
+      <fn-dropdown-items>
+        <fn-dropdown-item>5 seconds</fn-dropdown-item>
+        <fn-dropdown-item>10 seconds</fn-dropdown-item>
+      </fn-dropdown-items>
+    </fn-dropdown>
+
+
+    <h3><i>Example 3 &raquo;</i> Basic Dropdown with Error State</h3>
+    <fn-dropdown data-resolved class="error below">
+      <fn-dropdown-items>
+        <fn-dropdown-item>Choice 1</fn-dropdown-item>
+        <fn-dropdown-item>Choice 2</fn-dropdown-item>
+        <fn-dropdown-item>Choice 3</fn-dropdown-item>
+      </fn-dropdown-items>
+    </fn-dropdown>
+
+    <h3><i>Example 4 &raquo;</i> Input like Dropdown with Error State</h3>
+    <fn-dropdown data-resolved class="error input">
+      <fn-dropdown-header>Gender</fn-dropdown-header>
+      <fn-dropdown-items>
+        <fn-dropdown-item>Female</fn-dropdown-item>
+        <fn-dropdown-item>Male</fn-dropdown-item>
+      </fn-dropdown-items>
+    </fn-dropdown>
+
+
+  </section>
+</template>

@@ -1,0 +1,184 @@
+<!--
+  This file is part of the "FnordMetric" project
+    Copyright (c) 2014 Laura Schlimmer
+    Copyright (c) 2014 Paul Asmuth, Google Inc.
+
+  FnordMetric is free software: you can redistribute it and/or modify it under
+  the terms of the GNU General Public License v3.0. You should have received a
+  copy of the GNU General Public License along with this program. If not, see
+  <http://www.gnu.org/licenses/>.
+-->
+<template id="fn-modal-demo-base-tpl">
+  <section>
+    <h1><i>Example 1 &raquo;</i> Basic</h1>
+    <fn-button id="btn_1">Show Modal</fn-button>
+    <fn-modal-dimmer>
+      <fn-modal id="modal_1">
+        <fn-modal-close-icon></fn-modal-close-icon>
+        <fn-modal-header>Simple Modal</fn-modal-header>
+        <fn-modal-content>
+          Check out the other modal type that have more logic added
+        </fn-modal-content>
+      </fn-modal>
+    </fn-modal-dimmer>
+  </section>
+
+  <section>
+    <h1><i>Example 2 &raquo;</i> Icon and Multi Button Modal</h1>
+    <fn-button id="btn_2">Show</fn-button>
+    <fn-modal-dimmer>
+      <fn-modal-close-icon></fn-modal-close-icon>
+      <fn-modal data-type='actions icon' id="modal_2">
+        <fn-modal-header>Confirm</fn-modal-header>
+        <fn-modal-content>
+          <fn-modal-content-icon>
+            <i class="fa fa-question-circle"></i>
+          </fn-modal-content-icon>
+          <fn-modal-text>
+            Are you sure you want to logout?
+          </fn-modal-text>
+        </fn-modal-content>
+        <fn-modal-footer>
+          <fn-button>Yes</fn-button>
+          <fn-button>No</fn-button>
+        </fn-modal-footer>
+      </fn-modal>
+    </fn-modal-dimmer>
+  </section>
+
+  <section>
+    <h1><i>Example 3 &raquo;</i> Single Button Modal</h1>
+    <fn-button id="btn_3">Show</fn-button>
+    <fn-modal-dimmer>
+      <fn-modal data-type='actions' id="modal_3">
+        <fn-modal-close-icon></fn-modal-close-icon>
+        <fn-modal-header>Status</fn-modal-header>
+        <fn-modal-content>
+          Changes saved successfully
+        </fn-modal-content>
+        <fn-modal-footer>
+          <fn-button>Ok</fn-button>
+        </fn-modal-footer>
+      </fn-modal>
+    </fn-modal-dimmer>
+  </section>
+
+  <section>
+    <h1><i>Example 4 &raquo;</i> Input Modal</h1>
+    <fn-button id="btn_4">Show</fn-button>
+    <fn-modal-dimmer>
+      <fn-modal data-type='actions input' id="modal_4">
+        <fn-modal-close-icon></fn-modal-close-icon>
+        <fn-modal-header>Confirm</fn-modal-header>
+        <fn-modal-content>
+          <fn-modal-text>
+            Please enter your name
+          </fn-modal-text>
+          <fn-input></fn-input>
+        </fn-modal-content>
+        <fn-modal-footer>
+          <fn-button>Ok</fn-button>
+        </fn-modal-footer>
+      </fn-modal>
+    </fn-modal-dimmer>
+  </section>
+
+  <section>
+    <h1><i>Example 5 &raquo;</i> Custom Content Modal</h1>
+    <fn-button id="btn_5">Show</fn-button>
+    <fn-modal-dimmer>
+      <fn-modal data-type='actions' id="modal_5">
+        <fn-modal-close-icon></fn-modal-close-icon>
+        <fn-modal-header>Saving your data, please wait</fn-modal-header>
+        <fn-modal-content>
+          <fn-progressbar data-label='Uploading'>
+          </fn-progressbar>
+        </fn-modal-content>
+        <fn-modal-footer>
+          <fn-button>Cancel</fn-button>
+        </fn-modal-footer>
+      </fn-modal>
+    </fn-modal-dimmer>
+  </section>
+
+  <section>
+    <h1><i>Example 6 &raquo;</i> Modal Without Close Button</h1>
+    <fn-button id="btn_6">Show</fn-button>
+    <fn-modal-dimmer>
+      <fn-modal data-type='actions icon' id="modal_6">
+        <fn-modal-content>
+          <fn-modal-icon>
+            <i class="fa fa-question-circle"></i>
+          </fn-modal-icon>
+          <fn-modal-text data-style='bold'>
+            How old are you?
+          </fn-modal-text>
+        </fn-modal-content>
+        <fn-modal-footer>
+          <fn-button>Under 18</fn-button>
+          <fn-button>18 or older</fn-button>
+        </fn-modal-footer>
+      </fn-modal>
+    </fn-modal-dimmer>
+  </section>
+
+
+  <script type='text/javascript'>
+    var modal1 = document.querySelector("#modal_1");
+    document.querySelector("#btn_1").addEventListener('fn-button-click', function () {
+      modal1.show();
+    }, false);
+
+    var modal2 = document.querySelector("#modal_2");
+    document.querySelector("#btn_2").addEventListener('fn-button-click', function () {
+      console.log("show modal 2");
+      modal2.show();
+    }, false);
+
+    var modal3 = document.querySelector("#modal_3");
+    document.querySelector("#btn_3").addEventListener('fn-button-click', function () {
+      modal3.show();
+    }, false);
+    modal3.querySelector('fn-button').addEventListener('fn-button-click', function() {
+      modal3.close();
+    }, false);
+
+    var modal4 = document.querySelector("#modal_4");
+    document.querySelector("#btn_4").addEventListener('fn-button-click', function () {
+      modal4.show();
+    }, false);
+    modal4.querySelector('fn-button').addEventListener('fn-button-click', function() {
+      modal4.close();
+    }, false);
+
+    var modal5 = document.querySelector("#modal_5");
+    document.querySelector("#btn_5").addEventListener('fn-button-click', function () {
+      var progressbar = modal5.querySelector("fn-progressbar");
+      progressbar.setAttribute('data-progress', 0);
+      modal5.show();
+      var i = 1;
+      function updateProgress() {
+        if (i <= 100) {
+          progressbar.setAttribute("data-progress", i);
+          i++;
+        } else {
+          window.clearInterval(interval_id);
+          modal5.close();
+        }
+      }
+      interval_id = window.setInterval(updateProgress, 50);
+    }, false);
+
+    var modal6 = document.querySelector("#modal_6");
+    document.querySelector("#btn_6").addEventListener('fn-button-click', function () {
+      modal6.show();
+    }, false);
+
+
+
+
+
+
+  </script>
+</template>
+

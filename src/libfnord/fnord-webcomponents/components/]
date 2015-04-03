@@ -1,0 +1,137 @@
+<!--
+  This file is part of the "FnordMetric" project
+    Copyright (c) 2014 Laura Schlimmer
+    Copyright (c) 2014 Paul Asmuth, Google Inc.
+
+  FnordMetric is free software: you can redistribute it and/or modify it under
+  the terms of the GNU General Public License v3.0. You should have received a
+  copy of the GNU General Public License along with this program. If not, see
+  <http://www.gnu.org/licenses/>.
+-->
+<html>
+  <head>
+    <title>Fnord Table Examples</title>
+
+    <style type="text/css">
+      body, html {
+        margin: 0;
+        padding: 0 0 60px 0;
+        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+        font-size: 14px;
+        line-height: 22px;
+        height: 100%;
+        background: #f1f1f1;
+      }
+
+      #sidebar {
+        width: 200px;
+        background: #fff;
+        border-right: 1px solid #e5e5e5;
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 100%;
+      }
+
+      #viewport {
+        margin-left: 200px;
+      }
+
+      section {
+
+      }
+
+      section {
+        margin: 20px;
+        padding: 20px;
+        background: #fff;
+        border: 1px solid #e5e5e5;
+        border-radius: 3px;
+        box-shadow: 0 0 3px rgba(0,0,0,.1);
+      }
+
+      section h1 {
+        color: #666;
+        font-size: 18px;
+        line-height: 24px;
+        height: 24px;
+        padding: 0;
+        margin: 0 0 20px 0;
+        font-weight: 500;
+      }
+
+      section h1 i {
+        font-style: normal;
+        color: #999;
+      }
+    </style>
+  </head>
+  <body>
+    <link rel="import" href="components/fn-appbar.html" data-component="fn-appbar">
+    <link rel="import" href="components/fn-button.html" data-component="fn-button">
+    <link rel="import" href="components/fn-loader.html" data-component="fn-loader">
+    <link rel="import" href="components/fn-loader-demo.html" data-component="fn-loader-demo">
+    <link rel="import" href="components/fn-menu.html" data-component="fn-menu">
+    <link rel="import" href="components/fn-search.html" data-component="fn-search">
+    <link rel="import" href="components/fn-search-demo.html" data-component="fn-search-demo">
+    <link rel="import" href="components/fn-table.html" data-component="fn-table">
+    <link rel="import" href="components/fn-table-demo.html" data-component="fn-table-demo">
+    <link rel="import" href="components/fn-splitpane.html" data-component="fn-splitpane">
+    <link rel="import" href="components/fn-splitpane-demo.html" data-component="fn-splitpane-demo">
+    <link rel="stylesheet" href="themes/midnight-blue.css" type="text/css">
+
+    <div id="sidebar">
+      <fn-menu>
+        <fn-menu-item data-target-demo="fn-search">Home</fn-menu-item>
+
+        <fn-submenu>
+          <fn-submenu-title>
+            Controls
+          </fn-submenu-title>
+          <fn-menu-item data-target-demo="fn-search">fn-search</fn-menu-item>
+        </fn-submenu>
+
+        <fn-submenu>
+          <fn-submenu-title>
+            Elements
+          </fn-submenu-title>
+
+          <fn-menu-item data-target-demo="fn-table">fn-table</fn-menu-item>
+        </fn-submenu>
+
+        <fn-submenu>
+          <fn-submenu-title>
+            Miscellaneous
+          </fn-submenu-title>
+
+          <fn-menu-item data-target-demo="fn-loader">fn-loader</fn-menu-item>
+          <fn-menu-item data-target-demo="fn-splitpane">fn-splitpane</fn-menu-item>
+        </fn-submenu>
+      </fn-menu>
+    </div>
+
+    <div id="viewport">
+    </div>
+
+    <script type="text/javascript" src="fnord.js"></script>
+    <script type="text/javascript">
+      function openDemo(name) {
+        var tpl = Fnord.getTemplate(name + "-demo", "base");
+        viewport.innerHTML = "";
+        viewport.appendChild(tpl);
+        window.location.hash = name;
+      }
+
+      var sidebar = document.getElementById("sidebar");
+      sidebar.addEventListener("fn-button-click", function(e) {
+        console.log("fn button click");
+        openDemo(e.srcElement.getAttribute("data-target-demo"));
+      }, false);
+
+      var fragment = window.location.hash;
+      if (fragment) {
+        openDemo(fragment.substring(1));
+      }
+    </script>
+  </body>
+</html>

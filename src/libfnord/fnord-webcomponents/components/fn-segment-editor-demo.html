@@ -1,0 +1,78 @@
+<!--
+  This file is part of the "FnordMetric" project
+    Copyright (c) 2015 Laura Schlimmer
+    Copyright (c) 2015 Paul Asmuth, Google Inc.
+
+  FnordMetric is free software: you can redistribute it and/or modify it under
+  the terms of the GNU General Public License v3.0. You should have received a
+  copy of the GNU General Public License along with this program. If not, see
+  <http://www.gnu.org/licenses/>.
+-->
+<template id="fn-segment-editor-demo-base-tpl">
+
+  <section>
+    <fn-segment-editor id='editor1' data-resolved>
+      <template name='fn-segment-options'>
+        <fn-segment-option data-key='lang' data-title='Language'>
+          <fn-dropdown class='input' data-resolved data-segment-option>
+            <fn-dropdown-header data-blank></fn-dropdown-header>
+            <fn-dropdown-items>
+              <fn-dropdown-item data-value='de' data-title='German'>
+                German
+              </fn-dropdown-item>
+              <fn-dropdown-item data-value='fr' data-title='French'>
+                French
+              </fn-dropdown-item>
+            </fn-dropdown-items>
+          </fn-dropdown>
+        </fn-segment-option>
+
+        <fn-segment-option data-key='device_type' data-title='Device Type'>
+          <fn-dropdown class='input checkbox' data-resolved data-segment-option>
+            <fn-dropdown-items>
+              <fn-dropdown-item data-value='desktop' data-title='Desktop'>
+                <fn-checkbox></fn-checkbox>
+                Desktop
+              </fn-dropdown-item>
+              <fn-dropdown-item data-value='mobile' data-title='Mobile'>
+                <fn-checkbox></fn-checkbox>
+                Mobile
+              </fn-dropdown-item>
+            </fn-dropdown-items>
+          </fn-dropdown>
+        </fn-segment-option>
+      </template>
+    </fn-segment-editor>
+
+    <script type='text/javascript'>
+      var editor = document.getElementById('editor1');
+      var segments = [
+        {
+          'key' : 'french_mobile',
+          'name' : 'French Mobile',
+          'rules' : [
+            {'field' : 'lang', 'opt' : 'matches', 'value' : ['fr']},
+            {'field' : 'device_type', 'opt' : 'matches', 'value' : ['mobile', 'tablet']},
+          ],
+          'removable' : true,
+          'editable' : true,
+          'color' : '#4572a7'
+        },
+        {
+          'key' : 'german',
+          'name' : 'German',
+          'rules' : [
+            {'field' : 'lang', 'opt' : 'matches', 'value' : ['fr']},
+            {'field' : 'device_type', 'opt' : 'matches', 'value' : ['mobile', 'tablet']},
+          ],
+          'removable' : true,
+          'editable' : true,
+          'color' : '#89a54e'
+        }
+      ];
+
+      editor.addSegments(JSON.stringify(segments));
+      editor.availableColors = ["#4572a7", "#89a54e", "#aa4643", "#80699b"];
+    </script>
+  </section>
+</template>

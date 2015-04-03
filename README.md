@@ -65,6 +65,7 @@ Contributions
 + Pieter Noordhuis (http://github.com/pietern)
 + Tadas Ščerbinskas (http://github.com/tadassce)
 + Sebastian Korfmann (http://github.com/skorfmann)
++ Philipp Bogensberger (http://github.com/bogensberger)
 + Paul Asmuth (http://github.com/paulasmuth)
 
 To contribute, please fork this repository, make your changes and run the 

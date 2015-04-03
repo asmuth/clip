@@ -1,0 +1,267 @@
+<!--
+  This file is part of the "FnordMetric" project
+    Copyright (c) 2014 Laura Schlimmer
+    Copyright (c) 2014 Paul Asmuth, Google Inc.
+
+  FnordMetric is free software: you can redistribute it and/or modify it under
+  the terms of the GNU General Public License v3.0. You should have received a
+  copy of the GNU General Public License along with this program. If not, see
+  <http://www.gnu.org/licenses/>.
+-->
+
+<template id="fn-metric-explorer-list-base-tpl">
+  <style type='text/css'>
+    fn-message {
+      display: none;
+      width: 40%;
+      min-width: 550px;
+      margin: auto;
+    }
+
+    fn-message-text {
+      line-height: 1.7;
+    }
+    fn-loader {
+      padding-top: 0;
+    }
+
+    fn-message.active {
+      display:block;
+    }
+
+    fn-message.active + .list.ui {
+      display: none;
+    }
+
+    fn-table {
+      width: 100%;
+      border-top: 1px solid #ddd;
+      border-radius: 0;
+    }
+
+    fn-table /deep/ table {
+      border-radius: 0;
+      border-top: none;
+      margin-bottom: 0;
+    }
+
+    fn-table /deep/ table > thead > tr > td,
+    fn-table /deep/ table > thead > tr > th,
+    fn-table /deep/ table > tbody > tr > td,
+    fn-table /deep/ table > tbody > tr > th {
+      font-size: 92%;
+      background: transparent;
+      border-radius: 0;
+      border-top: none;
+    }
+
+    fn-pager {
+      float:right;
+      margin: 5px 5px 5px 0;
+    }
+  </style>
+
+  <fn-loader data-transparent data-loading data-loader-type="loader3">
+    <fn-message class="overview" data-state='error'>
+      <fn-message-header>
+      </fn-message-header>
+      <fn-message-text>
+      </fn-message-text>
+    </fn-message>
+    <div class="list ui">
+      <div class="navigation">
+        <h1 class="small left" style="float:left;" >Metrics &rsaquo; </h1>
+        <fn-search data-size="small" data-placeholder="Search...">
+          <fn-input class="icon" data-placeholder="Search...">
+            <fn-input-icon><i class="fa fa-search"></i></fn-input-icon>
+          </fn-input>
+        </fn-search>
+      </div>
+      <fn-table data-page="0" data-clickable>
+        <fn-table-column data-sortable data-presort="asc">Metric</fn-table-column>
+        <fn-table-column>Labels</fn-table-column>
+        <fn-table-column data-sortable>Last Insert</fn-table-column>
+        <fn-table-column data-sortable>Total Stored Bytes</fn-table-column>
+        <table>
+        </table>
+      </fn-table>
+      <fn-pager data-for data-first-item="1" data-circling></fn-pager>
+    </div>
+  </fn-loader>
+</template>
+
+<script type='text/javascript'>
+  var MetricExplorerList = function() {
+
+    this.createdCallback = function() {
+      var tpl = Fnord.getTemplate("fn-metric-explorer-list", "base");
+      this.appendChild(tpl);
+
+      if (this.hasAttribute('data-url')) {
+        this.init();
+      }
+
+    };
+
+    this.attributeChangedCallback = function(attr, new_val, old_val) {
+      if (attr == 'data-url') {
+        this.init();
+      }
+    };
+
+    this.init = function() {
+      var params = FnordMetric.util.parseUrlQueryString(this.getAttribute('data-url'));
+      var metric_url = "";
+      var header = "All Metrics";
+      var openPreview = false;
+
+      if (params.path == "search" &&
+          params.query_params &&
+          params.query_params.innerViewValue) {
+            metric_url = "?filter=" + params.query_params.innerViewValue;
+            header = "Search " + params.query_params.innerViewValue;
+            openPreview = true;
+      }
+
+      this.querySelector("fn-loader").style.height = (window.innerHeight - 65) + "px";
+      this.loadMetricList(metric_url, openPreview);
+      this.setHeader(header);
+      this.initSearch();
+    };
+
+    this.setHeader = function(title) {
+      this.querySelector(".navigation h1").innerHTML += " " + title;
+    };
+
+
+    this.initSearch = function() {
+      var base = this;
+      var onSearchSubmit = (function(base) {
+        return function(e) {
+          var url = "search?q=" + encodeURIComponent(e.srcElement.getValue());
+          FnordMetric.openUrl(url);
+        }
+      })(this);
+
+
+      var onSearchAutocomplete = (function(base) {
+        return function(e) {
+          var term = e.srcElement.getValue();
+          var res = [];
+          var url = "/metrics/list?filter=" + term;
+          Fnord.httpGet(url, function(r) {
+            if (r.status == 200) {
+              var json = JSON.parse(r.response);
+              json.metrics.map(function(metric) {
+                res.push({query : metric.key});
+              });
+              e.srcElement.autocomplete(term, res);
+            }
+          });
+        }
+      })(this);
+
+      var search = this.querySelector("fn-search");
+      search.addEventListener("fn-search-submit", onSearchSubmit);
+      search.addEventListener("fn-search-autocomplete", onSearchAutocomplete);
+    };
+
+
+    this.loadMetricList = function(url_query, openPreview) {
+      var base = this;
+      var loader = this.querySelector("fn-loader");
+      var table = this.querySelector("fn-table table");
+      var url = "/metrics/list" + url_query;
+
+      Fnord.httpGet(url, function(r) {
+        if (r.status === 200) {
+          var metrics = JSON.parse(r.response).metrics;
+
+          if (metrics.length == 0) {
+            base.renderMessage("No Metric", "Empty Metric List", '');
+            return;
+          }
+
+          if (metrics.length == 1 && openPreview) {
+            FnordMetric.util.openMetricPreview(metrics[0].key);
+            return;
+          }
+
+          metrics.forEach(function(m) {
+            var tr_elem = document.createElement("tr");
+            tr_elem.setAttribute('metric-key', m.key);
+            var cells = [
+              m.key,
+              m.labels.join(", "),
+              m.last_insert,
+              m.total_bytes];
+
+            cells.map(function(cell) {
+              var td_elem = document.createElement("td");
+              td_elem.innerHTML = cell;
+              tr_elem.appendChild(td_elem);
+            });
+
+            table.appendChild(tr_elem);
+
+          });
+          base.querySelector("fn-table").renderTable();
+          base.querySelector("fn-message").className = "";
+
+          base.setTableHeight(loader);
+          base.initTablePager(metrics.length);
+          loader.removeAttribute("data-loading");
+
+        } else {
+          base.renderMessage(
+            "Server Error", r.status + " " + r.statusText, 'error');
+        }
+      });
+
+      table.addEventListener('fn-table-row-click', function(e) {
+        var metric_key = e.srcElement.getAttribute('metric-key');
+        var end = Math.round(Date.now() / 1000);
+        var start = end - 3600;
+        FnordMetric.util.openMetricPreview(metric_key);
+      }, false);
+    };
+
+    this.setTableHeight = function(ref_elem) {
+      var fn_table = this.querySelector("fn-table");
+      var pager = this.querySelector("fn-pager");
+      var data_per_page;
+
+      var height = ref_elem.offsetHeight;
+      data_per_page = fn_table.setDataPerPageForHeight(height);
+      pager.setAttribute('data-per-page', data_per_page);
+    };
+
+    this.initTablePager = function(list_size) {
+      var pager = this.querySelector("fn-pager");
+      var table = this.querySelector("fn-table");
+      pager.setAttribute('data-last-item', list_size);
+      pager.forElement(table);
+
+      pager.addEventListener('fn-pager-turn', function() {
+
+      }, false);
+    };
+
+    this.renderMessage = function(header, text, state) {
+      var msg = this.querySelector("fn-message");
+      var loader = this.querySelector("fn-loader");
+
+      msg.className = "active";
+      msg.setAttribute('data-state', state);
+      msg.querySelector("fn-message-header").innerHTML = header;
+      msg.querySelector("fn-message-text").innerHTML = text;
+
+      loader.style.paddingTop = "50px";
+      loader.removeAttribute('data-loading');
+    };
+  };
+
+  window.addEventListener('fn-ready', function() {
+    Fnord.registerComponent('fn-metric-explorer-list', MetricExplorerList);
+  }, false);
+</script>

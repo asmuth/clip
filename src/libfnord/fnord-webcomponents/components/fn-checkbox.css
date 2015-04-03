@@ -1,0 +1,93 @@
+/**
+ * Adapted from: Semantic UI:
+ *   https://github.com/Semantic-Org/Semantic-UI
+ *   http://www.semantic-ui.com/
+ */
+
+fn-checkbox {
+  position: relative;
+  display: inline-block;
+  height: 17px;
+  width: 17px;
+  font-size: 14px;
+  line-height: 1em;
+  -webkit-backface-visibility: hidden;
+          backface-visibility: hidden;
+  vertical-align: middle;
+  color: rgba(0,0,0,.8);
+  -webkit-transition: color .2s ease;
+  transition: color .2s ease;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  display: inline-block;
+  outline: 0;
+  background: #fff;
+  border-radius: .25em;
+  -webkit-transition: background-color .3s ease,border .3s ease,box-shadow .3s ease;
+  transition: background-color .3s ease,border .3s ease,box-shadow .3s ease;
+  border: 1px solid #d4d4d5;
+  content: '';
+  top: -1px;
+  left: -1px;
+  cursor: pointer;
+}
+
+fn-checkbox[data-active]:before {
+  padding-left: 2px;
+  opacity: 1;
+  font-family: FontAwesome;
+  content: '\f00d';
+}
+
+fn-checkbox[data-type='radio'] {
+  width: 14px;
+  height: 14px;
+  border-radius: 500rem;
+  -webkit-transform: none;
+  -ms-transform: none;
+  transform: none;
+  content: '';
+}
+
+fn-checkbox[data-type='radio'][data-active]:before {
+  border: none;
+  line-height: 14px;
+  margin-left: 3px;
+  padding: 0;
+  font-size: 9px;
+  width: 14px;
+  height: 14px;
+  border-radius: 500rem;
+  -webkit-transform: scale(0.42857143);
+  -ms-transform: scale(0.42857143);
+  transform: scale(0.42857143);
+  background-color: rgba(0,0,0,.8);
+}
+
+fn-checkbox input {
+  color: inherit;
+  font: inherit;
+  margin: 0;
+  line-height: normal;
+  box-sizing: border-box;
+  padding: 0;
+  position: absolute;
+  top: 0;
+  left: 0;
+  opacity: 0!important;
+  outline: 0;
+  z-index: -1;
+  vertical-align:top;
+}
+
+fn-checkbox[data-state='error'] {
+  background: #fff0f0;
+  border-color: #dbb1b1;
+  color: #d95c5c;
+}
+
+fn-checkbox[data-state='error'] + fn-checkbox-label {
+  color: #d95c5c;
+}

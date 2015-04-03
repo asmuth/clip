@@ -1,0 +1,61 @@
+<!--
+  This file is part of the "FnordMetric" project
+    Copyright (c) 2014 Laura Schlimmer
+    Copyright (c) 2014 Paul Asmuth, Google Inc.
+
+  FnordMetric is free software: you can redistribute it and/or modify it under
+  the terms of the GNU General Public License v3.0. You should have received a
+  copy of the GNU General Public License along with this program. If not, see
+  <http://www.gnu.org/licenses/>.
+-->
+<script type='text/javascript'>
+  var ModalComponent = function() {
+    this.createdCallback = function() {
+      var base = this;
+
+      //customisable
+      this.closeElems = [
+        this.querySelector("fn-modal-close-icon"), this.parentNode
+      ];
+
+      this.closeElems.forEach(function(elem) {
+        if (elem) {
+          elem.onclick = function() {
+            base.close();
+          }
+        }
+      });
+
+      this.onclick = function(e) {
+        e.stopPropagation();
+      };
+    }
+
+    this.show = function() {
+      var dimmer = this.parentNode;
+      if (dimmer && dimmer.tagName == 'FN-MODAL-DIMMER') {
+        dimmer.setAttribute('data-active', 'active');
+      } else {
+        this.setAttribute('data-active', 'active');
+      }
+
+      //place modal
+      var height = this.getBoundingClientRect().height;
+      var mtop = ((window.innerHeight - height) / 3);
+      this.style.marginTop = mtop + "px";
+    };
+
+    this.close = function() {
+      var dimmer = this.parentNode;
+      if (dimmer) {
+        dimmer.removeAttribute('data-active');
+      } else {
+        this.removeAttribute('data-active');
+      }
+    };
+  };
+
+  window.addEventListener('fn-ready', function() {
+    Fnord.registerComponent('fn-modal', ModalComponent);
+  }, false);
+</script>

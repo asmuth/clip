@@ -1,0 +1,76 @@
+<!--
+  This file is part of the "FnordMetric" project
+    Copyright (c) 2014 Laura Schlimmer
+    Copyright (c) 2014 Paul Asmuth, Google Inc.
+
+  FnordMetric is free software: you can redistribute it and/or modify it under
+  the terms of the GNU General Public License v3.0. You should have received a
+  copy of the GNU General Public License along with this program. If not, see
+  <http://www.gnu.org/licenses/>.
+-->
+<template id="fn-input-demo-base-tpl">
+  <section>
+    <h1>Input</h1>
+    <h3><i>Example 1 &raquo;</i> Static</h3>
+    <!-- Static -->
+    <input class='fn-input' style='width:180px;'></input>
+
+    <!-- Basic Input With Placeholder -->
+    <fn-input data-placeholder="Username"></fn-input>
+
+    <!-- Basic Input With Placeholder And Value -->
+    <fn-input data-placeholder="First Name" data-value="Anna"></fn-input>
+
+  </section>
+
+  <section>
+    <h1>Variations</h1>
+    <h3><i>Example 1 &raquo;</i> Transparent</h3>
+    <!-- Transparent Input Has No Background -->
+    <fn-input class="transparent" data-placeholder='Search ...'></fn-input>
+
+    <h3><i>Example 2 &raquo;</i> Icon</h3>
+    <!-- Input Can Be Formatted With An Icon -->
+    <fn-input class="icon" data-placeholder='Search ...'>
+      <fn-input-icon><i class='fa fa-search'></i></fn-input-icon>
+    </fn-input>
+
+    <fn-input class="icon left" data-placeholder='Find A Cab ... '>
+      <fn-input-icon><i class='fa fa-cab'></i></fn-input-icon>
+    </fn-input>
+
+    <h3><i>Example 1 &raquo;</i> Inline</h3>
+    <fn-input-label>Last Name</fn-input-label>
+    <fn-input data-style="inline"></fn-input>
+    <div style="clear:both; width:100%; margin-bottom:20px;"></div>
+    <h3><i>Example 2 &raquo;</i> Inline Group</h3>
+    FIXME Inline field group
+  </section>
+
+  <section>
+    <h1>Types</h1>
+    <h3><i>Example 1 &raquo;</i> Password</h3>
+    <fn-input data-type='PASSWORD' data-value="foobar"></fn-input>
+  </section>
+
+  <section>
+    <h1>States</h1>
+    <h3><i>Example 1 &raquo;</i> Error</h3>
+    <fn-input class="error" style="margin-top:17px;"></fn-input>
+
+
+    <fn-input-label>Personal Information</fn-input-label>
+    <fn-input class="error" data-placeholder="First Name" style>
+    </fn-input>
+
+    <h3><i>Example 2 &raquo;</i> Read Only</h3>
+    <fn-input data-readonly data-placeholder='December 12 2014'></fn-input>
+
+    <h3><i>Example 3 &raquo;</i> Disabled</h3>
+    <fn-input-label>Last Name</fn-input-label>
+    <fn-input data-disabled data-placeholder='Last Name'></fn-input>
+
+  </section>
+
+
+</template>

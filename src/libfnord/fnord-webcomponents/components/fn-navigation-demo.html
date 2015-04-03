@@ -1,0 +1,97 @@
+<!--
+  This file is part of the "FnordMetric" project
+    Copyright (c) 2014 Laura Schlimmer
+    Copyright (c) 2014 Paul Asmuth, Google Inc.
+
+  FnordMetric is free software: you can redistribute it and/or modify it under
+  the terms of the GNU General Public License v3.0. You should have received a
+  copy of the GNU General Public License along with this program. If not, see
+  <http://www.gnu.org/licenses/>.
+-->
+<template id='fn-navigation-demo-base-tpl'>
+  <section>
+    <!-- Add class inactive to navigation item if you don't want to set active styles -->
+    <h1><i>Example 1 &raquo;</i> Navigation Menu</h1>
+    <fn-navigation>
+      <fn-navigation-item>
+        <fn-navigation-icon><i class="fa fa-headphones"></i></fn-navigation-icon>
+        <fn-navigation-text>Stream</fn-navigation-text>
+      </fn-navigation-item>
+      <fn-navigation-item>
+        <fn-navigation-icon><i class="fa fa-heart"></i></fn-navigation-icon>
+        <fn-navigation-text>Likes</fn-navigation-text>
+      </fn-navigation-item>
+      <fn-navigation-item>
+        <fn-navigation-icon><i class="fa fa-home"></i></fn-navigation-icon>
+        <fn-navigation-text>Home</fn-navigation-text>
+      </fn-navigation-item>
+      <fn-navigation-item class="right inactive">
+        <fn-navigation-icon><i class="fa fa-sign-in"></i></fn-navigation-icon>
+        <fn-navigation-text>Login</fn-navigation-text>
+      </fn-navigation-item>
+    </fn-navigation>
+  </section>
+
+  <section>
+    <!-- Static Items aren't clickable -->
+    <h1><i>Example 2 &raquo;</i> Navigation With Static Items</h1>
+    <fn-navigation>
+      <fn-navigation-item class="static">
+        Drilldown By:
+      </fn-navigation-item>
+      <fn-navigation-item class="static">
+
+        <fn-dropdown data-resolved>
+          <fn-dropdown-items>
+            <fn-dropdown-item>Dim 1</fn-dropdown-item>
+          </fn-dropdown-items>
+        </fn-dropdown>
+      </fn-navigation-item>
+
+      <fn-navigation-item class="static">
+        <fn-dropdown data-resolved>
+          <fn-dropdown-items>
+            <fn-dropdown-item>Dim 2</fn-dropdown-item>
+          </fn-dropdown-items>
+        </fn-dropdown>
+      </fn-navigation-item>
+    </fn-navigation>
+  </section>
+
+  <section>
+    <h1><i>Example 3 &raquo;</i> Inline Navigation</h1>
+    <fn-navigation class="inline">
+      <fn-navigation-item>Daily</fn-navigation-item>
+      <fn-navigation-item>Weekly</fn-navigation-item>
+      <fn-navigation-item>Monthly</fn-navigation-item>
+    </fn-navigation>
+  </section>
+
+  <section>
+    <h1><i>Example 4 &raquo;</i> Evenly Sized Items</h1>
+    <fn-navigation data-evenly-sized>
+      <fn-navigation-item>Daily</fn-navigation-item>
+      <fn-navigation-item>Weekly</fn-navigation-item>
+      <fn-navigation-item>Monthly</fn-navigation-item>
+    </fn-navigation>
+  </section>
+
+  <section>
+    <h1><i>Example 5 &raquo;</i> Navigation Menu with Searchbar</h1>
+    <fn-navigation style="width: 40%;">
+      <fn-navigation-item class="left">
+        <fn-navigation-icon><i class="fa fa-home"></i></fn-navigation-icon>
+        <fn-navigation-text>Home</fn-navigation-text>
+      </fn-navigation-item>
+      <fn-navigation-item class="left">
+        <fn-navigation-icon><i class="fa fa-envelope"></i></fn-navigation-icon>
+        <fn-navigation-text>Messages</fn-navigation-text>
+      </fn-navigation-item>
+      <fn-navigation-item class="right">
+        <fn-search data-style='transparent'>
+          <fn-input class='transparent' data-placeholder="Search..."></fn-input>
+        </fn-search>
+      </fn-navigation-item>
+    </fn-navigation>
+  </section>
+</template>

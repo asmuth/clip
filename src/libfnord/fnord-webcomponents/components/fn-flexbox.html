@@ -1,0 +1,61 @@
+<!--
+  This file is part of the "FnordMetric" project
+    Copyright (c) 2014 Laura Schlimmer
+    Copyright (c) 2014 Paul Asmuth, Google Inc.
+
+  FnordMetric is free software: you can redistribute it and/or modify it under
+  the terms of the GNU General Public License v3.0. You should have received a
+  copy of the GNU General Public License along with this program. If not, see
+  <http://www.gnu.org/licenses/>.
+-->
+<style type='text/css'>
+  fn-flexbox {
+    display: block;
+    height: 100%;
+    width: 100%;
+    border: 1px solid #ddd;
+    box-sizing:border-box;
+    position: relative;
+  }
+
+  fn-flexbox-item {
+    display:block;
+    box-sizing: border-box;
+    height: auto;
+    width: auto;
+    overflow: hidden;
+    position: relative;
+  }
+</style>
+<template id='fn-flexbox-base-tpl'>
+</template>
+<script type='text/javascript'>
+  var FlexBoxComponent = function() {
+    this.createdCallback = function() {
+      var base = this;
+      document.addEventListener("DOMContentLoaded", function() {
+        base.setItemSizes();
+      });
+    }
+
+    this.setItemSizes = function() {
+      var fixed_height = 0;
+      var fixed_height_items =
+        this.querySelectorAll("fn-flexbox-item[data-height='fixed']");
+
+      for (var i = 0; i < fixed_height_items.length; i++) {
+        fixed_height += fixed_height_items[i].offsetHeight;
+      }
+
+      var full_height_item = this.querySelector("fn-flexbox-item[data-height='full']");
+      full_height_item.style.height = "calc(100% - " + fixed_height + "px)";
+    };
+
+    this.onResize = function() {
+      this.setItemSizes();
+    }
+  }
+  window.addEventListener('fn-ready', function() {
+    Fnord.registerComponent('fn-flexbox', FlexBoxComponent);
+  }, false);
+</script>

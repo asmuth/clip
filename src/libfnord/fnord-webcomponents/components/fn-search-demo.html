@@ -1,0 +1,81 @@
+<!--
+  This file is part of the "FnordMetric" project
+    Copyright (c) 2014 Laura Schlimmer
+    Copyright (c) 2014 Paul Asmuth, Google Inc.
+
+  FnordMetric is free software: you can redistribute it and/or modify it under
+  the terms of the GNU General Public License v3.0. You should have received a
+  copy of the GNU General Public License along with this program. If not, see
+  <http://www.gnu.org/licenses/>.
+-->
+<template id="fn-search-demo-base-tpl">
+  <section>
+    <!-- Basic Search With Automatically Rendered Input -->
+    <h1><i>Example 1 &rsaquo;</i> Basic With Click Event</h1>
+    <fn-search id="search-example-1" style="height: 38px; width: 40%;">
+    </fn-search>
+
+    <script type="text/javascript">
+      document.querySelector("#search-example-1").addEventListener(
+        "fn-search-submit",
+        function(e) {
+          var search_term = e.srcElement.getValue();
+          alert("Search for:" + search_term);
+        },
+        false);
+    </script>
+  </section>
+
+  <section>
+    <!-- Search With Icon And Autocomplete Event -->
+    <h1><i>Example 2 &rsaquo;</i> Search With Autocomplete</h1>
+    <fn-search id="search-example-2" style="height: 38px; width: 40%;">
+      <fn-input class="icon" data-placeholder='Search ...' data-value='London'>
+        <fn-input-icon><i class='fa fa-search'></i></fn-input-icon>
+      </fn-input>
+    </fn-search>
+
+    <script type="text/javascript">
+      var search_2 = document.querySelector("#search-example-2");
+      var cities = [
+        "London", "Cambridge", "Liverpool", "Sheffield",
+        "Leeds", "Manchester", "Birmingham"
+      ];
+
+
+      search_2.addEventListener(
+          "fn-search-autocomplete",
+          function(e) {
+            var term = e.detail.value.toLowerCase();
+            var response = [];
+
+            cities.forEach(function(city) {
+              var c = city.toLowerCase();
+              if (c.indexOf(term) > -1) {
+                response.push({'query' : city});
+              }
+            });
+
+            search_2.autocomplete(term, response);
+          },
+          false);
+
+      search_2.addEventListener(
+        "fn-search-submit",
+        function(e) {
+          var search_term = e.detail.value;
+          alert("Search for:" + search_term);
+        },
+        false);
+    </script>
+  </section>
+
+  <section>
+    <!-- fn-input can be styled like every other fn-input elem -->
+    <h1><i>Example 3 &rsaquo;</i> Transparent Search</h1>
+    <fn-search data-style='transparent' style="height: 38px; width: 40%;">
+      <fn-input class="transparent" data-placeholder='Search ...'>
+      </fn-input>
+    </fn-search>
+  </section>
+</template>

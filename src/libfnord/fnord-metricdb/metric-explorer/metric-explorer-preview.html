@@ -1,0 +1,459 @@
+<!--
+  This file is part of the "FnordMetric" project
+    Copyright (c) 2014 Laura Schlimmer
+    Copyright (c) 2014 Paul Asmuth, Google Inc.
+
+  FnordMetric is free software: you can redistribute it and/or modify it under
+  the terms of the GNU General Public License v3.0. You should have received a
+  copy of the GNU General Public License along with this program. If not, see
+  <http://www.gnu.org/licenses/>.
+-->
+<template id="fn-metric-explorer-preview-base-tpl">
+  <style type='text/css'>
+    .navigation {
+      padding: 0 15px;
+    }
+    .navigation fn-button {
+      margin: 5px 8px 0 0;
+    }
+
+    .navigation .item {
+      vertical-align: middle;
+      margin-left: 0.8%;
+      float: left;
+    }
+
+    .navigation .item:first-child {
+      margin-left: 0;
+    }
+
+    fn-loader[name='result_pane'] fn-message {
+      display:none;
+    }
+
+    fn-loader[name='result_pane'] fn-message.active {
+      display: block;
+      margin: auto;
+      margin-top: 25px;
+    }
+
+    .result_pane {
+      padding: 10px;
+      background: #fff;
+      display: none;
+      text-align: cente;
+    }
+
+    .result_pane.active {
+      display: block;
+    }
+
+
+    .result_pane fn-table {
+      display:block;
+    }
+
+    .result_pane fn-pager {
+      margin-top: 5px;
+      float: right;
+    }
+
+    #raw.result_pane {
+      padding: 10px 10px 20px;
+    }
+
+    fn-controls /deep/ .controls_inner {
+      border-top: 1px solid #bbb;
+    }
+
+    fn-controls[type='secondary'] /deep/ .controls_inner {
+      border-bottom: none !important;
+    }
+
+    fn-datepicker /deep/ #datepicker_widget {
+      left: 170px;
+    }
+
+    fn-modal[name='select_metric'] {
+      width: 25%;
+      left: 65%;
+    }
+
+    fn-modal[name='select_metric'] fn-table {
+      width: 100%;
+    }
+
+  </style>
+  <fn-loader name='metric_explorer_preview'>
+    <div class="navigation">
+      <div class="item left">
+        <span class="text">Display: </span>
+        <fn-dropdown class="inline small" name="format">
+          <fn-dropdown-items>
+            <fn-dropdown-item data-value='svg'>Chart</fn-dropdown-item>
+            <fn-dropdown-item data-value='csv'>Raw</fn-dropdown-item>
+          </fn-dropdown-items>
+        </fn-dropdown>
+      </div>
+
+      <div class="item" style="height: 36px; line-height: 36px; float: right;">
+        <fn-date-time-selector data-selectable='past'>
+          <fn-date-time-selector-icon class='left'></fn-date-time-selector-icon>
+          <fn-dropdown id='timerange' class="inline">
+            <fn-dropdown-items>
+              <fn-dropdown-item data-value=300>5 minutes</fn-dropdown-item>
+              <fn-dropdown-item data-value=900>15 minutes</fn-dropdown-item>
+              <fn-dropdown-item data-value=1800>30 minutes</fn-dropdown-item>
+              <fn-dropdown-item data-value=3600>1 hour</fn-dropdown-item>
+              <fn-dropdown-item data-value=14400>4 hours</fn-dropdown-item>
+              <fn-dropdown-item data-value=43200>12 hours</fn-dropdown-item>
+              <fn-dropdown-item data-value=86400>1 day</fn-dropdown-item>
+            </fn-dropdown-items>
+          </fn-dropdown>
+          <fn-date-time-selector-icon class='right'></fn-date-time-selector-icon>
+        </fn-date-time-selector>
+      </div>
+    </div>
+
+    <div class="metric-controls">
+      <fn-metric-control data-index="0"></fn-metric-control>
+    </div>
+
+    <fn-loader name='result_pane' data-loading data-resolved="data-resolved" data-transparent>
+      <fn-message>
+      </fn-message>
+      <div class="result_pane active" data-format="svg">
+      </div>
+      <div class="result_pane" data-format="csv">
+        <fn-table data-page='0'>
+          <fn-table-column>Metric</fn-table-column>
+          <fn-table-column>Time</fn-table-column>
+          <fn-table-column>Value</fn-table-column>
+          <table></table>
+        </fn-table>
+        <fn-pager data-for data-first-item='1' data-circling data-per-page='25'></fn-pager>
+      </div>
+    </fn-loader>
+
+
+  </fn-loader>
+
+  <fn-modal-dimmer>
+    <fn-modal name='select_metric'>
+      <fn-modal-close-icon></fn-modal-close-icon>
+      <fn-modal-header>Select Metric</fn-modal-header>
+      <fn-modal-content>
+        <fn-table data-clickable></fn-table>
+      </fn-modal-content>
+    </fn-modal>
+  </fn-modal-dimmer>
+
+  <fn-tooltip data-pointer="right" id='ttp_endtime'>
+    Please select a date in the past
+  </fn-tooltip>
+</template>
+
+<script type='text/javascript'>
+  var MetricExplorerPreview = function() {
+    this.createdCallback = function() {
+      var tpl = Fnord.getTemplate("fn-metric-explorer-preview", "base");
+      this.appendChild(tpl);
+
+      if (this.getAttribute('data-url') != null) {
+        this.init()
+      }
+    };
+
+    this.attributeChangedCallback = function(attr, old_val, new_val) {
+      switch (attr) {
+        case 'data-url' :
+          this.init();
+          break;
+        case 'data-format' :
+          this.updateGenericParams({'format' :new_val});
+          break;
+        default:
+          break;
+      }
+    };
+
+    this.init = function() {
+      var base = this;
+      this.params = FnordMetric.util.parseMetricQueryUrl(this.getAttribute("data-url"));
+      this.handleGenericControls();
+
+      //init mainMetric
+      MetricHandler.initControl.apply(this, [
+        this.querySelector("fn-metric-control"), this.params.metric0.name, 0]);
+
+      //init subMetrics
+      for (var i = 1; i < parseInt(this.params.metrics, 10); i++) {
+        MetricHandler.initControl.apply(this, [
+          MetricHandler.addControl.apply(this, [i, false]), this.params["metric" + i]["name"], i]);
+      }
+
+      this.classList.add("resizable");
+
+      document.addEventListener("DOMContentLoaded", function() {
+        base.onResize();
+        base.DOMLoaded = true;
+      }, false);
+    };
+
+    this.initAppbar = function(appbar) {
+      var base = this;
+
+      var onRefresh = function() {
+        return base.onRefresh();
+      };
+
+      var onEmbed = function() {
+        return base.buildQueryUrl().query_url;
+      };
+
+      FnordMetric.util.initAppbar(appbar, onRefresh, onEmbed);
+    };
+
+    this.update = function() {
+      var urls = this.buildQueryUrl();
+
+      FnordMetric.util.setUrlHash("#metric?" + urls.url);
+      this.updateData(urls.query_url);
+    };
+
+    this.buildMetricQueryUrl = function() {
+      var param_str = "";
+      var url = "";
+      var query_url = "";
+
+      for (var i = 0; i < parseInt(this.params.metrics, 10); i++) {
+        var metric_params = this.params["metric" + i];
+        var aggr_fn = "";
+
+        for (var key in metric_params) {
+          param_str = "";
+
+          if (!metric_params[key] ||
+              metric_params[key].length == 0 ||
+              metric_params[key] == "undefined" ||
+              aggr_fn == 'value' && (key == 'aggr_step' || key == 'aggr_window')) {
+                continue;
+          }
+
+          if (key == "name") {
+            //name is first param
+            if ( i > 0) {
+              param_str += "&";
+            }
+
+            param_str += "metric=" + encodeURIComponent(metric_params[key]);
+
+          } else if (key == "aggr_fn") {
+            aggr_fn = metric_params[key];
+            //value is automatically returned if aggr_fn isn't set
+            if (metric_params[key] != "value") {
+              param_str += "&" + key + "=" + metric_params[key];
+            } else {
+              url += "&" + key + "=" + metric_params[key];
+            }
+
+          } else if (FnordMetric.util.isMetricParam(key)) {
+            //all other metric params
+            param_str += "&" + key + "=" + metric_params[key];
+          }
+
+          url += param_str;
+          query_url += param_str;
+        }
+      }
+
+      return {'url' : url, 'query_url' : query_url};
+    }
+
+    this.buildQueryUrl = function() {
+      var params = ["from", "until", "format"];
+      var queryParams = [
+        "logarithmic", "inverted", "min", "height",
+        "width", "grid", "axis_right", "legend"
+      ];
+
+      var metricUrl = this.buildMetricQueryUrl();
+      var param_str = "";
+      var url = "";
+      var query_url = "";
+
+      for (var i = 0; i < params.length; i++) {
+        param_str +=
+          "&" + params[i] + "=" + this.getGenericParamOrDefault(params[i]);
+      }
+
+      url = metricUrl.url + param_str;
+      query_url = metricUrl.query_url + param_str;
+
+      //params that can't be set by controls aren't visible in url
+
+      for (var i = 0; i < queryParams.length; i++) {
+        query_url +=
+          "&" + queryParams[i] + "=" +
+          this.getGenericParamOrDefault(queryParams[i]);
+      }
+
+      return {'url' :url, 'query_url' : query_url};
+    };
+
+    this.updateData = function(query_url) {
+      var base = this;
+      var url = "/metrics/timeseries?" + query_url;
+      var format = this.getGenericParamOrDefault('format');
+
+      Fnord.httpGet(url, function(r) {
+        if (r.status == 200) {
+          if (format == "svg") {
+            return PreviewRenderer.renderChart.apply(base, [r.response]);
+          }
+
+          if (r.response.length > 0) {
+            return PreviewRenderer.renderCsvAsTable.apply(base, [r.response]);
+          }
+
+          //no data points don't cause an error if format is csv
+          var resp = {
+            'status': r.status,
+            'statusText': r.statusText,
+            'response': "Empty Table"
+          }
+          return PreviewRenderer.renderError.apply(base, [resp]);
+
+        }
+
+        return PreviewRenderer.renderError.apply(base, [r]);
+      });
+    };
+
+    this.onRefresh = function() {
+      var until = Date.now();
+      var time_range = this.getGenericParamOrDefault('time_range');
+      var from = until - time_range;
+      this.updateGenericParams({
+        'until' : until,
+        'from' : from});
+    };
+
+/*********************** Metric Controls *****************************/
+    this.metricParamChanged = function(params, key) {
+      this.params["metric" + params.index] = params;
+      this.update();
+    };
+
+    this.getMetricUrlParamOrDefault = function(key, index) {
+      var defaults = {
+        "aggr_fn": "sum",
+        "aggr_window": "5",
+        "aggr_step": "10",
+        "scale" : "1.0",
+        "group_by" : ""
+      }
+
+      if (this.params["metric" + index] && this.params["metric" + index][key]) {
+        return this.params["metric" + index][key];
+      }
+
+      return defaults[key] ;
+    };
+/************************* Generic Controls **************************/
+    this.getGenericParamOrDefault = function(key) {
+      var defaults = {
+        until : Math.round(Date.now() / 1000),
+        /* 5 minutes  */
+        time_range : 3600,
+        /* 10, 5 seconds */
+        aggr_step : 10,
+        aggr_window : 5,
+        logarithmic : false,
+        inverted: false,
+        min: 0,
+        format: 'svg',
+        grid: 'both',
+        axis_right: true,
+        legend: 'toprightinside'
+      }
+
+      if (key == "time_range") {
+        var end_time = parseInt(this.getGenericParamOrDefault("until"), 10);
+        var start_time = parseInt(this.params['from'], 10);
+        if (!isNaN(start_time)) {
+          return end_time - start_time;
+        } else {
+          return defaults['time_range'];
+        }
+      }
+
+      var value = (this.params[key])?
+        this.params[key] : defaults[key];
+
+      return value;
+    };
+
+    this.updateGenericParams = function(new_params) {
+      for (var key in new_params) {
+        if (new_params[key] != undefined) {
+          this.params[key] = new_params[key].toString();
+        }
+      }
+
+      this.update();
+    };
+
+    this.onResize= function() {
+      var padding = 20;
+      var result_loader = this.querySelector("fn-loader[name='result_pane']");
+      var height =
+        window.innerHeight - result_loader.getBoundingClientRect().top - padding;
+      var width = window.innerWidth - padding;
+
+      this.updateGenericParams({'height': height, 'width' : width});
+    };
+
+
+
+    /* handles controls for generic params */
+    this.handleGenericControls = function() {
+      var base = this;
+      /* init */
+      var format_dropdown = this.querySelector("fn-dropdown[name='format']");
+
+      var selector = this.querySelector("fn-date-time-selector");
+      var range = parseInt(this.getGenericParamOrDefault("time_range"), 10);
+      var until = parseInt(this.getGenericParamOrDefault("until"), 10);
+
+      selector.setAttribute('data-until', until);
+      selector.setAttribute('data-range', range);
+      selector.setAttribute('data-resolved', 'resolved');
+
+      format_dropdown.setAttribute('data-preselected', this.getGenericParamOrDefault('format'));
+      format_dropdown.setAttribute('data-resolved', 'resolved');
+      /* handle Events */
+      //date
+      selector.addEventListener('fn-date-time-selector-until', function(e) {
+        var until = Math.round(parseInt(e.detail.until, 10) / 1000);
+        var from = until - base.getGenericParamOrDefault("time_range");
+        base.updateGenericParams({'until': until, 'from' : from});
+      }, false);
+
+      selector.addEventListener('fn-date-time-selector-range', function(e) {
+        var until = base.getGenericParamOrDefault("until");
+        var from = until - parseInt(e.detail.range, 10)
+        base.updateGenericParams({'from' : from});
+      }, false);
+
+      //format
+      format_dropdown.addEventListener('fn-dropdown-item-click', function(e) {
+        base.setAttribute("data-format", e.srcElement.getAttribute('data-value'));
+      }, false);
+    };
+  };
+
+  window.addEventListener('fn-ready', function() {
+    Fnord.registerComponent('fn-metric-explorer-preview', MetricExplorerPreview);
+  }, false);
+</script>

@@ -1,0 +1,376 @@
+<!--
+  This file is part of the "FnordMetric" project
+    Copyright (c) 2014 Laura Schlimmer
+    Copyright (c) 2014 Paul Asmuth, Google Inc.
+
+  FnordMetric is free software: you can redistribute it and/or modify it under
+  the terms of the GNU General Public License v3.0. You should have received a
+  copy of the GNU General Public License along with this program. If not, see
+  <http://www.gnu.org/licenses/>.
+-->
+<style type='text/css'>
+  fn-metric-control {
+    display:block;
+    height: 36px;
+    border-bottom: 1px solid #dee0e3;
+  }
+</style>
+<template id="fn-metric-control-base-tpl">
+  <style type='text/css'>
+    .metric-control-group {
+      height: 100%;
+      float: left;
+      line-height: 36px;
+      padding: 0 10px;
+    }
+
+    .right fn-button {
+      margin: 25px 20px 0 0;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    .inline {
+      display: inline-block;
+    }
+
+    .metric-control-group b {
+      font-weight: normal;
+      line-height: 12px;
+      font-weight: 500;
+      opacity: 0.7;
+    }
+
+    .header {
+      float:left;
+      width: 250px;
+      border-right: 1px solid #d4d4d5;
+      white-space: nowrap;
+      overflow: hidden;
+    }
+
+    fn-tooltip[data-pointer='right']:before {
+      bottom: -0.325em;
+      right: 1em;
+      top: auto;
+      left: auto;
+      margin-left: 0em;
+    }
+
+  </style>
+  <div class="metric-control">
+    <div class="header">
+      <h3 class="small"></h3>
+    </div>
+    <div class='metric-control-group'>
+      <b>Aggregate: </b>
+      <fn-dropdown class="inline" name='rollup'>
+        <fn-dropdown-items>
+          <fn-dropdown-item data-value='value'>Value</fn-dropdown-item>
+          <fn-dropdown-item data-value='sum'>Sum</fn-dropdown-item>
+          <fn-dropdown-item data-value='min'>Min</fn-dropdown-item>
+          <fn-dropdown-item data-value='max'>Max</fn-dropdown-item>
+        </fn-dropdown-items>
+      </fn-dropdown>
+      <b style="margin-left: 7px;">Window: </sub></b>
+      <fn-dropdown class="inline" name='time_window'>
+        <fn-dropdown-items>
+          <fn-dropdown-item data-value=1>1 second</fn-dropdown-item>
+          <fn-dropdown-item data-value=5>5 seconds</fn-dropdown-item>
+          <fn-dropdown-item data-value=10>10 seconds</fn-dropdown-item>
+          <fn-dropdown-item data-value=20>20 seconds</fn-dropdown-item>
+          <fn-dropdown-item data-value=30>30 seconds</fn-dropdown-item>
+          <fn-dropdown-item data-value=60>1 minute</fn-dropdown-item>
+          <fn-dropdown-item data-value=300>5 minutes</fn-dropdown-item>
+          <fn-dropdown-item data-value=900>15 minutes</fn-dropdown-item>
+          <fn-dropdown-item data-value=1800>30 minutes</fn-dropdown-item>
+          <fn-dropdown-item data-value=3600>1 hour</fn-dropdown-item>
+          <fn-dropdown-item data-value=7200>2 hours</fn-dropdown-item>
+          <fn-dropdown-item data-value=21600>6 hours</fn-dropdown-item>
+          <fn-dropdown-item data-value=43200>12 hours</fn-dropdown-item>
+          <fn-dropdown-item data-value=86400>24 hours</fn-dropdown-item>
+        </fn-dropdown-items>
+      </fn-dropdown>
+      <b style="margin-left: 7px;">Step: </b>
+      <fn-dropdown class="inline" name='time_step'>
+        <fn-dropdown-items>
+          <fn-dropdown-item data-value=1>1 second</fn-dropdown-item>
+          <fn-dropdown-item data-value=5>5 seconds</fn-dropdown-item>
+          <fn-dropdown-item data-value=10>10 seconds</fn-dropdown-item>
+          <fn-dropdown-item data-value=20>20 seconds</fn-dropdown-item>
+          <fn-dropdown-item data-value=30>30 seconds</fn-dropdown-item>
+          <fn-dropdown-item data-value=60>1 minute</fn-dropdown-item>
+          <fn-dropdown-item data-value=300>5 minutes</fn-dropdown-item>
+          <fn-dropdown-item data-value=900>15 minutes</fn-dropdown-item>
+          <fn-dropdown-item data-value=1800>30 minutes</fn-dropdown-item>
+          <fn-dropdown-item data-value=3600>1 hour</fn-dropdown-item>
+          <fn-dropdown-item data-value=7200>2 hours</fn-dropdown-item>
+          <fn-dropdown-item data-value=21600>6 hours</fn-dropdown-item>
+          <fn-dropdown-item data-value=43200>12 hours</fn-dropdown-item>
+          <fn-dropdown-item data-value=86400>24 hours</fn-dropdown-item>
+        </fn-dropdown-items>
+      </fn-dropdown>
+
+      <div class="hidden inline" name="group_by">
+        <b style="margin-left: 7px;">Group By: </b>
+        <fn-dropdown class="inline checkbox">
+          <fn-dropdown-items>
+          </fn-dropdown-items>
+        </fn-dropdown>
+      </div>
+    </div>
+
+    <fn-button class="control_btn" data-size="tiny" style="float: right;">
+      <i class="fa fa-times"></i>
+    </fn-button>
+  </div>
+  <fn-tooltip class='tooltip_aggr'>
+    There's no time-window aggregation for the current rollup
+  </fn-tooltip>
+  <fn-tooltip data-pointer='right' class="control_tooltip">
+  </fn-tooltip>
+</template>
+
+<script type='text/javascript'>
+  var MetricControlComponent = function() {
+    this.createdCallback = function() {
+      var tpl = Fnord.getTemplate("fn-metric-control", "base");
+      this.appendChild(tpl);
+
+      var state = this.getAttribute('data-state');
+
+      if (state == "initialised" && typeof this.params == 'object') {
+        this.init(true);
+      } else if (state == 'select-metrc') {
+        //new metric_control that hasn't been intialised yet
+        this.init(false)
+      }
+    };
+
+    this.attributeChangedCallback = function(attr, old_val, new_val) {
+      if (attr == "data-state") {
+        if (new_val == "initialised" && typeof this.params == 'object') {
+          return this.init(true);
+        }
+
+        if (new_val == "select-metric") {
+          return this.init(false);
+        }
+      }
+
+      if (attr == 'data-index') {
+        this.setColorIndex();
+      }
+    };
+
+    this.handleAggregationDisplay = function() {
+      var base = this;
+      var elem_names = ["time_window", "time_step"];
+
+      elem_names.map(function(name) {
+        var elem = base.querySelector("fn-dropdown[name='" + name + "']");
+        if (base.params.aggr_fn == "value" ) {
+          elem.classList.add("disabled");
+        } else {
+          elem.classList.remove("disabled");
+        }
+      });
+    };
+
+    this.init = function(dataInitialised) {
+      if (!this.basicInit) {
+        this.basicInit = true;
+        this.setControlButton();
+      }
+
+      if (dataInitialised) {
+        this.handleControls();
+        this.handleAggregationDisplay();
+      }
+
+      if (this.hasAttribute('data-index')) {
+        this.setColorIndex();
+      }
+    };
+
+    this.setColorIndex = function() {
+      var index = this.getAttribute('data-index');
+      var header = this.querySelector(".header h3");
+      if (index == 0 || !header) {
+        return;
+      }
+
+      header.classList.add("color" + index % 6);
+    }
+
+    this.columnsReloaded = function() {
+      if (this.params.columns && this.params.columns.length > 0) {
+        this.handleGroupByControls();
+      }
+    };
+
+    this.setControlButton = function() {
+      if (this.getAttribute('data-index') == 0) {
+        this.setAddButton();
+      } else {
+        this.setRemoveButton();
+      }
+    };
+
+    this.setAddButton = function() {
+      var base = this;
+      var button = this.querySelector('.control_btn');
+      button.querySelector("i").classList.add("fa-plus");
+      button.addEventListener('fn-button-click', function() {
+        base.fireAddMetricEvent();
+      }, false);
+    };
+
+    this.setRemoveButton = function() {
+      var base = this;
+      var button = this.querySelector('.control_btn');
+
+      button.addEventListener('fn-button-click', function() {
+        base.fireRemoveMetricEvent();
+      }, false);
+    };
+
+    this.setHeader = function() {
+      this.querySelector("h3").innerHTML = this.params.name;
+    };
+
+    this.handleControls = function() {
+      var base = this;
+      this.setHeader();
+
+      var rollup = this.querySelector("fn-dropdown[name='rollup']");
+      rollup.setAttribute('data-preselected', this.params.aggr_fn);
+      rollup.setAttribute('data-resolved', 'resolved');
+
+      var time_window = this.querySelector("fn-dropdown[name='time_window']");
+      time_window.setAttribute('data-preselected', this.params.aggr_window);
+      time_window.setAttribute('data-resolved', 'resolved');
+
+      var time_step = this.querySelector("fn-dropdown[name='time_step']");
+      time_step.setAttribute('data-preselected', this.params.aggr_step);
+      time_step.setAttribute('data-resolved', 'resolved');
+
+      rollup.addEventListener("fn-dropdown-item-click", function(e) {
+        base.params.aggr_fn = e.srcElement.getAttribute('data-value');
+        base.handleAggregationDisplay();
+        base.attributeChangedEvent("aggr_fn");
+      }, false);
+
+      time_window.addEventListener("fn-dropdown-item-click", function(e) {
+        base.params.aggr_window = e.srcElement.getAttribute('data-value');
+        base.attributeChangedEvent("aggr_window");
+      }, false);
+
+      time_step.addEventListener("fn-dropdown-item-click", function(e) {
+        base.params.aggr_step = e.srcElement.getAttribute('data-value');
+        base.attributeChangedEvent("aggr_step");
+      }, false);
+
+    };
+
+    this.splitColumns = function(columns) {
+      if (columns.length == 0) {return [];}
+
+      return columns.split(",");
+    };
+
+    this.addToCSV = function(csv, value) {
+      if (csv.length == 0) {return value;}
+      //value already included
+      if (csv.indexOf(value) > - 1) {return csv;}
+
+      return (csv += "," + value);
+    };
+
+    this.removeFromCSV = function(csv, value) {
+      if (csv == value || csv.length == 0) {return "";}
+
+      var regex = new RegExp("," + value);
+      return (csv.replace(regex, ""));
+    };
+
+    this.handleGroupByControls = function() {
+      var base = this;
+      var parent_elem = this.querySelector("div[name='group_by']");
+      var dropdown = parent_elem.querySelector("fn-dropdown");
+      var dropdown_items = parent_elem.querySelector("fn-dropdown-items");
+      var columns = this.splitColumns(this.params.columns);
+      var group_by = this.splitColumns(this.params.group_by);
+
+      if (columns.length > 0 ) {
+        parent_elem.classList.remove("hidden");
+      }
+
+
+      columns.map(function(c) {
+        var item = document.createElement("fn-dropdown-item");
+        item.innerHTML = "<fn-checkbox></fn-checkbox>" + c;
+        item.setAttribute('data-value', c);
+
+        if (group_by.indexOf(c) > -1) {
+          item.setAttribute("data-selected", "selected");
+          item.querySelector("fn-checkbox").setAttribute('data-preselected', 'active');
+        }
+
+        dropdown_items.appendChild(item);
+      });
+
+      dropdown.setAttribute('data-resolved', 'resolved');
+
+      dropdown.addEventListener('fn-dropdown-item-click', function(e) {
+        base.params.group_by = base.addToCSV(
+            base.params.group_by, e.srcElement.getAttribute('data-value'));
+        base.attributeChangedEvent('group_by');
+      }, false);
+
+      dropdown.addEventListener('fn-dropdown-item-unselect', function(e) {
+          base.params.group_by = base.removeFromCSV(
+            base.params.group_by, e.srcElement.getAttribute('data-value'));
+          base.attributeChangedEvent('group_by');
+      }, false);
+
+    };
+
+    this.fireNewMetricEvent = function(name) {
+      var metricEvent = new CustomEvent(
+        'fn-metric-control-new-metric', {
+          'detail': {'name': name},
+          bubbles: true,
+          cancelable: true
+        }
+      );
+
+      this.dispatchEvent(metricEvent);
+    };
+
+    this.fireAddMetricEvent = function() {
+      this.dispatchEvent(new Event('fn-metric-control-add-metric'));
+    };
+
+    this.fireRemoveMetricEvent = function() {
+      this.dispatchEvent(new Event('fn-metric-control-remove-metric'));
+    };
+
+    this.attributeChangedEvent = function(attr) {
+      var attrEvent = new CustomEvent(
+        'fn-metric-control-attr-changed', {
+        "detail" : {"key": attr},
+        bubbels: true,
+        cancelable: true
+      });
+
+      this.dispatchEvent(attrEvent);
+    };
+  };
+
+  window.addEventListener("fn-ready", function() {
+    Fnord.registerComponent("fn-metric-control", MetricControlComponent);
+  }, false);
+</script>

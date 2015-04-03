@@ -1,0 +1,137 @@
+<!--
+  This file is part of the "FnordMetric" project
+    Copyright (c) 2014 Laura Schlimmer
+    Copyright (c) 2014 Paul Asmuth, Google Inc.
+
+  FnordMetric is free software: you can redistribute it and/or modify it under
+  the terms of the GNU General Public License v3.0. You should have received a
+  copy of the GNU General Public License along with this program. If not, see
+  <http://www.gnu.org/licenses/>.
+-->
+<template id='fn-date-time-selector-demo-base-tpl'>
+  <section>
+    <h1><i>Example 1 &raquo;</i> Basic with Default Values</h1>
+
+    <!--
+      Default values:
+        data-range: 900000 (15minutes)
+        date-until: Date.now()
+        data-precision: minutes
+    -->
+
+    <fn-date-time-selector data-resolved='resolved'>
+      <fn-date-time-selector-icon class='left'></fn-date-time-selector-icon>
+      <fn-dropdown class="inline">
+        <fn-dropdown-items>
+          <fn-dropdown-item data-value=300000>5 minutes</fn-dropdown-item>
+          <fn-dropdown-item data-value=900000>15 minutes</fn-dropdown-item>
+          <fn-dropdown-item data-value=1800000>30 minutes</fn-dropdown-item>
+          <fn-dropdown-item data-value=3600000>1 hour</fn-dropdown-item>
+          <fn-dropdown-item data-value=14400000>4 hours</fn-dropdown-item>
+          <fn-dropdown-item data-value=43200000>12 hours</fn-dropdown-item>
+          <fn-dropdown-item data-value=86400000>1 day</fn-dropdown-item>
+        </fn-dropdown-items>
+      </fn-dropdown>
+      <fn-date-time-selector-header></fn-date-time-selector-header>
+      <fn-date-time-selector-icon class='right'></fn-date-time-selector-icon>
+    </fn-date-time-selector>
+  </section>
+
+  <section>
+    <h1><i>Example 2 &raquo;</i> Selected Enddate and Time</h1>
+
+    <!-- DateTimeSelector returns timestamps in milliseconds but takes as input timestamps in seconds, too -->
+
+    <fn-date-time-selector data-range='3600000' data-resolved='resolved' data-until='1423060200'>
+      <fn-date-time-selector-icon class='left'></fn-date-time-selector-icon>
+      <fn-dropdown class="inline">
+        <fn-dropdown-items>
+          <fn-dropdown-item data-value=300000>5 minutes</fn-dropdown-item>
+          <fn-dropdown-item data-value=900000>15 minutes</fn-dropdown-item>
+          <fn-dropdown-item data-value=1800000>30 minutes</fn-dropdown-item>
+          <fn-dropdown-item data-value=3600000>1 hour</fn-dropdown-item>
+          <fn-dropdown-item data-value=14400000>4 hours</fn-dropdown-item>
+          <fn-dropdown-item data-value=43200000>12 hours</fn-dropdown-item>
+          <fn-dropdown-item data-value=86400000>1 day</fn-dropdown-item>
+        </fn-dropdown-items>
+      </fn-dropdown>
+      <fn-date-time-selector-header></fn-date-time-selector-header>
+      <fn-date-time-selector-icon class='right'></fn-date-time-selector-icon>
+    </fn-date-time-selector>
+  </section>
+
+  <section>
+    <h1><i>Example 3 &raquo;</i> UTC Offset</h1>
+
+    <!--
+      date-utc-offset takes the difference between UTC and the timezone that should be used in minutes
+      e.g. GMT+2 => data-utc-offset='-120'
+
+      If data-utc-offset isn't set all dates and times are displayed in (the browser's) local time
+    -->
+
+    <fn-date-time-selector data-range='3600000' data-resolved='resolved' data-until='1426596428505' data-utc-offset='-120'>
+      <fn-date-time-selector-icon class='left'></fn-date-time-selector-icon>
+      <fn-dropdown class="inline">
+        <fn-dropdown-items>
+          <fn-dropdown-item data-value=300000>5 minutes</fn-dropdown-item>
+          <fn-dropdown-item data-value=900000>15 minutes</fn-dropdown-item>
+          <fn-dropdown-item data-value=1800000>30 minutes</fn-dropdown-item>
+          <fn-dropdown-item data-value=3600000>1 hour</fn-dropdown-item>
+          <fn-dropdown-item data-value=14400000>4 hours</fn-dropdown-item>
+          <fn-dropdown-item data-value=43200000>12 hours</fn-dropdown-item>
+          <fn-dropdown-item data-value=86400000>1 day</fn-dropdown-item>
+        </fn-dropdown-items>
+      </fn-dropdown>
+      <fn-date-time-selector-header></fn-date-time-selector-header>
+      <fn-date-time-selector-icon class='right'></fn-date-time-selector-icon>
+    </fn-date-time-selector>
+  </section>
+
+  <section>
+    <h1><i>Example 4 &raquo;</i> Restricted Date Selection (here: past dates)</h1>
+
+    <!-- Dates after Date.now() aren't selectable and thus don't trigger any event -->
+    <!-- dat-selectable='future' is supoorted as well -->
+
+    <fn-date-time-selector data-range='3600000' data-resolved='resolved' data-selectable='past'>
+      <fn-date-time-selector-icon class='left'></fn-date-time-selector-icon>
+      <fn-dropdown class="inline">
+        <fn-dropdown-items>
+          <fn-dropdown-item data-value=300000>5 minutes</fn-dropdown-item>
+          <fn-dropdown-item data-value=900000>15 minutes</fn-dropdown-item>
+          <fn-dropdown-item data-value=1800000>30 minutes</fn-dropdown-item>
+          <fn-dropdown-item data-value=3600000>1 hour</fn-dropdown-item>
+          <fn-dropdown-item data-value=14400000>4 hours</fn-dropdown-item>
+          <fn-dropdown-item data-value=43200000>12 hours</fn-dropdown-item>
+          <fn-dropdown-item data-value=86400000>1 day</fn-dropdown-item>
+        </fn-dropdown-items>
+      </fn-dropdown>
+      <fn-date-time-selector-header></fn-date-time-selector-header>
+      <fn-date-time-selector-icon class='right'></fn-date-time-selector-icon>
+    </fn-date-time-selector>
+  </section>
+
+  <section>
+    <h1><i>Example 5 &raquo;</i> Time With Second Precision</h1>
+
+    <!-- Time Description is rendered as hh:mm:ss -->
+
+    <fn-date-time-selector  data-precision="second" data-resolved='resolved' data-until='1423060200'>
+      <fn-date-time-selector-icon class='left'></fn-date-time-selector-icon>
+      <fn-dropdown class="inline">
+        <fn-dropdown-items>
+          <fn-dropdown-item data-value=300000>5 minutes</fn-dropdown-item>
+          <fn-dropdown-item data-value=900000>15 minutes</fn-dropdown-item>
+          <fn-dropdown-item data-value=1800000>30 minutes</fn-dropdown-item>
+          <fn-dropdown-item data-value=3600000>1 hour</fn-dropdown-item>
+          <fn-dropdown-item data-value=14400000>4 hours</fn-dropdown-item>
+          <fn-dropdown-item data-value=43200000>12 hours</fn-dropdown-item>
+          <fn-dropdown-item data-value=86400000>1 day</fn-dropdown-item>
+        </fn-dropdown-items>
+      </fn-dropdown>
+      <fn-date-time-selector-header></fn-date-time-selector-header>
+      <fn-date-time-selector-icon class='right'></fn-date-time-selector-icon>
+    </fn-date-time-selector>
+  </section>
+</template>

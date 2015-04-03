@@ -1,0 +1,98 @@
+<!--
+  This file is part of the "FnordMetric" project
+    Copyright (c) 2014 Laura Schlimmer
+    Copyright (c) 2014 Paul Asmuth, Google Inc.
+
+  FnordMetric is free software: you can redistribute it and/or modify it under
+  the terms of the GNU General Public License v3.0. You should have received a
+  copy of the GNU General Public License along with this program. If not, see
+  <http://www.gnu.org/licenses/>
+-->
+<template id='fn-tabbar-base-tpl'>
+</template>
+
+<script type='text/javascript'>
+  var TabBarComponent = function() {
+    this.createdCallback = function() {
+
+      var active_tab = this.querySelector("fn-tab[data-active='active']");
+
+      if (active_tab == null) {
+        var tabs = this.querySelectorAll("fn-tab");
+        if (tabs && tabs[0]) {
+          tabs[0].setAttribute('data-active', 'active');
+          active_tab = tabs[0];
+        }
+      }
+
+      if (this.hasAttribute('data-content-attached')) {
+        var index = active_tab.getAttribute('data-index');
+        this.setContent(index);
+      }
+
+      if (this.hasAttribute('data-evenly-sized')) {
+        this.setTabWidth();
+      }
+
+      this.observeTabs();
+    };
+
+    this.setContent = function(index) {
+      var active_content = this.querySelector("fn-tab-content[data-active='active']");
+
+      if (active_content) {
+        active_content.removeAttribute('data-active');
+      }
+
+      var tab_content =
+        this.querySelector("fn-tab-content[data-index='" + index + "']");
+
+      if (tab_content) {
+        tab_content.setAttribute('data-active', 'active');
+      }
+    };
+
+    this.setTabWidth = function() {
+      var tabs = this.querySelectorAll("fn-tab");
+
+      if (tabs.length == 0) {
+        return;
+      }
+
+      var width = 100 / tabs.length;
+      for (var i = 0; i < tabs.length; i++) {
+        tabs[i].style.width = width + "%";
+      }
+    }
+
+    this.observeTabs = function() {
+      var base = this;
+      var tabs = this.querySelectorAll("fn-tab");
+      for (var i = 0; i < tabs.length; i++) {
+        tabs[i].addEventListener('click', function() {
+          var current_tab = base.querySelector("fn-tab[data-active='active']");
+          current_tab.removeAttribute("data-active");
+          this.setAttribute("data-active", "active");
+
+          if (base.hasAttribute('data-content-attached')) {
+            var index = this.getAttribute('data-index');
+            if (index) {
+              base.setContent(index);
+            }
+          }
+          base.fireClickTabEvent();
+        }, false);
+      }
+
+    }
+
+    this.fireClickTabEvent = function() {
+      this.dispatchEvent(new Event("fn-tabbar-click"));
+    };
+
+  };
+
+  window.addEventListener('fn-ready', function() {
+    var tabbar = Fnord.registerComponent("fn-tabbar", TabBarComponent);
+  }, false);
+</script>

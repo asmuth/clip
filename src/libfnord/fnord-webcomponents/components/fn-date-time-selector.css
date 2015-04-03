@@ -1,0 +1,106 @@
+fn-date-time-selector,
+.fn-date-time-selector {
+  display: inline-block;
+  height: 1em;
+  line-height: 1em;
+}
+
+fn-date-time-selector-icon,
+.fn-date-time-selector-icon {
+  display: inline-block;
+  backface-visibility: hidden;
+  font-weight: 400 !important;
+  font-style: normal;
+  text-align: center;
+  vertical-align: bottom;
+  font-size: 0.9em;
+}
+
+fn-date-time-selector-icon:hover,
+.fn-date-time-selector-icon:hover {
+  cursor: pointer;
+}
+
+fn-date-time-selector-icon.left:after {
+  font-family: FontAwesome;
+  content: "\f053"
+}
+
+fn-date-time-selector-icon.right:before,
+.fn-date-time-selector-icon.right:before {
+  font-family: FontAwesome;
+  content: "\f054";
+}
+
+fn-date-time-selector fn-dropdown,
+.fn-date-time-selector fn-dropdown {
+  margin: 0 0.5em 0 0.2em;
+  display: inline-block;
+}
+
+fn-date-time-selector-header,
+.fn-date-time-selector-header {
+  padding: 0;
+  box-sizing: border-box;
+  text-align: left;
+  display: inline-block;
+  font-weight: bold;
+  margin: 0 0.5em;
+  white-space: nowrap;
+}
+
+fn-date-time-selector-header:hover,
+.fn-date-time-selector-header:hover {
+  font-weight: bold;
+  cursor: pointer;
+}
+
+fn-date-time-selector-header:after,
+.fn-date-time-selector-header:after {
+  font-family: FontAwesome;
+  content: "\f0d7";
+  vertical-align: top;
+  display: inline-block;
+  line-height: inherit;
+  font-weight: 400;
+  font-style: normal;
+  text-align: center;
+  width: auto;
+  margin: 0 0 0 0.5em;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  vertical-align: middle;
+}
+
+fn-date-time-selector-widget,
+.fn-date-time-selector-widget {
+  display: none;
+  position: fixed;
+  background: #fff;
+  box-shadow: 0 1px 4px 0 rgba(0,0,0,.15);
+  border: 1px solid rgba(39,41,43,.15);
+  border-radius: 0 0 .2857rem .2857rem;
+  -webkit-transition: opacity .2s ease;
+  transition: opacity .2s ease;
+  z-index: 101;
+  padding: 0.5em;
+}
+
+fn-date-time-selector-widget[data-active],
+.fn-date-time-selector-widget[data-active],
+fn-date-time-selector-widget.active,
+.fn-date-time-selector-widget.active {
+  display: block;
+}
+
+fn-date-time-selector-widget fn-timeinput,
+.fn-date-time-selector-widget fn-timeinput {
+  float: none;
+  display:block;
+  margin-bottom: 0.5em;
+}
+
+fn-date-time-selector-widget fn-calendar,
+.fn-date-time-selector-widget fn-calendar{
+  float: none;
+}

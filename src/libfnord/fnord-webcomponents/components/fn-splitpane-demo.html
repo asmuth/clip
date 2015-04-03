@@ -1,0 +1,66 @@
+<!--
+  This file is part of the "FnordMetric" project
+    Copyright (c) 2014 Laura Schlimmer
+    Copyright (c) 2014 Paul Asmuth, Google Inc.
+
+  FnordMetric is free software: you can redistribute it and/or modify it under
+  the terms of the GNU General Public License v3.0. You should have received a
+  copy of the GNU General Public License along with this program. If not, see
+  <http://www.gnu.org/licenses/>.
+-->
+
+<template id="fn-splitpane-demo-base-tpl">
+
+  <section>
+    <!-- SplitPane with initial left width of 30% -->
+    <fn-button name='example1' style="float:right;">Change View</fn-button>
+    <h1><i>Example 1 &rsaquo;</i> SplitPane with initial width</h1>
+
+    <fn-splitpane name='example1' data-split-direction="vertical" data-split-position="30" style="height:400px;">
+      <fn-splitpane-left >
+        <div style="background:#3498db; height:100%;"></div>
+      </fn-splitpane-left>
+      <fn-splitpane-resizer></fn-splitpane-resizer>
+      <fn-splitpane-right>
+        <div style="background:#8e44ad; height:100%;"></div>
+      </fn-splitpane-right>
+    </fn-splitpane>
+
+    <!-- Change Splitpane Direction -->
+    <script type="text/javascript">
+      document.querySelector("fn-button[name='example1']").addEventListener(
+        "fn-button-click",
+        function() {
+          document.querySelector("fn-splitpane[name='example1']").toggleSplitDirection();
+        },
+        false);
+    </script>
+  </section>
+
+  <section>
+    <!-- SplitPane with min width and height -->
+    <fn-button name='example2' style="float:right;">Change View</fn-button>
+    <h1><i>Example 2 &rsaquo;</i> SplitPane with Minimum Height and Width</h1>
+
+    <fn-splitpane name='example2' data-split-direction="vertical" data-height="70" data-width="200" style="height:400px;">
+      <fn-splitpane-left >
+        <div style="background:#3498db; height:100%;"></div>
+      </fn-splitpane-left>
+      <fn-splitpane-resizer></fn-splitpane-resizer>
+      <fn-splitpane-right>
+        <div style="background:#8e44ad; height:100%;"></div>
+      </fn-splitpane-right>
+    </fn-splitpane>
+
+    <script type="text/javascript">
+      document.querySelector("fn-button[name='example2']").addEventListener(
+        "click",
+        function() {
+          document.querySelector("fn-splitpane[name='example2']").toggleSplitDirection();
+        },
+        false);
+    </script>
+
+  </section>
+
+</template>
