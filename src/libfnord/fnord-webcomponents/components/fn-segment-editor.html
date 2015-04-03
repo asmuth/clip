@@ -525,6 +525,11 @@
         .onclick = function() {
           _this.onSaveSegment();
       }
+
+      segment_select.querySelector("[data-action='cancel-segment']")
+        .onclick = function() {
+          _this.changeView("fn-segment-overview");
+      }
     };
 
     this.changeView = function(selector) {
