@@ -519,6 +519,7 @@
 
       segment_select.innerHTML = segment_tpl.innerHTML;
       this.changeView("fn-segment-select");
+      this.removeErrorMessages();
 
       segment_select.querySelector("[data-action='save-segment']")
         .onclick = function() {
