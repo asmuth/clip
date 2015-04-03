@@ -596,6 +596,8 @@
 
 
     this.fireNewSegmentEvent = function(segment) {
+      this.fireSegmentsChangedEvent();
+
       var ev = new CustomEvent('fn-segment-new', {
         'detail' : {'segment' : JSON.stringify(segment)},
         'bubbles': true,
@@ -606,6 +608,8 @@
     };
 
     this.fireRemoveSegmentEvent = function(name) {
+      this.fireSegmentsChangedEvent();
+
       var ev = new CustomEvent('fn-segment-remove', {
         'detail' : {'segment_name' : name},
         'bubbles': true,
@@ -616,12 +620,23 @@
     };
 
     this.fireEditSegmentEvent = function(old_segment, new_segment) {
+      this.fireSegmentsChangedEvent();
+
       var ev = new CustomEvent('fn-segment-edit', {
         'detail' : {
           'old_segment' : JSON.stringify(old_segment),
           'new_segment' : JSON.stringify(new_segment)
         },
         'bubbles': true,
+        'cancelable' : true
+      });
+
+      this.dispatchEvent(ev);
+    };
+
+    this.fireSegmentsChangedEvent = function() {
+      var ev = new CustomEvent('fn-segment-change', {
+        'bubbles' : true,
         'cancelable' : true
       });
 
