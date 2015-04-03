@@ -168,6 +168,19 @@
         valid = false;
 
         this.querySelector(".segment-active").classList.add("segment-error");
+      } else {
+
+        for (var i = 0; i < segment.selection.length; i++) {
+          var s = segment.selection[i];
+
+          if (s.key.length == 0 || s.value[0].length == 0) {
+            valid = false;
+
+            //FIXME proper error message text
+            this.querySelector(".segment-active").classList.add("segment-error");
+            break;
+          }
+        };
       }
 
       return valid;
