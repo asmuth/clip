@@ -41,7 +41,7 @@
             <fn-segment-header-title>Name</fn-segment-header-title>
             <input class='fn-input' data-segment-name />
 
-            <fn-segment-error-message>Please insert a name</fn-segment-error-message>
+            <fn-segment-error-message>Please insert a unique name</fn-segment-error-message>
           </fn-segment-header>
 
           <fn-segment-error-message>
@@ -153,6 +153,18 @@
       return this.availableColors[index % this.availableColors.length];
     };
 
+    this.segmentNameExists = function(name) {
+      var segments = JSON.parse(this.getAttribute('data-segments'));
+
+      for (var i = 0; i < segments.length; i++) {
+        if (segments[i].name == name) {
+          return true;
+        }
+      }
+
+      return false;
+    }
+
     /**
       * Checks if the segment has a name and at least one option
       * Marks missing elements
@@ -162,7 +174,7 @@
     this.validateSegment = function(segment) {
       var valid = true;
 
-      if (segment.name.length == 0) {
+      if (segment.name.length == 0 || this.segmentNameExists(segment.name)) {
         valid = false;
 
         this.querySelector(".segment-active fn-segment-header").classList
