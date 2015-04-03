@@ -108,6 +108,11 @@
           _this.showEditor();
       }
 
+      if (this.hasAttribute('data-segments')) {
+        this.renderSegments();
+        this.renderPreviewValues();
+      }
+
       this.renderSegmentOptions();
       this.handleViewVisibility();
     };
@@ -164,16 +169,11 @@
           .add("segment-error");
       }
 
-      if (segment.selection.length == 0) {
-        valid = false;
+      if (segment.rules.length > 0) {
+        for (var i = 0; i < segment.rules.length; i++) {
+          var s = segment.rules[i];
 
-        this.querySelector(".segment-active").classList.add("segment-error");
-      } else {
-
-        for (var i = 0; i < segment.selection.length; i++) {
-          var s = segment.selection[i];
-
-          if (s.key.length == 0 || s.value[0].length == 0) {
+          if (s.field.length == 0 || s.value[0].length == 0) {
             valid = false;
 
             //FIXME proper error message text
@@ -195,23 +195,33 @@
       }
     };
 
+    this.getSegmentKey = function(name) {
+      return name.toLowerCase().replace(/\s/g, "_");
+    }
+
     /**
       * Collects the segment parameters from the html elements
       *
       * @param {object HTMLElement} fn_segment
       * @return {object} segment
+      * @return {string} segment.key The key of the segment
       * @return {string} segment.name The name of the segment
-      * @return {Array[object]} segment.selection The selected options
+      * @return {Array[object]} segment.rules The selected options
+      * @return {string} segment.rules.field The rule field name
+      * @return {string} segment.rules.op The rule option (=matches)
+      * @return {Array[string]} segment.rules.value The rule values
       * @return {boolean} segment.removable
       * @return {boolean} segment.editable
       * @return {string} segment.color The segments hex or rgb(a) color
       */
     this.getSegmentSelection = function(fn_segment) {
       var options = fn_segment.querySelectorAll("fn-segment-option");
+      var name = fn_segment.querySelector("input[data-segment-name]").value;
 
       var segment = {
-        'name' : fn_segment.querySelector("input[data-segment-name]").value,
-        'selection' : []
+        'key' : this.getSegmentKey(name),
+        'name' : name,
+        'rules' : []
       };
 
       for (var i = 0; i < options.length; i++) {
@@ -222,8 +232,9 @@
 
         var option_elem = options[i].querySelector("[data-segment-option]");
 
-        segment.selection.push({
-          'key' : options[i].getAttribute('data-key'),
+        segment.rules.push({
+          'field' : options[i].getAttribute('data-key'),
+          'op' : 'matches',
           'value' : option_elem.getValue().split(",")
         });
       }
@@ -232,6 +243,7 @@
       segment.editable = this.isEditable(segment);
       segment.color = this.getSegmentColor(segment);
 
+      console.log(segment);
       return segment;
     };
 
@@ -288,7 +300,7 @@
       segments.forEach(function(s) {
         if (s.name == old_name) {
           s.name = segment.name;
-          s.selection = segment.selection;
+          s.rules = segment.rules;
         }
       });
 
@@ -360,13 +372,13 @@
     };
 
 
-    this.getHTMLForSegmentValues = function(selection) {
+    this.getHTMLForSegmentValues = function(rules) {
       var html = [];
 
-      selection.forEach(function(s) {
+      rules.forEach(function(rule) {
         html.push(
-          "<fn-segment-text-title>", s.key, ":",
-          "</fn-segment-text-title>", "<fn-segment-text-value>", s.value.join(", "),
+          "<fn-segment-text-title>", rule.field, ":",
+          "</fn-segment-text-title>", "<fn-segment-text-value>", rule.value.join(", "),
           "</fn-segment-text-value>"
         );
       });
@@ -389,7 +401,7 @@
         "<fn-segment-title>", segment.name, "</fn-segment-title>", "<fn-segment-values>"
       ];
 
-      html.push(this.getHTMLForSegmentValues(segment.selection));
+      html.push(this.getHTMLForSegmentValues(segment.rules));
       html.push("</fn-segment-values>");
 
       fn_segment.innerHTML = html.join("");
@@ -430,13 +442,13 @@
 
       fn_segment_edit.querySelector("input[data-segment-name]").value = segment.name;
 
-      //set option seletions
-      segment.selection.forEach(function(s) {
+      //set option rules
+      segment.rules.forEach(function(rule) {
         var option = fn_segment_edit.querySelector(
-          "fn-segment-option[data-key='" + s.key + "']");
+          "fn-segment-option[data-key='" + rule.field + "']");
 
         option.querySelector("fn-checkbox").setAttribute('data-active', 'active');
-        option.querySelector("[data-segment-option]").setValue(s.value);
+        option.querySelector("[data-segment-option]").setValue(rule.value);
       });
 
 

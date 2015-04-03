@@ -48,20 +48,22 @@
       var editor = document.getElementById('editor1');
       var segments = [
         {
+          'key' : 'french_mobile',
           'name' : 'French Mobile',
-          'selection' : [
-            {'key' : 'lang', 'value' : ['fr']},
-            {'key' : 'device_type', 'value' : ['mobile', 'tablet']},
+          'rules' : [
+            {'field' : 'lang', 'opt' : 'matches', 'value' : ['fr']},
+            {'field' : 'device_type', 'opt' : 'matches', 'value' : ['mobile', 'tablet']},
           ],
           'removable' : true,
           'editable' : true,
           'color' : '#4572a7'
         },
         {
+          'key' : 'german',
           'name' : 'German',
-          'selection' : [
-            {'key' : 'lang', 'value' : ['fr']},
-            {'key' : 'device_type', 'value' : ['mobile', 'tablet']},
+          'rules' : [
+            {'field' : 'lang', 'opt' : 'matches', 'value' : ['fr']},
+            {'field' : 'device_type', 'opt' : 'matches', 'value' : ['mobile', 'tablet']},
           ],
           'removable' : true,
           'editable' : true,
