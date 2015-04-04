@@ -176,7 +176,7 @@ configure_file(config.h.in config.h)
 
 if(ENABLE_TESTS)
   add_library(fnord SHARED ${FNORDMETRIC_SOURCES})
-  target_link_libraries(fnord m)
+  target_link_libraries(fnord m ${MYSQL_CLIENT_LIBS})
 
   add_executable(tests/test-sql stage/src/fnordmetric/sql/sql_test.cc)
   target_link_libraries(tests/test-sql fnord)
