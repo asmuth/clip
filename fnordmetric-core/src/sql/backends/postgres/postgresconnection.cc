@@ -24,13 +24,7 @@ std::unique_ptr<PostgresConnection> PostgresConnection::openConnection(
 }
 
 PostgresConnection::PostgresConnection() : postgres_(nullptr) {
-#ifdef FNORD_ENABLE_POSTGRES
-  //postgres_ = PQconnectdb(NULL);
-
-  //if (postgres_ == nullptr) {
-    //RAISE(kRuntimeError, "postgres_init() failed\n");
-  //}
-#else
+#ifndef FNORD_ENABLE_POSTGRES
   RAISE(kRuntimeError, "FnordMetric was compiled without libpostgresclient");
 #endif
 }
