@@ -48,6 +48,8 @@ Contributions
 
 + Laura Schlimmer (http://github.com/lauraschlimmer)
 + Henrik Muehe (http://github.com/henrik-muehe)
++ Philipp Bogensberger (http://github.com/bogensberger)
++ "Dolfly" (http://github.com/dolfly)
 + Christian Parpart (http://github.com/trapni)
 + Finn Zirngibl (https://github.com/finnomenon)
 + Simon Menke (http://github.com/fd)
