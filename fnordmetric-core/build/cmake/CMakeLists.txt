@@ -81,6 +81,9 @@ set(FNORDMETRIC_SOURCES
     stage/src/fnordmetric/sql/backends/mysql/mysqlbackend.cc
     stage/src/fnordmetric/sql/backends/mysql/mysqlconnection.cc
     stage/src/fnordmetric/sql/backends/mysql/mysqltableref.cc
+    stage/src/fnordmetric/sql/backends/postgres/postgresbackend.cc
+    stage/src/fnordmetric/sql/backends/postgres/postgresconnection.cc
+    stage/src/fnordmetric/sql/backends/postgres/postgrestableref.cc
     stage/src/fnordmetric/query/query.cc
     stage/src/fnordmetric/query/queryservice.cc
     stage/src/fnordmetric/sql/expressions/aggregate.cc
@@ -170,6 +173,15 @@ if(MYSQL_FOUND)
   target_link_libraries(fnordmetric-server ${MYSQL_CLIENT_LIBS})
 else()
   message("WARNING: libmysqlclient not found, FnordMetric will be compiled without MySQL support")
+endif()
+
+find_package(PostgreSQL)
+if(PostgreSQL_FOUND)
+  set(FNORD_ENABLE_POSTGRES true)
+  target_link_libraries(fnordmetric-cli ${PostgreSQL_LIBRARIES})
+  target_link_libraries(fnordmetric-server ${PostgreSQL_LIBRARIES})
+else()
+  message("WARNING: libpq not found, FnordMetric will be compiled without Postgres support")
 endif()
 
 configure_file(config.h.in config.h)
