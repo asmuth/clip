@@ -11,7 +11,7 @@
 <template id="fn-segment-editor-demo-base-tpl">
 
   <section>
-    <fn-segment-editor id='editor1' data-resolved>
+    <fn-segment-editor id='editor1' data-loading >
       <template name='fn-segment-options'>
         <fn-segment-option data-key='lang' data-title='Language'>
           <fn-dropdown class='input' data-resolved data-segment-option>
@@ -73,6 +73,10 @@
 
       editor.addSegments(JSON.stringify(segments));
       editor.availableColors = ["#4572a7", "#89a54e", "#aa4643", "#80699b"];
+
+      window.setTimeout(function() {
+        editor.setAttribute('data-resolved', 'resolved');
+      }, 2000);
     </script>
   </section>
 </template>

@@ -10,11 +10,14 @@
 -->
 
 <template id="fn-segment-editor-base-tpl">
-  <fn-segment-editor-field class='segment-clickable' class='icon' data-action='open-segment-editor' >
-    <fn-segment-editor-field-values></fn-segment-editor-field-values>
-    <fn-segment-add-icon class='segment-clickable' data-action='open-segment-editor'>
-    </fn-segment-add-icon>
-  </fn-segment-editor-field>
+  <fn-loader class='segment-editor-loader' data-loading>
+    <fn-segment-editor-field class='segment-clickable' class='icon' data-action='open-segment-editor' >
+      <fn-segment-editor-field-values></fn-segment-editor-field-values>
+      <fn-segment-add-icon class='segment-clickable' data-action='open-segment-editor'>
+      </fn-segment-add-icon>
+    </fn-segment-editor-field>
+  </fn-loader>
+
 
   <fn-modal-dimmer>
     <fn-modal>
@@ -93,16 +96,17 @@
       }
     };
 
-
     this.attributeChangedCallback = function(attr, old_val, new_val) {
       if (attr == 'data-resolved' && new_val == 'resolved') {
         this.init();
       }
     };
 
-
     this.init = function() {
       var _this = this;
+
+      this.querySelector("fn-loader").removeAttribute('data-loading');
+
       this.querySelector(
         "[data-action='open-segment-editor']").onclick = function() {
           _this.showEditor();
@@ -115,13 +119,6 @@
 
       this.renderSegmentOptions();
       this.handleViewVisibility();
-    };
-
-
-    this.attributeChangedCallback = function(attr, old_val, new_val) {
-      if (attr == 'data-resolved') {
-        this.renderSegmentOptions();
-      }
     };
 
     /**
@@ -255,7 +252,6 @@
       segment.editable = this.isEditable(segment);
       segment.color = this.getSegmentColor(segment);
 
-      console.log(segment);
       return segment;
     };
 

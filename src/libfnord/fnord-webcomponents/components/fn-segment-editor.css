@@ -229,3 +229,21 @@ fn-segment-option fn-checkbox ~ fn-dropdown fn-dropdown-header {
 fn-segment-option fn-checkbox[data-active] ~ fn-dropdown fn-dropdown-header {
   opacity: 1;
 }
+
+fn-loader.segment-editor-loader[data-loading] {
+  width: 150px;
+  height: 2.57142em;
+  padding: 1px 1px 0 1px;
+  margin: 0;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+}
+
+fn-loader.segment-editor-loader {
+  min-width: 150px;
+  height: 2.57142em;
+  border: none;
+}
+
+fn-loader.segment-editor-loader /deep/ .spinner {
+  height: 2em;
+}
