@@ -47,6 +47,7 @@ Contributions
 #### Individual Contributors to FnordMetric
 
 + Laura Schlimmer (http://github.com/lauraschlimmer)
++ Henrik Muehe (http://github.com/henrik-muehe)
 + Christian Parpart (http://github.com/trapni)
 + Finn Zirngibl (https://github.com/finnomenon)
 + Simon Menke (http://github.com/fd)
