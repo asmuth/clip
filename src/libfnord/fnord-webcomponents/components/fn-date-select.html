@@ -15,7 +15,7 @@
   <fn-date-select-widget>
     <fn-date-select-inner>
 
-      <fn-calendar-group data-selectabe='past' data-select='from'></fn-calendar-group>
+      <fn-calendar-group data-selectable='past' data-select='from'></fn-calendar-group>
 
       <fn-date-select-controls>
 
@@ -52,7 +52,6 @@
 <script type-'text/javascript'>
   var DateSelect = function() {
     this.createdCallback = function() {
-      console.log("date select");
       var tpl = Fnord.getTemplate('fn-date-select', 'base');
       this.appendChild(tpl);
 
@@ -69,18 +68,34 @@
 
     this.init = function() {
       var _this = this;
-      this.querySelector("fn-date-select-field").onclick = function() {
+
+      this.querySelector("fn-date-select-field").onclick = function(e) {
+        e.stopPropagation();
         _this.showWidget();
+      }
+
+      this.querySelector("fn-date-select-widget").onclick = function(e) {
+        e.stopPropagation();
       }
 
       var from = DateUtil.parseTimestamp(this.getAttribute('data-from'));
       var until = DateUtil.parseTimestamp(this.getAttribute('data-until'));
 
+      this.selection = {
+        'from' : from,
+        'until' : until,
+        'current_from' : 0,
+        'current_until' :0
+      };
 
       this.renderCalendarGroup(from, until);
       this.setRange(from, until);
+      this.setFieldValue(from, until);
       this.observeDropdown();
-
+      this.observeCalendar();
+      this.observeInputs();
+      this.observeButtons();
+      this.select = 'from';
     };
 
     this.getCalendarStart = function(until) {
@@ -103,20 +118,67 @@
         Fnord.appendLeadingZero(date.getMonth() + 1) + "-" +
         Fnord.appendLeadingZero(date.getDate())
       );
+    };
+
+    this.setFieldValue = function(from, until) {
+      this.querySelector("fn-date-select-field").innerHTML =
+        this.getDateDescription(from) + " - " +
+        this.getDateDescription(until);
     }
 
     this.setRange = function(from, until) {
       var range = Math.round(until / 1000) - Math.round(from / 1000);
+      var from_descr = this.getDateDescription(from);
+      var until_descr = this.getDateDescription(until);
+
+      this.selection.current_from = from;
+      this.selection.current_until = until;
+
+      this.updateRange(range);
+
+      this.querySelector("input[data-action='date-select-from']").value =
+       from_descr;
+
+      this.querySelector("input[data-action='date-select-until']").value =
+        until_descr;
+    };
+
+    this.onRangeSelect = function(range, renderCalendar) {
+      if (range != 'custom') {
+        var until = DateUtil.parseTimestamp(this.getAttribute('data-until'));
+        var from = until - (range * 1000);
+
+        this.setRange(from, until);
+
+        if (renderCalendar) {
+          this.renderCalendarGroup(from, until);
+        }
+        this.blurInputs();
+
+      }
+
+      this.setInputStyle(range);
+    };
+
+    this.setInputStyle = function(range) {
+      if (range == 'custom') {
+        this.brightenInputs();
+      } else {
+        this.blurInputs();
+      }
+    }
+
+    this.updateRange = function(range) {
       var dropdown = this.querySelector("fn-dropdown");
       var items = this.querySelectorAll("fn-dropdown-item");
+
+      this.querySelector("fn-dropdown-item[data-selected]")
+            .removeAttribute('data-selected');
 
       var set = false;
 
       for (var i = 0; i < items.length; i++) {
         if (items[i].getAttribute('data-value') == range) {
-          this.querySelector("fn-dropdown-item[data-selected]")
-            .removeAttribute('data-selected');
-
           items[i].setAttribute('data-selected', 'selected');
           set = true;
           break;
@@ -126,15 +188,11 @@
       if (!set) {
         this.querySelector("fn-dropdown-item[data-value='custom']")
           .setAttribute('data-selected', 'selected');
+        range ='custom';
       }
+
       dropdown.setHeaderValue();
-
-      this.querySelector("input[data-action='date-select-from']").value =
-        this.getDateDescription(from);
-
-      this.querySelector("input[data-action='date-select-until']").value =
-        this.getDateDescription(until);
-
+      this.setInputStyle(range);
     };
 
     this.blurInputs = function() {
@@ -153,33 +211,57 @@
       }
     };
 
-    this.highlightInput = function(select) {
+    this.setSelect = function(select, timestamp) {
       var active_input = this.querySelector("input.date-select-highlight");
       var input = this.querySelector(
         "input[data-action='date-select-" + select + "']");
+      var calendar = this.querySelector("fn-calendar-group");
 
       if (active_input) {
         active_input.classList.remove("date-select-highlight");
       }
 
       input.classList.add("date-select-highlight");
-    }
 
-    this.onRangeSelect = function(range) {
-      if (range != 'custom') {
-        var until = DateUtil.parseTimestamp(this.getAttribute('data-until'));
-        var from = until - (range * 1000);
+      this.select = select;
+      calendar.setAttribute('data-select', select);
 
-        this.setRange(from, until);
-        this.renderCalendarGroup(from, until);
-        this.blurInputs();
-        
-
-      } else {
-        this.brightenInputs();
+      if (timestamp) {
+        if (select == 'from') {
+          calendar.setAttribute('data-until', timestamp);
+        } else {
+          calendar.setAttribute('data-from', timestamp);
+        }
       }
 
-      this.highlightInput('from');
+      calendar.render();
+    };
+
+    this.reset = function() {
+      this.setRange(this.selection.from, this.selection.until);
+      this.renderCalendarGroup(this.selection.from, this.selection.until);
+      this.toggleSelect('from');
+    }
+
+    this.onDateSelect = function(timestamp) {
+      var from;
+      var until;
+
+      if (this.select == 'from') {
+
+        this.setSelect('until', timestamp);
+
+        until = DateUtil.parseTimestamp(this.getAttribute('data-until'));
+        from = DateUtil.parseTimestamp(timestamp);
+
+      } else {
+        this.setSelect('from', timestamp);
+
+        until = DateUtil.parseTimestamp(timestamp);
+        from = DateUtil.parseTimestamp(this.getAttribute('data-from'));
+
+      }
+      this.setRange(from, until);
     }
 
     this.observeDropdown = function() {
@@ -188,15 +270,121 @@
       this.querySelector("fn-dropdown")
         .addEventListener('fn-dropdown-item-click', function(e) {
           var target = e.target || e.srcElement;
-          _this.onRangeSelect(target.getAttribute('data-value'));
+          _this.onRangeSelect(target.getAttribute('data-value'), true);
+          _this.setSelect('from');
         },
       false);
+    };
+
+    this.toggleSelect = function(new_select) {
+      var calendar = this.querySelector("fn-calendar-group");
+
+      if (!new_select) {
+        new_select = (this.select == 'from')? 'until' : 'from';
+      }
+
+      this.select = new_select;
+
+      calendar.setAttribute('data-select', new_select);
+      calendar.render(calendar.firstDate.timestamp);
+
+      this.highlightInput();
+    }
+
+    this.highlightInput = function() {
+      if (this.select == 'from') {
+        this.querySelector(
+          "input[data-action='date-select-from']").classList.add(
+            "date-select-highlight");
+
+        this.querySelector(
+          "input[data-action='date-select-until']").classList.remove(
+            "date-select-highlight");
+      } else {
+        this.querySelector(
+          "input[data-action='date-select-from']").classList.remove(
+            "date-select-highlight");
+
+        this.querySelector(
+          "input[data-action='date-select-until']").classList.add(
+            "date-select-highlight");
+      }
+    };
+
+    this.observeInputs = function() {
+      var _this = this;
+      var input_from = this.querySelector("input[data-action='date-select-from']");
+      var input_until = this.querySelector("input[data-action='date-select-until']");
+
+      input_from.onclick = function() {
+        _this.toggleSelect('from');
+      }
+
+      input_until.onclick = function() {
+        _this.toggleSelect('until');
+      }
+
+    }
+
+    this.observeCalendar = function() {
+      var _this = this;
+      this.querySelector("fn-calendar-group")
+        .addEventListener('fn-calendar-group-select', function(e) {
+          _this.onDateSelect(e.detail.timestamp);
+        },
+      false);
+    };
+
+    this.onApply = function() {
+      this.selection.from = this.selection.current_from;
+      this.selection.until = this.selection.current_until;
+
+
+      this.setAttribute('data-from', this.selection.from);
+      this.setAttribute('data-until', this.selection.until);
+
+      this.fireSelectEvent();
+      this.closeWidget();
+      this.setFieldValue(this.selection.from, this.selection.until);
+    }
+
+    this.observeButtons = function() {
+      var _this = this;
+
+      this.querySelector("fn-button[data-action='date-select-apply']")
+        .onclick = function() {
+          _this.onApply();
+      }
+
+      this.querySelector("fn-button[data-action='date-select-cancel']")
+        .onclick = function() {
+          _this.reset();
+          _this.closeWidget();
+      }
+
     }
 
     this.showWidget = function() {
-      this.querySelector("fn-date-select-widget")
-        .setAttribute('data-active', 'active');
+      this.setAttribute('data-active', 'active');
     };
+
+    this.closeWidget = function() {
+      this.removeAttribute('data-active');
+    }
+
+    this.onDocumentClick = function() {
+      this.closeWidget();
+    };
+
+    this.fireSelectEvent = function() {
+      var ev = new CustomEvent('fn-date-select-selection', {
+        'detail' : {'from' : this.selection.from, 'until' : this.selection.until},
+        'bubbles' : true,
+        'cancelable' : true
+      });
+
+      this.dispatchEvent(ev);
+    }
   };
 
   window.addEventListener('fn-ready', function() {

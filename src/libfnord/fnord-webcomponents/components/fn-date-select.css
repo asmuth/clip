@@ -26,7 +26,7 @@ fn-date-select-widget {
   padding: 0.5em;
 }
 
-fn-date-select-widget[data-active] {
+fn-date-select[data-active] fn-date-select-widget {
   display: block;
 }
 
