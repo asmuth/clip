@@ -102,6 +102,7 @@
       }
     };
 
+
     this.init = function() {
       var _this = this;
 
@@ -117,8 +118,30 @@
         this.renderPreviewValues();
       }
 
+      this.querySelector("fn-segment-select").onclick = function() {
+        _this.closeActiveItems.bind(this)();
+      }
+
+      this.querySelector("fn-segment-edit").onclick = function() {
+        _this.closeActiveItems.bind(this)();
+      }
+
       this.renderSegmentOptions();
       this.handleViewVisibility();
+    };
+
+
+    /**
+      * Close open Items (e.g. dropdowns) on editor click
+      */
+    this.closeActiveItems = function() {
+      var active_items = this.querySelectorAll("[data-active]");
+
+      for (var i = 0; i < active_items.length; i++) {
+        if (typeof active_items[i].onDocumentClick == 'function') {
+          active_items[i].onDocumentClick();
+        }
+      }
     };
 
     /**
@@ -168,10 +191,10 @@
       *
       * @return {boolean}
       */
-    this.validateSegment = function(segment) {
+    this.validateSegment = function(segment, isNew) {
       var valid = true;
 
-      if (segment.name.length == 0 || this.segmentNameExists(segment.name)) {
+      if (segment.name.length == 0 || (isNew && this.segmentNameExists(segment.name))) {
         valid = false;
 
         this.querySelector(".segment-active fn-segment-header").classList
@@ -182,7 +205,7 @@
         for (var i = 0; i < segment.rules.length; i++) {
           var s = segment.rules[i];
 
-          if (s.field.length == 0 || s.value[0].length == 0) {
+          if (s.field.length == 0 || s.values[0].length == 0) {
             valid = false;
 
             //FIXME proper error message text
@@ -218,7 +241,7 @@
       * @return {Array[object]} segment.rules The selected options
       * @return {string} segment.rules.field The rule field name
       * @return {string} segment.rules.op The rule option (=matches)
-      * @return {Array[string]} segment.rules.value The rule values
+      * @return {Array[string]} segment.rules.values The rule values
       * @return {boolean} segment.removable
       * @return {boolean} segment.editable
       * @return {string} segment.color The segments hex or rgb(a) color
@@ -244,7 +267,7 @@
         segment.rules.push({
           'field' : options[i].getAttribute('data-key'),
           'op' : 'matches',
-          'value' : option_elem.getValue().split(",")
+          'values' : option_elem.getValue().split(",")
         });
       }
 
@@ -263,7 +286,7 @@
       var fn_segment_select = this.querySelector("fn-segment-select");
       var segment = this.getSegmentSelection(fn_segment_select);
 
-      if (!this.validateSegment(segment)) {
+      if (!this.validateSegment(segment, true)) {
         return;
       }
 
@@ -386,7 +409,7 @@
       rules.forEach(function(rule) {
         html.push(
           "<fn-segment-text-title>", rule.field, ":",
-          "</fn-segment-text-title>", "<fn-segment-text-value>", rule.value.join(", "),
+          "</fn-segment-text-title>", "<fn-segment-text-value>", rule.values.join(", "),
           "</fn-segment-text-value>"
         );
       });
@@ -414,13 +437,15 @@
 
       fn_segment.innerHTML = html.join("");
 
-      if (segment.removable) {
+      //LATER
+      if (segment.removable || true) {
         var icon = document.createElement("fn-segment-remove-icon");
         fn_segment.appendChild(icon);
         _this.observeRemovableSegment(icon, segment.name);
       }
 
-      if (segment.editable) {
+      //LATER
+      if (segment.editable || true) {
         var icon = document.createElement("fn-segment-edit-icon");
         fn_segment.appendChild(icon);
         _this.observeEditableSegment(icon, fn_segment, segment);
@@ -456,19 +481,20 @@
           "fn-segment-option[data-key='" + rule.field + "']");
 
         option.querySelector("fn-checkbox").setAttribute('data-active', 'active');
-        option.querySelector("[data-segment-option]").setValue(rule.value);
+        option.querySelector("[data-segment-option]").setValue(rule.values);
       });
 
 
       fn_segment_edit.querySelector("[data-action='replace-segment']")
-        .onclick = function() {
+        .onclick = function(e) {
 
+          e.stopPropagation();
           var edited_segment = _this.getSegmentSelection(fn_segment_edit);
           _this.removeErrorMessages();
 
-          if (_this.validateSegment(edited_segment)) {
-            _this.fireEditSegmentEvent(segment, edited_segment);
+          if (_this.validateSegment(edited_segment, false)) {
             _this.editSegment(segment.name, edited_segment);
+            _this.fireEditSegmentEvent(segment, edited_segment);
             _this.changeView("fn-segment-overview");
           }
         }
@@ -555,12 +581,14 @@
       this.removeErrorMessages();
 
       segment_select.querySelector("[data-action='save-segment']")
-        .onclick = function() {
+        .onclick = function(e) {
+          e.stopPropagation();
           _this.onSaveSegment();
       }
 
       segment_select.querySelector("[data-action='cancel-segment']")
-        .onclick = function() {
+        .onclick = function(e) {
+          e.stopPropagation();
           _this.changeView("fn-segment-overview");
       }
     };
@@ -581,13 +609,15 @@
       var cancel_btns = this.querySelectorAll("[data-action='cancel-segment']");
       var _this = this;
 
-      add_btn.onclick = function() {
+      add_btn.onclick = function(e) {
+        e.stopPropagation();
         _this.showSegmentSelect();
       }
 
 
       for (var i = 0; i < cancel_btns.length; i++) {
-        cancel_btns[i].onclick = function() {
+        cancel_btns[i].onclick = function(e) {
+          e.stopPropagation();
           _this.changeView("fn-segment-overview");
         }
       }
@@ -609,7 +639,8 @@
     this.observeEditableSegment = function(icon, fn_segment, segment) {
       var _this = this;
 
-      icon.addEventListener('click', function() {
+      icon.addEventListener('click', function(e) {
+        e.stopPropagation();
         _this.renderEditSegment(fn_segment, segment);
       }, false);
     };
