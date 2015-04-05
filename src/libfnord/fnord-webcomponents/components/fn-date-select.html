@@ -34,9 +34,9 @@
         <div style='clear: both'></div>
 
         <fn-date-select-container>
-          <input class='fn-input fn-date-select-highlight' readonly data-action='date-select_from' />
+          <input class='fn-input date-select-highlight' readonly data-action='date-select-from' />
           <fn-date-select-separator>&#45;</fn-date-select-separator>
-          <input class='fn-input' readonly data-action='date-select_until' />
+          <input class='fn-input' readonly data-action='date-select-until' />
         </fn-date-select-container>
 
         <fn-button data-action='date-select-cancel'>Cancel</fn-button>
@@ -79,6 +79,7 @@
 
       this.renderCalendarGroup(from, until);
       this.setRange(from, until);
+      this.observeDropdown();
 
     };
 
@@ -95,10 +96,20 @@
       calendar.render();
     };
 
+    this.getDateDescription = function(timestamp) {
+      var date = new Date(timestamp);
+      return (
+        date.getFullYear() + "-" +
+        Fnord.appendLeadingZero(date.getMonth() + 1) + "-" +
+        Fnord.appendLeadingZero(date.getDate())
+      );
+    }
+
     this.setRange = function(from, until) {
       var range = Math.round(until / 1000) - Math.round(from / 1000);
       var dropdown = this.querySelector("fn-dropdown");
       var items = this.querySelectorAll("fn-dropdown-item");
+
       var set = false;
 
       for (var i = 0; i < items.length; i++) {
@@ -118,10 +129,73 @@
       }
       dropdown.setHeaderValue();
 
+      this.querySelector("input[data-action='date-select-from']").value =
+        this.getDateDescription(from);
+
+      this.querySelector("input[data-action='date-select-until']").value =
+        this.getDateDescription(until);
+
+    };
+
+    this.blurInputs = function() {
+      var inputs = this.querySelectorAll("input.date-select-active");
+
+      for (var i = 0; i < inputs.length; i++) {
+        inputs[i].classList.remove('date-select-active');
+      }
+    };
+
+    this.brightenInputs = function() {
+      var inputs = this.querySelectorAll("input");
+
+      for (var i = 0; i < inputs.length; i++) {
+        inputs[i].classList.add('date-select-active');
+      }
+    };
+
+    this.highlightInput = function(select) {
+      var active_input = this.querySelector("input.date-select-highlight");
+      var input = this.querySelector(
+        "input[data-action='date-select-" + select + "']");
+
+      if (active_input) {
+        active_input.classList.remove("date-select-highlight");
+      }
+
+      input.classList.add("date-select-highlight");
+    }
+
+    this.onRangeSelect = function(range) {
+      if (range != 'custom') {
+        var until = DateUtil.parseTimestamp(this.getAttribute('data-until'));
+        var from = until - (range * 1000);
+
+        this.setRange(from, until);
+        this.renderCalendarGroup(from, until);
+        this.blurInputs();
+        
+
+      } else {
+        this.brightenInputs();
+      }
+
+      this.highlightInput('from');
+    }
+
+    this.observeDropdown = function() {
+      var _this = this;
+
+      this.querySelector("fn-dropdown")
+        .addEventListener('fn-dropdown-item-click', function(e) {
+          var target = e.target || e.srcElement;
+          _this.onRangeSelect(target.getAttribute('data-value'));
+        },
+      false);
     }
 
     this.showWidget = function() {
-      this.querySelector("fn-date-select-widget").setAttribute('data-active', 'active');
+      this.querySelector("fn-date-select-widget")
+        .setAttribute('data-active', 'active');
     };
   };
 

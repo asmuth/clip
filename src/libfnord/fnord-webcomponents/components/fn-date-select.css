@@ -69,7 +69,15 @@ fn-date-select-container input.fn-input {
   cursor: pointer;
   line-height: 1.3em;
   padding: 0.5em 1em;
-  float: left
+  float: left;
+}
+
+fn-date-select-container input.fn-input.date-select-active {
+  opacity: 1;
+}
+
+fn-date-select-container input.fn-input.date-select-highlight {
+  border: 2px solid rgba(0, 0, 0, 0.3);
 }
 
 fn-date-select-separator {
