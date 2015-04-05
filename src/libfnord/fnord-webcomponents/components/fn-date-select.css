@@ -1,0 +1,85 @@
+fn-date-select-field {
+  display: inline-block;
+  line-height: 1.3em;
+  padding: 0.5em 1em;
+  margin: 0;
+  -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
+  text-align: left;
+  background: #ffffff;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  color: rgba(0, 0, 0, 0.8);
+  border-radius: 0.2857rem;
+  box-shadow: none;
+  cursor: pointer;
+}
+
+fn-date-select-widget {
+  display: none;
+  position: fixed;
+  background: #fff;
+  box-shadow: 0 1px 4px 0 rgba(0,0,0,.15);
+  border: 1px solid rgba(39,41,43,.15);
+  border-radius: 0 0 .2857rem .2857rem;
+  -webkit-transition: opacity .2s ease;
+  transition: opacity .2s ease;
+  z-index: 101;
+  padding: 0.5em;
+}
+
+fn-date-select-widget[data-active] {
+  display: block;
+}
+
+fn-date-select-inner {
+  display: table-row;
+}
+
+fn-date-select-inner fn-calendar-group {
+  display: table-cell;
+}
+
+fn-date-select-controls {
+  display: table-cell;
+  vertical-align: top;
+  padding: 5px;
+}
+
+fn-date-select-input-header {
+  margin-top: 30px;
+  float: left;
+  margin-bottom: 5px;
+}
+
+fn-date-select-controls fn-dropdown {
+  float: left;
+  margin-left: 5px;
+  margin-top: 20px;
+  display: inline-block;
+}
+
+fn-date-select-container {
+  margin: 15px 0 55px;
+  display: block;
+  overflow: auto;
+}
+
+fn-date-select-container input.fn-input {
+  opacity: 0.5;
+  width: 90px;
+  cursor: pointer;
+  line-height: 1.3em;
+  padding: 0.5em 1em;
+  float: left
+}
+
+fn-date-select-separator {
+  display: inline-block;
+  float: left;
+  margin: 10px 5px;
+}
+
+fn-date-select-controls fn-button {
+  float: right;
+  padding-left: 1em;
+  padding-right: 1em;
+}

@@ -102,7 +102,8 @@ fn-menu-item[data-active],
 /*--------------
  Menu Section
 ---------------*/
-fn-menu-section {
+fn-menu-section,
+.fn-menu-section {
   position: relative;
   display:block;
   padding: .78571em .95em;
@@ -171,7 +172,8 @@ fn-menu-title,
  Menu Section Items
 --------------------*/
 fn-menu-section fn-menu-item,
-.fn-menu-section fn-menu-item {
+fn-menu-section .fn-menu-item,
+.fn-menu-section .fn-menu-item {
   background: 0 0;
   padding: .5rem 1rem;
   font-size: .9rem;
@@ -179,7 +181,8 @@ fn-menu-section fn-menu-item,
 }
 
 fn-menu-section fn-menu-item[data-active],
-.fn-menu-section fn-menu-item[data-active] {
+fn-menu-section .fn-menu-item[data-active],
+.fn-menu-section .fn-menu-item[data-active] {
   color: rgba(0,0,0,.8);
   font-weight: 500;
   background: transparent;
@@ -187,14 +190,16 @@ fn-menu-section fn-menu-item[data-active],
 }
 
 fn-menu-section fn-menu-item:hover,
-.fn-menu-section fn-menu-item:hover {
+fn-menu-section .fn-menu-item:hover,
+.fn-menu-section .fn-menu-item:hover {
   color: rgba(0, 0, 0, 0.85);
   cursor: pointer;
   background: #fff;
 }
 
 fn-menu-section fn-menu-item::before,
-.fn-menu-section fn-menu-item::before {
+fn-menu-section .fn-menu-item::before,
+.fn-menu-section .fn-menu-item::before {
   height: 0px;
 }
 
