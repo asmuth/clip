@@ -15,12 +15,20 @@
   <fn-date-select-widget>
     <fn-date-select-inner>
 
-      <fn-calendar-group></fn-calendar-group>
+      <fn-calendar-group data-selectabe='past' data-select='from'></fn-calendar-group>
 
       <fn-date-select-controls>
 
         <fn-date-select-input-header>Date Range</fn-date-select-input-header>
-        <fn-dropdown class='input'>
+        <fn-dropdown class='input' data-resolved>
+          <!-- Later: render dropdown-items from template -->
+          <fn-dropdown-items>
+            <fn-dropdown-item data-selected data-value='custom'>Custom</fn-dropdown-item>
+            <fn-dropdown-item data-value=0>Today</fn-dropdown-item>
+            <fn-dropdown-item data-value='86400'>Yesterday</fn-dropdown-item>
+            <fn-dropdown-item data-value='604800'>Last 7 Days</fn-dropdown-item>
+            <fn-dropdown-item data-value='2592000'>Last 30 Days</fn-dropdown-item>
+          </fn-dropdown-items>
         </fn-dropdown>
 
         <div style='clear: both'></div>
@@ -48,19 +56,73 @@
       var tpl = Fnord.getTemplate('fn-date-select', 'base');
       this.appendChild(tpl);
 
-      this.init();
-    }
+      if (this.hasAttribute('data-resolved')) {
+        this.init();
+      }
+    };
+
+    this.attributeChangedCallback = function(attr, old_val, new_val) {
+      if (attr == 'data-resolved') {
+        this.init();
+      }
+    };
 
     this.init = function() {
       var _this = this;
       this.querySelector("fn-date-select-field").onclick = function() {
         _this.showWidget();
       }
+
+      var from = DateUtil.parseTimestamp(this.getAttribute('data-from'));
+      var until = DateUtil.parseTimestamp(this.getAttribute('data-until'));
+
+
+      this.renderCalendarGroup(from, until);
+      this.setRange(from, until);
+
+    };
+
+    this.getCalendarStart = function(until) {
+      var date = new Date(until);
+      return DateUtil.getMonthTimestamp(date.getMonth(), date.getFullYear(), -2);
+    }
+
+    this.renderCalendarGroup = function(from, until) {
+      var calendar = this.querySelector("fn-calendar-group");
+      calendar.setAttribute('data-from', from);
+      calendar.setAttribute('data-until', until);
+      calendar.setAttribute('data-timestamp', this.getCalendarStart(until));
+      calendar.render();
+    };
+
+    this.setRange = function(from, until) {
+      var range = Math.round(until / 1000) - Math.round(from / 1000);
+      var dropdown = this.querySelector("fn-dropdown");
+      var items = this.querySelectorAll("fn-dropdown-item");
+      var set = false;
+
+      for (var i = 0; i < items.length; i++) {
+        if (items[i].getAttribute('data-value') == range) {
+          this.querySelector("fn-dropdown-item[data-selected]")
+            .removeAttribute('data-selected');
+
+          items[i].setAttribute('data-selected', 'selected');
+          set = true;
+          break;
+        }
+      }
+
+      if (!set) {
+        this.querySelector("fn-dropdown-item[data-value='custom']")
+          .setAttribute('data-selected', 'selected');
+      }
+      dropdown.setHeaderValue();
+
     }
 
     this.showWidget = function() {
       this.querySelector("fn-date-select-widget").setAttribute('data-active', 'active');
-    }
+    };
   };
 
   window.addEventListener('fn-ready', function() {
