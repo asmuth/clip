@@ -38,11 +38,6 @@
     background-color: #d95c5c!important;
   }
 
-  fn-progressbar[data-state] /deep/ .bar::after {
-    animation: none!important;
-    -webkit-animation: none!important;
-  }
-
   fn-progressbar[data-state='success']  /deep/ .label {
     color : #356e36;
   }
@@ -55,6 +50,9 @@
     color : #d95c5c;
   }
 
+  fn-progressbar[data-state='unknown']  /deep/ .bar {
+    width: 0;
+  }
 </style>
 <template id='fn-progressbar-base-tpl'>
   <style type='text/css'>
@@ -180,20 +178,23 @@
     };
 
     this.renderDataLabel = function() {
-      var label_elem = document.createElement("div");
-      label_elem.className = "label";
+      var label_elem = this.shadowRoot.querySelector(".label");
+      if (!label_elem) {
+        label_elem = document.createElement("div");
+        label_elem.className = "label";
+        this.shadowRoot.appendChild(label_elem);
+      }
+
       label_elem.innerHTML = this.getAttribute('data-label');
-      this.shadowRoot.appendChild(label_elem);
     };
 
     this.updateProgressBar = function(progress) {
       var bar_elem = this.shadowRoot.querySelector(".bar");
       bar_elem.style.width = progress + "%";
 
-
       if (!(this.getAttribute('data-show-progress') == "off")) {
         var progress_elem = this.shadowRoot.querySelector(".progress");
-        progress_elem.innerHTML = progress + "%";
+        progress_elem.innerHTML = parseFloat(progress).toFixed(1) + "%";
       }
     };
   };

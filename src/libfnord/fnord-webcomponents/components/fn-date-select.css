@@ -88,6 +88,7 @@ fn-date-select-separator {
 
 fn-date-select-controls fn-button {
   float: right;
+  font-size: 1em;
   padding-left: 1em;
   padding-right: 1em;
 }

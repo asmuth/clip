@@ -377,7 +377,7 @@
     };
 
     this.fireSelectEvent = function() {
-      var ev = new CustomEvent('fn-date-select-selection', {
+      var ev = new CustomEvent('fn-date-select-apply', {
         'detail' : {'from' : this.selection.from, 'until' : this.selection.until},
         'bubbles' : true,
         'cancelable' : true
