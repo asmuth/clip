@@ -61,7 +61,12 @@ DateUtil.getStartOfMonth = function(timestamp, offset) {
   if (offset) {
 
     for (var i = 1; i <= Math.abs(offset); i++) {
-      var date = new Date(timestamp - DateUtil.millisPerDay);
+      if (offset < 0 ) {
+        date = new Date(timestamp  - (timestamp % DateUtil.millisPerDay) - DateUtil.millisPerDay);
+      } else {
+        date = new Date(timestamp  - (timestamp % DateUtil.millisPerDay));
+      }
+
       var daysInMonth = this.daysInMonth(date.getMonth() + 1, date.getFullYear());
 
       if (offset < 0) {
@@ -117,6 +122,18 @@ DateUtil.isNow = function(timestamp, precision) {
 DateUtil.isInstanceOfDate = function(date) {
   return (date !== null && typeof date === 'object' && date instanceof Date)
 };
+
+DateUtil.getFirstWeekdayOfMonth = function(timestamp) {
+  var first_day = new Date(DateUtil.getStartOfMonth(timestamp)).getDay();
+
+  if (first_day == 0) {
+    return 6;
+  }
+
+  return first_day - 1;
+};
+
+
 
 // @date Javascript Date instance or timestamp
 DateUtil.getDateObject = function(date, precision, advanced) {
@@ -232,6 +249,12 @@ DateUtil.parseTimestamp = function(timestamp) {
 
   return timestamp;
 };
+
+DateUtil.getDaysInMonth = function(timestamp) {
+  var date = new Date(timestamp);
+
+  return this.daysInMonth(date.getMonth() + 1, date.getYear());
+}
 
 DateUtil.daysInMonth = function(month, year) {
   if (month == 2) {

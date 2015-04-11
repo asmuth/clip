@@ -211,7 +211,6 @@
       this.init();
     }
 
-
     this.getStartTimestamp = function() {
       var timestamp = (this.hasAttribute('data-timestamp')) ?
         this.getAttribute('data-timestamp') : this.getAttribute('data-from');
@@ -230,17 +229,17 @@
       this.shadowRoot.getElementById('prev_month_picker').addEventListener('click',
         function() {
           _this.render(
-            DateUtil.getMonthTimestamp(_this.firstDate.month, _this.firstDate.year, -1));
+            DateUtil.getStartOfMonth(_this.firstDate, -1));
         },
       false);
 
       this.shadowRoot.getElementById('next_month_picker').addEventListener('click',
         function() {
+          //console.log(_this.lastDate);
           _this.render(
-            DateUtil.getMonthTimestamp(_this.lastDate.month, _this.lastDate.year, -1));
+            DateUtil.getStartOfMonth(_this.firstDate, 1));
         },
       false);
-
     }
 
     this.render = function(date) {
@@ -248,33 +247,33 @@
         date = this.getStartTimestamp();
       }
 
-      var date0 = DateUtil.getDateObject(date, 'date', true);
-      var date1 = DateUtil.getDateObject(
-        DateUtil.getMonthTimestamp(date0.month, date0.year, 1), 'date', true);
-      var date2 = DateUtil.getDateObject(
-        DateUtil.getMonthTimestamp(date0.month, date0.year, 2), 'date', true);
+      var date_0 = DateUtil.getStartOfMonth(date, 0);
+      var date_1 = DateUtil.getStartOfMonth(date, 1);
+      var date_2 = DateUtil.getStartOfMonth(date, 2);
 
-      this.firstDate = date0;
-      this.lastDate = date2;
+      this.firstDate = date_0;
+      this.lastDate = date_2;
 
-      this.renderMonthHeaders(date0, date1, date2);
+      this.renderMonthHeaders([date_0, date_1, date_2]);
 
-      this.renderWeeks(0, date0);
-      this.renderWeeks(1, date1);
-      this.renderWeeks(2, date2);
+      this.renderWeeks(0, date_0);
+      this.renderWeeks(1, date_1);
+      this.renderWeeks(2, date_2);
     }
 
-    this.renderMonthHeaders = function(date0, date1, date2) {
+    this.renderMonthHeaders = function(dates) {
       var headers = this.shadowRoot.querySelectorAll(".month_header td");
 
-      headers[0].innerHTML = DateUtil.humanMonth[date0.month] + " " + date0.year;
-      headers[1].innerHTML = DateUtil.humanMonth[date1.month] + " " + date1.year;
-      headers[2].innerHTML = DateUtil.humanMonth[date2.month] + " " + date2.year;
-
+      for (var i = 0; i < dates.length; i++) {
+        var date = new Date(dates[i]);
+        headers[i].innerHTML =
+          DateUtil.humanMonth[date.getMonth()] + " " + date.getFullYear();
+      }
     };
 
     this.renderWeeks = function(id, date) {
       var current_date = this.renderFirstWeek(id, date);
+      var num_days = DateUtil.getDaysInMonth(date);
 
       for (var week = 1; week < 6; week++) {
         var tr_elem = this.shadowRoot.getElementById(id + "_week" + week);
@@ -282,27 +281,25 @@
 
         for (var day = 0; day < 7; day++) {
           //all days of current month are rendered
-          if (current_date > date.num_days) {
+          if (current_date > num_days) {
             return this.renderLastWeeks(day, week, tr_elem, id, date);
           }
 
           tr_elem.appendChild(
-            this.renderDayElem(current_date, date.month_timestamp, true));
+            this.renderDayElem(current_date, date, true));
 
           current_date++;
         }
       }
 
-    }
+    };
 
     this.renderFirstWeek = function(id, date) {
       var preview = this.hasAttribute('data-preview');
-      var prev_month =
-        DateUtil.getMonthTimestamp(date.month, date.year, -1);
+      var prev_month = DateUtil.getStartOfMonth(date, -1);
       var prev_dates = this.datesOfPrevMonth(prev_month, date);
       var current_date = 1;
       var tr_elem = this.shadowRoot.getElementById(id + "_week0");
-
 
       tr_elem.innerHTML = '';
 
@@ -315,7 +312,8 @@
       //render first days of current month
       for (day = prev_dates.length; day < 7; day ++) {
         tr_elem.appendChild(
-          this.renderDayElem(current_date, date.month_timestamp, true));
+          this.renderDayElem(current_date, date, true));
+
         current_date++;
       }
 
@@ -367,8 +365,7 @@
       //inidcates whether days of next months should be displayed or not
       var preview = this.hasAttribute('data-preview');
 
-      var next_month =
-        DateUtil.getMonthTimestamp(date.month, date.year, 1);
+      var next_month = DateUtil.getStartOfMonth(date, 1);
       var current_date = 1;
 
       //add for remaining weekdays of week days of next month
@@ -471,25 +468,21 @@
     }
 
     //timestamp -> beginning of last month
-    this.datesOfPrevMonth = function(timestamp, date) {
+    this.datesOfPrevMonth = function(last_month, this_month) {
       var dates = [];
 
-      if (date.first_day == 0) {
-        return dates;
-      }
-
-      var new_date = new Date(timestamp);
+      var new_date = new Date(last_month);
       var num_days = DateUtil.daysInMonth(new_date.getMonth() + 1, new_date.getYear());
+      var first_day = DateUtil.getFirstWeekdayOfMonth(this_month);
 
-      for (var i = date.first_day - 1; i >= 0; i--) {
+      for (var i = first_day - 1; i >= 0; i--) {
         dates.push(num_days - i);
       }
 
       return dates;
     };
 
-
-  }
+  };
 
   window.addEventListener('fn-ready', function() {
     Fnord.registerComponent('fn-calendar-group', CalendarGroup);
