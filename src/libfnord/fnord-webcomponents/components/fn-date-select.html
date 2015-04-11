@@ -93,17 +93,37 @@
       };
 
       this.editing = {
-        'from' : null,
-        'until' : null
+        'from' : from,
+        'until' : until
       };
 
       this.renderCalendar(from, until);
       this.renderRangeDropdown();
       this.setRangeFields(from, until);
+      this.setSelectedRange(from, until);
+
+      this.observeRangeDropdown();
+      /*this.observeCalendar();
+      this.observeRangeFiels();
+      this.observeButtons();*/
     };
 
 
+    this.setSelectedRange = function(from, until) {
+      var range = ((until - from) in this.selectableRanges) ?
+        until - from : 'custom';
 
+      var active_item = this.querySelector("fn-dropdown-item[data-selected]");
+
+      if (active_item) {
+        active_item.removeAttribute('data-selected');
+      }
+
+      this.querySelector("fn-dropdown-item[data-value='" + range + "']")
+        .setAttribute('data-selected', 'selected');
+
+      this.querySelector("fn-dropdown").setHeaderValue();
+    }
 
     /**
       * Set State and Content
@@ -117,24 +137,23 @@
       until_field.value = this.getDateDescription(until);
 
       if (range) {
+
         from_field.classList.remove('date-select-active');
         until_field.classList.remove('date-select-active');
       } else {
         //custom
-        from_field.classList.add('date-select-active');
-        until_field.classList.add('date-select-active');
+        this.brightenRangeFields();
       }
     };
 
-    this.getDateDescription = function(timestamp) {
-      var date = new Date(timestamp);
-      return (
-        date.getFullYear() + "-" +
-        Fnord.appendLeadingZero(date.getMonth() + 1) + "-" +
-        Fnord.appendLeadingZero(date.getDate())
-      );
-    };
 
+    this.brightenRangeFields = function() {
+      var inputs = this.querySelectorAll("input");
+
+      for (var i = 0; i < inputs.length; i++) {
+        inputs[i].classList.add('date-select-active');
+      }
+    };
 
 
 
@@ -152,6 +171,8 @@
       this.querySelector("fn-dropdown")
         .setAttribute('data-resolved', 'resolved');
     }
+
+
 
     this.renderCalendar = function(from, until) {
       var calendar = this.querySelector("fn-calendar-group");
@@ -173,6 +194,50 @@
         this.setAttribute('data-active', 'active');
       }
     };
+
+    this.getDateDescription = function(timestamp) {
+      var date = new Date(timestamp);
+      return (
+        date.getFullYear() + "-" +
+        Fnord.appendLeadingZero(date.getMonth() + 1) + "-" +
+        Fnord.appendLeadingZero(date.getDate())
+      );
+    };
+
+
+    /***************** Observe Controls ***********************/
+
+    this.onRangeDropdownSelect = function(range) {
+      if (range == 'custom') {
+        return this.brightenRangeFields();
+      }
+
+      this.editing.until = DateUtil.getStartOfDay(new Date().getTime());
+      this.editing.from = this.editing.until - range;
+
+      //yesterday
+      if (range == 86400000) {
+        this.editing.until = this.editing.from;
+      }
+
+      this.setRangeFields(this.editing.from, this.editing.until);
+      this.renderCalendar(this.editing.from, this.editing.until);
+    }
+
+
+    this.observeRangeDropdown = function() {
+      var _this = this;
+
+      
+      this.querySelector("fn-dropdown")
+        .addEventListener('fn-dropdown-item-click', function(e) {
+          var target = e.target || e.srcElement;
+
+          _this.onRangeDropdownSelect(target.getAttribute('data-value'));
+          //_this.setSelect('from');*/
+        },
+      false);
+    }
 
   };
 
