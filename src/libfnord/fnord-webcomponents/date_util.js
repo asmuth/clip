@@ -35,6 +35,47 @@ DateUtil.humanMonth =  [
 ];
 
 
+/**
+  * Returns the timestamp at midnight of the given timestamp
+  *
+  * @param {number} timestamp Milliseconds Timestamp
+  */
+DateUtil.getStartOfDay = function(timestamp) {
+  return (timestamp - (timestamp % DateUtil.millisPerDay));
+}
+
+
+/**
+  * Return timestamp at 00:00 at the first day of the month or x months later or earlier
+  *
+  * @param {number} timestamp
+  * @offset {number} number of months earlier (< 0) or later (> 0)
+  */
+DateUtil.getStartOfMonth = function(timestamp, offset) {
+  var timestamp = this.getStartOfDay(timestamp);
+  var date = new Date(timestamp);
+
+  //start of current month
+  timestamp = timestamp - ((date.getDate() - 1)  * DateUtil.millisPerDay);
+
+  if (offset) {
+
+    for (var i = 1; i <= Math.abs(offset); i++) {
+      var date = new Date(timestamp - DateUtil.millisPerDay);
+      var daysInMonth = this.daysInMonth(date.getMonth() + 1, date.getFullYear());
+
+      if (offset < 0) {
+        timestamp = timestamp - (daysInMonth * DateUtil.millisPerDay);
+      } else {
+        timestamp = timestamp + (daysInMonth * DateUtil.millisPerDay);
+      }
+    }
+  }
+
+  return timestamp;
+}
+
+
 // @date DateObject as returned by DateUtil.getDateObject
 DateUtil.getDateTimeDescr = function(date) {
   if (DateUtil.isNow(date.timestamp, date.precision)) {
