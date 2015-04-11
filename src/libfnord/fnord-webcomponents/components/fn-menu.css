@@ -7,11 +7,11 @@
 fn-menu,
 .fn-menu {
   display: block;
-  margin: 1rem 0rem;
+  margin: 1em 0em;
   background: #ffffff;
   font-weight: normal;
   box-shadow: 0px 0px 0px 1px rgba(39, 41, 43, 0.15), 0px 1px 2px 0 rgba(0, 0, 0, 0.05);
-  border-radius: 0.2857rem;
+  border-radius: 0.2857em;
   overflow-x: hidden;
   overflow-y: auto;
 }
@@ -27,13 +27,13 @@ fn-menu::after,
 
 fn-menu:first-child,
 .fn-menu:first-child {
-  margin-top: 0rem;
+  margin-top: 0em;
   border-top:none;
 }
 
 fn-menu:last-child,
 .fn-menu:last-child{
-  margin-bottom: 0rem;
+  margin-bottom: 0em;
 }
 
 /*--------------
@@ -63,7 +63,7 @@ fn-menu-item,
           user-select: none;
   -webkit-transition: opacity 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
           transition: opacity 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
-  font-size: 1rem;
+  font-size: 1em;
   line-height: 1.3;
   font-weight: 500;
 }
@@ -111,12 +111,12 @@ fn-menu-section,
 
 fn-menu-section:first-child,
 .fn-menu-section:first-child {
-  border-radius: 0.2857rem 0.2857rem 0px 0px;
+  border-radius: 0.2857em 0.2857em 0px 0px;
 }
 
 fn-menu-section:last-child,
 .fn-menu-section:last-child {
-  border-radius: 0px 0px 0.2857rem 0.2857rem;
+  border-radius: 0px 0px 0.2857em 0.2857em;
 }
 
 fn-menu-section::before,
@@ -144,7 +144,7 @@ fn-menu-title,
   padding-bottom: 4px;
   line-height: 1.3;
   font-weight: 500;
-  font-size: 1rem;
+  font-size: 1em;
   background: none;
   display: block;
   height: auto!important;
@@ -175,8 +175,8 @@ fn-menu-section fn-menu-item,
 fn-menu-section .fn-menu-item,
 .fn-menu-section .fn-menu-item {
   background: 0 0;
-  padding: .5rem 1rem;
-  font-size: .9rem;
+  padding: .5em 1em;
+  font-size: .9em;
   color: rgba(0,0,0,.5);
 }
 
@@ -202,6 +202,30 @@ fn-menu-section .fn-menu-item::before,
 .fn-menu-section .fn-menu-item::before {
   height: 0px;
 }
+
+/*--------------------
+  Subsection
+---------------------*/
+fn-menu-subsection,
+.fn-menu-subsection {
+  display: block;
+  padding: .5em 1em;
+  position: relative;
+}
+
+fn-menu-subsection fn-menu-title,
+.fn-menu-subsection .fn-menu-title,
+.fn-menu-subsection fn-menu-title {
+  font-size: 0.95em;
+  color: rgba(0,0,0,.7);
+}
+
+fn-menu-title + fn-menu-subsection,
+.fn-menu-title + .fn-menu-subsection,
+fn-menu-title + .fn-menu-subsection{
+  margin-top: .3em;
+}
+
 
 /*--------------------
  Accordion Menu Section
@@ -235,7 +259,7 @@ fn-menu[data-option='accordion'] fn-menu-title:hover,
 
 fn-menu[data-option='accordion'] fn-menu-section fn-menu-item,
 .fn-menu[data-option='accordion'] .fn-menu-section .fn-menu-item{
-  padding: .5rem 1rem .5rem 2rem;
+  padding: .5em 1em .5em 2em;
 }
 
 ul.menu li.submenu[data-option='accordion'] > ul {
