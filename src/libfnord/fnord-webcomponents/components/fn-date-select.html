@@ -199,12 +199,14 @@
 
 
 
-    this.renderCalendar = function(from, until) {
+    this.renderCalendar = function(from, until, calendar_start) {
       var calendar = this.querySelector("fn-calendar-group");
+      var start = (typeof calendar_start !== 'undefined') ?
+        calendar_start : this.getCalendarStart(from, until);
+
       calendar.setAttribute('data-from', from);
       calendar.setAttribute('data-until', until);
-      console.log(this.getCalendarStart(from, until));
-      calendar.setAttribute('data-timestamp', this.getCalendarStart(from, until));
+      calendar.setAttribute('data-timestamp', start);
       calendar.setAttribute('data-select', this.editing.select);
       calendar.render();
     };
@@ -302,7 +304,10 @@
       this.brightenRangeFields();
       this.highlightRangeField();
       this.setSelectedRange();
-      this.renderCalendar(this.editing.from, this.editing.until);
+
+      this.renderCalendar(
+        this.editing.from, this.editing.until,
+        this.querySelector("fn-calendar-group").firstDate.timestamp);
     };
 
     this.observeRangeFields = function() {
