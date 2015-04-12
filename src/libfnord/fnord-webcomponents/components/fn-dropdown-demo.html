@@ -49,7 +49,7 @@
     <!-- Header Elem doesn't have to be a selectable item
          It is displayed if no item is selected
     -->
-    <fn-dropdown data-resolved class="input below">
+    <fn-dropdown data-resolved class="input">
       <fn-dropdown-header>Advanced</fn-dropdown-header>
       <fn-dropdown-items>
         <fn-dropdown-item>Inverted</fn-dropdown-item>
@@ -57,15 +57,6 @@
       </fn-dropdown-items>
     </fn-dropdown>
     <br />
-
-    <!-- Compact -->
-    <fn-dropdown data-resolved class="input compact">
-      <fn-dropdown-items>
-        <fn-dropdown-item>&#10003; Unread</fn-dropdown-item>
-        <fn-dropdown-item>&#10003; Promotions</fn-dropdown-item>
-        <fn-dropdown-item>&#10003; Updates</fn-dropdown-item>
-      </fn-dropdown-items>
-    </fn-dropdown>
 
 
     <!-- Inline Dropdown -->
@@ -80,6 +71,22 @@
         </fn-dropdown-items>
       </fn-dropdown>
     </span>
+
+    <!-- To make the list scrollable set a max-height for fn-dropdown-items -->
+    <h3><i>Example 5 &raquo;</i> Scrollable</h3>
+    <fn-dropdown data-resolved class='input' >
+      <fn-dropdown-items style='max-height: 150px;'>
+        <fn-dropdown-item>Books</fn-dropdown-item>
+        <fn-dropdown-item>Audible</fn-dropdown-item>
+        <fn-dropdown-item>Movies</fn-dropdown-item>
+        <fn-dropdown-item>TV</fn-dropdown-item>
+        <fn-dropdown-item>Music</fn-dropdown-item>
+        <fn-dropdown-item>Games</fn-dropdown-item>
+        <fn-dropdown-item>Electronics</fn-dropdown-item>
+        <fn-dropdown-item>Computers</fn-dropdown-item>
+      </fn-dropdown-items>
+    </fn-dropdown>
+
   </section>
 
   <section>

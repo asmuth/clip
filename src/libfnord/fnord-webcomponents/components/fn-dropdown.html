@@ -340,12 +340,14 @@
     /*********************** Key Navigation **********************************/
     this.onKeyDown = function(e) {
       var input = this.querySelector("fn-input");
+      var visibleScrollbar = this.visibleScrollbar();
+
       switch (e.keyCode) {
         case 38:
-          this.keyNavigation('up');
+          this.keyNavigation('up', visibleScrollbar);
           break;
         case 40:
-          this.keyNavigation('down');
+          this.keyNavigation('down', visibleScrollbar);
           break;
         case 13:
           this.onItemClick(this.querySelector("fn-dropdown-item.hover"), true);
@@ -367,13 +369,20 @@
       };
 
       elem.addEventListener('keydown', this.keydown_handler, false);
-    }
+    };
 
     this.unsetKeyNavigation = function(elem) {
       elem.removeEventListener('keydown', this.keydown_handler, false);
-    }
+    };
 
-    this.keyNavigation = function(direction) {
+    this.visibleScrollbar = function() {
+      var items = this.querySelector("fn-dropdown-items");
+
+      return items.scrollHeight > items.offsetHeight;
+    };
+
+
+    this.keyNavigation = function(direction, visibleScrollbar) {
       var hover_elem = this.querySelector("fn-dropdown-item.hover");
       var ref_elem;
       var elem = null;
@@ -393,15 +402,48 @@
 
       ref_elem = hover_elem;
       for (var i = 0; i < items.length; i++) {
+
+        //down
         if (direction == 'down') {
           elem = ref_elem.nextElementSibling;
+
+          //wrap around and mark first item
           if (!elem) {
             elem = items[0];
+
+            if (visibleScrollbar) {
+              var d_items = this.querySelector("fn-dropdown-items");
+              d_items.scrollTop = 0;
+            }
+
+          } else {
+
+            if (visibleScrollbar) {
+              var d_items = this.querySelector("fn-dropdown-items");
+              d_items.scrollTop = d_items.scrollTop + (d_items.offsetHeight / items.length);
+            }
           }
+
+        //up
         } else {
           elem = ref_elem.previousElementSibling;
+
+          //wrap around and mark last item
           if (!elem) {
-            return;
+            elem = items[items.length - 1];
+
+            if (visibleScrollbar) {
+              var d_items = this.querySelector("fn-dropdown-items");
+              d_items.scrollTop = d_items.scrollHeight;
+            }
+
+          } else {
+
+            if (visibleScrollbar) {
+              var d_items = this.querySelector("fn-dropdown-items");
+              d_items.scrollTop = d_items.scrollTop - (d_items.offsetHeight / items.length);
+            }
+
           }
         }
 
