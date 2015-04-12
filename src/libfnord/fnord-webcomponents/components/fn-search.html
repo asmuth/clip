@@ -40,11 +40,11 @@
             break;
           //Up Arrow
           case 38:
-            base.keyNavigation('up', false);
+            base.keyNavigation('up', base.visibleScrollbar());
             break;
           //Down Arrow
           case 40:
-            base.keyNavigation('down', true);
+            base.keyNavigation('down', base.visibleScrollbar());
             break;
           //Shift
           case 16:
@@ -99,15 +99,58 @@
       }
     };
 
-    this.keyNavigation = function(direction, takeFirstItem) {
+    this.visibleScrollbar = function() {
+      var ul = this.querySelector("ul");
+
+      return ul.scrollHeight > ul.offsetHeight;
+    }
+
+    this.keyNavigation = function(direction, visibleScrollbar) {
       var active_elem = this.getActiveListElem();
       var new_elem;
+      var elems = this.querySelectorAll("li");
 
       if (active_elem) {
+
         if (direction == 'down') {
           new_elem = active_elem.nextElementSibling;
+
+          if (!new_elem) {
+            //first elem
+            new_elem = elems[0];
+
+            if (visibleScrollbar) {
+              var ul = this.querySelector("ul");
+              ul.scrollTop = 0;
+            }
+
+          } else {
+
+            if (visibleScrollbar) {
+              var ul = this.querySelector("ul");
+              ul.scrollTop = ul.scrollTop + (ul.offsetHeight / elems.length);
+            }
+          }
+
         } else {
           new_elem = active_elem.previousElementSibling;
+
+          if (!new_elem) {
+            //last elem
+            new_elem = elems[elems.length - 1];
+
+            if (visibleScrollbar) {
+              var ul = this.querySelector("ul");
+              ul.scrollTop = ul.scrollHeight;
+            }
+
+          } else {
+
+            if (visibleScrollbar) {
+              var ul = this.querySelector("ul");
+              ul.scrollTop = ul.scrollTop - (ul.offsetHeight / elems.length);
+            }
+          }
         }
 
         if (!new_elem) {
@@ -116,10 +159,9 @@
 
         active_elem.classList.remove('hover');
 
-      } else if (takeFirstItem) {
-        new_elem = this.querySelector("li");
       } else {
-        return;
+        //first elem
+        new_elem = elems[0];
       }
 
       new_elem.classList.add('hover');
