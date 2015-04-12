@@ -53,15 +53,11 @@
 
           default:
             var value = this.getValue();
-            if (value.length >= base.getMinLength() && value.length != value_length) {
-
+            if (value.length >= base.getMinLength()) {
               base.fireAutocompleteEvent(value);
-
             } else {
               base.closeDropdown();
             }
-
-            value_length = value.length;
             break;
         }
       }, false);
