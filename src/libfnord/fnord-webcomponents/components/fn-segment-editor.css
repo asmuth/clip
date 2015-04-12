@@ -1,3 +1,7 @@
+/*************************
+  Segment Editor Field
+*************************/
+
 fn-segment-editor-field {
   display: inline-block;
   text-align: left;
@@ -50,6 +54,30 @@ fn-segment-editor-field fn-segment-add-icon {
   float: right;
 }
 
+/*********************
+  Field Loader
+*********************/
+fn-loader.segment-editor-loader[data-loading] {
+  width: 150px;
+  height: 2.57142em;
+  padding: 1px 1px 0 1px;
+  margin: 0;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+}
+
+fn-loader.segment-editor-loader {
+  min-width: 150px;
+  height: 2.57142em;
+  border: none;
+}
+
+fn-loader.segment-editor-loader /deep/ .spinner {
+  height: 2em;
+}
+
+/*******************
+  Segment Views
+*******************/
 fn-segment-overview,
 fn-segment-select,
 fn-segment-edit {
@@ -70,6 +98,47 @@ fn-segment-edit.segment-active {
   cursor: pointer;
 }
 
+/****************
+  Segments
+****************/
+fn-segments {
+  display: block;
+}
+
+fn-segments:empty {
+  height: 4.3em;
+}
+
+fn-segment {
+  border-top: 1px solid rgba(39, 41, 43, 0.15);
+}
+
+fn-segment:first-child {
+  border-top: none;
+}
+
+/*******************
+  Content
+*******************/
+fn-segment-title {
+  font-weight: 500;
+  display: inline-block;
+  margin-right: 1em;
+}
+
+fn-segment-text-value {
+  display: inline-block;
+  margin: 0 10px 0 0;
+}
+
+fn-segment-text-title {
+  display: inline-block;
+  margin: 0 2px 0 0;
+}
+
+/*****************
+  Segment Header
+*****************/
 fn-segment-header,
 .fn-segment-header {
   display: block;
@@ -101,14 +170,21 @@ fn-segment-header input.fn-input,
   font-weight: normal;
 }
 
-fn-segments {
-  display: block;
+fn-segment-header.segment-error fn-segment-error-message {
+  margin-top: 0.8em;
+  margin-left: 5px;
+  padding: 0;
+  text-align: left;
+  display: inline-block;
 }
 
-fn-segments:empty {
-  height: 4.3em;
+.segment-error fn-segment-header:not(.segment-error) fn-segment-error-message {
+  display: none;
 }
 
+/******************
+  Segment Option
+******************/
 fn-segment,
 fn-segment-option {
   display: block;
@@ -117,29 +193,40 @@ fn-segment-option {
   background-color: #fff;
 }
 
-fn-segment {
-  border-top: 1px solid rgba(39, 41, 43, 0.15);
+fn-segment-option {
+  height: 5.4em;
 }
 
-fn-segment:first-child {
-  border-top: none;
+fn-segment-option fn-segment-title,
+fn-segment-option > fn-checkbox,
+fn-segment-option fn-dropdown {
+  display: block;
+  float: left;
 }
 
-fn-segment-title {
-  font-weight: 500;
-  display: inline-block;
-  margin-right: 1em;
+fn-segment-option fn-segment-title {
+  margin-top: .65em;
 }
 
-fn-segment-text-title {
-  display: inline-block;
-  margin: 0 2px 0 0;
+fn-segment-option > fn-checkbox {
+  margin-top: .8em;
 }
 
-fn-segment-text-value {
-  display: inline-block;
-  margin: 0 10px 0 0;
+fn-segment-option fn-checkbox ~ fn-dropdown fn-dropdown-header {
+  opacity: 0.6;
 }
+
+fn-segment-option fn-checkbox[data-active] ~ fn-dropdown fn-dropdown-header {
+  opacity: 1;
+}
+
+fn-checkbox + fn-segment-title {
+  margin-left: 5px;
+}
+
+/********************
+  Icons
+********************/
 
 fn-segment-add-icon,
 fn-segment-edit-icon,
@@ -182,6 +269,9 @@ fn-segment-edit-icon:after {
   content: "\f044";
 }
 
+/******************
+  Footer
+******************/
 fn-segment-footer {
   display:block;
   padding: 0.7em 2em;
@@ -194,9 +284,9 @@ fn-segment-footer fn-button {
   font-size: 0.9em;
 }
 
-fn-checkbox + fn-segment-title {
-  margin-left: 5px;
-}
+/*******************
+  Error Message
+*******************/
 
 fn-segment-error-message {
   display: none;
@@ -205,45 +295,7 @@ fn-segment-error-message {
   font-style: italic;
 }
 
-fn-segment-header.segment-error fn-segment-error-message {
-  margin-top: 0.8em;
-  margin-left: 5px;
-  padding: 0;
-  text-align: left;
-  display: inline-block;
-}
-
-.segment-error fn-segment-header:not(.segment-error) fn-segment-error-message {
-  display: none;
-}
-
 .segment-error fn-segment-error-message {
   display: block;
   padding: 1em 2em 0em;
-}
-
-fn-segment-option fn-checkbox ~ fn-dropdown fn-dropdown-header {
-  opacity: 0.6;
-}
-
-fn-segment-option fn-checkbox[data-active] ~ fn-dropdown fn-dropdown-header {
-  opacity: 1;
-}
-
-fn-loader.segment-editor-loader[data-loading] {
-  width: 150px;
-  height: 2.57142em;
-  padding: 1px 1px 0 1px;
-  margin: 0;
-  border: 1px solid rgba(0, 0, 0, 0.15);
-}
-
-fn-loader.segment-editor-loader {
-  min-width: 150px;
-  height: 2.57142em;
-  border: none;
-}
-
-fn-loader.segment-editor-loader /deep/ .spinner {
-  height: 2em;
 }
