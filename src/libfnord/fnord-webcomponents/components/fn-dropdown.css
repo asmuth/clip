@@ -29,22 +29,32 @@ fn-dropdown,
 /*--------------
   Header Elem
 ---------------*/
-fn-dropdown-header:after,
-.fn-dropdown-header:after {
+fn-dropdown-header-icon,
+.fn-dropdown-header-icon {
   font-size: inherit;
-  font-family: FontAwesome;
-  content: "\f0d7";
-  display: inline-block;
+  float: right;
+  display: block;
   line-height: inherit;
   font-weight: 401;
   font-style: normal;
   text-align: center;
   width: auto;
+  max-width:5%;
   margin: 0 0 0 0.5em;
   -webkit-backface-visibility: hidden;
   backface-visibility: hidden;
   vertical-align:middle;
 }
+
+fn-dropdown-header-value,
+.fn-dropdown-header-value {
+  display: block;
+  float:left;
+  overflow: hidden;
+  white-space: nowrap;
+  max-width: 90%;
+}
+
 
 /*--------------
     Items
@@ -211,6 +221,9 @@ fn-dropdown.input fn-dropdown-header,
   min-width: 180px;
   padding: 0.65em 1.1em;
   line-height: 1em;
+  white-space: nowrap;
+  overflow: hidden;
+
 }
 
 fn-dropdown.input fn-dropdown-header:hover,
@@ -295,6 +308,7 @@ fn-dropdown.search fn-dropdown-items,
 .fn-dropdown.search .fn-dropdown-items{
   width: 100%;
 }
+
 
 
 /*******************************

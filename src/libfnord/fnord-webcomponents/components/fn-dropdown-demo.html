@@ -13,6 +13,10 @@
       .below {
         margin-bottom: 20px;
       }
+
+      fn-dropdown.checkbox fn-dropdown-header {
+        max-width: 150px;
+      }
     </style>
   <section>
     <h1>Styles</h1>
@@ -20,7 +24,9 @@
     <h3><i>Example 1 &raquo;</i> Basic</h3>
     <!-- Default -->
     <fn-dropdown data-resolved>
-      <fn-dropdown-header>Value</fn-dropdown-header>
+      <fn-dropdown-header>
+        <fn-dropdown-header-value>Value</fn-dropdown-header-value>
+      </fn-dropdown-header>
       <fn-dropdown-items>
         <fn-dropdown-item data-selected>Value</fn-dropdown-item>
         <fn-dropdown-item>Count</fn-dropdown-item>
@@ -50,7 +56,9 @@
          It is displayed if no item is selected
     -->
     <fn-dropdown data-resolved class="input">
-      <fn-dropdown-header>Advanced</fn-dropdown-header>
+      <fn-dropdown-header>
+        <fn-dropdown-header-value>Advanced</fn-dropdown-header-value>
+      </fn-dropdown-header>
       <fn-dropdown-items>
         <fn-dropdown-item>Inverted</fn-dropdown-item>
         <fn-dropdown-item>Logarithmic</fn-dropdown-item>
@@ -95,7 +103,9 @@
     <!-- An Initial Not Selectable Header is displayed if no item is selected -->
     <h3><i>Example 1 &raquo;</i> Initial Not Selectable Header</h3>
     <fn-dropdown data-resolved class='input'>
-      <fn-dropdown-header>Select Payment</fn-dropdown-header>
+      <fn-dropdown-header>
+        <fn-dropdown-header-value>Select Payment</fn-dropdown-header-value>
+      </fn-dropdown-header>
       <fn-dropdown-items>
         <fn-dropdown-item data-value="Visa">Visa</fn-dropdown-item>
         <fn-dropdown-item data-value="paypal">PayPal</fn-dropdown-item>
@@ -119,7 +129,9 @@
     <!-- A Static header is always displayed and isn't selectable -->
     <h3><i>Example 3 &raquo;</i> Static Header</h3>
     <fn-dropdown data-resolved class='input'>
-      <fn-dropdown-header data-static>Select Payment</fn-dropdown-header>
+      <fn-dropdown-header data-static>
+        <fn-dropdown-header-value>Select Payment</fn-dropdown-header-value>
+      </fn-dropdown-header>
       <fn-dropdown-items>
         <fn-dropdown-item data-value="Visa">Visa</fn-dropdown-item>
         <fn-dropdown-item data-value="paypal">PayPal</fn-dropdown-item>
@@ -133,16 +145,16 @@
     <h3><i>Example 4 &raquo;</i> Multi Selectable</h3>
     <fn-dropdown data-resolved class='input checkbox'>
       <fn-dropdown-items>
-        <fn-dropdown-item data-value='inv'>
-          <fn-checkbox></fn-checkbox>
+        <fn-dropdown-item data-value='inv' data-selected>
+          <fn-checkbox data-active></fn-checkbox>
           Inverted
         </fn-dropdown-item>
-        <fn-dropdown-item data-value='log'>
-          <fn-checkbox></fn-checkbox>
+        <fn-dropdown-item data-value='log' data-selected>
+          <fn-checkbox data-active></fn-checkbox>
           Logarithmic
         </fn-dropdown-item>
-        <fn-dropdown-item data-value='scl'>
-          <fn-checkbox></fn-checkbox>
+        <fn-dropdown-item data-value='scl' data-selected>
+          <fn-checkbox data-active></fn-checkbox>
           Scaled
         </fn-dropdown-item>
       </fn-dropdown-items>
@@ -342,7 +354,9 @@
     <h1>States</h1>
     <h3><i>Example 1 &raquo;</i> Disabled Basic Dropdown</h3>
     <fn-dropdown data-resolved class='disabled below'>
-      <fn-dropdown-header>Advanced</fn-dropdown-header>
+      <fn-dropdown-header>
+        <fn-dropdown-header-value>Advanced</fn-dropdown-header-value>
+      </fn-dropdown-header>
       <fn-dropdown-items>
         <fn-dropdown-item>Sum</fn-dropdown-item>
       </fn-dropdown-items>
@@ -368,7 +382,9 @@
 
     <h3><i>Example 4 &raquo;</i> Input like Dropdown with Error State</h3>
     <fn-dropdown data-resolved class="error input">
-      <fn-dropdown-header>Gender</fn-dropdown-header>
+      <fn-dropdown-header>
+        <fn-dropdown-header-value>Gender</fn-dropdown-header-value>
+      </fn-dropdown-header>
       <fn-dropdown-items>
         <fn-dropdown-item>Female</fn-dropdown-item>
         <fn-dropdown-item>Male</fn-dropdown-item>

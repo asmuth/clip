@@ -94,6 +94,20 @@
         this.insertBefore(header_elem, this.firstChild);
       }
 
+      //render header value
+      if (!header_elem.querySelector("fn-drodpown-header-value")) {
+        header_elem.appendChild(document.createElement(
+          "fn-dropdown-header-value"));
+      }
+
+      //render header icon
+      if (!header_elem.querySelector("fn-dropdown-header-icon")) {
+        var icon = document.createElement("fn-dropdown-header-icon");
+        icon.innerHTML = "<i class='fa fa-caret-down'></i>";
+        header_elem.appendChild(icon);
+      }
+
+
       var onClick = function(e) {
         e.stopPropagation();
         base.toggleDropdown();
@@ -107,7 +121,7 @@
 
     // Copies the selected items html to the header_elem
     this.setHeaderValue = function() {
-      var header = this.querySelector("fn-dropdown-header");
+      var header = this.querySelector("fn-dropdown-header-value");
 
       if (header.hasAttribute('data-static')) {
         return;
