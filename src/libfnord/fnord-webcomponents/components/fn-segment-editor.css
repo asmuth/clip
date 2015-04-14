@@ -187,14 +187,16 @@ fn-segment-header.segment-error fn-segment-error-message {
 *****************/
 fn-menu.segment-group-menu {
   display: block;
-  width: 100px;
-  border-right: 1px solid rgba(39, 41, 43, 0.1);
+  width: 150px;
   position: fixed;
-  height: calc(100% - 120px);
+  height: calc(100% - 119px);
+  border-radius: 0;
+  border-right: 1px solid rgba(39, 41, 43, 0.15);
+  box-shadow: none;
 }
 
 fn-menu.segment-group-menu ~ fn-segment-option {
-  margin-left: 10%;
+  margin-left: 150px;
   display: none;
 }
 
@@ -208,6 +210,7 @@ fn-menu.segment-group-menu ~ fn-segment-option[data-active] {
 fn-segment-options {
   display: block;
   overflow: visible;
+  min-height: 100px;
 }
 
 fn-segment,
