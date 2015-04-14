@@ -146,14 +146,28 @@
                 <fn-dropdown-items>
                   <fn-dropdown-item data-value='catalog' data-title='Catalog'>
                     <fn-checkbox></fn-checkbox>
-                    Desktop
+                    Catalog
                   </fn-dropdown-item>
                   <fn-dropdown-item data-value='search' data-title='Search'>
                     <fn-checkbox></fn-checkbox>
-                    Mobile
+                    Search
                   </fn-dropdown-item>
                 </fn-dropdown-items>
               </fn-dropdown>
+            </fn-segment-option>
+
+            <fn-segment-option data-key='search_query' data-title='Search Query'>
+              <fn-dropdown class='input' data-resolved data-segment-option data-rule-opt>
+                <fn-dropdown-items>
+                  <fn-dropdown-item data-value='matches' data-title='Matches'>
+                    Matches
+                  </fn-dropdown-item>
+                  <fn-dropdown-item data-value='begins_with'>
+                    Begins With
+                  </fn-dropdown-item>
+                </fn-dropdown-items>
+              </fn-dropdown>
+              <fn-input placeholder='Search Query' data-segment-option></fn-input>
             </fn-segment-option>
           </fn-segment-group>
         </fn-segment-browse>

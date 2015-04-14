@@ -262,12 +262,30 @@
           continue;
         }
 
-        var option_elem = options[i].querySelector("[data-segment-option]");
+        var option_elems = options[i].querySelectorAll("[data-segment-option]");
+        var opt = 'matches';
+        var values = [];
+
+        for (var j = 0; j < option_elems.length; j++) {
+          //rule option
+          if (option_elems[j].hasAttribute('data-rule-opt')) {
+            opt = option_elems[j].getValue();
+
+          //rule values
+          } else {
+            //dropdown values are returned as csv
+            if (option_elems[j].tagName == 'FN-DROPDOWN') {
+              values.push(option_elems[j].getValue().split(","));
+            } else {
+              values.push(option_elems[j].getValue());
+            }
+          }
+        }
 
         segment.rules.push({
           'field' : options[i].getAttribute('data-key'),
-          'op' : 'matches',
-          'values' : option_elem.getValue().split(",")
+          'op' : opt,
+          'values' : values
         });
       }
 
@@ -277,6 +295,7 @@
 
       return segment;
     };
+
 
     /******************************** Save ********************************/
 

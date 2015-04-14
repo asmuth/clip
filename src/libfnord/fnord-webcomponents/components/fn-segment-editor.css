@@ -240,15 +240,26 @@ fn-segment-option > fn-checkbox {
   margin-top: .8em;
 }
 
-fn-segment-option fn-checkbox ~ fn-dropdown fn-dropdown-header {
+fn-segment-option fn-checkbox ~ fn-dropdown fn-dropdown-header,
+fn-segment-option fn-checkbox ~ fn-input input {
   opacity: 0.6;
 }
 
-fn-segment-option fn-checkbox[data-active] ~ fn-dropdown fn-dropdown-header {
+fn-segment-option fn-checkbox[data-active] ~ fn-dropdown fn-dropdown-header,
+fn-segment-option fn-checkbox[data-active] ~ fn-input input {
   opacity: 1;
 }
 
 fn-checkbox + fn-segment-title {
+  margin-left: 5px;
+}
+
+fn-segment-option fn-input input {
+  line-height: 1.3em;
+  padding: 0.58em 1em;
+  outline: 0;
+  box-sizing: border-box;
+  float: left;
   margin-left: 5px;
 }
 
