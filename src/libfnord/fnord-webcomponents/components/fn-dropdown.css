@@ -115,6 +115,7 @@ fn-dropdown-item,
   vertical-align: baseline;
   overflow: hidden;
   text-align:left;
+  white-space: nowrap;
 }
 
 
@@ -263,7 +264,7 @@ fn-dropdown.input fn-dropdown-item,
 /* Add in spacing for scroll bar */
   padding-right: -webkit-calc(2.1em) !important;
   padding-right: calc(2.1em) !important;
-  white-space: normal;
+  white-space: nowrap;
   word-wrap: normal;
 }
 
