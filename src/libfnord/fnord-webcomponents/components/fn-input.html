@@ -69,8 +69,18 @@
       }
     };
 
-    this.setValue = function() {
-      this.querySelector("input").value = this.getAttribute('data-value');
+    this.setValue = function(value) {
+      if (value) {
+        if (value.constructor === Array) {
+          value = value.join(",");
+        }
+
+        this.querySelector("input").value = value;
+
+      } else {
+
+        this.querySelector("input").value = this.getAttribute('data-value');
+      }
     };
 
     this.getValue = function() {
