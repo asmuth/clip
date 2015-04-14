@@ -539,10 +539,7 @@
       var _this = this;
 
       this.changeView("fn-segment-edit");
-
-      if (!fn_segment_edit.hasAttribute('data-resolved')) {
-        this.initSegmentEdit();
-      }
+      this.initSegmentEdit();
 
       fn_segment_edit.querySelector("input[data-segment-name]").value = segment.name;
 
