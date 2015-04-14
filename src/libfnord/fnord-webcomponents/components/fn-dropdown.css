@@ -14,7 +14,7 @@ fn-dropdown,
   position: relative;
   cursor: pointer;
   display: inline-block;
-  line-height: 1em;
+  line-height: 1.3em;
   outline: none;
   text-align: left;
   color: rgba(0,0,0,.8);
@@ -221,7 +221,8 @@ fn-dropdown.input fn-dropdown-header,
   transition: border-radius .1s ease,width .2s ease,box-shadow .2s ease,border .2s ease;
   min-width: 180px;
   padding: 0.65em 1.1em;
-  line-height: 1em;
+  line-height: 1.3em;
+  height: 2.6em;
   white-space: nowrap;
   overflow: hidden;
 
