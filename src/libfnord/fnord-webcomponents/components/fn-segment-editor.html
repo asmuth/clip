@@ -341,7 +341,29 @@
     };
 
     /*********************** Render Select View *****************************/
-    //create a segment option element
+
+    /**
+      * Renders the fn-segment-option elements (based on the templates)
+      */
+    this.renderSegmentOptions = function() {
+      var select_tpl = this.querySelector("template[name='fn-segment-select']");
+      var fn_segment_options = select_tpl.content.querySelector("fn-segment-options");
+      var tpl = this.querySelector("template[name='fn-segment-options']");
+
+      if (tpl.content.querySelector("fn-segment-browse")) {
+        return this.renderSegmentGroupOptions(tpl, fn_segment_options);
+      }
+
+      var options = tpl.content.querySelectorAll("fn-segment-option");
+
+      for (var i = 0; i < options.length; i++) {
+        fn_segment_options.appendChild(this.createSegmentOption(options[i]));
+      }
+    };
+
+    /**
+      * Create a fn-segment-option element (based on the template)
+      */
     this.createSegmentOption = function(option) {
       var fn_segment_option = document.createElement("fn-segment-option");
       fn_segment_option.setAttribute('data-key', option.getAttribute('data-key'));
@@ -359,23 +381,9 @@
       return fn_segment_option;
     }
 
-    this.renderSegmentOptions = function() {
-      var select_tpl = this.querySelector("template[name='fn-segment-select']");
-      var fn_segment_options = select_tpl.content.querySelector("fn-segment-options");
-      var tpl = this.querySelector("template[name='fn-segment-options']");
-
-      if (tpl.content.querySelector("fn-segment-browse")) {
-        return this.renderSegmentGroupOptions(tpl, fn_segment_options);
-      }
-
-      var options = tpl.content.querySelectorAll("fn-segment-option");
-
-      for (var i = 0; i < options.length; i++) {
-        fn_segment_options.appendChild(this.createSegmentOption(options[i]));
-      }
-    };
-
-    //render segment groups (group menu and segment options)
+    /**
+      * Render Segment Group Menu and Segment Options
+      */
     this.renderSegmentGroupOptions = function(tpl, fn_segment_options) {
       var groups = tpl.content.querySelectorAll("fn-segment-group");
       var group_menu = document.createElement("fn-menu");
@@ -398,9 +406,15 @@
           fn_segment_options.appendChild(option);
         }
       }
+    };
 
-    }
 
+    /**
+      * Handles the group options visibility
+      *
+      * @param {number} index the active group's data-index attr
+      * @param {object HTMLElement} segment_options
+      */
     this.handleGroupOptions = function(index, segment_options) {
       var active_options =  segment_options.querySelectorAll(
         "fn-segment-option[data-active]");
@@ -414,9 +428,12 @@
       for (var i = 0; i < options.length; i++) {
         options[i].setAttribute('data-active', 'active');
       }
-    }
+    };
 
 
+    /**
+      * Handles the options-group menu
+      */
     this.handleGroupMenu = function(segment_options) {
       var active_group = segment_options.querySelector('fn-menu-item[data-active]');
       var active_index;
@@ -473,13 +490,30 @@
       this.setAttribute('data-segments', JSON.stringify(segments_attr));
     };
 
+    /**
+      * Return the rule's title if data-title is set for the matching
+      * fn-segment-option element or the rule's key otherwise
+      */
+    this.getRuleTitle = function(rule_key) {
+      var tpl = this.querySelector("template[name='fn-segment-options']");
+      var option_elem = tpl.content.querySelector(
+        "fn-segment-option[data-key='" + rule_key + "']");
+
+      if (option_elem && option_elem.hasAttribute('data-title')) {
+        return option_elem.getAttribute('data-title');
+      }
+
+      return rule_key;
+    };
+
 
     this.getHTMLForSegmentValues = function(rules) {
       var html = [];
+      var _this = this;
 
       rules.forEach(function(rule) {
         html.push(
-          "<fn-segment-text-title>", rule.field, ":",
+          "<fn-segment-text-title>", _this.getRuleTitle(rule.field), ":",
           "</fn-segment-text-title>", "<fn-segment-text-value>", rule.values.join(", "),
           "</fn-segment-text-value>"
         );
