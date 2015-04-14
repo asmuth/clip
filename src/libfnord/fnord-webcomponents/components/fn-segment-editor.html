@@ -275,7 +275,7 @@
           } else {
             //dropdown values are returned as csv
             if (option_elems[j].tagName == 'FN-DROPDOWN') {
-              values.push(option_elems[j].getValue().split(","));
+              values = values.concat(option_elems[j].getValue().split(","));
             } else {
               values.push(option_elems[j].getValue());
             }
@@ -289,6 +289,7 @@
         });
       }
 
+      console.log(segment.rules);
       segment.removable = this.isRemovable(segment);
       segment.editable = this.isEditable(segment);
       segment.color = this.getSegmentColor(segment);
