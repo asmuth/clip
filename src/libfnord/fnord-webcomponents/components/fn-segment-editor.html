@@ -600,9 +600,20 @@
       segment.rules.forEach(function(rule) {
         var option = fn_segment_edit.querySelector(
           "fn-segment-option[data-key='" + rule.field + "']");
+        var segment_options = option.querySelectorAll('[data-segment-option]');
 
         option.querySelector("fn-checkbox").setAttribute('data-active', 'active');
-        option.querySelector("[data-segment-option]").setValue(rule.values);
+
+        for (var i = 0; i < segment_options.length; i++) {
+          //set rule option
+          if (segment_options[i].hasAttribute('data-rule-opt')) {
+            segment_options[i].setValue([rule.opt]);
+            continue;
+          }
+
+          //set rule values
+          segment_options[i].setValue(rule.values);
+        }
       });
 
 

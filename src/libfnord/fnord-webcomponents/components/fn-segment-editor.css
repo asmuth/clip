@@ -189,7 +189,7 @@ fn-menu.segment-group-menu {
   display: block;
   width: 150px;
   position: fixed;
-  height: calc(100% - 119px);
+  height: calc(100% - 120px);
   border-radius: 0;
   border-right: 1px solid rgba(39, 41, 43, 0.15);
   box-shadow: none;
