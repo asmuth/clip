@@ -182,9 +182,34 @@ fn-segment-header.segment-error fn-segment-error-message {
   display: none;
 }
 
+/*****************
+  Group Menu
+*****************/
+fn-menu.segment-group-menu {
+  display: block;
+  width: 100px;
+  border-right: 1px solid rgba(39, 41, 43, 0.1);
+  position: fixed;
+  height: calc(100% - 120px);
+}
+
+fn-menu.segment-group-menu ~ fn-segment-option {
+  margin-left: 10%;
+  display: none;
+}
+
+fn-menu.segment-group-menu ~ fn-segment-option[data-active] {
+  display: block;
+}
+
 /******************
   Segment Option
 ******************/
+fn-segment-options {
+  display: block;
+  overflow: visible;
+}
+
 fn-segment,
 fn-segment-option {
   display: block;

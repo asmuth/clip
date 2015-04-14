@@ -71,12 +71,125 @@
         }
       ];
 
-      editor.addSegments(JSON.stringify(segments));
+      //editor.addSegments(JSON.stringify(segments));
       editor.availableColors = ["#4572a7", "#89a54e", "#aa4643", "#80699b"];
 
+      //remove loader
       window.setTimeout(function() {
-        editor.setAttribute('data-resolved', 'resolved');
+        //editor.setAttribute('data-resolved', 'resolved');
       }, 2000);
     </script>
   </section>
+
+  <section>
+    <fn-segment-editor id='editor2' data-resolved>
+      <template name='fn-segment-options'>
+        <fn-segment-browse>
+          <fn-segment-group>
+            <fn-segment-group-title>User</fn-segment-group-title>
+
+            <fn-segment-option data-key='lang' data-title='Language'>
+              <fn-dropdown class='input' data-resolved data-segment-option>
+                <fn-dropdown-header data-blank></fn-dropdown-header>
+                <fn-dropdown-items>
+                  <fn-dropdown-item data-value='de' data-title='German'>
+                    German
+                  </fn-dropdown-item>
+                  <fn-dropdown-item data-value='fr' data-title='French'>
+                    French
+                  </fn-dropdown-item>
+                </fn-dropdown-items>
+              </fn-dropdown>
+            </fn-segment-option>
+
+            <fn-segment-option data-key='device_type' data-title='Device Type'>
+              <fn-dropdown class='input checkbox' data-resolved data-segment-option>
+                <fn-dropdown-items>
+                  <fn-dropdown-item data-value='desktop' data-title='Desktop'>
+                    <fn-checkbox></fn-checkbox>
+                    Desktop
+                  </fn-dropdown-item>
+                  <fn-dropdown-item data-value='mobile' data-title='Mobile'>
+                    <fn-checkbox></fn-checkbox>
+                    Mobile
+                  </fn-dropdown-item>
+                </fn-dropdown-items>
+              </fn-dropdown>
+            </fn-segment-option>
+          </fn-segment-group>
+
+          <fn-segment-group>
+            <fn-segment-group-title>Page</fn-segment-group-title>
+
+            <fn-segment-option data-key='platform' data-title='Platform'>
+              <fn-dropdown class='input' data-resolved data-segment-option>
+                <fn-dropdown-header data-blank></fn-dropdown-header>
+                <fn-dropdown-items>
+                  <fn-dropdown-item data-value='de' data-title='DE'>
+                    DE
+                  </fn-dropdown-item>
+                  <fn-dropdown-item data-value='fr' data-title='FR'>
+                    FR
+                  </fn-dropdown-item>
+                  <fn-dropdown-item data-value='uk' data-title='UK'>
+                    UK
+                  </fn-dropdown-item>
+                  <fn-dropdown-item data-value='us' data-title='US'>
+                    US
+                  </fn-dropdown-item>
+                </fn-dropdown-items>
+              </fn-dropdown>
+            </fn-segment-option>
+
+            <fn-segment-option data-key='page_type' data-title='Page Type'>
+              <fn-dropdown class='input checkbox' data-resolved data-segment-option>
+                <fn-dropdown-items>
+                  <fn-dropdown-item data-value='catalog' data-title='Catalog'>
+                    <fn-checkbox></fn-checkbox>
+                    Desktop
+                  </fn-dropdown-item>
+                  <fn-dropdown-item data-value='search' data-title='Search'>
+                    <fn-checkbox></fn-checkbox>
+                    Mobile
+                  </fn-dropdown-item>
+                </fn-dropdown-items>
+              </fn-dropdown>
+            </fn-segment-option>
+          </fn-segment-group>
+        </fn-segment-browse>
+      </template>
+    </fn-segment-editor>
+
+    <script type='text/javascript'>
+      var editor2 = document.getElementById('editor2');
+      var segments = [
+        {
+          'key' : 'french_mobile',
+          'name' : 'French Mobile',
+          'rules' : [
+            {'field' : 'lang', 'opt' : 'matches', 'values' : ['fr']},
+            {'field' : 'device_type', 'opt' : 'matches', 'values' : ['mobile', 'tablet']},
+          ],
+          'removable' : true,
+          'editable' : true,
+          'color' : '#4572a7'
+        },
+        {
+          'key' : 'german',
+          'name' : 'German',
+          'rules' : [
+            {'field' : 'lang', 'opt' : 'matches', 'values' : ['fr']},
+            {'field' : 'device_type', 'opt' : 'matches', 'values' : ['mobile', 'tablet']},
+          ],
+          'removable' : true,
+          'editable' : true,
+          'color' : '#89a54e'
+        }
+      ];
+
+      editor2.addSegments(JSON.stringify(segments));
+      editor2.availableColors = ["#4572a7", "#89a54e", "#aa4643", "#80699b"];
+    </script>
+  </section>
+
 </template>

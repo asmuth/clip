@@ -341,32 +341,103 @@
     };
 
     /*********************** Render Select View *****************************/
+    //create a segment option element
+    this.createSegmentOption = function(option) {
+      var fn_segment_option = document.createElement("fn-segment-option");
+      fn_segment_option.setAttribute('data-key', option.getAttribute('data-key'));
+      fn_segment_option.setAttribute('data-title', option.getAttribute('data-title'));
+
+      var html = [
+        "<fn-checkbox></fn-checkbox><fn-segment-title>",
+        option.getAttribute('data-title'),
+        "</fn-segment-title>",
+        option.innerHTML
+      ];
+
+      fn_segment_option.innerHTML = html.join("");
+
+      return fn_segment_option;
+    }
 
     this.renderSegmentOptions = function() {
       var select_tpl = this.querySelector("template[name='fn-segment-select']");
       var fn_segment_options = select_tpl.content.querySelector("fn-segment-options");
       var tpl = this.querySelector("template[name='fn-segment-options']");
 
+      if (tpl.content.querySelector("fn-segment-browse")) {
+        return this.renderSegmentGroupOptions(tpl, fn_segment_options);
+      }
+
       var options = tpl.content.querySelectorAll("fn-segment-option");
 
       for (var i = 0; i < options.length; i++) {
-        var fn_segment_option = document.createElement("fn-segment-option");
-        fn_segment_option.setAttribute('data-key', options[i].getAttribute('data-key'));
-        fn_segment_option.setAttribute('data-title', options[i].getAttribute('data-title'));
-
-        var html = [
-          "<fn-checkbox></fn-checkbox><fn-segment-title>",
-          options[i].getAttribute('data-title'),
-          "</fn-segment-title>",
-          options[i].innerHTML
-        ];
-
-        fn_segment_option.innerHTML = html.join("");
-        fn_segment_options.appendChild(fn_segment_option);
+        fn_segment_options.appendChild(this.createSegmentOption(options[i]));
       }
     };
 
-    /********************* Render Overview *********************************/
+    //render segment groups (group menu and segment options)
+    this.renderSegmentGroupOptions = function(tpl, fn_segment_options) {
+      var groups = tpl.content.querySelectorAll("fn-segment-group");
+      var group_menu = document.createElement("fn-menu");
+      group_menu.classList.add('segment-group-menu');
+
+      fn_segment_options.appendChild(group_menu);
+
+      for (var i = 0; i < groups.length; i++) {
+        var options = groups[i].querySelectorAll("fn-segment-option");
+        var menu_item = document.createElement("fn-menu-item");
+
+        menu_item.setAttribute('data-index', i);
+        menu_item.appendChild(groups[i].querySelector("fn-segment-group-title"));
+        group_menu.appendChild(menu_item);
+
+
+        for (var j = 0; j < options.length; j++) {
+          var option = this.createSegmentOption(options[j]);
+          option.setAttribute('data-index', i);
+          fn_segment_options.appendChild(option);
+        }
+      }
+
+    }
+
+    this.handleGroupOptions = function(index, segment_options) {
+      var active_options =  segment_options.querySelectorAll(
+        "fn-segment-option[data-active]");
+      var options = segment_options.querySelectorAll(
+        "fn-segment-option[data-index='" + index + "']");
+
+      for (var i = 0; i < active_options.length; i++) {
+        active_options[i].removeAttribute('data-active');
+      }
+
+      for (var i = 0; i < options.length; i++) {
+        options[i].setAttribute('data-active', 'active');
+      }
+    }
+
+
+    this.handleGroupMenu = function(segment_options) {
+      var active_group = segment_options.querySelector('fn-menu-item[data-active]');
+      var active_index;
+      var _this = this;
+
+      if (!active_group) {
+        active_group = segment_options.querySelector("fn-menu-item[data-index='0']");
+        active_group.setAttribute('data-active', 'active');
+      }
+
+      active_index = active_group.getAttribute('data-index');
+      this.handleGroupOptions(active_index, segment_options);
+
+      segment_options.querySelector("fn-menu")
+        .addEventListener('fn-menu-item-click', function(e) {
+          var target = e.srcElement || e.target;
+          _this.handleGroupOptions(
+            target.getAttribute('data-index'), segment_options);
+        },
+      false);
+    };
 
     /**
       * Renders the segments based on data-segments attribute
@@ -512,6 +583,10 @@
 
       fn_segment_edit_options.innerHTML = fn_segment_options.innerHTML;
       fn_segment_edit.setAttribute('data-resolved', 'resolved');
+
+      if (fn_segment_edit_options.querySelector("fn-menu")) {
+        this.handleGroupMenu(fn_segment_edit_options);
+      }
     };
 
     /************************** Render Preview ******************************/
@@ -590,6 +665,10 @@
         .onclick = function(e) {
           e.stopPropagation();
           _this.changeView("fn-segment-overview");
+      }
+
+      if (segment_select.querySelector("fn-menu")) {
+        this.handleGroupMenu(segment_select.querySelector("fn-segment-options"));
       }
     };
 
