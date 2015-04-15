@@ -23,6 +23,7 @@
     <fn-modal>
       <fn-modal-close-icon></fn-modal-close-icon>
 
+      <!-- View: Segments -->
       <fn-segment-overview class='segment-active'>
         <fn-segment-header>
           <fn-segment-header-title>Segments</fn-segment-header-title>
@@ -32,9 +33,25 @@
 
         <fn-segment-footer>
           <fn-button data-action='add-segment'>Add Segment</fn-button>
+          <fn-button data-action='browse-recent-segments'>Recent Segments</fn-button>
         </fn-segment-footer>
       </fn-segment-overview>
 
+      <!-- View: Recent Segments -->
+      <fn-segment-recent>
+        <fn-segment-header>
+          <fn-segment-header-title>Recent Segments</fn-segment-header-title>
+        </fn-segment-header>
+
+        <fn-segments></fn-segments>
+
+        <fn-segment-footer>
+          <fn-button data-action='cancel-segment'>Back To Segments</fn-button>
+        </fn-segment-footer>
+      </fn-segment-recent>
+
+
+      <!-- View: Create New Segment -->
       <fn-segment-select>
       </fn-segment-select>
 
@@ -60,6 +77,8 @@
         </fn-segment-select>
       </template>
 
+
+      <!-- View: Edit Exisiting Segment -->
       <fn-segment-edit>
         <fn-segment-header>
           <fn-segment-header-title>Name</fn-segment-header-title>
@@ -370,7 +389,7 @@
       var fn_segment_options = select_tpl.content.querySelector("fn-segment-options");
       var tpl = this.querySelector("template[name='fn-segment-options']");
 
-      if (tpl.content.querySelector("fn-segment-browse")) {
+      if (tpl.content.querySelector("fn-segment-erowse")) {
         return this.renderSegmentGroupOptions(tpl, fn_segment_options);
       }
 
@@ -734,9 +753,16 @@
       }
     };
 
+
+    this.showRecentSegments = function() {
+      this.changeView('fn-segment-recent');
+      console.log("show recent segments");
+    }
+
     this.changeView = function(selector) {
       var view = this.querySelector(selector);
 
+      console.log(view);
       if (view) {
         var active_view = this.querySelector(".segment-active");
         active_view.classList.remove("segment-active");
@@ -747,6 +773,7 @@
 
     this.handleViewVisibility = function() {
       var add_btn = this.querySelector("[data-action='add-segment']");
+      var recent_btn = this.querySelector("[data-action='browse-recent-segments']");
       var cancel_btns = this.querySelectorAll("[data-action='cancel-segment']");
       var _this = this;
 
@@ -755,6 +782,14 @@
         _this.showSegmentSelect();
       }
 
+      if (this.hasAttribute('data-show-recent')) {
+        recent_btn.onclick = function(e) {
+          e.stopPropagation();
+          _this.showRecentSegments();
+        }
+      } else {
+        recent_btn.classList.add('segment-hidden');
+      }
 
       for (var i = 0; i < cancel_btns.length; i++) {
         cancel_btns[i].onclick = function(e) {

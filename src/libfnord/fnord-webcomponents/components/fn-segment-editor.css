@@ -80,7 +80,8 @@ fn-loader.segment-editor-loader /deep/ .spinner {
 *******************/
 fn-segment-overview,
 fn-segment-select,
-fn-segment-edit {
+fn-segment-edit,
+fn-segment-recent {
   display: none;
   background: #ffffff;
   border: none;
@@ -90,12 +91,17 @@ fn-segment-edit {
 
 fn-segment-overview.segment-active,
 fn-segment-select.segment-active,
-fn-segment-edit.segment-active {
+fn-segment-edit.segment-active,
+fn-segment-recent.segment-active {
   display: block;
 }
 
 .segment-clickable:hover {
   cursor: pointer;
+}
+
+.segment-hidden {
+  display: none;
 }
 
 /****************
