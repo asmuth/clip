@@ -202,8 +202,36 @@
         }
       ];
 
+      var recent_segments = [
+        {
+          'key' : 'mobile_all',
+          'name' : 'Mobile (all)',
+          'rules' : [
+            {'field' : 'device_type', 'opt' : 'matches', 'values' : ['mobile', 'tablet']},
+          ],
+          'removable' : true,
+          'editable' : true,
+          'color' : '#aa4643'
+        },
+        {
+          'key' : 'catalog',
+          'name' : 'Catalog',
+          'rules' : [
+            {'field' : 'page_type', 'opt' : 'matches', 'values' : ['catalog']},
+          ],
+          'removable' : true,
+          'editable' : true,
+          'color' : '#80699b'
+        }
+      ];
+
+
       editor2.addSegments(JSON.stringify(segments));
       editor2.availableColors = ["#4572a7", "#89a54e", "#aa4643", "#80699b"];
+
+      editor2.loadRecentSegments = function(callback) {
+        callback(recent_segments);
+      }
     </script>
   </section>
 
