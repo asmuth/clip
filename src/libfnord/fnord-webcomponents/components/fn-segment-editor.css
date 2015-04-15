@@ -142,6 +142,13 @@ fn-segment-text-title {
   margin: 0 2px 0 0;
 }
 
+.segment-text {
+  padding: 2.3em 0;
+  line-height: 1.3em;
+  font-style: italic;
+  text-align: center;
+}
+
 /*****************
   Segment Header
 *****************/

@@ -320,7 +320,7 @@
 
     /******************************** Save ********************************/
 
-    this.addNewSegment = function(segment) {
+    this.addNewSegment = function(segment, recent) {
       var segments = JSON.parse(this.getAttribute('data-segments'));
       var _this = this;
 
@@ -329,16 +329,20 @@
 
         segment.forEach(function(s) {
           segments.push(s);
-          _this.fireNewSegmentEvent(s);
         });
 
       } else {
         segments.push(segment);
+      }
+
+      this.setAttribute('data-segments', JSON.stringify(segments));
+
+      if (recent) {
+        this.fireAddRecentSegmentEvent(segment);
+      } else {
         this.fireNewSegmentEvent(segment);
       }
 
-
-      this.setAttribute('data-segments', JSON.stringify(segments));
       this.changeView("fn-segment-overview");
       this.renderSegments();
       this.renderPreviewValues();
@@ -794,19 +798,30 @@
       var _this = this;
       var fn_segment_recent = this.querySelector("fn-segment-recent");
       var fn_segments = fn_segment_recent.querySelector("fn-segments");
+      var add_all_btn = fn_segment_recent.querySelector(
+        "[data-action='add-recent-segments']");
 
       fn_segments.innerHTML = "";
+
+      _this.changeView('fn-segment-recent');
+
+      if (segments.length == 0) {
+        fn_segments.innerHTML =
+          "<div class='segment-text'>No Segments Found</div>"
+
+        add_all_btn.classList.add('segment-hidden');
+        return;
+      }
 
       segments.forEach(function(segment) {
         fn_segments.appendChild(_this.createRecentSegment(segment));
       });
 
-      fn_segment_recent.querySelector("[data-action='add-recent-segments']")
-        .onclick = function() {
-          _this.addNewSegment(segments, true);
-      };
+      add_all_btn.classList.remove('segment-hidden');
 
-      _this.changeView('fn-segment-recent');
+      add_all_btn.onclick = function() {
+        _this.addNewSegment(segments, true);
+      };
     };
 
 
@@ -886,8 +901,6 @@
     };
 
     this.fireNewSegmentEvent = function(segment) {
-      this.fireSegmentsChangedEvent();
-
       var ev = new CustomEvent('fn-segment-new', {
         'detail' : {'segment' : JSON.stringify(segment)},
         'bubbles': true,
@@ -895,7 +908,10 @@
       });
 
       this.dispatchEvent(ev);
+
+      this.fireSegmentsChangedEvent();
     };
+
 
     this.fireRemoveSegmentEvent = function(name) {
       this.fireSegmentsChangedEvent();
@@ -908,6 +924,19 @@
 
       this.dispatchEvent(ev);
     };
+
+
+    this.fireAddRecentSegmentEvent = function(segment) {
+      var ev = new CustomEvent('fn-segment-recent-add', {
+        'detail' : {'segment' : JSON.stringify(segment)},
+        'bubbles': true,
+        'cancelable' : true
+      });
+
+      this.dispatchEvent(ev);
+
+      this.fireSegmentsChangedEvent();
+    }
 
     this.fireEditSegmentEvent = function(old_segment, new_segment) {
       this.fireSegmentsChangedEvent();
