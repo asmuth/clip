@@ -9,6 +9,17 @@ fn-pager,
   display:block;
   line-height: 1.3em;
   color: rgba(0,0,0,.8);
+  -webkit-tap-highlight-color: transparent;
+}
+
+fn-pager::selection,
+.fn-pager::selection {
+  background: transparent;
+}
+
+fn-pager::-moz-selection,
+.fn-pager::-moz-selection {
+  background: transparent;
 }
 
 fn-pager-title,
