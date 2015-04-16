@@ -56,7 +56,6 @@
 
         <fn-segment-footer>
           <fn-button data-action='cancel-segment'>Back To Segments</fn-button>
-          <fn-button data-action='add-recent-segments'>Add All To Segments</fn-button>
         </fn-segment-footer>
       </fn-segment-recent>
 
@@ -842,8 +841,6 @@
       var _this = this;
       var fn_segment_recent = this.querySelector("fn-segment-recent");
       var fn_segments = fn_segment_recent.querySelector("fn-segments");
-      var add_all_btn = fn_segment_recent.querySelector(
-        "[data-action='add-recent-segments']");
 
       fn_segments.innerHTML = "";
 
@@ -858,7 +855,6 @@
            _this.showSegmentSelect();
         };
 
-        add_all_btn.classList.add('segment-hidden');
         return;
       }
 
@@ -866,11 +862,6 @@
         fn_segments.appendChild(_this.createRecentSegment(segment));
       });
 
-      add_all_btn.classList.remove('segment-hidden');
-
-      add_all_btn.onclick = function() {
-        _this.addNewSegment(segments, true);
-      };
     };
 
 
