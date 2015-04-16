@@ -143,10 +143,26 @@ fn-segment-text-title {
 }
 
 .segment-text {
-  padding: 2.3em 0;
+  padding-top: 2.3em;
   line-height: 1.3em;
   font-style: italic;
   text-align: center;
+}
+
+.segment-link {
+  font-style: normal;
+  color: rgba(0, 0, 0, 0.6);
+  cursor: pointer;
+  margin-top: 3em;
+  margin-bottom: 2em;
+  font-size: 0.9em;
+  font-weight: 500;
+  text-align: center;
+  text-decoration: underline;
+}
+
+.segment-link:hover {
+  color: rgba(0,0,0,0.8);
 }
 
 /*****************
