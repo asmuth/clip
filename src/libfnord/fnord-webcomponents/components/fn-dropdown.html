@@ -205,12 +205,32 @@
       }
     };
 
+    /**
+      * Close open Items (e.g. dropdowns) on editor click
+      */
+    this.closeActiveItems = function(callback) {
+      var active_items = document.querySelectorAll("[data-active]");
+
+      for (var i = 0; i < active_items.length; i++) {
+        if (typeof active_items[i].onDocumentClick == 'function') {
+          active_items[i].onDocumentClick();
+        }
+      }
+
+      callback();
+    };
+
     this.showDropdown = function() {
       if (this.classList.contains("disabled")) {
         return;
       }
 
-      this.setAttribute('data-active', 'active');
+      var _this = this;
+
+      this.closeActiveItems(function() {
+        _this.setAttribute('data-active', 'active');
+      });
+
 
       if (!this.eventListeners) {
         //set eventListeners only once
