@@ -577,14 +577,41 @@
     };
 
 
+    this.getRuleValuePreview = function(values) {
+      var value_str = "";
+
+      if (values.length > 10) {
+        return values.slice(0, 3).join(", ") + ", [ .. ], " +
+          values.slice(values.length - 3).join(", ");
+      }
+
+      for (var i = 0; i < values.length; i++) {
+        if (value_str.length > 20 && i + 1 != values.length) {
+          value_str += ", [ .. ], " + values[values.length - 1];
+          return value_str;
+        }
+
+        if ( i > 0) {
+          value_str += ", ";
+        }
+
+        value_str += values[i];
+      }
+
+      return value_str;
+    }
+
+
     this.getHTMLForSegmentValues = function(rules) {
       var html = [];
       var _this = this;
 
       rules.forEach(function(rule) {
+
         html.push(
           "<fn-segment-text-title>", _this.getRuleTitle(rule.field), ":",
-          "</fn-segment-text-title>", "<fn-segment-text-value>", rule.values.join(", "),
+          "</fn-segment-text-title>", "<fn-segment-text-value>",
+          _this.getRuleValuePreview(rule.values),
           "</fn-segment-text-value>"
         );
       });
