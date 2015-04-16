@@ -318,8 +318,8 @@
         });
       }
 
-      segment.removable = this.isRemovable(segment);
-      segment.editable = this.isEditable(segment);
+      /*segment.removable = this.isRemovable(segment);
+      segment.editable = this.isEditable(segment);*/
       segment.color = this.getSegmentColor(segment);
 
       return segment;
@@ -905,6 +905,9 @@
     this.observeAddRecentSegment = function(icon, segment) {
       var tooltip = this.querySelector("fn-segment-recent fn-tooltip");
       var _this = this;
+
+      
+
 
       tooltip.init(icon);
 
