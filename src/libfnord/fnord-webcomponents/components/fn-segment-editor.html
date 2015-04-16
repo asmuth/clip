@@ -906,7 +906,27 @@
       var tooltip = this.querySelector("fn-segment-recent fn-tooltip");
       var _this = this;
 
-      
+      tooltip.getLeftValue = function(elem) {
+        var fn_segment = elem.parentElement;
+        var padding = window.getComputedStyle(fn_segment, null)
+          .getPropertyValue('padding-right');
+        padding = parseInt(padding.substr(0, padding.length - 2), 10);
+
+        return fn_segment.offsetWidth - (2* padding) + 5;
+      }
+
+      tooltip.getTopValue = function(elem) {
+        var fn_segment = elem.parentElement;
+        var first_segment_top = _this.querySelector("fn-segment-recent fn-segment")
+          .getBoundingClientRect()
+          .top
+
+        var padding = window.getComputedStyle(fn_segment, null)
+          .getPropertyValue('padding-top');
+
+        return (parseInt(padding.substr(0, padding.length - 2), 10) +
+          fn_segment.getBoundingClientRect().top - first_segment_top + 3);
+      }
 
 
       tooltip.init(icon);
