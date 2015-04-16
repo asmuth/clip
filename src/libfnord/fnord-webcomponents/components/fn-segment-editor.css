@@ -270,12 +270,14 @@ fn-segment-option > fn-checkbox {
 }
 
 fn-segment-option fn-checkbox ~ fn-dropdown fn-dropdown-header,
-fn-segment-option fn-checkbox ~ fn-input input {
+fn-segment-option fn-checkbox ~ fn-input input,
+fn-segment-option fn-checkbox ~ fn-segment-title {
   opacity: 0.6;
 }
 
 fn-segment-option fn-checkbox[data-active] ~ fn-dropdown fn-dropdown-header,
-fn-segment-option fn-checkbox[data-active] ~ fn-input input {
+fn-segment-option fn-checkbox[data-active] ~ fn-input input,
+fn-segment-option fn-checkbox[data-active] ~ fn-segment-title {
   opacity: 1;
 }
 
