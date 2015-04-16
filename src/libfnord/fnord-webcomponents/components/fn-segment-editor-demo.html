@@ -82,7 +82,7 @@
   </section>
 
   <section>
-    <fn-segment-editor id='editor2' data-resolved data-show-recent>
+    <fn-segment-editor id='editor2' data-show-recent>
       <template name='fn-segment-options'>
         <fn-segment-browse>
           <fn-segment-group>
@@ -226,6 +226,15 @@
         }
       ];
 
+      editor2.customOptionHandling = function(elem) {
+        var dropdown = elem.querySelector("fn-dropdown");
+
+        dropdown.addEventListener('fn-dropdown-item-click', function(e) {
+          console.log("handle dropdown click event");
+        }, false);
+      }
+
+      editor2.setAttribute('data-resolved', 'resolved');
 
       editor2.addSegments(JSON.stringify(segments));
       editor2.availableColors = ["#4572a7", "#89a54e", "#aa4643", "#80699b"];

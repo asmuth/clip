@@ -713,6 +713,10 @@
       fn_segment_edit_options.innerHTML = fn_segment_options.innerHTML;
       fn_segment_edit.setAttribute('data-resolved', 'resolved');
 
+      if (typeof this.customOptionHandling === 'function') {
+        this.customOptionHandling(fn_segment_edit_options);
+      }
+
       if (fn_segment_edit_options.querySelector("fn-menu")) {
         this.handleGroupMenu(fn_segment_edit_options);
       }
@@ -781,8 +785,13 @@
       var _this = this;
 
       segment_select.innerHTML = segment_tpl.innerHTML;
+
       this.changeView("fn-segment-select");
       this.removeErrorMessages();
+
+      if (typeof this.customOptionHandling === 'function') {
+        this.customOptionHandling(segment_select);
+      }
 
       segment_select.querySelector("[data-action='save-segment']")
         .onclick = function(e) {
