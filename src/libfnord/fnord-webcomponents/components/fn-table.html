@@ -64,10 +64,13 @@
           th_elem.setAttribute('data-sortable', col.getAttribute('data-sortable'));
           th_elem.className += " sortable ";
 
-
           if (col.getAttribute("data-sort-state") != null) {
             th_elem.classList.add(col.getAttribute("data-sort-state"), "active");
+          } else if (col.getAttribute("data-order") != null) {
+            th_elem.classList.add(col.getAttribute("data-order"), "active");
           }
+
+
           if (col.hasAttribute('data-presort')) {
             col.removeAttribute('data-presort');
             sort = function() {
