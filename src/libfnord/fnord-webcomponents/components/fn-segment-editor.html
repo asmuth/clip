@@ -559,7 +559,7 @@
         segments_attr.push(segment);
       }, false) 
 
-      this.addPreviewValues(segments);
+      this.renderPreviewValues(segments);
       this.setAttribute('data-segments', JSON.stringify(segments_attr));
     };
 
@@ -763,12 +763,15 @@
 
     /************************** Render Preview ******************************/
 
-    this.addPreviewValues = function(segments) {
-      var field = this.querySelector("fn-segment-editor-field-values");
+    this.renderPreviewValues = function(segments) {
+      var segments = segments;
 
-      if (field.innerHTML.length > 0) {
-        field.appendChild(document.createElement("fn-segment-separator"));
+      if (!segments) {
+        var segments = JSON.parse(this.getAttribute('data-segments'));
       }
+
+      var field = this.querySelector("fn-segment-editor-field-values");
+      field.innerHTML = "";
 
       for (var i = 0; i < segments.length; i++) {
         var elem = document.createElement("fn-segment-field-value");
@@ -790,17 +793,13 @@
         elem.appendChild(title);
 
         field.appendChild(elem);
+
+        //preview wider than field
+        if (field.scrollWidth - field.offsetWidth > (elem.offsetWidth / 2)) {
+            elem.innerHTML = "...";
+            return;
+        }
       }
-    };
-
-
-    this.renderPreviewValues = function() {
-      var segments = JSON.parse(this.getAttribute('data-segments'));
-      var _this = this;
-
-      this.querySelector("fn-segment-editor-field-values").innerHTML = "";
-
-      this.addPreviewValues(segments);
     };
 
     /*********************** Visibility & Views *******************************/
@@ -1069,8 +1068,6 @@
     }
 
     this.fireEditSegmentEvent = function(old_segment, new_segment) {
-      this.fireSegmentsChangedEvent();
-
       var ev = new CustomEvent('fn-segment-edit', {
         'detail' : {
           'old_segment' : JSON.stringify(old_segment),
@@ -1081,6 +1078,7 @@
       });
 
       this.dispatchEvent(ev);
+      this.fireSegmentsChangedEvent();
     };
 
     this.fireSegmentsChangedEvent = function() {

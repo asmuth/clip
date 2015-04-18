@@ -9,6 +9,12 @@
   <http://www.gnu.org/licenses/>.
 -->
 <template id="fn-segment-editor-demo-base-tpl">
+  <style type='text/css'>
+    .segment-field-fixed fn-segment-editor-field {
+      max-width: 160px;
+      min-width: 160px;
+    }
+  </style>
 
   <section>
     <fn-segment-editor id='editor1' data-loading >
@@ -71,18 +77,18 @@
         }
       ];
 
-      //editor.addSegments(JSON.stringify(segments));
+      editor.addSegments(JSON.stringify(segments));
       editor.availableColors = ["#4572a7", "#89a54e", "#aa4643", "#80699b"];
 
       //remove loader
       window.setTimeout(function() {
-        //editor.setAttribute('data-resolved', 'resolved');
+        editor.setAttribute('data-resolved', 'resolved');
       }, 2000);
     </script>
   </section>
 
   <section>
-    <fn-segment-editor id='editor2' data-show-recent>
+    <fn-segment-editor id='editor2' data-show-recent class='segment-field-fixed'>
       <template name='fn-segment-options'>
         <fn-segment-browse>
           <fn-segment-group>

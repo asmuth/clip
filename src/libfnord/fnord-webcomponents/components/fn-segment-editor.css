@@ -7,18 +7,28 @@ fn-segment-editor-field {
   display: inline-block;
   text-align: left;
   line-height: 1.2142em;
-  padding: 0.67861em 1em;
+  padding: 0.67861em 10px;
   background: #ffffff;
   border: 1px solid rgba(0, 0, 0, 0.15);
   color: rgba(0, 0, 0, 0.8);
   border-radius: 0.2857rem;
   box-shadow: none;
   min-width: 150px;
+  overflow: hidden;
+  white-space: nowrap;
+
 }
 
 fn-segment-editor-field-values {
   margin-right: 8px;
   font-size: 0.9em;
+  display: inline-block;
+}
+
+.segment-field-fixed fn-segment-editor-field-values {
+  /* 10px padding on each side */
+  width: calc(100% - 20px);
+  overflow: hidden;
 }
 
 fn-segment-circle {
