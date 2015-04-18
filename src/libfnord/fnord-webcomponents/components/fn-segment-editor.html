@@ -45,7 +45,8 @@
 
         <fn-segments></fn-segments>
 
-        <fn-tooltip>Add to Segments</fn-tooltip>
+        <fn-tooltip data-name='add'>Add to Segments</fn-tooltip>
+        <fn-tooltip data-name='remove'>Remove This Segment</fn-tooltip>
 
         <template name='fn-segments-empty'>
           <fn-segments-empty>
@@ -638,6 +639,7 @@
       fn_segment.innerHTML = html.join("");
 
       fn_segment.setAttribute('data-name', segment.name);
+      fn_segment.setAttribute('data-key', segment.key);
 
       return fn_segment;
     };
@@ -648,6 +650,7 @@
       //LATER
       if (segment.removable || true) {
         var icon = document.createElement("fn-segment-remove-icon");
+        icon.classList.add('segment-icon');
         fn_segment.appendChild(icon);
         this.observeRemovableSegment(icon, segment.name);
       }
@@ -655,6 +658,7 @@
       //LATER
       if (segment.editable || true) {
         var icon = document.createElement("fn-segment-edit-icon");
+        icon.classList.add('segment-icon');
         fn_segment.appendChild(icon);
         this.observeEditableSegment(icon, fn_segment, segment);
       }
@@ -665,10 +669,16 @@
     this.createRecentSegment = function(segment) {
       var fn_segment = this.createFnSegment(segment);
 
-      var icon = document.createElement("fn-segment-add-icon");
-      fn_segment.appendChild(icon);
+      var add_icon = document.createElement("fn-segment-add-icon");
+      var remove_icon = document.createElement("fn-segment-remove-icon");
 
-      this.observeAddRecentSegment(icon, segment);
+      add_icon.classList.add('segment-icon');
+      remove_icon.classList.add('segment-icon');
+
+      fn_segment.appendChild(remove_icon);
+      fn_segment.appendChild(add_icon);
+
+      this.observeRecentSegment(add_icon, remove_icon, segment);
 
       return fn_segment;
     }
@@ -929,38 +939,79 @@
       }, false);
     };
 
-    this.observeAddRecentSegment = function(icon, segment) {
-      var tooltip = this.querySelector("fn-segment-recent fn-tooltip");
+
+    this.getTooltipLeftValue = function(elem) {
+      var fn_segment = elem.parentElement;
+      var padding = window.getComputedStyle(fn_segment, null)
+        .getPropertyValue('padding-right');
+      var previousSibling = elem.previousSibling;
+      var left;
+
+      padding = parseInt(padding.substr(0, padding.length - 2), 10);
+      left = fn_segment.offsetWidth - (2* padding) + 5;
+
+      if (previousSibling.classList.contains('segment-icon')) {
+        //margin-right = 10px
+        left = left - previousSibling.offsetWidth - 10;
+      }
+
+      return left;
+    }
+
+    this.getTooltipTopValue = function(elem) {
+      var fn_segment = elem.parentElement;
+      var first_segment_top = this.querySelector("fn-segment-recent fn-segment")
+        .getBoundingClientRect()
+        .top
+
+      var padding = window.getComputedStyle(fn_segment, null)
+        .getPropertyValue('padding-top');
+
+      return (parseInt(padding.substr(0, padding.length - 2), 10) +
+        fn_segment.getBoundingClientRect().top - first_segment_top + 18);
+    };
+
+
+    this.observeRecentSegment = function(add_icon, remove_icon, segment) {
+      var fn_segment_recent = this.querySelector("fn-segment-recent");
+      var add_tooltip = fn_segment_recent.querySelector(
+        "fn-tooltip[data-name='add']");
+      var remove_tooltip = fn_segment_recent.querySelector(
+        "fn-tooltip[data-name='remove']");
       var _this = this;
 
-      tooltip.getLeftValue = function(elem) {
-        var fn_segment = elem.parentElement;
-        var padding = window.getComputedStyle(fn_segment, null)
-          .getPropertyValue('padding-right');
-        padding = parseInt(padding.substr(0, padding.length - 2), 10);
-
-        return fn_segment.offsetWidth - (2* padding) + 5;
-      }
-
-      tooltip.getTopValue = function(elem) {
-        var fn_segment = elem.parentElement;
-        var first_segment_top = _this.querySelector("fn-segment-recent fn-segment")
-          .getBoundingClientRect()
-          .top
-
-        var padding = window.getComputedStyle(fn_segment, null)
-          .getPropertyValue('padding-top');
-
-        return (parseInt(padding.substr(0, padding.length - 2), 10) +
-          fn_segment.getBoundingClientRect().top - first_segment_top + 3);
-      }
+      add_tooltip.getLeftValue = this.getTooltipLeftValue;
+      add_tooltip.getTopValue = this.getTooltipTopValue.bind(this);
+      add_tooltip.init(add_icon);
 
 
-      tooltip.init(icon);
-
-      icon.onclick = function() {
+      add_icon.onclick = function() {
         _this.addNewSegment(segment);
       }
+
+
+      remove_tooltip.getLeftValue = this.getTooltipLeftValue;
+      remove_tooltip.getTopValue = this.getTooltipTopValue.bind(this);
+      remove_tooltip.init(remove_icon);
+
+      remove_icon.onclick = function() {
+        _this.fireRemoveRecentEvent(segment);
+
+        fn_segment_recent.removeChild(fn_segment_recent.querySelector(
+          "fn-segment[data-key='" + segment.key + "']"));
+      }
+    };
+
+
+
+    this.fireRemoveRecentEvent = function(segment) {
+      var ev = new CustomEvent('fn-segment-recent-remove', {
+        'detail' : {'segment' : JSON.stringify(segment)},
+        'bubbles': true,
+        'cancelable' : true
+      });
+
+      this.dispatchEvent(ev);
     };
 
     this.fireNewSegmentEvent = function(segment) {

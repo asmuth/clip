@@ -1,6 +1,3 @@
-fn-modal.segment-editor {
-  height: 40%;
-}
 
 /*************************
   Segment Editor Field
@@ -90,7 +87,7 @@ fn-segment-recent {
   background: #ffffff;
   border: none;
   border-radius: 0.2857rem;
-  overflow: auto;
+  overflow: hidden;
 }
 
 fn-segment-overview.segment-active,
@@ -113,6 +110,8 @@ fn-segment-recent.segment-active {
 ****************/
 fn-segments {
   display: block;
+  height: 70%;
+  overflow: auto;
 }
 
 fn-segments:empty {
@@ -328,6 +327,10 @@ fn-segment-remove-icon + fn-segment-edit-icon {
   margin-right: 10px;
 }
 
+fn-segment-remove-icon + fn-segment-add-icon {
+  margin-right: 10px;
+}
+
 fn-segment-add-icon:after {
   font-family: FontAwesome;
   content: "\f067"
@@ -343,14 +346,19 @@ fn-segment-edit-icon:after {
   content: "\f044";
 }
 
+
+/*****************
+  Tooltips
+*****************/
+fn-segment-editor fn-tooltip {
+  white-space: nowrap;
+}
+
 /******************
   Footer
 ******************/
 fn-segment-footer {
   width: 100%;
-  height: 3.97142em;
-  position: absolute;
-  bottom: 0;
   display:block;
   padding: 0.7em 2em;
   border-top: 1px solid rgba(39, 41, 43, 0.15);
