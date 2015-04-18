@@ -1013,9 +1013,9 @@
       remove_icon.onclick = function() {
         _this.fireRemoveRecentEvent(segment);
 
-        var elem = fn_segment_recent.querySelector(
-          "fn-segment[data-key='" + segment.key + "']");
-        elem.parentElement.removeChild(elem);
+        _this.loadRecentSegments(function(segments) {
+          _this.renderRecentSegments(segments);
+        });
       }
     };
 
