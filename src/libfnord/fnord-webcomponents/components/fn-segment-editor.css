@@ -1,3 +1,7 @@
+fn-modal.segment-editor {
+  height: 40%;
+}
+
 /*************************
   Segment Editor Field
 *************************/
@@ -85,8 +89,8 @@ fn-segment-recent {
   display: none;
   background: #ffffff;
   border: none;
-  box-shadow: 0 1px 2px 1px rgba(0, 0, 0, 0.3);
   border-radius: 0.2857rem;
+  overflow: auto;
 }
 
 fn-segment-overview.segment-active,
@@ -343,10 +347,15 @@ fn-segment-edit-icon:after {
   Footer
 ******************/
 fn-segment-footer {
+  width: 100%;
+  height: 3.97142em;
+  position: absolute;
+  bottom: 0;
   display:block;
   padding: 0.7em 2em;
   border-top: 1px solid rgba(39, 41, 43, 0.15);
   overflow: auto;
+  box-shadow: 0 1px 2px 1px rgba(0, 0, 0, 0.3);
 }
 
 fn-segment-footer fn-button {
