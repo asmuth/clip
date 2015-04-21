@@ -932,36 +932,23 @@
     /*************************** Tooltips **********************************/
 
     this.getTooltipLeftValue = function(elem) {
-      var fn_segment = elem.parentElement;
-      var padding = window.getComputedStyle(fn_segment, null)
-        .getPropertyValue('padding-right');
-      var previousSibling = elem.previousSibling;
-      var left;
+      var elem_left = elem.getBoundingClientRect().left;
+      var modal = this.querySelector("fn-modal").getBoundingClientRect();
 
-      padding = parseInt(padding.substr(0, padding.length - 2), 10);
-      left = fn_segment.offsetWidth - (2* padding) + 5;
-
-      if (previousSibling.classList.contains('segment-icon')) {
-        //margin-right = 10px
-        left = left - previousSibling.offsetWidth - 10;
-      }
-
-      return left;
+      return elem_left - modal.left - elem.offsetWidth ;
     };
 
     this.getTooltipTopValue = function(elem) {
       var fn_segment = elem.parentElement;
-      var container = this.querySelector(".segment-active fn-segments");
-      var first_segment_top = this.querySelector(".segment-active fn-segment")
-        .getBoundingClientRect()
-        .top
-
+      var header = this.querySelector(".segment-active fn-segment-header");
+      var elem_top = elem.getBoundingClientRect().top;
       var padding = window.getComputedStyle(fn_segment, null)
         .getPropertyValue('padding-top');
 
-      return (parseInt(padding.substr(0, padding.length - 2), 10) +
-        fn_segment.getBoundingClientRect().top - first_segment_top
-        + 18 - container.scrollTop);
+
+      return (elem_top - header.offsetHeight -
+        (parseInt(padding.substr(0, padding.length - 2), 10))
+        - elem.offsetHeight - 12);
     };
 
 
@@ -972,7 +959,7 @@
       var tooltip = this.querySelector(
         "fn-segment-overview fn-tooltip[data-name='remove']");
 
-      tooltip.getLeftValue = this.getTooltipLeftValue;
+      tooltip.getLeftValue = this.getTooltipLeftValue.bind(this);
       tooltip.getTopValue = this.getTooltipTopValue.bind(this);
       tooltip.init(icon);
 
@@ -989,7 +976,7 @@
       var tooltip = this.querySelector(
         "fn-segment-overview fn-tooltip[data-name='edit']");
 
-      tooltip.getLeftValue = this.getTooltipLeftValue;
+      tooltip.getLeftValue = this.getTooltipLeftValue.bind(this);
       tooltip.getTopValue = this.getTooltipTopValue.bind(this);
       tooltip.init(icon);
 
@@ -1009,7 +996,7 @@
         "fn-tooltip[data-name='remove']");
       var _this = this;
 
-      add_tooltip.getLeftValue = this.getTooltipLeftValue;
+      add_tooltip.getLeftValue = this.getTooltipLeftValue.bind(this);
       add_tooltip.getTopValue = this.getTooltipTopValue.bind(this);
       add_tooltip.init(add_icon);
 
@@ -1017,7 +1004,7 @@
         _this.addNewSegment(segment);
       }
 
-      remove_tooltip.getLeftValue = this.getTooltipLeftValue;
+      remove_tooltip.getLeftValue = this.getTooltipLeftValue.bind(this);
       remove_tooltip.getTopValue = this.getTooltipTopValue.bind(this);
       remove_tooltip.init(remove_icon);
 
