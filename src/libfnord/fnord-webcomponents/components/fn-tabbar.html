@@ -80,14 +80,18 @@
               base.setContent(index);
             }
           }
-          base.fireClickTabEvent();
+          base.fireClickTabEvent(this);
         }, false);
       }
 
     }
 
-    this.fireClickTabEvent = function() {
-      this.dispatchEvent(new Event("fn-tabbar-click"));
+    this.fireClickTabEvent = function(elem) {
+      var ev = new CustomEvent('fn-tabbar-click', {
+        bubbles: true,
+        cancelable: true});
+
+      elem.dispatchEvent(ev);
     };
 
   };
