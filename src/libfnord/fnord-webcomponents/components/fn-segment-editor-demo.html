@@ -229,6 +229,29 @@
           'removable' : true,
           'editable' : true,
           'color' : '#80699b'
+        },
+        {
+          'key' : 'french_mobile',
+          'name' : 'French Mobile',
+          'rules' : [
+            {'field' : 'lang', 'opt' : 'matches', 'values' : ['fr']},
+            {'field' : 'device_type', 'opt' : 'matches', 'values' : ['mobile', 'tablet']},
+          ],
+          'removable' : true,
+          'editable' : true,
+          'color' : '#4572a7'
+        },
+        {
+          'key' : 'teddy_de',
+          'name' : 'Teddy (de)',
+          'rules' : [
+            {'field' : 'lang', 'opt' : 'matches', 'values' : ['de']},
+            {'field' : 'platform', 'opt' : 'matches', 'values' : ['de']},
+            {'field' : 'search_query', 'opt' : 'begins_with', 'values' : ['teddy']}
+          ],
+          'removable' : true,
+          'editable' : true,
+          'color' : '#89a54e'
         }
       ];
 
@@ -246,7 +269,9 @@
       editor2.availableColors = ["#4572a7", "#89a54e", "#aa4643", "#80699b"];
 
       editor2.loadRecentSegments = function(callback) {
-        callback(recent_segments);
+        window.setTimeout(function() {
+          callback(recent_segments);
+        }, 100);
       }
 
       editor2.addEventListener('fn-segment-recent-remove', function(e) {

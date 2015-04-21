@@ -86,6 +86,18 @@ fn-loader.segment-editor-loader /deep/ .spinner {
   height: 2em;
 }
 
+
+/******************
+  Segments Loader
+******************/
+fn-segment-recent fn-loader {
+  height: 250px;
+}
+
+fn-segment-recent fn-loader /deep/ .loader {
+  background: transparent;
+}
+
 /*******************
   Segment Views
 *******************/
@@ -120,7 +132,8 @@ fn-segment-recent.segment-active {
 ****************/
 fn-segments {
   display: block;
-  height: 70%;
+  /*height: 70%;*/
+  height: 200px;
   overflow: auto;
 }
 
@@ -354,6 +367,13 @@ fn-segment-remove-icon:after {
 fn-segment-edit-icon:after {
   font-family: FontAwesome;
   content: "\f044";
+}
+
+fn-segment fn-segment-remove-icon {
+  position: relative;
+  top: -18px;
+  left: 20px;
+  font-size: 12px;
 }
 
 

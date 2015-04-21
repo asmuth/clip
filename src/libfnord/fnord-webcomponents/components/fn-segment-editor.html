@@ -46,7 +46,9 @@
           <fn-segment-header-title>Recent Segments</fn-segment-header-title>
         </fn-segment-header>
 
-        <fn-segments></fn-segments>
+        <fn-loader name='recent_segments' data-loading>
+          <fn-segments></fn-segments>
+        </fn-loader>
 
         <fn-tooltip data-name='add'>Add to Segments</fn-tooltip>
         <fn-tooltip data-name='remove'>Remove This Segment</fn-tooltip>
@@ -856,8 +858,6 @@
 
       fn_segments.innerHTML = "";
 
-      _this.changeView('fn-segment-recent');
-
       if (segments.length == 0) {
         var tpl = this.querySelector("template[name='fn-segments-empty']");
         var segments_empty = tpl.content.querySelector("fn-segments-empty");
@@ -874,7 +874,15 @@
         fn_segments.appendChild(_this.createRecentSegment(segment));
       });
 
+      fn_segment_recent.querySelector("fn-loader")
+        .removeAttribute('data-loading');
     };
+
+    this.showRecentSegmentsLoader = function() {
+      this.querySelector("fn-loader[name='recent_segments']")
+        .setAttribute('data-loading', 'loading');
+      this.changeView('fn-segment-recent');
+    }
 
 
 
@@ -903,6 +911,8 @@
       if (this.hasAttribute('data-show-recent')) {
         recent_btn.onclick = function(e) {
           e.stopPropagation();
+
+          _this.showRecentSegmentsLoader();
           _this.loadRecentSegments(function(segments) {
             _this.renderRecentSegments(segments);
           });
@@ -941,6 +951,7 @@
 
     this.getTooltipTopValue = function(elem) {
       var fn_segment = elem.parentElement;
+      var container = this.querySelector(".segment-active fn-segments");
       var first_segment_top = this.querySelector(".segment-active fn-segment")
         .getBoundingClientRect()
         .top
@@ -949,7 +960,8 @@
         .getPropertyValue('padding-top');
 
       return (parseInt(padding.substr(0, padding.length - 2), 10) +
-        fn_segment.getBoundingClientRect().top - first_segment_top + 18);
+        fn_segment.getBoundingClientRect().top - first_segment_top
+        + 18 - container.scrollTop);
     };
 
 
