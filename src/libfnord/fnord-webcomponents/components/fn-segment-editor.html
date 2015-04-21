@@ -944,11 +944,12 @@
       var elem_top = elem.getBoundingClientRect().top;
       var padding = window.getComputedStyle(fn_segment, null)
         .getPropertyValue('padding-top');
+      var modal = this.querySelector("fn-modal").getBoundingClientRect();
 
 
-      return (elem_top - header.offsetHeight -
-        (parseInt(padding.substr(0, padding.length - 2), 10))
-        - elem.offsetHeight - 12);
+      return (elem_top - header.offsetHeight +
+        (parseInt(padding.substr(0, padding.length - 2), 10)) * 2
+        - elem.offsetHeight * 1.8 - modal.top);
     };
 
 

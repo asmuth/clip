@@ -91,7 +91,7 @@ fn-loader.segment-editor-loader /deep/ .spinner {
   Segments Loader
 ******************/
 fn-segment-recent fn-loader {
-  height: 300px;
+  height: 70%;
 }
 
 fn-segment-recent fn-loader /deep/ .loader {
