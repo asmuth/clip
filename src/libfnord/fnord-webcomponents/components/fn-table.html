@@ -64,6 +64,7 @@
           th_elem.setAttribute('data-sortable', col.getAttribute('data-sortable'));
           th_elem.className += " sortable ";
 
+
           if (col.getAttribute("data-sort-state") != null) {
             th_elem.classList.add(col.getAttribute("data-sort-state"), "active");
           } else if (col.getAttribute("data-order") != null) {
@@ -220,17 +221,31 @@
       }
     };
 
+    this.inactivateSortedColumn = function() {
+      var attr = ['data-sort-state', 'data-order'];
+
+      for (var i = 0; i < attr.length; i++) {
+        var elem = this.querySelector('fn-table-column[' + attr[i] + ']');
+        if (elem) {
+          elem.removeAttribute(attr[i]);
+          return;
+        }
+      }
+    };
+
     this.observeSortableColumns = function(th_elem, column) {
       var base = this;
 
       th_elem.onclick = function() {
         var index = this.getAttribute('data-column-index');
+        base.inactivateSortedColumn();
+
         if (typeof base.customResortRows == 'function') {
           base.customResortRows(column, index);
         } else {
-        base.resortRows(
-          index,
-          this.getAttribute('data-sortable'));
+          base.resortRows(
+            index,
+            this.getAttribute('data-sortable'));
         }
       }
     };
