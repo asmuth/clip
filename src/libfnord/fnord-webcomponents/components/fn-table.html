@@ -221,13 +221,13 @@
       }
     };
 
-    this.inactivateSortedColumn = function() {
+    this.inactivateSortedColumn = function(new_column) {
       var attr = ['data-sort-state', 'data-order'];
 
       for (var i = 0; i < attr.length; i++) {
-        var elem = this.querySelector('fn-table-column[' + attr[i] + ']');
-        if (elem) {
-          elem.removeAttribute(attr[i]);
+        var column = this.querySelector('fn-table-column[' + attr[i] + ']');
+        if (column && column != new_column) {
+          column.removeAttribute(attr[i]);
           return;
         }
       }
@@ -238,7 +238,7 @@
 
       th_elem.onclick = function() {
         var index = this.getAttribute('data-column-index');
-        base.inactivateSortedColumn();
+        base.inactivateSortedColumn(column);
 
         if (typeof base.customResortRows == 'function') {
           base.customResortRows(column, index);
