@@ -122,8 +122,7 @@ fn-segment-recent.segment-active {
 fn-segment-flyout {
   position: absolute;
   background: #fff;
-  margin-top: 15px;
-
+  margin-top: 13px;
   width: 350px;
   height: 380px;
   display: none;
@@ -131,12 +130,10 @@ fn-segment-flyout {
   border-bottom-right-radius: 4px;
   border: 1px solid #bbb;
   box-shadow: 0px 1px 2px rgba(0,0,0,.09);
+  z-index: 20;
 }
 
 fn-segment-flyout-icon {
-  /*height: 25px;
-  width: 30px;
-  background: #F4F4F4;*/
   display: inline-block;
   position:absolute;
   top: -15px;
@@ -437,7 +434,7 @@ fn-segment-edit-icon:after {
 
 fn-segment fn-segment-remove-icon {
   position: relative;
-  top: -15px;
+  top: 0px;
   left: 0px;
   font-size: 13px;
 }

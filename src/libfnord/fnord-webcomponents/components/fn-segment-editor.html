@@ -57,7 +57,7 @@
         </template>
 
         <fn-segment-footer>
-          <fn-button data-action='cancel-segment'>Back To Segments</fn-button>
+          <fn-button data-action='segment-select'>New Segment</fn-button>
         </fn-segment-footer>
       </fn-segment-recent>
 
@@ -124,6 +124,7 @@
       if (this.hasAttribute('data-resolved')) {
         this.init();
       }
+
     };
 
     this.attributeChangedCallback = function(attr, old_val, new_val) {
@@ -132,6 +133,10 @@
       }
     };
 
+    this.onDocumentClick = function() {
+      this.closeFlyout();
+    }
+
 
     this.init = function() {
       var _this = this;
@@ -139,7 +144,8 @@
       this.querySelector("fn-loader").removeAttribute('data-loading');
 
       this.querySelector(
-        "[data-action='open-segment-editor']").onclick = function() {
+        "[data-action='open-segment-editor']").onclick = function(e) {
+          e.stopPropagation();
           _this.showFlyout();
       }
 
@@ -796,12 +802,26 @@
     this.showFlyout = function() {
       this.renderSegments();
       this.changeView("fn-segment-flyout", false);
+      this.setAttribute('data-active', 'active');
 
       var flyout = this.querySelector("fn-segment-flyout");
       var field = this.querySelector("fn-segment-editor-field");
 
       flyout.style.marginLeft =
         (flyout.offsetWidth / 2 - field.offsetWidth / 2) * -1 + "px";
+
+      flyout.onclick = function(e) {
+        e.stopPropagation();
+      }
+    }
+
+    this.closeFlyout = function() {
+      var flyout = this.querySelector("fn-segment-flyout");
+
+      if (flyout.classList.contains("segment-active")) {
+        flyout.classList.remove("segment-active");
+        this.removeAttribute('data-active');
+      }
     }
 
 
@@ -878,6 +898,7 @@
 
     this.changeView = function(selector, modalView) {
       var view = this.querySelector(selector);
+      var active_view = this.querySelector(".segment-active");
       var modal = this.querySelector("fn-modal");
 
       if (modalView == false) {
@@ -886,20 +907,17 @@
         modal.show();
       }
 
-      if (view) {
-        var active_view = this.querySelector(".segment-active");
-        if (active_view) {
-          active_view.classList.remove("segment-active");
-        }
-        view.classList.add("segment-active");
+      if (active_view) {
+        active_view.classList.remove("segment-active");
       }
+      view.classList.add("segment-active");
     };
 
 
     this.handleViewVisibility = function() {
       var add_btn = this.querySelector("[data-action='add-segment']");
-      var recent_btn = this.querySelector("[data-action='browse-recent-segments']");
       var cancel_btns = this.querySelectorAll("[data-action='cancel-segment']");
+      var select_btn = this.querySelector("[data-action='segment-select']");
       var _this = this;
 
       add_btn.onclick = function(e) {
@@ -910,7 +928,10 @@
         });
       }
 
-
+      select_btn.onclick = function(e) {
+        e.stopPropagation();
+        _this.showSegmentSelect();
+      }
 
       for (var i = 0; i < cancel_btns.length; i++) {
         cancel_btns[i].onclick = function(e) {
