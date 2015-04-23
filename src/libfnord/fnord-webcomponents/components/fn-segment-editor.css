@@ -27,7 +27,7 @@ fn-segment-editor-field-values {
 
 .segment-field-fixed fn-segment-editor-field-values {
   /* 10px padding on each side */
-  width: calc(100% - 20px);
+  width: calc(100% - 22px);
   overflow: hidden;
 }
 
@@ -389,7 +389,8 @@ fn-segment-option fn-input input {
 
 fn-segment-add-icon,
 fn-segment-edit-icon,
-fn-segment-remove-icon {
+fn-segment-remove-icon,
+fn-segment-open-icon {
   cursor: pointer;
   font-size: 1em;
   height: 1em;
@@ -398,6 +399,7 @@ fn-segment-remove-icon {
 }
 
 fn-segment-add-icon,
+fn-segment-open-icon,
 fn-segment fn-segment-edit-icon,
 fn-segment fn-segment-remove-icon {
   float: right;
@@ -425,6 +427,11 @@ fn-segment-add-icon:after {
 fn-segment-remove-icon:after {
   font-family: FontAwesome;
   content: "\f014";
+}
+
+fn-segment-open-icon:after {
+  font-family: FontAwesome;
+  content: "\f078";
 }
 
 fn-segment-edit-icon:after {

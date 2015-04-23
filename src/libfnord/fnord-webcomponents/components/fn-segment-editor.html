@@ -13,8 +13,8 @@
   <fn-loader class='segment-editor-loader' data-loading>
     <fn-segment-editor-field class='segment-clickable' class='icon' data-action='open-segment-editor' >
       <fn-segment-editor-field-values></fn-segment-editor-field-values>
-      <fn-segment-add-icon class='segment-clickable' data-action='open-segment-editor'>
-      </fn-segment-add-icon>
+      <fn-segment-open-icon class='segment-clickable' data-action='open-segment-editor'>
+      </fn-segment-open-icon>
     </fn-segment-editor-field>
   </fn-loader>
 
@@ -767,31 +767,16 @@
       var field = this.querySelector("fn-segment-editor-field-values");
       field.innerHTML = "";
 
+      var field_text = document.createElement("fn-segment-field-text");
+      field_text.innerHTML = (segments.length < 2) ? "Segment (" : "Segments (";
+      field_text.innerHTML += segments.length + ")";
+      field.appendChild(field_text);
+
       for (var i = 0; i < segments.length; i++) {
-        var elem = document.createElement("fn-segment-field-value");
-        elem.setAttribute('data-name', segments[i].name);
-
-        if (i > 0) {
-          elem.appendChild(document.createElement("fn-segment-separator"));
-        }
-
         if (segments[i].color) {
           var circle = document.createElement("fn-segment-circle");
           circle.style.backgroundColor = segments[i].color;
-          elem.appendChild(circle);
-        }
-
-        var title = document.createElement("fn-segment-field-name");
-        title.innerHTML = segments[i].name;
-        title.setAttribute('data-name', segments[i].name);
-        elem.appendChild(title);
-
-        field.appendChild(elem);
-
-        //preview wider than field
-        if (field.scrollWidth - field.offsetWidth > (elem.offsetWidth / 2)) {
-            elem.innerHTML = "...";
-            return;
+          field.appendChild(circle);
         }
       }
     };
