@@ -18,27 +18,23 @@
     </fn-segment-editor-field>
   </fn-loader>
 
+  <!-- View: Segments -->
+  <fn-segment-flyout>
+    <fn-segment-flyout-icon></fn-segment-flyout-icon>
+    <fn-segment-header>Segments</fn-segment-header>
+
+    <fn-segments></fn-segments>
+
+    <fn-tooltip data-name='remove'>Remove Segment</fn-tooltip>
+
+    <fn-segment-footer>
+      <fn-button data-action='add-segment'>Add Segment</fn-button>
+    </fn-segment-footer>
+  </fn-segment-flyout>
 
   <fn-modal-dimmer>
     <fn-modal class='segment-editor'>
       <fn-modal-close-icon></fn-modal-close-icon>
-
-      <!-- View: Segments -->
-      <fn-segment-overview class='segment-active'>
-        <fn-segment-header>
-          <fn-segment-header-title>Segments</fn-segment-header-title>
-        </fn-segment-header>
-
-        <fn-segments></fn-segments>
-
-        <fn-tooltip data-name='edit'>Edit Segment</fn-tooltip>
-        <fn-tooltip data-name='remove'>Remove Segment</fn-tooltip>
-
-        <fn-segment-footer>
-          <fn-button data-action='browse-recent-segments'>Recent Segments</fn-button>
-          <fn-button data-action='add-segment'>Add Segment</fn-button>
-        </fn-segment-footer>
-      </fn-segment-overview>
 
       <!-- View: Recent Segments -->
       <fn-segment-recent>
@@ -144,7 +140,7 @@
 
       this.querySelector(
         "[data-action='open-segment-editor']").onclick = function() {
-          _this.showEditor();
+          _this.showFlyout();
       }
 
       if (this.hasAttribute('data-segments')) {
@@ -356,7 +352,7 @@
         this.fireNewSegmentEvent(segment);
       }
 
-      this.changeView("fn-segment-overview");
+      this.changeView("fn-segment-flyout", false);
       this.renderSegments();
       this.renderPreviewValues();
     }
@@ -651,22 +647,12 @@
 
     this.createSegment = function(segment) {
       var fn_segment = this.createFnSegment(segment);
+      var icon = document.createElement("fn-segment-remove-icon");
 
-      //LATER
-      if (segment.removable || true) {
-        var icon = document.createElement("fn-segment-remove-icon");
-        icon.classList.add('segment-icon');
-        fn_segment.appendChild(icon);
-        this.observeRemovableSegment(icon, segment.name);
-      }
-
-      //LATER
-      if (segment.editable || true) {
-        var icon = document.createElement("fn-segment-edit-icon");
-        icon.classList.add('segment-icon');
-        fn_segment.appendChild(icon);
-        this.observeEditableSegment(icon, fn_segment, segment);
-      }
+      icon.classList.add('segment-icon');
+      fn_segment.appendChild(icon);
+      this.observeRemovableSegment(icon, segment.name);
+      this.observeEditableSegment(fn_segment, segment);
 
       return fn_segment;
     }
@@ -736,7 +722,7 @@
           if (_this.validateSegment(edited_segment, false)) {
             _this.editSegment(segment.name, edited_segment);
             _this.fireEditSegmentEvent(segment, edited_segment);
-            _this.changeView("fn-segment-overview");
+            _this.changeView("fn-segment-flyout", false);
           }
         }
     };
@@ -806,13 +792,17 @@
 
     /*********************** Visibility & Views *******************************/
 
-    this.showEditor = function() {
-      var modal = this.querySelector("fn-modal");
 
+    this.showFlyout = function() {
       this.renderSegments();
-      this.changeView("fn-segment-overview");
-      modal.show();
-    };
+      this.changeView("fn-segment-flyout", false);
+
+      var flyout = this.querySelector("fn-segment-flyout");
+      var field = this.querySelector("fn-segment-editor-field");
+
+      flyout.style.marginLeft =
+        (flyout.offsetWidth / 2 - field.offsetWidth / 2) * -1 + "px";
+    }
 
 
     /**
@@ -842,7 +832,7 @@
       segment_select.querySelector("[data-action='cancel-segment']")
         .onclick = function(e) {
           e.stopPropagation();
-          _this.changeView("fn-segment-overview");
+          _this.changeView("fn-segment-flyout");
       }
 
       if (segment_select.querySelector("fn-menu")) {
@@ -886,12 +876,21 @@
 
 
 
-    this.changeView = function(selector) {
+    this.changeView = function(selector, modalView) {
       var view = this.querySelector(selector);
+      var modal = this.querySelector("fn-modal");
+
+      if (modalView == false) {
+        modal.close();
+      } else {
+        modal.show();
+      }
 
       if (view) {
         var active_view = this.querySelector(".segment-active");
-        active_view.classList.remove("segment-active");
+        if (active_view) {
+          active_view.classList.remove("segment-active");
+        }
         view.classList.add("segment-active");
       }
     };
@@ -905,26 +904,18 @@
 
       add_btn.onclick = function(e) {
         e.stopPropagation();
-        _this.showSegmentSelect();
+        _this.showRecentSegmentsLoader();
+        _this.loadRecentSegments(function(segments) {
+          _this.renderRecentSegments(segments);
+        });
       }
 
-      if (this.hasAttribute('data-show-recent')) {
-        recent_btn.onclick = function(e) {
-          e.stopPropagation();
 
-          _this.showRecentSegmentsLoader();
-          _this.loadRecentSegments(function(segments) {
-            _this.renderRecentSegments(segments);
-          });
-        }
-      } else {
-        recent_btn.classList.add('segment-hidden');
-      }
 
       for (var i = 0; i < cancel_btns.length; i++) {
         cancel_btns[i].onclick = function(e) {
           e.stopPropagation();
-          _this.changeView("fn-segment-overview");
+          _this.changeView("fn-segment-flyout", false);
         }
       }
     };
@@ -958,10 +949,8 @@
     this.observeRemovableSegment = function(icon, segment_name) {
       var _this = this;
       var tooltip = this.querySelector(
-        "fn-segment-overview fn-tooltip[data-name='remove']");
+        "fn-segment-flyout fn-tooltip[data-name='remove']");
 
-      tooltip.getLeftValue = this.getTooltipLeftValue.bind(this);
-      tooltip.getTopValue = this.getTooltipTopValue.bind(this);
       tooltip.init(icon);
 
       icon.onclick = function(e) {
@@ -972,17 +961,10 @@
       }
     };
 
-    this.observeEditableSegment = function(icon, fn_segment, segment) {
+    this.observeEditableSegment = function(fn_segment, segment) {
       var _this = this;
-      var tooltip = this.querySelector(
-        "fn-segment-overview fn-tooltip[data-name='edit']");
 
-      tooltip.getLeftValue = this.getTooltipLeftValue.bind(this);
-      tooltip.getTopValue = this.getTooltipTopValue.bind(this);
-      tooltip.init(icon);
-
-
-      icon.addEventListener('click', function(e) {
+      fn_segment.addEventListener('click', function(e) {
         e.stopPropagation();
         _this.renderEditSegment(fn_segment, segment);
       }, false);

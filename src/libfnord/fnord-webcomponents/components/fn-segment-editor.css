@@ -112,11 +112,82 @@ fn-segment-recent {
   overflow: hidden;
 }
 
-fn-segment-overview.segment-active,
+fn-segment-flyout.segment-active,
 fn-segment-select.segment-active,
 fn-segment-edit.segment-active,
 fn-segment-recent.segment-active {
   display: block;
+}
+
+fn-segment-flyout {
+  position: absolute;
+  background: #fff;
+  margin-top: 15px;
+
+  width: 350px;
+  height: 380px;
+  display: none;
+  border-bottom-left-radius: 4px;
+  border-bottom-right-radius: 4px;
+  border: 1px solid #bbb;
+  box-shadow: 0px 1px 2px rgba(0,0,0,.09);
+}
+
+fn-segment-flyout-icon {
+  /*height: 25px;
+  width: 30px;
+  background: #F4F4F4;*/
+  display: inline-block;
+  position:absolute;
+  top: -15px;
+  left: 160px;
+  width: 0; 
+  height: 0; 
+  border-left: 15px solid transparent;
+  border-right: 15px solid transparent;
+  border-bottom: 15px solid #F4F4F4;
+  border-top: none;
+}
+
+fn-segment-flyout fn-segment-header,
+fn-segment-flyout fn-segment-footer {
+  font-size: 95%;
+  padding: 5px 0;
+  font-weight: 500;
+  text-align:center;
+  background-color: #F4F4F4;
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#f4f4f4), to(#e9e9e9));
+  background-image: -webkit-linear-gradient(top, #f4f4f4, #e9e9e9);
+  background-image: -moz-linear-gradient(top, #f4f4f4, #e9e9e9);
+  background-image: -ms-linear-gradient(top, #f4f4f4, #e9e9e9);
+  background-image: -o-linear-gradient(top, #f4f4f4, #e9e9e9);
+  background-image: linear-gradient(top, #f4f4f4, #e9e9e9);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorStr='#f4f4f4', EndColorStr='#e9e9e9');
+}
+
+fn-segment-flyout fn-segment-footer {
+  border-bottom-left-radius: 4px;
+  border-bottom-right-radius: 4px;
+  box-shadow: none;
+}
+
+
+fn-segment-flyout fn-segments {
+  font-size: 90%;
+  height: calc(100% - 75px);
+}
+
+fn-segment-flyout fn-segment {
+  padding: 1.2em 2em;
+}
+
+fn-segment-flyout fn-segment:hover {
+  background: rgba(0, 0, 0, 0.02);
+  cursor: pointer;
+}
+
+fn-segment-flyout fn-button {
+  margin-left: 109px;
 }
 
 .segment-clickable:hover {
@@ -141,11 +212,7 @@ fn-segments:empty {
 }
 
 fn-segment {
-  border-top: 1px solid rgba(39, 41, 43, 0.15);
-}
-
-fn-segment:first-child {
-  border-top: none;
+  border-bottom: 1px solid rgba(39, 41, 43, 0.15);
 }
 
 /*******************
@@ -360,7 +427,7 @@ fn-segment-add-icon:after {
 
 fn-segment-remove-icon:after {
   font-family: FontAwesome;
-  content: "\f00d";
+  content: "\f014";
 }
 
 fn-segment-edit-icon:after {
@@ -370,9 +437,9 @@ fn-segment-edit-icon:after {
 
 fn-segment fn-segment-remove-icon {
   position: relative;
-  top: -18px;
-  left: 20px;
-  font-size: 12px;
+  top: -15px;
+  left: 0px;
+  font-size: 13px;
 }
 
 
