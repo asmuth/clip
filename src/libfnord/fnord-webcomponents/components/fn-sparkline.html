@@ -25,7 +25,19 @@
     };
 
     this.render = function() {
-      this.renderWithData([3.0, 5.0, 8.0, 10.0, 6.0, 8.0, 3.0], 0.0, 12.0);
+      var y = {}
+      y.values = this.getAttribute('data-sparkline')
+        .split(",")
+        .map(function(v) {
+          return parseFloat(v);
+        });
+
+      y.min = (this.hasAttribute('data-min')) ?
+        parseFloat(this.getAttribute('data-min')) : 0.0;
+      y.max = (this.hasAttribute('data-max')) ?
+        parseFloat(this.getattribute('data-max')) : Math.max.apply(null, y.values);
+
+      this.renderWithData({y: y});
     }
 
     this.renderWithData = function(values, ymin, ymax) {
@@ -38,8 +50,8 @@
 
       var svg_line = [];
       for (var i = 0; i < points.length; ++i) {
-        var dx = padding_x * 0.5 + (points[i][0] * (width - padding_x));
-        var dy = padding_y * 0.5 + ((1.0 - points[i][1]) * (height - padding_y));
+        var dx = padding_x * 0.5 + (points[i].x * (width - padding_x));
+        var dy = padding_y * 0.5 + ((1.0 - points[i].y) * (height - padding_y));
         svg_line.push(i == 0 ? "M" : "L", dx, dy);
       }
 
@@ -54,24 +66,24 @@
       path.setAttribute("d", svg_line.join(" "));
     }
 
-    this.scaleValues = function(values, ymin, ymax) {
+    this.scaleValues = function(axes) {
       var scaled = [];
 
-      for (var i = 0; i < values.length; ++i) {
-        var v = values[i];
-        var x  = i / values.length + 0.5 / values.length;
+      for (var i = 0; i < axes.y.values.length; ++i) {
+        var v = axes.y.values[i];
+        var x  = i / axes.y.values.length + 0.5 / axes.y.values.length;
 
-        if (v < ymin) {
-          scaled.push([x, 0]);
+        if (v < axes.y.min) {
+          scaled.push({x : x, y: 0});
           continue;
         }
 
-        if (v > ymax) {
-          scaled.push([x, 1.0]);
+        if (v > axes.y.max) {
+          scaled.push({x: x, y: 1.0});
           continue;
         }
 
-        scaled.push([x, (v - ymin) / (ymax - ymin)]);
+        scaled.push({x: x, y:(v - axes.y.min) / (axes.y.max - axes.y.min)});
       }
 
       return scaled;
