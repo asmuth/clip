@@ -1,0 +1,86 @@
+<!--
+  This file is part of the "FnordMetric" project
+    Copyright (c) 2015 Laura Schlimmer
+    Copyright (c) 2015 Paul Asmuth, Google Inc.
+
+  FnordMetric is free software: you can redistribute it and/or modify it under
+  the terms of the GNU General Public License v3.0. You should have received a
+  copy of the GNU General Public License along with this program. If not, see
+  <http://www.gnu.org/licenses/>.
+-->
+
+<template id="fn-sparkline-base-tpl">
+  <svg>
+    <path />
+  </svg>
+</template>
+
+<script type='text/javascript'>
+  var Sparkline = function() {
+    this.createdCallback = function() {
+      console.log("sparkline");
+      if (this.hasAttribute('data-sparkline')) {
+        this.render();
+      }
+    };
+
+    this.render = function() {
+      this.renderWithData([3.0, 5.0, 8.0, 10.0, 6.0, 8.0, 3.0], 0.0, 12.0);
+    }
+
+    this.renderWithData = function(values, ymin, ymax) {
+      var height = this.getAttribute('height');
+      var width = this.getAttribute('width');
+      var padding_x = width * 0.1;
+      var padding_y = 0;
+
+      var points = this.scaleValues(values, ymin, ymax);
+
+      var svg_line = [];
+      for (var i = 0; i < points.length; ++i) {
+        var dx = padding_x * 0.5 + (points[i][0] * (width - padding_x));
+        var dy = padding_y * 0.5 + ((1.0 - points[i][1]) * (height - padding_y));
+        svg_line.push(i == 0 ? "M" : "L", dx, dy);
+      }
+
+      var tpl = Fnord.getTemplate("fn-sparkline", "base");
+      this.appendChild(tpl);
+
+      var svg = this.querySelector("svg");
+      svg.style.height = height;
+      svg.style.width = width;
+
+      var path = this.querySelector("path");
+      path.setAttribute("d", svg_line.join(" "));
+    }
+
+    this.scaleValues = function(values, ymin, ymax) {
+      var scaled = [];
+
+      for (var i = 0; i < values.length; ++i) {
+        var v = values[i];
+        var x  = i / values.length + 0.5 / values.length;
+
+        if (v < ymin) {
+          scaled.push([x, 0]);
+          continue;
+        }
+
+        if (v > ymax) {
+          scaled.push([x, 1.0]);
+          continue;
+        }
+
+        scaled.push([x, (v - ymin) / (ymax - ymin)]);
+      }
+
+      return scaled;
+    }
+
+  }
+
+
+  window.addEventListener('fn-ready', function() {
+    Fnord.registerComponent('fn-sparkline', Sparkline);
+  });
+</script>
