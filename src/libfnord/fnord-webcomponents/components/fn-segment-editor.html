@@ -20,12 +20,11 @@
 
   <!-- View: Segments -->
   <fn-segment-flyout>
-    <fn-segment-flyout-icon></fn-segment-flyout-icon>
     <fn-segment-header>Segments</fn-segment-header>
 
     <fn-segments></fn-segments>
 
-    <fn-tooltip data-name='remove'>Remove Segment</fn-tooltip>
+    <fn-tooltip data-name='remove'>Delete Segment</fn-tooltip>
 
     <fn-segment-footer>
       <fn-button data-action='add-segment'>Add Segment</fn-button>
@@ -40,6 +39,9 @@
       <fn-segment-recent>
         <fn-segment-header>
           <fn-segment-header-title>Recent Segments</fn-segment-header-title>
+          <fn-button data-action='segment-select'>
+            <fn-segment-add-icon></fn-segment-add-icon>New Segment
+          </fn-button>
         </fn-segment-header>
 
         <fn-loader name='recent_segments' data-loading>
@@ -56,9 +58,7 @@
           </fn-segments-empty>
         </template>
 
-        <fn-segment-footer>
-          <fn-button data-action='segment-select'>New Segment</fn-button>
-        </fn-segment-footer>
+        <fn-segment-footer></fn-segment-footer>
       </fn-segment-recent>
 
 
@@ -69,10 +69,11 @@
       <template name='fn-segment-select'>
         <fn-segment-select>
           <fn-segment-header>
-            <fn-segment-header-title>Name</fn-segment-header-title>
-            <input class='fn-input' data-segment-name />
+            <input class='fn-input' placeholder='Segment Name' data-segment-name />
+            <fn-segment-error-message>Please insert a (unique) name</fn-segment-error-message>
 
-            <fn-segment-error-message>Please insert a unique name</fn-segment-error-message>
+            <fn-button data-action='cancel-segment'>Cancel</fn-button>
+            <fn-button data-action='save-segment'>Save</fn-button>
           </fn-segment-header>
 
           <fn-segment-error-message>
@@ -80,11 +81,6 @@
           </fn-segment-error-message>
 
           <fn-segment-options></fn-segment-options>
-
-          <fn-segment-footer>
-            <fn-button data-action='save-segment'>Save</fn-button>
-            <fn-button data-action='cancel-segment'>Cancel</fn-button>
-          </fn-segment-footer>
         </fn-segment-select>
       </template>
 
@@ -632,16 +628,24 @@
       *
       * @param {object} segment
       */
-    this.createFnSegment = function(segment) {
+    this.createFnSegment = function(segment, extended) {
       var fn_segment = document.createElement("fn-segment");
       var _this = this;
+      var html = [];
 
-      var html = [
-        "<fn-segment-title>", segment.name, "</fn-segment-title>", "<fn-segment-values>"
-      ];
+      if (!extended) {
+        html.push("<fn-segment-circle style='background: ",
+          segment.color,
+          ";'></fn-segment-circle>");
+      }
 
-      html.push(this.getHTMLForSegmentValues(segment.rules));
-      html.push("</fn-segment-values>");
+      html.push("<fn-segment-title>", segment.name, "</fn-segment-title>");
+
+      if (extended) {
+        html.push("<fn-segment-values>",
+          this.getHTMLForSegmentValues(segment.rules),
+          "</fn-segment-values>");
+      }
 
       fn_segment.innerHTML = html.join("");
 
@@ -652,7 +656,7 @@
     };
 
     this.createSegment = function(segment) {
-      var fn_segment = this.createFnSegment(segment);
+      var fn_segment = this.createFnSegment(segment, false);
       var icon = document.createElement("fn-segment-remove-icon");
 
       icon.classList.add('segment-icon');
@@ -664,7 +668,7 @@
     }
 
     this.createRecentSegment = function(segment) {
-      var fn_segment = this.createFnSegment(segment);
+      var fn_segment = this.createFnSegment(segment, true);
 
       var add_icon = document.createElement("fn-segment-add-icon");
       var remove_icon = document.createElement("fn-segment-remove-icon");
@@ -837,7 +841,7 @@
       segment_select.querySelector("[data-action='cancel-segment']")
         .onclick = function(e) {
           e.stopPropagation();
-          _this.changeView("fn-segment-flyout");
+          _this.changeView("fn-segment-flyout", false);
       }
 
       if (segment_select.querySelector("fn-menu")) {
