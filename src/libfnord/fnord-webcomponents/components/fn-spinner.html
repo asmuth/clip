@@ -1,0 +1,58 @@
+<!--
+  This file is part of the "FnordMetric" project
+    Copyright (c) 2015 Laura Schlimmer
+    Copyright (c) 2015 Paul Asmuth, Google Inc.
+
+  FnordMetric is free software: you can redistribute it and/or modify it under
+  the terms of the GNU General Public License v3.0. You should have received a
+  copy of the GNU General Public License along with this program. If not, see
+  <http://www.gnu.org/licenses/>.
+-->
+<script type='text/javascript'>
+  var Spinner = function() {
+    this.createdCallback = function() {
+
+
+      if (this.hasAttribute('data-loading')) {
+        this.show();
+      }
+    };
+
+    this.attributeChangedCallback = function(attr, old_val, new_val) {
+      if (attr == 'data-loading') {
+        if (new_val == null) {
+          this.hide();
+        } else {
+          this.show();
+        }
+      }
+    };
+
+    this.setPosition = function(e) {
+      this.style.left = (window.scrollX + e.clientX) + "px";
+      this.style.top = (window.scrollY + e.clientY - 20) + "px";
+    };
+
+    this.setXY;
+
+    this.hide = function() {
+      var _this = this;
+
+      if (this.hasAttribute('data-loading')) {
+        return this.removeAttribute('data-loading');
+      }
+      document.removeEventListener('mousemove', _this.setXY, false);
+    }
+
+    this.show = function() {
+      var _this = this;
+      this.setXY = this.setPosition.bind(this);
+
+      document.addEventListener('mousemove', _this.setXY, false);
+    };
+  };
+
+  window.addEventListener('fn-ready', function() {
+    Fnord.registerComponent('fn-spinner', Spinner);
+  });
+</script>
