@@ -220,6 +220,23 @@
       callback();
     };
 
+    this.setXValue = function() {
+      var items = this.querySelector("fn-dropdown-items");
+      var pos = items.getBoundingClientRect();
+      var margin;
+
+      if (window.innerWidth < pos.right) {
+        margin = pos.right - window.innerWidth;
+
+        //visible y-scrollbar
+        if (items.scrollHeight > pos.height) {
+          margin += 17;
+        }
+
+        items.style.marginLeft = "-" + margin + "px";
+      }
+    }
+
     this.showDropdown = function() {
       if (this.classList.contains("disabled")) {
         return;
@@ -229,6 +246,7 @@
 
       this.closeActiveItems(function() {
         _this.setAttribute('data-active', 'active');
+        _this.setXValue();
       });
 
 
