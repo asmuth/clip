@@ -122,7 +122,7 @@ fn-segment-recent.segment-active {
 fn-segment-flyout {
   position: absolute;
   background: #fff;
-  margin-top: 15px;
+  margin-top: 12px;
   width: 300px;
   height: 380px;
   display: none;
