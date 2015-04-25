@@ -1,10 +1,10 @@
-/**
+, false/**
  * Adapted from: Semantic UI:
  *   https://github.com/Semantic-Org/Semantic-UI
  *   http://www.semantic-ui.com/
  */
 
-.fn-table,
+.fn-table table,
 fn-table table {
   width: 100%;
   background: #ffffff;
@@ -80,17 +80,19 @@ fn-table thead th.sortable:after {
   font-weight: normal;
   padding-right: 0.5em;
   font-size: 1em;
-  content: "\f0d8";
+  content: "\f175";
   float: right;
   opacity: 0.5;
 }
 
-fn-table thead th.sortable.desc:after {
-  content: "\f0d7";
+fn-table thead th.sortable.desc:after,
+fn-table thead th.sortable.numdsc:after {
+  content: "\f175" !important;
 }
 
-fn-table thead th.sortable.asc:after {
-  content: "\f0d8";
+fn-table thead th.sortable.asc:after,
+fn-table thead th.sortable.numasc:after {
+  content: "\f176" !important;
 }
 
 fn-table thead th.sortable.active:after {
