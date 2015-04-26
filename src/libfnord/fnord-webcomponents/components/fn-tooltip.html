@@ -72,6 +72,12 @@
         return pos.left - ((width - target_width) / 2);
       }
 
+      //tooltip bigger than remaining window space
+      if (window.innerWidth - (pos.left + target_middle - 15) < width) {
+        this.setAttribute('data-pointer', 'right');
+        return (pos.left - width + target_middle + 16);
+      }
+
       return (pos.left + target_middle - 15);
     }
 
