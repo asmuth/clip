@@ -46,11 +46,11 @@
     }
 
     td.border {
-      border-left: 1px solid rgba(0, 0, 0, 0.1);
+      border-left: 1px solid rgba(39, 41, 43, 0.15);
     }
 
     td.border.bottom {
-      border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+      border-bottom: 1px solid rgba(39, 41, 43, 0.15);
     }
 
     table.calendar td {
@@ -64,7 +64,14 @@
 
     tr.month_header td {
       text-align: center;
-      background-color: rgba(0, 0, 0, 0.1);
+      background-color: #F4F4F4;
+      background-image: -webkit-gradient(linear, left top, left bottom, from(#f4f4f4), to(#e9e9e9));
+      background-image: -webkit-linear-gradient(top, #f4f4f4, #e9e9e9);
+      background-image: -moz-linear-gradient(top, #f4f4f4, #e9e9e9);
+      background-image: -ms-linear-gradient(top, #f4f4f4, #e9e9e9);
+      background-image: -o-linear-gradient(top, #f4f4f4, #e9e9e9);
+      background-image: linear-gradient(top, #f4f4f4, #e9e9e9);
+      border-top: 1px solid rgba(39, 41, 43, 0.15);
     }
 
     tr.month_picker td {
@@ -86,11 +93,28 @@
     }
 
     .month_picker .picker {
-      padding: 0.5em;
+      padding: 0.45em;
       color: rgba(0, 0, 0, 0.8);
       font-size: 0.8em;
-      background-color: rgba(0, 0, 0, 0.1);
+      background-color: #F4F4F4;
+      background-image: -webkit-gradient(linear, left top, left bottom, from(#f4f4f4), to(#e9e9e9));
+      background-image: -webkit-linear-gradient(top, #f4f4f4, #e9e9e9);
+      background-image: -moz-linear-gradient(top, #f4f4f4, #e9e9e9);
+      background-image: -ms-linear-gradient(top, #f4f4f4, #e9e9e9);
+      background-image: -o-linear-gradient(top, #f4f4f4, #e9e9e9);
+      background-image: linear-gradient(top, #f4f4f4, #e9e9e9);
+      border-top: 1px solid rgba(39, 41, 43, 0.15);
+      border-bottom: 1px solid rgba(39, 41, 43, 0.15);
     }
+
+    #prev_month_picker .picker {
+      border-left: 1px solid rgba(39, 41, 43, 0.15);
+    }
+
+    #next_month_picker .picker {
+      border-right: 1px solid rgba(39, 41, 43, 0.15);
+    }
+
 
     /**********************
       States
@@ -104,11 +128,11 @@
     }
 
     table td.highlight {
-      background-color: #f0f0f0;
+      background-color: #F4F4F4;
     }
 
     table td.highlight_border {
-      border: 1px solid rgba(0, 0, 0, 0.1);
+     font-weight: bold;
     }
 
     table td.bright {
@@ -116,7 +140,7 @@
     }
 
     table td.colored {
-      background-color: #f0f0f0;
+      background-color: #F4F4F4;
     }
   </style>
 
