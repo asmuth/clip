@@ -82,7 +82,7 @@ fn-dropdown-items,
   transition: opacity .2s ease;
   z-index: 11;
   background-color: #fff;
-  overflow-y: auto;
+  overflow-y: scroll;
   -webkit-backface-visibility: hidden;
           backface-visibility: hidden;
   -webkit-overflow-scrolling: touch;
@@ -268,6 +268,10 @@ fn-dropdown.input fn-dropdown-header:after,
 fn-dropdown.input:not(.wide) fn-dropdown-items,
 .fn-dropdown.input:not(.wide) .fn-dropdown-items {
   border-top: none !important;
+}
+
+fn-dropdown.input fn-dropdown-items,
+.fn-dropdown.input .fn-dropdown-items {
   min-width: calc(100% - 1px);
 }
 
