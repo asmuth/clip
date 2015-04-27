@@ -14,12 +14,28 @@
       max-width: 160px;
       min-width: 160px;
     }
+
+    fn-segment-options-title h2 {
+      font-size: 17px;
+    }
+
+    fn-segment-options-title .subtitle {
+      color: #999;
+      font-size: 14px;
+      margin-top:5px;
+    }
   </style>
 
   <section>
     <fn-segment-editor id='editor1' data-loading >
       <template name='fn-segment-options'>
+        <fn-segment-options-title>
+          <h2>General</h2>
+          <div class='subtitle'>Segment your users by language and device information</div>
+        </fn-segment-options-title>
         <fn-segment-option data-key='lang' data-title='Language'>
+          <i class='fa fa-question-circle' data-help='lang'></i>
+          <fn-tooltip data-help='lang'>User's Language</fn-tooltip>
           <fn-dropdown class='input' data-resolved data-segment-option>
             <fn-dropdown-header data-blank></fn-dropdown-header>
             <fn-dropdown-items>
@@ -34,6 +50,8 @@
         </fn-segment-option>
 
         <fn-segment-option data-key='device_type' data-title='Device Type'>
+          <i class='fa fa-question-circle' data-help='device'></i>
+          <fn-tooltip data-help='device'>User's Device Type</fn-tooltip>
           <fn-dropdown class='input checkbox' data-resolved data-segment-option>
             <fn-dropdown-items>
               <fn-dropdown-item data-value='desktop' data-title='Desktop'>
@@ -79,10 +97,13 @@
 
       editor.addSegments(JSON.stringify(segments));
       editor.availableColors = ["#4572a7", "#89a54e", "#aa4643", "#80699b"];
+      editor.loadRecentSegments = function(callback) {
+        callback([]);
+      };
 
       //remove loader
       window.setTimeout(function() {
-        //editor.setAttribute('data-resolved', 'resolved');
+        editor.setAttribute('data-resolved', 'resolved');
       }, 2000);
     </script>
   </section>

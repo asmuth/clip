@@ -10,8 +10,9 @@
 -->
 
 <template id="fn-segment-editor-base-tpl">
-  <fn-loader class='segment-editor-loader' data-loading>
+  <fn-loader class='segment-editor-loader'>
     <fn-segment-editor-field class='segment-clickable' class='icon' data-action='open-segment-editor' >
+      <i class='fa fa-filter'></i>
       <fn-segment-editor-field-values></fn-segment-editor-field-values>
       <fn-segment-open-icon class='segment-clickable' data-action='open-segment-editor'>
       </fn-segment-open-icon>
@@ -40,7 +41,7 @@
         <fn-segment-header>
           <fn-segment-header-title>Recent Segments</fn-segment-header-title>
           <fn-button data-action='segment-select'>
-            <fn-segment-add-icon></fn-segment-add-icon>New Segment
+            <i class='fa fa-plus'></i> New Segment
           </fn-button>
         </fn-segment-header>
 
@@ -121,11 +122,19 @@
         this.init();
       }
 
+      if (this.hasAttribute('data-loading')) {
+        this.querySelector("fn-loader").setAttribute('data-loading');
+      }
+
     };
 
     this.attributeChangedCallback = function(attr, old_val, new_val) {
       if (attr == 'data-resolved' && new_val == 'resolved') {
-        this.init();
+        return this.init();
+      }
+      if (attr == 'data-loading' && new_val == null) {
+        this.querySelector("fn-loader").removeAttribute('data-loading');
+        return this.init();
       }
     };
 
@@ -136,8 +145,6 @@
 
     this.init = function() {
       var _this = this;
-
-      this.querySelector("fn-loader").removeAttribute('data-loading');
 
       this.querySelector(
         "[data-action='open-segment-editor']").onclick = function(e) {
@@ -426,10 +433,16 @@
         return this.renderSegmentGroupOptions(tpl, fn_segment_options);
       }
 
+
       var options = tpl.content.querySelectorAll("fn-segment-option");
+      var title = tpl.content.querySelector("fn-segment-options-title");
+      if (title) {
+        fn_segment_options.appendChild(title);
+      }
 
       for (var i = 0; i < options.length; i++) {
-        fn_segment_options.appendChild(this.createSegmentOption(options[i]));
+        var option = this.createSegmentOption(options[i]);
+        fn_segment_options.appendChild(option);
       }
     };
 
@@ -440,16 +453,15 @@
       var fn_segment_option = document.createElement("fn-segment-option");
       fn_segment_option.setAttribute('data-key', option.getAttribute('data-key'));
       fn_segment_option.setAttribute('data-title', option.getAttribute('data-title'));
-
       var html = [
-        "<fn-checkbox></fn-checkbox><fn-segment-title>",
+        "<div class='segment-option-cell first'><fn-checkbox></fn-checkbox><fn-segment-title>",
         option.getAttribute('data-title'),
-        "</fn-segment-title>",
-        option.innerHTML
+        "</fn-segment-title></div><div class='segment-option-cell second'>",
+        option.innerHTML,
+        "</div>"
       ];
 
       fn_segment_option.innerHTML = html.join("");
-
       return fn_segment_option;
     }
 
@@ -657,12 +669,17 @@
 
     this.createSegment = function(segment) {
       var fn_segment = this.createFnSegment(segment, false);
-      var icon = document.createElement("fn-segment-remove-icon");
 
-      icon.classList.add('segment-icon');
-      fn_segment.appendChild(icon);
-      this.observeRemovableSegment(icon, segment.name);
-      this.observeEditableSegment(fn_segment, segment);
+      //TODO add removable/editable properties
+      if (segment.key != 'all_traffic') {
+        var icon = document.createElement("fn-segment-remove-icon");
+        icon.classList.add('segment-icon');
+        fn_segment.appendChild(icon);
+        this.observeRemovableSegment(icon, segment.name);
+        this.observeEditableSegment(fn_segment, segment);
+      } else {
+        fn_segment.classList.add('static-segment');
+      }
 
       return fn_segment;
     }
@@ -789,6 +806,7 @@
 
 
     this.showFlyout = function() {
+      Fnord.closeOpenItems();
       this.renderSegments();
       this.changeView("fn-segment-flyout", false);
       this.setAttribute('data-active', 'active');
@@ -822,11 +840,21 @@
       var segment_tpl = tpl.content.querySelector("fn-segment-select");
       var segment_select = this.querySelector("fn-segment-select");
       var _this = this;
-
       segment_select.innerHTML = segment_tpl.innerHTML;
 
       this.changeView("fn-segment-select");
       this.removeErrorMessages();
+
+      var tooltips = segment_select.querySelectorAll("fn-tooltip");
+      for (var i = 0; i < tooltips.length; i++) {
+        var help = tooltips[i].getAttribute('data-help');
+        var elem = segment_select.querySelector("[data-help='" + help + "']");
+        if (elem) {
+          tooltips[i].init(elem);
+          tooltips[i].getTopValue = _this.getTooltipTopValue.bind(_this);
+          tooltips[i].getLeftValue = _this.getTooltipLeftValue.bind(_this);
+        }
+      }
 
       if (typeof this.customOptionHandling === 'function') {
         this.customOptionHandling(segment_select);
@@ -865,8 +893,6 @@
         fn_segments.querySelector('.segment-link').onclick = function() {
            _this.showSegmentSelect();
         };
-
-        return;
       }
 
       segments.forEach(function(segment) {
@@ -965,7 +991,6 @@
 
       icon.onclick = function(e) {
         e.stopPropagation();
-
         _this.removeSegment(segment_name);
         _this.fireRemoveSegmentEvent(segment_name);
       }
@@ -1035,8 +1060,6 @@
 
 
     this.fireRemoveSegmentEvent = function(name) {
-      this.fireSegmentsChangedEvent();
-
       var ev = new CustomEvent('fn-segment-remove', {
         'detail' : {'segment_name' : name},
         'bubbles': true,
@@ -1044,6 +1067,7 @@
       });
 
       this.dispatchEvent(ev);
+      this.fireSegmentsChangedEvent();
     };
 
 

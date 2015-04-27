@@ -1,8 +1,25 @@
+/************************
+  Editor
+************************/
+fn-segment-editor {
+  display: none;
+}
+
+fn-segment-editor[data-loading],
+fn-segment-editor[data-resolved] {
+  display: block;
+}
+
+/*************************
+  Modal
+*************************/
+fn-modal.segment-editor {
+  height: 400px;
+}
 
 /*************************
   Segment Editor Field
 *************************/
-
 fn-segment-editor-field {
   display: inline-block;
   text-align: left;
@@ -16,18 +33,28 @@ fn-segment-editor-field {
   min-width: 150px;
   overflow: hidden;
   white-space: nowrap;
+}
 
+fn-segment-editor-field i.fa-filter {
+  display: inline-block;
+  float: left;
+  margin-right: 2px;
+  margin-top: 1px;
+  opacity: 0.7;
+  font-size: 1em;
+  height: 1em;
+  vertical-align: bottom;
 }
 
 fn-segment-editor-field-values {
-  margin-right: 8px;
+  margin-right: 5px;
   font-size: 0.9em;
   display: inline-block;
 }
 
 .segment-field-fixed fn-segment-editor-field-values {
   /* 10px padding on each side */
-  width: calc(100% - 22px);
+  width: calc(100% - 34px);
   overflow: hidden;
 }
 
@@ -91,7 +118,7 @@ fn-loader.segment-editor-loader /deep/ .spinner {
   Segments Loader
 ******************/
 fn-segment-recent fn-loader {
-  height: 70%;
+  height: 320px;
 }
 
 fn-segment-recent fn-loader /deep/ .loader {
@@ -110,6 +137,10 @@ fn-segment-recent {
   border: none;
   border-radius: 0.2857rem;
   overflow: hidden;
+}
+
+fn-segment-select {
+  overflow: visible;
 }
 
 fn-segment-flyout.segment-active,
@@ -176,7 +207,7 @@ fn-segment-flyout fn-segment {
   padding: 1.2em 2em;
 }
 
-fn-segment-flyout fn-segment:hover {
+fn-segment-flyout fn-segment:hover:not(.static-segment) {
   background: rgba(0, 0, 50, 0.03);
   cursor: pointer;
 }
@@ -378,6 +409,18 @@ fn-segment-options {
   min-height: 300px;
 }
 
+fn-segment-options-title {
+  display: block;
+  padding: 0.8em 2em;
+}
+
+fn-segment-options-title h1,
+fn-segment-options-title h2,
+fn-segment-options-title h3,
+fn-segment-options-title h4 {
+  margin: 0;
+}
+
 fn-segment,
 fn-segment-option {
   display: block;
@@ -391,18 +434,36 @@ fn-segment-option {
 }
 
 fn-segment-option fn-segment-title,
-fn-segment-option > fn-checkbox,
-fn-segment-option fn-dropdown {
+.segment-option-cell > fn-checkbox,
+fn-segment-option fn-dropdown,
+.segment-option-cell > i[data-help] {
   display: block;
   float: left;
 }
 
-fn-segment-option fn-segment-title {
-  margin-top: .65em;
+.segment-option-cell {
+  display:inline-block;
+  height: 40px;
+  vertical-align: top;
 }
 
-fn-segment-option > fn-checkbox {
+.segment-option-cell.first {
+  width: 175px;
+}
+
+fn-segment-option i[data-help] {
+  margin-left: -0.7em;
   margin-top: .8em;
+  margin-right: 1em;
+  opacity: .7;
+}
+
+fn-segment-option fn-segment-title {
+  margin-top: 9px;
+}
+
+.segment-option-cell > fn-checkbox {
+  margin-top: 8px;
 }
 
 fn-segment-option fn-checkbox ~ fn-dropdown fn-dropdown-header,
