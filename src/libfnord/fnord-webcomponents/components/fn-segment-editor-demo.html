@@ -103,7 +103,7 @@
 
       //remove loader
       window.setTimeout(function() {
-        editor.setAttribute('data-resolved', 'resolved');
+        //editor.setAttribute('data-resolved', 'resolved');
       }, 2000);
     </script>
   </section>
@@ -113,7 +113,12 @@
       <template name='fn-segment-options'>
         <fn-segment-browse>
           <fn-segment-group>
-            <fn-segment-group-title>User</fn-segment-group-title>
+            <fn-segment-group-title>Users</fn-segment-group-title>
+
+            <fn-segment-options-title>
+              <h2>User</h2>
+              <div class='subtitle'>Segment by language and device information</div>
+            </fn-segment-options-title>
 
             <fn-segment-option data-key='lang' data-title='Language'>
               <fn-dropdown class='input' data-resolved data-segment-option>
@@ -147,6 +152,11 @@
 
           <fn-segment-group>
             <fn-segment-group-title>Page</fn-segment-group-title>
+
+            <fn-segment-options-title>
+              <h2>Page</h2>
+              <div class='subtitle'>Segment by platform and page type information</div>
+            </fn-segment-options-title>
 
             <fn-segment-option data-key='platform' data-title='Platform'>
               <fn-dropdown class='input' data-resolved data-segment-option>

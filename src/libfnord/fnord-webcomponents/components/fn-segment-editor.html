@@ -89,10 +89,11 @@
       <!-- View: Edit Exisiting Segment -->
       <fn-segment-edit>
         <fn-segment-header>
-          <fn-segment-header-title>Name</fn-segment-header-title>
           <input class='fn-input' data-segment-name />
-
           <fn-segment-error-message>Please insert a name</fn-segment-error-message>
+
+          <fn-button data-action='cancel-segment'>Cancel</fn-button>
+          <fn-button data-action='replace-segment'>Save</fn-button>
         </fn-segment-header>
 
         <fn-segment-error-message>
@@ -101,10 +102,6 @@
 
         <fn-segment-options></fn-segment-options>
 
-        <fn-segment-footer>
-          <fn-button data-action='replace-segment'>Save</fn-button>
-          <fn-button data-action='cancel-segment'>Cancel</fn-button>
-        </fn-segment-footer>
       </fn-segment-edit>
 
 
@@ -123,13 +120,14 @@
       }
 
       if (this.hasAttribute('data-loading')) {
-        this.querySelector("fn-loader").setAttribute('data-loading');
+        this.querySelector("fn-loader").setAttribute('data-loading', 'loading');
       }
 
     };
 
     this.attributeChangedCallback = function(attr, old_val, new_val) {
       if (attr == 'data-resolved' && new_val == 'resolved') {
+        this.querySelector("fn-loader").removeAttribute('data-loading');
         return this.init();
       }
       if (attr == 'data-loading' && new_val == null) {
@@ -478,17 +476,23 @@
       for (var i = 0; i < groups.length; i++) {
         var options = groups[i].querySelectorAll("fn-segment-option");
         var menu_item = document.createElement("fn-menu-item");
-
+        var container = document.createElement("fn-segment-group-options");
+        container.setAttribute('data-index', i);
         menu_item.setAttribute('data-index', i);
         menu_item.appendChild(groups[i].querySelector("fn-segment-group-title"));
         group_menu.appendChild(menu_item);
 
+        var title = groups[i].querySelector("fn-segment-options-title");
+        if (title) {
+          container.appendChild(title);
+        }
 
         for (var j = 0; j < options.length; j++) {
           var option = this.createSegmentOption(options[j]);
-          option.setAttribute('data-index', i);
-          fn_segment_options.appendChild(option);
+          container.appendChild(option);
         }
+
+        fn_segment_options.appendChild(container);
       }
     };
 
@@ -500,18 +504,16 @@
       * @param {object HTMLElement} segment_options
       */
     this.handleGroupOptions = function(index, segment_options) {
-      var active_options =  segment_options.querySelectorAll(
-        "fn-segment-option[data-active]");
-      var options = segment_options.querySelectorAll(
-        "fn-segment-option[data-index='" + index + "']");
+      var active_options =  segment_options.querySelector(
+        "fn-segment-group-options[data-active]");
+      var options = segment_options.querySelector(
+        "fn-segment-group-options[data-index='" + index + "']");
 
-      for (var i = 0; i < active_options.length; i++) {
-        active_options[i].removeAttribute('data-active');
+      if (active_options) {
+        active_options.removeAttribute('data-active');
       }
 
-      for (var i = 0; i < options.length; i++) {
-        options[i].setAttribute('data-active', 'active');
-      }
+      options.setAttribute('data-active', 'active');
     };
 
 
@@ -789,8 +791,7 @@
       field.innerHTML = "";
 
       var field_text = document.createElement("fn-segment-field-text");
-      field_text.innerHTML = (segments.length < 2) ? "Segment (" : "Segments (";
-      field_text.innerHTML += segments.length + ")";
+      field_text.innerHTML = "Segments (" + segments.length + ")";
       field.appendChild(field_text);
 
       for (var i = 0; i < segments.length; i++) {

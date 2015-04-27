@@ -344,6 +344,7 @@ fn-segment-header fn-button {
   float: right;
 }
 
+fn-segment-edit fn-segment-header fn-button:last-child,
 fn-segment-select fn-segment-header fn-button:last-child {
   margin-right: 5px;
 }
@@ -397,6 +398,15 @@ fn-menu.segment-group-menu ~ fn-segment-option {
 }
 
 fn-menu.segment-group-menu ~ fn-segment-option[data-active] {
+  display: block;
+}
+
+fn-segment-group-options {
+  display: none;
+  margin-left: 150px;
+}
+
+fn-segment-group-options[data-active] {
   display: block;
 }
 
