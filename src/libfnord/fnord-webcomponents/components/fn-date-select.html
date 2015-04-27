@@ -10,6 +10,9 @@
 -->
 <template id='fn-date-select-base-tpl'>
   <fn-date-select-field>
+    <i class='fa fa-calendar'></i>
+    <fn-date-select-field-values></fn-date-select-field-values>
+    <i class='fa fa-chevron-down'></i>
   </fn-date-select-field>
 
   <fn-date-select-widget>
@@ -118,7 +121,7 @@
 
 
     this.renderPreviewField = function() {
-      this.querySelector("fn-date-select-field").innerHTML =
+      this.querySelector("fn-date-select-field-values").innerHTML =
         this.getDateDescription(this.applied.from) + " - " +
         this.getDateDescription(this.applied.until);
     };
@@ -226,6 +229,7 @@
       if (this.hasAttribute('data-active')) {
         this.removeAttribute('data-active');
       } else {
+        Fnord.closeOpenItems();
         this.setAttribute('data-active', 'active');
       }
     };
@@ -262,9 +266,14 @@
 
     this.observeRangeDropdown = function() {
       var _this = this;
+      var dropdown = this.querySelector("fn-dropdown");
+      dropdown.closeActiveItems = function(callback) {
+        callback();
+      }
 
-      this.querySelector("fn-dropdown")
-        .addEventListener('fn-dropdown-item-click', function(e) {
+
+      dropdown.addEventListener('fn-dropdown-item-click', function(e) {
+          e.stopPropagation();
           var target = e.target || e.srcElement;
 
           _this.onRangeDropdownSelect(target.getAttribute('data-value'));
