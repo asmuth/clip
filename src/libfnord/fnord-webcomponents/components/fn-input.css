@@ -46,11 +46,13 @@ fn-input input::-webkit-input-placeholder,
 .fn-input input::-webkit-input-placeholder,
 input.fn-input::-webkit-input-placeholder{
   color: rgba(0, 0, 0, 0.4);
+  line-height: 1.3em;
 }
 fn-input input::-moz-placeholder,
 .fn-input input::-moz-placeholder,
 input.fn-input::-moz-placeholder{
   color: rgba(0, 0, 0, 0.4);
+  line-height: 1.3em;
 }
 
 /*******************************
