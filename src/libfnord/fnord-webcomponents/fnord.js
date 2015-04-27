@@ -217,7 +217,7 @@ Fnord.parseTimestamp = function(timestamp) {
   return time_str;
 }
 
-Fnord.closeOpenDropdowns = function() {
+Fnord.closeOpenItems = function() {
   var active_items = document.body.querySelectorAll("[data-active]");
 
   for (var i = 0; i < active_items.length; i++) {
@@ -234,4 +234,4 @@ window.onresize = function() {
   Fnord.onWindowResize();
 }
 
-document.body.addEventListener('click', Fnord.closeOpenDropdowns, false);
+document.body.addEventListener('click', Fnord.closeOpenItems, false);
