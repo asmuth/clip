@@ -14,7 +14,7 @@ fn-segment-editor[data-resolved] {
   Modal
 *************************/
 fn-modal.segment-editor {
-  height: 400px;
+  height: 450px;
 }
 
 /*************************
@@ -118,7 +118,7 @@ fn-loader.segment-editor-loader /deep/ .spinner {
   Segments Loader
 ******************/
 fn-segment-recent fn-loader {
-  height: 320px;
+  height: 370px;
 }
 
 fn-segment-recent fn-loader /deep/ .loader {
@@ -178,7 +178,7 @@ fn-segment-flyout:before {
   position: absolute;
   top: -29px;
   left: 142px;
-  z-index: 2;
+  z-inde7: 2;
 }
 
 fn-segment-flyout:after {
@@ -390,6 +390,7 @@ fn-menu.segment-group-menu {
   border-right: 1px solid rgba(39, 41, 43, 0.15);
   box-shadow: none;
   border-bottom-left-radius: 0.2857em;
+  background-color: #eee;
 }
 
 fn-menu.segment-group-menu ~ fn-segment-option {
@@ -401,9 +402,44 @@ fn-menu.segment-group-menu ~ fn-segment-option[data-active] {
   display: block;
 }
 
+
+fn-menu.segment-group-menu fn-menu-item {
+  transition: none;
+  color: #000;
+  font-weight: 400;
+  font-size: 0.9em;
+}
+
+fn-menu.segment-group-menu fn-menu-item:hover:after,
+fn-menu.segment-group-menu fn-menu-item:hover {
+  background: transparent;
+  color: #06c;
+}
+
+fn-menu.segment-group-menu fn-menu-item[data-active]:after,
+fn-menu.segment-group-menu fn-menu-item[data-active] {
+  color: #06c;
+  box-shadow: none;
+  background: transparent;
+}
+
+fn-menu.segment-group-menu fn-menu-item:after {
+  display: block;
+  content: "\f105";
+  font: normal normal normal 14px/1 FontAwesome;
+  float: right;
+  color: #bbb;
+}
+
 fn-segment-group-options {
   display: none;
   margin-left: 150px;
+  height: 400px;
+  overflow: auto;
+}
+
+fn-segment-group-options fn-segment-option:last-child {
+  margin-bottom: 200px;
 }
 
 fn-segment-group-options[data-active] {
@@ -429,6 +465,11 @@ fn-segment-options-title h2,
 fn-segment-options-title h3,
 fn-segment-options-title h4 {
   margin: 0;
+}
+
+fn-segment-options-title .subtitle {
+  opacity: 0.7;
+  font-size: 0.95em;
 }
 
 fn-segment,
@@ -470,6 +511,7 @@ fn-segment-option i[data-help] {
 
 fn-segment-option fn-segment-title {
   margin-top: 9px;
+  font-size: 0.9em;
 }
 
 .segment-option-cell > fn-checkbox {
@@ -518,6 +560,7 @@ fn-segment-open-icon {
 
 fn-segment-add-icon,
 fn-segment-open-icon,
+fn-segment fn-segment-remove-icon,
 fn-segment fn-segment-edit-icon,
 fn-segment-flyout fn-segment-remove-icon {
   float: right;
@@ -532,6 +575,10 @@ fn-segment-remove-icon:hover {
 
 fn-segment-remove-icon + fn-segment-edit-icon {
   margin-right: 10px;
+}
+
+fn-segment-add-icon + fn-segment-remove-icon {
+  margin-right: 40px;
 }
 
 fn-segment-remove-icon + fn-segment-add-icon {
@@ -558,12 +605,12 @@ fn-segment-edit-icon:after {
   content: "\f044";
 }
 
-fn-segment fn-segment-remove-icon {
+/*fn-segment fn-segment-remove-icon {
   position: relative;
   top: 0px;
   left: 0px;
   font-size: 13px;
-}
+}*/
 
 
 /*****************
