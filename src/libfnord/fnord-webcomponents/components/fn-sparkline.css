@@ -1,4 +1,4 @@
-path {
+fn-sparkline path {
   stroke: rgba(0, 0, 0, 0.6);
   fill: none;
   stroke-width: 2px;
@@ -10,6 +10,14 @@ fn-sparkline {
 
 fn-sparkline.sparkline-axes {
   padding-top: 8px;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.6);
-  border-left: 1px solid rgba(0, 0, 0, 0.6);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.3);
+  border-left: 1px solid rgba(0, 0, 0, 0.3);
+}
+
+
+
+fn-sparkline circle {
+  stroke: #a94442;
+  fill: #a94442;
+  stroke-width: 1px;
 }

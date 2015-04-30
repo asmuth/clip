@@ -12,13 +12,13 @@
 <template id="fn-sparkline-base-tpl">
   <svg>
     <path />
+    <circle />
   </svg>
 </template>
 
 <script type='text/javascript'>
   var Sparkline = function() {
     this.createdCallback = function() {
-      console.log("sparkline");
       if (this.hasAttribute('data-sparkline')) {
         this.render();
       }
@@ -70,7 +70,15 @@
 
       var path = this.querySelector("path");
       path.setAttribute("d", svg_line.join(" "));
-    }
+
+      if (this.hasAttribute('data-endpoint')) {
+        var i = points.length - 1;
+        var circle = this.querySelector("circle");
+        circle.setAttribute('cx', padding_x * 0.5 + (points[i].x * (width - padding_x)) - 2);
+        circle.setAttribute('cy', padding_y * 0.5 + ((1.0 - points[i].y) * (height - padding_y)) + 4);
+        circle.setAttribute('r', 4);
+      }
+    };
 
     this.scaleValues = function(axes) {
       var scaled = [];
