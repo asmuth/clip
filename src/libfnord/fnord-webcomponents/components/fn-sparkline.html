@@ -24,6 +24,12 @@
       }
     };
 
+    this.attributeChangedCallback = function(attr, old_val, new_val) {
+      if (attr == 'data-sparkline') {
+        this.render();
+      }
+    }
+
     this.render = function() {
       var y = {}
       y.values = this.getAttribute('data-sparkline')
