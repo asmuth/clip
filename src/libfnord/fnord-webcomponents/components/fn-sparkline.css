@@ -3,3 +3,13 @@ path {
   fill: none;
   stroke-width: 2px;
 }
+
+fn-sparkline {
+  display: inline-block;
+}
+
+fn-sparkline.sparkline-axes {
+  padding-top: 8px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.6);
+  border-left: 1px solid rgba(0, 0, 0, 0.6);
+}
