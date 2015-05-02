@@ -25,7 +25,7 @@ fn-button,
   vertical-align: baseline;
   color: rgba(0, 0, 0, 0.6);
   font-family: 'Helvetica Neue', Arial, Helvetica, sans-serif;
-  background: transparent !important;
+  background: transparent;
   background-image: none;
   font-weight: normal;
   box-shadow: 0px 0px 0px 1px rgba(39, 41, 43, 0.15) inset;
@@ -50,8 +50,8 @@ fn-button,
 
 fn-button:hover,
 .fn-button:hover {
-  background: #fafafa !important;
-  color: rgba(0, 0, 0, 0.8) !important;
+  background: #fafafa;
+  color: rgba(0, 0, 0, 0.8);
   box-shadow: 0px 0px 0px 1px rgba(39, 41, 43, 0.15) inset, 0px 0px 0px 0px rgba(39, 41, 43, 0.15) inset;
 }
 
@@ -99,11 +99,11 @@ fn-button[data-style='fluid'],
 fn-button[data-state='disabled'],
 .fn-button[data-state='disbaled'] {
   cursor: default;
-  background-color: #dcddde !important;
-  color: rgba(0, 0, 0, 0.4) !important;
-  opacity: 0.3 !important;
-  background-image: none !important;
-  box-shadow: none !important;
+  background-color: #dcddde;
+  color: rgba(0, 0, 0, 0.4);
+  opacity: 0.3 ;
+  background-image: none;
+  box-shadow: none;
   pointer-events: none;
 }
 
@@ -112,8 +112,8 @@ fn-button[data-state='disabled'],
 *******************************/
 fn-button[data-state='active'],
 .fn-button[data-state='active'] {
-  background: #fafafa !important;
-  color: rgba(0, 0, 0, 0.8) !important;
+  background: #fafafa;
+  color: rgba(0, 0, 0, 0.8);
   box-shadow: 0px 0px 0px 1px rgba(39, 41, 43, 0.15) inset, 0px 0px 0px 0px rgba(39, 41, 43, 0.15) inset;
 }
 
@@ -125,16 +125,16 @@ fn-button[data-state='active'],
 /* Toggle (Modifies active state to give affordances) */
 fn-button[data-toggle][data-state='active'],
 .fn-button[data-toggle][data-state='active'] {
-  background-color: #3b83c0 !important;
-  box-shadow: none !important;
+  background-color: #3b83c0;
+  box-shadow: none;
   text-shadow: none;
-  color: #ffffff !important;
+  color: #ffffff;
 }
 fn-button[data-toggle][data-state='active']:hover,
 .fn-button[data-toggle][data-state='active']:hover {
-  background-color:  #458ac6 !important;
+  background-color:  #458ac6;
   text-shadow: none;
-  color: #ffffff !important;
+  color: #ffffff;
 }
 
 /*******************************
