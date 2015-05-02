@@ -18,10 +18,12 @@ fn-dropdown,
   outline: none;
   text-align: left;
   color: rgba(0,0,0,.8);
-  tap-highlight-color: rgba(0, 0, 0, 0);
+  tap-highlight-color: transparent;
+  -webkit-tap-highlight-color: transparent;
   -webkit-transition: border-radius 0.1s ease, width 0.2s ease;
           transition: border-radius 0.1s ease, width 0.2s ease;
 }
+
 
 /*******************************
         Content
@@ -32,6 +34,23 @@ fn-dropdown,
 fn-dropdown-header {
   display: block;
 }
+
+fn-dropdown-header::-moz-selection {
+  background: transparent;
+}
+
+fn-dropdown-header::selection {
+  background: transparent;
+}
+
+fn-dropdown-header-value::-moz-selection {
+  background: transparent;
+}
+
+fn-dropdown-header-value::selection {
+  background: transparent;
+}
+
 
 fn-dropdown-header-icon,
 .fn-dropdown-header-icon {
@@ -82,7 +101,7 @@ fn-dropdown-items,
   transition: opacity .2s ease;
   z-index: 11;
   background-color: #fff;
-  overflow-y: scroll;
+  overflow-y: auto;
   -webkit-backface-visibility: hidden;
           backface-visibility: hidden;
   -webkit-overflow-scrolling: touch;
@@ -91,6 +110,11 @@ fn-dropdown-items,
   box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.08);
   -webkit-transition: box-shadow 0.2s ease, border 0.2s ease;
   transition: box-shadow 0.2s ease, border 0.2s ease;
+}
+
+fn-dropdown-items.wide,
+.fn-dropdown-items.wide {
+  overflow-y: scroll;
 }
 
 
@@ -367,5 +391,13 @@ fn-dropdown.input fn-dropdown-header:hover,
 fn-dropdown.input .fn-dropdown-header:hover {
   border-color: rgba(39,41,43,.15);
   box-shadow: none;
+}
+
+[data-check] {
+  visibility: hidden;
+}
+
+[data-check][data-active] {
+  visibility: visible;
 }
 

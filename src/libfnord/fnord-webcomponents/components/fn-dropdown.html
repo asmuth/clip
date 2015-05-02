@@ -285,6 +285,10 @@
 
         var input = input_items[i].querySelector("input");
         var checkbox = input_items[i].querySelector("fn-checkbox");
+        var check = input_items[i].querySelector("[data-check]");
+        if (check) {
+          console.log(check);
+        }
         var item = input_items[i];
 
         if (input) {
@@ -317,11 +321,12 @@
 
       //multi-selectable dropdown with checkboxes
       if (this.classList.contains('checkbox')) {
-        var checkbox = item.querySelector("fn-checkbox");
+        var checkbox = item.querySelector("fn-checkbox") || item.querySelector("[data-check]");
 
         if (item.hasAttribute('data-selected')) {
           selected = false;
           item.removeAttribute('data-selected');
+          console.log(checkbox);
           checkbox.removeAttribute('data-active');
 
           //not completely unselectable dropdown
