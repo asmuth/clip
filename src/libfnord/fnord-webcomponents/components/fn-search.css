@@ -69,13 +69,12 @@ fn-search ul li,
   height: auto;
   border-top: none;
   color: rgba(0, 0, 0, 0.8);
-  padding: 0.65em 0.7em 0.65em 0.7em!important;
+  padding: 0.65em 0.7em 0.65em 0.7em;
   text-transform: none;
   font-weight: normal;
   box-shadow: none;
   -webkit-touch-callout: none;
   margin: 0;
-  padding: 0;
   border: 0;
   font: inherit;
   line-height: inherit;
