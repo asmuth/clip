@@ -178,7 +178,7 @@ fn-segment-flyout:before {
   position: absolute;
   top: -29px;
   left: 142px;
-  z-inde7: 2;
+  z-index: 2;
 }
 
 fn-segment-flyout:after {

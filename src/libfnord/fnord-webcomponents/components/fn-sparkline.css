@@ -1,8 +1,3 @@
-fn-sparkline path {
-  stroke: rgba(0, 0, 0, 0.6);
-  fill: none;
-  stroke-width: 2px;
-}
 
 fn-sparkline {
   display: inline-block;
@@ -14,6 +9,16 @@ fn-sparkline.sparkline-axes {
   border-left: 1px solid rgba(0, 0, 0, 0.3);
 }
 
+fn-sparkline svg {
+  vertical-align: bottom;
+}
+
+
+fn-sparkline path {
+  stroke: rgba(0, 0, 0, 0.6);
+  fill: none;
+  stroke-width: 2px;
+}
 
 
 fn-sparkline circle {

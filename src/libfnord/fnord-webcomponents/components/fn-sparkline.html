@@ -49,15 +49,15 @@
     this.renderWithData = function(values, ymin, ymax) {
       var height = this.getAttribute('height');
       var width = this.getAttribute('width');
-      var padding_x = width * 0.1;
+      var padding_x = 0;
       var padding_y = 0;
 
       var points = this.scaleValues(values, ymin, ymax);
 
       var svg_line = [];
       for (var i = 0; i < points.length; ++i) {
-        var dx = padding_x * 0.5 + (points[i].x * (width - padding_x));
-        var dy = padding_y * 0.5 + ((1.0 - points[i].y) * (height - padding_y));
+        var dx = padding_x + (points[i].x * (width - padding_x * 2));
+        var dy = padding_y + ((1.0 - points[i].y) * (height - padding_y * 2));
         svg_line.push(i == 0 ? "M" : "L", dx, dy);
       }
 
@@ -70,14 +70,6 @@
 
       var path = this.querySelector("path");
       path.setAttribute("d", svg_line.join(" "));
-
-      if (this.hasAttribute('data-endpoint')) {
-        var i = points.length - 1;
-        var circle = this.querySelector("circle");
-        circle.setAttribute('cx', padding_x * 0.5 + (points[i].x * (width - padding_x)) - 2);
-        circle.setAttribute('cy', padding_y * 0.5 + ((1.0 - points[i].y) * (height - padding_y)) + 4);
-        circle.setAttribute('r', 4);
-      }
     };
 
     this.scaleValues = function(axes) {
@@ -85,7 +77,7 @@
 
       for (var i = 0; i < axes.y.values.length; ++i) {
         var v = axes.y.values[i];
-        var x  = i / axes.y.values.length + 0.5 / axes.y.values.length;
+        var x  = i / (axes.y.values.length - 1);
 
         if (v < axes.y.min) {
           scaled.push({x : x, y: 0});
