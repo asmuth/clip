@@ -152,6 +152,7 @@
         if (is_selectable) {
           var select_input = document.createElement("input");
           select_input.setAttribute("type", "checkbox");
+          select_input.className = "fn-checkbox";
           select_input.addEventListener("click", onRowSelectClick, false);
 
           if (row.getAttribute("data-selected") != null) {
@@ -161,6 +162,7 @@
 
           var select_td = document.createElement("td");
           select_td.appendChild(select_input);
+          select_td.className = "select";
           tr_elem.insertBefore(select_td, tr_elem.querySelector("td:first-child"));
         }
 
