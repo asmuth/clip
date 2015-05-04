@@ -814,11 +814,6 @@
       this.setAttribute('data-active', 'active');
 
       var flyout = this.querySelector("fn-segment-flyout");
-      var field = this.querySelector("fn-segment-editor-field");
-
-      flyout.style.marginLeft =
-        (flyout.offsetWidth / 2 - field.offsetWidth / 2) * -1 + "px";
-
       flyout.onclick = function(e) {
         e.stopPropagation();
       }
@@ -931,7 +926,14 @@
       if (active_view) {
         active_view.classList.remove("segment-active");
       }
+
       view.classList.add("segment-active");
+
+      if (selector == 'fn-segment-flyout') {
+        var field = this.querySelector("fn-segment-editor-field");
+        view.style.marginLeft =
+          (view.offsetWidth / 2 - field.offsetWidth / 2) * -1 + "px";
+      }
     };
 
 
