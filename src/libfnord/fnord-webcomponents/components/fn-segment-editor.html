@@ -871,7 +871,7 @@
       segment_select.querySelector("[data-action='cancel-segment']")
         .onclick = function(e) {
           e.stopPropagation();
-          _this.changeView("fn-segment-flyout", false);
+          _this.changeView("fn-segment-recent", true);
       }
 
       if (segment_select.querySelector("fn-menu")) {
@@ -914,15 +914,19 @@
 
 
     this.changeView = function(selector, modalView) {
-      var view = this.querySelector(selector);
-      var active_view = this.querySelector(".segment-active");
       var modal = this.querySelector("fn-modal");
-
       if (modalView == false) {
         modal.close();
       } else {
         modal.show();
       }
+
+      if (!selector) {
+        return;
+      }
+
+      var view = this.querySelector(selector);
+      var active_view = this.querySelector(".segment-active");
 
       if (active_view) {
         active_view.classList.remove("segment-active");
