@@ -131,7 +131,11 @@ fn-segment-recent fn-loader /deep/ .loader {
 fn-segment-overview,
 fn-segment-select,
 fn-segment-edit,
-fn-segment-recent {
+fn-segment-recent,
+.fn-segment-overview,
+.fn-segment-select,
+.fn-segment-edit,
+.fn-segment-recent {
   display: none;
   background: #ffffff;
   border: none;
@@ -146,11 +150,16 @@ fn-segment-select {
 fn-segment-flyout.segment-active,
 fn-segment-select.segment-active,
 fn-segment-edit.segment-active,
-fn-segment-recent.segment-active {
+fn-segment-recent.segment-active,
+.fn-segment-flyout.segment-active,
+.fn-segment-select.segment-active,
+.fn-segment-edit.segment-active,
+.fn-segment-recent.segment-active {
   display: block;
 }
 
-fn-segment-flyout {
+fn-segment-flyout,
+.fn-segment-flyout {
   position: absolute;
   background: #fff;
   margin-top: 12px;
@@ -165,7 +174,9 @@ fn-segment-flyout {
 }
 
 fn-segment-flyout:before,
-fn-segment-flyout:after {
+fn-segment-flyout:after,
+.fn-segment-flyout:before,
+.fn-segment-flyout:after {
   content: ' ';
   height: 0;
   position: absolute;
@@ -173,7 +184,8 @@ fn-segment-flyout:after {
   border: 15px solid transparent;
 }
 
-fn-segment-flyout:before {
+fn-segment-flyout:before,
+.fn-segment-flyout:before {
   border-bottom-color: #F4F4F4;
   position: absolute;
   top: -29px;
@@ -181,7 +193,8 @@ fn-segment-flyout:before {
   z-index: 2;
 }
 
-fn-segment-flyout:after {
+fn-segment-flyout:after,
+.fn-segment-flyout:after {
   border-bottom-color: #bbb;
   position: absolute;
   top: -30px;
@@ -189,7 +202,8 @@ fn-segment-flyout:after {
   z-index: 1;
 }
 
-fn-segment-flyout fn-segment-footer {
+fn-segment-flyout fn-segment-footer,
+.fn-segment-flyout fn-segment-footer {
   border-bottom-left-radius: 4px;
   border-bottom-right-radius: 4px;
   box-shadow: none;
@@ -198,7 +212,8 @@ fn-segment-flyout fn-segment-footer {
 }
 
 
-fn-segment-flyout fn-segments {
+fn-segment-flyout fn-segments,
+.fn-segment-flyout .fn-segments {
   font-size: 90%;
   height: calc(100% - 75px);
 }
@@ -291,7 +306,9 @@ fn-segment-text-title {
   Segment Header
 *****************/
 fn-segment-header,
-fn-segment-footer {
+fn-segment-footer,
+.fn-segment-header,
+.fn-segment-footer {
   display: block;
   box-shadow: 0px 1px 2px 0 rgba(0, 0, 0, 0.05);
   border-bottom: 1px solid rgba(39, 41, 43, 0.15);
@@ -311,21 +328,26 @@ fn-segment-footer {
   filter: progid:DXImageTransform.Microsoft.gradient(startColorStr='#f4f4f4', EndColorStr='#e9e9e9');
 }
 
-fn-segment-footer {
+fn-segment-footer,
+.fn-segment-footer {
   padding: 3px 0;
 }
 
 fn-segment-select fn-segment-header,
-fn-segment-recent fn-segment-header {
+fn-segment-recent fn-segment-header,
+.fn-segment-select .fn-segment-header,
+.fn-segment-recent .fn-segment-header {
   padding: 8px 0;
 }
 
-fn-segment-recent fn-segment-footer {
+fn-segment-recent fn-segment-footer,
+.fn-segment-recent .fn-segment-footer {
   height: 30px;
   border-top: none;
 }
 
-fn-segment-header fn-segment-error-message {
+fn-segment-header fn-segment-error-message,
+.fn-segment-header fn-segment-error-message {
   float: left;
 }
 
@@ -338,14 +360,17 @@ fn-segment-header-title,
   margin: 3px 2em 0;
 }
 
-fn-segment-header fn-button {
+fn-segment-header fn-button,
+.fn-segment-header fn-button {
   font-size: 90%;
   margin-right: 2em;
   float: right;
 }
 
 fn-segment-edit fn-segment-header fn-button:last-child,
-fn-segment-select fn-segment-header fn-button:last-child {
+fn-segment-select fn-segment-header fn-button:last-child,
+.fn-segment-edit .fn-segment-header fn-button:last-child,
+.fn-segment-select .fn-segment-header fn-button:last-child{
   margin-right: 5px;
 }
 
@@ -365,7 +390,8 @@ fn-segment-header input.fn-input,
   font-size: 90%;
 }
 
-fn-segment-header.segment-error fn-segment-error-message {
+fn-segment-header fn-segment-error-message.segment-error,
+.fn-segment-header .fn-segment-error-message.segment-error {
   margin-top: 0.8em;
   margin-left: 5px;
   padding: 0;
@@ -373,9 +399,7 @@ fn-segment-header.segment-error fn-segment-error-message {
   display: inline-block;
 }
 
-.segment-error fn-segment-header:not(.segment-error) fn-segment-error-message {
-  display: none;
-}
+
 
 
 /*****************
@@ -449,7 +473,8 @@ fn-segment-group-options[data-active] {
 /******************
   Segment Option
 ******************/
-fn-segment-options {
+fn-segment-options,
+.fn-segment-options {
   display: block;
   overflow: visible;
   min-height: 300px;
@@ -639,14 +664,16 @@ fn-segment-footer fn-button {
   Error Message
 *******************/
 
-fn-segment-error-message {
+fn-segment-error-message,
+.fn-segment-error-message {
   display: none;
   color: #d95c5c;
   font-size: 0.9em;
   font-style: italic;
 }
 
-.segment-error fn-segment-error-message {
+fn-segment-error-message.segment-error ,
+.fn-segment-error-message.segment-error {
   display: block;
   padding: 1em 2em 0em;
 }
