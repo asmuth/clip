@@ -59,7 +59,14 @@
           </fn-segments-empty>
         </template>
 
-        <fn-segment-footer></fn-segment-footer>
+        <fn-segment-footer>
+          <fn-button data-action='add-selected'>
+            <i class='fa fa-plus'></i> Add Selected
+          </fn-button>
+          <fn-button data-action='delete-selected'>
+            <i class='fa fa-trash-o'></i> Remove Selected
+          </fn-button>
+        </fn-segment-footer>
       </fn-segment-recent>
 
 
@@ -301,7 +308,8 @@
         }
 
         var option_elems = options[i].querySelectorAll("[data-segment-option]");
-        var opt = 'matches';
+        var type = options[i].getAttribute('data-type');
+        var opt = (type == null || type == 'string') ? 'matches' : 'matches_uint32';
         var values = [];
 
         for (var j = 0; j < option_elems.length; j++) {
@@ -355,7 +363,7 @@
       this.setAttribute('data-segments', JSON.stringify(segments));
 
       if (recent) {
-        this.fireAddRecentSegmentEvent(segment);
+        this.fireAddRecentEvent([segment]);
       } else {
         this.fireNewSegmentEvent(segment);
       }
@@ -452,6 +460,7 @@
       var fn_segment_option = document.createElement("fn-segment-option");
       fn_segment_option.setAttribute('data-key', option.getAttribute('data-key'));
       fn_segment_option.setAttribute('data-title', option.getAttribute('data-title'));
+      fn_segment_option.setAttribute('data-type', option.getAttribute('data-type'));
       var html = [
         "<div class='segment-option-cell first'><fn-checkbox></fn-checkbox><fn-segment-title>",
         option.getAttribute('data-title'),
@@ -674,15 +683,11 @@
       var fn_segment = this.createFnSegment(segment, false);
 
       //TODO add removable/editable properties
-      if (segment.key != 'all_traffic') {
-        var icon = document.createElement("fn-segment-remove-icon");
-        icon.classList.add('segment-icon');
-        fn_segment.appendChild(icon);
-        this.observeRemovableSegment(icon, segment.name);
-        this.observeEditableSegment(fn_segment, segment);
-      } else {
-        fn_segment.classList.add('static-segment');
-      }
+      var icon = document.createElement("fn-segment-remove-icon");
+      icon.classList.add('segment-icon');
+      fn_segment.appendChild(icon);
+      this.observeRemovableSegment(icon, segment.name);
+      this.observeEditableSegment(fn_segment, segment);
 
       return fn_segment;
     }
@@ -690,16 +695,10 @@
     this.createRecentSegment = function(segment) {
       var fn_segment = this.createFnSegment(segment, true);
 
-      var add_icon = document.createElement("fn-segment-add-icon");
-      var remove_icon = document.createElement("fn-segment-remove-icon");
+      var checkbox = document.createElement("fn-checkbox");
+      fn_segment.insertBefore(checkbox, fn_segment.firstElementChild);
 
-      add_icon.classList.add('segment-icon');
-      remove_icon.classList.add('segment-icon');
-
-      fn_segment.appendChild(add_icon);
-      fn_segment.appendChild(remove_icon);
-
-      this.observeRecentSegment(add_icon, remove_icon, segment);
+      this.observeRecentSegment(checkbox, fn_segment);
 
       return fn_segment;
     }
@@ -879,6 +878,7 @@
       var _this = this;
       var fn_segment_recent = this.querySelector("fn-segment-recent");
       var fn_segments = fn_segment_recent.querySelector("fn-segments");
+      var selection = [];
 
       fn_segments.innerHTML = "";
 
@@ -893,11 +893,33 @@
       }
 
       segments.forEach(function(segment) {
-        fn_segments.appendChild(_this.createRecentSegment(segment));
+        var fn_segment = _this.createRecentSegment(segment);
+        fn_segments.appendChild(fn_segment);
+
+        var checkbox = fn_segment.querySelector("fn-checkbox");
+        checkbox.addEventListener('fn-checkbox-select', function() {
+          fn_segment.classList.add('segment-selected');
+          selection.push(segment);
+        }, false);
+
+        checkbox.addEventListener('fn-checkbox-unselect', function() {
+          fn_segment.classList.remove('segment-selected');
+          selection.splice(selection.indexOf(segment), 1);
+        }, false);
       });
 
       fn_segment_recent.querySelector("fn-loader")
         .removeAttribute('data-loading');
+
+      fn_segment_recent.querySelector("fn-button[data-action='delete-selected']")
+        .addEventListener('click', function() {
+          _this.fireRemoveRecentEvent(selection);
+        });
+
+      fn_segment_recent.querySelector("fn-button[data-action='add-selected']")
+        .addEventListener('click', function() {
+          _this.fireAddRecentEvent(selection);
+        });
     };
 
     this.showRecentSegmentsLoader = function() {
@@ -1014,8 +1036,9 @@
     };
 
 
-    this.observeRecentSegment = function(add_icon, remove_icon, segment) {
-      var fn_segment_recent = this.querySelector("fn-segment-recent");
+    this.observeRecentSegment = function(checkbox, fn_segment) {
+      
+      /*var fn_segment_recent = this.querySelector("fn-segment-recent");
       var add_tooltip = fn_segment_recent.querySelector(
         "fn-tooltip[data-name='add']");
       var remove_tooltip = fn_segment_recent.querySelector(
@@ -1040,19 +1063,33 @@
         _this.loadRecentSegments(function(segments) {
           _this.renderRecentSegments(segments);
         });
-      }
+      }*/
     };
 
 
-    this.fireRemoveRecentEvent = function(segment) {
+    this.fireRemoveRecentEvent = function(segments) {
+      console.log(segments);
       var ev = new CustomEvent('fn-segment-recent-remove', {
-        'detail' : {'segment' : JSON.stringify(segment)},
+        'detail' : {'segments' : JSON.stringify(segments)},
         'bubbles': true,
         'cancelable' : true
       });
 
       this.dispatchEvent(ev);
     };
+
+    this.fireAddRecentEvent = function(segments) {
+      console.log(segments);
+      var ev = new CustomEvent('fn-segment-recent-add', {
+        'detail' : {'segments' : JSON.stringify(segments)},
+        'bubbles': true,
+        'cancelable' : true
+      });
+
+      this.dispatchEvent(ev);
+
+      this.fireSegmentsChangedEvent();
+    }
 
     this.fireNewSegmentEvent = function(segment) {
       var ev = new CustomEvent('fn-segment-new', {
@@ -1078,18 +1115,6 @@
       this.fireSegmentsChangedEvent();
     };
 
-
-    this.fireAddRecentSegmentEvent = function(segment) {
-      var ev = new CustomEvent('fn-segment-recent-add', {
-        'detail' : {'segment' : JSON.stringify(segment)},
-        'bubbles': true,
-        'cancelable' : true
-      });
-
-      this.dispatchEvent(ev);
-
-      this.fireSegmentsChangedEvent();
-    }
 
     this.fireEditSegmentEvent = function(old_segment, new_segment) {
       var ev = new CustomEvent('fn-segment-edit', {

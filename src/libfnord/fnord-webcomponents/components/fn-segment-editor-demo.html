@@ -120,7 +120,7 @@
               <div class='subtitle'>Segment by language and device information</div>
             </fn-segment-options-title>
 
-            <fn-segment-option data-key='lang' data-title='Language'>
+            <fn-segment-option data-key='lang' data-title='Language' data-type='string'>
               <fn-dropdown class='input' data-resolved data-segment-option>
                 <fn-dropdown-header data-blank></fn-dropdown-header>
                 <fn-dropdown-items>
@@ -134,7 +134,7 @@
               </fn-dropdown>
             </fn-segment-option>
 
-            <fn-segment-option data-key='device_type' data-title='Device Type'>
+            <fn-segment-option data-key='device_type' data-title='Device Type' data-type='int'>
               <fn-dropdown class='input checkbox' data-resolved data-segment-option>
                 <fn-dropdown-items>
                   <fn-dropdown-item data-value='desktop' data-title='Desktop'>
@@ -318,14 +318,14 @@
       }
 
       editor2.addEventListener('fn-segment-recent-remove', function(e) {
-        var removed_segment = JSON.parse(e.detail.segment);
+        var removed_segments = JSON.parse(e.detail.segments);
 
-        for (var i = 0; i < recent_segments.length; i++) {
+        /*for (var i = 0; i < recent_segments.length; i++) {
           if (recent_segments[i].key == removed_segment.key) {
             recent_segments.splice(i, 1);
             break;
           }
-        }
+        }*/
       });
     </script>
   </section>
