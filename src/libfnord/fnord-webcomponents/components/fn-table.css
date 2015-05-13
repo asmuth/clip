@@ -24,6 +24,7 @@ fn-table table {
 
 fn-table table[name='visible'] {
   display: table;
+  width: 100%;
 }
 
 fn-table-column {
