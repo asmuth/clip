@@ -118,7 +118,7 @@ fn-loader.segment-editor-loader /deep/ .spinner {
   Segments Loader
 ******************/
 fn-segment-recent fn-loader {
-  height: 370px;
+  height: 350px;
 }
 
 fn-segment-recent fn-loader /deep/ .loader {
@@ -332,6 +332,10 @@ fn-segment-footer,
 fn-segment-footer,
 .fn-segment-footer {
   padding: 3px 0;
+}
+
+fn-segment-recent fn-segment-footer {
+  padding: 8px 2em;
 }
 
 fn-segment-select fn-segment-header,
