@@ -50,7 +50,7 @@ Contributions
 + Henrik Muehe (http://github.com/henrik-muehe)
 + Philipp Bogensberger (http://github.com/bogensberger)
 + "Dolfly" (http://github.com/dolfly)
-+ Christian Parpart (http://github.com/trapni)
++ Christian Parpart (https://github.com/christianparpart)
 + Finn Zirngibl (https://github.com/finnomenon)
 + Simon Menke (http://github.com/fd)
 + Bruno Michel (http://github.com/nono)
