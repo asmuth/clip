@@ -1,0 +1,159 @@
+<!--
+  This file is part of the "FnordMetric" project
+    Copyright (c) 2015 Laura Schlimmer
+    Copyright (c) 2015 Paul Asmuth
+
+  FnordMetric is free software: you can redistribute it and/or modify it under
+  the terms of the GNU General Public License v3.0. You should have received a
+  copy of the GNU General Public License along with this program. If not, see
+  <http://www.gnu.org/licenses/>.
+-->
+
+<template id='fn-outage-overview-base-tpl'>
+  <fn-outage-overview-header>
+    <fn-outage-overview-title>Outages</fn-outage-overview-title>
+
+    <fn-outage-overview-error>
+      Please select at least tow outages to combine
+    </fn-outage-overview-error>
+
+    <fn-button data-action='combine-outages'>Combine</fn-button>
+  </fn-outage-overview-header>
+
+  <fn-table data-clickable data-selectable>
+    <fn-table-column data-key='key'>Name</fn-table-column>
+    <fn-table-column data-key='time'>Time</fn-table-column>
+
+    <table>
+      <tbody><tbody>
+    </table>
+  </fn-table>
+</template>
+
+<script type='text/javascript'>
+  var FnordOutageOverview = function() {
+    this.createdCallback = function() {
+      var tpl = Fnord.getTemplate('fn-outage-overview', 'base');
+      this.appendChild(tpl);
+
+      var _this = this;
+      this.querySelector("fn-button[data-action='combine-outages']")
+        .addEventListener('click', function() {
+          _this.handleCombine();
+        }, false);
+
+      if (this.hasAttribute('data-outages')) {
+        _this.render();
+      }
+
+      this.handleRowClick();
+    }
+
+    this.attributeChangedCallback = function(attr, old_val, new_val) {
+      if (attr == 'data-outages') {
+        this.render();
+      }
+    };
+
+    this.render = function() {
+      var outages = JSON.parse(this.getAttribute('data-outages'));
+      var _this = this;
+      var fn_table = this.querySelector("fn-table");
+      var tbody = fn_table.querySelector("tbody");
+      var keys = ['key', 'time'];
+      tbody.innerHTML = "";
+
+      outages.forEach(function(outage) {
+        var tr = document.createElement("tr");
+        tr.setAttribute('data-outage', JSON.stringify(outage));
+        keys.forEach(function(key) {
+          var td = document.createElement("td");
+          td.innerHTML = _this.format(outage[key], key);;
+          tr.appendChild(td);
+        });
+
+        tbody.appendChild(tr);
+      });
+
+      fn_table.renderTable();
+    };
+
+    this.handleCombine = function() {
+      var table = this.querySelector("fn-table table");
+      var selected = table.querySelectorAll("tr[data-selected]");
+      var error_msg = this.querySelector("fn-outage-overview-error");
+
+      if (selected.length < 2) {
+        error_msg.classList.add("active");
+        return;
+      }
+
+      var outages = JSON.parse(this.getAttribute('data-outages'));
+      var combined = {
+        'key' : '',
+        'time' : 0,
+        'combined' : []};
+      error_msg.classList.remove("active");
+
+      for (var i = 0; i < selected.length;i++) {
+        var outage = JSON.parse(selected[i].getAttribute('data-outage'));
+        if (i > 0) {
+          combined.key += " / ";
+        }
+        combined.key += outage.key;
+
+        for (var j = 0; j < outages.length; j++) {
+          if (outages[j].key == outage.key) {
+            if (combined.time < outages[j].time) {
+              combined.time = outages[j].time;
+            }
+            combined.combined.push(outages[j]);
+            outages.splice(j, 1);
+          }
+        }
+      }
+
+      outages.push(combined);
+      this.setAttribute('data-outages', JSON.stringify(outages));
+    };
+
+
+    this.handleRowClick = function() {
+      var _this = this;
+      this.querySelector("fn-table")
+        .addEventListener('fn-table-row-click', function(e) {
+          var target = e.srcElement || e.target;
+          var key = JSON.parse(target.getAttribute('data-outage')).key;
+          window.location.href = _this.getAttribute('data-url') + "?outage=" + key;
+        }, false);
+    }
+
+    this.format = function(data, key) {
+      switch (key) {
+        case "time":
+          var date = new Date(data);
+          var date_str = [
+            date.getFullYear(),
+            Fnord.appendLeadingZero(date.getMonth() + 1),
+            Fnord.appendLeadingZero(date.getDate())].join("-");
+          var time_str = [
+            Fnord.appendLeadingZero(date.getHours()),
+            Fnord.appendLeadingZero(date.getMinutes()),
+            Fnord.appendLeadingZero(date.getSeconds())].join(":");
+
+          return date_str + " " + time_str;
+
+        default:
+          return data;
+      }
+    };
+
+    this.setTitle = function(title) {
+      this.querySelector("fn-outage-overview-title").innerHTML = title;
+    }
+  };
+
+  window.addEventListener('fn-ready', function() {
+    Fnord.registerComponent('fn-outage-overview', FnordOutageOverview);
+  });
+</script>

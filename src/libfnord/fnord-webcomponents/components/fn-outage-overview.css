@@ -1,0 +1,44 @@
+fn-outage-overview {
+  display: block;
+}
+
+fn-outage-overview fn-table {
+  border: 1px solid rgba(39,41,43,.15);
+  border-radius: .2857rem;
+}
+
+fn-outage-overview fn-table td:not(.select) {
+  width: 50%;
+}
+
+fn-outage-overview-header {
+  display: block;
+  overflow: auto;
+  min-height: 34px;
+  padding: 3px 10px;
+  margin-bottom: 10px;
+}
+
+fn-outage-overview-title {
+  font-weight: 500;
+  margin-top: 3px;
+  float: left;
+}
+
+fn-outage-overview-header fn-button {
+  float: right;
+  font-size: 80%;
+}
+
+fn-outage-overview-error {
+  font-size: 80%;
+  color: #a94442;
+  font-style:italic;
+  float: left;
+  margin: 5px 0 0 5px;
+  display: none;
+}
+
+fn-outage-overview-error.active {
+  display: block;
+}
