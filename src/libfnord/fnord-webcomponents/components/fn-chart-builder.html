@@ -1,0 +1,102 @@
+<!--
+  This file is part of the "FnordMetric" project
+    Copyright (c) 2014 Laura Schlimmer
+    Copyright (c) 2014 Paul Asmuth, Google Inc.
+
+  FnordMetric is free software: you can redistribute it and/or modify it under
+  the terms of the GNU General Public License v3.0. You should have received a
+  copy of the GNU General Public License along with this program. If not, see
+  <http://www.gnu.org/licenses/>.
+-->
+<template id="fn-chart-builder-base-tpl">
+  <fn-chart-builder-header>
+    <fn-chart-builder-header-inner>
+      Metrics
+    </fn-chart-builder-header-inner>
+  </fn-chart-builder-header>
+
+  <div class='chart-builder-body'>
+
+    <template id="fn-chart-builder-list-item-tpl">
+      <fn-chart-builder-list-item>
+        <fn-chart-builder-list-item-header>
+        </fn-chart-builder-list-item-header>
+        <i class='fa fa-pencil' data-action='edit-metric'></i>
+        <i class='fa fa-trash-o' data-action='remove-metric'></i>
+      </fn-chart-builder-list-item>
+    </template>
+
+    <fn-chart-builder-list>
+    </fn-chart-builder-list>
+
+    <fn-chart-builder-pane>
+    </fn-chart-builder-pane>
+
+  </div>
+  <fn-chart-builder-footer>
+    <fn-button data-action='add-metric'>Add Metric</fn-button>
+  </fn-chart-builder-footer>
+
+  <fn-metric-editor>
+  </fn-metric-editor>
+</template>
+<script type='text/javascript'>
+  var FnordChartBuilder = function() {
+    this.createdCallback = function() {
+      var tpl = Fnord.getTemplate("fn-chart-builder", "base");
+      this.appendChild(tpl);
+
+      if (this.hasAttribute('data-metrics')) {
+        this.init();
+      }
+    }
+
+    this.init = function() {
+      this.onMetricsChange();
+
+      var metric_editor = this.querySelector("fn-metric-editor");
+      this.querySelector("[data-action='add-metric']").onclick = function() {
+        metric_editor.show();
+      }
+    }
+
+    this.onMetricsChange = function() {
+      this.renderMetricsList();
+    }
+
+    this.renderMetricsList = function() {
+      var list = this.querySelector("fn-chart-builder-list");
+      var metrics = JSON.parse(this.getAttribute('data-metrics'));
+      var tpl = this.querySelector("#fn-chart-builder-list-item-tpl");
+      var item = tpl.content.querySelector("fn-chart-builder-list-item");
+      var _this = this;
+
+      list.innerHTML = "";
+      metrics.forEach(function(metric) {
+        console.log(metric);
+        var m_item = item.cloneNode(true);
+        m_item.querySelector("fn-chart-builder-list-item-header").innerHTML =
+          metric.name;
+        list.appendChild(m_item);
+
+        m_item.querySelector("[data-action='edit-metric']").onclick = function() {
+          _this.querySelector("fn-metric-editor").editMetric(metric);
+        }
+
+        m_item.querySelector("[data-action='remove-metric']").onclick = function() {
+          metrics.splice(metrics.indexOf(metric), 1);
+          _this.setAttribute('data-metrics', JSON.stringify(metrics));
+          _this.onMetricRemoved();
+        }
+      });
+    };
+
+    this.onMetricRemoved = function() {
+      this.renderMetricsList();
+    }
+  };
+
+  window.addEventListener('fn-ready', function() {
+    Fnord.registerComponent("fn-chart-builder", FnordChartBuilder);
+  });
+</script>

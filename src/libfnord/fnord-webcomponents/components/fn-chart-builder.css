@@ -1,0 +1,62 @@
+fn-chart-builder {
+  border: 1px solid rgba(39,41,43,.15);
+  display: flex;
+  height: 100%;
+  flex-direction: column;
+}
+
+fn-chart-builder-header {
+  display: block;
+  flex: none;
+  border-bottom: 1px solid rgba(39,41,43,.1);
+  padding: 0.65em 1.1em 0.65em 1.1em;
+}
+
+.chart-builder-body {
+  display: flex;
+  min-height: 500px;
+}
+
+fn-chart-builder-footer {
+  display: block;
+  flex:none;
+  border-top: 1px solid rgba(39,41,43,.1);
+  padding: 0.4em 1.1em;
+}
+
+fn-chart-builder-pane {
+  border-left: 1px solid rgba(39,41,43,.1);
+  display: block;
+  flex: 1;
+  -webkit-box-flex: 1;
+  -webkit-flex: 1;
+  -ms-flex: 1;
+}
+
+fn-chart-builder-list {
+  display: block;
+  width: 150px;
+  flex: none;
+}
+
+fn-chart-builder-list-item {
+  display: block;
+  padding: 0.65em 1.1em 0.65em 1.1em;
+  font-size: 90%;
+  overflow: auto;
+}
+
+fn-chart-builder-list-item-header {
+  line-height: 15px;
+  float: left;
+}
+
+fn-chart-builder-list-item i {
+  float: right;
+  line-height: 15px;
+  vertical-align: bottom;
+}
+
+fn-chart-builder i.fa:hover {
+  cursor: pointer;
+}
