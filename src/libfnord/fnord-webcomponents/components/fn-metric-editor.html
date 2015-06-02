@@ -1,0 +1,464 @@
+<!--
+  This file is part of the "FnordMetric" project
+    Copyright (c) 2014 Laura Schlimmer
+    Copyright (c) 2014 Paul Asmuth, Google Inc.
+
+  FnordMetric is free software: you can redistribute it and/or modify it under
+  the terms of the GNU General Public License v3.0. You should have received a
+  copy of the GNU General Public License along with this program. If not, see
+  <http://www.gnu.org/licenses/>.
+-->
+<template id='fn-metric-editor-base-tpl'>
+  <fn-modal-dimmer>
+    <fn-modal>
+      <fn-modal-close-icon></fn-modal-close-icon>
+
+      <fn-metric-editor-recent class='me-modal-window active'>
+        <fn-metric-editor-header>
+          <fn-metric-editor-header-title>Recent Metrics</fn-metric-editor-header-title>
+          <fn-button data-action='metric-create'>
+            <i class='fa fa-plus'></i> New Metric
+          </fn-button>
+        </fn-metric-editor-header>
+
+        <fn-loader data-loading>
+          <fn-metrics></fn-metrics>
+        </fn-loader>
+
+        <template id='fn-metrics-empty-tpl'>
+          <fn-metrics-empty>
+            <div class='metric-text'>No Metrics Found</div>
+            <div class='metric-link' data-action='metric-create'>Add a new Metric</div>
+          </fn-metrics-empty>
+        </template>
+      </fn-metric-editor-recent>
+
+      <fn-metric-editor-series class='me-modal-window'>
+        <fn-metric-editor-header>
+          <fn-metric-editor-header-title>Select a Serie</fn-metric-editor-header-title>
+        </fn-metric-editor-header>
+
+        <fn-loader data-loading>
+          <fn-metric-series></fn-metric-series>
+        </fn-loader>
+
+        <template id='fn-metric-series-empty-tpl'>
+          <fn-metric-series-empty>
+            <div class='metric-text'>No Series Found</div>
+          </fn-metric-series-empty>
+        </template>
+      </fn-metric-editor-series>
+
+
+      <fn-metric-options id='fn-metric-options-tpl'>
+
+        <fn-metric-option>
+          <fn-metric-option-title>Draw</fn-metric-option-title>
+          <fn-dropdown data-key='chart' data-resolved class='input'>
+            <fn-dropdown-items>
+              <fn-dropdown-item data-value='line'>Linechart</fn-dropdown-item>
+              <fn-dropdown-item data-value='area'>Areachart</fn-dropdown-item>
+              <fn-dropdown-item data-value='bar'>Barchart</fn-dropdown-item>
+              <fn-dropdown-item data-value='point'>Pointchart</fn-dropdown-item>
+            </fn-dropdown-items>
+          </fn-dropdown>
+        </fn-metric-option>
+
+        <fn-metric-option>
+          <fn-metric-option-title>Rollup</fn-metric-option-title>
+          <fn-dropdown data-key='rollup' data-resolved class='input'>
+            <fn-dropdown-items>
+              <fn-dropdown-item data-value='value'>Value</fn-dropdown-item>
+              <fn-dropdown-item data-value='sum'>Sum</fn-dropdown-item>
+              <fn-dropdown-item data-value='count'>Count</fn-dropdown-item>
+              <fn-dropdown-item data-value='min'>Min</fn-dropdown-item>
+              <fn-dropdown-item data-value='max'>Max</fn-dropdown-item>
+              <fn-dropdown-item data-value='mean'>Mean</fn-dropdown-item>
+              <fn-dropdown-item data-value='median'>Median</fn-dropdown-item>
+              <fn-dropdown-item data-value='rollup mean'>Rollup Mean</fn-dropdown-item>
+              <fn-dropdown-item data-value='rollup count'>Rollup Count</fn-dropdown-item>
+              <fn-dropdown-item data-value='rollup sum'>Rollup Sum</fn-dropdown-item>
+            </fn-dropdown-items>
+          </fn-dropdown>
+        </fn-metric-option>
+
+        <fn-metric-option data-key='time_aggr' class='me-disabled'>
+          <fn-metric-option-title>Time Window / Step</fn-metric-option-title>
+          <fn-dropdown data-key='time_window' data-resolved class='disabled input'>
+            <fn-dropdown-items>
+              <fn-dropdown-item data-value=1>1 second</fn-dropdown-item>
+              <fn-dropdown-item data-value=5>5 seconds</fn-dropdown-item>
+              <fn-dropdown-item data-value=10>10 seconds</fn-dropdown-item>
+              <fn-dropdown-item data-value=20>20 seconds</fn-dropdown-item>
+              <fn-dropdown-item data-value=30>30 seconds</fn-dropdown-item>
+              <fn-dropdown-item data-value=60>1 minute</fn-dropdown-item>
+              <fn-dropdown-item data-value=300>5 minutes</fn-dropdown-item>
+              <fn-dropdown-item data-value=900>15 minutes</fn-dropdown-item>
+              <fn-dropdown-item data-value=1800>30 minutes</fn-dropdown-item>
+              <fn-dropdown-item data-value=3600>1 hour</fn-dropdown-item>
+              <fn-dropdown-item data-value=7200>2 hours</fn-dropdown-item>
+              <fn-dropdown-item data-value=21600>6 hours</fn-dropdown-item>
+              <fn-dropdown-item data-value=43200>12 hours</fn-dropdown-item>
+              <fn-dropdown-item data-value=86400>24 hours</fn-dropdown-item>
+            </fn-dropdown-items>
+          </fn-dropdown>
+
+          <fn-dropdown data-key='time_step' data-resolved class='disabled input'>
+            <fn-dropdown-items>
+              <fn-dropdown-item data-value=1>1 second</fn-dropdown-item>
+              <fn-dropdown-item data-value=5>5 seconds</fn-dropdown-item>
+              <fn-dropdown-item data-value=10>10 seconds</fn-dropdown-item>
+              <fn-dropdown-item data-value=20>20 seconds</fn-dropdown-item>
+              <fn-dropdown-item data-value=30>30 seconds</fn-dropdown-item>
+              <fn-dropdown-item data-value=60>1 minute</fn-dropdown-item>
+              <fn-dropdown-item data-value=300>5 minutes</fn-dropdown-item>
+              <fn-dropdown-item data-value=900>15 minutes</fn-dropdown-item>
+              <fn-dropdown-item data-value=1800>30 minutes</fn-dropdown-item>
+              <fn-dropdown-item data-value=3600>1 hour</fn-dropdown-item>
+              <fn-dropdown-item data-value=7200>2 hours</fn-dropdown-item>
+              <fn-dropdown-item data-value=21600>6 hours</fn-dropdown-item>
+              <fn-dropdown-item data-value=43200>12 hours</fn-dropdown-item>
+              <fn-dropdown-item data-value=86400>24 hours</fn-dropdown-item>
+            </fn-dropdown-items>
+          </fn-dropdown>
+        </fn-metric-option>
+
+        <fn-metric-option>
+          <fn-metric-option-title>Show the last...</fn-metric-option-title>
+          <fn-dropdown data-resolved class='input' data-key='timerange'>
+            <fn-dropdown-items>
+              <fn-dropdown-item data-value=300>5 minutes</fn-dropdown-item>
+              <fn-dropdown-item data-value=900>15 minutes</fn-dropdown-item>
+              <fn-dropdown-item data-value=1800>30 minutes</fn-dropdown-item>
+              <fn-dropdown-item data-value=3600>1 hour</fn-dropdown-item>
+              <fn-dropdown-item data-value=14400>4 hours</fn-dropdown-item>
+              <fn-dropdown-item data-value=43200>12 hours</fn-dropdown-item>
+              <fn-dropdown-item data-value=86400>1 day</fn-dropdown-item>
+            </fn-dropdown-items>
+          </fn-dropdown>
+        </fn-metric-option>
+
+        <fn-metric-option data-key='until'>
+          <fn-metric-option-title>Endtime</fn-metric-option-title>
+        </fn-metric-option>
+
+      </fn-metric-options>
+
+
+      <fn-metric-editor-create class='me-modal-window'>
+         <fn-metric-editor-header>
+            <input class='fn-input' placeholder='Metric Name' data-segment-name />
+            <fn-metric-editor-msg class='me-error' name='name'>Please insert a (unique) name</fn-metric-editor-msg>
+            <fn-metric-editor-msg class='me-error' name='option'>Please select at least one option</fn-metric-editor-msg>
+
+            <fn-button data-action='show-recent'>Cancel</fn-button>
+            <fn-button data-action='save-create'>Save</fn-button>
+          </fn-metric-editor-header>
+
+          <fn-metric-options></fn-metric-options>
+      </fn-metric-editor-create>
+
+      <fn-metric-editor-edit class='me-modal-window'>
+        <fn-metric-editor-header>
+          <input class='fn-input' data-metric-name />
+
+          <fn-button data-action='show-recent'>Cancel</fn-button>
+          <fn-button data-action='replace-metric'>Save</fn-button>
+        </fn-metric-editor-header>
+
+        <fn-metric-options></fn-metric-options>
+      </fn-metric-editor-edit>
+    </fn-modal>
+  </fn-modal-dimmer>
+</template>
+
+<script type='text/javascript'>
+  var FnordMetricEditor = function() {
+    this.createdCallback = function() {
+      var tpl = Fnord.getTemplate("fn-metric-editor", "base");
+      this.appendChild(tpl);
+      this.init();
+    }
+
+    this.init = function() {
+      var _this = this;
+      this.querySelector("fn-button[data-action='metric-create']").onclick =
+        function() {
+          _this.showSeries();
+        }
+
+      this.querySelector("fn-button[data-action='save-create']").onclick =
+        function() {
+          _this.onMetricCreation();
+        }
+
+      var show_recent_btns = this.querySelectorAll(
+        "fn-button[data-action='show-recent']");
+
+      for (var i = 0; i < show_recent_btns.length; i++) {
+        show_recent_btns[i].onclick = function() {
+          _this.showMetricRecent();
+        }
+      }
+    };
+
+
+    /**
+      * Collect the metric properties from the elem's html and build a metric
+      * object and call callback with this object if all needed properties are
+      * given or render error messages otherwise
+      *
+      * metric = {
+      *  name: String
+      *  key: String,
+      *  rules: [{field: String, opt: String, values: Array}]
+      */
+    this.buildMetric = function(elem, callback) {
+      var metric = {};
+
+      metric.name = elem.querySelector("input").value;
+      if (metric.name.length == 0) {
+        elem.querySelector("fn-metric-editor-msg[name='name']")
+          .classList.add("active");
+        return;
+      }
+      metric.key = metric.name.replace(" ", "_");
+      metric.rules = [];
+
+      for (var i = 0; i < this.optionPreselection.length; i++) {
+        var option = elem.querySelector(
+          "[data-key='" + this.optionPreselection[i].field + "']");
+        metric.rules.push({
+          field: this.optionPreselection[i].field,
+          opt: this.optionPreselection[i].opt,
+          values: [option.getValue()]});
+      }
+
+      callback(metric);
+    }
+
+
+
+    this.onMetricCreation = function() {
+      var view = this.querySelector("fn-metric-editor-create");
+      var _this = this;
+      this.buildMetric(view, function(metric) {
+        _this.fireNewMetricEvent({metric: metric});
+      });
+    };
+
+
+    this.show = function(view) {
+      var modal = this.querySelector("fn-modal");
+      modal.show();
+
+      if (view) {
+        return this.changeView(view);
+      }
+
+      this.showMetricRecent();
+    };
+
+    this.showSeries = function() {
+      var _this = this;
+      this.changeView("fn-metric-editor-series");
+
+      if (typeof this.loadSeries == "function") {
+        this.loadSeries(function(series) {
+          _this.renderSeries(series);
+        });
+      } else {
+        this.renderSeries([]);
+      }
+    };
+
+    
+
+    this.showMetricRecent = function() {
+      var _this = this;
+      this.changeView("fn-metric-editor-recent");
+
+      if (typeof this.loadRecentMetrics == "function") {
+        this.loadRecentMetrics(function(metrics) {
+          _this.renderRecentMetrics(metrics);
+        });
+      } else {
+        this.renderRecentMetrics([]);
+      }
+    }
+
+    this.optionPreselection = [
+      {"field" : 'chart', "opt" : "matches", "values" : ['line']},
+      {"field" : 'rollup', "opt" : "matches", "values" : ['value']},
+      {"field" : 'time_window', "opt" : "matches", "values" : ['5']},
+      {"field" : 'time_step', "opt" : "matches", "values" : ['10']},
+      {"field" : 'timerange', "opt" : "matches", "values" : ['3600']}
+    ];
+
+    this.setOptionSelection = function(elem, selection) {
+      for (var i = 0; i < selection.length; i++) {
+        var option = elem.querySelector("[data-key='" + selection[i].field + "']");
+        option.setValue(selection[i].values);
+      }
+    };
+
+
+    this.handleTimeAggregationControl = function(elem, selection) {
+      var option = elem.querySelector("[data-key='time_aggr']");
+      var dropdown_wdn = elem.querySelector("[data-key='time_window']");
+      var dropdown_step = elem.querySelector("[data-key='time_step']");
+
+      function handleAvailability(value) {
+        if (value == "value" || value.substr(0, 6) == "rollup") {
+          option.classList.add("me-disabled");
+          dropdown_wdn.classList.add("disabled");
+          dropdown_step.classList.add("disabled");
+        } else {
+          option.classList.remove("me-disabled");
+          dropdown_wdn.classList.remove("disabled");
+          dropdown_step.classList.remove("disabled");
+        }
+      }
+
+
+      for (var i = 0; i < selection.length; i++) {
+        if (selection[i].field == "rollup") {
+          handleAvailability(selection[i].values[0]);
+          break;
+        }
+      }
+
+      elem.querySelector("[data-key='rollup']").addEventListener(
+        'fn-dropdown-item-click', function(e) {
+          var target = e.srcElement || e.target;
+          handleAvailability(target.getAttribute('data-value'));
+        }, false);
+    };
+
+
+    this.showMetricCreate = function(serie) {
+      var view = this.querySelector("fn-metric-editor-create");
+      var options = view.querySelector("fn-metric-options");
+      var options_tpl = this.querySelector("#fn-metric-options-tpl");
+      options.innerHTML = "";
+      options.appendChild(options_tpl.cloneNode(true));
+
+      view.querySelector("input").value = serie.key;
+      this.setOptionSelection(options, this.optionPreselection);
+      this.handleTimeAggregationControl(options, this.optionPreselection);
+      this.hideErrorMessages(view);
+      this.changeView("fn-metric-editor-create");
+
+    };
+
+
+    this.hideErrorMessages = function(elem) {
+      var msg = elem.querySelectorAll("fn-metric-editor-msg.me-error.active");
+      for (var i = 0; i < msg.length; i++) {
+        msg[i].classList.remove("active");
+      }
+    };
+
+    this.renderSeries = function(series) {
+      var _this = this;
+      var view = this.querySelector("fn-metric-editor-series");
+      var container = view.querySelector("fn-metric-series");
+      container.innerHTML = "";
+
+      if (series.length == 0) {
+        var tpl = view.querySelector("#fn-metric-series-empty-tpl");
+        container.appendChild(
+          tpl.content.querySelector("fn-metric-series-empty").cloneNode(true));
+      }
+
+      series.forEach(function(serie) {
+        var elem = document.createElement("fn-metric-editor-serie");
+        elem.innerHTML = serie.key;
+        container.appendChild(elem);
+
+        elem.addEventListener("click", function() {
+          _this.showMetricCreate(serie);
+        });
+      });
+
+      view.querySelector("fn-loader").removeAttribute("data-loading");
+    };
+
+
+    this.renderRecentMetrics = function(metrics) {
+      var _this = this;
+      var view = this.querySelector("fn-metric-editor-recent");
+      var container = view.querySelector("fn-metrics");
+      container.innerHTML = "";
+
+      if (metrics.length == 0) {
+        var tpl = view.querySelector("#fn-metrics-empty-tpl");
+        container.appendChild(
+          tpl.content.querySelector("fn-metrics-empty").cloneNode(true));
+        view.querySelector("fn-loader").removeAttribute("data-loading");
+
+        container.querySelector("[data-action='metric-create']")
+          .addEventListener("click", function() {
+            _this.showSeries();
+          });
+        return;
+      }
+
+
+      metrics.forEach(function(metric) {
+        var elem = document.createElement("fn-metric-editor-metric");
+        elem.innerHTML = metric.name;
+        var add_icon = document.createElement("i");
+        add_icon.classList.add("fa", "fa-plus");
+        elem.appendChild(add_icon);
+        container.appendChild(elem);
+
+        add_icon.addEventListener("click", function() {
+          _this.fireNewMetricEvent({metric: metric, recent: true});
+        });
+      });
+
+      view.querySelector("fn-loader").removeAttribute("data-loading");
+    };
+
+
+    this.changeView = function(new_view) {
+      var old_view = this.querySelector(".me-modal-window.active");
+      if (old_view) {
+        old_view.classList.remove("active");
+      }
+
+      this.querySelector(new_view).classList.add("active");
+    };
+
+    this.editMetric = function(metric) {
+      var view = this.querySelector("fn-metric-editor-edit");
+      var options = view.querySelector("fn-metric-options");
+      var options_tpl = this.querySelector("#fn-metric-options-tpl");
+      options.innerHTML = "";
+      options.appendChild(options_tpl.cloneNode(true));
+
+      view.querySelector("input").value = metric.name;
+
+      this.setOptionSelection(options, metric.rules);
+      this.handleTimeAggregationControl(options, metric.rules);
+      this.hideErrorMessages(view);
+      this.show("fn-metric-editor-edit");
+    };
+
+
+    this.fireNewMetricEvent = function(detail) {
+      var ev = new CustomEvent("fn-metric-editor-new", {
+        detail: detail,
+        bubbles: true,
+        cancelable: true
+      });
+
+      this.dispatchEvent(ev);
+    }
+  }
+
+  window.addEventListener('fn-ready', function() {
+    Fnord.registerComponent('fn-metric-editor', FnordMetricEditor);
+  });
+</script>
