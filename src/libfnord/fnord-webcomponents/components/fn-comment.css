@@ -4,10 +4,32 @@
  *   http://www.semantic-ui.com/
  */
 
+fn-comments,
+.fn-comments {
+  margin: 1.5em 0em;
+  display: block;
+}
+
+fn-comments:first-child,
+.fn-comments:first-child {
+  margin-top: 0em;
+}
+
+fn-comments:last-child,
+.fn-comments:last-child {
+  margin-bottom: 0em;
+}
+
 fn-comment,
 .fn-comment {
   display: block;
   padding: 0.5em 0em 0em;
+}
+
+fn-comments fn-comment fn-comments,
+.fn-comments .fn-comment .fn-comments {
+  margin: 0em 0em 0.5em 0.5em;
+  padding: 1em 0em 1em 1em;
 }
 
 fn-comment-avatar,
