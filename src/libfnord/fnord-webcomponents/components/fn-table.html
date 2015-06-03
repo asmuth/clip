@@ -98,10 +98,15 @@
 
     this.renderRows = function() {
       var tbody = this.querySelector("table[name='visible'] > tbody");
+      var selectEvent = false;
       tbody.innerHTML = "";
 
       var onRowClick = (function(base) {
         return function() {
+          if (selectEvent) {
+            selectEvent = false;
+            return;
+          }
           var ev = new CustomEvent("fn-table-row-click", {
             bubbles: true,
             cancelable: true
@@ -115,6 +120,7 @@
 
       var onRowSelectClick = (function(base) {
         return function() {
+          selectEvent = true;
           var row = this.parentNode.parentNode;
           var all_rows = base.querySelectorAll("tr");
           var row_index = parseInt(row.getAttribute("data-row-index"), 10);
@@ -145,7 +151,6 @@
 
       this.forEachRowWithPagination(function(row, index) {
         var tr_elem = document.createElement("tr");
-        tr_elem.addEventListener("click", onRowClick, false);
         tr_elem.className = "row";
         tr_elem.innerHTML = row.innerHTML;
 
@@ -166,6 +171,7 @@
           tr_elem.insertBefore(select_td, tr_elem.querySelector("td:first-child"));
         }
 
+        tr_elem.addEventListener("click", onRowClick, false);
         tr_elem.setAttribute("data-row-index", index);
         tbody.appendChild(tr_elem);
       });
