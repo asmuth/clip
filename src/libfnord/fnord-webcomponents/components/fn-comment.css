@@ -1,0 +1,110 @@
+/**
+ * Adapted from: Semantic UI:
+ *   https://github.com/Semantic-Org/Semantic-UI
+ *   http://www.semantic-ui.com/
+ */
+
+fn-comment,
+.fn-comment {
+  display: block;
+  padding: 0.5em 0em 0em;
+}
+
+fn-comment-avatar,
+.fn-comment-avatar {
+  display: block;
+  width: 2.5em;
+  height: auto;
+  float: left;
+  margin: 0.2em 0em 0em
+}
+
+fn-comment-avatar img,
+.fn-comment-avatar img {
+  display: block;
+  margin: 0em auto;
+  width: 100%;
+  height: 100%;
+  border-radius: 0.25rem;
+}
+
+fn-comment-content,
+.fn-comment-content {
+  display: block;
+}
+
+fn-comment-avatar ~ fn-comment-content,
+.fn-comment-avatar ~ .fn-comment-content {
+  margin-left: 3.5em;
+}
+
+fn-comment-author,
+.fn-comment-author {
+  font-size: 1em;
+  color: rgba(0, 0, 0, 0.8);
+  font-weight: bold;
+}
+
+fn-comment-author a,
+a.fn-comment-author {
+  cursor: pointer;
+}
+
+fn-comment-author a:hover,
+a.fn-comment-author:hover {
+  color: #00b2f3;
+}
+
+fn-comment-metadata,
+.fn-comment-metadata {
+  display: inline-block;
+  margin-left: 0.5em;
+  color: rgba(0, 0, 0, 0.4);
+  font-size: 0.875em;
+}
+
+fn-comment-metadata > *,
+.fn-comment-metadata > * {
+  display: inline-block;
+  margin: 0em 0.5em 0em 0em;
+}
+
+fn-comment-metadata:last-child,
+.fn-comment-metadata:last-child {
+  margin-right: 0em;
+}
+
+fn-comment-text,
+.fn-comment-text {
+  display: block;
+  margin: 0.25em 0em 0.5em;
+  font-size: 1em;
+  word-wrap: break-word;
+  color: rgba(0, 0, 0, 0.8);
+  line-height: 1.3;
+}
+
+fn-comment-actions,
+.fn-comment-actions {
+  font-size: 0.875em;
+}
+
+fn-comment-action,
+.fn-comment-action {
+  cursor: pointer;
+  display: inline-block;
+  margin: 0em 0.75em 0em 0em;
+  color: rgba(0, 0, 0, 0.4);
+}
+
+fn-comment-action:last-child,
+.fn-comment-action:last-child {
+  margin-right: 0em;
+}
+
+fn-comment-action.active,
+fn-comment-action:hover,
+.fn-comment-action.active,
+.fn-comment-action:hover {
+  color: rgba(0, 0, 0, 0.8);
+}
