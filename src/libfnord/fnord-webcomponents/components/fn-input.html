@@ -78,8 +78,37 @@
         this.querySelector("input").value = value;
 
       } else {
+        var value = this.getAttribute('data-value');
+        var value_elems = this.querySelectorAll("fn-input-value");
+        for (var i = 0; i < value_elems.length; i++) {
+          this.removeChild(value_elems[i]);
+        }
 
-        this.querySelector("input").value = this.getAttribute('data-value');
+        if (this.classList.contains('csv')) {
+          var values = value.split(",");
+          var _this = this;
+          var i = 0;
+
+          values.forEach(function(v) {
+            var elem = document.createElement("fn-input-value");
+            if (i == 0) {
+              elem.style.marginLeft = "0.8em";
+              i++;
+            }
+            elem.innerHTML = v;
+            var icon = document.createElement("i");
+            icon.className = "fa fa-close";
+            elem.appendChild(icon);
+            _this.appendChild(elem);
+
+            icon.addEventListener('click', function() {
+              values.splice(values.indexOf(v), 1);
+              _this.removeCSVValue(v, values);
+            });
+          });
+        } else {
+          this.querySelector("input").value = value;
+        }
       }
     };
 
@@ -99,6 +128,18 @@
     this.setReadonly = function() {
       this.querySelector("input").readOnly = true;
     };
+
+    this.removeCSVValue = function(value, values) {
+      this.setAttribute('data-value', values.join(","));
+
+      var ev = new CustomEvent('fn-input-remove-csv-value', {
+        detail: {value: value},
+        bubbles: true,
+        cancealable: true
+      });
+
+      this.dispatchEvent(ev);
+    }
   };
 
   window.addEventListener('fn-ready', function() {

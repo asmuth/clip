@@ -214,3 +214,22 @@ fn-input.icon.left input:focus ~ fn-input-icon,
 }
 
 
+/*--------------------
+      CSV Items
+---------------------*/
+fn-input.csv fn-input-value {
+  display: inline-block;
+  position: relative;
+  margin-left: 0.45em;
+  top: -2.15em;
+  background-color: rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  border-radius:0.2857rem;
+  padding: 0 4px;
+}
+
+fn-input.csv fn-input-value i {
+  margin-left: 2px;
+  opacity: 0.7;
+  cursor: pointer;
+}
