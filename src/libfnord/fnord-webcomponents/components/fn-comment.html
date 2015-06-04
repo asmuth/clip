@@ -1,0 +1,52 @@
+<!--
+  This file is part of the "FnordMetric" project
+    Copyright (c) 2015 Laura Schlimmer
+    Copyright (c) 2015 Paul Asmuth
+
+  FnordMetric is free software: you can redistribute it and/or modify it under
+  the terms of the GNU General Public License v3.0. You should have received a
+  copy of the GNU General Public License along with this program. If not, see
+  <http://www.gnu.org/licenses/>.
+-->
+
+<template id='fn-comment-base-tpl'>
+  <fn-comment-content>
+    <fn-comment-author></fn-comment-author>
+    <fn-comment-metadata></fn-comment-metadata>
+    <fn-comment-text></fn-comment-text>
+    <fn-comment-actions>
+      <fn-comment-action>Reply</fn-comment-action>
+    </fn-comment-actions>
+  </fn-comment-content>
+</template>
+
+<script type='text/javascript'>
+  var FnordComment = function() {
+    this.render = function(comment) {
+      var tpl = Fnord.getTemplate('fn-comment', 'base');
+      this.appendChild(tpl);
+
+      this.querySelector("fn-comment-author").innerHTML = comment.author;
+      this.querySelector("fn-comment-metadata").innerHTML = this.formatDate(
+        comment.date);
+      this.querySelector("fn-comment-text").innerHTML = comment.text;
+    };
+
+    this.formatDate = function(ts) {
+      var date = new Date(DateUtil.parseTimestamp(ts));
+      var date_str = [
+        date.getFullYear(),
+        Fnord.appendLeadingZero(date.getMonth() + 1),
+        Fnord.appendLeadingZero(date.getDate())].join("-");
+      var time_str = [
+        Fnord.appendLeadingZero(date.getHours()),
+        Fnord.appendLeadingZero(date.getMinutes())].join(":");
+
+      return date_str + " " + time_str;
+    }
+  };
+
+  window.addEventListener('fn-ready', function() {
+    Fnord.registerComponent('fn-comment', FnordComment);
+  });
+</script>

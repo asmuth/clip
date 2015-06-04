@@ -29,7 +29,7 @@
 
   <section>
     <h1><i>Example 2 &raquo;</i> Nested Comments</h1>
-    <fn-comments>
+    <fn-comments id='comments2'>
       <fn-comment>
         <fn-comment-content>
           <fn-comment-author>Pete</fn-comment-author>
@@ -70,5 +70,18 @@
         </fn-comments>
       </fn-comment>
     </fn-comments>
+
+    <script type='text/javascript'>
+      var comments_elem = document.getElementById('comments2');
+      var comment_elem = document.createElement("fn-comment");
+      var comment = {
+        'author' : 'Kate',
+        'date' : 1433408033048,
+        'text': 'Great'
+      };
+      comment_elem.render(comment);
+      comments_elem.appendChild(comment_elem);
+    </script>
   </section>
+
 </template>
