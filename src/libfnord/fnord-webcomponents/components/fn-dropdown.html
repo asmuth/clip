@@ -225,8 +225,9 @@
       var pos = items.getBoundingClientRect();
       var margin;
 
-      if (window.innerWidth < pos.right) {
-        margin = pos.right - window.innerWidth;
+
+      if (document.body.offsetWidth < pos.right) {
+        margin = pos.right - document.body.offsetWidth;
 
         //visible y-scrollbar
         if (items.scrollHeight > pos.height) {

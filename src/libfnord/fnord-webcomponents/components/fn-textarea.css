@@ -23,6 +23,20 @@
   resize: vertical;
 }
 
+.fn-textarea::-webkit-input-placeholder {
+  color: rgba(0, 0, 0, 0.5);
+}
+.fn-textarea:-moz-placeholder {
+  color: rgba(0, 0, 0, 0.5);
+}
+.fn-textarea::-moz-placeholder {
+  color: rgba(0, 0, 0, 0.5);
+}
+.fn-textarea:-ms-input-placeholder {
+  color: rgba(0, 0, 0, 0.5);
+}
+
+
 .fn-textarea:focus {
   color: rgba(0, 0, 0, 0.85);
   border-color: rgba(39, 41, 43, 0.3);
