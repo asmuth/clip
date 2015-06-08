@@ -1,0 +1,41 @@
+/*
+  This file is part of the "FnordMetric" project
+    Copyright (c) 2015 Laura Schlimmer
+    Copyright (c) 2015 Paul Asmuth
+
+  FnordMetric is free software: you can redistribute it and/or modify it under
+  the terms of the GNU General Public License v3.0. You should have received a
+  copy of the GNU General Public License along with this program. If not, see
+  <http://www.gnu.org/licenses/>.
+*/
+doc {
+  display: block;
+}
+
+doc-title {
+  display: block;
+  font-size: 1.2em;
+  font-weight: 600;
+  margin-bottom: 20px;
+}
+
+doc-section doc-title {
+  font-size: 1.1em;
+  font-weight: 500;
+  margin-bottom: 8px;
+}
+
+doc-section {
+  display: block;
+  margin-top: 28px;
+}
+
+doc-url {
+  font-family: monospace;
+}
+
+doc-label {
+  display: inline-block;
+  font-size: 1em;
+  width: 49%;
+}
