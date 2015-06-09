@@ -27,14 +27,14 @@
 
         <doc-section data-resolved>
           <doc-title>Resource Information</doc-title>
-          <doc-http-api-info>
+          <doc-info>
             <doc-label>Response Formats</doc-label>
             <doc-value>JSON / CSV</doc-value>
-          </doc-http-api-info>
-          <doc-http-api-info>
+          </doc-info>
+          <doc-info>
             <doc-label>Authentication</doc-label>
             <doc-value>Yes</doc-value>
-          </doc-http-api-info>
+          </doc-info>
         </doc-section>
 
         <doc-section data-resolved>
@@ -93,31 +93,35 @@
           {
             doc_type: "http-api",
             content: {
-              url: "http://example.com/reports/download",
-              information: {
-                "Response Format" : "JSON / CSV",
-                "Authentication Required": "No"
-              },
+              path: "/reports/download",
+              method: "GET",
+              content_type: "application / json",
+              authentication_required: true,
+
               parameters: [
                 {
-                  name: "report",
+                  parameter: "report",
                   type: "String",
                   description: "The reports key",
-                  necessity: "mandatory"
+                  necessity: "mandatory",
+                  available_values: [
+                    {
+                      value: "test_report_a",
+                      description: "Test Report A"
+                    },
+                    {
+                      value: "test_report_b",
+                      descriptiom: "Test Report B"
+                    }
+                  ]
                 },
                 {
-                  name: "from",
+                  parameter: "from",
                   type: "Unix Timestamp",
                   description: "The reports start datetime",
                   necessity: "mandatory"
                 }
               ],
-              examples: [
-                {
-                  request: "http://example.com/reports/download?report=test",
-                  response: "{key: test, results: [{field: value}]}"
-                }
-              ]
             }
           }
         ]

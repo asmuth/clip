@@ -39,3 +39,17 @@ doc-label {
   font-size: 1em;
   width: 49%;
 }
+
+doc-info {
+  display: block;
+  border-bottom:1px solid rgba(39,41,43,.15);
+  padding: 10px 0;
+  min-width: 400px;
+  max-width: 600px;
+}
+
+doc-info doc-label {
+  color: rgba(0,0,0,.5);
+}
+
+
