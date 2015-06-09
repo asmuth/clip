@@ -45,11 +45,18 @@ doc-info {
   border-bottom:1px solid rgba(39,41,43,.15);
   padding: 10px 0;
   min-width: 400px;
-  max-width: 600px;
+  max-width: 630px;
 }
 
 doc-info doc-label {
   color: rgba(0,0,0,.5);
 }
 
+doc-section fn-table table[name='visible'] {
+  width: 630px;
+}
+
+doc-section fn-table tr td h5 {
+  margin-top: 0px;
+}
 

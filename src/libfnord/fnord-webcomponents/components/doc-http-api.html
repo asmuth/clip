@@ -43,7 +43,7 @@
 
     <template id='doc-http-api-value-row-tpl'>
       <tr>
-        <td style='border-top: none;'>
+        <td colspan='4' style='border-top: none;'>
           <div>
             <h5>Available Values</h5>
             <ul></ul>
@@ -123,7 +123,6 @@
         if (param.hasOwnProperty("available_values")) {
           var tr_elem = tpl.content.querySelector("tr").cloneNode(true);
           var ul = tr_elem.querySelector("ul");
-          tr.querySelector("td").colspan = columns.length;
 
           param["available_values"].forEach(function(value) {
             var li = document.createElement("li");
