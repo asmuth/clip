@@ -10,8 +10,8 @@
 -->
 <template id='doc-http-api-demo-base-tpl'>
   <section>
-    <h1>HTTP Api Documentation</h1>
-    <doc>
+    <h1>Static HTTP Api Documentation</h1>
+    <doc-ui>
       <doc-title>GET status/user_timeline</doc-title>
       <doc-dscr>
         Returns a collection of the most recent Comments posted by the User
@@ -76,6 +76,52 @@
         </doc-section>
         
       </doc-http-api>
-    </doc>
+    </doc-ui>
+  </section>
+
+  <section>
+    <h1>Dynamically Rendered Docu</h1>
+    <doc-ui id='doc-example2'></doc-ui>
+
+    <script type='text/javascript'>
+      var doc = document.getElementById("doc-example2");
+      var example = {
+        title: 'GET reports/download',
+        description: "Returns a report incidcated by the report parameter",
+        elements: [
+          {
+            http_api: {
+              url: "http://example.com/reports/download",
+              information: {
+                "Response Format" : "JSON / CSV",
+                "Authentication Required": "No"
+              },
+              parameters: [
+                {
+                  name: "report",
+                  type: "String",
+                  description: "The reports key",
+                  necessity: "mandatory"
+                },
+                {
+                  name: "from",
+                  type: "Unix Timestamp",
+                  description: "The reports start datetime",
+                  necessity: "mandatory"
+                }
+              ],
+              examples: [
+                {
+                  request: "http://example.com/reports/download?report=test",
+                  response: "{key: test, results: [{field: value}]}"
+                }
+              ]
+            }
+          }
+        ]
+      };
+
+      doc.render(example);
+    </script>
   </section>
 </template>
