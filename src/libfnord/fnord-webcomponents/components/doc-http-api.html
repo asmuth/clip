@@ -1,0 +1,56 @@
+<!--
+  This file is part of the "FnordMetric" project
+    Copyright (c) 2015 Laura Schlimmer
+    Copyright (c) 2015 Paul Asmuth
+
+  FnordMetric is free software: you can redistribute it and/or modify it under
+  the terms of the GNU General Public License v3.0. You should have received a
+  copy of the GNU General Public License along with this program. If not, see
+  <http://www.gnu.org/licenses/>.
+-->
+<template id='doc-http-api-base-tpl'>
+  <doc-section data-section='url'>
+    <doc-title>Resource URL</doc-title>
+    <doc-url></doc-url>
+  </doc-section>
+
+  <doc-section data-section='info'>
+    <doc-title>Resource Information</doc-title>
+
+    <template id='doc-http-api-info-tpl'>
+      <doc-http-api-info>
+        <doc-label></doc-label>
+        <doc-value></doc-value>
+      </doc-http-api-info>
+    </template>
+  </doc-section>
+
+  <doc-section data-section='parameters'>
+    <doc-title>Parameters</doc-title>
+  </doc-section>
+
+  <doc-section data-section='example'>
+    <doc-title>Example</doc-title>
+
+    <template id='doc-http-api-expl-tpl'>
+      <doc-http-api-expl>
+        <doc-url></doc-url>
+        <doc-code></doc-code>
+      </doc-http-api-expl>
+    </template>
+  </doc-section>
+</template>
+
+<script type='text/javascript'>
+  var DocHTTPApi = function() {
+    this.render = function(json) {
+      var tpl = Fnord.getTemplate("doc-http-api", "base");
+      this.appendChild(tpl);
+      console.log(json);
+    }
+  };
+
+  window.addEventListener('fn-ready', function() {
+    Fnord.registerComponent('doc-http-api', DocHTTPApi);
+  });
+</script>

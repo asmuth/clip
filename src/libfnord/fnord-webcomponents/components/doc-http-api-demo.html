@@ -18,14 +18,14 @@
       </doc-dscr>
 
       <doc-http-api>
-        <doc-section>
+        <doc-section data-resolved>
           <doc-title>Resource URL</doc-title>
           <doc-url>
             https://example/status/user_timeline
           </doc-url>
         </doc-section>
 
-        <doc-section>
+        <doc-section data-resolved>
           <doc-title>Resource Information</doc-title>
           <doc-http-api-info>
             <doc-label>Response Formats</doc-label>
@@ -37,7 +37,7 @@
           </doc-http-api-info>
         </doc-section>
 
-        <doc-section>
+        <doc-section data-resolved>
           <doc-title>Parameters</doc-title>
           <doc-http-api-param>
             <doc-param-name>
@@ -70,11 +70,12 @@
           </doc-http-api-param>
         </doc-section>
 
-        <doc-section>
+        <doc-section data-resolved>
           <doc-title>Example</doc-title>
-          <doc-url>https://example/status/user_timeline?user_id=123</doc-url>
+          <doc-http-api-expl>
+            <doc-url>https://example/status/user_timeline?user_id=123</doc-url>
+          </doc-http-api-expl>
         </doc-section>
-        
       </doc-http-api>
     </doc-ui>
   </section>
@@ -90,7 +91,8 @@
         description: "Returns a report incidcated by the report parameter",
         elements: [
           {
-            http_api: {
+            doc_type: "http-api",
+            content: {
               url: "http://example.com/reports/download",
               information: {
                 "Response Format" : "JSON / CSV",

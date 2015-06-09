@@ -9,6 +9,13 @@
   <http://www.gnu.org/licenses/>.
 */
 
+doc-http-api doc-section {
+  display: none;
+}
+
+doc-http-api doc-section[data-resolved] {
+  display: block;
+}
 
 doc-http-api-info {
   display: block;
@@ -21,3 +28,5 @@ doc-http-api-info {
 doc-http-api-info doc-label {
   color: rgba(0,0,0,.5);
 }
+
+

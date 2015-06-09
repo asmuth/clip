@@ -9,15 +9,26 @@
   <http://www.gnu.org/licenses/>.
 -->
 <template id='doc-ui-base-tpl'>
+  <doc-title></doc-title>
+  <doc-dscr></doc-dscr>
 </template>
 <script type='text/javascript'>
   var DocUIComponent = function() {
     this.createdCallback = function() {
-      console.log("created doc ui");
     }
 
     this.render = function(json) {
-      console.log(json);
+      var _this = this;
+      var tpl = Fnord.getTemplate("doc-ui", "base");
+      this.appendChild(tpl);
+      this.querySelector("doc-title").innerHTML = json.title;
+      this.querySelector("doc-dscr").innerHTML = json.description;
+
+      json.elements.forEach(function(element) {
+        var elem = document.createElement("doc-" + element.doc_type);
+        _this.appendChild(elem);
+        elem.render(element.content);
+      });
     }
   };
 
