@@ -15,7 +15,7 @@
   var TabBarComponent = function() {
     this.createdCallback = function() {
 
-      var active_tab = this.querySelector("fn-tab[data-active='active']");
+      var active_tab = this.querySelector("fn-tab[data-active]");
 
       if (active_tab == null) {
         var tabs = this.querySelectorAll("fn-tab");
@@ -38,7 +38,7 @@
     };
 
     this.setContent = function(index) {
-      var active_content = this.querySelector("fn-tab-content[data-active='active']");
+      var active_content = this.querySelector("fn-tab-content[data-active]");
 
       if (active_content) {
         active_content.removeAttribute('data-active');
@@ -70,7 +70,7 @@
       var tabs = this.querySelectorAll("fn-tab");
       for (var i = 0; i < tabs.length; i++) {
         tabs[i].addEventListener('click', function() {
-          var current_tab = base.querySelector("fn-tab[data-active='active']");
+          var current_tab = base.querySelector("fn-tab[data-active]");
           current_tab.removeAttribute("data-active");
           this.setAttribute("data-active", "active");
 
