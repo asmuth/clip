@@ -10,33 +10,35 @@
 -->
 <template id='doc-method-demo-base-tpl'>
   <section>
-    <h1>Method Documentation</h1>
     <doc-ui>
     </doc-ui>
 
     <script type='text/javascript'>
       var doc_ui = document.querySelector("doc-ui");
       var example = {
-        name: "isEmpty",
-        signature: "boolean isEmpty(Array* array)",
-        comment: "Returns true iff the array is empty",
-        specified_by: [
+        title: "Method Documentation",
+        description: "Example Method Documentation",
+        elements: [
           {
-            name: "isEmpty",
-            "interface": "Collection"
-          }
-        ],
-        parameters: [
-          {
-            parameter: "array",
-            description: "the array that should be tested for emptiness"
-          }
-        ],
-        return_description: "true if the array is empty",
-        exceptions: [
-          {
-            type: "NullPointerException",
-            cause: "if the specified array is null"
+            doc_type: "method",
+            content: {
+              name: "isEmpty",
+              signature: "boolean isEmpty(Array* array)",
+              comment: "Returns true iff the array is empty",
+              parameters: [
+                {
+                  parameter: "array",
+                  description: "the array that should be tested for emptiness"
+                }
+              ],
+              return_description: "true if the array is empty",
+              exceptions: [
+                {
+                  type: "NullPointerException",
+                  cause: "if the specified array is null"
+                }
+              ]
+            }
           }
         ]
       };

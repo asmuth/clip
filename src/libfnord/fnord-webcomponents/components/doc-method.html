@@ -9,12 +9,61 @@
   <http://www.gnu.org/licenses/>.
 -->
 <template id='doc-method-base-tpl'>
+  <doc-method>
+    <doc-header>
+      <doc-title></doc-title>
+    </doc-header>
+
+    <doc-code data-signature></doc-code>
+    <doc-dscr data-comment></doc-dscr>
+
+    <doc-section data-section='parameters'>
+      <doc-title>Parameters</doc-title>
+      <doc-list></doc-list>
+    </doc-section>
+
+    <doc-section data-section='return_description'>
+      <doc-title>Returns</doc-title>
+      <doc-text></doc-text>
+    </doc-section>
+
+    <doc-section data-section='exceptions'>
+      <doc-title>Throws</doc-title>
+      <doc-list></doc-list>
+    </doc-section>
+
+    <doc-section data-section='override'>
+      <doc-title>Overrides:</doc-title>
+      <doc-text></doc-text>
+    </doc-section>
+
+
+  </doc-method>
 </template>
 <script type='text/javascript'>
   var DocMethodComponent = function() {
     this.render = function(json) {
+      var tpl = Fnord.getTemplate("doc-method", "base");
+      this.appendChild(tpl);
+
+      this.querySelector("doc-header doc-title").innerHTML = json.name;
+      this.querySelector("doc-dscr[data-commment]").innerHTML = json.comment;
+      this.renderSignature(json.signature);
+      this.renderParameterSection(doc.parameters);
+
       console.log(json);
     }
+
+    this.renderSignature = function(signature) {
+      //TODO add highlighting
+      this.querySelector("doc-code[data-signature]").innerHTML = signature;
+    }
+
+    this.renderParameterSection = function(params) {
+      console.log(params);
+    }
+
+
   }
 
   window.addEventListener('fn-ready', function() {
