@@ -1,0 +1,133 @@
+<!--
+  This file is part of the "FnordMetric" project
+    Copyright (c) 2015 Laura Schlimmer
+    Copyright (c) 2015 Paul Asmuth
+
+  FnordMetric is free software: you can redistribute it and/or modify it under
+  the terms of the GNU General Public License v3.0. You should have received a
+  copy of the GNU General Public License along with this program. If not, see
+  <http://www.gnu.org/licenses/>.
+-->
+<template id='doc-http-api-demo-base-tpl'>
+  <section>
+    <h1>Static HTTP Api Documentation</h1>
+    <doc-ui>
+      <doc-title>GET status/user_timeline</doc-title>
+      <doc-dscr>
+        Returns a collection of the most recent Comments posted by the User
+      </doc-dscr>
+
+      <doc-http-api>
+        <doc-section data-resolved>
+          <doc-title>Resource URL</doc-title>
+          <doc-url>
+            https://example/status/user_timeline
+          </doc-url>
+        </doc-section>
+
+        <doc-section data-resolved>
+          <doc-title>Resource Information</doc-title>
+          <doc-info>
+            <doc-label>Response Formats</doc-label>
+            <doc-value>JSON / CSV</doc-value>
+          </doc-info>
+          <doc-info>
+            <doc-label>Authentication</doc-label>
+            <doc-value>Yes</doc-value>
+          </doc-info>
+        </doc-section>
+
+        <doc-section data-resolved>
+          <doc-title>Parameters</doc-title>
+          <doc-http-api-param>
+            <doc-param-name>
+              user_id
+              <doc-param-ordinality>mandatory</doc-param-ordinality>
+            </doc-param-name>
+            <doc-param-type>Int</doc-param-type>
+            <doc-param-dscr>The user's ID</doc-param-dscr>
+            <doc-param-exp>78945</doc-param-exp>
+          </doc-http-api-param>
+
+          <doc-http-api-param>
+            <doc-param-name>
+              from
+              <doc-param-ordinality>optional</doc-param-ordinality>
+            </doc-param-name>
+            <doc-param-type>Unix Timestamp</doc-param-type>
+            <doc-param-dscr>The start of the time range</doc-param-dscr>
+            <doc-param-exp>1433786451</doc-param>
+          </doc-http-api-param>
+
+          <doc-http-api-param>
+            <doc-param-name>
+              until
+              <doc-param-ordinality>optional</doc-param-ordinality>
+            </doc-param-name>
+            <doc-param-type>Unix Timestamp</doc-param-type>
+            <doc-param-dscr>The end of the time range</doc-param-dscr>
+            <doc-param-exp>1433788451</doc-param-exp>
+          </doc-http-api-param>
+        </doc-section>
+
+        <doc-section data-resolved>
+          <doc-title>Example</doc-title>
+          <doc-http-api-expl>
+            <doc-url>https://example/status/user_timeline?user_id=123</doc-url>
+          </doc-http-api-expl>
+        </doc-section>
+      </doc-http-api>
+    </doc-ui>
+  </section>
+
+  <section>
+    <h1>Dynamically Rendered Docu</h1>
+    <doc-ui id='doc-example2'></doc-ui>
+
+    <script type='text/javascript'>
+      var doc = document.getElementById("doc-example2");
+      var example = {
+        title: 'GET reports/download',
+        description: "Returns a report incidcated by the report parameter",
+        elements: [
+          {
+            doc_type: "http-api",
+            content: {
+              path: "/reports/download",
+              method: "GET",
+              content_type: "application / json",
+              authentication_required: true,
+
+              parameters: [
+                {
+                  parameter: "report",
+                  type: "String",
+                  description: "The reports key",
+                  necessity: "mandatory",
+                  available_values: [
+                    {
+                      value: "test_report_a",
+                      description: "Test Report A"
+                    },
+                    {
+                      value: "test_report_b",
+                      descriptiom: "Test Report B"
+                    }
+                  ]
+                },
+                {
+                  parameter: "from",
+                  type: "Unix Timestamp",
+                  description: "The reports start datetime",
+                  necessity: "mandatory"
+                }
+              ],
+            }
+          }
+        ]
+      };
+
+      doc.render(example);
+    </script>
+  </section>
+</template>

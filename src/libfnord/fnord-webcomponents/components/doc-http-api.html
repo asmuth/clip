@@ -1,0 +1,151 @@
+<!--
+  This file is part of the "FnordMetric" project
+    Copyright (c) 2015 Laura Schlimmer
+    Copyright (c) 2015 Paul Asmuth
+
+  FnordMetric is free software: you can redistribute it and/or modify it under
+  the terms of the GNU General Public License v3.0. You should have received a
+  copy of the GNU General Public License along with this program. If not, see
+  <http://www.gnu.org/licenses/>.
+-->
+<template id='doc-http-api-base-tpl'>
+  <doc-section data-section='url'>
+    <doc-title>Resource Path</doc-title>
+    <doc-url></doc-url>
+  </doc-section>
+
+  <doc-section data-section='info'>
+    <doc-title>Resource Information</doc-title>
+    <doc-info data-info='content_type'>
+      <doc-label>Content-Type</doc-label>
+      <doc-value></doc-value>
+    </doc-info>
+
+    <doc-info data-info='authentication_required'>
+      <doc-label>Authentication Required</doc-label>
+      <doc-value></doc-value>
+    </doc-info>
+  </doc-section>
+
+  <doc-section data-section='parameters'>
+    <doc-title>Parameters</doc-title>
+
+    <fn-table>
+      <fn-table-column>Parameter</fn-table-column>
+      <fn-table-column>Type</fn-table-column>
+      <fn-table-column>Description</fn-table-column>
+      <fn-table-column>Necessity</fn-table-column>
+
+      <table>
+        <tbody></tbody>
+      </table>
+    </fn-table>
+
+    <template id='doc-http-api-value-row-tpl'>
+      <tr>
+        <td colspan='4' style='border-top: none;'>
+          <div>
+            <h5>Available Values</h5>
+            <ul></ul>
+          </div>
+        </td>
+      </tr>
+    </template>
+  </doc-section>
+
+  <doc-section data-section='examples'>
+    <doc-title>Example</doc-title>
+
+    <template id='doc-http-api-expl-tpl'>
+      <doc-http-api-expl>
+        <doc-url></doc-url>
+        <doc-code></doc-code>
+      </doc-http-api-expl>
+    </template>
+  </doc-section>
+</template>
+
+<script type='text/javascript'>
+  var DocHTTPApi = function() {
+    this.render = function(json) {
+      var tpl = Fnord.getTemplate("doc-http-api", "base");
+      this.appendChild(tpl);
+
+      this.renderURLSection(json.path);
+      this.renderInfoSection(json);
+      this.renderParamSection(json.parameters);
+
+      console.log(json);
+    }
+
+    this.renderURLSection = function(url) {
+      if (url === undefined || url === null || url.length == 0) {
+        return;
+      }
+
+      var section = this.querySelector("doc-section[data-section='url']");
+      section.querySelector("doc-url").innerHTML = url;
+      section.setAttribute('data-resolved', 'resolved');
+    };
+
+    this.renderInfoSection = function(json) {
+      var section = this.querySelector("doc-section[data-section='info']");
+      section.querySelector("doc-info[data-info='content_type'] doc-value")
+        .innerHTML = json.content_type;
+      section.querySelector("doc-info[data-info='authentication_required'] doc-value")
+        .innerHTML = json.authentication_required ? "Yes" : "No";
+
+      section.setAttribute('data-resolved', 'resolved');
+    };
+
+    this.renderParamSection = function(params) {
+      if (params === undefined || params === null || params.length == 0) {
+        return;
+      }
+
+      var _this = this;
+      var section = this.querySelector("doc-section[data-section='parameters']");
+      var fn_table = section.querySelector("fn-table");
+      var tbody = fn_table.querySelector("tbody");
+      var tpl = _this.querySelector("#doc-http-api-value-row-tpl");
+      var columns = ["parameter", "type", "description", "necessity"];
+
+      params.forEach(function(param) {
+        var tr = document.createElement("tr");
+        columns.forEach(function(column) {
+          var td = document.createElement("td");
+          td.innerHTML = (param.hasOwnProperty(column)) ? param[column] : "-";
+          tr.appendChild(td);
+        });
+
+        tbody.appendChild(tr);
+
+        if (param.hasOwnProperty("available_values")) {
+          var tr_elem = tpl.content.querySelector("tr").cloneNode(true);
+          var ul = tr_elem.querySelector("ul");
+
+          param["available_values"].forEach(function(value) {
+            var li = document.createElement("li");
+            li.innerHTML = value.value;
+
+            if (value.hasOwnProperty("description")) {
+              li.innerHTML += ": " + value.description;
+            }
+
+            ul.appendChild(li);
+          });
+          tbody.appendChild(tr_elem);
+        }
+      });
+
+      fn_table.renderTable();
+      section.setAttribute('data-resolved', 'resolved');
+    };
+
+
+  };
+
+  window.addEventListener('fn-ready', function() {
+    Fnord.registerComponent('doc-http-api', DocHTTPApi);
+  });
+</script>

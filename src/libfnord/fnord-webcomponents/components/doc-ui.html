@@ -1,0 +1,38 @@
+<!--
+  This file is part of the "FnordMetric" project
+    Copyright (c) 2015 Laura Schlimmer
+    Copyright (c) 2015 Paul Asmuth
+
+  FnordMetric is free software: you can redistribute it and/or modify it under
+  the terms of the GNU General Public License v3.0. You should have received a
+  copy of the GNU General Public License along with this program. If not, see
+  <http://www.gnu.org/licenses/>.
+-->
+<template id='doc-ui-base-tpl'>
+  <doc-title></doc-title>
+  <doc-dscr></doc-dscr>
+</template>
+<script type='text/javascript'>
+  var DocUIComponent = function() {
+    this.createdCallback = function() {
+    }
+
+    this.render = function(json) {
+      var _this = this;
+      var tpl = Fnord.getTemplate("doc-ui", "base");
+      this.appendChild(tpl);
+      this.querySelector("doc-title").innerHTML = json.title;
+      this.querySelector("doc-dscr").innerHTML = json.description;
+
+      json.elements.forEach(function(element) {
+        var elem = document.createElement("doc-" + element.doc_type);
+        _this.appendChild(elem);
+        elem.render(element.content);
+      });
+    }
+  };
+
+  window.addEventListener('fn-ready', function() {
+    Fnord.registerComponent("doc-ui", DocUIComponent);
+  });
+</script>
