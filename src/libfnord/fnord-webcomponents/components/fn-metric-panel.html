@@ -42,7 +42,7 @@
     </fn-metric-panel-title>
     <fn-metric-panel-clearfix></fn-metric-panel-clearfix>
 
-    <fn-date-select data-selectable='past'>
+    <fn-date-select>
     </fn-date-select>
   </fn-metric-panel-section>
 </template>
@@ -165,6 +165,7 @@
       var dateselect = section.querySelector("fn-date-select");
       dateselect.setAttribute('data-from', this.getAttribute('data-from'));
       dateselect.setAttribute('data-until', this.getAttribute('data-until'));
+      dateselect.setAttribute('data-resolved', 'resolved');
 
       section.setAttribute('data-resolved', 'resolved');
     };
