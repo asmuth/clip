@@ -42,8 +42,8 @@
     </fn-metric-panel-title>
     <fn-metric-panel-clearfix></fn-metric-panel-clearfix>
 
-    <fn-daterangepicker data-selectable='past'>
-    </fn-daterangepicker>
+    <fn-date-select data-selectable='past'>
+    </fn-date-select>
   </fn-metric-panel-section>
 </template>
 <script type='text/javascript'>
@@ -162,9 +162,9 @@
     this.renderDateTimeContent = function() {
       var section = this.querySelector(
         "fn-metric-panel-section[data-content='datetime']");
-      var datepicker = section.querySelector("fn-daterangepicker");
-      datepicker.setAttribute('data-from', this.getAttribute('data-from'));
-      datepicker.setAttribute('data-until', this.getAttribute('data-until'));
+      var dateselect = section.querySelector("fn-date-select");
+      dateselect.setAttribute('data-from', this.getAttribute('data-from'));
+      dateselect.setAttribute('data-until', this.getAttribute('data-until'));
 
       section.setAttribute('data-resolved', 'resolved');
     };
