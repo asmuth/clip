@@ -17,21 +17,21 @@
     <script tpye='text/javascript'>
       var metrics = [
         {
-          'title': 'Performance',
+          'name': 'Performance',
           'key': 'performance',
           'children': [
             {
-              'title': 'HTTP',
+              'name': 'HTTP',
               'key': 'http',
               'children': [
                 {
-                  'title': 'Load Time',
+                  'name': 'Load Time',
                   'key': 'load_time',
                   'description': '',
                   'children': []
                 },
                 {
-                  'title': 'Response Time',
+                  'name': 'Response Time',
                   'key': 'response_time',
                   'description': '',
                   'children': []
@@ -41,11 +41,11 @@
           ]
         },
         {
-          'title': 'Availability',
+          'name': 'Availability',
           'key': 'availability',
           'children': [
             {
-              'title': 'Down Time',
+              'name': 'Down Time',
               'key': 'down_time',
               'description': '',
               'children': []
@@ -72,19 +72,19 @@
       var groupMetrics = {
         'Performance': [
           {
-            'title': 'Load Time',
+            'name': 'Load Time',
             'key': 'load_time',
             'description': ''
           },
           {
-            'title': 'HTTP Response Time',
+            'name': 'HTTP Response Time',
             'key': 'http_response_time',
             'description': 'The time the app needs to react to a http request'
           }
         ],
         'Availability': [
           {
-            'title': 'Down Time',
+            'name': 'Down Time',
             'key': 'down_time',
             'description': ''
           }

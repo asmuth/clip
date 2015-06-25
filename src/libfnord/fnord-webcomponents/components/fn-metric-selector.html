@@ -48,7 +48,7 @@
 
     this.renderTitleElem = function(node, hierarchy) {
       var elem = document.createElement("fn-metrics-title");
-      elem.innerHTML = node.title;
+      elem.innerHTML = node.name;
       elem.style.paddingLeft = hierarchy * 15 + 28 + "px";
 
       return elem;
@@ -59,7 +59,7 @@
       var checkbox = document.createElement("fn-checkbox");
       var title = document.createElement("fn-metric-title");
       var description = document.createElement("fn-metric-description");
-      title.innerHTML = leaf.title;
+      title.innerHTML = leaf.name;
       description.innerHTML = (leaf.description.length > 0) ?
         "<span>&#45;</span>" + leaf.description : "";
       elem.appendChild(checkbox);
@@ -109,7 +109,7 @@
       container.innerHTML = "";
       console.log(metrics);
       for (var group in metrics) {
-        container.appendChild(_this.renderTitleElem({title: group}, 0));
+        container.appendChild(_this.renderTitleElem({name: group}, 0));
 
         metrics[group].forEach(function(metric) {
           container.appendChild(_this.renderMetricElem(metric, 1));
