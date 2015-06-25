@@ -1,0 +1,39 @@
+fn-metric-panel {
+  display: block;
+}
+
+fn-metric-panel-section {
+  display: none;
+  padding: 1.2em 2em;
+}
+
+fn-metric-panel-section[data-resolved] {
+  display: block;
+}
+
+fn-metric-panel-title {
+  float: left;
+}
+
+fn-metric-panel-link {
+  float: right;
+  cursor: pointer;
+}
+
+fn-metric-panel fn-daterangepicker {
+  display: block;
+}
+
+fn-metric-panel fn-metrics {
+  display: block;
+}
+
+fn-metric-panel-clearfix {
+  display: block;
+  clear: both;
+}
+
+fn-metric-panel-item .fa.fa-times {
+  cursor: pointer;
+  padding: 2px;
+}

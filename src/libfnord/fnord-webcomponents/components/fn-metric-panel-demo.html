@@ -10,6 +10,25 @@
 -->
 <template id="fn-metric-panel-demo-base-tpl">
   <section>
+    <fn-metric-panel data-until='1435238080' data-from='1432646080'>
+    </fn-metric-panel>
 
+    <script type='text/javascript'>
+      var metrics = [
+        {
+          'key': 'metric1',
+          'title': 'Metric 1'
+        },
+        {
+          'key': 'metric2',
+          'title': 'Metric 2'
+        }
+      ];
+      var metric_panel = document.querySelector("fn-metric-panel");
+      metric_panel.setAttribute("data-filters", JSON.stringify([]));
+      metric_panel.setAttribute("data-metrics", JSON.stringify(metrics));
+      metric_panel.init();
+
+    </script>
   </section>
 </template>

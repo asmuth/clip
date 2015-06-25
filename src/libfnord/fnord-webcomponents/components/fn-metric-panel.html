@@ -10,18 +10,187 @@
 -->
 
 <template id="fn-metric-panel-base-tpl">
-  <fn-metric-panel>
-  </fn-metric-panel>
+  <fn-metric-panel-section data-content='metrics'>
+    <fn-metric-panel-title>
+      Metrics
+    </fn-metric-panel-title>
+    <fn-metric-panel-link data-action='add-metric'>
+      <i class='fa fa-plus'></i> Add Metric
+    </fn-metric-panel-link>
+    <fn-metric-panel-clearfix></fn-metric-panel-clearfix>
+
+    <fn-metrics>
+    </fn-metrics>
+  </fn-metric-panel-section>
+
+  <fn-metric-panel-section data-content='filters'>
+    <fn-metric-panel-title>
+      Filters
+    </fn-metric-panel-title>
+    <fn-metric-panel-link data-action='add-filter'>
+      <i class='fa fa-plus'></i> Add Filter
+    </fn-metric-panel-link>
+    <fn-metric-panel-clearfix></fn-metric-panel-clearfix>
+
+    <fn-metric-filters>
+    </fn-metric-filters>
+  </fn-metric-panel-section>
+
+  <fn-metric-panel-section data-content='datetime'>
+    <fn-metric-panel-title>
+      Time Range
+    </fn-metric-panel-title>
+    <fn-metric-panel-clearfix></fn-metric-panel-clearfix>
+
+    <fn-daterangepicker data-selectable='past'>
+    </fn-daterangepicker>
+  </fn-metric-panel-section>
 </template>
 <script type='text/javascript'>
   var MetricPanel = function() {
     this.createdCallback = function() {
       var tpl = Fnord.getTemplate('fn-metric-panel', 'base');
       this.appendChild(tpl);
+      this.init();
+      this.observeLinks();
+
+    };
+
+    this.init = function() {
+      if (this.hasAttribute('data-from') && this.hasAttribute('data-until')) {
+        this.renderDateTimeContent();
+      }
+
+      if (this.hasAttribute('data-metrics')) {
+        this.renderMetricContent();
+      }
+
+      if (this.hasAttribute('data-filters')) {
+        this.renderFilterContent();
+      }
+    };
+
+    this.observeLinks = function() {
+      var _this = this;
+      var links = this.querySelectorAll("fn-metric-panel-link");
+      for (var i = 0; i < links.length; i++) {
+        links[i].addEventListener('click', function() {
+          var ev = new Event('fn-metric-panel-' + this.getAttribute('data-action'));
+          _this.dispatchEvent(ev);
+        }, false);
+      }
+    }
+
+    this.createRemovableItem = function(content_item, onRemove) {
+      var item = document.createElement("fn-metric-panel-item");
+      var icon = document.createElement("i");
+      var title = document.createElement("span");
+
+      icon.className = "fa fa-times";
+      title.innerHTML = content_item.title;
+
+      item.appendChild(icon);
+      item.appendChild(title);
+      item.setAttribute('data-key', content_item.key);
+
+      icon.addEventListener('click', function() {
+        onRemove(content_item);
+      });
+
+      return item;
+    };
+
+    this.removeMetric = function(metric) {
+      var metrics = JSON.parse(this.getAttribute('data-metrics'));
+
+      for (var i = 0; i < metrics.length; i++) {
+        if (metrics[i].key == metric.key) {
+          metrics.splice(i, 1);
+          break;
+        }
+      }
+
+      this.setAttribute('data-metrics', metrics);
+      this.fireMetricRemovedEvent(metric);
+    }
+
+    this.removeFilter = function(filter) {
+      var filters = JSON.parse(this.getAttribute('data-filters'));
+
+      for (var i = 0; i < filters.length; i++) {
+        if (filters[i].key == filter.key) {
+          filters.splice(i, 1);
+          break;
+        }
+      }
+
+      this.setAttribute('data-filters', filters);
+      this.fireFilterRemovedEvent(filter);
     };
 
 
-  }
+    this.renderMetricContent = function() {
+      var _this = this;
+      var section = this.querySelector(
+        "fn-metric-panel-section[data-content='metrics']");
+      var metrics_elem = section.querySelector("fn-metrics");
+      var metrics = JSON.parse(this.getAttribute('data-metrics'));
+
+      metrics.forEach(function(metric) {
+        metrics_elem.appendChild(
+          _this.createRemovableItem(metric, _this.removeMetric.bind(_this)));
+      });
+
+      section.setAttribute('data-resolved', 'resolved');
+    };
+
+    this.renderFilterContent = function() {
+      var _this = this;
+      var section = this.querySelector(
+        "fn-metric-panel-section[data-content='filters']");
+      var filters_elem = section.querySelector("fn-metric-filters");
+      var filters = JSON.parse(this.getAttribute('data-filters'));
+
+      filters.forEach(function(filter) {
+        filters_elem.appendChild(
+          _this.createRemovableItem(filter, _this.removeFilter.bind(_this)));
+      });
+
+      section.setAttribute('data-resolved', 'resolved');
+    };
+
+    this.renderDateTimeContent = function() {
+      var section = this.querySelector(
+        "fn-metric-panel-section[data-content='datetime']");
+      var datepicker = section.querySelector("fn-daterangepicker");
+      datepicker.setAttribute('data-from', this.getAttribute('data-from'));
+      datepicker.setAttribute('data-until', this.getAttribute('data-until'));
+
+      section.setAttribute('data-resolved', 'resolved');
+    };
+
+
+    this.fireMetricRemovedEvent = function(metric) {
+      var ev = new CustomEvent('fn-metric-panel-remove-metric', {
+        detail: {metric: metric},
+        cancelable: true,
+        bubbles: true
+      });
+
+      this.dispatchEvent(ev);
+    };
+
+    this.fireFilterRemovedEvent = function(filter) {
+      var ev = new CustomEvent('fn-metric-panel-remove-filter', {
+        detail: {filter: filter},
+        cancelable: true,
+        bubbles: true
+      });
+
+      this.dispatchEvent(ev);
+    };
+
+  };
 
   window.addEventListener('fn-ready', function() {
     Fnord.registerComponent('fn-metric-panel', MetricPanel);
