@@ -9,13 +9,13 @@ fn-metric-selector fn-modal-footer {
 }
 
 fn-metric-selector fn-metric,
-fn-metric-selector fn-metric-title {
+fn-metric-selector fn-metrics-title {
   display: block;
   border-bottom: 1px solid rgba(39, 41, 43, 0.15);
   line-height: 1.3em;
 }
 
-fn-metric-selector fn-metric-title {
+fn-metric-selector fn-metrics-title {
   background: #f1f1f1;
   padding: 0.8em 2em;
   font-weight: 500;
@@ -31,4 +31,8 @@ fn-metric-selector fn-metric:last-child {
 
 fn-metric-selector fn-metric fn-checkbox {
   margin-right: 5px;
+}
+
+fn-metric-selector fn-metric-description span {
+  margin: 0 5px;
 }
