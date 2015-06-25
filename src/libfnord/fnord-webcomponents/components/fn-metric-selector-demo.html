@@ -1,0 +1,62 @@
+<!--
+  This file is part of the "FnordMetric" project
+    Copyright (c) 2015 Laura Schlimmer
+    Copyright (c) 2015 Paul Asmuth
+
+  FnordMetric is free software: you can redistribute it and/or modify it under
+  the terms of the GNU General Public License v3.0. You should have received a
+  copy of the GNU General Public License along with this program. If not, see
+  <http://www.gnu.org/licenses/>.
+-->
+<template id="fn-metric-selector-demo-base-tpl">
+  <section>
+    <fn-button id='add_metrics'>Add Metrics</fn-button>
+    <fn-metric-selector>
+    </fn-metric-selector>
+
+    <script tpye='text/javascript'>
+      var metrics = [
+        {
+          'title': 'Performance',
+          'key': 'performance',
+          'children': [
+            {
+              'title': 'HTTP',
+              'key': 'http',
+              'children': [
+                {
+                  'title': 'Load Time',
+                  'key': 'load_time',
+                  'children': []
+                },
+                {
+                  'title': 'Response Time',
+                  'key': 'response_time',
+                  'children': []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          'title': 'Availability',
+          'key': 'availability',
+          'children': [
+            {
+              'title': 'Down Time',
+              'key': 'down_time',
+              'children': []
+            }
+          ]
+        }
+      ];
+
+      var metric_selector = document.querySelector("fn-metric-selector");
+      metric_selector.setAttribute('data-metrics', JSON.stringify(metrics));
+
+      document.getElementById("add_metrics").addEventListener('click', function() {
+        metric_selector.show();
+      }, false);
+    </script>
+  </section>
+</template>

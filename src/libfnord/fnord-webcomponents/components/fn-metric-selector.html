@@ -1,0 +1,105 @@
+<!--
+  This file is part of the "FnordMetric" project
+    Copyright (c) 2015 Laura Schlimmer
+    Copyright (c) 2015 Paul Asmuth
+
+  FnordMetric is free software: you can redistribute it and/or modify it under
+  the terms of the GNU General Public License v3.0. You should have received a
+  copy of the GNU General Public License along with this program. If not, see
+  <http://www.gnu.org/licenses/>.
+-->
+
+<template id="fn-metric-selector-base-tpl">
+  <fn-modal-dimmer>
+    <fn-modal>
+      <fn-modal-close-icon></fn-modal-close-icon>
+      <fn-modal-header>
+        Metric Select
+      </fn-modal-header>
+      <fn-metrics>
+      </fn-metrics>
+      <fn-modal-footer>
+        <fn-button data-action='add-metrics'>Add Selected</fn-button>
+      </fn-modal-footer>
+    </fn-modal>
+  </fn-modal-dimmer>
+</template>
+<script type='text/javascript'>
+  var MetricSelector = function() {
+    this.createdCallback = function() {
+      var tpl = Fnord.getTemplate("fn-metric-selector", "base");
+      this.appendChild(tpl);
+
+      if (this.hasAttribute('data-metrics')) {
+        this.renderMetrics();
+      }
+    };
+
+    this.attributeChangedCallback = function(attr, old_val, new_val) {
+      if (attr == 'data-metrics') {
+        this.renderMetrics();
+      }
+    };
+
+    this.show = function() {
+      this.querySelector("fn-modal").show();
+    };
+
+
+    this.renderTitleElem = function(node, hierarchy) {
+      var elem = document.createElement("fn-metric-title");
+      elem.innerHTML = node.title;
+      elem.style.paddingLeft = hierarchy * 15 + 28 + "px";
+
+      return elem;
+    };
+
+    this.renderMetricElem = function(leaf, hierarchy) {
+      var elem = document.createElement("fn-metric");
+      var checkbox = document.createElement("fn-checkbox");
+      var span = document.createElement("span");
+      span.innerHTML = leaf.title;
+      elem.appendChild(checkbox);
+      elem.appendChild(span);
+      elem.setAttribute('data-metric', leaf.key);
+      elem.style.paddingLeft = hierarchy * 15 + 28 + "px";
+
+      return elem;
+    }
+
+    this.renderMetrics = function() {
+      var _this = this;
+      var container = this.querySelector("fn-metrics");
+      var metrics = JSON.parse(this.getAttribute('data-metrics'));
+
+      container.innerHTML = "";
+      var hierarchy = 0;
+
+      function traverse(node, func) {
+        func(node);
+
+        for (var i = 0; i < node.children.length; i++) {
+          traverse(node.children[i], func);
+        }
+      }
+
+      metrics.forEach(function(metric) {
+        hierarchy = 0;
+        traverse(metric, function(node) {
+          if (node.children.length > 0) {
+            container.appendChild(_this.renderTitleElem(node, hierarchy));
+            hierarchy++;
+          } else {
+            container.appendChild(_this.renderMetricElem(node, hierarchy));
+          }
+        });
+      });
+
+
+    };
+  };
+
+  window.addEventListener('fn-ready', function() {
+    Fnord.registerComponent('fn-metric-selector', MetricSelector);
+  });
+</script>

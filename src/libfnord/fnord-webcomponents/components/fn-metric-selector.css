@@ -1,0 +1,34 @@
+fn-metric-selector fn-modal-header {
+  font-size: 1em;
+  font-weight: 500;
+  padding: 1.1rem 2rem;
+}
+
+fn-metric-selector fn-modal-footer {
+  padding: 8px 2em;
+}
+
+fn-metric-selector fn-metric,
+fn-metric-selector fn-metric-title {
+  display: block;
+  border-bottom: 1px solid rgba(39, 41, 43, 0.15);
+  line-height: 1.3em;
+}
+
+fn-metric-selector fn-metric-title {
+  background: #f1f1f1;
+  padding: 0.8em 2em;
+  font-weight: 500;
+}
+
+fn-metric-selector fn-metric {
+  padding: 1.2em 2em;
+}
+
+fn-metric-selector fn-metric:last-child {
+  border-bottom: none;
+}
+
+fn-metric-selector fn-metric fn-checkbox {
+  margin-right: 5px;
+}
