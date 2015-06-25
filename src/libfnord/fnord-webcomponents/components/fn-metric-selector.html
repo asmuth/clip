@@ -65,9 +65,9 @@
       elem.style.paddingLeft = hierarchy * 15 + 28 + "px";
 
       return elem;
-    }
+    };
 
-    this.renderMetrics = function() {
+    this.renderMetricsTree = function() {
       var _this = this;
       var container = this.querySelector("fn-metrics");
       var metrics = JSON.parse(this.getAttribute('data-metrics'));
@@ -94,6 +94,43 @@
           }
         });
       });
+    };
+
+
+    this.renderMetricsGroup = function() {
+      var _this = this;
+      var container = this.querySelector("fn-metrics");
+      var metrics = JSON.parse(this.getAttribute('data-metrics'));
+
+      container.innerHTML = "";
+      console.log(metrics);
+      for (var group in metrics) {
+        container.appendChild(_this.renderTitleElem({title: group}, 0));
+
+        metrics[group].forEach(function(metric) {
+          container.appendChild(_this.renderMetricElem(metric, 1));
+        });
+      }
+    };
+
+
+
+    this.renderMetrics = function() {
+      var format = this.getAttribute('data-format');
+
+      switch (format) {
+        case 'tree':
+          this.renderMetricsTree();
+          return;
+
+        case 'group':
+          this.renderMetricsGroup();
+          return;
+
+        default:
+          return;
+      }
+
 
 
     };

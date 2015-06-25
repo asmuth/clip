@@ -11,7 +11,7 @@
 <template id="fn-metric-selector-demo-base-tpl">
   <section>
     <fn-button id='add_metrics'>Add Metrics</fn-button>
-    <fn-metric-selector>
+    <fn-metric-selector data-format='tree'>
     </fn-metric-selector>
 
     <script tpye='text/javascript'>
@@ -27,11 +27,13 @@
                 {
                   'title': 'Load Time',
                   'key': 'load_time',
+                  'description': '',
                   'children': []
                 },
                 {
                   'title': 'Response Time',
                   'key': 'response_time',
+                  'description': '',
                   'children': []
                 }
               ]
@@ -45,6 +47,7 @@
             {
               'title': 'Down Time',
               'key': 'down_time',
+              'description': '',
               'children': []
             }
           ]
@@ -56,6 +59,45 @@
 
       document.getElementById("add_metrics").addEventListener('click', function() {
         metric_selector.show();
+      }, false);
+    </script>
+  </section>
+
+  <section>
+    <fn-button id='metric_selector2_btn'>Show Metric Selector</fn-button>
+    <fn-metric-selector data-format='group'>
+    </fn-metric-selector>
+
+    <script type='text/javascript'>
+      var groupMetrics = {
+        'Performance': [
+          {
+            'title': 'Load Time',
+            'key': 'load_time',
+            'description': ''
+          },
+          {
+            'title': 'HTTP Response Time',
+            'key': 'http_response_time',
+            'description': 'The time the app needs to react to a http request'
+          }
+        ],
+        'Availability': [
+          {
+            'title': 'Down Time',
+            'key': 'down_time',
+            'description': ''
+          }
+        ]
+      };
+
+      var groupMetricSelector = document.querySelector(
+        "fn-metric-selector[data-format='group']");
+      groupMetricSelector.setAttribute(
+        'data-metrics', JSON.stringify(groupMetrics));
+
+      document.getElementById('metric_selector2_btn').addEventListener('click', function() {
+        groupMetricSelector.show();
       }, false);
     </script>
   </section>
