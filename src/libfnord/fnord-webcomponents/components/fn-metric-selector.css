@@ -8,6 +8,12 @@ fn-metric-selector fn-modal-footer {
   padding: 8px 2em;
 }
 
+fn-metric-selector fn-metrics {
+  display: block;
+  max-height: 400px;
+  overflow-y: auto;
+}
+
 fn-metric-selector fn-metric,
 fn-metric-selector fn-metrics-title {
   display: block;
@@ -35,4 +41,8 @@ fn-metric-selector fn-metric fn-checkbox {
 
 fn-metric-selector fn-metric-description span {
   margin: 0 5px;
+}
+
+fn-metric-selector fn-metric[data-active] {
+  font-weight: 500;
 }

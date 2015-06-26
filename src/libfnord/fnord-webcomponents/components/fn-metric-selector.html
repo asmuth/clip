@@ -29,10 +29,16 @@
     this.createdCallback = function() {
       var tpl = Fnord.getTemplate("fn-metric-selector", "base");
       this.appendChild(tpl);
+      var _this = this;
 
       if (this.hasAttribute('data-metrics')) {
         this.renderMetrics();
       }
+
+      this.querySelector("[data-action='add-metrics']").addEventListener(
+        'click', function() {
+          _this.handleSelection();
+        }, false);
     };
 
     this.attributeChangedCallback = function(attr, old_val, new_val) {
@@ -42,7 +48,29 @@
     };
 
     this.show = function() {
+      this.clearSelection();
       this.querySelector("fn-modal").show();
+    };
+
+
+    this.clearSelection = function() {
+      var selected = this.querySelectorAll("fn-metric[data-active]");
+
+      for (var i = 0; i < selected.length; i++) {
+        selected[i].removeAttribute('data-active');
+        selected[i].querySelector("fn-checkbox").removeAttribute('data-active');
+      }
+    }
+
+    this.handleSelection = function() {
+      var selected = this.querySelectorAll("fn-metric[data-active]");
+      var keys  = [];
+
+      for (var i = 0; i < selected.length; i++) {
+        keys.push(selected[i].getAttribute('data-key'));
+      }
+
+      this.fireSelectionEvent(keys);
     };
 
 
@@ -67,6 +95,14 @@
       elem.appendChild(description);
       elem.setAttribute('data-metric', leaf.key);
       elem.style.paddingLeft = hierarchy * 15 + 28 + "px";
+
+      checkbox.addEventListener('click', function() {
+        if (elem.hasAttribute('data-active')) {
+          elem.removeAttribute('data-active');
+        } else {
+          elem.setAttribute('data-active', 'active');
+        }
+      }, false);
 
       return elem;
     };
@@ -134,10 +170,17 @@
         default:
           return;
       }
-
-
-
     };
+
+    this.fireSelectionEvent = function(selection) {
+      var ev = new CustomEvent('fn-metric-selector-add', {
+        detail: {metrics: selection},
+        cancelable: true,
+        bubbles: true
+      });
+
+      this.dispatchEvent(ev);
+    }
   };
 
   window.addEventListener('fn-ready', function() {
