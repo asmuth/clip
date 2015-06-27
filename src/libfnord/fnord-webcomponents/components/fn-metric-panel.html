@@ -23,6 +23,18 @@
     </fn-metrics>
   </fn-metric-panel-section>
 
+  <fn-metric-panel-section data-content='dimensions'>
+    <fn-metric-panel-title>
+      Dimensions
+    </fn-metric-panel-title>
+    <fn-metric-panel-link data-action='add-dimension'>
+      <i class='fa fa-plus'></i> Add Dimension
+    </fn-metric-panel-link>
+
+    <fn-metric-dimensions>
+    </fn-metric-dimensions>
+  </fn-metric-panel-section>
+
   <fn-metric-panel-section data-content='filters'>
     <fn-metric-panel-title>
       Filters
@@ -51,12 +63,12 @@
     this.createdCallback = function() {
       var tpl = Fnord.getTemplate('fn-metric-panel', 'base');
       this.appendChild(tpl);
-      this.init();
+      this.render();
       this.observeLinks();
 
     };
 
-    this.init = function() {
+    this.render = function() {
       if (this.hasAttribute('data-from') && this.hasAttribute('data-until')) {
         this.renderDateTimeContent();
       }
@@ -64,6 +76,11 @@
       if (this.hasAttribute('data-metrics')) {
         this.renderMetricContent();
       }
+
+      if (this.hasAttribute('data-dimensions')) {
+        this.renderDimensionContent();
+      }
+
 
       if (this.hasAttribute('data-filters')) {
         this.renderFilterContent();
@@ -100,33 +117,25 @@
       return item;
     };
 
-    this.removeMetric = function(metric) {
-      var metrics = JSON.parse(this.getAttribute('data-metrics'));
 
-      for (var i = 0; i < metrics.length; i++) {
-        if (metrics[i].key == metric.key) {
-          metrics.splice(i, 1);
+    this.removeContentItem = function(key, removed_item) {
+      var items = JSON.parse(this.getAttribute('data-' + key + 's'));
+      var ev = new CustomEvent('fn-metric-panel-remove-' + key, {
+        detail: {key: removed_item},
+        cancelable: true,
+        bubbles: true
+      });
+
+      for (var i = 0; i < items.length; i++) {
+        if (items[i].key == removed_item.key) {
+          items.splice(i, 1);
           break;
         }
       }
 
-      this.setAttribute('data-metrics', metrics);
-      this.fireMetricRemovedEvent(metric);
+      this.setAttribute('data-' + key + 's', items);
+      this.dispatchEvent(ev);
     }
-
-    this.removeFilter = function(filter) {
-      var filters = JSON.parse(this.getAttribute('data-filters'));
-
-      for (var i = 0; i < filters.length; i++) {
-        if (filters[i].key == filter.key) {
-          filters.splice(i, 1);
-          break;
-        }
-      }
-
-      this.setAttribute('data-filters', filters);
-      this.fireFilterRemovedEvent(filter);
-    };
 
 
     this.renderMetricContent = function() {
@@ -138,11 +147,29 @@
 
       metrics.forEach(function(metric) {
         metrics_elem.appendChild(
-          _this.createRemovableItem(metric, _this.removeMetric.bind(_this)));
+           _this.createRemovableItem(metric, _this.removeContentItem.bind(_this, 'metric')));
       });
 
       section.setAttribute('data-resolved', 'resolved');
     };
+
+
+    this.renderDimensionContent = function() {
+      var _this = this;
+      var section = this.querySelector(
+        "fn-metric-panel-section[data-content='dimensions']");
+      var dimensions_elem = section.querySelector("fn-metric-dimensions");
+      var dimensions = JSON.parse(this.getAttribute('data-dimensions'));
+
+      dimensions.forEach(function(dimension) {
+        dimensions_elem.appendChild(
+          _this.createRemovableItem(
+            dimension, _this.removeContentItem.bind(_this, 'dimension')));
+      });
+
+      section.setAttribute('data-resolved', 'resolved');
+    };
+
 
     this.renderFilterContent = function() {
       var _this = this;
@@ -153,7 +180,8 @@
 
       filters.forEach(function(filter) {
         filters_elem.appendChild(
-          _this.createRemovableItem(filter, _this.removeFilter.bind(_this)));
+          _this.createRemovableItem(
+            filter, _this.removeContentItem.bind(_this, 'filter')));
       });
 
       section.setAttribute('data-resolved', 'resolved');
@@ -170,26 +198,6 @@
       section.setAttribute('data-resolved', 'resolved');
     };
 
-
-    this.fireMetricRemovedEvent = function(metric) {
-      var ev = new CustomEvent('fn-metric-panel-remove-metric', {
-        detail: {metric: metric},
-        cancelable: true,
-        bubbles: true
-      });
-
-      this.dispatchEvent(ev);
-    };
-
-    this.fireFilterRemovedEvent = function(filter) {
-      var ev = new CustomEvent('fn-metric-panel-remove-filter', {
-        detail: {filter: filter},
-        cancelable: true,
-        bubbles: true
-      });
-
-      this.dispatchEvent(ev);
-    };
 
   };
 
