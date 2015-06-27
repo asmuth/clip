@@ -1,0 +1,60 @@
+<!--
+  This file is part of the "FnordMetric" project
+    Copyright (c) 2015 Laura Schlimmer
+    Copyright (c) 2015 Paul Asmuth
+
+  FnordMetric is free software: you can redistribute it and/or modify it under
+  the terms of the GNU General Public License v3.0. You should have received a
+  copy of the GNU General Public License along with this program. If not, see
+  <http://www.gnu.org/licenses/>.
+-->
+
+<template id="fn-dimension-selector-base-tpl">
+  <fn-modal-dimmer>
+    <fn-modal>
+      <fn-modal-close-icon></fn-modal-close-icon>
+
+      <fn-dimension-selector-view data-select='dimension-option' data-active>
+        <fn-modal-header>Select Dimension Option</fn-modal-header>
+
+        <fn-dimension-selector-row data-option='drilldow'>
+          Add Drilldown
+        </fn-dimension-selector-row>
+        <fn-dimension-selector-row data-option='segment'>
+          Add Segment
+        </fn-dimension-selector-row>
+      </fn-dimension-selector-view>
+
+      <fn-dimension-selector-view>
+        <fn-modal-header>Add Drilldown</fn-modal-header>
+        <fn-dimension-options>
+        </fn-dimension-options>
+      </fn-dimension-selector-view>
+    </fn-modal>
+  </fn-modal-dimmer>
+</template>
+<script type='text/javascript'>
+  var DimensionSelector = function() {
+    this.createdCallback = function() {
+      var tpl = Fnord.getTemplate('fn-dimension-selector', 'base');
+      this.appendChild(tpl);
+    };
+
+    this.show = function() {
+      var active_option = this.querySelector(
+        "fn-dimension-selector-view[data-select][data-active]");
+
+      if (active_option.getAttribute('data-select') != 'dimension-option') {
+        active_option.removeAttribute('data-active');
+        this.querySelector("[data-select='dimension-option']").setAttribute(
+          'data-active', 'active');
+      }
+
+      this.querySelector("fn-modal").show();
+    };
+  };
+
+  window.addEventListener('fn-ready', function() {
+    Fnord.registerComponent('fn-dimension-selector', DimensionSelector);
+  });
+</script>

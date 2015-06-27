@@ -1,0 +1,7 @@
+fn-dimension-selector-view {
+  display: none;
+}
+
+fn-dimension-selector-view[data-active] {
+  display: block;
+}
