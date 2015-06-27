@@ -11,7 +11,13 @@
 <template id="fn-dimension-selector-demo-base-tpl">
   <section>
     <fn-button id='exp1-btn'>Open Dimension Selector</fn-button>
-    <fn-dimension-selector id='exp1-selector'></fn-dimension-selector>
+    <fn-dimension-selector id='exp1-selector'>
+      <template name='fn-dimension-drilldown-options'>
+        <fn-dimension-drilldown-option>
+        </fn-dimension-drilldown-option>
+      </template>
+    </fn-dimension-selector>
+
 
     <script type='text/javascript'>
       var selector = document.getElementById('exp1-selector');

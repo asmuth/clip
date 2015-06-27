@@ -1,7 +1,36 @@
+fn-dimension-selector fn-modal-header {
+  font-size: 1em;
+  font-weight: 500;
+  padding: 1.1rem 2rem;
+}
+
+fn-dimension-selector fn-modal-footer {
+  padding: 8px 2em;
+}
+
 fn-dimension-selector-view {
   display: none;
 }
 
 fn-dimension-selector-view[data-active] {
   display: block;
+}
+
+fn-dimension-selector-inner-view {
+  display: block;
+  height: 350px;
+  overflow-y: auto;
+}
+
+fn-dimension-selector-row {
+  display: block;
+  padding: 1.2em 2em;
+  line-height: 1.3em;
+  background: #fff;
+  border-bottom: 1px solid rgba(39, 41, 43, 0.15)
+}
+
+fn-dimension-selector-row[data-clickable]:hover {
+  cursor: pointer;
+  background: rgba(0, 0, 50, 0.03);
 }

@@ -14,21 +14,24 @@
     <fn-modal>
       <fn-modal-close-icon></fn-modal-close-icon>
 
-      <fn-dimension-selector-view data-select='dimension-option' data-active>
+      <fn-dimension-selector-view data-view='dimension-option' data-active>
         <fn-modal-header>Select Dimension Option</fn-modal-header>
 
-        <fn-dimension-selector-row data-option='drilldow'>
-          Add Drilldown
-        </fn-dimension-selector-row>
-        <fn-dimension-selector-row data-option='segment'>
-          Add Segment
-        </fn-dimension-selector-row>
+        <fn-dimension-selector-inner-view>
+          <fn-dimension-selector-row data-option='drilldown' data-clickable>
+            Add Drilldown
+          </fn-dimension-selector-row>
+          <fn-dimension-selector-row data-option='segment' data-clickable>
+            Add Segment
+          </fn-dimension-selector-row>
+        </fn-dimension-selector-inner-view>
       </fn-dimension-selector-view>
 
-      <fn-dimension-selector-view>
+      <fn-dimension-selector-view data-view='drilldown-dimension'>
         <fn-modal-header>Add Drilldown</fn-modal-header>
-        <fn-dimension-options>
-        </fn-dimension-options>
+
+        <fn-dimension-selector-inner-view>
+        </fn-dimension-selector-inner-view>
       </fn-dimension-selector-view>
     </fn-modal>
   </fn-modal-dimmer>
@@ -38,18 +41,35 @@
     this.createdCallback = function() {
       var tpl = Fnord.getTemplate('fn-dimension-selector', 'base');
       this.appendChild(tpl);
+      this.init();
     };
 
-    this.show = function() {
-      var active_option = this.querySelector(
-        "fn-dimension-selector-view[data-select][data-active]");
+    this.init = function() {
+      var _this = this;
+      this.querySelector("[data-option='drilldown']").addEventListener(
+        'click', function() {
+          _this.changeView('drilldown-dimension');
+        }, false);
 
-      if (active_option.getAttribute('data-select') != 'dimension-option') {
-        active_option.removeAttribute('data-active');
-        this.querySelector("[data-select='dimension-option']").setAttribute(
+      this.querySelector("[data-option='segment']").addEventListener(
+        'click', function() {
+
+        }, false);
+
+    };
+
+    this.changeView = function(view) {
+      var active_view = this.querySelector("[data-view][data-active]");
+
+      if (active_view.getAttribute('data-view') != view) {
+        active_view.removeAttribute('data-active');
+        this.querySelector("[data-view='" + view + "']").setAttribute(
           'data-active', 'active');
       }
+    }
 
+    this.show = function() {
+      this.changeView('dimension-option');
       this.querySelector("fn-modal").show();
     };
   };
