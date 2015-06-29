@@ -52,6 +52,10 @@
       this.querySelector("fn-modal").show();
     };
 
+    this.close = function() {
+      this.querySelector("fn-modal").close();
+    }
+
 
     this.clearSelection = function() {
       var selected = this.querySelectorAll("fn-metric[data-active]");
@@ -73,6 +77,7 @@
         });
       }
 
+      this.close();
       this.fireSelectionEvent(selection);
     };
 
