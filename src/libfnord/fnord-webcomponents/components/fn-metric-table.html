@@ -1,0 +1,61 @@
+<!--
+  This file is part of the "FnordMetric" project
+    Copyright (c) 2015 Laura Schlimmer
+    Copyright (c) 2015 Paul Asmuth
+
+  FnordMetric is free software: you can redistribute it and/or modify it under
+  the terms of the GNU General Public License v3.0. You should have received a
+  copy of the GNU General Public License along with this program. If not, see
+  <http://www.gnu.org/licenses/>.
+-->
+
+<template id="fn-metric-table-base-tpl">
+  <fn-table></fn-table>
+</template>
+<script type='text/javascript'>
+  var MetricTable = function() {
+    this.createdCallback = function() {
+      var tpl = Fnord.getTemplate('fn-metric-table', 'base');
+      this.appendChild(tpl);
+
+      if (this.hasAttribute('data-metrics') || this.hasAttribute('data-dimensions')) {
+        this.renderTableColumns();
+      }
+    };
+
+    this.attributeChangedCallback = function(attr, old_val, new_val) {
+      if (attr == 'data-metrics' || attr == 'data-dimensions') {
+        this.renderTableColumns();
+      }
+    };
+
+    this.renderTableColumns = function() {
+      var fn_table = this.querySelector("fn-table");
+      var dimensions = this.hasAttribute('data-dimensions') ?
+        JSON.parse(this.getAttribute('data-dimensions')) : [];
+      var metrics = this.hasAttribute('data-metrics') ?
+        JSON.parse(this.getAttribute('data-metrics')) : [];
+      fn_table.innerHTML = "";
+
+      function render(column) {
+        var fn_column = document.createElement("fn-table-column");
+        fn_column.innerHTML = column.name;
+        fn_table.appendChild(fn_column);
+      }
+
+      dimensions.forEach(function(dimension) {
+        render(dimension);
+      });
+
+      metrics.forEach(function(metric) {
+        render(metric);
+      });
+
+      fn_table.renderTable();
+    };
+  };
+
+  window.addEventListener('fn-ready', function() {
+    Fnord.registerComponent('fn-metric-table', MetricTable);
+  });
+</script>
