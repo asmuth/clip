@@ -64,13 +64,16 @@
 
     this.handleSelection = function() {
       var selected = this.querySelectorAll("fn-metric[data-active]");
-      var keys  = [];
+      var selection  = [];
 
       for (var i = 0; i < selected.length; i++) {
-        keys.push(selected[i].getAttribute('data-key'));
+        selection.push({
+          group: selected[i].getAttribute('data-group'),
+          key: selected[i].getAttribute('data-key')
+        });
       }
 
-      this.fireSelectionEvent(keys);
+      this.fireSelectionEvent(selection);
     };
 
 
@@ -147,7 +150,9 @@
         container.appendChild(_this.renderTitleElem({name: group}, 0));
 
         metrics[group].forEach(function(metric) {
-          container.appendChild(_this.renderMetricElem(metric, 1));
+          var elem = _this.renderMetricElem(metric, 1);
+          elem.setAttribute('data-group', group);
+          container.appendChild(elem);
         });
       }
     };
