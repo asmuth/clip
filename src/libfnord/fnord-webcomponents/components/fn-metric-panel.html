@@ -145,6 +145,7 @@
         "fn-metric-panel-section[data-content='metrics']");
       var metrics_elem = section.querySelector("fn-metrics");
       var metrics = JSON.parse(this.getAttribute('data-metrics'));
+      metrics_elem.innerHTML = "";
 
       metrics.forEach(function(metric) {
         metrics_elem.appendChild(
@@ -161,6 +162,7 @@
         "fn-metric-panel-section[data-content='dimensions']");
       var dimensions_elem = section.querySelector("fn-metric-dimensions");
       var dimensions = JSON.parse(this.getAttribute('data-dimensions'));
+      dimensions_elem.innerHTML = "";
 
       dimensions.forEach(function(dimension) {
         dimensions_elem.appendChild(
@@ -178,6 +180,7 @@
         "fn-metric-panel-section[data-content='filters']");
       var filters_elem = section.querySelector("fn-metric-filters");
       var filters = JSON.parse(this.getAttribute('data-filters'));
+      filters_elem.innerHTML = "";
 
       filters.forEach(function(filter) {
         filters_elem.appendChild(
