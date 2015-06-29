@@ -93,7 +93,7 @@
       elem.appendChild(checkbox);
       elem.appendChild(title);
       elem.appendChild(description);
-      elem.setAttribute('data-metric', leaf.key);
+      elem.setAttribute('data-key', leaf.key);
       elem.style.paddingLeft = hierarchy * 15 + 28 + "px";
 
       checkbox.addEventListener('click', function() {
@@ -143,7 +143,6 @@
       var metrics = JSON.parse(this.getAttribute('data-metrics'));
 
       container.innerHTML = "";
-      console.log(metrics);
       for (var group in metrics) {
         container.appendChild(_this.renderTitleElem({name: group}, 0));
 
