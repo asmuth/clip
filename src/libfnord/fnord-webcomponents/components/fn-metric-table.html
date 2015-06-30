@@ -18,13 +18,13 @@
       var tpl = Fnord.getTemplate('fn-metric-table', 'base');
       this.appendChild(tpl);
 
-      if (this.hasAttribute('data-metrics') || this.hasAttribute('data-dimensions')) {
+      if (this.hasAttribute('data-resolved')) {
         this.renderTableColumns();
       }
     };
 
     this.attributeChangedCallback = function(attr, old_val, new_val) {
-      if (attr == 'data-metrics' || attr == 'data-dimensions') {
+      if (attr == 'data-resolved') {
         this.renderTableColumns();
       }
     };

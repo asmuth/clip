@@ -9,4 +9,34 @@
   <http://www.gnu.org/licenses/>.
 -->
 <template id="fn-metric-table-demo-base-tpl">
+  <section>
+    <fn-metric-table></fn-metric-table>
+
+    <script type='text/javascript'>
+      var metrics = [
+        {
+          'key': 'metric1',
+          'name': 'Metric 1'
+        },
+        {
+          'key': 'metric2',
+          'name': 'Metric 2'
+        }
+      ];
+      var dimensions = [
+        {
+          'key': 'dim1',
+          'name': 'Dimension 1'
+        },
+        {
+          'key': 'dim2',
+          'name': 'Dimension 2'
+        }
+      ];
+      var metric_table = document.querySelector("fn-metric-table");
+      metric_table.setAttribute('data-dimensions', JSON.stringify(dimensions));
+      metric_table.setAttribute('data-metrics', JSON.stringify(metrics));
+      metric_table.setAttribute('data-resolved', 'resolved');
+    </script>
+  </section>
 </template>
