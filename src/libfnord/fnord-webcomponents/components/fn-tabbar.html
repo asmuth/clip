@@ -15,6 +15,16 @@
   var TabBarComponent = function() {
     this.createdCallback = function() {
 
+      this.init();
+    };
+
+    this.attributeChangedCallback = function(attr, old_val, new_val) {
+      if (attr == 'data-content-attached') {
+        this.init();
+      }
+    }
+
+    this.init = function() {
       var active_tab = this.querySelector("fn-tab[data-active]");
 
       if (active_tab == null) {
@@ -35,7 +45,7 @@
       }
 
       this.observeTabs();
-    };
+    }
 
     this.setContent = function(index) {
       var active_content = this.querySelector("fn-tab-content[data-active]");
