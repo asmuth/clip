@@ -1,0 +1,79 @@
+fn-share-modal h4 {
+  margin: 0;
+}
+
+fn-share-modal fn-share-option {
+  display: block;
+  width: 100%;
+  padding: 15px 10px;
+  border-left: 1px solid rgba(0, 0, 0, 0.15);
+  border-right: 1px solid rgba(0, 0, 0, 0.15);
+  border-top: 1px solid rgba(0, 0, 0, 0.15);
+}
+
+fn-share-modal fn-share-option:hover {
+  cursor: pointer;
+  background: #fafafa;
+}
+
+fn-share-modal fn-share-option.first {
+  margin-top: 20px;
+}
+
+fn-share-modal fn-share-option.last {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.15);
+}
+
+fn-share-modal fn-share-option[data-selected] fn-share-option-inner:after {
+  font-family: FontAwesome;
+  content: "\f00c";
+}
+
+fn-share-modal fn-share-controls {
+  display: block;
+  margin-top: 20px;
+}
+
+fn-share-modal fn-share-controls fn-input {
+  float: left;
+  width: 60%;
+  margin-right: 10px;
+}
+
+fn-share-modal fn-share-options {
+  display: block;
+  margin-top: 10px;
+}
+
+fn-share-modal fn-share-options .fn-textarea {
+  width: 100%;
+  margin: 5px 0 10px;
+}
+
+
+
+fn-modal.share_doc .invite_controls {
+  margin-top: 30px;
+}
+
+fn-modal.share_doc .invite_controls fn-input {
+  width: 60%;
+  margin-right: 10px;
+}
+
+fn-modal.share_doc .invite_controls .options {
+  margin-top: 10px;
+}
+
+fn-modal.share_doc .invite_controls .options fn-checkbox {
+  margin-left: 2px;
+}
+
+fn-modal.share_doc .invite_controls textarea {
+  margin-top: 10px;
+  width: 100%;
+}
+
+fn-modal.share_doc .invite_controls .button_container {
+  margin-top: 20px;
+}

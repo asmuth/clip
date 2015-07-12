@@ -1,0 +1,90 @@
+<!--
+  This file is part of the "FnordMetric" project
+    Copyright (c) 2015 Laura Schlimmer
+    Copyright (c) 2015 Paul Asmuth
+
+  FnordMetric is free software: you can redistribute it and/or modify it under
+  the terms of the GNU General Public License v3.0. You should have received a
+  copy of the GNU General Public License along with this program. If not, see
+  <http://www.gnu.org/licenses/>.
+-->
+
+<template id='fn-share-modal-base-tpl'>
+  <fn-modal-dimmer>
+    <fn-modal id='share-doc-modal' class='share_doc'>
+      <fn-modal-header>
+        Sharing Settings
+      </fn-modal-header>
+
+      <fn-modal-content>
+        <h4>Link to share</h4>
+        <fn-input style="width: 100%;"></fn-input>
+
+        <fn-share-option data-selected class='first'>
+          <fn-share-option-inner>Private &#151; Only specific</fn-share-option-inner>
+        </fn-share-option>
+
+        <fn-share-option>
+          <fn-share-option-inner>Public in Orga</fn-share-option-inner>
+        </fn-share-option>
+
+        <fn-share-option class='last'>
+          <fn-share-option-inner>Public</fn-share-option-inner>
+        </fn-share-option>
+
+        <fn-share-controls>
+          <h4>Invite People</h4>
+          <fn-input data-content='email' data-placeholder='Enter Email addresses'></fn-input>
+          <fn-dropdown data-resolved class='input'>
+            <fn-dropdown-items>
+              <fn-dropdown-item>Can Edit</fn-dropdown-item>
+              <fn-dropdown-item>Can View</fn-dropdown-item>
+            </fn-dropdown-items>
+          </fn-dropdown>
+
+          <div style="clear: both;"></div>
+
+          <fn-share-options>
+            <div>
+              <fn-checkbox data-active></fn-checkbox>
+              Notify people via eMail &#151; <span class='link'>Add message</span>
+            </div>
+
+            <textarea class='fn-textarea' placeholder="Optional: Add a personal message"></textarea>
+
+            <div>
+              <fn-button class='primary'>Send</fn-button>
+              <fn-button class='secondary'>Cancel</fn-button>
+            </div>
+          </fn-share-options>
+        </fn-share-controls>
+
+      </fn-modal-content>
+
+      <fn-modal-footer>
+        <fn-button class='primary' data-action='update-query-name'>
+          Done
+        </fn-button>
+      </fn-modal-footer>
+
+    </fn-modal>
+  </fn-modal-dimmer>
+
+</template>
+
+<script type='text/javascript'>
+  var ShareModal = function() {
+    this.createdCallback = function() {
+      var tpl = Fnord.getTemplate('fn-share-modal', 'base');
+      this.appendChild(tpl);
+    };
+
+    this.show = function() {
+      this.querySelector("fn-modal").show();
+    }
+  };
+
+  window.addEventListener('fn-ready', function() {
+    Fnord.registerComponent('fn-share-modal', ShareModal);
+  });
+</script>
