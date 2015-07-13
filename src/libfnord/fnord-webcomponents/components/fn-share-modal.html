@@ -34,6 +34,11 @@
 
         <fn-share-controls>
           <h4>Invite People</h4>
+
+          <fn-message data-state='hidden'>
+            <fn-message-text>Please add at least one recipient</fn-message-text>
+          </fn-message>
+
           <fn-input data-content='email' data-placeholder='Enter Email addresses'></fn-input>
           <fn-dropdown data-resolved class='input'>
             <fn-dropdown-items>
@@ -44,19 +49,21 @@
 
           <div style="clear: both;"></div>
 
-          <fn-share-options>
+          <fn-share-invite-options>
             <div>
               <fn-checkbox data-active></fn-checkbox>
-              Notify people via eMail &#151; <span class='link'>Add message</span>
+              Notify people via eMail &#151;
+              <span data-action='show-textarea' class='link'>Add message</span>
+              <span data-action='hide-textarea' class='link'>Discard message</span>
             </div>
 
             <textarea class='fn-textarea' placeholder="Optional: Add a personal message"></textarea>
 
             <div>
-              <fn-button class='primary'>Send</fn-button>
-              <fn-button class='secondary'>Cancel</fn-button>
+              <fn-button class='primary' data-action='send-invitations'>Send</fn-button>
+              <fn-button class='secondary' data-action='close-invite-options'>Cancel</fn-button>
             </div>
-          </fn-share-options>
+          </fn-share-invite-options>
         </fn-share-controls>
 
       </fn-modal-content>
@@ -69,7 +76,6 @@
 
     </fn-modal>
   </fn-modal-dimmer>
-
 </template>
 
 <script type='text/javascript'>
@@ -77,11 +83,74 @@
     this.createdCallback = function() {
       var tpl = Fnord.getTemplate('fn-share-modal', 'base');
       this.appendChild(tpl);
+
+      this.handleEmailInput();
+
+      this.handleInviteOptionsVisibility();
+    };
+
+    this.handleEmailInput = function() {
+      var input = this.querySelector("fn-input[data-content='email'] input");
+      var message = this.querySelector("fn-message");
+      var _this = this;
+
+
+      this.querySelector("[data-action='send-invitations']").addEventListener(
+        'click', function() {
+          var value = input.value;
+
+          if (value.length == 0) {
+            message.setAttribute('data-state', 'error');
+            return;
+          }
+
+          message.setAttribute('data-state', 'hidden');
+          var emails = input.value.split(" ");
+          _this.fireSendInvitationEvent(emails);
+        }, false);
+    };
+
+    this.handleInviteOptionsVisibility = function() {
+      var _this = this;
+      var invite_options = this.querySelector("fn-share-invite-options");
+
+      this.querySelector("fn-input[data-content='email'] input").addEventListener(
+        'focus', function() {
+          invite_options.setAttribute('data-active', 'active');
+        },
+      false);
+
+      this.querySelector(
+        "fn-button[data-action='close-invite-options']").addEventListener(
+          'click', function() {
+            invite_options.removeAttribute('data-active');
+          }, false);
+
+
+      this.querySelector("[data-action='show-textarea']").addEventListener(
+        'click', function() {
+          invite_options.setAttribute('data-message', 'active');
+        }, false);
+
+      this.querySelector("[data-action='hide-textarea']").addEventListener(
+        'click', function() {
+          invite_options.removeAttribute('data-message');
+        }, false);
     };
 
     this.show = function() {
       this.querySelector("fn-modal").show();
-    }
+    };
+
+    this.fireSendInvitationEvent = function(emails) {
+      var ev = new CustomEvent('fn-share-modal-send-invitations', {
+        detail: {emails: emails},
+        cancelable: true,
+        bubbles: true
+      });
+
+      this.dispatchEvent(ev);
+    };
   };
 
   window.addEventListener('fn-ready', function() {

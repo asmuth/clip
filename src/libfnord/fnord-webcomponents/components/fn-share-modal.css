@@ -40,40 +40,30 @@ fn-share-modal fn-share-controls fn-input {
   margin-right: 10px;
 }
 
-fn-share-modal fn-share-options {
-  display: block;
+fn-share-modal fn-share-invite-options {
+  display: none;
   margin-top: 10px;
 }
 
-fn-share-modal fn-share-options .fn-textarea {
+fn-share-modal fn-share-invite-options[data-active] {
+  display: block;
+}
+
+fn-share-modal fn-share-invite-options .fn-textarea {
   width: 100%;
   margin: 5px 0 10px;
+  display: none;
 }
 
-
-
-fn-modal.share_doc .invite_controls {
-  margin-top: 30px;
+fn-share-modal fn-share-invite-options [data-action='hide-textarea'] {
+  display: none;
 }
 
-fn-modal.share_doc .invite_controls fn-input {
-  width: 60%;
-  margin-right: 10px;
+fn-share-modal fn-share-invite-options[data-message='active'] .fn-textarea,
+fn-share-modal fn-share-invite-options[data-message='active'] [data-action='hide-textarea'] {
+  display: inline-block;
 }
 
-fn-modal.share_doc .invite_controls .options {
-  margin-top: 10px;
-}
-
-fn-modal.share_doc .invite_controls .options fn-checkbox {
-  margin-left: 2px;
-}
-
-fn-modal.share_doc .invite_controls textarea {
-  margin-top: 10px;
-  width: 100%;
-}
-
-fn-modal.share_doc .invite_controls .button_container {
-  margin-top: 20px;
+fn-share-modal fn-share-invite-options[data-message='active'] [data-action='show-textarea'] {
+  display: none;
 }
