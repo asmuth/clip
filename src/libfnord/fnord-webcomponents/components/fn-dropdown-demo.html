@@ -142,8 +142,8 @@
     <!-- A Static header is always displayed and isn't selectable -->
     <h3><i>Example 3 &raquo;</i> Static Header</h3>
     <fn-dropdown data-resolved class='input'>
-      <fn-dropdown-header data-static>
-        <fn-dropdown-header-value>Select Payment</fn-dropdown-header-value>
+      <fn-dropdown-header>
+        <fn-dropdown-header-value data-static>Select Payment</fn-dropdown-header-value>
       </fn-dropdown-header>
       <fn-dropdown-items>
         <fn-dropdown-item data-value="Visa">Visa</fn-dropdown-item>
@@ -244,6 +244,20 @@
       </fn-drodpown-items>
     </fn-dropdown>
 
+    <h3><i>Example 8 &raquo;</i> Opens on Hover</h3>
+    <fn-dropdown data-resolved data-hover class='input'>
+      <fn-dropdown-items>
+        <fn-dropdown-item data-default data-selected>
+          Desktop
+        </fn-dropdown-item>
+        <fn-dropdown-item>
+          Tablet
+        </fn-dropdown-item>
+        <fn-dropdown-item>
+          Mobile
+        </fn-dropdown-item>
+      </fn-drodpown-items>
+    </fn-dropdown>
 
   </section>
 

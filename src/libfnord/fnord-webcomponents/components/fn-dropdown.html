@@ -117,6 +117,18 @@
         this.setHeaderValue();
       }
       header_elem.addEventListener('click', onClick, false);
+
+      if (this.hasAttribute('data-hover')) {
+        this.addEventListener(
+          'mouseover',
+          base.showDropdown.bind(base),
+          false);
+
+        this.addEventListener(
+          'mouseout',
+          base.hideDropdown.bind(base),
+          false);
+      }
     };
 
     // Copies the selected items html to the header_elem
