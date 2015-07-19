@@ -29,7 +29,16 @@
       this.onclick = function(e) {
         e.stopPropagation();
       };
-    }
+    };
+
+    this.keyListener;
+
+    this.listener = function(e) {
+      //ESC
+      if (e.keyCode == 27) {
+        this.close();
+      }
+    };
 
     this.show = function() {
       var dimmer = this.parentNode;
@@ -43,6 +52,10 @@
       var height = this.getBoundingClientRect().height;
       var mtop = ((window.innerHeight - height) / 4);
       this.style.marginTop = mtop + "px";
+
+      var _this = this;
+      this.keyListener = this.listener.bind(this);
+      document.addEventListener('keyup', _this.keyListener, false);
     };
 
     this.close = function() {
@@ -52,6 +65,9 @@
       } else {
         this.removeAttribute('data-active');
       }
+
+      var _this = this;
+      document.removeEventListener('keyup', _this.keyListener, false);
     };
   };
 
