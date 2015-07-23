@@ -44,6 +44,7 @@ fn-metric-panel-clearfix {
 fn-metric-panel-item {
   color: rgba(0, 0, 0, 0.6);
   display: block;
+  font-size: 0.9em;
 }
 
 fn-metric-panel-item div {
