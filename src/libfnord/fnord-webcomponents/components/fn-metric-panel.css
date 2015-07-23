@@ -1,5 +1,7 @@
 fn-metric-panel {
   display: block;
+  width: 320px;
+  box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.15), 0px 0px 0px 1px rgba(39, 41, 43, 0.15) inset;
 }
 
 fn-metric-panel-section {
@@ -13,19 +15,25 @@ fn-metric-panel-section[data-resolved] {
 
 fn-metric-panel-title {
   float: left;
+  padding: 0.5em 0;
+  font-weight: bold;
 }
 
-fn-metric-panel-link {
+fn-metric-panel fn-button {
   float: right;
   cursor: pointer;
+  font-size: 0.9em;
 }
 
 fn-metric-panel fn-daterangepicker {
   display: block;
 }
 
-fn-metric-panel fn-metrics {
+fn-metric-panel fn-metrics,
+fn-metric-panel fn-metric-dimensions,
+fn-metric-panel fn-metric-filters {
   display: block;
+  margin-top: 10px;
 }
 
 fn-metric-panel-clearfix {
@@ -33,7 +41,35 @@ fn-metric-panel-clearfix {
   clear: both;
 }
 
+fn-metric-panel-item {
+  color: rgba(0, 0, 0, 0.6);
+  display: block;
+}
+
+fn-metric-panel-item div {
+  display: inline-block;
+  border: 1px solid rgba(39, 41, 43, 0.15);
+  padding: 0.3em 0.4em 0.3em 0.7em;
+  line-height: 1.5em;
+  border-top-left-radius: 0.2857rem;
+  border-bottom-left-radius: 0.2857rem;
+}
+
 fn-metric-panel-item .fa.fa-times {
+  padding: 0.3em 0.7em 0.3em 0.3em;
+  border: 1px solid rgba(39, 41, 43, 0.15);
+  line-height: 1.5em;
+  border-left: none;
+  border-top-right-radius: 0.2857rem;
+  border-bottom-right-radius: 0.2857rem;
+}
+
+fn-metric-panel-item .fa.fa-times:hover {
   cursor: pointer;
-  padding: 2px;
+  background: #fafafa;
+  color: rgba(0, 0, 0, 0.8);
+}
+
+fn-metric-panel-item + fn-metric-panel-item {
+  margin-top: 8px;
 }

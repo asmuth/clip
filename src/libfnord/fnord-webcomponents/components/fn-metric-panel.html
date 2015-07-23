@@ -14,9 +14,9 @@
     <fn-metric-panel-title>
       Metrics
     </fn-metric-panel-title>
-    <fn-metric-panel-link data-action='add-metric'>
-      <i class='fa fa-plus'></i> Add Metric
-    </fn-metric-panel-link>
+    <fn-button data-action='add-metric'>
+      <i class='fa fa-plus'></i> Metric
+    </fn-button>
     <fn-metric-panel-clearfix></fn-metric-panel-clearfix>
 
     <fn-metrics>
@@ -27,9 +27,9 @@
     <fn-metric-panel-title>
       Dimensions
     </fn-metric-panel-title>
-    <fn-metric-panel-link data-action='add-dimension'>
-      <i class='fa fa-plus'></i> Add Dimension
-    </fn-metric-panel-link>
+    <fn-button data-action='add-dimension'>
+      <i class='fa fa-plus'></i> Dimension
+    </fn-button>
     <fn-metric-panel-clearfix></fn-metric-panel-clearfix>
 
     <fn-metric-dimensions>
@@ -40,9 +40,9 @@
     <fn-metric-panel-title>
       Filters
     </fn-metric-panel-title>
-    <fn-metric-panel-link data-action='add-filter'>
-      <i class='fa fa-plus'></i> Add Filter
-    </fn-metric-panel-link>
+    <fn-button data-action='add-filter'>
+      <i class='fa fa-plus'></i> Filter
+    </fn-button>
     <fn-metric-panel-clearfix></fn-metric-panel-clearfix>
 
     <fn-metric-filters>
@@ -90,7 +90,7 @@
 
     this.observeLinks = function() {
       var _this = this;
-      var links = this.querySelectorAll("fn-metric-panel-link");
+      var links = this.querySelectorAll("fn-button");
       for (var i = 0; i < links.length; i++) {
         links[i].addEventListener('click', function() {
           var ev = new Event('fn-metric-panel-' + this.getAttribute('data-action'));
@@ -102,13 +102,13 @@
     this.createRemovableItem = function(content_item, onRemove) {
       var item = document.createElement("fn-metric-panel-item");
       var icon = document.createElement("i");
-      var title = document.createElement("span");
+      var title = document.createElement("div");
 
       icon.className = "fa fa-times";
       title.innerHTML = content_item.name;
 
-      item.appendChild(icon);
       item.appendChild(title);
+      item.appendChild(icon);
       item.setAttribute('data-key', content_item.key);
 
       icon.addEventListener('click', function() {
