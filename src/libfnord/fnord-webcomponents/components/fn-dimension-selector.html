@@ -30,7 +30,7 @@
       <fn-dimension-selector-view data-view='drilldown-dimension'>
         <fn-modal-header>Add Drilldown</fn-modal-header>
 
-        <fn-dimension-selector-inner-view>
+        <fn-dimension-selector-inner-view data-content='drilldown-options'>
         </fn-dimension-selector-inner-view>
       </fn-dimension-selector-view>
     </fn-modal>
@@ -48,14 +48,13 @@
       var _this = this;
       this.querySelector("[data-option='drilldown']").addEventListener(
         'click', function() {
-          _this.changeView('drilldown-dimension');
+          _this.renderDrilldownDimensions();
         }, false);
 
       this.querySelector("[data-option='segment']").addEventListener(
         'click', function() {
 
         }, false);
-
     };
 
     this.changeView = function(view) {
@@ -66,6 +65,15 @@
         this.querySelector("[data-view='" + view + "']").setAttribute(
           'data-active', 'active');
       }
+    };
+
+    this.renderDrilldownDimensions = function() {
+      var container = this.querySelector("[data-content='drilldown-options']");
+      var tpl = this.querySelector(
+        "template[name='fn-dimension-drilldown-options']");
+      var options = tpl.content.querySelectorAll("[data-drilldown-option]");
+      console.log(options);
+      this.changeView('drilldown-dimension');
     }
 
     this.show = function() {

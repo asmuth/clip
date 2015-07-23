@@ -27,6 +27,10 @@
       if (attr == 'data-resolved') {
         this.renderTableColumns();
       }
+      if ((attr == 'data-metrics' || attr == 'data-dimensions') &&
+          this.hasAttribute('data-resolved')) {
+            this.renderTableColumns();
+      }
     };
 
     this.renderTableColumns = function() {
