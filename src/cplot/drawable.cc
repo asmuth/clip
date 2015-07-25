@@ -1,20 +1,26 @@
 /**
- * This file is part of the "FnordMetric" project
+ * This file is part of the "libstx" project
  *   Copyright (c) 2011-2014 Paul Asmuth, Google Inc.
  *
- * FnordMetric is free software: you can redistribute it and/or modify it under
+ * libstx is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License v3.0. You should have received a
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
 #include <string>
-#include <fnordmetric/ui/canvas.h>
-#include <fnordmetric/ui/drawable.h>
+#include "stx/charts/canvas.h"
+#include "stx/charts/drawable.h"
 
-namespace fnordmetric {
-namespace ui {
+namespace stx {
+namespace chart {
 
 Drawable::Drawable(Canvas* canvas) : canvas_(canvas) {}
+
+Drawable::~Drawable() {
+  for (auto series : all_series_) {
+    delete series;
+  }
+}
 
 void Drawable::setTitle(const std::string& title) {
   canvas_->setTitle(title);

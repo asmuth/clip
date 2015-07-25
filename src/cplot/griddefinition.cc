@@ -1,16 +1,16 @@
 /**
- * This file is part of the "FnordMetric" project
+ * This file is part of the "libstx" project
  *   Copyright (c) 2011-2014 Paul Asmuth, Google Inc.
  *
- * FnordMetric is free software: you can redistribute it and/or modify it under
+ * libstx is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License v3.0. You should have received a
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#include <fnordmetric/ui/griddefinition.h>
+#include "stx/charts/griddefinition.h"
 
-namespace fnordmetric {
-namespace ui {
+namespace stx {
+namespace chart {
 
 GridDefinition::GridDefinition(
     kPlacement placement) :
@@ -26,7 +26,7 @@ GridDefinition::kPlacement GridDefinition::placement() const {
 }
 
 const std::vector<double> GridDefinition::ticks() const {
-  if (domain_->empty()) {
+  if (domain_ == nullptr || domain_->empty()) {
     return std::vector<double>();
   } else {
     return domain_->get()->getTicks();

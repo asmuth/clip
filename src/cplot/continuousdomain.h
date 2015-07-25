@@ -1,17 +1,20 @@
 /**
- * This file is part of the "FnordMetric" project
- *   Copyright (c) 2011-2014 Paul Asmuth, Google Inc.
+ * This file is part of the "libstx" project
+ *   Copyright (c) 2014 Paul Asmuth, Google Inc.
  *
- * FnordMetric is free software: you can redistribute it and/or modify it under
+ * libstx is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License v3.0. You should have received a
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#ifndef _FNORDMETRIC_CONTINUOUSDOMAIN_H
-#define _FNORDMETRIC_CONTINUOUSDOMAIN_H
-#include <fnordmetric/ui/domain.h>
-namespace fnordmetric {
-namespace ui {
+#ifndef _libstx_CONTINUOUSDOMAIN_H
+#define _libstx_CONTINUOUSDOMAIN_H
+#include "stx/exception.h"
+#include "stx/stringutil.h"
+#include "stx/charts/domain.h"
+
+namespace stx {
+namespace chart {
 
 class AnyContinuousDomain {
 public:
@@ -31,15 +34,15 @@ public:
    * @param logarithmic is this domain a logarithmic domain?
    */
   ContinuousDomain(
-    T min_value = std::numeric_limits<T>::max(),
-    T max_value = std::numeric_limits<T>::min(),
-    bool is_logarithmic = false,
-    bool is_inverted = false) :
-    min_value_(min_value),
-    max_value_(max_value),
-    is_logarithmic_(is_logarithmic),
-    is_inverted_(is_inverted),
-    padding_(0, 0) {}
+      T min_value = std::numeric_limits<T>::max(),
+      T max_value = std::numeric_limits<T>::min(),
+      bool is_logarithmic = false,
+      bool is_inverted = false) :
+      min_value_(min_value),
+      max_value_(max_value),
+      is_logarithmic_(is_logarithmic),
+      is_inverted_(is_inverted),
+      padding_(0, 0) {}
 
   double scale(T value) const {
     double scaled;
@@ -79,7 +82,7 @@ public:
   }
 
   virtual std::string label(T value) const {
-    return fnordmetric::util::format::numberToHuman(static_cast<double>(value));
+    return StringUtil::formatNumberMetric(static_cast<double>(value));
   }
 
   double valueAt(double index) const {
@@ -155,12 +158,12 @@ public:
   }
 
   void setMin(T min) {
-    min_value_ = min;
+    min_value_ = static_cast<double>(min);
     padding_.first = 0.0f;
   }
 
   void setMax(T max) {
-    max_value_ = max;
+    max_value_ = static_cast<double>(max);
     padding_.second = 0.0f;
   }
 
@@ -175,6 +178,13 @@ public:
   void setPadding(double min_padding, double max_padding) {
     padding_.first = min_padding;
     padding_.second = max_padding;
+  }
+
+  void build() {
+    if (min_value_ == max_value_) {
+      max_value_ += 1.0f;
+      min_value_ -= 1.0f;
+    }
   }
 
 protected:

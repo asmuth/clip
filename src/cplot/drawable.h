@@ -1,24 +1,24 @@
 /**
- * This file is part of the "FnordMetric" project
+ * This file is part of the "libstx" project
  *   Copyright (c) 2011-2014 Paul Asmuth, Google Inc.
  *
- * FnordMetric is free software: you can redistribute it and/or modify it under
+ * libstx is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License v3.0. You should have received a
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#ifndef _FNORDMETRIC_DRAWABLE_H
-#define _FNORDMETRIC_DRAWABLE_H
+#ifndef _libstx_DRAWABLE_H
+#define _libstx_DRAWABLE_H
 #include <tuple>
 #include <functional>
-#include <fnordmetric/ui/axisdefinition.h>
-#include <fnordmetric/ui/griddefinition.h>
-#include <fnordmetric/ui/legenddefinition.h>
-#include <fnordmetric/ui/series.h>
-#include <fnordmetric/ui/viewport.h>
+#include "stx/charts/axisdefinition.h"
+#include "stx/charts/griddefinition.h"
+#include "stx/charts/legenddefinition.h"
+#include "stx/charts/series.h"
+#include "stx/charts/viewport.h"
 
-namespace fnordmetric {
-namespace ui {
+namespace stx {
+namespace chart {
 class RenderTarget;
 class Canvas;
 
@@ -27,7 +27,7 @@ class Drawable {
   friend class Canvas;
 public:
   Drawable(Canvas* canvas);
-  virtual ~Drawable() {}
+  virtual ~Drawable();
 
   /**
    * Set the title for this chart

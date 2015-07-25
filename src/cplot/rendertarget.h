@@ -1,25 +1,24 @@
 /**
- * This file is part of the "FnordMetric" project
- *   Copyright (c) 2011-2014 Paul Asmuth, Google Inc.
+ * This file is part of the "libstx" project
+ *   Copyright (c) 2014 Paul Asmuth, Google Inc.
  *
- * FnordMetric is free software: you can redistribute it and/or modify it under
+ * libstx is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License v3.0. You should have received a
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-
-#ifndef _FNORDMETRIC_RENDERTARGET_H
-#define _FNORDMETRIC_RENDERTARGET_H
+#ifndef _libstx_RENDERTARGET_H
+#define _libstx_RENDERTARGET_H
 #include <stdlib.h>
 #include <vector>
 #include <string>
-#include <fnordmetric/sql/svalue.h>
 
-namespace fnordmetric {
-namespace ui {
+namespace stx {
+namespace chart {
 
 class RenderTarget {
 public:
+  virtual ~RenderTarget() {}
 
   virtual void beginChart(
       int width,

@@ -1,32 +1,32 @@
 /**
- * This file is part of the "FnordMetric" project
+ * This file is part of the "libstx" project
  *   Copyright (c) 2011-2014 Paul Asmuth, Google Inc.
  *
- * FnordMetric is free software: you can redistribute it and/or modify it under
+ * libstx is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License v3.0. You should have received a
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#ifndef _FNORDMETRIC_TIMEDOMAIN_H
-#define _FNORDMETRIC_TIMEDOMAIN_H
-#include <fnordmetric/ui/continuousdomain.h>
-#include <fnordmetric/util/datetime.h>
+#ifndef _libstx_TIMEDOMAIN_H
+#define _libstx_TIMEDOMAIN_H
+#include "stx/UnixTime.h"
+#include "stx/charts/continuousdomain.h"
 
-namespace fnordmetric {
-namespace ui {
+namespace stx {
+namespace chart {
 
-class TimeDomain : public ContinuousDomain<fnord::util::DateTime> {
+class TimeDomain : public ContinuousDomain<stx::UnixTime> {
 public:
 
   TimeDomain(
-    fnord::util::DateTime min_value =
-        std::numeric_limits<fnord::util::DateTime>::max(),
-    fnord::util::DateTime max_value =
-        std::numeric_limits<fnord::util::DateTime>::min(),
+    stx::UnixTime min_value =
+        std::numeric_limits<stx::UnixTime>::max(),
+    stx::UnixTime max_value =
+        std::numeric_limits<stx::UnixTime>::min(),
     bool is_logarithmic = false,
     bool is_inverted = false);
 
-  std::string label(fnord::util::DateTime value) const;
+  std::string label(stx::UnixTime value) const;
 
 };
 

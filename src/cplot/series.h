@@ -1,23 +1,24 @@
 /**
- * This file is part of the "FnordMetric" project
+ * This file is part of the "libstx" project
  *   Copyright (c) 2011-2014 Paul Asmuth, Google Inc.
  *
- * FnordMetric is free software: you can redistribute it and/or modify it under
+ * libstx is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License v3.0. You should have received a
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#ifndef _FNORDMETRIC_SERIES_H
-#define _FNORDMETRIC_SERIES_H
+#ifndef _libstx_SERIES_H
+#define _libstx_SERIES_H
 #include <stdlib.h>
 #include <string>
 #include <vector>
 #include <unordered_map>
 #include <tuple>
-#include <fnordmetric/util/runtimeexception.h>
-#include <fnordmetric/util/format.h>
+#include <stx/exception.h>
+#include <stx/stringutil.h>
 
-namespace fnordmetric {
+namespace stx {
+namespace chart {
 
 class Series {
 public:
@@ -104,11 +105,11 @@ public:
     return getProperty(prop);
   }
 
-  const bool hasProperty(kProperty prop) const {
+  bool hasProperty(kProperty prop) const {
     return properties_.find(prop) != properties_.end();
   }
 
-  const void setProperty(
+  void setProperty(
       kProperty prop,
       AnyPoint* point,
       const std::string& val) {
@@ -125,7 +126,7 @@ public:
     point->setPropertyOverride(prop, p->second.size() - 1);
   }
 
-  const void setDefaultProperty(kProperty prop, const std::string& val) {
+  void setDefaultProperty(kProperty prop, const std::string& val) {
     const auto p = properties_.find(prop);
 
     if (p == properties_.end()) {
@@ -186,19 +187,7 @@ public:
       return getProperty(P_LABEL, point);
     }
 
-    char buf[256]; // FIXPAUL
-    int len = snprintf(
-        buf,
-        sizeof(buf),
-        "%s: %s",
-        util::format::toHuman(point->x()).c_str(),
-        util::format::toHuman(point->y()).c_str());
-
-    if (len < 0) {
-      RAISE(kRuntimeError, "snprintf() failed");
-    }
-
-    return std::string(buf, len);
+    return StringUtil::format("$0: $1", point->x(), point->y());
   }
 
 protected:
@@ -269,26 +258,14 @@ public:
     if (hasProperty(P_LABEL)) {
       return getProperty(P_LABEL, point);
     }
-  
-    char buf[256]; // FIXPAUL
-    int len = snprintf(
-        buf,
-        sizeof(buf),
-        "%s: %s, %s",
-        util::format::toHuman(point->x()).c_str(),
-        util::format::toHuman(point->y()).c_str(),
-        util::format::toHuman(point->z()).c_str());
 
-    if (len < 0) {
-      RAISE(kRuntimeError, "snprintf() failed");
-    }
-
-    return std::string(buf, len);
+    return StringUtil::format("$0: $1, $2", point->x(), point->y(), point->z());
   }
 
 protected:
   std::vector<Point> data_;
 };
 
+}
 }
 #endif

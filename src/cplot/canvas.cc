@@ -1,21 +1,20 @@
 /**
- * This file is part of the "FnordMetric" project
+ * This file is part of the "libstx" project
  *   Copyright (c) 2014 Paul Asmuth, Google Inc.
  *
- * FnordMetric is free software: you can redistribute it and/or modify it under
+ * libstx is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License v3.0. You should have received a
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
 #include <stdlib.h>
-#include <fnordmetric/ui/canvas.h>
-#include <fnordmetric/ui/rendertarget.h>
-#include <fnordmetric/ui/domain.h>
-#include <fnordmetric/ui/rendertarget.h>
-#include <fnordmetric/ui/svgtarget.h>
+#include "stx/charts/canvas.h"
+#include "stx/charts/rendertarget.h"
+#include "stx/charts/domain.h"
+#include "stx/charts/svgtarget.h"
 
-namespace fnordmetric {
-namespace ui {
+namespace stx {
+namespace chart {
 
 Canvas::Canvas() :
     width_(800),
@@ -27,6 +26,16 @@ void Canvas::setTitle(const std::string& title) {
 
 void Canvas::setSubtitle(const std::string& subtitle) {
   subtitle_ = subtitle;
+}
+
+void Canvas::setDimensions(int width, int height) {
+  if (width > 0) {
+    width_ = width;
+  }
+
+  if (height > 0) {
+    height_ = height;
+  }
 }
 
 void Canvas::render(RenderTarget* target) const {
@@ -719,13 +728,6 @@ void Canvas::renderGrids(RenderTarget* target, Viewport* viewport) const {
 
     }
   }
-}
-
-std::string Canvas::renderSVG() const {
-  auto output = util::OutputStream::getStdout();
-  SVGTarget target(output.get());
-  render(&target);
-  return "fnord";
 }
 
 AxisDefinition* Canvas::addAxis(AxisDefinition::kPosition position) {

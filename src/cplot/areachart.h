@@ -1,25 +1,25 @@
 /**
- * This file is part of the "FnordMetric" project
+ * This file is part of the "libstx" project
  *   Copyright (c) 2014 Paul Asmuth, Google Inc.
  *
- * FnordMetric is free software: you can redistribute it and/or modify it under
+ * libstx is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License v3.0. You should have received a
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#ifndef _FNORDMETRIC_AREACHART_H
-#define _FNORDMETRIC_AREACHART_H
+#ifndef _libstx_AREACHART_H
+#define _libstx_AREACHART_H
 #include <stdlib.h>
-#include <fnordmetric/ui/axisdefinition.h>
-#include <fnordmetric/ui/domain.h>
-#include <fnordmetric/ui/continuousdomain.h>
-#include <fnordmetric/ui/drawable.h>
-#include <fnordmetric/ui/canvas.h>
-#include <fnordmetric/ui/colorpalette.h>
-#include <fnordmetric/ui/rendertarget.h>
+#include "stx/charts/axisdefinition.h"
+#include "stx/charts/domain.h"
+#include "stx/charts/continuousdomain.h"
+#include "stx/charts/drawable.h"
+#include "stx/charts/canvas.h"
+#include "stx/charts/colorpalette.h"
+#include "stx/charts/rendertarget.h"
 
-namespace fnordmetric {
-namespace ui {
+namespace stx {
+namespace chart {
 
 class AreaChart : public Drawable {
 public:
@@ -281,6 +281,13 @@ template <typename TX, typename TY, typename TZ>
 void AreaChart3D<TX, TY, TZ>::render(
     RenderTarget* target,
     Viewport* viewport) const {
+  if (x_domain_.get() == nullptr || y_domain_.get() == nullptr) {
+    RAISE(kRuntimeError, "could not build domains");
+  }
+
+  x_domain_.get()->build();
+  y_domain_.get()->build();
+
   target->beginGroup("areas");
 
   for (const auto& area : areas_) {

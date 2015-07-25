@@ -1,24 +1,24 @@
 /**
- * This file is part of the "FnordMetric" project
+ * This file is part of the "libstx" project
  *   Copyright (c) 2011-2014 Paul Asmuth, Google Inc.
  *
- * FnordMetric is free software: you can redistribute it and/or modify it under
+ * libstx is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License v3.0. You should have received a
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#ifndef _FNORDMETRIC_CANVAS_H
-#define _FNORDMETRIC_CANVAS_H
+#ifndef _libstx_CANVAS_H
+#define _libstx_CANVAS_H
 #include <memory>
 #include <vector>
 #include <string>
 #include <tuple>
-#include <fnordmetric/ui/axisdefinition.h>
-#include <fnordmetric/ui/drawable.h>
-#include <fnordmetric/ui/legenddefinition.h>
+#include "stx/charts/axisdefinition.h"
+#include "stx/charts/drawable.h"
+#include "stx/charts/legenddefinition.h"
 
-namespace fnordmetric {
-namespace ui {
+namespace stx {
+namespace chart {
 class RenderTarget;
 
 class Canvas {
@@ -52,6 +52,8 @@ public:
    * Set the subtitle for this canvas
    */
   void setSubtitle(const std::string& subtitle);
+
+  void setDimensions(int width, int height);
 
   /**
    * FIXPAUL overcomplicated, just accept a ptr
@@ -111,14 +113,6 @@ public:
    * @param target a RenderTarget subclass instance. Does not transfer ownership
    */
   void render(RenderTarget* target) const;
-
-  /**
-   * FIXPAUL REMOVEME
-   *
-   * Render the contents of this canvas as a scalabale vector graphic and return
-   * as string
-   */
-   std::string renderSVG() const;
 
 protected:
 
