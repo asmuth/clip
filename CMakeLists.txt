@@ -13,4 +13,4 @@ set(CPLOT_INCLUDE ${MODULE_INCLUDE} PARENT_SCOPE)
 # DEPENDENCIES
 find_package(Threads)
 
-add_subdirectory(src/libcplot)
+add_subdirectory(src/cplot)
