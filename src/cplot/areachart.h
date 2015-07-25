@@ -10,13 +10,13 @@
 #ifndef _libstx_AREACHART_H
 #define _libstx_AREACHART_H
 #include <stdlib.h>
-#include "stx/charts/axisdefinition.h"
-#include "stx/charts/domain.h"
-#include "stx/charts/continuousdomain.h"
-#include "stx/charts/drawable.h"
-#include "stx/charts/canvas.h"
-#include "stx/charts/colorpalette.h"
-#include "stx/charts/rendertarget.h"
+#include "cplot/axisdefinition.h"
+#include "cplot/domain.h"
+#include "cplot/continuousdomain.h"
+#include "cplot/drawable.h"
+#include "cplot/canvas.h"
+#include "cplot/colorpalette.h"
+#include "cplot/rendertarget.h"
 
 namespace stx {
 namespace chart {

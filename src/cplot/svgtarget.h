@@ -13,8 +13,8 @@
 #include <stdlib.h>
 #include <vector>
 #include <string>
-#include "stx/charts/rendertarget.h"
-#include "stx/charts/styles/style_default.h"
+#include "cplot/rendertarget.h"
+#include "cplot/styles/style_default.h"
 #include "stx/io/outputstream.h"
 
 namespace stx {

@@ -7,10 +7,10 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#include "stx/charts/domain.h"
-#include "stx/charts/continuousdomain.h"
-#include "stx/charts/discretedomain.h"
-#include "stx/charts/timedomain.h"
+#include "cplot/domain.h"
+#include "cplot/continuousdomain.h"
+#include "cplot/discretedomain.h"
+#include "cplot/timedomain.h"
 
 using namespace stx;
 namespace stx {

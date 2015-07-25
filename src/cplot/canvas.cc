@@ -8,10 +8,10 @@
  * <http://www.gnu.org/licenses/>.
  */
 #include <stdlib.h>
-#include "stx/charts/canvas.h"
-#include "stx/charts/rendertarget.h"
-#include "stx/charts/domain.h"
-#include "stx/charts/svgtarget.h"
+#include "cplot/canvas.h"
+#include "cplot/rendertarget.h"
+#include "cplot/domain.h"
+#include "cplot/svgtarget.h"
 
 namespace stx {
 namespace chart {

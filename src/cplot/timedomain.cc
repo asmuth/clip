@@ -8,7 +8,7 @@
  * <http://www.gnu.org/licenses/>.
  */
 #include "stx/UnixTime.h"
-#include "stx/charts/timedomain.h"
+#include "cplot/timedomain.h"
 
 namespace stx {
 namespace chart {

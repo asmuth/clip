@@ -8,8 +8,8 @@
  * <http://www.gnu.org/licenses/>.
  */
 #include <string>
-#include "stx/charts/canvas.h"
-#include "stx/charts/drawable.h"
+#include "cplot/canvas.h"
+#include "cplot/drawable.h"
 
 namespace stx {
 namespace chart {

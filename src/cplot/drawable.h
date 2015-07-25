@@ -11,11 +11,11 @@
 #define _libstx_DRAWABLE_H
 #include <tuple>
 #include <functional>
-#include "stx/charts/axisdefinition.h"
-#include "stx/charts/griddefinition.h"
-#include "stx/charts/legenddefinition.h"
-#include "stx/charts/series.h"
-#include "stx/charts/viewport.h"
+#include "cplot/axisdefinition.h"
+#include "cplot/griddefinition.h"
+#include "cplot/legenddefinition.h"
+#include "cplot/series.h"
+#include "cplot/viewport.h"
 
 namespace stx {
 namespace chart {

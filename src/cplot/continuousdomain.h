@@ -11,7 +11,7 @@
 #define _libstx_CONTINUOUSDOMAIN_H
 #include "stx/exception.h"
 #include "stx/stringutil.h"
-#include "stx/charts/domain.h"
+#include "cplot/domain.h"
 
 namespace stx {
 namespace chart {

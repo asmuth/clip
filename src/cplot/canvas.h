@@ -13,9 +13,9 @@
 #include <vector>
 #include <string>
 #include <tuple>
-#include "stx/charts/axisdefinition.h"
-#include "stx/charts/drawable.h"
-#include "stx/charts/legenddefinition.h"
+#include "cplot/axisdefinition.h"
+#include "cplot/drawable.h"
+#include "cplot/legenddefinition.h"
 
 namespace stx {
 namespace chart {

@@ -12,8 +12,8 @@
 #include <utility>
 #include <string>
 #include <vector>
-#include "stx/charts/domain.h"
-#include "stx/charts/domainprovider.h"
+#include "cplot/domain.h"
+#include "cplot/domainprovider.h"
 
 namespace stx {
 namespace chart {

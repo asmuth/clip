@@ -11,15 +11,15 @@
 #define _libstx_BARCHART_H
 #include <stdlib.h>
 #include <memory>
-#include "stx/charts/axisdefinition.h"
-#include "stx/charts/canvas.h"
-#include "stx/charts/colorpalette.h"
-#include "stx/charts/domain.h"
-#include "stx/charts/continuousdomain.h"
-#include "stx/charts/discretedomain.h"
-#include "stx/charts/drawable.h"
-#include "stx/charts/rendertarget.h"
-#include "stx/charts/seriesjoin.h"
+#include "cplot/axisdefinition.h"
+#include "cplot/canvas.h"
+#include "cplot/colorpalette.h"
+#include "cplot/domain.h"
+#include "cplot/continuousdomain.h"
+#include "cplot/discretedomain.h"
+#include "cplot/drawable.h"
+#include "cplot/rendertarget.h"
+#include "cplot/seriesjoin.h"
 #include <stx/exception.h>
 
 namespace stx {

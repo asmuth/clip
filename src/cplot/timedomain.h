@@ -10,7 +10,7 @@
 #ifndef _libstx_TIMEDOMAIN_H
 #define _libstx_TIMEDOMAIN_H
 #include "stx/UnixTime.h"
-#include "stx/charts/continuousdomain.h"
+#include "cplot/continuousdomain.h"
 
 namespace stx {
 namespace chart {
