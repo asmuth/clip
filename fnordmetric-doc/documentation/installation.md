@@ -30,7 +30,7 @@ To run FnordMetric Server using docker:
 To build a Docker Image for FnordMetric Server, use the included dockerfile:
 
     $ git clone https://github.com/paulasmuth/fnordmetric.git && cd fnordmetric
-    $ sudo docker -t myrepo/fnordmetric-server build .
+    $ sudo docker build -t myrepo/fnordmetric-server .
 
 ### Binary Releases
 
