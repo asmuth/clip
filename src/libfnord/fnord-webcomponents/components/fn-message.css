@@ -36,12 +36,14 @@ fn-message fn-message-header,
   display: block;
   font-family: 'Helvetica Neue', Arial, Helvetica, sans-serif;
   font-weight: bold;
-  margin: 0em 0em 0.5rem 0em;
   font-size:1.1em;
 }
 
+
+
 fn-message fn-message-text,
 .fn-message .fn-message-text {
+  display: block;
   opacity: 0.85;
   margin: 0.75em 0em;
 }
