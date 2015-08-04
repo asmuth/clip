@@ -1,0 +1,62 @@
+<!--
+  This file is part of the "FnordMetric" project
+    Copyright (c) 2015 Laura Schlimmer
+    Copyright (c) 2015 Paul Asmuth
+
+  FnordMetric is free software: you can redistribute it and/or modify it under
+  the terms of the GNU General Public License v3.0. You should have received a
+  copy of the GNU General Public License along with this program. If not, see
+  <http://www.gnu.org/licenses/>.
+-->
+
+<template id="fn-cli-base-tpl">
+  <fn-cli-output></fn-cli-output>
+  <fn-cli-input-overflow></fn-cli-input-overflow>
+  <fn-cli-new-line-icon><fn-cli-new-line-icon>
+  <input />
+</template>
+
+<script type="text/javascript">
+  var FnCli = function() {
+    this.createdCallback = function() {
+      var tpl = Fnord.getTemplate("fn-cli", "base");
+      this.appendChild(tpl);
+      console.log("created fn-cli");
+      this.observeInput();
+    };
+
+    this.observeInput = function() {
+      var _this = this;
+      var input = this.querySelector("input");
+      input.addEventListener("keyup", function(e) {
+        switch (e.keyCode) {
+          case 13:
+            e.preventDefault();
+            _this.handleEnter();
+            console.log("enter");
+            break;
+
+          default:
+            break;
+        }
+      }, false);
+    };
+
+    this.handleEnter = function() {
+      var input = this.querySelector("input");
+      var input_overflow = this.querySelector("fn-cli-input-overflow");
+      var value = input.value;
+
+      if (value[value.length - 1] != ";") {
+        input_overflow.innerHTML += value;
+        input.value = "";
+      } else {
+        
+      }
+    };
+  };
+
+  window.addEventListener("fn-ready", function() {
+    Fnord.registerComponent("fn-cli", FnCli);
+  });
+</script>

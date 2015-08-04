@@ -1,0 +1,18 @@
+fn-cli {
+  display: block;
+  height: auto;
+  /*background: #000;
+  color: #fff;*/
+
+}
+
+fn-cli-output {
+  display: block;
+  height: 200px;
+  overflow-y: auto;
+  border: 1px solid black;
+}
+
+fn-cli input {
+  width: 100%;
+}
