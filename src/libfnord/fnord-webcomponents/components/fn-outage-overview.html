@@ -11,7 +11,6 @@
 
 <template id='fn-outage-overview-base-tpl'>
   <fn-outage-overview-header>
-    <fn-outage-overview-title>Outages</fn-outage-overview-title>
 
     <fn-outage-overview-error>
       Please select at least tow outages to combine
@@ -46,7 +45,6 @@
         _this.render();
       }
 
-      this.handleRowClick();
     }
 
     this.attributeChangedCallback = function(attr, old_val, new_val) {
@@ -117,17 +115,6 @@
       this.setAttribute('data-outages', JSON.stringify(outages));
     };
 
-
-    this.handleRowClick = function() {
-      var _this = this;
-      this.querySelector("fn-table")
-        .addEventListener('fn-table-row-click', function(e) {
-          var target = e.srcElement || e.target;
-          var key = JSON.parse(target.getAttribute('data-outage')).key;
-          window.location.href = _this.getAttribute('data-url') + "?outage=" + key;
-        }, false);
-    }
-
     this.format = function(data, key) {
       switch (key) {
         case "time":
@@ -157,3 +144,4 @@
     Fnord.registerComponent('fn-outage-overview', FnordOutageOverview);
   });
 </script>
+

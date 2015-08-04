@@ -1,10 +1,12 @@
 fn-outage-overview {
   display: block;
+  width: 100%;
 }
 
 fn-outage-overview fn-table {
   border: 1px solid rgba(39,41,43,.15);
   border-radius: .2857rem;
+  width: 100%;
 }
 
 fn-outage-overview fn-table td:not(.select) {
