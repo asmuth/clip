@@ -383,6 +383,8 @@
       var timestamp = month_timestamp + (date - 1) * DateUtil.millisPerDay;
 
       td_elem.onclick = function() {
+        base.setAttribute("data-timestamp", timestamp);
+        base.setAttribute("data-selected", timestamp);
         base.fireDateSelectEvent(timestamp, this.classList.toString());
       };
     };
