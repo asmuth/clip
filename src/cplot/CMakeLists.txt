@@ -7,7 +7,7 @@
 # <http://www.gnu.org/licenses/>.
 
 # chart
-add_library(fnord-chart OBJECT
+add_library(cplot STATIC
     axisdefinition.cc
     areachart.cc
     barchart.cc
@@ -22,9 +22,5 @@ add_library(fnord-chart OBJECT
     series.cc
     timedomain.cc)
 
-add_executable(test-chart
-    $<TARGET_OBJECTS:stx-base>
-    $<TARGET_OBJECTS:fnord-chart>
-    chart_test.cc)
-
-target_link_libraries(test-chart ${CMAKE_THREAD_LIBS_INIT})
+add_executable(test-cplot chart_test.cc)
+target_link_libraries(test-cplot stx-base cplot)
