@@ -70,3 +70,8 @@ fn-pager-tooltip-for:before,
   font-family: FontAwesome;
   content: "\f101";
 }
+
+fn-pager-tooltip-for:hover,
+.fn-pager-tooltip-for:hover {
+  cursor: pointer;
+}
