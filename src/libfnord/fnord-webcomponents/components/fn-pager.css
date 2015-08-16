@@ -72,6 +72,8 @@ fn-pager-tooltip-for:before,
 }
 
 fn-pager-tooltip-for:hover,
-.fn-pager-tooltip-for:hover {
+.fn-pager-tooltip-for:hover,
+fn-pager-tooltip-back:hover,
+.fn-pager-tooltip-back:hover{
   cursor: pointer;
 }
