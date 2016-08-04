@@ -25,7 +25,7 @@ uint64_t WallClock::unixMillis() {
   struct timeval tv;
 
   gettimeofday(&tv, NULL);
-  return tv.tv_sec * 1000u + tv.tv_usec / 1000u;
+  return tv.tv_sec * 1000llu + tv.tv_usec / 1000llu;
 }
 
 uint64_t WallClock::getUnixMicros() {
@@ -36,7 +36,7 @@ uint64_t WallClock::unixMicros() {
   struct timeval tv;
 
   gettimeofday(&tv, NULL);
-  return tv.tv_sec * 1000000u + tv.tv_usec;
+  return tv.tv_sec * 1000000llu + tv.tv_usec;
 }
 
 }
