@@ -39,7 +39,7 @@ void WebUI::handleHTTPRequest(
   if (StringUtil::beginsWith(path, "/metrics")) {
     response->setStatus(http::kStatusOK);
     response->addHeader("Content-Type", "text/html; charset=utf-8");
-    response->addBody(getAppHTML());
+    response->addBody(getPreludeHTML());
     return;
   }
 
@@ -97,8 +97,8 @@ void WebUI::handleHTTPRequest(
 //  response->addBody(util::Assets::getAsset(asset_path));
 //}
 
-std::string WebUI::getAppHTML() const {
-  return getAssetFile("app.html");
+std::string WebUI::getPreludeHTML() const {
+  return getAssetFile("prelude.html");
 }
 
 std::string WebUI::getAssetFile(const std::string& file) const {

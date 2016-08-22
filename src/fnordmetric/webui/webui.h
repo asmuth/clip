@@ -24,7 +24,8 @@ public:
 
 private:
 
-  std::string getAppHTML() const;
+  std::string getPreludeHTML() const;
+  std::string getBundleHTML() const;
 
   std::string getAssetFile(const std::string& file) const;
 

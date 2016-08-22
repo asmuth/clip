@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>FnordMetric</title>
+    <meta content="text/html; charset=utf-8" http-equiv="Content-type">
+    <link href="/favicon.ico" rel="icon" type="image/x-icon">
+    <style type="text/css">
+      .headbar { display: none; }
+    </style>
+  </head>
+  <body>
+    <div class="headbar">
+      <h1 class='le_fnord'>F</h1>
+
+      <a class="smallpadding" href="/">
+        <h1><i class='fa fa-file'><i>New Query</h1>
+      </a>
+      <a href="/metrics">
+        <h1><i class='fa fa-area-chart'></i>Metrics</h1>
+      </a>
+
+      <div class="searchbar">
+        <i class='fa fa-search'></i>
+        <input>
+        <ul class="autocomplete"></ul>
+      </div>
+    </div>
+
+    <div class="viewport">
+    <div>
+
+    <script type="text/javascript">
+      window.setTimeout(function() {
+        var http = new XMLHttpRequest();
+        http.open("GET", "/assets/app.html", true);
+        http.send();
+
+        http.onreadystatechange = function() {
+          if (http.readyState == 4) {
+            if (http.status == 200) {
+              var dummy = document.createElement("div");
+              dummy.innerHTML = http.responseText;
+              dummy.style.display = "none";
+              document.body.appendChild(dummy);
+
+              var scripts = dummy.getElementsByTagName('script');
+              for (var i = 0; i < scripts.length; i++) {
+                var script = document.createElement('script');
+                script.type = scripts[i].type;
+                if (scripts[i].src) {
+                  script.src = scripts[i].src;
+                } else {
+                  script.innerHTML = scripts[i].innerHTML;
+                }
+
+                document.head.appendChild(script);
+                FnordMetric.init();
+              }
+            } else {
+              console.log("ERROR: unable to load /assets/app.html");
+            }
+          }
+        }
+      }, 0);
+    </script>
+  </body>
+</html>

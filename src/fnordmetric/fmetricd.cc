@@ -99,6 +99,14 @@ int main(int argc, const char** argv) {
       NULL,
       NULL);
 
+  flags.defineFlag(
+      "dev_assets",
+      FlagParser::T_STRING,
+      false,
+      NULL,
+      NULL);
+
+
   /* parse flags */
   {
     auto rc = flags.parseArgv(argc, argv);
@@ -200,7 +208,7 @@ int main(int argc, const char** argv) {
   /* run http server */
   if (rc.isSuccess()) {
     logInfo("Starting...");
-    WebUI webui;
+    WebUI webui(flags.getString("dev_assets"));
 
     http::EventLoop ev;
     http::HTTPRouter http_router;
