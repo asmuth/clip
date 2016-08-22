@@ -21,40 +21,50 @@
  * commercial activities involving this program without disclosing the source
  * code of your own applications
  */
-#ifndef _STX_THREAD_WAKEUP_H
-#define _STX_THREAD_WAKEUP_H
-#include <atomic>
-#include <condition_variable>
-#include <mutex>
-#include <list>
-#include <fnordmetric/util/autoref.h>
+#ifndef _STX_STATS_STATSREPOSITORY_H
+#define _STX_STATS_STATSREPOSITORY_H
+#include "fnordmetric/util/stdtypes.h"
+#include "fnordmetric/util/stats/stat.h"
 
-namespace fnordmetric {
-namespace http {
+namespace stats {
 
-class Wakeup : public RefCounted {
-public:
-  Wakeup();
-
-  /**
-   * Block the current thread and wait for the next wakeup event
-   */
-  void waitForNextWakeup();
-  void waitForFirstWakeup();
-  void waitForWakeup(long generation);
-
-  void wakeup();
-  void onWakeup(long generation, std::function<void()> callback);
-
-  long generation() const;
-
-protected:
-  std::mutex mutex_;
-  std::condition_variable condvar_;
-  std::atomic<long> gen_;
-  std::list<std::function<void()>> callbacks_;
+enum class ExportMode {
+  EXPORT_VALUE,
+  EXPORT_DELTA,
+  EXPORT_NONE
 };
 
-}
+struct ExportedStat {
+  const String path;
+  Stat* stat;
+  const ExportMode export_mode;
+
+  ExportedStat(
+      const String& p,
+      Stat* s,
+      ExportMode m) :
+      path(p),
+      stat(s),
+      export_mode(m) {}
+};
+
+class StatsRepository {
+public:
+  static StatsRepository* get();
+
+  void exportStat(
+      String path,
+      StatRef* stat,
+      ExportMode export_mode);
+
+  void forEachStat(Function<void (const ExportedStat& stat)> fn) const;
+
+protected:
+  std::vector<ExportedStat> stats_;
+  mutable std::mutex mutex_;
+};
+
+void exportStat(String path, StatRef* stat, ExportMode export_mode);
+
 }
 #endif

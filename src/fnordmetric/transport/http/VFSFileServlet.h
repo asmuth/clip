@@ -21,38 +21,28 @@
  * commercial activities involving this program without disclosing the source
  * code of your own applications
  */
-#ifndef _STX_THREAD_WAKEUP_H
-#define _STX_THREAD_WAKEUP_H
-#include <atomic>
-#include <condition_variable>
-#include <mutex>
-#include <list>
-#include <fnordmetric/util/autoref.h>
+#ifndef _STX_HTTP_VFSFILESERVLET_H
+#define _STX_HTTP_VFSFILESERVLET_H
+#include "fnordmetric/util/VFS.h"
+#include "fnordmetric/transport/http/httpservice.h"
 
 namespace fnordmetric {
 namespace http {
 
-class Wakeup : public RefCounted {
+class VFSFileServlet : public http::HTTPService {
 public:
-  Wakeup();
 
-  /**
-   * Block the current thread and wait for the next wakeup event
-   */
-  void waitForNextWakeup();
-  void waitForFirstWakeup();
-  void waitForWakeup(long generation);
+  VFSFileServlet(const String& base_path, VFS* vfs);
 
-  void wakeup();
-  void onWakeup(long generation, std::function<void()> callback);
-
-  long generation() const;
+  void handleHTTPRequest(
+      http::HTTPRequest* req,
+      http::HTTPResponse* res);
 
 protected:
-  std::mutex mutex_;
-  std::condition_variable condvar_;
-  std::atomic<long> gen_;
-  std::list<std::function<void()>> callbacks_;
+  String contentTypeFromFilename(const String& filename) const;
+
+  String base_path_;
+  VFS* vfs_;
 };
 
 }

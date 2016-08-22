@@ -21,40 +21,33 @@
  * commercial activities involving this program without disclosing the source
  * code of your own applications
  */
-#ifndef _STX_THREAD_WAKEUP_H
-#define _STX_THREAD_WAKEUP_H
-#include <atomic>
-#include <condition_variable>
-#include <mutex>
-#include <list>
-#include <fnordmetric/util/autoref.h>
+#ifndef _STX_STATS_COUNTERSTAT_H
+#define _STX_STATS_COUNTERSTAT_H
 
-namespace fnordmetric {
-namespace http {
+namespace stats {
 
-class Wakeup : public RefCounted {
+/**
+ * CounterStat<uint64_t, std::string> http_req_stat("http_reqs", "status_code");
+ * http_req_stat.incr(1, "200");
+ */
+template <typename ValueType, typename... DimensionTypes>
+class CounterStat : public Stat<ValueType, DimensionTypes...> {
 public:
-  Wakeup();
+  static_assert(
+      std::is_arithmetic<ValueType>::value,
+      "ValueType must be arithmetic");
 
-  /**
-   * Block the current thread and wait for the next wakeup event
-   */
-  void waitForNextWakeup();
-  void waitForFirstWakeup();
-  void waitForWakeup(long generation);
+  template <typename... DimensionTitleTypes>
+  CounterStat();
 
-  void wakeup();
-  void onWakeup(long generation, std::function<void()> callback);
+  void incr(T value, DimensionTypes... dimensions);
+  void desc(T value, DimensionTypes... dimensions);
+  T value(DimensionTypes... dimensions) const;
 
-  long generation() const;
+  void exportAll(OutputStream* out) const override;
 
-protected:
-  std::mutex mutex_;
-  std::condition_variable condvar_;
-  std::atomic<long> gen_;
-  std::list<std::function<void()>> callbacks_;
 };
 
 }
-}
+
 #endif

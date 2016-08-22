@@ -21,40 +21,38 @@
  * commercial activities involving this program without disclosing the source
  * code of your own applications
  */
-#ifndef _STX_THREAD_WAKEUP_H
-#define _STX_THREAD_WAKEUP_H
-#include <atomic>
-#include <condition_variable>
-#include <mutex>
-#include <list>
-#include <fnordmetric/util/autoref.h>
+#pragma once
+#include <fnordmetric/util/uri.h>
+#include <fnordmetric/util/io/file.h>
+#include <fnordmetric/transport/http/httpmessage.h>
+#include "fnordmetric/transport/http/httprequest.h"
+#include "fnordmetric/transport/http/httpresponse.h"
+#include "fnordmetric/transport/http/httpstats.h"
+#include "fnordmetric/transport/http/httpconnectionpool.h"
+#include "fnordmetric/transport/http/httpclient.h"
 
 namespace fnordmetric {
 namespace http {
 
-class Wakeup : public RefCounted {
+struct HTTPSSEEvent {
+  String data;
+  Option<String> name;
+};
+
+class HTTPSSEParser {
 public:
-  Wakeup();
 
-  /**
-   * Block the current thread and wait for the next wakeup event
-   */
-  void waitForNextWakeup();
-  void waitForFirstWakeup();
-  void waitForWakeup(long generation);
+  void onEvent(Function<void (const HTTPSSEEvent& ev)> fn);
 
-  void wakeup();
-  void onWakeup(long generation, std::function<void()> callback);
-
-  long generation() const;
+  void parse(const char* data, size_t size);
 
 protected:
-  std::mutex mutex_;
-  std::condition_variable condvar_;
-  std::atomic<long> gen_;
-  std::list<std::function<void()>> callbacks_;
+
+  void parseEvent(const char* data, size_t size);
+
+  Buffer buf_;
+  Function<void (const HTTPSSEEvent& ev)> on_event_;
 };
 
 }
 }
-#endif

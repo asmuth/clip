@@ -21,40 +21,36 @@
  * commercial activities involving this program without disclosing the source
  * code of your own applications
  */
-#ifndef _STX_THREAD_WAKEUP_H
-#define _STX_THREAD_WAKEUP_H
-#include <atomic>
-#include <condition_variable>
-#include <mutex>
-#include <list>
-#include <fnordmetric/util/autoref.h>
+#include "fnordmetric/util/stats/statsrepository.h"
 
-namespace fnordmetric {
-namespace http {
+namespace stats {
 
-class Wakeup : public RefCounted {
-public:
-  Wakeup();
+StatsRepository* StatsRepository::get() {
+  static StatsRepository singleton;
+  return &singleton;
+}
 
-  /**
-   * Block the current thread and wait for the next wakeup event
-   */
-  void waitForNextWakeup();
-  void waitForFirstWakeup();
-  void waitForWakeup(long generation);
+void StatsRepository::exportStat(
+    String path,
+    StatRef* stat_ref,
+    ExportMode export_mode) {
+  auto stat = stat_ref->getStat();
+  stat->incRef();
+  ScopedLock<std::mutex> lk(mutex_);
+  stats_.emplace_back(path, stat.get(), export_mode);
+}
 
-  void wakeup();
-  void onWakeup(long generation, std::function<void()> callback);
+void StatsRepository::forEachStat(
+    Function<void (const ExportedStat& stat)> fn) const {
+  ScopedLock<std::mutex> lk(mutex_);
 
-  long generation() const;
+  for (const auto& stat : stats_) {
+    fn(stat);
+  }
+}
 
-protected:
-  std::mutex mutex_;
-  std::condition_variable condvar_;
-  std::atomic<long> gen_;
-  std::list<std::function<void()>> callbacks_;
-};
+void exportStat(String path, StatRef* stat, ExportMode export_mode) {
+  StatsRepository::get()->exportStat(path, stat, export_mode);
+}
 
 }
-}
-#endif

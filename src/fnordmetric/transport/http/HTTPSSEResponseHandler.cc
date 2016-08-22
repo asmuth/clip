@@ -21,40 +21,31 @@
  * commercial activities involving this program without disclosing the source
  * code of your own applications
  */
-#ifndef _STX_THREAD_WAKEUP_H
-#define _STX_THREAD_WAKEUP_H
-#include <atomic>
-#include <condition_variable>
-#include <mutex>
-#include <list>
-#include <fnordmetric/util/autoref.h>
+#include "fnordmetric/transport/http/HTTPSSEResponseHandler.h"
 
 namespace fnordmetric {
 namespace http {
 
-class Wakeup : public RefCounted {
-public:
-  Wakeup();
+HTTPSSEResponseHandler::HTTPSSEResponseHandler(
+    Promise<HTTPResponse> promise,
+    CallbackFn on_event) :
+    HTTPResponseFuture(promise) {
+  parser_.onEvent(on_event);
+}
 
-  /**
-   * Block the current thread and wait for the next wakeup event
-   */
-  void waitForNextWakeup();
-  void waitForFirstWakeup();
-  void waitForWakeup(long generation);
+HTTPSSEResponseHandler::FactoryFn HTTPSSEResponseHandler::getFactory(
+    CallbackFn on_event) {
+  return [on_event] (
+      const Promise<http::HTTPResponse> promise) -> HTTPResponseFuture* {
+    return new HTTPSSEResponseHandler(promise, on_event);
+  };
+}
 
-  void wakeup();
-  void onWakeup(long generation, std::function<void()> callback);
-
-  long generation() const;
-
-protected:
-  std::mutex mutex_;
-  std::condition_variable condvar_;
-  std::atomic<long> gen_;
-  std::list<std::function<void()>> callbacks_;
-};
+void HTTPSSEResponseHandler::onBodyChunk(
+    const char* data,
+    size_t size) {
+  parser_.parse(data, size);
+}
 
 }
 }
-#endif

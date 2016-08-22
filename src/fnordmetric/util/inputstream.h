@@ -13,7 +13,6 @@
 #include <string>
 
 namespace fnordmetric {
-namespace util {
 
 class InputStream {
 public:
@@ -174,6 +173,5 @@ protected:
   size_t cur_;
 };
 
-}
 }
 #endif

@@ -21,39 +21,30 @@
  * commercial activities involving this program without disclosing the source
  * code of your own applications
  */
-#ifndef _STX_THREAD_WAKEUP_H
-#define _STX_THREAD_WAKEUP_H
-#include <atomic>
-#include <condition_variable>
-#include <mutex>
-#include <list>
-#include <fnordmetric/util/autoref.h>
+#ifndef _libstx_HTTP_STATUSES_H
+#define _libstx_HTTP_STATUSES_H
 
 namespace fnordmetric {
 namespace http {
 
-class Wakeup : public RefCounted {
-public:
-  Wakeup();
-
-  /**
-   * Block the current thread and wait for the next wakeup event
-   */
-  void waitForNextWakeup();
-  void waitForFirstWakeup();
-  void waitForWakeup(long generation);
-
-  void wakeup();
-  void onWakeup(long generation, std::function<void()> callback);
-
-  long generation() const;
-
-protected:
-  std::mutex mutex_;
-  std::condition_variable condvar_;
-  std::atomic<long> gen_;
-  std::list<std::function<void()>> callbacks_;
+struct HTTPStatus {
+  HTTPStatus(int code_, const char* name_) : code(code_), name(name_) {}
+  int code;
+  const char* name;
 };
+
+const HTTPStatus kStatusOK(200, "OK");
+const HTTPStatus kStatusCreated(201, "Created");
+const HTTPStatus kStatusNoContent(204, "No Content");
+const HTTPStatus kStatusBadRequest(400, "Bad request");
+const HTTPStatus kStatusUnauthorized(401, "Unauthorized");
+const HTTPStatus kStatusForbidden(403, "Forbidden");
+const HTTPStatus kStatusNotFound(404, "Not found");
+const HTTPStatus kStatusMovedPermanently(301, "Moved permanently");
+const HTTPStatus kStatusFound(302, "Found");
+const HTTPStatus kStatusInternalServerError(500, "Internal Server Error");
+const HTTPStatus kStatusBadGateway(502, "Bad Gateway");
+const HTTPStatus kStatusServiceUnavailable(503, "Service unavailable");
 
 }
 }

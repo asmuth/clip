@@ -33,6 +33,7 @@
 #include <fnordmetric/util/flagparser.h>
 #include <fnordmetric/util/logging.h>
 #include <fnordmetric/transport/http/eventloop.h>
+#include <fnordmetric/transport/http/httprouter.h>
 
 using namespace fnordmetric;
 

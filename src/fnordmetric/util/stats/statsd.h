@@ -21,40 +21,44 @@
  * commercial activities involving this program without disclosing the source
  * code of your own applications
  */
-#ifndef _STX_THREAD_WAKEUP_H
-#define _STX_THREAD_WAKEUP_H
-#include <atomic>
-#include <condition_variable>
-#include <mutex>
-#include <list>
-#include <fnordmetric/util/autoref.h>
+#include <fnordmetric/util/buffer.h>
+#include <fnordmetric/util/net/udpserver.h>
+#include <fnordmetric/util/thread/taskscheduler.h>
 
-namespace fnordmetric {
-namespace http {
+namespace statsd {
 
-class Wakeup : public RefCounted {
+class StatsdServer {
 public:
-  Wakeup();
 
-  /**
-   * Block the current thread and wait for the next wakeup event
-   */
-  void waitForNextWakeup();
-  void waitForFirstWakeup();
-  void waitForWakeup(long generation);
+  StatsdServer(
+      TaskScheduler* server_scheduler,
+      TaskScheduler* work_scheduler);
 
-  void wakeup();
-  void onWakeup(long generation, std::function<void()> callback);
+  void listen(int port);
 
-  long generation() const;
+  void onSample(std::function<void (
+      const std::string&,
+      double,
+      const std::vector<std::pair<std::string, std::string>>&)> callback);
+
+  static char const* parseStatsdSample(
+      char const* begin,
+      char const* end,
+      std::string* key,
+      std::string* value,
+      std::vector<std::pair<std::string, std::string>>* labels);
 
 protected:
-  std::mutex mutex_;
-  std::condition_variable condvar_;
-  std::atomic<long> gen_;
-  std::list<std::function<void()>> callbacks_;
+
+  void messageReceived(const Buffer& msg);
+
+  net::UDPServer udp_server_;
+
+  std::function<void (
+      const std::string&,
+      double,
+      const std::vector<std::pair<std::string, std::string>>&)> callback_;
 };
 
+
 }
-}
-#endif

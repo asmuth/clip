@@ -21,38 +21,48 @@
  * commercial activities involving this program without disclosing the source
  * code of your own applications
  */
-#ifndef _STX_THREAD_WAKEUP_H
-#define _STX_THREAD_WAKEUP_H
-#include <atomic>
-#include <condition_variable>
-#include <mutex>
-#include <list>
-#include <fnordmetric/util/autoref.h>
+#ifndef _libstx_WEB_HTTPRESPONSE_H
+#define _libstx_WEB_HTTPRESPONSE_H
+#include <fnordmetric/util/time.h>
+#include <fnordmetric/transport/http/httpmessage.h>
+#include <fnordmetric/transport/http/httprequest.h>
+#include <fnordmetric/transport/http/status.h>
+#include <string>
 
 namespace fnordmetric {
 namespace http {
 
-class Wakeup : public RefCounted {
+class HTTPResponse : public HTTPMessage {
 public:
-  Wakeup();
-
   /**
-   * Block the current thread and wait for the next wakeup event
+   * Parse the provided http response string and return the parsed http response
    */
-  void waitForNextWakeup();
-  void waitForFirstWakeup();
-  void waitForWakeup(long generation);
+  static HTTPResponse parse(const std::string& str);
 
-  void wakeup();
-  void onWakeup(long generation, std::function<void()> callback);
+  HTTPResponse();
 
-  long generation() const;
+  void setStatus(int status_code, const std::string& status);
+  void setStatus(const HTTPStatus& status);
+  void setStatusCode(int code);
+  void setStatusName(const std::string& status);
+
+  void addCookie(
+      const std::string& key,
+      const std::string& value,
+      const UnixTime& expire = UnixTime::epoch(),
+      const std::string& path = "",
+      const std::string& domain = "",
+      bool secure = false,
+      bool httponly = false);
+
+  void populateFromRequest(const HTTPRequest& request);
+
+  int statusCode() const;
+  const std::string& statusName() const;
 
 protected:
-  std::mutex mutex_;
-  std::condition_variable condvar_;
-  std::atomic<long> gen_;
-  std::list<std::function<void()>> callbacks_;
+  int status_code_;
+  std::string status_;
 };
 
 }

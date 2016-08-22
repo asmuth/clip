@@ -75,6 +75,52 @@ fmetricd_SOURCES = \
 		transport/http/eventloop.cc \
 		transport/http/wakeup.h \
 		transport/http/wakeup.cc \
+		transport/http/HTTPRequestStream.cc \
+		transport/http/HTTPRequestStream.h \
+		transport/http/HTTPResponseStream.cc \
+		transport/http/HTTPResponseStream.h \
+		transport/http/HTTPSSEParser.cc \
+		transport/http/httpconnectionhandler.h \
+		transport/http/HTTPSSEParser.h \
+		transport/http/HTTPSSEResponseHandler.cc \
+		transport/http/HTTPSSEResponseHandler.h \
+		transport/http/HTTPSSEStream.cc \
+		transport/http/HTTPSSEStream.h \
+		transport/http/VFSFileServlet.cc \
+		transport/http/VFSFileServlet.h \
+		transport/http/cookies.cc \
+		transport/http/cookies.h \
+		transport/http/status.h \
+		transport/http/httphandler.h \
+		transport/http/httpclient.cc \
+		transport/http/httpclient.h \
+		transport/http/httpclientconnection.cc \
+		transport/http/httpclientconnection.h \
+		transport/http/httpconnectionpool.cc \
+		transport/http/httpconnectionpool.h \
+		transport/http/httpgenerator.cc \
+		transport/http/httpgenerator.h \
+		transport/http/httpmessage.cc \
+		transport/http/httpmessage.h \
+		transport/http/httpparser.cc \
+		transport/http/httpparser.h \
+		transport/http/httprequest.cc \
+		transport/http/httprequest.h \
+		transport/http/httpresponse.cc \
+		transport/http/httpresponse.h \
+		transport/http/httpresponsefuture.cc \
+		transport/http/httpresponsefuture.h \
+		transport/http/httpresponsehandler.h \
+		transport/http/httprouter.cc \
+		transport/http/httprouter.h \
+		transport/http/httprouter_impl.h \
+		transport/http/httpserver.cc \
+		transport/http/httpserver.h \
+		transport/http/httpserverconnection.cc \
+		transport/http/httpserverconnection.h \
+		transport/http/httpstats.h \
+		transport/http/httpservice.cc \
+		transport/http/httpservice.h \
 		fmetricd.cc
 
 bin_PROGRAMS += fmetricd

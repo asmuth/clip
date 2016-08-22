@@ -21,38 +21,35 @@
  * commercial activities involving this program without disclosing the source
  * code of your own applications
  */
-#ifndef _STX_THREAD_WAKEUP_H
-#define _STX_THREAD_WAKEUP_H
-#include <atomic>
-#include <condition_variable>
-#include <mutex>
-#include <list>
-#include <fnordmetric/util/autoref.h>
+#ifndef _libstx_WEB_HTTPSERVER_H
+#define _libstx_WEB_HTTPSERVER_H
+#include <memory>
+#include <vector>
+#include <fnordmetric/transport/http/httprequest.h>
+#include <fnordmetric/transport/http/httphandler.h>
+#include "fnordmetric/transport/http/httpserverconnection.h"
+#include <fnordmetric/transport/http/httpstats.h>
+#include <fnordmetric/util/net/tcpserver.h>
+#include <fnordmetric/util/thread/taskscheduler.h>
 
 namespace fnordmetric {
 namespace http {
 
-class Wakeup : public RefCounted {
+class HTTPServer {
 public:
-  Wakeup();
+  HTTPServer(
+      HTTPHandlerFactory* handler_factory,
+      TaskScheduler* scheduler);
 
-  /**
-   * Block the current thread and wait for the next wakeup event
-   */
-  void waitForNextWakeup();
-  void waitForFirstWakeup();
-  void waitForWakeup(long generation);
+  void listen(int port);
 
-  void wakeup();
-  void onWakeup(long generation, std::function<void()> callback);
-
-  long generation() const;
+  HTTPServerStats* stats();
 
 protected:
-  std::mutex mutex_;
-  std::condition_variable condvar_;
-  std::atomic<long> gen_;
-  std::list<std::function<void()>> callbacks_;
+  HTTPServerStats stats_;
+  HTTPHandlerFactory* handler_factory_;
+  TaskScheduler* scheduler_;
+  net::TCPServer ssock_;
 };
 
 }

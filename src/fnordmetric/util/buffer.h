@@ -7,14 +7,12 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#ifndef _FNORD_UTIL_BUFFER_H_
-#define _FNORD_UTIL_BUFFER_H_
+#pragma once
 #include <stdlib.h>
 #include <stdint.h>
 #include <string>
 
-namespace fnord {
-namespace util {
+namespace fnordmetric {
 
 class Buffer {
 public:
@@ -36,5 +34,3 @@ protected:
 };
 
 }
-}
-#endif

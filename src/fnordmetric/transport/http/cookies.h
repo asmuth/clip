@@ -21,38 +21,35 @@
  * commercial activities involving this program without disclosing the source
  * code of your own applications
  */
-#ifndef _STX_THREAD_WAKEUP_H
-#define _STX_THREAD_WAKEUP_H
-#include <atomic>
-#include <condition_variable>
-#include <mutex>
-#include <list>
-#include <fnordmetric/util/autoref.h>
+#ifndef _STX_HTTP_COOKIES_H
+#define _STX_HTTP_COOKIES_H
+#include <vector>
+#include <string>
+#include "fnordmetric/util/UnixTime.h"
+#include <fnordmetric/util/uri.h>
 
 namespace fnordmetric {
 namespace http {
 
-class Wakeup : public RefCounted {
+class Cookies {
 public:
-  Wakeup();
+  typedef std::vector<std::pair<std::string, std::string>> CookieList;
 
-  /**
-   * Block the current thread and wait for the next wakeup event
-   */
-  void waitForNextWakeup();
-  void waitForFirstWakeup();
-  void waitForWakeup(long generation);
+  static bool getCookie(
+      const CookieList& cookies,
+      const std::string& key,
+      std::string* dst);
 
-  void wakeup();
-  void onWakeup(long generation, std::function<void()> callback);
+  static CookieList parseCookieHeader(const std::string& header_str);
 
-  long generation() const;
-
-protected:
-  std::mutex mutex_;
-  std::condition_variable condvar_;
-  std::atomic<long> gen_;
-  std::list<std::function<void()>> callbacks_;
+  static std::string mkCookie(
+      const std::string& key,
+      const std::string& value,
+      const UnixTime& expire = UnixTime::epoch(),
+      const std::string& path = "",
+      const std::string& domain = "",
+      bool secure = false,
+      bool httponly = false);
 };
 
 }

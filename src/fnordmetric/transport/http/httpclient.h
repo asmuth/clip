@@ -21,38 +21,46 @@
  * commercial activities involving this program without disclosing the source
  * code of your own applications
  */
-#ifndef _STX_THREAD_WAKEUP_H
-#define _STX_THREAD_WAKEUP_H
-#include <atomic>
-#include <condition_variable>
-#include <mutex>
-#include <list>
-#include <fnordmetric/util/autoref.h>
+#ifndef _libstx_HTTPCLIENT_H
+#define _libstx_HTTPCLIENT_H
+#include "fnordmetric/util/uri.h"
+#include "fnordmetric/transport/http/httpresponsefuture.h"
+#include "fnordmetric/transport/http/httpconnectionpool.h"
+#include "fnordmetric/util/thread/eventloop.h"
 
 namespace fnordmetric {
 namespace http {
 
-class Wakeup : public RefCounted {
+class HTTPClient {
 public:
-  Wakeup();
 
-  /**
-   * Block the current thread and wait for the next wakeup event
-   */
-  void waitForNextWakeup();
-  void waitForFirstWakeup();
-  void waitForWakeup(long generation);
+  HTTPClient();
+  HTTPClient(HTTPClientStats* stats);
 
-  void wakeup();
-  void onWakeup(long generation, std::function<void()> callback);
+  // deprecated
+  HTTPResponse executeRequest(const HTTPRequest& req);
 
-  long generation() const;
+  Status executeRequest(const HTTPRequest& req, HTTPResponse* res);
+
+  HTTPResponse executeRequest(
+      const HTTPRequest& req,
+      const InetAddr& addr);
+
+  HTTPResponse executeRequest(
+      const HTTPRequest& req,
+      Function<HTTPResponseFuture* (Promise<HTTPResponse> promise)> factory);
+
+  HTTPResponse executeRequest(
+      const HTTPRequest& req,
+      const InetAddr& addr,
+      Function<HTTPResponseFuture* (Promise<HTTPResponse> promise)> factory);
 
 protected:
+  HTTPClientStats stats_int_;
+  HTTPClientStats* stats_;
+  thread::EventLoop ev_;
   std::mutex mutex_;
-  std::condition_variable condvar_;
-  std::atomic<long> gen_;
-  std::list<std::function<void()>> callbacks_;
+  net::DNSCache dns_cache_;
 };
 
 }

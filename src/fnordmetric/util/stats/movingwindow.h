@@ -21,40 +21,35 @@
  * commercial activities involving this program without disclosing the source
  * code of your own applications
  */
-#ifndef _STX_THREAD_WAKEUP_H
-#define _STX_THREAD_WAKEUP_H
-#include <atomic>
-#include <condition_variable>
-#include <mutex>
-#include <list>
-#include <fnordmetric/util/autoref.h>
+#ifndef _STX_STATS_MOVINGAVERAGE_H
+#define _STX_STATS_MOVINGAVERAGE_H
+#include <stdlib.h>
+#include <stdint.h>
+#include "fnordmetric/util/UnixTime.h"
 
-namespace fnordmetric {
-namespace http {
+namespace stats {
 
-class Wakeup : public RefCounted {
+template <typename T>
+class RingBuffer {
 public:
-  Wakeup();
+  typedef std::function<T(T)> AggregationFunc;
 
-  /**
-   * Block the current thread and wait for the next wakeup event
-   */
-  void waitForNextWakeup();
-  void waitForFirstWakeup();
-  void waitForWakeup(long generation);
+  static const AggregationFunc kMeanAggregation;
+  static const AggregationFunc kSumAggregation;
 
-  void wakeup();
-  void onWakeup(long generation, std::function<void()> callback);
+  RingBuffer(
+      const std::string& name,
+      size_t buffer_size,
+      AggregationFunc aggregation);
 
-  long generation() const;
+  void insert(T value);
 
 protected:
-  std::mutex mutex_;
-  std::condition_variable condvar_;
-  std::atomic<long> gen_;
-  std::list<std::function<void()>> callbacks_;
+  T* rbuf;
+  size_t rbuf_len_;
+  size_t rbuf_pos_;
+  size_t rbuf_used_;
 };
 
-}
 }
 #endif

@@ -21,38 +21,28 @@
  * commercial activities involving this program without disclosing the source
  * code of your own applications
  */
-#ifndef _STX_THREAD_WAKEUP_H
-#define _STX_THREAD_WAKEUP_H
-#include <atomic>
-#include <condition_variable>
-#include <mutex>
-#include <list>
-#include <fnordmetric/util/autoref.h>
+#ifndef _libstx_HTTPRESPONSEHANDLER_H
+#define _libstx_HTTPRESPONSEHANDLER_H
+#include "fnordmetric/util/thread/wakeup.h"
+#include <memory>
 
 namespace fnordmetric {
 namespace http {
 
-class Wakeup : public RefCounted {
+class HTTPResponseHandler {
 public:
-  Wakeup();
+  virtual ~HTTPResponseHandler() {}
 
-  /**
-   * Block the current thread and wait for the next wakeup event
-   */
-  void waitForNextWakeup();
-  void waitForFirstWakeup();
-  void waitForWakeup(long generation);
+  virtual void onError(const std::exception& e) = 0;
 
-  void wakeup();
-  void onWakeup(long generation, std::function<void()> callback);
+  virtual void onVersion(const std::string& version) = 0;
+  virtual void onStatusCode(int status_code) = 0;
+  virtual void onStatusName(const std::string& status) = 0;
+  virtual void onHeader(const std::string& key, const std::string& value) = 0;
+  virtual void onHeadersComplete() = 0;
+  virtual void onBodyChunk(const char* data, size_t size) = 0;
+  virtual void onResponseComplete() = 0;
 
-  long generation() const;
-
-protected:
-  std::mutex mutex_;
-  std::condition_variable condvar_;
-  std::atomic<long> gen_;
-  std::list<std::function<void()>> callbacks_;
 };
 
 }

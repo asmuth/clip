@@ -13,11 +13,10 @@
 #include <cstdarg>
 #include <unistd.h>
 #include <fnordmetric/util/outputstream.h>
-#include <fnordmetric/util/runtimeexception.h>
+#include <fnordmetric/util/exception.h>
 #include <stdarg.h>
 
 namespace fnordmetric {
-namespace util {
 
 std::unique_ptr<OutputStream> OutputStream::getStdout() {
   auto stdout_stream = new FileOutputStream(1, false);
@@ -127,4 +126,4 @@ size_t StringOutputStream::write(const char* data, size_t size) {
 }
 
 }
-}
+

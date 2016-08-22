@@ -21,40 +21,48 @@
  * commercial activities involving this program without disclosing the source
  * code of your own applications
  */
-#ifndef _STX_THREAD_WAKEUP_H
-#define _STX_THREAD_WAKEUP_H
-#include <atomic>
-#include <condition_variable>
-#include <mutex>
-#include <list>
-#include <fnordmetric/util/autoref.h>
+#ifndef _STX_STATS_COUNTER_H
+#define _STX_STATS_COUNTER_H
+#include <stdlib.h>
+#include <stdint.h>
+#include "fnordmetric/util/time.h"
+#include "fnordmetric/util/stats/stat.h"
 
-namespace fnordmetric {
-namespace http {
+namespace stats {
 
-class Wakeup : public RefCounted {
+template <typename ValueType>
+class CounterStat : public Stat {
 public:
-  Wakeup();
+  CounterStat();
 
-  /**
-   * Block the current thread and wait for the next wakeup event
-   */
-  void waitForNextWakeup();
-  void waitForFirstWakeup();
-  void waitForWakeup(long generation);
+  void incr(ValueType value);
+  void decr(ValueType value);
+  void set(ValueType value);
+  ValueType get() const;
 
-  void wakeup();
-  void onWakeup(long generation, std::function<void()> callback);
-
-  long generation() const;
+  void exportAll(const String& path, StatsSink* sink) const override;
 
 protected:
-  std::mutex mutex_;
-  std::condition_variable condvar_;
-  std::atomic<long> gen_;
-  std::list<std::function<void()>> callbacks_;
+  std::atomic<ValueType> value_;
+};
+
+template <typename ValueType>
+class Counter : public StatRef {
+public:
+  Counter();
+
+  void incr(ValueType value);
+  void decr(ValueType value);
+  void set(ValueType value);
+  ValueType get() const;
+
+  RefPtr<Stat> getStat() const override;
+
+protected:
+  RefPtr<CounterStat<ValueType>> stat_;
 };
 
 }
-}
+
+#include "counter_impl.h"
 #endif

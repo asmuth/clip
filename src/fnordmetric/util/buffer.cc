@@ -8,11 +8,10 @@
  * <http://www.gnu.org/licenses/>.
  */
 #include <fnordmetric/util/buffer.h>
-#include <fnordmetric/util/runtimeexception.h>
+#include <fnordmetric/util/exception.h>
 #include <string.h>
 
-namespace fnord {
-namespace util {
+namespace fnordmetric {
 
 Buffer::Buffer(
     const void* initial_data,
@@ -68,6 +67,5 @@ std::string Buffer::toString() const {
   return std::string(static_cast<char *>(data_), size_);
 }
 
-}
 }
 

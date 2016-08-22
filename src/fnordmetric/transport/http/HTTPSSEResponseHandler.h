@@ -21,40 +21,42 @@
  * commercial activities involving this program without disclosing the source
  * code of your own applications
  */
-#ifndef _STX_THREAD_WAKEUP_H
-#define _STX_THREAD_WAKEUP_H
-#include <atomic>
-#include <condition_variable>
-#include <mutex>
-#include <list>
-#include <fnordmetric/util/autoref.h>
+#pragma once
+#include <fnordmetric/util/uri.h>
+#include <fnordmetric/util/io/file.h>
+#include <fnordmetric/transport/http/httpmessage.h>
+#include "fnordmetric/transport/http/httprequest.h"
+#include "fnordmetric/transport/http/httpresponse.h"
+#include "fnordmetric/transport/http/httpstats.h"
+#include "fnordmetric/transport/http/httpconnectionpool.h"
+#include "fnordmetric/transport/http/httpclient.h"
+#include "fnordmetric/transport/http/HTTPSSEParser.h"
 
 namespace fnordmetric {
 namespace http {
 
-class Wakeup : public RefCounted {
+class HTTPSSEResponseHandler : public HTTPResponseFuture {
 public:
-  Wakeup();
+  typedef
+      Function<HTTPResponseFuture* (const Promise<http::HTTPResponse>)>
+      FactoryFn;
 
-  /**
-   * Block the current thread and wait for the next wakeup event
-   */
-  void waitForNextWakeup();
-  void waitForFirstWakeup();
-  void waitForWakeup(long generation);
+  typedef
+      Function<void (const HTTPSSEEvent& ev)>
+      CallbackFn;
 
-  void wakeup();
-  void onWakeup(long generation, std::function<void()> callback);
-
-  long generation() const;
+  static FactoryFn getFactory(CallbackFn on_event);
 
 protected:
-  std::mutex mutex_;
-  std::condition_variable condvar_;
-  std::atomic<long> gen_;
-  std::list<std::function<void()>> callbacks_;
+
+  HTTPSSEResponseHandler(
+      Promise<HTTPResponse> promise,
+      CallbackFn on_event);
+
+  void onBodyChunk(const char* data, size_t size) override;
+
+  HTTPSSEParser parser_;
 };
 
 }
 }
-#endif

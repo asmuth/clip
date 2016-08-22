@@ -24,6 +24,9 @@
 #include "fnordmetric/util/inspect.h"
 #include "fnordmetric/transport/http/wakeup.h"
 
+namespace fnordmetric {
+namespace http {
+
 Wakeup::Wakeup() : gen_(0) {
 }
 
@@ -73,4 +76,7 @@ void Wakeup::wakeup() {
     callback();
   }
 }
+
+} // namespace http
+} // namespace fnordmetric
 

@@ -21,40 +21,41 @@
  * commercial activities involving this program without disclosing the source
  * code of your own applications
  */
-#ifndef _STX_THREAD_WAKEUP_H
-#define _STX_THREAD_WAKEUP_H
-#include <atomic>
-#include <condition_variable>
-#include <mutex>
-#include <list>
-#include <fnordmetric/util/autoref.h>
+#include "fnordmetric/util/stringutil.h"
+#include "fnordmetric/util/stats/statssink.h"
 
-namespace fnordmetric {
-namespace http {
+namespace stats {
 
-class Wakeup : public RefCounted {
-public:
-  Wakeup();
+TextStatsSink::TextStatsSink(
+    Function<void (const String& line)> callback) :
+    callback_(callback) {}
 
-  /**
-   * Block the current thread and wait for the next wakeup event
-   */
-  void waitForNextWakeup();
-  void waitForFirstWakeup();
-  void waitForWakeup(long generation);
+void TextStatsSink::addStatValue(
+    const String& path,
+    uint64_t value) {
+  callback_(StringUtil::format("$0:$1", path, value));
+}
 
-  void wakeup();
-  void onWakeup(long generation, std::function<void()> callback);
+void TextStatsSink::addStatValue(
+    const String& path,
+    const Labels& labels,
+    uint64_t value) {
+}
 
-  long generation() const;
+void BufferStatsSinkStatsSink::addStatValue(
+    const String& path,
+    uint64_t value) {
+  values_.emplace_back(path, value);
+}
 
-protected:
-  std::mutex mutex_;
-  std::condition_variable condvar_;
-  std::atomic<long> gen_;
-  std::list<std::function<void()>> callbacks_;
-};
+void BufferStatsSinkStatsSink::addStatValue(
+    const String& path,
+    const Labels& labels,
+    uint64_t value) {
+}
+
+const Vector<Pair<String, double>>& BufferStatsSinkStatsSink::values() const {
+  return values_;
+}
 
 }
-}
-#endif
