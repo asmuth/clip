@@ -8,8 +8,8 @@
  * <http://www.gnu.org/licenses/>.
  */
 #include <dirent.h>
-#include <fnordmetric/io/fileutil.h>
-#include <fnordmetric/util/runtimeexception.h>
+#include <fnordmetric/util/fileutil.h>
+#include <fnordmetric/util/exception.h>
 #include <fnordmetric/util/stringutil.h>
 #include <string.h>
 #include <sys/fcntl.h>
@@ -90,9 +90,9 @@ void FileUtil::mkdir_p(const std::string& dirname) {
 
 std::string FileUtil::joinPaths(const std::string& p1, const std::string p2) {
   auto p1_stripped = p1;
-  util::StringUtil::stripTrailingSlashes(&p1_stripped);
+  StringUtil::stripTrailingSlashes(&p1_stripped);
   auto p2_stripped = p2;
-  util::StringUtil::stripTrailingSlashes(&p2_stripped);
+  StringUtil::stripTrailingSlashes(&p2_stripped);
   return p1_stripped + "/" + p2_stripped;
 }
 

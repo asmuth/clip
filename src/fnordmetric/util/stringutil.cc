@@ -23,6 +23,7 @@
  */
 #include <string>
 #include "stringutil.h"
+#include "exception.h"
 
 void StringUtil::toStringVImpl(std::vector<std::string>* target) {}
 
@@ -112,6 +113,16 @@ std::string StringUtil::toString(double value) {
 template <>
 std::string StringUtil::toString(bool value) {
   return value ? "true" : "false";
+}
+
+template <>
+std::string StringUtil::toString(std::exception e) {
+  return e.what();
+}
+
+template <>
+std::string StringUtil::toString(Exception e) {
+  return e.getMessage();
 }
 
 void StringUtil::stripTrailingSlashes(std::string* str) {

@@ -21,37 +21,49 @@
  * commercial activities involving this program without disclosing the source
  * code of your own applications
  */
-#ifndef _libstx_WEB_HTTPSERVER_H
-#define _libstx_WEB_HTTPSERVER_H
-#include <memory>
-#include <vector>
-#include <fnordmetric/transport/http/httprequest.h>
-#include <fnordmetric/transport/http/httphandler.h>
-#include "fnordmetric/transport/http/httpserverconnection.h"
-#include <fnordmetric/transport/http/httpstats.h>
-#include <fnordmetric/transport/http/tcpserver.h>
-#include <fnordmetric/transport/http/taskscheduler.h>
+#include <limits>
+#include <string.h>
+#include <stdio.h>
+#include <fnordmetric/util/exception.h>
+#include <fnordmetric/util/ieee754.h>
 
-namespace fnordmetric {
-namespace http {
+uint64_t IEEE754::toBytes(double value) {
+  uint64_t bytes;
 
-class HTTPServer {
-public:
-  HTTPServer(
-      HTTPHandlerFactory* handler_factory,
-      TaskScheduler* scheduler);
+  constexpr bool ieee754 =
+      std::numeric_limits<double>::is_iec559 &&
+      sizeof(double) == sizeof(uint64_t);
 
-  void listen(int port);
+  static_assert(
+      ieee754,
+      "IEEE 754 floating point conversion not yet implemented");
 
-  HTTPServerStats* stats();
+  if (ieee754) {
+    memcpy((void *) &bytes, (void *) &value, sizeof(bytes));
+  } else {
+    /* not yet implemented */
+  }
 
-protected:
-  HTTPServerStats stats_;
-  HTTPHandlerFactory* handler_factory_;
-  TaskScheduler* scheduler_;
-  TCPServer ssock_;
-};
-
+  return bytes;
 }
+
+double IEEE754::fromBytes(uint64_t bytes) {
+  double value;
+
+  constexpr bool ieee754 =
+      std::numeric_limits<double>::is_iec559 &&
+      sizeof(double) == sizeof(uint64_t);
+
+  static_assert(
+      ieee754,
+      "IEEE 754 floating point conversion not yet implemented");
+
+  if (ieee754) {
+    memcpy((void *) &value, (void *) &bytes, sizeof(bytes));
+  } else {
+    /* not yet implemented */
+  }
+
+  return value;
 }
-#endif
+

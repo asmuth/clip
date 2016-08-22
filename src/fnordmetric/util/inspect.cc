@@ -9,9 +9,6 @@
  */
 #include <fnordmetric/util/inspect.h>
 
-namespace fnord {
-namespace util {
-
 template <>
 std::string inspect<bool>(const bool& value) {
   return value == true ? "true" : "false";
@@ -33,8 +30,12 @@ std::string inspect<unsigned long>(const unsigned long& value) {
 }
 
 template <>
-std::string inspect<unsigned long long>(
-    const unsigned long long& value) {
+std::string inspect<unsigned long long>(const unsigned long long& value) {
+  return std::to_string(value);
+}
+
+template <>
+std::string inspect<unsigned char>(const unsigned char& value) {
   return std::to_string(value);
 }
 
@@ -47,6 +48,12 @@ std::string inspect<long long>(
 template <>
 std::string inspect<long>(
     const long& value) {
+  return std::to_string(value);
+}
+
+template <>
+std::string inspect<unsigned short>(
+    const unsigned short& value) {
   return std::to_string(value);
 }
 
@@ -66,6 +73,13 @@ std::string inspect<std::string>(const std::string& value) {
 }
 
 template <>
+std::string inspect<std::wstring>(const std::wstring& value) {
+  std::string out;
+  out.assign(value.begin(), value.end());
+  return out;
+}
+
+template <>
 std::string inspect<char const*>(char const* const& value) {
   return std::string(value);
 }
@@ -80,6 +94,8 @@ std::string inspect<const void*>(void const* const& value) {
   return "<ptr>";
 }
 
-} // namespace util
-} // namespace fnord
+template <>
+std::string inspect<std::exception>(const std::exception& e) {
+  return e.what();
+}
 

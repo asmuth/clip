@@ -38,7 +38,7 @@
 #include <fnordmetric/util/thread/eventloop.h>
 #include <fnordmetric/util/thread/threadpool.h>
 
-#include "eventql/eventql.h"
+#include "fnordmetric/eventql.h"
 using namespace http;
 
 UNIT_TEST(HTTPTest);

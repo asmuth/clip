@@ -13,22 +13,23 @@
 #include <thread>
 #include <vector>
 #include <fnordmetric/transport/http/wakeup.h>
+#include <fnordmetric/transport/http/taskscheduler.h>
 
 namespace fnordmetric {
 namespace http {
 
-class EventLoop {
+class EventLoop : public TaskScheduler {
 public:
-  void run(std::function<void()> task);
-  void runAsync(std::function<void()> task);
-  void runOnReadable(std::function<void()> task, int fd);
-  void runOnWritable(std::function<void()> task, int fd);
+  void run(std::function<void()> task) override;
+  void runAsync(std::function<void()> task) override;
+  void runOnReadable(std::function<void()> task, int fd) override;
+  void runOnWritable(std::function<void()> task, int fd) override;
   void runOnWakeup(
       std::function<void()> task,
       Wakeup* wakeup,
-      long wakeup_generation);
+      long wakeup_generation) override;
 
-  void cancelFD(int fd);
+  void cancelFD(int fd) override;
 
   EventLoop();
   ~EventLoop();

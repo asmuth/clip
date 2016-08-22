@@ -21,37 +21,19 @@
  * commercial activities involving this program without disclosing the source
  * code of your own applications
  */
-#ifndef _libstx_WEB_HTTPSERVER_H
-#define _libstx_WEB_HTTPSERVER_H
-#include <memory>
-#include <vector>
-#include <fnordmetric/transport/http/httprequest.h>
-#include <fnordmetric/transport/http/httphandler.h>
-#include "fnordmetric/transport/http/httpserverconnection.h"
-#include <fnordmetric/transport/http/httpstats.h>
-#include <fnordmetric/transport/http/tcpserver.h>
-#include <fnordmetric/transport/http/taskscheduler.h>
+#ifndef _libstx_UTIL_IEEE754_H_
+#define _libstx_UTIL_IEEE754_H_
 
-namespace fnordmetric {
-namespace http {
+#include <stdlib.h>
+#include <stdint.h>
+#include <string>
 
-class HTTPServer {
+class IEEE754 {
 public:
-  HTTPServer(
-      HTTPHandlerFactory* handler_factory,
-      TaskScheduler* scheduler);
 
-  void listen(int port);
+  static uint64_t toBytes(double value);
+  static double fromBytes(uint64_t bytes);
 
-  HTTPServerStats* stats();
-
-protected:
-  HTTPServerStats stats_;
-  HTTPHandlerFactory* handler_factory_;
-  TaskScheduler* scheduler_;
-  TCPServer ssock_;
 };
 
-}
-}
 #endif
