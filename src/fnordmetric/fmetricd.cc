@@ -35,6 +35,7 @@
 #include <fnordmetric/transport/http/eventloop.h>
 #include <fnordmetric/transport/http/httprouter.h>
 #include <fnordmetric/transport/http/httpserver.h>
+#include <fnordmetric/webui/webui.h>
 
 using namespace fnordmetric;
 
@@ -199,10 +200,13 @@ int main(int argc, const char** argv) {
   /* run http server */
   if (rc.isSuccess()) {
     logInfo("Starting...");
+    WebUI webui;
+
     http::EventLoop ev;
     http::HTTPRouter http_router;
     http::HTTPServer http_server(&http_router, &ev);
     http_server.listen(8175);
+    http_router.addRouteByPrefixMatch("/", &webui);
     ev.run();
     //rc = service->run();
   }

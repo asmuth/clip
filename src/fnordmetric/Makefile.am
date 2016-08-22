@@ -149,6 +149,8 @@ fmetricd_SOURCES = \
     transport/http/eventloop.cc \
     transport/http/cookies.h \
     transport/http/cookies.cc \
+    webui/webui.h \
+    webui/webui.cc \
     fmetricd.cc
 
 bin_PROGRAMS += fmetricd
