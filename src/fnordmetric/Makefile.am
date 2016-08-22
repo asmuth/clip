@@ -49,8 +49,14 @@ AM_LDADD = $(PCRE_LDFLAGS_) $(CURL_LDFLAGS_) $(PTHREAD_LDFLAGS_)
 ####### FMETRICD ==############################################################
 
 fmetricd_SOURCES = \
+		util/autoref.h \
+		util/autoref_impl.h \
+		util/autoref.cc \
 		util/logging.h \
 		util/logging.cc \
+		util/inspect.h \
+		util/inspect_impl.h \
+		util/inspect.cc \
 		util/flagparser.h \
 		util/flagparser.cc \
 		util/return_code.h \
@@ -63,6 +69,12 @@ fmetricd_SOURCES = \
 		util/sha1.h \
 		util/sha1.cc \
 		util/base64.h \
+		util/exception.h \
+		util/stdtypes.h \
+		transport/http/eventloop.h \
+		transport/http/eventloop.cc \
+		transport/http/wakeup.h \
+		transport/http/wakeup.cc \
 		fmetricd.cc
 
 bin_PROGRAMS += fmetricd
