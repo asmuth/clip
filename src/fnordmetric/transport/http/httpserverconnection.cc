@@ -22,15 +22,9 @@
  * code of your own applications
  */
 #include "fnordmetric/util/exception.h"
-#include "fnordmetric/util/inspect.h"
 #include "fnordmetric/util/logging.h"
 #include "fnordmetric/transport/http/httpserverconnection.h"
 #include "fnordmetric/transport/http/httpgenerator.h"
-
-template <>
-std::string inspect(const fnordmetric::http::HTTPServerConnection& conn) {
-  return StringUtil::format("<HTTPServerConnection $0>", inspect(&conn));
-}
 
 namespace fnordmetric {
 namespace http {
@@ -64,7 +58,6 @@ HTTPServerConnection::HTTPServerConnection(
     on_write_completed_cb_(nullptr),
     closed_(false),
     stats_(stats) {
-  logTrace("http.server", "New HTTP connection: $0", inspect(*this));
   stats_->total_connections.incr(1);
   stats_->current_connections.incr(1);
 
@@ -341,7 +334,6 @@ void HTTPServerConnection::finishResponse() {
 void HTTPServerConnection::close() {
   std::unique_lock<std::recursive_mutex> lk(mutex_);
 
-  logTrace("http.server", "HTTP connection close: $0", inspect(*this));
 
   if (closed_) {
     RAISE(kIllegalStateError, "HTTP connection is already closed");
