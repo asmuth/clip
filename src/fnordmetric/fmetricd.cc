@@ -32,6 +32,9 @@
 //#include <curl/curl.h>
 #include <fnordmetric/util/flagparser.h>
 #include <fnordmetric/util/logging.h>
+#include <fnordmetric/transport/http/eventloop.h>
+
+using namespace fnordmetric;
 
 void shutdown(int);
 ReturnCode daemonize();
