@@ -14,6 +14,10 @@
 
 namespace fnordmetric {
 
+WebUI::WebUI(
+    const String& dynamic_asset_path /* = "" */) :
+    dynamic_asset_path_(dynamic_asset_path) {}
+
 void WebUI::handleHTTPRequest(
     http::HTTPRequest* request,
     http::HTTPResponse* response) {
@@ -28,18 +32,16 @@ void WebUI::handleHTTPRequest(
 
   if (path == "/") {
     response->setStatus(http::kStatusFound);
-    response->addHeader("Content-Type", "text/html; charset=utf-8");
     response->addHeader("Location", "/metrics/");
     return;
   }
 
-  //if (path == "/admin") {
-  //  sendAsset(
-  //      response,
-  //      "fnordmetric-webui/fnordmetric-webui.html",
-  //      "text/html; charset=utf-8");
-  //  return true;
-  //}
+  if (StringUtil::beginsWith(path, "/metrics")) {
+    response->setStatus(http::kStatusOK);
+    response->addHeader("Content-Type", "text/html; charset=utf-8");
+    response->addBody(getAppHTML());
+    return;
+  }
 
   //if (path == "/favicon.ico") {
   //  sendAsset(
@@ -49,7 +51,7 @@ void WebUI::handleHTTPRequest(
   //  return true;
   //}
 
-  //if (path == "/s/fnordmetric.js") {
+  //if (path == "/assets/fnordmetric.js") {
   //  sendAsset(
   //      response,
   //      "fnordmetric-js/fnordmetric.js",
@@ -57,7 +59,7 @@ void WebUI::handleHTTPRequest(
   //  return true;
   //}
 
-  //if (path == "/s/fnordmetric-webui.css") {
+  //if (path == "/assets/fnordmetric.css") {
   //  sendAsset(
   //      response,
   //      "fnordmetric-webui/fnordmetric-webui.css",
@@ -94,5 +96,20 @@ void WebUI::handleHTTPRequest(
 //  response->addHeader("Content-Type", content_type);
 //  response->addBody(util::Assets::getAsset(asset_path));
 //}
+
+std::string WebUI::getAppHTML() const {
+  return getAssetFile("app.html");
+}
+
+std::string WebUI::getAssetFile(const std::string& file) const {
+  if (!dynamic_asset_path_.empty()) {
+    auto file_path = FileUtil::joinPaths(dynamic_asset_path_, file);
+    if (FileUtil::exists(file_path)) {
+      return FileUtil::read(file_path).toString();
+    }
+  }
+
+  return "";
+}
 
 }

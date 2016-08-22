@@ -16,6 +16,7 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <unistd.h>
+#include "file.h"
 
 namespace fnordmetric {
 
@@ -148,6 +149,27 @@ void FileUtil::truncate(const std::string& filename, size_t new_size) {
     RAISE_ERRNO(kIOError, "truncate(%s) failed", filename.c_str());
   }
 }
+
+Buffer FileUtil::read(
+    const std::string& filename,
+    size_t offset /* = 0 */,
+    size_t limit /* = 0 */) {
+  try {
+    auto file = File::openFile(filename, File::O_READ);
+    if (offset > 0) {
+      file.seekTo(offset);
+    }
+
+    Buffer buf(limit == 0 ? file.size() - offset : limit);
+    auto read_bytes = file.read(&buf);
+    buf.truncate(read_bytes);
+
+    return buf;
+  } catch (const std::exception& e) {
+    RAISEF(kIOError, "$0 while reading file '$1'", e.what(), filename);
+  }
+}
+
 
 }
 

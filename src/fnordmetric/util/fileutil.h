@@ -13,6 +13,7 @@
 #include <stdlib.h>
 #include <stdint.h>
 #include <string>
+#include "buffer.h"
 
 namespace fnordmetric {
 
@@ -60,6 +61,14 @@ public:
    * Truncate a file
    */
   static void truncate(const std::string& filename, size_t size);
+
+  /**
+   * Read a file
+   */
+  static Buffer read(
+      const std::string& filename,
+      size_t offset = 0,
+      size_t limit = 0);
 
 };
 

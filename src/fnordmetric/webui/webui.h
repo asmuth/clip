@@ -16,17 +16,24 @@ namespace fnordmetric {
 class WebUI : public http::HTTPService {
 public:
 
+  WebUI(const String& dynamic_asset_path = "");
+
   void handleHTTPRequest(
       http::HTTPRequest* request,
       http::HTTPResponse* response) override;
 
 private:
 
+  std::string getAppHTML() const;
+
+  std::string getAssetFile(const std::string& file) const;
+
   void sendAsset(
       http::HTTPResponse* response,
       const std::string& asset_path,
       const std::string& content_type) const;
 
+  std::string dynamic_asset_path_;
 };
 
 }
