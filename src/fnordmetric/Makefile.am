@@ -96,6 +96,7 @@ fmetricd_SOURCES = \
     util/file.h \
     util/file.cc \
     util/exception.h \
+    util/exception.cc \
     util/bufferutil.h \
     util/bufferutil.cc \
     util/buffer.h \
