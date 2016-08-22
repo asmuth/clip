@@ -191,9 +191,14 @@ int main(int argc, const char** argv) {
     }
   }
 
-  /* main service loop */
+  /* run http server */
   if (rc.isSuccess()) {
     logInfo("Starting...");
+    http::EventLoop ev;
+    http::HTTPRouter http_router;
+    http::HTTPServer http_server(&http_router, &ev);
+    http_server.listen(listen_port);
+    ev.run();
     //rc = service->run();
   }
 
