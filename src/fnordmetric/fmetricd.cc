@@ -34,6 +34,7 @@
 #include <fnordmetric/util/logging.h>
 #include <fnordmetric/transport/http/eventloop.h>
 #include <fnordmetric/transport/http/httprouter.h>
+#include <fnordmetric/transport/http/httpserver.h>
 
 using namespace fnordmetric;
 
@@ -201,7 +202,7 @@ int main(int argc, const char** argv) {
     http::EventLoop ev;
     http::HTTPRouter http_router;
     http::HTTPServer http_server(&http_router, &ev);
-    http_server.listen(listen_port);
+    http_server.listen(8175);
     ev.run();
     //rc = service->run();
   }

@@ -185,11 +185,11 @@ TEST_CASE(URITest, TestParseQueryParams, [] () {
  */
 #include <stdlib.h>
 #include <stdio.h>
-#include "eventql/util/exception.h"
-#include "eventql/util/uri.h"
-#include "eventql/util/test/unittest.h"
+#include "fnordmetric/util/exception.h"
+#include "fnordmetric/util/uri.h"
+#include "fnordmetric/util/test/unittest.h"
 
-#include "eventql/eventql.h"
+#include "fnordmetric/eventql.h"
 
 UNIT_TEST(URITest);
 

@@ -21,37 +21,65 @@
  * commercial activities involving this program without disclosing the source
  * code of your own applications
  */
-#ifndef _libstx_WEB_HTTPSERVER_H
-#define _libstx_WEB_HTTPSERVER_H
+#ifndef _STX_BASE_STATUS_H
+#define _STX_BASE_STATUS_H
+#include <functional>
 #include <memory>
-#include <vector>
-#include <fnordmetric/transport/http/httprequest.h>
-#include <fnordmetric/transport/http/httphandler.h>
-#include "fnordmetric/transport/http/httpserverconnection.h"
-#include <fnordmetric/transport/http/httpstats.h>
-#include <fnordmetric/transport/http/tcpserver.h>
-#include <fnordmetric/transport/http/taskscheduler.h>
+#include <mutex>
+#include <stdlib.h>
+#include <string>
 
-namespace fnordmetric {
-namespace http {
-
-class HTTPServer {
-public:
-  HTTPServer(
-      HTTPHandlerFactory* handler_factory,
-      TaskScheduler* scheduler);
-
-  void listen(int port);
-
-  HTTPServerStats* stats();
-
-protected:
-  HTTPServerStats stats_;
-  HTTPHandlerFactory* handler_factory_;
-  TaskScheduler* scheduler_;
-  TCPServer ssock_;
+enum kStatusType {
+  eSuccess,
+  eBufferOverflowError,
+  eConcurrentModificationError,
+  eDivideByZeroError,
+  eFlagError,
+  eForeignError,
+  eIOError,
+  eIllegalArgumentError,
+  eIllegalFormatError,
+  eIllegalStateError,
+  eIndexError,
+  eInvalidOptionError,
+  eKeyError,
+  eMallocError,
+  eNoSuchMethodError,
+  eNotImplementedError,
+  eNotYetImplementedError,
+  eNotFoundError,
+  eNullPointerError,
+  eParseError,
+  eRangeError,
+  eReflectionError,
+  eResolveError,
+  eRPCError,
+  eRuntimeError,
+  eTypeError,
+  eUsageError,
+  eVersionMismatchError,
+  eWouldBlockError
 };
 
-}
-}
+class Status {
+public:
+  static Status success();
+
+  Status(const std::exception& e);
+  Status(kStatusType type);
+  Status(kStatusType type, const std::string& message);
+
+  bool isError() const;
+  bool isSuccess() const;
+
+  kStatusType type() const;
+  const std::string& message() const;
+
+  void raiseIfError() const;
+
+protected:
+  kStatusType type_;
+  std::string message_;
+};
+
 #endif

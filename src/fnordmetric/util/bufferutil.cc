@@ -21,49 +21,49 @@
  * commercial activities involving this program without disclosing the source
  * code of your own applications
  */
-#include <fnordmetric/util/exception.h>
-#include <fnordmetric/util/inspect.h>
-#include <fnordmetric/util/logging.h>
-#include <fnordmetric/util/time.h>
-#include "fnordmetric/transport/http/httpserverconnection.h"
-#include <fnordmetric/transport/http/httpserver.h>
+#include "fnordmetric/util/bufferutil.h"
+#include "fnordmetric/util/inspect.h"
 
-/*
-TODO:
-  - timeouts
-  - httpconnection -> httpserverconnection
-  - eventloop
-  - 100 continue
-  - chunked encoding
-  - https
-*/
+void BufferUtil::stripTrailingBytes(Buffer* buf, unsigned char byte) {
+  auto begin = (const unsigned char*) buf->data();
+  auto cur = begin + buf->size();
 
-namespace fnordmetric {
-namespace http {
+  while (cur > begin && *(cur - 1) == byte) {
+    cur--;
+  }
 
-HTTPServer::HTTPServer(
-    HTTPHandlerFactory* handler_factory,
-    TaskScheduler* scheduler) :
-    handler_factory_(handler_factory),
-    scheduler_(scheduler),
-    ssock_(scheduler) {
-  ssock_.onConnection([this] (std::unique_ptr<TCPConnection> conn) {
-    HTTPServerConnection::start(
-        handler_factory_,
-        std::move(conn),
-        scheduler_,
-        &stats_);
-  });
+  buf->truncate(cur - begin);
 }
 
-void HTTPServer::listen(int port) {
-  logNotice("http.server", "Starting HTTP server on port $0", port);
-  ssock_.listen(port);
+void BufferUtil::stripTrailingSlashes(Buffer* buf) {
+  stripTrailingBytes(buf, '/');
 }
 
-HTTPServerStats* HTTPServer::stats() {
-  return &stats_;
+std::string BufferUtil::hexPrint(
+    Buffer* buf,
+    bool sep /* = true */,
+    bool reverse /* = fase */) {
+  static const char hexTable[] = "0123456789abcdef";
+  auto data = (const unsigned char*) buf->data();
+  auto size = buf->size();
+  std::string str;
+
+  if (reverse) {
+    for (int i = size - 1; i >= 0; --i) {
+      if (sep && i < size - 1) { str += " "; }
+      auto byte = data[i];
+      str += hexTable[(byte & 0xf0) >> 4];
+      str += hexTable[byte & 0x0f];
+    }
+  } else {
+    for (int i = 0; i < size; ++i) {
+      if (sep && i > 0) { str += " "; }
+      auto byte = data[i];
+      str += hexTable[(byte & 0xf0) >> 4];
+      str += hexTable[byte & 0x0f];
+    }
+  }
+
+  return str;
 }
 
-}
-}

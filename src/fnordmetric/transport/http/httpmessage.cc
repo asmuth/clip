@@ -129,21 +129,17 @@ std::unique_ptr<OutputStream> HTTPMessage::getBodyOutputStream() {
 }
 
 template <>
-std::string StringUtil::toString(http::HTTPMessage::kHTTPMethod method) {
+std::string StringUtil::toString(fnordmetric::http::HTTPMessage::kHTTPMethod method) {
   switch (method) {
-    case http::HTTPMessage::M_CONNECT: return "CONNECT";
-    case http::HTTPMessage::M_DELETE: return "DELETE";
-    case http::HTTPMessage::M_GET: return "GET";
-    case http::HTTPMessage::M_HEAD: return "HEAD";
-    case http::HTTPMessage::M_OPTIONS: return "OPTIONS";
-    case http::HTTPMessage::M_POST: return "POST";
-    case http::HTTPMessage::M_PUT: return "PUT";
-    case http::HTTPMessage::M_TRACE: return "TRACE";
+    case fnordmetric::http::HTTPMessage::M_CONNECT: return "CONNECT";
+    case fnordmetric::http::HTTPMessage::M_DELETE: return "DELETE";
+    case fnordmetric::http::HTTPMessage::M_GET: return "GET";
+    case fnordmetric::http::HTTPMessage::M_HEAD: return "HEAD";
+    case fnordmetric::http::HTTPMessage::M_OPTIONS: return "OPTIONS";
+    case fnordmetric::http::HTTPMessage::M_POST: return "POST";
+    case fnordmetric::http::HTTPMessage::M_PUT: return "PUT";
+    case fnordmetric::http::HTTPMessage::M_TRACE: return "TRACE";
     default: RAISE(kTypeError, "invalid HTTP method");
   }
 }
 
-template <>
-std::string inspect(const http::HTTPMessage::kHTTPMethod& method) {
-  return StringUtil::toString(method);
-}

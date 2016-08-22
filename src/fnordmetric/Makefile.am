@@ -96,8 +96,6 @@ fmetricd_SOURCES = \
 		transport/http/httprequest.h \
 		transport/http/httpresponse.cc \
 		transport/http/httpresponse.h \
-		transport/http/httpresponsefuture.cc \
-		transport/http/httpresponsefuture.h \
 		transport/http/httpresponsehandler.h \
 		transport/http/httprouter.cc \
 		transport/http/httprouter.h \

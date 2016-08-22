@@ -28,7 +28,7 @@
 #include "fnordmetric/transport/http/httpgenerator.h"
 
 template <>
-std::string inspect(const http::HTTPServerConnection& conn) {
+std::string inspect(const fnordmetric::http::HTTPServerConnection& conn) {
   return StringUtil::format("<HTTPServerConnection $0>", inspect(&conn));
 }
 

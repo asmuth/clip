@@ -21,35 +21,32 @@
  * commercial activities involving this program without disclosing the source
  * code of your own applications
  */
-#ifndef _libstx_WEB_HTTPSERVER_H
-#define _libstx_WEB_HTTPSERVER_H
-#include <memory>
-#include <vector>
-#include <fnordmetric/transport/http/httprequest.h>
-#include <fnordmetric/transport/http/httphandler.h>
-#include "fnordmetric/transport/http/httpserverconnection.h"
-#include <fnordmetric/transport/http/httpstats.h>
-#include <fnordmetric/transport/http/tcpserver.h>
-#include <fnordmetric/transport/http/taskscheduler.h>
+#ifndef _STX_NET_TCPSERVER_H
+#define _STX_NET_TCPSERVER_H
+
+#include "fnordmetric/transport/http/taskscheduler.h"
+#include "fnordmetric/transport/http/tcpconnection.h"
 
 namespace fnordmetric {
 namespace http {
 
-class HTTPServer {
+class TCPServer {
 public:
-  HTTPServer(
-      HTTPHandlerFactory* handler_factory,
+
+  TCPServer(
       TaskScheduler* scheduler);
+
+  void onConnection(
+      std::function<void (std::unique_ptr<TCPConnection>)> callback);
 
   void listen(int port);
 
-  HTTPServerStats* stats();
-
 protected:
-  HTTPServerStats stats_;
-  HTTPHandlerFactory* handler_factory_;
+  void accept();
+
+  int ssock_;
   TaskScheduler* scheduler_;
-  TCPServer ssock_;
+  std::function<void (std::unique_ptr<TCPConnection>)> on_connection_cb_;
 };
 
 }

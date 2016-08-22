@@ -9,9 +9,6 @@
  */
 #include <fnordmetric/util/inspect.h>
 
-namespace fnord {
-namespace util {
-
 template <>
 std::string inspect<bool>(const bool& value) {
   return value == true ? "true" : "false";
@@ -79,7 +76,4 @@ template <>
 std::string inspect<const void*>(void const* const& value) {
   return "<ptr>";
 }
-
-} // namespace util
-} // namespace fnord
 
