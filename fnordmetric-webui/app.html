@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>FnordMetric WebUI</title>
+    <meta content="text/html; charset=utf-8" http-equiv="Content-type">
+    <link href="/s/bundle.css" rel="stylesheet" type="text/css">
+    <link href="/favicon.ico" rel="icon" type="image/x-icon">
+  </head>
+  <body>
+
+    <div class="viewport">
+      <div class="headbar">
+        <h1 class='le_fnord'>F</h1>
+      </div>
+    </div>
+
+    <script type="text/javascript" src="/s/fnordmetric.js"></script>
+    <script type="text/javascript" src="/s/util/fmloader.js"></script>
+    <script type="text/javascript">
+      fmLoader.load("/bundle.html", function(success) {
+        if (success) {
+          FnordMetric.init();
+        } else {
+          console.log("error");
+        }
+      });
+    </script>
+  </body>
+</html>
