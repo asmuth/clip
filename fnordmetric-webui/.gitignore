@@ -1,2 +1,4 @@
-fnordmetric-webui.js
+app.bundle.html
+app.bundle.js
+app.bundle.css
 tests/
