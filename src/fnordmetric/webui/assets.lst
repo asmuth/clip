@@ -1,6 +1,8 @@
 zui/util/z-viewport.js
 zui/util/z-navigator.js
 zui/util/z-router.js
+zui/util/z-template_util.js
+zui/util/z-http.js
 app.js
 app.css
 app.html
@@ -8,6 +10,6 @@ routes.js
 codemirror.css
 codemirror.js
 codemirror-sql.js
-views/metric-list/metric-list.js
 views/metric-list/metric-list.html
+views/metric-list/metric-list.js
 views/metric-list/metric-list.css
