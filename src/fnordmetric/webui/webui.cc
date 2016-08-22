@@ -43,6 +43,12 @@ void WebUI::handleHTTPRequest(
     return;
   }
 
+  if (StringUtil::beginsWith(path, "/assets/app.html")) {
+    response->setStatus(http::kStatusOK);
+    response->addHeader("Content-Type", "text/html; charset=utf-8");
+    response->addBody(getAppHTML());
+    return;
+  }
   //if (path == "/favicon.ico") {
   //  sendAsset(
   //      response,
@@ -99,6 +105,35 @@ void WebUI::handleHTTPRequest(
 
 std::string WebUI::getPreludeHTML() const {
   return getAssetFile("prelude.html");
+}
+
+std::string WebUI::getAppHTML() const {
+  auto assets_lst = FileUtil::read(
+      FileUtil::joinPaths(dynamic_asset_path_, "assets.lst")).toString();
+
+  std::string app_html;
+  for (const auto& f : StringUtil::split(assets_lst, "\n")) {
+    auto file_path = FileUtil::joinPaths(dynamic_asset_path_, f);
+    if (!FileUtil::exists(file_path)) {
+      continue;
+    }
+
+    if (StringUtil::endsWith(f, ".html")) {
+      app_html += FileUtil::read(file_path).toString();
+    }
+
+    if (StringUtil::endsWith(f, ".js")) {
+      auto content = FileUtil::read(file_path).toString();
+      app_html += "<script>" + content + "</script>";
+    }
+
+    if (StringUtil::endsWith(f, ".css")) {
+      auto content = FileUtil::read(file_path).toString();
+      app_html += "<style type='text/css'>" + content + "</style>";
+    }
+  }
+
+  return app_html;
 }
 
 std::string WebUI::getAssetFile(const std::string& file) const {
