@@ -5,6 +5,25 @@
   font-size: 90%;
 }
 
+.fnordmetric-metric-list table.metric_list th {
+  padding: 10px 0 10px 10px;
+  background-color: rgba(0,0,0,0.04);
+  font-weight: normal;
+}
+
+.fnordmetric-metric-list table.metric_list tr {
+  border-bottom: 1px solid #dbdedf;
+}
+
+.fnordmetric-metric-list table.metric_list tr:hover td  {
+  background-color: #d7e4f2;
+}
+
+.fnordmetric-metric-list table.metric_list td {
+  padding: 10px 0 10px 10px;
+  text-align: center;
+}
+
 .fnordmetric-metric-list table.metric_list tr {
   border-bottom: 1px solid rgb(226, 232, 237);
 }
