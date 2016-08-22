@@ -7,32 +7,35 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#ifndef _FNORDMETRIC_UTIL_URI_H
-#define _FNORDMETRIC_UTIL_URI_H
+#pragma once
 #include <string>
 #include <vector>
 #include <utility>
-
-namespace fnordmetric {
 
 class URI {
 public:
   typedef std::vector<std::pair<std::string, std::string>> ParamList;
 
+  static std::string urlEncode(const std::string& str);
   static std::string urlDecode(const std::string& str);
 
+  URI();
   URI(const std::string& uri_str);
   void parse(const std::string& uri_str);
 
   const std::string& scheme() const;
   const std::string& userinfo() const;
   const std::string& host() const;
-  const unsigned port() const;
+  unsigned port() const;
+  std::string hostAndPort() const;
   const std::string& path() const;
   const std::string& query() const;
+  std::string pathAndQuery() const;
   ParamList queryParams() const;
   const std::string& fragment() const;
   std::string toString() const;
+
+  void setPath(const std::string& path);
 
   static void parseURI(
       const std::string& uri_str,
@@ -44,9 +47,8 @@ public:
       std::string* query,
       std::string* fragment);
 
-  static void parseQueryString(
-      const std::string& query,
-      std::vector<std::pair<std::string, std::string>>* params);
+  static void parseQueryString(const std::string& query, ParamList* params);
+  static std::string buildQueryString(const ParamList& params);
 
   static bool getParam(
       const ParamList&,
@@ -63,5 +65,3 @@ protected:
   std::string fragment_;
 };
 
-}
-#endif

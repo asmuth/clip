@@ -26,7 +26,7 @@
 #include <vector>
 #include <string>
 #include <utility>
-#include <fnordmetric/util/io/outputstream.h>
+#include <fnordmetric/util/outputstream.h>
 #include <fnordmetric/transport/http/httpresponse.h>
 #include <fnordmetric/transport/http/httprequest.h>
 

@@ -7,10 +7,95 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#include <fnordmetric/util/runtimeexception.h>
+#include <fnordmetric/util/exception.h>
 #include <fnordmetric/util/uri.h>
 
-namespace fnordmetric {
+std::string URI::urlEncode(const std::string& str) {
+  static char hextbl[] = "0123456789ABCDEF";
+  std::string encoded;
+
+  for (const auto& c : str) {
+    switch (c) {
+      case 'A':
+      case 'B':
+      case 'C':
+      case 'D':
+      case 'E':
+      case 'F':
+      case 'G':
+      case 'H':
+      case 'I':
+      case 'J':
+      case 'K':
+      case 'L':
+      case 'M':
+      case 'N':
+      case 'O':
+      case 'P':
+      case 'Q':
+      case 'R':
+      case 'S':
+      case 'T':
+      case 'U':
+      case 'V':
+      case 'W':
+      case 'X':
+      case 'Y':
+      case 'Z':
+      case 'a':
+      case 'b':
+      case 'c':
+      case 'd':
+      case 'e':
+      case 'f':
+      case 'g':
+      case 'h':
+      case 'i':
+      case 'j':
+      case 'k':
+      case 'l':
+      case 'm':
+      case 'n':
+      case 'o':
+      case 'p':
+      case 'q':
+      case 'r':
+      case 's':
+      case 't':
+      case 'u':
+      case 'v':
+      case 'w':
+      case 'x':
+      case 'y':
+      case 'z':
+      case '0':
+      case '1':
+      case '2':
+      case '3':
+      case '4':
+      case '5':
+      case '6':
+      case '7':
+      case '8':
+      case '9':
+      case '-':
+      case '_':
+      case '.':
+      case '~':
+        encoded += c;
+        break;
+
+      default:
+        encoded += '%';
+        encoded += hextbl[(c >> 4) & 0xf],
+        encoded += hextbl[c & 0xf];
+        break;
+
+    }
+  }
+
+  return encoded;
+}
 
 std::string URI::urlDecode(const std::string& str) {
   std::string decoded;
@@ -18,22 +103,40 @@ std::string URI::urlDecode(const std::string& str) {
   const char* end = begin + str.size();
 
   while (begin != end) {
-    if (*begin == '%') {
-      char hex[3];
-      if (++begin + 2 > end) {
-        RAISE(kIllegalArgumentError, "invalid URL encoding");
+    switch (*begin) {
+
+      case '%': {
+        if (++begin + 2 > end) {
+          RAISE(kIllegalArgumentError, "invalid URL encoding");
+        }
+
+        String hstr(begin, 2);
+        if (!StringUtil::isHexString(hstr)) {
+          decoded += "%";
+          continue;
+        }
+
+        decoded += static_cast<char>(std::stoul(hstr, nullptr, 16));
+        begin += 2;
+        continue;
       }
-      hex[0] = *begin++;
-      hex[1] = *begin++;
-      hex[2] = 0;
-      decoded += static_cast<char>(std::stoul(hex, nullptr, 16));
-    } else {
-      decoded += *begin++;
+
+      case '+':
+        decoded += " ";
+        ++begin;
+        continue;
+
+      default:
+        decoded += *begin++;
+        continue;
+
     }
   }
 
   return decoded;
 }
+
+URI::URI() : port_(0) {}
 
 URI::URI(const std::string& uri_str) : port_(0) {
   parse(uri_str);
@@ -63,12 +166,32 @@ const std::string& URI::host() const {
   return host_;
 }
 
-const unsigned URI::port() const {
+unsigned URI::port() const {
   return port_;
+}
+
+std::string URI::hostAndPort() const {
+  if (port_ > 0) {
+    return StringUtil::format("$0:$1", host_, port_);
+  } else {
+    return host_;
+  }
 }
 
 const std::string& URI::path() const {
   return path_;
+}
+
+void URI::setPath(const std::string& path) {
+  path_ = path;
+}
+
+std::string URI::pathAndQuery() const {
+  if (query_.length() > 0) {
+    return StringUtil::format("$0?$1", path_, query_);
+  } else {
+    return path_;
+  }
 }
 
 const std::string& URI::query() const {
@@ -156,7 +279,11 @@ void URI::parseURI(
   /* scheme */
   bool has_scheme = false;
   for (const char* cur = begin; cur < end; ++cur) {
-    if (cur[0] == ':') {
+    if (*cur == '/') {
+      break;
+    }
+
+    if (*cur == ':') {
       *scheme = std::string(begin, cur - begin);
       begin = cur + 1;
       has_scheme = true;
@@ -258,7 +385,8 @@ void URI::parseQueryString(
         params->emplace_back(URI::urlDecode(key_str), URI::urlDecode(val_str));
         begin = cur + 1;
       } else {
-        break;
+        params->emplace_back(URI::urlDecode(key_str), "");
+        begin = cur + 1;
       }
     } else {
       break;
@@ -266,4 +394,20 @@ void URI::parseQueryString(
   }
 }
 
+std::string URI::buildQueryString(const URI::ParamList& params) {
+  std::string out;
+
+  for (int i = 0; i < params.size(); ++i) {
+    if (i > 0) {
+      out += "&";
+    }
+
+    out += StringUtil::format(
+        "$0=$1",
+        URI::urlEncode(params[i].first),
+        URI::urlEncode(params[i].second));
+  }
+
+  return out;
 }
+
