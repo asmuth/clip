@@ -21,40 +21,46 @@
  * commercial activities involving this program without disclosing the source
  * code of your own applications
  */
-#ifndef _STX_THREAD_WAKEUP_H
-#define _STX_THREAD_WAKEUP_H
-#include <atomic>
-#include <condition_variable>
-#include <mutex>
-#include <list>
-#include <fnordmetric/util/autoref.h>
+#ifndef _libstx_THREAD_TASK_H
+#define _libstx_THREAD_TASK_H
+#include <functional>
+#include <memory>
 
-namespace fnordmetric {
-namespace http {
+namespace thread {
 
-class Wakeup : public RefCounted {
+class Task {
 public:
-  Wakeup();
+  virtual ~Task() {}
 
-  /**
-   * Block the current thread and wait for the next wakeup event
-   */
-  void waitForNextWakeup();
-  void waitForFirstWakeup();
-  void waitForWakeup(long generation);
+  template <class RunnableType>
+  static std::shared_ptr<Task> create(RunnableType runnable);
 
-  void wakeup();
-  void onWakeup(long generation, std::function<void()> callback);
+  virtual void run() = 0;
 
-  long generation() const;
-
-protected:
-  std::mutex mutex_;
-  std::condition_variable condvar_;
-  std::atomic<long> gen_;
-  std::list<std::function<void()>> callbacks_;
 };
 
+template <class RunnableType>
+class TaskImpl : public Task {
+friend class Task;
+public:
+
+  void run() override;
+
+protected:
+  TaskImpl(RunnableType runnable) : runnable_(runnable) {}
+  RunnableType runnable_;
+};
+
+template <class RunnableType>
+std::shared_ptr<Task> Task::create(
+    RunnableType runnable) {
+  return std::shared_ptr<Task>(new TaskImpl<RunnableType>(runnable));
 }
+
+template <class RunnableType>
+void TaskImpl<RunnableType>::run() {
+  runnable_();
+}
+
 }
 #endif

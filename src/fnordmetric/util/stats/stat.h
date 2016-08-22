@@ -21,40 +21,25 @@
  * commercial activities involving this program without disclosing the source
  * code of your own applications
  */
-#ifndef _STX_THREAD_WAKEUP_H
-#define _STX_THREAD_WAKEUP_H
-#include <atomic>
-#include <condition_variable>
-#include <mutex>
-#include <list>
-#include <fnordmetric/util/autoref.h>
+#ifndef _STX_STATS_STAT_H
+#define _STX_STATS_STAT_H
+#include "fnordmetric/util/autoref.h"
+#include "fnordmetric/util/stats/statssink.h"
 
-namespace fnordmetric {
-namespace http {
+namespace stats {
 
-class Wakeup : public RefCounted {
+class Stat : public RefCounted {
 public:
-  Wakeup();
+  virtual ~Stat() {};
+  virtual void exportAll(const String& path, StatsSink* sink) const = 0;
+};
 
-  /**
-   * Block the current thread and wait for the next wakeup event
-   */
-  void waitForNextWakeup();
-  void waitForFirstWakeup();
-  void waitForWakeup(long generation);
-
-  void wakeup();
-  void onWakeup(long generation, std::function<void()> callback);
-
-  long generation() const;
-
-protected:
-  std::mutex mutex_;
-  std::condition_variable condvar_;
-  std::atomic<long> gen_;
-  std::list<std::function<void()>> callbacks_;
+class StatRef {
+public:
+  virtual ~StatRef() {};
+  virtual RefPtr<Stat> getStat() const = 0;
 };
 
 }
-}
+
 #endif

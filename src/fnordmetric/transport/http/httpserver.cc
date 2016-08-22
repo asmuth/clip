@@ -21,40 +21,49 @@
  * commercial activities involving this program without disclosing the source
  * code of your own applications
  */
-#ifndef _STX_THREAD_WAKEUP_H
-#define _STX_THREAD_WAKEUP_H
-#include <atomic>
-#include <condition_variable>
-#include <mutex>
-#include <list>
-#include <fnordmetric/util/autoref.h>
+#include <fnordmetric/util/exception.h>
+#include <fnordmetric/util/inspect.h>
+#include <fnordmetric/util/logging.h>
+#include <fnordmetric/util/wallclock.h>
+#include "fnordmetric/transport/http/httpserverconnection.h"
+#include <fnordmetric/transport/http/httpserver.h>
+
+/*
+TODO:
+  - timeouts
+  - httpconnection -> httpserverconnection
+  - eventloop
+  - 100 continue
+  - chunked encoding
+  - https
+*/
 
 namespace fnordmetric {
 namespace http {
 
-class Wakeup : public RefCounted {
-public:
-  Wakeup();
+HTTPServer::HTTPServer(
+    HTTPHandlerFactory* handler_factory,
+    TaskScheduler* scheduler) :
+    handler_factory_(handler_factory),
+    scheduler_(scheduler),
+    ssock_(scheduler) {
+  ssock_.onConnection([this] (std::unique_ptr<net::TCPConnection> conn) {
+    HTTPServerConnection::start(
+        handler_factory_,
+        std::move(conn),
+        scheduler_,
+        &stats_);
+  });
+}
 
-  /**
-   * Block the current thread and wait for the next wakeup event
-   */
-  void waitForNextWakeup();
-  void waitForFirstWakeup();
-  void waitForWakeup(long generation);
+void HTTPServer::listen(int port) {
+  logNotice("http.server", "Starting HTTP server on port $0", port);
+  ssock_.listen(port);
+}
 
-  void wakeup();
-  void onWakeup(long generation, std::function<void()> callback);
-
-  long generation() const;
-
-protected:
-  std::mutex mutex_;
-  std::condition_variable condvar_;
-  std::atomic<long> gen_;
-  std::list<std::function<void()>> callbacks_;
-};
+HTTPServerStats* HTTPServer::stats() {
+  return &stats_;
+}
 
 }
 }
-#endif

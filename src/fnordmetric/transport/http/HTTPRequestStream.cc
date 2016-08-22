@@ -2,6 +2,7 @@
  * Copyright (c) 2016 zScale Technology GmbH <legal@zscale.io>
  * Authors:
  *   - Paul Asmuth <paul@zscale.io>
+ *   - Laura Schlimmer <laura@zscale.io>
  *
  * This program is free software: you can redistribute it and/or modify it under
  * the terms of the GNU Affero General Public License ("the license") as
@@ -21,40 +22,56 @@
  * commercial activities involving this program without disclosing the source
  * code of your own applications
  */
-#ifndef _STX_THREAD_WAKEUP_H
-#define _STX_THREAD_WAKEUP_H
-#include <atomic>
-#include <condition_variable>
-#include <mutex>
-#include <list>
-#include <fnordmetric/util/autoref.h>
+#include <fnordmetric/transport/http/HTTPRequestStream.h>
 
 namespace fnordmetric {
 namespace http {
 
-class Wakeup : public RefCounted {
-public:
-  Wakeup();
+HTTPRequestStream::HTTPRequestStream(
+    const HTTPRequest& req,
+    RefPtr<HTTPServerConnection> conn) :
+    req_(req),
+    conn_(conn) {}
 
-  /**
-   * Block the current thread and wait for the next wakeup event
-   */
-  void waitForNextWakeup();
-  void waitForFirstWakeup();
-  void waitForWakeup(long generation);
+const HTTPRequest& HTTPRequestStream::request() const {
+  return req_;
+}
 
-  void wakeup();
-  void onWakeup(long generation, std::function<void()> callback);
+void HTTPRequestStream::readBody(Function<void (const void*, size_t)> fn) {
+  RefPtr<Wakeup> wakeup(new Wakeup());
+  bool error = false;
 
-  long generation() const;
+  conn_->readRequestBody([this, fn, wakeup] (
+      const void* data,
+      size_t size,
+      bool last_chunk) {
+    fn(data, size);
 
-protected:
-  std::mutex mutex_;
-  std::condition_variable condvar_;
-  std::atomic<long> gen_;
-  std::list<std::function<void()>> callbacks_;
-};
+    if (last_chunk) {
+      wakeup->wakeup();
+    }
+  },
+  [&error, &wakeup] {
+    error = true;
+    wakeup->wakeup();
+  });
+
+  wakeup->waitForFirstWakeup();
+
+  if (error) {
+    RAISE(kIOError, "client error");
+  }
+}
+
+void HTTPRequestStream::readBody() {
+  readBody([this] (const void* data, size_t size) {
+    req_.appendBody(data, size);
+  });
+}
+
+void HTTPRequestStream::discardBody() {
+  readBody([this] (const void* data, size_t size) {});
+}
 
 }
 }
-#endif

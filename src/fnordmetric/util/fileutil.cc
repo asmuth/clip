@@ -17,8 +17,7 @@
 #include <sys/types.h>
 #include <unistd.h>
 
-namespace fnord {
-namespace io {
+namespace fnordmetric {
 
 void FileUtil::mkdir(const std::string& dirname) {
   if (::mkdir(dirname.c_str(), S_IRWXU) != 0) {
@@ -151,4 +150,4 @@ void FileUtil::truncate(const std::string& filename, size_t new_size) {
 }
 
 }
-}
+

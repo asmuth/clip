@@ -21,40 +21,42 @@
  * commercial activities involving this program without disclosing the source
  * code of your own applications
  */
-#ifndef _STX_THREAD_WAKEUP_H
-#define _STX_THREAD_WAKEUP_H
-#include <atomic>
-#include <condition_variable>
+#ifndef _STX_BASE_OPTION_H
+#define _STX_BASE_OPTION_H
+#include <functional>
+#include <memory>
 #include <mutex>
-#include <list>
-#include <fnordmetric/util/autoref.h>
+#include <stdlib.h>
+#include "fnordmetric/util/inspect.h"
+#include "fnordmetric/util/exception.h"
 
-namespace fnordmetric {
-namespace http {
-
-class Wakeup : public RefCounted {
+template <typename T>
+class Option {
 public:
-  Wakeup();
+  Option();
+  Option(std::nullptr_t n);
+  Option(const T& value);
+  Option(T&& value);
+  Option(const Option<T>& other);
+  Option(Option<T>&& other);
+  ~Option();
 
-  /**
-   * Block the current thread and wait for the next wakeup event
-   */
-  void waitForNextWakeup();
-  void waitForFirstWakeup();
-  void waitForWakeup(long generation);
+  Option& operator=(const Option<T>& other);
+  Option& operator=(Option<T>&& other);
 
-  void wakeup();
-  void onWakeup(long generation, std::function<void()> callback);
-
-  long generation() const;
+  bool isEmpty() const;
+  T& get() const;
 
 protected:
-  std::mutex mutex_;
-  std::condition_variable condvar_;
-  std::atomic<long> gen_;
-  std::list<std::function<void()>> callbacks_;
+  char value_data_[sizeof(T)];
+  T* value_;
 };
 
-}
-}
+template <typename T>
+Option<T> Some(const T& value);
+
+template <typename T>
+Option<T> None();
+
+#include "option_impl.h"
 #endif

@@ -14,8 +14,7 @@
 #include <stdint.h>
 #include <string>
 
-namespace fnord {
-namespace io {
+namespace fnordmetric {
 
 class FileUtil {
 public:
@@ -64,6 +63,5 @@ public:
 
 };
 
-}
 }
 #endif

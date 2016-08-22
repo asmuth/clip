@@ -7,14 +7,12 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#ifndef _FNORDMETRIC_OUTPUTSTREAM_H
-#define _FNORDMETRIC_OUTPUTSTREAM_H
+#pragma once
 #include <fcntl.h>
 #include <memory>
 #include <mutex>
 
 namespace fnordmetric {
-namespace util {
 
 class OutputStream {
 public:
@@ -125,5 +123,4 @@ protected:
 };
 
 }
-}
-#endif
+

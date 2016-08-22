@@ -2,6 +2,7 @@
  * Copyright (c) 2016 zScale Technology GmbH <legal@zscale.io>
  * Authors:
  *   - Paul Asmuth <paul@zscale.io>
+ *   - Laura Schlimmer <laura@zscale.io>
  *
  * This program is free software: you can redistribute it and/or modify it under
  * the terms of the GNU Affero General Public License ("the license") as
@@ -21,38 +22,47 @@
  * commercial activities involving this program without disclosing the source
  * code of your own applications
  */
-#ifndef _STX_THREAD_WAKEUP_H
-#define _STX_THREAD_WAKEUP_H
-#include <atomic>
-#include <condition_variable>
-#include <mutex>
-#include <list>
+#ifndef _STX_HTTP_HTTPREQUESTSTREAM_H
+#define _STX_HTTP_HTTPREQUESTSTREAM_H
+#include <fnordmetric/util/stdtypes.h>
 #include <fnordmetric/util/autoref.h>
+#include <fnordmetric/transport/http/httpresponse.h>
+#include <fnordmetric/transport/http/httpserverconnection.h>
 
 namespace fnordmetric {
 namespace http {
 
-class Wakeup : public RefCounted {
+class HTTPRequestStream : public RefCounted {
 public:
-  Wakeup();
+
+  HTTPRequestStream(const HTTPRequest& req, RefPtr<HTTPServerConnection> conn);
 
   /**
-   * Block the current thread and wait for the next wakeup event
+   * Retrieve the http request. The http request will not contain a request body
+   * by default. Instead you must call one of the readBody(...) method to
+   * retrieve the request body
    */
-  void waitForNextWakeup();
-  void waitForFirstWakeup();
-  void waitForWakeup(long generation);
+  const HTTPRequest& request() const;
 
-  void wakeup();
-  void onWakeup(long generation, std::function<void()> callback);
+  /**
+   * Read the http request body in chunks. This method will call the provided
+   * callback for each chunk and return once all body chunks have been read
+   */
+  void readBody(Function<void (const void* data, size_t size)> fn);
 
-  long generation() const;
+  /**
+   * Read the http request body into the contained HTTPRequest
+   */
+  void readBody();
+
+  /**
+   * Discard the http request body
+   */
+  void discardBody();
 
 protected:
-  std::mutex mutex_;
-  std::condition_variable condvar_;
-  std::atomic<long> gen_;
-  std::list<std::function<void()>> callbacks_;
+  HTTPRequest req_;
+  RefPtr<HTTPServerConnection> conn_;
 };
 
 }

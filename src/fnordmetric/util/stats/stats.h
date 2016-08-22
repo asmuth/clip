@@ -21,40 +21,8 @@
  * commercial activities involving this program without disclosing the source
  * code of your own applications
  */
-#ifndef _STX_THREAD_WAKEUP_H
-#define _STX_THREAD_WAKEUP_H
-#include <atomic>
-#include <condition_variable>
-#include <mutex>
-#include <list>
-#include <fnordmetric/util/autoref.h>
-
-namespace fnordmetric {
-namespace http {
-
-class Wakeup : public RefCounted {
-public:
-  Wakeup();
-
-  /**
-   * Block the current thread and wait for the next wakeup event
-   */
-  void waitForNextWakeup();
-  void waitForFirstWakeup();
-  void waitForWakeup(long generation);
-
-  void wakeup();
-  void onWakeup(long generation, std::function<void()> callback);
-
-  long generation() const;
-
-protected:
-  std::mutex mutex_;
-  std::condition_variable condvar_;
-  std::atomic<long> gen_;
-  std::list<std::function<void()>> callbacks_;
-};
-
-}
-}
+#ifndef _STX_STATS_H
+#define _STX_STATS_H
+#include "fnordmetric/util/stats/counter.h"
+#include "fnordmetric/util/stats/statsrepository.h"
 #endif

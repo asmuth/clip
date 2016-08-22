@@ -21,40 +21,37 @@
  * commercial activities involving this program without disclosing the source
  * code of your own applications
  */
-#ifndef _STX_THREAD_WAKEUP_H
-#define _STX_THREAD_WAKEUP_H
-#include <atomic>
-#include <condition_variable>
-#include <mutex>
-#include <list>
-#include <fnordmetric/util/autoref.h>
+#ifndef _STX_INETADDR_H
+#define _STX_INETADDR_H
+#include <string>
 
-namespace fnordmetric {
-namespace http {
-
-class Wakeup : public RefCounted {
+class InetAddr {
 public:
-  Wakeup();
 
-  /**
-   * Block the current thread and wait for the next wakeup event
-   */
-  void waitForNextWakeup();
-  void waitForFirstWakeup();
-  void waitForWakeup(long generation);
+  static InetAddr resolve(const std::string& addr_str);
 
-  void wakeup();
-  void onWakeup(long generation, std::function<void()> callback);
+  InetAddr(
+      const std::string& hostname,
+      unsigned port);
 
-  long generation() const;
+  const std::string& ip() const;
+  const std::string& hostname() const;
+  unsigned port() const;
+  bool hasPort() const;
+  void setPort(unsigned port);
+  std::string ipAndPort() const;
+  std::string hostAndPort() const;
 
 protected:
-  std::mutex mutex_;
-  std::condition_variable condvar_;
-  std::atomic<long> gen_;
-  std::list<std::function<void()>> callbacks_;
+
+  InetAddr(
+      const std::string& hostname,
+      const std::string& ip,
+      unsigned port);
+
+  std::string hostname_;
+  std::string ip_;
+  unsigned port_;
 };
 
-}
-}
 #endif

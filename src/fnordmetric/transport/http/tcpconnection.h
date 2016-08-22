@@ -21,38 +21,54 @@
  * commercial activities involving this program without disclosing the source
  * code of your own applications
  */
-#ifndef _STX_THREAD_WAKEUP_H
-#define _STX_THREAD_WAKEUP_H
-#include <atomic>
-#include <condition_variable>
-#include <mutex>
-#include <list>
-#include <fnordmetric/util/autoref.h>
+#ifndef _STX_NET_TCPCONNECTION_H
+#define _STX_NET_TCPCONNECTION_H
+#include <stdlib.h>
+#include "fnordmetric/transport/http/inetaddr.h"
+#include "fnordmetric/transport/http/taskscheduler.h"
 
 namespace fnordmetric {
 namespace http {
 
-class Wakeup : public RefCounted {
+class TCPConnection {
 public:
-  Wakeup();
 
   /**
-   * Block the current thread and wait for the next wakeup event
+   * Open a new tcp (client) connection and block until the connection is
+   * established or raise an exception if the connction fails
    */
-  void waitForNextWakeup();
-  void waitForFirstWakeup();
-  void waitForWakeup(long generation);
+  static std::unique_ptr<TCPConnection> connect(const InetAddr& addr);
 
-  void wakeup();
-  void onWakeup(long generation, std::function<void()> callback);
+  /**
+   * Open a new tcp (client) connection and return immediately. IMPORTANT
+   * the caller must call connection->checkErrors(); after the onReady callback
+   * fires!
+   */
+  static void connectAsync(
+      const InetAddr& addr,
+      TaskScheduler* scheduler,
+      std::function<void(std::unique_ptr<TCPConnection> conn)> on_ready);
 
-  long generation() const;
+  TCPConnection(int fd);
+  ~TCPConnection();
+  int fd() const;
+
+  size_t read(void* dst, size_t size);
+  size_t write(const void* data, size_t size);
+  void close();
+  void setNonblocking(bool nonblocking = true);
+
+  /**
+   * This will raise an exception if there are any pending errors on the
+   * connection
+   */
+  void checkErrors() const;
 
 protected:
-  std::mutex mutex_;
-  std::condition_variable condvar_;
-  std::atomic<long> gen_;
-  std::list<std::function<void()>> callbacks_;
+  void connectImpl(const InetAddr& addr);
+
+  bool closed_;
+  int fd_;
 };
 
 }

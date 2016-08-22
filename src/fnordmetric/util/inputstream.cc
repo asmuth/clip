@@ -16,7 +16,6 @@
 #include <fnordmetric/util/runtimeexception.h>
 
 namespace fnordmetric {
-namespace util {
 
 std::unique_ptr<InputStream> InputStream::getStdin() {
   auto stdin_stream = new FileInputStream(0, false);
@@ -157,4 +156,4 @@ void StringInputStream::rewind() {
 }
 
 }
-}
+
