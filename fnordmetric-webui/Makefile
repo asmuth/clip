@@ -6,7 +6,7 @@
 all: build
 
 clean:
-	-rm fnordmetric-webui.js
+	-rm app.bundle.js app.bundle.css app.bundle.html
 
 build:
 	@( \
