@@ -29,7 +29,7 @@ void WebUI::handleHTTPRequest(
   if (path == "/") {
     response->setStatus(http::kStatusFound);
     response->addHeader("Content-Type", "text/html; charset=utf-8");
-    response->addHeader("Location", "/admin");
+    response->addHeader("Location", "/metrics/");
     return;
   }
 

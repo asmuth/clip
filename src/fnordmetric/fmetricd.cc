@@ -43,9 +43,9 @@ void shutdown(int);
 ReturnCode daemonize();
 
 int main(int argc, const char** argv) {
-  signal(SIGTERM, shutdown);
-  signal(SIGINT, shutdown);
-  signal(SIGHUP, shutdown);
+  //signal(SIGTERM, shutdown);
+  //signal(SIGINT, shutdown);
+  //signal(SIGHUP, shutdown);
   signal(SIGPIPE, SIG_IGN);
 
   FlagParser flags;
