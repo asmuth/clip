@@ -4,7 +4,8 @@ ACLOCAL_AMFLAGS = -I m4
 AUTOMAKE_OPTIONS = foreign
 
 SUBDIRS = \
-    .
+    . \
+    src/fnordmetric
 
 EXTRA_DIST =                             \
   autogen.sh                             \
