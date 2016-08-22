@@ -13,7 +13,7 @@
       <h1 class='le_fnord'>F</h1>
 
       <a class="smallpadding" href="/">
-        <h1><i class='fa fa-file'><i>New Query</h1>
+        <h1><i class='fa fa-file'></i>New Query</h1>
       </a>
       <a href="/metrics">
         <h1><i class='fa fa-area-chart'></i>Metrics</h1>
@@ -26,7 +26,7 @@
       </div>
     </div>
 
-    <div class="viewport">
+    <div class="viewport" id="fm_viewport">
     <div>
 
     <script type="text/javascript">
@@ -54,8 +54,9 @@
                 }
 
                 document.head.appendChild(script);
-                FnordMetric.init();
               }
+
+              FnordMetric.init();
             } else {
               console.log("ERROR: unable to load /assets/app.html");
             }

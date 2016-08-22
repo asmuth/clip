@@ -13,7 +13,7 @@ FnordMetric.config = FnordMetric.config || {};
 
 FnordMetric.config.routes = [
   {
-    "route": "/a/metrics",
+    "route": "/metrics",
     "view": "fnordmetric.metric.list",
   }
 ];

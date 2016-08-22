@@ -28,36 +28,21 @@ this["FnordMetric"] = (function() {
     navigator = new zNavigator(window);
     viewport = new zViewport(document.getElementById("fm_viewport"));
 
-    widgets.main_menu = new FnordMetric.MainMenu(document.getElementById("fm_main_menu"));
-    widgets.navbar = new FnordMetric.Navbar(document.querySelector(".fm_navbar"));
+    //widgets.main_menu = new FnordMetric.MainMenu(document.getElementById("fm_main_menu"));
+    //widgets.navbar = new FnordMetric.Navbar(document.querySelector(".fm_navbar"));
 
     navigator.onNavigationChange(setRoute);
+    document.querySelector(".headbar").style.display = "block";
     showLoader();
-
-    api_stubs.auth = new AuthAPI(app.config.api_hosts.auth);
-    api_stubs.auth.getCredentials({}, function(resp) {
-      //FIXME
-      resp.success = true;
-      resp.result = {credentials: {}};
-      if (resp.success) {
-        credentials = resp.result.credentials;
-        setupAPIStubs();
-        //FIXME
-        //fetchUserInfo(function() {
-          setRoute(navigator.getPath());
-        //});
-      } else {
-        navigateToAuthPage();
-      }
-    });
+    setRoute(navigator.getPath());
   }
 
   var loadConfig = function() {
-    var cfg = JSON.parse(document.querySelector("#fnordmetric_config").textContent);
+    //var cfg = JSON.parse(document.querySelector("#fnordmetric_config").textContent);
     app.config = app.config || {};
-    for (k in cfg) {
-      app.config[k] = cfg[k];
-    }
+    //for (k in cfg) {
+    //  app.config[k] = cfg[k];
+    //}
   }
 
   var navigateTo = function(url) {
@@ -70,10 +55,6 @@ this["FnordMetric"] = (function() {
     } else {
       navigator.navigateTo("/a/");
     }
-  }
-
-  var navigateToAuthPage = function() {
-    document.location.href = app.config.login_url;
   }
 
   var setRoute = function(path) {
@@ -107,12 +88,7 @@ this["FnordMetric"] = (function() {
 
   var loadPage = function(params) {
     showLoader();
-    if (params.project_id != current_project) {
-      renderPage(params);
-    } else {
-      widgets.navbar.setProjectID(current_project);
-      renderPage(params);
-    }
+    renderPage(params);
   }
 
   var renderPage = function(params) {
@@ -124,12 +100,12 @@ this["FnordMetric"] = (function() {
       //FIXME render 404
     }
 
-    if (route && route.main_menu) {
-      widgets.main_menu.setActiveItem(route.main_menu_active_item);
-      widgets.main_menu.showMenu();
-    } else {
-      widgets.main_menu.hideMenu();
-    }
+    //if (route && route.main_menu) {
+    //  widgets.main_menu.setActiveItem(route.main_menu_active_item);
+    //  widgets.main_menu.showMenu();
+    //} else {
+    //  widgets.main_menu.hideMenu();
+    //}
 
     hideLoader();
     viewport.setView(view, params);
@@ -140,11 +116,13 @@ this["FnordMetric"] = (function() {
   }
 
   var showLoader = function() {
-    document.getElementById("fm_main_loader").classList.remove("hidden");
+    //FIXME
+    //document.getElementById("fm_main_loader").classList.remove("hidden");
   };
 
   var hideLoader = function() {
-    document.getElementById("fm_main_loader").classList.add("hidden");
+    //FIXME
+    //document.getElementById("fm_main_loader").classList.add("hidden");
   };
 
   this["init"] = init;
