@@ -32,8 +32,8 @@
 #include <fnordmetric/transport/http/httprequest.h>
 #include <fnordmetric/transport/http/httpresponse.h>
 #include <fnordmetric/transport/http/httpstats.h>
-#include <fnordmetric/util/net/tcpconnection.h>
-#include <fnordmetric/util/thread/taskscheduler.h>
+#include <fnordmetric/transport/http/tcpconnection.h>
+#include <fnordmetric/transport/http/taskscheduler.h>
 
 namespace fnordmetric {
 namespace http {
@@ -83,7 +83,7 @@ public:
    **/
   static void start(
       HTTPHandlerFactory* handler_factory,
-      ScopedPtr<net::TCPConnection> conn,
+      ScopedPtr<TCPConnection> conn,
       TaskScheduler* scheduler,
       HTTPServerStats* stats);
 
@@ -118,7 +118,7 @@ public:
 protected:
   HTTPServerConnection(
       HTTPHandlerFactory* handler_factory,
-      ScopedPtr<net::TCPConnection> conn,
+      ScopedPtr<TCPConnection> conn,
       TaskScheduler* scheduler,
       HTTPServerStats* stats);
 
@@ -132,7 +132,7 @@ protected:
   void close();
 
   HTTPHandlerFactory* handler_factory_;
-  ScopedPtr<net::TCPConnection> conn_;
+  ScopedPtr<TCPConnection> conn_;
   TaskScheduler* scheduler_;
   HTTPParser parser_;
   Function<void ()> on_write_completed_cb_;

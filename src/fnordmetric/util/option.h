@@ -21,30 +21,42 @@
  * commercial activities involving this program without disclosing the source
  * code of your own applications
  */
-#ifndef _STX_HTTP_VFSFILESERVLET_H
-#define _STX_HTTP_VFSFILESERVLET_H
-#include "fnordmetric/util/VFS.h"
-#include "fnordmetric/transport/http/httpservice.h"
+#ifndef _STX_BASE_OPTION_H
+#define _STX_BASE_OPTION_H
+#include <functional>
+#include <memory>
+#include <mutex>
+#include <stdlib.h>
+#include "fnordmetric/util/inspect.h"
+#include "fnordmetric/util/exception.h"
 
-namespace fnordmetric {
-namespace http {
-
-class VFSFileServlet : public http::HTTPService {
+template <typename T>
+class Option {
 public:
+  Option();
+  Option(std::nullptr_t n);
+  Option(const T& value);
+  Option(T&& value);
+  Option(const Option<T>& other);
+  Option(Option<T>&& other);
+  ~Option();
 
-  VFSFileServlet(const String& base_path, VFS* vfs);
+  Option& operator=(const Option<T>& other);
+  Option& operator=(Option<T>&& other);
 
-  void handleHTTPRequest(
-      http::HTTPRequest* req,
-      http::HTTPResponse* res);
+  bool isEmpty() const;
+  T& get() const;
 
 protected:
-  String contentTypeFromFilename(const String& filename) const;
-
-  String base_path_;
-  VFS* vfs_;
+  char value_data_[sizeof(T)];
+  T* value_;
 };
 
-}
-}
+template <typename T>
+Option<T> Some(const T& value);
+
+template <typename T>
+Option<T> None();
+
+#include "option_impl.h"
 #endif

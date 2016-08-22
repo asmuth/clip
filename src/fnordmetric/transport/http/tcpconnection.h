@@ -21,46 +21,54 @@
  * commercial activities involving this program without disclosing the source
  * code of your own applications
  */
-#ifndef _libstx_HTTPCLIENT_H
-#define _libstx_HTTPCLIENT_H
-#include "fnordmetric/util/uri.h"
-#include "fnordmetric/transport/http/httpresponsefuture.h"
-#include "fnordmetric/transport/http/httpconnectionpool.h"
-#include "fnordmetric/util/thread/eventloop.h"
+#ifndef _STX_NET_TCPCONNECTION_H
+#define _STX_NET_TCPCONNECTION_H
+#include <stdlib.h>
+#include "fnordmetric/transport/http/inetaddr.h"
+#include "fnordmetric/transport/http/taskscheduler.h"
 
 namespace fnordmetric {
 namespace http {
 
-class HTTPClient {
+class TCPConnection {
 public:
 
-  HTTPClient();
-  HTTPClient(HTTPClientStats* stats);
+  /**
+   * Open a new tcp (client) connection and block until the connection is
+   * established or raise an exception if the connction fails
+   */
+  static std::unique_ptr<TCPConnection> connect(const InetAddr& addr);
 
-  // deprecated
-  HTTPResponse executeRequest(const HTTPRequest& req);
-
-  Status executeRequest(const HTTPRequest& req, HTTPResponse* res);
-
-  HTTPResponse executeRequest(
-      const HTTPRequest& req,
-      const InetAddr& addr);
-
-  HTTPResponse executeRequest(
-      const HTTPRequest& req,
-      Function<HTTPResponseFuture* (Promise<HTTPResponse> promise)> factory);
-
-  HTTPResponse executeRequest(
-      const HTTPRequest& req,
+  /**
+   * Open a new tcp (client) connection and return immediately. IMPORTANT
+   * the caller must call connection->checkErrors(); after the onReady callback
+   * fires!
+   */
+  static void connectAsync(
       const InetAddr& addr,
-      Function<HTTPResponseFuture* (Promise<HTTPResponse> promise)> factory);
+      TaskScheduler* scheduler,
+      std::function<void(std::unique_ptr<TCPConnection> conn)> on_ready);
+
+  TCPConnection(int fd);
+  ~TCPConnection();
+  int fd() const;
+
+  size_t read(void* dst, size_t size);
+  size_t write(const void* data, size_t size);
+  void close();
+  void setNonblocking(bool nonblocking = true);
+
+  /**
+   * This will raise an exception if there are any pending errors on the
+   * connection
+   */
+  void checkErrors() const;
 
 protected:
-  HTTPClientStats stats_int_;
-  HTTPClientStats* stats_;
-  thread::EventLoop ev_;
-  std::mutex mutex_;
-  net::DNSCache dns_cache_;
+  void connectImpl(const InetAddr& addr);
+
+  bool closed_;
+  int fd_;
 };
 
 }

@@ -21,38 +21,46 @@
  * commercial activities involving this program without disclosing the source
  * code of your own applications
  */
-#pragma once
-#include <fnordmetric/util/uri.h>
-#include <fnordmetric/util/io/file.h>
-#include <fnordmetric/transport/http/httpmessage.h>
-#include "fnordmetric/transport/http/httprequest.h"
-#include "fnordmetric/transport/http/httpresponse.h"
-#include "fnordmetric/transport/http/httpstats.h"
-#include "fnordmetric/transport/http/httpconnectionpool.h"
-#include "fnordmetric/transport/http/httpclient.h"
+#ifndef _libstx_THREAD_TASK_H
+#define _libstx_THREAD_TASK_H
+#include <functional>
+#include <memory>
 
-namespace fnordmetric {
-namespace http {
+namespace thread {
 
-struct HTTPSSEEvent {
-  String data;
-  Option<String> name;
+class Task {
+public:
+  virtual ~Task() {}
+
+  template <class RunnableType>
+  static std::shared_ptr<Task> create(RunnableType runnable);
+
+  virtual void run() = 0;
+
 };
 
-class HTTPSSEParser {
+template <class RunnableType>
+class TaskImpl : public Task {
+friend class Task;
 public:
 
-  void onEvent(Function<void (const HTTPSSEEvent& ev)> fn);
-
-  void parse(const char* data, size_t size);
+  void run() override;
 
 protected:
-
-  void parseEvent(const char* data, size_t size);
-
-  Buffer buf_;
-  Function<void (const HTTPSSEEvent& ev)> on_event_;
+  TaskImpl(RunnableType runnable) : runnable_(runnable) {}
+  RunnableType runnable_;
 };
 
+template <class RunnableType>
+std::shared_ptr<Task> Task::create(
+    RunnableType runnable) {
+  return std::shared_ptr<Task>(new TaskImpl<RunnableType>(runnable));
 }
+
+template <class RunnableType>
+void TaskImpl<RunnableType>::run() {
+  runnable_();
 }
+
+}
+#endif

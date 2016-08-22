@@ -21,42 +21,37 @@
  * commercial activities involving this program without disclosing the source
  * code of your own applications
  */
-#pragma once
-#include <fnordmetric/util/uri.h>
-#include <fnordmetric/util/io/file.h>
-#include <fnordmetric/transport/http/httpmessage.h>
-#include "fnordmetric/transport/http/httprequest.h"
-#include "fnordmetric/transport/http/httpresponse.h"
-#include "fnordmetric/transport/http/httpstats.h"
-#include "fnordmetric/transport/http/httpconnectionpool.h"
-#include "fnordmetric/transport/http/httpclient.h"
-#include "fnordmetric/transport/http/HTTPSSEParser.h"
+#ifndef _STX_INETADDR_H
+#define _STX_INETADDR_H
+#include <string>
 
-namespace fnordmetric {
-namespace http {
-
-class HTTPSSEResponseHandler : public HTTPResponseFuture {
+class InetAddr {
 public:
-  typedef
-      Function<HTTPResponseFuture* (const Promise<http::HTTPResponse>)>
-      FactoryFn;
 
-  typedef
-      Function<void (const HTTPSSEEvent& ev)>
-      CallbackFn;
+  static InetAddr resolve(const std::string& addr_str);
 
-  static FactoryFn getFactory(CallbackFn on_event);
+  InetAddr(
+      const std::string& hostname,
+      unsigned port);
+
+  const std::string& ip() const;
+  const std::string& hostname() const;
+  unsigned port() const;
+  bool hasPort() const;
+  void setPort(unsigned port);
+  std::string ipAndPort() const;
+  std::string hostAndPort() const;
 
 protected:
 
-  HTTPSSEResponseHandler(
-      Promise<HTTPResponse> promise,
-      CallbackFn on_event);
+  InetAddr(
+      const std::string& hostname,
+      const std::string& ip,
+      unsigned port);
 
-  void onBodyChunk(const char* data, size_t size) override;
-
-  HTTPSSEParser parser_;
+  std::string hostname_;
+  std::string ip_;
+  unsigned port_;
 };
 
-}
-}
+#endif

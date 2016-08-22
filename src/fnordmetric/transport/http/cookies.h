@@ -25,7 +25,8 @@
 #define _STX_HTTP_COOKIES_H
 #include <vector>
 #include <string>
-#include "fnordmetric/util/UnixTime.h"
+#include "fnordmetric/util/time.h"
+#include "fnordmetric/util/stringutil.h"
 #include <fnordmetric/util/uri.h>
 
 namespace fnordmetric {

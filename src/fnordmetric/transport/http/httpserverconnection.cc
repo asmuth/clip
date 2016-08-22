@@ -37,7 +37,7 @@ namespace http {
 
 void HTTPServerConnection::start(
     HTTPHandlerFactory* handler_factory,
-    ScopedPtr<net::TCPConnection> conn,
+    ScopedPtr<TCPConnection> conn,
     TaskScheduler* scheduler,
     HTTPServerStats* stats) {
   auto http_conn = new HTTPServerConnection(
@@ -54,7 +54,7 @@ void HTTPServerConnection::start(
 
 HTTPServerConnection::HTTPServerConnection(
     HTTPHandlerFactory* handler_factory,
-    ScopedPtr<net::TCPConnection> conn,
+    ScopedPtr<TCPConnection> conn,
     TaskScheduler* scheduler,
     HTTPServerStats* stats) :
     handler_factory_(handler_factory),

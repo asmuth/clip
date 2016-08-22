@@ -22,12 +22,11 @@
  * commercial activities involving this program without disclosing the source
  * code of your own applications
  */
-
 #ifndef _STX_HTTP_HTTPSSESTREAM_H
 #define _STX_HTTP_HTTPSSESTREAM_H
 #include "fnordmetric/transport/http/httpservice.h"
-#include "fnordmetric/util/json/json.h"
 #include <fnordmetric/util/inspect.h>
+#include <fnordmetric/util/option.h>
 
 namespace fnordmetric {
 namespace http {

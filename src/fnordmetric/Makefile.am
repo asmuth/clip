@@ -79,25 +79,13 @@ fmetricd_SOURCES = \
 		transport/http/HTTPRequestStream.h \
 		transport/http/HTTPResponseStream.cc \
 		transport/http/HTTPResponseStream.h \
-		transport/http/HTTPSSEParser.cc \
 		transport/http/httpconnectionhandler.h \
-		transport/http/HTTPSSEParser.h \
-		transport/http/HTTPSSEResponseHandler.cc \
-		transport/http/HTTPSSEResponseHandler.h \
 		transport/http/HTTPSSEStream.cc \
 		transport/http/HTTPSSEStream.h \
-		transport/http/VFSFileServlet.cc \
-		transport/http/VFSFileServlet.h \
 		transport/http/cookies.cc \
 		transport/http/cookies.h \
 		transport/http/status.h \
 		transport/http/httphandler.h \
-		transport/http/httpclient.cc \
-		transport/http/httpclient.h \
-		transport/http/httpclientconnection.cc \
-		transport/http/httpclientconnection.h \
-		transport/http/httpconnectionpool.cc \
-		transport/http/httpconnectionpool.h \
 		transport/http/httpgenerator.cc \
 		transport/http/httpgenerator.h \
 		transport/http/httpmessage.cc \

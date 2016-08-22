@@ -28,7 +28,7 @@
 #include <fnordmetric/transport/http/httpresponse.h>
 #include <fnordmetric/transport/http/HTTPRequestStream.h>
 #include <fnordmetric/transport/http/HTTPResponseStream.h>
-#include "fnordmetric/util/thread/taskscheduler.h"
+#include "fnordmetric/transport/http/taskscheduler.h"
 
 namespace fnordmetric {
 namespace http {
