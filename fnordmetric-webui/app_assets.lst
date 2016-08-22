@@ -1,0 +1,7 @@
+fnordmetric-webui/app.js
+fnordmetric-webui/app.css
+fnordmetric-webui/app.html
+fnordmetric-webui/routes.js
+fnordmetric-webui/codemirror.js
+fnordmetric-webui/codemirror-sql.js
+fnordmetric-webui/views/metric-list/metric-list.js

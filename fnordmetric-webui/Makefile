@@ -1,5 +1,6 @@
 # This file is part of the "FnordMetric" project
-#   Copyright (c) 2014 Paul Asmuth, Google Inc.
+#   Copyright (c) 2016 Paul Asmuth
+#   Copyright (c) 2016 Laura Schlimmer
 #
 # Licensed under the MIT license (see LICENSE).
 
