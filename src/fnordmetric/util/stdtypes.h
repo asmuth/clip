@@ -21,7 +21,8 @@
  * commercial activities involving this program without disclosing the source
  * code of your own applications
  */
-#pragma once
+#ifndef _STX_STDTYPES_H
+#define _STX_STDTYPES_H
 #include <condition_variable>
 #include <ctime>
 #include <deque>
@@ -79,3 +80,4 @@ using Stack = std::stack<T>;
 
 using StandardException = std::exception;
 
+#endif
