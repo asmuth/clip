@@ -29,7 +29,7 @@
 #include <unistd.h>
 #include "fnordmetric/util/buffer.h"
 #include "fnordmetric/util/exception.h"
-#include "fnordmetric/util/io/outputstream.h"
+#include "fnordmetric/util/outputstream.h"
 #include "fnordmetric/util/ieee754.h"
 
 std::unique_ptr<OutputStream> OutputStream::getStdout() {

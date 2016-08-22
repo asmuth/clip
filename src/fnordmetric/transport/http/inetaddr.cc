@@ -27,7 +27,7 @@
 #include <sys/socket.h>
 #include "fnordmetric/util/exception.h"
 #include "fnordmetric/util/stringutil.h"
-#include "fnordmetric/util/net/inetaddr.h"
+#include "fnordmetric/transport/http/inetaddr.h"
 
 InetAddr InetAddr::resolve(const std::string& addr_str) {
   auto parts = StringUtil::split(addr_str, ":");

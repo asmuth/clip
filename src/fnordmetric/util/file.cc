@@ -23,7 +23,7 @@
  */
 #include <fnordmetric/util/buffer.h>
 #include <fnordmetric/util/exception.h>
-#include <fnordmetric/util/io/file.h>
+#include <fnordmetric/util/file.h>
 #include <sys/fcntl.h>
 #include <sys/stat.h>
 #include <sys/types.h>

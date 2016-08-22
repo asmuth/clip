@@ -27,6 +27,9 @@
 #include <sys/types.h>
 #include <sys/uio.h>
 #include <sys/socket.h>
+#include <sys/fcntl.h>
+#include <sys/stat.h>
+#include <sys/types.h>
 #include <unistd.h>
 #include "fnordmetric/util/exception.h"
 #include "fnordmetric/util/inspect.h"

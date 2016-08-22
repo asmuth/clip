@@ -27,7 +27,7 @@
 #include <fcntl.h>
 #include <fnordmetric/util/buffer.h>
 #include <fnordmetric/util/exception.h>
-#include <fnordmetric/util/io/inputstream.h>
+#include <fnordmetric/util/inputstream.h>
 #include <fnordmetric/util/ieee754.h>
 
 std::unique_ptr<FileInputStream> InputStream::getStdin() {
