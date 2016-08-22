@@ -10,16 +10,16 @@ clean:
 
 build:
 	@( \
-    (cd ../../ && cat fnordmetric-webui/app_assets.lst | grep -E '.js' | xargs -n1 cat)) > app.bundle.js \
-    (cd ../../ && cat fnordmetric-webui/app_assets.lst | grep -E '.css' | xargs -n1 cat) > app.bundle.css \
-    (cd ../../ && cat fnordmetric-webui/app_assets.lst | grep -E '.html' | xargs -n1 cat) > app.bundle.html \
-    echo "<script>" >> app.bundle.html \
-    cat app.bundle.js >> app.bundle.html \
-    echo "</script>" >> app.bundle.html \
-    echo "<style type='text/css'>" >> app.bundle.html \
-    cat app.bundle.css >> app.bundle.html \
+    (cd ../ && cat fnordmetric-webui/app_assets.lst | grep -E '.js' | xargs -n1 cat) > app.bundle.js && \
+    (cd ../ && cat fnordmetric-webui/app_assets.lst | grep -E '.css' | xargs -n1 cat) > app.bundle.css && \
+    (cd ../ && cat fnordmetric-webui/app_assets.lst | grep -E '.html' | xargs -n1 cat) > app.bundle.html && \
+    echo "<script>" >> app.bundle.html && \
+    cat app.bundle.js >> app.bundle.html && \
+    echo "</script>" >> app.bundle.html && \
+    echo "<style type='text/css'>" >> app.bundle.html && \
+    cat app.bundle.css >> app.bundle.html && \
     echo "</style>" >> app.bundle.html \
-)
+  )
 
 atch:
 	-while sleep 1; do fswatch -1 * && make; done
