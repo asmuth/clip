@@ -57,7 +57,7 @@ HTTPServer::HTTPServer(
 }
 
 void HTTPServer::listen(int port) {
-  logNotice("http.server", "Starting HTTP server on port $0", port);
+  logNotice("Starting HTTP server on port $0", port);
   ssock_.listen(port);
 }
 

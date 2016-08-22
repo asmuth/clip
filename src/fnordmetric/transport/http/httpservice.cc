@@ -84,7 +84,7 @@ void HTTPServiceHandler::dispatchRequest() {
     try {
       service_->handleHTTPRequest(req_stream, res_stream);
     } catch (const std::exception& e) {
-      logError("http.server", e, "Error while processing HTTP request");
+      logError("Error while processing HTTP request: $0", e);
 
       try {
         if (res_stream->isOutputStarted()) {
@@ -97,7 +97,7 @@ void HTTPServiceHandler::dispatchRequest() {
           res_stream->writeResponse(res);
         }
       } catch (const std::exception& e) {
-        logError("http.server", e, "Connection Error");
+        logError("Connection Error: $0", e);
       }
     }
   };
