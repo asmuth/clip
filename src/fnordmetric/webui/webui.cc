@@ -57,6 +57,13 @@ void WebUI::handleHTTPRequest(
     return;
   }
 
+  if (path == "/fontawesome.woff") {
+    response->setStatus(http::kStatusOK);
+    response->addHeader("Content-Type", "application/x-font-woff");
+    response->addBody(getAssetFile("fontawesome.woff"));
+    return;
+  }
+
   response->setStatus(http::kStatusNotFound);
   response->addHeader("Content-Type", "text/plain; charset=utf-8");
   response->addBody("not found");
