@@ -3,6 +3,8 @@ zui/util/z-navigator.js
 zui/util/z-router.js
 zui/util/z-template_util.js
 zui/util/z-http.js
+zui/util/z-dom_util.js
+zui/components/z-table/z-table.js
 app.js
 app.css
 app.html
