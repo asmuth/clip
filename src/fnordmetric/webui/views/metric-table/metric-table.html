@@ -5,13 +5,24 @@
 
     <div class="content">
 
-      <div class="control_box">
+      <div class="sidebar">
         <h3>Measurements</h3>
         <ul class="value_columns"></ul>
       </div>
 
       <div class="table_box">
-        <div class="controls"></div>
+        <div class="controls">
+          <div class="control">
+            <z-dropdown class="value_columns inline">
+              <z-dropdown-header data-static>
+                <z-dropdown-header-value>Metrics</z-dropdown-header>
+              </z-dropdown-header>
+              <z-dropdown-flyout>
+                <z-dropdown-items></z-dropdown-items>
+              </z-dropdown-flyout>
+            </z-dropdown>
+          </div>
+        </div>
         <div class="metric-table"></div>
       </div>
 

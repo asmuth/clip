@@ -69,6 +69,7 @@ FnordMetric.views["fnordmetric.metric.table"] = function(elem, params) {
     renderHeader();
     renderTable();
     renderValueColumsControl();
+
   };
 
   var renderHeader = function(metric) {
@@ -83,34 +84,69 @@ FnordMetric.views["fnordmetric.metric.table"] = function(elem, params) {
   };
 
   var renderValueColumsControl = function() {
-    var ul = elem.querySelector(
-        ".fnordmetric-metric-table .control_box .value_columns");
-
     var displayed_columns = view_cfg.getValue("value_columns");
-
-    metric_cfg.value_columns.forEach(function(col) {
-      var displayed = false;
-      displayed_columns.forEach(function(c) {
-        if (c.id == col.id) {
-          displayed = true;
+    var value_columns = [];
+    metric_cfg.value_columns.forEach(function(c) {
+      var hidden = true;
+      displayed_columns.forEach(function(cc) {
+        if (c.id == cc.id) {
+          hidden = false;
           return;
         }
       });
 
+      value_columns.push({
+        id: c.id,
+        name: c.name,
+        hidden: hidden
+      });
+    });
+
+    renderValueColumnsDropdown(value_columns);
+    renderValueColumnsSidebar(value_columns);
+  }
+
+  var renderValueColumnsDropdown = function(value_columns) {
+    var dropdown = elem.querySelector(
+        ".fnordmetric-metric-table z-dropdown.value_columns");
+    var selector = new fMetricSelector(dropdown, value_columns);
+    selector.render();
+
+    dropdown.addEventListener("change", function(e) {
+      var columns = this.getValue().split(",");
+      value_columns.forEach(function(c) {
+        var idx = columns.indexOf(c.id);
+        if (c.hidden && idx > -1) {
+          view_cfg.addColumn("value_columns", c.id);
+        }
+
+        if (!c.hidden && idx == -1) {
+          view_cfg.removeColumn("value_columns", c.id);
+        }
+      });
+
+      update();
+    });
+  }
+
+  var renderValueColumnsSidebar = function(value_columns) {
+    var ul = elem.querySelector(
+        ".fnordmetric-metric-table .sidebar .value_columns");
+    value_columns.forEach(function(col) {
       var li = document.createElement("li");
       li.innerHTML = col.name;
       var icon = document.createElement("i");
       icon.className = "fa";
-      li.className = displayed ? "selected" : "";
+      li.className = col.hidden ? "" : "selected";
 
       li.appendChild(icon);
       ul.appendChild(li);
 
       icon.addEventListener("click", function(e) {
-        if (displayed) {
-          view_cfg.removeColumn("value_columns", col.id);
-        } else {
+        if (col.hidden) {
           view_cfg.addColumn("value_columns", col.id);
+        } else {
+          view_cfg.removeColumn("value_columns", col.id);
         }
         update();
       });
