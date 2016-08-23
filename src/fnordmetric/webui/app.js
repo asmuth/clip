@@ -97,7 +97,8 @@ this["FnordMetric"] = (function() {
 
     var view = route ? FnordMetric.views[route.view] : null;
     if (!view) {
-      //FIXME render 404
+      renderError({type: "404"});
+      return;
     }
 
     //if (route && route.main_menu) {
@@ -125,9 +126,9 @@ this["FnordMetric"] = (function() {
     //document.getElementById("fm_main_loader").classList.add("hidden");
   };
 
-  var renderError = function() {
+  var renderError = function(cfg) {
     var view = FnordMetric.views["fnordmetric.error"];
-    viewport.setView(view);
+    viewport.setView(view, cfg);
   }
 
   this["init"] = init;
