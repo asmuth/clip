@@ -125,11 +125,16 @@ this["FnordMetric"] = (function() {
     //document.getElementById("fm_main_loader").classList.add("hidden");
   };
 
+  var renderError = function() {
+    //TODO render error view
+  }
+
   this["init"] = init;
   this.navigateTo = navigateTo;
   this.navigateHome = navigateHome;
   this.showLoader = showLoader;
   this.hideLoader = hideLoader;
+  this.renderError = renderError;
   this.views = {};
   this.util = {};
   this.api_stubs = api_stubs;
