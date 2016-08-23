@@ -67,3 +67,12 @@
   background-color: #f6f8fa;
   cursor: pointer;
 }
+
+.fnordmetric-metric-list .hidden {
+  display: none;
+}
+
+.fnordmetric-metric-list .error {
+  margin-top: 20%;
+  text-align: center;
+}

@@ -1,8 +1,7 @@
 <template id="fnordmetric-metric-list-tpl">
   <div class="fnordmetric-metric-list">
-    <h1 class="page_header">Metrics <em class='metric_selection'></em></h1>
+    <h1 class="page_header">Metrics &rsaquo; <em class='metric_selection'></em></h1>
     <div class="pagination_navbar"></div>
-
 
     <table class="metric_list">
       <thead>
@@ -15,5 +14,12 @@
       </thead>
       <tbody></tbody>
     </table>
+
+    <div class="empty_result error hidden">
+      <h1>Looks like you haven't inserted any data yet.</h1>
+    </div>
+    <div class="empty_search error hidden">
+      <h1>Your search did not come up with any results.</h1>
+    </div>
   </div>
 </template>
