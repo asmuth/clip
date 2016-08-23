@@ -5,7 +5,10 @@ zui/util/z-template_util.js
 zui/util/z-http.js
 zui/util/z-dom_util.js
 zui/util/z-url_util.js
-zui/components/z-table/z-table.js
+zui/components/z-dropdown/z-dropdown.js
+zui/components/z-dropdown/z-dropdown.css
+zui/widgets/z-table/z-table.js
+widgets/metric-selector/metric-selector.js
 app.js
 app.css
 app.html
@@ -18,7 +21,7 @@ views/error/error.js
 views/metric-list/metric-list.html
 views/metric-list/metric-list.js
 views/metric-list/metric-list.css
+views/metric-table/view_config.js
 views/metric-table/metric-table.html
 views/metric-table/metric-table.js
 views/metric-table/metric-table.css
-views/metric-table/view_config.js
