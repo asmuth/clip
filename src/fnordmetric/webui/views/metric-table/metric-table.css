@@ -13,5 +13,18 @@
 .fnordmetric-metric-table .content .table_box {
   flex: 1;
   min-height: 600px;
+  padding: 20px;
 }
 
+.fnordmetric-metric-table .content .control_box h3 {
+  margin-top: 0;
+  font-weight: normal;
+  color: #394b59;
+  font-size: 15px;
+}
+
+.fnordmetric-metric-table .content .control_box ul.value_columns {
+  margin: 0;
+  padding: 0;
+  list-style-type: none;
+}
