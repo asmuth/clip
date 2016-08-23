@@ -1,7 +1,7 @@
 @font-face {
   font-family: 'FontAwesome';
-  src: url('/s/fontawesome.woff?v=4.2.0');
-  src:  url('/s/fontawesome.woff?v=4.2.0') format('woff');
+  src: url('/fontawesome.woff?v=4.2.0');
+  src:  url('/fontawesome.woff?v=4.2.0') format('woff');
   font-weight: normal;
   font-style: normal;
 }
@@ -109,6 +109,10 @@
   -webkit-animation: fa-spin 1s infinite linear;
   animation: fa-spin 1s infinite linear;
 }
+.fa-eye {
+  content: "\f06e";
+}
+
 @-webkit-keyframes fa-spin {
   0% {
     -webkit-transform: rotate(0deg);
