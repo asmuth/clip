@@ -18,3 +18,6 @@ views/error/error.js
 views/metric-list/metric-list.html
 views/metric-list/metric-list.js
 views/metric-list/metric-list.css
+views/metric-table/metric-table.html
+views/metric-table/metric-table.js
+views/metric-table/metric-table.css
