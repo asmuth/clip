@@ -1,0 +1,17 @@
+.fnordmetric-metric-table .content {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  min-height: 100%;
+}
+
+.fnordmetric-metric-table .content .control_box {
+  width: 160px;
+  padding: 20px;
+}
+
+.fnordmetric-metric-table .content .table_box {
+  flex: 1;
+  min-height: 600px;
+}
+
