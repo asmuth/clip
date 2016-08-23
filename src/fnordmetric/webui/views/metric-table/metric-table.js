@@ -6,10 +6,6 @@ FnordMetric.views["fnordmetric.metric.table"] = function(elem, params) {
       value_columns: []
     }
 
-    this.update = function(property, value) {
-
-    }
-
     this.get = function() {
       return cfg;
     }
@@ -22,28 +18,78 @@ FnordMetric.views["fnordmetric.metric.table"] = function(elem, params) {
       }
     }
 
-    this.getQueryString = function() {
+    this.removeColumn = function(col_type, col_id) {
+      if (!cfg.hasOwnProperty(col_type)) {
+        return;
+      }
 
+      for (var i = 0; i < cfg[col_type].length; i++) {
+        if (cfg[col_type][i].id == col_id) {
+          cfg[col_type].splice(i, 1);
+          return;
+        }
+      }
+    }
+
+    this.addColumn = function(col_type, col_id) {
+      if (!cfg.hasOwnProperty(col_type) || metric_cfg.hasOwnProperty(col_type)) {
+        return;
+      }
+
+      for (var i = 0; i < cfg[col_type].length; i++) {
+        if (cfg[col_type][i].id == col_id) {
+          return;
+        }
+      }
+
+      for (var i = 0; i < metric_cfgg[col_type].length; i++) {
+        if (metric_cfg[col_type][i].id == col_id) {
+          cfg[col_type].push(metric_cfg[col_type][i]);
+          return;
+        }
+      }
+    }
+
+    this.getParamList = function() {
+      var param_cfg = {
+        value_columns: cfg.value_columns,
+        id_columns: cfg.id_columns,
+        order: cfg.order
+      };
+
+      var param_list = {
+        cfg: JSON.stringify(param_cfg),
+        offset: cfg.offset
+      }
+
+      return param_list;
     }
 
     var initialize = function() {
-      var max_id_cols = 3;
-      var max_value_cols = 4;
+      if (uri_params.config) {
+        cfg = JSON.parse(uri_params.config);
 
-      if (metric_cfg.id_columns) {
-        cfg.id_columns = metric_cfg.id_columns.slice(0, max_id_cols);
+      } else {
+        //build default config
+        var max_id_cols = 3;
+        var max_value_cols = 4;
 
-        // display more value columns if less than max id columns
-        max_value_cols += max_id_cols - cfg.id_columns.length;
+        if (metric_cfg.id_columns) {
+          cfg.id_columns = metric_cfg.id_columns.slice(0, max_id_cols);
+
+          // display more value columns if less than max id columns
+          max_value_cols += max_id_cols - cfg.id_columns.length;
+        }
+
+        if (metric_cfg.id_columns) {
+          cfg.value_columns = metric_cfg.value_columns.slice(0, max_value_cols);
+        }
+
+        cfg.offset = 0;
+        cfg.order = cfg.value_columns[0].id;
       }
 
-      if (metric_cfg.id_columns) {
-        cfg.value_columns = metric_cfg.value_columns.slice(0, max_value_cols);
-      }
-
-      cfg.offset = 0;
       cfg.limit = 25;
-      cfg.order = cfg.value_columns[0].id;
     }
 
     initialize();
@@ -52,8 +98,8 @@ FnordMetric.views["fnordmetric.metric.table"] = function(elem, params) {
   var url_params = {};
   var table = new zTable({});
 
-  //info about the current view
-  var view_cfg = {};
+  var view_cfg;
+  var metric_cfg;
 
   this.initialize = function() {
     url_params = getUrlParams(params.path);
@@ -88,7 +134,7 @@ FnordMetric.views["fnordmetric.metric.table"] = function(elem, params) {
 
   var loadMetricConfig = function() {
     //REMOVE ME
-    var metric_cfg = {
+    metric_cfg = {
       id_columns: [
         { "id": "host", "name": "Host" },
         { "id": "datacenter", "name": "Datacenter" },
@@ -98,7 +144,9 @@ FnordMetric.views["fnordmetric.metric.table"] = function(elem, params) {
         { "id": "mem_used", "name": "Memory used" },
         { "id": "mem_free", "name": "Memory free" },
         { "id": "uptime", "name": "Uptime" },
-        { "id": "load_avg", "name": "Load Average" }
+        { "id": "load_avg", "name": "Load Average" },
+        { "id": "processes", "name": "Processes" },
+        { "id": "kernel_state", "name": "Kernel state" }
       ]
     };
     //REMOVE ME END
@@ -107,8 +155,9 @@ FnordMetric.views["fnordmetric.metric.table"] = function(elem, params) {
     render();
   };
 
-  var updateViewConfig = function() {
-
+  var update = function() {
+    params.app.navigateTo(
+        params.path + "?" + zURLUtil.buildQueryString(view_cfg.getParamList()));
   }
 
   var render = function() {
@@ -133,24 +182,40 @@ FnordMetric.views["fnordmetric.metric.table"] = function(elem, params) {
         ".fnordmetric-metric-table .control_box .value_columns");
 
     var displayed_columns = view_cfg.getValue("value_columns");
-    displayed_columns.forEach(function(col) {
+
+    metric_cfg.value_columns.forEach(function(col) {
+      var displayed = false;
+      displayed_columns.forEach(function(c) {
+        if (c.id == col.id) {
+          displayed = true;
+          return;
+        }
+      });
+
       var li = document.createElement("li");
       li.innerHTML = col.name;
-      var display_icon = document.createElement("i");
-      display_icon.className = "fa fa-eye";
+      var icon = document.createElement("i");
+      icon.className = "fa";
+      li.className = displayed ? "selected" : "";
 
-      li.appendChild(display_icon);
+      li.appendChild(icon);
       ul.appendChild(li);
 
-      display_icon.addEventListener("click", function(e) {
-        
+      icon.addEventListener("click", function(e) {
+        if (displayed) {
+          view_cfg.removeColumn("value_columns", col.id);
+        } else {
+          view_cfg.addColumn("value_columns", col.id);
+        }
+        update();
       });
 
       li.addEventListener("mouseover", function(e) {
-        console.log("highlight " + col.id + " column");
+        //console.log("highlight " + col.id + " column");
       });
+
       li.addEventListener("mouseout", function(e) {
-        console.log("remove highlight " + col.id + " column");
+        //console.log("remove highlight " + col.id + " column");
       });
     });
   }

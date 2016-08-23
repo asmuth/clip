@@ -28,3 +28,26 @@
   padding: 0;
   list-style-type: none;
 }
+
+.fnordmetric-metric-table .content .control_box ul.value_columns li {
+  display: block;
+  width: 100%;
+  line-height: 24px;
+}
+
+.fnordmetric-metric-table .content .control_box ul.value_columns li i {
+  padding: 5px;
+  float: right;
+}
+
+.fnordmetric-metric-table .content .control_box ul.value_columns li i:hover {
+  cursor: pointer;
+}
+
+.fnordmetric-metric-table .content .control_box ul.value_columns li i::before {
+  content: "\f070";
+}
+
+.fnordmetric-metric-table .content .control_box ul.value_columns li.selected i::before {
+  content: "\f06e";
+}
