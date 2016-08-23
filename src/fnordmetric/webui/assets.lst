@@ -21,3 +21,4 @@ views/metric-list/metric-list.css
 views/metric-table/metric-table.html
 views/metric-table/metric-table.js
 views/metric-table/metric-table.css
+views/metric-table/view_config.js
