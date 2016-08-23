@@ -126,7 +126,8 @@ this["FnordMetric"] = (function() {
   };
 
   var renderError = function() {
-    //TODO render error view
+    var view = FnordMetric.views["fnordmetric.error"];
+    viewport.setView(view);
   }
 
   this["init"] = init;
