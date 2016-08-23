@@ -49,59 +49,18 @@ void WebUI::handleHTTPRequest(
     response->addBody(getAppHTML());
     return;
   }
-  //if (path == "/favicon.ico") {
-  //  sendAsset(
-  //      response,
-  //      "fnordmetric-webui/fnordmetric-favicon.ico",
-  //      "image/x-icon");
-  //  return true;
-  //}
 
-  //if (path == "/assets/fnordmetric.js") {
-  //  sendAsset(
-  //      response,
-  //      "fnordmetric-js/fnordmetric.js",
-  //      "text/javascript");
-  //  return true;
-  //}
-
-  //if (path == "/assets/fnordmetric.css") {
-  //  sendAsset(
-  //      response,
-  //      "fnordmetric-webui/fnordmetric-webui.css",
-  //      "text/css");
-  //  return true;
-  //}
-
-  //if (path == "/s/fnordmetric-webui.js") {
-  //  sendAsset(
-  //      response,
-  //      "fnordmetric-webui/fnordmetric-webui.js",
-  //      "text/javascript");
-  //  return true;
-  //}
-
-  //if (path == "/s/fontawesome.woff") {
-  //  sendAsset(
-  //      response,
-  //      "fnordmetric-webui/fontawesome.woff",
-  //      "application/x-font-woff");
-  //  return true;
-  //}
+  if (path == "/favicon.ico") {
+    response->setStatus(http::kStatusOK);
+    response->addHeader("Content-Type", "image/x-icon");
+    response->addBody(getAssetFile("favicon.ico"));
+    return;
+  }
 
   response->setStatus(http::kStatusNotFound);
   response->addHeader("Content-Type", "text/plain; charset=utf-8");
   response->addBody("not found");
 }
-
-//void AdminUI::sendAsset(
-//    http::HTTPResponse* response,
-//    const std::string& asset_path,
-//    const std::string& content_type) const {
-//  response->setStatus(http::kStatusOK);
-//  response->addHeader("Content-Type", content_type);
-//  response->addBody(util::Assets::getAsset(asset_path));
-//}
 
 std::string WebUI::getPreludeHTML() const {
   return getAssetFile("prelude.html");
