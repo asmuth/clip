@@ -186,13 +186,15 @@ FnordMetric.views["fnordmetric.metric.table"] = function(elem, params) {
         updatePath();
       });
 
-      li.addEventListener("mouseover", function(e) {
-        //console.log("highlight " + col.id + " column");
-      });
+      if (!col.hidden) {
+        li.addEventListener("mouseover", function(e) {
+          table.highlightColumn(col.key);
+        });
 
-      li.addEventListener("mouseout", function(e) {
-        //console.log("remove highlight " + col.id + " column");
-      });
+        li.addEventListener("mouseout", function(e) {
+          table.unhiglightColumn();
+        });
+      }
     });
   }
 

@@ -36,7 +36,8 @@
 .fnordmetric-metric-table .content .sidebar ul.value_columns li {
   display: block;
   width: 100%;
-  line-height: 24px;
+  line-height: 30px;
+  padding: 0 8px;
 }
 
 .fnordmetric-metric-table .content .sidebar ul.value_columns li i {
@@ -54,6 +55,10 @@
 
 .fnordmetric-metric-table .content .sidebar ul.value_columns li.selected i::before {
   content: "\f06e";
+}
+
+.fnordmetric-metric-table .content .sidebar ul.value_columns li.selected:hover {
+  background: #f6f8fa;
 }
 
 .fnordmetric-metric-table z-modal.filter .z-modal-header {

@@ -334,6 +334,10 @@ table.f-table tr:hover td {
   cursor: pointer;
 }
 
+table.f-table tr td.highlight {
+  background-color: #f6f8fa;
+}
+
 table.f-table tr i.sort_desc,
 table.f-table tr i.sort_asc {
   float: right;
