@@ -1,3 +1,7 @@
+.fnordmetric-metric-table .hidden {
+  display: none;
+}
+
 .fnordmetric-metric-table .content {
   width: 100%;
   display: flex;
@@ -50,4 +54,38 @@
 
 .fnordmetric-metric-table .content .sidebar ul.value_columns li.selected i::before {
   content: "\f06e";
+}
+
+.fnordmetric-metric-table z-modal.filter .z-modal-header {
+  background: rgba(25, 32, 37, 1);
+  color: #cdd3d8;
+}
+
+.fnordmetric-metric-table z-modal.filter .z-modal-content section {
+  padding: 8px 0 18px 0;
+}
+
+.fnordmetric-metric-table z-modal.filter .z-modal-content section.disabled {
+  pointer-events: none;
+  cursor: default;
+  opacity: 0.5;
+}
+
+.fnordmetric-metric-table z-modal.filter .z-modal-content section label {
+  line-height: 30px;
+  margin-right: 5px;
+  vertical-align: top;
+}
+
+.fnordmetric-metric-table z-modal.filter .z-modal-content section z-dropdown.inline z-dropdown-header {
+  line-height: 30px;
+  padding-left: 0;
+}
+
+.fnordmetric-metric-table z-modal.filter .z-modal-content section input {
+  vertical-align: top;
+}
+
+.fnordmetric-metric-table z-modal.filter .z-modal-footer button {
+  float: right;
 }

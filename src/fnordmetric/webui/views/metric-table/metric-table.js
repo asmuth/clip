@@ -99,7 +99,7 @@ FnordMetric.views["fnordmetric.metric.table"] = function(elem, params) {
     renderHeader();
     renderTable();
     renderValueColumsControl();
-
+    renderFilterControl();
   };
 
   var renderHeader = function(metric) {
@@ -131,7 +131,7 @@ FnordMetric.views["fnordmetric.metric.table"] = function(elem, params) {
       });
     }
 
-    //TODO if update setvisibleColumns
+    //TODO if update setVisibleColumns
     table.render(elem.querySelector(".fnordmetric-metric-table .metric-table"));
   };
 
@@ -194,5 +194,17 @@ FnordMetric.views["fnordmetric.metric.table"] = function(elem, params) {
         //console.log("remove highlight " + col.id + " column");
       });
     });
+  }
+
+  var renderFilterControl = function() {
+    var filter = new FnordMetric.MetricTableFilter(
+        elem.querySelector(".fnordmetric-metric-table z-modal.filter"));
+
+    elem.querySelector(".fnordmetric-metric-table .control i.filter")
+        .addEventListener("click", function(e) {
+          filter.render(view_cfg.getTableColumns());
+        });
+
+
   }
 }
