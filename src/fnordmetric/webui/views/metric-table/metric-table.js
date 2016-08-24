@@ -100,6 +100,7 @@ FnordMetric.views["fnordmetric.metric.table"] = function(elem, params) {
     renderTable();
     renderValueColumsControl();
     renderFilterControl();
+    renderEmbedControl();
   };
 
   var renderHeader = function(metric) {
@@ -211,5 +212,12 @@ FnordMetric.views["fnordmetric.metric.table"] = function(elem, params) {
         .addEventListener("click", function(e) {
           filter.render(view_cfg.getValue("filter"));
         });
+  }
+
+  var renderEmbedControl = function() {
+    elem.querySelector(".fnordmetric-metric-table .control i.embed")
+        .addEventListener("click", function() {
+          fEmbedPopup(elem, "").render();
+        }, false);
   }
 }
