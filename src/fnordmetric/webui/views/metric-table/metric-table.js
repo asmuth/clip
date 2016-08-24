@@ -45,17 +45,17 @@ FnordMetric.views["fnordmetric.metric.table"] = function(elem, params) {
     //REMOVE ME
     metric_cfg = {
       id_columns: [
-        { "id": "host", "name": "Host", "sortable": true },
-        { "id": "datacenter", "name": "Datacenter", "sortable": true },
+        { "id": "host", "name": "Host", "sortable": true, "type": "string" },
+        { "id": "datacenter", "name": "Datacenter", "sortable": true, "type": "string" },
       ],
       value_columns: [
-        { "id": "cpu_time", "name": "CPU Time", "sortable": true },
-        { "id": "mem_used", "name": "Memory used", "sortable": true },
-        { "id": "mem_free", "name": "Memory free", "sortable": true },
-        { "id": "uptime", "name": "Uptime", "sortable": true },
-        { "id": "load_avg", "name": "Load Average", "sortable": true },
-        { "id": "processes", "name": "Processes", "sortable": true },
-        { "id": "kernel_state", "name": "Kernel state", "sortable": true }
+        { "id": "cpu_time", "name": "CPU Time", "sortable": true, "type": "num" },
+        { "id": "mem_used", "name": "Memory used", "sortable": true, "type": "num" },
+        { "id": "mem_free", "name": "Memory free", "sortable": true, "type": "num" },
+        { "id": "uptime", "name": "Uptime", "sortable": true, "type": "num" },
+        { "id": "load_avg", "name": "Load Average", "sortable": true, "type": "num" },
+        { "id": "processes", "name": "Processes", "sortable": true, "type": "num" },
+        { "id": "kernel_state", "name": "Kernel state", "sortable": true, "type": "num" }
       ]
     };
     //REMOVE ME END
@@ -200,11 +200,14 @@ FnordMetric.views["fnordmetric.metric.table"] = function(elem, params) {
     var filter = new FnordMetric.MetricTableFilter(
         elem.querySelector(".fnordmetric-metric-table z-modal.filter"));
 
+    filter.onSubmit(function(filter_str) {
+      view_cfg.updateValue("filter", filter_str);
+      updatePath();
+    });
+
     elem.querySelector(".fnordmetric-metric-table .control i.filter")
         .addEventListener("click", function(e) {
-          filter.render(view_cfg.getTableColumns());
+          filter.render(view_cfg.getValue("filter"));
         });
-
-
   }
 }
