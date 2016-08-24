@@ -62,12 +62,21 @@ FnordMetric.MetricTableViewConfig = function(metric_cfg, uri_params) {
         }
       });
 
-      table_columns.push({
+      var col = {
         key: c.id,
         title: c.name,
-        hidden: hidden,
-        sortable: c.sortable
-      });
+        hidden: hidden
+      };
+
+      for (var prop in c) {
+        if (prop == "id" || prop == "name") {
+          continue;
+        }
+
+        col[prop] = c[prop]
+      }
+
+      table_columns.push(col);
     });
 
     return table_columns;
@@ -112,6 +121,10 @@ FnordMetric.MetricTableViewConfig = function(metric_cfg, uri_params) {
       order_by: cfg.order_by,
       order: cfg.order
     };
+
+    if (cfg.hasOwnProperty("filter")) {
+      param_cfg.filter = cfg.filter;
+    }
 
     var param_list = {
       cfg: JSON.stringify(param_cfg),
