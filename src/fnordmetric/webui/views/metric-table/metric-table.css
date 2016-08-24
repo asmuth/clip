@@ -60,30 +60,28 @@
   background: rgba(25, 32, 37, 1);
   color: #cdd3d8;
 }
-
-.fnordmetric-metric-table z-modal.filter .z-modal-content section {
-  padding: 8px 0 18px 0;
+.fnordmetric-metric-table z-modal.filter .z-modal-content .input_container {
+  padding: 18px 0 18px 0;
 }
 
-.fnordmetric-metric-table z-modal.filter .z-modal-content section.disabled {
-  pointer-events: none;
-  cursor: default;
-  opacity: 0.5;
-}
-
-.fnordmetric-metric-table z-modal.filter .z-modal-content section label {
+.fnordmetric-metric-table z-modal.filter .z-modal-content .input_container label {
   line-height: 30px;
   margin-right: 5px;
   vertical-align: top;
+  font-weight: 500;
+  font-size: 15px;
+  width: 62px;
 }
 
-.fnordmetric-metric-table z-modal.filter .z-modal-content section z-dropdown.inline z-dropdown-header {
-  line-height: 30px;
-  padding-left: 0;
-}
-
-.fnordmetric-metric-table z-modal.filter .z-modal-content section input {
+.fnordmetric-metric-table z-modal.filter .z-modal-content .input_container input {
   vertical-align: top;
+  width: 300px;
+}
+
+.fnordmetric-metric-table z-modal.filter .z-modal-content .input_container .description {
+  margin-top: 13px;
+  display: block;
+  margin-left: 69px;
 }
 
 .fnordmetric-metric-table z-modal.filter .z-modal-footer button {
