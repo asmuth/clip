@@ -2,55 +2,13 @@
   <div class="z-modal-header">Filter</div>
 
   <div class="z-modal-content">
+    <div class="input_container">
+      <label>Filter by:</label>
+      <input type="text" class="filter" />
 
-    <section>
-      <label>Column:</label>
-      <z-dropdown class="columns inline">
-        <z-dropdown-header data-static>
-          <z-dropdown-header-value>Choose</z-dropdown-header>
-        </z-dropdown-header>
-        <z-dropdown-flyout>
-          <z-dropdown-items></z-dropdown-items>
-        </z-dropdown-flyout>
-      </z-dropdown>
-    </section>
-
-    <section class="filter disabled">
-      <label>Filter:</label>
-      <z-dropdown class="filter_key string inline hidden">
-        <z-dropdown-header data-static>
-        </z-dropdown-header>
-        <z-dropdown-flyout>
-          <z-dropdown-items>
-            <z-dropdown-item data-value='equals'>Equals</z-dropdown-item>
-            <z-dropdown-item data-value='not_equals'>Not Equals</z-dropdown-item>
-            <z-dropdown-item data-value='begins_with'>Begins with</z-dropdown-item>
-            <z-dropdown-item data-value='begins_not_with'>Does not begin with</z-dropdown-item>
-            <z-dropdown-item data-value='ends_with'>Ends with</z-dropdown-item>
-            <z-dropdown-item data-value='ends_not_with'>Does not end with</z-dropdown-item>
-            <z-dropdown-item data-value='contains'>Contains</z-dropdown-item>
-            <z-dropdown-item data-value='contains_not'>Does not contain</z-dropdown-item>
-          </z-dropdown-items>
-        </z-dropdown-flyout>
-      </z-dropdown>
-      
-      <z-dropdown class="filter_key num inline">
-        <z-dropdown-header data-static>
-        </z-dropdown-header>
-        <z-dropdown-flyout>
-          <z-dropdown-items>
-            <z-dropdown-item data-value='greater'>Greater than</z-dropdown-item>
-            <z-dropdown-item data-value='greater_equal'>Greater than or equal</z-dropdown-item>
-            <z-dropdown-item data-value='less'>Less than</z-dropdown-item>
-            <z-dropdown-item data-value='less_equal'>Less than or equal</z-dropdown-item>
-            <z-dropdown-item data-value='top'>Top 10</z-dropdown-item>
-            <z-dropdown-item data-value='bottom'>Bottom 10</z-dropdown-item>
-          </z-dropdown-items>
-        </z-dropdown-flyout>
-      </z-dropdown>
-
-      <input class="filter_value" />
-    </section>
+      <span class="description">
+          Example: starts_with(server, 'ngnix')
+    </div>
   </div>
 
   <div class="z-modal-footer">
