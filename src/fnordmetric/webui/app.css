@@ -109,8 +109,11 @@
   -webkit-animation: fa-spin 1s infinite linear;
   animation: fa-spin 1s infinite linear;
 }
-.fa-eye {
+.fa-eye:before {
   content: "\f06e";
+}
+.fa-filter:before {
+  content: "\f0b0";
 }
 
 @-webkit-keyframes fa-spin {
@@ -174,7 +177,6 @@ body {
 input {
   width: 200px;
   height: 23px;
-  float:left;
   padding: 2px;
   font-size: 14px;
 }
