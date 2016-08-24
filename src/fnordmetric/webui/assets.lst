@@ -9,6 +9,7 @@ zui/components/z-dropdown/z-dropdown.js
 zui/components/z-dropdown/z-dropdown.css
 zui/widgets/z-table/z-table.js
 widgets/metric-selector/metric-selector.js
+util/f-table_util.js
 app.js
 app.css
 app.html
