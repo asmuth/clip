@@ -304,11 +304,6 @@ table.f-table tr.list_header {
   color: #60707f;
 }
 
-table.f-table tr.list_header i.sort {
-  float: right;
-  line-height: 40px;
-}
-
 table.f-table th,
 table.f-table td {
   text-align: left;
@@ -337,6 +332,30 @@ table.f-table tr:hover td {
   cursor: pointer;
 }
 
+table.f-table tr i.sort_desc,
+table.f-table tr i.sort_asc {
+  float: right;
+  line-height: 40px;
+  cursor: pointer;
+}
+
+i.sort_desc,
+i.sort_asc {
+  display: inline-block;
+  font: normal normal normal 14px/1 FontAwesome;
+  font-size: inherit;
+  text-rendering: auto;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+i.sort_asc::before {
+  content: "\f175";
+}
+
+i.sort_desc::before {
+  content: "\f176";
+}
 /**
 .load_foreground {
   position: absolute;
