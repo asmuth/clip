@@ -25,12 +25,12 @@ fMetricSelector = function(elem, metrics) {
       }
 
       var item = document.createElement("z-dropdown-item");
-      item.setAttribute("data-value", m.id);
-      item.innerHTML = "<z-checkbox></z-checkbox> " + m.name;
+      item.setAttribute("data-value", m.key);
+      item.innerHTML = "<z-checkbox></z-checkbox> " + m.title;
       items.push(item);
 
       if (!m.hidden) {
-        selected_metrics.push(m.id);
+        selected_metrics.push(m.key);
       }
     });
 

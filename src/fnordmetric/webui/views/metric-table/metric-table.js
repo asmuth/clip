@@ -1,7 +1,7 @@
 FnordMetric.views["fnordmetric.metric.table"] = function(elem, params) {
 
   var url_params = {};
-  var table = new zTable({});
+  var table;
 
   var view_cfg;
   var metric_cfg;
@@ -14,9 +14,6 @@ FnordMetric.views["fnordmetric.metric.table"] = function(elem, params) {
     zDomUtil.handleLinks(page, params.app.navigateTo);
     elem.appendChild(page);
 
-    table.onClick(function(r) {
-      params.app.navigateTo("/metrics/" + r.metric_id);
-    });
 
     loadMetricConfig();
   };
@@ -79,29 +76,20 @@ FnordMetric.views["fnordmetric.metric.table"] = function(elem, params) {
   };
 
   var renderTable = function() {
-    elem.querySelector(".fnordmetric-metric-table .metric-table")
-        .innerHTML = JSON.stringify(view_cfg.get());
+    //initialize table
+    if (!table) {
+      table = new zTable({columns: view_cfg.getTableColumns()});
+      table.onClick(function(r) {
+        params.app.navigateTo("/metrics/" + r.metric_id);
+      });
+    }
+
+    //TODO if update setvisibleColumns
+    table.render(elem.querySelector(".fnordmetric-metric-table .metric-table"));
   };
 
   var renderValueColumsControl = function() {
-    var displayed_columns = view_cfg.getValue("value_columns");
-    var value_columns = [];
-    metric_cfg.value_columns.forEach(function(c) {
-      var hidden = true;
-      displayed_columns.forEach(function(cc) {
-        if (c.id == cc.id) {
-          hidden = false;
-          return;
-        }
-      });
-
-      value_columns.push({
-        id: c.id,
-        name: c.name,
-        hidden: hidden
-      });
-    });
-
+    var value_columns = view_cfg.getValueTableColumns();
     renderValueColumnsDropdown(value_columns);
     renderValueColumnsSidebar(value_columns);
   }
@@ -115,13 +103,13 @@ FnordMetric.views["fnordmetric.metric.table"] = function(elem, params) {
     dropdown.addEventListener("change", function(e) {
       var columns = this.getValue().split(",");
       value_columns.forEach(function(c) {
-        var idx = columns.indexOf(c.id);
+        var idx = columns.indexOf(c.key);
         if (c.hidden && idx > -1) {
-          view_cfg.addColumn("value_columns", c.id);
+          view_cfg.addColumn("value_columns", c.key);
         }
 
         if (!c.hidden && idx == -1) {
-          view_cfg.removeColumn("value_columns", c.id);
+          view_cfg.removeColumn("value_columns", c.key);
         }
       });
 
@@ -134,7 +122,7 @@ FnordMetric.views["fnordmetric.metric.table"] = function(elem, params) {
         ".fnordmetric-metric-table .sidebar .value_columns");
     value_columns.forEach(function(col) {
       var li = document.createElement("li");
-      li.innerHTML = col.name;
+      li.innerHTML = col.title;
       var icon = document.createElement("i");
       icon.className = "fa";
       li.className = col.hidden ? "" : "selected";
@@ -144,9 +132,9 @@ FnordMetric.views["fnordmetric.metric.table"] = function(elem, params) {
 
       icon.addEventListener("click", function(e) {
         if (col.hidden) {
-          view_cfg.addColumn("value_columns", col.id);
+          view_cfg.addColumn("value_columns", col.key);
         } else {
-          view_cfg.removeColumn("value_columns", col.id);
+          view_cfg.removeColumn("value_columns", col.key);
         }
         update();
       });

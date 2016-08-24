@@ -16,6 +16,57 @@ FnordMetric.MetricTableViewConfig = function(metric_cfg, uri_params) {
     }
   }
 
+  /**
+    * Returns a combined array of id and value columns,
+    *whereas each column consists of key, title, hidden and
+    * optionally align, comparator, formatter and sortable
+    */
+  this.getTableColumns = function() {
+    var table_columns = [];
+    metric_cfg.id_columns.forEach(function(c) {
+      var hidden = true;
+      cfg.id_columns.forEach(function(cc) {
+        if (c.id == cc.id) {
+          hidden = false;
+          return;
+        }
+      });
+
+      table_columns.push({
+        key: c.id,
+        title: c.name,
+        hidden: hidden
+      });
+    });
+
+    return table_columns.concat(this.getValueTableColumns());
+  };
+
+  /**
+    * Returns an array of value columns, whereas each column consists of key,
+    * title, hidden and optionally align, comparator, formatter and sortable
+    */
+  this.getValueTableColumns = function() {
+    var table_columns = [];
+    metric_cfg.value_columns.forEach(function(c) {
+      var hidden = true;
+      cfg.value_columns.forEach(function(cc) {
+        if (c.id == cc.id) {
+          hidden = false;
+          return;
+        }
+      });
+
+      table_columns.push({
+        key: c.id,
+        title: c.name,
+        hidden: hidden
+      });
+    });
+
+    return table_columns;
+  }
+
   this.removeColumn = function(col_type, col_id) {
     if (!cfg.hasOwnProperty(col_type)) {
       return;
