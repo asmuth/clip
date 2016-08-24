@@ -14,13 +14,20 @@ FnordMetric.views["fnordmetric.metric.table"] = function(elem, params) {
     zDomUtil.handleLinks(page, params.app.navigateTo);
     elem.appendChild(page);
 
-
-    loadMetricConfig();
+    loadMetricConfig(function() {
+      view_cfg = new FnordMetric.MetricTableViewConfig(metric_cfg, url_params);
+      render();
+      fetchData();
+    });
   };
 
   this.destroy = function() {
     //query_mgr.closeAll();
   };
+
+  this.changePath = function(new_path) {
+    //TODO update view, fetch data
+  }
 
   var getUrlParams = function(path) {
     var p = {};
@@ -34,30 +41,56 @@ FnordMetric.views["fnordmetric.metric.table"] = function(elem, params) {
     return p;
   };
 
-  var loadMetricConfig = function() {
+  var loadMetricConfig = function(callback) {
     //REMOVE ME
     metric_cfg = {
       id_columns: [
-        { "id": "host", "name": "Host" },
-        { "id": "datacenter", "name": "Datacenter" },
+        { "id": "host", "name": "Host", "sortable": true },
+        { "id": "datacenter", "name": "Datacenter", "sortable": true },
       ],
       value_columns: [
-        { "id": "cpu_time", "name": "CPU Time" },
-        { "id": "mem_used", "name": "Memory used" },
-        { "id": "mem_free", "name": "Memory free" },
-        { "id": "uptime", "name": "Uptime" },
-        { "id": "load_avg", "name": "Load Average" },
-        { "id": "processes", "name": "Processes" },
-        { "id": "kernel_state", "name": "Kernel state" }
+        { "id": "cpu_time", "name": "CPU Time", "sortable": true },
+        { "id": "mem_used", "name": "Memory used", "sortable": true },
+        { "id": "mem_free", "name": "Memory free", "sortable": true },
+        { "id": "uptime", "name": "Uptime", "sortable": true },
+        { "id": "load_avg", "name": "Load Average", "sortable": true },
+        { "id": "processes", "name": "Processes", "sortable": true },
+        { "id": "kernel_state", "name": "Kernel state", "sortable": true }
       ]
     };
     //REMOVE ME END
 
-    view_cfg = new FnordMetric.MetricTableViewConfig(metric_cfg, url_params);
-    render();
+    callback();
   };
 
-  var update = function() {
+  var fetchData = function() {
+    var query = view_cfg.getQuery();
+    //TODO view_cfg.getQuery(), sendRequest
+
+    //REMOVE ME
+    var result = {
+      columns: ["host", "datacenter", "cpu_time", "mem_used", "mem_free", "uptime"],
+      rows: [
+        ["nue01", "nue", "14355625767", "104", "7", "233445"],
+        ["nue02", "nue", "14355625767", "104", "7", "233445"],
+        ["nue03", "nue", "14355625767", "104", "7", "233445"],
+        ["nue04", "nue", "14355625767", "104", "7", "233445"],
+        ["nue05", "nue", "14355625767", "104", "7", "233445"],
+        ["nue06", "nue", "14355625767", "104", "7", "233445"],
+        ["nue07", "nue", "14355625767", "104", "7", "233445"],
+        ["nue08", "nue", "14355625767", "104", "7", "233445"],
+        ["nue09", "nue", "14355625767", "104", "7", "233445"],
+        ["nue10", "nue", "14355625767", "104", "7", "233445"],
+        ["nue11", "nue", "14355625767", "104", "7", "233445"],
+        ["nue12", "nue", "14355625767", "104", "7", "233445"],
+      ]
+    };
+    //REMOVEME END
+
+    updateTable(result);
+  }
+
+  var updatePath = function() {
     params.app.navigateTo(
         params.route.args[0] + "?" + zURLUtil.buildQueryString(view_cfg.getParamList()));
   }
@@ -75,12 +108,26 @@ FnordMetric.views["fnordmetric.metric.table"] = function(elem, params) {
     header.innerHTML = url_params.metric;
   };
 
+  var updateTable = function(update) {
+    table.setRows(fTableUtil.buildRows(update.columns, update.rows));
+    renderTable();
+  }
+
   var renderTable = function() {
     //initialize table
     if (!table) {
       table = new zTable({columns: view_cfg.getTableColumns()});
+
+      /* navigate to id detail page */
       table.onClick(function(r) {
         params.app.navigateTo("/metrics/" + r.metric_id);
+      });
+
+      /* sort callback */
+      table.onSort(function(column, direction) {
+        view_cfg.updateValue("order", direction);
+        view_cfg.updateValue("order_by", column.key);
+        updatePath();
       });
     }
 
@@ -113,7 +160,7 @@ FnordMetric.views["fnordmetric.metric.table"] = function(elem, params) {
         }
       });
 
-      update();
+      updatePath();
     });
   }
 
@@ -136,7 +183,7 @@ FnordMetric.views["fnordmetric.metric.table"] = function(elem, params) {
         } else {
           view_cfg.removeColumn("value_columns", col.key);
         }
-        update();
+        updatePath();
       });
 
       li.addEventListener("mouseover", function(e) {

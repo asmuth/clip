@@ -4,6 +4,10 @@ FnordMetric.MetricTableViewConfig = function(metric_cfg, uri_params) {
     value_columns: []
   }
 
+  this.updateValue = function(key, value) {
+    cfg[key] = value;
+  }
+
   this.get = function() {
     return cfg;
   }
@@ -35,7 +39,8 @@ FnordMetric.MetricTableViewConfig = function(metric_cfg, uri_params) {
       table_columns.push({
         key: c.id,
         title: c.name,
-        hidden: hidden
+        hidden: hidden,
+        sortable: c.sortable
       });
     });
 
@@ -60,7 +65,8 @@ FnordMetric.MetricTableViewConfig = function(metric_cfg, uri_params) {
       table_columns.push({
         key: c.id,
         title: c.name,
-        hidden: hidden
+        hidden: hidden,
+        sortable: c.sortable
       });
     });
 
@@ -103,6 +109,7 @@ FnordMetric.MetricTableViewConfig = function(metric_cfg, uri_params) {
     var param_cfg = {
       value_columns: cfg.value_columns,
       id_columns: cfg.id_columns,
+      order_by: cfg.order_by,
       order: cfg.order
     };
 
@@ -112,6 +119,10 @@ FnordMetric.MetricTableViewConfig = function(metric_cfg, uri_params) {
     }
 
     return param_list;
+  }
+
+  this.getQuery = function() {
+    //TODO
   }
 
   var initialize = function() {
@@ -138,7 +149,8 @@ FnordMetric.MetricTableViewConfig = function(metric_cfg, uri_params) {
       }
 
       cfg.offset = 0;
-      cfg.order = cfg.value_columns[0].id;
+      cfg.order_by = cfg.value_columns[0].id;
+      cfg.order = "desc";
     }
 
     cfg.limit = 25;
