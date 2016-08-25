@@ -18,13 +18,14 @@ widgets/metric-selector/metric-selector.js
 widgets/embed-popup/embed_popup.js
 widgets/embed-popup/embed_popup.html
 util/f-table_util.js
+3rdparty/dygraph-combined.js
+3rdparty/codemirror.css
+3rdparty/codemirror.js
+3rdparty/codemirror-sql.js
 app.js
 app.css
 app.html
 routes.js
-codemirror.css
-codemirror.js
-codemirror-sql.js
 views/error/error.html
 views/error/error.js
 views/metric-list/metric-list.html
