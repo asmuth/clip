@@ -1,4 +1,4 @@
-FnordMetric.views["fnordmetric.metric.table"] = function(elem, params) {
+FnordMetric.views["fnordmetric.metric"] = function(elem, params) {
 
   var url_params = {};
   var table;
@@ -50,7 +50,7 @@ FnordMetric.views["fnordmetric.metric.table"] = function(elem, params) {
     //REMOVE ME
     metric_cfg = {
       id_columns: [
-        { "id": "host", "name": "Host", "sortable": true, "type": "string" },
+        { "id": "sensor", "name": "Host", "sortable": true, "type": "string" },
         { "id": "datacenter", "name": "Datacenter", "sortable": true, "type": "string" },
       ],
       value_columns: [
@@ -74,7 +74,7 @@ FnordMetric.views["fnordmetric.metric.table"] = function(elem, params) {
 
     //REMOVE ME
     var result = {
-      columns: ["host", "datacenter", "cpu_time", "mem_used", "mem_free", "uptime"],
+      columns: ["sensor", "datacenter", "cpu_time", "mem_used", "mem_free", "uptime"],
       rows: [
         ["nue01", "nue", "14355625767", "104", "7", "233445"],
         ["nue02", "nue", "14355625767", "104", "7", "233445"],
@@ -104,7 +104,7 @@ FnordMetric.views["fnordmetric.metric.table"] = function(elem, params) {
   var render = function() {
     renderHeader();
     renderTable();
-    renderValueColumsControl();
+    renderColumsControl();
     renderFilterControl();
     renderEmbedControl();
   };
@@ -115,11 +115,6 @@ FnordMetric.views["fnordmetric.metric.table"] = function(elem, params) {
     header.innerHTML = url_params.metric;
   };
 
-  var updateTable = function(update) {
-    table.setRows(fTableUtil.buildRows(update.columns, update.rows));
-    renderTable();
-  }
-
   var renderTable = function() {
     //initialize table
     if (!table) {
@@ -127,7 +122,7 @@ FnordMetric.views["fnordmetric.metric.table"] = function(elem, params) {
 
       /* navigate to id detail page */
       table.onClick(function(r) {
-        params.app.navigateTo("/metrics/" + r.metric_id);
+        params.app.navigateTo(params.route.args[0] + "/" + r.cells.sensor.value);
       });
 
       /* sort callback */
@@ -142,7 +137,12 @@ FnordMetric.views["fnordmetric.metric.table"] = function(elem, params) {
     table.render(elem.querySelector(".fnordmetric-metric-table .metric-table"));
   };
 
-  var renderValueColumsControl = function() {
+  var updateTable = function(update) {
+    table.setRows(fTableUtil.buildRows(update.columns, update.rows));
+    renderTable();
+  }
+
+  var renderColumsControl = function() {
     var value_columns = view_cfg.getValueTableColumns();
     renderValueColumnsDropdown(value_columns);
     renderValueColumnsSidebar(value_columns);

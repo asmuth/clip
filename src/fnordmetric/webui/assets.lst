@@ -36,3 +36,4 @@ views/metric-table/filter.js
 views/metric-table/metric-table.html
 views/metric-table/metric-table.js
 views/metric-table/metric-table.css
+views/metric-sensor/metric-sensor.js

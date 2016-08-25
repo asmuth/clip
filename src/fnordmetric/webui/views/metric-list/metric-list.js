@@ -1,4 +1,4 @@
-FnordMetric.views["fnordmetric.metric.list"] = function(elem, params) {
+FnordMetric.views["fnordmetric.list"] = function(elem, params) {
   var url_params = {};
   var table = new zTable({
     columns: [

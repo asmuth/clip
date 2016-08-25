@@ -13,11 +13,15 @@ FnordMetric.config = FnordMetric.config || {};
 
 FnordMetric.config.routes = [
   {
+    "route": new RegExp("/metrics/(.*)/(.*)"),
+    "view": "fnordmetric.metric.sensor",
+  },
+  {
     "route": new RegExp("/metrics/(.*)"),
-    "view": "fnordmetric.metric.table",
+    "view": "fnordmetric.metric",
   },
   {
     "route": "/metrics",
-    "view": "fnordmetric.metric.list",
+    "view": "fnordmetric.list",
   }
 ];
