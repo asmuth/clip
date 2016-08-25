@@ -118,6 +118,12 @@
 .fa-code:before {
   content: "\f121";
 }
+.fa-angle-double-left:before {
+  content: "\f100";
+}
+.fa-angle-double-right:before {
+  content: "\f101";
+}
 
 @-webkit-keyframes fa-spin {
   0% {
