@@ -78,5 +78,9 @@
 
 .fnordmetric-metric-sensor .content .chart_box_container .chart_box .chart {
   border-top: 1px solid #d1d1d1;
-  height: 150px;
+  padding: 22px 17px 13px 0;
+}
+
+.fnordmetric-metric-sensor .content .chart_box_container .chart_box .chart_canvas {
+  height: 160px;
 }

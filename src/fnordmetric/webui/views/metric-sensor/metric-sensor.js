@@ -12,7 +12,7 @@ FnordMetric.views["fnordmetric.metric.sensor"] = function(elem, params) {
     elem.appendChild(page);
 
     loadMetricConfig(function(metric_cfg) {
-      renderLoadingCharts(metric_cfg);
+      renderLoadingCharts(metric_cfg); //race condition ?
       fetchData();
     });
   };
@@ -55,23 +55,23 @@ FnordMetric.views["fnordmetric.metric.sensor"] = function(elem, params) {
   var fetchData = function() {
     //REMOVE ME
     var result = {
-      columns: ["sensor", "datacenter", "cpu_time", "mem_used", "mem_free", "uptime"],
+      metric: "mem_used",
+      columns: ["time", "mem_used"],
       rows: [
-        ["nue01", "nue", "14355625767", "104", "7", "233445"],
-        ["nue02", "nue", "14355625767", "104", "7", "233445"],
-        ["nue03", "nue", "14355625767", "104", "7", "233445"],
-        ["nue04", "nue", "14355625767", "104", "7", "233445"],
-        ["nue05", "nue", "14355625767", "104", "7", "233445"],
-        ["nue06", "nue", "14355625767", "104", "7", "233445"],
-        ["nue07", "nue", "14355625767", "104", "7", "233445"],
-        ["nue08", "nue", "14355625767", "104", "7", "233445"],
-        ["nue09", "nue", "14355625767", "104", "7", "233445"],
-        ["nue10", "nue", "14355625767", "104", "7", "233445"],
-        ["nue11", "nue", "14355625767", "104", "7", "233445"],
-        ["nue12", "nue", "14355625767", "104", "7", "233445"],
+        [1472132898544, 1233],
+        [1472132909164, 1635],
+        [1472132922054, 3125],
+        [1472132930592, 4222],
+        [1472132938844, 3346],
+        [1472132946423, 2023],
+        [1472132954422, 1334],
+        [1472132965900, 923]
       ]
     };
+
     //REMOVE ME END
+
+    renderCharts([result]);
   }
 
   var renderHeader = function(page) {
@@ -93,8 +93,53 @@ FnordMetric.views["fnordmetric.metric.sensor"] = function(elem, params) {
     zDomUtil.clearChildren(chart_box);
     metric_cfg.value_columns.forEach(function(c) {
       var html = chart_tpl.cloneNode(true);
+      html.setAttribute("data-metric", c.id);
       html.querySelector(".chart_title").innerHTML = c.name;
       chart_box.appendChild(html);
+    });
+  }
+
+  var renderCharts = function(results) {
+    results.forEach(function(r) {
+      var time_col_idx;
+      for (var i = 0; i < r.columns.length; i++) {
+        if (r.columns[i] == "time") {
+          time_col_idx = i;
+          break;
+        }
+      }
+
+      if (typeof time_col_idx !== "number") {
+        console.log("ERROR: no time column", r.columns);
+        return;
+      }
+
+      var rows = [];
+      r.rows.forEach(function(r) {
+        var row = [];
+        for (var i = 0; i < r.length; i++) {
+          if (i == time_col_idx) {
+            row.push(new Date(r[i]));
+          } else {
+            row.push(r[i]);
+          }
+        }
+
+        rows.push(row);
+      });
+
+
+      var chart_elem = elem.querySelector(
+          ".fnordmetric-metric-sensor .chart_box[data-metric='" + r.metric + "']");
+      new Dygraph(
+          chart_elem.querySelector(".chart_canvas"),
+          rows,
+          {
+            labels: r.columns,
+            title: r.title,
+            drawYGrid: true,
+            drawXGrid: false
+          });
     });
   }
 
