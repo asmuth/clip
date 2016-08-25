@@ -22,6 +22,11 @@
   min-height: 600px;
 }
 
+.fnordmetric-metric-table .content .table_box z-pager {
+  float: right;
+  margin: 13px 20px;
+}
+
 .fnordmetric-metric-table .content .sidebar h3 {
   margin-top: 0;
   font-weight: normal;

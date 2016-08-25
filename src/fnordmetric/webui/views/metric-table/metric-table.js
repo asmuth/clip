@@ -38,6 +38,11 @@ FnordMetric.views["fnordmetric.metric.table"] = function(elem, params) {
       p.config = cfg_param;
     }
 
+    var offset_param = zURLUtil.getParamValue(path, "offset");
+    if (offset_param) {
+      p.offset = offset_param;
+    }
+
     return p;
   };
 
@@ -88,6 +93,7 @@ FnordMetric.views["fnordmetric.metric.table"] = function(elem, params) {
     //REMOVEME END
 
     updateTable(result);
+    renderPagination(result.rows.length);
   }
 
   var updatePath = function() {
@@ -219,5 +225,18 @@ FnordMetric.views["fnordmetric.metric.table"] = function(elem, params) {
         .addEventListener("click", function() {
           fEmbedPopup(elem, "").render();
         }, false);
+  }
+
+  var renderPagination = function(num_result_items) {
+    var pager = elem.querySelector(".fnordmetric-metric-table .table_box z-pager");
+    pager.render(
+        50,
+        parseInt(view_cfg.getValue("offset"), 10),
+        parseInt(view_cfg.getValue("limit"), 10));
+
+    pager.addEventListener("z-pager-turn", function(e) {
+      view_cfg.updateValue("offset", this.getOffset());
+      updatePath();
+    }, false);
   }
 }

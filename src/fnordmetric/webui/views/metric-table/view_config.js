@@ -1,4 +1,8 @@
 FnordMetric.MetricTableViewConfig = function(metric_cfg, uri_params) {
+  var default_limit = 30;
+  var default_offset = 0;
+  var default_order = "desc";
+
   var cfg = {
     id_columns: [],
     value_columns: []
@@ -161,12 +165,20 @@ FnordMetric.MetricTableViewConfig = function(metric_cfg, uri_params) {
         cfg.value_columns = metric_cfg.value_columns.slice(0, max_value_cols);
       }
 
-      cfg.offset = 0;
       cfg.order_by = cfg.value_columns[0].id;
-      cfg.order = "desc";
     }
 
-    cfg.limit = 25;
+    if (!cfg.hasOwnProperty("offset")) {
+      cfg.offset = default_offset;
+    }
+
+    if (!cfg.hasOwnProperty("limit")) {
+      cfg.limit = default_limit;
+    }
+
+    if (!cfg.hasOwnProperty("order")) {
+      cfg.order = default_order;
+    }
   }
 
   initialize();
