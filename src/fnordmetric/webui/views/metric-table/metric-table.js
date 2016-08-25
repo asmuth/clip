@@ -4,7 +4,6 @@ FnordMetric.views["fnordmetric.metric"] = function(elem, params) {
   var table;
 
   var view_cfg;
-  var metric_cfg;
 
   this.initialize = function() {
     url_params = getUrlParams(params.path);
@@ -14,7 +13,7 @@ FnordMetric.views["fnordmetric.metric"] = function(elem, params) {
     zDomUtil.handleLinks(page, params.app.navigateTo);
     elem.appendChild(page);
 
-    loadMetricConfig(function() {
+    loadMetricConfig(function(metric_cfg) {
       view_cfg = new FnordMetric.MetricTableViewConfig(metric_cfg, url_params);
       render();
       fetchData();
@@ -48,7 +47,7 @@ FnordMetric.views["fnordmetric.metric"] = function(elem, params) {
 
   var loadMetricConfig = function(callback) {
     //REMOVE ME
-    metric_cfg = {
+    var metric_cfg = {
       id_columns: [
         { "id": "sensor", "name": "Host", "sortable": true, "type": "string" },
         { "id": "datacenter", "name": "Datacenter", "sortable": true, "type": "string" },
@@ -65,7 +64,7 @@ FnordMetric.views["fnordmetric.metric"] = function(elem, params) {
     };
     //REMOVE ME END
 
-    callback();
+    callback(metric_cfg);
   };
 
   var fetchData = function() {
