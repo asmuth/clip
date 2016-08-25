@@ -11,6 +11,8 @@ zui/components/z-modal/z-modal.js
 zui/components/z-modal/z-modal.css
 zui/components/z-tabbable/z-tabbable.js
 zui/components/z-tabbable/z-tabbable.css
+zui/components/z-pager/z-pager.js
+zui/components/z-pager/z-pager.css
 zui/widgets/z-table/z-table.js
 widgets/metric-selector/metric-selector.js
 widgets/embed-popup/embed_popup.js
