@@ -115,6 +115,9 @@
 .fa-filter:before {
   content: "\f0b0";
 }
+.fa-code:before {
+  content: "\f121";
+}
 
 @-webkit-keyframes fa-spin {
   0% {
@@ -137,6 +140,11 @@
   }
 }
 
+*,
+*:before,
+*:after {
+  box-sizing: border-box
+}
 
 body, html {
   margin: 0;
@@ -259,9 +267,10 @@ input {
 h1.page_header {
   font-size: 140%;
   font-weight: 400;
-  margin: 0 0 0 20px;
-  padding: 17px 0 10px 0;
+  padding: 0 0 0 20px;
+  margin: 0;
   color: #738694;
+  line-height: 68px;
 }
 
 h1.page_header em {

@@ -7,17 +7,19 @@
   display: flex;
   flex-direction: row;
   min-height: 100%;
+  border-top: 1px solid #d1d1d1;
 }
 
 .fnordmetric-metric-table .content .sidebar {
-  width: 160px;
+  width: 190px;
   padding: 20px;
+  border-right: 1px solid #d1d1d1;
+  background: rgba(0,0,0,0.04);
 }
 
 .fnordmetric-metric-table .content .table_box {
   flex: 1;
   min-height: 600px;
-  padding: 20px;
 }
 
 .fnordmetric-metric-table .content .sidebar h3 {
@@ -59,6 +61,61 @@
 
 .fnordmetric-metric-table .content .sidebar ul.value_columns li.selected:hover {
   background: #f6f8fa;
+}
+
+.fnordmetric-metric-table .content .controls {
+  background: rgba(0,0,0,0.04);
+  width: 100%;
+  overflow: visible;
+  padding: 12px 20px;
+  height: 57px;
+}
+
+.fnordmetric-metric-table .content .controls .control {
+  float: right;
+  height: 38px;
+  line-height: 38px;
+}
+
+.fnordmetric-metric-table .content .controls .control:first-child {
+  margin-left: 10px;
+}
+
+.fnordmetric-metric-table .content .controls .control label {
+  font-size: 12px;
+  font-weight: 400;
+  vertical-align: top;
+  margin-right: 5px;
+}
+
+.fnordmetric-metric-table .content .controls .control i {
+  padding: 0 8px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.fnordmetric-metric-table .content .controls .control i:hover {
+  cursor: pointer;
+  color: #333;
+}
+
+.fnordmetric-metric-table .content .controls .control z-dropdown.inline z-dropdown-header {
+  line-height: 38px;
+  padding-left: 0;
+  font-size: 12px;
+}
+
+.fnordmetric-metric-table .content .controls .control z-dropdown.inline z-dropdown-flyout {
+  left: -22px;
+  margin-top: -3px;
+}
+
+.fnordmetric-metric-table .content table.f-table {
+  margin-top: 0;
+}
+
+.fnordmetric-metric-table .content table.f-table th {
+  background: #fff;
 }
 
 .fnordmetric-metric-table z-modal.filter .z-modal-header {
