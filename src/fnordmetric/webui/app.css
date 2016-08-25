@@ -279,9 +279,15 @@ h1.page_header {
   line-height: 68px;
 }
 
+h1.page_header a,
 h1.page_header em {
   font-style: normal;
   color: #394b59;
+  text-decoration: none;
+}
+
+h1.page_header a:first-child {
+  color: #738694;
 }
 
 /** table */
