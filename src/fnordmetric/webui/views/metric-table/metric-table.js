@@ -49,6 +49,7 @@ FnordMetric.views["fnordmetric.metric"] = function(elem, params) {
     //REMOVE ME
     var metric_cfg = {
       id_columns: [
+        { "id": "time", "name": "Time", "sortable": true, "type": "string" },
         { "id": "sensor", "name": "Host", "sortable": true, "type": "string" },
         { "id": "datacenter", "name": "Datacenter", "sortable": true, "type": "string" },
       ],

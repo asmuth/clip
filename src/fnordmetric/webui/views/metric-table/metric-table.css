@@ -30,6 +30,7 @@
 .fnordmetric-metric-table .content .table_box z-pager {
   float: right;
   margin: 13px 20px;
+  font-size: 13px;
 }
 
 /* sidebar filter */
@@ -148,7 +149,6 @@
 .fnordmetric-metric-table .content table.f-table {
   margin-top: 0;
   border-top: 1px solid #d1d1d1;
-  font-size: 13px;
 }
 
 .fnordmetric-metric-table .content table.f-table th,
