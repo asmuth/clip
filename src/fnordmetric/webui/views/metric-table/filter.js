@@ -48,7 +48,7 @@ FnordMetric.MetricTableFilter = function(elem) {
       } else {
         //new filter has been created
         submit_callbacks.forEach(function(cb) {
-          cb(filter)
+          cb(new_filter_str)
         });
       }
 

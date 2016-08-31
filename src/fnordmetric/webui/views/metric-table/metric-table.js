@@ -207,18 +207,24 @@ FnordMetric.views["fnordmetric.metric"] = function(elem, params) {
   //}
 
   var renderFilterList = function() {
-    var filter_strs = view_cfg.getValue("filter");
-    //REMOVE ME
-    //filter_strs = ["hostname = nue01", "datacenter = nue"];
-    //REMOVEME END
-    if (!filter_strs) {
-      //FIXME render empty filter list
-      return;
-    }
-
+    var filter_strs = view_cfg.getValue("filter") ? view_cfg.getValue("filter") : [];
     var filter_ctrl = new FnordMetric.MetricTableFilter(
         elem.querySelector(".fnordmetric-metric-table z-modal.filter"));
 
+    /* add a new filter */
+    var add_link = elem.querySelector(
+        ".fnordmetric-metric-table .sidebar a.add_filter");
+    add_link.addEventListener("click", function(e) {
+      filter_ctrl.render();
+    }, false);
+    filter_ctrl.onSubmit(function(filter_str) {
+      console.log(filter_str);
+      filter_strs.push(filter_str);
+      view_cfg.updateValue("filter", filter_strs);
+      updatePath();
+    });
+
+    /* render exisiting filter list */
     var flist_elem = elem.querySelector(
         ".fnordmetric-metric-table .sidebar .filter_list");
     var felem_tpl = zTemplateUtil.getTemplate(
@@ -233,13 +239,6 @@ FnordMetric.views["fnordmetric.metric"] = function(elem, params) {
       });
 
       flist_elem.appendChild(felem);
-    });
-
-    /* add a new filter */
-    filter_ctrl.onSubmit(function(filter_str) {
-      filter_strs.push(filter_str);
-      view_cfg.updateValue("filter", filter_strs);
-      updatePath();
     });
 
     /* change an existing filter */

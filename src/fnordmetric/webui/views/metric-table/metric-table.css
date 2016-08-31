@@ -63,6 +63,14 @@
   background: #e8e8e8;
 }
 
+.fnordmetric-metric-table .content .sidebar a.add_filter {
+  font-size: 13px;
+  display: block;
+  line-height: 24px;
+  margin-top: 14px;
+  text-align: center;
+}
+
 /**
 .fnordmetric-metric-table .content .sidebar ul.value_columns {
   margin: 0;

@@ -5,22 +5,10 @@
     <div class="content">
 
       <div class="sidebar">
-        <div class="filter">
-          <div class="filter_title">
-            <a class="link edit">Edit</a>
-            <h4>Filter</h4>
-          </div>
-          <div class="filter_value">hostname = nue01</div>
+        <div class="filter_list">
         </div>
 
-        <div class="filter">
-          <div class="filter_title">
-            <a class="link edit">Edit</a>
-            <h4>Filter</h4>
-          </div>
-          <div class="filter_value">hostname = nue01</div>
-        </div>
-
+        <a class="link add_filter">Add a Filter</a>
       </div>
 
       <div class="table_box">
@@ -83,3 +71,12 @@
   </div>
 </template>
 
+<template id="fnordmetric-metric-table-filter-list-elem-tpl">
+  <div class="filter">
+    <div class="filter_title">
+      <a class="link edit">Edit</a>
+      <h4>Filter</h4>
+    </div>
+    <div class="filter_value"></div>
+  </div>
+</template>
