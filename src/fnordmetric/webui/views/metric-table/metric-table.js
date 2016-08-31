@@ -103,8 +103,8 @@ FnordMetric.views["fnordmetric.metric"] = function(elem, params) {
   var render = function() {
     renderHeader();
     renderTable();
-    renderColumsControl();
-    renderFilterControl();
+    //renderColumsControl();
+    //renderFilterControl();
     renderEmbedControl();
   };
 
@@ -220,7 +220,7 @@ FnordMetric.views["fnordmetric.metric"] = function(elem, params) {
   }
 
   var renderEmbedControl = function() {
-    elem.querySelector(".fnordmetric-metric-table .control i.embed")
+    elem.querySelector(".fnordmetric-metric-table .control.embed")
         .addEventListener("click", function() {
           fEmbedPopup(elem, "").render();
         }, false);

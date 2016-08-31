@@ -5,32 +5,53 @@
     <div class="content">
 
       <div class="sidebar">
-        <h3>Measurements</h3>
-        <ul class="value_columns"></ul>
+        <div class="filter">
+          <div class="filter_title">
+            <a class="link edit">Edit</a>
+            <h4>Filter</h4>
+          </div>
+          <div class="filter_value">hostname = nue01</div>
+        </div>
+
+        <div class="filter">
+          <div class="filter_title">
+            <a class="link edit">Edit</a>
+            <h4>Filter</h4>
+          </div>
+          <div class="filter_value">hostname = nue01</div>
+        </div>
+
       </div>
 
       <div class="table_box">
+
         <div class="controls">
-          <div class="control">
-            <label>Display:</label>
-            <z-dropdown class="value_columns inline">
-              <z-dropdown-header data-static>
-                <z-dropdown-header-value>Metrics</z-dropdown-header>
+          <div class="control left">
+            <label>Timerange:</label>
+            <!-- <z-daterangepicker></z-daterangepicker> -->
+          </div>
+          <div class="control left">
+            <label>Compare To:</label>
+            <z-dropdown class="inline compare">
+              <z-dropdown-header>
+                <z-dropdown-header-value>&mdash;</z-dropdown-header-value>
               </z-dropdown-header>
               <z-dropdown-flyout>
-                <z-dropdown-items></z-dropdown-items>
+                <z-dropdown-items>
+                  <z-dropdown-item>An hour ago</z-dropdown-item>
+                  <z-dropdown-item data-selected>Yesterday</z-dropdown-item>
+                  <z-dropdown-item>Last week</z-dropdown-item>
+                  <z-dropdown-item>Last month</z-dropdown-item>
+                </z-dropdown-items>
               </z-dropdown-flyout>
             </z-dropdown>
           </div>
-          <div class="control">
-            <i class="filter fa fa-filter"></i>
-          </div>
 
-          <div class="control">
-            <i class="embed fa fa-code"></i>
-          </div>
-
+          <a class="control link api">API</a>
+          <a class="control link download">Download</a>
+          <a class="control link embed">Embed</a>
         </div>
+
         <table class="f-table metric-table">
         </table>
 
@@ -43,6 +64,10 @@
             <i class="fa fa-angle-double-right"></i>
           </z-pager-tooltip>
         </z-pager>
+      </div>
+
+      <div class="sidebar right">
+
       </div>
 
     </div>

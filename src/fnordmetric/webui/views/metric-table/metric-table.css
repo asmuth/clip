@@ -11,15 +11,20 @@
 }
 
 .fnordmetric-metric-table .content .sidebar {
-  width: 190px;
-  padding: 20px;
-  border-right: 1px solid #d1d1d1;
+  width: 208px;
+  padding: 0 20px 0 14px;
   background: rgba(0,0,0,0.04);
+}
+
+.fnordmetric-metric-table .content .sidebar.right {
+  width: 250px;
 }
 
 .fnordmetric-metric-table .content .table_box {
   flex: 1;
   min-height: 600px;
+  border-left: 1px solid #d1d1d1;
+  border-right: 1px solid #d1d1d1;
 }
 
 .fnordmetric-metric-table .content .table_box z-pager {
@@ -27,13 +32,37 @@
   margin: 13px 20px;
 }
 
-.fnordmetric-metric-table .content .sidebar h3 {
-  margin-top: 0;
-  font-weight: normal;
-  color: #394b59;
-  font-size: 15px;
+/* sidebar filter */
+.fnordmetric-metric-table .content .sidebar .filter {
+  font-size: 12px;
+  border-bottom: 1px solid #d9d9d9;
+  padding: 14px 0 10px 0;
 }
 
+.fnordmetric-metric-table .content .sidebar .filter .filter_title {
+  line-height: 18px;
+}
+
+.fnordmetric-metric-table .content .sidebar .filter .filter_title h4 {
+  margin: 0;
+  font-weight: 500;
+  text-transform: uppercase;
+}
+
+.fnordmetric-metric-table .content .sidebar .filter a.link.edit {
+  font-size: 11px;
+  float: right;
+}
+
+.fnordmetric-metric-table .content .sidebar .filter .filter_value {
+  font-family: monospace;
+  padding: 0 9px;
+  margin-top: 5px;
+  line-height: 28px;
+  background: #e8e8e8;
+}
+
+/**
 .fnordmetric-metric-table .content .sidebar ul.value_columns {
   margin: 0;
   padding: 0;
@@ -67,23 +96,24 @@
 .fnordmetric-metric-table .content .sidebar ul.value_columns li.selected:hover {
   background: #f6f8fa;
 }
-
+**/
 .fnordmetric-metric-table .content .controls {
   background: rgba(0,0,0,0.04);
   width: 100%;
   overflow: visible;
-  padding: 12px 20px;
-  height: 57px;
+  height: 37px;
 }
 
 .fnordmetric-metric-table .content .controls .control {
   float: right;
   height: 38px;
-  line-height: 38px;
+  line-height: 40px;
+  margin: 0 15px 0 10px;
+  font-size: 13px;
 }
 
-.fnordmetric-metric-table .content .controls .control:first-child {
-  margin-left: 10px;
+.fnordmetric-metric-table .content .controls .control.left {
+  float: left;
 }
 
 .fnordmetric-metric-table .content .controls .control label {
@@ -117,9 +147,12 @@
 
 .fnordmetric-metric-table .content table.f-table {
   margin-top: 0;
+  border-top: 1px solid #d1d1d1;
+  font-size: 13px;
 }
 
-.fnordmetric-metric-table .content table.f-table th {
+.fnordmetric-metric-table .content table.f-table th,
+.fnordmetric-metric-table .content table.f-table td {
   background: #fff;
 }
 
