@@ -104,6 +104,7 @@ FnordMetric.views["fnordmetric.metric"] = function(elem, params) {
   var render = function() {
     renderHeader();
     renderTable();
+    renderFilterList();
     //renderColumsControl();
     //renderFilterControl();
     renderEmbedControl();
@@ -142,66 +143,124 @@ FnordMetric.views["fnordmetric.metric"] = function(elem, params) {
     renderTable();
   }
 
-  var renderColumsControl = function() {
-    var value_columns = view_cfg.getValueTableColumns();
-    renderValueColumnsDropdown(value_columns);
-    renderValueColumnsSidebar(value_columns);
-  }
+  //var renderColumsControl = function() {
+  //  var value_columns = view_cfg.getValueTableColumns();
+  //  renderValueColumnsDropdown(value_columns);
+  //  renderValueColumnsSidebar(value_columns);
+  //}
 
-  var renderValueColumnsDropdown = function(value_columns) {
-    var dropdown = elem.querySelector(
-        ".fnordmetric-metric-table z-dropdown.value_columns");
-    var selector = new fMetricSelector(dropdown, value_columns);
-    selector.render();
+  //var renderValueColumnsDropdown = function(value_columns) {
+  //  var dropdown = elem.querySelector(
+  //      ".fnordmetric-metric-table z-dropdown.value_columns");
+  //  var selector = new fMetricSelector(dropdown, value_columns);
+  //  selector.render();
 
-    dropdown.addEventListener("change", function(e) {
-      var columns = this.getValue().split(",");
-      value_columns.forEach(function(c) {
-        var idx = columns.indexOf(c.key);
-        if (c.hidden && idx > -1) {
-          view_cfg.addColumn("value_columns", c.key);
-        }
+  //  dropdown.addEventListener("change", function(e) {
+  //    var columns = this.getValue().split(",");
+  //    value_columns.forEach(function(c) {
+  //      var idx = columns.indexOf(c.key);
+  //      if (c.hidden && idx > -1) {
+  //        view_cfg.addColumn("value_columns", c.key);
+  //      }
 
-        if (!c.hidden && idx == -1) {
-          view_cfg.removeColumn("value_columns", c.key);
-        }
+  //      if (!c.hidden && idx == -1) {
+  //        view_cfg.removeColumn("value_columns", c.key);
+  //      }
+  //    });
+
+  //    updatePath();
+  //  });
+  //}
+
+  //var renderValueColumnsSidebar = function(value_columns) {
+  //  var ul = elem.querySelector(
+  //      ".fnordmetric-metric-table .sidebar .value_columns");
+  //  value_columns.forEach(function(col) {
+  //    var li = document.createElement("li");
+  //    li.innerHTML = col.title;
+  //    var icon = document.createElement("i");
+  //    icon.className = "fa";
+  //    li.className = col.hidden ? "" : "selected";
+
+  //    li.appendChild(icon);
+  //    ul.appendChild(li);
+
+  //    icon.addEventListener("click", function(e) {
+  //      if (col.hidden) {
+  //        view_cfg.addColumn("value_columns", col.key);
+  //      } else {
+  //        view_cfg.removeColumn("value_columns", col.key);
+  //      }
+  //      updatePath();
+  //    });
+
+  //    if (!col.hidden) {
+  //      li.addEventListener("mouseover", function(e) {
+  //        table.highlightColumn(col.key);
+  //      });
+
+  //      li.addEventListener("mouseout", function(e) {
+  //        table.unhiglightColumn();
+  //      });
+  //    }
+  //  });
+  //}
+
+  var renderFilterList = function() {
+    var filter_strs = view_cfg.getValue("filter");
+    //REMOVE ME
+    //filter_strs = ["hostname = nue01", "datacenter = nue"];
+    //REMOVEME END
+    if (!filter_strs) {
+      //FIXME render empty filter list
+      return;
+    }
+
+    var filter_ctrl = new FnordMetric.MetricTableFilter(
+        elem.querySelector(".fnordmetric-metric-table z-modal.filter"));
+
+    var flist_elem = elem.querySelector(
+        ".fnordmetric-metric-table .sidebar .filter_list");
+    var felem_tpl = zTemplateUtil.getTemplate(
+        "fnordmetric-metric-table-filter-list-elem-tpl");
+
+    filter_strs.forEach(function(f) {
+      var felem = felem_tpl.cloneNode(true);
+      felem.querySelector(".filter_value").innerHTML = f;
+
+      felem.querySelector(".edit").addEventListener("click", function(e) {
+        filter_ctrl.render(f);
       });
 
+      flist_elem.appendChild(felem);
+    });
+
+    /* add a new filter */
+    filter_ctrl.onSubmit(function(filter_str) {
+      filter_strs.push(filter_str);
+      view_cfg.updateValue("filter", filter_strs);
       updatePath();
     });
-  }
 
-  var renderValueColumnsSidebar = function(value_columns) {
-    var ul = elem.querySelector(
-        ".fnordmetric-metric-table .sidebar .value_columns");
-    value_columns.forEach(function(col) {
-      var li = document.createElement("li");
-      li.innerHTML = col.title;
-      var icon = document.createElement("i");
-      icon.className = "fa";
-      li.className = col.hidden ? "" : "selected";
-
-      li.appendChild(icon);
-      ul.appendChild(li);
-
-      icon.addEventListener("click", function(e) {
-        if (col.hidden) {
-          view_cfg.addColumn("value_columns", col.key);
-        } else {
-          view_cfg.removeColumn("value_columns", col.key);
-        }
-        updatePath();
-      });
-
-      if (!col.hidden) {
-        li.addEventListener("mouseover", function(e) {
-          table.highlightColumn(col.key);
-        });
-
-        li.addEventListener("mouseout", function(e) {
-          table.unhiglightColumn();
-        });
+    /* change an existing filter */
+    filter_ctrl.onChange(function(new_filter_str, old_filter_str) {
+      var idx = filter_strs.indexOf(old_filter_str);
+      if (idx > -1) {
+        filter_strs[idx] = new_filter_str;
       }
+
+      view_cfg.updateValue("filter", filter_strs);
+      updatePath();
+    });
+
+    /* remove an exisiting filter */
+    filter_ctrl.onDelete(function(old_filter_str) {
+      var idx = filter_strs.indexOf(old_filter_str);
+      if (idx > -1) {
+        filter_strs.splice(idx, 1);
+      }
+      view_cfg.updateValue("filter", filter_strs);
+      updatePath();
     });
   }
 

@@ -149,8 +149,9 @@ FnordMetric.MetricTableViewConfig = function(metric_cfg, uri_params) {
         cfg.offset = uri_params.offset;
       }
 
-    } else {
-      //build default config
+    } else { //build default config
+
+      //columns to display
       var max_id_cols = 3;
       var max_value_cols = 4;
 
@@ -165,6 +166,7 @@ FnordMetric.MetricTableViewConfig = function(metric_cfg, uri_params) {
         cfg.value_columns = metric_cfg.value_columns.slice(0, max_value_cols);
       }
 
+      // order
       cfg.order_by = cfg.value_columns[0].id;
     }
 
