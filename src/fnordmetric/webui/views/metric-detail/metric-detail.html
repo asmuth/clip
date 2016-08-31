@@ -1,0 +1,76 @@
+<template id="fnordmetric-metric-detail-tpl">
+  <div class="fnordmetric-metric-table">
+    <div class="view_control">
+      <i class="table_view fa fa-table"></i>
+      <i class="timeseries_view fa fa-area-chart"></i>
+    </div>
+    <h1 class="page_header">Metrics &rsaquo; <em class='metric_name'></em></h1>
+
+    <div class="content">
+
+      <div class="sidebar">
+        <div class="filter_list">
+        </div>
+
+        <a class="link add_filter">Add a Filter</a>
+      </div>
+
+      <div class="table_box">
+
+        <div class="controls">
+          <div class="control left">
+            <label>Timerange:</label>
+            <!-- <z-daterangepicker></z-daterangepicker> -->
+          </div>
+          <div class="control left">
+            <label>Compare To:</label>
+            <z-dropdown class="inline compare">
+              <z-dropdown-header>
+                <z-dropdown-header-value>&mdash;</z-dropdown-header-value>
+              </z-dropdown-header>
+              <z-dropdown-flyout>
+                <z-dropdown-items>
+                  <z-dropdown-item>An hour ago</z-dropdown-item>
+                  <z-dropdown-item data-selected>Yesterday</z-dropdown-item>
+                  <z-dropdown-item>Last week</z-dropdown-item>
+                  <z-dropdown-item>Last month</z-dropdown-item>
+                </z-dropdown-items>
+              </z-dropdown-flyout>
+            </z-dropdown>
+          </div>
+
+          <a class="control link api">API</a>
+          <a class="control link download">Download</a>
+          <a class="control link embed">Embed</a>
+        </div>
+
+        <div class="view_content"></div>
+      </div>
+
+      <div class="sidebar right">
+
+      </div>
+
+    </div>
+
+    <z-modal class="filter">
+      <z-modal-box>
+        <z-modal-close-icon></z-modal-close-icon>
+        <div class="inner">
+        </div>
+      </z-modal-box>
+    </z-modal>
+
+  </div>
+</template>
+
+<template id="fnordmetric-metric-table-filter-list-elem-tpl">
+  <div class="filter">
+    <div class="filter_title">
+      <a class="link edit">Edit</a>
+      <h4>Filter</h4>
+    </div>
+    <div class="filter_value"></div>
+  </div>
+</template>
+
