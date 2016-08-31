@@ -124,6 +124,9 @@
 .fa-angle-double-right:before {
   content: "\f101";
 }
+.fa-caret-down:before {
+  content: "\f0d7";
+}
 
 @-webkit-keyframes fa-spin {
   0% {
@@ -167,14 +170,14 @@ body {
 
 .le_fnord {
   float: left;
-  line-height: 49px;
+  line-height: 38px;
   color: #cdd3d8;
   margin: 0;
   padding: 0;
   font-family: "Arial";
-  width: 51px;
+  width: 43px;
   text-align: center;
-  font-size: 24px;
+  font-size: 21px;
   border-right: 1px solid #2e3135;
 }
 .fancy_button {
@@ -198,13 +201,22 @@ input {
 
 .viewport {
   min-width: 900px;
-  margin-top: 49px;
+  margin-top: 38px;
+}
+
+/** link */
+a {
+  text-decoration: none;
+}
+
+a.link {
+  color: #3976BE;
 }
 
 /** headbar */
 .headbar {
   min-width: 900px;
-  height: 49px;
+  height: 38px;
   top: 0;
   position: absolute;
   left: 0;
@@ -214,22 +226,15 @@ input {
   border-bottom: rgba(24, 31, 36, 1);
 }
 
-.headbar a h1 i {
-  font-size:11px;
-  margin-right:8px;
-  position:relative;
-  top:-1px;
-}
-
-.headbar a h1 {
+.headbar a {
   font-weight: 400;
-  font-size: 100%;
-  line-height: 50px;
-  height: 49px;
-  padding: 0 25px;
+  font-size: 95%;
+  line-height: 39px;
+  height: 38px;
+  padding: 0 19px;
   margin: 0;
   float: left;
-  color: #cdd3d8;
+  color: #efefef;
 }
 
 .headbar a.smallpadding h1 {
@@ -276,7 +281,7 @@ h1.page_header {
   padding: 0 0 0 20px;
   margin: 0;
   color: #738694;
-  line-height: 68px;
+  line-height: 50px;
 }
 
 h1.page_header a,
@@ -295,25 +300,7 @@ table.f-table {
   width: 100%;
   margin-top: 5px;
   border-collapse: collapse;
-  font-size: 90%;
-}
-
-table.f-table th {
-  padding: 10px 0 10px 10px;
-  background-color: rgba(0,0,0,0.04);
-  font-weight: normal;
-}
-
-table.f-table tr {
-  border-bottom: 1px solid #dbdedf;
-}
-
-table.f-table tr:hover td  {
-  background-color: #d7e4f2;
-}
-
-table.f-table td {
-  padding: 10px 0 10px 10px;
+  font-size: 13px;
 }
 
 table.f-table tr {
@@ -327,23 +314,27 @@ table.f-table tr.list_header {
   color: #60707f;
 }
 
-table.f-table th,
-table.f-table td {
+table.f-table thead th,
+table.f-table tbody td {
   text-align: left;
   font-weight: 400;
   border: none;
-  height: 38px;
-  line-height: 38px;
-  font-size: 109%;
-  padding: 0 20px;
+  line-height: 1em;
+  padding: .8em;
 }
 
-table.f-table th {
-  line-height: 40px;
+table.f-table tbody td {
+  padding: .7em .8em;
+  vertical-align: middle;
+  border-top: 1px solid #e1e1e1;
 }
 
-table.f-table th {
-  border-right: 1px solid rgb(226, 232, 237);
+table.f-table thead th {
+  border-right: none;
+  font-weight: 500;
+  color: rgba(0,0,0,0.8);
+  box-shadow: 0 1px 2px rgba(0,0,0,.09);
+  border-bottom: 1px solid #e1e1e1;
 }
 
 table.f-table .clickable:hover {
@@ -362,7 +353,7 @@ table.f-table tr td.highlight {
 table.f-table tr i.sort_desc,
 table.f-table tr i.sort_asc {
   float: right;
-  line-height: 40px;
+  line-height: 1em;
   cursor: pointer;
 }
 
