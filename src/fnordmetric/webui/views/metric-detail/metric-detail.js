@@ -68,28 +68,48 @@ FnordMetric.views["fnordmetric.metric"] = function(elem, params) {
     //TODO view_cfg.getQuery(), sendRequest
 
     //REMOVE ME
-    var result = {
-      columns: ["sensor", "datacenter", "cpu_time", "mem_used", "mem_free", "uptime"],
-      rows: [
-        ["nue01", "nue", "14355625767", "104", "7", "233445"],
-        ["nue02", "nue", "14355625767", "104", "7", "233445"],
-        ["nue03", "nue", "14355625767", "104", "7", "233445"],
-        ["nue04", "nue", "14355625767", "104", "7", "233445"],
-        ["nue05", "nue", "14355625767", "104", "7", "233445"],
-        ["nue06", "nue", "14355625767", "104", "7", "233445"],
-        ["nue07", "nue", "14355625767", "104", "7", "233445"],
-        ["nue08", "nue", "14355625767", "104", "7", "233445"],
-        ["nue09", "nue", "14355625767", "104", "7", "233445"],
-        ["nue10", "nue", "14355625767", "104", "7", "233445"],
-        ["nue11", "nue", "14355625767", "104", "7", "233445"],
-        ["nue12", "nue", "14355625767", "104", "7", "233445"],
-      ]
-    };
+    var results = [];
+    if (view_cfg.getValue("view") == "table") {
+      results.push({
+        columns: ["sensor", "datacenter", "cpu_time", "mem_used", "mem_free", "uptime"],
+        rows: [
+          ["nue01", "nue", "14355625767", "104", "7", "233445"],
+          ["nue02", "nue", "14355625767", "104", "7", "233445"],
+          ["nue03", "nue", "14355625767", "104", "7", "233445"],
+          ["nue04", "nue", "14355625767", "104", "7", "233445"],
+          ["nue05", "nue", "14355625767", "104", "7", "233445"],
+          ["nue06", "nue", "14355625767", "104", "7", "233445"],
+          ["nue07", "nue", "14355625767", "104", "7", "233445"],
+          ["nue08", "nue", "14355625767", "104", "7", "233445"],
+          ["nue09", "nue", "14355625767", "104", "7", "233445"],
+          ["nue10", "nue", "14355625767", "104", "7", "233445"],
+          ["nue11", "nue", "14355625767", "104", "7", "233445"],
+          ["nue12", "nue", "14355625767", "104", "7", "233445"],
+        ]
+      });
+    } else {
+      for (var i = 0; i < 5; i++) {
+        results.push({
+          metric: "mem_used",
+          columns: ["time", "mem_used"],
+          rows: [
+            [1472132898544, 1233],
+            [1472132909164, 1635],
+            [1472132922054, 3125],
+            [1472132930592, 4222],
+            [1472132938844, 3346],
+            [1472132946423, 2023],
+            [1472132954422, 1334],
+            [1472132965900, 923]
+          ]
+        });
+      }
+    }
     //REMOVEME END
 
     //updateTable(result);
     //renderPagination(result.rows.length);
-    renderView(result);
+    renderView(results);
   }
 
   var render = function() {
@@ -123,11 +143,11 @@ FnordMetric.views["fnordmetric.metric"] = function(elem, params) {
     }, false);
   };
 
-  var renderView = function(result) {
+  var renderView = function(results) {
     //TODO enable / disable current view icon in header
     var view;
     var view_opts = {
-      data: result,
+      data: results,
       view_cfg: view_cfg
     };
 
