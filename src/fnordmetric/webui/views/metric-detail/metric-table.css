@@ -154,15 +154,6 @@
   margin-top: -3px;
 }
 
-.fnordmetric-metric-table .content table.f-table {
-  margin-top: 0;
-  border-top: 1px solid #d1d1d1;
-}
-
-.fnordmetric-metric-table .content table.f-table th,
-.fnordmetric-metric-table .content table.f-table td {
-  background: #fff;
-}
 
 .fnordmetric-metric-table z-modal.filter .z-modal-header {
   background: rgba(25, 32, 37, 1);
@@ -195,3 +186,36 @@
 .fnordmetric-metric-table z-modal.filter .z-modal-footer button {
   float: right;
 }
+
+/** table view **/
+.fnordmetric-metric-table .content table.f-table {
+  margin-top: 0;
+  border-top: 1px solid #d1d1d1;
+}
+
+.fnordmetric-metric-table .content table.f-table th,
+.fnordmetric-metric-table .content table.f-table td {
+  background: #fff;
+}
+
+/** timeseries view **/
+.fnordmetric-metric-table .content .timeseries {
+  width: 100%;
+  background: rgba(0,0,0,0.04);
+  padding: 18px 23px;
+}
+
+.fnordmetric-metric-table .content .timeseries .chart_box {
+  width: 100%;
+  border: 1px solid #d1d1d1;
+  border-radius: 5px;
+  background: #fff;
+  margin-bottom: 30px;
+
+}
+
+.fnordmetric-metric-table .content .timeseries .chart_box .chart_canvas {
+  height: 160px;
+  width: 100%;
+}
+
