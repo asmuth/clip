@@ -127,6 +127,9 @@
 .fa-caret-down:before {
   content: "\f0d7";
 }
+.fa-table:before {
+  content: "\f0ce";
+}
 
 @-webkit-keyframes fa-spin {
   0% {
@@ -207,6 +210,7 @@ input {
 /** link */
 a {
   text-decoration: none;
+  cursor: pointer;
 }
 
 a.link {
