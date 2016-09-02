@@ -202,7 +202,7 @@
 .fnordmetric-metric-table .content .timeseries {
   width: 100%;
   background: rgba(0,0,0,0.04);
-  padding: 18px 23px;
+  padding: 3px 11px 18px 12px;
 }
 
 .fnordmetric-metric-table .content .timeseries .chart_box {
@@ -210,13 +210,13 @@
   border: 1px solid #d1d1d1;
   border-radius: 5px;
   background: #fff;
-  margin-bottom: 30px;
+  margin-bottom: 20px;
 
 }
 
 /** FIXME hack to show right y-axis and hide left y-axis **/
 .fnordmetric-metric-table .content .timeseries .chart_box .chart_canvas {
-  height: 160px;
+  height: 174px;
   width: 104%;
   margin-left: -3%;
 }
