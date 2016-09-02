@@ -7,8 +7,14 @@ FnordMetric.views["fnordmetric.metric.table"] = function(elem, params) {
     //zDomUtil.handleLinks(page, params.app.navigateTo);
     elem.appendChild(page);
 
-    renderTable(params.data);
-    renderPagination(params.data.rows.length);
+    var results = params.data;
+    if (results.length > 0) {
+      renderTable(results[0]);
+      renderPagination(results[0].rows.length);
+    } else {
+      //TODO
+      //renderEmptyTable
+    }
   };
 
   var renderTable = function(data) {

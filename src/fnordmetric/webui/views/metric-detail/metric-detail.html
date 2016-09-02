@@ -1,9 +1,5 @@
 <template id="fnordmetric-metric-detail-tpl">
   <div class="fnordmetric-metric-table">
-    <div class="view_control">
-      <i class="table_view fa fa-table"></i>
-      <i class="timeseries_view fa fa-area-chart"></i>
-    </div>
     <h1 class="page_header">Metrics &rsaquo; <em class='metric_name'></em></h1>
 
     <div class="content">
@@ -37,6 +33,10 @@
                 </z-dropdown-items>
               </z-dropdown-flyout>
             </z-dropdown>
+          </div>
+          <div class="control view_control left">
+            <i class="table_view fa fa-table"></i>
+            <i class="timeseries_view fa fa-area-chart"></i>
           </div>
 
           <a class="control link api">API</a>
