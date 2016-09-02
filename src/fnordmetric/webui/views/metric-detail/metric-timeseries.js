@@ -56,6 +56,7 @@ FnordMetric.views["fnordmetric.metric.timeseries"] = function(elem, params) {
 
       var columns = result.columns;
       columns.push("test");
+      console.log(columns);
 
 
       new Dygraph(
@@ -65,6 +66,24 @@ FnordMetric.views["fnordmetric.metric.timeseries"] = function(elem, params) {
             labels: result.columns,
             title: result.title,
             colors: ["#3491DF", "#99C8E2"],
+            gridLineColor: "#e6e6e6",
+            axisLineColor: "#e6e6e6",
+            series: {
+              test: { axis: "y2"},
+              mem_used: { axis: "y2"}
+            },
+            axes: {
+              y: {
+                independentTicks: false
+              },
+              y2: {
+                drawGrid: true,
+                independentTicks: true
+              },
+              x: {
+                independentTicks: false
+              }
+            }
           });
     }
 

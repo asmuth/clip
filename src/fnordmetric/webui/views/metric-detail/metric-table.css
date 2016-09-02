@@ -214,8 +214,19 @@
 
 }
 
+/** FIXME hack to show right y-axis and hide left y-axis **/
 .fnordmetric-metric-table .content .timeseries .chart_box .chart_canvas {
   height: 160px;
-  width: 100%;
+  width: 104%;
+  margin-left: -3%;
 }
 
+.fnordmetric-metric-table .content .timeseries .chart_box .chart_canvas .dygraph-axis-label-x,
+.fnordmetric-metric-table .content .timeseries .chart_box .chart_canvas .dygraph-axis-label-y1 {
+  display: none;
+}
+
+.fnordmetric-metric-table .content .timeseries .chart_box .chart_canvas .dygraph-axis-label-y2 {
+  font-size: 12px;
+  color: #737373;
+}
