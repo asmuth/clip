@@ -1,0 +1,40 @@
+/*
+  This file is part of the "FnordMetric" project
+    Copyright (c) 2014 Laura Schlimmer
+    Copyright (c) 2014 Paul Asmuth, Google Inc.
+
+  FnordMetric is free software: you can redistribute it and/or modify it under
+  the terms of the GNU General Public License v3.0. You should have received a
+  copy of the GNU General Public License along with this program. If not, see
+  <http://www.gnu.org/licenses/>.
+*/
+fn-metric-explorer-list,
+fn-metric-explorer-search {
+  display: block;
+  width: 100%;
+}
+
+fn-metric-explorer-list fn-table /deep/ table,
+fn-metric-explorer-search fn-table /deep/ table {
+  width: 100%;
+}
+
+
+
+
+
+fn-metric-explorer-list .navigation fn-search,
+fn-metric-explorer-search .navigation fn-search {
+  height: 32px;
+  width: 13%;
+  min-width: 190px;
+  float: right;
+  margin: 6px 10px 0 0;
+}
+
+fn-metric-explorer-list .navigation fn-search /deep/ ul,
+fn-metric-explorer-search .navigation fn-search /deep/ ul {
+  width: 100%;
+  min-width: 150px;
+  overflow: hidden;
+}
