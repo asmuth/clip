@@ -5,7 +5,8 @@ AUTOMAKE_OPTIONS = foreign
 
 SUBDIRS = \
     . \
-    src/fnordmetric
+    src/fnordmetric \
+    sensors/sysstat
 
 EXTRA_DIST =                             \
   autogen.sh                             \
