@@ -9,11 +9,10 @@
  */
 #ifndef _FNORDMETRIC_UTIL_UNITTEST_H
 #define _FNORDMETRIC_UTIL_UNITTEST_H
-#include <fnordmetric/util/runtimeexception.h>
-#include <fnordmetric/util/inputstream.h>
-#include <fnordmetric/util/outputstream.h>
-#include <fnordmetric/util/random.h>
-#include <fnordmetric/util/inspect.h>
+#include "exception.h"
+#include "inputstream.h"
+#include "outputstream.h"
+#include "inspect.h"
 #include <functional>
 #include <unordered_map>
 #include <vector>
@@ -49,8 +48,8 @@ void EXPECT_EQ(T1 left, T2 right) {
     RAISE(
         kExpectationFailed,
         "expectation failed: %s == %s",
-        fnord::util::inspect<T1>(left).c_str(),
-        fnord::util::inspect<T2>(right).c_str());
+        inspect<T1>(left).c_str(),
+        inspect<T2>(right).c_str());
   }
 }
 
@@ -138,8 +137,6 @@ public:
   }
 
   int run() {
-    fnord::util::Random::init();
-
     for (auto initializer : initializers_) {
       initializer->lambda_();
     }
@@ -148,7 +145,7 @@ public:
 
     const TestCase* current_test_case = nullptr;
     int num_tests_passed = 0;
-    std::unordered_map<const TestCase*, RuntimeException> errors;
+    std::unordered_map<const TestCase*, std::string> errors;
 
     for (auto test_case : cases_) {
       fprintf(stderr, "    %s::%s", name_, test_case->name_);
@@ -157,9 +154,9 @@ public:
 
       try {
         test_case->lambda_();
-      } catch (fnordmetric::util::RuntimeException e) {
+      } catch (const std::exception& e) {
         fprintf(stderr, " \033[1;31m[FAIL]\e[0m\n");
-        errors.emplace(test_case, e);
+        errors.emplace(test_case, e.what());
         continue;
       }
 
@@ -174,10 +171,10 @@ public:
         if (err != errors.end()) {
           fprintf(
               stderr,
-              "\n\033[1;31m[FAIL] %s::%s\e[0m\n",
+              "\n\033[1;31m[FAIL] %s::%s\e[0m\n%s\n",
               name_,
-              test_case->name_);
-          err->second.debugPrint();
+              test_case->name_,
+              err->second.c_str());
         }
       }
 

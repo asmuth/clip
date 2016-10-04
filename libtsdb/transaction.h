@@ -52,8 +52,8 @@ public:
   uint64_t createSlot();
 
 protected:
-  std::map<uint64_t, TransactionContext*> slots_;
-  uint64_t slot_id_;
+  std::map<uint64_t, TransactionContext*> slots_; // FIXME allow limit to uint32_t in build config
+  uint64_t slot_id_; // FIXME allow limit to uint32_t in build config
   std::mutex mutex_;
 };
 

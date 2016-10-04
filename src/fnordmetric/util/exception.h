@@ -25,8 +25,8 @@
 #include <errno.h>
 #include <exception>
 #include <string>
-#include "fnordmetric/util/stringutil.h"
-#include "fnordmetric/util/stdtypes.h"
+#include "stringutil.h"
+#include "stdtypes.h"
 
 const char kAccessDeniedError[] = "AccessDeniedError";
 const char kAssertionError[] = "AssertionError";

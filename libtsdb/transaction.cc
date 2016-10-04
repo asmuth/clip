@@ -48,7 +48,9 @@ struct TransactionContext {
 
 TransactionContext::TransactionContext() :
     snapshot_(new TransactionSnapshot()),
-    refcount_(1) {}
+    refcount_(1) {
+  snapshot_.load()->page_map_.reset(new PageMap());
+}
 
 TransactionContext::~TransactionContext() {
   dropReference(snapshot_.load());

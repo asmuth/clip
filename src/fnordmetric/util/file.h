@@ -27,7 +27,7 @@
 #include <stdlib.h>
 #include <stdint.h>
 #include <string>
-#include <fnordmetric/util/stdtypes.h>
+#include "stdtypes.h"
 
 class Buffer;
 

@@ -11,8 +11,8 @@
 #include <stdlib.h>
 #include <stdint.h>
 #include <string>
-#include "fnordmetric/util/stdtypes.h"
-#include "fnordmetric/util/autoref.h"
+#include "stdtypes.h"
+#include "autoref.h"
 
 /**
  * A growing/growable buffer class.

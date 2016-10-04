@@ -22,7 +22,7 @@
  * code of your own applications
  */
 #pragma once
-#include <fnordmetric/util/exception.h>
+#include "exception.h"
 
 template <typename T>
 AutoRef<T>::AutoRef() : ref_(nullptr) {}

@@ -5,6 +5,7 @@ AUTOMAKE_OPTIONS = foreign
 
 SUBDIRS = \
     . \
+    libtsdb \
     src/fnordmetric \
     sensors/sysstat
 

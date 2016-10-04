@@ -26,8 +26,8 @@
 #include <fcntl.h>
 #include <memory>
 #include <mutex>
-#include "fnordmetric/util/buffer.h"
-#include "fnordmetric/util/file.h"
+#include "buffer.h"
+#include "file.h"
 
 class OutputStream {
 public:

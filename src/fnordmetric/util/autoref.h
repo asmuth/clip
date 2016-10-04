@@ -28,7 +28,7 @@
 #include <mutex>
 #include <stdlib.h>
 #include <atomic>
-#include <fnordmetric/util/stdtypes.h>
+#include "stdtypes.h"
 
 template <typename T>
 class AutoRef {

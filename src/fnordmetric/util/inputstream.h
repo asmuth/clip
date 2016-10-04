@@ -25,9 +25,9 @@
 #define _libstx_INPUTSTREAM_H
 #include <memory>
 #include <string>
-#include "fnordmetric/util/buffer.h"
-#include <fnordmetric/util/autoref.h>
-#include "fnordmetric/util/file.h"
+#include "buffer.h"
+#include "autoref.h"
+#include "file.h"
 
 class FileInputStream;
 
