@@ -1,6 +1,6 @@
 /**
  * This file is part of the "FnordMetric" project
- *   Copyright (c) 2014 Paul Asmuth <paul@asmuth.com>
+ *   Copyright (c) 2016 Paul Asmuth <paul@asmuth.com>
  *
  * FnordMetric is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License v3.0. You should have received a
@@ -12,6 +12,7 @@
 #include <map>
 
 namespace tsdb {
+class PageMap;
 struct TransactionSnapshot;
 struct TransactionContext;
 
@@ -25,6 +26,9 @@ public:
   Transaction& operator=(const Transaction& o) = delete;
   Transaction& operator=(Transaction&& o);
   ~Transaction();
+
+  PageMap* getPageMap();
+  void setPageMap(std::unique_ptr<PageMap>&& page_map);
 
   void close();
 

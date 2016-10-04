@@ -1,23 +1,25 @@
 /**
  * This file is part of the "FnordMetric" project
- *   Copyright (c) 2014 Paul Asmuth <paul@asmuth.com>
+ *   Copyright (c) 2016 Paul Asmuth <paul@asmuth.com>
  *
  * FnordMetric is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License v3.0. You should have received a
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
+#include <assert.h>
 #include "transaction.h"
+#include "page_map.h"
 
 namespace tsdb {
 
 template <class T>
-void addReference(T* ptr) {
+static void addReference(T* ptr) {
   ptr->refcount_.fetch_add(1);
 }
 
 template <class T>
-void dropReference(T* ptr) {
+static void dropReference(T* ptr) {
   if (std::atomic_fetch_sub_explicit(
           &ptr->refcount_,
           size_t(1),
@@ -29,6 +31,7 @@ void dropReference(T* ptr) {
 
 struct TransactionSnapshot {
   TransactionSnapshot();
+  std::unique_ptr<PageMap> page_map_;
   std::atomic<size_t> refcount_;
 };
 
@@ -88,6 +91,23 @@ Transaction& Transaction::operator=(Transaction&& o) {
 
 Transaction::~Transaction() {
   close();
+}
+
+PageMap* Transaction::getPageMap() {
+  return snap_->page_map_.get();
+}
+
+void Transaction::setPageMap(std::unique_ptr<PageMap>&& page_map) {
+  assert(!readonly_);
+  assert(ctx_->snapshot_.load() == snap_);
+
+  auto old_snap = snap_;
+  auto new_snap = new TransactionSnapshot();
+  new_snap->page_map_ = std::move(page_map);
+
+  snap_ = new_snap;
+  ctx_->snapshot_ = new_snap;
+  dropReference(old_snap);
 }
 
 void Transaction::close() {
