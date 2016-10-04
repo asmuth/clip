@@ -11,31 +11,33 @@
 
 namespace tsdb {
 
+template <class T>
+void addReference(T* ptr) {
+  ptr->refcount_.fetch_add(1);
+}
+
+template <class T>
+void dropReference(T* ptr) {
+  if (std::atomic_fetch_sub_explicit(
+          &ptr->refcount_,
+          size_t(1),
+          std::memory_order_release) == 1) {
+    std::atomic_thread_fence(std::memory_order_acquire);
+    delete ptr;
+  }
+}
+
 struct TransactionSnapshot {
   TransactionSnapshot();
-  void dropReference();
-
   std::atomic<size_t> refcount_;
 };
 
 TransactionSnapshot::TransactionSnapshot() :
     refcount_(1) {}
 
-void TransactionSnapshot::dropReference() {
-  if (std::atomic_fetch_sub_explicit(
-          &refcount_,
-          size_t(1),
-          std::memory_order_release) == 1) {
-    std::atomic_thread_fence(std::memory_order_acquire);
-    delete this;
-  }
-}
-
 struct TransactionContext {
   TransactionContext();
   ~TransactionContext();
-  void dropReference();
-
   std::mutex write_lock_;
   std::atomic<TransactionSnapshot*> snapshot_;
   std::atomic<size_t> refcount_;
@@ -46,17 +48,7 @@ TransactionContext::TransactionContext() :
     refcount_(1) {}
 
 TransactionContext::~TransactionContext() {
-  snapshot_.load()->dropReference();
-}
-
-void TransactionContext::dropReference() {
-  if (std::atomic_fetch_sub_explicit(
-          &refcount_,
-          size_t(1),
-          std::memory_order_release) == 1) {
-    std::atomic_thread_fence(std::memory_order_acquire);
-    delete this;
-  }
+  dropReference(snapshot_.load());
 }
 
 TransactionMap::TransactionMap() : slot_id_(0) {}
@@ -108,9 +100,9 @@ void Transaction::close() {
   }
 
   readonly_ = true;
-  snap_->dropReference();
+  dropReference(snap_);
   snap_ = nullptr;
-  ctx_->dropReference();
+  dropReference(ctx_);
   ctx_ = nullptr;
 }
 
@@ -128,7 +120,7 @@ bool TransactionMap::startTransaction(
   /* make a copy of the slot pointer and increment the refcount, so the slot
      pointer will stay valid after we unlock the mutex */
   auto txn_ctx = iter->second;
-  txn_ctx->refcount_.fetch_add(1);
+  addReference(txn_ctx);
 
   /* unlock the mutex - no further access to the slot map */
   lk.unlock();
@@ -141,7 +133,7 @@ bool TransactionMap::startTransaction(
 
   /* make a copy of the current snapshot and increment the snapshot refcount */
   auto txn_snap = txn_ctx->snapshot_.load();
-  txn_snap->refcount_.fetch_add(1);
+  addReference(txn_snap);
 
   *txn = Transaction(readonly, txn_ctx, txn_snap);
   return true;
