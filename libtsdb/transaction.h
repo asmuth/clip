@@ -12,7 +12,6 @@
 #include <map>
 
 namespace tsdb {
-class PartitionMap;
 struct TransactionSnapshot;
 struct TransactionContext;
 
@@ -20,17 +19,19 @@ class Transaction {
 public:
 
   Transaction();
-  Transaction(TransactionContext* slot);
+  Transaction(bool rdonly, TransactionContext* ctx, TransactionSnapshot* snap);
   Transaction(Transaction&& o);
   Transaction(const Transaction& o) = delete;
   Transaction& operator=(const Transaction& o) = delete;
   Transaction& operator=(Transaction&& o);
   ~Transaction();
 
+  void close();
+
 protected:
-  bool valid_;
-  TransactionContext* slot_;
-  TransactionSnapshot* snapshot_;
+  bool readonly_;
+  TransactionContext* ctx_;
+  TransactionSnapshot* snap_;
 };
 
 class TransactionMap {
@@ -41,7 +42,7 @@ public:
 
   bool startTransaction(
       uint64_t slot_id,
-      uint64_t flags,
+      bool readonly,
       Transaction* txn);
 
   uint64_t createSlot();
