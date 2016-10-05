@@ -85,7 +85,7 @@ bool TSDB::commit() {
         all_pages_clean = false;
 
         PageBuffer page_buf(page_idx->getType());
-        page_map_.loadPage(page_id, &page_buf);
+        page_map_.getPage(page_id, &page_buf);
 
         std::string page_data;
         page_buf.encode(&page_data);

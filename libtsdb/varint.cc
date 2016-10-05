@@ -23,5 +23,23 @@ void writeVarUInt(std::string* str, uint64_t value) {
   str->append((char*) buf, bytes);
 }
 
+bool readVarUInt(const char** cursor, const char* end, uint64_t* value) {
+  *value = 0;
+
+  for (int i = 0; ; ++i) {
+    if (*cursor == end) {
+      return false;
+    }
+
+    unsigned char b = *(*cursor)++;
+    *value |= (b & 0x7fULL) << (7 * i);
+    if (!(b & 0x80U)) {
+      break;
+    }
+  }
+
+  return true;
+}
+
 } // namespace tsdb
 

@@ -72,7 +72,7 @@ bool Cursor::next(uint64_t* timestamp, uint64_t* value) {
     }
 
     auto page_id = page_idx->getEntries()[page_pos_].page_id;
-    if (!page_map_->loadPage(page_id, &page_buf_)) {
+    if (!page_map_->getPage(page_id, &page_buf_)) {
       return false;
     }
 

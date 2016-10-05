@@ -19,26 +19,35 @@ const size_t TSDB::kMetaBlockSize = 512;
 const size_t TSDB::kDefaultBlockSize = 512;
 const char TSDB::kMagicBytes[4] = {0x17, 0x42, 0x05, 0x23};
 
-TSDB::TSDB() : fd_(-1), fpos_(0), bsize_(0), txn_map_(&page_map_) {}
-
-TSDB::~TSDB() {}
-
-bool TSDB::open(
+bool TSDB::createDatabase(
+    std::unique_ptr<TSDB>* db,
     const std::string& filename,
     size_t block_size /* = kDefaultBlockSize */) {
   assert(block_size > 0);
 
   int oflags = O_CREAT | O_RDWR | O_CLOEXEC | O_EXLOCK | O_EXCL;
-  fd_ = ::open(filename.c_str(), oflags, 0666);
-  if (fd_ < 0) {
+  int fd = ::open(filename.c_str(), oflags, 0666);
+  if (fd < 0) {
     return false;
   }
 
-  bsize_ = block_size;
-  assert(bsize_ >= kMetaBlockSize);
-  fpos_ = bsize_;
+  db->reset(new TSDB(fd, block_size, block_size));
   return true;
 }
+
+TSDB::TSDB(
+    int fd,
+    size_t fpos,
+    size_t bsize) :
+    fd_(fd),
+    fpos_(fpos),
+    bsize_(bsize),
+    page_map_(fd),
+    txn_map_(&page_map_) {
+  assert(bsize >= kMetaBlockSize);
+}
+
+TSDB::~TSDB() {}
 
 bool TSDB::createSeries(
     uint64_t series_id,

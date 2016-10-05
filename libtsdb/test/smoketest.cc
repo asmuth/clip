@@ -18,29 +18,45 @@
 UNIT_TEST(TSDBTest);
 
 TEST_CASE(TSDBTest, TestCreateAndInsert, [] () {
-  tsdb::TSDB db;
+  std::unique_ptr<tsdb::TSDB> db;
   unlink("/tmp/__test.tsdb");
-  EXPECT(db.open("/tmp/__test.tsdb") == true);
+  EXPECT(tsdb::TSDB::createDatabase(&db, "/tmp/__test.tsdb") == true);
 
   auto t0 = WallClock::unixMicros();
 
-  EXPECT(db.createSeries(1, tsdb::PageType::UINT64) == true);
+  EXPECT(db->createSeries(1, tsdb::PageType::UINT64) == true);
   for (size_t i = 0; i < 100000; ++i) {
-    EXPECT(db.insertUInt64(1, t0 + 20 * i, i) == true);
+    EXPECT(db->insertUInt64(1, t0 + 20 * i, i) == true);
   }
 
-  tsdb::Cursor cursor(tsdb::PageType::UINT64);
-  EXPECT(db.getCursor(1, &cursor) == true);
+  {
+    tsdb::Cursor cursor(tsdb::PageType::UINT64);
+    EXPECT(db->getCursor(1, &cursor) == true);
 
-  for (size_t i = 0; i < 100000; ++i) {
-    uint64_t ts;
-    uint64_t value;
-    EXPECT(cursor.next(&ts, &value) == true);
-    EXPECT(ts == t0 + 20 * i);
-    EXPECT(value == i);
+    for (size_t i = 0; i < 100000; ++i) {
+      uint64_t ts;
+      uint64_t value;
+      EXPECT(cursor.next(&ts, &value) == true);
+      EXPECT(ts == t0 + 20 * i);
+      EXPECT(value == i);
+    }
   }
 
-  EXPECT(db.commit() == true);
-  EXPECT(db.commit() == true);
+  EXPECT(db->commit() == true);
+
+  {
+    tsdb::Cursor cursor(tsdb::PageType::UINT64);
+    EXPECT(db->getCursor(1, &cursor) == true);
+
+    for (size_t i = 0; i < 100000; ++i) {
+      uint64_t ts;
+      uint64_t value;
+      EXPECT(cursor.next(&ts, &value) == true);
+      EXPECT(ts == t0 + 20 * i);
+      EXPECT(value == i);
+    }
+  }
+
+  EXPECT(db->commit() == true);
 });
 

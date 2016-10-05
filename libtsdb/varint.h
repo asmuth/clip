@@ -15,5 +15,8 @@ namespace tsdb {
 
 void writeVarUInt(std::string* str, uint64_t value);
 
+bool readVarUInt(const char** cursor, const char* end, uint64_t* value);
+
+
 } // namespace tsdb
 

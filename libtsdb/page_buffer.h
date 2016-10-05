@@ -34,6 +34,7 @@ public:
   size_t getSize() const;
 
   void encode(std::string* out) const;
+  bool decode(const char* data, size_t len);
 
 protected:
 

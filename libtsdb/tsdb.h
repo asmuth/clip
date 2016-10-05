@@ -25,12 +25,12 @@ public:
   static const size_t kDefaultBlockSize;
   static const char kMagicBytes[4];
 
-  TSDB();
   TSDB(const TSDB& o) = delete;
   TSDB& operator=(const TSDB& o) = delete;
   ~TSDB();
 
-  bool open(
+  static bool createDatabase(
+      std::unique_ptr<TSDB>* db,
       const std::string& filename,
       size_t block_size = kDefaultBlockSize);
 
@@ -53,6 +53,8 @@ public:
   bool commit();
 
 protected:
+
+  TSDB(int fd, size_t fpos, size_t block_size);
 
   bool allocPage(
       uint64_t min_size,

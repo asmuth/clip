@@ -122,5 +122,32 @@ void PageBuffer::encode(std::string* out) const {
   }
 }
 
+bool PageBuffer::decode(const char* data, size_t len) {
+  auto cur = data;
+  auto end = cur + len;
+
+  uint64_t nentries;
+  if (!readVarUInt(&cur, end, &nentries)) {
+    return false;
+  }
+
+  timestamps_.resize(nentries);
+  for (uint64_t i = 0; i < nentries; ++i) {
+    if (!readVarUInt(&cur, end, &timestamps_[i])) {
+      return false;
+    }
+  }
+
+  auto& values = *((ValueVectorUInt64Type*) values_);
+  values.resize(nentries);
+  for (uint64_t i = 0; i < nentries; ++i) {
+    if (!readVarUInt(&cur, end, &values[i])) {
+      return false;
+    }
+  }
+
+  return true;
+}
+
 } // namespace tsdb
 

@@ -38,7 +38,7 @@ bool TSDB::insert(
   };
 
   assert(page_id > 0);
-  page_map_.modifyPage(page_id, modify_fn);
+  page_map_.modifyPage(page_idx->getType(), page_id, modify_fn);
 
   return true;
 }

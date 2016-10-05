@@ -28,7 +28,7 @@ public:
 
   using PageIDType = size_t;
 
-  PageMap();
+  PageMap(int fd);
   PageMap(const PageMap& o) = delete;
   PageMap& operator=(const PageMap& o) = delete;
   ~PageMap();
@@ -37,9 +37,10 @@ public:
 
   bool getPageInfo(PageIDType page_id, PageInfo* info);
 
-  bool loadPage(PageIDType page_id, PageBuffer* buf);
+  bool getPage(PageIDType page_id, PageBuffer* buf);
 
   bool modifyPage(
+      PageType page_type,
       PageIDType page_id,
       std::function<bool (PageBuffer* buf)> fn);
 
@@ -64,6 +65,12 @@ protected:
 
   void dropEntryReference(PageMap::PageMapEntry* entry);
 
+  bool loadPage(
+      uint64_t disk_addr,
+      uint64_t disk_size,
+      PageBuffer* buffer);
+
+  int fd_;
   std::mutex mutex_;
   PageIDType page_id_;
   std::map<PageIDType, PageMapEntry*> map_;
