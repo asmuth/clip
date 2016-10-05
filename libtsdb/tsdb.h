@@ -42,13 +42,6 @@ public:
 
   bool getCursor(uint64_t series_id, Cursor* cursor);
 
-  bool insert(
-      uint64_t series_id,
-      uint64_t time,
-      PageType value_type,
-      const void* value,
-      size_t value_size);
-
   bool insertUInt64(
       uint64_t series_id,
       uint64_t time,
@@ -59,6 +52,15 @@ public:
 protected:
 
   TSDB(int fd, size_t fpos, size_t block_size);
+
+  bool load();
+
+  bool insert(
+      uint64_t series_id,
+      uint64_t time,
+      PageType value_type,
+      const void* value,
+      size_t value_size);
 
   bool allocPage(
       uint64_t min_size,

@@ -179,10 +179,8 @@ bool TSDB::commit() {
 
   /* commit the new transaction */
   std::string commit_data(kMagicBytes, sizeof(kMagicBytes));
-  assert(txn_disk_addr % bsize_ == 0);
-  assert(txn_disk_size % bsize_ == 0);
-  writeVarUInt(&commit_data, txn_disk_addr / bsize_);
-  writeVarUInt(&commit_data, txn_disk_size / bsize_);
+  writeVarUInt(&commit_data, txn_disk_addr);
+  writeVarUInt(&commit_data, txn_disk_size);
 
   rc = pwrite(fd_, commit_data.data(), commit_data.size(), 0);
   if (rc <= 0) {

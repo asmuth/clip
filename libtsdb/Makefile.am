@@ -24,6 +24,7 @@ libtsdb_a_SOURCES = \
     cursor.cc \
     op_commit.cc \
     op_insert.cc \
+    op_load.cc \
     page_buffer.h \
     page_buffer.cc \
     page_map.h \

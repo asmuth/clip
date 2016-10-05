@@ -23,16 +23,37 @@ bool TSDB::createDatabase(
     std::unique_ptr<TSDB>* db,
     const std::string& filename,
     size_t block_size /* = kDefaultBlockSize */) {
-  assert(block_size > 0);
+  assert(block_size >= kMetaBlockSize);
 
-  int oflags = O_CREAT | O_RDWR | O_CLOEXEC | O_EXLOCK | O_EXCL;
-  int fd = ::open(filename.c_str(), oflags, 0666);
+  int fd = ::open(
+      filename.c_str(),
+      O_CREAT | O_RDWR | O_CLOEXEC | O_EXLOCK | O_EXCL,
+      0666);
+
   if (fd < 0) {
     return false;
   }
 
   db->reset(new TSDB(fd, block_size, block_size));
   return true;
+}
+
+bool TSDB::openDatabase(
+    std::unique_ptr<TSDB>* db,
+    const std::string& filename) {
+  int fd = ::open(filename.c_str(), O_RDWR | O_CLOEXEC | O_EXLOCK);
+  if (fd < 0) {
+    return false;
+  }
+
+  std::unique_ptr<TSDB> loading(new TSDB(fd, 0, 0));
+
+  if (loading->load()) {
+    *db = std::move(loading);
+    return true;
+  } else {
+    return false;
+  }
 }
 
 TSDB::TSDB(
@@ -43,11 +64,11 @@ TSDB::TSDB(
     fpos_(fpos),
     bsize_(bsize),
     page_map_(fd),
-    txn_map_(&page_map_) {
-  assert(bsize >= kMetaBlockSize);
-}
+    txn_map_(&page_map_) {}
 
-TSDB::~TSDB() {}
+TSDB::~TSDB() {
+  close(fd_);
+}
 
 bool TSDB::createSeries(
     uint64_t series_id,
