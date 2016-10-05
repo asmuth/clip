@@ -18,25 +18,33 @@ static void addReference(T* ptr) {
   ptr->refcount_.fetch_add(1);
 }
 
-template <class T>
-static void dropReference(T* ptr) {
-  if (std::atomic_fetch_sub_explicit(
-          &ptr->refcount_,
-          size_t(1),
-          std::memory_order_release) == 1) {
-    std::atomic_thread_fence(std::memory_order_acquire);
-    delete ptr;
-  }
-}
-
 struct TransactionSnapshot {
   TransactionSnapshot();
   std::unique_ptr<PageIndex> page_index_;
   std::atomic<size_t> refcount_;
+  std::atomic<TransactionSnapshot*> next_;
 };
 
 TransactionSnapshot::TransactionSnapshot() :
-    refcount_(1) {}
+    refcount_(1),
+    next_(nullptr) {}
+
+static void dropSnapshotReference(TransactionSnapshot* ptr) {
+  while (ptr) {
+    if (std::atomic_fetch_sub_explicit(
+            &ptr->refcount_,
+            size_t(1),
+            std::memory_order_release) == 1) {
+      std::atomic_thread_fence(std::memory_order_acquire);
+      auto next_ptr = ptr->next_.load();
+      delete ptr;
+      ptr = next_ptr;
+      continue;
+    } else {
+      break;
+    }
+  }
+}
 
 struct TransactionContext {
   TransactionContext();
@@ -51,14 +59,24 @@ TransactionContext::TransactionContext() :
     refcount_(1) {}
 
 TransactionContext::~TransactionContext() {
-  dropReference(snapshot_.load());
+  dropSnapshotReference(snapshot_.load());
+}
+
+static void dropContextReference(TransactionContext* ptr) {
+  if (std::atomic_fetch_sub_explicit(
+          &ptr->refcount_,
+          size_t(1),
+          std::memory_order_release) == 1) {
+    std::atomic_thread_fence(std::memory_order_acquire);
+    delete ptr;
+  }
 }
 
 TransactionMap::TransactionMap() {}
 
 TransactionMap::~TransactionMap() {
   for (auto& s : slots_) {
-    dropReference(s.second);
+    dropContextReference(s.second);
     s.second = nullptr;
   }
 }
@@ -111,10 +129,14 @@ void Transaction::setPageIndex(std::unique_ptr<PageIndex>&& page_index) {
   auto old_snap = snap_;
   auto new_snap = new TransactionSnapshot();
   new_snap->page_index_ = std::move(page_index);
+  new_snap->refcount_.fetch_add(1);
+  old_snap->next_ = new_snap;
+
+  std::atomic_thread_fence(std::memory_order_acq_rel);
 
   snap_ = new_snap;
   ctx_->snapshot_ = new_snap;
-  dropReference(old_snap);
+  dropSnapshotReference(old_snap);
 }
 
 void Transaction::close() {
@@ -127,9 +149,9 @@ void Transaction::close() {
   }
 
   readonly_ = true;
-  dropReference(snap_);
+  dropSnapshotReference(snap_);
   snap_ = nullptr;
-  dropReference(ctx_);
+  dropContextReference(ctx_);
   ctx_ = nullptr;
 }
 
