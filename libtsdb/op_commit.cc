@@ -125,9 +125,9 @@ bool TSDB::commit() {
 
     uint64_t index_disk_addr;
     uint64_t index_disk_size;
-    if (txn.hasDiskSnapshot() && all_pages_clean) {
+    if (page_idx->hasDiskSnapshot() && all_pages_clean) {
       /* reuse the previous series index */
-      txn.getDiskSnapshot(&index_disk_addr, &index_disk_size);
+      page_idx->getDiskSnapshot(&index_disk_addr, &index_disk_size);
     } else {
       all_series_clean = false;
 
@@ -146,7 +146,7 @@ bool TSDB::commit() {
         return false;
       }
 
-      txn.setDiskSnapshot(index_disk_addr, index_disk_size);
+      page_idx->setDiskSnapshot(index_disk_addr, index_disk_size);
     }
 
     /* append the series index position to the transaction */

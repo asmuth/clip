@@ -17,7 +17,9 @@ PageIndex::PageIndex(
     type_(type),
     entries_(nullptr),
     splitpoints_(nullptr),
-    size_(0) {}
+    size_(0),
+    disk_addr_(0),
+    disk_size_(0) {}
 
 bool PageIndex::alloc(size_t nentries) {
   if (nentries == 0 || size_ > 0) {
@@ -67,6 +69,20 @@ size_t PageIndex::getSize() const {
 
 PageType PageIndex::getType() const {
   return type_;
+}
+
+bool PageIndex::hasDiskSnapshot() const {
+  return disk_addr_ > 0;
+}
+
+void PageIndex::getDiskSnapshot(uint64_t* addr, uint64_t* size) const {
+  *addr = disk_addr_;
+  *size = disk_size_;
+}
+
+void PageIndex::setDiskSnapshot(uint64_t addr, uint64_t size) {
+  disk_addr_ = addr;
+  disk_size_ = size;
 }
 
 } // namespace tsdb

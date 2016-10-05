@@ -30,7 +30,7 @@ public:
   Transaction& operator=(Transaction&& o);
   ~Transaction();
 
-  const PageIndex* getPageIndex() const;
+  PageIndex* getPageIndex() const;
 
   void updatePageIndex(
       std::unique_ptr<PageIndex>&& page_index,
@@ -38,10 +38,6 @@ public:
           std::set<PageMap::PageIDType>{});
 
   uint64_t getVersion() const;
-
-  bool hasDiskSnapshot() const;
-  void getDiskSnapshot(uint64_t* addr, uint64_t* size) const;
-  void setDiskSnapshot(uint64_t addr, uint64_t size);
 
   void close();
 

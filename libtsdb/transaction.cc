@@ -29,8 +29,6 @@ struct TransactionSnapshot {
   std::atomic<TransactionSnapshot*> next_;
   std::set<PageMap::PageIDType> dropped_pages_;
   const uint64_t version_;
-  uint64_t disk_addr_;
-  uint64_t disk_size_;
 };
 
 TransactionSnapshot::TransactionSnapshot(
@@ -39,9 +37,7 @@ TransactionSnapshot::TransactionSnapshot(
     page_map_(page_map),
     refcount_(1),
     next_(nullptr),
-    version_(version),
-    disk_addr_(0),
-    disk_size_(0) {}
+    version_(version) {}
 
 TransactionSnapshot::~TransactionSnapshot() {
   for (const auto& p : dropped_pages_) {
@@ -139,7 +135,7 @@ Transaction::~Transaction() {
   close();
 }
 
-const PageIndex* Transaction::getPageIndex() const {
+PageIndex* Transaction::getPageIndex() const {
   return snap_->page_index_.get();
 }
 
@@ -172,24 +168,6 @@ uint64_t Transaction::getVersion() const {
   }
 
   return snap_->version_;
-}
-
-bool Transaction::hasDiskSnapshot() const {
-  if (!snap_) {
-    return false;
-  }
-
-  return snap_->disk_addr_ > 0;
-}
-
-void Transaction::getDiskSnapshot(uint64_t* addr, uint64_t* size) const {
-  *addr = snap_->disk_addr_;
-  *size = snap_->disk_size_;
-}
-
-void Transaction::setDiskSnapshot(uint64_t addr, uint64_t size) {
-  snap_->disk_addr_ = addr;
-  snap_->disk_size_ = size;
 }
 
 void Transaction::close() {

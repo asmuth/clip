@@ -40,11 +40,17 @@ public:
   size_t getSize() const;
   PageType getType() const;
 
+  bool hasDiskSnapshot() const;
+  void getDiskSnapshot(uint64_t* addr, uint64_t* size) const;
+  void setDiskSnapshot(uint64_t addr, uint64_t size);
+
 protected:
   PageType type_;
   PageIndexEntry* entries_;
   PageIndexSplitpoint* splitpoints_;
   size_t size_;
+  uint64_t disk_addr_;
+  uint64_t disk_size_;
 };
 
 } // namespace tsdb
