@@ -9,6 +9,7 @@
  */
 #pragma once
 #include <stdlib.h>
+#include <algorithm>
 #include <vector>
 
 namespace tsdb {
@@ -20,17 +21,21 @@ public:
 
   PageBuffer(PageType type);
   PageBuffer(const PageBuffer& o) = delete;
-  ~PageBuffer();
   PageBuffer& operator=(const PageBuffer& o) = delete;
+  ~PageBuffer();
 
   void insert(uint64_t time, const void* value, size_t value_len);
 
 protected:
-  PageType type;
-  std::vector<uint64_t> timestamps;
-  union values {
-    std::vector<uint64_t> uint64;
-  };
+
+  using ValueVectorUInt64Type = std::vector<uint64_t>;
+
+  static constexpr const size_t kValuesVectorSize =
+      sizeof(ValueVectorUInt64Type);
+
+  PageType type_;
+  std::vector<uint64_t> timestamps_;
+  char values_[kValuesVectorSize];
 };
 
 } // namespace tsdb

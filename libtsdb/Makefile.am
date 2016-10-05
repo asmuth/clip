@@ -22,6 +22,7 @@ AM_LDFLAGS = $(PTHREAD_CFLAGS)
 libtsdb_a_SOURCES = \
     op_insert.cc \
     page_buffer.h \
+    page_buffer.cc \
     page_map.h \
     page_map.cc \
     page_index.h \
