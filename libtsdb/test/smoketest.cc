@@ -41,5 +41,6 @@ TEST_CASE(TSDBTest, TestCreateAndInsert, [] () {
   }
 
   EXPECT(db.commit() == true);
+  EXPECT(db.commit() == true);
 });
 

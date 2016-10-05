@@ -112,7 +112,11 @@ bool PageMap::modifyPage(
   return rc;
 }
 
-void PageMap::flushPage(PageIDType page_id, uint64_t version) {
+void PageMap::flushPage(
+    PageIDType page_id,
+    uint64_t version,
+    uint64_t disk_addr,
+    uint64_t disk_size) {
   /* grab the main mutex and locate the page in our map */
   std::unique_lock<std::mutex> map_lk(mutex_);
   auto iter = map_.find(page_id);
@@ -128,6 +132,8 @@ void PageMap::flushPage(PageIDType page_id, uint64_t version) {
   /* grab the entries lock and drop the buffer it the version matches */
   std::unique_lock<std::mutex> entry_lk(entry->lock);
   if (entry->version == version) {
+    entry->disk_addr = disk_addr;
+    entry->disk_size = disk_size;
     entry->buffer.reset(nullptr);
   }
 

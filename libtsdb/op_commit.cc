@@ -20,6 +20,15 @@ namespace tsdb {
 struct FlushedPage {
   PageMap::PageIDType page_id;
   uint64_t version;
+  uint64_t disk_addr;
+  uint64_t disk_size;
+};
+
+struct FlushedIndex {
+  uint64_t series_id;
+  uint64_t version;
+  uint64_t disk_addr;
+  uint64_t disk_size;
 };
 
 bool TSDB::commit() {
@@ -62,6 +71,7 @@ bool TSDB::commit() {
     }
 
     /* write each page to disk */
+    bool all_pages_clean = true;
     for (size_t i = 0; i < page_idx->getSize(); ++i) {
       auto page_id = page_idx->getEntries()[i].page_id;
       PageInfo page_info;
@@ -71,6 +81,8 @@ bool TSDB::commit() {
       }
 
       if (page_info.is_dirty) {
+        all_pages_clean = false;
+
         PageBuffer page_buf(page_idx->getType());
         page_map_.loadPage(page_id, &page_buf);
 
@@ -98,6 +110,8 @@ bool TSDB::commit() {
         FlushedPage flushed_page;
         flushed_page.page_id = page_id;
         flushed_page.version = page_info.version;
+        flushed_page.disk_addr = page_info.disk_addr;
+        flushed_page.disk_size = page_info.disk_size;
         flushed_pages.emplace_back(flushed_page);
       }
 
@@ -108,16 +122,28 @@ bool TSDB::commit() {
       writeVarUInt(&index_data, page_info.disk_size / bsize_);
     }
 
-    /* write the series index to disk*/
     uint64_t index_disk_addr;
     uint64_t index_disk_size;
-    if (!allocPage(index_data.size(), &index_disk_addr, &index_disk_size)) {
-      return false;
-    }
+    if (txn.hasDiskSnapshot() && all_pages_clean) {
+      /* reuse the previous series index */
+      txn.getDiskSnapshot(&index_disk_addr, &index_disk_size);
+    } else {
+      /* write the series index to disk*/
+      if (!allocPage(index_data.size(), &index_disk_addr, &index_disk_size)) {
+        return false;
+      }
 
-    auto rc = pwrite(fd_, index_data.data(), index_data.size(), index_disk_addr);
-    if (rc <= 0) {
-      return false;
+      auto rc = pwrite(
+          fd_,
+          index_data.data(),
+          index_data.size(),
+          index_disk_addr);
+
+      if (rc <= 0) {
+        return false;
+      }
+
+      txn.setDiskSnapshot(index_disk_addr, index_disk_size);
     }
 
     /* append the series index position to the transaction */
@@ -159,7 +185,7 @@ bool TSDB::commit() {
 
   /* drop the flushed pages from memory */
   for (const auto& p : flushed_pages) {
-    page_map_.flushPage(p.page_id, p.version);
+    page_map_.flushPage(p.page_id, p.version, p.disk_addr, p.disk_size);
   }
 
   return true;

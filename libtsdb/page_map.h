@@ -43,7 +43,11 @@ public:
       PageIDType page_id,
       std::function<bool (PageBuffer* buf)> fn);
 
-  void flushPage(PageIDType page_id, uint64_t version);
+  void flushPage(
+      PageIDType page_id,
+      uint64_t version,
+      uint64_t disk_addr,
+      uint64_t disk_size);
 
   void deletePage(PageIDType page_id);
 

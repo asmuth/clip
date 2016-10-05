@@ -39,6 +39,10 @@ public:
 
   uint64_t getVersion() const;
 
+  bool hasDiskSnapshot() const;
+  void getDiskSnapshot(uint64_t* addr, uint64_t* size) const;
+  void setDiskSnapshot(uint64_t addr, uint64_t size);
+
   void close();
 
 protected:
