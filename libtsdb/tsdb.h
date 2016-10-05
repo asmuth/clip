@@ -29,6 +29,10 @@ public:
   TSDB& operator=(const TSDB& o) = delete;
   ~TSDB();
 
+  static bool openDatabase(
+      std::unique_ptr<TSDB>* db,
+      const std::string& filename);
+
   static bool createDatabase(
       std::unique_ptr<TSDB>* db,
       const std::string& filename,
