@@ -1,3 +1,6 @@
+- [ ] set fpos_ in load
+- [ ] remove ftruncate from allocpage
+----
 - [ ] partition split in insert
 - [ ] TSDB::listSeries
 - [ ] Cursor::seek
