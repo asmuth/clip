@@ -43,20 +43,67 @@ bool TSDB::load() {
     if (!readVarUInt(&metablock_cur, metablock_end, &txn_size)) {
       return false;
     }
+
+    fpos_ = txn_addr + txn_size;
   }
 
   /* read transaction */
-  {
-    std::string txn_data;
-    txn_data.resize(txn_size);
+  std::string txn_data;
+  txn_data.resize(txn_size);
 
-    if (pread(fd_, &txn_data[0], txn_size, txn_addr) <= 0) {
+  if (pread(fd_, &txn_data[0], txn_size, txn_addr) <= 0) {
+    return false;
+  }
+
+  const char* txn_data_cur = &txn_data[0];
+  const char* txn_data_end = txn_data_cur + txn_data.size();
+
+  uint64_t flags;
+  if (!readVarUInt(&txn_data_cur, txn_data_end, &flags)) {
+    return false;
+  }
+
+  uint64_t bsize;
+  if (readVarUInt(&txn_data_cur, txn_data_end, &bsize)) {
+    bsize_ = bsize;
+  } else {
+    return false;
+  }
+
+  while (txn_data_cur < txn_data_end) {
+    uint64_t series_id;
+    if (!readVarUInt(&txn_data_cur, txn_data_end, &series_id)) {
       return false;
     }
 
-    printf("txn at: %llu/%llu\n", txn_addr, txn_size);
+    if (series_id == 0) {
+      break;
+    }
+
+    uint64_t seriesidx_disk_addr;
+    uint64_t seriesidx_disk_size;
+    if (!readVarUInt(&txn_data_cur, txn_data_end, &seriesidx_disk_addr)) {
+      return false;
+    }
+
+    if (!readVarUInt(&txn_data_cur, txn_data_end, &seriesidx_disk_size)) {
+      return false;
+    }
+
+    seriesidx_disk_addr *= bsize_;
+    seriesidx_disk_size *= bsize_;
+    if (!loadTransaction(series_id, seriesidx_disk_addr, seriesidx_disk_size)) {
+      return false;
+    }
   }
 
+  return true;
+}
+
+bool TSDB::loadTransaction(
+    uint64_t series_id,
+    uint64_t disk_addr,
+    uint64_t disk_size) {
   return true;
 }
 

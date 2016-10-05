@@ -157,6 +157,9 @@ bool TSDB::commit() {
     writeVarUInt(&txn_data, index_disk_size / bsize_);
   }
 
+  /* append the eof marker to the transaction */
+  writeVarUInt(&txn_data, 0);
+
   /* if nothing has changed, bail out */
   if (all_series_clean) {
     return true;

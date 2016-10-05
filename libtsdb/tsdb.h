@@ -54,6 +54,10 @@ protected:
   TSDB(int fd, size_t fpos, size_t block_size);
 
   bool load();
+  bool loadTransaction(
+      uint64_t series_id,
+      uint64_t disk_addr,
+      uint64_t disk_size);
 
   bool insert(
       uint64_t series_id,
