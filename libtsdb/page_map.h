@@ -34,6 +34,8 @@ public:
       PageIDType page_id,
       std::function<bool (PageBuffer* buf)> fn);
 
+  void deletePage(PageIDType page_id);
+
 protected:
 
   struct PageMapEntry {

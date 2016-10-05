@@ -12,7 +12,7 @@
 
 namespace tsdb {
 
-TSDB::TSDB() {}
+TSDB::TSDB() : txn_map_(&page_map_) {}
 
 TSDB::~TSDB() {}
 

@@ -8,8 +8,10 @@
  * <http://www.gnu.org/licenses/>.
  */
 #include <assert.h>
+#include <set>
 #include "transaction.h"
 #include "page_index.h"
+#include "page_map.h"
 
 namespace tsdb {
 
@@ -19,15 +21,26 @@ static void addReference(T* ptr) {
 }
 
 struct TransactionSnapshot {
-  TransactionSnapshot();
+  TransactionSnapshot(PageMap* page_map);
+  ~TransactionSnapshot();
+  PageMap* page_map_;
   std::unique_ptr<PageIndex> page_index_;
   std::atomic<size_t> refcount_;
   std::atomic<TransactionSnapshot*> next_;
+  std::set<PageMap::PageIDType> dropped_pages_;
 };
 
-TransactionSnapshot::TransactionSnapshot() :
+TransactionSnapshot::TransactionSnapshot(
+    PageMap* page_map) :
+    page_map_(page_map),
     refcount_(1),
     next_(nullptr) {}
+
+TransactionSnapshot::~TransactionSnapshot() {
+  for (const auto& p : dropped_pages_) {
+    page_map_->deletePage(p);
+  }
+}
 
 static void dropSnapshotReference(TransactionSnapshot* ptr) {
   while (ptr) {
@@ -47,15 +60,16 @@ static void dropSnapshotReference(TransactionSnapshot* ptr) {
 }
 
 struct TransactionContext {
-  TransactionContext();
+  TransactionContext(PageMap* page_map);
   ~TransactionContext();
   std::mutex write_lock_;
   std::atomic<TransactionSnapshot*> snapshot_;
   std::atomic<size_t> refcount_;
 };
 
-TransactionContext::TransactionContext() :
-    snapshot_(new TransactionSnapshot()),
+TransactionContext::TransactionContext(
+    PageMap* page_map) :
+    snapshot_(new TransactionSnapshot(page_map)),
     refcount_(1) {}
 
 TransactionContext::~TransactionContext() {
@@ -72,7 +86,7 @@ static void dropContextReference(TransactionContext* ptr) {
   }
 }
 
-TransactionMap::TransactionMap() {}
+TransactionMap::TransactionMap(PageMap* page_map) : page_map_(page_map) {}
 
 TransactionMap::~TransactionMap() {
   for (auto& s : slots_) {
@@ -122,14 +136,17 @@ const PageIndex* Transaction::getPageIndex() const {
   return snap_->page_index_.get();
 }
 
-void Transaction::setPageIndex(std::unique_ptr<PageIndex>&& page_index) {
+void Transaction::updatePageIndex(
+    std::unique_ptr<PageIndex>&& page_index,
+    const std::set<PageMap::PageIDType>& deleted_pages /* = {} */) {
   assert(!readonly_);
   assert(ctx_->snapshot_.load() == snap_);
 
   auto old_snap = snap_;
-  auto new_snap = new TransactionSnapshot();
+  auto new_snap = new TransactionSnapshot(old_snap->page_map_);
   new_snap->page_index_ = std::move(page_index);
   new_snap->refcount_.fetch_add(1);
+  old_snap->dropped_pages_ = deleted_pages;
   old_snap->next_ = new_snap;
 
   std::atomic_thread_fence(std::memory_order_acq_rel);
@@ -196,7 +213,7 @@ bool TransactionMap::createSlot(
     return false;
   }
 
-  auto txn_ctx = new TransactionContext();
+  auto txn_ctx = new TransactionContext(page_map_);
   txn_ctx->snapshot_.load()->page_index_ = std::move(page_index);
 
   slots_.emplace(slot_id, txn_ctx);

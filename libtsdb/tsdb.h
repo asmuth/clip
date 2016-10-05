@@ -41,8 +41,8 @@ public:
       uint64_t value);
 
 protected:
-  TransactionMap txn_map_;
   PageMap page_map_;
+  TransactionMap txn_map_;
 };
 
 } // namespace tsdb

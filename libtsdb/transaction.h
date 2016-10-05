@@ -10,9 +10,12 @@
 #pragma once
 #include <mutex>
 #include <map>
+#include <set>
+#include "page_map.h"
 
 namespace tsdb {
 class PageIndex;
+class PageMap;
 struct TransactionSnapshot;
 struct TransactionContext;
 
@@ -28,7 +31,11 @@ public:
   ~Transaction();
 
   const PageIndex* getPageIndex() const;
-  void setPageIndex(std::unique_ptr<PageIndex>&& page_index);
+
+  void updatePageIndex(
+      std::unique_ptr<PageIndex>&& page_index,
+      const std::set<PageMap::PageIDType>& deleted_pages =
+          std::set<PageMap::PageIDType>{});
 
   void close();
 
@@ -41,7 +48,7 @@ protected:
 class TransactionMap {
 public:
 
-  TransactionMap();
+  TransactionMap(PageMap* page_map);
   ~TransactionMap();
 
   bool startTransaction(
@@ -54,6 +61,7 @@ public:
       std::unique_ptr<PageIndex>&& page_index);
 
 protected:
+  PageMap* page_map_;
   std::map<uint64_t, TransactionContext*> slots_; // FIXME allow limit to uint32_t in build config
   std::mutex mutex_;
 };

@@ -71,6 +71,20 @@ bool PageMap::modifyPage(
   return rc;
 }
 
+void PageMap::deletePage(PageIDType page_id) {
+  std::unique_lock<std::mutex> map_lk(mutex_);
+  auto iter = map_.find(page_id);
+  if (iter == map_.end()) {
+    return;
+  }
+
+  auto entry = iter->second;
+  map_.erase(iter);
+  map_lk.unlock();
+
+  dropEntryReference(entry);
+}
+
 void PageMap::dropEntryReference(PageMap::PageMapEntry* entry) {
   if (std::atomic_fetch_sub_explicit(
           &entry->refcount,
