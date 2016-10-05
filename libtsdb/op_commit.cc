@@ -17,8 +17,14 @@
 
 namespace tsdb {
 
+struct FlushedPage {
+  PageMap::PageIDType page_id;
+  uint64_t version;
+};
+
 bool TSDB::commit() {
   std::unique_lock<std::mutex> lk(commit_mutex_);
+  std::vector<FlushedPage> flushed_pages;
 
   /* get a snapshot of all series */
   std::set<uint64_t> series_ids;
@@ -58,30 +64,48 @@ bool TSDB::commit() {
     /* write each page to disk */
     for (size_t i = 0; i < page_idx->getSize(); ++i) {
       auto page_id = page_idx->getEntries()[i].page_id;
+      PageInfo page_info;
 
-      PageBuffer page_buf(page_idx->getType());
-      page_map_.loadPage(page_id, &page_buf);
-
-      std::string page_data;
-      page_buf.encode(&page_data);
-      assert(!page_data.empty());
-
-      uint64_t page_disk_addr;
-      uint64_t page_disk_size;
-      if (!allocPage(page_data.size(), &page_disk_addr, &page_disk_size)) {
+      if (!page_map_.getPageInfo(page_id, &page_info)) {
         return false;
       }
 
-      auto rc = pwrite(fd_, page_data.data(), page_data.size(), page_disk_addr);
-      if (rc <= 0) {
-        return false;
+      if (page_info.is_dirty) {
+        PageBuffer page_buf(page_idx->getType());
+        page_map_.loadPage(page_id, &page_buf);
+
+        std::string page_data;
+        page_buf.encode(&page_data);
+        assert(!page_data.empty());
+
+        if (!allocPage(
+              page_data.size(),
+              &page_info.disk_addr,
+              &page_info.disk_size)) {
+          return false;
+        }
+
+        auto rc = pwrite(
+            fd_,
+            page_data.data(),
+            page_data.size(),
+            page_info.disk_addr);
+
+        if (rc <= 0) {
+          return false;
+        }
+
+        FlushedPage flushed_page;
+        flushed_page.page_id = page_id;
+        flushed_page.version = page_info.version;
+        flushed_pages.emplace_back(flushed_page);
       }
 
       /* append the pages position to the series index */
-      assert(page_disk_addr % bsize_ == 0);
-      assert(page_disk_size % bsize_ == 0);
-      writeVarUInt(&index_data, page_disk_addr / bsize_);
-      writeVarUInt(&index_data, page_disk_size / bsize_);
+      assert(page_info.disk_addr % bsize_ == 0);
+      assert(page_info.disk_size % bsize_ == 0);
+      writeVarUInt(&index_data, page_info.disk_addr / bsize_);
+      writeVarUInt(&index_data, page_info.disk_size / bsize_);
     }
 
     /* write the series index to disk*/
@@ -132,6 +156,12 @@ bool TSDB::commit() {
   }
 
   fsync(fd_);
+
+  /* drop the flushed pages from memory */
+  for (const auto& p : flushed_pages) {
+    page_map_.flushPage(p.page_id, p.version);
+  }
+
   return true;
 }
 

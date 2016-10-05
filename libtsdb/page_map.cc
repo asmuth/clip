@@ -23,6 +23,9 @@ size_t PageMap::allocPage(PageType type) {
   auto entry = new PageMapEntry();
   entry->refcount = 1;
   entry->buffer.reset(new PageBuffer(type));
+  entry->version = 1;
+  entry->disk_addr = 0;
+  entry->disk_size = 0;
 
   std::unique_lock<std::mutex> lk(mutex_);
 
@@ -30,6 +33,32 @@ size_t PageMap::allocPage(PageType type) {
   map_.emplace(page_id, entry);
 
   return page_id;
+}
+
+bool PageMap::getPageInfo(PageIDType page_id, PageInfo* info) {
+  /* grab the main mutex and locate the page in our map */
+  std::unique_lock<std::mutex> map_lk(mutex_);
+  auto iter = map_.find(page_id);
+  if (iter == map_.end()) {
+    return false;
+  }
+
+  /* increment the entries refcount and unlock the main mutex */
+  auto entry = iter->second;
+  entry->refcount.fetch_add(1);
+  map_lk.unlock();
+
+  /* grab the entries lock and copy the info */
+  std::unique_lock<std::mutex> entry_lk(entry->lock);
+  info->version = entry->version;
+  info->is_dirty = !!entry->buffer;
+  info->disk_addr = entry->disk_addr;
+  info->disk_size = entry->disk_size;
+  entry_lk.unlock();
+
+  /* decrement the entries refcount and return */
+  dropEntryReference(entry);
+  return true;
 }
 
 bool PageMap::loadPage(
@@ -42,8 +71,18 @@ bool PageMap::loadPage(
     return false;
   }
 
-  /* copy the page */
+  /* increment the entries refcount and unlock the main mutex */
+  auto entry = iter->second;
+  entry->refcount.fetch_add(1);
+  map_lk.unlock();
+
+  /* grab the pages lock and copy the page */
+  std::unique_lock<std::mutex> entry_lk(entry->lock);
   *buf = *iter->second->buffer;
+  entry_lk.unlock();
+
+  /* decrement the entries refcount and return */
+  dropEntryReference(entry);
   return true;
 }
 
@@ -65,10 +104,37 @@ bool PageMap::modifyPage(
   /* grab the entries lock and perform the modification */
   std::unique_lock<std::mutex> entry_lk(entry->lock);
   auto rc = fn(entry->buffer.get());
+  entry->version++;
+  entry_lk.unlock();
 
   /* decrement the entries refcount and return */
   dropEntryReference(entry);
   return rc;
+}
+
+void PageMap::flushPage(PageIDType page_id, uint64_t version) {
+  /* grab the main mutex and locate the page in our map */
+  std::unique_lock<std::mutex> map_lk(mutex_);
+  auto iter = map_.find(page_id);
+  if (iter == map_.end()) {
+    return;
+  }
+
+  /* increment the entries refcount and unlock the main mutex */
+  auto entry = iter->second;
+  entry->refcount.fetch_add(1);
+  map_lk.unlock();
+
+  /* grab the entries lock and drop the buffer it the version matches */
+  std::unique_lock<std::mutex> entry_lk(entry->lock);
+  if (entry->version == version) {
+    entry->buffer.reset(nullptr);
+  }
+
+  entry_lk.unlock();
+
+  /* decrement the entries refcount and return */
+  dropEntryReference(entry);
 }
 
 void PageMap::deletePage(PageIDType page_id) {

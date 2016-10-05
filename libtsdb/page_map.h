@@ -16,6 +16,13 @@
 
 namespace tsdb {
 
+struct PageInfo {
+  uint64_t version;
+  bool is_dirty;
+  uint64_t disk_addr;
+  uint64_t disk_size;
+};
+
 class PageMap {
 public:
 
@@ -28,11 +35,15 @@ public:
 
   PageIDType allocPage(PageType type);
 
+  bool getPageInfo(PageIDType page_id, PageInfo* info);
+
   bool loadPage(PageIDType page_id, PageBuffer* buf);
 
   bool modifyPage(
       PageIDType page_id,
       std::function<bool (PageBuffer* buf)> fn);
+
+  void flushPage(PageIDType page_id, uint64_t version);
 
   void deletePage(PageIDType page_id);
 
@@ -41,6 +52,9 @@ protected:
   struct PageMapEntry {
     std::unique_ptr<PageBuffer> buffer;
     std::mutex lock;
+    uint64_t version;
+    uint64_t disk_addr;
+    uint64_t disk_size;
     std::atomic<size_t> refcount;
   };
 
