@@ -26,6 +26,8 @@ bool TSDB::commit() {
 
   /* write the transaction header */
   std::string txn_data;
+  writeVarUInt(&txn_data, 0); // flags
+  writeVarUInt(&txn_data, bsize_);
 
   /* write the pages and partition indexes for each series */
   for (auto siter = series_ids.begin(); siter != series_ids.end(); ) {
@@ -76,8 +78,10 @@ bool TSDB::commit() {
       }
 
       /* append the pages position to the series index */
-      writeVarUInt(&index_data, page_disk_addr);
-      writeVarUInt(&index_data, page_disk_size);
+      assert(page_disk_addr % bsize_ == 0);
+      assert(page_disk_size % bsize_ == 0);
+      writeVarUInt(&index_data, page_disk_addr / bsize_);
+      writeVarUInt(&index_data, page_disk_size / bsize_);
     }
 
     /* write the series index to disk*/
@@ -94,8 +98,10 @@ bool TSDB::commit() {
 
     /* append the series index position to the transaction */
     writeVarUInt(&txn_data, series_id);
-    writeVarUInt(&txn_data, index_disk_addr);
-    writeVarUInt(&txn_data, index_disk_size);
+    assert(index_disk_addr % bsize_ == 0);
+    assert(index_disk_size % bsize_ == 0);
+    writeVarUInt(&txn_data, index_disk_addr / bsize_);
+    writeVarUInt(&txn_data, index_disk_size / bsize_);
   }
 
   /* write the new transaction to disk */
@@ -115,8 +121,10 @@ bool TSDB::commit() {
 
   /* commit the new transaction */
   std::string commit_data(kMagicBytes, sizeof(kMagicBytes));
-  writeVarUInt(&commit_data, txn_disk_addr);
-  writeVarUInt(&commit_data, txn_disk_size);
+  assert(txn_disk_addr % bsize_ == 0);
+  assert(txn_disk_size % bsize_ == 0);
+  writeVarUInt(&commit_data, txn_disk_addr / bsize_);
+  writeVarUInt(&commit_data, txn_disk_size / bsize_);
 
   rc = pwrite(fd_, commit_data.data(), commit_data.size(), 0);
   if (rc <= 0) {
