@@ -20,6 +20,8 @@ AM_CXXFLAGS = -DFNORDMETRIC_VERSION=\"v@PACKAGE_VERSION@\" $(PTHREAD_CFLAGS) $(P
 AM_LDFLAGS = $(PTHREAD_CFLAGS)
 
 libtsdb_a_SOURCES = \
+    cursor.h \
+    cursor.cc \
     op_insert.cc \
     page_buffer.h \
     page_buffer.cc \

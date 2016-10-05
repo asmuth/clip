@@ -19,10 +19,27 @@ UNIT_TEST(TSDBTest);
 TEST_CASE(TSDBTest, TestCreateAndInsert, [] () {
   tsdb::TSDB db;
 
-  EXPECT(db.createSeries(1, tsdb::PageType::UINT64) == true);
-  EXPECT(db.insertUInt64(1, WallClock::unixMicros(), 123) == true);
-  EXPECT(db.insertUInt64(1, WallClock::unixMicros(), 456) == true);
-  EXPECT(db.insertUInt64(1, WallClock::unixMicros(), 789) == true);
+  auto t0 = WallClock::unixMicros();
 
+  EXPECT(db.createSeries(1, tsdb::PageType::UINT64) == true);
+  EXPECT(db.insertUInt64(1, t0 + 2000000, 123) == true);
+  EXPECT(db.insertUInt64(1, t0 + 4000000, 456) == true);
+  EXPECT(db.insertUInt64(1, t0 + 8000000, 789) == true);
+
+  tsdb::Cursor cursor;
+  EXPECT(db.getCursor(1, &cursor) == true);
+
+  uint64_t ts;
+  uint64_t value;
+  EXPECT(cursor.next(&ts, &value) == true);
+  EXPECT(ts == t0 + 2000000);
+  EXPECT(value == 123);
+  EXPECT(cursor.next(&ts, &value) == true);
+  EXPECT(ts == t0 + 4000000);
+  EXPECT(value == 456);
+  EXPECT(cursor.next(&ts, &value) == true);
+  EXPECT(ts == t0 + 8000000);
+  EXPECT(value == 789);
+  EXPECT(cursor.next(&ts, &value) == false);
 });
 

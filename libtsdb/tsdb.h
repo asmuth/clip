@@ -12,6 +12,7 @@
 #include "transaction.h"
 #include "page_map.h"
 #include "page_buffer.h"
+#include "cursor.h"
 
 namespace tsdb {
 
@@ -23,9 +24,9 @@ public:
   TSDB& operator=(const TSDB& o) = delete;
   ~TSDB();
 
-  bool createSeries(
-      uint64_t series_id,
-      PageType type);
+  bool createSeries(uint64_t series_id, PageType type);
+
+  bool getCursor(uint64_t series_id, Cursor* cursor);
 
   bool insert(
       uint64_t series_id,

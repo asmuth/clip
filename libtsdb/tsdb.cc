@@ -30,5 +30,18 @@ bool TSDB::createSeries(
       std::move(page_index));
 }
 
+bool TSDB::getCursor(
+    uint64_t series_id,
+    Cursor* cursor) {
+  /* start transaction */
+  Transaction txn;
+  if (!txn_map_.startTransaction(series_id, true, &txn)) {
+    return false;
+  }
+
+  *cursor = Cursor(std::move(txn));
+  return true;
+}
+
 } // namespace tsdb
 
