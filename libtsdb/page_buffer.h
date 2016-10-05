@@ -18,9 +18,15 @@ enum class PageType { UINT64 };
 class PageBuffer {
 public:
 
+  PageBuffer(PageType type);
+  PageBuffer(const PageBuffer& o) = delete;
+  ~PageBuffer();
+  PageBuffer& operator=(const PageBuffer& o) = delete;
+
   void insert(uint64_t time, const void* value, size_t value_len);
 
 protected:
+  PageType type;
   std::vector<uint64_t> timestamps;
   union values {
     std::vector<uint64_t> uint64;

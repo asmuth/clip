@@ -23,7 +23,9 @@ public:
   TSDB& operator=(const TSDB& o) = delete;
   ~TSDB();
 
-  bool createSeries(uint64_t series_id);
+  bool createSeries(
+      uint64_t series_id,
+      PageType type);
 
   bool insert(
       uint64_t series_id,

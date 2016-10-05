@@ -19,7 +19,7 @@ UNIT_TEST(TSDBTest);
 TEST_CASE(TSDBTest, TestCreateAndInsert, [] () {
   tsdb::TSDB db;
 
-  EXPECT(db.createSeries(1) == true);
+  EXPECT(db.createSeries(1, tsdb::PageType::UINT64) == true);
   EXPECT(db.insertUInt64(1, WallClock::unixMicros(), 123) == true);
   EXPECT(db.insertUInt64(1, WallClock::unixMicros(), 456) == true);
   EXPECT(db.insertUInt64(1, WallClock::unixMicros(), 789) == true);

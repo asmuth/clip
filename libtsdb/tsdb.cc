@@ -16,12 +16,14 @@ TSDB::TSDB() {}
 
 TSDB::~TSDB() {}
 
-bool TSDB::createSeries(uint64_t series_id) {
+bool TSDB::createSeries(
+    uint64_t series_id,
+    PageType type) {
   std::unique_ptr<PageIndex> page_index(new PageIndex());
   page_index->alloc(1);
 
   auto page_index_entry = page_index->getEntries();
-  page_index_entry->page_id = page_map_.allocPage();
+  page_index_entry->page_id = page_map_.allocPage(type);
 
   return txn_map_.createSlot(
       series_id,

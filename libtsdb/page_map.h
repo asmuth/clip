@@ -11,6 +11,7 @@
 #include <stdlib.h>
 #include <memory>
 #include <map>
+#include <mutex>
 #include "page_buffer.h"
 
 namespace tsdb {
@@ -25,7 +26,7 @@ public:
   PageMap& operator=(const PageMap& o) = delete;
   ~PageMap();
 
-  PageIDType allocPage();
+  PageIDType allocPage(PageType type);
 
   bool loadPage(PageIDType page_id, PageBuffer* buf);
 
@@ -34,8 +35,18 @@ public:
       std::function<bool (PageBuffer* buf)> fn);
 
 protected:
+
+  struct PageMapEntry {
+    std::unique_ptr<PageBuffer> buffer;
+    std::mutex lock;
+    std::atomic<size_t> refcount;
+  };
+
+  void dropEntryReference(PageMap::PageMapEntry* entry);
+
+  std::mutex mutex_;
   PageIDType page_id_;
-  std::map<PageIDType, std::unique_ptr<PageBuffer>> buffered_;
+  std::map<PageIDType, PageMapEntry*> map_;
 };
 
 } // namespace tsdb
