@@ -53,6 +53,14 @@ const PageIndexEntry* PageIndex::getEntries() const {
   return entries_;
 }
 
+PageIndexSplitpoint* PageIndex::getSplitpoints() {
+  return splitpoints_;
+}
+
+const PageIndexSplitpoint* PageIndex::getSplitpoints() const {
+  return splitpoints_;
+}
+
 size_t PageIndex::getSize() const {
   return size_;
 }

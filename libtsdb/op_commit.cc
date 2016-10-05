@@ -10,10 +10,18 @@
 #include <assert.h>
 #include <unistd.h>
 #include <set>
+#include <vector>
 #include "tsdb.h"
 #include "page_index.h"
+#include "varint.h"
 
 namespace tsdb {
+
+struct SeriesIndexPosition {
+  uint64_t series_id;
+  uint64_t addr;
+  uint64_t size;
+};
 
 bool TSDB::commit() {
   std::unique_lock<std::mutex> lk(commit_mutex_);
@@ -22,7 +30,8 @@ bool TSDB::commit() {
   std::set<uint64_t> series_ids;
   txn_map_.listSlots(&series_ids);
 
-  /* prepare the partition indexes for each series */
+  /* write the pages and partition indexes for each series */
+  std::vector<SeriesIndexPosition> series_index_positions;
   for (auto siter = series_ids.begin(); siter != series_ids.end(); ) {
     auto series_id = *siter;
 
@@ -37,8 +46,13 @@ bool TSDB::commit() {
       ++siter;
     }
 
-    /* write each page to disk */
+    /* write the series index data header */
+    std::string index_data;
     auto page_idx = txn.getPageIndex();
+    writeVarUInt(&index_data, (uint64_t) page_idx->getType());
+    writeVarUInt(&index_data, page_idx->getSize());
+
+    /* write each page to disk */
     for (size_t i = 0; i < page_idx->getSize(); ++i) {
       auto page_id = page_idx->getEntries()[i].page_id;
 
@@ -59,9 +73,28 @@ bool TSDB::commit() {
       if (rc <= 0) {
         return false;
       }
+
+      writeVarUInt(&index_data, page_disk_addr);
+      writeVarUInt(&index_data, page_disk_size);
     }
 
-    /* write the series index to disk */
+    for (size_t i = 1; i < page_idx->getSize(); ++i) {
+      auto point = page_idx->getSplitpoints()[i - 1].point;
+      writeVarUInt(&index_data, point); // FIXME use delta encoding
+    }
+
+    SeriesIndexPosition index_pos;
+    index_pos.series_id = series_id;
+    if (!allocPage(index_data.size(), &index_pos.addr, &index_pos.size)) {
+      return false;
+    }
+
+    auto rc = pwrite(fd_, index_data.data(), index_data.size(), index_pos.addr);
+    if (rc <= 0) {
+      return false;
+    }
+
+    series_index_positions.emplace_back(index_pos);
   }
 
   return true;

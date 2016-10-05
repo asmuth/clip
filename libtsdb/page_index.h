@@ -34,6 +34,9 @@ public:
   PageIndexEntry* getEntries();
   const PageIndexEntry* getEntries() const;
 
+  PageIndexSplitpoint* getSplitpoints();
+  const PageIndexSplitpoint* getSplitpoints() const;
+
   size_t getSize() const;
   PageType getType() const;
 

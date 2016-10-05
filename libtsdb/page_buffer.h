@@ -14,7 +14,7 @@
 
 namespace tsdb {
 
-enum class PageType { UINT64 };
+enum class PageType : uint64_t { UINT64 = 1 };
 
 class PageBuffer {
 public:
