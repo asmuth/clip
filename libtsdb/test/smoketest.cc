@@ -22,24 +22,19 @@ TEST_CASE(TSDBTest, TestCreateAndInsert, [] () {
   auto t0 = WallClock::unixMicros();
 
   EXPECT(db.createSeries(1, tsdb::PageType::UINT64) == true);
-  EXPECT(db.insertUInt64(1, t0 + 2000000, 123) == true);
-  EXPECT(db.insertUInt64(1, t0 + 4000000, 456) == true);
-  EXPECT(db.insertUInt64(1, t0 + 8000000, 789) == true);
+  for (size_t i = 0; i < 1000000; ++i) {
+    EXPECT(db.insertUInt64(1, t0 + 20 * i, i) == true);
+  }
 
   tsdb::Cursor cursor(tsdb::PageType::UINT64);
   EXPECT(db.getCursor(1, &cursor) == true);
 
-  uint64_t ts;
-  uint64_t value;
-  EXPECT(cursor.next(&ts, &value) == true);
-  EXPECT(ts == t0 + 2000000);
-  EXPECT(value == 123);
-  EXPECT(cursor.next(&ts, &value) == true);
-  EXPECT(ts == t0 + 4000000);
-  EXPECT(value == 456);
-  EXPECT(cursor.next(&ts, &value) == true);
-  EXPECT(ts == t0 + 8000000);
-  EXPECT(value == 789);
-  EXPECT(cursor.next(&ts, &value) == false);
+  for (size_t i = 0; i < 1000000; ++i) {
+    uint64_t ts;
+    uint64_t value;
+    EXPECT(cursor.next(&ts, &value) == true);
+    EXPECT(ts == t0 + 20 * i);
+    EXPECT(value == i);
+  }
 });
 
