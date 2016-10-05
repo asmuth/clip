@@ -102,7 +102,7 @@ Transaction::~Transaction() {
   close();
 }
 
-PageIndex* Transaction::getPageIndex() {
+const PageIndex* Transaction::getPageIndex() const {
   return snap_->page_index_.get();
 }
 

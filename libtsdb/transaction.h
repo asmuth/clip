@@ -27,7 +27,7 @@ public:
   Transaction& operator=(Transaction&& o);
   ~Transaction();
 
-  PageIndex* getPageIndex();
+  const PageIndex* getPageIndex() const;
   void setPageIndex(std::unique_ptr<PageIndex>&& page_index);
 
   void close();

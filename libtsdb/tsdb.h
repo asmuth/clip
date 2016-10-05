@@ -10,6 +10,7 @@
 #pragma once
 #include <stdlib.h>
 #include "transaction.h"
+#include "page_map.h"
 
 namespace tsdb {
 
@@ -23,8 +24,14 @@ public:
 
   bool createSeries(uint64_t series_id);
 
+  bool insertUInt64(
+      uint64_t series_id,
+      uint64_t time,
+      uint64_t value);
+
 protected:
   TransactionMap txn_map_;
+  PageMap page_map_;
 };
 
 } // namespace tsdb

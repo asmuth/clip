@@ -7,18 +7,21 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#include "page_map.h"
+#include "tsdb.h"
+#include "page_index.h"
 
 namespace tsdb {
 
-PageMap::PageMap() : page_id_(0) {}
+bool TSDB::insertUInt64(
+    uint64_t series_id,
+    uint64_t time,
+    uint64_t value) {
+  Transaction txn;
+  if (!txn_map_.startTransaction(series_id, false, &txn)) {
+    return false;
+  }
 
-PageMap::~PageMap() {}
-
-size_t PageMap::allocPage() {
-  auto page_id = ++page_id_;
-
-  return page_id;
+  return true;
 }
 
 } // namespace tsdb

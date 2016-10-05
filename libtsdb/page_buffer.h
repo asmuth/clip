@@ -7,19 +7,21 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#include "page_map.h"
+#pragma once
+#include <stdlib.h>
+#include <vector>
 
 namespace tsdb {
 
-PageMap::PageMap() : page_id_(0) {}
+class PageBuffer {
+public:
 
-PageMap::~PageMap() {}
-
-size_t PageMap::allocPage() {
-  auto page_id = ++page_id_;
-
-  return page_id;
-}
+protected:
+  std::vector<uint64_t> timestamps;
+  union values {
+    std::vector<uint64_t> uint64;
+  };
+};
 
 } // namespace tsdb
 

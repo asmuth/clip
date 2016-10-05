@@ -24,10 +24,16 @@ class PageIndex {
 public:
 
   PageIndex();
-  PageIndex(size_t n);
   PageIndex(const PageIndex& o) = delete;
   PageIndex& operator=(const PageIndex& o) = delete;
   ~PageIndex();
+
+  bool alloc(size_t nentries);
+
+  PageIndexEntry* getEntries();
+  const PageIndexEntry* getEntries() const;
+
+  size_t getSize() const;
 
 protected:
   PageIndexEntry* entries_;
