@@ -21,13 +21,31 @@ PageMap::~PageMap() {
   }
 }
 
-size_t PageMap::allocPage(PageType type) {
+PageMap::PageIDType PageMap::allocPage(PageType type) {
   auto entry = new PageMapEntry();
   entry->refcount = 1;
   entry->buffer.reset(new PageBuffer(type));
   entry->version = 1;
   entry->disk_addr = 0;
   entry->disk_size = 0;
+
+  std::unique_lock<std::mutex> lk(mutex_);
+
+  auto page_id = ++page_id_;
+  map_.emplace(page_id, entry);
+
+  return page_id;
+}
+
+PageMap::PageIDType PageMap::addColdPage(
+    PageType type,
+    uint64_t disk_addr,
+    uint64_t disk_size) {
+  auto entry = new PageMapEntry();
+  entry->refcount = 1;
+  entry->version = 1;
+  entry->disk_addr = disk_addr;
+  entry->disk_size = disk_size;
 
   std::unique_lock<std::mutex> lk(mutex_);
 
@@ -119,7 +137,10 @@ bool PageMap::modifyPage(
   /* if the page is not in memory, load it */
   if (!entry->buffer) {
     entry->buffer.reset(new PageBuffer(page_type));
-    loadPage(entry->disk_addr, entry->disk_size, entry->buffer.get());
+    if (!loadPage(entry->disk_addr, entry->disk_size, entry->buffer.get())) {
+      entry->buffer.reset(nullptr);
+      return false;
+    }
   }
 
   /* perform the modification */

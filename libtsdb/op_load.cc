@@ -104,7 +104,60 @@ bool TSDB::loadTransaction(
     uint64_t series_id,
     uint64_t disk_addr,
     uint64_t disk_size) {
-  return true;
+  std::string index_data;
+  index_data.resize(disk_size);
+
+  if (pread(fd_, &index_data[0], disk_size, disk_addr) <= 0) {
+    return false;
+  }
+
+  const char* index_data_cur = &index_data[0];
+  const char* index_data_end = index_data_cur + index_data.size();
+
+  uint64_t index_type;
+  if (!readVarUInt(&index_data_cur, index_data_end, &index_type)) {
+    return false;
+  }
+
+  uint64_t index_len;
+  if (!readVarUInt(&index_data_cur, index_data_end, &index_len)) {
+    return false;
+  }
+
+  std::unique_ptr<PageIndex> page_idx(new PageIndex((PageType) index_type));
+  page_idx->setDiskSnapshot(disk_addr, disk_size);
+
+  if (!page_idx->alloc(index_len)) {
+    return false;
+  }
+
+  for (size_t i = 1; i < index_len; ++i) {
+    auto point = &page_idx->getSplitpoints()[i - 1].point;
+    if (!readVarUInt(&index_data_cur, index_data_end, point)) {
+      return false;
+    }
+  }
+
+  for (size_t i = 0; i < index_len; ++i) {
+    uint64_t page_addr;
+    if (!readVarUInt(&index_data_cur, index_data_end, &page_addr)) {
+      return false;
+    }
+
+    uint64_t page_size;
+    if (!readVarUInt(&index_data_cur, index_data_end, &page_size)) {
+      return false;
+    }
+
+    auto page_id = page_map_.addColdPage(
+        page_idx->getType(),
+        page_addr * bsize_,
+        page_size * bsize_);
+
+    page_idx->getEntries()[i].page_id = page_id;
+  }
+
+  return txn_map_.createSlot(series_id, std::move(page_idx));
 }
 
 } // namespace tsdb

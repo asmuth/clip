@@ -22,6 +22,8 @@ PageBuffer::PageBuffer(PageType type) : type_(type) {
     case PageType::UINT64:
       new (values_) ValueVectorUInt64Type();
       break;
+    default:
+      assert(false);
   }
 }
 
@@ -34,6 +36,8 @@ PageBuffer::PageBuffer(
       new (values_) ValueVectorUInt64Type(
           std::move(*((ValueVectorUInt64Type*) o.values_)));
       break;
+    default:
+      assert(false);
   }
 }
 
@@ -45,6 +49,8 @@ PageBuffer& PageBuffer::operator=(const PageBuffer& o) {
       *((ValueVectorUInt64Type*) values_) =
           *((ValueVectorUInt64Type*) o.values_);
       break;
+    default:
+      assert(false);
   }
 
   return *this;
@@ -58,6 +64,8 @@ PageBuffer& PageBuffer::operator=(PageBuffer&& o) {
       *((ValueVectorUInt64Type*) values_) =
           std::move(*((ValueVectorUInt64Type*) o.values_));
       break;
+    default:
+      assert(false);
   }
 
   return *this;
@@ -68,6 +76,8 @@ PageBuffer::~PageBuffer() {
     case PageType::UINT64:
       ((ValueVectorUInt64Type*) values_)->~vector();
       break;
+    default:
+      assert(false);
   }
 }
 
@@ -76,6 +86,7 @@ static void insertValue(
     ValueVectorType* value_vector,
     size_t pos,
     const ValueType& value) {
+  assert(pos <= value_vector->size());
   value_vector->insert(value_vector->begin() + pos, value);
 }
 

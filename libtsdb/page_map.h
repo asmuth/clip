@@ -35,6 +35,8 @@ public:
 
   PageIDType allocPage(PageType type);
 
+  PageIDType addColdPage(PageType type, uint64_t disk_addr, uint64_t disk_size);
+
   bool getPageInfo(PageIDType page_id, PageInfo* info);
 
   bool getPage(PageIDType page_id, PageBuffer* buf);
