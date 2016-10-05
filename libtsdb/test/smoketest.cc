@@ -26,7 +26,7 @@ TEST_CASE(TSDBTest, TestCreateAndInsert, [] () {
   EXPECT(db.insertUInt64(1, t0 + 4000000, 456) == true);
   EXPECT(db.insertUInt64(1, t0 + 8000000, 789) == true);
 
-  tsdb::Cursor cursor;
+  tsdb::Cursor cursor(tsdb::PageType::UINT64);
   EXPECT(db.getCursor(1, &cursor) == true);
 
   uint64_t ts;

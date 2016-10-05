@@ -10,14 +10,16 @@
 #pragma once
 #include <stdlib.h>
 #include "transaction.h"
+#include "page_buffer.h"
+#include "page_map.h"
 
 namespace tsdb {
 
 class Cursor {
 public:
 
-  Cursor();
-  Cursor(Transaction&& txn);
+  Cursor(PageType type);
+  Cursor(PageType type, PageMap* page_map, Transaction&& txn);
   Cursor(Cursor&& o);
   Cursor(const Cursor& o) = delete;
   Cursor& operator=(const Cursor& o) = delete;
@@ -27,6 +29,11 @@ public:
 
 protected:
   Transaction txn_;
+  size_t page_pos_;
+  PageMap* page_map_;
+  PageBuffer page_buf_;
+  bool page_buf_valid_;
+  size_t page_buf_pos_;
 };
 
 } // namespace tsdb

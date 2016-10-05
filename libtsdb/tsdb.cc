@@ -19,7 +19,7 @@ TSDB::~TSDB() {}
 bool TSDB::createSeries(
     uint64_t series_id,
     PageType type) {
-  std::unique_ptr<PageIndex> page_index(new PageIndex());
+  std::unique_ptr<PageIndex> page_index(new PageIndex(type));
   page_index->alloc(1);
 
   auto page_index_entry = page_index->getEntries();
@@ -39,7 +39,11 @@ bool TSDB::getCursor(
     return false;
   }
 
-  *cursor = Cursor(std::move(txn));
+  *cursor = Cursor(
+      txn.getPageIndex()->getType(),
+      &page_map_,
+      std::move(txn));
+
   return true;
 }
 

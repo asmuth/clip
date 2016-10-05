@@ -32,6 +32,21 @@ size_t PageMap::allocPage(PageType type) {
   return page_id;
 }
 
+bool PageMap::loadPage(
+    PageIDType page_id,
+    PageBuffer* buf) {
+  /* grab the main mutex and locate the page in our map */
+  std::unique_lock<std::mutex> map_lk(mutex_);
+  auto iter = map_.find(page_id);
+  if (iter == map_.end()) {
+    return false;
+  }
+
+  /* copy the page */
+  *buf = *iter->second->buffer;
+  return true;
+}
+
 bool PageMap::modifyPage(
     PageIDType page_id,
     std::function<bool (PageBuffer* buf)> fn) {

@@ -7,6 +7,7 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
+#include <assert.h>
 #include <stdlib.h>
 #include <vector>
 #include <algorithm>
@@ -20,6 +21,44 @@ PageBuffer::PageBuffer(PageType type) : type_(type) {
       new (values_) ValueVectorUInt64Type();
       break;
   }
+}
+
+PageBuffer::PageBuffer(
+    PageBuffer&& o) :
+    type_(o.type_),
+    timestamps_(std::move(o.timestamps_)) {
+  switch (type_) {
+    case PageType::UINT64:
+      new (values_) ValueVectorUInt64Type(
+          std::move(*((ValueVectorUInt64Type*) o.values_)));
+      break;
+  }
+}
+
+PageBuffer& PageBuffer::operator=(const PageBuffer& o) {
+  assert(type_ == o.type_);
+  timestamps_ = o.timestamps_;
+  switch (type_) {
+    case PageType::UINT64:
+      *((ValueVectorUInt64Type*) values_) =
+          *((ValueVectorUInt64Type*) o.values_);
+      break;
+  }
+
+  return *this;
+}
+
+PageBuffer& PageBuffer::operator=(PageBuffer&& o) {
+  assert(type_ == o.type_);
+  timestamps_ = std::move(o.timestamps_);
+  switch (type_) {
+    case PageType::UINT64:
+      *((ValueVectorUInt64Type*) values_) =
+          std::move(*((ValueVectorUInt64Type*) o.values_));
+      break;
+  }
+
+  return *this;
 }
 
 PageBuffer::~PageBuffer() {
@@ -52,6 +91,22 @@ void PageBuffer::insert(uint64_t time, const void* value, size_t value_len) {
       insertValue((ValueVectorUInt64Type*) values_, pos, *((uint64_t*) value));
       break;
   }
+}
+
+void PageBuffer::getTimestamp(size_t pos, uint64_t* timestamp) const {
+  assert(pos < timestamps_.size());
+  *timestamp = timestamps_[pos];
+}
+
+void PageBuffer::getValue(size_t pos, uint64_t* value) const {
+  assert(type_ == PageType::UINT64);
+  auto& values = *((ValueVectorUInt64Type*) values_);
+  assert(pos < values.size());
+  *value = values[pos];
+}
+
+size_t PageBuffer::getSize() const {
+  return timestamps_.size();
 }
 
 } // namespace tsdb

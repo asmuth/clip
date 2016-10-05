@@ -21,10 +21,17 @@ public:
 
   PageBuffer(PageType type);
   PageBuffer(const PageBuffer& o) = delete;
-  PageBuffer& operator=(const PageBuffer& o) = delete;
+  PageBuffer(PageBuffer&& o) ;
+  PageBuffer& operator=(const PageBuffer& o);
+  PageBuffer& operator=(PageBuffer&& o);
   ~PageBuffer();
 
   void insert(uint64_t time, const void* value, size_t value_len);
+
+  void getTimestamp(size_t pos, uint64_t* timestamp) const;
+  void getValue(size_t pos, uint64_t* value) const;
+
+  size_t getSize() const;
 
 protected:
 

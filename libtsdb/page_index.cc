@@ -12,7 +12,12 @@
 
 namespace tsdb {
 
-PageIndex::PageIndex() : entries_(nullptr), splitpoints_(nullptr), size_(0) {}
+PageIndex::PageIndex(
+    PageType type) :
+    type_(type),
+    entries_(nullptr),
+    splitpoints_(nullptr),
+    size_(0) {}
 
 bool PageIndex::alloc(size_t nentries) {
   if (nentries == 0 || size_ > 0) {
@@ -50,6 +55,10 @@ const PageIndexEntry* PageIndex::getEntries() const {
 
 size_t PageIndex::getSize() const {
   return size_;
+}
+
+PageType PageIndex::getType() const {
+  return type_;
 }
 
 } // namespace tsdb

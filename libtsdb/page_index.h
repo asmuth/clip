@@ -9,6 +9,7 @@
  */
 #pragma once
 #include <stdlib.h>
+#include "page_buffer.h"
 
 namespace tsdb {
 
@@ -23,7 +24,7 @@ struct PageIndexSplitpoint {
 class PageIndex {
 public:
 
-  PageIndex();
+  PageIndex(PageType type);
   PageIndex(const PageIndex& o) = delete;
   PageIndex& operator=(const PageIndex& o) = delete;
   ~PageIndex();
@@ -34,8 +35,10 @@ public:
   const PageIndexEntry* getEntries() const;
 
   size_t getSize() const;
+  PageType getType() const;
 
 protected:
+  PageType type_;
   PageIndexEntry* entries_;
   PageIndexSplitpoint* splitpoints_;
   size_t size_;
