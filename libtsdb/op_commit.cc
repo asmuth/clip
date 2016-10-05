@@ -36,6 +36,7 @@ bool TSDB::commit() {
   std::vector<FlushedPage> flushed_pages;
 
   /* get a snapshot of all series */
+  bool all_series_clean = true;
   std::set<uint64_t> series_ids;
   txn_map_.listSlots(&series_ids);
 
@@ -128,6 +129,8 @@ bool TSDB::commit() {
       /* reuse the previous series index */
       txn.getDiskSnapshot(&index_disk_addr, &index_disk_size);
     } else {
+      all_series_clean = false;
+
       /* write the series index to disk*/
       if (!allocPage(index_data.size(), &index_disk_addr, &index_disk_size)) {
         return false;
@@ -152,6 +155,11 @@ bool TSDB::commit() {
     assert(index_disk_size % bsize_ == 0);
     writeVarUInt(&txn_data, index_disk_addr / bsize_);
     writeVarUInt(&txn_data, index_disk_size / bsize_);
+  }
+
+  /* if nothing has changed, bail out */
+  if (all_series_clean) {
+    return true;
   }
 
   /* write the new transaction to disk */
