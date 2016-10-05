@@ -24,6 +24,8 @@ libtsdb_a_SOURCES = \
     page_map.cc \
     page_index.h \
     page_index.cc \
+    tsdb.h \
+    tsdb.cc \
     transaction.h \
     transaction.cc
 

@@ -12,7 +12,7 @@
 #include <map>
 
 namespace tsdb {
-class PageMap;
+class PageIndex;
 struct TransactionSnapshot;
 struct TransactionContext;
 
@@ -27,8 +27,8 @@ public:
   Transaction& operator=(Transaction&& o);
   ~Transaction();
 
-  PageMap* getPageMap();
-  void setPageMap(std::unique_ptr<PageMap>&& page_map);
+  PageIndex* getPageIndex();
+  void setPageIndex(std::unique_ptr<PageIndex>&& page_index);
 
   void close();
 
@@ -49,11 +49,12 @@ public:
       bool readonly,
       Transaction* txn);
 
-  uint64_t createSlot();
+  bool createSlot(
+      uint64_t slot_id,
+      std::unique_ptr<PageIndex>&& page_index);
 
 protected:
   std::map<uint64_t, TransactionContext*> slots_; // FIXME allow limit to uint32_t in build config
-  uint64_t slot_id_; // FIXME allow limit to uint32_t in build config
   std::mutex mutex_;
 };
 

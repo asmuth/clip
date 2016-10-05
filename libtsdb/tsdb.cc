@@ -7,18 +7,22 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#include <stdlib.h>
-#include <stdio.h>
-#include "util/exception.h"
-#include "util/unittest.h"
 #include "tsdb.h"
+#include "page_index.h"
 
-UNIT_TEST(TSDBTest);
+namespace tsdb {
 
-TEST_CASE(TSDBTest, TestCreateAndInsert, [] () {
-  tsdb::TSDB db;
+TSDB::TSDB() {}
 
-  EXPECT(db.createSeries(1) == true);
+TSDB::~TSDB() {}
 
-});
+bool TSDB::createSeries(uint64_t series_id) {
+  std::unique_ptr<PageIndex> page_index(new PageIndex());
+
+  return txn_map_.createSlot(
+      series_id,
+      std::move(page_index));
+}
+
+} // namespace tsdb
 

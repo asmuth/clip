@@ -7,18 +7,25 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
+#pragma once
 #include <stdlib.h>
-#include <stdio.h>
-#include "util/exception.h"
-#include "util/unittest.h"
-#include "tsdb.h"
+#include "transaction.h"
 
-UNIT_TEST(TSDBTest);
+namespace tsdb {
 
-TEST_CASE(TSDBTest, TestCreateAndInsert, [] () {
-  tsdb::TSDB db;
+class TSDB {
+public:
 
-  EXPECT(db.createSeries(1) == true);
+  TSDB();
+  TSDB(const TSDB& o) = delete;
+  TSDB& operator=(const TSDB& o) = delete;
+  ~TSDB();
 
-});
+  bool createSeries(uint64_t series_id);
+
+protected:
+  TransactionMap txn_map_;
+};
+
+} // namespace tsdb
 

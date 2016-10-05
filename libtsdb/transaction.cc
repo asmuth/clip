@@ -9,7 +9,7 @@
  */
 #include <assert.h>
 #include "transaction.h"
-#include "page_map.h"
+#include "page_index.h"
 
 namespace tsdb {
 
@@ -31,7 +31,7 @@ static void dropReference(T* ptr) {
 
 struct TransactionSnapshot {
   TransactionSnapshot();
-  std::unique_ptr<PageMap> page_map_;
+  std::unique_ptr<PageIndex> page_index_;
   std::atomic<size_t> refcount_;
 };
 
@@ -49,14 +49,21 @@ struct TransactionContext {
 TransactionContext::TransactionContext() :
     snapshot_(new TransactionSnapshot()),
     refcount_(1) {
-  snapshot_.load()->page_map_.reset(new PageMap());
+  snapshot_.load()->page_index_.reset(new PageIndex());
 }
 
 TransactionContext::~TransactionContext() {
   dropReference(snapshot_.load());
 }
 
-TransactionMap::TransactionMap() : slot_id_(0) {}
+TransactionMap::TransactionMap() {}
+
+TransactionMap::~TransactionMap() {
+  for (auto& s : slots_) {
+    dropReference(s.second);
+    s.second = nullptr;
+  }
+}
 
 Transaction::Transaction() : readonly_(true), ctx_(nullptr), snap_(nullptr) {}
 
@@ -95,17 +102,17 @@ Transaction::~Transaction() {
   close();
 }
 
-PageMap* Transaction::getPageMap() {
-  return snap_->page_map_.get();
+PageIndex* Transaction::getPageIndex() {
+  return snap_->page_index_.get();
 }
 
-void Transaction::setPageMap(std::unique_ptr<PageMap>&& page_map) {
+void Transaction::setPageIndex(std::unique_ptr<PageIndex>&& page_index) {
   assert(!readonly_);
   assert(ctx_->snapshot_.load() == snap_);
 
   auto old_snap = snap_;
   auto new_snap = new TransactionSnapshot();
-  new_snap->page_map_ = std::move(page_map);
+  new_snap->page_index_ = std::move(page_index);
 
   snap_ = new_snap;
   ctx_->snapshot_ = new_snap;
@@ -161,10 +168,19 @@ bool TransactionMap::startTransaction(
   return true;
 }
 
-uint64_t TransactionMap::createSlot() {
+bool TransactionMap::createSlot(
+    uint64_t slot_id,
+    std::unique_ptr<PageIndex>&& page_index) {
   std::unique_lock<std::mutex> lk(mutex_);
-  slots_.emplace(++slot_id_, new TransactionContext());
-  return slot_id_;
+  if (slots_.count(slot_id) > 0) {
+    return false;
+  }
+
+  auto txn_ctx = new TransactionContext();
+  txn_ctx->snapshot_.load()->page_index_ = std::move(page_index);
+
+  slots_.emplace(slot_id, txn_ctx);
+  return true;
 }
 
 } // namespace tsdb

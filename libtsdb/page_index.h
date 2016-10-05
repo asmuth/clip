@@ -24,6 +24,7 @@ class PageIndex {
 public:
 
   PageIndex();
+  PageIndex(size_t n);
   PageIndex(const PageIndex& o) = delete;
   PageIndex& operator=(const PageIndex& o) = delete;
   ~PageIndex();
