@@ -12,23 +12,6 @@
 
 namespace tsdb {
 
-struct PageMapEntry {
-  bool is_dirty;
-  union {
-    struct dirty {
-      void* page_buffer_;
-    };
-    struct cold {
-      uint64_t page_addr_; // FIXME allow limit to uint32_t in build config
-      uint64_t page_size_; // FIXME allow limit to uint32 in build config
-    };
-  } data;
-};
-
-struct PageMapSplitpoint {
-  uint64_t point;
-};
-
 class PageMap {
 public:
 
@@ -38,9 +21,6 @@ public:
   ~PageMap();
 
 protected:
-  PageMapEntry* entries_;
-  PageMapSplitpoint* splitpoints_;
-  size_t size_;
 };
 
 } // namespace tsdb

@@ -7,9 +7,32 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#include "page_map.h"
+#pragma once
+#include <stdlib.h>
 
 namespace tsdb {
+
+struct PageIndexEntry {
+  size_t page_id;
+};
+
+struct PageIndexSplitpoint {
+  uint64_t point;
+};
+
+class PageIndex {
+public:
+
+  PageIndex();
+  PageIndex(const PageIndex& o) = delete;
+  PageIndex& operator=(const PageIndex& o) = delete;
+  ~PageIndex();
+
+protected:
+  PageIndexEntry* entries_;
+  PageIndexSplitpoint* splitpoints_;
+  size_t size_;
+};
 
 } // namespace tsdb
 
