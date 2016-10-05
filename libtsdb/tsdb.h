@@ -11,6 +11,7 @@
 #include <stdlib.h>
 #include "transaction.h"
 #include "page_map.h"
+#include "page_buffer.h"
 
 namespace tsdb {
 
@@ -23,6 +24,13 @@ public:
   ~TSDB();
 
   bool createSeries(uint64_t series_id);
+
+  bool insert(
+      uint64_t series_id,
+      uint64_t time,
+      PageType value_type,
+      const void* value,
+      size_t value_size);
 
   bool insertUInt64(
       uint64_t series_id,

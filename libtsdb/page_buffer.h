@@ -13,8 +13,12 @@
 
 namespace tsdb {
 
+enum class PageType { UINT64 };
+
 class PageBuffer {
 public:
+
+  void insert(uint64_t time, const void* value, size_t value_len);
 
 protected:
   std::vector<uint64_t> timestamps;
