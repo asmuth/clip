@@ -9,6 +9,7 @@
  */
 #include <stdlib.h>
 #include <stdio.h>
+#include <unistd.h>
 #include "util/exception.h"
 #include "util/unittest.h"
 #include "util/time.h"
@@ -18,6 +19,8 @@ UNIT_TEST(TSDBTest);
 
 TEST_CASE(TSDBTest, TestCreateAndInsert, [] () {
   tsdb::TSDB db;
+  unlink("/tmp/__test.tsdb");
+  EXPECT(db.open("/tmp/__test.tsdb") == true);
 
   auto t0 = WallClock::unixMicros();
 
@@ -36,5 +39,7 @@ TEST_CASE(TSDBTest, TestCreateAndInsert, [] () {
     EXPECT(ts == t0 + 20 * i);
     EXPECT(value == i);
   }
+
+  EXPECT(db.commit() == true);
 });
 

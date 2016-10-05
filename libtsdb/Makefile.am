@@ -22,6 +22,7 @@ AM_LDFLAGS = $(PTHREAD_CFLAGS)
 libtsdb_a_SOURCES = \
     cursor.h \
     cursor.cc \
+    op_commit.cc \
     op_insert.cc \
     page_buffer.h \
     page_buffer.cc \
@@ -32,7 +33,9 @@ libtsdb_a_SOURCES = \
     tsdb.h \
     tsdb.cc \
     transaction.h \
-    transaction.cc
+    transaction.cc \
+    varint.h \
+    varint.cc
 
 tsdb_smoketest_SOURCES = \
     @top_srcdir@/src/fnordmetric/util/uri.h \

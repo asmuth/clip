@@ -7,18 +7,42 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
+#include <assert.h>
+#include <fcntl.h>
+#include <unistd.h>
 #include "tsdb.h"
 #include "page_index.h"
 
 namespace tsdb {
 
-TSDB::TSDB() : txn_map_(&page_map_) {}
+TSDB::TSDB() : fd_(-1), fpos_(0), bsize_(0), txn_map_(&page_map_) {}
 
 TSDB::~TSDB() {}
+
+bool TSDB::open(
+    const std::string& filename,
+    size_t block_size /* = kDefaultBlockSize */) {
+  assert(block_size > 0);
+
+  int oflags = O_CREAT | O_RDWR | O_CLOEXEC | O_EXLOCK | O_EXCL;
+  fd_ = ::open(filename.c_str(), oflags, 0666);
+  if (fd_ < 0) {
+    return false;
+  }
+
+  bsize_ = block_size;
+  assert(bsize_ >= kMetaBlockSize);
+  fpos_ = bsize_;
+  return true;
+}
 
 bool TSDB::createSeries(
     uint64_t series_id,
     PageType type) {
+  if (fd_ < 0) {
+    return false;
+  }
+
   std::unique_ptr<PageIndex> page_index(new PageIndex(type));
   page_index->alloc(1);
 
@@ -33,6 +57,10 @@ bool TSDB::createSeries(
 bool TSDB::getCursor(
     uint64_t series_id,
     Cursor* cursor) {
+  if (fd_ < 0) {
+    return false;
+  }
+
   /* start transaction */
   Transaction txn;
   if (!txn_map_.startTransaction(series_id, true, &txn)) {
@@ -46,6 +74,25 @@ bool TSDB::getCursor(
 
   return true;
 }
+
+bool TSDB::allocPage(
+    uint64_t min_size,
+    uint64_t* page_addr,
+    uint64_t* page_size) {
+  assert(min_size > 0);
+  *page_size = ((min_size + bsize_ - 1) / bsize_) * bsize_;
+  assert(*page_size > 0);
+  *page_addr = fpos_;
+  auto new_fpos = fpos_ + *page_size;
+
+  if (ftruncate(fd_, new_fpos) != 0) {
+    return false;
+  }
+
+  fpos_ = new_fpos;
+  return true;
+}
+
 
 } // namespace tsdb
 

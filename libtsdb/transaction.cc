@@ -220,5 +220,12 @@ bool TransactionMap::createSlot(
   return true;
 }
 
+void TransactionMap::listSlots(std::set<uint64_t>* slots) {
+  std::unique_lock<std::mutex> lk(mutex_);
+  for (const auto& s : slots_) {
+    slots->emplace(s.first);
+  }
+}
+
 } // namespace tsdb
 

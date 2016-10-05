@@ -9,6 +9,8 @@
  */
 #pragma once
 #include <stdlib.h>
+#include <mutex>
+#include <string>
 #include "transaction.h"
 #include "page_map.h"
 #include "page_buffer.h"
@@ -19,10 +21,17 @@ namespace tsdb {
 class TSDB {
 public:
 
+  static const size_t kMetaBlockSize = 512;
+  static const size_t kDefaultBlockSize = 512;
+
   TSDB();
   TSDB(const TSDB& o) = delete;
   TSDB& operator=(const TSDB& o) = delete;
   ~TSDB();
+
+  bool open(
+      const std::string& filename,
+      size_t block_size = kDefaultBlockSize);
 
   bool createSeries(uint64_t series_id, PageType type);
 
@@ -40,9 +49,21 @@ public:
       uint64_t time,
       uint64_t value);
 
+  bool commit();
+
 protected:
+
+  bool allocPage(
+      uint64_t min_size,
+      uint64_t* page_addr,
+      uint64_t* page_size);
+
+  int fd_;
+  size_t fpos_;
+  size_t bsize_;
   PageMap page_map_;
   TransactionMap txn_map_;
+  std::mutex commit_mutex_;
 };
 
 } // namespace tsdb

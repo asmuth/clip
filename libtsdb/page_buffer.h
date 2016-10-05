@@ -33,6 +33,8 @@ public:
 
   size_t getSize() const;
 
+  void encode(std::string* out) const;
+
 protected:
 
   using ValueVectorUInt64Type = std::vector<uint64_t>;

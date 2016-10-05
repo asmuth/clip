@@ -60,6 +60,8 @@ public:
       uint64_t slot_id,
       std::unique_ptr<PageIndex>&& page_index);
 
+  void listSlots(std::set<uint64_t>* slots);
+
 protected:
   PageMap* page_map_;
   std::map<uint64_t, TransactionContext*> slots_; // FIXME allow limit to uint32_t in build config

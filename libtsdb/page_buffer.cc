@@ -9,9 +9,11 @@
  */
 #include <assert.h>
 #include <stdlib.h>
+#include <string>
 #include <vector>
 #include <algorithm>
 #include "page_buffer.h"
+#include "varint.h"
 
 namespace tsdb {
 
@@ -107,6 +109,17 @@ void PageBuffer::getValue(size_t pos, uint64_t* value) const {
 
 size_t PageBuffer::getSize() const {
   return timestamps_.size();
+}
+
+void PageBuffer::encode(std::string* out) const {
+  writeVarUInt(out, timestamps_.size());
+  for (const auto& t : timestamps_) {
+    writeVarUInt(out, t);
+  }
+  auto& values = *((ValueVectorUInt64Type*) values_);
+  for (const auto& v : values) {
+    writeVarUInt(out, v);
+  }
 }
 
 } // namespace tsdb
