@@ -21,20 +21,23 @@ static void addReference(T* ptr) {
 }
 
 struct TransactionSnapshot {
-  TransactionSnapshot(PageMap* page_map);
+  TransactionSnapshot(PageMap* page_map, uint64_t version);
   ~TransactionSnapshot();
   PageMap* page_map_;
   std::unique_ptr<PageIndex> page_index_;
   std::atomic<size_t> refcount_;
   std::atomic<TransactionSnapshot*> next_;
   std::set<PageMap::PageIDType> dropped_pages_;
+  const uint64_t version_;
 };
 
 TransactionSnapshot::TransactionSnapshot(
-    PageMap* page_map) :
+    PageMap* page_map,
+    uint64_t version) :
     page_map_(page_map),
     refcount_(1),
-    next_(nullptr) {}
+    next_(nullptr),
+    version_(version) {}
 
 TransactionSnapshot::~TransactionSnapshot() {
   for (const auto& p : dropped_pages_) {
@@ -69,7 +72,7 @@ struct TransactionContext {
 
 TransactionContext::TransactionContext(
     PageMap* page_map) :
-    snapshot_(new TransactionSnapshot(page_map)),
+    snapshot_(new TransactionSnapshot(page_map, 1)),
     refcount_(1) {}
 
 TransactionContext::~TransactionContext() {
@@ -143,7 +146,10 @@ void Transaction::updatePageIndex(
   assert(ctx_->snapshot_.load() == snap_);
 
   auto old_snap = snap_;
-  auto new_snap = new TransactionSnapshot(old_snap->page_map_);
+  auto new_snap = new TransactionSnapshot(
+      old_snap->page_map_,
+      old_snap->version_ + 1);
+
   new_snap->page_index_ = std::move(page_index);
   new_snap->refcount_.fetch_add(1);
   old_snap->dropped_pages_ = deleted_pages;
@@ -154,6 +160,14 @@ void Transaction::updatePageIndex(
   snap_ = new_snap;
   ctx_->snapshot_ = new_snap;
   dropSnapshotReference(old_snap);
+}
+
+uint64_t Transaction::getVersion() const {
+  if (!snap_) {
+    return 0;
+  }
+
+  return snap_->version_;
 }
 
 void Transaction::close() {

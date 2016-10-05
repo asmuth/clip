@@ -37,6 +37,8 @@ public:
       const std::set<PageMap::PageIDType>& deleted_pages =
           std::set<PageMap::PageIDType>{});
 
+  uint64_t getVersion() const;
+
   void close();
 
 protected:
