@@ -17,12 +17,6 @@
 
 namespace tsdb {
 
-struct SeriesIndexPosition {
-  uint64_t series_id;
-  uint64_t addr;
-  uint64_t size;
-};
-
 bool TSDB::commit() {
   std::unique_lock<std::mutex> lk(commit_mutex_);
 
@@ -30,8 +24,10 @@ bool TSDB::commit() {
   std::set<uint64_t> series_ids;
   txn_map_.listSlots(&series_ids);
 
+  /* write the transaction header */
+  std::string txn_data;
+
   /* write the pages and partition indexes for each series */
-  std::vector<SeriesIndexPosition> series_index_positions;
   for (auto siter = series_ids.begin(); siter != series_ids.end(); ) {
     auto series_id = *siter;
 
@@ -51,6 +47,11 @@ bool TSDB::commit() {
     auto page_idx = txn.getPageIndex();
     writeVarUInt(&index_data, (uint64_t) page_idx->getType());
     writeVarUInt(&index_data, page_idx->getSize());
+
+    for (size_t i = 1; i < page_idx->getSize(); ++i) {
+      auto point = page_idx->getSplitpoints()[i - 1].point;
+      writeVarUInt(&index_data, point); // FIXME use delta encoding
+    }
 
     /* write each page to disk */
     for (size_t i = 0; i < page_idx->getSize(); ++i) {
@@ -74,29 +75,55 @@ bool TSDB::commit() {
         return false;
       }
 
+      /* append the pages position to the series index */
       writeVarUInt(&index_data, page_disk_addr);
       writeVarUInt(&index_data, page_disk_size);
     }
 
-    for (size_t i = 1; i < page_idx->getSize(); ++i) {
-      auto point = page_idx->getSplitpoints()[i - 1].point;
-      writeVarUInt(&index_data, point); // FIXME use delta encoding
-    }
-
-    SeriesIndexPosition index_pos;
-    index_pos.series_id = series_id;
-    if (!allocPage(index_data.size(), &index_pos.addr, &index_pos.size)) {
+    /* write the series index to disk*/
+    uint64_t index_disk_addr;
+    uint64_t index_disk_size;
+    if (!allocPage(index_data.size(), &index_disk_addr, &index_disk_size)) {
       return false;
     }
 
-    auto rc = pwrite(fd_, index_data.data(), index_data.size(), index_pos.addr);
+    auto rc = pwrite(fd_, index_data.data(), index_data.size(), index_disk_addr);
     if (rc <= 0) {
       return false;
     }
 
-    series_index_positions.emplace_back(index_pos);
+    /* append the series index position to the transaction */
+    writeVarUInt(&txn_data, series_id);
+    writeVarUInt(&txn_data, index_disk_addr);
+    writeVarUInt(&txn_data, index_disk_size);
   }
 
+  /* write the new transaction to disk */
+  uint64_t txn_disk_addr;
+  uint64_t txn_disk_size;
+  if (!allocPage(txn_data.size(), &txn_disk_addr, &txn_disk_size)) {
+    return false;
+  }
+
+  auto rc = pwrite(fd_, txn_data.data(), txn_data.size(), txn_disk_addr);
+  if (rc <= 0) {
+    return false;
+  }
+
+  /* fsync all changes before comitting the new transaction */
+  fsync(fd_);
+
+  /* commit the new transaction */
+  std::string commit_data(kMagicBytes, sizeof(kMagicBytes));
+  writeVarUInt(&commit_data, txn_disk_addr);
+  writeVarUInt(&commit_data, txn_disk_size);
+
+  rc = pwrite(fd_, commit_data.data(), commit_data.size(), 0);
+  if (rc <= 0) {
+    return false;
+  }
+
+  fsync(fd_);
   return true;
 }
 

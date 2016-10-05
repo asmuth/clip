@@ -21,8 +21,9 @@ namespace tsdb {
 class TSDB {
 public:
 
-  static const size_t kMetaBlockSize = 512;
-  static const size_t kDefaultBlockSize = 512;
+  static const size_t kMetaBlockSize;
+  static const size_t kDefaultBlockSize;
+  static const char kMagicBytes[4];
 
   TSDB();
   TSDB(const TSDB& o) = delete;

@@ -15,6 +15,10 @@
 
 namespace tsdb {
 
+const size_t TSDB::kMetaBlockSize = 512;
+const size_t TSDB::kDefaultBlockSize = 512;
+const char TSDB::kMagicBytes[4] = {0x17, 0x42, 0x05, 0x23};
+
 TSDB::TSDB() : fd_(-1), fpos_(0), bsize_(0), txn_map_(&page_map_) {}
 
 TSDB::~TSDB() {}
