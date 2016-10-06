@@ -1,5 +1,3 @@
-- [ ] remove ftruncate from allocpage
-----
 - [ ] partition split in insert
 - [ ] TSDB::listSeries
 - [ ] Cursor::seek
