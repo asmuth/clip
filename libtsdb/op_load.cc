@@ -44,7 +44,12 @@ bool TSDB::load() {
       return false;
     }
 
-    fpos_ = txn_addr + txn_size;
+    uint64_t fpos;
+    if (readVarUInt(&metablock_cur, metablock_end, &fpos)) {
+      fpos_ = fpos;
+    } else {
+      return false;
+    }
   }
 
   /* read transaction */

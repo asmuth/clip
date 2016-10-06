@@ -184,6 +184,7 @@ bool TSDB::commit() {
   std::string commit_data(kMagicBytes, sizeof(kMagicBytes));
   writeVarUInt(&commit_data, txn_disk_addr);
   writeVarUInt(&commit_data, txn_disk_size);
+  writeVarUInt(&commit_data, fpos_);
 
   rc = pwrite(fd_, commit_data.data(), commit_data.size(), 0);
   if (rc <= 0) {
