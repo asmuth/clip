@@ -119,9 +119,18 @@ bool TSDB::allocPage(
   *page_addr = fpos_;
   auto new_fpos = fpos_ + *page_size;
 
+#ifdef HAVE_POSIX_FALLOCATE
+  if (posix_fallocate(fd_, fpos_, *page_size) != 0) {
+    return false;
+  }
+#else
+  /* fall back to using ftruncate if the os doesn't support a preallocation call
+     we skip the hack where a single zero byte is written to the end of file to 
+     actually 'force' the allocation. */
   if (ftruncate(fd_, new_fpos) != 0) {
     return false;
   }
+#endif
 
   fpos_ = new_fpos;
   return true;

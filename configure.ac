@@ -9,23 +9,22 @@ AC_CONFIG_SRCDIR([configure.ac])
 AC_CONFIG_MACRO_DIR([m4])
 AM_SILENT_RULES([yes])
 
-# Check for build env
+# Check for build env, standard header files and library functions
 AC_PROG_CC
 AC_PROG_CXX
 AC_PROG_RANLIB
 AM_PROG_AS
 AM_PROG_AR
-
-# Check for header files
 AC_HEADER_STDC
-AC_CHECK_HEADERS([fcntl.h inttypes.h limits.h stdlib.h unistd.h syslog.h])
-AM_CONDITIONAL([HAVE_SYSLOG_H], [test x$HAVE_SYSLOG_H = x1])
-
-# Check for library functions
 AC_FUNC_MEMCMP
 AC_FUNC_STRTOD
-AC_CHECK_FUNCS([ftruncate memset mkdir strchr strerror strtol gethostbyname_r])
+ACX_PTHREAD
+AC_CHECK_HEADERS([fcntl.h inttypes.h limits.h stdlib.h unistd.h syslog.h])
+AC_CHECK_FUNCS([ftruncate posix_fallocate gethostbyname_r])
+AM_CONDITIONAL([HAVE_SYSLOG_H], [test x$HAVE_SYSLOG_H = x1])
 AM_CONDITIONAL([HAVE_GETHOSTBYNAME_R], [test x$HAVE_GETHOSTBYNAME_R = x1])
+AM_CONDITIONAL([HAVE_POSIX_FALLOCATE], [test x$HAVE_POSIX_FALLOCATE = x1])
+AM_CONDITIONAL([HAVE_PTHREAD], [test "x$acx_pthread_ok" = "xyes"])
 
 # Check for zlib
 HAVE_ZLIB=0
@@ -60,10 +59,6 @@ AS_IF([test "$with_zlib" != no], [
   ])
 ])
 AM_CONDITIONAL([HAVE_ZLIB], [test $HAVE_ZLIB = 1])
-
-# Check for pthread
-ACX_PTHREAD
-AM_CONDITIONAL([HAVE_PTHREAD], [test "x$acx_pthread_ok" = "xyes"])
 
 AC_CONFIG_FILES([Makefile libtsdb/Makefile src/fnordmetric/Makefile sensors/sysstat/Makefile])
 AC_OUTPUT
