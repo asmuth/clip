@@ -10,6 +10,7 @@
 #include <assert.h>
 #include <unistd.h>
 #include <string.h>
+#include <fcntl.h>
 #include <set>
 #include <vector>
 #include "tsdb.h"
@@ -27,9 +28,17 @@ bool TSDB::load() {
     std::string metablock;
     metablock.resize(kMetaBlockSize);
 
+#ifdef HAVE_POSIX_FADVISE
+    posix_fadvise(fd_, 0, metablock.size(), POSIX_FADV_NOREUSE);
+#endif
+
     if (pread(fd_, &metablock[0], metablock.size(), 0) <= 0) {
       return false;
     }
+
+#ifdef HAVE_POSIX_FADVISE
+    posix_fadvise(fd_, 0, metablock.size(), POSIX_FADV_DONTNEED);
+#endif
 
     if (memcmp(metablock.data(), kMagicBytes, sizeof(kMagicBytes)) != 0) {
       return false;
@@ -57,9 +66,17 @@ bool TSDB::load() {
   std::string txn_data;
   txn_data.resize(txn_size);
 
+#ifdef HAVE_POSIX_FADVISE
+  posix_fadvise(fd_, txn_addr, txn_size, POSIX_FADV_NOREUSE);
+#endif
+
   if (pread(fd_, &txn_data[0], txn_size, txn_addr) <= 0) {
     return false;
   }
+
+#ifdef HAVE_POSIX_FADVISE
+  posix_fadvise(fd_, txn_addr, txn_size, POSIX_FADV_DONTNEED);
+#endif
 
   const char* txn_data_cur = &txn_data[0];
   const char* txn_data_end = txn_data_cur + txn_data.size();
@@ -113,9 +130,17 @@ bool TSDB::loadTransaction(
   std::string index_data;
   index_data.resize(disk_size);
 
+#ifdef HAVE_POSIX_FADVISE
+  posix_fadvise(fd_, disk_addr, disk_size, POSIX_FADV_NOREUSE);
+#endif
+
   if (pread(fd_, &index_data[0], disk_size, disk_addr) <= 0) {
     return false;
   }
+
+#ifdef HAVE_POSIX_FADVISE
+  posix_fadvise(fd_, disk_addr, disk_size, POSIX_FADV_DONTNEED);
+#endif
 
   const char* index_data_cur = &index_data[0];
   const char* index_data_end = index_data_cur + index_data.size();

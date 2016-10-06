@@ -66,7 +66,11 @@ TSDB::TSDB(
     fpos_(fpos),
     bsize_(bsize),
     page_map_(fd),
-    txn_map_(&page_map_) {}
+    txn_map_(&page_map_) {
+#ifdef HAVE_POSIX_FADVISE
+  posix_fadvise(fd_, 0, 0, POSIX_FADV_RANDOM);
+#endif
+}
 
 TSDB::~TSDB() {
   close(fd_);

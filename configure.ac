@@ -21,10 +21,11 @@ AC_FUNC_MEMCMP
 AC_FUNC_STRTOD
 ACX_PTHREAD
 AC_CHECK_HEADERS([fcntl.h inttypes.h limits.h stdlib.h unistd.h syslog.h])
-AC_CHECK_FUNCS([ftruncate posix_fallocate gethostbyname_r])
+AC_CHECK_FUNCS([ftruncate posix_fallocate posix_fadvise gethostbyname_r])
 AM_CONDITIONAL([HAVE_SYSLOG_H], [test x$HAVE_SYSLOG_H = x1])
 AM_CONDITIONAL([HAVE_GETHOSTBYNAME_R], [test x$HAVE_GETHOSTBYNAME_R = x1])
 AM_CONDITIONAL([HAVE_POSIX_FALLOCATE], [test x$HAVE_POSIX_FALLOCATE = x1])
+AM_CONDITIONAL([HAVE_POSIX_FADVISE], [test x$HAVE_POSIX_FADVISE = x1])
 AM_CONDITIONAL([HAVE_PTHREAD], [test "x$acx_pthread_ok" = "xyes"])
 
 # Check for fdatasync (am_check_funcs doesn't work on OSX for fdatasync)

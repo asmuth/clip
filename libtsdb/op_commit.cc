@@ -9,6 +9,7 @@
  */
 #include <assert.h>
 #include <unistd.h>
+#include <fcntl.h>
 #include <set>
 #include <vector>
 #include "tsdb.h"
@@ -31,9 +32,15 @@ struct FlushedIndex {
   uint64_t disk_size;
 };
 
+struct IndexPage {
+  uint64_t addr;
+  uint64_t size;
+};
+
 bool TSDB::commit() {
   std::unique_lock<std::mutex> lk(commit_mutex_);
   std::vector<FlushedPage> flushed_pages;
+  std::vector<IndexPage> index_pages;
 
   /* get a snapshot of all series */
   bool all_series_clean = true;
@@ -146,6 +153,11 @@ bool TSDB::commit() {
         return false;
       }
 
+      IndexPage index_page;
+      index_page.addr = index_disk_addr;
+      index_page.size = index_disk_size;
+      index_pages.emplace_back(index_page);
+
       page_idx->setDiskSnapshot(index_disk_addr, index_disk_size);
     }
 
@@ -206,6 +218,14 @@ bool TSDB::commit() {
 #else
   if (fsync(fd_) != 0) {
     return false;
+  }
+#endif
+
+  /* advise the kernel that we are not going to read back the index */
+#ifdef HAVE_POSIX_FADVISE
+  posix_fadvise(fd_, txn_disk_addr, txn_disk_size, POSIX_FADV_DONTNEED);
+  for (const auto& p : index_pages) {
+    posix_fadvise(fd_, p.addr, p.size, POSIX_FADV_DONTNEED);
   }
 #endif
 
