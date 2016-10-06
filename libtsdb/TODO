@@ -6,5 +6,6 @@
 - [ ] store metadata blob w/ each series
 - [ ] free list
 - [ ] improved page de/encoding
+- [ ] grab file lock in open
 ----
 - [ ] delete range

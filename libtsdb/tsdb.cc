@@ -29,7 +29,7 @@ bool TSDB::createDatabase(
 
   int fd = ::open(
       filename.c_str(),
-      O_CREAT | O_RDWR | O_CLOEXEC | O_EXLOCK | O_EXCL,
+      O_CREAT | O_RDWR | O_CLOEXEC | O_EXCL,
       0666);
 
   if (fd < 0) {
@@ -43,7 +43,7 @@ bool TSDB::createDatabase(
 bool TSDB::openDatabase(
     std::unique_ptr<TSDB>* db,
     const std::string& filename) {
-  int fd = ::open(filename.c_str(), O_RDWR | O_CLOEXEC | O_EXLOCK);
+  int fd = ::open(filename.c_str(), O_RDWR | O_CLOEXEC);
   if (fd < 0) {
     return false;
   }
