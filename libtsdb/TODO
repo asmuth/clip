@@ -9,3 +9,5 @@
 - [ ] grab file lock in open
 ----
 - [ ] delete range
+- [ ] preload next N transaction pages using fadivse(WILLNEED) in op_load
+

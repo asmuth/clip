@@ -28,17 +28,9 @@ bool TSDB::load() {
     std::string metablock;
     metablock.resize(kMetaBlockSize);
 
-#ifdef HAVE_POSIX_FADVISE
-    posix_fadvise(fd_, 0, metablock.size(), POSIX_FADV_NOREUSE);
-#endif
-
     if (pread(fd_, &metablock[0], metablock.size(), 0) <= 0) {
       return false;
     }
-
-#ifdef HAVE_POSIX_FADVISE
-    posix_fadvise(fd_, 0, metablock.size(), POSIX_FADV_DONTNEED);
-#endif
 
     if (memcmp(metablock.data(), kMagicBytes, sizeof(kMagicBytes)) != 0) {
       return false;
@@ -113,6 +105,8 @@ bool TSDB::load() {
       return false;
     }
 
+    // FIXME preload next N transaction pages using fadivse(WILLNEED)
+
     seriesidx_disk_addr *= bsize_;
     seriesidx_disk_size *= bsize_;
     if (!loadTransaction(series_id, seriesidx_disk_addr, seriesidx_disk_size)) {
@@ -129,10 +123,6 @@ bool TSDB::loadTransaction(
     uint64_t disk_size) {
   std::string index_data;
   index_data.resize(disk_size);
-
-#ifdef HAVE_POSIX_FADVISE
-  posix_fadvise(fd_, disk_addr, disk_size, POSIX_FADV_NOREUSE);
-#endif
 
   if (pread(fd_, &index_data[0], disk_size, disk_addr) <= 0) {
     return false;

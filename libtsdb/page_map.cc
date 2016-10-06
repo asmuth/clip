@@ -9,6 +9,7 @@
  */
 #include <assert.h>
 #include <unistd.h>
+#include <fcntl.h>
 #include "page_map.h"
 
 namespace tsdb {
@@ -141,6 +142,10 @@ bool PageMap::modifyPage(
       entry->buffer.reset(nullptr);
       return false;
     }
+
+#ifdef HAVE_POSIX_FADVISE
+    posix_fadvise(fd_, entry->disk_addr, entry->disk_size, POSIX_FADV_DONTNEED);
+#endif
   }
 
   /* perform the modification */
@@ -217,6 +222,12 @@ void PageMap::deletePage(PageIDType page_id) {
   auto entry = iter->second;
   map_.erase(iter);
   map_lk.unlock();
+
+  if (entry->disk_addr > 0 && !entry->buffer) {
+#ifdef HAVE_POSIX_FADVISE
+    posix_fadvise(fd_, entry->disk_addr, entry->disk_size, POSIX_FADV_DONTNEED);
+#endif
+  }
 
   dropEntryReference(entry);
 }
