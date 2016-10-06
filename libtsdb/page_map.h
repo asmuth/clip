@@ -9,6 +9,7 @@
  */
 #pragma once
 #include <stdlib.h>
+#include <atomic>
 #include <memory>
 #include <map>
 #include <mutex>

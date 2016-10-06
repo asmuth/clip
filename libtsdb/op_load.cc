@@ -9,6 +9,7 @@
  */
 #include <assert.h>
 #include <unistd.h>
+#include <string.h>
 #include <set>
 #include <vector>
 #include "tsdb.h"
