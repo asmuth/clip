@@ -23,6 +23,7 @@
  * commercial activities involving this program without disclosing the source
  * code of your own applications
  */
+#include <iostream>
 #include <string>
 #include <ctime>
 #include <sys/time.h>
@@ -78,7 +79,7 @@ uint64_t MonotonicClock::now() {
 #else
   timespec ts;
   if (clock_gettime(CLOCK_MONOTONIC, &ts) != 0) {
-    logFatal("clock_gettime(CLOCK_MONOTONIC) failed");
+    std::cerr << "clock_gettime(CLOCK_MONOTONIC) failed\n";
     abort();
   } else {
     return std::uint64_t(ts.tv_sec) * 1000000 + ts.tv_nsec / 1000;
