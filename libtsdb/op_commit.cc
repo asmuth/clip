@@ -178,7 +178,15 @@ bool TSDB::commit() {
   }
 
   /* fsync all changes before comitting the new transaction */
-  fsync(fd_);
+#ifdef HAVE_FDATASYNC
+  if (fdatasync(fd_) != 0) {
+    return false;
+  }
+#else
+  if (fsync(fd_) != 0) {
+    return false;
+  }
+#endif
 
   /* commit the new transaction */
   std::string commit_data(kMagicBytes, sizeof(kMagicBytes));
@@ -191,7 +199,15 @@ bool TSDB::commit() {
     return false;
   }
 
-  fsync(fd_);
+#ifdef HAVE_FDATASYNC
+  if (fdatasync(fd_) != 0) {
+    return false;
+  }
+#else
+  if (fsync(fd_) != 0) {
+    return false;
+  }
+#endif
 
   /* drop the flushed pages from memory */
   for (const auto& p : flushed_pages) {

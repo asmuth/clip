@@ -20,6 +20,10 @@ if HAVE_POSIX_FALLOCATE
 FEATURE_TEST_DEFS += -DHAVE_POSIX_FALLOCATE=1
 endif
 
+if HAVE_FDATASYNC
+FEATURE_TEST_DEFS += -DHAVE_FDATASYNC=1
+endif
+
 AM_CXXFLAGS = -DFNORDMETRIC_VERSION=\"v@PACKAGE_VERSION@\" $(FEATURE_TEST_DEFS) -std=c++0x -mno-omit-leaf-frame-pointer -fno-omit-frame-pointer -Wall -Wextra -Wno-unused-parameter -Wdelete-non-virtual-dtor -Wno-predefined-identifier-outside-function -g -I$(top_srcdir)/src/fnordmetric -I$(top_srcdir)/src
 AM_LDFLAGS = $(PTHREAD_LDFLAGS)
 
