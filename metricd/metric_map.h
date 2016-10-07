@@ -18,10 +18,10 @@
 
 namespace fnordmetric {
 
-class MetricRepository {
+class MetricMap {
 public:
 
-  virtual ~MetricRepository() {}
+  virtual ~MetricMap() {}
 
   Metric* findMetric(const std::string& key) const;
 

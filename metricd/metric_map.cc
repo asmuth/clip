@@ -14,7 +14,7 @@ using namespace fnord;
 namespace fnordmetric {
 namespace metricdb {
 
-IMetric* IMetricRepository::findMetric(const std::string& key) const {
+IMetric* IMetricMap::findMetric(const std::string& key) const {
   IMetric* metric = nullptr;
 
   std::lock_guard<std::mutex> lock_holder(metrics_mutex_);
@@ -27,7 +27,7 @@ IMetric* IMetricRepository::findMetric(const std::string& key) const {
   return metric;
 }
 
-IMetric* IMetricRepository::findOrCreateMetric(const std::string& key) {
+IMetric* IMetricMap::findOrCreateMetric(const std::string& key) {
   IMetric* metric;
   std::lock_guard<std::mutex> lock_holder(metrics_mutex_);
 
@@ -50,7 +50,7 @@ IMetric* IMetricRepository::findOrCreateMetric(const std::string& key) {
   return metric;
 }
 
-std::vector<IMetric*> IMetricRepository::listMetrics()
+std::vector<IMetric*> IMetricMap::listMetrics()
     const {
   std::vector<IMetric*> metrics;
 
