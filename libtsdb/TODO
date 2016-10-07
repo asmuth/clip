@@ -5,6 +5,7 @@
 - [ ] free list
 - [ ] improved page de/encoding
 - [ ] grab file lock in open
+- [ ] return error messages
 ----
 - [ ] delete range
 - [ ] preload next N transaction pages using fadivse(WILLNEED) in op_load
