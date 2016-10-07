@@ -12,7 +12,7 @@
 #include <stdlib.h>
 #include <vector>
 #include <string>
-#include <fnordmetric/sql/runtime/symboltable.h>
+#include <metricd/sql/runtime/symboltable.h>
 
 namespace fnordmetric {
 namespace query {

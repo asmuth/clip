@@ -11,7 +11,7 @@
 #include <assert.h>
 #include <math.h>
 #include <string.h>
-#include <fnordmetric/sql/expressions/math.h>
+#include <metricd/sql/expressions/math.h>
 
 namespace fnordmetric {
 namespace query {

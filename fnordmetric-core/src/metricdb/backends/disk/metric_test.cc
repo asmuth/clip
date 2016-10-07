@@ -7,11 +7,11 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#include <fnordmetric/environment.h>
-#include <fnordmetric/io/fileutil.h>
-#include <fnordmetric/metricdb/metric.h>
-#include <fnordmetric/util/unittest.h>
-#include <fnordmetric/util/wallclock.h>
+#include <metricd/environment.h>
+#include <metricd/io/fileutil.h>
+#include <metricd/metricdb/metric.h>
+#include <metricd/util/unittest.h>
+#include <metricd/util/wallclock.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>

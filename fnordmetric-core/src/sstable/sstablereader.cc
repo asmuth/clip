@@ -7,10 +7,10 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#include <fnordmetric/sstable/binaryformat.h>
-#include <fnordmetric/sstable/sstablereader.h>
-#include <fnordmetric/util/fnv.h>
-#include <fnordmetric/util/runtimeexception.h>
+#include <metricd/sstable/binaryformat.h>
+#include <metricd/sstable/sstablereader.h>
+#include <metricd/util/fnv.h>
+#include <metricd/util/runtimeexception.h>
 
 namespace fnord {
 namespace sstable {

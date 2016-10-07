@@ -7,9 +7,9 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#include <fnordmetric/sql_extensions/domainconfig.h>
-#include <fnordmetric/ui/continuousdomain.h>
-#include <fnordmetric/ui/timedomain.h>
+#include <metricd/sql_extensions/domainconfig.h>
+#include <metricd/ui/continuousdomain.h>
+#include <metricd/ui/timedomain.h>
 
 namespace fnordmetric {
 namespace query {

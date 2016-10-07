@@ -7,10 +7,10 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#include <fnordmetric/webui/webui.h>
-//#include <fnordmetric/util/assets.h>
-#include <fnordmetric/util/uri.h>
-#include <fnordmetric/util/logging.h>
+#include <metricd/webui/webui.h>
+//#include <metricd/util/assets.h>
+#include <metricd/util/uri.h>
+#include <metricd/util/logging.h>
 
 namespace fnordmetric {
 

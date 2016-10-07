@@ -11,16 +11,16 @@
 #define _FNORDMETRIC_BARCHART_H
 #include <stdlib.h>
 #include <memory>
-#include <fnordmetric/ui/axisdefinition.h>
-#include <fnordmetric/ui/canvas.h>
-#include <fnordmetric/ui/colorpalette.h>
-#include <fnordmetric/ui/domain.h>
-#include <fnordmetric/ui/continuousdomain.h>
-#include <fnordmetric/ui/discretedomain.h>
-#include <fnordmetric/ui/drawable.h>
-#include <fnordmetric/ui/rendertarget.h>
-#include <fnordmetric/ui/seriesjoin.h>
-#include <fnordmetric/util/runtimeexception.h>
+#include <metricd/ui/axisdefinition.h>
+#include <metricd/ui/canvas.h>
+#include <metricd/ui/colorpalette.h>
+#include <metricd/ui/domain.h>
+#include <metricd/ui/continuousdomain.h>
+#include <metricd/ui/discretedomain.h>
+#include <metricd/ui/drawable.h>
+#include <metricd/ui/rendertarget.h>
+#include <metricd/ui/seriesjoin.h>
+#include <metricd/util/runtimeexception.h>
 
 namespace fnordmetric {
 namespace ui {

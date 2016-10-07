@@ -25,7 +25,7 @@
 #define _STX_STATS_MOVINGAVERAGE_H
 #include <stdlib.h>
 #include <stdint.h>
-#include "fnordmetric/util/UnixTime.h"
+#include "metricd/util/UnixTime.h"
 
 namespace stats {
 

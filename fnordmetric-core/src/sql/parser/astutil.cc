@@ -7,11 +7,11 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#include <fnordmetric/sql/parser/astnode.h>
-#include <fnordmetric/sql/parser/astutil.h>
-#include <fnordmetric/sql/parser/token.h>
-#include <fnordmetric/sql/runtime/tablerepository.h>
-#include <fnordmetric/util/runtimeexception.h>
+#include <metricd/sql/parser/astnode.h>
+#include <metricd/sql/parser/astutil.h>
+#include <metricd/sql/parser/token.h>
+#include <metricd/sql/runtime/tablerepository.h>
+#include <metricd/util/runtimeexception.h>
 
 namespace fnordmetric {
 namespace query {

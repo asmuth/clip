@@ -6,7 +6,7 @@ AUTOMAKE_OPTIONS = foreign
 SUBDIRS = \
     . \
     libtsdb \
-    src/fnordmetric \
+    metricd \
     sensors/sysstat
 
 EXTRA_DIST =                             \

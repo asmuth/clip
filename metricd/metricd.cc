@@ -30,12 +30,12 @@
 #include <sys/resource.h>
 #include <sys/file.h>
 //#include <curl/curl.h>
-#include <fnordmetric/util/flagparser.h>
-#include <fnordmetric/util/logging.h>
-#include <fnordmetric/transport/http/eventloop.h>
-#include <fnordmetric/transport/http/httprouter.h>
-#include <fnordmetric/transport/http/httpserver.h>
-#include <fnordmetric/webui/webui.h>
+#include <metricd/util/flagparser.h>
+#include <metricd/util/logging.h>
+#include <metricd/transport/http/eventloop.h>
+#include <metricd/transport/http/httprouter.h>
+#include <metricd/transport/http/httpserver.h>
+#include <metricd/webui/webui.h>
 
 using namespace fnordmetric;
 

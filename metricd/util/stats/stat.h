@@ -23,8 +23,8 @@
  */
 #ifndef _STX_STATS_STAT_H
 #define _STX_STATS_STAT_H
-#include "fnordmetric/util/autoref.h"
-#include "fnordmetric/util/stats/statssink.h"
+#include "metricd/util/autoref.h"
+#include "metricd/util/stats/statssink.h"
 
 namespace stats {
 

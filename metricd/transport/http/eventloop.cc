@@ -17,8 +17,8 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
-#include "fnordmetric/util/exception.h"
-#include "fnordmetric/transport/http/eventloop.h"
+#include "metricd/util/exception.h"
+#include "metricd/transport/http/eventloop.h"
 
 namespace fnordmetric {
 namespace http {

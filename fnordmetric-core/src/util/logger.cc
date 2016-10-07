@@ -7,9 +7,9 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#include <fnordmetric/util/logger.h>
-#include <fnordmetric/util/wallclock.h>
-#include <fnordmetric/util/runtimeexception.h>
+#include <metricd/util/logger.h>
+#include <metricd/util/wallclock.h>
+#include <metricd/util/runtimeexception.h>
 #include <sstream>
 #include <stdarg.h>
 

@@ -24,8 +24,8 @@
 #include <limits>
 #include <string.h>
 #include <stdio.h>
-#include <fnordmetric/util/exception.h>
-#include <fnordmetric/util/ieee754.h>
+#include <metricd/util/exception.h>
+#include <metricd/util/ieee754.h>
 
 uint64_t IEEE754::toBytes(double value) {
   uint64_t bytes;

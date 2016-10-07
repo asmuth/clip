@@ -21,11 +21,11 @@
  * commercial activities involving this program without disclosing the source
  * code of your own applications
  */
-#include <fnordmetric/util/inspect.h>
-#include <fnordmetric/util/logging.h>
-#include "fnordmetric/transport/http/httpserverconnection.h"
-#include <fnordmetric/transport/http/httpservice.h>
-#include <fnordmetric/transport/http/HTTPResponseStream.h>
+#include <metricd/util/inspect.h>
+#include <metricd/util/logging.h>
+#include "metricd/transport/http/httpserverconnection.h"
+#include <metricd/transport/http/httpservice.h>
+#include <metricd/transport/http/HTTPResponseStream.h>
 
 namespace fnordmetric {
 namespace http {

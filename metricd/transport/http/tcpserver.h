@@ -24,8 +24,8 @@
 #ifndef _STX_NET_TCPSERVER_H
 #define _STX_NET_TCPSERVER_H
 
-#include "fnordmetric/transport/http/taskscheduler.h"
-#include "fnordmetric/transport/http/tcpconnection.h"
+#include "metricd/transport/http/taskscheduler.h"
+#include "metricd/transport/http/tcpconnection.h"
 
 namespace fnordmetric {
 namespace http {

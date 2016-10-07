@@ -24,11 +24,11 @@
 #ifndef _libstx_HTTPSTATS_H
 #define _libstx_HTTPSTATS_H
 
-#include "fnordmetric/util/fileutil.h"
-#include "fnordmetric/util/stdtypes.h"
-#include "fnordmetric/util/stats/counter.h"
-#include "fnordmetric/util/stats/multicounter.h"
-#include "fnordmetric/util/stats/statsrepository.h"
+#include "metricd/util/fileutil.h"
+#include "metricd/util/stdtypes.h"
+#include "metricd/util/stats/counter.h"
+#include "metricd/util/stats/multicounter.h"
+#include "metricd/util/stats/statsrepository.h"
 
 namespace fnordmetric {
 namespace http {

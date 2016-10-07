@@ -25,8 +25,8 @@
 #define _STX_STATS_COUNTER_H
 #include <stdlib.h>
 #include <stdint.h>
-#include "fnordmetric/util/time.h"
-#include "fnordmetric/util/stats/stat.h"
+#include "metricd/util/time.h"
+#include "metricd/util/stats/stat.h"
 
 namespace stats {
 

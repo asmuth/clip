@@ -12,11 +12,11 @@
 #include <string.h>
 #include <string>
 #include <vector>
-#include <fnordmetric/cli/cli.h>
-#include <fnordmetric/util/exceptionhandler.h>
-#include <fnordmetric/util/random.h>
-#include <fnordmetric/environment.h>
-#include <fnordmetric/util/signalhandler.h>
+#include <metricd/cli/cli.h>
+#include <metricd/util/exceptionhandler.h>
+#include <metricd/util/random.h>
+#include <metricd/environment.h>
+#include <metricd/util/signalhandler.h>
 
 using namespace fnordmetric;
 

@@ -7,14 +7,14 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#include <fnordmetric/environment.h>
-#include <fnordmetric/http/httpinputstream.h>
-#include <fnordmetric/http/httpoutputstream.h>
-#include <fnordmetric/http/httpserver.h>
-#include <fnordmetric/http/httprequest.h>
-#include <fnordmetric/http/httpresponse.h>
-#include <fnordmetric/util/runtimeexception.h>
-#include <fnordmetric/util/wallclock.h>
+#include <metricd/environment.h>
+#include <metricd/http/httpinputstream.h>
+#include <metricd/http/httpoutputstream.h>
+#include <metricd/http/httpserver.h>
+#include <metricd/http/httprequest.h>
+#include <metricd/http/httpresponse.h>
+#include <metricd/util/runtimeexception.h>
+#include <metricd/util/wallclock.h>
 #include <netinet/in.h>
 #include <sys/types.h>
 #include <sys/socket.h>

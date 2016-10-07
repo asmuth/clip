@@ -7,7 +7,7 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#include <fnordmetric/ui/barchart.h>
+#include <metricd/ui/barchart.h>
 
 namespace fnordmetric {
 namespace ui {

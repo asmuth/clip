@@ -9,8 +9,8 @@
  */
 #ifndef _FNORDMETRIC_QUERYSERVICE_H
 #define _FNORDMETRIC_QUERYSERVICE_H
-#include <fnordmetric/query/query.h>
-#include <fnordmetric/sql/runtime/defaultruntime.h>
+#include <metricd/query/query.h>
+#include <metricd/sql/runtime/defaultruntime.h>
 
 namespace fnordmetric {
 namespace ui {

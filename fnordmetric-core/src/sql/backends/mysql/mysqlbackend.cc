@@ -7,11 +7,11 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#include <fnordmetric/environment.h>
-#include <fnordmetric/sql/backends/mysql/mysqlbackend.h>
-#include <fnordmetric/sql/backends/mysql/mysqlconnection.h>
-#include <fnordmetric/sql/backends/mysql/mysqltableref.h>
-#include <fnordmetric/util/runtimeexception.h>
+#include <metricd/environment.h>
+#include <metricd/sql/backends/mysql/mysqlbackend.h>
+#include <metricd/sql/backends/mysql/mysqlconnection.h>
+#include <metricd/sql/backends/mysql/mysqltableref.h>
+#include <metricd/util/runtimeexception.h>
 #include <memory>
 #include <mutex>
 

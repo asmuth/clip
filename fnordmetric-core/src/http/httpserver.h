@@ -11,9 +11,9 @@
 #define _FNORDMETRIC_WEB_HTTPSERVER_H
 #include <memory>
 #include <vector>
-#include <fnordmetric/http/httprequest.h>
-#include <fnordmetric/http/httphandler.h>
-#include <fnordmetric/thread/taskscheduler.h>
+#include <metricd/http/httprequest.h>
+#include <metricd/http/httphandler.h>
+#include <metricd/thread/taskscheduler.h>
 
 namespace fnord {
 namespace http {

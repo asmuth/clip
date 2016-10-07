@@ -14,10 +14,10 @@
 #include <string>
 #include <vector>
 #include <memory>
-#include <fnordmetric/sql/runtime/runtime.h>
-#include <fnordmetric/sql/runtime/queryplannode.h>
-#include <fnordmetric/sql_extensions/drawstatement.h>
-#include <fnordmetric/ui/canvas.h>
+#include <metricd/sql/runtime/runtime.h>
+#include <metricd/sql/runtime/queryplannode.h>
+#include <metricd/sql_extensions/drawstatement.h>
+#include <metricd/ui/canvas.h>
 
 namespace fnordmetric {
 namespace query {

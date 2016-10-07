@@ -7,9 +7,9 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#include <fnordmetric/metricdb/metricrepository.h>
-#include <fnordmetric/net/udpserver.h>
-#include <fnordmetric/thread/taskscheduler.h>
+#include <metricd/metricdb/metricrepository.h>
+#include <metricd/net/udpserver.h>
+#include <metricd/thread/taskscheduler.h>
 
 namespace fnordmetric {
 namespace metricdb {

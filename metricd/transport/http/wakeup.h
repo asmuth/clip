@@ -27,7 +27,7 @@
 #include <condition_variable>
 #include <mutex>
 #include <list>
-#include <fnordmetric/util/autoref.h>
+#include <metricd/util/autoref.h>
 
 namespace fnordmetric {
 namespace http {

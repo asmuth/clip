@@ -21,10 +21,10 @@
  * commercial activities involving this program without disclosing the source
  * code of your own applications
  */
-#include <fnordmetric/util/exception.h>
-#include <fnordmetric/transport/http/cookies.h>
-#include <fnordmetric/transport/http/httpparser.h>
-#include <fnordmetric/transport/http/httprequest.h>
+#include <metricd/util/exception.h>
+#include <metricd/transport/http/cookies.h>
+#include <metricd/transport/http/httpparser.h>
+#include <metricd/transport/http/httprequest.h>
 
 namespace fnordmetric {
 namespace http {

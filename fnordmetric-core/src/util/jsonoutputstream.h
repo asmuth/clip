@@ -9,8 +9,8 @@
  */
 #ifndef _FNORDMETRIC_UTIL_JSONOUTPUTSTREAM_H
 #define _FNORDMETRIC_UTIL_JSONOUTPUTSTREAM_H
-#include <fnordmetric/util/outputstream.h>
-#include <fnordmetric/util/runtimeexception.h>
+#include <metricd/util/outputstream.h>
+#include <metricd/util/runtimeexception.h>
 
 namespace fnordmetric {
 namespace util {

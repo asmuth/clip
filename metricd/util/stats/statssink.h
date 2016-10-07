@@ -24,7 +24,7 @@
 #ifndef _STX_STATS_STATSSINK_H
 #define _STX_STATS_STATSSINK_H
 #include <stdlib.h>
-#include "fnordmetric/util/stdtypes.h"
+#include "metricd/util/stdtypes.h"
 
 namespace stats {
 

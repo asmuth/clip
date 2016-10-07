@@ -9,8 +9,8 @@
  */
 #ifndef _FNORDMETRIC_TIMEDOMAIN_H
 #define _FNORDMETRIC_TIMEDOMAIN_H
-#include <fnordmetric/ui/continuousdomain.h>
-#include <fnordmetric/util/datetime.h>
+#include <metricd/ui/continuousdomain.h>
+#include <metricd/util/datetime.h>
 
 namespace fnordmetric {
 namespace ui {

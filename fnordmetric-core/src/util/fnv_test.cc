@@ -10,8 +10,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <assert.h>
-#include <fnordmetric/util/fnv.h>
-#include <fnordmetric/util/unittest.h>
+#include <metricd/util/fnv.h>
+#include <metricd/util/unittest.h>
 
 UNIT_TEST(FNVTest);
 

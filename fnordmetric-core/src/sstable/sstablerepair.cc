@@ -7,11 +7,11 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#include <fnordmetric/environment.h>
-#include <fnordmetric/sstable/sstablereader.h>
-#include <fnordmetric/sstable/sstablerepair.h>
-#include <fnordmetric/util/fnv.h>
-#include <fnordmetric/util/runtimeexception.h>
+#include <metricd/environment.h>
+#include <metricd/sstable/sstablereader.h>
+#include <metricd/sstable/sstablerepair.h>
+#include <metricd/util/fnv.h>
+#include <metricd/util/runtimeexception.h>
 
 using fnordmetric::util::RuntimeException;
 

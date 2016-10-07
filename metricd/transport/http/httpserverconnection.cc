@@ -21,10 +21,10 @@
  * commercial activities involving this program without disclosing the source
  * code of your own applications
  */
-#include "fnordmetric/util/exception.h"
-#include "fnordmetric/util/logging.h"
-#include "fnordmetric/transport/http/httpserverconnection.h"
-#include "fnordmetric/transport/http/httpgenerator.h"
+#include "metricd/util/exception.h"
+#include "metricd/util/logging.h"
+#include "metricd/transport/http/httpserverconnection.h"
+#include "metricd/transport/http/httpgenerator.h"
 
 namespace fnordmetric {
 namespace http {

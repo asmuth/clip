@@ -12,8 +12,8 @@
 #include <sys/select.h>
 #include <thread>
 #include <vector>
-#include <fnordmetric/transport/http/wakeup.h>
-#include <fnordmetric/transport/http/taskscheduler.h>
+#include <metricd/transport/http/wakeup.h>
+#include <metricd/transport/http/taskscheduler.h>
 
 namespace fnordmetric {
 namespace http {

@@ -13,9 +13,9 @@
 #include <vector>
 #include <string>
 #include <tuple>
-#include <fnordmetric/ui/axisdefinition.h>
-#include <fnordmetric/ui/drawable.h>
-#include <fnordmetric/ui/legenddefinition.h>
+#include <metricd/ui/axisdefinition.h>
+#include <metricd/ui/drawable.h>
+#include <metricd/ui/legenddefinition.h>
 
 namespace fnordmetric {
 namespace ui {

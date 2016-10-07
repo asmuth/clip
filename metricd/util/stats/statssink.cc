@@ -21,8 +21,8 @@
  * commercial activities involving this program without disclosing the source
  * code of your own applications
  */
-#include "fnordmetric/util/stringutil.h"
-#include "fnordmetric/util/stats/statssink.h"
+#include "metricd/util/stringutil.h"
+#include "metricd/util/stats/statssink.h"
 
 namespace stats {
 

@@ -7,7 +7,7 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#include <fnordmetric/metricdb/sample.h>
+#include <metricd/metricdb/sample.h>
 
 using fnord::util::DateTime;
 

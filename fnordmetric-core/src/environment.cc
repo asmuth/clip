@@ -8,8 +8,8 @@
  * <http://www.gnu.org/licenses/>.
  */
 #include <memory>
-#include <fnordmetric/environment.h>
-#include <fnordmetric/util/logoutputstream.h>
+#include <metricd/environment.h>
+#include <metricd/util/logoutputstream.h>
 
 using fnord::util::LogOutputStream;
 

@@ -21,7 +21,7 @@
  * commercial activities involving this program without disclosing the source
  * code of your own applications
  */
-#include "fnordmetric/util/stats/statsrepository.h"
+#include "metricd/util/stats/statsrepository.h"
 
 namespace stats {
 

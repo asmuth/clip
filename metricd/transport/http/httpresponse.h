@@ -23,10 +23,10 @@
  */
 #ifndef _libstx_WEB_HTTPRESPONSE_H
 #define _libstx_WEB_HTTPRESPONSE_H
-#include <fnordmetric/util/time.h>
-#include <fnordmetric/transport/http/httpmessage.h>
-#include <fnordmetric/transport/http/httprequest.h>
-#include <fnordmetric/transport/http/status.h>
+#include <metricd/util/time.h>
+#include <metricd/transport/http/httpmessage.h>
+#include <metricd/transport/http/httprequest.h>
+#include <metricd/transport/http/status.h>
 #include <string>
 
 namespace fnordmetric {

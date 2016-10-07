@@ -7,10 +7,10 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#include <fnordmetric/ui/domain.h>
-#include <fnordmetric/ui/continuousdomain.h>
-#include <fnordmetric/ui/discretedomain.h>
-#include <fnordmetric/ui/timedomain.h>
+#include <metricd/ui/domain.h>
+#include <metricd/ui/continuousdomain.h>
+#include <metricd/ui/discretedomain.h>
+#include <metricd/ui/timedomain.h>
 
 using namespace fnord;
 namespace fnordmetric {

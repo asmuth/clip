@@ -12,9 +12,9 @@
 #include <algorithm>
 #include <stdlib.h>
 #include <assert.h>
-#include <fnordmetric/ui/domain.h>
-#include <fnordmetric/ui/drawable.h>
-#include <fnordmetric/util/format.h>
+#include <metricd/ui/domain.h>
+#include <metricd/ui/drawable.h>
+#include <metricd/util/format.h>
 
 namespace fnordmetric {
 namespace query {

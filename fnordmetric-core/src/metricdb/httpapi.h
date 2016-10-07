@@ -10,11 +10,11 @@
 #ifndef _FNORDMETRIC_METRICDB_HTTPINTERFACE_H
 #define _FNORDMETRIC_METRICDB_HTTPINTERFACE_H
 #include <memory>
-#include <fnordmetric/http/httphandler.h>
-#include <fnordmetric/http/httprequest.h>
-#include <fnordmetric/http/httpresponse.h>
-#include <fnordmetric/util/jsonoutputstream.h>
-#include <fnordmetric/util/uri.h>
+#include <metricd/http/httphandler.h>
+#include <metricd/http/httprequest.h>
+#include <metricd/http/httpresponse.h>
+#include <metricd/util/jsonoutputstream.h>
+#include <metricd/util/uri.h>
 
 using namespace fnord;
 namespace fnordmetric {

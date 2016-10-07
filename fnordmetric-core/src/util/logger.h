@@ -9,7 +9,7 @@
  */
 #ifndef _FNORDMETRIC_UTIL_LOGGER_H
 #define _FNORDMETRIC_UTIL_LOGGER_H
-#include <fnordmetric/util/datetime.h>
+#include <metricd/util/datetime.h>
 #include <string>
 #include <vector>
 

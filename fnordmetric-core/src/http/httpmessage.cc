@@ -8,7 +8,7 @@
  * <http://www.gnu.org/licenses/>.
  */
 #include <algorithm>
-#include <fnordmetric/http/httprequest.h>
+#include <metricd/http/httprequest.h>
 
 using fnordmetric::util::InputStream;
 using fnordmetric::util::OutputStream;

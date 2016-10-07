@@ -23,8 +23,8 @@
  */
 #ifndef _libstx_HTTPCONNECTIONHANDLER_H
 #define _libstx_HTTPCONNECTIONHANDLER_H
-#include <fnordmetric/transport/http/httprequest.h>
-#include <fnordmetric/transport/http/httpresponse.h>
+#include <metricd/transport/http/httprequest.h>
+#include <metricd/transport/http/httpresponse.h>
 
 namespace fnordmetric {
 namespace http {

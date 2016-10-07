@@ -9,7 +9,7 @@
  */
 #include <stdlib.h>
 #include "pointchart.h"
-#include <fnordmetric/util/runtimeexception.h>
+#include <metricd/util/runtimeexception.h>
 
 namespace fnordmetric {
 namespace ui {

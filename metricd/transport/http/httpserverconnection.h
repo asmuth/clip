@@ -25,15 +25,15 @@
 #define _STX_HTTP_SERVERCONNECTION_H
 #include <memory>
 #include <vector>
-#include <fnordmetric/util/autoref.h>
-#include <fnordmetric/util/stdtypes.h>
-#include <fnordmetric/transport/http/httphandler.h>
-#include <fnordmetric/transport/http/httpparser.h>
-#include <fnordmetric/transport/http/httprequest.h>
-#include <fnordmetric/transport/http/httpresponse.h>
-#include <fnordmetric/transport/http/httpstats.h>
-#include <fnordmetric/transport/http/tcpconnection.h>
-#include <fnordmetric/transport/http/taskscheduler.h>
+#include <metricd/util/autoref.h>
+#include <metricd/util/stdtypes.h>
+#include <metricd/transport/http/httphandler.h>
+#include <metricd/transport/http/httpparser.h>
+#include <metricd/transport/http/httprequest.h>
+#include <metricd/transport/http/httpresponse.h>
+#include <metricd/transport/http/httpstats.h>
+#include <metricd/transport/http/tcpconnection.h>
+#include <metricd/transport/http/taskscheduler.h>
 
 namespace fnordmetric {
 namespace http {

@@ -26,9 +26,9 @@
 #include <vector>
 #include <string>
 #include <utility>
-#include <fnordmetric/util/buffer.h>
-#include <fnordmetric/util/inputstream.h>
-#include <fnordmetric/util/outputstream.h>
+#include <metricd/util/buffer.h>
+#include <metricd/util/inputstream.h>
+#include <metricd/util/outputstream.h>
 
 namespace fnordmetric {
 namespace http {

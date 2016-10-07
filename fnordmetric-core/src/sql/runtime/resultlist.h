@@ -13,8 +13,8 @@
 #include <string>
 #include <vector>
 #include <memory>
-#include <fnordmetric/sql/runtime/rowsink.h>
-#include <fnordmetric/sql/svalue.h>
+#include <metricd/sql/runtime/rowsink.h>
+#include <metricd/sql/svalue.h>
 
 namespace fnordmetric {
 namespace query {

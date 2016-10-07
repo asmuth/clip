@@ -26,7 +26,7 @@
 
 #include <stdlib.h>
 #include <stdint.h>
-#include "fnordmetric/util/buffer.h"
+#include "metricd/util/buffer.h"
 
 class BufferUtil {
 public:

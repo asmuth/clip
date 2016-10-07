@@ -22,7 +22,7 @@
  * commercial activities involving this program without disclosing the source
  * code of your own applications
  */
-#include <fnordmetric/transport/http/HTTPRequestStream.h>
+#include <metricd/transport/http/HTTPRequestStream.h>
 
 namespace fnordmetric {
 namespace http {

@@ -21,8 +21,8 @@
  * commercial activities involving this program without disclosing the source
  * code of your own applications
  */
-#include "fnordmetric/transport/http/cookies.h"
-#include "fnordmetric/util/inspect.h"
+#include "metricd/transport/http/cookies.h"
+#include "metricd/util/inspect.h"
 
 namespace fnordmetric {
 namespace http {

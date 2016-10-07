@@ -10,10 +10,10 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-#include <fnordmetric/io/file.h>
-#include <fnordmetric/util/unittest.h>
-#include <fnordmetric/sstable/sstablewriter.h>
-#include <fnordmetric/sstable/rowoffsetindex.h>
+#include <metricd/io/file.h>
+#include <metricd/util/unittest.h>
+#include <metricd/sstable/sstablewriter.h>
+#include <metricd/sstable/rowoffsetindex.h>
 
 using namespace fnord::sstable;
 using namespace fnord::io;

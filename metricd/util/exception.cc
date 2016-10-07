@@ -24,8 +24,8 @@
 #include <stdio.h>
 #include <stdarg.h>
 #include <string.h>
-#include <fnordmetric/util/exception.h>
-#include <fnordmetric/util/outputstream.h>
+#include <metricd/util/exception.h>
+#include <metricd/util/outputstream.h>
 
 Exception::Exception() :
     type_name_(nullptr),

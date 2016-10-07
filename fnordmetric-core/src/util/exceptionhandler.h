@@ -11,7 +11,7 @@
 #define _FNORDMETRIC_UTIL_EXCEPTIONHANDLER_H
 #include <mutex>
 #include <memory>
-#include <fnordmetric/util/logger.h>
+#include <metricd/util/logger.h>
 
 namespace fnord {
 namespace util {

@@ -25,20 +25,20 @@
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h>
-#include <fnordmetric/util/exception.h>
-#include <fnordmetric/transport/http/httpclient.h>
-#include <fnordmetric/transport/http/httpconnectionpool.h>
-#include <fnordmetric/transport/http/httpparser.h>
-#include <fnordmetric/transport/http/httprequest.h>
-#include <fnordmetric/transport/http/httpresponse.h>
-#include <fnordmetric/transport/http/httpresponsehandler.h>
-#include <fnordmetric/transport/http/httpclientconnection.h>
-#include <fnordmetric/util/io/inputstream.h>
-#include <fnordmetric/util/test/unittest.h>
-#include <fnordmetric/util/thread/eventloop.h>
-#include <fnordmetric/util/thread/threadpool.h>
+#include <metricd/util/exception.h>
+#include <metricd/transport/http/httpclient.h>
+#include <metricd/transport/http/httpconnectionpool.h>
+#include <metricd/transport/http/httpparser.h>
+#include <metricd/transport/http/httprequest.h>
+#include <metricd/transport/http/httpresponse.h>
+#include <metricd/transport/http/httpresponsehandler.h>
+#include <metricd/transport/http/httpclientconnection.h>
+#include <metricd/util/io/inputstream.h>
+#include <metricd/util/test/unittest.h>
+#include <metricd/util/thread/eventloop.h>
+#include <metricd/util/thread/threadpool.h>
 
-#include "fnordmetric/eventql.h"
+#include "metricd/eventql.h"
 using namespace http;
 
 UNIT_TEST(HTTPTest);

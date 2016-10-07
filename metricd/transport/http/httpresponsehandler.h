@@ -23,7 +23,7 @@
  */
 #ifndef _libstx_HTTPRESPONSEHANDLER_H
 #define _libstx_HTTPRESPONSEHANDLER_H
-#include "fnordmetric/transport/http/wakeup.h"
+#include "metricd/transport/http/wakeup.h"
 #include <memory>
 
 namespace fnordmetric {

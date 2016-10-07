@@ -27,8 +27,8 @@
 #include <memory>
 #include <mutex>
 #include <stdlib.h>
-#include "fnordmetric/util/inspect.h"
-#include "fnordmetric/util/exception.h"
+#include "metricd/util/inspect.h"
+#include "metricd/util/exception.h"
 
 template <typename T>
 class Option {

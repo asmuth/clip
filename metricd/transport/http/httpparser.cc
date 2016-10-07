@@ -22,10 +22,10 @@
  * code of your own applications
  */
 #include <string.h>
-#include "fnordmetric/util/bufferutil.h"
-#include "fnordmetric/util/exception.h"
-#include "fnordmetric/util/inspect.h"
-#include "fnordmetric/transport/http/httpparser.h"
+#include "metricd/util/bufferutil.h"
+#include "metricd/util/exception.h"
+#include "metricd/util/inspect.h"
+#include "metricd/transport/http/httpparser.h"
 
 namespace fnordmetric {
 namespace http {

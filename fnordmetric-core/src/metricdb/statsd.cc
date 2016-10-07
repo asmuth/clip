@@ -7,10 +7,10 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#include <fnordmetric/environment.h>
-#include <fnordmetric/util/inspect.h>
-#include <fnordmetric/metricdb/statsd.h>
-#include <fnordmetric/util/runtimeexception.h>
+#include <metricd/environment.h>
+#include <metricd/util/inspect.h>
+#include <metricd/metricdb/statsd.h>
+#include <metricd/util/runtimeexception.h>
 
 namespace fnordmetric {
 namespace metricdb {

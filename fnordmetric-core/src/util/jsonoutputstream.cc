@@ -7,7 +7,7 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#include <fnordmetric/util/jsonoutputstream.h>
+#include <metricd/util/jsonoutputstream.h>
 #include <stdlib.h>
 #include <stdint.h>
 #include <stdio.h>

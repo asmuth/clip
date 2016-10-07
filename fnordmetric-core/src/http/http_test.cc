@@ -10,13 +10,13 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-#include <fnordmetric/util/inputstream.h>
-#include <fnordmetric/http/httpinputstream.h>
-#include <fnordmetric/http/httpoutputstream.h>
-#include <fnordmetric/http/httprequest.h>
-#include <fnordmetric/http/httpresponse.h>
-#include <fnordmetric/util/unittest.h>
-#include <fnordmetric/util/runtimeexception.h>
+#include <metricd/util/inputstream.h>
+#include <metricd/http/httpinputstream.h>
+#include <metricd/http/httpoutputstream.h>
+#include <metricd/http/httprequest.h>
+#include <metricd/http/httpresponse.h>
+#include <metricd/util/unittest.h>
+#include <metricd/util/runtimeexception.h>
 
 using namespace fnord::http;
 using fnord::http::HTTPInputStream;

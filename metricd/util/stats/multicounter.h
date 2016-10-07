@@ -25,9 +25,9 @@
 #define _STX_STATS_MULTICOUNTER_H
 #include <stdlib.h>
 #include <stdint.h>
-#include "fnordmetric/util/time.h"
-#include "fnordmetric/util/hash.h"
-#include "fnordmetric/util/stats/stat.h"
+#include "metricd/util/time.h"
+#include "metricd/util/hash.h"
+#include "metricd/util/stats/stat.h"
 
 namespace stats {
 

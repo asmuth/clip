@@ -9,8 +9,8 @@
  */
 #ifndef _FNORDMETRIC_UTIL_LOGOUTPUTSTREAM_H
 #define _FNORDMETRIC_UTIL_LOGOUTPUTSTREAM_H
-#include <fnordmetric/util/logger.h>
-#include <fnordmetric/util/outputstream.h>
+#include <metricd/util/logger.h>
+#include <metricd/util/outputstream.h>
 
 namespace fnord {
 namespace util {

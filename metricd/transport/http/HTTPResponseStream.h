@@ -24,10 +24,10 @@
  */
 #ifndef _STX_HTTP_HTTPRESPONSESTREAM_H
 #define _STX_HTTP_HTTPRESPONSESTREAM_H
-#include <fnordmetric/util/stdtypes.h>
-#include <fnordmetric/util/autoref.h>
-#include <fnordmetric/transport/http/httpresponse.h>
-#include <fnordmetric/transport/http/httpserverconnection.h>
+#include <metricd/util/stdtypes.h>
+#include <metricd/util/autoref.h>
+#include <metricd/transport/http/httpresponse.h>
+#include <metricd/transport/http/httpserverconnection.h>
 
 namespace fnordmetric {
 namespace http {

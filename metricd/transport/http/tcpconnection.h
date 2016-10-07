@@ -24,8 +24,8 @@
 #ifndef _STX_NET_TCPCONNECTION_H
 #define _STX_NET_TCPCONNECTION_H
 #include <stdlib.h>
-#include "fnordmetric/transport/http/inetaddr.h"
-#include "fnordmetric/transport/http/taskscheduler.h"
+#include "metricd/transport/http/inetaddr.h"
+#include "metricd/transport/http/taskscheduler.h"
 
 namespace fnordmetric {
 namespace http {

@@ -13,13 +13,13 @@
 #include <string>
 #include <vector>
 #include <assert.h>
-#include <fnordmetric/sql/parser/token.h>
-#include <fnordmetric/sql/parser/astnode.h>
-#include <fnordmetric/sql/runtime/queryplannode.h>
-#include <fnordmetric/sql/runtime/tablerepository.h>
-#include <fnordmetric/sql/runtime/compile.h>
-#include <fnordmetric/sql/runtime/execute.h>
-#include <fnordmetric/util/runtimeexception.h>
+#include <metricd/sql/parser/token.h>
+#include <metricd/sql/parser/astnode.h>
+#include <metricd/sql/runtime/queryplannode.h>
+#include <metricd/sql/runtime/tablerepository.h>
+#include <metricd/sql/runtime/compile.h>
+#include <metricd/sql/runtime/execute.h>
+#include <metricd/util/runtimeexception.h>
 
 namespace fnordmetric {
 namespace query {

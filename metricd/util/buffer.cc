@@ -7,8 +7,8 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#include <fnordmetric/util/buffer.h>
-#include <fnordmetric/util/exception.h>
+#include <metricd/util/buffer.h>
+#include <metricd/util/exception.h>
 #include <string.h>
 
 Buffer::Buffer() : data_(nullptr), size_(0), alloc_(0), mark_(0) {}

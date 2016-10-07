@@ -8,11 +8,11 @@
  * <http://www.gnu.org/licenses/>.
  */
 #include <stdlib.h>
-#include <fnordmetric/ui/canvas.h>
-#include <fnordmetric/ui/rendertarget.h>
-#include <fnordmetric/ui/domain.h>
-#include <fnordmetric/ui/rendertarget.h>
-#include <fnordmetric/ui/svgtarget.h>
+#include <metricd/ui/canvas.h>
+#include <metricd/ui/rendertarget.h>
+#include <metricd/ui/domain.h>
+#include <metricd/ui/rendertarget.h>
+#include <metricd/ui/svgtarget.h>
 
 namespace fnordmetric {
 namespace ui {

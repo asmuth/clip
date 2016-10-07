@@ -9,7 +9,7 @@
  */
 #ifndef _FNORDMETRIC_WEB_HTTPREQUEST_H
 #define _FNORDMETRIC_WEB_HTTPREQUEST_H
-#include <fnordmetric/http/httpmessage.h>
+#include <metricd/http/httpmessage.h>
 #include <string>
 
 namespace fnord {

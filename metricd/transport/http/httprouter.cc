@@ -23,9 +23,9 @@
  */
 #include <stdlib.h>
 #include <memory>
-#include "fnordmetric/transport/http/httpserverconnection.h"
-#include "fnordmetric/transport/http/httprouter.h"
-#include "fnordmetric/transport/http/httpservice.h"
+#include "metricd/transport/http/httpserverconnection.h"
+#include "metricd/transport/http/httprouter.h"
+#include "metricd/transport/http/httpservice.h"
 
 namespace fnordmetric {
 namespace http {

@@ -10,13 +10,13 @@
 #ifndef _FNORDMETRIC_LINECHART_H
 #define _FNORDMETRIC_LINECHART_H
 #include <stdlib.h>
-#include <fnordmetric/ui/axisdefinition.h>
-#include <fnordmetric/ui/continuousdomain.h>
-#include <fnordmetric/ui/domain.h>
-#include <fnordmetric/ui/drawable.h>
-#include <fnordmetric/ui/canvas.h>
-#include <fnordmetric/ui/colorpalette.h>
-#include <fnordmetric/ui/rendertarget.h>
+#include <metricd/ui/axisdefinition.h>
+#include <metricd/ui/continuousdomain.h>
+#include <metricd/ui/domain.h>
+#include <metricd/ui/drawable.h>
+#include <metricd/ui/canvas.h>
+#include <metricd/ui/colorpalette.h>
+#include <metricd/ui/rendertarget.h>
 
 namespace fnordmetric {
 namespace ui {

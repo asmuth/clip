@@ -7,16 +7,16 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-#include <fnordmetric/ui/axisdefinition.h>
-#include <fnordmetric/ui/areachart.h>
-#include <fnordmetric/ui/barchart.h>
-#include <fnordmetric/ui/canvas.h>
-#include <fnordmetric/ui/domain.h>
-#include <fnordmetric/ui/linechart.h>
-#include <fnordmetric/ui/pointchart.h>
-#include <fnordmetric/ui/series.h>
-#include <fnordmetric/ui/svgtarget.h>
-#include <fnordmetric/util/unittest.h>
+#include <metricd/ui/axisdefinition.h>
+#include <metricd/ui/areachart.h>
+#include <metricd/ui/barchart.h>
+#include <metricd/ui/canvas.h>
+#include <metricd/ui/domain.h>
+#include <metricd/ui/linechart.h>
+#include <metricd/ui/pointchart.h>
+#include <metricd/ui/series.h>
+#include <metricd/ui/svgtarget.h>
+#include <metricd/util/unittest.h>
 
 using namespace fnordmetric;
 using namespace fnordmetric::ui;

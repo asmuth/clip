@@ -23,8 +23,8 @@
  */
 #ifndef _STX_STATS_STATSREPOSITORY_H
 #define _STX_STATS_STATSREPOSITORY_H
-#include "fnordmetric/util/stdtypes.h"
-#include "fnordmetric/util/stats/stat.h"
+#include "metricd/util/stdtypes.h"
+#include "metricd/util/stats/stat.h"
 
 namespace stats {
 

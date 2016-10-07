@@ -9,7 +9,7 @@
  */
 #ifndef _FNORDMETRIC_DISCRETEDOMAIN_H
 #define _FNORDMETRIC_DISCRETEDOMAIN_H
-#include <fnordmetric/ui/domain.h>
+#include <metricd/ui/domain.h>
 
 namespace fnordmetric {
 namespace ui {

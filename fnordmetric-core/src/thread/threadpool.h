@@ -13,9 +13,9 @@
 #include <condition_variable>
 #include <functional>
 #include <list>
-#include <fnordmetric/thread/task.h>
-#include <fnordmetric/thread/taskscheduler.h>
-#include <fnordmetric/util/exceptionhandler.h>
+#include <metricd/thread/task.h>
+#include <metricd/thread/taskscheduler.h>
+#include <metricd/util/exceptionhandler.h>
 
 namespace fnord {
 namespace thread {

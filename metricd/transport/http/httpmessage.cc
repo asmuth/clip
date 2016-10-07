@@ -22,8 +22,8 @@
  * code of your own applications
  */
 #include <algorithm>
-#include <fnordmetric/util/inspect.h>
-#include <fnordmetric/transport/http/httprequest.h>
+#include <metricd/util/inspect.h>
+#include <metricd/transport/http/httprequest.h>
 
 namespace fnordmetric {
 namespace http {

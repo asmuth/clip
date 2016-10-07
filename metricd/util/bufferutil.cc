@@ -21,8 +21,8 @@
  * commercial activities involving this program without disclosing the source
  * code of your own applications
  */
-#include "fnordmetric/util/bufferutil.h"
-#include "fnordmetric/util/inspect.h"
+#include "metricd/util/bufferutil.h"
+#include "metricd/util/inspect.h"
 
 void BufferUtil::stripTrailingBytes(Buffer* buf, unsigned char byte) {
   auto begin = (const unsigned char*) buf->data();

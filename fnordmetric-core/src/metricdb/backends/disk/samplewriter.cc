@@ -7,11 +7,11 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#include <fnordmetric/metricdb/backends/disk/binaryformat.h>
-#include <fnordmetric/metricdb/backends/disk/samplewriter.h>
-#include <fnordmetric/metricdb/backends/disk/tokenindex.h>
-#include <fnordmetric/util/ieee754.h>
-#include <fnordmetric/util/runtimeexception.h>
+#include <metricd/metricdb/backends/disk/binaryformat.h>
+#include <metricd/metricdb/backends/disk/samplewriter.h>
+#include <metricd/metricdb/backends/disk/tokenindex.h>
+#include <metricd/util/ieee754.h>
+#include <metricd/util/runtimeexception.h>
 #include <stdlib.h>
 
 namespace fnordmetric {

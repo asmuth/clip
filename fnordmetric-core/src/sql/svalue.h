@@ -13,8 +13,8 @@
 #include <string>
 #include <string.h>
 #include <vector>
-#include <fnordmetric/util/runtimeexception.h>
-#include <fnordmetric/types.h>
+#include <metricd/util/runtimeexception.h>
+#include <metricd/types.h>
 
 namespace fnordmetric {
 namespace query {

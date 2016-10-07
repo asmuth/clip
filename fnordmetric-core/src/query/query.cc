@@ -9,15 +9,15 @@
  */
 #include <stdlib.h>
 #include <string.h>
-#include <fnordmetric/query/query.h>
-#include <fnordmetric/sql/parser/astnode.h>
-#include <fnordmetric/sql/parser/parser.h>
-#include <fnordmetric/sql/runtime/queryplanbuilder.h>
-#include <fnordmetric/sql/runtime/resultlist.h>
-#include <fnordmetric/sql/runtime/tablerepository.h>
-#include <fnordmetric/sql/runtime/importstatement.h>
-#include <fnordmetric/sql_extensions/drawstatement.h>
-#include <fnordmetric/util/runtimeexception.h>
+#include <metricd/query/query.h>
+#include <metricd/sql/parser/astnode.h>
+#include <metricd/sql/parser/parser.h>
+#include <metricd/sql/runtime/queryplanbuilder.h>
+#include <metricd/sql/runtime/resultlist.h>
+#include <metricd/sql/runtime/tablerepository.h>
+#include <metricd/sql/runtime/importstatement.h>
+#include <metricd/sql_extensions/drawstatement.h>
+#include <metricd/util/runtimeexception.h>
 
 namespace fnordmetric {
 namespace query {

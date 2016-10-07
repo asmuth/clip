@@ -10,8 +10,8 @@
 #ifndef _FNORDMETRIC_ENVIRONMENT_H
 #define _FNORDMETRIC_ENVIRONMENT_H
 #include <memory>
-#include <fnordmetric/cli/flagparser.h>
-#include <fnordmetric/util/logger.h>
+#include <metricd/cli/flagparser.h>
+#include <metricd/util/logger.h>
 #include "config.h"
 
 using fnord::util::Logger;

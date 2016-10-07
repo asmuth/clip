@@ -9,9 +9,9 @@
  */
 #ifndef _FNORDMETRIC_FFS_OBJECTREF_H
 #define _FNORDMETRIC_FFS_OBJECTREF_H
-#include <fnordmetric/util/runtimeexception.h>
+#include <metricd/util/runtimeexception.h>
 #include "object.h"
-#include <fnordmetric/io/pagemanager.h>
+#include <metricd/io/pagemanager.h>
 
 namespace fnordmetric {
 namespace ffs {

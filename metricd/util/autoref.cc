@@ -21,7 +21,7 @@
  * commercial activities involving this program without disclosing the source
  * code of your own applications
  */
-#include "fnordmetric/util/autoref.h"
+#include "metricd/util/autoref.h"
 
 RefCounted::RefCounted() : refcount_(0) {}
 

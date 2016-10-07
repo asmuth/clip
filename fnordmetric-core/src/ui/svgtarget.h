@@ -13,9 +13,9 @@
 #include <stdlib.h>
 #include <vector>
 #include <string>
-#include <fnordmetric/ui/rendertarget.h>
-#include <fnordmetric/ui/styles/style_default.h>
-#include <fnordmetric/util/outputstream.h>
+#include <metricd/ui/rendertarget.h>
+#include <metricd/ui/styles/style_default.h>
+#include <metricd/util/outputstream.h>
 
 namespace fnordmetric {
 namespace ui {

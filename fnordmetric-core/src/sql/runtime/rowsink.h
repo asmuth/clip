@@ -14,9 +14,9 @@
 #include <string>
 #include <vector>
 #include <assert.h>
-#include <fnordmetric/sql/svalue.h>
-#include <fnordmetric/sql/parser/token.h>
-#include <fnordmetric/sql/parser/astnode.h>
+#include <metricd/sql/svalue.h>
+#include <metricd/sql/parser/token.h>
+#include <metricd/sql/parser/astnode.h>
 
 namespace fnordmetric {
 namespace query {

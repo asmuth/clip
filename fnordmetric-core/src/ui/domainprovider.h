@@ -12,7 +12,7 @@
 #include <algorithm>
 #include <stdlib.h>
 #include <math.h>
-#include <fnordmetric/ui/domain.h>
+#include <metricd/ui/domain.h>
 
 namespace fnordmetric {
 namespace ui {

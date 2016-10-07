@@ -9,8 +9,8 @@
  */
 #ifndef _FNORDMETRIC_UI_GRIDDEFINITION_H
 #define _FNORDMETRIC_UI_GRIDDEFINITION_H
-#include <fnordmetric/ui/domain.h>
-#include <fnordmetric/ui/domainprovider.h>
+#include <metricd/ui/domain.h>
+#include <metricd/ui/domainprovider.h>
 
 namespace fnordmetric {
 namespace ui {

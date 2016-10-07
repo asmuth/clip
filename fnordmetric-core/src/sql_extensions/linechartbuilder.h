@@ -9,7 +9,7 @@
  */
 #ifndef _FNORDMETRIC_SQLEXTENSIONS_LINECHARTBUILDER_H
 #define _FNORDMETRIC_SQLEXTENSIONS_LINECHARTBUILDER_H
-#include <fnordmetric/sql_extensions/chartbuilder.h>
+#include <metricd/sql_extensions/chartbuilder.h>
 
 namespace fnordmetric {
 namespace ui {

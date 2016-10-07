@@ -9,7 +9,7 @@
  */
 #ifndef _FNORDMETRIC_SQL_DEFAULTRUNTIME_H
 #define _FNORDMETRIC_SQL_DEFAULTRUNTIME_H
-#include <fnordmetric/sql/runtime/runtime.h>
+#include <metricd/sql/runtime/runtime.h>
 
 namespace fnordmetric {
 namespace query {

@@ -23,11 +23,11 @@
  */
 #include <stdlib.h>
 #include <stdio.h>
-#include "fnordmetric/util/exception.h"
-#include "fnordmetric/util/io/inputstream.h"
-#include "fnordmetric/util/test/unittest.h"
+#include "metricd/util/exception.h"
+#include "metricd/util/io/inputstream.h"
+#include "metricd/util/test/unittest.h"
 
-#include "fnordmetric/eventql.h"
+#include "metricd/eventql.h"
 
 UNIT_TEST(FileInputStreamTest);
 

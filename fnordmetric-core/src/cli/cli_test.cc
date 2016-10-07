@@ -10,12 +10,12 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-#include <fnordmetric/environment.h>
-#include <fnordmetric/io/fileutil.h>
-#include <fnordmetric/util/unittest.h>
-#include <fnordmetric/cli/cli.h>
-#include <fnordmetric/cli/flagparser.h>
-#include <fnordmetric/util/outputstream.h>
+#include <metricd/environment.h>
+#include <metricd/io/fileutil.h>
+#include <metricd/util/unittest.h>
+#include <metricd/cli/cli.h>
+#include <metricd/cli/flagparser.h>
+#include <metricd/util/outputstream.h>
 
 using namespace fnordmetric::cli;
 

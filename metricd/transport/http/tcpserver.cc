@@ -30,9 +30,9 @@
 #include <string.h>
 #include <unistd.h>
 
-#include "fnordmetric/util/exception.h"
-#include "fnordmetric/util/inspect.h"
-#include "fnordmetric/transport/http/tcpserver.h"
+#include "metricd/util/exception.h"
+#include "metricd/util/inspect.h"
+#include "metricd/transport/http/tcpserver.h"
 
 namespace fnordmetric {
 namespace http {

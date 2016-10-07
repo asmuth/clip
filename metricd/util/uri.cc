@@ -7,8 +7,8 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#include <fnordmetric/util/exception.h>
-#include <fnordmetric/util/uri.h>
+#include <metricd/util/exception.h>
+#include <metricd/util/uri.h>
 
 std::string URI::urlEncode(const std::string& str) {
   static char hextbl[] = "0123456789ABCDEF";

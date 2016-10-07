@@ -7,14 +7,14 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#include <fnordmetric/environment.h>
-#include <fnordmetric/metricdb/backends/disk/binaryformat.h>
-#include <fnordmetric/metricdb/backends/disk/metric.h>
-#include <fnordmetric/metricdb/backends/disk/tableref.h>
-#include <fnordmetric/metricdb/backends/disk/samplewriter.h>
-#include <fnordmetric/util/runtimeexception.h>
-#include <fnordmetric/util/freeondestroy.h>
-#include <fnordmetric/util/wallclock.h>
+#include <metricd/environment.h>
+#include <metricd/metricdb/backends/disk/binaryformat.h>
+#include <metricd/metricdb/backends/disk/metric.h>
+#include <metricd/metricdb/backends/disk/tableref.h>
+#include <metricd/metricdb/backends/disk/samplewriter.h>
+#include <metricd/util/runtimeexception.h>
+#include <metricd/util/freeondestroy.h>
+#include <metricd/util/wallclock.h>
 #include <string.h>
 
 using namespace fnord;

@@ -7,10 +7,10 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#include <fnordmetric/sql/runtime/tablerepository.h>
-#include <fnordmetric/sql/runtime/importstatement.h>
-#include <fnordmetric/util/runtimeexception.h>
-#include <fnordmetric/util/uri.h>
+#include <metricd/sql/runtime/tablerepository.h>
+#include <metricd/sql/runtime/importstatement.h>
+#include <metricd/util/runtimeexception.h>
+#include <metricd/util/uri.h>
 
 namespace fnordmetric {
 namespace query {

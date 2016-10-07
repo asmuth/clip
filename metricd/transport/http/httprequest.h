@@ -23,8 +23,8 @@
  */
 #ifndef _libstx_WEB_HTTPREQUEST_H
 #define _libstx_WEB_HTTPREQUEST_H
-#include <fnordmetric/util/uri.h>
-#include <fnordmetric/transport/http/httpmessage.h>
+#include <metricd/util/uri.h>
+#include <metricd/transport/http/httpmessage.h>
 #include <string>
 
 namespace fnordmetric {

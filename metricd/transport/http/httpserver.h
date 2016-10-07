@@ -25,12 +25,12 @@
 #define _libstx_WEB_HTTPSERVER_H
 #include <memory>
 #include <vector>
-#include <fnordmetric/transport/http/httprequest.h>
-#include <fnordmetric/transport/http/httphandler.h>
-#include "fnordmetric/transport/http/httpserverconnection.h"
-#include <fnordmetric/transport/http/httpstats.h>
-#include <fnordmetric/transport/http/tcpserver.h>
-#include <fnordmetric/transport/http/taskscheduler.h>
+#include <metricd/transport/http/httprequest.h>
+#include <metricd/transport/http/httphandler.h>
+#include "metricd/transport/http/httpserverconnection.h"
+#include <metricd/transport/http/httpstats.h>
+#include <metricd/transport/http/tcpserver.h>
+#include <metricd/transport/http/taskscheduler.h>
 
 namespace fnordmetric {
 namespace http {

@@ -10,9 +10,9 @@
 #ifndef _FNORDMETRIC_WEBINTERFACE_H
 #define _FNORDMETRIC_WEBINTERFACE_H
 #include <memory>
-#include <fnordmetric/http/httphandler.h>
-#include <fnordmetric/http/httprequest.h>
-#include <fnordmetric/http/httpresponse.h>
+#include <metricd/http/httphandler.h>
+#include <metricd/http/httprequest.h>
+#include <metricd/http/httpresponse.h>
 
 using namespace fnord;
 namespace fnordmetric {

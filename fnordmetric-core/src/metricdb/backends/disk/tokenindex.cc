@@ -7,8 +7,8 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#include <fnordmetric/metricdb/backends/disk/tokenindex.h>
-#include <fnordmetric/util/runtimeexception.h>
+#include <metricd/metricdb/backends/disk/tokenindex.h>
+#include <metricd/util/runtimeexception.h>
 
 namespace fnordmetric {
 namespace metricdb {

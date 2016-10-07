@@ -23,12 +23,12 @@
  */
 #ifndef _libstx_HTTPSERVICE_H
 #define _libstx_HTTPSERVICE_H
-#include <fnordmetric/transport/http/httphandler.h>
-#include <fnordmetric/transport/http/httprequest.h>
-#include <fnordmetric/transport/http/httpresponse.h>
-#include <fnordmetric/transport/http/HTTPRequestStream.h>
-#include <fnordmetric/transport/http/HTTPResponseStream.h>
-#include "fnordmetric/transport/http/taskscheduler.h"
+#include <metricd/transport/http/httphandler.h>
+#include <metricd/transport/http/httprequest.h>
+#include <metricd/transport/http/httpresponse.h>
+#include <metricd/transport/http/HTTPRequestStream.h>
+#include <metricd/transport/http/HTTPResponseStream.h>
+#include "metricd/transport/http/taskscheduler.h"
 
 namespace fnordmetric {
 namespace http {

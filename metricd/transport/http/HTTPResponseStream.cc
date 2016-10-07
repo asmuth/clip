@@ -22,9 +22,9 @@
  * commercial activities involving this program without disclosing the source
  * code of your own applications
  */
-#include <fnordmetric/util/inspect.h>
-#include <fnordmetric/util/exception.h>
-#include <fnordmetric/transport/http/HTTPResponseStream.h>
+#include <metricd/util/inspect.h>
+#include <metricd/util/exception.h>
+#include <metricd/transport/http/HTTPResponseStream.h>
 
 namespace fnordmetric {
 namespace http {

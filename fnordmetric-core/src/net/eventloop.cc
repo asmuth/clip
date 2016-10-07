@@ -12,7 +12,7 @@
 #include <assert.h>
 #include <string.h>
 #include "eventloop.h"
-#include <fnordmetric/util/runtimeexception.h>
+#include <metricd/util/runtimeexception.h>
 
 namespace fnordmetric {
 namespace ev {

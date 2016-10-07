@@ -8,8 +8,8 @@
  * <http://www.gnu.org/licenses/>.
  */
 #include <string>
-#include <fnordmetric/ui/canvas.h>
-#include <fnordmetric/ui/drawable.h>
+#include <metricd/ui/canvas.h>
+#include <metricd/ui/drawable.h>
 
 namespace fnordmetric {
 namespace ui {

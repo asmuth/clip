@@ -25,10 +25,10 @@
 #include <string.h>
 #include <unistd.h>
 #include <fcntl.h>
-#include <fnordmetric/util/buffer.h>
-#include <fnordmetric/util/exception.h>
-#include <fnordmetric/util/inputstream.h>
-#include <fnordmetric/util/ieee754.h>
+#include <metricd/util/buffer.h>
+#include <metricd/util/exception.h>
+#include <metricd/util/inputstream.h>
+#include <metricd/util/ieee754.h>
 
 std::unique_ptr<FileInputStream> InputStream::getStdin() {
   auto stdin_stream = new FileInputStream(0, false);

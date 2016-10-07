@@ -23,8 +23,8 @@
  */
 #ifndef _libstx_THREAD_TASKSCHEDULER_H
 #define _libstx_THREAD_TASKSCHEDULER_H
-#include <fnordmetric/transport/http/task.h>
-#include <fnordmetric/transport/http/wakeup.h>
+#include <metricd/transport/http/task.h>
+#include <metricd/transport/http/wakeup.h>
 
 namespace fnordmetric {
 namespace http {

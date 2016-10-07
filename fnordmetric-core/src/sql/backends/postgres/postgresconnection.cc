@@ -7,8 +7,8 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#include <fnordmetric/environment.h>
-#include <fnordmetric/sql/backends/postgres/postgresconnection.h>
+#include <metricd/environment.h>
+#include <metricd/sql/backends/postgres/postgresconnection.h>
 #include <iostream>
 #include <sstream>
 

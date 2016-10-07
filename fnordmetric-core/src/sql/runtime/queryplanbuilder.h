@@ -14,10 +14,10 @@
 #include <string>
 #include <vector>
 #include <assert.h>
-#include <fnordmetric/sql/parser/token.h>
-#include <fnordmetric/sql/parser/astnode.h>
-#include <fnordmetric/sql/runtime/queryplan.h>
-#include <fnordmetric/sql/runtime/compile.h>
+#include <metricd/sql/parser/token.h>
+#include <metricd/sql/parser/astnode.h>
+#include <metricd/sql/runtime/queryplan.h>
+#include <metricd/sql/runtime/compile.h>
 
 namespace fnordmetric {
 namespace query {

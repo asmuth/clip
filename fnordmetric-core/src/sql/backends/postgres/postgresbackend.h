@@ -9,8 +9,8 @@
  */
 #ifndef _FNORDMETRIC_POSTGRESBACKEND_H
 #define _FNORDMETRIC_POSTGRESBACKEND_H
-#include <fnordmetric/sql/backends/backend.h>
-#include <fnordmetric/sql/backends/postgres/postgresconnection.h>
+#include <metricd/sql/backends/backend.h>
+#include <metricd/sql/backends/postgres/postgresconnection.h>
 #include <memory>
 #include <mutex>
 #include <vector>

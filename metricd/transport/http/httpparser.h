@@ -26,8 +26,8 @@
 #include <memory>
 #include <vector>
 
-#include "fnordmetric/util/buffer.h"
-#include "fnordmetric/transport/http/httpmessage.h"
+#include "metricd/util/buffer.h"
+#include "metricd/transport/http/httpmessage.h"
 
 namespace fnordmetric {
 namespace http {

@@ -10,9 +10,9 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <unistd.h>
-#include "util/exception.h"
-#include "util/unittest.h"
-#include "util/time.h"
+#include "metricd/util/exception.h"
+#include "metricd/util/unittest.h"
+#include "metricd/util/time.h"
 #include "tsdb.h"
 
 UNIT_TEST(TSDBTest);

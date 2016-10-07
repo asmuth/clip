@@ -7,15 +7,15 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#include <fnordmetric/environment.h>
-#include <fnordmetric/metricdb/httpapi.h>
-#include <fnordmetric/query/queryservice.h>
-#include <fnordmetric/metricdb/metricrepository.h>
-#include <fnordmetric/metricdb/metrictablerepository.h>
-#include <fnordmetric/util/stringutil.h>
-#include <fnordmetric/sql/backends/csv/csvbackend.h>
-#include <fnordmetric/sql/backends/mysql/mysqlbackend.h>
-#include <fnordmetric/sql/backends/postgres/postgresbackend.h>
+#include <metricd/environment.h>
+#include <metricd/metricdb/httpapi.h>
+#include <metricd/query/queryservice.h>
+#include <metricd/metricdb/metricrepository.h>
+#include <metricd/metricdb/metrictablerepository.h>
+#include <metricd/util/stringutil.h>
+#include <metricd/sql/backends/csv/csvbackend.h>
+#include <metricd/sql/backends/mysql/mysqlbackend.h>
+#include <metricd/sql/backends/postgres/postgresbackend.h>
 
 namespace fnordmetric {
 namespace metricdb {

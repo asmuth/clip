@@ -9,8 +9,8 @@
  */
 #include <assert.h>
 #include <memory>
-#include <fnordmetric/thread/threadpool.h>
-#include <fnordmetric/util/runtimeexception.h>
+#include <metricd/thread/threadpool.h>
+#include <metricd/util/runtimeexception.h>
 #include <sys/select.h>
 #include <thread>
 

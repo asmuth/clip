@@ -25,8 +25,8 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <iostream>
-#include "util/flagparser.h"
-#include "util/stringutil.h"
+#include "metricd/util/flagparser.h"
+#include "metricd/util/stringutil.h"
 
 ReturnCode daemonize();
 

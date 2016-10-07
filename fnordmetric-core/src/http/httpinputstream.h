@@ -12,7 +12,7 @@
 #include <vector>
 #include <string>
 #include <utility>
-#include <fnordmetric/util/inputstream.h>
+#include <metricd/util/inputstream.h>
 
 using fnordmetric::util::InputStream;
 

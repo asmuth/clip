@@ -21,9 +21,9 @@
  * commercial activities involving this program without disclosing the source
  * code of your own applications
  */
-#include <fnordmetric/util/buffer.h>
-#include <fnordmetric/util/net/udpserver.h>
-#include <fnordmetric/util/thread/taskscheduler.h>
+#include <metricd/util/buffer.h>
+#include <metricd/util/net/udpserver.h>
+#include <metricd/util/thread/taskscheduler.h>
 
 namespace statsd {
 

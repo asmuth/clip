@@ -9,7 +9,7 @@
  */
 #ifndef _FNORDMETRIC_UTIL_WALLCLOCK_H
 #define _FNORDMETRIC_UTIL_WALLCLOCK_H
-#include <fnordmetric/util/datetime.h>
+#include <metricd/util/datetime.h>
 #include <stdlib.h>
 #include <stdint.h>
 

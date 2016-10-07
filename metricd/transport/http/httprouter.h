@@ -24,10 +24,10 @@
 #ifndef _libstx_HTTPROUTER_H
 #define _libstx_HTTPROUTER_H
 
-#include "fnordmetric/transport/http/httphandler.h"
-#include "fnordmetric/transport/http/httprequest.h"
-#include "fnordmetric/transport/http/httpresponse.h"
-#include "fnordmetric/transport/http/taskscheduler.h"
+#include "metricd/transport/http/httphandler.h"
+#include "metricd/transport/http/httprequest.h"
+#include "metricd/transport/http/httpresponse.h"
+#include "metricd/transport/http/taskscheduler.h"
 
 namespace fnordmetric {
 namespace http {

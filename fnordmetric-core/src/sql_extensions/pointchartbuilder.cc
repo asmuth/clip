@@ -7,9 +7,9 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#include <fnordmetric/sql_extensions/pointchartbuilder.h>
-#include <fnordmetric/sql_extensions/drawstatement.h>
-#include <fnordmetric/ui/pointchart.h>
+#include <metricd/sql_extensions/pointchartbuilder.h>
+#include <metricd/sql_extensions/drawstatement.h>
+#include <metricd/ui/pointchart.h>
 
 namespace fnordmetric {
 namespace query {

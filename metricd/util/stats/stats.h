@@ -23,6 +23,6 @@
  */
 #ifndef _STX_STATS_H
 #define _STX_STATS_H
-#include "fnordmetric/util/stats/counter.h"
-#include "fnordmetric/util/stats/statsrepository.h"
+#include "metricd/util/stats/counter.h"
+#include "metricd/util/stats/statsrepository.h"
 #endif

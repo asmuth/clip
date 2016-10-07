@@ -7,7 +7,7 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#include <fnordmetric/ui/domainprovider.h>
+#include <metricd/ui/domainprovider.h>
 
 namespace fnordmetric {
 namespace ui {

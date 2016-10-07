@@ -7,10 +7,10 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#include <fnordmetric/environment.h>
-#include <fnordmetric/metricdb/backends/disk/compactiontask.h>
-#include <fnordmetric/metricdb/backends/disk/metricrepository.h>
-#include <fnordmetric/util/wallclock.h>
+#include <metricd/environment.h>
+#include <metricd/metricdb/backends/disk/compactiontask.h>
+#include <metricd/metricdb/backends/disk/metricrepository.h>
+#include <metricd/util/wallclock.h>
 #include <unistd.h>
 
 using fnord::util::WallClock;

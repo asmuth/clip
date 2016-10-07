@@ -27,10 +27,10 @@
 #include <stdarg.h>
 #include <string>
 #include <unistd.h>
-#include "fnordmetric/util/buffer.h"
-#include "fnordmetric/util/exception.h"
-#include "fnordmetric/util/outputstream.h"
-#include "fnordmetric/util/ieee754.h"
+#include "metricd/util/buffer.h"
+#include "metricd/util/exception.h"
+#include "metricd/util/outputstream.h"
+#include "metricd/util/ieee754.h"
 
 std::unique_ptr<OutputStream> OutputStream::getStdout() {
   auto stdout_stream = new FileOutputStream(1, false);

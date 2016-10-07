@@ -8,9 +8,9 @@
  * <http://www.gnu.org/licenses/>.
  */
 #include <dirent.h>
-#include <fnordmetric/util/fileutil.h>
-#include <fnordmetric/util/exception.h>
-#include <fnordmetric/util/stringutil.h>
+#include <metricd/util/fileutil.h>
+#include <metricd/util/exception.h>
+#include <metricd/util/stringutil.h>
 #include <string.h>
 #include <sys/fcntl.h>
 #include <sys/stat.h>

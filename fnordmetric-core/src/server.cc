@@ -12,24 +12,24 @@
 #include <string.h>
 #include <string>
 #include <vector>
-#include <fnordmetric/cli/flagparser.h>
-#include <fnordmetric/environment.h>
-#include <fnordmetric/http/httpserver.h>
-#include <fnordmetric/io/fileutil.h>
-#include <fnordmetric/metricdb/adminui.h>
-#include <fnordmetric/metricdb/httpapi.h>
-#include <fnordmetric/metricdb/metricrepository.h>
-#include <fnordmetric/metricdb/backends/disk/metricrepository.h>
-#include <fnordmetric/metricdb/backends/inmemory/metricrepository.h>
-#include <fnordmetric/metricdb/statsd.h>
-#include <fnordmetric/net/udpserver.h>
-#include <fnordmetric/util/exceptionhandler.h>
-#include <fnordmetric/util/inputstream.h>
-#include <fnordmetric/util/outputstream.h>
-#include <fnordmetric/util/random.h>
-#include <fnordmetric/util/runtimeexception.h>
-#include <fnordmetric/util/signalhandler.h>
-#include <fnordmetric/thread/threadpool.h>
+#include <metricd/cli/flagparser.h>
+#include <metricd/environment.h>
+#include <metricd/http/httpserver.h>
+#include <metricd/io/fileutil.h>
+#include <metricd/metricdb/adminui.h>
+#include <metricd/metricdb/httpapi.h>
+#include <metricd/metricdb/metricrepository.h>
+#include <metricd/metricdb/backends/disk/metricrepository.h>
+#include <metricd/metricdb/backends/inmemory/metricrepository.h>
+#include <metricd/metricdb/statsd.h>
+#include <metricd/net/udpserver.h>
+#include <metricd/util/exceptionhandler.h>
+#include <metricd/util/inputstream.h>
+#include <metricd/util/outputstream.h>
+#include <metricd/util/random.h>
+#include <metricd/util/runtimeexception.h>
+#include <metricd/util/signalhandler.h>
+#include <metricd/thread/threadpool.h>
 
 using namespace fnordmetric;
 using namespace fnordmetric::metricdb;

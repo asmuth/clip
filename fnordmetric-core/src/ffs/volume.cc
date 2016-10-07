@@ -7,8 +7,8 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#include <fnordmetric/ffs/volume.h>
-#include <fnordmetric/util/runtimeexception.h>
+#include <metricd/ffs/volume.h>
+#include <metricd/util/runtimeexception.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>

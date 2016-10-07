@@ -13,7 +13,7 @@
 #include <stdlib.h>
 #include <vector>
 #include <string>
-#include <fnordmetric/sql/svalue.h>
+#include <metricd/sql/svalue.h>
 
 namespace fnordmetric {
 namespace ui {

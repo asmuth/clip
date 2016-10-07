@@ -10,8 +10,8 @@
 #ifndef _FNORDMETRIC_POSTGRESBACKEND_POSTGRESTABLEREF_H
 #define _FNORDMETRIC_POSTGRESBACKEND_POSTGRESTABLEREF_H
 #include <memory>
-#include <fnordmetric/sql/backends/postgres/postgresconnection.h>
-#include <fnordmetric/sql/backends/tableref.h>
+#include <metricd/sql/backends/postgres/postgresconnection.h>
+#include <metricd/sql/backends/tableref.h>
 
 namespace fnordmetric {
 namespace query {

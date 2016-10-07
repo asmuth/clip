@@ -10,7 +10,7 @@
 #include <stdlib.h>
 #include "canvas.h"
 #include "linechart.h"
-#include <fnordmetric/util/runtimeexception.h>
+#include <metricd/util/runtimeexception.h>
 
 namespace fnordmetric {
 namespace ui {

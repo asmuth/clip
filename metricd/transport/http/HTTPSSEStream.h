@@ -24,9 +24,9 @@
  */
 #ifndef _STX_HTTP_HTTPSSESTREAM_H
 #define _STX_HTTP_HTTPSSESTREAM_H
-#include "fnordmetric/transport/http/httpservice.h"
-#include <fnordmetric/util/inspect.h>
-#include <fnordmetric/util/option.h>
+#include "metricd/transport/http/httpservice.h"
+#include <metricd/util/inspect.h>
+#include <metricd/util/option.h>
 
 namespace fnordmetric {
 namespace http {

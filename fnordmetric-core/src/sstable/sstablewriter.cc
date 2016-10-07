@@ -7,12 +7,12 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#include <fnordmetric/sstable/binaryformat.h>
-#include <fnordmetric/sstable/fileheaderwriter.h>
-#include <fnordmetric/sstable/fileheaderreader.h>
-#include <fnordmetric/sstable/sstablewriter.h>
-#include <fnordmetric/util/fnv.h>
-#include <fnordmetric/util/runtimeexception.h>
+#include <metricd/sstable/binaryformat.h>
+#include <metricd/sstable/fileheaderwriter.h>
+#include <metricd/sstable/fileheaderreader.h>
+#include <metricd/sstable/sstablewriter.h>
+#include <metricd/util/fnv.h>
+#include <metricd/util/runtimeexception.h>
 #include <string.h>
 
 namespace fnord {

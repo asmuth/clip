@@ -7,7 +7,7 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#include <fnordmetric/util/signalhandler.h>
+#include <metricd/util/signalhandler.h>
 #include <signal.h>
 
 namespace fnordmetric {

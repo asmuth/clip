@@ -7,8 +7,8 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#include <fnordmetric/sql/runtime/orderby.h>
-#include <fnordmetric/sql/expressions/boolean.h>
+#include <metricd/sql/runtime/orderby.h>
+#include <metricd/sql/expressions/boolean.h>
 #include <algorithm>
 
 namespace fnordmetric {

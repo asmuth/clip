@@ -12,8 +12,8 @@
 #include <utility>
 #include <string>
 #include <vector>
-#include <fnordmetric/ui/domain.h>
-#include <fnordmetric/ui/domainprovider.h>
+#include <metricd/ui/domain.h>
+#include <metricd/ui/domainprovider.h>
 
 namespace fnordmetric {
 namespace ui {

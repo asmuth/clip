@@ -31,9 +31,9 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <unistd.h>
-#include "fnordmetric/util/exception.h"
-#include "fnordmetric/util/inspect.h"
-#include "fnordmetric/transport/http/tcpconnection.h"
+#include "metricd/util/exception.h"
+#include "metricd/util/inspect.h"
+#include "metricd/transport/http/tcpconnection.h"
 
 namespace fnordmetric {
 namespace http {
