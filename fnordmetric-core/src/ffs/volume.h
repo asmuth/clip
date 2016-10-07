@@ -17,7 +17,7 @@
 #include <mutex>
 #include <unordered_map>
 #include "objectref.h"
-#include <fnordmetric/io/pagemanager.h>
+#include <metricd/io/pagemanager.h>
 
 /**
  * A ffs volume stores an arbitrary number of 'objects'. Each object is

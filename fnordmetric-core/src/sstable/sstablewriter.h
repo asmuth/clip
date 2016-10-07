@@ -13,12 +13,12 @@
 #include <string>
 #include <vector>
 #include <memory>
-#include <fnordmetric/io/file.h>
-#include <fnordmetric/io/pagemanager.h>
-#include <fnordmetric/sstable/cursor.h>
-#include <fnordmetric/sstable/index.h>
-#include <fnordmetric/sstable/indexprovider.h>
-#include <fnordmetric/util/runtimeexception.h>
+#include <metricd/io/file.h>
+#include <metricd/io/pagemanager.h>
+#include <metricd/sstable/cursor.h>
+#include <metricd/sstable/index.h>
+#include <metricd/sstable/indexprovider.h>
+#include <metricd/util/runtimeexception.h>
 
 namespace fnord {
 namespace sstable {

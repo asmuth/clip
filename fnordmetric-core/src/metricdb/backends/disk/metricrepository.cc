@@ -7,10 +7,10 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#include <fnordmetric/environment.h>
-#include <fnordmetric/metricdb/backends/disk/metricrepository.h>
-#include <fnordmetric/sstable/sstablerepair.h>
-#include <fnordmetric/thread/task.h>
+#include <metricd/environment.h>
+#include <metricd/metricdb/backends/disk/metricrepository.h>
+#include <metricd/sstable/sstablerepair.h>
+#include <metricd/thread/task.h>
 
 namespace fnordmetric {
 namespace metricdb {

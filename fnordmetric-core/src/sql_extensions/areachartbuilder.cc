@@ -7,9 +7,9 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#include <fnordmetric/sql_extensions/areachartbuilder.h>
-#include <fnordmetric/sql_extensions/drawstatement.h>
-#include <fnordmetric/ui/areachart.h>
+#include <metricd/sql_extensions/areachartbuilder.h>
+#include <metricd/sql_extensions/drawstatement.h>
+#include <metricd/ui/areachart.h>
 
 namespace fnordmetric {
 namespace query {

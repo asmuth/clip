@@ -7,11 +7,11 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#include <fnordmetric/sql/runtime/defaultruntime.h>
-#include <fnordmetric/sql/expressions/aggregate.h>
-#include <fnordmetric/sql/expressions/boolean.h>
-#include <fnordmetric/sql/expressions/datetime.h>
-#include <fnordmetric/sql/expressions/math.h>
+#include <metricd/sql/runtime/defaultruntime.h>
+#include <metricd/sql/expressions/aggregate.h>
+#include <metricd/sql/expressions/boolean.h>
+#include <metricd/sql/expressions/datetime.h>
+#include <metricd/sql/expressions/math.h>
 
 namespace fnordmetric {
 namespace query {

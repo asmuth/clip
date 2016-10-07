@@ -10,10 +10,10 @@
 #include <stdlib.h>
 #include <string.h>
 #include <vector>
-#include <fnordmetric/sql/parser/astnode.h>
-#include <fnordmetric/sql/runtime/compile.h>
-#include <fnordmetric/sql/svalue.h>
-#include <fnordmetric/util/runtimeexception.h>
+#include <metricd/sql/parser/astnode.h>
+#include <metricd/sql/runtime/compile.h>
+#include <metricd/sql/svalue.h>
+#include <metricd/util/runtimeexception.h>
 
 namespace fnordmetric {
 namespace query {

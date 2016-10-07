@@ -11,7 +11,7 @@
 #include <assert.h>
 #include "astnode.h"
 #include "token.h"
-#include <fnordmetric/util/inspect.h>
+#include <metricd/util/inspect.h>
 
 namespace fnordmetric {
 namespace query {

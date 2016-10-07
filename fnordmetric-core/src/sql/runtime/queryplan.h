@@ -13,8 +13,8 @@
 #include <string>
 #include <vector>
 #include <memory>
-#include <fnordmetric/sql/runtime/queryplannode.h>
-#include <fnordmetric/sql/runtime/tablerepository.h>
+#include <metricd/sql/runtime/queryplannode.h>
+#include <metricd/sql/runtime/tablerepository.h>
 
 namespace fnordmetric {
 namespace query {

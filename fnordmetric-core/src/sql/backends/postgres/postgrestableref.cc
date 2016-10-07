@@ -7,8 +7,8 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#include <fnordmetric/sql/backends/postgres/postgrestableref.h>
-#include <fnordmetric/sql/runtime/tablescan.h>
+#include <metricd/sql/backends/postgres/postgrestableref.h>
+#include <metricd/sql/runtime/tablescan.h>
 #include <iostream>
 
 namespace fnordmetric {

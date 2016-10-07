@@ -13,15 +13,15 @@
 #include <string>
 #include <vector>
 #include <memory>
-#include <fnordmetric/io/file.h>
-#include <fnordmetric/io/mmappedfile.h>
-#include <fnordmetric/sstable/binaryformat.h>
-#include <fnordmetric/sstable/fileheaderreader.h>
-#include <fnordmetric/sstable/cursor.h>
-#include <fnordmetric/sstable/index.h>
-#include <fnordmetric/sstable/indexprovider.h>
-#include <fnordmetric/util/buffer.h>
-#include <fnordmetric/util/runtimeexception.h>
+#include <metricd/io/file.h>
+#include <metricd/io/mmappedfile.h>
+#include <metricd/sstable/binaryformat.h>
+#include <metricd/sstable/fileheaderreader.h>
+#include <metricd/sstable/cursor.h>
+#include <metricd/sstable/index.h>
+#include <metricd/sstable/indexprovider.h>
+#include <metricd/util/buffer.h>
+#include <metricd/util/runtimeexception.h>
 
 namespace fnord {
 namespace sstable {

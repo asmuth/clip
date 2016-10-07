@@ -42,3 +42,4 @@ test-driver
 libtool
 confdefs.h
 src/fnordmetric/fmetricd
+*.dSYM

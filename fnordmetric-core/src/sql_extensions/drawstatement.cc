@@ -7,12 +7,12 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#include <fnordmetric/sql_extensions/domainconfig.h>
-#include <fnordmetric/sql_extensions/drawstatement.h>
-#include <fnordmetric/sql_extensions/areachartbuilder.h>
-#include <fnordmetric/sql_extensions/barchartbuilder.h>
-#include <fnordmetric/sql_extensions/linechartbuilder.h>
-#include <fnordmetric/sql_extensions/pointchartbuilder.h>
+#include <metricd/sql_extensions/domainconfig.h>
+#include <metricd/sql_extensions/drawstatement.h>
+#include <metricd/sql_extensions/areachartbuilder.h>
+#include <metricd/sql_extensions/barchartbuilder.h>
+#include <metricd/sql_extensions/linechartbuilder.h>
+#include <metricd/sql_extensions/pointchartbuilder.h>
 
 namespace fnordmetric {
 namespace query {

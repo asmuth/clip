@@ -12,8 +12,8 @@
 #include <stdio.h>
 #include <string.h>
 #include <string>
-#include <fnordmetric/http/httpinputstream.h>
-#include <fnordmetric/util/runtimeexception.h>
+#include <metricd/http/httpinputstream.h>
+#include <metricd/util/runtimeexception.h>
 
 using fnordmetric::util::InputStream;
 

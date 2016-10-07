@@ -9,16 +9,16 @@
  */
 #ifndef _FNORDMETRIC_METRICDB_DISK_BACKEND_METRIC_H_
 #define _FNORDMETRIC_METRICDB_DISK_BACKEND_METRIC_H_
-#include <fnordmetric/io/filerepository.h>
-#include <fnordmetric/metricdb/backends/disk/compactionpolicy.h>
-#include <fnordmetric/metricdb/backends/disk/labelindex.h>
-#include <fnordmetric/metricdb/backends/disk/metriccursor.h>
-#include <fnordmetric/metricdb/backends/disk/metricsnapshot.h>
-#include <fnordmetric/metricdb/backends/disk/samplereader.h>
-#include <fnordmetric/metricdb/backends/disk/tokenindex.h>
-#include <fnordmetric/metricdb/metric.h>
-#include <fnordmetric/metricdb/sample.h>
-#include <fnordmetric/util/datetime.h>
+#include <metricd/io/filerepository.h>
+#include <metricd/metricdb/backends/disk/compactionpolicy.h>
+#include <metricd/metricdb/backends/disk/labelindex.h>
+#include <metricd/metricdb/backends/disk/metriccursor.h>
+#include <metricd/metricdb/backends/disk/metricsnapshot.h>
+#include <metricd/metricdb/backends/disk/samplereader.h>
+#include <metricd/metricdb/backends/disk/tokenindex.h>
+#include <metricd/metricdb/metric.h>
+#include <metricd/metricdb/sample.h>
+#include <metricd/util/datetime.h>
 #include <string>
 #include <vector>
 

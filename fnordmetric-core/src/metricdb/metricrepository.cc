@@ -7,8 +7,8 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#include <fnordmetric/environment.h>
-#include <fnordmetric/metricdb/metricrepository.h>
+#include <metricd/environment.h>
+#include <metricd/metricdb/metricrepository.h>
 
 using namespace fnord;
 namespace fnordmetric {

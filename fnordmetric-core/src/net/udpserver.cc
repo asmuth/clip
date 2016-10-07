@@ -8,8 +8,8 @@
  * <http://www.gnu.org/licenses/>.
  */
 #include <fcntl.h>
-#include <fnordmetric/net/udpserver.h>
-#include <fnordmetric/util/runtimeexception.h>
+#include <metricd/net/udpserver.h>
+#include <metricd/util/runtimeexception.h>
 #include <netinet/in.h>
 #include <sys/types.h>
 #include <sys/socket.h>

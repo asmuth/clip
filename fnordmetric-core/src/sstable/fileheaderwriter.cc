@@ -7,9 +7,9 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#include <fnordmetric/sstable/binaryformat.h>
-#include <fnordmetric/sstable/fileheaderwriter.h>
-#include <fnordmetric/util/fnv.h>
+#include <metricd/sstable/binaryformat.h>
+#include <metricd/sstable/fileheaderwriter.h>
+#include <metricd/util/fnv.h>
 
 namespace fnord {
 namespace sstable {

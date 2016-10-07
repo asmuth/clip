@@ -18,7 +18,7 @@
 #include <mutex>
 #include <vector>
 #include <atomic>
-#include <fnordmetric/util/runtimeexception.h>
+#include <metricd/util/runtimeexception.h>
 
 namespace fnord {
 namespace io {

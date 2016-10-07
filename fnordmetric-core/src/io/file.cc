@@ -7,9 +7,9 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#include <fnordmetric/io/file.h>
-#include <fnordmetric/util/buffer.h>
-#include <fnordmetric/util/runtimeexception.h>
+#include <metricd/io/file.h>
+#include <metricd/util/buffer.h>
+#include <metricd/util/runtimeexception.h>
 #include <sys/fcntl.h>
 #include <sys/stat.h>
 #include <sys/types.h>

@@ -7,8 +7,8 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#include <fnordmetric/metricdb/backends/disk/metriccursor.h>
-#include <fnordmetric/util/stringutil.h>
+#include <metricd/metricdb/backends/disk/metriccursor.h>
+#include <metricd/util/stringutil.h>
 #include <stdlib.h>
 #include <cstring>
 #include <string>

@@ -8,9 +8,9 @@
  * <http://www.gnu.org/licenses/>.
  */
 #include <stdlib.h>
-#include <fnordmetric/util/assets.h>
-#include <fnordmetric/util/inputstream.h>
-#include <fnordmetric/util/runtimeexception.h>
+#include <metricd/util/assets.h>
+#include <metricd/util/inputstream.h>
+#include <metricd/util/runtimeexception.h>
 #include <asset_bundle.cc>
 #include <cstdlib>
 

@@ -9,7 +9,7 @@
  */
 #ifndef _FNORDMETRIC_METRICDB_METRICREPOSITORY_H_
 #define _FNORDMETRIC_METRICDB_METRICREPOSITORY_H_
-#include <fnordmetric/metricdb/metric.h>
+#include <metricd/metricdb/metric.h>
 #include <mutex>
 #include <memory>
 #include <string>

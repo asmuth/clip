@@ -8,8 +8,8 @@
  * <http://www.gnu.org/licenses/>.
  */
 #include <stdlib.h>
-#include <fnordmetric/util/exceptionhandler.h>
-#include <fnordmetric/util/runtimeexception.h>
+#include <metricd/util/exceptionhandler.h>
+#include <metricd/util/runtimeexception.h>
 
 namespace fnord {
 namespace util {

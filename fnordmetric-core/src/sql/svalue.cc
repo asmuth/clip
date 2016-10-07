@@ -13,10 +13,10 @@
 #include <string>
 #include <ctime>
 #include <stdint.h>
-#include <fnordmetric/sql/parser/token.h>
-#include <fnordmetric/sql/svalue.h>
-#include <fnordmetric/util/format.h>
-#include <fnordmetric/util/inspect.h>
+#include <metricd/sql/parser/token.h>
+#include <metricd/sql/svalue.h>
+#include <metricd/util/format.h>
+#include <metricd/util/inspect.h>
 
 namespace fnordmetric {
 namespace query {

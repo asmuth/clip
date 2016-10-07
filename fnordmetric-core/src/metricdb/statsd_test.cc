@@ -7,8 +7,8 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#include <fnordmetric/metricdb/statsd.h>
-#include <fnordmetric/util/unittest.h>
+#include <metricd/metricdb/statsd.h>
+#include <metricd/util/unittest.h>
 
 using namespace fnordmetric::metricdb;
 

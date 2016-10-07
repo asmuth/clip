@@ -10,24 +10,24 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-#include <fnordmetric/sql/backends/csv/csvbackend.h>
-#include <fnordmetric/sql/backends/csv/csvtableref.h>
-#include <fnordmetric/sql/backends/tableref.h>
-#include <fnordmetric/sql/parser/parser.h>
-#include <fnordmetric/sql/parser/token.h>
-#include <fnordmetric/sql/parser/tokenize.h>
-#include <fnordmetric/sql/runtime/defaultruntime.h>
-#include <fnordmetric/sql/runtime/queryplannode.h>
-#include <fnordmetric/sql/runtime/resultlist.h>
-#include <fnordmetric/sql/runtime/tablescan.h>
-#include <fnordmetric/sql/runtime/tablerepository.h>
-#include <fnordmetric/ui/canvas.h>
-#include <fnordmetric/ui/svgtarget.h>
-#include <fnordmetric/util/datetime.h>
-#include <fnordmetric/util/inputstream.h>
-#include <fnordmetric/util/outputstream.h>
-#include <fnordmetric/util/unittest.h>
-#include <fnordmetric/util/runtimeexception.h>
+#include <metricd/sql/backends/csv/csvbackend.h>
+#include <metricd/sql/backends/csv/csvtableref.h>
+#include <metricd/sql/backends/tableref.h>
+#include <metricd/sql/parser/parser.h>
+#include <metricd/sql/parser/token.h>
+#include <metricd/sql/parser/tokenize.h>
+#include <metricd/sql/runtime/defaultruntime.h>
+#include <metricd/sql/runtime/queryplannode.h>
+#include <metricd/sql/runtime/resultlist.h>
+#include <metricd/sql/runtime/tablescan.h>
+#include <metricd/sql/runtime/tablerepository.h>
+#include <metricd/ui/canvas.h>
+#include <metricd/ui/svgtarget.h>
+#include <metricd/util/datetime.h>
+#include <metricd/util/inputstream.h>
+#include <metricd/util/outputstream.h>
+#include <metricd/util/unittest.h>
+#include <metricd/util/runtimeexception.h>
 
 using namespace fnordmetric::query;
 

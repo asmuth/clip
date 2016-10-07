@@ -9,7 +9,7 @@
  */
 #ifndef _FNORDMETRIC_THREAD_TASKSCHEDULER_H
 #define _FNORDMETRIC_THREAD_TASKSCHEDULER_H
-#include <fnordmetric/thread/task.h>
+#include <metricd/thread/task.h>
 
 namespace fnord {
 namespace thread {

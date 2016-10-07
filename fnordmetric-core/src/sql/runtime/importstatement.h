@@ -11,8 +11,8 @@
 #define _FNORDMETRIC_QUERY_IMPORTSTATEMENT_H
 #include <stdlib.h>
 #include <vector>
-#include <fnordmetric/sql/parser/astnode.h>
-#include <fnordmetric/sql/runtime/compile.h>
+#include <metricd/sql/parser/astnode.h>
+#include <metricd/sql/runtime/compile.h>
 
 namespace fnordmetric {
 namespace query {

@@ -12,7 +12,7 @@
 #define _FNORDMETRIC_FLAGPARSER_H
 #include <string>
 #include <vector>
-#include <fnordmetric/util/runtimeexception.h>
+#include <metricd/util/runtimeexception.h>
 
 namespace fnordmetric {
 namespace util {

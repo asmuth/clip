@@ -7,8 +7,8 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#include <fnordmetric/util/binarymessagereader.h>
-#include <fnordmetric/util/runtimeexception.h>
+#include <metricd/util/binarymessagereader.h>
+#include <metricd/util/runtimeexception.h>
 
 namespace fnord {
 namespace util {

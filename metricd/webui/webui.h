@@ -9,7 +9,7 @@
  */
 #pragma once
 #include <memory>
-#include <fnordmetric/transport/http/httpservice.h>
+#include <metricd/transport/http/httpservice.h>
 
 namespace fnordmetric {
 

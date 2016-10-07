@@ -10,13 +10,13 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-#include <fnordmetric/sql/parser/parser.h>
-#include <fnordmetric/sql/runtime/compile.h>
-#include <fnordmetric/sql/runtime/execute.h>
-#include <fnordmetric/sql/runtime/runtime.h>
-#include <fnordmetric/sql/svalue.h>
-#include <fnordmetric/util/unittest.h>
-#include <fnordmetric/util/runtimeexception.h>
+#include <metricd/sql/parser/parser.h>
+#include <metricd/sql/runtime/compile.h>
+#include <metricd/sql/runtime/execute.h>
+#include <metricd/sql/runtime/runtime.h>
+#include <metricd/sql/svalue.h>
+#include <metricd/util/unittest.h>
+#include <metricd/util/runtimeexception.h>
 
 using namespace fnordmetric::query;
 

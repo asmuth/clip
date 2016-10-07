@@ -9,7 +9,7 @@
  */
 #ifndef _FNORDMETRIC_METRICDB_TABLEHEADERREADER_H
 #define _FNORDMETRIC_METRICDB_TABLEHEADERREADER_H
-#include <fnordmetric/util/binarymessagereader.h>
+#include <metricd/util/binarymessagereader.h>
 #include <stdlib.h>
 #include <stdint.h>
 #include <string>

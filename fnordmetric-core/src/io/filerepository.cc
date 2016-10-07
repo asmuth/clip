@@ -7,9 +7,9 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#include <fnordmetric/io/filerepository.h>
-#include <fnordmetric/io/fileutil.h>
-#include <fnordmetric/util/random.h>
+#include <metricd/io/filerepository.h>
+#include <metricd/io/fileutil.h>
+#include <metricd/util/random.h>
 
 namespace fnord {
 namespace io {

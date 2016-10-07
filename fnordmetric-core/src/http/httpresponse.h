@@ -9,9 +9,9 @@
  */
 #ifndef _FNORDMETRIC_WEB_HTTPRESPONSE_H
 #define _FNORDMETRIC_WEB_HTTPRESPONSE_H
-#include <fnordmetric/http/httpmessage.h>
-#include <fnordmetric/http/httprequest.h>
-#include <fnordmetric/http/status.h>
+#include <metricd/http/httpmessage.h>
+#include <metricd/http/httprequest.h>
+#include <metricd/http/status.h>
 #include <string>
 
 namespace fnord {

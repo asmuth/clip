@@ -7,10 +7,10 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#include <fnordmetric/environment.h>
-#include <fnordmetric/metricdb/adminui.h>
-#include <fnordmetric/util/assets.h>
-#include <fnordmetric/util/uri.h>
+#include <metricd/environment.h>
+#include <metricd/metricdb/adminui.h>
+#include <metricd/util/assets.h>
+#include <metricd/util/uri.h>
 
 namespace fnordmetric {
 namespace metricdb {

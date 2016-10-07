@@ -7,8 +7,8 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#include <fnordmetric/http/httpresponse.h>
-#include <fnordmetric/http/httpoutputstream.h>
+#include <metricd/http/httpresponse.h>
+#include <metricd/http/httpoutputstream.h>
 
 namespace fnord {
 namespace http {

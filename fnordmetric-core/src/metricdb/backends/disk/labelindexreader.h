@@ -9,8 +9,8 @@
  */
 #ifndef _FNORDMETRIC_METRICDB_LABELINDEXREADER_H
 #define _FNORDMETRIC_METRICDB_LABELINDEXREADER_H
-#include <fnordmetric/metricdb/backends/disk/labelindex.h>
-#include <fnordmetric/util/binarymessagereader.h>
+#include <metricd/metricdb/backends/disk/labelindex.h>
+#include <metricd/util/binarymessagereader.h>
 #include <stdlib.h>
 #include <stdint.h>
 #include <string>

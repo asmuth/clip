@@ -7,15 +7,15 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#include <fnordmetric/environment.h>
-#include <fnordmetric/query/query.h>
-#include <fnordmetric/query/queryservice.h>
-#include <fnordmetric/sql/runtime/queryplannode.h>
-#include <fnordmetric/sql/runtime/resultlist.h>
-#include <fnordmetric/sql/runtime/tablerepository.h>
-#include <fnordmetric/ui/svgtarget.h>
-#include <fnordmetric/util/inputstream.h>
-#include <fnordmetric/util/jsonoutputstream.h>
+#include <metricd/environment.h>
+#include <metricd/query/query.h>
+#include <metricd/query/queryservice.h>
+#include <metricd/sql/runtime/queryplannode.h>
+#include <metricd/sql/runtime/resultlist.h>
+#include <metricd/sql/runtime/tablerepository.h>
+#include <metricd/ui/svgtarget.h>
+#include <metricd/util/inputstream.h>
+#include <metricd/util/jsonoutputstream.h>
 
 namespace fnordmetric {
 namespace query {

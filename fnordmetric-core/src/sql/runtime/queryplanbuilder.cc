@@ -8,20 +8,20 @@
  * <http://www.gnu.org/licenses/>.
  */
 #include <stdlib.h>
-#include <fnordmetric/sql/parser/astnode.h>
-#include <fnordmetric/sql/parser/astutil.h>
-#include <fnordmetric/sql/runtime/queryplanbuilder.h>
-#include <fnordmetric/sql/runtime/queryplannode.h>
-#include <fnordmetric/sql/runtime/tablelessselect.h>
-#include <fnordmetric/sql/runtime/tablescan.h>
-#include <fnordmetric/sql/runtime/tablerepository.h>
-#include <fnordmetric/sql/runtime/limitclause.h>
-#include <fnordmetric/sql/runtime/orderby.h>
-#include <fnordmetric/sql/runtime/groupby.h>
-#include <fnordmetric/sql/runtime/groupovertimewindow.h>
-#include <fnordmetric/sql/runtime/runtime.h>
-#include <fnordmetric/sql/runtime/symboltable.h>
-#include <fnordmetric/sql/runtime/importstatement.h>
+#include <metricd/sql/parser/astnode.h>
+#include <metricd/sql/parser/astutil.h>
+#include <metricd/sql/runtime/queryplanbuilder.h>
+#include <metricd/sql/runtime/queryplannode.h>
+#include <metricd/sql/runtime/tablelessselect.h>
+#include <metricd/sql/runtime/tablescan.h>
+#include <metricd/sql/runtime/tablerepository.h>
+#include <metricd/sql/runtime/limitclause.h>
+#include <metricd/sql/runtime/orderby.h>
+#include <metricd/sql/runtime/groupby.h>
+#include <metricd/sql/runtime/groupovertimewindow.h>
+#include <metricd/sql/runtime/runtime.h>
+#include <metricd/sql/runtime/symboltable.h>
+#include <metricd/sql/runtime/importstatement.h>
 
 namespace fnordmetric {
 namespace query {

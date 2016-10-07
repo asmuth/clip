@@ -7,11 +7,11 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-#include <fnordmetric/util/runtimeexception.h>
-#include <fnordmetric/util/unittest.h>
-#include <fnordmetric/sql/backends/csv/csvinputstream.h>
-#include <fnordmetric/sql/backends/csv/csvtableref.h>
-#include <fnordmetric/sql/svalue.h>
+#include <metricd/util/runtimeexception.h>
+#include <metricd/util/unittest.h>
+#include <metricd/sql/backends/csv/csvinputstream.h>
+#include <metricd/sql/backends/csv/csvtableref.h>
+#include <metricd/sql/svalue.h>
 
 using namespace fnordmetric::query::csv_backend;
 

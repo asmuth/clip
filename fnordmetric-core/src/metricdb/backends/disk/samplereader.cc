@@ -7,9 +7,9 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#include <fnordmetric/metricdb/backends/disk/tokenindex.h>
-#include <fnordmetric/metricdb/backends/disk/samplereader.h>
-#include <fnordmetric/util/ieee754.h>
+#include <metricd/metricdb/backends/disk/tokenindex.h>
+#include <metricd/metricdb/backends/disk/samplereader.h>
+#include <metricd/util/ieee754.h>
 
 namespace fnordmetric {
 namespace metricdb {

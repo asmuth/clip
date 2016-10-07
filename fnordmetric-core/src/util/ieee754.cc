@@ -7,8 +7,8 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#include <fnordmetric/util/ieee754.h>
-#include <fnordmetric/util/runtimeexception.h>
+#include <metricd/util/ieee754.h>
+#include <metricd/util/runtimeexception.h>
 #include <limits>
 #include <string.h>
 #include <stdio.h>

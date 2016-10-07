@@ -9,8 +9,8 @@
  */
 #ifndef _FNORD_IO_MMAPPED_FILE_H_
 #define _FNORD_IO_MMAPPED_FILE_H_
-#include <fnordmetric/io/file.h>
-#include <fnordmetric/util/runtimeexception.h>
+#include <metricd/io/file.h>
+#include <metricd/util/runtimeexception.h>
 #include <stdlib.h>
 #include <stdint.h>
 #include <string>

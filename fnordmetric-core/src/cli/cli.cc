@@ -10,16 +10,16 @@
 #include <vector>
 #include <string>
 #include <memory>
-#include <fnordmetric/environment.h>
-#include <fnordmetric/cli/cli.h>
-#include <fnordmetric/cli/flagparser.h>
-#include <fnordmetric/util/exceptionhandler.h>
-#include <fnordmetric/util/inputstream.h>
-#include <fnordmetric/util/outputstream.h>
-#include <fnordmetric/util/runtimeexception.h>
-#include <fnordmetric/sql/backends/csv/csvbackend.h>
-#include <fnordmetric/sql/backends/mysql/mysqlbackend.h>
-#include <fnordmetric/sql/backends/postgres/postgresbackend.h>
+#include <metricd/environment.h>
+#include <metricd/cli/cli.h>
+#include <metricd/cli/flagparser.h>
+#include <metricd/util/exceptionhandler.h>
+#include <metricd/util/inputstream.h>
+#include <metricd/util/outputstream.h>
+#include <metricd/util/runtimeexception.h>
+#include <metricd/sql/backends/csv/csvbackend.h>
+#include <metricd/sql/backends/mysql/mysqlbackend.h>
+#include <metricd/sql/backends/postgres/postgresbackend.h>
 
 namespace fnordmetric {
 namespace cli {

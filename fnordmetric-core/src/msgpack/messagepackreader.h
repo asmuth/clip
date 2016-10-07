@@ -13,9 +13,9 @@
 #include <string>
 #include <vector>
 #include <memory>
-#include <fnordmetric/util/runtimeexception.h>
-#include <fnordmetric/sql/parser/token.h>
-#include <fnordmetric/sql/parser/astnode.h>
+#include <metricd/util/runtimeexception.h>
+#include <metricd/sql/parser/token.h>
+#include <metricd/sql/parser/astnode.h>
 
 namespace fnord {
 namespace msgpack {

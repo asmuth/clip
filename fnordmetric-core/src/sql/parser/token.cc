@@ -7,9 +7,9 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#include <fnordmetric/sql/parser/token.h>
-#include <fnordmetric/util/runtimeexception.h>
-#include <fnordmetric/util/inspect.h>
+#include <metricd/sql/parser/token.h>
+#include <metricd/util/runtimeexception.h>
+#include <metricd/util/inspect.h>
 #include <string.h>
 
 namespace fnordmetric {

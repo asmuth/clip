@@ -7,12 +7,12 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#include <fnordmetric/sql/parser/token.h>
-#include <fnordmetric/sql/runtime/compile.h>
-#include <fnordmetric/sql/runtime/execute.h>
-#include <fnordmetric/sql/runtime/importstatement.h>
-#include <fnordmetric/sql/svalue.h>
-#include <fnordmetric/util/runtimeexception.h>
+#include <metricd/sql/parser/token.h>
+#include <metricd/sql/runtime/compile.h>
+#include <metricd/sql/runtime/execute.h>
+#include <metricd/sql/runtime/importstatement.h>
+#include <metricd/sql/svalue.h>
+#include <metricd/util/runtimeexception.h>
 
 namespace fnordmetric {
 namespace query {

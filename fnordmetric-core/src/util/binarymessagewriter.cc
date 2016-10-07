@@ -7,8 +7,8 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#include <fnordmetric/util/binarymessagewriter.h>
-#include <fnordmetric/util/runtimeexception.h>
+#include <metricd/util/binarymessagewriter.h>
+#include <metricd/util/runtimeexception.h>
 #include <stdlib.h>
 #include <string.h>
 

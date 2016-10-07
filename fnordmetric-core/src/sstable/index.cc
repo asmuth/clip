@@ -7,7 +7,7 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#include <fnordmetric/sstable/index.h>
+#include <metricd/sstable/index.h>
 
 namespace fnord {
 namespace sstable {

@@ -10,7 +10,7 @@
 #ifndef _FNORDMETRIC_UTIL_DATETIME_H
 #define _FNORDMETRIC_UTIL_DATETIME_H
 #include <ctime>
-#include <fnordmetric/util/datetime.h>
+#include <metricd/util/datetime.h>
 #include <inttypes.h>
 #include <limits>
 #include <string>

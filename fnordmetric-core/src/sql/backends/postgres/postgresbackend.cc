@@ -7,11 +7,11 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#include <fnordmetric/environment.h>
-#include <fnordmetric/sql/backends/postgres/postgresbackend.h>
-#include <fnordmetric/sql/backends/postgres/postgresconnection.h>
-#include <fnordmetric/sql/backends/postgres/postgrestableref.h>
-#include <fnordmetric/util/runtimeexception.h>
+#include <metricd/environment.h>
+#include <metricd/sql/backends/postgres/postgresbackend.h>
+#include <metricd/sql/backends/postgres/postgresconnection.h>
+#include <metricd/sql/backends/postgres/postgrestableref.h>
+#include <metricd/util/runtimeexception.h>
 #include <memory>
 #include <mutex>
 

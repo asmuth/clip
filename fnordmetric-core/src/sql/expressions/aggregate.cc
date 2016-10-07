@@ -8,8 +8,8 @@
  * <http://www.gnu.org/licenses/>.
  */
 #include <stdlib.h>
-#include <fnordmetric/sql/expressions/aggregate.h>
-#include <fnordmetric/sql/svalue.h>
+#include <metricd/sql/expressions/aggregate.h>
+#include <metricd/sql/svalue.h>
 
 namespace fnordmetric {
 namespace query {

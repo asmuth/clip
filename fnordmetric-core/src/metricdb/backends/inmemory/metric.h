@@ -11,7 +11,7 @@
 #define _FNORDMETRIC_METRICDB_INMEMORY_BACKEND_METRIC_H_
 #include <atomic>
 #include <mutex>
-#include <fnordmetric/metricdb/metric.h>
+#include <metricd/metricdb/metric.h>
 
 namespace fnordmetric {
 namespace metricdb {

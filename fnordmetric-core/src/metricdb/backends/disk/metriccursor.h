@@ -9,9 +9,9 @@
  */
 #ifndef _FNORD_METRICDB_DISK_BACKEND_METRICCURSOR_H
 #define _FNORD_METRICDB_DISK_BACKEND_METRICCURSOR_H
-#include <fnordmetric/metricdb/backends/disk/metricsnapshot.h>
-#include <fnordmetric/metricdb/backends/disk/samplereader.h>
-#include <fnordmetric/util/binarymessagereader.h>
+#include <metricd/metricdb/backends/disk/metricsnapshot.h>
+#include <metricd/metricdb/backends/disk/samplereader.h>
+#include <metricd/util/binarymessagereader.h>
 #include <stdlib.h>
 #include <string>
 #include <vector>

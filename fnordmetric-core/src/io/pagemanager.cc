@@ -12,9 +12,9 @@
 #include <sys/mman.h>
 #include <unistd.h>
 #include "pagemanager.h"
-#include <fnordmetric/environment.h>
-#include <fnordmetric/io/file.h>
-#include <fnordmetric/io/fileutil.h>
+#include <metricd/environment.h>
+#include <metricd/io/file.h>
+#include <metricd/io/fileutil.h>
 
 namespace fnord {
 namespace io {

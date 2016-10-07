@@ -9,7 +9,7 @@
  */
 #ifndef _FNORDMETRIC_FFS_VOLUME_IMPL_H_
 #define _FNORDMETRIC_FFS_VOLUME_IMPL_H_
-#include <fnordmetric/util/runtimeexception.h>
+#include <metricd/util/runtimeexception.h>
 
 namespace fnordmetric {
 namespace ffs {

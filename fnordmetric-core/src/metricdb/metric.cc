@@ -7,8 +7,8 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#include <fnordmetric/metricdb/metric.h>
-#include <fnordmetric/util/runtimeexception.h>
+#include <metricd/metricdb/metric.h>
+#include <metricd/util/runtimeexception.h>
 
 namespace fnordmetric {
 namespace metricdb {

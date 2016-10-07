@@ -7,9 +7,9 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#include <fnordmetric/metricdb/metrictableref.h>
-#include <fnordmetric/sql/runtime/tablescan.h>
-#include <fnordmetric/sql/svalue.h>
+#include <metricd/metricdb/metrictableref.h>
+#include <metricd/sql/runtime/tablescan.h>
+#include <metricd/sql/svalue.h>
 
 namespace fnordmetric {
 namespace query {
