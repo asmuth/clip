@@ -3,13 +3,9 @@
 MAINTAINERCLEANFILES =   \
   Makefile.in
 
-# we'll fill those later
-bin_PROGRAMS =
-noinst_LIBRARIES =
-dist_noinst_DATA =
-BUILT_SOURCES =
-TESTS =
-check_PROGRAMS =
+bin_PROGRAMS = metricd
+TESTS = metric_test
+check_PROGRAMS = $(TESTS)
 
 
 ################# DEPENDENCIES ####################
@@ -43,12 +39,9 @@ CURL_LDFLAGS_=-lcurl
 
 AM_CXXFLAGS = -DFNORDMETRIC_VERSION=\"v@PACKAGE_VERSION@\" $(PTHREAD_CFLAGS) $(PTHREAD_DEF) $(SYSLOG_DEF) $(ZLIB_DEF) $(GETHOSTBYNAME_R_DEF) -std=c++0x -ftemplate-depth=500 -mno-omit-leaf-frame-pointer -fno-omit-frame-pointer -Wall -Wextra -Wno-unused-parameter -Wno-sign-compare -Wdelete-non-virtual-dtor -Wno-predefined-identifier-outside-function -Wno-invalid-offsetof -g -I$(top_srcdir)/ -I$(top_builddir)/
 AM_CFLAGS =  $(PTHREAD_CFLAGS) $(PTHREAD_DEF) $(SYSLOG_DEF) $(ZLIB_DEF) $(GETHOSTBYNAME_R_DEF) -std=c11 -mno-omit-leaf-frame-pointer -fno-omit-frame-pointer -Wall -pedantic -g
-AM_LDFLAGS = $(PTHREAD_CFLAGS)
-AM_LDADD = $(PCRE_LDFLAGS_) $(CURL_LDFLAGS_) $(PTHREAD_LDFLAGS_)
+AM_LDFLAGS = $(PCRE_LDFLAGS_) $(CURL_LDFLAGS_) $(PTHREAD_LDFLAGS_)
 
-####### FMETRICD ==############################################################
-
-metricd_SOURCES = \
+metricd_common_sources_ = \
     util/uri.h \
     util/uri.cc \
     util/time_impl.h \
@@ -150,10 +143,13 @@ metricd_SOURCES = \
     transport/http/cookies.h \
     transport/http/cookies.cc \
     webui/webui.h \
-    webui/webui.cc \
+    webui/webui.cc
+
+metricd_SOURCES = \
+    $(metricd_common_sources_) \
     metricd.cc
 
-bin_PROGRAMS += metricd
-metricd_LDADD = ${AM_LDADD}
+metric_test_SOURCES = \
+    $(metricd_common_sources_) \
+    metric_test.cc
 
-####### TESTS #################################################################

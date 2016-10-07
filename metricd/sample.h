@@ -7,35 +7,30 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#ifndef _FNORDMETRIC_METRICDB_SAMPLE_H_
-#define _FNORDMETRIC_METRICDB_SAMPLE_H_
-#include <metricd/util/datetime.h>
+#pragma once
 #include <stdlib.h>
 #include <string>
 #include <vector>
 
-using fnord::util::DateTime;
-
 namespace fnordmetric {
-namespace metricdb {
 
 class Sample {
 public:
+
+  using TimestampType = uint64_t;
+
   Sample(
-      const DateTime& time,
+      TimestampType time,
       double value,
       const std::vector<std::pair<std::string, std::string>>& labels);
 
-  const DateTime& time();
+  TimestampType time();
   double value();
-  const std::vector<std::pair<std::string, std::string>>& labels();
 
 protected:
-  const DateTime& time_;
+  const TimestampType& time_;
   double value_;
-  const std::vector<std::pair<std::string, std::string>>& labels_;
 };
 
-}
-}
-#endif
+} // namespace fnordmetric
+
