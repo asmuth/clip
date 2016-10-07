@@ -48,7 +48,7 @@ AM_LDADD = $(PCRE_LDFLAGS_) $(CURL_LDFLAGS_) $(PTHREAD_LDFLAGS_)
 
 ####### FMETRICD ==############################################################
 
-fmetricd_SOURCES = \
+metricd_SOURCES = \
     util/uri.h \
     util/uri.cc \
     util/time_impl.h \
@@ -151,9 +151,9 @@ fmetricd_SOURCES = \
     transport/http/cookies.cc \
     webui/webui.h \
     webui/webui.cc \
-    fmetricd.cc
+    metricd.cc
 
-bin_PROGRAMS += fmetricd
-fmetricd_LDADD = ${AM_LDADD}
+bin_PROGRAMS += metricd
+metricd_LDADD = ${AM_LDADD}
 
 ####### TESTS #################################################################
