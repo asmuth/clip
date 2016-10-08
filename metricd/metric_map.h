@@ -22,22 +22,21 @@ class MetricMap {
 friend class MetricMapBuilder;
 public:
 
-  virtual ~MetricMap() {}
+  ~MetricMap();
 
   Metric* findMetric(const std::string& key) const;
 
   std::set<std::string> listMetrics() const;
 
 protected:
-  std::map<std::string, Metric*> metrics_;
+  std::map<std::string, std::pair<Metric*, bool>> metrics_;
+  std::shared_ptr<MetricMap> next_;
 };
 
 class MetricMapBuilder {
 public:
 
-  MetricMapBuilder();
-
-  void copyFrom(const MetricMap* metric_map);
+  MetricMapBuilder(MetricMap* metric_map);
 
   void addMetric(
       const std::string& key,

@@ -50,7 +50,7 @@ ReturnCode MetricService::startService(
     }
   }
 
-  MetricMapBuilder metric_map_builder;
+  MetricMapBuilder metric_map_builder(nullptr);
   for (const auto& series_id : series_ids) {
     std::string metadata_buf;
     if (!tsdb->getSeriesMetadata(series_id, &metadata_buf)) {
@@ -109,8 +109,7 @@ void MetricService::configureMetric(
     return;
   }
 
-  MetricMapBuilder metric_map_builder;
-  metric_map_builder.copyFrom(metric_map.get());
+  MetricMapBuilder metric_map_builder(metric_map.get());
   metric = new Metric(metric_id);
   metric->setConfig(config);
   metric_map_builder.addMetric(metric_id, std::unique_ptr<Metric>(metric));

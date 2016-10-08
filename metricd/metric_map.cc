@@ -12,12 +12,20 @@
 
 namespace fnordmetric {
 
+MetricMap::~MetricMap() {
+  for (auto& m : metrics_) {
+    if (m.second.second) {
+      delete m.second.first;
+    }
+  }
+}
+
 Metric* MetricMap::findMetric(const std::string& key) const {
   auto iter = metrics_.find(key);
   if (iter == metrics_.end()) {
     return nullptr;
   } else {
-    return iter->second;
+    return iter->second.first;
   }
 }
 
@@ -35,12 +43,19 @@ Metric* MetricMap::findMetric(const std::string& key) const {
 //  return metrics;
 //}
 
-MetricMapBuilder::MetricMapBuilder() :
-    metric_map_(std::make_shared<MetricMap>()) {}
+MetricMapBuilder::MetricMapBuilder(
+    MetricMap* mm) :
+    metric_map_(std::make_shared<MetricMap>()) {
+  if (mm) {
+    for (auto& m : mm->metrics_) {
+      m.second.second = false;
 
-void MetricMapBuilder::copyFrom(const MetricMap* metric_map) {
-  for (const auto& m : metric_map->metrics_) {
-    metric_map_->metrics_.insert(m);
+      metric_map_->metrics_.emplace(
+          m.first,
+          std::make_pair(m.second.first, true));
+    }
+
+    mm->next_ = metric_map_;
   }
 }
 
@@ -52,7 +67,7 @@ Metric* MetricMapBuilder::findMetric(
 void MetricMapBuilder::addMetric(
     const std::string& key,
     std::unique_ptr<Metric> metric) {
-  metric_map_->metrics_.emplace(key, metric.release());
+  metric_map_->metrics_.emplace(key, std::make_pair(metric.release(), true));
 }
 
 std::shared_ptr<MetricMap> MetricMapBuilder::getMetricMap() {
