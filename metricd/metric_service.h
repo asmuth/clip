@@ -82,7 +82,8 @@ protected:
 
   MetricService(
       std::unique_ptr<tsdb::TSDB> tsdb,
-      std::shared_ptr<MetricMap> metric_map);
+      std::shared_ptr<MetricMap> metric_map,
+      SeriesIDType series_id);
 
   std::unique_ptr<tsdb::TSDB> tsdb_;
   VersionedMetricMap metric_map_;

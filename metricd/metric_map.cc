@@ -67,6 +67,10 @@ void VersionedMetricMap::updateMetricMap(
   metric_map_ = std::move(metric_map);
 }
 
+SeriesIDProvider::SeriesIDProvider(
+    SeriesIDType init_id) :
+    series_id_(init_id) {}
+
 SeriesIDType SeriesIDProvider::allocateSeriesID() {
   return series_id_.fetch_add(1) + 1;
 }

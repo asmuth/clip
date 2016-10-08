@@ -64,6 +64,7 @@ protected:
 class SeriesIDProvider {
 public:
 
+  SeriesIDProvider(SeriesIDType init_id);
   SeriesIDType allocateSeriesID();
 
 protected:

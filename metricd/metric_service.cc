@@ -43,6 +43,13 @@ ReturnCode MetricService::startService(
     return ReturnCode::error("ERUNTIME", "error while opening database");
   }
 
+  SeriesIDType series_id_max = 0;
+  for (auto s : series_ids) {
+    if (s > series_id_max) {
+      series_id_max = s;
+    }
+  }
+
   MetricMapBuilder metric_map_builder;
   for (const auto& series_id : series_ids) {
     std::string metadata_buf;
@@ -66,15 +73,18 @@ ReturnCode MetricService::startService(
   service->reset(
       new MetricService(
           std::move(tsdb),
-          metric_map_builder.getMetricMap()));
+          metric_map_builder.getMetricMap(),
+          series_id_max));
 
   return ReturnCode::success();
 }
 
 MetricService::MetricService(
     std::unique_ptr<tsdb::TSDB> tsdb,
-    std::shared_ptr<MetricMap> metric_map) :
-    tsdb_(std::move(tsdb)) {
+    std::shared_ptr<MetricMap> metric_map,
+    SeriesIDType series_id) :
+    tsdb_(std::move(tsdb)),
+    id_provider_(series_id) {
   metric_map_.updateMetricMap(std::move(metric_map));
 }
 
