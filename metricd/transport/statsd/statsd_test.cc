@@ -11,16 +11,15 @@
 #include <metricd/util/unittest.h>
 #include <metricd/transport/statsd/statsd.h>
 
+using namespace fnordmetric;
 using namespace fnordmetric::statsd;
 
 UNIT_TEST(StatsdTest);
 
-using LabelList = std::vector<std::pair<std::string, std::string>>;
-
 TEST_CASE(StatsdTest, TestSimpleParseFromStatsdFormat, [] () {
   std::string key;
   std::string value;
-  LabelList labels;
+  LabelSet labels;
 
   std::string test_smpl = "/fnord/mymetric";
   auto cur = test_smpl.c_str();
@@ -41,7 +40,7 @@ TEST_CASE(StatsdTest, TestSimpleParseFromStatsdFormat, [] () {
 TEST_CASE(StatsdTest, TestSimpleParseFromStatsdFormatWithValue, [] () {
   std::string key;
   std::string value;
-  LabelList labels;
+  LabelSet labels;
 
   std::string test_smpl = "/fnord/mymetric:34.23";
   auto cur = test_smpl.c_str();
@@ -62,7 +61,7 @@ TEST_CASE(StatsdTest, TestSimpleParseFromStatsdFormatWithValue, [] () {
 TEST_CASE(StatsdTest, TestParseFromStatsdFormatWithLabels, [] () {
   std::string key;
   std::string value;
-  LabelList labels;
+  LabelSet labels;
 
   std::string test_smpl = "/fnord/mymetric[label1=435][l2=str]:34.23";
   auto cur = test_smpl.c_str();
@@ -77,17 +76,15 @@ TEST_CASE(StatsdTest, TestParseFromStatsdFormatWithLabels, [] () {
   EXPECT_EQ(cur, test_smpl.c_str() + test_smpl.size());
   EXPECT_EQ(key, "/fnord/mymetric");
   EXPECT_EQ(labels.size(), 2);
-  EXPECT_EQ(labels[0].first, "label1");
-  EXPECT_EQ(labels[0].second, "435");
-  EXPECT_EQ(labels[1].first, "l2");
-  EXPECT_EQ(labels[1].second, "str");
+  EXPECT(labels["label1"] == "435");
+  EXPECT(labels["l2"] == "str");
   EXPECT_EQ(value, "34.23");
 });
 
 TEST_CASE(StatsdTest, TestParseFromStatsdFormatWithMultipleSamples, [] () {
   std::string key;
   std::string value;
-  LabelList labels;
+  LabelSet labels;
 
   std::string test_smpl = "/fnord/mymetric:2.3\n/fnord/other:42.5\r\nfu:4.6";
 
@@ -138,7 +135,7 @@ TEST_CASE(StatsdTest, TestParseFromStatsdFormatWithMultipleSamples, [] () {
 TEST_CASE(StatsdTest, TestParseFromStatsdFormatWithMultipleSmplLabels, [] () {
   std::string key;
   std::string value;
-  LabelList labels;
+  LabelSet labels;
 
   std::string test_smpl = "/fmet[l1=l]:2.3\noth[l3=x]:42.5\r\nfu[a=b]:4.6\r\n";
 
