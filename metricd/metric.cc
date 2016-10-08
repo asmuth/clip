@@ -8,6 +8,7 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
+#include <assert.h>
 #include <sstream>
 #include <metricd/metric.h>
 #include <metricd/metric_map.h>
@@ -193,6 +194,18 @@ ReturnCode MetricSeriesList::findOrCreateSeries(
   series_.emplace(new_series_id, new_series);
   *series = std::move(new_series);
   return ReturnCode::success();
+}
+
+void MetricSeriesList::addSeries(
+    const SeriesIDType& series_id,
+    const LabelSet& labels) {
+  assert(series_.count(series_id) == 0);
+
+  series_.emplace(
+      series_id,
+      std::make_shared<MetricSeries>(
+          series_id,
+          labels));
 }
 
 size_t MetricSeriesList::getSize() const {

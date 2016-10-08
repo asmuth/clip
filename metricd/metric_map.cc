@@ -44,6 +44,11 @@ void MetricMapBuilder::copyFrom(const MetricMap* metric_map) {
   }
 }
 
+Metric* MetricMapBuilder::findMetric(
+    const std::string& key) {
+  return metric_map_->findMetric(key);
+}
+
 void MetricMapBuilder::addMetric(
     const std::string& key,
     std::unique_ptr<Metric> metric) {

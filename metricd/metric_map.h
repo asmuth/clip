@@ -43,6 +43,8 @@ public:
       const std::string& key,
       std::unique_ptr<Metric> metric);
 
+  Metric* findMetric(const std::string& key);
+
   std::shared_ptr<MetricMap> getMetricMap();
 
 protected:

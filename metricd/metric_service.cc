@@ -67,6 +67,15 @@ ReturnCode MetricService::startService(
         "Opening timeseries; metric_id=$0; series_id=$1",
         metadata.metric_id,
         series_id);
+
+    const auto& metric_id = metadata.metric_id;
+    auto metric = metric_map_builder.findMetric(metric_id);
+    if (!metric) {
+      metric = new Metric(metric_id);
+      metric_map_builder.addMetric(metric_id, std::unique_ptr<Metric>(metric));
+    }
+
+    metric->getSeriesList()->addSeries(series_id, metadata.labels);
   }
 
   /* initialize service */

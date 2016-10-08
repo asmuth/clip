@@ -79,6 +79,10 @@ public:
       const LabelSet& labels,
       std::shared_ptr<MetricSeries>* series);
 
+  void addSeries(
+      const SeriesIDType& series_id,
+      const LabelSet& labels);
+
   void listSeries(std::set<SeriesIDType>* series_ids);
 
   size_t getSize() const;
