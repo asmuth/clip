@@ -13,6 +13,7 @@
 #include <metricd/util/return_code.h>
 #include <libtsdb/tsdb.h>
 #include <functional>
+#include <iostream>
 #include <string>
 #include <vector>
 #include <set>
@@ -49,6 +50,14 @@ protected:
   const SeriesIDType series_id_;
   const LabelSet labels_;
 };
+
+struct MetricSeriesMetadata {
+  MetricIDType metric_id;
+  LabelSet labels;
+  bool encode(std::ostream* os) const;
+  bool decode(std::istream* is);
+};
+
 
 class MetricSeriesList {
 public:

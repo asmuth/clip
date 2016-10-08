@@ -8,8 +8,10 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
+#include <sstream>
 #include <metricd/metric.h>
 #include <metricd/metric_map.h>
+#include <libtsdb/varint.h>
 
 namespace fnordmetric {
 
@@ -57,6 +59,89 @@ bool MetricSeries::compareLabel(
   }
 }
 
+bool MetricSeriesMetadata::encode(std::ostream* os) const {
+  if (!tsdb::writeVarUInt(os, metric_id.size())) {
+    return false;
+  }
+
+  os->write(metric_id.data(), metric_id.size());
+  if (os->fail()) {
+    return false;
+  }
+
+  if (!tsdb::writeVarUInt(os, labels.size())) {
+    return false;
+  }
+
+  for (const auto& l : labels) {
+    if (!tsdb::writeVarUInt(os, l.first.size())) {
+      return false;
+    }
+
+    os->write(l.first.data(), l.first.size());
+    if (os->fail()) {
+      return false;
+    }
+
+    if (!tsdb::writeVarUInt(os, l.second.size())) {
+      return false;
+    }
+
+    os->write(l.second.data(), l.second.size());
+    if (os->fail()) {
+      return false;
+    }
+  }
+
+  return true;
+}
+
+bool MetricSeriesMetadata::decode(std::istream* is) {
+  uint64_t metric_id_len;
+  if (!tsdb::readVarUInt(is, &metric_id_len)) {
+    return false;
+  }
+
+  metric_id.reserve(metric_id_len);
+  is->read(&metric_id[0], metric_id.size());
+  if (is->fail()) {
+    return false;
+  }
+
+  uint64_t labels_count;
+  if (!tsdb::readVarUInt(is, &labels_count)) {
+    return false;
+  }
+
+  for (uint64_t i = 0; i < labels_count; ++i) {
+    uint64_t label_key_len;
+    if (!tsdb::readVarUInt(is, &label_key_len)) {
+      return false;
+    }
+
+    std::string label_key(label_key_len, 0);
+    is->read(&label_key[0], label_key.size());
+    if (is->fail()) {
+      return false;
+    }
+
+    uint64_t label_value_len;
+    if (!tsdb::readVarUInt(is, &label_value_len)) {
+      return false;
+    }
+
+    std::string label_value(label_value_len, 0);
+    is->read(&label_value[0], label_value.size());
+    if (is->fail()) {
+      return false;
+    }
+
+    labels[label_key] = label_value;
+  }
+
+  return true;
+}
+
 MetricSeriesList::MetricSeriesList() {}
 
 ReturnCode MetricSeriesList::findOrCreateSeries(
@@ -82,11 +167,24 @@ ReturnCode MetricSeriesList::findOrCreateSeries(
       new_series_id,
       labels);
 
+  /* encode series metadata */
+  MetricSeriesMetadata metadata;
+
+  std::ostringstream metadata_buf;
+  metadata.encode(&metadata_buf);
+
+  /* create the new  series in the tsdb file */
   auto tsdb_page_type = tsdb::PageType::UINT64; // FIXME
-  if (!tsdb->createSeries(new_series_id, tsdb_page_type)) {
+  auto create_rc = tsdb->createSeries(
+      new_series_id,
+      tsdb_page_type,
+      metadata_buf.str());
+
+  if (!create_rc) {
     return ReturnCode::error("ERUNTIME", "can't create series");
   }
 
+  /* add new series to series list */
   series_.emplace(new_series_id, new_series);
   *series = std::move(new_series);
   return ReturnCode::success();
