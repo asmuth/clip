@@ -10,12 +10,17 @@
 #pragma once
 #include <stdlib.h>
 #include <string>
+#include <iostream>
 
 namespace tsdb {
 
-void writeVarUInt(std::string* str, uint64_t value);
+bool writeVarUInt(std::string* str, uint64_t value);
+
+bool writeVarUInt(std::ostream* os, uint64_t value);
 
 bool readVarUInt(const char** cursor, const char* end, uint64_t* value);
+
+bool readVarUInt(std::istream* is, uint64_t* value);
 
 
 } // namespace tsdb
