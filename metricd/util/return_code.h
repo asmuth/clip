@@ -27,6 +27,7 @@
 #include <stdlib.h>
 #include <string>
 #include <stdarg.h>
+#include "stringutil.h"
 
 class ReturnCode {
 public:
@@ -60,6 +61,14 @@ public:
     va_end(args);
 
     return rc;
+  }
+
+  template <typename... T>
+  inline static ReturnCode errorf(
+      const std::string& code,
+      const std::string& message,
+      T... args) {
+    return ReturnCode::error(code, StringUtil::format(message, args...));
   }
 
   inline bool isError() const {
