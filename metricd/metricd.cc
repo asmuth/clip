@@ -36,6 +36,7 @@
 #include <metricd/transport/http/httprouter.h>
 #include <metricd/transport/http/httpserver.h>
 #include <metricd/webui/webui.h>
+#include <metricd/metric_service.h>
 
 using namespace fnordmetric;
 
@@ -204,6 +205,14 @@ int main(int argc, const char** argv) {
       rc = ReturnCode::error("IO_ERROR", "writing pidfile failed");
     }
   }
+
+  /* start metric service */
+  MetricMapBuilder metric_map_builder;
+  metric_map_builder.addMetric(
+      "test",
+      std::unique_ptr<Metric>(new Metric("test")));
+
+  MetricService metric_service(metric_map_builder.getMetricMap());
 
   /* run http server */
   if (rc.isSuccess()) {

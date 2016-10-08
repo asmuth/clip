@@ -1,40 +1,44 @@
 /**
  * This file is part of the "FnordMetric" project
  *   Copyright (c) 2014 Paul Asmuth, Google Inc.
+ *   Copyright (c) 2016 Paul Asmuth, FnordCorp B.V. <paul@asmuth.com>
  *
  * FnordMetric is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License v3.0. You should have received a
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#include <metricd/metricdb/sample.h>
-
-using fnord::util::DateTime;
+#include <metricd/sample.h>
 
 namespace fnordmetric {
-namespace metricdb {
 
 Sample::Sample(
-    const DateTime& time,
-    double value,
-    const std::vector<std::pair<std::string, std::string>>& labels) :
+    TimestampType time,
+    double value) :
     time_(time),
-    value_(value),
-    labels_(labels) {}
+    value_(value) {}
 
-const DateTime& Sample::time() {
+TimestampType Sample::getTime() {
   return time_;
 }
 
-double Sample::value() {
+double Sample::getValue() {
   return value_;
 }
 
-const std::vector<std::pair<std::string, std::string>>& Sample::labels() {
+LabelledSample::LabelledSample(
+    Sample sample,
+    const LabelSet& labels) :
+    sample_(sample),
+    labels_(labels) {}
+
+const Sample& LabelledSample::getSample() const {
+  return sample_;
+}
+
+const LabelSet& LabelledSample::getLabels() const {
   return labels_;
 }
 
-
-}
-}
+} // namespace fnordmetric
 

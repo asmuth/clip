@@ -1,68 +1,70 @@
 /**
  * This file is part of the "FnordMetric" project
  *   Copyright (c) 2014 Paul Asmuth, Google Inc.
+ *   Copyright (c) 2016 Paul Asmuth, FnordCorp B.V. <paul@asmuth.com>
  *
  * FnordMetric is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License v3.0. You should have received a
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#include <metricd/environment.h>
-#include <metricd/metricdb/metricrepository.h>
+#include <metricd/metric_map.h>
 
-using namespace fnord;
 namespace fnordmetric {
-namespace metricdb {
 
-IMetric* IMetricMap::findMetric(const std::string& key) const {
-  IMetric* metric = nullptr;
-
-  std::lock_guard<std::mutex> lock_holder(metrics_mutex_);
-
-  auto iter = metrics_.find(key);
-  if (iter != metrics_.end()) {
-    metric = iter->second.get();
-  }
-
-  return metric;
-}
-
-IMetric* IMetricMap::findOrCreateMetric(const std::string& key) {
-  IMetric* metric;
-  std::lock_guard<std::mutex> lock_holder(metrics_mutex_);
-
+Metric* MetricMap::findMetric(const std::string& key) const {
   auto iter = metrics_.find(key);
   if (iter == metrics_.end()) {
-    if (env()->verbose()) {
-      env()->logger()->printf(
-          "DEBUG",
-          "Create new metric: '%s'",
-          key.c_str());
-    }
-
-    // FIXPAUL expensive operation; should be done outside of lock..
-    metric = createMetric(key);
-    metrics_.emplace(key, std::unique_ptr<IMetric>(metric));
+    return nullptr;
   } else {
-    metric = iter->second.get();
+    return iter->second.get();
   }
-
-  return metric;
 }
 
-std::vector<IMetric*> IMetricMap::listMetrics()
-    const {
-  std::vector<IMetric*> metrics;
+//std::vector<IMetric*> IMetricMap::listMetrics()
+//    const {
+//  std::vector<IMetric*> metrics;
+//
+//  {
+//    std::lock_guard<std::mutex> lock_holder(metrics_mutex_);
+//    for (const auto& iter : metrics_) {
+//      metrics.emplace_back(iter.second.get());
+//    }
+//  }
+//
+//  return metrics;
+//}
 
-  {
-    std::lock_guard<std::mutex> lock_holder(metrics_mutex_);
-    for (const auto& iter : metrics_) {
-      metrics.emplace_back(iter.second.get());
-    }
-  }
+MetricMapBuilder::MetricMapBuilder() :
+    metric_map_(std::make_shared<MetricMap>()) {}
 
-  return metrics;
+void MetricMapBuilder::addMetric(
+    const std::string& key,
+    std::unique_ptr<Metric> metric) {
+  metric_map_->metrics_.emplace(key, std::move(metric));
 }
 
+std::shared_ptr<MetricMap> MetricMapBuilder::getMetricMap() {
+  auto mmap = std::move(metric_map_);
+  metric_map_ = std::make_shared<MetricMap>();
+  return mmap;
 }
+
+std::shared_ptr<MetricMap> VersionedMetricMap::getMetricMap() {
+  std::unique_lock<std::mutex> lk(mutex_);
+  return metric_map_;
 }
+
+void VersionedMetricMap::updateMetricMap(
+    std::shared_ptr<MetricMap> metric_map) {
+  std::unique_lock<std::mutex> lk(mutex_);
+  metric_map_ = std::move(metric_map);
+}
+
+SeriesIDType SeriesIDProvider::allocateSeriesID() {
+  return series_id_.fetch_add(1) + 1;
+}
+
+} // namespace fnordmetric
+
+

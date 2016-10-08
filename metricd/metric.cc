@@ -1,43 +1,95 @@
 /**
  * This file is part of the "FnordMetric" project
  *   Copyright (c) 2014 Paul Asmuth, Google Inc.
+ *   Copyright (c) 2016 Paul Asmuth, FnordCorp B.V. <paul@asmuth.com>
  *
  * FnordMetric is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License v3.0. You should have received a
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#include <metricd/metricdb/metric.h>
-#include <metricd/util/runtimeexception.h>
+#include <metricd/metric.h>
+#include <metricd/metric_map.h>
 
 namespace fnordmetric {
-namespace metricdb {
 
-IMetric::IMetric(const std::string& key) : key_(key) {}
-IMetric::~IMetric() {}
+MetricSeries::MetricSeries(
+    SeriesIDType series_id,
+    LabelSet labels) :
+    labels_(labels) {}
 
-void IMetric::insertSample(
-    double value,
-    const std::vector<std::pair<std::string, std::string>>& labels) {
-  // FIXPAUL slow slow slow!
-  for (int i1 = 0; i1 < labels.size(); ++i1) {
-    for (int i2 = 0; i2 < labels.size(); ++i2) {
-      if (i1 != i2 && labels[i1].first == labels[i2].first) {
-        RAISE(
-            kIllegalArgumentError,
-            "duplicate label: %s",
-            labels[i1].first.c_str());
-      }
+ReturnCode MetricSeries::insertSample(Sample sample) {
+  return ReturnCode::success();
+}
+
+const LabelSet* MetricSeries::getLabels() const {
+  return &labels_;
+}
+
+bool MetricSeries::hasLabel(const std::string& label) const {
+  return labels_.count(label) > 0;
+}
+
+std::string MetricSeries::getLabel(const std::string& label) const {
+  auto iter = labels_.find(label);
+  if (iter == labels_.end()) {
+    return "";
+  } else {
+    return iter->second;
+  }
+}
+
+bool MetricSeries::compareLabel(
+    const std::string& label,
+    const std::string& value) const {
+  auto iter = labels_.find(label);
+  if (iter == labels_.end()) {
+    return false;
+  } else {
+    return iter->second == value;
+  }
+}
+
+MetricSeriesList::MetricSeriesList() {}
+
+ReturnCode MetricSeriesList::findOrCreateSeries(
+    SeriesIDProvider* series_id_provider,
+    const LabelSet& labels,
+    std::shared_ptr<MetricSeries>* series) {
+  std::unique_lock<std::mutex> lk(series_mutex_);
+
+  /* try to find an existing series that matches the label set */
+  // FIXME this operation should not be O(n)
+  auto series_iter = series_.begin();
+  for (; series_iter != series_.end(); ++series_iter) {
+    if (*series_iter->second->getLabels() == labels) {
+      *series = series_iter->second;
+      return ReturnCode::success();
     }
   }
 
-  insertSampleImpl(value, labels);
+  /* if no existing series was found, create a new one */
+  auto new_series_id = series_id_provider->allocateSeriesID();
+  auto new_series = std::make_shared<MetricSeries>(
+      new_series_id,
+      labels);
+
+  series_.emplace(new_series_id, new_series);
+  *series = std::move(new_series);
+  return ReturnCode::success();
 }
 
-const std::string& IMetric::key() const {
-  return key_;
+size_t MetricSeriesList::getSize() const {
+  std::unique_lock<std::mutex> lk(series_mutex_);
+  return series_.size();
 }
 
+Metric::Metric(
+    const std::string& key) {}
+
+MetricSeriesList* Metric::getSeriesList() {
+  return &series_;
 }
-}
+
+} // namespace fnordmetric
 

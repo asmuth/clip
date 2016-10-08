@@ -1,65 +1,78 @@
 /**
  * This file is part of the "FnordMetric" project
  *   Copyright (c) 2014 Paul Asmuth, Google Inc.
+ *   Copyright (c) 2016 Paul Asmuth, FnordCorp B.V. <paul@asmuth.com>
  *
  * FnordMetric is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License v3.0. You should have received a
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#ifndef _FNORD_METRIC_SERVICE_H
-#define _FNORD_METRIC_SERVICE_H
-#include <mutex>
-#include <stdlib.h>
+#pragma once
+#include <atomic>
+#include <memory>
 #include <string>
-#include "fnord/datetime.h"
-#include "metricd/metricrepository.h"
-#include "fnord/stats/counter.h"
-#include "fnord/thread/taskscheduler.h"
-#include "tsdb/TSDBClient.h"
-#include "metricd/Sample.pb.h"
+#include "metricd/metric_map.h"
+#include "metricd/metric.h"
+#include "metricd/util/return_code.h"
 
-namespace fnord {
-namespace metric_service {
+namespace fnordmetric {
+class MetricListCursor;
+class MetricSeriesListCursor;
+class MetricCursor;
 
 class MetricService {
 public:
 
-  MetricService(
-      const String& tsdb_namespace,
-      tsdb::TSDBClient* tsdb);
+  MetricService(std::shared_ptr<MetricMap> metric_map);
 
   /**
    * List all metrics
    */
-  std::vector<IMetric*> listMetrics() const;
+  MetricListCursor listMetrics();
 
   /**
-   * Insert a sample into a metric
+   * List all series in a metric
    */
-  void insertSample(
-      const std::string& metric_key,
-      double value,
-      const std::vector<std::pair<std::string, std::string>>& labels);
+  MetricSeriesListCursor listMetricsSeries(const MetricIDType& metric_id);
 
   /**
-   * Return all samples for the provided metric and time range
+   * Insert a sample into a metric series
+   */
+  ReturnCode insertSample(
+      const MetricIDType& metric_id,
+      const LabelledSample& sample);
+
+  /**
+   * Get a cursor to a metric series
+   */
+  MetricCursor getCursor(
+      const MetricIDType& metric_id,
+      SeriesIDType series_id);
+
+  /**
+   * Return all samples from a metric series and time range
    */
   void scanSamples(
-      const std::string& metric_key,
-      const DateTime& time_begin,
-      const DateTime& time_end,
-      Function<void (const metricd::MetricSample& sample)> callback);
+      const MetricIDType& metric_id,
+      SeriesIDType series_id,
+      TimestampType time_begin,
+      TimestampType time_end,
+      std::function<void (const Sample& sample)> foreach);
 
-  Sample getMostRecentSample(const std::string& metric_key);
+  /**
+   * Get the most recent sample from a metric series
+   */
+  bool getMostRecentSample(
+      const MetricIDType& metric_id,
+      SeriesIDType series_id,
+      Sample* sample);
 
 protected:
-
-  Random rnd_;
-  String tsdb_namespace_;
-  tsdb::TSDBClient* tsdb_;
+  VersionedMetricMap metric_map_;
+  SeriesIDProvider id_provider_;
+  //tsdb::TSDB tsdb_;
 };
 
-} // namespace metric_service
-} // namsepace fnord
-#endif
+} // namespace fnordmetric
+

@@ -10,26 +10,62 @@
  */
 #pragma once
 #include <metricd/metric.h>
-#include <mutex>
+#include <map>
 #include <memory>
+#include <mutex>
 #include <string>
-#include <unordered_map>
 #include <vector>
 
 namespace fnordmetric {
 
 class MetricMap {
+friend class MetricMapBuilder;
 public:
 
   virtual ~MetricMap() {}
 
   Metric* findMetric(const std::string& key) const;
 
-  std::vector<Metric*> listMetrics() const;
+  std::set<std::string> listMetrics() const;
 
 protected:
-  std::unordered_map<std::string, std::unique_ptr<Metric>> metrics_;
-  mutable std::mutex metrics_mutex_;
+  std::map<std::string, std::unique_ptr<Metric>> metrics_;
+};
+
+class MetricMapBuilder {
+public:
+
+  MetricMapBuilder();
+
+  void addMetric(
+      const std::string& key,
+      std::unique_ptr<Metric> metric);
+
+  std::shared_ptr<MetricMap> getMetricMap();
+
+protected:
+  std::shared_ptr<MetricMap> metric_map_;
+};
+
+class VersionedMetricMap {
+public:
+
+  std::shared_ptr<MetricMap> getMetricMap();
+
+  void updateMetricMap(std::shared_ptr<MetricMap> metric_map);
+
+protected:
+  std::mutex mutex_;
+  std::shared_ptr<MetricMap> metric_map_;
+};
+
+class SeriesIDProvider {
+public:
+
+  SeriesIDType allocateSeriesID();
+
+protected:
+  std::atomic<SeriesIDType> series_id_;
 };
 
 } // namespace fnordmetric

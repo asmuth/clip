@@ -42,6 +42,14 @@ AM_CFLAGS =  $(PTHREAD_CFLAGS) $(PTHREAD_DEF) $(SYSLOG_DEF) $(ZLIB_DEF) $(GETHOS
 AM_LDFLAGS = $(PCRE_LDFLAGS_) $(CURL_LDFLAGS_) $(PTHREAD_LDFLAGS_)
 
 metricd_common_sources_ = \
+    metric.h \
+    metric.cc \
+    metric_map.h \
+    metric_map.cc \
+    metric_service.h \
+    metric_service.cc \
+    sample.h \
+    sample.cc \
     util/uri.h \
     util/uri.cc \
     util/time_impl.h \

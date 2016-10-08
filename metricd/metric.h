@@ -10,67 +10,81 @@
  */
 #pragma once
 #include <metricd/sample.h>
+#include <metricd/util/return_code.h>
 #include <functional>
 #include <string>
 #include <vector>
 #include <set>
+#include <map>
 #include <memory>
+#include <mutex>
 
 namespace fnordmetric {
+class SeriesIDProvider;
 
-class Metric {
+using MetricIDType = std::string;
+using SeriesIDType = uint64_t;
+
+class MetricSeries {
 public:
 
-  using SeriesIDType = uint64_t;
-  using TimestampType = Sample::TimestampType;
+  MetricSeries(
+      SeriesIDType series_id,
+      LabelSet labels);
 
-  Metric(const std::string& key);
+  ReturnCode insertSample(Sample sample);
 
-  virtual size_t getTotalBytes() const;
-  virtual Metric::TimestampType getLastInsertTime();
+  size_t getTotalBytes() const;
+  TimestampType getLastInsertTime();
 
-  virtual std::set<std::string> getLabels() const;
-  virtual bool hasLabel(const std::string& label) const;
-
-};
-
-class MetricSeries : std::enable_shared_from_this<MetricSeries> {
-public:
-
-  void insertSample(Sample sample);
-
-  virtual size_t getTotalBytes() const;
-  virtual Metric::TimestampType getLastInsertTime();
-
-  virtual std::set<std::string> getLabels() const;
-  virtual bool hasLabel(const std::string& label) const;
-  virtual bool getLabel(const std::string& label) const;
+  const LabelSet* getLabels() const;
+  bool hasLabel(const std::string& label) const;
+  std::string getLabel(const std::string& label) const;
+  bool compareLabel(const std::string& label, const std::string& value) const;
 
 protected:
-
-  const std::string key_;
+  const LabelSet labels_;
 };
 
 class MetricSeriesList {
 public:
 
-  using LabelSet = std::vector<std::pair<std::string, std::string>>;
+  MetricSeriesList();
 
   bool findSeries(
-      Metric::SeriesIDType series_id,
+      SeriesIDType series_id,
       std::shared_ptr<MetricSeries>* series);
 
-  bool findOrCreateSeries(
-      LabelSet labels,
+  ReturnCode findOrCreateSeries(
+      SeriesIDProvider* series_id_provider,
+      const LabelSet& labels,
       std::shared_ptr<MetricSeries>* series);
 
-  void listSeries(std::set<Metric::SeriesIDType>* series_ids);
+  void listSeries(std::set<SeriesIDType>* series_ids);
 
   size_t getSize() const;
 
 protected:
   mutable std::mutex series_mutex_;
-  std::map<Metric::SeriesIDType, std::shared_ptr<MetricSeries>> series_;
+  std::map<SeriesIDType, std::shared_ptr<MetricSeries>> series_;
+};
+
+class Metric {
+public:
+
+  Metric(
+      const std::string& key);
+
+  size_t getTotalBytes() const;
+  TimestampType getLastInsertTime();
+
+  std::set<std::string> getLabels() const;
+  bool hasLabel(const std::string& label) const;
+
+  MetricSeriesList* getSeriesList();
+
+protected:
+  MetricSeriesList series_;
 };
 
 } // namespace fnordmetric
