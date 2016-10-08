@@ -157,6 +157,8 @@ metricd_SOURCES = \
     $(metricd_common_sources_) \
     metricd.cc
 
+metricd_LDADD = $(top_srcdir)/libtsdb/libtsdb.a
+
 metric_test_SOURCES = \
     $(metricd_common_sources_) \
     metric_test.cc

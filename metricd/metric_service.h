@@ -15,6 +15,7 @@
 #include "metricd/metric_map.h"
 #include "metricd/metric.h"
 #include "metricd/util/return_code.h"
+#include "libtsdb/tsdb.h"
 
 namespace fnordmetric {
 class MetricListCursor;
@@ -24,7 +25,9 @@ class MetricCursor;
 class MetricService {
 public:
 
-  MetricService(std::shared_ptr<MetricMap> metric_map);
+  static ReturnCode startService(
+      const std::string& datadir,
+      std::unique_ptr<MetricService>* service);
 
   /**
    * List all metrics
@@ -69,6 +72,12 @@ public:
       Sample* sample);
 
 protected:
+
+  MetricService(
+      std::unique_ptr<tsdb::TSDB> tsdb,
+      std::shared_ptr<MetricMap> metric_map);
+
+  std::unique_ptr<tsdb::TSDB> tsdb_;
   VersionedMetricMap metric_map_;
   SeriesIDProvider id_provider_;
   //tsdb::TSDB tsdb_;

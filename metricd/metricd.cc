@@ -52,6 +52,13 @@ int main(int argc, const char** argv) {
   FlagParser flags;
 
   flags.defineFlag(
+      "datadir",
+      FlagParser::T_STRING,
+      false,
+      NULL,
+      NULL);
+
+  flags.defineFlag(
       "help",
       FlagParser::T_SWITCH,
       false,
@@ -119,11 +126,11 @@ int main(int argc, const char** argv) {
 
   /* setup logging */
   if (!flags.isSet("nolog_to_stderr") && !flags.isSet("daemonize")) {
-    Logger::logToStderr("fmetricd");
+    Logger::logToStderr("metricd");
   }
 
   if (flags.isSet("log_to_syslog")) {
-    Logger::logToSyslog("fmetricd");
+    Logger::logToSyslog("metricd");
   }
 
   Logger::get()->setMinimumLogLevel(
@@ -133,7 +140,8 @@ int main(int argc, const char** argv) {
   if (flags.isSet("help") || flags.isSet("version")) {
     std::cerr <<
         StringUtil::format(
-            "fmetricd $0\n"
+            "metricd $0\n"
+            "Part of the FnordMetric project (http://fnordmetric.io)\n"
             "Copyright (c) 2016, Paul Asmuth et al. All rights reserved.\n\n",
             FNORDMETRIC_VERSION);
   }
@@ -144,7 +152,8 @@ int main(int argc, const char** argv) {
 
   if (flags.isSet("help")) {
     std::cerr <<
-        "Usage: $ fmetricd [OPTIONS]\n\n"
+        "Usage: $ metricd [OPTIONS]\n\n"
+        "   --datadir <dir>           Where to store the data\n"
         "   --daemonize               Daemonize the server\n"
         "   --pidfile <file>          Write a PID file\n"
         "   --loglevel <level>        Minimum log level (default: INFO)\n"
@@ -157,6 +166,12 @@ int main(int argc, const char** argv) {
         "   $ fmetricd --daemonize\n";
 
     return 0;
+  }
+
+  /* check flags */
+  if (!flags.isSet("datadir")) {
+    std::cerr << "ERROR: --datadir flag must be set" << std::endl;
+    return 1;
   }
 
   /* init libraries */
@@ -207,12 +222,12 @@ int main(int argc, const char** argv) {
   }
 
   /* start metric service */
-  MetricMapBuilder metric_map_builder;
-  metric_map_builder.addMetric(
-      "test",
-      std::unique_ptr<Metric>(new Metric("test")));
-
-  MetricService metric_service(metric_map_builder.getMetricMap());
+  std::unique_ptr<MetricService> metric_service;
+  if (rc.isSuccess()) {
+    rc = MetricService::startService(
+        flags.getString("datadir"),
+        &metric_service);
+  }
 
   /* run http server */
   if (rc.isSuccess()) {
@@ -229,7 +244,7 @@ int main(int argc, const char** argv) {
   }
 
   if (!rc.isSuccess()) {
-    logFatal("error: $0", rc.getMessage());
+    logFatal("ERROR: $0", rc.getMessage());
   }
 
   /* shutdown */

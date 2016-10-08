@@ -9,11 +9,52 @@
  * <http://www.gnu.org/licenses/>.
  */
 #include "metricd/metric_service.h"
+#include "metricd/util/fileutil.h"
+#include "metricd/util/logging.h"
 
 namespace fnordmetric {
 
+ReturnCode MetricService::startService(
+    const std::string& datadir,
+    std::unique_ptr<MetricService>* service) {
+  auto db_path = FileUtil::joinPaths(datadir, "default.tsdb");
+
+  if (!FileUtil::exists(datadir)) {
+    return ReturnCode::errorf("EIO", "datadir doesn't exist: $0", datadir);
+  }
+
+  /* open tsdb */
+  std::unique_ptr<tsdb::TSDB> tsdb;
+  if (FileUtil::exists(db_path)) {
+    logInfo("Opening database: $0", db_path);
+    if (!tsdb::TSDB::openDatabase(&tsdb, db_path)) {
+      return ReturnCode::errorf("EIO", "can't open database at $0", db_path);
+    }
+  } else {
+    logInfo("Creating database: $0", db_path);
+    if (!tsdb::TSDB::createDatabase(&tsdb, db_path)) {
+      return ReturnCode::errorf("EIO", "can't create database at $0", db_path);
+    }
+  }
+
+  /* load metrics */
+  MetricMapBuilder metric_map_builder;
+  metric_map_builder.addMetric(
+      "test",
+      std::unique_ptr<Metric>(new Metric("test")));
+
+  service->reset(
+      new MetricService(
+          std::move(tsdb),
+          metric_map_builder.getMetricMap()));
+
+  return ReturnCode::success();
+}
+
 MetricService::MetricService(
-    std::shared_ptr<MetricMap> metric_map) {
+    std::unique_ptr<tsdb::TSDB> tsdb,
+    std::shared_ptr<MetricMap> metric_map) :
+    tsdb_(std::move(tsdb)) {
   metric_map_.updateMetricMap(std::move(metric_map));
 }
 
