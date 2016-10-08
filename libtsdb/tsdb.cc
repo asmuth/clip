@@ -78,12 +78,17 @@ TSDB::~TSDB() {
 
 bool TSDB::createSeries(
     uint64_t series_id,
-    PageType type) {
+    PageType type,
+    const std::string& metadata) {
   if (fd_ < 0) {
     return false;
   }
 
-  std::unique_ptr<PageIndex> page_index(new PageIndex(type));
+  std::unique_ptr<PageIndex> page_index(
+      new PageIndex(
+          type,
+          std::string(metadata)));
+
   page_index->alloc(1);
 
   auto page_index_entry = page_index->getEntries();

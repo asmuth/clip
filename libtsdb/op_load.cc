@@ -140,12 +140,28 @@ bool TSDB::loadTransaction(
     return false;
   }
 
+  uint64_t metadata_len;
+  if (!readVarUInt(&index_data_cur, index_data_end, &metadata_len)) {
+    return false;
+  }
+
+  if (index_data_cur + metadata_len >= index_data_end) { // FIXME overflow
+    return false;
+  }
+
+  std::string metadata(index_data_cur, metadata_len);
+  index_data_cur += metadata_len;
+
   uint64_t index_len;
   if (!readVarUInt(&index_data_cur, index_data_end, &index_len)) {
     return false;
   }
 
-  std::unique_ptr<PageIndex> page_idx(new PageIndex((PageType) index_type));
+  std::unique_ptr<PageIndex> page_idx(
+      new PageIndex(
+          (PageType) index_type,
+          metadata));
+
   page_idx->setDiskSnapshot(disk_addr, disk_size);
 
   if (!page_idx->alloc(index_len)) {
