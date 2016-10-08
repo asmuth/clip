@@ -29,13 +29,15 @@ public:
   std::set<std::string> listMetrics() const;
 
 protected:
-  std::map<std::string, std::unique_ptr<Metric>> metrics_;
+  std::map<std::string, Metric*> metrics_;
 };
 
 class MetricMapBuilder {
 public:
 
   MetricMapBuilder();
+
+  void copyFrom(const MetricMap* metric_map);
 
   void addMetric(
       const std::string& key,

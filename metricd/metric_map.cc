@@ -17,7 +17,7 @@ Metric* MetricMap::findMetric(const std::string& key) const {
   if (iter == metrics_.end()) {
     return nullptr;
   } else {
-    return iter->second.get();
+    return iter->second;
   }
 }
 
@@ -38,10 +38,16 @@ Metric* MetricMap::findMetric(const std::string& key) const {
 MetricMapBuilder::MetricMapBuilder() :
     metric_map_(std::make_shared<MetricMap>()) {}
 
+void MetricMapBuilder::copyFrom(const MetricMap* metric_map) {
+  for (const auto& m : metric_map->metrics_) {
+    metric_map_->metrics_.insert(m);
+  }
+}
+
 void MetricMapBuilder::addMetric(
     const std::string& key,
     std::unique_ptr<Metric> metric) {
-  metric_map_->metrics_.emplace(key, std::move(metric));
+  metric_map_->metrics_.emplace(key, metric.release());
 }
 
 std::shared_ptr<MetricMap> MetricMapBuilder::getMetricMap() {

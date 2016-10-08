@@ -15,6 +15,8 @@
 
 namespace fnordmetric {
 
+MetricConfig::MetricConfig() : is_valid(false) {}
+
 MetricSeries::MetricSeries(
     SeriesIDType series_id,
     LabelSet labels) :
@@ -102,7 +104,7 @@ bool MetricSeriesMetadata::decode(std::istream* is) {
     return false;
   }
 
-  metric_id.reserve(metric_id_len);
+  metric_id.resize(metric_id_len);
   is->read(&metric_id[0], metric_id.size());
   if (is->fail()) {
     return false;
@@ -147,6 +149,7 @@ MetricSeriesList::MetricSeriesList() {}
 ReturnCode MetricSeriesList::findOrCreateSeries(
     tsdb::TSDB* tsdb,
     SeriesIDProvider* series_id_provider,
+    const std::string& metric_id,
     const LabelSet& labels,
     std::shared_ptr<MetricSeries>* series) {
   std::unique_lock<std::mutex> lk(series_mutex_);
@@ -169,6 +172,8 @@ ReturnCode MetricSeriesList::findOrCreateSeries(
 
   /* encode series metadata */
   MetricSeriesMetadata metadata;
+  metadata.metric_id = metric_id;
+  metadata.labels = labels;
 
   std::ostringstream metadata_buf;
   metadata.encode(&metadata_buf);
@@ -197,6 +202,11 @@ size_t MetricSeriesList::getSize() const {
 
 Metric::Metric(
     const std::string& key) {}
+
+void Metric::setConfig(MetricConfig config) {
+  std::unique_lock<std::mutex> lk(config_mutex_);
+  config_ = config;
+}
 
 MetricSeriesList* Metric::getSeriesList() {
   return &series_;

@@ -71,8 +71,11 @@ bool TSDB::commit() {
     std::string index_data;
     auto page_idx = txn.getPageIndex();
     writeVarUInt(&index_data, (uint64_t) page_idx->getType());
-    writeVarUInt(&index_data, (uint64_t) page_idx->getMetadata().size());
-    index_data.append(page_idx->getMetadata());
+    writeVarUInt(&index_data, page_idx->getMetadata().size());
+    index_data.append(
+        page_idx->getMetadata().data(),
+        page_idx->getMetadata().size());
+
     writeVarUInt(&index_data, page_idx->getSize());
 
     for (size_t i = 1; i < page_idx->getSize(); ++i) {

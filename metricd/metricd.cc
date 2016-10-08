@@ -252,6 +252,13 @@ int main(int argc, const char** argv) {
         &metric_service);
   }
 
+  /* load config */
+  if (rc.isSuccess()) {
+    MetricConfig mc;
+    mc.is_valid = true;
+    metric_service->configureMetric("test", mc);
+  }
+
   /* start statsd service */
   std::unique_ptr<statsd::StatsdServer> statsd_server;
   if (rc.isSuccess() && flags.isSet("listen_statsd")) {

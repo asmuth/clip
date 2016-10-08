@@ -27,6 +27,11 @@ class SeriesIDProvider;
 using MetricIDType = std::string;
 using SeriesIDType = uint64_t;
 
+struct MetricConfig {
+  MetricConfig();
+  bool is_valid;
+};
+
 class MetricSeries {
 public:
 
@@ -70,6 +75,7 @@ public:
   ReturnCode findOrCreateSeries(
       tsdb::TSDB* tsdb,
       SeriesIDProvider* series_id_provider,
+      const std::string& metric_id,
       const LabelSet& labels,
       std::shared_ptr<MetricSeries>* series);
 
@@ -91,13 +97,14 @@ public:
   size_t getTotalBytes() const;
   TimestampType getLastInsertTime();
 
-  std::set<std::string> getLabels() const;
-  bool hasLabel(const std::string& label) const;
+  void setConfig(MetricConfig config);
 
   MetricSeriesList* getSeriesList();
 
 protected:
   MetricSeriesList series_;
+  MetricConfig config_;
+  std::mutex config_mutex_;
 };
 
 } // namespace fnordmetric

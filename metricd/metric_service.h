@@ -30,6 +30,13 @@ public:
       std::unique_ptr<MetricService>* service);
 
   /**
+   * Update the configuration for a metric
+   */
+  void configureMetric(
+      const MetricIDType& metric_id,
+      const MetricConfig& config);
+
+  /**
    * List all metrics
    */
   MetricListCursor listMetrics();
@@ -79,6 +86,7 @@ protected:
 
   std::unique_ptr<tsdb::TSDB> tsdb_;
   VersionedMetricMap metric_map_;
+  std::mutex metric_map_mutex_;
   SeriesIDProvider id_provider_;
   //tsdb::TSDB tsdb_;
 };

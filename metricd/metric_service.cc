@@ -78,6 +78,26 @@ MetricService::MetricService(
   metric_map_.updateMetricMap(std::move(metric_map));
 }
 
+void MetricService::configureMetric(
+    const MetricIDType& metric_id,
+    const MetricConfig& config) {
+  std::unique_lock<std::mutex> lk(metric_map_mutex_);
+
+  auto metric_map = metric_map_.getMetricMap();
+  auto metric = metric_map->findMetric(metric_id);
+  if (metric) {
+    metric->setConfig(config);
+    return;
+  }
+
+  MetricMapBuilder metric_map_builder;
+  metric_map_builder.copyFrom(metric_map.get());
+  metric = new Metric(metric_id);
+  metric->setConfig(config);
+  metric_map_builder.addMetric(metric_id, std::unique_ptr<Metric>(metric));
+  metric_map_.updateMetricMap(metric_map_builder.getMetricMap());
+}
+
 ReturnCode MetricService::insertSample(
     const MetricIDType& metric_id,
     const LabelledSample& sample) {
@@ -91,6 +111,7 @@ ReturnCode MetricService::insertSample(
   auto rc = metric->getSeriesList()->findOrCreateSeries(
       tsdb_.get(),
       &id_provider_,
+      metric_id,
       sample.getLabels(),
       &series);
 
