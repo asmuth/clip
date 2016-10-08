@@ -11,6 +11,7 @@
 #pragma once
 #include <metricd/sample.h>
 #include <metricd/util/return_code.h>
+#include <libtsdb/tsdb.h>
 #include <functional>
 #include <string>
 #include <vector>
@@ -32,7 +33,9 @@ public:
       SeriesIDType series_id,
       LabelSet labels);
 
-  ReturnCode insertSample(Sample sample);
+  ReturnCode insertSample(
+      tsdb::TSDB* tsdb,
+      Sample sample);
 
   size_t getTotalBytes() const;
   TimestampType getLastInsertTime();
@@ -43,6 +46,7 @@ public:
   bool compareLabel(const std::string& label, const std::string& value) const;
 
 protected:
+  const SeriesIDType series_id_;
   const LabelSet labels_;
 };
 
@@ -56,6 +60,7 @@ public:
       std::shared_ptr<MetricSeries>* series);
 
   ReturnCode findOrCreateSeries(
+      tsdb::TSDB* tsdb,
       SeriesIDProvider* series_id_provider,
       const LabelSet& labels,
       std::shared_ptr<MetricSeries>* series);

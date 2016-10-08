@@ -16,10 +16,17 @@ namespace fnordmetric {
 MetricSeries::MetricSeries(
     SeriesIDType series_id,
     LabelSet labels) :
+    series_id_(series_id),
     labels_(labels) {}
 
-ReturnCode MetricSeries::insertSample(Sample sample) {
-  return ReturnCode::success();
+ReturnCode MetricSeries::insertSample(
+    tsdb::TSDB* tsdb,
+    Sample sample) {
+  if (tsdb->insertUInt64(series_id_, sample.getTime(), sample.getValue())) {
+    return ReturnCode::success();
+  } else {
+    return ReturnCode::error("ERUNTIME", "insert failed");
+  }
 }
 
 const LabelSet* MetricSeries::getLabels() const {
@@ -53,6 +60,7 @@ bool MetricSeries::compareLabel(
 MetricSeriesList::MetricSeriesList() {}
 
 ReturnCode MetricSeriesList::findOrCreateSeries(
+    tsdb::TSDB* tsdb,
     SeriesIDProvider* series_id_provider,
     const LabelSet& labels,
     std::shared_ptr<MetricSeries>* series) {
@@ -73,6 +81,11 @@ ReturnCode MetricSeriesList::findOrCreateSeries(
   auto new_series = std::make_shared<MetricSeries>(
       new_series_id,
       labels);
+
+  auto tsdb_page_type = tsdb::PageType::UINT64; // FIXME
+  if (!tsdb->createSeries(new_series_id, tsdb_page_type)) {
+    return ReturnCode::error("ERUNTIME", "can't create series");
+  }
 
   series_.emplace(new_series_id, new_series);
   *series = std::move(new_series);

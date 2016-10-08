@@ -69,6 +69,7 @@ ReturnCode MetricService::insertSample(
 
   std::shared_ptr<MetricSeries> series;
   auto rc = metric->getSeriesList()->findOrCreateSeries(
+      tsdb_.get(),
       &id_provider_,
       sample.getLabels(),
       &series);
@@ -77,7 +78,12 @@ ReturnCode MetricService::insertSample(
     return rc;
   }
 
-  return series->insertSample(sample.getSample());
+  rc = series->insertSample(tsdb_.get(), sample.getSample());
+  if (rc.isSuccess()) {
+    tsdb_->commit(); // FIXME
+  }
+
+  return rc;
 }
 
 //void MetricService::scanSamples(
