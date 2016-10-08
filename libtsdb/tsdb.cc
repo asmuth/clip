@@ -99,6 +99,11 @@ bool TSDB::createSeries(
       std::move(page_index));
 }
 
+bool TSDB::listSeries(std::set<uint64_t>* series_ids) {
+  txn_map_.listSlots(series_ids);
+  return true;
+}
+
 bool TSDB::getCursor(
     uint64_t series_id,
     Cursor* cursor) {
@@ -117,6 +122,20 @@ bool TSDB::getCursor(
       &page_map_,
       std::move(txn));
 
+  return true;
+}
+
+bool TSDB::getSeriesMetadata(uint64_t series_id, std::string* metadata) {
+  if (fd_ < 0) {
+    return false;
+  }
+
+  Transaction txn;
+  if (!txn_map_.startTransaction(series_id, true, &txn)) {
+    return false;
+  }
+
+  *metadata = txn.getPageIndex()->getMetadata();
   return true;
 }
 
