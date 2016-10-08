@@ -4,7 +4,7 @@ MAINTAINERCLEANFILES =   \
   Makefile.in
 
 bin_PROGRAMS = metricd
-TESTS = metric_test
+TESTS = metric_test statsd_test
 check_PROGRAMS = $(TESTS)
 
 
@@ -150,6 +150,8 @@ metricd_common_sources_ = \
     transport/http/eventloop.cc \
     transport/http/cookies.h \
     transport/http/cookies.cc \
+    transport/statsd/statsd.h \
+    transport/statsd/statsd.cc \
     webui/webui.h \
     webui/webui.cc
 
@@ -163,3 +165,10 @@ metric_test_SOURCES = \
     $(metricd_common_sources_) \
     metric_test.cc
 
+metric_test_LDADD = $(top_srcdir)/libtsdb/libtsdb.a
+
+statsd_test_SOURCES = \
+    $(metricd_common_sources_) \
+    transport/statsd/statsd_test.cc
+
+statsd_test_LDADD = $(top_srcdir)/libtsdb/libtsdb.a

@@ -21,31 +21,31 @@ using namespace fnordmetric;
 UNIT_TEST(MetricTest);
 
 TEST_CASE(MetricTest, TestMetricSeriesList, [] () {
-  SeriesIDProvider id_provider;
-  MetricSeriesList series_list;
-  EXPECT(series_list.getSize() == 0);
-  std::shared_ptr<MetricSeries> series1;
-  EXPECT(
-      series_list.findOrCreateSeries(
-          &id_provider,
-          {{ "hostname", "r1s1"}, { "datacenter", "ams1"}},
-          &series1).isSuccess());
-  EXPECT(series_list.getSize() == 1);
-  std::shared_ptr<MetricSeries> series2;
-  EXPECT(
-      series_list.findOrCreateSeries(
-          &id_provider,
-          {{ "hostname", "r1s1"}, { "datacenter", "ams1"}},
-          &series2).isSuccess());
-  EXPECT(series_list.getSize() == 1);
-  EXPECT(series1.get() == series2.get());
-  std::shared_ptr<MetricSeries> series3;
-  EXPECT(
-      series_list.findOrCreateSeries(
-          &id_provider,
-          {{ "hostname", "r1s2"}, { "datacenter", "ams1"}},
-          &series2).isSuccess());
-  EXPECT(series_list.getSize() == 2);
-  EXPECT(series2.get() != series3.get());
+  //SeriesIDProvider id_provider;
+  //MetricSeriesList series_list;
+  //EXPECT(series_list.getSize() == 0);
+  //std::shared_ptr<MetricSeries> series1;
+  //EXPECT(
+  //    series_list.findOrCreateSeries(
+  //        &id_provider,
+  //        {{ "hostname", "r1s1"}, { "datacenter", "ams1"}},
+  //        &series1).isSuccess());
+  //EXPECT(series_list.getSize() == 1);
+  //std::shared_ptr<MetricSeries> series2;
+  //EXPECT(
+  //    series_list.findOrCreateSeries(
+  //        &id_provider,
+  //        {{ "hostname", "r1s1"}, { "datacenter", "ams1"}},
+  //        &series2).isSuccess());
+  //EXPECT(series_list.getSize() == 1);
+  //EXPECT(series1.get() == series2.get());
+  //std::shared_ptr<MetricSeries> series3;
+  //EXPECT(
+  //    series_list.findOrCreateSeries(
+  //        &id_provider,
+  //        {{ "hostname", "r1s2"}, { "datacenter", "ams1"}},
+  //        &series2).isSuccess());
+  //EXPECT(series_list.getSize() == 2);
+  //EXPECT(series2.get() != series3.get());
 });
 

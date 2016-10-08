@@ -1,44 +1,53 @@
 /**
  * This file is part of the "FnordMetric" project
  *   Copyright (c) 2014 Paul Asmuth, Google Inc.
+ *   Copyright (c) 2016 Paul Asmuth, FnordCorp B.V. <paul@asmuth.com>
  *
  * FnordMetric is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License v3.0. You should have received a
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#include <metricd/metricdb/metricrepository.h>
-#include <metricd/net/udpserver.h>
-#include <metricd/thread/taskscheduler.h>
+#include <stdlib.h>
+#include <thread>
+#include "metricd/util/return_code.h"
+#include "metricd/sample.h"
 
 namespace fnordmetric {
-namespace metricdb {
+class MetricService;
+namespace statsd {
 
 class StatsdServer {
 public:
 
   StatsdServer(
-      IMetricRepository* metric_repo,
-      fnord::thread::TaskScheduler* server_scheduler,
-      fnord::thread::TaskScheduler* work_scheduler);
+      MetricService* metric_service);
 
-  void listen(int port);
+  ~StatsdServer();
 
-  static char const* parseStatsdSample(
-      char const* begin,
-      char const* end,
-      std::string* key,
-      std::string* value,
-      std::vector<std::pair<std::string, std::string>>* labels);
+  ReturnCode listen(const std::string& addr, int port);
+  ReturnCode listenAndStart(const std::string& addr, int port);
+
+  ReturnCode start();
+  void shutdown();
 
 protected:
 
-  void messageReceived(const fnord::util::Buffer& msg);
+  void handlePacket(const char* pkt, size_t pkt_len);
 
-  IMetricRepository* metric_repo_;
-  fnord::net::UDPServer udp_server_;
+  int ssock_;
+  MetricService* metric_service_;
+  std::thread thread_;
+  std::atomic<bool> running_;
 };
 
+bool parseStatsdSample(
+    const char** begin,
+    const char* end,
+    std::string* key,
+    std::string* value,
+    LabelSet* labels);
 
-}
-}
+} // namespace statsd
+} // namespace fnordmetric
+

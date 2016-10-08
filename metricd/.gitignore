@@ -1,3 +1,4 @@
 metricd
 metricctl
 metric_test
+statsd_test

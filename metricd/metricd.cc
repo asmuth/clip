@@ -35,6 +35,7 @@
 #include <metricd/transport/http/eventloop.h>
 #include <metricd/transport/http/httprouter.h>
 #include <metricd/transport/http/httpserver.h>
+#include <metricd/transport/statsd/statsd.h>
 #include <metricd/webui/webui.h>
 #include <metricd/metric_service.h>
 
@@ -42,6 +43,21 @@ using namespace fnordmetric;
 
 void shutdown(int);
 ReturnCode daemonize();
+
+bool parseListenAddr(
+    const std::string& addr,
+    std::string* host,
+    uint16_t* port) {
+  std::smatch m;
+  std::regex listen_regex("([0-9a-zA-Z-_.]+):([0-9]+)");
+  if (std::regex_match(addr, m, listen_regex)) {
+    *host = m[1];
+    *port = std::stoul(m[2]);
+    return true;
+  } else {
+    return false;
+  }
+}
 
 int main(int argc, const char** argv) {
   //signal(SIGTERM, shutdown);
@@ -53,6 +69,13 @@ int main(int argc, const char** argv) {
 
   flags.defineFlag(
       "datadir",
+      FlagParser::T_STRING,
+      false,
+      NULL,
+      NULL);
+
+  flags.defineFlag(
+      "listen_statsd",
       FlagParser::T_STRING,
       false,
       NULL,
@@ -229,9 +252,25 @@ int main(int argc, const char** argv) {
         &metric_service);
   }
 
+  /* start statsd service */
+  std::unique_ptr<statsd::StatsdServer> statsd_server;
+  if (rc.isSuccess() && flags.isSet("listen_statsd")) {
+    std::string statsd_bind;
+    uint16_t statsd_port;
+    auto parse_rc = parseListenAddr(
+        flags.getString("listen_statsd"),
+        &statsd_bind,
+        &statsd_port);
+    if (parse_rc) {
+      statsd_server.reset(new statsd::StatsdServer(metric_service.get()));
+      rc = statsd_server->listenAndStart(statsd_bind, statsd_port);
+    } else {
+      rc = ReturnCode::error("ERUNTIME", "invalid value for --listen_statsd");
+    }
+  }
+
   /* run http server */
   if (rc.isSuccess()) {
-    logInfo("Starting...");
     WebUI webui(flags.getString("dev_assets"));
 
     http::EventLoop ev;
@@ -248,6 +287,10 @@ int main(int argc, const char** argv) {
   }
 
   /* shutdown */
+  if (statsd_server) {
+    statsd_server->shutdown();
+  }
+
   logInfo("Exiting...");
   signal(SIGTERM, SIG_IGN);
   signal(SIGINT, SIG_IGN);
