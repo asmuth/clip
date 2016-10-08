@@ -58,7 +58,6 @@ struct MetricSeriesMetadata {
   bool decode(std::istream* is);
 };
 
-
 class MetricSeriesList {
 public:
 

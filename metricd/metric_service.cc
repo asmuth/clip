@@ -38,11 +38,31 @@ ReturnCode MetricService::startService(
   }
 
   /* load metrics */
-  MetricMapBuilder metric_map_builder;
-  metric_map_builder.addMetric(
-      "test",
-      std::unique_ptr<Metric>(new Metric("test")));
+  std::set<uint64_t> series_ids;
+  if (!tsdb->listSeries(&series_ids)) {
+    return ReturnCode::error("ERUNTIME", "error while opening database");
+  }
 
+  MetricMapBuilder metric_map_builder;
+  for (const auto& series_id : series_ids) {
+    std::string metadata_buf;
+    if (!tsdb->getSeriesMetadata(series_id, &metadata_buf)) {
+      return ReturnCode::error("ERUNTIME", "error while opening database");
+    }
+
+    std::istringstream metadata_is(metadata_buf);
+    MetricSeriesMetadata metadata;
+    if (!metadata.decode(&metadata_is)) {
+      return ReturnCode::error("ERUNTIME", "corrupt database");
+    }
+
+    logDebug(
+        "Opening timeseries; metric_id=$0; series_id=$1",
+        metadata.metric_id,
+        series_id);
+  }
+
+  /* initialize service */
   service->reset(
       new MetricService(
           std::move(tsdb),
