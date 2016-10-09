@@ -130,9 +130,16 @@ ReturnCode MetricService::listMetricSeries(
     return ReturnCode::error("ENOTFOUND", "metric not found");
   }
 
-  std::vector<SeriesIDType> series;
-  metric->getSeriesList()->listSeries(&series);
-  *cursor = MetricSeriesListCursor(std::move(series));
+  auto series_list = metric->getSeriesList();
+
+  std::vector<SeriesIDType> snapshot;
+  series_list->listSeries(&snapshot);
+
+  *cursor = MetricSeriesListCursor(
+      std::move(metric_map),
+      series_list,
+      std::move(snapshot));
+
   return ReturnCode::success();
 }
 

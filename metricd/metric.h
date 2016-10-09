@@ -22,6 +22,7 @@
 #include <mutex>
 
 namespace fnordmetric {
+class MetricMap;
 class SeriesIDProvider;
 
 using MetricIDType = std::string;
@@ -99,22 +100,32 @@ public:
   using ListIterType = ListType::iterator;
 
   MetricSeriesListCursor();
-  MetricSeriesListCursor(ListType&& series);
+  MetricSeriesListCursor(
+      std::shared_ptr<MetricMap> metric_map,
+      MetricSeriesList* series_list,
+      ListType&& snapshot);
+
   MetricSeriesListCursor(const MetricSeriesListCursor& o) = delete;
   MetricSeriesListCursor(MetricSeriesListCursor&& o);
   MetricSeriesListCursor& operator=(const MetricSeriesListCursor& o) = delete;
   MetricSeriesListCursor& operator=(MetricSeriesListCursor&& o);
 
   SeriesIDType getSeriesID() const;
+  const LabelSet* getLabels() const;
 
   bool isValid() const;
   bool next();
 
 protected:
 
+  bool fetchNext();
+
   bool valid_;
-  ListType series_;
+  std::shared_ptr<MetricMap> metric_map_;
+  MetricSeriesList* series_list_;
+  ListType snapshot_;
   ListIterType cursor_;
+  std::shared_ptr<MetricSeries> series_;
 };
 
 class Metric {

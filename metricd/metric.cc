@@ -147,6 +147,20 @@ bool MetricSeriesMetadata::decode(std::istream* is) {
 
 MetricSeriesList::MetricSeriesList() {}
 
+bool MetricSeriesList::findSeries(
+    SeriesIDType series_id,
+    std::shared_ptr<MetricSeries>* series) {
+  std::unique_lock<std::mutex> lk(series_mutex_);
+
+  auto iter = series_.find(series_id);
+  if (iter == series_.end()) {
+    return false;
+  } else {
+    *series = iter->second;
+    return true;
+  }
+}
+
 ReturnCode MetricSeriesList::findOrCreateSeries(
     tsdb::TSDB* tsdb,
     SeriesIDProvider* series_id_provider,
@@ -222,22 +236,34 @@ size_t MetricSeriesList::getSize() const {
   return series_.size();
 }
 
-MetricSeriesListCursor::MetricSeriesListCursor() : valid_(false) {}
+MetricSeriesListCursor::MetricSeriesListCursor() :
+    valid_(false),
+    series_list_(nullptr) {}
 
 MetricSeriesListCursor::MetricSeriesListCursor(
-    ListType&& series) :
+    std::shared_ptr<MetricMap> metric_map,
+    MetricSeriesList* series_list,
+    ListType&& snapshot) :
     valid_(true),
-    series_(std::move(series)),
-    cursor_(series_.begin()) {}
+    metric_map_(metric_map),
+    series_list_(series_list),
+    snapshot_(std::move(snapshot)),
+    cursor_(snapshot_.begin()) {
+  fetchNext();
+}
 
 MetricSeriesListCursor::MetricSeriesListCursor(
     MetricSeriesListCursor&& o) :
-    valid_(o.valid_) {
+    valid_(o.valid_),
+    metric_map_(std::move(o.metric_map_)),
+    series_list_(o.series_list_) {
   o.valid_ = false;
+  o.series_list_ = nullptr;
   if (valid_) {
-    auto cursor_pos = o.cursor_ - o.series_.begin();
-    series_ = std::move(o.series_);
-    cursor_ = series_.begin() + cursor_pos;
+    auto cursor_pos = o.cursor_ - o.snapshot_.begin();
+    snapshot_ = std::move(o.snapshot_);
+    cursor_ = snapshot_.begin() + cursor_pos;
+    fetchNext();
   }
 }
 
@@ -245,10 +271,14 @@ MetricSeriesListCursor& MetricSeriesListCursor::operator=(
     MetricSeriesListCursor&& o) {
   valid_ = o.valid_;
   o.valid_ = false;
+  metric_map_ = std::move(o.metric_map_);
+  series_list_ = o.series_list_;
+  o.series_list_ = nullptr;
   if (valid_) {
-    auto cursor_pos = o.cursor_ - o.series_.begin();
-    series_ = std::move(o.series_);
-    cursor_ = series_.begin() + cursor_pos;
+    auto cursor_pos = o.cursor_ - o.snapshot_.begin();
+    snapshot_ = std::move(o.snapshot_);
+    cursor_ = snapshot_.begin() + cursor_pos;
+    fetchNext();
   }
 
   return *this;
@@ -259,17 +289,33 @@ SeriesIDType MetricSeriesListCursor::getSeriesID() const {
   return *cursor_;
 }
 
+const LabelSet* MetricSeriesListCursor::getLabels() const {
+  assert(valid_);
+  assert(series_.get() != nullptr);
+  return series_->getLabels();
+}
+
 bool MetricSeriesListCursor::isValid() const {
-  return cursor_ != series_.end();
+  return valid_ && cursor_ != snapshot_.end();
 }
 
 bool MetricSeriesListCursor::next() {
-  if (cursor_ == series_.end()) {
+  if (!valid_ || cursor_ == snapshot_.end()) {
     return false;
   } else {
     ++cursor_;
-    return true;
+    return fetchNext();
   }
+}
+
+bool MetricSeriesListCursor::fetchNext() {
+  while (cursor_ != snapshot_.end()) {
+    if (series_list_->findSeries(*cursor_, &series_)) {
+      return true;
+    }
+  }
+
+  return false;
 }
 
 Metric::Metric(
