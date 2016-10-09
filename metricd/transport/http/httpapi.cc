@@ -41,6 +41,12 @@ void HTTPAPI::handleHTTPRequest(
     return;
   }
 
+  // PATH: /api/v1/metrics/list_series
+  if (path == "/api/v1/metrics/list_series") {
+    renderMetricSeriesList(request, response, uri);
+    return;
+  }
+
   //// PATH: ^/metrics/.*
   //if (path.compare(0, sizeof(kMetricsUrlPrefix) - 1, kMetricsUrlPrefix) == 0) {
   //  // PATH: ^/metrics/(.*)$
@@ -116,6 +122,64 @@ void HTTPAPI::renderMetricList(
   json.endArray();
   json.endObject();
 }
+
+void HTTPAPI::renderMetricSeriesList(
+    http::HTTPRequest* request,
+    http::HTTPResponse* response,
+    const URI& uri) {
+  auto params = uri.queryParams();
+
+  std::string metric_id;
+  if (!URI::getParam(params, "metric_id", &metric_id)) {
+    response->setStatus(http::kStatusBadRequest);
+    response->addBody("ERROR: missing parameter ?metric_id=...");
+    return;
+  }
+
+  MetricSeriesListCursor cursor;
+  auto rc = metric_service_->listMetricSeries(metric_id, &cursor);
+  if (!rc.isSuccess()) {
+    response->setStatus(http::kStatusInternalServerError);
+    response->addBody("ERROR: " + rc.getMessage());
+  }
+
+  response->setStatus(http::kStatusOK);
+  response->addHeader("Content-Type", "application/json; charset=utf-8");
+  json::JSONOutputStream json(response->getBodyOutputStream());
+
+  json.beginObject();
+  json.addObjectEntry("metric_id");
+  json.addString(metric_id);
+  json.addComma();
+  json.addObjectEntry("series");
+  json.beginArray();
+
+  for (int i = 0; cursor.isValid(); cursor.next()) {
+    if (i++ > 0) { json.addComma(); }
+    json.beginObject();
+
+    json.addObjectEntry("series_id");
+    json.addInteger(cursor.getSeriesID());
+    json.addComma();
+
+    json.addObjectEntry("labels");
+    json.beginObject();
+    //const auto& labels = metric->getLabels();
+    //for (auto cur = labels.begin(); cur != labels.end(); ++cur) {
+    //  if (cur != labels.begin()) {
+    //    json.addComma();
+    //  }
+    //  json.addString(*cur);
+    //}
+    json.endObject();
+
+    json.endObject();
+  }
+
+  json.endArray();
+  json.endObject();
+}
+
 
 //void HTTPAPI::insertSample(
 //    http::HTTPRequest* request,
