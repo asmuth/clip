@@ -47,30 +47,11 @@ void HTTPAPI::handleHTTPRequest(
     return;
   }
 
-  //// PATH: ^/metrics/.*
-  //if (path.compare(0, sizeof(kMetricsUrlPrefix) - 1, kMetricsUrlPrefix) == 0) {
-  //  // PATH: ^/metrics/(.*)$
-  //  switch (request->method()) {
-  //    case http::HTTPRequest::M_GET:
-  //      renderMetricSampleScan(request, response, &uri);
-  //      return true;
-  //    default:
-  //      return false;
-  //  }
-  //}
-
-  //// PATH: ^/query/?*
-  //if (path == kQueryUrl) {
-  //  switch (request->method()) {
-  //    case http::HTTPRequest::M_GET:
-  //    case http::HTTPRequest::M_POST:
-  //      executeQuery(request, response, &uri);
-  //      return true;
-  //    default:
-  //      return false;
-  //  }
-  //  return true;
-  //}
+  // PATH: /api/v1/metrics/insert
+  if (path == "/api/v1/metrics/insert") {
+    insertSample(request, response, uri);
+    return;
+  }
 
   response->setStatus(http::kStatusNotFound);
   response->addBody("not found");
@@ -181,62 +162,64 @@ void HTTPAPI::renderMetricSeriesList(
   json.endObject();
 }
 
+void HTTPAPI::insertSample(
+    http::HTTPRequest* request,
+    http::HTTPResponse* response,
+    const URI& uri) {
+  auto params = uri.queryParams();
 
-//void HTTPAPI::insertSample(
-//    http::HTTPRequest* request,
-//    http::HTTPResponse* response,
-//    const URI& uri) {
-//  const auto& postbody = request->getBody();
-//  util::URI::ParamList params;
-//
-//  if (postbody.size() > 0) {
-//    util::URI::parseQueryString(postbody, &params);
-//  } else {
-//    params = uri->queryParams();
-//  }
-//
-//  std::string metric_key;
-//  if (!util::URI::getParam(params, "metric", &metric_key)) {
-//    response->addBody("error: invalid metric key: " + metric_key);
-//    response->setStatus(http::kStatusBadRequest);
-//    return;
-//  }
-//
-//  std::string value_str;
-//  if (!util::URI::getParam(params, "value", &value_str)) {
-//    response->addBody("error: missing ?value=... parameter");
-//    response->setStatus(http::kStatusBadRequest);
-//    return;
-//  }
-//
-//  std::vector<std::pair<std::string, std::string>> labels;
-//  for (const auto& param : params) {
-//    const auto& key = param.first;
-//    const auto& value = param.second;
-//
-//    if (key.compare(0, sizeof(kLabelParamPrefix) - 1, kLabelParamPrefix) == 0 &&
-//        key.back() == ']') {
-//      auto label_key = key.substr(
-//          sizeof(kLabelParamPrefix) - 1,
-//          key.size() - sizeof(kLabelParamPrefix));
-//
-//      labels.emplace_back(label_key, value);
-//    }
-//  }
-//
-//  double sample_value;
-//  try {
-//    sample_value = std::stod(value_str);
-//  } catch (std::exception& e) {
-//    response->addBody("error: invalid value: " + value_str);
-//    response->setStatus(http::kStatusBadRequest);
-//    return;
-//  }
-//
-//  auto metric = metric_repo_->findOrCreateMetric(metric_key);
-//  metric->insertSample(sample_value, labels);
-//  response->setStatus(http::kStatusCreated);
-//}
+  std::string metric_id;
+  if (!URI::getParam(params, "metric_id", &metric_id)) {
+    response->addBody("error: missing ?metric_id=... parameter");
+    response->setStatus(http::kStatusBadRequest);
+    return;
+  }
+
+  std::string value_str;
+  if (!URI::getParam(params, "value", &value_str)) {
+    response->addBody("error: missing ?value=... parameter");
+    response->setStatus(http::kStatusBadRequest);
+    return;
+  }
+
+  static const char kLabelParamPrefix[] = "label[";
+  LabelSet labels;
+  for (const auto& param : params) {
+    const auto& key = param.first;
+    const auto& value = param.second;
+
+    if (key.compare(0, sizeof(kLabelParamPrefix) - 1, kLabelParamPrefix) == 0 &&
+        key.back() == ']') {
+      auto label_key = key.substr(
+          sizeof(kLabelParamPrefix) - 1,
+          key.size() - sizeof(kLabelParamPrefix));
+
+      labels[label_key] = value;
+    }
+  }
+
+  double sample_value;
+  try {
+    sample_value = std::stod(value_str);
+  } catch (std::exception& e) {
+    response->addBody("error: invalid value: " + value_str);
+    response->setStatus(http::kStatusBadRequest);
+    return;
+  }
+
+  auto now = WallClock::unixMicros();
+  auto rc = metric_service_->insertSample(
+      metric_id,
+      LabelledSample(Sample(now, sample_value), labels));
+
+  if (rc.isSuccess()) {
+    response->setStatus(http::kStatusCreated);
+  } else {
+    response->setStatus(http::kStatusInternalServerError);
+    response->addBody("ERROR: " + rc.getMessage());
+  }
+}
+
 //
 //void HTTPAPI::renderMetricSampleScan(
 //    http::HTTPRequest* request,
