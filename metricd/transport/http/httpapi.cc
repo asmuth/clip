@@ -164,13 +164,14 @@ void HTTPAPI::renderMetricSeriesList(
 
     json.addObjectEntry("labels");
     json.beginObject();
-    //const auto& labels = metric->getLabels();
-    //for (auto cur = labels.begin(); cur != labels.end(); ++cur) {
-    //  if (cur != labels.begin()) {
-    //    json.addComma();
-    //  }
-    //  json.addString(*cur);
-    //}
+    auto labels = cursor.getLabels();
+    for (auto cur = labels->begin(); cur != labels->end(); ++cur) {
+      if (cur != labels->begin()) {
+        json.addComma();
+      }
+      json.addObjectEntry(cur->first);
+      json.addString(cur->second);
+    }
     json.endObject();
 
     json.endObject();
