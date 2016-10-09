@@ -116,6 +116,11 @@ void MetricService::configureMetric(
   metric_map_.updateMetricMap(metric_map_builder.getMetricMap());
 }
 
+MetricListCursor MetricService::listMetrics() {
+  auto metric_map = metric_map_.getMetricMap();
+  return MetricListCursor(metric_map);
+}
+
 ReturnCode MetricService::insertSample(
     const MetricIDType& metric_id,
     const LabelledSample& sample) {

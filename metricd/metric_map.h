@@ -20,6 +20,7 @@ namespace fnordmetric {
 
 class MetricMap {
 friend class MetricMapBuilder;
+friend class MetricListCursor;
 public:
 
   ~MetricMap();
@@ -29,7 +30,12 @@ public:
   std::set<std::string> listMetrics() const;
 
 protected:
-  std::map<std::string, std::pair<Metric*, bool>> metrics_;
+
+  using SlotType = std::pair<Metric*, bool>;
+  using MapType = std::map<std::string, SlotType>;
+  using IterType = MapType::iterator;
+
+  MapType metrics_;
   std::shared_ptr<MetricMap> next_;
 };
 
@@ -60,6 +66,26 @@ public:
 protected:
   std::mutex mutex_;
   std::shared_ptr<MetricMap> metric_map_;
+};
+
+class MetricListCursor {
+public:
+
+  MetricListCursor(std::shared_ptr<MetricMap> metric_map);
+  MetricListCursor(const MetricListCursor& o) = delete;
+  MetricListCursor(MetricListCursor&& o);
+  MetricListCursor& operator=(const MetricListCursor& o) = delete;
+
+  const std::string& getMetricID();
+
+  bool isValid() const;
+  bool next();
+
+protected:
+  std::shared_ptr<MetricMap> metric_map_;
+  MetricMap::IterType begin_;
+  MetricMap::IterType cur_;
+  MetricMap::IterType end_;
 };
 
 class SeriesIDProvider {

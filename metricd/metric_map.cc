@@ -87,6 +87,37 @@ void VersionedMetricMap::updateMetricMap(
   metric_map_ = std::move(metric_map);
 }
 
+MetricListCursor::MetricListCursor(
+    std::shared_ptr<MetricMap> metric_map) :
+    metric_map_(std::move(metric_map)),
+    begin_(metric_map_->metrics_.begin()),
+    cur_(begin_),
+    end_(metric_map_->metrics_.end()) {}
+
+MetricListCursor::MetricListCursor(
+    MetricListCursor&& o) :
+    metric_map_(std::move(o.metric_map_)),
+    begin_(std::move(o.begin_)),
+    cur_(std::move(o.cur_)),
+    end_(std::move(o.end_)) {}
+
+const std::string& MetricListCursor::getMetricID() {
+  return cur_->first;
+}
+
+bool MetricListCursor::isValid() const {
+  return cur_ != end_;
+}
+
+bool MetricListCursor::next() {
+  if (cur_ == end_) {
+    return false;
+  } else {
+    ++cur_;
+    return true;
+  }
+}
+
 SeriesIDProvider::SeriesIDProvider(
     SeriesIDType init_id) :
     series_id_(init_id) {}
