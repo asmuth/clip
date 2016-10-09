@@ -50,6 +50,8 @@ metricd_common_sources_ = \
     metric_service.cc \
     sample.h \
     sample.cc \
+    util/json.h \
+    util/json.cc \
     util/uri.h \
     util/uri.cc \
     util/time_impl.h \
