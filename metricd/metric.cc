@@ -199,6 +199,7 @@ ReturnCode MetricSeriesList::findOrCreateSeries(
 void MetricSeriesList::addSeries(
     const SeriesIDType& series_id,
     const LabelSet& labels) {
+  std::unique_lock<std::mutex> lk(series_mutex_);
   assert(series_.count(series_id) == 0);
 
   series_.emplace(
@@ -208,9 +209,67 @@ void MetricSeriesList::addSeries(
           labels));
 }
 
+void MetricSeriesList::listSeries(std::vector<SeriesIDType>* series_ids) {
+  std::unique_lock<std::mutex> lk(series_mutex_);
+  series_ids->reserve(series_.size());
+  for (const auto& s : series_) {
+    series_ids->emplace_back(s.first);
+  }
+}
+
 size_t MetricSeriesList::getSize() const {
   std::unique_lock<std::mutex> lk(series_mutex_);
   return series_.size();
+}
+
+MetricSeriesListCursor::MetricSeriesListCursor() : valid_(false) {}
+
+MetricSeriesListCursor::MetricSeriesListCursor(
+    ListType&& series) :
+    valid_(true),
+    series_(std::move(series)),
+    cursor_(series_.begin()) {}
+
+MetricSeriesListCursor::MetricSeriesListCursor(
+    MetricSeriesListCursor&& o) :
+    valid_(o.valid_) {
+  o.valid_ = false;
+  if (valid_) {
+    auto cursor_pos = o.cursor_ - o.series_.begin();
+    series_ = std::move(o.series_);
+    cursor_ = series_.begin() + cursor_pos;
+  }
+}
+
+MetricSeriesListCursor& MetricSeriesListCursor::operator=(
+    MetricSeriesListCursor&& o) {
+  valid_ = o.valid_;
+  o.valid_ = false;
+  if (valid_) {
+    auto cursor_pos = o.cursor_ - o.series_.begin();
+    series_ = std::move(o.series_);
+    cursor_ = series_.begin() + cursor_pos;
+  }
+
+  return *this;
+}
+
+SeriesIDType MetricSeriesListCursor::getSeriesID() const {
+  assert(valid_);
+  return *cursor_;
+}
+
+bool MetricSeriesListCursor::isValid() const {
+  return cursor_ != series_.end();
+}
+
+bool MetricSeriesListCursor::next() {
+  if (cursor_ == series_.end()) {
+    return false;
+  } else {
+    ++cursor_;
+    return true;
+  }
 }
 
 Metric::Metric(

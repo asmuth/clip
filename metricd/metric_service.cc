@@ -121,13 +121,28 @@ MetricListCursor MetricService::listMetrics() {
   return MetricListCursor(metric_map);
 }
 
+ReturnCode MetricService::listMetricSeries(
+    const MetricIDType& metric_id,
+    MetricSeriesListCursor* cursor) {
+  auto metric_map = metric_map_.getMetricMap();
+  auto metric = metric_map->findMetric(metric_id);
+  if (!metric) {
+    return ReturnCode::error("ENOTFOUND", "metric not found");
+  }
+
+  std::vector<SeriesIDType> series;
+  metric->getSeriesList()->listSeries(&series);
+  *cursor = MetricSeriesListCursor(std::move(series));
+  return ReturnCode::success();
+}
+
 ReturnCode MetricService::insertSample(
     const MetricIDType& metric_id,
     const LabelledSample& sample) {
   auto metric_map = metric_map_.getMetricMap();
   auto metric = metric_map->findMetric(metric_id);
   if (!metric) {
-    return ReturnCode::error("ERUNTIME", "metric not found");
+    return ReturnCode::error("ENOTFOUND", "metric not found");
   }
 
   std::shared_ptr<MetricSeries> series;

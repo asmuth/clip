@@ -83,13 +83,38 @@ public:
       const SeriesIDType& series_id,
       const LabelSet& labels);
 
-  void listSeries(std::set<SeriesIDType>* series_ids);
+  void listSeries(std::vector<SeriesIDType>* series_ids);
 
   size_t getSize() const;
 
 protected:
   mutable std::mutex series_mutex_;
   std::map<SeriesIDType, std::shared_ptr<MetricSeries>> series_;
+};
+
+class MetricSeriesListCursor {
+public:
+
+  using ListType = std::vector<SeriesIDType>;
+  using ListIterType = ListType::iterator;
+
+  MetricSeriesListCursor();
+  MetricSeriesListCursor(ListType&& series);
+  MetricSeriesListCursor(const MetricSeriesListCursor& o) = delete;
+  MetricSeriesListCursor(MetricSeriesListCursor&& o);
+  MetricSeriesListCursor& operator=(const MetricSeriesListCursor& o) = delete;
+  MetricSeriesListCursor& operator=(MetricSeriesListCursor&& o);
+
+  SeriesIDType getSeriesID() const;
+
+  bool isValid() const;
+  bool next();
+
+protected:
+
+  bool valid_;
+  ListType series_;
+  ListIterType cursor_;
 };
 
 class Metric {

@@ -44,7 +44,9 @@ public:
   /**
    * List all series in a metric
    */
-  MetricSeriesListCursor listMetricsSeries(const MetricIDType& metric_id);
+  ReturnCode listMetricSeries(
+      const MetricIDType& metric_id,
+      MetricSeriesListCursor* cursor);
 
   /**
    * Insert a sample into a metric series
