@@ -27,6 +27,13 @@ void HTTPAPI::handleHTTPRequest(
   StringUtil::stripTrailingSlashes(&path);
 
   response->addHeader("Access-Control-Allow-Origin", "*");
+  response->addHeader("Access-Control-Allow-Methods", "GET, POST");
+  response->addHeader("Access-Control-Allow-Headers", "Authorization");
+
+  if (request->method() == http::HTTPMessage::M_OPTIONS) {
+    response->setStatus(http::kStatusOK);
+    return;
+  }
 
   // PATH: /api/v1/metrics/list
   if (path == "/api/v1/metrics/list") {
