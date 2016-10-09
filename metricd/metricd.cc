@@ -35,6 +35,7 @@
 #include <metricd/transport/http/eventloop.h>
 #include <metricd/transport/http/httprouter.h>
 #include <metricd/transport/http/httpserver.h>
+#include <metricd/transport/http/httpapi.h>
 #include <metricd/transport/statsd/statsd.h>
 #include <metricd/webui/webui.h>
 #include <metricd/metric_service.h>
@@ -279,14 +280,15 @@ int main(int argc, const char** argv) {
   /* run http server */
   if (rc.isSuccess()) {
     WebUI webui(flags.getString("dev_assets"));
+    HTTPAPI http_api(metric_service.get());
 
     http::EventLoop ev;
     http::HTTPRouter http_router;
     http::HTTPServer http_server(&http_router, &ev);
     http_server.listen(8175);
+    http_router.addRouteByPrefixMatch("/api", &http_api);
     http_router.addRouteByPrefixMatch("/", &webui);
     ev.run();
-    //rc = service->run();
   }
 
   if (!rc.isSuccess()) {

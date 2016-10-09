@@ -108,6 +108,8 @@ metricd_common_sources_ = \
     util/autoref_impl.h \
     util/autoref.h \
     util/autoref.cc \
+    transport/http/httpapi.h \
+    transport/http/httpapi.cc \
     transport/http/wakeup.h \
     transport/http/wakeup.cc \
     transport/http/tcpserver.h \
