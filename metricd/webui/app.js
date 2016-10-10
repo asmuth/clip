@@ -11,50 +11,47 @@
 
 this["FnordMetric"] = (function() {
   var app = this;
-  var current_project;
-  var user_info = {};
   var router;
-  var navigator;
-  var viewport;
   var widgets = {};
-  var api_stubs = {};
-  var credentials = {};
+  var current_path = win.location.pathname + win.location.search;
 
   var init = function() {
     console.log(">> FnordMetric v0.10");
-    loadConfig();
 
-    router = new zRouter(app.config.routes);
-    navigator = new zNavigator(window);
-    viewport = new zViewport(document.getElementById("fm_viewport"));
-
-    //widgets.main_menu = new FnordMetric.MainMenu(document.getElementById("fm_main_menu"));
-    //widgets.navbar = new FnordMetric.Navbar(document.querySelector(".fm_navbar"));
-
-    navigator.onNavigationChange(setRoute);
     document.querySelector(".headbar").style.display = "block";
     showLoader();
     setRoute(navigator.getPath());
-  }
 
-  var loadConfig = function() {
-    //var cfg = JSON.parse(document.querySelector("#fnordmetric_config").textContent);
-    app.config = app.config || {};
-    //for (k in cfg) {
-    //  app.config[k] = cfg[k];
-    //}
+    /* handle history entry change */
+    setTimeout(function() {
+      win.addEventListener('popstate', function(e) {
+        e.preventDefault();
+        if (e.state && e.state.path) {
+          applyNavgiationChange(e.state.path);
+        } else {
+          applyNavigationChange(win.location.pathname + win.location.search);
+        }
+      }, false);
+    }, 0);
   }
 
   var navigateTo = function(url) {
-    navigator.navigateTo(zURLUtil.getPathAndQuery(url));
+    var path zURLUtil.getPathAndQuery(url);
+    history.pushState({path: path}, "", path);
+    applyNavigationChange(path);
   }
 
-  var navigateHome = function() {
-    if (current_project) {
-      navigator.navigateTo("/a/" + current_project);
-    } else {
-      navigator.navigateTo("/a/");
+  var applyNavigationChange = function(path) {
+    if (path == current_path) {
+      return;
     }
+
+    current_path = path;
+    setRoute(path);
+  };
+
+  var navigateHome = function() {
+    navigateTo("/");
   }
 
   var setRoute = function(path) {
