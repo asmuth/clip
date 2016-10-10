@@ -26,7 +26,7 @@ TEST_CASE(TSDBTest, TestCreateAndInsert, [] () {
     std::unique_ptr<tsdb::TSDB> db;
     EXPECT(tsdb::TSDB::createDatabase(&db, "/tmp/__test.tsdb") == true);
 
-    EXPECT(db->createSeries(1, tsdb::PageType::UINT64) == true);
+    EXPECT(db->createSeries(1, tsdb::PageType::UINT64, "") == true);
     for (size_t i = 0; i < 100000; ++i) {
       EXPECT(db->insertUInt64(1, t0 + 20 * i, i) == true);
     }

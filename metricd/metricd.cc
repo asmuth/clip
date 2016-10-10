@@ -35,12 +35,30 @@
 #include <metricd/transport/http/eventloop.h>
 #include <metricd/transport/http/httprouter.h>
 #include <metricd/transport/http/httpserver.h>
+#include <metricd/transport/http/httpapi.h>
+#include <metricd/transport/statsd/statsd.h>
 #include <metricd/webui/webui.h>
+#include <metricd/metric_service.h>
 
 using namespace fnordmetric;
 
 void shutdown(int);
 ReturnCode daemonize();
+
+bool parseListenAddr(
+    const std::string& addr,
+    std::string* host,
+    uint16_t* port) {
+  std::smatch m;
+  std::regex listen_regex("([0-9a-zA-Z-_.]+):([0-9]+)");
+  if (std::regex_match(addr, m, listen_regex)) {
+    *host = m[1];
+    *port = std::stoul(m[2]);
+    return true;
+  } else {
+    return false;
+  }
+}
 
 int main(int argc, const char** argv) {
   //signal(SIGTERM, shutdown);
@@ -49,6 +67,20 @@ int main(int argc, const char** argv) {
   signal(SIGPIPE, SIG_IGN);
 
   FlagParser flags;
+
+  flags.defineFlag(
+      "datadir",
+      FlagParser::T_STRING,
+      false,
+      NULL,
+      NULL);
+
+  flags.defineFlag(
+      "listen_statsd",
+      FlagParser::T_STRING,
+      false,
+      NULL,
+      NULL);
 
   flags.defineFlag(
       "help",
@@ -118,11 +150,11 @@ int main(int argc, const char** argv) {
 
   /* setup logging */
   if (!flags.isSet("nolog_to_stderr") && !flags.isSet("daemonize")) {
-    Logger::logToStderr("fmetricd");
+    Logger::logToStderr("metricd");
   }
 
   if (flags.isSet("log_to_syslog")) {
-    Logger::logToSyslog("fmetricd");
+    Logger::logToSyslog("metricd");
   }
 
   Logger::get()->setMinimumLogLevel(
@@ -132,7 +164,8 @@ int main(int argc, const char** argv) {
   if (flags.isSet("help") || flags.isSet("version")) {
     std::cerr <<
         StringUtil::format(
-            "fmetricd $0\n"
+            "metricd $0\n"
+            "Part of the FnordMetric project (http://fnordmetric.io)\n"
             "Copyright (c) 2016, Paul Asmuth et al. All rights reserved.\n\n",
             FNORDMETRIC_VERSION);
   }
@@ -143,7 +176,8 @@ int main(int argc, const char** argv) {
 
   if (flags.isSet("help")) {
     std::cerr <<
-        "Usage: $ fmetricd [OPTIONS]\n\n"
+        "Usage: $ metricd [OPTIONS]\n\n"
+        "   --datadir <dir>           Where to store the data\n"
         "   --daemonize               Daemonize the server\n"
         "   --pidfile <file>          Write a PID file\n"
         "   --loglevel <level>        Minimum log level (default: INFO)\n"
@@ -156,6 +190,12 @@ int main(int argc, const char** argv) {
         "   $ fmetricd --daemonize\n";
 
     return 0;
+  }
+
+  /* check flags */
+  if (!flags.isSet("datadir")) {
+    std::cerr << "ERROR: --datadir flag must be set" << std::endl;
+    return 1;
   }
 
   /* init libraries */
@@ -205,25 +245,61 @@ int main(int argc, const char** argv) {
     }
   }
 
+  /* start metric service */
+  std::unique_ptr<MetricService> metric_service;
+  if (rc.isSuccess()) {
+    rc = MetricService::startService(
+        flags.getString("datadir"),
+        &metric_service);
+  }
+
+  /* load config */
+  if (rc.isSuccess()) {
+    MetricConfig mc;
+    mc.is_valid = true;
+    metric_service->configureMetric("test", mc);
+  }
+
+  /* start statsd service */
+  std::unique_ptr<statsd::StatsdServer> statsd_server;
+  if (rc.isSuccess() && flags.isSet("listen_statsd")) {
+    std::string statsd_bind;
+    uint16_t statsd_port;
+    auto parse_rc = parseListenAddr(
+        flags.getString("listen_statsd"),
+        &statsd_bind,
+        &statsd_port);
+    if (parse_rc) {
+      statsd_server.reset(new statsd::StatsdServer(metric_service.get()));
+      rc = statsd_server->listenAndStart(statsd_bind, statsd_port);
+    } else {
+      rc = ReturnCode::error("ERUNTIME", "invalid value for --listen_statsd");
+    }
+  }
+
   /* run http server */
   if (rc.isSuccess()) {
-    logInfo("Starting...");
     WebUI webui(flags.getString("dev_assets"));
+    HTTPAPI http_api(metric_service.get());
 
     http::EventLoop ev;
     http::HTTPRouter http_router;
     http::HTTPServer http_server(&http_router, &ev);
     http_server.listen(8175);
+    http_router.addRouteByPrefixMatch("/api", &http_api);
     http_router.addRouteByPrefixMatch("/", &webui);
     ev.run();
-    //rc = service->run();
   }
 
   if (!rc.isSuccess()) {
-    logFatal("error: $0", rc.getMessage());
+    logFatal("ERROR: $0", rc.getMessage());
   }
 
   /* shutdown */
+  if (statsd_server) {
+    statsd_server->shutdown();
+  }
+
   logInfo("Exiting...");
   signal(SIGTERM, SIG_IGN);
   signal(SIGINT, SIG_IGN);

@@ -38,9 +38,16 @@ public:
       const std::string& filename,
       size_t block_size = kDefaultBlockSize);
 
-  bool createSeries(uint64_t series_id, PageType type);
+  bool createSeries(
+      uint64_t series_id,
+      PageType type,
+      const std::string& metadata);
+
+  bool listSeries(std::set<uint64_t>* series_ids);
 
   bool getCursor(uint64_t series_id, Cursor* cursor);
+
+  bool getSeriesMetadata(uint64_t series_id, std::string* metadata);
 
   bool insertUInt64(
       uint64_t series_id,

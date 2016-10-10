@@ -11,7 +11,7 @@
 
 namespace tsdb {
 
-void writeVarUInt(std::string* str, uint64_t value) {
+bool writeVarUInt(std::string* str, uint64_t value) {
   unsigned char buf[10];
   size_t bytes = 0;
   do {
@@ -21,6 +21,17 @@ void writeVarUInt(std::string* str, uint64_t value) {
   } while (value);
 
   str->append((char*) buf, bytes);
+  return true;
+}
+
+bool writeVarUInt(std::ostream* os, uint64_t value) {
+  do {
+    unsigned char b = value & 0x7fU;
+    if (value >>= 7) b |= 0x80U;
+    os->put(b);
+  } while (value);
+
+  return !os->fail();
 }
 
 bool readVarUInt(const char** cursor, const char* end, uint64_t* value) {
@@ -32,6 +43,24 @@ bool readVarUInt(const char** cursor, const char* end, uint64_t* value) {
     }
 
     unsigned char b = *(*cursor)++;
+    *value |= (b & 0x7fULL) << (7 * i);
+    if (!(b & 0x80U)) {
+      break;
+    }
+  }
+
+  return true;
+}
+
+bool readVarUInt(std::istream* is, uint64_t* value) {
+  *value = 0;
+
+  for (int i = 0; ; ++i) {
+    if (!is->good()) {
+      return false;
+    }
+
+    unsigned char b = is->get();
     *value |= (b & 0x7fULL) << (7 * i);
     if (!(b & 0x80U)) {
       break;

@@ -9,6 +9,7 @@
  */
 #pragma once
 #include <stdlib.h>
+#include <string>
 #include "page_buffer.h"
 
 namespace tsdb {
@@ -24,7 +25,7 @@ struct PageIndexSplitpoint {
 class PageIndex {
 public:
 
-  PageIndex(PageType type);
+  PageIndex(PageType type, const std::string metadata);
   PageIndex(const PageIndex& o) = delete;
   PageIndex& operator=(const PageIndex& o) = delete;
   ~PageIndex();
@@ -44,8 +45,11 @@ public:
   void getDiskSnapshot(uint64_t* addr, uint64_t* size) const;
   void setDiskSnapshot(uint64_t addr, uint64_t size);
 
+  const std::string& getMetadata() const;
+
 protected:
   PageType type_;
+  std::string metadata_;
   PageIndexEntry* entries_;
   PageIndexSplitpoint* splitpoints_;
   size_t size_;
