@@ -2,9 +2,9 @@ FnordMetric.views["fnordmetric.metric.table"] = function(elem, params) {
   var table;
 
   this.initialize = function() {
-    var page = zTemplateUtil.getTemplate("fnordmetric-metric-table-tpl");
+    var page = templateUtil.getTemplate("fnordmetric-metric-table-tpl");
 
-    //zDomUtil.handleLinks(page, params.app.navigateTo);
+    //DomUtil.handleLinks(page, params.app.navigateTo);
     elem.appendChild(page);
 
     var results = params.data;
@@ -20,7 +20,7 @@ FnordMetric.views["fnordmetric.metric.table"] = function(elem, params) {
   var renderTable = function(data) {
     //initialize table
     if (!table) {
-      table = new zTable({columns: params.view_cfg.getTableColumns()});
+      table = new fTable({columns: params.view_cfg.getTableColumns()});
 
       /* navigate to id detail page */
       table.onClick(function(r) {

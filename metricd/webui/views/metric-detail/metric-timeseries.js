@@ -2,7 +2,7 @@ FnordMetric.views["fnordmetric.metric.timeseries"] = function(elem, params) {
   var table;
 
   this.initialize = function() {
-    var page = zTemplateUtil.getTemplate("fnordmetric-metric-timeseries-tpl");
+    var page = templateUtil.getTemplate("fnordmetric-metric-timeseries-tpl");
     elem.appendChild(page);
 
     renderCharts(params.data);
@@ -10,7 +10,7 @@ FnordMetric.views["fnordmetric.metric.timeseries"] = function(elem, params) {
 
   var renderCharts = function(results) {
     var chart_container = elem.querySelector(".timeseries");
-    var chart_tpl = zTemplateUtil.getTemplate(
+    var chart_tpl = templateUtil.getTemplate(
         "fnordmetric-metric-timeseries-chart-tpl").querySelector(".chart_box");
 
     var chart_boxes = [];

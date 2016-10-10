@@ -2,14 +2,15 @@ FnordMetric.views["fnordmetric.metric"] = function(elem, params) {
   var path = params.path;
   var url_params;
   var view_cfg;
+  var viewport;
 
   this.initialize = function() {
     url_params = getParams(params.path);
-    var page = zTemplateUtil.getTemplate("fnordmetric-metric-detail-tpl");
+    var page = templateUtil.getTemplate("fnordmetric-metric-detail-tpl");
 
-    zDomUtil.handleLinks(page, params.app.navigateTo);
-    zDomUtil.replaceContent(elem, page);
-    viewport = new zViewport(elem.querySelector(".view_content"));
+    DomUtil.handleLinks(page, params.app.navigateTo);
+    DomUtil.replaceContent(elem, page);
+    viewport = new Viewport(elem.querySelector(".view_content"));
 
     loadMetricConfig(function(metric_cfg) {
       view_cfg = new FnordMetric.MetricTableViewConfig(metric_cfg, url_params);
@@ -20,19 +21,19 @@ FnordMetric.views["fnordmetric.metric"] = function(elem, params) {
 
   var updatePath = function() {
     params.app.navigateTo(
-        params.route.args[0] + "?" + zURLUtil.buildQueryString(view_cfg.getParamList()));
+        params.route.args[0] + "?" + URLUtil.buildQueryString(view_cfg.getParamList()));
   }
 
   var getParams = function() {
     var p = {};
 
     p.metric = params.route.args[1];
-    var cfg_param = zURLUtil.getParamValue(path, "cfg");
+    var cfg_param = URLUtil.getParamValue(path, "cfg");
     if (cfg_param) {
       p.config = cfg_param;
     }
 
-    var offset_param = zURLUtil.getParamValue(path, "offset");
+    var offset_param = URLUtil.getParamValue(path, "offset");
     if (offset_param) {
       p.offset = offset_param;
     }
@@ -189,7 +190,7 @@ FnordMetric.views["fnordmetric.metric"] = function(elem, params) {
     /* render exisiting filter list */
     var flist_elem = elem.querySelector(
         ".fnordmetric-metric-table .sidebar .filter_list");
-    var felem_tpl = zTemplateUtil.getTemplate(
+    var felem_tpl = templateUtil.getTemplate(
         "fnordmetric-metric-table-filter-list-elem-tpl");
 
     filter_strs.forEach(function(f) {

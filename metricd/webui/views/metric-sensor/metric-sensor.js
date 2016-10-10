@@ -5,10 +5,10 @@ FnordMetric.views["fnordmetric.metric.sensor"] = function(elem, params) {
   this.initialize = function() {
     url_params = getUrlParams();
 
-    var page = zTemplateUtil.getTemplate("fnordmetric-metric-sensor-tpl");
+    var page = templateUtil.getTemplate("fnordmetric-metric-sensor-tpl");
     renderHeader(page);
 
-    zDomUtil.handleLinks(page, params.app.navigateTo);
+    DomUtil.handleLinks(page, params.app.navigateTo);
     elem.appendChild(page);
 
     loadMetricConfig(function(metric_cfg) {
@@ -78,7 +78,7 @@ FnordMetric.views["fnordmetric.metric.sensor"] = function(elem, params) {
     var metric_link = page.querySelector(".page_header .metric_name");
     metric_link.setAttribute(
         "href",
-        zURLUtil.joinPaths(base_url, url_params.metric));
+        URLUtil.joinPaths(base_url, url_params.metric));
     metric_link.innerHTML = url_params.metric;
 
     page.querySelector(".page_header .sensor_name").innerHTML = url_params.sensor;
@@ -87,10 +87,10 @@ FnordMetric.views["fnordmetric.metric.sensor"] = function(elem, params) {
   var renderLoadingCharts = function(metric_cfg) {
     var chart_box = elem.querySelector(
         ".fnordmetric-metric-sensor .chart_box_container");
-    var chart_tpl = zTemplateUtil.getTemplate(
+    var chart_tpl = templateUtil.getTemplate(
         "fnordmetric-metric-sensor-chart-tpl").querySelector(".chart_box");
 
-    zDomUtil.clearChildren(chart_box);
+    DomUtil.clearChildren(chart_box);
     metric_cfg.value_columns.forEach(function(c) {
       var html = chart_tpl.cloneNode(true);
       html.setAttribute("data-metric", c.id);

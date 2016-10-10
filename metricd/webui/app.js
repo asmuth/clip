@@ -1,7 +1,6 @@
 /**
  * This file is part of the "FnordMetric" project
  *   Copyright (c) 2016 Laura Schlimmer
- *   Copyright (c) 2016 Paul Asmuth
  *
  * FnordMetric is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License v3.0. You should have received a
@@ -11,32 +10,36 @@
 
 this["FnordMetric"] = (function() {
   var app = this;
+  var current_path = window.location.pathname + window.location.search;
   var router;
+  var viewport;
   var widgets = {};
-  var current_path = win.location.pathname + win.location.search;
 
   var init = function() {
     console.log(">> FnordMetric v0.10");
 
     document.querySelector(".headbar").style.display = "block";
     showLoader();
-    setRoute(navigator.getPath());
+
+    viewport = new Viewport(document.getElementById("fm_viewport"));
+    router = new Router();
+    setRoute(current_path);
 
     /* handle history entry change */
     setTimeout(function() {
-      win.addEventListener('popstate', function(e) {
+      window.addEventListener('popstate', function(e) {
         e.preventDefault();
         if (e.state && e.state.path) {
           applyNavgiationChange(e.state.path);
         } else {
-          applyNavigationChange(win.location.pathname + win.location.search);
+          applyNavigationChange(window.location.pathname + window.location.search);
         }
       }, false);
     }, 0);
   }
 
   var navigateTo = function(url) {
-    var path zURLUtil.getPathAndQuery(url);
+    var path = zURLUtil.getPathAndQuery(url);
     history.pushState({path: path}, "", path);
     applyNavigationChange(path);
   }
@@ -60,9 +63,8 @@ this["FnordMetric"] = (function() {
     var params = {};
     params.app = app;
     params.path = path;
-    params.api_stubs = api_stubs;
-    params.user_info = user_info;
 
+    //FIXME
     var m = path.match(/\/a\/([a-z0-9A-Z_-]+)(\/?.*)/);
     if (m) {
       params.project_id = m[1];
@@ -98,19 +100,8 @@ this["FnordMetric"] = (function() {
       return;
     }
 
-    //if (route && route.main_menu) {
-    //  widgets.main_menu.setActiveItem(route.main_menu_active_item);
-    //  widgets.main_menu.showMenu();
-    //} else {
-    //  widgets.main_menu.hideMenu();
-    //}
-
     hideLoader();
     viewport.setView(view, params);
-  }
-
-  var setupAPIStubs = function() {
-    api_stubs.user = new UserAPI(app.config.api_hosts.api_user, credentials.api_token);
   }
 
   var showLoader = function() {
@@ -136,7 +127,6 @@ this["FnordMetric"] = (function() {
   this.renderError = renderError;
   this.views = {};
   this.util = {};
-  this.api_stubs = api_stubs;
   return this;
 }).apply(this["FnordMetric"] || {});
 
@@ -150,16 +140,16 @@ FnordMetric.util.rewriteLinks = function(elem, project_id) {
 
 FnordMetric.util.rewriteAndHandleLinks = function(elem, project_id) {
   FnordMetric.util.rewriteLinks(elem, project_id);
-  zDomUtil.handleLinks(elem, FnordMetric.navigateTo);
+  DomUtil.handleLinks(elem, FnordMetric.navigateTo);
 }
 
 FnordMetric.util.renderBreadcrumbs = function(elem, crumbs) {
-  zDomUtil.clearChildren(elem);
+  DomUtil.clearChildren(elem);
 
   crumbs.forEach(function(c) {
     var crumb_elem = document.createElement("fm-breadcrumbs-section");
     var crumb_a = document.createElement("a");
-    crumb_a.innerHTML = zDomUtil.escapeHTML(c.title);
+    crumb_a.innerHTML = DomUtil.escapeHTML(c.title);
     if (c.href) {
       crumb_a.setAttribute("href", c.href);
     }
