@@ -39,7 +39,7 @@ this["FnordMetric"] = (function() {
   }
 
   var navigateTo = function(url) {
-    var path = zURLUtil.getPathAndQuery(url);
+    var path = URLUtil.getPathAndQuery(url);
     history.pushState({path: path}, "", path);
     applyNavigationChange(path);
   }
@@ -127,6 +127,7 @@ this["FnordMetric"] = (function() {
   this.renderError = renderError;
   this.views = {};
   this.util = {};
+  this.api_base_path = "/api/v1/metrics";
   return this;
 }).apply(this["FnordMetric"] || {});
 
