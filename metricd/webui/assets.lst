@@ -6,7 +6,9 @@ util/f-table_util.js
 util/url_util.js
 util/dom_util.js
 util/viewport.js
+util/http.js
 widgets/f-table/f-table.js
+3rdparty/dygraph-combined.js
 views/error/error.html
 views/error/error.js
 views/metric-list/metric-list.css
