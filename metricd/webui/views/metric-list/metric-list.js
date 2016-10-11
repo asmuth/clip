@@ -1,9 +1,33 @@
 FnordMetric.views["fnordmetric.metric.list"] = function(elem, params) {
  // var query_mgr = EventSourceHandler();
+  var api_url = "/list";
+  var table = new fTable({
+    columns: [
+      {
+        key: "metric_id",
+        title: "Metric ID"
+      }
+    ]
+  });
 
   this.initialize = function(params) {
     var page = templateUtil.getTemplate("fnordmetric-metric-list-tpl");
     elem.appendChild(page);
+
+    /* navigate to id detail page */
+    table.onClick(function(r) {
+      params.app.navigateTo(params.route.args[0] + "/" + r.cells.sensor.value);
+    });
+
+    /* sort callback */
+    table.onSort(function(column, direction) {
+      params.view_cfg.updateValue("order", direction);
+      params.view_cfg.updateValue("order_by", column.key);
+      updatePath();
+    });
+
+    table.render(
+        elem.querySelector(".fnordmetric-metric-list table.metric_list"));
 
     fetchMetricList();
   };
@@ -13,7 +37,33 @@ FnordMetric.views["fnordmetric.metric.list"] = function(elem, params) {
   };
 
   var fetchMetricList = function() {
+    HTTPUtil.httpGet(params.app.api_base_path + api_url, {}, function(r) {
+      if (r.status != 200) {
+        params.app.renderError(
+            "an error occured while loading the metric list:",
+            r.response);
+        return;
+      }
 
+      var metrics = JSON.parse(r.response);
+      renderTable(metrics.metrics);
+    });
   };
 
+  var renderTable = function(metrics) {
+    var rows = [];
+    metrics.forEach(function(m) {
+      var cells = {};
+      for (var k in m) {
+        cells[k] = {
+          value: m[k]
+        }
+      }
+
+      rows.push({cells});
+    });
+
+    table.setRows(rows);
+    table.render(elem.querySelector(".fnordmetric-metric-list table.metric_list"));
+  };
 };
