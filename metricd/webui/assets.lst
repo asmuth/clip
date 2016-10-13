@@ -8,6 +8,8 @@ util/dom_util.js
 util/viewport.js
 util/http.js
 widgets/f-table/f-table.js
+widgets/dropdown/dropdown.css
+widgets/dropdown/dropdown.js
 3rdparty/dygraph-combined.js
 views/error/error.html
 views/error/error.js

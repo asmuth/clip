@@ -11,6 +11,11 @@
 }
 
 .fnordmetric-metric-table .content .sidebar {
+  display: none;
+}
+
+/*
+.fnordmetric-metric-table .content .sidebar {
   width: 208px;
   padding: 0 20px 0 14px;
   background: rgba(0,0,0,0.04);
@@ -19,6 +24,7 @@
 .fnordmetric-metric-table .content .sidebar.right {
   width: 250px;
 }
+*/
 
 .fnordmetric-metric-table .content .table_box {
   flex: 1;
@@ -126,6 +132,7 @@
 }
 
 .fnordmetric-metric-table .content .controls .control label {
+  float: left;
   font-size: 12px;
   font-weight: 400;
   vertical-align: top;
@@ -143,17 +150,9 @@
   color: #333;
 }
 
-.fnordmetric-metric-table .content .controls .control z-dropdown.inline z-dropdown-header {
-  line-height: 38px;
-  padding-left: 0;
-  font-size: 12px;
+.fnordmetric-metric-table .content .controls .control f-dropdown button.btn {
+  line-height: 40px;
 }
-
-.fnordmetric-metric-table .content .controls .control z-dropdown.inline z-dropdown-flyout {
-  left: -22px;
-  margin-top: -3px;
-}
-
 
 .fnordmetric-metric-table z-modal.filter .z-modal-header {
   background: rgba(25, 32, 37, 1);

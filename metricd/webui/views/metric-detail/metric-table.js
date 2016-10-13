@@ -8,19 +8,46 @@ FnordMetric.views["fnordmetric.metric.table"] = function(elem, params) {
     elem.appendChild(page);
 
     var results = params.data;
-    if (results.length > 0) {
-      renderTable(results[0]);
-      renderPagination(results[0].rows.length);
+
+    //REMOVEME
+    results.series.push({
+      series_id: "server_1",
+      labels: {
+        time: 1476270385,
+        cpu_time: 1476270385,
+        uptime: 3600
+      }
+    });
+    //REMOVEME END
+
+    if (results.series.length > 0) {
+      renderTable(results.series);
+      renderPagination(results.series.length);
     } else {
       //TODO
       //renderEmptyTable
     }
   };
 
-  var renderTable = function(data) {
+  var renderTable = function(series) {
     //initialize table
     if (!table) {
-      table = new fTable({columns: params.view_cfg.getTableColumns()});
+      var columns = [{
+        key: "series_id",
+        title: "Series ID"
+      }];
+
+      series.forEach(function(s) {
+        for (var key in s.labels) {
+          columns.push({
+            key: key,
+            title: key
+          });
+        }
+      });
+      console.log(columns);
+
+      table = new fTable({columns: columns});
 
       /* navigate to id detail page */
       table.onClick(function(r) {
@@ -35,7 +62,7 @@ FnordMetric.views["fnordmetric.metric.table"] = function(elem, params) {
       });
     }
 
-    table.setRows(fTableUtil.buildRows(data.columns, data.rows));
+    //table.setRows(fTableUtil.buildRows(data.columns, data.rows));
     table.render(elem.querySelector(".fnordmetric-metric-table .metric-table"));
   };
 
@@ -99,14 +126,14 @@ FnordMetric.views["fnordmetric.metric.table"] = function(elem, params) {
 
   var renderPagination = function(num_result_items) {
     var pager = elem.querySelector(".fnordmetric-metric-table .table_box z-pager");
-    pager.render(
-        50,
-        parseInt(params.view_cfg.getValue("offset"), 10),
-        parseInt(params.view_cfg.getValue("limit"), 10));
+    //pager.render(
+    //    50,
+    //    parseInt(params.view_cfg.getValue("offset"), 10),
+    //    parseInt(params.view_cfg.getValue("limit"), 10));
 
-    pager.addEventListener("z-pager-turn", function(e) {
-      params.view_cfg.updateValue("offset", this.getOffset());
-      updatePath();
-    }, false);
+    //pager.addEventListener("z-pager-turn", function(e) {
+    //  params.view_cfg.updateValue("offset", this.getOffset());
+    //  updatePath();
+    //}, false);
   }
 }
