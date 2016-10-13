@@ -183,6 +183,35 @@ body {
   font-size: 21px;
   border-right: 1px solid #2e3135;
 }
+
+button.btn {
+  line-height: 2.2em;
+  background: #fff;
+  border: 1px solid transparent;
+  border-color: #ccc;
+  border-width: 1px;
+  font-size: inherit;
+  border-radius: 3px;
+  display: inline-block;
+  text-align: center;
+  cursor: pointer;
+  color: #333;
+  padding: 0 10px;
+  box-sizing: border-box;
+  font-weight: 400;
+}
+
+button.btn:hover {
+  background: #e6e6e6;
+}
+
+button.btn:active,
+button.btn:focus {
+  border-color: #adadad;
+  outline: none;
+  background: #e6e6e6;
+}
+
 .fancy_button {
   font-weight: 600;
   border-radius: 4px;
