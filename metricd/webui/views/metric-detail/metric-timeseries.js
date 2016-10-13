@@ -5,28 +5,26 @@ FnordMetric.views["fnordmetric.metric.timeseries"] = function(elem, params) {
     var page = templateUtil.getTemplate("fnordmetric-metric-timeseries-tpl");
     elem.appendChild(page);
 
-    renderCharts(params.data);
+    renderCharts(params.data.series);
   };
 
-  var renderCharts = function(results) {
+  var renderCharts = function(series) {
     var chart_container = elem.querySelector(".timeseries");
     var chart_tpl = templateUtil.getTemplate(
         "fnordmetric-metric-timeseries-chart-tpl").querySelector(".chart_box");
 
     var chart_boxes = [];
-    results.forEach(function(r) {
+    series.forEach(function(r) {
       var chart_box = chart_tpl.cloneNode(true);
       chart_container.appendChild(chart_box);
       chart_boxes.push(chart_box);
     });
 
-    console.log(results.length);
-
-    for (var j = 0; j < results.length; j++) {
-      var result = results[j];
+    for (var j = 0; j < series.length; j++) {
+      var serie = series[j];
       var time_col_idx;
-      for (var i = 0; i < result.columns.length; i++) {
-        if (result.columns[i] == "time") {
+      for (var i = 0; i < serie.columns.length; i++) {
+        if (serie.columns[i] == "time") {
           time_col_idx = i;
           break;
         }

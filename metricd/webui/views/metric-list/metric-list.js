@@ -50,18 +50,16 @@ FnordMetric.views["fnordmetric.metric.list"] = function(elem, params) {
 
   var renderTable = function(metrics) {
     var rows = [];
-    for (var i = 0; i < 15; i++) {
-      metrics.forEach(function(m) {
-        var cells = {};
-        for (var k in m) {
-          cells[k] = {
-            value: m[k]
-          }
+    metrics.forEach(function(m) {
+      var cells = {};
+      for (var k in m) {
+        cells[k] = {
+          value: m[k]
         }
+      }
 
-        rows.push({cells});
-      });
-    }
+      rows.push({cells});
+    });
 
     table.setRows(rows);
     table.render(

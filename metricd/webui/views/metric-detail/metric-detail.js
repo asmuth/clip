@@ -51,7 +51,6 @@ FnordMetric.views["fnordmetric.metric"] = function(elem, params) {
       }
 
       var series = JSON.parse(r.response);
-      console.log(series);
       renderView(series);
     });
     //updateTable(result);
@@ -95,7 +94,6 @@ FnordMetric.views["fnordmetric.metric"] = function(elem, params) {
   var renderTimerangeControl = function() {
     var dropdown = elem.querySelector(
         ".fnordmetric-metric-table .control dropdown.timerange");
-    console.log(dropdown);
   }
 
   var renderView = function(results) {
