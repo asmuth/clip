@@ -20,19 +20,15 @@
           </div>
           <div class="control left">
             <label>Compare To:</label>
-            <z-dropdown class="inline compare">
-              <z-dropdown-header>
-                <z-dropdown-header-value>&mdash;</z-dropdown-header-value>
-              </z-dropdown-header>
-              <z-dropdown-flyout>
-                <z-dropdown-items>
-                  <z-dropdown-item>An hour ago</z-dropdown-item>
-                  <z-dropdown-item data-selected>Yesterday</z-dropdown-item>
-                  <z-dropdown-item>Last week</z-dropdown-item>
-                  <z-dropdown-item>Last month</z-dropdown-item>
-                </z-dropdown-items>
-              </z-dropdown-flyout>
-            </z-dropdown>
+            <f-dropdown class="inline timerange">
+              <button class="btn"><span class="value">An hour ago</span></button>
+              <ul>
+                <li>An hour ago</li>
+                <li>Yesterday</li>
+                <li>Last week</li>
+                <li>Last month</li>
+              </ul>
+            </f-dropdown>
           </div>
           <div class="control view_control left">
             <i class="table_view fa fa-table"></i>
