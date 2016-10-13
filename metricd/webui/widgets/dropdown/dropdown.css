@@ -1,16 +1,16 @@
-dropdown {
+f-dropdown {
   float: left;
   position: relative;
   display: block;
 }
 
-dropdown.inline button.btn {
+f-dropdown.inline button.btn {
   background: transparent;
   border: none;
   font-weight: 500;
 }
 
-dropdown ul {
+f-dropdown ul {
   position: static;
   top: 100%;
   left: 0;
@@ -26,15 +26,16 @@ dropdown ul {
   display: none;
 }
 
-dropdown.active ul,
-dropdown button.btn:focus + ul,
-dropdown button.btn:active + ul {
+f-dropdown.active ul {
   display: block;
 }
 
-dropdown ul li {
+f-dropdown ul li {
   cursor: pointer;
   padding: 0 10px;
+  color: #333;
 }
 
-
+f-dropdown ul li.selected {
+  font-weight: 600;
+}
