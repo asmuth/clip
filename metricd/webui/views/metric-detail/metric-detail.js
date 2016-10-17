@@ -93,7 +93,17 @@ FnordMetric.views["fnordmetric.metric"] = function(elem, params) {
 
   var renderTimerangeControl = function() {
     var dropdown = elem.querySelector(
-        ".fnordmetric-metric-table .control dropdown.timerange");
+        ".fnordmetric-metric-table .control f-dropdown.timerange");
+
+    var compare_to_value = view_cfg.getValue("compare_to");
+    if (compare_to_value != null) {
+      dropdown.setValue(compare_to_value);
+    }
+
+    dropdown.addEventListener("select", function(e) {
+      view_cfg.updateValue("compare_to", e.detail.value);
+      updatePath();
+    }, false);
   }
 
   var renderView = function(results) {

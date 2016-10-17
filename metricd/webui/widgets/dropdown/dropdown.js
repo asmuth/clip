@@ -29,7 +29,7 @@ var DropdownComponent = function() {
     }
   }
 
-  this.setSelectedItem = function(value) {
+  this.setValue = function(value) {
     var selected_item = this.querySelector("ul li[data-value='" + value + "']");
     if (selected_item) {
       this.selectItem(selected_item)
@@ -45,8 +45,7 @@ var DropdownComponent = function() {
   }
 
   this.onSelect = function(elem) {
-    this.fireSelectEvent(elem.getAttribute("data-value"));
-    this.renderHeader(elem.textContent);
+    this.fireSelectEvent(elem);
     this.selectItem(elem);
     this.hideMenu();
   }
@@ -58,6 +57,8 @@ var DropdownComponent = function() {
     }
 
     elem.classList.add("selected");
+
+    this.renderHeader(elem.textContent);
   }
 
   this.renderHeader = function(value) {
@@ -65,8 +66,15 @@ var DropdownComponent = function() {
         value);
   }
 
-  this.fireSelectEvent = function(value) {
-    var ev = new CustomEvent("select", { detail: value, bubbles: true});
+  this.fireSelectEvent = function(elem) {
+    var ev = new CustomEvent(
+      "select", {
+        detail: {
+          item: elem,
+          value: elem.getAttribute("data-value"),
+        },
+        bubbles: true,
+    });
     this.dispatchEvent(ev);
   }
 

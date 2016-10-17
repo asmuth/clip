@@ -41,6 +41,10 @@ FnordMetric.MetricTableViewConfig = function(uri_params) {
       param_cfg.filter = cfg.filter;
     }
 
+    if (cfg.hasOwnProperty("compare_to")) {
+      param_cfg.compare_to = cfg.compare_to;
+    }
+
     return {
       cfg: JSON.stringify(param_cfg),
       offset: cfg.offset
