@@ -10,6 +10,10 @@ util/http.js
 widgets/f-table/f-table.js
 widgets/dropdown/dropdown.css
 widgets/dropdown/dropdown.js
+widgets/popup/popup.css
+widgets/popup/popup.js
+widgets/embed-popup/embed_popup.html
+widgets/embed-popup/embed_popup.js
 3rdparty/dygraph-combined.js
 views/error/error.html
 views/error/error.js
