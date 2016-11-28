@@ -9,11 +9,13 @@
  */
 
 this["FnordMetric"] = (function() {
+  'use strict'
   var app = this;
   var current_path = window.location.pathname + window.location.search;
   var router;
-  var viewport;
+  var viewport_elem;
   var widgets = {};
+  var current_view;
 
   var init = function() {
     console.log(">> FnordMetric v0.10");
@@ -21,8 +23,7 @@ this["FnordMetric"] = (function() {
     document.querySelector(".headbar").style.display = "block";
     showLoader();
 
-    viewport = new Viewport(document.getElementById("fm_viewport"));
-    router = new Router();
+    viewport_elem = document.getElementById("fm_viewport");
     setRoute(current_path);
 
     /* handle history entry change */
@@ -36,6 +37,34 @@ this["FnordMetric"] = (function() {
         }
       }, false);
     }, 0);
+  }
+
+  function findRoute(url) {
+    if (url == "/metrics/") {
+      return {
+        "route": "/metrics",
+        "view": "fnordmetric.metric.list",
+      }
+    }
+
+    return null;
+  }
+
+  function setView(view, params) {
+    if (current_view && current_view.destroy) {
+      current_view.destroy();
+    }
+
+    
+    viewport_elem.innerHTML = "";
+    current_view = {};
+
+    view.call(current_view, viewport_elem, params);
+
+    if (current_view.initialize) {
+      current_view.initialize.call(current_view);
+    }
+    
   }
 
   var navigateTo = function(url) {
@@ -73,9 +102,8 @@ this["FnordMetric"] = (function() {
       params.vpath = path;
     }
 
-    var current_view = viewport.getView();
     if (current_view && current_view.changePath) {
-      var route = router.findRoute(params.vpath);
+      var route = findRoute(params.vpath);
       if (current_view.changePath(path, route)) {
         return;
       }
@@ -91,7 +119,7 @@ this["FnordMetric"] = (function() {
   }
 
   var renderPage = function(params) {
-    var route = params.vpath ? router.findRoute(params.vpath) : null;
+    var route = params.vpath ? findRoute(params.vpath) : null;
     params.route = route;
 
     var view = route ? FnordMetric.views[route.view] : null;
@@ -101,7 +129,8 @@ this["FnordMetric"] = (function() {
     }
 
     hideLoader();
-    viewport.setView(view, params);
+    setView(view, params);
+    current_view = view;
   }
 
   var showLoader = function() {
@@ -116,7 +145,7 @@ this["FnordMetric"] = (function() {
 
   var renderError = function(cfg) {
     var view = FnordMetric.views["fnordmetric.error"];
-    viewport.setView(view, cfg);
+    setView(view, cfg);
   }
 
   this["init"] = init;

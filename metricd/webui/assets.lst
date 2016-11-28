@@ -1,11 +1,9 @@
 app.css
 app.js
-util/router.js
 util/template_util.js
 util/f-table_util.js
 util/url_util.js
 util/dom_util.js
-util/viewport.js
 util/http.js
 widgets/f-table/f-table.js
 widgets/dropdown/dropdown.css
