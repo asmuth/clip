@@ -2,36 +2,20 @@ FnordMetric.views["fnordmetric.metric.table"] = function(elem, params) {
   var table;
 
   this.initialize = function() {
-    var page = templateUtil.getTemplate("fnordmetric-metric-table-tpl");
-
-    //DomUtil.handleLinks(page, params.app.navigateTo);
-    elem.appendChild(page);
-
     var results = params.data;
-
-    //REMOVEME
-    results.series.push({
-      series_id: "server_1",
-      labels: {
-        time: 1476270385,
-        cpu_time: 1476270385,
-        uptime: 3600
-      }
-    });
-    //REMOVEME END
-
     if (results.series.length > 0) {
       renderTable(results.series);
-      renderPagination(results.series.length);
     } else {
-      //TODO
-      //renderEmptyTable
+      renderEmptyTable();
     }
   };
 
   var renderTable = function(series) {
-    //initialize table
+    /* initialize table */
     if (!table) {
+      var page = templateUtil.getTemplate("fnordmetric-metric-table-tpl");
+      elem.appendChild(page);
+
       var columns = [{
         key: "series_id",
         title: "Series ID"
@@ -45,10 +29,8 @@ FnordMetric.views["fnordmetric.metric.table"] = function(elem, params) {
           });
         }
       });
-      console.log(columns);
 
       table = new fTable({columns: columns});
-
       /* navigate to id detail page */
       table.onClick(function(r) {
         params.app.navigateTo(params.route.args[0] + "/" + r.cells.sensor.value);
@@ -64,7 +46,13 @@ FnordMetric.views["fnordmetric.metric.table"] = function(elem, params) {
 
     //table.setRows(fTableUtil.buildRows(data.columns, data.rows));
     table.render(elem.querySelector(".fnordmetric-metric-table .metric-table"));
+    renderPagination(series.length);
   };
+
+  var renderEmptyTable = function() {
+    elem.innerHTML = "<div class='error_pane'>" +
+        "<h2>We couldn't find anything</h2></div>";
+  }
 
 
   //var renderValueColumnsDropdown = function(value_columns) {

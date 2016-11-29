@@ -1,9 +1,11 @@
 FnordMetric.views["fnordmetric.metric"] = function(elem, params) {
+  'use strict';
+
   var api_path = "/list_series";
   var path = params.path;
   var url_params;
   var view_cfg;
-  var viewport;
+  var viewport_elem;
 
   this.initialize = function() {
     url_params = getParams(params.path);
@@ -11,7 +13,7 @@ FnordMetric.views["fnordmetric.metric"] = function(elem, params) {
 
     DomUtil.handleLinks(page, params.app.navigateTo);
     DomUtil.replaceContent(elem, page);
-    viewport = new Viewport(elem.querySelector(".view_content"));
+    viewport_elem = elem.querySelector(".view_content");
 
     view_cfg = new FnordMetric.MetricTableViewConfig(url_params);
     render();
@@ -128,7 +130,14 @@ FnordMetric.views["fnordmetric.metric"] = function(elem, params) {
         break;
     }
 
-    viewport.setView(view, view_opts);
+    //render view
+    viewport_elem.innerHTML = "";
+
+    var current_view = {};
+    view.call(current_view, viewport_elem, view_opts);
+    if (current_view.initialize) {
+      current_view.initialize.call(current_view);
+    }
   }
 
   //var renderFilterList = function() {

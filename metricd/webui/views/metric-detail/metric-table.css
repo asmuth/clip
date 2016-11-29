@@ -26,6 +26,10 @@
 }
 */
 
+.fnordmetric-metric-table .content .view_content {
+  height: 100%;
+}
+
 .fnordmetric-metric-table .content .table_box {
   flex: 1;
   min-height: 600px;
@@ -184,6 +188,19 @@
 
 .fnordmetric-metric-table z-modal.filter .z-modal-footer button {
   float: right;
+}
+
+/** erorr message **/
+.fnordmetric-metric-table .view_content .error_pane {
+  text-align: center;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.fnordmetric-metric-table .view_content .error_pane h1 {
+  
 }
 
 /** table view **/

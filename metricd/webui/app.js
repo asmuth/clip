@@ -17,6 +17,17 @@ this["FnordMetric"] = (function() {
   var widgets = {};
   var current_view;
 
+  var routes = [
+    {
+      "route": "/metrics",
+      "view": "fnordmetric.metric.list",
+    },
+    {
+      "route": new RegExp("^\/metrics\/(.*)$"),
+      "view": "fnordmetric.metric",
+    }
+  ];
+
   var init = function() {
     console.log(">> FnordMetric v0.10");
 
@@ -39,11 +50,27 @@ this["FnordMetric"] = (function() {
     }, 0);
   }
 
-  function findRoute(url) {
-    if (url == "/metrics/") {
+  function findRoute(full_path) {
+    var path = full_path;
+    var end = path.indexOf("?");
+    if (end >= 0) {
+      path = path.substring(0, end)
+    }
+
+    // PATH: /metrics/
+    if (path == "/metrics/") {
       return {
         "route": "/metrics",
         "view": "fnordmetric.metric.list",
+      }
+    }
+
+    var m = path.match(new RegExp("^\/metrics\/(.*)$"));
+    if (m) {
+      return {
+        "route": "/metrics",
+        "view": "fnordmetric.metric",
+        "args": m
       }
     }
 
@@ -55,7 +82,6 @@ this["FnordMetric"] = (function() {
       current_view.destroy();
     }
 
-    
     viewport_elem.innerHTML = "";
     current_view = {};
 
@@ -64,7 +90,6 @@ this["FnordMetric"] = (function() {
     if (current_view.initialize) {
       current_view.initialize.call(current_view);
     }
-    
   }
 
   var navigateTo = function(url) {

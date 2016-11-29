@@ -86,6 +86,5 @@ FnordMetric.views["fnordmetric.metric.timeseries"] = function(elem, params) {
     }
 
   }
-  
 }
 
