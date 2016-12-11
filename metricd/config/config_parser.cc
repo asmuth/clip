@@ -37,6 +37,11 @@ ReturnCode ConfigParser::parse(ConfigList* config) {
       }
     }
 
+    if (ttype == T_ENDLINE) {
+      consumeToken();
+      continue;
+    }
+
     setError(
         StringUtil::format(
             "invalid token; got: $0, expected one of: metric",
@@ -71,6 +76,10 @@ bool ConfigParser::parseMetricDefinition(ConfigList* config) {
   if (!expectAndConsumeToken(T_RCBRACE)) {
     return false;
   }
+
+  MetricConfig metric_config;
+  metric_config.is_valid = true;
+  config->addMetricConfig(metric_name, metric_config);
 
   return true;
 }

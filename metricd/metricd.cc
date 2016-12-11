@@ -71,10 +71,17 @@ int main(int argc, const char** argv) {
   FlagParser flags;
 
   flags.defineFlag(
+      "config",
+      FlagParser::T_STRING,
+      false,
+      "c",
+      NULL);
+
+  flags.defineFlag(
       "datadir",
       FlagParser::T_STRING,
       false,
-      NULL,
+      "d",
       NULL);
 
   flags.defineFlag(
@@ -179,7 +186,8 @@ int main(int argc, const char** argv) {
   if (flags.isSet("help")) {
     std::cerr <<
         "Usage: $ metricd [OPTIONS]\n\n"
-        "   --datadir <dir>           Where to store the data\n"
+        "   -c, --config <path>       Path to config file\n"
+        "   -d, --datadir <dir>       Where to store the data\n"
         "   --daemonize               Daemonize the server\n"
         "   --pidfile <file>          Write a PID file\n"
         "   --loglevel <level>        Minimum log level (default: INFO)\n"
@@ -195,6 +203,11 @@ int main(int argc, const char** argv) {
   }
 
   /* check flags */
+  if (!flags.isSet("config")) {
+    std::cerr << "ERROR: --config flag must be set" << std::endl;
+    return 1;
+  }
+
   if (!flags.isSet("datadir")) {
     std::cerr << "ERROR: --datadir flag must be set" << std::endl;
     return 1;
@@ -258,15 +271,18 @@ int main(int argc, const char** argv) {
   /* parse config */
   ConfigList config;
   if (rc.isSuccess()) {
-    std::string config_str = "metric blah {}";
-    ConfigParser config_parser(config_str.data(), config_str.size());
+    auto config_file = FileUtil::read(flags.getString("config"));
+    ConfigParser config_parser(
+        (const char*) config_file.data(),
+        config_file.size());
+
     rc = config_parser.parse(&config);
   }
 
   /* load config */
   if (rc.isSuccess()) {
     for (const auto& mc : config.getMetricConfigs()) {
-      metric_service->configureMetric("test", mc);
+      metric_service->configureMetric(mc.first, mc.second);
     }
   }
 

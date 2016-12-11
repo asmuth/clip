@@ -9,6 +9,7 @@
  */
 #pragma once
 #include <atomic>
+#include <map>
 #include <memory>
 #include <string>
 #include "metricd/util/return_code.h"
@@ -19,11 +20,11 @@ namespace fnordmetric {
 class ConfigList {
 public:
 
-  const std::vector<MetricConfig>& getMetricConfigs() const;
-  void addMetricConfig(MetricConfig config);
+  const std::map<MetricIDType, MetricConfig>& getMetricConfigs() const;
+  void addMetricConfig(MetricIDType metric_id, MetricConfig config);
 
 protected:
-  std::vector<MetricConfig> metric_configs_;
+  std::map<MetricIDType, MetricConfig> metric_configs_;
 };
 
 } // namespace fnordmetric

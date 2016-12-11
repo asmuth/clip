@@ -11,12 +11,13 @@
 
 namespace fnordmetric {
 
-const std::vector<MetricConfig>& ConfigList::getMetricConfigs() const {
+const std::map<MetricIDType, MetricConfig>& ConfigList::getMetricConfigs()
+    const {
   return metric_configs_;
 }
 
-void ConfigList::addMetricConfig(MetricConfig config) {
-  metric_configs_.emplace_back(std::move(config));
+void ConfigList::addMetricConfig(MetricIDType metric_id, MetricConfig config) {
+  metric_configs_.emplace(metric_id, std::move(config));
 }
 
 } // namespace fnordmetric
