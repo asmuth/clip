@@ -26,8 +26,37 @@ public:
   ReturnCode parse(ConfigList* config);
 
 protected:
+
+  enum TokenType {
+    T_STRING,
+    T_COMMA,
+    T_ENDLINE,
+    T_LPAREN,
+    T_RPAREN,
+    T_LCBRACE,
+    T_RCBRACE,
+    T_EOF
+  };
+
+  bool getToken(
+      TokenType* type,
+      const char** buf,
+      size_t* buf_len);
+
+  void consumeToken();
+
+  void setError(const std::string& error);
+
   const char* input_;
-  size_t input_len_;
+  const char* input_cur_;
+  const char* input_end_;
+  bool has_token_;
+  TokenType token_type_;
+  std::string token_buf_;
+  bool has_error_;
+  std::string error_msg_;
+  size_t error_lineno_;
+  size_t error_colno_;
 };
 
 } // namespace fnordmetric

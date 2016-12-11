@@ -255,10 +255,16 @@ int main(int argc, const char** argv) {
         &metric_service);
   }
 
+  /* parse config */
+  ConfigList config;
+  if (rc.isSuccess()) {
+    std::string config_str = "metric blah {}";
+    ConfigParser config_parser(config_str.data(), config_str.size());
+    rc = config_parser.parse(&config);
+  }
+
   /* load config */
   if (rc.isSuccess()) {
-    ConfigList config;
-
     for (const auto& mc : config.getMetricConfigs()) {
       metric_service->configureMetric("test", mc);
     }
