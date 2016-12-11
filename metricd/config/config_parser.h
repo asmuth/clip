@@ -34,9 +34,14 @@ protected:
     T_LPAREN,
     T_RPAREN,
     T_LCBRACE,
-    T_RCBRACE,
-    T_EOF
+    T_RCBRACE
   };
+
+  bool parseMetricDefinition(ConfigList* config);
+
+  bool getToken(
+      TokenType* type,
+      std::string* buf);
 
   bool getToken(
       TokenType* type,
@@ -44,6 +49,19 @@ protected:
       size_t* buf_len);
 
   void consumeToken();
+  bool expectAndConsumeToken(TokenType type);
+  bool expectAndConsumeString(std::string* buf);
+
+  std::string printToken(TokenType type);
+
+  std::string printToken(
+      TokenType type,
+      const std::string& buf);
+
+  std::string printToken(
+      TokenType type,
+      const char* buf,
+      size_t buf_len);
 
   void setError(const std::string& error);
 
