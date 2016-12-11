@@ -21,21 +21,32 @@ ConfigParser::ConfigParser(
     has_error_(false) {}
 
 ReturnCode ConfigParser::parse(ConfigList* config) {
-  // a file consists of a list of top-level definitions
   TokenType ttype;
-  const char* tbuf;
-  size_t tbuf_len;
-  while (getToken(&ttype, &tbuf, &tbuf_len)) {
-    switch (ttype) {
+  std::string tbuf;
 
-      case T_STRING:
-        std::cerr << "got token! (" << tbuf_len << "): " << std::string(tbuf, tbuf_len) << "\n";
-        consumeToken();
+  /* a file consists of a list of top-level definitions */
+  while (getToken(&ttype, &tbuf)) {
+
+    /* parse the "metric" definition */
+    if (ttype == T_STRING && tbuf == "metric") {
+      consumeToken();
+      if (parseMetricDefinition(config)) {
         continue;
-
+      } else {
+        break;
+      }
     }
 
-    setError("invalid token. expected one of: metric");
+    if (ttype == T_ENDLINE) {
+      consumeToken();
+      continue;
+    }
+
+    setError(
+        StringUtil::format(
+            "invalid token; got: $0, expected one of: metric",
+            printToken(ttype, tbuf)));
+
     break;
   }
 
@@ -50,6 +61,40 @@ ReturnCode ConfigParser::parse(ConfigList* config) {
   } else {
     return ReturnCode::success();
   }
+}
+
+bool ConfigParser::parseMetricDefinition(ConfigList* config) {
+  std::string metric_name;
+  if (!expectAndConsumeString(&metric_name)) {
+    return false;
+  }
+
+  if (!expectAndConsumeToken(T_LCBRACE)) {
+    return false;
+  }
+
+  if (!expectAndConsumeToken(T_RCBRACE)) {
+    return false;
+  }
+
+  MetricConfig metric_config;
+  metric_config.is_valid = true;
+  config->addMetricConfig(metric_name, metric_config);
+
+  return true;
+}
+
+bool ConfigParser::getToken(
+    TokenType* ttype,
+    std::string* tbuf) {
+  const char* tbuf_cstr = nullptr;
+  size_t tbuf_len = 0;
+
+  bool ret = getToken(ttype, &tbuf_cstr, &tbuf_len);
+  if (tbuf_cstr) {
+    tbuf->append(tbuf_cstr, tbuf_len);
+  }
+  return ret;
 }
 
 bool ConfigParser::getToken(
@@ -198,6 +243,76 @@ return_token:
 void ConfigParser::consumeToken() {
   has_token_ = false;
   token_buf_.clear();
+}
+
+bool ConfigParser::expectAndConsumeToken(TokenType desired_type) {
+  TokenType actual_type;
+  const char* tbuf = nullptr;
+  size_t tbuf_len = 0;
+
+  if (!getToken(&actual_type, &tbuf, &tbuf_len)) {
+    return false;
+  }
+
+  if (actual_type != desired_type) {
+    setError(
+        StringUtil::format(
+            "unexpected token; expected: $0, got: $1",
+            printToken(desired_type),
+            printToken(actual_type, tbuf, tbuf_len)));
+
+    return false;
+  }
+
+  consumeToken();
+  return true;
+}
+
+bool ConfigParser::expectAndConsumeString(std::string* buf) {
+  TokenType ttype;
+  if (!getToken(&ttype, buf)) {
+    return false;
+  }
+
+  if (ttype != T_STRING) {
+    setError(
+        StringUtil::format(
+            "unexpected token; expected: STRING, got: $0",
+            printToken(ttype, *buf)));
+
+    return false;
+  }
+
+  consumeToken();
+  return true;
+}
+
+std::string ConfigParser::printToken(TokenType type) {
+  return printToken(type, nullptr, 0);
+}
+
+std::string ConfigParser::printToken(
+    TokenType type,
+    const std::string& buf) {
+  return printToken(type, buf.data(), buf.size());
+}
+
+std::string ConfigParser::printToken(
+    TokenType type,
+    const char* buf,
+    size_t buf_len) {
+  std::string out;
+  switch (type) {
+    case T_STRING: out = "STRING"; break;
+    case T_COMMA: out = "COMMA"; break;
+    case T_ENDLINE: out = "ENDLINE"; break;
+    case T_LPAREN: out = "LPAREN"; break;
+    case T_RPAREN: out = "RPAREN"; break;
+    case T_LCBRACE: out = "LCBRACE"; break;
+    case T_RCBRACE: out = "RCBRACE"; break;
+  }
+
+  return out;
 }
 
 void ConfigParser::setError(const std::string& error) {
