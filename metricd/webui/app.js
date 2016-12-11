@@ -17,17 +17,6 @@ this["FnordMetric"] = (function() {
   var widgets = {};
   var current_view;
 
-  var routes = [
-    {
-      "route": "/metrics",
-      "view": "fnordmetric.metric.list",
-    },
-    {
-      "route": new RegExp("^\/metrics\/(.*)$"),
-      "view": "fnordmetric.metric",
-    }
-  ];
-
   var init = function() {
     console.log(">> FnordMetric v0.10");
 
@@ -58,7 +47,7 @@ this["FnordMetric"] = (function() {
     }
 
     // PATH: /metrics/
-    if (path == "/metrics/") {
+    if (path == "/metrics") {
       return {
         "route": "/metrics",
         "view": "fnordmetric.metric.list",
@@ -69,7 +58,7 @@ this["FnordMetric"] = (function() {
     if (m) {
       return {
         "route": "/metrics",
-        "view": "fnordmetric.metric",
+        "view": "fnordmetric.metric.series.list",
         "args": m
       }
     }

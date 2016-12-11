@@ -1,4 +1,4 @@
-FnordMetric.views["fnordmetric.metric"] = function(elem, params) {
+FnordMetric.views["fnordmetric.metric.series.list"] = function(elem, params) {
   'use strict';
 
   var api_path = "/list_series";
@@ -9,7 +9,7 @@ FnordMetric.views["fnordmetric.metric"] = function(elem, params) {
 
   this.initialize = function() {
     url_params = getParams(params.path);
-    var page = templateUtil.getTemplate("fnordmetric-metric-detail-tpl");
+    var page = templateUtil.getTemplate("fnordmetric-metric-series-list-tpl");
 
     DomUtil.handleLinks(page, params.app.navigateTo);
     DomUtil.replaceContent(elem, page);
@@ -25,7 +25,7 @@ FnordMetric.views["fnordmetric.metric"] = function(elem, params) {
         params.route.args[0] + "?" + URLUtil.buildQueryString(view_cfg.getParamList()));
   }
 
-  var getParams = function() {
+  var getParams = function(path) {
     var p = {};
 
     p.metric = params.route.args[1];
@@ -69,16 +69,16 @@ FnordMetric.views["fnordmetric.metric"] = function(elem, params) {
 
   var renderHeader = function(metric) {
     var header = elem.querySelector(
-        ".fnordmetric-metric-table .page_header .metric_name");
+        ".fnordmetric-metric-series-list .page_header .metric_name");
     header.innerHTML = url_params.metric;
 
     /* handle view controls */
-    elem.querySelector(".fnordmetric-metric-table .view_control").setAttribute(
+    elem.querySelector(".fnordmetric-metric-series-list .view_control").setAttribute(
         "data-view", view_cfg.getValue("view"));
 
     /* switch to table view */
     var table_view_ctrl = elem.querySelector(
-        ".fnordmetric-metric-table .view_control .table_view");
+        ".fnordmetric-metric-series-list .view_control .table_view");
     table_view_ctrl.addEventListener("click", function(e) {
       view_cfg.updateValue("view", "table");
       updatePath();
@@ -86,7 +86,7 @@ FnordMetric.views["fnordmetric.metric"] = function(elem, params) {
 
     /* switch to timeseries view */
     var timeseries_view_ctrl = elem.querySelector(
-        ".fnordmetric-metric-table .view_control .timeseries_view");
+        ".fnordmetric-metric-series-list .view_control .timeseries_view");
     timeseries_view_ctrl.addEventListener("click", function(e) {
       view_cfg.updateValue("view", "timeseries");
       updatePath();
@@ -95,7 +95,7 @@ FnordMetric.views["fnordmetric.metric"] = function(elem, params) {
 
   var renderTimerangeControl = function() {
     var dropdown = elem.querySelector(
-        ".fnordmetric-metric-table .control f-dropdown.timerange");
+        ".fnordmetric-metric-series-list .control f-dropdown.timerange");
 
     var compare_to_value = view_cfg.getValue("compare_to");
     if (compare_to_value != null) {
@@ -118,11 +118,11 @@ FnordMetric.views["fnordmetric.metric"] = function(elem, params) {
 
     switch (view_cfg.getValue("view")){
       case "table":
-        view = FnordMetric.views["fnordmetric.metric.table"];
+        view = FnordMetric.views["fnordmetric.metric.series.list.table"];
         break;
 
       case "timeseries":
-        view = FnordMetric.views["fnordmetric.metric.timeseries"];
+        view = FnordMetric.views["fnordmetric.metric.series.list.chart"];
         break;
 
       default:
@@ -131,6 +131,7 @@ FnordMetric.views["fnordmetric.metric"] = function(elem, params) {
     }
 
     //render view
+    console.log(view);
     viewport_elem.innerHTML = "";
 
     var current_view = {};
@@ -198,7 +199,7 @@ FnordMetric.views["fnordmetric.metric"] = function(elem, params) {
   //}
 
   var renderEmbedControl = function() {
-    elem.querySelector(".fnordmetric-metric-table .control.embed")
+    elem.querySelector(".fnordmetric-metric-series-list .control.embed")
         .addEventListener("click", function() {
           fEmbedPopup(elem, "").render();
         }, false);

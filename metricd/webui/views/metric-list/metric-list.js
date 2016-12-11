@@ -1,4 +1,6 @@
 FnordMetric.views["fnordmetric.metric.list"] = function(elem, params) {
+  'use strict';
+
   var api_url = "/list";
   var table = new fTable({
     columns: [

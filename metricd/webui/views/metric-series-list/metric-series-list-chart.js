@@ -1,4 +1,4 @@
-FnordMetric.views["fnordmetric.metric.timeseries"] = function(elem, params) {
+FnordMetric.views["fnordmetric.metric.series.list.chart"] = function(elem, params) {
   var table;
 
   this.initialize = function() {

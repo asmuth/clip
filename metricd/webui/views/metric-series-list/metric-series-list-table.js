@@ -1,4 +1,4 @@
-FnordMetric.views["fnordmetric.metric.table"] = function(elem, params) {
+FnordMetric.views["fnordmetric.metric.series.list.table"] = function(elem, params) {
   var table;
 
   this.initialize = function() {
