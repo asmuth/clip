@@ -20,9 +20,9 @@ FnordMetric.MetricTableFilter = function(elem) {
 
   this.render = function(filter_str) {
     var inner = elem.querySelector(".inner");
-    zDomUtil.clearChildren(inner);
+    DomUtil.clearChildren(inner);
 
-    var tpl = zTemplateUtil.getTemplate(
+    var tpl = templateUtil.getTemplate(
         "fnordmetric-metric-table-filter-modal-tpl");
 
     tpl.querySelector("button.close").addEventListener("click", function() {

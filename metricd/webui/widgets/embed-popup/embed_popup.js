@@ -1,7 +1,6 @@
 /**
  * This file is part of the "FnordMetric" project
- *   Copyright (c) 2014 Laura Schlimmer
- *   Copyright (c) 2014 Paul Asmuth, Google Inc.
+ *   Copyright (c) 2016 Laura Schlimmer
  *
  * FnordMetric is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License v3.0. You should have received a
@@ -23,10 +22,10 @@ fEmbedPopup = function(elem, query) {
   }
 
   function render() {
-    var tpl = zTemplateUtil.getTemplate("fnordmetric-embed-popup");
-    var modal = tpl.querySelector("z-modal");
+    var tpl = templateUtil.getTemplate("fnordmetric-embed-popup");
+    var popup = tpl.querySelector("f-popup");
     elem.appendChild(tpl);
-    modal.show();
+    popup.show();
     //background = document.createElement("div");
     //background.className = "popup_ui background";
 
@@ -90,10 +89,7 @@ fEmbedPopup = function(elem, query) {
   }
 
   function embedIFrame() {
-    inner_window.innerHTML = "Copy this into your HTML page:";
-    var code = document.createElement("code");
-    code.innerHTML = '&lt;iframe<br />&nbsp;&nbsp;&nbsp;&nbsp;width="800"<br />&nbsp;&nbsp;&nbsp;&nbsp;height="400"<br />&nbsp;&nbsp;&nbsp;&nbsp;frameBorder="0"<br />&nbsp;&nbsp;&nbsp;&nbsp;src="' + queryUrl() + '"&gt;<br />&nbsp;&nbsp;&nbsp;&nbsp;&lt;/iframe&gt;';
-    inner_window.appendChild(code);
+    //code.innerHTML = '&lt;iframe<br />&nbsp;&nbsp;&nbsp;&nbsp;width="800"<br />&nbsp;&nbsp;&nbsp;&nbsp;height="400"<br />&nbsp;&nbsp;&nbsp;&nbsp;frameBorder="0"<br />&nbsp;&nbsp;&nbsp;&nbsp;src="' + queryUrl() + '"&gt;<br />&nbsp;&nbsp;&nbsp;&nbsp;&lt;/iframe&gt;';
   }
 
   function embedURL() {
@@ -104,14 +100,10 @@ fEmbedPopup = function(elem, query) {
   }
 
   function embedHTML() {
-    inner_window.innerHTML = "Copy this into the header of your html page:";
     var code1 = document.createElement("code");
-    code1.innerHTML = '&lt;script href="http://' + document.location.host + '/s/fnordmetric.js" type="text/javascript"&gt;&lt;script&gt;';
-    inner_window.appendChild(code1);
-    inner_window.innerHTML += "Copy this into the body of your html page:";
+   // code1.innerHTML = '&lt;script href="http://' + document.location.host + '/s/fnordmetric.js" type="text/javascript"&gt;&lt;script&gt;';
     var code2 = document.createElement("code");
-    code2.innerHTML = '&lt;fm-chart&gt;<br />' + query + '<br />&lt;/fm-chart&gt;';
-    inner_window.appendChild(code2);
+   // code2.innerHTML = '&lt;fm-chart&gt;<br />' + query + '<br />&lt;/fm-chart&gt;';
   }
 
   function queryUrl() {

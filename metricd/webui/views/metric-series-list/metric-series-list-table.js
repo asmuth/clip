@@ -1,27 +1,36 @@
-FnordMetric.views["fnordmetric.metric.table"] = function(elem, params) {
+FnordMetric.views["fnordmetric.metric.series.list.table"] = function(elem, params) {
   var table;
 
   this.initialize = function() {
-    var page = zTemplateUtil.getTemplate("fnordmetric-metric-table-tpl");
-
-    //zDomUtil.handleLinks(page, params.app.navigateTo);
-    elem.appendChild(page);
-
     var results = params.data;
-    if (results.length > 0) {
-      renderTable(results[0]);
-      renderPagination(results[0].rows.length);
+    if (results.series.length > 0) {
+      renderTable(results.series);
     } else {
-      //TODO
-      //renderEmptyTable
+      renderEmptyTable();
     }
   };
 
-  var renderTable = function(data) {
-    //initialize table
+  var renderTable = function(series) {
+    /* initialize table */
     if (!table) {
-      table = new zTable({columns: params.view_cfg.getTableColumns()});
+      var page = templateUtil.getTemplate("fnordmetric-metric-table-tpl");
+      elem.appendChild(page);
 
+      var columns = [{
+        key: "series_id",
+        title: "Series ID"
+      }];
+
+      series.forEach(function(s) {
+        for (var key in s.labels) {
+          columns.push({
+            key: key,
+            title: key
+          });
+        }
+      });
+
+      table = new fTable({columns: columns});
       /* navigate to id detail page */
       table.onClick(function(r) {
         params.app.navigateTo(params.route.args[0] + "/" + r.cells.sensor.value);
@@ -35,9 +44,15 @@ FnordMetric.views["fnordmetric.metric.table"] = function(elem, params) {
       });
     }
 
-    table.setRows(fTableUtil.buildRows(data.columns, data.rows));
+    //table.setRows(fTableUtil.buildRows(data.columns, data.rows));
     table.render(elem.querySelector(".fnordmetric-metric-table .metric-table"));
+    renderPagination(series.length);
   };
+
+  var renderEmptyTable = function() {
+    elem.innerHTML = "<div class='error_pane'>" +
+        "<h2>We couldn't find anything</h2></div>";
+  }
 
 
   //var renderValueColumnsDropdown = function(value_columns) {
@@ -99,14 +114,14 @@ FnordMetric.views["fnordmetric.metric.table"] = function(elem, params) {
 
   var renderPagination = function(num_result_items) {
     var pager = elem.querySelector(".fnordmetric-metric-table .table_box z-pager");
-    pager.render(
-        50,
-        parseInt(params.view_cfg.getValue("offset"), 10),
-        parseInt(params.view_cfg.getValue("limit"), 10));
+    //pager.render(
+    //    50,
+    //    parseInt(params.view_cfg.getValue("offset"), 10),
+    //    parseInt(params.view_cfg.getValue("limit"), 10));
 
-    pager.addEventListener("z-pager-turn", function(e) {
-      params.view_cfg.updateValue("offset", this.getOffset());
-      updatePath();
-    }, false);
+    //pager.addEventListener("z-pager-turn", function(e) {
+    //  params.view_cfg.updateValue("offset", this.getOffset());
+    //  updatePath();
+    //}, false);
   }
 }

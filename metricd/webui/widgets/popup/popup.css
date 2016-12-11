@@ -1,0 +1,30 @@
+/* popup */
+f-popup {
+  display: none;
+}
+
+f-popup[data-active] {
+  display: block;
+}
+
+f-popup-background {
+  background: rgba(45, 53, 59, 0.85);
+  height: 100%;
+  width: 100%;
+  position: fixed;
+  top: 0;
+  z-index: 999;
+}
+
+f-popup-window {
+  display: block;
+  position: relative;
+  width: 590px;
+  height: 400px;
+  top: 50%;
+  margin: auto;
+  margin-top: -250px;
+  background: #fafafa;
+  vertical-align: center;
+  padding: 10px 50px;
+}
