@@ -10,6 +10,7 @@
 #include <stdlib.h>
 #include <stdint.h>
 #include <stdio.h>
+#include <cmath>
 #include "json.h"
 #include "stringutil.h"
 

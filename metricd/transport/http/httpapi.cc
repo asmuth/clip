@@ -166,6 +166,8 @@ void HTTPAPI::insertSample(
     http::HTTPRequest* request,
     http::HTTPResponse* response,
     const URI& uri) {
+  // FIXME check POST
+
   auto params = uri.queryParams();
 
   std::string metric_id;

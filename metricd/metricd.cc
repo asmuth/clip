@@ -37,6 +37,8 @@
 #include <metricd/transport/http/httpserver.h>
 #include <metricd/transport/http/httpapi.h>
 #include <metricd/transport/statsd/statsd.h>
+#include <metricd/config/config_list.h>
+#include <metricd/config/config_parser.h>
 #include <metricd/webui/webui.h>
 #include <metricd/metric_service.h>
 
@@ -255,9 +257,11 @@ int main(int argc, const char** argv) {
 
   /* load config */
   if (rc.isSuccess()) {
-    MetricConfig mc;
-    mc.is_valid = true;
-    metric_service->configureMetric("test", mc);
+    ConfigList config;
+
+    for (const auto& mc : config.getMetricConfigs()) {
+      metric_service->configureMetric("test", mc);
+    }
   }
 
   /* start statsd service */
