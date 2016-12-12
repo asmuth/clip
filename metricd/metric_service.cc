@@ -172,6 +172,18 @@ ReturnCode MetricService::insertSample(
   return rc;
 }
 
+MetricSeriesCursor MetricService::getCursor(
+    const MetricIDType& metric_id,
+    SeriesIDType series_id) {
+  tsdb::Cursor tsdb_cursor(tsdb::PageType::UINT64);
+
+  if (tsdb_->getCursor(series_id, &tsdb_cursor)) {
+    return MetricSeriesCursor(std::move(tsdb_cursor));
+  } else {
+    return MetricSeriesCursor();
+  }
+}
+
 //void MetricService::scanSamples(
 //    const std::string& metric_key,
 //    const fnord::DateTime& time_begin,
