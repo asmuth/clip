@@ -37,6 +37,11 @@ protected:
       http::HTTPResponse* response,
       const URI& uri);
 
+  void performMetricFetchSeries(
+      http::HTTPRequest* request,
+      http::HTTPResponse* response,
+      const URI& uri);
+
   void renderMetricSampleScan(
       http::HTTPRequest* request,
       http::HTTPResponse* response,
