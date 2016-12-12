@@ -122,6 +122,7 @@ void HTTPAPI::renderMetricSeriesList(
   if (!rc.isSuccess()) {
     response->setStatus(http::kStatusInternalServerError);
     response->addBody("ERROR: " + rc.getMessage());
+    return;
   }
 
   response->setStatus(http::kStatusOK);
