@@ -1,5 +1,19 @@
 FnordMetric.views["fnordmetric.metric.series.list.table"] = function(elem, params) {
   var table;
+  var default_columns = [
+    {
+      key: "sparkline",
+      title: "Sparkline"
+    },
+    {
+      key: "min",
+      title: "Min"
+    },
+    {
+      key: "max",
+      title: "Max"
+    }
+  ];
 
   this.initialize = function() {
     var results = params.data;
@@ -11,24 +25,32 @@ FnordMetric.views["fnordmetric.metric.series.list.table"] = function(elem, param
   };
 
   var renderTable = function(series) {
-    /* initialize table */
-    if (!table) {
-      var page = templateUtil.getTemplate("fnordmetric-metric-table-tpl");
-      elem.appendChild(page);
+    /* build columns and rows */
+    var columns = default_columns;
+    var column_keys = {};
+    var rows = [];
+    series.forEach(function(s) {
+      var cells = {};
 
-      var columns = [{
-        key: "series_id",
-        title: "Series ID"
-      }];
+      for (var key in s.labels) {
+        cells[key] = {value : s.labels[key]};
 
-      series.forEach(function(s) {
-        for (var key in s.labels) {
+        if (!column_keys.hasOwnProperty(key)) {
+          column_keys[key] = true;
           columns.push({
             key: key,
             title: key
           });
         }
-      });
+      }
+
+      rows.push({cells: cells});
+    });
+
+    /* initialize table */
+    if (!table) {
+      var page = templateUtil.getTemplate("fnordmetric-metric-table-tpl");
+      elem.appendChild(page);
 
       table = new fTable({columns: columns});
       /* navigate to id detail page */
@@ -44,7 +66,7 @@ FnordMetric.views["fnordmetric.metric.series.list.table"] = function(elem, param
       });
     }
 
-    //table.setRows(fTableUtil.buildRows(data.columns, data.rows));
+    table.setRows(rows);
     table.render(elem.querySelector(".fnordmetric-metric-table .metric-table"));
     renderPagination(series.length);
   };

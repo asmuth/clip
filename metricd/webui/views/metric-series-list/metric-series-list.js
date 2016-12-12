@@ -43,7 +43,7 @@ FnordMetric.views["fnordmetric.metric.series.list"] = function(elem, params) {
   }
 
   var fetchData = function() {
-    var url = params.app.api_base_path + api_path + "?metric_id=test"; //FIXME 
+    var url = params.app.api_base_path + api_path + "?metric_id=" + url_params.metric; //FIXME 
     HTTPUtil.httpGet(url, {}, function(r) {
       if (r.status != 200) {
         params.app.renderError(
@@ -131,7 +131,6 @@ FnordMetric.views["fnordmetric.metric.series.list"] = function(elem, params) {
     }
 
     //render view
-    console.log(view);
     viewport_elem.innerHTML = "";
 
     var current_view = {};
