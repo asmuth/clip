@@ -103,9 +103,9 @@ bool ConfigParser::getToken(
     size_t* tbuf_len) {
   char quote_char = 0;
 
-  //if (has_token_) {
-  //  goto return_token;
-  //}
+  if (has_token_) {
+    goto return_token;
+  }
 
   /* skip whitespace */
   while ((
