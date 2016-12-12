@@ -93,6 +93,23 @@ protected:
   std::map<SeriesIDType, std::shared_ptr<MetricSeries>> series_;
 };
 
+class MetricSeriesCursor {
+public:
+
+  MetricSeriesCursor();
+  MetricSeriesCursor(tsdb::Cursor cursor);
+
+  MetricSeriesCursor(const MetricSeriesCursor& o) = delete;
+  MetricSeriesCursor(MetricSeriesCursor&& o);
+  MetricSeriesCursor& operator=(const MetricSeriesCursor& o) = delete;
+  MetricSeriesCursor& operator=(MetricSeriesCursor&& o);
+
+  bool next(uint64_t* timestamp, uint64_t* value);
+
+protected:
+  tsdb::Cursor cursor_;
+};
+
 class MetricSeriesListCursor {
 public:
 

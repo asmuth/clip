@@ -20,7 +20,7 @@
 namespace fnordmetric {
 class MetricListCursor;
 class MetricSeriesListCursor;
-class MetricCursor;
+class MetricSeriesCursor;
 
 class MetricService {
 public:
@@ -58,7 +58,7 @@ public:
   /**
    * Get a cursor to a metric series
    */
-  MetricCursor getCursor(
+  MetricSeriesCursor getCursor(
       const MetricIDType& metric_id,
       SeriesIDType series_id);
 

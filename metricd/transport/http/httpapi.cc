@@ -201,8 +201,8 @@ void HTTPAPI::performMetricFetchSeries(
   json.addObjectEntry("series");
   json.beginArray();
 
-  for (int i = 0; cursor.isValid(); cursor.next()) {
-    if (i++ > 0) { json.addComma(); }
+  for (int j = 0; cursor.isValid(); cursor.next()) {
+    if (j++ > 0) { json.addComma(); }
     json.beginObject();
 
     json.addObjectEntry("series_id");
@@ -220,6 +220,27 @@ void HTTPAPI::performMetricFetchSeries(
       json.addString(cur->second);
     }
     json.endObject();
+    json.addComma();
+
+    json.addObjectEntry("values");
+    json.beginArray();
+
+    auto data_cursor = metric_service_->getCursor(
+        metric_id,
+        cursor.getSeriesID());
+
+    uint64_t timestamp;
+    uint64_t value;
+    for (size_t i = 0; data_cursor.next(&timestamp, &value); ++i) {
+      if (i++ > 0) { json.addComma(); }
+      json.beginArray();
+      json.addInteger(timestamp);
+      json.addComma();
+      json.addInteger(value);
+      json.endArray();
+    }
+
+    json.endArray();
 
     json.endObject();
   }

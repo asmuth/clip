@@ -236,6 +236,27 @@ size_t MetricSeriesList::getSize() const {
   return series_.size();
 }
 
+
+MetricSeriesCursor::MetricSeriesCursor() :
+    cursor_(tsdb::PageType::UINT64) {}
+
+MetricSeriesCursor::MetricSeriesCursor(
+    tsdb::Cursor cursor) :
+    cursor_(std::move(cursor)) {}
+
+MetricSeriesCursor::MetricSeriesCursor(
+    MetricSeriesCursor&& o) :
+    cursor_(std::move(o.cursor_)) {}
+
+MetricSeriesCursor& MetricSeriesCursor::operator=(MetricSeriesCursor&& o) {
+  cursor_ = std::move(o.cursor_);
+  return *this;
+}
+
+bool MetricSeriesCursor::next(uint64_t* timestamp, uint64_t* value) {
+  return cursor_.next(timestamp, value);
+}
+
 MetricSeriesListCursor::MetricSeriesListCursor() :
     valid_(false),
     series_list_(nullptr) {}
