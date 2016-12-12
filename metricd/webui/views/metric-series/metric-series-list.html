@@ -1,0 +1,73 @@
+<template id="fnordmetric-metric-series-list-tpl">
+  <div class="fnordmetric-metric-series-list">
+    <h1 class="page_header">Metrics &rsaquo; Series &rsaquo; <em class='metric_name'></em></h1>
+
+    <div class="content">
+
+      <div class="sidebar">
+        <div class="filter_list">
+        </div>
+
+        <a class="link add_filter">Add a Filter</a>
+      </div>
+
+      <div class="table_box">
+
+        <div class="controls">
+          <div class="control left">
+            <label>Timerange:</label>
+            <!-- <z-daterangepicker></z-daterangepicker> -->
+          </div>
+
+          <div class="control left">
+            <label>Compare To:</label>
+            <f-dropdown class="inline timerange">
+              <button class="btn"><span class="value">An hour ago</span></button>
+              <ul>
+                <li data-value="3600">An hour ago</li>
+                <li data-value="86400">Yesterday</li>
+                <li data-value="604800">Last week</li>
+                <li data-value="2592000">Last month</li>
+              </ul>
+            </f-dropdown>
+          </div>
+          <div class="control view_control left">
+            <i class="table_view fa fa-table"></i>
+            <i class="timeseries_view fa fa-area-chart"></i>
+          </div>
+
+          <a class="control link api">API</a>
+          <a class="control link download">Download</a>
+          <a class="control link embed">Embed</a>
+        </div>
+
+        <div class="view_content"></div>
+      </div>
+
+      <div class="sidebar right">
+
+      </div>
+
+    </div>
+
+    <z-modal class="filter">
+      <z-modal-box>
+        <z-modal-close-icon></z-modal-close-icon>
+        <div class="inner">
+        </div>
+      </z-modal-box>
+    </z-modal>
+
+  </div>
+</template>
+
+<template id="fnordmetric-metric-table-filter-list-elem-tpl">
+  <div class="filter">
+    <div class="filter_title">
+      <a class="link edit">Edit</a>
+      <h4>Filter</h4>
+    </div>
+    <div class="filter_value"></div>
+  </div>
+</template>
+
