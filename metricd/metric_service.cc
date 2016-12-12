@@ -8,6 +8,7 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
+#include <assert.h>
 #include "metricd/metric_service.h"
 #include "metricd/util/fileutil.h"
 #include "metricd/util/logging.h"
@@ -16,6 +17,7 @@ namespace fnordmetric {
 
 ReturnCode MetricService::startService(
     const std::string& datadir,
+    const ConfigList* config,
     std::unique_ptr<MetricService>* service) {
   auto db_path = FileUtil::joinPaths(datadir, "default.tsdb");
 
@@ -71,6 +73,16 @@ ReturnCode MetricService::startService(
     const auto& metric_id = metadata.metric_id;
     auto metric = metric_map_builder.findMetric(metric_id);
     if (!metric) {
+      auto metric_config = config->getMetricConfig(metric_id);
+      if (!metric_config) {
+        logWarning(
+            "Skipping orphaned series; metric_id=$0; series_id=$1",
+            metric_id,
+            series_id);
+
+        continue;
+      }
+
       metric = new Metric(metric_id);
       metric_map_builder.addMetric(metric_id, std::unique_ptr<Metric>(metric));
     }
@@ -97,24 +109,21 @@ MetricService::MetricService(
   metric_map_.updateMetricMap(std::move(metric_map));
 }
 
-void MetricService::configureMetric(
-    const MetricIDType& metric_id,
-    const MetricConfig& config) {
-  std::unique_lock<std::mutex> lk(metric_map_mutex_);
-
-  auto metric_map = metric_map_.getMetricMap();
-  auto metric = metric_map->findMetric(metric_id);
-  if (metric) {
-    metric->setConfig(config);
-    return;
-  }
-
-  MetricMapBuilder metric_map_builder(metric_map.get());
-  metric = new Metric(metric_id);
-  metric->setConfig(config);
-  metric_map_builder.addMetric(metric_id, std::unique_ptr<Metric>(metric));
-  metric_map_.updateMetricMap(metric_map_builder.getMetricMap());
-}
+//void MetricService::configureMetric(
+//    const MetricIDType& metric_id,
+//    const MetricConfig& config) {
+//  std::unique_lock<std::mutex> lk(metric_map_mutex_);
+//
+//  auto metric_map = metric_map_.getMetricMap();
+//  auto metric = metric_map->findMetric(metric_id);
+//  assert(!metric);
+//
+//  MetricMapBuilder metric_map_builder(metric_map.get());
+//  metric = new Metric(metric_id);
+//  metric->setConfig(config);
+//  metric_map_builder.addMetric(metric_id, std::unique_ptr<Metric>(metric));
+//  metric_map_.updateMetricMap(metric_map_builder.getMetricMap());
+//}
 
 MetricListCursor MetricService::listMetrics() {
   auto metric_map = metric_map_.getMetricMap();
@@ -157,6 +166,7 @@ ReturnCode MetricService::insertSample(
       tsdb_.get(),
       &id_provider_,
       metric_id,
+      metric->getConfig(),
       sample.getLabels(),
       &series);
 
@@ -175,12 +185,22 @@ ReturnCode MetricService::insertSample(
 MetricSeriesCursor MetricService::getCursor(
     const MetricIDType& metric_id,
     SeriesIDType series_id) {
-  tsdb::Cursor tsdb_cursor(tsdb::PageType::UINT64);
+  auto metric_map = metric_map_.getMetricMap();
+  auto metric = metric_map->findMetric(metric_id);
+  if (!metric) {
+    //return ReturnCode::error("ENOTFOUND", "metric not found");
+    return MetricSeriesCursor(MetricDataType::UINT64);
+  }
+
+  tsdb::Cursor tsdb_cursor(
+      getMetricTSDBPageType(metric->getConfig().data_type));
 
   if (tsdb_->getCursor(series_id, &tsdb_cursor)) {
-    return MetricSeriesCursor(std::move(tsdb_cursor));
+    return MetricSeriesCursor(
+        metric->getConfig().data_type,
+        std::move(tsdb_cursor));
   } else {
-    return MetricSeriesCursor();
+    return MetricSeriesCursor(metric->getConfig().data_type);
   }
 }
 

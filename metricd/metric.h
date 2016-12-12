@@ -28,8 +28,15 @@ class SeriesIDProvider;
 using MetricIDType = std::string;
 using SeriesIDType = uint64_t;
 
+enum class MetricDataType {
+  UINT64,
+  INT64,
+  FLOAT64
+};
+
 struct MetricConfig {
   MetricConfig();
+  MetricDataType data_type;
   bool is_valid;
 };
 
@@ -77,6 +84,7 @@ public:
       tsdb::TSDB* tsdb,
       SeriesIDProvider* series_id_provider,
       const std::string& metric_id,
+      const MetricConfig& config,
       const LabelSet& labels,
       std::shared_ptr<MetricSeries>* series);
 
@@ -96,8 +104,8 @@ protected:
 class MetricSeriesCursor {
 public:
 
-  MetricSeriesCursor();
-  MetricSeriesCursor(tsdb::Cursor cursor);
+  MetricSeriesCursor(MetricDataType data_type);
+  MetricSeriesCursor(MetricDataType data_type, tsdb::Cursor cursor);
 
   MetricSeriesCursor(const MetricSeriesCursor& o) = delete;
   MetricSeriesCursor(MetricSeriesCursor&& o);
@@ -154,6 +162,7 @@ public:
   size_t getTotalBytes() const;
   TimestampType getLastInsertTime();
 
+  const MetricConfig& getConfig() const;
   void setConfig(MetricConfig config);
 
   MetricSeriesList* getSeriesList();
@@ -161,8 +170,9 @@ public:
 protected:
   MetricSeriesList series_;
   MetricConfig config_;
-  std::mutex config_mutex_;
 };
+
+tsdb::PageType getMetricTSDBPageType(MetricDataType t);
 
 } // namespace fnordmetric
 

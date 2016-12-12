@@ -14,6 +14,7 @@
 #include <string>
 #include "metricd/metric_map.h"
 #include "metricd/metric.h"
+#include "metricd/config/config_list.h"
 #include "metricd/util/return_code.h"
 #include "libtsdb/tsdb.h"
 
@@ -27,14 +28,8 @@ public:
 
   static ReturnCode startService(
       const std::string& datadir,
+      const ConfigList* config,
       std::unique_ptr<MetricService>* service);
-
-  /**
-   * Update the configuration for a metric
-   */
-  void configureMetric(
-      const MetricIDType& metric_id,
-      const MetricConfig& config);
 
   /**
    * List all metrics
@@ -89,7 +84,6 @@ protected:
 
   std::unique_ptr<tsdb::TSDB> tsdb_;
   VersionedMetricMap metric_map_;
-  std::mutex metric_map_mutex_;
   SeriesIDProvider id_provider_;
   //tsdb::TSDB tsdb_;
 };

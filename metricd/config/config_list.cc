@@ -16,6 +16,15 @@ const std::map<MetricIDType, MetricConfig>& ConfigList::getMetricConfigs()
   return metric_configs_;
 }
 
+const MetricConfig* ConfigList::getMetricConfig(MetricIDType metric_id) const {
+  auto metric_config = metric_configs_.find(metric_id);
+  if (metric_config == metric_configs_.end()) {
+    return nullptr;
+  } else {
+    return &metric_config->second;
+  }
+}
+
 void ConfigList::addMetricConfig(MetricIDType metric_id, MetricConfig config) {
   metric_configs_.emplace(metric_id, std::move(config));
 }

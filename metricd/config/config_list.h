@@ -21,6 +21,7 @@ class ConfigList {
 public:
 
   const std::map<MetricIDType, MetricConfig>& getMetricConfigs() const;
+  const MetricConfig* getMetricConfig(MetricIDType metric_id) const;
   void addMetricConfig(MetricIDType metric_id, MetricConfig config);
 
 protected:
