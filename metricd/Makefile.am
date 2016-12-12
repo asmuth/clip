@@ -112,6 +112,9 @@ metricd_common_sources_ = \
     util/autoref_impl.h \
     util/autoref.h \
     util/autoref.cc \
+    query/data_frame.h \
+    query/data_frame.cc \
+    query/data_frame_impl.h \
     transport/http/httpapi.h \
     transport/http/httpapi.cc \
     transport/http/wakeup.h \
