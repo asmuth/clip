@@ -1,12 +1,8 @@
 FnordMetric.views["fnordmetric.metric.series.list"] = function(elem, params) {
   'use strict';
 
-  var api_url = "/list_series";
+  var api_url = "/fetch_series";
   var default_columns = [
-    {
-      key: "sparkline",
-      title: "Sparkline"
-    },
     {
       key: "min",
       title: "Min"
@@ -14,8 +10,14 @@ FnordMetric.views["fnordmetric.metric.series.list"] = function(elem, params) {
     {
       key: "max",
       title: "Max"
+    },
+    {
+      key: "sparkline",
+      title: ""
     }
   ];
+
+
 
   var table;
   var url_params;
@@ -85,7 +87,34 @@ FnordMetric.views["fnordmetric.metric.series.list"] = function(elem, params) {
     var column_keys = {};
     var rows = [];
     series.forEach(function(s) {
-      var cells = {};
+      var cells = {
+        sparkline: {
+          value_html: "<z-sparkline height='20px' width='100px' data-sparkline='{{values}}'></sparkline>"
+        },
+        max: {
+          value: null
+        },
+        min: {
+          value: null
+        }
+      }
+
+      var sparkline_values = [];
+      s.values.forEach(function(v) {
+        sparkline_values.push(v[1]);
+
+        if (!cells.max.value || cells.max.value < v[1]) {
+          cells.max.value = v[1];
+        }
+
+        if (!cells.min.value || cells.min.value > v[1]) {
+          cells.min.value = v[1];
+        }
+      });
+
+      cells.sparkline.value_html = cells.sparkline.value_html.replace(
+          "{{values}}",
+          sparkline_values.join(","));
 
       for (var key in s.labels) {
         cells[key] = {value : s.labels[key]};

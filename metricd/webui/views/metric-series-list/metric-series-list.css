@@ -1,5 +1,9 @@
-.fnordmetric-metric-series-list .hidden {
-  display: none;
+.fnordmetric-metric-series-list table.f-table {
+  table-layout: fixed
+}
+
+.fnordmetric-metric-series-list table.f-table thead th[data-key='sparkline'] {
+  width: 130px;
 }
 
 /** controls **/
