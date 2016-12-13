@@ -223,13 +223,16 @@ button.btn:focus {
   display: inline-block;
 }
 
-input {
-  width: 200px;
-  height: 23px;
-  padding: 2px;
-  font-size: 14px;
+input[type='text'] {
+  line-height: 1.2142em;
+  padding: 0.67861em 1em;
+  height: auto;
+  border-radius: 0.2857rem;
+  -webkit-tap-highlight-color: rgba(255,255,255,0);
+  outline: none;
+  border: 1px solid #bbb;
+  box-shadow: inset 1px 1px 1px rgba(0,0,0,.1);
 }
-
 
 .viewport {
   min-width: 900px;

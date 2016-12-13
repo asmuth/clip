@@ -1,0 +1,39 @@
+/** input **/
+f-timerange-picker {
+  display: inline-block;
+  line-height: inherit;
+}
+
+f-timerange-picker input {
+  width: 230px;
+}
+
+f-timerange-picker input:hover {
+  cursor: pointer;
+}
+
+f-timerange-picker .arrow_left {
+  vertical-align: middle;
+  display: inline-block;
+  width: 0;
+  height: 0;
+  border-top: 9px solid transparent;
+  border-bottom: 9px solid transparent;
+  border-right: 9px solid #999;
+}
+
+f-timerange-picker .arrow_right {
+  vertical-align: middle;
+  display: inline-block;
+  width: 0;
+  height: 0;
+  border-top: 9px solid transparent;
+  border-bottom: 9px solid transparent;
+  border-left: 9px solid #999;
+}
+
+f-timerange-picker .arrow_left:hover,
+f-timerange-picker .arrow_right:hover {
+  cursor: pointer;
+}
+

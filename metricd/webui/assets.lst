@@ -3,6 +3,7 @@ app.js
 util/template_util.js
 util/f-table_util.js
 util/url_util.js
+util/date_util.js
 util/dom_util.js
 util/http.js
 widgets/f-table/f-table.js
@@ -11,6 +12,9 @@ widgets/sparkline/z-sparkline.html
 widgets/sparkline/z-sparkline.css
 widgets/dropdown/dropdown.js
 widgets/dropdown/dropdown.css
+widgets/f-timerange-picker/f-timerange-picker.js
+widgets/f-timerange-picker/f-timerange-picker.html
+widgets/f-timerange-picker/f-timerange-picker.css
 views/error/error.html
 views/error/error.js
 views/metric-list/metric-list.css
