@@ -39,7 +39,23 @@ ReturnCode MetricService::startService(
     }
   }
 
-  /* load metrics */
+  /* load metric configs */
+  MetricMapBuilder metric_map_builder(nullptr);
+  for (const auto& mc : config->getMetricConfigs()) {
+    auto metric = metric_map_builder.findMetric(mc.first);
+    if (metric) {
+      return ReturnCode::error(
+          "EARG",
+          StringUtil::format("duplicate metric for: $0", mc.first));
+    }
+
+    logDebug("Opening metric; metric_id=$0", mc.first);
+
+    metric = new Metric(mc.first);
+    metric_map_builder.addMetric(mc.first, std::unique_ptr<Metric>(metric));
+  }
+
+  /* load series */
   std::set<uint64_t> series_ids;
   if (!tsdb->listSeries(&series_ids)) {
     return ReturnCode::error("ERUNTIME", "error while opening database");
@@ -52,7 +68,6 @@ ReturnCode MetricService::startService(
     }
   }
 
-  MetricMapBuilder metric_map_builder(nullptr);
   for (const auto& series_id : series_ids) {
     std::string metadata_buf;
     if (!tsdb->getSeriesMetadata(series_id, &metadata_buf)) {
@@ -65,27 +80,21 @@ ReturnCode MetricService::startService(
       return ReturnCode::error("ERUNTIME", "corrupt database");
     }
 
-    logDebug(
-        "Opening timeseries; metric_id=$0; series_id=$1",
-        metadata.metric_id,
-        series_id);
-
     const auto& metric_id = metadata.metric_id;
     auto metric = metric_map_builder.findMetric(metric_id);
     if (!metric) {
-      auto metric_config = config->getMetricConfig(metric_id);
-      if (!metric_config) {
-        logWarning(
-            "Skipping orphaned series; metric_id=$0; series_id=$1",
-            metric_id,
-            series_id);
+      logWarning(
+          "Skipping orphaned series; metric_id=$0; series_id=$1",
+          metric_id,
+          series_id);
 
-        continue;
-      }
-
-      metric = new Metric(metric_id);
-      metric_map_builder.addMetric(metric_id, std::unique_ptr<Metric>(metric));
+      continue;
     }
+
+    logDebug(
+        "Opening series; metric_id=$0; series_id=$1",
+        metadata.metric_id,
+        series_id);
 
     metric->getSeriesList()->addSeries(series_id, metadata.labels);
   }
