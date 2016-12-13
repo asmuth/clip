@@ -3,21 +3,23 @@ FnordMetric.views["fnordmetric.metric.series.list"] = function(elem, params) {
 
   var api_url = "/fetch_series";
   var default_columns = [
-    {
-      key: "min",
-      title: "Min"
-    },
-    {
-      key: "max",
-      title: "Max"
-    },
+  //  {
+  //    key: "min",
+  //    title: "Min"
+  //  },
+  //  {
+  //    key: "max",
+  //    title: "Max"
+  //  },
     {
       key: "sparkline",
       title: ""
     }
   ];
 
-
+  var sparkline_html = ["<z-sparkline height='40px' width='220px' ",
+    "data-sparkline='{{values}}'></z-sparkline> ",
+    "<span>{{latest}}</span><span>{{unit}}</span>"].join("");
 
   var table;
   var url_params;
@@ -92,32 +94,34 @@ FnordMetric.views["fnordmetric.metric.series.list"] = function(elem, params) {
           value: s.series_id
         },
         sparkline: {
-          value_html: "<z-sparkline height='20px' width='100px' data-sparkline='{{values}}'></sparkline>"
-        },
-        max: {
-          value: null
-        },
-        min: {
-          value: null
+          value_html: sparkline_html
         }
-      }
+      };
 
       var sparkline_values = [];
       s.values.forEach(function(v) {
         sparkline_values.push(v[1]);
 
-        if (!cells.max.value || cells.max.value < v[1]) {
-          cells.max.value = v[1];
-        }
+        //if (!cells.max.value || cells.max.value < v[1]) {
+        //  cells.max.value = v[1];
+        //}
 
-        if (!cells.min.value || cells.min.value > v[1]) {
-          cells.min.value = v[1];
-        }
+        //if (!cells.min.value || cells.min.value > v[1]) {
+        //  cells.min.value = v[1];
+        //}
       });
 
       cells.sparkline.value_html = cells.sparkline.value_html.replace(
           "{{values}}",
           sparkline_values.join(","));
+
+      cells.sparkline.value_html = cells.sparkline.value_html.replace(
+          "{{latest}}",
+          s.values[s.values.length - 1][1]); //FIXME use value returned by api
+
+      cells.sparkline.value_html = cells.sparkline.value_html.replace(
+          "{{unit}}",
+          s.unit || "&nbsp;MB"); //FIXME use value returned by api
 
       for (var key in s.labels) {
         cells[key] = {value : s.labels[key]};

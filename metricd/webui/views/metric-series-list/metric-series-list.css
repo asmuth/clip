@@ -2,9 +2,19 @@
   table-layout: fixed
 }
 
-.fnordmetric-metric-series-list table.f-table thead th[data-key='sparkline'] {
-  width: 130px;
+/**.fnordmetric-metric-series-list table.f-table thead th[data-key='sparkline'] {
+  width: 240px;
 }
+**/
+.fnordmetric-metric-series-list table.f-table tbody td {
+  line-height: 40px;
+}
+
+.fnordmetric-metric-series-list table.f-table tbody td[data-key='sparkline'] z-sparkline {
+  margin-right: 10px;
+
+}
+
 
 /** controls **/
 .fnordmetric-metric-series-list .controls {
