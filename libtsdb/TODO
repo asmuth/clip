@@ -1,3 +1,4 @@
+- [ ] bug: create tsdb without commit, then re-open fails
 - [ ] partition split in insert
 - [ ] TSDB::listSeries
 - [ ] Cursor::seek
