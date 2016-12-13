@@ -364,10 +364,7 @@ uint64_t alignTime(uint64_t timestamp, uint64_t window, uint64_t align = 0) {
   }
 
   int64_t timestamp_base = int64_t(timestamp) - int64_t(align);
-  int64_t timestamp_aligned =
-      (timestamp_base / int64_t(window)) * int64_t(window) + int64_t(align);
-
-  return uint64_t(timestamp_aligned);
+  return (timestamp_base / int64_t(window)) * int64_t(window) + int64_t(align);
 }
 
 tsdb::PageType getMetricTSDBPageType(MetricDataType t) {
