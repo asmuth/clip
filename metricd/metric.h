@@ -172,6 +172,8 @@ protected:
   MetricConfig config_;
 };
 
+uint64_t alignTime(uint64_t timestamp, uint64_t window, uint64_t align);
+
 tsdb::PageType getMetricTSDBPageType(MetricDataType t);
 
 } // namespace fnordmetric
