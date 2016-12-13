@@ -1,19 +1,5 @@
 FnordMetric.views["fnordmetric.metric.series.list.table"] = function(elem, params) {
   var table;
-  var default_columns = [
-    {
-      key: "sparkline",
-      title: "Sparkline"
-    },
-    {
-      key: "min",
-      title: "Min"
-    },
-    {
-      key: "max",
-      title: "Max"
-    }
-  ];
 
   this.initialize = function() {
     var results = params.data;

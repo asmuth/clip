@@ -9,6 +9,8 @@ widgets/f-table/f-table.js
 widgets/sparkline/z-sparkline.js
 widgets/sparkline/z-sparkline.html
 widgets/sparkline/z-sparkline.css
+widgets/dropdown/dropdown.js
+widgets/dropdown/dropdown.css
 views/error/error.html
 views/error/error.js
 views/metric-list/metric-list.css
