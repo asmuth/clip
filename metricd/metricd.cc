@@ -260,15 +260,7 @@ int main(int argc, const char** argv) {
     }
   }
 
-  /* start metric service */
-  std::unique_ptr<MetricService> metric_service;
-  if (rc.isSuccess()) {
-    rc = MetricService::startService(
-        flags.getString("datadir"),
-        &metric_service);
-  }
-
-  /* parse config */
+  /* load config */
   ConfigList config;
   if (rc.isSuccess()) {
     auto config_file = FileUtil::read(flags.getString("config"));
@@ -279,11 +271,13 @@ int main(int argc, const char** argv) {
     rc = config_parser.parse(&config);
   }
 
-  /* load config */
+  /* start metric service */
+  std::unique_ptr<MetricService> metric_service;
   if (rc.isSuccess()) {
-    for (const auto& mc : config.getMetricConfigs()) {
-      metric_service->configureMetric(mc.first, mc.second);
-    }
+    rc = MetricService::startService(
+        flags.getString("datadir"),
+        &config,
+        &metric_service);
   }
 
   /* start statsd service */

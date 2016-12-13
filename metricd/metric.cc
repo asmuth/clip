@@ -16,7 +16,9 @@
 
 namespace fnordmetric {
 
-MetricConfig::MetricConfig() : is_valid(false) {}
+MetricConfig::MetricConfig() :
+   data_type(MetricDataType::UINT64),
+   is_valid(false) {}
 
 MetricSeries::MetricSeries(
     SeriesIDType series_id,
@@ -165,6 +167,7 @@ ReturnCode MetricSeriesList::findOrCreateSeries(
     tsdb::TSDB* tsdb,
     SeriesIDProvider* series_id_provider,
     const std::string& metric_id,
+    const MetricConfig& config,
     const LabelSet& labels,
     std::shared_ptr<MetricSeries>* series) {
   std::unique_lock<std::mutex> lk(series_mutex_);
@@ -194,10 +197,9 @@ ReturnCode MetricSeriesList::findOrCreateSeries(
   metadata.encode(&metadata_buf);
 
   /* create the new  series in the tsdb file */
-  auto tsdb_page_type = tsdb::PageType::UINT64; // FIXME
   auto create_rc = tsdb->createSeries(
       new_series_id,
-      tsdb_page_type,
+      getMetricTSDBPageType(config.data_type),
       metadata_buf.str());
 
   if (!create_rc) {
@@ -236,11 +238,12 @@ size_t MetricSeriesList::getSize() const {
   return series_.size();
 }
 
-
-MetricSeriesCursor::MetricSeriesCursor() :
-    cursor_(tsdb::PageType::UINT64) {}
+MetricSeriesCursor::MetricSeriesCursor(
+    MetricDataType data_type) :
+    cursor_(getMetricTSDBPageType(data_type)) {}
 
 MetricSeriesCursor::MetricSeriesCursor(
+    MetricDataType data_type,
     tsdb::Cursor cursor) :
     cursor_(std::move(cursor)) {}
 
@@ -343,12 +346,22 @@ Metric::Metric(
     const std::string& key) {}
 
 void Metric::setConfig(MetricConfig config) {
-  std::unique_lock<std::mutex> lk(config_mutex_);
   config_ = config;
+}
+
+const MetricConfig& Metric::getConfig() const {
+  return config_;
 }
 
 MetricSeriesList* Metric::getSeriesList() {
   return &series_;
+}
+
+tsdb::PageType getMetricTSDBPageType(MetricDataType t) {
+  switch (t) {
+    case MetricDataType::UINT64: return tsdb::PageType::UINT64;
+    default: assert(false); // invalid data tyoe
+  }
 }
 
 } // namespace fnordmetric
