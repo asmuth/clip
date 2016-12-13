@@ -17,3 +17,7 @@ views/metric-list/metric-list.js
 views/metric-series-list/metric-series-list.css
 views/metric-series-list/metric-series-list.html
 views/metric-series-list/metric-series-list.js
+views/metric-serie/metric-serie.css
+views/metric-serie/metric-serie.html
+views/metric-serie/metric-serie.js
+

@@ -88,6 +88,9 @@ FnordMetric.views["fnordmetric.metric.series.list"] = function(elem, params) {
     var rows = [];
     series.forEach(function(s) {
       var cells = {
+        series_id: {
+          value: s.series_id
+        },
         sparkline: {
           value_html: "<z-sparkline height='20px' width='100px' data-sparkline='{{values}}'></sparkline>"
         },
@@ -136,7 +139,8 @@ FnordMetric.views["fnordmetric.metric.series.list"] = function(elem, params) {
       table = new fTable({columns: columns.concat(default_columns)});
       /* navigate to id detail page */
       table.onClick(function(r) {
-        params.app.navigateTo(params.route.args[0] + "/" + r.cells.sensor.value);
+        params.app.navigateTo(
+            params.route.args[0] + "/" + r.cells.series_id.value);
       });
 
       /* sort callback */

@@ -1,4 +1,4 @@
-FnordMetric.views["fnordmetric.metric.series.list"] = function(elem, params) {
+FnordMetric.views["fnordmetric.metric.serie"] = function(elem, params) {
   'use strict';
 
   var api_path = "/list_series";
@@ -7,8 +7,9 @@ FnordMetric.views["fnordmetric.metric.series.list"] = function(elem, params) {
   var view_cfg;
 
   this.initialize = function() {
+    console.log("metric serie view");
     url_params = getParams(params.path);
-    var page = templateUtil.getTemplate("fnordmetric-metric-series-list-tpl");
+    var page = templateUtil.getTemplate("fnordmetric-metric-serie-tpl");
 
     DomUtil.handleLinks(page, params.app.navigateTo);
     DomUtil.replaceContent(elem, page);
