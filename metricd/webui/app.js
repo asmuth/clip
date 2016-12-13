@@ -96,7 +96,7 @@ this["FnordMetric"] = (function() {
     applyNavigationChange(path);
   }
 
-  var applyNavigationChange = function(path) {
+  function applyNavigationChange(path) {
     if (path == current_path) {
       return;
     }
