@@ -73,7 +73,7 @@ f-timerange-picker f-popup-window .inner ul button.btn {
   line-height: 2.8em;
 }
 
-f-timerange-picker f-popup-window .inner .footer button.btn {
+f-timerange-picker f-popup-window .footer button.btn {
   float: right;
 }
 

@@ -30,6 +30,7 @@ FnordMetric.views["fnordmetric.metric.series.list"] = function(elem, params) {
 
     url_params = getParams(params.path);
 
+    wacthTimeRangePicker();
     renderHeader();
     fetchMetricSeriesList();
   };
@@ -55,6 +56,24 @@ FnordMetric.views["fnordmetric.metric.series.list"] = function(elem, params) {
     }
 
     return p;
+  }
+
+  var wacthTimeRangePicker = function() {
+    var picker = elem.querySelector(
+        ".fnordmetric-metric-series-list f-timerange-picker");
+
+    picker.addEventListener("submit", function(e) {
+      updateQueryStr(this.getTimerange());
+    }, false);
+  }
+
+  var updateQueryStr = function(query_params) {
+    var url = params.path;
+    for (var k in query_params) {
+      url = URLUtil.addOrModifyParam(url, k, query_params[k]);
+    }
+
+    params.app.navigateTo(url);
   }
 
   var renderHeader = function() {

@@ -184,7 +184,8 @@ body {
   border-right: 1px solid #2e3135;
 }
 
-button.btn {
+button.btn,
+input[type='submit'].btn {
   line-height: 2.2em;
   background: #fff;
   border: 1px solid transparent;
@@ -201,10 +202,14 @@ button.btn {
   font-weight: 400;
 }
 
+input[type='submit'].btn:hover,
 button.btn:hover {
   background: #e6e6e6;
 }
 
+input[type='submit'].btn:active,
+input[type='submit'].btn:focus,
+input[type='submit'].btn.active,
 button.btn:active,
 button.btn.active,
 button.btn:focus {

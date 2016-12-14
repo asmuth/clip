@@ -35,6 +35,12 @@ TimeRangePickerUtil.formatDateTime = function(date) {
 var TimeRangePickerPopup = function(timerange, popup) {
   'use strict';
 
+  var submit_callbacks = [];
+
+  this.setSubmitCallback = function(c) {
+    submit_callbacks.push(c);
+  }
+
   this.toggleVisibility = function() {
     if (popup.isVisible()) {
       popup.close();
@@ -45,9 +51,11 @@ var TimeRangePickerPopup = function(timerange, popup) {
     popup.show();
   }
 
+/********************************* private **********************************/
+
   var render = function() {
     var tpl = templateUtil.getTemplate("f-timerange-picker-popup-tpl");
-    var inner = popup.querySelector("f-popup-window");
+    var inner = popup.querySelector("f-popup-window .inner");
     DomUtil.clearChildren(inner);
     inner.appendChild(tpl.cloneNode(true));
 
@@ -68,10 +76,10 @@ var TimeRangePickerPopup = function(timerange, popup) {
     if (!elem) {
       range = 'custom';
       enableCustomInput();
-      elem = popup.querySelector("ul.timerange button[data-value='custom']");
+      elem = popup.querySelector("ul.timeranges button[data-value='custom']");
     }
 
-    updateInputValues(range);
+    updateInput(range);
     elem.classList.add("active");
   }
 
@@ -80,27 +88,50 @@ var TimeRangePickerPopup = function(timerange, popup) {
     for (var i = 0; i < buttons.length; i++) {
 
       buttons[i].addEventListener("click", function(e) {
+        e.preventDefault();
+
         popup.querySelector("ul.timeranges li button.active").
             classList.remove("active");
         this.classList.add("active");
 
         var selected_timerange = this.getAttribute('data-value');
-        updateInputValues(selected_timerange);
+        updateInput(selected_timerange);
 
-        if (selected_timerange == 'custom') {
-          enableCustomInput();
-        }
       }, false);
 
     }
   }
 
+  var updateInput = function(selected_timerange) {
+    if (selected_timerange == 'custom') {
+      enableCustomInput();
+    } else {
+      disableCustomInput();
+    }
+
+    updateInputValues(selected_timerange);
+  }
+
   var enableCustomInput = function() {
     var elem = popup.querySelector(".col.custom");
-    // TODO set active class
+    elem.classList.add("active");
 
     var start_input = elem.querySelector("input[name='start']");
+    start_input.removeAttribute('readonly');
     start_input.focus();
+
+    elem.querySelector("input[name='end']").removeAttribute('readonly');
+  }
+
+  var disableCustomInput = function() {
+    var elem = popup.querySelector(".col.custom");
+    elem.classList.remove("active");
+
+    elem.querySelector("input[name='start']").
+        setAttribute('readonly', true);
+
+    elem.querySelector("input[name='end']").
+        setAttribute('readonly', true);
   }
 
   var updateInputValues = function(selected_timerange) {
@@ -115,12 +146,43 @@ var TimeRangePickerPopup = function(timerange, popup) {
       start = end - parseInt(selected_timerange);
     }
 
-    popup.querySelector("input[name='start']").
+    popup.querySelector(".custom input[name='start']").
         value = TimeRangePickerUtil.formatDateTime(start);
 
-    popup.querySelector("input[name='end']").
+    popup.querySelector(".custom input[name='end']").
         value = TimeRangePickerUtil.formatDateTime(end);
   }
+
+  var submit = function() {
+    var range = popup.querySelector("ul.timeranges li button.active").
+        getAttribute('data-value');
+
+    var start;
+    var end;
+    if (range == 'custom') {
+      start = new Date(popup.querySelector("input[name='start']").value).getTime();
+      end = new Date(popup.querySelector("input[name='end']").value).getTime();
+
+    } else {
+      end = Date.now();
+      start = end - parseInt(range);
+    }
+
+    submit_callbacks.forEach(function(c) {
+      c({
+        start: start,
+        end: end
+      });
+    });
+
+    popup.close();
+  }
+
+  /** initialize **/
+  popup.querySelector("button.cancel").addEventListener("click", function() {
+    popup.close();
+  }, false);
+  popup.querySelector("button.apply").addEventListener("click", submit, false);
 }
 
 var TimeRangePickerComponent = function() {
@@ -140,6 +202,9 @@ var TimeRangePickerComponent = function() {
 
     this_ = this;
     popup = new TimeRangePickerPopup(timerange, this.querySelector("f-popup"));
+    popup.setSubmitCallback(function() {
+      fireSubmitEvent();
+    });
 
     //FIXME better naming
     watchTimerangeMover();
@@ -165,7 +230,7 @@ var TimeRangePickerComponent = function() {
   this.getTimerange = function() {
     return {
       start: timerange.start,
-      end: timerang.end
+      end: timerange.end
     }
   }
 
@@ -202,6 +267,10 @@ var TimeRangePickerComponent = function() {
         TimeRangePickerUtil.formatDateTime(timerange.end);
   }
 
+  var fireSubmitEvent = function() {
+    var ev = new CustomEvent('submit');
+    this_.dispatchEvent(ev);
+  }
 }
 
 
