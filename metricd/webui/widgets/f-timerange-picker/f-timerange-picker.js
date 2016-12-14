@@ -252,12 +252,12 @@ var TimeRangePickerComponent = function() {
     }, false);
   }
 
-
   var moveTimerange = function(range) {
     timerange.start += range;
     timerange.end += range;
 
     updateInputValue();
+    fireSubmitEvent();
   }
 
   var updateInputValue = function() {
