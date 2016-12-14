@@ -3,5 +3,40 @@
   <i class="arrow_left"></i>
   <input type="text" readonly />
   <i class="arrow_right"></i>
+
+  <f-popup class="fnordmetric-embed-popup">
+    <f-popup-background>
+      <f-popup-window>
+      </f-popup-window>
+    </f-popup-background>
+  </f-popup>
+
+</template>
+
+<template id="f-timerange-picker-popup-tpl">
+  <div class="inner">
+    <div class="col custom">
+      <input type='text' name='start' placeholder='yy-mm-dd hh:mm' readonly />
+      &mdash;
+      <input type='text' name='end' placeholder='yy-mm-dd hh:mm' readonly />
+    </div>
+
+    <div class="col predefined">
+      <ul class="timeranges">
+        <li><button data-value='300000' class='btn'>Last 5 minutes</button></li>
+        <li><button data-value='900000'class='btn'>Last 15 minues</button></li>
+        <li><button data-value='1800000' class='btn'>Last 30 minues</button></li>
+        <li><button data-value='3600000' class='btn'>Last 1 hour</button></li>
+        <li><button data-value='43200000' class='btn'>Last 12 hours</button></li>
+        <li><button data-value='86400000' class='btn'>Last 24 hours</button></li>
+        <li><button data-value='custom' class='btn'>Custom</button></li>
+      </ul>
+    </div>
+
+    <div class="footer">
+      <button class="cancel btn">Cancel</button>
+      <button class="apply btn">Apply</button>
+    </div>
+  </div>
 </template>
 

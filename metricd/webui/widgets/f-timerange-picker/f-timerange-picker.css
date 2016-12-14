@@ -12,28 +12,68 @@ f-timerange-picker input:hover {
   cursor: pointer;
 }
 
-f-timerange-picker .arrow_left {
+f-timerange-picker::selection,
+f-timerange-picker input::selection {
+  background: transparent;
+}
+
+f-timerange-picker .arrow_left,
+f-timerange-picker .arrow_right {
+  padding: 0 5px;
   vertical-align: middle;
   display: inline-block;
   width: 0;
   height: 0;
   border-top: 9px solid transparent;
   border-bottom: 9px solid transparent;
+}
+
+f-timerange-picker .arrow_left {
   border-right: 9px solid #999;
 }
 
 f-timerange-picker .arrow_right {
-  vertical-align: middle;
-  display: inline-block;
-  width: 0;
-  height: 0;
-  border-top: 9px solid transparent;
-  border-bottom: 9px solid transparent;
   border-left: 9px solid #999;
 }
 
 f-timerange-picker .arrow_left:hover,
 f-timerange-picker .arrow_right:hover {
   cursor: pointer;
+}
+
+f-timerange-picker f-popup-window .inner .col {
+  width: 50%;
+  float: left;
+}
+
+f-timerange-picker f-popup-window .inner .col.custom {
+  opacity: 0.5;
+}
+
+f-timerange-picker f-popup-window .inner .col.custom input:hover {
+  cursor: initial;
+}
+
+f-timerange-picker f-popup-window .inner .col.custom.active {
+  opacity: 1;
+}
+
+f-timerange-picker f-popup-window .inner .col.custom.active input:hover {
+  cursor: pointer;
+}
+
+f-timerange-picker f-popup-window .inner ul {
+  list-style-type: none;
+  margin: 0;
+}
+
+f-timerange-picker f-popup-window .inner ul button.btn {
+  width: 160px;
+  text-align: left;
+  line-height: 2.8em;
+}
+
+f-timerange-picker f-popup-window .inner .footer button.btn {
+  float: right;
 }
 

@@ -206,6 +206,7 @@ button.btn:hover {
 }
 
 button.btn:active,
+button.btn.active,
 button.btn:focus {
   border-color: #adadad;
   outline: none;
