@@ -45,14 +45,15 @@ FnordMetric.views["fnordmetric.metric.series.list"] = function(elem, params) {
     var p = {};
 
     p.metric = params.route.args[1];
-    var cfg_param = URLUtil.getParamValue(path, "cfg");
-    if (cfg_param) {
-      p.config = cfg_param;
+
+    var start_param = URLUtil.getParamValue(path, "start");
+    if (start_param) {
+      p.start = parseInt(start_param);
     }
 
-    var offset_param = URLUtil.getParamValue(path, "offset");
-    if (offset_param) {
-      p.offset = offset_param;
+    var end_param = URLUtil.getParamValue(path, "end");
+    if (end_param) {
+      p.end = parseInt(end_param);
     }
 
     return p;
@@ -61,6 +62,10 @@ FnordMetric.views["fnordmetric.metric.series.list"] = function(elem, params) {
   var wacthTimeRangePicker = function() {
     var picker = elem.querySelector(
         ".fnordmetric-metric-series-list f-timerange-picker");
+
+    if (url_params.start && url_params.end) {
+      picker.setTimerange(url_params.start, url_params.end);
+    }
 
     picker.addEventListener("submit", function(e) {
       updateQueryStr(this.getTimerange());

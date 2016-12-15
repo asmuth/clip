@@ -202,14 +202,16 @@ var TimeRangePickerComponent = function() {
 
     this_ = this;
     popup = new TimeRangePickerPopup(timerange, this.querySelector("f-popup"));
-    popup.setSubmitCallback(function() {
+    popup.setSubmitCallback(function(new_timerange) {
+      console.log(c);
+      timerange.start = new_timerange.start;
+      timerange.end = new_timerange.end;
       fireSubmitEvent();
     });
 
     //FIXME better naming
     watchTimerangeMover();
     watchInputClick();
-
 
     updateInputValue();
   }
@@ -222,6 +224,8 @@ var TimeRangePickerComponent = function() {
   this.setTimerange = function(start, end) {
     timerange.start = start;
     timerange.end = end;
+
+    updateInputValue();
   }
 
   /**
