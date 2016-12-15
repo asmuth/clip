@@ -66,7 +66,9 @@ var TimeRangePickerWidget = function(timerange, widget) {
     DomUtil.clearChildren(inner);
     inner.appendChild(tpl.cloneNode(true));
 
-    watchTimerangeButtons(widget);
+    watchTimerangeButtons();
+    watchCustomSubmit();
+    enforceInputFormat(widget.querySelector("input[name='start']"));
 
     var elem;
     var range;
@@ -90,7 +92,7 @@ var TimeRangePickerWidget = function(timerange, widget) {
     elem.classList.add("active");
   }
 
-  var watchTimerangeButtons = function(widget) {
+  var watchTimerangeButtons = function() {
     /** watch buttons with predefined timeranges */
     var buttons = widget.querySelectorAll("ul.timeranges li button.defined");
     for (var i = 0; i < buttons.length; i++) {
@@ -115,6 +117,13 @@ var TimeRangePickerWidget = function(timerange, widget) {
       }, false);
 
     }
+  }
+
+  var watchCustomSubmit = function() {
+    widget.querySelector(".custom form").addEventListener("submit", function(e) {
+      e.preventDefault();
+      submitCustom();
+    }, false);
   }
 
   var switchActiveButton = function(btn) {
@@ -154,6 +163,11 @@ var TimeRangePickerWidget = function(timerange, widget) {
     start_input.focus();
 
     elem.querySelector("input[name='end']").removeAttribute('readonly');
+
+  }
+
+  var enforceInputFormat = function(input) {
+    //TODO!
   }
 
   var disableCustomInput = function() {
@@ -198,10 +212,12 @@ var TimeRangePickerWidget = function(timerange, widget) {
     close();
   }, false);
 
-  //widget.querySelector("button.apply").addEventListener(
-  //    "click",
-  //    submitCustom,
-  //    false);
+  /** close widget on ESC keypress **/
+  document.addEventListener("keydown", function(e) {
+    if (e.keyCode == 27) {
+      close();
+    }
+  }, false);
 }
 
 var TimeRangePickerComponent = function() {
@@ -220,14 +236,8 @@ var TimeRangePickerComponent = function() {
     this.appendChild(tpl);
 
     this_ = this;
-    widget = new TimeRangePickerWidget(timerange, this.querySelector(".widget"));
-    widget.setSubmitCallback(function(new_timerange) {
-      timerange.start = new_timerange.start;
-      timerange.end = new_timerange.end;
-      fireSubmitEvent();
-    });
 
-    //FIXME better naming
+    initializeWidget();
     watchTimerangeMover();
     watchInputClick();
 
@@ -257,6 +267,23 @@ var TimeRangePickerComponent = function() {
   }
 
 /******************************** private *************************************/
+
+  var initializeWidget = function() {
+    widget = new TimeRangePickerWidget(timerange, this_.querySelector(".widget"));
+    widget.setSubmitCallback(function(new_timerange) {
+      timerange.start = new_timerange.start;
+      timerange.end = new_timerange.end;
+      fireSubmitEvent();
+    });
+
+    document.addEventListener("click", function(e) {
+      widget.toggleVisibility();
+    }, false);
+
+    this_.addEventListener("click", function(e) {
+      e.stopPropagation();
+    }, false);
+  }
 
   var watchTimerangeMover = function() {
     this_.querySelector(".arrow_left").addEventListener("click", function(e) {
