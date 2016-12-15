@@ -2,6 +2,7 @@
 f-timerange-picker {
   display: inline-block;
   line-height: inherit;
+  position: relative;
 }
 
 f-timerange-picker input {
@@ -41,39 +42,59 @@ f-timerange-picker .arrow_right:hover {
   cursor: pointer;
 }
 
-f-timerange-picker f-popup-window .inner .col {
+f-timerange-picker .widget {
+  position: static;
+  top: 100%;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  box-shadow: 0px 4px 7px #ccc;
+  z-index: 9999;
+  overflow: auto;
+  display: none;
+}
+
+f-timerange-picker .widget.active {
+  display: block;
+}
+
+f-timerange-picker .widget .inner .col {
   width: 50%;
   float: left;
 }
 
-f-timerange-picker f-popup-window .inner .col.custom {
+f-timerange-picker .widget .inner .col.custom form {
   opacity: 0.5;
 }
 
-f-timerange-picker f-popup-window .inner .col.custom input:hover {
+f-timerange-picker .widget .inner .col.custom form input:hover {
   cursor: initial;
 }
 
-f-timerange-picker f-popup-window .inner .col.custom.active {
+f-timerange-picker .widget .inner .col.custom.active form {
   opacity: 1;
 }
 
-f-timerange-picker f-popup-window .inner .col.custom.active input:hover {
+f-timerange-picker .widget .inner .col.custom.active form input:hover {
   cursor: pointer;
 }
 
-f-timerange-picker f-popup-window .inner ul {
+f-timerange-picker .widget .inner .col.custom a.link.custom {
+  text-decoration: underline;
+}
+
+f-timerange-picker .widget .inner ul {
   list-style-type: none;
   margin: 0;
 }
 
-f-timerange-picker f-popup-window .inner ul button.btn {
+f-timerange-picker .widget .inner ul button.btn {
   width: 160px;
   text-align: left;
   line-height: 2.8em;
 }
 
-f-timerange-picker f-popup-window .footer button.btn {
+f-timerange-picker .widget .footer button.btn {
   float: right;
 }
 

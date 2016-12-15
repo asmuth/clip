@@ -28,11 +28,11 @@ TimeRangePickerUtil.formatDateTime = function(date) {
 }
 
 /**
-  * The time range picker popup handler
+  * The time range picker widget handler
   * @param timerange is the shared timerange object
-  * @param popup is the popup html elem
+  * @param widget is the widget html elem
   */
-var TimeRangePickerPopup = function(timerange, popup) {
+var TimeRangePickerWidget = function(timerange, widget) {
   'use strict';
 
   var submit_callbacks = [];
@@ -42,24 +42,31 @@ var TimeRangePickerPopup = function(timerange, popup) {
   }
 
   this.toggleVisibility = function() {
-    if (popup.isVisible()) {
-      popup.close();
-      return;
+    if (widget.classList.contains('active')) {
+      close();
+    } else {
+      show();
     }
-
-    render();
-    popup.show();
   }
 
 /********************************* private **********************************/
 
+  var show = function() {
+    render();
+    widget.classList.add('active');
+  }
+
+  var close = function() {
+    widget.classList.remove('active');
+  }
+
   var render = function() {
-    var tpl = templateUtil.getTemplate("f-timerange-picker-popup-tpl");
-    var inner = popup.querySelector("f-popup-window .inner");
+    var tpl = templateUtil.getTemplate("f-timerange-picker-widget-tpl");
+    var inner = widget.querySelector(".inner");
     DomUtil.clearChildren(inner);
     inner.appendChild(tpl.cloneNode(true));
 
-    watchTimerangeButtons(popup);
+    watchTimerangeButtons(widget);
 
     var elem;
     var range;
@@ -68,7 +75,7 @@ var TimeRangePickerPopup = function(timerange, popup) {
     var now = Date.now();
     if (now - timerange.end < 30 * dateUtil.kMillisPerSecond) {
       range = timerange.end - timerange.start;
-      elem = popup.querySelector(
+      elem = widget.querySelector(
           "ul.timeranges button[data-value='" + range + "']");
     }
 
@@ -76,44 +83,70 @@ var TimeRangePickerPopup = function(timerange, popup) {
     if (!elem) {
       range = 'custom';
       enableCustomInput();
-      elem = popup.querySelector("ul.timeranges button[data-value='custom']");
+      elem = widget.querySelector("ul.timeranges button[data-value='custom']");
     }
 
     updateInput(range);
     elem.classList.add("active");
   }
 
-  var watchTimerangeButtons = function(popup) {
-    var buttons = popup.querySelectorAll("ul.timeranges li button");
+  var watchTimerangeButtons = function(widget) {
+    /** watch buttons with predefined timeranges */
+    var buttons = widget.querySelectorAll("ul.timeranges li button.defined");
     for (var i = 0; i < buttons.length; i++) {
 
       buttons[i].addEventListener("click", function(e) {
-        e.preventDefault();
+        switchActiveButton(this);
+        submitPredefined(this);
+      }, false);
 
-        popup.querySelector("ul.timeranges li button.active").
-            classList.remove("active");
-        this.classList.add("active");
+    }
 
-        var selected_timerange = this.getAttribute('data-value');
-        updateInput(selected_timerange);
+    /** watch custom time range buttons **/
+    var custom_buttons = {
+      btn: widget.querySelector("button.custom"),
+      link: widget.querySelector("a.custom")
+    }
+    for (var k in custom_buttons) {
 
+      custom_buttons[k].addEventListener("click", function(e) {
+        switchActiveButton(custom_buttons.btn);
+        enableCustomInput();
       }, false);
 
     }
   }
 
+  var switchActiveButton = function(btn) {
+    widget.querySelector("ul.timeranges li button.active").
+        classList.remove("active");
+
+    btn.classList.add("active");
+  }
+
   var updateInput = function(selected_timerange) {
+    var start;
+    var end;
     if (selected_timerange == 'custom') {
+      start = timerange.start;
+      end = timerange.end;
+
       enableCustomInput();
+
     } else {
-      disableCustomInput();
+      end = Date.now();
+      start = end - parseInt(selected_timerange);
     }
 
-    updateInputValues(selected_timerange);
+    widget.querySelector(".custom input[name='start']").
+        value = TimeRangePickerUtil.formatDateTime(start);
+
+    widget.querySelector(".custom input[name='end']").
+        value = TimeRangePickerUtil.formatDateTime(end);
   }
 
   var enableCustomInput = function() {
-    var elem = popup.querySelector(".col.custom");
+    var elem = widget.querySelector(".col.custom");
     elem.classList.add("active");
 
     var start_input = elem.querySelector("input[name='start']");
@@ -124,7 +157,7 @@ var TimeRangePickerPopup = function(timerange, popup) {
   }
 
   var disableCustomInput = function() {
-    var elem = popup.querySelector(".col.custom");
+    var elem = widget.querySelector(".col.custom");
     elem.classList.remove("active");
 
     elem.querySelector("input[name='start']").
@@ -134,55 +167,41 @@ var TimeRangePickerPopup = function(timerange, popup) {
         setAttribute('readonly', true);
   }
 
-  var updateInputValues = function(selected_timerange) {
-    var start;
-    var end;
-    if (selected_timerange == 'custom') {
-      start = timerange.start;
-      end = timerange.end;
+  var submitPredefined = function(elem) {
+    var selected_range = {};
+    selected_range.end = Date.now();
+    selected_range.start =
+        selected_range.end - parseInt(elem.getAttribute('data-value'));
 
-    } else {
-      end = Date.now();
-      start = end - parseInt(selected_timerange);
-    }
-
-    popup.querySelector(".custom input[name='start']").
-        value = TimeRangePickerUtil.formatDateTime(start);
-
-    popup.querySelector(".custom input[name='end']").
-        value = TimeRangePickerUtil.formatDateTime(end);
+    submit(selected_range);
   }
 
-  var submit = function() {
-    var range = popup.querySelector("ul.timeranges li button.active").
-        getAttribute('data-value');
+  var submitCustom = function() {
+    var selected_range = {
+      start: new Date(widget.querySelector("input[name='start']").value).getTime(),
+      end: new Date(widget.querySelector("input[name='end']").value).getTime()
+    };
 
-    var start;
-    var end;
-    if (range == 'custom') {
-      start = new Date(popup.querySelector("input[name='start']").value).getTime();
-      end = new Date(popup.querySelector("input[name='end']").value).getTime();
+    submit(selected_range);
+  }
 
-    } else {
-      end = Date.now();
-      start = end - parseInt(range);
-    }
-
-    submit_callbacks.forEach(function(c) {
-      c({
-        start: start,
-        end: end
-      });
+  var submit = function(selected_range) {
+    submit_callbacks.forEach(function(callback) {
+      callback(selected_range);
     });
 
-    popup.close();
+    close();
   }
 
   /** initialize **/
-  popup.querySelector("button.cancel").addEventListener("click", function() {
-    popup.close();
+  widget.querySelector("button.cancel").addEventListener("click", function() {
+    close();
   }, false);
-  popup.querySelector("button.apply").addEventListener("click", submit, false);
+
+  //widget.querySelector("button.apply").addEventListener(
+  //    "click",
+  //    submitCustom,
+  //    false);
 }
 
 var TimeRangePickerComponent = function() {
@@ -194,16 +213,15 @@ var TimeRangePickerComponent = function() {
   timerange.start = timerange.end - default_range;
 
   var this_;
-  var popup;
+  var widget;
 
   this.createdCallback = function() {
     var tpl = templateUtil.getTemplate("f-timerange-picker-tpl");
     this.appendChild(tpl);
 
     this_ = this;
-    popup = new TimeRangePickerPopup(timerange, this.querySelector("f-popup"));
-    popup.setSubmitCallback(function(new_timerange) {
-      console.log(c);
+    widget = new TimeRangePickerWidget(timerange, this.querySelector(".widget"));
+    widget.setSubmitCallback(function(new_timerange) {
       timerange.start = new_timerange.start;
       timerange.end = new_timerange.end;
       fireSubmitEvent();
@@ -252,7 +270,7 @@ var TimeRangePickerComponent = function() {
 
   var watchInputClick = function() {
     this_.querySelector("input").addEventListener("click", function(e) {
-      popup.toggleVisibility(timerange);
+      widget.toggleVisibility(timerange);
     }, false);
   }
 
