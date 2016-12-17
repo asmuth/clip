@@ -41,6 +41,13 @@ int main(int argc, const char** argv) {
       NULL);
 
   flags.defineFlag(
+      "metric_prefix",
+      FlagParser::T_STRING,
+      false,
+      NULL,
+      NULL);
+
+  flags.defineFlag(
       "help",
       FlagParser::T_SWITCH,
       false,
@@ -81,6 +88,8 @@ int main(int argc, const char** argv) {
     std::cerr <<
         "Usage: $ sensor_valve_srcds [OPTIONS]\n\n"
         "   --srcds_addr <addr>       Address of the srcds server (e.g. localhost:27015)\n"
+        "   --metric_prefix <str>     Prefix all metric names with a string (e.g. 'gameserver.csgo.')\n"
+        "   --metric_prefix <k>=<v>   Add a label to all metrics\n"
         "   -?, --help                Display this help text and exit\n"
         "   -v, --version             Display the version of this binary and exit";
 
@@ -88,6 +97,7 @@ int main(int argc, const char** argv) {
   }
 
   /* check arguments */
+  std::string metric_prefix = flags.getString("metric_prefix");
   if (!flags.isSet("srcds_addr")) {
     std::cerr << "ERROR: --srcds_addr flag must be set\n";
     return 1;
@@ -115,6 +125,9 @@ int main(int argc, const char** argv) {
 
     std::vector<std::pair<std::string, std::string>> measurements;
     info.toList(&measurements);
+    for (auto& m : measurements) {
+      m.first.insert(0, metric_prefix);
+    }
 
     for (const auto& m : measurements) {
       std::cout << m.first << "=" << m.second << std::endl;
