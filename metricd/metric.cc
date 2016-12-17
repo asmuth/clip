@@ -287,7 +287,7 @@ std::unique_ptr<OutputAggregator> MetricSeriesCursor::mkAggregator(
   switch (config->aggregation) {
     case MetricAggregationType::SUM:
       return std::unique_ptr<OutputAggregator>(
-          new SumOutputAggregator<uint64_t>());
+          new SumOutputAggregator<uint64_t>(config->granularity));
     case MetricAggregationType::NONE: return {};
     default: return {};
   }

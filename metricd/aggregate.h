@@ -29,7 +29,9 @@ template <typename T>
 class SumOutputAggregator : public OutputAggregator {
 public:
 
-  SumOutputAggregator();
+  SumOutputAggregator(
+      uint64_t granularity,
+      uint64_t align = 0);
 
   bool aggregateUINT64(
       uint64_t input_time,
@@ -44,6 +46,8 @@ public:
       T* output_value);
 
 protected:
+  uint64_t granularity_;
+  uint64_t align_;
   uint64_t twin_;
   T sum_;
 };
