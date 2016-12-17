@@ -43,6 +43,13 @@ int main(int argc, const char** argv) {
       NULL);
 
   flags.defineFlag(
+      "srcds_poll_interval",
+      FlagParser::T_FLOAT,
+      false,
+      NULL,
+      "1");
+
+  flags.defineFlag(
       "metric_prefix",
       FlagParser::T_STRING,
       false,
@@ -110,14 +117,15 @@ int main(int argc, const char** argv) {
   if (flags.isSet("help")) {
     std::cerr <<
         "Usage: $ sensor_valve_srcds [OPTIONS]\n\n"
-        "   --srcds_addr <addr>       Address of the srcds server (e.g. localhost:27015)\n"
-        "   --metric_prefix <str>     Prefix all metric names with a string (e.g. 'gameserver.csgo.')\n"
-        "   --metric_label <k>=<v>    Add a label to all metrics\n"
-        "   --send_statsd <addr>      Send measurements via statsd/udp\n"
-        "   --send_jsonudp <addr>     Send measurements via json/udp\n"
-        "   --send_jsontcp <addr>     Send measurements via json/tcp\n"
-        "   -?, --help                Display this help text and exit\n"
-        "   -v, --version             Display the version of this binary and exit";
+        "   --srcds_addr <addr>         Address of the srcds server (e.g. localhost:27015)\n"
+        "   --srcds_poll_interval <n>   Poll interval (default 1s)\n"
+        "   --metric_prefix <str>       Prefix all metric names with a string (e.g. 'gameserver.csgo.')\n"
+        "   --metric_label <k>=<v>      Add a label to all metrics\n"
+        "   --send_statsd <addr>        Send measurements via statsd/udp\n"
+        "   --send_jsonudp <addr>       Send measurements via json/udp\n"
+        "   --send_jsontcp <addr>       Send measurements via json/tcp\n"
+        "   -?, --help                  Display this help text and exit\n"
+        "   -v, --version               Display the version of this binary and exit";
 
     return 0;
   }
@@ -168,7 +176,7 @@ int main(int argc, const char** argv) {
   }
 
   /* periodically poll for measurements */
-  for (;; usleep(1000000)) {
+  for (;; usleep(flags.getFloat("srcds_poll_interval") * 1000000)) {
     fnordmetric::sensor_valve_srcds::SRCDSInfo info;
     auto rc = srcds_client.getInfo(&info);
     if (!rc.isSuccess()) {
