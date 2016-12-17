@@ -18,19 +18,21 @@ namespace sensor_valve_srcds {
 
 struct SRCDSInfo {
   SRCDSInfo();
+  void toList(std::vector<std::pair<std::string, std::string>>* list) const;
+
   uint8_t protocol_version;
   std::string server_name;
+  std::string server_folder;
+  char server_type;
+  char server_os;
   std::string map;
-  std::string folder;
   std::string game;
   uint16_t appid;
   uint8_t player_count;
   uint8_t player_count_max;
   uint8_t player_count_bots;
-  char server_type;
-  char server_os;
-  bool server_password_protected;
-  bool server_vac_enabled;
+  bool password_protected;
+  bool vac_enabled;
 };
 
 class SRCDSClient {

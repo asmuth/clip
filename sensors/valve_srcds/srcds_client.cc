@@ -32,14 +32,30 @@ static const uint64_t kResponseTimeout_us = 1000000;
 
 SRCDSInfo::SRCDSInfo() :
     protocol_version(0),
+    server_type(0),
+    server_os(0),
     appid(0),
     player_count(0),
     player_count_max(0),
     player_count_bots(0),
-    server_type(0),
-    server_os(0),
-    server_password_protected(false),
-    server_vac_enabled(false) {}
+    password_protected(false),
+    vac_enabled(false) {}
+
+void SRCDSInfo::toList(
+    std::vector<std::pair<std::string, std::string>>* list) const {
+  list->emplace_back("protocol_version", std::to_string(protocol_version));
+  list->emplace_back("server_name", server_name);
+  list->emplace_back("server_folder", server_folder);
+  list->emplace_back("server_os", std::string(1, server_os));
+  list->emplace_back("server_type", std::string(1, server_type));
+  list->emplace_back("appid", std::to_string(appid));
+  list->emplace_back("game", game);
+  list->emplace_back("map", map);
+  list->emplace_back("player_count", std::to_string(player_count));
+  list->emplace_back("player_max", std::to_string(player_count_max));
+  list->emplace_back("password_protected", password_protected ? "true" : "false");
+  list->emplace_back("vac_enbled", vac_enabled ? "true" : "false");
+}
 
 SRCDSClient::SRCDSClient() : fd_(-1) {}
 
@@ -176,7 +192,7 @@ bool SRCDSClient::parseInfoResponsePacket(
 
   /* read server folder */
   for (; pkt_cur < pkt_end && *pkt_cur != 0; ++pkt_cur) {
-    info->folder += *pkt_cur;
+    info->server_folder += *pkt_cur;
   }
 
   if (pkt_cur < pkt_end) {
@@ -251,14 +267,14 @@ bool SRCDSClient::parseInfoResponsePacket(
     return false;
   }
 
-  info->server_password_protected = (*pkt_cur++) == 0;
+  info->password_protected = (*pkt_cur++) == 0;
 
   /* read server vac */
   if (pkt_cur >= pkt_end) {
     return false;
   }
 
-  info->server_vac_enabled = (*pkt_cur++) > 0;
+  info->vac_enabled = (*pkt_cur++) > 0;
 
   return true;
 }
