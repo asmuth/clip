@@ -73,15 +73,72 @@ bool ConfigParser::parseMetricDefinition(ConfigList* config) {
     return false;
   }
 
+  MetricConfig metric_config;
+  metric_config.is_valid = true;
+
+  TokenType ttype;
+  std::string tbuf;
+  while (getToken(&ttype, &tbuf)) {
+    if (ttype == T_RCBRACE) {
+      break;
+    }
+
+    if (ttype == T_ENDLINE) {
+      consumeToken();
+      continue;
+    }
+
+    /* parse the "aggregation" stanza */
+    if (ttype == T_STRING && tbuf == "aggregation") {
+      consumeToken();
+      if (!parseMetricDefinitionAggregationStanza(&metric_config)) {
+        return false;
+      }
+      continue;
+    }
+
+    setError(
+        StringUtil::format(
+            "invalid token; got: $0, expected one of: metric",
+            printToken(ttype, tbuf)));
+    return false;
+  }
+
   if (!expectAndConsumeToken(T_RCBRACE)) {
     return false;
   }
 
-  MetricConfig metric_config;
-  metric_config.is_valid = true;
   config->addMetricConfig(metric_name, metric_config);
-
   return true;
+}
+
+bool ConfigParser::parseMetricDefinitionAggregationStanza(
+    MetricConfig* metric_config) {
+  TokenType ttype;
+  std::string tbuf;
+  if (!getToken(&ttype, &tbuf) || ttype != T_STRING) {
+    setError("aggregation requires an argument");
+    return false;
+  }
+
+  consumeToken();
+
+  static const std::map<std::string, MetricAggregationType> aggr_type_map = {
+    { "sum", MetricAggregationType::SUM }
+  };
+
+  auto iter = aggr_type_map.find(tbuf);
+  if (iter != aggr_type_map.end()) {
+    metric_config->aggregation = iter->second;
+    return true;
+  } else {
+    setError(
+        StringUtil::format(
+            "invalid token; got: $0, expected one of: sum, ...",
+            printToken(ttype, tbuf)));
+
+    return false;
+  }
 }
 
 bool ConfigParser::getToken(

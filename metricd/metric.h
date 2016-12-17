@@ -11,6 +11,7 @@
 #pragma once
 #include <metricd/sample.h>
 #include <metricd/util/return_code.h>
+#include <metricd/aggregate.h>
 #include <libtsdb/tsdb.h>
 #include <functional>
 #include <iostream>
@@ -34,9 +35,23 @@ enum class MetricDataType {
   FLOAT64
 };
 
+enum class MetricAggregationType {
+  NONE,
+  RANDOM,
+  LATEST,
+  NEWEST,
+  MIN,
+  MAX,
+  AVG,
+  SUM,
+  SUMRATE,
+  RATE
+};
+
 struct MetricConfig {
   MetricConfig();
   MetricDataType data_type;
+  MetricAggregationType aggregation;
   bool is_valid;
 };
 
@@ -116,6 +131,7 @@ public:
 
 protected:
   tsdb::Cursor cursor_;
+  std::unique_ptr<Aggregator> aggr_;
 };
 
 class MetricSeriesListCursor {
