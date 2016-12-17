@@ -73,14 +73,107 @@ bool ConfigParser::parseMetricDefinition(ConfigList* config) {
     return false;
   }
 
+  MetricConfig metric_config;
+  metric_config.is_valid = true;
+
+  TokenType ttype;
+  std::string tbuf;
+  while (getToken(&ttype, &tbuf)) {
+    if (ttype == T_RCBRACE) {
+      break;
+    }
+
+    if (ttype == T_ENDLINE) {
+      consumeToken();
+      continue;
+    }
+
+    /* parse the "aggregation" stanza */
+    if (ttype == T_STRING && tbuf == "aggregation") {
+      consumeToken();
+      if (!parseMetricDefinitionAggregationStanza(&metric_config)) {
+        return false;
+      }
+      continue;
+    }
+
+    /* parse the "granularity" stanza */
+    if (ttype == T_STRING && tbuf == "granularity") {
+      consumeToken();
+      if (!parseMetricDefinitionGranularityStanza(&metric_config)) {
+        return false;
+      }
+      continue;
+    }
+
+    setError(
+        StringUtil::format(
+            "invalid token; got: $0, expected one of: metric",
+            printToken(ttype, tbuf)));
+    return false;
+  }
+
   if (!expectAndConsumeToken(T_RCBRACE)) {
     return false;
   }
 
-  MetricConfig metric_config;
-  metric_config.is_valid = true;
   config->addMetricConfig(metric_name, metric_config);
+  return true;
+}
 
+bool ConfigParser::parseMetricDefinitionAggregationStanza(
+    MetricConfig* metric_config) {
+  TokenType ttype;
+  std::string tbuf;
+  if (!getToken(&ttype, &tbuf) || ttype != T_STRING) {
+    setError("aggregation requires an argument");
+    return false;
+  }
+
+  consumeToken();
+
+  static const std::map<std::string, MetricAggregationType> aggr_type_map = {
+    { "sum", MetricAggregationType::SUM }
+  };
+
+  auto iter = aggr_type_map.find(tbuf);
+  if (iter != aggr_type_map.end()) {
+    metric_config->aggregation = iter->second;
+    return true;
+  } else {
+    setError(
+        StringUtil::format(
+            "invalid token; got: $0, expected one of: sum, ...",
+            printToken(ttype, tbuf)));
+
+    return false;
+  }
+}
+
+bool ConfigParser::parseMetricDefinitionGranularityStanza(
+    MetricConfig* metric_config) {
+  TokenType ttype;
+  std::string tbuf;
+  if (!getToken(&ttype, &tbuf) || ttype != T_STRING) {
+    setError("granularity requires an argument");
+    return false;
+  }
+
+  consumeToken();
+
+  uint64_t granularity = 0;
+  try {
+    granularity = std::stoull(tbuf);
+  } catch (...) {
+    setError(
+        StringUtil::format(
+            "invalid value for granularity; got: $0, must be a valid number",
+            printToken(ttype, tbuf)));
+
+    return false;
+  }
+
+  metric_config->granularity = granularity;
   return true;
 }
 
@@ -89,6 +182,8 @@ bool ConfigParser::getToken(
     std::string* tbuf) {
   const char* tbuf_cstr = nullptr;
   size_t tbuf_len = 0;
+
+  tbuf->clear();
 
   bool ret = getToken(ttype, &tbuf_cstr, &tbuf_len);
   if (tbuf_cstr) {
@@ -310,6 +405,12 @@ std::string ConfigParser::printToken(
     case T_RPAREN: out = "RPAREN"; break;
     case T_LCBRACE: out = "LCBRACE"; break;
     case T_RCBRACE: out = "RCBRACE"; break;
+  }
+
+  if (buf && buf_len > 0) {
+    out += "<";
+    out += std::string(buf, buf_len);
+    out += ">";
   }
 
   return out;
