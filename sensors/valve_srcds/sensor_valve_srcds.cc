@@ -24,6 +24,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <iostream>
+#include <map>
 #include "metricd/util/flagparser.h"
 #include "metricd/util/stringutil.h"
 #include "sensors/valve_srcds/srcds_client.h"
@@ -42,6 +43,13 @@ int main(int argc, const char** argv) {
 
   flags.defineFlag(
       "metric_prefix",
+      FlagParser::T_STRING,
+      false,
+      NULL,
+      NULL);
+
+  flags.defineFlag(
+      "metric_label",
       FlagParser::T_STRING,
       false,
       NULL,
@@ -89,7 +97,7 @@ int main(int argc, const char** argv) {
         "Usage: $ sensor_valve_srcds [OPTIONS]\n\n"
         "   --srcds_addr <addr>       Address of the srcds server (e.g. localhost:27015)\n"
         "   --metric_prefix <str>     Prefix all metric names with a string (e.g. 'gameserver.csgo.')\n"
-        "   --metric_prefix <k>=<v>   Add a label to all metrics\n"
+        "   --metric_label <k>=<v>    Add a label to all metrics\n"
         "   -?, --help                Display this help text and exit\n"
         "   -v, --version             Display the version of this binary and exit";
 
@@ -97,10 +105,20 @@ int main(int argc, const char** argv) {
   }
 
   /* check arguments */
-  std::string metric_prefix = flags.getString("metric_prefix");
   if (!flags.isSet("srcds_addr")) {
     std::cerr << "ERROR: --srcds_addr flag must be set\n";
     return 1;
+  }
+
+  std::string metric_prefix = flags.getString("metric_prefix");
+  std::map<std::string, std::string> metric_labels;
+  for (const auto& lbl : flags.getStrings("metric_label")) {
+    auto s = lbl.find("=");
+    if (s == std::string::npos) {
+      continue;
+    }
+
+    metric_labels[lbl.substr(0, s)] = lbl.substr(s + 1);
   }
 
   /* setup srcds client */
