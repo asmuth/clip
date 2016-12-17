@@ -113,6 +113,18 @@ int main(int argc, const char** argv) {
       continue;
     }
 
+    std::cout << "server name: " << info.server_name << std::endl;
+    std::cout << "server map: " << info.map << std::endl;
+    std::cout << "server folder: " << info.folder << std::endl;
+    std::cout << "server game: " << info.game << std::endl;
+    std::cout << "server appid: " << info.appid << std::endl;
+    std::cout << "server player_count: " << (int) info.player_count << std::endl;
+    std::cout << "server player_count_max: " << (int) info.player_count_max << std::endl;
+    std::cout << "server player_count_bots: " << (int) info.player_count_bots << std::endl;
+    std::cout << "server type: " << info.server_type << std::endl;
+    std::cout << "server os: " << info.server_os << std::endl;
+    std::cout << "server password protected: " << info.server_password_protected << std::endl;
+    std::cout << "server vac enabled: " << info.server_vac_enabled << std::endl;
   }
 
   return 0;

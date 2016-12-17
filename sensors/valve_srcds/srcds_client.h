@@ -17,7 +17,20 @@ namespace fnordmetric {
 namespace sensor_valve_srcds {
 
 struct SRCDSInfo {
-  uint64_t num_players;
+  SRCDSInfo();
+  uint8_t protocol_version;
+  std::string server_name;
+  std::string map;
+  std::string folder;
+  std::string game;
+  uint16_t appid;
+  uint8_t player_count;
+  uint8_t player_count_max;
+  uint8_t player_count_bots;
+  char server_type;
+  char server_os;
+  bool server_password_protected;
+  bool server_vac_enabled;
 };
 
 class SRCDSClient {
@@ -32,7 +45,7 @@ public:
 
 protected:
 
-  ReturnCode parseInfoResponsePacket(
+  bool parseInfoResponsePacket(
       const char* pkt,
       size_t pkt_len,
       SRCDSInfo* info) const;

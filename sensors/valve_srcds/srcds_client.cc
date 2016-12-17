@@ -24,7 +24,22 @@ static const unsigned char kInfoRequestPacket[] = {
   0x6e, 0x67, 0x69, 0x6e, 0x65, 0x20, 0x51, 0x75, 0x65, 0x72, 0x79, 0x00
 };
 
+static const unsigned char kInfoResponsePacketHeader[] = {
+  0xff, 0xff, 0xff, 0xff, 0x49
+};
+
 static const uint64_t kResponseTimeout_us = 1000000;
+
+SRCDSInfo::SRCDSInfo() :
+    protocol_version(0),
+    appid(0),
+    player_count(0),
+    player_count_max(0),
+    player_count_bots(0),
+    server_type(0),
+    server_os(0),
+    server_password_protected(false),
+    server_vac_enabled(false) {}
 
 SRCDSClient::SRCDSClient() : fd_(-1) {}
 
@@ -102,7 +117,150 @@ ReturnCode SRCDSClient::getInfo(SRCDSInfo* info) {
     return ReturnCode::error("EIO", "recv() failed: $0", strerror(errno));
   }
 
-  return parseInfoResponsePacket(resp_packet, resp_packet_len, info);
+  if (parseInfoResponsePacket(resp_packet, resp_packet_len, info)) {
+    return ReturnCode::success();
+  } else {
+    return ReturnCode::error("EIO", "received invalid response packet");
+  }
+}
+
+bool SRCDSClient::parseInfoResponsePacket(
+    const char* pkt,
+    size_t pkt_len,
+    SRCDSInfo* info) const {
+  auto pkt_cur = pkt;
+  auto pkt_end = pkt + pkt_len;
+
+  /* read header */
+  if (pkt_len < sizeof(kInfoResponsePacketHeader)) {
+    return false;
+  }
+
+  if (memcmp(
+        pkt_cur,
+        kInfoResponsePacketHeader,
+        sizeof(kInfoResponsePacketHeader)) != 0) {
+    return false;
+  }
+
+  pkt_cur += sizeof(kInfoResponsePacketHeader);
+
+  /* read protocol version */
+  if (pkt_cur >= pkt_end) {
+    return false;
+  }
+
+  info->protocol_version = *((const uint8_t*) pkt_cur++);
+
+  /* read server map */
+  for (; pkt_cur < pkt_end && *pkt_cur != 0; ++pkt_cur) {
+    info->server_name += *pkt_cur;
+  }
+
+  if (pkt_cur < pkt_end) {
+    ++pkt_cur;
+  } else {
+    return false;
+  }
+
+  /* read server map */
+  for (; pkt_cur < pkt_end && *pkt_cur != 0; ++pkt_cur) {
+    info->map += *pkt_cur;
+  }
+
+  if (pkt_cur < pkt_end) {
+    ++pkt_cur;
+  } else {
+    return false;
+  }
+
+  /* read server folder */
+  for (; pkt_cur < pkt_end && *pkt_cur != 0; ++pkt_cur) {
+    info->folder += *pkt_cur;
+  }
+
+  if (pkt_cur < pkt_end) {
+    ++pkt_cur;
+  } else {
+    return false;
+  }
+
+  /* read server game */
+  for (; pkt_cur < pkt_end && *pkt_cur != 0; ++pkt_cur) {
+    info->game += *pkt_cur;
+  }
+
+  if (pkt_cur < pkt_end) {
+    ++pkt_cur;
+  } else {
+    return false;
+  }
+
+  /* read app id */
+  if (pkt_cur >= pkt_end - 2) {
+    return false;
+  }
+
+  info->appid = *((const uint8_t*) pkt_cur++);
+  info->appid += *((const uint8_t*) pkt_cur++) << 8;
+
+  /* read players count */
+  if (pkt_cur >= pkt_end) {
+    return false;
+  }
+
+  info->player_count = *((const uint8_t*) pkt_cur++);
+
+  /* read players max count */
+  if (pkt_cur >= pkt_end) {
+    return false;
+  }
+
+  info->player_count_max = *((const uint8_t*) pkt_cur++);
+
+  /* read players bots count */
+  if (pkt_cur >= pkt_end) {
+    return false;
+  }
+
+  info->player_count_bots = *((const uint8_t*) pkt_cur++);
+
+  /* read players bots count */
+  if (pkt_cur >= pkt_end) {
+    return false;
+  }
+
+  info->player_count_bots = *((const uint8_t*) pkt_cur++);
+
+  /* read server type */
+  if (pkt_cur >= pkt_end) {
+    return false;
+  }
+
+  info->server_type = *pkt_cur++;
+
+  /* read server os */
+  if (pkt_cur >= pkt_end) {
+    return false;
+  }
+
+  info->server_os = *pkt_cur++;
+
+  /* read server password */
+  if (pkt_cur >= pkt_end) {
+    return false;
+  }
+
+  info->server_password_protected = (*pkt_cur++) == 0;
+
+  /* read server vac */
+  if (pkt_cur >= pkt_end) {
+    return false;
+  }
+
+  info->server_vac_enabled = (*pkt_cur++) > 0;
+
+  return true;
 }
 
 } // namespace sensor_valve_srcds
