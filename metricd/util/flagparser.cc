@@ -125,6 +125,37 @@ int64_t FlagParser::getInt(const char* longopt) const {
   return 0;
 }
 
+double FlagParser::getFloat(const char* longopt) const {
+  for (auto& flag : flags_) {
+    if (flag.longopt == longopt) {
+      assert(flag.type == T_FLOAT);
+
+      std::string flag_value_str;
+
+      if (flag.values.size() == 0) {
+        if (flag.default_value != nullptr) {
+          flag_value_str = flag.default_value;
+        } else {
+          break;
+        }
+      } else {
+        flag_value_str = flag.values.back();
+      }
+
+      double flag_value;
+      try {
+        flag_value = std::stod(flag_value_str);
+      } catch (std::exception e) {
+        break;
+      }
+
+      return flag_value;
+    }
+  }
+
+  return 0;
+}
+
 ReturnCode FlagParser::parseArgv(int argc, const char** argv) {
   std::vector<std::string> args;
   for (int i = 1; i < argc; ++i) {
