@@ -166,6 +166,8 @@ metricd_common_sources_ = \
     transport/http/cookies.cc \
     transport/statsd/statsd.h \
     transport/statsd/statsd.cc \
+    transport/statsd/statsd_server.h \
+    transport/statsd/statsd_server.cc \
     webui/webui.h \
     webui/webui.cc
 

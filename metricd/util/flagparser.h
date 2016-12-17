@@ -79,6 +79,14 @@ public:
   int64_t getInt(const char* longopt) const;
 
   /**
+   * Returns the float value of the flag or throws an exception if the value
+   * is invalid.
+   *
+   * @param longopt the longopt of the flag
+   */
+  double getFloat(const char* longopt) const;
+
+  /**
    * Parse an argv array. This may throw an exception.
    */
   ReturnCode parseArgv(int argc, const char** argv);

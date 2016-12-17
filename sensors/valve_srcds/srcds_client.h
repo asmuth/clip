@@ -54,7 +54,6 @@ protected:
 
   int fd_;
   sockaddr_in remote_addr_;
-  uint16_t remote_port_;
 };
 
 } // namespace sensor_valve_srcds

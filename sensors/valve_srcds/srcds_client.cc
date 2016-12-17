@@ -52,7 +52,9 @@ void SRCDSInfo::toList(
   list->emplace_back("game", game);
   list->emplace_back("map", map);
   list->emplace_back("player_count", std::to_string(player_count));
-  list->emplace_back("player_max", std::to_string(player_count_max));
+  list->emplace_back("player_count_bots", std::to_string(player_count_bots));
+  list->emplace_back("player_count_human", std::to_string(player_count - player_count_bots));
+  list->emplace_back("player_count_max", std::to_string(player_count_max));
   list->emplace_back("password_protected", password_protected ? "true" : "false");
   list->emplace_back("vac_enbled", vac_enabled ? "true" : "false");
 }
@@ -103,7 +105,7 @@ ReturnCode SRCDSClient::getInfo(SRCDSInfo* info) {
       (const sockaddr*) &remote_addr_,
       sizeof(remote_addr_));
 
-  if (rc < -1) {
+  if (rc < 0) {
     /* N.B. we set the socket to nonblocking so this might return EAGAIN.
        however we explicitly chose not to retry in this case */
     return ReturnCode::error("EIO", "sendto() failed: $0", strerror(errno));
@@ -233,13 +235,6 @@ bool SRCDSClient::parseInfoResponsePacket(
   }
 
   info->player_count_max = *((const uint8_t*) pkt_cur++);
-
-  /* read players bots count */
-  if (pkt_cur >= pkt_end) {
-    return false;
-  }
-
-  info->player_count_bots = *((const uint8_t*) pkt_cur++);
 
   /* read players bots count */
   if (pkt_cur >= pkt_end) {
