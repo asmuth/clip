@@ -90,6 +90,8 @@ bool ConfigParser::getToken(
   const char* tbuf_cstr = nullptr;
   size_t tbuf_len = 0;
 
+  tbuf->clear();
+
   bool ret = getToken(ttype, &tbuf_cstr, &tbuf_len);
   if (tbuf_cstr) {
     tbuf->append(tbuf_cstr, tbuf_len);
@@ -310,6 +312,12 @@ std::string ConfigParser::printToken(
     case T_RPAREN: out = "RPAREN"; break;
     case T_LCBRACE: out = "LCBRACE"; break;
     case T_RCBRACE: out = "RCBRACE"; break;
+  }
+
+  if (buf && buf_len > 0) {
+    out += "<";
+    out += std::string(buf, buf_len);
+    out += ">";
   }
 
   return out;

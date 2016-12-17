@@ -19,14 +19,6 @@ namespace fnordmetric {
 class ConfigParser {
 public:
 
-  ConfigParser(
-      const char* input,
-      size_t input_len);
-
-  ReturnCode parse(ConfigList* config);
-
-protected:
-
   enum TokenType {
     T_STRING,
     T_COMMA,
@@ -37,18 +29,28 @@ protected:
     T_RCBRACE
   };
 
-  bool parseMetricDefinition(ConfigList* config);
+  ConfigParser(
+      const char* input,
+      size_t input_len);
+
+  ReturnCode parse(ConfigList* config);
 
   bool getToken(
       TokenType* type,
       std::string* buf);
+
+  void consumeToken();
+
+protected:
+
+  bool parseMetricDefinition(ConfigList* config);
+  bool parseMetricDefinitionAggregationStanza(MetricConfig* metric_config);
 
   bool getToken(
       TokenType* type,
       const char** buf,
       size_t* buf_len);
 
-  void consumeToken();
   bool expectAndConsumeToken(TokenType type);
   bool expectAndConsumeString(std::string* buf);
 
