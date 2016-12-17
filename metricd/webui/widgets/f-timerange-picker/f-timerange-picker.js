@@ -291,27 +291,26 @@ var TimeRangePickerComponent = function() {
     this.appendChild(tpl);
 
     this_ = this;
+  }
+
+  /**
+    * Set the initial values
+    * @param init_timerange (Object) determines the initial values for
+    * start, end and timezone
+  **/
+  this.initialize = function(init_timerange) {
+    if (init_timerange.timezone) {
+      timerange.timezone = init_timerange.timezone;
+    }
+
+    if (init_timerange.start && init_timerange.end) {
+      timerange.start = init_timerange.start;
+      timerange.end = init_timerange.end;
+    }
 
     initializeWidget();
     watchTimerangeMover();
     watchInputClick();
-
-    updateInputValue();
-  }
-
-  /**
-    * Set the start and end of the selected timerange
-    * @param start timestamp in milliseconds
-    * @param end timestamp in milliseconds
-    * @param timezone determines the timezone, must be either utc or local
-  **/
-  this.setTimerange = function(start, end, timezone) {
-    timerange.start = start;
-    timerange.end = end;
-
-    if (timezone) {
-      timerange.timezone = timezone;
-    }
 
     updateInputValue();
   }
@@ -323,8 +322,11 @@ var TimeRangePickerComponent = function() {
     return {
       start: timerange.start,
       end: timerange.end,
-      timezone: timerange.timezone
     }
+  }
+
+  this.getTimezone = function() {
+    return timerange.timezone;
   }
 
 

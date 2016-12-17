@@ -56,11 +56,6 @@ FnordMetric.views["fnordmetric.metric.series.list"] = function(elem, params) {
       p.end = parseInt(end_param);
     }
 
-    var timezone_param = URLUtil.getParamValue(path, "timezone");
-    if (timezone_param) {
-      p.timezone = timezone_param;
-    }
-
     return p;
   }
 
@@ -68,13 +63,31 @@ FnordMetric.views["fnordmetric.metric.series.list"] = function(elem, params) {
     var picker = elem.querySelector(
         ".fnordmetric-metric-series-list f-timerange-picker");
 
-    if (url_params.start && url_params.end) {
-      picker.setTimerange(url_params.start, url_params.end, url_params.timezone);
+    var timerange = {};
+
+    var timezone = DomUtil.getCookie("timezone");
+    if (timezone) {
+      timerange.timezone = timezone;
     }
 
+    if (url_params.start && url_params.end) {
+      timerange.start = url_params.start;
+      timerange.end = url_params.end;
+    }
+
+    picker.initialize(timerange);
+
     picker.addEventListener("submit", function(e) {
+      updateTimezoneCookie(this.getTimezone());
       updateQueryStr(this.getTimerange());
     }, false);
+  }
+
+  var updateTimezoneCookie = function(timezone) {
+    /** set the cookie expiry date for in 5 years **/
+    var d = new Date();
+    d.setFullYear(d.getFullYear() + 5);
+    DomUtil.setCookie("timezone", timezone, d.toUTCString());
   }
 
   var updateQueryStr = function(query_params) {
