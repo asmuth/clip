@@ -10,8 +10,10 @@
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <sys/fcntl.h>
+#include <poll.h>
 #include <string.h>
 #include <regex>
+#include <iostream>
 #include "sensors/valve_srcds/srcds_client.h"
 
 namespace fnordmetric {
@@ -21,6 +23,8 @@ static const unsigned char kInfoRequestPacket[] = {
   0xff, 0xff, 0xff, 0xff, 0x54, 0x53, 0x6f, 0x75, 0x72, 0x63, 0x65, 0x20, 0x45,
   0x6e, 0x67, 0x69, 0x6e, 0x65, 0x20, 0x51, 0x75, 0x65, 0x72, 0x79, 0x00
 };
+
+static const uint64_t kResponseTimeout_us = 1000000;
 
 SRCDSClient::SRCDSClient() : fd_(-1) {}
 
@@ -74,7 +78,31 @@ ReturnCode SRCDSClient::getInfo(SRCDSInfo* info) {
     return ReturnCode::error("EIO", "sendto() failed: $0", strerror(errno));
   }
 
-  return ReturnCode::success();
+  struct pollfd p;
+  p.fd = fd_;
+  p.events = POLLIN;
+  int poll_rc = poll(&p, 1, kResponseTimeout_us / 1000);
+  switch (poll_rc) {
+    case 0:
+      return ReturnCode::error("EIO", "SRCDS info operation timed out");
+    case -1:
+      /* N.B. we set the socket to nonblocking so this might return EAGAIN.
+         however we explicitly chose not to retry in this case */
+      return ReturnCode::error("EIO", "poll() failed: $0", strerror(errno));
+  }
+
+  char resp_packet[0xFFFF];
+  ssize_t resp_packet_len = recv(
+      fd_,
+      resp_packet,
+      sizeof(resp_packet),
+      0);
+
+  if (resp_packet_len < 0) {
+    return ReturnCode::error("EIO", "recv() failed: $0", strerror(errno));
+  }
+
+  return parseInfoResponsePacket(resp_packet, resp_packet_len, info);
 }
 
 } // namespace sensor_valve_srcds

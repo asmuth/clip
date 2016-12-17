@@ -31,6 +31,12 @@ public:
   ReturnCode getInfo(SRCDSInfo* info);
 
 protected:
+
+  ReturnCode parseInfoResponsePacket(
+      const char* pkt,
+      size_t pkt_len,
+      SRCDSInfo* info) const;
+
   int fd_;
   sockaddr_in remote_addr_;
   uint16_t remote_port_;
