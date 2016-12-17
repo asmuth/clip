@@ -134,8 +134,7 @@ void StatsdServer::handlePacket(const char* pkt, size_t pkt_len) {
     try {
       float_value = std::stod(value);
     } catch (std::exception& e) {
-      logWarning("received invalid statsd packet");
-      return;
+      continue;
     }
 
     auto now = WallClock::unixMicros();
