@@ -74,6 +74,10 @@ sensor_valve_srcds_SOURCES = \
     @top_srcdir@/metricd/util/autoref_impl.h \
     @top_srcdir@/metricd/util/autoref.h \
     @top_srcdir@/metricd/util/autoref.cc \
+    @top_srcdir@/metricd/sample.h \
+    @top_srcdir@/metricd/sample.cc \
+    @top_srcdir@/metricd/transport/statsd/statsd.h \
+    @top_srcdir@/metricd/transport/statsd/statsd.cc \
     srcds_client.h \
     srcds_client.cc \
     sensor_valve_srcds.cc

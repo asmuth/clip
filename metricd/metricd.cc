@@ -37,6 +37,7 @@
 #include <metricd/transport/http/httpserver.h>
 #include <metricd/transport/http/httpapi.h>
 #include <metricd/transport/statsd/statsd.h>
+#include <metricd/transport/statsd/statsd_server.h>
 #include <metricd/config/config_list.h>
 #include <metricd/config/config_parser.h>
 #include <metricd/webui/webui.h>

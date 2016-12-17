@@ -27,6 +27,7 @@
 #include <map>
 #include "metricd/util/flagparser.h"
 #include "metricd/util/stringutil.h"
+#include "metricd/transport/statsd/statsd.h"
 #include "sensors/valve_srcds/srcds_client.h"
 
 ReturnCode daemonize();
@@ -36,6 +37,13 @@ int main(int argc, const char** argv) {
 
   flags.defineFlag(
       "srcds_addr",
+      FlagParser::T_STRING,
+      false,
+      NULL,
+      NULL);
+
+  flags.defineFlag(
+      "statsd",
       FlagParser::T_STRING,
       false,
       NULL,
@@ -98,6 +106,7 @@ int main(int argc, const char** argv) {
         "   --srcds_addr <addr>       Address of the srcds server (e.g. localhost:27015)\n"
         "   --metric_prefix <str>     Prefix all metric names with a string (e.g. 'gameserver.csgo.')\n"
         "   --metric_label <k>=<v>    Add a label to all metrics\n"
+        "   --statsd <addr>           Send measurements via udp/statsd\n"
         "   -?, --help                Display this help text and exit\n"
         "   -v, --version             Display the version of this binary and exit";
 
@@ -131,7 +140,23 @@ int main(int argc, const char** argv) {
     }
   }
 
-  /* periodically poll for server infos */
+  /* setup statsd client if enabled */
+  std::vector<std::unique_ptr<fnordmetric::statsd::StatsdEmitter>> statsd_trgts;
+  for (const auto& statsd_addr : flags.getStrings("statsd")) {
+    std::unique_ptr<fnordmetric::statsd::StatsdEmitter> statsd_emitter(
+        new fnordmetric::statsd::StatsdEmitter());
+
+    auto rc = statsd_emitter->connect(statsd_addr);
+    if (!rc.isSuccess()) {
+      std::cerr <<
+          "WARNING: statsd emittter error:" << rc.getMessage() << std::endl;
+      continue;
+    }
+
+    statsd_trgts.emplace_back(std::move(statsd_emitter));
+  }
+
+  /* periodically poll for measurements */
   for (;; usleep(1000000)) {
     fnordmetric::sensor_valve_srcds::SRCDSInfo info;
     auto rc = srcds_client.getInfo(&info);
@@ -147,6 +172,20 @@ int main(int argc, const char** argv) {
       m.first.insert(0, metric_prefix);
     }
 
+    /* if statsd output is enabled, deliver measurements via statsd */
+    for (const auto& statsd_emitter : statsd_trgts) {
+      for (const auto& m : measurements) {
+        statsd_emitter->enqueueSample(m.first, m.second, metric_labels);
+      }
+
+      auto statsd_rc = statsd_emitter->emitSamples();
+      if (!statsd_rc.isSuccess()) {
+        std::cerr <<
+            "WARNING: statsd send failed:" << rc.getMessage() << std::endl;
+      }
+    }
+
+    /* print measurements to stdout */
     for (const auto& m : measurements) {
       std::cout << m.first << "=" << m.second << std::endl;
     }

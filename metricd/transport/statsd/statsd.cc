@@ -13,6 +13,7 @@
 #include <fcntl.h>
 #include <errno.h>
 #include <string.h>
+#include <regex>
 #include <netinet/in.h>
 #include <sys/types.h>
 #include <sys/socket.h>
@@ -25,128 +26,80 @@
 namespace fnordmetric {
 namespace statsd {
 
-StatsdServer::StatsdServer(
-    MetricService* metric_service) :
-    ssock_(-1),
-    metric_service_(metric_service) {}
+StatsdEmitter::StatsdEmitter() : fd_(-1) {}
 
-StatsdServer::~StatsdServer() {
-  if (ssock_ >= 0) {
-    close(ssock_);
-  }
-}
-
-ReturnCode StatsdServer::listen(const std::string& bind_addr, int port) {
-  logInfo("Starting statsd server on $0:$1", bind_addr, port);
-
-  ssock_ = socket(AF_INET, SOCK_DGRAM, 0);
-  if (ssock_ == 0) {
-    return ReturnCode::error("EIO", strerror(errno));
+ReturnCode StatsdEmitter::connect(const std::string& addr) {
+  std::regex addr_regex("([0-9a-zA-Z-_.]+):([0-9]+)");
+  std::smatch m;
+  if (!std::regex_match(addr, m, addr_regex)) {
+    return ReturnCode::error("EARG", "invalid srcds_addr");
   }
 
-  int opt = 1;
-  if (setsockopt(ssock_, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt)) < 0) {
-    return ReturnCode::error("EIO", strerror(errno));
+  /* resolve hostname */
+  auto hostname = m[1].str();
+  struct hostent* h = gethostbyname(hostname.c_str());
+  if (h == nullptr) {
+    return ReturnCode::error("EIO", "gethostbyname($0) failed", hostname);
   }
 
-  struct sockaddr_in addr;
-  memset((char *) &addr, 0, sizeof(addr));
-  addr.sin_family = AF_INET;
-  addr.sin_addr.s_addr = htonl(INADDR_ANY);
-  addr.sin_port = htons(port);
-  if (bind(ssock_, (struct sockaddr *) &addr, sizeof(addr)) < 0) {
-    close(ssock_);
-    ssock_ = -1;
-    return ReturnCode::error("EIO", strerror(errno));
+  memcpy(&remote_addr_.sin_addr, h->h_addr, h->h_length);
+  remote_addr_.sin_family = AF_INET;
+  remote_addr_.sin_port = htons(std::stoul(m[2]));
+
+  /* open local socket and put into nonblock */
+  fd_ = socket(AF_INET, SOCK_DGRAM, 0);
+  if (fd_ == -1) {
+    return ReturnCode::error("EIO", "socket() failed: $0", strerror(errno));
+  }
+
+  if (fcntl(fd_, F_SETFL, fcntl(fd_, F_GETFL, 0) | O_NONBLOCK) != 0) {
+    return ReturnCode::error("EIO", "fcntl() failed: $0", strerror(errno));
   }
 
   return ReturnCode::success();
 }
 
-ReturnCode StatsdServer::listenAndStart(const std::string& addr, int port) {
-  auto rc = listen(addr, port);
-  if (!rc.isSuccess()) {
-    return rc;
+void StatsdEmitter::enqueueSample(
+    const std::string& metric,
+    const std::string& value,
+    const std::map<std::string, std::string>& labels /* = {} */) {
+  buf_ += metric;
+  for (const auto& l : labels) {
+    buf_ += "[";
+    buf_ += l.first;
+    buf_ += "=";
+    buf_ += l.second;
+    buf_ += "]";
+  }
+  buf_ += ":";
+  buf_ += value;
+  buf_ += "\n";
+}
+
+ReturnCode StatsdEmitter::emitSamples() {
+  if (fd_ == -1) {
+    return ReturnCode::error("EARG", "not connected");
   }
 
-  return start();
-}
-
-ReturnCode StatsdServer::start() {
-  running_ = true;
-  thread_ =  std::thread([this] {
-    while (running_.load(std::memory_order_acquire)) {
-      struct sockaddr_in other_addr;
-      socklen_t other_addr_len = sizeof(other_addr);
-
-      char buf[65535];
-      auto buf_len = recvfrom(
-          ssock_,
-          buf,
-          sizeof(buf),
-          0,
-          (struct sockaddr *) &other_addr,
-          &other_addr_len);
-
-      if (buf_len < 0) {
-        logError("statsd receive failed: $0", strerror(errno));
-        continue;
-      }
-
-      handlePacket(buf, buf_len);
-    }
-  });
-
-  return ReturnCode::success();
-}
-
-void StatsdServer::shutdown() {
-  running_.store(false, std::memory_order_release);
-  close(ssock_);
-  if (thread_.joinable()) {
-    thread_.join();
+  if (buf_.empty()) {
+    return ReturnCode::success();
   }
-  ssock_ = -1;
-}
 
-void StatsdServer::handlePacket(const char* pkt, size_t pkt_len) {
-  std::string key;
-  std::string value;
-  LabelSet labels;
+  // FIXME handle multi-packet buffers
+  int rc = sendto(
+      fd_,
+      buf_.data(),
+      buf_.size(),
+      0,
+      (const sockaddr*) &remote_addr_,
+      sizeof(remote_addr_));
 
-  char const* cur = pkt;
-  char const* end = pkt + pkt_len;
-
-  while (cur < end) {
-    if (!parseStatsdSample(&cur, end, &key, &value, &labels)) {
-      logWarning("received invalid statsd packet");
-      return;
-    }
-
-    logDebug(
-        "received statsd sample; metric_id=$0 value=$1",
-        key,
-        value);
-
-    double float_value;
-    try {
-      float_value = std::stod(value);
-    } catch (std::exception& e) {
-      logWarning("received invalid statsd packet");
-      return;
-    }
-
-    auto now = WallClock::unixMicros();
-    LabelledSample sample(
-        Sample(now, float_value),
-        labels);
-
-    auto rc = metric_service_->insertSample(key, sample);
-    if (!rc.isSuccess()) {
-      logWarning("statsd insert failed: $0", rc.getMessage());
-    }
-
-    labels.clear();
+  if (rc > 0) {
+    return ReturnCode::success();
+  } else {
+    /* N.B. we set the socket to nonblocking so this might return EAGAIN.
+       however we explicitly chose not to retry in this case */
+    return ReturnCode::error("EIO", "sendto() failed: $0", strerror(errno));
   }
 }
 

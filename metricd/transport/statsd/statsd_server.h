@@ -21,34 +21,29 @@ namespace fnordmetric {
 class MetricService;
 namespace statsd {
 
-class StatsdEmitter {
+class StatsdServer {
 public:
 
-  StatsdEmitter();
-  StatsdEmitter(const StatsdEmitter& o) = delete;
-  StatsdEmitter& operator=(const StatsdEmitter& o) = delete;
+  StatsdServer(
+      MetricService* metric_service);
 
-  ReturnCode connect(const std::string& addr);
+  ~StatsdServer();
 
-  void enqueueSample(
-      const std::string& metric,
-      const std::string& value,
-      const std::map<std::string, std::string>& labels = {});
+  ReturnCode listen(const std::string& addr, int port);
+  ReturnCode listenAndStart(const std::string& addr, int port);
 
-  ReturnCode emitSamples();
+  ReturnCode start();
+  void shutdown();
 
 protected:
-  int fd_;
-  sockaddr_in remote_addr_;
-  std::string buf_;
-};
 
-bool parseStatsdSample(
-    const char** begin,
-    const char* end,
-    std::string* key,
-    std::string* value,
-    LabelSet* labels);
+  void handlePacket(const char* pkt, size_t pkt_len);
+
+  int ssock_;
+  MetricService* metric_service_;
+  std::thread thread_;
+  std::atomic<bool> running_;
+};
 
 } // namespace statsd
 } // namespace fnordmetric
