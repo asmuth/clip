@@ -52,6 +52,7 @@ ReturnCode MetricService::startService(
     logDebug("Opening metric; metric_id=$0", mc.first);
 
     metric = new Metric(mc.first);
+    metric->setConfig(mc.second);
     metric_map_builder.addMetric(mc.first, std::unique_ptr<Metric>(metric));
   }
 

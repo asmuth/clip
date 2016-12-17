@@ -12,6 +12,7 @@
 #include <sstream>
 #include <metricd/metric.h>
 #include <metricd/metric_map.h>
+#include <metricd/util/logging.h>
 #include <libtsdb/varint.h>
 
 namespace fnordmetric {
@@ -345,9 +346,18 @@ bool MetricSeriesListCursor::fetchNext() {
 }
 
 Metric::Metric(
-    const std::string& key) {}
+    const std::string& key) :
+    key_(key) {}
 
 void Metric::setConfig(MetricConfig config) {
+  if (config.aggregation != MetricAggregationType::NONE &&
+      config.granularity == 0) {
+    logWarning(
+        "metric<$0>: setting 'aggregation' without 'granularity' will have "
+        "no effect",
+        key_);
+  }
+
   config_ = config;
 }
 

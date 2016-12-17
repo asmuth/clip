@@ -185,6 +185,7 @@ public:
   MetricSeriesList* getSeriesList();
 
 protected:
+  std::string key_;
   MetricSeriesList series_;
   MetricConfig config_;
 };
