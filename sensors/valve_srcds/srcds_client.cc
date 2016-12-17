@@ -103,7 +103,7 @@ ReturnCode SRCDSClient::getInfo(SRCDSInfo* info) {
       (const sockaddr*) &remote_addr_,
       sizeof(remote_addr_));
 
-  if (rc < -1) {
+  if (rc < 0) {
     /* N.B. we set the socket to nonblocking so this might return EAGAIN.
        however we explicitly chose not to retry in this case */
     return ReturnCode::error("EIO", "sendto() failed: $0", strerror(errno));
