@@ -73,5 +73,11 @@ AS_IF([test "$with_zlib" != no], [
 ])
 AM_CONDITIONAL([HAVE_ZLIB], [test $HAVE_ZLIB = 1])
 
-AC_CONFIG_FILES([Makefile libtsdb/Makefile metricd/Makefile sensors/sysstat/Makefile])
+AC_CONFIG_FILES([
+    Makefile
+    libtsdb/Makefile
+    metricd/Makefile
+    sensors/sysstat/Makefile
+    sensors/valve_srcds/Makefile])
+
 AC_OUTPUT
