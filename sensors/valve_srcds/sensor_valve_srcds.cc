@@ -43,13 +43,6 @@ int main(int argc, const char** argv) {
       NULL);
 
   flags.defineFlag(
-      "statsd",
-      FlagParser::T_STRING,
-      false,
-      NULL,
-      NULL);
-
-  flags.defineFlag(
       "metric_prefix",
       FlagParser::T_STRING,
       false,
@@ -61,6 +54,20 @@ int main(int argc, const char** argv) {
       FlagParser::T_STRING,
       false,
       NULL,
+      NULL);
+
+  flags.defineFlag(
+      "send_statsd",
+      FlagParser::T_STRING,
+      false,
+      NULL,
+      NULL);
+
+  flags.defineFlag(
+      "verbose",
+      FlagParser::T_SWITCH,
+      false,
+      "v",
       NULL);
 
   flags.defineFlag(
@@ -106,7 +113,9 @@ int main(int argc, const char** argv) {
         "   --srcds_addr <addr>       Address of the srcds server (e.g. localhost:27015)\n"
         "   --metric_prefix <str>     Prefix all metric names with a string (e.g. 'gameserver.csgo.')\n"
         "   --metric_label <k>=<v>    Add a label to all metrics\n"
-        "   --statsd <addr>           Send measurements via udp/statsd\n"
+        "   --send_statsd <addr>      Send measurements via statsd/udp\n"
+        "   --send_jsonudp <addr>     Send measurements via json/udp\n"
+        "   --send_jsontcp <addr>     Send measurements via json/tcp\n"
         "   -?, --help                Display this help text and exit\n"
         "   -v, --version             Display the version of this binary and exit";
 
@@ -114,6 +123,8 @@ int main(int argc, const char** argv) {
   }
 
   /* check arguments */
+  bool verbose = flags.isSet("verbose");
+
   if (!flags.isSet("srcds_addr")) {
     std::cerr << "ERROR: --srcds_addr flag must be set\n";
     return 1;
@@ -142,7 +153,7 @@ int main(int argc, const char** argv) {
 
   /* setup statsd client if enabled */
   std::vector<std::unique_ptr<fnordmetric::statsd::StatsdEmitter>> statsd_trgts;
-  for (const auto& statsd_addr : flags.getStrings("statsd")) {
+  for (const auto& statsd_addr : flags.getStrings("send_statsd")) {
     std::unique_ptr<fnordmetric::statsd::StatsdEmitter> statsd_emitter(
         new fnordmetric::statsd::StatsdEmitter());
 
@@ -185,9 +196,11 @@ int main(int argc, const char** argv) {
       }
     }
 
-    /* print measurements to stdout */
-    for (const auto& m : measurements) {
-      std::cout << m.first << "=" << m.second << std::endl;
+    /* print measurements to stdout if verbose*/
+    if (verbose) {
+      for (const auto& m : measurements) {
+        std::cout << m.first << "=" << m.second << std::endl;
+      }
     }
   }
 
