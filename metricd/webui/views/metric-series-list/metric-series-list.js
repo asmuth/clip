@@ -56,6 +56,11 @@ FnordMetric.views["fnordmetric.metric.series.list"] = function(elem, params) {
       p.end = parseInt(end_param);
     }
 
+    var timezone_param = URLUtil.getParamValue(path, "timezone");
+    if (timezone_param) {
+      p.timezone = timezone_param;
+    }
+
     return p;
   }
 
@@ -64,7 +69,7 @@ FnordMetric.views["fnordmetric.metric.series.list"] = function(elem, params) {
         ".fnordmetric-metric-series-list f-timerange-picker");
 
     if (url_params.start && url_params.end) {
-      picker.setTimerange(url_params.start, url_params.end);
+      picker.setTimerange(url_params.start, url_params.end, url_params.timezone);
     }
 
     picker.addEventListener("submit", function(e) {
