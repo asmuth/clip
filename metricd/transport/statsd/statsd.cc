@@ -94,6 +94,8 @@ ReturnCode StatsdEmitter::emitSamples() {
       (const sockaddr*) &remote_addr_,
       sizeof(remote_addr_));
 
+  buf_.clear();
+
   if (rc > 0) {
     return ReturnCode::success();
   } else {
