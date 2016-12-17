@@ -26,11 +26,19 @@
 #include <iostream>
 #include "metricd/util/flagparser.h"
 #include "metricd/util/stringutil.h"
+#include "sensors/valve_srcds/srcds_client.h"
 
 ReturnCode daemonize();
 
 int main(int argc, const char** argv) {
   FlagParser flags;
+
+  flags.defineFlag(
+      "srcds_addr",
+      FlagParser::T_STRING,
+      false,
+      NULL,
+      NULL);
 
   flags.defineFlag(
       "help",
@@ -59,7 +67,7 @@ int main(int argc, const char** argv) {
   if (flags.isSet("help") || flags.isSet("version")) {
     std::cerr <<
         StringUtil::format(
-            "sensor_sysstat $0\n"
+            "sensor_valve_srcds $0\n"
             "Part of the FnordMetric project (http://fnordmetric.io)\n"
             "Copyright (c) 2016, Paul Asmuth, Laura Schlimmer et al. All rights reserved.\n\n",
             FNORDMETRIC_VERSION);
@@ -71,11 +79,40 @@ int main(int argc, const char** argv) {
 
   if (flags.isSet("help")) {
     std::cerr <<
-        "Usage: $ sensor_sysstat [OPTIONS]\n\n"
+        "Usage: $ sensor_valve_srcds [OPTIONS]\n\n"
+        "   --srcds_addr <addr>       Address of the srcds server (e.g. localhost:27015)\n"
         "   -?, --help                Display this help text and exit\n"
         "   -v, --version             Display the version of this binary and exit";
 
     return 0;
+  }
+
+  /* check arguments */
+  if (!flags.isSet("srcds_addr")) {
+    std::cerr << "ERROR: --srcds_addr flag must be set\n";
+    return 1;
+  }
+
+  /* setup srcds client */
+  fnordmetric::sensor_valve_srcds::SRCDSClient srcds_client;
+  {
+    auto rc = srcds_client.connect(flags.getString("srcds_addr"));
+    if (!rc.isSuccess()) {
+      std::cerr << "ERROR: " << rc.getMessage() << std::endl;
+      return 1;
+    }
+  }
+
+  /* periodically poll for server infos */
+  for (;; usleep(1000000)) {
+    fnordmetric::sensor_valve_srcds::SRCDSInfo info;
+    auto rc = srcds_client.getInfo(&info);
+    if (!rc.isSuccess()) {
+      std::cerr <<
+          "WARNING: SRCDS info request failed:" << rc.getMessage() << std::endl;
+      continue;
+    }
+
   }
 
   return 0;
