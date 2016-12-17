@@ -42,6 +42,9 @@ AM_CFLAGS =  $(PTHREAD_CFLAGS) $(PTHREAD_DEF) $(SYSLOG_DEF) $(ZLIB_DEF) $(GETHOS
 AM_LDFLAGS = $(PCRE_LDFLAGS_) $(CURL_LDFLAGS_) $(PTHREAD_LDFLAGS_)
 
 metricd_common_sources_ = \
+    aggregate.h \
+    aggregate_impl.h \
+    aggregate.cc \
     config/config_list.h \
     config/config_list.cc \
     config/config_parser.h \

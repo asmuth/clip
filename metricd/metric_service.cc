@@ -199,7 +199,7 @@ MetricSeriesCursor MetricService::getCursor(
   auto metric = metric_map->findMetric(metric_id);
   if (!metric) {
     //return ReturnCode::error("ENOTFOUND", "metric not found");
-    return MetricSeriesCursor(MetricDataType::UINT64);
+    return MetricSeriesCursor();
   }
 
   tsdb::Cursor tsdb_cursor(
@@ -207,10 +207,10 @@ MetricSeriesCursor MetricService::getCursor(
 
   if (tsdb_->getCursor(series_id, &tsdb_cursor)) {
     return MetricSeriesCursor(
-        metric->getConfig().data_type,
+        &metric->getConfig(),
         std::move(tsdb_cursor));
   } else {
-    return MetricSeriesCursor(metric->getConfig().data_type);
+    return MetricSeriesCursor();
   }
 }
 

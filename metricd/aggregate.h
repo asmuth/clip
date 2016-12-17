@@ -12,30 +12,43 @@
 
 namespace fnordmetric {
 
-class Aggregator {
+class OutputAggregator {
 public:
 
-  virtual ~Aggregator() = default;
+  virtual ~OutputAggregator() = default;
 
-  virtual void addUINT64(uint64_t time, uint64_t value) = 0;
-
-  virtual uint64_t getUINT64() = 0;
+  virtual bool aggregateUINT64(
+      uint64_t input_time,
+      uint64_t input_value,
+      uint64_t* output_time,
+      uint64_t* output_value) = 0;
 
 };
 
 template <typename T>
-class SumAggregator {
+class SumOutputAggregator : public OutputAggregator {
 public:
 
-  SumAggregator();
+  SumOutputAggregator();
 
-  void addUINT64(uint64_t time, uint64_t value) override;
+  bool aggregateUINT64(
+      uint64_t input_time,
+      uint64_t input_value,
+      uint64_t* output_time,
+      uint64_t* output_value) override;
 
-  uint64_t getUINT64() override;
+  bool aggregate(
+      uint64_t input_time,
+      T input_value,
+      uint64_t* output_time,
+      T* output_value);
 
 protected:
-  uint64_t sum_;
+  uint64_t twin_;
+  T sum_;
 };
 
 } // namespace fnordmetric
+
+#include "aggregate_impl.h"
 

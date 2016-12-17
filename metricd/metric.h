@@ -120,8 +120,8 @@ protected:
 class MetricSeriesCursor {
 public:
 
-  MetricSeriesCursor(MetricDataType data_type);
-  MetricSeriesCursor(MetricDataType data_type, tsdb::Cursor cursor);
+  MetricSeriesCursor();
+  MetricSeriesCursor(const MetricConfig* config, tsdb::Cursor cursor);
 
   MetricSeriesCursor(const MetricSeriesCursor& o) = delete;
   MetricSeriesCursor(MetricSeriesCursor&& o);
@@ -131,8 +131,12 @@ public:
   bool next(uint64_t* timestamp, uint64_t* value);
 
 protected:
+
+  std::unique_ptr<OutputAggregator> mkAggregator(
+      const MetricConfig* config) const;
+
   tsdb::Cursor cursor_;
-  std::unique_ptr<Aggregator> aggr_;
+  std::unique_ptr<OutputAggregator> aggr_;
 };
 
 class MetricSeriesListCursor {

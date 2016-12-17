@@ -241,26 +241,56 @@ size_t MetricSeriesList::getSize() const {
   return series_.size();
 }
 
-MetricSeriesCursor::MetricSeriesCursor(
-    MetricDataType data_type) :
-    cursor_(getMetricTSDBPageType(data_type)) {}
+MetricSeriesCursor::MetricSeriesCursor() :
+    cursor_(tsdb::PageType::UINT64) {}
 
 MetricSeriesCursor::MetricSeriesCursor(
-    MetricDataType data_type,
+    const MetricConfig* config,
     tsdb::Cursor cursor) :
-    cursor_(std::move(cursor)) {}
+    cursor_(std::move(cursor)),
+    aggr_(mkAggregator(config)) {}
 
 MetricSeriesCursor::MetricSeriesCursor(
     MetricSeriesCursor&& o) :
-    cursor_(std::move(o.cursor_)) {}
+    cursor_(std::move(o.cursor_)),
+    aggr_(std::move(o.aggr_)) {}
 
 MetricSeriesCursor& MetricSeriesCursor::operator=(MetricSeriesCursor&& o) {
   cursor_ = std::move(o.cursor_);
+  aggr_ = std::move(o.aggr_);
   return *this;
 }
 
 bool MetricSeriesCursor::next(uint64_t* timestamp, uint64_t* value) {
-  return cursor_.next(timestamp, value);
+  if (aggr_) {
+    uint64_t next_ts;
+    uint64_t next_val;
+
+    while (cursor_.next(&next_ts, &next_val)) {
+      if (aggr_->aggregateUINT64(next_ts, next_val, timestamp, value)) {
+        return true;
+      }
+    }
+
+    return aggr_->aggregateUINT64(uint64_t(-1), 0, timestamp, value);
+  } else {
+    return cursor_.next(timestamp, value);
+  }
+}
+
+std::unique_ptr<OutputAggregator> MetricSeriesCursor::mkAggregator(
+    const MetricConfig* config) const {
+  if (config->granularity == 0) {
+    return {};
+  }
+
+  switch (config->aggregation) {
+    case MetricAggregationType::SUM:
+      return std::unique_ptr<OutputAggregator>(
+          new SumOutputAggregator<uint64_t>());
+    case MetricAggregationType::NONE: return {};
+    default: return {};
+  }
 }
 
 MetricSeriesListCursor::MetricSeriesListCursor() :
