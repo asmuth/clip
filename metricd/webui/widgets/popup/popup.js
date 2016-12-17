@@ -42,6 +42,10 @@ var PopupComponent = function() {
 
     this.dispatchEvent(ev);
   };
+
+  this.isVisible = function() {
+    return this.hasAttribute("data-active");
+  }
 }
 
 var proto = Object.create(HTMLElement.prototype);

@@ -1,129 +1,30 @@
-.fnordmetric-metric-series-list .hidden {
-  display: none;
+.fnordmetric-metric-series-list table.f-table {
+  table-layout: fixed
 }
 
-.fnordmetric-metric-series-list .content {
-  width: 100%;
-  display: flex;
-  flex-direction: row;
-  min-height: 100%;
-  border-top: 1px solid #d1d1d1;
-}
-
-.fnordmetric-metric-series-list .content .sidebar {
-  display: none;
-}
-
-/*
-.fnordmetric-metric-series-list .content .sidebar {
-  width: 208px;
-  padding: 0 20px 0 14px;
-  background: rgba(0,0,0,0.04);
-}
-
-.fnordmetric-metric-series-list .content .sidebar.right {
-  width: 250px;
-}
-*/
-
-.fnordmetric-metric-series-list .content .view_content {
-  height: 100%;
-}
-
-.fnordmetric-metric-series-list .content .table_box {
-  flex: 1;
-  min-height: 600px;
-  border-left: 1px solid #d1d1d1;
-  border-right: 1px solid #d1d1d1;
-}
-
-.fnordmetric-metric-series-list .content .table_box z-pager {
-  float: right;
-  margin: 13px 20px;
-  font-size: 13px;
-}
-
-/* sidebar filter */
-.fnordmetric-metric-series-list .content .sidebar .filter {
-  font-size: 12px;
-  border-bottom: 1px solid #d9d9d9;
-  padding: 14px 0 10px 0;
-}
-
-.fnordmetric-metric-series-list .content .sidebar .filter .filter_title {
-  line-height: 18px;
-}
-
-.fnordmetric-metric-series-list .content .sidebar .filter .filter_title h4 {
-  margin: 0;
-  font-weight: 500;
-  text-transform: uppercase;
-}
-
-.fnordmetric-metric-series-list .content .sidebar .filter a.link.edit {
-  font-size: 11px;
-  float: right;
-}
-
-.fnordmetric-metric-series-list .content .sidebar .filter .filter_value {
-  font-family: monospace;
-  padding: 0 9px;
-  margin-top: 5px;
-  line-height: 28px;
-  background: #e8e8e8;
-}
-
-.fnordmetric-metric-series-list .content .sidebar a.add_filter {
-  font-size: 13px;
-  display: block;
-  line-height: 24px;
-  margin-top: 14px;
-  text-align: center;
-}
-
-/**
-.fnordmetric-metric-series-list .content .sidebar ul.value_columns {
-  margin: 0;
-  padding: 0;
-  list-style-type: none;
-}
-
-.fnordmetric-metric-series-list .content .sidebar ul.value_columns li {
-  display: block;
-  width: 100%;
-  line-height: 30px;
-  padding: 0 8px;
-}
-
-.fnordmetric-metric-series-list .content .sidebar ul.value_columns li i {
-  padding: 5px;
-  float: right;
-}
-
-.fnordmetric-metric-series-list .content .sidebar ul.value_columns li i:hover {
-  cursor: pointer;
-}
-
-.fnordmetric-metric-series-list .content .sidebar ul.value_columns li i::before {
-  content: "\f070";
-}
-
-.fnordmetric-metric-series-list .content .sidebar ul.value_columns li.selected i::before {
-  content: "\f06e";
-}
-
-.fnordmetric-metric-series-list .content .sidebar ul.value_columns li.selected:hover {
-  background: #f6f8fa;
+/**.fnordmetric-metric-series-list table.f-table thead th[data-key='sparkline'] {
+  width: 240px;
 }
 **/
-.fnordmetric-metric-series-list .content .controls {
+.fnordmetric-metric-series-list table.f-table tbody td {
+  line-height: 40px;
+}
+
+.fnordmetric-metric-series-list table.f-table tbody td[data-key='sparkline'] z-sparkline {
+  margin-right: 10px;
+
+}
+
+
+/** controls **/
+.fnordmetric-metric-series-list .controls {
   background: rgba(0,0,0,0.04);
   width: 100%;
   overflow: visible;
   height: 37px;
 }
 
-.fnordmetric-metric-series-list .content .controls .control {
+.fnordmetric-metric-series-list .controls .control {
   float: right;
   height: 38px;
   line-height: 40px;
@@ -131,11 +32,11 @@
   font-size: 13px;
 }
 
-.fnordmetric-metric-series-list .content .controls .control.left {
+.fnordmetric-metric-series-list .controls .control.left {
   float: left;
 }
 
-.fnordmetric-metric-series-list .content .controls .control label {
+.fnordmetric-metric-series-list .controls .control label {
   float: left;
   font-size: 12px;
   font-weight: 400;
@@ -143,106 +44,18 @@
   margin-right: 5px;
 }
 
-.fnordmetric-metric-series-list .content .controls .control i {
-  padding: 0 8px;
-  font-size: 14px;
-  font-weight: 600;
-}
-
-.fnordmetric-metric-series-list .content .controls .control i:hover {
-  cursor: pointer;
-  color: #333;
-}
-
-.fnordmetric-metric-series-list .content .controls .control f-dropdown button.btn {
-  line-height: 40px;
-}
-
-.fnordmetric-metric-series-list z-modal.filter .z-modal-header {
-  background: rgba(25, 32, 37, 1);
-  color: #cdd3d8;
-}
-.fnordmetric-metric-series-list z-modal.filter .z-modal-content .input_container {
-  padding: 18px 0 18px 0;
-}
-
-.fnordmetric-metric-series-list z-modal.filter .z-modal-content .input_container label {
-  line-height: 30px;
-  margin-right: 5px;
-  vertical-align: top;
-  font-weight: 500;
-  font-size: 15px;
-  width: 62px;
-}
-
-.fnordmetric-metric-series-list z-modal.filter .z-modal-content .input_container input {
-  vertical-align: top;
-  width: 300px;
-}
-
-.fnordmetric-metric-series-list z-modal.filter .z-modal-content .input_container .description {
-  margin-top: 13px;
-  display: block;
-  margin-left: 69px;
-}
-
-.fnordmetric-metric-series-list z-modal.filter .z-modal-footer button {
+/** pager **/
+.fnordmetric-metric-series-list z-pager {
   float: right;
+  margin: 13px 20px;
+  font-size: 13px;
 }
 
 /** erorr message **/
-.fnordmetric-metric-series-list .view_content .error_pane {
+.fnordmetric-metric-series-list .error_pane {
   text-align: center;
   height: 100%;
   display: flex;
   flex-direction: column;
   justify-content: center;
-}
-
-.fnordmetric-metric-series-list .view_content .error_pane h1 {
-  
-}
-
-/** table view **/
-.fnordmetric-metric-series-list .content table.f-table {
-  margin-top: 0;
-  border-top: 1px solid #d1d1d1;
-}
-
-.fnordmetric-metric-series-list .content table.f-table th,
-.fnordmetric-metric-series-list .content table.f-table td {
-  background: #fff;
-}
-
-/** timeseries view **/
-.fnordmetric-metric-series-list .content .timeseries {
-  width: 100%;
-  background: rgba(0,0,0,0.04);
-  padding: 3px 11px 18px 12px;
-}
-
-.fnordmetric-metric-series-list .content .timeseries .chart_box {
-  width: 100%;
-  border: 1px solid #d1d1d1;
-  border-radius: 5px;
-  background: #fff;
-  margin-bottom: 20px;
-
-}
-
-/** FIXME hack to show right y-axis and hide left y-axis **/
-.fnordmetric-metric-series-list .content .timeseries .chart_box .chart_canvas {
-  height: 174px;
-  width: 104%;
-  margin-left: -3%;
-}
-
-.fnordmetric-metric-series-list .content .timeseries .chart_box .chart_canvas .dygraph-axis-label-x,
-.fnordmetric-metric-series-list .content .timeseries .chart_box .chart_canvas .dygraph-axis-label-y1 {
-  display: none;
-}
-
-.fnordmetric-metric-series-list .content .timeseries .chart_box .chart_canvas .dygraph-axis-label-y2 {
-  font-size: 12px;
-  color: #737373;
 }

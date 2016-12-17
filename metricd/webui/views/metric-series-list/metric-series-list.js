@@ -1,208 +1,188 @@
 FnordMetric.views["fnordmetric.metric.series.list"] = function(elem, params) {
   'use strict';
 
-  var api_path = "/list_series";
-  var path = params.path;
+  var api_url = "/fetch_series";
+  var default_columns = [
+  //  {
+  //    key: "min",
+  //    title: "Min"
+  //  },
+  //  {
+  //    key: "max",
+  //    title: "Max"
+  //  },
+    {
+      key: "sparkline",
+      title: ""
+    }
+  ];
+
+  var sparkline_html = ["<z-sparkline height='40px' width='220px' ",
+    "data-sparkline='{{values}}'></z-sparkline> ",
+    "<span>{{latest}}</span><span>{{unit}}</span>"].join("");
+
+  var table;
   var url_params;
-  var view_cfg;
-  var viewport_elem;
 
   this.initialize = function() {
-    url_params = getParams(params.path);
     var page = templateUtil.getTemplate("fnordmetric-metric-series-list-tpl");
+    elem.appendChild(page);
 
-    DomUtil.handleLinks(page, params.app.navigateTo);
-    DomUtil.replaceContent(elem, page);
-    viewport_elem = elem.querySelector(".view_content");
+    url_params = getParams(params.path);
 
-    view_cfg = new FnordMetric.MetricTableViewConfig(url_params);
-    render();
-    fetchData();
-  }
+    wacthTimeRangePicker();
+    renderHeader();
+    fetchMetricSeriesList();
+  };
 
-  var updatePath = function() {
-    params.app.navigateTo(
-        params.route.args[0] + "?" + URLUtil.buildQueryString(view_cfg.getParamList()));
-  }
+  this.destroy = function() {
+
+  };
+
+/********************************* private ***********************************/
 
   var getParams = function(path) {
     var p = {};
 
     p.metric = params.route.args[1];
-    var cfg_param = URLUtil.getParamValue(path, "cfg");
-    if (cfg_param) {
-      p.config = cfg_param;
+
+    var start_param = URLUtil.getParamValue(path, "start");
+    if (start_param) {
+      p.start = parseInt(start_param);
     }
 
-    var offset_param = URLUtil.getParamValue(path, "offset");
-    if (offset_param) {
-      p.offset = offset_param;
+    var end_param = URLUtil.getParamValue(path, "end");
+    if (end_param) {
+      p.end = parseInt(end_param);
     }
 
     return p;
   }
 
-  var fetchData = function() {
-    var url = params.app.api_base_path + api_path + "?metric_id=test"; //FIXME 
+  var wacthTimeRangePicker = function() {
+    var picker = elem.querySelector(
+        ".fnordmetric-metric-series-list f-timerange-picker");
+
+    if (url_params.start && url_params.end) {
+      picker.setTimerange(url_params.start, url_params.end);
+    }
+
+    picker.addEventListener("submit", function(e) {
+      updateQueryStr(this.getTimerange());
+    }, false);
+  }
+
+  var updateQueryStr = function(query_params) {
+    var url = params.path;
+    for (var k in query_params) {
+      url = URLUtil.addOrModifyParam(url, k, query_params[k]);
+    }
+
+    params.app.navigateTo(url);
+  }
+
+  var renderHeader = function() {
+    var header = elem.querySelector(
+        ".fnordmetric-metric-series-list .page_header .metric_name");
+    header.innerHTML = url_params.metric;
+  }
+
+  var fetchMetricSeriesList = function() {
+    var query_str = [
+      "metric_id=",
+      url_params.metric
+    ].join("");
+
+    var url = params.app.api_base_path + api_url + "?" + query_str;
     HTTPUtil.httpGet(url, {}, function(r) {
       if (r.status != 200) {
         params.app.renderError(
-            "an error occured while loading the metric list:",
+            "an error occured while loading the metric series list:",
             r.response);
         return;
       }
 
       var series = JSON.parse(r.response);
-      renderView(series);
+      renderTable(series.series);
     });
-    //updateTable(result);
-    //renderPagination(result.rows.length);
-  }
-
-  var render = function() {
-    renderHeader();
-    // renderView(); --> initView
-    //renderFilterList();
-    renderTimerangeControl();
-    renderEmbedControl();
   };
 
-  var renderHeader = function(metric) {
-    var header = elem.querySelector(
-        ".fnordmetric-metric-series-list .page_header .metric_name");
-    header.innerHTML = url_params.metric;
+  var renderTable = function(series) {
+    /* build columns and rows */
+    var columns = [];
+    var column_keys = {};
+    var rows = [];
+    series.forEach(function(s) {
+      var cells = {
+        series_id: {
+          value: s.series_id
+        },
+        sparkline: {
+          value_html: sparkline_html
+        }
+      };
 
-    /* handle view controls */
-    elem.querySelector(".fnordmetric-metric-series-list .view_control").setAttribute(
-        "data-view", view_cfg.getValue("view"));
+      var sparkline_values = [];
+      s.values.forEach(function(v) {
+        sparkline_values.push(v[1]);
 
-    /* switch to table view */
-    var table_view_ctrl = elem.querySelector(
-        ".fnordmetric-metric-series-list .view_control .table_view");
-    table_view_ctrl.addEventListener("click", function(e) {
-      view_cfg.updateValue("view", "table");
-      updatePath();
-    }, false);
+        //if (!cells.max.value || cells.max.value < v[1]) {
+        //  cells.max.value = v[1];
+        //}
 
-    /* switch to timeseries view */
-    var timeseries_view_ctrl = elem.querySelector(
-        ".fnordmetric-metric-series-list .view_control .timeseries_view");
-    timeseries_view_ctrl.addEventListener("click", function(e) {
-      view_cfg.updateValue("view", "timeseries");
-      updatePath();
-    }, false);
+        //if (!cells.min.value || cells.min.value > v[1]) {
+        //  cells.min.value = v[1];
+        //}
+      });
+
+      cells.sparkline.value_html = cells.sparkline.value_html.replace(
+          "{{values}}",
+          sparkline_values.join(","));
+
+      cells.sparkline.value_html = cells.sparkline.value_html.replace(
+          "{{latest}}",
+          s.values[s.values.length - 1][1]); //FIXME use value returned by api
+
+      cells.sparkline.value_html = cells.sparkline.value_html.replace(
+          "{{unit}}",
+          s.unit || "&nbsp;MB"); //FIXME use value returned by api
+
+      for (var key in s.labels) {
+        cells[key] = {value : s.labels[key]};
+
+        if (!column_keys.hasOwnProperty(key)) {
+          column_keys[key] = true;
+          columns.push({
+            key: key,
+            title: key
+          });
+        }
+      }
+
+      rows.push({cells: cells});
+    });
+
+    /* initialize table */
+    if (!table) {
+      table = new fTable({columns: columns.concat(default_columns)});
+      /* navigate to id detail page */
+      table.onClick(function(r) {
+        params.app.navigateTo(
+            params.route.args[0] + "/" + r.cells.series_id.value);
+      });
+
+      /* sort callback */
+      table.onSort(function(column, direction) {
+        params.view_cfg.updateValue("order", direction);
+        params.view_cfg.updateValue("order_by", column.key);
+        updatePath();
+      });
+    }
+
+    table.setRows(rows);
+    table.render(elem.querySelector(
+        ".fnordmetric-metric-series-list table.metric_series_list"));
+   // renderPagination(series.length);
   };
-
-  var renderTimerangeControl = function() {
-    var dropdown = elem.querySelector(
-        ".fnordmetric-metric-series-list .control f-dropdown.timerange");
-
-    var compare_to_value = view_cfg.getValue("compare_to");
-    if (compare_to_value != null) {
-      dropdown.setValue(compare_to_value);
-    }
-
-    dropdown.addEventListener("select", function(e) {
-      view_cfg.updateValue("compare_to", e.detail.value);
-      updatePath();
-    }, false);
-  }
-
-  var renderView = function(results) {
-    //TODO enable / disable current view icon in header
-    var view;
-    var view_opts = {
-      data: results,
-      view_cfg: view_cfg
-    };
-
-    switch (view_cfg.getValue("view")){
-      case "table":
-        view = FnordMetric.views["fnordmetric.metric.series.list.table"];
-        break;
-
-      case "timeseries":
-        view = FnordMetric.views["fnordmetric.metric.series.list.chart"];
-        break;
-
-      default:
-        view = FnordMetric.views["fnordmetric.404"];
-        break;
-    }
-
-    //render view
-    console.log(view);
-    viewport_elem.innerHTML = "";
-
-    var current_view = {};
-    view.call(current_view, viewport_elem, view_opts);
-    if (current_view.initialize) {
-      current_view.initialize.call(current_view);
-    }
-  }
-
-  //var renderFilterList = function() {
-  //  var filter_strs = view_cfg.getValue("filter") ? view_cfg.getValue("filter") : [];
-  //  var filter_ctrl = new FnordMetric.MetricTableFilter(
-  //      elem.querySelector(".fnordmetric-metric-table z-modal.filter"));
-
-  //  /* add a new filter */
-  //  var add_link = elem.querySelector(
-  //      ".fnordmetric-metric-table .sidebar a.add_filter");
-  //  add_link.addEventListener("click", function(e) {
-  //    filter_ctrl.render();
-  //  }, false);
-  //  filter_ctrl.onSubmit(function(filter_str) {
-  //    console.log(filter_str);
-  //    filter_strs.push(filter_str);
-  //    view_cfg.updateValue("filter", filter_strs);
-  //    updatePath();
-  //  });
-
-  //  /* render exisiting filter list */
-  //  var flist_elem = elem.querySelector(
-  //      ".fnordmetric-metric-table .sidebar .filter_list");
-  //  var felem_tpl = templateUtil.getTemplate(
-  //      "fnordmetric-metric-table-filter-list-elem-tpl");
-
-  //  filter_strs.forEach(function(f) {
-  //    var felem = felem_tpl.cloneNode(true);
-  //    felem.querySelector(".filter_value").innerHTML = f;
-
-  //    felem.querySelector(".edit").addEventListener("click", function(e) {
-  //      filter_ctrl.render(f);
-  //    });
-
-  //    flist_elem.appendChild(felem);
-  //  });
-
-  //  /* change an existing filter */
-  //  filter_ctrl.onChange(function(new_filter_str, old_filter_str) {
-  //    var idx = filter_strs.indexOf(old_filter_str);
-  //    if (idx > -1) {
-  //      filter_strs[idx] = new_filter_str;
-  //    }
-
-  //    view_cfg.updateValue("filter", filter_strs);
-  //    updatePath();
-  //  });
-
-  //  /* remove an exisiting filter */
-  //  filter_ctrl.onDelete(function(old_filter_str) {
-  //    var idx = filter_strs.indexOf(old_filter_str);
-  //    if (idx > -1) {
-  //      filter_strs.splice(idx, 1);
-  //    }
-  //    view_cfg.updateValue("filter", filter_strs);
-  //    updatePath();
-  //  });
-  //}
-
-  var renderEmbedControl = function() {
-    elem.querySelector(".fnordmetric-metric-series-list .control.embed")
-        .addEventListener("click", function() {
-          fEmbedPopup(elem, "").render();
-        }, false);
-  }
-}
+};
 

@@ -54,10 +54,19 @@ this["FnordMetric"] = (function() {
       }
     }
 
+    // PATH: /metrics/metric_id/serie_id
+    var ms = path.match(new RegExp("^\/metrics\/(.*)\/([0-9]*)$"));
+    if (ms) {
+      return {
+        "view": "fnordmetric.metric.serie",
+        "args": ms
+      }
+    }
+
+    // PATH: /metrics/metric_id
     var m = path.match(new RegExp("^\/metrics\/(.*)$"));
     if (m) {
       return {
-        "route": "/metrics",
         "view": "fnordmetric.metric.series.list",
         "args": m
       }
@@ -87,7 +96,7 @@ this["FnordMetric"] = (function() {
     applyNavigationChange(path);
   }
 
-  var applyNavigationChange = function(path) {
+  function applyNavigationChange(path) {
     if (path == current_path) {
       return;
     }
