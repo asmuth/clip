@@ -97,6 +97,15 @@ bool ConfigParser::parseMetricDefinition(ConfigList* config) {
       continue;
     }
 
+    /* parse the "granularity" stanza */
+    if (ttype == T_STRING && tbuf == "granularity") {
+      consumeToken();
+      if (!parseMetricDefinitionGranularityStanza(&metric_config)) {
+        return false;
+      }
+      continue;
+    }
+
     setError(
         StringUtil::format(
             "invalid token; got: $0, expected one of: metric",
@@ -139,6 +148,33 @@ bool ConfigParser::parseMetricDefinitionAggregationStanza(
 
     return false;
   }
+}
+
+bool ConfigParser::parseMetricDefinitionGranularityStanza(
+    MetricConfig* metric_config) {
+  TokenType ttype;
+  std::string tbuf;
+  if (!getToken(&ttype, &tbuf) || ttype != T_STRING) {
+    setError("granularity requires an argument");
+    return false;
+  }
+
+  consumeToken();
+
+  uint64_t granularity = 0;
+  try {
+    granularity = std::stoull(tbuf);
+  } catch (...) {
+    setError(
+        StringUtil::format(
+            "invalid value for granularity; got: $0, must be a valid number",
+            printToken(ttype, tbuf)));
+
+    return false;
+  }
+
+  metric_config->granularity = granularity;
+  return true;
 }
 
 bool ConfigParser::getToken(

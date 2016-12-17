@@ -45,6 +45,7 @@ protected:
 
   bool parseMetricDefinition(ConfigList* config);
   bool parseMetricDefinitionAggregationStanza(MetricConfig* metric_config);
+  bool parseMetricDefinitionGranularityStanza(MetricConfig* metric_config);
 
   bool getToken(
       TokenType* type,

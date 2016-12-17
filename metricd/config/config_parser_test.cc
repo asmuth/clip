@@ -76,6 +76,7 @@ TEST_CASE(ConfigParserTest, TestParseMetricDefinition, [] () {
   std::string confstr =
       R"(metric users_online {
         aggregation sum
+        granularity 60
       })";
 
   ConfigList config;
@@ -89,6 +90,7 @@ TEST_CASE(ConfigParserTest, TestParseMetricDefinition, [] () {
     auto mc = config.getMetricConfig("users_online");
     EXPECT(mc != nullptr);
     EXPECT(mc->aggregation == MetricAggregationType::SUM);
+    EXPECT(mc->granularity == 60);
   }
 });
 

@@ -18,6 +18,8 @@ namespace fnordmetric {
 
 MetricConfig::MetricConfig() :
    data_type(MetricDataType::UINT64),
+   aggregation(MetricAggregationType::NONE),
+   granularity(0),
    is_valid(false) {}
 
 MetricSeries::MetricSeries(
