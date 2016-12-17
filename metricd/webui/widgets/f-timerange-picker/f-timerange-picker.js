@@ -9,7 +9,13 @@
  */
 
 var TimeRangePickerUtil = this.TimeRangePickerUtil || {};
-TimeRangePickerUtil.formatDateTime = function(date) {
+
+/**
+  * Format to a date time string yyyy-mm-dd hh:mm
+  * @param timestamp to format
+  * @param timezone determines the timezone (must be utc or local, defaults to local)
+**/
+TimeRangePickerUtil.formatDateTime = function(timestamp, timezone) {
   function appendLeadingZero(num) {
     if (num < 10) {
       return "0" + num;
@@ -18,7 +24,12 @@ TimeRangePickerUtil.formatDateTime = function(date) {
     return "" + num;
   }
 
-  var d = new Date(date);
+  var d;
+  if (timezone == 'utc') {
+    d = new Date(TimeRangePickerUtil.toLocal(timestamp));
+  } else {
+    d = new Date(timestamp);
+  }
   return [
       d.getFullYear(), "-",
       appendLeadingZero(d.getMonth() + 1), "-",
@@ -27,12 +38,23 @@ TimeRangePickerUtil.formatDateTime = function(date) {
       appendLeadingZero(d.getMinutes())].join("");
 }
 
+TimeRangePickerUtil.toUTC = function(timestamp) {
+  var date = new Date(timestamp);
+  console.log(timestamp);
+  return timestamp - (date.getTimezoneOffset() * dateUtil.kMillisPerMinute);
+}
+
+TimeRangePickerUtil.toLocal = function(timestamp) {
+  var date = new Date(timestamp);
+  return timestamp + (date.getTimezoneOffset() * dateUtil.kMillisPerMinute);
+}
+
 /**
   * The time range picker widget handler
   * @param timerange is the shared timerange object
   * @param widget is the widget html elem
   */
-var TimeRangePickerWidget = function(timerange, widget) {
+var TimeRangePickerWidget = function(timerange, timezone, widget) {
   'use strict';
 
   var submit_callbacks = [];
@@ -148,10 +170,10 @@ var TimeRangePickerWidget = function(timerange, widget) {
     }
 
     widget.querySelector(".custom input[name='start']").
-        value = TimeRangePickerUtil.formatDateTime(start);
+        value = TimeRangePickerUtil.formatDateTime(start, timezone);
 
     widget.querySelector(".custom input[name='end']").
-        value = TimeRangePickerUtil.formatDateTime(end);
+        value = TimeRangePickerUtil.formatDateTime(end, timezone);
   }
 
   var enableCustomInput = function() {
@@ -192,8 +214,8 @@ var TimeRangePickerWidget = function(timerange, widget) {
 
   var submitCustom = function() {
     var selected_range = {
-      start: new Date(widget.querySelector("input[name='start']").value).getTime(),
-      end: new Date(widget.querySelector("input[name='end']").value).getTime()
+      start: TimeRangePickerUtil.toUTC(new Date(widget.querySelector("input[name='start']").value).getTime()),
+      end: TimeRangePickerUtil.toUTC(new Date(widget.querySelector("input[name='end']").value).getTime())
     };
 
     submit(selected_range);
@@ -223,10 +245,15 @@ var TimeRangePickerWidget = function(timerange, widget) {
 var TimeRangePickerComponent = function() {
   'use strict';
 
-  var default_range = 5 * dateUtil.kMillisPerMinute; //5 minutes
+  /** default config **/
+  var config = {
+    range: 5 * dateUtil.kMillisPerMinute, //5 minutes
+    timezone: 'utc'
+  }
+
   var timerange = {};
   timerange.end = Date.now();
-  timerange.start = timerange.end - default_range;
+  timerange.start = timerange.end - config.range;
 
   var this_;
   var widget;
@@ -242,6 +269,15 @@ var TimeRangePickerComponent = function() {
     watchInputClick();
 
     updateInputValue();
+  }
+
+  this.setTimezone = function(timezone) {
+    /** allow only supported timezones **/
+    if (timezone != 'utc' && timezone != 'local') {
+      return;
+    }
+
+    config.timezone = timezone;
   }
 
   /**
@@ -269,7 +305,10 @@ var TimeRangePickerComponent = function() {
 /******************************** private *************************************/
 
   var initializeWidget = function() {
-    widget = new TimeRangePickerWidget(timerange, this_.querySelector(".widget"));
+    widget = new TimeRangePickerWidget(
+        timerange,
+        config.timezone,
+        this_.querySelector(".widget"));
     widget.setSubmitCallback(function(new_timerange) {
       timerange.start = new_timerange.start;
       timerange.end = new_timerange.end;
@@ -287,11 +326,11 @@ var TimeRangePickerComponent = function() {
 
   var watchTimerangeMover = function() {
     this_.querySelector(".arrow_left").addEventListener("click", function(e) {
-      moveTimerange(default_range * -1);
+      moveTimerange(config.range * -1);
     }, false);
 
     this_.querySelector(".arrow_right").addEventListener("click", function(e) {
-      moveTimerange(default_range);
+      moveTimerange(config.range);
     }, false);
   }
 
@@ -311,9 +350,9 @@ var TimeRangePickerComponent = function() {
 
   var updateInputValue = function() {
     var input = this_.querySelector("input");
-    input.value = TimeRangePickerUtil.formatDateTime(timerange.start) +
+    input.value = TimeRangePickerUtil.formatDateTime(timerange.start, config.timezone) +
         " - " +
-        TimeRangePickerUtil.formatDateTime(timerange.end);
+        TimeRangePickerUtil.formatDateTime(timerange.end, config.timezone);
   }
 
   var fireSubmitEvent = function() {
