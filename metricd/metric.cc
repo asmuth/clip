@@ -399,16 +399,6 @@ MetricSeriesList* Metric::getSeriesList() {
   return &series_;
 }
 
-uint64_t alignTime(uint64_t timestamp, uint64_t window, uint64_t align = 0) {
-  if (window >= std::numeric_limits<uint64_t>::max() / 2 ||
-      timestamp >= std::numeric_limits<uint64_t>::max() / 2) {
-    return -1;
-  }
-
-  int64_t timestamp_base = int64_t(timestamp) - int64_t(align);
-  return (timestamp_base / int64_t(window)) * int64_t(window) + int64_t(align);
-}
-
 tsdb::PageType getMetricTSDBPageType(MetricDataType t) {
   switch (t) {
     case MetricDataType::UINT64: return tsdb::PageType::UINT64;
