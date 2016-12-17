@@ -1,0 +1,10 @@
+[Unit]
+Description=metricd
+
+[Service]
+WorkingDirectory=/var/lib/metricd
+ExecStart=/usr/local/bin/metricd -d /var/lib/metricd -c /etc/metricd.conf
+User=metricd
+
+[Install]
+WantedBy=multi-user.target

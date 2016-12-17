@@ -7,7 +7,8 @@ SUBDIRS = \
     . \
     libtsdb \
     metricd \
-    sensors/sysstat
+    sensors/sysstat \
+    sensors/valve_srcds
 
 EXTRA_DIST =                             \
   autogen.sh                             \
