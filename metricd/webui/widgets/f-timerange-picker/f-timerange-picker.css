@@ -27,6 +27,13 @@ f-timerange-picker .arrow_right {
   height: 0;
   border-top: 9px solid transparent;
   border-bottom: 9px solid transparent;
+  cursor: pointer;
+}
+
+f-timerange-picker .arrow_left.disabled,
+f-timerange-picker .arrow_right.disabled {
+  cursor: initial;
+  opacity: 0.6;
 }
 
 f-timerange-picker .arrow_left {
@@ -35,11 +42,6 @@ f-timerange-picker .arrow_left {
 
 f-timerange-picker .arrow_right {
   border-left: 9px solid #999;
-}
-
-f-timerange-picker .arrow_left:hover,
-f-timerange-picker .arrow_right:hover {
-  cursor: pointer;
 }
 
 f-timerange-picker .widget {

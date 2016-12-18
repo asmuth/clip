@@ -355,11 +355,15 @@ var TimeRangePickerComponent = function() {
 
   var watchTimerangeMover = function() {
     this_.querySelector(".arrow_left").addEventListener("click", function(e) {
-      moveTimerange(config.range * -1);
+      if (!this.classList.contains("disabled")) {
+        moveTimerange(config.range * -1);
+      }
     }, false);
 
     this_.querySelector(".arrow_right").addEventListener("click", function(e) {
-      moveTimerange(config.range);
+      if (!this.classList.contains("disabled")) {
+        moveTimerange(config.range);
+      }
     }, false);
   }
 
@@ -382,6 +386,13 @@ var TimeRangePickerComponent = function() {
     input.value = TimeRangePickerUtil.formatDateTime(timerange.start, timerange.timezone) +
         " - " +
         TimeRangePickerUtil.formatDateTime(timerange.end, timerange.timezone);
+
+
+    if (timerange.end + config.range >= Date.now()) {
+      this_.querySelector(".arrow_right").classList.add("disabled");
+    } else {
+      this_.querySelector(".arrow_right").classList.remove("disabled");
+    }
   }
 
   var fireSubmitEvent = function() {
