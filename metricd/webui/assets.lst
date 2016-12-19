@@ -12,6 +12,7 @@ widgets/sparkline/z-sparkline.html
 widgets/sparkline/z-sparkline.css
 widgets/dropdown/dropdown.js
 widgets/dropdown/dropdown.css
+widgets/f-timerange-picker/f-timerange-picker-widget.js
 widgets/f-timerange-picker/f-timerange-picker.js
 widgets/f-timerange-picker/f-timerange-picker.html
 widgets/f-timerange-picker/f-timerange-picker.css
