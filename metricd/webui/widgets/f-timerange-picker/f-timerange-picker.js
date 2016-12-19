@@ -70,6 +70,10 @@ var TimeRangePickerWidget = function(timerange, widget) {
     }
   }
 
+  this.close = function() {
+    close();
+  }
+
 /********************************* private **********************************/
 
   var show = function() {
@@ -348,7 +352,7 @@ var TimeRangePickerComponent = function() {
     });
 
     document.addEventListener("click", function(e) {
-      widget.toggleVisibility();
+      widget.close();
     }, false);
 
     this_.addEventListener("click", function(e) {
