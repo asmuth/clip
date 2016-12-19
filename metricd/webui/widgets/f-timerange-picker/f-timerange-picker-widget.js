@@ -7,6 +7,7 @@ var TimeRangePickerWidget = function(timerange, widget) {
   'use strict';
 
   var submit_callbacks = [];
+  var calendar;
 
   this.setSubmitCallback = function(c) {
     submit_callbacks.push(c);
@@ -26,6 +27,25 @@ var TimeRangePickerWidget = function(timerange, widget) {
 
 /********************************* private **********************************/
 
+  var initialize = function() {
+    calendar = new TimeRangePickerCalendar();
+
+    widget.querySelector("button.cancel").addEventListener("click", function() {
+      close();
+    }, false);
+
+    /** close widget on ESC keypress **/
+    document.addEventListener("keydown", function(e) {
+      if (e.keyCode == 27) {
+        close();
+      }
+    }, false);
+
+    document.addEventListener("click", function(e) {
+      close();
+    }, false);
+  }
+
   var show = function() {
     render();
     widget.classList.add('active');
@@ -44,6 +64,8 @@ var TimeRangePickerWidget = function(timerange, widget) {
     watchTimezoneControls();
     watchTimerangeButtons();
     watchCustomSubmit();
+    watchCalendarClick();
+
     enforceInputFormat(widget.querySelector("input[name='start']"));
     enforceInputFormat(widget.querySelector("input[name='end']"));
 
@@ -115,6 +137,15 @@ var TimeRangePickerWidget = function(timerange, widget) {
     widget.querySelector(".custom form").addEventListener("submit", function(e) {
       e.preventDefault();
       submitCustom();
+    }, false);
+  }
+
+  var watchCalendarClick = function() {
+    //FIXME handle independently for start and end
+    var calendar_box = widget.querySelector(".calendar_box");
+    widget.querySelector(".icon.calendar").addEventListener("click", function() {
+      DomUtil.clearChildren(calendar_box);
+      calendar.render(calendar_box);
     }, false);
   }
 
@@ -213,16 +244,6 @@ var TimeRangePickerWidget = function(timerange, widget) {
     close();
   }
 
-  /** initialize **/
-  widget.querySelector("button.cancel").addEventListener("click", function() {
-    close();
-  }, false);
-
-  /** close widget on ESC keypress **/
-  document.addEventListener("keydown", function(e) {
-    if (e.keyCode == 27) {
-      close();
-    }
-  }, false);
+  initialize();
 }
 

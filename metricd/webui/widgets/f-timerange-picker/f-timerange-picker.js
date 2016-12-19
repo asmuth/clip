@@ -85,10 +85,6 @@ var TimeRangePickerComponent = function() {
       fireSubmitEvent();
     });
 
-    document.addEventListener("click", function(e) {
-      widget.close();
-    }, false);
-
     this_.addEventListener("click", function(e) {
       e.stopPropagation();
     }, false);

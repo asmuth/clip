@@ -9,6 +9,14 @@ dateUtil.kMillisPerHour = dateUtil.kSecondsPerHour * dateUtil.kMillisPerSecond;
 dateUtil.kMillisPerDay = dateUtil.kSecondsPerDay * dateUtil.kMillisPerSecond;
 dateUtil.kMillisPerWeek = dateUtil.kMillisPerDay * 7;
 
+dateUtil.daysInMonth = function(month, year) {
+  if (month == 2) {
+    return (28 + DateUtil.leapYearOffset());
+  }
+
+  return (31 - (month - 1) % 7 % 2);
+}
+
 dateUtil.toUTC = function(timestamp) {
   var date = new Date(timestamp);
   return timestamp - (date.getTimezoneOffset() * dateUtil.kMillisPerMinute);

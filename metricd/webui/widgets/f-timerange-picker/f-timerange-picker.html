@@ -27,6 +27,8 @@
       <button class="apply btn">Apply</button>
     </form>
 
+    <div class="calendar_box"></div>
+
     <div>
       <a class="link custom">Custom</a>
     </div>
@@ -51,5 +53,29 @@
       <li><button type="button" data-value='local' class='btn'>Local</button></li>
     </ul>
   </div>
+</template>
+
+<template id="f-timerange-picker-calendar-tpl">
+  <table class="calendar">
+    <thead>
+      <tr>
+        <td class="prev">&#8592;</td>
+        <td class="title" colspan="5">
+          <span class="month"></span>
+          <span class="year"></span>
+        </td>
+        <td class="next">&#8594;</td>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="weekdays"></tr>
+      <tr class="dates" data-week="0"></tr>
+      <tr class="dates" data-week="1"></tr>
+      <tr class="dates" data-week="2"></tr>
+      <tr class="dates" data-week="3"></tr>
+      <tr class="dates" data-week="4"></tr>
+      <tr class="dates" data-week="5"></tr>
+    </tbody>
+  </table>
 </template>
 
