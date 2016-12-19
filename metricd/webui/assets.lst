@@ -15,6 +15,7 @@ widgets/dropdown/dropdown.css
 widgets/f-timerange-picker/f-timerange-picker.js
 widgets/f-timerange-picker/f-timerange-picker.html
 widgets/f-timerange-picker/f-timerange-picker.css
+3rdparty/formatter.min.js
 views/error/error.html
 views/error/error.js
 views/metric-list/metric-list.css

@@ -91,6 +91,7 @@ var TimeRangePickerWidget = function(timerange, widget) {
     watchTimerangeButtons();
     watchCustomSubmit();
     enforceInputFormat(widget.querySelector("input[name='start']"));
+    enforceInputFormat(widget.querySelector("input[name='end']"));
 
     var elem;
     var range;
@@ -204,7 +205,9 @@ var TimeRangePickerWidget = function(timerange, widget) {
   }
 
   var enforceInputFormat = function(input) {
-    //TODO!
+    new Formatter(input, {
+      pattern: '{{9999}}-{{99}}-{{99}} {{99}}:{{99}}'
+    });
   }
 
   var disableCustomInput = function() {
