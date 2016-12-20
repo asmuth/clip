@@ -100,3 +100,43 @@ f-timerange-picker .widget .footer button.btn {
   float: right;
 }
 
+f-timerange-picker table.calendar {
+  border: 1px solid #eee;
+  padding: 5px;
+  margin: 5px;
+  color: #444;
+  border-radius: 3px;
+}
+
+f-timerange-picker table.calendar .prev,
+f-timerange-picker table.calendar .next {
+  color: #999;
+  cursor: pointer;
+}
+
+f-timerange-picker table.calendar td {
+  text-align: center;
+  line-height: 22px;
+  padding: 0 3px;
+}
+
+f-timerange-picker table.calendar tr.weekdays td {
+  font-weight: 600;
+}
+
+f-timerange-picker table.calendar tr.dates td:hover {
+  cursor: pointer;
+}
+
+f-timerange-picker table.calendar tr.dates td.cur_date {
+  background-color: blue;
+}
+
+f-timerange-picker table.calendar tr.dates td.disabled {
+  opacity: 0.5;
+}
+
+f-timerange-picker table.calendar tr.dates td.disabled:hover {
+  cursor: initial;
+}
+

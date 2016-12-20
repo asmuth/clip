@@ -29,6 +29,16 @@ var TimeRangePickerWidget = function(timerange, widget) {
 
   var initialize = function() {
     calendar = new TimeRangePickerCalendar();
+    calendar.setSubmitCallback(function(date) {
+      //FIXME handle start and end
+      var selected_range = {
+        start: date.getTime(),
+        end: timerange.end,
+        timezone: timerange.timezone
+      };
+
+      submit(selected_range);
+    });
 
     widget.querySelector("button.cancel").addEventListener("click", function() {
       close();
@@ -142,10 +152,14 @@ var TimeRangePickerWidget = function(timerange, widget) {
 
   var watchCalendarClick = function() {
     //FIXME handle independently for start and end
+    /** render start date calendar **/
     var calendar_box = widget.querySelector(".calendar_box");
     widget.querySelector(".icon.calendar").addEventListener("click", function() {
       DomUtil.clearChildren(calendar_box);
-      calendar.render(calendar_box);
+      calendar.render(calendar_box, {
+        min: null,
+        max: new Date(timerange.end)
+      });
     }, false);
   }
 
