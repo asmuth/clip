@@ -1,5 +1,7 @@
 
 var TimeRangePickerCalendar = function() {
+  'use strict';
+
   var translations = {
     months: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
     weekdays: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
@@ -18,7 +20,11 @@ var TimeRangePickerCalendar = function() {
 
     opts_ = opts;
 
-    date = new Date();
+    if (opts_.selected) {
+      date = new Date(opts_.selected);
+    } else {
+      date = new Date();
+    }
     date.setDate("1");
 
     watchMonthMover();
@@ -78,14 +84,39 @@ var TimeRangePickerCalendar = function() {
         date.getMonth() + 1,
         date.getFullYear());
 
+    var all_disabled = false;
+
     var max_date = null;
-    if (opts_.max && dateUtil.isSameMonth(date, opts_.max)) {
-      max_date = opts_.max.getDate();
+    if (opts_.max) {
+
+      if (opts_.max.getFullYear() < date.getFullYear() ||
+          opts_.max.getFullYear() == date.getFullYear() &&
+          opts_.max.getMonth() < date.getMonth()) {
+        all_disabled = true;
+
+      } else if (dateUtil.isSameMonth(date, opts_.max)) {
+        max_date = opts_.max.getDate();
+
+      }
     }
 
     var min_date = null;
-    if (opts_.min && dateUtil.isSameMonth(date, opts_.min)) {
-      min_date = opts_.min.getDate();
+    if (opts_.min) {
+
+      if (opts_.min.getFullYear() > date.getFullYear() ||
+          opts_.min.getFullYear() == date.getFullYear() &&
+          opts_.min.getMonth() > date.getMonth()) {
+        all_disabled = true;
+
+      } else if (dateUtil.isSameMonth(date, opts_.min)) {
+        min_date = opts_.min.getDate();
+
+      }
+    }
+
+    var selected_date = null;
+    if (opts_.selected && dateUtil.isSameMonth(date, opts_.selected)) {
+      selected_date = opts_.selected.getDate();
     }
 
     var cur_date = null;
@@ -109,8 +140,13 @@ var TimeRangePickerCalendar = function() {
         td.classList.add("cur_date");
       }
 
+      /** highlight selected date **/
+      if (d == selected_date) {
+        td.classList.add("selected");
+      }
+
       /** disable selection of dates > opts_.max **/
-      if (d < min_date || d > max_date) {
+      if (all_disabled || min_date && d < min_date || max_date && d > max_date) {
         td.classList.add("disabled");
 
       } else {

@@ -129,6 +129,10 @@ f-timerange-picker table.calendar tr.dates td:hover {
 }
 
 f-timerange-picker table.calendar tr.dates td.cur_date {
+  border: 1px solid blue;
+}
+
+f-timerange-picker table.calendar tr.dates td.selected {
   background-color: blue;
 }
 

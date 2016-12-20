@@ -24,7 +24,15 @@ dateUtil.leapYearOffset = function(year) {
   }
 
   return 0;
-};
+}
+
+dateUtil.isSameMonth = function(d, d1) {
+  return d.getFullYear() == d1.getFullYear() && d.getMonth() == d1.getMonth();
+}
+
+dateUtil.isCurrentMonth = function(d) {
+  return dateUtil.isSameMonth(d, new Date());
+}
 
 dateUtil.toUTC = function(timestamp) {
   var date = new Date(timestamp);

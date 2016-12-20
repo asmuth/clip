@@ -152,15 +152,28 @@ var TimeRangePickerWidget = function(timerange, widget) {
 
   var watchCalendarClick = function() {
     //FIXME handle independently for start and end
-    /** render start date calendar **/
     var calendar_box = widget.querySelector(".calendar_box");
-    widget.querySelector(".icon.calendar").addEventListener("click", function() {
+
+    /** render start date calendar **/
+    widget.querySelector(".icon.calendar.start").addEventListener("click", function() {
       DomUtil.clearChildren(calendar_box);
       calendar.render(calendar_box, {
         min: null,
-        max: new Date(timerange.end)
+        max: new Date(timerange.end),
+        selected: new Date(timerange.start)
       });
     }, false);
+
+    /** render end date calendar **/
+    widget.querySelector(".icon.calendar.end").addEventListener("click", function() {
+      DomUtil.clearChildren(calendar_box);
+      calendar.render(calendar_box, {
+        min: new Date(timerange.start),
+        max: new Date(),
+        selected: new Date(timerange.end)
+      });
+    }, false);
+
   }
 
   var switchActiveButton = function(list_class, btn) {
