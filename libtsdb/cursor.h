@@ -27,25 +27,25 @@ public:
 
   bool valid();
 
-  void get(uint64_t* timestamp, uint64_t* value);
+  void get(uint64_t* timestamp, void* value, size_t value_len);
   uint64_t getTime();
-
-  bool next();
+  void getValue(void* value, size_t value_len);
 
   /* seek to the first entry that is greater or equal */
   bool seekTo(uint64_t timestamp);
   bool seekToFirst();
   bool seekToLast();
 
-  bool next(uint64_t* timestamp, uint64_t* value);
+  bool next();
+  bool next(uint64_t* timestamp, void* value, size_t value_len);
 
   /* insert at the current position (new value will appear before current
      value at this position after insert) */
-  void insert(uint64_t timestamp, uint64_t value);
+  void insert(uint64_t timestamp, const void* value, size_t value_len);
 
-  void append(uint64_t timestamp, uint64_t value);
+  void append(uint64_t timestamp, const void* value, size_t value_len);
 
-  void update(uint64_t value);
+  void update(const void* value, size_t value_len);
 
 protected:
   Transaction txn_;

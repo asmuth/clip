@@ -68,9 +68,9 @@ bool Cursor::valid() {
   return page_map_ && page_buf_valid_ && page_buf_pos_ < page_buf_.getSize();
 }
 
-void Cursor::get(uint64_t* timestamp, uint64_t* value) {
+void Cursor::get(uint64_t* timestamp, void* value, size_t value_len) {
   page_buf_.getTimestamp(page_buf_pos_, timestamp);
-  page_buf_.getValue(page_buf_pos_, value, sizeof(uint64_t));
+  page_buf_.getValue(page_buf_pos_, value, value_len);
 }
 
 uint64_t Cursor::getTime() {
@@ -79,12 +79,16 @@ uint64_t Cursor::getTime() {
   return timestamp;
 }
 
-bool Cursor::next(uint64_t* timestamp, uint64_t* value) {
+void Cursor::getValue(void* value, size_t value_len) {
+  page_buf_.getValue(page_buf_pos_, value, value_len);
+}
+
+bool Cursor::next(uint64_t* timestamp, void* value, size_t value_len) {
   if (!valid()) {
     return false;
   }
 
-  get(timestamp, value);
+  get(timestamp, value, value_len);
   next();
   return true;
 }
@@ -207,12 +211,12 @@ bool Cursor::next() {
   }
 }
 
-void Cursor::update(uint64_t value) {
+void Cursor::update(const void* value, size_t value_len) {
   assert(!txn_.isReadonly());
   assert(valid());
 
-  auto modify_fn = [this, value] (PageBuffer* page) -> bool {
-    page->update(page_buf_pos_, &value, sizeof(value));
+  auto modify_fn = [this, value, value_len] (PageBuffer* page) -> bool {
+    page->update(page_buf_pos_, value, value_len);
     return true;
   };
 
@@ -220,13 +224,17 @@ void Cursor::update(uint64_t value) {
   modify_fn(&page_buf_);
 }
 
-void Cursor::insert(uint64_t timestamp, uint64_t value) {
+void Cursor::insert(uint64_t timestamp, const void* value, size_t value_len) {
   assert(!txn_.isReadonly());
   assert(valid());
 
   /* append the value */
-  auto modify_fn = [this, timestamp, value] (PageBuffer* page) -> bool {
-    page->insert(page_buf_pos_, timestamp, &value, sizeof(value));
+  auto modify_fn = [
+      this,
+      timestamp,
+      value,
+      value_len] (PageBuffer* page) -> bool {
+    page->insert(page_buf_pos_, timestamp, value, value_len);
     return true;
   };
 
@@ -234,7 +242,7 @@ void Cursor::insert(uint64_t timestamp, uint64_t value) {
   modify_fn(&page_buf_);
 }
 
-void Cursor::append(uint64_t timestamp, uint64_t value) {
+void Cursor::append(uint64_t timestamp, const void* value, size_t value_len) {
   assert(!txn_.isReadonly());
 
   /* open the last page */
@@ -254,8 +262,12 @@ void Cursor::append(uint64_t timestamp, uint64_t value) {
   }
 
   /* append the value */
-  auto modify_fn = [this, timestamp, value] (PageBuffer* page) -> bool {
-    page->append(timestamp, &value, sizeof(value));
+  auto modify_fn = [
+      this,
+      timestamp,
+      value,
+      value_len] (PageBuffer* page) -> bool {
+    page->append(timestamp, value, value_len);
     return true;
   };
 

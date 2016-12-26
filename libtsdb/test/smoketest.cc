@@ -30,8 +30,8 @@ TEST_CASE(TSDBTest, TestCreateAndInsert, [] () {
     {
       tsdb::Cursor cursor;
       EXPECT(db->getCursor(1, &cursor, false) == true);
-      for (size_t i = 0; i < 100000; ++i) {
-        cursor.append(t0 + 20 * i, i);
+      for (uint64_t i = 0; i < 100000; ++i) {
+        cursor.append(t0 + 20 * i, &i, sizeof(i));
       }
     }
 
@@ -39,10 +39,10 @@ TEST_CASE(TSDBTest, TestCreateAndInsert, [] () {
       tsdb::Cursor cursor;
       EXPECT(db->getCursor(1, &cursor) == true);
 
-      for (size_t i = 0; i < 100000; ++i) {
+      for (uint64_t i= 0; i < 100000; ++i) {
         uint64_t ts;
         uint64_t value;
-        EXPECT(cursor.next(&ts, &value) == true);
+        EXPECT(cursor.next(&ts, &value, sizeof(value)) == true);
         EXPECT(ts == t0 + 20 * i);
         EXPECT(value == i);
       }
@@ -54,10 +54,10 @@ TEST_CASE(TSDBTest, TestCreateAndInsert, [] () {
       tsdb::Cursor cursor;
       EXPECT(db->getCursor(1, &cursor) == true);
 
-      for (size_t i = 0; i < 100000; ++i) {
+      for (uint64_t i= 0; i < 100000; ++i) {
         uint64_t ts;
         uint64_t value;
-        EXPECT(cursor.next(&ts, &value) == true);
+        EXPECT(cursor.next(&ts, &value, sizeof(value)) == true);
         EXPECT(ts == t0 + 20 * i);
         EXPECT(value == i);
       }
@@ -68,8 +68,8 @@ TEST_CASE(TSDBTest, TestCreateAndInsert, [] () {
     {
       tsdb::Cursor cursor;
       EXPECT(db->getCursor(1, &cursor, false) == true);
-      for (size_t i = 100000; i < 200000; ++i) {
-        cursor.append(t0 + 20 * i, i);
+      for (uint64_t i = 100000; i < 200000; ++i) {
+        cursor.append(t0 + 20 * i, &i, sizeof(i));
       }
     }
 
@@ -79,10 +79,10 @@ TEST_CASE(TSDBTest, TestCreateAndInsert, [] () {
       tsdb::Cursor cursor;
       EXPECT(db->getCursor(1, &cursor) == true);
 
-      for (size_t i = 0; i < 200000; ++i) {
+      for (uint64_t i= 0; i < 200000; ++i) {
         uint64_t ts;
         uint64_t value;
-        EXPECT(cursor.next(&ts, &value) == true);
+        EXPECT(cursor.next(&ts, &value, sizeof(value)) == true);
         EXPECT(ts == t0 + 20 * i);
         EXPECT(value == i);
       }
@@ -97,10 +97,10 @@ TEST_CASE(TSDBTest, TestCreateAndInsert, [] () {
       tsdb::Cursor cursor;
       EXPECT(db->getCursor(1, &cursor) == true);
 
-      for (size_t i = 0; i < 200000; ++i) {
+      for (uint64_t i= 0; i < 200000; ++i) {
         uint64_t ts;
         uint64_t value;
-        EXPECT(cursor.next(&ts, &value) == true);
+        EXPECT(cursor.next(&ts, &value, sizeof(value)) == true);
         EXPECT(ts == t0 + 20 * i);
         EXPECT(value == i);
       }
@@ -109,8 +109,8 @@ TEST_CASE(TSDBTest, TestCreateAndInsert, [] () {
     {
       tsdb::Cursor cursor;
       EXPECT(db->getCursor(1, &cursor, false) == true);
-      for (size_t i = 300000; i < 400000; ++i) {
-        cursor.append(t0 + 20 * i, i);
+      for (uint64_t i= 300000; i < 400000; ++i) {
+        cursor.append(t0 + 20 * i, &i, sizeof(i));
       }
     }
 
@@ -120,18 +120,18 @@ TEST_CASE(TSDBTest, TestCreateAndInsert, [] () {
       tsdb::Cursor cursor;
       EXPECT(db->getCursor(1, &cursor) == true);
 
-      for (size_t i = 0; i < 200000; ++i) {
+      for (uint64_t i= 0; i < 200000; ++i) {
         uint64_t ts;
         uint64_t value;
-        EXPECT(cursor.next(&ts, &value) == true);
+        EXPECT(cursor.next(&ts, &value, sizeof(value)) == true);
         EXPECT(ts == t0 + 20 * i);
         EXPECT(value == i);
       }
 
-      for (size_t i = 300000; i < 400000; ++i) {
+      for (uint64_t i= 300000; i < 400000; ++i) {
         uint64_t ts;
         uint64_t value;
-        EXPECT(cursor.next(&ts, &value) == true);
+        EXPECT(cursor.next(&ts, &value, sizeof(value)) == true);
         EXPECT(ts == t0 + 20 * i);
         EXPECT(value == i);
       }
@@ -146,8 +146,8 @@ TEST_CASE(TSDBTest, TestCreateAndInsert, [] () {
       tsdb::Cursor cursor;
       EXPECT(db->getCursor(1, &cursor, false) == true);
       cursor.seekTo(t0 + 20 * 200000);
-      for (size_t i = 200000; i < 300000; ++i) {
-        cursor.insert(t0 + 20 * i, i);
+      for (uint64_t i= 200000; i < 300000; ++i) {
+        cursor.insert(t0 + 20 * i, &i, sizeof(i));
         cursor.next();
       }
     }
@@ -156,10 +156,10 @@ TEST_CASE(TSDBTest, TestCreateAndInsert, [] () {
       tsdb::Cursor cursor;
       EXPECT(db->getCursor(1, &cursor) == true);
 
-      for (size_t i = 0; i < 400000; ++i) {
+      for (uint64_t i= 0; i < 400000; ++i) {
         uint64_t ts;
         uint64_t value;
-        EXPECT(cursor.next(&ts, &value) == true);
+        EXPECT(cursor.next(&ts, &value, sizeof(value)) == true);
         EXPECT(ts == t0 + 20 * i);
         EXPECT(value == i);
       }
@@ -171,10 +171,10 @@ TEST_CASE(TSDBTest, TestCreateAndInsert, [] () {
       tsdb::Cursor cursor;
       EXPECT(db->getCursor(1, &cursor) == true);
 
-      for (size_t i = 0; i < 400000; ++i) {
+      for (uint64_t i= 0; i < 400000; ++i) {
         uint64_t ts;
         uint64_t value;
-        EXPECT(cursor.next(&ts, &value) == true);
+        EXPECT(cursor.next(&ts, &value, sizeof(value)) == true);
         EXPECT(ts == t0 + 20 * i);
         EXPECT(value == i);
       }
@@ -192,8 +192,8 @@ TEST_CASE(TSDBTest, TestSeek, [] () {
     EXPECT(db->createSeries(1, sizeof(uint64_t), "") == true);
     tsdb::Cursor cursor;
     EXPECT(db->getCursor(1, &cursor, false));
-    for (size_t i = 1; i <= 50000; ++i) {
-      cursor.append(i * 2, i);
+    for (uint64_t i= 1; i <= 50000; ++i) {
+      cursor.append(i * 2, &i, sizeof(i));
     }
 
     EXPECT(db->commit() == true);
@@ -209,7 +209,7 @@ TEST_CASE(TSDBTest, TestSeek, [] () {
     {
       uint64_t ts;
       uint64_t value;
-      cursor.get(&ts, &value);
+      cursor.get(&ts, &value, sizeof(value));
       EXPECT(ts == 2);
       EXPECT(value == 1);
     }
@@ -218,7 +218,7 @@ TEST_CASE(TSDBTest, TestSeek, [] () {
     {
       uint64_t ts;
       uint64_t value;
-      cursor.get(&ts, &value);
+      cursor.get(&ts, &value, sizeof(value));
       EXPECT(ts == 4);
       EXPECT(value == 2);
     }
@@ -228,7 +228,7 @@ TEST_CASE(TSDBTest, TestSeek, [] () {
     {
       uint64_t ts;
       uint64_t value;
-      cursor.get(&ts, &value);
+      cursor.get(&ts, &value, sizeof(value));
       EXPECT(ts == 1338);
       EXPECT(value == 669);
     }
@@ -238,7 +238,7 @@ TEST_CASE(TSDBTest, TestSeek, [] () {
     {
       uint64_t ts;
       uint64_t value;
-      cursor.get(&ts, &value);
+      cursor.get(&ts, &value, sizeof(value));
       EXPECT(ts == 90000);
       EXPECT(value == 45000);
     }
@@ -248,7 +248,7 @@ TEST_CASE(TSDBTest, TestSeek, [] () {
     {
       uint64_t ts;
       uint64_t value;
-      cursor.get(&ts, &value);
+      cursor.get(&ts, &value, sizeof(value));
       EXPECT(ts == 100000);
       EXPECT(value == 50000);
     }
@@ -268,8 +268,8 @@ TEST_CASE(TSDBTest, TestUpdate, [] () {
     EXPECT(db->createSeries(1, sizeof(uint64_t), "") == true);
     tsdb::Cursor cursor;
     EXPECT(db->getCursor(1, &cursor, false));
-    for (size_t i = 1; i <= 50000; ++i) {
-      cursor.append(i * 2, i);
+    for (uint64_t i= 1; i <= 50000; ++i) {
+      cursor.append(i * 2, &i, sizeof(i));
     }
 
     EXPECT(db->commit() == true);
@@ -287,17 +287,18 @@ TEST_CASE(TSDBTest, TestUpdate, [] () {
     {
       uint64_t ts;
       uint64_t value;
-      cursor.get(&ts, &value);
+      cursor.get(&ts, &value, sizeof(value));
       EXPECT(ts == 1338);
       EXPECT(value == 669);
     }
 
-    cursor.update(1234);
+    uint64_t new_value = 1234;
+    cursor.update(&new_value, sizeof(new_value));
 
     {
       uint64_t ts;
       uint64_t value;
-      cursor.get(&ts, &value);
+      cursor.get(&ts, &value, sizeof(value));
       EXPECT(ts == 1338);
       EXPECT(value == 1234);
     }
@@ -317,7 +318,7 @@ TEST_CASE(TSDBTest, TestUpdate, [] () {
     {
       uint64_t ts;
       uint64_t value;
-      cursor.get(&ts, &value);
+      cursor.get(&ts, &value, sizeof(value));
       EXPECT(ts == 1338);
       EXPECT(value == 1234);
     }
