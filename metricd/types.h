@@ -29,6 +29,13 @@ void tval_add(
     const void* op,
     size_t op_len);
 
+int tval_cmp(
+    MetricDataType type,
+    void* left,
+    size_t left_len,
+    const void* right,
+    size_t right_len);
+
 size_t getMetricDataTypeSize(MetricDataType t);
 
 } // namespace fnordmetric

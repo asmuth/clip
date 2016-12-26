@@ -270,6 +270,9 @@ std::unique_ptr<InputAggregator> mkInputAggregator(
   }
 
   switch (config->aggregation) {
+    case MetricAggregationType::MAX:
+      return std::unique_ptr<InputAggregator>(
+          new MaxInputAggregator(config->granularity));
     case MetricAggregationType::SUM:
       return std::unique_ptr<InputAggregator>(
           new SumInputAggregator(config->granularity));
@@ -291,6 +294,9 @@ std::unique_ptr<OutputAggregator> mkOutputAggregator(
   }
 
   switch (config->aggregation) {
+    case MetricAggregationType::MAX:
+      return std::unique_ptr<OutputAggregator>(
+          new MaxOutputAggregator(cursor, granularity));
     case MetricAggregationType::SUM:
       return std::unique_ptr<OutputAggregator>(
           new SumOutputAggregator(cursor, granularity));

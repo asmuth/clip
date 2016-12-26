@@ -83,6 +83,49 @@ protected:
   uint64_t cur_sum_;
 };
 
+class MaxInputAggregator : public InputAggregator {
+public:
+
+  MaxInputAggregator(
+      uint64_t granularity,
+      uint64_t align = 0);
+
+  ReturnCode addSample(
+      tsdb::Cursor* cursor,
+      uint64_t time,
+      MetricDataType value_type,
+      const void* value,
+      size_t value_len) override;
+
+protected:
+  uint64_t granularity_;
+  uint64_t align_;
+};
+
+class MaxOutputAggregator : public OutputAggregator {
+public:
+
+  MaxOutputAggregator(
+      tsdb::Cursor* cursor,
+      uint64_t granularity,
+      uint64_t align = 0,
+      bool interpolate = true);
+
+  bool next(
+      uint64_t* time,
+      void* value,
+      size_t value_len) override;
+
+protected:
+  tsdb::Cursor* cursor_;
+  uint64_t granularity_;
+  uint64_t align_;
+  bool interpolate_;
+  uint64_t cur_time_;
+  uint64_t cur_max_;
+  size_t cur_max_time_;
+};
+
 uint64_t alignTime(uint64_t timestamp, uint64_t window, uint64_t align);
 
 } // namespace fnordmetric

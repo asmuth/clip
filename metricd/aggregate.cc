@@ -109,6 +109,92 @@ bool SumOutputAggregator::next(
   return true;
 }
 
+MaxInputAggregator::MaxInputAggregator(
+    uint64_t granularity,
+    uint64_t align /* = 0 */) :
+    granularity_(granularity),
+    align_(align) {}
+
+ReturnCode MaxInputAggregator::addSample(
+    tsdb::Cursor* cursor,
+    uint64_t time,
+    MetricDataType value_type,
+    const void* value,
+    size_t value_len) {
+  auto twin = alignTime(time, granularity_, align_);
+  size_t value_type_len = getMetricDataTypeSize(value_type);
+  assert(value_type_len == value_len);
+
+  /* update or insert value */
+  if (cursor->seekTo(twin)) {
+    if (cursor->getTime() == twin) {
+      void* current = alloca(value_type_len);
+      cursor->getValue(current, value_type_len);
+      if (tval_cmp(value_type, current, value_type_len, value, value_len) < 0) {
+        cursor->update(value, value_len);
+      }
+    } else {
+      cursor->insert(twin, value, value_len);
+    }
+  } else {
+    cursor->append(twin, value, value_len);
+  }
+
+  /* ensure that next time window entry exists */
+  auto twin_next = twin + granularity_;
+  void* zero = alloca(value_type_len);
+  tval_zero(value_type, zero, value_type_len);
+  if (cursor->next() && cursor->valid()) {
+    if (cursor->getTime() > twin_next) {
+      cursor->insert(twin_next, zero, value_type_len);
+    }
+  } else {
+    cursor->append(twin_next, zero, value_type_len);
+  }
+
+  return ReturnCode::success();
+}
+
+MaxOutputAggregator::MaxOutputAggregator(
+    tsdb::Cursor* cursor,
+    uint64_t granularity,
+    uint64_t align /* = 0 */,
+    bool interpolate /* = true */) :
+    cursor_(cursor),
+    granularity_(granularity),
+    align_(align),
+    interpolate_(interpolate) {
+  cursor_->seekToFirst();
+  cursor_->get(&cur_time_, &cur_max_, sizeof(cur_max_));
+  cur_time_ = alignTime(cur_time_, granularity_, align_);
+  cursor_->next();
+}
+
+bool MaxOutputAggregator::next(
+    uint64_t* time,
+    void* value,
+    size_t value_len) {
+  if (!cursor_->valid()) {
+    return false;
+  }
+
+  while (cursor_->valid() && cursor_->getTime() < cur_time_ + granularity_) {
+    uint64_t val;
+    cursor_->getValue(&val, sizeof(val));
+    cur_max_ = std::max(cur_max_, val);
+    cursor_->next();
+  }
+
+  assert(value_len == sizeof(cur_max_));
+  memcpy(value, &cur_max_, sizeof(cur_max_));
+
+  *time = cur_time_;
+  cur_time_ += granularity_;
+  cur_max_ = 0;
+
+  return true;
+}
+
 uint64_t alignTime(uint64_t timestamp, uint64_t window, uint64_t align = 0) {
   if (window >= std::numeric_limits<uint64_t>::max() / 2 ||
       timestamp >= std::numeric_limits<uint64_t>::max() / 2) {

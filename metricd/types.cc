@@ -47,6 +47,30 @@ void tval_add(
   }
 }
 
+int tval_cmp(
+    MetricDataType type,
+    void* left,
+    size_t left_len,
+    const void* right,
+    size_t right_len) {
+  switch (type) {
+
+    case MetricDataType::UINT64: {
+      assert(left_len == sizeof(uint64_t));
+      assert(right_len == sizeof(uint64_t));
+      if (*((const uint64_t*) left) < *((const uint64_t*) right)) {
+        return -1;
+      } else if (*((const uint64_t*) left) > *((const uint64_t*) right)) {
+        return 1;
+      } else {
+        return 0;
+      }
+    }
+
+    default: throw std::invalid_argument("type error");
+  }
+}
+
 size_t getMetricDataTypeSize(MetricDataType t) {
   switch (t) {
     case MetricDataType::UINT64: return sizeof(uint64_t);
