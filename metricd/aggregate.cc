@@ -39,6 +39,7 @@ ReturnCode SumInputAggregator::addSample(
   size_t value_type_len = getMetricDataTypeSize(value_type);
   assert(value_type_len == value_len);
 
+  /* update or insert value */
   if (cursor->seekTo(twin)) {
     if (cursor->getTime() == twin) {
       void* sum = alloca(value_type_len);
@@ -50,6 +51,18 @@ ReturnCode SumInputAggregator::addSample(
     }
   } else {
     cursor->append(twin, value, value_len);
+  }
+
+  /* ensure that next time window entry exists */
+  auto twin_next = twin + granularity_;
+  void* zero = alloca(value_type_len);
+  tval_zero(value_type, zero, value_type_len);
+  if (cursor->next() && cursor->valid()) {
+    if (cursor->getTime() > twin_next) {
+      cursor->insert(twin_next, zero, value_type_len);
+    }
+  } else {
+    cursor->append(twin_next, zero, value_type_len);
   }
 
   return ReturnCode::success();

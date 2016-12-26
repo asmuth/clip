@@ -20,6 +20,8 @@ enum class MetricDataType {
   FLOAT64
 };
 
+void tval_zero(MetricDataType type, void* reg, size_t reg_len);
+
 void tval_add(
     MetricDataType type,
     void* reg,

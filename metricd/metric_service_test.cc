@@ -98,6 +98,10 @@ TEST_CASE(MetricServiceTest, TestSumAggregator, [] () {
     EXPECT(cursor.next(&ts, &val));
     EXPECT(ts == 1482776400000000);
     EXPECT(val == 17);
+    EXPECT(cursor.next(&ts, &val));
+    EXPECT(ts == 1482776460000000);
+    EXPECT(val == 0);
+    EXPECT(cursor.next(&ts, &val) == false);
   }
 });
 

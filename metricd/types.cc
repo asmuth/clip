@@ -10,9 +10,23 @@
  */
 #include <stdexcept>
 #include <assert.h>
+#include <string.h>
 #include "metricd/types.h"
 
 namespace fnordmetric {
+
+void tval_zero(MetricDataType type, void* reg, size_t reg_len) {
+  switch (type) {
+
+    case MetricDataType::UINT64: {
+      assert(reg_len == sizeof(uint64_t));
+      memset(reg, 0, reg_len);
+      return;
+    }
+
+    default: throw std::invalid_argument("type error");
+  }
+}
 
 void tval_add(
     MetricDataType type,
