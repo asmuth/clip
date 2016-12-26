@@ -13,6 +13,10 @@ f-timerange-picker input {
   width: 230px;
 }
 
+f-timerange-picker input.invalid {
+  border: 1px solid #F0514E;
+}
+
 f-timerange-picker input:hover {
   cursor: pointer;
 }
@@ -23,15 +27,20 @@ f-timerange-picker input::selection {
 }
 
 f-timerange-picker .arrow_left,
+f-timerange-picker .arrow_down,
 f-timerange-picker .arrow_right {
   padding: 0 5px;
   vertical-align: middle;
   display: inline-block;
   width: 0;
   height: 0;
-  border-top: 9px solid transparent;
-  border-bottom: 9px solid transparent;
   cursor: pointer;
+  border-top: 9px solid transparent;
+}
+
+f-timerange-picker .arrow_left,
+f-timerange-picker .arrow_right {
+  border-bottom: 9px solid transparent;
 }
 
 f-timerange-picker .arrow_left.disabled,
@@ -46,6 +55,15 @@ f-timerange-picker .arrow_left {
 
 f-timerange-picker .arrow_right {
   border-left: 9px solid #999;
+}
+
+f-timerange-picker .arrow_down {
+  width: 0;
+  height: 0;
+  padding: 0;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-top: 5px solid #999;
 }
 
 f-timerange-picker .widget {

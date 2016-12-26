@@ -29,6 +29,15 @@ var DropdownComponent = function() {
     }
   }
 
+  this.getValue = function() {
+    var selected_item = this.querySelector("ul li.selected");
+    if (!selected_item) {
+      return null;
+    } else {
+      return selected_item.getAttribute("data-value");
+    }
+  }
+
   this.setValue = function(value) {
     var selected_item = this.querySelector("ul li[data-value='" + value + "']");
     if (selected_item) {
@@ -45,8 +54,8 @@ var DropdownComponent = function() {
   }
 
   this.onSelect = function(elem) {
-    this.fireSelectEvent(elem);
     this.selectItem(elem);
+    this.fireSelectEvent(elem);
     this.hideMenu();
   }
 

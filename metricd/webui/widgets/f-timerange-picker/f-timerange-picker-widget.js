@@ -44,6 +44,10 @@ var TimeRangePickerWidget = function(timerange, widget) {
       close();
     }, false);
 
+    widget.querySelector("button.apply").addEventListener("click", function() {
+      submitCustom();
+    }, false);
+
     /** close widget on ESC keypress **/
     document.addEventListener("keydown", function(e) {
       if (e.keyCode == 27) {
@@ -102,17 +106,15 @@ var TimeRangePickerWidget = function(timerange, widget) {
   }
 
   var watchTimezoneControls = function() {
-    var ctrls = widget.querySelectorAll("ul.timezones li button");
-    for (var i = 0; i < ctrls.length; i++ ) {
-      if (ctrls[i].getAttribute("data-value") == timerange.timezone) {
-        ctrls[i].classList.add("active");
-      }
+    var dropdown = widget.querySelector("f-dropdown.timezones");
 
-      ctrls[i].addEventListener("click", function(e) {
-        switchActiveButton("timezones", this);
-        submitTimezone(this.getAttribute("data-value"));
-      }, false);
+    if (timerange.timezone) {
+      dropdown.setValue(timerange.timezone);
     }
+
+    dropdown.addEventListener("select", function(e) {
+      submitTimezone(this.getValue());
+    }, false);
   }
 
   var watchTimerangeButtons = function() {
@@ -220,9 +222,28 @@ var TimeRangePickerWidget = function(timerange, widget) {
   }
 
   var enforceInputFormat = function(input) {
+    /** enforce YYYY-mm-dd HH:MM format **/
     new Formatter(input, {
       pattern: '{{9999}}-{{99}}-{{99}} {{99}}:{{99}}'
     });
+
+    input.addEventListener("focus", function(e) {
+      this.classList.remove("invalid");
+    }, false);
+
+    input.addEventListener("blur", function(e) {
+      validateInput(this);
+    }, false);
+  }
+
+  var validateInput = function(input) {
+    /** as the format is already checked, we only have to validate the length **/
+    if (input.value.length != 16) {
+      input.classList.add("invalid");
+      return false;
+    }
+
+    return true;
   }
 
   var disableCustomInput = function() {
@@ -257,13 +278,30 @@ var TimeRangePickerWidget = function(timerange, widget) {
   }
 
   var submitCustom = function() {
-    var selected_range = {
-      start: dateUtil.toUTC(new Date(widget.querySelector("input[name='start']").value).getTime()),
-      end: dateUtil.toUTC(new Date(widget.querySelector("input[name='end']").value).getTime()),
-      timezone: timerange.timezone
-    };
+    var start_input = widget.querySelector("input[name='start']");
+    var end_input = widget.querySelector("input[name='end']");
+    if (!validateInput(start_input) || !validateInput(end_input)) {
+      //TODO render error message
+      return;
+    }
 
-    submit(selected_range);
+    var start = new Date(start_input.value).getTime();
+    var end = new Date(end_input.value).getTime();
+    if (start > end) {
+      //TODO render error message 
+      return;
+    }
+
+    if (timerange.timezone != "local") {
+      start = dateUtil.toUTC(start);
+      end = dateUtil.toUTC(end);
+    }
+
+    submit({
+      start: start,
+      end: end,
+      timezone: timerange.timezone
+    });
   }
 
   var submit = function(selected_range) {

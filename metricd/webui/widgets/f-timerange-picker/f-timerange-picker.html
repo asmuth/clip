@@ -42,11 +42,11 @@
     </div>
 
     <label>Timezone</label>
-    <f-dropdown>
-      <button class="btn">UTC</button>
-      <ul class="timezones">
-        <li><button type="button" data-value='utc' class='btn'>UTC</button></li>
-        <li><button type="button" data-value='local' class='btn'>Local</button></li>
+    <f-dropdown class="timezones">
+      <button class="btn"><span class="value">UTC</span> <i class="arrow_down"></i></button>
+      <ul>
+        <li data-value='utc'>UTC</li>
+        <li data-value='local'>Local</li>
       </ul>
     </f-dropdown>
 
