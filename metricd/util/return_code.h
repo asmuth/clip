@@ -45,7 +45,7 @@ public:
     return rc;
   }
 
-  inline static ReturnCode error(
+  inline static ReturnCode errorp(
       const std::string& code,
       const char* message,
       ...) {
