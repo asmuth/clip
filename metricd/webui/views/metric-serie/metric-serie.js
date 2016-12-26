@@ -72,7 +72,6 @@ FnordMetric.views["fnordmetric.metric.serie"] = function(elem, params) {
       } else {
         renderSerieLabels(serie.labels);
         renderView(serie.values);
-    //renderPagination(result.rows.length);
       }
     });
   }

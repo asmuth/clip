@@ -63,64 +63,6 @@ FnordMetric.views["fnordmetric.metric.serie.table"] = function(elem, params) {
         "<h2>We couldn't find anything</h2></div>";
   }
 
-
-  //var renderValueColumnsDropdown = function(value_columns) {
-  //  var dropdown = elem.querySelector(
-  //      ".fnordmetric-metric-table z-dropdown.value_columns");
-  //  var selector = new fMetricSelector(dropdown, value_columns);
-  //  selector.render();
-
-  //  dropdown.addEventListener("change", function(e) {
-  //    var columns = this.getValue().split(",");
-  //    value_columns.forEach(function(c) {
-  //      var idx = columns.indexOf(c.key);
-  //      if (c.hidden && idx > -1) {
-  //        view_cfg.addColumn("value_columns", c.key);
-  //      }
-
-  //      if (!c.hidden && idx == -1) {
-  //        view_cfg.removeColumn("value_columns", c.key);
-  //      }
-  //    });
-
-  //    updatePath();
-  //  });
-  //}
-
-  //var renderValueColumnsSidebar = function(value_columns) {
-  //  var ul = elem.querySelector(
-  //      ".fnordmetric-metric-table .sidebar .value_columns");
-  //  value_columns.forEach(function(col) {
-  //    var li = document.createElement("li");
-  //    li.innerHTML = col.title;
-  //    var icon = document.createElement("i");
-  //    icon.className = "fa";
-  //    li.className = col.hidden ? "" : "selected";
-
-  //    li.appendChild(icon);
-  //    ul.appendChild(li);
-
-  //    icon.addEventListener("click", function(e) {
-  //      if (col.hidden) {
-  //        view_cfg.addColumn("value_columns", col.key);
-  //      } else {
-  //        view_cfg.removeColumn("value_columns", col.key);
-  //      }
-  //      updatePath();
-  //    });
-
-  //    if (!col.hidden) {
-  //      li.addEventListener("mouseover", function(e) {
-  //        table.highlightColumn(col.key);
-  //      });
-
-  //      li.addEventListener("mouseout", function(e) {
-  //        table.unhiglightColumn();
-  //      });
-  //    }
-  //  });
-  //}
-
   var renderPagination = function(num_result_items) {
     var pager = elem.querySelector(".fnordmetric-metric-table .table_box z-pager");
     //pager.render(
