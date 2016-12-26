@@ -60,23 +60,15 @@ ReturnCode SumInputAggregator::addSample(
   return ReturnCode::success();
 }
 
-uint64_t alignTime(uint64_t timestamp, uint64_t window, uint64_t align = 0) {
-  if (window >= std::numeric_limits<uint64_t>::max() / 2 ||
-      timestamp >= std::numeric_limits<uint64_t>::max() / 2) {
-    return -1;
-  }
-
-  int64_t timestamp_base = int64_t(timestamp) - int64_t(align);
-  return (timestamp_base / int64_t(window)) * int64_t(window) + int64_t(align);
-}
-
 SumOutputAggregator::SumOutputAggregator(
     tsdb::Cursor* cursor,
     uint64_t granularity,
-    uint64_t align /* = 0 */) :
+    uint64_t align /* = 0 */,
+    bool interpolate /* = true */) :
     cursor_(cursor),
     granularity_(granularity),
-    align_(align) {
+    align_(align),
+    interpolate_(interpolate) {
   cursor_->seekToFirst();
   cursor_->get(&cur_time_, &cur_sum_, sizeof(cur_sum_));
   cur_time_ = alignTime(cur_time_, granularity_, align_);
@@ -98,13 +90,33 @@ bool SumOutputAggregator::next(
     cursor_->next();
   }
 
+  uint64_t interpolate_windows = 1;
+  if (interpolate_ && cursor_->valid()) {
+    auto next_time = alignTime(cursor_->getTime(), granularity_, align_);
+    interpolate_windows = (next_time - cur_time_) / granularity_;
+  }
+
+  uint64_t next_val = cur_sum_ / interpolate_windows;
+  next_val += cur_sum_ % interpolate_windows;
+
+  assert(value_len == sizeof(next_val));
+  memcpy(value, &next_val, sizeof(next_val));
+  cur_sum_ -= next_val;
+
   *time = cur_time_;
-  assert(value_len == sizeof(cur_sum_));
-  memcpy(value, &cur_sum_, sizeof(cur_sum_));
-  cur_sum_ = 0;
   cur_time_ += granularity_;
 
   return true;
+}
+
+uint64_t alignTime(uint64_t timestamp, uint64_t window, uint64_t align = 0) {
+  if (window >= std::numeric_limits<uint64_t>::max() / 2 ||
+      timestamp >= std::numeric_limits<uint64_t>::max() / 2) {
+    return -1;
+  }
+
+  int64_t timestamp_base = int64_t(timestamp) - int64_t(align);
+  return (timestamp_base / int64_t(window)) * int64_t(window) + int64_t(align);
 }
 
 } // namespace fnordmetric

@@ -313,41 +313,41 @@ TEST_CASE(MetricServiceTest, TestSumAggregatorWithUpsampling, [] () {
     uint64_t val;
     EXPECT(cursor.next(&ts, &val));
     EXPECT(ts == 1482776340000000);
-    EXPECT(val == 23);
+    EXPECT(val == 8);
     EXPECT(cursor.next(&ts, &val));
     EXPECT(ts == 1482776350000000);
-    EXPECT(val == 0);
+    EXPECT(val == 3);
     EXPECT(cursor.next(&ts, &val));
     EXPECT(ts == 1482776360000000);
-    EXPECT(val == 0);
+    EXPECT(val == 3);
     EXPECT(cursor.next(&ts, &val));
     EXPECT(ts == 1482776370000000);
-    EXPECT(val == 0);
+    EXPECT(val == 3);
     EXPECT(cursor.next(&ts, &val));
     EXPECT(ts == 1482776380000000);
-    EXPECT(val == 0);
+    EXPECT(val == 3);
     EXPECT(cursor.next(&ts, &val));
     EXPECT(ts == 1482776390000000);
-    EXPECT(val == 0);
+    EXPECT(val == 3);
 
     EXPECT(cursor.next(&ts, &val));
     EXPECT(ts == 1482776400000000);
-    EXPECT(val == 17);
+    EXPECT(val == 7);
     EXPECT(cursor.next(&ts, &val));
     EXPECT(ts == 1482776410000000);
-    EXPECT(val == 0);
+    EXPECT(val == 2);
     EXPECT(cursor.next(&ts, &val));
     EXPECT(ts == 1482776420000000);
-    EXPECT(val == 0);
+    EXPECT(val == 2);
     EXPECT(cursor.next(&ts, &val));
     EXPECT(ts == 1482776430000000);
-    EXPECT(val == 0);
+    EXPECT(val == 2);
     EXPECT(cursor.next(&ts, &val));
     EXPECT(ts == 1482776440000000);
-    EXPECT(val == 0);
+    EXPECT(val == 2);
     EXPECT(cursor.next(&ts, &val));
     EXPECT(ts == 1482776450000000);
-    EXPECT(val == 0);
+    EXPECT(val == 2);
 
     for (uint64_t expected_ts = 1482776460000000, i = 0; i < 12; ++i) {
       EXPECT(cursor.next(&ts, &val));
@@ -358,22 +358,22 @@ TEST_CASE(MetricServiceTest, TestSumAggregatorWithUpsampling, [] () {
 
     EXPECT(cursor.next(&ts, &val));
     EXPECT(ts == 1482776580000000);
-    EXPECT(val == 42);
+    EXPECT(val == 7);
     EXPECT(cursor.next(&ts, &val));
     EXPECT(ts == 1482776590000000);
-    EXPECT(val == 0);
+    EXPECT(val == 7);
     EXPECT(cursor.next(&ts, &val));
     EXPECT(ts == 1482776600000000);
-    EXPECT(val == 0);
+    EXPECT(val == 7);
     EXPECT(cursor.next(&ts, &val));
     EXPECT(ts == 1482776610000000);
-    EXPECT(val == 0);
+    EXPECT(val == 7);
     EXPECT(cursor.next(&ts, &val));
     EXPECT(ts == 1482776620000000);
-    EXPECT(val == 0);
+    EXPECT(val == 7);
     EXPECT(cursor.next(&ts, &val));
     EXPECT(ts == 1482776630000000);
-    EXPECT(val == 0);
+    EXPECT(val == 7);
 
     for (uint64_t expected_ts = 1482776640000000, i = 0; i < 12; ++i) {
       EXPECT(cursor.next(&ts, &val));

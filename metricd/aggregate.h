@@ -66,7 +66,8 @@ public:
   SumOutputAggregator(
       tsdb::Cursor* cursor,
       uint64_t granularity,
-      uint64_t align = 0);
+      uint64_t align = 0,
+      bool interpolate = true);
 
   bool next(
       uint64_t* time,
@@ -77,6 +78,7 @@ protected:
   tsdb::Cursor* cursor_;
   uint64_t granularity_;
   uint64_t align_;
+  bool interpolate_;
   uint64_t cur_time_;
   uint64_t cur_sum_;
 };
