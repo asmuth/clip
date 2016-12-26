@@ -23,7 +23,6 @@ FnordMetric.views["fnordmetric.metric.serie.table"] = function(elem, params) {
   };
 
   var renderTable = function(values) {
-    console.log(values);
     /* build columns and rows */
     var columns = default_columns;
     var rows = [];

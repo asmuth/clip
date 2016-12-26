@@ -30,7 +30,7 @@ FnordMetric.views["fnordmetric.metric.series.list"] = function(elem, params) {
 
     url_params = getParams(params.path);
 
-    wacthTimeRangePicker();
+    watchTimeRangePicker();
     renderHeader();
     fetchMetricSeriesList();
   };
@@ -59,7 +59,7 @@ FnordMetric.views["fnordmetric.metric.series.list"] = function(elem, params) {
     return p;
   }
 
-  var wacthTimeRangePicker = function() {
+  var watchTimeRangePicker = function() {
     var picker = elem.querySelector(
         ".fnordmetric-metric-series-list f-timerange-picker");
 

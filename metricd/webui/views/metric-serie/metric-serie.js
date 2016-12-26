@@ -19,12 +19,13 @@ FnordMetric.views["fnordmetric.metric.serie"] = function(elem, params) {
     fetchData();
   }
 
-  var updatePath = function() {
-    console.log("update path");
-    //FIXME 
-    return;
-    params.app.navigateTo(
-        params.route.args[0] + "?" + URLUtil.buildQueryString(view_cfg.getParamList()));
+  var updatePath = function(query_params) {
+    var url = params.path;
+    for (var k in query_params) {
+      url = URLUtil.addOrModifyParam(url, k, query_params[k]);
+    }
+
+    params.app.navigateTo(url);
   }
 
   var getParams = function(path) {
@@ -33,6 +34,7 @@ FnordMetric.views["fnordmetric.metric.serie"] = function(elem, params) {
     p.metric = params.route.args[1];
     p.series_id = params.route.args[2];
 
+    /** param view **/
     var view_param = URLUtil.getParamValue(path, "view");
     if (view_param) {
       p.view = view_param;
@@ -40,6 +42,13 @@ FnordMetric.views["fnordmetric.metric.serie"] = function(elem, params) {
       p.view = "table";
     }
 
+    /** param compare_to **/
+    var compare_to_param = URLUtil.getParamValue(path, "compare_to");
+    if (compare_to_param) {
+      p.compare_to = compare_to_param;
+    }
+
+    /** param offset **/
     var offset_param = URLUtil.getParamValue(path, "offset");
     if (offset_param) {
       p.offset = offset_param;
@@ -80,6 +89,7 @@ FnordMetric.views["fnordmetric.metric.serie"] = function(elem, params) {
     renderHeader();
     // renderView(); --> initView
     renderTimerangeControl();
+    watchTimeRangePicker();
     renderEmbedControl();
   };
 
@@ -91,29 +101,26 @@ FnordMetric.views["fnordmetric.metric.serie"] = function(elem, params) {
         "href",
         "/metrics/" + encodeURIComponent(url_params.metric));
 
-    ///* handle view controls */
-    //elem.querySelector(".fnordmetric-metric-serie .view_control").setAttribute(
-    //    "data-view", view_cfg.getValue("view"));
+    /* handle view controls */
+    elem.querySelector(".fnordmetric-metric-serie .view_control").setAttribute(
+        "data-view", url_params.view);
 
-    ///* switch to table view */
-    //var table_view_ctrl = elem.querySelector(
-    //    ".fnordmetric-metric-serie .view_control .table_view");
-    //table_view_ctrl.addEventListener("click", function(e) {
-    //  view_cfg.updateValue("view", "table");
-    //  updatePath();
-    //}, false);
+    /* switch to table view */
+    elem.querySelector(
+        ".fnordmetric-metric-serie .view_control .table_view").
+        addEventListener("click", function(e) {
+          updatePath({view: "table"});
+        }, false);
 
-    ///* switch to timeseries view */
-    //var timeseries_view_ctrl = elem.querySelector(
-    //    ".fnordmetric-metric-serie .view_control .timeseries_view");
-    //timeseries_view_ctrl.addEventListener("click", function(e) {
-    //  view_cfg.updateValue("view", "timeseries");
-    //  updatePath();
-    //}, false);
+    /* switch to timeseries view */
+    elem.querySelector(
+        ".fnordmetric-metric-serie .view_control .timeseries_view").
+        addEventListener("click", function(e) {
+          updatePath({view: "timeseries"});
+        }, false);
   };
 
   var renderSerieLabels = function(labels) {
-    console.log(labels);
     var title = [];
 
     for (var label in labels) {
@@ -124,19 +131,42 @@ FnordMetric.views["fnordmetric.metric.serie"] = function(elem, params) {
         innerHTML = DomUtil.escapeHTML(title.join(", "));
   }
 
+  var watchTimeRangePicker = function() {
+    var picker = elem.querySelector(
+        ".fnordmetric-metric-serie f-timerange-picker");
+
+    var timerange = {};
+
+    var timezone = DomUtil.getCookie("timezone");
+    if (timezone) {
+      timerange.timezone = timezone;
+    }
+
+    if (url_params.start && url_params.end) {
+      timerange.start = url_params.start;
+      timerange.end = url_params.end;
+    }
+
+    picker.initialize(timerange);
+
+    picker.addEventListener("submit", function(e) {
+      updateTimezoneCookie(this.getTimezone());
+      updateQueryStr(this.getTimerange());
+    }, false);
+  }
+
   var renderTimerangeControl = function() {
     var dropdown = elem.querySelector(
         ".fnordmetric-metric-serie .control f-dropdown.timerange");
 
-    //var compare_to_value = view_cfg.getValue("compare_to");
-    //if (compare_to_value != null) {
-    //  dropdown.setValue(compare_to_value);
-    //}
+    var compare_to_value = url_params.compare_to;
+    if (compare_to_value != null) {
+      dropdown.setValue(compare_to_value);
+    }
 
-    //dropdown.addEventListener("select", function(e) {
-    //  view_cfg.updateValue("compare_to", e.detail.value);
-    //  updatePath();
-    //}, false);
+    dropdown.addEventListener("select", function(e) {
+      updatePath({compare_to: e.detail.value});
+    }, false);
   }
 
   var renderView = function(results) {
