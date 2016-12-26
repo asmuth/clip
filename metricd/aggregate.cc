@@ -21,6 +21,21 @@ bool SumOutputAggregator<uint64_t>::aggregateUINT64(
   return aggregate(input_time, input_value, output_time, output_value);
 }
 
+SumInputAggregator::SumInputAggregator(
+    uint64_t granularity,
+    uint64_t align /* = 0 */) :
+    granularity_(granularity),
+    align_(align) {}
+
+ReturnCode SumInputAggregator::addSample(
+    tsdb::Cursor* cursor,
+    uint64_t time,
+    MetricDataType value_type,
+    const void* value,
+    size_t value_len) {
+
+}
+
 uint64_t alignTime(uint64_t timestamp, uint64_t window, uint64_t align = 0) {
   if (window >= std::numeric_limits<uint64_t>::max() / 2 ||
       timestamp >= std::numeric_limits<uint64_t>::max() / 2) {

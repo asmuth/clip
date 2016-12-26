@@ -25,8 +25,8 @@ public:
       TimestampType time,
       double value);
 
-  TimestampType getTime();
-  double getValue();
+  TimestampType getTime() const;
+  double getValue() const;
 
 protected:
   const TimestampType time_;

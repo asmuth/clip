@@ -23,21 +23,15 @@ MetricConfig::MetricConfig() :
    granularity(0),
    is_valid(false) {}
 
+SeriesIDType MetricSeries::getSeriesID() const {
+  return series_id_;
+}
+
 MetricSeries::MetricSeries(
     SeriesIDType series_id,
     LabelSet labels) :
     series_id_(series_id),
     labels_(labels) {}
-
-ReturnCode MetricSeries::insertSample(
-    tsdb::TSDB* tsdb,
-    Sample sample) {
-  //if (tsdb->insertUInt64(series_id_, sample.getTime(), sample.getValue())) {
-  //  return ReturnCode::success();
-  //} else {
-  //  return ReturnCode::error("ERUNTIME", "insert failed");
-  //}
-}
 
 const LabelSet* MetricSeries::getLabels() const {
   return &labels_;
@@ -277,6 +271,21 @@ bool MetricSeriesCursor::next(uint64_t* timestamp, uint64_t* value) {
   }
 }
 
+std::unique_ptr<InputAggregator> mkInputAggregator(
+    const MetricConfig* config) {
+  if (config->granularity == 0) {
+    return {};
+  }
+
+  switch (config->aggregation) {
+    case MetricAggregationType::SUM:
+      return std::unique_ptr<InputAggregator>(
+          new SumInputAggregator(config->granularity));
+    case MetricAggregationType::NONE: return {};
+    default: return {};
+  }
+}
+
 std::unique_ptr<OutputAggregator> MetricSeriesCursor::mkAggregator(
     const MetricConfig* config) const {
   if (config->granularity == 0) {
@@ -388,6 +397,7 @@ void Metric::setConfig(MetricConfig config) {
   }
 
   config_ = config;
+  input_aggr_ = mkInputAggregator(&config_);
 }
 
 const MetricConfig& Metric::getConfig() const {
@@ -396,6 +406,10 @@ const MetricConfig& Metric::getConfig() const {
 
 MetricSeriesList* Metric::getSeriesList() {
   return &series_;
+}
+
+InputAggregator* Metric::getInputAggregator() {
+  return input_aggr_.get();
 }
 
 size_t getMetricDataTypeSize(MetricDataType t) {

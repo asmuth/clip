@@ -9,6 +9,7 @@
  * <http://www.gnu.org/licenses/>.
  */
 #pragma once
+#include <metricd/types.h>
 #include <metricd/sample.h>
 #include <metricd/util/return_code.h>
 #include <metricd/aggregate.h>
@@ -28,12 +29,6 @@ class SeriesIDProvider;
 
 using MetricIDType = std::string;
 using SeriesIDType = uint64_t;
-
-enum class MetricDataType {
-  UINT64,
-  INT64,
-  FLOAT64
-};
 
 enum class MetricAggregationType {
   NONE,
@@ -63,12 +58,10 @@ public:
       SeriesIDType series_id,
       LabelSet labels);
 
-  ReturnCode insertSample(
-      tsdb::TSDB* tsdb,
-      Sample sample);
-
   size_t getTotalBytes() const;
   TimestampType getLastInsertTime();
+
+  SeriesIDType getSeriesID() const;
 
   const LabelSet* getLabels() const;
   bool hasLabel(const std::string& label) const;
@@ -188,13 +181,19 @@ public:
 
   MetricSeriesList* getSeriesList();
 
+  InputAggregator* getInputAggregator();
+
 protected:
   std::string key_;
   MetricSeriesList series_;
   MetricConfig config_;
+  std::unique_ptr<InputAggregator> input_aggr_;
 };
 
 size_t getMetricDataTypeSize(MetricDataType t);
+
+std::unique_ptr<InputAggregator> mkInputAggregator(
+    const MetricConfig* config);
 
 } // namespace fnordmetric
 

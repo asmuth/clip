@@ -9,6 +9,9 @@
  */
 #pragma once
 #include <metricd/sample.h>
+#include <metricd/types.h>
+#include <metricd/util/return_code.h>
+#include <libtsdb/cursor.h>
 
 namespace fnordmetric {
 
@@ -50,6 +53,39 @@ protected:
   uint64_t align_;
   uint64_t twin_;
   T sum_;
+};
+
+class InputAggregator {
+public:
+
+  virtual ~InputAggregator() = default;
+
+  virtual ReturnCode addSample(
+      tsdb::Cursor* cursor,
+      uint64_t time,
+      MetricDataType value_type,
+      const void* value,
+      size_t value_len) = 0;
+
+};
+
+class SumInputAggregator : public InputAggregator {
+public:
+
+  SumInputAggregator(
+      uint64_t granularity,
+      uint64_t align = 0);
+
+  ReturnCode addSample(
+      tsdb::Cursor* cursor,
+      uint64_t time,
+      MetricDataType value_type,
+      const void* value,
+      size_t value_len) override;
+
+protected:
+  uint64_t granularity_;
+  uint64_t align_;
 };
 
 uint64_t alignTime(uint64_t timestamp, uint64_t window, uint64_t align);

@@ -184,7 +184,19 @@ ReturnCode MetricService::insertSample(
     return rc;
   }
 
-  rc = series->insertSample(tsdb_.get(), sample.getSample());
+  tsdb::Cursor cursor;
+  if (!tsdb_->getCursor(series->getSeriesID(), &cursor, false)) {
+    return ReturnCode::error("ERUNTIME", "can't open cursor");
+  }
+
+  uint64_t value = sample.getSample().getValue();
+  rc = metric->getInputAggregator()->addSample(
+      &cursor,
+      sample.getSample().getTime(),
+      MetricDataType::UINT64,
+      &value,
+      sizeof(value));
+
   if (rc.isSuccess()) {
     tsdb_->commit(); // FIXME
   }

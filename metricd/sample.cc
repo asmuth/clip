@@ -18,11 +18,11 @@ Sample::Sample(
     time_(time),
     value_(value) {}
 
-TimestampType Sample::getTime() {
+TimestampType Sample::getTime() const {
   return time_;
 }
 
-double Sample::getValue() {
+double Sample::getValue() const {
   return value_;
 }
 
