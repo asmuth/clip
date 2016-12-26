@@ -139,6 +139,10 @@ PageIndex* Transaction::getPageIndex() const {
   return snap_->page_index_.get();
 }
 
+PageMap* Transaction::getPageMap() const {
+  return snap_->page_map_;
+}
+
 void Transaction::updatePageIndex(
     std::unique_ptr<PageIndex>&& page_index,
     const std::set<PageMap::PageIDType>& deleted_pages /* = {} */) {

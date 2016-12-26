@@ -31,6 +31,7 @@ public:
   ~Transaction();
 
   PageIndex* getPageIndex() const;
+  PageMap* getPageMap() const;
 
   void updatePageIndex(
       std::unique_ptr<PageIndex>&& page_index,

@@ -238,3 +238,58 @@ TEST_CASE(TSDBTest, TestSeek, [] () {
     EXPECT(cursor.valid() == false);
   }
 });
+
+TEST_CASE(TSDBTest, TestUpdate, [] () {
+  unlink("/tmp/__test.tsdb");
+
+  {
+    std::unique_ptr<tsdb::TSDB> db;
+    EXPECT(tsdb::TSDB::createDatabase(&db, "/tmp/__test.tsdb") == true);
+
+    EXPECT(db->createSeries(1, tsdb::PageType::UINT64, "") == true);
+    for (size_t i = 1; i <= 5000; ++i) {
+      EXPECT(db->insertUInt64(1, i * 2, i) == true);
+    }
+
+    EXPECT(db->commit() == true);
+  }
+
+  {
+    std::unique_ptr<tsdb::TSDB> db;
+    EXPECT(tsdb::TSDB::openDatabase(&db, "/tmp/__test.tsdb") == true);
+
+    tsdb::Cursor cursor(tsdb::PageType::UINT64);
+    EXPECT(db->getCursor(1, &cursor));
+    EXPECT(cursor.valid() == true);
+    cursor.seekTo(1337);
+    EXPECT(cursor.valid() == true);
+    {
+      uint64_t ts;
+      uint64_t value;
+      cursor.get(&ts, &value);
+      EXPECT(ts == 1338);
+      EXPECT(value == 669);
+    }
+
+    cursor.update(1234);
+    EXPECT(db->commit() == true);
+  }
+
+  {
+    std::unique_ptr<tsdb::TSDB> db;
+    EXPECT(tsdb::TSDB::openDatabase(&db, "/tmp/__test.tsdb") == true);
+
+    tsdb::Cursor cursor(tsdb::PageType::UINT64);
+    EXPECT(db->getCursor(1, &cursor));
+    EXPECT(cursor.valid() == true);
+    cursor.seekTo(1337);
+    EXPECT(cursor.valid() == true);
+    {
+      uint64_t ts;
+      uint64_t value;
+      cursor.get(&ts, &value);
+      EXPECT(ts == 1338);
+      EXPECT(value == 1234);
+    }
+  }
+});

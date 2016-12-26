@@ -40,11 +40,12 @@ public:
 
   void append(uint64_t timestamp, uint64_t value);
 
-  void update(uint64_t timestamp, uint64_t value);
+  void update(uint64_t value);
 
 protected:
   Transaction txn_;
   size_t page_pos_;
+  size_t page_id_;
   PageMap* page_map_;
   PageBuffer page_buf_;
   bool page_buf_valid_;

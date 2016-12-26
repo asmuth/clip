@@ -106,6 +106,23 @@ void PageBuffer::insert(uint64_t time, const void* value, size_t value_len) {
   }
 }
 
+template <typename ValueVectorType, typename ValueType>
+static void updateValue(
+    ValueVectorType* value_vector,
+    size_t pos,
+    const ValueType& value) {
+  assert(pos <= value_vector->size());
+  value_vector[pos] = value;
+}
+
+void PageBuffer::update(size_t pos, const void* value, size_t value_len) {
+  switch (type_) {
+    case PageType::UINT64:
+      insertValue((ValueVectorUInt64Type*) values_, pos, *((uint64_t*) value));
+      break;
+  }
+}
+
 void PageBuffer::getTimestamp(size_t pos, uint64_t* timestamp) const {
   assert(pos < timestamps_.size());
   *timestamp = timestamps_[pos];
