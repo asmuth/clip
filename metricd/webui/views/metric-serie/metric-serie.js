@@ -150,8 +150,7 @@ FnordMetric.views["fnordmetric.metric.serie"] = function(elem, params) {
     picker.initialize(timerange);
 
     picker.addEventListener("submit", function(e) {
-      updateTimezoneCookie(this.getTimezone());
-      updateQueryStr(this.getTimerange());
+      updatePath(this.getTimerange());
     }, false);
   }
 
@@ -182,7 +181,7 @@ FnordMetric.views["fnordmetric.metric.serie"] = function(elem, params) {
         break;
 
       case "timeseries":
-        view = FnordMetric.views["fnordmetric.metric.serie.chart"];
+        view = FnordMetric.views["fnordmetric.metric.serie.timeseries"];
         break;
 
       default:

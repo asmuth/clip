@@ -191,9 +191,10 @@ FnordMetric.views["fnordmetric.metric.series.list"] = function(elem, params) {
 
       /* sort callback */
       table.onSort(function(column, direction) {
-        params.view_cfg.updateValue("order", direction);
-        params.view_cfg.updateValue("order_by", column.key);
-        updatePath();
+        //FIXME handle sort
+       // params.view_cfg.updateValue("order", direction);
+       // params.view_cfg.updateValue("order_by", column.key);
+       // updatePath();
       });
     }
 

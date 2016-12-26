@@ -123,7 +123,7 @@
   height: 37px;
 }
 
-.fnordmetric-metric-serie .content .controls .control {
+.fnordmetric-metric-serie .content .controls > .control {
   float: right;
   height: 38px;
   line-height: 40px;
@@ -131,11 +131,11 @@
   font-size: 13px;
 }
 
-.fnordmetric-metric-serie .content .controls .control.left {
+.fnordmetric-metric-serie .content .controls > .control.left {
   float: left;
 }
 
-.fnordmetric-metric-serie .content .controls .control label {
+.fnordmetric-metric-serie .content .controls > .control label {
   float: left;
   font-size: 12px;
   font-weight: 400;
@@ -143,18 +143,18 @@
   margin-right: 5px;
 }
 
-.fnordmetric-metric-serie .content .controls .control i {
+.fnordmetric-metric-serie .content .controls > .control i.fa {
   padding: 0 8px;
   font-size: 14px;
   font-weight: 600;
 }
 
-.fnordmetric-metric-serie .content .controls .control i:hover {
+.fnordmetric-metric-serie .content .controls > .control i.fa:hover {
   cursor: pointer;
   color: #333;
 }
 
-.fnordmetric-metric-serie .content .controls .control f-dropdown button.btn {
+.fnordmetric-metric-serie .content .controls > .control f-dropdown button.btn {
   line-height: 40px;
 }
 
@@ -227,16 +227,11 @@
   border-radius: 5px;
   background: #fff;
   margin-bottom: 20px;
-
 }
 
-/** FIXME hack to show right y-axis and hide left y-axis **/
 .fnordmetric-metric-serie .content .timeseries .chart_box .chart_canvas {
-  height: 174px;
-  width: 104%;
-  margin-left: -3%;
 }
-
+/**
 .fnordmetric-metric-serie .content .timeseries .chart_box .chart_canvas .dygraph-axis-label-x,
 .fnordmetric-metric-serie .content .timeseries .chart_box .chart_canvas .dygraph-axis-label-y1 {
   display: none;
@@ -246,3 +241,4 @@
   font-size: 12px;
   color: #737373;
 }
+**/

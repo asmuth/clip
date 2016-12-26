@@ -31,9 +31,9 @@ f-timerange-picker input::selection {
   background: transparent;
 }
 
-f-timerange-picker .arrow_left,
-f-timerange-picker .arrow_down,
-f-timerange-picker .arrow_right {
+f-timerange-picker i.arrow_left,
+f-timerange-picker i.arrow_down,
+f-timerange-picker i.arrow_right {
   padding: 0 5px;
   vertical-align: middle;
   display: inline-block;
@@ -43,26 +43,26 @@ f-timerange-picker .arrow_right {
   border-top: 9px solid transparent;
 }
 
-f-timerange-picker .arrow_left,
-f-timerange-picker .arrow_right {
+f-timerange-picker i.arrow_left,
+f-timerange-picker i.arrow_right {
   border-bottom: 9px solid transparent;
 }
 
-f-timerange-picker .arrow_left.disabled,
-f-timerange-picker .arrow_right.disabled {
+f-timerange-picker i.arrow_left.disabled,
+f-timerange-picker i.arrow_right.disabled {
   cursor: initial;
   opacity: 0.6;
 }
 
-f-timerange-picker .arrow_left {
+f-timerange-picker i.arrow_left {
   border-right: 9px solid #999;
 }
 
-f-timerange-picker .arrow_right {
+f-timerange-picker i.arrow_right {
   border-left: 9px solid #999;
 }
 
-f-timerange-picker .arrow_down {
+f-timerange-picker i.arrow_down {
   width: 0;
   height: 0;
   padding: 0;

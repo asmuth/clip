@@ -43,12 +43,7 @@ FnordMetric.views["fnordmetric.metric.serie.table"] = function(elem, params) {
     if (!table) {
       var tpl = templateUtil.getTemplate("fnordmetric-metric-serie-table-tpl");
       elem.appendChild(tpl);
-
       table = new fTable({columns: columns});
-      /* navigate to id detail page */
-      table.onClick(function(r) {
-        params.app.navigateTo(params.route.args[0] + "/" + r.cells.sensor.value);
-      });
     }
 
     table.setRows(rows);

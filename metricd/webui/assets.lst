@@ -18,6 +18,7 @@ widgets/f-timerange-picker/f-timerange-picker.js
 widgets/f-timerange-picker/f-timerange-picker.html
 widgets/f-timerange-picker/f-timerange-picker.css
 3rdparty/formatter.min.js
+3rdparty/dygraph-combined.min.js
 views/error/error.html
 views/error/error.js
 views/metric-list/metric-list.css
@@ -31,4 +32,6 @@ views/metric-serie/metric-serie.html
 views/metric-serie/metric-serie.js
 views/metric-serie/metric-serie-table.html
 views/metric-serie/metric-serie-table.js
+views/metric-serie/metric-serie-timeseries.html
+views/metric-serie/metric-serie-timeseries.js
 
