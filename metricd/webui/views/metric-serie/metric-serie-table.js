@@ -1,60 +1,61 @@
 FnordMetric.views["fnordmetric.metric.serie.table"] = function(elem, params) {
   var table;
 
+  var default_columns = [
+    {
+      key: "time",
+      title: "Time",
+      formatter: dateUtil.formatDateTime
+    },
+    {
+      key: "value",
+      title: "Value"
+    }
+  ];
+
   this.initialize = function() {
     var results = params.data;
-    if (results.series.length > 0) {
-      renderTable(results.series);
+    if (results.length > 0) {
+      renderTable(results);
     } else {
       renderEmptyTable();
     }
   };
 
-  var renderTable = function(series) {
+  var renderTable = function(values) {
+    console.log(values);
     /* build columns and rows */
     var columns = default_columns;
-    var column_keys = {};
     var rows = [];
-    series.forEach(function(s) {
-      var cells = {};
-
-      for (var key in s.labels) {
-        cells[key] = {value : s.labels[key]};
-
-        if (!column_keys.hasOwnProperty(key)) {
-          column_keys[key] = true;
-          columns.push({
-            key: key,
-            title: key
-          });
+    values.forEach(function(v) {
+      var cells = {
+        time: {
+          value: v[0] / 1000
+        },
+        value: {
+          value: v[1]
         }
-      }
+      };
 
       rows.push({cells: cells});
     });
 
     /* initialize table */
     if (!table) {
-      var page = templateUtil.getTemplate("fnordmetric-metric-table-tpl");
-      elem.appendChild(page);
+      var tpl = templateUtil.getTemplate("fnordmetric-metric-serie-table-tpl");
+      elem.appendChild(tpl);
 
       table = new fTable({columns: columns});
       /* navigate to id detail page */
       table.onClick(function(r) {
         params.app.navigateTo(params.route.args[0] + "/" + r.cells.sensor.value);
       });
-
-      /* sort callback */
-      table.onSort(function(column, direction) {
-        params.view_cfg.updateValue("order", direction);
-        params.view_cfg.updateValue("order_by", column.key);
-        updatePath();
-      });
     }
 
     table.setRows(rows);
-    table.render(elem.querySelector(".fnordmetric-metric-table .metric-table"));
-    renderPagination(series.length);
+    table.render(elem.querySelector(
+        ".fnordmetric-metric-serie-table .metric-serie-table"));
+    renderPagination(values.length);
   };
 
   var renderEmptyTable = function() {
