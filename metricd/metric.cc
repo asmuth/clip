@@ -412,12 +412,5 @@ InputAggregator* Metric::getInputAggregator() {
   return input_aggr_.get();
 }
 
-size_t getMetricDataTypeSize(MetricDataType t) {
-  switch (t) {
-    case MetricDataType::UINT64: return sizeof(uint64_t);
-    default: assert(false); // invalid data tyoe
-  }
-}
-
 } // namespace fnordmetric
 

@@ -190,8 +190,6 @@ protected:
   std::unique_ptr<InputAggregator> input_aggr_;
 };
 
-size_t getMetricDataTypeSize(MetricDataType t);
-
 std::unique_ptr<InputAggregator> mkInputAggregator(
     const MetricConfig* config);
 

@@ -4,8 +4,8 @@ MAINTAINERCLEANFILES =   \
   Makefile.in
 
 bin_PROGRAMS = metricd
-TESTS = metricd_test_config_parser
-check_PROGRAMS = metricd_test_config_parser
+TESTS = metricd_test_config_parser metricd_test_metric_service
+check_PROGRAMS = $(TESTS)
 
 
 ################# DEPENDENCIES ####################
@@ -168,6 +168,8 @@ metricd_common_sources_ = \
     transport/statsd/statsd.cc \
     transport/statsd/statsd_server.h \
     transport/statsd/statsd_server.cc \
+    types.h \
+    types.cc \
     webui/webui.h \
     webui/webui.cc
 
@@ -194,3 +196,9 @@ metricd_test_config_parser_SOURCES = \
     config/config_parser_test.cc
 
 metricd_test_config_parser_LDADD = $(top_srcdir)/libtsdb/libtsdb.a
+
+metricd_test_metric_service_SOURCES = \
+    $(metricd_common_sources_) \
+    metric_service_test.cc
+
+metricd_test_metric_service_LDADD = $(top_srcdir)/libtsdb/libtsdb.a

@@ -8,7 +8,9 @@
  * <http://www.gnu.org/licenses/>.
  */
 #include "metricd/aggregate.h"
+#include "metricd/types.h"
 #include <limits>
+#include <assert.h>
 
 namespace fnordmetric {
 
@@ -33,7 +35,24 @@ ReturnCode SumInputAggregator::addSample(
     MetricDataType value_type,
     const void* value,
     size_t value_len) {
+  auto twin = alignTime(time, granularity_, align_);
+  size_t value_type_len = getMetricDataTypeSize(value_type);
+  assert(value_type_len == value_len);
 
+  if (cursor->seekTo(twin)) {
+    if (cursor->getTime() == twin) {
+      void* sum = alloca(value_type_len);
+      cursor->getValue(sum, value_type_len);
+      tval_add(value_type, sum, value_type_len, value, value_len);
+      cursor->update(sum, value_type_len);
+    } else {
+      cursor->insert(twin, value, value_len);
+    }
+  } else {
+    cursor->append(twin, value, value_len);
+  }
+
+  return ReturnCode::success();
 }
 
 uint64_t alignTime(uint64_t timestamp, uint64_t window, uint64_t align = 0) {
