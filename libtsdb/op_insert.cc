@@ -14,27 +14,27 @@
 
 namespace tsdb {
 
-bool TSDB::insertUInt64(
-    uint64_t series_id,
-    uint64_t time,
-    uint64_t value) {
-  tsdb::Cursor cursor(tsdb::PageType::UINT64);
-  if (!getCursor(series_id, &cursor, false, SEEK_NONE)) {
-    return false;
-  }
-
-  if (cursor.seekTo(time)) {
-    if (cursor.getTime() == time) {
-      cursor.update(value);
-    } else {
-      cursor.insert(time, value);
-    }
-  } else {
-    cursor.append(time, value);
-  }
-
-  return true;
-}
+// bool TSDB::insertUInt64(
+//     uint64_t series_id,
+//     uint64_t time,
+//     uint64_t value) {
+//   tsdb::Cursor cursor;
+//   if (!getCursor(series_id, &cursor, false, SEEK_NONE)) {
+//     return false;
+//   }
+// 
+//   if (cursor.seekTo(time)) {
+//     if (cursor.getTime() == time) {
+//       cursor.update(value);
+//     } else {
+//       cursor.insert(time, value);
+//     }
+//   } else {
+//     cursor.append(time, value);
+//   }
+// 
+//   return true;
+// }
 
 } // namespace tsdb
 

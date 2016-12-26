@@ -22,11 +22,12 @@ PageMap::~PageMap() {
   }
 }
 
-PageMap::PageIDType PageMap::allocPage(PageType type) {
+PageMap::PageIDType PageMap::allocPage(uint64_t value_size) {
   auto entry = new PageMapEntry();
   entry->refcount = 1;
-  entry->buffer.reset(new PageBuffer(type));
+  entry->buffer.reset(new PageBuffer(value_size));
   entry->version = 1;
+  entry->value_size = value_size;
   entry->disk_addr = 0;
   entry->disk_size = 0;
 
@@ -39,12 +40,13 @@ PageMap::PageIDType PageMap::allocPage(PageType type) {
 }
 
 PageMap::PageIDType PageMap::addColdPage(
-    PageType type,
+    uint64_t value_size,
     uint64_t disk_addr,
     uint64_t disk_size) {
   auto entry = new PageMapEntry();
   entry->refcount = 1;
   entry->version = 1;
+  entry->value_size = value_size;
   entry->disk_addr = disk_addr;
   entry->disk_size = disk_size;
 
@@ -109,15 +111,15 @@ bool PageMap::getPage(
   }
 
   /* load the page from disk */
+  auto value_size = entry->value_size;
   auto disk_addr = entry->disk_addr;
   auto disk_size = entry->disk_size;
   entry_lk.unlock();
   dropEntryReference(entry);
-  return loadPage(disk_addr, disk_size, buf);
+  return loadPage(value_size, disk_addr, disk_size, buf);
 }
 
 bool PageMap::modifyPage(
-    PageType page_type,
     PageIDType page_id,
     std::function<bool (PageBuffer* buf)> fn) {
   /* grab the main mutex and locate the page in our map */
@@ -137,8 +139,12 @@ bool PageMap::modifyPage(
 
   /* if the page is not in memory, load it */
   if (!entry->buffer) {
-    entry->buffer.reset(new PageBuffer(page_type));
-    if (!loadPage(entry->disk_addr, entry->disk_size, entry->buffer.get())) {
+    entry->buffer.reset(new PageBuffer());
+    if (!loadPage(
+          entry->value_size,
+          entry->disk_addr,
+          entry->disk_size,
+          entry->buffer.get())) {
       entry->buffer.reset(nullptr);
       return false;
     }
@@ -159,11 +165,13 @@ bool PageMap::modifyPage(
 }
 
 bool PageMap::loadPage(
+    uint64_t value_size,
     uint64_t disk_addr,
     uint64_t disk_size,
     PageBuffer* buffer) {
   assert(disk_addr > 0);
   assert(disk_size > 0);
+  *buffer = PageBuffer(value_size);
 
   auto buf = malloc(disk_size);
   if (!buf) {

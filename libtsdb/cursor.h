@@ -18,8 +18,8 @@ namespace tsdb {
 class Cursor {
 public:
 
-  Cursor(PageType type);
-  Cursor(PageType type, PageMap* page_map, Transaction&& txn);
+  Cursor();
+  Cursor(PageMap* page_map, Transaction&& txn);
   Cursor(Cursor&& o);
   Cursor(const Cursor& o) = delete;
   Cursor& operator=(const Cursor& o) = delete;

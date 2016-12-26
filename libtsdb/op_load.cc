@@ -135,8 +135,8 @@ bool TSDB::loadTransaction(
   const char* index_data_cur = &index_data[0];
   const char* index_data_end = index_data_cur + index_data.size();
 
-  uint64_t index_type;
-  if (!readVarUInt(&index_data_cur, index_data_end, &index_type)) {
+  uint64_t value_size;
+  if (!readVarUInt(&index_data_cur, index_data_end, &value_size)) {
     return false;
   }
 
@@ -157,10 +157,7 @@ bool TSDB::loadTransaction(
     return false;
   }
 
-  std::unique_ptr<PageIndex> page_idx(
-      new PageIndex(
-          (PageType) index_type,
-          metadata));
+  std::unique_ptr<PageIndex> page_idx(new PageIndex(value_size, metadata));
 
   page_idx->setDiskSnapshot(disk_addr, disk_size);
 
@@ -187,7 +184,7 @@ bool TSDB::loadTransaction(
     }
 
     auto page_id = page_map_.addColdPage(
-        page_idx->getType(),
+        value_size,
         page_addr * bsize_,
         page_size * bsize_);
 

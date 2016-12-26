@@ -13,9 +13,9 @@
 namespace tsdb {
 
 PageIndex::PageIndex(
-    PageType type,
+    uint64_t value_size,
     const std::string metadata) :
-    type_(type),
+    value_size_(value_size),
     metadata_(metadata),
     entries_(nullptr),
     splitpoints_(nullptr),
@@ -69,8 +69,8 @@ size_t PageIndex::getSize() const {
   return size_;
 }
 
-PageType PageIndex::getType() const {
-  return type_;
+size_t PageIndex::getValueSize() const {
+  return value_size_;
 }
 
 bool PageIndex::hasDiskSnapshot() const {

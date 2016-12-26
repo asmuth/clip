@@ -46,7 +46,7 @@ public:
 
   bool createSeries(
       uint64_t series_id,
-      PageType type,
+      uint64_t value_size,
       const std::string& metadata);
 
   bool listSeries(std::set<uint64_t>* series_ids);
@@ -59,10 +59,10 @@ public:
 
   bool getSeriesMetadata(uint64_t series_id, std::string* metadata);
 
-  bool insertUInt64(
-      uint64_t series_id,
-      uint64_t time,
-      uint64_t value);
+  //bool insertUInt64(
+  //    uint64_t series_id,
+  //    uint64_t time,
+  //    uint64_t value);
 
   bool commit();
 
@@ -76,12 +76,11 @@ protected:
       uint64_t disk_addr,
       uint64_t disk_size);
 
-  bool insert(
-      uint64_t series_id,
-      uint64_t time,
-      PageType value_type,
-      const void* value,
-      size_t value_size);
+  // bool insert(
+  //     uint64_t series_id,
+  //     uint64_t time,
+  //     const void* value,
+  //     size_t value_size);
 
   bool allocPage(
       uint64_t min_size,

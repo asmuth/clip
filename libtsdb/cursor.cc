@@ -13,24 +13,22 @@
 
 namespace tsdb {
 
-Cursor::Cursor(
-    PageType type) :
+Cursor::Cursor() :
     page_pos_(0),
     page_id_(-1),
     page_map_(nullptr),
-    page_buf_(type),
+    page_buf_(),
     page_buf_valid_(false),
     page_buf_pos_(0) {}
 
 Cursor::Cursor(
-    PageType type,
     PageMap* page_map,
     Transaction&& txn) :
     txn_(std::move(txn)),
     page_pos_(0),
     page_id_(-1),
     page_map_(page_map),
-    page_buf_(type),
+    page_buf_(),
     page_buf_valid_(false),
     page_buf_pos_(0) {}
 
@@ -72,7 +70,7 @@ bool Cursor::valid() {
 
 void Cursor::get(uint64_t* timestamp, uint64_t* value) {
   page_buf_.getTimestamp(page_buf_pos_, timestamp);
-  page_buf_.getValue(page_buf_pos_, value);
+  page_buf_.getValue(page_buf_pos_, value, sizeof(uint64_t));
 }
 
 uint64_t Cursor::getTime() {
@@ -218,11 +216,7 @@ void Cursor::update(uint64_t value) {
     return true;
   };
 
-  txn_.getPageMap()->modifyPage(
-      txn_.getPageIndex()->getType(),
-      page_id_,
-      modify_fn);
-
+  txn_.getPageMap()->modifyPage(page_id_, modify_fn);
   modify_fn(&page_buf_);
 }
 
@@ -236,11 +230,7 @@ void Cursor::insert(uint64_t timestamp, uint64_t value) {
     return true;
   };
 
-  txn_.getPageMap()->modifyPage(
-      txn_.getPageIndex()->getType(),
-      page_id_,
-      modify_fn);
-
+  txn_.getPageMap()->modifyPage(page_id_, modify_fn);
   modify_fn(&page_buf_);
 }
 
@@ -269,11 +259,7 @@ void Cursor::append(uint64_t timestamp, uint64_t value) {
     return true;
   };
 
-  txn_.getPageMap()->modifyPage(
-      txn_.getPageIndex()->getType(),
-      page_id_,
-      modify_fn);
-
+  txn_.getPageMap()->modifyPage(page_id_, modify_fn);
   modify_fn(&page_buf_);
 
   /* seek to the inserted value */

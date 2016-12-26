@@ -10,7 +10,6 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <unistd.h>
-#include <iostream>
 #include "metricd/util/exception.h"
 #include "metricd/util/unittest.h"
 #include "metricd/util/time.h"
@@ -27,9 +26,9 @@ TEST_CASE(TSDBTest, TestCreateAndInsert, [] () {
     std::unique_ptr<tsdb::TSDB> db;
     EXPECT(tsdb::TSDB::createDatabase(&db, "/tmp/__test.tsdb") == true);
 
-    EXPECT(db->createSeries(1, tsdb::PageType::UINT64, "") == true);
+    EXPECT(db->createSeries(1, sizeof(uint64_t), "") == true);
     {
-      tsdb::Cursor cursor(tsdb::PageType::UINT64);
+      tsdb::Cursor cursor;
       EXPECT(db->getCursor(1, &cursor, false) == true);
       for (size_t i = 0; i < 100000; ++i) {
         cursor.append(t0 + 20 * i, i);
@@ -37,7 +36,7 @@ TEST_CASE(TSDBTest, TestCreateAndInsert, [] () {
     }
 
     {
-      tsdb::Cursor cursor(tsdb::PageType::UINT64);
+      tsdb::Cursor cursor;
       EXPECT(db->getCursor(1, &cursor) == true);
 
       for (size_t i = 0; i < 100000; ++i) {
@@ -52,7 +51,7 @@ TEST_CASE(TSDBTest, TestCreateAndInsert, [] () {
     EXPECT(db->commit() == true);
 
     {
-      tsdb::Cursor cursor(tsdb::PageType::UINT64);
+      tsdb::Cursor cursor;
       EXPECT(db->getCursor(1, &cursor) == true);
 
       for (size_t i = 0; i < 100000; ++i) {
@@ -67,7 +66,7 @@ TEST_CASE(TSDBTest, TestCreateAndInsert, [] () {
     EXPECT(db->commit() == true);
 
     {
-      tsdb::Cursor cursor(tsdb::PageType::UINT64);
+      tsdb::Cursor cursor;
       EXPECT(db->getCursor(1, &cursor, false) == true);
       for (size_t i = 100000; i < 200000; ++i) {
         cursor.append(t0 + 20 * i, i);
@@ -77,7 +76,7 @@ TEST_CASE(TSDBTest, TestCreateAndInsert, [] () {
     EXPECT(db->commit() == true);
 
     {
-      tsdb::Cursor cursor(tsdb::PageType::UINT64);
+      tsdb::Cursor cursor;
       EXPECT(db->getCursor(1, &cursor) == true);
 
       for (size_t i = 0; i < 200000; ++i) {
@@ -95,7 +94,7 @@ TEST_CASE(TSDBTest, TestCreateAndInsert, [] () {
     EXPECT(tsdb::TSDB::openDatabase(&db, "/tmp/__test.tsdb") == true);
 
     {
-      tsdb::Cursor cursor(tsdb::PageType::UINT64);
+      tsdb::Cursor cursor;
       EXPECT(db->getCursor(1, &cursor) == true);
 
       for (size_t i = 0; i < 200000; ++i) {
@@ -108,7 +107,7 @@ TEST_CASE(TSDBTest, TestCreateAndInsert, [] () {
     }
 
     {
-      tsdb::Cursor cursor(tsdb::PageType::UINT64);
+      tsdb::Cursor cursor;
       EXPECT(db->getCursor(1, &cursor, false) == true);
       for (size_t i = 300000; i < 400000; ++i) {
         cursor.append(t0 + 20 * i, i);
@@ -118,7 +117,7 @@ TEST_CASE(TSDBTest, TestCreateAndInsert, [] () {
     EXPECT(db->commit() == true);
 
     {
-      tsdb::Cursor cursor(tsdb::PageType::UINT64);
+      tsdb::Cursor cursor;
       EXPECT(db->getCursor(1, &cursor) == true);
 
       for (size_t i = 0; i < 200000; ++i) {
@@ -144,7 +143,7 @@ TEST_CASE(TSDBTest, TestCreateAndInsert, [] () {
     EXPECT(tsdb::TSDB::openDatabase(&db, "/tmp/__test.tsdb") == true);
 
     {
-      tsdb::Cursor cursor(tsdb::PageType::UINT64);
+      tsdb::Cursor cursor;
       EXPECT(db->getCursor(1, &cursor, false) == true);
       cursor.seekTo(t0 + 20 * 200000);
       for (size_t i = 200000; i < 300000; ++i) {
@@ -154,7 +153,7 @@ TEST_CASE(TSDBTest, TestCreateAndInsert, [] () {
     }
 
     {
-      tsdb::Cursor cursor(tsdb::PageType::UINT64);
+      tsdb::Cursor cursor;
       EXPECT(db->getCursor(1, &cursor) == true);
 
       for (size_t i = 0; i < 400000; ++i) {
@@ -169,7 +168,7 @@ TEST_CASE(TSDBTest, TestCreateAndInsert, [] () {
     EXPECT(db->commit() == true);
 
     {
-      tsdb::Cursor cursor(tsdb::PageType::UINT64);
+      tsdb::Cursor cursor;
       EXPECT(db->getCursor(1, &cursor) == true);
 
       for (size_t i = 0; i < 400000; ++i) {
@@ -190,8 +189,8 @@ TEST_CASE(TSDBTest, TestSeek, [] () {
     std::unique_ptr<tsdb::TSDB> db;
     EXPECT(tsdb::TSDB::createDatabase(&db, "/tmp/__test.tsdb") == true);
 
-    EXPECT(db->createSeries(1, tsdb::PageType::UINT64, "") == true);
-    tsdb::Cursor cursor(tsdb::PageType::UINT64);
+    EXPECT(db->createSeries(1, sizeof(uint64_t), "") == true);
+    tsdb::Cursor cursor;
     EXPECT(db->getCursor(1, &cursor, false));
     for (size_t i = 1; i <= 50000; ++i) {
       cursor.append(i * 2, i);
@@ -204,7 +203,7 @@ TEST_CASE(TSDBTest, TestSeek, [] () {
     std::unique_ptr<tsdb::TSDB> db;
     EXPECT(tsdb::TSDB::openDatabase(&db, "/tmp/__test.tsdb") == true);
 
-    tsdb::Cursor cursor(tsdb::PageType::UINT64);
+    tsdb::Cursor cursor;
     EXPECT(db->getCursor(1, &cursor));
     EXPECT(cursor.valid() == true);
     {
@@ -266,8 +265,8 @@ TEST_CASE(TSDBTest, TestUpdate, [] () {
     std::unique_ptr<tsdb::TSDB> db;
     EXPECT(tsdb::TSDB::createDatabase(&db, "/tmp/__test.tsdb") == true);
 
-    EXPECT(db->createSeries(1, tsdb::PageType::UINT64, "") == true);
-    tsdb::Cursor cursor(tsdb::PageType::UINT64);
+    EXPECT(db->createSeries(1, sizeof(uint64_t), "") == true);
+    tsdb::Cursor cursor;
     EXPECT(db->getCursor(1, &cursor, false));
     for (size_t i = 1; i <= 50000; ++i) {
       cursor.append(i * 2, i);
@@ -280,7 +279,7 @@ TEST_CASE(TSDBTest, TestUpdate, [] () {
     std::unique_ptr<tsdb::TSDB> db;
     EXPECT(tsdb::TSDB::openDatabase(&db, "/tmp/__test.tsdb") == true);
 
-    tsdb::Cursor cursor(tsdb::PageType::UINT64);
+    tsdb::Cursor cursor;
     EXPECT(db->getCursor(1, &cursor, false));
     EXPECT(cursor.valid() == true);
     cursor.seekTo(1337);
@@ -310,7 +309,7 @@ TEST_CASE(TSDBTest, TestUpdate, [] () {
     std::unique_ptr<tsdb::TSDB> db;
     EXPECT(tsdb::TSDB::openDatabase(&db, "/tmp/__test.tsdb") == true);
 
-    tsdb::Cursor cursor(tsdb::PageType::UINT64);
+    tsdb::Cursor cursor;
     EXPECT(db->getCursor(1, &cursor));
     EXPECT(cursor.valid() == true);
     cursor.seekTo(1337);

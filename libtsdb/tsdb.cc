@@ -78,7 +78,7 @@ TSDB::~TSDB() {
 
 bool TSDB::createSeries(
     uint64_t series_id,
-    PageType type,
+    uint64_t value_size,
     const std::string& metadata) {
   if (fd_ < 0) {
     return false;
@@ -86,13 +86,13 @@ bool TSDB::createSeries(
 
   std::unique_ptr<PageIndex> page_index(
       new PageIndex(
-          type,
+          value_size,
           std::string(metadata)));
 
   page_index->alloc(1);
 
   auto page_index_entry = page_index->getEntries();
-  page_index_entry->page_id = page_map_.allocPage(type);
+  page_index_entry->page_id = page_map_.allocPage(value_size);
 
   return txn_map_.createSlot(
       series_id,
@@ -119,10 +119,7 @@ bool TSDB::getCursor(
     return false;
   }
 
-  *cursor = Cursor(
-      txn.getPageIndex()->getType(),
-      &page_map_,
-      std::move(txn));
+  *cursor = Cursor(&page_map_, std::move(txn));
 
   switch (seek_type) {
     case SEEK_FIRST:
