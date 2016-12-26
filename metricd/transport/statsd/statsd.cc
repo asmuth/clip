@@ -39,7 +39,10 @@ ReturnCode StatsdEmitter::connect(const std::string& addr) {
   auto hostname = m[1].str();
   struct hostent* h = gethostbyname(hostname.c_str());
   if (h == nullptr) {
-    return ReturnCode::error("EIO", "gethostbyname($0) failed", hostname);
+    return ReturnCode::errorf(
+        "EIO",
+        "gethostbyname($0) failed",
+        hostname);
   }
 
   memcpy(&remote_addr_.sin_addr, h->h_addr, h->h_length);
@@ -49,11 +52,11 @@ ReturnCode StatsdEmitter::connect(const std::string& addr) {
   /* open local socket and put into nonblock */
   fd_ = socket(AF_INET, SOCK_DGRAM, 0);
   if (fd_ == -1) {
-    return ReturnCode::error("EIO", "socket() failed: $0", strerror(errno));
+    return ReturnCode::errorf("EIO", "socket() failed: $0", strerror(errno));
   }
 
   if (fcntl(fd_, F_SETFL, fcntl(fd_, F_GETFL, 0) | O_NONBLOCK) != 0) {
-    return ReturnCode::error("EIO", "fcntl() failed: $0", strerror(errno));
+    return ReturnCode::errorf("EIO", "fcntl() failed: $0", strerror(errno));
   }
 
   return ReturnCode::success();
@@ -101,7 +104,7 @@ ReturnCode StatsdEmitter::emitSamples() {
   } else {
     /* N.B. we set the socket to nonblocking so this might return EAGAIN.
        however we explicitly chose not to retry in this case */
-    return ReturnCode::error("EIO", "sendto() failed: $0", strerror(errno));
+    return ReturnCode::errorf("EIO", "sendto() failed: $0", strerror(errno));
   }
 }
 
