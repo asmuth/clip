@@ -11,17 +11,9 @@
 #include "metricd/types.h"
 #include <limits>
 #include <assert.h>
+#include <string.h>
 
 namespace fnordmetric {
-
-template <>
-bool SumOutputAggregator<uint64_t>::aggregateUINT64(
-    uint64_t input_time,
-    uint64_t input_value,
-    uint64_t* output_time,
-    uint64_t* output_value) {
-  return aggregate(input_time, input_value, output_time, output_value);
-}
 
 SumInputAggregator::SumInputAggregator(
     uint64_t granularity,
@@ -76,6 +68,52 @@ uint64_t alignTime(uint64_t timestamp, uint64_t window, uint64_t align = 0) {
 
   int64_t timestamp_base = int64_t(timestamp) - int64_t(align);
   return (timestamp_base / int64_t(window)) * int64_t(window) + int64_t(align);
+}
+
+SumOutputAggregator::SumOutputAggregator(
+    tsdb::Cursor* cursor,
+    uint64_t granularity,
+    uint64_t align /* = 0 */) :
+    cursor_(cursor),
+    granularity_(granularity),
+    align_(align) {
+  cursor_->seekToFirst();
+  cursor_->get(&cur_time_, &cur_sum_, sizeof(cur_sum_));
+  cur_time_ = alignTime(cur_time_, granularity_, align_);
+  cursor_->next();
+}
+
+bool SumOutputAggregator::next(
+    uint64_t* time,
+    void* value,
+    size_t value_len) {
+  if (cursor_->valid()) {
+    if (cursor_->getTime() <= cur_time_ + granularity_) {
+      *time = cur_time_;
+      assert(value_len == sizeof(cur_sum_));
+      memcpy(value, &cur_sum_, sizeof(cur_sum_));
+      cursor_->getValue(&cur_sum_, sizeof(cur_sum_));
+      cursor_->next();
+      cur_time_ += granularity_;
+    } else {
+      *time = cur_time_;
+      assert(value_len == sizeof(cur_sum_));
+      memcpy(value, &cur_sum_, sizeof(cur_sum_));
+      cur_sum_ = 0;
+      cur_time_ += granularity_;
+    }
+
+    return true;
+  } else if (cur_time_ < uint64_t(-1)) {
+    *time = cur_time_;
+    assert(value_len == sizeof(cur_sum_));
+    memcpy(value, &cur_sum_, sizeof(cur_sum_));
+    cur_sum_ = 0;
+    cur_time_ = uint64_t(-1);
+    return true;
+  } else {
+    return false;
+  }
 }
 
 } // namespace fnordmetric

@@ -15,46 +15,6 @@
 
 namespace fnordmetric {
 
-class OutputAggregator {
-public:
-
-  virtual ~OutputAggregator() = default;
-
-  virtual bool aggregateUINT64(
-      uint64_t input_time,
-      uint64_t input_value,
-      uint64_t* output_time,
-      uint64_t* output_value) = 0;
-
-};
-
-template <typename T>
-class SumOutputAggregator : public OutputAggregator {
-public:
-
-  SumOutputAggregator(
-      uint64_t granularity,
-      uint64_t align = 0);
-
-  bool aggregateUINT64(
-      uint64_t input_time,
-      uint64_t input_value,
-      uint64_t* output_time,
-      uint64_t* output_value) override;
-
-  bool aggregate(
-      uint64_t input_time,
-      T input_value,
-      uint64_t* output_time,
-      T* output_value);
-
-protected:
-  uint64_t granularity_;
-  uint64_t align_;
-  uint64_t twin_;
-  T sum_;
-};
-
 class InputAggregator {
 public:
 
@@ -65,6 +25,18 @@ public:
       uint64_t time,
       MetricDataType value_type,
       const void* value,
+      size_t value_len) = 0;
+
+};
+
+class OutputAggregator {
+public:
+
+  virtual ~OutputAggregator() = default;
+
+  virtual bool next(
+      uint64_t* time,
+      void* value,
       size_t value_len) = 0;
 
 };
@@ -86,6 +58,27 @@ public:
 protected:
   uint64_t granularity_;
   uint64_t align_;
+};
+
+class SumOutputAggregator : public OutputAggregator {
+public:
+
+  SumOutputAggregator(
+      tsdb::Cursor* cursor,
+      uint64_t granularity,
+      uint64_t align = 0);
+
+  bool next(
+      uint64_t* time,
+      void* value,
+      size_t value_len) override;
+
+protected:
+  tsdb::Cursor* cursor_;
+  uint64_t granularity_;
+  uint64_t align_;
+  uint64_t cur_time_;
+  uint64_t cur_sum_;
 };
 
 uint64_t alignTime(uint64_t timestamp, uint64_t window, uint64_t align);

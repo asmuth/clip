@@ -53,24 +53,6 @@ TEST_CASE(MetricServiceTest, TestSumAggregator, [] () {
   }
 
   {
-    LabelledSample smpl(Sample(1482776368000000, 10), {});
-    auto rc = service->insertSample("users_online", smpl);
-    EXPECT(rc.isSuccess());
-  }
-
-  {
-    LabelledSample smpl(Sample(1482776369000000, 5), {});
-    auto rc = service->insertSample("users_online", smpl);
-    EXPECT(rc.isSuccess());
-  }
-
-  {
-    LabelledSample smpl(Sample(1482776370000000, 8), {});
-    auto rc = service->insertSample("users_online", smpl);
-    EXPECT(rc.isSuccess());
-  }
-
-  {
     LabelledSample smpl(Sample(1482776400000000, 15), {});
     auto rc = service->insertSample("users_online", smpl);
     EXPECT(rc.isSuccess());
@@ -89,6 +71,35 @@ TEST_CASE(MetricServiceTest, TestSumAggregator, [] () {
   }
 
   {
+    LabelledSample smpl(Sample(1482776368000000, 10), {});
+    auto rc = service->insertSample("users_online", smpl);
+    EXPECT(rc.isSuccess());
+  }
+  {
+    LabelledSample smpl(Sample(1482776370000000, 8), {});
+    auto rc = service->insertSample("users_online", smpl);
+    EXPECT(rc.isSuccess());
+  }
+
+  {
+    LabelledSample smpl(Sample(1482776369000000, 5), {});
+    auto rc = service->insertSample("users_online", smpl);
+    EXPECT(rc.isSuccess());
+  }
+
+  {
+    LabelledSample smpl(Sample(1482776590000000, 42), {});
+    auto rc = service->insertSample("users_online", smpl);
+    EXPECT(rc.isSuccess());
+  }
+
+  {
+    LabelledSample smpl(Sample(1482776788000000, 5), {});
+    auto rc = service->insertSample("users_online", smpl);
+    EXPECT(rc.isSuccess());
+  }
+
+  {
     auto cursor = service->getCursor("users_online", 1); // FIXME hack
     uint64_t ts;
     uint64_t val;
@@ -100,6 +111,24 @@ TEST_CASE(MetricServiceTest, TestSumAggregator, [] () {
     EXPECT(val == 17);
     EXPECT(cursor.next(&ts, &val));
     EXPECT(ts == 1482776460000000);
+    EXPECT(val == 0);
+    EXPECT(cursor.next(&ts, &val));
+    EXPECT(ts == 1482776520000000);
+    EXPECT(val == 0);
+    EXPECT(cursor.next(&ts, &val));
+    EXPECT(ts == 1482776580000000);
+    EXPECT(val == 42);
+    EXPECT(cursor.next(&ts, &val));
+    EXPECT(ts == 1482776640000000);
+    EXPECT(val == 0);
+    EXPECT(cursor.next(&ts, &val));
+    EXPECT(ts == 1482776700000000);
+    EXPECT(val == 0);
+    EXPECT(cursor.next(&ts, &val));
+    EXPECT(ts == 1482776760000000);
+    EXPECT(val == 5);
+    EXPECT(cursor.next(&ts, &val));
+    EXPECT(ts == 1482776820000000);
     EXPECT(val == 0);
     EXPECT(cursor.next(&ts, &val) == false);
   }

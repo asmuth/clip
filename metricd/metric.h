@@ -125,9 +125,6 @@ public:
 
 protected:
 
-  std::unique_ptr<OutputAggregator> mkAggregator(
-      const MetricConfig* config) const;
-
   tsdb::Cursor cursor_;
   std::unique_ptr<OutputAggregator> aggr_;
 };
@@ -189,6 +186,11 @@ protected:
   MetricConfig config_;
   std::unique_ptr<InputAggregator> input_aggr_;
 };
+
+std::unique_ptr<OutputAggregator> mkOutputAggregator(
+    tsdb::Cursor* cursor,
+    const MetricConfig* config);
+
 
 std::unique_ptr<InputAggregator> mkInputAggregator(
     const MetricConfig* config);

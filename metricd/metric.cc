@@ -241,7 +241,7 @@ MetricSeriesCursor::MetricSeriesCursor(
     const MetricConfig* config,
     tsdb::Cursor cursor) :
     cursor_(std::move(cursor)),
-    aggr_(mkAggregator(config)) {}
+    aggr_(mkOutputAggregator(&cursor_, config)) {}
 
 MetricSeriesCursor::MetricSeriesCursor(
     MetricSeriesCursor&& o) :
@@ -256,16 +256,7 @@ MetricSeriesCursor& MetricSeriesCursor::operator=(MetricSeriesCursor&& o) {
 
 bool MetricSeriesCursor::next(uint64_t* timestamp, uint64_t* value) {
   if (aggr_) {
-    uint64_t next_ts;
-    uint64_t next_val;
-
-    while (cursor_.next(&next_ts, &next_val, sizeof(next_val))) {
-      if (aggr_->aggregateUINT64(next_ts, next_val, timestamp, value)) {
-        return true;
-      }
-    }
-
-    return aggr_->aggregateUINT64(uint64_t(-1), 0, timestamp, value);
+    return aggr_->next(timestamp, value, sizeof(uint64_t));
   } else {
     return cursor_.next(timestamp, value, sizeof(uint64_t));
   }
@@ -286,8 +277,9 @@ std::unique_ptr<InputAggregator> mkInputAggregator(
   }
 }
 
-std::unique_ptr<OutputAggregator> MetricSeriesCursor::mkAggregator(
-    const MetricConfig* config) const {
+std::unique_ptr<OutputAggregator> mkOutputAggregator(
+    tsdb::Cursor* cursor,
+    const MetricConfig* config) {
   if (config->granularity == 0) {
     return {};
   }
@@ -295,7 +287,7 @@ std::unique_ptr<OutputAggregator> MetricSeriesCursor::mkAggregator(
   switch (config->aggregation) {
     case MetricAggregationType::SUM:
       return std::unique_ptr<OutputAggregator>(
-          new SumOutputAggregator<uint64_t>(config->granularity));
+          new SumOutputAggregator(cursor, config->granularity));
     case MetricAggregationType::NONE: return {};
     default: return {};
   }
