@@ -298,14 +298,12 @@ var TimeRangePickerWidget = function(timerange, widget) {
     var start_input = widget.querySelector("input[name='start']");
     var end_input = widget.querySelector("input[name='end']");
     if (!validateInput(start_input) || !validateInput(end_input)) {
-      //TODO render error message
       return;
     }
 
     var start = new Date(start_input.value).getTime();
     var end = new Date(end_input.value).getTime();
     if (start > end) {
-      //TODO render error message 
       return;
     }
 

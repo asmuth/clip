@@ -6,7 +6,12 @@ f-timerange-picker {
 }
 
 f-timerange-picker .clear_fix {
-  clear: both
+  clear: both;
+}
+
+f-timerange-picker .error {
+  color: #F0514E;
+  visibility: hidden;
 }
 
 f-timerange-picker input {
@@ -122,6 +127,20 @@ f-timerange-picker .widget .inner .col.custom form .input_wrapper {
 
 f-timerange-picker .widget .inner .col.custom form .input_wrapper label {
   width: 28px;
+}
+
+f-timerange-picker .widget .inner .col.custom form .input_wrapper .icon {
+  float: right;
+  margin-left: 5px;
+}
+
+f-timerange-picker .widget .inner .col.custom form .input_wrapper input.invalid + .error {
+  visibility: visible;
+}
+
+f-timerange-picker .widget .inner .col.custom form .input_wrapper .error {
+  line-height: 13px;
+  margin-left: 33px;
 }
 
 f-timerange-picker .widget .inner .col.custom form .calendar_box {
