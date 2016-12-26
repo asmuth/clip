@@ -194,7 +194,7 @@ protected:
   MetricConfig config_;
 };
 
-tsdb::PageType getMetricTSDBPageType(MetricDataType t);
+size_t getMetricDataTypeSize(MetricDataType t);
 
 } // namespace fnordmetric
 

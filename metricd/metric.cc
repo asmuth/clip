@@ -32,11 +32,11 @@ MetricSeries::MetricSeries(
 ReturnCode MetricSeries::insertSample(
     tsdb::TSDB* tsdb,
     Sample sample) {
-  if (tsdb->insertUInt64(series_id_, sample.getTime(), sample.getValue())) {
-    return ReturnCode::success();
-  } else {
-    return ReturnCode::error("ERUNTIME", "insert failed");
-  }
+  //if (tsdb->insertUInt64(series_id_, sample.getTime(), sample.getValue())) {
+  //  return ReturnCode::success();
+  //} else {
+  //  return ReturnCode::error("ERUNTIME", "insert failed");
+  //}
 }
 
 const LabelSet* MetricSeries::getLabels() const {
@@ -202,7 +202,7 @@ ReturnCode MetricSeriesList::findOrCreateSeries(
   /* create the new  series in the tsdb file */
   auto create_rc = tsdb->createSeries(
       new_series_id,
-      getMetricTSDBPageType(config.data_type),
+      getMetricDataTypeSize(config.data_type),
       metadata_buf.str());
 
   if (!create_rc) {
@@ -241,8 +241,7 @@ size_t MetricSeriesList::getSize() const {
   return series_.size();
 }
 
-MetricSeriesCursor::MetricSeriesCursor() :
-    cursor_(tsdb::PageType::UINT64) {}
+MetricSeriesCursor::MetricSeriesCursor() {}
 
 MetricSeriesCursor::MetricSeriesCursor(
     const MetricConfig* config,
@@ -266,7 +265,7 @@ bool MetricSeriesCursor::next(uint64_t* timestamp, uint64_t* value) {
     uint64_t next_ts;
     uint64_t next_val;
 
-    while (cursor_.next(&next_ts, &next_val)) {
+    while (cursor_.next(&next_ts, &next_val, sizeof(next_val))) {
       if (aggr_->aggregateUINT64(next_ts, next_val, timestamp, value)) {
         return true;
       }
@@ -274,7 +273,7 @@ bool MetricSeriesCursor::next(uint64_t* timestamp, uint64_t* value) {
 
     return aggr_->aggregateUINT64(uint64_t(-1), 0, timestamp, value);
   } else {
-    return cursor_.next(timestamp, value);
+    return cursor_.next(timestamp, value, sizeof(uint64_t));
   }
 }
 
@@ -399,9 +398,9 @@ MetricSeriesList* Metric::getSeriesList() {
   return &series_;
 }
 
-tsdb::PageType getMetricTSDBPageType(MetricDataType t) {
+size_t getMetricDataTypeSize(MetricDataType t) {
   switch (t) {
-    case MetricDataType::UINT64: return tsdb::PageType::UINT64;
+    case MetricDataType::UINT64: return sizeof(uint64_t);
     default: assert(false); // invalid data tyoe
   }
 }

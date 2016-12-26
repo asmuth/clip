@@ -202,9 +202,7 @@ MetricSeriesCursor MetricService::getCursor(
     return MetricSeriesCursor();
   }
 
-  tsdb::Cursor tsdb_cursor(
-      getMetricTSDBPageType(metric->getConfig().data_type));
-
+  tsdb::Cursor tsdb_cursor;
   if (tsdb_->getCursor(series_id, &tsdb_cursor)) {
     return MetricSeriesCursor(
         &metric->getConfig(),
