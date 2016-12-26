@@ -15,12 +15,14 @@ FnordMetric.views["fnordmetric.metric.serie"] = function(elem, params) {
     DomUtil.replaceContent(elem, page);
     viewport_elem = elem.querySelector(".view_content");
 
-    //view_cfg = new FnordMetric.MetricTableViewConfig(url_params);
     render();
     fetchData();
   }
 
   var updatePath = function() {
+    console.log("update path");
+    //FIXME 
+    return;
     params.app.navigateTo(
         params.route.args[0] + "?" + URLUtil.buildQueryString(view_cfg.getParamList()));
   }
@@ -29,11 +31,13 @@ FnordMetric.views["fnordmetric.metric.serie"] = function(elem, params) {
     var p = {};
 
     p.metric = params.route.args[1];
-    p.serie_id = params.route.args[2];
+    p.series_id = params.route.args[2];
 
-    var cfg_param = URLUtil.getParamValue(path, "cfg");
-    if (cfg_param) {
-      p.config = cfg_param;
+    var view_param = URLUtil.getParamValue(path, "view");
+    if (view_param) {
+      p.view = view_param;
+    } else {
+      p.view = "table";
     }
 
     var offset_param = URLUtil.getParamValue(path, "offset");
@@ -54,18 +58,28 @@ FnordMetric.views["fnordmetric.metric.serie"] = function(elem, params) {
         return;
       }
 
-      var series = JSON.parse(r.response);
-      console.log(series);
-      renderView(series);
-    });
-    //updateTable(result);
+      var serie;
+      var series = JSON.parse(r.response).series;
+      for (var i = 0; i < series.length; i++) {
+        if (series[i].series_id == url_params.series_id) {
+          serie = series[i];
+          break;
+        }
+      }
+
+      if (!serie) {
+        //TODO handle empty result list
+      } else {
+        renderSerieLabels(serie.labels);
+        renderView(serie.values);
     //renderPagination(result.rows.length);
+      }
+    });
   }
 
   var render = function() {
     renderHeader();
     // renderView(); --> initView
-    //renderFilterList();
     renderTimerangeControl();
     renderEmbedControl();
   };
@@ -99,6 +113,18 @@ FnordMetric.views["fnordmetric.metric.serie"] = function(elem, params) {
     //}, false);
   };
 
+  var renderSerieLabels = function(labels) {
+    console.log(labels);
+    var title = [];
+
+    for (var label in labels) {
+      title.push(label + ": " + labels[label]);
+    }
+
+    elem.querySelector(".fnordmetric-metric-serie .page_header .serie_name").
+        innerHTML = DomUtil.escapeHTML(title.join(", "));
+  }
+
   var renderTimerangeControl = function() {
     var dropdown = elem.querySelector(
         ".fnordmetric-metric-serie .control f-dropdown.timerange");
@@ -118,11 +144,10 @@ FnordMetric.views["fnordmetric.metric.serie"] = function(elem, params) {
     //TODO enable / disable current view icon in header
     var view;
     var view_opts = {
-      data: results,
-      view_cfg: view_cfg
+      data: results
     };
 
-    switch (view_cfg.getValue("view")){
+    switch (url_params.view){
       case "table":
         view = FnordMetric.views["fnordmetric.metric.serie.table"];
         break;

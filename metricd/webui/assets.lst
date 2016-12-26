@@ -29,4 +29,5 @@ views/metric-series-list/metric-series-list.js
 views/metric-serie/metric-serie.css
 views/metric-serie/metric-serie.html
 views/metric-serie/metric-serie.js
+views/metric-serie/metric-serie-table.js
 
