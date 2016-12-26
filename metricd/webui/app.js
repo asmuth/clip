@@ -9,7 +9,8 @@
  */
 
 this["FnordMetric"] = (function() {
-  'use strict'
+  'use strict';
+
   var app = this;
   var current_path = window.location.pathname + window.location.search;
   var router;
@@ -184,30 +185,3 @@ this["FnordMetric"] = (function() {
 }).apply(this["FnordMetric"] || {});
 
 
-FnordMetric.util.rewriteLinks = function(elem, project_id) {
-  var elems = elem.querySelectorAll("a");
-  for (var i = 0; i < elems.length; ++i) {
-    elems[i].href = elems[i].href.replace("%project_id%", project_id);
-  }
-};
-
-FnordMetric.util.rewriteAndHandleLinks = function(elem, project_id) {
-  FnordMetric.util.rewriteLinks(elem, project_id);
-  DomUtil.handleLinks(elem, FnordMetric.navigateTo);
-}
-
-FnordMetric.util.renderBreadcrumbs = function(elem, crumbs) {
-  DomUtil.clearChildren(elem);
-
-  crumbs.forEach(function(c) {
-    var crumb_elem = document.createElement("fm-breadcrumbs-section");
-    var crumb_a = document.createElement("a");
-    crumb_a.innerHTML = DomUtil.escapeHTML(c.title);
-    if (c.href) {
-      crumb_a.setAttribute("href", c.href);
-    }
-
-    crumb_elem.appendChild(crumb_a);
-    elem.appendChild(crumb_elem);
-  });
-}
