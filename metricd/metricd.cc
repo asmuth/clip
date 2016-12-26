@@ -234,9 +234,9 @@ int main(int argc, const char** argv) {
         0666);
 
     if (pidfile_fd < 0) {
-      rc = ReturnCode::error(
+      rc = ReturnCode::errorf(
           "IO_ERROR",
-          "writing pidfile failed: %s",
+          "writing pidfile failed: $0",
           std::strerror(errno));
     }
 
