@@ -393,6 +393,34 @@ bool StringUtil::includesi(const std::string& str, const std::string& subject) {
   return includes(str_i, subject_i);
 }
 
+std::string StringUtil::hexPrint(
+    const void* data,
+    size_t size,
+    bool sep /* = true */,
+    bool reverse /* = fase */) {
+  static const char hexTable[] = "0123456789abcdef";
+
+  std::string str;
+
+  if (reverse) {
+    for (int i = size - 1; i >= 0; --i) {
+      if (sep && i > 0) { str += " "; }
+      auto byte = ((const unsigned char*) data)[i];
+      str += hexTable[(byte & 0xf0) >> 4];
+      str += hexTable[byte & 0x0f];
+    }
+  } else {
+    for (int i = 0; i < size; ++i) {
+      if (sep && i > 0) { str += " "; }
+      auto byte = ((const unsigned char*) data)[i];
+      str += hexTable[(byte & 0xf0) >> 4];
+      str += hexTable[byte & 0x0f];
+    }
+  }
+
+  return str;
+}
+
 std::string StringUtil::formatv(
     const char* fmt,
     std::vector<std::string> values) {
