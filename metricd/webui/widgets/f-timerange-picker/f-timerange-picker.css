@@ -67,7 +67,8 @@ f-timerange-picker .arrow_down {
 }
 
 f-timerange-picker .widget {
-  position: static;
+  position: relative;
+  left: 23px;
   top: 100%;
   background-color: #fff;
   border: 1px solid #ccc;
@@ -86,6 +87,10 @@ f-timerange-picker .widget.active {
 f-timerange-picker .widget .footer,
 f-timerange-picker .widget .inner {
   overflow: auto;
+}
+
+f-timerange-picker .widget .footer {
+  padding-top: 13px;
 }
 
 f-timerange-picker .widget .inner .col {
@@ -180,8 +185,17 @@ f-timerange-picker table.calendar .title {
 
 f-timerange-picker table.calendar .prev,
 f-timerange-picker table.calendar .next {
-  color: #999;
+  padding: 0;
+}
+
+f-timerange-picker table.calendar .prev span,
+f-timerange-picker table.calendar .next span {
+  color: #0189FF;
   cursor: pointer;
+  border: 1px solid #d1d1d1;
+  border-radius: 3px;
+  vertical-align: middle;
+  padding: 0px 3px 1px 3px;
 }
 
 f-timerange-picker table.calendar .prev::selection,
@@ -196,7 +210,12 @@ f-timerange-picker table.calendar td {
 }
 
 f-timerange-picker table.calendar tr.weekdays td {
+  padding-top: 5px;
   color: #828285;
+}
+
+f-timerange-picker table.calendar tr:last-child td {
+  padding-bottom: 5px;
 }
 
 f-timerange-picker table.calendar tr.dates td:hover {
@@ -209,11 +228,10 @@ f-timerange-picker table.calendar tr.dates td.cur_date {
 
 f-timerange-picker table.calendar tr.dates td.selected {
   padding: 0 5px;
-  color: #fefefe;
 }
 
 f-timerange-picker table.calendar tr.dates td.selected span {
-  background-color: #EC8096;
+  background-color: #cdd3d8;
   border-radius: 50%;
   padding: 4px;
 }
