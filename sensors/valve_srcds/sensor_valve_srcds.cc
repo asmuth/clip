@@ -30,8 +30,6 @@
 #include "metricd/transport/statsd/statsd.h"
 #include "sensors/valve_srcds/srcds_client.h"
 
-ReturnCode daemonize();
-
 int main(int argc, const char** argv) {
   FlagParser flags;
 
