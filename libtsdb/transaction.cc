@@ -174,6 +174,10 @@ uint64_t Transaction::getVersion() const {
   return snap_->version_;
 }
 
+bool Transaction::isReadonly() const {
+  return readonly_;
+}
+
 void Transaction::close() {
   if (!snap_) {
     return;

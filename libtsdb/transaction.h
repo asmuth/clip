@@ -40,6 +40,7 @@ public:
 
   uint64_t getVersion() const;
 
+  bool isReadonly() const;
   void close();
 
 protected:

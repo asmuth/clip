@@ -25,6 +25,12 @@ public:
   static const size_t kDefaultBlockSize;
   static const char kMagicBytes[4];
 
+  enum SeekType {
+    SEEK_FIRST,
+    SEEK_LAST,
+    SEEK_NONE
+  };
+
   TSDB(const TSDB& o) = delete;
   TSDB& operator=(const TSDB& o) = delete;
   ~TSDB();
@@ -45,7 +51,11 @@ public:
 
   bool listSeries(std::set<uint64_t>* series_ids);
 
-  bool getCursor(uint64_t series_id, Cursor* cursor);
+  bool getCursor(
+      uint64_t series_id,
+      Cursor* cursor,
+      bool readonly = true,
+      SeekType seek_type = SEEK_FIRST);
 
   bool getSeriesMetadata(uint64_t series_id, std::string* metadata);
 

@@ -90,18 +90,29 @@ static void insertValue(
   value_vector->insert(value_vector->begin() + pos, value);
 }
 
-void PageBuffer::insert(uint64_t time, const void* value, size_t value_len) {
-  auto timestamp_iter = std::lower_bound(
-      timestamps_.begin(),
-      timestamps_.end(),
-      time);
-
-  auto pos = timestamp_iter - timestamps_.begin();
-  timestamps_.insert(timestamp_iter, time);
+void PageBuffer::insert(size_t pos, uint64_t time, const void* value, size_t value_len) {
+  timestamps_.insert(timestamps_.begin() + pos, time);
 
   switch (type_) {
     case PageType::UINT64:
       insertValue((ValueVectorUInt64Type*) values_, pos, *((uint64_t*) value));
+      break;
+  }
+}
+
+template <typename ValueVectorType, typename ValueType>
+static void appendValue(
+    ValueVectorType* value_vector,
+    const ValueType& value) {
+  value_vector->push_back(value);
+}
+
+void PageBuffer::append(uint64_t time, const void* value, size_t value_len) {
+  timestamps_.push_back(time);
+
+  switch (type_) {
+    case PageType::UINT64:
+      appendValue((ValueVectorUInt64Type*) values_, *((uint64_t*) value));
       break;
   }
 }
@@ -112,13 +123,13 @@ static void updateValue(
     size_t pos,
     const ValueType& value) {
   assert(pos <= value_vector->size());
-  value_vector[pos] = value;
+  (*value_vector)[pos] = value;
 }
 
 void PageBuffer::update(size_t pos, const void* value, size_t value_len) {
   switch (type_) {
     case PageType::UINT64:
-      insertValue((ValueVectorUInt64Type*) values_, pos, *((uint64_t*) value));
+      updateValue((ValueVectorUInt64Type*) values_, pos, *((uint64_t*) value));
       break;
   }
 }

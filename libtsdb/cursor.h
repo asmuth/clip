@@ -26,11 +26,16 @@ public:
   Cursor& operator=(Cursor&& o);
 
   bool valid();
+
   void get(uint64_t* timestamp, uint64_t* value);
+  uint64_t getTime();
+
   bool next();
 
   /* seek to the first entry that is greater or equal */
-  void seekTo(uint64_t timestamp);
+  bool seekTo(uint64_t timestamp);
+  bool seekToFirst();
+  bool seekToLast();
 
   bool next(uint64_t* timestamp, uint64_t* value);
 

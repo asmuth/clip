@@ -8,51 +8,32 @@
  * <http://www.gnu.org/licenses/>.
  */
 #include <assert.h>
+#include <iostream>
 #include "tsdb.h"
 #include "page_index.h"
 
 namespace tsdb {
 
-bool TSDB::insert(
-    uint64_t series_id,
-    uint64_t time,
-    PageType value_type,
-    const void* value,
-    size_t value_size) {
-  /* start transaction */
-  Transaction txn;
-  if (!txn_map_.startTransaction(series_id, false, &txn)) {
-    return false;
-  }
-
-  /* find page for insert */
-  size_t page_id = 0;
-  auto page_idx = txn.getPageIndex();
-  assert(page_idx->getSize() > 0);
-  page_id = page_idx->getEntries()[0].page_id;
-
-  /* perform page modification */
-  auto modify_fn = [time, value, value_size] (PageBuffer* page) -> bool {
-    page->insert(time, value, value_size);
-    return true;
-  };
-
-  assert(page_id > 0);
-  page_map_.modifyPage(page_idx->getType(), page_id, modify_fn);
-
-  return true;
-}
-
 bool TSDB::insertUInt64(
     uint64_t series_id,
     uint64_t time,
     uint64_t value) {
-  return insert(
-      series_id,
-      time,
-      PageType::UINT64,
-      &value,
-      sizeof(value));
+  tsdb::Cursor cursor(tsdb::PageType::UINT64);
+  if (!getCursor(series_id, &cursor, false, SEEK_NONE)) {
+    return false;
+  }
+
+  if (cursor.seekTo(time)) {
+    if (cursor.getTime() == time) {
+      cursor.update(value);
+    } else {
+      cursor.insert(time, value);
+    }
+  } else {
+    cursor.append(time, value);
+  }
+
+  return true;
 }
 
 } // namespace tsdb

@@ -106,14 +106,16 @@ bool TSDB::listSeries(std::set<uint64_t>* series_ids) {
 
 bool TSDB::getCursor(
     uint64_t series_id,
-    Cursor* cursor) {
+    Cursor* cursor,
+    bool readonly /* = true */,
+    SeekType seek_type /* = SEEK_FIRST */) {
   if (fd_ < 0) {
     return false;
   }
 
   /* start transaction */
   Transaction txn;
-  if (!txn_map_.startTransaction(series_id, true, &txn)) {
+  if (!txn_map_.startTransaction(series_id, readonly, &txn)) {
     return false;
   }
 
@@ -121,6 +123,17 @@ bool TSDB::getCursor(
       txn.getPageIndex()->getType(),
       &page_map_,
       std::move(txn));
+
+  switch (seek_type) {
+    case SEEK_FIRST:
+      cursor->seekToFirst();
+      break;
+    case SEEK_LAST:
+      cursor->seekToLast();
+      break;
+    case SEEK_NONE:
+      break;
+  }
 
   return true;
 }

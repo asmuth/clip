@@ -26,8 +26,9 @@ public:
   PageBuffer& operator=(PageBuffer&& o);
   ~PageBuffer();
 
-  void insert(uint64_t time, const void* value, size_t value_len);
   void update(size_t pos, const void* value, size_t value_len);
+  void insert(size_t pos, uint64_t time, const void* value, size_t value_len);
+  void append(uint64_t time, const void* value, size_t value_len);
 
   void getTimestamp(size_t pos, uint64_t* timestamp) const;
   void getValue(size_t pos, uint64_t* value) const;
