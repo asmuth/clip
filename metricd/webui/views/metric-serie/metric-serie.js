@@ -170,63 +170,6 @@ FnordMetric.views["fnordmetric.metric.serie"] = function(elem, params) {
     }
   }
 
-  //var renderFilterList = function() {
-  //  var filter_strs = view_cfg.getValue("filter") ? view_cfg.getValue("filter") : [];
-  //  var filter_ctrl = new FnordMetric.MetricTableFilter(
-  //      elem.querySelector(".fnordmetric-metric-table z-modal.filter"));
-
-  //  /* add a new filter */
-  //  var add_link = elem.querySelector(
-  //      ".fnordmetric-metric-table .sidebar a.add_filter");
-  //  add_link.addEventListener("click", function(e) {
-  //    filter_ctrl.render();
-  //  }, false);
-  //  filter_ctrl.onSubmit(function(filter_str) {
-  //    console.log(filter_str);
-  //    filter_strs.push(filter_str);
-  //    view_cfg.updateValue("filter", filter_strs);
-  //    updatePath();
-  //  });
-
-  //  /* render exisiting filter list */
-  //  var flist_elem = elem.querySelector(
-  //      ".fnordmetric-metric-table .sidebar .filter_list");
-  //  var felem_tpl = templateUtil.getTemplate(
-  //      "fnordmetric-metric-table-filter-list-elem-tpl");
-
-  //  filter_strs.forEach(function(f) {
-  //    var felem = felem_tpl.cloneNode(true);
-  //    felem.querySelector(".filter_value").innerHTML = f;
-
-  //    felem.querySelector(".edit").addEventListener("click", function(e) {
-  //      filter_ctrl.render(f);
-  //    });
-
-  //    flist_elem.appendChild(felem);
-  //  });
-
-  //  /* change an existing filter */
-  //  filter_ctrl.onChange(function(new_filter_str, old_filter_str) {
-  //    var idx = filter_strs.indexOf(old_filter_str);
-  //    if (idx > -1) {
-  //      filter_strs[idx] = new_filter_str;
-  //    }
-
-  //    view_cfg.updateValue("filter", filter_strs);
-  //    updatePath();
-  //  });
-
-  //  /* remove an exisiting filter */
-  //  filter_ctrl.onDelete(function(old_filter_str) {
-  //    var idx = filter_strs.indexOf(old_filter_str);
-  //    if (idx > -1) {
-  //      filter_strs.splice(idx, 1);
-  //    }
-  //    view_cfg.updateValue("filter", filter_strs);
-  //    updatePath();
-  //  });
-  //}
-
   var renderEmbedControl = function() {
     elem.querySelector(".fnordmetric-metric-serie .control.embed")
         .addEventListener("click", function() {
