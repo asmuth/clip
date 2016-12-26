@@ -203,12 +203,14 @@ bool ConfigParser::getToken(
   }
 
   /* skip whitespace */
-  while ((
-      *input_cur_ == ' ' ||
-      *input_cur_ == '\t' ||
-      *input_cur_ == '\r')
-      && input_cur_ < input_end_) {
-    input_cur_++;
+  while (input_cur_ < input_end_) {
+    if (*input_cur_ == ' ' ||
+        *input_cur_ == '\t' ||
+        *input_cur_ == '\r') {
+      input_cur_++;
+    } else {
+      break;
+    }
   }
 
   if (input_cur_ >= input_end_) {
