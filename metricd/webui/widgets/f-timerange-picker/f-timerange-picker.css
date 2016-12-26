@@ -5,6 +5,10 @@ f-timerange-picker {
   position: relative;
 }
 
+f-timerange-picker .clear_fix {
+  clear: both
+}
+
 f-timerange-picker input {
   width: 230px;
 }
@@ -53,6 +57,7 @@ f-timerange-picker .widget {
   box-shadow: 0px 4px 7px #ccc;
   z-index: 9999;
   overflow: auto;
+  padding: 13px;
   display: none;
 }
 
@@ -60,21 +65,53 @@ f-timerange-picker .widget.active {
   display: block;
 }
 
+f-timerange-picker .widget .footer,
+f-timerange-picker .widget .inner {
+  overflow: auto;
+}
+
 f-timerange-picker .widget .inner .col {
-  width: 50%;
+  width: auto;
   float: left;
+}
+
+f-timerange-picker .widget .inner .col.custom {
+  width: 285px;
+  margin-right: 20px;
+}
+
+f-timerange-picker .widget .inner .col.predefined {
+  margin-left: 20px;
 }
 
 f-timerange-picker .widget .inner .col.custom form {
   opacity: 0.5;
 }
 
-f-timerange-picker .widget .inner .col.custom form input:hover {
-  cursor: initial;
-}
-
 f-timerange-picker .widget .inner .col.custom.active form {
   opacity: 1;
+}
+
+f-timerange-picker .widget .inner .col.custom form .input_wrapper {
+  float: left;
+}
+
+f-timerange-picker .widget .inner .col.custom form .input_wrapper label {
+  width: 28px;
+}
+
+f-timerange-picker .widget .inner .col.custom form input {
+  position: relative;
+}
+
+f-timerange-picker .widget .inner .col.custom form .calendar_box {
+  position: absolute;
+  background: #fff;
+  z-index: 999;
+}
+
+f-timerange-picker .widget .inner .col.custom form input:hover {
+  cursor: initial;
 }
 
 f-timerange-picker .widget .inner .col.custom.active form input:hover {
@@ -88,6 +125,11 @@ f-timerange-picker .widget .inner .col.custom a.link.custom {
 f-timerange-picker .widget .inner ul {
   list-style-type: none;
   margin: 0;
+  padding: 0;
+}
+
+f-timerange-picker .widget .inner ul.timeranges {
+  float: right;
 }
 
 f-timerange-picker .widget .inner ul button.btn {
