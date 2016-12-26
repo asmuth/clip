@@ -31,7 +31,7 @@ Cursor::Cursor(
     page_buf_(type),
     page_buf_valid_(false),
     page_buf_pos_(0) {
-  next();
+  seekTo(0);
 }
 
 Cursor::Cursor(Cursor&& o) :
@@ -79,6 +79,49 @@ bool Cursor::next(uint64_t* timestamp, uint64_t* value) {
   get(timestamp, value);
   next();
   return true;
+}
+
+void Cursor::seekTo(uint64_t timestamp) {
+  /* search for the correct page */
+  auto page_idx = txn_.getPageIndex();
+  page_pos_ = 0; // FIXME: binary search for the correct page
+
+  /* load the page */
+  auto page_id = page_idx->getEntries()[page_pos_].page_id;
+  if (page_map_->getPage(page_id, &page_buf_)) {
+    page_buf_valid_ = true;
+  } else {
+    page_buf_valid_ = false;
+    return;
+  }
+
+  /* search for the correct slot in the page */
+  if (timestamp == 0) {
+    page_buf_pos_ = 0;
+    return;
+  }
+
+  {
+    auto high = page_buf_.getSize();
+    auto low = 0;
+
+    uint64_t actual_timestamp;
+    while (high != low) {
+      page_buf_pos_ = (high + low) / 2 ;
+      page_buf_.getTimestamp(page_buf_pos_, &actual_timestamp);
+      if (actual_timestamp > timestamp) {
+        high = page_buf_pos_;
+      } else if (actual_timestamp < timestamp) {
+        low = page_buf_pos_ + 1;
+      } else {
+        return;
+      }
+    }
+
+    if (actual_timestamp < timestamp) {
+      page_buf_pos_++;
+    }
+  }
 }
 
 bool Cursor::next() {

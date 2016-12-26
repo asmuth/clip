@@ -18,11 +18,6 @@ namespace tsdb {
 class Cursor {
 public:
 
-  enum SeekType {
-    SEEK_LOWER_BOUND,
-    SEEK_UPPER_BOUND
-  };
-
   Cursor(PageType type);
   Cursor(PageType type, PageMap* page_map, Transaction&& txn);
   Cursor(Cursor&& o);
@@ -34,11 +29,16 @@ public:
   void get(uint64_t* timestamp, uint64_t* value);
   bool next();
 
-  void seekTo(uint64_t timestamp, SeekType seek_type = SEEK_LOWER_BOUND);
+  /* seek to the first entry that is greater or equal */
+  void seekTo(uint64_t timestamp);
 
   bool next(uint64_t* timestamp, uint64_t* value);
 
+  /* insert at the current position (new value will appear before current
+     value at this position after insert) */
   void insert(uint64_t timestamp, uint64_t value);
+
+  void append(uint64_t timestamp, uint64_t value);
 
   void update(uint64_t timestamp, uint64_t value);
 
