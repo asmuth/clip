@@ -9,6 +9,7 @@
  */
 #include "cursor.h"
 #include "page_index.h"
+#include <iostream>
 
 namespace tsdb {
 
@@ -29,7 +30,9 @@ Cursor::Cursor(
     page_map_(page_map),
     page_buf_(type),
     page_buf_valid_(false),
-    page_buf_pos_(0) {}
+    page_buf_pos_(0) {
+  next();
+}
 
 Cursor::Cursor(Cursor&& o) :
     txn_(std::move(o.txn_)),
@@ -59,12 +62,34 @@ Cursor& Cursor::operator=(Cursor&& o) {
   return *this;
 }
 
+bool Cursor::valid() {
+  return page_map_ && page_buf_valid_ && page_buf_pos_ < page_buf_.getSize();
+}
+
+void Cursor::get(uint64_t* timestamp, uint64_t* value) {
+  page_buf_.getTimestamp(page_buf_pos_, timestamp);
+  page_buf_.getValue(page_buf_pos_, value);
+}
+
 bool Cursor::next(uint64_t* timestamp, uint64_t* value) {
+  if (!valid()) {
+    return false;
+  }
+
+  get(timestamp, value);
+  next();
+  return true;
+}
+
+bool Cursor::next() {
   if (!page_map_) {
     return false;
   }
 
-  while (!page_buf_valid_ || page_buf_pos_ >= page_buf_.getSize()) {
+  if (page_buf_valid_ && page_buf_pos_ < page_buf_.getSize()) {
+    ++page_buf_pos_;
+    return true;
+  } else {
     /* load next page */
     auto page_idx = txn_.getPageIndex();
     if (page_pos_ >= page_idx->getSize()) {
@@ -78,13 +103,9 @@ bool Cursor::next(uint64_t* timestamp, uint64_t* value) {
 
     ++page_pos_;
     page_buf_valid_ = true;
+    page_buf_pos_ = 0;
+    return true;
   }
-
-  page_buf_.getTimestamp(page_buf_pos_, timestamp);
-  page_buf_.getValue(page_buf_pos_, value);
-
-  ++page_buf_pos_;
-  return true;
 }
 
 } // namespace tsdb

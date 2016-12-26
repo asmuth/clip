@@ -165,4 +165,45 @@ TEST_CASE(TSDBTest, TestCreateAndInsert, [] () {
 
 });
 
+TEST_CASE(TSDBTest, TestSeek, [] () {
+  unlink("/tmp/__test.tsdb");
 
+  auto t0 = WallClock::unixMicros();
+
+  {
+    std::unique_ptr<tsdb::TSDB> db;
+    EXPECT(tsdb::TSDB::createDatabase(&db, "/tmp/__test.tsdb") == true);
+
+    EXPECT(db->createSeries(1, tsdb::PageType::UINT64, "") == true);
+    for (size_t i = 0; i < 100000; ++i) {
+      EXPECT(db->insertUInt64(1, t0 + 20 * i, i) == true);
+    }
+
+    EXPECT(db->commit() == true);
+  }
+
+  {
+    std::unique_ptr<tsdb::TSDB> db;
+    EXPECT(tsdb::TSDB::openDatabase(&db, "/tmp/__test.tsdb") == true);
+
+    tsdb::Cursor cursor(tsdb::PageType::UINT64);
+    EXPECT(db->getCursor(1, &cursor));
+    EXPECT(cursor.valid() == true);
+    {
+      uint64_t ts;
+      uint64_t value;
+      cursor.get(&ts, &value);
+      EXPECT(ts == t0);
+      EXPECT(value == 0);
+    }
+    EXPECT(cursor.next() == true);
+    EXPECT(cursor.valid() == true);
+    {
+      uint64_t ts;
+      uint64_t value;
+      cursor.get(&ts, &value);
+      EXPECT(ts == t0 + 20);
+      EXPECT(value == 1);
+    }
+  }
+});
