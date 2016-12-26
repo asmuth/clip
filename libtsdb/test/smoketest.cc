@@ -272,6 +272,15 @@ TEST_CASE(TSDBTest, TestUpdate, [] () {
     }
 
     cursor.update(1234);
+
+    {
+      uint64_t ts;
+      uint64_t value;
+      cursor.get(&ts, &value);
+      EXPECT(ts == 1338);
+      EXPECT(value == 1234);
+    }
+
     EXPECT(db->commit() == true);
   }
 
