@@ -21,6 +21,7 @@ MetricConfig::MetricConfig() :
    data_type(MetricDataType::UINT64),
    aggregation(MetricAggregationType::NONE),
    granularity(0),
+   display_granularity(0),
    is_valid(false) {}
 
 SeriesIDType MetricSeries::getSeriesID() const {
@@ -280,14 +281,19 @@ std::unique_ptr<InputAggregator> mkInputAggregator(
 std::unique_ptr<OutputAggregator> mkOutputAggregator(
     tsdb::Cursor* cursor,
     const MetricConfig* config) {
-  if (config->granularity == 0) {
+  uint64_t granularity = config->display_granularity;
+  if (granularity == 0) {
+    granularity = config->granularity;
+  }
+
+  if (granularity == 0) {
     return {};
   }
 
   switch (config->aggregation) {
     case MetricAggregationType::SUM:
       return std::unique_ptr<OutputAggregator>(
-          new SumOutputAggregator(cursor, config->granularity));
+          new SumOutputAggregator(cursor, granularity));
     case MetricAggregationType::NONE: return {};
     default: return {};
   }

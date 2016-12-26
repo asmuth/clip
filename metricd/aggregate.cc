@@ -87,33 +87,24 @@ bool SumOutputAggregator::next(
     uint64_t* time,
     void* value,
     size_t value_len) {
-  if (cursor_->valid()) {
-    if (cursor_->getTime() <= cur_time_ + granularity_) {
-      *time = cur_time_;
-      assert(value_len == sizeof(cur_sum_));
-      memcpy(value, &cur_sum_, sizeof(cur_sum_));
-      cursor_->getValue(&cur_sum_, sizeof(cur_sum_));
-      cursor_->next();
-      cur_time_ += granularity_;
-    } else {
-      *time = cur_time_;
-      assert(value_len == sizeof(cur_sum_));
-      memcpy(value, &cur_sum_, sizeof(cur_sum_));
-      cur_sum_ = 0;
-      cur_time_ += granularity_;
-    }
-
-    return true;
-  } else if (cur_time_ < uint64_t(-1)) {
-    *time = cur_time_;
-    assert(value_len == sizeof(cur_sum_));
-    memcpy(value, &cur_sum_, sizeof(cur_sum_));
-    cur_sum_ = 0;
-    cur_time_ = uint64_t(-1);
-    return true;
-  } else {
+  if (!cursor_->valid()) {
     return false;
   }
+
+  while (cursor_->valid() && cursor_->getTime() < cur_time_ + granularity_) {
+    uint64_t val;
+    cursor_->getValue(&val, sizeof(val));
+    cur_sum_ += val;
+    cursor_->next();
+  }
+
+  *time = cur_time_;
+  assert(value_len == sizeof(cur_sum_));
+  memcpy(value, &cur_sum_, sizeof(cur_sum_));
+  cur_sum_ = 0;
+  cur_time_ += granularity_;
+
+  return true;
 }
 
 } // namespace fnordmetric

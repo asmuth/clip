@@ -48,6 +48,7 @@ struct MetricConfig {
   MetricDataType data_type;
   MetricAggregationType aggregation;
   uint64_t granularity;
+  uint64_t display_granularity;
   bool is_valid;
 };
 
