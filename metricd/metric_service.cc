@@ -189,8 +189,13 @@ ReturnCode MetricService::insertSample(
     return ReturnCode::error("ERUNTIME", "can't open cursor");
   }
 
+  auto input_aggregator = metric->getInputAggregator();
+  if (!input_aggregator) {
+    return ReturnCode::error("ERUNTIME", "can't open input aggregator");
+  }
+
   uint64_t value = sample.getSample().getValue();
-  rc = metric->getInputAggregator()->addSample(
+  rc = input_aggregator->addSample(
       &cursor,
       sample.getSample().getTime(),
       MetricDataType::UINT64,
