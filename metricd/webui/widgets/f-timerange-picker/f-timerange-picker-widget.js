@@ -153,11 +153,28 @@ var TimeRangePickerWidget = function(timerange, widget) {
   }
 
   var watchCalendarClick = function() {
-    //FIXME handle independently for start and end
+    var calendar_box_start = widget.querySelector(".calendar_box.start");
+    var calendar_box_end = widget.querySelector(".calendar_box.end");
+
+    /** close calendar on click outside of the calendar elem **/
+    widget.addEventListener("click", function(e) {
+      DomUtil.clearChildren(calendar_box_end);
+      DomUtil.clearChildren(calendar_box_start);
+    }, false);
+
+    /** don't close calendar on click within calendar elem **/
+    calendar_box_start.addEventListener("click", function(e) {
+      e.stopPropagation();
+    }, false);
+
+    calendar_box_end.addEventListener("click", function(e) {
+      e.stopPropagation();
+    }, false);
 
     /** render start date calendar **/
-    var calendar_box_start = widget.querySelector(".calendar_box.start");
-    widget.querySelector(".icon.calendar.start").addEventListener("click", function() {
+    widget.querySelector(".icon.calendar.start").addEventListener("click", function(e) {
+      e.stopPropagation();
+
       DomUtil.clearChildren(calendar_box_end);
       DomUtil.clearChildren(calendar_box_start);
       calendar.render(calendar_box_start, {
@@ -168,8 +185,9 @@ var TimeRangePickerWidget = function(timerange, widget) {
     }, false);
 
     /** render end date calendar **/
-    var calendar_box_end = widget.querySelector(".calendar_box.end");
-    widget.querySelector(".icon.calendar.end").addEventListener("click", function() {
+    widget.querySelector(".icon.calendar.end").addEventListener("click", function(e) {
+      e.stopPropagation();
+
       DomUtil.clearChildren(calendar_box_start);
       DomUtil.clearChildren(calendar_box_end);
       calendar.render(calendar_box_end, {
@@ -178,7 +196,6 @@ var TimeRangePickerWidget = function(timerange, widget) {
         selected: new Date(timerange.end)
       });
     }, false);
-
   }
 
   var switchActiveButton = function(list_class, btn) {

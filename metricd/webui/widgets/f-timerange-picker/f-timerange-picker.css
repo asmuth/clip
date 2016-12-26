@@ -10,7 +10,7 @@ f-timerange-picker .clear_fix {
 }
 
 f-timerange-picker input {
-  width: 230px;
+  width: 233px;
 }
 
 f-timerange-picker input.invalid {
@@ -111,6 +111,7 @@ f-timerange-picker .widget .inner .col.custom.active form {
 }
 
 f-timerange-picker .widget .inner .col.custom form .input_wrapper {
+  position: relative;
   float: left;
 }
 
@@ -118,14 +119,12 @@ f-timerange-picker .widget .inner .col.custom form .input_wrapper label {
   width: 28px;
 }
 
-f-timerange-picker .widget .inner .col.custom form input {
-  position: relative;
-}
-
 f-timerange-picker .widget .inner .col.custom form .calendar_box {
   position: absolute;
   background: #fff;
   z-index: 999;
+  left: 33px;
+  margin-top: -5px;
 }
 
 f-timerange-picker .widget .inner .col.custom form input:hover {
@@ -163,9 +162,20 @@ f-timerange-picker .widget .footer button.btn {
 f-timerange-picker table.calendar {
   border: 1px solid #eee;
   padding: 5px;
-  margin: 5px;
+  margin: 0px;
   color: #444;
   border-radius: 3px;
+  border-collapse: collapse;
+}
+
+f-timerange-picker table.calendar thead tr td {
+  border-bottom: 1px solid #d1d1d1;
+  line-height: 38px;
+}
+
+f-timerange-picker table.calendar .title {
+  text-align: left;
+  font-weight: 500;
 }
 
 f-timerange-picker table.calendar .prev,
@@ -174,14 +184,19 @@ f-timerange-picker table.calendar .next {
   cursor: pointer;
 }
 
+f-timerange-picker table.calendar .prev::selection,
+f-timerange-picker table.calendar .next::selection {
+  background: transparent;
+}
+
 f-timerange-picker table.calendar td {
   text-align: center;
   line-height: 22px;
-  padding: 0 3px;
+  padding: 0 9px;
 }
 
 f-timerange-picker table.calendar tr.weekdays td {
-  font-weight: 600;
+  color: #828285;
 }
 
 f-timerange-picker table.calendar tr.dates td:hover {
@@ -189,11 +204,18 @@ f-timerange-picker table.calendar tr.dates td:hover {
 }
 
 f-timerange-picker table.calendar tr.dates td.cur_date {
-  border: 1px solid blue;
+  font-weight: 600;
 }
 
 f-timerange-picker table.calendar tr.dates td.selected {
-  background-color: blue;
+  padding: 0 5px;
+  color: #fefefe;
+}
+
+f-timerange-picker table.calendar tr.dates td.selected span {
+  background-color: #EC8096;
+  border-radius: 50%;
+  padding: 4px;
 }
 
 f-timerange-picker table.calendar tr.dates td.disabled {

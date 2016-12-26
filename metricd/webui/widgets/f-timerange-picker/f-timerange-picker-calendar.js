@@ -4,7 +4,7 @@ var TimeRangePickerCalendar = function() {
 
   var translations = {
     months: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
-    weekdays: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
+    weekdays: ["M", "T", "W", "T", "F", "S", "S"]
   };
 
   var submit_callbacks = [];
@@ -133,7 +133,7 @@ var TimeRangePickerCalendar = function() {
       var d = i + 1;
 
       var td = document.createElement("td");
-      td.innerHTML = d;
+      td.innerHTML = "<span>" + d + "</span>";
 
       /** highlight current date **/
       if (d == cur_date) {
