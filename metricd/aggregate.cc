@@ -62,17 +62,26 @@ ReturnCode SumInputAggregator::addSample(
 
 SumOutputAggregator::SumOutputAggregator(
     tsdb::Cursor* cursor,
+    MetricDataType input_type,
     uint64_t granularity,
     uint64_t align /* = 0 */,
     bool interpolate /* = true */) :
     cursor_(cursor),
+    input_type_(input_type),
     granularity_(granularity),
     align_(align),
     interpolate_(interpolate) {
-  cursor_->seekToFirst();
-  cursor_->get(&cur_time_, &cur_sum_, sizeof(cur_sum_));
+  cur_sum_.type = input_type_;
+  cur_sum_.len = getMetricDataTypeSize(input_type_);
+  cur_sum_.data = malloc(cur_sum_.len);
+
+  cursor_->get(&cur_time_, cur_sum_.data, cur_sum_.len);
   cur_time_ = alignTime(cur_time_, granularity_, align_);
   cursor_->next();
+}
+
+SumOutputAggregator::~SumOutputAggregator() {
+  free(cur_sum_.data);
 }
 
 bool SumOutputAggregator::next(
@@ -83,10 +92,13 @@ bool SumOutputAggregator::next(
     return false;
   }
 
+  tval_ref val;
+  val.type = input_type_;
+  val.len = getMetricDataTypeSize(input_type_);
+  val.data = alloca(val.len);
   while (cursor_->valid() && cursor_->getTime() < cur_time_ + granularity_) {
-    uint64_t val;
-    cursor_->getValue(&val, sizeof(val));
-    cur_sum_ += val;
+    cursor_->getValue(val.data, val.len);
+    tval_add(cur_sum_.type, cur_sum_.data, cur_sum_.len, val.data, val.len);
     cursor_->next();
   }
 
@@ -96,15 +108,41 @@ bool SumOutputAggregator::next(
     interpolate_windows = (next_time - cur_time_) / granularity_;
   }
 
-  uint64_t next_val = cur_sum_ / interpolate_windows;
-  next_val += cur_sum_ % interpolate_windows;
+  if (interpolate_windows > 1) {
+    tval_ref next_val;
+    next_val.type = input_type_;
+    next_val.len = getMetricDataTypeSize(input_type_);
+    next_val.data = alloca(val.len);
 
-  if (out_len > 0) {
-    assert(out[0].len == sizeof(next_val));
-    memcpy(out[0].data, &next_val, sizeof(next_val));
+    switch (input_type_) {
+      case MetricDataType::UINT64:
+        *((uint64_t*) next_val.data) =
+            (*((uint64_t*) cur_sum_.data) / interpolate_windows) +
+            (*((uint64_t*) cur_sum_.data) % interpolate_windows);
+
+    }
+
+    if (out_len > 0) {
+      assert(out[0].type == next_val.type);
+      assert(out[0].len == next_val.len);
+      memcpy(out[0].data, next_val.data, std::min(next_val.len, out[0].len));
+    }
+
+    tval_sub(
+        cur_sum_.type,
+        cur_sum_.data,
+        cur_sum_.len,
+        next_val.data,
+        next_val.len);
+  } else {
+    if (out_len > 0) {
+      assert(out[0].type == cur_sum_.type);
+      assert(out[0].len == cur_sum_.len);
+      memcpy(out[0].data, cur_sum_.data, std::min(cur_sum_.len, out[0].len));
+    }
+
+    tval_zero(cur_sum_.type, cur_sum_.data, cur_sum_.len);
   }
-
-  cur_sum_ -= next_val;
 
   *time = cur_time_;
   cur_time_ += granularity_;
@@ -180,7 +218,6 @@ MaxOutputAggregator::MaxOutputAggregator(
     granularity_(granularity),
     align_(align),
     interpolate_(interpolate) {
-  cursor_->seekToFirst();
   cursor_->get(&cur_time_, &cur_max_, sizeof(cur_max_));
   has_cur_max_ = true;
   cur_time_ = alignTime(cur_time_, granularity_, align_);

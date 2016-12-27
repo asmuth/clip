@@ -71,9 +71,12 @@ public:
 
   SumOutputAggregator(
       tsdb::Cursor* cursor,
+      MetricDataType input_type,
       uint64_t granularity,
       uint64_t align = 0,
       bool interpolate = true);
+
+  ~SumOutputAggregator();
 
   bool next(
       uint64_t* time,
@@ -88,11 +91,12 @@ public:
 
 protected:
   tsdb::Cursor* cursor_;
+  MetricDataType input_type_;
   uint64_t granularity_;
   uint64_t align_;
   bool interpolate_;
   uint64_t cur_time_;
-  uint64_t cur_sum_;
+  tval_ref cur_sum_;
 };
 
 class MaxInputAggregator : public InputAggregator {

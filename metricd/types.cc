@@ -47,6 +47,25 @@ void tval_add(
   }
 }
 
+void tval_sub(
+    MetricDataType type,
+    void* reg,
+    size_t reg_len,
+    const void* op,
+    size_t op_len) {
+  switch (type) {
+
+    case MetricDataType::UINT64: {
+      assert(reg_len == sizeof(uint64_t));
+      assert(op_len == sizeof(uint64_t));
+      *((uint64_t*) reg) -= *((const uint64_t*) op);
+      return;
+    }
+
+    default: throw std::invalid_argument("type error");
+  }
+}
+
 int tval_cmp(
     MetricDataType type,
     void* left,

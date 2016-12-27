@@ -35,6 +35,13 @@ void tval_add(
     const void* op,
     size_t op_len);
 
+void tval_sub(
+    MetricDataType type,
+    void* reg,
+    size_t reg_len,
+    const void* op,
+    size_t op_len);
+
 int tval_cmp(
     MetricDataType type,
     void* left,
