@@ -62,24 +62,9 @@ enum MetricKind : uint32_t {
   AVERAGE_FLOAT64   = 18
 };
 
-enum class MetricAggregationType {
-  NONE,
-  RANDOM,
-  LATEST,
-  NEWEST,
-  MIN,
-  MAX,
-  AVG,
-  SUM,
-  SUMRATE,
-  RATE
-};
-
 struct MetricConfig {
   MetricConfig();
   MetricKind kind;
-  MetricDataType data_type;
-  MetricAggregationType aggregation;
   uint64_t granularity;
   uint64_t display_granularity;
   bool is_valid;
@@ -237,6 +222,8 @@ std::unique_ptr<OutputAggregator> mkOutputAggregator(
 
 std::unique_ptr<InputAggregator> mkInputAggregator(
     const MetricConfig* config);
+
+MetricDataType getMetricDataType(MetricKind t);
 
 } // namespace fnordmetric
 

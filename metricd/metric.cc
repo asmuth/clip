@@ -19,8 +19,6 @@ namespace fnordmetric {
 
 MetricConfig::MetricConfig() :
     kind(MetricKind::UNKNOWN),
-    data_type(MetricDataType::UINT64),
-    aggregation(MetricAggregationType::NONE),
     granularity(0),
     display_granularity(0),
     is_valid(false) {}
@@ -152,7 +150,7 @@ ReturnCode MetricSeriesList::findOrCreateSeries(
   /* create the new  series in the tsdb file */
   auto create_rc = tsdb->createSeries(
       new_series_id.id,
-      getMetricDataTypeSize(config.data_type),
+      getMetricDataTypeSize(getMetricDataType(config.kind)),
       metadata_buf.str());
 
   if (!create_rc) {
@@ -255,14 +253,17 @@ std::unique_ptr<InputAggregator> mkInputAggregator(
     return {};
   }
 
-  switch (config->aggregation) {
-    case MetricAggregationType::MAX:
+  switch (config->kind) {
+    case MetricKind::MAX_UINT64:
+    case MetricKind::MAX_INT64:
+    case MetricKind::MAX_FLOAT64:
       return std::unique_ptr<InputAggregator>(
           new MaxInputAggregator(config->granularity));
-    case MetricAggregationType::SUM:
+    case MetricKind::COUNTER_UINT64:
+    case MetricKind::COUNTER_INT64:
+    case MetricKind::COUNTER_FLOAT64:
       return std::unique_ptr<InputAggregator>(
           new SumInputAggregator(config->granularity));
-    case MetricAggregationType::NONE: return {};
     default: return {};
   }
 }
@@ -279,20 +280,23 @@ std::unique_ptr<OutputAggregator> mkOutputAggregator(
     return {};
   }
 
-  switch (config->aggregation) {
-    case MetricAggregationType::MAX:
+  switch (config->kind) {
+    case MetricKind::MAX_UINT64:
+    case MetricKind::MAX_INT64:
+    case MetricKind::MAX_FLOAT64:
       return std::unique_ptr<OutputAggregator>(
           new MaxOutputAggregator(
               cursor,
-              config->data_type,
+              getMetricDataType(config->kind),
               granularity));
-    case MetricAggregationType::SUM:
+    case MetricKind::COUNTER_UINT64:
+    case MetricKind::COUNTER_INT64:
+    case MetricKind::COUNTER_FLOAT64:
       return std::unique_ptr<OutputAggregator>(
           new SumOutputAggregator(
               cursor,
-              config->data_type,
+              getMetricDataType(config->kind),
               granularity));
-    case MetricAggregationType::NONE: return {};
     default: return {};
   }
 }
@@ -383,13 +387,13 @@ Metric::Metric(
     key_(key) {}
 
 ReturnCode Metric::setConfig(MetricConfig config) {
-  if (config.aggregation != MetricAggregationType::NONE &&
-      config.granularity == 0) {
-    logWarning(
-        "metric<$0>: setting 'aggregation' without 'granularity' will have "
-        "no effect",
-        key_);
-  }
+  //if (config.aggregation != MetricAggregationType::NONE &&
+  //    config.granularity == 0) {
+  //  logWarning(
+  //      "metric<$0>: setting 'aggregation' without 'granularity' will have "
+  //      "no effect",
+  //      key_);
+  //}
 
   if (config.kind == MetricKind::UNKNOWN) {
     return ReturnCode::errorf(
@@ -413,6 +417,33 @@ MetricSeriesList* Metric::getSeriesList() {
 
 InputAggregator* Metric::getInputAggregator() {
   return input_aggr_.get();
+}
+
+MetricDataType getMetricDataType(MetricKind t) {
+  switch (t) {
+    case SAMPLE_UINT64: return MetricDataType::UINT64;
+    case SAMPLE_INT64: return MetricDataType::INT64;
+    case SAMPLE_FLOAT64: return MetricDataType::FLOAT64;
+    case COUNTER_UINT64: return MetricDataType::UINT64;
+    case COUNTER_INT64: return MetricDataType::INT64;
+    case COUNTER_FLOAT64: return MetricDataType::FLOAT64;
+    case MONOTONIC_UINT64: return MetricDataType::UINT64;
+    case MONOTONIC_INT64: return MetricDataType::INT64;
+    case MONOTONIC_FLOAT64: return MetricDataType::FLOAT64;
+    case MIN_UINT64: return MetricDataType::UINT64;
+    case MIN_INT64: return MetricDataType::INT64;
+    case MIN_FLOAT64: return MetricDataType::FLOAT64;
+    case MAX_UINT64: return MetricDataType::UINT64;
+    case MAX_INT64: return MetricDataType::INT64;
+    case MAX_FLOAT64: return MetricDataType::FLOAT64;
+    case AVERAGE_UINT64: return MetricDataType::UINT64;
+    case AVERAGE_INT64: return MetricDataType::INT64;
+    case AVERAGE_FLOAT64: return MetricDataType::FLOAT64;
+
+    case UNKNOWN:
+    default:
+      return MetricDataType::UINT64;
+  }
 }
 
 } // namespace fnordmetric

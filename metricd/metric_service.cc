@@ -187,7 +187,7 @@ ReturnCode MetricService::insertSample(
   }
 
   tval_ref val;
-  val.type = metric->getConfig().data_type;
+  val.type = getMetricDataType(metric->getConfig().kind);
   val.len = getMetricDataTypeSize(val.type);
   val.data = alloca(val.len);
 
