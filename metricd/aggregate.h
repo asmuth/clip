@@ -72,6 +72,8 @@ public:
   SumOutputAggregator(
       tsdb::Cursor* cursor,
       tval_type input_type,
+      uint64_t time_begin,
+      uint64_t time_limit,
       uint64_t granularity,
       uint64_t align = 0,
       bool interpolate = true);
@@ -92,6 +94,8 @@ public:
 protected:
   tsdb::Cursor* cursor_;
   tval_type input_type_;
+  uint64_t time_begin_;
+  uint64_t time_limit_;
   uint64_t granularity_;
   uint64_t align_;
   bool interpolate_;
@@ -124,6 +128,8 @@ public:
   MaxOutputAggregator(
       tsdb::Cursor* cursor,
       tval_type input_type,
+      uint64_t time_begin,
+      uint64_t time_limit,
       uint64_t granularity,
       uint64_t align = 0,
       bool interpolate = true);
@@ -144,6 +150,8 @@ public:
 protected:
   tsdb::Cursor* cursor_;
   tval_type input_type_;
+  uint64_t time_begin_;
+  uint64_t time_limit_;
   uint64_t granularity_;
   uint64_t align_;
   bool interpolate_;

@@ -31,8 +31,7 @@ TEST_CASE(MetricServiceTest, TestSumAggregator, [] () {
   {
     MetricConfig mc;
     mc.is_valid = true;
-    mc.data_type = MetricDataType::UINT64;
-    mc.aggregation = MetricAggregationType::SUM;
+    mc.kind = MetricKind::COUNTER_UINT64;
     mc.granularity = 60 * kMicrosPerSecond;
     config.addMetricConfig("users_online", mc);
   }
@@ -46,69 +45,100 @@ TEST_CASE(MetricServiceTest, TestSumAggregator, [] () {
   EXPECT(start_rc.isSuccess());
 
   {
-    auto cursor = service->getCursor("users_online", SeriesNameType(""));
+    auto rc = service->insertSample(
+        "users_online",
+        SeriesNameType(""),
+        1482776400000000,
+        "15");
+    EXPECT(rc.isSuccess());
+  }
+
+  {
+    auto rc = service->insertSample(
+        "users_online",
+        SeriesNameType(""),
+        1482776400000000,
+        "1");
+    EXPECT(rc.isSuccess());
+  }
+
+  {
+    auto rc = service->insertSample(
+        "users_online",
+        SeriesNameType(""),
+        1482776410000000,
+        "1");
+
+    EXPECT(rc.isSuccess());
+  }
+
+  {
+    auto rc = service->insertSample(
+        "users_online",
+        SeriesNameType(""),
+        1482776368000000,
+        "10");
+
+    EXPECT(rc.isSuccess());
+  }
+
+  {
+    auto rc = service->insertSample(
+        "users_online",
+        SeriesNameType(""),
+        1482776370000000,
+        "8");
+
+    EXPECT(rc.isSuccess());
+  }
+
+  {
+    auto rc = service->insertSample(
+        "users_online",
+        SeriesNameType(""),
+        1482776369000000,
+        "5");
+
+    EXPECT(rc.isSuccess());
+  }
+
+  {
+    auto rc = service->insertSample(
+        "users_online",
+        SeriesNameType(""),
+        1482776590000000,
+        "42");
+
+    EXPECT(rc.isSuccess());
+  }
+
+  {
+    auto rc = service->insertSample(
+        "users_online",
+        SeriesNameType(""),
+        1482776788000000,
+        "5");
+
+    EXPECT(rc.isSuccess());
+  }
+
+  {
+    auto cursor = service->getCursor(
+        "users_online",
+        SeriesNameType(""),
+        1482776220000000,
+        1482776900000000);
     uint64_t ts;
     tval_ref val;
     val.len = sizeof(uint64_t);
     val.data = alloca(val.len);
-    val.type = MetricDataType::UINT64;
-    EXPECT(cursor.next(&ts, &val, 1) == false);
-  }
-
-  {
-    LabelledSample smpl(Sample(1482776400000000, 15), {});
-    auto rc = service->insertSample("users_online", smpl);
-    EXPECT(rc.isSuccess());
-  }
-
-  {
-    LabelledSample smpl(Sample(1482776400000000, 1), {});
-    auto rc = service->insertSample("users_online", smpl);
-    EXPECT(rc.isSuccess());
-  }
-
-  {
-    LabelledSample smpl(Sample(1482776410000000, 1), {});
-    auto rc = service->insertSample("users_online", smpl);
-    EXPECT(rc.isSuccess());
-  }
-
-  {
-    LabelledSample smpl(Sample(1482776368000000, 10), {});
-    auto rc = service->insertSample("users_online", smpl);
-    EXPECT(rc.isSuccess());
-  }
-  {
-    LabelledSample smpl(Sample(1482776370000000, 8), {});
-    auto rc = service->insertSample("users_online", smpl);
-    EXPECT(rc.isSuccess());
-  }
-
-  {
-    LabelledSample smpl(Sample(1482776369000000, 5), {});
-    auto rc = service->insertSample("users_online", smpl);
-    EXPECT(rc.isSuccess());
-  }
-
-  {
-    LabelledSample smpl(Sample(1482776590000000, 42), {});
-    auto rc = service->insertSample("users_online", smpl);
-    EXPECT(rc.isSuccess());
-  }
-
-  {
-    LabelledSample smpl(Sample(1482776788000000, 5), {});
-    auto rc = service->insertSample("users_online", smpl);
-    EXPECT(rc.isSuccess());
-  }
-
-  {
-    auto cursor = service->getCursor("users_online", SeriesNameType(""));
-    uint64_t ts;
-    tval_ref val;
-    val.len = sizeof(uint64_t);
-    val.data = alloca(val.len);
-    val.type = MetricDataType::UINT64;
+    val.type = tval_type::UINT64;
+    EXPECT(cursor.next(&ts, &val, 1));
+    EXPECT(ts == 1482776220000000);
+    EXPECT(*((uint64_t*) val.data) == 0);
+    EXPECT(cursor.next(&ts, &val, 1));
+    EXPECT(ts == 1482776280000000);
+    EXPECT(*((uint64_t*) val.data) == 0);
     EXPECT(cursor.next(&ts, &val, 1));
     EXPECT(ts == 1482776340000000);
     EXPECT(*((uint64_t*) val.data) == 23);
@@ -136,6 +166,12 @@ TEST_CASE(MetricServiceTest, TestSumAggregator, [] () {
     EXPECT(cursor.next(&ts, &val, 1));
     EXPECT(ts == 1482776820000000);
     EXPECT(*((uint64_t*) val.data) ==0);
+    EXPECT(cursor.next(&ts, &val, 1));
+    EXPECT(ts == 1482776880000000);
+    EXPECT(*((uint64_t*) val.data) ==0);
+    EXPECT(cursor.next(&ts, &val, 1));
+    EXPECT(ts == 1482776940000000);
+    EXPECT(*((uint64_t*) val.data) ==0);
     EXPECT(cursor.next(&ts, &val, 1) == false);
   }
 });
@@ -149,8 +185,7 @@ TEST_CASE(MetricServiceTest, TestSumAggregatorWithDownsampling, [] () {
   {
     MetricConfig mc;
     mc.is_valid = true;
-    mc.data_type = MetricDataType::UINT64;
-    mc.aggregation = MetricAggregationType::SUM;
+    mc.kind = MetricKind::COUNTER_UINT64;
     mc.granularity = 60 * kMicrosPerSecond;
     mc.display_granularity = 300 * kMicrosPerSecond;
     config.addMetricConfig("users_online", mc);
@@ -165,69 +200,94 @@ TEST_CASE(MetricServiceTest, TestSumAggregatorWithDownsampling, [] () {
   EXPECT(start_rc.isSuccess());
 
   {
-    auto cursor = service->getCursor("users_online", SeriesNameType(""));
+    auto rc = service->insertSample(
+        "users_online",
+        SeriesNameType(""),
+        1482776400000000,
+        "15");
+    EXPECT(rc.isSuccess());
+  }
+
+  {
+    auto rc = service->insertSample(
+        "users_online",
+        SeriesNameType(""),
+        1482776400000000,
+        "1");
+    EXPECT(rc.isSuccess());
+  }
+
+  {
+    auto rc = service->insertSample(
+        "users_online",
+        SeriesNameType(""),
+        1482776410000000,
+        "1");
+
+    EXPECT(rc.isSuccess());
+  }
+
+  {
+    auto rc = service->insertSample(
+        "users_online",
+        SeriesNameType(""),
+        1482776368000000,
+        "10");
+
+    EXPECT(rc.isSuccess());
+  }
+
+  {
+    auto rc = service->insertSample(
+        "users_online",
+        SeriesNameType(""),
+        1482776370000000,
+        "8");
+
+    EXPECT(rc.isSuccess());
+  }
+
+  {
+    auto rc = service->insertSample(
+        "users_online",
+        SeriesNameType(""),
+        1482776369000000,
+        "5");
+
+    EXPECT(rc.isSuccess());
+  }
+
+  {
+    auto rc = service->insertSample(
+        "users_online",
+        SeriesNameType(""),
+        1482776590000000,
+        "42");
+
+    EXPECT(rc.isSuccess());
+  }
+
+  {
+    auto rc = service->insertSample(
+        "users_online",
+        SeriesNameType(""),
+        1482776788000000,
+        "5");
+
+    EXPECT(rc.isSuccess());
+  }
+
+  {
+    auto cursor = service->getCursor(
+        "users_online",
+        SeriesNameType(""),
+        1482776100000000,
+        1482776700000000);
     uint64_t ts;
     tval_ref val;
     val.len = sizeof(uint64_t);
     val.data = alloca(val.len);
-    val.type = MetricDataType::UINT64;
-    EXPECT(cursor.next(&ts, &val, 1) == false);
-  }
-
-  {
-    LabelledSample smpl(Sample(1482776400000000, 15), {});
-    auto rc = service->insertSample("users_online", smpl);
-    EXPECT(rc.isSuccess());
-  }
-
-  {
-    LabelledSample smpl(Sample(1482776400000000, 1), {});
-    auto rc = service->insertSample("users_online", smpl);
-    EXPECT(rc.isSuccess());
-  }
-
-  {
-    LabelledSample smpl(Sample(1482776410000000, 1), {});
-    auto rc = service->insertSample("users_online", smpl);
-    EXPECT(rc.isSuccess());
-  }
-
-  {
-    LabelledSample smpl(Sample(1482776368000000, 10), {});
-    auto rc = service->insertSample("users_online", smpl);
-    EXPECT(rc.isSuccess());
-  }
-  {
-    LabelledSample smpl(Sample(1482776370000000, 8), {});
-    auto rc = service->insertSample("users_online", smpl);
-    EXPECT(rc.isSuccess());
-  }
-
-  {
-    LabelledSample smpl(Sample(1482776369000000, 5), {});
-    auto rc = service->insertSample("users_online", smpl);
-    EXPECT(rc.isSuccess());
-  }
-
-  {
-    LabelledSample smpl(Sample(1482776590000000, 42), {});
-    auto rc = service->insertSample("users_online", smpl);
-    EXPECT(rc.isSuccess());
-  }
-
-  {
-    LabelledSample smpl(Sample(1482776788000000, 5), {});
-    auto rc = service->insertSample("users_online", smpl);
-    EXPECT(rc.isSuccess());
-  }
-
-  {
-    auto cursor = service->getCursor("users_online", SeriesNameType(""));
-    uint64_t ts;
-    tval_ref val;
-    val.len = sizeof(uint64_t);
-    val.data = alloca(val.len);
-    val.type = MetricDataType::UINT64;
+    val.type = tval_type::UINT64;
     EXPECT(cursor.next(&ts, &val, 1));
     EXPECT(ts == 1482776100000000);
     EXPECT(*((uint64_t*) val.data) ==23);
@@ -250,8 +310,7 @@ TEST_CASE(MetricServiceTest, TestSumAggregatorWithUpsampling, [] () {
   {
     MetricConfig mc;
     mc.is_valid = true;
-    mc.data_type = MetricDataType::UINT64;
-    mc.aggregation = MetricAggregationType::SUM;
+    mc.kind = MetricKind::COUNTER_UINT64;
     mc.granularity = 60 * kMicrosPerSecond;
     mc.display_granularity = 10 * kMicrosPerSecond;
     config.addMetricConfig("users_online", mc);
@@ -266,69 +325,94 @@ TEST_CASE(MetricServiceTest, TestSumAggregatorWithUpsampling, [] () {
   EXPECT(start_rc.isSuccess());
 
   {
-    auto cursor = service->getCursor("users_online", SeriesNameType(""));
+    auto rc = service->insertSample(
+        "users_online",
+        SeriesNameType(""),
+        1482776400000000,
+        "15");
+    EXPECT(rc.isSuccess());
+  }
+
+  {
+    auto rc = service->insertSample(
+        "users_online",
+        SeriesNameType(""),
+        1482776400000000,
+        "1");
+    EXPECT(rc.isSuccess());
+  }
+
+  {
+    auto rc = service->insertSample(
+        "users_online",
+        SeriesNameType(""),
+        1482776410000000,
+        "1");
+
+    EXPECT(rc.isSuccess());
+  }
+
+  {
+    auto rc = service->insertSample(
+        "users_online",
+        SeriesNameType(""),
+        1482776368000000,
+        "10");
+
+    EXPECT(rc.isSuccess());
+  }
+
+  {
+    auto rc = service->insertSample(
+        "users_online",
+        SeriesNameType(""),
+        1482776370000000,
+        "8");
+
+    EXPECT(rc.isSuccess());
+  }
+
+  {
+    auto rc = service->insertSample(
+        "users_online",
+        SeriesNameType(""),
+        1482776369000000,
+        "5");
+
+    EXPECT(rc.isSuccess());
+  }
+
+  {
+    auto rc = service->insertSample(
+        "users_online",
+        SeriesNameType(""),
+        1482776590000000,
+        "42");
+
+    EXPECT(rc.isSuccess());
+  }
+
+  {
+    auto rc = service->insertSample(
+        "users_online",
+        SeriesNameType(""),
+        1482776788000000,
+        "5");
+
+    EXPECT(rc.isSuccess());
+  }
+
+  {
+    auto cursor = service->getCursor(
+        "users_online",
+        SeriesNameType(""),
+        1482776340000000,
+        1482776820000000);
     uint64_t ts;
     tval_ref val;
     val.len = sizeof(uint64_t);
     val.data = alloca(val.len);
-    val.type = MetricDataType::UINT64;
-    EXPECT(cursor.next(&ts, &val, 1) == false);
-  }
-
-  {
-    LabelledSample smpl(Sample(1482776400000000, 15), {});
-    auto rc = service->insertSample("users_online", smpl);
-    EXPECT(rc.isSuccess());
-  }
-
-  {
-    LabelledSample smpl(Sample(1482776400000000, 1), {});
-    auto rc = service->insertSample("users_online", smpl);
-    EXPECT(rc.isSuccess());
-  }
-
-  {
-    LabelledSample smpl(Sample(1482776410000000, 1), {});
-    auto rc = service->insertSample("users_online", smpl);
-    EXPECT(rc.isSuccess());
-  }
-
-  {
-    LabelledSample smpl(Sample(1482776368000000, 10), {});
-    auto rc = service->insertSample("users_online", smpl);
-    EXPECT(rc.isSuccess());
-  }
-  {
-    LabelledSample smpl(Sample(1482776370000000, 8), {});
-    auto rc = service->insertSample("users_online", smpl);
-    EXPECT(rc.isSuccess());
-  }
-
-  {
-    LabelledSample smpl(Sample(1482776369000000, 5), {});
-    auto rc = service->insertSample("users_online", smpl);
-    EXPECT(rc.isSuccess());
-  }
-
-  {
-    LabelledSample smpl(Sample(1482776590000000, 42), {});
-    auto rc = service->insertSample("users_online", smpl);
-    EXPECT(rc.isSuccess());
-  }
-
-  {
-    LabelledSample smpl(Sample(1482776788000000, 5), {});
-    auto rc = service->insertSample("users_online", smpl);
-    EXPECT(rc.isSuccess());
-  }
-
-  {
-    auto cursor = service->getCursor("users_online", SeriesNameType(""));
-    uint64_t ts;
-    tval_ref val;
-    val.len = sizeof(uint64_t);
-    val.data = alloca(val.len);
-    val.type = MetricDataType::UINT64;
+    val.type = tval_type::UINT64;
     EXPECT(cursor.next(&ts, &val, 1));
     EXPECT(ts == 1482776340000000);
     EXPECT(*((uint64_t*) val.data) ==8);
@@ -435,8 +519,7 @@ TEST_CASE(MetricServiceTest, TestMaxAggregator, [] () {
   {
     MetricConfig mc;
     mc.is_valid = true;
-    mc.data_type = MetricDataType::UINT64;
-    mc.aggregation = MetricAggregationType::MAX;
+    mc.kind = MetricKind::MAX_UINT64;
     mc.granularity = 60 * kMicrosPerSecond;
     config.addMetricConfig("users_online", mc);
   }
@@ -450,69 +533,101 @@ TEST_CASE(MetricServiceTest, TestMaxAggregator, [] () {
   EXPECT(start_rc.isSuccess());
 
   {
-    auto cursor = service->getCursor("users_online", SeriesNameType(""));
+    auto rc = service->insertSample(
+        "users_online",
+        SeriesNameType(""),
+        1482776400000000,
+        "15");
+    EXPECT(rc.isSuccess());
+  }
+
+  {
+    auto rc = service->insertSample(
+        "users_online",
+        SeriesNameType(""),
+        1482776400000000,
+        "1");
+    EXPECT(rc.isSuccess());
+  }
+
+  {
+    auto rc = service->insertSample(
+        "users_online",
+        SeriesNameType(""),
+        1482776410000000,
+        "1");
+
+    EXPECT(rc.isSuccess());
+  }
+
+  {
+    auto rc = service->insertSample(
+        "users_online",
+        SeriesNameType(""),
+        1482776368000000,
+        "10");
+
+    EXPECT(rc.isSuccess());
+  }
+
+  {
+    auto rc = service->insertSample(
+        "users_online",
+        SeriesNameType(""),
+        1482776370000000,
+        "8");
+
+    EXPECT(rc.isSuccess());
+  }
+
+  {
+    auto rc = service->insertSample(
+        "users_online",
+        SeriesNameType(""),
+        1482776369000000,
+        "5");
+
+    EXPECT(rc.isSuccess());
+  }
+
+  {
+    auto rc = service->insertSample(
+        "users_online",
+        SeriesNameType(""),
+        1482776590000000,
+        "42");
+
+    EXPECT(rc.isSuccess());
+  }
+
+  {
+    auto rc = service->insertSample(
+        "users_online",
+        SeriesNameType(""),
+        1482776788000000,
+        "5");
+
+    EXPECT(rc.isSuccess());
+  }
+
+  {
+    auto cursor = service->getCursor(
+        "users_online",
+        SeriesNameType(""),
+        1482776220000000,
+        1482776900000000);
+
     uint64_t ts;
     tval_ref val;
     val.len = sizeof(uint64_t);
     val.data = alloca(val.len);
-    val.type = MetricDataType::UINT64;
-    EXPECT(cursor.next(&ts, &val, 1) == false);
-  }
-
-  {
-    LabelledSample smpl(Sample(1482776400000000, 15), {});
-    auto rc = service->insertSample("users_online", smpl);
-    EXPECT(rc.isSuccess());
-  }
-
-  {
-    LabelledSample smpl(Sample(1482776400000000, 1), {});
-    auto rc = service->insertSample("users_online", smpl);
-    EXPECT(rc.isSuccess());
-  }
-
-  {
-    LabelledSample smpl(Sample(1482776410000000, 1), {});
-    auto rc = service->insertSample("users_online", smpl);
-    EXPECT(rc.isSuccess());
-  }
-
-  {
-    LabelledSample smpl(Sample(1482776368000000, 10), {});
-    auto rc = service->insertSample("users_online", smpl);
-    EXPECT(rc.isSuccess());
-  }
-  {
-    LabelledSample smpl(Sample(1482776370000000, 8), {});
-    auto rc = service->insertSample("users_online", smpl);
-    EXPECT(rc.isSuccess());
-  }
-
-  {
-    LabelledSample smpl(Sample(1482776369000000, 5), {});
-    auto rc = service->insertSample("users_online", smpl);
-    EXPECT(rc.isSuccess());
-  }
-
-  {
-    LabelledSample smpl(Sample(1482776590000000, 42), {});
-    auto rc = service->insertSample("users_online", smpl);
-    EXPECT(rc.isSuccess());
-  }
-
-  {
-    LabelledSample smpl(Sample(1482776788000000, 5), {});
-    auto rc = service->insertSample("users_online", smpl);
-    EXPECT(rc.isSuccess());
-  }
-
-  {
-    auto cursor = service->getCursor("users_online", SeriesNameType(""));
-    uint64_t ts;
-    tval_ref val;
-    val.len = sizeof(uint64_t);
-    val.data = alloca(val.len);
-    val.type = MetricDataType::UINT64;
+    val.type = tval_type::UINT64;
+    EXPECT(cursor.next(&ts, &val, 1));
+    EXPECT(ts == 1482776220000000);
+    EXPECT(*((uint64_t*) val.data) == 0);
+    EXPECT(cursor.next(&ts, &val, 1));
+    EXPECT(ts == 1482776280000000);
+    EXPECT(*((uint64_t*) val.data) == 0);
     EXPECT(cursor.next(&ts, &val, 1));
     EXPECT(ts == 1482776340000000);
     EXPECT(*((uint64_t*) val.data) ==10);
@@ -540,6 +655,12 @@ TEST_CASE(MetricServiceTest, TestMaxAggregator, [] () {
     EXPECT(cursor.next(&ts, &val, 1));
     EXPECT(ts == 1482776820000000);
     EXPECT(*((uint64_t*) val.data) ==0);
+    EXPECT(cursor.next(&ts, &val, 1));
+    EXPECT(ts == 1482776880000000);
+    EXPECT(*((uint64_t*) val.data) ==0);
+    EXPECT(cursor.next(&ts, &val, 1));
+    EXPECT(ts == 1482776940000000);
+    EXPECT(*((uint64_t*) val.data) ==0);
     EXPECT(cursor.next(&ts, &val, 1) == false);
   }
 });
@@ -553,8 +674,7 @@ TEST_CASE(MetricServiceTest, TestMaxAggregatorWithDownsampling, [] () {
   {
     MetricConfig mc;
     mc.is_valid = true;
-    mc.data_type = MetricDataType::UINT64;
-    mc.aggregation = MetricAggregationType::MAX;
+    mc.kind = MetricKind::MAX_UINT64;
     mc.granularity = 60 * kMicrosPerSecond;
     mc.display_granularity = 300 * kMicrosPerSecond;
     config.addMetricConfig("users_online", mc);
@@ -569,69 +689,94 @@ TEST_CASE(MetricServiceTest, TestMaxAggregatorWithDownsampling, [] () {
   EXPECT(start_rc.isSuccess());
 
   {
-    auto cursor = service->getCursor("users_online", SeriesNameType(""));
+    auto rc = service->insertSample(
+        "users_online",
+        SeriesNameType(""),
+        1482776400000000,
+        "15");
+    EXPECT(rc.isSuccess());
+  }
+
+  {
+    auto rc = service->insertSample(
+        "users_online",
+        SeriesNameType(""),
+        1482776400000000,
+        "1");
+    EXPECT(rc.isSuccess());
+  }
+
+  {
+    auto rc = service->insertSample(
+        "users_online",
+        SeriesNameType(""),
+        1482776410000000,
+        "1");
+
+    EXPECT(rc.isSuccess());
+  }
+
+  {
+    auto rc = service->insertSample(
+        "users_online",
+        SeriesNameType(""),
+        1482776368000000,
+        "10");
+
+    EXPECT(rc.isSuccess());
+  }
+
+  {
+    auto rc = service->insertSample(
+        "users_online",
+        SeriesNameType(""),
+        1482776370000000,
+        "8");
+
+    EXPECT(rc.isSuccess());
+  }
+
+  {
+    auto rc = service->insertSample(
+        "users_online",
+        SeriesNameType(""),
+        1482776369000000,
+        "5");
+
+    EXPECT(rc.isSuccess());
+  }
+
+  {
+    auto rc = service->insertSample(
+        "users_online",
+        SeriesNameType(""),
+        1482776590000000,
+        "42");
+
+    EXPECT(rc.isSuccess());
+  }
+
+  {
+    auto rc = service->insertSample(
+        "users_online",
+        SeriesNameType(""),
+        1482776788000000,
+        "5");
+
+    EXPECT(rc.isSuccess());
+  }
+
+  {
+    auto cursor = service->getCursor(
+        "users_online",
+        SeriesNameType(""),
+        1482776100000000,
+        1482776700000000);
     uint64_t ts;
     tval_ref val;
     val.len = sizeof(uint64_t);
     val.data = alloca(val.len);
-    val.type = MetricDataType::UINT64;
-    EXPECT(cursor.next(&ts, &val, 1) == false);
-  }
-
-  {
-    LabelledSample smpl(Sample(1482776400000000, 15), {});
-    auto rc = service->insertSample("users_online", smpl);
-    EXPECT(rc.isSuccess());
-  }
-
-  {
-    LabelledSample smpl(Sample(1482776400000000, 1), {});
-    auto rc = service->insertSample("users_online", smpl);
-    EXPECT(rc.isSuccess());
-  }
-
-  {
-    LabelledSample smpl(Sample(1482776410000000, 1), {});
-    auto rc = service->insertSample("users_online", smpl);
-    EXPECT(rc.isSuccess());
-  }
-
-  {
-    LabelledSample smpl(Sample(1482776368000000, 10), {});
-    auto rc = service->insertSample("users_online", smpl);
-    EXPECT(rc.isSuccess());
-  }
-  {
-    LabelledSample smpl(Sample(1482776370000000, 8), {});
-    auto rc = service->insertSample("users_online", smpl);
-    EXPECT(rc.isSuccess());
-  }
-
-  {
-    LabelledSample smpl(Sample(1482776369000000, 5), {});
-    auto rc = service->insertSample("users_online", smpl);
-    EXPECT(rc.isSuccess());
-  }
-
-  {
-    LabelledSample smpl(Sample(1482776590000000, 42), {});
-    auto rc = service->insertSample("users_online", smpl);
-    EXPECT(rc.isSuccess());
-  }
-
-  {
-    LabelledSample smpl(Sample(1482776788000000, 5), {});
-    auto rc = service->insertSample("users_online", smpl);
-    EXPECT(rc.isSuccess());
-  }
-
-  {
-    auto cursor = service->getCursor("users_online", SeriesNameType(""));
-    uint64_t ts;
-    tval_ref val;
-    val.len = sizeof(uint64_t);
-    val.data = alloca(val.len);
-    val.type = MetricDataType::UINT64;
+    val.type = tval_type::UINT64;
     EXPECT(cursor.next(&ts, &val, 1));
     EXPECT(ts == 1482776100000000);
     EXPECT(*((uint64_t*) val.data) ==10);
@@ -654,8 +799,7 @@ TEST_CASE(MetricServiceTest, TestMaxAggregatorWithUpsampling, [] () {
   {
     MetricConfig mc;
     mc.is_valid = true;
-    mc.data_type = MetricDataType::UINT64;
-    mc.aggregation = MetricAggregationType::MAX;
+    mc.kind = MetricKind::MAX_UINT64;
     mc.granularity = 60 * kMicrosPerSecond;
     mc.display_granularity = 10 * kMicrosPerSecond;
     config.addMetricConfig("users_online", mc);
@@ -670,69 +814,95 @@ TEST_CASE(MetricServiceTest, TestMaxAggregatorWithUpsampling, [] () {
   EXPECT(start_rc.isSuccess());
 
   {
-    auto cursor = service->getCursor("users_online", SeriesNameType(""));
+    auto rc = service->insertSample(
+        "users_online",
+        SeriesNameType(""),
+        1482776400000000,
+        "15");
+    EXPECT(rc.isSuccess());
+  }
+
+  {
+    auto rc = service->insertSample(
+        "users_online",
+        SeriesNameType(""),
+        1482776400000000,
+        "1");
+    EXPECT(rc.isSuccess());
+  }
+
+  {
+    auto rc = service->insertSample(
+        "users_online",
+        SeriesNameType(""),
+        1482776410000000,
+        "1");
+
+    EXPECT(rc.isSuccess());
+  }
+
+  {
+    auto rc = service->insertSample(
+        "users_online",
+        SeriesNameType(""),
+        1482776368000000,
+        "10");
+
+    EXPECT(rc.isSuccess());
+  }
+
+  {
+    auto rc = service->insertSample(
+        "users_online",
+        SeriesNameType(""),
+        1482776370000000,
+        "8");
+
+    EXPECT(rc.isSuccess());
+  }
+
+  {
+    auto rc = service->insertSample(
+        "users_online",
+        SeriesNameType(""),
+        1482776369000000,
+        "5");
+
+    EXPECT(rc.isSuccess());
+  }
+
+  {
+    auto rc = service->insertSample(
+        "users_online",
+        SeriesNameType(""),
+        1482776590000000,
+        "42");
+
+    EXPECT(rc.isSuccess());
+  }
+
+  {
+    auto rc = service->insertSample(
+        "users_online",
+        SeriesNameType(""),
+        1482776788000000,
+        "5");
+
+    EXPECT(rc.isSuccess());
+  }
+
+  {
+    auto cursor = service->getCursor(
+        "users_online",
+        SeriesNameType(""),
+        1482776340000000,
+        1482776820000000);
+
     uint64_t ts;
     tval_ref val;
     val.len = sizeof(uint64_t);
     val.data = alloca(val.len);
-    val.type = MetricDataType::UINT64;
-    EXPECT(cursor.next(&ts, &val, 1) == false);
-  }
-
-  {
-    LabelledSample smpl(Sample(1482776400000000, 15), {});
-    auto rc = service->insertSample("users_online", smpl);
-    EXPECT(rc.isSuccess());
-  }
-
-  {
-    LabelledSample smpl(Sample(1482776400000000, 1), {});
-    auto rc = service->insertSample("users_online", smpl);
-    EXPECT(rc.isSuccess());
-  }
-
-  {
-    LabelledSample smpl(Sample(1482776410000000, 1), {});
-    auto rc = service->insertSample("users_online", smpl);
-    EXPECT(rc.isSuccess());
-  }
-
-  {
-    LabelledSample smpl(Sample(1482776368000000, 10), {});
-    auto rc = service->insertSample("users_online", smpl);
-    EXPECT(rc.isSuccess());
-  }
-  {
-    LabelledSample smpl(Sample(1482776370000000, 8), {});
-    auto rc = service->insertSample("users_online", smpl);
-    EXPECT(rc.isSuccess());
-  }
-
-  {
-    LabelledSample smpl(Sample(1482776369000000, 5), {});
-    auto rc = service->insertSample("users_online", smpl);
-    EXPECT(rc.isSuccess());
-  }
-
-  {
-    LabelledSample smpl(Sample(1482776590000000, 42), {});
-    auto rc = service->insertSample("users_online", smpl);
-    EXPECT(rc.isSuccess());
-  }
-
-  {
-    LabelledSample smpl(Sample(1482776788000000, 5), {});
-    auto rc = service->insertSample("users_online", smpl);
-    EXPECT(rc.isSuccess());
-  }
-
-  {
-    auto cursor = service->getCursor("users_online", SeriesNameType(""));
-    uint64_t ts;
-    tval_ref val;
-    val.len = sizeof(uint64_t);
-    val.data = alloca(val.len);
-    val.type = MetricDataType::UINT64;
+    val.type = tval_type::UINT64;
     EXPECT(cursor.next(&ts, &val, 1));
     EXPECT(ts == 1482776340000000);
     EXPECT(*((uint64_t*) val.data) ==10);

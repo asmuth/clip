@@ -135,7 +135,11 @@ class MetricSeriesCursor {
 public:
 
   MetricSeriesCursor();
-  MetricSeriesCursor(const MetricConfig* config, tsdb::Cursor cursor);
+  MetricSeriesCursor(
+      const MetricConfig* config,
+      tsdb::Cursor cursor,
+      uint64_t time_begin,
+      uint64_t time_limit);
 
   MetricSeriesCursor(const MetricSeriesCursor& o) = delete;
   MetricSeriesCursor(MetricSeriesCursor&& o);
@@ -218,8 +222,9 @@ protected:
 
 std::unique_ptr<OutputAggregator> mkOutputAggregator(
     tsdb::Cursor* cursor,
+    uint64_t time_begin,
+    uint64_t time_limit,
     const MetricConfig* config);
-
 
 std::unique_ptr<InputAggregator> mkInputAggregator(
     const MetricConfig* config);

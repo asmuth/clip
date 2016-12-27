@@ -63,21 +63,25 @@ ReturnCode SumInputAggregator::addSample(
 SumOutputAggregator::SumOutputAggregator(
     tsdb::Cursor* cursor,
     tval_type input_type,
+    uint64_t time_begin,
+    uint64_t time_limit,
     uint64_t granularity,
     uint64_t align /* = 0 */,
     bool interpolate /* = true */) :
     cursor_(cursor),
     input_type_(input_type),
+    time_begin_(time_begin),
+    time_limit_(time_limit),
     granularity_(granularity),
     align_(align),
     interpolate_(interpolate) {
   cur_sum_.type = input_type_;
   cur_sum_.len = tval_len(input_type_);
   cur_sum_.data = malloc(cur_sum_.len);
+  tval_zero(cur_sum_.type, cur_sum_.data, cur_sum_.len);
 
-  cursor_->get(&cur_time_, cur_sum_.data, cur_sum_.len);
-  cur_time_ = alignTime(cur_time_, granularity_, align_);
-  cursor_->next();
+  cur_time_ = alignTime(time_begin_, granularity_, align_);
+  cursor_->seekTo(cur_time_);
 }
 
 SumOutputAggregator::~SumOutputAggregator() {
@@ -88,7 +92,7 @@ bool SumOutputAggregator::next(
     uint64_t* time,
     tval_ref* out,
     size_t out_len) {
-  if (!cursor_->valid()) {
+  if (cur_time_ >= time_limit_ + granularity_) {
     return false;
   }
 
@@ -212,22 +216,26 @@ ReturnCode MaxInputAggregator::addSample(
 MaxOutputAggregator::MaxOutputAggregator(
     tsdb::Cursor* cursor,
     tval_type input_type,
+    uint64_t time_begin,
+    uint64_t time_limit,
     uint64_t granularity,
     uint64_t align /* = 0 */,
     bool interpolate /* = true */) :
     cursor_(cursor),
     input_type_(input_type),
+    time_begin_(time_begin),
+    time_limit_(time_limit),
     granularity_(granularity),
     align_(align),
     interpolate_(interpolate) {
   cur_max_.type = input_type_;
   cur_max_.len = tval_len(input_type_);
   cur_max_.data = malloc(cur_max_.len);
+  tval_zero(cur_max_.type, cur_max_.data, cur_max_.len);
+  has_cur_max_ = false;
 
-  cursor_->get(&cur_time_, cur_max_.data, cur_max_.len);
-  has_cur_max_ = true;
-  cur_time_ = alignTime(cur_time_, granularity_, align_);
-  cursor_->next();
+  cur_time_ = alignTime(time_begin_, granularity_, align_);
+  cursor_->seekTo(cur_time_);
 }
 
 MaxOutputAggregator::~MaxOutputAggregator() {
@@ -238,7 +246,7 @@ bool MaxOutputAggregator::next(
     uint64_t* time,
     tval_ref* out,
     size_t out_len) {
-  if (!cursor_->valid()) {
+  if (cur_time_ >= time_limit_ + granularity_) {
     return false;
   }
 

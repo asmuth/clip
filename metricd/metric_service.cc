@@ -227,7 +227,9 @@ ReturnCode MetricService::insertSample(
 
 MetricSeriesCursor MetricService::getCursor(
     const MetricIDType& metric_id,
-    const SeriesNameType& series_name) {
+    const SeriesNameType& series_name,
+    uint64_t time_begin,
+    uint64_t time_limit) {
   auto metric_map = metric_map_.getMetricMap();
   auto metric = metric_map->findMetric(metric_id);
   if (!metric) {
@@ -245,7 +247,9 @@ MetricSeriesCursor MetricService::getCursor(
   if (tsdb_->getCursor(series->getSeriesID().id, &tsdb_cursor)) {
     return MetricSeriesCursor(
         &metric->getConfig(),
-        std::move(tsdb_cursor));
+        std::move(tsdb_cursor),
+        time_begin,
+        time_limit);
   } else {
     return MetricSeriesCursor();
   }
@@ -253,7 +257,9 @@ MetricSeriesCursor MetricService::getCursor(
 
 MetricSeriesCursor MetricService::getCursor(
     const MetricIDType& metric_id,
-    const SeriesIDType& series_id) {
+    const SeriesIDType& series_id,
+    uint64_t time_begin,
+    uint64_t time_limit) {
   auto metric_map = metric_map_.getMetricMap();
   auto metric = metric_map->findMetric(metric_id);
   if (!metric) {
@@ -265,7 +271,9 @@ MetricSeriesCursor MetricService::getCursor(
   if (tsdb_->getCursor(series_id.id, &tsdb_cursor)) {
     return MetricSeriesCursor(
         &metric->getConfig(),
-        std::move(tsdb_cursor));
+        std::move(tsdb_cursor),
+        time_begin,
+        time_limit);
   } else {
     return MetricSeriesCursor();
   }

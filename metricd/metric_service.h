@@ -57,14 +57,18 @@ public:
    */
   MetricSeriesCursor getCursor(
       const MetricIDType& metric_id,
-      const SeriesIDType& series_id);
+      const SeriesIDType& series_id,
+      uint64_t time_begin,
+      uint64_t time_limit);
 
   /**
    * Get a cursor to a metric series
    */
   MetricSeriesCursor getCursor(
       const MetricIDType& metric_id,
-      const SeriesNameType& series_name);
+      const SeriesNameType& series_name,
+      uint64_t time_begin,
+      uint64_t time_limit);
 
 protected:
 

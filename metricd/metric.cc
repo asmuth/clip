@@ -207,9 +207,11 @@ MetricSeriesCursor::MetricSeriesCursor() {}
 
 MetricSeriesCursor::MetricSeriesCursor(
     const MetricConfig* config,
-    tsdb::Cursor cursor) :
+    tsdb::Cursor cursor,
+    uint64_t time_begin,
+    uint64_t time_limit) :
     cursor_(std::move(cursor)),
-    aggr_(mkOutputAggregator(&cursor_, config)) {}
+    aggr_(mkOutputAggregator(&cursor_, time_begin, time_limit, config)) {}
 
 MetricSeriesCursor::MetricSeriesCursor(
     MetricSeriesCursor&& o) :
@@ -282,6 +284,8 @@ std::unique_ptr<InputAggregator> mkInputAggregator(
 
 std::unique_ptr<OutputAggregator> mkOutputAggregator(
     tsdb::Cursor* cursor,
+    uint64_t time_begin,
+    uint64_t time_limit,
     const MetricConfig* config) {
   uint64_t granularity = config->display_granularity;
   if (granularity == 0) {
@@ -300,6 +304,8 @@ std::unique_ptr<OutputAggregator> mkOutputAggregator(
           new MaxOutputAggregator(
               cursor,
               getMetricDataType(config->kind),
+              time_begin,
+              time_limit,
               granularity));
     case MetricKind::COUNTER_UINT64:
     case MetricKind::COUNTER_INT64:
@@ -308,6 +314,8 @@ std::unique_ptr<OutputAggregator> mkOutputAggregator(
           new SumOutputAggregator(
               cursor,
               getMetricDataType(config->kind),
+              time_begin,
+              time_limit,
               granularity));
     default: return {};
   }
