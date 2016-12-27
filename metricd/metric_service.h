@@ -39,7 +39,7 @@ public:
   /**
    * List all series in a metric
    */
-  ReturnCode listMetricSeries(
+  ReturnCode listSeries(
       const MetricIDType& metric_id,
       MetricSeriesListCursor* cursor);
 
@@ -55,25 +55,14 @@ public:
    */
   MetricSeriesCursor getCursor(
       const MetricIDType& metric_id,
-      SeriesIDType series_id);
+      const SeriesIDType& series_id);
 
   /**
-   * Return all samples from a metric series and time range
+   * Get a cursor to a metric series
    */
-  void scanSamples(
+  MetricSeriesCursor getCursor(
       const MetricIDType& metric_id,
-      SeriesIDType series_id,
-      TimestampType time_begin,
-      TimestampType time_end,
-      std::function<void (const Sample& sample)> foreach);
-
-  /**
-   * Get the most recent sample from a metric series
-   */
-  bool getMostRecentSample(
-      const MetricIDType& metric_id,
-      SeriesIDType series_id,
-      Sample* sample);
+      const SeriesNameType& series_name);
 
 protected:
 

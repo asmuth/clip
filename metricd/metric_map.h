@@ -95,7 +95,7 @@ public:
   SeriesIDType allocateSeriesID();
 
 protected:
-  std::atomic<SeriesIDType> series_id_;
+  std::atomic<uint64_t> series_id_;
 };
 
 } // namespace fnordmetric

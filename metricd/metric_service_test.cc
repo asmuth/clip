@@ -46,7 +46,7 @@ TEST_CASE(MetricServiceTest, TestSumAggregator, [] () {
   EXPECT(start_rc.isSuccess());
 
   {
-    auto cursor = service->getCursor("users_online", 1); // FIXME hack
+    auto cursor = service->getCursor("users_online", "");
     uint64_t ts;
     uint64_t val;
     EXPECT(cursor.next(&ts, &val) == false);
@@ -100,7 +100,7 @@ TEST_CASE(MetricServiceTest, TestSumAggregator, [] () {
   }
 
   {
-    auto cursor = service->getCursor("users_online", 1); // FIXME hack
+    auto cursor = service->getCursor("users_online", "");
     uint64_t ts;
     uint64_t val;
     EXPECT(cursor.next(&ts, &val));
@@ -159,7 +159,7 @@ TEST_CASE(MetricServiceTest, TestSumAggregatorWithDownsampling, [] () {
   EXPECT(start_rc.isSuccess());
 
   {
-    auto cursor = service->getCursor("users_online", 1); // FIXME hack
+    auto cursor = service->getCursor("users_online", "");
     uint64_t ts;
     uint64_t val;
     EXPECT(cursor.next(&ts, &val) == false);
@@ -213,7 +213,7 @@ TEST_CASE(MetricServiceTest, TestSumAggregatorWithDownsampling, [] () {
   }
 
   {
-    auto cursor = service->getCursor("users_online", 1); // FIXME hack
+    auto cursor = service->getCursor("users_online", "");
     uint64_t ts;
     uint64_t val;
     EXPECT(cursor.next(&ts, &val));
@@ -254,7 +254,7 @@ TEST_CASE(MetricServiceTest, TestSumAggregatorWithUpsampling, [] () {
   EXPECT(start_rc.isSuccess());
 
   {
-    auto cursor = service->getCursor("users_online", 1); // FIXME hack
+    auto cursor = service->getCursor("users_online", "");
     uint64_t ts;
     uint64_t val;
     EXPECT(cursor.next(&ts, &val) == false);
@@ -308,7 +308,7 @@ TEST_CASE(MetricServiceTest, TestSumAggregatorWithUpsampling, [] () {
   }
 
   {
-    auto cursor = service->getCursor("users_online", 1); // FIXME hack
+    auto cursor = service->getCursor("users_online", "");
     uint64_t ts;
     uint64_t val;
     EXPECT(cursor.next(&ts, &val));
@@ -432,7 +432,7 @@ TEST_CASE(MetricServiceTest, TestMaxAggregator, [] () {
   EXPECT(start_rc.isSuccess());
 
   {
-    auto cursor = service->getCursor("users_online", 1); // FIXME hack
+    auto cursor = service->getCursor("users_online", "");
     uint64_t ts;
     uint64_t val;
     EXPECT(cursor.next(&ts, &val) == false);
@@ -486,7 +486,7 @@ TEST_CASE(MetricServiceTest, TestMaxAggregator, [] () {
   }
 
   {
-    auto cursor = service->getCursor("users_online", 1); // FIXME hack
+    auto cursor = service->getCursor("users_online", "");
     uint64_t ts;
     uint64_t val;
     EXPECT(cursor.next(&ts, &val));
@@ -545,7 +545,7 @@ TEST_CASE(MetricServiceTest, TestMaxAggregatorWithDownsampling, [] () {
   EXPECT(start_rc.isSuccess());
 
   {
-    auto cursor = service->getCursor("users_online", 1); // FIXME hack
+    auto cursor = service->getCursor("users_online", "");
     uint64_t ts;
     uint64_t val;
     EXPECT(cursor.next(&ts, &val) == false);
@@ -599,7 +599,7 @@ TEST_CASE(MetricServiceTest, TestMaxAggregatorWithDownsampling, [] () {
   }
 
   {
-    auto cursor = service->getCursor("users_online", 1); // FIXME hack
+    auto cursor = service->getCursor("users_online", "");
     uint64_t ts;
     uint64_t val;
     EXPECT(cursor.next(&ts, &val));
@@ -640,7 +640,7 @@ TEST_CASE(MetricServiceTest, TestMaxAggregatorWithUpsampling, [] () {
   EXPECT(start_rc.isSuccess());
 
   {
-    auto cursor = service->getCursor("users_online", 1); // FIXME hack
+    auto cursor = service->getCursor("users_online", "");
     uint64_t ts;
     uint64_t val;
     EXPECT(cursor.next(&ts, &val) == false);
@@ -694,7 +694,7 @@ TEST_CASE(MetricServiceTest, TestMaxAggregatorWithUpsampling, [] () {
   }
 
   {
-    auto cursor = service->getCursor("users_online", 1); // FIXME hack
+    auto cursor = service->getCursor("users_online", "");
     uint64_t ts;
     uint64_t val;
     EXPECT(cursor.next(&ts, &val));

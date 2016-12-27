@@ -62,10 +62,11 @@ ReturnCode MetricService::startService(
     return ReturnCode::error("ERUNTIME", "error while opening database");
   }
 
-  SeriesIDType series_id_max = 0;
+  SeriesIDType series_id_max;
+  series_id_max.id = 0;
   for (auto s : series_ids) {
-    if (s > series_id_max) {
-      series_id_max = s;
+    if (s > series_id_max.id) {
+      series_id_max.id = s;
     }
   }
 
@@ -97,7 +98,9 @@ ReturnCode MetricService::startService(
         metadata.metric_id,
         series_id);
 
-    metric->getSeriesList()->addSeries(series_id, metadata.series_name);
+    SeriesIDType sid;
+    sid.id = series_id;
+    metric->getSeriesList()->addSeries(sid, metadata.series_name);
   }
 
   /* initialize service */
@@ -119,28 +122,12 @@ MetricService::MetricService(
   metric_map_.updateMetricMap(std::move(metric_map));
 }
 
-//void MetricService::configureMetric(
-//    const MetricIDType& metric_id,
-//    const MetricConfig& config) {
-//  std::unique_lock<std::mutex> lk(metric_map_mutex_);
-//
-//  auto metric_map = metric_map_.getMetricMap();
-//  auto metric = metric_map->findMetric(metric_id);
-//  assert(!metric);
-//
-//  MetricMapBuilder metric_map_builder(metric_map.get());
-//  metric = new Metric(metric_id);
-//  metric->setConfig(config);
-//  metric_map_builder.addMetric(metric_id, std::unique_ptr<Metric>(metric));
-//  metric_map_.updateMetricMap(metric_map_builder.getMetricMap());
-//}
-
 MetricListCursor MetricService::listMetrics() {
   auto metric_map = metric_map_.getMetricMap();
   return MetricListCursor(metric_map);
 }
 
-ReturnCode MetricService::listMetricSeries(
+ReturnCode MetricService::listSeries(
     const MetricIDType& metric_id,
     MetricSeriesListCursor* cursor) {
   auto metric_map = metric_map_.getMetricMap();
@@ -171,13 +158,16 @@ ReturnCode MetricService::insertSample(
     return ReturnCode::error("ENOTFOUND", "metric not found");
   }
 
+  SeriesNameType series_name;
+  series_name.name = sample.getSeriesName();
+
   std::shared_ptr<MetricSeries> series;
-  auto rc = metric->getSeriesList()->findOrCreateSeriesByName(
+  auto rc = metric->getSeriesList()->findOrCreateSeries(
       tsdb_.get(),
       &id_provider_,
       metric_id,
       metric->getConfig(),
-      sample.getSeriesName(),
+      series_name,
       &series);
 
   if (!rc.isSuccess()) {
@@ -185,7 +175,7 @@ ReturnCode MetricService::insertSample(
   }
 
   tsdb::Cursor cursor;
-  if (!tsdb_->getCursor(series->getSeriesID(), &cursor, false)) {
+  if (!tsdb_->getCursor(series->getSeriesID().id, &cursor, false)) {
     return ReturnCode::error("ERUNTIME", "can't open cursor");
   }
 
@@ -211,7 +201,7 @@ ReturnCode MetricService::insertSample(
 
 MetricSeriesCursor MetricService::getCursor(
     const MetricIDType& metric_id,
-    SeriesIDType series_id) {
+    const SeriesIDType& series_id) {
   auto metric_map = metric_map_.getMetricMap();
   auto metric = metric_map->findMetric(metric_id);
   if (!metric) {
@@ -220,7 +210,7 @@ MetricSeriesCursor MetricService::getCursor(
   }
 
   tsdb::Cursor tsdb_cursor;
-  if (tsdb_->getCursor(series_id, &tsdb_cursor)) {
+  if (tsdb_->getCursor(series_id.id, &tsdb_cursor)) {
     return MetricSeriesCursor(
         &metric->getConfig(),
         std::move(tsdb_cursor));

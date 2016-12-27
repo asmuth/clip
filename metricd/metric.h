@@ -28,7 +28,14 @@ class MetricMap;
 class SeriesIDProvider;
 
 using MetricIDType = std::string;
-using SeriesIDType = uint64_t;
+
+struct SeriesIDType {
+  uint64_t id;
+};
+
+struct SeriesNameType {
+  std::string name;
+};
 
 enum class MetricAggregationType {
   NONE,
@@ -57,22 +64,22 @@ public:
 
   MetricSeries(
       SeriesIDType series_id,
-      std::string series_name);
+      SeriesNameType series_name);
 
   size_t getTotalBytes() const;
   TimestampType getLastInsertTime();
 
   SeriesIDType getSeriesID() const;
-  const std::string& getSeriesName() const;
+  const SeriesNameType& getSeriesName() const;
 
 protected:
   const SeriesIDType series_id_;
-  std::string series_name_;
+  SeriesNameType series_name_;
 };
 
 struct MetricSeriesMetadata {
   MetricIDType metric_id;
-  std::string series_name;
+  SeriesNameType series_name;
   bool encode(std::ostream* os) const;
   bool decode(std::istream* is);
 };
@@ -82,25 +89,25 @@ public:
 
   MetricSeriesList();
 
-  bool findSeriesByID(
-      SeriesIDType series_id,
+  bool findSeries(
+      const SeriesIDType& series_id,
       std::shared_ptr<MetricSeries>* series);
 
-  bool findSeriesByName(
-      const std::string& name,
+  bool findSeries(
+      const SeriesNameType& series_name,
       std::shared_ptr<MetricSeries>* series);
 
-  ReturnCode findOrCreateSeriesByName(
+  ReturnCode findOrCreateSeries(
       tsdb::TSDB* tsdb,
       SeriesIDProvider* series_id_provider,
       const std::string& metric_id,
       const MetricConfig& config,
-      const std::string& series_name,
+      const SeriesNameType& series_name,
       std::shared_ptr<MetricSeries>* series);
 
   void addSeries(
       const SeriesIDType& series_id,
-      const std::string& series_name);
+      const SeriesNameType& series_name);
 
   void listSeries(std::vector<SeriesIDType>* series_ids);
 
@@ -109,7 +116,7 @@ public:
 protected:
   mutable std::mutex series_mutex_;
   std::map<std::string, std::shared_ptr<MetricSeries>> series_;
-  std::map<SeriesIDType, std::shared_ptr<MetricSeries>> series_by_id_;
+  std::map<uint64_t, std::shared_ptr<MetricSeries>> series_by_id_;
 };
 
 class MetricSeriesCursor {
@@ -149,7 +156,7 @@ public:
   MetricSeriesListCursor& operator=(MetricSeriesListCursor&& o);
 
   SeriesIDType getSeriesID() const;
-  const std::string& getSeriesName() const;
+  const SeriesNameType& getSeriesName() const;
 
   bool isValid() const;
   bool next();

@@ -124,7 +124,7 @@ void HTTPAPI::renderMetricSeriesList(
   }
 
   MetricSeriesListCursor cursor;
-  auto rc = metric_service_->listMetricSeries(metric_id, &cursor);
+  auto rc = metric_service_->listSeries(metric_id, &cursor);
   if (!rc.isSuccess()) {
     response->setStatus(http::kStatusInternalServerError);
     response->addBody("ERROR: " + rc.getMessage());
@@ -147,7 +147,7 @@ void HTTPAPI::renderMetricSeriesList(
     json.beginObject();
 
     json.addObjectEntry("series_id");
-    json.addString(cursor.getSeriesName());
+    json.addString(cursor.getSeriesName().name);
 
     json.endObject();
   }
@@ -170,7 +170,7 @@ void HTTPAPI::performMetricFetchSeries(
   }
 
   MetricSeriesListCursor cursor;
-  auto rc = metric_service_->listMetricSeries(metric_id, &cursor);
+  auto rc = metric_service_->listSeries(metric_id, &cursor);
   if (!rc.isSuccess()) {
     response->setStatus(http::kStatusInternalServerError);
     response->addBody("ERROR: " + rc.getMessage());
@@ -193,7 +193,7 @@ void HTTPAPI::performMetricFetchSeries(
     json.beginObject();
 
     json.addObjectEntry("series_id");
-    json.addString(cursor.getSeriesName());
+    json.addString(cursor.getSeriesName().name);
     json.addComma();
 
     json.addObjectEntry("values");
