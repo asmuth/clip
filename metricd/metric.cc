@@ -222,6 +222,32 @@ bool MetricSeriesCursor::next(
   }
 }
 
+MetricDataType MetricSeriesCursor::getOutputType() const {
+  if (aggr_) {
+    return aggr_->getOutputType();
+  } else {
+    //return config_.data_type;
+    return MetricDataType::UINT64; // FIXME
+  }
+}
+
+size_t MetricSeriesCursor::getOutputColumnCount() const {
+  if (aggr_) {
+    return aggr_->getOutputColumnCount();
+  } else {
+    return 1;
+  }
+}
+
+std::string MetricSeriesCursor::getOutputColumnName(size_t idx) const {
+  if (aggr_) {
+    return aggr_->getOutputColumnName(idx);
+  } else {
+    assert(idx < 1);
+    return "value";
+  }
+}
+
 std::unique_ptr<InputAggregator> mkInputAggregator(
     const MetricConfig* config) {
   if (config->granularity == 0) {

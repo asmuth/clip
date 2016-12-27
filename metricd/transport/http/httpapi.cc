@@ -156,6 +156,40 @@ void HTTPAPI::renderMetricSeriesList(
   json.endObject();
 }
 
+static void renderJSONTimeseries(
+    json::JSONOutputStream* json,
+    MetricSeriesCursor* cursor) {
+  json->beginArray();
+
+  std::vector<tval_ref> values(cursor->getOutputColumnCount());
+  for (size_t i = 0; i < values.size(); ++i) {
+    values[i].type = cursor->getOutputType();
+    values[i].len = getMetricDataTypeSize(values[i].type);
+    values[i].data = alloca(values[i].len);
+  }
+
+  uint64_t timestamp;
+  for (size_t j = 0; cursor->next(&timestamp, &values[0], values.size()); ++j) {
+    if (j++ > 0) { json->addComma(); }
+    json->beginArray();
+    json->addInteger(timestamp);
+
+    for (size_t i = 0; i < values.size(); ++i) {
+      switch (values[i].type) {
+        case MetricDataType::UINT64:
+          json->addComma();
+          json->addInteger(*((uint64_t*) values[i].data));
+          break;
+      }
+    }
+
+    json->endArray();
+  }
+
+  json->endArray();
+}
+
+
 void HTTPAPI::performMetricFetchSeries(
     http::HTTPRequest* request,
     http::HTTPResponse* response,
@@ -189,6 +223,10 @@ void HTTPAPI::performMetricFetchSeries(
   json.beginArray();
 
   for (int j = 0; cursor.isValid(); cursor.next()) {
+    auto data_cursor = metric_service_->getCursor(
+        metric_id,
+        cursor.getSeriesID());
+
     if (j++ > 0) { json.addComma(); }
     json.beginObject();
 
@@ -196,25 +234,18 @@ void HTTPAPI::performMetricFetchSeries(
     json.addString(cursor.getSeriesName().name);
     json.addComma();
 
-    json.addObjectEntry("values");
+    json.addObjectEntry("columns");
     json.beginArray();
-
-    auto data_cursor = metric_service_->getCursor(
-        metric_id,
-        cursor.getSeriesID());
-
-    uint64_t timestamp;
-    //uint64_t value;
-    for (size_t i = 0; data_cursor.next(&timestamp, nullptr, 0); ++i) {
-      if (i++ > 0) { json.addComma(); }
-      json.beginArray();
-      json.addInteger(timestamp);
-      //json.addComma();
-      //json.addInteger(value);
-      json.endArray();
+    json.addString("time");
+    for (size_t i = 0; i < data_cursor.getOutputColumnCount(); ++i) {
+      json.addComma();
+      json.addString(data_cursor.getOutputColumnName(i));
     }
-
     json.endArray();
+    json.addComma();
+
+    json.addObjectEntry("values");
+    renderJSONTimeseries(&json, &data_cursor);
 
     json.endObject();
   }
