@@ -195,7 +195,7 @@ bool MaxOutputAggregator::next(
   *time = cur_time_;
   cur_time_ += granularity_;
 
-  bool should_interpolate = 
+  bool should_interpolate =
       interpolate_ &&
       cursor_->valid() &&
       cursor_->getTime() >= cur_time_ + granularity_;
