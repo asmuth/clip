@@ -1,0 +1,188 @@
+f-tabbable,
+.f-tabbable {
+  background-color: transparent;
+  border-bottom: 1px solid #d4d4d5;
+  border-radius: 0em;
+  box-shadow: none;
+  background: #fff;
+  font-weight: 400;
+  display: block;
+  box-sizing: border-box;
+  line-height: 1.33;
+  color: rgba(0,0,0,.8);
+}
+
+f-tabbable f-tab,
+.f-tabbable .f-tab {
+  display: inline-block;
+  padding: .76em 1.4em;
+  margin: 0 0 0 -4px;
+  background-color: transparent;
+  border-left: 1px solid transparent;
+  border-right: 1px solid transparent;
+  border-top: 1px solid transparent;
+  color: rgba(0, 0, 0, 0.8);
+  vertical-align: middle;
+  line-height: 1;
+  text-align: center;
+  text-decoration: none;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+f-tabbable f-tab.link,
+.f-tabbable .f-tab.link {
+  padding: 0;
+}
+
+f-tabbable f-tab.link a,
+.f-tabbable .f-tab.link a {
+  padding: .76em 1.4em;
+  display: block;
+}
+
+
+f-tabbable f-tab:first-child,
+.f-tabbable .f-tab:first-child {
+  margin-left: 0;
+}
+
+f-tabbable f-tab:before,
+.f-tabbable .f-tab:before {
+  display: none;
+  position: absolute;
+  content: '';
+  top: 0;
+  right: 0;
+  width: 1px;
+  height: 100%;
+  background: -webkit-linear-gradient(rgba(0,0,0,.05) 0,rgba(0,0,0,.1) 50%,rgba(0,0,0,.05) 100%);
+  background: linear-gradient(rgba(0,0,0,.05) 0,rgba(0,0,0,.1) 50%,rgba(0,0,0,.05) 100%);
+}
+
+/* Hover */
+f-tabbable f-tab:hover,
+.f-tabbable .f-tab:hover {
+  background-color: transparent;
+  color: rgba(0, 0, 0, 0.8);
+  cursor:pointer;
+}
+
+/* Active */
+f-tabbable f-tab[data-active],
+.f-tabbable .f-tab[data-active] {
+  position: relative;
+  color: rgba(0, 0, 0, 0.8);
+  border-color: #d4d4d5;
+  font-weight: bold;
+  margin-bottom: -1px;
+  border-bottom: 1px solid #ffffff;
+  box-shadow: none;
+  border-radius: 5px 5px 0px 0px;
+}
+
+f-tabbable f-tab[data-active] a,
+.f-tabbable .f-tab[data-active] a {
+  font-weight: 500;
+}
+
+
+/* Coupling with segment for attachment */
+f-tabbable[data-content-attached],
+.f-tabbable[data-content-attached] {
+  border-bottom: none;
+}
+
+f-tabbable[data-content-attached] f-tab[data-active],
+.f-tabbable[data-content-attached] .f-tab[data-active] {
+  position: relative;
+  z-index: 2;
+}
+
+f-tabbable[data-content-attached] f-tab-content,
+.f-tabbable[data-content-attached] .f-tab-content {
+  box-sizing: border-box;
+  margin: -1px 0px 0px;
+  border-radius: 0 .2857rem .2857rem .2857rem;
+  top: 0;
+  bottom: 0;
+  box-shadow: none;
+  border: 1px solid #d4d4d5;
+  position: relative;
+  background-color: #fff;
+  padding: 1em;
+}
+
+f-tabbable[data-content-attached] f-tab-content,
+.f-tabbable[data-content-attached] .f-tab-content {
+  display:none;
+}
+
+f-tabbable[data-content-attached] f-tab-content[data-active],
+.f-tabbable[data-content-attached] .f-tab-content[data-active] {
+  display: block;
+}
+
+f-tabbable[data-content-attached] f-tab-content {
+  border-left: 0;
+  border-right: 0;
+  border-bottom: 0;
+  border-top: 1px solid #ddd;
+  padding: 0;
+}
+
+f-tabbable.open_tabs {
+  border-top: none;
+}
+
+f-tabbable.open_tabs f-tab {
+  border-radius: 0;
+  border-top: 2px solid transparent;
+  height: 41px;
+}
+
+f-tabbable.open_tabs f-tab[data-active] {
+  border-top: 2px solid #3d8ad3;
+  border-left: 1px solid #ddd;
+  border-right: 1px solid #ddd;
+  background: #fff;
+  height: 41px;
+}
+
+f-tabbable.slim_tabs {
+  border-bottom: 1px solid #ddd;
+  padding: 0;
+  font: 16px/24px "Roboto", 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-size: 14px;
+}
+
+f-tabbable.slim_tabs f-tab {
+  border: none;
+  border-radius: 0;
+  line-height: 38px;
+  margin-right: 10px;
+  padding: 0 10px;
+}
+
+f-tabbable.slim_tabs f-tab.link {
+  padding: 0;
+  color: rgba(0, 0, 0, 0.8);
+}
+
+f-tabbable.slim_tabs f-tab a {
+  padding: 0 10px;
+  line-height: 38px;
+  display: block;
+}
+
+f-tabbable.slim_tabs f-tab[data-active] {
+  border-bottom: 2px solid #3d8ad3;
+}
+
+f-tabbable.slim_tabs f-tab[data-active] a {
+  color: #3d8ad3;
+}

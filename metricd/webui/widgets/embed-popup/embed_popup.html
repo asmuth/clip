@@ -3,31 +3,32 @@
     <f-popup-background>
       <f-popup-window>
         <div class="inner">
-          <z-tabbable class="slim_tabs" data-content-attached>
-            <z-tab data-index='0'>IFrame</z-tab>
-            <z-tab data-index='1'>URL</z-tab>
-            <z-tab data-index='2'>HTML5</z-tab>
+          <f-tabbable class="slim_tabs" data-content-attached>
+            <f-tab data-index='0'>IFrame</f-tab>
+            <f-tab data-index='1'>URL</f-tab>
+            <f-tab data-index='2'>HTML5</f-tab>
 
-            <z-tab-content data-index='0'>
-              Copy this into your HTML page:
+            <f-tab-content data-index='0'>
+              <div>Copy this into your HTML page:</div>
 
               <code>
-                &lt;iframe<br />&nbsp;&nbsp;&nbsp;&nbsp;width="800"
+                &lt;iframe
+                <br />&nbsp;&nbsp;&nbsp;&nbsp;width="800"
                 <br />&nbsp;&nbsp;&nbsp;&nbsp;height="400"
                 <br />&nbsp;&nbsp;&nbsp;&nbsp;frameBorder="0"
                 <br />&nbsp;&nbsp;&nbsp;&nbsp;src="<span class="query_url"></span>"&gt;
-                <br />&nbsp;&nbsp;&nbsp;&nbsp;&lt;/iframe&gt;
+                <br />&lt;/iframe&gt;
               </code>
-            </z-tab-content>
+            </f-tab-content>
 
-            <z-tab-content data-index='1'>
-              Embed URL:
+            <f-tab-content data-index='1'>
+              <div>Embed URL:</div>
 
               <code><span class="query_url"></span></code>
-            </z-tab-content>
+            </f-tab-content>
 
-            <z-tab-content data-index='2'>
-              Copy this into the header of your html page:
+            <f-tab-content data-index='2'>
+              <div>Copy this into the header of your html page:</div>
 
               <code>
                 &lt;script href="http://<span class="host"></span>/s/fnordmetric.js" type="text/javascript"&gt;&lt;script&gt;
@@ -38,12 +39,12 @@
               <code>
                &lt;fm-chart&gt;<br /><span class='query_str'></span><br />&lt;/fm-chart&gt;
               </code>
-            </z-tab-content>
+            </f-tab-content>
 
-          </z-tabbable>
+          </f-tabbable>
         </div>
-        <div class="z-modal-footer">
-          <button class="close">Cancel</button>
+        <div class="footer">
+          <button class="btn close">Cancel</button>
         </div>
       </f-popup-window>
     </f-popup-background>

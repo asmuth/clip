@@ -17,6 +17,13 @@ widgets/f-timerange-picker/f-timerange-picker-calendar.js
 widgets/f-timerange-picker/f-timerange-picker.js
 widgets/f-timerange-picker/f-timerange-picker.html
 widgets/f-timerange-picker/f-timerange-picker.css
+widgets/popup/popup.css
+widgets/popup/popup.js
+widgets/f-tabbable/f-tabbable.css
+widgets/f-tabbable/f-tabbable.js
+widgets/embed-popup/embed_popup.html
+widgets/embed-popup/embed_popup.css
+widgets/embed-popup/embed_popup.js
 3rdparty/formatter.min.js
 3rdparty/dygraph-combined.min.js
 views/error/error.html

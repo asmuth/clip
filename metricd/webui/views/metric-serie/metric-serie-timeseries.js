@@ -25,7 +25,6 @@ FnordMetric.views["fnordmetric.metric.serie.timeseries"] = function(elem, params
           axes: {
             x: {
               axisLabelFormatter: function(d, gran, opts) {
-                console.log(gran, opts);
                 return dateUtil.formatDateTime(d.getTime());
               },
               pixelsPerLabel: 100,

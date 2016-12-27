@@ -9,83 +9,22 @@
  */
 fEmbedPopup = function(elem, query) {
   var popup;
-  var background;
   var inner_window;
 
   function close() {
     if (popup.parentNode == elem) {
       elem.removeChild(popup);
     }
-    if (background.parentNode == elem) {
-      elem.removeChild(background);
-    }
   }
 
   function render() {
     var tpl = templateUtil.getTemplate("fnordmetric-embed-popup");
-    var popup = tpl.querySelector("f-popup");
+    popup = tpl.querySelector("f-popup");
+
+    tpl.querySelector("button.close").addEventListener("click", close, false);
+
     elem.appendChild(tpl);
     popup.show();
-    //background = document.createElement("div");
-    //background.className = "popup_ui background";
-
-    //popup = document.createElement("div");
-    //popup.className = "popup_ui";
-
-    //var tabbar = document.createElement("div");
-    //tabbar.className = "metric_preview_secondary_controls";
-
-    //var close_btn = FnordMetric.createButton(
-    //  "#", "close_btn btn", "<i class='fa fa-close'></i>");
-
-    //var iframe_tab = FnordMetric.createButton(
-    //  "#", "tab btn", "IFrame");
-
-    //var url_tab = FnordMetric.createButton(
-    //  "#", "tab btn", "URL");
-
-    //var html_tab = FnordMetric.createButton(
-    //  "#", "tab btn", "HTML5");
-
-    //inner_window = document.createElement("div");
-    //inner_window.className = "inner";
-
-    //elem.appendChild(background);
-    //popup.appendChild(close_btn);
-    //tabbar.appendChild(iframe_tab);
-    //tabbar.appendChild(url_tab);
-    //tabbar.appendChild(html_tab);
-    //popup.appendChild(tabbar);
-    //popup.appendChild(inner_window);
-    //elem.appendChild(popup);
-
-
-    //background.addEventListener('click', function(e) {
-    //  e.preventDefault();
-    //  close();
-    //}, false);
-
-    //close_btn.addEventListener('click', function(e) {
-    //  e.preventDefault();
-    //  close();
-    //}, false);
-
-    //iframe_tab.addEventListener('click', function(e) {
-    //  e.preventDefault();
-    //  embedIFrame();
-    //}, false);
-
-    //url_tab.addEventListener('click', function(e) {
-    //  e.preventDefault();
-    //  embedURL();
-    //}, false);
-
-    //html_tab.addEventListener('click', function(e) {
-    //  e.preventDefault();
-    //  embedHTML();
-    //}, false);
-
-    //embedIFrame();
   }
 
   function embedIFrame() {
