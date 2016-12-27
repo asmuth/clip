@@ -1,3 +1,4 @@
+cursor options (summary vs series, begin/limit, display granularity, etc)
 summary api endpoint
 summaries in all api respones
 asset packaging
