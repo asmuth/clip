@@ -229,16 +229,11 @@
   margin-bottom: 20px;
 }
 
-.fnordmetric-metric-serie .content .timeseries .chart_box .chart_canvas {
-}
-/**
 .fnordmetric-metric-serie .content .timeseries .chart_box .chart_canvas .dygraph-axis-label-x,
-.fnordmetric-metric-serie .content .timeseries .chart_box .chart_canvas .dygraph-axis-label-y1 {
-  display: none;
-}
-
+.fnordmetric-metric-serie .content .timeseries .chart_box .chart_canvas .dygraph-axis-label-y,
+.fnordmetric-metric-serie .content .timeseries .chart_box .chart_canvas .dygraph-axis-label-y1,
 .fnordmetric-metric-serie .content .timeseries .chart_box .chart_canvas .dygraph-axis-label-y2 {
   font-size: 12px;
   color: #737373;
 }
-**/
+

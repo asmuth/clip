@@ -27,8 +27,18 @@ FnordMetric.views["fnordmetric.metric.serie.timeseries"] = function(elem, params
               axisLabelFormatter: function(d, gran, opts) {
                 console.log(gran, opts);
                 return dateUtil.formatDateTime(d.getTime());
-              }
+              },
+              pixelsPerLabel: 100,
+              axisLabelWidth: 130
+            },
+            y: {
+              //FIXME handle width for small / large numbers
+              axisLabelWidth: 40
+              //FIXME handle axisLabelFormatter
             }
+          },
+          labelsDivStyles: {
+            fontSize: "12px"
           }
           //series: {
           //  test: { axis: "y2"},
