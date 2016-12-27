@@ -77,8 +77,8 @@ SumOutputAggregator::SumOutputAggregator(
 
 bool SumOutputAggregator::next(
     uint64_t* time,
-    void* value,
-    size_t value_len) {
+    tval_ref* out,
+    size_t out_len) {
   if (!cursor_->valid()) {
     return false;
   }
@@ -99,14 +99,30 @@ bool SumOutputAggregator::next(
   uint64_t next_val = cur_sum_ / interpolate_windows;
   next_val += cur_sum_ % interpolate_windows;
 
-  assert(value_len == sizeof(next_val));
-  memcpy(value, &next_val, sizeof(next_val));
+  if (out_len > 0) {
+    assert(out[0].len == sizeof(next_val));
+    memcpy(out[0].data, &next_val, sizeof(next_val));
+  }
+
   cur_sum_ -= next_val;
 
   *time = cur_time_;
   cur_time_ += granularity_;
 
   return true;
+}
+
+MetricDataType SumOutputAggregator::getOutputType() const {
+  return MetricDataType::UINT64;
+}
+
+size_t SumOutputAggregator::getOutputColumnCount() const {
+  return 1;
+}
+
+std::string SumOutputAggregator::getOutputColumnName(size_t idx) const {
+  assert(idx < 1);
+  return "value";
 }
 
 MaxInputAggregator::MaxInputAggregator(
@@ -173,8 +189,8 @@ MaxOutputAggregator::MaxOutputAggregator(
 
 bool MaxOutputAggregator::next(
     uint64_t* time,
-    void* value,
-    size_t value_len) {
+    tval_ref* out,
+    size_t out_len) {
   if (!cursor_->valid()) {
     return false;
   }
@@ -189,8 +205,10 @@ bool MaxOutputAggregator::next(
     cursor_->next();
   }
 
-  assert(value_len == sizeof(cur_max_));
-  memcpy(value, &cur_max_, sizeof(cur_max_));
+  if (out_len > 0) {
+    assert(out[0].len == sizeof(cur_max_));
+    memcpy(out[0].data, &cur_max_, sizeof(cur_max_));
+  }
 
   *time = cur_time_;
   cur_time_ += granularity_;
@@ -206,6 +224,19 @@ bool MaxOutputAggregator::next(
   }
 
   return true;
+}
+
+MetricDataType MaxOutputAggregator::getOutputType() const {
+  return MetricDataType::UINT64;
+}
+
+size_t MaxOutputAggregator::getOutputColumnCount() const {
+  return 1;
+}
+
+std::string MaxOutputAggregator::getOutputColumnName(size_t idx) const {
+  assert(idx < 1);
+  return "value";
 }
 
 uint64_t alignTime(uint64_t timestamp, uint64_t window, uint64_t align = 0) {

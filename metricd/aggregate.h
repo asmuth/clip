@@ -36,8 +36,14 @@ public:
 
   virtual bool next(
       uint64_t* time,
-      void* value,
-      size_t value_len) = 0;
+      tval_ref* out,
+      size_t out_len) = 0;
+
+  virtual MetricDataType getOutputType() const = 0;
+
+  virtual size_t getOutputColumnCount() const = 0;
+
+  virtual std::string getOutputColumnName(size_t idx) const = 0;
 
 };
 
@@ -71,8 +77,14 @@ public:
 
   bool next(
       uint64_t* time,
-      void* value,
-      size_t value_len) override;
+      tval_ref* out,
+      size_t out_len) override;
+
+  MetricDataType getOutputType() const override;
+
+  size_t getOutputColumnCount() const override;
+
+  std::string getOutputColumnName(size_t idx) const override;
 
 protected:
   tsdb::Cursor* cursor_;
@@ -113,8 +125,14 @@ public:
 
   bool next(
       uint64_t* time,
-      void* value,
-      size_t value_len) override;
+      tval_ref* out,
+      size_t out_len) override;
+
+  MetricDataType getOutputType() const override;
+
+  size_t getOutputColumnCount() const override;
+
+  std::string getOutputColumnName(size_t idx) const override;
 
 protected:
   tsdb::Cursor* cursor_;

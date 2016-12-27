@@ -211,11 +211,14 @@ MetricSeriesCursor& MetricSeriesCursor::operator=(MetricSeriesCursor&& o) {
   return *this;
 }
 
-bool MetricSeriesCursor::next(uint64_t* timestamp, uint64_t* value) {
+bool MetricSeriesCursor::next(
+    uint64_t* timestamp,
+    tval_ref* out,
+    size_t out_len) {
   if (aggr_) {
-    return aggr_->next(timestamp, value, sizeof(uint64_t));
+    return aggr_->next(timestamp, out, out_len);
   } else {
-    return cursor_.next(timestamp, value, sizeof(uint64_t));
+    return false;
   }
 }
 

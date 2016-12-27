@@ -48,8 +48,11 @@ TEST_CASE(MetricServiceTest, TestSumAggregator, [] () {
   {
     auto cursor = service->getCursor("users_online", SeriesNameType(""));
     uint64_t ts;
-    uint64_t val;
-    EXPECT(cursor.next(&ts, &val) == false);
+    tval_ref val;
+    val.len = sizeof(uint64_t);
+    val.data = alloca(val.len);
+    val.type = MetricDataType::UINT64;
+    EXPECT(cursor.next(&ts, &val, 1) == false);
   }
 
   {
@@ -102,35 +105,38 @@ TEST_CASE(MetricServiceTest, TestSumAggregator, [] () {
   {
     auto cursor = service->getCursor("users_online", SeriesNameType(""));
     uint64_t ts;
-    uint64_t val;
-    EXPECT(cursor.next(&ts, &val));
+    tval_ref val;
+    val.len = sizeof(uint64_t);
+    val.data = alloca(val.len);
+    val.type = MetricDataType::UINT64;
+    EXPECT(cursor.next(&ts, &val, 1));
     EXPECT(ts == 1482776340000000);
-    EXPECT(val == 23);
-    EXPECT(cursor.next(&ts, &val));
+    EXPECT(*((uint64_t*) val.data) == 23);
+    EXPECT(cursor.next(&ts, &val, 1));
     EXPECT(ts == 1482776400000000);
-    EXPECT(val == 17);
-    EXPECT(cursor.next(&ts, &val));
+    EXPECT(*((uint64_t*) val.data) ==17);
+    EXPECT(cursor.next(&ts, &val, 1));
     EXPECT(ts == 1482776460000000);
-    EXPECT(val == 0);
-    EXPECT(cursor.next(&ts, &val));
+    EXPECT(*((uint64_t*) val.data) ==0);
+    EXPECT(cursor.next(&ts, &val, 1));
     EXPECT(ts == 1482776520000000);
-    EXPECT(val == 0);
-    EXPECT(cursor.next(&ts, &val));
+    EXPECT(*((uint64_t*) val.data) ==0);
+    EXPECT(cursor.next(&ts, &val, 1));
     EXPECT(ts == 1482776580000000);
-    EXPECT(val == 42);
-    EXPECT(cursor.next(&ts, &val));
+    EXPECT(*((uint64_t*) val.data) ==42);
+    EXPECT(cursor.next(&ts, &val, 1));
     EXPECT(ts == 1482776640000000);
-    EXPECT(val == 0);
-    EXPECT(cursor.next(&ts, &val));
+    EXPECT(*((uint64_t*) val.data) ==0);
+    EXPECT(cursor.next(&ts, &val, 1));
     EXPECT(ts == 1482776700000000);
-    EXPECT(val == 0);
-    EXPECT(cursor.next(&ts, &val));
+    EXPECT(*((uint64_t*) val.data) ==0);
+    EXPECT(cursor.next(&ts, &val, 1));
     EXPECT(ts == 1482776760000000);
-    EXPECT(val == 5);
-    EXPECT(cursor.next(&ts, &val));
+    EXPECT(*((uint64_t*) val.data) ==5);
+    EXPECT(cursor.next(&ts, &val, 1));
     EXPECT(ts == 1482776820000000);
-    EXPECT(val == 0);
-    EXPECT(cursor.next(&ts, &val) == false);
+    EXPECT(*((uint64_t*) val.data) ==0);
+    EXPECT(cursor.next(&ts, &val, 1) == false);
   }
 });
 
@@ -161,8 +167,11 @@ TEST_CASE(MetricServiceTest, TestSumAggregatorWithDownsampling, [] () {
   {
     auto cursor = service->getCursor("users_online", SeriesNameType(""));
     uint64_t ts;
-    uint64_t val;
-    EXPECT(cursor.next(&ts, &val) == false);
+    tval_ref val;
+    val.len = sizeof(uint64_t);
+    val.data = alloca(val.len);
+    val.type = MetricDataType::UINT64;
+    EXPECT(cursor.next(&ts, &val, 1) == false);
   }
 
   {
@@ -215,17 +224,20 @@ TEST_CASE(MetricServiceTest, TestSumAggregatorWithDownsampling, [] () {
   {
     auto cursor = service->getCursor("users_online", SeriesNameType(""));
     uint64_t ts;
-    uint64_t val;
-    EXPECT(cursor.next(&ts, &val));
+    tval_ref val;
+    val.len = sizeof(uint64_t);
+    val.data = alloca(val.len);
+    val.type = MetricDataType::UINT64;
+    EXPECT(cursor.next(&ts, &val, 1));
     EXPECT(ts == 1482776100000000);
-    EXPECT(val == 23);
-    EXPECT(cursor.next(&ts, &val));
+    EXPECT(*((uint64_t*) val.data) ==23);
+    EXPECT(cursor.next(&ts, &val, 1));
     EXPECT(ts == 1482776400000000);
-    EXPECT(val == 59);
-    EXPECT(cursor.next(&ts, &val));
+    EXPECT(*((uint64_t*) val.data) ==59);
+    EXPECT(cursor.next(&ts, &val, 1));
     EXPECT(ts == 1482776700000000);
-    EXPECT(val == 5);
-    EXPECT(cursor.next(&ts, &val) == false);
+    EXPECT(*((uint64_t*) val.data) ==5);
+    EXPECT(cursor.next(&ts, &val, 1) == false);
   }
 });
 
@@ -256,8 +268,11 @@ TEST_CASE(MetricServiceTest, TestSumAggregatorWithUpsampling, [] () {
   {
     auto cursor = service->getCursor("users_online", SeriesNameType(""));
     uint64_t ts;
-    uint64_t val;
-    EXPECT(cursor.next(&ts, &val) == false);
+    tval_ref val;
+    val.len = sizeof(uint64_t);
+    val.data = alloca(val.len);
+    val.type = MetricDataType::UINT64;
+    EXPECT(cursor.next(&ts, &val, 1) == false);
   }
 
   {
@@ -310,101 +325,104 @@ TEST_CASE(MetricServiceTest, TestSumAggregatorWithUpsampling, [] () {
   {
     auto cursor = service->getCursor("users_online", SeriesNameType(""));
     uint64_t ts;
-    uint64_t val;
-    EXPECT(cursor.next(&ts, &val));
+    tval_ref val;
+    val.len = sizeof(uint64_t);
+    val.data = alloca(val.len);
+    val.type = MetricDataType::UINT64;
+    EXPECT(cursor.next(&ts, &val, 1));
     EXPECT(ts == 1482776340000000);
-    EXPECT(val == 8);
-    EXPECT(cursor.next(&ts, &val));
+    EXPECT(*((uint64_t*) val.data) ==8);
+    EXPECT(cursor.next(&ts, &val, 1));
     EXPECT(ts == 1482776350000000);
-    EXPECT(val == 3);
-    EXPECT(cursor.next(&ts, &val));
+    EXPECT(*((uint64_t*) val.data) ==3);
+    EXPECT(cursor.next(&ts, &val, 1));
     EXPECT(ts == 1482776360000000);
-    EXPECT(val == 3);
-    EXPECT(cursor.next(&ts, &val));
+    EXPECT(*((uint64_t*) val.data) ==3);
+    EXPECT(cursor.next(&ts, &val, 1));
     EXPECT(ts == 1482776370000000);
-    EXPECT(val == 3);
-    EXPECT(cursor.next(&ts, &val));
+    EXPECT(*((uint64_t*) val.data) ==3);
+    EXPECT(cursor.next(&ts, &val, 1));
     EXPECT(ts == 1482776380000000);
-    EXPECT(val == 3);
-    EXPECT(cursor.next(&ts, &val));
+    EXPECT(*((uint64_t*) val.data) ==3);
+    EXPECT(cursor.next(&ts, &val, 1));
     EXPECT(ts == 1482776390000000);
-    EXPECT(val == 3);
+    EXPECT(*((uint64_t*) val.data) ==3);
 
-    EXPECT(cursor.next(&ts, &val));
+    EXPECT(cursor.next(&ts, &val, 1));
     EXPECT(ts == 1482776400000000);
-    EXPECT(val == 7);
-    EXPECT(cursor.next(&ts, &val));
+    EXPECT(*((uint64_t*) val.data) ==7);
+    EXPECT(cursor.next(&ts, &val, 1));
     EXPECT(ts == 1482776410000000);
-    EXPECT(val == 2);
-    EXPECT(cursor.next(&ts, &val));
+    EXPECT(*((uint64_t*) val.data) ==2);
+    EXPECT(cursor.next(&ts, &val, 1));
     EXPECT(ts == 1482776420000000);
-    EXPECT(val == 2);
-    EXPECT(cursor.next(&ts, &val));
+    EXPECT(*((uint64_t*) val.data) ==2);
+    EXPECT(cursor.next(&ts, &val, 1));
     EXPECT(ts == 1482776430000000);
-    EXPECT(val == 2);
-    EXPECT(cursor.next(&ts, &val));
+    EXPECT(*((uint64_t*) val.data) ==2);
+    EXPECT(cursor.next(&ts, &val, 1));
     EXPECT(ts == 1482776440000000);
-    EXPECT(val == 2);
-    EXPECT(cursor.next(&ts, &val));
+    EXPECT(*((uint64_t*) val.data) ==2);
+    EXPECT(cursor.next(&ts, &val, 1));
     EXPECT(ts == 1482776450000000);
-    EXPECT(val == 2);
+    EXPECT(*((uint64_t*) val.data) ==2);
 
     for (uint64_t expected_ts = 1482776460000000, i = 0; i < 12; ++i) {
-      EXPECT(cursor.next(&ts, &val));
+      EXPECT(cursor.next(&ts, &val, 1));
       EXPECT(ts == expected_ts);
-      EXPECT(val == 0);
+      EXPECT(*((uint64_t*) val.data) ==0);
       expected_ts += 10000000;
     }
 
-    EXPECT(cursor.next(&ts, &val));
+    EXPECT(cursor.next(&ts, &val, 1));
     EXPECT(ts == 1482776580000000);
-    EXPECT(val == 7);
-    EXPECT(cursor.next(&ts, &val));
+    EXPECT(*((uint64_t*) val.data) ==7);
+    EXPECT(cursor.next(&ts, &val, 1));
     EXPECT(ts == 1482776590000000);
-    EXPECT(val == 7);
-    EXPECT(cursor.next(&ts, &val));
+    EXPECT(*((uint64_t*) val.data) ==7);
+    EXPECT(cursor.next(&ts, &val, 1));
     EXPECT(ts == 1482776600000000);
-    EXPECT(val == 7);
-    EXPECT(cursor.next(&ts, &val));
+    EXPECT(*((uint64_t*) val.data) ==7);
+    EXPECT(cursor.next(&ts, &val, 1));
     EXPECT(ts == 1482776610000000);
-    EXPECT(val == 7);
-    EXPECT(cursor.next(&ts, &val));
+    EXPECT(*((uint64_t*) val.data) ==7);
+    EXPECT(cursor.next(&ts, &val, 1));
     EXPECT(ts == 1482776620000000);
-    EXPECT(val == 7);
-    EXPECT(cursor.next(&ts, &val));
+    EXPECT(*((uint64_t*) val.data) ==7);
+    EXPECT(cursor.next(&ts, &val, 1));
     EXPECT(ts == 1482776630000000);
-    EXPECT(val == 7);
+    EXPECT(*((uint64_t*) val.data) ==7);
 
     for (uint64_t expected_ts = 1482776640000000, i = 0; i < 12; ++i) {
-      EXPECT(cursor.next(&ts, &val));
+      EXPECT(cursor.next(&ts, &val, 1));
       EXPECT(ts == expected_ts);
-      EXPECT(val == 0);
+      EXPECT(*((uint64_t*) val.data) ==0);
       expected_ts += 10000000;
     }
 
-    EXPECT(cursor.next(&ts, &val));
+    EXPECT(cursor.next(&ts, &val, 1));
     EXPECT(ts == 1482776760000000);
-    EXPECT(val == 5);
-    EXPECT(cursor.next(&ts, &val));
+    EXPECT(*((uint64_t*) val.data) ==5);
+    EXPECT(cursor.next(&ts, &val, 1));
     EXPECT(ts == 1482776770000000);
-    EXPECT(val == 0);
-    EXPECT(cursor.next(&ts, &val));
+    EXPECT(*((uint64_t*) val.data) ==0);
+    EXPECT(cursor.next(&ts, &val, 1));
     EXPECT(ts == 1482776780000000);
-    EXPECT(val == 0);
-    EXPECT(cursor.next(&ts, &val));
+    EXPECT(*((uint64_t*) val.data) ==0);
+    EXPECT(cursor.next(&ts, &val, 1));
     EXPECT(ts == 1482776790000000);
-    EXPECT(val == 0);
-    EXPECT(cursor.next(&ts, &val));
+    EXPECT(*((uint64_t*) val.data) ==0);
+    EXPECT(cursor.next(&ts, &val, 1));
     EXPECT(ts == 1482776800000000);
-    EXPECT(val == 0);
-    EXPECT(cursor.next(&ts, &val));
+    EXPECT(*((uint64_t*) val.data) ==0);
+    EXPECT(cursor.next(&ts, &val, 1));
     EXPECT(ts == 1482776810000000);
-    EXPECT(val == 0);
+    EXPECT(*((uint64_t*) val.data) ==0);
 
-    EXPECT(cursor.next(&ts, &val));
+    EXPECT(cursor.next(&ts, &val, 1));
     EXPECT(ts == 1482776820000000);
-    EXPECT(val == 0);
-    EXPECT(cursor.next(&ts, &val) == false);
+    EXPECT(*((uint64_t*) val.data) ==0);
+    EXPECT(cursor.next(&ts, &val, 1) == false);
   }
 });
 
@@ -434,8 +452,11 @@ TEST_CASE(MetricServiceTest, TestMaxAggregator, [] () {
   {
     auto cursor = service->getCursor("users_online", SeriesNameType(""));
     uint64_t ts;
-    uint64_t val;
-    EXPECT(cursor.next(&ts, &val) == false);
+    tval_ref val;
+    val.len = sizeof(uint64_t);
+    val.data = alloca(val.len);
+    val.type = MetricDataType::UINT64;
+    EXPECT(cursor.next(&ts, &val, 1) == false);
   }
 
   {
@@ -488,35 +509,38 @@ TEST_CASE(MetricServiceTest, TestMaxAggregator, [] () {
   {
     auto cursor = service->getCursor("users_online", SeriesNameType(""));
     uint64_t ts;
-    uint64_t val;
-    EXPECT(cursor.next(&ts, &val));
+    tval_ref val;
+    val.len = sizeof(uint64_t);
+    val.data = alloca(val.len);
+    val.type = MetricDataType::UINT64;
+    EXPECT(cursor.next(&ts, &val, 1));
     EXPECT(ts == 1482776340000000);
-    EXPECT(val == 10);
-    EXPECT(cursor.next(&ts, &val));
+    EXPECT(*((uint64_t*) val.data) ==10);
+    EXPECT(cursor.next(&ts, &val, 1));
     EXPECT(ts == 1482776400000000);
-    EXPECT(val == 15);
-    EXPECT(cursor.next(&ts, &val));
+    EXPECT(*((uint64_t*) val.data) ==15);
+    EXPECT(cursor.next(&ts, &val, 1));
     EXPECT(ts == 1482776460000000);
-    EXPECT(val == 0);
-    EXPECT(cursor.next(&ts, &val));
+    EXPECT(*((uint64_t*) val.data) ==0);
+    EXPECT(cursor.next(&ts, &val, 1));
     EXPECT(ts == 1482776520000000);
-    EXPECT(val == 0);
-    EXPECT(cursor.next(&ts, &val));
+    EXPECT(*((uint64_t*) val.data) ==0);
+    EXPECT(cursor.next(&ts, &val, 1));
     EXPECT(ts == 1482776580000000);
-    EXPECT(val == 42);
-    EXPECT(cursor.next(&ts, &val));
+    EXPECT(*((uint64_t*) val.data) ==42);
+    EXPECT(cursor.next(&ts, &val, 1));
     EXPECT(ts == 1482776640000000);
-    EXPECT(val == 0);
-    EXPECT(cursor.next(&ts, &val));
+    EXPECT(*((uint64_t*) val.data) ==0);
+    EXPECT(cursor.next(&ts, &val, 1));
     EXPECT(ts == 1482776700000000);
-    EXPECT(val == 0);
-    EXPECT(cursor.next(&ts, &val));
+    EXPECT(*((uint64_t*) val.data) ==0);
+    EXPECT(cursor.next(&ts, &val, 1));
     EXPECT(ts == 1482776760000000);
-    EXPECT(val == 5);
-    EXPECT(cursor.next(&ts, &val));
+    EXPECT(*((uint64_t*) val.data) ==5);
+    EXPECT(cursor.next(&ts, &val, 1));
     EXPECT(ts == 1482776820000000);
-    EXPECT(val == 0);
-    EXPECT(cursor.next(&ts, &val) == false);
+    EXPECT(*((uint64_t*) val.data) ==0);
+    EXPECT(cursor.next(&ts, &val, 1) == false);
   }
 });
 
@@ -547,8 +571,11 @@ TEST_CASE(MetricServiceTest, TestMaxAggregatorWithDownsampling, [] () {
   {
     auto cursor = service->getCursor("users_online", SeriesNameType(""));
     uint64_t ts;
-    uint64_t val;
-    EXPECT(cursor.next(&ts, &val) == false);
+    tval_ref val;
+    val.len = sizeof(uint64_t);
+    val.data = alloca(val.len);
+    val.type = MetricDataType::UINT64;
+    EXPECT(cursor.next(&ts, &val, 1) == false);
   }
 
   {
@@ -601,17 +628,20 @@ TEST_CASE(MetricServiceTest, TestMaxAggregatorWithDownsampling, [] () {
   {
     auto cursor = service->getCursor("users_online", SeriesNameType(""));
     uint64_t ts;
-    uint64_t val;
-    EXPECT(cursor.next(&ts, &val));
+    tval_ref val;
+    val.len = sizeof(uint64_t);
+    val.data = alloca(val.len);
+    val.type = MetricDataType::UINT64;
+    EXPECT(cursor.next(&ts, &val, 1));
     EXPECT(ts == 1482776100000000);
-    EXPECT(val == 10);
-    EXPECT(cursor.next(&ts, &val));
+    EXPECT(*((uint64_t*) val.data) ==10);
+    EXPECT(cursor.next(&ts, &val, 1));
     EXPECT(ts == 1482776400000000);
-    EXPECT(val == 42);
-    EXPECT(cursor.next(&ts, &val));
+    EXPECT(*((uint64_t*) val.data) ==42);
+    EXPECT(cursor.next(&ts, &val, 1));
     EXPECT(ts == 1482776700000000);
-    EXPECT(val == 5);
-    EXPECT(cursor.next(&ts, &val) == false);
+    EXPECT(*((uint64_t*) val.data) ==5);
+    EXPECT(cursor.next(&ts, &val, 1) == false);
   }
 });
 
@@ -642,8 +672,11 @@ TEST_CASE(MetricServiceTest, TestMaxAggregatorWithUpsampling, [] () {
   {
     auto cursor = service->getCursor("users_online", SeriesNameType(""));
     uint64_t ts;
-    uint64_t val;
-    EXPECT(cursor.next(&ts, &val) == false);
+    tval_ref val;
+    val.len = sizeof(uint64_t);
+    val.data = alloca(val.len);
+    val.type = MetricDataType::UINT64;
+    EXPECT(cursor.next(&ts, &val, 1) == false);
   }
 
   {
@@ -696,100 +729,103 @@ TEST_CASE(MetricServiceTest, TestMaxAggregatorWithUpsampling, [] () {
   {
     auto cursor = service->getCursor("users_online", SeriesNameType(""));
     uint64_t ts;
-    uint64_t val;
-    EXPECT(cursor.next(&ts, &val));
+    tval_ref val;
+    val.len = sizeof(uint64_t);
+    val.data = alloca(val.len);
+    val.type = MetricDataType::UINT64;
+    EXPECT(cursor.next(&ts, &val, 1));
     EXPECT(ts == 1482776340000000);
-    EXPECT(val == 10);
-    EXPECT(cursor.next(&ts, &val));
+    EXPECT(*((uint64_t*) val.data) ==10);
+    EXPECT(cursor.next(&ts, &val, 1));
     EXPECT(ts == 1482776350000000);
-    EXPECT(val == 10);
-    EXPECT(cursor.next(&ts, &val));
+    EXPECT(*((uint64_t*) val.data) ==10);
+    EXPECT(cursor.next(&ts, &val, 1));
     EXPECT(ts == 1482776360000000);
-    EXPECT(val == 10);
-    EXPECT(cursor.next(&ts, &val));
+    EXPECT(*((uint64_t*) val.data) ==10);
+    EXPECT(cursor.next(&ts, &val, 1));
     EXPECT(ts == 1482776370000000);
-    EXPECT(val == 10);
-    EXPECT(cursor.next(&ts, &val));
+    EXPECT(*((uint64_t*) val.data) ==10);
+    EXPECT(cursor.next(&ts, &val, 1));
     EXPECT(ts == 1482776380000000);
-    EXPECT(val == 10);
-    EXPECT(cursor.next(&ts, &val));
+    EXPECT(*((uint64_t*) val.data) ==10);
+    EXPECT(cursor.next(&ts, &val, 1));
     EXPECT(ts == 1482776390000000);
-    EXPECT(val == 10);
+    EXPECT(*((uint64_t*) val.data) ==10);
 
-    EXPECT(cursor.next(&ts, &val));
+    EXPECT(cursor.next(&ts, &val, 1));
     EXPECT(ts == 1482776400000000);
-    EXPECT(val == 15);
-    EXPECT(cursor.next(&ts, &val));
+    EXPECT(*((uint64_t*) val.data) ==15);
+    EXPECT(cursor.next(&ts, &val, 1));
     EXPECT(ts == 1482776410000000);
-    EXPECT(val == 15);
-    EXPECT(cursor.next(&ts, &val));
+    EXPECT(*((uint64_t*) val.data) ==15);
+    EXPECT(cursor.next(&ts, &val, 1));
     EXPECT(ts == 1482776420000000);
-    EXPECT(val == 15);
-    EXPECT(cursor.next(&ts, &val));
+    EXPECT(*((uint64_t*) val.data) ==15);
+    EXPECT(cursor.next(&ts, &val, 1));
     EXPECT(ts == 1482776430000000);
-    EXPECT(val == 15);
-    EXPECT(cursor.next(&ts, &val));
+    EXPECT(*((uint64_t*) val.data) ==15);
+    EXPECT(cursor.next(&ts, &val, 1));
     EXPECT(ts == 1482776440000000);
-    EXPECT(val == 15);
-    EXPECT(cursor.next(&ts, &val));
+    EXPECT(*((uint64_t*) val.data) ==15);
+    EXPECT(cursor.next(&ts, &val, 1));
     EXPECT(ts == 1482776450000000);
-    EXPECT(val == 15);
+    EXPECT(*((uint64_t*) val.data) ==15);
 
     for (uint64_t expected_ts = 1482776460000000, i = 0; i < 12; ++i) {
-      EXPECT(cursor.next(&ts, &val));
+      EXPECT(cursor.next(&ts, &val, 1));
       EXPECT(ts == expected_ts);
-      EXPECT(val == 0);
+      EXPECT(*((uint64_t*) val.data) ==0);
       expected_ts += 10000000;
     }
 
-    EXPECT(cursor.next(&ts, &val));
+    EXPECT(cursor.next(&ts, &val, 1));
     EXPECT(ts == 1482776580000000);
-    EXPECT(val == 42);
-    EXPECT(cursor.next(&ts, &val));
+    EXPECT(*((uint64_t*) val.data) ==42);
+    EXPECT(cursor.next(&ts, &val, 1));
     EXPECT(ts == 1482776590000000);
-    EXPECT(val == 42);
-    EXPECT(cursor.next(&ts, &val));
+    EXPECT(*((uint64_t*) val.data) ==42);
+    EXPECT(cursor.next(&ts, &val, 1));
     EXPECT(ts == 1482776600000000);
-    EXPECT(val == 42);
-    EXPECT(cursor.next(&ts, &val));
+    EXPECT(*((uint64_t*) val.data) ==42);
+    EXPECT(cursor.next(&ts, &val, 1));
     EXPECT(ts == 1482776610000000);
-    EXPECT(val == 42);
-    EXPECT(cursor.next(&ts, &val));
+    EXPECT(*((uint64_t*) val.data) ==42);
+    EXPECT(cursor.next(&ts, &val, 1));
     EXPECT(ts == 1482776620000000);
-    EXPECT(val == 42);
-    EXPECT(cursor.next(&ts, &val));
+    EXPECT(*((uint64_t*) val.data) ==42);
+    EXPECT(cursor.next(&ts, &val, 1));
     EXPECT(ts == 1482776630000000);
-    EXPECT(val == 42);
+    EXPECT(*((uint64_t*) val.data) ==42);
 
     for (uint64_t expected_ts = 1482776640000000, i = 0; i < 12; ++i) {
-      EXPECT(cursor.next(&ts, &val));
+      EXPECT(cursor.next(&ts, &val, 1));
       EXPECT(ts == expected_ts);
-      EXPECT(val == 0);
+      EXPECT(*((uint64_t*) val.data) ==0);
       expected_ts += 10000000;
     }
 
-    EXPECT(cursor.next(&ts, &val));
+    EXPECT(cursor.next(&ts, &val, 1));
     EXPECT(ts == 1482776760000000);
-    EXPECT(val == 5);
-    EXPECT(cursor.next(&ts, &val));
+    EXPECT(*((uint64_t*) val.data) ==5);
+    EXPECT(cursor.next(&ts, &val, 1));
     EXPECT(ts == 1482776770000000);
-    EXPECT(val == 5);
-    EXPECT(cursor.next(&ts, &val));
+    EXPECT(*((uint64_t*) val.data) ==5);
+    EXPECT(cursor.next(&ts, &val, 1));
     EXPECT(ts == 1482776780000000);
-    EXPECT(val == 5);
-    EXPECT(cursor.next(&ts, &val));
+    EXPECT(*((uint64_t*) val.data) ==5);
+    EXPECT(cursor.next(&ts, &val, 1));
     EXPECT(ts == 1482776790000000);
-    EXPECT(val == 5);
-    EXPECT(cursor.next(&ts, &val));
+    EXPECT(*((uint64_t*) val.data) ==5);
+    EXPECT(cursor.next(&ts, &val, 1));
     EXPECT(ts == 1482776800000000);
-    EXPECT(val == 5);
-    EXPECT(cursor.next(&ts, &val));
+    EXPECT(*((uint64_t*) val.data) ==5);
+    EXPECT(cursor.next(&ts, &val, 1));
     EXPECT(ts == 1482776810000000);
-    EXPECT(val == 5);
+    EXPECT(*((uint64_t*) val.data) ==5);
 
-    EXPECT(cursor.next(&ts, &val));
+    EXPECT(cursor.next(&ts, &val, 1));
     EXPECT(ts == 1482776820000000);
-    EXPECT(val == 0);
-    EXPECT(cursor.next(&ts, &val) == false);
+    EXPECT(*((uint64_t*) val.data) ==0);
+    EXPECT(cursor.next(&ts, &val, 1) == false);
   }
 });

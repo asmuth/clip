@@ -133,10 +133,18 @@ public:
   MetricSeriesCursor& operator=(const MetricSeriesCursor& o) = delete;
   MetricSeriesCursor& operator=(MetricSeriesCursor&& o);
 
-  bool next(uint64_t* timestamp, uint64_t* value);
+  bool next(
+      uint64_t* time,
+      tval_ref* out,
+      size_t out_len);
+
+  MetricDataType getOutputType() const;
+
+  size_t getOutputColumnCount() const;
+
+  std::string getOutputColumnName(size_t idx) const;
 
 protected:
-
   tsdb::Cursor cursor_;
   std::unique_ptr<OutputAggregator> aggr_;
 };

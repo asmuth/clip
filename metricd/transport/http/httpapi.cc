@@ -204,13 +204,13 @@ void HTTPAPI::performMetricFetchSeries(
         cursor.getSeriesID());
 
     uint64_t timestamp;
-    uint64_t value;
-    for (size_t i = 0; data_cursor.next(&timestamp, &value); ++i) {
+    //uint64_t value;
+    for (size_t i = 0; data_cursor.next(&timestamp, nullptr, 0); ++i) {
       if (i++ > 0) { json.addComma(); }
       json.beginArray();
       json.addInteger(timestamp);
-      json.addComma();
-      json.addInteger(value);
+      //json.addComma();
+      //json.addInteger(value);
       json.endArray();
     }
 
