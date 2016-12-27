@@ -153,7 +153,7 @@ int main(int argc, const char** argv) {
   {
     auto rc = flags.parseArgv(argc, argv);
     if (!rc.isSuccess()) {
-      logFatal(rc.getMessage());
+      std::cerr << "ERROR: " << rc.getMessage() << std::endl;
       return 1;
     }
   }

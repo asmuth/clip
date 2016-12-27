@@ -11,6 +11,7 @@
 #include <stdexcept>
 #include <assert.h>
 #include <string.h>
+#include <limits>
 #include "metricd/types.h"
 
 namespace fnordmetric {
@@ -20,6 +21,23 @@ void tval_zero(tval_type type, void* reg, size_t reg_len) {
 
     case tval_type::UINT64: {
       assert(reg_len == sizeof(uint64_t));
+      memset(reg, 0, reg_len);
+      return;
+    }
+
+    case tval_type::INT64: {
+      assert(reg_len == sizeof(int64_t));
+      memset(reg, 0, reg_len);
+      return;
+    }
+
+    case tval_type::FLOAT64: {
+      static_assert(
+          std::numeric_limits<double>::is_iec559 &&
+          sizeof(double) == sizeof(uint64_t),
+          "non-compatible double implementation");
+
+      assert(reg_len == sizeof(double));
       memset(reg, 0, reg_len);
       return;
     }
@@ -43,6 +61,25 @@ void tval_add(
       return;
     }
 
+    case tval_type::INT64: {
+      assert(reg_len == sizeof(int64_t));
+      assert(op_len == sizeof(int64_t));
+      *((int64_t*) reg) += *((const int64_t*) op);
+      return;
+    }
+
+    case tval_type::FLOAT64: {
+      static_assert(
+          std::numeric_limits<double>::is_iec559 &&
+          sizeof(double) == sizeof(uint64_t),
+          "non-compatible double implementation");
+
+      assert(reg_len == sizeof(double));
+      assert(op_len == sizeof(double));
+      *((double*) reg) += *((const double*) op);
+      return;
+    }
+
     default: throw std::invalid_argument("type error");
   }
 }
@@ -59,6 +96,25 @@ void tval_sub(
       assert(reg_len == sizeof(uint64_t));
       assert(op_len == sizeof(uint64_t));
       *((uint64_t*) reg) -= *((const uint64_t*) op);
+      return;
+    }
+
+    case tval_type::INT64: {
+      assert(reg_len == sizeof(int64_t));
+      assert(op_len == sizeof(int64_t));
+      *((int64_t*) reg) -= *((const int64_t*) op);
+      return;
+    }
+
+    case tval_type::FLOAT64: {
+      static_assert(
+          std::numeric_limits<double>::is_iec559 &&
+          sizeof(double) == sizeof(uint64_t),
+          "non-compatible double implementation");
+
+      assert(reg_len == sizeof(double));
+      assert(op_len == sizeof(double));
+      *((double*) reg) -= *((const double*) op);
       return;
     }
 
@@ -86,6 +142,36 @@ int tval_cmp(
       }
     }
 
+    case tval_type::INT64: {
+      assert(left_len == sizeof(int64_t));
+      assert(right_len == sizeof(int64_t));
+      if (*((const int64_t*) left) < *((const int64_t*) right)) {
+        return -1;
+      } else if (*((const int64_t*) left) > *((const int64_t*) right)) {
+        return 1;
+      } else {
+        return 0;
+      }
+    }
+
+    case tval_type::FLOAT64: {
+      static_assert(
+          std::numeric_limits<double>::is_iec559 &&
+          sizeof(double) == sizeof(uint64_t),
+          "non-compatible double implementation");
+
+      assert(left_len == sizeof(double));
+      assert(right_len == sizeof(double));
+
+      if (*((const double*) left) < *((const double*) right)) {
+        return -1;
+      } else if (*((const double*) left) > *((const double*) right)) {
+        return 1;
+      } else {
+        return 0;
+      }
+    }
+
     default: throw std::invalid_argument("type error");
   }
 }
@@ -98,25 +184,58 @@ bool tval_fromstring(
     size_t str_len) {
   switch (type) {
 
-      case tval_type::UINT64: {
-        assert(val_len == sizeof(uint64_t));
-        try {
-          *((uint64_t*) val_data) = std::stoull(std::string(str, str_len));
-          return true;
-        } catch (...) {
-          return false;
-        }
-      }
-
-      default:
+    case tval_type::UINT64: {
+      assert(val_len == sizeof(uint64_t));
+      try {
+        *((uint64_t*) val_data) = std::stoull(std::string(str, str_len));
+        return true;
+      } catch (...) {
         return false;
+      }
+    }
+
+    case tval_type::INT64: {
+      assert(val_len == sizeof(int64_t));
+      try {
+        *((int64_t*) val_data) = std::stoll(std::string(str, str_len));
+        return true;
+      } catch (...) {
+        return false;
+      }
+    }
+
+    case tval_type::FLOAT64: {
+      static_assert(
+          std::numeric_limits<double>::is_iec559 &&
+          sizeof(double) == sizeof(uint64_t),
+          "non-compatible double implementation");
+
+      assert(val_len == sizeof(double));
+
+      try {
+        *((double*) val_data) = std::stod(std::string(str, str_len));
+        return true;
+      } catch (...) {
+        return false;
+      }
+    }
+
+    default:
+      return false;
 
   }
 }
 
 size_t tval_len(tval_type t) {
+  static_assert(
+      std::numeric_limits<double>::is_iec559 &&
+      sizeof(double) == sizeof(uint64_t),
+      "non-compatible double implementation");
+
   switch (t) {
     case tval_type::UINT64: return sizeof(uint64_t);
+    case tval_type::INT64: return sizeof(int64_t);
+    case tval_type::FLOAT64: return sizeof(double);
     default: throw std::invalid_argument("type error");
   }
 }

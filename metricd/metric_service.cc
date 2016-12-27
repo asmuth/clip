@@ -96,6 +96,15 @@ ReturnCode MetricService::startService(
       continue;
     }
 
+    if (metric->getConfig().kind != metadata.metric_kind) {
+      logWarning(
+          "Skipping series with invalid type; metric_id=$0; series_id=$1",
+          metric_id,
+          series_id);
+
+      continue;
+    }
+
     logDebug(
         "Opening series; metric_id=$0; series_id=$1",
         metadata.metric_id,

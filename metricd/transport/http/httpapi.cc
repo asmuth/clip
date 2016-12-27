@@ -180,6 +180,14 @@ static void renderJSONTimeseries(
           json->addComma();
           json->addInteger(*((uint64_t*) values[i].data));
           break;
+        case tval_type::INT64:
+          json->addComma();
+          json->addInteger(*((int64_t*) values[i].data));
+          break;
+        case tval_type::FLOAT64:
+          json->addComma();
+          json->addFloat(*((double*) values[i].data));
+          break;
       }
     }
 
