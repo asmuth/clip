@@ -269,34 +269,12 @@ void HTTPAPI::insertSample(
     return;
   }
 
-  std::string value_str;
-  if (!URI::getParam(params, "value", &value_str)) {
+  std::string series_id;
+  URI::getParam(params, "series_id", &series_id);
+
+  std::string value;
+  if (!URI::getParam(params, "value", &value)) {
     response->addBody("error: missing ?value=... parameter");
-    response->setStatus(http::kStatusBadRequest);
-    return;
-  }
-
-  static const char kLabelParamPrefix[] = "label[";
-  LabelSet labels;
-  for (const auto& param : params) {
-    const auto& key = param.first;
-    const auto& value = param.second;
-
-    if (key.compare(0, sizeof(kLabelParamPrefix) - 1, kLabelParamPrefix) == 0 &&
-        key.back() == ']') {
-      auto label_key = key.substr(
-          sizeof(kLabelParamPrefix) - 1,
-          key.size() - sizeof(kLabelParamPrefix));
-
-      labels[label_key] = value;
-    }
-  }
-
-  double sample_value;
-  try {
-    sample_value = std::stod(value_str);
-  } catch (std::exception& e) {
-    response->addBody("error: invalid value: " + value_str);
     response->setStatus(http::kStatusBadRequest);
     return;
   }
@@ -304,7 +282,9 @@ void HTTPAPI::insertSample(
   auto now = WallClock::unixMicros();
   auto rc = metric_service_->insertSample(
       metric_id,
-      LabelledSample(Sample(now, sample_value), labels));
+      SeriesNameType(series_id),
+      now,
+      value);
 
   if (rc.isSuccess()) {
     response->setStatus(http::kStatusCreated);

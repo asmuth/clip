@@ -150,7 +150,9 @@ ReturnCode MetricService::listSeries(
 
 ReturnCode MetricService::insertSample(
     const MetricIDType& metric_id,
-    const LabelledSample& sample) {
+    const SeriesNameType& series_name,
+    uint64_t time,
+    const std::string& value) {
   auto metric_map = metric_map_.getMetricMap();
   auto metric = metric_map->findMetric(metric_id);
   if (!metric) {
@@ -163,7 +165,7 @@ ReturnCode MetricService::insertSample(
       &id_provider_,
       metric_id,
       metric->getConfig(),
-      SeriesNameType(sample.getSeriesName()),
+      series_name,
       &series);
 
   if (!rc.isSuccess()) {
@@ -180,13 +182,28 @@ ReturnCode MetricService::insertSample(
     return ReturnCode::error("ERUNTIME", "can't open input aggregator");
   }
 
-  uint64_t value = sample.getSample().getValue();
+  tval_ref val;
+  val.type = metric->getConfig().data_type;
+  val.len = getMetricDataTypeSize(val.type);
+  val.data = alloca(val.len);
+
+  int parse_rc = tval_fromstring(
+      val.type,
+      val.data,
+      val.len,
+      value.data(),
+      value.size());
+
+  if (!parse_rc) {
+    return ReturnCode::errorf("ERUNTIME", "invalid value: '$0'", value);
+  }
+
   rc = input_aggregator->addSample(
       &cursor,
-      sample.getSample().getTime(),
-      MetricDataType::UINT64,
-      &value,
-      sizeof(value));
+      time,
+      val.type,
+      val.data,
+      val.len);
 
   if (rc.isSuccess()) {
     tsdb_->commit(); // FIXME

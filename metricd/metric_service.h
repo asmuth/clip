@@ -48,7 +48,9 @@ public:
    */
   ReturnCode insertSample(
       const MetricIDType& metric_id,
-      const LabelledSample& sample);
+      const SeriesNameType& series_name,
+      uint64_t time,
+      const std::string& value);
 
   /**
    * Get a cursor to a metric series

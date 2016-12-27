@@ -90,6 +90,30 @@ int tval_cmp(
   }
 }
 
+bool tval_fromstring(
+    MetricDataType type,
+    void* val_data,
+    size_t val_len,
+    const char* str,
+    size_t str_len) {
+  switch (type) {
+
+      case MetricDataType::UINT64: {
+        assert(val_len == sizeof(uint64_t));
+        try {
+          *((uint64_t*) val_data) = std::stoull(std::string(str, str_len));
+          return true;
+        } catch (...) {
+          return false;
+        }
+      }
+
+      default:
+        return false;
+
+  }
+}
+
 size_t getMetricDataTypeSize(MetricDataType t) {
   switch (t) {
     case MetricDataType::UINT64: return sizeof(uint64_t);

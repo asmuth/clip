@@ -130,19 +130,13 @@ void StatsdServer::handlePacket(const char* pkt, size_t pkt_len) {
         key,
         value);
 
-    double float_value;
-    try {
-      float_value = std::stod(value);
-    } catch (std::exception& e) {
-      continue;
-    }
-
     auto now = WallClock::unixMicros();
-    LabelledSample sample(
-        Sample(now, float_value),
-        labels);
+    auto rc = metric_service_->insertSample(
+        key,
+        SeriesNameType(""),
+        now,
+        value);
 
-    auto rc = metric_service_->insertSample(key, sample);
     if (!rc.isSuccess()) {
       logWarning(
           "statsd insert failed: $0 [$1=$2]",

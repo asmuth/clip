@@ -49,6 +49,13 @@ int tval_cmp(
     const void* right,
     size_t right_len);
 
+bool tval_fromstring(
+    MetricDataType type,
+    void* val_data,
+    size_t val_len,
+    const char* str,
+    size_t str_len);
+
 size_t getMetricDataTypeSize(MetricDataType t);
 
 } // namespace fnordmetric
