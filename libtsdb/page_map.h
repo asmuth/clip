@@ -34,16 +34,18 @@ public:
   PageMap& operator=(const PageMap& o) = delete;
   ~PageMap();
 
-  PageIDType allocPage(PageType type);
+  PageIDType allocPage(uint64_t value_size);
 
-  PageIDType addColdPage(PageType type, uint64_t disk_addr, uint64_t disk_size);
+  PageIDType addColdPage(
+      uint64_t value_size,
+      uint64_t disk_addr,
+      uint64_t disk_size);
 
   bool getPageInfo(PageIDType page_id, PageInfo* info);
 
   bool getPage(PageIDType page_id, PageBuffer* buf);
 
   bool modifyPage(
-      PageType page_type,
       PageIDType page_id,
       std::function<bool (PageBuffer* buf)> fn);
 
@@ -61,6 +63,7 @@ protected:
     std::unique_ptr<PageBuffer> buffer;
     std::mutex lock;
     uint64_t version;
+    uint64_t value_size;
     uint64_t disk_addr;
     uint64_t disk_size;
     std::atomic<size_t> refcount;
@@ -71,6 +74,7 @@ protected:
   bool loadPage(
       uint64_t disk_addr,
       uint64_t disk_size,
+      uint64_t value_size,
       PageBuffer* buffer);
 
   int fd_;

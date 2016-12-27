@@ -89,9 +89,9 @@ bool ConfigParser::parseMetricDefinition(ConfigList* config) {
     }
 
     /* parse the "aggregation" stanza */
-    if (ttype == T_STRING && tbuf == "aggregation") {
+    if (ttype == T_STRING && tbuf == "kind") {
       consumeToken();
-      if (!parseMetricDefinitionAggregationStanza(&metric_config)) {
+      if (!parseMetricDefinitionKindStanza(&metric_config)) {
         return false;
       }
       continue;
@@ -121,7 +121,7 @@ bool ConfigParser::parseMetricDefinition(ConfigList* config) {
   return true;
 }
 
-bool ConfigParser::parseMetricDefinitionAggregationStanza(
+bool ConfigParser::parseMetricDefinitionKindStanza(
     MetricConfig* metric_config) {
   TokenType ttype;
   std::string tbuf;
@@ -132,18 +132,35 @@ bool ConfigParser::parseMetricDefinitionAggregationStanza(
 
   consumeToken();
 
-  static const std::map<std::string, MetricAggregationType> aggr_type_map = {
-    { "sum", MetricAggregationType::SUM }
+  static const std::map<std::string, MetricKind> kind_map = {
+    { "sample(uint64)",     MetricKind::SAMPLE_UINT64 },
+    { "sample(int64)",      MetricKind::SAMPLE_INT64 },
+    { "sample(float64)",    MetricKind::SAMPLE_FLOAT64 },
+    { "counter(uint64)",    MetricKind::COUNTER_UINT64 },
+    { "counter(int64)",     MetricKind::COUNTER_INT64 },
+    { "counter(float64)",   MetricKind::COUNTER_FLOAT64 },
+    { "monotonic(uint64)",  MetricKind::MONOTONIC_UINT64 },
+    { "monotonic(int64)",   MetricKind::MONOTONIC_INT64 },
+    { "monotonic(float64)", MetricKind::MONOTONIC_FLOAT64 },
+    { "min(uint64)",        MetricKind::MIN_UINT64 },
+    { "min(int64)",         MetricKind::MIN_INT64 },
+    { "min(float64)",       MetricKind::MIN_FLOAT64 },
+    { "max(uint64)",        MetricKind::MAX_UINT64 },
+    { "max(int64)",         MetricKind::MAX_INT64 },
+    { "max(float64)",       MetricKind::MAX_FLOAT64 },
+    { "average(uint64)",    MetricKind::AVERAGE_UINT64 },
+    { "average(int64)",     MetricKind::AVERAGE_INT64 },
+    { "average(float64)",   MetricKind::AVERAGE_FLOAT64 }
   };
 
-  auto iter = aggr_type_map.find(tbuf);
-  if (iter != aggr_type_map.end()) {
-    metric_config->aggregation = iter->second;
+  auto iter = kind_map.find(tbuf);
+  if (iter != kind_map.end()) {
+    metric_config->kind = iter->second;
     return true;
   } else {
     setError(
         StringUtil::format(
-            "invalid token; got: $0, expected one of: sum, ...",
+            "invalid metric kind: $0",
             printToken(ttype, tbuf)));
 
     return false;

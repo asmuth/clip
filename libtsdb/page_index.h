@@ -25,7 +25,7 @@ struct PageIndexSplitpoint {
 class PageIndex {
 public:
 
-  PageIndex(PageType type, const std::string metadata);
+  PageIndex(uint64_t value_size, const std::string metadata);
   PageIndex(const PageIndex& o) = delete;
   PageIndex& operator=(const PageIndex& o) = delete;
   ~PageIndex();
@@ -39,7 +39,7 @@ public:
   const PageIndexSplitpoint* getSplitpoints() const;
 
   size_t getSize() const;
-  PageType getType() const;
+  size_t getValueSize() const;
 
   bool hasDiskSnapshot() const;
   void getDiskSnapshot(uint64_t* addr, uint64_t* size) const;
@@ -48,7 +48,7 @@ public:
   const std::string& getMetadata() const;
 
 protected:
-  PageType type_;
+  uint64_t value_size_;
   std::string metadata_;
   PageIndexEntry* entries_;
   PageIndexSplitpoint* splitpoints_;

@@ -1,4 +1,15 @@
-rvm: 1.9.3
-script: ./fnordmetric-core/run_specs.sh
-services:
-  - redis-server
+language: cpp
+compiler: clang
+dist: trusty
+
+env:
+  - CXXFLAGS="-stdlib=libc++"
+
+script:
+  - ./autogen.sh
+  - ./configure
+  - make check
+
+before_install:
+  - sudo apt-get -qq update
+  - sudo apt-get install -y libc++-dev

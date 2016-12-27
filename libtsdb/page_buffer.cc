@@ -10,6 +10,7 @@
 #include <assert.h>
 #include <stdlib.h>
 #include <string>
+#include <string.h>
 #include <vector>
 #include <algorithm>
 #include "page_buffer.h"
@@ -17,93 +18,55 @@
 
 namespace tsdb {
 
-PageBuffer::PageBuffer(PageType type) : type_(type) {
-  switch (type_) {
-    case PageType::UINT64:
-      new (values_) ValueVectorUInt64Type();
-      break;
-    default:
-      assert(false);
-  }
-}
+PageBuffer::PageBuffer() : value_size_(0) {}
+
+PageBuffer::PageBuffer(size_t value_size) : value_size_(value_size) {}
 
 PageBuffer::PageBuffer(
     PageBuffer&& o) :
-    type_(o.type_),
-    timestamps_(std::move(o.timestamps_)) {
-  switch (type_) {
-    case PageType::UINT64:
-      new (values_) ValueVectorUInt64Type(
-          std::move(*((ValueVectorUInt64Type*) o.values_)));
-      break;
-    default:
-      assert(false);
-  }
-}
+    value_size_(o.value_size_),
+    timestamps_(std::move(o.timestamps_)),
+    values_(std::move(o.values_)) {}
 
 PageBuffer& PageBuffer::operator=(const PageBuffer& o) {
-  assert(type_ == o.type_);
+  value_size_ = o.value_size_;
   timestamps_ = o.timestamps_;
-  switch (type_) {
-    case PageType::UINT64:
-      *((ValueVectorUInt64Type*) values_) =
-          *((ValueVectorUInt64Type*) o.values_);
-      break;
-    default:
-      assert(false);
-  }
-
+  values_ = o.values_;
   return *this;
 }
 
 PageBuffer& PageBuffer::operator=(PageBuffer&& o) {
-  assert(type_ == o.type_);
+  value_size_ = o.value_size_;
   timestamps_ = std::move(o.timestamps_);
-  switch (type_) {
-    case PageType::UINT64:
-      *((ValueVectorUInt64Type*) values_) =
-          std::move(*((ValueVectorUInt64Type*) o.values_));
-      break;
-    default:
-      assert(false);
-  }
-
+  values_ = std::move(o.values_);
   return *this;
 }
 
-PageBuffer::~PageBuffer() {
-  switch (type_) {
-    case PageType::UINT64:
-      ((ValueVectorUInt64Type*) values_)->~vector();
-      break;
-    default:
-      assert(false);
-  }
-}
+PageBuffer::~PageBuffer() {}
 
-template <typename ValueVectorType, typename ValueType>
-static void insertValue(
-    ValueVectorType* value_vector,
+void PageBuffer::insert(
     size_t pos,
-    const ValueType& value) {
-  assert(pos <= value_vector->size());
-  value_vector->insert(value_vector->begin() + pos, value);
+    uint64_t time,
+    const void* value,
+    size_t value_len) {
+  assert(value_len == value_size_);
+  assert(pos <= values_.size());
+  timestamps_.insert(timestamps_.begin() + pos, time);
+  values_.insert(
+      values_.begin() + pos,
+      std::string((const char*) value, value_len));
 }
 
-void PageBuffer::insert(uint64_t time, const void* value, size_t value_len) {
-  auto timestamp_iter = std::lower_bound(
-      timestamps_.begin(),
-      timestamps_.end(),
-      time);
+void PageBuffer::append(uint64_t time, const void* value, size_t value_len) {
+  assert(value_len == value_size_);
+  timestamps_.push_back(time);
+  values_.push_back(std::string((const char*) value, value_len));
+}
 
-  auto pos = timestamp_iter - timestamps_.begin();
-  timestamps_.insert(timestamp_iter, time);
-
-  switch (type_) {
-    case PageType::UINT64:
-      insertValue((ValueVectorUInt64Type*) values_, pos, *((uint64_t*) value));
-      break;
-  }
+void PageBuffer::update(size_t pos, const void* value, size_t value_len) {
+  assert(value_len == value_size_);
+  assert(pos <= values_.size());
+  values_[pos] = std::string((const char*) value, value_len);
 }
 
 void PageBuffer::getTimestamp(size_t pos, uint64_t* timestamp) const {
@@ -111,11 +74,11 @@ void PageBuffer::getTimestamp(size_t pos, uint64_t* timestamp) const {
   *timestamp = timestamps_[pos];
 }
 
-void PageBuffer::getValue(size_t pos, uint64_t* value) const {
-  assert(type_ == PageType::UINT64);
-  auto& values = *((ValueVectorUInt64Type*) values_);
-  assert(pos < values.size());
-  *value = values[pos];
+void PageBuffer::getValue(size_t pos, void* value, size_t value_len) const {
+  assert(pos < values_.size());
+  assert(value_len == value_size_);
+  assert(values_[pos].size() == value_size_);
+  memcpy(value, values_[pos].data(), value_size_);
 }
 
 size_t PageBuffer::getSize() const {
@@ -127,13 +90,14 @@ void PageBuffer::encode(std::string* out) const {
   for (const auto& t : timestamps_) {
     writeVarUInt(out, t);
   }
-  auto& values = *((ValueVectorUInt64Type*) values_);
-  for (const auto& v : values) {
-    writeVarUInt(out, v);
+  for (const auto& v : values_) {
+    assert(v.size() == value_size_);
+    *out += v;
   }
 }
 
 bool PageBuffer::decode(const char* data, size_t len) {
+  assert(value_size_ > 0);
   auto cur = data;
   auto end = cur + len;
 
@@ -149,12 +113,14 @@ bool PageBuffer::decode(const char* data, size_t len) {
     }
   }
 
-  auto& values = *((ValueVectorUInt64Type*) values_);
-  values.resize(nentries);
+  values_.resize(nentries);
   for (uint64_t i = 0; i < nentries; ++i) {
-    if (!readVarUInt(&cur, end, &values[i])) {
+    if (cur + value_size_ >= end) {
       return false;
     }
+
+    values_[i] = std::string(cur, value_size_);
+    cur += value_size_;
   }
 
   return true;

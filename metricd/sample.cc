@@ -18,11 +18,11 @@ Sample::Sample(
     time_(time),
     value_(value) {}
 
-TimestampType Sample::getTime() {
+TimestampType Sample::getTime() const {
   return time_;
 }
 
-double Sample::getValue() {
+double Sample::getValue() const {
   return value_;
 }
 
@@ -38,6 +38,10 @@ const Sample& LabelledSample::getSample() const {
 
 const LabelSet& LabelledSample::getLabels() const {
   return labels_;
+}
+
+const std::string& LabelledSample::getSeriesName() const {
+  return series_name_;
 }
 
 } // namespace fnordmetric

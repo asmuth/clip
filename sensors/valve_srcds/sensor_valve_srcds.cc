@@ -122,8 +122,9 @@ int main(int argc, const char** argv) {
         "   --send_statsd <addr>        Send measurements via statsd/udp\n"
         "   --send_jsonudp <addr>       Send measurements via json/udp\n"
         "   --send_jsontcp <addr>       Send measurements via json/tcp\n"
+        "   -v, --verbose               Run in verbose mode\n"
         "   -?, --help                  Display this help text and exit\n"
-        "   -v, --version               Display the version of this binary and exit";
+        "   -V, --version               Display the version of this binary and exit";
 
     return 0;
   }

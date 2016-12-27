@@ -9,52 +9,159 @@
  */
 #pragma once
 #include <metricd/sample.h>
+#include <metricd/types.h>
+#include <metricd/util/return_code.h>
+#include <libtsdb/cursor.h>
 
 namespace fnordmetric {
+
+class InputAggregator {
+public:
+
+  virtual ~InputAggregator() = default;
+
+  virtual ReturnCode addSample(
+      tsdb::Cursor* cursor,
+      uint64_t time,
+      tval_type value_type,
+      const void* value,
+      size_t value_len) = 0;
+
+};
 
 class OutputAggregator {
 public:
 
   virtual ~OutputAggregator() = default;
 
-  virtual bool aggregateUINT64(
-      uint64_t input_time,
-      uint64_t input_value,
-      uint64_t* output_time,
-      uint64_t* output_value) = 0;
+  virtual bool next(
+      uint64_t* time,
+      tval_ref* out,
+      size_t out_len) = 0;
+
+  virtual tval_type getOutputType() const = 0;
+
+  virtual size_t getOutputColumnCount() const = 0;
+
+  virtual std::string getOutputColumnName(size_t idx) const = 0;
 
 };
 
-template <typename T>
-class SumOutputAggregator : public OutputAggregator {
+class SumInputAggregator : public InputAggregator {
 public:
 
-  SumOutputAggregator(
+  SumInputAggregator(
       uint64_t granularity,
       uint64_t align = 0);
 
-  bool aggregateUINT64(
-      uint64_t input_time,
-      uint64_t input_value,
-      uint64_t* output_time,
-      uint64_t* output_value) override;
-
-  bool aggregate(
-      uint64_t input_time,
-      T input_value,
-      uint64_t* output_time,
-      T* output_value);
+  ReturnCode addSample(
+      tsdb::Cursor* cursor,
+      uint64_t time,
+      tval_type value_type,
+      const void* value,
+      size_t value_len) override;
 
 protected:
   uint64_t granularity_;
   uint64_t align_;
-  uint64_t twin_;
-  T sum_;
+};
+
+class SumOutputAggregator : public OutputAggregator {
+public:
+
+  SumOutputAggregator(
+      tsdb::Cursor* cursor,
+      tval_type input_type,
+      uint64_t time_begin,
+      uint64_t time_limit,
+      uint64_t granularity,
+      uint64_t align = 0,
+      bool interpolate = true);
+
+  ~SumOutputAggregator();
+
+  bool next(
+      uint64_t* time,
+      tval_ref* out,
+      size_t out_len) override;
+
+  tval_type getOutputType() const override;
+
+  size_t getOutputColumnCount() const override;
+
+  std::string getOutputColumnName(size_t idx) const override;
+
+protected:
+  tsdb::Cursor* cursor_;
+  tval_type input_type_;
+  uint64_t time_begin_;
+  uint64_t time_limit_;
+  uint64_t granularity_;
+  uint64_t align_;
+  bool interpolate_;
+  uint64_t cur_time_;
+  tval_ref cur_sum_;
+};
+
+class MaxInputAggregator : public InputAggregator {
+public:
+
+  MaxInputAggregator(
+      uint64_t granularity,
+      uint64_t align = 0);
+
+  ReturnCode addSample(
+      tsdb::Cursor* cursor,
+      uint64_t time,
+      tval_type value_type,
+      const void* value,
+      size_t value_len) override;
+
+protected:
+  uint64_t granularity_;
+  uint64_t align_;
+};
+
+class MaxOutputAggregator : public OutputAggregator {
+public:
+
+  MaxOutputAggregator(
+      tsdb::Cursor* cursor,
+      tval_type input_type,
+      uint64_t time_begin,
+      uint64_t time_limit,
+      uint64_t granularity,
+      uint64_t align = 0,
+      bool interpolate = true);
+
+  ~MaxOutputAggregator();
+
+  bool next(
+      uint64_t* time,
+      tval_ref* out,
+      size_t out_len) override;
+
+  tval_type getOutputType() const override;
+
+  size_t getOutputColumnCount() const override;
+
+  std::string getOutputColumnName(size_t idx) const override;
+
+protected:
+  tsdb::Cursor* cursor_;
+  tval_type input_type_;
+  uint64_t time_begin_;
+  uint64_t time_limit_;
+  uint64_t granularity_;
+  uint64_t align_;
+  bool interpolate_;
+  uint64_t cur_time_;
+  tval_ref cur_max_;
+  bool has_cur_max_;
+  size_t cur_max_time_;
 };
 
 uint64_t alignTime(uint64_t timestamp, uint64_t window, uint64_t align);
 
 } // namespace fnordmetric
-
-#include "aggregate_impl.h"
 

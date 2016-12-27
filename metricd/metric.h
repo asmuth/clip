@@ -9,6 +9,7 @@
  * <http://www.gnu.org/licenses/>.
  */
 #pragma once
+#include <metricd/types.h>
 #include <metricd/sample.h>
 #include <metricd/util/return_code.h>
 #include <metricd/aggregate.h>
@@ -27,32 +28,45 @@ class MetricMap;
 class SeriesIDProvider;
 
 using MetricIDType = std::string;
-using SeriesIDType = uint64_t;
 
-enum class MetricDataType {
-  UINT64,
-  INT64,
-  FLOAT64
+struct SeriesIDType {
+  explicit SeriesIDType(uint64_t id_) : id(id_) {}
+  uint64_t id;
 };
 
-enum class MetricAggregationType {
-  NONE,
-  RANDOM,
-  LATEST,
-  NEWEST,
-  MIN,
-  MAX,
-  AVG,
-  SUM,
-  SUMRATE,
-  RATE
+struct SeriesNameType {
+  SeriesNameType() = default;
+  explicit SeriesNameType(const std::string& name_) : name(name_) {}
+  std::string name;
+};
+
+enum MetricKind : uint32_t {
+  UNKNOWN           = 0,
+  SAMPLE_UINT64     = 1,
+  SAMPLE_INT64      = 2,
+  SAMPLE_FLOAT64    = 3,
+  COUNTER_UINT64    = 4,
+  COUNTER_INT64     = 5,
+  COUNTER_FLOAT64   = 6,
+  MONOTONIC_UINT64  = 7,
+  MONOTONIC_INT64   = 8,
+  MONOTONIC_FLOAT64 = 9,
+  MIN_UINT64        = 10,
+  MIN_INT64         = 11,
+  MIN_FLOAT64       = 12,
+  MAX_UINT64        = 13,
+  MAX_INT64         = 14,
+  MAX_FLOAT64       = 15,
+  AVERAGE_UINT64    = 16,
+  AVERAGE_INT64     = 17,
+  AVERAGE_FLOAT64   = 18
 };
 
 struct MetricConfig {
   MetricConfig();
-  MetricDataType data_type;
-  MetricAggregationType aggregation;
+  MetricKind kind;
   uint64_t granularity;
+  uint64_t display_granularity;
   bool is_valid;
 };
 
@@ -61,28 +75,23 @@ public:
 
   MetricSeries(
       SeriesIDType series_id,
-      LabelSet labels);
-
-  ReturnCode insertSample(
-      tsdb::TSDB* tsdb,
-      Sample sample);
+      SeriesNameType series_name);
 
   size_t getTotalBytes() const;
   TimestampType getLastInsertTime();
 
-  const LabelSet* getLabels() const;
-  bool hasLabel(const std::string& label) const;
-  std::string getLabel(const std::string& label) const;
-  bool compareLabel(const std::string& label, const std::string& value) const;
+  SeriesIDType getSeriesID() const;
+  const SeriesNameType& getSeriesName() const;
 
 protected:
   const SeriesIDType series_id_;
-  const LabelSet labels_;
+  SeriesNameType series_name_;
 };
 
 struct MetricSeriesMetadata {
   MetricIDType metric_id;
-  LabelSet labels;
+  MetricKind metric_kind;
+  SeriesNameType series_name;
   bool encode(std::ostream* os) const;
   bool decode(std::istream* is);
 };
@@ -93,7 +102,11 @@ public:
   MetricSeriesList();
 
   bool findSeries(
-      SeriesIDType series_id,
+      const SeriesIDType& series_id,
+      std::shared_ptr<MetricSeries>* series);
+
+  bool findSeries(
+      const SeriesNameType& series_name,
       std::shared_ptr<MetricSeries>* series);
 
   ReturnCode findOrCreateSeries(
@@ -101,12 +114,12 @@ public:
       SeriesIDProvider* series_id_provider,
       const std::string& metric_id,
       const MetricConfig& config,
-      const LabelSet& labels,
+      const SeriesNameType& series_name,
       std::shared_ptr<MetricSeries>* series);
 
   void addSeries(
       const SeriesIDType& series_id,
-      const LabelSet& labels);
+      const SeriesNameType& series_name);
 
   void listSeries(std::vector<SeriesIDType>* series_ids);
 
@@ -114,27 +127,37 @@ public:
 
 protected:
   mutable std::mutex series_mutex_;
-  std::map<SeriesIDType, std::shared_ptr<MetricSeries>> series_;
+  std::map<std::string, std::shared_ptr<MetricSeries>> series_;
+  std::map<uint64_t, std::shared_ptr<MetricSeries>> series_by_id_;
 };
 
 class MetricSeriesCursor {
 public:
 
   MetricSeriesCursor();
-  MetricSeriesCursor(const MetricConfig* config, tsdb::Cursor cursor);
+  MetricSeriesCursor(
+      const MetricConfig* config,
+      tsdb::Cursor cursor,
+      uint64_t time_begin,
+      uint64_t time_limit);
 
   MetricSeriesCursor(const MetricSeriesCursor& o) = delete;
   MetricSeriesCursor(MetricSeriesCursor&& o);
   MetricSeriesCursor& operator=(const MetricSeriesCursor& o) = delete;
   MetricSeriesCursor& operator=(MetricSeriesCursor&& o);
 
-  bool next(uint64_t* timestamp, uint64_t* value);
+  bool next(
+      uint64_t* time,
+      tval_ref* out,
+      size_t out_len);
+
+  tval_type getOutputType() const;
+
+  size_t getOutputColumnCount() const;
+
+  std::string getOutputColumnName(size_t idx) const;
 
 protected:
-
-  std::unique_ptr<OutputAggregator> mkAggregator(
-      const MetricConfig* config) const;
-
   tsdb::Cursor cursor_;
   std::unique_ptr<OutputAggregator> aggr_;
 };
@@ -157,7 +180,7 @@ public:
   MetricSeriesListCursor& operator=(MetricSeriesListCursor&& o);
 
   SeriesIDType getSeriesID() const;
-  const LabelSet* getLabels() const;
+  const SeriesNameType& getSeriesName() const;
 
   bool isValid() const;
   bool next();
@@ -184,17 +207,29 @@ public:
   TimestampType getLastInsertTime();
 
   const MetricConfig& getConfig() const;
-  void setConfig(MetricConfig config);
+  ReturnCode setConfig(MetricConfig config);
 
   MetricSeriesList* getSeriesList();
+
+  InputAggregator* getInputAggregator();
 
 protected:
   std::string key_;
   MetricSeriesList series_;
   MetricConfig config_;
+  std::unique_ptr<InputAggregator> input_aggr_;
 };
 
-tsdb::PageType getMetricTSDBPageType(MetricDataType t);
+std::unique_ptr<OutputAggregator> mkOutputAggregator(
+    tsdb::Cursor* cursor,
+    uint64_t time_begin,
+    uint64_t time_limit,
+    const MetricConfig* config);
+
+std::unique_ptr<InputAggregator> mkInputAggregator(
+    const MetricConfig* config);
+
+tval_type getMetricDataType(MetricKind t);
 
 } // namespace fnordmetric
 

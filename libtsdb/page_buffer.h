@@ -14,22 +14,23 @@
 
 namespace tsdb {
 
-enum class PageType : uint64_t { UINT64 = 1 };
-
 class PageBuffer {
 public:
 
-  PageBuffer(PageType type);
+  PageBuffer();
+  PageBuffer(size_t value_size);
   PageBuffer(const PageBuffer& o) = delete;
   PageBuffer(PageBuffer&& o) ;
   PageBuffer& operator=(const PageBuffer& o);
   PageBuffer& operator=(PageBuffer&& o);
   ~PageBuffer();
 
-  void insert(uint64_t time, const void* value, size_t value_len);
+  void update(size_t pos, const void* value, size_t value_len);
+  void insert(size_t pos, uint64_t time, const void* value, size_t value_len);
+  void append(uint64_t time, const void* value, size_t value_len);
 
   void getTimestamp(size_t pos, uint64_t* timestamp) const;
-  void getValue(size_t pos, uint64_t* value) const;
+  void getValue(size_t pos, void* value, size_t value_len) const;
 
   size_t getSize() const;
 
@@ -40,12 +41,9 @@ protected:
 
   using ValueVectorUInt64Type = std::vector<uint64_t>;
 
-  static constexpr const size_t kValuesVectorSize =
-      sizeof(ValueVectorUInt64Type);
-
-  PageType type_;
+  size_t value_size_;
   std::vector<uint64_t> timestamps_;
-  char values_[kValuesVectorSize];
+  std::vector<std::string> values_;
 };
 
 } // namespace tsdb

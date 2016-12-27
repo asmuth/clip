@@ -18,53 +18,23 @@
 namespace fnordmetric {
 
 MetricConfig::MetricConfig() :
-   data_type(MetricDataType::UINT64),
-   aggregation(MetricAggregationType::NONE),
-   granularity(0),
-   is_valid(false) {}
+    kind(MetricKind::UNKNOWN),
+    granularity(0),
+    display_granularity(0),
+    is_valid(false) {}
 
 MetricSeries::MetricSeries(
     SeriesIDType series_id,
-    LabelSet labels) :
+    SeriesNameType series_name) :
     series_id_(series_id),
-    labels_(labels) {}
+    series_name_(series_name) {}
 
-ReturnCode MetricSeries::insertSample(
-    tsdb::TSDB* tsdb,
-    Sample sample) {
-  if (tsdb->insertUInt64(series_id_, sample.getTime(), sample.getValue())) {
-    return ReturnCode::success();
-  } else {
-    return ReturnCode::error("ERUNTIME", "insert failed");
-  }
+SeriesIDType MetricSeries::getSeriesID() const {
+  return series_id_;
 }
 
-const LabelSet* MetricSeries::getLabels() const {
-  return &labels_;
-}
-
-bool MetricSeries::hasLabel(const std::string& label) const {
-  return labels_.count(label) > 0;
-}
-
-std::string MetricSeries::getLabel(const std::string& label) const {
-  auto iter = labels_.find(label);
-  if (iter == labels_.end()) {
-    return "";
-  } else {
-    return iter->second;
-  }
-}
-
-bool MetricSeries::compareLabel(
-    const std::string& label,
-    const std::string& value) const {
-  auto iter = labels_.find(label);
-  if (iter == labels_.end()) {
-    return false;
-  } else {
-    return iter->second == value;
-  }
+const SeriesNameType& MetricSeries::getSeriesName() const {
+  return series_name_;
 }
 
 bool MetricSeriesMetadata::encode(std::ostream* os) const {
@@ -77,28 +47,17 @@ bool MetricSeriesMetadata::encode(std::ostream* os) const {
     return false;
   }
 
-  if (!tsdb::writeVarUInt(os, labels.size())) {
+  if (!tsdb::writeVarUInt(os, (uint64_t) metric_kind)) {
     return false;
   }
 
-  for (const auto& l : labels) {
-    if (!tsdb::writeVarUInt(os, l.first.size())) {
-      return false;
-    }
+  if (!tsdb::writeVarUInt(os, series_name.name.size())) {
+    return false;
+  }
 
-    os->write(l.first.data(), l.first.size());
-    if (os->fail()) {
-      return false;
-    }
-
-    if (!tsdb::writeVarUInt(os, l.second.size())) {
-      return false;
-    }
-
-    os->write(l.second.data(), l.second.size());
-    if (os->fail()) {
-      return false;
-    }
+  os->write(series_name.name.data(), series_name.name.size());
+  if (os->fail()) {
+    return false;
   }
 
   return true;
@@ -116,35 +75,22 @@ bool MetricSeriesMetadata::decode(std::istream* is) {
     return false;
   }
 
-  uint64_t labels_count;
-  if (!tsdb::readVarUInt(is, &labels_count)) {
+  uint64_t kind;
+  if (tsdb::readVarUInt(is, &kind)) {
+    metric_kind = (MetricKind) kind;
+  } else {
     return false;
   }
 
-  for (uint64_t i = 0; i < labels_count; ++i) {
-    uint64_t label_key_len;
-    if (!tsdb::readVarUInt(is, &label_key_len)) {
-      return false;
-    }
+  uint64_t series_name_len;
+  if (!tsdb::readVarUInt(is, &series_name_len)) {
+    return false;
+  }
 
-    std::string label_key(label_key_len, 0);
-    is->read(&label_key[0], label_key.size());
-    if (is->fail()) {
-      return false;
-    }
-
-    uint64_t label_value_len;
-    if (!tsdb::readVarUInt(is, &label_value_len)) {
-      return false;
-    }
-
-    std::string label_value(label_value_len, 0);
-    is->read(&label_value[0], label_value.size());
-    if (is->fail()) {
-      return false;
-    }
-
-    labels[label_key] = label_value;
+  series_name.name.resize(series_name_len);
+  is->read(&series_name.name[0], series_name.name.size());
+  if (is->fail()) {
+    return false;
   }
 
   return true;
@@ -153,11 +99,25 @@ bool MetricSeriesMetadata::decode(std::istream* is) {
 MetricSeriesList::MetricSeriesList() {}
 
 bool MetricSeriesList::findSeries(
-    SeriesIDType series_id,
+    const SeriesIDType& series_id,
     std::shared_ptr<MetricSeries>* series) {
   std::unique_lock<std::mutex> lk(series_mutex_);
 
-  auto iter = series_.find(series_id);
+  auto iter = series_by_id_.find(series_id.id);
+  if (iter == series_by_id_.end()) {
+    return false;
+  } else {
+    *series = iter->second;
+    return true;
+  }
+}
+
+bool MetricSeriesList::findSeries(
+    const SeriesNameType& series_name,
+    std::shared_ptr<MetricSeries>* series) {
+  std::unique_lock<std::mutex> lk(series_mutex_);
+
+  auto iter = series_.find(series_name.name);
   if (iter == series_.end()) {
     return false;
   } else {
@@ -171,38 +131,38 @@ ReturnCode MetricSeriesList::findOrCreateSeries(
     SeriesIDProvider* series_id_provider,
     const std::string& metric_id,
     const MetricConfig& config,
-    const LabelSet& labels,
+    const SeriesNameType& series_name,
     std::shared_ptr<MetricSeries>* series) {
   std::unique_lock<std::mutex> lk(series_mutex_);
 
   /* try to find an existing series that matches the label set */
   // FIXME this operation should not be O(n)
-  auto series_iter = series_.begin();
-  for (; series_iter != series_.end(); ++series_iter) {
-    if (*series_iter->second->getLabels() == labels) {
-      *series = series_iter->second;
-      return ReturnCode::success();
-    }
+  auto series_iter = series_.find(series_name.name);
+  if (series_iter != series_.end()) {
+    *series = series_iter->second;
+    return ReturnCode::success();
   }
 
   /* if no existing series was found, create a new one */
   auto new_series_id = series_id_provider->allocateSeriesID();
+
   auto new_series = std::make_shared<MetricSeries>(
       new_series_id,
-      labels);
+      series_name);
 
   /* encode series metadata */
   MetricSeriesMetadata metadata;
   metadata.metric_id = metric_id;
-  metadata.labels = labels;
+  metadata.metric_kind = config.kind;
+  metadata.series_name = series_name;
 
   std::ostringstream metadata_buf;
   metadata.encode(&metadata_buf);
 
   /* create the new  series in the tsdb file */
   auto create_rc = tsdb->createSeries(
-      new_series_id,
-      getMetricTSDBPageType(config.data_type),
+      new_series_id.id,
+      tval_len(getMetricDataType(config.kind)),
       metadata_buf.str());
 
   if (!create_rc) {
@@ -210,29 +170,31 @@ ReturnCode MetricSeriesList::findOrCreateSeries(
   }
 
   /* add new series to series list */
-  series_.emplace(new_series_id, new_series);
+  series_.emplace(series_name.name, new_series);
+  series_by_id_.emplace(new_series_id.id, new_series);
   *series = std::move(new_series);
   return ReturnCode::success();
 }
 
 void MetricSeriesList::addSeries(
     const SeriesIDType& series_id,
-    const LabelSet& labels) {
+    const SeriesNameType& series_name) {
   std::unique_lock<std::mutex> lk(series_mutex_);
-  assert(series_.count(series_id) == 0);
+  assert(series_.count(series_name.name) == 0);
 
-  series_.emplace(
+  auto series = std::make_shared<MetricSeries>(
       series_id,
-      std::make_shared<MetricSeries>(
-          series_id,
-          labels));
+      series_name);
+
+  series_.emplace(series_name.name, series);
+  series_by_id_.emplace(series_id.id, series);
 }
 
 void MetricSeriesList::listSeries(std::vector<SeriesIDType>* series_ids) {
   std::unique_lock<std::mutex> lk(series_mutex_);
-  series_ids->reserve(series_.size());
-  for (const auto& s : series_) {
-    series_ids->emplace_back(s.first);
+  series_ids->reserve(series_by_id_.size());
+  for (const auto& s : series_by_id_) {
+    series_ids->emplace_back(SeriesIDType(s.first));
   }
 }
 
@@ -241,14 +203,15 @@ size_t MetricSeriesList::getSize() const {
   return series_.size();
 }
 
-MetricSeriesCursor::MetricSeriesCursor() :
-    cursor_(tsdb::PageType::UINT64) {}
+MetricSeriesCursor::MetricSeriesCursor() {}
 
 MetricSeriesCursor::MetricSeriesCursor(
     const MetricConfig* config,
-    tsdb::Cursor cursor) :
+    tsdb::Cursor cursor,
+    uint64_t time_begin,
+    uint64_t time_limit) :
     cursor_(std::move(cursor)),
-    aggr_(mkAggregator(config)) {}
+    aggr_(mkOutputAggregator(&cursor_, time_begin, time_limit, config)) {}
 
 MetricSeriesCursor::MetricSeriesCursor(
     MetricSeriesCursor&& o) :
@@ -261,34 +224,99 @@ MetricSeriesCursor& MetricSeriesCursor::operator=(MetricSeriesCursor&& o) {
   return *this;
 }
 
-bool MetricSeriesCursor::next(uint64_t* timestamp, uint64_t* value) {
+bool MetricSeriesCursor::next(
+    uint64_t* timestamp,
+    tval_ref* out,
+    size_t out_len) {
   if (aggr_) {
-    uint64_t next_ts;
-    uint64_t next_val;
-
-    while (cursor_.next(&next_ts, &next_val)) {
-      if (aggr_->aggregateUINT64(next_ts, next_val, timestamp, value)) {
-        return true;
-      }
-    }
-
-    return aggr_->aggregateUINT64(uint64_t(-1), 0, timestamp, value);
+    return aggr_->next(timestamp, out, out_len);
   } else {
-    return cursor_.next(timestamp, value);
+    return false;
   }
 }
 
-std::unique_ptr<OutputAggregator> MetricSeriesCursor::mkAggregator(
-    const MetricConfig* config) const {
+tval_type MetricSeriesCursor::getOutputType() const {
+  if (aggr_) {
+    return aggr_->getOutputType();
+  } else {
+    //return config_.data_type;
+    return tval_type::UINT64; // FIXME
+  }
+}
+
+size_t MetricSeriesCursor::getOutputColumnCount() const {
+  if (aggr_) {
+    return aggr_->getOutputColumnCount();
+  } else {
+    return 1;
+  }
+}
+
+std::string MetricSeriesCursor::getOutputColumnName(size_t idx) const {
+  if (aggr_) {
+    return aggr_->getOutputColumnName(idx);
+  } else {
+    assert(idx < 1);
+    return "value";
+  }
+}
+
+std::unique_ptr<InputAggregator> mkInputAggregator(
+    const MetricConfig* config) {
   if (config->granularity == 0) {
     return {};
   }
 
-  switch (config->aggregation) {
-    case MetricAggregationType::SUM:
+  switch (config->kind) {
+    case MetricKind::MAX_UINT64:
+    case MetricKind::MAX_INT64:
+    case MetricKind::MAX_FLOAT64:
+      return std::unique_ptr<InputAggregator>(
+          new MaxInputAggregator(config->granularity));
+    case MetricKind::COUNTER_UINT64:
+    case MetricKind::COUNTER_INT64:
+    case MetricKind::COUNTER_FLOAT64:
+      return std::unique_ptr<InputAggregator>(
+          new SumInputAggregator(config->granularity));
+    default: return {};
+  }
+}
+
+std::unique_ptr<OutputAggregator> mkOutputAggregator(
+    tsdb::Cursor* cursor,
+    uint64_t time_begin,
+    uint64_t time_limit,
+    const MetricConfig* config) {
+  uint64_t granularity = config->display_granularity;
+  if (granularity == 0) {
+    granularity = config->granularity;
+  }
+
+  if (granularity == 0) {
+    return {};
+  }
+
+  switch (config->kind) {
+    case MetricKind::MAX_UINT64:
+    case MetricKind::MAX_INT64:
+    case MetricKind::MAX_FLOAT64:
       return std::unique_ptr<OutputAggregator>(
-          new SumOutputAggregator<uint64_t>(config->granularity));
-    case MetricAggregationType::NONE: return {};
+          new MaxOutputAggregator(
+              cursor,
+              getMetricDataType(config->kind),
+              time_begin,
+              time_limit,
+              granularity));
+    case MetricKind::COUNTER_UINT64:
+    case MetricKind::COUNTER_INT64:
+    case MetricKind::COUNTER_FLOAT64:
+      return std::unique_ptr<OutputAggregator>(
+          new SumOutputAggregator(
+              cursor,
+              getMetricDataType(config->kind),
+              time_begin,
+              time_limit,
+              granularity));
     default: return {};
   }
 }
@@ -346,10 +374,9 @@ SeriesIDType MetricSeriesListCursor::getSeriesID() const {
   return *cursor_;
 }
 
-const LabelSet* MetricSeriesListCursor::getLabels() const {
-  assert(valid_);
-  assert(series_.get() != nullptr);
-  return series_->getLabels();
+const SeriesNameType& MetricSeriesListCursor::getSeriesName() const {
+  assert(valid_ && series_);
+  return series_->getSeriesName();
 }
 
 bool MetricSeriesListCursor::isValid() const {
@@ -379,16 +406,25 @@ Metric::Metric(
     const std::string& key) :
     key_(key) {}
 
-void Metric::setConfig(MetricConfig config) {
-  if (config.aggregation != MetricAggregationType::NONE &&
-      config.granularity == 0) {
-    logWarning(
-        "metric<$0>: setting 'aggregation' without 'granularity' will have "
-        "no effect",
+ReturnCode Metric::setConfig(MetricConfig config) {
+  //if (config.aggregation != MetricAggregationType::NONE &&
+  //    config.granularity == 0) {
+  //  logWarning(
+  //      "metric<$0>: setting 'aggregation' without 'granularity' will have "
+  //      "no effect",
+  //      key_);
+  //}
+
+  if (config.kind == MetricKind::UNKNOWN) {
+    return ReturnCode::errorf(
+        "EARG",
+        "metric<$0>: missing 'kind'",
         key_);
   }
 
   config_ = config;
+  input_aggr_ = mkInputAggregator(&config_);
+  return ReturnCode::success();
 }
 
 const MetricConfig& Metric::getConfig() const {
@@ -399,10 +435,34 @@ MetricSeriesList* Metric::getSeriesList() {
   return &series_;
 }
 
-tsdb::PageType getMetricTSDBPageType(MetricDataType t) {
+InputAggregator* Metric::getInputAggregator() {
+  return input_aggr_.get();
+}
+
+tval_type getMetricDataType(MetricKind t) {
   switch (t) {
-    case MetricDataType::UINT64: return tsdb::PageType::UINT64;
-    default: assert(false); // invalid data tyoe
+    case SAMPLE_UINT64: return tval_type::UINT64;
+    case SAMPLE_INT64: return tval_type::INT64;
+    case SAMPLE_FLOAT64: return tval_type::FLOAT64;
+    case COUNTER_UINT64: return tval_type::UINT64;
+    case COUNTER_INT64: return tval_type::INT64;
+    case COUNTER_FLOAT64: return tval_type::FLOAT64;
+    case MONOTONIC_UINT64: return tval_type::UINT64;
+    case MONOTONIC_INT64: return tval_type::INT64;
+    case MONOTONIC_FLOAT64: return tval_type::FLOAT64;
+    case MIN_UINT64: return tval_type::UINT64;
+    case MIN_INT64: return tval_type::INT64;
+    case MIN_FLOAT64: return tval_type::FLOAT64;
+    case MAX_UINT64: return tval_type::UINT64;
+    case MAX_INT64: return tval_type::INT64;
+    case MAX_FLOAT64: return tval_type::FLOAT64;
+    case AVERAGE_UINT64: return tval_type::UINT64;
+    case AVERAGE_INT64: return tval_type::INT64;
+    case AVERAGE_FLOAT64: return tval_type::FLOAT64;
+
+    case UNKNOWN:
+    default:
+      return tval_type::UINT64;
   }
 }
 

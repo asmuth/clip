@@ -248,6 +248,12 @@ public:
    */
   static bool includesi(const std::string& str, const std::string& subject);
 
+  static std::string hexPrint(
+      const void* data,
+      size_t size,
+      bool separate_bytes = true,
+      bool reverse_byte_order = false);
+
   /**
    * Format the provided string using StringUtil::format and print to stdou
    *

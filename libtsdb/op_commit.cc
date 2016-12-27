@@ -70,7 +70,7 @@ bool TSDB::commit() {
     /* write the series index data header */
     std::string index_data;
     auto page_idx = txn.getPageIndex();
-    writeVarUInt(&index_data, (uint64_t) page_idx->getType());
+    writeVarUInt(&index_data, page_idx->getValueSize());
     writeVarUInt(&index_data, page_idx->getMetadata().size());
     index_data.append(
         page_idx->getMetadata().data(),
@@ -96,7 +96,7 @@ bool TSDB::commit() {
       if (page_info.is_dirty) {
         all_pages_clean = false;
 
-        PageBuffer page_buf(page_idx->getType());
+        PageBuffer page_buf;
         page_map_.getPage(page_id, &page_buf);
 
         std::string page_data;

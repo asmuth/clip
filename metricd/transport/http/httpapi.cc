@@ -124,7 +124,7 @@ void HTTPAPI::renderMetricSeriesList(
   }
 
   MetricSeriesListCursor cursor;
-  auto rc = metric_service_->listMetricSeries(metric_id, &cursor);
+  auto rc = metric_service_->listSeries(metric_id, &cursor);
   if (!rc.isSuccess()) {
     response->setStatus(http::kStatusInternalServerError);
     response->addBody("ERROR: " + rc.getMessage());
@@ -147,20 +147,7 @@ void HTTPAPI::renderMetricSeriesList(
     json.beginObject();
 
     json.addObjectEntry("series_id");
-    json.addInteger(cursor.getSeriesID());
-    json.addComma();
-
-    json.addObjectEntry("labels");
-    json.beginObject();
-    auto labels = cursor.getLabels();
-    for (auto cur = labels->begin(); cur != labels->end(); ++cur) {
-      if (cur != labels->begin()) {
-        json.addComma();
-      }
-      json.addObjectEntry(cur->first);
-      json.addString(cur->second);
-    }
-    json.endObject();
+    json.addString(cursor.getSeriesName().name);
 
     json.endObject();
   }
@@ -168,6 +155,48 @@ void HTTPAPI::renderMetricSeriesList(
   json.endArray();
   json.endObject();
 }
+
+static void renderJSONTimeseries(
+    json::JSONOutputStream* json,
+    MetricSeriesCursor* cursor) {
+  json->beginArray();
+
+  std::vector<tval_ref> values(cursor->getOutputColumnCount());
+  for (size_t i = 0; i < values.size(); ++i) {
+    values[i].type = cursor->getOutputType();
+    values[i].len = tval_len(values[i].type);
+    values[i].data = alloca(values[i].len);
+  }
+
+  uint64_t timestamp;
+  for (size_t j = 0; cursor->next(&timestamp, &values[0], values.size()); ++j) {
+    if (j++ > 0) { json->addComma(); }
+    json->beginArray();
+    json->addInteger(timestamp);
+
+    for (size_t i = 0; i < values.size(); ++i) {
+      switch (values[i].type) {
+        case tval_type::UINT64:
+          json->addComma();
+          json->addInteger(*((uint64_t*) values[i].data));
+          break;
+        case tval_type::INT64:
+          json->addComma();
+          json->addInteger(*((int64_t*) values[i].data));
+          break;
+        case tval_type::FLOAT64:
+          json->addComma();
+          json->addFloat(*((double*) values[i].data));
+          break;
+      }
+    }
+
+    json->endArray();
+  }
+
+  json->endArray();
+}
+
 
 void HTTPAPI::performMetricFetchSeries(
     http::HTTPRequest* request,
@@ -183,12 +212,15 @@ void HTTPAPI::performMetricFetchSeries(
   }
 
   MetricSeriesListCursor cursor;
-  auto rc = metric_service_->listMetricSeries(metric_id, &cursor);
+  auto rc = metric_service_->listSeries(metric_id, &cursor);
   if (!rc.isSuccess()) {
     response->setStatus(http::kStatusInternalServerError);
     response->addBody("ERROR: " + rc.getMessage());
     return;
   }
+
+  uint64_t time_limit = WallClock::unixMicros();
+  uint64_t time_begin = time_limit - 2 * kMicrosPerHour;
 
   response->setStatus(http::kStatusOK);
   response->addHeader("Content-Type", "application/json; charset=utf-8");
@@ -202,45 +234,31 @@ void HTTPAPI::performMetricFetchSeries(
   json.beginArray();
 
   for (int j = 0; cursor.isValid(); cursor.next()) {
+    auto data_cursor = metric_service_->getCursor(
+        metric_id,
+        cursor.getSeriesID(),
+        time_begin,
+        time_limit);
+
     if (j++ > 0) { json.addComma(); }
     json.beginObject();
 
     json.addObjectEntry("series_id");
-    json.addInteger(cursor.getSeriesID());
+    json.addString(cursor.getSeriesName().name);
     json.addComma();
 
-    json.addObjectEntry("labels");
-    json.beginObject();
-    auto labels = cursor.getLabels();
-    for (auto cur = labels->begin(); cur != labels->end(); ++cur) {
-      if (cur != labels->begin()) {
-        json.addComma();
-      }
-      json.addObjectEntry(cur->first);
-      json.addString(cur->second);
+    json.addObjectEntry("columns");
+    json.beginArray();
+    json.addString("time");
+    for (size_t i = 0; i < data_cursor.getOutputColumnCount(); ++i) {
+      json.addComma();
+      json.addString(data_cursor.getOutputColumnName(i));
     }
-    json.endObject();
+    json.endArray();
     json.addComma();
 
     json.addObjectEntry("values");
-    json.beginArray();
-
-    auto data_cursor = metric_service_->getCursor(
-        metric_id,
-        cursor.getSeriesID());
-
-    uint64_t timestamp;
-    uint64_t value;
-    for (size_t i = 0; data_cursor.next(&timestamp, &value); ++i) {
-      if (i++ > 0) { json.addComma(); }
-      json.beginArray();
-      json.addInteger(timestamp);
-      json.addComma();
-      json.addInteger(value);
-      json.endArray();
-    }
-
-    json.endArray();
+    renderJSONTimeseries(&json, &data_cursor);
 
     json.endObject();
   }
@@ -264,34 +282,12 @@ void HTTPAPI::insertSample(
     return;
   }
 
-  std::string value_str;
-  if (!URI::getParam(params, "value", &value_str)) {
+  std::string series_id;
+  URI::getParam(params, "series_id", &series_id);
+
+  std::string value;
+  if (!URI::getParam(params, "value", &value)) {
     response->addBody("error: missing ?value=... parameter");
-    response->setStatus(http::kStatusBadRequest);
-    return;
-  }
-
-  static const char kLabelParamPrefix[] = "label[";
-  LabelSet labels;
-  for (const auto& param : params) {
-    const auto& key = param.first;
-    const auto& value = param.second;
-
-    if (key.compare(0, sizeof(kLabelParamPrefix) - 1, kLabelParamPrefix) == 0 &&
-        key.back() == ']') {
-      auto label_key = key.substr(
-          sizeof(kLabelParamPrefix) - 1,
-          key.size() - sizeof(kLabelParamPrefix));
-
-      labels[label_key] = value;
-    }
-  }
-
-  double sample_value;
-  try {
-    sample_value = std::stod(value_str);
-  } catch (std::exception& e) {
-    response->addBody("error: invalid value: " + value_str);
     response->setStatus(http::kStatusBadRequest);
     return;
   }
@@ -299,7 +295,9 @@ void HTTPAPI::insertSample(
   auto now = WallClock::unixMicros();
   auto rc = metric_service_->insertSample(
       metric_id,
-      LabelledSample(Sample(now, sample_value), labels));
+      SeriesNameType(series_id),
+      now,
+      value);
 
   if (rc.isSuccess()) {
     response->setStatus(http::kStatusCreated);

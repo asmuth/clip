@@ -25,8 +25,8 @@ public:
       TimestampType time,
       double value);
 
-  TimestampType getTime();
-  double getValue();
+  TimestampType getTime() const;
+  double getValue() const;
 
 protected:
   const TimestampType time_;
@@ -40,10 +40,12 @@ public:
 
   const Sample& getSample() const;
   const LabelSet& getLabels() const;
+  const std::string& getSeriesName() const;
 
 protected:
   const Sample sample_;
   const LabelSet labels_;
+  const std::string series_name_;
 };
 
 } // namespace fnordmetric
