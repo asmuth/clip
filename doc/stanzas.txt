@@ -44,6 +44,22 @@ granularity <granularity>
 
 --------------------------------------------------------------------------------
 
+retention <retention>
+
+  Controls how long samples for this metric are stored (the default is unlimited,
+  which means samples are never discarded)
+
+  Examples:
+    - 5m
+    - 12h
+    - 1w
+    - 1y
+    - unlimited (default)
+
+
+
+--------------------------------------------------------------------------------
+
 summarize <fn>
 
   Set the default summarization method (i.e. the method by which multiple series
@@ -90,6 +106,13 @@ display_granularity <granularity>
     - 5m
     - 12h
     - 1w
+
+
+--------------------------------------------------------------------------------
+
+chart_type <line|area|bars>
+
+   ...
 
 
 --------------------------------------------------------------------------------
