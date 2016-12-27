@@ -146,7 +146,7 @@ public:
       tval_ref* out,
       size_t out_len);
 
-  MetricDataType getOutputType() const;
+  tval_type getOutputType() const;
 
   size_t getOutputColumnCount() const;
 
@@ -223,7 +223,7 @@ std::unique_ptr<OutputAggregator> mkOutputAggregator(
 std::unique_ptr<InputAggregator> mkInputAggregator(
     const MetricConfig* config);
 
-MetricDataType getMetricDataType(MetricKind t);
+tval_type getMetricDataType(MetricKind t);
 
 } // namespace fnordmetric
 

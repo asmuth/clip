@@ -15,10 +15,10 @@
 
 namespace fnordmetric {
 
-void tval_zero(MetricDataType type, void* reg, size_t reg_len) {
+void tval_zero(tval_type type, void* reg, size_t reg_len) {
   switch (type) {
 
-    case MetricDataType::UINT64: {
+    case tval_type::UINT64: {
       assert(reg_len == sizeof(uint64_t));
       memset(reg, 0, reg_len);
       return;
@@ -29,14 +29,14 @@ void tval_zero(MetricDataType type, void* reg, size_t reg_len) {
 }
 
 void tval_add(
-    MetricDataType type,
+    tval_type type,
     void* reg,
     size_t reg_len,
     const void* op,
     size_t op_len) {
   switch (type) {
 
-    case MetricDataType::UINT64: {
+    case tval_type::UINT64: {
       assert(reg_len == sizeof(uint64_t));
       assert(op_len == sizeof(uint64_t));
       *((uint64_t*) reg) += *((const uint64_t*) op);
@@ -48,14 +48,14 @@ void tval_add(
 }
 
 void tval_sub(
-    MetricDataType type,
+    tval_type type,
     void* reg,
     size_t reg_len,
     const void* op,
     size_t op_len) {
   switch (type) {
 
-    case MetricDataType::UINT64: {
+    case tval_type::UINT64: {
       assert(reg_len == sizeof(uint64_t));
       assert(op_len == sizeof(uint64_t));
       *((uint64_t*) reg) -= *((const uint64_t*) op);
@@ -67,14 +67,14 @@ void tval_sub(
 }
 
 int tval_cmp(
-    MetricDataType type,
+    tval_type type,
     void* left,
     size_t left_len,
     const void* right,
     size_t right_len) {
   switch (type) {
 
-    case MetricDataType::UINT64: {
+    case tval_type::UINT64: {
       assert(left_len == sizeof(uint64_t));
       assert(right_len == sizeof(uint64_t));
       if (*((const uint64_t*) left) < *((const uint64_t*) right)) {
@@ -91,14 +91,14 @@ int tval_cmp(
 }
 
 bool tval_fromstring(
-    MetricDataType type,
+    tval_type type,
     void* val_data,
     size_t val_len,
     const char* str,
     size_t str_len) {
   switch (type) {
 
-      case MetricDataType::UINT64: {
+      case tval_type::UINT64: {
         assert(val_len == sizeof(uint64_t));
         try {
           *((uint64_t*) val_data) = std::stoull(std::string(str, str_len));
@@ -114,9 +114,9 @@ bool tval_fromstring(
   }
 }
 
-size_t getMetricDataTypeSize(MetricDataType t) {
+size_t tval_len(tval_type t) {
   switch (t) {
-    case MetricDataType::UINT64: return sizeof(uint64_t);
+    case tval_type::UINT64: return sizeof(uint64_t);
     default: throw std::invalid_argument("type error");
   }
 }

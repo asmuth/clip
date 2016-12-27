@@ -23,7 +23,7 @@ public:
   virtual ReturnCode addSample(
       tsdb::Cursor* cursor,
       uint64_t time,
-      MetricDataType value_type,
+      tval_type value_type,
       const void* value,
       size_t value_len) = 0;
 
@@ -39,7 +39,7 @@ public:
       tval_ref* out,
       size_t out_len) = 0;
 
-  virtual MetricDataType getOutputType() const = 0;
+  virtual tval_type getOutputType() const = 0;
 
   virtual size_t getOutputColumnCount() const = 0;
 
@@ -57,7 +57,7 @@ public:
   ReturnCode addSample(
       tsdb::Cursor* cursor,
       uint64_t time,
-      MetricDataType value_type,
+      tval_type value_type,
       const void* value,
       size_t value_len) override;
 
@@ -71,7 +71,7 @@ public:
 
   SumOutputAggregator(
       tsdb::Cursor* cursor,
-      MetricDataType input_type,
+      tval_type input_type,
       uint64_t granularity,
       uint64_t align = 0,
       bool interpolate = true);
@@ -83,7 +83,7 @@ public:
       tval_ref* out,
       size_t out_len) override;
 
-  MetricDataType getOutputType() const override;
+  tval_type getOutputType() const override;
 
   size_t getOutputColumnCount() const override;
 
@@ -91,7 +91,7 @@ public:
 
 protected:
   tsdb::Cursor* cursor_;
-  MetricDataType input_type_;
+  tval_type input_type_;
   uint64_t granularity_;
   uint64_t align_;
   bool interpolate_;
@@ -109,7 +109,7 @@ public:
   ReturnCode addSample(
       tsdb::Cursor* cursor,
       uint64_t time,
-      MetricDataType value_type,
+      tval_type value_type,
       const void* value,
       size_t value_len) override;
 
@@ -123,7 +123,7 @@ public:
 
   MaxOutputAggregator(
       tsdb::Cursor* cursor,
-      MetricDataType input_type,
+      tval_type input_type,
       uint64_t granularity,
       uint64_t align = 0,
       bool interpolate = true);
@@ -135,7 +135,7 @@ public:
       tval_ref* out,
       size_t out_len) override;
 
-  MetricDataType getOutputType() const override;
+  tval_type getOutputType() const override;
 
   size_t getOutputColumnCount() const override;
 
@@ -143,7 +143,7 @@ public:
 
 protected:
   tsdb::Cursor* cursor_;
-  MetricDataType input_type_;
+  tval_type input_type_;
   uint64_t granularity_;
   uint64_t align_;
   bool interpolate_;

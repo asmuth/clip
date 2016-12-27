@@ -150,7 +150,7 @@ ReturnCode MetricSeriesList::findOrCreateSeries(
   /* create the new  series in the tsdb file */
   auto create_rc = tsdb->createSeries(
       new_series_id.id,
-      getMetricDataTypeSize(getMetricDataType(config.kind)),
+      tval_len(getMetricDataType(config.kind)),
       metadata_buf.str());
 
   if (!create_rc) {
@@ -221,12 +221,12 @@ bool MetricSeriesCursor::next(
   }
 }
 
-MetricDataType MetricSeriesCursor::getOutputType() const {
+tval_type MetricSeriesCursor::getOutputType() const {
   if (aggr_) {
     return aggr_->getOutputType();
   } else {
     //return config_.data_type;
-    return MetricDataType::UINT64; // FIXME
+    return tval_type::UINT64; // FIXME
   }
 }
 
@@ -419,30 +419,30 @@ InputAggregator* Metric::getInputAggregator() {
   return input_aggr_.get();
 }
 
-MetricDataType getMetricDataType(MetricKind t) {
+tval_type getMetricDataType(MetricKind t) {
   switch (t) {
-    case SAMPLE_UINT64: return MetricDataType::UINT64;
-    case SAMPLE_INT64: return MetricDataType::INT64;
-    case SAMPLE_FLOAT64: return MetricDataType::FLOAT64;
-    case COUNTER_UINT64: return MetricDataType::UINT64;
-    case COUNTER_INT64: return MetricDataType::INT64;
-    case COUNTER_FLOAT64: return MetricDataType::FLOAT64;
-    case MONOTONIC_UINT64: return MetricDataType::UINT64;
-    case MONOTONIC_INT64: return MetricDataType::INT64;
-    case MONOTONIC_FLOAT64: return MetricDataType::FLOAT64;
-    case MIN_UINT64: return MetricDataType::UINT64;
-    case MIN_INT64: return MetricDataType::INT64;
-    case MIN_FLOAT64: return MetricDataType::FLOAT64;
-    case MAX_UINT64: return MetricDataType::UINT64;
-    case MAX_INT64: return MetricDataType::INT64;
-    case MAX_FLOAT64: return MetricDataType::FLOAT64;
-    case AVERAGE_UINT64: return MetricDataType::UINT64;
-    case AVERAGE_INT64: return MetricDataType::INT64;
-    case AVERAGE_FLOAT64: return MetricDataType::FLOAT64;
+    case SAMPLE_UINT64: return tval_type::UINT64;
+    case SAMPLE_INT64: return tval_type::INT64;
+    case SAMPLE_FLOAT64: return tval_type::FLOAT64;
+    case COUNTER_UINT64: return tval_type::UINT64;
+    case COUNTER_INT64: return tval_type::INT64;
+    case COUNTER_FLOAT64: return tval_type::FLOAT64;
+    case MONOTONIC_UINT64: return tval_type::UINT64;
+    case MONOTONIC_INT64: return tval_type::INT64;
+    case MONOTONIC_FLOAT64: return tval_type::FLOAT64;
+    case MIN_UINT64: return tval_type::UINT64;
+    case MIN_INT64: return tval_type::INT64;
+    case MIN_FLOAT64: return tval_type::FLOAT64;
+    case MAX_UINT64: return tval_type::UINT64;
+    case MAX_INT64: return tval_type::INT64;
+    case MAX_FLOAT64: return tval_type::FLOAT64;
+    case AVERAGE_UINT64: return tval_type::UINT64;
+    case AVERAGE_INT64: return tval_type::INT64;
+    case AVERAGE_FLOAT64: return tval_type::FLOAT64;
 
     case UNKNOWN:
     default:
-      return MetricDataType::UINT64;
+      return tval_type::UINT64;
   }
 }
 

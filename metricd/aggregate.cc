@@ -24,11 +24,11 @@ SumInputAggregator::SumInputAggregator(
 ReturnCode SumInputAggregator::addSample(
     tsdb::Cursor* cursor,
     uint64_t time,
-    MetricDataType value_type,
+    tval_type value_type,
     const void* value,
     size_t value_len) {
   auto twin = alignTime(time, granularity_, align_);
-  size_t value_type_len = getMetricDataTypeSize(value_type);
+  size_t value_type_len = tval_len(value_type);
   assert(value_type_len == value_len);
 
   /* update or insert value */
@@ -62,7 +62,7 @@ ReturnCode SumInputAggregator::addSample(
 
 SumOutputAggregator::SumOutputAggregator(
     tsdb::Cursor* cursor,
-    MetricDataType input_type,
+    tval_type input_type,
     uint64_t granularity,
     uint64_t align /* = 0 */,
     bool interpolate /* = true */) :
@@ -72,7 +72,7 @@ SumOutputAggregator::SumOutputAggregator(
     align_(align),
     interpolate_(interpolate) {
   cur_sum_.type = input_type_;
-  cur_sum_.len = getMetricDataTypeSize(input_type_);
+  cur_sum_.len = tval_len(input_type_);
   cur_sum_.data = malloc(cur_sum_.len);
 
   cursor_->get(&cur_time_, cur_sum_.data, cur_sum_.len);
@@ -94,7 +94,7 @@ bool SumOutputAggregator::next(
 
   tval_ref val;
   val.type = input_type_;
-  val.len = getMetricDataTypeSize(input_type_);
+  val.len = tval_len(input_type_);
   val.data = alloca(val.len);
   while (cursor_->valid() && cursor_->getTime() < cur_time_ + granularity_) {
     cursor_->getValue(val.data, val.len);
@@ -111,11 +111,11 @@ bool SumOutputAggregator::next(
   if (interpolate_windows > 1) {
     tval_ref next_val;
     next_val.type = input_type_;
-    next_val.len = getMetricDataTypeSize(input_type_);
+    next_val.len = tval_len(input_type_);
     next_val.data = alloca(val.len);
 
     switch (input_type_) {
-      case MetricDataType::UINT64:
+      case tval_type::UINT64:
         *((uint64_t*) next_val.data) =
             (*((uint64_t*) cur_sum_.data) / interpolate_windows) +
             (*((uint64_t*) cur_sum_.data) % interpolate_windows);
@@ -150,7 +150,7 @@ bool SumOutputAggregator::next(
   return true;
 }
 
-MetricDataType SumOutputAggregator::getOutputType() const {
+tval_type SumOutputAggregator::getOutputType() const {
   return input_type_;
 }
 
@@ -172,11 +172,11 @@ MaxInputAggregator::MaxInputAggregator(
 ReturnCode MaxInputAggregator::addSample(
     tsdb::Cursor* cursor,
     uint64_t time,
-    MetricDataType value_type,
+    tval_type value_type,
     const void* value,
     size_t value_len) {
   auto twin = alignTime(time, granularity_, align_);
-  size_t value_type_len = getMetricDataTypeSize(value_type);
+  size_t value_type_len = tval_len(value_type);
   assert(value_type_len == value_len);
 
   /* update or insert value */
@@ -211,7 +211,7 @@ ReturnCode MaxInputAggregator::addSample(
 
 MaxOutputAggregator::MaxOutputAggregator(
     tsdb::Cursor* cursor,
-    MetricDataType input_type,
+    tval_type input_type,
     uint64_t granularity,
     uint64_t align /* = 0 */,
     bool interpolate /* = true */) :
@@ -221,7 +221,7 @@ MaxOutputAggregator::MaxOutputAggregator(
     align_(align),
     interpolate_(interpolate) {
   cur_max_.type = input_type_;
-  cur_max_.len = getMetricDataTypeSize(input_type_);
+  cur_max_.len = tval_len(input_type_);
   cur_max_.data = malloc(cur_max_.len);
 
   cursor_->get(&cur_time_, cur_max_.data, cur_max_.len);
@@ -245,7 +245,7 @@ bool MaxOutputAggregator::next(
   while (cursor_->valid() && cursor_->getTime() < cur_time_ + granularity_) {
     tval_ref val;
     val.type = input_type_;
-    val.len = getMetricDataTypeSize(input_type_);
+    val.len = tval_len(input_type_);
     val.data = alloca(val.len);
 
     cursor_->getValue(val.data, val.len);
@@ -278,7 +278,7 @@ bool MaxOutputAggregator::next(
   return true;
 }
 
-MetricDataType MaxOutputAggregator::getOutputType() const {
+tval_type MaxOutputAggregator::getOutputType() const {
   return input_type_;
 }
 

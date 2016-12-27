@@ -14,49 +14,49 @@
 
 namespace fnordmetric {
 
-enum class MetricDataType {
+enum class tval_type {
   UINT64,
   INT64,
   FLOAT64
 };
 
 struct tval_ref {
-  MetricDataType type;
+  tval_type type;
   void* data;
   size_t len;
 };
 
-void tval_zero(MetricDataType type, void* reg, size_t reg_len);
+void tval_zero(tval_type type, void* reg, size_t reg_len);
 
 void tval_add(
-    MetricDataType type,
+    tval_type type,
     void* reg,
     size_t reg_len,
     const void* op,
     size_t op_len);
 
 void tval_sub(
-    MetricDataType type,
+    tval_type type,
     void* reg,
     size_t reg_len,
     const void* op,
     size_t op_len);
 
 int tval_cmp(
-    MetricDataType type,
+    tval_type type,
     void* left,
     size_t left_len,
     const void* right,
     size_t right_len);
 
 bool tval_fromstring(
-    MetricDataType type,
+    tval_type type,
     void* val_data,
     size_t val_len,
     const char* str,
     size_t str_len);
 
-size_t getMetricDataTypeSize(MetricDataType t);
+size_t tval_len(tval_type t);
 
 } // namespace fnordmetric
 

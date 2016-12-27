@@ -164,7 +164,7 @@ static void renderJSONTimeseries(
   std::vector<tval_ref> values(cursor->getOutputColumnCount());
   for (size_t i = 0; i < values.size(); ++i) {
     values[i].type = cursor->getOutputType();
-    values[i].len = getMetricDataTypeSize(values[i].type);
+    values[i].len = tval_len(values[i].type);
     values[i].data = alloca(values[i].len);
   }
 
@@ -176,7 +176,7 @@ static void renderJSONTimeseries(
 
     for (size_t i = 0; i < values.size(); ++i) {
       switch (values[i].type) {
-        case MetricDataType::UINT64:
+        case tval_type::UINT64:
           json->addComma();
           json->addInteger(*((uint64_t*) values[i].data));
           break;
