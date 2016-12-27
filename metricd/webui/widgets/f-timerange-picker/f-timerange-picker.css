@@ -72,7 +72,7 @@ f-timerange-picker i.arrow_down {
 }
 
 f-timerange-picker .widget {
-  position: relative;
+  position: absolute;
   left: 23px;
   top: 100%;
   background-color: #fff;
@@ -83,6 +83,7 @@ f-timerange-picker .widget {
   overflow: auto;
   padding: 13px;
   display: none;
+  width: 513px;
 }
 
 f-timerange-picker .widget.active {
