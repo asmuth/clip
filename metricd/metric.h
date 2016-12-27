@@ -30,10 +30,13 @@ class SeriesIDProvider;
 using MetricIDType = std::string;
 
 struct SeriesIDType {
+  explicit SeriesIDType(uint64_t id_) : id(id_) {}
   uint64_t id;
 };
 
 struct SeriesNameType {
+  SeriesNameType() = default;
+  explicit SeriesNameType(const std::string& name_) : name(name_) {}
   std::string name;
 };
 

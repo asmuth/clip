@@ -62,11 +62,10 @@ ReturnCode MetricService::startService(
     return ReturnCode::error("ERUNTIME", "error while opening database");
   }
 
-  SeriesIDType series_id_max;
-  series_id_max.id = 0;
+  uint64_t series_id_max = 0;
   for (auto s : series_ids) {
-    if (s > series_id_max.id) {
-      series_id_max.id = s;
+    if (s > series_id_max) {
+      series_id_max = s;
     }
   }
 
@@ -98,9 +97,9 @@ ReturnCode MetricService::startService(
         metadata.metric_id,
         series_id);
 
-    SeriesIDType sid;
-    sid.id = series_id;
-    metric->getSeriesList()->addSeries(sid, metadata.series_name);
+    metric->getSeriesList()->addSeries(
+        SeriesIDType(series_id),
+        metadata.series_name);
   }
 
   /* initialize service */
@@ -108,7 +107,7 @@ ReturnCode MetricService::startService(
       new MetricService(
           std::move(tsdb),
           metric_map_builder.getMetricMap(),
-          series_id_max));
+          SeriesIDType(series_id_max)));
 
   return ReturnCode::success();
 }
@@ -158,16 +157,13 @@ ReturnCode MetricService::insertSample(
     return ReturnCode::error("ENOTFOUND", "metric not found");
   }
 
-  SeriesNameType series_name;
-  series_name.name = sample.getSeriesName();
-
   std::shared_ptr<MetricSeries> series;
   auto rc = metric->getSeriesList()->findOrCreateSeries(
       tsdb_.get(),
       &id_provider_,
       metric_id,
       metric->getConfig(),
-      series_name,
+      SeriesNameType(sample.getSeriesName()),
       &series);
 
   if (!rc.isSuccess()) {
@@ -197,6 +193,32 @@ ReturnCode MetricService::insertSample(
   }
 
   return rc;
+}
+
+MetricSeriesCursor MetricService::getCursor(
+    const MetricIDType& metric_id,
+    const SeriesNameType& series_name) {
+  auto metric_map = metric_map_.getMetricMap();
+  auto metric = metric_map->findMetric(metric_id);
+  if (!metric) {
+    //return ReturnCode::error("ENOTFOUND", "metric not found");
+    return MetricSeriesCursor();
+  }
+
+  std::shared_ptr<MetricSeries> series;
+  if (!metric->getSeriesList()->findSeries(series_name, &series)) {
+    //return ReturnCode::error("ENOTFOUND", "series not found");
+    return MetricSeriesCursor();
+  }
+
+  tsdb::Cursor tsdb_cursor;
+  if (tsdb_->getCursor(series->getSeriesID().id, &tsdb_cursor)) {
+    return MetricSeriesCursor(
+        &metric->getConfig(),
+        std::move(tsdb_cursor));
+  } else {
+    return MetricSeriesCursor();
+  }
 }
 
 MetricSeriesCursor MetricService::getCursor(

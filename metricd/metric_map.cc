@@ -123,9 +123,7 @@ SeriesIDProvider::SeriesIDProvider(
     series_id_(init_id.id) {}
 
 SeriesIDType SeriesIDProvider::allocateSeriesID() {
-  SeriesIDType sid;
-  sid.id = series_id_.fetch_add(1) + 1;
-  return sid;
+  return SeriesIDType(series_id_.fetch_add(1) + 1);
 }
 
 } // namespace fnordmetric

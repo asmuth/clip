@@ -102,6 +102,20 @@ bool MetricSeriesList::findSeries(
   }
 }
 
+bool MetricSeriesList::findSeries(
+    const SeriesNameType& series_name,
+    std::shared_ptr<MetricSeries>* series) {
+  std::unique_lock<std::mutex> lk(series_mutex_);
+
+  auto iter = series_.find(series_name.name);
+  if (iter == series_.end()) {
+    return false;
+  } else {
+    *series = iter->second;
+    return true;
+  }
+}
+
 ReturnCode MetricSeriesList::findOrCreateSeries(
     tsdb::TSDB* tsdb,
     SeriesIDProvider* series_id_provider,
@@ -169,9 +183,7 @@ void MetricSeriesList::listSeries(std::vector<SeriesIDType>* series_ids) {
   std::unique_lock<std::mutex> lk(series_mutex_);
   series_ids->reserve(series_by_id_.size());
   for (const auto& s : series_by_id_) {
-    SeriesIDType sid;
-    sid.id = s.first;
-    series_ids->emplace_back(sid);
+    series_ids->emplace_back(SeriesIDType(s.first));
   }
 }
 
