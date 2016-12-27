@@ -18,11 +18,12 @@
 namespace fnordmetric {
 
 MetricConfig::MetricConfig() :
-   data_type(MetricDataType::UINT64),
-   aggregation(MetricAggregationType::NONE),
-   granularity(0),
-   display_granularity(0),
-   is_valid(false) {}
+    kind(MetricKind::UNKNOWN),
+    data_type(MetricDataType::UINT64),
+    aggregation(MetricAggregationType::NONE),
+    granularity(0),
+    display_granularity(0),
+    is_valid(false) {}
 
 MetricSeries::MetricSeries(
     SeriesIDType series_id,
@@ -381,7 +382,7 @@ Metric::Metric(
     const std::string& key) :
     key_(key) {}
 
-void Metric::setConfig(MetricConfig config) {
+ReturnCode Metric::setConfig(MetricConfig config) {
   if (config.aggregation != MetricAggregationType::NONE &&
       config.granularity == 0) {
     logWarning(
@@ -390,8 +391,16 @@ void Metric::setConfig(MetricConfig config) {
         key_);
   }
 
+  if (config.kind == MetricKind::UNKNOWN) {
+    return ReturnCode::errorf(
+        "EARG",
+        "metric<$0>: missing 'kind'",
+        key_);
+  }
+
   config_ = config;
   input_aggr_ = mkInputAggregator(&config_);
+  return ReturnCode::success();
 }
 
 const MetricConfig& Metric::getConfig() const {

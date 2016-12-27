@@ -40,6 +40,28 @@ struct SeriesNameType {
   std::string name;
 };
 
+enum MetricKind : uint32_t {
+  UNKNOWN           = 0,
+  SAMPLE_UINT64     = 1,
+  SAMPLE_INT64      = 2,
+  SAMPLE_FLOAT64    = 3,
+  COUNTER_UINT64    = 4,
+  COUNTER_INT64     = 5,
+  COUNTER_FLOAT64   = 6,
+  MONOTONIC_UINT64  = 7,
+  MONOTONIC_INT64   = 8,
+  MONOTONIC_FLOAT64 = 9,
+  MIN_UINT64        = 10,
+  MIN_INT64         = 11,
+  MIN_FLOAT64       = 12,
+  MAX_UINT64        = 13,
+  MAX_INT64         = 14,
+  MAX_FLOAT64       = 15,
+  AVERAGE_UINT64    = 16,
+  AVERAGE_INT64     = 17,
+  AVERAGE_FLOAT64   = 18
+};
+
 enum class MetricAggregationType {
   NONE,
   RANDOM,
@@ -55,6 +77,7 @@ enum class MetricAggregationType {
 
 struct MetricConfig {
   MetricConfig();
+  MetricKind kind;
   MetricDataType data_type;
   MetricAggregationType aggregation;
   uint64_t granularity;
@@ -194,7 +217,7 @@ public:
   TimestampType getLastInsertTime();
 
   const MetricConfig& getConfig() const;
-  void setConfig(MetricConfig config);
+  ReturnCode setConfig(MetricConfig config);
 
   MetricSeriesList* getSeriesList();
 
