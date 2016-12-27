@@ -151,7 +151,7 @@ bool SumOutputAggregator::next(
 }
 
 MetricDataType SumOutputAggregator::getOutputType() const {
-  return MetricDataType::UINT64;
+  return input_type_;
 }
 
 size_t SumOutputAggregator::getOutputColumnCount() const {
@@ -211,17 +211,27 @@ ReturnCode MaxInputAggregator::addSample(
 
 MaxOutputAggregator::MaxOutputAggregator(
     tsdb::Cursor* cursor,
+    MetricDataType input_type,
     uint64_t granularity,
     uint64_t align /* = 0 */,
     bool interpolate /* = true */) :
     cursor_(cursor),
+    input_type_(input_type),
     granularity_(granularity),
     align_(align),
     interpolate_(interpolate) {
-  cursor_->get(&cur_time_, &cur_max_, sizeof(cur_max_));
+  cur_max_.type = input_type_;
+  cur_max_.len = getMetricDataTypeSize(input_type_);
+  cur_max_.data = malloc(cur_max_.len);
+
+  cursor_->get(&cur_time_, cur_max_.data, cur_max_.len);
   has_cur_max_ = true;
   cur_time_ = alignTime(cur_time_, granularity_, align_);
   cursor_->next();
+}
+
+MaxOutputAggregator::~MaxOutputAggregator() {
+  free(cur_max_.data);
 }
 
 bool MaxOutputAggregator::next(
@@ -233,18 +243,23 @@ bool MaxOutputAggregator::next(
   }
 
   while (cursor_->valid() && cursor_->getTime() < cur_time_ + granularity_) {
-    uint64_t val;
-    cursor_->getValue(&val, sizeof(val));
-    if (!has_cur_max_ || val > cur_max_) {
-      cur_max_ = val;
+    tval_ref val;
+    val.type = input_type_;
+    val.len = getMetricDataTypeSize(input_type_);
+    val.data = alloca(val.len);
+
+    cursor_->getValue(val.data, val.len);
+    if (!has_cur_max_ ||
+        tval_cmp(val.type, val.data, val.len, cur_max_.data, cur_max_.len) > 0) {
+      memcpy(cur_max_.data, val.data, val.len);
       has_cur_max_ = true;
     }
     cursor_->next();
   }
 
   if (out_len > 0) {
-    assert(out[0].len == sizeof(cur_max_));
-    memcpy(out[0].data, &cur_max_, sizeof(cur_max_));
+    assert(out[0].len == cur_max_.len);
+    memcpy(out[0].data, cur_max_.data, cur_max_.len);
   }
 
   *time = cur_time_;
@@ -256,7 +271,7 @@ bool MaxOutputAggregator::next(
       cursor_->getTime() >= cur_time_ + granularity_;
 
   if (!should_interpolate) {
-    cur_max_ = 0;
+    tval_zero(cur_max_.type, cur_max_.data, cur_max_.len);
     has_cur_max_ = false;
   }
 
@@ -264,7 +279,7 @@ bool MaxOutputAggregator::next(
 }
 
 MetricDataType MaxOutputAggregator::getOutputType() const {
-  return MetricDataType::UINT64;
+  return input_type_;
 }
 
 size_t MaxOutputAggregator::getOutputColumnCount() const {
