@@ -40,10 +40,12 @@ public:
 
   const Sample& getSample() const;
   const LabelSet& getLabels() const;
+  const std::string& getSeriesName() const;
 
 protected:
   const Sample sample_;
   const LabelSet labels_;
+  const std::string series_name_;
 };
 
 } // namespace fnordmetric

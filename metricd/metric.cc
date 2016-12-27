@@ -24,42 +24,18 @@ MetricConfig::MetricConfig() :
    display_granularity(0),
    is_valid(false) {}
 
+MetricSeries::MetricSeries(
+    SeriesIDType series_id,
+    std::string series_name) :
+    series_id_(series_id),
+    series_name_(series_name) {}
+
 SeriesIDType MetricSeries::getSeriesID() const {
   return series_id_;
 }
 
-MetricSeries::MetricSeries(
-    SeriesIDType series_id,
-    LabelSet labels) :
-    series_id_(series_id),
-    labels_(labels) {}
-
-const LabelSet* MetricSeries::getLabels() const {
-  return &labels_;
-}
-
-bool MetricSeries::hasLabel(const std::string& label) const {
-  return labels_.count(label) > 0;
-}
-
-std::string MetricSeries::getLabel(const std::string& label) const {
-  auto iter = labels_.find(label);
-  if (iter == labels_.end()) {
-    return "";
-  } else {
-    return iter->second;
-  }
-}
-
-bool MetricSeries::compareLabel(
-    const std::string& label,
-    const std::string& value) const {
-  auto iter = labels_.find(label);
-  if (iter == labels_.end()) {
-    return false;
-  } else {
-    return iter->second == value;
-  }
+const std::string& MetricSeries::getSeriesName() const {
+  return series_name_;
 }
 
 bool MetricSeriesMetadata::encode(std::ostream* os) const {
@@ -72,28 +48,13 @@ bool MetricSeriesMetadata::encode(std::ostream* os) const {
     return false;
   }
 
-  if (!tsdb::writeVarUInt(os, labels.size())) {
+  if (!tsdb::writeVarUInt(os, series_name.size())) {
     return false;
   }
 
-  for (const auto& l : labels) {
-    if (!tsdb::writeVarUInt(os, l.first.size())) {
-      return false;
-    }
-
-    os->write(l.first.data(), l.first.size());
-    if (os->fail()) {
-      return false;
-    }
-
-    if (!tsdb::writeVarUInt(os, l.second.size())) {
-      return false;
-    }
-
-    os->write(l.second.data(), l.second.size());
-    if (os->fail()) {
-      return false;
-    }
+  os->write(series_name.data(), series_name.size());
+  if (os->fail()) {
+    return false;
   }
 
   return true;
@@ -111,35 +72,15 @@ bool MetricSeriesMetadata::decode(std::istream* is) {
     return false;
   }
 
-  uint64_t labels_count;
-  if (!tsdb::readVarUInt(is, &labels_count)) {
+  uint64_t series_name_len;
+  if (!tsdb::readVarUInt(is, &series_name_len)) {
     return false;
   }
 
-  for (uint64_t i = 0; i < labels_count; ++i) {
-    uint64_t label_key_len;
-    if (!tsdb::readVarUInt(is, &label_key_len)) {
-      return false;
-    }
-
-    std::string label_key(label_key_len, 0);
-    is->read(&label_key[0], label_key.size());
-    if (is->fail()) {
-      return false;
-    }
-
-    uint64_t label_value_len;
-    if (!tsdb::readVarUInt(is, &label_value_len)) {
-      return false;
-    }
-
-    std::string label_value(label_value_len, 0);
-    is->read(&label_value[0], label_value.size());
-    if (is->fail()) {
-      return false;
-    }
-
-    labels[label_key] = label_value;
+  series_name.resize(series_name_len);
+  is->read(&series_name[0], series_name.size());
+  if (is->fail()) {
+    return false;
   }
 
   return true;
@@ -147,13 +88,13 @@ bool MetricSeriesMetadata::decode(std::istream* is) {
 
 MetricSeriesList::MetricSeriesList() {}
 
-bool MetricSeriesList::findSeries(
+bool MetricSeriesList::findSeriesByID(
     SeriesIDType series_id,
     std::shared_ptr<MetricSeries>* series) {
   std::unique_lock<std::mutex> lk(series_mutex_);
 
-  auto iter = series_.find(series_id);
-  if (iter == series_.end()) {
+  auto iter = series_by_id_.find(series_id);
+  if (iter == series_by_id_.end()) {
     return false;
   } else {
     *series = iter->second;
@@ -161,35 +102,33 @@ bool MetricSeriesList::findSeries(
   }
 }
 
-ReturnCode MetricSeriesList::findOrCreateSeries(
+ReturnCode MetricSeriesList::findOrCreateSeriesByName(
     tsdb::TSDB* tsdb,
     SeriesIDProvider* series_id_provider,
     const std::string& metric_id,
     const MetricConfig& config,
-    const LabelSet& labels,
+    const std::string& series_name,
     std::shared_ptr<MetricSeries>* series) {
   std::unique_lock<std::mutex> lk(series_mutex_);
 
   /* try to find an existing series that matches the label set */
   // FIXME this operation should not be O(n)
-  auto series_iter = series_.begin();
-  for (; series_iter != series_.end(); ++series_iter) {
-    if (*series_iter->second->getLabels() == labels) {
-      *series = series_iter->second;
-      return ReturnCode::success();
-    }
+  auto series_iter = series_.find(series_name);
+  if (series_iter != series_.end()) {
+    *series = series_iter->second;
+    return ReturnCode::success();
   }
 
   /* if no existing series was found, create a new one */
   auto new_series_id = series_id_provider->allocateSeriesID();
   auto new_series = std::make_shared<MetricSeries>(
       new_series_id,
-      labels);
+      series_name);
 
   /* encode series metadata */
   MetricSeriesMetadata metadata;
   metadata.metric_id = metric_id;
-  metadata.labels = labels;
+  metadata.series_name = series_name;
 
   std::ostringstream metadata_buf;
   metadata.encode(&metadata_buf);
@@ -205,28 +144,30 @@ ReturnCode MetricSeriesList::findOrCreateSeries(
   }
 
   /* add new series to series list */
-  series_.emplace(new_series_id, new_series);
+  series_.emplace(series_name, new_series);
+  series_by_id_.emplace(new_series_id, new_series);
   *series = std::move(new_series);
   return ReturnCode::success();
 }
 
 void MetricSeriesList::addSeries(
     const SeriesIDType& series_id,
-    const LabelSet& labels) {
+    const std::string& series_name) {
   std::unique_lock<std::mutex> lk(series_mutex_);
-  assert(series_.count(series_id) == 0);
+  assert(series_.count(series_name) == 0);
 
-  series_.emplace(
+  auto series = std::make_shared<MetricSeries>(
       series_id,
-      std::make_shared<MetricSeries>(
-          series_id,
-          labels));
+      series_name);
+
+  series_.emplace(series_name, series);
+  series_by_id_.emplace(series_id, series);
 }
 
 void MetricSeriesList::listSeries(std::vector<SeriesIDType>* series_ids) {
   std::unique_lock<std::mutex> lk(series_mutex_);
-  series_ids->reserve(series_.size());
-  for (const auto& s : series_) {
+  series_ids->reserve(series_by_id_.size());
+  for (const auto& s : series_by_id_) {
     series_ids->emplace_back(s.first);
   }
 }
@@ -358,10 +299,9 @@ SeriesIDType MetricSeriesListCursor::getSeriesID() const {
   return *cursor_;
 }
 
-const LabelSet* MetricSeriesListCursor::getLabels() const {
-  assert(valid_);
-  assert(series_.get() != nullptr);
-  return series_->getLabels();
+const std::string& MetricSeriesListCursor::getSeriesName() const {
+  assert(valid_ && series_);
+  return series_->getSeriesName();
 }
 
 bool MetricSeriesListCursor::isValid() const {
@@ -379,7 +319,7 @@ bool MetricSeriesListCursor::next() {
 
 bool MetricSeriesListCursor::fetchNext() {
   while (cursor_ != snapshot_.end()) {
-    if (series_list_->findSeries(*cursor_, &series_)) {
+    if (series_list_->findSeriesByID(*cursor_, &series_)) {
       return true;
     }
   }

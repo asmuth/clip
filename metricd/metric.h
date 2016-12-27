@@ -57,26 +57,22 @@ public:
 
   MetricSeries(
       SeriesIDType series_id,
-      LabelSet labels);
+      std::string series_name);
 
   size_t getTotalBytes() const;
   TimestampType getLastInsertTime();
 
   SeriesIDType getSeriesID() const;
-
-  const LabelSet* getLabels() const;
-  bool hasLabel(const std::string& label) const;
-  std::string getLabel(const std::string& label) const;
-  bool compareLabel(const std::string& label, const std::string& value) const;
+  const std::string& getSeriesName() const;
 
 protected:
   const SeriesIDType series_id_;
-  const LabelSet labels_;
+  std::string series_name_;
 };
 
 struct MetricSeriesMetadata {
   MetricIDType metric_id;
-  LabelSet labels;
+  std::string series_name;
   bool encode(std::ostream* os) const;
   bool decode(std::istream* is);
 };
@@ -86,21 +82,25 @@ public:
 
   MetricSeriesList();
 
-  bool findSeries(
+  bool findSeriesByID(
       SeriesIDType series_id,
       std::shared_ptr<MetricSeries>* series);
 
-  ReturnCode findOrCreateSeries(
+  bool findSeriesByName(
+      const std::string& name,
+      std::shared_ptr<MetricSeries>* series);
+
+  ReturnCode findOrCreateSeriesByName(
       tsdb::TSDB* tsdb,
       SeriesIDProvider* series_id_provider,
       const std::string& metric_id,
       const MetricConfig& config,
-      const LabelSet& labels,
+      const std::string& series_name,
       std::shared_ptr<MetricSeries>* series);
 
   void addSeries(
       const SeriesIDType& series_id,
-      const LabelSet& labels);
+      const std::string& series_name);
 
   void listSeries(std::vector<SeriesIDType>* series_ids);
 
@@ -108,7 +108,8 @@ public:
 
 protected:
   mutable std::mutex series_mutex_;
-  std::map<SeriesIDType, std::shared_ptr<MetricSeries>> series_;
+  std::map<std::string, std::shared_ptr<MetricSeries>> series_;
+  std::map<SeriesIDType, std::shared_ptr<MetricSeries>> series_by_id_;
 };
 
 class MetricSeriesCursor {
@@ -148,7 +149,7 @@ public:
   MetricSeriesListCursor& operator=(MetricSeriesListCursor&& o);
 
   SeriesIDType getSeriesID() const;
-  const LabelSet* getLabels() const;
+  const std::string& getSeriesName() const;
 
   bool isValid() const;
   bool next();

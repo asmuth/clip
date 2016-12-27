@@ -144,7 +144,11 @@ void StatsdServer::handlePacket(const char* pkt, size_t pkt_len) {
 
     auto rc = metric_service_->insertSample(key, sample);
     if (!rc.isSuccess()) {
-      logWarning("statsd insert failed: $0", rc.getMessage());
+      logWarning(
+          "statsd insert failed: $0 [$1=$2]",
+          rc.getMessage(),
+          key,
+          value);
     }
 
     labels.clear();

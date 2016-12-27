@@ -40,5 +40,9 @@ const LabelSet& LabelledSample::getLabels() const {
   return labels_;
 }
 
+const std::string& LabelledSample::getSeriesName() const {
+  return series_name_;
+}
+
 } // namespace fnordmetric
 

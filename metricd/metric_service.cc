@@ -97,7 +97,7 @@ ReturnCode MetricService::startService(
         metadata.metric_id,
         series_id);
 
-    metric->getSeriesList()->addSeries(series_id, metadata.labels);
+    metric->getSeriesList()->addSeries(series_id, metadata.series_name);
   }
 
   /* initialize service */
@@ -172,12 +172,12 @@ ReturnCode MetricService::insertSample(
   }
 
   std::shared_ptr<MetricSeries> series;
-  auto rc = metric->getSeriesList()->findOrCreateSeries(
+  auto rc = metric->getSeriesList()->findOrCreateSeriesByName(
       tsdb_.get(),
       &id_provider_,
       metric_id,
       metric->getConfig(),
-      sample.getLabels(),
+      sample.getSeriesName(),
       &series);
 
   if (!rc.isSuccess()) {

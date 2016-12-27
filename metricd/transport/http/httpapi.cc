@@ -147,20 +147,7 @@ void HTTPAPI::renderMetricSeriesList(
     json.beginObject();
 
     json.addObjectEntry("series_id");
-    json.addInteger(cursor.getSeriesID());
-    json.addComma();
-
-    json.addObjectEntry("labels");
-    json.beginObject();
-    auto labels = cursor.getLabels();
-    for (auto cur = labels->begin(); cur != labels->end(); ++cur) {
-      if (cur != labels->begin()) {
-        json.addComma();
-      }
-      json.addObjectEntry(cur->first);
-      json.addString(cur->second);
-    }
-    json.endObject();
+    json.addString(cursor.getSeriesName());
 
     json.endObject();
   }
@@ -206,20 +193,7 @@ void HTTPAPI::performMetricFetchSeries(
     json.beginObject();
 
     json.addObjectEntry("series_id");
-    json.addInteger(cursor.getSeriesID());
-    json.addComma();
-
-    json.addObjectEntry("labels");
-    json.beginObject();
-    auto labels = cursor.getLabels();
-    for (auto cur = labels->begin(); cur != labels->end(); ++cur) {
-      if (cur != labels->begin()) {
-        json.addComma();
-      }
-      json.addObjectEntry(cur->first);
-      json.addString(cur->second);
-    }
-    json.endObject();
+    json.addString(cursor.getSeriesName());
     json.addComma();
 
     json.addObjectEntry("values");
