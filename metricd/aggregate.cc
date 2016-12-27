@@ -190,7 +190,15 @@ bool MaxOutputAggregator::next(
 
   *time = cur_time_;
   cur_time_ += granularity_;
-  cur_max_ = 0;
+
+  bool should_interpolate = 
+      interpolate_ &&
+      cursor_->valid() &&
+      cursor_->getTime() >= cur_time_ + granularity_;
+
+  if (!should_interpolate) {
+    cur_max_ = 0;
+  }
 
   return true;
 }
