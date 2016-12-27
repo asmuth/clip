@@ -166,6 +166,7 @@ MaxOutputAggregator::MaxOutputAggregator(
     interpolate_(interpolate) {
   cursor_->seekToFirst();
   cursor_->get(&cur_time_, &cur_max_, sizeof(cur_max_));
+  has_cur_max_ = true;
   cur_time_ = alignTime(cur_time_, granularity_, align_);
   cursor_->next();
 }
@@ -181,7 +182,10 @@ bool MaxOutputAggregator::next(
   while (cursor_->valid() && cursor_->getTime() < cur_time_ + granularity_) {
     uint64_t val;
     cursor_->getValue(&val, sizeof(val));
-    cur_max_ = std::max(cur_max_, val);
+    if (!has_cur_max_ || val > cur_max_) {
+      cur_max_ = val;
+      has_cur_max_ = true;
+    }
     cursor_->next();
   }
 
@@ -198,6 +202,7 @@ bool MaxOutputAggregator::next(
 
   if (!should_interpolate) {
     cur_max_ = 0;
+    has_cur_max_ = false;
   }
 
   return true;

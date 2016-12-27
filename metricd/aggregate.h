@@ -123,6 +123,7 @@ protected:
   bool interpolate_;
   uint64_t cur_time_;
   uint64_t cur_max_;
+  bool has_cur_max_;
   size_t cur_max_time_;
 };
 
