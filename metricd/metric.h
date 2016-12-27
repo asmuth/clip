@@ -90,6 +90,7 @@ protected:
 
 struct MetricSeriesMetadata {
   MetricIDType metric_id;
+  MetricKind metric_kind;
   SeriesNameType series_name;
   bool encode(std::ostream* os) const;
   bool decode(std::istream* is);

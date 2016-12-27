@@ -47,6 +47,10 @@ bool MetricSeriesMetadata::encode(std::ostream* os) const {
     return false;
   }
 
+  if (!tsdb::writeVarUInt(os, (uint64_t) metric_kind)) {
+    return false;
+  }
+
   if (!tsdb::writeVarUInt(os, series_name.name.size())) {
     return false;
   }
@@ -68,6 +72,13 @@ bool MetricSeriesMetadata::decode(std::istream* is) {
   metric_id.resize(metric_id_len);
   is->read(&metric_id[0], metric_id.size());
   if (is->fail()) {
+    return false;
+  }
+
+  uint64_t kind;
+  if (tsdb::readVarUInt(is, &kind)) {
+    metric_kind = (MetricKind) kind;
+  } else {
     return false;
   }
 
@@ -142,6 +153,7 @@ ReturnCode MetricSeriesList::findOrCreateSeries(
   /* encode series metadata */
   MetricSeriesMetadata metadata;
   metadata.metric_id = metric_id;
+  metadata.metric_kind = config.kind;
   metadata.series_name = series_name;
 
   std::ostringstream metadata_buf;
