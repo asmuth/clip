@@ -133,7 +133,8 @@ bool ConfigParser::parseMetricDefinitionAggregationStanza(
   consumeToken();
 
   static const std::map<std::string, MetricAggregationType> aggr_type_map = {
-    { "sum", MetricAggregationType::SUM }
+    { "sum", MetricAggregationType::SUM },
+    { "max", MetricAggregationType::MAX }
   };
 
   auto iter = aggr_type_map.find(tbuf);
