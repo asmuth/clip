@@ -225,7 +225,7 @@ ReturnCode MetricService::insertSample(
   return rc;
 }
 
-MetricSeriesCursor MetricService::getCursor(
+MetricCursor MetricService::getCursor(
     const MetricIDType& metric_id,
     const SeriesNameType& series_name,
     uint64_t time_begin,
@@ -234,28 +234,28 @@ MetricSeriesCursor MetricService::getCursor(
   auto metric = metric_map->findMetric(metric_id);
   if (!metric) {
     //return ReturnCode::error("ENOTFOUND", "metric not found");
-    return MetricSeriesCursor();
+    return MetricCursor();
   }
 
   std::shared_ptr<MetricSeries> series;
   if (!metric->getSeriesList()->findSeries(series_name, &series)) {
     //return ReturnCode::error("ENOTFOUND", "series not found");
-    return MetricSeriesCursor();
+    return MetricCursor();
   }
 
   tsdb::Cursor tsdb_cursor;
   if (tsdb_->getCursor(series->getSeriesID().id, &tsdb_cursor)) {
-    return MetricSeriesCursor(
+    return MetricCursor(
         &metric->getConfig(),
         std::move(tsdb_cursor),
         time_begin,
         time_limit);
   } else {
-    return MetricSeriesCursor();
+    return MetricCursor();
   }
 }
 
-MetricSeriesCursor MetricService::getCursor(
+MetricCursor MetricService::getCursor(
     const MetricIDType& metric_id,
     const SeriesIDType& series_id,
     uint64_t time_begin,
@@ -264,18 +264,18 @@ MetricSeriesCursor MetricService::getCursor(
   auto metric = metric_map->findMetric(metric_id);
   if (!metric) {
     //return ReturnCode::error("ENOTFOUND", "metric not found");
-    return MetricSeriesCursor();
+    return MetricCursor();
   }
 
   tsdb::Cursor tsdb_cursor;
   if (tsdb_->getCursor(series_id.id, &tsdb_cursor)) {
-    return MetricSeriesCursor(
+    return MetricCursor(
         &metric->getConfig(),
         std::move(tsdb_cursor),
         time_begin,
         time_limit);
   } else {
-    return MetricSeriesCursor();
+    return MetricCursor();
   }
 }
 

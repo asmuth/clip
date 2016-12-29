@@ -17,9 +17,9 @@
 
 namespace fnordmetric {
 
-MetricSeriesCursor::MetricSeriesCursor() {}
+MetricCursor::MetricCursor() {}
 
-MetricSeriesCursor::MetricSeriesCursor(
+MetricCursor::MetricCursor(
     const MetricConfig* config,
     tsdb::Cursor cursor,
     uint64_t time_begin,
@@ -27,18 +27,18 @@ MetricSeriesCursor::MetricSeriesCursor(
     cursor_(std::move(cursor)),
     aggr_(mkOutputAggregator(&cursor_, time_begin, time_limit, config)) {}
 
-MetricSeriesCursor::MetricSeriesCursor(
-    MetricSeriesCursor&& o) :
+MetricCursor::MetricCursor(
+    MetricCursor&& o) :
     cursor_(std::move(o.cursor_)),
     aggr_(std::move(o.aggr_)) {}
 
-MetricSeriesCursor& MetricSeriesCursor::operator=(MetricSeriesCursor&& o) {
+MetricCursor& MetricCursor::operator=(MetricCursor&& o) {
   cursor_ = std::move(o.cursor_);
   aggr_ = std::move(o.aggr_);
   return *this;
 }
 
-bool MetricSeriesCursor::next(
+bool MetricCursor::next(
     uint64_t* timestamp,
     tval_ref* out,
     size_t out_len) {
@@ -49,7 +49,7 @@ bool MetricSeriesCursor::next(
   }
 }
 
-tval_type MetricSeriesCursor::getOutputType() const {
+tval_type MetricCursor::getOutputType() const {
   if (aggr_) {
     return aggr_->getOutputType();
   } else {
@@ -58,7 +58,7 @@ tval_type MetricSeriesCursor::getOutputType() const {
   }
 }
 
-size_t MetricSeriesCursor::getOutputColumnCount() const {
+size_t MetricCursor::getOutputColumnCount() const {
   if (aggr_) {
     return aggr_->getOutputColumnCount();
   } else {
@@ -66,7 +66,7 @@ size_t MetricSeriesCursor::getOutputColumnCount() const {
   }
 }
 
-std::string MetricSeriesCursor::getOutputColumnName(size_t idx) const {
+std::string MetricCursor::getOutputColumnName(size_t idx) const {
   if (aggr_) {
     return aggr_->getOutputColumnName(idx);
   } else {

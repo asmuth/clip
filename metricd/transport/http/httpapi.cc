@@ -158,7 +158,7 @@ void HTTPAPI::renderMetricSeriesList(
 
 static void renderJSONTimeseries(
     json::JSONOutputStream* json,
-    MetricSeriesCursor* cursor) {
+    MetricCursor* cursor) {
   json->beginArray();
 
   std::vector<tval_ref> values(cursor->getOutputColumnCount());

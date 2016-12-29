@@ -25,20 +25,20 @@
 
 namespace fnordmetric {
 
-class MetricSeriesCursor {
+class MetricCursor {
 public:
 
-  MetricSeriesCursor();
-  MetricSeriesCursor(
+  MetricCursor();
+  MetricCursor(
       const MetricConfig* config,
       tsdb::Cursor cursor,
       uint64_t time_begin,
       uint64_t time_limit);
 
-  MetricSeriesCursor(const MetricSeriesCursor& o) = delete;
-  MetricSeriesCursor(MetricSeriesCursor&& o);
-  MetricSeriesCursor& operator=(const MetricSeriesCursor& o) = delete;
-  MetricSeriesCursor& operator=(MetricSeriesCursor&& o);
+  MetricCursor(const MetricCursor& o) = delete;
+  MetricCursor(MetricCursor&& o);
+  MetricCursor& operator=(const MetricCursor& o) = delete;
+  MetricCursor& operator=(MetricCursor&& o);
 
   bool next(
       uint64_t* time,

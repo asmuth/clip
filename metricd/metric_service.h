@@ -53,7 +53,7 @@ public:
   /**
    * Get a cursor to a metric series
    */
-  MetricSeriesCursor getCursor(
+  MetricCursor getCursor(
       const MetricIDType& metric_id,
       const SeriesIDType& series_id,
       uint64_t time_begin,
@@ -62,7 +62,7 @@ public:
   /**
    * Get a cursor to a metric series
    */
-  MetricSeriesCursor getCursor(
+  MetricCursor getCursor(
       const MetricIDType& metric_id,
       const SeriesNameType& series_name,
       uint64_t time_begin,
