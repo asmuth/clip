@@ -148,19 +148,6 @@ bool SumOutputAggregator::next(
   return true;
 }
 
-tval_type SumOutputAggregator::getOutputType() const {
-  return input_type_;
-}
-
-size_t SumOutputAggregator::getOutputColumnCount() const {
-  return 1;
-}
-
-std::string SumOutputAggregator::getOutputColumnName(size_t idx) const {
-  assert(idx < 1);
-  return "value";
-}
-
 MaxInputAggregator::MaxInputAggregator(
     uint64_t granularity,
     uint64_t align /* = 0 */) :
@@ -272,19 +259,6 @@ bool MaxOutputAggregator::next(
   }
 
   return true;
-}
-
-tval_type MaxOutputAggregator::getOutputType() const {
-  return input_type_;
-}
-
-size_t MaxOutputAggregator::getOutputColumnCount() const {
-  return 1;
-}
-
-std::string MaxOutputAggregator::getOutputColumnName(size_t idx) const {
-  assert(idx < 1);
-  return "value";
 }
 
 uint64_t alignTime(uint64_t timestamp, uint64_t window, uint64_t align = 0) {

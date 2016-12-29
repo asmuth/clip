@@ -73,9 +73,9 @@ public:
 
   MetricCursor();
   MetricCursor(
-      const MetricConfig* config,
-      tsdb::Cursor cursor,
-      std::unique_ptr<MetricCursorOptions> opts);
+      const MetricConfig& config,
+      std::unique_ptr<MetricCursorOptions> opts,
+      std::vector<std::unique_ptr<OutputAggregator>> series_readers);
 
   MetricCursor(const MetricCursor& o) = delete;
   MetricCursor(MetricCursor&& o);
@@ -94,16 +94,18 @@ public:
   std::string getOutputColumnName(size_t idx) const;
 
 protected:
-
-  std::unique_ptr<OutputAggregator> mkOutputAggregator(tsdb::Cursor cursor);
-
-  const MetricConfig* config_;
+  MetricConfig config_;
   std::unique_ptr<MetricCursorOptions> opts_;
-  std::unique_ptr<OutputAggregator> aggr_;
+  std::vector<std::unique_ptr<OutputAggregator>> series_readers_;
 };
 
 std::unique_ptr<InputAggregator> mkInputAggregator(
     const MetricConfig* config);
+
+std::unique_ptr<OutputAggregator> mkOutputAggregator(
+    const MetricConfig& config,
+    tsdb::Cursor cursor,
+    const MetricCursorOptions* cursor_opts);
 
 } // namespace fnordmetric
 

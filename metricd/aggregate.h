@@ -40,12 +40,6 @@ public:
       tval_ref* out,
       size_t out_len) = 0;
 
-  virtual tval_type getOutputType() const = 0;
-
-  virtual size_t getOutputColumnCount() const = 0;
-
-  virtual std::string getOutputColumnName(size_t idx) const = 0;
-
 };
 
 class SumInputAggregator : public InputAggregator {
@@ -81,12 +75,6 @@ public:
       uint64_t* time,
       tval_ref* out,
       size_t out_len) override;
-
-  tval_type getOutputType() const override;
-
-  size_t getOutputColumnCount() const override;
-
-  std::string getOutputColumnName(size_t idx) const override;
 
 protected:
   tsdb::Cursor cursor_;
@@ -129,12 +117,6 @@ public:
       uint64_t* time,
       tval_ref* out,
       size_t out_len) override;
-
-  tval_type getOutputType() const override;
-
-  size_t getOutputColumnCount() const override;
-
-  std::string getOutputColumnName(size_t idx) const override;
 
 protected:
   tsdb::Cursor cursor_;

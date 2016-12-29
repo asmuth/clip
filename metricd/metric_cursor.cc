@@ -55,16 +55,25 @@ ReturnCode MetricCursor::openCursor(
     opts->series_id = series->getSeriesID();
   }
 
-  /* open tsdb cursor */
-  tsdb::Cursor tsdb_cursor;
-  if (!db->getCursor(opts->series_id.id, &tsdb_cursor)) {
-    return ReturnCode::error("EIO", "can't open tsdb cursor");
+  /* open tsdb cursors */
+  std::vector<std::unique_ptr<OutputAggregator>> series_readers;
+  {
+    tsdb::Cursor tsdb_cursor;
+    if (!db->getCursor(opts->series_id.id, &tsdb_cursor)) {
+      return ReturnCode::error("EIO", "can't open tsdb cursor");
+    }
+
+    series_readers.emplace_back(
+        mkOutputAggregator(
+            config,
+            std::move(tsdb_cursor),
+            opts.get()));
   }
 
   *cursor = MetricCursor(
-      &metric->getConfig(),
-      std::move(tsdb_cursor),
-      std::move(opts));
+      metric->getConfig(),
+      std::move(opts),
+      std::move(series_readers));
 
   return ReturnCode::success();
 }
@@ -72,26 +81,24 @@ ReturnCode MetricCursor::openCursor(
 MetricCursor::MetricCursor() {}
 
 MetricCursor::MetricCursor(
-    const MetricConfig* config,
-    tsdb::Cursor cursor,
-    std::unique_ptr<MetricCursorOptions> opts)  :
+    const MetricConfig& config,
+    std::unique_ptr<MetricCursorOptions> opts,
+    std::vector<std::unique_ptr<OutputAggregator>> series_readers)  :
     config_(config),
     opts_(std::move(opts)),
-    aggr_(mkOutputAggregator(std::move(cursor))) {}
+    series_readers_(std::move(series_readers)) {}
 
 MetricCursor::MetricCursor(
     MetricCursor&& o) :
-    config_(o.config_),
+    config_(std::move(o.config_)),
     opts_(std::move(o.opts_)),
-    aggr_(std::move(o.aggr_)) {
-  o.config_ = nullptr;
+    series_readers_(std::move(o.series_readers_)) {
 }
 
 MetricCursor& MetricCursor::operator=(MetricCursor&& o) {
-  config_ = o.config_;
-  o.config_ = nullptr;
+  config_ = std::move(o.config_);
   opts_ = std::move(o.opts_);
-  aggr_ = std::move(o.aggr_);
+  series_readers_ = std::move(o.series_readers_);
   return *this;
 }
 
@@ -99,37 +106,34 @@ bool MetricCursor::next(
     uint64_t* timestamp,
     tval_ref* out,
     size_t out_len) {
-  if (aggr_) {
-    return aggr_->next(timestamp, out, out_len);
-  } else {
-    return false;
-  }
+  return series_readers_[0]->next(timestamp, out, out_len);
 }
 
 tval_type MetricCursor::getOutputType() const {
-  if (aggr_) {
-    return aggr_->getOutputType();
-  } else {
-    //return config_.data_type;
-    return tval_type::UINT64; // FIXME
+  switch (config_.kind) {
+
+    case MetricKind::COUNTER_UINT64:
+    case MetricKind::MAX_UINT64:
+      return tval_type::UINT64;
+
+    case MetricKind::COUNTER_INT64:
+    case MetricKind::MAX_INT64:
+      return tval_type::INT64;
+
+    case MetricKind::COUNTER_FLOAT64:
+    case MetricKind::MAX_FLOAT64:
+      return tval_type::FLOAT64;
+
   }
 }
 
 size_t MetricCursor::getOutputColumnCount() const {
-  if (aggr_) {
-    return aggr_->getOutputColumnCount();
-  } else {
-    return 1;
-  }
+  return 1;
 }
 
 std::string MetricCursor::getOutputColumnName(size_t idx) const {
-  if (aggr_) {
-    return aggr_->getOutputColumnName(idx);
-  } else {
-    assert(idx < 1);
-    return "value";
-  }
+  assert(idx < 1);
+  return "value";
 }
 
 std::unique_ptr<InputAggregator> mkInputAggregator(
@@ -149,9 +153,11 @@ std::unique_ptr<InputAggregator> mkInputAggregator(
   }
 }
 
-std::unique_ptr<OutputAggregator> MetricCursor::mkOutputAggregator(
-    tsdb::Cursor cursor) {
-  switch (config_->kind) {
+std::unique_ptr<OutputAggregator> mkOutputAggregator(
+    const MetricConfig& config,
+    tsdb::Cursor cursor,
+    const MetricCursorOptions* cursor_opts) {
+  switch (config.kind) {
 
     case MetricKind::MAX_UINT64:
     case MetricKind::MAX_INT64:
@@ -159,8 +165,8 @@ std::unique_ptr<OutputAggregator> MetricCursor::mkOutputAggregator(
       return std::unique_ptr<OutputAggregator>(
           new MaxOutputAggregator(
               std::move(cursor),
-              getMetricDataType(config_->kind),
-              opts_.get()));
+              getMetricDataType(config.kind),
+              cursor_opts));
 
     case MetricKind::COUNTER_UINT64:
     case MetricKind::COUNTER_INT64:
@@ -168,8 +174,8 @@ std::unique_ptr<OutputAggregator> MetricCursor::mkOutputAggregator(
       return std::unique_ptr<OutputAggregator>(
           new SumOutputAggregator(
               std::move(cursor),
-              getMetricDataType(config_->kind),
-              opts_.get()));
+              getMetricDataType(config.kind),
+              cursor_opts));
 
     default: return {};
   }
