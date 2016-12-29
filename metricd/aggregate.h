@@ -14,6 +14,7 @@
 #include <libtsdb/cursor.h>
 
 namespace fnordmetric {
+class MetricCursorOptions;
 
 class InputAggregator {
 public:
@@ -72,11 +73,7 @@ public:
   SumOutputAggregator(
       tsdb::Cursor* cursor,
       tval_type input_type,
-      uint64_t time_begin,
-      uint64_t time_limit,
-      uint64_t granularity,
-      uint64_t align = 0,
-      bool interpolate = true);
+      const MetricCursorOptions* opts);
 
   ~SumOutputAggregator();
 
@@ -94,11 +91,7 @@ public:
 protected:
   tsdb::Cursor* cursor_;
   tval_type input_type_;
-  uint64_t time_begin_;
-  uint64_t time_limit_;
-  uint64_t granularity_;
-  uint64_t align_;
-  bool interpolate_;
+  const MetricCursorOptions* opts_;
   uint64_t cur_time_;
   tval_ref cur_sum_;
 };
@@ -128,11 +121,7 @@ public:
   MaxOutputAggregator(
       tsdb::Cursor* cursor,
       tval_type input_type,
-      uint64_t time_begin,
-      uint64_t time_limit,
-      uint64_t granularity,
-      uint64_t align = 0,
-      bool interpolate = true);
+      const MetricCursorOptions* opts);
 
   ~MaxOutputAggregator();
 
@@ -150,11 +139,7 @@ public:
 protected:
   tsdb::Cursor* cursor_;
   tval_type input_type_;
-  uint64_t time_begin_;
-  uint64_t time_limit_;
-  uint64_t granularity_;
-  uint64_t align_;
-  bool interpolate_;
+  const MetricCursorOptions* opts_;
   uint64_t cur_time_;
   tval_ref cur_max_;
   bool has_cur_max_;

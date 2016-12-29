@@ -219,8 +219,7 @@ void HTTPAPI::performMetricFetchSeries(
     return;
   }
 
-  uint64_t time_limit = WallClock::unixMicros();
-  uint64_t time_begin = time_limit - 2 * kMicrosPerHour;
+  MetricCursorOptions data_cursor_opts;
 
   response->setStatus(http::kStatusOK);
   response->addHeader("Content-Type", "application/json; charset=utf-8");
@@ -237,8 +236,7 @@ void HTTPAPI::performMetricFetchSeries(
     auto data_cursor = metric_service_->getCursor(
         metric_id,
         cursor.getSeriesID(),
-        time_begin,
-        time_limit);
+        data_cursor_opts);
 
     if (j++ > 0) { json.addComma(); }
     json.beginObject();

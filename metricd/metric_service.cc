@@ -228,8 +228,7 @@ ReturnCode MetricService::insertSample(
 MetricCursor MetricService::getCursor(
     const MetricIDType& metric_id,
     const SeriesNameType& series_name,
-    uint64_t time_begin,
-    uint64_t time_limit) {
+    const MetricCursorOptions& opts) {
   auto metric_map = metric_map_.getMetricMap();
   auto metric = metric_map->findMetric(metric_id);
   if (!metric) {
@@ -243,23 +242,13 @@ MetricCursor MetricService::getCursor(
     return MetricCursor();
   }
 
-  tsdb::Cursor tsdb_cursor;
-  if (tsdb_->getCursor(series->getSeriesID().id, &tsdb_cursor)) {
-    return MetricCursor(
-        &metric->getConfig(),
-        std::move(tsdb_cursor),
-        time_begin,
-        time_limit);
-  } else {
-    return MetricCursor();
-  }
+  return getCursor(metric, series->getSeriesID(), opts);
 }
 
 MetricCursor MetricService::getCursor(
     const MetricIDType& metric_id,
     const SeriesIDType& series_id,
-    uint64_t time_begin,
-    uint64_t time_limit) {
+    const MetricCursorOptions& opts) {
   auto metric_map = metric_map_.getMetricMap();
   auto metric = metric_map->findMetric(metric_id);
   if (!metric) {
@@ -267,40 +256,33 @@ MetricCursor MetricService::getCursor(
     return MetricCursor();
   }
 
+  return getCursor(metric, series_id, opts);
+}
+
+MetricCursor MetricService::getCursor(
+    Metric* metric,
+    const SeriesIDType& series_id,
+    MetricCursorOptions opts) {
+  const auto& config = metric->getConfig();
+
+  if (opts.granularity == 0) {
+    opts.granularity = config.display_granularity;
+  }
+
+  if (opts.granularity == 0) {
+    opts.granularity = config.granularity;
+  }
+
   tsdb::Cursor tsdb_cursor;
   if (tsdb_->getCursor(series_id.id, &tsdb_cursor)) {
     return MetricCursor(
         &metric->getConfig(),
         std::move(tsdb_cursor),
-        time_begin,
-        time_limit);
+        opts);
   } else {
     return MetricCursor();
   }
 }
-
-//void MetricService::scanSamples(
-//    const std::string& metric_key,
-//    const fnord::DateTime& time_begin,
-//    const fnord::DateTime& time_end,
-//    std::function<void (const metricd::MetricSample& sample)> callback) {
-//  auto partitions = tsdb::TimeWindowPartitioner::partitionKeysFor(
-//      metric_key,
-//      time_begin,
-//      time_end,
-//      600 * kMicrosPerSecond);
-//
-//  for (const auto& partition_key : partitions) {
-//    tsdb_->fetchPartition(
-//        tsdb_namespace_,
-//        metric_key,
-//        partition_key,
-//        [callback] (const Buffer& buf) {
-//      callback(msg::decode<metricd::MetricSample>(buf));
-//    });
-//  }
-//}
-//
 
 } // namsepace fnordmetric
 

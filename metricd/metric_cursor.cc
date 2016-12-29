@@ -13,27 +13,44 @@
 #include <metricd/metric.h>
 #include <metricd/metric_cursor.h>
 #include <metricd/util/logging.h>
+#include <metricd/util/time.h>
 #include <libtsdb/varint.h>
 
 namespace fnordmetric {
+
+MetricCursorOptions::MetricCursorOptions() {
+  time_limit = WallClock::unixMicros();
+  time_begin = time_limit - 2 * kMicrosPerHour;
+  granularity = 0;
+  align = 0;
+  interpolate = true;
+}
 
 MetricCursor::MetricCursor() {}
 
 MetricCursor::MetricCursor(
     const MetricConfig* config,
     tsdb::Cursor cursor,
-    uint64_t time_begin,
-    uint64_t time_limit) :
+    const MetricCursorOptions& opts)  :
+    config_(config),
     cursor_(std::move(cursor)),
-    aggr_(mkOutputAggregator(&cursor_, time_begin, time_limit, config)) {}
+    opts_(opts),
+    aggr_(mkOutputAggregator()) {}
 
 MetricCursor::MetricCursor(
     MetricCursor&& o) :
+    config_(o.config_),
     cursor_(std::move(o.cursor_)),
-    aggr_(std::move(o.aggr_)) {}
+    opts_(std::move(o.opts_)),
+    aggr_(std::move(o.aggr_)) {
+  o.config_ = nullptr;
+}
 
 MetricCursor& MetricCursor::operator=(MetricCursor&& o) {
+  config_ = o.config_;
+  o.config_ = nullptr;
   cursor_ = std::move(o.cursor_);
+  opts_ = std::move(o.opts_);
   aggr_ = std::move(o.aggr_);
   return *this;
 }
@@ -77,10 +94,6 @@ std::string MetricCursor::getOutputColumnName(size_t idx) const {
 
 std::unique_ptr<InputAggregator> mkInputAggregator(
     const MetricConfig* config) {
-  if (config->granularity == 0) {
-    return {};
-  }
-
   switch (config->kind) {
     case MetricKind::MAX_UINT64:
     case MetricKind::MAX_INT64:
@@ -96,41 +109,27 @@ std::unique_ptr<InputAggregator> mkInputAggregator(
   }
 }
 
-std::unique_ptr<OutputAggregator> mkOutputAggregator(
-    tsdb::Cursor* cursor,
-    uint64_t time_begin,
-    uint64_t time_limit,
-    const MetricConfig* config) {
-  uint64_t granularity = config->display_granularity;
-  if (granularity == 0) {
-    granularity = config->granularity;
-  }
+std::unique_ptr<OutputAggregator> MetricCursor::mkOutputAggregator() {
+  switch (config_->kind) {
 
-  if (granularity == 0) {
-    return {};
-  }
-
-  switch (config->kind) {
     case MetricKind::MAX_UINT64:
     case MetricKind::MAX_INT64:
     case MetricKind::MAX_FLOAT64:
       return std::unique_ptr<OutputAggregator>(
           new MaxOutputAggregator(
-              cursor,
-              getMetricDataType(config->kind),
-              time_begin,
-              time_limit,
-              granularity));
+              &cursor_,
+              getMetricDataType(config_->kind),
+              &opts_));
+
     case MetricKind::COUNTER_UINT64:
     case MetricKind::COUNTER_INT64:
     case MetricKind::COUNTER_FLOAT64:
       return std::unique_ptr<OutputAggregator>(
           new SumOutputAggregator(
-              cursor,
-              getMetricDataType(config->kind),
-              time_begin,
-              time_limit,
-              granularity));
+              &cursor_,
+              getMetricDataType(config_->kind),
+              &opts_));
+
     default: return {};
   }
 }

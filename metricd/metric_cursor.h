@@ -24,6 +24,34 @@
 #include <mutex>
 
 namespace fnordmetric {
+class MetricConfig;
+
+struct MetricCursorOptions {
+
+  MetricCursorOptions();
+
+  /**
+   * begin of scan time window (inclusive); unix microsecond timestamp;
+   * default is now() - 2 hours
+   */
+  uint64_t time_begin;
+
+  /**
+   * end of scan time window (exclusive); unix microsecond timestamp;
+   * default is now()
+   */
+  uint64_t time_limit;
+
+  /**
+   * unit: microseconds; default: 0 (zero means default granularity)
+   */
+  uint64_t granularity;
+
+  uint64_t align;
+
+  bool interpolate;
+
+};
 
 class MetricCursor {
 public:
@@ -32,8 +60,7 @@ public:
   MetricCursor(
       const MetricConfig* config,
       tsdb::Cursor cursor,
-      uint64_t time_begin,
-      uint64_t time_limit);
+      const MetricCursorOptions& opts);
 
   MetricCursor(const MetricCursor& o) = delete;
   MetricCursor(MetricCursor&& o);
@@ -52,15 +79,14 @@ public:
   std::string getOutputColumnName(size_t idx) const;
 
 protected:
+
+  std::unique_ptr<OutputAggregator> mkOutputAggregator();
+
+  const MetricConfig* config_;
   tsdb::Cursor cursor_;
+  MetricCursorOptions opts_;
   std::unique_ptr<OutputAggregator> aggr_;
 };
-
-std::unique_ptr<OutputAggregator> mkOutputAggregator(
-    tsdb::Cursor* cursor,
-    uint64_t time_begin,
-    uint64_t time_limit,
-    const MetricConfig* config);
 
 std::unique_ptr<InputAggregator> mkInputAggregator(
     const MetricConfig* config);

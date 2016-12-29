@@ -8,6 +8,7 @@
  * <http://www.gnu.org/licenses/>.
  */
 #include "metricd/aggregate.h"
+#include "metricd/metric_cursor.h"
 #include "metricd/types.h"
 #include <limits>
 #include <assert.h>
@@ -63,24 +64,16 @@ ReturnCode SumInputAggregator::addSample(
 SumOutputAggregator::SumOutputAggregator(
     tsdb::Cursor* cursor,
     tval_type input_type,
-    uint64_t time_begin,
-    uint64_t time_limit,
-    uint64_t granularity,
-    uint64_t align /* = 0 */,
-    bool interpolate /* = true */) :
+    const MetricCursorOptions* opts) :
     cursor_(cursor),
     input_type_(input_type),
-    time_begin_(time_begin),
-    time_limit_(time_limit),
-    granularity_(granularity),
-    align_(align),
-    interpolate_(interpolate) {
+    opts_(opts) {
   cur_sum_.type = input_type_;
   cur_sum_.len = tval_len(input_type_);
   cur_sum_.data = malloc(cur_sum_.len);
   tval_zero(cur_sum_.type, cur_sum_.data, cur_sum_.len);
 
-  cur_time_ = alignTime(time_begin_, granularity_, align_);
+  cur_time_ = alignTime(opts->time_begin, opts->granularity, opts->align);
   cursor_->seekTo(cur_time_);
 }
 
@@ -92,7 +85,8 @@ bool SumOutputAggregator::next(
     uint64_t* time,
     tval_ref* out,
     size_t out_len) {
-  if (cur_time_ >= time_limit_ + granularity_) {
+  auto granularity = opts_->granularity;
+  if (cur_time_ >= opts_->time_limit + granularity) {
     return false;
   }
 
@@ -100,16 +94,16 @@ bool SumOutputAggregator::next(
   val.type = input_type_;
   val.len = tval_len(input_type_);
   val.data = alloca(val.len);
-  while (cursor_->valid() && cursor_->getTime() < cur_time_ + granularity_) {
+  while (cursor_->valid() && cursor_->getTime() < cur_time_ + granularity) {
     cursor_->getValue(val.data, val.len);
     tval_add(cur_sum_.type, cur_sum_.data, cur_sum_.len, val.data, val.len);
     cursor_->next();
   }
 
   uint64_t interpolate_windows = 1;
-  if (interpolate_ && cursor_->valid()) {
-    auto next_time = alignTime(cursor_->getTime(), granularity_, align_);
-    interpolate_windows = (next_time - cur_time_) / granularity_;
+  if (opts_->interpolate && cursor_->valid()) {
+    auto next_time = alignTime(cursor_->getTime(), granularity, opts_->align);
+    interpolate_windows = (next_time - cur_time_) / granularity;
   }
 
   if (interpolate_windows > 1) {
@@ -149,7 +143,7 @@ bool SumOutputAggregator::next(
   }
 
   *time = cur_time_;
-  cur_time_ += granularity_;
+  cur_time_ += granularity;
 
   return true;
 }
@@ -216,25 +210,17 @@ ReturnCode MaxInputAggregator::addSample(
 MaxOutputAggregator::MaxOutputAggregator(
     tsdb::Cursor* cursor,
     tval_type input_type,
-    uint64_t time_begin,
-    uint64_t time_limit,
-    uint64_t granularity,
-    uint64_t align /* = 0 */,
-    bool interpolate /* = true */) :
+    const MetricCursorOptions* opts) :
     cursor_(cursor),
     input_type_(input_type),
-    time_begin_(time_begin),
-    time_limit_(time_limit),
-    granularity_(granularity),
-    align_(align),
-    interpolate_(interpolate) {
+    opts_(opts) {
   cur_max_.type = input_type_;
   cur_max_.len = tval_len(input_type_);
   cur_max_.data = malloc(cur_max_.len);
   tval_zero(cur_max_.type, cur_max_.data, cur_max_.len);
   has_cur_max_ = false;
 
-  cur_time_ = alignTime(time_begin_, granularity_, align_);
+  cur_time_ = alignTime(opts->time_begin, opts->granularity, opts->align);
   cursor_->seekTo(cur_time_);
 }
 
@@ -246,11 +232,12 @@ bool MaxOutputAggregator::next(
     uint64_t* time,
     tval_ref* out,
     size_t out_len) {
-  if (cur_time_ >= time_limit_ + granularity_) {
+  auto granularity = opts_->granularity;
+  if (cur_time_ >= opts_->time_limit + granularity) {
     return false;
   }
 
-  while (cursor_->valid() && cursor_->getTime() < cur_time_ + granularity_) {
+  while (cursor_->valid() && cursor_->getTime() < cur_time_ + granularity) {
     tval_ref val;
     val.type = input_type_;
     val.len = tval_len(input_type_);
@@ -262,6 +249,7 @@ bool MaxOutputAggregator::next(
       memcpy(cur_max_.data, val.data, val.len);
       has_cur_max_ = true;
     }
+
     cursor_->next();
   }
 
@@ -271,12 +259,12 @@ bool MaxOutputAggregator::next(
   }
 
   *time = cur_time_;
-  cur_time_ += granularity_;
+  cur_time_ += granularity;
 
   bool should_interpolate =
-      interpolate_ &&
+      opts_->interpolate &&
       cursor_->valid() &&
-      cursor_->getTime() >= cur_time_ + granularity_;
+      cursor_->getTime() >= cur_time_ + granularity;
 
   if (!should_interpolate) {
     tval_zero(cur_max_.type, cur_max_.data, cur_max_.len);

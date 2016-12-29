@@ -123,11 +123,14 @@ TEST_CASE(MetricServiceTest, TestSumAggregator, [] () {
   }
 
   {
+    MetricCursorOptions cursor_opts;
+    cursor_opts.time_begin = 1482776220000000;
+    cursor_opts.time_limit = 1482776900000000;
+
     auto cursor = service->getCursor(
         "users_online",
         SeriesNameType(""),
-        1482776220000000,
-        1482776900000000);
+        cursor_opts);
     uint64_t ts;
     tval_ref val;
     val.len = sizeof(uint64_t);
@@ -278,11 +281,15 @@ TEST_CASE(MetricServiceTest, TestSumAggregatorWithDownsampling, [] () {
   }
 
   {
+    MetricCursorOptions cursor_opts;
+    cursor_opts.time_begin = 1482776100000000;
+    cursor_opts.time_limit = 1482776700000000;
+
     auto cursor = service->getCursor(
         "users_online",
         SeriesNameType(""),
-        1482776100000000,
-        1482776700000000);
+        cursor_opts);
+
     uint64_t ts;
     tval_ref val;
     val.len = sizeof(uint64_t);
@@ -403,11 +410,15 @@ TEST_CASE(MetricServiceTest, TestSumAggregatorWithUpsampling, [] () {
   }
 
   {
+    MetricCursorOptions cursor_opts;
+    cursor_opts.time_begin = 1482776340000000;
+    cursor_opts.time_limit = 1482776820000000;
+
     auto cursor = service->getCursor(
         "users_online",
         SeriesNameType(""),
-        1482776340000000,
-        1482776820000000);
+        cursor_opts);
+
     uint64_t ts;
     tval_ref val;
     val.len = sizeof(uint64_t);
@@ -611,11 +622,14 @@ TEST_CASE(MetricServiceTest, TestMaxAggregator, [] () {
   }
 
   {
+    MetricCursorOptions cursor_opts;
+    cursor_opts.time_begin = 1482776220000000;
+    cursor_opts.time_limit = 1482776900000000;
+
     auto cursor = service->getCursor(
         "users_online",
         SeriesNameType(""),
-        1482776220000000,
-        1482776900000000);
+        cursor_opts);
 
     uint64_t ts;
     tval_ref val;
@@ -767,11 +781,15 @@ TEST_CASE(MetricServiceTest, TestMaxAggregatorWithDownsampling, [] () {
   }
 
   {
+    MetricCursorOptions cursor_opts;
+    cursor_opts.time_begin = 1482776100000000;
+    cursor_opts.time_limit = 1482776700000000;
+
     auto cursor = service->getCursor(
         "users_online",
         SeriesNameType(""),
-        1482776100000000,
-        1482776700000000);
+        cursor_opts);
+
     uint64_t ts;
     tval_ref val;
     val.len = sizeof(uint64_t);
@@ -892,11 +910,14 @@ TEST_CASE(MetricServiceTest, TestMaxAggregatorWithUpsampling, [] () {
   }
 
   {
+    MetricCursorOptions cursor_opts;
+    cursor_opts.time_begin = 1482776340000000;
+    cursor_opts.time_limit = 1482776820000000;
+
     auto cursor = service->getCursor(
         "users_online",
         SeriesNameType(""),
-        1482776340000000,
-        1482776820000000);
+        cursor_opts);
 
     uint64_t ts;
     tval_ref val;

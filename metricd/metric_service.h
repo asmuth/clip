@@ -56,8 +56,7 @@ public:
   MetricCursor getCursor(
       const MetricIDType& metric_id,
       const SeriesIDType& series_id,
-      uint64_t time_begin,
-      uint64_t time_limit);
+      const MetricCursorOptions& opts);
 
   /**
    * Get a cursor to a metric series
@@ -65,8 +64,7 @@ public:
   MetricCursor getCursor(
       const MetricIDType& metric_id,
       const SeriesNameType& series_name,
-      uint64_t time_begin,
-      uint64_t time_limit);
+      const MetricCursorOptions& opts);
 
 protected:
 
@@ -74,6 +72,11 @@ protected:
       std::unique_ptr<tsdb::TSDB> tsdb,
       std::shared_ptr<MetricMap> metric_map,
       SeriesIDType series_id);
+
+  MetricCursor getCursor(
+      Metric* metric,
+      const SeriesIDType& series_id,
+      MetricCursorOptions opts);
 
   std::unique_ptr<tsdb::TSDB> tsdb_;
   VersionedMetricMap metric_map_;
