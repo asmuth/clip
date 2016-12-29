@@ -163,7 +163,7 @@ ReturnCode MetricService::listSeries(
 
 ReturnCode MetricService::fetchData(
     const MetricIDType& metric_id,
-    const MetricCursorOptions& req_opts,
+    const MetricCursorOptions& opts,
     MetricCursor* cursor) {
   auto metric_map = metric_map_.getMetricMap();
   auto metric = metric_map->findMetric(metric_id);
@@ -171,40 +171,7 @@ ReturnCode MetricService::fetchData(
     return ReturnCode::error("ENOTFOUND", "metric not found");
   }
 
-  std::unique_ptr<MetricCursorOptions> opts(new MetricCursorOptions(req_opts));
-
-  /* fill in cursor options defaults from metric config */
-  const auto& config = metric->getConfig();
-  if (opts->granularity == 0) {
-    opts->granularity = config.display_granularity;
-  }
-
-  if (opts->granularity == 0) {
-    opts->granularity = config.granularity;
-  }
-
-  /* if no series id is given, perform the lookup */
-  if (opts->series_id.id == 0) {
-    std::shared_ptr<MetricSeries> series;
-    if (!metric->getSeriesList()->findSeries(opts->series_name, &series)) {
-      return ReturnCode::error("ENOTFOUND", "series not found");
-    }
-
-    opts->series_id = series->getSeriesID();
-  }
-
-  /* open tsdb cursor */
-  tsdb::Cursor tsdb_cursor;
-  if (!tsdb_->getCursor(opts->series_id.id, &tsdb_cursor)) {
-    return ReturnCode::error("EIO", "can't open tsdb cursor");
-  }
-
-  *cursor = MetricCursor(
-      &metric->getConfig(),
-      std::move(tsdb_cursor),
-      std::move(opts));
-
-  return ReturnCode::success();
+  return MetricCursor::openCursor(tsdb_.get(), metric, opts, cursor);
 }
 
 ReturnCode MetricService::insertSample(

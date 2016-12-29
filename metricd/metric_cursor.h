@@ -65,6 +65,12 @@ struct MetricCursorOptions {
 class MetricCursor {
 public:
 
+  static ReturnCode openCursor(
+      tsdb::TSDB* db,
+      Metric* metric,
+      const MetricCursorOptions& cursor_opts,
+      MetricCursor* cursor);
+
   MetricCursor();
   MetricCursor(
       const MetricConfig* config,

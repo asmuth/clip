@@ -27,6 +27,48 @@ MetricCursorOptions::MetricCursorOptions() {
   interpolate = true;
 }
 
+ReturnCode MetricCursor::openCursor(
+    tsdb::TSDB* db,
+    Metric* metric,
+    const MetricCursorOptions& cursor_opts,
+    MetricCursor* cursor) {
+  std::unique_ptr<MetricCursorOptions> opts(
+      new MetricCursorOptions(cursor_opts));
+
+  /* fill in cursor options defaults from metric config */
+  const auto& config = metric->getConfig();
+  if (opts->granularity == 0) {
+    opts->granularity = config.display_granularity;
+  }
+
+  if (opts->granularity == 0) {
+    opts->granularity = config.granularity;
+  }
+
+  /* if no series id is given, perform the lookup */
+  if (opts->series_id.id == 0) {
+    std::shared_ptr<MetricSeries> series;
+    if (!metric->getSeriesList()->findSeries(opts->series_name, &series)) {
+      return ReturnCode::error("ENOTFOUND", "series not found");
+    }
+
+    opts->series_id = series->getSeriesID();
+  }
+
+  /* open tsdb cursor */
+  tsdb::Cursor tsdb_cursor;
+  if (!db->getCursor(opts->series_id.id, &tsdb_cursor)) {
+    return ReturnCode::error("EIO", "can't open tsdb cursor");
+  }
+
+  *cursor = MetricCursor(
+      &metric->getConfig(),
+      std::move(tsdb_cursor),
+      std::move(opts));
+
+  return ReturnCode::success();
+}
+
 MetricCursor::MetricCursor() {}
 
 MetricCursor::MetricCursor(
