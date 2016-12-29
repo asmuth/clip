@@ -161,6 +161,52 @@ ReturnCode MetricService::listSeries(
   return ReturnCode::success();
 }
 
+ReturnCode MetricService::fetchData(
+    const MetricIDType& metric_id,
+    const MetricCursorOptions& req_opts,
+    MetricCursor* cursor) {
+  auto metric_map = metric_map_.getMetricMap();
+  auto metric = metric_map->findMetric(metric_id);
+  if (!metric) {
+    return ReturnCode::error("ENOTFOUND", "metric not found");
+  }
+
+  std::unique_ptr<MetricCursorOptions> opts(new MetricCursorOptions(req_opts));
+
+  /* fill in cursor options defaults from metric config */
+  const auto& config = metric->getConfig();
+  if (opts->granularity == 0) {
+    opts->granularity = config.display_granularity;
+  }
+
+  if (opts->granularity == 0) {
+    opts->granularity = config.granularity;
+  }
+
+  /* if no series id is given, perform the lookup */
+  if (opts->series_id.id == 0) {
+    std::shared_ptr<MetricSeries> series;
+    if (!metric->getSeriesList()->findSeries(opts->series_name, &series)) {
+      return ReturnCode::error("ENOTFOUND", "series not found");
+    }
+
+    opts->series_id = series->getSeriesID();
+  }
+
+  /* open tsdb cursor */
+  tsdb::Cursor tsdb_cursor;
+  if (!tsdb_->getCursor(opts->series_id.id, &tsdb_cursor)) {
+    return ReturnCode::error("EIO", "can't open tsdb cursor");
+  }
+
+  *cursor = MetricCursor(
+      &metric->getConfig(),
+      std::move(tsdb_cursor),
+      std::move(opts));
+
+  return ReturnCode::success();
+}
+
 ReturnCode MetricService::insertSample(
     const MetricIDType& metric_id,
     const SeriesNameType& series_name,
@@ -223,65 +269,6 @@ ReturnCode MetricService::insertSample(
   }
 
   return rc;
-}
-
-MetricCursor MetricService::getCursor(
-    const MetricIDType& metric_id,
-    const SeriesNameType& series_name,
-    const MetricCursorOptions& opts) {
-  auto metric_map = metric_map_.getMetricMap();
-  auto metric = metric_map->findMetric(metric_id);
-  if (!metric) {
-    //return ReturnCode::error("ENOTFOUND", "metric not found");
-    return MetricCursor();
-  }
-
-  std::shared_ptr<MetricSeries> series;
-  if (!metric->getSeriesList()->findSeries(series_name, &series)) {
-    //return ReturnCode::error("ENOTFOUND", "series not found");
-    return MetricCursor();
-  }
-
-  return getCursor(metric, series->getSeriesID(), opts);
-}
-
-MetricCursor MetricService::getCursor(
-    const MetricIDType& metric_id,
-    const SeriesIDType& series_id,
-    const MetricCursorOptions& opts) {
-  auto metric_map = metric_map_.getMetricMap();
-  auto metric = metric_map->findMetric(metric_id);
-  if (!metric) {
-    //return ReturnCode::error("ENOTFOUND", "metric not found");
-    return MetricCursor();
-  }
-
-  return getCursor(metric, series_id, opts);
-}
-
-MetricCursor MetricService::getCursor(
-    Metric* metric,
-    const SeriesIDType& series_id,
-    MetricCursorOptions opts) {
-  const auto& config = metric->getConfig();
-
-  if (opts.granularity == 0) {
-    opts.granularity = config.display_granularity;
-  }
-
-  if (opts.granularity == 0) {
-    opts.granularity = config.granularity;
-  }
-
-  tsdb::Cursor tsdb_cursor;
-  if (tsdb_->getCursor(series_id.id, &tsdb_cursor)) {
-    return MetricCursor(
-        &metric->getConfig(),
-        std::move(tsdb_cursor),
-        opts);
-  } else {
-    return MetricCursor();
-  }
 }
 
 } // namsepace fnordmetric

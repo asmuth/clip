@@ -14,7 +14,7 @@
 #include <libtsdb/cursor.h>
 
 namespace fnordmetric {
-class MetricCursorOptions;
+struct MetricCursorOptions;
 
 class InputAggregator {
 public:
@@ -71,7 +71,7 @@ class SumOutputAggregator : public OutputAggregator {
 public:
 
   SumOutputAggregator(
-      tsdb::Cursor* cursor,
+      tsdb::Cursor cursor,
       tval_type input_type,
       const MetricCursorOptions* opts);
 
@@ -89,7 +89,7 @@ public:
   std::string getOutputColumnName(size_t idx) const override;
 
 protected:
-  tsdb::Cursor* cursor_;
+  tsdb::Cursor cursor_;
   tval_type input_type_;
   const MetricCursorOptions* opts_;
   uint64_t cur_time_;
@@ -119,7 +119,7 @@ class MaxOutputAggregator : public OutputAggregator {
 public:
 
   MaxOutputAggregator(
-      tsdb::Cursor* cursor,
+      tsdb::Cursor cursor,
       tval_type input_type,
       const MetricCursorOptions* opts);
 
@@ -137,7 +137,7 @@ public:
   std::string getOutputColumnName(size_t idx) const override;
 
 protected:
-  tsdb::Cursor* cursor_;
+  tsdb::Cursor cursor_;
   tval_type input_type_;
   const MetricCursorOptions* opts_;
   uint64_t cur_time_;

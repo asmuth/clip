@@ -124,13 +124,14 @@ TEST_CASE(MetricServiceTest, TestCounterMetric, [] () {
 
   {
     MetricCursorOptions cursor_opts;
+    cursor_opts.series_name = SeriesNameType("");
     cursor_opts.time_begin = 1482776220000000;
     cursor_opts.time_limit = 1482776900000000;
 
-    auto cursor = service->getCursor(
-        "users_online",
-        SeriesNameType(""),
-        cursor_opts);
+    MetricCursor cursor;
+    auto cursor_rc = service->fetchData("users_online", cursor_opts, &cursor);
+    EXPECT(cursor_rc.isSuccess());
+
     uint64_t ts;
     tval_ref val;
     val.len = sizeof(uint64_t);
@@ -282,13 +283,13 @@ TEST_CASE(MetricServiceTest, TestCounterMetricWithDownsampling, [] () {
 
   {
     MetricCursorOptions cursor_opts;
+    cursor_opts.series_name = SeriesNameType("");
     cursor_opts.time_begin = 1482776100000000;
     cursor_opts.time_limit = 1482776700000000;
 
-    auto cursor = service->getCursor(
-        "users_online",
-        SeriesNameType(""),
-        cursor_opts);
+    MetricCursor cursor;
+    auto cursor_rc = service->fetchData("users_online", cursor_opts, &cursor);
+    EXPECT(cursor_rc.isSuccess());
 
     uint64_t ts;
     tval_ref val;
@@ -411,13 +412,13 @@ TEST_CASE(MetricServiceTest, TestCounterMetricWithUpsampling, [] () {
 
   {
     MetricCursorOptions cursor_opts;
+    cursor_opts.series_name = SeriesNameType("");
     cursor_opts.time_begin = 1482776340000000;
     cursor_opts.time_limit = 1482776820000000;
 
-    auto cursor = service->getCursor(
-        "users_online",
-        SeriesNameType(""),
-        cursor_opts);
+    MetricCursor cursor;
+    auto cursor_rc = service->fetchData("users_online", cursor_opts, &cursor);
+    EXPECT(cursor_rc.isSuccess());
 
     uint64_t ts;
     tval_ref val;
@@ -623,13 +624,13 @@ TEST_CASE(MetricServiceTest, TestMaxMetric, [] () {
 
   {
     MetricCursorOptions cursor_opts;
+    cursor_opts.series_name = SeriesNameType("");
     cursor_opts.time_begin = 1482776220000000;
     cursor_opts.time_limit = 1482776900000000;
 
-    auto cursor = service->getCursor(
-        "users_online",
-        SeriesNameType(""),
-        cursor_opts);
+    MetricCursor cursor;
+    auto cursor_rc = service->fetchData("users_online", cursor_opts, &cursor);
+    EXPECT(cursor_rc.isSuccess());
 
     uint64_t ts;
     tval_ref val;
@@ -782,13 +783,13 @@ TEST_CASE(MetricServiceTest, TestMaxMetricWithDownsampling, [] () {
 
   {
     MetricCursorOptions cursor_opts;
+    cursor_opts.series_name = SeriesNameType("");
     cursor_opts.time_begin = 1482776100000000;
     cursor_opts.time_limit = 1482776700000000;
 
-    auto cursor = service->getCursor(
-        "users_online",
-        SeriesNameType(""),
-        cursor_opts);
+    MetricCursor cursor;
+    auto cursor_rc = service->fetchData("users_online", cursor_opts, &cursor);
+    EXPECT(cursor_rc.isSuccess());
 
     uint64_t ts;
     tval_ref val;
@@ -911,13 +912,13 @@ TEST_CASE(MetricServiceTest, TestMaxMetricWithUpsampling, [] () {
 
   {
     MetricCursorOptions cursor_opts;
+    cursor_opts.series_name = SeriesNameType("");
     cursor_opts.time_begin = 1482776340000000;
     cursor_opts.time_limit = 1482776820000000;
 
-    auto cursor = service->getCursor(
-        "users_online",
-        SeriesNameType(""),
-        cursor_opts);
+    MetricCursor cursor;
+    auto cursor_rc = service->fetchData("users_online", cursor_opts, &cursor);
+    EXPECT(cursor_rc.isSuccess());
 
     uint64_t ts;
     tval_ref val;

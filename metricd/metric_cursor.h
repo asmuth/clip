@@ -9,11 +9,7 @@
  * <http://www.gnu.org/licenses/>.
  */
 #pragma once
-#include <metricd/types.h>
-#include <metricd/sample.h>
-#include <metricd/util/return_code.h>
-#include <metricd/aggregate.h>
-#include <libtsdb/tsdb.h>
+#include <metricd/metric.h>
 #include <functional>
 #include <iostream>
 #include <string>
@@ -24,11 +20,24 @@
 #include <mutex>
 
 namespace fnordmetric {
-class MetricConfig;
+struct MetricConfig;
+
+enum class MetricCursorType {
+  SERIES,
+  SUMMARY
+};
 
 struct MetricCursorOptions {
 
   MetricCursorOptions();
+
+  MetricCursorType cursor_type;
+
+  SeriesNameType series_name;
+  SeriesIDType series_id;
+
+  std::string series_name_match;
+
 
   /**
    * begin of scan time window (inclusive); unix microsecond timestamp;
@@ -60,7 +69,7 @@ public:
   MetricCursor(
       const MetricConfig* config,
       tsdb::Cursor cursor,
-      const MetricCursorOptions& opts);
+      std::unique_ptr<MetricCursorOptions> opts);
 
   MetricCursor(const MetricCursor& o) = delete;
   MetricCursor(MetricCursor&& o);
@@ -80,11 +89,10 @@ public:
 
 protected:
 
-  std::unique_ptr<OutputAggregator> mkOutputAggregator();
+  std::unique_ptr<OutputAggregator> mkOutputAggregator(tsdb::Cursor cursor);
 
   const MetricConfig* config_;
-  tsdb::Cursor cursor_;
-  MetricCursorOptions opts_;
+  std::unique_ptr<MetricCursorOptions> opts_;
   std::unique_ptr<OutputAggregator> aggr_;
 };
 

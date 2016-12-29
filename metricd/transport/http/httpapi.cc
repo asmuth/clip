@@ -219,7 +219,6 @@ void HTTPAPI::performMetricFetchSeries(
     return;
   }
 
-  MetricCursorOptions data_cursor_opts;
 
   response->setStatus(http::kStatusOK);
   response->addHeader("Content-Type", "application/json; charset=utf-8");
@@ -233,17 +232,29 @@ void HTTPAPI::performMetricFetchSeries(
   json.beginArray();
 
   for (int j = 0; cursor.isValid(); cursor.next()) {
-    auto data_cursor = metric_service_->getCursor(
-        metric_id,
-        cursor.getSeriesID(),
-        data_cursor_opts);
-
     if (j++ > 0) { json.addComma(); }
-    json.beginObject();
 
     json.addObjectEntry("series_id");
     json.addString(cursor.getSeriesName().name);
     json.addComma();
+
+    MetricCursorOptions data_cursor_opts;
+    data_cursor_opts.series_id = cursor.getSeriesID();
+
+    MetricCursor data_cursor;
+    auto data_cursor_rc = metric_service_->fetchData(
+        metric_id,
+        data_cursor_opts,
+        &data_cursor);
+
+    if (!data_cursor_rc.isSuccess()) {
+      json.addObjectEntry("error");
+      json.addString(rc.getMessage());
+      json.endObject();
+      continue;
+    }
+
+    json.beginObject();
 
     json.addObjectEntry("columns");
     json.beginArray();

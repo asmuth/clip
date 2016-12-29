@@ -62,10 +62,10 @@ ReturnCode SumInputAggregator::addSample(
 }
 
 SumOutputAggregator::SumOutputAggregator(
-    tsdb::Cursor* cursor,
+    tsdb::Cursor cursor,
     tval_type input_type,
     const MetricCursorOptions* opts) :
-    cursor_(cursor),
+    cursor_(std::move(cursor)),
     input_type_(input_type),
     opts_(opts) {
   cur_sum_.type = input_type_;
@@ -74,7 +74,7 @@ SumOutputAggregator::SumOutputAggregator(
   tval_zero(cur_sum_.type, cur_sum_.data, cur_sum_.len);
 
   cur_time_ = alignTime(opts->time_begin, opts->granularity, opts->align);
-  cursor_->seekTo(cur_time_);
+  cursor_.seekTo(cur_time_);
 }
 
 SumOutputAggregator::~SumOutputAggregator() {
@@ -94,15 +94,15 @@ bool SumOutputAggregator::next(
   val.type = input_type_;
   val.len = tval_len(input_type_);
   val.data = alloca(val.len);
-  while (cursor_->valid() && cursor_->getTime() < cur_time_ + granularity) {
-    cursor_->getValue(val.data, val.len);
+  while (cursor_.valid() && cursor_.getTime() < cur_time_ + granularity) {
+    cursor_.getValue(val.data, val.len);
     tval_add(cur_sum_.type, cur_sum_.data, cur_sum_.len, val.data, val.len);
-    cursor_->next();
+    cursor_.next();
   }
 
   uint64_t interpolate_windows = 1;
-  if (opts_->interpolate && cursor_->valid()) {
-    auto next_time = alignTime(cursor_->getTime(), granularity, opts_->align);
+  if (opts_->interpolate && cursor_.valid()) {
+    auto next_time = alignTime(cursor_.getTime(), granularity, opts_->align);
     interpolate_windows = (next_time - cur_time_) / granularity;
   }
 
@@ -208,10 +208,10 @@ ReturnCode MaxInputAggregator::addSample(
 }
 
 MaxOutputAggregator::MaxOutputAggregator(
-    tsdb::Cursor* cursor,
+    tsdb::Cursor cursor,
     tval_type input_type,
     const MetricCursorOptions* opts) :
-    cursor_(cursor),
+    cursor_(std::move(cursor)),
     input_type_(input_type),
     opts_(opts) {
   cur_max_.type = input_type_;
@@ -221,7 +221,7 @@ MaxOutputAggregator::MaxOutputAggregator(
   has_cur_max_ = false;
 
   cur_time_ = alignTime(opts->time_begin, opts->granularity, opts->align);
-  cursor_->seekTo(cur_time_);
+  cursor_.seekTo(cur_time_);
 }
 
 MaxOutputAggregator::~MaxOutputAggregator() {
@@ -237,20 +237,20 @@ bool MaxOutputAggregator::next(
     return false;
   }
 
-  while (cursor_->valid() && cursor_->getTime() < cur_time_ + granularity) {
+  while (cursor_.valid() && cursor_.getTime() < cur_time_ + granularity) {
     tval_ref val;
     val.type = input_type_;
     val.len = tval_len(input_type_);
     val.data = alloca(val.len);
 
-    cursor_->getValue(val.data, val.len);
+    cursor_.getValue(val.data, val.len);
     if (!has_cur_max_ ||
         tval_cmp(val.type, val.data, val.len, cur_max_.data, cur_max_.len) > 0) {
       memcpy(cur_max_.data, val.data, val.len);
       has_cur_max_ = true;
     }
 
-    cursor_->next();
+    cursor_.next();
   }
 
   if (out_len > 0) {
@@ -263,8 +263,8 @@ bool MaxOutputAggregator::next(
 
   bool should_interpolate =
       opts_->interpolate &&
-      cursor_->valid() &&
-      cursor_->getTime() >= cur_time_ + granularity;
+      cursor_.valid() &&
+      cursor_.getTime() >= cur_time_ + granularity;
 
   if (!should_interpolate) {
     tval_zero(cur_max_.type, cur_max_.data, cur_max_.len);

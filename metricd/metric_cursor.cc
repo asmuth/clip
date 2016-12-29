@@ -19,6 +19,7 @@
 namespace fnordmetric {
 
 MetricCursorOptions::MetricCursorOptions() {
+  cursor_type = MetricCursorType::SERIES;
   time_limit = WallClock::unixMicros();
   time_begin = time_limit - 2 * kMicrosPerHour;
   granularity = 0;
@@ -31,16 +32,14 @@ MetricCursor::MetricCursor() {}
 MetricCursor::MetricCursor(
     const MetricConfig* config,
     tsdb::Cursor cursor,
-    const MetricCursorOptions& opts)  :
+    std::unique_ptr<MetricCursorOptions> opts)  :
     config_(config),
-    cursor_(std::move(cursor)),
-    opts_(opts),
-    aggr_(mkOutputAggregator()) {}
+    opts_(std::move(opts)),
+    aggr_(mkOutputAggregator(std::move(cursor))) {}
 
 MetricCursor::MetricCursor(
     MetricCursor&& o) :
     config_(o.config_),
-    cursor_(std::move(o.cursor_)),
     opts_(std::move(o.opts_)),
     aggr_(std::move(o.aggr_)) {
   o.config_ = nullptr;
@@ -49,7 +48,6 @@ MetricCursor::MetricCursor(
 MetricCursor& MetricCursor::operator=(MetricCursor&& o) {
   config_ = o.config_;
   o.config_ = nullptr;
-  cursor_ = std::move(o.cursor_);
   opts_ = std::move(o.opts_);
   aggr_ = std::move(o.aggr_);
   return *this;
@@ -109,7 +107,8 @@ std::unique_ptr<InputAggregator> mkInputAggregator(
   }
 }
 
-std::unique_ptr<OutputAggregator> MetricCursor::mkOutputAggregator() {
+std::unique_ptr<OutputAggregator> MetricCursor::mkOutputAggregator(
+    tsdb::Cursor cursor) {
   switch (config_->kind) {
 
     case MetricKind::MAX_UINT64:
@@ -117,18 +116,18 @@ std::unique_ptr<OutputAggregator> MetricCursor::mkOutputAggregator() {
     case MetricKind::MAX_FLOAT64:
       return std::unique_ptr<OutputAggregator>(
           new MaxOutputAggregator(
-              &cursor_,
+              std::move(cursor),
               getMetricDataType(config_->kind),
-              &opts_));
+              opts_.get()));
 
     case MetricKind::COUNTER_UINT64:
     case MetricKind::COUNTER_INT64:
     case MetricKind::COUNTER_FLOAT64:
       return std::unique_ptr<OutputAggregator>(
           new SumOutputAggregator(
-              &cursor_,
+              std::move(cursor),
               getMetricDataType(config_->kind),
-              &opts_));
+              opts_.get()));
 
     default: return {};
   }

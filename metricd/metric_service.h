@@ -42,6 +42,14 @@ public:
       MetricSeriesListCursor* cursor);
 
   /**
+   * Get a cursor to a metric
+   */
+  ReturnCode fetchData(
+      const MetricIDType& metric_id,
+      const MetricCursorOptions& opts,
+      MetricCursor* cursor);
+
+  /**
    * Insert a sample into a metric series
    */
   ReturnCode insertSample(
@@ -50,33 +58,12 @@ public:
       uint64_t time,
       const std::string& value);
 
-  /**
-   * Get a cursor to a metric series
-   */
-  MetricCursor getCursor(
-      const MetricIDType& metric_id,
-      const SeriesIDType& series_id,
-      const MetricCursorOptions& opts);
-
-  /**
-   * Get a cursor to a metric series
-   */
-  MetricCursor getCursor(
-      const MetricIDType& metric_id,
-      const SeriesNameType& series_name,
-      const MetricCursorOptions& opts);
-
 protected:
 
   MetricService(
       std::unique_ptr<tsdb::TSDB> tsdb,
       std::shared_ptr<MetricMap> metric_map,
       SeriesIDType series_id);
-
-  MetricCursor getCursor(
-      Metric* metric,
-      const SeriesIDType& series_id,
-      MetricCursorOptions opts);
 
   std::unique_ptr<tsdb::TSDB> tsdb_;
   VersionedMetricMap metric_map_;
