@@ -50,6 +50,8 @@ metricd_common_sources_ = \
     config/config_parser.cc \
     metric.h \
     metric.cc \
+    metric_cursor.h \
+    metric_cursor.cc \
     metric_map.h \
     metric_map.cc \
     metric_service.h \

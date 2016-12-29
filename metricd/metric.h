@@ -131,37 +131,6 @@ protected:
   std::map<uint64_t, std::shared_ptr<MetricSeries>> series_by_id_;
 };
 
-class MetricSeriesCursor {
-public:
-
-  MetricSeriesCursor();
-  MetricSeriesCursor(
-      const MetricConfig* config,
-      tsdb::Cursor cursor,
-      uint64_t time_begin,
-      uint64_t time_limit);
-
-  MetricSeriesCursor(const MetricSeriesCursor& o) = delete;
-  MetricSeriesCursor(MetricSeriesCursor&& o);
-  MetricSeriesCursor& operator=(const MetricSeriesCursor& o) = delete;
-  MetricSeriesCursor& operator=(MetricSeriesCursor&& o);
-
-  bool next(
-      uint64_t* time,
-      tval_ref* out,
-      size_t out_len);
-
-  tval_type getOutputType() const;
-
-  size_t getOutputColumnCount() const;
-
-  std::string getOutputColumnName(size_t idx) const;
-
-protected:
-  tsdb::Cursor cursor_;
-  std::unique_ptr<OutputAggregator> aggr_;
-};
-
 class MetricSeriesListCursor {
 public:
 
@@ -219,15 +188,6 @@ protected:
   MetricConfig config_;
   std::unique_ptr<InputAggregator> input_aggr_;
 };
-
-std::unique_ptr<OutputAggregator> mkOutputAggregator(
-    tsdb::Cursor* cursor,
-    uint64_t time_begin,
-    uint64_t time_limit,
-    const MetricConfig* config);
-
-std::unique_ptr<InputAggregator> mkInputAggregator(
-    const MetricConfig* config);
 
 tval_type getMetricDataType(MetricKind t);
 

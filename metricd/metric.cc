@@ -12,6 +12,7 @@
 #include <sstream>
 #include <metricd/metric.h>
 #include <metricd/metric_map.h>
+#include <metricd/metric_cursor.h>
 #include <metricd/util/logging.h>
 #include <libtsdb/varint.h>
 
@@ -201,124 +202,6 @@ void MetricSeriesList::listSeries(std::vector<SeriesIDType>* series_ids) {
 size_t MetricSeriesList::getSize() const {
   std::unique_lock<std::mutex> lk(series_mutex_);
   return series_.size();
-}
-
-MetricSeriesCursor::MetricSeriesCursor() {}
-
-MetricSeriesCursor::MetricSeriesCursor(
-    const MetricConfig* config,
-    tsdb::Cursor cursor,
-    uint64_t time_begin,
-    uint64_t time_limit) :
-    cursor_(std::move(cursor)),
-    aggr_(mkOutputAggregator(&cursor_, time_begin, time_limit, config)) {}
-
-MetricSeriesCursor::MetricSeriesCursor(
-    MetricSeriesCursor&& o) :
-    cursor_(std::move(o.cursor_)),
-    aggr_(std::move(o.aggr_)) {}
-
-MetricSeriesCursor& MetricSeriesCursor::operator=(MetricSeriesCursor&& o) {
-  cursor_ = std::move(o.cursor_);
-  aggr_ = std::move(o.aggr_);
-  return *this;
-}
-
-bool MetricSeriesCursor::next(
-    uint64_t* timestamp,
-    tval_ref* out,
-    size_t out_len) {
-  if (aggr_) {
-    return aggr_->next(timestamp, out, out_len);
-  } else {
-    return false;
-  }
-}
-
-tval_type MetricSeriesCursor::getOutputType() const {
-  if (aggr_) {
-    return aggr_->getOutputType();
-  } else {
-    //return config_.data_type;
-    return tval_type::UINT64; // FIXME
-  }
-}
-
-size_t MetricSeriesCursor::getOutputColumnCount() const {
-  if (aggr_) {
-    return aggr_->getOutputColumnCount();
-  } else {
-    return 1;
-  }
-}
-
-std::string MetricSeriesCursor::getOutputColumnName(size_t idx) const {
-  if (aggr_) {
-    return aggr_->getOutputColumnName(idx);
-  } else {
-    assert(idx < 1);
-    return "value";
-  }
-}
-
-std::unique_ptr<InputAggregator> mkInputAggregator(
-    const MetricConfig* config) {
-  if (config->granularity == 0) {
-    return {};
-  }
-
-  switch (config->kind) {
-    case MetricKind::MAX_UINT64:
-    case MetricKind::MAX_INT64:
-    case MetricKind::MAX_FLOAT64:
-      return std::unique_ptr<InputAggregator>(
-          new MaxInputAggregator(config->granularity));
-    case MetricKind::COUNTER_UINT64:
-    case MetricKind::COUNTER_INT64:
-    case MetricKind::COUNTER_FLOAT64:
-      return std::unique_ptr<InputAggregator>(
-          new SumInputAggregator(config->granularity));
-    default: return {};
-  }
-}
-
-std::unique_ptr<OutputAggregator> mkOutputAggregator(
-    tsdb::Cursor* cursor,
-    uint64_t time_begin,
-    uint64_t time_limit,
-    const MetricConfig* config) {
-  uint64_t granularity = config->display_granularity;
-  if (granularity == 0) {
-    granularity = config->granularity;
-  }
-
-  if (granularity == 0) {
-    return {};
-  }
-
-  switch (config->kind) {
-    case MetricKind::MAX_UINT64:
-    case MetricKind::MAX_INT64:
-    case MetricKind::MAX_FLOAT64:
-      return std::unique_ptr<OutputAggregator>(
-          new MaxOutputAggregator(
-              cursor,
-              getMetricDataType(config->kind),
-              time_begin,
-              time_limit,
-              granularity));
-    case MetricKind::COUNTER_UINT64:
-    case MetricKind::COUNTER_INT64:
-    case MetricKind::COUNTER_FLOAT64:
-      return std::unique_ptr<OutputAggregator>(
-          new SumOutputAggregator(
-              cursor,
-              getMetricDataType(config->kind),
-              time_begin,
-              time_limit,
-              granularity));
-    default: return {};
-  }
 }
 
 MetricSeriesListCursor::MetricSeriesListCursor() :

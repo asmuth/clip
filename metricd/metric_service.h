@@ -12,16 +12,14 @@
 #include <atomic>
 #include <memory>
 #include <string>
-#include "metricd/metric_map.h"
 #include "metricd/metric.h"
+#include "metricd/metric_cursor.h"
+#include "metricd/metric_map.h"
 #include "metricd/config/config_list.h"
 #include "metricd/util/return_code.h"
 #include "libtsdb/tsdb.h"
 
 namespace fnordmetric {
-class MetricListCursor;
-class MetricSeriesListCursor;
-class MetricSeriesCursor;
 
 class MetricService {
 public:
