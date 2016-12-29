@@ -22,7 +22,7 @@ using namespace fnordmetric;
 
 UNIT_TEST(MetricServiceTest);
 
-TEST_CASE(MetricServiceTest, TestSumAggregator, [] () {
+TEST_CASE(MetricServiceTest, TestCounterMetric, [] () {
   mkdir("/tmp/__test_metricd", 0755);
   unlink("/tmp/__test_metricd/default.tsdb");
 
@@ -179,7 +179,7 @@ TEST_CASE(MetricServiceTest, TestSumAggregator, [] () {
   }
 });
 
-TEST_CASE(MetricServiceTest, TestSumAggregatorWithDownsampling, [] () {
+TEST_CASE(MetricServiceTest, TestCounterMetricWithDownsampling, [] () {
   mkdir("/tmp/__test_metricd", 0755);
   unlink("/tmp/__test_metricd/default.tsdb");
 
@@ -308,7 +308,7 @@ TEST_CASE(MetricServiceTest, TestSumAggregatorWithDownsampling, [] () {
   }
 });
 
-TEST_CASE(MetricServiceTest, TestSumAggregatorWithUpsampling, [] () {
+TEST_CASE(MetricServiceTest, TestCounterMetricWithUpsampling, [] () {
   mkdir("/tmp/__test_metricd", 0755);
   unlink("/tmp/__test_metricd/default.tsdb");
 
@@ -521,7 +521,7 @@ TEST_CASE(MetricServiceTest, TestSumAggregatorWithUpsampling, [] () {
   }
 });
 
-TEST_CASE(MetricServiceTest, TestMaxAggregator, [] () {
+TEST_CASE(MetricServiceTest, TestMaxMetric, [] () {
   mkdir("/tmp/__test_metricd", 0755);
   unlink("/tmp/__test_metricd/default.tsdb");
 
@@ -679,7 +679,7 @@ TEST_CASE(MetricServiceTest, TestMaxAggregator, [] () {
   }
 });
 
-TEST_CASE(MetricServiceTest, TestMaxAggregatorWithDownsampling, [] () {
+TEST_CASE(MetricServiceTest, TestMaxMetricWithDownsampling, [] () {
   mkdir("/tmp/__test_metricd", 0755);
   unlink("/tmp/__test_metricd/default.tsdb");
 
@@ -808,7 +808,7 @@ TEST_CASE(MetricServiceTest, TestMaxAggregatorWithDownsampling, [] () {
   }
 });
 
-TEST_CASE(MetricServiceTest, TestMaxAggregatorWithUpsampling, [] () {
+TEST_CASE(MetricServiceTest, TestMaxMetricWithUpsampling, [] () {
   mkdir("/tmp/__test_metricd", 0755);
   unlink("/tmp/__test_metricd/default.tsdb");
 
