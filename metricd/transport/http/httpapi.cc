@@ -9,6 +9,7 @@
  * <http://www.gnu.org/licenses/>.
  */
 #include <metricd/metric_service.h>
+#include <metricd/query/query_frontend.h>
 #include <metricd/transport/http/httpapi.h>
 #include <metricd/util/stringutil.h>
 #include <metricd/util/json.h>

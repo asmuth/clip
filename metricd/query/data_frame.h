@@ -14,12 +14,10 @@
 #include <vector>
 #include <utility>
 #include "metricd/util/return_code.h"
+#include "metricd/types.h"
 
 namespace fnordmetric {
 
-enum class DataFrameType {
-  UINT, INT, DOUBLE
-};
 
 /**
  * A named vector of numeric values and an optional corresponding list of
@@ -28,7 +26,7 @@ enum class DataFrameType {
 class DataFrame {
 public:
 
-  DataFrame(DataFrameType type, bool has_time);
+  DataFrame(tval_type type);
   DataFrame(DataFrame&& other);
   DataFrame(const DataFrame& other) = delete;
   ~DataFrame();
@@ -36,18 +34,14 @@ public:
   DataFrame& operator=(DataFrame&& other);
   DataFrame& operator=(const DataFrame& other) = delete;
 
-  const std::vector<std::string> getID() const;
-  void setID(const std::vector<std::string> id);
+  const std::string& getID() const;
+  void setID(const std::string& id);
 
-  template <typename T>
-  const T* getData() const;
-
-  template <typename T>
-  T* getData();
+  const void* getData() const;
+  void* getData();
 
   const uint64_t* getTime() const;
   uint64_t* getTime();
-  bool hasTime() const;
 
   size_t getSize() const;
   size_t getEntrySize() const;
@@ -60,9 +54,8 @@ public:
   void debugPrint() const;
 
 protected:
-  DataFrameType type_;
-  bool has_time_;
-  std::vector<std::string> id_;
+  tval_type type_;
+  std::string id_;
   void* data_;
   size_t size_;
   size_t capacity_;
@@ -80,7 +73,7 @@ public:
 
   size_t getFrameCount() const;
   const DataFrame* getFrame(size_t idx) const;
-  DataFrame* addFrame(DataFrameType type, bool has_time);
+  DataFrame* addFrame(tval_type type);
 
   void debugPrint() const;
 
@@ -89,6 +82,4 @@ protected:
 };
 
 } // namespace fnordmetric
-
-#include "data_frame_impl.h"
 
