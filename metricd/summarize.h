@@ -13,6 +13,32 @@
 
 namespace fnordmetric {
 
+enum class GrossSummaryMethod {
+  SUM,
+  MAX,
+  MIN,
+  TREND
+};
+
+class GrossSummary {
+public:
+
+  virtual ~GrossSummary() = default;
+
+  virtual void addValue(
+      tval_type value_type,
+      const void* value,
+      size_t value_len) = 0;
+
+  virtual void getValue(
+      tval_type value_type,
+      void* value,
+      size_t value_len) = 0;
+
+  virtual void reset() = 0;
+
+};
+
 class GroupSummary {
 public:
 
