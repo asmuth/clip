@@ -37,14 +37,13 @@ public:
   const std::string& getID() const;
   void setID(const std::string& id);
 
-  const void* getData() const;
-  void* getData();
+  const void* getData(size_t idx = 0) const;
+  void* getData(size_t idx = 0);
 
-  const uint64_t* getTime() const;
-  uint64_t* getTime();
+  const uint64_t* getTime(size_t idx = 0) const;
+  uint64_t* getTime(size_t idx = 0);
 
   size_t getSize() const;
-  size_t getEntrySize() const;
 
   void resize(size_t len);
 
