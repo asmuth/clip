@@ -127,13 +127,14 @@ MetricCursor::MetricCursor(
     MetricCursor&& o) :
     config_(std::move(o.config_)),
     opts_(std::move(o.opts_)),
-    series_readers_(std::move(o.series_readers_)) {
-}
+    series_readers_(std::move(o.series_readers_)),
+    group_summary_(std::move(o.group_summary_)) {}
 
 MetricCursor& MetricCursor::operator=(MetricCursor&& o) {
   config_ = std::move(o.config_);
   opts_ = std::move(o.opts_);
   series_readers_ = std::move(o.series_readers_);
+  group_summary_ = std::move(o.group_summary_);
   return *this;
 }
 
@@ -153,7 +154,7 @@ bool MetricCursor::next(
       next_val.data = alloca(next_val.len);
 
       for (auto& reader : series_readers_) {
-        if (!series_readers_[0]->next(timestamp, &next_val, 1)) {
+        if (!reader->next(timestamp, &next_val, 1)) {
           return false;
         }
 
