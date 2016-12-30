@@ -3,17 +3,19 @@ FnordMetric.views["fnordmetric.metric.series.list"] = function(elem, params) {
 
   var api_url = "/fetch_series";
   var default_columns = [
-  //  {
-  //    key: "min",
-  //    title: "Min"
-  //  },
-  //  {
-  //    key: "max",
-  //    title: "Max"
-  //  },
+    {
+      key: "series_id",
+      title: "Series ID",
+      sortable: true
+    },
     {
       key: "sparkline",
-      title: ""
+      title: "Value"
+    },
+    {
+      key: "value",
+      title: "",
+      sortable: true
     }
   ];
 
@@ -127,8 +129,6 @@ FnordMetric.views["fnordmetric.metric.series.list"] = function(elem, params) {
 
   var renderTable = function(series) {
     /* build columns and rows */
-    var columns = [];
-    var column_keys = {};
     var rows = [];
     series.forEach(function(s) {
       var cells = {
@@ -165,24 +165,13 @@ FnordMetric.views["fnordmetric.metric.series.list"] = function(elem, params) {
           "{{unit}}",
           s.unit || "&nbsp;MB"); //FIXME use value returned by api
 
-      for (var key in s.labels) {
-        cells[key] = {value : s.labels[key]};
-
-        if (!column_keys.hasOwnProperty(key)) {
-          column_keys[key] = true;
-          columns.push({
-            key: key,
-            title: key
-          });
-        }
-      }
 
       rows.push({cells: cells});
     });
 
     /* initialize table */
     if (!table) {
-      table = new fTable({columns: columns.concat(default_columns)});
+      table = new fTable({columns: default_columns});
       /* navigate to id detail page */
       table.onClick(function(r) {
         params.app.navigateTo(
