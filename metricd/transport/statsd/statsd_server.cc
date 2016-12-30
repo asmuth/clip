@@ -141,7 +141,7 @@ void StatsdServer::handlePacket(const char* pkt, size_t pkt_len) {
 
     if (!rc.isSuccess()) {
       logWarning(
-          "statsd insert failed; metric_id=$1 series_id=$2 value=$3; error=$0",
+          "statsd insert failed: $0; metric_id=$1 series_id=$2 value=$3",
           rc.getMessage(),
           metric_id,
           series_id,
