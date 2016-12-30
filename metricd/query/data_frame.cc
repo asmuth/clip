@@ -60,6 +60,10 @@ DataFrame::~DataFrame() {
   }
 }
 
+tval_type DataFrame::getType() const {
+  return type_;
+}
+
 const std::string& DataFrame::getID() const {
   return id_;
 }

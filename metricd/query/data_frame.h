@@ -34,6 +34,8 @@ public:
   DataFrame& operator=(DataFrame&& other);
   DataFrame& operator=(const DataFrame& other) = delete;
 
+  tval_type getType() const;
+
   const std::string& getID() const;
   void setID(const std::string& id);
 

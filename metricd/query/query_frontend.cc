@@ -17,7 +17,7 @@ QueryFrontend::QueryFrontend(
 
 ReturnCode QueryFrontend::fetchTimeseriesJSON(
     const QueryOptions* query,
-    json::JSONOutputStream* out) {
+    json::JSONOutputStream* json) {
 
   auto metric_id = query->getProperty("metric_id");
   if (!metric_id) {
@@ -40,6 +40,52 @@ ReturnCode QueryFrontend::fetchTimeseriesJSON(
       return rc;
     }
   }
+
+  /* write output json */
+  json->beginArray();
+
+  for (size_t frame_idx = 0; frame_idx < results.getFrameCount(); ++frame_idx) {
+    if (frame_idx > 0) { json->addComma(); }
+
+    auto frame = results.getFrame(frame_idx);
+    json->beginObject();
+    json->addObjectEntry("series_id");
+    json->addString(frame->getID());
+    json->addComma();
+
+    json->addObjectEntry("time");
+    json->beginArray();
+    for (size_t i = 0; i < frame->getSize(); ++i) {
+      if (i > 0) { json->addComma(); }
+      json->addInteger(*frame->getTime(i));
+    }
+    json->endArray();
+    json->addComma();
+
+    json->addObjectEntry("values");
+    json->beginArray();
+    for (size_t i = 0; i < frame->getSize(); ++i) {
+      if (i > 0) { json->addComma(); }
+      switch (frame->getType()) {
+        case tval_type::UINT64:
+          json->addInteger(*((uint64_t*) frame->getData(i)));
+          break;
+        case tval_type::INT64:
+          json->addInteger(*((int64_t*) frame->getData(i)));
+          break;
+        case tval_type::FLOAT64:
+          json->addFloat(*((double*) frame->getData(i)));
+          break;
+        default:
+          json->addNull();
+      }
+    }
+    json->endArray();
+
+    json->endObject();
+  }
+
+  json->endArray();
 
   return ReturnCode::success();
 }
