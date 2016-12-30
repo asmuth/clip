@@ -234,6 +234,7 @@ void HTTPAPI::performMetricFetchSeries(
   for (int j = 0; cursor.isValid(); cursor.next()) {
     if (j++ > 0) { json.addComma(); }
 
+    json.beginObject();
     json.addObjectEntry("series_id");
     json.addString(cursor.getSeriesName().name);
     json.addComma();
@@ -253,8 +254,6 @@ void HTTPAPI::performMetricFetchSeries(
       json.endObject();
       continue;
     }
-
-    json.beginObject();
 
     json.addObjectEntry("columns");
     json.beginArray();
