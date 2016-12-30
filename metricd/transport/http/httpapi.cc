@@ -18,7 +18,8 @@ namespace fnordmetric {
 
 HTTPAPI::HTTPAPI(
     MetricService* metric_service) :
-    metric_service_(metric_service) {}
+    metric_service_(metric_service),
+    query_frontend_(metric_service) {}
 
 void HTTPAPI::handleHTTPRequest(
     http::HTTPRequest* request,
@@ -51,6 +52,12 @@ void HTTPAPI::handleHTTPRequest(
   // PATH: /api/v1/metrics/fetch_series
   if (path == "/api/v1/metrics/fetch_series") {
     performMetricFetchSeries(request, response, uri);
+    return;
+  }
+
+  // PATH: /api/v1/metrics/fetch_summary
+  if (path == "/api/v1/metrics/fetch_summary") {
+    performMetricFetchSummary(request, response, uri);
     return;
   }
 
@@ -198,6 +205,33 @@ static void renderJSONTimeseries(
   json->endArray();
 }
 
+
+void HTTPAPI::performMetricFetchSummary(
+    http::HTTPRequest* request,
+    http::HTTPResponse* response,
+    const URI& uri) {
+  auto params = uri.queryParams();
+
+  std::string metric_id;
+  if (!URI::getParam(params, "metric_id", &metric_id)) {
+    response->setStatus(http::kStatusBadRequest);
+    response->addBody("ERROR: missing parameter ?metric_id=...");
+    return;
+  }
+
+  QueryOptions opts;
+
+  json::JSONOutputStream json(response->getBodyOutputStream());
+  auto rc = query_frontend_.fetchTimeseriesJSON(&opts, &json);
+  if (rc.isSuccess()) {
+    response->setStatus(http::kStatusOK);
+    response->addHeader("Content-Type", "application/json; charset=utf-8");
+  } else {
+    response->clearBody();
+    response->setStatus(http::kStatusInternalServerError);
+    response->addBody("ERROR: " + rc.getMessage());
+  }
+}
 
 void HTTPAPI::performMetricFetchSeries(
     http::HTTPRequest* request,

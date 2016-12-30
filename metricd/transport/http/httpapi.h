@@ -11,6 +11,7 @@
 #pragma once
 #include <memory>
 #include <metricd/transport/http/httpservice.h>
+#include <metricd/query/query_frontend.h>
 #include <metricd/util/uri.h>
 
 namespace fnordmetric {
@@ -42,6 +43,11 @@ protected:
       http::HTTPResponse* response,
       const URI& uri);
 
+  void performMetricFetchSummary(
+      http::HTTPRequest* request,
+      http::HTTPResponse* response,
+      const URI& uri);
+
   void renderMetricSampleScan(
       http::HTTPRequest* request,
       http::HTTPResponse* response,
@@ -53,6 +59,7 @@ protected:
       const URI& uri);
 
   MetricService* metric_service_;
+  QueryFrontend query_frontend_;
 };
 
 }

@@ -20,7 +20,9 @@ namespace fnordmetric {
 class QueryOperation {
 public:
 
-  ReturnCode execute(DataFrameBundle* out);
+  virtual ~QueryOperation() = default;
+
+  virtual ReturnCode execute(DataFrameBundle* out) = 0;
 
 };
 

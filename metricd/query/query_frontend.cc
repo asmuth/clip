@@ -11,5 +11,28 @@
 
 namespace fnordmetric {
 
+QueryFrontend::QueryFrontend(
+    MetricService* metric_service) :
+    metric_service_(metric_service) {}
+
+ReturnCode QueryFrontend::fetchTimeseriesJSON(
+    const QueryOptions* query,
+    json::JSONOutputStream* out) {
+
+  auto metric_id = query->getProperty("metric_id");
+  if (!metric_id) {
+    return ReturnCode::error("EARG", "missing argument: metric_id");
+  }
+
+  MetricCursorOptions cursor_opts;
+
+  FetchTimeseriesOperation fetch_op(
+      metric_service_,
+      *metric_id,
+      std::move(cursor_opts));
+
+  return ReturnCode::success();
+}
+
 } // namespace fnordmetric
 

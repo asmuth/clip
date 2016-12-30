@@ -13,24 +13,26 @@
 #include <string>
 #include "metricd/metric.h"
 #include "metricd/metric_service.h"
-#include "metricd/query/query_options.h"
+#include "metricd/metric_cursor.h"
 #include "metricd/query/data_frame.h"
-#include "metricd/query/ops/fetch_timeseries.h"
-#include <metricd/util/json.h>
+#include "metricd/query/query_operation.h"
 
 namespace fnordmetric {
 
-class QueryFrontend {
+class FetchTimeseriesOperation : public QueryOperation {
 public:
 
-  QueryFrontend(MetricService* metric_service);
+  FetchTimeseriesOperation(
+      MetricService* metric_service,
+      const std::string& metric_id,
+      MetricCursorOptions&& cursor_opts);
 
-  ReturnCode fetchTimeseriesJSON(
-      const QueryOptions* query,
-      json::JSONOutputStream* out);
+  ReturnCode execute(DataFrameBundle* out) override;
 
 protected:
   MetricService* metric_service_;
+  std::string metric_id_;
+  MetricCursorOptions cursor_opts_;
 };
 
 } // namespace fnordmetric
