@@ -26,6 +26,7 @@
 namespace fnordmetric {
 class MetricMap;
 class SeriesIDProvider;
+class MetricSeriesListCursor;
 
 using MetricIDType = std::string;
 
@@ -123,6 +124,7 @@ public:
       const SeriesNameType& series_name);
 
   void listSeries(std::vector<SeriesIDType>* series_ids);
+  MetricSeriesListCursor listSeries();
 
   size_t getSize() const;
 
@@ -140,7 +142,6 @@ public:
 
   MetricSeriesListCursor();
   MetricSeriesListCursor(
-      std::shared_ptr<MetricMap> metric_map,
       MetricSeriesList* series_list,
       ListType&& snapshot);
 
@@ -154,6 +155,8 @@ public:
 
   bool isValid() const;
   bool next();
+
+  void setMetricMap(std::shared_ptr<MetricMap> metric_map);
 
 protected:
 

@@ -45,29 +45,48 @@ ReturnCode MetricCursor::openCursor(
     opts->granularity = config.granularity;
   }
 
-  /* if no series id is given, perform the lookup */
-  if (opts->series_id.id == 0) {
-    std::shared_ptr<MetricSeries> series;
-    if (!metric->getSeriesList()->findSeries(opts->series_name, &series)) {
-      return ReturnCode::error("ENOTFOUND", "series not found");
-    }
-
-    opts->series_id = series->getSeriesID();
-  }
-
   /* open tsdb cursors */
   std::vector<std::unique_ptr<OutputAggregator>> series_readers;
-  {
-    tsdb::Cursor tsdb_cursor;
-    if (!db->getCursor(opts->series_id.id, &tsdb_cursor)) {
-      return ReturnCode::error("EIO", "can't open tsdb cursor");
+  switch (opts->cursor_type) {
+
+    case MetricCursorType::SERIES: {
+      /* if no series id is given, perform the lookup */
+      if (opts->series_id.id == 0) {
+        std::shared_ptr<MetricSeries> series;
+        if (!metric->getSeriesList()->findSeries(opts->series_name, &series)) {
+          return ReturnCode::error("ENOTFOUND", "series not found");
+        }
+
+        opts->series_id = series->getSeriesID();
+      }
+
+      tsdb::Cursor tsdb_cursor;
+      if (!db->getCursor(opts->series_id.id, &tsdb_cursor)) {
+        return ReturnCode::error("EIO", "can't open tsdb cursor");
+      }
+
+      series_readers.emplace_back(
+          mkOutputAggregator(
+              config,
+              std::move(tsdb_cursor),
+              opts.get()));
+
+      break;
     }
 
-    series_readers.emplace_back(
-        mkOutputAggregator(
-            config,
-            std::move(tsdb_cursor),
-            opts.get()));
+    case MetricCursorType::SUMMARY: {
+      auto series_cursor = metric->getSeriesList()->listSeries();
+
+      for (; series_cursor.isValid(); series_cursor.next()) {
+        tsdb::Cursor tsdb_cursor;
+        if (!db->getCursor(series_cursor.getSeriesID().id, &tsdb_cursor)) {
+          return ReturnCode::error("EIO", "can't open tsdb cursor");
+        }
+      }
+
+      break;
+    }
+
   }
 
   *cursor = MetricCursor(
