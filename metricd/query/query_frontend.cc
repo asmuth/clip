@@ -18,7 +18,7 @@ QueryFrontend::QueryFrontend(
 ReturnCode QueryFrontend::fetchTimeseriesJSON(
     const QueryOptions* query,
     json::JSONOutputStream* json) {
-  std::vector<GrossSummaryMethod> summary_methods;
+  std::vector<GrossSummaryMethod> summary_methods{GrossSummaryMethod::SUM};
 
   /* fetch series */
   DataFrameBundle results;
@@ -37,10 +37,14 @@ ReturnCode QueryFrontend::fetchTimeseriesJSON(
 
     for (const auto& summary_method : summary_methods) {
       tval_autoref summary_val;
-      summarizeTimeseries(
+      auto rc = summarizeTimeseries(
           summary_method,
           results.getFrame(frame_idx),
           &summary_val);
+
+      if (!rc.isSuccess()) {
+        return rc;
+      }
 
       gross_summaries[frame_idx].emplace_back(
           getGrossSummaryName(summary_method),

@@ -21,6 +21,17 @@ enum class GrossSummaryMethod {
   TREND
 };
 
+std::string getGrossSummaryName(GrossSummaryMethod method);
+
+ReturnCode summarizeTimeseries(
+    GrossSummaryMethod method,
+    const DataFrame* frame,
+    tval_autoref* result);
+
+ReturnCode summarizeTimeseries_SUM(
+    const DataFrame* frame,
+    tval_autoref* result);
+
 class GroupSummary {
 public:
 
@@ -39,13 +50,6 @@ public:
   virtual void reset() = 0;
 
 };
-
-std::string getGrossSummaryName(GrossSummaryMethod method);
-
-ReturnCode summarizeTimeseries(
-    GrossSummaryMethod method,
-    const DataFrame* frame,
-    tval_autoref* result);
 
 class SumGroupSummary : public GroupSummary {
 public:
