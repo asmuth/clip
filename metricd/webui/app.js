@@ -21,7 +21,7 @@ this["FnordMetric"] = (function() {
   var init = function() {
     console.log(">> FnordMetric v0.10");
 
-    document.querySelector(".headbar").style.display = "block";
+    document.querySelector(".navbar").style.display = "block";
     showLoader();
 
     viewport_elem = document.getElementById("fm_viewport");

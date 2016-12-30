@@ -4,6 +4,10 @@ f-dropdown {
   display: block;
 }
 
+f-dropdown.inline {
+  display: inline-block;
+}
+
 f-dropdown.inline button.btn {
   background: transparent;
   border: none;
@@ -11,7 +15,7 @@ f-dropdown.inline button.btn {
 }
 
 f-dropdown ul {
-  position: static;
+  position: absolute;
   top: 100%;
   left: 0;
   z-index: 999;
