@@ -16,6 +16,7 @@
 #include "metricd/metric_cursor.h"
 #include "metricd/query/data_frame.h"
 #include "metricd/query/query_operation.h"
+#include "metricd/query/query_options.h"
 
 namespace fnordmetric {
 
@@ -24,15 +25,13 @@ public:
 
   FetchTimeseriesOperation(
       MetricService* metric_service,
-      const std::string& metric_id,
-      MetricCursorOptions&& cursor_opts);
+      const QueryOptions* query_opts);
 
   ReturnCode execute(DataFrameBundle* out) override;
 
 protected:
   MetricService* metric_service_;
-  std::string metric_id_;
-  MetricCursorOptions cursor_opts_;
+  const QueryOptions* query_opts_;
 };
 
 } // namespace fnordmetric

@@ -18,23 +18,11 @@ QueryFrontend::QueryFrontend(
 ReturnCode QueryFrontend::fetchTimeseriesJSON(
     const QueryOptions* query,
     json::JSONOutputStream* json) {
-
-  auto metric_id = query->getProperty("metric_id");
-  if (!metric_id) {
-    return ReturnCode::error("EARG", "missing argument: metric_id");
-  }
-
   DataFrameBundle results;
 
   /* fetch data */
   {
-    MetricCursorOptions cursor_opts;
-    //cursor_opts.cursor_type = MetricCursorType::SUMMARY;
-    FetchTimeseriesOperation fetch_op(
-        metric_service_,
-        *metric_id,
-        std::move(cursor_opts));
-
+    FetchTimeseriesOperation fetch_op(metric_service_, query);
     auto rc = fetch_op.execute(&results);
     if (!rc.isSuccess()) {
       return rc;

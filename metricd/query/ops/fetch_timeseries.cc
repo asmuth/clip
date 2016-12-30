@@ -13,11 +13,9 @@ namespace fnordmetric {
 
 FetchTimeseriesOperation::FetchTimeseriesOperation(
     MetricService* metric_service,
-    const std::string& metric_id,
-    MetricCursorOptions&& cursor_opts) :
+    const QueryOptions* query_opts) :
     metric_service_(metric_service),
-    metric_id_(metric_id),
-    cursor_opts_(cursor_opts) {}
+    query_opts_(query_opts) {}
 
 static void readDataFrame(MetricCursor* cursor, DataFrame* frame) {
   uint64_t timestamp;
@@ -31,14 +29,20 @@ static void readDataFrame(MetricCursor* cursor, DataFrame* frame) {
 }
 
 ReturnCode FetchTimeseriesOperation::execute(DataFrameBundle* out) {
+  auto metric_id = query_opts_->getProperty("metric_id");
+  if (!metric_id) {
+    return ReturnCode::error("EARG", "missing argument: metric_id");
+  }
+
   /* fetch summary */
   {
-    MetricCursor cursor;
-    auto summary_cursor_opts = cursor_opts_;
+    MetricCursorOptions summary_cursor_opts;
     summary_cursor_opts.cursor_type = MetricCursorType::SUMMARY;
 
+    MetricCursor cursor;
+
     auto cursor_rc = metric_service_->fetchData(
-        metric_id_,
+        *metric_id,
         summary_cursor_opts,
         &cursor);
 
@@ -53,18 +57,18 @@ ReturnCode FetchTimeseriesOperation::execute(DataFrameBundle* out) {
 
   /* fetch individual series */
   MetricSeriesListCursor list_cursor;
-  auto rc = metric_service_->listSeries(metric_id_, &list_cursor);
+  auto rc = metric_service_->listSeries(*metric_id, &list_cursor);
   if (!rc.isSuccess()) {
     return rc;
   }
 
   for (; list_cursor.isValid(); list_cursor.next()) {
-    auto series_cursor_opts = cursor_opts_;
+    MetricCursorOptions series_cursor_opts;
     series_cursor_opts.series_id = list_cursor.getSeriesID();
 
     MetricCursor cursor;
     auto cursor_rc = metric_service_->fetchData(
-        metric_id_,
+        *metric_id,
         series_cursor_opts,
         &cursor);
 
