@@ -112,7 +112,8 @@ void StatsdServer::shutdown() {
 }
 
 void StatsdServer::handlePacket(const char* pkt, size_t pkt_len) {
-  std::string key;
+  std::string metric_id;
+  std::string series_id;
   std::string value;
   LabelSet labels;
 
@@ -120,32 +121,32 @@ void StatsdServer::handlePacket(const char* pkt, size_t pkt_len) {
   char const* end = pkt + pkt_len;
 
   while (cur < end) {
-    if (!parseStatsdSample(&cur, end, &key, &value, &labels)) {
+    if (!parseStatsdSample(&cur, end, &metric_id, &series_id, &value)) {
       logWarning("received invalid statsd packet");
       return;
     }
 
     logDebug(
-        "received statsd sample; metric_id=$0 value=$1",
-        key,
+        "received statsd sample; metric_id=$0 series_id=$1 value=$2",
+        metric_id,
+        series_id,
         value);
 
     auto now = WallClock::unixMicros();
     auto rc = metric_service_->insertSample(
-        key,
-        SeriesNameType(""),
+        metric_id,
+        SeriesNameType(series_id),
         now,
         value);
 
     if (!rc.isSuccess()) {
       logWarning(
-          "statsd insert failed: $0 [$1=$2]",
+          "statsd insert failed; metric_id=$1 series_id=$2 value=$3; error=$0",
           rc.getMessage(),
-          key,
+          metric_id,
+          series_id,
           value);
     }
-
-    labels.clear();
   }
 }
 

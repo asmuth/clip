@@ -46,9 +46,9 @@ protected:
 bool parseStatsdSample(
     const char** begin,
     const char* end,
-    std::string* key,
-    std::string* value,
-    LabelSet* labels);
+    std::string* metric_id,
+    std::string* series_id,
+    std::string* value);
 
 } // namespace statsd
 } // namespace fnordmetric

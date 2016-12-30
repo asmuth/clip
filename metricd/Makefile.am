@@ -4,7 +4,7 @@ MAINTAINERCLEANFILES =   \
   Makefile.in
 
 bin_PROGRAMS = metricd
-TESTS = metricd_test_config_parser metricd_test_metric_service
+TESTS = metricd_test_config_parser metricd_test_metric_service metricd_test_statsd
 check_PROGRAMS = $(TESTS)
 
 
@@ -211,3 +211,9 @@ metricd_test_metric_service_SOURCES = \
     metric_service_test.cc
 
 metricd_test_metric_service_LDADD = $(top_srcdir)/libtsdb/libtsdb.a
+
+metricd_test_statsd_SOURCES = \
+    $(metricd_common_sources_) \
+    transport/statsd/statsd_test.cc
+
+metricd_test_statsd_LDADD = $(top_srcdir)/libtsdb/libtsdb.a
