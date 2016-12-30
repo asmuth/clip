@@ -154,9 +154,10 @@ ReturnCode MetricService::listSeries(
   series_list->listSeries(&snapshot);
 
   *cursor = MetricSeriesListCursor(
-      std::move(metric_map),
       series_list,
       std::move(snapshot));
+
+  cursor->setMetricMap(std::move(metric_map));
 
   return ReturnCode::success();
 }

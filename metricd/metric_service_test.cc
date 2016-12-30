@@ -522,6 +522,152 @@ TEST_CASE(MetricServiceTest, TestCounterMetricWithUpsampling, [] () {
   }
 });
 
+TEST_CASE(MetricServiceTest, TestCounterMetricWithSummary, [] () {
+  mkdir("/tmp/__test_metricd", 0755);
+  unlink("/tmp/__test_metricd/default.tsdb");
+
+  ConfigList config;
+
+  {
+    MetricConfig mc;
+    mc.is_valid = true;
+    mc.kind = MetricKind::COUNTER_UINT64;
+    mc.granularity = 60 * kMicrosPerSecond;
+    config.addMetricConfig("users_online", mc);
+  }
+
+  std::unique_ptr<MetricService> service;
+  auto start_rc = MetricService::startService(
+      "/tmp/__test_metricd",
+      &config,
+      &service);
+
+  EXPECT(start_rc.isSuccess());
+
+  {
+    auto rc = service->insertSample(
+        "users_online",
+        SeriesNameType("one"),
+        1482776220000000,
+        "10");
+    EXPECT(rc.isSuccess());
+  }
+
+  {
+    auto rc = service->insertSample(
+        "users_online",
+        SeriesNameType("one"),
+        1482776280000000,
+        "10");
+    EXPECT(rc.isSuccess());
+  }
+
+  {
+    auto rc = service->insertSample(
+        "users_online",
+        SeriesNameType("one"),
+        1482776340000000,
+        "10");
+    EXPECT(rc.isSuccess());
+  }
+
+  {
+    auto rc = service->insertSample(
+        "users_online",
+        SeriesNameType("one"),
+        1482776400000000,
+        "10");
+    EXPECT(rc.isSuccess());
+  }
+
+  {
+    auto rc = service->insertSample(
+        "users_online",
+        SeriesNameType("one"),
+        1482776460000000,
+        "10");
+    EXPECT(rc.isSuccess());
+  }
+
+  {
+    auto rc = service->insertSample(
+        "users_online",
+        SeriesNameType("two"),
+        1482776230000000,
+        "13");
+    EXPECT(rc.isSuccess());
+  }
+
+  {
+    auto rc = service->insertSample(
+        "users_online",
+        SeriesNameType("two"),
+        1482776290000000,
+        "13");
+    EXPECT(rc.isSuccess());
+  }
+
+  {
+    auto rc = service->insertSample(
+        "users_online",
+        SeriesNameType("two"),
+        1482776350000000,
+        "13");
+    EXPECT(rc.isSuccess());
+  }
+
+  {
+    auto rc = service->insertSample(
+        "users_online",
+        SeriesNameType("two"),
+        1482776410000000,
+        "13");
+    EXPECT(rc.isSuccess());
+  }
+
+  {
+    auto rc = service->insertSample(
+        "users_online",
+        SeriesNameType("two"),
+        1482776470000000,
+        "13");
+    EXPECT(rc.isSuccess());
+  }
+
+  {
+    MetricCursorOptions cursor_opts;
+    cursor_opts.cursor_type = MetricCursorType::SUMMARY;
+    cursor_opts.time_begin = 1482776220000000;
+    cursor_opts.time_limit = 1482776460000000;
+
+    MetricCursor cursor;
+    auto cursor_rc = service->fetchData("users_online", cursor_opts, &cursor);
+    EXPECT(cursor_rc.isSuccess());
+
+    uint64_t ts;
+    tval_ref val;
+    val.len = sizeof(uint64_t);
+    val.data = alloca(val.len);
+    val.type = tval_type::UINT64;
+    EXPECT(cursor.next(&ts, &val, 1));
+    EXPECT(ts == 1482776220000000);
+    EXPECT_EQ(*((uint64_t*) val.data), 23);
+    EXPECT(cursor.next(&ts, &val, 1));
+    EXPECT(ts == 1482776280000000);
+    EXPECT(*((uint64_t*) val.data) == 23);
+    EXPECT(cursor.next(&ts, &val, 1));
+    EXPECT(ts == 1482776340000000);
+    EXPECT(*((uint64_t*) val.data) == 23);
+    EXPECT(cursor.next(&ts, &val, 1));
+    EXPECT(ts == 1482776400000000);
+    EXPECT(*((uint64_t*) val.data) == 23);
+    EXPECT(cursor.next(&ts, &val, 1));
+    EXPECT(ts == 1482776460000000);
+    EXPECT(*((uint64_t*) val.data) == 23);
+    EXPECT(cursor.next(&ts, &val, 1) == false);
+  }
+});
+
 TEST_CASE(MetricServiceTest, TestMaxMetric, [] () {
   mkdir("/tmp/__test_metricd", 0755);
   unlink("/tmp/__test_metricd/default.tsdb");

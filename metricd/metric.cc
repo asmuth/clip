@@ -199,6 +199,20 @@ void MetricSeriesList::listSeries(std::vector<SeriesIDType>* series_ids) {
   }
 }
 
+MetricSeriesListCursor MetricSeriesList::listSeries() {
+  std::unique_lock<std::mutex> lk(series_mutex_);
+  std::vector<SeriesIDType> snapshot;
+  snapshot.reserve(series_by_id_.size());
+  for (const auto& s : series_by_id_) {
+    snapshot.emplace_back(SeriesIDType(s.first));
+  }
+  lk.unlock();
+
+  return MetricSeriesListCursor(
+      this,
+      std::move(snapshot));
+}
+
 size_t MetricSeriesList::getSize() const {
   std::unique_lock<std::mutex> lk(series_mutex_);
   return series_.size();
@@ -209,11 +223,9 @@ MetricSeriesListCursor::MetricSeriesListCursor() :
     series_list_(nullptr) {}
 
 MetricSeriesListCursor::MetricSeriesListCursor(
-    std::shared_ptr<MetricMap> metric_map,
     MetricSeriesList* series_list,
     ListType&& snapshot) :
     valid_(true),
-    metric_map_(metric_map),
     series_list_(series_list),
     snapshot_(std::move(snapshot)),
     cursor_(snapshot_.begin()) {
@@ -283,6 +295,11 @@ bool MetricSeriesListCursor::fetchNext() {
   }
 
   return false;
+}
+
+void MetricSeriesListCursor::setMetricMap(
+    std::shared_ptr<MetricMap> metric_map) {
+  metric_map_ = std::move(metric_map);
 }
 
 Metric::Metric(

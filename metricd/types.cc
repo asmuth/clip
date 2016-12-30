@@ -11,10 +11,41 @@
 #include <stdexcept>
 #include <assert.h>
 #include <string>
+#include <string.h>
 #include <limits>
 #include "metricd/types.h"
 
 namespace fnordmetric {
+
+tval_autoref::tval_autoref(tval_type type) {
+  tval_alloc(&val, type);
+  tval_zero(val.type, val.data, val.len);
+}
+
+tval_autoref::tval_autoref(tval_autoref&& other) {
+  val.type = other.val.type;
+  val.data = other.val.data;
+  val.len = other.val.len;
+
+  other.val.data = nullptr;
+  other.val.len = 0;
+}
+
+tval_autoref::~tval_autoref() {
+  tval_free(&val);
+}
+
+tval_autoref& tval_autoref::operator=(tval_autoref&& other) {
+  tval_free(&val);
+
+  val.type = other.val.type;
+  val.data = other.val.data;
+  val.len = other.val.len;
+
+  other.val.data = nullptr;
+  other.val.len = 0;
+  return *this;
+}
 
 void tval_zero(tval_type type, void* reg, size_t reg_len) {
   switch (type) {
@@ -238,6 +269,16 @@ size_t tval_len(tval_type t) {
     case tval_type::FLOAT64: return sizeof(double);
     default: throw std::invalid_argument("type error");
   }
+}
+
+void tval_alloc(tval_ref* ref, tval_type type) {
+  ref->type = type;
+  ref->len = tval_len(type);
+  ref->data = malloc(ref->len);
+}
+
+void tval_free(tval_ref* ref) {
+  free(ref->data);
 }
 
 } // namespace fnordmetric

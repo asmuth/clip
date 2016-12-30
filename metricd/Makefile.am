@@ -119,6 +119,8 @@ metricd_common_sources_ = \
     query/data_frame.h \
     query/data_frame.cc \
     query/data_frame_impl.h \
+    summarize.h \
+    summarize.cc \
     transport/http/httpapi.h \
     transport/http/httpapi.cc \
     transport/http/wakeup.h \

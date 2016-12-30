@@ -26,6 +26,16 @@ struct tval_ref {
   size_t len;
 };
 
+struct tval_autoref {
+  tval_autoref(tval_type type);
+  tval_autoref(const tval_autoref& other) = delete;
+  tval_autoref(tval_autoref&& other);
+  tval_autoref& operator=(const tval_autoref& other) = delete;
+  tval_autoref& operator=(tval_autoref&& other);
+  ~tval_autoref();
+  tval_ref val;
+};
+
 void tval_zero(tval_type type, void* reg, size_t reg_len);
 
 void tval_add(
@@ -57,6 +67,9 @@ bool tval_fromstring(
     size_t str_len);
 
 size_t tval_len(tval_type t);
+
+void tval_alloc(tval_ref* ref, tval_type type);
+void tval_free(tval_ref* ref);
 
 } // namespace fnordmetric
 
