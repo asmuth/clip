@@ -24,12 +24,22 @@ ReturnCode QueryFrontend::fetchTimeseriesJSON(
     return ReturnCode::error("EARG", "missing argument: metric_id");
   }
 
-  MetricCursorOptions cursor_opts;
+  DataFrameBundle results;
 
-  FetchTimeseriesOperation fetch_op(
-      metric_service_,
-      *metric_id,
-      std::move(cursor_opts));
+  /* fetch summary */
+  {
+    MetricCursorOptions cursor_opts;
+    cursor_opts.cursor_type = MetricCursorType::SUMMARY;
+    FetchTimeseriesOperation fetch_op(
+        metric_service_,
+        *metric_id,
+        std::move(cursor_opts));
+
+    auto rc = fetch_op.execute(&results);
+    if (!rc.isSuccess()) {
+      return rc;
+    }
+  }
 
   return ReturnCode::success();
 }

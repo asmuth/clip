@@ -205,21 +205,21 @@ static void renderJSONTimeseries(
   json->endArray();
 }
 
-
 void HTTPAPI::performMetricFetchSummary(
     http::HTTPRequest* request,
     http::HTTPResponse* response,
     const URI& uri) {
   auto params = uri.queryParams();
+  QueryOptions opts;
 
   std::string metric_id;
-  if (!URI::getParam(params, "metric_id", &metric_id)) {
+  if (URI::getParam(params, "metric_id", &metric_id)) {
+    opts.addProperty("metric_id", metric_id);
+  } else {
     response->setStatus(http::kStatusBadRequest);
     response->addBody("ERROR: missing parameter ?metric_id=...");
     return;
   }
-
-  QueryOptions opts;
 
   json::JSONOutputStream json(response->getBodyOutputStream());
   auto rc = query_frontend_.fetchTimeseriesJSON(&opts, &json);

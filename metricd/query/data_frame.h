@@ -48,8 +48,7 @@ public:
 
   void resize(size_t len);
 
-  template <typename T>
-  void addValue(T value, uint64_t time = 0);
+  void addValue(uint64_t time, const void* data, size_t data_len);
 
   void debugPrint() const;
 
