@@ -10,7 +10,7 @@
  */
 #include <stdexcept>
 #include <assert.h>
-#include <string.h>
+#include <string>
 #include <limits>
 #include "metricd/types.h"
 
