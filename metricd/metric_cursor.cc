@@ -138,14 +138,11 @@ MetricCursor& MetricCursor::operator=(MetricCursor&& o) {
   return *this;
 }
 
-bool MetricCursor::next(
-    uint64_t* timestamp,
-    tval_ref* out,
-    size_t out_len) {
+bool MetricCursor::next(uint64_t* timestamp, tval_ref* out) {
   switch (opts_->cursor_type) {
 
     case MetricCursorType::SERIES:
-      return series_readers_[0]->next(timestamp, out, out_len);
+      return series_readers_[0]->next(timestamp, out, 1);
 
     case MetricCursorType::SUMMARY: {
       tval_ref next_val;
@@ -161,7 +158,7 @@ bool MetricCursor::next(
         group_summary_->addValue(next_val.type, next_val.data, next_val.len);
       }
 
-      if (out_len > 0) {
+      if (out) {
         group_summary_->getValue(out[0].type, out[0].data, out[0].len);
       }
 
@@ -192,15 +189,6 @@ tval_type MetricCursor::getOutputType(const MetricConfig& config) {
       return tval_type::FLOAT64;
 
   }
-}
-
-size_t MetricCursor::getOutputColumnCount() const {
-  return 1;
-}
-
-std::string MetricCursor::getOutputColumnName(size_t idx) const {
-  assert(idx < 1);
-  return "value";
 }
 
 std::unique_ptr<InputAggregator> mkInputAggregator(

@@ -84,17 +84,10 @@ public:
   MetricCursor& operator=(const MetricCursor& o) = delete;
   MetricCursor& operator=(MetricCursor&& o);
 
-  bool next(
-      uint64_t* time,
-      tval_ref* out,
-      size_t out_len);
+  bool next(uint64_t* time, tval_ref* out);
 
   tval_type getOutputType() const;
   static tval_type getOutputType(const MetricConfig& config);
-
-  size_t getOutputColumnCount() const;
-
-  std::string getOutputColumnName(size_t idx) const;
 
 protected:
   MetricConfig config_;

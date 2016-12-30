@@ -23,7 +23,7 @@ static void readDataFrame(MetricCursor* cursor, DataFrame* frame) {
   val.type = cursor->getOutputType();
   val.len = tval_len(val.type);
   val.data = alloca(val.len);
-  while (cursor->next(&timestamp, &val, 1)) {
+  while (cursor->next(&timestamp, &val)) {
     frame->addValue(timestamp, val.data, val.len);
   }
 }
