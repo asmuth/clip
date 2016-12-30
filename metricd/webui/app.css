@@ -142,6 +142,9 @@
 .fa-angle-right:before {
   content: "\f105";
 }
+.fa-angle-down:before {
+  content: "\f107";
+}
 .fa-calendar:before {
   content: "\f073";
 }
@@ -568,6 +571,16 @@ table.f-table thead th {
   border-bottom: 1px solid #e1e1e1;
   background: #f9f9f9;
   border-top: 1px solid #ddd;
+}
+
+table.f-table thead th[align='right'],
+table.f-table tbody td[align='right'] {
+  text-align: right;
+}
+
+table.f-table thead th[align='center'],
+table.f-table tbody td[align='center'] {
+  text-align: center;
 }
 
 table.f-table .clickable:hover {

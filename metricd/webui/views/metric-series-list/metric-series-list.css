@@ -6,13 +6,47 @@
   width: 240px;
 }
 **/
-.fnordmetric-metric-series-list table.f-table tbody td {
-  line-height: 40px;
+.fnordmetric-metric-series-list table.f-table thead th.context_menu {
+  width: 42px;
 }
 
-.fnordmetric-metric-series-list table.f-table tbody td[data-key='sparkline'] z-sparkline {
-  margin-right: 10px;
+.fnordmetric-metric-series-list table.f-table tbody td {
+  line-height: 21px;
+  padding: .7em .8em .6em .8em;
+}
 
+.fnordmetric-metric-series-list table.f-table tbody tr td:first-child {
+  color: #3d8ad3;
+}
+
+.fnordmetric-metric-series-list table.f-table tbody tr td:first-child i.fa-eye {
+  color: #bbb;
+}
+
+.fnordmetric-metric-series-list table.f-table tbody td.align_center {
+  text-align: center;
+}
+
+.fnordmetric-metric-series-list table.f-table tbody td.values {
+  padding-top: 12px;
+}
+.fnordmetric-metric-series-list table.f-table tbody td.values .value_stats {
+  font-size: 11px;
+  line-height: 16px;
+}
+
+.fnordmetric-metric-series-list table.f-table tbody td.context_menu {
+  padding-top: 0px;
+}
+
+.fnordmetric-metric-series-list table.f-table tbody td.context_menu i {
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.fnordmetric-metric-series-list table.f-table tbody td .total {
+  color: #333;
+  font-size: 16px;
 }
 
 
