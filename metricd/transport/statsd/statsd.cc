@@ -64,14 +64,12 @@ ReturnCode StatsdEmitter::connect(const std::string& addr) {
 
 void StatsdEmitter::enqueueSample(
     const std::string& metric,
-    const std::string& value,
-    const std::map<std::string, std::string>& labels /* = {} */) {
+    const std::string& series_id,
+    const std::string& value) {
   buf_ += metric;
-  for (const auto& l : labels) {
+  if (!series_id.empty()) {
     buf_ += "[";
-    buf_ += l.first;
-    buf_ += "=";
-    buf_ += l.second;
+    buf_ += series_id;
     buf_ += "]";
   }
   buf_ += ":";
