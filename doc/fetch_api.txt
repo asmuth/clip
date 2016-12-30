@@ -1,0 +1,10 @@
+from
+until
+granularity
+metric_id
+series_id
+series_id_filter
+series_limit=0
+summarize_series=true/false
+summarize_series_filter=regex
+summarize_gross={x,y,z}

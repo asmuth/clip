@@ -26,10 +26,12 @@ DataFrame::DataFrame(
     DataFrame&& other) :
     type_(other.type_),
     id_(other.id_),
+    tags_(other.tags_),
     data_(other.data_),
     size_(other.size_),
     capacity_(other.capacity_) {
   other.id_.clear();
+  other.tags_.clear();
   other.data_ = nullptr;
   other.size_ = 0;
   other.capacity_ = 0;
@@ -42,6 +44,7 @@ DataFrame& DataFrame::operator=(DataFrame&& other) {
 
   type_ = other.type_;
   id_ = other.id_;
+  tags_ = other.tags_;
   data_ = other.data_;
   size_ = other.size_;
   capacity_ = other.capacity_;

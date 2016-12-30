@@ -50,20 +50,14 @@ void HTTPAPI::handleHTTPRequest(
   }
 
   // PATH: /api/v1/metrics/fetch_series
-  if (path == "/api/v1/metrics/fetch_series") {
-    performMetricFetchSeries(request, response, uri);
-    return;
-  }
-
-  // PATH: /api/v1/metrics/fetch_summary
-  if (path == "/api/v1/metrics/fetch_summary") {
-    performMetricFetchSummary(request, response, uri);
+  if (path == "/api/v1/metrics/fetch") {
+    performMetricFetch(request, response, uri);
     return;
   }
 
   // PATH: /api/v1/metrics/insert
   if (path == "/api/v1/metrics/insert") {
-    insertSample(request, response, uri);
+    performMetricInsert(request, response, uri);
     return;
   }
 
@@ -164,7 +158,7 @@ void HTTPAPI::renderMetricSeriesList(
   json.endObject();
 }
 
-void HTTPAPI::performMetricFetchSummary(
+void HTTPAPI::performMetricFetch(
     http::HTTPRequest* request,
     http::HTTPResponse* response,
     const URI& uri) {
@@ -182,7 +176,11 @@ void HTTPAPI::performMetricFetchSummary(
 
   json::JSONOutputStream json(response->getBodyOutputStream());
   json.beginObject();
-  json.addObjectEntry("results");
+  json.addObjectEntry("metric_id");
+  json.addString(metric_id);
+  json.addComma();
+
+  json.addObjectEntry("series");
 
   auto rc = query_frontend_.fetchTimeseriesJSON(&opts, &json);
   if (rc.isSuccess()) {
@@ -196,39 +194,7 @@ void HTTPAPI::performMetricFetchSummary(
   }
 }
 
-void HTTPAPI::performMetricFetchSeries(
-    http::HTTPRequest* request,
-    http::HTTPResponse* response,
-    const URI& uri) {
-  auto params = uri.queryParams();
-  QueryOptions opts;
-
-  std::string metric_id;
-  if (URI::getParam(params, "metric_id", &metric_id)) {
-    opts.addProperty("metric_id", metric_id);
-  } else {
-    response->setStatus(http::kStatusBadRequest);
-    response->addBody("ERROR: missing parameter ?metric_id=...");
-    return;
-  }
-
-  json::JSONOutputStream json(response->getBodyOutputStream());
-  json.beginObject();
-  json.addObjectEntry("results");
-
-  auto rc = query_frontend_.fetchTimeseriesJSON(&opts, &json);
-  if (rc.isSuccess()) {
-    json.endObject();
-    response->setStatus(http::kStatusOK);
-    response->addHeader("Content-Type", "application/json; charset=utf-8");
-  } else {
-    response->clearBody();
-    response->setStatus(http::kStatusInternalServerError);
-    response->addBody("ERROR: " + rc.getMessage());
-  }
-}
-
-void HTTPAPI::insertSample(
+void HTTPAPI::performMetricInsert(
     http::HTTPRequest* request,
     http::HTTPResponse* response,
     const URI& uri) {

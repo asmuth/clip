@@ -31,52 +31,49 @@ static void readDataFrame(MetricCursor* cursor, DataFrame* frame) {
 }
 
 ReturnCode FetchTimeseriesOperation::execute(DataFrameBundle* out) {
-  switch (cursor_opts_.cursor_type) {
+  /* fetch summary */
+  {
+    MetricCursor cursor;
+    auto summary_cursor_opts = cursor_opts_;
+    summary_cursor_opts.cursor_type = MetricCursorType::SUMMARY;
 
-    /* fetch individual series */
-    case MetricCursorType::SERIES: {
-      MetricSeriesListCursor list_cursor;
-      auto rc = metric_service_->listSeries(metric_id_, &list_cursor);
-      if (!rc.isSuccess()) {
-        return rc;
-      }
+    auto cursor_rc = metric_service_->fetchData(
+        metric_id_,
+        summary_cursor_opts,
+        &cursor);
 
-      for (; list_cursor.isValid(); list_cursor.next()) {
-        auto series_cursor_opts = cursor_opts_;
-        series_cursor_opts.series_id = list_cursor.getSeriesID();
-
-        MetricCursor cursor;
-        auto cursor_rc = metric_service_->fetchData(
-            metric_id_,
-            series_cursor_opts,
-            &cursor);
-
-        if (!cursor_rc.isSuccess()) {
-          return cursor_rc;
-        }
-
-        auto frame = out->addFrame(cursor.getOutputType());
-        readDataFrame(&cursor, frame);
-      }
+    if (!cursor_rc.isSuccess()) {
+      return cursor_rc;
     }
 
-    /* fetch summary */
-    case MetricCursorType::SUMMARY: {
-      MetricCursor cursor;
-      auto cursor_rc = metric_service_->fetchData(
-          metric_id_,
-          cursor_opts_,
-          &cursor);
+    auto frame = out->addFrame(cursor.getOutputType());
+    frame->addTag("summary");
+    readDataFrame(&cursor, frame);
+  }
 
-      if (!cursor_rc.isSuccess()) {
-        return cursor_rc;
-      }
+  /* fetch individual series */
+  MetricSeriesListCursor list_cursor;
+  auto rc = metric_service_->listSeries(metric_id_, &list_cursor);
+  if (!rc.isSuccess()) {
+    return rc;
+  }
 
-      auto frame = out->addFrame(cursor.getOutputType());
-      frame->addTag("summary");
-      readDataFrame(&cursor, frame);
+  for (; list_cursor.isValid(); list_cursor.next()) {
+    auto series_cursor_opts = cursor_opts_;
+    series_cursor_opts.series_id = list_cursor.getSeriesID();
+
+    MetricCursor cursor;
+    auto cursor_rc = metric_service_->fetchData(
+        metric_id_,
+        series_cursor_opts,
+        &cursor);
+
+    if (!cursor_rc.isSuccess()) {
+      return cursor_rc;
     }
 
+    auto frame = out->addFrame(cursor.getOutputType());
+    readDataFrame(&cursor, frame);
   }
 
   return ReturnCode::success();

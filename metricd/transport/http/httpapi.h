@@ -38,22 +38,12 @@ protected:
       http::HTTPResponse* response,
       const URI& uri);
 
-  void performMetricFetchSeries(
+  void performMetricFetch(
       http::HTTPRequest* request,
       http::HTTPResponse* response,
       const URI& uri);
 
-  void performMetricFetchSummary(
-      http::HTTPRequest* request,
-      http::HTTPResponse* response,
-      const URI& uri);
-
-  void renderMetricSampleScan(
-      http::HTTPRequest* request,
-      http::HTTPResponse* response,
-      const URI& uri);
-
-  void insertSample(
+  void performMetricInsert(
       http::HTTPRequest* request,
       http::HTTPResponse* response,
       const URI& uri);
