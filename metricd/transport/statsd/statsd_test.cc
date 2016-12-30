@@ -18,8 +18,8 @@ UNIT_TEST(StatsdTest);
 
 TEST_CASE(StatsdTest, TestSimpleParseFromStatsdFormat, [] () {
   std::string key;
+  std::string series_id;
   std::string value;
-  LabelSet labels;
 
   std::string test_smpl = "/fnord/mymetric";
   auto cur = test_smpl.c_str();
@@ -27,20 +27,20 @@ TEST_CASE(StatsdTest, TestSimpleParseFromStatsdFormat, [] () {
       &cur,
       test_smpl.c_str() + test_smpl.size(),
       &key,
-      &value,
-      &labels);
+      &series_id,
+      &value);
 
   EXPECT(ret == true);
   EXPECT_EQ(cur, test_smpl.c_str() + test_smpl.size());
   EXPECT_EQ(key, "/fnord/mymetric");
-  EXPECT_EQ(labels.size(), 0);
+  EXPECT_EQ(series_id, "");
   EXPECT_EQ(value, "");
 });
 
 TEST_CASE(StatsdTest, TestSimpleParseFromStatsdFormatWithValue, [] () {
   std::string key;
+  std::string series_id;
   std::string value;
-  LabelSet labels;
 
   std::string test_smpl = "/fnord/mymetric:34.23";
   auto cur = test_smpl.c_str();
@@ -48,43 +48,41 @@ TEST_CASE(StatsdTest, TestSimpleParseFromStatsdFormatWithValue, [] () {
       &cur,
       test_smpl.c_str() + test_smpl.size(),
       &key,
-      &value,
-      &labels);
+      &series_id,
+      &value);
 
   EXPECT(ret == true);
   EXPECT_EQ(cur, test_smpl.c_str() + test_smpl.size());
   EXPECT_EQ(key, "/fnord/mymetric");
-  EXPECT_EQ(labels.size(), 0);
+  EXPECT_EQ(series_id, "");
   EXPECT_EQ(value, "34.23");
 });
 
-TEST_CASE(StatsdTest, TestParseFromStatsdFormatWithLabels, [] () {
+TEST_CASE(StatsdTest, TestParseFromStatsdFormatWithSeriesID, [] () {
   std::string key;
+  std::string series_id;
   std::string value;
-  LabelSet labels;
 
-  std::string test_smpl = "/fnord/mymetric[label1=435][l2=str]:34.23";
+  std::string test_smpl = "/fnord/mymetric[myfancyseriesid]:34.23";
   auto cur = test_smpl.c_str();
   auto ret = parseStatsdSample(
       &cur,
       test_smpl.c_str() + test_smpl.size(),
       &key,
-      &value,
-      &labels);
+      &series_id,
+      &value);
 
   EXPECT(ret == true);
   EXPECT_EQ(cur, test_smpl.c_str() + test_smpl.size());
   EXPECT_EQ(key, "/fnord/mymetric");
-  EXPECT_EQ(labels.size(), 2);
-  EXPECT(labels["label1"] == "435");
-  EXPECT(labels["l2"] == "str");
+  EXPECT_EQ(series_id, "myfancyseriesid");
   EXPECT_EQ(value, "34.23");
 });
 
 TEST_CASE(StatsdTest, TestParseFromStatsdFormatWithMultipleSamples, [] () {
   std::string key;
+  std::string series_id;
   std::string value;
-  LabelSet labels;
 
   std::string test_smpl = "/fnord/mymetric:2.3\n/fnord/other:42.5\r\nfu:4.6";
 
@@ -96,48 +94,47 @@ TEST_CASE(StatsdTest, TestParseFromStatsdFormatWithMultipleSamples, [] () {
       &cur,
       end,
       &key,
-      &value,
-      &labels);
+      &series_id,
+      &value);
 
   EXPECT(ret == true);
   EXPECT(cur == begin + 20);
   EXPECT_EQ(key, "/fnord/mymetric");
-  EXPECT_EQ(labels.size(), 0);
   EXPECT_EQ(value, "2.3");
 
   ret = parseStatsdSample(
       &cur,
       end,
       &key,
-      &value,
-      &labels);
+      &series_id,
+      &value);
 
   EXPECT(ret == true);
   EXPECT(cur == begin + 39);
   EXPECT_EQ(key, "/fnord/other");
-  EXPECT_EQ(labels.size(), 0);
+  EXPECT_EQ(series_id, "");
   EXPECT_EQ(value, "42.5");
 
   ret = parseStatsdSample(
       &cur,
       end,
       &key,
-      &value,
-      &labels);
+      &series_id,
+      &value);
 
   EXPECT(ret == true);
   EXPECT(cur == end);
   EXPECT_EQ(key, "fu");
-  EXPECT_EQ(labels.size(), 0);
+  EXPECT_EQ(series_id, "");
   EXPECT_EQ(value, "4.6");
 });
 
 TEST_CASE(StatsdTest, TestParseFromStatsdFormatWithMultipleSmplLabels, [] () {
   std::string key;
+  std::string series_id;
   std::string value;
-  LabelSet labels;
 
-  std::string test_smpl = "/fmet[l1=l]:2.3\noth[l3=x]:42.5\r\nfu[a=b]:4.6\r\n";
+  std::string test_smpl = "/fmet[l1]:2.3\noth[l3]:42.5\r\nfu[xx]:4.6\r\n";
 
   auto begin = test_smpl.c_str();
   auto cur = begin;
@@ -147,41 +144,37 @@ TEST_CASE(StatsdTest, TestParseFromStatsdFormatWithMultipleSmplLabels, [] () {
       &cur,
       end,
       &key,
-      &value,
-      &labels);
+      &series_id,
+      &value);
 
   EXPECT(ret == true);
-  EXPECT(cur == begin + 16);
   EXPECT_EQ(key, "/fmet");
-  EXPECT_EQ(labels.size(), 1);
+  EXPECT_EQ(series_id, "l1");
   EXPECT_EQ(value, "2.3");
 
-  labels.clear();
   ret = parseStatsdSample(
       &cur,
       end,
       &key,
-      &value,
-      &labels);
+      &series_id,
+      &value);
 
   EXPECT(ret == true);
-  EXPECT(cur == begin + 32);
   EXPECT_EQ(key, "oth");
-  EXPECT_EQ(labels.size(), 1);
+  EXPECT_EQ(series_id, "l3");
   EXPECT_EQ(value, "42.5");
 
-  labels.clear();
   ret = parseStatsdSample(
       &cur,
       end,
       &key,
-      &value,
-      &labels);
+      &series_id,
+      &value);
 
   EXPECT(ret == true);
   EXPECT(cur == end);
   EXPECT_EQ(key, "fu");
-  EXPECT_EQ(labels.size(), 1);
+  EXPECT_EQ(series_id, "xx");
   EXPECT_EQ(value, "4.6");
 });
 

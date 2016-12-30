@@ -31,9 +31,9 @@ public:
   ReturnCode connect(const std::string& addr);
 
   void enqueueSample(
-      const std::string& metric,
-      const std::string& value,
-      const std::map<std::string, std::string>& labels = {});
+      const std::string& metric_id,
+      const std::string& series_id,
+      const std::string& value);
 
   ReturnCode emitSamples();
 
@@ -46,9 +46,9 @@ protected:
 bool parseStatsdSample(
     const char** begin,
     const char* end,
-    std::string* key,
-    std::string* value,
-    LabelSet* labels);
+    std::string* metric_id,
+    std::string* series_id,
+    std::string* value);
 
 } // namespace statsd
 } // namespace fnordmetric

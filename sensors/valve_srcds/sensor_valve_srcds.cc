@@ -55,7 +55,7 @@ int main(int argc, const char** argv) {
       NULL);
 
   flags.defineFlag(
-      "metric_label",
+      "series_id",
       FlagParser::T_STRING,
       false,
       NULL,
@@ -117,8 +117,8 @@ int main(int argc, const char** argv) {
         "Usage: $ sensor_valve_srcds [OPTIONS]\n\n"
         "   --srcds_addr <addr>         Address of the srcds server (e.g. localhost:27015)\n"
         "   --srcds_poll_interval <n>   Poll interval (default 1s)\n"
+        "   --series_id <str>           Set the series id for all metrics\n"
         "   --metric_prefix <str>       Prefix all metric names with a string (e.g. 'gameserver.csgo.')\n"
-        "   --metric_label <k>=<v>      Add a label to all metrics\n"
         "   --send_statsd <addr>        Send measurements via statsd/udp\n"
         "   --send_jsonudp <addr>       Send measurements via json/udp\n"
         "   --send_jsontcp <addr>       Send measurements via json/tcp\n"
@@ -138,15 +138,7 @@ int main(int argc, const char** argv) {
   }
 
   std::string metric_prefix = flags.getString("metric_prefix");
-  std::map<std::string, std::string> metric_labels;
-  for (const auto& lbl : flags.getStrings("metric_label")) {
-    auto s = lbl.find("=");
-    if (s == std::string::npos) {
-      continue;
-    }
-
-    metric_labels[lbl.substr(0, s)] = lbl.substr(s + 1);
-  }
+  std::string series_id = flags.getString("series_id");
 
   /* setup srcds client */
   fnordmetric::sensor_valve_srcds::SRCDSClient srcds_client;
@@ -193,7 +185,7 @@ int main(int argc, const char** argv) {
     /* if statsd output is enabled, deliver measurements via statsd */
     for (const auto& statsd_emitter : statsd_trgts) {
       for (const auto& m : measurements) {
-        statsd_emitter->enqueueSample(m.first, m.second, metric_labels);
+        statsd_emitter->enqueueSample(m.first, series_id, m.second);
       }
 
       auto statsd_rc = statsd_emitter->emitSamples();

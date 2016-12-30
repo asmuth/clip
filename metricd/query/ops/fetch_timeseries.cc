@@ -77,6 +77,7 @@ ReturnCode FetchTimeseriesOperation::execute(DataFrameBundle* out) {
     }
 
     auto frame = out->addFrame(cursor.getOutputType());
+    frame->setID(list_cursor.getSeriesName().name);
     readDataFrame(&cursor, frame);
   }
 

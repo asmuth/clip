@@ -64,14 +64,12 @@ ReturnCode StatsdEmitter::connect(const std::string& addr) {
 
 void StatsdEmitter::enqueueSample(
     const std::string& metric,
-    const std::string& value,
-    const std::map<std::string, std::string>& labels /* = {} */) {
+    const std::string& series_id,
+    const std::string& value) {
   buf_ += metric;
-  for (const auto& l : labels) {
+  if (!series_id.empty()) {
     buf_ += "[";
-    buf_ += l.first;
-    buf_ += "=";
-    buf_ += l.second;
+    buf_ += series_id;
     buf_ += "]";
   }
   buf_ += ":";
@@ -118,9 +116,9 @@ enum StatsdParseState {
 bool parseStatsdSample(
     const char** ucur,
     const char* end,
-    std::string* key,
-    std::string* value,
-    LabelSet* labels) {
+    std::string* metric_id,
+    std::string* series_id,
+    std::string* value) {
   StatsdParseState state = S_KEY;
   const char* cur = *ucur;
   const char* mark = cur;
@@ -139,7 +137,7 @@ bool parseStatsdSample(
             continue;
         }
 
-        *key = std::string(mark, cur);
+        *metric_id = std::string(mark, cur);
         state = *cur == '[' ? S_LABEL : S_VALUE;
         mark = cur + 1;
         break;
@@ -170,16 +168,7 @@ bool parseStatsdSample(
             continue;
         }
 
-        char const* split;
-        for (split = mark; split < cur && *split != '='; ++split);
-        if (split + 1 >= cur) {
-          return false;
-        }
-
-        labels->emplace(
-            std::string(mark, split),
-            std::string(split + 1, cur));
-
+        *series_id = std::string(mark, cur - mark);
         state = S_LABEL_OR_VALUE;
         mark = cur + 1;
         break;
