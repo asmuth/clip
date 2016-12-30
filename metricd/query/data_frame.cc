@@ -72,6 +72,14 @@ void DataFrame::setID(const std::string& id) {
   id_ = id;
 }
 
+const std::set<std::string>& DataFrame::getTags() const {
+  return tags_;
+}
+
+void DataFrame::addTag(const std::string& tag) {
+  tags_.insert(tag);
+}
+
 const uint64_t* DataFrame::getTime(size_t idx /* = 0 */) const {
   auto ptr = static_cast<const char*>(data_) + sizeof(uint64_t) * idx;
   return (const uint64_t*) (ptr);

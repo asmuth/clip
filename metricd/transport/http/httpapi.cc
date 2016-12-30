@@ -164,47 +164,6 @@ void HTTPAPI::renderMetricSeriesList(
   json.endObject();
 }
 
-static void renderJSONTimeseries(
-    json::JSONOutputStream* json,
-    MetricCursor* cursor) {
-  json->beginArray();
-
-  std::vector<tval_ref> values(cursor->getOutputColumnCount());
-  for (size_t i = 0; i < values.size(); ++i) {
-    values[i].type = cursor->getOutputType();
-    values[i].len = tval_len(values[i].type);
-    values[i].data = alloca(values[i].len);
-  }
-
-  uint64_t timestamp;
-  for (size_t j = 0; cursor->next(&timestamp, &values[0], values.size()); ++j) {
-    if (j++ > 0) { json->addComma(); }
-    json->beginArray();
-    json->addInteger(timestamp);
-
-    for (size_t i = 0; i < values.size(); ++i) {
-      switch (values[i].type) {
-        case tval_type::UINT64:
-          json->addComma();
-          json->addInteger(*((uint64_t*) values[i].data));
-          break;
-        case tval_type::INT64:
-          json->addComma();
-          json->addInteger(*((int64_t*) values[i].data));
-          break;
-        case tval_type::FLOAT64:
-          json->addComma();
-          json->addFloat(*((double*) values[i].data));
-          break;
-      }
-    }
-
-    json->endArray();
-  }
-
-  json->endArray();
-}
-
 void HTTPAPI::performMetricFetchSummary(
     http::HTTPRequest* request,
     http::HTTPResponse* response,
@@ -222,8 +181,12 @@ void HTTPAPI::performMetricFetchSummary(
   }
 
   json::JSONOutputStream json(response->getBodyOutputStream());
+  json.beginObject();
+  json.addObjectEntry("results");
+
   auto rc = query_frontend_.fetchTimeseriesJSON(&opts, &json);
   if (rc.isSuccess()) {
+    json.endObject();
     response->setStatus(http::kStatusOK);
     response->addHeader("Content-Type", "application/json; charset=utf-8");
   } else {
@@ -238,76 +201,31 @@ void HTTPAPI::performMetricFetchSeries(
     http::HTTPResponse* response,
     const URI& uri) {
   auto params = uri.queryParams();
+  QueryOptions opts;
 
   std::string metric_id;
-  if (!URI::getParam(params, "metric_id", &metric_id)) {
+  if (URI::getParam(params, "metric_id", &metric_id)) {
+    opts.addProperty("metric_id", metric_id);
+  } else {
     response->setStatus(http::kStatusBadRequest);
     response->addBody("ERROR: missing parameter ?metric_id=...");
     return;
   }
 
-  MetricSeriesListCursor cursor;
-  auto rc = metric_service_->listSeries(metric_id, &cursor);
-  if (!rc.isSuccess()) {
+  json::JSONOutputStream json(response->getBodyOutputStream());
+  json.beginObject();
+  json.addObjectEntry("results");
+
+  auto rc = query_frontend_.fetchTimeseriesJSON(&opts, &json);
+  if (rc.isSuccess()) {
+    json.endObject();
+    response->setStatus(http::kStatusOK);
+    response->addHeader("Content-Type", "application/json; charset=utf-8");
+  } else {
+    response->clearBody();
     response->setStatus(http::kStatusInternalServerError);
     response->addBody("ERROR: " + rc.getMessage());
-    return;
   }
-
-
-  response->setStatus(http::kStatusOK);
-  response->addHeader("Content-Type", "application/json; charset=utf-8");
-  json::JSONOutputStream json(response->getBodyOutputStream());
-
-  json.beginObject();
-  json.addObjectEntry("metric_id");
-  json.addString(metric_id);
-  json.addComma();
-  json.addObjectEntry("series");
-  json.beginArray();
-
-  for (int j = 0; cursor.isValid(); cursor.next()) {
-    if (j++ > 0) { json.addComma(); }
-
-    json.beginObject();
-    json.addObjectEntry("series_id");
-    json.addString(cursor.getSeriesName().name);
-    json.addComma();
-
-    MetricCursorOptions data_cursor_opts;
-    data_cursor_opts.series_id = cursor.getSeriesID();
-
-    MetricCursor data_cursor;
-    auto data_cursor_rc = metric_service_->fetchData(
-        metric_id,
-        data_cursor_opts,
-        &data_cursor);
-
-    if (!data_cursor_rc.isSuccess()) {
-      json.addObjectEntry("error");
-      json.addString(rc.getMessage());
-      json.endObject();
-      continue;
-    }
-
-    json.addObjectEntry("columns");
-    json.beginArray();
-    json.addString("time");
-    for (size_t i = 0; i < data_cursor.getOutputColumnCount(); ++i) {
-      json.addComma();
-      json.addString(data_cursor.getOutputColumnName(i));
-    }
-    json.endArray();
-    json.addComma();
-
-    json.addObjectEntry("values");
-    renderJSONTimeseries(&json, &data_cursor);
-
-    json.endObject();
-  }
-
-  json.endArray();
-  json.endObject();
 }
 
 void HTTPAPI::insertSample(
@@ -349,75 +267,6 @@ void HTTPAPI::insertSample(
     response->addBody("ERROR: " + rc.getMessage());
   }
 }
-
-//
-//void HTTPAPI::renderMetricSampleScan(
-//    http::HTTPRequest* request,
-//    http::HTTPResponse* response,
-//    const URI& uri) {
-//  auto metric_key = uri->path().substr(sizeof(kMetricsUrlPrefix) - 1);
-//  if (metric_key.size() < 3) {
-//    response->addBody("error: invalid metric key: " + metric_key);
-//    response->setStatus(http::kStatusBadRequest);
-//    return;
-//  }
-//
-//  auto metric = metric_repo_->findMetric(metric_key);
-//  if (metric == nullptr) {
-//    response->addBody("metric not found: " + metric_key);
-//    response->setStatus(http::kStatusNotFound);
-//    return;
-//  }
-//
-//  response->setStatus(http::kStatusOK);
-//  response->addHeader("Content-Type", "application/json; charset=utf-8");
-//  JSONOutputStream json(response->getBodyOutputStream());
-//
-//  json.beginObject();
-//
-//  json.addObjectEntry("metric");
-//  renderMetricJSON(metric, &json);
-//  json.addComma();
-//
-//  json.addObjectEntry("samples");
-//  json.beginArray();
-//
-//  int i = 0;
-//  metric->scanSamples(
-//      fnord::util::DateTime::epoch(),
-//      fnord::util::DateTime::now(),
-//      [&json, &i] (Sample* sample) -> bool {
-//        if (i++ > 0) { json.addComma(); }
-//        json.beginObject();
-//
-//        json.addObjectEntry("time");
-//        json.addLiteral<uint64_t>(static_cast<uint64_t>(sample->time()));
-//        json.addComma();
-//
-//        json.addObjectEntry("value");
-//        json.addLiteral<double>(sample->value());
-//        json.addComma();
-//
-//        json.addObjectEntry("labels");
-//        json.beginObject();
-//        auto labels = sample->labels();
-//        for (int n = 0; n < labels.size(); n++) {
-//          if (n > 0) {
-//            json.addComma();
-//          }
-//
-//          json.addObjectEntry(labels[n].first);
-//          json.addString(labels[n].second);
-//        }
-//        json.endObject();
-//
-//        json.endObject();
-//        return true;
-//      });
-//
-//  json.endArray();
-//  json.endObject();
-//}
 
 } // namespace fnordmetric
 

@@ -26,10 +26,10 @@ ReturnCode QueryFrontend::fetchTimeseriesJSON(
 
   DataFrameBundle results;
 
-  /* fetch summary */
+  /* fetch data */
   {
     MetricCursorOptions cursor_opts;
-    cursor_opts.cursor_type = MetricCursorType::SUMMARY;
+    //cursor_opts.cursor_type = MetricCursorType::SUMMARY;
     FetchTimeseriesOperation fetch_op(
         metric_service_,
         *metric_id,
@@ -51,6 +51,15 @@ ReturnCode QueryFrontend::fetchTimeseriesJSON(
     json->beginObject();
     json->addObjectEntry("series_id");
     json->addString(frame->getID());
+    json->addComma();
+
+    json->addObjectEntry("tags");
+    json->beginArray();
+    for (auto t = frame->getTags().begin(); t != frame->getTags().end(); ++t) {
+      if (t != frame->getTags().begin()) { json->addComma(); }
+      json->addString(*t);
+    }
+    json->endArray();
     json->addComma();
 
     json->addObjectEntry("time");

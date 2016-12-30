@@ -39,6 +39,9 @@ public:
   const std::string& getID() const;
   void setID(const std::string& id);
 
+  const std::set<std::string>& getTags() const;
+  void addTag(const std::string& tag);
+
   const void* getData(size_t idx = 0) const;
   void* getData(size_t idx = 0);
 
@@ -56,6 +59,7 @@ public:
 protected:
   tval_type type_;
   std::string id_;
+  std::set<std::string> tags_;
   void* data_;
   size_t size_;
   size_t capacity_;
