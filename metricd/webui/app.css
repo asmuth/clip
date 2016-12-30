@@ -318,6 +318,10 @@ a.link {
   padding: 0px 18px 0px 10px;
 }
 
+.navbar .nav_item.settings {
+  padding-right: 14px;
+}
+
 .navbar .nav_item.settings i.fa.fa-cog {
   margin-right: 6px;
 }
@@ -416,6 +420,36 @@ a.link {
 }
 
 /** search */
+.search {
+  border: 1px solid #bbb;
+  border-radius: 3px;
+  box-shadow: 0 0 2px rgba(0,0,0,.1);
+}
+
+.search i.fa-filter {
+  opacity: 0.6;
+  line-height: 29px;
+  position: absolute;
+  padding: 0 9px;
+  vertical-align: middle;
+  background-color: #F4F4F4;
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#fefefe), to(#e9e9e9));
+  background-image: -webkit-linear-gradient(top, #fefefe, #e9e9e9);
+  background-image: -moz-linear-gradient(top, #fefefe, #e9e9e9);
+  background-image: -ms-linear-gradient(top, #fefefe, #e9e9e9);
+  background-image: -o-linear-gradient(top, #fefefe, #e9e9e9);
+  background-image: linear-gradient(top, #fefefe, #e9e9e9);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorStr='#fefefe', EndColorStr='#e9e9e9');
+  border-right: 1px solid #bbb;
+}
+
+.search input {
+  position: relative;
+  margin-left: 30px;
+  border: none;
+  box-shadow: none;
+}
+
 .searchbar {
   float: right;
   height: 49px;
@@ -481,7 +515,7 @@ a.link {
 
 /** page header */
 .page_header {
-  height: 53px;
+  height: 57px;
   padding: 14px 0 0 0;
 }
 

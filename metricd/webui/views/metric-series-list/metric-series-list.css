@@ -18,19 +18,26 @@
 
 /** controls **/
 .fnordmetric-metric-series-list .controls {
-  background: rgba(0,0,0,0.04);
-  width: 100%;
-  overflow: visible;
-  height: 37px;
+  height: 34px;
+  padding: 0;
+  line-height: 33px;
+  font-size: 12px;
+  cursor: default;
+  background: #f9f9f9;
+  border-top: 1px solid #ddd;
+  border-bottom: 1px solid #ddd;
 }
 
 .fnordmetric-metric-series-list .controls .control {
   float: right;
-  height: 38px;
-  line-height: 40px;
   margin: 0 15px 0 10px;
-  font-size: 13px;
+  opacity: 0.7;
 }
+
+.fnordmetric-metric-series-list .controls .control:first-child {
+  margin-right: 5px;
+}
+
 
 .fnordmetric-metric-series-list .controls .control.left {
   float: left;
@@ -42,6 +49,16 @@
   font-weight: 400;
   vertical-align: top;
   margin-right: 5px;
+}
+
+/** toolbar **/
+.fnordmetric-metric-series-list .toolbar {
+  height: 53px;
+}
+
+.fnordmetric-metric-series-list .toolbar .search {
+  float: left;
+  margin-top: 15px;
 }
 
 /** pager **/
