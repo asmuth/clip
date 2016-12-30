@@ -54,11 +54,43 @@
 /** toolbar **/
 .fnordmetric-metric-series-list .toolbar {
   height: 53px;
+  padding-right: 6px;
 }
 
 .fnordmetric-metric-series-list .toolbar .search {
   float: left;
   margin-top: 15px;
+}
+
+.fnordmetric-metric-series-list .toolbar .info {
+  float: right;
+  line-height: 20px;
+  border-right: 1px solid #bbb;
+  padding: 0 14px;
+  margin-top: 21px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.fnordmetric-metric-series-list .toolbar .info.legend {
+  font-weight: 400;
+}
+
+.fnordmetric-metric-series-list .toolbar .legend .circle {
+  display: inline-block;
+  height: 10px;
+  width: 10px;
+  border-radius: 50%;
+  vertical-align: top;
+  margin: 5px 5px 0 0;
+}
+
+.fnordmetric-metric-series-list .toolbar .legend .circle.blue {
+  background: #19A2E5;
+}
+
+.fnordmetric-metric-series-list .toolbar .legend .circle.light_blue {
+  background: #aad4e9;
 }
 
 /** pager **/

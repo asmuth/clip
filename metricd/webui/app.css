@@ -562,8 +562,8 @@ table.f-table tbody td {
 
 table.f-table thead th {
   border-right: none;
-  font-weight: 500;
-  color: rgba(0,0,0,0.8);
+  font-weight: 400;
+  color: #999;
   box-shadow: 0 1px 2px rgba(0,0,0,.09);
   border-bottom: 1px solid #e1e1e1;
   background: #f9f9f9;
@@ -601,11 +601,11 @@ i.sort_asc {
 }
 
 i.sort_asc::before {
-  content: "\f175";
+  content: "\f0d7";
 }
 
 i.sort_desc::before {
-  content: "\f176";
+  content: "\f0d8";
 }
 /**
 .load_foreground {
