@@ -142,7 +142,7 @@ bool MetricCursor::next(uint64_t* timestamp, tval_ref* out) {
   switch (opts_->cursor_type) {
 
     case MetricCursorType::SERIES:
-      return series_readers_[0]->next(timestamp, out, 1);
+      return series_readers_[0]->next(timestamp, out);
 
     case MetricCursorType::SUMMARY: {
       tval_ref next_val;
@@ -151,7 +151,7 @@ bool MetricCursor::next(uint64_t* timestamp, tval_ref* out) {
       next_val.data = alloca(next_val.len);
 
       for (auto& reader : series_readers_) {
-        if (!reader->next(timestamp, &next_val, 1)) {
+        if (!reader->next(timestamp, &next_val)) {
           return false;
         }
 

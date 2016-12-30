@@ -35,10 +35,7 @@ public:
 
   virtual ~OutputAggregator() = default;
 
-  virtual bool next(
-      uint64_t* time,
-      tval_ref* out,
-      size_t out_len) = 0;
+  virtual bool next(uint64_t* time, tval_ref* out) = 0;
 
 };
 
@@ -71,10 +68,7 @@ public:
 
   ~SumOutputAggregator();
 
-  bool next(
-      uint64_t* time,
-      tval_ref* out,
-      size_t out_len) override;
+  bool next(uint64_t* time, tval_ref* out) override;
 
 protected:
   tsdb::Cursor cursor_;
@@ -113,10 +107,7 @@ public:
 
   ~MaxOutputAggregator();
 
-  bool next(
-      uint64_t* time,
-      tval_ref* out,
-      size_t out_len) override;
+  bool next(uint64_t* time, tval_ref* out) override;
 
 protected:
   tsdb::Cursor cursor_;

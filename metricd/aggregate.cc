@@ -81,10 +81,7 @@ SumOutputAggregator::~SumOutputAggregator() {
   free(cur_sum_.data);
 }
 
-bool SumOutputAggregator::next(
-    uint64_t* time,
-    tval_ref* out,
-    size_t out_len) {
+bool SumOutputAggregator::next(uint64_t* time, tval_ref* out) {
   auto granularity = opts_->granularity;
   if (cur_time_ >= opts_->time_limit + granularity) {
     return false;
@@ -120,7 +117,7 @@ bool SumOutputAggregator::next(
 
     }
 
-    if (out_len > 0) {
+    if (out) {
       assert(out[0].type == next_val.type);
       assert(out[0].len == next_val.len);
       memcpy(out[0].data, next_val.data, std::min(next_val.len, out[0].len));
@@ -133,7 +130,7 @@ bool SumOutputAggregator::next(
         next_val.data,
         next_val.len);
   } else {
-    if (out_len > 0) {
+    if (out) {
       assert(out[0].type == cur_sum_.type);
       assert(out[0].len == cur_sum_.len);
       memcpy(out[0].data, cur_sum_.data, std::min(cur_sum_.len, out[0].len));
@@ -215,10 +212,7 @@ MaxOutputAggregator::~MaxOutputAggregator() {
   free(cur_max_.data);
 }
 
-bool MaxOutputAggregator::next(
-    uint64_t* time,
-    tval_ref* out,
-    size_t out_len) {
+bool MaxOutputAggregator::next(uint64_t* time, tval_ref* out) {
   auto granularity = opts_->granularity;
   if (cur_time_ >= opts_->time_limit + granularity) {
     return false;
@@ -240,7 +234,7 @@ bool MaxOutputAggregator::next(
     cursor_.next();
   }
 
-  if (out_len > 0) {
+  if (out) {
     assert(out[0].len == cur_max_.len);
     memcpy(out[0].data, cur_max_.data, cur_max_.len);
   }
