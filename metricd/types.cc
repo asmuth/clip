@@ -11,6 +11,7 @@
 #include <stdexcept>
 #include <assert.h>
 #include <string>
+#include <string.h>
 #include <limits>
 #include "metricd/types.h"
 

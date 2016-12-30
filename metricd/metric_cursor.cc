@@ -82,6 +82,12 @@ ReturnCode MetricCursor::openCursor(
         if (!db->getCursor(series_cursor.getSeriesID().id, &tsdb_cursor)) {
           return ReturnCode::error("EIO", "can't open tsdb cursor");
         }
+
+        series_readers.emplace_back(
+            mkOutputAggregator(
+                config,
+                std::move(tsdb_cursor),
+                opts.get()));
       }
 
       break;
