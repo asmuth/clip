@@ -27,6 +27,7 @@ struct tval_ref {
 };
 
 struct tval_autoref {
+  tval_autoref();
   tval_autoref(tval_type type);
   tval_autoref(const tval_autoref& other) = delete;
   tval_autoref(tval_autoref&& other);

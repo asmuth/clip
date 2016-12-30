@@ -16,10 +16,8 @@
 namespace fnordmetric {
 
 DataFrame::DataFrame(
-    DataFrameType type,
-    bool has_time) :
+    tval_type type) :
     type_(type),
-    has_time_(has_time),
     data_(nullptr),
     size_(0),
     capacity_(0) {}
@@ -27,12 +25,13 @@ DataFrame::DataFrame(
 DataFrame::DataFrame(
     DataFrame&& other) :
     type_(other.type_),
-    has_time_(other.has_time_),
     id_(other.id_),
+    tags_(other.tags_),
     data_(other.data_),
     size_(other.size_),
     capacity_(other.capacity_) {
   other.id_.clear();
+  other.tags_.clear();
   other.data_ = nullptr;
   other.size_ = 0;
   other.capacity_ = 0;
@@ -44,8 +43,8 @@ DataFrame& DataFrame::operator=(DataFrame&& other) {
   }
 
   type_ = other.type_;
-  has_time_ = other.has_time_;
   id_ = other.id_;
+  tags_ = other.tags_;
   data_ = other.data_;
   size_ = other.size_;
   capacity_ = other.capacity_;
@@ -64,38 +63,56 @@ DataFrame::~DataFrame() {
   }
 }
 
-const std::vector<std::string> DataFrame::getID() const {
+tval_type DataFrame::getType() const {
+  return type_;
+}
+
+const std::string& DataFrame::getID() const {
   return id_;
 }
 
-void DataFrame::setID(const std::vector<std::string> id) {
+void DataFrame::setID(const std::string& id) {
   id_ = id;
 }
 
-const uint64_t* DataFrame::getTime() const {
-  auto ptr = static_cast<const char*>(data_) + getEntrySize() * getSize();
+const std::set<std::string>& DataFrame::getTags() const {
+  return tags_;
+}
+
+void DataFrame::addTag(const std::string& tag) {
+  tags_.insert(tag);
+}
+
+const uint64_t* DataFrame::getTime(size_t idx /* = 0 */) const {
+  auto ptr = static_cast<const char*>(data_) + sizeof(uint64_t) * idx;
   return (const uint64_t*) (ptr);
 }
 
-uint64_t* DataFrame::getTime() {
-  auto ptr = static_cast<char*>(data_) + getEntrySize() * getSize();
+uint64_t* DataFrame::getTime(size_t idx /* = 0 */) {
+  auto ptr = static_cast<char*>(data_) + sizeof(uint64_t) * idx;
   return (uint64_t*) ptr;
 }
 
-bool DataFrame::hasTime() const {
-  return has_time_;
+const void* DataFrame::getData(size_t idx /* = 0 */) const {
+  auto ptr =
+      static_cast<const char*>(data_) +
+      sizeof(uint64_t) * getSize() +
+      tval_len(type_) * idx;
+
+  return ptr;
+}
+
+void* DataFrame::getData(size_t idx /* = 0 */) {
+  auto ptr =
+      static_cast<char*>(data_) +
+      sizeof(uint64_t) * getSize() +
+      tval_len(type_) * idx;
+
+  return ptr;
 }
 
 size_t DataFrame::getSize() const {
   return size_;
-}
-
-size_t DataFrame::getEntrySize() const {
-  switch (type_) {
-    case DataFrameType::UINT: return sizeof(uint64_t);
-    case DataFrameType::INT: return sizeof(int64_t);
-    case DataFrameType::DOUBLE: return sizeof(double);
-  }
 }
 
 void DataFrame::resize(size_t new_size) {
@@ -107,10 +124,7 @@ void DataFrame::resize(size_t new_size) {
     capacity_ = size_; // FIXME
   }
 
-  auto esize = getEntrySize();
-  if (has_time_) {
-    esize += sizeof(uint64_t);
-  }
+  auto esize = tval_len(type_) + sizeof(uint64_t);
 
   auto old_data = data_;
   data_ = malloc(capacity_ * esize);
@@ -121,44 +135,45 @@ void DataFrame::resize(size_t new_size) {
   }
 
   if (old_data) {
-    memcpy(data_, old_data, old_size * getEntrySize());
-  }
+    memcpy(data_, old_data, old_size * tval_len(type_));
 
-  if (old_data && has_time_) {
     memcpy(
-        (char*) data_ + size_ * getEntrySize(),
-        (const char*) old_data + old_size * getEntrySize(),
+        (char*) data_ + size_ * tval_len(type_),
+        (const char*) old_data + old_size * tval_len(type_),
         old_size * sizeof(uint64_t));
   }
 }
 
+void DataFrame::addValue(uint64_t time, const void* data, size_t data_len) {
+  assert(data_len == tval_len(type_));
+  auto idx = getSize();
+  resize(idx + 1);
+  *getTime(idx) = time;
+  memcpy(getData(idx), data, std::min(data_len, tval_len(type_)));
+}
+
 void DataFrame::debugPrint() const {
-  auto id = StringUtil::join(id_, ", ");
   fprintf(
       stderr,
       "==== DATA FRAME: %p; id=%s, size=%lu ====\n",
       this,
-      id.c_str(),
+      id_.c_str(),
       size_);
 
   for (size_t i = 0; i < size_; ++i) {
-    if (has_time_) {
-      fprintf(stderr, ">> time: %llu ", getTime()[i]);
-    } else {
-      fprintf(stderr, ">> ");
-    }
+    fprintf(stderr, ">> time: %llu ", getTime()[i]);
 
-    switch (type_) {
-      case DataFrameType::UINT:
-        fprintf(stderr, "val: " PRIu64 "\n", getData<uint64_t>()[i]);
-        break;
-      case DataFrameType::INT:
-        fprintf(stderr, "val: " PRId64 "\n", getData<int64_t>()[i]);
-        break;
-      case DataFrameType::DOUBLE:
-        fprintf(stderr, "val: %f\n", getData<double>()[i]);
-        break;
-    }
+    //switch (type_) {
+    //  case DataFrameType::UINT:
+    //    fprintf(stderr, "val: " PRIu64 "\n", getData<uint64_t>()[i]);
+    //    break;
+    //  case DataFrameType::INT:
+    //    fprintf(stderr, "val: " PRId64 "\n", getData<int64_t>()[i]);
+    //    break;
+    //  case DataFrameType::DOUBLE:
+    //    fprintf(stderr, "val: %f\n", getData<double>()[i]);
+    //    break;
+    //}
   }
 
   printf("\n\n");
@@ -184,8 +199,8 @@ const DataFrame* DataFrameBundle::getFrame(size_t idx) const {
   return &frames_[idx];
 }
 
-DataFrame* DataFrameBundle::addFrame(DataFrameType type, bool has_time) {
-  frames_.emplace_back(type, has_time);
+DataFrame* DataFrameBundle::addFrame(tval_type type) {
+  frames_.emplace_back(type);
   return &frames_.back();
 }
 

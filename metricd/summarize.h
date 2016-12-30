@@ -10,6 +10,7 @@
 #pragma once
 #include <metricd/types.h>
 #include <metricd/util/return_code.h>
+#include <metricd/query/data_frame.h>
 
 namespace fnordmetric {
 
@@ -20,24 +21,16 @@ enum class GrossSummaryMethod {
   TREND
 };
 
-class GrossSummary {
-public:
+std::string getGrossSummaryName(GrossSummaryMethod method);
 
-  virtual ~GrossSummary() = default;
+ReturnCode summarizeTimeseries(
+    GrossSummaryMethod method,
+    const DataFrame* frame,
+    tval_autoref* result);
 
-  virtual void addValue(
-      tval_type value_type,
-      const void* value,
-      size_t value_len) = 0;
-
-  virtual void getValue(
-      tval_type value_type,
-      void* value,
-      size_t value_len) = 0;
-
-  virtual void reset() = 0;
-
-};
+ReturnCode summarizeTimeseries_SUM(
+    const DataFrame* frame,
+    tval_autoref* result);
 
 class GroupSummary {
 public:

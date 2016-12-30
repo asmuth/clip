@@ -17,6 +17,11 @@
 
 namespace fnordmetric {
 
+tval_autoref::tval_autoref() {
+  val.data = nullptr;
+  val.len = 0;
+}
+
 tval_autoref::tval_autoref(tval_type type) {
   tval_alloc(&val, type);
   tval_zero(val.type, val.data, val.len);
@@ -32,11 +37,15 @@ tval_autoref::tval_autoref(tval_autoref&& other) {
 }
 
 tval_autoref::~tval_autoref() {
-  tval_free(&val);
+  if (val.data) {
+    tval_free(&val);
+  }
 }
 
 tval_autoref& tval_autoref::operator=(tval_autoref&& other) {
-  tval_free(&val);
+  if (val.data) {
+    tval_free(&val);
+  }
 
   val.type = other.val.type;
   val.data = other.val.data;

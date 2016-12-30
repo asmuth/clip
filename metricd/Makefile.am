@@ -118,7 +118,13 @@ metricd_common_sources_ = \
     util/autoref.cc \
     query/data_frame.h \
     query/data_frame.cc \
-    query/data_frame_impl.h \
+    query/ops/fetch_timeseries.h \
+    query/ops/fetch_timeseries.cc \
+    query/query_operation.h \
+    query/query_options.h \
+    query/query_options.cc \
+    query/query_frontend.h \
+    query/query_frontend.cc \
     summarize.h \
     summarize.cc \
     transport/http/httpapi.h \

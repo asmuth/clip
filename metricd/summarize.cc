@@ -13,6 +13,43 @@
 
 namespace fnordmetric {
 
+std::string getGrossSummaryName(GrossSummaryMethod method) {
+  switch (method) {
+    case GrossSummaryMethod::SUM: return "sum";
+    case GrossSummaryMethod::MAX: return "max";
+    case GrossSummaryMethod::MIN: return "min";
+    case GrossSummaryMethod::TREND: return "trend";
+  }
+}
+
+ReturnCode summarizeTimeseries(
+    GrossSummaryMethod method,
+    const DataFrame* frame,
+    tval_autoref* result) {
+  switch (method) {
+    case GrossSummaryMethod::SUM:
+        return summarizeTimeseries_SUM(frame, result);
+  }
+}
+
+ReturnCode summarizeTimeseries_SUM(
+    const DataFrame* frame,
+    tval_autoref* result) {
+  tval_autoref acc(frame->getType());
+
+  for (size_t i = 0; i < frame->getSize(); ++i) {
+    tval_add(
+        acc.val.type,
+        acc.val.data,
+        acc.val.len,
+        frame->getData(i),
+        acc.val.len);
+  }
+
+  *result = std::move(acc);
+  return ReturnCode::success();
+}
+
 SumGroupSummary::SumGroupSummary(tval_type val_type) : acc_(val_type) {}
 
 void SumGroupSummary::addValue(
