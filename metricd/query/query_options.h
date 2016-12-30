@@ -8,8 +8,7 @@
  * <http://www.gnu.org/licenses/>.
  */
 #pragma once
-#include <atomic>
-#include <memory>
+#include <map>
 #include <string>
 
 namespace fnordmetric {
@@ -34,8 +33,8 @@ public:
   size_t getChildCount(const std::string& property) const;
 
 protected:
-  std::map<std::string, std::string> properties_;
-  std::map<std::string, QueryOptions> children_;
+  std::multimap<std::string, std::string> properties_;
+  std::multimap<std::string, QueryOptions> children_;
 };
 
 } // namespace fnordmetric
