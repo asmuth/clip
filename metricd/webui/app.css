@@ -136,6 +136,15 @@
 .fa-plus:before {
   content: "\f067";
 }
+.fa-angle-left:before {
+  content: "\f104";
+}
+.fa-angle-right:before {
+  content: "\f105";
+}
+.fa-calendar:before {
+  content: "\f073";
+}
 
 @-webkit-keyframes fa-spin {
   0% {
@@ -473,7 +482,11 @@ a.link {
 /** page header */
 .page_header {
   height: 53px;
-  padding: 12px 0 0 0;
+  padding: 14px 0 0 0;
+}
+
+.page_header f-timerange-picker {
+  float: right;
 }
 
 /** table */

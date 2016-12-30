@@ -1,4 +1,3 @@
-/** input **/
 f-timerange-picker {
   display: inline-block;
   line-height: inherit;
@@ -14,10 +13,6 @@ f-timerange-picker .error {
   visibility: hidden;
 }
 
-f-timerange-picker input {
-  width: 233px;
-}
-
 f-timerange-picker input.invalid {
   border: 1px solid #F0514E;
 }
@@ -31,35 +26,68 @@ f-timerange-picker input::selection {
   background: transparent;
 }
 
-f-timerange-picker i.arrow_left,
-f-timerange-picker i.arrow_down,
-f-timerange-picker i.arrow_right {
-  padding: 0 5px;
-  vertical-align: middle;
+/** date_field **/
+
+f-timerange-picker .date_field {
   display: inline-block;
-  width: 0;
-  height: 0;
+  line-height: 29px;
+  padding: 0px;
+  background: #fff;
+  font-size: 12px;
+  color: #333;
+  border: 1px solid #bbb;
+  border-radius: 2px;
+  box-shadow: 0 0 2px rgba(0,0,0,.1);
+  font-weight: 500;
+}
+
+f-timerange-picker .date_field .date_value {
+  display: inline-block;
+}
+
+f-timerange-picker .date_field i.fa {
+  line-height: 29px;
+  padding: 0 9px;
+  vertical-align: middle;
+  background-color: #F4F4F4;
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#fefefe), to(#e9e9e9));
+  background-image: -webkit-linear-gradient(top, #fefefe, #e9e9e9);
+  background-image: -moz-linear-gradient(top, #fefefe, #e9e9e9);
+  background-image: -ms-linear-gradient(top, #fefefe, #e9e9e9);
+  background-image: -o-linear-gradient(top, #fefefe, #e9e9e9);
+  background-image: linear-gradient(top, #fefefe, #e9e9e9);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorStr='#fefefe', EndColorStr='#e9e9e9');
+  border-color: #bbb;
+  border-style: solid;
+  border-width: 0px;
+}
+
+f-timerange-picker .date_field i.fa.fa-calendar {
+  margin-right: 4px;
+  border-right-width: 1px;
+}
+
+f-timerange-picker .date_field i.fa.fa-caret-down {
+  margin-left: 4px;
+  border-left-width: 1px;
+}
+
+f-timerange-picker i.mover {
+  font-size: 17px;
+  vertical-align: middle;
+  opacity: .8;
+  color: rgba(0,0,0,.4);
+  height: 1em;
+  line-height: 1;
+  font-weight: bold;
+  padding: 0 8px;
+  margin: 0;
   cursor: pointer;
-  border-top: 9px solid transparent;
 }
 
-f-timerange-picker i.arrow_left,
-f-timerange-picker i.arrow_right {
-  border-bottom: 9px solid transparent;
-}
-
-f-timerange-picker i.arrow_left.disabled,
-f-timerange-picker i.arrow_right.disabled {
+f-timerange-picker i.mover.disabled {
   cursor: initial;
   opacity: 0.6;
-}
-
-f-timerange-picker i.arrow_left {
-  border-right: 9px solid #999;
-}
-
-f-timerange-picker i.arrow_right {
-  border-left: 9px solid #999;
 }
 
 f-timerange-picker i.arrow_down {
@@ -73,19 +101,76 @@ f-timerange-picker i.arrow_down {
 
 f-timerange-picker .widget {
   position: absolute;
-  left: 23px;
   top: 100%;
+  right: 0px;
+  margin-top: 14px;
   background-color: #fff;
-  border: 1px solid #ccc;
+  border: 1px solid #bbb;
   border-radius: 3px;
-  box-shadow: 0px 4px 7px #ccc;
+  box-shadow: 0px 1px 2px rgba(0,0,0,.09);
   z-index: 9999;
-  overflow: auto;
   padding: 13px;
   display: none;
   width: 513px;
+  font-size: 12px;
 }
 
+f-timerange-picker .widget::before,
+f-timerange-picker .widget::after {
+  content: ' ';
+  height: 0;
+  position: absolute;
+  width: 0;
+  border: 15px solid transparent;
+  right: 23px;
+}
+
+f-timerange-picker .widget::before {
+  border-bottom-color: #fff;
+  top: -29px;
+  z-index: 2;
+}
+
+f-timerange-picker .widget::after {
+  border-bottom-color: #bbb;
+  top: -30px;
+  z-index: 1;
+}
+
+/**
+f-timerange-picker .widget::before {
+  content: '';
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  background: #e6edf6;
+  -webkit-box-shadow: inherit;
+  box-shadow: inherit;
+  z-index: -1;
+  top: -5px;
+  left: 50%;
+  margin-left: -5px;
+  -webkit-transform: scaleX(0.6) rotate(45deg);
+  -ms-transform: scaleX(0.6) rotate(45deg);
+  transform: scaleX(0.6) rotate(45deg);
+}
+
+f-timerange-picker .widget::after {
+  content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: inherit;
+    z-index: -1;
+
+}
+
+f-timerange-picker .widget::before {
+  left: 14px;
+}
+**/
 f-timerange-picker .widget.active {
   display: block;
 }

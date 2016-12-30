@@ -91,13 +91,13 @@ var TimeRangePickerComponent = function() {
   }
 
   var watchTimerangeMover = function() {
-    this_.querySelector(".arrow_left").addEventListener("click", function(e) {
+    this_.querySelector(".mover.prev").addEventListener("click", function(e) {
       if (!this.classList.contains("disabled")) {
         moveTimerange(config.range * -1);
       }
     }, false);
 
-    this_.querySelector(".arrow_right").addEventListener("click", function(e) {
+    this_.querySelector(".mover.next").addEventListener("click", function(e) {
       if (!this.classList.contains("disabled")) {
         moveTimerange(config.range);
       }
@@ -105,7 +105,7 @@ var TimeRangePickerComponent = function() {
   }
 
   var watchInputClick = function() {
-    this_.querySelector("input").addEventListener("click", function(e) {
+    this_.querySelector(".date_field").addEventListener("click", function(e) {
       widget.toggleVisibility(timerange);
     }, false);
   }
@@ -119,16 +119,16 @@ var TimeRangePickerComponent = function() {
   }
 
   var updateInputValue = function() {
-    var input = this_.querySelector("input");
-    input.value = dateUtil.formatDateTime(timerange.start, timerange.timezone) +
+    this_.querySelector(".date_field .date_value").innerHTML =
+        dateUtil.formatDateTime(timerange.start, timerange.timezone) +
         " - " +
         dateUtil.formatDateTime(timerange.end, timerange.timezone);
 
 
     if (timerange.end + config.range >= Date.now()) {
-      this_.querySelector(".arrow_right").classList.add("disabled");
+      this_.querySelector(".mover.next").classList.add("disabled");
     } else {
-      this_.querySelector(".arrow_right").classList.remove("disabled");
+      this_.querySelector(".mover.next").classList.remove("disabled");
     }
   }
 
