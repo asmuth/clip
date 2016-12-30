@@ -10,6 +10,7 @@
  */
 #pragma once
 #include <metricd/metric.h>
+#include <metricd/summarize.h>
 #include <functional>
 #include <iostream>
 #include <string>
@@ -75,7 +76,8 @@ public:
   MetricCursor(
       const MetricConfig& config,
       std::unique_ptr<MetricCursorOptions> opts,
-      std::vector<std::unique_ptr<OutputAggregator>> series_readers);
+      std::vector<std::unique_ptr<OutputAggregator>> series_readers,
+      std::unique_ptr<GroupSummary> group_summary);
 
   MetricCursor(const MetricCursor& o) = delete;
   MetricCursor(MetricCursor&& o);
@@ -88,6 +90,7 @@ public:
       size_t out_len);
 
   tval_type getOutputType() const;
+  static tval_type getOutputType(const MetricConfig& config);
 
   size_t getOutputColumnCount() const;
 
@@ -97,6 +100,7 @@ protected:
   MetricConfig config_;
   std::unique_ptr<MetricCursorOptions> opts_;
   std::vector<std::unique_ptr<OutputAggregator>> series_readers_;
+  std::unique_ptr<GroupSummary> group_summary_;
 };
 
 std::unique_ptr<InputAggregator> mkInputAggregator(

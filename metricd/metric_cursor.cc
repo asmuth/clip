@@ -95,10 +95,18 @@ ReturnCode MetricCursor::openCursor(
 
   }
 
+  /* set up group summary */
+  std::unique_ptr<GroupSummary> group_summary;
+  if (opts->cursor_type == MetricCursorType::SUMMARY) {
+    group_summary.reset(
+        new SumGroupSummary(getOutputType(metric->getConfig())));
+  }
+
   *cursor = MetricCursor(
       metric->getConfig(),
       std::move(opts),
-      std::move(series_readers));
+      std::move(series_readers),
+      std::move(group_summary));
 
   return ReturnCode::success();
 }
@@ -108,10 +116,12 @@ MetricCursor::MetricCursor() {}
 MetricCursor::MetricCursor(
     const MetricConfig& config,
     std::unique_ptr<MetricCursorOptions> opts,
-    std::vector<std::unique_ptr<OutputAggregator>> series_readers)  :
+    std::vector<std::unique_ptr<OutputAggregator>> series_readers,
+    std::unique_ptr<GroupSummary> group_summary) :
     config_(config),
     opts_(std::move(opts)),
-    series_readers_(std::move(series_readers)) {}
+    series_readers_(std::move(series_readers)),
+    group_summary_(std::move(group_summary)) {}
 
 MetricCursor::MetricCursor(
     MetricCursor&& o) :
@@ -131,11 +141,42 @@ bool MetricCursor::next(
     uint64_t* timestamp,
     tval_ref* out,
     size_t out_len) {
-  return series_readers_[0]->next(timestamp, out, out_len);
+  switch (opts_->cursor_type) {
+
+    case MetricCursorType::SERIES:
+      return series_readers_[0]->next(timestamp, out, out_len);
+
+    case MetricCursorType::SUMMARY: {
+      tval_ref next_val;
+      next_val.type = getOutputType();
+      next_val.len = tval_len(next_val.type);
+      next_val.data = alloca(next_val.len);
+
+      for (auto& reader : series_readers_) {
+        if (!series_readers_[0]->next(timestamp, &next_val, 1)) {
+          return false;
+        }
+
+        group_summary_->addValue(next_val.type, next_val.data, next_val.len);
+      }
+
+      if (out_len > 0) {
+        group_summary_->getValue(out[0].type, out[0].data, out[0].len);
+      }
+
+      group_summary_->reset();
+      return true;
+    }
+
+  }
 }
 
 tval_type MetricCursor::getOutputType() const {
-  switch (config_.kind) {
+  return getOutputType(config_);
+}
+
+tval_type MetricCursor::getOutputType(const MetricConfig& config) {
+  switch (config.kind) {
 
     case MetricKind::COUNTER_UINT64:
     case MetricKind::MAX_UINT64:
