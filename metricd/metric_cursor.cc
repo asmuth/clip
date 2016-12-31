@@ -139,6 +139,10 @@ MetricCursor& MetricCursor::operator=(MetricCursor&& o) {
 }
 
 bool MetricCursor::next(uint64_t* timestamp, tval_ref* out) {
+  if (series_readers_.empty()) {
+    return false;
+  }
+
   switch (opts_->cursor_type) {
 
     case MetricCursorType::SERIES:
