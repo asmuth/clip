@@ -103,6 +103,38 @@
   color: #3d8ad3;
 }
 
+/** sparkline **/
+.sparkline {
+  display: inline-block;
+}
+
+.sparkline.sparkline-axes {
+  padding-top: 8px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.3);
+  border-left: 1px solid rgba(0, 0, 0, 0.3);
+}
+
+.sparkline svg {
+  vertical-align: bottom;
+}
+
+.sparkline path {
+  stroke: #aad4e9;
+  fill: none;
+  stroke-width: 2px;
+}
+
+.sparkline path:first-child {
+  stroke: #19A2E5;
+}
+
+.sparkline circle {
+  stroke: #a94442;
+  fill: #a94442;
+  stroke-width: 1px;
+}
+
+
 /** controls **/
 .fnordmetric-metric-series-list .controls {
   height: 34px;

@@ -42,9 +42,9 @@ var FnordMetricMetricSeriesListTable = function(table) {
         }
       }
 
-      alert("render context menu");
-      e.preventDefault();
-      return false;
+      //alert("render context menu");
+      //e.preventDefault();
+      //return false;
     });
 
 
@@ -66,15 +66,30 @@ var FnordMetricMetricSeriesListTable = function(table) {
 
   var renderSparklineCell = function(series, tr) {
     var td = document.createElement("td");
-    renderSparkline(td);
+    renderSparkline(series, td);
 
     tr.appendChild(td);
   }
 
   //TODO
-  var renderSparkline = function(td_elem) {
-    td_elem.innerHTML = "sparkline";
+  var renderSparkline = function(series, td) {
+    td.setAttribute("height", "100px");
+    td.setAttribute("width", "400px");
 
+    var sparkline_cfg = {
+      series: [
+        {
+          values: [1, 4, 7, 2, 8, 3, 4, 1]
+        },
+        {
+          values: [1, 5, 9, 2, 6, 3, 7, 6]
+        }
+      ]
+    };
+
+    var svg = document.querySelector("svg.sparkline_tpl").cloneNode(true);
+    td.appendChild(svg);
+    FnordMetricMetricSeriesListSparkline.render(svg, sparkline_cfg);
   }
 
   var renderSummariesCell = function(summaries, tr) {
@@ -125,3 +140,116 @@ var FnordMetricMetricSeriesListTable = function(table) {
   }
 
 }
+
+var FnordMetricMetricSeriesListSparkline = (function() {
+
+  /**
+    * @param elem the html elem
+    * @param cfg (Object) consists of multiple series object, each with 
+    * values: an array of float values for the y axis
+    * min (optinal): a float determining the min value
+    * max(optinal): a float determining the max value
+    **/
+  var render = function(elem, cfg) {
+    var height = getDimension('height', elem);
+    var width = getDimension("width", elem);
+
+    var path_elems = elem.querySelectorAll("path");
+
+    for (var i = 0; i < cfg.series.length; i++) {
+      if (path_elems.length - 1 < i) {
+        break;
+      }
+
+      renderPath(cfg.series[i], height, width, path_elems[i]);
+    }
+
+    elem.style.height = height + "px";
+    elem.style.width = width + "px";
+  }
+
+  var renderPath = function(series, height, width, path_elem) {
+    if (!series.min) {
+      series.min = 0.0;
+    }
+
+    if (!series.max) {
+      series.max = Math.max.apply(null, series.values);
+    }
+
+    var padding_x = 0;
+    var padding_y = 5;
+
+    var points = scaleValues(series);
+
+    var svg_line = [];
+    for (var i = 0; i < points.length; ++i) {
+      if (!isNaN(points[i].y)) {
+        var dx = padding_x + (points[i].x * (width - padding_x * 2));
+        var dy = padding_y + ((1.0 - points[i].y) * (height - padding_y * 2));
+        svg_line.push(i == 0 ? "M" : "L", dx, dy);
+      }
+    }
+
+    //var svg = elem.querySelector("svg");
+
+    path_elem.setAttribute("d", svg_line.join(" "));
+  };
+
+  var getTemplate = function() {
+    var tpl = document.createElement("svg");
+    tpl.className = "sparkline";
+
+    var p = document.createElement("path");
+    tpl.appendChild(p);
+    var c = document.createElement("circle");
+    tpl.appendChild(c);
+
+    return tpl;
+  }
+
+  getDimension = function(dimension, elem) {
+    var value = elem.getAttribute(dimension);
+
+    var idx = value.indexOf("%");
+    if (idx > -1) {
+      return elem.offsetWidth * (parseInt(value.substr(0, idx), 10) / 100);
+    }
+
+    return parseFloat(value);
+  };
+
+  var scaleValues = function(series) {
+    var scaled = [];
+
+    for (var i = 0; i < series.values.length; ++i) {
+      var v = series.values[i];
+      var x  = i / (series.values.length - 1);
+
+      if (v < series.min) {
+        scaled.push({x : x, y: 0});
+        continue;
+      }
+
+      if (v > series.max) {
+        scaled.push({x: x, y: 1.0});
+        continue;
+      }
+
+      if (series.max - series.min == 0) {
+        scaled.push({x: x, y: v});
+      } else {
+        scaled.push({x: x, y:(v - series.min) / (series.max - series.min)});
+      }
+    }
+
+    return scaled;
+  };
+
+  return {
+    render: render
+  }
+
+})();
+
+
