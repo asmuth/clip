@@ -2,42 +2,85 @@ var FnordMetricMetricSeriesListTable = function(table) {
   'use strict';
 
   this.render = function(series) {
+    var tbody = table.querySelector("tbody");
     for (var i = 0; i < series.length; i++) {
       /** skip total summary row **/
       if (i == 0) {
         continue;
       }
 
-      renderRow(series[i])
+      renderRow(series[i], tbody)
     }
   }
 
-  var renderRow = function(series) {
+  var renderRow = function(series, tbody) {
     var tr = document.createElement("tr");
     var html = [];
 
     /** series id **/
-    var series_id_td = document.createElement("td");
-    series_id_td.innerHTML = series.series_id;
+    renderSeriesIdCell(series.series_id, tr);
+
+    /** sparkline **/
+    renderSparklineCell(series, tr);
+
+    /** values **/
+    renderSummariesCell(series.summaries, tr);
+
+    /** context menu icon **/
+    renderContextMenuIconCell(series.series_id, tr);
+
+    /** watch right click **/
+    tr.addEventListener("contextmenu", function(e) {
+      //check if right click
+      if (e.which) {
+        if (e.which != 3) {
+          return false;
+        }
+      } else if (e.button) { //IE, Opera
+        if (e.button != 2) {
+          return false;
+        }
+      }
+
+      alert("render context menu");
+      e.preventDefault();
+      return false;
+    });
+
+
+    tbody.appendChild(tr);
+  }
+
+  var renderSeriesIdCell = function(id, tr) {
+    var td = document.createElement("td");
+    td.innerHTML = id;
 
     var eye_icon_elem = document.createElement("div");
     var eye_icon = document.createElement("i");
     eye_icon.className = "fa fa-eye";
     eye_icon_elem.appendChild(eye_icon);
-    series_id_td.appendChild(eye_icon_elem);
+    td.appendChild(eye_icon_elem);
 
-    tr.appendChild(series_id_td);
+    tr.appendChild(td);
+  }
 
-    /** sparkline **/
-    var sparkline_td = document.createElement("td");
-    renderSparkline(sparkline_td);
+  var renderSparklineCell = function(series, tr) {
+    var td = document.createElement("td");
+    renderSparkline(td);
 
-    tr.appendChild(sparkline_td);
+    tr.appendChild(td);
+  }
 
-    /** values **/
+  //TODO
+  var renderSparkline = function(td_elem) {
+    td_elem.innerHTML = "sparkline";
+
+  }
+
+  var renderSummariesCell = function(summaries, tr) {
     var sum;
     var value_stats = [];
-    series.summaries.forEach(function(s) {
+    summaries.forEach(function(s) {
       switch (s.summary) {
         case "sum":
           sum = s.value;
@@ -49,35 +92,36 @@ var FnordMetricMetricSeriesListTable = function(table) {
      }
     });
 
-    var values_td = document.createElement("td");
-    values_td.className = "values";
-    values_td.innerHTML = ["<div class='total'>", sum || "-",
+    var td = document.createElement("td");
+    td.className = "values";
+    td.innerHTML = ["<div class='total'>", sum || "-",
       "</div><div class='value_stats'>",
       value_stats.join(" "), "</div>"].join("");
 
-    tr.appendChild(values_td);
+    tr.appendChild(td);
+  }
 
-    /** context menu icon **/
-    var menu_icon_td = document.createElement("td");
-    menu_icon_td.className = "align_center context_menu";
+  var renderContextMenuIconCell = function(series_id, tr) {
+    var td = document.createElement("td");
+    td.className = "align_center context_menu_icon";
 
     var menu_icon = document.createElement("i");
     menu_icon.className = "fa fa-angle-down";
 
     menu_icon.addEventListener("click", function(e) {
-      alert("display context menu");
+      renderContextMenu(series_id, e);
     }, false);
 
-    menu_icon_td.appendChild(menu_icon);
-    tr.appendChild(menu_icon_td);
-
-    table.querySelector("tbody").appendChild(tr);
+    td.appendChild(menu_icon);
+    tr.appendChild(td);
   }
 
-  //TODO
-  var renderSparkline = function(td_elem) {
-    td_elem.innerHTML = "sparkline";
-
+  var renderContextMenu = function(series_id, ev) {
+    //FIXME
+    var menu = document.querySelector(".context_menu");
+    menu.style.left = ev.clientX + "px";
+    menu.style.top = ev.clientY + "px";
+    menu.classList.add("active");
   }
 
 }
