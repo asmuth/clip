@@ -71,11 +71,8 @@ var FnordMetricMetricSeriesListTable = function(table) {
     tr.appendChild(td);
   }
 
-  //TODO
+  //FIXME remove data stub
   var renderSparkline = function(series, td) {
-    td.setAttribute("height", "100px");
-    td.setAttribute("width", "400px");
-
     var sparkline_cfg = {
       series: [
         {
@@ -89,6 +86,8 @@ var FnordMetricMetricSeriesListTable = function(table) {
 
     var svg = document.querySelector("svg.sparkline_tpl").cloneNode(true);
     td.appendChild(svg);
+    td.className = "sparkline";
+
     FnordMetricMetricSeriesListSparkline.render(svg, sparkline_cfg);
   }
 
@@ -107,11 +106,14 @@ var FnordMetricMetricSeriesListTable = function(table) {
      }
     });
 
+    var value_stats_line = value_stats.length > 0 ?
+      value_stats.join(" ") :
+      " - ";
+
     var td = document.createElement("td");
     td.className = "values";
     td.innerHTML = ["<div class='total'>", sum || "-",
-      "</div><div class='value_stats'>",
-      value_stats.join(" "), "</div>"].join("");
+      "</div><div class='value_stats'>", value_stats_line, "</div>"].join("");
 
     tr.appendChild(td);
   }
@@ -153,6 +155,7 @@ var FnordMetricMetricSeriesListSparkline = (function() {
   var render = function(elem, cfg) {
     var height = getDimension('height', elem);
     var width = getDimension("width", elem);
+    console.log(height, width);
 
     var path_elems = elem.querySelectorAll("path");
 

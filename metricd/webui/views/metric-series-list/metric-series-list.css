@@ -12,7 +12,7 @@
 
 .fnordmetric-metric-series-list table.f-table tbody td {
   line-height: 21px;
-  padding: .7em .8em .6em .8em;
+  padding: 5px 10px;
 }
 
 .fnordmetric-metric-series-list table.f-table tbody tr td:first-child {
@@ -27,9 +27,10 @@
   text-align: center;
 }
 
-.fnordmetric-metric-series-list table.f-table tbody td.values {
-  padding-top: 12px;
+.fnordmetric-metric-series-list table.f-table tbody td.sparkline {
+  width: 420px;
 }
+
 .fnordmetric-metric-series-list table.f-table tbody td.values .value_stats {
   font-size: 11px;
   line-height: 16px;
@@ -104,31 +105,31 @@
 }
 
 /** sparkline **/
-.sparkline {
+svg.sparkline {
   display: inline-block;
 }
 
-.sparkline.sparkline-axes {
+svg.sparkline.sparkline-axes {
   padding-top: 8px;
   border-bottom: 1px solid rgba(0, 0, 0, 0.3);
   border-left: 1px solid rgba(0, 0, 0, 0.3);
 }
 
-.sparkline svg {
+svg.sparkline {
   vertical-align: bottom;
 }
 
-.sparkline path {
+svg.sparkline path {
   stroke: #aad4e9;
   fill: none;
   stroke-width: 2px;
 }
 
-.sparkline path:first-child {
+svg.sparkline path:first-child {
   stroke: #19A2E5;
 }
 
-.sparkline circle {
+svg.sparkline circle {
   stroke: #a94442;
   fill: #a94442;
   stroke-width: 1px;
