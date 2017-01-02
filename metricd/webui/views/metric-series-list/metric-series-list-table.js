@@ -43,7 +43,8 @@ var FnordMetricMetricSeriesListTable = function(table) {
       }
 
       //alert("render context menu");
-      //e.preventDefault();
+      renderContextMenu(series.series_id, e);
+      e.preventDefault();
       //return false;
     });
 
@@ -130,13 +131,37 @@ var FnordMetricMetricSeriesListTable = function(table) {
   }
 
   var renderContextMenu = function(series_id, ev) {
-    //FIXME
+    ev.stopPropagation();
     var menu = document.querySelector(".context_menu");
-    menu.style.left = ev.clientX + "px";
-    menu.style.top = ev.clientY + "px";
     menu.classList.add("active");
+
+    /** set left position **/
+    if (window.innerWidth - ev.clientX < menu.offsetWidth) {
+      menu.style.left = (ev.clientX - menu.offsetWidth + 19) + "px";
+      menu.setAttribute("data-pointer", "right");
+
+    } else if (ev.clientX < menu.offsetWidth / 2) {
+      menu.style.left = ev.clientX - 16 + "px";
+      menu.setAttribute("data-pointer", "left");
+
+    } else {
+      menu.style.left = ev.clientX - menu.offsetWidth / 2 + "px";
+      menu.setAttribute("data-pointer", "center");
+
+    }
+
+    /** set top position **/
+    menu.style.top = ev.clientY + window.scrollX + 5 + "px";
   }
 
+
+  var hideContextMenu = function() {
+    document.querySelector(".context_menu").classList.remove("active");
+  }
+
+  document.addEventListener("click", function(e) {
+    hideContextMenu();
+  }, false);
 }
 
 var FnordMetricMetricSeriesListSparkline = (function() {

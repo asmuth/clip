@@ -88,6 +88,15 @@
   background: #f9f9f9;
 }
 
+.context_menu[data-pointer='left']::before {
+  left: 16px;
+}
+
+.context_menu[data-pointer='right']::before {
+  right: 16px;
+  left: auto;
+}
+
 .context_menu ul {
   list-style-type: none;
   padding: 0;
