@@ -1,0 +1,45 @@
+
+.fnordmetric-metric-series-chart {
+  display: flex;
+  flex-direction: row;
+  flex: 1;
+  font: 16px/24px "Roboto",'Helvetica Neue',Helvetica,Arial,sans-serif;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 20px;
+  margin: 15px 0 13px 0;
+}
+
+.fnordmetric-metric-series-chart .summary {
+  width: 150px;
+}
+
+.fnordmetric-metric-series-chart .chart {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.fnordmetric-metric-series-chart .summary .total {
+  font-size: 23px;
+  color: #333;
+  line-height: 24px;
+}
+
+.fnordmetric-metric-series-chart .summary .legend {
+  margin: 13px 0 9px 0;
+}
+
+.fnordmetric-metric-series-chart .summary .circle {
+  display: inline-block;
+  height: 10px;
+  width: 10px;
+  border-radius: 50%;
+  vertical-align: top;
+  margin: 5px 9px 0 0;
+}
+
+.fnordmetric-metric-series-chart .summary .stats {
+  font-size: 11px;
+}
+

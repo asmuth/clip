@@ -4,7 +4,6 @@ FnordMetric.views["fnordmetric.metric.series.list"] = function(elem, params) {
   var api_url = "/fetch";
 
   var table;
-  var chart;
   var url_params;
 
   this.initialize = function() {
@@ -15,9 +14,6 @@ FnordMetric.views["fnordmetric.metric.series.list"] = function(elem, params) {
 
     table = new FnordMetricMetricSeriesListTable(
         elem.querySelector("table.metric_series_list"));
-
-    chart = new FnordMetricMetricSeriesListChart(
-        elem.querySelector(".chart_pane"));
 
     watchTimeRangePicker();
     watchFilter();
@@ -128,9 +124,34 @@ FnordMetric.views["fnordmetric.metric.series.list"] = function(elem, params) {
 
       var series = JSON.parse(r.response);
       table.render(series.series);
-      chart.render(series.series);
+      renderChart(series.series[0]);
     });
   };
+
+  var renderChart = function(series) {
+    //FIXME make another request as soon as API is ready
+    new FnordMetricMetricSeriesListChart(elem.querySelector(".chart_pane"), {
+      time: series.time,
+      summary: {
+        series_id: series.series_id
+      },
+      series: [
+        {
+          series_id: series.series_id,
+          values: series.values,
+          summaries: series.summaries,
+          //REMOVEME
+          title: "Current Value",
+          unit: "MB/s"
+          //REMOVEME END
+        },
+        {
+          title: "Compare To: Yesterday",
+        }
+      ]
+    });
+    
+  }
 
 };
 
