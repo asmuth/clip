@@ -122,7 +122,7 @@ svg.sparkline {
 svg.sparkline path {
   stroke: #aad4e9;
   fill: none;
-  stroke-width: 2px;
+  stroke-width: 1px;
 }
 
 svg.sparkline path:first-child {
@@ -132,6 +132,11 @@ svg.sparkline path:first-child {
 svg.sparkline circle {
   stroke: #a94442;
   fill: #a94442;
+  stroke-width: 1px;
+}
+
+svg.sparkline line.stroke {
+  stroke: #eee;
   stroke-width: 1px;
 }
 

@@ -155,9 +155,10 @@ var FnordMetricMetricSeriesListSparkline = (function() {
   var render = function(elem, cfg) {
     var height = getDimension('height', elem);
     var width = getDimension("width", elem);
-    console.log(height, width);
 
-    var path_elems = elem.querySelectorAll("path");
+    renderGrid(elem, height, width);
+
+    var path_elems = elem.querySelectorAll(".lines path");
 
     for (var i = 0; i < cfg.series.length; i++) {
       if (path_elems.length - 1 < i) {
@@ -169,6 +170,28 @@ var FnordMetricMetricSeriesListSparkline = (function() {
 
     elem.style.height = height + "px";
     elem.style.width = width + "px";
+  }
+
+  var renderGrid = function(elem, height, width) {
+    /** render x axis in the middle of the sparkline **/
+    var x_axis = elem.querySelector(".axis.x .stroke");
+    x_axis.setAttribute("y1", height / 2);
+    x_axis.setAttribute("y2", height / 2);
+    x_axis.setAttribute("x1", 0);
+    x_axis.setAttribute("x2", width);
+
+    /** render two a y axis after 1/3 and 2/3 of the grid width **/
+    var y_axis_left = elem.querySelector(".axis.y .stroke.left");
+    y_axis_left.setAttribute("x1", width * 1 / 3);
+    y_axis_left.setAttribute("x2", width * 1 / 3);
+    y_axis_left.setAttribute("y1", 0);
+    y_axis_left.setAttribute("y2", height);
+
+    var y_axis_right = elem.querySelector(".axis.y .stroke.right");
+    y_axis_right.setAttribute("x1", width * 2 / 3);
+    y_axis_right.setAttribute("x2", width * 2 / 3);
+    y_axis_right.setAttribute("y1", 0);
+    y_axis_right.setAttribute("y2", height);
   }
 
   var renderPath = function(series, height, width, path_elem) {
