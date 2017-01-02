@@ -4,6 +4,7 @@ FnordMetric.views["fnordmetric.metric.series.list"] = function(elem, params) {
   var api_url = "/fetch";
 
   var table;
+  var chart;
   var url_params;
 
   this.initialize = function() {
@@ -14,6 +15,9 @@ FnordMetric.views["fnordmetric.metric.series.list"] = function(elem, params) {
 
     table = new FnordMetricMetricSeriesListTable(
         elem.querySelector("table.metric_series_list"));
+
+    chart = new FnordMetricMetricSeriesListChart(
+        elem.querySelector(".chart_pane"));
 
     watchTimeRangePicker();
     watchFilter();
@@ -124,6 +128,7 @@ FnordMetric.views["fnordmetric.metric.series.list"] = function(elem, params) {
 
       var series = JSON.parse(r.response);
       table.render(series.series);
+      chart.render(series.series);
     });
   };
 

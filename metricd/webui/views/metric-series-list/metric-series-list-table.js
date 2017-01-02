@@ -3,14 +3,14 @@ var FnordMetricMetricSeriesListTable = function(table) {
 
   this.render = function(series) {
     var tbody = table.querySelector("tbody");
-    for (var i = 0; i < series.length; i++) {
-      /** skip total summary row **/
-      if (i == 0) {
-        continue;
+    series.forEach(function(s) {
+      /** skip summary row **/
+      if (s.tags && s.tags.indexOf("summary") > -1) {
+        return;
       }
 
-      renderRow(series[i], tbody)
-    }
+      renderRow(s, tbody)
+    });
   }
 
   var renderRow = function(series, tbody) {

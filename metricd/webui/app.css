@@ -253,6 +253,7 @@ input[type='text'] {
 a {
   text-decoration: none;
   cursor: pointer;
+  color: #545758;
 }
 
 a.link {
