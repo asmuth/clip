@@ -27,7 +27,7 @@
 #include <stdlib.h>
 #include <stdint.h>
 #include <string>
-#include <eventql/util/stdtypes.h>
+#include <metricd/util/stdtypes.h>
 
 class Buffer;
 

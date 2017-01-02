@@ -21,9 +21,9 @@
  * commercial activities involving this program without disclosing the source
  * code of your own applications
  */
-#include <eventql/util/buffer.h>
-#include <eventql/util/exception.h>
-#include <eventql/util/io/file.h>
+#include <metricd/util/buffer.h>
+#include <metricd/util/exception.h>
+#include <metricd/util/io/file.h>
 #include <sys/fcntl.h>
 #include <sys/stat.h>
 #include <sys/types.h>
