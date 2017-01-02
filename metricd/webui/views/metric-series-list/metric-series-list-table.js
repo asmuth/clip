@@ -71,15 +71,11 @@ var FnordMetricMetricSeriesListTable = function(table) {
     tr.appendChild(td);
   }
 
-  //FIXME remove data stub
   var renderSparkline = function(series, td) {
     var sparkline_cfg = {
       series: [
         {
-          values: [1, 4, 7, 2, 8, 3, 4, 1]
-        },
-        {
-          values: [1, 5, 9, 2, 6, 3, 7, 6]
+          values: series.values
         }
       ]
     };
