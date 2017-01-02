@@ -16,6 +16,7 @@ FnordMetric.views["fnordmetric.metric.series.list"] = function(elem, params) {
         elem.querySelector("table.metric_series_list"));
 
     watchTimeRangePicker();
+    watchFilter();
     renderHeader();
     fetchMetricSeriesList();
   };
@@ -41,7 +42,21 @@ FnordMetric.views["fnordmetric.metric.series.list"] = function(elem, params) {
       p.end = parseInt(end_param);
     }
 
+    var filter_param = URLUtil.getParamValue(path, "filter");
+    if (filter_param) {
+      p.filter = filter_param;
+    }
+
     return p;
+  }
+
+  var updateQueryStr = function(query_params) {
+    var url = params.path;
+    for (var k in query_params) {
+      url = URLUtil.addOrModifyParam(url, k, query_params[k]);
+    }
+
+    params.app.navigateTo(url);
   }
 
   var watchTimeRangePicker = function() {
@@ -75,13 +90,15 @@ FnordMetric.views["fnordmetric.metric.series.list"] = function(elem, params) {
     DomUtil.setCookie("timezone", timezone, d.toUTCString());
   }
 
-  var updateQueryStr = function(query_params) {
-    var url = params.path;
-    for (var k in query_params) {
-      url = URLUtil.addOrModifyParam(url, k, query_params[k]);
+  var watchFilter = function() {
+    var filter_input = elem.querySelector(".search input");
+    if (url_params.filter) {
+      filter_input.value = DomUtil.escapeHTML(url_params.filter);
     }
 
-    params.app.navigateTo(url);
+    DomUtil.onEnter(filter_input, function(e) {
+      updateQueryStr({filter: filter_input.value});
+    }, false);
   }
 
   var renderHeader = function() {
