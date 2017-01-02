@@ -11,7 +11,7 @@
 }
 
 .fnordmetric-metric-series-chart .summary {
-  width: 150px;
+  width: 225px;
 }
 
 .fnordmetric-metric-series-chart .chart {
@@ -41,5 +41,15 @@
 
 .fnordmetric-metric-series-chart .summary .stats {
   font-size: 11px;
+}
+
+.fnordmetric-metric-series-chart .fm-chart .axis .stroke {
+  stroke-width: 1px;
+  stroke: #545758;
+  opacity: 0.1;
+}
+
+.fnordmetric-metric-series-chart .fm-chart .axis .stroke.main_axis {
+  opacity: 0.6;
 }
 

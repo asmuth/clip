@@ -22,6 +22,8 @@
 var FnordMetricMetricSeriesListChart = function(elem, config) {
   'use strict';
 
+  var summary_elem_width = config.hasOwnProperty("summary") ? 225 : 0;
+
   var default_colors = ["#19A2E5", "#aad4e9"];
 
   var summary_html = "<div class='total'>{{sum}} {{unit}}</div>" +
@@ -37,6 +39,8 @@ var FnordMetricMetricSeriesListChart = function(elem, config) {
         config.summary.hasOwnProperty("series_id")) {
       renderSummaries();
     }
+
+    renderChart();
   }
 
   function renderSummaries() {
@@ -101,26 +105,83 @@ var FnordMetricMetricSeriesListChart = function(elem, config) {
     elem.appendChild(summary_elem);
   }
 
- // this.render = function(series) {
- //   for (var i = 0; i < series.length; i++) {
- //     if (series[i].tags && series[i].tags.indexOf("summary") > -1) {
- //       renderChart(series[i].time, series[i].values);
- //       renderSummaries(series[i].summaries);
- //       break;
- //     }
- //   }
- // }
+  function renderChart() {
+    var chart_elem = document.createElement("div");
+    chart_elem.className = "chart";
 
- // var renderChart = function(time, values) {
- // 
- // }
 
- // var renderSummaries = function(summaries) {
- //   var stats_elem = elem.querySelector(".stats");
- //   stats_elem.innerHTML = [
- //     
- //   ];
- // }
+    var height = elem.offsetHeight;
+    var width = elem.offsetWidth - summary_elem_width;
+
+    //FIXME fix viewBox values
+    var html = ["<svg class='fm-chart' viewBox='0 0 ", width, " ", height, "'>"];
+
+    html.push(renderGrid(chart_elem, height, width));
+
+    html.push("</svg>");
+
+    chart_elem.innerHTML = html.join("");
+    elem.appendChild(chart_elem);
+
+  }
+
+  //FIXME better naming
+  function renderGrid(chart_elem, height, width) {
+    var html = [];
+
+    html.push("<g class='axis'>");
+
+    /** render x axes **/
+    html.push(
+      "<line class='axis stroke main_axis' y1='", height, "' y2='", height,
+      "' x1='0' x2='", width, "'></line>");
+
+    html.push(
+      "<line class='axis stroke' y1='", height * 2 / 3, "' y2='", height * 2 / 3,
+      "' x1='0' x2='", width, "'></line>");
+
+    html.push(
+      "<line class='axis stroke' y1='", height * 1 / 3, "' y2='", height * 1 / 3,
+      "' x1='0' x2='", width, "'></line>");
+
+    html.push(
+      "<line class='axis stroke' y1='0' y2='0'",
+      " x1='0' x2='", width, "'></line>");
+
+    /** render y axes **/
+    html.push(
+      "<line class='axis stroke' y1='0' y2='", height,
+      "' x1='", width * 1 / 5, "' x2='", width * 1 / 5, "'></line>");
+
+    html.push(
+      "<line class='axis stroke' y1='0' y2='", height,
+      "' x1='", width * 2 / 5, "' x2='", width * 2 / 5, "'></line>");
+
+    html.push(
+      "<line class='axis stroke' y1='0' y2='", height,
+      "' x1='", width * 3 / 5, "' x2='", width * 3 / 5, "'></line>");
+
+    html.push(
+      "<line class='axis stroke' y1='0' y2='", height,
+      "' x1='", width * 4 / 5, "' x2='", width * 4 / 5, "'></line>");
+
+
+ //   /** render two a y axis after 1/3 and 2/3 of the grid width **/
+ //   var y_axis_left = elem.querySelector(".axis.y .stroke.left");
+ //   y_axis_left.setAttribute("x1", width * 1 / 3);
+ //   y_axis_left.setAttribute("x2", width * 1 / 3);
+ //   y_axis_left.setAttribute("y1", 0);
+ //   y_axis_left.setAttribute("y2", height);
+
+ //   var y_axis_right = elem.querySelector(".axis.y .stroke.right");
+ //   y_axis_right.setAttribute("x1", width * 2 / 3);
+ //   y_axis_right.setAttribute("x2", width * 2 / 3);
+ //   y_axis_right.setAttribute("y1", 0);
+ //   y_axis_right.setAttribute("y2", height);
+
+    html.push("</g>");
+    return html.join("");
+  }
 
   /** init **/
   render();
