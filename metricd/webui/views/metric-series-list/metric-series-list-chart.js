@@ -23,7 +23,8 @@ var FnordMetricMetricSeriesListChart = function(elem, config) {
   'use strict';
 
   var summary_elem_width = config.hasOwnProperty("summary") ? 225 : 0;
-  var grid_margin = 20;
+  var grid_margin_x = 20;
+  var grid_margin_y = 10;
   var tick_margin = 6;
 
   var default_colors = ["#19A2E5", "#aad4e9"];
@@ -129,12 +130,13 @@ var FnordMetricMetricSeriesListChart = function(elem, config) {
 
   function renderXAxis(chart_elem, height, width) {
     var tick_height = height - tick_margin;
-    var grid_height = height - grid_margin;
+    var grid_height = height - grid_margin_x;
+    var grid_width = width - grid_margin_y;
     var html = [];
 
     html.push("<g class='axis x'>");
 
-    /** render ticks **/
+    /** render x ticks **/
     //FIXME make 70 constant
     html.push("<text x='", 0 + 60, "' y='", tick_height,
       "' class='label'>", "2017-01-02 15:32", "</text>");
@@ -160,51 +162,63 @@ var FnordMetricMetricSeriesListChart = function(elem, config) {
     html.push("<text x='", width * 7/8 + 70, "' y='", tick_height,
       "' class='label'>", "2017-01-02 15:30", "</text>");
 
+    /** render y ticks **/
+    html.push("<text x='", grid_margin_y, "' y='", grid_height * 2 / 3,
+      "' class='label'>", "10", "</text>");
+
+    html.push("<text x='", grid_margin_y, "' y='", grid_height * 1 / 3,
+      "' class='label'>", "10", "</text>");
+
+    html.push("<text x='", grid_margin_y, "' y='", 0,
+      "' class='label'>", "10", "</text>");
+
 
     /** render x axes **/
     html.push(
       "<line class='axis stroke main_axis' y1='", grid_height, "' y2='",
-      grid_height, "' x1='0' x2='", width, "'></line>");
+      grid_height, "' x1='0' x2='", grid_width, "'></line>");
 
     html.push(
       "<line class='axis stroke' y1='", grid_height * 2 / 3, "' y2='",
-      grid_height * 2 / 3, "' x1='0' x2='", width, "'></line>");
+      grid_height * 2 / 3, "' x1='", grid_margin_y,
+      "' x2='", grid_width, "'></line>");
 
     html.push(
       "<line class='axis stroke' y1='", grid_height * 1 / 3, "' y2='",
-      grid_height * 1 / 3, "' x1='0' x2='", width, "'></line>");
+      grid_height * 1 / 3, "' x1='", grid_margin_y,
+      "' x2='", grid_width, "'></line>");
 
     html.push(
       "<line class='axis stroke' y1='0' y2='0'",
-      " x1='0' x2='", width, "'></line>");
+      " x1='", grid_margin_y, "' x2='", grid_width, "'></line>");
 
     html.push("</g>");
     return html.join("");
   }
 
   function renderYAxis(chart_elem, height, width) {
-    var inner_width = width - 10;
-    var inner_height = height - grid_margin;
+    var grid_height = height - grid_margin_x;
+    var grid_width = width - grid_margin_y;
     var html = [];
 
     html.push("<g class='axis y'>");
 
     /** render y axes **/
     html.push(
-      "<line class='axis stroke' y1='0' y2='", inner_height,
-      "' x1='", width * 1 / 5, "' x2='", width * 1 / 5, "'></line>");
+      "<line class='axis stroke' y1='0' y2='", grid_height,
+      "' x1='", grid_width * 1 / 5, "' x2='", grid_width * 1 / 5, "'></line>");
 
     html.push(
-      "<line class='axis stroke' y1='0' y2='", inner_height,
-      "' x1='", width * 2 / 5, "' x2='", width * 2 / 5, "'></line>");
+      "<line class='axis stroke' y1='0' y2='", grid_height,
+      "' x1='", grid_width * 2 / 5, "' x2='", grid_width * 2 / 5, "'></line>");
 
     html.push(
-      "<line class='axis stroke' y1='0' y2='", inner_height,
-      "' x1='", width * 3 / 5, "' x2='", width * 3 / 5, "'></line>");
+      "<line class='axis stroke' y1='0' y2='", grid_height,
+      "' x1='", grid_width * 3 / 5, "' x2='", grid_width * 3 / 5, "'></line>");
 
     html.push(
-      "<line class='axis stroke' y1='0' y2='", inner_height,
-      "' x1='", width * 4 / 5, "' x2='", width * 4 / 5, "'></line>");
+      "<line class='axis stroke' y1='0' y2='", grid_height,
+      "' x1='", grid_width * 4 / 5, "' x2='", grid_width * 4 / 5, "'></line>");
 
     html.push("</g>");
     return html.join("");
