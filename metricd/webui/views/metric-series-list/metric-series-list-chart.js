@@ -23,6 +23,8 @@ var FnordMetricMetricSeriesListChart = function(elem, config) {
   'use strict';
 
   var summary_elem_width = config.hasOwnProperty("summary") ? 225 : 0;
+  var grid_margin = 20;
+  var tick_margin = 6;
 
   var default_colors = ["#19A2E5", "#aad4e9"];
 
@@ -116,53 +118,92 @@ var FnordMetricMetricSeriesListChart = function(elem, config) {
     //FIXME fix viewBox values
     var html = ["<svg class='fm-chart' viewBox='0 0 ", width, " ", height, "'>"];
 
-    html.push(renderGrid(chart_elem, height, width));
+    html.push(renderXAxis(chart_elem, height, width));
+    html.push(renderYAxis(chart_elem, height, width));
 
     html.push("</svg>");
 
     chart_elem.innerHTML = html.join("");
     elem.appendChild(chart_elem);
-
   }
 
-  //FIXME better naming
-  function renderGrid(chart_elem, height, width) {
+  function renderXAxis(chart_elem, height, width) {
+    var tick_height = height - tick_margin;
+    var grid_height = height - grid_margin;
     var html = [];
 
-    html.push("<g class='axis'>");
+    html.push("<g class='axis x'>");
+
+    /** render ticks **/
+    //FIXME make 70 constant
+    html.push("<text x='", 0 + 60, "' y='", tick_height,
+      "' class='label'>", "2017-01-02 15:32", "</text>");
+
+    html.push("<text x='", width * 1/8 + 70, "' y='", tick_height,
+      "' class='label'>", "2017-01-02 15:32", "</text>");
+
+    html.push("<text x='", width * 2/8 + 70, "' y='", tick_height,
+      "' class='label'>", "2017-01-02 15:30", "</text>");
+
+    html.push("<text x='", width * 3/8 + 70, "' y='", tick_height,
+      "' class='label'>", "2017-01-02 15:30", "</text>");
+
+    html.push("<text x='", width * 4/8 + 70, "' y='", tick_height,
+      "' class='label'>", "2017-01-02 15:30", "</text>");
+
+    html.push("<text x='", width * 5/8 + 70, "' y='", tick_height,
+      "' class='label'>", "2017-01-02 15:30", "</text>");
+
+    html.push("<text x='", width * 6/8 + 70, "' y='", tick_height,
+      "' class='label'>", "2017-01-02 15:30", "</text>");
+
+    html.push("<text x='", width * 7/8 + 70, "' y='", tick_height,
+      "' class='label'>", "2017-01-02 15:30", "</text>");
+
 
     /** render x axes **/
     html.push(
-      "<line class='axis stroke main_axis' y1='", height, "' y2='", height,
-      "' x1='0' x2='", width, "'></line>");
+      "<line class='axis stroke main_axis' y1='", grid_height, "' y2='",
+      grid_height, "' x1='0' x2='", width, "'></line>");
 
     html.push(
-      "<line class='axis stroke' y1='", height * 2 / 3, "' y2='", height * 2 / 3,
-      "' x1='0' x2='", width, "'></line>");
+      "<line class='axis stroke' y1='", grid_height * 2 / 3, "' y2='",
+      grid_height * 2 / 3, "' x1='0' x2='", width, "'></line>");
 
     html.push(
-      "<line class='axis stroke' y1='", height * 1 / 3, "' y2='", height * 1 / 3,
-      "' x1='0' x2='", width, "'></line>");
+      "<line class='axis stroke' y1='", grid_height * 1 / 3, "' y2='",
+      grid_height * 1 / 3, "' x1='0' x2='", width, "'></line>");
 
     html.push(
       "<line class='axis stroke' y1='0' y2='0'",
       " x1='0' x2='", width, "'></line>");
 
+    html.push("</g>");
+    return html.join("");
+  }
+
+  function renderYAxis(chart_elem, height, width) {
+    var inner_width = width - 10;
+    var inner_height = height - grid_margin;
+    var html = [];
+
+    html.push("<g class='axis y'>");
+
     /** render y axes **/
     html.push(
-      "<line class='axis stroke' y1='0' y2='", height,
+      "<line class='axis stroke' y1='0' y2='", inner_height,
       "' x1='", width * 1 / 5, "' x2='", width * 1 / 5, "'></line>");
 
     html.push(
-      "<line class='axis stroke' y1='0' y2='", height,
+      "<line class='axis stroke' y1='0' y2='", inner_height,
       "' x1='", width * 2 / 5, "' x2='", width * 2 / 5, "'></line>");
 
     html.push(
-      "<line class='axis stroke' y1='0' y2='", height,
+      "<line class='axis stroke' y1='0' y2='", inner_height,
       "' x1='", width * 3 / 5, "' x2='", width * 3 / 5, "'></line>");
 
     html.push(
-      "<line class='axis stroke' y1='0' y2='", height,
+      "<line class='axis stroke' y1='0' y2='", inner_height,
       "' x1='", width * 4 / 5, "' x2='", width * 4 / 5, "'></line>");
 
     html.push("</g>");
