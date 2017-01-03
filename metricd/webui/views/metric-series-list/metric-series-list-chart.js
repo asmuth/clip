@@ -33,6 +33,9 @@ FnordMetric.SeriesChart = function(elem, config) {
 
   var default_colors = ["#19A2E5", "#aad4e9"];
 
+  var chart_elem = null;
+  var summary_elem = null;
+
   var summary_renderer;
   var chart_renderer;
   var chart_hover_handler;
@@ -47,7 +50,7 @@ FnordMetric.SeriesChart = function(elem, config) {
   }
 
   function renderSummaries() {
-    var summary_elem = document.createElement("div");
+    summary_elem = document.createElement("div");
     summary_elem.className = "summary";
 
     var html = summary_renderer.render(config);
@@ -56,7 +59,7 @@ FnordMetric.SeriesChart = function(elem, config) {
   }
 
   function renderChart() {
-    var chart_elem = document.createElement("div");
+    chart_elem = document.createElement("div");
     chart_elem.className = "chart";
 
     var height = elem.offsetHeight;
@@ -133,7 +136,7 @@ FnordMetric.SeriesChart = function(elem, config) {
     chart_elem.innerHTML = html.join("");
     elem.appendChild(chart_elem);
 
-    chart_hover_handler.watch(chart_elem);
+    chart_hover_handler.watch(chart_elem, summary_elem);
   }
 
   function scaleValues(time, values, min, max) {
@@ -443,11 +446,11 @@ FnordMetric.SeriesChartHoverHandler = function() {
   var tooltip_elem = null;
   var tooltip_line = null;
   var bbox = null;
-  //var legend_elems = base_elem.querySelectorAll(".legend .point");
+  var legend_elems = []; //base_elem.querySelectorAll(".legend .point");
   var hidden_series = [];
   var chart_elems = [];
 
-  this.watch = function(elem) {
+  this.watch = function(elem, legend_elem) {
     base_elem = elem;
 
     base_elem.addEventListener("mouseover", chartHover, false);
@@ -455,11 +458,14 @@ FnordMetric.SeriesChartHoverHandler = function() {
 
     base_elem.addEventListener("mouseout", hideToolTip, false);
 
-    //for (var i = 0; i < legend_elems.length; i++) {
-    //  legend_elems[i].onclick = function() {
-    //    legendClick(this);
-    //  };
-    //}
+    if (legend_elem) {
+      legend_elems = legend_elem.querySelectorAll(".legend_item");
+      for (var i = 0; i < legend_elems.length; i++) {
+        legend_elems[i].addEventListener("click",function() {
+          legendClick(this);
+        }, false);
+      }
+    }
   }
 
   var chartHover = function(e) {
@@ -602,49 +608,41 @@ FnordMetric.SeriesChartHoverHandler = function() {
     return best_point;
   };
 
- // var initChartElems = function() {
- //   chart_elems = base_elem.querySelectorAll(".lines circle");
- //   Array.prototype.push.apply(
- //     chart_elems, base_elem.querySelectorAll(".lines path"));
- //   Array.prototype.push.apply(
- //     chart_elems, base_elem.querySelectorAll(".points circle"));
- //   Array.prototype.push.apply(
- //     chart_elems, base_elem.querySelectorAll(".bars rect"));
- //   Array.prototype.push.apply(
- //     chart_elems, base_elem.querySelectorAll(".areas circle"));
- // };
+  var initChartElems = function() {
+    chart_elems = base_elem.querySelectorAll(".lines circle,.lines path");
+  };
 
- // var hideSeries = function(series) {
- //   for (var i = 0; i < chart_elems.length; i++) {
- //     if (chart_elems[i].getAttribute('fm:series') == series) {
- //       chart_elems[i].style.display = "none";
- //     }
- //   }
- // };
+  var hideSeries = function(series) {
+    for (var i = 0; i < chart_elems.length; i++) {
+      if (chart_elems[i].getAttribute('fm:series') == series) {
+        chart_elems[i].style.display = "none";
+      }
+    }
+  };
 
- // var displaySeries = function(series) {
- //   for (var i = 0; i < chart_elems.length; i++) {
- //     if (chart_elems[i].getAttribute('fm:series') == series) {
- //       chart_elems[i].style.display = "block";
- //     }
- //   }
- // };
+  var displaySeries = function(series) {
+    for (var i = 0; i < chart_elems.length; i++) {
+      if (chart_elems[i].getAttribute('fm:series') == series) {
+        chart_elems[i].style.display = "block";
+      }
+    }
+  };
 
- // var legendClick = function(legend_elem) {
- //   if (chart_elems.length == 0) {
- //     initChartElems();
- //   }
- //   var series = legend_elem.getAttribute('fm:series');
- //   //FIXME: add fm:series attribute to legend_elems and path_elems
- //   var series = 'Tokyo'; 
- //   var index = hidden_series.indexOf(series);
- //   if (index > -1) {
- //     displaySeries(series);
- //     hidden_series.splice(index, 1);
- //   } else {
- //     hidden_series.push(series);
- //     hideSeries(series);
- //   } 
- // };
+  var legendClick = function(legend_elem) {
+    if (chart_elems.length == 0) {
+      initChartElems();
+    }
+    var series = legend_elem.getAttribute('fm:series');
+    //FIXME: add fm:series attribute to legend_elems and path_elems
+    var series = 'Tokyo'; 
+    var index = hidden_series.indexOf(series);
+    if (index > -1) {
+      displaySeries(series);
+      hidden_series.splice(index, 1);
+    } else {
+      hidden_series.push(series);
+      hideSeries(series);
+    } 
+  };
 }
 
