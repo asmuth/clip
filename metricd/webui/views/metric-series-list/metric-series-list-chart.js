@@ -65,12 +65,8 @@ FnordMetric.SeriesChart = function(elem, config) {
     var grid_height = height - grid_margin_x;
     var grid_width = width - grid_margin_y;
 
-    var html = ["<svg class='fm-chart' viewBox='0 0 ", width, " ", height, "'>"];
+    var html = [];
 
-    /** render x axis **/
-    html.push(chart_renderer.renderXAxis(chart_elem, height, width));
-
-    html.push("<g class='lines'>");
 
     var min = null;
     var max = null;
@@ -99,6 +95,18 @@ FnordMetric.SeriesChart = function(elem, config) {
         });
       }
     }
+
+    html.push("<svg class='fm-chart' viewBox='0 0 ", width, " ", height, "'>");
+
+    /** render x axis **/
+    html.push(chart_renderer.renderXAxis(
+        time_values[0] / 1000,
+        time_values[time_values.length - 1] / 1000,
+        chart_elem,
+        height,
+        width));
+
+    html.push("<g class='lines'>");
 
     series_values.forEach(function(s) {
       var scaled_values = scaleValues(
@@ -180,40 +188,46 @@ FnordMetric.SeriesChartRenderer = function(
     tick_margin) {
   'use strict';
 
-  this.renderXAxis = function(chart_elem, height, width) {
+  this.renderXAxis = function(min, max, chart_elem, height, width) {
     var tick_height = height - tick_margin;
     var grid_height = height - grid_margin_x;
     var grid_width = width - grid_margin_y;
-    var html = [];
 
+    var tick_values = getTickValues(min, max, 10);
+
+    var html = [];
     html.push("<g class='axis x'>");
 
     /** render x ticks **/
-    //FIXME make 70 constant
-    html.push("<text x='", 0 + 60, "' y='", tick_height,
-      "' class='label'>", "2017-01-02 15:32", "</text>");
+    //html.push("<text x='", 0, "' y='", tick_height,
+    //  "' class='label'>", formatDate(tick_values[0]), "</text>");
 
-    html.push("<text x='", width * 1/8 + 70, "' y='", tick_height,
-      "' class='label'>", "2017-01-02 15:32", "</text>");
+    html.push("<text x='", width * 1/9, "' y='", tick_height,
+      "' class='label'>", formatDate(tick_values[1]), "</text>");
 
-    html.push("<text x='", width * 2/8 + 70, "' y='", tick_height,
-      "' class='label'>", "2017-01-02 15:30", "</text>");
+    html.push("<text x='", width * 2/9, "' y='", tick_height,
+      "' class='label'>", formatDate(tick_values[2]), "</text>");
 
-    html.push("<text x='", width * 3/8 + 70, "' y='", tick_height,
-      "' class='label'>", "2017-01-02 15:30", "</text>");
+    html.push("<text x='", width * 3/9, "' y='", tick_height,
+      "' class='label'>", formatDate(tick_values[3]), "</text>");
 
-    html.push("<text x='", width * 4/8 + 70, "' y='", tick_height,
-      "' class='label'>", "2017-01-02 15:30", "</text>");
+    html.push("<text x='", width * 4/9, "' y='", tick_height,
+      "' class='label'>", formatDate(tick_values[4]), "</text>");
 
-    html.push("<text x='", width * 5/8 + 70, "' y='", tick_height,
-      "' class='label'>", "2017-01-02 15:30", "</text>");
+    html.push("<text x='", width * 5/9, "' y='", tick_height,
+      "' class='label'>", formatDate(tick_values[5]), "</text>");
 
-    html.push("<text x='", width * 6/8 + 70, "' y='", tick_height,
-      "' class='label'>", "2017-01-02 15:30", "</text>");
+    html.push("<text x='", width * 6/9, "' y='", tick_height,
+      "' class='label'>", formatDate(tick_values[6]), "</text>");
 
-    html.push("<text x='", width * 7/8 + 70, "' y='", tick_height,
-      "' class='label'>", "2017-01-02 15:30", "</text>");
+    html.push("<text x='", width * 7/9, "' y='", tick_height,
+      "' class='label'>", formatDate(tick_values[7]), "</text>");
 
+    html.push("<text x='", width * 8/9, "' y='", tick_height,
+      "' class='label'>", formatDate(tick_values[8]), "</text>");
+
+    //html.push("<text x='", width * 9/9, "' y='", tick_height,
+    //  "' class='label'>", formatDate(tick_values[9]), "</text>");
 
     /** render x axes **/
     html.push(
@@ -322,7 +336,7 @@ FnordMetric.SeriesChartRenderer = function(
     * //FIXME improve by adding a log function for smoother values and better number rounding
     */
   function getTickValues(min, max, num_ticks) {
-    var range = Math.abs(min) + Math.abs(max);
+    var range = min < 0 ? Math.abs(min) + Math.abs(max) : max - min;
     var incr = range / (num_ticks - 1);
     var tick_values = [];
     for (var i = 0; i < num_ticks; i++) {
