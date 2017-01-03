@@ -389,6 +389,8 @@ FnordMetric.SeriesChartHoverHandler = function() {
     base_elem.addEventListener("mouseover", chartHover, false);
     base_elem.addEventListener("mousemove", chartHover, false);
 
+    base_elem.addEventListener("mouseout", hideToolTip, false);
+
     //for (var i = 0; i < legend_elems.length; i++) {
     //  legend_elems[i].onclick = function() {
     //    legendClick(this);
