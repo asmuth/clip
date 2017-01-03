@@ -79,7 +79,7 @@ FnordMetric.SeriesChart = function(elem, config) {
       if (s.values) {
         var min = s.min ? s.min : 0;
         var max = s.max ? s.max : Math.max.apply(null, s.values);
-        var scaled_values = scaleValues(s.values, min, max);
+        var scaled_values = scaleValues(s.time, s.values, min, max);
 
         var color = s.color ? s.color : default_colors[i % default_colors.length];
 
@@ -100,7 +100,7 @@ FnordMetric.SeriesChart = function(elem, config) {
     chart_hover_handler.watch(chart_elem);
   }
 
-  function scaleValues(values, min, max) {
+  function scaleValues(time, values, min, max) {
     var scaled = [];
 
     for (var i = 0; i < values.length; ++i) {
@@ -108,6 +108,7 @@ FnordMetric.SeriesChart = function(elem, config) {
       var x  = i / (values.length - 1);
 
       var point = {
+        time: time[i],
         value: v,
         x: x
       }
@@ -261,8 +262,10 @@ FnordMetric.SeriesChartRenderer = function(
         var dy = padding_y + ((1.0 - points[i].y) * (height - padding_y * 2));
         svg_line.push(i == 0 ? "M" : "L", dx, dy);
 
+        console.log(points[i]);
         circles.push("<circle class='point' r='5' cx='", dx, "' cy='", dy,
-          "' fm-label='", points[i].value, "'></circle>");
+          "' fm-label='", formatDate(points[i].time / 1000), ": ",
+          points[i].value, "'></circle>");
 
       } else {
         //FIXME
@@ -279,6 +282,23 @@ FnordMetric.SeriesChartRenderer = function(
     return html.join("");
   };
 
+  function formatDate(timestamp) {
+    function appendLeadingZero(num) {
+      if (num < 10) {
+        return "0" + num;
+      }
+
+      return "" + num;
+    }
+
+    var d = new Date(timestamp)
+    return [
+        d.getFullYear(), "-",
+        appendLeadingZero(d.getMonth() + 1), "-",
+        appendLeadingZero(d.getDate()), " ",
+        appendLeadingZero(d.getHours()), ":",
+        appendLeadingZero(d.getMinutes())].join("");
+  }
 }
 
 FnordMetric.SeriesChartSummaryRenderer = function(default_colors) {
@@ -353,6 +373,7 @@ FnordMetric.SeriesChartHoverHandler = function() {
   var base_elem = null;
   var hover_points = [];
   var tooltip_elem = null;
+  var tooltip_axis = null;
   var bbox = null;
   //var legend_elems = base_elem.querySelectorAll(".legend .point");
   var hidden_series = [];
@@ -448,6 +469,8 @@ FnordMetric.SeriesChartHoverHandler = function() {
       base_elem.appendChild(tooltip_elem);
       tooltip_elem.className = 'fm-tooltip';
       tooltip_elem.addEventListener("mousemove", chartHover, false);
+
+      tooltip_line 
     }
 
     tooltip_elem.innerHTML = point.label;
