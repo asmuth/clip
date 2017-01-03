@@ -165,20 +165,6 @@ var FnordMetricMetricSeriesListChart = function(elem, config) {
       "<line class='axis stroke' y1='0' y2='", height,
       "' x1='", width * 4 / 5, "' x2='", width * 4 / 5, "'></line>");
 
-
- //   /** render two a y axis after 1/3 and 2/3 of the grid width **/
- //   var y_axis_left = elem.querySelector(".axis.y .stroke.left");
- //   y_axis_left.setAttribute("x1", width * 1 / 3);
- //   y_axis_left.setAttribute("x2", width * 1 / 3);
- //   y_axis_left.setAttribute("y1", 0);
- //   y_axis_left.setAttribute("y2", height);
-
- //   var y_axis_right = elem.querySelector(".axis.y .stroke.right");
- //   y_axis_right.setAttribute("x1", width * 2 / 3);
- //   y_axis_right.setAttribute("x2", width * 2 / 3);
- //   y_axis_right.setAttribute("y1", 0);
- //   y_axis_right.setAttribute("y2", height);
-
     html.push("</g>");
     return html.join("");
   }
