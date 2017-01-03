@@ -28,7 +28,7 @@ FnordMetric.SeriesChart = function(elem, config) {
 
   var summary_elem_width = config.hasOwnProperty("summary") ? 225 : 0;
   var grid_margin_x = 20;
-  var grid_margin_y = 10;
+  var grid_margin_y = 30;
   var tick_margin = 6;
 
   var default_colors = ["#19A2E5", "#aad4e9"];
@@ -72,25 +72,53 @@ FnordMetric.SeriesChart = function(elem, config) {
 
     html.push("<g class='lines'>");
 
+    var min = null;
+    var max = null;
+
+    var series_values = [];
+    var time_values = null;
+
     //FIXME check for each series if unit is the same or if multiple y axis have to be rendered
     for (var i = 0; i < config.series.length; i++) {
       var s = config.series[i];
-
       if (s.values) {
-        var min = s.min ? s.min : 0;
-        var max = s.max ? s.max : Math.max.apply(null, s.values);
-        var scaled_values = scaleValues(s.time, s.values, min, max);
+        min = Math.min(
+            min,
+            /** if no value < 0 exists, 0 is set to be the min value **/
+            s.min ? s.min : Math.min.apply(null, s.values.concat([0])));
 
-        var color = s.color ? s.color : default_colors[i % default_colors.length];
+        max = Math.max(max, s.max ? s.max : Math.max.apply(null, s.values))
 
-        html.push(
-          chart_renderer.renderPath(scaled_values, grid_height, width, color));
+        if (time_values == null) {
+          time_values = s.time;
+        }
+
+        series_values.push({
+          values: s.values,
+          color: s.color ? s.color : default_colors[i % default_colors.length]
+        });
       }
     }
 
+    series_values.forEach(function(s) {
+      var scaled_values = scaleValues(
+          time_values,
+          s.values,
+          min,
+          max);
+
+      html.push(
+        chart_renderer.renderPath(scaled_values, grid_height, width, s.color));
+    });
+
     html.push("</g>");
 
-    html.push(chart_renderer.renderYAxis(chart_elem, height, width));
+    html.push(chart_renderer.renderYAxis(
+      min,
+      max,
+      chart_elem,
+      height,
+      width));
 
     html.push("</svg>");
 
@@ -150,6 +178,7 @@ FnordMetric.SeriesChartRenderer = function(
     grid_margin_x,
     grid_margin_y,
     tick_margin) {
+  'use strict';
 
   this.renderXAxis = function(chart_elem, height, width) {
     var tick_height = height - tick_margin;
@@ -185,16 +214,6 @@ FnordMetric.SeriesChartRenderer = function(
     html.push("<text x='", width * 7/8 + 70, "' y='", tick_height,
       "' class='label'>", "2017-01-02 15:30", "</text>");
 
-    /** render y ticks **/
-    html.push("<text x='", grid_margin_y, "' y='", grid_height * 2 / 3,
-      "' class='label'>", "10", "</text>");
-
-    html.push("<text x='", grid_margin_y, "' y='", grid_height * 1 / 3,
-      "' class='label'>", "10", "</text>");
-
-    html.push("<text x='", grid_margin_y, "' y='", 0,
-      "' class='label'>", "10", "</text>");
-
 
     /** render x axes **/
     html.push(
@@ -219,12 +238,24 @@ FnordMetric.SeriesChartRenderer = function(
     return html.join("");
   }
 
-  this.renderYAxis = function(chart_elem, height, width) {
+  this.renderYAxis = function(min, max, chart_elem, height, width) {
     var grid_height = height - grid_margin_x;
     var grid_width = width - grid_margin_y;
     var html = [];
 
     html.push("<g class='axis y'>");
+
+    var tick_values = getTickValues(min, max, 4);
+
+    /** render y ticks **/
+    html.push("<text x='", grid_margin_y, "' y='", grid_height * 2 / 3,
+      "' class='label'>", tick_values[1], "</text>");
+
+    html.push("<text x='", grid_margin_y, "' y='", grid_height * 1 / 3,
+      "' class='label'>", tick_values[2], "</text>");
+
+    html.push("<text x='", grid_margin_y, "' y='", 0,
+      "' class='label'>", tick_values[3], "</text>");
 
     /** render y axes **/
     html.push(
@@ -286,6 +317,21 @@ FnordMetric.SeriesChartRenderer = function(
     return html.join("");
   };
 
+  /**
+    * Calculates the tick values linearly
+    * //FIXME improve by adding a log function for smoother values and better number rounding
+    */
+  function getTickValues(min, max, num_ticks) {
+    var range = Math.abs(min) + Math.abs(max);
+    var incr = range / (num_ticks - 1);
+    var tick_values = [];
+    for (var i = 0; i < num_ticks; i++) {
+      tick_values.push(Math.round(min + i * incr));
+    }
+
+    return tick_values;
+  }
+
   function formatDate(timestamp) {
     function appendLeadingZero(num) {
       if (num < 10) {
@@ -306,6 +352,8 @@ FnordMetric.SeriesChartRenderer = function(
 }
 
 FnordMetric.SeriesChartSummaryRenderer = function(default_colors) {
+  'use strict';
+
   var summary_html = "<div class='total'>{{sum}} {{unit}}</div>" +
     "<div class='legend'>{{legend}}</div>" +
     "<div class='stats'>min={{min}} max={{max}} stddev={{stddev}}</div>";
@@ -374,10 +422,12 @@ FnordMetric.SeriesChartSummaryRenderer = function(default_colors) {
 }
 
 FnordMetric.SeriesChartHoverHandler = function() {
+  'use strict';
+
   var base_elem = null;
   var hover_points = [];
   var tooltip_elem = null;
-  var tooltip_axis = null;
+  var tooltip_line = null;
   var bbox = null;
   //var legend_elems = base_elem.querySelectorAll(".legend .point");
   var hidden_series = [];

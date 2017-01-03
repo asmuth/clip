@@ -149,7 +149,7 @@ FnordMetric.views["fnordmetric.metric.series.list"] = function(elem, params) {
           //REMOVEME
         {
           title: "Compare To: Yesterday",
-          values: series.values.map(function(v) { return v / Math.random() } ),
+          values: series.values.map(function(v) { return v - 1000 } ),
           time: series.time,
           unit: "MB/s"
         }
