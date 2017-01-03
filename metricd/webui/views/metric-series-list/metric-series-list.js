@@ -130,7 +130,7 @@ FnordMetric.views["fnordmetric.metric.series.list"] = function(elem, params) {
 
   var renderChart = function(series) {
     //FIXME make another request as soon as API is ready
-    new FnordMetricMetricSeriesListChart(elem.querySelector(".chart_pane"), {
+    new FnordMetric.SeriesChart(elem.querySelector(".chart_pane"), {
       time: series.time,
       summary: {
         series_id: series.series_id
@@ -140,14 +140,20 @@ FnordMetric.views["fnordmetric.metric.series.list"] = function(elem, params) {
           series_id: series.series_id,
           values: series.values,
           summaries: series.summaries,
+          time: series.time,
           //REMOVEME
           title: "Current Value",
           unit: "MB/s"
           //REMOVEME END
         },
+          //REMOVEME
         {
           title: "Compare To: Yesterday",
+          values: series.values.map(function(v) { return v / Math.random() } ),
+          time: series.time,
+          unit: "MB/s"
         }
+          //REMOVEME END
       ]
     });
     

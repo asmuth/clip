@@ -66,3 +66,12 @@
   fill: #666;
 }
 
+.fnordmetric-metric-series-chart .fm-chart .line {
+  fill: none;
+  stroke: #000;
+}
+
+.fnordmetric-metric-series-chart .fm-chart circle.point {
+  fill: transparent;
+}
+
