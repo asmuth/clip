@@ -33,8 +33,9 @@ FnordMetric.SeriesChart = function(elem, config) {
 
   var default_colors = ["#19A2E5", "#aad4e9"];
 
-  var chart_renderer;
   var summary_renderer;
+  var chart_renderer;
+  var chart_hover_handler;
 
   function render() {
     if (config.hasOwnProperty("summary") &&
@@ -96,10 +97,8 @@ FnordMetric.SeriesChart = function(elem, config) {
     chart_elem.innerHTML = html.join("");
     elem.appendChild(chart_elem);
 
-    watchHoverEvent(chart_elem);
+    chart_hover_handler.watch(chart_elem);
   }
-
-
 
   function scaleValues(values, min, max) {
     var scaled = [];
@@ -133,28 +132,15 @@ FnordMetric.SeriesChart = function(elem, config) {
     return scaled;
   }
 
-  function watchHoverEvent(chart_elem) {
-    var circles = chart_elem.querySelectorAll("circle.point");
-
-    for (var i = 0; i < circles.length; i++) {
-      circles[i].addEventListener("mouseover", function(e) {
-        console.log("display tooltio");
-      }, false);
-
-      circles[i].addEventListener("mouseout", function(e) {
-        console.log("hide tooltio");
-      }, false);
-    }
-
-  }
-
   /** init **/
+  summary_renderer = new FnordMetric.SeriesChartSummaryRenderer(default_colors);
+
   chart_renderer = new FnordMetric.SeriesChartRenderer(
     grid_margin_x,
     grid_margin_y,
     tick_margin);
 
-  summary_renderer = new FnordMetric.SeriesChartSummaryRenderer(default_colors);
+  chart_hover_handler = new FnordMetric.SeriesChartHoverHandler();
 
   render();
 }
@@ -364,5 +350,200 @@ FnordMetric.SeriesChartSummaryRenderer = function(default_colors) {
 }
 
 FnordMetric.SeriesChartHoverHandler = function() {
+  var base_elem = null;
+  var hover_points = [];
+  var tooltip_elem = null;
+  var bbox = null;
+  //var legend_elems = base_elem.querySelectorAll(".legend .point");
+  var hidden_series = [];
+  var chart_elems = [];
+
+  this.watch = function(elem) {
+    base_elem = elem;
+
+    base_elem.addEventListener("mouseover", chartHover, false);
+    base_elem.addEventListener("mousemove", chartHover, false);
+
+    //for (var i = 0; i < legend_elems.length; i++) {
+    //  legend_elems[i].onclick = function() {
+    //    legendClick(this);
+    //  };
+    //}
+  }
+
+  var chartHover = function(e) {
+    var mx = e.x + window.scrollX;
+    var my = e.y + window.scrollY;
+
+    if (!compareBBox(bbox, base_elem.getBoundingClientRect())) {
+      indexAllPoints();
+      bbox = base_elem.getBoundingClientRect();
+    }
+
+    var point = findClosestPoint(mx, my, 50);
+    if (point == null) {
+      hideToolTip();
+    } else {
+      showToolTip(point);
+    }
+  };
+
+  var compareBBox = function(a, b) {
+    if (a == null || b == null) {
+      return false;
+    }
+
+    return (
+        a.left == b.left &&
+        a.top == b.top &&
+        a.width == b.width &&
+        a.height == b.height);
+  }
+
+
+  var indexAllPoints = function() {
+    hover_points = [];
+    indexPoints(base_elem.querySelectorAll(".areas"));
+    indexPoints(base_elem.querySelectorAll(".lines"));
+    indexPoints(base_elem.querySelectorAll(".points"));
+    //indexBarPoints(elem.querySelectorAll(".bar"))
+  }
+
+  var indexPoints  = function(elems) {
+    for (var j = 0; j < elems.length; j++) {
+      var points = elems[j].querySelectorAll(".point");
+      for (var i = 0; i < points.length; i++) {
+        var bbox = points[i].getBoundingClientRect();
+        hover_points.push({
+          x: bbox.left + bbox.width * 0.5,
+          y: window.scrollY + bbox.top + bbox.height * 0.5,
+          top: window.scrollY + bbox.top,
+          label: points[i].getAttribute('fm-label')
+        });
+      }
+    }
+  }
+
+ // var indexBarPoints = function(elems) {
+ //   for (var i = 0; i < elems.length; i++) {
+ //     var bbox = elems[i].getBoundingClientRect();
+
+ //     hover_points.push({
+ //       x: bbox.left + bbox.width * 0.5,
+ //       y: window.scrollY + bbox.top + bbox.height * 0.5,
+ //       top: window.scrollY + bbox.top,
+ //       bbox: bbox,
+ //       label: elems[i].getAttribute('fm:label')
+ //     });
+ //   }
+
+ // }
+
+  var showToolTip = function (point) {
+    if (tooltip_elem == null) {
+      /* setup tooltip elem */
+      tooltip_elem = document.createElement("div");
+      tooltip_elem.style.position = "absolute";
+      tooltip_elem.style.display = "none";
+      base_elem.appendChild(tooltip_elem);
+      tooltip_elem.className = 'fm-tooltip';
+      tooltip_elem.addEventListener("mousemove", chartHover, false);
+    }
+
+    tooltip_elem.innerHTML = point.label;
+    tooltip_elem.style.display = "block";
+
+    var pos_x = Math.round(point.x - tooltip_elem.offsetWidth * 0.5);
+    tooltip_elem.style.left = pos_x + "px";
+
+    var pos_y = Math.round(point.top - tooltip_elem.offsetHeight )-5;
+    tooltip_elem.style.top = pos_y + "px";
+
+  };
+
+  var hideToolTip = function () {
+    if (tooltip_elem != null) {
+      tooltip_elem.style.display = "none";
+    }
+  };
+
+  var findClosestPoint = function(x, y, max_snap) {
+    if (typeof max_snap == "undefined") {
+      max_snap = Infinity;
+    }
+
+    var best_point = null;
+    var best_distance = max_snap;
+
+    for (var i = 0; i < hover_points.length; i++) {
+      if (hover_points[i].bbox) {
+        if (
+          (x >= hover_points[i].bbox.left && 
+          x <= hover_points[i].bbox.right) && (
+          y >= hover_points[i].bbox.top &&
+          y <= hover_points[i].bbox.bottom)
+          ) {
+          best_point = hover_points[i];
+        }
+      } else {
+        /* calculate the euclidian distance */
+        var diff_x = Math.pow((x - hover_points[i].x), 2);
+        var diff_y = Math.pow((y - hover_points[i].y), 2);
+        var dist = Math.sqrt(diff_x + diff_y);
+
+        if (dist < best_distance) { 
+          best_distance = dist;
+          best_point = hover_points[i];
+        }
+      }
+    }
+
+    return best_point;
+  };
+
+ // var initChartElems = function() {
+ //   chart_elems = base_elem.querySelectorAll(".lines circle");
+ //   Array.prototype.push.apply(
+ //     chart_elems, base_elem.querySelectorAll(".lines path"));
+ //   Array.prototype.push.apply(
+ //     chart_elems, base_elem.querySelectorAll(".points circle"));
+ //   Array.prototype.push.apply(
+ //     chart_elems, base_elem.querySelectorAll(".bars rect"));
+ //   Array.prototype.push.apply(
+ //     chart_elems, base_elem.querySelectorAll(".areas circle"));
+ // };
+
+ // var hideSeries = function(series) {
+ //   for (var i = 0; i < chart_elems.length; i++) {
+ //     if (chart_elems[i].getAttribute('fm:series') == series) {
+ //       chart_elems[i].style.display = "none";
+ //     }
+ //   }
+ // };
+
+ // var displaySeries = function(series) {
+ //   for (var i = 0; i < chart_elems.length; i++) {
+ //     if (chart_elems[i].getAttribute('fm:series') == series) {
+ //       chart_elems[i].style.display = "block";
+ //     }
+ //   }
+ // };
+
+ // var legendClick = function(legend_elem) {
+ //   if (chart_elems.length == 0) {
+ //     initChartElems();
+ //   }
+ //   var series = legend_elem.getAttribute('fm:series');
+ //   //FIXME: add fm:series attribute to legend_elems and path_elems
+ //   var series = 'Tokyo'; 
+ //   var index = hidden_series.indexOf(series);
+ //   if (index > -1) {
+ //     displaySeries(series);
+ //     hidden_series.splice(index, 1);
+ //   } else {
+ //     hidden_series.push(series);
+ //     hideSeries(series);
+ //   } 
+ // };
 }
 

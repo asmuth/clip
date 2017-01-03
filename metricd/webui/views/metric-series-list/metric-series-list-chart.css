@@ -75,3 +75,12 @@
   fill: transparent;
 }
 
+.fnordmetric-metric-series-chart .fm-tooltip {
+  text-align: center;
+  padding: 5px 7px;
+  color: #fff;
+  background: #333;
+  border-radius: 3px;
+  font-size: 13px;
+}
+
