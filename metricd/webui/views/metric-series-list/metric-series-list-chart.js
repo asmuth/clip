@@ -243,6 +243,11 @@ FnordMetric.SeriesChartRenderer = function(
       "<line class='axis stroke' y1='0' y2='", grid_height,
       "' x1='", grid_width * 4 / 5, "' x2='", grid_width * 4 / 5, "'></line>");
 
+    /** render tooltip line **/
+    html.push(
+      "<line class='stroke tooltip' y1='0' y2='", grid_height,
+      "' x1='0' x2='0'></line>");
+
     html.push("</g>");
 
     return html.join("");
@@ -262,7 +267,6 @@ FnordMetric.SeriesChartRenderer = function(
         var dy = padding_y + ((1.0 - points[i].y) * (height - padding_y * 2));
         svg_line.push(i == 0 ? "M" : "L", dx, dy);
 
-        console.log(points[i]);
         circles.push("<circle class='point' r='5' cx='", dx, "' cy='", dy,
           "' fm-label='", formatDate(points[i].time / 1000), ": ",
           points[i].value, "'></circle>");
@@ -439,7 +443,8 @@ FnordMetric.SeriesChartHoverHandler = function() {
           x: bbox.left + bbox.width * 0.5,
           y: window.scrollY + bbox.top + bbox.height * 0.5,
           top: window.scrollY + bbox.top,
-          label: points[i].getAttribute('fm-label')
+          label: points[i].getAttribute('fm-label'),
+          cx: points[i].getAttribute("cx")
         });
       }
     }
@@ -470,23 +475,30 @@ FnordMetric.SeriesChartHoverHandler = function() {
       tooltip_elem.className = 'fm-tooltip';
       tooltip_elem.addEventListener("mousemove", chartHover, false);
 
-      tooltip_line 
+      tooltip_line = base_elem.querySelector("line.tooltip");
     }
 
     tooltip_elem.innerHTML = point.label;
     tooltip_elem.style.display = "block";
+
+    tooltip_line.style.display = "block";
+    tooltip_line.setAttribute("x1", point.cx);
+    tooltip_line.setAttribute("x2", point.cx);
 
     var pos_x = Math.round(point.x - tooltip_elem.offsetWidth * 0.5);
     tooltip_elem.style.left = pos_x + "px";
 
     var pos_y = Math.round(point.top - tooltip_elem.offsetHeight )-5;
     tooltip_elem.style.top = pos_y + "px";
-
   };
 
   var hideToolTip = function () {
     if (tooltip_elem != null) {
       tooltip_elem.style.display = "none";
+    }
+
+    if (tooltip_line != null) {
+      tooltip_line.style.display = "none";
     }
   };
 

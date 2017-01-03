@@ -50,6 +50,11 @@
   opacity: 0.1;
 }
 
+.fnordmetric-metric-series-chart .fm-chart .axis .stroke.tooltip {
+  display: none;
+  opacity: 0.6;
+}
+
 .fnordmetric-metric-series-chart .fm-chart .axis .stroke.main_axis {
   opacity: 0.6;
 }
