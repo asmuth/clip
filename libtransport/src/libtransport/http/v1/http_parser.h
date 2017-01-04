@@ -9,6 +9,7 @@
  * <http://www.gnu.org/licenses/>.
  */
 #pragma once
+#include <functional>
 #include <memory>
 #include <vector>
 
