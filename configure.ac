@@ -80,4 +80,6 @@ AC_CONFIG_FILES([
     sensors/sysstat/Makefile
     sensors/valve_srcds/Makefile])
 
+AC_CONFIG_SUBDIRS([libtransport])
+
 AC_OUTPUT

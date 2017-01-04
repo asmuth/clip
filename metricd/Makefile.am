@@ -140,7 +140,10 @@ metricd_SOURCES = \
     $(metricd_common_sources_) \
     metricd.cc
 
-metricd_LDADD = $(top_srcdir)/libtsdb/libtsdb.a
+metricd_LDADD = \
+    $(top_srcdir)/libtsdb/libtsdb.a \
+    ${top_builddir}/libtransport/src/libtransport/http/libtransport_http.a \
+    ${top_builddir}/libtransport/src/libtransport/uri/libtransport_uri.a
 
 metric_test_SOURCES = \
     $(metricd_common_sources_) \

@@ -5,6 +5,7 @@ AUTOMAKE_OPTIONS = foreign
 
 SUBDIRS = \
     . \
+    libtransport \
     libtsdb \
     metricd \
     sensors/sysstat \

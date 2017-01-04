@@ -23,7 +23,7 @@ void WebUI::handleHTTPRequest(
 
   logDebug(
       "HTTP request: $0 $1",
-      request->method(),
+      http::getHTTPMethodName(request->method()),
       request->uri());
 
   URI uri(request->uri());
