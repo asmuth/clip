@@ -16,16 +16,15 @@
 #include <sys/time.h>
 #include <sys/resource.h>
 #include <sys/file.h>
-#include <libtransport/http/v1/http_server.h>
 #include <metricd/util/flagparser.h>
 #include <metricd/util/logging.h>
 #include <metricd/util/fileutil.h>
 #include <metricd/transport/http/http_api.h>
+#include <metricd/transport/http/http_server.h>
 #include <metricd/transport/statsd/statsd.h>
 #include <metricd/transport/statsd/statsd_server.h>
 #include <metricd/config/config_list.h>
 #include <metricd/config/config_parser.h>
-#include <metricd/webui/webui.h>
 #include <metricd/metric_service.h>
 
 using namespace fnordmetric;
@@ -300,17 +299,7 @@ int main(int argc, const char** argv) {
         &http_port);
 
     if (parse_rc) {
-      WebUI webui(flags.getString("dev_assets"));
-      HTTPAPI http_api(metric_service.get());
-
-      libtransport::http::HTTPServer server;
-      server.setRequestHandler(
-          std::bind(
-              &HTTPAPI::handleHTTPRequest,
-              &http_api,
-              std::placeholders::_1,
-              std::placeholders::_2));
-
+      HTTPServer server(metric_service.get(), flags.getString("dev_assets"));
       server.listen(http_bind, http_port);
       server.run();
     } else {

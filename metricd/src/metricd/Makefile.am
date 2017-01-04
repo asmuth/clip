@@ -127,6 +127,8 @@ metricd_common_sources_ = \
     summarize.cc \
     transport/http/http_api.h \
     transport/http/http_api.cc \
+    transport/http/http_server.h \
+    transport/http/http_server.cc \
     transport/statsd/statsd.h \
     transport/statsd/statsd.cc \
     transport/statsd/statsd_server.h \
