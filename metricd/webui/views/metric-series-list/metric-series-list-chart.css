@@ -1,0 +1,113 @@
+
+.fnordmetric-metric-series-chart {
+  display: flex;
+  flex-direction: row;
+  flex: 1;
+  font: 16px/24px "Roboto",'Helvetica Neue',Helvetica,Arial,sans-serif;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 20px;
+  margin: 15px 0 13px 0;
+  height: 125px;
+}
+
+.fnordmetric-metric-series-chart .summary {
+  width: 225px;
+}
+
+.fnordmetric-metric-series-chart .chart {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.fnordmetric-metric-series-chart .circle {
+  display: inline-block;
+  height: 10px;
+  width: 10px;
+  border-radius: 50%;
+  vertical-align: top;
+  margin: 5px 9px 0 0;
+}
+
+.fnordmetric-metric-series-chart .summary .total {
+  font-size: 23px;
+  color: #333;
+  line-height: 24px;
+}
+
+.fnordmetric-metric-series-chart .summary .legend {
+  margin: 13px 0 9px 0;
+}
+
+.fnordmetric-metric-series-chart .summary .legend .legend_item:hover {
+  cursor: pointer;
+}
+
+.fnordmetric-metric-series-chart .summary .stats {
+  font-size: 11px;
+}
+
+.fnordmetric-metric-series-chart .fm-chart .hidden {
+  display: none;
+}
+
+.fnordmetric-metric-series-chart .fm-chart .axis .stroke {
+  stroke-width: 1px;
+  stroke: #545758;
+  opacity: 0.1;
+}
+
+.fnordmetric-metric-series-chart .fm-chart .axis .stroke.tooltip {
+  display: none;
+  opacity: 0.6;
+}
+
+.fnordmetric-metric-series-chart .fm-chart .axis .stroke.main_axis {
+  opacity: 0.6;
+}
+
+.fnordmetric-metric-series-chart .fm-chart text {
+  font-family: "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+  font: 10px sans-serif;
+}
+
+.fnordmetric-metric-series-chart .fm-chart .label {
+  text-anchor: middle;
+  dominant-baseline: central;
+  font-size: 11px;
+  fill: #666;
+}
+
+.fnordmetric-metric-series-chart .fm-chart .line {
+  fill: none;
+  stroke: #000;
+}
+
+.fnordmetric-metric-series-chart .fm-chart circle.point {
+  fill: transparent;
+}
+
+.fnordmetric-metric-series-chart .fm-tooltip {
+  background: #fff;
+  border-radius: 3px;
+  padding: 0;
+  font-size: 12px;
+  line-height: 30px;
+  box-shadow: 0 0 2px rgba(0,0,0,.1);
+  border: 1px solid #ddd; 
+}
+
+.fnordmetric-metric-series-chart .fm-tooltip .date,
+.fnordmetric-metric-series-chart .fm-tooltip .series {
+  padding: 0 7px;
+}
+
+.fnordmetric-metric-series-chart .fm-tooltip .date {
+  background: #f9f9f9;
+}
+
+.fnordmetric-metric-series-chart .fm-tooltip .series .circle {
+  margin: 10px 4px 0 0;
+}
+
