@@ -242,8 +242,8 @@ button.btn:focus {
 }
 
 input[type='text'] {
-  line-height: 1.2142em;
-  padding: 0.67861em 1em;
+  line-height: 24px;
+  padding: 0 1em;
   height: auto;
   border-radius: 0.2857rem;
   -webkit-tap-highlight-color: rgba(255,255,255,0);
