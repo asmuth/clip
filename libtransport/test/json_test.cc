@@ -190,7 +190,6 @@ TEST_CASE(JSONTest, TestNested, [] () {
   auto rc = writeJSON(json_arr.getRoot(), &json_str);
   EXPECT_TRUE(rc);
 
-  std::cerr << json_str << std::endl;
   EXPECT(json_str == "[{},{},{}]");
 });
 
