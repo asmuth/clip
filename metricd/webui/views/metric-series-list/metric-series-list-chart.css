@@ -31,6 +31,10 @@
   margin: 13px 0 9px 0;
 }
 
+.fnordmetric-metric-series-chart .summary .legend .legend_item:hover {
+  cursor: pointer;
+}
+
 .fnordmetric-metric-series-chart .summary .circle {
   display: inline-block;
   height: 10px;
@@ -42,6 +46,10 @@
 
 .fnordmetric-metric-series-chart .summary .stats {
   font-size: 11px;
+}
+
+.fnordmetric-metric-series-chart .fm-chart .hidden {
+  display: none;
 }
 
 .fnordmetric-metric-series-chart .fm-chart .axis .stroke {

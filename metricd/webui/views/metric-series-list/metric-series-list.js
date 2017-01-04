@@ -148,6 +148,7 @@ FnordMetric.views["fnordmetric.metric.series.list"] = function(elem, params) {
         },
           //REMOVEME
         {
+          series_id: "test",
           title: "Compare To: Yesterday",
           values: series.values.map(function(v) { return v - 1000 } ),
           time: series.time,

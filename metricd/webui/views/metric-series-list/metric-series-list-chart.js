@@ -74,7 +74,7 @@ FnordMetric.SeriesChart = function(elem, config) {
     var min = null;
     var max = null;
 
-    var series_values = [];
+    var mapped_series = [];
     var time_values = null;
 
     //FIXME check for each series if unit is the same or if multiple y axis have to be rendered
@@ -92,9 +92,10 @@ FnordMetric.SeriesChart = function(elem, config) {
           time_values = s.time;
         }
 
-        series_values.push({
+        mapped_series.push({
           values: s.values,
-          color: s.color ? s.color : default_colors[i % default_colors.length]
+          color: s.color ? s.color : default_colors[i % default_colors.length],
+          series_id: s.series_id
         });
       }
     }
@@ -111,15 +112,19 @@ FnordMetric.SeriesChart = function(elem, config) {
 
     html.push("<g class='lines'>");
 
-    series_values.forEach(function(s) {
+    mapped_series.forEach(function(s) {
       var scaled_values = scaleValues(
           time_values,
           s.values,
           min,
           max);
 
-      html.push(
-        chart_renderer.renderPath(scaled_values, grid_height, width, s.color));
+      html.push(chart_renderer.renderPath(
+        s.series_id,
+        scaled_values,
+        grid_height,
+        width,
+        s.color));
     });
 
     html.push("</g>");
@@ -301,7 +306,7 @@ FnordMetric.SeriesChartRenderer = function(
     return html.join("");
   }
 
-  this.renderPath = function(points, height, width, color) {
+  this.renderPath = function(series_id, points, height, width, color) {
     var padding_x = 0;
     var padding_y = 0;
 
@@ -327,8 +332,8 @@ FnordMetric.SeriesChartRenderer = function(
     html.push(circles.join(""));
 
     html.push(
-        "<path class='line' style='stroke:", color, ";' d='",
-        svg_line.join(" "),
+        "<path class='line' style='stroke:", color, ";' fm-series='", series_id,
+        "' d='", svg_line.join(" "),
         "'></path>");
 
     return html.join("");
@@ -375,7 +380,7 @@ FnordMetric.SeriesChartSummaryRenderer = function(default_colors) {
     "<div class='legend'>{{legend}}</div>" +
     "<div class='stats'>min={{min}} max={{max}} stddev={{stddev}}</div>";
 
-  var legend_item_html = "<div class='legend_item'>" +
+  var legend_item_html = "<div class='legend_item' fm-series='{{series_id}}'>" +
     "<span class='circle' style='background: {{color}}'></span>" +
     "<span>{{title}}</span></div>";
 
@@ -424,9 +429,12 @@ FnordMetric.SeriesChartSummaryRenderer = function(default_colors) {
       item_html = item_html.replace(
           "{{color}}",
           series.color ? series.color : default_colors[i]);
+
       item_html = item_html.replace(
           "{{title}}",
           series.title ? series.title : series.series_id);
+
+      item_html = item_html.replace("{{series_id}}", series.series_id);
 
       legend_html.push(item_html);
     }
@@ -612,29 +620,12 @@ FnordMetric.SeriesChartHoverHandler = function() {
     chart_elems = base_elem.querySelectorAll(".lines circle,.lines path");
   };
 
-  var hideSeries = function(series) {
-    for (var i = 0; i < chart_elems.length; i++) {
-      if (chart_elems[i].getAttribute('fm:series') == series) {
-        chart_elems[i].style.display = "none";
-      }
-    }
-  };
-
-  var displaySeries = function(series) {
-    for (var i = 0; i < chart_elems.length; i++) {
-      if (chart_elems[i].getAttribute('fm:series') == series) {
-        chart_elems[i].style.display = "block";
-      }
-    }
-  };
-
   var legendClick = function(legend_elem) {
     if (chart_elems.length == 0) {
       initChartElems();
     }
-    var series = legend_elem.getAttribute('fm:series');
-    //FIXME: add fm:series attribute to legend_elems and path_elems
-    var series = 'Tokyo'; 
+
+    var series = legend_elem.getAttribute('fm-series');
     var index = hidden_series.indexOf(series);
     if (index > -1) {
       displaySeries(series);
@@ -642,7 +633,24 @@ FnordMetric.SeriesChartHoverHandler = function() {
     } else {
       hidden_series.push(series);
       hideSeries(series);
-    } 
+    }
   };
+
+  var hideSeries = function(series) {
+    for (var i = 0; i < chart_elems.length; i++) {
+      if (chart_elems[i].getAttribute('fm-series') == series) {
+        chart_elems[i].classList.add("hidden");
+      }
+    }
+  };
+
+  var displaySeries = function(series) {
+    for (var i = 0; i < chart_elems.length; i++) {
+      if (chart_elems[i].getAttribute('fm-series') == series) {
+        chart_elems[i].classList.remove("hidden");
+      }
+    }
+  };
+
 }
 
