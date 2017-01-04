@@ -77,7 +77,7 @@ FnordMetric.SeriesChart = function(elem, config) {
 
     /** get global min, max and time values **/
     for (var i = 0; i < config.series.length; i++) {
-    //FIXME check for each series if unit is the same or if multiple y axis have to be rendered
+    //FIXME check if the unit is the same among all series
       var s = config.series[i];
       if (!s.values) {
         return false;
@@ -85,11 +85,13 @@ FnordMetric.SeriesChart = function(elem, config) {
 
       /** the series min is either the configured min value,
         * the smallest value < 0 or 0 **/
-      min = Math.min(min, s.min ?
+      var series_min = s.min ?
         s.min :
-        Math.min.apply(null, s.values.concat([0])));
+        Math.min.apply(null, s.values.concat([0]));
+      min = Math.min(min, series_min);
 
-      max = Math.max(max, s.max ? s.max : Math.max.apply(null, s.values))
+      var series_max = s.max ? s.max : Math.max.apply(null, s.values);
+      max = Math.max(max, series_max);
 
       if (time_values == null) {
         time_values = s.time;
@@ -564,7 +566,20 @@ FnordMetric.SeriesChartHoverHandler = function() {
     tooltip_line.setAttribute("x1", point.cx);
     tooltip_line.setAttribute("x2", point.cx);
 
-    var pos_x = Math.round(point.x - tooltip_elem.offsetWidth * 0.5);
+    var pos_x;
+    /** display line at tooltip right at the window's right edge **/
+    if (window.innerWidth - point.x < tooltip_elem.offsetWidth * 0.5) {
+      pos_x = point.x - tooltip_elem.offsetWidth;
+
+    /** display line at tooltio left at the window's left edge **/
+    } else if (point.x < tooltip_elem.offsetWidth * 0.5) {
+      pos_x = point.x;
+
+    /** display line at tooltip center **/
+    } else {
+      pos_x = Math.round(point.x - tooltip_elem.offsetWidth * 0.5);
+    }
+
     tooltip_elem.style.left = pos_x + "px";
 
     var pos_y = Math.round(point.top - tooltip_elem.offsetHeight )-5;
