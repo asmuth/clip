@@ -51,8 +51,6 @@ libtsdb_a_SOURCES = \
     varint.cc
 
 tsdb_smoketest_SOURCES = \
-    @top_srcdir@/metricd/util/uri.h \
-    @top_srcdir@/metricd/util/uri.cc \
     @top_srcdir@/metricd/util/time_impl.h \
     @top_srcdir@/metricd/util/time.h \
     @top_srcdir@/metricd/util/time.cc \
