@@ -2,7 +2,7 @@
 ## In general, the safest way to proceed is to run ./autogen.sh
 
 AC_PREREQ(2.59)
-AC_INIT([fnordmetric],[2.0.0-dev],[authors@fnordmetric.io],[fnordmetric])
+AC_INIT([metricd],[2.0.0-dev],[authors@fnordmetric.io],[metricd])
 AM_INIT_AUTOMAKE([foreign subdir-objects serial-tests])
 AM_MAINTAINER_MODE([enable])
 AC_CONFIG_SRCDIR([configure.ac])
@@ -75,10 +75,6 @@ AM_CONDITIONAL([HAVE_ZLIB], [test $HAVE_ZLIB = 1])
 
 AC_CONFIG_FILES([
     Makefile
-    libtsdb/Makefile
-    sensors/sysstat/Makefile
-    sensors/valve_srcds/Makefile])
-
-AC_CONFIG_SUBDIRS([libtransport])
+    src/metricd/Makefile])
 
 AC_OUTPUT
