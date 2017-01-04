@@ -143,6 +143,7 @@ metricd_SOURCES = \
 metricd_LDADD = \
     $(top_builddir)/../libtsdb/libtsdb.a \
     ${top_builddir}/../libtransport/src/libtransport/http/libtransport_http.a \
+    ${top_builddir}/../libtransport/src/libtransport/json/libtransport_json.a \
     ${top_builddir}/../libtransport/src/libtransport/uri/libtransport_uri.a
 
 metric_test_SOURCES = \

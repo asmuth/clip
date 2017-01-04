@@ -16,9 +16,12 @@
 #include "metricd/query/query_options.h"
 #include "metricd/query/data_frame.h"
 #include "metricd/query/ops/fetch_timeseries.h"
-#include <metricd/util/json.h>
+#include <libtransport/json/json.h>
+#include <libtransport/json/json_writer.h>
 
 namespace fnordmetric {
+
+namespace json = libtransport::json;
 
 class QueryFrontend {
 public:
@@ -27,7 +30,7 @@ public:
 
   ReturnCode fetchTimeseriesJSON(
       const QueryOptions* query,
-      json::JSONOutputStream* out);
+      json::JSONWriter* out);
 
 protected:
   MetricService* metric_service_;
