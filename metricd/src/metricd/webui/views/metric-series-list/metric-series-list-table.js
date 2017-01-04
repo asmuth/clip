@@ -1,8 +1,23 @@
-var FnordMetricMetricSeriesListTable = function(table) {
+/**
+ * This file is part of the "FnordMetric" project
+ *   Copyright (c) 2016 Laura Schlimmer, FnordCorp B.V.
+ *
+ * FnordMetric is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License v3.0. You should have received a
+ * copy of the GNU General Public License along with this program. If not, see
+ * <http://www.gnu.org/licenses/>.
+ */
+if (typeof FnordMetric == undefined) {
+  FnordMetric = {};
+}
+
+FnordMetric.SeriesTable = function(elem, series) {
   'use strict';
 
-  this.render = function(series) {
-    var tbody = table.querySelector("tbody");
+  var sparkline_renderer;
+
+  var render = function() {
+    var tbody = elem.querySelector("tbody");
     series.forEach(function(s) {
       /** skip summary row **/
       if (s.tags && s.tags.indexOf("summary") > -1) {
@@ -42,10 +57,8 @@ var FnordMetricMetricSeriesListTable = function(table) {
         }
       }
 
-      //alert("render context menu");
       renderContextMenu(series.series_id, e);
       e.preventDefault();
-      //return false;
     });
 
 
@@ -85,7 +98,7 @@ var FnordMetricMetricSeriesListTable = function(table) {
     td.appendChild(svg);
     td.className = "sparkline";
 
-    FnordMetricMetricSeriesListSparkline.render(svg, sparkline_cfg);
+    sparkline_renderer.render(svg, sparkline_cfg);
   }
 
   var renderSummariesCell = function(summaries, tr) {
@@ -154,17 +167,21 @@ var FnordMetricMetricSeriesListTable = function(table) {
     menu.style.top = ev.clientY + window.scrollX + 5 + "px";
   }
 
-
   var hideContextMenu = function() {
     document.querySelector(".context_menu").classList.remove("active");
   }
+
+  /** init **/
+  sparkline_renderer = new FnordMetric.SeriesTableSparklineRenderer();
+  render();
 
   document.addEventListener("click", function(e) {
     hideContextMenu();
   }, false);
 }
 
-var FnordMetricMetricSeriesListSparkline = (function() {
+FnordMetric.SeriesTableSparklineRenderer = function() {
+  'use strict';
 
   /**
     * @param elem the html elem
@@ -173,7 +190,7 @@ var FnordMetricMetricSeriesListSparkline = (function() {
     * min (optinal): a float determining the min value
     * max(optinal): a float determining the max value
     **/
-  var render = function(elem, cfg) {
+  this.render = function(elem, cfg) {
     var height = getDimension('height', elem);
     var width = getDimension("width", elem);
 
@@ -293,10 +310,5 @@ var FnordMetricMetricSeriesListSparkline = (function() {
     return scaled;
   };
 
-  return {
-    render: render
-  }
-
-})();
-
+}
 

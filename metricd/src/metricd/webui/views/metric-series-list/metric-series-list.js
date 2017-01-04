@@ -3,7 +3,6 @@ FnordMetric.views["fnordmetric.metric.series.list"] = function(elem, params) {
 
   var api_url = "/fetch";
 
-  var table;
   var url_params;
 
   this.initialize = function() {
@@ -11,9 +10,6 @@ FnordMetric.views["fnordmetric.metric.series.list"] = function(elem, params) {
     elem.appendChild(page);
 
     url_params = getParams(params.path);
-
-    table = new FnordMetricMetricSeriesListTable(
-        elem.querySelector("table.metric_series_list"));
 
     watchTimeRangePicker();
     watchFilter();
@@ -123,7 +119,9 @@ FnordMetric.views["fnordmetric.metric.series.list"] = function(elem, params) {
       }
 
       var series = JSON.parse(r.response);
-      table.render(series.series);
+      new FnordMetric.SeriesTable(
+          elem.querySelector("table.metric_series_list"),
+          series.series);
       renderChart(series.series[0]);
     });
   };
