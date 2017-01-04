@@ -18,8 +18,6 @@ AM_CXXFLAGS = -DFNORDMETRIC_VERSION=\"v@PACKAGE_VERSION@\" $(PTHREAD_CFLAGS) $(P
 AM_LDFLAGS = $(PTHREAD_LDFLAGS_)
 
 sensor_sysstat_SOURCES = \
-    @top_srcdir@/metricd/util/uri.h \
-    @top_srcdir@/metricd/util/uri.cc \
     @top_srcdir@/metricd/util/time_impl.h \
     @top_srcdir@/metricd/util/time.h \
     @top_srcdir@/metricd/util/time.cc \
