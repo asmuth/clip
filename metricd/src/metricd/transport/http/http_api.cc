@@ -10,7 +10,7 @@
  */
 #include <metricd/metric_service.h>
 #include <metricd/query/query_frontend.h>
-#include <metricd/transport/http/httpapi.h>
+#include <metricd/transport/http/http_api.h>
 #include <metricd/util/stringutil.h>
 #include <metricd/util/json.h>
 #include <metricd/util/time.h>

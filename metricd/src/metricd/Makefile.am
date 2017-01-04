@@ -125,8 +125,8 @@ metricd_common_sources_ = \
     query/query_frontend.cc \
     summarize.h \
     summarize.cc \
-    transport/http/httpapi.h \
-    transport/http/httpapi.cc \
+    transport/http/http_api.h \
+    transport/http/http_api.cc \
     transport/statsd/statsd.h \
     transport/statsd/statsd.cc \
     transport/statsd/statsd_server.h \

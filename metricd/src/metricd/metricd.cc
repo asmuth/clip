@@ -20,7 +20,7 @@
 #include <metricd/util/flagparser.h>
 #include <metricd/util/logging.h>
 #include <metricd/util/fileutil.h>
-#include <metricd/transport/http/httpapi.h>
+#include <metricd/transport/http/http_api.h>
 #include <metricd/transport/statsd/statsd.h>
 #include <metricd/transport/statsd/statsd_server.h>
 #include <metricd/config/config_list.h>
