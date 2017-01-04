@@ -1,2 +1,4 @@
+unit map (/etc/metricd/default_units.conf) + unit configuration
+fetchoptions from json
 asset packaging
 http pull sensors
