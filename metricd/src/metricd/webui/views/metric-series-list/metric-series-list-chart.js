@@ -23,17 +23,6 @@ if (typeof FnordMetric == undefined) {
   FnordMetric = {};
 }
 
-FnordMetric.SeriesChartUtil = FnordMetric.SeriesChartUtil || {};
-
-FnordMetric.SeriesChartUtil.escapeHTML = function(str) {
-  if (str == undefined || str == null || str.length == 0) {
-    return "";
-  }
-  var div = document.createElement('div');
-  div.appendChild(document.createTextNode(str));
-  return div.innerHTML;
-};
-
 FnordMetric.SeriesChart = function(elem, config) {
   'use strict';
 
@@ -81,37 +70,34 @@ FnordMetric.SeriesChart = function(elem, config) {
     var height = elem.offsetHeight;
     var width = elem.offsetWidth - summary_elem_width;
 
-    var html = [];
-
 
     var min = null;
     var max = null;
-
-    var mapped_series = [];
     var time_values = null;
 
-    //FIXME check for each series if unit is the same or if multiple y axis have to be rendered
+    /** get global min, max and time values **/
     for (var i = 0; i < config.series.length; i++) {
+    //FIXME check for each series if unit is the same or if multiple y axis have to be rendered
       var s = config.series[i];
-      if (s.values) {
-        min = Math.min(
-            min,
-            /** if no value < 0 exists, 0 is set to be the min value **/
-            s.min ? s.min : Math.min.apply(null, s.values.concat([0])));
+      if (!s.values) {
+        return false;
+      }
 
-        max = Math.max(max, s.max ? s.max : Math.max.apply(null, s.values))
+      /** the series min is either the configured min value,
+        * the smallest value < 0 or 0 **/
+      min = Math.min(min, s.min ?
+        s.min :
+        Math.min.apply(null, s.values.concat([0])));
 
-        if (time_values == null) {
-          time_values = s.time;
-        }
+      max = Math.max(max, s.max ? s.max : Math.max.apply(null, s.values))
 
-        mapped_series.push(s);
-        if (!s.hasOwnProperty("color")) {
-          s.color = default_colors[i % default_colors.length];
-        }
+      if (time_values == null) {
+        time_values = s.time;
       }
     }
 
+    /** build chart html **/
+    var html = [];
     html.push("<svg class='fm-chart' viewBox='0 0 ", width, " ", height, "'>");
 
     /** render x axis **/
@@ -124,15 +110,24 @@ FnordMetric.SeriesChart = function(elem, config) {
 
     html.push("<g class='lines'>");
 
-    mapped_series.forEach(function(s) {
+    for (var i = 0; i < config.series.length; i++) {
+      var s = config.series[i];
+      if (!s.values) {
+        return false;
+      }
+
       var scaled_values = scaleValues(
           time_values,
           s.values,
           min,
           max);
 
+      if (!s.color) {
+        s.color = default_colors[i % default_colors.length];
+      }
+
       html.push(chart_renderer.renderPath(s, scaled_values, height, width));
-    });
+    }
 
     html.push("</g>");
 
@@ -234,17 +229,18 @@ FnordMetric.SeriesChartRenderer = function(padding) {
 
     /** render x axes **/
     html.push(
-      "<line class='axis stroke main_axis' y1='", grid_height + padding.top, "' y2='",
-      grid_height + padding.top, "' x1='0' x2='", grid_width, "'></line>");
+      "<line class='axis stroke main_axis' y1='", grid_height + padding.top,
+      "' y2='", grid_height + padding.top, "' x1='0' x2='", grid_width,
+      "'></line>");
 
     html.push(
-      "<line class='axis stroke' y1='", grid_height * 2 / 3 + padding.top, "' y2='",
-      grid_height * 2 / 3 + padding.top, "' x1='", padding.left,
+      "<line class='axis stroke' y1='", grid_height * 2 / 3 + padding.top,
+      "' y2='", grid_height * 2 / 3 + padding.top, "' x1='", padding.left,
       "' x2='", grid_width, "'></line>");
 
     html.push(
-      "<line class='axis stroke' y1='", grid_height * 1 / 3 + padding.top, "' y2='",
-      grid_height * 1 / 3 + padding.top, "' x1='", padding.left,
+      "<line class='axis stroke' y1='", grid_height * 1 / 3 + padding.top,
+      "' y2='", grid_height * 1 / 3 + padding.top, "' x1='", padding.left,
       "' x2='", grid_width, "'></line>");
 
     html.push(
@@ -265,10 +261,12 @@ FnordMetric.SeriesChartRenderer = function(padding) {
     var tick_values = getTickValues(min, max, 4);
 
     /** render y ticks **/
-    html.push("<text x='", padding.left, "' y='", grid_height * 2 / 3 + padding.top,
+    html.push("<text x='", padding.left, "' y='",
+      grid_height * 2 / 3 + padding.top,
       "' class='label'>", tick_values[1], "</text>");
 
-    html.push("<text x='", padding.left, "' y='", grid_height * 1 / 3 + padding.top,
+    html.push("<text x='", padding.left, "' y='",
+      grid_height * 1 / 3 + padding.top,
       "' class='label'>", tick_values[2], "</text>");
 
     html.push("<text x='", padding.left, "' y='", padding.top,
@@ -276,25 +274,29 @@ FnordMetric.SeriesChartRenderer = function(padding) {
 
     /** render y axes **/
     html.push(
-      "<line class='axis stroke' y1='", padding.top, "' y2='", grid_height + padding.top,
+      "<line class='axis stroke' y1='", padding.top, "' y2='",
+      grid_height + padding.top,
       "' x1='", grid_width * 1 / 5, "' x2='", grid_width * 1 / 5, "'></line>");
 
     html.push(
-      "<line class='axis stroke' y1='", padding.top, "' y2='", grid_height + padding.top,
+      "<line class='axis stroke' y1='", padding.top, "' y2='",
+      grid_height + padding.top,
       "' x1='", grid_width * 2 / 5, "' x2='", grid_width * 2 / 5, "'></line>");
 
     html.push(
-      "<line class='axis stroke' y1='", padding.top, "' y2='", grid_height + padding.top,
+      "<line class='axis stroke' y1='", padding.top, "' y2='",
+      grid_height + padding.top,
       "' x1='", grid_width * 3 / 5, "' x2='", grid_width * 3 / 5, "'></line>");
 
     html.push(
-      "<line class='axis stroke' y1='", padding.top, "' y2='", grid_height + padding.top,
+      "<line class='axis stroke' y1='", padding.top, "' y2='",
+      grid_height + padding.top,
       "' x1='", grid_width * 4 / 5, "' x2='", grid_width * 4 / 5, "'></line>");
 
     /** render tooltip line **/
     html.push(
-      "<line class='stroke tooltip' y1='", padding.top, "' y2='", grid_height + padding.top,
-      "' x1='0' x2='0'></line>");
+      "<line class='stroke tooltip' y1='", padding.top, "' y2='",
+      grid_height + padding.top, "' x1='0' x2='0'></line>");
 
     html.push("</g>");
 
@@ -452,7 +454,7 @@ FnordMetric.SeriesChartHoverHandler = function() {
   var tooltip_elem = null;
   var tooltip_line = null;
   var bbox = null;
-  var legend_elems = []; //base_elem.querySelectorAll(".legend .point");
+  var legend_elems = [];
   var hidden_series = [];
   var chart_elems = [];
 
@@ -509,7 +511,6 @@ FnordMetric.SeriesChartHoverHandler = function() {
     indexPoints(base_elem.querySelectorAll(".areas"));
     indexPoints(base_elem.querySelectorAll(".lines"));
     indexPoints(base_elem.querySelectorAll(".points"));
-    //indexBarPoints(elem.querySelectorAll(".bar"))
   }
 
   var indexPoints  = function(elems) {
@@ -531,21 +532,6 @@ FnordMetric.SeriesChartHoverHandler = function() {
       }
     }
   }
-
- // var indexBarPoints = function(elems) {
- //   for (var i = 0; i < elems.length; i++) {
- //     var bbox = elems[i].getBoundingClientRect();
-
- //     hover_points.push({
- //       x: bbox.left + bbox.width * 0.5,
- //       y: window.scrollY + bbox.top + bbox.height * 0.5,
- //       top: window.scrollY + bbox.top,
- //       bbox: bbox,
- //       label: elems[i].getAttribute('fm:label')
- //     });
- //   }
-
- // }
 
   var showToolTip = function (point) {
     if (tooltip_elem == null) {
@@ -666,4 +652,15 @@ FnordMetric.SeriesChartHoverHandler = function() {
   };
 
 }
+
+FnordMetric.SeriesChartUtil = FnordMetric.SeriesChartUtil || {};
+
+FnordMetric.SeriesChartUtil.escapeHTML = function(str) {
+  if (str == undefined || str == null || str.length == 0) {
+    return "";
+  }
+  var div = document.createElement('div');
+  div.appendChild(document.createTextNode(str));
+  return div.innerHTML;
+};
 
