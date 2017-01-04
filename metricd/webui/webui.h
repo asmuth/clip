@@ -9,18 +9,22 @@
  */
 #pragma once
 #include <memory>
-#include <metricd/transport/http/httpservice.h>
+#include <libtransport/http/http_request.h>
+#include <libtransport/http/http_response.h>
+#include <libtransport/uri/uri.h>
 
 namespace fnordmetric {
 
-class WebUI : public http::HTTPService {
+using namespace libtransport;
+
+class WebUI {
 public:
 
-  WebUI(const String& dynamic_asset_path = "");
+  WebUI(const std::string& dynamic_asset_path = "");
 
   void handleHTTPRequest(
       http::HTTPRequest* request,
-      http::HTTPResponse* response) override;
+      http::HTTPResponse* response);
 
 private:
 

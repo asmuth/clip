@@ -8,14 +8,13 @@
  * <http://www.gnu.org/licenses/>.
  */
 #include <metricd/webui/webui.h>
-//#include <metricd/util/assets.h>
-#include <metricd/util/uri.h>
 #include <metricd/util/logging.h>
+#include <metricd/util/fileutil.h>
 
 namespace fnordmetric {
 
 WebUI::WebUI(
-    const String& dynamic_asset_path /* = "" */) :
+    const std::string& dynamic_asset_path /* = "" */) :
     dynamic_asset_path_(dynamic_asset_path) {}
 
 void WebUI::handleHTTPRequest(

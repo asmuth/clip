@@ -37,7 +37,7 @@ endif
 PCRE_LDFLAGS_=-lpcre
 CURL_LDFLAGS_=-lcurl
 
-AM_CXXFLAGS = -DFNORDMETRIC_VERSION=\"v@PACKAGE_VERSION@\" $(PTHREAD_CFLAGS) $(PTHREAD_DEF) $(SYSLOG_DEF) $(ZLIB_DEF) $(GETHOSTBYNAME_R_DEF) -std=c++0x -ftemplate-depth=500 -mno-omit-leaf-frame-pointer -fno-omit-frame-pointer -Wall -Wextra -Wno-unused-parameter -Wno-sign-compare -Wdelete-non-virtual-dtor -Wno-predefined-identifier-outside-function -Wno-invalid-offsetof -g -I$(top_srcdir)/ -I$(top_builddir)/
+AM_CXXFLAGS = -DFNORDMETRIC_VERSION=\"v@PACKAGE_VERSION@\" $(PTHREAD_CFLAGS) $(PTHREAD_DEF) $(SYSLOG_DEF) $(ZLIB_DEF) $(GETHOSTBYNAME_R_DEF) -std=c++0x -ftemplate-depth=500 -mno-omit-leaf-frame-pointer -fno-omit-frame-pointer -Wall -Wextra -Wno-unused-parameter -Wno-sign-compare -Wdelete-non-virtual-dtor -Wno-predefined-identifier-outside-function -Wno-invalid-offsetof -g -I$(top_srcdir)/ -I$(top_srcdir)/libtransport/src
 AM_CFLAGS =  $(PTHREAD_CFLAGS) $(PTHREAD_DEF) $(SYSLOG_DEF) $(ZLIB_DEF) $(GETHOSTBYNAME_R_DEF) -std=c11 -mno-omit-leaf-frame-pointer -fno-omit-frame-pointer -Wall -pedantic -g
 AM_LDFLAGS = $(PCRE_LDFLAGS_) $(CURL_LDFLAGS_) $(PTHREAD_LDFLAGS_)
 
@@ -60,8 +60,6 @@ metricd_common_sources_ = \
     sample.cc \
     util/json.h \
     util/json.cc \
-    util/uri.h \
-    util/uri.cc \
     util/time_impl.h \
     util/time.h \
     util/time.cc \
@@ -129,50 +127,6 @@ metricd_common_sources_ = \
     summarize.cc \
     transport/http/httpapi.h \
     transport/http/httpapi.cc \
-    transport/http/wakeup.h \
-    transport/http/wakeup.cc \
-    transport/http/tcpserver.h \
-    transport/http/tcpserver.cc \
-    transport/http/tcpconnection.h \
-    transport/http/tcpconnection.cc \
-    transport/http/taskscheduler.h \
-    transport/http/task.h \
-    transport/http/status.h \
-    transport/http/inetaddr.h \
-    transport/http/inetaddr.cc \
-    transport/http/httpstats.h \
-    transport/http/HTTPSSEStream.h \
-    transport/http/HTTPSSEStream.cc \
-    transport/http/httpservice.h \
-    transport/http/httpservice.cc \
-    transport/http/httpserverconnection.h \
-    transport/http/httpserverconnection.cc \
-    transport/http/httpserver.h \
-    transport/http/httpserver.cc \
-    transport/http/httprouter_impl.h \
-    transport/http/httprouter.h \
-    transport/http/httprouter.cc \
-    transport/http/HTTPResponseStream.h \
-    transport/http/HTTPResponseStream.cc \
-    transport/http/httpresponsehandler.h \
-    transport/http/httpresponse.h \
-    transport/http/httpresponse.cc \
-    transport/http/HTTPRequestStream.h \
-    transport/http/HTTPRequestStream.cc \
-    transport/http/httprequest.h \
-    transport/http/httprequest.cc \
-    transport/http/httpparser.h \
-    transport/http/httpparser.cc \
-    transport/http/httpmessage.h \
-    transport/http/httpmessage.cc \
-    transport/http/httphandler.h \
-    transport/http/httpgenerator.h \
-    transport/http/httpgenerator.cc \
-    transport/http/httpconnectionhandler.h \
-    transport/http/eventloop.h \
-    transport/http/eventloop.cc \
-    transport/http/cookies.h \
-    transport/http/cookies.cc \
     transport/statsd/statsd.h \
     transport/statsd/statsd.cc \
     transport/statsd/statsd_server.h \

@@ -16,12 +16,10 @@
 #include <sys/time.h>
 #include <sys/resource.h>
 #include <sys/file.h>
-//#include <curl/curl.h>
+#include <libtransport/http/v1/http_server.h>
 #include <metricd/util/flagparser.h>
 #include <metricd/util/logging.h>
-#include <metricd/transport/http/eventloop.h>
-#include <metricd/transport/http/httprouter.h>
-#include <metricd/transport/http/httpserver.h>
+#include <metricd/util/fileutil.h>
 #include <metricd/transport/http/httpapi.h>
 #include <metricd/transport/statsd/statsd.h>
 #include <metricd/transport/statsd/statsd_server.h>
@@ -290,13 +288,16 @@ int main(int argc, const char** argv) {
     WebUI webui(flags.getString("dev_assets"));
     HTTPAPI http_api(metric_service.get());
 
-    http::EventLoop ev;
-    http::HTTPRouter http_router;
-    http::HTTPServer http_server(&http_router, &ev);
-    http_server.listen(8175);
-    http_router.addRouteByPrefixMatch("/api", &http_api);
-    http_router.addRouteByPrefixMatch("/", &webui);
-    ev.run();
+    libtransport::http::HTTPServer server;
+    server.setRequestHandler(
+        std::bind(
+            &HTTPAPI::handleHTTPRequest,
+            &http_api,
+            std::placeholders::_1,
+            std::placeholders::_2));
+
+    server.listen("localhost", 8080);
+    server.run();
   }
 
   if (!rc.isSuccess()) {

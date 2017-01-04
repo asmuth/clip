@@ -13,6 +13,7 @@
 #include <metricd/transport/http/httpapi.h>
 #include <metricd/util/stringutil.h>
 #include <metricd/util/json.h>
+#include <metricd/util/time.h>
 
 namespace fnordmetric {
 
@@ -69,9 +70,8 @@ void HTTPAPI::renderMetricList(
     http::HTTPRequest* request,
     http::HTTPResponse* response,
     const URI& uri) {
-  response->setStatus(http::kStatusOK);
-  response->addHeader("Content-Type", "application/json; charset=utf-8");
-  json::JSONOutputStream json(response->getBodyOutputStream());
+  std::string json_str;
+  json::JSONOutputStream json(StringOutputStream::fromString(&json_str));
 
   json.beginObject();
   json.addObjectEntry("metrics");
@@ -110,6 +110,10 @@ void HTTPAPI::renderMetricList(
 
   json.endArray();
   json.endObject();
+
+  response->setStatus(http::kStatusOK);
+  response->addHeader("Content-Type", "application/json; charset=utf-8");
+  response->addBody(json_str);
 }
 
 void HTTPAPI::renderMetricSeriesList(
@@ -133,9 +137,8 @@ void HTTPAPI::renderMetricSeriesList(
     return;
   }
 
-  response->setStatus(http::kStatusOK);
-  response->addHeader("Content-Type", "application/json; charset=utf-8");
-  json::JSONOutputStream json(response->getBodyOutputStream());
+  std::string json_str;
+  json::JSONOutputStream json(StringOutputStream::fromString(&json_str));
 
   json.beginObject();
   json.addObjectEntry("metric_id");
@@ -156,6 +159,10 @@ void HTTPAPI::renderMetricSeriesList(
 
   json.endArray();
   json.endObject();
+
+  response->setStatus(http::kStatusOK);
+  response->addHeader("Content-Type", "application/json; charset=utf-8");
+  response->addBody(json_str);
 }
 
 void HTTPAPI::performMetricFetch(
@@ -174,21 +181,23 @@ void HTTPAPI::performMetricFetch(
     return;
   }
 
-  json::JSONOutputStream json(response->getBodyOutputStream());
+  std::string json_str;
+  json::JSONOutputStream json(StringOutputStream::fromString(&json_str));
+
   json.beginObject();
   json.addObjectEntry("metric_id");
   json.addString(metric_id);
   json.addComma();
 
   json.addObjectEntry("series");
-
   auto rc = query_frontend_.fetchTimeseriesJSON(&opts, &json);
+  json.endObject();
+
   if (rc.isSuccess()) {
-    json.endObject();
     response->setStatus(http::kStatusOK);
     response->addHeader("Content-Type", "application/json; charset=utf-8");
+    response->addBody(json_str);
   } else {
-    response->clearBody();
     response->setStatus(http::kStatusInternalServerError);
     response->addBody("ERROR: " + rc.getMessage());
   }

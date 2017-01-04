@@ -10,21 +10,24 @@
  */
 #pragma once
 #include <memory>
-#include <metricd/transport/http/httpservice.h>
+#include <libtransport/http/http_request.h>
+#include <libtransport/http/http_response.h>
+#include <libtransport/uri/uri.h>
 #include <metricd/query/query_frontend.h>
-#include <metricd/util/uri.h>
 
 namespace fnordmetric {
 class MetricService;
 
-class HTTPAPI : public http::HTTPService {
+using namespace libtransport;
+
+class HTTPAPI {
 public:
 
   HTTPAPI(MetricService* metric_service);
 
   void handleHTTPRequest(
       http::HTTPRequest* request,
-      http::HTTPResponse* response) override;
+      http::HTTPResponse* response);
 
 protected:
 
