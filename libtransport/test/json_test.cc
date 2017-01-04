@@ -180,3 +180,17 @@ TEST_CASE(JSONTest, TestJSONReencoding2, [] () {
   EXPECT(orig_str == new_string);
 });
 
+TEST_CASE(JSONTest, TestNested, [] () {
+  JSONArrayStorage json_arr;
+  json_arr->appendObject();
+  json_arr->appendObject();
+  json_arr->appendObject();
+
+  std::string json_str;
+  auto rc = writeJSON(json_arr.getRoot(), &json_str);
+  EXPECT_TRUE(rc);
+
+  std::cerr << json_str << std::endl;
+  EXPECT(json_str == "[{},{},{}]");
+});
+

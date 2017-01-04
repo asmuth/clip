@@ -34,8 +34,24 @@ JSONWriter::JSONWriter(
 JSONWriter::JSONWriter(WriteCallback write_cb) : write_cb_(write_cb) {}
 
 bool JSONWriter::beginObject() {
-  if (!stack_.empty() && stack_.top() == WriterState::OBJECT_ENTRY_KEY) {
-    return false;
+  if (!stack_.empty()) {
+    switch (stack_.top()) {
+
+      case WriterState::OBJECT_NEXT:
+      case WriterState::OBJECT_ENTRY_KEY:
+        return false;
+
+      case WriterState::ARRAY_NEXT:
+        if (!write(",")) {
+          return false;
+        }
+        /* fallthrough */
+
+      case WriterState::OBJECT_ENTRY_VALUE:
+      case WriterState::ARRAY:
+        break;
+
+    }
   }
 
   stack_.push(WriterState::OBJECT_ENTRY_KEY);
@@ -47,22 +63,30 @@ bool JSONWriter::endObject() {
     return false;
   }
 
-  switch (stack_.top()) {
-    case WriterState::OBJECT_NEXT:
-    case WriterState::OBJECT_ENTRY_KEY:
-      break;
-    default:
-      return false;
-  }
-
   stack_.pop();
   advanceState();
   return write("}");
 }
 
 bool JSONWriter::beginArray() {
-  if (!stack_.empty() && stack_.top() == WriterState::OBJECT_ENTRY_KEY) {
-    return false;
+  if (!stack_.empty()) {
+    switch (stack_.top()) {
+
+      case WriterState::OBJECT_NEXT:
+      case WriterState::OBJECT_ENTRY_KEY:
+        return false;
+
+      case WriterState::ARRAY_NEXT:
+        if (!write(",")) {
+          return false;
+        }
+        /* fallthrough */
+
+      case WriterState::OBJECT_ENTRY_VALUE:
+      case WriterState::ARRAY:
+        break;
+
+    }
   }
 
   stack_.push(WriterState::ARRAY);
@@ -72,14 +96,6 @@ bool JSONWriter::beginArray() {
 bool JSONWriter::endArray() {
   if (stack_.empty()) {
     return false;
-  }
-
-  switch (stack_.top()) {
-    case WriterState::ARRAY:
-    case WriterState::ARRAY_NEXT:
-      break;
-    default:
-      return false;
   }
 
   stack_.pop();
