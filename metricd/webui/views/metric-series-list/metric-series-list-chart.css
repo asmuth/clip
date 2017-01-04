@@ -21,6 +21,15 @@
   flex: 1;
 }
 
+.fnordmetric-metric-series-chart .circle {
+  display: inline-block;
+  height: 10px;
+  width: 10px;
+  border-radius: 50%;
+  vertical-align: top;
+  margin: 5px 9px 0 0;
+}
+
 .fnordmetric-metric-series-chart .summary .total {
   font-size: 23px;
   color: #333;
@@ -33,15 +42,6 @@
 
 .fnordmetric-metric-series-chart .summary .legend .legend_item:hover {
   cursor: pointer;
-}
-
-.fnordmetric-metric-series-chart .summary .circle {
-  display: inline-block;
-  height: 10px;
-  width: 10px;
-  border-radius: 50%;
-  vertical-align: top;
-  margin: 5px 9px 0 0;
 }
 
 .fnordmetric-metric-series-chart .summary .stats {
@@ -89,11 +89,25 @@
 }
 
 .fnordmetric-metric-series-chart .fm-tooltip {
-  text-align: center;
-  padding: 5px 7px;
-  color: #fff;
-  background: #333;
+  background: #fff;
   border-radius: 3px;
-  font-size: 13px;
+  padding: 0;
+  font-size: 12px;
+  line-height: 30px;
+  box-shadow: 0 0 2px rgba(0,0,0,.1);
+  border: 1px solid #ddd; 
+}
+
+.fnordmetric-metric-series-chart .fm-tooltip .date,
+.fnordmetric-metric-series-chart .fm-tooltip .series {
+  padding: 0 7px;
+}
+
+.fnordmetric-metric-series-chart .fm-tooltip .date {
+  background: #f9f9f9;
+}
+
+.fnordmetric-metric-series-chart .fm-tooltip .series .circle {
+  margin: 10px 4px 0 0;
 }
 

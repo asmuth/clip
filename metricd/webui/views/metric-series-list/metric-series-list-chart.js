@@ -23,6 +23,17 @@ if (typeof FnordMetric == undefined) {
   FnordMetric = {};
 }
 
+FnordMetric.SeriesChartUtil = FnordMetric.SeriesChartUtil || {};
+
+FnordMetric.SeriesChartUtil.escapeHTML = function(str) {
+  if (str == undefined || str == null || str.length == 0) {
+    return "";
+  }
+  var div = document.createElement('div');
+  div.appendChild(document.createTextNode(str));
+  return div.innerHTML;
+};
+
 FnordMetric.SeriesChart = function(elem, config) {
   'use strict';
 
@@ -92,11 +103,10 @@ FnordMetric.SeriesChart = function(elem, config) {
           time_values = s.time;
         }
 
-        mapped_series.push({
-          values: s.values,
-          color: s.color ? s.color : default_colors[i % default_colors.length],
-          series_id: s.series_id
-        });
+        mapped_series.push(s);
+        if (!s.hasOwnProperty("color")) {
+          s.color = default_colors[i % default_colors.length];
+        }
       }
     }
 
@@ -119,12 +129,7 @@ FnordMetric.SeriesChart = function(elem, config) {
           min,
           max);
 
-      html.push(chart_renderer.renderPath(
-        s.series_id,
-        scaled_values,
-        grid_height,
-        width,
-        s.color));
+      html.push(chart_renderer.renderPath(s, scaled_values, grid_height, width));
     });
 
     html.push("</g>");
@@ -306,7 +311,8 @@ FnordMetric.SeriesChartRenderer = function(
     return html.join("");
   }
 
-  this.renderPath = function(series_id, points, height, width, color) {
+  this.renderPath = function(series, points, height, width) {
+    console.log(series);
     var padding_x = 0;
     var padding_y = 0;
 
@@ -321,8 +327,9 @@ FnordMetric.SeriesChartRenderer = function(
         svg_line.push(i == 0 ? "M" : "L", dx, dy);
 
         circles.push("<circle class='point' r='5' cx='", dx, "' cy='", dy,
-          "' fm-label='", formatDate(points[i].time / 1000), ": ",
-          points[i].value, "'></circle>");
+          "' fm-date='", formatDate(points[i].time / 1000), "' fm-value='",
+          points[i].value, "' fm-color='", series.color, "' fm-title='",
+          series.title || series.series_id, "'></circle>");
 
       } else {
         //FIXME
@@ -332,8 +339,8 @@ FnordMetric.SeriesChartRenderer = function(
     html.push(circles.join(""));
 
     html.push(
-        "<path class='line' style='stroke:", color, ";' fm-series='", series_id,
-        "' d='", svg_line.join(" "),
+        "<path class='line' style='stroke:", series.color,
+        ";' fm-series='", series.series_id, "' d='", svg_line.join(" "),
         "'></path>");
 
     return html.join("");
@@ -523,8 +530,12 @@ FnordMetric.SeriesChartHoverHandler = function() {
           x: bbox.left + bbox.width * 0.5,
           y: window.scrollY + bbox.top + bbox.height * 0.5,
           top: window.scrollY + bbox.top,
-          label: points[i].getAttribute('fm-label'),
-          cx: points[i].getAttribute("cx")
+          cx: points[i].getAttribute('cx'),
+          color: points[i].getAttribute('fm-color'),
+          title: points[i].getAttribute('fm-title'),
+          date: points[i].getAttribute('fm-date'),
+          value: FnordMetric.SeriesChartUtil.escapeHTML(
+              points[i].getAttribute('fm-value'))
         });
       }
     }
@@ -549,6 +560,13 @@ FnordMetric.SeriesChartHoverHandler = function() {
     if (tooltip_elem == null) {
       /* setup tooltip elem */
       tooltip_elem = document.createElement("div");
+      tooltip_elem.innerHTML = [
+        "<div class='date'></div>",
+        "<div class='series'>",
+          "<span class='circle'></span><span class='title'></span>: ",
+          "<span class='value'><span> <span class='unit'",
+        "</div>"].join("");
+
       tooltip_elem.style.position = "absolute";
       tooltip_elem.style.display = "none";
       base_elem.appendChild(tooltip_elem);
@@ -558,7 +576,11 @@ FnordMetric.SeriesChartHoverHandler = function() {
       tooltip_line = base_elem.querySelector("line.tooltip");
     }
 
-    tooltip_elem.innerHTML = point.label;
+    tooltip_elem.querySelector(".date").innerHTML = point.date;
+    tooltip_elem.querySelector(".value").innerHTML = point.value;
+    tooltip_elem.querySelector(".title").innerHTML = point.title;
+    tooltip_elem.querySelector(".circle").style.background = point.color;
+
     tooltip_elem.style.display = "block";
 
     tooltip_line.style.display = "block";
