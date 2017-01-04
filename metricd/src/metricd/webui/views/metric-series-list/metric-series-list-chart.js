@@ -205,28 +205,28 @@ FnordMetric.SeriesChartRenderer = function(padding) {
     html.push("<g class='axis x'>");
 
     /** render x ticks **/
-    html.push("<text x='", width * 1/9, "' y='", tick_height,
+    html.push("<text x='", grid_width * 1/9, "' y='", tick_height,
       "' class='label'>", formatDate(tick_values[1]), "</text>");
 
-    html.push("<text x='", width * 2/9, "' y='", tick_height,
+    html.push("<text x='", grid_width * 2/9, "' y='", tick_height,
       "' class='label'>", formatDate(tick_values[2]), "</text>");
 
-    html.push("<text x='", width * 3/9, "' y='", tick_height,
+    html.push("<text x='", grid_width * 3/9, "' y='", tick_height,
       "' class='label'>", formatDate(tick_values[3]), "</text>");
 
-    html.push("<text x='", width * 4/9, "' y='", tick_height,
+    html.push("<text x='", grid_width * 4/9, "' y='", tick_height,
       "' class='label'>", formatDate(tick_values[4]), "</text>");
 
-    html.push("<text x='", width * 5/9, "' y='", tick_height,
+    html.push("<text x='", grid_width * 5/9, "' y='", tick_height,
       "' class='label'>", formatDate(tick_values[5]), "</text>");
 
-    html.push("<text x='", width * 6/9, "' y='", tick_height,
+    html.push("<text x='", grid_width * 6/9, "' y='", tick_height,
       "' class='label'>", formatDate(tick_values[6]), "</text>");
 
-    html.push("<text x='", width * 7/9, "' y='", tick_height,
+    html.push("<text x='", grid_width * 7/9, "' y='", tick_height,
       "' class='label'>", formatDate(tick_values[7]), "</text>");
 
-    html.push("<text x='", width * 8/9, "' y='", tick_height,
+    html.push("<text x='", grid_width * 8/9, "' y='", tick_height,
       "' class='label'>", formatDate(tick_values[8]), "</text>");
 
     /** render x axes **/
@@ -546,7 +546,7 @@ FnordMetric.SeriesChartHoverHandler = function() {
           "<span class='value'><span> <span class='unit'",
         "</div>"].join("");
 
-      tooltip_elem.style.position = "absolute";
+      tooltip_elem.style.position = "absolute"
       tooltip_elem.style.display = "none";
       base_elem.appendChild(tooltip_elem);
       tooltip_elem.className = 'fm-tooltip';
