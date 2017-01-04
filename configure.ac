@@ -19,7 +19,6 @@ AM_PROG_AR
 AC_HEADER_STDC
 AC_FUNC_MEMCMP
 AC_FUNC_STRTOD
-ACX_PTHREAD
 AC_CHECK_HEADERS([fcntl.h inttypes.h limits.h stdlib.h unistd.h syslog.h])
 AC_CHECK_FUNCS([ftruncate posix_fallocate posix_fadvise gethostbyname_r])
 AM_CONDITIONAL([HAVE_SYSLOG_H], [test x$HAVE_SYSLOG_H = x1])
@@ -73,12 +72,12 @@ AS_IF([test "$with_zlib" != no], [
 ])
 AM_CONDITIONAL([HAVE_ZLIB], [test $HAVE_ZLIB = 1])
 
+AC_CONFIG_SUBDIRS([libtransport metricd])
+
 AC_CONFIG_FILES([
     Makefile
     libtsdb/Makefile
     sensors/sysstat/Makefile
     sensors/valve_srcds/Makefile])
-
-AC_CONFIG_SUBDIRS([libtransport])
 
 AC_OUTPUT
