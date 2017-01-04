@@ -3,7 +3,7 @@
 MAINTAINERCLEANFILES =   \
   Makefile.in
 
-TESTS = http_test uri_test
+TESTS = http_test uri_test json_test
 check_PROGRAMS = $(TESTS)
 
 AM_CXXFLAGS = -std=c++0x -ftemplate-depth=500 -mno-omit-leaf-frame-pointer -fno-omit-frame-pointer -Wall -Wextra -Wno-unused-parameter -Wno-sign-compare -Wdelete-non-virtual-dtor -Wno-predefined-identifier-outside-function -Wno-invalid-offsetof -g -I$(top_srcdir)/src
@@ -17,4 +17,7 @@ http_test_LDADD = \
 
 uri_test_SOURCES = uri_test.cc
 uri_test_LDADD = ${top_builddir}/src/libtransport/uri/libtransport_uri.a
+
+json_test_SOURCES = json_test.cc
+json_test_LDADD = ${top_builddir}/src/libtransport/json/libtransport_json.a
 
