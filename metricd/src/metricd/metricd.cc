@@ -71,6 +71,13 @@ int main(int argc, const char** argv) {
       NULL);
 
   flags.defineFlag(
+      "listen_http",
+      FlagParser::T_STRING,
+      false,
+      NULL,
+      "localhost:8175");
+
+  flags.defineFlag(
       "listen_statsd",
       FlagParser::T_STRING,
       false,
@@ -285,19 +292,30 @@ int main(int argc, const char** argv) {
 
   /* run http server */
   if (rc.isSuccess()) {
-    WebUI webui(flags.getString("dev_assets"));
-    HTTPAPI http_api(metric_service.get());
+    std::string http_bind;
+    uint16_t http_port;
+    auto parse_rc = parseListenAddr(
+        flags.getString("listen_http"),
+        &http_bind,
+        &http_port);
 
-    libtransport::http::HTTPServer server;
-    server.setRequestHandler(
-        std::bind(
-            &HTTPAPI::handleHTTPRequest,
-            &http_api,
-            std::placeholders::_1,
-            std::placeholders::_2));
+    if (parse_rc) {
+      WebUI webui(flags.getString("dev_assets"));
+      HTTPAPI http_api(metric_service.get());
 
-    server.listen("localhost", 8080);
-    server.run();
+      libtransport::http::HTTPServer server;
+      server.setRequestHandler(
+          std::bind(
+              &HTTPAPI::handleHTTPRequest,
+              &http_api,
+              std::placeholders::_1,
+              std::placeholders::_2));
+
+      server.listen(http_bind, http_port);
+      server.run();
+    } else {
+      rc = ReturnCode::error("ERUNTIME", "invalid value for --listen_http");
+    }
   }
 
   if (!rc.isSuccess()) {
