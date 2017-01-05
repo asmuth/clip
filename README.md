@@ -2,7 +2,7 @@ FnordMetric
 ===========
 
 **metricd** is a lightweight daemon for real-time metrics collection, storage
-and visualization. It allows you capture measurements and build beautiful
+and visualization. It allows you to capture measurements and build beautiful
 real-time dashboards within minutes.
 
 Documentation: [fnordmetric.io](http://fnordmetric.io/)
