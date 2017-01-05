@@ -1,0 +1,115 @@
+table.fnordmetric-series-list-table.f-table {
+  table-layout: fixed
+}
+
+/**table.fnordmetric-series-list-table.f-table thead th[data-key='sparkline'] {
+  width: 240px;
+}
+**/
+table.fnordmetric-series-list-table.f-table thead th.context_menu_icon {
+  width: 42px;
+}
+
+table.fnordmetric-series-list-table.f-table tbody td {
+  line-height: 21px;
+  padding: 5px 10px;
+}
+
+table.fnordmetric-series-list-table.f-table tbody tr td:first-child {
+  color: #3d8ad3;
+}
+
+table.fnordmetric-series-list-table.f-table tbody tr td:first-child i.fa-eye {
+  color: #bbb;
+}
+
+table.fnordmetric-series-list-table.f-table tbody td.align_center {
+  text-align: center;
+}
+
+table.fnordmetric-series-list-table.f-table tbody td.sparkline {
+  width: 420px;
+}
+
+table.fnordmetric-series-list-table.f-table tbody td.values .value_stats {
+  font-size: 11px;
+  line-height: 16px;
+}
+
+table.fnordmetric-series-list-table.f-table tbody td.context_menu_icon {
+  padding-top: 0px;
+}
+
+table.fnordmetric-series-list-table.f-table tbody td.context_menu_icon i {
+  font-size: 18px;
+  font-weight: 600;
+}
+
+table.fnordmetric-series-list-table.f-table tbody td .total {
+  color: #333;
+  font-size: 16px;
+}
+
+/** context_menu **/
+.fm-context_menu {
+  display: none;
+  background: #f9f9f9;
+  padding: 0;
+  margin: 10px 0 0 0;
+  position: fixed;
+  z-index: 900;
+  border: 1px solid #ccc;
+  color: rgba(0,0,0,0.8);
+  border-radius: 3px;
+  box-shadow: 0px 2px 4px rgba(0,0,0,0.1);
+  font-size: 12px;
+  line-height: 1.1em;
+}
+
+.fm-context_menu.active {
+  display: block;
+}
+
+.fm-context_menu::before {
+  position: absolute;
+  content: '';
+  width: 0.75em;
+  height: 0.75em;
+  -webkit-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  transform: rotate(45deg);
+  z-index: 2;
+  margin-left: -0.325em;
+  top: -0.325em;
+  left: 50%;
+  right: auto;
+  bottom: auto;
+  box-shadow: -1px -1px 0px 0px #b3b3b3;
+  background: #f9f9f9;
+}
+
+.fm-context_menu[data-pointer='left']::before {
+  left: 16px;
+}
+
+.fm-context_menu[data-pointer='right']::before {
+  right: 16px;
+  left: auto;
+}
+
+.fm-context_menu ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.fm-context_menu ul li {
+  line-height: 32px;
+  padding: 0 10px;
+}
+
+.fm-context_menu ul li:hover {
+  cursor: pointer;
+  color: #3d8ad3;
+}
+

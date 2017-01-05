@@ -17,7 +17,17 @@ FnordMetric.SeriesTable = function(elem, series) {
   var sparkline_renderer;
 
   var render = function() {
-    var tbody = elem.querySelector("tbody");
+    var table = document.createElement("table");
+    table.className = "f-table fnordmetric-series-list-table";
+    elem.appendChild(table);
+
+    var thead = document.createElement("thead");
+    table.appendChild(thead);
+    renderHeader(thead);
+
+    var tbody = document.createElement("tbody");
+    table.appendChild(tbody);
+
     series.forEach(function(s) {
       /** skip summary row **/
       if (s.tags && s.tags.indexOf("summary") > -1) {
@@ -26,6 +36,30 @@ FnordMetric.SeriesTable = function(elem, series) {
 
       renderRow(s, tbody)
     });
+  }
+
+  var renderHeader = function(thead) {
+    var html = [
+      "<tr>" ,
+        "<th>" ,
+          "Series ID" ,
+          "<span class='sort'>" ,
+            "<i class='sort_asc'></i>" ,
+            "<i class='sort_desc'></i>" ,
+          "</span>" ,
+        "</th>" ,
+        "<th colspan='2'>" ,
+          "Value" ,
+          "<span class='sort'>" ,
+            "<i class='sort_asc'></i>" ,
+            "<i class='sort_desc'></i>" ,
+          "</span>" ,
+        "</th>" ,
+        "<th class='context_menu_icon'></th>" ,
+      "</tr>"
+    ];
+
+    thead.innerHTML = html.join("");
   }
 
   var renderRow = function(series, tbody) {
@@ -146,7 +180,24 @@ FnordMetric.SeriesTable = function(elem, series) {
 
   var renderContextMenu = function(series_id, ev) {
     ev.stopPropagation();
-    var menu = document.querySelector(".context_menu");
+    var menu = elem.querySelector(".fm-context_menu");
+
+    if (!menu) {
+      menu = document.createElement("div");
+      menu.className = "fm-context_menu";
+
+      menu.innerHTML = [
+        "<ul>",
+          "<li>Open in New Tab</li>",
+          "<li>Open in New Tab</li>",
+          "<li>Open in New Tab</li>",
+        "</ul>",
+      ].join("");
+
+      elem.appendChild(menu);
+    }
+
+
     menu.classList.add("active");
 
     var pos_x;
@@ -177,7 +228,10 @@ FnordMetric.SeriesTable = function(elem, series) {
   }
 
   var hideContextMenu = function() {
-    document.querySelector(".context_menu").classList.remove("active");
+    var menu = elem.querySelector(".fm-context_menu");
+    if (menu) {
+      menu.classList.remove("active");
+    }
   }
 
   /** init **/

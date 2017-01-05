@@ -120,7 +120,7 @@ FnordMetric.views["fnordmetric.metric.series.list"] = function(elem, params) {
 
       var series = JSON.parse(r.response);
       new FnordMetric.SeriesTable(
-          elem.querySelector("table.metric_series_list"),
+          elem.querySelector(".table_container"),
           series.series);
       renderChart(series.series[0]);
     });
