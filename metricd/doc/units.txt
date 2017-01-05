@@ -35,11 +35,24 @@ unit bytes_binary {
   unit_name 2^30  "Gibibyte"  "Gibibytes"  "GiB";
 }
 
+unit user_count {
+  unit_desc "User Count"
+  unit_name 1 "User" "Users";
+}
+
 metric memory_used {
   unit bytes
 }
 
 metric network_bandwidth {
   unit rate(bits, 1s)
+}
+
+metric users_online {
+  unit user_count
+}
+
+metric user_signups {
+  unit rate(user_count, 1m)
 }
 
