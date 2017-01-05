@@ -12,9 +12,8 @@ real-time dashboards within minutes.
 [Download](https://fnordmetric.io/download/),
 [Getting Started](https://fnordmetric.io/documentation/getting_started)
 
-[ ![Screenshot](https://raw.githubusercontent.com/paulasmuth/fnordmetric/master/fnordmetric-doc/web/assets/img/fnordmetric_server_screen1.png) ](http://github.com/paulasmuth/fnordmetric)
 
-## Features:
+## Features
 
 This is a quick run-through of the main features to get you excited. For
 more detailed information on these topics and their caveats you are kindly
@@ -33,6 +32,10 @@ referred to the documentation.
 
 - Large list of included sensors
 
+
+## Web Interface
+
+[ ![Screenshot](https://raw.githubusercontent.com/paulasmuth/fnordmetric/master/fnordmetric-doc/web/assets/img/fnordmetric_server_screen1.png) ](http://github.com/paulasmuth/fnordmetric)
 
 ## Build
 
