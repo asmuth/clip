@@ -11,12 +11,65 @@ if (typeof FnordMetric == undefined) {
   FnordMetric = {};
 }
 
-FnordMetric.SeriesTable = function(elem, series) {
+FnordMetric.SeriesTable = function(elem) {
   'use strict';
 
+  var columns = [
+    {
+      key: "series_id",
+      title: "Series ID",
+      sortable: true
+    },
+    {
+      key: "value",
+      title: "Value",
+      sortable: true,
+      colspan: "2"
+    },
+    {
+      key: "context_menu",
+      title: ""
+    }
+  ];
+
+  var on_sort_callbacks = [];
   var sparkline_renderer;
 
-  var render = function() {
+  /**
+   * Adds a callback that is called on a column sort event
+   *
+   * @param callback {function} a callback function
+   */
+  this.onSort = function(callback) {
+    on_sort_callbacks.push(callback);
+  }
+
+  /**
+   * Marks the column thats been sorted by
+   *
+   * @param col {string} the column's key
+   * @param dir {string} the sort direction (must be either asc or desc)
+   */
+  this.setSort = function(col, dir) {
+    columns.forEach(function(c) {
+      if (c.key == col) {
+        c.sorted = dir;
+      } else {
+        c.sorted = null;
+      }
+    });
+  }
+
+  /**
+   * Renders a table for the provided series
+   *
+   * @param series {array} the request response
+   */
+  this.render = function(series) {
+    if (!sparkline_renderer) {
+      sparkline_renderer = new FnordMetric.SeriesTableSparklineRenderer();
+    }
+
     var table = document.createElement("table");
     table.className = "fnordmetric-series-list-table";
     elem.appendChild(table);
@@ -38,28 +91,63 @@ FnordMetric.SeriesTable = function(elem, series) {
     });
   }
 
-  var renderHeader = function(thead) {
-    var html = [
-      "<tr>" ,
-        "<th>" ,
-          "Series ID" ,
-          "<span class='sort'>" ,
-            "<i class='sort_asc'></i>" ,
-            "<i class='sort_desc'></i>" ,
-          "</span>" ,
-        "</th>" ,
-        "<th colspan='2'>" ,
-          "Value" ,
-          "<span class='sort'>" ,
-            "<i class='sort_asc'></i>" ,
-            "<i class='sort_desc'></i>" ,
-          "</span>" ,
-        "</th>" ,
-        "<th class='context_menu_icon'></th>" ,
-      "</tr>"
-    ];
+/********************************* private ***********************************/
 
-    thead.innerHTML = html.join("");
+  var renderHeader = function(thead) {
+    var tr = document.createElement("tr");
+
+    columns.forEach(function(col) {
+      var th = document.createElement("th");
+      th.className = col.key;
+      th.innerHTML = col.title;
+
+      if (col.colspan) {
+        th.setAttribute("colspan", col.colspan);
+      }
+
+      if (col.sortable) {
+        var sort_elem = document.createElement("span");
+        sort_elem.classList.add("sort");
+        th.appendChild(sort_elem);
+
+        var sort_asc = document.createElement("i");
+        sort_asc.classList.add("sort_asc");
+        sort_elem.appendChild(sort_asc);
+
+        var sort_desc = document.createElement("i");
+        sort_desc.classList.add("sort_desc");
+        sort_elem.appendChild(sort_desc);
+
+        switch (col.sorted) {
+          case "asc":
+            sort_asc.classList.add("active");
+            break;
+          case "desc":
+            sort_desc.classList.add("active");
+            break;
+          case null:
+            break;
+        }
+
+        var sort_fn = function(dir) {
+          on_sort_callbacks.forEach(function(f) {
+            f(col, dir);
+          });
+        }
+
+        sort_asc.addEventListener("click", function(e) {
+          sort_fn("asc");
+        }, false);
+
+        sort_desc.addEventListener("click", function(e) {
+          sort_fn("desc");
+        }, false);
+      }
+
+      tr.appendChild(th);
+    });
+
+    thead.appendChild(tr);
   }
 
   var renderRow = function(series, tbody) {
@@ -240,9 +328,6 @@ FnordMetric.SeriesTable = function(elem, series) {
   }
 
   /** init **/
-  sparkline_renderer = new FnordMetric.SeriesTableSparklineRenderer();
-  render();
-
   document.addEventListener("click", function(e) {
     hideContextMenu();
   }, false);
