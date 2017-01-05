@@ -1,27 +1,76 @@
 FnordMetric
 ===========
 
+[![Build Status](https://travis-ci.org/paulasmuth/fnordmetric.png?branch=unstable)](http://travis-ci.org/paulasmuth/fnordmetric)
+
 **metricd** is a lightweight daemon for real-time metrics collection, storage
 and visualization. It allows you to capture measurements and build beautiful
 real-time dashboards within minutes.
 
-Documentation: [fnordmetric.io](http://fnordmetric.io/)
+**More information:**
+[Documentation](http://fnordmetric.io/),
+[Download](https://fnordmetric.io/download/),
+[Getting Started](https://fnordmetric.io/documentation/getting_started)
 
 [ ![Screenshot](https://raw.githubusercontent.com/paulasmuth/fnordmetric/master/fnordmetric-doc/web/assets/img/fnordmetric_server_screen1.png) ](http://github.com/paulasmuth/fnordmetric)
 
-### Features:
-+ Telemetry: Collect timeseries data via HTTP, UDP/statsd, MQTT or SNMP
-+ Visualization: Render custom charts as SVG, HTML or PNG and embed them into any website
-+ HTTP+JSON Query API
-+ Supports pull- and push-type sensors
-+ Self-contained, standalone daemon
-+ Large list of included sensors
+## Features:
 
-### Documentation
+This is a quick run-through of the main features to get you excited. For
+more detailed information on these topics and their caveats you are kindly
+referred to the documentation.
+
+- **Telemetry**: Collect timeseries data via HTTP, UDP/statsd, MQTT or SNMP
+
+- **Visualization**: Render custom charts as SVG, HTML or PNG and embed them into
+  any website
+
+- **Queries**: Retrieve summaries and timeseries via the HTTP+JSON Query API
+
+- Supports pull- and push-type sensors
+
+- Self-contained, standalone daemon
+
+- Large list of included sensors
+
+
+## Documentation
+
 You can find the full documentation at http://fnordmetric.io/
 
 
-### Contributors
+## Build
+
+Before we can start we need to install some build dependencies. Currently
+you need a modern c++ compiler, libz and autotools.
+
+    # Ubuntu
+    $ apt-get install clang make automake autoconf libtool zlib1g-dev
+
+    # OSX
+    $ brew install automake autoconf
+
+To build EventQL from a distribution tarball:
+
+    $ ./configure
+    $ make
+    $ sudo make install
+
+To build EventQL from a git checkout:
+
+    $ git clone git@github.com:paulasmuth/fnordmetric.git
+    $ cd fnordmetric
+    $ ./autogen.sh
+    $ ./configure
+    $ make V=1
+    $ sudo make install
+
+To run the test suite:
+
+    $ make check
+
+
+## Contributors
 
 + Laura Schlimmer (http://github.com/lauraschlimmer)
 + Henrik Muehe (http://github.com/henrik-muehe)
