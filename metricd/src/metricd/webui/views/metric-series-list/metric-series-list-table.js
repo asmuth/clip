@@ -86,6 +86,8 @@ FnordMetric.SeriesTable = function(elem, series) {
   }
 
   var renderSparkline = function(series, td) {
+    td.className = "sparkline";
+
     var sparkline_cfg = {
       series: [
         {
@@ -93,9 +95,6 @@ FnordMetric.SeriesTable = function(elem, series) {
         }
       ]
     };
-
-    var svg = document.querySelector("svg.sparkline_tpl").cloneNode(true);
-    td.className = "sparkline";
 
     var html = sparkline_renderer.render(
         sparkline_cfg,
@@ -187,6 +186,13 @@ FnordMetric.SeriesTable = function(elem, series) {
 FnordMetric.SeriesTableSparklineRenderer = function() {
   'use strict';
 
+  var padding = {
+    top: 2,
+    bottom: 2,
+    left: 10,
+    right: 10
+  }
+
   /**
     * @param elem the html elem
     * @param cfg (Object) consists of multiple series object, each with 
@@ -195,25 +201,22 @@ FnordMetric.SeriesTableSparklineRenderer = function() {
     * max(optinal): a float determining the max value
     **/
   this.render = function(cfg, width, height) {
-    console.log(height, width);
-    var html = ["<svg class='sparkline' style='height: ", height, "px; width: ",
-      width, "px;'>"];
+    var grid_height = height - padding.top - padding.bottom;
+    var grid_width = width - padding.left - padding.right;
+
+    var html = ["<svg class='sparkline' style='height: ", grid_height, "px; width: ",
+      grid_width, "px;'>"];
 
 
-    html.push(renderGrid(height, width));
+    html.push(renderGrid(grid_height, grid_width));
 
     html.push("<g class='lines'>");
 
-//    var path_elems = elem.querySelectorAll(".lines path");
-//
     for (var i = 0; i < cfg.series.length; i++) {
-      html.push(renderPath(cfg.series[i], height, width));
+      html.push(renderPath(cfg.series[i], grid_height, grid_width));
     }
 
     html.push("</g>");
-//
-//    elem.style.height = height + "px";
-//    elem.style.width = width + "px";
 
     html.push("</svg>");
 
