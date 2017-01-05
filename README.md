@@ -10,16 +10,17 @@ Documentation: [fnordmetric.io](http://fnordmetric.io/)
 [ ![Screenshot](https://raw.githubusercontent.com/paulasmuth/fnordmetric/master/fnordmetric-doc/web/assets/img/fnordmetric_server_screen1.png) ](http://github.com/paulasmuth/fnordmetric)
 
 
-#### metricd
+Features
+--------
 
-Fnordmetric Server is a standalone HTTP server application. It exposes a web UI
-and a HTTP API to run ChartSQL queries and collect timeseries data. You can use
-fnordmetric-server as a one-stop solution for metric collection and charting.
-Since fnordmetric-server aims to be a StatsD+graphite competitor, it implements
-a wire compatible StatsD API.
+This is a short list of key features to get you excited about FnordMetric. For further informations on these topics please visit the documentation.
 
-FnordMetric Server can store the collected timeseries data on local disk or in
-external storage (HBase).
++ Telemetry: Collect timeseries data via HTTP, UDP/statsd, MQTT or SNMP
++ Visualization: Render custom charts as SVG, HTML or PNG and embed them into any website
++ HTTP+JSON Query API
++ Supports pull- and push-type sensors
++ Self-contained, standalone daemon
++ Large list of included sensors
 
 
 Documentation
