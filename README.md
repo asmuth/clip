@@ -3,7 +3,7 @@ FnordMetric
 
 [![Build Status](https://travis-ci.org/paulasmuth/fnordmetric.png?branch=unstable)](http://travis-ci.org/paulasmuth/fnordmetric)
 
-**metricd** is a lightweight daemon for real-time metrics collection, storage
+FnordMetric (metricd) is a lightweight daemon for real-time metrics collection, storage
 and visualization. It allows you to capture measurements and build beautiful
 real-time dashboards within minutes.
 
