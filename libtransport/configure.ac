@@ -66,6 +66,7 @@ AC_CONFIG_FILES([
     Makefile
     src/libtransport/http/Makefile
     src/libtransport/uri/Makefile
+    src/libtransport/json/Makefile
     test/Makefile
     examples/http_client/Makefile
     examples/http_server/Makefile

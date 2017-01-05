@@ -58,8 +58,6 @@ metricd_common_sources_ = \
     metric_service.cc \
     sample.h \
     sample.cc \
-    util/json.h \
-    util/json.cc \
     util/time_impl.h \
     util/time.h \
     util/time.cc \
@@ -145,6 +143,7 @@ metricd_SOURCES = \
 metricd_LDADD = \
     $(top_builddir)/../libtsdb/libtsdb.a \
     ${top_builddir}/../libtransport/src/libtransport/http/libtransport_http.a \
+    ${top_builddir}/../libtransport/src/libtransport/json/libtransport_json.a \
     ${top_builddir}/../libtransport/src/libtransport/uri/libtransport_uri.a
 
 metric_test_SOURCES = \

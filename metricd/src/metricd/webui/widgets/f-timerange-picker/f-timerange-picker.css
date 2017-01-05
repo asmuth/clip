@@ -41,8 +41,18 @@ f-timerange-picker .date_field {
   font-weight: 500;
 }
 
+f-timerange-picker .date_field:hover {
+  cursor: pointer;
+}
+
 f-timerange-picker .date_field .date_value {
   display: inline-block;
+}
+
+f-timerange-picker .date_field input {
+  border: none;
+  border-radius: 2px;
+  line-height: 30px;
 }
 
 f-timerange-picker .date_field i.fa {
@@ -72,6 +82,15 @@ f-timerange-picker .date_field i.fa.fa-caret-down {
   border-left-width: 1px;
 }
 
+f-timerange-picker .widget .date_field i.fa.fa-calendar {
+  margin-right: 0px;
+  margin-left: 0px;
+  border-right-width: 0px;
+  border-left-width: 1px;
+  vertical-align: top;
+  line-height: 30px;
+}
+
 f-timerange-picker i.mover {
   font-size: 17px;
   vertical-align: middle;
@@ -88,15 +107,6 @@ f-timerange-picker i.mover {
 f-timerange-picker i.mover.disabled {
   cursor: initial;
   opacity: 0.6;
-}
-
-f-timerange-picker i.arrow_down {
-  width: 0;
-  height: 0;
-  padding: 0;
-  border-left: 5px solid transparent;
-  border-right: 5px solid transparent;
-  border-top: 5px solid #999;
 }
 
 f-timerange-picker .widget {
@@ -213,11 +223,7 @@ f-timerange-picker .widget .inner .col.custom form .input_wrapper {
 
 f-timerange-picker .widget .inner .col.custom form .input_wrapper label {
   width: 28px;
-}
-
-f-timerange-picker .widget .inner .col.custom form .input_wrapper .icon {
-  float: right;
-  margin-left: 5px;
+  display: inline-block;
 }
 
 f-timerange-picker .widget .inner .col.custom form .input_wrapper input.invalid + .error {
@@ -259,14 +265,56 @@ f-timerange-picker .widget .inner ul.timeranges {
   float: right;
 }
 
+f-timerange-picker .widget .inner ul.timeranges li {
+  margin-top: 5px;
+}
+
 f-timerange-picker .widget .inner ul button.btn {
   width: 160px;
   text-align: left;
   line-height: 2.8em;
 }
 
+f-timerange-picker .widget .inner ul button.btn.active {
+  background-color: #F4F4F4;
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#fefefe), to(#e9e9e9));
+  background-image: -webkit-linear-gradient(top, #fefefe, #e9e9e9);
+  background-image: -moz-linear-gradient(top, #fefefe, #e9e9e9);
+  background-image: -ms-linear-gradient(top, #fefefe, #e9e9e9);
+  background-image: -o-linear-gradient(top, #fefefe, #e9e9e9);
+  background-image: linear-gradient(top, #fefefe, #e9e9e9);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorStr='#fefefe', EndColorStr='#e9e9e9');
+}
+
+f-timerange-picker .widget .timezone f-dropdown {
+  display: inline-block;
+}
+
+f-timerange-picker .widget .timezone f-dropdown ul {
+  width: 100%;
+  line-height: 28px;
+}
+
+f-timerange-picker .widget .timezone f-dropdown ul li:hover {
+  font-weight: 500;
+}
+
+f-timerange-picker .widget .timezone f-dropdown button.btn,
+f-timerange-picker .widget .footer button.btn {
+  background-color: #F4F4F4;
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#fefefe), to(#e9e9e9));
+  background-image: -webkit-linear-gradient(top, #fefefe, #e9e9e9);
+  background-image: -moz-linear-gradient(top, #fefefe, #e9e9e9);
+  background-image: -ms-linear-gradient(top, #fefefe, #e9e9e9);
+  background-image: -o-linear-gradient(top, #fefefe, #e9e9e9);
+  background-image: linear-gradient(top, #fefefe, #e9e9e9);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorStr='#fefefe', EndColorStr='#e9e9e9');
+  border-color: #bbb;
+}
+
 f-timerange-picker .widget .footer button.btn {
   float: right;
+  margin-left: 5px;
 }
 
 f-timerange-picker table.calendar {

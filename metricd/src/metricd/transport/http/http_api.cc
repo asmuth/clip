@@ -12,7 +12,6 @@
 #include <metricd/query/query_frontend.h>
 #include <metricd/transport/http/http_api.h>
 #include <metricd/util/stringutil.h>
-#include <metricd/util/json.h>
 #include <metricd/util/time.h>
 
 namespace fnordmetric {
@@ -71,39 +70,18 @@ void HTTPAPI::renderMetricList(
     http::HTTPResponse* response,
     const URI& uri) {
   std::string json_str;
-  json::JSONOutputStream json(StringOutputStream::fromString(&json_str));
+  json::JSONWriter json(&json_str);
 
   json.beginObject();
-  json.addObjectEntry("metrics");
+  json.addString("metrics");
   json.beginArray();
 
   auto cursor = metric_service_->listMetrics();
-  for (int i = 0; cursor.isValid(); cursor.next()) {
-    if (i++ > 0) { json.addComma(); }
+  for (; cursor.isValid(); cursor.next()) {
     json.beginObject();
 
-    json.addObjectEntry("metric_id");
+    json.addString("metric_id");
     json.addString(cursor.getMetricID());
-    //json.addComma();
-
-    //json->addObjectEntry("total_bytes");
-    //json->addLiteral<size_t>(metric->totalBytes());
-    //json->addComma();
-
-    //json->addObjectEntry("last_insert");
-    //json->addLiteral<uint64_t>(static_cast<uint64_t>(metric->lastInsertTime()));
-    //json->addComma();
-
-    //json->addObjectEntry("labels");
-    //json->beginArray();
-    //auto labels = metric->labels();
-    //for (auto cur = labels.begin(); cur != labels.end(); ++cur) {
-    //  if (cur != labels.begin()) {
-    //    json->addComma();
-    //  }
-    //  json->addString(*cur);
-    //}
-    //json->endArray();
 
     json.endObject();
   }
@@ -138,20 +116,18 @@ void HTTPAPI::renderMetricSeriesList(
   }
 
   std::string json_str;
-  json::JSONOutputStream json(StringOutputStream::fromString(&json_str));
+  json::JSONWriter json(&json_str);
 
   json.beginObject();
-  json.addObjectEntry("metric_id");
+  json.addString("metric_id");
   json.addString(metric_id);
-  json.addComma();
-  json.addObjectEntry("series");
+  json.addString("series");
   json.beginArray();
 
-  for (int i = 0; cursor.isValid(); cursor.next()) {
-    if (i++ > 0) { json.addComma(); }
+  for (; cursor.isValid(); cursor.next()) {
     json.beginObject();
 
-    json.addObjectEntry("series_id");
+    json.addString("series_id");
     json.addString(cursor.getSeriesName().name);
 
     json.endObject();
@@ -182,14 +158,13 @@ void HTTPAPI::performMetricFetch(
   }
 
   std::string json_str;
-  json::JSONOutputStream json(StringOutputStream::fromString(&json_str));
+  json::JSONWriter json(&json_str);
 
   json.beginObject();
-  json.addObjectEntry("metric_id");
+  json.addString("metric_id");
   json.addString(metric_id);
-  json.addComma();
 
-  json.addObjectEntry("series");
+  json.addString("series");
   auto rc = query_frontend_.fetchTimeseriesJSON(&opts, &json);
   json.endObject();
 

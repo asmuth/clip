@@ -17,7 +17,7 @@ QueryFrontend::QueryFrontend(
 
 ReturnCode QueryFrontend::fetchTimeseriesJSON(
     const QueryOptions* query,
-    json::JSONOutputStream* json) {
+    json::JSONWriter* json) {
   std::vector<GrossSummaryMethod> summary_methods{GrossSummaryMethod::SUM};
 
   /* fetch series */
@@ -56,33 +56,26 @@ ReturnCode QueryFrontend::fetchTimeseriesJSON(
   json->beginArray();
 
   for (size_t frame_idx = 0; frame_idx < results.getFrameCount(); ++frame_idx) {
-    if (frame_idx > 0) { json->addComma(); }
-
     auto frame = results.getFrame(frame_idx);
     json->beginObject();
-    json->addObjectEntry("series_id");
+    json->addString("series_id");
     json->addString(frame->getID());
-    json->addComma();
 
-    json->addObjectEntry("tags");
+    json->addString("tags");
     json->beginArray();
     for (auto t = frame->getTags().begin(); t != frame->getTags().end(); ++t) {
-      if (t != frame->getTags().begin()) { json->addComma(); }
       json->addString(*t);
     }
     json->endArray();
-    json->addComma();
 
-    json->addObjectEntry("summaries");
+    json->addString("summaries");
     json->beginArray();
     for (size_t i = 0; i < gross_summaries[frame_idx].size(); ++i) {
-      if (i > 0) { json->addComma(); }
       json->beginObject();
-      json->addObjectEntry("summary");
+      json->addString("summary");
       json->addString(gross_summaries[frame_idx][i].first);
 
-      json->addComma();
-      json->addObjectEntry("value");
+      json->addString("value");
       const auto& sval = gross_summaries[frame_idx][i].second.val;
       switch (sval.type) {
         case tval_type::UINT64:
@@ -101,21 +94,17 @@ ReturnCode QueryFrontend::fetchTimeseriesJSON(
       json->endObject();
     }
     json->endArray();
-    json->addComma();
 
-    json->addObjectEntry("time");
+    json->addString("time");
     json->beginArray();
     for (size_t i = 0; i < frame->getSize(); ++i) {
-      if (i > 0) { json->addComma(); }
       json->addInteger(*frame->getTime(i));
     }
     json->endArray();
-    json->addComma();
 
-    json->addObjectEntry("values");
+    json->addString("values");
     json->beginArray();
     for (size_t i = 0; i < frame->getSize(); ++i) {
-      if (i > 0) { json->addComma(); }
       switch (frame->getType()) {
         case tval_type::UINT64:
           json->addInteger(*((uint64_t*) frame->getData(i)));

@@ -7,6 +7,7 @@ SUBDIRS = \
     . \
     src/libtransport/http \
     src/libtransport/uri \
+    src/libtransport/json\
     test \
     examples/http_client \
     examples/http_server \

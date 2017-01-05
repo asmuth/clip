@@ -10,15 +10,19 @@
  */
 #pragma once
 #include <memory>
+#include <metricd/query/query_frontend.h>
 #include <libtransport/http/http_request.h>
 #include <libtransport/http/http_response.h>
 #include <libtransport/uri/uri.h>
-#include <metricd/query/query_frontend.h>
+#include <libtransport/json/json.h>
+#include <libtransport/json/json_reader.h>
+#include <libtransport/json/json_writer.h>
 
 namespace fnordmetric {
 class MetricService;
 
-using namespace libtransport;
+namespace json = libtransport::json;
+namespace http = libtransport::http;
 
 class HTTPAPI {
 public:
