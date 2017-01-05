@@ -21,16 +21,11 @@ more detailed information on these topics and their caveats you are kindly
 referred to the documentation.
 
 - **Telemetry**: Collect timeseries data via HTTP, UDP/statsd, MQTT or SNMP
-
 - **Visualization**: Render custom charts as SVG, HTML or PNG and embed them into
   any website
-
 - **Queries**: Retrieve summaries and timeseries via the HTTP+JSON Query API
-
 - Supports pull- and push-type sensors
-
 - Self-contained, standalone daemon
-
 - Large list of included sensors
 
 
