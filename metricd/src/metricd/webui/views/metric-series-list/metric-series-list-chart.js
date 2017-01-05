@@ -205,49 +205,72 @@ FnordMetric.SeriesChartRenderer = function(padding) {
     html.push("<g class='axis x'>");
 
     /** render x ticks **/
-    html.push("<text x='", grid_width * 1/9, "' y='", tick_height,
-      "' class='label'>", formatDate(tick_values[1]), "</text>");
+    html.push(
+      "<text x='", grid_width * 1/9, "' y='", tick_height, "' class='label'>",
+        formatDate(tick_values[1]),
+      "</text>");
 
-    html.push("<text x='", grid_width * 2/9, "' y='", tick_height,
-      "' class='label'>", formatDate(tick_values[2]), "</text>");
+    html.push(
+      "<text x='", grid_width * 2/9, "' y='", tick_height, "' class='label'>",
+        formatDate(tick_values[2]),
+      "</text>");
 
-    html.push("<text x='", grid_width * 3/9, "' y='", tick_height,
-      "' class='label'>", formatDate(tick_values[3]), "</text>");
+    html.push(
+      "<text x='", grid_width * 3/9, "' y='", tick_height, "' class='label'>",
+        formatDate(tick_values[3]),
+      "</text>");
 
-    html.push("<text x='", grid_width * 4/9, "' y='", tick_height,
-      "' class='label'>", formatDate(tick_values[4]), "</text>");
+    html.push(
+      "<text x='", grid_width * 4/9, "' y='", tick_height, "' class='label'>",
+        formatDate(tick_values[4]),
+      "</text>");
 
-    html.push("<text x='", grid_width * 5/9, "' y='", tick_height,
-      "' class='label'>", formatDate(tick_values[5]), "</text>");
+    html.push(
+      "<text x='", grid_width * 5/9, "' y='", tick_height, "' class='label'>",
+        formatDate(tick_values[5]),
+      "</text>");
 
-    html.push("<text x='", grid_width * 6/9, "' y='", tick_height,
-      "' class='label'>", formatDate(tick_values[6]), "</text>");
+    html.push(
+      "<text x='", grid_width * 6/9, "' y='", tick_height, "' class='label'>",
+        formatDate(tick_values[6]),
+      "</text>");
 
-    html.push("<text x='", grid_width * 7/9, "' y='", tick_height,
-      "' class='label'>", formatDate(tick_values[7]), "</text>");
+    html.push(
+      "<text x='", grid_width * 7/9, "' y='", tick_height, "' class='label'>",
+        formatDate(tick_values[7]),
+      "</text>");
 
-    html.push("<text x='", grid_width * 8/9, "' y='", tick_height,
-      "' class='label'>", formatDate(tick_values[8]), "</text>");
+    html.push(
+      "<text x='", grid_width * 8/9, "' y='", tick_height, "' class='label'>",
+        formatDate(tick_values[8]),
+      "</text>");
 
     /** render x axes **/
     html.push(
-      "<line class='axis stroke main_axis' y1='", grid_height + padding.top,
-      "' y2='", grid_height + padding.top, "' x1='0' x2='", grid_width,
+      "<line class='axis stroke main_axis' ",
+        "y1='", grid_height + padding.top, "' y2='", grid_height + padding.top,
+        "' x1='0' x2='", grid_width,
       "'></line>");
 
     html.push(
-      "<line class='axis stroke' y1='", grid_height * 2 / 3 + padding.top,
-      "' y2='", grid_height * 2 / 3 + padding.top, "' x1='", padding.left,
-      "' x2='", grid_width, "'></line>");
+      "<line class='axis stroke'",
+        " y1='", grid_height * 2 / 3 + padding.top,
+        "' y2='", grid_height * 2 / 3 + padding.top,
+        "' x1='", padding.left, "' x2='", grid_width,
+      "'></line>");
 
     html.push(
-      "<line class='axis stroke' y1='", grid_height * 1 / 3 + padding.top,
-      "' y2='", grid_height * 1 / 3 + padding.top, "' x1='", padding.left,
-      "' x2='", grid_width, "'></line>");
+      "<line class='axis stroke'",
+        " y1='", grid_height * 1 / 3 + padding.top,
+        "' y2='", grid_height * 1 / 3 + padding.top,
+        "' x1='", padding.left, "' x2='", grid_width,
+      "'></line>");
 
     html.push(
-      "<line class='axis stroke' y1='", padding.top, "' y2='", padding.top,"'",
-      " x1='", padding.left, "' x2='", grid_width, "'></line>");
+      "<line class='axis stroke'",
+        " y1='", padding.top, "' y2='", padding.top, "'",
+        " x1='", padding.left, "' x2='", grid_width,
+      "'></line>");
 
     html.push("</g>");
     return html.join("");
@@ -263,42 +286,54 @@ FnordMetric.SeriesChartRenderer = function(padding) {
     var tick_values = getTickValues(min, max, 4);
 
     /** render y ticks **/
-    html.push("<text x='", padding.left, "' y='",
-      grid_height * 2 / 3 + padding.top,
-      "' class='label'>", tick_values[1], "</text>");
+    html.push(
+      "<text class='label'",
+          "x='", padding.left, "' y='", grid_height * 2 / 3 + padding.top, "'>",
+        tick_values[1],
+      "</text>");
 
-    html.push("<text x='", padding.left, "' y='",
-      grid_height * 1 / 3 + padding.top,
-      "' class='label'>", tick_values[2], "</text>");
+    html.push(
+      "<text class='label' ",
+          "x='", padding.left, "' y='", grid_height * 1 / 3 + padding.top, "' >",
+        tick_values[2],
+      "</text>");
 
-    html.push("<text x='", padding.left, "' y='", padding.top,
-      "' class='label'>", tick_values[3], "</text>");
+    html.push(
+      "<text class='label' x='", padding.left, "' y='", padding.top, "'>",
+        tick_values[3],
+      "</text>");
 
     /** render y axes **/
     html.push(
-      "<line class='axis stroke' y1='", padding.top, "' y2='",
-      grid_height + padding.top,
-      "' x1='", grid_width * 1 / 5, "' x2='", grid_width * 1 / 5, "'></line>");
+      "<line class='axis stroke'",
+        " y1='", padding.top, "' y2='", grid_height + padding.top,
+        "' x1='", grid_width * 1 / 5, "' x2='", grid_width * 1 / 5,
+      "'></line>");
 
     html.push(
-      "<line class='axis stroke' y1='", padding.top, "' y2='",
-      grid_height + padding.top,
-      "' x1='", grid_width * 2 / 5, "' x2='", grid_width * 2 / 5, "'></line>");
+      "<line class='axis stroke'",
+        " y1='", padding.top, "' y2='", grid_height + padding.top,
+        "' x1='", grid_width * 2 / 5, "' x2='", grid_width * 2 / 5,
+      "'></line>");
 
     html.push(
-      "<line class='axis stroke' y1='", padding.top, "' y2='",
-      grid_height + padding.top,
-      "' x1='", grid_width * 3 / 5, "' x2='", grid_width * 3 / 5, "'></line>");
+      "<line class='axis stroke'",
+        " y1='", padding.top, "' y2='", grid_height + padding.top,
+        "' x1='", grid_width * 3 / 5, "' x2='", grid_width * 3 / 5,
+      "'></line>");
 
     html.push(
-      "<line class='axis stroke' y1='", padding.top, "' y2='",
-      grid_height + padding.top,
-      "' x1='", grid_width * 4 / 5, "' x2='", grid_width * 4 / 5, "'></line>");
+      "<line class='axis stroke'",
+        "y1='", padding.top, "' y2='", grid_height + padding.top,
+        "' x1='", grid_width * 4 / 5, "' x2='", grid_width * 4 / 5,
+      "'></line>");
 
     /** render tooltip line **/
     html.push(
-      "<line class='stroke tooltip' y1='", padding.top, "' y2='",
-      grid_height + padding.top, "' x1='0' x2='0'></line>");
+      "<line class='stroke tooltip'",
+        " y1='", padding.top, "' y2='", grid_height + padding.top,
+        "' x1='0' x2='0'>",
+      "</line>");
 
     html.push("</g>");
 
@@ -321,10 +356,14 @@ FnordMetric.SeriesChartRenderer = function(padding) {
         var dy = padding.top + ((1.0 - points[i].y) * (grid_height));
         svg_line.push(i == 0 ? "M" : "L", dx, dy);
 
-        circles.push("<circle class='point' r='5' cx='", dx, "' cy='", dy,
-          "' fm-date='", formatDate(points[i].time / 1000), "' fm-value='",
-          points[i].value, "' fm-color='", series.color, "' fm-title='",
-          series.title || series.series_id, "'></circle>");
+        circles.push(
+          "<circle class='point' r='5'",
+            " cx='", dx, "' cy='", dy,
+            "' fm-date='", formatDate(points[i].time / 1000),
+            "' fm-value='", points[i].value,
+            "' fm-color='", series.color,
+            "' fm-title='", series.title || series.series_id,
+          "'></circle>");
 
       } else {
         //FIXME
@@ -334,8 +373,9 @@ FnordMetric.SeriesChartRenderer = function(padding) {
     html.push(circles.join(""));
 
     html.push(
-        "<path class='line' style='stroke:", series.color,
-        ";' fm-series='", series.series_id, "' d='", svg_line.join(" "),
+        "<path class='line' style='stroke:", series.color, ";",
+          "' fm-series='", series.series_id,
+          "' d='", svg_line.join(" "),
         "'></path>");
 
     return html.join("");
@@ -378,13 +418,24 @@ FnordMetric.SeriesChartRenderer = function(padding) {
 FnordMetric.SeriesChartSummaryRenderer = function(default_colors) {
   'use strict';
 
-  var summary_html = "<div class='total'>{{sum}} {{unit}}</div>" +
-    "<div class='legend'>{{legend}}</div>" +
-    "<div class='stats'>min={{min}} max={{max}} stddev={{stddev}}</div>";
+  var summary_html = [
+    "<div class='total'>",
+      "{{sum}} {{unit}}",
+    "</div>",
+    "<div class='legend'>",
+      "{{legend}}",
+    "</div>",
+    "<div class='stats'>",
+      "min={{min}} max={{max}} stddev={{stddev}}",
+    "</div>"
+  ].join("");
 
-  var legend_item_html = "<div class='legend_item' fm-series='{{series_id}}'>" +
-    "<span class='circle' style='background: {{color}}'></span>" +
-    "<span>{{title}}</span></div>";
+  var legend_item_html = [
+    "<div class='legend_item' fm-series='{{series_id}}'>",
+      "<span class='circle' style='background: {{color}}'></span>",
+      "<span>{{title}}</span>",
+    "</div>"
+  ].join("");
 
   this.render = function(config) {
     var html = summary_html;
@@ -507,7 +558,6 @@ FnordMetric.SeriesChartHoverHandler = function() {
         a.height == b.height);
   }
 
-
   var indexAllPoints = function() {
     hover_points = [];
     indexPoints(base_elem.querySelectorAll(".areas"));
@@ -544,7 +594,8 @@ FnordMetric.SeriesChartHoverHandler = function() {
         "<div class='series'>",
           "<span class='circle'></span><span class='title'></span>: ",
           "<span class='value'><span> <span class='unit'",
-        "</div>"].join("");
+        "</div>"
+      ].join("");
 
       tooltip_elem.style.position = "absolute"
       tooltip_elem.style.display = "none";
