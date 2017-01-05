@@ -1,8 +1,33 @@
-var FnordMetricMetricSeriesListTable = function(table) {
+/**
+ * This file is part of the "FnordMetric" project
+ *   Copyright (c) 2016 Laura Schlimmer, FnordCorp B.V.
+ *
+ * FnordMetric is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License v3.0. You should have received a
+ * copy of the GNU General Public License along with this program. If not, see
+ * <http://www.gnu.org/licenses/>.
+ */
+if (typeof FnordMetric == undefined) {
+  FnordMetric = {};
+}
+
+FnordMetric.SeriesTable = function(elem, series) {
   'use strict';
 
-  this.render = function(series) {
-    var tbody = table.querySelector("tbody");
+  var sparkline_renderer;
+
+  var render = function() {
+    var table = document.createElement("table");
+    table.className = "fnordmetric-series-list-table";
+    elem.appendChild(table);
+
+    var thead = document.createElement("thead");
+    table.appendChild(thead);
+    renderHeader(thead);
+
+    var tbody = document.createElement("tbody");
+    table.appendChild(tbody);
+
     series.forEach(function(s) {
       /** skip summary row **/
       if (s.tags && s.tags.indexOf("summary") > -1) {
@@ -13,9 +38,34 @@ var FnordMetricMetricSeriesListTable = function(table) {
     });
   }
 
+  var renderHeader = function(thead) {
+    var html = [
+      "<tr>" ,
+        "<th>" ,
+          "Series ID" ,
+          "<span class='sort'>" ,
+            "<i class='sort_asc'></i>" ,
+            "<i class='sort_desc'></i>" ,
+          "</span>" ,
+        "</th>" ,
+        "<th colspan='2'>" ,
+          "Value" ,
+          "<span class='sort'>" ,
+            "<i class='sort_asc'></i>" ,
+            "<i class='sort_desc'></i>" ,
+          "</span>" ,
+        "</th>" ,
+        "<th class='context_menu_icon'></th>" ,
+      "</tr>"
+    ];
+
+    thead.innerHTML = html.join("");
+  }
+
   var renderRow = function(series, tbody) {
     var tr = document.createElement("tr");
     var html = [];
+    tbody.appendChild(tr);
 
     /** series id **/
     renderSeriesIdCell(series.series_id, tr);
@@ -31,7 +81,7 @@ var FnordMetricMetricSeriesListTable = function(table) {
 
     /** watch right click **/
     tr.addEventListener("contextmenu", function(e) {
-      //check if right click
+      /** check if right click **/
       if (e.which) {
         if (e.which != 3) {
           return false;
@@ -42,14 +92,10 @@ var FnordMetricMetricSeriesListTable = function(table) {
         }
       }
 
-      //alert("render context menu");
       renderContextMenu(series.series_id, e);
       e.preventDefault();
-      //return false;
     });
 
-
-    tbody.appendChild(tr);
   }
 
   var renderSeriesIdCell = function(id, tr) {
@@ -67,12 +113,13 @@ var FnordMetricMetricSeriesListTable = function(table) {
 
   var renderSparklineCell = function(series, tr) {
     var td = document.createElement("td");
-    renderSparkline(series, td);
-
     tr.appendChild(td);
+    renderSparkline(series, td);
   }
 
   var renderSparkline = function(series, td) {
+    td.className = "sparkline";
+
     var sparkline_cfg = {
       series: [
         {
@@ -81,11 +128,12 @@ var FnordMetricMetricSeriesListTable = function(table) {
       ]
     };
 
-    var svg = document.querySelector("svg.sparkline_tpl").cloneNode(true);
-    td.appendChild(svg);
-    td.className = "sparkline";
+    var html = sparkline_renderer.render(
+        sparkline_cfg,
+        td.offsetWidth,
+        td.offsetHeight);
 
-    FnordMetricMetricSeriesListSparkline.render(svg, sparkline_cfg);
+    td.innerHTML = html;
   }
 
   var renderSummariesCell = function(summaries, tr) {
@@ -109,8 +157,14 @@ var FnordMetricMetricSeriesListTable = function(table) {
 
     var td = document.createElement("td");
     td.className = "values";
-    td.innerHTML = ["<div class='total'>", sum || "-",
-      "</div><div class='value_stats'>", value_stats_line, "</div>"].join("");
+    td.innerHTML = [
+      "<div class='total'>",
+        sum || "-",
+      "</div>",
+      "<div class='value_stats'>",
+        value_stats_line,
+      "</div>"
+    ].join("");
 
     tr.appendChild(td);
   }
@@ -132,39 +186,77 @@ var FnordMetricMetricSeriesListTable = function(table) {
 
   var renderContextMenu = function(series_id, ev) {
     ev.stopPropagation();
-    var menu = document.querySelector(".context_menu");
+    var menu = elem.querySelector(".fm-context_menu");
+
+    if (!menu) {
+      menu = document.createElement("div");
+      menu.className = "fm-context_menu";
+
+      menu.innerHTML = [
+        "<ul>",
+          "<li>Open in New Tab</li>",
+          "<li>Open in New Tab</li>",
+          "<li>Open in New Tab</li>",
+        "</ul>",
+      ].join("");
+
+      elem.appendChild(menu);
+    }
+
     menu.classList.add("active");
 
-    /** set left position **/
+    var pos_x;
+    var pointer_pos;
+
+    /** right align contextmenu at the window's right edge **/
     if (window.innerWidth - ev.clientX < menu.offsetWidth) {
-      menu.style.left = (ev.clientX - menu.offsetWidth + 19) + "px";
-      menu.setAttribute("data-pointer", "right");
+      pos_x = ev.clientX - menu.offsetWidth + 19;
+      pointer_pos = "right";
 
+    /** left align contextmenu at the window's left edge **/
     } else if (ev.clientX < menu.offsetWidth / 2) {
-      menu.style.left = ev.clientX - 16 + "px";
-      menu.setAttribute("data-pointer", "left");
+      pos_x = ev.clientX - 16;
+      pointer_pos = "left";
 
+    /** center contextmenu **/
     } else {
-      menu.style.left = ev.clientX - menu.offsetWidth / 2 + "px";
-      menu.setAttribute("data-pointer", "center");
+      pos_x = ev.clientX - menu.offsetWidth / 2;
+      pointer_pos = "center";
 
     }
 
-    /** set top position **/
-    menu.style.top = ev.clientY + window.scrollX + 5 + "px";
-  }
+    menu.style.left = pos_x + "px";
+    menu.setAttribute("data-pointer", pointer_pos);
 
+    var pos_top = ev.clientY + window.scrollX + 5;
+    menu.style.top = pos_top + "px";
+  }
 
   var hideContextMenu = function() {
-    document.querySelector(".context_menu").classList.remove("active");
+    var menu = elem.querySelector(".fm-context_menu");
+    if (menu) {
+      menu.classList.remove("active");
+    }
   }
+
+  /** init **/
+  sparkline_renderer = new FnordMetric.SeriesTableSparklineRenderer();
+  render();
 
   document.addEventListener("click", function(e) {
     hideContextMenu();
   }, false);
 }
 
-var FnordMetricMetricSeriesListSparkline = (function() {
+FnordMetric.SeriesTableSparklineRenderer = function() {
+  'use strict';
+
+  var padding = {
+    top: 2,
+    bottom: 2,
+    left: 10,
+    right: 10
+  }
 
   /**
     * @param elem the html elem
@@ -173,49 +265,58 @@ var FnordMetricMetricSeriesListSparkline = (function() {
     * min (optinal): a float determining the min value
     * max(optinal): a float determining the max value
     **/
-  var render = function(elem, cfg) {
-    var height = getDimension('height', elem);
-    var width = getDimension("width", elem);
+  this.render = function(cfg, width, height) {
+    var grid_height = height - padding.top - padding.bottom;
+    var grid_width = width - padding.left - padding.right;
 
-    renderGrid(elem, height, width);
+    var html = [
+      "<svg class='sparkline'",
+        "style='height: ", grid_height, "px; width: ", grid_width, "px;'",
+      ">"];
 
-    var path_elems = elem.querySelectorAll(".lines path");
+
+    html.push(renderGrid(grid_height, grid_width));
+
+    html.push("<g class='lines'>");
 
     for (var i = 0; i < cfg.series.length; i++) {
-      if (path_elems.length - 1 < i) {
-        break;
-      }
-
-      renderPath(cfg.series[i], height, width, path_elems[i]);
+      html.push(renderPath(cfg.series[i], grid_height, grid_width));
     }
 
-    elem.style.height = height + "px";
-    elem.style.width = width + "px";
+    html.push("</g>");
+
+    html.push("</svg>");
+
+    return html.join("");
   }
 
-  var renderGrid = function(elem, height, width) {
+  var renderGrid = function(height, width) {
+    var html = [];
+    html.push("<g class='axis x'>");
+
     /** render x axis in the middle of the sparkline **/
-    var x_axis = elem.querySelector(".axis.x .stroke");
-    x_axis.setAttribute("y1", height / 2);
-    x_axis.setAttribute("y2", height / 2);
-    x_axis.setAttribute("x1", 0);
-    x_axis.setAttribute("x2", width);
+    html.push(
+      "<line class='axis x stroke' ",
+        "y1='", height / 2, "' y2='", height / 2, "' x1='0' x2='", width,
+      "'></line>");
 
     /** render two a y axis after 1/3 and 2/3 of the grid width **/
-    var y_axis_left = elem.querySelector(".axis.y .stroke.left");
-    y_axis_left.setAttribute("x1", width * 1 / 3);
-    y_axis_left.setAttribute("x2", width * 1 / 3);
-    y_axis_left.setAttribute("y1", 0);
-    y_axis_left.setAttribute("y2", height);
+    html.push(
+      "<line class='axis x stroke' ",
+        "y1='0' y2='", height, "' x1='", width * 1/3, "' x2='", width * 1/3,
+      "'></line>");
 
-    var y_axis_right = elem.querySelector(".axis.y .stroke.right");
-    y_axis_right.setAttribute("x1", width * 2 / 3);
-    y_axis_right.setAttribute("x2", width * 2 / 3);
-    y_axis_right.setAttribute("y1", 0);
-    y_axis_right.setAttribute("y2", height);
+    html.push(
+      "<line class='axis x stroke' ",
+        "y1='0' y2='", height, "' x1='", width * 2/3, "' x2='", width * 2/3,
+      "'></line>");
+
+    html.push("</g>");
+
+    return html.join("");
   }
 
-  var renderPath = function(series, height, width, path_elem) {
+  var renderPath = function(series, height, width) {
     if (!series.min) {
       series.min = 0.0;
     }
@@ -225,7 +326,7 @@ var FnordMetricMetricSeriesListSparkline = (function() {
     }
 
     var padding_x = 0;
-    var padding_y = 5;
+    var padding_y = padding.top + padding.bottom;
 
     var points = scaleValues(series);
 
@@ -238,9 +339,13 @@ var FnordMetricMetricSeriesListSparkline = (function() {
       }
     }
 
-    //var svg = elem.querySelector("svg");
+    var html = [];
+    html.push(
+        "<path class='line' style='stroke:", series.color,
+          ";' d='", svg_line.join(" "),
+        "'></path>");
 
-    path_elem.setAttribute("d", svg_line.join(" "));
+    return html.join("");
   };
 
   var getTemplate = function() {
@@ -255,7 +360,7 @@ var FnordMetricMetricSeriesListSparkline = (function() {
     return tpl;
   }
 
-  getDimension = function(dimension, elem) {
+  var getDimension = function(dimension, elem) {
     var value = elem.getAttribute(dimension);
 
     var idx = value.indexOf("%");
@@ -292,11 +397,5 @@ var FnordMetricMetricSeriesListSparkline = (function() {
 
     return scaled;
   };
-
-  return {
-    render: render
-  }
-
-})();
-
+}
 
