@@ -50,6 +50,43 @@ table.fnordmetric-series-list-table.f-table tbody td .total {
   font-size: 16px;
 }
 
+/** sparkline **/
+table.fnordmetric-series-list-table svg.sparkline {
+  display: inline-block;
+}
+
+table.fnordmetric-series-list-table svg.sparkline.sparkline-axes {
+  padding-top: 8px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.3);
+  border-left: 1px solid rgba(0, 0, 0, 0.3);
+}
+
+table.fnordmetric-series-list-table svg.sparkline {
+  vertical-align: bottom;
+}
+
+table.fnordmetric-series-list-table svg.sparkline path {
+  stroke: #aad4e9;
+  fill: none;
+  stroke-width: 1px;
+}
+
+table.fnordmetric-series-list-table svg.sparkline path:first-child {
+  stroke: #19A2E5;
+}
+
+table.fnordmetric-series-list-table svg.sparkline circle {
+  stroke: #a94442;
+  fill: #a94442;
+  stroke-width: 1px;
+}
+
+table.fnordmetric-series-list-table svg.sparkline line.stroke {
+  stroke: #eee;
+  stroke-width: 1px;
+}
+
+
 /** context_menu **/
 .fm-context_menu {
   display: none;
