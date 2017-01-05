@@ -7,8 +7,6 @@ real-time dashboards within minutes.
 
 Documentation: [fnordmetric.io](http://fnordmetric.io/)
 
-Demo Video: [http://fnordmetric.io/fnordmetric-server.mp4](http://fnordmetric.io/fnordmetric-server.mp4)
-
 [ ![Screenshot](https://raw.githubusercontent.com/paulasmuth/fnordmetric/master/fnordmetric-doc/web/assets/img/fnordmetric_server_screen1.png) ](http://github.com/paulasmuth/fnordmetric)
 
 
@@ -27,7 +25,7 @@ external storage (HBase).
 Documentation
 -------------
 
-You can find the full FnordMetric Documentation at http://fnordmetric.io/
+You can find the full documentation at http://fnordmetric.io/
 
 
 Contributions
@@ -64,15 +62,11 @@ specs, commit them to your github repository and send me a pull request.
 Need help, head on over to our [Google Groups][1]  page to discuss any ideas
 that you might have.
 
-#### Other Open Source Software included in FnordMetric
-
-  + Marijn Haverbeke's CodeMirror --- javascript code editor (https://github.com/marijnh/codemirror)
-  + FontAwesome --- icon font (http://fontawesome.io/)
 
 License
 -------
 
-Copyright (c) 2011-2014 Paul Asmuth
+Copyright (c) 2011-2016 Paul Asmuth
 
 FnordMetric is free software: you can redistribute it and/or modify it under
 the terms of the GNU General Public License as published by the Free Software
