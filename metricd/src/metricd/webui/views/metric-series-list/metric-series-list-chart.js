@@ -13,25 +13,6 @@ if (typeof FnordMetric == undefined) {
 }
 
 /**
-  {
-    summary: {
-      series_id: "cur_value"
-    }
-    time: [1...., 1....,]
-    series: [
-      {
-        series_id: "cur_value",
-        values: [2, 6, 7, ...],
-        color: "#999",
-        title: "Current Value"
-        unit: "%"
-      }
-    ]
-  }
-
-
-**/
-/**
  * Renders a chart and optionally a summary for the provided series
  *
  * @param elem   {HTMLElement} an HTML elem within the chart will be rendered
