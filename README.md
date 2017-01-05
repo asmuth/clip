@@ -12,6 +12,7 @@ real-time dashboards within minutes.
 [Download](https://fnordmetric.io/download/),
 [Getting Started](https://fnordmetric.io/documentation/getting_started)
 
+[ ![Screenshot](https://raw.githubusercontent.com/paulasmuth/fnordmetric/master/fnordmetric-doc/web/assets/img/fnordmetric_server_screen1.png) ](http://github.com/paulasmuth/fnordmetric)
 
 ## Features
 
@@ -31,11 +32,6 @@ referred to the documentation.
 - Self-contained, standalone daemon
 
 - Large list of included sensors
-
-
-FnordMetric also includes a web-based user interface.
-
-[ ![Screenshot](https://raw.githubusercontent.com/paulasmuth/fnordmetric/master/fnordmetric-doc/web/assets/img/fnordmetric_server_screen1.png) ](http://github.com/paulasmuth/fnordmetric)
 
 
 ## Build
