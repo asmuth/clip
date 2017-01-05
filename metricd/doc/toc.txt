@@ -1,0 +1,50 @@
+Overview
+  Getting Started
+  Installation
+  Usage
+  Configuration
+
+Metrics
+  Data Model
+  Metric Types
+  Metric Configuration
+  Built-in Units
+  Custom Units
+  Granularity & Retention
+  Summarization
+
+Collecting Data
+  Sample Format
+  List of included sensors
+  Push sensors
+    listen_http
+    listen_udp
+    listen_mqtt
+  Pull sensors
+    sensor_http
+    sensor_proc
+    sensor_snmp
+    sensor_mqtt
+
+Queries
+  JSON Queries
+  Operations
+
+Charts & Widgets
+  Chart Types
+  Chart Options
+  Widgets
+    - Chart
+    - Distribution
+    - Top Series
+
+HTTP API
+  ...
+
+Maintenance
+
+Hacking
+  Support
+  Contribute
+  License
+
