@@ -40,13 +40,13 @@ you need a modern c++ compiler, libz and autotools.
     # OSX
     $ brew install automake autoconf
 
-To build EventQL from a distribution tarball:
+To build FnordMetric from a distribution tarball:
 
     $ ./configure
     $ make
     $ sudo make install
 
-To build EventQL from a git checkout:
+To build FnordMetric from a git checkout:
 
     $ git clone git@github.com:paulasmuth/fnordmetric.git
     $ cd fnordmetric
