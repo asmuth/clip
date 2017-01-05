@@ -11,6 +11,7 @@
 #pragma once
 #include <stdlib.h>
 #include <stdint.h>
+#include <string>
 
 namespace fnordmetric {
 
@@ -66,6 +67,10 @@ bool tval_fromstring(
     size_t val_len,
     const char* str,
     size_t str_len);
+
+bool tval_fromstring(
+    tval_ref* val,
+    const std::string& str);
 
 size_t tval_len(tval_type t);
 

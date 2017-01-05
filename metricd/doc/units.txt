@@ -49,14 +49,14 @@ unit area {
 
 // input should be in g
 unit weight_metric {
-  unit_name 1             "Gram"        "Grams"       "g";
-  unit_name 10^4          "Kilogram"    "Kilograms"   "kg";
-  unit_name 10^4          "Tonne"       "Tonnes"      "T";
+  unit_name gram       1             "Gram"        "Grams"       "g";
+  unit_name kilogram   10^4          "Kilogram"    "Kilograms"   "kg";
+  unit_name tonne      10^4          "Tonne"       "Tonnes"      "T";
 }
 
 unit user_count {
   unit_desc "User Count"
-  unit_name 1 "User" "Users";
+  unit_name users 1 "User" "Users";
 }
 
 metric memory_used {

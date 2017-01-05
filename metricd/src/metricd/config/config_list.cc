@@ -29,5 +29,23 @@ void ConfigList::addMetricConfig(MetricIDType metric_id, MetricConfig config) {
   metric_configs_.emplace(metric_id, std::move(config));
 }
 
+const std::map<std::string, UnitConfig>& ConfigList::getUnitConfigs()
+    const {
+  return unit_configs_;
+}
+
+const UnitConfig* ConfigList::getUnitConfig(std::string unit_id) const {
+  auto unit_config = unit_configs_.find(unit_id);
+  if (unit_config == unit_configs_.end()) {
+    return nullptr;
+  } else {
+    return &unit_config->second;
+  }
+}
+
+void ConfigList::addUnitConfig(std::string unit_id, UnitConfig config) {
+  unit_configs_.emplace(unit_id, std::move(config));
+}
+
 } // namespace fnordmetric
 

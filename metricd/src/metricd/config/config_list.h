@@ -14,6 +14,7 @@
 #include <string>
 #include "metricd/util/return_code.h"
 #include "metricd/metric.h"
+#include "metricd/units.h"
 
 namespace fnordmetric {
 
@@ -24,8 +25,13 @@ public:
   const MetricConfig* getMetricConfig(MetricIDType metric_id) const;
   void addMetricConfig(MetricIDType metric_id, MetricConfig config);
 
+  const std::map<std::string, UnitConfig>& getUnitConfigs() const;
+  const UnitConfig* getUnitConfig(std::string unit_id) const;
+  void addUnitConfig(std::string unit_id, UnitConfig config);
+
 protected:
   std::map<MetricIDType, MetricConfig> metric_configs_;
+  std::map<std::string, UnitConfig> unit_configs_;
 };
 
 } // namespace fnordmetric
