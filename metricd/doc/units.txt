@@ -54,6 +54,7 @@ unit user_count {
 
 metric memory_used {
   unit bytes
+  unit_scale 10^-3 // base vale is in kb
 }
 
 metric network_bandwidth {
