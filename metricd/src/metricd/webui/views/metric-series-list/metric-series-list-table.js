@@ -18,7 +18,7 @@ FnordMetric.SeriesTable = function(elem, series) {
 
   var render = function() {
     var table = document.createElement("table");
-    table.className = "f-table fnordmetric-series-list-table";
+    table.className = "fnordmetric-series-list-table";
     elem.appendChild(table);
 
     var thead = document.createElement("thead");

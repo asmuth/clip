@@ -1,51 +1,138 @@
-table.fnordmetric-series-list-table.f-table {
+/** font awesome icons **/
+table.fnordmetric-series-list-table .fa-angle-down:before {
+  content: "\f107";
+}
+
+table.fnordmetric-series-list-table tr i.sort_desc,
+table.fnordmetric-series-list-table tr i.sort_asc {
+  float: right;
+  line-height: 1em;
+  cursor: pointer;
+}
+
+table.fnordmetric-series-list-table i.sort_desc,
+table.fnordmetric-series-list-table i.sort_asc {
+  display: inline-block;
+  font: normal normal normal 14px/1 FontAwesome;
+  font-size: inherit;
+  text-rendering: auto;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+table.fnordmetric-series-list-table i.sort_asc::before {
+  content: "\f0d7";
+}
+
+table.fnordmetric-series-list-table i.sort_desc::before {
+  content: "\f0d8";
+}
+
+/** table */
+table.fnordmetric-series-list-table {
+  width: 100%;
+  margin-top: 5px;
+  border-collapse: collapse;
+  font-size: 13px;
   table-layout: fixed
 }
 
-/**table.fnordmetric-series-list-table.f-table thead th[data-key='sparkline'] {
-  width: 240px;
-}
-**/
-table.fnordmetric-series-list-table.f-table thead th.context_menu_icon {
-  width: 42px;
+table.fnordmetric-series-list-table tr {
+  border-bottom: 1px solid rgb(226, 232, 237);
 }
 
-table.fnordmetric-series-list-table.f-table tbody td {
+table.fnordmetric-series-list-table tr.list_header {
+  border-top: 2px solid rgb(226, 232, 237);
+  border-bottom: 2px solid rgb(226, 232, 237);
+  background-color: #f6f8fa;
+  color: #60707f;
+}
+
+table.fnordmetric-series-list-table thead th,
+table.fnordmetric-series-list-table tbody td {
+  text-align: left;
+  font-weight: 400;
+  border: none;
+  line-height: 1em;
+  padding: .8em;
+}
+
+table.fnordmetric-series-list-table tbody td {
+  vertical-align: middle;
+  border-top: 1px solid #e1e1e1;
   line-height: 21px;
   padding: 5px 10px;
 }
 
-table.fnordmetric-series-list-table.f-table tbody tr td:first-child {
-  color: #3d8ad3;
+table.fnordmetric-series-list-table thead th {
+  border-right: none;
+  font-weight: 400;
+  color: #999;
+  box-shadow: 0 1px 2px rgba(0,0,0,.09);
+  border-bottom: 1px solid #e1e1e1;
+  background: #f9f9f9;
+  border-top: 1px solid #ddd;
 }
 
-table.fnordmetric-series-list-table.f-table tbody tr td:first-child i.fa-eye {
-  color: #bbb;
+table.fnordmetric-series-list-table thead th[align='right'],
+table.fnordmetric-series-list-table tbody td[align='right'] {
+  text-align: right;
 }
 
-table.fnordmetric-series-list-table.f-table tbody td.align_center {
+table.fnordmetric-series-list-table thead th[align='center'],
+table.fnordmetric-series-list-table tbody td[align='center'] {
   text-align: center;
 }
 
-table.fnordmetric-series-list-table.f-table tbody td.sparkline {
+table.fnordmetric-series-list-table .clickable:hover {
+  cursor:pointer;
+}
+
+table.fnordmetric-series-list-table tr:hover td {
+  background-color: #f6f8fa;
+  cursor: pointer;
+}
+
+table.fnordmetric-series-list-table tr td.highlight {
+  background-color: #f6f8fa;
+}
+
+
+table.fnordmetric-series-list-table thead th.context_menu_icon {
+  width: 42px;
+}
+
+table.fnordmetric-series-list-table tbody tr td:first-child {
+  color: #3d8ad3;
+}
+
+table.fnordmetric-series-list-table tbody tr td:first-child i.fa-eye {
+  color: #bbb;
+}
+
+table.fnordmetric-series-list-table tbody td.align_center {
+  text-align: center;
+}
+
+table.fnordmetric-series-list-table tbody td.sparkline {
   width: 420px;
 }
 
-table.fnordmetric-series-list-table.f-table tbody td.values .value_stats {
+table.fnordmetric-series-list-table tbody td.values .value_stats {
   font-size: 11px;
   line-height: 16px;
 }
 
-table.fnordmetric-series-list-table.f-table tbody td.context_menu_icon {
+table.fnordmetric-series-list-table tbody td.context_menu_icon {
   padding-top: 0px;
 }
 
-table.fnordmetric-series-list-table.f-table tbody td.context_menu_icon i {
+table.fnordmetric-series-list-table tbody td.context_menu_icon i {
   font-size: 18px;
   font-weight: 600;
 }
 
-table.fnordmetric-series-list-table.f-table tbody td .total {
+table.fnordmetric-series-list-table tbody td .total {
   color: #333;
   font-size: 16px;
 }
