@@ -47,7 +47,7 @@ FnordMetric.SeriesTable = function(elem, series) {
 
     /** watch right click **/
     tr.addEventListener("contextmenu", function(e) {
-      //check if right click
+      /** check if right click **/
       if (e.which) {
         if (e.which != 3) {
           return false;
@@ -61,7 +61,6 @@ FnordMetric.SeriesTable = function(elem, series) {
       renderContextMenu(series.series_id, e);
       e.preventDefault();
     });
-
 
   }
 
@@ -82,7 +81,6 @@ FnordMetric.SeriesTable = function(elem, series) {
     var td = document.createElement("td");
     tr.appendChild(td);
     renderSparkline(series, td);
-
   }
 
   var renderSparkline = function(series, td) {
@@ -151,23 +149,31 @@ FnordMetric.SeriesTable = function(elem, series) {
     var menu = document.querySelector(".context_menu");
     menu.classList.add("active");
 
-    /** set left position **/
+    var pos_x;
+    var pointer_pos;
+
+    /** right align contextmenu at the window's right edge **/
     if (window.innerWidth - ev.clientX < menu.offsetWidth) {
-      menu.style.left = (ev.clientX - menu.offsetWidth + 19) + "px";
-      menu.setAttribute("data-pointer", "right");
+      pos_x = ev.clientX - menu.offsetWidth + 19;
+      pointer_pos = "right";
 
+    /** left align contextmenu at the window's left edge **/
     } else if (ev.clientX < menu.offsetWidth / 2) {
-      menu.style.left = ev.clientX - 16 + "px";
-      menu.setAttribute("data-pointer", "left");
+      pos_x = ev.clientX - 16;
+      pointer_pos = "left";
 
+    /** center contextmenu **/
     } else {
-      menu.style.left = ev.clientX - menu.offsetWidth / 2 + "px";
-      menu.setAttribute("data-pointer", "center");
+      pos_x = ev.clientX - menu.offsetWidth / 2;
+      pointer_pos = "center";
 
     }
 
-    /** set top position **/
-    menu.style.top = ev.clientY + window.scrollX + 5 + "px";
+    menu.style.left = pos_x + "px";
+    menu.setAttribute("data-pointer", pointer_pos);
+
+    var pos_top = ev.clientY + window.scrollX + 5;
+    menu.style.top = pos_top + "px";
   }
 
   var hideContextMenu = function() {
@@ -256,12 +262,9 @@ FnordMetric.SeriesTableSparklineRenderer = function() {
     }
 
     var padding_x = 0;
-    var padding_y = 5;
+    var padding_y = padding.top + padding.bottom;
 
     var points = scaleValues(series);
-
-    var html = [];
-
 
     var svg_line = [];
     for (var i = 0; i < points.length; ++i) {
@@ -272,7 +275,7 @@ FnordMetric.SeriesTableSparklineRenderer = function() {
       }
     }
 
-
+    var html = [];
     html.push(
         "<path class='line' style='stroke:", series.color,
         ";' d='", svg_line.join(" "), "'></path>");
@@ -329,6 +332,5 @@ FnordMetric.SeriesTableSparklineRenderer = function() {
 
     return scaled;
   };
-
 }
 
