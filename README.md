@@ -97,7 +97,7 @@ Need help, head on over to our [Google Groups][1]  page to discuss any ideas
 that you might have.
 
 
-### License
+## License
 
 Copyright (c) 2011-2016 Paul Asmuth
 
