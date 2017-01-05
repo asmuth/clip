@@ -11,5 +11,15 @@
 
 namespace fnordmetric {
 
+UnitNameConfig::UnitNameConfig() {}
+
+UnitNameConfig::UnitNameConfig(
+    UnitNameConfig&& other) :
+    factor(std::move(other.factor)),
+    singular(std::move(other.singular)),
+    plural(std::move(other.plural)),
+    symbol(std::move(other.symbol)) {}
+
+
 } // namespace fnordmetric
 
