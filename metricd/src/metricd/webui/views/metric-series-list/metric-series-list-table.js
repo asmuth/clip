@@ -157,8 +157,14 @@ FnordMetric.SeriesTable = function(elem, series) {
 
     var td = document.createElement("td");
     td.className = "values";
-    td.innerHTML = ["<div class='total'>", sum || "-",
-      "</div><div class='value_stats'>", value_stats_line, "</div>"].join("");
+    td.innerHTML = [
+      "<div class='total'>",
+        sum || "-",
+      "</div>",
+      "<div class='value_stats'>",
+        value_stats_line,
+      "</div>"
+    ].join("");
 
     tr.appendChild(td);
   }
@@ -196,7 +202,6 @@ FnordMetric.SeriesTable = function(elem, series) {
 
       elem.appendChild(menu);
     }
-
 
     menu.classList.add("active");
 
@@ -264,8 +269,10 @@ FnordMetric.SeriesTableSparklineRenderer = function() {
     var grid_height = height - padding.top - padding.bottom;
     var grid_width = width - padding.left - padding.right;
 
-    var html = ["<svg class='sparkline' style='height: ", grid_height, "px; width: ",
-      grid_width, "px;'>"];
+    var html = [
+      "<svg class='sparkline'",
+        "style='height: ", grid_height, "px; width: ", grid_width, "px;'",
+      ">"];
 
 
     html.push(renderGrid(grid_height, grid_width));
@@ -289,17 +296,20 @@ FnordMetric.SeriesTableSparklineRenderer = function() {
 
     /** render x axis in the middle of the sparkline **/
     html.push(
-      "<line class='axis x stroke' y1='", height / 2, "' y2='", height / 2,
-      "' x1='0' x2='", width, "'></line>");
+      "<line class='axis x stroke' ",
+        "y1='", height / 2, "' y2='", height / 2, "' x1='0' x2='", width,
+      "'></line>");
 
     /** render two a y axis after 1/3 and 2/3 of the grid width **/
     html.push(
-      "<line class='axis x stroke' y1='0' y2='", height,
-      "' x1='", width * 1/3, "' x2='", width * 1/3, "'></line>");
+      "<line class='axis x stroke' ",
+        "y1='0' y2='", height, "' x1='", width * 1/3, "' x2='", width * 1/3,
+      "'></line>");
 
     html.push(
-      "<line class='axis x stroke' y1='0' y2='", height,
-      "' x1='", width * 2/3, "' x2='", width * 2/3, "'></line>");
+      "<line class='axis x stroke' ",
+        "y1='0' y2='", height, "' x1='", width * 2/3, "' x2='", width * 2/3,
+      "'></line>");
 
     html.push("</g>");
 
@@ -332,7 +342,8 @@ FnordMetric.SeriesTableSparklineRenderer = function() {
     var html = [];
     html.push(
         "<path class='line' style='stroke:", series.color,
-        ";' d='", svg_line.join(" "), "'></path>");
+          ";' d='", svg_line.join(" "),
+        "'></path>");
 
     return html.join("");
   };
