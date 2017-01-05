@@ -34,11 +34,6 @@ referred to the documentation.
 - Large list of included sensors
 
 
-## Documentation
-
-You can find the full documentation at http://fnordmetric.io/
-
-
 ## Build
 
 Before we can start we need to install some build dependencies. Currently
@@ -68,6 +63,11 @@ To build EventQL from a git checkout:
 To run the test suite:
 
     $ make check
+
+
+## Documentation
+
+You can find the full documentation at http://fnordmetric.io/
 
 
 ## Contributors
