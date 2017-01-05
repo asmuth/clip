@@ -138,7 +138,6 @@ FnordMetric.views["fnordmetric.metric.series.list"] = function(elem, params) {
           series_id: series.series_id,
           values: series.values,
           summaries: series.summaries,
-          time: series.time,
           //REMOVEME
           title: "Current Value",
           unit: "MB/s"
@@ -149,7 +148,6 @@ FnordMetric.views["fnordmetric.metric.series.list"] = function(elem, params) {
           series_id: "test",
           title: "Compare To: Yesterday",
           values: series.values.map(function(v) { return v - 1000 } ),
-          time: series.time,
           unit: "MB/s"
         }
           //REMOVEME END

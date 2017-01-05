@@ -1,3 +1,16 @@
+/**
+ * This file is part of the "FnordMetric" project
+ *   Copyright (c) 2016 Laura Schlimmer, FnordCorp B.V.
+ *
+ * FnordMetric is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License v3.0. You should have received a
+ * copy of the GNU General Public License along with this program. If not, see
+ * <http://www.gnu.org/licenses/>.
+ */
+
+if (typeof FnordMetric == undefined) {
+  FnordMetric = {};
+}
 
 /**
   {
@@ -18,11 +31,25 @@
 
 
 **/
-
-if (typeof FnordMetric == undefined) {
-  FnordMetric = {};
-}
-
+/**
+ * Renders a chart and optionally a summary for the provided series
+ *
+ * @param elem   {HTMLElement} an HTML elem within the chart will be rendered
+ * @param config {object}      the chart's configuration
+ *
+ * summary {object} Optinal. if set the summary will be rendered
+ * summary.series_id {string} the series' id whose summary is displayed
+ *
+ * time {array} the time values for the chart's x axis
+ *
+ * series {array} an array of series objects
+ * series.series_id {string} the series' id
+ * series.values {array} the series' numerical values
+ * series.summaries {array} Optinal.
+ * series.color {string} Optinal.
+ * series.title {string} Optinal. the series' title
+ * series.unit {string} Optional. the unit of series.values
+ */
 FnordMetric.SeriesChart = function(elem, config) {
   'use strict';
 
@@ -73,9 +100,9 @@ FnordMetric.SeriesChart = function(elem, config) {
 
     var min = null;
     var max = null;
-    var time_values = null;
+    var time_values = config.time;
 
-    /** get global min, max and time values **/
+    /** get global min and max **/
     for (var i = 0; i < config.series.length; i++) {
     //FIXME check if the unit is the same among all series
       var s = config.series[i];
@@ -92,10 +119,6 @@ FnordMetric.SeriesChart = function(elem, config) {
 
       var series_max = s.max ? s.max : Math.max.apply(null, s.values);
       max = Math.max(max, series_max);
-
-      if (time_values == null) {
-        time_values = s.time;
-      }
     }
 
     /** build chart html **/
@@ -191,6 +214,9 @@ FnordMetric.SeriesChart = function(elem, config) {
   render();
 }
 
+/**
+ * Helper methods to render the chart elem
+ */
 FnordMetric.SeriesChartRenderer = function(padding) {
   'use strict';
 
@@ -415,6 +441,9 @@ FnordMetric.SeriesChartRenderer = function(padding) {
   }
 }
 
+/**
+ * Helper methods to render the summary elem
+ */
 FnordMetric.SeriesChartSummaryRenderer = function(default_colors) {
   'use strict';
 
@@ -499,6 +528,9 @@ FnordMetric.SeriesChartSummaryRenderer = function(default_colors) {
   }
 }
 
+/**
+ * Helper methods to handle the chart hover events
+ */
 FnordMetric.SeriesChartHoverHandler = function() {
   'use strict';
 
