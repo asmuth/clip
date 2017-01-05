@@ -97,29 +97,12 @@ FnordMetric.SeriesChart = function(elem, config) {
     var height = elem.offsetHeight;
     var width = elem.offsetWidth - summary_elem_width;
 
-
-    var min = null;
-    var max = null;
+    /** if all values are > 0, 0 is set to be the min value **/
+    var min = Math.min(0, getMin(config.series));
+    var max = getMax(config.series);
     var time_values = config.time;
 
-    /** get global min and max **/
-    for (var i = 0; i < config.series.length; i++) {
     //FIXME check if the unit is the same among all series
-      var s = config.series[i];
-      if (!s.values) {
-        return false;
-      }
-
-      /** the series min is either the configured min value,
-        * the smallest value < 0 or 0 **/
-      var series_min = s.min ?
-        s.min :
-        Math.min.apply(null, s.values.concat([0]));
-      min = Math.min(min, series_min);
-
-      var series_max = s.max ? s.max : Math.max.apply(null, s.values);
-      max = Math.max(max, series_max);
-    }
 
     /** build chart html **/
     var html = [];
@@ -202,6 +185,22 @@ FnordMetric.SeriesChart = function(elem, config) {
     }
 
     return scaled;
+  }
+
+  function getMin(series) {
+    var m = series.map(function(s) {
+      return Math.min.apply(null, s.values)
+    });
+
+    return Math.min.apply(null, m);
+  }
+
+  function getMax(series) {
+    var m = series.map(function(s) {
+      return Math.max.apply(null, s.values)
+    });
+
+    return Math.max.apply(null, m);
   }
 
   /** init **/
