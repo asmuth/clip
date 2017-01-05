@@ -1,8 +1,9 @@
 FnordMetric
 ===========
 
-FnordMetric allows you collect and visualize timeseries data using only SQL. It
-enables you to build beautiful real-time analytics dashboards within minutes.
+**metricd** is a lightweight daemon for real-time metrics collection, storage
+and visualization. It allows you capture measurements and build beautiful
+real-time dashboards within minutes.
 
 Documentation: [fnordmetric.io](http://fnordmetric.io/)
 
@@ -11,19 +12,7 @@ Demo Video: [http://fnordmetric.io/fnordmetric-server.mp4](http://fnordmetric.io
 [ ![Screenshot](https://raw.githubusercontent.com/paulasmuth/fnordmetric/master/fnordmetric-doc/web/assets/img/fnordmetric_server_screen1.png) ](http://github.com/paulasmuth/fnordmetric)
 
 
-
-#### FnordMetric ChartSQL
-
-FnordMetric ChartSQL allows you to write SQL queries that return charts instead
-of tables. The charts are rendered as SVG vector graphics and can easily be
-embedded into any website and customized with css in order to build beautiful
-dashboards.
-
-You can execute ChartSQL queries from the command line against a number of
-external sources like CSV files or a MySQL database.
-
-
-#### FnordMetric Server
+#### metricd
 
 Fnordmetric Server is a standalone HTTP server application. It exposes a web UI
 and a HTTP API to run ChartSQL queries and collect timeseries data. You can use
