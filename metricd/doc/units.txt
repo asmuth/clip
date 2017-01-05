@@ -40,7 +40,7 @@ unit bytes_binary {
 }
 
 // input should be in cm2
-unit flaeche {
+unit area {
   unit_name 1             "Quadtratzentimeter" "Quadtratzentimer"   "cm²";
   unit_name 10^4          "Quadtratmeter"      "Quadtratmeter"      "m²";
   unit_name 10^4          "Hektar"             "Hektar"             "ha";
@@ -70,7 +70,6 @@ metric user_signups {
 }
 
 metric world_dominance {
-  unit flaeche
-  unit_scale 10^-4 // base is in m2
+  unit rate(area, 1h)
 }
 
