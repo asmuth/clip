@@ -9,12 +9,7 @@ Documentation: [fnordmetric.io](http://fnordmetric.io/)
 
 [ ![Screenshot](https://raw.githubusercontent.com/paulasmuth/fnordmetric/master/fnordmetric-doc/web/assets/img/fnordmetric_server_screen1.png) ](http://github.com/paulasmuth/fnordmetric)
 
-
-Features
---------
-
-This is a short list of key features to get you excited about FnordMetric. For further informations on these topics please visit the documentation.
-
+### Features:
 + Telemetry: Collect timeseries data via HTTP, UDP/statsd, MQTT or SNMP
 + Visualization: Render custom charts as SVG, HTML or PNG and embed them into any website
 + HTTP+JSON Query API
@@ -22,14 +17,11 @@ This is a short list of key features to get you excited about FnordMetric. For f
 + Self-contained, standalone daemon
 + Large list of included sensors
 
-
-Documentation
--------------
-
+### Documentation
 You can find the full documentation at http://fnordmetric.io/
 
 
-Contributions
+Contributors
 -------------
 
 #### Individual Contributors to FnordMetric
