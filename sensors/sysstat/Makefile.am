@@ -3,7 +3,7 @@
 MAINTAINERCLEANFILES =   \
   Makefile.in
 
-bin_PROGRAMS = sensor_sysstat
+bin_PROGRAMS = metricd-sensor-sysstat
 
 ################# DEPENDENCIES ####################
 
@@ -17,7 +17,7 @@ endif
 AM_CXXFLAGS = -DFNORDMETRIC_VERSION=\"v@PACKAGE_VERSION@\" $(PTHREAD_CFLAGS) $(PTHREAD_DEF) -std=c++0x -mno-omit-leaf-frame-pointer -fno-omit-frame-pointer -Wall -Wextra -Wno-unused-parameter -Wdelete-non-virtual-dtor -Wno-predefined-identifier-outside-function -g -I$(top_srcdir)/metricd/src -I$(top_srcdir)
 AM_LDFLAGS = $(PTHREAD_LDFLAGS_)
 
-sensor_sysstat_SOURCES = \
+metricd_sensor_sysstat_SOURCES = \
     @top_srcdir@/metricd/src/metricd/util/time_impl.h \
     @top_srcdir@/metricd/src/metricd/util/time.h \
     @top_srcdir@/metricd/src/metricd/util/time.cc \
