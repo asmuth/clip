@@ -33,9 +33,10 @@ referred to the documentation.
 - Large list of included sensors
 
 
-## Web Interface
+FnordMetric also includes a web-based user interface.
 
 [ ![Screenshot](https://raw.githubusercontent.com/paulasmuth/fnordmetric/master/fnordmetric-doc/web/assets/img/fnordmetric_server_screen1.png) ](http://github.com/paulasmuth/fnordmetric)
+
 
 ## Build
 
