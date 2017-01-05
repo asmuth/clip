@@ -266,6 +266,17 @@ bool tval_fromstring(
   }
 }
 
+bool tval_fromstring(
+    tval_ref* val,
+    const std::string& str) {
+  return tval_fromstring(
+      val->type,
+      val->data,
+      val->len,
+      str.data(),
+      str.size());
+}
+
 size_t tval_len(tval_type t) {
   static_assert(
       std::numeric_limits<double>::is_iec559 &&
