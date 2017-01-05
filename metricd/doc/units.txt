@@ -1,0 +1,46 @@
+
+unit bits {
+  unit_desc "Bits (Decimal Prefix)"
+
+  unit_prefix 1     "Byte"      "Bits"      "b";
+  unit_prefix 10^3  "Kilobit"   "Kilobits"  "Kb";
+  unit_prefix 10^6  "Megabit"   "Megabits"  "Mb";
+  unit_prefix 10^9  "Gigabit"   "Gigabits"  "Gb";
+}
+
+unit bytes {
+  unit_desc "Bytes (Decimal Prefix)"
+
+  unit_prefix 1     "Byte"      "Bytes"      "B";
+  unit_prefix 10^3  "Kilobyte"  "Kilobytes"  "KB";
+  unit_prefix 10^6  "Megabyte"  "Megabytes"  "MB";
+  unit_prefix 10^9  "Gigabyte"  "Gigabytes"  "GB";
+}
+
+unit bits_binary {
+  unit_desc "Bits (Binary Prefix)"
+
+  unit_prefix 1     "Byte"      "Bits"      "b";
+  unit_prefix 10^3  "Kibibit"   "Kibibits"  "Kb";
+  unit_prefix 10^6  "Mebibit"   "Mebibits"  "Mb";
+  unit_prefix 10^9  "Gibibit"   "Gibibits"  "Gb";
+}
+
+unit bytes_binary {
+  unit_desc "Bytes (Binary Prefix)"
+
+  unit_prefix 1     "Byte"      "Bytes"      "B";
+  unit_prefix 10^3  "Kibibyte"  "Kibibytes"  "KB";
+  unit_prefix 10^6  "Mebibyte"  "Mebibytes"  "MB";
+  unit_prefix 10^9  "Gibibyte"  "Gibibytes"  "GB";
+}
+
+
+metric memory_used {
+  unit bytes
+}
+
+metric network_bandwidth {
+  unit rate(bits, 1s)
+}
+
