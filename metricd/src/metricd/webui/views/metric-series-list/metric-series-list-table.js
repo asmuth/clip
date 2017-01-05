@@ -31,6 +31,7 @@ FnordMetric.SeriesTable = function(elem, series) {
   var renderRow = function(series, tbody) {
     var tr = document.createElement("tr");
     var html = [];
+    tbody.appendChild(tr);
 
     /** series id **/
     renderSeriesIdCell(series.series_id, tr);
@@ -62,7 +63,6 @@ FnordMetric.SeriesTable = function(elem, series) {
     });
 
 
-    tbody.appendChild(tr);
   }
 
   var renderSeriesIdCell = function(id, tr) {
@@ -80,9 +80,9 @@ FnordMetric.SeriesTable = function(elem, series) {
 
   var renderSparklineCell = function(series, tr) {
     var td = document.createElement("td");
+    tr.appendChild(td);
     renderSparkline(series, td);
 
-    tr.appendChild(td);
   }
 
   var renderSparkline = function(series, td) {
@@ -95,10 +95,14 @@ FnordMetric.SeriesTable = function(elem, series) {
     };
 
     var svg = document.querySelector("svg.sparkline_tpl").cloneNode(true);
-    td.appendChild(svg);
     td.className = "sparkline";
 
-    sparkline_renderer.render(svg, sparkline_cfg);
+    var html = sparkline_renderer.render(
+        sparkline_cfg,
+        td.offsetWidth,
+        td.offsetHeight);
+
+    td.innerHTML = html;
   }
 
   var renderSummariesCell = function(summaries, tr) {
@@ -190,49 +194,56 @@ FnordMetric.SeriesTableSparklineRenderer = function() {
     * min (optinal): a float determining the min value
     * max(optinal): a float determining the max value
     **/
-  this.render = function(elem, cfg) {
-    var height = getDimension('height', elem);
-    var width = getDimension("width", elem);
+  this.render = function(cfg, width, height) {
+    console.log(height, width);
+    var html = ["<svg class='sparkline' style='height: ", height, "px; width: ",
+      width, "px;'>"];
 
-    renderGrid(elem, height, width);
 
-    var path_elems = elem.querySelectorAll(".lines path");
+    html.push(renderGrid(height, width));
 
+    html.push("<g class='lines'>");
+
+//    var path_elems = elem.querySelectorAll(".lines path");
+//
     for (var i = 0; i < cfg.series.length; i++) {
-      if (path_elems.length - 1 < i) {
-        break;
-      }
-
-      renderPath(cfg.series[i], height, width, path_elems[i]);
+      html.push(renderPath(cfg.series[i], height, width));
     }
 
-    elem.style.height = height + "px";
-    elem.style.width = width + "px";
+    html.push("</g>");
+//
+//    elem.style.height = height + "px";
+//    elem.style.width = width + "px";
+
+    html.push("</svg>");
+
+    return html.join("");
   }
 
-  var renderGrid = function(elem, height, width) {
+  var renderGrid = function(height, width) {
+    var html = [];
+    html.push("<g class='axis x'>");
+
     /** render x axis in the middle of the sparkline **/
-    var x_axis = elem.querySelector(".axis.x .stroke");
-    x_axis.setAttribute("y1", height / 2);
-    x_axis.setAttribute("y2", height / 2);
-    x_axis.setAttribute("x1", 0);
-    x_axis.setAttribute("x2", width);
+    html.push(
+      "<line class='axis x stroke' y1='", height / 2, "' y2='", height / 2,
+      "' x1='0' x2='", width, "'></line>");
 
     /** render two a y axis after 1/3 and 2/3 of the grid width **/
-    var y_axis_left = elem.querySelector(".axis.y .stroke.left");
-    y_axis_left.setAttribute("x1", width * 1 / 3);
-    y_axis_left.setAttribute("x2", width * 1 / 3);
-    y_axis_left.setAttribute("y1", 0);
-    y_axis_left.setAttribute("y2", height);
+    html.push(
+      "<line class='axis x stroke' y1='0' y2='", height,
+      "' x1='", width * 1/3, "' x2='", width * 1/3, "'></line>");
 
-    var y_axis_right = elem.querySelector(".axis.y .stroke.right");
-    y_axis_right.setAttribute("x1", width * 2 / 3);
-    y_axis_right.setAttribute("x2", width * 2 / 3);
-    y_axis_right.setAttribute("y1", 0);
-    y_axis_right.setAttribute("y2", height);
+    html.push(
+      "<line class='axis x stroke' y1='0' y2='", height,
+      "' x1='", width * 2/3, "' x2='", width * 2/3, "'></line>");
+
+    html.push("</g>");
+
+    return html.join("");
   }
 
-  var renderPath = function(series, height, width, path_elem) {
+  var renderPath = function(series, height, width) {
     if (!series.min) {
       series.min = 0.0;
     }
@@ -246,6 +257,9 @@ FnordMetric.SeriesTableSparklineRenderer = function() {
 
     var points = scaleValues(series);
 
+    var html = [];
+
+
     var svg_line = [];
     for (var i = 0; i < points.length; ++i) {
       if (!isNaN(points[i].y)) {
@@ -255,9 +269,12 @@ FnordMetric.SeriesTableSparklineRenderer = function() {
       }
     }
 
-    //var svg = elem.querySelector("svg");
 
-    path_elem.setAttribute("d", svg_line.join(" "));
+    html.push(
+        "<path class='line' style='stroke:", series.color,
+        ";' d='", svg_line.join(" "), "'></path>");
+
+    return html.join("");
   };
 
   var getTemplate = function() {
@@ -272,7 +289,7 @@ FnordMetric.SeriesTableSparklineRenderer = function() {
     return tpl;
   }
 
-  getDimension = function(dimension, elem) {
+  var getDimension = function(dimension, elem) {
     var value = elem.getAttribute(dimension);
 
     var idx = value.indexOf("%");
