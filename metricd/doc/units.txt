@@ -1,4 +1,5 @@
 
+// input should be in bits
 unit bits {
   unit_desc "Bits (Decimal Prefix)"
 
@@ -8,6 +9,7 @@ unit bits {
   unit_name 10^9  "Gigabit"   "Gigabits"  "Gb";
 }
 
+// input should be in bytes
 unit bytes {
   unit_desc "Bytes (Decimal Prefix)"
 
@@ -17,6 +19,7 @@ unit bytes {
   unit_name 10^9  "Gigabyte"  "Gigabytes"  "GB";
 }
 
+// input should be in bits
 unit bits_binary {
   unit_desc "Bits (Binary Prefix)"
 
@@ -26,6 +29,7 @@ unit bits_binary {
   unit_name 2^30  "Gibibit"   "Gibibits"  "Gib";
 }
 
+// input should be in bytes
 unit bytes_binary {
   unit_desc "Bytes (Binary Prefix)"
 
@@ -33,6 +37,14 @@ unit bytes_binary {
   unit_name 2^10  "Kibibyte"  "Kibibytes"  "KiB";
   unit_name 2^20  "Mebibyte"  "Mebibytes"  "MiB";
   unit_name 2^30  "Gibibyte"  "Gibibytes"  "GiB";
+}
+
+// input should be in cm2
+unit flaeche {
+  unit_name 1             "Quadtratzentimeter" "Quadtratzentimer"   "cm²";
+  unit_name 10^4          "Quadtratmeter"      "Quadtratmeter"      "m²";
+  unit_name 10^4          "Hektar"             "Hektar"             "ha";
+  unit_name 40468564.224  "Acre"               "Acres"              "ac";
 }
 
 unit user_count {
@@ -46,6 +58,7 @@ metric memory_used {
 
 metric network_bandwidth {
   unit rate(bits, 1s)
+  unit_scale 8 // base value is in bytes
 }
 
 metric users_online {
@@ -54,5 +67,10 @@ metric users_online {
 
 metric user_signups {
   unit rate(user_count, 1m)
+}
+
+metric world_dominance {
+  unit flaeche
+  unit_scale 10^-4 // base is in m2
 }
 
