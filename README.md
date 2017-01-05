@@ -21,10 +21,7 @@ Documentation: [fnordmetric.io](http://fnordmetric.io/)
 You can find the full documentation at http://fnordmetric.io/
 
 
-Contributors
--------------
-
-#### Individual Contributors to FnordMetric
+### Contributors
 
 + Laura Schlimmer (http://github.com/lauraschlimmer)
 + Henrik Muehe (http://github.com/henrik-muehe)
@@ -56,8 +53,7 @@ Need help, head on over to our [Google Groups][1]  page to discuss any ideas
 that you might have.
 
 
-License
--------
+### License
 
 Copyright (c) 2011-2016 Paul Asmuth
 
