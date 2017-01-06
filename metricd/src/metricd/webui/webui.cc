@@ -46,6 +46,17 @@ void WebUI::handleHTTPRequest(
     response->setStatus(http::kStatusOK);
     response->addHeader("Content-Type", "text/html; charset=utf-8");
     std::string body = getAssetFile("embed.html");
+    std::string js_src;
+    std::string css_src;
+    js_src += getAssetFile("embed/chart/chart.js");
+    css_src += getAssetFile("embed/chart/chart.css");
+
+    std::string params_str = "{}";
+
+    StringUtil::replaceAll(&body, "{{JS_SRC}}", js_src);
+    StringUtil::replaceAll(&body, "{{CSS_SRC}}", css_src);
+    StringUtil::replaceAll(&body, "{{PARAMS}}", params_str);
+
     response->addBody(body);
     return;
   }

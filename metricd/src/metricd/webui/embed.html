@@ -1,3 +1,23 @@
 <!DOCTYPE html>
 <title>FnordMetric</title>
 <meta content="text/html; charset=utf-8" http-equiv="Content-type">
+<script>{{JS_SRC}}</script>
+<style type="text/css">{{CSS_SRC}}</style>
+<div id="viewport">
+  <div class="fm-chart-container">
+    <div class="fm-chart-title">
+    </div>
+    <div class="fm-chart-body">
+      <div class="fm-chart-summary">
+      </div>
+      <div class="fm-chart-canvas">
+      </div>
+    </div>
+    <div class="fm-chart-series-list">
+    </div>
+  </div>
+</div>
+<script>
+  var chart = new FnordMetricChart(document.getElementById("viewport"), {{PARAMS}});
+  chart.render()
+</script>

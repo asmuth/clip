@@ -1,3 +1,29 @@
+.fm-chart-container {
+  border: 2px solid #000;
+}
+
+.fm-chart-title {
+  height: 30px;
+  background: #eee;
+}
+
+.fm-chart-body {
+  min-height: 140px;
+  display: flex;
+  flex-direction: row;
+}
+
+.fm-chart-summary {
+  width: 200px;
+  background: #ccc;
+}
+
+.fm-chart-series-list{
+  background: #eee;
+  height: 300px;
+}
+
+
 
 .fnordmetric-metric-series-chart {
   display: flex;
