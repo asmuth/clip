@@ -31,11 +31,11 @@ void WebUI::handleHTTPRequest(
 
   if (path == "/") {
     response->setStatus(http::kStatusFound);
-    response->addHeader("Location", "/metrics/");
+    response->addHeader("Location", "/ui/");
     return;
   }
 
-  if (StringUtil::beginsWith(path, "/metrics")) {
+  if (StringUtil::beginsWith(path, "/ui/")) {
     response->setStatus(http::kStatusOK);
     response->addHeader("Content-Type", "text/html; charset=utf-8");
     response->addBody(getPreludeHTML());
