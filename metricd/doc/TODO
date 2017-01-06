@@ -1,3 +1,6 @@
+frontend: pickUnit
+frontend: pickSummarySeries
+frontend: pickGrossSummary
 
 metric type: health check
 metric type: event log

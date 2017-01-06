@@ -12,7 +12,7 @@ this["FnordMetric"] = (function() {
   'use strict';
 
   var app = this;
-  var current_path = window.location.pathname + window.location.search;
+  var current_path;
   var router;
   var viewport_elem;
   var widgets = {};
@@ -25,7 +25,7 @@ this["FnordMetric"] = (function() {
     showLoader();
 
     viewport_elem = document.getElementById("fm_viewport");
-    setRoute(current_path);
+    setPath(window.location.pathname + window.location.search);
 
     /* handle history entry change */
     setTimeout(function() {
@@ -34,10 +34,81 @@ this["FnordMetric"] = (function() {
         if (e.state && e.state.path) {
           applyNavgiationChange(e.state.path);
         } else {
-          applyNavigationChange(window.location.pathname + window.location.search);
+          setPath(window.location.pathname + window.location.search);
         }
       }, false);
     }, 0);
+  }
+
+
+  var navigateTo = function(url) {
+    var path = URLUtil.getPathAndQuery(url);
+    history.pushState({path: path}, "", path);
+    setPath(path);
+  }
+
+  var navigateHome = function() {
+    navigateTo("/");
+  }
+
+  var showLoader = function() {
+    //FIXME
+    //document.getElementById("fm_main_loader").classList.remove("hidden");
+  };
+
+  var hideLoader = function() {
+    //FIXME
+    //document.getElementById("fm_main_loader").classList.add("hidden");
+  };
+
+  /** PRIVATE **/
+  function setPath(path) {
+    if (path == current_path) {
+      return;
+    }
+
+    current_path = path;
+    console.log(">> Navigate to: " + path);
+
+    var params = {};
+    params.app = app;
+    params.path = path;
+
+    /* try changing the path in the current view instance */
+    if (current_view && current_view.changePath) {
+      var route = findRoute(params.path);
+      if (current_view.changePath(path, route)) {
+        return;
+      }
+    }
+
+    /* otherwise search for the new view class */
+    showLoader();
+
+    var route = params.path ? findRoute(params.path) : null;
+    params.route = route;
+
+    var view = route ? FnordMetric.views[route.view] : null;
+    if (!view) {
+      view = FnordMetric.views["fnordmetric.error"];
+    }
+
+    /* destroy the current view */
+    if (current_view && current_view.destroy) {
+      current_view.destroy();
+    }
+
+    /* initialize the new view */
+    viewport_elem.innerHTML = "";
+    current_view = {};
+
+    view.call(current_view, viewport_elem, params);
+
+    if (current_view.initialize) {
+      current_view.initialize.call(current_view);
+    }
+
+    hideLoader();
   }
 
   function findRoute(full_path) {
@@ -76,108 +147,11 @@ this["FnordMetric"] = (function() {
     return null;
   }
 
-  function setView(view, params) {
-    if (current_view && current_view.destroy) {
-      current_view.destroy();
-    }
-
-    viewport_elem.innerHTML = "";
-    current_view = {};
-
-    view.call(current_view, viewport_elem, params);
-
-    if (current_view.initialize) {
-      current_view.initialize.call(current_view);
-    }
-  }
-
-  var navigateTo = function(url) {
-    var path = URLUtil.getPathAndQuery(url);
-    history.pushState({path: path}, "", path);
-    applyNavigationChange(path);
-  }
-
-  function applyNavigationChange(path) {
-    if (path == current_path) {
-      return;
-    }
-
-    current_path = path;
-    setRoute(path);
-  };
-
-  var navigateHome = function() {
-    navigateTo("/");
-  }
-
-  var setRoute = function(path) {
-    console.log(">> Navigate to: " + path);
-
-    var params = {};
-    params.app = app;
-    params.path = path;
-
-    //FIXME
-    var m = path.match(/\/a\/([a-z0-9A-Z_-]+)(\/?.*)/);
-    if (m) {
-      params.project_id = m[1];
-      params.vpath = "/a/<namespace>" + m[2];
-    } else {
-      params.vpath = path;
-    }
-
-    if (current_view && current_view.changePath) {
-      var route = findRoute(params.vpath);
-      if (current_view.changePath(path, route)) {
-        return;
-      }
-    }
-
-    /* render page */
-    loadPage(params);
-  }
-
-  var loadPage = function(params) {
-    showLoader();
-    renderPage(params);
-  }
-
-  var renderPage = function(params) {
-    var route = params.vpath ? findRoute(params.vpath) : null;
-    params.route = route;
-
-    var view = route ? FnordMetric.views[route.view] : null;
-    if (!view) {
-      renderError({type: "404"});
-      return;
-    }
-
-    hideLoader();
-    setView(view, params);
-    current_view = view;
-  }
-
-  var showLoader = function() {
-    //FIXME
-    //document.getElementById("fm_main_loader").classList.remove("hidden");
-  };
-
-  var hideLoader = function() {
-    //FIXME
-    //document.getElementById("fm_main_loader").classList.add("hidden");
-  };
-
-  var renderError = function(cfg) {
-    var view = FnordMetric.views["fnordmetric.error"];
-    setView(view, cfg);
-  }
-
   this["init"] = init;
   this.navigateTo = navigateTo;
   this.navigateHome = navigateHome;
   this.showLoader = showLoader;
   this.hideLoader = hideLoader;
-  this.renderError = renderError;
   this.views = {};
   this.util = {};
   this.api_base_path = "/api/v1/metrics";
