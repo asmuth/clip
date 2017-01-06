@@ -42,6 +42,14 @@ void WebUI::handleHTTPRequest(
     return;
   }
 
+  if (StringUtil::beginsWith(path, "/embed")) {
+    response->setStatus(http::kStatusOK);
+    response->addHeader("Content-Type", "text/html; charset=utf-8");
+    std::string body = getAssetFile("embed.html");
+    response->addBody(body);
+    return;
+  }
+
   if (StringUtil::beginsWith(path, "/assets/app.html")) {
     response->setStatus(http::kStatusOK);
     response->addHeader("Content-Type", "text/html; charset=utf-8");
