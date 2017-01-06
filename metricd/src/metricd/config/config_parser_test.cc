@@ -94,4 +94,25 @@ UNIT_TEST(ConfigParserTest);
 //  }
 //});
 
+TEST_CASE(ConfigParserTest, TestParseMetricUnitStanza, [] () {
+  std::string confstr =
+      R"(metric users_online {
+        unit bytes
+      })";
+
+  ConfigList config;
+  ConfigParser parser(confstr.data(), confstr.size());
+  auto rc = parser.parse(&config);
+  std::cerr << rc.getMessage() << std::endl;
+  EXPECT(rc.isSuccess());
+
+  EXPECT(config.getMetricConfigs().size() == 1);
+  {
+    auto mc = config.getMetricConfig("users_online");
+    EXPECT(mc != nullptr);
+    EXPECT(mc->unit_id == "bytes");
+  }
+});
+
+
 

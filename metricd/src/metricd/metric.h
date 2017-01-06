@@ -70,6 +70,7 @@ struct MetricConfig {
   uint64_t granularity;
   uint64_t display_granularity;
   bool is_valid;
+  std::string unit_id;
 };
 
 class MetricSeries {

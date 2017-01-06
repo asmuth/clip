@@ -194,6 +194,19 @@ bool ConfigParser::parseMetricDefinitionGranularityStanza(
   return true;
 }
 
+bool ConfigParser::parseMetricDefinitionUnitStanza(
+    MetricConfig* metric_config) {
+  TokenType ttype;
+  std::string tbuf;
+  if (!getToken(&ttype, &tbuf) || ttype != T_STRING) {
+    setError("unit requires an argument");
+    return false;
+  }
+
+  consumeToken();
+  return true;
+}
+
 bool ConfigParser::getToken(
     TokenType* ttype,
     std::string* tbuf) {
