@@ -34,7 +34,7 @@ Here is a simple example:
   </thead>
   <tbody>
     <tr>
-      <td><code><b>title</b></code></td>
+      <td><code><strong>title</strong></code></td>
       <td>Here be dragons</td>
       <td>false</td>
     </tr>
