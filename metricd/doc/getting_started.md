@@ -1,129 +1,176 @@
-Getting Started with FnordMetric
-================================
+Getting Started with FnordMetric Server
+=======================================
 
-### Getting Started in 5 minutes
+_This guide will walk you through starting a FnordMetric Server instance, inserting
+metric data and querying the metric data with ChartSQL. If you do not have installed
+FnordMetric yet, read the [Installation page](/documentation/installation) first._
 
-We have three 5 minute getting started guides for impatient people who don't like
-reading documentation (like the author). For more in-depth information you are
-kindly referred to the remaining pages.
+Fnordmetric Server is a standalone HTTP server application. It exposes a web UI
+and a HTTP API to run ChartSQL queries and collect timeseries data.
 
-If you want to learn how to draw charts from SQL query results using ChartSQL and
-the FnordMetric command line interface, read:
+You can start FnordMetric Server with or without a "storage backend".
+If FnordMetric Server is started without a storage backend you can only use the
+web interface to execute ChartSQL queries against external data sources (like a
+MySQL database). If it is started with a storage backend, you can also use the
+HTTP (and optionally the statsd) API to collect timeseries data into the storage
+backend and subsequently query that timerseries data using ChartSQL.
 
-  + [Getting Started with ChartSQL in 5 minutes](/documentation/getting_started/fnordmetric-cli)
+FnordMetric Server currently supports three storage backends: `inmemory`, `disk`,
+and `hbase`.
 
-If you want to see how you can collect timeseries data with FnordMetric Server
-and query it using a web interface and ChartSQL, read:
 
-  + [Getting Started with FnordMetric Server in 5 minutes](/documentation/getting_started/fnordmetric-server)
+#### Starting Fnordmetric Server
 
----
+For the getting started guide we will use the `disk` backend which stores the
+metric data in a folder on the local hard disk. To start a FnordMetric server
+instance with a local disk storage backend on HTTP port 8080 run:
 
-What is FnordMetric?
-====================
+    $ mkdir -p /tmp/fnordmetric-data
+    $ fnordmetric-server --http_port 8080 --statsd_port 8125 --storage_backend disk --datadir /tmp/fnordmetric-data
 
-FnordMetric is a framework for visualizing and collecting (timeseries) data
-using SQL. It extends standard SQL with ChartSQL, allowing you to write queries
-that return charts rather than tables. The query results are rendered as SVG
-vector graphics or images. [Check out some examples](/examples)
+#### Collecting Timeseries Data
 
-The charts can easily be embedded into any website and customized using CSS.
-This enables you to build beautiful dashboards within minutes using nothing
-else than SQL.
+FnordMetric Server records timeseries data in "Metrics". A Metric is somewhat
+equivalent to a table in a regular SQL database. Each metric has a unique name
+and consists of a collection of data points called "samples" that are recorded
+over time (i.e. a timeseries).
 
-FnordMetric Binaries
---------------------
+A "sample" is a single datapoint. Each sample contains at least a timestamp
+and a numeric value. To keep the table analogy, each metric is a table that has
+two default columns `value` and `time` and each sample is a row in that table.
 
-FnordMetric ships two binaries, each with it's own usecase:
+You can query metrics using ChartSQL like normal tables:
 
-#### FnordMetric CLI
+    > select time, value from mymetric;
 
-[fnordmetric-cli](/documentation/getting_started/fnordmetric-cli) is probably
-best described as gnuplot meets SQL. It allows you to run ChartSQL queries from
-the command line against [external data sources](/documentation/chartsql/external_data_sources/),
-like MySQL databases or CSV files.
-
-Use fnordmetric-cli if you have already collected the source data and just
-want to visualize it using ChartSQL.
-
-[&raquo; Getting started with fnordmetric-cli](/documentation/getting_started/fnordmetric-cli)
-<br style="line-height:30px;"/>
-
-#### FnordMetric Server
-
-[fnordmetric-server](/documentation/getting_started/fnordmetric-server) is a
-standalone HTTP server application. It exposes a web UI and a HTTP API to run
-ChartSQL queries. The query results are returned as JSON, SVG or PNG.
-
-Like fnordmetric-cli, the server allows you to execute queries against a number
-of [external data sources](/documentation/chartsql/external_data_sources/) like
-MySQL databases or CSV files. Additionally, the server includes a facility to
-[collect timeseries data](/documentation/metricdb/collecting_metrics/) and store
-them either on local disk or in external storage (HBase).
-
-You can use fnordmetric-server as a one-stop solution for metric collection and
-charting. Since fnordmetric-server aims to be a StatsD+graphite competitor, it
-implements a wire compatible [StatsD API](/documentation/metridb/statsd_interface/).
-
-[&raquo; Getting started with fnordmetric-server](/documentation/getting_started/fnordmetric-server)
+    ===================================
+    | time                  |  value  |
+    ===================================
+    | 2014-11-08 20:30:12   |  0.913  |
+    | 2014-11-08 20:30:42   |  0.837  |
+    | 2014-11-08 20:31:13   |  0.638  |
+    | 2014-11-08 20:31:41   |  0.326  |
+    | ...                   |  ...    |
 
 
 
-FnordMetric Clients
--------------------
+As an example, we will monitor the http response times of a fictional web
+application. We will create one "metric" that will be called `http\_response\_times`
+and will record the http response times (latencies) of our application. We are
+going to insert a sample into this metric for each HTTP request that our web
+application serves.
 
-Additionally, there are a number of client libraries for FnordMetric:
+There are a number of client libraries that allow you to send samples to
+FnordMetric Server using the HTTP or statsd API. For now, lets cheat a bit and
+manually send samples from the command line. The simplest way to send samples
+from your command line is using the statsd API. If you started FnordMetric Server
+on port 8125 (see above), you can use the netcat utility to send a sample via
+UDP+statsd.
 
+Let's insert the value `42` into the `http\_response\_times` metric. In our example this
+means we record the response time of a single HTTP request that took 42ms.
 
-#### FnordMetric for HTML5
-
-Plug fnordmetric charts into any website and build beautiful dashboards within
-minutes using only SQL and HTML/CSS. Includes generic dashboard control elements.
-
-[Getting started with the HTML5 API](/documentation/getting_started/fnordmetric-server)
-
-<!--
-
-#### FnordMetric for JavaScript and node.js
-
-The JavaScript client allows you to plug fnordmetric charts into any web
-application. It also includes helper code to collect counters/timeseries
-data in your node.js backend and send them to fnordmetric-server.
-
-[&raquo; Getting started with the JavaScript API](/documentation/getting_started/fnordmetric-server)
-
-#### FnordMetric for Ruby (on Rails)
-
-The ruby client allows you to plug fnordmetric charts into an Ruby (on Rails)
-web application. It also includes helper classes to collect counters/timeseries
-data and send them to fnordmetric-server.
-
-[&raquo; Getting started with the ruby API](/documentation/getting_started/fnordmetric-server)
+    $ echo "http_response_times:42" | nc -u -w0 127.0.0.1 8125
 
 
-FnordMetric Agents
-------------------
+Execute this command a few times with different values to insert multiple samples
+into the metric. FnordMetric Server will automatically create the metric if it
+doesn't exist yet.
 
-FnordMetric also includes a number of pre-built agents to collect data from common sources:
+#### Execute Queries from the Web Interface
 
-  + Docker Agent (fm-docker-agent)
+You should now be able to navigate to the admin interface on
+`http://localhost:8080/` in your browser and see our newly created metric. Click
+on the metric to bring up the interactive query editor. This should look something
+like this:
 
--->
+<div style="width:960px; margin:50px auto 40px auto; height:583px; overflow: hidden;" class="shadow">
+  <video width="960" height="583" autoplay="autoplay" loop>
+    <source src="/fnordmetric-server.mp4" type="video/mp4">
+    <script type="text/javascript">
+      if (!(navigator.userAgent.search("Safari") >= 0 && navigator.userAgent.search("Chrome") < 0)) {
+        document.write('<source src="/fnordmetric-server.webm" type="video/webm">');
+      }
+    </script>
+    <img src="/img/fnordmetric_server_screen.png" width="875" />
+  </video>
+</div>
 
-Rationale
----------
+Click around a bit to make yourself familiar with the Web UI. The charts you see
+above are generated using ChartSQL. The queries are  automatically generated by
+the interactive query editor. Here is an example query:
 
-If you're like the author you are probably thinking something along the lines of "Does
-the world really need yet another data visualization tool?" right now. Surely,
-there already is gnuplot and about a bazillion javascript libraries that let
-you draw pretty charts.
+<i>Display the 100 latest samples from `http\_response\_times` as a line chart with the
+sample time plotted on the X axis and the sample value plotted on the Y axis.:</i>
 
-However, most of the existing open source tools require you to provide the input
-data in some specific, custom format. I reckon this is not ideal. It means you
-have to write a heap of repetitive glue code (or sed incantations if that's your
-thing) to mangle your input data into that format. If you run a lot of ad-hoc
-queries you have to waste a significant amount of time on this boring legwork
-that could much better be spent on interesting tasks.
+    DRAW LINECHART
+        AXIS LEFT
+        AXIS BOTTOM;
 
-FnordMetric aims to fix that by extending standard SQL; it allows you to express
-the data query and the chart specification in a coherent fashion (SQL).
+    SELECT time as x, value as y
+        FROM http_response_times
+        ORDER BY time DESC
+        LIMIT 100;
+
+
+#### Adding labels
+
+To allow you to drill down into your metric data in arbitrary dimensions, each
+sample can optionally be labelled with one or more "labels". Each label is a
+key: value pair.
+
+In our example, assume we run our web application on multiple hosts in different
+datacenters. It would be nice to label each sample with  `hostname=...` and
+`datacenter=...` so that we can roll up the http response times by host, datacenter
+or a combinaton of both.
+
+Let's insert a few more example samples into our <code>http\_response\_times</code> metric
+and attach these labels:
+
+    $ echo "http_response_times[hostname=machine82][datacenter=ams1]:18" | nc -u -w0 127.0.0.1 8125
+    $ echo "http_response_times[hostname=machine83][datacenter=ams1]:42" | nc -u -w0 127.0.0.1 8125
+    $ echo "http_response_times[hostname=machine84][datacenter=ams1]:23" | nc -u -w0 127.0.0.1 8125
+
+When querying metrics with ChartSQL, the label keys act as table columns so you
+can filter and aggregate/group by label values. Our <code>http\_response\_times</code> table
+now has 4 columns:
+
+    > select time, value, hostname, datacenter from http_response_times;
+
+    ==============================================================
+    | time                  | value  | hostname   | datacenter  |
+    ==============================================================
+    | 2014-11-08 20:30:12   | 18     | machine82  | ams1        |
+    | 2014-11-08 20:30:12   | 42     | machine83  | ams1        |
+    | 2014-11-08 20:30:12   | 23     | machine84  | ams1        |
+    | ...                   | ...    | ...        | ...         |
+
+You can execute this query from the interactive query editor to display the last
+hour of samples in the `http\_response\_times` metric rolled up by hostname. It
+will draw a line chart with the sample time plotted on the X axis and the sample value
+plotted on the Y axis and one series per hostname:
+
+    DRAW LINECHART
+        AXIS LEFT
+        AXIS BOTTOM;
+
+    SELECT hostname as series, time as x, value as y
+        FROM http_response_times
+        WHERE time > -1hour;
+
+The result should look something like this:
+
+<img src="/img/fnordmetric_server_screen2.png" width="800" class="shadow" />
+<br />
+
+You now have a running FnordMetric Server, but there is a lot more you can do.
+These are good docs to read next:
+
+  + [Examples](/examples/)
+  + [ChartSQL Query Language](/documentation/chartsql/introduction/)
+  + [Time-window aggregations](/documentation/chartsql/timewindow_aggregations/)
+
+This guide will walk you through building a simple HTML5 dashboard using ChartSQL
+and FnordMetric Server:
+
+  + [Gettting Started with HTML5 Dashboards in 5 Minutes](/documentation/html5_dashboards)
