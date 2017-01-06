@@ -14,12 +14,26 @@ FnordMetric.views["fnordmetric.metric.series.list"] = function(elem, params) {
   var api_url = "/fetch";
 
   var url_params;
+  var table;
 
   this.initialize = function() {
     var page = templateUtil.getTemplate("fnordmetric-metric-series-list-tpl");
     elem.appendChild(page);
 
     url_params = getParams(params.path);
+
+    /** init table **/
+    table = new FnordMetric.SeriesTable(elem.querySelector(".table_container"));
+    table.onSort(function(col, dir) {
+      updateQueryStr({
+        order_col: col.key,
+        order_dir: dir
+      });
+    });
+
+    if (url_params.order_col && url_params.order_dir) {
+      table.setSort(url_params.order_col, url_params.order_dir);
+    }
 
     watchTimeRangePicker();
     watchFilter();
@@ -51,6 +65,16 @@ FnordMetric.views["fnordmetric.metric.series.list"] = function(elem, params) {
     var filter_param = URLUtil.getParamValue(path, "filter");
     if (filter_param) {
       p.filter = filter_param;
+    }
+
+    var order_col_param = URLUtil.getParamValue(path, "order_col");
+    if (order_col_param) {
+      p.order_col = order_col_param;
+    }
+
+    var order_dir_param = URLUtil.getParamValue(path, "order_dir");
+    if (order_dir_param) {
+      p.order_dir = order_dir_param;
     }
 
     return p;
@@ -129,9 +153,7 @@ FnordMetric.views["fnordmetric.metric.series.list"] = function(elem, params) {
       }
 
       var series = JSON.parse(r.response);
-      new FnordMetric.SeriesTable(
-          elem.querySelector(".table_container"),
-          series.series);
+      table.render(series.series);
       renderChart(series.series[0]);
     });
   };
@@ -163,7 +185,6 @@ FnordMetric.views["fnordmetric.metric.series.list"] = function(elem, params) {
           //REMOVEME END
       ]
     });
-    
   }
 
 };
