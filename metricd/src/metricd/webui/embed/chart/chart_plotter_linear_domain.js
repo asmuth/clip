@@ -10,21 +10,15 @@
 
 FnordMetricChart.PlotterLinearDomain = function() {
 
-  var min;
-  var max;
+  var min = null;
+  var max = null;
 
-  this.findMinMax = function(series) {
-    var min_values = series.map(function(s) {
-      return Math.min.apply(null, s.values)
-    });
+  var kDefaultNumTicks = 5;
+  var num_ticks = kDefaultNumTicks;
 
-    this.setMin(Math.min.apply(null, min_values));
-
-    var max_values = series.map(function(s) {
-      return Math.max.apply(null, s.values)
-    });
-
-    this.setMax(Math.max.apply(null, max_values));
+  this.findMinMax = function(values) {
+    this.setMin(Math.min.apply(null, values));
+    this.setMax(Math.max.apply(null, values));
   }
 
   this.setMin = function(min_value) {
@@ -33,6 +27,10 @@ FnordMetricChart.PlotterLinearDomain = function() {
 
   this.setMax = function(max_value) {
     max = max_value;
+  }
+
+  this.setNumTicks = function(num_ticks_value) {
+    num_ticks = num_ticks_value;
   }
 
   this.convertDomainToScreen = function(input_val) {
@@ -62,6 +60,29 @@ FnordMetricChart.PlotterLinearDomain = function() {
         return input_val * (max - min) + min;
     }
    // returns -inf..+inf
+  }
+
+  this.getLabels = function() {
+    var ticks = getTicks();
+    var labels = [];
+
+    for (var i = 0; i < ticks.length; i++) {
+      labels.push([ticks[i], this.convertScreenToDomain(ticks[i])]);
+    }
+
+    return labels;
+  }
+
+/********************************** private ***********************************/
+
+  function getTicks() {
+    var ticks = [];
+
+    for (var i = 0; i < num_ticks; i++) {
+      ticks.push(i / (num_ticks - 1));
+    }
+
+    return ticks;
   }
 
 }

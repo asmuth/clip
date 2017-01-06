@@ -17,168 +17,105 @@
 FnordMetricChart.Plotter = function(elem, params) {
   'use strict';
 
+  var svg = null;
+
+  var kNumDefaultXTicks = 8;
+  var kNumDefaultYTicks = 3;
+
   this.render = function(series) {
-    return;
-    var domain = new FnordMetricChart.PlotterLinearDomain;
-    series.forEach(function(s) {
-      domain.findMinMax(s);
-    });
+    var x_domain = new FnordMetricChart.PlotterLinearDomain;
+    x_domain.setNumTicks(kNumDefaultXTicks); //FIXME make this configurable
 
-    drawXAxis()
-    drawYAxis()
+    var y_domain = new FnordMetricChart.PlotterLinearDomain; //FIXME allow multiple y_domains
+    y_domain.setNumTicks(kNumDefaultYTicks); //FIXME make this configurable
 
     series.forEach(function(s) {
-      drawLine(s);
+      y_domain.findMinMax(s.values);
+      x_domain.findMinMax(s.time);
     });
+
+    var html = [];
+    html.push(startCanvas());
+
+    var x_labels = x_domain.getLabels();
+    html.push(drawXAxis(x_labels));
+
+    var y_labels = y_domain.getLabels();
+    html.push(drawYAxis(y_labels));
+
+    //drawGrid
+
+    series.forEach(function(s) {
+      drawLine(s, x_domain, y_domain);
+    });
+
+    html.push(endCanvas());
+    elem.innerHTML = html.join("");
   }
 
-  function blah() {
-    var chart_elem = document.createElement("div");
-    chart_elem.className = "chart";
-
-    var height = elem.offsetHeight;
-    var width = elem.offsetWidth - summary_elem_width;
-
-    var time_values = config.time;
-
-    /** build chart html **/
-    var html = [];
-    html.push("<svg class='fm-chart' viewBox='0 0 ", width, " ", height, "'>");
-
-    /** render x axis **/
-    html.push(chart_renderer.renderXAxis(
-        time_values[0] / 1000,
-        time_values[time_values.length - 1] / 1000,
-        chart_elem,
-        height,
-        width));
-
-    html.push("<g class='lines'>");
-
-    for (var i = 0; i < config.series.length; i++) {
-      var s = config.series[i];
-      if (!s.values) {
-        return false;
-      }
-
-      var scaled_values = scaleValues(
-          time_values,
-          s.values,
-          min,
-          max);
-
-      if (!s.color) {
-        s.color = default_colors[i % default_colors.length];
-      }
-
-      html.push(chart_renderer.renderPath(s, scaled_values, height, width));
-    }
-
-    html.push("</g>");
-
-    html.push(chart_renderer.renderYAxis(
-      min,
-      max,
-      chart_elem,
-      height,
-      width));
-
-    html.push("</svg>");
-
-    chart_elem.innerHTML = html.join("");
-    elem.appendChild(chart_elem);
-
+  function startCanvas() {
+    //FIXME add viewBox viewBox='0 0 ", width, " ", height, "'
+    return "<svg class='fm-chart'>"
   }
 
-  function drawXAxis(tick_values, height, width) {
+  function endCanvas() {
+    return "</svg>";
+  }
+
+  function drawXAxis(labels) {
     var html = [];
+
     html.push("<g class='axis x'>");
 
-    /** render x ticks **/
-    var num_ticks = tick_values.length;
-    for (var i = 0; i < num_ticks; i++) {
+    /** render ticks **/
+    for (var i = 0; i < labels.length; i++) {
       html.push(
-        "<text x='", grid_width * i / num_ticks, "' y='", 0, "' class='label'>",
-          formatDate(tick_values[i]),
+        "<text x='", labels[i][0], "' y='0' class='label'>",
+          formatDate(labels[i][1] / 1000),
         "</text>");
     }
 
-    /** render x axes **/
-    var num_axes = 3; //FIXME
-    for (var i = 0; i < num_axes; i++) {
-      html.push(
-        "<line class='axis stroke main_axis' ",
-          "y1='", height * i / num_axes, "' y2='", height,
-          "' x1='0' x2='", width,
-        "'></line>");
-    }
+    /** render line **/
+   // html.push(
+   //   "<line class='axis stroke main_axis' ",
+   //     "y1='", height * i / num_axes, "' y2='", height,
+   //     "' x1='0' x2='", width,
+   //   "'></line>");
 
     html.push("</g>");
+
     return html.join("");
   }
 
-  function drawYAxis(min, max, chart_elem, height, width) {
-    var grid_height = height - padding.top - padding.bottom;
-    var grid_width = width - padding.left - padding.right;
+  function drawYAxis(labels) {
     var html = [];
 
     html.push("<g class='axis y'>");
 
-    var tick_values = getTickValues(min, max, 4);
-
-    /** render y ticks **/
-    html.push(
-      "<text class='label'",
-          "x='", padding.left, "' y='", grid_height * 2 / 3 + padding.top, "'>",
-        tick_values[1],
-      "</text>");
-
-    html.push(
-      "<text class='label' ",
-          "x='", padding.left, "' y='", grid_height * 1 / 3 + padding.top, "' >",
-        tick_values[2],
-      "</text>");
-
-    html.push(
-      "<text class='label' x='", padding.left, "' y='", padding.top, "'>",
-        tick_values[3],
-      "</text>");
-
-    /** render y axes **/
-    html.push(
-      "<line class='axis stroke'",
-        " y1='", padding.top, "' y2='", grid_height + padding.top,
-        "' x1='", grid_width * 1 / 5, "' x2='", grid_width * 1 / 5,
-      "'></line>");
-
-    html.push(
-      "<line class='axis stroke'",
-        " y1='", padding.top, "' y2='", grid_height + padding.top,
-        "' x1='", grid_width * 2 / 5, "' x2='", grid_width * 2 / 5,
-      "'></line>");
-
-    html.push(
-      "<line class='axis stroke'",
-        " y1='", padding.top, "' y2='", grid_height + padding.top,
-        "' x1='", grid_width * 3 / 5, "' x2='", grid_width * 3 / 5,
-      "'></line>");
-
-    html.push(
-      "<line class='axis stroke'",
-        "y1='", padding.top, "' y2='", grid_height + padding.top,
-        "' x1='", grid_width * 4 / 5, "' x2='", grid_width * 4 / 5,
-      "'></line>");
-
-    /** render tooltip line **/
-    html.push(
-      "<line class='stroke tooltip'",
-        " y1='", padding.top, "' y2='", grid_height + padding.top,
-        "' x1='0' x2='0'>",
-      "</line>");
+    /** render ticks **/
+    for (var i = 0; i < labels.length; i++) {
+      html.push(
+        "<text class='label' x='0' y='", labels[i][0], "'>",
+          DOMUtil.escapeHTML(labels[i][1]),
+        "</text>");
+    }
 
     html.push("</g>");
 
     return html.join("");
+  }
+
+  function drawLine(series, x_domain, y_domain) {
+    var line = [];
+
+    for (var i = 0; i < series.values.length; i++) {
+      var x = x_domain.convertDomainToScreen(series.time[i]);
+      var y = y_domain.convertDomainToScreen(series.values[i]);
+
+
+
+      console.log(x, y)
+    }
   }
 
    function drawLines(series, points, height, width) {
@@ -221,21 +158,6 @@ FnordMetricChart.Plotter = function(elem, params) {
 
     return html.join("");
   };
-
-  /**
-    * Calculates the tick values linearly
-    * //FIXME improve by adding a log function for smoother values and better number rounding
-    */
-  function getTickValues(min, max, num_ticks) {
-    var range = min < 0 ? Math.abs(min) + Math.abs(max) : max - min;
-    var incr = range / (num_ticks - 1);
-    var tick_values = [];
-    for (var i = 0; i < num_ticks; i++) {
-      tick_values.push(Math.round(min + i * incr));
-    }
-
-    return tick_values;
-  }
 
   function formatDate(timestamp) {
     function appendLeadingZero(num) {

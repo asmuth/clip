@@ -29,7 +29,6 @@ var FnordMetricChart = function(viewport, params) {
       }
 
       var result = JSON.parse(r.response);
-      console.log(result);
       callback(result);
     });
   }
@@ -39,9 +38,9 @@ var FnordMetricChart = function(viewport, params) {
   }
 
   function renderChart(result) {
-    var elem = viewport.querySelector("fm-chart-plot");
+    var elem = viewport.querySelector(".fm-chart-plot");
     var plotter = new FnordMetricChart.Plotter(elem, params);
-    plotter.render();
+    plotter.render(result.series);
   }
 
   function renderSummaries(result) {
