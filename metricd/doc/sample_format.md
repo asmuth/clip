@@ -8,8 +8,9 @@ samples:
 Text Format
 -----------
 
-Each packet must contain one or more lines. Each line is expected to be in
-this format (series_id is optional):
+The text format is compatible with the StatsD format. A packet must contain
+one or more lines. Every line is expected to conform to this scheme
+(the series_id is optional):
 
     <metric_id>:<value>
     <metric_id>[<series_id>]:value
