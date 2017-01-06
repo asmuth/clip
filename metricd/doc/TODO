@@ -1,3 +1,10 @@
+
+metric type: health check
+metric type: event log
+metric rules
+
+rules/health page (shows metric and sensors stats/errors)
+
 unit map (/etc/metricd/default_units.conf) + unit configuration
 fetchoptions from json
 asset packaging
