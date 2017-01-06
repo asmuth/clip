@@ -7,19 +7,49 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-
-if (typeof FnordMetric == undefined) {
-  FnordMetric = {};
-}
-
-var FnordMetricChart = function(params, viewport) {
+var FnordMetricChart = function(viewport, params) {
 
   this.render = function() {
     renderSkeletonHTML();
-    //fetchData
-    //renderChart();
-    //renderSummaries();
-    //renderSeriesList();
+
+    fetchData(function(result) {
+      renderChart(result);
+      renderSummaries(result);
+      renderSeriesList(result);
+    });
+  };
+
+  function fetchData(callback) {
+    var url = "/api/v1/metrics/fetch?metric_id=prod.db.mysql.ram_used";
+
+    HTTPUtil.httpGet(url, {}, function(r) {
+      if (r.status != 200) {
+        // FIXME
+        return;
+      }
+
+      var result = JSON.parse(r.response);
+      console.log(result);
+      callback(result);
+    });
+  }
+
+  function renderSkeletonHTML() {
+    // FIXME
+  }
+
+  function renderChart(result) {
+    var elem = viewport.querySelector("fm-chart-plot");
+    var plotter = new FnordMetricChart.Plotter(elem, params);
+    plotter.render();
+  }
+
+  function renderSummaries(result) {
+
+  }
+
+  function renderSeriesList(result) {
+
   }
 
 };
