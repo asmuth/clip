@@ -5,7 +5,8 @@ AUTOMAKE_OPTIONS = foreign
 
 SUBDIRS = \
     . \
-    src/metricd
+    src/metricd \
+    test
 
 EXTRA_DIST =                             \
   autogen.sh                             \

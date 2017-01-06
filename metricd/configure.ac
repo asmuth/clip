@@ -75,6 +75,7 @@ AM_CONDITIONAL([HAVE_ZLIB], [test $HAVE_ZLIB = 1])
 
 AC_CONFIG_FILES([
     Makefile
-    src/metricd/Makefile])
+    src/metricd/Makefile
+    test/Makefile])
 
 AC_OUTPUT

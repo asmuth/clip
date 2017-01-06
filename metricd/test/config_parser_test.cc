@@ -10,9 +10,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <unistd.h>
-#include "metricd/util/exception.h"
-#include "metricd/util/unittest.h"
-#include "metricd/util/time.h"
+#include "unittest.h"
 #include "metricd/config/config_parser.h"
 
 using namespace fnordmetric;
@@ -103,7 +101,6 @@ TEST_CASE(ConfigParserTest, TestParseMetricUnitStanza, [] () {
   ConfigList config;
   ConfigParser parser(confstr.data(), confstr.size());
   auto rc = parser.parse(&config);
-  std::cerr << rc.getMessage() << std::endl;
   EXPECT(rc.isSuccess());
 
   EXPECT(config.getMetricConfigs().size() == 1);

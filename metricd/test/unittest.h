@@ -7,94 +7,38 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#ifndef _FNORDMETRIC_UTIL_UNITTEST_H
-#define _FNORDMETRIC_UTIL_UNITTEST_H
-#include "exception.h"
-#include "inputstream.h"
-#include "outputstream.h"
-#include "inspect.h"
+#pragma once
 #include <functional>
 #include <unordered_map>
 #include <vector>
 #include <string>
 #include <string.h>
 
-const char kExpectationFailed[] = "ExpectationFailed";
-
 #define UNIT_TEST(T) \
-    static fnordmetric::util::UnitTest T(#T); \
+    static libtransport::UnitTest T(#T); \
     int main() { \
       auto& t = T; \
       return t.run(); \
     }
 
 #define TEST_CASE(T, N, L) \
-    static fnordmetric::util::UnitTest::TestCase __##T##__case__##N(&T, #N, (L));
+    static libtransport::UnitTest::TestCase __##T##__case__##N(&T, #N, (L));
 
 #define TEST_INITIALIZER(T, N, L) \
-    static fnordmetric::util::UnitTest::TestInitializer __##T##__case__##N( \
+    static libtransport::UnitTest::TestInitializer __##T##__case__##N( \
         &T, (L));
 
 #define EXPECT(X) \
     if (!(X)) { \
-      RAISE( \
-          kExpectationFailed, \
-          "expectation failed: %s", #X); \
+      throw std::runtime_error(std::string("expectation failed: ") + #X); \
     }
 
-template <typename T1, typename T2>
-void EXPECT_EQ(T1 left, T2 right) {
-  if (!(left == right)) {
-    RAISE(
-        kExpectationFailed,
-        "expectation failed: %s == %s",
-        inspect<T1>(left).c_str(),
-        inspect<T2>(right).c_str());
-  }
-}
+#define EXPECT_EQ(A, B) EXPECT((A) == (B))
 
-#define EXPECT_EXCEPTION(E, L) \
-    { \
-      bool raised = false; \
-      try { \
-        L(); \
-      } catch (fnordmetric::util::RuntimeException e) { \
-        raised = true; \
-        auto msg = e.getMessage().c_str(); \
-        if (strcmp(msg, E) != 0) { \
-          RAISE( \
-              kExpectationFailed, \
-              "excepted exception '%s' but got '%s'", E, msg); \
-        } \
-      } \
-      if (!raised) { \
-        RAISE( \
-            kExpectationFailed, \
-            "excepted exception '%s' but got no exception", E); \
-      } \
-    }
+#define EXPECT_TRUE(X) EXPECT(!!(X))
+#define EXPECT_FALSE(X) EXPECT(!(X))
 
-#define EXPECT_FILES_EQ(F1, F2) \
-  { \
-    auto one = fnordmetric::util::FileInputStream::openFile(F1); \
-    auto two = fnordmetric::util::FileInputStream::openFile(F2); \
-    std::string one_str; \
-    std::string two_str; \
-    one->readUntilEOF(&one_str); \
-    two->readUntilEOF(&two_str); \
-    if (one_str != two_str) { \
-      std::string filename1(F1); \
-      std::string filename2(F2); \
-      RAISE( \
-          kExpectationFailed, \
-          "expected files '%s' and '%s' to be equal, but the differ", \
-          filename1.c_str(), filename2.c_str()); \
-    } \
-  }
-
-
-namespace fnordmetric {
-namespace util {
+namespace libtransport {
 
 class UnitTest {
 public:
@@ -194,6 +138,5 @@ protected:
   std::vector<const TestInitializer*> initializers_;
 };
 
-}
-}
-#endif
+} // namespace libtransport
+

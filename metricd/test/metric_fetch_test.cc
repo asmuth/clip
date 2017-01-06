@@ -12,8 +12,7 @@
 #include <unistd.h>
 #include <sys/stat.h>
 #include <sys/types.h>
-#include "metricd/util/exception.h"
-#include "metricd/util/unittest.h"
+#include "unittest.h"
 #include "metricd/util/time.h"
 #include "metricd/metric_service.h"
 #include "metricd/sample.h"

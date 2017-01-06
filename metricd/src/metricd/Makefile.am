@@ -4,9 +4,7 @@ MAINTAINERCLEANFILES =   \
   Makefile.in
 
 bin_PROGRAMS = metricd
-TESTS = metricd_test_config_parser metricd_test_metric_service metricd_test_statsd
-check_PROGRAMS = $(TESTS)
-
+check_LIBRARIES = libmetricd.a
 
 ################# DEPENDENCIES ####################
 if HAVE_ZLIB
@@ -148,32 +146,7 @@ metricd_LDADD = \
     ${top_builddir}/../libtransport/src/libtransport/json/libtransport_json.a \
     ${top_builddir}/../libtransport/src/libtransport/uri/libtransport_uri.a
 
-metric_test_SOURCES = \
+libmetricd_a_SOURCES = \
     $(metricd_common_sources_) \
-    metric_test.cc
+    metricd.cc
 
-metric_test_LDADD = $(top_srcdir)/libtsdb/libtsdb.a
-
-statsd_test_SOURCES = \
-    $(metricd_common_sources_) \
-    transport/statsd/statsd_test.cc
-
-statsd_test_LDADD = $(top_srcdir)/libtsdb/libtsdb.a
-
-metricd_test_config_parser_SOURCES = \
-    $(metricd_common_sources_) \
-    config/config_parser_test.cc
-
-metricd_test_config_parser_LDADD = $(top_srcdir)/libtsdb/libtsdb.a
-
-metricd_test_metric_service_SOURCES = \
-    $(metricd_common_sources_) \
-    metric_service_test.cc
-
-metricd_test_metric_service_LDADD = $(top_srcdir)/libtsdb/libtsdb.a
-
-metricd_test_statsd_SOURCES = \
-    $(metricd_common_sources_) \
-    transport/statsd/statsd_test.cc
-
-metricd_test_statsd_LDADD = $(top_srcdir)/libtsdb/libtsdb.a

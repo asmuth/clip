@@ -106,6 +106,15 @@ bool ConfigParser::parseMetricDefinition(ConfigList* config) {
       continue;
     }
 
+    /* parse the "unit" stanza */
+    if (ttype == T_STRING && tbuf == "unit") {
+      consumeToken();
+      if (!parseMetricDefinitionUnitStanza(&metric_config)) {
+        return false;
+      }
+      continue;
+    }
+
     setError(
         StringUtil::format(
             "invalid token; got: $0, expected one of: metric",
@@ -203,6 +212,7 @@ bool ConfigParser::parseMetricDefinitionUnitStanza(
     return false;
   }
 
+  metric_config->unit_id = tbuf;
   consumeToken();
   return true;
 }
