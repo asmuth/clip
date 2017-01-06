@@ -118,29 +118,27 @@ this["FnordMetric"] = (function() {
       path = path.substring(0, end)
     }
 
-    // PATH: /metrics/
-    if (path == "/metrics") {
-      return {
-        "route": "/metrics",
-        "view": "fnordmetric.metric.list",
-      }
-    }
+    var routes = FnordMetric.routes;
+    for (var i = 0; i < routes.length; i++) {
+      if (routes[i].route instanceof RegExp) {
+        var match = path.match(routes[i].route);
+        if (match) {
+          var route = {};
+          for (var k in routes[i]) {
+            route[k] = routes[i][k];
+          }
 
-    // PATH: /metrics/metric_id/serie_id
-    var ms = path.match(new RegExp("^\/metrics\/(.*)\/([0-9]*)$"));
-    if (ms) {
-      return {
-        "view": "fnordmetric.metric.serie",
-        "args": ms
-      }
-    }
+          route.args = {}
+          for (var j = 1; j < match.length; ++j) {
+            route.args[route.route_args[j - 1]] = match[j];
+          }
 
-    // PATH: /metrics/metric_id
-    var m = path.match(new RegExp("^\/metrics\/(.*)$"));
-    if (m) {
-      return {
-        "view": "fnordmetric.metric.series.list",
-        "args": m
+          return route;
+        }
+      } else {
+        if (path === routes[i].route) {
+          return routes[i];
+        }
       }
     }
 

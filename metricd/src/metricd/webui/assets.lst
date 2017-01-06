@@ -1,5 +1,6 @@
 app.css
 app.js
+routes.js
 3rdparty/formatter.min.js
 util/template_util.js
 util/url_util.js
