@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<title>FnordMetric</title>
+<meta content="text/html; charset=utf-8" http-equiv="Content-type">
+<script>{{JS_SRC}}</script>
+<style type="text/css">{{CSS_SRC}}</style>
+<div id="viewport">
+</div>
+<script>
+  var top_series = new FnordMetricTopSeries(
+      document.getElementById("viewport"),
+      {{PARAMS}});
+  top_series.render();
+</script>
+
