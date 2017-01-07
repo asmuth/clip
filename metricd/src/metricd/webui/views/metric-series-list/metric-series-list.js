@@ -60,8 +60,8 @@ function FnordMetricSeriesListView(elem, params) {
 
     picker.initialize({
       timezone: config.getTimezone(),
-      start: config.getStart(),
-      end: config.getEnd()
+      from: config.getFrom(),
+      until: config.getUntil()
     });
 
     picker.onSubmit(function(timerange) {

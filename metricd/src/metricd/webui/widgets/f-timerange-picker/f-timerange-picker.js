@@ -21,8 +21,8 @@ FM.TimeRangePickerComponent = function(elem) {
   var timerange = {
     timezone: 'utc'
   };
-  timerange.end = Date.now();
-  timerange.start = timerange.end - config.range;
+  timerange.until = Date.now();
+  timerange.from = timerange.until - config.range;
 
   var widget;
   var on_submit_callbacks = [];
@@ -30,7 +30,7 @@ FM.TimeRangePickerComponent = function(elem) {
   /**
     * Set the initial values
     * @param init_timerange (Object) determines the initial values for
-    * start, end and timezone
+    * from, until and timezone
   **/
   this.initialize = function(init_timerange) {
     var tpl = templateUtil.getTemplate("f-timerange-picker-tpl");
@@ -40,9 +40,9 @@ FM.TimeRangePickerComponent = function(elem) {
       timerange.timezone = init_timerange.timezone;
     }
 
-    if (init_timerange.start && init_timerange.end) {
-      timerange.start = init_timerange.start;
-      timerange.end = init_timerange.end;
+    if (init_timerange.from && init_timerange.until) {
+      timerange.from = init_timerange.from;
+      timerange.until = init_timerange.until;
     }
 
     initializeWidget();
@@ -64,8 +64,8 @@ FM.TimeRangePickerComponent = function(elem) {
         elem.querySelector(".widget"));
 
     widget.setSubmitCallback(function(new_timerange) {
-      timerange.start = new_timerange.start;
-      timerange.end = new_timerange.end;
+      timerange.from = new_timerange.from;
+      timerange.until = new_timerange.until;
       timerange.timezone = new_timerange.timezone;
 
       updateInputValue();
@@ -98,8 +98,8 @@ FM.TimeRangePickerComponent = function(elem) {
   }
 
   var moveTimerange = function(range) {
-    timerange.start += range;
-    timerange.end += range;
+    timerange.from += range;
+    timerange.until += range;
 
     updateInputValue();
     callSubmitCallbacks();
@@ -107,12 +107,12 @@ FM.TimeRangePickerComponent = function(elem) {
 
   var updateInputValue = function() {
     elem.querySelector(".date_field .date_value").innerHTML =
-        dateUtil.formatDateTime(timerange.start, timerange.timezone) +
+        dateUtil.formatDateTime(timerange.from, timerange.timezone) +
         " - " +
-        dateUtil.formatDateTime(timerange.end, timerange.timezone);
+        dateUtil.formatDateTime(timerange.until, timerange.timezone);
 
 
-    if (timerange.end + config.range >= Date.now()) {
+    if (timerange.until + config.range >= Date.now()) {
       elem.querySelector(".mover.next").classList.add("disabled");
     } else {
       elem.querySelector(".mover.next").classList.remove("disabled");
@@ -122,8 +122,8 @@ FM.TimeRangePickerComponent = function(elem) {
   function callSubmitCallbacks() {
     on_submit_callbacks.forEach(function(fn) {
       fn({
-        start: timerange.start,
-        end: timerange.end,
+        from: timerange.from,
+        until: timerange.until,
         timezone: timerange.timezone
       });
     });
