@@ -58,7 +58,7 @@ FnordMetricChart.Plotter = function(elem, params) {
     }
 
     /* fit the x axis */
-    canvas_margin_bottom += 16; // FIXME
+    canvas_margin_bottom += 26; // FIXME
   }
 
   function draw(result) {
@@ -132,7 +132,7 @@ FnordMetricChart.Plotter = function(elem, params) {
     c.svg += "<g class='axis x'>";
 
     /** render tick/grid **/
-    var text_padding = 5;
+    var text_padding = 10;
     for (var i = 1; i < x_ticks_count; i++) {
       var tick_x_domain = (i / x_ticks_count);
       var tick_x_screen = tick_x_domain * (width - (canvas_margin_left + canvas_margin_right)) + canvas_margin_left;
