@@ -55,9 +55,6 @@
   stroke: #000;
 }
 
-.fm-chart .point.invisible {
-  fill: transparent;
-}
 /**.fm-chart circle.point {
   fill: transparent;
 }

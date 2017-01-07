@@ -23,6 +23,7 @@ FnordMetricChart.Plotter = function(elem, params) {
   params.border_right = false;
   params.border_left = false;
   params.border_bottom = true;
+  params.points = false;
 
   var width = 1240; // FIXME
   var height = 180;
@@ -75,6 +76,10 @@ FnordMetricChart.Plotter = function(elem, params) {
 
     series.forEach(function(s) {
       drawLine(s, svg);
+
+      if (params.points) {
+        drawPoints(s, svg);
+      }
     });
 
     svg.svg += "</svg>"
@@ -196,10 +201,23 @@ FnordMetricChart.Plotter = function(elem, params) {
       var y_screen = height - (y * (height - (canvas_margin_bottom + canvas_margin_top)) + canvas_margin_bottom);
 
       points.push([x_screen, y_screen]);
-      c.drawPoint(x_screen, y_screen, 3, "point invisible");
     }
 
     c.drawPath(points, "line");
+  }
+
+  function drawPoints(series, c) {
+    var point_size = 3;
+
+    for (var i = 0; i < series.values.length; i++) {
+      var x = x_domain.convertDomainToScreen(series.time[i]);
+      var y = y_domain.convertDomainToScreen(series.values[i]);
+
+      var x_screen = x * (width - (canvas_margin_left + canvas_margin_right)) + canvas_margin_left;
+      var y_screen = height - (y * (height - (canvas_margin_bottom + canvas_margin_top)) + canvas_margin_bottom);
+
+      c.drawPoint(x_screen, y_screen, point_size, "point");
+    }
   }
 
 }
