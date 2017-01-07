@@ -193,7 +193,7 @@ FnordMetricChart.Plotter = function(elem, params) {
       var y = y_domain.convertDomainToScreen(series.values[i]);
 
       var x_screen = x * (width - (canvas_margin_left + canvas_margin_right)) + canvas_margin_left;
-      var y_screen = height - (y * (height - (canvas_margin_bottom + canvas_margin_top)) + canvas_margin_bottom);
+      var y_screen = (1.0 - y) * (height - (canvas_margin_bottom + canvas_margin_top)) + canvas_margin_top;
 
       points.push([x_screen, y_screen]);
     }
