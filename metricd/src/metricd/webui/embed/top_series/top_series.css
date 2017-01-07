@@ -1,0 +1,60 @@
+.fm-top-series-container {
+  font: 16px/24px "Roboto",'Helvetica Neue',Helvetica,Arial,sans-serif;
+  font-weight: 400;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: subpixel-antialiased;
+}
+
+.fm-top-series-container table.fm-top-series-table {
+  width: 100%;
+  margin-top: 5px;
+  border-collapse: collapse;
+  font-size: 13px;
+  table-layout: fixed;
+}
+
+.fm-top-series-container table.fm-top-series-table tr {
+  border-bottom: 1px solid rgb(226, 232, 237);
+}
+
+.fm-top-series-container table.fm-top-series-table thead th,
+.fm-top-series-container table.fm-top-series-table tbody td {
+  text-align: left;
+  font-weight: 400;
+  border: none;
+  line-height: 1em;
+  padding: .8em;
+}
+
+.fm-top-series-container table.fm-top-series-table tbody td {
+  vertical-align: middle;
+  border-top: 1px solid #e1e1e1;
+  line-height: 21px;
+  padding: 5px 10px;
+}
+
+.fm-top-series-container table.fm-top-series-table thead th {
+  border-right: none;
+  font-weight: 400;
+  color: #999;
+  box-shadow: 0 1px 2px rgba(0,0,0,.09);
+  border-bottom: 1px solid #e1e1e1;
+  background: #f9f9f9;
+  border-top: 1px solid #ddd;
+}
+
+.fm-top-series-container table.fm-top-series-table thead th[align='right'],
+.fm-top-series-container table.fm-top-series-table tbody td[align='right'] {
+  text-align: right;
+}
+
+.fm-top-series-container table.fm-top-series-table thead th[align='center'],
+.fm-top-series-container table.fm-top-series-table tbody td[align='center'] {
+  text-align: center;
+}
+
+.fm-top-series-container table.fm-top-series-table tr:hover td {
+  background-color: #f6f8fa;
+  cursor: pointer;
+}
+
