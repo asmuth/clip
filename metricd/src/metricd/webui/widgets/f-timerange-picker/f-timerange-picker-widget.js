@@ -82,7 +82,7 @@ var TimeRangePickerWidget = function(timerange, widget) {
   var render = function() {
     var tpl = templateUtil.getTemplate("f-timerange-picker-widget-tpl");
     var inner = widget.querySelector(".inner");
-    DomUtil.clearChildren(inner);
+    DOMUtil.clearChildren(inner);
     inner.appendChild(tpl.cloneNode(true));
 
     watchTimezoneControls();
@@ -168,8 +168,8 @@ var TimeRangePickerWidget = function(timerange, widget) {
 
     /** close calendar on click outside of the calendar elem **/
     widget.addEventListener("click", function(e) {
-      DomUtil.clearChildren(calendar_box_end);
-      DomUtil.clearChildren(calendar_box_start);
+      DOMUtil.clearChildren(calendar_box_end);
+      DOMUtil.clearChildren(calendar_box_start);
     }, false);
 
     /** don't close calendar on click within calendar elem **/
@@ -185,8 +185,8 @@ var TimeRangePickerWidget = function(timerange, widget) {
     widget.querySelector(".icon.calendar.start").addEventListener("click", function(e) {
       e.stopPropagation();
 
-      DomUtil.clearChildren(calendar_box_end);
-      DomUtil.clearChildren(calendar_box_start);
+      DOMUtil.clearChildren(calendar_box_end);
+      DOMUtil.clearChildren(calendar_box_start);
       calendar.render(calendar_box_start, {
         min: null,
         max: new Date(timerange.end),
@@ -198,8 +198,8 @@ var TimeRangePickerWidget = function(timerange, widget) {
     widget.querySelector(".icon.calendar.end").addEventListener("click", function(e) {
       e.stopPropagation();
 
-      DomUtil.clearChildren(calendar_box_start);
-      DomUtil.clearChildren(calendar_box_end);
+      DOMUtil.clearChildren(calendar_box_start);
+      DOMUtil.clearChildren(calendar_box_end);
       calendar.render(calendar_box_end, {
         min: new Date(timerange.start),
         max: new Date(),

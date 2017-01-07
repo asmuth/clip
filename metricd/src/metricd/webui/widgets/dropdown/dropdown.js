@@ -72,7 +72,7 @@ var DropdownComponent = function() {
   }
 
   this.renderHeader = function(value) {
-    this.querySelector("button.btn .value").innerHTML = DomUtil.escapeHTML(
+    this.querySelector("button.btn .value").innerHTML = DOMUtil.escapeHTML(
         value);
   }
 

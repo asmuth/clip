@@ -11,6 +11,8 @@
 FM = this.FM || {};
 
 FM.FilterComponent = function(elem) {
+  'use strict';
+
   var submit_callbacks = [];
 
   this.init = function(filter_value) {

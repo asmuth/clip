@@ -9,20 +9,30 @@
  */
 
 function FnordMetricSeriesListViewConfig(params) {
-  var metric_id = params.route.args.metric_id;
-  var filter = URLUtil.getParamValue(params.path, "filter") 
 
   this.getMetricID = function() {
-    return metric_id;
-    return ;
-  }
-
-  this.setFilter = function(filter_value) {
-    filter = filter_value;
+    return params.route.args.metric_id;
   }
 
   this.getFilter = function() {
-    return filter;
+    var filter_param = URLUtil.getParamValue(params.path, "filter");
+    return filter_param ? filter_param : null;
   }
+
+  this.getStart = function() {
+    var start_param = URLUtil.getParamValue(params.path, "start");
+    return start_param ? start_param : null;
+  }
+
+  this.getEnd = function() {
+    var end_param = URLUtil.getParamValue(params.path, "end");
+    return end_param ? end_param : null;
+  }
+
+  this.getTimezone = function() {
+    var timezone_cookie = DOMUtil.getCookie("timezone");
+    return timezone_cookie ? timezone_cookie : null;
+  }
+
 }
 
