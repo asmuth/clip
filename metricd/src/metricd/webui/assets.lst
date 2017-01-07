@@ -37,3 +37,4 @@ embed/chart/chart_plotter_linear_domain.js
 embed/chart/chart_plot.js
 embed/chart/chart_query_manager.js
 embed/chart/svg_helper.js
+embed/units.js

@@ -13,9 +13,11 @@ FnordMetricChart.QueryManager = function(params) {
   var callback_success;
   var callback_error;
   var success;
-  var series;
   var queries_total;
   var queries_completed;
+  var result = {
+    series: []
+  }
 
   this.executeQueries = function(on_succes, on_error) {
     var fetch_opts = {
@@ -53,9 +55,9 @@ FnordMetricChart.QueryManager = function(params) {
       }
 
       try {
-        var result = JSON.parse(r.response);
-        result.series.forEach(function(s) {
-          series.push(s);
+        var r = JSON.parse(r.response);
+        r.series.forEach(function(s) {
+          result.series.push(s);
         });
       } catch (e) {
         success = false;
@@ -73,7 +75,7 @@ FnordMetricChart.QueryManager = function(params) {
 
     queries_completed += 1;
     if (queries_completed == queries_total) {
-      callback_success(series);
+      callback_success(result);
     }
   }
 

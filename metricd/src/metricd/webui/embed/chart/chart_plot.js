@@ -29,9 +29,9 @@ FnordMetricChart.Plotter = function(elem, params) {
   var y_ticks_count = 5;
   var y_label_width = 50; // FIXME
 
-  this.render = function(series) {
+  this.render = function(result) {
     /* set up domains */
-    series.forEach(function(s) {
+    result.series.forEach(function(s) {
       y_domain.findMinMax(s.values);
       x_domain.findMinMax(s.time);
     });
@@ -40,7 +40,7 @@ FnordMetricChart.Plotter = function(elem, params) {
     fitLayout();
 
     /* draw the svg */
-    var svg = drawChart(series);
+    var svg = drawChart(result);
     elem.innerHTML = svg;
   }
 
@@ -56,15 +56,15 @@ FnordMetricChart.Plotter = function(elem, params) {
     canvas_margin_bottom += 16; // FIXME
   }
 
-  function drawChart(series) {
+  function drawChart(result) {
     var svg = new FnordMetricChart.SVGHelper();
     svg.svg += "<svg class='fm-chart' viewBox='0 0 " + width + " " + height + "' >";
 
     drawBorders(svg);
     drawXAxis(svg);
-    drawYAxis(svg);
+    drawYAxis(result, svg);
 
-    series.forEach(function(s) {
+    result.series.forEach(function(s) {
       drawLine(s, svg);
 
       if (params.points) {
@@ -143,8 +143,17 @@ FnordMetricChart.Plotter = function(elem, params) {
     c.svg += "</g>";
   }
 
-   function drawYAxis(c) {
+   function drawYAxis(result, c) {
     c.svg += "<g class='axis y'>";
+
+    /** build tick labels **/
+    var tick_values = []
+    for (var i = 0; i <= y_ticks_count ; i++) {
+      tick_values.push(y_domain.convertScreenToDomain(1.0 - (i / y_ticks_count)));
+    }
+
+    var unit = result.unit;
+    var tick_labels = FnordMetricUnits.formatValues(unit, tick_values);
 
     /** render tick/grid **/
     for (var i = 0; i <= y_ticks_count ; i++) {
@@ -165,14 +174,14 @@ FnordMetricChart.Plotter = function(elem, params) {
         c.drawText(
             canvas_margin_left + text_padding,
             tick_y_screen,
-            "blah",
+            tick_labels[i],
             "inside");
       } else {
         var text_padding = 8;
         c.drawText(
             canvas_margin_left - text_padding,
             tick_y_screen,
-            "blah",
+            tick_labels[i],
             "outside");
       }
     }

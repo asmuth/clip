@@ -12,10 +12,10 @@ var FnordMetricChart = function(viewport, params) {
   this.render = function() {
     renderSkeletonHTML();
 
-    fetchData(function(series) {
-      renderChart(series);
-      renderSummaries(series);
-      renderSeriesList(series);
+    fetchData(function(result) {
+      renderChart(result);
+      renderSummaries(result);
+      renderSeriesList(result);
     });
   };
 
@@ -53,17 +53,17 @@ var FnordMetricChart = function(viewport, params) {
     viewport.appendChild(container_elem);
   }
 
-  function renderChart(series) {
+  function renderChart(result) {
     var elem = viewport.querySelector(".fm-chart-plot");
     var plotter = new FnordMetricChart.Plotter(elem, params);
-    plotter.render(series);
+    plotter.render(result);
   }
 
-  function renderSummaries(series) {
+  function renderSummaries(result) {
 
   }
 
-  function renderSeriesList(series) {
+  function renderSeriesList(result) {
 
   }
 
