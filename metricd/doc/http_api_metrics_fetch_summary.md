@@ -8,8 +8,16 @@ the metric.
 
 <table>
   <tr>
-    <td>metric_id</td>
+    <td><code><strong>metric_id</strong></code></td>
     <td>The name of the metric for which to compute the summary.</td>
+  </tr>
+  <tr>
+    <td><code><strong>from</strong></code></td>
+    <td>Begin of the query time window (inclusive). Valid values are: ISO-8601-style dates, unix timestamps, `now` and relative references of the form `-NN[s(((ec)ond)s)|m(((in)ute)s)|h((our)s)|d((ay)s)|w((eek)s)|y((ear)s)]`. For example: `2017-01-29 14:00:00`, `now`, `-30min` or `-6h`</td>
+  </tr>
+  <tr>
+    <td><code><strong>until</strong></code></td>
+    <td>End of the time window (exclusive). See "from" (above) for list of valid values.</td>
   </tr>
 </table>
 
@@ -20,7 +28,9 @@ the metric.
     >> Content-Length: ...
     >>
     >> {
-    >>   "metric_id": "users_online"
+    >>   "metric_id": "users_online",
+    >>   "from": "-2hours",
+    >>   "until": "now"
     >> }
 
 ### Example Response
