@@ -51,7 +51,7 @@ void WebUI::handleHTTPRequest(
     js_src += getAssetFile("embed/chart/chart.js");
     js_src += getAssetFile("embed/chart/chart_plotter_linear_domain.js");
     js_src += getAssetFile("embed/chart/chart_plot.js");
-    js_src += getAssetFile("embed/chart/svg_renderer.js");
+    js_src += getAssetFile("embed/chart/svg_helper.js");
     js_src += getAssetFile("util/http.js");
     js_src += getAssetFile("util/dom.js");
     css_src += getAssetFile("embed/chart/chart.css");
