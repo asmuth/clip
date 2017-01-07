@@ -17,8 +17,8 @@
 FnordMetricChart.Plotter = function(elem, params) {
   'use strict';
 
-  var width = elem.offsetWidth;
-  var height = 180;
+  var width = elem.offsetWidth * 1.6;
+  var height = 180 * 1.6;
   var canvas_margin_top = 10;
   var canvas_margin_right = 1;
   var canvas_margin_bottom = 1;
