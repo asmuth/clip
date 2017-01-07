@@ -69,6 +69,7 @@ bool JSONReader::readNextToken(
       case ' ':
       case '\n':
       case '\r':
+      case '\t':
         advanceCursor();
         break;
 

@@ -126,6 +126,72 @@ TEST_CASE(JSONTest, TestJSONReaderToObject, [] () {
   EXPECT(obj->getArray("blah")->getDouble(3) == 0.000037);
 });
 
+TEST_CASE(JSONTest, TestJSONReaderWithNewlines, [] () {
+  std::string json_str = "{\n\r\"metric_id\": \"csgo.player_count_human\" }";
+
+  JSONReader json_reader(&json_str);
+
+  kTokenType token_type;
+  std::string token_str;
+
+  EXPECT_TRUE(json_reader.readNextToken(&token_type, &token_str));
+  EXPECT_EQ(token_type, JSON_OBJECT_BEGIN);
+
+  EXPECT_TRUE(json_reader.readNextToken(&token_type, &token_str));
+  EXPECT_EQ(token_type, JSON_STRING);
+  EXPECT_EQ(token_str, "metric_id");
+
+  EXPECT_TRUE(json_reader.readNextToken(&token_type, &token_str));
+  EXPECT_EQ(token_type, JSON_STRING);
+  EXPECT_EQ(token_str, "csgo.player_count_human");
+
+  EXPECT_TRUE(json_reader.readNextToken(&token_type, &token_str));
+  EXPECT_EQ(token_type, JSON_OBJECT_END);
+
+  JSONStorage json_elem;
+  auto rc = readJSON(&json_elem, &json_str);
+  EXPECT_TRUE(rc);
+
+  EXPECT_TRUE(json_elem.hasRootObject());
+  auto obj = json_elem.getRootAsObject();
+
+  EXPECT_TRUE(obj->has("metric_id"));
+  EXPECT(obj->getString("metric_id") == "csgo.player_count_human");
+});
+
+TEST_CASE(JSONTest, TestJSONReaderWithTabs, [] () {
+  std::string json_str = "{\n\t\"metric_id\": \"csgo.player_count_human\" }";
+
+  JSONReader json_reader(&json_str);
+
+  kTokenType token_type;
+  std::string token_str;
+
+  EXPECT_TRUE(json_reader.readNextToken(&token_type, &token_str));
+  EXPECT_EQ(token_type, JSON_OBJECT_BEGIN);
+
+  EXPECT_TRUE(json_reader.readNextToken(&token_type, &token_str));
+  EXPECT_EQ(token_type, JSON_STRING);
+  EXPECT_EQ(token_str, "metric_id");
+
+  EXPECT_TRUE(json_reader.readNextToken(&token_type, &token_str));
+  EXPECT_EQ(token_type, JSON_STRING);
+  EXPECT_EQ(token_str, "csgo.player_count_human");
+
+  EXPECT_TRUE(json_reader.readNextToken(&token_type, &token_str));
+  EXPECT_EQ(token_type, JSON_OBJECT_END);
+
+  JSONStorage json_elem;
+  auto rc = readJSON(&json_elem, &json_str);
+  EXPECT_TRUE(rc);
+
+  EXPECT_TRUE(json_elem.hasRootObject());
+  auto obj = json_elem.getRootAsObject();
+
+  EXPECT_TRUE(obj->has("metric_id"));
+  EXPECT(obj->getString("metric_id") == "csgo.player_count_human");
+});
+
 TEST_CASE(JSONTest, TestMultiLevelEscaping, [] () {
   std::string json_str = R"({"str":"fub \\\"blah\\\" bar"})";
 
