@@ -31,4 +31,8 @@ widgets/f-timerange-picker/f-timerange-picker-calendar.js
 widgets/f-timerange-picker/f-timerange-picker.js
 widgets/f-timerange-picker/f-timerange-picker.html
 widgets/f-timerange-picker/f-timerange-picker.css
-
+embed/chart/chart.js
+embed/chart/chart.css
+embed/chart/chart_plotter_linear_domain.js
+embed/chart/chart_plot.js
+embed/chart/svg_helper.js

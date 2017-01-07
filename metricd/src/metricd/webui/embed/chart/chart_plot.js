@@ -17,14 +17,6 @@
 FnordMetricChart.Plotter = function(elem, params) {
   'use strict';
 
-  // remove me
-  params.axis_y_position = "inside";
-  params.border_top = false;
-  params.border_right = false;
-  params.border_left = false;
-  params.border_bottom = true;
-  params.points = false;
-
   var width = 1240; // FIXME
   var height = 180;
   var canvas_margin_top = 10;
@@ -39,7 +31,6 @@ FnordMetricChart.Plotter = function(elem, params) {
 
   this.render = function(series) {
     /* set up domains */
-
     series.forEach(function(s) {
       y_domain.findMinMax(s.values);
       x_domain.findMinMax(s.time);
@@ -50,7 +41,6 @@ FnordMetricChart.Plotter = function(elem, params) {
 
     /* draw the svg */
     var svg = drawChart(series);
-    console.log(svg);
     elem.innerHTML = svg;
   }
 

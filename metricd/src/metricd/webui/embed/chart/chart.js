@@ -20,7 +20,7 @@ var FnordMetricChart = function(viewport, params) {
   };
 
   function fetchData(callback) {
-    var url = "/api/v1/metrics/fetch?metric_id=prod.db.mysql.ram_used";
+    var url = "/api/v1/metrics/fetch?metric_id=" + params.metric_id;
 
     HTTPUtil.httpGet(url, {}, function(r) {
       if (r.status != 200) {
@@ -34,7 +34,7 @@ var FnordMetricChart = function(viewport, params) {
   }
 
   function renderSkeletonHTML() {
-    // FIXME
+    viewport.innerHTML = '<div class="fm-chart-container"> <div class="fm-chart-title"> </div> <div class="fm-chart-body"> <div class="fm-chart-summary"> </div> <div class="fm-chart-plot"> </div> </div> <div class="fm-chart-series-list"> </div> </div>';
   }
 
   function renderChart(result) {
