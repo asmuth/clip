@@ -34,29 +34,29 @@ Here is a simple example:
   </thead>
   <tbody>
     <tr>
-      <td><code><strong>title</strong></code></td>
-      <td>Here be dragons</td>
-      <td>false</td>
+      <td><code><strong>axis_y_position</strong></code></td>
+      <td>...</td>
+      <td>...</td>
     </tr>
     <tr>
-      <td>show_plot</td>
-      <td>Here be dragons</td>
-      <td>false</td>
+      <td><code><strong>border_top</strong></code></td>
+      <td>...</td>
+      <td>...</td>
     </tr>
     <tr>
-      <td>show_summary</td>
-      <td>Here be dragons</td>
-      <td>false</td>
+      <td><code><strong>border_right</strong></code></td>
+      <td>...</td>
+      <td>...</td>
     </tr>
     <tr>
-      <td>show_series_list</td>
-      <td>Here be dragons</td>
-      <td>false</td>
+      <td><code><strong>border_bottom</strong></code></td>
+      <td>...</td>
+      <td>...</td>
     </tr>
     <tr>
-      <td>show_summary</td>
-      <td>Here be dragons</td>
-      <td>false</td>
+      <td><code><strong>border_left</strong></code></td>
+      <td>...</td>
+      <td>...</td>
     </tr>
   </tbody>
 </table>
