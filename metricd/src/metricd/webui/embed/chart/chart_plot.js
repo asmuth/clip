@@ -1,6 +1,7 @@
 /**
  * This file is part of the "FnordMetric" project
  *   Copyright (c) 2016 Laura Schlimmer, FnordCorp B.V.
+ *   Copyright (c) 2016 Paul Asmuth, FnordCorp B.V.
  *
  * FnordMetric is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License v3.0. You should have received a
@@ -204,12 +205,15 @@ FnordMetricChart.Plotter = function(elem, params) {
 
     for (var i = 0; i < series.values.length; i++) {
       var x = x_domain.convertDomainToScreen(series.time[i]);
-      var y = y_domain.convertDomainToScreen(series.values[i]);
-
       var x_screen = x * (width - (canvas_margin_left + canvas_margin_right)) + canvas_margin_left;
-      var y_screen = (1.0 - y) * (height - (canvas_margin_bottom + canvas_margin_top)) + canvas_margin_top;
 
-      points.push([x_screen, y_screen]);
+      if (series.values[i] === null) {
+        points.push([x_screen, null]);
+      } else {
+        var y = y_domain.convertDomainToScreen(series.values[i]);
+        var y_screen = (1.0 - y) * (height - (canvas_margin_bottom + canvas_margin_top)) + canvas_margin_top;
+        points.push([x_screen, y_screen]);
+      }
     }
 
     c.drawPath(points, "line");
