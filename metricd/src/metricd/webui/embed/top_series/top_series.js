@@ -10,14 +10,38 @@
 var FnordMetricTopSeries = function(viewport, params) {
 
   this.render = function() {
-    //renderSkeletonHTML();
+    renderSkeletonHTML();
 
-    //fetchData(function(result) {
-    //  renderChart(result);
-    //  renderSummaries(result);
-    //  renderSeriesList(result);
-    //});
+    fetchData(function(result) {
+      renderTable(result);
+    });
   };
 
+  function fetchData(callback) {
+
+  }
+
+  function renderSkeletonHTML() {
+    var container_elem = document.createElement("div");
+    container_elem.classList.add("fm-top-series-container");
+
+    var table_elem = document.createElement("table");
+    table_elem.classList.add("fm-top-series-table");
+    container_elem.appendChild(table_elem);
+
+    var thead_elem = document.createElement("thead");
+    table_elem.appendChild(thead_elem);
+
+    var tbody_elem = document.createElement("tbody");
+    table_elem.appendChild(tbody_elem);
+
+    viewport.appendChild(container_elem);
+  }
+
+  function renderTable(result) {
+    var elem = viewport.querySelector(".fm-top-series-table");
+    var renderer = new FnordMetricTopSeries.Renderer(elem);
+    renderer.render(result);
+  }
 }
 
