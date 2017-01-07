@@ -13,6 +13,7 @@
 #include <metricd/transport/http/http_api.h>
 #include <metricd/util/stringutil.h>
 #include <metricd/util/time.h>
+#include <libtransport/json/json_object.h>
 
 namespace fnordmetric {
 
@@ -46,6 +47,12 @@ void HTTPAPI::handleHTTPRequest(
   // PATH: /api/v1/metrics/list_series
   if (path == "/api/v1/metrics/list_series") {
     renderMetricSeriesList(request, response, uri);
+    return;
+  }
+
+  // PATH: /api/v1/metrics/fetch_summary
+  if (path == "/api/v1/metrics/fetch_summary") {
+    performMetricFetchSummary(request, response, uri);
     return;
   }
 
@@ -172,6 +179,35 @@ void HTTPAPI::performMetricFetch(
     response->setStatus(http::kStatusOK);
     response->addHeader("Content-Type", "application/json; charset=utf-8");
     response->addBody(json_str);
+  } else {
+    response->setStatus(http::kStatusInternalServerError);
+    response->addBody("ERROR: " + rc.getMessage());
+  }
+}
+
+void HTTPAPI::performMetricFetchSummary(
+    http::HTTPRequest* request,
+    http::HTTPResponse* response,
+    const URI& uri) {
+
+  json::JSONStorage json_req;
+  if (!json::readJSON(&json_req, &request->body()) || !json_req.hasRootObject()) {
+    response->setStatus(http::kStatusBadRequest);
+    response->addBody("ERROR: invalid json");
+    return;
+  }
+
+  std::string json_res_str;
+  json::JSONWriter json_res(&json_res_str);
+
+  auto rc = query_frontend_.fetchSummaryJSON(
+      json_req.getRootAsObject(),
+      &json_res);
+
+  if (rc.isSuccess()) {
+    response->setStatus(http::kStatusOK);
+    response->addHeader("Content-Type", "application/json; charset=utf-8");
+    response->addBody(json_res_str);
   } else {
     response->setStatus(http::kStatusInternalServerError);
     response->addBody("ERROR: " + rc.getMessage());

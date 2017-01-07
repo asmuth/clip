@@ -18,6 +18,7 @@
 #include "metricd/query/ops/fetch_timeseries.h"
 #include <libtransport/json/json.h>
 #include <libtransport/json/json_writer.h>
+#include <libtransport/json/json_object.h>
 
 namespace fnordmetric {
 
@@ -31,6 +32,10 @@ public:
   ReturnCode fetchTimeseriesJSON(
       const QueryOptions* query,
       json::JSONWriter* out);
+
+  ReturnCode fetchSummaryJSON(
+      const json::JSONObject* req,
+      json::JSONWriter* res);
 
 protected:
   MetricService* metric_service_;
