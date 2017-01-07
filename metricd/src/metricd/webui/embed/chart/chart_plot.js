@@ -220,9 +220,5 @@ FnordMetricChart.Plotter = function(elem, params) {
     }
   }
 
-  function initResize(series) {
-
-  }
-
 }
 
