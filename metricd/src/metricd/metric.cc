@@ -304,7 +304,8 @@ void MetricSeriesListCursor::setMetricMap(
 
 Metric::Metric(
     const std::string& key) :
-    key_(key) {}
+    key_(key),
+    unit_config_(nullptr) {}
 
 ReturnCode Metric::setConfig(MetricConfig config) {
   //if (config.aggregation != MetricAggregationType::NONE &&
@@ -337,6 +338,14 @@ MetricSeriesList* Metric::getSeriesList() {
 
 InputAggregator* Metric::getInputAggregator() {
   return input_aggr_.get();
+}
+
+void Metric::setUnitConfig(const UnitConfig* config) {
+  unit_config_ = config;
+}
+
+const UnitConfig* Metric::getUnitConfig() const {
+  return unit_config_;
 }
 
 tval_type getMetricDataType(MetricKind t) {
