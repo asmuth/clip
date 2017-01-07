@@ -40,15 +40,13 @@ FnordMetricChart.Plotter = function(elem, params) {
     fitLayout();
 
     /* draw the svg */
-    refresh(series);
+    draw(series);
 
     /* adjust the svg when the window is resized */
-    initResize(series);
-  }
-
-  function refresh(series) {
-    var svg = drawChart(series);
-    elem.innerHTML = svg;
+    window.addEventListener("resize", function(e) {
+      width = elem.offsetWidth;
+      refresh(series);
+    }, false);
   }
 
   function fitLayout() {
@@ -63,6 +61,11 @@ FnordMetricChart.Plotter = function(elem, params) {
     canvas_margin_bottom += 16; // FIXME
   }
 
+  function draw(series) {
+    var svg = drawChart(series);
+    elem.innerHTML = svg;
+  }
+  
   function drawChart(series) {
     var svg = new FnordMetricChart.SVGHelper();
     svg.svg += "<svg class='fm-chart' viewBox='0 0 " + width + " " + height + "' >";
@@ -218,10 +221,7 @@ FnordMetricChart.Plotter = function(elem, params) {
   }
 
   function initResize(series) {
-    window.addEventListener("resize", function(e) {
-      width = elem.offsetWidth;
-      refresh(series);
-    }, false);
+
   }
 
 }
