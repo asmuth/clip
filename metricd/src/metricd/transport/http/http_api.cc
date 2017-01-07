@@ -146,13 +146,22 @@ void HTTPAPI::performMetricFetchSummary(
     http::HTTPRequest* request,
     http::HTTPResponse* response,
     const URI& uri) {
+  json::JSONObjectStorage json_req;
 
-  std::cerr << request->body() << std::endl;
-  json::JSONStorage json_req;
-  if (!json::readJSON(&json_req, &request->body()) || !json_req.hasRootObject()) {
-    response->setStatus(http::kStatusBadRequest);
-    response->addBody("ERROR: invalid json");
-    return;
+  if (request->method() == http::HTTPMessage::M_POST) {
+    const auto& body = request->body();
+    if (!json::readJSON(&json_req, &body) || !json_req.hasRootObject()) {
+      response->setStatus(http::kStatusBadRequest);
+      response->addBody("ERROR: invalid json");
+      return;
+    }
+  } else {
+    auto params = uri.queryParams();
+
+    std::string metric_id;
+    if (URI::getParam(params, "metric_id", &metric_id)) {
+      json_req.getRootAsObject()->setString("metric_id", metric_id);
+    }
   }
 
   std::string json_res_str;
