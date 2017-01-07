@@ -16,6 +16,7 @@
 namespace fnordmetric {
 
 enum class tval_type {
+  NIL,
   UINT64,
   INT64,
   FLOAT64
@@ -39,6 +40,8 @@ struct tval_autoref {
 };
 
 void tval_zero(tval_type type, void* reg, size_t reg_len);
+
+bool tval_iszero(const tval_ref* tval);
 
 void tval_add(
     tval_type type,

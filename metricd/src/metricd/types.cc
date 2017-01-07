@@ -86,6 +86,33 @@ void tval_zero(tval_type type, void* reg, size_t reg_len) {
   }
 }
 
+bool tval_iszero(const tval_ref* val) {
+  switch (val->type) {
+
+    case tval_type::UINT64: {
+      assert(val->len == sizeof(uint64_t));
+      return *((uint64_t*) val->data) == 0;
+    }
+
+    case tval_type::INT64: {
+      assert(val->len == sizeof(int64_t));
+      return *((int64_t*) val->data) == 0;
+    }
+
+    case tval_type::FLOAT64: {
+      static_assert(
+          std::numeric_limits<double>::is_iec559 &&
+          sizeof(double) == sizeof(uint64_t),
+          "non-compatible double implementation");
+
+      assert(val->len == sizeof(double));
+      return *((double*) val->data) == 0.0f;
+    }
+
+    default: throw std::invalid_argument("type error");
+  }
+}
+
 void tval_add(
     tval_type type,
     void* reg,
