@@ -1,3 +1,7 @@
+implement parseTimeSpec
+
+-----------------------------
+
 frontend: pickUnit
 frontend: pickSummarySeries
 frontend: pickGrossSummary

@@ -168,6 +168,16 @@ void HTTPAPI::performMetricFetchSeries(
     if (URI::getParam(params, "metric_id", &metric_id)) {
       json_req.getRootAsObject()->setString("metric_id", metric_id);
     }
+
+    std::string from;
+    if (URI::getParam(params, "from", &from)) {
+      json_req.getRootAsObject()->setString("from", from);
+    }
+
+    std::string until;
+    if (URI::getParam(params, "until", &until)) {
+      json_req.getRootAsObject()->setString("until", until);
+    }
   }
 
   std::string json_res_str;
@@ -206,6 +216,16 @@ void HTTPAPI::performMetricFetchSummary(
     std::string metric_id;
     if (URI::getParam(params, "metric_id", &metric_id)) {
       json_req.getRootAsObject()->setString("metric_id", metric_id);
+    }
+
+    std::string from;
+    if (URI::getParam(params, "from", &from)) {
+      json_req.getRootAsObject()->setString("from", from);
+    }
+
+    std::string until;
+    if (URI::getParam(params, "until", &until)) {
+      json_req.getRootAsObject()->setString("until", until);
     }
   }
 

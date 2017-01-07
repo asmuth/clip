@@ -8,6 +8,7 @@
  * <http://www.gnu.org/licenses/>.
  */
 #include "metricd/query/query_frontend.h"
+#include "metricd/util/format.h"
 
 namespace fnordmetric {
 
@@ -29,14 +30,32 @@ static void readDataFrame(MetricCursor* cursor, DataFrame* frame) {
 ReturnCode QueryFrontend::fetchSeriesJSON(
     const json::JSONObject* req,
     json::JSONWriter* res) {
+  /* set options from request */
   MetricCursorOptions cursor_opts;
+  std::vector<GrossSummaryMethod> summary_methods{GrossSummaryMethod::SUM};
 
   auto metric_id = req->getString("metric_id");
   if (metric_id.empty()) {
     return ReturnCode::error("EARG", "missing argument: metric_id");
   }
 
-  /* fetch summary */
+  auto time_begin = req->getString("from");
+  if (!time_begin.empty()) {
+    auto rc = parseTimeSpec(time_begin, &cursor_opts.time_begin);
+    if (!rc.isSuccess()) {
+      return rc;
+    }
+  }
+
+  auto time_limit = req->getString("until");
+  if (!time_limit.empty()) {
+    auto rc = parseTimeSpec(time_limit, &cursor_opts.time_limit);
+    if (!rc.isSuccess()) {
+      return rc;
+    }
+  }
+
+  /* fetch series */
   DataFrameBundle results;
   {
     MetricCursor cursor;
@@ -54,7 +73,6 @@ ReturnCode QueryFrontend::fetchSeriesJSON(
   }
 
   /* compute gross summaries */
-  std::vector<GrossSummaryMethod> summary_methods{GrossSummaryMethod::SUM};
   using SummaryList = std::vector<std::pair<std::string, tval_autoref>>;
   std::vector<SummaryList> gross_summaries(results.getFrameCount());
   for (size_t frame_idx = 0; frame_idx < results.getFrameCount(); ++frame_idx) {
@@ -159,8 +177,26 @@ ReturnCode QueryFrontend::fetchSeriesJSON(
 ReturnCode QueryFrontend::fetchSummaryJSON(
     const json::JSONObject* req,
     json::JSONWriter* res) {
+  /* set options from request */
   MetricCursorOptions cursor_opts;
   cursor_opts.cursor_type = MetricCursorType::SUMMARY;
+  std::vector<GrossSummaryMethod> summary_methods{GrossSummaryMethod::SUM};
+
+  auto time_begin = req->getString("from");
+  if (!time_begin.empty()) {
+    auto rc = parseTimeSpec(time_begin, &cursor_opts.time_begin);
+    if (!rc.isSuccess()) {
+      return rc;
+    }
+  }
+
+  auto time_limit = req->getString("until");
+  if (!time_limit.empty()) {
+    auto rc = parseTimeSpec(time_limit, &cursor_opts.time_limit);
+    if (!rc.isSuccess()) {
+      return rc;
+    }
+  }
 
   auto metric_id = req->getString("metric_id");
   if (metric_id.empty()) {
@@ -195,7 +231,6 @@ ReturnCode QueryFrontend::fetchSummaryJSON(
   }
 
   /* compute gross summaries */
-  std::vector<GrossSummaryMethod> summary_methods{GrossSummaryMethod::SUM};
   using SummaryList = std::vector<std::pair<std::string, tval_autoref>>;
   std::vector<SummaryList> gross_summaries(results.getFrameCount());
   for (size_t frame_idx = 0; frame_idx < results.getFrameCount(); ++frame_idx) {

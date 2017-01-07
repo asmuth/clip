@@ -61,6 +61,8 @@ metricd_common_sources_ = \
     util/time_impl.h \
     util/time.h \
     util/time.cc \
+    util/format.h \
+    util/format.cc \
     util/stringutil_impl.h \
     util/stringutil.h \
     util/stringutil.cc \
