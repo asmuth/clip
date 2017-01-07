@@ -57,8 +57,14 @@ function FnordMetricSeriesListView(elem, params) {
     elem.appendChild(page);
 
     /** initialize ui components **/
+    initHeaderBreadcrumbs();
     initLayoutDatepicker();
     initLayoutFilter();
+  }
+
+  function initHeaderBreadcrumbs() {
+    elem.querySelector(".page_header .breadcrumbs .metric_name").innerHTML =
+      DOMUtil.escapeHTML(config.getMetricID());
   }
 
   function initLayoutDatepicker() {
