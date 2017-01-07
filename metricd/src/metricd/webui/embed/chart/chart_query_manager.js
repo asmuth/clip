@@ -38,6 +38,10 @@ FnordMetricChart.QueryManager = function(params) {
   }
 
   function executeFetchSummary(qry) {
+    delete qry.op;
+    qry.from = params.from;
+    qry.until = params.until;
+
     HTTPUtil.httpPost(
         "/api/v1/metrics/fetch_summary",
         JSON.stringify(qry),
