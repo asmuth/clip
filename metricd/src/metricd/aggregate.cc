@@ -241,9 +241,15 @@ bool MaxOutputAggregator::next(uint64_t* time, tval_ref* out) {
     cursor_.next();
   }
 
+ if (tval_iszero(&cur_max_) &&
+      (!cursor_.valid() || (cursor_.getTime() > cur_time_ + granularity))) {
+    has_cur_max_ = false;
+  }
+
   if (out) {
     assert(out[0].len == cur_max_.len);
     memcpy(out[0].data, cur_max_.data, cur_max_.len);
+    out->type = has_cur_max_ ? input_type_ : tval_type::NIL;
   }
 
   *time = cur_time_;
