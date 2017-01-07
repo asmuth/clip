@@ -15,22 +15,47 @@ QueryFrontend::QueryFrontend(
     MetricService* metric_service) :
     metric_service_(metric_service) {}
 
-ReturnCode QueryFrontend::fetchTimeseriesJSON(
-    const QueryOptions* query,
-    json::JSONWriter* json) {
-  std::vector<GrossSummaryMethod> summary_methods{GrossSummaryMethod::SUM};
+static void readDataFrame(MetricCursor* cursor, DataFrame* frame) {
+  uint64_t timestamp;
+  tval_ref val;
+  val.type = cursor->getOutputType();
+  val.len = tval_len(val.type);
+  val.data = alloca(val.len);
+  while (cursor->next(&timestamp, &val)) {
+    frame->addValue(timestamp, val.data, val.len);
+  }
+}
 
-  /* fetch series */
+ReturnCode QueryFrontend::fetchSummaryJSON(
+    const json::JSONObject* req,
+    json::JSONWriter* res) {
+  MetricCursorOptions cursor_opts;
+  cursor_opts.cursor_type = MetricCursorType::SUMMARY;
+
+  auto metric_id = req->getString("metric_id");
+  if (metric_id.empty()) {
+    return ReturnCode::error("EARG", "missing argument: metric_id");
+  }
+
+  /* fetch summary */
   DataFrameBundle results;
   {
-    FetchTimeseriesOperation fetch_op(metric_service_, query);
-    auto rc = fetch_op.execute(&results);
-    if (!rc.isSuccess()) {
-      return rc;
+    MetricCursor cursor;
+    auto cursor_rc = metric_service_->fetchData(
+        metric_id,
+        cursor_opts,
+        &cursor);
+
+    if (!cursor_rc.isSuccess()) {
+      return cursor_rc;
     }
+
+    auto frame = results.addFrame(cursor.getOutputType());
+    readDataFrame(&cursor, frame);
   }
 
   /* compute gross summaries */
+  std::vector<GrossSummaryMethod> summary_methods{GrossSummaryMethod::SUM};
   using SummaryList = std::vector<std::pair<std::string, tval_autoref>>;
   std::vector<SummaryList> gross_summaries(results.getFrameCount());
   for (size_t frame_idx = 0; frame_idx < results.getFrameCount(); ++frame_idx) {
@@ -53,78 +78,78 @@ ReturnCode QueryFrontend::fetchTimeseriesJSON(
   }
 
   /* write output json */
-  json->beginArray();
+  res->beginArray();
 
   for (size_t frame_idx = 0; frame_idx < results.getFrameCount(); ++frame_idx) {
     auto frame = results.getFrame(frame_idx);
-    json->beginObject();
-    json->addString("series_id");
-    json->addString(frame->getID());
+    res->beginObject();
+    res->addString("series_id");
+    res->addString(frame->getID());
 
-    json->addString("tags");
-    json->beginArray();
+    res->addString("tags");
+    res->beginArray();
     for (auto t = frame->getTags().begin(); t != frame->getTags().end(); ++t) {
-      json->addString(*t);
+      res->addString(*t);
     }
-    json->endArray();
+    res->endArray();
 
-    json->addString("summaries");
-    json->beginArray();
+    res->addString("summaries");
+    res->beginArray();
     for (size_t i = 0; i < gross_summaries[frame_idx].size(); ++i) {
-      json->beginObject();
-      json->addString("summary");
-      json->addString(gross_summaries[frame_idx][i].first);
+      res->beginObject();
+      res->addString("summary");
+      res->addString(gross_summaries[frame_idx][i].first);
 
-      json->addString("value");
+      res->addString("value");
       const auto& sval = gross_summaries[frame_idx][i].second.val;
       switch (sval.type) {
         case tval_type::UINT64:
-          json->addInteger(*((uint64_t*) sval.data));
+          res->addInteger(*((uint64_t*) sval.data));
           break;
         case tval_type::INT64:
-          json->addInteger(*((int64_t*) sval.data));
+          res->addInteger(*((int64_t*) sval.data));
           break;
         case tval_type::FLOAT64:
-          json->addFloat(*((double*) sval.data));
+          res->addFloat(*((double*) sval.data));
           break;
         default:
-          json->addNull();
+          res->addNull();
       }
 
-      json->endObject();
+      res->endObject();
     }
-    json->endArray();
+    res->endArray();
 
-    json->addString("time");
-    json->beginArray();
+    res->addString("time");
+    res->beginArray();
     for (size_t i = 0; i < frame->getSize(); ++i) {
-      json->addInteger(*frame->getTime(i));
+      res->addInteger(*frame->getTime(i));
     }
-    json->endArray();
+    res->endArray();
 
-    json->addString("values");
-    json->beginArray();
+    res->addString("values");
+    res->beginArray();
     for (size_t i = 0; i < frame->getSize(); ++i) {
       switch (frame->getType()) {
         case tval_type::UINT64:
-          json->addInteger(*((uint64_t*) frame->getData(i)));
+          res->addInteger(*((uint64_t*) frame->getData(i)));
           break;
         case tval_type::INT64:
-          json->addInteger(*((int64_t*) frame->getData(i)));
+          res->addInteger(*((int64_t*) frame->getData(i)));
           break;
         case tval_type::FLOAT64:
-          json->addFloat(*((double*) frame->getData(i)));
+          res->addFloat(*((double*) frame->getData(i)));
           break;
         default:
-          json->addNull();
+          res->addNull();
       }
     }
-    json->endArray();
+    res->endArray();
 
-    json->endObject();
+    res->endObject();
   }
 
-  json->endArray();
+  res->endArray();
 
   return ReturnCode::success();
 }

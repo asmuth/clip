@@ -56,12 +56,6 @@ void HTTPAPI::handleHTTPRequest(
     return;
   }
 
-  // PATH: /api/v1/metrics/fetch_series
-  if (path == "/api/v1/metrics/fetch") {
-    performMetricFetch(request, response, uri);
-    return;
-  }
-
   // PATH: /api/v1/metrics/insert
   if (path == "/api/v1/metrics/insert") {
     performMetricInsert(request, response, uri);
@@ -148,48 +142,12 @@ void HTTPAPI::renderMetricSeriesList(
   response->addBody(json_str);
 }
 
-void HTTPAPI::performMetricFetch(
-    http::HTTPRequest* request,
-    http::HTTPResponse* response,
-    const URI& uri) {
-  auto params = uri.queryParams();
-  QueryOptions opts;
-
-  std::string metric_id;
-  if (URI::getParam(params, "metric_id", &metric_id)) {
-    opts.addProperty("metric_id", metric_id);
-  } else {
-    response->setStatus(http::kStatusBadRequest);
-    response->addBody("ERROR: missing parameter ?metric_id=...");
-    return;
-  }
-
-  std::string json_str;
-  json::JSONWriter json(&json_str);
-
-  json.beginObject();
-  json.addString("metric_id");
-  json.addString(metric_id);
-
-  json.addString("series");
-  auto rc = query_frontend_.fetchTimeseriesJSON(&opts, &json);
-  json.endObject();
-
-  if (rc.isSuccess()) {
-    response->setStatus(http::kStatusOK);
-    response->addHeader("Content-Type", "application/json; charset=utf-8");
-    response->addBody(json_str);
-  } else {
-    response->setStatus(http::kStatusInternalServerError);
-    response->addBody("ERROR: " + rc.getMessage());
-  }
-}
-
 void HTTPAPI::performMetricFetchSummary(
     http::HTTPRequest* request,
     http::HTTPResponse* response,
     const URI& uri) {
 
+  std::cerr << request->body() << std::endl;
   json::JSONStorage json_req;
   if (!json::readJSON(&json_req, &request->body()) || !json_req.hasRootObject()) {
     response->setStatus(http::kStatusBadRequest);

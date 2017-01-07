@@ -50,11 +50,6 @@ protected:
       http::HTTPResponse* response,
       const URI& uri);
 
-  void performMetricFetch(
-      http::HTTPRequest* request,
-      http::HTTPResponse* response,
-      const URI& uri);
-
   void performMetricInsert(
       http::HTTPRequest* request,
       http::HTTPResponse* response,

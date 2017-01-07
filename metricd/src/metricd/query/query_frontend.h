@@ -29,10 +29,6 @@ public:
 
   QueryFrontend(MetricService* metric_service);
 
-  ReturnCode fetchTimeseriesJSON(
-      const QueryOptions* query,
-      json::JSONWriter* out);
-
   ReturnCode fetchSummaryJSON(
       const json::JSONObject* req,
       json::JSONWriter* res);
