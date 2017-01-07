@@ -19,37 +19,6 @@ DOMUtil.clearChildren = function(elem) {
   elem.innerHTML = "";
 }
 
-/**
-  * Set a cookie value
-  * @param name the cookies name
-  * @param value the cookies value
-  * @param expires (optional) expiry date in GMTString format
-  * (as returned by Date.toUTCString)
-  */
-DOMUtil.setCookie = function(name, value, expires) {
-  var cookie_str = name + "=" + value;
-
-  if (expires) {
-    cookie_str += "; expires=" + expires;
-  }
-
-  document.cookie = cookie_str;
-}
-
-DOMUtil.getCookie = function(name) {
-  var cookie = "; " + document.cookie;
-  var parts = cookie.split("; ");
-
-  for (var i = 0; i < parts.length; i++) {
-    var c = parts[i].split("=");
-    if (c[0] == name) {
-      return c[1];
-    }
-  }
-
-  return null;
-}
-
 DOMUtil.onClick = function(elem, fn) {
   elem.addEventListener("click", function(e) {
     e.preventDefault();
