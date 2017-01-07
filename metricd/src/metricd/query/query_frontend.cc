@@ -77,6 +77,8 @@ ReturnCode QueryFrontend::fetchSeriesJSON(
   }
 
   /* write output json */
+  res->beginObject();
+  res->addString("series");
   res->beginArray();
 
   for (size_t frame_idx = 0; frame_idx < results.getFrameCount(); ++frame_idx) {
@@ -149,6 +151,7 @@ ReturnCode QueryFrontend::fetchSeriesJSON(
   }
 
   res->endArray();
+  res->endObject();
 
   return ReturnCode::success();
 }
@@ -215,6 +218,8 @@ ReturnCode QueryFrontend::fetchSummaryJSON(
   }
 
   /* write output json */
+  res->beginObject();
+  res->addString("series");
   res->beginArray();
 
   for (size_t frame_idx = 0; frame_idx < results.getFrameCount(); ++frame_idx) {
@@ -287,6 +292,7 @@ ReturnCode QueryFrontend::fetchSummaryJSON(
   }
 
   res->endArray();
+  res->endObject();
 
   return ReturnCode::success();
 }
