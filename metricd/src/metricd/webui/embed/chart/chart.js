@@ -27,7 +27,30 @@ var FnordMetricChart = function(viewport, params) {
   }
 
   function renderSkeletonHTML() {
-    viewport.innerHTML = '<div class="fm-chart-container"> <div class="fm-chart-title"> </div> <div class="fm-chart-body"> <div class="fm-chart-summary"> </div> <div class="fm-chart-plot"> </div> </div> <div class="fm-chart-series-list"> </div> </div>';
+    var container_elem = document.createElement("div");
+    container_elem.classList.add("fm-chart-container");
+
+    var title_elem = document.createElement("div");
+    title_elem.classList.add("fm-chart-title");
+    container_elem.appendChild(title_elem);
+
+    var body_elem = document.createElement("div");
+    body_elem.classList.add("fm-chart-body");
+    container_elem.appendChild(body_elem);
+
+    var summary_elem = document.createElement("div");
+    summary_elem.classList.add("fm-chart-summary");
+    body_elem.appendChild(summary_elem);
+
+    var plot_elem = document.createElement("div");
+    plot_elem.classList.add("fm-chart-plot");
+    body_elem.appendChild(plot_elem);
+
+    var series_list_elem = document.createElement("div");
+    series_list_elem.classList.add("fm-chart-series-list");
+    container_elem.appendChild(series_list_elem);
+
+    viewport.appendChild(container_elem);
   }
 
   function renderChart(series) {
