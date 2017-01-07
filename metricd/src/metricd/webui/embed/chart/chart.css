@@ -23,9 +23,11 @@
   height: 300px;
 }
 
+.fm-chart-plot {
+  width: 100%;
+}
 
-
-.fnordmetric-metric-series-chart {
+{
   display: flex;
   flex-direction: row;
   flex: 1;
@@ -37,17 +39,17 @@
   height: 125px;
 }
 
-.fnordmetric-metric-series-chart .summary {
+.summary {
   width: 225px;
 }
 
-.fnordmetric-metric-series-chart .chart {
+.chart {
   display: flex;
   flex-direction: column;
   flex: 1;
 }
 
-.fnordmetric-metric-series-chart .circle {
+.circle {
   display: inline-block;
   height: 10px;
   width: 10px;
@@ -56,65 +58,66 @@
   margin: 5px 9px 0 0;
 }
 
-.fnordmetric-metric-series-chart .summary .total {
+.summary .total {
   font-size: 23px;
   color: #333;
   line-height: 24px;
 }
 
-.fnordmetric-metric-series-chart .summary .legend {
+.summary .legend {
   margin: 13px 0 9px 0;
 }
 
-.fnordmetric-metric-series-chart .summary .legend .legend_item:hover {
+.summary .legend .legend_item:hover {
   cursor: pointer;
 }
 
-.fnordmetric-metric-series-chart .summary .stats {
+.summary .stats {
   font-size: 11px;
 }
 
-.fnordmetric-metric-series-chart .fm-chart .hidden {
-  display: none;
+
+
+/* clean stuff */
+
+.fm-chart text {
+  font-family: "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+  font: 10px sans-serif;
 }
 
-.fnordmetric-metric-series-chart .fm-chart .axis .stroke {
+.fm-chart .border {
+  stroke-width: 1px;
+  stroke: #545758;
+  opacity: 0.6;
+}
+
+.fm-chart .grid {
   stroke-width: 1px;
   stroke: #545758;
   opacity: 0.1;
 }
 
-.fnordmetric-metric-series-chart .fm-chart .axis .stroke.tooltip {
-  display: none;
-  opacity: 0.6;
+.fm-chart .axis.x text {
+  alignment-baseline: text-before-edge;
 }
 
-.fnordmetric-metric-series-chart .fm-chart .axis .stroke.main_axis {
-  opacity: 0.6;
-}
-
-.fnordmetric-metric-series-chart .fm-chart text {
-  font-family: "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
-  font: 10px sans-serif;
-}
-
-.fnordmetric-metric-series-chart .fm-chart .label {
+.fm-chart .label {
   text-anchor: middle;
   dominant-baseline: central;
   font-size: 11px;
   fill: #666;
 }
 
-.fnordmetric-metric-series-chart .fm-chart .line {
+.fm-chart .line {
   fill: none;
   stroke: #000;
 }
 
-.fnordmetric-metric-series-chart .fm-chart circle.point {
+.fm-chart circle.point {
   fill: transparent;
 }
 
-.fnordmetric-metric-series-chart .fm-tooltip {
+.fm-tooltip {
   background: #fff;
   border-radius: 3px;
   padding: 0;
@@ -124,16 +127,16 @@
   border: 1px solid #ddd; 
 }
 
-.fnordmetric-metric-series-chart .fm-tooltip .date,
-.fnordmetric-metric-series-chart .fm-tooltip .series {
+.fm-tooltip .date,
+.fm-tooltip .series {
   padding: 0 7px;
 }
 
-.fnordmetric-metric-series-chart .fm-tooltip .date {
+.fm-tooltip .date {
   background: #f9f9f9;
 }
 
-.fnordmetric-metric-series-chart .fm-tooltip .series .circle {
+.fm-tooltip .series .circle {
   margin: 10px 4px 0 0;
 }
 
