@@ -47,10 +47,10 @@ void WebUI::handleHTTPRequest(
     return;
   }
 
-  if (StringUtil::beginsWith(path, "/embed")) {
+  if (StringUtil::beginsWith(path, "/embed/chart")) {
     response->setStatus(http::kStatusOK);
     response->addHeader("Content-Type", "text/html; charset=utf-8");
-    std::string body = getAssetFile("embed.html");
+    std::string body = getAssetFile("embed/chart/chart.html");
     std::string js_src;
     std::string css_src;
     js_src += getAssetFile("embed/chart/chart.js");
@@ -61,6 +61,27 @@ void WebUI::handleHTTPRequest(
     js_src += getAssetFile("util/http.js");
     js_src += getAssetFile("embed/units.js");
     css_src += getAssetFile("embed/chart/chart.css");
+
+    std::string config = "{}";
+    URI::getParam(uri.queryParams(), "c", &config);
+    StringUtil::replaceAll(&config, "</", "<\\/");
+
+    StringUtil::replaceAll(&body, "{{JS_SRC}}", js_src);
+    StringUtil::replaceAll(&body, "{{CSS_SRC}}", css_src);
+    StringUtil::replaceAll(&body, "{{PARAMS}}", config);
+
+    response->addBody(body);
+    return;
+  }
+
+  if (StringUtil::beginsWith(path, "/embed/top_series")) {
+    response->setStatus(http::kStatusOK);
+    response->addHeader("Content-Type", "text/html; charset=utf-8");
+    std::string body = getAssetFile("embed/top_series/top_series.html");
+    std::string js_src;
+    std::string css_src;
+    js_src += getAssetFile("embed/top_series/top_series.js");
+    css_src += getAssetFile("embed/top_series/top_series.css");
 
     std::string config = "{}";
     URI::getParam(uri.queryParams(), "c", &config);
