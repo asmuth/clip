@@ -35,6 +35,20 @@ FnordMetricChart.SVGHelper = function() {
         "</text>";
   }
 
+  this.drawPath = function(points, classes) {
+    var d_attr = "";
+    for (var i = 0; i < points.length; i++) {
+      d_attr += i == 0 ? "M " : "L ";
+      d_attr += points[i][0] + " " + points[i][1];
+    }
+
+    this.svg +=
+        "<path" +
+            xmlAttr("class", classes) +
+            xmlAttr("d", d_attr) +
+        " />";
+  }
+
   function xmlAttr(name, value) {
     return " " + name + "='" +  value + "'"; // FIXME WARNING: does not escape...
   }

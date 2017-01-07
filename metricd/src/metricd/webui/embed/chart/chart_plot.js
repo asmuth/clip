@@ -48,7 +48,7 @@ FnordMetricChart.Plotter = function(elem, params) {
     fitLayout();
 
     /* draw the svg */
-    var svg = drawChart();
+    var svg = drawChart(series);
     console.log(svg);
     elem.innerHTML = svg;
   }
@@ -65,13 +65,17 @@ FnordMetricChart.Plotter = function(elem, params) {
     canvas_margin_bottom += 16; // FIXME
   }
 
-  function drawChart(c) {
+  function drawChart(series) {
     var svg = new FnordMetricChart.SVGHelper();
     svg.svg += "<svg class='fm-chart' viewBox='0 0 " + width + " " + height + "' >";
 
     drawBorders(svg);
     drawXAxis(svg);
     drawYAxis(svg);
+
+    series.forEach(function(s) {
+      drawLine(s, svg);
+    });
 
     svg.svg += "</svg>"
     return svg.svg;
@@ -181,23 +185,21 @@ FnordMetricChart.Plotter = function(elem, params) {
     c.svg += "</g>";
    }
 
- // function drawLine(series) {
- //   var line = [];
+  function drawLine(series, c) {
+    var points = [];
 
- //   for (var i = 0; i < series.values.length; i++) {
- //     var x = x_domain.convertDomainToScreen(series.time[i]);
- //     var y = y_domain.convertDomainToScreen(series.values[i]);
+    for (var i = 0; i < series.values.length; i++) {
+      var x = x_domain.convertDomainToScreen(series.time[i]);
+      var y = y_domain.convertDomainToScreen(series.values[i]);
 
- //     line.push(i == 0 ? "M" : "L", x, y);
- //   }
+      var x_screen = x * (width - (canvas_margin_left + canvas_margin_right)) + canvas_margin_left;
+      var y_screen = height - (y * (height - (canvas_margin_bottom + canvas_margin_top)) + canvas_margin_bottom);
 
- //   var html = [];
- //   html.push(
- //       "<path class='line' d='", line.join(" "),
- //       "'></path>");
+      points.push([x_screen, y_screen]);
+    }
 
- //   return html.join("");
- // }
+    c.drawPath(points, "line");
+  }
 
 }
 
