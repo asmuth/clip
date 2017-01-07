@@ -30,17 +30,14 @@ FnordMetricChart.Plotter = function(elem, params) {
   var canvas_margin_right = 1;
   var canvas_margin_bottom = 1;
   var canvas_margin_left = 1;
-  var x_domain;
+  var x_domain = new FnordMetricChart.PlotterLinearDomain;
   var x_ticks_count = 12;
-  var y_domain;
+  var y_domain = new FnordMetricChart.PlotterLinearDomain; //FIXME allow multiple y_domains
   var y_ticks_count = 5;
   var y_label_width = 50; // FIXME
 
   this.render = function(series) {
     /* set up domains */
-    var x_domain = new FnordMetricChart.PlotterLinearDomain;
-    var x_ticks_count = 8;
-    var y_domain = new FnordMetricChart.PlotterLinearDomain; //FIXME allow multiple y_domains
 
     series.forEach(function(s) {
       y_domain.findMinMax(s.values);
