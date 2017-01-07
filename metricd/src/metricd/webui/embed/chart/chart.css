@@ -1,10 +1,9 @@
 .fm-chart-container {
-  border: 2px solid #000;
 }
 
 .fm-chart-title {
-  height: 30px;
-  background: #eee;
+  /*height: 30px;
+  background: #eee;*/
 }
 
 .fm-chart-body {
@@ -15,18 +14,73 @@
 
 .fm-chart-summary {
   width: 200px;
-  background: #ccc;
-}
-
-.fm-chart-series-list{
-  background: #eee;
-  height: 300px;
 }
 
 .fm-chart-plot {
   width: 100%;
 }
 
+.fm-chart text {
+  font-family: "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+  font-size: 11px;
+}
+
+.fm-chart .border {
+  stroke-width: 1px;
+  stroke: #545758;
+  opacity: 0.6;
+}
+
+.fm-chart .grid {
+  stroke-width: 1px;
+  stroke: #545758;
+  opacity: 0.1;
+}
+
+.fm-chart .axis.x text {
+  alignment-baseline: text-before-edge;
+  text-anchor: middle;
+}
+
+.fm-chart .axis.y text {
+  dominant-baseline: central;
+}
+
+.fm-chart .axis.y text.outside {
+  text-anchor: end;
+}
+
+.fm-chart .line {
+  fill: none;
+  stroke: #000;
+}
+
+/**.fm-chart circle.point {
+  fill: transparent;
+}
+
+.fm-tooltip {
+  background: #fff;
+  border-radius: 3px;
+  padding: 0;
+  font-size: 12px;
+  line-height: 30px;
+  box-shadow: 0 0 2px rgba(0,0,0,.1);
+  border: 1px solid #ddd; 
+}
+
+.fm-tooltip .date,
+.fm-tooltip .series {
+  padding: 0 7px;
+}
+
+.fm-tooltip .date {
+  background: #f9f9f9;
+}
+
+.fm-tooltip .series .circle {
+  margin: 10px 4px 0 0;
+}
 {
   display: flex;
   flex-direction: row;
@@ -75,68 +129,4 @@
 .summary .stats {
   font-size: 11px;
 }
-
-
-
-/* clean stuff */
-
-.fm-chart text {
-  font-family: "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
-  font: 10px sans-serif;
-}
-
-.fm-chart .border {
-  stroke-width: 1px;
-  stroke: #545758;
-  opacity: 0.6;
-}
-
-.fm-chart .grid {
-  stroke-width: 1px;
-  stroke: #545758;
-  opacity: 0.1;
-}
-
-.fm-chart .axis.x text {
-  alignment-baseline: text-before-edge;
-}
-
-.fm-chart .label {
-  text-anchor: middle;
-  dominant-baseline: central;
-  font-size: 11px;
-  fill: #666;
-}
-
-.fm-chart .line {
-  fill: none;
-  stroke: #000;
-}
-
-.fm-chart circle.point {
-  fill: transparent;
-}
-
-.fm-tooltip {
-  background: #fff;
-  border-radius: 3px;
-  padding: 0;
-  font-size: 12px;
-  line-height: 30px;
-  box-shadow: 0 0 2px rgba(0,0,0,.1);
-  border: 1px solid #ddd; 
-}
-
-.fm-tooltip .date,
-.fm-tooltip .series {
-  padding: 0 7px;
-}
-
-.fm-tooltip .date {
-  background: #f9f9f9;
-}
-
-.fm-tooltip .series .circle {
-  margin: 10px 4px 0 0;
-}
-
+**/

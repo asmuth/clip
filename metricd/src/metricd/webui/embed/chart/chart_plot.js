@@ -17,14 +17,21 @@
 FnordMetricChart.Plotter = function(elem, params) {
   'use strict';
 
+  // remove me
+  params.axis_y_position = "inside";
+  params.border_top = false;
+  params.border_right = false;
+  params.border_left = false;
+  params.border_bottom = true;
+
   var width = 1240;
   var height = 180;
   var canvas_margin_top = 10;
-  var canvas_margin_right = 10;
-  var canvas_margin_bottom = 10;
-  var canvas_margin_left = 10;
+  var canvas_margin_right = 1;
+  var canvas_margin_bottom = 1;
+  var canvas_margin_left = 1;
   var x_domain;
-  var x_ticks_count = 8;
+  var x_ticks_count = 12;
   var y_domain;
   var y_ticks_count = 5;
   var y_label_width = 50;
@@ -58,7 +65,7 @@ FnordMetricChart.Plotter = function(elem, params) {
     }
 
     /* fit the x axis */
-    canvas_margin_bottom += 20;
+    canvas_margin_bottom += 16;
   }
 
   function drawChart(c) {
@@ -75,43 +82,51 @@ FnordMetricChart.Plotter = function(elem, params) {
 
   function drawBorders(c) {
     /** render top border **/
-    c.drawLine(
-        canvas_margin_left,
-        width - canvas_margin_right,
-        canvas_margin_top,
-        canvas_margin_top,
-        "border");
-
-    /** render bottom border  **/
-    c.drawLine(
-        canvas_margin_left,
-        width - canvas_margin_right,
-        height - canvas_margin_bottom,
-        height - canvas_margin_bottom,
-        "border");
+    if (params.border_top) {
+      c.drawLine(
+          canvas_margin_left,
+          width - canvas_margin_right,
+          canvas_margin_top,
+          canvas_margin_top,
+          "border");
+    }
 
     /** render right border  **/
-    c.drawLine(
-        width - canvas_margin_right,
-        width - canvas_margin_right,
-        canvas_margin_top,
-        height - canvas_margin_bottom,
-        "border");
+    if (params.border_right) {
+      c.drawLine(
+          width - canvas_margin_right,
+          width - canvas_margin_right,
+          canvas_margin_top,
+          height - canvas_margin_bottom,
+          "border");
+    }
+
+    /** render bottom border  **/
+    if (params.border_bottom) {
+      c.drawLine(
+          canvas_margin_left,
+          width - canvas_margin_right,
+          height - canvas_margin_bottom,
+          height - canvas_margin_bottom,
+          "border");
+    }
 
     /** render left border **/
-    c.drawLine(
-        canvas_margin_left,
-        canvas_margin_left,
-        canvas_margin_top,
-        height - canvas_margin_bottom,
-        "border");
+    if (params.border_left) {
+      c.drawLine(
+          canvas_margin_left,
+          canvas_margin_left,
+          canvas_margin_top,
+          height - canvas_margin_bottom,
+          "border");
+    }
   }
 
   function drawXAxis(c) {
     c.svg += "<g class='axis x'>";
 
     /** render tick/grid **/
-    var text_padding = 3;
+    var text_padding = 5;
     for (var i = 1; i < x_ticks_count; i++) {
       var tick_x_domain = (i / x_ticks_count);
       var tick_x_screen = tick_x_domain * (width - (canvas_margin_left + canvas_margin_right)) + canvas_margin_left;
@@ -126,7 +141,7 @@ FnordMetricChart.Plotter = function(elem, params) {
       c.drawText(
           tick_x_screen,
           (height - canvas_margin_bottom) + text_padding,
-          "blah");
+          "2017-01-01");
     }
 
     c.svg += "</g>";
@@ -135,13 +150,35 @@ FnordMetricChart.Plotter = function(elem, params) {
    function drawYAxis(c) {
     c.svg += "<g class='axis y'>";
 
-    /** render labels **/
-    //for (var i = 0; i < x_ticks_count + 1; i++) {
-    //  c.drawText(
-    //      (i / x_ticks_count) * (width - (canvas_margin_left + canvas_margin_right)),
-    //      (height - canvas_margin_bottom) + text_padding,
-    //      "blah");
-    //}
+    /** render tick/grid **/
+    var text_padding = 8;
+    for (var i = 0; i <= y_ticks_count ; i++) {
+      var tick_y_domain = (i / y_ticks_count);
+      var tick_y_screen = tick_y_domain * (height - (canvas_margin_bottom + canvas_margin_top)) + canvas_margin_top;
+
+      c.drawLine(
+          canvas_margin_left,
+          width - canvas_margin_right,
+          tick_y_screen,
+          tick_y_screen,
+          "grid");
+
+      if (params.axis_y_position == "inside" && (i == y_ticks_count)) {
+        /* skip text */
+      } else if (params.axis_y_position == "inside") {
+        c.drawText(
+            canvas_margin_left + text_padding,
+            tick_y_screen,
+            "blah",
+            "inside");
+      } else {
+        c.drawText(
+            canvas_margin_left - text_padding,
+            tick_y_screen,
+            "blah",
+            "outside");
+      }
+    }
 
     c.svg += "</g>";
    }
