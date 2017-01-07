@@ -35,7 +35,9 @@ public:
 
   virtual ~OutputAggregator() = default;
 
-  virtual bool next(uint64_t* time, tval_ref* out) = 0;
+  virtual bool next(
+      uint64_t* time,
+      tval_ref* out) = 0;
 
 };
 
@@ -76,6 +78,7 @@ protected:
   const MetricCursorOptions* opts_;
   uint64_t cur_time_;
   tval_ref cur_sum_;
+  bool have_value_;
 };
 
 class MaxInputAggregator : public InputAggregator {
