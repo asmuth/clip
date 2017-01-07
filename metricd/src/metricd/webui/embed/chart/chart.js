@@ -13,6 +13,7 @@ var FnordMetricChart = function(viewport, params) {
     renderSkeletonHTML();
 
     fetchData(function(result) {
+      console.log(result);
       renderChart(result);
       renderSummaries(result);
       renderSeriesList(result);
@@ -20,9 +21,15 @@ var FnordMetricChart = function(viewport, params) {
   };
 
   function fetchData(callback) {
-    var url = "/api/v1/metrics/fetch?metric_id=" + params.metric_id;
+    var fetch_opts = {
+      metric_id: params.metric_id
+    };
 
-    HTTPUtil.httpGet(url, {}, function(r) {
+    HTTPUtil.httpPost(
+        "/api/v1/metrics/fetch_summary",
+        JSON.stringify(fetch_opts),
+        {},
+        function(r) {
       if (r.status != 200) {
         // FIXME
         return;

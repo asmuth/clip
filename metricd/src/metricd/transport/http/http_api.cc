@@ -13,6 +13,7 @@
 #include <metricd/transport/http/http_api.h>
 #include <metricd/util/stringutil.h>
 #include <metricd/util/time.h>
+#include <libtransport/json/json_object.h>
 
 namespace fnordmetric {
 
@@ -50,8 +51,14 @@ void HTTPAPI::handleHTTPRequest(
   }
 
   // PATH: /api/v1/metrics/fetch_series
-  if (path == "/api/v1/metrics/fetch") {
-    performMetricFetch(request, response, uri);
+  if (path == "/api/v1/metrics/fetch_series") {
+    performMetricFetchSummary(request, response, uri);
+    return;
+  }
+
+  // PATH: /api/v1/metrics/fetch_summary
+  if (path == "/api/v1/metrics/fetch_summary") {
+    performMetricFetchSummary(request, response, uri);
     return;
   }
 
@@ -141,37 +148,78 @@ void HTTPAPI::renderMetricSeriesList(
   response->addBody(json_str);
 }
 
-void HTTPAPI::performMetricFetch(
+void HTTPAPI::performMetricFetchSeries(
     http::HTTPRequest* request,
     http::HTTPResponse* response,
     const URI& uri) {
-  auto params = uri.queryParams();
-  QueryOptions opts;
+  json::JSONObjectStorage json_req;
 
-  std::string metric_id;
-  if (URI::getParam(params, "metric_id", &metric_id)) {
-    opts.addProperty("metric_id", metric_id);
+  if (request->method() == http::HTTPMessage::M_POST) {
+    const auto& body = request->body();
+    if (!json::readJSON(&json_req, &body) || !json_req.hasRootObject()) {
+      response->setStatus(http::kStatusBadRequest);
+      response->addBody("ERROR: invalid json");
+      return;
+    }
   } else {
-    response->setStatus(http::kStatusBadRequest);
-    response->addBody("ERROR: missing parameter ?metric_id=...");
-    return;
+    auto params = uri.queryParams();
+
+    std::string metric_id;
+    if (URI::getParam(params, "metric_id", &metric_id)) {
+      json_req.getRootAsObject()->setString("metric_id", metric_id);
+    }
   }
 
-  std::string json_str;
-  json::JSONWriter json(&json_str);
+  std::string json_res_str;
+  json::JSONWriter json_res(&json_res_str);
 
-  json.beginObject();
-  json.addString("metric_id");
-  json.addString(metric_id);
-
-  json.addString("series");
-  auto rc = query_frontend_.fetchTimeseriesJSON(&opts, &json);
-  json.endObject();
+  auto rc = query_frontend_.fetchSeriesJSON(
+      json_req.getRootAsObject(),
+      &json_res);
 
   if (rc.isSuccess()) {
     response->setStatus(http::kStatusOK);
     response->addHeader("Content-Type", "application/json; charset=utf-8");
-    response->addBody(json_str);
+    response->addBody(json_res_str);
+  } else {
+    response->setStatus(http::kStatusInternalServerError);
+    response->addBody("ERROR: " + rc.getMessage());
+  }
+}
+
+void HTTPAPI::performMetricFetchSummary(
+    http::HTTPRequest* request,
+    http::HTTPResponse* response,
+    const URI& uri) {
+  json::JSONObjectStorage json_req;
+
+  if (request->method() == http::HTTPMessage::M_POST) {
+    const auto& body = request->body();
+    if (!json::readJSON(&json_req, &body) || !json_req.hasRootObject()) {
+      response->setStatus(http::kStatusBadRequest);
+      response->addBody("ERROR: invalid json");
+      return;
+    }
+  } else {
+    auto params = uri.queryParams();
+
+    std::string metric_id;
+    if (URI::getParam(params, "metric_id", &metric_id)) {
+      json_req.getRootAsObject()->setString("metric_id", metric_id);
+    }
+  }
+
+  std::string json_res_str;
+  json::JSONWriter json_res(&json_res_str);
+
+  auto rc = query_frontend_.fetchSummaryJSON(
+      json_req.getRootAsObject(),
+      &json_res);
+
+  if (rc.isSuccess()) {
+    response->setStatus(http::kStatusOK);
+    response->addHeader("Content-Type", "application/json; charset=utf-8");
+    response->addBody(json_res_str);
   } else {
     response->setStatus(http::kStatusInternalServerError);
     response->addBody("ERROR: " + rc.getMessage());

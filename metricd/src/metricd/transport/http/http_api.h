@@ -45,7 +45,12 @@ protected:
       http::HTTPResponse* response,
       const URI& uri);
 
-  void performMetricFetch(
+  void performMetricFetchSeries(
+      http::HTTPRequest* request,
+      http::HTTPResponse* response,
+      const URI& uri);
+
+  void performMetricFetchSummary(
       http::HTTPRequest* request,
       http::HTTPResponse* response,
       const URI& uri);

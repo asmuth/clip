@@ -1,121 +1,39 @@
-FnordMetric Server HTTP API
-===========================
+HTTP API
+========
 
-GET /query
-----------
+The HTTP API gives you full access to metricd via HTTP. All metricd operations
+can be executed via this API. The metricctl cli also uses the HTTP API to access
+metricd.
 
-Execute a ChartSQL / SQL query and return the result.
+#### Version Prefix
 
-#### Parameters:
+All API routes are prefixed with '/api/v1/'. This documentation is only for the
+v1 version of the API.
 
-<table>
+**Backwards compatibility:<** At the current version, EventQL does not yet
+promise backwards compatibility even with the v1 prefix. We'll remove this warning
+when this policy changes. We expect we'll reach API stability by metricd 1.0.
+
+<h3>API Methods</h3>
+<table class="api_reference http">
   <tr>
-    <th>q <i>(mandatory)</i></th>
-    <td>
-      the ChartSQL / SQL query to execute
-    </td>
+    <td><code><a href="../metrics_list"><strong>/api/v1/metrics/list</strong></a></code></td>
+    <td></td>
   </tr>
   <tr>
-    <th>format</th>
-    <td>
-      the response format: `svg` or `json` (default: json)
-    </td>
+    <td><code><a href="../metrics_list_series"><strong>/api/v1/metrics/list_series</strong></a></code></td>
+    <td></td>
   </tr>
   <tr>
-    <th>width</th>
-    <td>
-      the width of the chart to be rendered in px (default: 800)
-    </td>
+    <td><code><a href="../metrics_fetch_series"><strong>/api/v1/metrics/fetch_series</strong></a></code></td>
+    <td></td>
   </tr>
   <tr>
-    <th>height</th>
-    <td>
-      the height of the chart to be rendered in px (default: 320)
-    </td>
+    <td><code><a href="../metrics_fetch_summary"><strong>/api/v1/metrics/fetch_summary</strong></a></code></td>
+    <td>Fetch a summary timeseries of all series in a metric.</td>
   </tr>
-</table>
-<br />
-
-
-POST /query
------------
-
-Execute a ChartSQL / SQL query and return the result. Send the ChartSQL query as
-the HTTP POST body and use the same GET query parameters as for the
-`GET /query` call
-
-
-GET /metrics
-------------
-
-Returns a list of all metrics.
-
-Parameters:
-
-<table>
   <tr>
-    <th>format</th>
-    <td>
-      the response format: `csv`, or `json` (default)
-    </td>
+    <td><code><a href="../metrics_insert"><strong>/api/v1/metrics/insert</strong></a></code></td>
+    <td></td>
   </tr>
 </table>
-<br />
-
-Examples:
-
-    >> GET /metrics HTTP/1.1
-    << HTTP/1.1 200 OK
-    << ...
-    << {
-    <<   "metrics": [
-    <<     {
-    <<       "key": "http_status_codes",
-    <<       "labels": ["statuscode", "hostname"],
-    <<       "last_insert": 1414241420602240,
-    <<       "total_stored_bytes": 24641536
-    <<     },
-    <<     {
-    <<       "key": "http_latency",
-    <<       "labels": ["url", "hostname"],
-    <<       "last_insert": 1414241420602240,
-    <<       "total_stored_bytes": 129499136
-    <<     },
-    <<   ]
-    << }
-
-
-### POST /metrics
-
-Insert a sample into a metric. If no metric with this key exists, a new one
-will be created.
-
-#### Parameters:
-
-<table>
-  <tr>
-    <th>metric <i>(mandatory)</i></th>
-    <td>
-      the key of this metric (e.g. my-counter-sum-15 or /frontend/http_status_code)
-    </td>
-  </tr>
-  <tr>
-    <th>value <i>(mandatory)</i></th>
-    <td>
-      the value to add/sample to this metric
-    </td>
-  </tr>
-</table>
-<br />
-
-Examples:
-
-    >> POST /metrics/total_sales_in_euro-sum-30?value=351 HTTP/1.1
-    << HTTP/1.1 201 CREATED
-
-    >> POST /metrics/http_status_codes?value=351&label[statuscode]=200&label[hostname]=myhost1 HTTP/1.1
-    << HTTP/1.1 201 CREATED
-
-
-
-

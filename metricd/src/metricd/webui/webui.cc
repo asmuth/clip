@@ -10,8 +10,13 @@
 #include <metricd/webui/webui.h>
 #include <metricd/util/logging.h>
 #include <metricd/util/fileutil.h>
+#include <libtransport/json/json.h>
+#include <libtransport/json/json_object.h>
+#include <libtransport/json/json_writer.h>
 
 namespace fnordmetric {
+
+namespace json = libtransport::json;
 
 WebUI::WebUI(
     const std::string& dynamic_asset_path /* = "" */) :
@@ -55,11 +60,13 @@ void WebUI::handleHTTPRequest(
     js_src += getAssetFile("util/http.js");
     css_src += getAssetFile("embed/chart/chart.css");
 
-    std::string params_str = "{}";
+    std::string config = "{}";
+    URI::getParam(uri.queryParams(), "c", &config);
+    StringUtil::replaceAll(&config, "</", "<\\/");
 
     StringUtil::replaceAll(&body, "{{JS_SRC}}", js_src);
     StringUtil::replaceAll(&body, "{{CSS_SRC}}", css_src);
-    StringUtil::replaceAll(&body, "{{PARAMS}}", params_str);
+    StringUtil::replaceAll(&body, "{{PARAMS}}", config);
 
     response->addBody(body);
     return;
