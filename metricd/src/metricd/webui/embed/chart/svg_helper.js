@@ -49,6 +49,16 @@ FnordMetricChart.SVGHelper = function() {
         " />";
   }
 
+  this.drawPoint = function(x, y, point_size, classes) {
+    this.svg +=
+        "<circle" +
+            xmlAttr("cx", x) +
+            xmlAttr("cy", y) +
+            xmlAttr("r", point_size) +
+            xmlAttr("class", classes) +
+        " />";
+  }
+
   function xmlAttr(name, value) {
     return " " + name + "='" +  value + "'"; // FIXME WARNING: does not escape...
   }

@@ -196,6 +196,7 @@ FnordMetricChart.Plotter = function(elem, params) {
       var y_screen = height - (y * (height - (canvas_margin_bottom + canvas_margin_top)) + canvas_margin_bottom);
 
       points.push([x_screen, y_screen]);
+      c.drawPoint(x_screen, y_screen, 3, "point invisible");
     }
 
     c.drawPath(points, "line");
