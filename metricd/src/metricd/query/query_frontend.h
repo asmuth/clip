@@ -29,6 +29,10 @@ public:
 
   QueryFrontend(MetricService* metric_service);
 
+  ReturnCode fetchSeriesJSON(
+      const json::JSONObject* req,
+      json::JSONWriter* res);
+
   ReturnCode fetchSummaryJSON(
       const json::JSONObject* req,
       json::JSONWriter* res);
