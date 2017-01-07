@@ -40,10 +40,10 @@ var TimeRangePickerWidget = function(timerange, widget) {
   var initialize = function() {
     calendar = new TimeRangePickerCalendar();
     calendar.setSubmitCallback(function(date) {
-      //FIXME handle start and end
+      //FIXME handle from and end
       var selected_range = {
-        start: date.getTime(),
-        end: timerange.end,
+        from: date.getTime(),
+        until: timerange.until,
         timezone: timerange.timezone
       };
 
@@ -82,7 +82,7 @@ var TimeRangePickerWidget = function(timerange, widget) {
   var render = function() {
     var tpl = templateUtil.getTemplate("f-timerange-picker-widget-tpl");
     var inner = widget.querySelector(".inner");
-    DomUtil.clearChildren(inner);
+    DOMUtil.clearChildren(inner);
     inner.appendChild(tpl.cloneNode(true));
 
     watchTimezoneControls();
@@ -98,8 +98,8 @@ var TimeRangePickerWidget = function(timerange, widget) {
 
     /** check if current timerange is predefined **/
     var now = Date.now();
-    if (now - timerange.end < 30 * dateUtil.kMillisPerSecond) {
-      range = timerange.end - timerange.start;
+    if (now - timerange.until < 30 * dateUtil.kMillisPerSecond) {
+      range = timerange.until - timerange.from;
       elem = widget.querySelector(
           "ul.timeranges button[data-value='" + range + "']");
     }
@@ -168,8 +168,8 @@ var TimeRangePickerWidget = function(timerange, widget) {
 
     /** close calendar on click outside of the calendar elem **/
     widget.addEventListener("click", function(e) {
-      DomUtil.clearChildren(calendar_box_end);
-      DomUtil.clearChildren(calendar_box_start);
+      DOMUtil.clearChildren(calendar_box_end);
+      DOMUtil.clearChildren(calendar_box_start);
     }, false);
 
     /** don't close calendar on click within calendar elem **/
@@ -185,12 +185,12 @@ var TimeRangePickerWidget = function(timerange, widget) {
     widget.querySelector(".icon.calendar.start").addEventListener("click", function(e) {
       e.stopPropagation();
 
-      DomUtil.clearChildren(calendar_box_end);
-      DomUtil.clearChildren(calendar_box_start);
+      DOMUtil.clearChildren(calendar_box_end);
+      DOMUtil.clearChildren(calendar_box_start);
       calendar.render(calendar_box_start, {
         min: null,
-        max: new Date(timerange.end),
-        selected: new Date(timerange.start)
+        max: new Date(timerange.until),
+        selected: new Date(timerange.from)
       });
     }, false);
 
@@ -198,12 +198,12 @@ var TimeRangePickerWidget = function(timerange, widget) {
     widget.querySelector(".icon.calendar.end").addEventListener("click", function(e) {
       e.stopPropagation();
 
-      DomUtil.clearChildren(calendar_box_start);
-      DomUtil.clearChildren(calendar_box_end);
+      DOMUtil.clearChildren(calendar_box_start);
+      DOMUtil.clearChildren(calendar_box_end);
       calendar.render(calendar_box_end, {
-        min: new Date(timerange.start),
+        min: new Date(timerange.from),
         max: new Date(),
-        selected: new Date(timerange.end)
+        selected: new Date(timerange.until)
       });
     }, false);
   }
@@ -216,24 +216,24 @@ var TimeRangePickerWidget = function(timerange, widget) {
   }
 
   var updateInput = function(selected_timerange) {
-    var start;
-    var end;
+    var from;
+    var until;
     if (selected_timerange == 'custom') {
-      start = timerange.start;
-      end = timerange.end;
+      from = timerange.from;
+      until = timerange.until;
 
       enableCustomInput();
 
     } else {
-      end = Date.now();
-      start = end - parseInt(selected_timerange);
+      until = Date.now();
+      from = until - parseInt(selected_timerange);
     }
 
     widget.querySelector(".custom input[name='start']").
-        value = dateUtil.formatDateTime(start, timerange.timezone);
+        value = dateUtil.formatDateTime(from, timerange.timezone);
 
     widget.querySelector(".custom input[name='end']").
-        value = dateUtil.formatDateTime(end, timerange.timezone);
+        value = dateUtil.formatDateTime(until, timerange.timezone);
   }
 
   var enableCustomInput = function() {
@@ -286,8 +286,8 @@ var TimeRangePickerWidget = function(timerange, widget) {
 
   var submitTimezone = function(selected_timezone) {
     var selected_range = {
-      start: timerange.start,
-      end: timerange.end,
+      from: timerange.from,
+      until: timerange.until,
       timezone: selected_timezone
     };
 
@@ -296,9 +296,9 @@ var TimeRangePickerWidget = function(timerange, widget) {
 
   var submitPredefined = function(elem) {
     var selected_range = {};
-    selected_range.end = Date.now();
-    selected_range.start =
-        selected_range.end - parseInt(elem.getAttribute('data-value'));
+    selected_range.until = Date.now();
+    selected_range.from =
+        selected_range.until - parseInt(elem.getAttribute('data-value'));
     selected_range.timezone = timerange.timezone;
 
     submit(selected_range);
@@ -311,20 +311,20 @@ var TimeRangePickerWidget = function(timerange, widget) {
       return;
     }
 
-    var start = new Date(start_input.value).getTime();
-    var end = new Date(end_input.value).getTime();
-    if (start > end) {
+    var from = new Date(start_input.value).getTime();
+    var until = new Date(end_input.value).getTime();
+    if (from > until) {
       return;
     }
 
     if (timerange.timezone != "local") {
-      start = dateUtil.toUTC(start);
-      end = dateUtil.toUTC(end);
+      from = dateUtil.toUTC(from);
+      until = dateUtil.toUTC(until);
     }
 
     submit({
-      start: start,
-      end: end,
+      from: from,
+      until: until,
       timezone: timerange.timezone
     });
   }

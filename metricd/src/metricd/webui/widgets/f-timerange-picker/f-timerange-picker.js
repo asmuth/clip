@@ -8,7 +8,9 @@
  * <http://www.gnu.org/licenses/>.
  */
 
-var TimeRangePickerComponent = function() {
+FM = this.FM || {};
+
+FM.TimeRangePickerComponent = function(elem) {
   'use strict';
 
   /** default config **/
@@ -19,32 +21,28 @@ var TimeRangePickerComponent = function() {
   var timerange = {
     timezone: 'utc'
   };
-  timerange.end = Date.now();
-  timerange.start = timerange.end - config.range;
+  timerange.until = Date.now();
+  timerange.from = timerange.until - config.range;
 
-  var this_;
   var widget;
-
-  this.createdCallback = function() {
-    var tpl = templateUtil.getTemplate("f-timerange-picker-tpl");
-    this.appendChild(tpl);
-
-    this_ = this;
-  }
+  var on_submit_callbacks = [];
 
   /**
     * Set the initial values
     * @param init_timerange (Object) determines the initial values for
-    * start, end and timezone
+    * from, until and timezone
   **/
   this.initialize = function(init_timerange) {
+    var tpl = templateUtil.getTemplate("f-timerange-picker-tpl");
+    elem.appendChild(tpl);
+
     if (init_timerange.timezone) {
       timerange.timezone = init_timerange.timezone;
     }
 
-    if (init_timerange.start && init_timerange.end) {
-      timerange.start = init_timerange.start;
-      timerange.end = init_timerange.end;
+    if (init_timerange.from && init_timerange.until) {
+      timerange.from = init_timerange.from;
+      timerange.until = init_timerange.until;
     }
 
     initializeWidget();
@@ -54,50 +52,39 @@ var TimeRangePickerComponent = function() {
     updateInputValue();
   }
 
-  /**
-    * Returns start and end of the selected timerange
-  **/
-  this.getTimerange = function() {
-    return {
-      start: timerange.start,
-      end: timerange.end,
-    }
+  this.onSubmit = function(callback_fn) {
+    on_submit_callbacks.push(callback_fn);
   }
-
-  this.getTimezone = function() {
-    return timerange.timezone;
-  }
-
 
 /******************************** private *************************************/
 
   var initializeWidget = function() {
     widget = new TimeRangePickerWidget(
         timerange,
-        this_.querySelector(".widget"));
+        elem.querySelector(".widget"));
 
     widget.setSubmitCallback(function(new_timerange) {
-      timerange.start = new_timerange.start;
-      timerange.end = new_timerange.end;
+      timerange.from = new_timerange.from;
+      timerange.until = new_timerange.until;
       timerange.timezone = new_timerange.timezone;
 
       updateInputValue();
-      fireSubmitEvent();
+      callSubmitCallbacks();
     });
 
-    this_.addEventListener("click", function(e) {
+    elem.addEventListener("click", function(e) {
       e.stopPropagation();
     }, false);
   }
 
   var watchTimerangeMover = function() {
-    this_.querySelector(".mover.prev").addEventListener("click", function(e) {
+    elem.querySelector(".mover.prev").addEventListener("click", function(e) {
       if (!this.classList.contains("disabled")) {
         moveTimerange(config.range * -1);
       }
     }, false);
 
-    this_.querySelector(".mover.next").addEventListener("click", function(e) {
+    elem.querySelector(".mover.next").addEventListener("click", function(e) {
       if (!this.classList.contains("disabled")) {
         moveTimerange(config.range);
       }
@@ -105,41 +92,42 @@ var TimeRangePickerComponent = function() {
   }
 
   var watchInputClick = function() {
-    this_.querySelector(".date_field").addEventListener("click", function(e) {
+    elem.querySelector(".date_field").addEventListener("click", function(e) {
       widget.toggleVisibility(timerange);
     }, false);
   }
 
   var moveTimerange = function(range) {
-    timerange.start += range;
-    timerange.end += range;
+    timerange.from += range;
+    timerange.until += range;
 
     updateInputValue();
-    fireSubmitEvent();
+    callSubmitCallbacks();
   }
 
   var updateInputValue = function() {
-    this_.querySelector(".date_field .date_value").innerHTML =
-        dateUtil.formatDateTime(timerange.start, timerange.timezone) +
+    elem.querySelector(".date_field .date_value").innerHTML =
+        dateUtil.formatDateTime(timerange.from, timerange.timezone) +
         " - " +
-        dateUtil.formatDateTime(timerange.end, timerange.timezone);
+        dateUtil.formatDateTime(timerange.until, timerange.timezone);
 
 
-    if (timerange.end + config.range >= Date.now()) {
-      this_.querySelector(".mover.next").classList.add("disabled");
+    if (timerange.until + config.range >= Date.now()) {
+      elem.querySelector(".mover.next").classList.add("disabled");
     } else {
-      this_.querySelector(".mover.next").classList.remove("disabled");
+      elem.querySelector(".mover.next").classList.remove("disabled");
     }
   }
 
-  var fireSubmitEvent = function() {
-    var ev = new CustomEvent('submit');
-    this_.dispatchEvent(ev);
+  function callSubmitCallbacks() {
+    on_submit_callbacks.forEach(function(fn) {
+      fn({
+        from: timerange.from,
+        until: timerange.until,
+        timezone: timerange.timezone
+      });
+    });
   }
 }
 
-
-var proto = Object.create(HTMLElement.prototype);
-TimeRangePickerComponent.apply(proto);
-document.registerElement("f-timerange-picker", { prototype: proto });
 
