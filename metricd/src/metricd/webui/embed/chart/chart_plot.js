@@ -184,7 +184,7 @@ FnordMetricChart.Plotter = function(elem, params) {
     c.svg += "</g>";
    }
 
- // function drawLine(series, x_domain, y_domain) {
+ // function drawLine(series) {
  //   var line = [];
 
  //   for (var i = 0; i < series.values.length; i++) {
@@ -202,22 +202,5 @@ FnordMetricChart.Plotter = function(elem, params) {
  //   return html.join("");
  // }
 
- // function formatDate(timestamp) {
- //   function appendLeadingZero(num) {
- //     if (num < 10) {
- //       return "0" + num;
- //     }
-
- //     return "" + num;
- //   }
-
- //   var d = new Date(timestamp)
- //   return [
- //       d.getFullYear(), "-",
- //       appendLeadingZero(d.getMonth() + 1), "-",
- //       appendLeadingZero(d.getDate()), " ",
- //       appendLeadingZero(d.getHours()), ":",
- //       appendLeadingZero(d.getMinutes())].join("");
- // }
 }
 
