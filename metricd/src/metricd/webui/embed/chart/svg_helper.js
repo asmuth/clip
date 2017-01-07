@@ -38,7 +38,7 @@ FnordMetricChart.SVGHelper = function() {
   this.drawPath = function(points, classes) {
     var d_attr = "";
     for (var i = 0; i < points.length; i++) {
-      d_attr += i == 0 ? "M " : "L ";
+      d_attr += i == 0 ? "M " : " L";
       d_attr += points[i][0] + " " + points[i][1];
     }
 
