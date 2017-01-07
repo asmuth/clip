@@ -12,31 +12,17 @@ var FnordMetricChart = function(viewport, params) {
   this.render = function() {
     renderSkeletonHTML();
 
-    fetchData(function(result) {
-      console.log(result);
-      renderChart(result);
-      renderSummaries(result);
-      renderSeriesList(result);
+    fetchData(function(series) {
+      renderChart(series);
+      renderSummaries(series);
+      renderSeriesList(series);
     });
   };
 
   function fetchData(callback) {
-    var fetch_opts = {
-      metric_id: params.metric_id
-    };
-
-    HTTPUtil.httpPost(
-        "/api/v1/metrics/fetch_summary",
-        JSON.stringify(fetch_opts),
-        {},
-        function(r) {
-      if (r.status != 200) {
-        // FIXME
-        return;
-      }
-
-      var result = JSON.parse(r.response);
-      callback(result);
+    var query_manager = new FnordMetricChart.QueryManager(params);
+    query_manager.executeQueries(callback, function() {
+      // handle error
     });
   }
 
@@ -44,17 +30,17 @@ var FnordMetricChart = function(viewport, params) {
     viewport.innerHTML = '<div class="fm-chart-container"> <div class="fm-chart-title"> </div> <div class="fm-chart-body"> <div class="fm-chart-summary"> </div> <div class="fm-chart-plot"> </div> </div> <div class="fm-chart-series-list"> </div> </div>';
   }
 
-  function renderChart(result) {
+  function renderChart(series) {
     var elem = viewport.querySelector(".fm-chart-plot");
     var plotter = new FnordMetricChart.Plotter(elem, params);
-    plotter.render(result.series);
+    plotter.render(series);
   }
 
-  function renderSummaries(result) {
+  function renderSummaries(series) {
 
   }
 
-  function renderSeriesList(result) {
+  function renderSeriesList(series) {
 
   }
 
