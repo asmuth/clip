@@ -12,7 +12,6 @@ function FnordMetricSeriesListView(elem, params) {
   'use strict';
 
   var config = new FnordMetricSeriesListViewConfig(params);
-  var metric_id = params.route.args.metric_id;
 
   this.initialize = function() {
     initLayout();
@@ -23,7 +22,7 @@ function FnordMetricSeriesListView(elem, params) {
 
   };
 
-  function refresh(var what_changed) {
+  function refresh(what_changed) {
     refreshSummary();
     refreshSeriesList();
   }
@@ -50,15 +49,33 @@ function FnordMetricSeriesListView(elem, params) {
     var page = templateUtil.getTemplate("fnordmetric-metric-series-list-tpl");
     elem.appendChild(page);
 
-    // initialize ui components
+    /** initialize ui components **/
     initLayoutDatepicker();
-    initLayoutDatepicker();
-    initLayoutDatepicker();
-    initLayoutDatepicker();
+    initLayoutFilter();
   }
 
   function initLayoutDatepicker() {
+    var picker = new FM.TimeRangePickerComponent(
+        elem.querySelector("f-timerange-picker"));
 
+    picker.initialize({
+      timezone: config.getTimezone(),
+      from: config.getFrom(),
+      until: config.getUntil()
+    });
+
+    picker.onSubmit(function(timerange) {
+      refresh(timerange);
+    });
+  }
+
+  function initLayoutFilter() {
+    var filter = new FM.FilterComponent(elem.querySelector(".search input"));
+    filter.init(config.getFilter());
+
+    filter.onSubmit(function(filter_value) {
+      refresh({filter: filter_value});
+    });
   }
 
 }

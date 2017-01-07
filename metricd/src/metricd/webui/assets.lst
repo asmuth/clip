@@ -5,7 +5,7 @@ routes.js
 util/template_util.js
 util/url_util.js
 util/date_util.js
-util/dom_util.js
+util/dom.js
 util/http.js
 views/error/error.html
 views/error/error.js
@@ -14,9 +14,8 @@ views/metric-list/metric-list.html
 views/metric-list/metric-list.js
 views/metric-series-list/metric-series-list.css
 views/metric-series-list/metric-series-list.html
-views/metric-series-list/metric-series-list-table.js
-views/metric-series-list/metric-series-list-table.css
 views/metric-series-list/metric-series-list.js
+views/metric-series-list/metric-series-list-config.js
 views/metric-serie/metric-serie.css
 views/metric-serie/metric-serie.html
 views/metric-serie/metric-serie.js
@@ -31,6 +30,7 @@ widgets/f-timerange-picker/f-timerange-picker-calendar.js
 widgets/f-timerange-picker/f-timerange-picker.js
 widgets/f-timerange-picker/f-timerange-picker.html
 widgets/f-timerange-picker/f-timerange-picker.css
+widgets/filter/filter.js
 embed/chart/chart.js
 embed/chart/chart.css
 embed/chart/chart_plotter_linear_domain.js

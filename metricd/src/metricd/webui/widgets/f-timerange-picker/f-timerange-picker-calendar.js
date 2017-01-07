@@ -82,7 +82,7 @@ var TimeRangePickerCalendar = function() {
 
   var renderDates = function() {
     var tr = elem.querySelector("tr.dates[data-week='0']");
-    DomUtil.clearChildren(tr);
+    DOMUtil.clearChildren(tr);
 
     /** weekday of first day in selected month **/
     var counter = (date.getDay() + 6) % 7;
@@ -136,7 +136,7 @@ var TimeRangePickerCalendar = function() {
     for (var i = 0; i < days_in_month; i++) {
       if (counter % 7 == 0) {
         tr = elem.querySelector("tr.dates[data-week='" + counter / 7 + "']");
-        DomUtil.clearChildren(tr);
+        DOMUtil.clearChildren(tr);
       }
 
       var d = i + 1;
@@ -192,7 +192,7 @@ var TimeRangePickerCalendar = function() {
     for (var i = 0; counter / 7 != 6; i++) {
       if (counter % 7 == 0) {
         tr = elem.querySelector("tr.dates[data-week='" + counter / 7 + "']");
-        DomUtil.clearChildren(tr);
+        DOMUtil.clearChildren(tr);
       }
 
       var td = document.createElement("td");
