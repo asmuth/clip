@@ -40,11 +40,15 @@ FnordMetricChart.Plotter = function(elem, params) {
     fitLayout();
 
     /* draw the svg */
-    var svg = drawChart(series);
-    elem.innerHTML = svg;
+    refresh(series);
 
     /* adjust the svg when the window is resized */
     initResize(series);
+  }
+
+  function refresh(series) {
+    var svg = drawChart(series);
+    elem.innerHTML = svg;
   }
 
   function fitLayout() {
@@ -215,15 +219,9 @@ FnordMetricChart.Plotter = function(elem, params) {
 
   function initResize(series) {
     window.addEventListener("resize", function(e) {
-      resize(series);
+      width = elem.offsetWidth;
+      refresh(series);
     }, false);
-  }
-
-  function resize(series) {
-    width = elem.offsetWidth;
-
-    var svg = drawChart(series);
-    elem.innerHTML = svg;
   }
 
 }
