@@ -8,7 +8,7 @@ number of other properties.
 However, the metric itself does not contain any data; instead it is a container
 object for one or more "series". Each series in the metric is identified by a
 unique series ID and holds a simple timeseries, i.e. a list of `(time, value)`
-tuples.
+data points that are recorded over time.
 
 For Example:
 
@@ -32,7 +32,7 @@ the same kind, for example when reporting the same measurement from a number of
 sensors.
 
   - **Metrics** must be configured in the configuration file
-  - **Series** are automatically created when values are inserted into them
+  - **Series** belong to metrics and are automatically created when values are inserted into them
 
 The reason behind this two-level split into metrics and series is configurability:
 We would like to control settings like granularity and units for each timeseries
