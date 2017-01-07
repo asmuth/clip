@@ -81,6 +81,9 @@ void WebUI::handleHTTPRequest(
     std::string js_src;
     std::string css_src;
     js_src += getAssetFile("embed/top_series/top_series.js");
+    js_src += getAssetFile("embed/top_series/top_series_render.js");
+    js_src += getAssetFile("util/http.js");
+    js_src += getAssetFile("util/dom.js");
     css_src += getAssetFile("embed/top_series/top_series.css");
 
     std::string config = "{}";

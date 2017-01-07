@@ -7,7 +7,9 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-var FnordMetricTopSeries.SparklinePlotter = function(viewport, params) {
+
+FnordMetricTopSeries.SparklinePlotter = function(viewport, params) {
+  'use strict';
 
   this.render = function(series) {
 

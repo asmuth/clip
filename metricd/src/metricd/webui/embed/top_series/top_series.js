@@ -8,6 +8,7 @@
  * <http://www.gnu.org/licenses/>.
  */
 var FnordMetricTopSeries = function(viewport, params) {
+  'use strict';
 
   this.render = function() {
     renderSkeletonHTML();
@@ -18,6 +19,28 @@ var FnordMetricTopSeries = function(viewport, params) {
   };
 
   function fetchData(callback) {
+    //FIXME
+    HTTPUtil.httpPost(
+        "/api/v1/metrics/fetch_series",
+        JSON.stringify({metric_id: params.metric_id}),
+        {},
+        function(r) {
+      if (r.status != 200) {
+        success = false;
+        return;
+      }
+
+      var result = {
+        series: []
+      }
+
+      var r = JSON.parse(r.response);
+      r.series.forEach(function(s) {
+        result.series.push(s);
+      });
+      callback(result);
+
+    });
 
   }
 
