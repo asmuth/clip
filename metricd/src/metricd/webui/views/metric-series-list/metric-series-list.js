@@ -49,9 +49,16 @@ function FnordMetricSeriesListView(elem, params) {
     var page = templateUtil.getTemplate("fnordmetric-metric-series-list-tpl");
     elem.appendChild(page);
 
+    renderHeaderBreadcrumbs();
+
     /** initialize ui components **/
     initLayoutDatepicker();
     initLayoutFilter();
+  }
+
+  function renderHeaderBreadcrumbs() {
+    elem.querySelector(".page_header .breadcrumbs .metric_name").innerHTML =
+      DOMUtil.escapeHTML(config.getMetricID());
   }
 
   function initLayoutDatepicker() {
