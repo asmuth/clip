@@ -17,7 +17,7 @@
 FnordMetricChart.Plotter = function(elem, params) {
   'use strict';
 
-  var width = 1240; // FIXME
+  var width = elem.offsetWidth;
   var height = 180;
   var canvas_margin_top = 10;
   var canvas_margin_right = 1;
@@ -42,6 +42,9 @@ FnordMetricChart.Plotter = function(elem, params) {
     /* draw the svg */
     var svg = drawChart(series);
     elem.innerHTML = svg;
+
+    /* adjust the svg when the window is resized */
+    initResize(series);
   }
 
   function fitLayout() {
@@ -208,6 +211,19 @@ FnordMetricChart.Plotter = function(elem, params) {
 
       c.drawPoint(x_screen, y_screen, point_size, "point");
     }
+  }
+
+  function initResize(series) {
+    window.addEventListener("resize", function(e) {
+      resize(series);
+    }, false);
+  }
+
+  function resize(series) {
+    width = elem.offsetWidth;
+
+    var svg = drawChart(series);
+    elem.innerHTML = svg;
   }
 
 }
