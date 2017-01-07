@@ -24,7 +24,7 @@ FnordMetricChart.Plotter = function(elem, params) {
   params.border_left = false;
   params.border_bottom = true;
 
-  var width = 1240;
+  var width = 1240; // FIXME
   var height = 180;
   var canvas_margin_top = 10;
   var canvas_margin_right = 1;
@@ -34,7 +34,7 @@ FnordMetricChart.Plotter = function(elem, params) {
   var x_ticks_count = 12;
   var y_domain;
   var y_ticks_count = 5;
-  var y_label_width = 50;
+  var y_label_width = 50; // FIXME
 
   this.render = function(series) {
     /* set up domains */
@@ -65,7 +65,7 @@ FnordMetricChart.Plotter = function(elem, params) {
     }
 
     /* fit the x axis */
-    canvas_margin_bottom += 16;
+    canvas_margin_bottom += 16; // FIXME
   }
 
   function drawChart(c) {
@@ -151,7 +151,6 @@ FnordMetricChart.Plotter = function(elem, params) {
     c.svg += "<g class='axis y'>";
 
     /** render tick/grid **/
-    var text_padding = 8;
     for (var i = 0; i <= y_ticks_count ; i++) {
       var tick_y_domain = (i / y_ticks_count);
       var tick_y_screen = tick_y_domain * (height - (canvas_margin_bottom + canvas_margin_top)) + canvas_margin_top;
@@ -166,12 +165,14 @@ FnordMetricChart.Plotter = function(elem, params) {
       if (params.axis_y_position == "inside" && (i == y_ticks_count)) {
         /* skip text */
       } else if (params.axis_y_position == "inside") {
+        var text_padding = 3;
         c.drawText(
             canvas_margin_left + text_padding,
             tick_y_screen,
             "blah",
             "inside");
       } else {
+        var text_padding = 8;
         c.drawText(
             canvas_margin_left - text_padding,
             tick_y_screen,
