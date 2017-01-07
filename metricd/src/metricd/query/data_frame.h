@@ -47,6 +47,9 @@ public:
   const uint64_t* getTime(size_t idx = 0) const;
   uint64_t* getTime(size_t idx = 0);
 
+  void setNullFlag(size_t idx, bool flag);
+  bool getNullFlag(size_t idx) const;
+
   size_t getSize() const;
 
   void resize(size_t len);

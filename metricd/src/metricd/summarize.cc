@@ -56,6 +56,10 @@ void SumGroupSummary::addValue(
     tval_type value_type,
     const void* value,
     size_t value_len) {
+  if (value_type == tval_type::NIL) {
+    return;
+  }
+
   assert(value_type == acc_.val.type);
   assert(value_len == acc_.val.len);
   tval_add(acc_.val.type, acc_.val.data, acc_.val.len, value, value_len);

@@ -1,6 +1,7 @@
 /**
  * This file is part of the "FnordMetric" project
  *   Copyright (c) 2016 Laura Schlimmer, FnordCorp B.V.
+ *   Copyright (c) 2016 Paul Asmuth, FnordCorp B.V.
  *
  * FnordMetric is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License v3.0. You should have received a
@@ -37,8 +38,15 @@ FnordMetricChart.SVGHelper = function() {
 
   this.drawPath = function(points, classes) {
     var d_attr = "";
+    var line_active = false;
     for (var i = 0; i < points.length; i++) {
-      d_attr += i == 0 ? "M " : " L";
+      if (points[i][1] === null) {
+        line_active = false;
+        continue;
+      }
+
+      d_attr += line_active ? " L " : " M";
+      line_active = true;
       d_attr += points[i][0] + " " + points[i][1];
     }
 

@@ -110,12 +110,37 @@ void* DataFrame::getData(size_t idx /* = 0 */) {
   return ptr;
 }
 
+void DataFrame::setNullFlag(size_t idx, bool flag) {
+  auto bitfield =
+      static_cast<uint8_t*>(data_) +
+      capacity_ * (sizeof(uint64_t) + tval_len(type_));
+
+  uint8_t* bitfield_pos = bitfield + idx / 8;
+  uint8_t bit = 1 << ((idx % 8) + 1);
+
+  if (flag) {
+    *bitfield_pos |= bit;
+  } else {
+    *bitfield_pos &= ~bit;
+  }
+}
+
+bool DataFrame::getNullFlag(size_t idx) const {
+  auto bitfield =
+      static_cast<const uint8_t*>(data_) +
+      capacity_ * (sizeof(uint64_t) + tval_len(type_));
+
+  auto bitfield_pos = bitfield + idx / 8;
+  auto bit = 1 << ((idx % 8) + 1);
+  return *bitfield_pos & bit;
+}
+
 size_t DataFrame::getSize() const {
   return size_;
 }
 
 void DataFrame::resize(size_t new_size) {
-  auto old_size = size_;
+  auto old_capacity = capacity_;
   size_ = new_size;
   if (new_size <= capacity_) {
     return;
@@ -123,23 +148,32 @@ void DataFrame::resize(size_t new_size) {
     capacity_ = size_; // FIXME
   }
 
-  auto esize = tval_len(type_) + sizeof(uint64_t);
-
   auto old_data = data_;
-  data_ = malloc(capacity_ * esize);
 
-  if (!data_) { // this should never happen ;)
-    perror("malloc() failed");
-    abort();
+  {
+    auto alloc_size =
+        capacity_ * (tval_len(type_) + sizeof(uint64_t)) + (capacity_ + 7) / 8;
+
+    data_ = malloc(alloc_size);
+    if (!data_) { // this should never happen ;)
+      throw std::bad_alloc();
+    }
+
+    memset(data_, 0, alloc_size);
   }
 
   if (old_data) {
-    memcpy(data_, old_data, old_size * tval_len(type_));
+    memcpy(data_, old_data, old_capacity * sizeof(uint64_t));
 
     memcpy(
-        (char*) data_ + size_ * tval_len(type_),
-        (const char*) old_data + old_size * tval_len(type_),
-        old_size * sizeof(uint64_t));
+        (char*) data_ + capacity_ * sizeof(uint64_t),
+        (const char*) old_data + old_capacity * sizeof(uint64_t),
+        old_capacity * tval_len(type_));
+
+    memcpy(
+        (char*) data_ + capacity_ * (tval_len(type_) + sizeof(uint64_t)),
+        (const char*) old_data + old_capacity * (tval_len(type_) + sizeof(uint64_t)),
+        (old_capacity + 7) / 8);
   }
 }
 

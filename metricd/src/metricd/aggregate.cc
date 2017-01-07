@@ -67,7 +67,8 @@ SumOutputAggregator::SumOutputAggregator(
     const MetricCursorOptions* opts) :
     cursor_(std::move(cursor)),
     input_type_(input_type),
-    opts_(opts) {
+    opts_(opts),
+    have_value_(false) {
   cur_sum_.type = input_type_;
   cur_sum_.len = tval_len(input_type_);
   cur_sum_.data = malloc(cur_sum_.len);
@@ -95,12 +96,18 @@ bool SumOutputAggregator::next(uint64_t* time, tval_ref* out) {
     cursor_.getValue(val.data, val.len);
     tval_add(cur_sum_.type, cur_sum_.data, cur_sum_.len, val.data, val.len);
     cursor_.next();
+    have_value_ = true;
   }
 
   uint64_t interpolate_windows = 1;
   if (opts_->interpolate && cursor_.valid()) {
     auto next_time = alignTime(cursor_.getTime(), granularity, opts_->align);
     interpolate_windows = (next_time - cur_time_) / granularity;
+  }
+
+  if (tval_iszero(&cur_sum_) &&
+      (!cursor_.valid() || (cursor_.getTime() > cur_time_ + granularity))) {
+    have_value_ = false;
   }
 
   if (interpolate_windows > 1) {
@@ -118,9 +125,9 @@ bool SumOutputAggregator::next(uint64_t* time, tval_ref* out) {
     }
 
     if (out) {
-      assert(out[0].type == next_val.type);
       assert(out[0].len == next_val.len);
       memcpy(out[0].data, next_val.data, std::min(next_val.len, out[0].len));
+      out->type = have_value_ ? input_type_ : tval_type::NIL;
     }
 
     tval_sub(
@@ -131,9 +138,9 @@ bool SumOutputAggregator::next(uint64_t* time, tval_ref* out) {
         next_val.len);
   } else {
     if (out) {
-      assert(out[0].type == cur_sum_.type);
       assert(out[0].len == cur_sum_.len);
       memcpy(out[0].data, cur_sum_.data, std::min(cur_sum_.len, out[0].len));
+      out->type = have_value_ ? input_type_ : tval_type::NIL;
     }
 
     tval_zero(cur_sum_.type, cur_sum_.data, cur_sum_.len);
@@ -234,9 +241,15 @@ bool MaxOutputAggregator::next(uint64_t* time, tval_ref* out) {
     cursor_.next();
   }
 
+ if (tval_iszero(&cur_max_) &&
+      (!cursor_.valid() || (cursor_.getTime() > cur_time_ + granularity))) {
+    has_cur_max_ = false;
+  }
+
   if (out) {
     assert(out[0].len == cur_max_.len);
     memcpy(out[0].data, cur_max_.data, cur_max_.len);
+    out->type = has_cur_max_ ? input_type_ : tval_type::NIL;
   }
 
   *time = cur_time_;
