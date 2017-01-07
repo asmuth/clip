@@ -24,6 +24,9 @@ static void readDataFrame(MetricCursor* cursor, DataFrame* frame) {
   val.data = alloca(val.len);
   while (cursor->next(&timestamp, &val)) {
     frame->addValue(timestamp, val.data, val.len);
+    if (val.type == tval_type::NIL) {
+      frame->setNullFlag(frame->getSize() - 1, true);
+    }
   }
 }
 
@@ -149,6 +152,11 @@ ReturnCode QueryFrontend::fetchSeriesJSON(
     res->addString("values");
     res->beginArray();
     for (size_t i = 0; i < frame->getSize(); ++i) {
+      if (frame->getNullFlag(i)) {
+        res->addNull();
+        continue;
+      }
+
       switch (frame->getType()) {
         case tval_type::UINT64:
           res->addInteger(*((uint64_t*) frame->getData(i)));
@@ -307,6 +315,11 @@ ReturnCode QueryFrontend::fetchSummaryJSON(
     res->addString("values");
     res->beginArray();
     for (size_t i = 0; i < frame->getSize(); ++i) {
+      if (frame->getNullFlag(i)) {
+        res->addNull();
+        continue;
+      }
+
       switch (frame->getType()) {
         case tval_type::UINT64:
           res->addInteger(*((uint64_t*) frame->getData(i)));
