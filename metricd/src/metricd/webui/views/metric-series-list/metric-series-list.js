@@ -29,12 +29,19 @@ function FnordMetricSeriesListView(elem, params) {
 
   function refreshSummary() {
     var chart_opts = {
-      metric_id: config.getMetricID(),
       axis_y_position: "inside",
       border_top: false,
       border_right: false,
       border_bottom: true,
-      border_left: false
+      border_left: false,
+      queries: [
+        {
+          query: {
+            op: "fetch_summary",
+            metric_id: config.getMetricID()
+          }
+        }
+      ]
     };
 
     var chart = new FnordMetricChart(elem.querySelector(".summary"), chart_opts);

@@ -13,6 +13,7 @@
 #include <metricd/sample.h>
 #include <metricd/util/return_code.h>
 #include <metricd/aggregate.h>
+#include <metricd/units.h>
 #include <libtsdb/tsdb.h>
 #include <functional>
 #include <iostream>
@@ -187,11 +188,15 @@ public:
 
   InputAggregator* getInputAggregator();
 
+  void setUnitConfig(const UnitConfig* config);
+  const UnitConfig* getUnitConfig() const;
+
 protected:
   std::string key_;
   MetricSeriesList series_;
   MetricConfig config_;
   std::unique_ptr<InputAggregator> input_aggr_;
+  const UnitConfig* unit_config_;
 };
 
 tval_type getMetricDataType(MetricKind t);
