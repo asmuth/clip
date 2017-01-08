@@ -58,9 +58,22 @@
   cursor: pointer;
 }
 
-.fm-chart .line {
+.fm-top-series-container table.fm-top-series-table thead th .sort {
+  float: right;
+  color: #858585;
+}
+
+.fm-top-series-container table.fm-top-series-table thead th.menu {
+  width: 40px;
+}
+
+.fm-top-series-container table.fm-top-series-table tbody td.id {
+  color: #3d8ad3;
+}
+
+.fm-top-series-container .fm-chart .line {
   fill: none;
   stroke: #000;
-  stroke-width: 1px;
+  stroke-width: 0.5;
 }
 

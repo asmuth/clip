@@ -8,10 +8,10 @@
  * <http://www.gnu.org/licenses/>.
  */
 
-function FnordMetricSeriesListView(elem, params) {
+function FnordMetricMetricDetail(elem, params) {
   'use strict';
 
-  var config = new FnordMetricSeriesListViewConfig(params);
+  var config = new FnordMetricMetricDetailConfig(params);
 
   this.initialize = function() {
     initLayout();
@@ -30,7 +30,7 @@ function FnordMetricSeriesListView(elem, params) {
 
   function refreshSummary() {
     var chart_opts = {
-      height: 180,
+      height: 120,
       axis_y_position: "inside",
       border_top: false,
       border_right: false,
@@ -60,7 +60,7 @@ function FnordMetricSeriesListView(elem, params) {
   }
 
   function initLayout() {
-    var page = templateUtil.getTemplate("fnordmetric-metric-series-list-tpl");
+    var page = templateUtil.getTemplate("fnordmetric-metric-detail-tpl");
     elem.appendChild(page);
 
     /** initialize ui components **/
@@ -100,4 +100,4 @@ function FnordMetricSeriesListView(elem, params) {
 
 }
 
-FnordMetric.views["fnordmetric.metric.series.list"] = FnordMetricSeriesListView;
+FnordMetric.views["fnordmetric.metric.detail"] = FnordMetricMetricDetail;

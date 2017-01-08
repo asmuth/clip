@@ -59,13 +59,13 @@ FnordMetricTopSeries.Table = function(elem, params) {
       sort_elem.classList.add("sort");
       th.appendChild(sort_elem);
 
-      var sort_asc = document.createElement("i");
-      sort_asc.classList.add("sort_asc");
-      sort_elem.appendChild(sort_asc);
-
       var sort_desc = document.createElement("i");
       sort_desc.classList.add("sort_desc");
       sort_elem.appendChild(sort_desc);
+
+      var sort_asc = document.createElement("i");
+      sort_asc.classList.add("sort_asc");
+      sort_elem.appendChild(sort_asc);
 
       switch (col.sorted) {
         case "asc":
@@ -122,6 +122,7 @@ FnordMetricTopSeries.Table = function(elem, params) {
 
   function renderIDCell(series_id) {
     var td = document.createElement("td");
+    td.classList.add("id");
     td.innerHTML = DOMUtil.escapeHTML(series_id);
 
     return td;
@@ -129,6 +130,7 @@ FnordMetricTopSeries.Table = function(elem, params) {
 
   function renderSparklineCell(result) {
     var td = document.createElement("td");
+    td.classList.add("sparkline");
 
     var sparkline_elem = document.createElement("div");
     sparkline_elem.classList.add("fm-sparkline");
@@ -142,6 +144,7 @@ FnordMetricTopSeries.Table = function(elem, params) {
 
   function renderSummaryCell(summaries) {
     var td = document.createElement("td");
+    td.classList.add("summary");
 
     var sum_elem = document.createElement("div");
     sum_elem.classList.add("sum");
