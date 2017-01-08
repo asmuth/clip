@@ -114,7 +114,7 @@ FnordMetricTopSeries.Table = function(elem, params) {
 
     tr.appendChild(renderIDCell(series.series_id));
     tr.appendChild(renderSparklineCell(series));
-    tr.appendChild(renderSummaryCell(series.summaries));
+    tr.appendChild(renderSummaryCell(series));
     tr.appendChild(renderContextMenuCell());
 
     return tr;
@@ -142,27 +142,30 @@ FnordMetricTopSeries.Table = function(elem, params) {
     return td;
   }
 
-  function renderSummaryCell(summaries) {
+  function renderSummaryCell(series) {
     var td = document.createElement("td");
     td.classList.add("summary");
 
-    var sum_elem = document.createElement("div");
-    sum_elem.classList.add("sum");
-    td.appendChild(sum_elem);
+    var max_summary_elems = 4;
+    for (var i = 0; i < series.summaries.length && i < max_summary_elems; i++) {
+      var span = document.createElement("span");
 
-    var stats_elem = document.createElement("div");
-    stats_elem.classList.add("stats");
-    td.appendChild(stats_elem);
+      /* render main summary */
+      if (i == 0) {
+        span.classList.add("main_summary");
 
-    summaries.forEach(function(s) {
-      switch (s.summary) {
-        case "sum":
-          sum_elem.innerHTML = DOMUtil.escapeHTML(s.value);
-          break;
-
-        //FIXME add min, max, stddev
+      /* render small summary */
+      } else {
+        span.classList.add("small_summary");
+        span.innerHTML = DOMUtil.escapeHTML(series.summaries[i].summary) + "=";
       }
-    });
+
+      span.innerHTML += FnordMetricUnits.formatValue(
+          series.unit,
+          series.summaries[i].value);
+
+      td.appendChild(span);
+    }
 
     return td;
   }
