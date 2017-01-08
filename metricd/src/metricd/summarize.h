@@ -14,6 +14,18 @@
 
 namespace fnordmetric {
 
+enum class GroupSummaryMethod {
+  SUM,
+  MAX,
+  MIN,
+};
+
+std::string getGroupSummaryName(GroupSummaryMethod method);
+
+bool getGroupSummaryFromName(
+    GroupSummaryMethod* method,
+    const std::string& name);
+
 enum class GrossSummaryMethod {
   SUM,
   MAX,
@@ -22,6 +34,7 @@ enum class GrossSummaryMethod {
 };
 
 std::string getGrossSummaryName(GrossSummaryMethod method);
+
 bool getGrossSummaryFromName(
     GrossSummaryMethod* method,
     const std::string& name);

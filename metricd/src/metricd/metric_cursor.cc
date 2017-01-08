@@ -98,8 +98,12 @@ ReturnCode MetricCursor::openCursor(
   /* set up group summary */
   std::unique_ptr<GroupSummary> group_summary;
   if (opts->cursor_type == MetricCursorType::SUMMARY) {
-    group_summary.reset(
-        new SumGroupSummary(getOutputType(metric->getConfig())));
+    switch (opts->summarize_group) {
+      case GroupSummaryMethod::SUM:
+        group_summary.reset(
+            new SumGroupSummary(getOutputType(metric->getConfig())));
+        break;
+    }
   }
 
   *cursor = MetricCursor(

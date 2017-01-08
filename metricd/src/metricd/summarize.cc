@@ -14,6 +14,31 @@
 
 namespace fnordmetric {
 
+std::string getGroupSummaryName(GroupSummaryMethod method) {
+  switch (method) {
+    case GroupSummaryMethod::SUM: return "sum";
+    case GroupSummaryMethod::MAX: return "max";
+    case GroupSummaryMethod::MIN: return "min";
+  }
+}
+
+bool getGroupSummaryFromName(
+    GroupSummaryMethod* method,
+    const std::string& name) {
+  static const std::map<std::string, GroupSummaryMethod> method_map = {
+    { "sum", GroupSummaryMethod::SUM },
+    { "max", GroupSummaryMethod::MAX },
+    { "min", GroupSummaryMethod::MIN }
+  };
+
+  auto iter = method_map.find(name);
+  if (iter == method_map.end()) {
+    return false;
+  } else {
+    *method = iter->second;
+    return true;
+  }
+}
 std::string getGrossSummaryName(GrossSummaryMethod method) {
   switch (method) {
     case GrossSummaryMethod::SUM: return "sum";

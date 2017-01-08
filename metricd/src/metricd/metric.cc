@@ -414,5 +414,31 @@ tval_type getMetricDataType(MetricKind t) {
   }
 }
 
+GroupSummaryMethod getMetricDefaultGroupSumamry(MetricKind t) {
+  switch (t) {
+    case SAMPLE_UINT64:
+    case SAMPLE_INT64:
+    case SAMPLE_FLOAT64:
+    case COUNTER_UINT64:
+    case COUNTER_INT64:
+    case COUNTER_FLOAT64:
+    case MONOTONIC_UINT64:
+    case MONOTONIC_INT64:
+    case MONOTONIC_FLOAT64:
+    case MIN_UINT64:
+    case MIN_INT64:
+    case MIN_FLOAT64:
+    case MAX_UINT64:
+    case MAX_INT64:
+    case MAX_FLOAT64:
+    case AVERAGE_UINT64:
+    case AVERAGE_INT64:
+    case AVERAGE_FLOAT64:
+    case UNKNOWN:
+    default:
+      return GroupSummaryMethod::SUM;
+  }
+}
+
 } // namespace fnordmetric
 

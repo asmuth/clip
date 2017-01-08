@@ -11,6 +11,10 @@
 
 namespace fnordmetric {
 
+std::map<MetricIDType, MetricConfig>& ConfigList::getMetricConfigs() {
+  return metric_configs_;
+}
+
 const std::map<MetricIDType, MetricConfig>& ConfigList::getMetricConfigs()
     const {
   return metric_configs_;

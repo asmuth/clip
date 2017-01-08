@@ -331,6 +331,8 @@ ReturnCode QueryFrontend::fetchSummaryJSON(
     return describe_rc;
   }
 
+  auto metric_config = metric_info.getMetricConfig();
+
   /* configure time range */
   MetricCursorOptions cursor_opts;
   cursor_opts.cursor_type = MetricCursorType::SUMMARY;
@@ -350,7 +352,7 @@ ReturnCode QueryFrontend::fetchSummaryJSON(
     }
   }
 
-  /* configure summary methods */
+  /* configure gross summary methods */
   std::vector<GrossSummaryMethod> summary_methods;
   auto summary_methods_param = req->get("summarize_gross");
   if (summary_methods_param) {
@@ -363,6 +365,22 @@ ReturnCode QueryFrontend::fetchSummaryJSON(
     }
   } else {
     summary_methods = metric_info.getMetricConfig()->summarize_gross;
+  }
+
+  /* configure group summary method */
+  cursor_opts.summarize_group = metric_config->summarize_group.get();
+  auto summary_method_group_param = req->getString("summarize_group");
+  if (!summary_method_group_param.empty()) {
+    auto rc = getGroupSummaryFromName(
+        &cursor_opts.summarize_group,
+        summary_method_group_param);
+
+    if (!rc) {
+      return ReturnCode::errorf(
+          "EARG",
+          "invalid group summary: $0",
+          summary_method_group_param);
+    }
   }
 
   /* fetch summary */

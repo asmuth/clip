@@ -26,7 +26,7 @@ public:
 
   static ReturnCode startService(
       const std::string& datadir,
-      const ConfigList* config,
+      ConfigList* config,
       std::unique_ptr<MetricService>* service);
 
   /**

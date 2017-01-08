@@ -61,6 +61,8 @@ struct MetricCursorOptions {
 
   bool interpolate;
 
+  GroupSummaryMethod summarize_group;
+
 };
 
 class MetricCursor {

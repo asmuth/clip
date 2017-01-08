@@ -17,7 +17,7 @@ namespace fnordmetric {
 
 ReturnCode MetricService::startService(
     const std::string& datadir,
-    const ConfigList* config,
+    ConfigList* config,
     std::unique_ptr<MetricService>* service) {
   auto db_path = FileUtil::joinPaths(datadir, "default.tsdb");
 
@@ -41,7 +41,7 @@ ReturnCode MetricService::startService(
 
   /* load metric configs */
   MetricMapBuilder metric_map_builder(nullptr);
-  for (const auto& mc : config->getMetricConfigs()) {
+  for (auto& mc : config->getMetricConfigs()) {
     auto metric = metric_map_builder.findMetric(mc.first);
     if (metric) {
       return ReturnCode::error(
@@ -51,6 +51,10 @@ ReturnCode MetricService::startService(
 
     logDebug("Opening metric; metric_id=$0", mc.first);
 
+    if (mc.second.summarize_group.isEmpty()) {
+      mc.second.summarize_group = Some(
+          getMetricDefaultGroupSumamry(mc.second.kind));
+    }
 
     metric = new Metric(mc.first);
     auto rc = metric->setConfig(&mc.second);

@@ -15,6 +15,7 @@
 #include <metricd/aggregate.h>
 #include <metricd/summarize.h>
 #include <metricd/units.h>
+#include <metricd/util/option.h>
 #include <libtsdb/tsdb.h>
 #include <functional>
 #include <iostream>
@@ -75,6 +76,7 @@ struct MetricConfig {
   std::string unit_id;
   tval_autoref unit_scale;
   std::vector<GrossSummaryMethod> summarize_gross;
+  Option<GroupSummaryMethod> summarize_group;
 };
 
 class MetricSeries {
@@ -222,6 +224,7 @@ protected:
 };
 
 tval_type getMetricDataType(MetricKind t);
+GroupSummaryMethod getMetricDefaultGroupSumamry(MetricKind t);
 
 } // namespace fnordmetric
 

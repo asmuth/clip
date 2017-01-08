@@ -237,6 +237,11 @@ void HTTPAPI::performMetricFetchSummary(
     if (URI::getParam(params, "summarize_gross", &summarize_gross)) {
       json_req.getRootAsObject()->setString("summarize_gross", summarize_gross);
     }
+
+    std::string summarize_group;
+    if (URI::getParam(params, "summarize_group", &summarize_group)) {
+      json_req.getRootAsObject()->setString("summarize_group", summarize_group);
+    }
   }
 
   std::string json_res_str;

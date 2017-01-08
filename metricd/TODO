@@ -2,7 +2,6 @@ v0.5
 - [ ] METRICD: implement parseTimeSpec
 - [ ] METRICD: make units and unit_scale configurable in config file
 - [ ] METRICD: make granularity configurable in api endpoins
-- [ ] METRICD: make group summary configurable in api endpoins
 - [ ] METRICD: implement series id filter in api endpoins
 - [ ] METRICD: make gross summaries configurable in config
 - [ ] METRICD: make group summary configurable in config

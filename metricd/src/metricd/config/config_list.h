@@ -21,6 +21,7 @@ namespace fnordmetric {
 class ConfigList {
 public:
 
+  std::map<MetricIDType, MetricConfig>& getMetricConfigs();
   const std::map<MetricIDType, MetricConfig>& getMetricConfigs() const;
   const MetricConfig* getMetricConfig(MetricIDType metric_id) const;
   void addMetricConfig(MetricIDType metric_id, MetricConfig config);
