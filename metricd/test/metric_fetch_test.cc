@@ -850,6 +850,7 @@ TEST_CASE(MetricServiceTest, TestCounterMetricWithSummary, [] () {
   {
     MetricCursorOptions cursor_opts;
     cursor_opts.cursor_type = MetricCursorType::SUMMARY;
+    cursor_opts.summarize_group = GroupSummaryMethod::SUM;
     cursor_opts.time_begin = 1482776220000000;
     cursor_opts.time_limit = 1482776460000000;
 
