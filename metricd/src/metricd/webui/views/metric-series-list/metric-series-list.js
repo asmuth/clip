@@ -29,6 +29,7 @@ function FnordMetricSeriesListView(elem, params) {
 
   function refreshSummary() {
     var chart_opts = {
+      height: 180,
       axis_y_position: "inside",
       border_top: false,
       border_right: false,

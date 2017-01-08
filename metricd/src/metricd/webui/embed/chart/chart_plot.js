@@ -18,6 +18,7 @@
 FnordMetricChart.Plotter = function(elem, params) {
   'use strict';
 
+  var RENDER_SCALE_FACTOR = 1.6;
   var width;
   var height;
   var canvas_margin_top;
@@ -32,8 +33,11 @@ FnordMetricChart.Plotter = function(elem, params) {
   var y_labels;
 
   this.render = function(result) {
-    width = elem.offsetWidth * 1.6;
-    height = 180 * 1.6;
+    width = (params.width || elem.offsetWidth) * RENDER_SCALE_FACTOR;
+    height = (params.height || elem.offsetHeight) * RENDER_SCALE_FACTOR;
+    if (height < 50) {
+      height = 50;
+    }
 
     /* prepare axes */
     prepareXAxis(result);
@@ -53,14 +57,14 @@ FnordMetricChart.Plotter = function(elem, params) {
   }
 
   function prepareLayout(result) {
-    canvas_margin_top = 10;
-    canvas_margin_right = 1;
-    canvas_margin_bottom = 30;
-    canvas_margin_left = 1;
+    canvas_margin_top = 6 * RENDER_SCALE_FACTOR;
+    canvas_margin_right = 1 * RENDER_SCALE_FACTOR;
+    canvas_margin_bottom = 18 * RENDER_SCALE_FACTOR;
+    canvas_margin_left = 1 * RENDER_SCALE_FACTOR;
 
     /* fit the y axis labels */
     y_label_width =
-        12 *
+        7 * RENDER_SCALE_FACTOR *
         Math.max.apply(null, y_labels.map(function(l) { return l.length; }));
 
     /* fit the y axis */
@@ -168,7 +172,7 @@ FnordMetricChart.Plotter = function(elem, params) {
     c.svg += "<g class='axis x'>";
 
     /** render tick/grid **/
-    var text_padding = 10;
+    var text_padding = 6 * RENDER_SCALE_FACTOR;
     for (var i = 1; i < x_ticks_count; i++) {
       var tick_x_domain = (i / x_ticks_count);
       var tick_x_screen = tick_x_domain * (width - (canvas_margin_left + canvas_margin_right)) + canvas_margin_left;
@@ -207,14 +211,14 @@ FnordMetricChart.Plotter = function(elem, params) {
       if (params.axis_y_position == "inside" && (i == y_ticks_count)) {
         /* skip text */
       } else if (params.axis_y_position == "inside") {
-        var text_padding = 3;
+        var text_padding = 2 * RENDER_SCALE_FACTOR;
         c.drawText(
             canvas_margin_left + text_padding,
             tick_y_screen,
             y_labels[i],
             "inside");
       } else {
-        var text_padding = 8;
+        var text_padding = 5 * RENDER_SCALE_FACTOR;
         c.drawText(
             canvas_margin_left - text_padding,
             tick_y_screen,
