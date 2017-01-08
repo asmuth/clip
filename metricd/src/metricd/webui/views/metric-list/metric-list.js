@@ -8,46 +8,31 @@
  * <http://www.gnu.org/licenses/>.
  */
 
-FnordMetric.views["fnordmetric.metric.list"] = function(elem, params) {
+function FnordMetricMetricList(elem, params) {
   'use strict';
 
   var api_url = "/list";
-  var table = new fTable({
-    columns: [
-      {
-        key: "metric_id",
-        title: "Metric ID"
-      }
-    ]
-  });
 
   this.initialize = function() {
+    initLayout();
+
+    fetchData(function(result) {
+      renderTable(result);
+    });
+  };
+
+  //this.destroy = function() {
+  //};
+
+  function initLayout() {
     var page = templateUtil.getTemplate("fnordmetric-metric-list-tpl");
     elem.appendChild(page);
+  }
 
-    /* navigate to id detail page */
-    table.onClick(function(r) {
-      params.app.navigateTo(params.route.route + "/" + r.cells.metric_id.value);
-    });
+  var fetchData = function(callback) {
+    var url = params.app.api_base_path + api_url;
 
-    /* sort callback */
-    table.onSort(function(column, direction) {
-      params.view_cfg.updateValue("order", direction);
-      params.view_cfg.updateValue("order_by", column.key);
-      updatePath();
-    });
-
-    table.render(
-        elem.querySelector(".fnordmetric-metric-list table.metric_list"));
-
-    fetchMetricList();
-  };
-
-  this.destroy = function() {
-  };
-
-  var fetchMetricList = function() {
-    HTTPUtil.httpGet(params.app.api_base_path + api_url, {}, function(r) {
+    HTTPUtil.httpGet(url, {}, function(r) {
       if (r.status != 200) {
         params.app.renderError(
             "an error occured while loading the metric list:",
@@ -56,25 +41,15 @@ FnordMetric.views["fnordmetric.metric.list"] = function(elem, params) {
       }
 
       var metrics = JSON.parse(r.response);
-      renderTable(metrics.metrics);
+      callback(metrics);
     });
   };
 
-  var renderTable = function(metrics) {
-    var rows = [];
-    metrics.forEach(function(m) {
-      var cells = {};
-      for (var k in m) {
-        cells[k] = {
-          value: m[k]
-        }
-      }
-
-      rows.push({cells});
-    });
-
-    table.setRows(rows);
-    table.render(
+  var renderTable = function(result) {
+    var table = new FnordMetricMetricList.Table(
         elem.querySelector(".fnordmetric-metric-list table.metric_list"));
-  };
+    table.render(result);
+  }
 };
+
+FnordMetric.views["fnordmetric.metric.list"] = FnordMetricMetricList;
