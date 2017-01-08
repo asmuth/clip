@@ -12,7 +12,7 @@ FnordMetricTopSeries.SparklinePlotter = function(elem, params) {
   'use strict';
 
   var width = elem.offsetWidth * 1.6 || 180; //FIXME
-  var height = 14 * 1.6;
+  var height = 11 * 1.6;
   var canvas_margin_top = 1;
   var canvas_margin_right = 1;
   var canvas_margin_bottom = 1;
