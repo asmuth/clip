@@ -29,6 +29,10 @@ List of valid stanzas within the `metric` block:
       <td>Set the metric's unit</td>
     </tr>
     <tr>
+      <td><code><strong>unit_scale</strong></code></td>
+      <td></td>
+    </tr>
+    <tr>
       <td><code><strong>granularity</strong></code></td>
       <td>Set the storage granularity</td>
     </tr>

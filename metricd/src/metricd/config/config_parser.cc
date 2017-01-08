@@ -98,7 +98,7 @@ bool ConfigParser::parseMetricDefinition(ConfigList* config) {
       continue;
     }
 
-    /* parse the "aggregation" stanza */
+    /* parse the "kind" stanza */
     if (ttype == T_STRING && tbuf == "kind") {
       consumeToken();
       if (!parseMetricDefinitionKindStanza(&metric_config)) {
@@ -120,6 +120,15 @@ bool ConfigParser::parseMetricDefinition(ConfigList* config) {
     if (ttype == T_STRING && tbuf == "unit") {
       consumeToken();
       if (!parseMetricDefinitionUnitStanza(&metric_config)) {
+        return false;
+      }
+      continue;
+    }
+
+    /* parse the "unit_scale" stanza */
+    if (ttype == T_STRING && tbuf == "unit_scale") {
+      consumeToken();
+      if (!parseMetricDefinitionUnitScaleStanza(&metric_config)) {
         return false;
       }
       continue;
@@ -223,6 +232,24 @@ bool ConfigParser::parseMetricDefinitionUnitStanza(
   }
 
   metric_config->unit_id = tbuf;
+  consumeToken();
+  return true;
+}
+
+bool ConfigParser::parseMetricDefinitionUnitScaleStanza(
+    MetricConfig* metric_config) {
+  TokenType ttype;
+  std::string tbuf;
+  if (!getToken(&ttype, &tbuf) || ttype != T_STRING) {
+    setError("unit_scale requires an argument");
+    return false;
+  }
+
+  if (!tval_parsenumber(&metric_config->unit_scale, tbuf)) {
+    setError("invalid value for unit_scale <factor>: " + tbuf);
+    return false;
+  }
+
   consumeToken();
   return true;
 }
