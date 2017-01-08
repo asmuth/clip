@@ -18,7 +18,7 @@ FnordMetricTopSeries.SparklinePlotter = function(elem, params) {
   var canvas_margin_bottom = 1;
   var canvas_margin_left = 1;
 
-  var y_domain = new FnordMetricTopSeries.SparklineLinearDomain();
+  var y_domain = new FnordMetricTopSeries.SparklineDomain();
 
   this.render = function(series) {
     y_domain.findMinMax(series.values);

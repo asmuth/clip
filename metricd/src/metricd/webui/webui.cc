@@ -83,7 +83,7 @@ void WebUI::handleHTTPRequest(
     js_src += getAssetFile("embed/top_series/top_series.js");
     js_src += getAssetFile("embed/top_series/top_series_table.js");
     js_src += getAssetFile("embed/top_series/top_series_sparkline_plot.js");
-    js_src += getAssetFile("embed/top_series/sparkline_linear_domain.js");
+    js_src += getAssetFile("embed/top_series/top_series_sparkline_domain.js");
     js_src += getAssetFile("embed/svg_helper.js");
     js_src += getAssetFile("util/http.js");
     js_src += getAssetFile("util/dom.js");
