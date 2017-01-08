@@ -8,6 +8,6 @@ FnordMetric.routes = [
   {
     "route": new RegExp("^/ui/metrics/(.*)$"),
     "route_args": [ "metric_id" ],
-    "view": "fnordmetric.metric.series.list",
+    "view": "fnordmetric.metric.detail",
   }
 ];

@@ -8,7 +8,7 @@
  * <http://www.gnu.org/licenses/>.
  */
 
-function FnordMetricSeriesListViewConfig(params) {
+function FnordMetricMetricDetailConfig(params) {
 
   this.getMetricID = function() {
     return params.route.args.metric_id;

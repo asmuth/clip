@@ -13,10 +13,10 @@ views/error/error.js
 views/metric-list/metric-list.css
 views/metric-list/metric-list.html
 views/metric-list/metric-list.js
-views/metric-series-list/metric-series-list.css
-views/metric-series-list/metric-series-list.html
-views/metric-series-list/metric-series-list.js
-views/metric-series-list/metric-series-list-config.js
+views/metric-detail/metric_detail.css
+views/metric-detail/metric_detail.html
+views/metric-detail/metric_detail.js
+views/metric-detail/metric_detail_config.js
 views/metric-serie/metric-serie.css
 views/metric-serie/metric-serie.html
 views/metric-serie/metric-serie.js
