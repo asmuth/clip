@@ -71,6 +71,21 @@
   color: #3d8ad3;
 }
 
+.fm-top-series-container table.fm-top-series-table td.summary .main_summary {
+  display: block;
+  font-size: 17px;
+  color: #333;
+  line-height: 13px;
+}
+
+.fm-top-series-container table.fm-top-series-table td.summary .small_summary {
+  font-size: 11px;
+}
+
+.fm-top-series-container table.fm-top-series-table td.summary .small_summary + .small_summary {
+  margin-left: 4px;
+}
+
 .fm-top-series-container .fm-chart .line {
   fill: none;
   stroke: #000;
