@@ -134,9 +134,16 @@ ReturnCode getGrossSummaryMethodsFromJSON(
 ReturnCode QueryFrontend::fetchSeriesJSON(
     const json::JSONObject* req,
     json::JSONWriter* res) {
+  /* get metric info */
   auto metric_id = req->getString("metric_id");
   if (metric_id.empty()) {
     return ReturnCode::error("EARG", "missing argument: metric_id");
+  }
+
+  MetricInfo metric_info;
+  auto describe_rc = metric_service_->describeMetric(metric_id, &metric_info);
+  if (!describe_rc.isSuccess()) {
+    return describe_rc;
   }
 
   /* configure time range */
@@ -169,14 +176,7 @@ ReturnCode QueryFrontend::fetchSeriesJSON(
       return rc;
     }
   } else {
-    // FIXME default summary methods from metric
-  }
-
-  /* get metric info */
-  MetricInfo metric_info;
-  auto describe_rc = metric_service_->describeMetric(metric_id, &metric_info);
-  if (!describe_rc.isSuccess()) {
-    return describe_rc;
+    summary_methods = metric_info.getMetricConfig()->summarize_gross;
   }
 
   /* fetch series */
@@ -230,7 +230,6 @@ ReturnCode QueryFrontend::fetchSeriesJSON(
 
   /* write output json */
   res->beginObject();
-  auto unit_config = metric_info.getUnitConfig();
   res->addString("unit");
   writeUnitConfigToJSON(&metric_info, res);
 
@@ -320,9 +319,16 @@ ReturnCode QueryFrontend::fetchSeriesJSON(
 ReturnCode QueryFrontend::fetchSummaryJSON(
     const json::JSONObject* req,
     json::JSONWriter* res) {
+  /* get metric info */
   auto metric_id = req->getString("metric_id");
   if (metric_id.empty()) {
     return ReturnCode::error("EARG", "missing argument: metric_id");
+  }
+
+  MetricInfo metric_info;
+  auto describe_rc = metric_service_->describeMetric(metric_id, &metric_info);
+  if (!describe_rc.isSuccess()) {
+    return describe_rc;
   }
 
   /* configure time range */
@@ -356,14 +362,7 @@ ReturnCode QueryFrontend::fetchSummaryJSON(
       return rc;
     }
   } else {
-    // FIXME default summary methods from metric
-  }
-
-  /* get metric info */
-  MetricInfo metric_info;
-  auto describe_rc = metric_service_->describeMetric(metric_id, &metric_info);
-  if (!describe_rc.isSuccess()) {
-    return describe_rc;
+    summary_methods = metric_info.getMetricConfig()->summarize_gross;
   }
 
   /* fetch summary */

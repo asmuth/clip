@@ -13,6 +13,7 @@
 #include <metricd/sample.h>
 #include <metricd/util/return_code.h>
 #include <metricd/aggregate.h>
+#include <metricd/summarize.h>
 #include <metricd/units.h>
 #include <libtsdb/tsdb.h>
 #include <functional>
@@ -73,6 +74,7 @@ struct MetricConfig {
   bool is_valid;
   std::string unit_id;
   tval_autoref unit_scale;
+  std::vector<GrossSummaryMethod> summarize_gross;
 };
 
 class MetricSeries {
