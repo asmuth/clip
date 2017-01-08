@@ -5,20 +5,7 @@ v0.5
 - [ ] METRICD: make interpolation configurable in config
 - [ ] METRICD: proper kind configuration on config
 - [ ] METRICD: proper granularity configuration on config
-- [ ] METRICD: /api/v1/query endpoint
 - [ ] METRICD: /api/v1/metrics/config endpoint
-- [ ] CHART WIDGET: show summaries
-- [ ] CHART WIDGET: x axis labels
-- [ ] CHART WIDGET: tooltips
-- [ ] CHART WIDGET: draw missing sections as red background
-- [ ] CHART WIDGET: chart type area
-- [ ] CHART WIDGET: chart type bars
-- [ ] CHART WIDGET: chart type stacked_area
-- [ ] CHART WIDGET: chart type stacked_bars
-- [ ] CHART WIDGET: legend
-- [ ] CHART WIDGET: title
-- [ ] WEBUI: query page
-- [ ] WEBUI: metrics list page
 - [ ] METRICD: asset packaging
 - [ ] METRICD: sensor_http
 - [ ] METRICD: sensor_proc
@@ -27,10 +14,6 @@ v0.5
 - [ ] METRICD: implement metric type: min
 - [ ] METRICD: implement metric type: sample
 - [ ] METRICD: implement metric type: monotonic
-- [ ] CHART WIDGET: make colors configurable
-- [ ] CHART WIDGET: foreground and background color
-- [ ] METRICD: embed.js
-- [ ] METRICD: built-in units file
 - [ ] METRICD: implement gross summarization: avg
 - [ ] METRICD: implement gross summarization: min
 - [ ] METRICD: implement gross summarization: max
@@ -42,8 +25,26 @@ v0.5
 - [ ] METRICD: implement group summarization: max
 - [ ] METRICD: implement group summarization: mean
 - [ ] METRICD: implement group summarization: stddev
+- [ ] METRICD: embed.js
+- [ ] METRICD: built-in units file
+- [ ] METRICD: /api/v1/query endpoint
 - [ ] METRICD: initial metricctl implementation
 - [ ] METRICD: libtsdb v0.2
+- [ ] WEBUI: query page
+- [ ] WEBUI: metrics list page
+- [ ] WEBUI: series detail page
+- [ ] CHART WIDGET: show summaries
+- [ ] CHART WIDGET: x axis labels
+- [ ] CHART WIDGET: tooltips
+- [ ] CHART WIDGET: draw missing sections as red background
+- [ ] CHART WIDGET: chart type area
+- [ ] CHART WIDGET: chart type bars
+- [ ] CHART WIDGET: chart type stacked_area
+- [ ] CHART WIDGET: chart type stacked_bars
+- [ ] CHART WIDGET: legend
+- [ ] CHART WIDGET: title
+- [ ] CHART WIDGET: make colors configurable
+- [ ] CHART WIDGET: foreground and background color
 
 v0.6
 - [ ] METRICD: smoothing
