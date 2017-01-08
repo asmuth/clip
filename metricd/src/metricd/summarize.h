@@ -22,6 +22,9 @@ enum class GrossSummaryMethod {
 };
 
 std::string getGrossSummaryName(GrossSummaryMethod method);
+bool getGrossSummaryFromName(
+    GrossSummaryMethod* method,
+    const std::string& name);
 
 ReturnCode summarizeTimeseries(
     GrossSummaryMethod method,

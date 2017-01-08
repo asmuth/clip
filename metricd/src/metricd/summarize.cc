@@ -9,6 +9,7 @@
  */
 #include <assert.h>
 #include <string.h>
+#include <map>
 #include <metricd/summarize.h>
 
 namespace fnordmetric {
@@ -19,6 +20,25 @@ std::string getGrossSummaryName(GrossSummaryMethod method) {
     case GrossSummaryMethod::MAX: return "max";
     case GrossSummaryMethod::MIN: return "min";
     case GrossSummaryMethod::TREND: return "trend";
+  }
+}
+
+bool getGrossSummaryFromName(
+    GrossSummaryMethod* method,
+    const std::string& name) {
+  static const std::map<std::string, GrossSummaryMethod> method_map = {
+    { "sum", GrossSummaryMethod::SUM },
+    { "max", GrossSummaryMethod::MAX },
+    { "min", GrossSummaryMethod::MIN },
+    { "trend", GrossSummaryMethod::TREND }
+  };
+
+  auto iter = method_map.find(name);
+  if (iter == method_map.end()) {
+    *method = iter->second;
+    return true;
+  } else {
+    return false;
   }
 }
 
