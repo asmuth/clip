@@ -254,40 +254,6 @@ int main(int argc, const char** argv) {
 
   /* load config */
   ConfigList config;
-
-  {
-    UnitConfig uc;
-    uc.unit_id = "byte";
-    {
-      UnitNameConfig unc;
-      unc.factor = tval_autoref(tval_type::UINT64);
-      tval_fromstring(&unc.factor.val, "1");
-      unc.singular = "Byte";
-      unc.plural = "Bytes";
-      unc.symbol = "B";
-      uc.names.emplace("bytes", std::move(unc));
-    }
-    {
-      UnitNameConfig unc;
-      unc.factor = tval_autoref(tval_type::UINT64);
-      tval_fromstring(&unc.factor.val, "1000");
-      unc.singular = "Kilobyte";
-      unc.plural = "Kilobytes";
-      unc.symbol = "KB";
-      uc.names.emplace("kilobytes", std::move(unc));
-    }
-    {
-      UnitNameConfig unc;
-      unc.factor = tval_autoref(tval_type::UINT64);
-      tval_fromstring(&unc.factor.val, "1000000");
-      unc.singular = "Gigabyte";
-      unc.plural = "Gigabytes";
-      unc.symbol = "GB";
-      uc.names.emplace("gigabytes", std::move(unc));
-    }
-    config.addUnitConfig(std::move(uc));
-  }
-
   if (rc.isSuccess()) {
     auto config_file = FileUtil::read(flags.getString("config"));
     ConfigParser config_parser(
