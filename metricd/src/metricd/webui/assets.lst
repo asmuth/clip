@@ -17,13 +17,6 @@ views/metric-detail/metric_detail.css
 views/metric-detail/metric_detail.html
 views/metric-detail/metric_detail.js
 views/metric-detail/metric_detail_config.js
-views/metric-serie/metric-serie.css
-views/metric-serie/metric-serie.html
-views/metric-serie/metric-serie.js
-views/metric-serie/metric-serie-table.html
-views/metric-serie/metric-serie-table.js
-views/metric-serie/metric-serie-timeseries.html
-views/metric-serie/metric-serie-timeseries.js
 widgets/dropdown/dropdown.js
 widgets/dropdown/dropdown.css
 widgets/f-timerange-picker/f-timerange-picker-widget.js
