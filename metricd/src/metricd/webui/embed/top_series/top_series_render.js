@@ -97,6 +97,12 @@ FnordMetricTopSeries.Renderer = function(elem, params) {
       });
     }
 
+    if (col.attrs) {
+      for (var attr in col.attrs) {
+        th.setAttribute(attr, col.attrs[attr]) //FIXME escape!
+      }
+    }
+
     return th;
   }
 
@@ -114,7 +120,7 @@ FnordMetricTopSeries.Renderer = function(elem, params) {
     tr.appendChild(renderIDCell(series.series_id));
     tr.appendChild(renderSparklineCell(series));
     tr.appendChild(renderSummaryCell(series.summaries));
-    //renderContextMenuCell();
+    tr.appendChild(renderContextMenuCell());
 
     return tr;
   }
@@ -146,7 +152,9 @@ FnordMetricTopSeries.Renderer = function(elem, params) {
   }
 
   function renderContextMenuCell() {
+    var td = document.createElement("td");
     //TODO
+    return td;
   }
 }
 
