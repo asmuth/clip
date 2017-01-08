@@ -48,6 +48,14 @@ ReturnCode summarizeTimeseries_SUM(
     const DataFrame* frame,
     tval_autoref* result);
 
+ReturnCode summarizeTimeseries_MAX(
+    const DataFrame* frame,
+    tval_autoref* result);
+
+ReturnCode summarizeTimeseries_MIN(
+    const DataFrame* frame,
+    tval_autoref* result);
+
 class GroupSummary {
 public:
 

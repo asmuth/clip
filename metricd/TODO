@@ -15,8 +15,6 @@ v0.5
 - [ ] METRICD: implement metric type: sample
 - [ ] METRICD: implement metric type: monotonic
 - [ ] METRICD: implement gross summarization: avg
-- [ ] METRICD: implement gross summarization: min
-- [ ] METRICD: implement gross summarization: max
 - [ ] METRICD: implement gross summarization: mean
 - [ ] METRICD: implement gross summarization: stddev
 - [ ] METRICD: implement gross summarization: trend
