@@ -21,6 +21,9 @@
 .fa-file-text:before {
   content: "\f15c";
 }
+.fa-file-o:before {
+  content: "\f016";
+}
 .fa-area-chart:before {
   content: "\f1fe";
 }

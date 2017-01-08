@@ -1,0 +1,7 @@
+.fnordmetric-metric-list table.fm-table.metric_list tr td:first-child {
+  color: #3d8ad3;
+}
+
+.fnordmetric-metric-list table.fm-table.metric_list tr td i.fa {
+  margin-right: 7px;
+}

@@ -108,7 +108,8 @@ FnordMetricMetricList.Table = function(elem) {
     var tr = document.createElement("tr");
 
     var td = document.createElement("td");
-    td.innerHTML = DOMUtil.escapeHTML(metric.metric_id);
+    td.innerHTML =
+        "<i class='fa fa-file-o'></i>" + DOMUtil.escapeHTML(metric.metric_id);
     tr.appendChild(td);
 
     return tr;
