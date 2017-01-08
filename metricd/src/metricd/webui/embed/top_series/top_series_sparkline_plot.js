@@ -40,7 +40,7 @@ FnordMetricTopSeries.SparklinePlotter = function(elem, params) {
   }
 
   function drawSparkline(series) {
-    var svg = new FnordMetricTopSeries.SVGHelper();
+    var svg = new FnordMetric.SVGHelper();
     svg.svg += "<svg shape-rendering='geometricPrecision' class='fm-chart' viewBox='0 0 " + width + " " + height + "' >";
 
     drawLine(series, svg);
