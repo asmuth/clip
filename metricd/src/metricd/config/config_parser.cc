@@ -143,6 +143,15 @@ bool ConfigParser::parseMetricDefinition(ConfigList* config) {
       continue;
     }
 
+    /* parse the "summarize_gross" stanza */
+    if (ttype == T_STRING && tbuf == "summarize_gross") {
+      consumeToken();
+      if (!parseMetricDefinitionSummarizeGrossStanza(&metric_config)) {
+        return false;
+      }
+      continue;
+    }
+
     setError(
         StringUtil::format(
             "invalid token: $0",
@@ -280,6 +289,39 @@ bool ConfigParser::parseMetricDefinitionSummarizeGroupStanza(
 
   metric_config->summarize_group = method;
   consumeToken();
+  return true;
+}
+
+bool ConfigParser::parseMetricDefinitionSummarizeGrossStanza(
+    MetricConfig* metric_config) {
+  for (;;) {
+    TokenType ttype;
+    std::string tbuf;
+    if (!getToken(&ttype, &tbuf) || ttype != T_STRING) {
+      setError("summarize_gross requires one or more arguments");
+      return false;
+    }
+
+    GrossSummaryMethod method;
+    if (!getGrossSummaryFromName(&method, tbuf)) {
+      setError("invalid gross summary method: " + tbuf);
+      return false;
+    }
+
+    metric_config->summarize_gross.emplace_back(method);
+    consumeToken();
+
+    if (!getToken(&ttype, &tbuf)) {
+      break;
+    }
+
+    if (ttype == T_COMMA) {
+      consumeToken();
+    } else {
+      break;
+    }
+  }
+
   return true;
 }
 
