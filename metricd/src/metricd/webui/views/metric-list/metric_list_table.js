@@ -11,9 +11,15 @@
 FnordMetricMetricList.Table = function(elem) {
   'use strict';
 
+  var on_click = [];
+
   this.render = function(result) {
     renderHeader();
     renderBody(result);
+  }
+
+  this.onClick = function(callback) {
+    on_click.push(callback);
   }
 
 /********************************** private ***********************************/
@@ -91,7 +97,10 @@ FnordMetricMetricList.Table = function(elem) {
     var tbody = elem.querySelector("tbody");
 
     result.metrics.forEach(function(metric) {
-      tbody.appendChild(renderRow(metric));
+      var tr = renderRow(metric);
+      tbody.appendChild(tr);
+
+      initRowClick(tr, metric.metric_id);
     });
   }
 
@@ -103,6 +112,14 @@ FnordMetricMetricList.Table = function(elem) {
     tr.appendChild(td);
 
     return tr;
+  }
+
+  function initRowClick(tr_elem, metric_id) {
+    DOMUtil.onClick(tr_elem, function(e) {
+      on_click.forEach(function(callback_fn) {
+        callback_fn(metric_id);
+      });
+    });
   }
 
 }

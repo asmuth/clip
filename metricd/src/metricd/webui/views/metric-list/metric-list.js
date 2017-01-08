@@ -49,6 +49,10 @@ function FnordMetricMetricList(elem, params) {
     var table = new FnordMetricMetricList.Table(
         elem.querySelector(".fnordmetric-metric-list table.metric_list"));
     table.render(result);
+
+    table.onClick(function(metric_id) {
+      params.app.navigateTo(params.route.route + "/" + metric_id);
+    });
   }
 };
 
