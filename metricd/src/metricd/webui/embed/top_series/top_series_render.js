@@ -11,104 +11,142 @@
 FnordMetricTopSeries.Renderer = function(elem, params) {
   'use strict';
 
-  var columns = [
-    {
-      key: "series_id",
-      title: "Series ID",
-      sortable: true
-    },
-    {
-      key: "summary",
-      title: "Value",
-      sortable: true,
-      attrs: {
-        colspan: 2
-      }
-    },
-    {
-      key: "menu",
-      sortable: false
-    }
-  ];
+  var on_sort = [];
+
+  this.onSort = function(callback_fn) {
+    on_sort.push(callback_fn);
+  }
 
   this.render = function(result) {
     renderHeader();
+    renderBody(result);
   }
+
+/********************************** private ***********************************/
 
   function renderHeader() {
     var head_tr = elem.querySelector("thead");
+    var columns = [
+      {
+        key: "series_id",
+        title: "Series ID",
+        sortable: true
+      },
+      {
+        key: "summary",
+        title: "Value",
+        sortable: true,
+        attrs: {
+          colspan: 2
+        }
+      },
+      {
+        key: "menu",
+        sortable: false
+      }
+    ];
 
     columns.forEach(function(col) {
-      var th = document.createElement("th");
-      th.classList.add(col.key);
+      head_tr.appendChild(renderHeaderCell(col));
+    });
 
-      if (col.title) {
-        th.innerHTML = DOMUtil.escapeHTML(col.title);
+  }
+
+  function renderHeaderCell(col) {
+    var th = document.createElement("th");
+    th.classList.add(col.key);
+
+    if (col.title) {
+      th.innerHTML = DOMUtil.escapeHTML(col.title);
+    }
+
+    if (col.sortable) {
+      var sort_elem = document.createElement("span");
+      sort_elem.classList.add("sort");
+      th.appendChild(sort_elem);
+
+      var sort_asc = document.createElement("i");
+      sort_asc.classList.add("sort_asc");
+      sort_elem.appendChild(sort_asc);
+
+      var sort_desc = document.createElement("i");
+      sort_desc.classList.add("sort_desc");
+      sort_elem.appendChild(sort_desc);
+
+      switch (col.sorted) {
+        case "asc":
+          sort_asc.classList.add("active");
+          break;
+        case "desc":
+          sort_desc.classList.add("active");
+          break;
       }
 
-      if (col.sortable) {
-        var sort_elem = document.createElement("span");
-        sort_elem.classList.add("sort");
-        th.appendChild(sort_elem);
-
-        var sort_asc = document.createElement("i");
-        sort_asc.classList.add("sort_asc");
-        sort_elem.appendChild(sort_asc);
-
-        var sort_desc = document.createElement("i");
-        sort_desc.classList.add("sort_desc");
-        sort_elem.appendChild(sort_desc);
-
-        switch (col.sorted) {
-          case "asc":
-            sort_asc.classList.add("active");
-            break;
-          case "desc":
-            sort_desc.classList.add("active");
-            break;
-        }
-
-        var sort_fn = function(dir) {
-          //on_sort.forEach(function(f) {
-          //  f(c, dir);
-          //});
-        };
-
-        DOMUtil.onClick(sort_asc, function() {
-          sort_fn("asc");
+      var sort_fn = function(dir) {
+        on_sort.forEach(function(f) {
+          f(c, dir);
         });
+      };
 
-        DOMUtil.onClick(sort_desc, function() {
-          sort_fn("desc");
-        });
-      }
+      DOMUtil.onClick(sort_asc, function() {
+        sort_fn("asc");
+      });
 
-      head_tr.appendChild(th);
+      DOMUtil.onClick(sort_desc, function() {
+        sort_fn("desc");
+      });
+    }
+
+    return th;
+  }
+
+  function renderBody(result) {
+    var tbody = document.querySelector("tbody");
+
+    result.series.forEach(function(series) {
+      tbody.appendChild(renderRow(series));
     });
   }
 
-  function renderRow() {
-    renderIDCell();
-    renderSparklineCell();
-    renderSummaryCell();
-    renderContextMenuCell();
+  function renderRow(series) {
+    var tr = document.createElement("tr");
+
+    tr.appendChild(renderIDCell(series.series_id));
+    tr.appendChild(renderSparklineCell(series));
+    tr.appendChild(renderSummaryCell(series.summaries));
+    //renderContextMenuCell();
+
+    return tr;
   }
 
-  function renderIDCell() {
+  function renderIDCell(series_id) {
+    var td = document.createElement("td");
+    td.innerHTML = DOMUtil.escapeHTML(series_id);
 
+    return td;
   }
 
-  function renderSparklineCell(series) {
-    var plotter = new FnordMetricTopSeries.SparklinePlotter(some_elem);
-    plotter.render(series);
+  function renderSparklineCell(result) {
+    var td = document.createElement("td");
+
+    var sparkline_elem = document.createElement("div");
+    sparkline_elem.classList.add("fm-sparkline");
+    td.appendChild(sparkline_elem);
+
+    var plotter = new FnordMetricTopSeries.SparklinePlotter(sparkline_elem);
+    plotter.render(result);
+
+    return td;
   }
 
-  function renderSummaryCell() {
-
+  function renderSummaryCell(summaries) {
+    var td = document.createElement("td");
+    //TODO
+    return td;
   }
 
   function renderContextMenuCell() {
-
+    //TODO
   }
 }
 
