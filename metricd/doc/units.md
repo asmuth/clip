@@ -16,6 +16,18 @@ To configure a unit, add a `unit` block to your configuration file:
     }
 
 
+
+    unit_name <name> <factor> <singular> <plural> <symbol>
+
+Here is a simple example:
+
+    unit byte {
+      unit_name bytes      1     "Byte"      "Bytes"      "B";
+      unit_name kilobytes  10^3  "Kilobyte"  "Kilobytes"  "KB";
+      unit_name megabytes  10^6  "Megabyte"  "Megabytes"  "MB";
+      unit_name gigabytes  10^9  "Gigabyte"  "Gigabytes"  "GB";
+    }
+
 Rates
 -----
 

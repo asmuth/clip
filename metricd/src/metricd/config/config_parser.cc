@@ -37,6 +37,16 @@ ReturnCode ConfigParser::parse(ConfigList* config) {
       }
     }
 
+    /* parse the "metric" definition */
+    if (ttype == T_STRING && tbuf == "unit") {
+      consumeToken();
+      if (parseUnitDefinition(config)) {
+        continue;
+      } else {
+        break;
+      }
+    }
+
     if (ttype == T_ENDLINE) {
       consumeToken();
       continue;
@@ -88,7 +98,7 @@ bool ConfigParser::parseMetricDefinition(ConfigList* config) {
       continue;
     }
 
-    /* parse the "aggregation" stanza */
+    /* parse the "kind" stanza */
     if (ttype == T_STRING && tbuf == "kind") {
       consumeToken();
       if (!parseMetricDefinitionKindStanza(&metric_config)) {
@@ -115,9 +125,36 @@ bool ConfigParser::parseMetricDefinition(ConfigList* config) {
       continue;
     }
 
+    /* parse the "unit_scale" stanza */
+    if (ttype == T_STRING && tbuf == "unit_scale") {
+      consumeToken();
+      if (!parseMetricDefinitionUnitScaleStanza(&metric_config)) {
+        return false;
+      }
+      continue;
+    }
+
+    /* parse the "summarize_group" stanza */
+    if (ttype == T_STRING && tbuf == "summarize_group") {
+      consumeToken();
+      if (!parseMetricDefinitionSummarizeGroupStanza(&metric_config)) {
+        return false;
+      }
+      continue;
+    }
+
+    /* parse the "summarize_gross" stanza */
+    if (ttype == T_STRING && tbuf == "summarize_gross") {
+      consumeToken();
+      if (!parseMetricDefinitionSummarizeGrossStanza(&metric_config)) {
+        return false;
+      }
+      continue;
+    }
+
     setError(
         StringUtil::format(
-            "invalid token; got: $0, expected one of: metric",
+            "invalid token: $0",
             printToken(ttype, tbuf)));
     return false;
   }
@@ -214,6 +251,203 @@ bool ConfigParser::parseMetricDefinitionUnitStanza(
 
   metric_config->unit_id = tbuf;
   consumeToken();
+  return true;
+}
+
+bool ConfigParser::parseMetricDefinitionUnitScaleStanza(
+    MetricConfig* metric_config) {
+  TokenType ttype;
+  std::string tbuf;
+  if (!getToken(&ttype, &tbuf) || ttype != T_STRING) {
+    setError("unit_scale requires an argument");
+    return false;
+  }
+
+  if (!tval_parsenumber(&metric_config->unit_scale, tbuf)) {
+    setError("invalid value for unit_scale <factor>: " + tbuf);
+    return false;
+  }
+
+  consumeToken();
+  return true;
+}
+
+bool ConfigParser::parseMetricDefinitionSummarizeGroupStanza(
+    MetricConfig* metric_config) {
+  TokenType ttype;
+  std::string tbuf;
+  if (!getToken(&ttype, &tbuf) || ttype != T_STRING) {
+    setError("summarize_group requires an argument");
+    return false;
+  }
+
+  GroupSummaryMethod method;
+  if (!getGroupSummaryFromName(&method, tbuf)) {
+    setError("invalid group summary method: " + tbuf);
+    return false;
+  }
+
+  metric_config->summarize_group = method;
+  consumeToken();
+  return true;
+}
+
+bool ConfigParser::parseMetricDefinitionSummarizeGrossStanza(
+    MetricConfig* metric_config) {
+  for (;;) {
+    TokenType ttype;
+    std::string tbuf;
+    if (!getToken(&ttype, &tbuf) || ttype != T_STRING) {
+      setError("summarize_gross requires one or more arguments");
+      return false;
+    }
+
+    GrossSummaryMethod method;
+    if (!getGrossSummaryFromName(&method, tbuf)) {
+      setError("invalid gross summary method: " + tbuf);
+      return false;
+    }
+
+    metric_config->summarize_gross.emplace_back(method);
+    consumeToken();
+
+    if (!getToken(&ttype, &tbuf)) {
+      break;
+    }
+
+    if (ttype == T_COMMA) {
+      consumeToken();
+    } else {
+      break;
+    }
+  }
+
+  return true;
+}
+
+bool ConfigParser::parseUnitDefinition(ConfigList* config) {
+  UnitConfig unit_config;
+  if (!expectAndConsumeString(&unit_config.unit_id)) {
+    return false;
+  }
+
+  if (!expectAndConsumeToken(T_LCBRACE)) {
+    return false;
+  }
+
+
+  TokenType ttype;
+  std::string tbuf;
+  while (getToken(&ttype, &tbuf)) {
+    if (ttype == T_RCBRACE) {
+      break;
+    }
+
+    if (ttype == T_ENDLINE) {
+      consumeToken();
+      continue;
+    }
+
+    /* parse the "unit_desc" stanza */
+    if (ttype == T_STRING && tbuf == "unit_desc") {
+      consumeToken();
+      if (!parseUnitDefinitionDescriptionStanza(&unit_config)) {
+        return false;
+      }
+      continue;
+    }
+
+    /* parse the "unit_name" stanza */
+    if (ttype == T_STRING && tbuf == "unit_name") {
+      consumeToken();
+      if (!parseUnitDefinitionNameStanza(&unit_config)) {
+        return false;
+      }
+      continue;
+    }
+
+    setError(
+        StringUtil::format(
+            "invalid token: $0, expected one of: unit_desc, unit_name",
+            printToken(ttype, tbuf)));
+    return false;
+  }
+
+  if (!expectAndConsumeToken(T_RCBRACE)) {
+    return false;
+  }
+
+  config->addUnitConfig(std::move(unit_config));
+  return true;
+}
+
+bool ConfigParser::parseUnitDefinitionDescriptionStanza(
+    UnitConfig* unit_config) {
+  TokenType ttype;
+  std::string tbuf;
+  if (!getToken(&ttype, &tbuf) || ttype != T_STRING) {
+    setError("unit_desc requires an argument");
+    return false;
+  }
+
+  unit_config->description = tbuf;
+  consumeToken();
+  return true;
+}
+
+bool ConfigParser::parseUnitDefinitionNameStanza(
+    UnitConfig* unit_config) {
+  static const std::string kArgError =
+      "unit_name requires 5 arguments: unit_name <name> <factor> <singular> <plural> <symbol>";
+
+  UnitNameConfig unc;
+
+  TokenType name_type;
+  std::string unit_name;
+  if ((!getToken(&name_type, &unit_name) || name_type != T_STRING))  {
+    setError(kArgError);
+    return false;
+  }
+  consumeToken();
+
+  // FIXME allow non string factors
+  TokenType factor_type;
+  std::string factor_str;
+  if ((!getToken(&factor_type, &factor_str) || factor_type != T_STRING))  {
+    setError(kArgError);
+    return false;
+  }
+  consumeToken();
+
+  if (!tval_parsenumber(&unc.factor, factor_str)) {
+    setError("invalid value for unit_name <factor>: " + factor_str);
+    return false;
+  }
+
+  TokenType singular_type;
+  if ((!getToken(&singular_type, &unc.singular) || singular_type != T_STRING))  {
+    setError(kArgError);
+    return false;
+  }
+  consumeToken();
+
+  TokenType plural_type;
+  std::string plural_buf;
+  if ((!getToken(&plural_type, &unc.plural) || plural_type != T_STRING))  {
+    setError(kArgError);
+    return false;
+  }
+  consumeToken();
+
+  TokenType symbol_type;
+  std::string symbol_buf;
+  if ((!getToken(&symbol_type, &unc.symbol) || symbol_type != T_STRING))  {
+    setError(kArgError);
+    return false;
+  }
+  consumeToken();
+
+  unit_config->names.emplace(unit_name, std::move(unc));
   return true;
 }
 

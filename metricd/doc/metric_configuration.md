@@ -29,16 +29,16 @@ List of valid stanzas within the `metric` block:
       <td>Set the metric's unit</td>
     </tr>
     <tr>
+      <td><code><strong>unit_scale</strong></code></td>
+      <td></td>
+    </tr>
+    <tr>
       <td><code><strong>granularity</strong></code></td>
       <td>Set the storage granularity</td>
     </tr>
     <tr>
       <td><code><strong>retention</strong></code></td>
       <td>Set the rentention period</td>
-    </tr>
-    <tr>
-      <td><code><strong>summarize</strong></code></td>
-      <td></td>
     </tr>
     <tr>
       <td><code><strong>summarize_group</strong></code></td>

@@ -76,6 +76,10 @@ bool tval_fromstring(
     tval_ref* val,
     const std::string& str);
 
+bool tval_parsenumber(
+    tval_autoref* val,
+    const std::string& str);
+
 size_t tval_len(tval_type t);
 
 void tval_alloc(tval_ref* ref, tval_type type);

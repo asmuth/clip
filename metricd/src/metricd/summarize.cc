@@ -73,7 +73,13 @@ ReturnCode summarizeTimeseries(
     tval_autoref* result) {
   switch (method) {
     case GrossSummaryMethod::SUM:
-        return summarizeTimeseries_SUM(frame, result);
+      return summarizeTimeseries_SUM(frame, result);
+    case GrossSummaryMethod::MAX:
+      return summarizeTimeseries_MAX(frame, result);
+    case GrossSummaryMethod::MIN:
+      return summarizeTimeseries_MIN(frame, result);
+    default:
+      return ReturnCode::error("EARG", "invalid gross summary method");
   }
 }
 
@@ -92,6 +98,54 @@ ReturnCode summarizeTimeseries_SUM(
   }
 
   *result = std::move(acc);
+  return ReturnCode::success();
+}
+
+ReturnCode summarizeTimeseries_MAX(
+    const DataFrame* frame,
+    tval_autoref* result) {
+  tval_autoref reg(frame->getType());
+  bool have_reg = false;
+
+  for (size_t i = 0; i < frame->getSize(); ++i) {
+    int cmp = tval_cmp(
+        reg.val.type,
+        reg.val.data,
+        reg.val.len,
+        frame->getData(i),
+        reg.val.len);
+
+    if (!have_reg || cmp > 1) {
+      memcpy(reg.val.data, frame->getData(i), reg.val.len);
+      have_reg = true;
+    }
+  }
+
+  *result = std::move(reg);
+  return ReturnCode::success();
+}
+
+ReturnCode summarizeTimeseries_MIN(
+    const DataFrame* frame,
+    tval_autoref* result) {
+  tval_autoref reg(frame->getType());
+  bool have_reg = false;
+
+  for (size_t i = 0; i < frame->getSize(); ++i) {
+    int cmp = tval_cmp(
+        reg.val.type,
+        reg.val.data,
+        reg.val.len,
+        frame->getData(i),
+        reg.val.len);
+
+    if (!have_reg || cmp < 1) {
+      memcpy(reg.val.data, frame->getData(i), reg.val.len);
+      have_reg = true;
+    }
+  }
+
+  *result = std::move(reg);
   return ReturnCode::success();
 }
 

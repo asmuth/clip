@@ -44,10 +44,16 @@ public:
 protected:
 
   bool parseMetricDefinition(ConfigList* config);
-  bool parseMetricDefinitionAggregationStanza(MetricConfig* metric_config);
   bool parseMetricDefinitionKindStanza(MetricConfig* metric_config);
   bool parseMetricDefinitionGranularityStanza(MetricConfig* metric_config);
   bool parseMetricDefinitionUnitStanza(MetricConfig* metric_config);
+  bool parseMetricDefinitionUnitScaleStanza(MetricConfig* metric_config);
+  bool parseMetricDefinitionSummarizeGroupStanza(MetricConfig* metric_config);
+  bool parseMetricDefinitionSummarizeGrossStanza(MetricConfig* metric_config);
+
+  bool parseUnitDefinition(ConfigList* config);
+  bool parseUnitDefinitionDescriptionStanza(UnitConfig* unit_config);
+  bool parseUnitDefinitionNameStanza(UnitConfig* unit_config);
 
   bool getToken(
       TokenType* type,

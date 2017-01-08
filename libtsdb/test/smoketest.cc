@@ -11,8 +11,8 @@
 #include <stdio.h>
 #include <unistd.h>
 #include "metricd/util/exception.h"
-#include "metricd/util/unittest.h"
 #include "metricd/util/time.h"
+#include "unittest.h"
 #include "tsdb.h"
 
 UNIT_TEST(TSDBTest);
