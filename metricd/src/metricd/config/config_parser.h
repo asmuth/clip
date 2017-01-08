@@ -48,6 +48,7 @@ protected:
   bool parseMetricDefinitionGranularityStanza(MetricConfig* metric_config);
   bool parseMetricDefinitionUnitStanza(MetricConfig* metric_config);
   bool parseMetricDefinitionUnitScaleStanza(MetricConfig* metric_config);
+  bool parseMetricDefinitionSummarizeGroupStanza(MetricConfig* metric_config);
 
   bool parseUnitDefinition(ConfigList* config);
   bool parseUnitDefinitionDescriptionStanza(UnitConfig* unit_config);

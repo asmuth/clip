@@ -41,10 +41,6 @@ List of valid stanzas within the `metric` block:
       <td>Set the rentention period</td>
     </tr>
     <tr>
-      <td><code><strong>summarize</strong></code></td>
-      <td></td>
-    </tr>
-    <tr>
       <td><code><strong>summarize_group</strong></code></td>
       <td></td>
     </tr>

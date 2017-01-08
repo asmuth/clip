@@ -134,6 +134,15 @@ bool ConfigParser::parseMetricDefinition(ConfigList* config) {
       continue;
     }
 
+    /* parse the "summarize_group" stanza */
+    if (ttype == T_STRING && tbuf == "summarize_group") {
+      consumeToken();
+      if (!parseMetricDefinitionSummarizeGroupStanza(&metric_config)) {
+        return false;
+      }
+      continue;
+    }
+
     setError(
         StringUtil::format(
             "invalid token: $0",
@@ -250,6 +259,26 @@ bool ConfigParser::parseMetricDefinitionUnitScaleStanza(
     return false;
   }
 
+  consumeToken();
+  return true;
+}
+
+bool ConfigParser::parseMetricDefinitionSummarizeGroupStanza(
+    MetricConfig* metric_config) {
+  TokenType ttype;
+  std::string tbuf;
+  if (!getToken(&ttype, &tbuf) || ttype != T_STRING) {
+    setError("summarize_group requires an argument");
+    return false;
+  }
+
+  GroupSummaryMethod method;
+  if (!getGroupSummaryFromName(&method, tbuf)) {
+    setError("invalid group summary method: " + tbuf);
+    return false;
+  }
+
+  metric_config->summarize_group = method;
   consumeToken();
   return true;
 }
