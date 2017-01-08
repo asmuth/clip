@@ -28,7 +28,7 @@ FnordMetricTopSeries.SparklinePlotter = function(elem, params) {
     /* adjust the svg when the window is resized */
     window.addEventListener("resize", function(e) {
       width = elem.offsetWidth;
-      refresh(series);
+      draw(series);
     }, false);
   }
 
