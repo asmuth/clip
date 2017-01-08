@@ -348,6 +348,36 @@ const UnitConfig* Metric::getUnitConfig() const {
   return unit_config_;
 }
 
+MetricInfo::MetricInfo() : metric_(nullptr) {}
+
+MetricInfo::MetricInfo(
+    Metric* metric,
+    std::shared_ptr<MetricMap> metric_map) :
+    metric_(metric),
+    metric_map_(std::move(metric_map)) {}
+
+
+MetricInfo::MetricInfo(
+    MetricInfo&& o) :
+    metric_(o.metric_),
+    metric_map_(std::move(o.metric_map_)) {
+  o.metric_ = nullptr;
+}
+
+MetricInfo& MetricInfo::operator=(MetricInfo&& o) {
+  metric_map_ = std::move(o.metric_map_);
+  metric_ = o.metric_;
+  o.metric_ = nullptr;
+}
+
+const UnitConfig* MetricInfo::getUnitConfig() const {
+  if (!metric_) {
+    return nullptr;
+  }
+
+  return metric_->getUnitConfig();
+}
+
 tval_type getMetricDataType(MetricKind t) {
   switch (t) {
     case SAMPLE_UINT64: return tval_type::UINT64;

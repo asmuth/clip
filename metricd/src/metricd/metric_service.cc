@@ -145,6 +145,19 @@ MetricListCursor MetricService::listMetrics() {
   return MetricListCursor(metric_map);
 }
 
+ReturnCode MetricService::describeMetric(
+    const std::string& metric_id,
+    MetricInfo* metric_info) {
+  auto metric_map = metric_map_.getMetricMap();
+  auto metric = metric_map->findMetric(metric_id);
+  if (!metric) {
+    return ReturnCode::error("ENOTFOUND", "metric not found");
+  }
+
+  *metric_info = MetricInfo(metric, metric_map);
+  return ReturnCode::success();
+}
+
 ReturnCode MetricService::listSeries(
     const MetricIDType& metric_id,
     MetricSeriesListCursor* cursor) {

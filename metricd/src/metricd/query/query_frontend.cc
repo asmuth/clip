@@ -58,6 +58,13 @@ ReturnCode QueryFrontend::fetchSeriesJSON(
     }
   }
 
+  /* get metric info */
+  MetricInfo metric_info;
+  auto describe_rc = metric_service_->describeMetric(metric_id, &metric_info);
+  if (!describe_rc.isSuccess()) {
+    return describe_rc;
+  }
+
   /* fetch series */
   DataFrameBundle results;
   {
@@ -99,6 +106,8 @@ ReturnCode QueryFrontend::fetchSeriesJSON(
 
   /* write output json */
   res->beginObject();
+
+
   res->addString("series");
   res->beginArray();
 
