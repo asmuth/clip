@@ -37,5 +37,10 @@ embed/chart/chart.css
 embed/chart/chart_plotter_linear_domain.js
 embed/chart/chart_plot.js
 embed/chart/chart_query_manager.js
+embed/top_series/top_series.js
+embed/top_series/top_series_table.js
+embed/top_series/top_series_sparkline_plot.js
+embed/top_series/sparkline_linear_domain.js
+embed/top_series/top_series.css
 embed/svg_helper.js
 embed/units.js
