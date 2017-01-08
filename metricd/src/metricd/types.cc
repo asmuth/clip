@@ -341,6 +341,13 @@ bool tval_fromstring(
       str.size());
 }
 
+bool tval_parsenumber(
+    tval_autoref* val,
+    const std::string& str) {
+  *val = tval_autoref(tval_type::FLOAT64); // FIXME
+  return tval_fromstring(&val->val, str);
+}
+
 size_t tval_len(tval_type t) {
   static_assert(
       std::numeric_limits<double>::is_iec559 &&

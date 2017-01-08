@@ -49,6 +49,10 @@ protected:
   bool parseMetricDefinitionGranularityStanza(MetricConfig* metric_config);
   bool parseMetricDefinitionUnitStanza(MetricConfig* metric_config);
 
+  bool parseUnitDefinition(ConfigList* config);
+  bool parseUnitDefinitionDescriptionStanza(UnitConfig* unit_config);
+  bool parseUnitDefinitionNameStanza(UnitConfig* unit_config);
+
   bool getToken(
       TokenType* type,
       const char** buf,
