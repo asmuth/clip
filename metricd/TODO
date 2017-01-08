@@ -21,7 +21,6 @@ v0.5
 - [ ] CHART WIDGET: chart type stacked_bars
 - [ ] CHART WIDGET: legend
 - [ ] CHART WIDGET: title
-- [ ] WEBUI: implement FnordMetricUnits.formatValues
 - [ ] WEBUI: query page
 - [ ] WEBUI: metrics list page
 - [ ] METRICD: asset packaging
