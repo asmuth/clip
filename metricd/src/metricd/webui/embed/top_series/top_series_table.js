@@ -11,22 +11,6 @@
 FnordMetricTopSeries.Table = function(elem, params) {
   'use strict';
 
-  var on_sort = [];
-  var on_click = [];
-  var on_right_click = [];
-
-  this.onSort = function(callback_fn) {
-    on_sort.push(callback_fn);
-  }
-
-  this.onClick = function(callback_fn) {
-    on_click.push(callback_fn);
-  }
-
-  this.onRightClick = function(callback_fn) {
-    on_right_click.push(callback_fn);
-  }
-
   this.render = function(result) {
     renderHeader();
     renderBody(result);

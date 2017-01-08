@@ -82,7 +82,6 @@ void WebUI::handleHTTPRequest(
     std::string css_src;
     js_src += getAssetFile("embed/top_series/top_series.js");
     js_src += getAssetFile("embed/top_series/top_series_table.js");
-    js_src += getAssetFile("embed/top_series/table_event_handler.js");
     js_src += getAssetFile("embed/top_series/top_series_sparkline_plot.js");
     js_src += getAssetFile("embed/top_series/sparkline_linear_domain.js");
     js_src += getAssetFile("embed/svg_helper.js");
