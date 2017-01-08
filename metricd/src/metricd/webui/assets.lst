@@ -10,9 +10,9 @@ util/http.js
 util/cookie.js
 views/error/error.html
 views/error/error.js
-views/metric-list/metric-list.css
-views/metric-list/metric-list.html
-views/metric-list/metric-list.js
+views/metric-list/metric_list.css
+views/metric-list/metric_list.html
+views/metric-list/metric_list.js
 views/metric-list/metric_list_table.js
 views/metric-detail/metric_detail.css
 views/metric-detail/metric_detail.html
