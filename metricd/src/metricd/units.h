@@ -25,6 +25,7 @@ struct UnitNameConfig {
 };
 
 struct UnitConfig {
+  std::string unit_id;
   std::string description;
   std::map<std::string, UnitNameConfig> names;
 };

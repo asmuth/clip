@@ -72,6 +72,7 @@ struct MetricConfig {
   uint64_t display_granularity;
   bool is_valid;
   std::string unit_id;
+  tval_autoref unit_scale;
 };
 
 class MetricSeries {

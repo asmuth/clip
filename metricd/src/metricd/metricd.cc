@@ -257,6 +257,7 @@ int main(int argc, const char** argv) {
 
   {
     UnitConfig uc;
+    uc.unit_id = "byte";
     {
       UnitNameConfig unc;
       unc.factor = tval_autoref(tval_type::UINT64);
@@ -284,7 +285,7 @@ int main(int argc, const char** argv) {
       unc.symbol = "GB";
       uc.names.emplace("gigabytes", std::move(unc));
     }
-    config.addUnitConfig("byte", std::move(uc));
+    config.addUnitConfig(std::move(uc));
   }
 
   if (rc.isSuccess()) {

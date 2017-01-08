@@ -27,7 +27,7 @@ public:
 
   const std::map<std::string, UnitConfig>& getUnitConfigs() const;
   const UnitConfig* getUnitConfig(std::string unit_id) const;
-  void addUnitConfig(std::string unit_id, UnitConfig config);
+  void addUnitConfig(UnitConfig config);
 
 protected:
   std::map<MetricIDType, MetricConfig> metric_configs_;

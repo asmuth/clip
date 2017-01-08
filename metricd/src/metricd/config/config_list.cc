@@ -43,7 +43,8 @@ const UnitConfig* ConfigList::getUnitConfig(std::string unit_id) const {
   }
 }
 
-void ConfigList::addUnitConfig(std::string unit_id, UnitConfig config) {
+void ConfigList::addUnitConfig(UnitConfig config) {
+  auto unit_id = config.unit_id;
   unit_configs_.emplace(unit_id, std::move(config));
 }
 

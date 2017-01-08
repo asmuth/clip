@@ -7,6 +7,7 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
+#include <assert.h>
 #include "metricd/query/query_frontend.h"
 #include "metricd/util/format.h"
 
@@ -28,6 +29,68 @@ static void readDataFrame(MetricCursor* cursor, DataFrame* frame) {
       frame->setNullFlag(frame->getSize() - 1, true);
     }
   }
+}
+
+static void writeTValToJSON(
+    const tval_ref* val,
+    json::JSONWriter* json) {
+  switch (val->type) {
+    case tval_type::UINT64:
+      assert(val->len == sizeof(uint64_t));
+      json->addInteger(*((uint64_t*) val->data));
+      break;
+    case tval_type::INT64:
+      assert(val->len == sizeof(int64_t));
+      json->addInteger(*((int64_t*) val->data));
+      break;
+    case tval_type::FLOAT64:
+      assert(val->len == sizeof(double));
+      json->addFloat(*((double*) val->data));
+      break;
+    default:
+      json->addNull();
+  }
+}
+
+static void writeUnitConfigToJSON(
+    const MetricInfo* metric_info,
+    json::JSONWriter* json) {
+  auto metric_config = metric_info->getMetricConfig();
+  auto unit_config = metric_info->getUnitConfig();
+  if (!unit_config) {
+    json->addNull();
+    return;
+  }
+
+  json->beginObject();
+  json->addString("unit_id");
+  json->addString(unit_config->unit_id);
+  json->addString("description");
+  json->addString(unit_config->description);
+
+  if (metric_config.unit_scale.val.type != tval_type::NIL) {
+    json->addString("unit_scale");
+    writeTValToJSON(&metric_config.unit_scale.val, json);
+  }
+
+  json->addString("names");
+  json->beginObject();
+  for (const auto& n : unit_config->names) {
+    json->addString(n.first);
+    json->beginObject();
+    json->addString("singular");
+    json->addString(n.second.singular);
+    json->addString("plural");
+    json->addString(n.second.plural);
+    json->addString("symbol");
+    json->addString(n.second.symbol);
+    json->addString("factor");
+    writeTValToJSON(&n.second.factor.val, json);
+    json->endObject();
+  }
+  json->endObject();
+
+  json->endObject();
 }
 
 ReturnCode QueryFrontend::fetchSeriesJSON(
@@ -67,11 +130,20 @@ ReturnCode QueryFrontend::fetchSeriesJSON(
 
   /* fetch series */
   DataFrameBundle results;
-  {
+  MetricSeriesListCursor list_cursor;
+  auto rc = metric_service_->listSeries(metric_id, &list_cursor);
+  if (!rc.isSuccess()) {
+    return rc;
+  }
+
+  for (; list_cursor.isValid(); list_cursor.next()) {
+    MetricCursorOptions series_cursor_opts;
+    series_cursor_opts.series_id = list_cursor.getSeriesID();
+
     MetricCursor cursor;
     auto cursor_rc = metric_service_->fetchData(
         metric_id,
-        cursor_opts,
+        series_cursor_opts,
         &cursor);
 
     if (!cursor_rc.isSuccess()) {
@@ -79,6 +151,7 @@ ReturnCode QueryFrontend::fetchSeriesJSON(
     }
 
     auto frame = results.addFrame(cursor.getOutputType());
+    frame->setID(list_cursor.getSeriesName().name);
     readDataFrame(&cursor, frame);
   }
 
@@ -106,7 +179,9 @@ ReturnCode QueryFrontend::fetchSeriesJSON(
 
   /* write output json */
   res->beginObject();
-
+  auto unit_config = metric_info.getUnitConfig();
+  res->addString("unit");
+  writeUnitConfigToJSON(&metric_info, res);
 
   res->addString("series");
   res->beginArray();
@@ -220,22 +295,20 @@ ReturnCode QueryFrontend::fetchSummaryJSON(
     return ReturnCode::error("EARG", "missing argument: metric_id");
   }
 
-  /* fetch summary */
-  DataFrameBundle results;
-  MetricSeriesListCursor list_cursor;
-  auto rc = metric_service_->listSeries(metric_id, &list_cursor);
-  if (!rc.isSuccess()) {
-    return rc;
+  /* get metric info */
+  MetricInfo metric_info;
+  auto describe_rc = metric_service_->describeMetric(metric_id, &metric_info);
+  if (!describe_rc.isSuccess()) {
+    return describe_rc;
   }
 
-  for (; list_cursor.isValid(); list_cursor.next()) {
-    MetricCursorOptions series_cursor_opts;
-    series_cursor_opts.series_id = list_cursor.getSeriesID();
-
+  /* fetch summary */
+  DataFrameBundle results;
+  {
     MetricCursor cursor;
     auto cursor_rc = metric_service_->fetchData(
         metric_id,
-        series_cursor_opts,
+        cursor_opts,
         &cursor);
 
     if (!cursor_rc.isSuccess()) {
@@ -243,7 +316,6 @@ ReturnCode QueryFrontend::fetchSummaryJSON(
     }
 
     auto frame = results.addFrame(cursor.getOutputType());
-    frame->setID(list_cursor.getSeriesName().name);
     readDataFrame(&cursor, frame);
   }
 
@@ -271,6 +343,9 @@ ReturnCode QueryFrontend::fetchSummaryJSON(
 
   /* write output json */
   res->beginObject();
+  res->addString("unit");
+  writeUnitConfigToJSON(&metric_info, res);
+
   res->addString("series");
   res->beginArray();
 

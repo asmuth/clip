@@ -52,7 +52,7 @@ void HTTPAPI::handleHTTPRequest(
 
   // PATH: /api/v1/metrics/fetch_series
   if (path == "/api/v1/metrics/fetch_series") {
-    performMetricFetchSummary(request, response, uri);
+    performMetricFetchSeries(request, response, uri);
     return;
   }
 
