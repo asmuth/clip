@@ -12,6 +12,10 @@ FnordMetricUnits = {};
 
 // FIXME
 FnordMetricUnits.chooseUnit = function(unit, values) {
+  if (!unit) {
+    return null;
+  }
+
   var unit_scale = unit.unit_scale || 1;
   var values_max = Math.max.apply(null, values) * unit_scale;
 
@@ -35,7 +39,6 @@ FnordMetricUnits.chooseUnit = function(unit, values) {
 }
 
 FnordMetricUnits.formatValues = function(unit, values) {
-  unit.unit_scale = 1000;
   var unit_name = FnordMetricUnits.chooseUnit(unit, values);
   return FnordMetricUnits.formatValuesWithUnit(unit, unit_name, values)
 }
@@ -47,6 +50,10 @@ FnordMetricUnits.formatValuesWithUnit = function(unit, unit_name, values) {
 }
 
 FnordMetricUnits.formatValueWithUnit = function(unit, unit_name, value) {
+  if (!unit || !unit_name) {
+    return value.toFixed(2);
+  }
+
   var unit_scale = unit.unit_scale || 1;
   var unit_name = unit.names[unit_name];
   return ((value * unit_scale) / unit_name.factor).toFixed(1) + unit_name.symbol;
