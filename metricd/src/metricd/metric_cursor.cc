@@ -38,11 +38,11 @@ ReturnCode MetricCursor::openCursor(
   /* fill in cursor options defaults from metric config */
   const auto& config = metric->getConfig();
   if (opts->granularity == 0) {
-    opts->granularity = config.display_granularity;
+    opts->granularity = config->display_granularity;
   }
 
   if (opts->granularity == 0) {
-    opts->granularity = config.granularity;
+    opts->granularity = config->granularity;
   }
 
   /* open tsdb cursors */
@@ -114,7 +114,7 @@ ReturnCode MetricCursor::openCursor(
 MetricCursor::MetricCursor() {}
 
 MetricCursor::MetricCursor(
-    const MetricConfig& config,
+    const MetricConfig* config,
     std::unique_ptr<MetricCursorOptions> opts,
     std::vector<std::unique_ptr<OutputAggregator>> series_readers,
     std::unique_ptr<GroupSummary> group_summary) :
@@ -177,8 +177,8 @@ tval_type MetricCursor::getOutputType() const {
   return getOutputType(config_);
 }
 
-tval_type MetricCursor::getOutputType(const MetricConfig& config) {
-  switch (config.kind) {
+tval_type MetricCursor::getOutputType(const MetricConfig* config) {
+  switch (config->kind) {
 
     case MetricKind::COUNTER_UINT64:
     case MetricKind::MAX_UINT64:
@@ -213,10 +213,10 @@ std::unique_ptr<InputAggregator> mkInputAggregator(
 }
 
 std::unique_ptr<OutputAggregator> mkOutputAggregator(
-    const MetricConfig& config,
+    const MetricConfig* config,
     tsdb::Cursor cursor,
     const MetricCursorOptions* cursor_opts) {
-  switch (config.kind) {
+  switch (config->kind) {
 
     case MetricKind::MAX_UINT64:
     case MetricKind::MAX_INT64:
@@ -224,7 +224,7 @@ std::unique_ptr<OutputAggregator> mkOutputAggregator(
       return std::unique_ptr<OutputAggregator>(
           new MaxOutputAggregator(
               std::move(cursor),
-              getMetricDataType(config.kind),
+              getMetricDataType(config->kind),
               cursor_opts));
 
     case MetricKind::COUNTER_UINT64:
@@ -233,7 +233,7 @@ std::unique_ptr<OutputAggregator> mkOutputAggregator(
       return std::unique_ptr<OutputAggregator>(
           new SumOutputAggregator(
               std::move(cursor),
-              getMetricDataType(config.kind),
+              getMetricDataType(config->kind),
               cursor_opts));
 
     default: return {};

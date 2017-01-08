@@ -118,7 +118,7 @@ public:
       tsdb::TSDB* tsdb,
       SeriesIDProvider* series_id_provider,
       const std::string& metric_id,
-      const MetricConfig& config,
+      const MetricConfig* config,
       const SeriesNameType& series_name,
       std::shared_ptr<MetricSeries>* series);
 
@@ -182,8 +182,8 @@ public:
   size_t getTotalBytes() const;
   TimestampType getLastInsertTime();
 
-  const MetricConfig& getConfig() const;
-  ReturnCode setConfig(MetricConfig config);
+  const MetricConfig* getConfig() const;
+  ReturnCode setConfig(const MetricConfig* config);
 
   MetricSeriesList* getSeriesList();
 
@@ -195,7 +195,7 @@ public:
 protected:
   std::string key_;
   MetricSeriesList series_;
-  MetricConfig config_;
+  const MetricConfig* config_;
   std::unique_ptr<InputAggregator> input_aggr_;
   const UnitConfig* unit_config_;
 };
@@ -212,7 +212,7 @@ public:
   MetricInfo& operator=(MetricInfo&& o);
 
   const UnitConfig* getUnitConfig() const;
-  MetricConfig getMetricConfig() const;
+  const MetricConfig* getMetricConfig() const;
 
 protected:
   Metric* metric_;

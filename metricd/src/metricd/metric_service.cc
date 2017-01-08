@@ -53,7 +53,7 @@ ReturnCode MetricService::startService(
 
 
     metric = new Metric(mc.first);
-    auto rc = metric->setConfig(mc.second);
+    auto rc = metric->setConfig(&mc.second);
     if (!rc.isSuccess()) {
       return rc;
     }
@@ -102,7 +102,7 @@ ReturnCode MetricService::startService(
       continue;
     }
 
-    if (metric->getConfig().kind != metadata.metric_kind) {
+    if (metric->getConfig()->kind != metadata.metric_kind) {
       logWarning(
           "Skipping series with invalid type; metric_id=$0; series_id=$1",
           metric_id,
@@ -229,7 +229,7 @@ ReturnCode MetricService::insertSample(
   }
 
   tval_ref val;
-  val.type = getMetricDataType(metric->getConfig().kind);
+  val.type = getMetricDataType(metric->getConfig()->kind);
   val.len = tval_len(val.type);
   val.data = alloca(val.len);
 

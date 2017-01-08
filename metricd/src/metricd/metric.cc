@@ -131,7 +131,7 @@ ReturnCode MetricSeriesList::findOrCreateSeries(
     tsdb::TSDB* tsdb,
     SeriesIDProvider* series_id_provider,
     const std::string& metric_id,
-    const MetricConfig& config,
+    const MetricConfig* config,
     const SeriesNameType& series_name,
     std::shared_ptr<MetricSeries>* series) {
   std::unique_lock<std::mutex> lk(series_mutex_);
@@ -154,7 +154,7 @@ ReturnCode MetricSeriesList::findOrCreateSeries(
   /* encode series metadata */
   MetricSeriesMetadata metadata;
   metadata.metric_id = metric_id;
-  metadata.metric_kind = config.kind;
+  metadata.metric_kind = config->kind;
   metadata.series_name = series_name;
 
   std::ostringstream metadata_buf;
@@ -163,7 +163,7 @@ ReturnCode MetricSeriesList::findOrCreateSeries(
   /* create the new  series in the tsdb file */
   auto create_rc = tsdb->createSeries(
       new_series_id.id,
-      tval_len(getMetricDataType(config.kind)),
+      tval_len(getMetricDataType(config->kind)),
       metadata_buf.str());
 
   if (!create_rc) {
@@ -307,16 +307,16 @@ Metric::Metric(
     key_(key),
     unit_config_(nullptr) {}
 
-ReturnCode Metric::setConfig(MetricConfig config) {
-  //if (config.aggregation != MetricAggregationType::NONE &&
-  //    config.granularity == 0) {
+ReturnCode Metric::setConfig(const MetricConfig* config) {
+  //if (config->aggregation != MetricAggregationType::NONE &&
+  //    config->granularity == 0) {
   //  logWarning(
   //      "metric<$0>: setting 'aggregation' without 'granularity' will have "
   //      "no effect",
   //      key_);
   //}
 
-  if (config.kind == MetricKind::UNKNOWN) {
+  if (config->kind == MetricKind::UNKNOWN) {
     return ReturnCode::errorf(
         "EARG",
         "metric<$0>: missing 'kind'",
@@ -324,11 +324,11 @@ ReturnCode Metric::setConfig(MetricConfig config) {
   }
 
   config_ = config;
-  input_aggr_ = mkInputAggregator(&config_);
+  input_aggr_ = mkInputAggregator(config_);
   return ReturnCode::success();
 }
 
-const MetricConfig& Metric::getConfig() const {
+const MetricConfig* Metric::getConfig() const {
   return config_;
 }
 
@@ -368,6 +368,7 @@ MetricInfo& MetricInfo::operator=(MetricInfo&& o) {
   metric_map_ = std::move(o.metric_map_);
   metric_ = o.metric_;
   o.metric_ = nullptr;
+  return *this;
 }
 
 const UnitConfig* MetricInfo::getUnitConfig() const {
@@ -378,10 +379,10 @@ const UnitConfig* MetricInfo::getUnitConfig() const {
   return metric_->getUnitConfig();
 }
 
-MetricConfig MetricInfo::getMetricConfig() const {
-  //if (!metric_) {
-  //  return nullptr;
-  //}
+const MetricConfig* MetricInfo::getMetricConfig() const {
+  if (!metric_) {
+    return nullptr;
+  }
 
   return metric_->getConfig();
 }

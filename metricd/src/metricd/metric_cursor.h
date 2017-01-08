@@ -74,7 +74,7 @@ public:
 
   MetricCursor();
   MetricCursor(
-      const MetricConfig& config,
+      const MetricConfig* config,
       std::unique_ptr<MetricCursorOptions> opts,
       std::vector<std::unique_ptr<OutputAggregator>> series_readers,
       std::unique_ptr<GroupSummary> group_summary);
@@ -87,10 +87,10 @@ public:
   bool next(uint64_t* time, tval_ref* out);
 
   tval_type getOutputType() const;
-  static tval_type getOutputType(const MetricConfig& config);
+  static tval_type getOutputType(const MetricConfig* config);
 
 protected:
-  MetricConfig config_;
+  const MetricConfig* config_;
   std::unique_ptr<MetricCursorOptions> opts_;
   std::vector<std::unique_ptr<OutputAggregator>> series_readers_;
   std::unique_ptr<GroupSummary> group_summary_;
@@ -100,7 +100,7 @@ std::unique_ptr<InputAggregator> mkInputAggregator(
     const MetricConfig* config);
 
 std::unique_ptr<OutputAggregator> mkOutputAggregator(
-    const MetricConfig& config,
+    const MetricConfig* config,
     tsdb::Cursor cursor,
     const MetricCursorOptions* cursor_opts);
 

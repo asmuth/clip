@@ -68,9 +68,9 @@ static void writeUnitConfigToJSON(
   json->addString("description");
   json->addString(unit_config->description);
 
-  if (metric_config.unit_scale.val.type != tval_type::NIL) {
+  if (metric_config->unit_scale.val.type != tval_type::NIL) {
     json->addString("unit_scale");
-    writeTValToJSON(&metric_config.unit_scale.val, json);
+    writeTValToJSON(&metric_config->unit_scale.val, json);
   }
 
   json->addString("names");
