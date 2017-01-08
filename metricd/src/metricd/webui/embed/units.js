@@ -38,6 +38,10 @@ FnordMetricUnits.chooseUnit = function(unit, values) {
   return candidates[idx][0];
 }
 
+FnordMetricUnits.formatValue = function(unit, value) {
+  return FnordMetricUnits.formatValues(unit, [value]);
+}
+
 FnordMetricUnits.formatValues = function(unit, values) {
   var unit_name = FnordMetricUnits.chooseUnit(unit, values);
   return FnordMetricUnits.formatValuesWithUnit(unit, unit_name, values)
