@@ -4,6 +4,7 @@ v0.5
 - [ ] METRICD: make granularity configurable in api endpoins
 - [ ] METRICD: make gross summaries configurable in api endpoins
 - [ ] METRICD: make group summary configurable in api endpoins
+- [ ] METRICD: implement series id filter in api endpoins
 - [ ] METRICD: make gross summaries configurable in config
 - [ ] METRICD: make group summary configurable in config
 - [ ] METRICD: make interpolation configurable in config
@@ -49,6 +50,8 @@ v0.5
 - [ ] METRICD: implement group summarization: max
 - [ ] METRICD: implement group summarization: mean
 - [ ] METRICD: implement group summarization: stddev
+- [ ] METRICD: initial metricctl implementation
+- [ ] METRICD: libtsdb v0.2
 
 v0.6
 - [ ] CHART WIDGET: logarithmic axis
