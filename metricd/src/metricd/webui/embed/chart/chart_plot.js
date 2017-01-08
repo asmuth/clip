@@ -68,7 +68,7 @@ FnordMetricChart.Plotter = function(elem, params) {
   }
 
   function drawChart(result) {
-    var svg = new FnordMetricChart.SVGHelper();
+    var svg = new FnordMetric.SVGHelper();
     svg.svg += "<svg shape-rendering='geometricPrecision' class='fm-chart' viewBox='0 0 " + width + " " + height + "' >";
 
     drawBorders(svg);

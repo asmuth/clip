@@ -57,7 +57,7 @@ void WebUI::handleHTTPRequest(
     js_src += getAssetFile("embed/chart/chart_plotter_linear_domain.js");
     js_src += getAssetFile("embed/chart/chart_plot.js");
     js_src += getAssetFile("embed/chart/chart_query_manager.js");
-    js_src += getAssetFile("embed/chart/svg_helper.js");
+    js_src += getAssetFile("embed/svg_helper.js");
     js_src += getAssetFile("util/http.js");
     js_src += getAssetFile("embed/units.js");
     css_src += getAssetFile("embed/chart/chart.css");
@@ -81,6 +81,12 @@ void WebUI::handleHTTPRequest(
     std::string js_src;
     std::string css_src;
     js_src += getAssetFile("embed/top_series/top_series.js");
+    js_src += getAssetFile("embed/top_series/top_series_table.js");
+    js_src += getAssetFile("embed/top_series/top_series_sparkline_plot.js");
+    js_src += getAssetFile("embed/top_series/sparkline_linear_domain.js");
+    js_src += getAssetFile("embed/svg_helper.js");
+    js_src += getAssetFile("util/http.js");
+    js_src += getAssetFile("util/dom.js");
     css_src += getAssetFile("embed/top_series/top_series.css");
 
     std::string config = "{}";

@@ -9,7 +9,9 @@
  * <http://www.gnu.org/licenses/>.
  */
 
-FnordMetricChart.SVGHelper = function() {
+FnordMetric = this.FnordMetric || {};
+
+FnordMetric.SVGHelper = function() {
   'use strict';
 
   this.svg = "";

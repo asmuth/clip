@@ -30,7 +30,7 @@ function FnordMetricSeriesListViewConfig(params) {
   }
 
   this.getTimezone = function() {
-    var timezone_cookie = DOMUtil.getCookie("timezone");
+    var timezone_cookie = CookieUtil.get("timezone");
     return timezone_cookie ? timezone_cookie : null;
   }
 
