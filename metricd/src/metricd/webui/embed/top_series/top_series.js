@@ -20,6 +20,7 @@ var FnordMetricTopSeries = function(viewport, params) {
 
   function fetchData(callback) {
     //FIXME
+    //REMOVE ME
     HTTPUtil.httpPost(
         "/api/v1/metrics/fetch_series",
         JSON.stringify({metric_id: params.metric_id}),
@@ -41,7 +42,7 @@ var FnordMetricTopSeries = function(viewport, params) {
       callback(result);
 
     });
-
+    //REMOVE ME END
   }
 
   function renderSkeletonHTML() {
