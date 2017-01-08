@@ -147,7 +147,25 @@ FnordMetricTopSeries.Table = function(elem, params) {
 
   function renderSummaryCell(summaries) {
     var td = document.createElement("td");
-    //TODO
+
+    var sum_elem = document.createElement("div");
+    sum_elem.classList.add("sum");
+    td.appendChild(sum_elem);
+
+    var stats_elem = document.createElement("div");
+    stats_elem.classList.add("stats");
+    td.appendChild(stats_elem);
+
+    summaries.forEach(function(s) {
+      switch (s.summary) {
+        case "sum":
+          sum_elem.innerHTML = DOMUtil.escapeHTML(s.value);
+          break;
+
+        //FIXME add min, max, stddev
+      }
+    });
+
     return td;
   }
 
