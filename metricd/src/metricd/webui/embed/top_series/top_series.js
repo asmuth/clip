@@ -67,7 +67,7 @@ var FnordMetricTopSeries = function(viewport, params) {
     var table = new FnordMetricTopSeries.Table(elem);
     table.render(result);
 
-    var table_event_handler = new FnordMetricTopSeries.TableEventHandler(table);
+    var table_event_handler = new FnordMetricTopSeries.TableEventHandler(elem);
     table_event_handler.init();
   }
 }
