@@ -56,6 +56,7 @@ FnordMetricChart.QueryManager = function(params) {
 
       try {
         var r = JSON.parse(r.response);
+        result.unit = r.unit;
         r.series.forEach(function(s) {
           result.series.push(s);
         });

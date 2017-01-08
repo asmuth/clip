@@ -11,9 +11,44 @@
 FnordMetricUnits = {};
 
 // FIXME
-FnordMetricUnits.formatValues = function(unit, values) {
-  return values.map(function(v) {
-    return v.toFixed(1);
+FnordMetricUnits.chooseUnit = function(unit, values) {
+  var unit_scale = unit.unit_scale || 1;
+  var values_max = Math.max.apply(null, values) * unit_scale;
+
+  var candidates = [];
+  for (k in unit.names) {
+    candidates.push([k, unit.names[k].factor]);
+  }
+
+  candidates.sort(function(a, b) {
+    return b[1] - a[1];
   });
+
+  var idx = 0;
+  for (; idx < candidates.length; ++idx) {
+    if (candidates[idx][1] < values_max) {
+      break;
+    }
+  }
+
+  return candidates[idx][0];
+}
+
+FnordMetricUnits.formatValues = function(unit, values) {
+  unit.unit_scale = 1000;
+  var unit_name = FnordMetricUnits.chooseUnit(unit, values);
+  return FnordMetricUnits.formatValuesWithUnit(unit, unit_name, values)
+}
+
+FnordMetricUnits.formatValuesWithUnit = function(unit, unit_name, values) {
+  return values.map(function(v) {
+    return FnordMetricUnits.formatValueWithUnit(unit, unit_name, v);
+  });
+}
+
+FnordMetricUnits.formatValueWithUnit = function(unit, unit_name, value) {
+  var unit_scale = unit.unit_scale || 1;
+  var unit_name = unit.names[unit_name];
+  return ((value * unit_scale) / unit_name.factor).toFixed(1) + unit_name.symbol;
 }
 

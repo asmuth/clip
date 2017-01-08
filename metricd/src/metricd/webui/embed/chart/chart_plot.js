@@ -28,7 +28,7 @@ FnordMetricChart.Plotter = function(elem, params) {
   var x_ticks_count = 12;
   var y_domain = new FnordMetricChart.PlotterLinearDomain; //FIXME allow multiple y_domains
   var y_ticks_count = 5;
-  var y_label_width = 50; // FIXME
+  var y_label_width = 150; // FIXME
 
   this.render = function(result) {
     /* set up domains */
