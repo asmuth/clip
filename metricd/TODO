@@ -1,0 +1,61 @@
+v0.5
+- [ ] METRICD: implement parseTimeSpec
+- [ ] METRICD: return units in api responses
+- [ ] METRICD: make granularity configurable in api endpoins
+- [ ] METRICD: make gross summaries configurable in api endpoins
+- [ ] METRICD: make group summary configurable in api endpoins
+- [ ] METRICD: make gross summaries configurable in config
+- [ ] METRICD: make group summary configurable in config
+- [ ] METRICD: make interpolation configurable in config
+- [ ] METRICD: make smoothing configurable in config
+- [ ] METRICD: proper kind configuration on config
+- [ ] METRICD: proper granularity configuration on config
+- [ ] METRICD: /api/v1/query endpoint
+- [ ] METRICD: /api/v1/metrics/config endpoint
+- [ ] CHART WIDGET: show summaries
+- [ ] CHART WIDGET: x axis labels
+- [ ] CHART WIDGET: tooltips
+- [ ] CHART WIDGET: draw missing sections as red background
+- [ ] CHART WIDGET: chart type area
+- [ ] CHART WIDGET: chart type bars
+- [ ] CHART WIDGET: chart type stacked_area
+- [ ] CHART WIDGET: chart type stacked_bars
+- [ ] CHART WIDGET: legend
+- [ ] CHART WIDGET: title
+- [ ] WEBUI: implement FnordMetricUnits.formatValues
+- [ ] WEBUI: query page
+- [ ] WEBUI: metrics list page
+- [ ] METRICD: asset packaging
+- [ ] METRICD: sensor_http
+- [ ] METRICD: sensor_proc
+- [ ] METRICD: listen_http
+- [ ] METRICD: listen_udp
+- [ ] METRICD: implement metric type: min
+- [ ] METRICD: implement metric type: sample
+- [ ] METRICD: implement metric type: monotonic
+- [ ] METRICD: smoothing
+- [ ] CHART WIDGET: make colors configurable
+- [ ] CHART WIDGET: foreground and background color
+- [ ] METRICD: embed.js
+- [ ] METRICD: built-in units file
+- [ ] METRICD: implement gross summarization: avg
+- [ ] METRICD: implement gross summarization: min
+- [ ] METRICD: implement gross summarization: max
+- [ ] METRICD: implement gross summarization: mean
+- [ ] METRICD: implement gross summarization: stddev
+- [ ] METRICD: implement gross summarization: trend
+- [ ] METRICD: implement group summarization: avg
+- [ ] METRICD: implement group summarization: min
+- [ ] METRICD: implement group summarization: max
+- [ ] METRICD: implement group summarization: mean
+- [ ] METRICD: implement group summarization: stddev
+
+v0.6
+- [ ] CHART WIDGET: logarithmic axis
+- [ ] METRICD: metric groups
+- [ ] METRICD: metric type: health check
+- [ ] METRICD: metric type: event log
+- [ ] METRICD: metric rules
+- [ ] WEBUI: sensors
+- [ ] WEBUI: rules/health page (shows metric and sensors stats/errors)
+- [ ] WEBUI: display metric groups
