@@ -541,26 +541,19 @@ a.link {
 }
 
 /** table */
-table.f-table {
+table.fm-table {
   width: 100%;
   margin-top: 5px;
   border-collapse: collapse;
   font-size: 13px;
 }
 
-table.f-table tr {
+table.fm-table tr {
   border-bottom: 1px solid rgb(226, 232, 237);
 }
 
-table.f-table tr.list_header {
-  border-top: 2px solid rgb(226, 232, 237);
-  border-bottom: 2px solid rgb(226, 232, 237);
-  background-color: #f6f8fa;
-  color: #60707f;
-}
-
-table.f-table thead th,
-table.f-table tbody td {
+table.fm-table thead th,
+table.fm-table tbody td {
   text-align: left;
   font-weight: 400;
   border: none;
@@ -568,13 +561,13 @@ table.f-table tbody td {
   padding: .8em;
 }
 
-table.f-table tbody td {
-  padding: .7em .8em;
+table.fm-table tbody td {
   vertical-align: middle;
   border-top: 1px solid #e1e1e1;
+  line-height: 21px;
 }
 
-table.f-table thead th {
+table.fm-table thead th {
   border-right: none;
   font-weight: 400;
   color: #999;
@@ -584,32 +577,32 @@ table.f-table thead th {
   border-top: 1px solid #ddd;
 }
 
-table.f-table thead th[align='right'],
-table.f-table tbody td[align='right'] {
+table.fm-table thead th[align='right'],
+table.fm-table tbody td[align='right'] {
   text-align: right;
 }
 
-table.f-table thead th[align='center'],
-table.f-table tbody td[align='center'] {
+table.fm-table thead th[align='center'],
+table.fm-table tbody td[align='center'] {
   text-align: center;
 }
 
-table.f-table .clickable:hover {
+table.fm-table .clickable:hover {
   cursor:pointer;
 }
 
-table.f-table tr:hover td {
+table.fm-table tr:hover td {
   background-color: #f6f8fa;
   cursor: pointer;
 }
 
-table.f-table tr td.highlight {
-  background-color: #f6f8fa;
+table.fm-table th .sort {
+  float: right;
+  color: #858585;
 }
 
-table.f-table tr i.sort_desc,
-table.f-table tr i.sort_asc {
-  float: right;
+table.fm-table tr i.sort_desc,
+table.fm-table tr i.sort_asc {
   line-height: 1em;
   cursor: pointer;
 }
