@@ -93,18 +93,54 @@ static void writeUnitConfigToJSON(
   json->endObject();
 }
 
+ReturnCode getGrossSummaryMethodsFromJSON(
+    const json::JSONElement* param,
+    std::vector<GrossSummaryMethod>* summary_methods) {
+  std::vector<std::string> method_strs;
+  if (param->isString()) {
+    auto method_str = param->getAsString()->getString();
+    for (const auto& s : StringUtil::split(method_str, ",")) {
+      method_strs.emplace_back(s);
+    }
+  }
+
+  if (param->isArray()) {
+    auto method_arr = param->getAsArray();
+    for (size_t i = 0; i < method_arr->size(); ++i) {
+      auto elem = method_arr->get(i);
+      if (!elem->isString()) {
+        continue;
+      }
+
+      method_strs.emplace_back(elem->getAsString()->getString());
+    }
+  }
+
+  for (const auto& method_str : method_strs) {
+    GrossSummaryMethod method;
+    if (!getGrossSummaryFromName(&method, method_str)) {
+      return ReturnCode::errorf(
+          "EARG",
+          "invalid gross summary method: $0",
+          method_str);
+    }
+
+    summary_methods->emplace_back(method);
+  }
+
+  return ReturnCode::success();
+}
+
 ReturnCode QueryFrontend::fetchSeriesJSON(
     const json::JSONObject* req,
     json::JSONWriter* res) {
-  /* set options from request */
-  MetricCursorOptions cursor_opts;
-  std::vector<GrossSummaryMethod> summary_methods{GrossSummaryMethod::SUM};
-
   auto metric_id = req->getString("metric_id");
   if (metric_id.empty()) {
     return ReturnCode::error("EARG", "missing argument: metric_id");
   }
 
+  /* configure time range */
+  MetricCursorOptions cursor_opts;
   auto time_begin = req->getString("from");
   if (!time_begin.empty()) {
     auto rc = parseTimeSpec(time_begin, &cursor_opts.time_begin);
@@ -119,6 +155,21 @@ ReturnCode QueryFrontend::fetchSeriesJSON(
     if (!rc.isSuccess()) {
       return rc;
     }
+  }
+
+  /* configure summary methods */
+  std::vector<GrossSummaryMethod> summary_methods;
+  auto summary_methods_param = req->get("summarize_gross");
+  if (summary_methods_param) {
+    auto rc = getGrossSummaryMethodsFromJSON(
+        summary_methods_param,
+        &summary_methods);
+
+    if (!rc.isSuccess()) {
+      return rc;
+    }
+  } else {
+    // FIXME default summary methods from metric
   }
 
   /* get metric info */
@@ -269,11 +320,14 @@ ReturnCode QueryFrontend::fetchSeriesJSON(
 ReturnCode QueryFrontend::fetchSummaryJSON(
     const json::JSONObject* req,
     json::JSONWriter* res) {
-  /* set options from request */
+  auto metric_id = req->getString("metric_id");
+  if (metric_id.empty()) {
+    return ReturnCode::error("EARG", "missing argument: metric_id");
+  }
+
+  /* configure time range */
   MetricCursorOptions cursor_opts;
   cursor_opts.cursor_type = MetricCursorType::SUMMARY;
-  std::vector<GrossSummaryMethod> summary_methods{GrossSummaryMethod::SUM};
-
   auto time_begin = req->getString("from");
   if (!time_begin.empty()) {
     auto rc = parseTimeSpec(time_begin, &cursor_opts.time_begin);
@@ -290,9 +344,19 @@ ReturnCode QueryFrontend::fetchSummaryJSON(
     }
   }
 
-  auto metric_id = req->getString("metric_id");
-  if (metric_id.empty()) {
-    return ReturnCode::error("EARG", "missing argument: metric_id");
+  /* configure summary methods */
+  std::vector<GrossSummaryMethod> summary_methods;
+  auto summary_methods_param = req->get("summarize_gross");
+  if (summary_methods_param) {
+    auto rc = getGrossSummaryMethodsFromJSON(
+        summary_methods_param,
+        &summary_methods);
+
+    if (!rc.isSuccess()) {
+      return rc;
+    }
+  } else {
+    // FIXME default summary methods from metric
   }
 
   /* get metric info */

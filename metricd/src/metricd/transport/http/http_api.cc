@@ -178,6 +178,11 @@ void HTTPAPI::performMetricFetchSeries(
     if (URI::getParam(params, "until", &until)) {
       json_req.getRootAsObject()->setString("until", until);
     }
+
+    std::string summarize_gross;
+    if (URI::getParam(params, "summarize_gross", &summarize_gross)) {
+      json_req.getRootAsObject()->setString("summarize_gross", summarize_gross);
+    }
   }
 
   std::string json_res_str;
@@ -226,6 +231,11 @@ void HTTPAPI::performMetricFetchSummary(
     std::string until;
     if (URI::getParam(params, "until", &until)) {
       json_req.getRootAsObject()->setString("until", until);
+    }
+
+    std::string summarize_gross;
+    if (URI::getParam(params, "summarize_gross", &summarize_gross)) {
+      json_req.getRootAsObject()->setString("summarize_gross", summarize_gross);
     }
   }
 

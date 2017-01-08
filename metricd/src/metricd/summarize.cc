@@ -35,10 +35,10 @@ bool getGrossSummaryFromName(
 
   auto iter = method_map.find(name);
   if (iter == method_map.end()) {
+    return false;
+  } else {
     *method = iter->second;
     return true;
-  } else {
-    return false;
   }
 }
 
