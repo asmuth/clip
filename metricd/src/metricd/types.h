@@ -31,14 +31,15 @@ struct tval_ref {
 struct tval_autoref {
   tval_autoref();
   tval_autoref(tval_type type);
-  tval_autoref(const tval_autoref& other) = delete;
+  tval_autoref(const tval_autoref& other);
   tval_autoref(tval_autoref&& other);
-  tval_autoref& operator=(const tval_autoref& other) = delete;
+  tval_autoref& operator=(const tval_autoref& other);
   tval_autoref& operator=(tval_autoref&& other);
   ~tval_autoref();
   tval_ref val;
 };
 
+void tval_copy(const tval_ref* dst, const tval_ref* src);
 void tval_zero(tval_type type, void* reg, size_t reg_len);
 
 bool tval_iszero(const tval_ref* tval);
