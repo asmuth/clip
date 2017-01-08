@@ -16,6 +16,7 @@ function FnordMetricSeriesListView(elem, params) {
   this.initialize = function() {
     initLayout();
     refreshSummary();
+    refreshSeriesList();
   };
 
   this.destroy = function() {
@@ -50,7 +51,12 @@ function FnordMetricSeriesListView(elem, params) {
   }
 
   function refreshSeriesList() {
+    var widget_opts = {
+      metric_id: config.getMetricID()
+    };
 
+    var widget = new FnordMetricTopSeries(elem.querySelector(".series_list"), widget_opts);
+    widget.render();
   }
 
   function initLayout() {

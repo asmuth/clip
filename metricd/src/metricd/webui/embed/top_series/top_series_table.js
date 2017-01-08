@@ -12,9 +12,19 @@ FnordMetricTopSeries.Table = function(elem, params) {
   'use strict';
 
   var on_sort = [];
+  var on_click = [];
+  var on_right_click = [];
 
   this.onSort = function(callback_fn) {
     on_sort.push(callback_fn);
+  }
+
+  this.onClick = function(callback_fn) {
+    on_click.push(callback_fn);
+  }
+
+  this.onRightClick = function(callback_fn) {
+    on_right_click.push(callback_fn);
   }
 
   this.render = function(result) {
@@ -116,6 +126,7 @@ FnordMetricTopSeries.Table = function(elem, params) {
 
   function renderRow(series) {
     var tr = document.createElement("tr");
+    tr.setAttribute("fm-series", series.series_id); //FIXME escape!
 
     tr.appendChild(renderIDCell(series.series_id));
     tr.appendChild(renderSparklineCell(series));
@@ -147,13 +158,31 @@ FnordMetricTopSeries.Table = function(elem, params) {
 
   function renderSummaryCell(summaries) {
     var td = document.createElement("td");
-    //TODO
+
+    var sum_elem = document.createElement("div");
+    sum_elem.classList.add("sum");
+    td.appendChild(sum_elem);
+
+    var stats_elem = document.createElement("div");
+    stats_elem.classList.add("stats");
+    td.appendChild(stats_elem);
+
+    summaries.forEach(function(s) {
+      switch (s.summary) {
+        case "sum":
+          sum_elem.innerHTML = DOMUtil.escapeHTML(s.value);
+          break;
+
+        //FIXME add min, max, stddev
+      }
+    });
+
     return td;
   }
 
   function renderContextMenuCell() {
     var td = document.createElement("td");
-    //TODO
+    td.classList.add("caret_down"); //render icon
     return td;
   }
 }
