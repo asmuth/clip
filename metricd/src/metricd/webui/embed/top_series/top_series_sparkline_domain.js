@@ -8,7 +8,7 @@
  * <http://www.gnu.org/licenses/>.
  */
 
-FnordMetricTopSeries.SparklineLinearDomain = function() {
+FnordMetricTopSeries.SparklineDomain = function() {
 
   var min = null;
   var max = null;
