@@ -20,15 +20,16 @@ FnordMetricChart.Plotter = function(elem, params) {
 
   var width = elem.offsetWidth * 1.6;
   var height = 180 * 1.6;
-  var canvas_margin_top = 10;
-  var canvas_margin_right = 1;
-  var canvas_margin_bottom = 1;
-  var canvas_margin_left = 1;
+  var canvas_margin_top;
+  var canvas_margin_right;
+  var canvas_margin_bottom;
+  var canvas_margin_left;
   var x_domain = new FnordMetricChart.PlotterLinearDomain;
   var x_ticks_count = 12;
   var y_domain = new FnordMetricChart.PlotterLinearDomain; //FIXME allow multiple y_domains
   var y_ticks_count = 5;
-  var y_label_width = 150; // FIXME
+  var y_label_width;
+  var y_labels = [];
 
   this.render = function(result) {
     /* set up domains */
@@ -36,6 +37,14 @@ FnordMetricChart.Plotter = function(elem, params) {
       y_domain.findMinMax(s.values);
       x_domain.findMinMax(s.time);
     });
+
+    /* set up y axis labels */
+    var y_values = []
+    for (var i = 0; i <= y_ticks_count ; i++) {
+      y_values.push(y_domain.convertScreenToDomain(1.0 - (i / y_ticks_count)));
+    }
+
+    y_labels = FnordMetricUnits.formatValues(result.unit, y_values);
 
     /* set up layout */
     fitLayout();
@@ -50,16 +59,23 @@ FnordMetricChart.Plotter = function(elem, params) {
     }, false);
   }
 
-  function fitLayout() {
+  function fitLayout(result) {
+    canvas_margin_top = 10;
+    canvas_margin_right = 1;
+    canvas_margin_bottom = 30;
+    canvas_margin_left = 1;
+
+    /* fit the y axis labels */
+    y_label_width =
+        12 *
+        Math.max.apply(null, y_labels.map(function(l) { return l.length; }));
+
     /* fit the y axis */
     if (params.axis_y_position == "inside") {
 
     } else {
       canvas_margin_left = y_label_width;
     }
-
-    /* fit the x axis */
-    canvas_margin_bottom += 26; // FIXME
   }
 
   function draw(result) {
@@ -157,15 +173,6 @@ FnordMetricChart.Plotter = function(elem, params) {
    function drawYAxis(result, c) {
     c.svg += "<g class='axis y'>";
 
-    /** build tick labels **/
-    var tick_values = []
-    for (var i = 0; i <= y_ticks_count ; i++) {
-      tick_values.push(y_domain.convertScreenToDomain(1.0 - (i / y_ticks_count)));
-    }
-
-    var unit = result.unit;
-    var tick_labels = FnordMetricUnits.formatValues(unit, tick_values);
-
     /** render tick/grid **/
     for (var i = 0; i <= y_ticks_count ; i++) {
       var tick_y_domain = (i / y_ticks_count);
@@ -185,14 +192,14 @@ FnordMetricChart.Plotter = function(elem, params) {
         c.drawText(
             canvas_margin_left + text_padding,
             tick_y_screen,
-            tick_labels[i],
+            y_labels[i],
             "inside");
       } else {
         var text_padding = 8;
         c.drawText(
             canvas_margin_left - text_padding,
             tick_y_screen,
-            tick_labels[i],
+            y_labels[i],
             "outside");
       }
     }
