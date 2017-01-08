@@ -378,6 +378,14 @@ const UnitConfig* MetricInfo::getUnitConfig() const {
   return metric_->getUnitConfig();
 }
 
+MetricConfig MetricInfo::getMetricConfig() const {
+  //if (!metric_) {
+  //  return nullptr;
+  //}
+
+  return metric_->getConfig();
+}
+
 tval_type getMetricDataType(MetricKind t) {
   switch (t) {
     case SAMPLE_UINT64: return tval_type::UINT64;

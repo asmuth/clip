@@ -212,6 +212,7 @@ public:
   MetricInfo& operator=(MetricInfo&& o);
 
   const UnitConfig* getUnitConfig() const;
+  MetricConfig getMetricConfig() const;
 
 protected:
   Metric* metric_;
