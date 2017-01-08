@@ -64,8 +64,8 @@ var FnordMetricTopSeries = function(viewport, params) {
 
   function renderTable(result) {
     var elem = viewport.querySelector(".fm-top-series-table");
-    var renderer = new FnordMetricTopSeries.Renderer(elem);
-    renderer.render(result);
+    var table = new FnordMetricTopSeries.Table(elem);
+    table.render(result);
   }
 }
 

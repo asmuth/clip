@@ -8,7 +8,7 @@
  * <http://www.gnu.org/licenses/>.
  */
 
-FnordMetricTopSeries.Renderer = function(elem, params) {
+FnordMetricTopSeries.Table = function(elem, params) {
   'use strict';
 
   var on_sort = [];
