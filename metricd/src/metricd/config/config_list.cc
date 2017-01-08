@@ -11,6 +11,10 @@
 
 namespace fnordmetric {
 
+std::map<MetricIDType, MetricConfig>& ConfigList::getMetricConfigs() {
+  return metric_configs_;
+}
+
 const std::map<MetricIDType, MetricConfig>& ConfigList::getMetricConfigs()
     const {
   return metric_configs_;
@@ -43,7 +47,8 @@ const UnitConfig* ConfigList::getUnitConfig(std::string unit_id) const {
   }
 }
 
-void ConfigList::addUnitConfig(std::string unit_id, UnitConfig config) {
+void ConfigList::addUnitConfig(UnitConfig config) {
+  auto unit_id = config.unit_id;
   unit_configs_.emplace(unit_id, std::move(config));
 }
 

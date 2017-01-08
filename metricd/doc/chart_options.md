@@ -81,6 +81,15 @@ Here is a simple example:
       <td><code><strong>query</strong></code></td>
       <td>JSON object containing a <a href="/documentation/charts/json_queries">JSON Query</a></td>
     </tr>
+    <tr>
+      <td><code><strong>summarize_gross</strong></code></td>
+      <td>
+        Return one or more <a href="/documentation/metrics/summarization">gross summaries</a>
+        for the results of this query. Value may be a single string, an array
+        of strings or string containing a comma-separated list of values. For valid summarization methods please see the
+        <a href="/documentation/metrics/summarization">Summarization Page</a>
+      </td>
+    </tr>
   </tbody>
 </table>
 
@@ -88,18 +97,15 @@ Here is a simple example:
 ### Example:
 
     {
-      title: "My title"
-      show_summary: title,
-      show_summary: true,
-      show_plot: true,
-      show_series_list: true,
-      queries: [
+      "title": "My title",
+      "from": "-2h",
+      "until: "now",
+      "queries": [
         {
-          draw_type "line",
-          draw_color: "#0f0"
-          query: {
-            op: fetch
-            metric_id: mymetric
+          "summarize_gross": ["sum", "min", "max", "stddev"],
+          "query": {
+            "op": "fetch",
+            "metric_id": "users_online"
           }
         }
       ]

@@ -18,6 +18,15 @@ Returns timeseries data from one or more series of the metrics.
     <td><code><strong>until</strong></code></td>
     <td>End of the time window (exclusive). See "from" (above) for list of valid values.</td>
   </tr>
+  <tr>
+    <td><code><strong>summarize_gross</strong></code></td>
+    <td>
+      Return one or more <a href="/documentation/metrics/summarization">gross summaries</a>
+      for the results of this query. Value may be a single string, an array
+      of strings or string containing a comma-separated list of values. For valid summarization methods please see the
+      <a href="/documentation/metrics/summarization">Summarization Page</a>
+    </td>
+  </tr>
 </table>
 
 ### Example Request

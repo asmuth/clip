@@ -21,13 +21,14 @@ namespace fnordmetric {
 class ConfigList {
 public:
 
+  std::map<MetricIDType, MetricConfig>& getMetricConfigs();
   const std::map<MetricIDType, MetricConfig>& getMetricConfigs() const;
   const MetricConfig* getMetricConfig(MetricIDType metric_id) const;
   void addMetricConfig(MetricIDType metric_id, MetricConfig config);
 
   const std::map<std::string, UnitConfig>& getUnitConfigs() const;
   const UnitConfig* getUnitConfig(std::string unit_id) const;
-  void addUnitConfig(std::string unit_id, UnitConfig config);
+  void addUnitConfig(UnitConfig config);
 
 protected:
   std::map<MetricIDType, MetricConfig> metric_configs_;

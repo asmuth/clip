@@ -18,6 +18,7 @@
 namespace fnordmetric {
 
 tval_autoref::tval_autoref() {
+  val.type = tval_type::NIL;
   val.data = nullptr;
   val.len = 0;
 }
@@ -27,11 +28,23 @@ tval_autoref::tval_autoref(tval_type type) {
   tval_zero(val.type, val.data, val.len);
 }
 
+tval_autoref::tval_autoref(const tval_autoref& other) {
+  if (other.val.type == tval_type::NIL) {
+    val.type = tval_type::NIL;
+    val.data = nullptr;
+    val.len = 0;
+  } else {
+    tval_alloc(&val, other.val.type);
+    tval_copy(&val, &other.val);
+  }
+}
+
 tval_autoref::tval_autoref(tval_autoref&& other) {
   val.type = other.val.type;
   val.data = other.val.data;
   val.len = other.val.len;
 
+  other.val.type = tval_type::NIL;
   other.val.data = nullptr;
   other.val.len = 0;
 }
@@ -40,6 +53,23 @@ tval_autoref::~tval_autoref() {
   if (val.data) {
     tval_free(&val);
   }
+}
+
+tval_autoref& tval_autoref::operator=(const tval_autoref& other) {
+  if (val.data) {
+    tval_free(&val);
+  }
+
+  if (other.val.type == tval_type::NIL) {
+    val.type = tval_type::NIL;
+    val.data = nullptr;
+    val.len = 0;
+  } else {
+    tval_alloc(&val, other.val.type);
+    tval_copy(&val, &other.val);
+  }
+
+  return *this;
 }
 
 tval_autoref& tval_autoref::operator=(tval_autoref&& other) {
@@ -51,9 +81,16 @@ tval_autoref& tval_autoref::operator=(tval_autoref&& other) {
   val.data = other.val.data;
   val.len = other.val.len;
 
+  other.val.type = tval_type::NIL;
   other.val.data = nullptr;
   other.val.len = 0;
   return *this;
+}
+
+void tval_copy(const tval_ref* dst, const tval_ref* src) {
+  assert(dst->type == src->type);
+  assert(dst->len == src->len);
+  memcpy(dst->data, src->data, std::min(dst->len, src->len));
 }
 
 void tval_zero(tval_type type, void* reg, size_t reg_len) {

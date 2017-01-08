@@ -52,7 +52,7 @@ void HTTPAPI::handleHTTPRequest(
 
   // PATH: /api/v1/metrics/fetch_series
   if (path == "/api/v1/metrics/fetch_series") {
-    performMetricFetchSummary(request, response, uri);
+    performMetricFetchSeries(request, response, uri);
     return;
   }
 
@@ -178,6 +178,11 @@ void HTTPAPI::performMetricFetchSeries(
     if (URI::getParam(params, "until", &until)) {
       json_req.getRootAsObject()->setString("until", until);
     }
+
+    std::string summarize_gross;
+    if (URI::getParam(params, "summarize_gross", &summarize_gross)) {
+      json_req.getRootAsObject()->setString("summarize_gross", summarize_gross);
+    }
   }
 
   std::string json_res_str;
@@ -226,6 +231,16 @@ void HTTPAPI::performMetricFetchSummary(
     std::string until;
     if (URI::getParam(params, "until", &until)) {
       json_req.getRootAsObject()->setString("until", until);
+    }
+
+    std::string summarize_gross;
+    if (URI::getParam(params, "summarize_gross", &summarize_gross)) {
+      json_req.getRootAsObject()->setString("summarize_gross", summarize_gross);
+    }
+
+    std::string summarize_group;
+    if (URI::getParam(params, "summarize_group", &summarize_group)) {
+      json_req.getRootAsObject()->setString("summarize_group", summarize_group);
     }
   }
 
