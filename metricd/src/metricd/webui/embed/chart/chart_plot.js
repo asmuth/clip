@@ -18,36 +18,29 @@
 FnordMetricChart.Plotter = function(elem, params) {
   'use strict';
 
-  var width = elem.offsetWidth * 1.6;
-  var height = 180 * 1.6;
+  var width;
+  var height;
   var canvas_margin_top;
   var canvas_margin_right;
   var canvas_margin_bottom;
   var canvas_margin_left;
-  var x_domain = new FnordMetricChart.PlotterLinearDomain;
-  var x_ticks_count = 12;
-  var y_domain = new FnordMetricChart.PlotterLinearDomain; //FIXME allow multiple y_domains
-  var y_ticks_count = 5;
+  var x_domain;
+  var x_ticks_count;
+  var y_ticks_count;
+  var y_domain;
   var y_label_width;
-  var y_labels = [];
+  var y_labels;
 
   this.render = function(result) {
-    /* set up domains */
-    result.series.forEach(function(s) {
-      y_domain.findMinMax(s.values);
-      x_domain.findMinMax(s.time);
-    });
+    width = elem.offsetWidth * 1.6;
+    height = 180 * 1.6;
 
-    /* set up y axis labels */
-    var y_values = []
-    for (var i = 0; i <= y_ticks_count ; i++) {
-      y_values.push(y_domain.convertScreenToDomain(1.0 - (i / y_ticks_count)));
-    }
+    /* prepare axes */
+    prepareXAxis(result);
+    prepareYAxis(result);
 
-    y_labels = FnordMetricUnits.formatValues(result.unit, y_values);
-
-    /* set up layout */
-    fitLayout();
+    /* prepare layout */
+    prepareLayout(result);
 
     /* draw the svg */
     draw(result);
@@ -55,11 +48,11 @@ FnordMetricChart.Plotter = function(elem, params) {
     /* adjust the svg when the window is resized */
     window.addEventListener("resize", function(e) {
       width = elem.offsetWidth;
-      refresh(result);
+      draw(result);
     }, false);
   }
 
-  function fitLayout(result) {
+  function prepareLayout(result) {
     canvas_margin_top = 10;
     canvas_margin_right = 1;
     canvas_margin_bottom = 30;
@@ -76,6 +69,32 @@ FnordMetricChart.Plotter = function(elem, params) {
     } else {
       canvas_margin_left = y_label_width;
     }
+  }
+
+  function prepareXAxis(result) {
+    x_ticks_count = 12;
+    x_domain = new FnordMetricChart.PlotterLinearDomain;
+
+    result.series.forEach(function(s) {
+      x_domain.findMinMax(s.time);
+    });
+  }
+
+  function prepareYAxis(result) {
+    y_ticks_count = 5;
+    y_domain = new FnordMetricChart.PlotterLinearDomain;
+
+    result.series.forEach(function(s) {
+      y_domain.findMinMax(s.values);
+    });
+
+    /* set up y axis labels */
+    var y_values = []
+    for (var i = 0; i <= y_ticks_count ; i++) {
+      y_values.push(y_domain.convertScreenToDomain(1.0 - (i / y_ticks_count)));
+    }
+
+    y_labels = FnordMetricUnits.formatValues(result.unit, y_values);
   }
 
   function draw(result) {
