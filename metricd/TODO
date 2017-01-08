@@ -61,4 +61,5 @@ v0.6
 - [ ] METRICD: metric rules
 - [ ] WEBUI: sensors
 - [ ] WEBUI: rules/health page (shows metric and sensors stats/errors)
-- [ ] WEBUI: display metric groups
+- [ ] WEBUI: display metric groups]
+- [ ] METRICD: config reload

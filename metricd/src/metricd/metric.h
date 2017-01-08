@@ -199,6 +199,24 @@ protected:
   const UnitConfig* unit_config_;
 };
 
+class MetricInfo {
+public:
+
+  MetricInfo();
+  MetricInfo(Metric* metric, std::shared_ptr<MetricMap> metric_map);
+
+  MetricInfo(const MetricInfo& o) = delete;
+  MetricInfo(MetricInfo&& o);
+  MetricInfo& operator=(const MetricInfo& o) = delete;
+  MetricInfo& operator=(MetricInfo&& o);
+
+  const UnitConfig* getUnitConfig() const;
+
+protected:
+  Metric* metric_;
+  std::shared_ptr<MetricMap> metric_map_;
+};
+
 tval_type getMetricDataType(MetricKind t);
 
 } // namespace fnordmetric

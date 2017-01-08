@@ -35,6 +35,13 @@ public:
   MetricListCursor listMetrics();
 
   /**
+   * Get information about a specific metric
+   */
+  ReturnCode describeMetric(
+      const std::string& metric_id,
+      MetricInfo* metric_info);
+
+  /**
    * List all series in a metric
    */
   ReturnCode listSeries(
