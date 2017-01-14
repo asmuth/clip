@@ -49,7 +49,8 @@ ReturnCode HTTPSensorTask::invoke() {
         response.statusCode());
   }
 
-  return metric_service_->insertSamples(response.body());
+  const auto& body = response.body();
+  return metric_service_->insertSamplesBatch(body.data(), body.size());
 }
 
 } // namespace fnordmetric

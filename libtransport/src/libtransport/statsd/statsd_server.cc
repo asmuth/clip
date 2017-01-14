@@ -95,7 +95,10 @@ ReturnCode StatsdServer::start() {
         continue;
       }
 
-      handlePacket(buf, buf_len);
+      auto rc = metric_service_->insertSamplesBatch(buf, buf_len);
+      if (!rc.isSuccess()) {
+        logWarning("statsd insert failed:", rc.getMessage());
+      }
     }
   });
 
@@ -109,45 +112,6 @@ void StatsdServer::shutdown() {
     thread_.join();
   }
   ssock_ = -1;
-}
-
-void StatsdServer::handlePacket(const char* pkt, size_t pkt_len) {
-  std::string metric_id;
-  std::string series_id;
-  std::string value;
-  LabelSet labels;
-
-  char const* cur = pkt;
-  char const* end = pkt + pkt_len;
-
-  while (cur < end) {
-    if (!parseStatsdSample(&cur, end, &metric_id, &series_id, &value)) {
-      logWarning("received invalid statsd packet");
-      return;
-    }
-
-    logDebug(
-        "received statsd sample; metric_id=$0 series_id=$1 value=$2",
-        metric_id,
-        series_id,
-        value);
-
-    auto now = WallClock::unixMicros();
-    auto rc = metric_service_->insertSample(
-        metric_id,
-        SeriesNameType(series_id),
-        now,
-        value);
-
-    if (!rc.isSuccess()) {
-      logWarning(
-          "statsd insert failed: $0; metric_id=$1 series_id=$2 value=$3",
-          rc.getMessage(),
-          metric_id,
-          series_id,
-          value);
-    }
-  }
 }
 
 } // namespace statsd

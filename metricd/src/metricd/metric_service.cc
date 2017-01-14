@@ -12,6 +12,8 @@
 #include "metricd/metric_service.h"
 #include "metricd/util/fileutil.h"
 #include "metricd/util/logging.h"
+#include "metricd/util/time.h"
+#include "metricd/transport/statsd/statsd.h"
 
 namespace fnordmetric {
 
@@ -260,6 +262,40 @@ ReturnCode MetricService::insertSample(
   }
 
   return rc;
+}
+
+ReturnCode MetricService::insertSamplesBatch(const char* data, size_t len) {
+  std::string metric_id;
+  std::string series_id;
+  std::string value;
+  LabelSet labels;
+
+  char const* cur = data;
+  char const* end = data + len;
+
+  while (cur < end) {
+    if (!statsd::parseStatsdSample(&cur, end, &metric_id, &series_id, &value)) {
+      return ReturnCode::error("EPARSE", "invalid packet");
+    }
+
+    auto now = WallClock::unixMicros();
+    auto rc = insertSample(
+        metric_id,
+        SeriesNameType(series_id),
+        now,
+        value);
+
+    if (!rc.isSuccess()) {
+      logWarning(
+          "batch insert failed: $0; metric_id=$1 series_id=$2 value=$3",
+          rc.getMessage(),
+          metric_id,
+          series_id,
+          value);
+    }
+  }
+
+  return ReturnCode::success();
 }
 
 } // namsepace fnordmetric

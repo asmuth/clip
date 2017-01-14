@@ -65,7 +65,7 @@ public:
       uint64_t time,
       const std::string& value);
 
-  ReturnCode insertSamples(const std::string& data);
+  ReturnCode insertSamplesBatch(const char* data, size_t len);
 
 protected:
 
