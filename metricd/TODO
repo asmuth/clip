@@ -7,7 +7,6 @@ v0.5
 - [ ] METRICD: proper granularity configuration on config
 - [ ] METRICD: /api/v1/metrics/config endpoint
 - [ ] METRICD: asset packaging
-- [ ] METRICD: sensor_http
 - [ ] METRICD: sensor_proc
 - [ ] METRICD: listen_http
 - [ ] METRICD: listen_udp
