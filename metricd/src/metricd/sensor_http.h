@@ -8,30 +8,22 @@
  * <http://www.gnu.org/licenses/>.
  */
 #pragma once
-#include <metricd/types.h>
-#include <metricd/util/return_code.h>
+#include <metricd/sensors.h>
 
 namespace fnordmetric {
 
-struct SensorConfig {
-  virtual ~SensorConfig() = default;
-  std::string sensor_id;
+struct HTTPSensorConfig : public SensorConfig {
+  std::string http_url;
 };
 
-class SensorTask {
+class HTTPSensorTask : public SensorTask {
 public:
 
-  virtual ~SensorTask() = default;
+  uint64_t getNextInvocationTime() const override;
 
-  virtual uint64_t getNextInvocationTime() const = 0;
-
-  virtual ReturnCode invoke() = 0;
+  ReturnCode invoke() override;
 
 };
-
-ReturnCode mkSensorTask(
-    const SensorConfig* sensor_cfg,
-    std::unique_ptr<SensorTask>* sensor_task);
 
 } // namespace fnordmetric
 

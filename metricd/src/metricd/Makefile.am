@@ -55,6 +55,9 @@ metricd_common_sources_ = \
     metric_service.h \
     metric_service.cc \
     sensors.h \
+    sensors.cc \
+    sensor_http.h \
+    sensor_http.cc \
     sample.h \
     sample.cc \
     units.h \

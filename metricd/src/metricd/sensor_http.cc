@@ -7,31 +7,18 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#pragma once
-#include <metricd/types.h>
-#include <metricd/util/return_code.h>
+#include <metricd/sensor_http.h>
+#include <metricd/util/time.h>
 
 namespace fnordmetric {
 
-struct SensorConfig {
-  virtual ~SensorConfig() = default;
-  std::string sensor_id;
-};
+uint64_t HTTPSensorTask::getNextInvocationTime() const {
+  return MonotonicClock::now() + 1 * kMicrosPerSecond;
+}
 
-class SensorTask {
-public:
-
-  virtual ~SensorTask() = default;
-
-  virtual uint64_t getNextInvocationTime() const = 0;
-
-  virtual ReturnCode invoke() = 0;
-
-};
-
-ReturnCode mkSensorTask(
-    const SensorConfig* sensor_cfg,
-    std::unique_ptr<SensorTask>* sensor_task);
+ReturnCode HTTPSensorTask::invoke() {
+  return ReturnCode::success();
+}
 
 } // namespace fnordmetric
 
