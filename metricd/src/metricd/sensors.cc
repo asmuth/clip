@@ -15,12 +15,13 @@
 namespace fnordmetric {
 
 ReturnCode mkSensorTask(
+    MetricService* metric_service,
     const SensorConfig* sensor_cfg,
     std::unique_ptr<SensorTask>* sensor_task) {
   {
     auto cfg = dynamic_cast<const HTTPSensorConfig*>(sensor_cfg);
     if (cfg) {
-      sensor_task->reset(new HTTPSensorTask());
+      sensor_task->reset(new HTTPSensorTask(cfg, metric_service));
       return ReturnCode::success();
     }
   }

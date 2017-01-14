@@ -65,6 +65,8 @@ public:
       uint64_t time,
       const std::string& value);
 
+  ReturnCode insertSamples(const std::string& data);
+
 protected:
 
   MetricService(

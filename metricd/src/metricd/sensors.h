@@ -18,6 +18,7 @@
 #include <metricd/util/return_code.h>
 
 namespace fnordmetric {
+class MetricService;
 
 struct SensorConfig {
   virtual ~SensorConfig() = default;
@@ -36,6 +37,7 @@ public:
 };
 
 ReturnCode mkSensorTask(
+    MetricService* metric_service,
     const SensorConfig* sensor_cfg,
     std::unique_ptr<SensorTask>* sensor_task);
 

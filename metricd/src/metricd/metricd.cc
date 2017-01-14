@@ -277,7 +277,7 @@ int main(int argc, const char** argv) {
   if (rc.isSuccess()) {
     for (const auto& s : config.getSensorConfigs()) {
       std::unique_ptr<SensorTask> sensor_task;
-      rc = mkSensorTask(s.second.get(), &sensor_task);
+      rc = mkSensorTask(metric_service.get(), s.second.get(), &sensor_task);
       if (!rc.isSuccess()) {
         break;
       }

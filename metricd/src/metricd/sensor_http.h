@@ -19,13 +19,15 @@ struct HTTPSensorConfig : public SensorConfig {
 class HTTPSensorTask : public SensorTask {
 public:
 
-  HTTPSensorTask();
+  HTTPSensorTask(const HTTPSensorConfig* config, MetricService* metric_service);
 
   uint64_t getNextInvocationTime() const override;
 
   ReturnCode invoke() override;
 
 protected:
+  const HTTPSensorConfig* config_;
+  MetricService* metric_service_;
   uint64_t next_invocation_;
 };
 
