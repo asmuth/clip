@@ -37,10 +37,20 @@ ReturnCode ConfigParser::parse(ConfigList* config) {
       }
     }
 
-    /* parse the "metric" definition */
+    /* parse the "unit" definition */
     if (ttype == T_STRING && tbuf == "unit") {
       consumeToken();
       if (parseUnitDefinition(config)) {
+        continue;
+      } else {
+        break;
+      }
+    }
+
+    /* parse the "sensor_http" definition */
+    if (ttype == T_STRING && tbuf == "sensor_http") {
+      consumeToken();
+      if (parseSensorHTTPDefinition(config)) {
         continue;
       } else {
         break;
@@ -448,6 +458,67 @@ bool ConfigParser::parseUnitDefinitionNameStanza(
   consumeToken();
 
   unit_config->names.emplace(unit_name, std::move(unc));
+  return true;
+}
+
+bool ConfigParser::parseSensorHTTPDefinition(ConfigList* config) {
+  std::unique_ptr<HTTPSensorConfig> sensor_config(new HTTPSensorConfig());
+  if (!expectAndConsumeString(&sensor_config->sensor_id)) {
+    return false;
+  }
+
+  if (!expectAndConsumeToken(T_LCBRACE)) {
+    return false;
+  }
+
+
+  TokenType ttype;
+  std::string tbuf;
+  while (getToken(&ttype, &tbuf)) {
+    if (ttype == T_RCBRACE) {
+      break;
+    }
+
+    if (ttype == T_ENDLINE) {
+      consumeToken();
+      continue;
+    }
+
+    /* parse the "http_url" stanza */
+    if (ttype == T_STRING && tbuf == "http_url") {
+      consumeToken();
+      if (!parseSensorHTTPDefinitionURLStanza(sensor_config.get())) {
+        return false;
+      }
+      continue;
+    }
+
+    setError(
+        StringUtil::format(
+            "invalid token: $0, expected one of: unit_desc, unit_name",
+            printToken(ttype, tbuf)));
+    return false;
+  }
+
+  if (!expectAndConsumeToken(T_RCBRACE)) {
+    return false;
+  }
+
+  config->addSensorConfig(std::move(sensor_config));
+  return true;
+}
+
+bool ConfigParser::parseSensorHTTPDefinitionURLStanza(
+    HTTPSensorConfig* sensor_config) {
+  TokenType ttype;
+  std::string tbuf;
+  if (!getToken(&ttype, &tbuf) || ttype != T_STRING) {
+    setError("http_url requires an argument");
+    return false;
+  }
+
+  sensor_config->http_url = tbuf;
+  consumeToken();
   return true;
 }
 

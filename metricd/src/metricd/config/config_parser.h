@@ -13,6 +13,7 @@
 #include <string>
 #include "metricd/config/config_list.h"
 #include "metricd/util/return_code.h"
+#include "metricd/sensor_http.h"
 
 namespace fnordmetric {
 
@@ -54,6 +55,9 @@ protected:
   bool parseUnitDefinition(ConfigList* config);
   bool parseUnitDefinitionDescriptionStanza(UnitConfig* unit_config);
   bool parseUnitDefinitionNameStanza(UnitConfig* unit_config);
+
+  bool parseSensorHTTPDefinition(ConfigList* config);
+  bool parseSensorHTTPDefinitionURLStanza(HTTPSensorConfig* sensor_config);
 
   bool getToken(
       TokenType* type,

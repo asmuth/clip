@@ -89,3 +89,22 @@ TEST_CASE(ConfigParserTest, TestParseMetricUnitStanza, [] () {
   }
 });
 
+TEST_CASE(ConfigParserTest, TestParseHTTPSensor, [] () {
+  std::string confstr =
+      R"(sensor_http sensor1 {
+        http_url "http://example.com/stats"
+      })";
+
+  ConfigList config;
+  ConfigParser parser(confstr.data(), confstr.size());
+  auto rc = parser.parse(&config);
+  EXPECT(rc.isSuccess());
+
+  EXPECT(config.getSensorConfigs().size() == 1);
+  {
+    auto sc = config.getSensorConfig("sensor1");
+    EXPECT(sc != nullptr);
+    EXPECT(sc->sensor_id == "sensor1");
+  }
+});
+
