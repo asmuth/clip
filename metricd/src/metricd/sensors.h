@@ -33,5 +33,15 @@ ReturnCode mkSensorTask(
     const SensorConfig* sensor_cfg,
     std::unique_ptr<SensorTask>* sensor_task);
 
+class SensorScheduler{
+public:
+
+  void addTask(std::unique_ptr<SensorTask> task);
+
+  ReturnCode start();
+  void shutdown();
+
+};
+
 } // namespace fnordmetric
 

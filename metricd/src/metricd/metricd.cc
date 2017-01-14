@@ -26,6 +26,7 @@
 #include <metricd/config/config_list.h>
 #include <metricd/config/config_parser.h>
 #include <metricd/metric_service.h>
+#include <metricd/sensors.h>
 
 using namespace fnordmetric;
 
@@ -272,6 +273,24 @@ int main(int argc, const char** argv) {
         &metric_service);
   }
 
+  /* start sensor scheduler */
+  SensorScheduler sensor_sched;
+  if (rc.isSuccess()) {
+    for (const auto& s : config.getSensorConfigs()) {
+      std::unique_ptr<SensorTask> sensor_task;
+      rc = mkSensorTask(s.second.get(), &sensor_task);
+      if (!rc.isSuccess()) {
+        break;
+      }
+
+      sensor_sched.addTask(std::move(sensor_task));
+    }
+  }
+
+  if (!rc.isSuccess()) {
+    rc = sensor_sched.start();
+  }
+
   /* start statsd service */
   std::unique_ptr<statsd::StatsdServer> statsd_server;
   if (rc.isSuccess() && flags.isSet("listen_statsd")) {
@@ -315,6 +334,8 @@ int main(int argc, const char** argv) {
   if (statsd_server) {
     statsd_server->shutdown();
   }
+
+  sensor_sched.shutdown();
 
   logInfo("Exiting...");
   signal(SIGTERM, SIG_IGN);
