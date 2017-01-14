@@ -52,5 +52,24 @@ void ConfigList::addUnitConfig(UnitConfig config) {
   unit_configs_.emplace(unit_id, std::move(config));
 }
 
+const std::map<std::string, std::unique_ptr<SensorConfig>>& ConfigList::getSensorConfigs()
+    const {
+  return sensor_configs_;
+}
+
+const SensorConfig* ConfigList::getSensorConfig(std::string sensor_id) const {
+  auto sensor_config = sensor_configs_.find(sensor_id);
+  if (sensor_config == sensor_configs_.end()) {
+    return nullptr;
+  } else {
+    return sensor_config->second.get();
+  }
+}
+
+void ConfigList::addSensorConfig(std::unique_ptr<SensorConfig> config) {
+  auto sensor_id = config->sensor_id;
+  sensor_configs_.emplace(sensor_id, std::move(config));
+}
+
 } // namespace fnordmetric
 

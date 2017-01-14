@@ -15,6 +15,7 @@
 #include "metricd/util/return_code.h"
 #include "metricd/metric.h"
 #include "metricd/units.h"
+#include "metricd/sensors.h"
 
 namespace fnordmetric {
 
@@ -30,9 +31,14 @@ public:
   const UnitConfig* getUnitConfig(std::string unit_id) const;
   void addUnitConfig(UnitConfig config);
 
+  const std::map<std::string, std::unique_ptr<SensorConfig>>& getSensorConfigs() const;
+  const SensorConfig* getSensorConfig(std::string unit_id) const;
+  void addSensorConfig(std::unique_ptr<SensorConfig> config);
+
 protected:
   std::map<MetricIDType, MetricConfig> metric_configs_;
   std::map<std::string, UnitConfig> unit_configs_;
+  std::map<std::string, std::unique_ptr<SensorConfig>> sensor_configs_;
 };
 
 } // namespace fnordmetric
