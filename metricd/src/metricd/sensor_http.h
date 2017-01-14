@@ -19,10 +19,14 @@ struct HTTPSensorConfig : public SensorConfig {
 class HTTPSensorTask : public SensorTask {
 public:
 
+  HTTPSensorTask();
+
   uint64_t getNextInvocationTime() const override;
 
   ReturnCode invoke() override;
 
+protected:
+  uint64_t next_invocation_;
 };
 
 } // namespace fnordmetric

@@ -9,14 +9,19 @@
  */
 #include <metricd/sensor_http.h>
 #include <metricd/util/time.h>
+#include <iostream>
 
 namespace fnordmetric {
 
+HTTPSensorTask::HTTPSensorTask() : next_invocation_(0) {}
+
 uint64_t HTTPSensorTask::getNextInvocationTime() const {
-  return MonotonicClock::now() + 1 * kMicrosPerSecond;
+  return next_invocation_;
 }
 
 ReturnCode HTTPSensorTask::invoke() {
+  std::cerr << "HTTPSensorTask::invoke() called" << std::endl;
+  next_invocation_ = MonotonicClock::now() + 1 * kMicrosPerSecond;
   return ReturnCode::success();
 }
 

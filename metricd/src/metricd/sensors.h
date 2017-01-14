@@ -8,6 +8,12 @@
  * <http://www.gnu.org/licenses/>.
  */
 #pragma once
+#include <atomic>
+#include <condition_variable>
+#include <functional>
+#include <mutex>
+#include <list>
+#include <thread>
 #include <metricd/types.h>
 #include <metricd/util/return_code.h>
 
@@ -36,11 +42,28 @@ ReturnCode mkSensorTask(
 class SensorScheduler{
 public:
 
+  SensorScheduler(size_t thread_count = 1);
   void addTask(std::unique_ptr<SensorTask> task);
 
   ReturnCode start();
   void shutdown();
 
+protected:
+
+  ReturnCode executeNextTask();
+
+  size_t thread_count_;
+  std::vector<std::thread> threads_;
+  std::atomic<bool> running_;
+
+  std::mutex mutex_;
+  std::condition_variable cv_;
+  std::multiset<
+      SensorTask*,
+      std::function<bool (
+          const SensorTask*,
+          const SensorTask*)>> queue_;
+  std::list<std::unique_ptr<SensorTask>> tasks_;
 };
 
 } // namespace fnordmetric

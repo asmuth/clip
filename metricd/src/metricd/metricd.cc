@@ -140,7 +140,6 @@ int main(int argc, const char** argv) {
       NULL,
       NULL);
 
-
   /* parse flags */
   {
     auto rc = flags.parseArgv(argc, argv);
@@ -287,7 +286,7 @@ int main(int argc, const char** argv) {
     }
   }
 
-  if (!rc.isSuccess()) {
+  if (rc.isSuccess()) {
     rc = sensor_sched.start();
   }
 
