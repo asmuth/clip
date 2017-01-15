@@ -20,7 +20,9 @@ FnordMetricChart.Plotter = function(elem, params) {
 
   var RENDER_SCALE_FACTOR = 1.6;
   var width;
+  var width_real;
   var height;
+  var height_real;
   var canvas_margin_top;
   var canvas_margin_right;
   var canvas_margin_bottom;
@@ -33,12 +35,6 @@ FnordMetricChart.Plotter = function(elem, params) {
   var y_labels;
 
   this.render = function(result) {
-    width = (params.width || elem.offsetWidth) * RENDER_SCALE_FACTOR;
-    height = (params.height || elem.offsetHeight) * RENDER_SCALE_FACTOR;
-    if (height < 50) {
-      height = 50;
-    }
-
     /* prepare axes */
     prepareXAxis(result);
     prepareYAxis(result);
@@ -48,9 +44,24 @@ FnordMetricChart.Plotter = function(elem, params) {
 
     /* draw the svg */
     draw(result);
+
+    /* adjust the svg when the elem is resized */
+    if (!params.width) {
+      var resize_observer = new ResizeObserver(function(e) {
+        prepareLayout(result);
+        draw(result);
+      });
+
+      resize_observer.observe(elem);
+    }
   }
 
   function prepareLayout(result) {
+    width_real = params.width || elem.offsetWidth;
+    width = width_real * RENDER_SCALE_FACTOR;
+    height_real = params.height || elem.offsetHeight;
+    height = height_real * RENDER_SCALE_FACTOR;
+
     canvas_margin_top = 6 * RENDER_SCALE_FACTOR;
     canvas_margin_right = 1 * RENDER_SCALE_FACTOR;
     canvas_margin_bottom = 18 * RENDER_SCALE_FACTOR;
@@ -102,7 +113,7 @@ FnordMetricChart.Plotter = function(elem, params) {
 
   function drawChart(result) {
     var svg = new FnordMetric.SVGHelper();
-    svg.svg += "<svg shape-rendering='geometricPrecision' class='fm-chart' viewBox='0 0 " + width + " " + height + "' >";
+    svg.svg += "<svg shape-rendering='geometricPrecision' class='fm-chart' viewBox='0 0 " + width + " " + height + "' style='width:" + width_real + "px;'>";
 
     drawBorders(svg);
     drawXAxis(svg);

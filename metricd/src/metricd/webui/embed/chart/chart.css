@@ -18,6 +18,7 @@
 
 .fm-chart-plot {
   width: 100%;
+  overflow: hidden;
 }
 
 .fm-chart text {

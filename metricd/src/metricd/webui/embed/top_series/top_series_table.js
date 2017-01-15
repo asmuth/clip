@@ -138,8 +138,7 @@ FnordMetricTopSeries.Table = function(elem, params) {
     td.appendChild(sparkline_elem);
 
     var sparklines_params = {
-      height: 30,
-      width: 300
+      height: 30
     };
 
     var sparkline_plotter = new FnordMetricTopSeries.SparklinePlotter(

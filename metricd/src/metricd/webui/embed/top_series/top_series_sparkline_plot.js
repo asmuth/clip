@@ -11,9 +11,11 @@
 FnordMetricTopSeries.SparklinePlotter = function(elem, params) {
   'use strict';
 
-  var RENDER_SCALE_FACTOR = 1.6;
+  var RENDER_SCALE_FACTOR = 1.2;
   var width;
+  var width_real;
   var height;
+  var height_real;
   var canvas_margin_top = 1;
   var canvas_margin_right = 1;
   var canvas_margin_bottom = 1;
@@ -21,16 +23,31 @@ FnordMetricTopSeries.SparklinePlotter = function(elem, params) {
   var y_domain;
 
   this.render = function(series) {
-    width = (params.width || elem.offsetWidth) * RENDER_SCALE_FACTOR;
-    height = (params.height || elem.offsetHeight) * RENDER_SCALE_FACTOR;
-
     y_domain = new FnordMetricTopSeries.SparklineDomain();
     y_domain.findMinMax(series.values);
 
+    prepareLayout(series);
     draw(series);
+
+    /* adjust the svg when the elem is resized */
+    if (!params.width) {
+      var resize_observer = new ResizeObserver(function(e) {
+        prepareLayout(series);
+        draw(series);
+      });
+
+      resize_observer.observe(elem);
+    }
   }
 
 /********************************** private ***********************************/
+
+  function prepareLayout(result) {
+    width_real = params.width || elem.offsetWidth;
+    width = width_real * RENDER_SCALE_FACTOR;
+    height_real = params.height || elem.offsetHeight;
+    height = height_real * RENDER_SCALE_FACTOR;
+  }
 
   function draw(series) {
     var svg = drawSparkline(series);
@@ -39,7 +56,7 @@ FnordMetricTopSeries.SparklinePlotter = function(elem, params) {
 
   function drawSparkline(series) {
     var svg = new FnordMetric.SVGHelper();
-    svg.svg += "<svg shape-rendering='geometricPrecision' class='fm-chart' viewBox='0 0 " + width + " " + height + "' style='width:" + width + "px;'>";
+    svg.svg += "<svg shape-rendering='geometricPrecision' class='fm-chart' viewBox='0 0 " + width + " " + height + "' style='width:" + width_real + "px;'>";
 
     drawLine(series, svg);
 
