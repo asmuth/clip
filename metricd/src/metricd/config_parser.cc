@@ -180,14 +180,41 @@ bool ConfigParser::parseMetricDefinition(ConfigList* config) {
 
 bool ConfigParser::parseMetricDefinitionKindStanza(
     MetricConfig* metric_config) {
-  TokenType ttype;
-  std::string tbuf;
-  if (!getToken(&ttype, &tbuf) || ttype != T_STRING) {
-    setError("aggregation requires an argument");
-    return false;
+  std::string kind;
+
+  /* read type name */
+  {
+    TokenType ttype;
+    if (!getToken(&ttype, &kind) || ttype != T_STRING) {
+      setError("kind requires an argument");
+      return false;
+    }
+    consumeToken();
   }
 
-  consumeToken();
+  /* read optional type arguments */
+  {
+    TokenType ttype;
+    std::string tbuf;
+    if (getToken(&ttype, &tbuf) && ttype == T_LPAREN) {
+      consumeToken();
+
+      if (!getToken(&ttype, &tbuf) || ttype != T_STRING) {
+        setError("invalid argument to 'kind' stanza");
+        return false;
+      }
+
+      kind += "(";
+      kind += tbuf;
+      kind += ")";
+
+      consumeToken();
+
+      if (!expectAndConsumeToken(T_RPAREN)) {
+        return false;
+      }
+    }
+  }
 
   static const std::map<std::string, MetricKind> kind_map = {
     { "sample(uint64)",     MetricKind::SAMPLE_UINT64 },
@@ -210,16 +237,12 @@ bool ConfigParser::parseMetricDefinitionKindStanza(
     { "average(float64)",   MetricKind::AVERAGE_FLOAT64 }
   };
 
-  auto iter = kind_map.find(tbuf);
+  auto iter = kind_map.find(kind);
   if (iter != kind_map.end()) {
     metric_config->kind = iter->second;
     return true;
   } else {
-    setError(
-        StringUtil::format(
-            "invalid metric kind: $0",
-            printToken(ttype, tbuf)));
-
+    setError(StringUtil::format("invalid metric kind: $0", kind));
     return false;
   }
 }

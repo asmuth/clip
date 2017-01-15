@@ -1,5 +1,4 @@
 v0.5
-- [ ] METRICD: proper kind configuration on config
 - [ ] METRICD: make granularity configurable in api endpoints
 - [ ] METRICD: add series id rewrite in http sensor
 - [ ] METRICD: implement series id filter in api endpoins

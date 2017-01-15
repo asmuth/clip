@@ -89,6 +89,41 @@ TEST_CASE(ConfigParserTest, TestParseMetricGranularityStanza, [] () {
   }
 });
 
+TEST_CASE(ConfigParserTest, TestParseMetricKindStanza, [] () {
+  std::string confstr =
+      R"(metric users_online {
+        kind max(uint64)
+      })";
+
+  ConfigList config;
+  ConfigParser parser(confstr.data(), confstr.size());
+  auto rc = parser.parse(&config);
+  EXPECT(rc.isSuccess());
+
+  EXPECT(config.getMetricConfigs().size() == 1);
+  {
+    auto mc = config.getMetricConfig("users_online");
+    EXPECT(mc != nullptr);
+    EXPECT(mc->kind == MetricKind::MAX_UINT64);
+  }
+});
+
+TEST_CASE(ConfigParserTest, TestParseMetricKindStanzaWithQuotes, [] () {
+  std::string confstr = "metric users_online { kind 'max(uint64)' }";
+
+  ConfigList config;
+  ConfigParser parser(confstr.data(), confstr.size());
+  auto rc = parser.parse(&config);
+  EXPECT(rc.isSuccess());
+
+  EXPECT(config.getMetricConfigs().size() == 1);
+  {
+    auto mc = config.getMetricConfig("users_online");
+    EXPECT(mc != nullptr);
+    EXPECT(mc->kind == MetricKind::MAX_UINT64);
+  }
+});
+
 TEST_CASE(ConfigParserTest, TestParseMetricUnitStanza, [] () {
   std::string confstr =
       R"(metric users_online {
