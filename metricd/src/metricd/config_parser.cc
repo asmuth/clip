@@ -7,7 +7,7 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#include "metricd/config/config_parser.h"
+#include "metricd/config_parser.h"
 #include "metricd/util/format.h"
 
 namespace fnordmetric {

@@ -15,7 +15,7 @@
 #include "metricd/metric.h"
 #include "metricd/metric_cursor.h"
 #include "metricd/metric_map.h"
-#include "metricd/config/config_list.h"
+#include "metricd/config_list.h"
 #include "metricd/util/return_code.h"
 #include "libtsdb/tsdb.h"
 

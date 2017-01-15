@@ -23,8 +23,8 @@
 #include <metricd/transport/http/http_server.h>
 #include <metricd/transport/statsd/statsd.h>
 #include <metricd/transport/statsd/statsd_server.h>
-#include <metricd/config/config_list.h>
-#include <metricd/config/config_parser.h>
+#include <metricd/config_list.h>
+#include <metricd/config_parser.h>
 #include <metricd/metric_service.h>
 #include <metricd/sensors.h>
 

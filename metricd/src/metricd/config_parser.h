@@ -11,7 +11,7 @@
 #include <atomic>
 #include <memory>
 #include <string>
-#include "metricd/config/config_list.h"
+#include "metricd/config_list.h"
 #include "metricd/util/return_code.h"
 #include "metricd/sensor_http.h"
 

@@ -42,10 +42,10 @@ AM_LDFLAGS = $(PCRE_LDFLAGS_) $(CURL_LDFLAGS_) $(PTHREAD_LDFLAGS_)
 metricd_common_sources_ = \
     aggregate.h \
     aggregate.cc \
-    config/config_list.h \
-    config/config_list.cc \
-    config/config_parser.h \
-    config/config_parser.cc \
+    config_list.h \
+    config_list.cc \
+    config_parser.h \
+    config_parser.cc \
     metric.h \
     metric.cc \
     metric_cursor.h \

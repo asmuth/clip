@@ -11,7 +11,7 @@
 #include <stdio.h>
 #include <unistd.h>
 #include "unittest.h"
-#include "metricd/config/config_parser.h"
+#include "metricd/config_parser.h"
 
 using namespace fnordmetric;
 
