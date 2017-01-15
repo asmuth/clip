@@ -109,10 +109,10 @@ bool ConfigParser::parseMetricDefinition(ConfigList* config) {
       continue;
     }
 
-    /* parse the "kind" stanza */
-    if (ttype == T_STRING && tbuf == "kind") {
+    /* parse the "type" stanza */
+    if (ttype == T_STRING && tbuf == "type") {
       consumeToken();
-      if (!parseMetricDefinitionKindStanza(&metric_config)) {
+      if (!parseMetricDefinitionTypeStanza(&metric_config)) {
         return false;
       }
       continue;
@@ -178,15 +178,15 @@ bool ConfigParser::parseMetricDefinition(ConfigList* config) {
   return true;
 }
 
-bool ConfigParser::parseMetricDefinitionKindStanza(
+bool ConfigParser::parseMetricDefinitionTypeStanza(
     MetricConfig* metric_config) {
-  std::string kind;
+  std::string type;
 
   /* read type name */
   {
     TokenType ttype;
-    if (!getToken(&ttype, &kind) || ttype != T_STRING) {
-      setError("kind requires an argument");
+    if (!getToken(&ttype, &type) || ttype != T_STRING) {
+      setError("type requires an argument");
       return false;
     }
     consumeToken();
@@ -200,13 +200,13 @@ bool ConfigParser::parseMetricDefinitionKindStanza(
       consumeToken();
 
       if (!getToken(&ttype, &tbuf) || ttype != T_STRING) {
-        setError("invalid argument to 'kind' stanza");
+        setError("invalid argument to 'type' stanza");
         return false;
       }
 
-      kind += "(";
-      kind += tbuf;
-      kind += ")";
+      type += "(";
+      type += tbuf;
+      type += ")";
 
       consumeToken();
 
@@ -216,7 +216,7 @@ bool ConfigParser::parseMetricDefinitionKindStanza(
     }
   }
 
-  static const std::map<std::string, MetricKind> kind_map = {
+  static const std::map<std::string, MetricKind> type_map = {
     { "sample(uint64)",     MetricKind::SAMPLE_UINT64 },
     { "sample(int64)",      MetricKind::SAMPLE_INT64 },
     { "sample(float64)",    MetricKind::SAMPLE_FLOAT64 },
@@ -237,12 +237,12 @@ bool ConfigParser::parseMetricDefinitionKindStanza(
     { "average(float64)",   MetricKind::AVERAGE_FLOAT64 }
   };
 
-  auto iter = kind_map.find(kind);
-  if (iter != kind_map.end()) {
+  auto iter = type_map.find(type);
+  if (iter != type_map.end()) {
     metric_config->kind = iter->second;
     return true;
   } else {
-    setError(StringUtil::format("invalid metric kind: $0", kind));
+    setError(StringUtil::format("invalid metric type: $0", type));
     return false;
   }
 }

@@ -92,7 +92,7 @@ TEST_CASE(ConfigParserTest, TestParseMetricGranularityStanza, [] () {
 TEST_CASE(ConfigParserTest, TestParseMetricKindStanza, [] () {
   std::string confstr =
       R"(metric users_online {
-        kind max(uint64)
+        type max(uint64)
       })";
 
   ConfigList config;
@@ -109,7 +109,7 @@ TEST_CASE(ConfigParserTest, TestParseMetricKindStanza, [] () {
 });
 
 TEST_CASE(ConfigParserTest, TestParseMetricKindStanzaWithQuotes, [] () {
-  std::string confstr = "metric users_online { kind 'max(uint64)' }";
+  std::string confstr = "metric users_online { type 'max(uint64)' }";
 
   ConfigList config;
   ConfigParser parser(confstr.data(), confstr.size());
