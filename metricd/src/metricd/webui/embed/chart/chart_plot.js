@@ -48,12 +48,6 @@ FnordMetricChart.Plotter = function(elem, params) {
 
     /* draw the svg */
     draw(result);
-
-    /* adjust the svg when the window is resized */
-    window.addEventListener("resize", function(e) {
-      width = elem.offsetWidth;
-      draw(result);
-    }, false);
   }
 
   function prepareLayout(result) {

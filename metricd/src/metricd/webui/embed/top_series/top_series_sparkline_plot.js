@@ -28,12 +28,6 @@ FnordMetricTopSeries.SparklinePlotter = function(elem, params) {
     y_domain.findMinMax(series.values);
 
     draw(series);
-
-    /* adjust the svg when the window is resized */
-    window.addEventListener("resize", function(e) {
-      width = elem.offsetWidth;
-      draw(series);
-    }, false);
   }
 
 /********************************** private ***********************************/
