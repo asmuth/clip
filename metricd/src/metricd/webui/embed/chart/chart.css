@@ -53,7 +53,7 @@
 .fm-chart .line {
   fill: none;
   stroke: #000;
-  stroke-width: 1.6;
+  stroke-width: 2;
 }
 
 /**.fm-chart circle.point {
