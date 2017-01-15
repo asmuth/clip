@@ -57,6 +57,7 @@ protected:
   bool parseUnitDefinitionNameStanza(UnitConfig* unit_config);
 
   bool parseSensorMetricIDRewriteStanza(SensorConfig* sensor_config);
+  bool parseSensorSeriesIDRewriteStanza(SensorConfig* sensor_config);
   bool parseSensorHTTPDefinition(ConfigList* config);
   bool parseSensorHTTPDefinitionURLStanza(HTTPSensorConfig* sensor_config);
 

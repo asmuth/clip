@@ -28,8 +28,10 @@ struct SensorConfig {
   bool metric_id_rewrite_enabled;
   std::regex metric_id_rewrite_regex;
   std::string metric_id_rewrite_replace;
+  bool series_id_rewrite_enabled;
+  std::regex series_id_rewrite_regex;
+  std::string series_id_rewrite_replace;
 };
-
 
 class SensorTask {
 public:

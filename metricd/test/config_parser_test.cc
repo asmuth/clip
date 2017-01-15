@@ -159,6 +159,28 @@ TEST_CASE(ConfigParserTest, TestParseSensorMetricIDRewriteStanza, [] () {
     auto sc = config.getSensorConfig("sensor1");
     EXPECT(sc != nullptr);
     EXPECT(sc->metric_id_rewrite_enabled == true);
+    EXPECT(sc->series_id_rewrite_enabled == false);
+  }
+});
+
+
+TEST_CASE(ConfigParserTest, TestParseSensorSeriesIDRewriteStanza, [] () {
+  std::string confstr =
+      R"(sensor_http sensor1 {
+        series_id_rewrite ".*" "blah-$1"
+      })";
+
+  ConfigList config;
+  ConfigParser parser(confstr.data(), confstr.size());
+  auto rc = parser.parse(&config);
+  EXPECT(rc.isSuccess());
+
+  EXPECT(config.getSensorConfigs().size() == 1);
+  {
+    auto sc = config.getSensorConfig("sensor1");
+    EXPECT(sc != nullptr);
+    EXPECT(sc->series_id_rewrite_enabled == true);
+    EXPECT(sc->metric_id_rewrite_enabled == false);
   }
 });
 
