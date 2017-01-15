@@ -44,6 +44,8 @@ public:
 
 protected:
 
+  bool parseSensorThreadsStanza(ConfigList* config);
+
   bool parseMetricDefinition(ConfigList* config);
   bool parseMetricDefinitionTypeStanza(MetricConfig* metric_config);
   bool parseMetricDefinitionGranularityStanza(MetricConfig* metric_config);

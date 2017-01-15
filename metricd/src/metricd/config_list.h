@@ -22,6 +22,11 @@ namespace fnordmetric {
 class ConfigList {
 public:
 
+  ConfigList();
+
+  size_t getSensorThreads() const;
+  void setSensorThreads(size_t threads);
+
   std::map<MetricIDType, MetricConfig>& getMetricConfigs();
   const std::map<MetricIDType, MetricConfig>& getMetricConfigs() const;
   const MetricConfig* getMetricConfig(MetricIDType metric_id) const;
@@ -36,6 +41,7 @@ public:
   void addSensorConfig(std::unique_ptr<SensorConfig> config);
 
 protected:
+  size_t sensor_threads_;
   std::map<MetricIDType, MetricConfig> metric_configs_;
   std::map<std::string, UnitConfig> unit_configs_;
   std::map<std::string, std::unique_ptr<SensorConfig>> sensor_configs_;

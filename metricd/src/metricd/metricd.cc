@@ -269,7 +269,7 @@ int main(int argc, const char** argv) {
   }
 
   /* start sensor scheduler */
-  SensorScheduler sensor_sched;
+  SensorScheduler sensor_sched(config.getSensorThreads());
   if (rc.isSuccess()) {
     for (const auto& s : config.getSensorConfigs()) {
       std::unique_ptr<SensorTask> sensor_task;

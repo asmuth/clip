@@ -11,6 +11,16 @@
 
 namespace fnordmetric {
 
+ConfigList::ConfigList() : sensor_threads_(1) {}
+
+size_t ConfigList::getSensorThreads() const {
+  return sensor_threads_;
+}
+
+void ConfigList::setSensorThreads(size_t threads) {
+  sensor_threads_ = threads;
+}
+
 std::map<MetricIDType, MetricConfig>& ConfigList::getMetricConfigs() {
   return metric_configs_;
 }

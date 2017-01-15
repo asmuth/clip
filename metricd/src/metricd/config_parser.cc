@@ -49,6 +49,16 @@ ReturnCode ConfigParser::parse(ConfigList* config) {
       }
     }
 
+    /* parse the "sensor_threads" stanza */
+    if (ttype == T_STRING && tbuf == "sensor_threads") {
+      consumeToken();
+      if (parseSensorThreadsStanza(config)) {
+        continue;
+      } else {
+        break;
+      }
+    }
+
     /* parse the "sensor_http" definition */
     if (ttype == T_STRING && tbuf == "sensor_http") {
       consumeToken();
@@ -83,6 +93,31 @@ ReturnCode ConfigParser::parse(ConfigList* config) {
   } else {
     return ReturnCode::success();
   }
+}
+
+bool ConfigParser::parseSensorThreadsStanza(ConfigList* config) {
+  TokenType ttype;
+  std::string tbuf;
+  if (!getToken(&ttype, &tbuf) || ttype != T_STRING) {
+    setError("sensor_threads requires an argument");
+    return false;
+  }
+
+  consumeToken();
+
+  try {
+    config->setSensorThreads(std::stoull(tbuf));
+  } catch (const std::exception& e) {
+    setError(
+        StringUtil::format(
+            "invalid value for sensor_threads '$0': $1",
+            printToken(ttype, tbuf),
+            e.what()));
+
+    return false;
+  }
+
+  return true;
 }
 
 bool ConfigParser::parseMetricDefinition(ConfigList* config) {
