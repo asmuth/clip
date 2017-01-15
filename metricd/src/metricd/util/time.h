@@ -15,6 +15,7 @@
 #include <inttypes.h>
 #include <limits>
 #include <string>
+#include "metricd/util/option.h"
 
 constexpr const uint64_t kMicrosPerMilli = 1000;
 constexpr const uint64_t kMicrosPerSecond = 1000000;
@@ -40,6 +41,7 @@ constexpr const uint64_t kMillisPerYear = kDaysPerYear * kMillisPerDay;
 constexpr const uint64_t kMicrosPerYear = kDaysPerYear * kMicrosPerDay;
 
 class UnixTime;
+class CivilTime;
 
 class WallClock {
 public:
@@ -70,6 +72,35 @@ public:
    * @param timestamp the UTC microsecond timestamp
    */
   constexpr UnixTime(uint64_t utc_time);
+
+  /**
+   * Create a new UTC UnixTime instance from a civil time reference
+   *
+   * @param civil the civil time
+   */
+  UnixTime(const CivilTime& civil);
+
+  /**
+   * Parse time from the provided string
+   *
+   * @param str the string to parse
+   * @param fmt the strftime format string (optional)
+   */
+  static Option<UnixTime> parseString(
+      const String& str,
+      const char* fmt = "%Y-%m-%d %H:%M:%S");
+
+  /**
+   * Parse time from the provided string
+   *
+   * @param str the string to parse
+   * @param strlen the size of the string to parse
+   * @param fmt the strftime format string (optional)
+   */
+  static Option<UnixTime> parseString(
+      const char* str,
+      size_t strlen,
+      const char* fmt = "%Y-%m-%d %H:%M:%S");
 
   /**
    * Return a representation of the date as a string (strftime)
@@ -125,6 +156,115 @@ protected:
    * The utc microsecond timestamp of the represented moment in time
    */
   uint64_t utc_micros_;
+};
+
+/**
+ * Class representing an instance of time in the gregorian calendar
+ */
+class CivilTime {
+public:
+
+  /**
+   * Create a new CivilTime instance with all fields set to zero
+   */
+  constexpr CivilTime();
+
+  /**
+   * Create a new CivilTime instance with all fields set to zero
+   */
+  constexpr CivilTime(std::nullptr_t);
+
+  /**
+   * Parse time from the provided string
+   *
+   * @param str the string to parse
+   * @param fmt the strftime format string (optional)
+   */
+  static Option<CivilTime> parseString(
+      const String& str,
+      const char* fmt = "%Y-%m-%d %H:%M:%S");
+
+  /**
+   * Parse time from the provided string
+   *
+   * @param str the string to parse
+   * @param strlen the size of the string to parse
+   * @param fmt the strftime format string (optional)
+   */
+  static Option<CivilTime> parseString(
+      const char* str,
+      size_t strlen,
+      const char* fmt = "%Y-%m-%d %H:%M:%S");
+
+  /**
+   * Year including century / A.D. (eg. 1999)
+   */
+  constexpr uint16_t year() const;
+
+  /**
+   * Month [1-12]
+   */
+  constexpr uint8_t month() const;
+
+  /**
+   * Day of the month [1-31]
+   */
+  constexpr uint8_t day() const;
+
+  /**
+   * Hour [0-23]
+   */
+  constexpr uint8_t hour() const;
+
+  /**
+   * Hour [0-59]
+   */
+  constexpr uint8_t minute() const;
+
+  /**
+   * Second [0-60]
+   */
+  constexpr uint8_t second() const;
+
+  /**
+   * Millisecond [0-999]
+   */
+  constexpr uint16_t millisecond() const;
+
+  /**
+   * Timezone offset to UTC in seconds
+   */
+  constexpr int32_t offset() const;
+
+  void setYear(uint16_t value);
+  void setMonth(uint8_t value);
+  void setDay(uint8_t value);
+  void setHour(uint8_t value);
+  void setMinute(uint8_t value);
+  void setSecond(uint8_t value);
+  void setMillisecond(uint16_t value);
+  void setOffset(int32_t value);
+
+protected:
+  uint16_t year_;
+  uint8_t month_;
+  uint8_t day_;
+  uint8_t hour_;
+  uint8_t minute_;
+  uint8_t second_;
+  uint16_t millisecond_;
+  int32_t offset_;
+};
+
+class ISO8601 {
+public:
+
+  static Option<CivilTime> parse(const String& str);
+
+  static bool isLeapYear(uint16_t year);
+
+  static uint8_t daysInMonth(uint16_t year, uint8_t month);
+
 };
 
 namespace std {
