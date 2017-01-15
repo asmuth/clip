@@ -56,13 +56,13 @@ FnordMetricTopSeries.SparklinePlotter = function(elem, params) {
       var x = i / (series.values.length - 1);
       var x_screen = x * (width - (canvas_margin_left + canvas_margin_right)) + canvas_margin_left;
 
-      if (series.values[i] === null) {
-        points.push([x_screen, null]);
-      } else {
-        var y = y_domain.convertDomainToScreen(series.values[i]);
-        var y_screen = (1.0 - y) * (height - (canvas_margin_bottom + canvas_margin_top)) + canvas_margin_top;
-        points.push([x_screen, y_screen]);
+      var y = 0;
+      if (series.values[i] !== null) {
+        y = y_domain.convertDomainToScreen(series.values[i]);
       }
+
+      var y_screen = (1.0 - y) * (height - (canvas_margin_bottom + canvas_margin_top)) + canvas_margin_top;
+      points.push([x_screen, y_screen]);
     }
 
     svg.drawPath(points, "line");
