@@ -38,7 +38,7 @@ FnordMetric.SVGHelper = function() {
         "</text>";
   }
 
-  this.drawPath = function(points, classes) {
+  this.drawPath = function(points, classes, style) {
     var d_attr = "";
     var line_active = false;
     for (var i = 0; i < points.length; i++) {
@@ -55,6 +55,7 @@ FnordMetric.SVGHelper = function() {
     this.svg +=
         "<path" +
             xmlAttr("class", classes) +
+            xmlAttr("style", cssStringify(style)) +
             xmlAttr("d", d_attr) +
         " />";
   }
@@ -76,6 +77,19 @@ FnordMetric.SVGHelper = function() {
   function xmlEscape(val) {
     // FIXME WARNING: does not escape...
     return val;
+  }
+
+  function cssStringify(style) {
+    if (!style) {
+      return "";
+    }
+
+    var css_stanzas = [];
+    for (k in style) {
+      css_stanzas.push(k + ":" + style[k]);
+    }
+
+    return css_stanzas.join(";");
   }
 
 }

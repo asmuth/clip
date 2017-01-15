@@ -27,6 +27,7 @@ v0.5
 - [ ] METRICD: parse exponents in unit_name
 - [ ] METRICD: semicolon and comments in config
 - [ ] METRICD: json sample format
+- [ ] METRICD: include in config
 - [ ] WEBUI: query page
 - [ ] WEBUI: metrics list page
 - [ ] WEBUI: series detail page

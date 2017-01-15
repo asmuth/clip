@@ -65,7 +65,7 @@ FnordMetricTopSeries.SparklinePlotter = function(elem, params) {
       points.push([x_screen, y_screen]);
     }
 
-    svg.drawPath(points, "line");
+    svg.drawPath(points, "line", { stroke: FnordMetric.Colors.default[0] });
   }
 
 }

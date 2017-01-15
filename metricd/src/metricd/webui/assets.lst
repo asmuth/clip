@@ -25,6 +25,7 @@ widgets/f-timerange-picker/f-timerange-picker.js
 widgets/f-timerange-picker/f-timerange-picker.html
 widgets/f-timerange-picker/f-timerange-picker.css
 widgets/filter/filter.js
+embed/colors.js
 embed/chart/chart.js
 embed/chart/chart.css
 embed/chart/chart_plotter_linear_domain.js

@@ -114,8 +114,12 @@ FnordMetricChart.Plotter = function(elem, params) {
     drawXAxis(svg);
     drawYAxis(result, svg);
 
+    var series_idx = 0;
     result.series.forEach(function(s) {
-      drawLine(s, svg);
+      var color = FnordMetric.Colors.default[series_idx % FnordMetric.Colors.default.length];
+      series_idx += 1;
+
+      drawLine(s, svg, { color: color });
 
       if (params.points) {
         drawPoints(s, svg);
@@ -230,7 +234,7 @@ FnordMetricChart.Plotter = function(elem, params) {
     c.svg += "</g>";
    }
 
-  function drawLine(series, c) {
+  function drawLine(series, c, opts) {
     var points = [];
 
     for (var i = 0; i < series.values.length; i++) {
@@ -246,7 +250,7 @@ FnordMetricChart.Plotter = function(elem, params) {
       }
     }
 
-    c.drawPath(points, "line");
+    c.drawPath(points, "line", { stroke: opts.color });
   }
 
   function drawPoints(series, c) {
