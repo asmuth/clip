@@ -26,6 +26,7 @@ v0.5
 - [ ] METRICD: initial metricctl implementation
 - [ ] METRICD: libtsdb v0.2
 - [ ] METRICD: parse exponents in unit_name
+- [ ] METRICD: semicolon and comments in config
 - [ ] WEBUI: query page
 - [ ] WEBUI: metrics list page
 - [ ] WEBUI: series detail page
