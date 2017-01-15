@@ -194,6 +194,7 @@ body, html {
 body {
   background: #fff;
   padding-bottom: 20px;
+  overflow-y: scroll;
 }
 
 button.btn,

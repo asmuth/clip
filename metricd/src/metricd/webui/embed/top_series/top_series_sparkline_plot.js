@@ -11,7 +11,7 @@
 FnordMetricTopSeries.SparklinePlotter = function(elem, params) {
   'use strict';
 
-  var RENDER_SCALE_FACTOR = 1.2;
+  var RENDER_SCALE_FACTOR = 1.6;
   var width;
   var width_real;
   var height;
