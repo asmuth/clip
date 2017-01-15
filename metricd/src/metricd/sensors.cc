@@ -14,6 +14,9 @@
 
 namespace fnordmetric {
 
+SensorConfig::SensorConfig() :
+    metric_id_rewrite_enabled(false) {}
+
 ReturnCode mkSensorTask(
     MetricService* metric_service,
     const SensorConfig* sensor_cfg,

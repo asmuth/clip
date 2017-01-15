@@ -14,6 +14,7 @@
 #include <mutex>
 #include <list>
 #include <thread>
+#include <regex>
 #include <metricd/types.h>
 #include <metricd/util/return_code.h>
 
@@ -21,9 +22,14 @@ namespace fnordmetric {
 class MetricService;
 
 struct SensorConfig {
+  SensorConfig();
   virtual ~SensorConfig() = default;
   std::string sensor_id;
+  bool metric_id_rewrite_enabled;
+  std::regex metric_id_rewrite_regex;
+  std::string metric_id_rewrite_replace;
 };
+
 
 class SensorTask {
 public:
