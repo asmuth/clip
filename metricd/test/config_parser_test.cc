@@ -70,6 +70,25 @@ TEST_CASE(ConfigParserTest, TestTokenize, [] () {
   EXPECT(parser.getToken(&ttype, &tbuf) == false);
 });
 
+TEST_CASE(ConfigParserTest, TestParseMetricGranularityStanza, [] () {
+  std::string confstr =
+      R"(metric users_online {
+        granularity 1m
+      })";
+
+  ConfigList config;
+  ConfigParser parser(confstr.data(), confstr.size());
+  auto rc = parser.parse(&config);
+  EXPECT(rc.isSuccess());
+
+  EXPECT(config.getMetricConfigs().size() == 1);
+  {
+    auto mc = config.getMetricConfig("users_online");
+    EXPECT(mc != nullptr);
+    EXPECT(mc->granularity == 60000000);
+  }
+});
+
 TEST_CASE(ConfigParserTest, TestParseMetricUnitStanza, [] () {
   std::string confstr =
       R"(metric users_online {

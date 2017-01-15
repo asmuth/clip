@@ -8,6 +8,7 @@
  * <http://www.gnu.org/licenses/>.
  */
 #include "metricd/config/config_parser.h"
+#include "metricd/util/format.h"
 
 namespace fnordmetric {
 
@@ -235,13 +236,13 @@ bool ConfigParser::parseMetricDefinitionGranularityStanza(
   consumeToken();
 
   uint64_t granularity = 0;
-  try {
-    granularity = std::stoull(tbuf);
-  } catch (...) {
+  auto rc = parseDuration(tbuf, &granularity);
+  if (!rc.isSuccess()) {
     setError(
         StringUtil::format(
-            "invalid value for granularity; got: $0, must be a valid number",
-            printToken(ttype, tbuf)));
+            "invalid value for granularity '$0': $1",
+            printToken(ttype, tbuf),
+            rc.getMessage()));
 
     return false;
   }

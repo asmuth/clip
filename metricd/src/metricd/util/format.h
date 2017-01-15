@@ -17,7 +17,9 @@
 
 namespace fnordmetric {
 
-ReturnCode parseTimeSpec(const std::string& str, uint64_t* timestamp);
+ReturnCode parseDuration(const std::string& str, uint64_t* dueration);
+
+ReturnCode parsePointInTime(const std::string& str, uint64_t* timestamp);
 
 } // namespace fnordmetric
 

@@ -150,7 +150,7 @@ ReturnCode QueryFrontend::fetchSeriesJSON(
   MetricCursorOptions cursor_opts;
   auto time_begin = req->getString("from");
   if (!time_begin.empty()) {
-    auto rc = parseTimeSpec(time_begin, &cursor_opts.time_begin);
+    auto rc = parsePointInTime(time_begin, &cursor_opts.time_begin);
     if (!rc.isSuccess()) {
       return rc;
     }
@@ -158,7 +158,7 @@ ReturnCode QueryFrontend::fetchSeriesJSON(
 
   auto time_limit = req->getString("until");
   if (!time_limit.empty()) {
-    auto rc = parseTimeSpec(time_limit, &cursor_opts.time_limit);
+    auto rc = parsePointInTime(time_limit, &cursor_opts.time_limit);
     if (!rc.isSuccess()) {
       return rc;
     }
@@ -338,7 +338,7 @@ ReturnCode QueryFrontend::fetchSummaryJSON(
   cursor_opts.cursor_type = MetricCursorType::SUMMARY;
   auto time_begin = req->getString("from");
   if (!time_begin.empty()) {
-    auto rc = parseTimeSpec(time_begin, &cursor_opts.time_begin);
+    auto rc = parsePointInTime(time_begin, &cursor_opts.time_begin);
     if (!rc.isSuccess()) {
       return rc;
     }
@@ -346,7 +346,7 @@ ReturnCode QueryFrontend::fetchSummaryJSON(
 
   auto time_limit = req->getString("until");
   if (!time_limit.empty()) {
-    auto rc = parseTimeSpec(time_limit, &cursor_opts.time_limit);
+    auto rc = parsePointInTime(time_limit, &cursor_opts.time_limit);
     if (!rc.isSuccess()) {
       return rc;
     }
