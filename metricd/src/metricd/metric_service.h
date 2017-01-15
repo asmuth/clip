@@ -65,7 +65,20 @@ public:
       uint64_t time,
       const std::string& value);
 
-  ReturnCode insertSamplesBatch(const char* data, size_t len);
+  struct BatchInsertOptions {
+    BatchInsertOptions();
+    bool metric_id_rewrite_enabled;
+    std::regex metric_id_rewrite_regex;
+    std::string metric_id_rewrite_replace;
+    bool series_id_rewrite_enabled;
+    std::regex series_id_rewrite_regex;
+    std::string series_id_rewrite_replace;
+  };
+
+  ReturnCode insertSamplesBatch(
+      const char* data,
+      size_t len,
+      const BatchInsertOptions* opts = nullptr);
 
 protected:
 

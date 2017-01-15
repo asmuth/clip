@@ -264,7 +264,14 @@ ReturnCode MetricService::insertSample(
   return rc;
 }
 
-ReturnCode MetricService::insertSamplesBatch(const char* data, size_t len) {
+MetricService::BatchInsertOptions::BatchInsertOptions() :
+    metric_id_rewrite_enabled(false),
+    series_id_rewrite_enabled(false) {}
+
+ReturnCode MetricService::insertSamplesBatch(
+    const char* data,
+    size_t len,
+    const BatchInsertOptions* opts /* = nullptr */) {
   std::string metric_id;
   std::string series_id;
   std::string value;
@@ -276,6 +283,36 @@ ReturnCode MetricService::insertSamplesBatch(const char* data, size_t len) {
   while (cur < end) {
     if (!statsd::parseStatsdSample(&cur, end, &metric_id, &series_id, &value)) {
       return ReturnCode::error("EPARSE", "invalid packet");
+    }
+
+    if (opts && opts->metric_id_rewrite_enabled) {
+      try {
+        metric_id = std::regex_replace(
+            metric_id,
+            opts->metric_id_rewrite_regex,
+            opts->metric_id_rewrite_replace,
+            std::regex_constants::match_default |
+            std::regex_constants::format_no_copy |
+            std::regex_constants::format_first_only);
+
+      } catch (const std::exception& e) {
+        return ReturnCode::errorf("ERUNTIME", "regex error: $0", e.what());
+      }
+    }
+
+    if (opts && opts->series_id_rewrite_enabled) {
+      try {
+        series_id = std::regex_replace(
+            series_id,
+            opts->series_id_rewrite_regex,
+            opts->series_id_rewrite_replace,
+            std::regex_constants::match_default |
+            std::regex_constants::format_no_copy |
+            std::regex_constants::format_first_only);
+
+      } catch (const std::exception& e) {
+        return ReturnCode::errorf("ERUNTIME", "regex error: $0", e.what());
+      }
     }
 
     auto now = WallClock::unixMicros();
