@@ -205,10 +205,6 @@ int main(int argc, const char** argv) {
     return 1;
   }
 
-  /* init libraries */
-  //curl_global_init(CURL_GLOBAL_DEFAULT);
-
-
   /* daemonize */
   auto rc = ReturnCode::success();
   if (rc.isSuccess() && flags.isSet("daemonize")) {
@@ -348,9 +344,6 @@ int main(int argc, const char** argv) {
     flock(pidfile_fd, LOCK_UN);
     close(pidfile_fd);
   }
-
-  /* shutdown libraries*/
-  //curl_global_cleanup();
 
   return rc.isSuccess() ? 0 : 1;
 }
