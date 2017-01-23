@@ -29,6 +29,7 @@ FnordMetricChart.Plotter = function(elem, params) {
   var canvas_margin_left;
   var x_domain;
   var x_ticks_count;
+  var x_labels = [];
   var y_ticks_count;
   var y_domain;
   var y_label_width;
@@ -87,6 +88,11 @@ FnordMetricChart.Plotter = function(elem, params) {
     result.series.forEach(function(s) {
       x_domain.findMinMax(s.time);
     });
+
+    for (var i = 0; i < x_ticks_count; i++) {
+      var x = x_domain.convertScreenToDomain(i/ x_ticks_count);
+      x_labels.push(dateUtil.formatDateTime(x / 1000));
+    }
   }
 
   function prepareYAxis(result) {
@@ -196,7 +202,7 @@ FnordMetricChart.Plotter = function(elem, params) {
       c.drawText(
           tick_x_screen,
           (height - canvas_margin_bottom) + text_padding,
-          "2017-01-01");
+          x_labels[i]);
     }
 
     c.svg += "</g>";
