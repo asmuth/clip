@@ -20,6 +20,12 @@ UnitNameConfig::UnitNameConfig(
     plural(std::move(other.plural)),
     symbol(std::move(other.symbol)) {}
 
+UnitNameConfig::UnitNameConfig(
+    const UnitNameConfig& other) :
+    factor(other.factor),
+    singular(std::move(other.singular)),
+    plural(std::move(other.plural)),
+    symbol(std::move(other.symbol)) {}
 
 } // namespace fnordmetric
 

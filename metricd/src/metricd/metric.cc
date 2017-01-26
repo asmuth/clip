@@ -55,16 +55,6 @@ std::shared_ptr<const MetricConfig> Metric::getConfig() const {
   return config_;
 }
 
-void Metric::setUnitConfig(std::shared_ptr<const UnitConfig> config) {
-  std::unique_lock<std::mutex> lk(config_mutex_);
-  unit_config_ = config;
-}
-
-std::shared_ptr<const UnitConfig> Metric::getUnitConfig() const {
-  std::unique_lock<std::mutex> lk(config_mutex_);
-  return unit_config_;
-}
-
 std::mutex& Metric::getInsertLock() {
   return insert_mutex_;
 }
@@ -96,7 +86,7 @@ std::shared_ptr<const UnitConfig> MetricInfo::getUnitConfig() const {
     return nullptr;
   }
 
-  return metric_->getUnitConfig();
+  return metric_->getConfig()->unit_config;
 }
 
 std::shared_ptr<const MetricConfig> MetricInfo::getMetricConfig() const {

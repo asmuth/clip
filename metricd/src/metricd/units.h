@@ -17,6 +17,7 @@ namespace fnordmetric {
 
 struct UnitNameConfig {
   UnitNameConfig();
+  UnitNameConfig(const UnitNameConfig& other);
   UnitNameConfig(UnitNameConfig&& other);
   tval_autoref factor;
   std::string singular;

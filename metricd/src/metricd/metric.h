@@ -60,6 +60,7 @@ struct MetricConfig {
   uint64_t display_granularity;
   bool is_valid;
   std::string unit_id;
+  std::shared_ptr<const UnitConfig> unit_config;
   tval_autoref unit_scale;
   std::vector<GrossSummaryMethod> summarize_gross;
   Option<GroupSummaryMethod> summarize_group;
@@ -76,9 +77,6 @@ public:
 
   std::shared_ptr<const MetricConfig> getConfig() const;
   ReturnCode setConfig(std::shared_ptr<const MetricConfig> config);
-
-  void setUnitConfig(std::shared_ptr<const UnitConfig> config);
-  std::shared_ptr<const UnitConfig> getUnitConfig() const;
 
   std::mutex& getInsertLock();
 

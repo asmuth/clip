@@ -49,7 +49,20 @@ ReturnCode MetricService::startService(
 
 ReturnCode MetricService::applyConfig(const ConfigList* config) {
   for (auto& mc : config->getMetricConfigs()) {
-    configureMetric(mc.first, std::make_shared<MetricConfig>(mc.second));
+    auto metric_config = std::make_shared<MetricConfig>(mc.second);
+    if (!metric_config->unit_id.empty()) {
+      auto unit_config = config->getUnitConfig(metric_config->unit_id);
+      if (!unit_config) {
+        return ReturnCode::errorf(
+            "EARG",
+            "invalid unit id: $0",
+            metric_config->unit_id);
+      }
+
+      metric_config->unit_config.reset(new UnitConfig(*unit_config));
+    }
+
+    configureMetric(mc.first, metric_config);
   }
 
   return ReturnCode::success();
