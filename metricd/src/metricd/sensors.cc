@@ -60,6 +60,11 @@ ReturnCode SensorScheduler::executeNextTask() {
 
   SensorTask* task;
   while (running_) {
+    if (queue_.empty()) {
+      cv_.wait(lk);
+      continue;
+    }
+
     auto now = MonotonicClock::now();
     auto next_task = (*queue_.begin())->getNextInvocationTime();
     if (now < next_task) {

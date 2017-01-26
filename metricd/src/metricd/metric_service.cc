@@ -115,8 +115,11 @@ ReturnCode MetricService::fetchData(
     return ReturnCode::error("ENOTFOUND", "metric not found");
   }
 
-  //return MetricCursor::openCursor(tsdb_.get(), metric, opts, cursor);
-  return ReturnCode::success();
+  return MetricCursor::openCursor(
+      metric->getConfig(),
+      getMetricFilePath(datadir_, metric_id),
+      opts,
+      cursor);
 }
 
 ReturnCode MetricService::insertSample(

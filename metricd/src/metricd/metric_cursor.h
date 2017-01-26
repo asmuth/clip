@@ -53,18 +53,18 @@ struct MetricCursorOptions {
 class MetricCursor {
 public:
 
-  //static ReturnCode openCursor(
-  //    tsdb::TSDB* db,
-  //    Metric* metric,
-  //    const MetricCursorOptions& cursor_opts,
-  //    MetricCursor* cursor);
+  static ReturnCode openCursor(
+      std::shared_ptr<const MetricConfig> metric_config,
+      const std::string metric_file,
+      const MetricCursorOptions& cursor_opts,
+      MetricCursor* cursor);
 
   MetricCursor();
-  //MetricCursor(
-  //    const MetricConfig* config,
-  //    std::unique_ptr<MetricCursorOptions> opts,
-  //    std::vector<std::unique_ptr<OutputAggregator>> series_readers,
-  //    std::unique_ptr<GroupSummary> group_summary);
+  MetricCursor(
+      std::shared_ptr<const MetricConfig> config,
+      std::unique_ptr<MetricCursorOptions> opts,
+      std::unique_ptr<tsdb::TSDB> db,
+      std::unique_ptr<OutputAggregator> reader);
 
   MetricCursor(const MetricCursor& o) = delete;
   MetricCursor(MetricCursor&& o);
@@ -77,8 +77,9 @@ public:
   static tval_type getOutputType(const MetricConfig* config);
 
 protected:
+  std::shared_ptr<const MetricConfig> config_;
   std::unique_ptr<MetricCursorOptions> opts_;
-  std::shared_ptr<MetricConfig> config_;
+  std::unique_ptr<tsdb::TSDB> db_;
   std::unique_ptr<OutputAggregator> reader_;
 };
 

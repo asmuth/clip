@@ -26,121 +26,70 @@ MetricCursorOptions::MetricCursorOptions() {
   interpolate = true;
 }
 
-//ReturnCode MetricCursor::openCursor(
-//    tsdb::TSDB* db,
-//    Metric* metric,
-//    const MetricCursorOptions& cursor_opts,
-//    MetricCursor* cursor) {
-//  std::unique_ptr<MetricCursorOptions> opts(
-//      new MetricCursorOptions(cursor_opts));
-//
-//  /* fill in cursor options defaults from metric config */
-//  const auto& config = metric->getConfig();
-//  if (opts->granularity == 0) {
-//    opts->granularity = config->display_granularity;
-//  }
-//
-//  if (opts->granularity == 0) {
-//    opts->granularity = config->granularity;
-//  }
-//
-//  /* open tsdb cursors */
-//  std::vector<std::unique_ptr<OutputAggregator>> series_readers;
-//  switch (opts->cursor_type) {
-//
-//    case MetricCursorType::SERIES: {
-//      /* if no series id is given, perform the lookup */
-//      if (opts->series_id.id == 0) {
-//        std::shared_ptr<MetricSeries> series;
-//        if (!metric->getSeriesList()->findSeries(opts->series_name, &series)) {
-//          return ReturnCode::error("ENOTFOUND", "series not found");
-//        }
-//
-//        opts->series_id = series->getSeriesID();
-//      }
-//
-//      tsdb::Cursor tsdb_cursor;
-//      if (!db->getCursor(opts->series_id.id, &tsdb_cursor)) {
-//        return ReturnCode::error("EIO", "can't open tsdb cursor");
-//      }
-//
-//      series_readers.emplace_back(
-//          mkOutputAggregator(
-//              config,
-//              std::move(tsdb_cursor),
-//              opts.get()));
-//
-//      break;
-//    }
-//
-//    case MetricCursorType::SUMMARY: {
-//      auto series_cursor = metric->getSeriesList()->listSeries();
-//
-//      for (; series_cursor.isValid(); series_cursor.next()) {
-//        tsdb::Cursor tsdb_cursor;
-//        if (!db->getCursor(series_cursor.getSeriesID().id, &tsdb_cursor)) {
-//          return ReturnCode::error("EIO", "can't open tsdb cursor");
-//        }
-//
-//        series_readers.emplace_back(
-//            mkOutputAggregator(
-//                config,
-//                std::move(tsdb_cursor),
-//                opts.get()));
-//      }
-//
-//      break;
-//    }
-//
-//  }
-//
-//  /* set up group summary */
-//  std::unique_ptr<GroupSummary> group_summary;
-//  if (opts->cursor_type == MetricCursorType::SUMMARY) {
-//    switch (opts->summarize_group) {
-//      case GroupSummaryMethod::SUM:
-//        group_summary.reset(
-//            new SumGroupSummary(getOutputType(metric->getConfig())));
-//        break;
-//    }
-//  }
-//
-//  *cursor = MetricCursor(
-//      metric->getConfig(),
-//      std::move(opts),
-//      std::move(series_readers),
-//      std::move(group_summary));
-//
-//  return ReturnCode::success();
-//}
-//
+ReturnCode MetricCursor::openCursor(
+    std::shared_ptr<const MetricConfig> metric_config,
+    const std::string metric_file,
+    const MetricCursorOptions& cursor_opts,
+    MetricCursor* cursor) {
+  std::unique_ptr<MetricCursorOptions> opts(
+      new MetricCursorOptions(cursor_opts));
+
+  /* fill in cursor options defaults from metric config */
+  if (opts->granularity == 0) {
+    opts->granularity = metric_config->display_granularity;
+  }
+
+  if (opts->granularity == 0) {
+    opts->granularity = metric_config->granularity;
+  }
+
+  /* open db file */
+  std::unique_ptr<tsdb::TSDB> db;
+  if (!tsdb::TSDB::openDatabase(&db, metric_file)) {
+    return ReturnCode::errorf("EIO", "can't open database at $0", metric_file);
+  }
+
+  tsdb::Cursor db_cursor;
+  if (!db->getCursor(1, &db_cursor)) {
+    return ReturnCode::error("EIO", "can't open tsdb cursor");
+  }
+
+  *cursor = MetricCursor(
+      metric_config,
+      std::move(opts),
+      std::move(db),
+      mkOutputAggregator(metric_config.get(), std::move(db_cursor), opts.get()));
+
+  return ReturnCode::success();
+}
+
 MetricCursor::MetricCursor() {}
-//
-//MetricCursor::MetricCursor(
-//    const MetricConfig* config,
-//    std::unique_ptr<MetricCursorOptions> opts,
-//    std::vector<std::unique_ptr<OutputAggregator>> series_readers,
-//    std::unique_ptr<GroupSummary> group_summary) :
-//    config_(config),
-//    opts_(std::move(opts)),
-//    series_readers_(std::move(series_readers)),
-//    group_summary_(std::move(group_summary)) {}
-//
-//MetricCursor::MetricCursor(
-//    MetricCursor&& o) :
-//    config_(std::move(o.config_)),
-//    opts_(std::move(o.opts_)),
-//    series_readers_(std::move(o.series_readers_)),
-//    group_summary_(std::move(o.group_summary_)) {}
-//
-//MetricCursor& MetricCursor::operator=(MetricCursor&& o) {
-//  config_ = std::move(o.config_);
-//  opts_ = std::move(o.opts_);
-//  series_readers_ = std::move(o.series_readers_);
-//  group_summary_ = std::move(o.group_summary_);
-//  return *this;
-//}
-//
+
+MetricCursor::MetricCursor(
+    std::shared_ptr<const MetricConfig> config,
+    std::unique_ptr<MetricCursorOptions> opts,
+    std::unique_ptr<tsdb::TSDB> db,
+    std::unique_ptr<OutputAggregator> reader) :
+    config_(config),
+    opts_(std::move(opts)),
+    db_(std::move(db)),
+    reader_(std::move(reader)) {}
+
+MetricCursor::MetricCursor(
+    MetricCursor&& o) :
+    config_(std::move(o.config_)),
+    opts_(std::move(o.opts_)),
+    db_(std::move(o.db_)),
+    reader_(std::move(o.reader_)){}
+
+MetricCursor& MetricCursor::operator=(MetricCursor&& o) {
+  config_ = std::move(o.config_);
+  opts_ = std::move(o.opts_);
+  db_ = std::move(o.db_);
+  reader_ = std::move(o.reader_);
+  return *this;
+}
+
 bool MetricCursor::next(uint64_t* timestamp, tval_ref* out) {
   return reader_->next(timestamp, out);
 }
