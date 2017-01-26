@@ -194,8 +194,7 @@ ReturnCode MetricService::insertSample(
 }
 
 MetricService::BatchInsertOptions::BatchInsertOptions() :
-    metric_id_rewrite_enabled(false),
-    series_id_rewrite_enabled(false) {}
+    metric_id_rewrite_enabled(false) {}
 
 ReturnCode MetricService::insertSamplesBatch(
     const char* data,
@@ -229,21 +228,6 @@ ReturnCode MetricService::insertSamplesBatch(
       }
     }
 
-    if (opts && opts->series_id_rewrite_enabled) {
-      try {
-        series_id = std::regex_replace(
-            series_id,
-            opts->series_id_rewrite_regex,
-            opts->series_id_rewrite_replace,
-            std::regex_constants::match_default |
-            std::regex_constants::format_no_copy |
-            std::regex_constants::format_first_only);
-
-      } catch (const std::exception& e) {
-        return ReturnCode::errorf("ERUNTIME", "regex error: $0", e.what());
-      }
-    }
-
     auto now = WallClock::unixMicros();
     auto rc = insertSample(
         metric_id,
@@ -252,10 +236,9 @@ ReturnCode MetricService::insertSamplesBatch(
 
     if (!rc.isSuccess()) {
       logWarning(
-          "batch insert failed: $0; metric_id=$1 series_id=$2 value=$3",
+          "batch insert failed: $0; metric_id=$1 value=$2",
           rc.getMessage(),
           metric_id,
-          series_id,
           value);
     }
   }

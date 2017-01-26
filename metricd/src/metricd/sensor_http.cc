@@ -53,9 +53,6 @@ ReturnCode HTTPSensorTask::invoke() {
   insert_opts.metric_id_rewrite_enabled = config_->metric_id_rewrite_enabled;
   insert_opts.metric_id_rewrite_regex = config_->metric_id_rewrite_regex;
   insert_opts.metric_id_rewrite_replace = config_->metric_id_rewrite_replace;
-  insert_opts.series_id_rewrite_enabled = config_->series_id_rewrite_enabled;
-  insert_opts.series_id_rewrite_regex = config_->series_id_rewrite_regex;
-  insert_opts.series_id_rewrite_replace = config_->series_id_rewrite_replace;
 
   const auto& body = response.body();
   return metric_service_->insertSamplesBatch(

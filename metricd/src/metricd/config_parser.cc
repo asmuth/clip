@@ -555,40 +555,6 @@ bool ConfigParser::parseSensorMetricIDRewriteStanza(
   return true;
 }
 
-bool ConfigParser::parseSensorSeriesIDRewriteStanza(
-    SensorConfig* sensor_config) {
-  TokenType ttype;
-  std::string regex_str;
-  if (!getToken(&ttype, &regex_str) || ttype != T_STRING) {
-    setError("series_id_rewrite requires two arguments");
-    return false;
-  }
-
-  consumeToken();
-
-  std::string replace_str;
-  if (!getToken(&ttype, &replace_str) || ttype != T_STRING) {
-    setError("series_id_rewrite requires two arguments");
-    return false;
-  }
-
-  std::regex regex;
-  try {
-    regex = std::regex(regex_str);
-  } catch (const std::exception& e) {
-    setError(StringUtil::format("invalid regex: $0", e.what()));
-    return false;
-  }
-
-  consumeToken();
-
-  sensor_config->series_id_rewrite_enabled = true;
-  sensor_config->series_id_rewrite_regex = regex;
-  sensor_config->series_id_rewrite_replace = replace_str;
-
-  return true;
-}
-
 bool ConfigParser::parseSensorHTTPDefinition(ConfigList* config) {
   std::unique_ptr<HTTPSensorConfig> sensor_config(new HTTPSensorConfig());
   if (!expectAndConsumeString(&sensor_config->sensor_id)) {
@@ -625,15 +591,6 @@ bool ConfigParser::parseSensorHTTPDefinition(ConfigList* config) {
     if (ttype == T_STRING && tbuf == "metric_id_rewrite") {
       consumeToken();
       if (!parseSensorMetricIDRewriteStanza(sensor_config.get())) {
-        return false;
-      }
-      continue;
-    }
-
-    /* parse the "series_id_rewrite" stanza */
-    if (ttype == T_STRING && tbuf == "series_id_rewrite") {
-      consumeToken();
-      if (!parseSensorSeriesIDRewriteStanza(sensor_config.get())) {
         return false;
       }
       continue;
