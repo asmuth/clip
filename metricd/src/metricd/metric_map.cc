@@ -76,6 +76,8 @@ std::shared_ptr<MetricMap> MetricMapBuilder::getMetricMap() {
   return mmap;
 }
 
+VersionedMetricMap::VersionedMetricMap() : metric_map_(new MetricMap()) {}
+
 std::shared_ptr<MetricMap> VersionedMetricMap::getMetricMap() {
   std::unique_lock<std::mutex> lk(mutex_);
   return metric_map_;
@@ -118,14 +120,5 @@ bool MetricListCursor::next() {
   }
 }
 
-SeriesIDProvider::SeriesIDProvider(
-    SeriesIDType init_id) :
-    series_id_(init_id.id) {}
-
-SeriesIDType SeriesIDProvider::allocateSeriesID() {
-  return SeriesIDType(series_id_.fetch_add(1) + 1);
-}
-
 } // namespace fnordmetric
-
 

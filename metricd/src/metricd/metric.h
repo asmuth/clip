@@ -28,22 +28,8 @@
 
 namespace fnordmetric {
 class MetricMap;
-class SeriesIDProvider;
-class MetricSeriesListCursor;
 
 using MetricIDType = std::string;
-
-struct SeriesIDType {
-  explicit SeriesIDType() : id(0) {}
-  explicit SeriesIDType(uint64_t id_) : id(id_) {}
-  uint64_t id;
-};
-
-struct SeriesNameType {
-  SeriesNameType() = default;
-  explicit SeriesNameType(const std::string& name_) : name(name_) {}
-  std::string name;
-};
 
 enum MetricKind : uint32_t {
   UNKNOWN           = 0,
@@ -79,104 +65,6 @@ struct MetricConfig {
   Option<GroupSummaryMethod> summarize_group;
 };
 
-class MetricSeries {
-public:
-
-  MetricSeries(
-      SeriesIDType series_id,
-      SeriesNameType series_name);
-
-  size_t getTotalBytes() const;
-  TimestampType getLastInsertTime();
-
-  SeriesIDType getSeriesID() const;
-  const SeriesNameType& getSeriesName() const;
-
-protected:
-  const SeriesIDType series_id_;
-  SeriesNameType series_name_;
-};
-
-struct MetricSeriesMetadata {
-  MetricIDType metric_id;
-  MetricKind metric_kind;
-  SeriesNameType series_name;
-  bool encode(std::ostream* os) const;
-  bool decode(std::istream* is);
-};
-
-class MetricSeriesList {
-public:
-
-  MetricSeriesList();
-
-  bool findSeries(
-      const SeriesIDType& series_id,
-      std::shared_ptr<MetricSeries>* series);
-
-  bool findSeries(
-      const SeriesNameType& series_name,
-      std::shared_ptr<MetricSeries>* series);
-
-  ReturnCode findOrCreateSeries(
-      tsdb::TSDB* tsdb,
-      SeriesIDProvider* series_id_provider,
-      const std::string& metric_id,
-      const MetricConfig* config,
-      const SeriesNameType& series_name,
-      std::shared_ptr<MetricSeries>* series);
-
-  void addSeries(
-      const SeriesIDType& series_id,
-      const SeriesNameType& series_name);
-
-  void listSeries(std::vector<SeriesIDType>* series_ids);
-  MetricSeriesListCursor listSeries();
-
-  size_t getSize() const;
-
-protected:
-  mutable std::mutex series_mutex_;
-  std::map<std::string, std::shared_ptr<MetricSeries>> series_;
-  std::map<uint64_t, std::shared_ptr<MetricSeries>> series_by_id_;
-};
-
-class MetricSeriesListCursor {
-public:
-
-  using ListType = std::vector<SeriesIDType>;
-  using ListIterType = ListType::iterator;
-
-  MetricSeriesListCursor();
-  MetricSeriesListCursor(
-      MetricSeriesList* series_list,
-      ListType&& snapshot);
-
-  MetricSeriesListCursor(const MetricSeriesListCursor& o) = delete;
-  MetricSeriesListCursor(MetricSeriesListCursor&& o);
-  MetricSeriesListCursor& operator=(const MetricSeriesListCursor& o) = delete;
-  MetricSeriesListCursor& operator=(MetricSeriesListCursor&& o);
-
-  SeriesIDType getSeriesID() const;
-  const SeriesNameType& getSeriesName() const;
-
-  bool isValid() const;
-  bool next();
-
-  void setMetricMap(std::shared_ptr<MetricMap> metric_map);
-
-protected:
-
-  bool fetchNext();
-
-  bool valid_;
-  std::shared_ptr<MetricMap> metric_map_;
-  MetricSeriesList* series_list_;
-  ListType snapshot_;
-  ListIterType cursor_;
-  std::shared_ptr<MetricSeries> series_;
-};
-
 class Metric {
 public:
 
@@ -186,22 +74,17 @@ public:
   size_t getTotalBytes() const;
   TimestampType getLastInsertTime();
 
-  const MetricConfig* getConfig() const;
-  ReturnCode setConfig(const MetricConfig* config);
+  std::shared_ptr<const MetricConfig> getConfig() const;
+  ReturnCode setConfig(std::shared_ptr<const MetricConfig> config);
 
-  MetricSeriesList* getSeriesList();
-
-  InputAggregator* getInputAggregator();
-
-  void setUnitConfig(const UnitConfig* config);
-  const UnitConfig* getUnitConfig() const;
+  void setUnitConfig(std::shared_ptr<const UnitConfig> config);
+  std::shared_ptr<const UnitConfig> getUnitConfig() const;
 
 protected:
   std::string key_;
-  MetricSeriesList series_;
-  const MetricConfig* config_;
-  std::unique_ptr<InputAggregator> input_aggr_;
-  const UnitConfig* unit_config_;
+  mutable std::mutex config_mutex_;
+  std::shared_ptr<const MetricConfig> config_;
+  std::shared_ptr<const UnitConfig> unit_config_;
 };
 
 class MetricInfo {
@@ -215,8 +98,8 @@ public:
   MetricInfo& operator=(const MetricInfo& o) = delete;
   MetricInfo& operator=(MetricInfo&& o);
 
-  const UnitConfig* getUnitConfig() const;
-  const MetricConfig* getMetricConfig() const;
+  std::shared_ptr<const UnitConfig> getUnitConfig() const;
+  std::shared_ptr<const MetricConfig> getMetricConfig() const;
 
 protected:
   Metric* metric_;

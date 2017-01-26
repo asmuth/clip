@@ -135,7 +135,6 @@ void StatsdServer::handlePacket(const char* pkt, size_t pkt_len) {
     auto now = WallClock::unixMicros();
     auto rc = metric_service_->insertSample(
         metric_id,
-        SeriesNameType(series_id),
         now,
         value);
 

@@ -59,6 +59,8 @@ protected:
 class VersionedMetricMap {
 public:
 
+  VersionedMetricMap();
+
   std::shared_ptr<MetricMap> getMetricMap();
 
   void updateMetricMap(std::shared_ptr<MetricMap> metric_map);
@@ -86,16 +88,6 @@ protected:
   MetricMap::IterType begin_;
   MetricMap::IterType cur_;
   MetricMap::IterType end_;
-};
-
-class SeriesIDProvider {
-public:
-
-  SeriesIDProvider(SeriesIDType init_id);
-  SeriesIDType allocateSeriesID();
-
-protected:
-  std::atomic<uint64_t> series_id_;
 };
 
 } // namespace fnordmetric

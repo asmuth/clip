@@ -23,22 +23,9 @@
 namespace fnordmetric {
 struct MetricConfig;
 
-enum class MetricCursorType {
-  SERIES,
-  SUMMARY
-};
-
 struct MetricCursorOptions {
 
   MetricCursorOptions();
-
-  MetricCursorType cursor_type;
-
-  SeriesNameType series_name;
-  SeriesIDType series_id;
-
-  std::string series_name_match;
-
 
   /**
    * begin of scan time window (inclusive); unix microsecond timestamp;
@@ -61,25 +48,23 @@ struct MetricCursorOptions {
 
   bool interpolate;
 
-  GroupSummaryMethod summarize_group;
-
 };
 
 class MetricCursor {
 public:
 
-  static ReturnCode openCursor(
-      tsdb::TSDB* db,
-      Metric* metric,
-      const MetricCursorOptions& cursor_opts,
-      MetricCursor* cursor);
+  //static ReturnCode openCursor(
+  //    tsdb::TSDB* db,
+  //    Metric* metric,
+  //    const MetricCursorOptions& cursor_opts,
+  //    MetricCursor* cursor);
 
   MetricCursor();
-  MetricCursor(
-      const MetricConfig* config,
-      std::unique_ptr<MetricCursorOptions> opts,
-      std::vector<std::unique_ptr<OutputAggregator>> series_readers,
-      std::unique_ptr<GroupSummary> group_summary);
+  //MetricCursor(
+  //    const MetricConfig* config,
+  //    std::unique_ptr<MetricCursorOptions> opts,
+  //    std::vector<std::unique_ptr<OutputAggregator>> series_readers,
+  //    std::unique_ptr<GroupSummary> group_summary);
 
   MetricCursor(const MetricCursor& o) = delete;
   MetricCursor(MetricCursor&& o);
@@ -92,10 +77,9 @@ public:
   static tval_type getOutputType(const MetricConfig* config);
 
 protected:
-  const MetricConfig* config_;
   std::unique_ptr<MetricCursorOptions> opts_;
-  std::vector<std::unique_ptr<OutputAggregator>> series_readers_;
-  std::unique_ptr<GroupSummary> group_summary_;
+  std::shared_ptr<MetricConfig> config_;
+  std::unique_ptr<OutputAggregator> reader_;
 };
 
 std::unique_ptr<InputAggregator> mkInputAggregator(

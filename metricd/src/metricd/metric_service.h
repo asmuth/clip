@@ -26,7 +26,6 @@ public:
 
   static ReturnCode startService(
       const std::string& datadir,
-      ConfigList* config,
       std::unique_ptr<MetricService>* service);
 
   /**
@@ -42,13 +41,6 @@ public:
       MetricInfo* metric_info);
 
   /**
-   * List all series in a metric
-   */
-  ReturnCode listSeries(
-      const MetricIDType& metric_id,
-      MetricSeriesListCursor* cursor);
-
-  /**
    * Get a cursor to a metric
    */
   ReturnCode fetchData(
@@ -61,7 +53,6 @@ public:
    */
   ReturnCode insertSample(
       const MetricIDType& metric_id,
-      const SeriesNameType& series_name,
       uint64_t time,
       const std::string& value);
 
@@ -82,15 +73,9 @@ public:
 
 protected:
 
-  MetricService(
-      std::unique_ptr<tsdb::TSDB> tsdb,
-      std::shared_ptr<MetricMap> metric_map,
-      SeriesIDType series_id);
-
-  std::unique_ptr<tsdb::TSDB> tsdb_;
+  MetricService(const std::string& datadir);
+  std::string datadir_;
   VersionedMetricMap metric_map_;
-  SeriesIDProvider id_provider_;
-  //tsdb::TSDB tsdb_;
 };
 
 } // namespace fnordmetric

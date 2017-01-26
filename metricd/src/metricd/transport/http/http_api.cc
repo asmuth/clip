@@ -44,12 +44,6 @@ void HTTPAPI::handleHTTPRequest(
     return;
   }
 
-  // PATH: /api/v1/metrics/list_series
-  if (path == "/api/v1/metrics/list_series") {
-    renderMetricSeriesList(request, response, uri);
-    return;
-  }
-
   // PATH: /api/v1/metrics/fetch_series
   if (path == "/api/v1/metrics/fetch_series") {
     performMetricFetchSeries(request, response, uri);
@@ -89,53 +83,6 @@ void HTTPAPI::renderMetricList(
 
     json.addString("metric_id");
     json.addString(cursor.getMetricID());
-
-    json.endObject();
-  }
-
-  json.endArray();
-  json.endObject();
-
-  response->setStatus(http::kStatusOK);
-  response->addHeader("Content-Type", "application/json; charset=utf-8");
-  response->addBody(json_str);
-}
-
-void HTTPAPI::renderMetricSeriesList(
-    http::HTTPRequest* request,
-    http::HTTPResponse* response,
-    const URI& uri) {
-  auto params = uri.queryParams();
-
-  std::string metric_id;
-  if (!URI::getParam(params, "metric_id", &metric_id)) {
-    response->setStatus(http::kStatusBadRequest);
-    response->addBody("ERROR: missing parameter ?metric_id=...");
-    return;
-  }
-
-  MetricSeriesListCursor cursor;
-  auto rc = metric_service_->listSeries(metric_id, &cursor);
-  if (!rc.isSuccess()) {
-    response->setStatus(http::kStatusInternalServerError);
-    response->addBody("ERROR: " + rc.getMessage());
-    return;
-  }
-
-  std::string json_str;
-  json::JSONWriter json(&json_str);
-
-  json.beginObject();
-  json.addString("metric_id");
-  json.addString(metric_id);
-  json.addString("series");
-  json.beginArray();
-
-  for (; cursor.isValid(); cursor.next()) {
-    json.beginObject();
-
-    json.addString("series_id");
-    json.addString(cursor.getSeriesName().name);
 
     json.endObject();
   }
@@ -276,9 +223,6 @@ void HTTPAPI::performMetricInsert(
     return;
   }
 
-  std::string series_id;
-  URI::getParam(params, "series_id", &series_id);
-
   std::string value;
   if (!URI::getParam(params, "value", &value)) {
     response->addBody("error: missing ?value=... parameter");
@@ -289,7 +233,6 @@ void HTTPAPI::performMetricInsert(
   auto now = WallClock::unixMicros();
   auto rc = metric_service_->insertSample(
       metric_id,
-      SeriesNameType(series_id),
       now,
       value);
 
