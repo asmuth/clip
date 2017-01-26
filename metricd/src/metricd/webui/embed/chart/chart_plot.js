@@ -107,6 +107,7 @@ FnordMetricChart.Plotter = function(elem, params) {
   }
 
   function draw(result) {
+    console.log(result);
     var svg = drawChart(result);
     elem.innerHTML = svg;
   }

@@ -32,7 +32,7 @@ FnordMetricChart.QueryManager = function(params) {
     queries_completed = 0;
 
     params.queries.forEach(function(qry) {
-      if (qry.query.op == "fetch_summary") {
+      if (qry.query.op == "fetch") {
         executeFetchSummary(qry.query);
         return;
       }
@@ -45,7 +45,7 @@ FnordMetricChart.QueryManager = function(params) {
     qry.until = params.until;
 
     HTTPUtil.httpPost(
-        "/api/v1/metrics/fetch_summary",
+        "/api/v1/metrics/fetch_timeseries",
         JSON.stringify(qry),
         {},
         function(r) {
@@ -57,9 +57,7 @@ FnordMetricChart.QueryManager = function(params) {
       try {
         var r = JSON.parse(r.response);
         result.unit = r.unit;
-        r.series.forEach(function(s) {
-          result.series.push(s);
-        });
+        result.series.push(r.timeseries);
       } catch (e) {
         success = false;
       }

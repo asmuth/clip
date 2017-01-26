@@ -60,6 +60,7 @@ void WebUI::handleHTTPRequest(
     js_src += getAssetFile("embed/svg_helper.js");
     js_src += getAssetFile("util/http.js");
     js_src += getAssetFile("embed/units.js");
+    js_src += getAssetFile("embed/colors.js");
     css_src += getAssetFile("embed/chart/chart.css");
 
     std::string config = "{}";
