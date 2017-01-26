@@ -9,19 +9,36 @@
  * <http://www.gnu.org/licenses/>.
  */
 #include <assert.h>
+#include <iostream>
+#include <sstream>
 #include "metricd/metric_service.h"
 #include "metricd/util/fileutil.h"
 #include "metricd/util/logging.h"
 #include "metricd/util/time.h"
+#include "metricd/util/sha1.h"
 #include "metricd/transport/statsd/statsd.h"
 
 namespace fnordmetric {
+
+static std::string getMetricFilePath(
+    const std::string& datadir,
+    const std::string& metric_id) {
+  auto h = SHA1::compute(metric_id).toString();
+  return FileUtil::joinPaths(datadir, "metrics/" + h.substr(0, 2) + "/" + h);
+}
 
 ReturnCode MetricService::startService(
     const std::string& datadir,
     std::unique_ptr<MetricService>* service) {
   if (!FileUtil::exists(datadir)) {
     return ReturnCode::errorf("EIO", "datadir doesn't exist: $0", datadir);
+  }
+
+  /* create metric directories */
+  for (size_t i = 0; i < 256; ++i) {
+    unsigned char c = i;
+    auto dirname = "metrics/" + StringUtil::hexPrint(&c, 1);
+    FileUtil::mkdir_p(FileUtil::joinPaths(datadir, dirname));
   }
 
   /* initialize service */
@@ -112,58 +129,68 @@ ReturnCode MetricService::insertSample(
     return ReturnCode::error("ENOTFOUND", "metric not found");
   }
 
+  std::unique_lock<std::mutex> lk(metric->getInsertLock());
+  auto metric_config = metric->getConfig();
+  auto db_path = getMetricFilePath(datadir_, metric_id);
+
+  /* open db file */
+  std::unique_ptr<tsdb::TSDB> db;
+  if (FileUtil::exists(db_path)) {
+    if (!tsdb::TSDB::openDatabase(&db, db_path)) {
+      return ReturnCode::errorf("EIO", "can't open database at $0", db_path);
+    }
+  } else {
+    if (!tsdb::TSDB::createDatabase(&db, db_path)) {
+      return ReturnCode::errorf("EIO", "can't create database at $0", db_path);
+    }
+
+    if (!db->createSeries(1, tval_len(getMetricDataType(metric_config->kind)), "")) {
+      return ReturnCode::errorf("EIO", "can't create series in $0", db_path);
+    }
+  }
+
+  tval_ref val;
+  val.type = getMetricDataType(metric->getConfig()->kind);
+  val.len = tval_len(val.type);
+  val.data = alloca(val.len);
+
+  int parse_rc = tval_fromstring(
+      val.type,
+      val.data,
+      val.len,
+      value.data(),
+      value.size());
+
+  if (!parse_rc) {
+    return ReturnCode::errorf("ERUNTIME", "invalid value: '$0'", value);
+  }
+
+  auto input_aggregator = mkInputAggregator(
+      metric_config.get());
+
+  if (!input_aggregator) {
+    return ReturnCode::error("ERUNTIME", "can't open input aggregator");
+  }
+
+  tsdb::Cursor db_cursor;
+  if (!db->getCursor(1, &db_cursor, false)) {
+    return ReturnCode::error("EIO", "can't open tsdb cursor");
+  }
+
+  auto insert_rc = input_aggregator->addSample(
+      &db_cursor,
+      time,
+      val.type,
+      val.data,
+      val.len);
+
+  if (!insert_rc.isSuccess()) {
+    return insert_rc;
+  }
+
+  db->commit(); // FIXME
+
   return ReturnCode::success();
-  //std::shared_ptr<MetricSeries> series;
-  //auto rc = metric->getSeriesList()->findOrCreateSeries(
-  //    tsdb_.get(),
-  //    &id_provider_,
-  //    metric_id,
-  //    metric->getConfig(),
-  //    series_name,
-  //    &series);
-
-  //if (!rc.isSuccess()) {
-  //  return rc;
-  //}
-
-  //tsdb::Cursor cursor;
-  //if (!tsdb_->getCursor(series->getSeriesID().id, &cursor, false)) {
-  //  return ReturnCode::error("ERUNTIME", "can't open cursor");
-  //}
-
-  //auto input_aggregator = metric->getInputAggregator();
-  //if (!input_aggregator) {
-  //  return ReturnCode::error("ERUNTIME", "can't open input aggregator");
-  //}
-
-  //tval_ref val;
-  //val.type = getMetricDataType(metric->getConfig()->kind);
-  //val.len = tval_len(val.type);
-  //val.data = alloca(val.len);
-
-  //int parse_rc = tval_fromstring(
-  //    val.type,
-  //    val.data,
-  //    val.len,
-  //    value.data(),
-  //    value.size());
-
-  //if (!parse_rc) {
-  //  return ReturnCode::errorf("ERUNTIME", "invalid value: '$0'", value);
-  //}
-
-  //rc = input_aggregator->addSample(
-  //    &cursor,
-  //    time,
-  //    val.type,
-  //    val.data,
-  //    val.len);
-
-  //if (rc.isSuccess()) {
-  //  tsdb_->commit(); // FIXME
-  //}
-
-  //return rc;
 }
 
 MetricService::BatchInsertOptions::BatchInsertOptions() :

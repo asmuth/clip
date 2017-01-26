@@ -65,6 +65,10 @@ std::shared_ptr<const UnitConfig> Metric::getUnitConfig() const {
   return unit_config_;
 }
 
+std::mutex& Metric::getInsertLock() {
+  return insert_mutex_;
+}
+
 MetricInfo::MetricInfo() : metric_(nullptr) {}
 
 MetricInfo::MetricInfo(

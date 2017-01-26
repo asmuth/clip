@@ -80,11 +80,14 @@ public:
   void setUnitConfig(std::shared_ptr<const UnitConfig> config);
   std::shared_ptr<const UnitConfig> getUnitConfig() const;
 
+  std::mutex& getInsertLock();
+
 protected:
   std::string key_;
   mutable std::mutex config_mutex_;
   std::shared_ptr<const MetricConfig> config_;
   std::shared_ptr<const UnitConfig> unit_config_;
+  std::mutex insert_mutex_;
 };
 
 class MetricInfo {

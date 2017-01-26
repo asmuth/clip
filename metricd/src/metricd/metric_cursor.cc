@@ -167,50 +167,50 @@ tval_type MetricCursor::getOutputType(const MetricConfig* config) {
   }
 }
 
-//std::unique_ptr<InputAggregator> mkInputAggregator(
-//    const MetricConfig* config) {
-//  switch (config->kind) {
-//    case MetricKind::MAX_UINT64:
-//    case MetricKind::MAX_INT64:
-//    case MetricKind::MAX_FLOAT64:
-//      return std::unique_ptr<InputAggregator>(
-//          new MaxInputAggregator(config->granularity));
-//    case MetricKind::COUNTER_UINT64:
-//    case MetricKind::COUNTER_INT64:
-//    case MetricKind::COUNTER_FLOAT64:
-//      return std::unique_ptr<InputAggregator>(
-//          new SumInputAggregator(config->granularity));
-//    default: return {};
-//  }
-//}
-//
-//std::unique_ptr<OutputAggregator> mkOutputAggregator(
-//    const MetricConfig* config,
-//    tsdb::Cursor cursor,
-//    const MetricCursorOptions* cursor_opts) {
-//  switch (config->kind) {
-//
-//    case MetricKind::MAX_UINT64:
-//    case MetricKind::MAX_INT64:
-//    case MetricKind::MAX_FLOAT64:
-//      return std::unique_ptr<OutputAggregator>(
-//          new MaxOutputAggregator(
-//              std::move(cursor),
-//              getMetricDataType(config->kind),
-//              cursor_opts));
-//
-//    case MetricKind::COUNTER_UINT64:
-//    case MetricKind::COUNTER_INT64:
-//    case MetricKind::COUNTER_FLOAT64:
-//      return std::unique_ptr<OutputAggregator>(
-//          new SumOutputAggregator(
-//              std::move(cursor),
-//              getMetricDataType(config->kind),
-//              cursor_opts));
-//
-//    default: return {};
-//  }
-//}
+std::unique_ptr<InputAggregator> mkInputAggregator(
+    const MetricConfig* config) {
+  switch (config->kind) {
+    case MetricKind::MAX_UINT64:
+    case MetricKind::MAX_INT64:
+    case MetricKind::MAX_FLOAT64:
+      return std::unique_ptr<InputAggregator>(
+          new MaxInputAggregator(config->granularity));
+    case MetricKind::COUNTER_UINT64:
+    case MetricKind::COUNTER_INT64:
+    case MetricKind::COUNTER_FLOAT64:
+      return std::unique_ptr<InputAggregator>(
+          new SumInputAggregator(config->granularity));
+    default: return {};
+  }
+}
+
+std::unique_ptr<OutputAggregator> mkOutputAggregator(
+    const MetricConfig* config,
+    tsdb::Cursor cursor,
+    const MetricCursorOptions* cursor_opts) {
+  switch (config->kind) {
+
+    case MetricKind::MAX_UINT64:
+    case MetricKind::MAX_INT64:
+    case MetricKind::MAX_FLOAT64:
+      return std::unique_ptr<OutputAggregator>(
+          new MaxOutputAggregator(
+              std::move(cursor),
+              getMetricDataType(config->kind),
+              cursor_opts));
+
+    case MetricKind::COUNTER_UINT64:
+    case MetricKind::COUNTER_INT64:
+    case MetricKind::COUNTER_FLOAT64:
+      return std::unique_ptr<OutputAggregator>(
+          new SumOutputAggregator(
+              std::move(cursor),
+              getMetricDataType(config->kind),
+              cursor_opts));
+
+    default: return {};
+  }
+}
 
 } // namespace fnordmetric
 
