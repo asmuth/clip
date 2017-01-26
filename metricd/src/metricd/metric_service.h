@@ -28,10 +28,24 @@ public:
       const std::string& datadir,
       std::unique_ptr<MetricService>* service);
 
+  ReturnCode applyConfig(const ConfigList* config);
+
   /**
    * List all metrics
    */
-  MetricListCursor listMetrics();
+  MetricListCursor listMetrics() const;
+
+  /**
+   * Create/configure metric
+   */
+  ReturnCode configureMetric(
+      const std::string& metric_id,
+      std::shared_ptr<MetricConfig> config);
+
+  /**
+   * Remove metric
+   */
+  ReturnCode configureMetric(const std::string& metric_id);
 
   /**
    * Get information about a specific metric
@@ -76,6 +90,7 @@ protected:
   MetricService(const std::string& datadir);
   std::string datadir_;
   VersionedMetricMap metric_map_;
+  std::mutex metric_map_mutex_;
 };
 
 } // namespace fnordmetric

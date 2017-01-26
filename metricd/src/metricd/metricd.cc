@@ -267,6 +267,10 @@ int main(int argc, const char** argv) {
         &metric_service);
   }
 
+  if (rc.isSuccess()) {
+    rc = metric_service->applyConfig(&config);
+  }
+
   /* start sensor scheduler */
   SensorScheduler sensor_sched(config.getSensorThreads());
   //if (rc.isSuccess()) {

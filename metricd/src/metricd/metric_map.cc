@@ -78,7 +78,7 @@ std::shared_ptr<MetricMap> MetricMapBuilder::getMetricMap() {
 
 VersionedMetricMap::VersionedMetricMap() : metric_map_(new MetricMap()) {}
 
-std::shared_ptr<MetricMap> VersionedMetricMap::getMetricMap() {
+std::shared_ptr<MetricMap> VersionedMetricMap::getMetricMap() const {
   std::unique_lock<std::mutex> lk(mutex_);
   return metric_map_;
 }

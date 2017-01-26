@@ -61,12 +61,12 @@ public:
 
   VersionedMetricMap();
 
-  std::shared_ptr<MetricMap> getMetricMap();
+  std::shared_ptr<MetricMap> getMetricMap() const;
 
   void updateMetricMap(std::shared_ptr<MetricMap> metric_map);
 
 protected:
-  std::mutex mutex_;
+  mutable std::mutex mutex_;
   std::shared_ptr<MetricMap> metric_map_;
 };
 

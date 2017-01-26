@@ -24,108 +24,16 @@ ReturnCode MetricService::startService(
     return ReturnCode::errorf("EIO", "datadir doesn't exist: $0", datadir);
   }
 
-  ///* open tsdb */
-  //std::unique_ptr<tsdb::TSDB> tsdb;
-  //if (FileUtil::exists(db_path)) {
-  //  logInfo("Opening database: $0", db_path);
-  //  if (!tsdb::TSDB::openDatabase(&tsdb, db_path)) {
-  //    return ReturnCode::errorf("EIO", "can't open database at $0", db_path);
-  //  }
-  //} else {
-  //  logInfo("Creating database: $0", db_path);
-  //  if (!tsdb::TSDB::createDatabase(&tsdb, db_path)) {
-  //    return ReturnCode::errorf("EIO", "can't create database at $0", db_path);
-  //  }
-  //}
-
-  /* load metric configs */
-  //MetricMapBuilder metric_map_builder(nullptr);
-  //for (auto& mc : config->getMetricConfigs()) {
-  //  auto metric = metric_map_builder.findMetric(mc.first);
-  //  if (metric) {
-  //    return ReturnCode::error(
-  //        "EARG",
-  //        StringUtil::format("duplicate metric for: $0", mc.first));
-  //  }
-
-  //  logDebug("Opening metric; metric_id=$0", mc.first);
-
-  //  if (mc.second.summarize_group.isEmpty()) {
-  //    mc.second.summarize_group = Some(
-  //        getMetricDefaultGroupSumamry(mc.second.kind));
-  //  }
-
-  //  metric = new Metric(mc.first);
-  //  auto rc = metric->setConfig(&mc.second);
-  //  if (!rc.isSuccess()) {
-  //    return rc;
-  //  }
-
-  //  auto unit = config->getUnitConfig(mc.second.unit_id);
-  //  if (unit) {
-  //    metric->setUnitConfig(unit);
-  //  }
-
-  //  metric_map_builder.addMetric(mc.first, std::unique_ptr<Metric>(metric));
-  //}
-
-  ///* load series */
-  //std::set<uint64_t> series_ids;
-  //if (!tsdb->listSeries(&series_ids)) {
-  //  return ReturnCode::error("ERUNTIME", "error while opening database");
-  //}
-
-  //uint64_t series_id_max = 0;
-  //for (auto s : series_ids) {
-  //  if (s > series_id_max) {
-  //    series_id_max = s;
-  //  }
-  //}
-
-  //for (const auto& series_id : series_ids) {
-  //  std::string metadata_buf;
-  //  if (!tsdb->getSeriesMetadata(series_id, &metadata_buf)) {
-  //    return ReturnCode::error("ERUNTIME", "error while opening database");
-  //  }
-
-  //  std::istringstream metadata_is(metadata_buf);
-  //  MetricSeriesMetadata metadata;
-  //  if (!metadata.decode(&metadata_is)) {
-  //    return ReturnCode::error("ERUNTIME", "corrupt database");
-  //  }
-
-  //  const auto& metric_id = metadata.metric_id;
-  //  auto metric = metric_map_builder.findMetric(metric_id);
-  //  if (!metric) {
-  //    logWarning(
-  //        "Skipping orphaned series; metric_id=$0; series_id=$1",
-  //        metric_id,
-  //        series_id);
-
-  //    continue;
-  //  }
-
-  //  if (metric->getConfig()->kind != metadata.metric_kind) {
-  //    logWarning(
-  //        "Skipping series with invalid type; metric_id=$0; series_id=$1",
-  //        metric_id,
-  //        series_id);
-
-  //    continue;
-  //  }
-
-  //  logDebug(
-  //      "Opening series; metric_id=$0; series_id=$1",
-  //      metadata.metric_id,
-  //      series_id);
-
-  //  metric->getSeriesList()->addSeries(
-  //      SeriesIDType(series_id),
-  //      metadata.series_name);
-  //}
-
   /* initialize service */
   service->reset(new MetricService(datadir));
+
+  return ReturnCode::success();
+}
+
+ReturnCode MetricService::applyConfig(const ConfigList* config) {
+  for (auto& mc : config->getMetricConfigs()) {
+    configureMetric(mc.first, std::make_shared<MetricConfig>(mc.second));
+  }
 
   return ReturnCode::success();
 }
@@ -134,9 +42,37 @@ MetricService::MetricService(
     const std::string& datadir) :
     datadir_(datadir) {}
 
-MetricListCursor MetricService::listMetrics() {
+MetricListCursor MetricService::listMetrics() const {
   auto metric_map = metric_map_.getMetricMap();
   return MetricListCursor(metric_map);
+}
+
+ReturnCode MetricService::configureMetric(
+    const std::string& metric_id,
+    std::shared_ptr<MetricConfig> config) {
+  std::unique_lock<std::mutex> lk(metric_map_mutex_);
+  auto metric_map = metric_map_.getMetricMap();
+
+  {
+    auto metric = metric_map->findMetric(metric_id);
+    if (metric) {
+      logDebug("Updating metric config; metric_id=$0", metric_id);
+      return metric->setConfig(config);
+    }
+  }
+
+  std::unique_ptr<Metric> metric(new Metric(metric_id));
+  logDebug("Creating metric; metric_id=$0", metric_id);
+  auto rc = metric->setConfig(config);
+  if (!rc.isSuccess()) {
+    return rc;
+  }
+
+  MetricMapBuilder metric_map_builder(metric_map.get());
+  metric_map_builder.addMetric(metric_id, std::move(metric));
+  metric_map_.updateMetricMap(metric_map_builder.getMetricMap());
+
+  return ReturnCode::success();
 }
 
 ReturnCode MetricService::describeMetric(
