@@ -3,30 +3,32 @@ FnordMetric
 
 [![Build Status](https://travis-ci.org/paulasmuth/fnordmetric.png?branch=unstable)](http://travis-ci.org/paulasmuth/fnordmetric)
 
-FnordMetric (metricd) is a lightweight daemon for real-time metrics collection, storage
-and visualization. It allows you to capture measurements and build beautiful
-real-time dashboards within minutes.
+FnordMetric (metricd) is collection of lightweight tools for real-time metrics
+collection and visualization with SQL. It allows you to capture measurements and
+build beautiful real-time dashboards within minutes using your favorite SQL
+database.
 
-**More information:**
+The FnordMetric distribution currently consists of these components:
+
+- **metric-collectd**
+  A standalone daemon that collects measurements and other timeseries data via
+  UDP/StatsD, HTTP Pull, SNMP or a number of other methods and stores them into
+  a SQL database.
+
+- **metric-queryd**
+  A standalone HTTP service that allows you to plot SQL query results. The HTTP
+  API can return graphs and other widgets as SVG, HTML or PNG.
+
+
+More Information:
 [Documentation](http://fnordmetric.io/),
 [Download](https://fnordmetric.io/download/),
 [Getting Started](https://fnordmetric.io/documentation/getting_started)
 
+
+## Web Interface
+
 [ ![Screenshot](https://raw.githubusercontent.com/paulasmuth/fnordmetric/master/fnordmetric-doc/web/assets/img/fnordmetric_server_screen1.png) ](http://github.com/paulasmuth/fnordmetric)
-
-## Features
-
-This is a quick run-through of the main features to get you excited. For
-more detailed information on these topics and their caveats you are kindly
-referred to the documentation.
-
-- **Telemetry**: Collect timeseries data via HTTP, UDP/statsd, MQTT or SNMP
-- **Visualization**: Render custom charts as SVG, HTML or PNG and embed them into
-  any website
-- **Queries**: Retrieve summaries and timeseries via the HTTP+JSON Query API
-- Supports pull- and push-type sensors
-- Self-contained, standalone daemon
-- Large list of included sensors
 
 
 ## Build
