@@ -1,7 +1,7 @@
 License
 =======
 
-Copyright (c) 2011-2014 Paul Asmuth et al.
+Copyright (c) 2011-2017 Paul Asmuth, Laura Schlimmer et al.
 
 FnordMetric is free software: you can redistribute it and/or modify it under
 the terms of the GNU General Public License as published by the Free Software

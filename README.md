@@ -8,16 +8,16 @@ collection and visualization with SQL. It allows you to capture measurements and
 build beautiful real-time dashboards within minutes using your favorite SQL
 database.
 
-The FnordMetric distribution currently consists of these components:
+the fnordmetric distribution currently consists of these components:
 
 - **metric-collectd**
   A standalone daemon that collects measurements and other timeseries data via
   UDP/StatsD, HTTP Pull, SNMP or a number of other methods and stores them into
-  a SQL database.
+  a backend SQL database.
 
 - **metric-queryd**
-  A standalone HTTP service that allows you to plot SQL query results. The HTTP
-  API can return graphs and other widgets as SVG, HTML or PNG.
+  A standalone HTTP service that allows you to execute SQL queries and plot the
+  results. The HTTP API can return graphs and other widgets as SVG, HTML or PNG.
 
 
 More Information:
