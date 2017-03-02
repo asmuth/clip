@@ -1,45 +1,73 @@
-Sending data via statsd
-=======================
+Collecting Data via UDP/StatsD
+===============================
 
-FnordMetric Server allows you to send metric data using the statsd protocol.
-Statsd is a very simple, text based protocol.
+To listen for samples via UDP, add a `listen_udp` block to your configuration
+file.`metric-collectd` will listen for UDP packets on the specified port. 
 
----
+    listen_udp {
+      port 8125
+      format statsd
+    }
 
-To use the statsd protocol, start the fnordmetric server with the --statsd_port
-option:
 
-    $ fnordmetric-server --storage_backend inmemory --statsd_port 8125 --http_port 8080
+This is the list of valid stanzas within the `listen_udp` block:
 
-The fnordmetric server will listen for UDP packets on the specified port. Each
-UDP packet must contain one or more ASCII lines. Each line is expected to be in
-this format:
+<table>
+  <thead>
+    <tr>
+      <th>Setting</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code><strong>port</strong></code></td>
+      <td>The port on which the UDP server should be started</td>
+    </tr>
+    <tr>
+      <td><code><strong>format</strong></code></td>
+      <td>The expected input sample format ('statsd' or 'json')</td>
+    </tr>
+    <tr>
+      <td><code><strong>rewrite</strong></code></td>
+      <td>Rewrite the metric name or labels (see <a href="/documentation/configuration-file#rewrite">Configuration File</a>)</td>
+    </tr>
+  </tbody>
+</table>
+
+StatsD Protocol
+---------------
+
+StatsD is a very simple, text based protocol. For detailed information have a
+look at the [Sample Formats](/documentation/sample-format) page.
+
+When using the statsd protocol, each UDP packet must contain one or more lines.
+Each line is expected to be in this format:
 
     <metricname>:<value>
 
-So the simplest way to send in metrics from your command line if you have 
-fnordmetric server running on port 8125 would be:
+A simple way to send in metrics from your command line if you have
+metric-collectd running on port 8125 would be to use the `netcat` utility:
 
     $ echo "foo:1" | nc -u -w0 127.0.0.1 8125
 
-This would insert the value "1" into the metric "foo". If no metric with this key
-exists yet, a new one will be created.
+This would insert the value "1" into the metric "foo".
 
 
-Using metric labels with statsd
+Using metric labels with StatsD
 -------------------------------
 
 The statsd protocol itself does not support labels. However, the statsd
-implementation in FnordMetric Server respects a metric naming convention
+implementation in metric-collectd understands a common metric naming convention
 that allows you to specify labels.
 
 The line format for metrics with one label is:
 
-    <metricname>[<label_key>=<label_value>]:<value>
+    <metricname>{<label_key>=<label_value>}:<value>
 
-To attach multiple labels, repeat the square bracket clause:
+To attach multiple labels, put them all into the curly braces separated by commas:
 
-    <metricname>[<label1_key>=<label1_value>][<label2_key>=<label2_value>]:<value>
+    <metricname>{<label1_key>=<label1_value>,<label2_key>=<label2_value>}:<value>
 
 For example, if we want to sample the CPU utilization on multiple hosts into
 the metric "cpu-utilization" with two label dimensions "hostname" and "datacenter",
@@ -47,7 +75,7 @@ our UDP packets could look like this:
 
 _Insert value `0.642` with labels `hostname=machine83` and `datacenter=ams1` into metric `cpu-utilization`:_
 
-    cpu-utilization[hostname=machine83][datacenter=ams1]:0.642
+    cpu-utilization{hostname=machine83,datacenter=ams1}:0.642
 
 Batch insert
 ------------
@@ -56,10 +84,10 @@ You may include multiple lines in the same UDP packet. The lines may be
 separated with `\n` or `\r\n`.
 
 For example, to insert the values 23, 42 and 5 into the metrics "mymetric-one",
-"mymetric-two" and "mymetric-three", you would send this UDP packet:
+"mymetric-two" and "mymetric-three", you could send this UDP packet:
 
-    mymetric-one:23\r\n
-    mymetric-two:42\r\n
-    mymetric-three:5\r\n
+    mymetric-one:23\n
+    mymetric-two:42\n
+    mymetric-three:5\n
 
 

@@ -8,8 +8,8 @@ please see the [Data Model](/documentation/data-model) page.
 <table>
   <thead>
     <tr>
-      <th>property</th>
-      <th>description</th>
+      <th>Setting</th>
+      <th>Description</th>
     </tr>
   </thead>
   <tbody>
