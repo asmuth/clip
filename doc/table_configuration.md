@@ -24,10 +24,10 @@ the aggregation time window. The default aggregation window is 10 seconds.
 
 At the end of every aggregation window, metric-collectd will execute one INSERT
 statement for every unique combination of labels in the input samples received
-during the  window. As a result of this, the number of rows written to the backend
-database depends only on the aggregation windpw of a table and the "cardinality"
-of the input data (i.e. the number of unique label values), but not on the number
-of individual samples that are sent to metric-collectd.
+during the time window. As a result of this, the number of rows written to the
+backend database depends only on the aggregation windpw of a table and the
+"cardinality" of the input data (i.e. the number of unique label values), but
+not on the number of individual samples that are sent to metric-collectd.
 
 A table may have zero, one or more label columns. If a table does not have any
 label columns, metric-collectd will always insert exactly one row for every time
@@ -123,6 +123,8 @@ any of the valid data types below (e.g. `string` or `uint64`).
 The measure stanza adds a measurement column to the table. There may be any number
 of measure stanzas in a table block.
 
-    measure <column_name> [<aggregation_type>]
+    measure <column_name> <aggregation_fun>
 
+The format of the aggregation function parameter is in the format `function(type)`,
+for example `sum(uint64)` or `average(float64)` or `count_distinct(string)`
 
