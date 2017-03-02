@@ -1,9 +1,12 @@
-Sending data via HTTP
-=====================
+Collecting Data via HTTP
+========================
 
-You can send metric data to FnordMetric Server using a simple HTTP interface.
+You can either send data to metric-collectd using the HTTP API, or configure
+metric-collectd to pull from your HTTP endpoint.
 
----
+
+HTTP Push
+---------
 
 To use the http interface, start FnordMetric Server with the --http_port
 option:
@@ -28,8 +31,8 @@ This would insert the value "23.5" into the metric "test_metric". If no metric
 with this key exists yet, a new one will be created.
 
 
-Adding Metric Labels
---------------------
+HTTP Pull
+---------
 
 To allow you to drill down into your metric data in arbitrary dimensions, each
 sample can optionally be labelled with one or more "labels". Each label is a

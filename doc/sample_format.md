@@ -1,5 +1,5 @@
-Sample Format
-=============
+Sample Formats
+==============
 
 This page describes the various formats in which metric-collectd accepts input
 samples. The formats are generally the same for all pull and push transport

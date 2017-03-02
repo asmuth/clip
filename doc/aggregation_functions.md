@@ -3,7 +3,7 @@ Aggregation Functions
 
 Aggregation functions control how measurements are pre-aggregated before being
 stored into the backend database. Please see the
-[Table Configuration](/documentation/table-configuration) page for more details.
+[Data Model](/documentation/data-model) page for more details.
 
 This is the list of all currently supported aggregation functions and a description
 for each of the functions:
