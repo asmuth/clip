@@ -48,14 +48,12 @@ were collected.
 
 Now, the input measurements are collected as individual data points called "samples".
 Samples may be actively pushed to metric-collectd or pulled/scraped from a remote endpoint
-using one of the transport protocol.
+using one of the transport protocols.
 
 A sample consists of a "metric name", a value and a timestamp. The timestamp is
-generated implicitly if it is not provided.
-
-The metric name is used to identify the table and column ("measure") into which
-the data should be written. The general format is `table.column` (i.e. first
-the table name, then a dot, then the column name).
+generated implicitly if it is not provided. The metric name is used to identify
+the table and column ("measure") into which the data should be written. The general
+format is `table.column` (i.e. first the table name, then a dot, then the column name).
 
 For example, to report the measure "load_avg" in the table "host_stats", you
 would send samples similar to these:

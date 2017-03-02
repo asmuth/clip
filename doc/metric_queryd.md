@@ -1,5 +1,5 @@
-metric-queryd
-=============
+The metric-queryd server
+========================
 
 metric-queryd is a simple stateless service that executes SQL queries on a backend
 database and returns the results as charts.
