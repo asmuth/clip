@@ -79,8 +79,7 @@ Save this to `metric_collect.conf`
     # automatically create tables that don't exist
     create_tables on
 
-    # collect measurements in the "host_stats" table. report one tuple per host
-    # every 10 seconds
+    # collect measurements in the "host_stats" table. Insert one row per host every 10 seconds
     table host_stats {
       interval 10s
       field hostname string group
