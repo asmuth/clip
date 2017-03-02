@@ -12,11 +12,8 @@ that you might have.
   + suggest or implement new options for existing charts or new chart types
   + improve the documentation
   + publish howtos, tutorials and videos
-  + add a new default stylesheet (requires css knowledge)
-  + add a new language binding (requires minimal c++ knowledge)
-  + add a new query backend (requires c++ knowledge)
+  + add a new backend (requires c++ knowledge)
   + add a new render target (requires c++ knowledge)
-  + add some new features to the query engine (requires c++ knowledge)
   + many more! improve all the things :)
 
 #### Individual Contributors to FnordMetric
