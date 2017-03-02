@@ -5,11 +5,60 @@ You can either send data to metric-collectd using the HTTP API, or configure
 metric-collectd to pull from your HTTP endpoint.
 
 
+HTTP Pull
+---------
+
+To fetch ("scrape") samples via HTTP, add a `fetch_http` block to your configuration
+file. `metric-collectd` will peridodically connect to the specified url and
+collect metrics.
+
+    fetch_http {
+      url "http://localhost:9175/stats"
+      interval 10s
+      format statsd
+    }
+
+This is the list of valid stanzas within the `listen_http` block:
+
+<table>
+  <thead>
+    <tr>
+      <th>Setting</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code><strong>url</strong></code></td>
+      <td>The HTTP URL to fetch</td>
+    </tr>
+    <tr>
+      <td><code><strong>format</strong></code></td>
+      <td>The expected input sample format ('statsd' or 'json')</td>
+    </tr>
+    <tr>
+      <td><code><strong>interval</strong></code></td>
+      <td>Controls how often the URL is fetched. Valid values are any number (interpreted as seconds) or strings of the format
+`N[s(((ec)ond)s)|m(((in)ute)s)|h((our)s)|d((ay)s)|w((eek)s)|y((ear)s)]`. For
+example: `1s`, `30min` or `6hours`.</td>
+    </tr>
+    <tr>
+      <td><code><strong>rewrite</strong></code></td>
+      <td>Rewrite the metric name or labels (see <a href="/documentation/configuration-file#rewrite">Configuration File</a>)</td>
+    </tr>
+  </tbody>
+</table>
+
+metric-collectd will sends a `HTTP GET` request for the specified URL and expects
+a 200-range response status code. The response body must be either in `statsd`
+or `json` format.
+
+
 HTTP Push
 ---------
 
 To listen for samples via HTTP, add a `listen_http` block to your configuration
-file.`metric-collectd` will listen for HTTP connectionss on the specified port. 
+file.`metric-collectd` will listen for HTTP connections on the specified port.
 
     listen_http {
       port 8080
@@ -79,5 +128,4 @@ More examples:
 
     >> POST /metrics?metric=http_status_codes&value=351&label[statuscode]=200&label[hostname]=myhost1 HTTP/1.1
     << HTTP/1.1 201 CREATED
-
 

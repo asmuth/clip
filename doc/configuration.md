@@ -26,11 +26,11 @@ please see the [Data Model](/documentation/data-model) page.
       <td>This settings controls wether tables should be automatically created (if they don't exist yet). Valid values are `on` and `off`</td>
     </tr>
     <tr>
-      <td><code><strong>listen_udp</strong></code></td>
+      <td><code><strong><a href="/documentation/collect-data-via-statsd">listen_udp</a></strong></code></td>
       <td>Declares a UDP/statsd listener port (A data source).</td>
     </tr>
     <tr>
-      <td><code><strong>listen_http</strong></code></td>
+      <td><code><strong><a href="/documentation/collect-data-via-http">listen_http</a></strong></code></td>
       <td>Declares a HTTP listener port (A data source).</td>
     </tr>
     <tr>
@@ -38,7 +38,7 @@ please see the [Data Model](/documentation/data-model) page.
       <td>Pull data via SNMP (A data source).</td>
     </tr>
     <tr>
-      <td><code><strong>fetch_http</strong></code></td>
+      <td><code><strong><a href="/documentation/collect-data-via-http">fetch_http</a></strong></code></td>
       <td>Pull data via HTTP (A data source).</td>
     </tr>
   </tbody>
