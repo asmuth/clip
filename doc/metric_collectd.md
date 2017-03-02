@@ -59,11 +59,11 @@ configuration file:
       <td>Declares a HTTP listener port (A data source). <a href="/documentation/collect_via_http">More Information</a></td>
     </tr>
     <tr>
-      <td><code><strong>collect_snmp</strong></code></td>
+      <td><code><strong>fetch_snmp</strong></code></td>
       <td>Pull data via SNMP (A data source). <a href="/documentation/collect_via_snmp">More Information</a></td>
     </tr>
     <tr>
-      <td><code><strong>collect_http</strong></code></td>
+      <td><code><strong>fetch_http</strong></code></td>
       <td>Pull data via HTTP (A data source). <a href="/documentation/collect_via_http">More Information</a></td>
     </tr>
   </tbody>
@@ -82,9 +82,9 @@ Save this to `metric_collect.conf`
     # collect measurements in the "host_stats" table. Insert one row per host every 10 seconds
     table host_stats {
       interval 10s
-      field hostname string group
-      field load_avg float64 max
-      field request_count uint64 sum
+      label hostname
+      measure load_avg max(float64)
+      measure request_count sum(uint64)
     }
 
     # listen on UDP port 8125 for statsd packets
