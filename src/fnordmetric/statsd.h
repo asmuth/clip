@@ -19,7 +19,6 @@
 
 namespace fnordmetric {
 class MetricService;
-namespace statsd {
 
 class StatsdEmitter {
 public:
@@ -50,6 +49,5 @@ bool parseStatsdSample(
     std::string* series_id,
     std::string* value);
 
-} // namespace statsd
 } // namespace fnordmetric
 

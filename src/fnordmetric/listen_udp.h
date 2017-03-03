@@ -19,7 +19,6 @@
 #include "fnordmetric/aggregation_service.h"
 
 namespace fnordmetric {
-namespace statsd {
 
 class StatsdServer {
 public:
@@ -43,6 +42,5 @@ protected:
   std::atomic<bool> running_;
 };
 
-} // namespace statsd
 } // namespace fnordmetric
 

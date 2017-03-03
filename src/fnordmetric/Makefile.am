@@ -53,10 +53,10 @@ libfnordmetric_common_a_SOURCES = \
     ingest.cc \
     units.h \
     units.cc \
-    transport/statsd/statsd.h \
-    transport/statsd/statsd.cc \
-    transport/statsd/statsd_server.h \
-    transport/statsd/statsd_server.cc \
+    statsd.h \
+    statsd.cc \
+    listen_udp.h \
+    listen_udp.cc \
     util/daemonize.h \
     util/daemonize.cc \
     util/time_impl.h \

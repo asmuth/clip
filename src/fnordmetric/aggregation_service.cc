@@ -16,7 +16,7 @@
 #include "fnordmetric/util/logging.h"
 #include "fnordmetric/util/time.h"
 #include "fnordmetric/util/sha1.h"
-#include "fnordmetric/transport/statsd/statsd.h"
+#include "fnordmetric/statsd.h"
 
 namespace fnordmetric {
 
@@ -62,7 +62,7 @@ ReturnCode AggregationService::insertSamplesBatch(
   char const* end = data + len;
 
   while (cur < end) {
-    if (!statsd::parseStatsdSample(&cur, end, &metric_id, &series_id, &value)) {
+    if (!parseStatsdSample(&cur, end, &metric_id, &series_id, &value)) {
       return ReturnCode::error("EPARSE", "invalid packet");
     }
 

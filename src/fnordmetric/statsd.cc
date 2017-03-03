@@ -19,12 +19,11 @@
 #include <sys/socket.h>
 #include <fnordmetric/util/logging.h>
 #include <fnordmetric/util/time.h>
-#include <fnordmetric/transport/statsd/statsd.h>
+#include <fnordmetric/statsd.h>
 #include <fnordmetric/sample.h>
 #include <fnordmetric/aggregation_service.h>
 
 namespace fnordmetric {
-namespace statsd {
 
 StatsdEmitter::StatsdEmitter() : fd_(-1) {}
 
@@ -190,6 +189,5 @@ bool parseStatsdSample(
   return true;
 }
 
-} // namespace statsd
 } // namespace fnordmetric
 

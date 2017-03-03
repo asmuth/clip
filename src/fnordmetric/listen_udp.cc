@@ -19,13 +19,12 @@
 #include <sys/socket.h>
 #include <fnordmetric/util/logging.h>
 #include <fnordmetric/util/time.h>
-#include <fnordmetric/transport/statsd/statsd.h>
-#include <fnordmetric/transport/statsd/statsd_server.h>
+#include <fnordmetric/statsd.h>
+#include <fnordmetric/listen_udp.h>
 #include <fnordmetric/sample.h>
 #include <fnordmetric/aggregation_service.h>
 
 namespace fnordmetric {
-namespace statsd {
 
 StatsdServer::StatsdServer(
     AggregationService* aggr_service) :
@@ -146,6 +145,5 @@ void StatsdServer::handlePacket(const char* pkt, size_t pkt_len) {
   }
 }
 
-} // namespace statsd
 } // namespace fnordmetric
 
