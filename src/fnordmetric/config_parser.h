@@ -44,6 +44,7 @@ public:
 
 protected:
 
+  bool parseBackendStanza(ConfigList* config);
   bool parseCreateTablesStanza(ConfigList* config);
 
   bool parseTableDefinition(ConfigList* config);

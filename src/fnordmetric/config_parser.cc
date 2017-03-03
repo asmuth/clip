@@ -29,6 +29,16 @@ ReturnCode ConfigParser::parse(ConfigList* config) {
   /* a file consists of a list of top-level definitions */
   while (getToken(&ttype, &tbuf)) {
 
+    /* parse the "backend" stanza */
+    if (ttype == T_STRING && tbuf == "backend") {
+      consumeToken();
+      if (parseBackendStanza(config)) {
+        continue;
+      } else {
+        break;
+      }
+    }
+
     /* parse the "create_tables" stanza */
     if (ttype == T_STRING && tbuf == "create_tables") {
       consumeToken();
@@ -93,6 +103,16 @@ ReturnCode ConfigParser::parse(ConfigList* config) {
   } else {
     return ReturnCode::success();
   }
+}
+
+bool ConfigParser::parseBackendStanza(ConfigList* config) {
+  std::string value;
+  if (!expectAndConsumeString(&value)) {
+    return false;
+  }
+
+  config->setBackendURL(value);
+  return true;
 }
 
 bool ConfigParser::parseCreateTablesStanza(ConfigList* config) {

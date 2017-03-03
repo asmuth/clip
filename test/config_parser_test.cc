@@ -90,6 +90,16 @@ TEST_CASE(ConfigParserTest, TestParseCreateTablesOff, [] () {
   EXPECT(config.getCreateTables() == false);
 });
 
+TEST_CASE(ConfigParserTest, TestParseBackendURL, [] () {
+  std::string confstr = R"(backend 'mysql://localhost:3306/mydb?user=root')";
+
+  ConfigList config;
+  ConfigParser parser(confstr.data(), confstr.size());
+  auto rc = parser.parse(&config);
+  EXPECT(rc.isSuccess());
+  EXPECT(config.getBackendURL() == "mysql://localhost:3306/mydb?user=root");
+});
+
 TEST_CASE(ConfigParserTest, TestParseTableIntervalStanza, [] () {
   std::string confstr =
       R"(table users_online {

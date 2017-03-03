@@ -13,6 +13,14 @@ namespace fnordmetric {
 
 ConfigList::ConfigList() : create_tables_(false) {}
 
+const std::string& ConfigList::getBackendURL() const {
+  return backend_url_;
+}
+
+void ConfigList::setBackendURL(const std::string& backend_url) {
+  backend_url_ = backend_url;
+}
+
 bool ConfigList::getCreateTables() const {
   return create_tables_;
 }

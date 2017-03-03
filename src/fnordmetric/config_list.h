@@ -24,6 +24,9 @@ public:
 
   ConfigList();
 
+  const std::string& getBackendURL() const;
+  void setBackendURL(const std::string& backend_url);
+
   bool getCreateTables() const;
   void setCreateTables(bool create_tables);
 
@@ -41,6 +44,7 @@ public:
   void addSensorConfig(std::unique_ptr<SensorConfig> config);
 
 protected:
+  std::string backend_url_;
   bool create_tables_;
   std::map<TableIDType, TableConfig> metric_configs_;
   std::map<std::string, UnitConfig> unit_configs_;
