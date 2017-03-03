@@ -44,23 +44,17 @@ public:
 
 protected:
 
-  bool parseSensorThreadsStanza(ConfigList* config);
-
-  bool parseMetricDefinition(ConfigList* config);
-  bool parseMetricDefinitionTypeStanza(MetricConfig* metric_config);
-  bool parseMetricDefinitionGranularityStanza(MetricConfig* metric_config);
-  bool parseMetricDefinitionUnitStanza(MetricConfig* metric_config);
-  bool parseMetricDefinitionUnitScaleStanza(MetricConfig* metric_config);
-  bool parseMetricDefinitionSummarizeGroupStanza(MetricConfig* metric_config);
-  bool parseMetricDefinitionSummarizeGrossStanza(MetricConfig* metric_config);
+  bool parseTableDefinition(ConfigList* config);
+  bool parseTableDefinitionIntervalStanza(MetricConfig* metric_config);
+  bool parseTableDefinitionLabelStanza(MetricConfig* metric_config);
 
   bool parseUnitDefinition(ConfigList* config);
   bool parseUnitDefinitionDescriptionStanza(UnitConfig* unit_config);
   bool parseUnitDefinitionNameStanza(UnitConfig* unit_config);
 
-  bool parseSensorMetricIDRewriteStanza(SensorConfig* sensor_config);
-  bool parseSensorHTTPDefinition(ConfigList* config);
-  bool parseSensorHTTPDefinitionURLStanza(HTTPSensorConfig* sensor_config);
+  bool parseRewriteStanza(SensorConfig* sensor_config);
+  bool parseFetchHTTPDefinition(ConfigList* config);
+  bool parseFetchHTTPDefinitionURLStanza(HTTPSensorConfig* sensor_config);
 
   bool getToken(
       TokenType* type,

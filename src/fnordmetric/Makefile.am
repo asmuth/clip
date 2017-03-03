@@ -117,16 +117,12 @@ metric_collectd_SOURCES = \
     sample.cc \
     units.h \
     units.cc \
-    transport/http/http_server.h \
-    transport/http/http_server.cc \
     transport/statsd/statsd.h \
     transport/statsd/statsd.cc \
     transport/statsd/statsd_server.h \
     transport/statsd/statsd_server.cc \
     types.h \
     types.cc \
-    webui/webui.h \
-    webui/webui.cc \
     $(fnordmetric_util_src) \
     metric_collectd.cc
 

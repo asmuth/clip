@@ -18,7 +18,7 @@ namespace fnordmetric {
 
 MetricConfig::MetricConfig() :
     kind(MetricKind::UNKNOWN),
-    granularity(0),
+    interval(0),
     display_granularity(0),
     is_valid(false) {}
 

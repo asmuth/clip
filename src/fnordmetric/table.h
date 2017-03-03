@@ -55,7 +55,7 @@ enum MetricKind : uint32_t {
 struct MetricConfig {
   MetricConfig();
   MetricKind kind;
-  uint64_t granularity;
+  uint64_t interval;
   uint64_t display_granularity;
   bool is_valid;
   std::string unit_id;

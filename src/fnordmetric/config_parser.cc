@@ -32,7 +32,7 @@ ReturnCode ConfigParser::parse(ConfigList* config) {
     /* parse the "metric" definition */
     if (ttype == T_STRING && tbuf == "metric") {
       consumeToken();
-      if (parseMetricDefinition(config)) {
+      if (parseTableDefinition(config)) {
         continue;
       } else {
         break;
@@ -49,20 +49,10 @@ ReturnCode ConfigParser::parse(ConfigList* config) {
       }
     }
 
-    /* parse the "sensor_threads" stanza */
-    if (ttype == T_STRING && tbuf == "sensor_threads") {
+    /* parse the "fetch_http" definition */
+    if (ttype == T_STRING && tbuf == "fetch_http") {
       consumeToken();
-      if (parseSensorThreadsStanza(config)) {
-        continue;
-      } else {
-        break;
-      }
-    }
-
-    /* parse the "sensor_http" definition */
-    if (ttype == T_STRING && tbuf == "sensor_http") {
-      consumeToken();
-      if (parseSensorHTTPDefinition(config)) {
+      if (parseFetchHTTPDefinition(config)) {
         continue;
       } else {
         break;
@@ -95,32 +85,7 @@ ReturnCode ConfigParser::parse(ConfigList* config) {
   }
 }
 
-bool ConfigParser::parseSensorThreadsStanza(ConfigList* config) {
-  TokenType ttype;
-  std::string tbuf;
-  if (!getToken(&ttype, &tbuf) || ttype != T_STRING) {
-    setError("sensor_threads requires an argument");
-    return false;
-  }
-
-  consumeToken();
-
-  try {
-    config->setSensorThreads(std::stoull(tbuf));
-  } catch (const std::exception& e) {
-    setError(
-        StringUtil::format(
-            "invalid value for sensor_threads '$0': $1",
-            printToken(ttype, tbuf),
-            e.what()));
-
-    return false;
-  }
-
-  return true;
-}
-
-bool ConfigParser::parseMetricDefinition(ConfigList* config) {
+bool ConfigParser::parseTableDefinition(ConfigList* config) {
   std::string metric_name;
   if (!expectAndConsumeString(&metric_name)) {
     return false;
@@ -145,55 +110,19 @@ bool ConfigParser::parseMetricDefinition(ConfigList* config) {
       continue;
     }
 
-    /* parse the "type" stanza */
-    if (ttype == T_STRING && tbuf == "type") {
+    /* parse the "interval" stanza */
+    if (ttype == T_STRING && tbuf == "interval") {
       consumeToken();
-      if (!parseMetricDefinitionTypeStanza(&metric_config)) {
+      if (!parseTableDefinitionIntervalStanza(&metric_config)) {
         return false;
       }
       continue;
     }
 
-    /* parse the "granularity" stanza */
-    if (ttype == T_STRING && tbuf == "granularity") {
+    /* parse the "label" stanza */
+    if (ttype == T_STRING && tbuf == "label") {
       consumeToken();
-      if (!parseMetricDefinitionGranularityStanza(&metric_config)) {
-        return false;
-      }
-      continue;
-    }
-
-    /* parse the "unit" stanza */
-    if (ttype == T_STRING && tbuf == "unit") {
-      consumeToken();
-      if (!parseMetricDefinitionUnitStanza(&metric_config)) {
-        return false;
-      }
-      continue;
-    }
-
-    /* parse the "unit_scale" stanza */
-    if (ttype == T_STRING && tbuf == "unit_scale") {
-      consumeToken();
-      if (!parseMetricDefinitionUnitScaleStanza(&metric_config)) {
-        return false;
-      }
-      continue;
-    }
-
-    /* parse the "summarize_group" stanza */
-    if (ttype == T_STRING && tbuf == "summarize_group") {
-      consumeToken();
-      if (!parseMetricDefinitionSummarizeGroupStanza(&metric_config)) {
-        return false;
-      }
-      continue;
-    }
-
-    /* parse the "summarize_gross" stanza */
-    if (ttype == T_STRING && tbuf == "summarize_gross") {
-      consumeToken();
-      if (!parseMetricDefinitionSummarizeGrossStanza(&metric_config)) {
+      if (!parseTableDefinitionLabelStanza(&metric_config)) {
         return false;
       }
       continue;
@@ -214,171 +143,43 @@ bool ConfigParser::parseMetricDefinition(ConfigList* config) {
   return true;
 }
 
-bool ConfigParser::parseMetricDefinitionTypeStanza(
-    MetricConfig* metric_config) {
-  std::string type;
-
-  /* read type name */
-  {
-    TokenType ttype;
-    if (!getToken(&ttype, &type) || ttype != T_STRING) {
-      setError("type requires an argument");
-      return false;
-    }
-    consumeToken();
-  }
-
-  /* read optional type arguments */
-  {
-    TokenType ttype;
-    std::string tbuf;
-    if (getToken(&ttype, &tbuf) && ttype == T_LPAREN) {
-      consumeToken();
-
-      if (!getToken(&ttype, &tbuf) || ttype != T_STRING) {
-        setError("invalid argument to 'type' stanza");
-        return false;
-      }
-
-      type += "(";
-      type += tbuf;
-      type += ")";
-
-      consumeToken();
-
-      if (!expectAndConsumeToken(T_RPAREN)) {
-        return false;
-      }
-    }
-  }
-
-  static const std::map<std::string, MetricKind> type_map = {
-    { "sample(uint64)",     MetricKind::SAMPLE_UINT64 },
-    { "sample(int64)",      MetricKind::SAMPLE_INT64 },
-    { "sample(float64)",    MetricKind::SAMPLE_FLOAT64 },
-    { "counter(uint64)",    MetricKind::COUNTER_UINT64 },
-    { "counter(int64)",     MetricKind::COUNTER_INT64 },
-    { "counter(float64)",   MetricKind::COUNTER_FLOAT64 },
-    { "monotonic(uint64)",  MetricKind::MONOTONIC_UINT64 },
-    { "monotonic(int64)",   MetricKind::MONOTONIC_INT64 },
-    { "monotonic(float64)", MetricKind::MONOTONIC_FLOAT64 },
-    { "min(uint64)",        MetricKind::MIN_UINT64 },
-    { "min(int64)",         MetricKind::MIN_INT64 },
-    { "min(float64)",       MetricKind::MIN_FLOAT64 },
-    { "max(uint64)",        MetricKind::MAX_UINT64 },
-    { "max(int64)",         MetricKind::MAX_INT64 },
-    { "max(float64)",       MetricKind::MAX_FLOAT64 },
-    { "average(uint64)",    MetricKind::AVERAGE_UINT64 },
-    { "average(int64)",     MetricKind::AVERAGE_INT64 },
-    { "average(float64)",   MetricKind::AVERAGE_FLOAT64 }
-  };
-
-  auto iter = type_map.find(type);
-  if (iter != type_map.end()) {
-    metric_config->kind = iter->second;
-    return true;
-  } else {
-    setError(StringUtil::format("invalid metric type: $0", type));
-    return false;
-  }
-}
-
-bool ConfigParser::parseMetricDefinitionGranularityStanza(
+bool ConfigParser::parseTableDefinitionIntervalStanza(
     MetricConfig* metric_config) {
   TokenType ttype;
   std::string tbuf;
   if (!getToken(&ttype, &tbuf) || ttype != T_STRING) {
-    setError("granularity requires an argument");
+    setError("interval requires an argument");
     return false;
   }
 
   consumeToken();
 
-  uint64_t granularity = 0;
-  auto rc = parseDuration(tbuf, &granularity);
+  uint64_t interval = 0;
+  auto rc = parseDuration(tbuf, &interval);
   if (!rc.isSuccess()) {
     setError(
         StringUtil::format(
-            "invalid value for granularity '$0': $1",
+            "invalid value for interval '$0': $1",
             printToken(ttype, tbuf),
             rc.getMessage()));
 
     return false;
   }
 
-  metric_config->granularity = granularity;
+  metric_config->interval = interval;
   return true;
 }
 
-bool ConfigParser::parseMetricDefinitionUnitStanza(
-    MetricConfig* metric_config) {
-  TokenType ttype;
-  std::string tbuf;
-  if (!getToken(&ttype, &tbuf) || ttype != T_STRING) {
-    setError("unit requires an argument");
-    return false;
-  }
-
-  metric_config->unit_id = tbuf;
-  consumeToken();
-  return true;
-}
-
-bool ConfigParser::parseMetricDefinitionUnitScaleStanza(
-    MetricConfig* metric_config) {
-  TokenType ttype;
-  std::string tbuf;
-  if (!getToken(&ttype, &tbuf) || ttype != T_STRING) {
-    setError("unit_scale requires an argument");
-    return false;
-  }
-
-  if (!tval_parsenumber(&metric_config->unit_scale, tbuf)) {
-    setError("invalid value for unit_scale <factor>: " + tbuf);
-    return false;
-  }
-
-  consumeToken();
-  return true;
-}
-
-bool ConfigParser::parseMetricDefinitionSummarizeGroupStanza(
-    MetricConfig* metric_config) {
-  TokenType ttype;
-  std::string tbuf;
-  if (!getToken(&ttype, &tbuf) || ttype != T_STRING) {
-    setError("summarize_group requires an argument");
-    return false;
-  }
-
-  GroupSummaryMethod method;
-  if (!getGroupSummaryFromName(&method, tbuf)) {
-    setError("invalid group summary method: " + tbuf);
-    return false;
-  }
-
-  metric_config->summarize_group = method;
-  consumeToken();
-  return true;
-}
-
-bool ConfigParser::parseMetricDefinitionSummarizeGrossStanza(
+bool ConfigParser::parseTableDefinitionLabelStanza(
     MetricConfig* metric_config) {
   for (;;) {
     TokenType ttype;
     std::string tbuf;
     if (!getToken(&ttype, &tbuf) || ttype != T_STRING) {
-      setError("summarize_gross requires one or more arguments");
+      setError("label requires one or more arguments");
       return false;
     }
 
-    GrossSummaryMethod method;
-    if (!getGrossSummaryFromName(&method, tbuf)) {
-      setError("invalid gross summary method: " + tbuf);
-      return false;
-    }
-
-    metric_config->summarize_gross.emplace_back(method);
     consumeToken();
 
     if (!getToken(&ttype, &tbuf)) {
@@ -521,7 +322,7 @@ bool ConfigParser::parseUnitDefinitionNameStanza(
   return true;
 }
 
-bool ConfigParser::parseSensorMetricIDRewriteStanza(
+bool ConfigParser::parseRewriteStanza(
     SensorConfig* sensor_config) {
   TokenType ttype;
   std::string regex_str;
@@ -555,7 +356,7 @@ bool ConfigParser::parseSensorMetricIDRewriteStanza(
   return true;
 }
 
-bool ConfigParser::parseSensorHTTPDefinition(ConfigList* config) {
+bool ConfigParser::parseFetchHTTPDefinition(ConfigList* config) {
   std::unique_ptr<HTTPSensorConfig> sensor_config(new HTTPSensorConfig());
   if (!expectAndConsumeString(&sensor_config->sensor_id)) {
     return false;
@@ -581,7 +382,7 @@ bool ConfigParser::parseSensorHTTPDefinition(ConfigList* config) {
     /* parse the "http_url" stanza */
     if (ttype == T_STRING && tbuf == "http_url") {
       consumeToken();
-      if (!parseSensorHTTPDefinitionURLStanza(sensor_config.get())) {
+      if (!parseFetchHTTPDefinitionURLStanza(sensor_config.get())) {
         return false;
       }
       continue;
@@ -590,7 +391,7 @@ bool ConfigParser::parseSensorHTTPDefinition(ConfigList* config) {
     /* parse the "metric_id_rewrite" stanza */
     if (ttype == T_STRING && tbuf == "metric_id_rewrite") {
       consumeToken();
-      if (!parseSensorMetricIDRewriteStanza(sensor_config.get())) {
+      if (!parseRewriteStanza(sensor_config.get())) {
         return false;
       }
       continue;
@@ -611,7 +412,7 @@ bool ConfigParser::parseSensorHTTPDefinition(ConfigList* config) {
   return true;
 }
 
-bool ConfigParser::parseSensorHTTPDefinitionURLStanza(
+bool ConfigParser::parseFetchHTTPDefinitionURLStanza(
     HTTPSensorConfig* sensor_config) {
   TokenType ttype;
   std::string tbuf;
