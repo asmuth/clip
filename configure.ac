@@ -2,7 +2,7 @@
 ## In general, the safest way to proceed is to run ./autogen.sh
 
 AC_PREREQ(2.59)
-AC_INIT([fnordmetric],[2.0.0-dev],[authors@fnordmetric.io],[fnordmetric])
+AC_INIT([fnordmetric],[0.8.0-dev],[authors@fnordmetric.io],[fnordmetric])
 AM_INIT_AUTOMAKE([foreign subdir-objects serial-tests])
 AM_MAINTAINER_MODE([enable])
 AC_CONFIG_SRCDIR([configure.ac])
