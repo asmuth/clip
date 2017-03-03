@@ -42,7 +42,7 @@ public:
 
 protected:
 
-  AggregationService(const std::string& datadir);
+  AggregationService();
 
   VersionedTableMap table_map_;
   std::mutex table_map_mutex_;

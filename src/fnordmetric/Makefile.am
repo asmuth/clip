@@ -96,6 +96,8 @@ fnordmetric_util_src = \
 metric_collectd_SOURCES = \
     aggregate.h \
     aggregate.cc \
+    aggregation_service.h \
+    aggregation_service.cc \
     config_list.h \
     config_list.cc \
     config_parser.h \
