@@ -5,7 +5,6 @@ metric-collectd is a standalone daemon process that collects measurements,
 pre-aggregates them and stores the aggregated tuples into a backend database.
 
     Usage: $ metric-collectd [OPTIONS]
-
        -c, --config <file>       Load config file
        --daemonize               Daemonize the server
        --pidfile <file>          Write a PID file

@@ -64,27 +64,6 @@ int main(int argc, const char** argv) {
       NULL);
 
   flags.defineFlag(
-      "datadir",
-      FlagParser::T_STRING,
-      false,
-      "d",
-      NULL);
-
-  flags.defineFlag(
-      "listen_http",
-      FlagParser::T_STRING,
-      false,
-      NULL,
-      "localhost:8175");
-
-  flags.defineFlag(
-      "listen_statsd",
-      FlagParser::T_STRING,
-      false,
-      NULL,
-      NULL);
-
-  flags.defineFlag(
       "help",
       FlagParser::T_SWITCH,
       false,
@@ -133,13 +112,6 @@ int main(int argc, const char** argv) {
       NULL,
       NULL);
 
-  flags.defineFlag(
-      "dev_assets",
-      FlagParser::T_STRING,
-      false,
-      NULL,
-      NULL);
-
   /* parse flags */
   {
     auto rc = flags.parseArgv(argc, argv);
@@ -177,9 +149,8 @@ int main(int argc, const char** argv) {
 
   if (flags.isSet("help")) {
     std::cerr <<
-        "Usage: $ metricd [OPTIONS]\n\n"
-        "   -c, --config <path>       Path to config file\n"
-        "   -d, --datadir <dir>       Where to store the data\n"
+        "Usage: $ metric-collectd [OPTIONS]\n"
+        "   -c, --config <file>       Load config file\n"
         "   --daemonize               Daemonize the server\n"
         "   --pidfile <file>          Write a PID file\n"
         "   --loglevel <level>        Minimum log level (default: INFO)\n"
@@ -187,9 +158,10 @@ int main(int argc, const char** argv) {
         "   --[no]log_to_stderr       Do[n't] log to stderr\n"
         "   -?, --help                Display this help text and exit\n"
         "   -v, --version             Display the version of this binary and exit\n"
-        "                                                       \n"
-        "Examples:                                              \n"
-        "   $ fmetricd --daemonize\n";
+        "\n"
+        "Examples:\n"
+        "   $ metric-collectd -c metrics.conf\n"
+        "   $ metric-collectd -c metrics.conf --daemonize --log_to_syslog\n";
 
     return 0;
   }
@@ -197,11 +169,6 @@ int main(int argc, const char** argv) {
   /* check flags */
   if (!flags.isSet("config")) {
     std::cerr << "ERROR: --config flag must be set" << std::endl;
-    return 1;
-  }
-
-  if (!flags.isSet("datadir")) {
-    std::cerr << "ERROR: --datadir flag must be set" << std::endl;
     return 1;
   }
 
@@ -259,7 +226,7 @@ int main(int argc, const char** argv) {
     rc = config_parser.parse(&config);
   }
 
-  /* start metric service */
+  /* start aggregation service */
   std::unique_ptr<AggregationService> aggr_service;
   if (rc.isSuccess()) {
     rc = AggregationService::startService(&aggr_service);
@@ -287,52 +254,46 @@ int main(int argc, const char** argv) {
   //  rc = sensor_sched.start();
   //}
 
-  /* start statsd service */
-  std::unique_ptr<statsd::StatsdServer> statsd_server;
-  if (rc.isSuccess() && flags.isSet("listen_statsd")) {
-    std::string statsd_bind;
-    uint16_t statsd_port;
-    auto parse_rc = parseListenAddr(
-        flags.getString("listen_statsd"),
-        &statsd_bind,
-        &statsd_port);
-    if (parse_rc) {
-      statsd_server.reset(new statsd::StatsdServer(aggr_service.get()));
-      rc = statsd_server->listenAndStart(statsd_bind, statsd_port);
-    } else {
-      rc = ReturnCode::error("ERUNTIME", "invalid value for --listen_statsd");
-    }
-  }
+  ///* start statsd service */
+  //std::unique_ptr<statsd::StatsdServer> statsd_server;
+  //if (rc.isSuccess() && flags.isSet("listen_statsd")) {
+  //  std::string statsd_bind;
+  //  uint16_t statsd_port;
+  //  auto parse_rc = parseListenAddr(
+  //      flags.getString("listen_statsd"),
+  //      &statsd_bind,
+  //      &statsd_port);
+  //  if (parse_rc) {
+  //    statsd_server.reset(new statsd::StatsdServer(aggr_service.get()));
+  //    rc = statsd_server->listenAndStart(statsd_bind, statsd_port);
+  //  } else {
+  //    rc = ReturnCode::error("ERUNTIME", "invalid value for --listen_statsd");
+  //  }
+  //}
 
-  /* run http server */
-  if (rc.isSuccess()) {
-    std::string http_bind;
-    uint16_t http_port;
-    auto parse_rc = parseListenAddr(
-        flags.getString("listen_http"),
-        &http_bind,
-        &http_port);
+  ///* run http server */
+  //if (rc.isSuccess()) {
+  //  std::string http_bind;
+  //  uint16_t http_port;
+  //  auto parse_rc = parseListenAddr(
+  //      flags.getString("listen_http"),
+  //      &http_bind,
+  //      &http_port);
 
-    if (parse_rc) {
-      //HTTPServer server(aggr_service.get(), flags.getString("dev_assets"));
-      //server.listen(http_bind, http_port);
-      //server.run();
-    } else {
-      rc = ReturnCode::error("ERUNTIME", "invalid value for --listen_http");
-    }
-  }
+  //  if (parse_rc) {
+  //    //HTTPServer server(aggr_service.get(), flags.getString("dev_assets"));
+  //    //server.listen(http_bind, http_port);
+  //    //server.run();
+  //  } else {
+  //    rc = ReturnCode::error("ERUNTIME", "invalid value for --listen_http");
+  //  }
+  //}
 
   if (!rc.isSuccess()) {
     logFatal("ERROR: $0", rc.getMessage());
   }
 
   /* shutdown */
-  if (statsd_server) {
-    statsd_server->shutdown();
-  }
-
-  //sensor_sched.shutdown();
-
   logInfo("Exiting...");
   signal(SIGTERM, SIG_IGN);
   signal(SIGINT, SIG_IGN);

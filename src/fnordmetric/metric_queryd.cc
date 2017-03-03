@@ -157,7 +157,6 @@ int main(int argc, const char** argv) {
   if (flags.isSet("help")) {
     std::cerr <<
         "Usage: $ metric-queryd [OPTIONS]\n"
-        "\n"
         "   --backend                 Set the backend database connection URI/string\n"
         "   --listen_http             Listen for HTTP connection on this address\n"
         "   --daemonize               Daemonize the server\n"

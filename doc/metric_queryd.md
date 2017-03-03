@@ -5,7 +5,6 @@ metric-queryd is a simple stateless service that executes SQL queries on a backe
 database and returns the results as charts.
 
     Usage: $ metric-queryd [OPTIONS]
-
        --backend                 Set the backend database connection URI/string
        --listen_http             Listen for HTTP connection on this address
        --daemonize               Daemonize the server
