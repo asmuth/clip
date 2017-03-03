@@ -12,12 +12,8 @@ else
 ZLIB_DEF =
 endif
 
-if HAVE_PTHREAD
 PTHREAD_DEF = -DHAVE_PTHREAD=1
 PTHREAD_LDFLAGS_=-lpthread
-else
-PTHREAD_DEF =
-endif
 
 if HAVE_SYSLOG_H
 SYSLOG_DEF = -DHAVE_SYSLOG_H=1
@@ -36,7 +32,6 @@ CURL_LDFLAGS_=-lcurl
 
 AM_CXXFLAGS = -DFNORDMETRIC_VERSION=\"v@PACKAGE_VERSION@\" $(PTHREAD_CFLAGS) $(PTHREAD_DEF) $(SYSLOG_DEF) $(ZLIB_DEF) $(GETHOSTBYNAME_R_DEF) -std=c++0x -ftemplate-depth=500 -mno-omit-leaf-frame-pointer -fno-omit-frame-pointer -Wall -Wextra -Wno-unused-parameter -Wno-sign-compare -Wdelete-non-virtual-dtor -Wno-predefined-identifier-outside-function -Wno-invalid-offsetof -g -I$(top_srcdir)/src -I$(top_srcdir)/deps/libtransport/src -I$(top_srcdir)/
 AM_CFLAGS =  $(PTHREAD_CFLAGS) $(PTHREAD_DEF) $(SYSLOG_DEF) $(ZLIB_DEF) $(GETHOSTBYNAME_R_DEF) -std=c11 -mno-omit-leaf-frame-pointer -fno-omit-frame-pointer -Wall -pedantic -g
-AM_LDFLAGS = $(PCRE_LDFLAGS_) $(CURL_LDFLAGS_) $(PTHREAD_LDFLAGS_)
 
 fnordmetric_util_src = \
     util/daemonize.h \
@@ -111,6 +106,8 @@ metric_collectd_SOURCES = \
     table_map.cc \
     sample.h \
     sample.cc \
+    sensors.h \
+    sensors.cc \
     units.h \
     units.cc \
     transport/statsd/statsd.h \
@@ -125,7 +122,8 @@ metric_collectd_SOURCES = \
 metric_collectd_LDADD = \
     ${top_builddir}/deps/libtransport/src/libtransport/http/libtransport_http.a \
     ${top_builddir}/deps/libtransport/src/libtransport/json/libtransport_json.a \
-    ${top_builddir}/deps/libtransport/src/libtransport/uri/libtransport_uri.a
+    ${top_builddir}/deps/libtransport/src/libtransport/uri/libtransport_uri.a \
+    $(PTHREAD_LDFLAGS_)
 
 metric_queryd_SOURCES = \
     $(fnordmetric_util_src) \
@@ -134,5 +132,5 @@ metric_queryd_SOURCES = \
 metric_queryd_LDADD = \
     ${top_builddir}/deps/libtransport/src/libtransport/http/libtransport_http.a \
     ${top_builddir}/deps/libtransport/src/libtransport/json/libtransport_json.a \
-    ${top_builddir}/deps/libtransport/src/libtransport/uri/libtransport_uri.a
-
+    ${top_builddir}/deps/libtransport/src/libtransport/uri/libtransport_uri.a \
+    $(PTHREAD_LDFLAGS_)

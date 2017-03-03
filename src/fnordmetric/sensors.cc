@@ -8,7 +8,6 @@
  * <http://www.gnu.org/licenses/>.
  */
 #include <fnordmetric/sensors.h>
-#include <fnordmetric/sensor_http.h>
 #include <fnordmetric/util/time.h>
 #include <fnordmetric/util/logging.h>
 
@@ -17,6 +16,7 @@ namespace fnordmetric {
 SensorConfig::SensorConfig() :
     metric_id_rewrite_enabled(false) {}
 
+/*
 ReturnCode mkSensorTask(
     MetricService* metric_service,
     const SensorConfig* sensor_cfg,
@@ -34,6 +34,7 @@ ReturnCode mkSensorTask(
       "invalid sensor type for sensor: $0",
       sensor_cfg->sensor_id);
 }
+*/
 
 SensorScheduler::SensorScheduler(
     size_t thread_count /* = 1 */) :
