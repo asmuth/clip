@@ -41,5 +41,6 @@ compile
 test-driver
 libtool
 confdefs.h
-src/fnordmetric/fmetricd
+src/fnordmetric/metric-collectd
+src/fnordmetric/metric-queryd
 *.dSYM

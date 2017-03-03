@@ -3,7 +3,7 @@
 MAINTAINERCLEANFILES =   \
   Makefile.in
 
-bin_PROGRAMS = metric_collectd
+bin_PROGRAMS = metric-collectd metric-queryd
 
 ################# DEPENDENCIES ####################
 if HAVE_ZLIB
@@ -38,25 +38,9 @@ AM_CXXFLAGS = -DFNORDMETRIC_VERSION=\"v@PACKAGE_VERSION@\" $(PTHREAD_CFLAGS) $(P
 AM_CFLAGS =  $(PTHREAD_CFLAGS) $(PTHREAD_DEF) $(SYSLOG_DEF) $(ZLIB_DEF) $(GETHOSTBYNAME_R_DEF) -std=c11 -mno-omit-leaf-frame-pointer -fno-omit-frame-pointer -Wall -pedantic -g
 AM_LDFLAGS = $(PCRE_LDFLAGS_) $(CURL_LDFLAGS_) $(PTHREAD_LDFLAGS_)
 
-metric_collectd_SOURCES = \
-    aggregate.h \
-    aggregate.cc \
-    config_list.h \
-    config_list.cc \
-    config_parser.h \
-    config_parser.cc \
-    table.h \
-    table.cc \
-    table_map.h \
-    table_map.cc \
-    aggregation_service.h \
-    aggregation_service.cc \
-    fetch_http.h \
-    fetch_http.cc \
-    sample.h \
-    sample.cc \
-    units.h \
-    units.cc \
+fnordmetric_util_src = \
+    util/daemonize.h \
+    util/daemonize.cc \
     util/time_impl.h \
     util/time.h \
     util/time.cc \
@@ -112,7 +96,27 @@ metric_collectd_SOURCES = \
     util/base64.h \
     util/autoref_impl.h \
     util/autoref.h \
-    util/autoref.cc \
+    util/autoref.cc
+
+metric_collectd_SOURCES = \
+    aggregate.h \
+    aggregate.cc \
+    config_list.h \
+    config_list.cc \
+    config_parser.h \
+    config_parser.cc \
+    table.h \
+    table.cc \
+    table_map.h \
+    table_map.cc \
+    aggregation_service.h \
+    aggregation_service.cc \
+    fetch_http.h \
+    fetch_http.cc \
+    sample.h \
+    sample.cc \
+    units.h \
+    units.cc \
     transport/http/http_server.h \
     transport/http/http_server.cc \
     transport/statsd/statsd.h \
@@ -123,6 +127,7 @@ metric_collectd_SOURCES = \
     types.cc \
     webui/webui.h \
     webui/webui.cc \
+    $(fnordmetric_util_src) \
     metric_collectd.cc
 
 metric_collectd_LDADD = \
@@ -130,4 +135,12 @@ metric_collectd_LDADD = \
     ${top_builddir}/deps/libtransport/src/libtransport/json/libtransport_json.a \
     ${top_builddir}/deps/libtransport/src/libtransport/uri/libtransport_uri.a
 
+metric_queryd_SOURCES = \
+    $(fnordmetric_util_src) \
+    metric_queryd.cc
+
+metric_queryd_LDADD = \
+    ${top_builddir}/deps/libtransport/src/libtransport/http/libtransport_http.a \
+    ${top_builddir}/deps/libtransport/src/libtransport/json/libtransport_json.a \
+    ${top_builddir}/deps/libtransport/src/libtransport/uri/libtransport_uri.a
 
