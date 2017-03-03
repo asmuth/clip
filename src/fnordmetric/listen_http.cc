@@ -1,28 +1,22 @@
 /**
  * This file is part of the "FnordMetric" project
  *   Copyright (c) 2014 Paul Asmuth, Google Inc.
- *   Copyright (c) 2016 Paul Asmuth, FnordCorp B.V.
+ *   Copyright (c) 2016 Paul Asmuth, FnordCorp B.V. <paul@asmuth.com>
  *
  * FnordMetric is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License v3.0. You should have received a
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#include <assert.h>
-#include <fnordmetric/metric_service.h>
-#include <fnordmetric/query/query_frontend.h>
-#include <fnordmetric/transport/http/http_api.h>
+#include <fnordmetric/transport/http/http_server.h>
 #include <fnordmetric/util/stringutil.h>
-#include <fnordmetric/util/time.h>
-#include "fnordmetric/util/format.h"
-#include <libtransport/json/json_object.h>
 
 namespace fnordmetric {
 
 HTTPAPI::HTTPAPI(
-    MetricService* metric_service) :
-    metric_service_(metric_service),
-    query_frontend_(metric_service) {}
+    AggregationService* aggr_service) :
+    aggr_service_(aggr_service),
+    query_frontend_(aggr_service) {}
 
 void HTTPAPI::handleHTTPRequest(
     http::HTTPRequest* request,
@@ -79,7 +73,7 @@ void HTTPAPI::renderMetricList(
   json.addString("metrics");
   json.beginArray();
 
-  auto cursor = metric_service_->listMetrics();
+  auto cursor = aggr_service_->listMetrics();
   for (; cursor.isValid(); cursor.next()) {
     json.beginObject();
 
@@ -280,7 +274,7 @@ void HTTPAPI::performMetricFetchTimeseries(
 
   /* get metric info */
   MetricInfo metric_info;
-  auto describe_rc = metric_service_->describeMetric(metric_id, &metric_info);
+  auto describe_rc = aggr_service_->describeMetric(metric_id, &metric_info);
   if (!describe_rc.isSuccess()) {
     response->setStatus(http::kStatusInternalServerError);
     response->addBody(std::string("ERROR: ") + describe_rc.getMessage());
@@ -306,7 +300,7 @@ void HTTPAPI::performMetricFetchTimeseries(
 
   /* fetch series */
   MetricCursor cursor;
-  auto cursor_rc = metric_service_->fetchData(
+  auto cursor_rc = aggr_service_->fetchData(
       metric_id,
       cursor_opts,
       &cursor);
@@ -450,7 +444,7 @@ void HTTPAPI::performMetricInsert(
   }
 
   auto now = WallClock::unixMicros();
-  auto rc = metric_service_->insertSample(
+  auto rc = aggr_service_->insertSample(
       metric_id,
       now,
       value);
@@ -463,5 +457,38 @@ void HTTPAPI::performMetricInsert(
   }
 }
 
-} // namespace fnordmetric
+HTTPServer::HTTPServer(
+    AggregationService* aggr_service,
+    const std::string& asset_path) :
+    http_api_(aggr_service),
+    webui_(asset_path) {
+  http_server_.setRequestHandler(
+      std::bind(
+          &HTTPServer::handleRequest,
+          this,
+          std::placeholders::_1,
+          std::placeholders::_2));
+}
+
+bool HTTPServer::listen(const std::string& addr, int port) {
+  return http_server_.listen(addr, port);
+}
+
+bool HTTPServer::run() {
+  return http_server_.run();
+}
+
+void HTTPServer::handleRequest(
+    http::HTTPRequest* request,
+    http::HTTPResponse* response) {
+
+  if (StringUtil::beginsWith(request->uri(), "/api/")) {
+    http_api_.handleHTTPRequest(request, response);
+    return;
+  }
+
+  webui_.handleHTTPRequest(request, response);
+}
+
+}
 

@@ -20,8 +20,6 @@
 #include <fnordmetric/util/logging.h>
 #include <fnordmetric/util/fileutil.h>
 #include <fnordmetric/util/daemonize.h>
-#include <fnordmetric/transport/http/http_api.h>
-#include <fnordmetric/transport/http/http_server.h>
 #include <fnordmetric/config_list.h>
 #include <fnordmetric/config_parser.h>
 

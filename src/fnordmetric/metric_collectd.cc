@@ -20,13 +20,12 @@
 #include <fnordmetric/util/logging.h>
 #include <fnordmetric/util/fileutil.h>
 #include <fnordmetric/util/daemonize.h>
-#include <fnordmetric/transport/http/http_api.h>
-#include <fnordmetric/transport/http/http_server.h>
 #include <fnordmetric/config_list.h>
 #include <fnordmetric/config_parser.h>
 #include <fnordmetric/aggregation_service.h>
 #include <fnordmetric/ingest.h>
 #include <fnordmetric/listen_udp.h>
+#include <fnordmetric/listen_http.h>
 
 using namespace fnordmetric;
 

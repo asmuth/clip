@@ -9,8 +9,8 @@
  * <http://www.gnu.org/licenses/>.
  */
 #pragma once
-#include <memory>
-#include <fnordmetric/query/query_frontend.h>
+#include <fnordmetric/webui/webui.h>
+#include <libtransport/http/v1/http_server.h>
 #include <libtransport/http/http_request.h>
 #include <libtransport/http/http_response.h>
 #include <libtransport/uri/uri.h>
@@ -19,7 +19,7 @@
 #include <libtransport/json/json_writer.h>
 
 namespace fnordmetric {
-class MetricService;
+class AggregationService;
 
 namespace json = libtransport::json;
 namespace http = libtransport::http;
@@ -27,7 +27,7 @@ namespace http = libtransport::http;
 class HTTPAPI {
 public:
 
-  HTTPAPI(MetricService* metric_service);
+  HTTPAPI(AggregationService* aggr_service);
 
   void handleHTTPRequest(
       http::HTTPRequest* request,
@@ -55,9 +55,31 @@ protected:
       http::HTTPResponse* response,
       const URI& uri);
 
-  MetricService* metric_service_;
-  QueryFrontend query_frontend_;
+  AggregationService* aggr_service_;
 };
+
+
+class HTTPServer {
+public:
+
+  HTTPServer(
+      AggregationService* aggr_service,
+      const std::string& asset_path);
+
+  bool listen(const std::string& addr, int port);
+  bool run();
+
+protected:
+
+  void handleRequest(
+      http::HTTPRequest* request,
+      http::HTTPResponse* response);
+
+  HTTPAPI http_api_;
+  WebUI webui_;
+  libtransport::http::HTTPServer http_server_;
+};
+
 
 }
 
