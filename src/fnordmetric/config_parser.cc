@@ -180,14 +180,10 @@ bool ConfigParser::parseTableDefinitionIntervalStanza(
 
 bool ConfigParser::parseTableDefinitionLabelStanza(
     TableConfig* table_config) {
-  TokenType column_name_type;
   std::string column_name;
-  if (!getToken(&column_name_type, &column_name) || column_name_type != T_STRING) {
-    setError("label requires one or more arguments");
+  if (!expectAndConsumeString(&column_name)) {
     return false;
   }
-
-  consumeToken();
 
   table_config->labels.emplace_back(LabelConfig(column_name));
   return true;
@@ -195,25 +191,46 @@ bool ConfigParser::parseTableDefinitionLabelStanza(
 
 bool ConfigParser::parseTableDefinitionMeasureStanza(
     TableConfig* table_config) {
-  TokenType column_name_type;
   std::string column_name;
-  if (!getToken(&column_name_type, &column_name) || column_name_type != T_STRING) {
-    setError("measure requires two arguments");
+  if (!expectAndConsumeString(&column_name)) {
     return false;
   }
 
-  consumeToken();
-
-  TokenType aggregation_type;
-  std::string aggregation;
-  if (!getToken(&aggregation_type, &aggregation) || aggregation_type != T_STRING) {
-    setError("measure requires two arguments");
+  std::string aggregation_fun_str;
+  if (!expectAndConsumeString(&aggregation_fun_str)) {
     return false;
   }
 
-  consumeToken();
+  AggregationFunctionType aggregation_fun;
+  if (!parseAggregationFunctionType(aggregation_fun_str, &aggregation_fun)) {
+    setError(
+        StringUtil::format(
+            "invalid aggregation function: $0",
+            aggregation_fun_str));
+    return false;
+  }
 
-  table_config->labels.emplace_back(LabelConfig(column_name));
+  if (!expectAndConsumeToken(T_LPAREN)) {
+    return false;
+  }
+
+  std::string data_type_str;
+  if (!expectAndConsumeString(&data_type_str)) {
+    return false;
+  }
+
+  DataType data_type;
+  if (!parseDataType(data_type_str, &data_type)) {
+    setError(StringUtil::format("invalid data type: $0", data_type_str));
+    return false;
+  }
+
+  if (!expectAndConsumeToken(T_RPAREN)) {
+    return false;
+  }
+
+  table_config->measures.emplace_back(
+      MeasureConfig(column_name, data_type, aggregation_fun));
   return true;
 }
 

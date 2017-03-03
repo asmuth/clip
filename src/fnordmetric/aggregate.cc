@@ -14,6 +14,25 @@
 
 namespace fnordmetric {
 
+std::string getAggregationFunctionTypeName(AggregationFunctionType t) {
+  switch (t) {
+    case AggregationFunctionType::SUM: return "sum";
+    case AggregationFunctionType::MIN: return "min";
+    case AggregationFunctionType::MAX: return "max";
+  }
+
+  return "???";
+}
+
+bool parseAggregationFunctionType(
+    const std::string& s,
+    AggregationFunctionType* t) {
+  if (s == "sum") { *t = AggregationFunctionType::SUM; return true; }
+  if (s == "min") { *t = AggregationFunctionType::MIN; return true; }
+  if (s == "max") { *t = AggregationFunctionType::MAX; return true; }
+  return false;
+}
+
 //SumInputAggregator::SumInputAggregator(
 //    uint64_t granularity,
 //    uint64_t align /* = 0 */) :

@@ -123,6 +123,26 @@ TEST_CASE(ConfigParserTest, TestParseTableLabelStanza, [] () {
   }
 });
 
+TEST_CASE(ConfigParserTest, TestParseTableMeasureStanza, [] () {
+  std::string confstr =
+      R"(table users_online {
+        measure load_avg max(float64)
+        measure request_count sum(uint64)
+      })";
+
+  ConfigList config;
+  ConfigParser parser(confstr.data(), confstr.size());
+  auto rc = parser.parse(&config);
+  EXPECT(rc.isSuccess());
+
+  EXPECT(config.getTableConfigs().size() == 1);
+  {
+    auto mc = config.getTableConfig("users_online");
+    EXPECT(mc != nullptr);
+    EXPECT(mc->measures.size() == 2);
+  }
+});
+
 //TEST_CASE(ConfigParserTest, TestParseSensorTableIDRewriteStanza, [] () {
 //  std::string confstr =
 //      R"(sensor_http sensor1 {

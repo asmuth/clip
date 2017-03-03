@@ -35,17 +35,20 @@ enum class DataType {
   STRING
 };
 
+std::string getDataTypeName(DataType t);
+bool parseDataType(const std::string& s, DataType* t);
+
 struct LabelConfig {
-  LabelConfig(const std::string n, DataType t = DataType::STRING);
-  std::string column_name;
-  DataType type;
+  LabelConfig(const std::string& n, DataType t = DataType::STRING);
+  const std::string column_name;
+  const DataType type;
 };
 
 struct MeasureConfig {
-  MeasureConfig(const std::string n, DataType t, AggregationFunction f);
-  std::string column_name;
-  DataType type;
-  AggregationFunctionType aggr_fun;
+  MeasureConfig(const std::string& n, DataType t, AggregationFunctionType f);
+  const std::string column_name;
+  const DataType type;
+  const AggregationFunctionType aggr_fun;
 };
 
 struct TableConfig {

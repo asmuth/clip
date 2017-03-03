@@ -17,6 +17,9 @@ enum class AggregationFunctionType {
   SUM, MIN, MAX
 };
 
+std::string getAggregationFunctionTypeName(AggregationFunctionType t);
+bool parseAggregationFunctionType(const std::string& s, AggregationFunctionType* t);
+
 class AggregationFunction {
 public:
 

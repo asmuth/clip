@@ -17,14 +17,45 @@
 
 namespace fnordmetric {
 
+std::string getDataTypeName(DataType t) {
+  switch (t) {
+    case DataType::NIL: return "nil";
+    case DataType::UINT64: return "uint64";
+    case DataType::INT64: return "int64";
+    case DataType::FLOAT64: return "float64";
+    case DataType::STRING: return "string";
+  }
+
+  return "???";
+}
+
+bool parseDataType(
+    const std::string& s,
+    DataType* t) {
+  if (s == "nil") { *t = DataType::NIL; return true; }
+  if (s == "uint64") { *t = DataType::UINT64; return true; }
+  if (s == "int64") { *t = DataType::INT64; return true; }
+  if (s == "float64") { *t = DataType::FLOAT64; return true; }
+  if (s == "string") { *t = DataType::STRING; return true; }
+  return false;
+}
+
 TableConfig::TableConfig() :
     interval(10 * kMicrosPerSecond) {}
 
 LabelConfig::LabelConfig(
-    const std::string n,
+    const std::string& n,
     DataType t /* = DataType::STRING */) :
     column_name(n),
     type(t) {}
+
+MeasureConfig::MeasureConfig(
+    const std::string& n,
+    DataType t,
+    AggregationFunctionType f) :
+    column_name(n),
+    type(t),
+    aggr_fun(f) {}
 
 } // namespace fnordmetric
 
