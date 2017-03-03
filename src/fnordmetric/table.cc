@@ -20,5 +20,11 @@ namespace fnordmetric {
 TableConfig::TableConfig() :
     interval(10 * kMicrosPerSecond) {}
 
+LabelConfig::LabelConfig(
+    const std::string n,
+    DataType t /* = DataType::STRING */) :
+    column_name(n),
+    type(t) {}
+
 } // namespace fnordmetric
 

@@ -29,8 +29,8 @@ ReturnCode ConfigParser::parse(ConfigList* config) {
   /* a file consists of a list of top-level definitions */
   while (getToken(&ttype, &tbuf)) {
 
-    /* parse the "metric" definition */
-    if (ttype == T_STRING && tbuf == "metric") {
+    /* parse the "table" definition */
+    if (ttype == T_STRING && tbuf == "table") {
       consumeToken();
       if (parseTableDefinition(config)) {
         continue;
@@ -95,7 +95,7 @@ bool ConfigParser::parseTableDefinition(ConfigList* config) {
     return false;
   }
 
-  TableConfig metric_config;
+  TableConfig table_config;
 
   TokenType ttype;
   std::string tbuf;
@@ -112,7 +112,7 @@ bool ConfigParser::parseTableDefinition(ConfigList* config) {
     /* parse the "interval" stanza */
     if (ttype == T_STRING && tbuf == "interval") {
       consumeToken();
-      if (!parseTableDefinitionIntervalStanza(&metric_config)) {
+      if (!parseTableDefinitionIntervalStanza(&table_config)) {
         return false;
       }
       continue;
@@ -121,7 +121,7 @@ bool ConfigParser::parseTableDefinition(ConfigList* config) {
     /* parse the "label" stanza */
     if (ttype == T_STRING && tbuf == "label") {
       consumeToken();
-      if (!parseTableDefinitionLabelStanza(&metric_config)) {
+      if (!parseTableDefinitionLabelStanza(&table_config)) {
         return false;
       }
       continue;
@@ -138,12 +138,12 @@ bool ConfigParser::parseTableDefinition(ConfigList* config) {
     return false;
   }
 
-  config->addTableConfig(metric_name, metric_config);
+  config->addTableConfig(metric_name, table_config);
   return true;
 }
 
 bool ConfigParser::parseTableDefinitionIntervalStanza(
-    TableConfig* metric_config) {
+    TableConfig* table_config) {
   TokenType ttype;
   std::string tbuf;
   if (!getToken(&ttype, &tbuf) || ttype != T_STRING) {
@@ -165,33 +165,22 @@ bool ConfigParser::parseTableDefinitionIntervalStanza(
     return false;
   }
 
-  metric_config->interval = interval;
+  table_config->interval = interval;
   return true;
 }
 
 bool ConfigParser::parseTableDefinitionLabelStanza(
-    TableConfig* metric_config) {
-  for (;;) {
-    TokenType ttype;
-    std::string tbuf;
-    if (!getToken(&ttype, &tbuf) || ttype != T_STRING) {
-      setError("label requires one or more arguments");
-      return false;
-    }
-
-    consumeToken();
-
-    if (!getToken(&ttype, &tbuf)) {
-      break;
-    }
-
-    if (ttype == T_COMMA) {
-      consumeToken();
-    } else {
-      break;
-    }
+    TableConfig* table_config) {
+  TokenType column_name_type;
+  std::string column_name;
+  if (!getToken(&column_name_type, &column_name) || column_name_type != T_STRING) {
+    setError("label requires one or more arguments");
+    return false;
   }
 
+  consumeToken();
+
+  table_config->labels.emplace_back(LabelConfig(column_name));
   return true;
 }
 

@@ -36,7 +36,7 @@ enum class DataType {
 };
 
 struct LabelConfig {
-  LabelConfig(const std::string n, DataType t);
+  LabelConfig(const std::string n, DataType t = DataType::STRING);
   std::string column_name;
   DataType type;
 };
