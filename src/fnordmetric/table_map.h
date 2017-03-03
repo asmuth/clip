@@ -20,7 +20,6 @@ namespace fnordmetric {
 
 class TableMap {
 friend class TableMapBuilder;
-friend class TableListCursor;
 public:
 
   ~TableMap();
@@ -35,7 +34,7 @@ protected:
   using MapType = std::map<std::string, SlotType>;
   using IterType = MapType::iterator;
 
-  MapType metrics_;
+  MapType tables_;
   std::shared_ptr<TableMap> next_;
 };
 
@@ -45,10 +44,10 @@ public:
   TableMapBuilder(TableMap* metric_map);
 
   void addTable(
-      const std::string& key,
-      std::unique_ptr<TableConfig> metric);
+      const TableIDType& table_id,
+      const TableConfig& table);
 
-  TableConfig* findTable(const std::string& key);
+  TableConfig* findTable(const TableIDType& table_id);
 
   std::shared_ptr<TableMap> getTableMap();
 
@@ -68,26 +67,6 @@ public:
 protected:
   mutable std::mutex mutex_;
   std::shared_ptr<TableMap> metric_map_;
-};
-
-class TableListCursor {
-public:
-
-  TableListCursor(std::shared_ptr<TableMap> metric_map);
-  TableListCursor(const TableListCursor& o) = delete;
-  TableListCursor(TableListCursor&& o);
-  TableListCursor& operator=(const TableListCursor& o) = delete;
-
-  const std::string& getTableID();
-
-  bool isValid() const;
-  bool next();
-
-protected:
-  std::shared_ptr<TableMap> metric_map_;
-  TableMap::IterType begin_;
-  TableMap::IterType cur_;
-  TableMap::IterType end_;
 };
 
 } // namespace fnordmetric
