@@ -24,8 +24,8 @@ public:
 
   ConfigList();
 
-  size_t getSensorThreads() const;
-  void setSensorThreads(size_t threads);
+  bool getCreateTables() const;
+  void setCreateTables(bool create_tables);
 
   std::map<TableIDType, TableConfig>& getTableConfigs();
   const std::map<TableIDType, TableConfig>& getTableConfigs() const;
@@ -41,7 +41,7 @@ public:
   void addSensorConfig(std::unique_ptr<SensorConfig> config);
 
 protected:
-  size_t sensor_threads_;
+  bool create_tables_;
   std::map<TableIDType, TableConfig> metric_configs_;
   std::map<std::string, UnitConfig> unit_configs_;
   std::map<std::string, std::unique_ptr<SensorConfig>> sensor_configs_;

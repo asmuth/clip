@@ -70,15 +70,25 @@ TEST_CASE(ConfigParserTest, TestTokenize, [] () {
   EXPECT(parser.getToken(&ttype, &tbuf) == false);
 });
 
-//TEST_CASE(ConfigParserTest, TestParseSensorThreads, [] () {
-//  std::string confstr = R"(sensor_threads 23)";
-//
-//  ConfigList config;
-//  ConfigParser parser(confstr.data(), confstr.size());
-//  auto rc = parser.parse(&config);
-//  EXPECT(rc.isSuccess());
-//  EXPECT(config.getSensorThreads() == 23);
-//});
+TEST_CASE(ConfigParserTest, TestParseCreateTablesOn, [] () {
+  std::string confstr = R"(create_tables on)";
+
+  ConfigList config;
+  ConfigParser parser(confstr.data(), confstr.size());
+  auto rc = parser.parse(&config);
+  EXPECT(rc.isSuccess());
+  EXPECT(config.getCreateTables() == true);
+});
+
+TEST_CASE(ConfigParserTest, TestParseCreateTablesOff, [] () {
+  std::string confstr = R"(create_tables off)";
+
+  ConfigList config;
+  ConfigParser parser(confstr.data(), confstr.size());
+  auto rc = parser.parse(&config);
+  EXPECT(rc.isSuccess());
+  EXPECT(config.getCreateTables() == false);
+});
 
 TEST_CASE(ConfigParserTest, TestParseTableIntervalStanza, [] () {
   std::string confstr =

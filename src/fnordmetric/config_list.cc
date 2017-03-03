@@ -11,14 +11,14 @@
 
 namespace fnordmetric {
 
-ConfigList::ConfigList() : sensor_threads_(1) {}
+ConfigList::ConfigList() : create_tables_(false) {}
 
-size_t ConfigList::getSensorThreads() const {
-  return sensor_threads_;
+bool ConfigList::getCreateTables() const {
+  return create_tables_;
 }
 
-void ConfigList::setSensorThreads(size_t threads) {
-  sensor_threads_ = threads;
+void ConfigList::setCreateTables(bool create_tables) {
+  create_tables_ = create_tables;
 }
 
 std::map<TableIDType, TableConfig>& ConfigList::getTableConfigs() {

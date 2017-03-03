@@ -29,6 +29,16 @@ ReturnCode ConfigParser::parse(ConfigList* config) {
   /* a file consists of a list of top-level definitions */
   while (getToken(&ttype, &tbuf)) {
 
+    /* parse the "create_tables" stanza */
+    if (ttype == T_STRING && tbuf == "create_tables") {
+      consumeToken();
+      if (parseCreateTablesStanza(config)) {
+        continue;
+      } else {
+        break;
+      }
+    }
+
     /* parse the "table" definition */
     if (ttype == T_STRING && tbuf == "table") {
       consumeToken();
@@ -66,7 +76,7 @@ ReturnCode ConfigParser::parse(ConfigList* config) {
 
     setError(
         StringUtil::format(
-            "invalid token; got: $0, expected one of: metric",
+            "invalid token; got: $0",
             printToken(ttype, tbuf)));
 
     break;
@@ -83,6 +93,28 @@ ReturnCode ConfigParser::parse(ConfigList* config) {
   } else {
     return ReturnCode::success();
   }
+}
+
+bool ConfigParser::parseCreateTablesStanza(ConfigList* config) {
+  std::string value;
+  if (!expectAndConsumeString(&value)) {
+    return false;
+  }
+
+  if (value == "on") {
+    config->setCreateTables(true);
+  } else if (value == "off") {
+    config->setCreateTables(false);
+  } else {
+    setError(
+        StringUtil::format(
+            "invalid value for create_tables: $1, valid values: {on, off}",
+            value));
+
+    return false;
+  }
+
+  return true;
 }
 
 bool ConfigParser::parseTableDefinition(ConfigList* config) {

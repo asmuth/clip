@@ -44,6 +44,8 @@ public:
 
 protected:
 
+  bool parseCreateTablesStanza(ConfigList* config);
+
   bool parseTableDefinition(ConfigList* config);
   bool parseTableDefinitionIntervalStanza(TableConfig* metric_config);
   bool parseTableDefinitionLabelStanza(TableConfig* metric_config);
