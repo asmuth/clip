@@ -13,108 +13,99 @@
 #include <fnordmetric/util/return_code.h>
 
 namespace fnordmetric {
-struct MetricCursorOptions;
 
-class InputAggregator {
+enum class AggregationFunctionType {
+  SUM, MIN, MAX
+};
+
+class AggregationFunction {
 public:
 
-  virtual ~InputAggregator() = default;
+  virtual ~AggregationFunction() = default;
 
   virtual ReturnCode addSample(
       uint64_t time,
-      tval_type value_type,
-      const void* value,
-      size_t value_len) = 0;
+      void* value,
+      size_t value_size);
 
 };
 
-class OutputAggregator {
-public:
-
-  virtual ~OutputAggregator() = default;
-
-  virtual bool next(
-      uint64_t* time,
-      tval_ref* out) = 0;
-
-};
-
-class SumInputAggregator : public InputAggregator {
-public:
-
-  SumInputAggregator(
-      uint64_t granularity,
-      uint64_t align = 0);
-
-  ReturnCode addSample(
-      uint64_t time,
-      tval_type value_type,
-      const void* value,
-      size_t value_len) override;
-
-protected:
-  uint64_t granularity_;
-  uint64_t align_;
-};
-
-class SumOutputAggregator : public OutputAggregator {
-public:
-
-  SumOutputAggregator(
-      tval_type input_type,
-      const MetricCursorOptions* opts);
-
-  ~SumOutputAggregator();
-
-  bool next(uint64_t* time, tval_ref* out) override;
-
-protected:
-  tval_type input_type_;
-  const MetricCursorOptions* opts_;
-  uint64_t cur_time_;
-  tval_ref cur_sum_;
-  bool have_value_;
-};
-
-class MaxInputAggregator : public InputAggregator {
-public:
-
-  MaxInputAggregator(
-      uint64_t granularity,
-      uint64_t align = 0);
-
-  ReturnCode addSample(
-      uint64_t time,
-      tval_type value_type,
-      const void* value,
-      size_t value_len) override;
-
-protected:
-  uint64_t granularity_;
-  uint64_t align_;
-};
-
-class MaxOutputAggregator : public OutputAggregator {
-public:
-
-  MaxOutputAggregator(
-      tval_type input_type,
-      const MetricCursorOptions* opts);
-
-  ~MaxOutputAggregator();
-
-  bool next(uint64_t* time, tval_ref* out) override;
-
-protected:
-  tval_type input_type_;
-  const MetricCursorOptions* opts_;
-  uint64_t cur_time_;
-  tval_ref cur_max_;
-  bool has_cur_max_;
-  size_t cur_max_time_;
-};
-
-uint64_t alignTime(uint64_t timestamp, uint64_t window, uint64_t align);
+//class SumInputAggregator : public InputAggregator {
+//public:
+//
+//  SumInputAggregator(
+//      uint64_t granularity,
+//      uint64_t align = 0);
+//
+//  ReturnCode addSample(
+//      uint64_t time,
+//      tval_type value_type,
+//      const void* value,
+//      size_t value_len) override;
+//
+//protected:
+//  uint64_t granularity_;
+//  uint64_t align_;
+//};
+//
+//class SumOutputAggregator : public OutputAggregator {
+//public:
+//
+//  SumOutputAggregator(
+//      tval_type input_type,
+//      const MetricCursorOptions* opts);
+//
+//  ~SumOutputAggregator();
+//
+//  bool next(uint64_t* time, tval_ref* out) override;
+//
+//protected:
+//  tval_type input_type_;
+//  const MetricCursorOptions* opts_;
+//  uint64_t cur_time_;
+//  tval_ref cur_sum_;
+//  bool have_value_;
+//};
+//
+//class MaxInputAggregator : public InputAggregator {
+//public:
+//
+//  MaxInputAggregator(
+//      uint64_t granularity,
+//      uint64_t align = 0);
+//
+//  ReturnCode addSample(
+//      uint64_t time,
+//      tval_type value_type,
+//      const void* value,
+//      size_t value_len) override;
+//
+//protected:
+//  uint64_t granularity_;
+//  uint64_t align_;
+//};
+//
+//class MaxOutputAggregator : public OutputAggregator {
+//public:
+//
+//  MaxOutputAggregator(
+//      tval_type input_type,
+//      const MetricCursorOptions* opts);
+//
+//  ~MaxOutputAggregator();
+//
+//  bool next(uint64_t* time, tval_ref* out) override;
+//
+//protected:
+//  tval_type input_type_;
+//  const MetricCursorOptions* opts_;
+//  uint64_t cur_time_;
+//  tval_ref cur_max_;
+//  bool has_cur_max_;
+//  size_t cur_max_time_;
+//};
+//
+//uint64_t alignTime(uint64_t timestamp, uint64_t window, uint64_t align);
 
 } // namespace fnordmetric
 

@@ -21,16 +21,16 @@ void ConfigList::setSensorThreads(size_t threads) {
   sensor_threads_ = threads;
 }
 
-std::map<MetricIDType, TableConfig>& ConfigList::getTableConfigs() {
+std::map<TableIDType, TableConfig>& ConfigList::getTableConfigs() {
   return metric_configs_;
 }
 
-const std::map<MetricIDType, TableConfig>& ConfigList::getTableConfigs()
+const std::map<TableIDType, TableConfig>& ConfigList::getTableConfigs()
     const {
   return metric_configs_;
 }
 
-const TableConfig* ConfigList::getTableConfig(MetricIDType metric_id) const {
+const TableConfig* ConfigList::getTableConfig(TableIDType metric_id) const {
   auto metric_config = metric_configs_.find(metric_id);
   if (metric_config == metric_configs_.end()) {
     return nullptr;
@@ -39,7 +39,7 @@ const TableConfig* ConfigList::getTableConfig(MetricIDType metric_id) const {
   }
 }
 
-void ConfigList::addTableConfig(MetricIDType metric_id, TableConfig config) {
+void ConfigList::addTableConfig(TableIDType metric_id, TableConfig config) {
   metric_configs_.emplace(metric_id, std::move(config));
 }
 

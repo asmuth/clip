@@ -96,7 +96,6 @@ bool ConfigParser::parseTableDefinition(ConfigList* config) {
   }
 
   TableConfig metric_config;
-  metric_config.is_valid = true;
 
   TokenType ttype;
   std::string tbuf;

@@ -1,9 +1,9 @@
 /**
- * This file is part of the "FnordMetric" project
+ * This file is part of the "FnordTable" project
  *   Copyright (c) 2014 Paul Asmuth, Google Inc.
  *   Copyright (c) 2016 Paul Asmuth, FnordCorp B.V. <paul@asmuth.com>
  *
- * FnordMetric is free software: you can redistribute it and/or modify it under
+ * FnordTable is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License v3.0. You should have received a
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
@@ -12,7 +12,7 @@
 
 namespace fnordmetric {
 
-MetricMap::~MetricMap() {
+TableMap::~TableMap() {
   for (auto& m : metrics_) {
     if (m.second.second) {
       delete m.second.first;
@@ -20,7 +20,7 @@ MetricMap::~MetricMap() {
   }
 }
 
-Metric* MetricMap::findMetric(const std::string& key) const {
+TableConfig* TableMap::findTable(const std::string& key) const {
   auto iter = metrics_.find(key);
   if (iter == metrics_.end()) {
     return nullptr;
@@ -29,9 +29,9 @@ Metric* MetricMap::findMetric(const std::string& key) const {
   }
 }
 
-//std::vector<IMetric*> IMetricMap::listMetrics()
+//std::vector<ITableConfig*> ITableMap::listTables()
 //    const {
-//  std::vector<IMetric*> metrics;
+//  std::vector<ITableConfig*> metrics;
 //
 //  {
 //    std::lock_guard<std::mutex> lock_holder(metrics_mutex_);
@@ -43,9 +43,9 @@ Metric* MetricMap::findMetric(const std::string& key) const {
 //  return metrics;
 //}
 
-MetricMapBuilder::MetricMapBuilder(
-    MetricMap* mm) :
-    metric_map_(std::make_shared<MetricMap>()) {
+TableMapBuilder::TableMapBuilder(
+    TableMap* mm) :
+    metric_map_(std::make_shared<TableMap>()) {
   if (mm) {
     for (auto& m : mm->metrics_) {
       m.second.second = false;
@@ -59,59 +59,59 @@ MetricMapBuilder::MetricMapBuilder(
   }
 }
 
-Metric* MetricMapBuilder::findMetric(
+TableConfig* TableMapBuilder::findTable(
     const std::string& key) {
-  return metric_map_->findMetric(key);
+  return metric_map_->findTable(key);
 }
 
-void MetricMapBuilder::addMetric(
+void TableMapBuilder::addTable(
     const std::string& key,
-    std::unique_ptr<Metric> metric) {
+    std::unique_ptr<TableConfig> metric) {
   metric_map_->metrics_.emplace(key, std::make_pair(metric.release(), true));
 }
 
-std::shared_ptr<MetricMap> MetricMapBuilder::getMetricMap() {
+std::shared_ptr<TableMap> TableMapBuilder::getTableMap() {
   auto mmap = std::move(metric_map_);
-  metric_map_ = std::make_shared<MetricMap>();
+  metric_map_ = std::make_shared<TableMap>();
   return mmap;
 }
 
-VersionedMetricMap::VersionedMetricMap() : metric_map_(new MetricMap()) {}
+VersionedTableMap::VersionedTableMap() : metric_map_(new TableMap()) {}
 
-std::shared_ptr<MetricMap> VersionedMetricMap::getMetricMap() const {
+std::shared_ptr<TableMap> VersionedTableMap::getTableMap() const {
   std::unique_lock<std::mutex> lk(mutex_);
   return metric_map_;
 }
 
-void VersionedMetricMap::updateMetricMap(
-    std::shared_ptr<MetricMap> metric_map) {
+void VersionedTableMap::updateTableMap(
+    std::shared_ptr<TableMap> metric_map) {
   std::unique_lock<std::mutex> lk(mutex_);
   metric_map_ = std::move(metric_map);
 }
 
-MetricListCursor::MetricListCursor(
-    std::shared_ptr<MetricMap> metric_map) :
+TableListCursor::TableListCursor(
+    std::shared_ptr<TableMap> metric_map) :
     metric_map_(std::move(metric_map)),
     begin_(metric_map_->metrics_.begin()),
     cur_(begin_),
     end_(metric_map_->metrics_.end()) {}
 
-MetricListCursor::MetricListCursor(
-    MetricListCursor&& o) :
+TableListCursor::TableListCursor(
+    TableListCursor&& o) :
     metric_map_(std::move(o.metric_map_)),
     begin_(std::move(o.begin_)),
     cur_(std::move(o.cur_)),
     end_(std::move(o.end_)) {}
 
-const std::string& MetricListCursor::getMetricID() {
+const std::string& TableListCursor::getTableID() {
   return cur_->first;
 }
 
-bool MetricListCursor::isValid() const {
+bool TableListCursor::isValid() const {
   return cur_ != end_;
 }
 
-bool MetricListCursor::next() {
+bool TableListCursor::next() {
   if (cur_ == end_) {
     return false;
   } else {

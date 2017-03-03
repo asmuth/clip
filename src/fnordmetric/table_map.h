@@ -1,9 +1,9 @@
 /**
- * This file is part of the "FnordMetric" project
+ * This file is part of the "FnordTable" project
  *   Copyright (c) 2014 Paul Asmuth, Google Inc.
  *   Copyright (c) 2016 Paul Asmuth, FnordCorp B.V. <paul@asmuth.com>
  *
- * FnordMetric is free software: you can redistribute it and/or modify it under
+ * FnordTable is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License v3.0. You should have received a
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
@@ -18,76 +18,76 @@
 
 namespace fnordmetric {
 
-class MetricMap {
-friend class MetricMapBuilder;
-friend class MetricListCursor;
+class TableMap {
+friend class TableMapBuilder;
+friend class TableListCursor;
 public:
 
-  ~MetricMap();
+  ~TableMap();
 
-  Metric* findMetric(const std::string& key) const;
+  TableConfig* findTable(const std::string& key) const;
 
-  std::set<std::string> listMetrics() const;
+  std::set<std::string> listTables() const;
 
 protected:
 
-  using SlotType = std::pair<Metric*, bool>;
+  using SlotType = std::pair<TableConfig*, bool>;
   using MapType = std::map<std::string, SlotType>;
   using IterType = MapType::iterator;
 
   MapType metrics_;
-  std::shared_ptr<MetricMap> next_;
+  std::shared_ptr<TableMap> next_;
 };
 
-class MetricMapBuilder {
+class TableMapBuilder {
 public:
 
-  MetricMapBuilder(MetricMap* metric_map);
+  TableMapBuilder(TableMap* metric_map);
 
-  void addMetric(
+  void addTable(
       const std::string& key,
-      std::unique_ptr<Metric> metric);
+      std::unique_ptr<TableConfig> metric);
 
-  Metric* findMetric(const std::string& key);
+  TableConfig* findTable(const std::string& key);
 
-  std::shared_ptr<MetricMap> getMetricMap();
+  std::shared_ptr<TableMap> getTableMap();
 
 protected:
-  std::shared_ptr<MetricMap> metric_map_;
+  std::shared_ptr<TableMap> metric_map_;
 };
 
-class VersionedMetricMap {
+class VersionedTableMap {
 public:
 
-  VersionedMetricMap();
+  VersionedTableMap();
 
-  std::shared_ptr<MetricMap> getMetricMap() const;
+  std::shared_ptr<TableMap> getTableMap() const;
 
-  void updateMetricMap(std::shared_ptr<MetricMap> metric_map);
+  void updateTableMap(std::shared_ptr<TableMap> metric_map);
 
 protected:
   mutable std::mutex mutex_;
-  std::shared_ptr<MetricMap> metric_map_;
+  std::shared_ptr<TableMap> metric_map_;
 };
 
-class MetricListCursor {
+class TableListCursor {
 public:
 
-  MetricListCursor(std::shared_ptr<MetricMap> metric_map);
-  MetricListCursor(const MetricListCursor& o) = delete;
-  MetricListCursor(MetricListCursor&& o);
-  MetricListCursor& operator=(const MetricListCursor& o) = delete;
+  TableListCursor(std::shared_ptr<TableMap> metric_map);
+  TableListCursor(const TableListCursor& o) = delete;
+  TableListCursor(TableListCursor&& o);
+  TableListCursor& operator=(const TableListCursor& o) = delete;
 
-  const std::string& getMetricID();
+  const std::string& getTableID();
 
   bool isValid() const;
   bool next();
 
 protected:
-  std::shared_ptr<MetricMap> metric_map_;
-  MetricMap::IterType begin_;
-  MetricMap::IterType cur_;
-  MetricMap::IterType end_;
+  std::shared_ptr<TableMap> metric_map_;
+  TableMap::IterType begin_;
+  TableMap::IterType cur_;
+  TableMap::IterType end_;
 };
 
 } // namespace fnordmetric
