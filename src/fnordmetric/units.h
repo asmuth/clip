@@ -8,7 +8,6 @@
  * <http://www.gnu.org/licenses/>.
  */
 #pragma once
-#include <fnordmetric/types.h>
 #include <fnordmetric/util/return_code.h>
 #include <string>
 #include <map>
@@ -19,7 +18,7 @@ struct UnitNameConfig {
   UnitNameConfig();
   UnitNameConfig(const UnitNameConfig& other);
   UnitNameConfig(UnitNameConfig&& other);
-  tval_autoref factor;
+  std::string factor;
   std::string singular;
   std::string plural;
   std::string symbol;

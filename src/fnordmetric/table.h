@@ -9,7 +9,6 @@
  * <http://www.gnu.org/licenses/>.
  */
 #pragma once
-#include <fnordmetric/types.h>
 #include <fnordmetric/sample.h>
 #include <fnordmetric/util/return_code.h>
 #include <fnordmetric/aggregate.h>

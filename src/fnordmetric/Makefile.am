@@ -116,8 +116,6 @@ metric_collectd_SOURCES = \
     transport/statsd/statsd.cc \
     transport/statsd/statsd_server.h \
     transport/statsd/statsd_server.cc \
-    types.h \
-    types.cc \
     $(fnordmetric_util_src) \
     metric_collectd.cc
 

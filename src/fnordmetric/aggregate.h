@@ -9,7 +9,6 @@
  */
 #pragma once
 #include <fnordmetric/sample.h>
-#include <fnordmetric/types.h>
 #include <fnordmetric/util/return_code.h>
 
 namespace fnordmetric {

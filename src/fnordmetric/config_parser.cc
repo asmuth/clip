@@ -280,19 +280,12 @@ bool ConfigParser::parseUnitDefinitionNameStanza(
   }
   consumeToken();
 
-  // FIXME allow non string factors
   TokenType factor_type;
-  std::string factor_str;
-  if ((!getToken(&factor_type, &factor_str) || factor_type != T_STRING))  {
+  if ((!getToken(&factor_type, &unc.factor) || factor_type != T_STRING))  {
     setError(kArgError);
     return false;
   }
   consumeToken();
-
-  if (!tval_parsenumber(&unc.factor, factor_str)) {
-    setError("invalid value for unit_name <factor>: " + factor_str);
-    return false;
-  }
 
   TokenType singular_type;
   if ((!getToken(&singular_type, &unc.singular) || singular_type != T_STRING))  {

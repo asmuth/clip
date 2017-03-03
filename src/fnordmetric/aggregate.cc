@@ -8,7 +8,6 @@
  * <http://www.gnu.org/licenses/>.
  */
 #include "fnordmetric/aggregate.h"
-#include "fnordmetric/types.h"
 #include <limits>
 #include <assert.h>
 #include <string.h>

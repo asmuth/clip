@@ -15,7 +15,6 @@
 #include <list>
 #include <thread>
 #include <regex>
-#include <fnordmetric/types.h>
 #include <fnordmetric/util/return_code.h>
 
 namespace fnordmetric {
