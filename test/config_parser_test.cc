@@ -91,9 +91,9 @@ TEST_CASE(ConfigParserTest, TestParseMetricGranularityStanza, [] () {
   auto rc = parser.parse(&config);
   EXPECT(rc.isSuccess());
 
-  EXPECT(config.getMetricConfigs().size() == 1);
+  EXPECT(config.getTableConfigs().size() == 1);
   {
-    auto mc = config.getMetricConfig("users_online");
+    auto mc = config.getTableConfig("users_online");
     EXPECT(mc != nullptr);
     EXPECT(mc->granularity == 60000000);
   }
@@ -110,9 +110,9 @@ TEST_CASE(ConfigParserTest, TestParseMetricKindStanza, [] () {
   auto rc = parser.parse(&config);
   EXPECT(rc.isSuccess());
 
-  EXPECT(config.getMetricConfigs().size() == 1);
+  EXPECT(config.getTableConfigs().size() == 1);
   {
-    auto mc = config.getMetricConfig("users_online");
+    auto mc = config.getTableConfig("users_online");
     EXPECT(mc != nullptr);
     EXPECT(mc->kind == MetricKind::MAX_UINT64);
   }
@@ -126,9 +126,9 @@ TEST_CASE(ConfigParserTest, TestParseMetricKindStanzaWithQuotes, [] () {
   auto rc = parser.parse(&config);
   EXPECT(rc.isSuccess());
 
-  EXPECT(config.getMetricConfigs().size() == 1);
+  EXPECT(config.getTableConfigs().size() == 1);
   {
-    auto mc = config.getMetricConfig("users_online");
+    auto mc = config.getTableConfig("users_online");
     EXPECT(mc != nullptr);
     EXPECT(mc->kind == MetricKind::MAX_UINT64);
   }
@@ -145,9 +145,9 @@ TEST_CASE(ConfigParserTest, TestParseMetricUnitStanza, [] () {
   auto rc = parser.parse(&config);
   EXPECT(rc.isSuccess());
 
-  EXPECT(config.getMetricConfigs().size() == 1);
+  EXPECT(config.getTableConfigs().size() == 1);
   {
-    auto mc = config.getMetricConfig("users_online");
+    auto mc = config.getTableConfig("users_online");
     EXPECT(mc != nullptr);
     EXPECT(mc->unit_id == "bytes");
   }

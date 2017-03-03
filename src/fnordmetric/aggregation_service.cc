@@ -48,8 +48,8 @@ ReturnCode MetricService::startService(
 }
 
 ReturnCode MetricService::applyConfig(const ConfigList* config) {
-  for (auto& mc : config->getMetricConfigs()) {
-    auto metric_config = std::make_shared<MetricConfig>(mc.second);
+  for (auto& mc : config->getTableConfigs()) {
+    auto metric_config = std::make_shared<TableConfig>(mc.second);
     if (!metric_config->unit_id.empty()) {
       auto unit_config = config->getUnitConfig(metric_config->unit_id);
       if (!unit_config) {
@@ -79,7 +79,7 @@ MetricListCursor MetricService::listMetrics() const {
 
 ReturnCode MetricService::configureMetric(
     const std::string& metric_id,
-    std::shared_ptr<MetricConfig> config) {
+    std::shared_ptr<TableConfig> config) {
   std::unique_lock<std::mutex> lk(metric_map_mutex_);
   auto metric_map = metric_map_.getMetricMap();
 

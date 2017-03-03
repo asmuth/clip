@@ -52,8 +52,8 @@ enum MetricKind : uint32_t {
   AVERAGE_FLOAT64   = 18
 };
 
-struct MetricConfig {
-  MetricConfig();
+struct TableConfig {
+  TableConfig();
   MetricKind kind;
   uint64_t interval;
   uint64_t display_granularity;
@@ -74,15 +74,15 @@ public:
   size_t getTotalBytes() const;
   TimestampType getLastInsertTime();
 
-  std::shared_ptr<const MetricConfig> getConfig() const;
-  ReturnCode setConfig(std::shared_ptr<const MetricConfig> config);
+  std::shared_ptr<const TableConfig> getConfig() const;
+  ReturnCode setConfig(std::shared_ptr<const TableConfig> config);
 
   std::mutex& getInsertLock();
 
 protected:
   std::string key_;
   mutable std::mutex config_mutex_;
-  std::shared_ptr<const MetricConfig> config_;
+  std::shared_ptr<const TableConfig> config_;
   std::shared_ptr<const UnitConfig> unit_config_;
   std::mutex insert_mutex_;
 };
@@ -99,7 +99,7 @@ public:
   MetricInfo& operator=(MetricInfo&& o);
 
   std::shared_ptr<const UnitConfig> getUnitConfig() const;
-  std::shared_ptr<const MetricConfig> getMetricConfig() const;
+  std::shared_ptr<const TableConfig> getTableConfig() const;
 
 protected:
   Metric* metric_;

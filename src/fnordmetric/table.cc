@@ -16,7 +16,7 @@
 
 namespace fnordmetric {
 
-MetricConfig::MetricConfig() :
+TableConfig::TableConfig() :
     kind(MetricKind::UNKNOWN),
     interval(0),
     display_granularity(0),
@@ -27,7 +27,7 @@ Metric::Metric(
     key_(key),
     unit_config_(nullptr) {}
 
-ReturnCode Metric::setConfig(std::shared_ptr<const MetricConfig> config) {
+ReturnCode Metric::setConfig(std::shared_ptr<const TableConfig> config) {
   std::unique_lock<std::mutex> lk(config_mutex_);
   //if (config->aggregation != MetricAggregationType::NONE &&
   //    config->granularity == 0) {
@@ -48,7 +48,7 @@ ReturnCode Metric::setConfig(std::shared_ptr<const MetricConfig> config) {
   return ReturnCode::success();
 }
 
-std::shared_ptr<const MetricConfig> Metric::getConfig() const {
+std::shared_ptr<const TableConfig> Metric::getConfig() const {
   std::unique_lock<std::mutex> lk(config_mutex_);
   return config_;
 }
@@ -87,7 +87,7 @@ std::shared_ptr<const UnitConfig> MetricInfo::getUnitConfig() const {
   return metric_->getConfig()->unit_config;
 }
 
-std::shared_ptr<const MetricConfig> MetricInfo::getMetricConfig() const {
+std::shared_ptr<const TableConfig> MetricInfo::getTableConfig() const {
   if (!metric_) {
     return nullptr;
   }

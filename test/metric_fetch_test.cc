@@ -28,11 +28,11 @@ TEST_CASE(MetricServiceTest, TestCounterMetric, [] () {
   ConfigList config;
 
   {
-    MetricConfig mc;
+    TableConfig mc;
     mc.is_valid = true;
     mc.kind = MetricKind::COUNTER_UINT64;
     mc.granularity = 60 * kMicrosPerSecond;
-    config.addMetricConfig("users_online", mc);
+    config.addTableConfig("users_online", mc);
   }
 
   std::unique_ptr<MetricService> service;
@@ -199,11 +199,11 @@ TEST_CASE(MetricServiceTest, TestCounterMetricWithLiveZero, [] () {
   ConfigList config;
 
   {
-    MetricConfig mc;
+    TableConfig mc;
     mc.is_valid = true;
     mc.kind = MetricKind::COUNTER_UINT64;
     mc.granularity = 60 * kMicrosPerSecond;
-    config.addMetricConfig("users_online", mc);
+    config.addTableConfig("users_online", mc);
   }
 
   std::unique_ptr<MetricService> service;
@@ -370,12 +370,12 @@ TEST_CASE(MetricServiceTest, TestCounterMetricWithDownsampling, [] () {
   ConfigList config;
 
   {
-    MetricConfig mc;
+    TableConfig mc;
     mc.is_valid = true;
     mc.kind = MetricKind::COUNTER_UINT64;
     mc.granularity = 60 * kMicrosPerSecond;
     mc.display_granularity = 300 * kMicrosPerSecond;
-    config.addMetricConfig("users_online", mc);
+    config.addTableConfig("users_online", mc);
   }
 
   std::unique_ptr<MetricService> service;
@@ -502,12 +502,12 @@ TEST_CASE(MetricServiceTest, TestCounterMetricWithUpsampling, [] () {
   ConfigList config;
 
   {
-    MetricConfig mc;
+    TableConfig mc;
     mc.is_valid = true;
     mc.kind = MetricKind::COUNTER_UINT64;
     mc.granularity = 60 * kMicrosPerSecond;
     mc.display_granularity = 10 * kMicrosPerSecond;
-    config.addMetricConfig("users_online", mc);
+    config.addTableConfig("users_online", mc);
   }
 
   std::unique_ptr<MetricService> service;
@@ -742,11 +742,11 @@ TEST_CASE(MetricServiceTest, TestCounterMetricWithSummary, [] () {
   ConfigList config;
 
   {
-    MetricConfig mc;
+    TableConfig mc;
     mc.is_valid = true;
     mc.kind = MetricKind::COUNTER_UINT64;
     mc.granularity = 60 * kMicrosPerSecond;
-    config.addMetricConfig("users_online", mc);
+    config.addTableConfig("users_online", mc);
   }
 
   std::unique_ptr<MetricService> service;
@@ -889,11 +889,11 @@ TEST_CASE(MetricServiceTest, TestMaxMetric, [] () {
   ConfigList config;
 
   {
-    MetricConfig mc;
+    TableConfig mc;
     mc.is_valid = true;
     mc.kind = MetricKind::MAX_UINT64;
     mc.granularity = 60 * kMicrosPerSecond;
-    config.addMetricConfig("users_online", mc);
+    config.addTableConfig("users_online", mc);
   }
 
   std::unique_ptr<MetricService> service;
@@ -1060,12 +1060,12 @@ TEST_CASE(MetricServiceTest, TestMaxMetricWithDownsampling, [] () {
   ConfigList config;
 
   {
-    MetricConfig mc;
+    TableConfig mc;
     mc.is_valid = true;
     mc.kind = MetricKind::MAX_UINT64;
     mc.granularity = 60 * kMicrosPerSecond;
     mc.display_granularity = 300 * kMicrosPerSecond;
-    config.addMetricConfig("users_online", mc);
+    config.addTableConfig("users_online", mc);
   }
 
   std::unique_ptr<MetricService> service;
@@ -1192,12 +1192,12 @@ TEST_CASE(MetricServiceTest, TestMaxMetricWithUpsampling, [] () {
   ConfigList config;
 
   {
-    MetricConfig mc;
+    TableConfig mc;
     mc.is_valid = true;
     mc.kind = MetricKind::MAX_UINT64;
     mc.granularity = 60 * kMicrosPerSecond;
     mc.display_granularity = 10 * kMicrosPerSecond;
-    config.addMetricConfig("users_online", mc);
+    config.addTableConfig("users_online", mc);
   }
 
   std::unique_ptr<MetricService> service;

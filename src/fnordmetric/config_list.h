@@ -27,10 +27,10 @@ public:
   size_t getSensorThreads() const;
   void setSensorThreads(size_t threads);
 
-  std::map<MetricIDType, MetricConfig>& getMetricConfigs();
-  const std::map<MetricIDType, MetricConfig>& getMetricConfigs() const;
-  const MetricConfig* getMetricConfig(MetricIDType metric_id) const;
-  void addMetricConfig(MetricIDType metric_id, MetricConfig config);
+  std::map<MetricIDType, TableConfig>& getTableConfigs();
+  const std::map<MetricIDType, TableConfig>& getTableConfigs() const;
+  const TableConfig* getTableConfig(MetricIDType metric_id) const;
+  void addTableConfig(MetricIDType metric_id, TableConfig config);
 
   const std::map<std::string, UnitConfig>& getUnitConfigs() const;
   const UnitConfig* getUnitConfig(std::string unit_id) const;
@@ -42,7 +42,7 @@ public:
 
 protected:
   size_t sensor_threads_;
-  std::map<MetricIDType, MetricConfig> metric_configs_;
+  std::map<MetricIDType, TableConfig> metric_configs_;
   std::map<std::string, UnitConfig> unit_configs_;
   std::map<std::string, std::unique_ptr<SensorConfig>> sensor_configs_;
 };

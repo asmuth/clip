@@ -121,7 +121,7 @@ static void writeTValToJSON(
 static void writeUnitConfigToJSON(
     const MetricInfo* metric_info,
     json::JSONWriter* json) {
-  auto metric_config = metric_info->getMetricConfig();
+  auto metric_config = metric_info->getTableConfig();
   auto unit_config = metric_info->getUnitConfig();
   if (!unit_config) {
     json->addNull();
@@ -301,7 +301,7 @@ void HTTPAPI::performMetricFetchTimeseries(
       return;
     }
   } else {
-    summary_methods = metric_info.getMetricConfig()->summarize_gross;
+    summary_methods = metric_info.getTableConfig()->summarize_gross;
   }
 
   /* fetch series */

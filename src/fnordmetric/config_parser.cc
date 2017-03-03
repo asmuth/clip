@@ -95,7 +95,7 @@ bool ConfigParser::parseTableDefinition(ConfigList* config) {
     return false;
   }
 
-  MetricConfig metric_config;
+  TableConfig metric_config;
   metric_config.is_valid = true;
 
   TokenType ttype;
@@ -139,12 +139,12 @@ bool ConfigParser::parseTableDefinition(ConfigList* config) {
     return false;
   }
 
-  config->addMetricConfig(metric_name, metric_config);
+  config->addTableConfig(metric_name, metric_config);
   return true;
 }
 
 bool ConfigParser::parseTableDefinitionIntervalStanza(
-    MetricConfig* metric_config) {
+    TableConfig* metric_config) {
   TokenType ttype;
   std::string tbuf;
   if (!getToken(&ttype, &tbuf) || ttype != T_STRING) {
@@ -171,7 +171,7 @@ bool ConfigParser::parseTableDefinitionIntervalStanza(
 }
 
 bool ConfigParser::parseTableDefinitionLabelStanza(
-    MetricConfig* metric_config) {
+    TableConfig* metric_config) {
   for (;;) {
     TokenType ttype;
     std::string tbuf;

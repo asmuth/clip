@@ -38,7 +38,7 @@ public:
    */
   ReturnCode configureMetric(
       const std::string& metric_id,
-      std::shared_ptr<MetricConfig> config);
+      std::shared_ptr<TableConfig> config);
 
   /**
    * Remove metric
