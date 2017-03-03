@@ -127,6 +127,15 @@ bool ConfigParser::parseTableDefinition(ConfigList* config) {
       continue;
     }
 
+    /* parse the "measure" stanza */
+    if (ttype == T_STRING && tbuf == "measure") {
+      consumeToken();
+      if (!parseTableDefinitionMeasureStanza(&table_config)) {
+        return false;
+      }
+      continue;
+    }
+
     setError(
         StringUtil::format(
             "invalid token: $0",
@@ -175,6 +184,30 @@ bool ConfigParser::parseTableDefinitionLabelStanza(
   std::string column_name;
   if (!getToken(&column_name_type, &column_name) || column_name_type != T_STRING) {
     setError("label requires one or more arguments");
+    return false;
+  }
+
+  consumeToken();
+
+  table_config->labels.emplace_back(LabelConfig(column_name));
+  return true;
+}
+
+bool ConfigParser::parseTableDefinitionMeasureStanza(
+    TableConfig* table_config) {
+  TokenType column_name_type;
+  std::string column_name;
+  if (!getToken(&column_name_type, &column_name) || column_name_type != T_STRING) {
+    setError("measure requires two arguments");
+    return false;
+  }
+
+  consumeToken();
+
+  TokenType aggregation_type;
+  std::string aggregation;
+  if (!getToken(&aggregation_type, &aggregation) || aggregation_type != T_STRING) {
+    setError("measure requires two arguments");
     return false;
   }
 

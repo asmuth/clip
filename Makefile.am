@@ -6,7 +6,8 @@ AUTOMAKE_OPTIONS = foreign
 SUBDIRS = \
     . \
     deps/libtransport \
-    src/fnordmetric
+    src/fnordmetric \
+    test
 
 EXTRA_DIST =                             \
   autogen.sh                             \

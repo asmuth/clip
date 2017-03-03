@@ -47,6 +47,7 @@ protected:
   bool parseTableDefinition(ConfigList* config);
   bool parseTableDefinitionIntervalStanza(TableConfig* metric_config);
   bool parseTableDefinitionLabelStanza(TableConfig* metric_config);
+  bool parseTableDefinitionMeasureStanza(TableConfig* metric_config);
 
   bool parseUnitDefinition(ConfigList* config);
   bool parseUnitDefinitionDescriptionStanza(UnitConfig* unit_config);

@@ -73,6 +73,6 @@ AM_CONDITIONAL([HAVE_ZLIB], [test $HAVE_ZLIB = 1])
 
 AC_CONFIG_SUBDIRS([deps/libtransport])
 
-AC_CONFIG_FILES([Makefile src/fnordmetric/Makefile])
+AC_CONFIG_FILES([Makefile src/fnordmetric/Makefile test/Makefile])
 
 AC_OUTPUT

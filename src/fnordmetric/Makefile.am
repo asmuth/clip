@@ -4,6 +4,7 @@ MAINTAINERCLEANFILES =   \
   Makefile.in
 
 bin_PROGRAMS = metric-collectd metric-queryd
+noinst_LIBRARIES = libfnordmetric-common.a
 
 ################# DEPENDENCIES ####################
 if HAVE_ZLIB
@@ -33,7 +34,29 @@ CURL_LDFLAGS_=-lcurl
 AM_CXXFLAGS = -DFNORDMETRIC_VERSION=\"v@PACKAGE_VERSION@\" $(PTHREAD_CFLAGS) $(PTHREAD_DEF) $(SYSLOG_DEF) $(ZLIB_DEF) $(GETHOSTBYNAME_R_DEF) -std=c++0x -ftemplate-depth=500 -mno-omit-leaf-frame-pointer -fno-omit-frame-pointer -Wall -Wextra -Wno-unused-parameter -Wno-sign-compare -Wdelete-non-virtual-dtor -Wno-predefined-identifier-outside-function -Wno-invalid-offsetof -g -I$(top_srcdir)/src -I$(top_srcdir)/deps/libtransport/src -I$(top_srcdir)/
 AM_CFLAGS =  $(PTHREAD_CFLAGS) $(PTHREAD_DEF) $(SYSLOG_DEF) $(ZLIB_DEF) $(GETHOSTBYNAME_R_DEF) -std=c11 -mno-omit-leaf-frame-pointer -fno-omit-frame-pointer -Wall -pedantic -g
 
-fnordmetric_util_src = \
+libfnordmetric_common_a_SOURCES = \
+    aggregate.h \
+    aggregate.cc \
+    aggregation_service.h \
+    aggregation_service.cc \
+    config_list.h \
+    config_list.cc \
+    config_parser.h \
+    config_parser.cc \
+    table.h \
+    table.cc \
+    table_map.h \
+    table_map.cc \
+    sample.h \
+    sample.cc \
+    sensors.h \
+    sensors.cc \
+    units.h \
+    units.cc \
+    transport/statsd/statsd.h \
+    transport/statsd/statsd.cc \
+    transport/statsd/statsd_server.h \
+    transport/statsd/statsd_server.cc \
     util/daemonize.h \
     util/daemonize.cc \
     util/time_impl.h \
@@ -93,43 +116,17 @@ fnordmetric_util_src = \
     util/autoref.h \
     util/autoref.cc
 
-metric_collectd_SOURCES = \
-    aggregate.h \
-    aggregate.cc \
-    aggregation_service.h \
-    aggregation_service.cc \
-    config_list.h \
-    config_list.cc \
-    config_parser.h \
-    config_parser.cc \
-    table.h \
-    table.cc \
-    table_map.h \
-    table_map.cc \
-    sample.h \
-    sample.cc \
-    sensors.h \
-    sensors.cc \
-    units.h \
-    units.cc \
-    transport/statsd/statsd.h \
-    transport/statsd/statsd.cc \
-    transport/statsd/statsd_server.h \
-    transport/statsd/statsd_server.cc \
-    $(fnordmetric_util_src) \
-    metric_collectd.cc
-
+metric_collectd_SOURCES = metric_collectd.cc
 metric_collectd_LDADD = \
+    libfnordmetric-common.a \
     ${top_builddir}/deps/libtransport/src/libtransport/http/libtransport_http.a \
     ${top_builddir}/deps/libtransport/src/libtransport/json/libtransport_json.a \
     ${top_builddir}/deps/libtransport/src/libtransport/uri/libtransport_uri.a \
     $(PTHREAD_LDFLAGS_)
 
-metric_queryd_SOURCES = \
-    $(fnordmetric_util_src) \
-    metric_queryd.cc
-
+metric_queryd_SOURCES = \ metric_queryd.cc
 metric_queryd_LDADD = \
+    libfnordmetric-common.a \
     ${top_builddir}/deps/libtransport/src/libtransport/http/libtransport_http.a \
     ${top_builddir}/deps/libtransport/src/libtransport/json/libtransport_json.a \
     ${top_builddir}/deps/libtransport/src/libtransport/uri/libtransport_uri.a \
