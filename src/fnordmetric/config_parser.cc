@@ -406,7 +406,7 @@ bool ConfigParser::parseUnitDefinitionNameStanza(
 }
 
 bool ConfigParser::parseRewriteStanza(
-    SensorConfig* sensor_config) {
+    IngestionTaskConfig* sensor_config) {
   TokenType ttype;
   std::string regex_str;
   if (!getToken(&ttype, &regex_str) || ttype != T_STRING) {
@@ -440,7 +440,7 @@ bool ConfigParser::parseRewriteStanza(
 }
 
 bool ConfigParser::parseFetchHTTPDefinition(ConfigList* config) {
-  std::unique_ptr<HTTPSensorConfig> sensor_config(new HTTPSensorConfig());
+  std::unique_ptr<HTTPIngestionTaskConfig> sensor_config(new HTTPIngestionTaskConfig());
   if (!expectAndConsumeString(&sensor_config->sensor_id)) {
     return false;
   }
@@ -491,12 +491,12 @@ bool ConfigParser::parseFetchHTTPDefinition(ConfigList* config) {
     return false;
   }
 
-  config->addSensorConfig(std::move(sensor_config));
+  config->addIngestionTaskConfig(std::move(sensor_config));
   return true;
 }
 
 bool ConfigParser::parseFetchHTTPDefinitionURLStanza(
-    HTTPSensorConfig* sensor_config) {
+    HTTPIngestionTaskConfig* sensor_config) {
   TokenType ttype;
   std::string tbuf;
   if (!getToken(&ttype, &tbuf) || ttype != T_STRING) {

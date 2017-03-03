@@ -22,12 +22,8 @@
 #include <fnordmetric/util/daemonize.h>
 #include <fnordmetric/transport/http/http_api.h>
 #include <fnordmetric/transport/http/http_server.h>
-#include <fnordmetric/transport/statsd/statsd.h>
-#include <fnordmetric/transport/statsd/statsd_server.h>
 #include <fnordmetric/config_list.h>
 #include <fnordmetric/config_parser.h>
-#include <fnordmetric/aggregation_service.h>
-#include <fnordmetric/sensors.h>
 
 using namespace fnordmetric;
 

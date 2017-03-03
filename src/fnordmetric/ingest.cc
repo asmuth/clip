@@ -7,24 +7,24 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#include <fnordmetric/sensors.h>
+#include <fnordmetric/ingest.h>
 #include <fnordmetric/util/time.h>
 #include <fnordmetric/util/logging.h>
 
 namespace fnordmetric {
 
-SensorConfig::SensorConfig() :
+IngestionTaskConfig::IngestionTaskConfig() :
     metric_id_rewrite_enabled(false) {}
 
 /*
-ReturnCode mkSensorTask(
+ReturnCode mkIngestionTask(
     MetricService* metric_service,
-    const SensorConfig* sensor_cfg,
-    std::unique_ptr<SensorTask>* sensor_task) {
+    const IngestionTaskConfig* sensor_cfg,
+    std::unique_ptr<IngestionTask>* sensor_task) {
   {
-    auto cfg = dynamic_cast<const HTTPSensorConfig*>(sensor_cfg);
+    auto cfg = dynamic_cast<const HTTPIngestionTaskConfig*>(sensor_cfg);
     if (cfg) {
-      sensor_task->reset(new HTTPSensorTask(cfg, metric_service));
+      sensor_task->reset(new HTTPIngestionTask(cfg, metric_service));
       return ReturnCode::success();
     }
   }
@@ -40,11 +40,11 @@ SensorScheduler::SensorScheduler(
     size_t thread_count /* = 1 */) :
     thread_count_(thread_count),
     running_(false),
-    queue_([] (const SensorTask* a, const SensorTask* b) {
+    queue_([] (const IngestionTask* a, const IngestionTask* b) {
       return a->getNextInvocationTime() < b->getNextInvocationTime();
     }) {}
 
-void SensorScheduler::addTask(std::unique_ptr<SensorTask> task) {
+void SensorScheduler::addTask(std::unique_ptr<IngestionTask> task) {
   std::unique_lock<std::mutex> lk(mutex_);
   queue_.emplace(task.get());
   tasks_.emplace_back(std::move(task));
@@ -59,7 +59,7 @@ ReturnCode SensorScheduler::executeNextTask() {
     return ReturnCode::success();
   }
 
-  SensorTask* task;
+  IngestionTask* task;
   while (running_) {
     if (queue_.empty()) {
       cv_.wait(lk);

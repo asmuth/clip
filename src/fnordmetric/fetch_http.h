@@ -8,25 +8,25 @@
  * <http://www.gnu.org/licenses/>.
  */
 #pragma once
-#include <fnordmetric/sensors.h>
+#include <fnordmetric/ingest.h>
 
 namespace fnordmetric {
 
-struct HTTPSensorConfig : public SensorConfig {
+struct HTTPIngestionTaskConfig : public IngestionTaskConfig {
   std::string http_url;
 };
 
-class HTTPSensorTask : public SensorTask {
+class HTTPIngestionTask : public IngestionTask {
 public:
 
-  HTTPSensorTask(const HTTPSensorConfig* config, MetricService* metric_service);
+  HTTPIngestionTask(const HTTPIngestionTaskConfig* config, MetricService* metric_service);
 
   uint64_t getNextInvocationTime() const override;
 
   ReturnCode invoke() override;
 
 protected:
-  const HTTPSensorConfig* config_;
+  const HTTPIngestionTaskConfig* config_;
   MetricService* metric_service_;
   uint64_t next_invocation_;
 };

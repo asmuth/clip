@@ -49,8 +49,8 @@ libfnordmetric_common_a_SOURCES = \
     table_map.cc \
     sample.h \
     sample.cc \
-    sensors.h \
-    sensors.cc \
+    ingest.h \
+    ingest.cc \
     units.h \
     units.cc \
     transport/statsd/statsd.h \

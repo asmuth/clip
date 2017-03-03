@@ -27,7 +27,7 @@
 #include <fnordmetric/config_list.h>
 #include <fnordmetric/config_parser.h>
 #include <fnordmetric/aggregation_service.h>
-#include <fnordmetric/sensors.h>
+#include <fnordmetric/ingest.h>
 
 using namespace fnordmetric;
 

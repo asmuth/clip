@@ -20,19 +20,19 @@
 namespace fnordmetric {
 class MetricService;
 
-struct SensorConfig {
-  SensorConfig();
-  virtual ~SensorConfig() = default;
+struct IngestionTaskConfig {
+  IngestionTaskConfig();
+  virtual ~IngestionTaskConfig() = default;
   std::string sensor_id;
   bool metric_id_rewrite_enabled;
   std::regex metric_id_rewrite_regex;
   std::string metric_id_rewrite_replace;
 };
 
-class SensorTask {
+class IngestionTask {
 public:
 
-  virtual ~SensorTask() = default;
+  virtual ~IngestionTask() = default;
 
   virtual uint64_t getNextInvocationTime() const = 0;
 
@@ -40,16 +40,11 @@ public:
 
 };
 
-ReturnCode mkSensorTask(
-    MetricService* metric_service,
-    const SensorConfig* sensor_cfg,
-    std::unique_ptr<SensorTask>* sensor_task);
-
 class SensorScheduler{
 public:
 
   SensorScheduler(size_t thread_count = 1);
-  void addTask(std::unique_ptr<SensorTask> task);
+  void addTask(std::unique_ptr<IngestionTask> task);
 
   ReturnCode start();
   void shutdown();
@@ -65,11 +60,11 @@ protected:
   std::mutex mutex_;
   std::condition_variable cv_;
   std::multiset<
-      SensorTask*,
+      IngestionTask*,
       std::function<bool (
-          const SensorTask*,
-          const SensorTask*)>> queue_;
-  std::list<std::unique_ptr<SensorTask>> tasks_;
+          const IngestionTask*,
+          const IngestionTask*)>> queue_;
+  std::list<std::unique_ptr<IngestionTask>> tasks_;
 };
 
 } // namespace fnordmetric

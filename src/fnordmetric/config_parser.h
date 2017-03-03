@@ -56,9 +56,9 @@ protected:
   bool parseUnitDefinitionDescriptionStanza(UnitConfig* unit_config);
   bool parseUnitDefinitionNameStanza(UnitConfig* unit_config);
 
-  bool parseRewriteStanza(SensorConfig* sensor_config);
+  bool parseRewriteStanza(IngestionTaskConfig* sensor_config);
   bool parseFetchHTTPDefinition(ConfigList* config);
-  bool parseFetchHTTPDefinitionURLStanza(HTTPSensorConfig* sensor_config);
+  bool parseFetchHTTPDefinitionURLStanza(HTTPIngestionTaskConfig* sensor_config);
 
   bool getToken(
       TokenType* type,

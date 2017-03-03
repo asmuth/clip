@@ -15,7 +15,7 @@
 #include "fnordmetric/util/return_code.h"
 #include "fnordmetric/table.h"
 #include "fnordmetric/units.h"
-#include "fnordmetric/sensors.h"
+#include "fnordmetric/ingest.h"
 
 namespace fnordmetric {
 
@@ -39,16 +39,16 @@ public:
   const UnitConfig* getUnitConfig(std::string unit_id) const;
   void addUnitConfig(UnitConfig config);
 
-  const std::map<std::string, std::unique_ptr<SensorConfig>>& getSensorConfigs() const;
-  const SensorConfig* getSensorConfig(std::string unit_id) const;
-  void addSensorConfig(std::unique_ptr<SensorConfig> config);
+  const std::map<std::string, std::unique_ptr<IngestionTaskConfig>>& getIngestionTaskConfigs() const;
+  const IngestionTaskConfig* getIngestionTaskConfig(std::string unit_id) const;
+  void addIngestionTaskConfig(std::unique_ptr<IngestionTaskConfig> config);
 
 protected:
   std::string backend_url_;
   bool create_tables_;
   std::map<TableIDType, TableConfig> metric_configs_;
   std::map<std::string, UnitConfig> unit_configs_;
-  std::map<std::string, std::unique_ptr<SensorConfig>> sensor_configs_;
+  std::map<std::string, std::unique_ptr<IngestionTaskConfig>> sensor_configs_;
 };
 
 } // namespace fnordmetric
