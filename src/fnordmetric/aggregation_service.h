@@ -19,46 +19,14 @@
 
 namespace fnordmetric {
 
-class MetricService {
+class AggregationService {
 public:
 
-  static ReturnCode startService(
-      const std::string& datadir,
-      std::unique_ptr<MetricService>* service);
+  static ReturnCode startService(std::unique_ptr<AggregationService>* service);
 
   ReturnCode applyConfig(const ConfigList* config);
 
-  /**
-   * List all metrics
-   */
-  MetricListCursor listMetrics() const;
-
-  /**
-   * Create/configure metric
-   */
-  ReturnCode configureMetric(
-      const std::string& metric_id,
-      std::shared_ptr<TableConfig> config);
-
-  /**
-   * Remove metric
-   */
-  ReturnCode configureMetric(const std::string& metric_id);
-
-  /**
-   * Get information about a specific metric
-   */
-  ReturnCode describeMetric(
-      const std::string& metric_id,
-      MetricInfo* metric_info);
-
-  /**
-   * Insert a sample into a metric series
-   */
-  ReturnCode insertSample(
-      const MetricIDType& metric_id,
-      uint64_t time,
-      const std::string& value);
+  ReturnCode insertSample(const Sample& sample);
 
   struct BatchInsertOptions {
     BatchInsertOptions();
@@ -74,10 +42,10 @@ public:
 
 protected:
 
-  MetricService(const std::string& datadir);
-  std::string datadir_;
-  VersionedMetricMap metric_map_;
-  std::mutex metric_map_mutex_;
+  AggregationService(const std::string& datadir);
+
+  VersionedTableMap table_map_;
+  std::mutex table_map_mutex_;
 };
 
 } // namespace fnordmetric

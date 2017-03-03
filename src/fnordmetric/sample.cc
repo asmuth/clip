@@ -13,35 +13,29 @@
 namespace fnordmetric {
 
 Sample::Sample(
+    const std::string& metric_name,
+    const std::string& value,
     TimestampType time,
-    double value) :
+    const LabelSet& labels) :
+    metric_name_(metric_name),
+    value_(value),
     time_(time),
-    value_(value) {}
+    labels_(labels) {}
+
+const std::string& Sample::getMetricName() const {
+  return metric_name_;
+}
+
+const std::string& Sample::getValue() const {
+  return value_;
+}
 
 TimestampType Sample::getTime() const {
   return time_;
 }
 
-double Sample::getValue() const {
-  return value_;
-}
-
-LabelledSample::LabelledSample(
-    Sample sample,
-    const LabelSet& labels) :
-    sample_(sample),
-    labels_(labels) {}
-
-const Sample& LabelledSample::getSample() const {
-  return sample_;
-}
-
-const LabelSet& LabelledSample::getLabels() const {
+const LabelSet& Sample::getLabels() const {
   return labels_;
-}
-
-const std::string& LabelledSample::getSeriesName() const {
-  return series_name_;
 }
 
 } // namespace fnordmetric

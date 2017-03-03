@@ -22,30 +22,21 @@ class Sample {
 public:
 
   Sample(
+      const std::string& metric_name,
+      const std::string& value,
       TimestampType time,
-      double value);
+      const LabelSet& labels);
 
+  const std::string& getMetricName() const;
+  const std::string& getValue() const;
   TimestampType getTime() const;
-  double getValue() const;
-
-protected:
-  const TimestampType time_;
-  const double value_;
-};
-
-class LabelledSample {
-public:
-
-  LabelledSample(Sample sample, const LabelSet& labels);
-
-  const Sample& getSample() const;
   const LabelSet& getLabels() const;
-  const std::string& getSeriesName() const;
 
 protected:
-  const Sample sample_;
+  const std::string metric_name_;
+  const std::string& value_;
+  const TimestampType time_;
   const LabelSet labels_;
-  const std::string series_name_;
 };
 
 } // namespace fnordmetric

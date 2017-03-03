@@ -109,10 +109,6 @@ metric_collectd_SOURCES = \
     table.cc \
     table_map.h \
     table_map.cc \
-    aggregation_service.h \
-    aggregation_service.cc \
-    fetch_http.h \
-    fetch_http.cc \
     sample.h \
     sample.cc \
     units.h \

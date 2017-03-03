@@ -28,9 +28,9 @@ namespace fnordmetric {
 namespace statsd {
 
 StatsdServer::StatsdServer(
-    MetricService* metric_service) :
+    AggregationService* aggr_service) :
     ssock_(-1),
-    metric_service_(metric_service) {}
+    aggr_service_(aggr_service) {}
 
 StatsdServer::~StatsdServer() {
   if (ssock_ >= 0) {
@@ -133,10 +133,7 @@ void StatsdServer::handlePacket(const char* pkt, size_t pkt_len) {
         value);
 
     auto now = WallClock::unixMicros();
-    auto rc = metric_service_->insertSample(
-        metric_id,
-        now,
-        value);
+    auto rc = aggr_service_->insertSample(Sample(metric_id, value, now, {}));
 
     if (!rc.isSuccess()) {
       logWarning(

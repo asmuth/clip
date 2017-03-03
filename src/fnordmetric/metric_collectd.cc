@@ -260,34 +260,32 @@ int main(int argc, const char** argv) {
   }
 
   /* start metric service */
-  std::unique_ptr<MetricService> metric_service;
+  std::unique_ptr<AggregationService> aggr_service;
   if (rc.isSuccess()) {
-    rc = MetricService::startService(
-        flags.getString("datadir"),
-        &metric_service);
+    rc = AggregationService::startService(&aggr_service);
   }
 
   if (rc.isSuccess()) {
-    rc = metric_service->applyConfig(&config);
+    rc = aggr_service->applyConfig(&config);
   }
 
-  /* start sensor scheduler */
-  SensorScheduler sensor_sched(config.getSensorThreads());
-  if (rc.isSuccess()) {
-    for (const auto& s : config.getSensorConfigs()) {
-      std::unique_ptr<SensorTask> sensor_task;
-      rc = mkSensorTask(metric_service.get(), s.second.get(), &sensor_task);
-      if (!rc.isSuccess()) {
-        break;
-      }
+  ///* start sensor scheduler */
+  //SensorScheduler sensor_sched(config.getSensorThreads());
+  //if (rc.isSuccess()) {
+  //  for (const auto& s : config.getSensorConfigs()) {
+  //    std::unique_ptr<SensorTask> sensor_task;
+  //    rc = mkSensorTask(aggr_service.get(), s.second.get(), &sensor_task);
+  //    if (!rc.isSuccess()) {
+  //      break;
+  //    }
 
-      sensor_sched.addTask(std::move(sensor_task));
-    }
-  }
+  //    sensor_sched.addTask(std::move(sensor_task));
+  //  }
+  //}
 
-  if (rc.isSuccess()) {
-    rc = sensor_sched.start();
-  }
+  //if (rc.isSuccess()) {
+  //  rc = sensor_sched.start();
+  //}
 
   /* start statsd service */
   std::unique_ptr<statsd::StatsdServer> statsd_server;
@@ -299,7 +297,7 @@ int main(int argc, const char** argv) {
         &statsd_bind,
         &statsd_port);
     if (parse_rc) {
-      statsd_server.reset(new statsd::StatsdServer(metric_service.get()));
+      statsd_server.reset(new statsd::StatsdServer(aggr_service.get()));
       rc = statsd_server->listenAndStart(statsd_bind, statsd_port);
     } else {
       rc = ReturnCode::error("ERUNTIME", "invalid value for --listen_statsd");
@@ -316,9 +314,9 @@ int main(int argc, const char** argv) {
         &http_port);
 
     if (parse_rc) {
-      HTTPServer server(metric_service.get(), flags.getString("dev_assets"));
-      server.listen(http_bind, http_port);
-      server.run();
+      //HTTPServer server(aggr_service.get(), flags.getString("dev_assets"));
+      //server.listen(http_bind, http_port);
+      //server.run();
     } else {
       rc = ReturnCode::error("ERUNTIME", "invalid value for --listen_http");
     }
@@ -333,7 +331,7 @@ int main(int argc, const char** argv) {
     statsd_server->shutdown();
   }
 
-  sensor_sched.shutdown();
+  //sensor_sched.shutdown();
 
   logInfo("Exiting...");
   signal(SIGTERM, SIG_IGN);

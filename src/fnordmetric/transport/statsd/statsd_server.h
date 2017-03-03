@@ -16,17 +16,15 @@
 #include <netinet/in.h>
 #include "fnordmetric/util/return_code.h"
 #include "fnordmetric/sample.h"
+#include "fnordmetric/aggregation_service.h"
 
 namespace fnordmetric {
-class MetricService;
 namespace statsd {
 
 class StatsdServer {
 public:
 
-  StatsdServer(
-      MetricService* metric_service);
-
+  StatsdServer(AggregationService* aggr_service);
   ~StatsdServer();
 
   ReturnCode listen(const std::string& addr, int port);
@@ -40,7 +38,7 @@ protected:
   void handlePacket(const char* pkt, size_t pkt_len);
 
   int ssock_;
-  MetricService* metric_service_;
+  AggregationService* aggr_service_;
   std::thread thread_;
   std::atomic<bool> running_;
 };

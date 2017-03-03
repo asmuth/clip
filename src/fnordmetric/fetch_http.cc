@@ -18,7 +18,7 @@ namespace fnordmetric {
 
 HTTPSensorTask::HTTPSensorTask(
     const HTTPSensorConfig* config,
-    MetricService* metric_service) :
+    AggregationService* metric_service) :
     config_(config),
     metric_service_(metric_service),
     next_invocation_(0) {}
@@ -49,7 +49,7 @@ ReturnCode HTTPSensorTask::invoke() {
         response.statusCode());
   }
 
-  MetricService::BatchInsertOptions insert_opts;
+  AggregationService::BatchInsertOptions insert_opts;
   insert_opts.metric_id_rewrite_enabled = config_->metric_id_rewrite_enabled;
   insert_opts.metric_id_rewrite_regex = config_->metric_id_rewrite_regex;
   insert_opts.metric_id_rewrite_replace = config_->metric_id_rewrite_replace;
