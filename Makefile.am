@@ -5,11 +5,8 @@ AUTOMAKE_OPTIONS = foreign
 
 SUBDIRS = \
     . \
-    libtransport \
-    libtsdb \
-    metricd \
-    sensors/sysstat \
-    sensors/valve_srcds
+    src/fnordmetric \
+    libtransport
 
 EXTRA_DIST =                             \
   autogen.sh                             \

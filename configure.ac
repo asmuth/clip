@@ -72,12 +72,8 @@ AS_IF([test "$with_zlib" != no], [
 ])
 AM_CONDITIONAL([HAVE_ZLIB], [test $HAVE_ZLIB = 1])
 
-AC_CONFIG_SUBDIRS([libtransport metricd])
+AC_CONFIG_SUBDIRS([libtransport])
 
-AC_CONFIG_FILES([
-    Makefile
-    libtsdb/Makefile
-    sensors/sysstat/Makefile
-    sensors/valve_srcds/Makefile])
+AC_CONFIG_FILES([Makefile src/fnordmetric/Makefile])
 
 AC_OUTPUT
