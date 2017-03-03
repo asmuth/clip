@@ -11,11 +11,6 @@
 #include <atomic>
 #include <memory>
 #include <string>
-#include "fnordmetric/metric.h"
-#include "fnordmetric/metric_service.h"
-#include "fnordmetric/query/query_options.h"
-#include "fnordmetric/query/data_frame.h"
-#include "fnordmetric/query/ops/fetch_timeseries.h"
 #include <libtransport/json/json.h>
 #include <libtransport/json/json_writer.h>
 #include <libtransport/json/json_object.h>
@@ -27,18 +22,6 @@ namespace json = libtransport::json;
 class QueryFrontend {
 public:
 
-  QueryFrontend(MetricService* metric_service);
-
-  ReturnCode fetchSeriesJSON(
-      const json::JSONObject* req,
-      json::JSONWriter* res);
-
-  ReturnCode fetchSummaryJSON(
-      const json::JSONObject* req,
-      json::JSONWriter* res);
-
-protected:
-  MetricService* metric_service_;
 };
 
 } // namespace fnordmetric

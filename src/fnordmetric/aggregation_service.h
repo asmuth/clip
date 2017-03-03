@@ -12,12 +12,10 @@
 #include <atomic>
 #include <memory>
 #include <string>
-#include "fnordmetric/metric.h"
-#include "fnordmetric/metric_cursor.h"
-#include "fnordmetric/metric_map.h"
+#include "fnordmetric/table.h"
+#include "fnordmetric/table_map.h"
 #include "fnordmetric/config_list.h"
 #include "fnordmetric/util/return_code.h"
-#include "libtsdb/tsdb.h"
 
 namespace fnordmetric {
 
@@ -53,14 +51,6 @@ public:
   ReturnCode describeMetric(
       const std::string& metric_id,
       MetricInfo* metric_info);
-
-  /**
-   * Get a cursor to a metric
-   */
-  ReturnCode fetchData(
-      const MetricIDType& metric_id,
-      const MetricCursorOptions& opts,
-      MetricCursor* cursor);
 
   /**
    * Insert a sample into a metric series

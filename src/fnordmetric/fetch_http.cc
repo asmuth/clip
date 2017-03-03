@@ -7,8 +7,8 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#include <fnordmetric/metric_service.h>
-#include <fnordmetric/sensor_http.h>
+#include <fnordmetric/aggregation_service.h>
+#include <fnordmetric/fetch_http.h>
 #include <fnordmetric/util/time.h>
 #include <libtransport/uri/uri.h>
 #include <iostream>

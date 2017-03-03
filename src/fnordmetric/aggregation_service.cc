@@ -11,7 +11,7 @@
 #include <assert.h>
 #include <iostream>
 #include <sstream>
-#include "fnordmetric/metric_service.h"
+#include "fnordmetric/aggregation_service.h"
 #include "fnordmetric/util/fileutil.h"
 #include "fnordmetric/util/logging.h"
 #include "fnordmetric/util/time.h"
@@ -118,96 +118,96 @@ ReturnCode MetricService::describeMetric(
   return ReturnCode::success();
 }
 
-ReturnCode MetricService::fetchData(
-    const MetricIDType& metric_id,
-    const MetricCursorOptions& opts,
-    MetricCursor* cursor) {
-  auto metric_map = metric_map_.getMetricMap();
-  auto metric = metric_map->findMetric(metric_id);
-  if (!metric) {
-    return ReturnCode::error("ENOTFOUND", "metric not found");
-  }
+//ReturnCode MetricService::fetchData(
+//    const MetricIDType& metric_id,
+//    const MetricCursorOptions& opts,
+//    MetricCursor* cursor) {
+//  auto metric_map = metric_map_.getMetricMap();
+//  auto metric = metric_map->findMetric(metric_id);
+//  if (!metric) {
+//    return ReturnCode::error("ENOTFOUND", "metric not found");
+//  }
+//
+//  return MetricCursor::openCursor(
+//      metric->getConfig(),
+//      getMetricFilePath(datadir_, metric_id),
+//      opts,
+//      cursor);
+//}
 
-  return MetricCursor::openCursor(
-      metric->getConfig(),
-      getMetricFilePath(datadir_, metric_id),
-      opts,
-      cursor);
-}
-
-ReturnCode MetricService::insertSample(
-    const MetricIDType& metric_id,
-    uint64_t time,
-    const std::string& value) {
-  auto metric_map = metric_map_.getMetricMap();
-  auto metric = metric_map->findMetric(metric_id);
-  if (!metric) {
-    return ReturnCode::error("ENOTFOUND", "metric not found");
-  }
-
-  std::unique_lock<std::mutex> lk(metric->getInsertLock());
-  auto metric_config = metric->getConfig();
-  auto db_path = getMetricFilePath(datadir_, metric_id);
-
-  /* open db file */
-  std::unique_ptr<tsdb::TSDB> db;
-  if (FileUtil::exists(db_path)) {
-    if (!tsdb::TSDB::openDatabase(&db, db_path)) {
-      return ReturnCode::errorf("EIO", "can't open database at $0", db_path);
-    }
-  } else {
-    if (!tsdb::TSDB::createDatabase(&db, db_path)) {
-      return ReturnCode::errorf("EIO", "can't create database at $0", db_path);
-    }
-
-    if (!db->createSeries(1, tval_len(getMetricDataType(metric_config->kind)), "")) {
-      return ReturnCode::errorf("EIO", "can't create series in $0", db_path);
-    }
-  }
-
-  tval_ref val;
-  val.type = getMetricDataType(metric->getConfig()->kind);
-  val.len = tval_len(val.type);
-  val.data = alloca(val.len);
-
-  int parse_rc = tval_fromstring(
-      val.type,
-      val.data,
-      val.len,
-      value.data(),
-      value.size());
-
-  if (!parse_rc) {
-    return ReturnCode::errorf("ERUNTIME", "invalid value: '$0'", value);
-  }
-
-  auto input_aggregator = mkInputAggregator(
-      metric_config.get());
-
-  if (!input_aggregator) {
-    return ReturnCode::error("ERUNTIME", "can't open input aggregator");
-  }
-
-  tsdb::Cursor db_cursor;
-  if (!db->getCursor(1, &db_cursor, false)) {
-    return ReturnCode::error("EIO", "can't open tsdb cursor");
-  }
-
-  auto insert_rc = input_aggregator->addSample(
-      &db_cursor,
-      time,
-      val.type,
-      val.data,
-      val.len);
-
-  if (!insert_rc.isSuccess()) {
-    return insert_rc;
-  }
-
-  db->commit(); // FIXME
-
-  return ReturnCode::success();
-}
+//ReturnCode MetricService::insertSample(
+//    const MetricIDType& metric_id,
+//    uint64_t time,
+//    const std::string& value) {
+//  auto metric_map = metric_map_.getMetricMap();
+//  auto metric = metric_map->findMetric(metric_id);
+//  if (!metric) {
+//    return ReturnCode::error("ENOTFOUND", "metric not found");
+//  }
+//
+//  std::unique_lock<std::mutex> lk(metric->getInsertLock());
+//  auto metric_config = metric->getConfig();
+//  auto db_path = getMetricFilePath(datadir_, metric_id);
+//
+//  /* open db file */
+//  std::unique_ptr<tsdb::TSDB> db;
+//  if (FileUtil::exists(db_path)) {
+//    if (!tsdb::TSDB::openDatabase(&db, db_path)) {
+//      return ReturnCode::errorf("EIO", "can't open database at $0", db_path);
+//    }
+//  } else {
+//    if (!tsdb::TSDB::createDatabase(&db, db_path)) {
+//      return ReturnCode::errorf("EIO", "can't create database at $0", db_path);
+//    }
+//
+//    if (!db->createSeries(1, tval_len(getMetricDataType(metric_config->kind)), "")) {
+//      return ReturnCode::errorf("EIO", "can't create series in $0", db_path);
+//    }
+//  }
+//
+//  tval_ref val;
+//  val.type = getMetricDataType(metric->getConfig()->kind);
+//  val.len = tval_len(val.type);
+//  val.data = alloca(val.len);
+//
+//  int parse_rc = tval_fromstring(
+//      val.type,
+//      val.data,
+//      val.len,
+//      value.data(),
+//      value.size());
+//
+//  if (!parse_rc) {
+//    return ReturnCode::errorf("ERUNTIME", "invalid value: '$0'", value);
+//  }
+//
+//  auto input_aggregator = mkInputAggregator(
+//      metric_config.get());
+//
+//  if (!input_aggregator) {
+//    return ReturnCode::error("ERUNTIME", "can't open input aggregator");
+//  }
+//
+//  tsdb::Cursor db_cursor;
+//  if (!db->getCursor(1, &db_cursor, false)) {
+//    return ReturnCode::error("EIO", "can't open tsdb cursor");
+//  }
+//
+//  auto insert_rc = input_aggregator->addSample(
+//      &db_cursor,
+//      time,
+//      val.type,
+//      val.data,
+//      val.len);
+//
+//  if (!insert_rc.isSuccess()) {
+//    return insert_rc;
+//  }
+//
+//  db->commit(); // FIXME
+//
+//  return ReturnCode::success();
+//}
 
 MetricService::BatchInsertOptions::BatchInsertOptions() :
     metric_id_rewrite_enabled(false) {}

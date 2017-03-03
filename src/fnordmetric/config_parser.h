@@ -13,7 +13,7 @@
 #include <string>
 #include "fnordmetric/config_list.h"
 #include "fnordmetric/util/return_code.h"
-#include "fnordmetric/sensor_http.h"
+#include "fnordmetric/fetch_http.h"
 
 namespace fnordmetric {
 

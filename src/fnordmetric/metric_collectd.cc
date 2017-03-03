@@ -25,7 +25,7 @@
 #include <fnordmetric/transport/statsd/statsd_server.h>
 #include <fnordmetric/config_list.h>
 #include <fnordmetric/config_parser.h>
-#include <fnordmetric/metric_service.h>
+#include <fnordmetric/aggregation_service.h>
 #include <fnordmetric/sensors.h>
 
 using namespace fnordmetric;

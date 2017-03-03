@@ -21,7 +21,7 @@
 #include <fnordmetric/util/time.h>
 #include <fnordmetric/transport/statsd/statsd.h>
 #include <fnordmetric/sample.h>
-#include <fnordmetric/metric_service.h>
+#include <fnordmetric/aggregation_service.h>
 
 namespace fnordmetric {
 namespace statsd {

@@ -13,7 +13,7 @@
 #include <memory>
 #include <string>
 #include "fnordmetric/util/return_code.h"
-#include "fnordmetric/metric.h"
+#include "fnordmetric/table.h"
 #include "fnordmetric/units.h"
 #include "fnordmetric/sensors.h"
 

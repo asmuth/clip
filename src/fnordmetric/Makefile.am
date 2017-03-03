@@ -3,8 +3,7 @@
 MAINTAINERCLEANFILES =   \
   Makefile.in
 
-bin_PROGRAMS = metricd
-check_LIBRARIES = libmetricd.a
+bin_PROGRAMS = metric_collectd
 
 ################# DEPENDENCIES ####################
 if HAVE_ZLIB
@@ -39,25 +38,21 @@ AM_CXXFLAGS = -DFNORDMETRIC_VERSION=\"v@PACKAGE_VERSION@\" $(PTHREAD_CFLAGS) $(P
 AM_CFLAGS =  $(PTHREAD_CFLAGS) $(PTHREAD_DEF) $(SYSLOG_DEF) $(ZLIB_DEF) $(GETHOSTBYNAME_R_DEF) -std=c11 -mno-omit-leaf-frame-pointer -fno-omit-frame-pointer -Wall -pedantic -g
 AM_LDFLAGS = $(PCRE_LDFLAGS_) $(CURL_LDFLAGS_) $(PTHREAD_LDFLAGS_)
 
-metricd_common_sources_ = \
+metric_collectd_SOURCES = \
     aggregate.h \
     aggregate.cc \
     config_list.h \
     config_list.cc \
     config_parser.h \
     config_parser.cc \
-    metric.h \
-    metric.cc \
-    metric_cursor.h \
-    metric_cursor.cc \
-    metric_map.h \
-    metric_map.cc \
-    metric_service.h \
-    metric_service.cc \
-    sensors.h \
-    sensors.cc \
-    sensor_http.h \
-    sensor_http.cc \
+    table.h \
+    table.cc \
+    table_map.h \
+    table_map.cc \
+    aggregation_service.h \
+    aggregation_service.cc \
+    fetch_http.h \
+    fetch_http.cc \
     sample.h \
     sample.cc \
     units.h \
@@ -118,19 +113,6 @@ metricd_common_sources_ = \
     util/autoref_impl.h \
     util/autoref.h \
     util/autoref.cc \
-    query/data_frame.h \
-    query/data_frame.cc \
-    query/ops/fetch_timeseries.h \
-    query/ops/fetch_timeseries.cc \
-    query/query_operation.h \
-    query/query_options.h \
-    query/query_options.cc \
-    query/query_frontend.h \
-    query/query_frontend.cc \
-    summarize.h \
-    summarize.cc \
-    transport/http/http_api.h \
-    transport/http/http_api.cc \
     transport/http/http_server.h \
     transport/http/http_server.cc \
     transport/statsd/statsd.h \
@@ -140,19 +122,12 @@ metricd_common_sources_ = \
     types.h \
     types.cc \
     webui/webui.h \
-    webui/webui.cc
+    webui/webui.cc \
+    metric_collectd.cc
 
-metricd_SOURCES = \
-    $(metricd_common_sources_) \
-    metricd.cc
-
-metricd_LDADD = \
-    $(top_builddir)/libtsdb/libtsdb.a \
+metric_collectd_LDADD = \
     ${top_builddir}/deps/libtransport/src/libtransport/http/libtransport_http.a \
     ${top_builddir}/deps/libtransport/src/libtransport/json/libtransport_json.a \
     ${top_builddir}/deps/libtransport/src/libtransport/uri/libtransport_uri.a
 
-libmetricd_a_SOURCES = \
-    $(metricd_common_sources_) \
-    metricd.cc
 

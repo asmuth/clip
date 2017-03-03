@@ -9,6 +9,7 @@
  * <http://www.gnu.org/licenses/>.
  */
 #include <fnordmetric/transport/http/http_server.h>
+#include <fnordmetric/util/stringutil.h>
 
 namespace fnordmetric {
 

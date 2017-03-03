@@ -16,7 +16,6 @@
 #include <fnordmetric/summarize.h>
 #include <fnordmetric/units.h>
 #include <fnordmetric/util/option.h>
-#include <libtsdb/tsdb.h>
 #include <functional>
 #include <iostream>
 #include <string>

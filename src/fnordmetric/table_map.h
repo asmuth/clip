@@ -9,7 +9,7 @@
  * <http://www.gnu.org/licenses/>.
  */
 #pragma once
-#include <fnordmetric/metric.h>
+#include <fnordmetric/table.h>
 #include <map>
 #include <memory>
 #include <mutex>

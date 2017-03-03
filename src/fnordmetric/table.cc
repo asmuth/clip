@@ -10,11 +10,9 @@
  */
 #include <assert.h>
 #include <sstream>
-#include <fnordmetric/metric.h>
-#include <fnordmetric/metric_map.h>
-#include <fnordmetric/metric_cursor.h>
+#include <fnordmetric/table.h>
+#include <fnordmetric/table_map.h>
 #include <fnordmetric/util/logging.h>
-#include <libtsdb/varint.h>
 
 namespace fnordmetric {
 

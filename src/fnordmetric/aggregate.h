@@ -11,7 +11,6 @@
 #include <fnordmetric/sample.h>
 #include <fnordmetric/types.h>
 #include <fnordmetric/util/return_code.h>
-#include <libtsdb/cursor.h>
 
 namespace fnordmetric {
 struct MetricCursorOptions;
@@ -22,7 +21,6 @@ public:
   virtual ~InputAggregator() = default;
 
   virtual ReturnCode addSample(
-      tsdb::Cursor* cursor,
       uint64_t time,
       tval_type value_type,
       const void* value,
@@ -49,7 +47,6 @@ public:
       uint64_t align = 0);
 
   ReturnCode addSample(
-      tsdb::Cursor* cursor,
       uint64_t time,
       tval_type value_type,
       const void* value,
@@ -64,7 +61,6 @@ class SumOutputAggregator : public OutputAggregator {
 public:
 
   SumOutputAggregator(
-      tsdb::Cursor cursor,
       tval_type input_type,
       const MetricCursorOptions* opts);
 
@@ -73,7 +69,6 @@ public:
   bool next(uint64_t* time, tval_ref* out) override;
 
 protected:
-  tsdb::Cursor cursor_;
   tval_type input_type_;
   const MetricCursorOptions* opts_;
   uint64_t cur_time_;
@@ -89,7 +84,6 @@ public:
       uint64_t align = 0);
 
   ReturnCode addSample(
-      tsdb::Cursor* cursor,
       uint64_t time,
       tval_type value_type,
       const void* value,
@@ -104,7 +98,6 @@ class MaxOutputAggregator : public OutputAggregator {
 public:
 
   MaxOutputAggregator(
-      tsdb::Cursor cursor,
       tval_type input_type,
       const MetricCursorOptions* opts);
 
@@ -113,7 +106,6 @@ public:
   bool next(uint64_t* time, tval_ref* out) override;
 
 protected:
-  tsdb::Cursor cursor_;
   tval_type input_type_;
   const MetricCursorOptions* opts_;
   uint64_t cur_time_;

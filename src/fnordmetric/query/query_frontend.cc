@@ -13,9 +13,6 @@
 
 namespace fnordmetric {
 
-QueryFrontend::QueryFrontend(
-    MetricService* metric_service) :
-    metric_service_(metric_service) {}
 
 } // namespace fnordmetric
 
