@@ -218,6 +218,9 @@ int main(int argc, const char** argv) {
     rc = config_parser.parse(&config);
   }
 
+  /* open backend */
+  std::unique_ptr<Backend> backend(new NoopBackend());
+
   /* open signal pipe and bind signals */
   if (rc.isSuccess()) {
     if (::pipe(sig_pipe) != 0) {
@@ -233,7 +236,7 @@ int main(int argc, const char** argv) {
   /* start aggregation service */
   std::unique_ptr<AggregationService> aggr_service;
   if (rc.isSuccess()) {
-    rc = AggregationService::startService(&aggr_service);
+    rc = AggregationService::startService(backend.get(), &aggr_service);
   }
 
   if (rc.isSuccess()) {
@@ -267,9 +270,9 @@ int main(int argc, const char** argv) {
 
   /* shutdown */
   logInfo("Exiting...");
-  signal(SIGTERM, SIG_IGN);
-  signal(SIGINT, SIG_IGN);
-  signal(SIGHUP, SIG_IGN);
+  signal(SIGTERM, SIG_DFL);
+  signal(SIGINT, SIG_DFL);
+  signal(SIGHUP, SIG_DFL);
 
   if (sig_pipe[0] >= 0) {
     close(sig_pipe[0]);
@@ -281,6 +284,7 @@ int main(int argc, const char** argv) {
 
   ingestion_service.shutdown();
   aggr_service->shutdown();
+  backend->shutdown();
 
   /* unlock pidfile */
   if (pidfile_fd > 0) {

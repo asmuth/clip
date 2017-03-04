@@ -52,7 +52,8 @@ struct MeasureConfig {
 };
 
 struct TableConfig {
-  TableConfig();
+  TableConfig(const std::string& id);
+  const std::string table_id;
   uint64_t interval;
   std::vector<LabelConfig> labels;
   std::vector<MeasureConfig> measures;

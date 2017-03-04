@@ -32,8 +32,8 @@ public:
 
   std::map<TableIDType, TableConfig>& getTableConfigs();
   const std::map<TableIDType, TableConfig>& getTableConfigs() const;
-  const TableConfig* getTableConfig(TableIDType metric_id) const;
-  void addTableConfig(TableIDType metric_id, TableConfig config);
+  const TableConfig* getTableConfig(TableIDType table_id) const;
+  void addTableConfig(TableConfig config);
 
   const std::map<std::string, UnitConfig>& getUnitConfigs() const;
   const UnitConfig* getUnitConfig(std::string unit_id) const;
@@ -46,9 +46,9 @@ public:
 protected:
   std::string backend_url_;
   bool create_tables_;
-  std::map<TableIDType, TableConfig> metric_configs_;
+  std::map<TableIDType, TableConfig> table_configs_;
   std::map<std::string, UnitConfig> unit_configs_;
-  std::map<std::string, std::unique_ptr<IngestionTaskConfig>> sensor_configs_;
+  std::map<std::string, std::unique_ptr<IngestionTaskConfig>> ingestion_configs_;
 };
 
 } // namespace fnordmetric

@@ -23,6 +23,9 @@ IngestionService::IngestionService(
     aggregation_service_(aggregation_service) {}
 
 ReturnCode IngestionService::applyConfig(const ConfigList* config) {
+  auto statsd_server = std::unique_ptr<StatsdServer>(new StatsdServer(aggregation_service_));
+  statsd_server->listen("localhost", 8125);
+  addTask(std::move(statsd_server));
   return ReturnCode::success();
 }
 

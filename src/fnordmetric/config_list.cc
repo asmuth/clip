@@ -30,25 +30,25 @@ void ConfigList::setCreateTables(bool create_tables) {
 }
 
 std::map<TableIDType, TableConfig>& ConfigList::getTableConfigs() {
-  return metric_configs_;
+  return table_configs_;
 }
 
 const std::map<TableIDType, TableConfig>& ConfigList::getTableConfigs()
     const {
-  return metric_configs_;
+  return table_configs_;
 }
 
-const TableConfig* ConfigList::getTableConfig(TableIDType metric_id) const {
-  auto metric_config = metric_configs_.find(metric_id);
-  if (metric_config == metric_configs_.end()) {
+const TableConfig* ConfigList::getTableConfig(TableIDType table_id) const {
+  auto table_config = table_configs_.find(table_id);
+  if (table_config == table_configs_.end()) {
     return nullptr;
   } else {
-    return &metric_config->second;
+    return &table_config->second;
   }
 }
 
-void ConfigList::addTableConfig(TableIDType metric_id, TableConfig config) {
-  metric_configs_.emplace(metric_id, std::move(config));
+void ConfigList::addTableConfig(TableConfig config) {
+  table_configs_.emplace(config.table_id, std::move(config));
 }
 
 const std::map<std::string, UnitConfig>& ConfigList::getUnitConfigs()
@@ -72,21 +72,21 @@ void ConfigList::addUnitConfig(UnitConfig config) {
 
 const std::map<std::string, std::unique_ptr<IngestionTaskConfig>>& ConfigList::getIngestionTaskConfigs()
     const {
-  return sensor_configs_;
+  return ingestion_configs_;
 }
 
 const IngestionTaskConfig* ConfigList::getIngestionTaskConfig(std::string sensor_id) const {
-  auto sensor_config = sensor_configs_.find(sensor_id);
-  if (sensor_config == sensor_configs_.end()) {
+  auto ingestion_config = ingestion_configs_.find(sensor_id);
+  if (ingestion_config == ingestion_configs_.end()) {
     return nullptr;
   } else {
-    return sensor_config->second.get();
+    return ingestion_config->second.get();
   }
 }
 
 void ConfigList::addIngestionTaskConfig(std::unique_ptr<IngestionTaskConfig> config) {
   auto sensor_id = config->sensor_id;
-  sensor_configs_.emplace(sensor_id, std::move(config));
+  ingestion_configs_.emplace(sensor_id, std::move(config));
 }
 
 } // namespace fnordmetric

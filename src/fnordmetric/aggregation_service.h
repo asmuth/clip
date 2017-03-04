@@ -20,6 +20,7 @@
 #include "fnordmetric/table_map.h"
 #include "fnordmetric/config_list.h"
 #include "fnordmetric/util/return_code.h"
+#include "fnordmetric/backends/backend.h"
 
 namespace fnordmetric {
 struct AggregationSlot;
@@ -28,7 +29,9 @@ class AggregationMap;
 class AggregationService {
 public:
 
-  static ReturnCode startService(std::unique_ptr<AggregationService>* service);
+  static ReturnCode startService(
+      Backend* backend,
+      std::unique_ptr<AggregationService>* service);
 
   ~AggregationService();
 
@@ -52,11 +55,12 @@ public:
 
 protected:
 
-  AggregationService();
+  AggregationService(Backend* backend);
 
   void processExpirations();
   void performInserts(std::vector<std::unique_ptr<AggregationSlot>> slots);
 
+  Backend* backend_;
   VersionedTableMap table_map_;
   std::mutex table_map_mutex_;
   std::unique_ptr<AggregationMap> aggregation_map_;

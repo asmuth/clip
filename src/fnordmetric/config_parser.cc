@@ -138,8 +138,8 @@ bool ConfigParser::parseCreateTablesStanza(ConfigList* config) {
 }
 
 bool ConfigParser::parseTableDefinition(ConfigList* config) {
-  std::string metric_name;
-  if (!expectAndConsumeString(&metric_name)) {
+  std::string table_name;
+  if (!expectAndConsumeString(&table_name)) {
     return false;
   }
 
@@ -147,7 +147,7 @@ bool ConfigParser::parseTableDefinition(ConfigList* config) {
     return false;
   }
 
-  TableConfig table_config;
+  TableConfig table_config(table_name);
 
   TokenType ttype;
   std::string tbuf;
@@ -199,7 +199,7 @@ bool ConfigParser::parseTableDefinition(ConfigList* config) {
     return false;
   }
 
-  config->addTableConfig(metric_name, table_config);
+  config->addTableConfig(table_config);
   return true;
 }
 

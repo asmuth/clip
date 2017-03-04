@@ -21,12 +21,15 @@
 namespace fnordmetric {
 
 ReturnCode AggregationService::startService(
+    Backend* backend,
     std::unique_ptr<AggregationService>* service) {
-  service->reset(new AggregationService());
+  service->reset(new AggregationService(backend));
   return ReturnCode::success();
 }
 
-AggregationService::AggregationService() :
+AggregationService::AggregationService(
+    Backend* backend) :
+    backend_(backend),
     aggregation_map_(new AggregationMap()),
     expiration_thread_shutdown_(false),
     expiration_thread_(std::thread(
@@ -54,6 +57,11 @@ ReturnCode AggregationService::applyConfig(const ConfigList* config) {
 }
 
 ReturnCode AggregationService::insertSample(const Sample& smpl) {
+  logDebug(
+      "Ingesting sample: metric_name=$0 value=$1",
+      smpl.getMetricName(),
+      smpl.getValue());
+
   auto table_id = smpl.getMetricName(); // FIXME
   auto table = table_map_.getTableMap()->findTable(table_id);
   if (!table.get()) {
@@ -153,7 +161,24 @@ void AggregationService::processExpirations() {
 
 void AggregationService::performInserts(
     std::vector<std::unique_ptr<AggregationSlot>> slots) {
-  logInfo("metric-collectd", "Insert $0 slots", slots.size());
+  std::vector<Backend::InsertOp> insert_ops;
+
+  for (auto& s : slots) {
+    logDebug(
+        "Emitting row: table=$0",
+        s->table->table_id);
+
+    Backend::InsertOp op;
+    op.table = s->table;
+    op.time = s->time;
+    op.label_values = s->labels;
+    insert_ops.emplace_back(std::move(op));
+  }
+
+  auto rc = backend_->insertRows(std::move(insert_ops));
+  if (!rc.isSuccess()) {
+    logError("BACKEND ERROR: $0", rc.getMessage());
+  }
 }
 
 AggregationSlot* AggregationMap::getSlot(

@@ -40,7 +40,9 @@ bool parseDataType(
   return false;
 }
 
-TableConfig::TableConfig() :
+TableConfig::TableConfig(
+    const std::string& id) :
+    table_id(id),
     interval(10 * kMicrosPerSecond) {}
 
 LabelConfig::LabelConfig(

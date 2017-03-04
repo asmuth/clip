@@ -112,12 +112,6 @@ void StatsdServer::handlePacket(const char* pkt, size_t pkt_len) {
       return;
     }
 
-    logDebug(
-        "received statsd sample; metric_id=$0 series_id=$1 value=$2",
-        metric_id,
-        series_id,
-        value);
-
     auto now = WallClock::unixMicros();
     auto rc = aggr_service_->insertSample(Sample(metric_id, value, now, {}));
 
