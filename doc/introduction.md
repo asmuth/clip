@@ -14,7 +14,7 @@ database.
       backend database.
     </p>
     <p>
-      metric-collectd can currently listen for samples in text/statsd or JSON format
+      metric-collectd can currently listen for samples in Text/StatsD or JSON format
       via UDP or HTTP. It can also pull samples via HTTP or SNMP.
     </p>
   </li>
