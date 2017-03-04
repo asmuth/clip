@@ -8,6 +8,7 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
+#pragma once
 #include <stdlib.h>
 #include <atomic>
 #include "fnordmetric/util/return_code.h"
@@ -15,6 +16,10 @@
 #include "fnordmetric/aggregation_service.h"
 
 namespace fnordmetric {
+
+struct UDPIngestionTaskConfig : public IngestionTaskConfig {
+  uint16_t port;
+};
 
 class StatsdServer : public IngestionTask {
 public:

@@ -12,6 +12,7 @@
 #include <unistd.h>
 #include "unittest.h"
 #include "fnordmetric/config_parser.h"
+#include "fnordmetric/listen_udp.h"
 
 using namespace fnordmetric;
 
@@ -123,8 +124,6 @@ TEST_CASE(ConfigParserTest, TestTokenizeWithComments, [] () {
 
   EXPECT(parser.getToken(&ttype, &tbuf) == false);
 });
-
-
 
 TEST_CASE(ConfigParserTest, TestParseCreateTablesOn, [] () {
   std::string confstr = R"(create_tables on)";
@@ -244,8 +243,6 @@ TEST_CASE(ConfigParserTest, ParseTableDefinitionWithComments, [] () {
   }
 });
 
-
-
 //TEST_CASE(ConfigParserTest, TestParseSensorTableIDRewriteStanza, [] () {
 //  std::string confstr =
 //      R"(sensor_http sensor1 {
@@ -305,4 +302,23 @@ TEST_CASE(ConfigParserTest, ParseTableDefinitionWithComments, [] () {
 //    EXPECT(sc->sensor_id == "sensor1");
 //  }
 //});
+
+TEST_CASE(ConfigParserTest, TestParseListenUDP, [] () {
+  std::string confstr =
+      R"(listen_udp {
+        port 8175
+      })";
+
+  ConfigList config;
+  ConfigParser parser(confstr.data(), confstr.size());
+  auto rc = parser.parse(&config);
+  EXPECT(rc.isSuccess());
+
+  EXPECT(config.getIngestionTaskConfigs().size() == 1);
+  auto c = dynamic_cast<UDPIngestionTaskConfig*>(
+      config.getIngestionTaskConfigs()[0].get());
+
+  EXPECT(c != nullptr);
+  EXPECT(c->port == 8175);
+});
 

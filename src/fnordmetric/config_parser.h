@@ -14,6 +14,7 @@
 #include "fnordmetric/config_list.h"
 #include "fnordmetric/util/return_code.h"
 #include "fnordmetric/fetch_http.h"
+#include "fnordmetric/listen_udp.h"
 
 namespace fnordmetric {
 
@@ -57,8 +58,12 @@ protected:
   bool parseUnitDefinitionNameStanza(UnitConfig* unit_config);
 
   bool parseRewriteStanza(IngestionTaskConfig* sensor_config);
+
   bool parseFetchHTTPDefinition(ConfigList* config);
   bool parseFetchHTTPDefinitionURLStanza(HTTPIngestionTaskConfig* sensor_config);
+
+  bool parseListenUDPDefinition(ConfigList* config);
+  bool parseListenUDPDefinitionPortStanza(UDPIngestionTaskConfig* config);
 
   bool getToken(
       TokenType* type,

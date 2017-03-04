@@ -39,8 +39,7 @@ public:
   const UnitConfig* getUnitConfig(std::string unit_id) const;
   void addUnitConfig(UnitConfig config);
 
-  const std::map<std::string, std::unique_ptr<IngestionTaskConfig>>& getIngestionTaskConfigs() const;
-  const IngestionTaskConfig* getIngestionTaskConfig(std::string unit_id) const;
+  const std::vector<std::unique_ptr<IngestionTaskConfig>>& getIngestionTaskConfigs() const;
   void addIngestionTaskConfig(std::unique_ptr<IngestionTaskConfig> config);
 
 protected:
@@ -48,7 +47,7 @@ protected:
   bool create_tables_;
   std::map<TableIDType, TableConfig> table_configs_;
   std::map<std::string, UnitConfig> unit_configs_;
-  std::map<std::string, std::unique_ptr<IngestionTaskConfig>> ingestion_configs_;
+  std::vector<std::unique_ptr<IngestionTaskConfig>> ingestion_configs_;
 };
 
 } // namespace fnordmetric

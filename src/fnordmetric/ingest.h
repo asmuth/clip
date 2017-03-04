@@ -30,7 +30,6 @@ ReturnCode mkIngestionTask(
 struct IngestionTaskConfig {
   IngestionTaskConfig();
   virtual ~IngestionTaskConfig() = default;
-  std::string sensor_id;
   bool metric_id_rewrite_enabled;
   std::regex metric_id_rewrite_regex;
   std::string metric_id_rewrite_replace;

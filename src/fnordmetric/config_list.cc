@@ -70,23 +70,12 @@ void ConfigList::addUnitConfig(UnitConfig config) {
   unit_configs_.emplace(unit_id, std::move(config));
 }
 
-const std::map<std::string, std::unique_ptr<IngestionTaskConfig>>& ConfigList::getIngestionTaskConfigs()
-    const {
+const std::vector<std::unique_ptr<IngestionTaskConfig>>& ConfigList::getIngestionTaskConfigs() const {
   return ingestion_configs_;
 }
 
-const IngestionTaskConfig* ConfigList::getIngestionTaskConfig(std::string sensor_id) const {
-  auto ingestion_config = ingestion_configs_.find(sensor_id);
-  if (ingestion_config == ingestion_configs_.end()) {
-    return nullptr;
-  } else {
-    return ingestion_config->second.get();
-  }
-}
-
 void ConfigList::addIngestionTaskConfig(std::unique_ptr<IngestionTaskConfig> config) {
-  auto sensor_id = config->sensor_id;
-  ingestion_configs_.emplace(sensor_id, std::move(config));
+  ingestion_configs_.emplace_back(std::move(config));
 }
 
 } // namespace fnordmetric

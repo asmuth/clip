@@ -31,7 +31,7 @@ IngestionService::IngestionService(
 ReturnCode IngestionService::applyConfig(const ConfigList* config) {
   for (const auto& ic : config->getIngestionTaskConfigs()) {
     std::unique_ptr<IngestionTask> task;
-    auto rc = mkIngestionTask(ic.second.get(), &task);
+    auto rc = mkIngestionTask(ic.get(), &task);
     if (rc.isSuccess()) {
       return rc;
     }

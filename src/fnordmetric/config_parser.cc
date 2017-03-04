@@ -79,6 +79,16 @@ ReturnCode ConfigParser::parse(ConfigList* config) {
       }
     }
 
+    /* parse the "listen_udp" definition */
+    if (ttype == T_STRING && tbuf == "listen_udp") {
+      consumeToken();
+      if (parseListenUDPDefinition(config)) {
+        continue;
+      } else {
+        break;
+      }
+    }
+
     if (ttype == T_ENDLINE) {
       consumeToken();
       continue;
@@ -440,15 +450,12 @@ bool ConfigParser::parseRewriteStanza(
 }
 
 bool ConfigParser::parseFetchHTTPDefinition(ConfigList* config) {
-  std::unique_ptr<HTTPIngestionTaskConfig> sensor_config(new HTTPIngestionTaskConfig());
-  if (!expectAndConsumeString(&sensor_config->sensor_id)) {
-    return false;
-  }
+  std::unique_ptr<HTTPIngestionTaskConfig> ingestion_task(
+      new HTTPIngestionTaskConfig());
 
   if (!expectAndConsumeToken(T_LCBRACE)) {
     return false;
   }
-
 
   TokenType ttype;
   std::string tbuf;
@@ -465,25 +472,13 @@ bool ConfigParser::parseFetchHTTPDefinition(ConfigList* config) {
     /* parse the "http_url" stanza */
     if (ttype == T_STRING && tbuf == "http_url") {
       consumeToken();
-      if (!parseFetchHTTPDefinitionURLStanza(sensor_config.get())) {
+      if (!parseFetchHTTPDefinitionURLStanza(ingestion_task.get())) {
         return false;
       }
       continue;
     }
 
-    /* parse the "metric_id_rewrite" stanza */
-    if (ttype == T_STRING && tbuf == "metric_id_rewrite") {
-      consumeToken();
-      if (!parseRewriteStanza(sensor_config.get())) {
-        return false;
-      }
-      continue;
-    }
-
-    setError(
-        StringUtil::format(
-            "invalid token: $0, expected one of: unit_desc, unit_name",
-            printToken(ttype, tbuf)));
+    setError(StringUtil::format("unexpected token: $0", printToken(ttype, tbuf)));
     return false;
   }
 
@@ -491,12 +486,12 @@ bool ConfigParser::parseFetchHTTPDefinition(ConfigList* config) {
     return false;
   }
 
-  config->addIngestionTaskConfig(std::move(sensor_config));
+  config->addIngestionTaskConfig(std::move(ingestion_task));
   return true;
 }
 
 bool ConfigParser::parseFetchHTTPDefinitionURLStanza(
-    HTTPIngestionTaskConfig* sensor_config) {
+    HTTPIngestionTaskConfig* config) {
   TokenType ttype;
   std::string tbuf;
   if (!getToken(&ttype, &tbuf) || ttype != T_STRING) {
@@ -504,7 +499,74 @@ bool ConfigParser::parseFetchHTTPDefinitionURLStanza(
     return false;
   }
 
-  sensor_config->http_url = tbuf;
+  config->http_url = tbuf;
+  consumeToken();
+  return true;
+}
+
+bool ConfigParser::parseListenUDPDefinition(ConfigList* config) {
+  std::unique_ptr<UDPIngestionTaskConfig> ingestion_task(
+      new UDPIngestionTaskConfig());
+
+  if (!expectAndConsumeToken(T_LCBRACE)) {
+    return false;
+  }
+
+  TokenType ttype;
+  std::string tbuf;
+  while (getToken(&ttype, &tbuf)) {
+    if (ttype == T_RCBRACE) {
+      break;
+    }
+
+    if (ttype == T_ENDLINE) {
+      consumeToken();
+      continue;
+    }
+
+    /* parse the "port" stanza */
+    if (ttype == T_STRING && tbuf == "port") {
+      consumeToken();
+      if (!parseListenUDPDefinitionPortStanza(ingestion_task.get())) {
+        return false;
+      }
+      continue;
+    }
+
+    setError(StringUtil::format("unexpected token: $0", printToken(ttype, tbuf)));
+    return false;
+  }
+
+  if (!expectAndConsumeToken(T_RCBRACE)) {
+    return false;
+  }
+
+  config->addIngestionTaskConfig(std::move(ingestion_task));
+  return true;
+}
+
+bool ConfigParser::parseListenUDPDefinitionPortStanza(
+    UDPIngestionTaskConfig* config) {
+  TokenType ttype;
+  std::string tbuf;
+  if (!getToken(&ttype, &tbuf) || ttype != T_STRING) {
+    setError("port requires an argument");
+    return false;
+  }
+
+  try {
+    auto val = std::stoul(tbuf);
+    if (val > std::numeric_limits<uint16_t>::max()) {
+      setError("port number out of range");
+      return false;
+    }
+
+    config->port = val;
+  } catch (...) {
+    setError(std::string("invalid value for port: ") + tbuf);
+    return false;
+  }
+
   consumeToken();
   return true;
 }
