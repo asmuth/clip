@@ -118,18 +118,24 @@ ReturnCode AggregationService::insertSample(const Sample& smpl) {
     }
   }
 
-  std::unique_lock<std::mutex> lk(mutex_);
   auto now = MonotonicClock::now();
-  auto slot = aggregation_map_->getSlot(
+  std::unique_lock<std::mutex> lk(mutex_);
+
+  AggregationSlot* slot;
+  auto rc = aggregation_map_->getSlot(
       alignTime(smpl.getTime(), table->interval),
       now + table->interval,
       table,
-      labels);
+      labels,
+      &slot);
 
-  slot->measures[measure_idx]->addSample(table->measures[measure_idx], smpl);
-
-  cv_.notify_all();
-  return ReturnCode::success();
+  if (rc.isSuccess()) {
+    slot->measures[measure_idx]->addSample(table->measures[measure_idx], smpl);
+    cv_.notify_all();
+    return ReturnCode::success();
+  } else {
+    return rc;
+  }
 }
 
 AggregationService::BatchInsertOptions::BatchInsertOptions() :
@@ -240,11 +246,12 @@ void AggregationService::performInserts(
   }
 }
 
-AggregationSlot* AggregationMap::getSlot(
+ReturnCode AggregationMap::getSlot(
     uint64_t timestamp,
     uint64_t expire_at,
     std::shared_ptr<TableConfig> table,
-    const std::vector<std::string>& labels) {
+    const std::vector<std::string>& labels,
+    AggregationSlot** slot) {
   std::string slot_idv;
   slot_idv += std::to_string(timestamp) + "~";
   slot_idv += std::to_string((intptr_t) table.get());
@@ -258,29 +265,34 @@ AggregationSlot* AggregationMap::getSlot(
     if (iter->second->timestamp == timestamp &&
         iter->second->table.get() == table.get() &&
         iter->second->labels == labels) {
-      return iter->second;
+      *slot = iter->second;
+      return ReturnCode::success();
     }
   }
 
-  auto slot = new AggregationSlot;
-  slot->slot_id = slot_id;
-  slot->timestamp = timestamp;
-  slot->table = table;
-  slot->labels = labels;
+  auto new_slot = std::unique_ptr<AggregationSlot>(new AggregationSlot());
+  new_slot->slot_id = slot_id;
+  new_slot->timestamp = timestamp;
+  new_slot->table = table;
+  new_slot->labels = labels;
 
   for (const auto& m : table->measures) {
-    slot->measures.emplace_back(new SumAggregationFunction(m)); // FIXME
+    std::unique_ptr<AggregationFunction> aggregation_fun;
+    auto rc = mkAggregationFunction(m, &aggregation_fun);
+    if (!rc.isSuccess()) {
+      return rc;
+    }
+
+    new_slot->measures.emplace_back(std::move(aggregation_fun));
   }
 
-  slots_.emplace(slot_id, slot);
+  *slot = new_slot.get();
+  slots_.emplace(slot_id, new_slot.get());
 
   auto iter = expiration_list_.begin();
   for (; iter->first > expire_at && iter != expiration_list_.end(); ++iter);
-  expiration_list_.insert(
-      iter,
-      std::make_pair(expire_at, std::unique_ptr<AggregationSlot>(slot)));
-
-  return slot;
+  expiration_list_.insert(iter, std::make_pair(expire_at, std::move(new_slot)));
+  return ReturnCode::success();
 }
 
 void AggregationMap::getExpiredSlots(

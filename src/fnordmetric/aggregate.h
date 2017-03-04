@@ -12,6 +12,7 @@
 #include <fnordmetric/util/return_code.h>
 
 namespace fnordmetric {
+class AggregationFunction;
 class MeasureConfig;
 
 enum class AggregationFunctionType {
@@ -20,6 +21,10 @@ enum class AggregationFunctionType {
 
 std::string getAggregationFunctionTypeName(AggregationFunctionType t);
 bool parseAggregationFunctionType(const std::string& s, AggregationFunctionType* t);
+
+ReturnCode mkAggregationFunction(
+    const MeasureConfig& config,
+    std::unique_ptr<AggregationFunction>* fun);
 
 class AggregationFunction {
 public:
@@ -36,10 +41,10 @@ public:
 
 };
 
-class SumAggregationFunction : public AggregationFunction {
+class SumIntegerAggregationFunction : public AggregationFunction {
 public:
 
-  SumAggregationFunction(const MeasureConfig& config);
+  SumIntegerAggregationFunction();
 
   ReturnCode addSample(
       const MeasureConfig& config,
@@ -50,7 +55,7 @@ public:
       std::vector<std::pair<std::string, std::string>>* columns) const override;
 
 protected:
-  uint64_t sum_;
+  int64_t sum_;
 };
 
 //

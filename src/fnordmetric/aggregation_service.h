@@ -81,11 +81,12 @@ struct AggregationSlot {
 class AggregationMap {
 public:
 
-  AggregationSlot* getSlot(
+  ReturnCode getSlot(
       uint64_t timestamp,
       uint64_t expire_at,
       std::shared_ptr<TableConfig> table,
-      const std::vector<std::string>& labels);
+      const std::vector<std::string>& labels,
+      AggregationSlot** slot);
 
   void getExpiredSlots(
       uint64_t expired_on,

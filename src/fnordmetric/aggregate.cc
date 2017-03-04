@@ -34,15 +34,31 @@ bool parseAggregationFunctionType(
   return false;
 }
 
-SumAggregationFunction::SumAggregationFunction(
-    const MeasureConfig& config) :
-    sum_(0) {}
+ReturnCode mkAggregationFunction(
+    const MeasureConfig& config,
+    std::unique_ptr<AggregationFunction>* fun) {
+  switch (config.aggr_fun) {
+    case AggregationFunctionType::SUM:
+      switch (config.type) {
+        case DataType::UINT64:
+        case DataType::INT64:
+          fun->reset(new SumIntegerAggregationFunction());
+          return ReturnCode::success();
+        default:
+          return ReturnCode::error("ERUNTIME", "invalid data type for SUM");
+      }
+  }
 
-ReturnCode SumAggregationFunction::addSample(
+  return ReturnCode::error("ERUNTIME", "invalid aggregation function");
+}
+
+SumIntegerAggregationFunction::SumIntegerAggregationFunction() : sum_(0) {}
+
+ReturnCode SumIntegerAggregationFunction::addSample(
     const MeasureConfig& config,
     const Sample& sample) {
   try {
-    sum_ += std::stoull(sample.getValue());
+    sum_ += std::stoll(sample.getValue());
   } catch (...) {
     return ReturnCode::errorf("ERUNTIME", "invalid value: $0", sample.getValue());
   }
@@ -50,7 +66,7 @@ ReturnCode SumAggregationFunction::addSample(
   return ReturnCode::success();
 }
 
-void SumAggregationFunction::getResult(
+void SumIntegerAggregationFunction::getResult(
     const MeasureConfig& config,
     std::vector<std::pair<std::string, std::string>>* columns) const {
   columns->emplace_back(config.column_name, std::to_string(sum_));
