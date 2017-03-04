@@ -18,7 +18,9 @@
 namespace fnordmetric {
 
 struct UDPIngestionTaskConfig : public IngestionTaskConfig {
+  UDPIngestionTaskConfig();
   uint16_t port;
+  IngestionSampleFormat format;
 };
 
 class StatsdServer : public IngestionTask {

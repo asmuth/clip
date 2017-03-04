@@ -15,6 +15,23 @@
 
 namespace fnordmetric {
 
+std::string getIngestionSampleFormatName(IngestionSampleFormat t) {
+  switch (t) {
+    case IngestionSampleFormat::STATSD: return "statsd";
+    case IngestionSampleFormat::JSON: return "json";
+  }
+
+  return "???";
+}
+
+bool parseIngestionSampleFormat(
+    const std::string& s,
+    IngestionSampleFormat* t) {
+  if (s == "statsd") { *t = IngestionSampleFormat::STATSD; return true; }
+  if (s == "json") { *t = IngestionSampleFormat::JSON; return true; }
+  return false;
+}
+
 ReturnCode mkIngestionTask(
     const IngestionTaskConfig* config,
     std::unique_ptr<IngestionTask>* task) {

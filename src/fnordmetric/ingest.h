@@ -23,6 +23,13 @@ class ConfigList;
 class IngestionTask;
 struct IngestionTaskConfig;
 
+enum class IngestionSampleFormat {
+  STATSD, JSON
+};
+
+std::string getIngestionSampleFormatName(IngestionSampleFormat t);
+bool parseIngestionSampleFormat(const std::string& s, IngestionSampleFormat* t);
+
 ReturnCode mkIngestionTask(
     const IngestionTaskConfig* config,
     std::unique_ptr<IngestionTask>* task);

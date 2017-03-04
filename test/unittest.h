@@ -33,6 +33,11 @@
       throw std::runtime_error(std::string("expectation failed: ") + #X); \
     }
 
+#define EXPECT_RC(X) \
+    if (!(X).isSuccess()) { \
+      throw std::runtime_error((X).getMessage()); \
+    }
+
 #define EXPECT_EQ(A, B) EXPECT((A) == (B))
 
 #define EXPECT_TRUE(X) EXPECT(!!(X))

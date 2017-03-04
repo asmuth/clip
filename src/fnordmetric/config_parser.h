@@ -64,6 +64,7 @@ protected:
 
   bool parseListenUDPDefinition(ConfigList* config);
   bool parseListenUDPDefinitionPortStanza(UDPIngestionTaskConfig* config);
+  bool parseListenUDPDefinitionFormatStanza(UDPIngestionTaskConfig* config);
 
   bool getToken(
       TokenType* type,

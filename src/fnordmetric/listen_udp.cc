@@ -26,6 +26,10 @@
 
 namespace fnordmetric {
 
+UDPIngestionTaskConfig::UDPIngestionTaskConfig() :
+    port(0),
+    format(IngestionSampleFormat::STATSD) {}
+
 StatsdServer::StatsdServer(
     AggregationService* aggr_service) :
     aggr_service_(aggr_service),

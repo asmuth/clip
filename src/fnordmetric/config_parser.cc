@@ -533,6 +533,15 @@ bool ConfigParser::parseListenUDPDefinition(ConfigList* config) {
       continue;
     }
 
+    /* parse the "format" stanza */
+    if (ttype == T_STRING && tbuf == "format") {
+      consumeToken();
+      if (!parseListenUDPDefinitionFormatStanza(ingestion_task.get())) {
+        return false;
+      }
+      continue;
+    }
+
     setError(StringUtil::format("unexpected token: $0", printToken(ttype, tbuf)));
     return false;
   }
@@ -569,6 +578,27 @@ bool ConfigParser::parseListenUDPDefinitionPortStanza(
 
   consumeToken();
   return true;
+}
+
+bool ConfigParser::parseListenUDPDefinitionFormatStanza(
+    UDPIngestionTaskConfig* config) {
+  TokenType ttype;
+  std::string tbuf;
+  if (!getToken(&ttype, &tbuf) || ttype != T_STRING) {
+    setError("format requires an argument");
+    return false;
+  }
+
+  consumeToken();
+
+  IngestionSampleFormat format;
+  if (parseIngestionSampleFormat(tbuf, &format)) {
+    config->format = format;
+    return true;
+  } else {
+    setError(std::string("invalid value for format: ") + tbuf);
+    return false;
+  }
 }
 
 bool ConfigParser::getToken(
