@@ -20,6 +20,12 @@
 namespace fnordmetric {
 class AggregationService;
 class ConfigList;
+class IngestionTask;
+struct IngestionTaskConfig;
+
+ReturnCode mkIngestionTask(
+    const IngestionTaskConfig* config,
+    std::unique_ptr<IngestionTask>* task);
 
 struct IngestionTaskConfig {
   IngestionTaskConfig();

@@ -15,6 +15,12 @@
 
 namespace fnordmetric {
 
+ReturnCode mkIngestionTask(
+    const IngestionTaskConfig* config,
+    std::unique_ptr<IngestionTask>* task) {
+  return ReturnCode::error("ERUNTIME", "invalid ingestion task config");
+}
+
 IngestionTaskConfig::IngestionTaskConfig() :
     metric_id_rewrite_enabled(false) {}
 
@@ -23,9 +29,16 @@ IngestionService::IngestionService(
     aggregation_service_(aggregation_service) {}
 
 ReturnCode IngestionService::applyConfig(const ConfigList* config) {
-  auto statsd_server = std::unique_ptr<StatsdServer>(new StatsdServer(aggregation_service_));
-  statsd_server->listen("localhost", 8125);
-  addTask(std::move(statsd_server));
+  for (const auto& ic : config->getIngestionTaskConfigs()) {
+    std::unique_ptr<IngestionTask> task;
+    auto rc = mkIngestionTask(ic.second.get(), &task);
+    if (rc.isSuccess()) {
+      return rc;
+    }
+
+    addTask(std::move(task));
+  }
+
   return ReturnCode::success();
 }
 
