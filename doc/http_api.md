@@ -13,7 +13,7 @@ These are the API methods exposed by `metric-collectd`
     <th>Description</th>
   </tr>
   <tr>
-    <td><code><a href="/documentation/collecting-data-via-http"><strong>POST /metrics</strong></a></code></td>
+    <td><code><a href="/documentation/collect-data-via-http"><strong>POST /metrics</strong></a></code></td>
     <td>Submit input samples</td>
   </tr>
 </table>

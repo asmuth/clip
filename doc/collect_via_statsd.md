@@ -21,6 +21,10 @@ This is the list of valid stanzas within the `listen_udp` block:
   </thead>
   <tbody>
     <tr>
+      <td><code><strong>bind</strong></code></td>
+      <td>The address on which the UDP server should be started (default: 0.0.0.0)</td>
+    </tr>
+    <tr>
       <td><code><strong>port</strong></code></td>
       <td>The port on which the UDP server should be started</td>
     </tr>
@@ -89,5 +93,8 @@ For example, to insert the values 23, 42 and 5 into the metrics "mymetric-one",
     mymetric-one:23\n
     mymetric-two:42\n
     mymetric-three:5\n
+
+ For more information on the format see the [Sample Formats](/documentation/sample-format)
+page.
 
 

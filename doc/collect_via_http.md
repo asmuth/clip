@@ -51,7 +51,8 @@ example: `1s`, `30min` or `6hours`.</td>
 
 metric-collectd will sends a `HTTP GET` request for the specified URL and expects
 a 200-range response status code. The response body must be either in `statsd`
-or `json` format.
+or `json` format. for more information on the format see the [sample formats](/documentation/sample-format)
+page.
 
 
 HTTP Push
@@ -75,6 +76,10 @@ This is the list of valid stanzas within the `listen_http` block:
   </thead>
   <tbody>
     <tr>
+      <td><code><strong>bind</strong></code></td>
+      <td>The address on which the HTTP server should be started (default: 0.0.0.0)</td>
+    </tr>
+    <tr>
       <td><code><strong>port</strong></code></td>
       <td>The port on which the HTTP server should be started</td>
     </tr>
@@ -85,47 +90,45 @@ This is the list of valid stanzas within the `listen_http` block:
   </tbody>
 </table>
 
-To insert a sample, send a `POST /metrics` request. There are two mandatory
-parameters `metric` and `value`: The metric parameter must contain the metric
-name to insert into and the value parameter must contain the value to insert.
+To insert a sample, send a `POST /metrics` request. By default, the API expects
+the samples to be in Text/StatsD in the body of the request. You can switch
+to the JSON format by sending a `Content-Type: application/json` header.
 
-    POST /metrics
-    metric=<metric-name>&value=<value>
+    >> POST /metrics
+    >> Content-Type: text/plain
+    >>
+    >> metric_name1:value2\n
+    >> metric_name2:value2\n
+
+    << HTTP/1.1 201 CREATED
 
 A simple way to send in metrics via HTTP from your command line if you have
 metric-collectd running on HTTP port 8080 would be using the curl utility:
 
-    $ curl -X POST -d "metric=host_stats.request_count&value=23.5" localhost:8080/metrics
+    $ curl -X POST -d "host_stats.request_count:23.5" localhost:8080/metrics
 
 This would insert the value "23.5" into the metric "host_stats.request_count".
 
-A sample can optionally be labelled with one or more "labels". Each label is a
-key: value pair and is specified as an additional HTTP POST parameter where the
-key follows this format: `label[...]`
+A sample can optionally be labelled with one or more "labels". To attach labels,
+put them all into the curly braces separated by commas. For example, if we want
+to sample the CPU utilization on multiple hosts into the metric "cpu-utilization"
+with two label dimensions "hostname" and "datacenter", our UDP packets could look
+like this:
 
-    POST /metrics
-    metric=<metric-name>&value=<value>&label[<k1>]=<v1>
 
-    POST /metrics
-    metric=<metric-name>&value=<value>&label[<k1>]=<v1>&label[<k2>]=<v2>
+    >> POST /metrics
+    >> Content-Type: text/plain
+    >>
+    >> cpu-utilization{hostname=machine83,datacenter=ams1}:0.642\n
 
-For example, if we want to sample the CPU utilization on multiple hosts into
-the metric "cpu-utilization" with two label dimensions "hostname" and "datacenter",
-our HTTP requests should look like this:
-
-    >> POST /metrics?metric=cpu-utilization&value=0.642&label[hostname]=machine83&label[datacenter]=ams1
     << HTTP/1.1 201 CREATED
 
-Alas, curl interprets square brackets as globs, so we have to escape the square
-brackets when using the curl command line utility:
 
-    $ curl -X POST -d "metric=cpu-util&label\[hostname\]=machine83&label\[datacenter\]=ams1&value=0.642" localhost:8080/metrics
+To send the above request with curl:
 
-More examples:
+    $ curl -X POST -d "cpu-utilization{hostname=machine83,datacenter=ams1}:0.642" localhost:8080/metrics
 
-    >> POST /metrics?metric=total_sales_in_euro-sum-30&value=351 HTTP/1.1
-    << HTTP/1.1 201 CREATED
+For more information on the format see the [Sample Formats](/documentation/sample-format)
+page.
 
-    >> POST /metrics?metric=http_status_codes&value=351&label[statuscode]=200&label[hostname]=myhost1 HTTP/1.1
-    << HTTP/1.1 201 CREATED
 
