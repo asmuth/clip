@@ -22,12 +22,23 @@ namespace fnordmetric {
 
 ReturnCode AggregationService::startService(
     std::unique_ptr<AggregationService>* service) {
-  /* initialize service */
   service->reset(new AggregationService());
   return ReturnCode::success();
 }
 
-AggregationService::AggregationService() {}
+AggregationService::AggregationService() :
+    aggregation_map_(new AggregationMap()),
+    expiration_thread_shutdown_(false),
+    expiration_thread_(std::thread(
+        std::bind(&AggregationService::processExpirations, this))) {}
+
+AggregationService::~AggregationService() {
+  shutdown();
+
+  if (expiration_thread_.joinable()) {
+    expiration_thread_.join();
+  }
+}
 
 ReturnCode AggregationService::applyConfig(const ConfigList* config) {
   std::unique_lock<std::mutex> lk(table_map_mutex_);
@@ -43,6 +54,23 @@ ReturnCode AggregationService::applyConfig(const ConfigList* config) {
 }
 
 ReturnCode AggregationService::insertSample(const Sample& smpl) {
+  auto table_id = smpl.getMetricName(); // FIXME
+  auto table = table_map_.getTableMap()->findTable(table_id);
+  if (!table.get()) {
+    return ReturnCode::errorf("ERUNTIME", "table not found: $0", table_id);
+  }
+
+  std::vector<std::string> labels; // FIXME
+
+  std::unique_lock<std::mutex> lk(mutex_);
+  auto now = MonotonicClock::now();
+  auto slot = aggregation_map_->getSlot(
+      smpl.getTime(),
+      now + table->interval,
+      table,
+      labels);
+
+  cv_.notify_all();
   return ReturnCode::success();
 }
 
@@ -96,51 +124,63 @@ ReturnCode AggregationService::insertSamplesBatch(
   return ReturnCode::success();
 }
 
-static bool compareLabels(
-    const std::vector<std::pair<std::string, std::string>>& a,
-    const std::vector<std::pair<std::string, std::string>>& b) {
-  if (a.size() != b.size()) {
-    return false;
-  }
-
-  for (size_t i = 0; i < a.size(); ++i) {
-    if (a[i].first != b[i].first || a[i].second != b[i].second) {
-      return false;
-    }
-  }
-
-  return true;
+void AggregationService::shutdown() {
+  std::unique_lock<std::mutex> lk(mutex_);
+  expiration_thread_shutdown_ = true;
+  cv_.notify_all();
 }
 
-AggregationMap::Slot* AggregationMap::getSlot(
+void AggregationService::processExpirations() {
+  std::unique_lock<std::mutex> lk(mutex_);
+  while (!expiration_thread_shutdown_) {
+    auto now = MonotonicClock::now();
+    std::vector<std::unique_ptr<AggregationSlot>> expired;
+    aggregation_map_->getExpiredSlots(now, &expired);
+
+    if (!expired.empty()) {
+      performInserts(std::move(expired));
+    }
+
+    auto next = aggregation_map_->getNextExpiration();
+    if (next == 0) {
+      cv_.wait(lk);
+    } else {
+      assert(next > now);
+      cv_.wait_for(lk, std::chrono::microseconds(next - now));
+    }
+  }
+}
+
+void AggregationService::performInserts(
+    std::vector<std::unique_ptr<AggregationSlot>> slots) {
+  logInfo("metric-collectd", "Insert $0 slots", slots.size());
+}
+
+AggregationSlot* AggregationMap::getSlot(
     uint64_t timestamp,
-    uint64_t interval,
     uint64_t expire_at,
     std::shared_ptr<TableConfig> table,
-    const std::vector<std::pair<std::string, std::string>>& labels) {
+    const std::vector<std::string>& labels) {
   std::string slot_idv;
   slot_idv += std::to_string(timestamp) + "~";
-  slot_idv += std::to_string(interval) + "~";
   slot_idv += std::to_string((intptr_t) table.get());
   for (const auto& l : labels) {
-    slot_idv += "~" + l.first + "=" + l.second;
+    slot_idv += "~" + l;
   }
 
   auto slot_id = SHA1::compute(slot_idv);
   auto slots = slots_.equal_range(slot_id);
   for (auto iter = slots.first; iter != slots.second; ++iter) {
     if (iter->second->time == timestamp &&
-        iter->second->interval == interval &&
         iter->second->table.get() == table.get() &&
-        compareLabels(iter->second->labels, labels)) {
+        iter->second->labels == labels) {
       return iter->second;
     }
   }
 
-  auto slot = new Slot;
+  auto slot = new AggregationSlot;
   slot->slot_id = slot_id;
   slot->time = timestamp;
-  slot->interval = interval;
   slot->table = table;
   slot->labels = labels;
 
@@ -150,14 +190,14 @@ AggregationMap::Slot* AggregationMap::getSlot(
   for (; iter->first > expire_at && iter != expiration_list_.end(); ++iter);
   expiration_list_.insert(
       iter,
-      std::make_pair(expire_at, std::unique_ptr<Slot>(slot)));
+      std::make_pair(expire_at, std::unique_ptr<AggregationSlot>(slot)));
 
   return slot;
 }
 
 void AggregationMap::getExpiredSlots(
     uint64_t expired_on,
-    std::vector<std::unique_ptr<Slot>>* slots) {
+    std::vector<std::unique_ptr<AggregationSlot>>* slots) {
   while (!expiration_list_.empty() && expiration_list_.back().first <= expired_on) {
     auto slot = std::move(expiration_list_.back().second);
     expiration_list_.pop_back();
@@ -172,6 +212,14 @@ void AggregationMap::getExpiredSlots(
 
     slots->emplace_back(std::move(slot));
   }
+}
+
+uint64_t AggregationMap::getNextExpiration() const {
+  if (expiration_list_.empty()) {
+    return 0;
+  }
+
+  return expiration_list_.back().first;
 }
 
 } // namsepace fnordmetric

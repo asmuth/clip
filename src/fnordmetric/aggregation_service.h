@@ -12,6 +12,9 @@
 #include <atomic>
 #include <memory>
 #include <string>
+#include <mutex>
+#include <thread>
+#include <condition_variable>
 #include "fnordmetric/table.h"
 #include "fnordmetric/util/sha1.h"
 #include "fnordmetric/table_map.h"
@@ -19,12 +22,15 @@
 #include "fnordmetric/util/return_code.h"
 
 namespace fnordmetric {
+struct AggregationSlot;
 class AggregationMap;
 
 class AggregationService {
 public:
 
   static ReturnCode startService(std::unique_ptr<AggregationService>* service);
+
+  ~AggregationService();
 
   ReturnCode applyConfig(const ConfigList* config);
 
@@ -42,39 +48,49 @@ public:
       size_t len,
       const BatchInsertOptions* opts = nullptr);
 
+  void shutdown();
+
 protected:
 
   AggregationService();
 
+  void processExpirations();
+  void performInserts(std::vector<std::unique_ptr<AggregationSlot>> slots);
+
   VersionedTableMap table_map_;
   std::mutex table_map_mutex_;
+  std::unique_ptr<AggregationMap> aggregation_map_;
+  std::mutex mutex_;
+  std::condition_variable cv_;
+  bool expiration_thread_shutdown_;
+  std::thread expiration_thread_;
+};
+
+struct AggregationSlot {
+  SHA1Hash slot_id;
+  uint64_t time;
+  std::shared_ptr<TableConfig> table;
+  std::vector<std::string> labels;
 };
 
 class AggregationMap {
 public:
 
-  struct Slot {
-    SHA1Hash slot_id;
-    uint64_t time;
-    uint64_t interval;
-    std::shared_ptr<TableConfig> table;
-    std::vector<std::pair<std::string, std::string>> labels;
-  };
-
-  Slot* getSlot(
+  AggregationSlot* getSlot(
       uint64_t timestamp,
-      uint64_t interval,
       uint64_t expire_at,
       std::shared_ptr<TableConfig> table,
-      const std::vector<std::pair<std::string, std::string>>& labels);
+      const std::vector<std::string>& labels);
 
   void getExpiredSlots(
       uint64_t expired_on,
-      std::vector<std::unique_ptr<Slot>>* slots);
+      std::vector<std::unique_ptr<AggregationSlot>>* slots);
+
+  uint64_t getNextExpiration() const;
 
 protected:
-  std::multimap<SHA1Hash, Slot*> slots_;
-  std::deque<std::pair<uint64_t, std::unique_ptr<Slot>>> expiration_list_;
+  std::multimap<SHA1Hash, AggregationSlot*> slots_;
+  std::deque<std::pair<uint64_t, std::unique_ptr<AggregationSlot>>> expiration_list_;
 };
 
 } // namespace fnordmetric
