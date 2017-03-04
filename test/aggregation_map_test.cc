@@ -22,7 +22,7 @@ TEST_CASE(AggregationMapTest, TestAggregationSlotLookup, [] () {
   AggregationMap map;
 
   auto ts = WallClock::unixMicros();
-  auto test_tbl = std::make_shared<TableConfig>();
+  auto test_tbl = std::make_shared<TableConfig>("test_tbl");
   test_tbl->interval = 10 * kMicrosPerSecond;
   test_tbl->labels.emplace_back(LabelConfig("test"));
 
@@ -104,7 +104,7 @@ TEST_CASE(AggregationMapTest, TestExpiration, [] () {
   AggregationMap map;
 
   auto ts = WallClock::unixMicros();
-  auto test_tbl = std::make_shared<TableConfig>();
+  auto test_tbl = std::make_shared<TableConfig>("test_tbl");
   test_tbl->interval = 10 * kMicrosPerSecond;
   test_tbl->labels.emplace_back(LabelConfig("slot"));
 
