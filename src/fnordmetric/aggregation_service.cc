@@ -56,19 +56,69 @@ ReturnCode AggregationService::applyConfig(const ConfigList* config) {
   return ReturnCode::success();
 }
 
+static bool parseMetricName(
+    const std::string& metric_name,
+    std::string* table_id,
+    std::string* measure_id) {
+  size_t table_id_len = metric_name.size();
+  while (table_id_len > 0) {
+    if (metric_name[table_id_len - 1] == '.') {
+      break;
+    } else {
+      --table_id_len;
+    }
+  }
+
+  if (table_id_len <= 1 || table_id_len == metric_name.size()) {
+    return false;
+  } else {
+    *table_id = metric_name.substr(0, table_id_len - 1);
+    *measure_id = metric_name.substr(table_id_len);
+    return true;
+  }
+}
+
 ReturnCode AggregationService::insertSample(const Sample& smpl) {
+  std::string table_id;
+  std::string measure_id;
+  if (!parseMetricName(smpl.getMetricName(), &table_id, &measure_id)) {
+    return ReturnCode::errorf(
+        "ERUNTIME",
+        "invalid metric name: $0",
+        smpl.getMetricName());
+  }
+
   logDebug(
       "Ingesting sample: metric_name=$0 value=$1",
       smpl.getMetricName(),
       smpl.getValue());
 
-  auto table_id = smpl.getMetricName(); // FIXME
   auto table = table_map_.getTableMap()->findTable(table_id);
   if (!table.get()) {
     return ReturnCode::errorf("ERUNTIME", "table not found: $0", table_id);
   }
 
-  std::vector<std::string> labels; // FIXME
+  size_t measure_idx = size_t(-1);
+  for (size_t i = 0; i < table->measures.size(); ++i) {
+    if (table->measures[i].column_name == measure_id) {
+      measure_idx = i;
+      break;
+    }
+  }
+
+  if (measure_idx == size_t(-1)) {
+    return ReturnCode::errorf("ERUNTIME", "column not found: $0", measure_id);
+  }
+
+  std::vector<std::string> labels(table->labels.size());
+  for (size_t i = 0; i < labels.size(); ++i) {
+    for (const auto& l : smpl.getLabels()) {
+      if (l.first == table->labels[i].column_name) {
+        labels[i] = l.second;
+        break;
+      }
+    }
+  }
 
   std::unique_lock<std::mutex> lk(mutex_);
   auto now = MonotonicClock::now();
