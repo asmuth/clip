@@ -61,6 +61,8 @@ libfnordmetric_common_a_SOURCES = \
     listen_udp.cc \
     listen_http.h \
     listen_http.cc \
+    fetch_http.h \
+    fetch_http.cc \
     util/daemonize.h \
     util/daemonize.cc \
     util/time_impl.h \

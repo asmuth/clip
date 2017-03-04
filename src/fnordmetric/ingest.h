@@ -48,7 +48,7 @@ public:
 
   virtual ~IngestionTask() = default;
 
-  virtual ReturnCode start() = 0;
+  virtual void start() = 0;
   virtual void shutdown() = 0;
 
 };
@@ -56,12 +56,18 @@ public:
 class PeriodicIngestionTask : public IngestionTask {
 public:
 
-  virtual uint64_t getNextInvocationTime() const = 0;
+  PeriodicIngestionTask(uint64_t interval);
+
   virtual ReturnCode invoke() = 0;
 
-  ReturnCode start() override;
+  void start() override;
   void shutdown() override;
 
+protected:
+  uint64_t interval_;
+  std::mutex mutex_;
+  std::condition_variable cv_;
+  bool running_;
 };
 
 class IngestionService {

@@ -460,8 +460,8 @@ bool ConfigParser::parseRewriteStanza(
 }
 
 bool ConfigParser::parseFetchHTTPDefinition(ConfigList* config) {
-  std::unique_ptr<HTTPIngestionTaskConfig> ingestion_task(
-      new HTTPIngestionTaskConfig());
+  std::unique_ptr<HTTPPullIngestionTaskConfig> ingestion_task(
+      new HTTPPullIngestionTaskConfig());
 
   if (!expectAndConsumeToken(T_LCBRACE)) {
     return false;
@@ -479,10 +479,28 @@ bool ConfigParser::parseFetchHTTPDefinition(ConfigList* config) {
       continue;
     }
 
-    /* parse the "http_url" stanza */
-    if (ttype == T_STRING && tbuf == "http_url") {
+    /* parse the "url" stanza */
+    if (ttype == T_STRING && tbuf == "url") {
       consumeToken();
       if (!parseFetchHTTPDefinitionURLStanza(ingestion_task.get())) {
+        return false;
+      }
+      continue;
+    }
+
+    /* parse the "format" stanza */
+    if (ttype == T_STRING && tbuf == "format") {
+      consumeToken();
+      if (!parseFetchHTTPDefinitionFormatStanza(ingestion_task.get())) {
+        return false;
+      }
+      continue;
+    }
+
+    /* parse the "interval" stanza */
+    if (ttype == T_STRING && tbuf == "interval") {
+      consumeToken();
+      if (!parseFetchHTTPDefinitionIntervalStanza(ingestion_task.get())) {
         return false;
       }
       continue;
@@ -501,7 +519,7 @@ bool ConfigParser::parseFetchHTTPDefinition(ConfigList* config) {
 }
 
 bool ConfigParser::parseFetchHTTPDefinitionURLStanza(
-    HTTPIngestionTaskConfig* config) {
+    HTTPPullIngestionTaskConfig* config) {
   TokenType ttype;
   std::string tbuf;
   if (!getToken(&ttype, &tbuf) || ttype != T_STRING) {
@@ -509,9 +527,51 @@ bool ConfigParser::parseFetchHTTPDefinitionURLStanza(
     return false;
   }
 
-  config->http_url = tbuf;
+  config->url = tbuf;
   consumeToken();
   return true;
+}
+
+bool ConfigParser::parseFetchHTTPDefinitionFormatStanza(
+    HTTPPullIngestionTaskConfig* config) {
+  TokenType ttype;
+  std::string tbuf;
+  if (!getToken(&ttype, &tbuf) || ttype != T_STRING) {
+    setError("format requires an argument");
+    return false;
+  }
+
+  consumeToken();
+
+  IngestionSampleFormat format;
+  if (parseIngestionSampleFormat(tbuf, &format)) {
+    config->format = format;
+    return true;
+  } else {
+    setError(std::string("invalid value for format: ") + tbuf);
+    return false;
+  }
+}
+
+bool ConfigParser::parseFetchHTTPDefinitionIntervalStanza(
+    HTTPPullIngestionTaskConfig* config) {
+  TokenType ttype;
+  std::string tbuf;
+  if (!getToken(&ttype, &tbuf) || ttype != T_STRING) {
+    setError("interval requires an argument");
+    return false;
+  }
+
+  consumeToken();
+
+  uint64_t interval;
+  if (parseDuration(tbuf, &interval).isSuccess()) {
+    config->interval = interval;
+    return true;
+  } else {
+    setError(std::string("invalid value for interval: ") + tbuf);
+    return false;
+  }
 }
 
 bool ConfigParser::parseListenHTTPDefinition(ConfigList* config) {

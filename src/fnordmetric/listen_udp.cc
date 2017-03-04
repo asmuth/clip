@@ -95,7 +95,7 @@ ReturnCode UDPListener::listen(const std::string& bind_addr, int port) {
   return ReturnCode::success();
 }
 
-ReturnCode UDPListener::start() {
+void UDPListener::start() {
   running_ = true;
 
   while (running_.load(std::memory_order_acquire)) {
@@ -123,8 +123,6 @@ ReturnCode UDPListener::start() {
       logWarning("error while inserting samples: $0", rc.getMessage());
     }
   }
-
-  return ReturnCode::success();
 }
 
 void UDPListener::shutdown() {

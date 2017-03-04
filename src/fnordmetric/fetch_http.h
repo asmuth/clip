@@ -12,23 +12,33 @@
 
 namespace fnordmetric {
 
-struct HTTPIngestionTaskConfig : public IngestionTaskConfig {
-  std::string http_url;
+struct HTTPPullIngestionTaskConfig : public IngestionTaskConfig {
+  HTTPPullIngestionTaskConfig();
+  std::string url;
+  uint64_t interval;
+  IngestionSampleFormat format;
 };
 
-class HTTPIngestionTask : public PeriodicIngestionTask {
+class HTTPPullIngestionTask : public PeriodicIngestionTask {
 public:
 
-  HTTPIngestionTask(const HTTPIngestionTaskConfig* config, AggregationService* metric_service);
+  static ReturnCode start(
+      AggregationService* aggregation_service,
+      const IngestionTaskConfig* config,
+      std::unique_ptr<IngestionTask>* task);
 
-  uint64_t getNextInvocationTime() const override;
+  HTTPPullIngestionTask(
+      AggregationService* aggregation_service,
+      uint64_t interval,
+      const std::string& url,
+      IngestionSampleFormat format);
 
   ReturnCode invoke() override;
 
 protected:
-  const HTTPIngestionTaskConfig* config_;
-  AggregationService* metric_service_;
-  uint64_t next_invocation_;
+  AggregationService* aggr_service_;
+  std::string url_;
+  IngestionSampleFormat format_;
 };
 
 } // namespace fnordmetric

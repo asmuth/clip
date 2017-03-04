@@ -9,7 +9,6 @@
  * <http://www.gnu.org/licenses/>.
  */
 #pragma once
-#include <thread>
 #include <fnordmetric/ingest.h>
 #include <fnordmetric/webui/webui.h>
 #include <libtransport/http/v1/http_server.h>
@@ -44,7 +43,7 @@ public:
 
   ReturnCode listen(const std::string& addr, int port);
 
-  virtual ReturnCode start() override;
+  virtual void start() override;
   virtual void shutdown() override;
 
 protected:
@@ -55,7 +54,6 @@ protected:
 
   AggregationService* aggr_service_;
   libtransport::http::HTTPServer http_server_;
-  std::thread http_server_thread_;
 };
 
 } // namespace fnordmetric

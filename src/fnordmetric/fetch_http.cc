@@ -10,27 +10,54 @@
 #include <fnordmetric/aggregation_service.h>
 #include <fnordmetric/fetch_http.h>
 #include <fnordmetric/util/time.h>
+#include <fnordmetric/util/logging.h>
 #include <libtransport/uri/uri.h>
 #include <iostream>
 #include <libtransport/http/v1/http_client.h>
 
 namespace fnordmetric {
 
-HTTPSensorTask::HTTPSensorTask(
-    const HTTPSensorConfig* config,
-    AggregationService* metric_service) :
-    config_(config),
-    metric_service_(metric_service),
-    next_invocation_(0) {}
+HTTPPullIngestionTaskConfig::HTTPPullIngestionTaskConfig() :
+    interval(10 * kMicrosPerSecond),
+    format(IngestionSampleFormat::STATSD) {}
 
-uint64_t HTTPSensorTask::getNextInvocationTime() const {
-  return next_invocation_;
+ReturnCode HTTPPullIngestionTask::start(
+    AggregationService* aggregation_service,
+    const IngestionTaskConfig* config,
+    std::unique_ptr<IngestionTask>* task) {
+  auto c = dynamic_cast<const HTTPPullIngestionTaskConfig*>(config);
+  if (!c) {
+    return ReturnCode::error("ERUNTIME", "invalid ingestion task config");
+  }
+
+  if (c->url.empty()) {
+    return ReturnCode::error("ERUNTIME", "missing url");
+  }
+
+  task->reset(
+      new HTTPPullIngestionTask(
+          aggregation_service,
+          c->interval,
+          c->url,
+          c->format));
+
+  return ReturnCode::success();
 }
 
-ReturnCode HTTPSensorTask::invoke() {
-  next_invocation_ = MonotonicClock::now() + 1 * kMicrosPerSecond;
+HTTPPullIngestionTask::HTTPPullIngestionTask(
+    AggregationService* aggregation_service,
+    uint64_t interval,
+    const std::string& url,
+    IngestionSampleFormat format) :
+    PeriodicIngestionTask(interval),
+    aggr_service_(aggregation_service),
+    url_(url),
+    format_(format) {}
 
-  URI url(config_->http_url);
+ReturnCode HTTPPullIngestionTask::invoke() {
+  logDebug("Fetching samples via HTTP from $0", url_);
+
+  URI url(url_);
   libtransport::http::HTTPClient client;
   if (!client.connect(url.host(), url.port())) {
     return ReturnCode::error("EIO", client.getError());
@@ -50,12 +77,13 @@ ReturnCode HTTPSensorTask::invoke() {
   }
 
   AggregationService::BatchInsertOptions insert_opts;
-  insert_opts.metric_id_rewrite_enabled = config_->metric_id_rewrite_enabled;
-  insert_opts.metric_id_rewrite_regex = config_->metric_id_rewrite_regex;
-  insert_opts.metric_id_rewrite_replace = config_->metric_id_rewrite_replace;
+  insert_opts.format = format_;
+  //insert_opts.metric_id_rewrite_enabled = config_->metric_id_rewrite_enabled;
+  //insert_opts.metric_id_rewrite_regex = config_->metric_id_rewrite_regex;
+  //insert_opts.metric_id_rewrite_replace = config_->metric_id_rewrite_replace;
 
   const auto& body = response.body();
-  return metric_service_->insertSamplesBatch(
+  return aggr_service_->insertSamplesBatch(
       body.data(),
       body.size(),
       &insert_opts);

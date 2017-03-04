@@ -39,8 +39,8 @@ public:
   ~UDPListener();
 
   ReturnCode listen(const std::string& addr, int port);
-  ReturnCode start() override;
 
+  void start() override;
   void shutdown() override;
 
 protected:

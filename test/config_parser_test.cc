@@ -13,6 +13,9 @@
 #include "unittest.h"
 #include "fnordmetric/config_parser.h"
 #include "fnordmetric/listen_udp.h"
+#include "fnordmetric/listen_http.h"
+#include "fnordmetric/fetch_http.h"
+#include "fnordmetric/util/time.h"
 
 using namespace fnordmetric;
 
@@ -262,8 +265,7 @@ TEST_CASE(ConfigParserTest, ParseTableDefinitionWithComments, [] () {
 //    EXPECT(sc->series_id_rewrite_enabled == false);
 //  }
 //});
-//
-//
+
 //TEST_CASE(ConfigParserTest, TestParseSensorSeriesIDRewriteStanza, [] () {
 //  std::string confstr =
 //      R"(sensor_http sensor1 {
@@ -281,25 +283,6 @@ TEST_CASE(ConfigParserTest, ParseTableDefinitionWithComments, [] () {
 //    EXPECT(sc != nullptr);
 //    EXPECT(sc->series_id_rewrite_enabled == true);
 //    EXPECT(sc->metric_id_rewrite_enabled == false);
-//  }
-//});
-//
-//TEST_CASE(ConfigParserTest, TestParseHTTPSensor, [] () {
-//  std::string confstr =
-//      R"(sensor_http sensor1 {
-//        http_url "http://example.com/stats"
-//      })";
-//
-//  ConfigList config;
-//  ConfigParser parser(confstr.data(), confstr.size());
-//  auto rc = parser.parse(&config);
-//  EXPECT_RC(rc);
-//
-//  EXPECT(config.getSensorConfigs().size() == 1);
-//  {
-//    auto sc = config.getSensorConfig("sensor1");
-//    EXPECT(sc != nullptr);
-//    EXPECT(sc->sensor_id == "sensor1");
 //  }
 //});
 
@@ -365,5 +348,28 @@ TEST_CASE(ConfigParserTest, TestParseListenHTTP, [] () {
   EXPECT(c != nullptr);
   EXPECT(c->port == 8175);
   EXPECT(c->bind == "127.0.0.1");
+});
+
+TEST_CASE(ConfigParserTest, TestParseFetchHTTP, [] () {
+  std::string confstr =
+      R"(fetch_http {
+        url "http://example.com/asd?123"
+        interval 30s
+        format json
+      })";
+
+  ConfigList config;
+  ConfigParser parser(confstr.data(), confstr.size());
+  auto rc = parser.parse(&config);
+  EXPECT_RC(rc);
+
+  EXPECT(config.getIngestionTaskConfigs().size() == 1);
+  auto c = dynamic_cast<HTTPPullIngestionTaskConfig*>(
+      config.getIngestionTaskConfigs()[0].get());
+
+  EXPECT(c != nullptr);
+  EXPECT(c->url == "http://example.com/asd?123");
+  EXPECT(c->interval == 30 * kMicrosPerSecond);
+  EXPECT(c->format == IngestionSampleFormat::JSON);
 });
 

@@ -61,7 +61,9 @@ protected:
   bool parseRewriteStanza(IngestionTaskConfig* sensor_config);
 
   bool parseFetchHTTPDefinition(ConfigList* config);
-  bool parseFetchHTTPDefinitionURLStanza(HTTPIngestionTaskConfig* sensor_config);
+  bool parseFetchHTTPDefinitionURLStanza(HTTPPullIngestionTaskConfig* config);
+  bool parseFetchHTTPDefinitionFormatStanza(HTTPPullIngestionTaskConfig* config);
+  bool parseFetchHTTPDefinitionIntervalStanza(HTTPPullIngestionTaskConfig* config);
 
   bool parseListenHTTPDefinition(ConfigList* config);
   bool parseListenHTTPDefinitionBindStanza(HTTPPushIngestionTaskConfig* config);

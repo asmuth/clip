@@ -7,11 +7,13 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
+#include <unistd.h>
 #include <fnordmetric/ingest.h>
 #include <fnordmetric/util/time.h>
 #include <fnordmetric/util/logging.h>
 #include <fnordmetric/listen_udp.h>
 #include <fnordmetric/listen_http.h>
+#include <fnordmetric/fetch_http.h>
 
 namespace fnordmetric {
 
@@ -44,11 +46,59 @@ ReturnCode mkIngestionTask(
     return HTTPPushIngestionTask::start(service, config, task);
   }
 
+  if (dynamic_cast<const HTTPPullIngestionTaskConfig*>(config)) {
+    return HTTPPullIngestionTask::start(service, config, task);
+  }
+
   return ReturnCode::error("ERUNTIME", "invalid ingestion task config");
 }
 
 IngestionTaskConfig::IngestionTaskConfig() :
     metric_id_rewrite_enabled(false) {}
+
+PeriodicIngestionTask::PeriodicIngestionTask(
+    uint64_t interval) :
+    interval_(interval),
+    running_(false) {}
+
+void PeriodicIngestionTask::start() {
+  uint64_t last_run = 0;
+
+  std::unique_lock<std::mutex> lk(mutex_);
+  running_ = true;
+  while (running_) {
+    auto now = MonotonicClock::now();
+    if (now - last_run < interval_) {
+      cv_.wait_for(lk, std::chrono::microseconds(interval_ - (now - last_run)));
+    }
+
+    if (!running_) {
+      break;
+    }
+
+    last_run = now;
+    lk.unlock();
+
+    auto rc = ReturnCode::success();
+    try {
+      rc = invoke();
+    } catch (const std::exception& e) {
+      rc = ReturnCode::error("ERUNTIME", e.what());
+    }
+
+    if (!rc.isSuccess()) {
+      logWarning("Ingestion task failed: $0", rc.getMessage());
+    }
+
+    lk.lock();
+  }
+}
+
+void PeriodicIngestionTask::shutdown() {
+  std::unique_lock<std::mutex> lk(mutex_);
+  running_ = false;
+  cv_.notify_all();
+}
 
 IngestionService::IngestionService(
     AggregationService* aggregation_service) :

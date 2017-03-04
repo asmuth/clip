@@ -64,10 +64,8 @@ ReturnCode HTTPPushIngestionTask::listen(const std::string& addr, int port) {
   }
 }
 
-ReturnCode HTTPPushIngestionTask::start() {
-  http_server_thread_ = std::thread([this] { http_server_.run(); });
-  http_server_thread_.detach();
-  return ReturnCode::success();
+void HTTPPushIngestionTask::start() {
+  http_server_.run();
 }
 
 void HTTPPushIngestionTask::shutdown() {}
