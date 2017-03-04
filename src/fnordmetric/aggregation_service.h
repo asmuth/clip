@@ -13,11 +13,13 @@
 #include <memory>
 #include <string>
 #include "fnordmetric/table.h"
+#include "fnordmetric/util/sha1.h"
 #include "fnordmetric/table_map.h"
 #include "fnordmetric/config_list.h"
 #include "fnordmetric/util/return_code.h"
 
 namespace fnordmetric {
+class AggregationMap;
 
 class AggregationService {
 public:
@@ -46,6 +48,32 @@ protected:
 
   VersionedTableMap table_map_;
   std::mutex table_map_mutex_;
+};
+
+class AggregationMap {
+public:
+
+  struct Slot {
+    uint64_t time;
+    uint64_t interval;
+    std::string table_id;
+    std::vector<std::pair<std::string, std::string>> labels;
+  };
+
+  Slot* getSlot(
+      uint64_t timestamp,
+      uint64_t interval,
+      uint64_t expire_at,
+      const std::string& table_id,
+      const std::vector<std::pair<std::string, std::string>>& labels);
+
+  void getExpiredSlots(
+      uint64_t expired_on,
+      std::vector<std::unique_ptr<Slot>>* slots);
+
+protected:
+  std::unordered_map<SHA1Hash, std::unique_ptr<Slot>> slots_;
+  std::list<std::pair<uint64_t, SHA1Hash>> expiration_list_;
 };
 
 } // namespace fnordmetric

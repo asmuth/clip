@@ -1,5 +1,5 @@
 /**
- * This file is part of the "FnordTable" project
+ * This file is part of the "FnordMetric" project
  *   Copyright (c) 2016 Paul Asmuth <paul@asmuth.com>
  *
  * FnordTable is free software: you can redistribute it and/or modify it under

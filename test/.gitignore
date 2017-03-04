@@ -1,2 +1,1 @@
-config_parser_test
-metric_fetch_test
+test-*
