@@ -16,6 +16,7 @@ class NoopBackend : public Backend {
 public:
 
   ReturnCode createTable(const TableConfig& table_config) override {
+    std::cerr << "CREATE TABLE " << table_config.table_id << std::endl;
     return ReturnCode::success();
   }
 
