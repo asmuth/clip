@@ -104,3 +104,168 @@ TEST_CASE(AggregationMapTest, TestSlotLookup, [] () {
   EXPECT(slot_g != slot_f);
 });
 
+TEST_CASE(AggregationMapTest, TestExpiration, [] () {
+  AggregationMap map;
+
+  auto ts = WallClock::unixMicros();
+
+  map.getSlot(
+      ts + 30 * kMicrosPerSecond,
+      10 * kMicrosPerSecond,
+      ts + 40 * kMicrosPerSecond,
+      "test_tbl",
+      { { "slot", "4" } });
+
+  map.getSlot(
+      ts + 40 * kMicrosPerSecond,
+      10 * kMicrosPerSecond,
+      ts + 50 * kMicrosPerSecond,
+      "test_tbl",
+      { { "slot", "5" } });
+
+  map.getSlot(
+      ts + 50 * kMicrosPerSecond,
+      10 * kMicrosPerSecond,
+      ts + 60 * kMicrosPerSecond,
+      "test_tbl",
+      { { "slot", "6" } });
+
+  map.getSlot(
+      ts + 20 * kMicrosPerSecond,
+      10 * kMicrosPerSecond,
+      ts + 30 * kMicrosPerSecond,
+      "test_tbl",
+      { { "slot", "3" } });
+
+  map.getSlot(
+      ts,
+      10 * kMicrosPerSecond,
+      ts + 10 * kMicrosPerSecond,
+      "test_tbl",
+      { { "slot", "1" } });
+
+  map.getSlot(
+      ts + 10 * kMicrosPerSecond,
+      10 * kMicrosPerSecond,
+      ts + 20 * kMicrosPerSecond,
+      "test_tbl",
+      { { "slot", "2" } });
+
+  std::vector<std::unique_ptr<AggregationMap::Slot>> expired;
+  map.getExpiredSlots(ts, &expired);
+  EXPECT(expired.size() == 0);
+
+  map.getExpiredSlots(ts + 10 * kMicrosPerSecond, &expired);
+  EXPECT(expired.size() == 1);
+  EXPECT(expired[0]->labels.size() == 1);
+  EXPECT(expired[0]->labels[0].first == "slot");
+  EXPECT(expired[0]->labels[0].second == "1");
+  expired.clear();
+
+  map.getExpiredSlots(ts + 11 * kMicrosPerSecond, &expired);
+  EXPECT(expired.size() == 0);
+
+  map.getExpiredSlots(ts + 35 * kMicrosPerSecond, &expired);
+  EXPECT(expired[0]->labels.size() == 1);
+  EXPECT(expired[0]->labels[0].first == "slot");
+  EXPECT(expired[0]->labels[0].second == "2");
+  EXPECT(expired[1]->labels.size() == 1);
+  EXPECT(expired[1]->labels[0].first == "slot");
+  EXPECT(expired[1]->labels[0].second == "3");
+  EXPECT(expired.size() == 2);
+  expired.clear();
+
+  map.getExpiredSlots(ts + 60 * kMicrosPerSecond, &expired);
+  EXPECT(expired[0]->labels.size() == 1);
+  EXPECT(expired[0]->labels[0].first == "slot");
+  EXPECT(expired[0]->labels[0].second == "4");
+  EXPECT(expired[1]->labels.size() == 1);
+  EXPECT(expired[1]->labels[0].first == "slot");
+  EXPECT(expired[1]->labels[0].second == "5");
+  EXPECT(expired[2]->labels.size() == 1);
+  EXPECT(expired[2]->labels[0].first == "slot");
+  EXPECT(expired[2]->labels[0].second == "6");
+  EXPECT(expired.size() == 3);
+  expired.clear();
+
+  map.getExpiredSlots(ts + 60 * kMicrosPerSecond, &expired);
+  EXPECT(expired.size() == 0);
+
+  map.getSlot(
+      ts + 30 * kMicrosPerSecond,
+      10 * kMicrosPerSecond,
+      ts + 40 * kMicrosPerSecond,
+      "test_tbl",
+      { { "slot", "4" } });
+
+  map.getSlot(
+      ts + 40 * kMicrosPerSecond,
+      10 * kMicrosPerSecond,
+      ts + 50 * kMicrosPerSecond,
+      "test_tbl",
+      { { "slot", "5" } });
+
+  map.getSlot(
+      ts + 50 * kMicrosPerSecond,
+      10 * kMicrosPerSecond,
+      ts + 60 * kMicrosPerSecond,
+      "test_tbl",
+      { { "slot", "6" } });
+
+  map.getSlot(
+      ts + 20 * kMicrosPerSecond,
+      10 * kMicrosPerSecond,
+      ts + 30 * kMicrosPerSecond,
+      "test_tbl",
+      { { "slot", "3" } });
+
+  map.getSlot(
+      ts,
+      10 * kMicrosPerSecond,
+      ts + 10 * kMicrosPerSecond,
+      "test_tbl",
+      { { "slot", "1" } });
+
+  map.getSlot(
+      ts + 10 * kMicrosPerSecond,
+      10 * kMicrosPerSecond,
+      ts + 20 * kMicrosPerSecond,
+      "test_tbl",
+      { { "slot", "2" } });
+
+  map.getExpiredSlots(ts, &expired);
+  EXPECT(expired.size() == 0);
+
+  map.getExpiredSlots(ts + 10 * kMicrosPerSecond, &expired);
+  EXPECT(expired.size() == 1);
+  EXPECT(expired[0]->labels.size() == 1);
+  EXPECT(expired[0]->labels[0].first == "slot");
+  EXPECT(expired[0]->labels[0].second == "1");
+  expired.clear();
+
+  map.getExpiredSlots(ts + 11 * kMicrosPerSecond, &expired);
+  EXPECT(expired.size() == 0);
+
+  map.getExpiredSlots(ts + 35 * kMicrosPerSecond, &expired);
+  EXPECT(expired[0]->labels.size() == 1);
+  EXPECT(expired[0]->labels[0].first == "slot");
+  EXPECT(expired[0]->labels[0].second == "2");
+  EXPECT(expired[1]->labels.size() == 1);
+  EXPECT(expired[1]->labels[0].first == "slot");
+  EXPECT(expired[1]->labels[0].second == "3");
+  EXPECT(expired.size() == 2);
+  expired.clear();
+
+  map.getExpiredSlots(ts + 60 * kMicrosPerSecond, &expired);
+  EXPECT(expired[0]->labels.size() == 1);
+  EXPECT(expired[0]->labels[0].first == "slot");
+  EXPECT(expired[0]->labels[0].second == "4");
+  EXPECT(expired[1]->labels.size() == 1);
+  EXPECT(expired[1]->labels[0].first == "slot");
+  EXPECT(expired[1]->labels[0].second == "5");
+  EXPECT(expired[2]->labels.size() == 1);
+  EXPECT(expired[2]->labels[0].first == "slot");
+  EXPECT(expired[2]->labels[0].second == "6");
+  EXPECT(expired.size() == 3);
+});
+

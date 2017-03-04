@@ -138,19 +138,40 @@ AggregationMap::Slot* AggregationMap::getSlot(
   }
 
   auto slot = new Slot;
+  slot->slot_id = slot_id;
   slot->time = timestamp;
   slot->interval = interval;
   slot->table_id = table_id;
   slot->labels = labels;
 
   slots_.emplace(slot_id, slot);
-  expiration_list_.emplace_back(expire_at, std::unique_ptr<Slot>(slot));
+
+  auto iter = expiration_list_.begin();
+  for (; iter->first > expire_at && iter != expiration_list_.end(); ++iter);
+  expiration_list_.insert(
+      iter,
+      std::make_pair(expire_at, std::unique_ptr<Slot>(slot)));
+
   return slot;
 }
 
 void AggregationMap::getExpiredSlots(
     uint64_t expired_on,
     std::vector<std::unique_ptr<Slot>>* slots) {
+  while (!expiration_list_.empty() && expiration_list_.back().first <= expired_on) {
+    auto slot = std::move(expiration_list_.back().second);
+    expiration_list_.pop_back();
+
+    auto iter_range = slots_.equal_range(slot->slot_id);
+    for (auto iter = iter_range.first; iter != iter_range.second; ++iter) {
+      if (iter->second == slot.get()) {
+        slots_.erase(iter);
+        break;
+      }
+    }
+
+    slots->emplace_back(std::move(slot));
+  }
 }
 
 } // namsepace fnordmetric

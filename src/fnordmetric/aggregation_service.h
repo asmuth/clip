@@ -54,6 +54,7 @@ class AggregationMap {
 public:
 
   struct Slot {
+    SHA1Hash slot_id;
     uint64_t time;
     uint64_t interval;
     std::string table_id;
@@ -73,7 +74,7 @@ public:
 
 protected:
   std::multimap<SHA1Hash, Slot*> slots_;
-  std::list<std::pair<uint64_t, std::unique_ptr<Slot>>> expiration_list_;
+  std::deque<std::pair<uint64_t, std::unique_ptr<Slot>>> expiration_list_;
 };
 
 } // namespace fnordmetric
