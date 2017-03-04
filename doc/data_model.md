@@ -31,12 +31,11 @@ Consider this example table configuration:
 
 When you start metric-collectd with the configuration from above, it will create
 a table `host_stats` in the backend database that looks similar to the one from
-the SQL statement below. Note that metric-collectd will automatically add a
-`time` column to the table which stores the time window in which the samples
-were collected.
+the SQL statement below.
 
     CREATE TABLE host_stats (
       time datetime,
+      time_window uint64,
       datacenter string,
       hostname string,
       load_avg float64,
@@ -44,7 +43,14 @@ were collected.
       PRIMARY KEY (time, datacenter, hostname)
     );
 
+Note that two other columns were automatically added to the table:
 
+  - The `time` column stores the end of the time window in which the samples were
+    collected
+
+  - The `time_window` column stores the length of the time window in which the
+    samples were collected. In our example, the `time_window` column would always
+    contain the value `10 seconds`.
 
 Now, the input measurements are collected as individual data points called "samples".
 Samples may be actively pushed to metric-collectd or pulled/scraped from a remote endpoint
@@ -59,8 +65,8 @@ For example, to report the measure "load_avg" in the table "host_stats", you
 would send samples similar to these:
 
     ...
-    Sample: metric=host_stats.load_avg value=0.42
-    Sample: metric=host_stats.load_avg value=0.23
+    Sample: host_stats.load_avg:0.42
+    Sample: host_stats.load_avg:0.23
     ...
 
 The later, you could query the `host_stats` table and retrieve the aggregated
@@ -87,9 +93,9 @@ label to each sample in order to roll up CPU utilization aggregates by host,
 datacenter or a combination of both.
 
     ...
-    Sample: metric=cpu_util value=0.873 label[hostname]=machine64 label[datacenter]=ams1
-    Sample: metric=cpu_util value=0.352 label[hostname]=machine65 label[datacenter]=ams1
-    Sample: metric=cpu_util value=0.543 label[hostname]=machine66 label[datacenter]=ams1
+    Sample: metric=cpu_util{hostname=machine64,datacenter=ams1}:0.873
+    Sample: metric=cpu_util{hostname=machine65,datacenter=ams1}:0.352
+    Sample: metric=cpu_util{hostname=machine66,datacenter=ams1}:0.543
     ...
 
 The labels correspond to columns in the target SQL table, so you can filter and
