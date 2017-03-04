@@ -24,11 +24,10 @@
 #include <fnordmetric/config_parser.h>
 #include <fnordmetric/aggregation_service.h>
 #include <fnordmetric/ingest.h>
-#include <fnordmetric/listen_udp.h>
-#include <fnordmetric/listen_http.h>
 
 using namespace fnordmetric;
 
+int sig_pipe[2] = {-1, -1};
 void shutdown(int);
 
 bool parseListenAddr(
@@ -47,11 +46,6 @@ bool parseListenAddr(
 }
 
 int main(int argc, const char** argv) {
-  //signal(SIGTERM, shutdown);
-  //signal(SIGINT, shutdown);
-  //signal(SIGHUP, shutdown);
-  signal(SIGPIPE, SIG_IGN);
-
   FlagParser flags;
 
   flags.defineFlag(
@@ -224,6 +218,18 @@ int main(int argc, const char** argv) {
     rc = config_parser.parse(&config);
   }
 
+  /* open signal pipe and bind signals */
+  if (rc.isSuccess()) {
+    if (::pipe(sig_pipe) != 0) {
+      rc = ReturnCode::error("EIO", "pipe() failed");
+    }
+
+    signal(SIGTERM, shutdown);
+    signal(SIGINT, shutdown);
+    signal(SIGHUP, shutdown);
+    signal(SIGPIPE, SIG_IGN);
+  }
+
   /* start aggregation service */
   std::unique_ptr<AggregationService> aggr_service;
   if (rc.isSuccess()) {
@@ -234,58 +240,26 @@ int main(int argc, const char** argv) {
     rc = aggr_service->applyConfig(&config);
   }
 
-  ///* start sensor scheduler */
-  //SensorScheduler sensor_sched(config.getSensorThreads());
-  //if (rc.isSuccess()) {
-  //  for (const auto& s : config.getSensorConfigs()) {
-  //    std::unique_ptr<SensorTask> sensor_task;
-  //    rc = mkSensorTask(aggr_service.get(), s.second.get(), &sensor_task);
-  //    if (!rc.isSuccess()) {
-  //      break;
-  //    }
+  /* start ingestion service */
+  IngestionService ingestion_service(aggr_service.get());
+  if (rc.isSuccess()) {
+    rc = ingestion_service.applyConfig(&config);
+  }
 
-  //    sensor_sched.addTask(std::move(sensor_task));
-  //  }
-  //}
+  /* wait for shutdown or reload */
+  for (;;) {
+    char sig;
+    auto read_rc = read(sig_pipe[0], &sig, 1);
+    if (read_rc != 1) {
+      rc = ReturnCode::error("EIO", "read() failed");
+      break;
+    }
 
-  //if (rc.isSuccess()) {
-  //  rc = sensor_sched.start();
-  //}
-
-  ///* start statsd service */
-  //std::unique_ptr<statsd::StatsdServer> statsd_server;
-  //if (rc.isSuccess() && flags.isSet("listen_statsd")) {
-  //  std::string statsd_bind;
-  //  uint16_t statsd_port;
-  //  auto parse_rc = parseListenAddr(
-  //      flags.getString("listen_statsd"),
-  //      &statsd_bind,
-  //      &statsd_port);
-  //  if (parse_rc) {
-  //    statsd_server.reset(new statsd::StatsdServer(aggr_service.get()));
-  //    rc = statsd_server->listenAndStart(statsd_bind, statsd_port);
-  //  } else {
-  //    rc = ReturnCode::error("ERUNTIME", "invalid value for --listen_statsd");
-  //  }
-  //}
-
-  ///* run http server */
-  //if (rc.isSuccess()) {
-  //  std::string http_bind;
-  //  uint16_t http_port;
-  //  auto parse_rc = parseListenAddr(
-  //      flags.getString("listen_http"),
-  //      &http_bind,
-  //      &http_port);
-
-  //  if (parse_rc) {
-  //    //HTTPServer server(aggr_service.get(), flags.getString("dev_assets"));
-  //    //server.listen(http_bind, http_port);
-  //    //server.run();
-  //  } else {
-  //    rc = ReturnCode::error("ERUNTIME", "invalid value for --listen_http");
-  //  }
-  //}
+    // shutdown
+    if (sig == 'S') { 
+      break;
+    }
+  }
 
   if (!rc.isSuccess()) {
     logFatal("ERROR: $0", rc.getMessage());
@@ -296,7 +270,17 @@ int main(int argc, const char** argv) {
   signal(SIGTERM, SIG_IGN);
   signal(SIGINT, SIG_IGN);
   signal(SIGHUP, SIG_IGN);
-  //service.reset(nullptr);
+
+  if (sig_pipe[0] >= 0) {
+    close(sig_pipe[0]);
+  }
+
+  if (sig_pipe[1] >= 0) {
+    close(sig_pipe[1]);
+  }
+
+  ingestion_service.shutdown();
+  aggr_service->shutdown();
 
   /* unlock pidfile */
   if (pidfile_fd > 0) {
@@ -309,6 +293,10 @@ int main(int argc, const char** argv) {
 }
 
 void shutdown(int) {
-  // kill
+  char shutdown = 'S';
+  int rc = write(sig_pipe[1], &shutdown, sizeof(shutdown));
+  if (rc != 1) {
+    exit(1);
+  }
 }
 

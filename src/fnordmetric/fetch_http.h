@@ -16,10 +16,10 @@ struct HTTPIngestionTaskConfig : public IngestionTaskConfig {
   std::string http_url;
 };
 
-class HTTPIngestionTask : public IngestionTask {
+class HTTPIngestionTask : public PeriodicIngestionTask {
 public:
 
-  HTTPIngestionTask(const HTTPIngestionTaskConfig* config, MetricService* metric_service);
+  HTTPIngestionTask(const HTTPIngestionTaskConfig* config, AggregationService* metric_service);
 
   uint64_t getNextInvocationTime() const override;
 
@@ -27,7 +27,7 @@ public:
 
 protected:
   const HTTPIngestionTaskConfig* config_;
-  MetricService* metric_service_;
+  AggregationService* metric_service_;
   uint64_t next_invocation_;
 };
 

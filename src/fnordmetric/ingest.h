@@ -18,7 +18,8 @@
 #include <fnordmetric/util/return_code.h>
 
 namespace fnordmetric {
-class MetricService;
+class AggregationService;
+class ConfigList;
 
 struct IngestionTaskConfig {
   IngestionTaskConfig();
@@ -34,37 +35,37 @@ public:
 
   virtual ~IngestionTask() = default;
 
-  virtual uint64_t getNextInvocationTime() const = 0;
-
-  virtual ReturnCode invoke() = 0;
+  virtual ReturnCode start() = 0;
+  virtual void shutdown() = 0;
 
 };
 
-class SensorScheduler{
+class PeriodicIngestionTask : public IngestionTask {
 public:
 
-  SensorScheduler(size_t thread_count = 1);
+  virtual uint64_t getNextInvocationTime() const = 0;
+  virtual ReturnCode invoke() = 0;
+
+  ReturnCode start() override;
+  void shutdown() override;
+
+};
+
+class IngestionService {
+public:
+
+  IngestionService(AggregationService* aggregation_service);
+
+  ReturnCode applyConfig(const ConfigList* config);
+
   void addTask(std::unique_ptr<IngestionTask> task);
 
-  ReturnCode start();
   void shutdown();
 
 protected:
-
-  ReturnCode executeNextTask();
-
-  size_t thread_count_;
-  std::vector<std::thread> threads_;
-  std::atomic<bool> running_;
-
+  AggregationService* aggregation_service_;
   std::mutex mutex_;
-  std::condition_variable cv_;
-  std::multiset<
-      IngestionTask*,
-      std::function<bool (
-          const IngestionTask*,
-          const IngestionTask*)>> queue_;
-  std::list<std::unique_ptr<IngestionTask>> tasks_;
+  std::vector<std::pair<std::thread, std::unique_ptr<IngestionTask>>> tasks_;
 };
 
 } // namespace fnordmetric

@@ -9,18 +9,14 @@
  * <http://www.gnu.org/licenses/>.
  */
 #include <stdlib.h>
-#include <thread>
 #include <atomic>
-#include <arpa/inet.h>
-#include <netdb.h>
-#include <netinet/in.h>
 #include "fnordmetric/util/return_code.h"
 #include "fnordmetric/sample.h"
 #include "fnordmetric/aggregation_service.h"
 
 namespace fnordmetric {
 
-class StatsdServer {
+class StatsdServer : public IngestionTask {
 public:
 
   StatsdServer(AggregationService* aggr_service);
@@ -29,16 +25,15 @@ public:
   ReturnCode listen(const std::string& addr, int port);
   ReturnCode listenAndStart(const std::string& addr, int port);
 
-  ReturnCode start();
-  void shutdown();
+  ReturnCode start() override;
+  void shutdown() override;
 
 protected:
 
   void handlePacket(const char* pkt, size_t pkt_len);
 
-  int ssock_;
   AggregationService* aggr_service_;
-  std::thread thread_;
+  int ssock_;
   std::atomic<bool> running_;
 };
 

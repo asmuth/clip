@@ -28,8 +28,8 @@ namespace fnordmetric {
 
 StatsdServer::StatsdServer(
     AggregationService* aggr_service) :
-    ssock_(-1),
-    aggr_service_(aggr_service) {}
+    aggr_service_(aggr_service),
+    ssock_(-1) {}
 
 StatsdServer::~StatsdServer() {
   if (ssock_ >= 0) {
@@ -64,39 +64,29 @@ ReturnCode StatsdServer::listen(const std::string& bind_addr, int port) {
   return ReturnCode::success();
 }
 
-ReturnCode StatsdServer::listenAndStart(const std::string& addr, int port) {
-  auto rc = listen(addr, port);
-  if (!rc.isSuccess()) {
-    return rc;
-  }
-
-  return start();
-}
-
 ReturnCode StatsdServer::start() {
   running_ = true;
-  thread_ =  std::thread([this] {
-    while (running_.load(std::memory_order_acquire)) {
-      struct sockaddr_in other_addr;
-      socklen_t other_addr_len = sizeof(other_addr);
 
-      char buf[65535];
-      auto buf_len = recvfrom(
-          ssock_,
-          buf,
-          sizeof(buf),
-          0,
-          (struct sockaddr *) &other_addr,
-          &other_addr_len);
+  while (running_.load(std::memory_order_acquire)) {
+    struct sockaddr_in other_addr;
+    socklen_t other_addr_len = sizeof(other_addr);
 
-      if (buf_len < 0) {
-        logError("statsd receive failed: $0", strerror(errno));
-        continue;
-      }
+    char buf[65535];
+    auto buf_len = recvfrom(
+        ssock_,
+        buf,
+        sizeof(buf),
+        0,
+        (struct sockaddr *) &other_addr,
+        &other_addr_len);
 
-      handlePacket(buf, buf_len);
+    if (buf_len < 0) {
+      logError("statsd receive failed: $0", strerror(errno));
+      continue;
     }
-  });
+
+    handlePacket(buf, buf_len);
+  }
 
   return ReturnCode::success();
 }
@@ -104,9 +94,6 @@ ReturnCode StatsdServer::start() {
 void StatsdServer::shutdown() {
   running_.store(false, std::memory_order_release);
   close(ssock_);
-  if (thread_.joinable()) {
-    thread_.join();
-  }
   ssock_ = -1;
 }
 
