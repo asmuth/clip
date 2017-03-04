@@ -18,6 +18,21 @@ using namespace fnordmetric;
 
 UNIT_TEST(AggregationMapTest);
 
+static AggregationSlot* getSlotOrDie(
+    AggregationMap* map,
+    uint64_t timestamp,
+    uint64_t expire_at,
+    std::shared_ptr<TableConfig> table,
+    const std::vector<std::string>& labels) {
+  AggregationSlot* slot;
+  auto rc = map->getSlot(timestamp, expire_at, table, labels, &slot);
+  if (!rc.isSuccess()) {
+    throw std::runtime_error(rc.getMessage());
+  }
+
+  return slot;
+}
+
 TEST_CASE(AggregationMapTest, TestAggregationSlotLookup, [] () {
   AggregationMap map;
 
@@ -26,7 +41,8 @@ TEST_CASE(AggregationMapTest, TestAggregationSlotLookup, [] () {
   test_tbl->interval = 10 * kMicrosPerSecond;
   test_tbl->labels.emplace_back(LabelConfig("test"));
 
-  auto slot_a = map.getSlot(
+  auto slot_a = getSlotOrDie(
+      &map,
       ts,
       ts + 10 * kMicrosPerSecond,
       test_tbl,
@@ -34,7 +50,8 @@ TEST_CASE(AggregationMapTest, TestAggregationSlotLookup, [] () {
 
   EXPECT(slot_a != nullptr);
 
-  auto slot_b = map.getSlot(
+  auto slot_b = getSlotOrDie(
+      &map,
       ts + 10 * kMicrosPerSecond,
       ts + 20 * kMicrosPerSecond,
       test_tbl,
@@ -43,7 +60,8 @@ TEST_CASE(AggregationMapTest, TestAggregationSlotLookup, [] () {
   EXPECT(slot_b != nullptr);
   EXPECT(slot_b != slot_a);
 
-  auto slot_c = map.getSlot(
+  auto slot_c = getSlotOrDie(
+      &map,
       ts,
       ts + 10 * kMicrosPerSecond,
       test_tbl,
@@ -53,7 +71,8 @@ TEST_CASE(AggregationMapTest, TestAggregationSlotLookup, [] () {
   EXPECT(slot_c != slot_b);
   EXPECT(slot_c == slot_a);
 
-  auto slot_d = map.getSlot(
+  auto slot_d = getSlotOrDie(
+      &map,
       ts,
       ts + 10 * kMicrosPerSecond,
       test_tbl,
@@ -63,7 +82,8 @@ TEST_CASE(AggregationMapTest, TestAggregationSlotLookup, [] () {
   EXPECT(slot_d != slot_a);
   EXPECT(slot_d != slot_b);
 
-  auto slot_e = map.getSlot(
+  auto slot_e = getSlotOrDie(
+      &map,
       ts,
       ts + 10 * kMicrosPerSecond,
       test_tbl,
@@ -74,7 +94,8 @@ TEST_CASE(AggregationMapTest, TestAggregationSlotLookup, [] () {
   EXPECT(slot_e != slot_b);
   EXPECT(slot_e != slot_d);
 
-  auto slot_f = map.getSlot(
+  auto slot_f = getSlotOrDie(
+      &map,
       ts + 10 * kMicrosPerSecond,
       ts + 20 * kMicrosPerSecond,
       test_tbl,
@@ -86,7 +107,8 @@ TEST_CASE(AggregationMapTest, TestAggregationSlotLookup, [] () {
   EXPECT(slot_f != slot_d);
   EXPECT(slot_f != slot_e);
 
-  auto slot_g = map.getSlot(
+  auto slot_g = getSlotOrDie(
+      &map,
       ts,
       ts + 10 * kMicrosPerSecond,
       test_tbl,
@@ -108,37 +130,43 @@ TEST_CASE(AggregationMapTest, TestExpiration, [] () {
   test_tbl->interval = 10 * kMicrosPerSecond;
   test_tbl->labels.emplace_back(LabelConfig("slot"));
 
-  map.getSlot(
+  getSlotOrDie(
+      &map,
       ts + 30 * kMicrosPerSecond,
       ts + 40 * kMicrosPerSecond,
       test_tbl,
       { "4" });
 
-  map.getSlot(
+  getSlotOrDie(
+      &map,
       ts + 40 * kMicrosPerSecond,
       ts + 50 * kMicrosPerSecond,
       test_tbl,
       { "5" });
 
-  map.getSlot(
+  getSlotOrDie(
+      &map,
       ts + 50 * kMicrosPerSecond,
       ts + 60 * kMicrosPerSecond,
       test_tbl,
       { "6" });
 
-  map.getSlot(
+  getSlotOrDie(
+      &map,
       ts + 20 * kMicrosPerSecond,
       ts + 30 * kMicrosPerSecond,
       test_tbl,
       { "3" });
 
-  map.getSlot(
+  getSlotOrDie(
+      &map,
       ts,
       ts + 10 * kMicrosPerSecond,
       test_tbl,
       { "1" });
 
-  map.getSlot(
+  getSlotOrDie(
+      &map,
       ts + 10 * kMicrosPerSecond,
       ts + 20 * kMicrosPerSecond,
       test_tbl,
@@ -178,37 +206,43 @@ TEST_CASE(AggregationMapTest, TestExpiration, [] () {
   map.getExpiredSlots(ts + 60 * kMicrosPerSecond, &expired);
   EXPECT(expired.size() == 0);
 
-  map.getSlot(
+  getSlotOrDie(
+      &map,
       ts + 30 * kMicrosPerSecond,
       ts + 40 * kMicrosPerSecond,
       test_tbl,
       { "4" });
 
-  map.getSlot(
+  getSlotOrDie(
+      &map,
       ts + 40 * kMicrosPerSecond,
       ts + 50 * kMicrosPerSecond,
       test_tbl,
       { "5" });
 
-  map.getSlot(
+  getSlotOrDie(
+      &map,
       ts + 50 * kMicrosPerSecond,
       ts + 60 * kMicrosPerSecond,
       test_tbl,
       { "6" });
 
-  map.getSlot(
+  getSlotOrDie(
+      &map,
       ts + 20 * kMicrosPerSecond,
       ts + 30 * kMicrosPerSecond,
       test_tbl,
       { "3" });
 
-  map.getSlot(
+  getSlotOrDie(
+      &map,
       ts,
       ts + 10 * kMicrosPerSecond,
       test_tbl,
       { "1" });
 
-  map.getSlot(
+  getSlotOrDie(
+      &map,
       ts + 10 * kMicrosPerSecond,
       ts + 20 * kMicrosPerSecond,
       test_tbl,
