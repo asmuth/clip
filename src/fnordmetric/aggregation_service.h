@@ -72,7 +72,7 @@ protected:
 
 struct AggregationSlot {
   SHA1Hash slot_id;
-  uint64_t time;
+  uint64_t timestamp;
   std::shared_ptr<TableConfig> table;
   std::vector<std::string> labels;
 };
@@ -96,6 +96,8 @@ protected:
   std::multimap<SHA1Hash, AggregationSlot*> slots_;
   std::deque<std::pair<uint64_t, std::unique_ptr<AggregationSlot>>> expiration_list_;
 };
+
+uint64_t alignTime(uint64_t timestamp, uint64_t window, uint64_t align = 0);
 
 } // namespace fnordmetric
 

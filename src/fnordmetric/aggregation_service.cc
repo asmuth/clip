@@ -123,7 +123,7 @@ ReturnCode AggregationService::insertSample(const Sample& smpl) {
   std::unique_lock<std::mutex> lk(mutex_);
   auto now = MonotonicClock::now();
   auto slot = aggregation_map_->getSlot(
-      smpl.getTime(),
+      alignTime(smpl.getTime(), table->interval),
       now + table->interval,
       table,
       labels);
@@ -215,12 +215,13 @@ void AggregationService::performInserts(
 
   for (auto& s : slots) {
     logDebug(
-        "Emitting row: table=$0",
-        s->table->table_id);
+        "Emitting row: table=$0 window=$1",
+        s->table->table_id,
+        UnixTime(s->timestamp).toString());
 
     Backend::InsertOp op;
     op.table = s->table;
-    op.time = s->time;
+    op.time = s->timestamp;
     op.label_values = s->labels;
     insert_ops.emplace_back(std::move(op));
   }
@@ -246,7 +247,7 @@ AggregationSlot* AggregationMap::getSlot(
   auto slot_id = SHA1::compute(slot_idv);
   auto slots = slots_.equal_range(slot_id);
   for (auto iter = slots.first; iter != slots.second; ++iter) {
-    if (iter->second->time == timestamp &&
+    if (iter->second->timestamp == timestamp &&
         iter->second->table.get() == table.get() &&
         iter->second->labels == labels) {
       return iter->second;
@@ -255,7 +256,7 @@ AggregationSlot* AggregationMap::getSlot(
 
   auto slot = new AggregationSlot;
   slot->slot_id = slot_id;
-  slot->time = timestamp;
+  slot->timestamp = timestamp;
   slot->table = table;
   slot->labels = labels;
 
@@ -295,6 +296,16 @@ uint64_t AggregationMap::getNextExpiration() const {
   }
 
   return expiration_list_.back().first;
+}
+
+uint64_t alignTime(uint64_t timestamp, uint64_t window, uint64_t align /* = 0 */) {
+  if (window >= std::numeric_limits<uint64_t>::max() / 2 ||
+      timestamp >= std::numeric_limits<uint64_t>::max() / 2) {
+    return -1;
+  }
+
+  int64_t timestamp_base = int64_t(timestamp) - int64_t(align);
+  return (timestamp_base / int64_t(window)) * int64_t(window) + int64_t(align);
 }
 
 } // namsepace fnordmetric
