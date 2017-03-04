@@ -41,6 +41,7 @@ public:
 
   struct BatchInsertOptions {
     BatchInsertOptions();
+    IngestionSampleFormat format;
     bool metric_id_rewrite_enabled;
     std::regex metric_id_rewrite_regex;
     std::string metric_id_rewrite_replace;

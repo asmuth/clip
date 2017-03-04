@@ -11,6 +11,7 @@
 #include <fnordmetric/listen_http.h>
 #include <fnordmetric/util/logging.h>
 #include <fnordmetric/util/stringutil.h>
+#include <fnordmetric/aggregation_service.h>
 
 namespace fnordmetric {
 
@@ -73,8 +74,39 @@ void HTTPPushIngestionTask::shutdown() {}
 
 void HTTPPushIngestionTask::handleRequest(
     http::HTTPRequest* request,
-    http::HTTPResponse* response) {}
+    http::HTTPResponse* response) {
+  URI uri(request->uri());
+  auto path = uri.path();
 
+  static const char kMetricsUrl[] = "/metrics";
+  if (path != kMetricsUrl || request->method() != http::HTTPRequest::M_POST) {
+    response->setStatus(http::kStatusBadRequest);
+    response->addBody("ERROR: please send metrics to POST /metrics\n");
+    return;
+  }
+
+  AggregationService::BatchInsertOptions opts;
+  opts.format = IngestionSampleFormat::STATSD;
+  if (request->getHeader("Content-Type") == "application/json") {
+    opts.format = IngestionSampleFormat::JSON;
+  }
+  if (request->getHeader("Content-Type") == "text/plain") {
+    opts.format = IngestionSampleFormat::STATSD;
+  }
+
+  auto rc = aggr_service_->insertSamplesBatch(
+      request->body().data(),
+      request->body().size(),
+      &opts);
+
+  if (rc.isSuccess()) {
+    response->setStatus(http::kStatusCreated);
+    response->addBody("OK\n");
+  } else {
+    response->setStatus(http::kStatusInternalServerError);
+    response->addBody(StringUtil::format("ERROR: $0\n", rc.getMessage()));
+  }
+}
 
 } // namespace fnordmetric
 
