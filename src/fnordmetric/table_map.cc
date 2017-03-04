@@ -23,44 +23,37 @@ std::shared_ptr<TableConfig> TableMap::findTable(const std::string& key) const {
   }
 }
 
-TableMapBuilder::TableMapBuilder(
-    TableMap* mm) :
-    metric_map_(std::make_shared<TableMap>()) {
-  if (mm) {
-    for (auto& m : mm->tables_) {
-      metric_map_->tables_.emplace(m);
-    }
-  }
-}
+TableMapBuilder::TableMapBuilder() : table_map_(std::make_shared<TableMap>()) {}
+
 
 std::shared_ptr<TableConfig> TableMapBuilder::findTable(
     const std::string& key) {
-  return metric_map_->findTable(key);
+  return table_map_->findTable(key);
 }
 
 void TableMapBuilder::addTable(
     const TableIDType& key,
     const TableConfig& config) {
-  metric_map_->tables_.emplace(key, std::make_shared<TableConfig>(config));
+  table_map_->tables_.emplace(key, std::make_shared<TableConfig>(config));
 }
 
 std::shared_ptr<TableMap> TableMapBuilder::getTableMap() {
-  auto mmap = std::move(metric_map_);
-  metric_map_ = std::make_shared<TableMap>();
+  auto mmap = std::move(table_map_);
+  table_map_ = std::make_shared<TableMap>();
   return mmap;
 }
 
-VersionedTableMap::VersionedTableMap() : metric_map_(new TableMap()) {}
+VersionedTableMap::VersionedTableMap() : table_map_(new TableMap()) {}
 
 std::shared_ptr<TableMap> VersionedTableMap::getTableMap() const {
   std::unique_lock<std::mutex> lk(mutex_);
-  return metric_map_;
+  return table_map_;
 }
 
 void VersionedTableMap::updateTableMap(
-    std::shared_ptr<TableMap> metric_map) {
+    std::shared_ptr<TableMap> table_map) {
   std::unique_lock<std::mutex> lk(mutex_);
-  metric_map_ = std::move(metric_map);
+  table_map_ = std::move(table_map);
 }
 
 } // namespace fnordmetric

@@ -40,7 +40,7 @@ protected:
 class TableMapBuilder {
 public:
 
-  TableMapBuilder(TableMap* metric_map);
+  TableMapBuilder();
 
   void addTable(
       const TableIDType& table_id,
@@ -51,7 +51,7 @@ public:
   std::shared_ptr<TableMap> getTableMap();
 
 protected:
-  std::shared_ptr<TableMap> metric_map_;
+  std::shared_ptr<TableMap> table_map_;
 };
 
 class VersionedTableMap {
@@ -61,11 +61,11 @@ public:
 
   std::shared_ptr<TableMap> getTableMap() const;
 
-  void updateTableMap(std::shared_ptr<TableMap> metric_map);
+  void updateTableMap(std::shared_ptr<TableMap> table_map);
 
 protected:
   mutable std::mutex mutex_;
-  std::shared_ptr<TableMap> metric_map_;
+  std::shared_ptr<TableMap> table_map_;
 };
 
 } // namespace fnordmetric

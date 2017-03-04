@@ -45,9 +45,7 @@ AggregationService::~AggregationService() {
 
 ReturnCode AggregationService::applyConfig(const ConfigList* config) {
   std::unique_lock<std::mutex> lk(table_map_mutex_);
-  auto table_map = table_map_.getTableMap();
-  TableMapBuilder table_map_builder(table_map.get());
-
+  TableMapBuilder table_map_builder;
   for (auto& mc : config->getTableConfigs()) {
     table_map_builder.addTable(mc.first, mc.second);
   }
