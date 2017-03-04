@@ -24,18 +24,17 @@ public:
 
   ~TableMap();
 
-  TableConfig* findTable(const std::string& key) const;
+  std::shared_ptr<TableConfig> findTable(const std::string& key) const;
 
   std::set<std::string> listTables() const;
 
 protected:
 
-  using SlotType = std::pair<TableConfig*, bool>;
+  using SlotType = std::shared_ptr<TableConfig>;
   using MapType = std::map<std::string, SlotType>;
   using IterType = MapType::iterator;
 
   MapType tables_;
-  std::shared_ptr<TableMap> next_;
 };
 
 class TableMapBuilder {
@@ -47,7 +46,7 @@ public:
       const TableIDType& table_id,
       const TableConfig& table);
 
-  TableConfig* findTable(const TableIDType& table_id);
+  std::shared_ptr<TableConfig> findTable(const TableIDType& table_id);
 
   std::shared_ptr<TableMap> getTableMap();
 

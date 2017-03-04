@@ -12,20 +12,14 @@
 
 namespace fnordmetric {
 
-TableMap::~TableMap() {
-  for (auto& m : tables_) {
-    if (m.second.second) {
-      delete m.second.first;
-    }
-  }
-}
+TableMap::~TableMap() {}
 
-TableConfig* TableMap::findTable(const std::string& key) const {
+std::shared_ptr<TableConfig> TableMap::findTable(const std::string& key) const {
   auto iter = tables_.find(key);
   if (iter == tables_.end()) {
     return nullptr;
   } else {
-    return iter->second.first;
+    return iter->second;
   }
 }
 
@@ -34,18 +28,12 @@ TableMapBuilder::TableMapBuilder(
     metric_map_(std::make_shared<TableMap>()) {
   if (mm) {
     for (auto& m : mm->tables_) {
-      m.second.second = false;
-
-      metric_map_->tables_.emplace(
-          m.first,
-          std::make_pair(m.second.first, true));
+      metric_map_->tables_.emplace(m);
     }
-
-    mm->next_ = metric_map_;
   }
 }
 
-TableConfig* TableMapBuilder::findTable(
+std::shared_ptr<TableConfig> TableMapBuilder::findTable(
     const std::string& key) {
   return metric_map_->findTable(key);
 }
@@ -53,7 +41,7 @@ TableConfig* TableMapBuilder::findTable(
 void TableMapBuilder::addTable(
     const TableIDType& key,
     const TableConfig& config) {
-  metric_map_->tables_.emplace(key, std::make_pair(new TableConfig(config), true));
+  metric_map_->tables_.emplace(key, std::make_shared<TableConfig>(config));
 }
 
 std::shared_ptr<TableMap> TableMapBuilder::getTableMap() {
