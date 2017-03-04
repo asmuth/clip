@@ -10,7 +10,8 @@
 #pragma once
 #include <memory>
 #include <vector>
-#include <iostream>
+#include <fnordmetric/util/return_code.h>
+#include <fnordmetric/table.h>
 #include <libtransport/uri/uri.h>
 
 namespace fnordmetric {
@@ -18,7 +19,7 @@ namespace fnordmetric {
 class Backend {
 public:
 
-  ReturnCode openBackend(
+  static ReturnCode openBackend(
       const URI& backend_uri,
       std::unique_ptr<Backend>* backend);
 
@@ -35,29 +36,6 @@ public:
   virtual ReturnCode insertRows(const std::vector<InsertOp>& ops) = 0;
 
   virtual void shutdown() = 0;
-
-};
-
-class NoopBackend : public Backend {
-public:
-
-  ReturnCode createTable(const TableConfig& table_config) override {
-    return ReturnCode::success();
-  }
-
-  ReturnCode insertRows(const std::vector<InsertOp>& ops) override {
-    for (const auto& op : ops) {
-      std::cerr << "INSERT INTO " << op.table->table_id << std::endl;
-      std::cerr << "  time = " << op.time << std::endl;
-      for (const auto& c : op.columns) {
-        std::cerr << "  " << c.first << " = " << c.second << std::endl;
-      }
-    }
-
-    return ReturnCode::success();
-  }
-
-  void shutdown() override {}
 
 };
 

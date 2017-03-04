@@ -219,7 +219,14 @@ int main(int argc, const char** argv) {
   }
 
   /* open backend */
-  std::unique_ptr<Backend> backend(new NoopBackend());
+  if (rc.isSuccess() && config.getBackendURL().empty()) {
+    rc = ReturnCode::error("ERUNTIME", "missing backend url");
+  }
+
+  std::unique_ptr<Backend> backend;
+  if (rc.isSuccess()) {
+    rc = Backend::openBackend(config.getBackendURL(), &backend);
+  }
 
   /* open signal pipe and bind signals */
   if (rc.isSuccess()) {
@@ -244,13 +251,14 @@ int main(int argc, const char** argv) {
   }
 
   /* start ingestion service */
-  IngestionService ingestion_service(aggr_service.get());
+  std::unique_ptr<IngestionService> ingestion_service;
   if (rc.isSuccess()) {
-    rc = ingestion_service.applyConfig(&config);
+    ingestion_service.reset(new IngestionService(aggr_service.get()));
+    rc = ingestion_service->applyConfig(&config);
   }
 
   /* wait for shutdown or reload */
-  for (;;) {
+  while (rc.isSuccess()) {
     char sig;
     auto read_rc = read(sig_pipe[0], &sig, 1);
     if (read_rc != 1) {
@@ -282,9 +290,17 @@ int main(int argc, const char** argv) {
     close(sig_pipe[1]);
   }
 
-  ingestion_service.shutdown();
-  aggr_service->shutdown();
-  backend->shutdown();
+  if (ingestion_service) {
+    ingestion_service->shutdown();
+  }
+
+  if (aggr_service) {
+    aggr_service->shutdown();
+  }
+
+  if (backend) {
+    backend->shutdown();
+  }
 
   /* unlock pidfile */
   if (pidfile_fd > 0) {

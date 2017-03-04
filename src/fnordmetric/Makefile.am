@@ -39,6 +39,8 @@ libfnordmetric_common_a_SOURCES = \
     aggregate.cc \
     aggregation_service.h \
     aggregation_service.cc \
+    backends/backend.h \
+    backends/backend.cc \
     config_list.h \
     config_list.cc \
     config_parser.h \
