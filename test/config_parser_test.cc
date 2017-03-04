@@ -70,6 +70,62 @@ TEST_CASE(ConfigParserTest, TestTokenize, [] () {
   EXPECT(parser.getToken(&ttype, &tbuf) == false);
 });
 
+TEST_CASE(ConfigParserTest, TestTokenizeWithComments, [] () {
+  std::string confstr =
+      R"(metric users_online {
+        # test
+        summarize_group sum
+      })";
+
+  ConfigParser parser(confstr.data(), confstr.size());
+  ConfigParser::TokenType ttype;
+  std::string tbuf;
+
+  EXPECT(parser.getToken(&ttype, &tbuf) == true);
+  EXPECT(ttype == ConfigParser::T_STRING);
+  EXPECT(tbuf == "metric");
+  parser.consumeToken();
+
+  EXPECT(parser.getToken(&ttype, &tbuf) == true);
+  EXPECT(ttype == ConfigParser::T_STRING);
+  EXPECT(tbuf == "users_online");
+  parser.consumeToken();
+
+  EXPECT(parser.getToken(&ttype, &tbuf) == true);
+  EXPECT(ttype == ConfigParser::T_LCBRACE);
+  EXPECT(tbuf == "");
+  parser.consumeToken();
+
+  EXPECT(parser.getToken(&ttype, &tbuf) == true);
+  EXPECT(ttype == ConfigParser::T_ENDLINE);
+  EXPECT(tbuf == "");
+  parser.consumeToken();
+
+  EXPECT(parser.getToken(&ttype, &tbuf) == true);
+  EXPECT(ttype == ConfigParser::T_STRING);
+  EXPECT(tbuf == "summarize_group");
+  parser.consumeToken();
+
+  EXPECT(parser.getToken(&ttype, &tbuf) == true);
+  EXPECT(ttype == ConfigParser::T_STRING);
+  EXPECT(tbuf == "sum");
+  parser.consumeToken();
+
+  EXPECT(parser.getToken(&ttype, &tbuf) == true);
+  EXPECT(ttype == ConfigParser::T_ENDLINE);
+  EXPECT(tbuf == "");
+  parser.consumeToken();
+
+  EXPECT(parser.getToken(&ttype, &tbuf) == true);
+  EXPECT(ttype == ConfigParser::T_RCBRACE);
+  EXPECT(tbuf == "");
+  parser.consumeToken();
+
+  EXPECT(parser.getToken(&ttype, &tbuf) == false);
+});
+
+
+
 TEST_CASE(ConfigParserTest, TestParseCreateTablesOn, [] () {
   std::string confstr = R"(create_tables on)";
 
@@ -162,6 +218,33 @@ TEST_CASE(ConfigParserTest, TestParseTableMeasureStanza, [] () {
     EXPECT(mc->measures.size() == 2);
   }
 });
+
+TEST_CASE(ConfigParserTest, ParseTableDefinitionWithComments, [] () {
+  std::string confstr =
+      R"(
+        # testing
+        table users_online {
+          measure load_avg max(float64)
+          # test
+          measure request_count sum(uint64)
+        }
+        # test
+      )";
+
+  ConfigList config;
+  ConfigParser parser(confstr.data(), confstr.size());
+  auto rc = parser.parse(&config);
+  EXPECT(rc.isSuccess());
+
+  EXPECT(config.getTableConfigs().size() == 1);
+  {
+    auto mc = config.getTableConfig("users_online");
+    EXPECT(mc != nullptr);
+    EXPECT(mc->measures.size() == 2);
+  }
+});
+
+
 
 //TEST_CASE(ConfigParserTest, TestParseSensorTableIDRewriteStanza, [] () {
 //  std::string confstr =

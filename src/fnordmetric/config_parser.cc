@@ -539,9 +539,28 @@ bool ConfigParser::getToken(
     if (*input_cur_ == ' ' ||
         *input_cur_ == '\t' ||
         *input_cur_ == '\r') {
-      input_cur_++;
+      ++input_cur_;
     } else {
       break;
+    }
+  }
+
+  /* skip comments */
+  while (input_cur_ < input_end_ && *input_cur_ == '#') {
+    while (input_cur_ < input_end_) {
+      if (*input_cur_++ == '\n') {
+        break;
+      }
+    }
+
+    while (input_cur_ < input_end_) {
+      if (*input_cur_ == ' ' ||
+          *input_cur_ == '\t' ||
+          *input_cur_ == '\r') {
+        ++input_cur_;
+      } else {
+        break;
+      }
     }
   }
 
@@ -642,6 +661,7 @@ bool ConfigParser::getToken(
     goto return_token;
   } else {
     while (
+        *input_cur_ != '#' &&
         *input_cur_ != ' ' &&
         *input_cur_ != '\t' &&
         *input_cur_ != '\n' &&
