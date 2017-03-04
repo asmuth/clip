@@ -49,8 +49,7 @@ Note that two other columns were automatically added to the table:
     collected
 
   - The `time_window` column stores the length of the time window in which the
-    samples were collected. In our example, the `time_window` column would always
-    contain the value `10 seconds`.
+    samples were collected.
 
 Now, the input measurements are collected as individual data points called "samples".
 Samples may be actively pushed to metric-collectd or pulled/scraped from a remote endpoint
