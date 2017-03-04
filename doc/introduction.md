@@ -33,6 +33,10 @@ database.
   </li>
 </ul>
 
+The two services, `metricd-collectd` and `metric-queryd` do not depend on each
+other and don't share a lot of code. If you're only interested in the data capture
+part or only in the visualization part, you can run only one of the services.
+
 To get started with FnordMetric, have a look at these pages: [Getting Started]()
 
 <div class="notice">
