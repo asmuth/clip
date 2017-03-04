@@ -32,7 +32,10 @@ public:
       const IngestionTaskConfig* config,
       std::unique_ptr<IngestionTask>* task);
 
-  UDPListener(AggregationService* aggr_service);
+  UDPListener(
+      AggregationService* aggr_service,
+      IngestionSampleFormat format);
+
   ~UDPListener();
 
   ReturnCode listen(const std::string& addr, int port);
@@ -41,10 +44,8 @@ public:
   void shutdown() override;
 
 protected:
-
-  void handlePacket(const char* pkt, size_t pkt_len);
-
   AggregationService* aggr_service_;
+  IngestionSampleFormat format_;
   int ssock_;
   std::atomic<bool> running_;
 };

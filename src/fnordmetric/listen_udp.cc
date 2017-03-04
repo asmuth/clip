@@ -44,7 +44,7 @@ ReturnCode UDPListener::start(
     return ReturnCode::error("ERUNTIME", "missing port");
   }
 
-  auto self = new UDPListener(aggregation_service);
+  auto self = new UDPListener(aggregation_service, c->format);
   task->reset(self);
 
   auto rc = self->listen(c->bind, c->port);
@@ -56,8 +56,10 @@ ReturnCode UDPListener::start(
 }
 
 UDPListener::UDPListener(
-    AggregationService* aggr_service) :
+    AggregationService* aggr_service,
+    IngestionSampleFormat format) :
     aggr_service_(aggr_service),
+    format_(format),
     ssock_(-1) {}
 
 UDPListener::~UDPListener() {
@@ -114,7 +116,12 @@ ReturnCode UDPListener::start() {
       continue;
     }
 
-    handlePacket(buf, buf_len);
+    AggregationService::BatchInsertOptions opts;
+    opts.format = format_;
+    auto rc = aggr_service_->insertSamplesBatch(buf, buf_len, &opts);
+    if (!rc.isSuccess()) {
+      logWarning("error while inserting samples: $0", rc.getMessage());
+    }
   }
 
   return ReturnCode::success();
@@ -124,35 +131,6 @@ void UDPListener::shutdown() {
   running_.store(false, std::memory_order_release);
   close(ssock_);
   ssock_ = -1;
-}
-
-void UDPListener::handlePacket(const char* pkt, size_t pkt_len) {
-  std::string metric_id;
-  std::string series_id;
-  std::string value;
-  LabelSet labels;
-
-  char const* cur = pkt;
-  char const* end = pkt + pkt_len;
-
-  while (cur < end) {
-    if (!parseStatsdSample(&cur, end, &metric_id, &series_id, &value)) {
-      logWarning("received invalid statsd packet");
-      return;
-    }
-
-    auto now = WallClock::unixMicros();
-    auto rc = aggr_service_->insertSample(Sample(metric_id, value, now, {}));
-
-    if (!rc.isSuccess()) {
-      logWarning(
-          "statsd insert failed: $0; metric_id=$1 series_id=$2 value=$3",
-          rc.getMessage(),
-          metric_id,
-          series_id,
-          value);
-    }
-  }
 }
 
 } // namespace fnordmetric
