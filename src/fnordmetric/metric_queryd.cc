@@ -43,12 +43,16 @@ bool parseListenAddr(
 }
 
 int main(int argc, const char** argv) {
-  //signal(SIGTERM, shutdown);
-  //signal(SIGINT, shutdown);
-  //signal(SIGHUP, shutdown);
   signal(SIGPIPE, SIG_IGN);
 
   FlagParser flags;
+
+  flags.defineFlag(
+      "backend",
+      FlagParser::T_STRING,
+      false,
+      NULL,
+      NULL);
 
   flags.defineFlag(
       "listen_http",
@@ -167,6 +171,12 @@ int main(int argc, const char** argv) {
     return 0;
   }
 
+  /* check flags */
+  if (!flags.isSet("backend")) {
+    std::cerr << "ERROR: --backend flag must be set" << std::endl;
+    return 1;
+  }
+
   /* daemonize */
   auto rc = ReturnCode::success();
   if (rc.isSuccess() && flags.isSet("daemonize")) {
@@ -208,6 +218,12 @@ int main(int argc, const char** argv) {
       pidfile_fd = -1;
       rc = ReturnCode::error("IO_ERROR", "writing pidfile failed");
     }
+  }
+
+  /* open backend */
+  std::unique_ptr<Backend> backend;
+  if (rc.isSuccess()) {
+    rc = Backend::openBackend(flags.getString("backend"), &backend);
   }
 
   /* run http server */
