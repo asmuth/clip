@@ -89,6 +89,16 @@ ReturnCode ConfigParser::parse(ConfigList* config) {
       }
     }
 
+    /* parse the "listen_http" definition */
+    if (ttype == T_STRING && tbuf == "listen_http") {
+      consumeToken();
+      if (parseListenHTTPDefinition(config)) {
+        continue;
+      } else {
+        break;
+      }
+    }
+
     if (ttype == T_ENDLINE) {
       consumeToken();
       continue;
@@ -503,6 +513,97 @@ bool ConfigParser::parseFetchHTTPDefinitionURLStanza(
   consumeToken();
   return true;
 }
+
+bool ConfigParser::parseListenHTTPDefinition(ConfigList* config) {
+  std::unique_ptr<HTTPPushIngestionTaskConfig> ingestion_task(
+      new HTTPPushIngestionTaskConfig());
+
+  if (!expectAndConsumeToken(T_LCBRACE)) {
+    return false;
+  }
+
+  TokenType ttype;
+  std::string tbuf;
+  while (getToken(&ttype, &tbuf)) {
+    if (ttype == T_RCBRACE) {
+      break;
+    }
+
+    if (ttype == T_ENDLINE) {
+      consumeToken();
+      continue;
+    }
+
+    /* parse the "bind" stanza */
+    if (ttype == T_STRING && tbuf == "bind") {
+      consumeToken();
+      if (!parseListenHTTPDefinitionBindStanza(ingestion_task.get())) {
+        return false;
+      }
+      continue;
+    }
+
+    /* parse the "port" stanza */
+    if (ttype == T_STRING && tbuf == "port") {
+      consumeToken();
+      if (!parseListenHTTPDefinitionPortStanza(ingestion_task.get())) {
+        return false;
+      }
+      continue;
+    }
+
+    setError(StringUtil::format("unexpected token: $0", printToken(ttype, tbuf)));
+    return false;
+  }
+
+  if (!expectAndConsumeToken(T_RCBRACE)) {
+    return false;
+  }
+
+  config->addIngestionTaskConfig(std::move(ingestion_task));
+  return true;
+}
+
+bool ConfigParser::parseListenHTTPDefinitionBindStanza(
+    HTTPPushIngestionTaskConfig* config) {
+  TokenType ttype;
+  std::string tbuf;
+  if (!getToken(&ttype, &tbuf) || ttype != T_STRING) {
+    setError("bind requires an argument");
+    return false;
+  }
+
+  config->bind = tbuf;
+  consumeToken();
+  return true;
+}
+
+bool ConfigParser::parseListenHTTPDefinitionPortStanza(
+    HTTPPushIngestionTaskConfig* config) {
+  TokenType ttype;
+  std::string tbuf;
+  if (!getToken(&ttype, &tbuf) || ttype != T_STRING) {
+    setError("port requires an argument");
+    return false;
+  }
+
+  try {
+    auto val = std::stoul(tbuf);
+    if (val > std::numeric_limits<uint16_t>::max()) {
+      setError("port number out of range");
+      return false;
+    }
+
+    config->port = val;
+  } catch (...) {
+    setError(std::string("invalid value for port: ") + tbuf);
+    return false;
+  }
+
+  consumeToken();
+  return true;
+}
+
 
 bool ConfigParser::parseListenUDPDefinition(ConfigList* config) {
   std::unique_ptr<UDPIngestionTaskConfig> ingestion_task(

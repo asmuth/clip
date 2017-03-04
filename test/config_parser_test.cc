@@ -307,6 +307,7 @@ TEST_CASE(ConfigParserTest, TestParseListenUDP, [] () {
   std::string confstr =
       R"(listen_udp {
         port 8175
+        bind 127.0.0.1
       })";
 
   ConfigList config;
@@ -320,6 +321,7 @@ TEST_CASE(ConfigParserTest, TestParseListenUDP, [] () {
 
   EXPECT(c != nullptr);
   EXPECT(c->port == 8175);
+  EXPECT(c->bind == "127.0.0.1");
   EXPECT(c->format == IngestionSampleFormat::STATSD);
 });
 
@@ -342,5 +344,26 @@ TEST_CASE(ConfigParserTest, TestParseListenUDPWithFormat, [] () {
   EXPECT(c != nullptr);
   EXPECT(c->port == 8175);
   EXPECT(c->format == IngestionSampleFormat::JSON);
+});
+
+TEST_CASE(ConfigParserTest, TestParseListenHTTP, [] () {
+  std::string confstr =
+      R"(listen_http {
+        port 8175
+        bind 127.0.0.1
+      })";
+
+  ConfigList config;
+  ConfigParser parser(confstr.data(), confstr.size());
+  auto rc = parser.parse(&config);
+  EXPECT_RC(rc);
+
+  EXPECT(config.getIngestionTaskConfigs().size() == 1);
+  auto c = dynamic_cast<HTTPPushIngestionTaskConfig*>(
+      config.getIngestionTaskConfigs()[0].get());
+
+  EXPECT(c != nullptr);
+  EXPECT(c->port == 8175);
+  EXPECT(c->bind == "127.0.0.1");
 });
 

@@ -40,6 +40,10 @@ ReturnCode mkIngestionTask(
     return UDPListener::start(service, config, task);
   }
 
+  if (dynamic_cast<const HTTPPushIngestionTaskConfig*>(config)) {
+    return HTTPPushIngestionTask::start(service, config, task);
+  }
+
   return ReturnCode::error("ERUNTIME", "invalid ingestion task config");
 }
 

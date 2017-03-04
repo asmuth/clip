@@ -28,7 +28,7 @@ namespace fnordmetric {
 
 UDPIngestionTaskConfig::UDPIngestionTaskConfig() :
     bind("0.0.0.0"),
-    port(0),
+    port(8125),
     format(IngestionSampleFormat::STATSD) {}
 
 ReturnCode UDPListener::start(
@@ -47,7 +47,7 @@ ReturnCode UDPListener::start(
   auto self = new UDPListener(aggregation_service);
   task->reset(self);
 
-  auto rc =self->listen(c->bind, c->port);
+  auto rc = self->listen(c->bind, c->port);
   if (!rc.isSuccess()) {
     return rc;
   }
@@ -67,7 +67,7 @@ UDPListener::~UDPListener() {
 }
 
 ReturnCode UDPListener::listen(const std::string& bind_addr, int port) {
-  logInfo("Starting statsd server on $0:$1", bind_addr, port);
+  logInfo("Starting UDP server on $0:$1", bind_addr, port);
 
   ssock_ = socket(AF_INET, SOCK_DGRAM, 0);
   if (ssock_ == 0) {

@@ -9,6 +9,8 @@
  * <http://www.gnu.org/licenses/>.
  */
 #pragma once
+#include <thread>
+#include <fnordmetric/ingest.h>
 #include <fnordmetric/webui/webui.h>
 #include <libtransport/http/v1/http_server.h>
 #include <libtransport/http/http_request.h>
@@ -24,50 +26,26 @@ class AggregationService;
 namespace json = libtransport::json;
 namespace http = libtransport::http;
 
-class HTTPAPI {
-public:
-
-  HTTPAPI(AggregationService* aggr_service);
-
-  void handleHTTPRequest(
-      http::HTTPRequest* request,
-      http::HTTPResponse* response);
-
-protected:
-
-  void renderMetricList(
-      http::HTTPRequest* request,
-      http::HTTPResponse* response,
-      const URI& uri);
-
-  void performMetricFetchTimeseries(
-      http::HTTPRequest* request,
-      http::HTTPResponse* response,
-      const URI& uri);
-
-  void performMetricFetchSummary(
-      http::HTTPRequest* request,
-      http::HTTPResponse* response,
-      const URI& uri);
-
-  void performMetricInsert(
-      http::HTTPRequest* request,
-      http::HTTPResponse* response,
-      const URI& uri);
-
-  AggregationService* aggr_service_;
+struct HTTPPushIngestionTaskConfig : public IngestionTaskConfig {
+  HTTPPushIngestionTaskConfig();
+  std::string bind;
+  uint16_t port;
 };
 
-
-class HTTPServer {
+class HTTPPushIngestionTask : public IngestionTask {
 public:
 
-  HTTPServer(
-      AggregationService* aggr_service,
-      const std::string& asset_path);
+  static ReturnCode start(
+      AggregationService* aggregation_service,
+      const IngestionTaskConfig* config,
+      std::unique_ptr<IngestionTask>* task);
 
-  bool listen(const std::string& addr, int port);
-  bool run();
+  HTTPPushIngestionTask(AggregationService* aggregation_service);
+
+  ReturnCode listen(const std::string& addr, int port);
+
+  virtual ReturnCode start() override;
+  virtual void shutdown() override;
 
 protected:
 
@@ -75,11 +53,10 @@ protected:
       http::HTTPRequest* request,
       http::HTTPResponse* response);
 
-  HTTPAPI http_api_;
-  WebUI webui_;
+  AggregationService* aggr_service_;
   libtransport::http::HTTPServer http_server_;
+  std::thread http_server_thread_;
 };
 
-
-}
+} // namespace fnordmetric
 

@@ -59,6 +59,8 @@ libfnordmetric_common_a_SOURCES = \
     statsd.cc \
     listen_udp.h \
     listen_udp.cc \
+    listen_http.h \
+    listen_http.cc \
     util/daemonize.h \
     util/daemonize.cc \
     util/time_impl.h \
