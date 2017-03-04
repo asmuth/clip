@@ -12,6 +12,7 @@
 #include <fnordmetric/util/return_code.h>
 
 namespace fnordmetric {
+class MeasureConfig;
 
 enum class AggregationFunctionType {
   SUM, MIN, MAX
@@ -26,29 +27,32 @@ public:
   virtual ~AggregationFunction() = default;
 
   virtual ReturnCode addSample(
-      uint64_t time,
-      void* value,
-      size_t value_size);
+      const MeasureConfig& config,
+      const Sample& sample) = 0;
+
+  virtual void getResult(
+      const MeasureConfig& config,
+      std::vector<std::pair<std::string, std::string>>* columns) const = 0;
 
 };
 
-//class SumInputAggregator : public InputAggregator {
-//public:
-//
-//  SumInputAggregator(
-//      uint64_t granularity,
-//      uint64_t align = 0);
-//
-//  ReturnCode addSample(
-//      uint64_t time,
-//      tval_type value_type,
-//      const void* value,
-//      size_t value_len) override;
-//
-//protected:
-//  uint64_t granularity_;
-//  uint64_t align_;
-//};
+class SumAggregationFunction : public AggregationFunction {
+public:
+
+  SumAggregationFunction(const MeasureConfig& config);
+
+  ReturnCode addSample(
+      const MeasureConfig& config,
+      const Sample& sample) override;
+
+  void getResult(
+      const MeasureConfig& config,
+      std::vector<std::pair<std::string, std::string>>* columns) const override;
+
+protected:
+  uint64_t sum_;
+};
+
 //
 //class SumOutputAggregator : public OutputAggregator {
 //public:

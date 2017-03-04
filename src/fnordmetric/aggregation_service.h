@@ -75,6 +75,7 @@ struct AggregationSlot {
   uint64_t timestamp;
   std::shared_ptr<TableConfig> table;
   std::vector<std::string> labels;
+  std::vector<std::unique_ptr<AggregationFunction>> measures;
 };
 
 class AggregationMap {

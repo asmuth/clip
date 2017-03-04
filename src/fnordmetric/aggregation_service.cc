@@ -126,6 +126,8 @@ ReturnCode AggregationService::insertSample(const Sample& smpl) {
       table,
       labels);
 
+  slot->measures[measure_idx]->addSample(table->measures[measure_idx], smpl);
+
   cv_.notify_all();
   return ReturnCode::success();
 }
@@ -220,7 +222,15 @@ void AggregationService::performInserts(
     Backend::InsertOp op;
     op.table = s->table;
     op.time = s->timestamp;
-    op.label_values = s->labels;
+
+    for (size_t i = 0; i < s->labels.size(); ++i) {
+      op.columns.emplace_back(s->table->labels[i].column_name, s->labels[i]);
+    }
+
+    for (size_t i = 0; i < s->measures.size(); ++i) {
+      s->measures[i]->getResult(s->table->measures[i], &op.columns);
+    }
+
     insert_ops.emplace_back(std::move(op));
   }
 
@@ -257,6 +267,10 @@ AggregationSlot* AggregationMap::getSlot(
   slot->timestamp = timestamp;
   slot->table = table;
   slot->labels = labels;
+
+  for (const auto& m : table->measures) {
+    slot->measures.emplace_back(new SumAggregationFunction(m)); // FIXME
+  }
 
   slots_.emplace(slot_id, slot);
 

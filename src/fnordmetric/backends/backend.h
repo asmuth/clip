@@ -10,6 +10,7 @@
 #pragma once
 #include <memory>
 #include <vector>
+#include <iostream>
 #include <libtransport/uri/uri.h>
 
 namespace fnordmetric {
@@ -28,8 +29,7 @@ public:
   struct InsertOp {
     std::shared_ptr<TableConfig> table;
     uint64_t time;
-    std::vector<std::string> label_values;
-    std::vector<std::string> measure_values;
+    std::vector<std::pair<std::string, std::string>> columns;
   };
 
   virtual ReturnCode insertRows(const std::vector<InsertOp>& ops) = 0;
@@ -46,6 +46,14 @@ public:
   }
 
   ReturnCode insertRows(const std::vector<InsertOp>& ops) override {
+    for (const auto& op : ops) {
+      std::cerr << "INSERT INTO " << op.table->table_id << std::endl;
+      std::cerr << "  time = " << op.time << std::endl;
+      for (const auto& c : op.columns) {
+        std::cerr << "  " << c.first << " = " << c.second << std::endl;
+      }
+    }
+
     return ReturnCode::success();
   }
 
