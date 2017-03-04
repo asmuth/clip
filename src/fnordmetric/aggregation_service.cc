@@ -116,12 +116,12 @@ AggregationMap::Slot* AggregationMap::getSlot(
     uint64_t timestamp,
     uint64_t interval,
     uint64_t expire_at,
-    const std::string& table_id,
+    std::shared_ptr<TableConfig> table,
     const std::vector<std::pair<std::string, std::string>>& labels) {
   std::string slot_idv;
   slot_idv += std::to_string(timestamp) + "~";
   slot_idv += std::to_string(interval) + "~";
-  slot_idv += table_id;
+  slot_idv += std::to_string((intptr_t) table.get());
   for (const auto& l : labels) {
     slot_idv += "~" + l.first + "=" + l.second;
   }
@@ -131,7 +131,7 @@ AggregationMap::Slot* AggregationMap::getSlot(
   for (auto iter = slots.first; iter != slots.second; ++iter) {
     if (iter->second->time == timestamp &&
         iter->second->interval == interval &&
-        iter->second->table_id == table_id &&
+        iter->second->table.get() == table.get() &&
         compareLabels(iter->second->labels, labels)) {
       return iter->second;
     }
@@ -141,7 +141,7 @@ AggregationMap::Slot* AggregationMap::getSlot(
   slot->slot_id = slot_id;
   slot->time = timestamp;
   slot->interval = interval;
-  slot->table_id = table_id;
+  slot->table = table;
   slot->labels = labels;
 
   slots_.emplace(slot_id, slot);

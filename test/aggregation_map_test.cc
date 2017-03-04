@@ -22,12 +22,15 @@ TEST_CASE(AggregationMapTest, TestSlotLookup, [] () {
   AggregationMap map;
 
   auto ts = WallClock::unixMicros();
+  auto test_tbl = std::make_shared<TableConfig>();
+  test_tbl->interval = 10 * kMicrosPerSecond;
+  test_tbl->labels.emplace_back(LabelConfig("test"));
 
   auto slot_a = map.getSlot(
       ts,
       10 * kMicrosPerSecond,
       ts + 10 * kMicrosPerSecond,
-      "test_tbl",
+      test_tbl,
       { { "test", "blah" } });
 
   EXPECT(slot_a != nullptr);
@@ -36,7 +39,7 @@ TEST_CASE(AggregationMapTest, TestSlotLookup, [] () {
       ts + 10 * kMicrosPerSecond,
       10 * kMicrosPerSecond,
       ts + 20 * kMicrosPerSecond,
-      "test_tbl",
+      test_tbl,
       { { "test", "blah" } });
 
   EXPECT(slot_b != nullptr);
@@ -46,7 +49,7 @@ TEST_CASE(AggregationMapTest, TestSlotLookup, [] () {
       ts,
       10 * kMicrosPerSecond,
       ts + 10 * kMicrosPerSecond,
-      "test_tbl",
+      test_tbl,
       { { "test", "blah" } });
 
   EXPECT(slot_c != nullptr);
@@ -57,7 +60,7 @@ TEST_CASE(AggregationMapTest, TestSlotLookup, [] () {
       ts,
       10 * kMicrosPerSecond,
       ts + 10 * kMicrosPerSecond,
-      "test_tbl",
+      test_tbl,
       { { "test", "blahx" } });
 
   EXPECT(slot_d != nullptr);
@@ -68,7 +71,7 @@ TEST_CASE(AggregationMapTest, TestSlotLookup, [] () {
       ts,
       10 * kMicrosPerSecond,
       ts + 10 * kMicrosPerSecond,
-      "test_tbl",
+      test_tbl,
       {});
 
   EXPECT(slot_e != nullptr);
@@ -80,7 +83,7 @@ TEST_CASE(AggregationMapTest, TestSlotLookup, [] () {
       ts + 10 * kMicrosPerSecond,
       10 * kMicrosPerSecond,
       ts + 20 * kMicrosPerSecond,
-      "test_tbl",
+      test_tbl,
       {});
 
   EXPECT(slot_f != nullptr);
@@ -93,7 +96,7 @@ TEST_CASE(AggregationMapTest, TestSlotLookup, [] () {
       ts,
       10 * kMicrosPerSecond,
       ts + 10 * kMicrosPerSecond,
-      "test_tbl",
+      test_tbl,
       {});
 
   EXPECT(slot_g != nullptr);
@@ -108,47 +111,50 @@ TEST_CASE(AggregationMapTest, TestExpiration, [] () {
   AggregationMap map;
 
   auto ts = WallClock::unixMicros();
+  auto test_tbl = std::make_shared<TableConfig>();
+  test_tbl->interval = 10 * kMicrosPerSecond;
+  test_tbl->labels.emplace_back(LabelConfig("slot"));
 
   map.getSlot(
       ts + 30 * kMicrosPerSecond,
       10 * kMicrosPerSecond,
       ts + 40 * kMicrosPerSecond,
-      "test_tbl",
+      test_tbl,
       { { "slot", "4" } });
 
   map.getSlot(
       ts + 40 * kMicrosPerSecond,
       10 * kMicrosPerSecond,
       ts + 50 * kMicrosPerSecond,
-      "test_tbl",
+      test_tbl,
       { { "slot", "5" } });
 
   map.getSlot(
       ts + 50 * kMicrosPerSecond,
       10 * kMicrosPerSecond,
       ts + 60 * kMicrosPerSecond,
-      "test_tbl",
+      test_tbl,
       { { "slot", "6" } });
 
   map.getSlot(
       ts + 20 * kMicrosPerSecond,
       10 * kMicrosPerSecond,
       ts + 30 * kMicrosPerSecond,
-      "test_tbl",
+      test_tbl,
       { { "slot", "3" } });
 
   map.getSlot(
       ts,
       10 * kMicrosPerSecond,
       ts + 10 * kMicrosPerSecond,
-      "test_tbl",
+      test_tbl,
       { { "slot", "1" } });
 
   map.getSlot(
       ts + 10 * kMicrosPerSecond,
       10 * kMicrosPerSecond,
       ts + 20 * kMicrosPerSecond,
-      "test_tbl",
+      test_tbl,
       { { "slot", "2" } });
 
   std::vector<std::unique_ptr<AggregationMap::Slot>> expired;
@@ -195,42 +201,42 @@ TEST_CASE(AggregationMapTest, TestExpiration, [] () {
       ts + 30 * kMicrosPerSecond,
       10 * kMicrosPerSecond,
       ts + 40 * kMicrosPerSecond,
-      "test_tbl",
+      test_tbl,
       { { "slot", "4" } });
 
   map.getSlot(
       ts + 40 * kMicrosPerSecond,
       10 * kMicrosPerSecond,
       ts + 50 * kMicrosPerSecond,
-      "test_tbl",
+      test_tbl,
       { { "slot", "5" } });
 
   map.getSlot(
       ts + 50 * kMicrosPerSecond,
       10 * kMicrosPerSecond,
       ts + 60 * kMicrosPerSecond,
-      "test_tbl",
+      test_tbl,
       { { "slot", "6" } });
 
   map.getSlot(
       ts + 20 * kMicrosPerSecond,
       10 * kMicrosPerSecond,
       ts + 30 * kMicrosPerSecond,
-      "test_tbl",
+      test_tbl,
       { { "slot", "3" } });
 
   map.getSlot(
       ts,
       10 * kMicrosPerSecond,
       ts + 10 * kMicrosPerSecond,
-      "test_tbl",
+      test_tbl,
       { { "slot", "1" } });
 
   map.getSlot(
       ts + 10 * kMicrosPerSecond,
       10 * kMicrosPerSecond,
       ts + 20 * kMicrosPerSecond,
-      "test_tbl",
+      test_tbl,
       { { "slot", "2" } });
 
   map.getExpiredSlots(ts, &expired);

@@ -57,7 +57,7 @@ public:
     SHA1Hash slot_id;
     uint64_t time;
     uint64_t interval;
-    std::string table_id;
+    std::shared_ptr<TableConfig> table;
     std::vector<std::pair<std::string, std::string>> labels;
   };
 
@@ -65,7 +65,7 @@ public:
       uint64_t timestamp,
       uint64_t interval,
       uint64_t expire_at,
-      const std::string& table_id,
+      std::shared_ptr<TableConfig> table,
       const std::vector<std::pair<std::string, std::string>>& labels);
 
   void getExpiredSlots(
