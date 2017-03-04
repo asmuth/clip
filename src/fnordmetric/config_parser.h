@@ -63,6 +63,7 @@ protected:
   bool parseFetchHTTPDefinitionURLStanza(HTTPIngestionTaskConfig* sensor_config);
 
   bool parseListenUDPDefinition(ConfigList* config);
+  bool parseListenUDPDefinitionBindStanza(UDPIngestionTaskConfig* config);
   bool parseListenUDPDefinitionPortStanza(UDPIngestionTaskConfig* config);
   bool parseListenUDPDefinitionFormatStanza(UDPIngestionTaskConfig* config);
 

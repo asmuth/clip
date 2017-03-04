@@ -524,6 +524,15 @@ bool ConfigParser::parseListenUDPDefinition(ConfigList* config) {
       continue;
     }
 
+    /* parse the "bind" stanza */
+    if (ttype == T_STRING && tbuf == "bind") {
+      consumeToken();
+      if (!parseListenUDPDefinitionBindStanza(ingestion_task.get())) {
+        return false;
+      }
+      continue;
+    }
+
     /* parse the "port" stanza */
     if (ttype == T_STRING && tbuf == "port") {
       consumeToken();
@@ -551,6 +560,20 @@ bool ConfigParser::parseListenUDPDefinition(ConfigList* config) {
   }
 
   config->addIngestionTaskConfig(std::move(ingestion_task));
+  return true;
+}
+
+bool ConfigParser::parseListenUDPDefinitionBindStanza(
+    UDPIngestionTaskConfig* config) {
+  TokenType ttype;
+  std::string tbuf;
+  if (!getToken(&ttype, &tbuf) || ttype != T_STRING) {
+    setError("bind requires an argument");
+    return false;
+  }
+
+  config->bind = tbuf;
+  consumeToken();
   return true;
 }
 
