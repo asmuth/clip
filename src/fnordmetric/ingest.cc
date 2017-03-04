@@ -33,8 +33,13 @@ bool parseIngestionSampleFormat(
 }
 
 ReturnCode mkIngestionTask(
+    AggregationService* service,
     const IngestionTaskConfig* config,
     std::unique_ptr<IngestionTask>* task) {
+  if (dynamic_cast<const UDPIngestionTaskConfig*>(config)) {
+    return UDPListener::start(service, config, task);
+  }
+
   return ReturnCode::error("ERUNTIME", "invalid ingestion task config");
 }
 
@@ -48,8 +53,8 @@ IngestionService::IngestionService(
 ReturnCode IngestionService::applyConfig(const ConfigList* config) {
   for (const auto& ic : config->getIngestionTaskConfigs()) {
     std::unique_ptr<IngestionTask> task;
-    auto rc = mkIngestionTask(ic.get(), &task);
-    if (rc.isSuccess()) {
+    auto rc = mkIngestionTask(aggregation_service_, ic.get(), &task);
+    if (!rc.isSuccess()) {
       return rc;
     }
 

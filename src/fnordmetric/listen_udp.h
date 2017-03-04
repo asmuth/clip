@@ -19,20 +19,25 @@ namespace fnordmetric {
 
 struct UDPIngestionTaskConfig : public IngestionTaskConfig {
   UDPIngestionTaskConfig();
+  std::string bind;
   uint16_t port;
   IngestionSampleFormat format;
 };
 
-class StatsdServer : public IngestionTask {
+class UDPListener : public IngestionTask {
 public:
 
-  StatsdServer(AggregationService* aggr_service);
-  ~StatsdServer();
+  static ReturnCode start(
+      AggregationService* aggregation_service,
+      const IngestionTaskConfig* config,
+      std::unique_ptr<IngestionTask>* task);
+
+  UDPListener(AggregationService* aggr_service);
+  ~UDPListener();
 
   ReturnCode listen(const std::string& addr, int port);
-  ReturnCode listenAndStart(const std::string& addr, int port);
-
   ReturnCode start() override;
+
   void shutdown() override;
 
 protected:

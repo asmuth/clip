@@ -31,6 +31,7 @@ std::string getIngestionSampleFormatName(IngestionSampleFormat t);
 bool parseIngestionSampleFormat(const std::string& s, IngestionSampleFormat* t);
 
 ReturnCode mkIngestionTask(
+    AggregationService* aggregation_service,
     const IngestionTaskConfig* config,
     std::unique_ptr<IngestionTask>* task);
 

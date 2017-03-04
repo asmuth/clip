@@ -27,21 +27,46 @@
 namespace fnordmetric {
 
 UDPIngestionTaskConfig::UDPIngestionTaskConfig() :
+    bind("0.0.0.0"),
     port(0),
     format(IngestionSampleFormat::STATSD) {}
 
-StatsdServer::StatsdServer(
+ReturnCode UDPListener::start(
+    AggregationService* aggregation_service,
+    const IngestionTaskConfig* config,
+    std::unique_ptr<IngestionTask>* task) {
+  auto c = dynamic_cast<const UDPIngestionTaskConfig*>(config);
+  if (!c) {
+    return ReturnCode::error("ERUNTIME", "invalid ingestion task config");
+  }
+
+  if (c->port == 0) {
+    return ReturnCode::error("ERUNTIME", "missing port");
+  }
+
+  auto self = new UDPListener(aggregation_service);
+  task->reset(self);
+
+  auto rc =self->listen(c->bind, c->port);
+  if (!rc.isSuccess()) {
+    return rc;
+  }
+
+  return ReturnCode::success();
+}
+
+UDPListener::UDPListener(
     AggregationService* aggr_service) :
     aggr_service_(aggr_service),
     ssock_(-1) {}
 
-StatsdServer::~StatsdServer() {
+UDPListener::~UDPListener() {
   if (ssock_ >= 0) {
     close(ssock_);
   }
 }
 
-ReturnCode StatsdServer::listen(const std::string& bind_addr, int port) {
+ReturnCode UDPListener::listen(const std::string& bind_addr, int port) {
   logInfo("Starting statsd server on $0:$1", bind_addr, port);
 
   ssock_ = socket(AF_INET, SOCK_DGRAM, 0);
@@ -68,7 +93,7 @@ ReturnCode StatsdServer::listen(const std::string& bind_addr, int port) {
   return ReturnCode::success();
 }
 
-ReturnCode StatsdServer::start() {
+ReturnCode UDPListener::start() {
   running_ = true;
 
   while (running_.load(std::memory_order_acquire)) {
@@ -95,13 +120,13 @@ ReturnCode StatsdServer::start() {
   return ReturnCode::success();
 }
 
-void StatsdServer::shutdown() {
+void UDPListener::shutdown() {
   running_.store(false, std::memory_order_release);
   close(ssock_);
   ssock_ = -1;
 }
 
-void StatsdServer::handlePacket(const char* pkt, size_t pkt_len) {
+void UDPListener::handlePacket(const char* pkt, size_t pkt_len) {
   std::string metric_id;
   std::string series_id;
   std::string value;
