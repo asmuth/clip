@@ -96,5 +96,62 @@ ReturnCode AggregationService::insertSamplesBatch(
   return ReturnCode::success();
 }
 
+static bool compareLabels(
+    const std::vector<std::pair<std::string, std::string>>& a,
+    const std::vector<std::pair<std::string, std::string>>& b) {
+  if (a.size() != b.size()) {
+    return false;
+  }
+
+  for (size_t i = 0; i < a.size(); ++i) {
+    if (a[i].first != b[i].first || a[i].second != b[i].second) {
+      return false;
+    }
+  }
+
+  return true;
+}
+
+AggregationMap::Slot* AggregationMap::getSlot(
+    uint64_t timestamp,
+    uint64_t interval,
+    uint64_t expire_at,
+    const std::string& table_id,
+    const std::vector<std::pair<std::string, std::string>>& labels) {
+  std::string slot_idv;
+  slot_idv += std::to_string(timestamp) + "~";
+  slot_idv += std::to_string(interval) + "~";
+  slot_idv += table_id;
+  for (const auto& l : labels) {
+    slot_idv += "~" + l.first + "=" + l.second;
+  }
+
+  auto slot_id = SHA1::compute(slot_idv);
+  auto slots = slots_.equal_range(slot_id);
+  for (auto iter = slots.first; iter != slots.second; ++iter) {
+    if (iter->second->time == timestamp &&
+        iter->second->interval == interval &&
+        iter->second->table_id == table_id &&
+        compareLabels(iter->second->labels, labels)) {
+      return iter->second;
+    }
+  }
+
+  auto slot = new Slot;
+  slot->time = timestamp;
+  slot->interval = interval;
+  slot->table_id = table_id;
+  slot->labels = labels;
+
+  slots_.emplace(slot_id, slot);
+  expiration_list_.emplace_back(expire_at, std::unique_ptr<Slot>(slot));
+  return slot;
+}
+
+void AggregationMap::getExpiredSlots(
+    uint64_t expired_on,
+    std::vector<std::unique_ptr<Slot>>* slots) {
+}
+
 } // namsepace fnordmetric
 

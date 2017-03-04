@@ -72,8 +72,8 @@ public:
       std::vector<std::unique_ptr<Slot>>* slots);
 
 protected:
-  std::unordered_map<SHA1Hash, std::unique_ptr<Slot>> slots_;
-  std::list<std::pair<uint64_t, SHA1Hash>> expiration_list_;
+  std::multimap<SHA1Hash, Slot*> slots_;
+  std::list<std::pair<uint64_t, std::unique_ptr<Slot>>> expiration_list_;
 };
 
 } // namespace fnordmetric
