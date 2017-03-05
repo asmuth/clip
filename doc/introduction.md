@@ -7,7 +7,7 @@ database (currently supported are MySQL, Postgres and EventQL).
 
 <ul>
   <li>
-    <h4 style="margin-bottom:.2em; font-size:16px;">metric-collectd</h4>
+    <h4 style="margin-bottom:.2em; font-size:16px;"><a href="/documentation/metric-collectd">metric-collectd</a></h4>
     <p>
       metric-collectd is a lightweight daemon that collects measurements and other
       timeseries data, pre-aggregates it and stores the resulting tuples into a
@@ -18,7 +18,7 @@ database (currently supported are MySQL, Postgres and EventQL).
   </li>
 
   <li>
-    <h4 style="margin-bottom:.2em; font-size:16px;">metric-queryd</h4>
+    <h4 style="margin-bottom:.2em; font-size:16px;"><a href="/documentation/metric-collectd">metric-queryd</a></h4>
     <p>
       metric-queryd is a simple HTTP service that executes SQL queries on a backend
       database and plots the results. The HTTP API allows you to create timeseries graphs
