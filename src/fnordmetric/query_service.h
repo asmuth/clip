@@ -34,6 +34,10 @@ protected:
       http::HTTPRequest* request,
       http::HTTPResponse* response);
 
+  void handleRequest_QUERY(
+      http::HTTPRequest* request,
+      http::HTTPResponse* response);
+
   std::string getPreludeHTML() const;
   std::string getAppHTML() const;
   std::string getAssetFile(const std::string& file) const;

@@ -57,6 +57,11 @@ void QueryService::handleRequest(
     return;
   }
 
+  if (path == "/api/v1/query") {
+    handleRequest_QUERY(request, response);
+    return;
+  }
+
   if (StringUtil::beginsWith(path, "/ui/")) {
     response->setStatus(http::kStatusOK);
     response->addHeader("Content-Type", "text/html; charset=utf-8");
@@ -116,6 +121,50 @@ void QueryService::handleRequest(
   response->setStatus(http::kStatusNotFound);
   response->addHeader("Content-Type", "text/plain; charset=utf-8");
   response->addBody("not found");
+}
+
+void QueryService::handleRequest_QUERY(
+    http::HTTPRequest* request,
+    http::HTTPResponse* response) {
+  /* read params */
+  json::JSONObjectStorage json_req;
+  if (request->method() == http::HTTPMessage::M_POST) {
+    const auto& body = request->body();
+    if (!json::readJSON(&json_req, &body) || !json_req.hasRootObject()) {
+      response->setStatus(http::kStatusBadRequest);
+      response->addBody("ERROR: invalid json");
+      return;
+    }
+  } else {
+    auto params = URI(request->uri()).queryParams();
+
+    std::string query;
+    if (URI::getParam(params, "query", &query)) {
+      json_req.getRootAsObject()->setString("query", query);
+    }
+  }
+
+  std::string query = json_req->getString("query");
+  if (query.empty()) {
+    response->setStatus(http::kStatusBadRequest);
+    response->addBody("missing parameter: query");
+    return;
+  }
+
+  /* execute query */
+
+  /* write response */
+  std::string json_str;
+  json::JSONWriter json(&json_str);
+
+  json.beginObject();
+  json.addString("query");
+  json.addString(query);
+  json.endObject();
+
+  response->setStatus(http::kStatusOK);
+  response->addHeader("Content-Type", "application/json; charset=utf-8");
+  response->addBody(json_str);
 }
 
 std::string QueryService::getPreludeHTML() const {

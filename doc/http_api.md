@@ -28,6 +28,10 @@ These are the API methods exposed by `metric-queryd`
     <th>Description</th>
   </tr>
   <tr>
+    <td><code><a><strong>GET /api/v1/query</strong></a></code></td>
+    <td>Execute a SQL query</td>
+  </tr>
+  <tr>
     <td><code><a href="/documentation/widget-timeseries"><strong>GET /embed/timeseries</strong></a></code></td>
     <td>Render a timeseries widget</td>
   </tr>
