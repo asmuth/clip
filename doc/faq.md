@@ -34,15 +34,19 @@ FnordMetric contains components for capturing measurements into your SQL databas
 (metric-collectd) and for visualizing the results (metric-queryd). However, there
 is no component for monitoring or alerting.
 
-The reason is that we felt that collecting and visualizing data are non-trivial
-tasks and there was a useful abstraction for making them easier. Monitoring is
-another story however. The alerting rules are usually highly custom and verifying
-if a condition is true is often already trivial using SQL. We feel that we can't
-add a lot over plain SQL for checking alerting rules.
+The reason is that the alerting rules are usually highly custom, so most other
+systems include a small domain specific programming language to define the
+alerting conditions.
+
+We think that SQL is already a very well-suited language for this task and adding
+any kind of rule system on top would actuall make it less powerful. In other words,
+we think that we can't add a lot over plain old SQL for checking custom alerting
+rules.
 
 Hence, the recommendation for monitoring/alerting is to run all rules directly
-against the SQL database. You could do this with a custom script, or/and connect
-to a third-party alerting system PagerDuty or nagios.
+against the SQL database. You could do this with a custom script that executes
+the rule queries on the SQL database and connects with a third-party alerting
+system PagerDuty or nagios.
 
 
 ### Is FnordMetric highly available/scalable/distributed?
