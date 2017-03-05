@@ -33,6 +33,14 @@ These are the API methods exposed by `metric-queryd`
   </tr>
   <tr>
     <td><code><a href="/documentation/widget-timeseries"><strong>GET /embed/timeseries</strong></a></code></td>
-    <td>Render a timeseries widget</td>
+    <td>Render a timeseries chart</td>
+  </tr>
+  <tr>
+    <td><code><a href="/documentation/widget-plot"><strong>GET /embed/plot</strong></a></code></td>
+    <td>Render line/area/scatter charts</td>
+  </tr>
+  <tr>
+    <td><code><a href="/documentation/widget-barchart"><strong>GET /embed/barchart</strong></a></code></td>
+    <td>Render a bar chart</td>
   </tr>
 </table>

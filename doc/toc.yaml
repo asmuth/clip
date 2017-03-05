@@ -1,0 +1,131 @@
+---
+
+documentation:
+  -
+    title: "Getting Started"
+    pages:
+      -
+        title: "Introduction"
+        url: "/"
+        file: "introduction"
+      -
+        title: "Getting Started"
+        url: "/documentation/getting-started"
+        file: "getting_started"
+      -
+        title: "Installation"
+        url: "/documentation/installation"
+        file: "installation"
+      -
+        title: "Download"
+        url: "/documentation/download"
+        file: "download"
+
+
+  -
+    title: "Collecting Data"
+    pages:
+      -
+        title: "The metric-collectd server"
+        url: "/documentation/metric-collectd"
+        file: "metric_collectd"
+      -
+        title: "Data Model"
+        url: "/documentation/data-model"
+        file: "data_model"
+      -
+        title: "Configuration File"
+        url: "/documentation/configuration-file"
+        file: "configuration"
+      -
+        title: "Data Types"
+        url: "/documentation/data_types"
+        file: "data_types"
+      -
+        title: "Aggregation Functions"
+        url: "/documentation/aggregation-functions"
+        file: "aggregation_functions"
+      -
+        title: "Sample Formats"
+        url: "/documentation/sample-format"
+        file: "sample_format"
+      -
+        title: "Collect via HTTP"
+        url: "/documentation/collect-data-via-http"
+        file: "collect_via_http"
+      -
+        title: "Collect via UDP/StatsD"
+        url: "/documentation/collect-data-via-statsd"
+        file: "collect_via_statsd"
+
+  -
+    title: "Charts & Visualizations"
+    pages:
+      -
+        title: "The metric-queryd server"
+        url: "/documentation/metric-queryd"
+        file: "metric_queryd"
+      -
+        title: "Building HTML Dashboards"
+        url: "/documentation/html-dashboards"
+        file: "html_dashboards"
+      -
+        title: "Widget: Timeseries"
+        url: "/documentation/widget-timeseries"
+        file: "widget_timeseries"
+      -
+        title: "Widget: Plot"
+        url: "/documentation/widget-linechart"
+        file: "widget_timeseries"
+      -
+        title: "Widget: Barchart"
+        url: "/documentation/widget-linechart"
+        file: "widget_timeseries"
+
+  -
+    title: "HTTP API"
+    pages:
+      -
+        title: "API Methods"
+        url: "/documentation/http-api"
+        file: "http_api"
+
+  -
+    title: "Backends"
+    pages:
+      -
+        title: "MySQL Backend"
+        url: "/documentation/backend-mysql"
+        file: "backend_mysql"
+      -
+        title: "Postgres Backend"
+        url: "/documentation/backend-postgres"
+        file: "backend_postgres"
+      -
+        title: "EventQL Backend"
+        url: "/documentation/backend-eventql"
+        file: "backend_eventql"
+
+  -
+    title: "Examples"
+    pages:
+      -
+        title: "Example Gallery"
+        url: "/examples"
+        file: "examples"
+
+  -
+    title: "Community"
+    pages:
+      -
+        title: "Support"
+        url: "/documentation/support"
+        file: "support"
+      -
+        title: "Contributing"
+        url: "/documentation/contributing"
+        file: "contributing"
+      -
+        title: "License"
+        url: "/documentation/license"
+        file: "license"
