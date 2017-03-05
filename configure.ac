@@ -25,20 +25,7 @@ AM_CONDITIONAL([HAVE_SYSLOG_H], [test x$HAVE_SYSLOG_H = x1])
 AM_CONDITIONAL([HAVE_GETHOSTBYNAME_R], [test x$HAVE_GETHOSTBYNAME_R = x1])
 AM_CONDITIONAL([HAVE_POSIX_FALLOCATE], [test x$HAVE_POSIX_FALLOCATE = x1])
 AM_CONDITIONAL([HAVE_POSIX_FADVISE], [test x$HAVE_POSIX_FADVISE = x1])
-
-# pthread
 AX_PTHREAD
-
-# Check for fdatasync (am_check_funcs doesn't work on OSX for fdatasync)
-AC_CACHE_CHECK(
-    [for fdatasync],
-    [ac_cv_func_fdatasync],
-    [AC_COMPILE_IFELSE(
-        [AC_LANG_PROGRAM([[#include <unistd.h>]],[[fdatasync(0);]])],
-        [ac_cv_func_fdatasync=yes],
-        [ac_cv_func_fdatasync=no])])
-
-AM_CONDITIONAL([HAVE_FDATASYNC], [test "x${ac_cv_func_fdatasync}" = "xyes"])
 
 # Check for zlib
 HAVE_ZLIB=0
