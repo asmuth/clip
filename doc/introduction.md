@@ -1,7 +1,7 @@
 # FnordMetric v0.8.0
 
-FnordMetric (metricd) is collection of lightweight tools for real-time metrics
-collection and visualization with SQL. It allows you to capture measurements and
+FnordMetric is a collection of lightweight tools for real-time metrics collection
+and visualization with SQL. The tools allow you to record measurements and
 build beautiful real-time dashboards within minutes. All using your favorite SQL
 database.
 
@@ -11,11 +11,9 @@ database.
     <p>
       metric-collectd is a lightweight daemon that collects measurements and other
       timeseries data, pre-aggregates it and stores the resulting tuples into a
-      backend database.
-    </p>
-    <p>
-      metric-collectd can currently listen for samples in Text/StatsD or JSON format
-      via UDP or HTTP. It can also pull samples via HTTP or SNMP.
+      backend database. metric-collectd can currently listen for samples in
+      Text/StatsD or JSON format via UDP or HTTP. It can also pull samples via
+      HTTP or SNMP.
     </p>
   </li>
 
@@ -24,11 +22,8 @@ database.
     <p>
       metric-queryd is a simple HTTP service that executes SQL queries on a backend
       database and plots the results. The HTTP API allows you to create timeseries graphs
-      and other visualizations using nothing but SQL.
-    </p>
-    <p>
-      You can easily plug the returned charts into a HTML site to create a real-time
-      SQL-powered dashboard.
+      and other visualizations using nothing but SQL. You can easily plug the returned
+      charts into a HTML site to create a real-time SQL-powered dashboard.
     </p>
   </li>
 </ul>
@@ -37,7 +32,9 @@ The two services, `metricd-collectd` and `metric-queryd` do not depend on each
 other and don't share a lot of code. If you're only interested in the data capture
 part or only in the visualization part, you can run only one of the services.
 
-To get started with FnordMetric, have a look at these pages: [Getting Started]()
+To get started with FnordMetric, have a look at these pages:
+[Getting Started](/documentation/getting-started),
+[Data Model](/documentation/data-model)
 
 <div class="notice">
   <div style="float:right;"><a class="github-button" data-style="mega" href="https://github.com/paulasmuth/fnordmetric" data-count-href="/paulasmuth/fnordmetric/stargazers" data-count-api="/repos/paulasmuth/fnordmetric#stargazers_count" data-count-aria-label="# stargazers on GitHub" aria-label="Star paulasmuth/fnordmetric on GitHub">View on GitHub</a></div>
@@ -65,7 +62,7 @@ SQL queries and create charts:
 
 ## Examples
 
-Here are some example charts that were generated using FnordMetric and SQL to
+Here are some example charts that were generated using `metric-queryd` and SQL to
 give you some ideas on whats possible. Have a look at the
 [full list of examples](/examples/) for more.
 
