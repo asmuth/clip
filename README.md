@@ -3,21 +3,23 @@ FnordMetric
 
 [![Build Status](https://travis-ci.org/paulasmuth/fnordmetric.png?branch=unstable)](http://travis-ci.org/paulasmuth/fnordmetric)
 
-FnordMetric (metricd) is collection of lightweight tools for real-time metrics
-collection and visualization with SQL. It allows you to capture measurements and
-build beautiful real-time dashboards within minutes using your favorite SQL
-database.
+FnordMetric is a collection of lightweight tools for real-time metrics collection
+and visualization with SQL. The tools allow you to record measurements and
+build beautiful real-time dashboards within minutes. All using your favorite SQL
+database (currently supported are MySQL, Postgres and EventQL).
 
-the fnordmetric distribution currently consists of these components:
+- **metric-collectd** -
+  A lightweight daemon that collects measurements and other
+  timeseries data, pre-aggregates it and stores the resulting tuples into a
+  backend database. metric-collectd can currently listen for samples in
+  Text/StatsD or JSON format via UDP or HTTP. It can also pull samples via
+  HTTP or SNMP.
 
-- **metric-collectd**
-  A standalone daemon that collects measurements and other timeseries data via
-  UDP/StatsD, HTTP Pull, SNMP or a number of other methods and stores them into
-  a backend SQL database.
-
-- **metric-queryd**
-  A standalone HTTP service that allows you to execute SQL queries and plot the
-  results. The HTTP API can return graphs and other widgets as SVG, HTML or PNG.
+- **metric-queryd** -
+  A simple HTTP service that executes SQL queries on a backend
+  database and plots the results. The HTTP API allows you to create timeseries graphs
+  and other visualizations using nothing but SQL. You can easily plug the returned
+  charts into a HTML site to create a real-time SQL-powered dashboard.
 
 
 More Information:

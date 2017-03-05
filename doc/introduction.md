@@ -63,7 +63,7 @@ SQL queries and create charts:
 ## Examples
 
 Here are some example charts that were generated using `metric-queryd` and SQL to
-give you some ideas on whats possible. Have a look at the
+give you some ideas on what is possible. Have a look at the
 [full list of examples](/examples/) for more.
 
 <div style="height: .6em;"></div>
