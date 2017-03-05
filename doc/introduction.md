@@ -83,13 +83,37 @@ _Example: Scatter chart with lables_
 
 ## Supported Databases
 
-These are the currently supported database. If you'd like to add a new backend,
-please have a look at `src/fnordmetric/backends` and create a pull request on
-GitHub.
+These currently supported databases are [MySQL](/documentation/backend-mysql), 
+[Postgres](/documentation/backend-postgres) and [EventQL](/documentation/backend-eventql).
+If you'd like to add a new backend, please have a look at `src/fnordmetric/backends` and
+create a pull request on GitHub.
 
-  - [MySQL]()
-  - [Postgres]()
-  - [EventQL]()
+### Why FnordMetric?
+
+One way to look at FnordMetric is that it's a SQL-based alternative to the
+StatsD/Graphite, ELK or Prometheus stacks. So why would you choose FnordMetric
+over these other solutions? Here are some reasons:
+
+- The FnordMetric programs are just simple, stateless middleware services. All
+  the heavy lifting is done by the backend database. You get to use the full
+  power of a true RDBMS for your timeseries collection and querying.
+
+- In the same vein, you don't have to learn another informally specified domain
+  specific query language for your metrics/graphing tool. It's just SQL
+
+- Also consider that since all your metrics data will be stored in a SQL database,
+  you can easily JOIN it with other (non-timeseries) data tables, for example
+  with records from your main production database.
+
+- FnordMetric follows the unix philosophy: Do one thing and do it well. FnordMetric
+  consists of two components `metric-queryd` and `metric-collectd` that are both
+  narrow in scope.
+
+- FnordMetric is implemented in self-contained C++. It's super quick to set up
+  and does not require a lot of resources
+
+- The FnordMetric project was started over 7 years ago and is still actively maintained
+
 
 
 ## Getting Started
