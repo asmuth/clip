@@ -7,41 +7,27 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#include <fnordmetric/environment.h>
-#include <fnordmetric/sql/backends/mysql/mysqlconnection.h>
+#include <fnordmetric/backends/mysql/mysqlbackend.h>
+#include <fnordmetric/backends/mysql/mysqlconnection.h>
 
 namespace fnordmetric {
-namespace query {
 namespace mysql_backend {
 
-std::unique_ptr<MySQLConnection> MySQLConnection::openConnection(
-    const util::URI& uri) {
-  std::unique_ptr<MySQLConnection> conn(new MySQLConnection());
-  conn->connect(uri);
-  return conn;
+MySQLConnection::MySQLConnection() : mysql_(nullptr) {}
+
+MySQLConnection::~MySQLConnection() {
+  if (mysql_) {
+    mysql_close(mysql_);
+  }
 }
 
-MySQLConnection::MySQLConnection() : mysql_(nullptr) {
-#ifdef FNORD_ENABLE_MYSQL
+ReturnCode MySQLConnection::connect(const URI& uri) {
   mysql_ = mysql_init(NULL);
 
   if (mysql_ == nullptr) {
-    RAISE(kRuntimeError, "mysql_init() failed\n");
+    return ReturnCode::error("ERUNTIME", "mysql_init() failed");
   }
-#else
-  RAISE(kRuntimeError, "FnordMetric was compiled without libmysqlclient");
-#endif
-}
 
-MySQLConnection::~MySQLConnection() {
-#ifdef FNORD_ENABLE_MYSQL
-  mysql_close(mysql_);
-#else
-  RAISE(kRuntimeError, "FnordMetric was compiled without libmysqlclient");
-#endif
-}
-
-void MySQLConnection::connect(const util::URI& uri) {
   unsigned int port = 3306;
   std::string host = uri.host();
   std::string username;
@@ -49,10 +35,10 @@ void MySQLConnection::connect(const util::URI& uri) {
   std::string database;
 
   if (host.size() == 0) {
-    RAISE(
-        kRuntimeError,
-        "invalid mysql:// URI: has no hostname (URI: '%s')",
-        uri.toString().c_str());
+    return ReturnCode::errorf(
+        "ERUNTIME",
+        "invalid mysql:// URI: has no hostname (URI: '$0')",
+        uri.toString());
   }
 
   if (uri.port() > 0) {
@@ -60,11 +46,11 @@ void MySQLConnection::connect(const util::URI& uri) {
   }
 
   if (uri.path().size() < 2 || uri.path()[0] != '/') {
-    RAISE(
-        kRuntimeError,
+    return ReturnCode::errorf(
+        "ERUNTIME",
         "invalid mysql:// URI: missing database, format is: mysql://host/db "
-        " (URI: %s)",
-        uri.toString().c_str());
+        " (URI: $0)",
+        uri.toString());
   }
 
   database = uri.path().substr(1);
@@ -80,23 +66,22 @@ void MySQLConnection::connect(const util::URI& uri) {
       continue;
     }
 
-    RAISE(
-        kRuntimeError,
-        "invalid parameter for mysql:// URI: '%s=%s'",
-        param.first.c_str(),
-        param.second.c_str());
+    return ReturnCode::errorf(
+        "ERUNTIME",
+        "invalid parameter for mysql:// URI: '$0=$1'",
+        param.first,
+        param.second);
   }
 
-  connect(host, port, database, username, password);
+  return connect(host, port, database, username, password);
 }
 
-void MySQLConnection::connect(
+ReturnCode MySQLConnection::connect(
     const std::string& host,
     unsigned int port,
     const std::string& database,
     const std::string& username,
     const std::string& password) {
-#ifdef FNORD_ENABLE_MYSQL
   auto ret = mysql_real_connect(
       mysql_,
       host.c_str(),
@@ -108,16 +93,14 @@ void MySQLConnection::connect(
       CLIENT_COMPRESS);
 
   if (ret != mysql_) {
-    RAISE(
-      kRuntimeError,
-      "mysql_real_connect() failed: %s\n",
-      mysql_error(mysql_));
+    return ReturnCode::errorf(
+        "ERUNTIME",
+        "mysql_real_connect() failed: $0",
+        mysql_error(mysql_));
   }
-#else
-  RAISE(kRuntimeError, "FnordMetric was compiled without libmysqlclient");
-#endif
-}
 
+  return ReturnCode::success();
+}
 
 std::vector<std::string> MySQLConnection::describeTable(
     const std::string& table_name) {
@@ -205,6 +188,6 @@ void MySQLConnection::executeQuery(
 #endif
 }
 
-}
-}
-}
+} // namespace mysql_backend
+} // namespace fnordmetric
+

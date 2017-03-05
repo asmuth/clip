@@ -21,23 +21,27 @@ export AM_CXXFLAGS = \
     -I$(abs_top_srcdir)/
 
 FNORDMETRIC_LIBS = \
-    -L$(abs_top_srcdir)/src/fnordmetric \
-    -L$(abs_top_srcdir)/deps/libtransport/src/libtransport/http \
-    -L$(abs_top_srcdir)/deps/libtransport/src/libtransport/json \
-    -L$(abs_top_srcdir)/deps/libtransport/src/libtransport/uri \
-    -lfnordmetric-common \
+    $(abs_top_builddir)/src/fnordmetric/libfnordmetric-common.a \
+    -L$(abs_top_builddir)/deps/libtransport/src/libtransport/http/libtransport_http.a \
+    -L$(abs_top_builddir)/deps/libtransport/src/libtransport/json/libtransport_json.a \
+    -L$(abs_top_builddir)/deps/libtransport/src/libtransport/uri \
     -ltransport_http \
     -ltransport_json \
     -ltransport_uri \
-    -lfnordmetric-common
+    $(abs_top_builddir)/src/fnordmetric/libfnordmetric-common.a
+
+if ENABLE_MYSQL
+  FNORDMETRIC_LIBS += $(abs_top_builddir)/src/fnordmetric/backends/mysql/libfnordmetric-backend-mysql.a
+  FNORDMETRIC_LIBS += -lmysqlclient
+endif
 
 export FNORDMETRIC_LIBS
 
 SUBDIRS = \
     . \
     deps/libtransport \
-    src/fnordmetric \
     src/fnordmetric/backends/mysql \
+    src/fnordmetric \
     test
 
 EXTRA_DIST =                             \

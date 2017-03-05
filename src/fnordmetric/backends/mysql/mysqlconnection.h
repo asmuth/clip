@@ -7,18 +7,13 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#ifndef _FNORDMETRIC_MYSQLBACKEND_MYSQLCONNECTION_H
-#define _FNORDMETRIC_MYSQLBACKEND_MYSQLCONNECTION_H
+#pragma once
 #include <memory>
-#include <fnordmetric/util/uri.h>
-#include <fnordmetric/util/runtimeexception.h>
-#include <functional>
-#ifdef FNORD_ENABLE_MYSQL
-#include <mysql.h>
-#endif
+#include <libtransport/uri/uri.h>
+#include <fnordmetric/util/return_code.h>
+#include <mysql/mysql.h>
 
 namespace fnordmetric {
-namespace query {
 namespace mysql_backend {
 
 class MySQLConnection {
@@ -35,7 +30,7 @@ public:
    * @param URI the mysql:// URI
    * @returns a new MySQLConnection
    */
-  static std::unique_ptr<MySQLConnection> openConnection(const util::URI& uri);
+  static std::unique_ptr<MySQLConnection> openConnection(const URI& uri);
 
   /**
    * Create a new mysql connection
@@ -57,7 +52,7 @@ public:
    * @param URI the mysql:// URI
    * @returns a new MySQLConnection
    */
-  void connect(const util::URI& uri);
+  ReturnCode connect(const URI& uri);
 
   /**
    * Connect to a mysql server. May throw an exception
@@ -69,7 +64,7 @@ public:
    * @param password the mysq user password or empty string
    * @returns a new MySQLConnection
    */
-  void connect(
+  ReturnCode connect(
       const std::string& host,
       unsigned int port,
       const std::string& database,
@@ -105,14 +100,9 @@ public:
       std::function<bool (const std::vector<std::string>&)> row_callback);
 
 protected:
-#ifdef FNORD_ENABLE_MYSQL
    MYSQL* mysql_;
-#else
-   void* mysql_;
-#endif
 };
 
-}
-}
-}
-#endif
+} // namespace mysql_backend
+} // namespace fnordmetric
+

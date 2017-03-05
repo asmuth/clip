@@ -34,6 +34,7 @@ AC_ARG_ENABLE([mysql], AS_HELP_STRING([--enable-mysql], [Enable mysql]))
 AM_CONDITIONAL([ENABLE_MYSQL], [test "x$enable_mysql" = "xyes"])
 AC_SUBST(ENABLE_MYSQL)
 if test "x$enable_mysql" = "xyes"; then
+  AC_DEFINE([ENABLE_MYSQL], [1])
   AC_MSG_RESULT(["enabled"])
 else
   AC_MSG_RESULT(["disabled"])

@@ -1,42 +1,41 @@
 /**
  * This file is part of the "FnordMetric" project
  *   Copyright (c) 2014 Paul Asmuth, Google Inc.
+ *   Copyright (c) 2017 Paul Asmuth <paul@asmuth.com>
  *
  * FnordMetric is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License v3.0. You should have received a
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#ifndef _FNORDMETRIC_MYSQLBACKEND_H
-#define _FNORDMETRIC_MYSQLBACKEND_H
-#include <fnordmetric/sql/backends/backend.h>
-#include <fnordmetric/sql/backends/mysql/mysqlconnection.h>
+#pragma once
 #include <memory>
 #include <mutex>
 #include <vector>
+#include <fnordmetric/backends/backend.h>
+#include <fnordmetric/backends/mysql/mysqlconnection.h>
 
 namespace fnordmetric {
-namespace query {
 namespace mysql_backend {
 
-class MySQLBackend : public fnordmetric::query::Backend {
+class MySQLBackend : public Backend {
 public:
 
-  static MySQLBackend* singleton();
+  static ReturnCode connect(
+      const URI& backend_uri,
+      std::unique_ptr<Backend>* backend);
 
-  MySQLBackend();
-
-  bool openTables(
-      const std::vector<std::string>& table_names,
-      const util::URI& source_uri,
-      std::vector<std::unique_ptr<TableRef>>* target) override;
+  ReturnCode createTable(const TableConfig& table_config) override;
+  ReturnCode insertRows(const std::vector<InsertOp>& ops) override;
 
 protected:
-  std::vector<std::shared_ptr<MySQLConnection>> connections_;
-  std::mutex connections_mutex_;
+
+  MySQLBackend(std::unique_ptr<MySQLConnection> conn);
+
+  std::unique_ptr<MySQLConnection> conn_;
+  std::mutex mutex_;
 };
 
-}
-}
-}
-#endif
+} // namespace mysql_backend
+} // namespace fnordmetric
+

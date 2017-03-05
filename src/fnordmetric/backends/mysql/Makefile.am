@@ -4,6 +4,8 @@ noinst_LIBRARIES = libfnordmetric-backend-mysql.a
 
 libfnordmetric_backend_mysql_a_SOURCES = \
     mysqlbackend.h \
-    mysqlbackend.cc
+    mysqlbackend.cc \
+    mysqlconnection.h \
+    mysqlconnection.cc
 
 endif

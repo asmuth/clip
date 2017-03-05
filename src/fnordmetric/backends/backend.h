@@ -35,7 +35,7 @@ public:
 
   virtual ReturnCode insertRows(const std::vector<InsertOp>& ops) = 0;
 
-  virtual void shutdown() = 0;
+  virtual void shutdown() {}
 
 };
 
