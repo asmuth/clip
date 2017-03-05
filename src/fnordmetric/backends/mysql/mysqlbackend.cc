@@ -102,6 +102,40 @@ ReturnCode MySQLBackend::createTable(const TableConfig& table_config) {
 
   if (table_exists) {
     /* migrate */
+    std::set<std::string> actual_columns;
+    {
+      std::vector<std::string> cols;
+      auto rc = conn_->describeTable(table_config.table_id, &cols);
+      if (!rc.isSuccess()) {
+        return rc;
+      }
+
+      for (const auto& c : cols) {
+        actual_columns.insert(c);
+      }
+    }
+
+    for (const auto& c : expected_cols) {
+      if (actual_columns.count(c.first) > 0) {
+        continue;
+      }
+
+      logInfo(
+          "[MySQL] Creating table column: $0.$1",
+          table_config.table_id,
+          c.first);
+
+      std::string query = StringUtil::format(
+          "ALTER TABLE `$0` ADD COLUMN `$1` $2;",
+          conn_->escapeString(table_config.table_id),
+          conn_->escapeString(c.first),
+          getMySQLType(c.second));
+
+      auto rc = conn_->executeQuery(query);
+      if (!rc.isSuccess()) {
+        return rc;
+      }
+    }
 
     return ReturnCode::success();
   } else {
@@ -122,9 +156,7 @@ ReturnCode MySQLBackend::createTable(const TableConfig& table_config) {
         conn_->escapeString(table_config.table_id),
         StringUtil::join(create_cols, ", "));
 
-    std::vector<std::string> headers;
-    std::list<std::vector<std::string>> rows;
-    return conn_->executeQuery(query, &headers, &rows);
+    return conn_->executeQuery(query);
   }
 }
 
@@ -158,9 +190,7 @@ ReturnCode MySQLBackend::insertRows(const std::vector<InsertOp>& ops) {
         conn_->escapeString(op.table->table_id),
         StringUtil::join(insert_cols, ", "));
 
-    std::vector<std::string> headers;
-    std::list<std::vector<std::string>> rows;
-    auto rc = conn_->executeQuery(query, &headers, &rows);
+    auto rc = conn_->executeQuery(query);
     if (!rc.isSuccess()) {
       return ReturnCode::error("[MySQL] Insert failed: $0", rc.getMessage());
     }

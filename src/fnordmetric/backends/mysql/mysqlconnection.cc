@@ -126,8 +126,8 @@ ReturnCode MySQLConnection::describeTable(
 
 ReturnCode MySQLConnection::executeQuery(
     const std::string& query,
-    std::vector<std::string>* header,
-    std::list<std::vector<std::string>>* rows) {
+    std::vector<std::string>* header /* = nullptr */,
+    std::list<std::vector<std::string>>* rows /* = nullptr */) {
   logDebug("[MySQL] Executing Query: $0", query);
 
   if (mysql_real_query(mysql_, query.c_str(), query.size()) != 0) {
@@ -137,28 +137,31 @@ ReturnCode MySQLConnection::executeQuery(
         mysql_error(mysql_));
   }
 
-  auto result = mysql_use_result(mysql_);
-  if (!result) {
-    return ReturnCode::success();
-  }
-
-  MYSQL_ROW row;
-  while ((row = mysql_fetch_row(result))) {
-    auto col_lens = mysql_fetch_lengths(result);
-    if (col_lens == nullptr) {
-      break;
+  if (rows) {
+    auto result = mysql_use_result(mysql_);
+    if (!result) {
+      return ReturnCode::success();
     }
 
-    std::vector<std::string> row_vec;
-    auto row_len = mysql_num_fields(result);
-    for (int i = 0; i < row_len; ++i) {
-      row_vec.emplace_back(row[i], col_lens[i]);
+    MYSQL_ROW row;
+    while ((row = mysql_fetch_row(result))) {
+      auto col_lens = mysql_fetch_lengths(result);
+      if (col_lens == nullptr) {
+        break;
+      }
+
+      std::vector<std::string> row_vec;
+      auto row_len = mysql_num_fields(result);
+      for (int i = 0; i < row_len; ++i) {
+        row_vec.emplace_back(row[i], col_lens[i]);
+      }
+
+      rows->emplace_back(row_vec);
     }
 
-    rows->emplace_back(row_vec);
+    mysql_free_result(result);
   }
 
-  mysql_free_result(result);
   return ReturnCode::success();
 }
 

@@ -96,8 +96,8 @@ public:
    */
   ReturnCode executeQuery(
       const std::string& query,
-      std::vector<std::string>* header,
-      std::list<std::vector<std::string>>* rows);
+      std::vector<std::string>* header = nullptr,
+      std::list<std::vector<std::string>>* rows = nullptr);
 
   std::string escapeString(const std::string& str);
 
