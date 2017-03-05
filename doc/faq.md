@@ -46,7 +46,7 @@ rules.
 Hence, the recommendation for monitoring/alerting is to run all rules directly
 against the SQL database. You could do this with a custom script that executes
 the rule queries on the SQL database and connects with a third-party alerting
-system PagerDuty or nagios.
+system like PagerDuty or nagios.
 
 
 ### Is FnordMetric highly available/scalable/distributed?
