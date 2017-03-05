@@ -1,5 +1,6 @@
 bin_PROGRAMS = metric-collectd metric-queryd
 noinst_LIBRARIES = libfnordmetric-common.a
+SUBDIRS = backends/mysql
 
 libfnordmetric_common_a_SOURCES = \
     aggregate.h \
@@ -88,6 +89,21 @@ libfnordmetric_common_a_SOURCES = \
     util/autoref_impl.h \
     util/autoref.h \
     util/autoref.cc
+
+FNORDMETRIC_LIBS = \
+    libfnordmetric-common.a \
+    -L$(abs_top_builddir)/deps/libtransport/src/libtransport/http/libtransport_http.a \
+    -L$(abs_top_builddir)/deps/libtransport/src/libtransport/json/libtransport_json.a \
+    -L$(abs_top_builddir)/deps/libtransport/src/libtransport/uri \
+    -ltransport_http \
+    -ltransport_json \
+    -ltransport_uri \
+    libfnordmetric-common.a
+
+if ENABLE_MYSQL
+  FNORDMETRIC_LIBS += backends/mysql/libfnordmetric-backend-mysql.a
+  FNORDMETRIC_LIBS += -lmysqlclient
+endif
 
 metric_collectd_SOURCES = metric_collectd.cc
 metric_collectd_LDADD = $(FNORDMETRIC_LIBS)
