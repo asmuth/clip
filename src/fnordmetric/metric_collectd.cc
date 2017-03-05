@@ -115,11 +115,11 @@ int main(int argc, const char** argv) {
 
   /* setup logging */
   if (!flags.isSet("nolog_to_stderr") && !flags.isSet("daemonize")) {
-    Logger::logToStderr("metricd");
+    Logger::logToStderr("metric-collectd");
   }
 
   if (flags.isSet("log_to_syslog")) {
-    Logger::logToSyslog("metricd");
+    Logger::logToSyslog("metric-collectd");
   }
 
   Logger::get()->setMinimumLogLevel(
@@ -129,7 +129,7 @@ int main(int argc, const char** argv) {
   if (flags.isSet("help") || flags.isSet("version")) {
     std::cerr <<
         StringUtil::format(
-            "metricd $0\n"
+            "metric-collectd $0\n"
             "Part of the FnordMetric project (http://fnordmetric.io)\n"
             "Copyright (c) 2016, Paul Asmuth et al. All rights reserved.\n\n",
             FNORDMETRIC_VERSION);

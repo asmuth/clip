@@ -129,11 +129,11 @@ int main(int argc, const char** argv) {
 
   /* setup logging */
   if (!flags.isSet("nolog_to_stderr") && !flags.isSet("daemonize")) {
-    Logger::logToStderr("metricd");
+    Logger::logToStderr("metric-queryd");
   }
 
   if (flags.isSet("log_to_syslog")) {
-    Logger::logToSyslog("metricd");
+    Logger::logToSyslog("metric-queryd");
   }
 
   Logger::get()->setMinimumLogLevel(
