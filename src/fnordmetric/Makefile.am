@@ -97,13 +97,14 @@ FNORDMETRIC_LIBS = \
     -L$(abs_top_builddir)/deps/libtransport/src/libtransport/uri \
     -ltransport_http \
     -ltransport_json \
-    -ltransport_uri \
-    libfnordmetric-common.a
+    -ltransport_uri
 
 if ENABLE_MYSQL
   FNORDMETRIC_LIBS += backends/mysql/libfnordmetric-backend-mysql.a
   FNORDMETRIC_LIBS += -lmysqlclient
 endif
+
+FNORDMETRIC_LIBS += libfnordmetric-common.a
 
 metric_collectd_SOURCES = metric_collectd.cc
 metric_collectd_LDADD = $(FNORDMETRIC_LIBS)

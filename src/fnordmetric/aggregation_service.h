@@ -15,6 +15,7 @@
 #include <mutex>
 #include <thread>
 #include <condition_variable>
+#include "fnordmetric/aggregate.h"
 #include "fnordmetric/table.h"
 #include "fnordmetric/util/sha1.h"
 #include "fnordmetric/table_map.h"

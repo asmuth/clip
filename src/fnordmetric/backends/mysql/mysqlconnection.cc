@@ -130,18 +130,17 @@ ReturnCode MySQLConnection::executeQuery(
     std::list<std::vector<std::string>>* rows) {
   logDebug("[MySQL] Executing Query: $0", query);
 
-  MYSQL_RES* result = nullptr;
-  if (mysql_real_query(mysql_, query.c_str(), query.size()) == 0) {
-    result = mysql_use_result(mysql_);
-  }
-
-  if (result == nullptr) {
+  if (mysql_real_query(mysql_, query.c_str(), query.size()) != 0) {
     return ReturnCode::errorf(
         "ERUNTIME",
         "mysql query failed: $0",
         mysql_error(mysql_));
   }
 
+  auto result = mysql_use_result(mysql_);
+  if (!result) {
+    return ReturnCode::success();
+  }
 
   MYSQL_ROW row;
   while ((row = mysql_fetch_row(result))) {

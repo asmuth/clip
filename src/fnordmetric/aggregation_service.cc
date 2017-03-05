@@ -46,7 +46,10 @@ AggregationService::~AggregationService() {
 ReturnCode AggregationService::applyConfig(const ConfigList* config) {
   if (config->getCreateTables()) {
     for (auto& mc : config->getTableConfigs()) {
-      backend_->createTable(mc.second);
+      auto rc = backend_->createTable(mc.second);
+      if (!rc.isSuccess()) {
+        return rc;
+      }
     }
   }
 

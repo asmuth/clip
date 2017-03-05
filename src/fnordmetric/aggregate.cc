@@ -52,6 +52,24 @@ ReturnCode mkAggregationFunction(
   return ReturnCode::error("ERUNTIME", "invalid aggregation function");
 }
 
+ReturnCode getAggregationFunctionOutputColumns(
+    const MeasureConfig& config,
+    std::vector<std::pair<std::string, DataType>>* columns) {
+  switch (config.aggr_fun) {
+    case AggregationFunctionType::SUM:
+      switch (config.type) {
+        case DataType::UINT64:
+        case DataType::INT64:
+          columns->emplace_back(config.column_name, DataType::INT64);
+          return ReturnCode::success();
+        default:
+          return ReturnCode::error("ERUNTIME", "invalid data type for SUM");
+      }
+  }
+
+  return ReturnCode::error("ERUNTIME", "invalid aggregation function");
+}
+
 SumIntegerAggregationFunction::SumIntegerAggregationFunction() : sum_(0) {}
 
 ReturnCode SumIntegerAggregationFunction::addSample(

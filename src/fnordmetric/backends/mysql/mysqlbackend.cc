@@ -11,6 +11,8 @@
 #include <fnordmetric/backends/mysql/mysqlbackend.h>
 #include <fnordmetric/backends/mysql/mysqlconnection.h>
 #include <fnordmetric/util/time.h>
+#include <fnordmetric/util/logging.h>
+#include <fnordmetric/aggregate.h>
 #include <memory>
 #include <mutex>
 
@@ -44,9 +46,86 @@ MySQLBackend::MySQLBackend(
     std::unique_ptr<MySQLConnection> conn) :
     conn_(std::move(conn)) {}
 
+static std::string getMySQLType(DataType t) {
+  switch (t) {
+    case DataType::UINT64:
+    case DataType::INT64:
+      return "BIGINT";
+    case DataType::FLOAT64:
+      return "DOUBLE";
+    case DataType::NIL:
+    case DataType::STRING:
+      return "VARCHAR(1024)"; // FIXME
+    case DataType::TIMESTAMP:
+      return "TIMESTAMP";
+  }
+
+  throw std::runtime_error("invalid data type");
+}
+
 ReturnCode MySQLBackend::createTable(const TableConfig& table_config) {
+  std::vector<std::pair<std::string, DataType>> expected_cols;
+  expected_cols.emplace_back("time", DataType::TIMESTAMP);
+  expected_cols.emplace_back("time_window", DataType::FLOAT64);
+
+  for (const auto& l : table_config.labels) {
+    expected_cols.emplace_back(l.column_name, l.type);
+  }
+
+  for (const auto& m : table_config.measures) {
+    auto rc = getAggregationFunctionOutputColumns(m, &expected_cols);
+    if (!rc.isSuccess()) {
+      return rc;
+    }
+  }
+
   std::unique_lock<std::mutex> lk(mutex_);
-  return ReturnCode::success();
+
+  /* check if table exists */
+  bool table_exists = false;
+  {
+    auto query = StringUtil::format(
+        "SHOW TABLES LIKE '$0';",
+        conn_->escapeString(table_config.table_id));
+
+    std::vector<std::string> headers;
+    std::list<std::vector<std::string>> rows;
+    auto rc = conn_->executeQuery(query, &headers, &rows);
+    if (!rc.isSuccess()) {
+      return rc;
+    }
+
+    if (rows.size() > 0) {
+      table_exists = true;
+    }
+  }
+
+  if (table_exists) {
+    /* migrate */
+
+    return ReturnCode::success();
+  } else {
+    /* create */
+    logInfo("[MySQL] Creating table: $0", table_config.table_id);
+
+    std::vector<std::string> create_cols;
+    for (const auto& c : expected_cols) {
+      create_cols.emplace_back(
+          StringUtil::format(
+              "`$0` $1",
+              conn_->escapeString(c.first),
+              getMySQLType(c.second)));
+    }
+
+    std::string query = StringUtil::format(
+        "CREATE TABLE `$0` ($1);",
+        conn_->escapeString(table_config.table_id),
+        StringUtil::join(create_cols, ", "));
+
+    std::vector<std::string> headers;
+    std::list<std::vector<std::string>> rows;
+    return conn_->executeQuery(query, &headers, &rows);
+  }
 }
 
 ReturnCode MySQLBackend::insertRows(const std::vector<InsertOp>& ops) {

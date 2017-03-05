@@ -9,15 +9,12 @@
  */
 #pragma once
 #include <fnordmetric/sample.h>
+#include <fnordmetric/table.h>
 #include <fnordmetric/util/return_code.h>
 
 namespace fnordmetric {
 class AggregationFunction;
 class MeasureConfig;
-
-enum class AggregationFunctionType {
-  SUM, MIN, MAX
-};
 
 std::string getAggregationFunctionTypeName(AggregationFunctionType t);
 bool parseAggregationFunctionType(const std::string& s, AggregationFunctionType* t);
@@ -25,6 +22,10 @@ bool parseAggregationFunctionType(const std::string& s, AggregationFunctionType*
 ReturnCode mkAggregationFunction(
     const MeasureConfig& config,
     std::unique_ptr<AggregationFunction>* fun);
+
+ReturnCode getAggregationFunctionOutputColumns(
+    const MeasureConfig& config,
+    std::vector<std::pair<std::string, DataType>>* columns);
 
 class AggregationFunction {
 public:

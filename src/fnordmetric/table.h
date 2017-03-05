@@ -11,7 +11,6 @@
 #pragma once
 #include <fnordmetric/sample.h>
 #include <fnordmetric/util/return_code.h>
-#include <fnordmetric/aggregate.h>
 #include <fnordmetric/util/option.h>
 #include <functional>
 #include <iostream>
@@ -32,7 +31,12 @@ enum class DataType {
   UINT64,
   INT64,
   FLOAT64,
-  STRING
+  STRING,
+  TIMESTAMP
+};
+
+enum class AggregationFunctionType {
+  SUM, MIN, MAX
 };
 
 std::string getDataTypeName(DataType t);

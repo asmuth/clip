@@ -24,6 +24,7 @@ std::string getDataTypeName(DataType t) {
     case DataType::INT64: return "int64";
     case DataType::FLOAT64: return "float64";
     case DataType::STRING: return "string";
+    case DataType::TIMESTAMP: return "timestamp";
   }
 
   return "???";
@@ -37,6 +38,7 @@ bool parseDataType(
   if (s == "int64") { *t = DataType::INT64; return true; }
   if (s == "float64") { *t = DataType::FLOAT64; return true; }
   if (s == "string") { *t = DataType::STRING; return true; }
+  if (s == "timestamp") { *t = DataType::TIMESTAMP; return true; }
   return false;
 }
 
