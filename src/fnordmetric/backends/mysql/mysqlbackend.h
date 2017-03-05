@@ -28,6 +28,11 @@ public:
   ReturnCode createTable(const TableConfig& table_config) override;
   ReturnCode insertRows(const std::vector<InsertOp>& ops) override;
 
+  ReturnCode executeQuery(
+      const std::string& query,
+      std::vector<std::string>* header = nullptr,
+      std::list<std::vector<std::string>>* rows = nullptr) override;
+
 protected:
 
   MySQLBackend(std::unique_ptr<MySQLConnection> conn);

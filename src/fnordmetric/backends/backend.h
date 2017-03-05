@@ -35,6 +35,11 @@ public:
 
   virtual ReturnCode insertRows(const std::vector<InsertOp>& ops) = 0;
 
+  virtual ReturnCode executeQuery(
+      const std::string& query,
+      std::vector<std::string>* header = nullptr,
+      std::list<std::vector<std::string>>* rows = nullptr) = 0;
+
   virtual void shutdown() {}
 
 };

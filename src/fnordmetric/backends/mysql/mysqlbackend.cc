@@ -199,6 +199,19 @@ ReturnCode MySQLBackend::insertRows(const std::vector<InsertOp>& ops) {
   return ReturnCode::success();
 }
 
+ReturnCode MySQLBackend::executeQuery(
+    const std::string& query,
+    std::vector<std::string>* header /* = nullptr */,
+    std::list<std::vector<std::string>>* rows /* = nullptr */) {
+  std::unique_lock<std::mutex> lk(mutex_);
+  auto rc = conn_->executeQuery(query, header, rows);
+  if (rc.isSuccess()) {
+    return rc;
+  } else {
+    return ReturnCode::error("[MySQL] Query failed: $0", rc.getMessage());
+  }
+}
+
 } // namespace mysql_backend
 } // namespace fnordmetric
 

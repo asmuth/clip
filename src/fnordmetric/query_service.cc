@@ -152,14 +152,45 @@ void QueryService::handleRequest_QUERY(
   }
 
   /* execute query */
+  std::vector<std::string> result_header;
+  std::list<std::vector<std::string>> result_rows;
+  auto rc = backend_->executeQuery(query, &result_header, &result_rows);
+  if (!rc.isSuccess()) {
+    response->setStatus(http::kStatusInternalServerError);
+    response->addBody(StringUtil::format("ERROR: $0", rc.getMessage()));
+    return;
+  }
 
   /* write response */
   std::string json_str;
   json::JSONWriter json(&json_str);
 
   json.beginObject();
+
   json.addString("query");
   json.addString(query);
+  json.addString("result");
+  json.beginObject();
+
+  json.addString("column_names");
+  json.beginArray();
+  for (const auto& c : result_header) {
+    json.addString(c);
+  }
+  json.endArray();
+
+  json.addString("rows");
+  json.beginArray();
+  for (const auto& row : result_rows) {
+    json.beginArray();
+    for (const auto& c : row) {
+      json.addString(c);
+    }
+    json.endArray();
+  }
+  json.endArray();
+
+  json.endObject();
   json.endObject();
 
   response->setStatus(http::kStatusOK);
