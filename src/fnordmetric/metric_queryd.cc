@@ -22,6 +22,7 @@
 #include <fnordmetric/util/daemonize.h>
 #include <fnordmetric/config_list.h>
 #include <fnordmetric/config_parser.h>
+#include <fnordmetric/query_service.h>
 
 using namespace fnordmetric;
 
@@ -59,7 +60,7 @@ int main(int argc, const char** argv) {
       FlagParser::T_STRING,
       false,
       NULL,
-      "localhost:8175");
+      NULL);
 
   flags.defineFlag(
       "help",
@@ -177,6 +178,11 @@ int main(int argc, const char** argv) {
     return 1;
   }
 
+  if (!flags.isSet("listen_http")) {
+    std::cerr << "ERROR: --listen_http flag must be set" << std::endl;
+    return 1;
+  }
+
   /* daemonize */
   auto rc = ReturnCode::success();
   if (rc.isSuccess() && flags.isSet("daemonize")) {
@@ -227,21 +233,26 @@ int main(int argc, const char** argv) {
   }
 
   /* run http server */
+  std::string http_bind;
+  uint16_t http_port;
   if (rc.isSuccess()) {
-    std::string http_bind;
-    uint16_t http_port;
     auto parse_rc = parseListenAddr(
         flags.getString("listen_http"),
         &http_bind,
         &http_port);
 
-    if (parse_rc) {
-      //HTTPServer server(metric_service.get(), flags.getString("dev_assets"));
-      //server.listen(http_bind, http_port);
-      //server.run();
-    } else {
+    if (!parse_rc) {
       rc = ReturnCode::error("ERUNTIME", "invalid value for --listen_http");
     }
+  }
+
+  if (rc.isSuccess()) {
+    QueryService query_service(backend.get());
+    if (flags.isSet("dev_assets")) {
+      query_service.setAssetPath(flags.getString("dev_assets"));
+    }
+
+    query_service.listenAndRun(http_bind, http_port);
   }
 
   if (!rc.isSuccess()) {

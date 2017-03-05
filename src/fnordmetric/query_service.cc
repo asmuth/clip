@@ -1,6 +1,7 @@
 /**
  * This file is part of the "FnordMetric" project
  *   Copyright (c) 2014 Paul Asmuth, Google Inc.
+ *   Copyright (c) 2017 Paul Asmuth <paul@asmuth.com>
  *
  * FnordMetric is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License v3.0. You should have received a
@@ -10,6 +11,7 @@
 #include <fnordmetric/webui/webui.h>
 #include <fnordmetric/util/logging.h>
 #include <fnordmetric/util/fileutil.h>
+#include <fnordmetric/query_service.h>
 #include <libtransport/json/json.h>
 #include <libtransport/json/json_object.h>
 #include <libtransport/json/json_writer.h>
@@ -18,14 +20,29 @@ namespace fnordmetric {
 
 namespace json = libtransport::json;
 
-WebUI::WebUI(
-    const std::string& dynamic_asset_path /* = "" */) :
-    dynamic_asset_path_(dynamic_asset_path) {}
+QueryService::QueryService(Backend* backend) : backend_(backend) {
+  http_server_.setRequestHandler(
+      std::bind(
+          &QueryService::handleRequest,
+          this,
+          std::placeholders::_1,
+          std::placeholders::_2));
+}
 
-void WebUI::handleHTTPRequest(
+ReturnCode QueryService::listenAndRun(const std::string& addr, int port) {
+  logInfo("Starting HTTP server on $0:$1", addr, port);
+
+  if (!http_server_.listen(addr, port)) {
+    return ReturnCode::error("ERUNTIME", "listen() failed");
+  }
+
+  http_server_.run();
+  return ReturnCode::success();
+}
+
+void QueryService::handleRequest(
     http::HTTPRequest* request,
     http::HTTPResponse* response) {
-
   logDebug(
       "HTTP request: $0 $1",
       http::getHTTPMethodName(request->method()),
@@ -47,7 +64,7 @@ void WebUI::handleHTTPRequest(
     return;
   }
 
-  if (StringUtil::beginsWith(path, "/embed/chart")) {
+  if (StringUtil::beginsWith(path, "/embed/timeseries")) {
     response->setStatus(http::kStatusOK);
     response->addHeader("Content-Type", "text/html; charset=utf-8");
     std::string body = getAssetFile("embed/chart/chart.html");
@@ -62,33 +79,6 @@ void WebUI::handleHTTPRequest(
     js_src += getAssetFile("embed/units.js");
     js_src += getAssetFile("embed/colors.js");
     css_src += getAssetFile("embed/chart/chart.css");
-
-    std::string config = "{}";
-    URI::getParam(uri.queryParams(), "c", &config);
-    StringUtil::replaceAll(&config, "</", "<\\/");
-
-    StringUtil::replaceAll(&body, "{{JS_SRC}}", js_src);
-    StringUtil::replaceAll(&body, "{{CSS_SRC}}", css_src);
-    StringUtil::replaceAll(&body, "{{PARAMS}}", config);
-
-    response->addBody(body);
-    return;
-  }
-
-  if (StringUtil::beginsWith(path, "/embed/top_series")) {
-    response->setStatus(http::kStatusOK);
-    response->addHeader("Content-Type", "text/html; charset=utf-8");
-    std::string body = getAssetFile("embed/top_series/top_series.html");
-    std::string js_src;
-    std::string css_src;
-    js_src += getAssetFile("embed/top_series/top_series.js");
-    js_src += getAssetFile("embed/top_series/top_series_table.js");
-    js_src += getAssetFile("embed/top_series/top_series_sparkline_plot.js");
-    js_src += getAssetFile("embed/top_series/top_series_sparkline_domain.js");
-    js_src += getAssetFile("embed/svg_helper.js");
-    js_src += getAssetFile("util/http.js");
-    js_src += getAssetFile("util/dom.js");
-    css_src += getAssetFile("embed/top_series/top_series.css");
 
     std::string config = "{}";
     URI::getParam(uri.queryParams(), "c", &config);
@@ -128,32 +118,26 @@ void WebUI::handleHTTPRequest(
   response->addBody("not found");
 }
 
-std::string WebUI::getPreludeHTML() const {
+std::string QueryService::getPreludeHTML() const {
   return getAssetFile("prelude.html");
 }
 
-std::string WebUI::getAppHTML() const {
-  auto assets_lst = FileUtil::read(
-      FileUtil::joinPaths(dynamic_asset_path_, "assets.lst")).toString();
+std::string QueryService::getAppHTML() const {
+  auto assets_lst = getAssetFile("assets.lst");
 
   std::string app_html;
   for (const auto& f : StringUtil::split(assets_lst, "\n")) {
-    auto file_path = FileUtil::joinPaths(dynamic_asset_path_, f);
-    if (!FileUtil::exists(file_path)) {
-      continue;
-    }
-
     if (StringUtil::endsWith(f, ".html")) {
-      app_html += FileUtil::read(file_path).toString();
+      app_html += getAssetFile(f);
     }
 
     if (StringUtil::endsWith(f, ".js")) {
-      auto content = FileUtil::read(file_path).toString();
+      auto content = getAssetFile(f);
       app_html += "<script>" + content + "</script>";
     }
 
     if (StringUtil::endsWith(f, ".css")) {
-      auto content = FileUtil::read(file_path).toString();
+      auto content = getAssetFile(f);
       app_html += "<style type='text/css'>" + content + "</style>";
     }
   }
@@ -161,7 +145,7 @@ std::string WebUI::getAppHTML() const {
   return app_html;
 }
 
-std::string WebUI::getAssetFile(const std::string& file) const {
+std::string QueryService::getAssetFile(const std::string& file) const {
   if (!dynamic_asset_path_.empty()) {
     auto file_path = FileUtil::joinPaths(dynamic_asset_path_, file);
     if (FileUtil::exists(file_path)) {
@@ -172,4 +156,9 @@ std::string WebUI::getAssetFile(const std::string& file) const {
   return "";
 }
 
+void QueryService::setAssetPath(const std::string& path) {
+  dynamic_asset_path_ = path;
 }
+
+} // namespace fnordmetric
+

@@ -31,6 +31,8 @@ libfnordmetric_common_a_SOURCES = \
     listen_http.cc \
     fetch_http.h \
     fetch_http.cc \
+    query_service.h \
+    query_service.cc \
     util/daemonize.h \
     util/daemonize.cc \
     util/time_impl.h \
