@@ -10,6 +10,7 @@
  */
 #include <fnordmetric/backends/mysql/mysqlbackend.h>
 #include <fnordmetric/backends/mysql/mysqlconnection.h>
+#include <fnordmetric/util/time.h>
 #include <memory>
 #include <mutex>
 
@@ -50,6 +51,42 @@ ReturnCode MySQLBackend::createTable(const TableConfig& table_config) {
 
 ReturnCode MySQLBackend::insertRows(const std::vector<InsertOp>& ops) {
   std::unique_lock<std::mutex> lk(mutex_);
+
+  for (const auto& op : ops) {
+    std::vector<std::string> insert_cols;
+
+    insert_cols.emplace_back(
+        StringUtil::format(
+            "time='$0'",
+            conn_->escapeString(UnixTime(op.time).toString())));
+
+    insert_cols.emplace_back(
+        StringUtil::format(
+            "time_window='$0'",
+            conn_->escapeString(
+                std::to_string(op.table->interval / double(kMicrosPerSecond)))));
+
+    for (const auto& c : op.columns) {
+      insert_cols.emplace_back(
+          StringUtil::format(
+              "`$0`='$1'",
+              conn_->escapeString(c.first),
+              conn_->escapeString(c.second)));
+    }
+
+    std::string query = StringUtil::format(
+        "INSERT INTO `$0` SET $1;",
+        conn_->escapeString(op.table->table_id),
+        StringUtil::join(insert_cols, ", "));
+
+    std::vector<std::string> headers;
+    std::list<std::vector<std::string>> rows;
+    auto rc = conn_->executeQuery(query, &headers, &rows);
+    if (!rc.isSuccess()) {
+      return ReturnCode::error("[MySQL] Insert failed: $0", rc.getMessage());
+    }
+  }
+
   return ReturnCode::success();
 }
 

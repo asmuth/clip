@@ -9,6 +9,7 @@
  */
 #include <fnordmetric/backends/mysql/mysqlbackend.h>
 #include <fnordmetric/backends/mysql/mysqlconnection.h>
+#include <fnordmetric/util/logging.h>
 
 namespace fnordmetric {
 namespace mysql_backend {
@@ -102,43 +103,32 @@ ReturnCode MySQLConnection::connect(
   return ReturnCode::success();
 }
 
-std::vector<std::string> MySQLConnection::describeTable(
-    const std::string& table_name) {
-  std::vector<std::string> columns;
-
-#ifdef FNORD_ENABLE_MYSQL
+ReturnCode MySQLConnection::describeTable(
+    const std::string& table_name,
+    std::vector<std::string>* columns) {
   MYSQL_RES* res = mysql_list_fields(mysql_, table_name.c_str(), NULL);
   if (res == nullptr) {
-    RAISE(
-      kRuntimeError,
-      "mysql_list_fields() failed: %s\n",
-      mysql_error(mysql_));
+    return ReturnCode::errorf(
+        "ERUNTIME",
+        "mysql_list_fields() failed: $0",
+        mysql_error(mysql_));
   }
 
   auto num_cols = mysql_num_fields(res);
   for (int i = 0; i < num_cols; ++i) {
     MYSQL_FIELD* col = mysql_fetch_field_direct(res, i);
-    columns.emplace_back(col->name);
+    columns->emplace_back(col->name);
   }
 
   mysql_free_result(res);
-#else
-  RAISE(kRuntimeError, "FnordMetric was compiled without libmysqlclient");
-#endif
-  return columns;
+  return ReturnCode::success();
 }
 
-void MySQLConnection::executeQuery(
+ReturnCode MySQLConnection::executeQuery(
     const std::string& query,
-    std::function<bool (const std::vector<std::string>&)> row_callback) {
-#ifdef FNORD_ENABLE_MYSQL
-  if (env()->verbose()) {
-    fnord::util::LogEntry entry;
-    entry.append("__severity__", "DEBUG");
-    entry.append("__message__", "Executing MySQL query");
-    entry.append("query", query);
-    env()->logger()->log(entry);
-  }
+    std::vector<std::string>* header,
+    std::list<std::vector<std::string>>* rows) {
+  logDebug("[MySQL] Executing Query: $0", query);
 
   MYSQL_RES* result = nullptr;
   if (mysql_real_query(mysql_, query.c_str(), query.size()) == 0) {
@@ -146,10 +136,9 @@ void MySQLConnection::executeQuery(
   }
 
   if (result == nullptr) {
-    RAISE(
-        kRuntimeError,
-        "mysql query failed: %s -- error: %s\n",
-        query.c_str(),
+    return ReturnCode::errorf(
+        "ERUNTIME",
+        "mysql query failed: $0",
         mysql_error(mysql_));
   }
 
@@ -167,25 +156,19 @@ void MySQLConnection::executeQuery(
       row_vec.emplace_back(row[i], col_lens[i]);
     }
 
-    try {
-      if (!row_callback(row_vec)) {
-        break;
-      }
-    } catch (const std::exception& e) {
-      mysql_free_result(result);
-      try {
-        auto rte = dynamic_cast<const util::RuntimeException&>(e);
-        throw rte;
-      } catch (std::bad_cast bce) {
-        throw e;
-      }
-    }
+    rows->emplace_back(row_vec);
   }
 
   mysql_free_result(result);
-#else
-  RAISE(kRuntimeError, "FnordMetric was compiled without libmysqlclient");
-#endif
+  return ReturnCode::success();
+}
+
+std::string MySQLConnection::escapeString(const std::string& in) {
+  std::string out;
+  out.resize(in.size() * 2 + 1);
+  auto len = mysql_real_escape_string(mysql_, &out[0], in.data(), in.size());
+  out.resize(len);
+  return out;
 }
 
 } // namespace mysql_backend

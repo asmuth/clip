@@ -43,7 +43,7 @@ public:
   ~MySQLConnection();
 
   /**
-   * Connect to a mysql server on the specified URI. May throw an exception
+   * Connect to a mysql server on the specified URI.
    *
    * Example URIs:
    *    mysql://localhost/test_database?user=root
@@ -55,7 +55,7 @@ public:
   ReturnCode connect(const URI& uri);
 
   /**
-   * Connect to a mysql server. May throw an exception
+   * Connect to a mysql server.
    *
    * @param host the mysql server hostname
    * @param port the mysql server port
@@ -73,12 +73,14 @@ public:
 
   /**
    * Returns a list of all column names for the provided table name. May 
-   * throw an exception (This does the equivalent to a DESCRIBEL TABLE)
+   * throw an exception (This does the equivalent to a DESCRIBE TABLE)
    *
    * @param table_name the name of the table do describe
    * @returns a list of all columns names of the table
    */
-  std::vector<std::string> describeTable(const std::string& table_name);
+  ReturnCode describeTable(
+      const std::string& table_name,
+      std::vector<std::string>* columns);
 
   /**
    * Execute a mysql query. The mysql query string must not include a terminal
@@ -90,14 +92,14 @@ public:
    * if it returns false it will not be called again and the remainder of the
    * result set will be discarded.
    *
-   * This method may throw an exception.
-   *
    * @param query the mysql query string without a terminal semicolon
-   * @param row_callback the callback that should be called for every result row
    */
-  void executeQuery(
+  ReturnCode executeQuery(
       const std::string& query,
-      std::function<bool (const std::vector<std::string>&)> row_callback);
+      std::vector<std::string>* header,
+      std::list<std::vector<std::string>>* rows);
+
+  std::string escapeString(const std::string& str);
 
 protected:
    MYSQL* mysql_;
