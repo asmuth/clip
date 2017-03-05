@@ -20,6 +20,10 @@ documentation:
         title: "Download"
         url: "/documentation/download"
         file: "download"
+      -
+        title: "FAQ"
+        url: "/documentation/faq"
+        file: "faq"
 
 
   -
