@@ -63,6 +63,27 @@ SQL queries and create charts:
 </div>
 
 
+## Examples
+
+Here are some example charts that were generated using FnordMetric and SQL to
+give you some ideas on whats possible. Have a look at the
+[full list of examples](/examples/) for more.
+
+<div style="height: .6em;"></div>
+
+_Example: Simple timeseries chart_
+<a href="/examples/linecharts/simple_lines"><img src="/examples/linecharts/simple_lines/simple_lines.png" style="width: 100%;" /></a>
+
+_Example: Chart with explicit domain and legend_
+<a href="/examples/linecharts/explicit_domain"><img src="/examples/linecharts/explicit_domain/explicit_domain.png" style="width: 100%;" /></a>
+
+_Example: Horizontal barchart_
+<a href="/examples/barcharts/horizontal_bars"><img src="/examples/barcharts/horizontal_bars/horizontal_bars.png" style="width: 100%;" /></a>
+
+_Example: Scatter chart with lables_
+<a href="/examples/pointcharts/pointchart_with_labels"><img src="/examples/pointcharts/pointchart_with_labels/pointchart_with_labels.png" style="width: 100%;" /></a>
+
+
 ## Supported Databases
 
 These are the currently supported database. If you'd like to add a new backend,
@@ -76,10 +97,9 @@ GitHub.
 
 ## Getting Started
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis
-nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
-fugiat nulla pariatur
+To get started with FnordMetric, have a look at the [Getting Started](/documentation/getting-started) and
+[Data Model](/documentation/data-model) pages. If you have any questions please
+don't hesitate to reach out via [Github Issues](http://github.com/paulasmuth/fnordmetric/issues)
+or [the FnordMetric google group](http://groups.google.com/group/fnordmetric).
 
 <script async defer src="https://buttons.github.io/buttons.js"></script>
