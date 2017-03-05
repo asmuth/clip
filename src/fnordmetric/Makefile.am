@@ -1,38 +1,5 @@
-## Process this file with automake to produce Makefile.in
-
-MAINTAINERCLEANFILES =   \
-  Makefile.in
-
 bin_PROGRAMS = metric-collectd metric-queryd
 noinst_LIBRARIES = libfnordmetric-common.a
-
-################# DEPENDENCIES ####################
-if HAVE_ZLIB
-ZLIB_DEF = -DHAVE_ZLIB=1
-else
-ZLIB_DEF =
-endif
-
-PTHREAD_DEF = -DHAVE_PTHREAD=1
-PTHREAD_LDFLAGS_=-lpthread
-
-if HAVE_SYSLOG_H
-SYSLOG_DEF = -DHAVE_SYSLOG_H=1
-else
-SYSLOG_DEF =
-endif
-
-if HAVE_GETHOSTBYNAME_R
-GETHOSTBYNAME_R_DEF = -DHAVE_GETHOSTBYNAME_R=1
-else
-GETHOSTBYNAME_R_DEF =
-endif
-
-PCRE_LDFLAGS_=-lpcre
-CURL_LDFLAGS_=-lcurl
-
-AM_CXXFLAGS = -DFNORDMETRIC_VERSION=\"v@PACKAGE_VERSION@\" $(PTHREAD_CFLAGS) $(PTHREAD_DEF) $(SYSLOG_DEF) $(ZLIB_DEF) $(GETHOSTBYNAME_R_DEF) -std=c++0x -ftemplate-depth=500 -mno-omit-leaf-frame-pointer -fno-omit-frame-pointer -Wall -Wextra -Wno-unused-parameter -Wno-sign-compare -Wdelete-non-virtual-dtor -Wno-predefined-identifier-outside-function -Wno-invalid-offsetof -g -I$(top_srcdir)/src -I$(top_srcdir)/deps/libtransport/src -I$(top_srcdir)/
-AM_CFLAGS =  $(PTHREAD_CFLAGS) $(PTHREAD_DEF) $(SYSLOG_DEF) $(ZLIB_DEF) $(GETHOSTBYNAME_R_DEF) -std=c11 -mno-omit-leaf-frame-pointer -fno-omit-frame-pointer -Wall -pedantic -g
 
 libfnordmetric_common_a_SOURCES = \
     aggregate.h \
@@ -123,17 +90,7 @@ libfnordmetric_common_a_SOURCES = \
     util/autoref.cc
 
 metric_collectd_SOURCES = metric_collectd.cc
-metric_collectd_LDADD = \
-    libfnordmetric-common.a \
-    ${top_builddir}/deps/libtransport/src/libtransport/http/libtransport_http.a \
-    ${top_builddir}/deps/libtransport/src/libtransport/json/libtransport_json.a \
-    ${top_builddir}/deps/libtransport/src/libtransport/uri/libtransport_uri.a \
-    $(PTHREAD_LDFLAGS_)
+metric_collectd_LDADD = $(FNORDMETRIC_LIBS)
 
-metric_queryd_SOURCES = \ metric_queryd.cc
-metric_queryd_LDADD = \
-    libfnordmetric-common.a \
-    ${top_builddir}/deps/libtransport/src/libtransport/http/libtransport_http.a \
-    ${top_builddir}/deps/libtransport/src/libtransport/json/libtransport_json.a \
-    ${top_builddir}/deps/libtransport/src/libtransport/uri/libtransport_uri.a \
-    $(PTHREAD_LDFLAGS_)
+metric_queryd_SOURCES = metric_queryd.cc
+metric_queryd_LDADD = $(FNORDMETRIC_LIBS)

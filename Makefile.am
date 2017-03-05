@@ -1,12 +1,42 @@
-## Process this file with automake to produce Makefile.in
-
 ACLOCAL_AMFLAGS = -I m4
 AUTOMAKE_OPTIONS = foreign
+
+export AM_CXXFLAGS = \
+    -std=c++0x \
+    -ftemplate-depth=500 \
+    -mno-omit-leaf-frame-pointer \
+    -fno-omit-frame-pointer \
+    -g \
+    -Wall \
+    -Wextra \
+    -Wno-unused-parameter \
+    -Wno-sign-compare \
+    -Wdelete-non-virtual-dtor \
+    -Wno-predefined-identifier-outside-function \
+    -Wno-invalid-offsetof \
+    -DFNORDMETRIC_VERSION=\"v@PACKAGE_VERSION@\" \
+    -DHAVE_PTHREAD=1 \
+    -I$(abs_top_srcdir)/src \
+    -L$(abs_top_srcdir)/src/fnordmetric \
+    -I$(abs_top_srcdir)/deps/libtransport/src \
+    -L$(abs_top_srcdir)/deps/libtransport/src \
+    -I$(abs_top_srcdir)/
+
+FNORDMETRIC_LIBS = \
+    -lfnordmetric-common \
+    -ltransport_http \
+    -ltransport_json \
+    -ltransport_uri \
+    -lfnordmetric-common \
+    -lpthread
+
+export FNORDMETRIC_LIBS
 
 SUBDIRS = \
     . \
     deps/libtransport \
     src/fnordmetric \
+    src/fnordmetric/backends/mysql \
     test
 
 EXTRA_DIST =                             \

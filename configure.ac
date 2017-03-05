@@ -26,6 +26,9 @@ AM_CONDITIONAL([HAVE_GETHOSTBYNAME_R], [test x$HAVE_GETHOSTBYNAME_R = x1])
 AM_CONDITIONAL([HAVE_POSIX_FALLOCATE], [test x$HAVE_POSIX_FALLOCATE = x1])
 AM_CONDITIONAL([HAVE_POSIX_FADVISE], [test x$HAVE_POSIX_FADVISE = x1])
 
+# pthread
+AX_PTHREAD
+
 # Check for fdatasync (am_check_funcs doesn't work on OSX for fdatasync)
 AC_CACHE_CHECK(
     [for fdatasync],
@@ -71,8 +74,22 @@ AS_IF([test "$with_zlib" != no], [
 ])
 AM_CONDITIONAL([HAVE_ZLIB], [test $HAVE_ZLIB = 1])
 
-AC_CONFIG_SUBDIRS([deps/libtransport])
+# --enable-mysql
+AC_MSG_CHECKING([Feature: MySQL Backend])
+AC_ARG_ENABLE([mysql], AS_HELP_STRING([--enable-mysql], [Enable mysql]))
+AM_CONDITIONAL([ENABLE_MYSQL], [test "x$enable_mysql" = "xyes"])
+AC_SUBST(ENABLE_MYSQL)
+if test "x$enable_mysql" = "xyes"; then
+  AC_MSG_RESULT(["enabled"])
+else
+  AC_MSG_RESULT(["disabled"])
+fi
 
-AC_CONFIG_FILES([Makefile src/fnordmetric/Makefile test/Makefile])
+AC_CONFIG_SUBDIRS([deps/libtransport])
+AC_CONFIG_FILES([
+    Makefile
+    src/fnordmetric/Makefile
+    src/fnordmetric/backends/mysql/Makefile
+    test/Makefile])
 
 AC_OUTPUT
