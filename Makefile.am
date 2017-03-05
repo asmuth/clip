@@ -15,7 +15,7 @@ export AM_CXXFLAGS = \
     -Wno-predefined-identifier-outside-function \
     -Wno-invalid-offsetof \
     -DFNORDMETRIC_VERSION=\"v@PACKAGE_VERSION@\" \
-    -DHAVE_PTHREAD=1 \
+    $(PTHREAD_CFLAGS) \
     -I$(abs_top_srcdir)/src \
     -L$(abs_top_srcdir)/src/fnordmetric \
     -I$(abs_top_srcdir)/deps/libtransport/src \
@@ -27,8 +27,7 @@ FNORDMETRIC_LIBS = \
     -ltransport_http \
     -ltransport_json \
     -ltransport_uri \
-    -lfnordmetric-common \
-    -lpthread
+    -lfnordmetric-common
 
 export FNORDMETRIC_LIBS
 

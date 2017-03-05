@@ -25,41 +25,8 @@ AM_CONDITIONAL([HAVE_SYSLOG_H], [test x$HAVE_SYSLOG_H = x1])
 AM_CONDITIONAL([HAVE_GETHOSTBYNAME_R], [test x$HAVE_GETHOSTBYNAME_R = x1])
 AM_CONDITIONAL([HAVE_POSIX_FALLOCATE], [test x$HAVE_POSIX_FALLOCATE = x1])
 AM_CONDITIONAL([HAVE_POSIX_FADVISE], [test x$HAVE_POSIX_FADVISE = x1])
-AX_PTHREAD
-
-# Check for zlib
-HAVE_ZLIB=0
-AS_IF([test "$with_zlib" != no], [
-  AC_MSG_CHECKING([zlib version])
-
-  # First check the zlib header version
-  AC_COMPILE_IFELSE(
-    [AC_LANG_PROGRAM([[
-        #include <zlib.h>
-        #if !defined(ZLIB_VERNUM) || (ZLIB_VERNUM < 0x1204)
-        # error zlib version too old
-        #endif
-        ]], [])], [
-    AC_MSG_RESULT([ok (1.2.0.4 or later)])
-
-    # Also need to add -lz to the linker flags and make sure this succeeds.
-    AC_SEARCH_LIBS([zlibVersion], [z], [
-      AC_DEFINE([HAVE_ZLIB], [1], [Enable classes using zlib compression.])
-      HAVE_ZLIB=1
-    ], [
-      AS_IF([test "$with_zlib" != check], [
-        AC_MSG_FAILURE([--with-zlib was given, but no working zlib library was found])
-      ])
-    ])
-  ], [
-    AS_IF([test "$with_zlib" = check], [
-      AC_MSG_RESULT([headers missing or too old (requires 1.2.0.4)])
-    ], [
-      AC_MSG_FAILURE([--with-zlib was given, but zlib headers were not present or were too old (requires 1.2.0.4)])
-    ])
-  ])
-])
-AM_CONDITIONAL([HAVE_ZLIB], [test $HAVE_ZLIB = 1])
+ACX_PTHREAD
+ACX_ZLIB
 
 # --enable-mysql
 AC_MSG_CHECKING([Feature: MySQL Backend])
