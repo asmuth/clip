@@ -41,8 +41,8 @@ if a condition is true is often already trivial using SQL. We feel that we can't
 add a lot over plain SQL for checking alerting rules.
 
 Hence, the recommendation for monitoring/alerting is to run all rules directly
-against the SQL database and possibly connecting a third-party alerting system
-like nagios.
+against the SQL database. You could do this with a custom script, or/and connect
+to a third-party alerting system PagerDuty or nagios.
 
 
 ### Is FnordMetric highly available/scalable/distributed?
