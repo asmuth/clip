@@ -1,0 +1,219 @@
+<svg viewBox='0 0 800 320' class='fm-chart'>
+  <style type='text/css'>
+  <![CDATA[
+  .fm-chart text, .fm-tooltip {
+    font-family: "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+    font: 10px sans-serif;
+  }
+
+  .fm-chart .axis .stroke {
+    stroke: #aaa;
+    stroke-width: 1px;
+  }
+
+  .fm-chart .axis .tick {
+    stroke: #aaa;
+    stroke-width: 1px;
+  }
+
+  .fm-chart .axis .label, .axis .title {
+    fill: #666;
+  }
+
+  .fm-chart .axis .label {
+    font-size: 10px;
+  }
+
+  .fm-chart .axis .title {
+    font-size: 10px;
+  }
+
+  .fm-chart .chart-title {
+    font-size: 12px;
+    font-weight: bold;
+  }
+
+  .fm-chart .chart-subtitle {
+    font-size: 10px;
+  }
+
+  .fm-chart text.label {
+    fill: #666;
+  }
+
+  .fm-chart .legend text {
+    font-size: 10px;
+    fill: #333;
+  }
+
+  .fm-chart .legend text.title {
+    fill: #666;
+  }
+
+  .fm-chart .line {
+    fill: none;
+    stroke: #000;
+  }
+
+  .fm-chart .area {
+    opacity: 0.8;
+  }
+
+  .fm-chart .grid .gridline {
+    stroke: #ddd;
+    stroke-width: 0.02em;
+  }
+
+  .fm-chart .bar,
+  .fm-chart .point,
+  .fm-chart .area {
+    fill: #000;
+  }
+
+  .fm-chart .bar.color6,
+  .fm-chart .point.color6,
+  .fm-chart .area.color6 {
+    fill: #db843d;
+  }
+
+  .fm-chart .lines .line.color6 {
+    strok: #db843d;
+  }
+
+  .fm-chart .bar.color5,
+  .fm-chart .point.color5,
+  .fm-chart .area.color5 {
+    fill: #3d96ae;
+  }
+
+  .fm-chart .lines .line.color5 {
+    stroke: #3d96ae;
+  }
+
+  .fm-chart .bar.color4,
+  .fm-chart .point.color4,
+  .fm-chart .area.color4 {
+    fill: #80699b;
+  }
+
+  .fm-chart .line.color4 {
+    stroke: #80699b;
+  }
+
+  .fm-chart .bar.color3,
+  .fm-chart .point.color3,
+  .fm-chart .area.color3 {
+    fill: #89a54e;
+  }
+
+  .fm-chart .line.color3 {
+    stroke: #89a54e;
+  }
+
+  .fm-chart .bar.color2,
+  .fm-chart .point.color2,
+  .fm-chart .area.color2 {
+    fill: #aa4643;
+  }
+
+  .fm-chart .line.color2 {
+    stroke: #aa4643;
+  }
+
+  .fm-chart .bar.color1,
+  .fm-chart .point.color1,
+  .fm-chart .area.color1 {
+    fill: #4572a7;
+  }
+
+  .fm-chart .line.color1 {
+    stroke: #4572a7;
+  }
+
+  .fm-chart.bar.vertical .axis.left .stroke,
+  .fm-chart.bar.vertical .axis.left .tick,
+  .fm-chart.bar.vertical .axis.right .stroke,
+  .fm-chart.bar.vertical .axis.right .tick {
+    display: none;
+  }
+
+  .fm-tooltip {
+    text-align: center;
+    padding: 5px 7px;
+    color: #fff;
+    background: #333;
+    border-radius: 3px;
+    font-size: 13px;
+  }
+  ]]>
+  </style>
+  <g class='axis bottom'>
+    <text x='50.000000' y='307.500000' style='text-anchor:middle; dominant-baseline:central;' class='label' >0</text>
+    <text x='153.571429' y='307.500000' style='text-anchor:middle; dominant-baseline:central;' class='label' >22.2K</text>
+    <text x='257.142857' y='307.500000' style='text-anchor:middle; dominant-baseline:central;' class='label' >44.3K</text>
+    <text x='360.714286' y='307.500000' style='text-anchor:middle; dominant-baseline:central;' class='label' >66.5K</text>
+    <text x='464.285714' y='307.500000' style='text-anchor:middle; dominant-baseline:central;' class='label' >88.7K</text>
+    <text x='567.857143' y='307.500000' style='text-anchor:middle; dominant-baseline:central;' class='label' >110.9K</text>
+    <text x='671.428571' y='307.500000' style='text-anchor:middle; dominant-baseline:central;' class='label' >133.0K</text>
+    <text x='775.000000' y='307.500000' style='text-anchor:middle; dominant-baseline:central;' class='label' >155.2K</text>
+    <line x1='50.000000' y1='295.000000' x2='50.000000' y2='290.000000' class='tick' />
+    <line x1='153.571429' y1='295.000000' x2='153.571429' y2='290.000000' class='tick' />
+    <line x1='257.142857' y1='295.000000' x2='257.142857' y2='290.000000' class='tick' />
+    <line x1='360.714286' y1='295.000000' x2='360.714286' y2='290.000000' class='tick' />
+    <line x1='464.285714' y1='295.000000' x2='464.285714' y2='290.000000' class='tick' />
+    <line x1='567.857143' y1='295.000000' x2='567.857143' y2='290.000000' class='tick' />
+    <line x1='671.428571' y1='295.000000' x2='671.428571' y2='290.000000' class='tick' />
+    <line x1='775.000000' y1='295.000000' x2='775.000000' y2='290.000000' class='tick' />
+    <line x1='50.000000' y1='295.000000' x2='775.000000' y2='295.000000' class='stroke' />
+  </g>
+  <g class='axis left'>
+    <text x='40.000000' y='32.214286' style='text-anchor:end; dominant-baseline:middle;' class='label' >BRB</text>
+    <text x='40.000000' y='72.642857' style='text-anchor:end; dominant-baseline:middle;' class='label' >BLR</text>
+    <text x='40.000000' y='113.071429' style='text-anchor:end; dominant-baseline:middle;' class='label' >BEL</text>
+    <text x='40.000000' y='153.500000' style='text-anchor:end; dominant-baseline:middle;' class='label' >BLZ</text>
+    <text x='40.000000' y='193.928571' style='text-anchor:end; dominant-baseline:middle;' class='label' >BEN</text>
+    <text x='40.000000' y='234.357143' style='text-anchor:end; dominant-baseline:middle;' class='label' >BMU</text>
+    <text x='40.000000' y='274.785714' style='text-anchor:end; dominant-baseline:middle;' class='label' >BTN</text>
+    <line x1='50.000000' y1='295.000000' x2='55.000000' y2='295.000000' class='tick' />
+    <line x1='50.000000' y1='12.000000' x2='55.000000' y2='12.000000' class='tick' />
+    <line x1='50.000000' y1='52.428571' x2='55.000000' y2='52.428571' class='tick' />
+    <line x1='50.000000' y1='92.857143' x2='55.000000' y2='92.857143' class='tick' />
+    <line x1='50.000000' y1='133.285714' x2='55.000000' y2='133.285714' class='tick' />
+    <line x1='50.000000' y1='173.714286' x2='55.000000' y2='173.714286' class='tick' />
+    <line x1='50.000000' y1='214.142857' x2='55.000000' y2='214.142857' class='tick' />
+    <line x1='50.000000' y1='254.571429' x2='55.000000' y2='254.571429' class='tick' />
+    <line x1='50.000000' y1='12.000000' x2='50.000000' y2='295.000000' class='stroke' />
+  </g>
+  <g class='legend'>
+    <text x='75.000000' y='275.000000' style='text-anchor:start; dominant-baseline:text-after-edge;' class='title' ></text>
+    <circle cx='750.000000' cy='273.800000' r='3.000000' class='point color1' fm:label='' fm:series='', style=''></circle>
+    <text x='742.000000' y='273.800000' style='text-anchor:end; dominant-baseline:central;' class='label' >unnamed</text>
+    <circle cx='688.000000' cy='273.800000' r='3.000000' class='point color2' fm:label='' fm:series='', style=''></circle>
+    <text x='680.000000' y='273.800000' style='text-anchor:end; dominant-baseline:central;' class='label' >unnamed</text>
+    <circle cx='626.000000' cy='273.800000' r='3.000000' class='point color3' fm:label='' fm:series='', style=''></circle>
+    <text x='618.000000' y='273.800000' style='text-anchor:end; dominant-baseline:central;' class='label' >unnamed</text>
+  </g>
+  <g class='bars horizontal'>
+    <rect x='50.000000' y='18.064286' width='130.825941' height='28.300000' class='bar color1' fm:series='unnamed' fm:label='BRB: 28009.025448, BRB: 28112.245293' style=''></rect>
+    <rect x='180.825941' y='18.064286' width='131.308066' height='28.300000' class='bar color2' fm:series='unnamed' fm:label='BRB: 28009.025448, BRB: 28112.245293' style=''></rect>
+    <rect x='312.134007' y='18.064286' width='0.000000' height='28.300000' class='bar color3' fm:series='unnamed' fm:label='BRB: 28009.025448, BRB: 28112.245293' style=''></rect>
+    <rect x='50.000000' y='58.492857' width='57.933710' height='28.300000' class='bar color1' fm:series='unnamed' fm:label='BLR: 12403.249284, BLR: 13504.334730, BLR: 12070.821040' style=''></rect>
+    <rect x='107.933710' y='58.492857' width='63.076715' height='28.300000' class='bar color2' fm:series='unnamed' fm:label='BLR: 12403.249284, BLR: 13504.334730, BLR: 12070.821040' style=''></rect>
+    <rect x='171.010425' y='58.492857' width='56.380988' height='28.300000' class='bar color3' fm:series='unnamed' fm:label='BLR: 12403.249284, BLR: 13504.334730, BLR: 12070.821040' style=''></rect>
+    <rect x='50.000000' y='98.921429' width='162.663882' height='28.300000' class='bar color1' fm:series='unnamed' fm:label='BEL: 34825.331707, BEL: 35558.523643, BEL: 36172.729483' style=''></rect>
+    <rect x='212.663882' y='98.921429' width='166.088511' height='28.300000' class='bar color2' fm:series='unnamed' fm:label='BEL: 34825.331707, BEL: 35558.523643, BEL: 36172.729483' style=''></rect>
+    <rect x='378.752393' y='98.921429' width='168.957374' height='28.300000' class='bar color3' fm:series='unnamed' fm:label='BEL: 34825.331707, BEL: 35558.523643, BEL: 36172.729483' style=''></rect>
+    <rect x='50.000000' y='139.350000' width='42.769106' height='28.300000' class='bar color1' fm:series='unnamed' fm:label='BLZ: 9156.601253, BLZ: 9056.117430, BLZ: 9261.731337' style=''></rect>
+    <rect x='92.769106' y='139.350000' width='42.299761' height='28.300000' class='bar color2' fm:series='unnamed' fm:label='BLZ: 9156.601253, BLZ: 9056.117430, BLZ: 9261.731337' style=''></rect>
+    <rect x='135.068867' y='139.350000' width='43.260153' height='28.300000' class='bar color3' fm:series='unnamed' fm:label='BLZ: 9156.601253, BLZ: 9056.117430, BLZ: 9261.731337' style=''></rect>
+    <rect x='50.000000' y='179.778572' width='5.542158' height='28.300000' class='bar color1' fm:series='unnamed' fm:label='BEN: 1186.541714, BEN: 1176.747368, BEN: 1182.521114' style=''></rect>
+    <rect x='55.542158' y='179.778572' width='5.496410' height='28.300000' class='bar color2' fm:series='unnamed' fm:label='BEN: 1186.541714, BEN: 1176.747368, BEN: 1182.521114' style=''></rect>
+    <rect x='61.038568' y='179.778572' width='5.523378' height='28.300000' class='bar color3' fm:series='unnamed' fm:label='BEN: 1186.541714, BEN: 1176.747368, BEN: 1182.521114' style=''></rect>
+    <rect x='50.000000' y='220.207143' width='212.338719' height='28.300000' class='bar color1' fm:series='unnamed' fm:label='BMU: 45460.407272, BMU: 45862.019680, BMU: 49784.862884' style=''></rect>
+    <rect x='262.338719' y='220.207143' width='214.214590' height='28.300000' class='bar color2' fm:series='unnamed' fm:label='BMU: 45460.407272, BMU: 45862.019680, BMU: 49784.862884' style=''></rect>
+    <rect x='476.553309' y='220.207143' width='232.537600' height='28.300000' class='bar color3' fm:series='unnamed' fm:label='BMU: 45460.407272, BMU: 45862.019680, BMU: 49784.862884' style=''></rect>
+    <rect x='50.000000' y='260.635715' width='17.931301' height='28.300000' class='bar color1' fm:series='unnamed' fm:label='BTN: 3838.980710, BTN: 3947.696116, BTN: 3408.008408' style=''></rect>
+    <rect x='67.931301' y='260.635715' width='18.439094' height='28.300000' class='bar color2' fm:series='unnamed' fm:label='BTN: 3838.980710, BTN: 3947.696116, BTN: 3408.008408' style=''></rect>
+    <rect x='86.370395' y='260.635715' width='15.918294' height='28.300000' class='bar color3' fm:series='unnamed' fm:label='BTN: 3838.980710, BTN: 3947.696116, BTN: 3408.008408' style=''></rect>
+  </g>
+</svg>

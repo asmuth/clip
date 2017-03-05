@@ -1,0 +1,239 @@
+<svg viewBox='0 0 800 320' class='fm-chart'>
+  <style type='text/css'>
+  <![CDATA[
+  .fm-chart text, .fm-tooltip {
+    font-family: "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+    font: 10px sans-serif;
+  }
+
+  .fm-chart .axis .stroke {
+    stroke: #aaa;
+    stroke-width: 1px;
+  }
+
+  .fm-chart .axis .tick {
+    stroke: #aaa;
+    stroke-width: 1px;
+  }
+
+  .fm-chart .axis .label, .axis .title {
+    fill: #666;
+  }
+
+  .fm-chart .axis .label {
+    font-size: 10px;
+  }
+
+  .fm-chart .axis .title {
+    font-size: 10px;
+  }
+
+  .fm-chart .chart-title {
+    font-size: 12px;
+    font-weight: bold;
+  }
+
+  .fm-chart .chart-subtitle {
+    font-size: 10px;
+  }
+
+  .fm-chart text.label {
+    fill: #666;
+  }
+
+  .fm-chart .legend text {
+    font-size: 10px;
+    fill: #333;
+  }
+
+  .fm-chart .legend text.title {
+    fill: #666;
+  }
+
+  .fm-chart .line {
+    fill: none;
+    stroke: #000;
+  }
+
+  .fm-chart .area {
+    opacity: 0.8;
+  }
+
+  .fm-chart .grid .gridline {
+    stroke: #ddd;
+    stroke-width: 0.02em;
+  }
+
+  .fm-chart .bar,
+  .fm-chart .point,
+  .fm-chart .area {
+    fill: #000;
+  }
+
+  .fm-chart .bar.color6,
+  .fm-chart .point.color6,
+  .fm-chart .area.color6 {
+    fill: #db843d;
+  }
+
+  .fm-chart .lines .line.color6 {
+    strok: #db843d;
+  }
+
+  .fm-chart .bar.color5,
+  .fm-chart .point.color5,
+  .fm-chart .area.color5 {
+    fill: #3d96ae;
+  }
+
+  .fm-chart .lines .line.color5 {
+    stroke: #3d96ae;
+  }
+
+  .fm-chart .bar.color4,
+  .fm-chart .point.color4,
+  .fm-chart .area.color4 {
+    fill: #80699b;
+  }
+
+  .fm-chart .line.color4 {
+    stroke: #80699b;
+  }
+
+  .fm-chart .bar.color3,
+  .fm-chart .point.color3,
+  .fm-chart .area.color3 {
+    fill: #89a54e;
+  }
+
+  .fm-chart .line.color3 {
+    stroke: #89a54e;
+  }
+
+  .fm-chart .bar.color2,
+  .fm-chart .point.color2,
+  .fm-chart .area.color2 {
+    fill: #aa4643;
+  }
+
+  .fm-chart .line.color2 {
+    stroke: #aa4643;
+  }
+
+  .fm-chart .bar.color1,
+  .fm-chart .point.color1,
+  .fm-chart .area.color1 {
+    fill: #4572a7;
+  }
+
+  .fm-chart .line.color1 {
+    stroke: #4572a7;
+  }
+
+  .fm-chart.bar.vertical .axis.left .stroke,
+  .fm-chart.bar.vertical .axis.left .tick,
+  .fm-chart.bar.vertical .axis.right .stroke,
+  .fm-chart.bar.vertical .axis.right .tick {
+    display: none;
+  }
+
+  .fm-tooltip {
+    text-align: center;
+    padding: 5px 7px;
+    color: #fff;
+    background: #333;
+    border-radius: 3px;
+    font-size: 13px;
+  }
+  ]]>
+  </style>
+  <g class='axis bottom'>
+    <text x='743.750000' y='307.500000' style='text-anchor:middle; dominant-baseline:central;' class='label' >Dec</text>
+    <text x='681.250000' y='307.500000' style='text-anchor:middle; dominant-baseline:central;' class='label' >Nov</text>
+    <text x='618.750000' y='307.500000' style='text-anchor:middle; dominant-baseline:central;' class='label' >Oct</text>
+    <text x='556.250000' y='307.500000' style='text-anchor:middle; dominant-baseline:central;' class='label' >Sep</text>
+    <text x='493.750000' y='307.500000' style='text-anchor:middle; dominant-baseline:central;' class='label' >Aug</text>
+    <text x='431.250000' y='307.500000' style='text-anchor:middle; dominant-baseline:central;' class='label' >Jul</text>
+    <text x='368.750000' y='307.500000' style='text-anchor:middle; dominant-baseline:central;' class='label' >Jun</text>
+    <text x='306.250000' y='307.500000' style='text-anchor:middle; dominant-baseline:central;' class='label' >May</text>
+    <text x='243.750000' y='307.500000' style='text-anchor:middle; dominant-baseline:central;' class='label' >Apr</text>
+    <text x='181.250000' y='307.500000' style='text-anchor:middle; dominant-baseline:central;' class='label' >Mar</text>
+    <text x='118.750000' y='307.500000' style='text-anchor:middle; dominant-baseline:central;' class='label' >Feb</text>
+    <text x='56.250000' y='307.500000' style='text-anchor:middle; dominant-baseline:central;' class='label' >Jan</text>
+    <line x1='25.000000' y1='295.000000' x2='25.000000' y2='290.000000' class='tick' />
+    <line x1='775.000000' y1='295.000000' x2='775.000000' y2='290.000000' class='tick' />
+    <line x1='712.500000' y1='295.000000' x2='712.500000' y2='290.000000' class='tick' />
+    <line x1='650.000000' y1='295.000000' x2='650.000000' y2='290.000000' class='tick' />
+    <line x1='587.500000' y1='295.000000' x2='587.500000' y2='290.000000' class='tick' />
+    <line x1='525.000000' y1='295.000000' x2='525.000000' y2='290.000000' class='tick' />
+    <line x1='462.500000' y1='295.000000' x2='462.500000' y2='290.000000' class='tick' />
+    <line x1='400.000000' y1='295.000000' x2='400.000000' y2='290.000000' class='tick' />
+    <line x1='337.500000' y1='295.000000' x2='337.500000' y2='290.000000' class='tick' />
+    <line x1='275.000000' y1='295.000000' x2='275.000000' y2='290.000000' class='tick' />
+    <line x1='212.500000' y1='295.000000' x2='212.500000' y2='290.000000' class='tick' />
+    <line x1='150.000000' y1='295.000000' x2='150.000000' y2='290.000000' class='tick' />
+    <line x1='87.500000' y1='295.000000' x2='87.500000' y2='290.000000' class='tick' />
+    <line x1='25.000000' y1='295.000000' x2='775.000000' y2='295.000000' class='stroke' />
+  </g>
+  <g class='legend'>
+    <text x='750.000000' y='22.000000' style='text-anchor:end; dominant-baseline:text-before-edge;' class='title' ></text>
+    <circle cx='50.000000' cy='28.000000' r='3.000000' class='point color1' fm:label='' fm:series='', style=''></circle>
+    <text x='58.000000' y='28.000000' style='text-anchor:start; dominant-baseline:central;' class='label' >unnamed</text>
+    <circle cx='112.000000' cy='28.000000' r='3.000000' class='point color2' fm:label='' fm:series='', style=''></circle>
+    <text x='120.000000' y='28.000000' style='text-anchor:start; dominant-baseline:central;' class='label' >unnamed</text>
+    <circle cx='174.000000' cy='28.000000' r='3.000000' class='point color3' fm:label='' fm:series='', style=''></circle>
+    <text x='182.000000' y='28.000000' style='text-anchor:start; dominant-baseline:central;' class='label' >unnamed</text>
+    <circle cx='236.000000' cy='28.000000' r='3.000000' class='point color4' fm:label='' fm:series='', style=''></circle>
+    <text x='244.000000' y='28.000000' style='text-anchor:start; dominant-baseline:central;' class='label' >unnamed</text>
+  </g>
+  <g class='bars vertical'>
+    <rect x='722.968750' y='181.042579' width='8.750000' height='82.627737' class='bar color1' fm:series='unnamed' fm:label='Dec: 9.600000, Dec: 2.500000, Dec: 1.000000, Dec: 4.800000' style=''></rect>
+    <rect x='733.906250' y='242.152676' width='8.750000' height='21.517640' class='bar color2' fm:series='unnamed' fm:label='Dec: 9.600000, Dec: 2.500000, Dec: 1.000000, Dec: 4.800000' style=''></rect>
+    <rect x='744.843750' y='255.063260' width='8.750000' height='8.607056' class='bar color3' fm:series='unnamed' fm:label='Dec: 9.600000, Dec: 2.500000, Dec: 1.000000, Dec: 4.800000' style=''></rect>
+    <rect x='755.781250' y='222.356448' width='8.750000' height='41.313869' class='bar color4' fm:series='unnamed' fm:label='Dec: 9.600000, Dec: 2.500000, Dec: 1.000000, Dec: 4.800000' style=''></rect>
+    <rect x='660.468750' y='144.032238' width='8.750000' height='119.638078' class='bar color1' fm:series='unnamed' fm:label='Nov: 13.900000, Nov: 8.600000, Nov: 3.900000, Nov: 6.600000' style=''></rect>
+    <rect x='671.406250' y='189.649635' width='8.750000' height='74.020681' class='bar color2' fm:series='unnamed' fm:label='Nov: 13.900000, Nov: 8.600000, Nov: 3.900000, Nov: 6.600000' style=''></rect>
+    <rect x='682.343750' y='230.102798' width='8.750000' height='33.567518' class='bar color3' fm:series='unnamed' fm:label='Nov: 13.900000, Nov: 8.600000, Nov: 3.900000, Nov: 6.600000' style=''></rect>
+    <rect x='693.281250' y='206.863747' width='8.750000' height='56.806569' class='bar color4' fm:series='unnamed' fm:label='Nov: 13.900000, Nov: 8.600000, Nov: 3.900000, Nov: 6.600000' style=''></rect>
+    <rect x='597.968750' y='106.161192' width='8.750000' height='157.509124' class='bar color1' fm:series='unnamed' fm:label='Oct: 18.300000, Oct: 14.100000, Oct: 9.000000, Oct: 10.300000' style=''></rect>
+    <rect x='608.906250' y='142.310827' width='8.750000' height='121.359489' class='bar color2' fm:series='unnamed' fm:label='Oct: 18.300000, Oct: 14.100000, Oct: 9.000000, Oct: 10.300000' style=''></rect>
+    <rect x='619.843750' y='186.206813' width='8.750000' height='77.463504' class='bar color3' fm:series='unnamed' fm:label='Oct: 18.300000, Oct: 14.100000, Oct: 9.000000, Oct: 10.300000' style=''></rect>
+    <rect x='630.781250' y='175.017640' width='8.750000' height='88.652676' class='bar color4' fm:series='unnamed' fm:label='Oct: 18.300000, Oct: 14.100000, Oct: 9.000000, Oct: 10.300000' style=''></rect>
+    <rect x='535.468750' y='63.125912' width='8.750000' height='200.544404' class='bar color1' fm:series='unnamed' fm:label='Sep: 23.300000, Sep: 20.100000, Sep: 14.300000, Sep: 14.200000' style=''></rect>
+    <rect x='546.406250' y='90.668491' width='8.750000' height='173.001825' class='bar color2' fm:series='unnamed' fm:label='Sep: 23.300000, Sep: 20.100000, Sep: 14.300000, Sep: 14.200000' style=''></rect>
+    <rect x='557.343750' y='140.589416' width='8.750000' height='123.080900' class='bar color3' fm:series='unnamed' fm:label='Sep: 23.300000, Sep: 20.100000, Sep: 14.300000, Sep: 14.200000' style=''></rect>
+    <rect x='568.281250' y='141.450122' width='8.750000' height='122.220195' class='bar color4' fm:series='unnamed' fm:label='Sep: 23.300000, Sep: 20.100000, Sep: 14.300000, Sep: 14.200000' style=''></rect>
+    <rect x='472.968750' y='35.583333' width='8.750000' height='228.086983' class='bar color1' fm:series='unnamed' fm:label='Aug: 26.500000, Aug: 24.100000, Aug: 17.900000, Aug: 16.600000' style=''></rect>
+    <rect x='483.906250' y='56.240268' width='8.750000' height='207.430049' class='bar color2' fm:series='unnamed' fm:label='Aug: 26.500000, Aug: 24.100000, Aug: 17.900000, Aug: 16.600000' style=''></rect>
+    <rect x='494.843750' y='109.604015' width='8.750000' height='154.066302' class='bar color3' fm:series='unnamed' fm:label='Aug: 26.500000, Aug: 24.100000, Aug: 17.900000, Aug: 16.600000' style=''></rect>
+    <rect x='505.781250' y='120.793187' width='8.750000' height='142.877129' class='bar color4' fm:series='unnamed' fm:label='Aug: 26.500000, Aug: 24.100000, Aug: 17.900000, Aug: 16.600000' style=''></rect>
+    <rect x='410.468750' y='46.772506' width='8.750000' height='216.897810' class='bar color1' fm:series='unnamed' fm:label='Jul: 25.200000, Jul: 24.800000, Jul: 18.600000, Jul: 17.000000' style=''></rect>
+    <rect x='421.406250' y='50.215328' width='8.750000' height='213.454988' class='bar color2' fm:series='unnamed' fm:label='Jul: 25.200000, Jul: 24.800000, Jul: 18.600000, Jul: 17.000000' style=''></rect>
+    <rect x='432.343750' y='103.579075' width='8.750000' height='160.091241' class='bar color3' fm:series='unnamed' fm:label='Jul: 25.200000, Jul: 24.800000, Jul: 18.600000, Jul: 17.000000' style=''></rect>
+    <rect x='443.281250' y='117.350365' width='8.750000' height='146.319951' class='bar color4' fm:series='unnamed' fm:label='Jul: 25.200000, Jul: 24.800000, Jul: 18.600000, Jul: 17.000000' style=''></rect>
+    <rect x='347.968750' y='78.618613' width='8.750000' height='185.051703' class='bar color1' fm:series='unnamed' fm:label='Jun: 21.500000, Jun: 22.000000, Jun: 17.000000, Jun: 15.200000' style=''></rect>
+    <rect x='358.906250' y='74.315085' width='8.750000' height='189.355231' class='bar color2' fm:series='unnamed' fm:label='Jun: 21.500000, Jun: 22.000000, Jun: 17.000000, Jun: 15.200000' style=''></rect>
+    <rect x='369.843750' y='117.350365' width='8.750000' height='146.319951' class='bar color3' fm:series='unnamed' fm:label='Jun: 21.500000, Jun: 22.000000, Jun: 17.000000, Jun: 15.200000' style=''></rect>
+    <rect x='380.781250' y='132.843066' width='8.750000' height='130.827251' class='bar color4' fm:series='unnamed' fm:label='Jun: 21.500000, Jun: 22.000000, Jun: 17.000000, Jun: 15.200000' style=''></rect>
+    <rect x='285.468750' y='107.021898' width='8.750000' height='156.648418' class='bar color1' fm:series='unnamed' fm:label='May: 18.200000, May: 17.000000, May: 13.500000, May: 11.900000' style=''></rect>
+    <rect x='296.406250' y='117.350365' width='8.750000' height='146.319951' class='bar color2' fm:series='unnamed' fm:label='May: 18.200000, May: 17.000000, May: 13.500000, May: 11.900000' style=''></rect>
+    <rect x='307.343750' y='147.475061' width='8.750000' height='116.195255' class='bar color3' fm:series='unnamed' fm:label='May: 18.200000, May: 17.000000, May: 13.500000, May: 11.900000' style=''></rect>
+    <rect x='318.281250' y='161.246350' width='8.750000' height='102.423966' class='bar color4' fm:series='unnamed' fm:label='May: 18.200000, May: 17.000000, May: 13.500000, May: 11.900000' style=''></rect>
+    <rect x='222.968750' y='138.868005' width='8.750000' height='124.802311' class='bar color1' fm:series='unnamed' fm:label='Apr: 14.500000, Apr: 11.300000, Apr: 8.400000, Apr: 8.500000' style=''></rect>
+    <rect x='233.906250' y='166.410584' width='8.750000' height='97.259732' class='bar color2' fm:series='unnamed' fm:label='Apr: 14.500000, Apr: 11.300000, Apr: 8.400000, Apr: 8.500000' style=''></rect>
+    <rect x='244.843750' y='191.371046' width='8.750000' height='72.299270' class='bar color3' fm:series='unnamed' fm:label='Apr: 14.500000, Apr: 11.300000, Apr: 8.400000, Apr: 8.500000' style=''></rect>
+    <rect x='255.781250' y='190.510341' width='8.750000' height='73.159976' class='bar color4' fm:series='unnamed' fm:label='Apr: 14.500000, Apr: 11.300000, Apr: 8.400000, Apr: 8.500000' style=''></rect>
+    <rect x='160.468750' y='181.903285' width='8.750000' height='81.767032' class='bar color1' fm:series='unnamed' fm:label='Mar: 9.500000, Mar: 5.700000, Mar: 3.500000, Mar: 5.700000' style=''></rect>
+    <rect x='171.406250' y='214.610097' width='8.750000' height='49.060219' class='bar color2' fm:series='unnamed' fm:label='Mar: 9.500000, Mar: 5.700000, Mar: 3.500000, Mar: 5.700000' style=''></rect>
+    <rect x='182.343750' y='233.545620' width='8.750000' height='30.124696' class='bar color3' fm:series='unnamed' fm:label='Mar: 9.500000, Mar: 5.700000, Mar: 3.500000, Mar: 5.700000' style=''></rect>
+    <rect x='193.281250' y='214.610097' width='8.750000' height='49.060219' class='bar color4' fm:series='unnamed' fm:label='Mar: 9.500000, Mar: 5.700000, Mar: 3.500000, Mar: 5.700000' style=''></rect>
+    <rect x='97.968750' y='204.281630' width='8.750000' height='59.388686' class='bar color1' fm:series='unnamed' fm:label='Feb: 6.900000, Feb: 0.800000, Feb: 0.600000, Feb: 4.200000' style=''></rect>
+    <rect x='108.906250' y='256.784672' width='8.750000' height='6.885645' class='bar color2' fm:series='unnamed' fm:label='Feb: 6.900000, Feb: 0.800000, Feb: 0.600000, Feb: 4.200000' style=''></rect>
+    <rect x='119.843750' y='258.506083' width='8.750000' height='5.164234' class='bar color3' fm:series='unnamed' fm:label='Feb: 6.900000, Feb: 0.800000, Feb: 0.600000, Feb: 4.200000' style=''></rect>
+    <rect x='130.781250' y='227.520681' width='8.750000' height='36.149635' class='bar color4' fm:series='unnamed' fm:label='Feb: 6.900000, Feb: 0.800000, Feb: 0.600000, Feb: 4.200000' style=''></rect>
+    <rect x='35.468750' y='203.420925' width='8.750000' height='60.249392' class='bar color1' fm:series='unnamed' fm:label='Jan: 7.000000, Jan: -0.200000, Jan: -0.900000, Jan: 3.900000' style=''></rect>
+    <rect x='46.406250' y='263.670316' width='8.750000' height='1.721411' class='bar color2' fm:series='unnamed' fm:label='Jan: 7.000000, Jan: -0.200000, Jan: -0.900000, Jan: 3.900000' style=''></rect>
+    <rect x='57.343750' y='263.670316' width='8.750000' height='7.746350' class='bar color3' fm:series='unnamed' fm:label='Jan: 7.000000, Jan: -0.200000, Jan: -0.900000, Jan: 3.900000' style=''></rect>
+    <rect x='68.281250' y='230.102798' width='8.750000' height='33.567518' class='bar color4' fm:series='unnamed' fm:label='Jan: 7.000000, Jan: -0.200000, Jan: -0.900000, Jan: 3.900000' style=''></rect>
+  </g>
+</svg>

@@ -1,0 +1,262 @@
+<svg viewBox='0 0 800 320' class='fm-chart'>
+  <style type='text/css'>
+  <![CDATA[
+  .fm-chart text, .fm-tooltip {
+    font-family: "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+    font: 10px sans-serif;
+  }
+
+  .fm-chart .axis .stroke {
+    stroke: #aaa;
+    stroke-width: 1px;
+  }
+
+  .fm-chart .axis .tick {
+    stroke: #aaa;
+    stroke-width: 1px;
+  }
+
+  .fm-chart .axis .label, .axis .title {
+    fill: #666;
+  }
+
+  .fm-chart .axis .label {
+    font-size: 10px;
+  }
+
+  .fm-chart .axis .title {
+    font-size: 10px;
+  }
+
+  .fm-chart .chart-title {
+    font-size: 12px;
+    font-weight: bold;
+  }
+
+  .fm-chart .chart-subtitle {
+    font-size: 10px;
+  }
+
+  .fm-chart text.label {
+    fill: #666;
+  }
+
+  .fm-chart .legend text {
+    font-size: 10px;
+    fill: #333;
+  }
+
+  .fm-chart .legend text.title {
+    fill: #666;
+  }
+
+  .fm-chart .line {
+    fill: none;
+    stroke: #000;
+  }
+
+  .fm-chart .area {
+    opacity: 0.8;
+  }
+
+  .fm-chart .grid .gridline {
+    stroke: #ddd;
+    stroke-width: 0.02em;
+  }
+
+  .fm-chart .bar,
+  .fm-chart .point,
+  .fm-chart .area {
+    fill: #000;
+  }
+
+  .fm-chart .bar.color6,
+  .fm-chart .point.color6,
+  .fm-chart .area.color6 {
+    fill: #db843d;
+  }
+
+  .fm-chart .lines .line.color6 {
+    strok: #db843d;
+  }
+
+  .fm-chart .bar.color5,
+  .fm-chart .point.color5,
+  .fm-chart .area.color5 {
+    fill: #3d96ae;
+  }
+
+  .fm-chart .lines .line.color5 {
+    stroke: #3d96ae;
+  }
+
+  .fm-chart .bar.color4,
+  .fm-chart .point.color4,
+  .fm-chart .area.color4 {
+    fill: #80699b;
+  }
+
+  .fm-chart .line.color4 {
+    stroke: #80699b;
+  }
+
+  .fm-chart .bar.color3,
+  .fm-chart .point.color3,
+  .fm-chart .area.color3 {
+    fill: #89a54e;
+  }
+
+  .fm-chart .line.color3 {
+    stroke: #89a54e;
+  }
+
+  .fm-chart .bar.color2,
+  .fm-chart .point.color2,
+  .fm-chart .area.color2 {
+    fill: #aa4643;
+  }
+
+  .fm-chart .line.color2 {
+    stroke: #aa4643;
+  }
+
+  .fm-chart .bar.color1,
+  .fm-chart .point.color1,
+  .fm-chart .area.color1 {
+    fill: #4572a7;
+  }
+
+  .fm-chart .line.color1 {
+    stroke: #4572a7;
+  }
+
+  .fm-chart.bar.vertical .axis.left .stroke,
+  .fm-chart.bar.vertical .axis.left .tick,
+  .fm-chart.bar.vertical .axis.right .stroke,
+  .fm-chart.bar.vertical .axis.right .tick {
+    display: none;
+  }
+
+  .fm-tooltip {
+    text-align: center;
+    padding: 5px 7px;
+    color: #fff;
+    background: #333;
+    border-radius: 3px;
+    font-size: 13px;
+  }
+  ]]>
+  </style>
+  <g class='axis bottom'>
+    <text x='80.208333' y='307.500000' style='text-anchor:middle; dominant-baseline:central;' class='label' >Dec</text>
+    <text x='140.625000' y='307.500000' style='text-anchor:middle; dominant-baseline:central;' class='label' >Nov</text>
+    <text x='201.041667' y='307.500000' style='text-anchor:middle; dominant-baseline:central;' class='label' >Oct</text>
+    <text x='261.458333' y='307.500000' style='text-anchor:middle; dominant-baseline:central;' class='label' >Sep</text>
+    <text x='321.875000' y='307.500000' style='text-anchor:middle; dominant-baseline:central;' class='label' >Aug</text>
+    <text x='382.291667' y='307.500000' style='text-anchor:middle; dominant-baseline:central;' class='label' >Jul</text>
+    <text x='442.708333' y='307.500000' style='text-anchor:middle; dominant-baseline:central;' class='label' >Jun</text>
+    <text x='503.125000' y='307.500000' style='text-anchor:middle; dominant-baseline:central;' class='label' >May</text>
+    <text x='563.541667' y='307.500000' style='text-anchor:middle; dominant-baseline:central;' class='label' >Apr</text>
+    <text x='623.958333' y='307.500000' style='text-anchor:middle; dominant-baseline:central;' class='label' >Mar</text>
+    <text x='684.375000' y='307.500000' style='text-anchor:middle; dominant-baseline:central;' class='label' >Feb</text>
+    <text x='744.791667' y='307.500000' style='text-anchor:middle; dominant-baseline:central;' class='label' >Jan</text>
+    <line x1='50.000000' y1='295.000000' x2='50.000000' y2='290.000000' class='tick' />
+    <line x1='50.000000' y1='295.000000' x2='50.000000' y2='290.000000' class='tick' />
+    <line x1='110.416667' y1='295.000000' x2='110.416667' y2='290.000000' class='tick' />
+    <line x1='170.833333' y1='295.000000' x2='170.833333' y2='290.000000' class='tick' />
+    <line x1='231.250000' y1='295.000000' x2='231.250000' y2='290.000000' class='tick' />
+    <line x1='291.666667' y1='295.000000' x2='291.666667' y2='290.000000' class='tick' />
+    <line x1='352.083333' y1='295.000000' x2='352.083333' y2='290.000000' class='tick' />
+    <line x1='412.500000' y1='295.000000' x2='412.500000' y2='290.000000' class='tick' />
+    <line x1='472.916667' y1='295.000000' x2='472.916667' y2='290.000000' class='tick' />
+    <line x1='533.333333' y1='295.000000' x2='533.333333' y2='290.000000' class='tick' />
+    <line x1='593.750000' y1='295.000000' x2='593.750000' y2='290.000000' class='tick' />
+    <line x1='654.166667' y1='295.000000' x2='654.166667' y2='290.000000' class='tick' />
+    <line x1='714.583333' y1='295.000000' x2='714.583333' y2='290.000000' class='tick' />
+    <line x1='50.000000' y1='295.000000' x2='775.000000' y2='295.000000' class='stroke' />
+  </g>
+  <g class='axis left'>
+    <text x='40.000000' y='295.000000' style='text-anchor:end; dominant-baseline:middle;' class='label' >29.2</text>
+    <text x='40.000000' y='254.571429' style='text-anchor:end; dominant-baseline:middle;' class='label' >24.5</text>
+    <text x='40.000000' y='214.142857' style='text-anchor:end; dominant-baseline:middle;' class='label' >19.8</text>
+    <text x='40.000000' y='173.714286' style='text-anchor:end; dominant-baseline:middle;' class='label' >15.1</text>
+    <text x='40.000000' y='133.285714' style='text-anchor:end; dominant-baseline:middle;' class='label' >10.5</text>
+    <text x='40.000000' y='92.857143' style='text-anchor:end; dominant-baseline:middle;' class='label' >5.75</text>
+    <text x='40.000000' y='52.428571' style='text-anchor:end; dominant-baseline:middle;' class='label' >1.06</text>
+    <text x='40.000000' y='12.000000' style='text-anchor:end; dominant-baseline:middle;' class='label' >-3.64</text>
+    <line x1='50.000000' y1='295.000000' x2='55.000000' y2='295.000000' class='tick' />
+    <line x1='50.000000' y1='254.571429' x2='55.000000' y2='254.571429' class='tick' />
+    <line x1='50.000000' y1='214.142857' x2='55.000000' y2='214.142857' class='tick' />
+    <line x1='50.000000' y1='173.714286' x2='55.000000' y2='173.714286' class='tick' />
+    <line x1='50.000000' y1='133.285714' x2='55.000000' y2='133.285714' class='tick' />
+    <line x1='50.000000' y1='92.857143' x2='55.000000' y2='92.857143' class='tick' />
+    <line x1='50.000000' y1='52.428571' x2='55.000000' y2='52.428571' class='tick' />
+    <line x1='50.000000' y1='12.000000' x2='55.000000' y2='12.000000' class='tick' />
+    <line x1='50.000000' y1='12.000000' x2='50.000000' y2='295.000000' class='stroke' />
+  </g>
+  <g class='legend'>
+    <text x='75.000000' y='275.000000' style='text-anchor:start; dominant-baseline:text-after-edge;' class='title' ></text>
+    <circle cx='750.000000' cy='273.800000' r='3.000000' class='point color1' fm:label='' fm:series='', style=''></circle>
+    <text x='742.000000' y='273.800000' style='text-anchor:end; dominant-baseline:central;' class='label' >Tokyo</text>
+    <circle cx='700.000000' cy='273.800000' r='3.000000' class='point color2' fm:label='' fm:series='', style=''></circle>
+    <text x='692.000000' y='273.800000' style='text-anchor:end; dominant-baseline:central;' class='label' >New York</text>
+    <circle cx='632.000000' cy='273.800000' r='3.000000' class='point color3' fm:label='' fm:series='', style=''></circle>
+    <text x='624.000000' y='273.800000' style='text-anchor:end; dominant-baseline:central;' class='label' >Berlin</text>
+    <circle cx='576.000000' cy='273.800000' r='3.000000' class='point color4' fm:label='' fm:series='', style=''></circle>
+    <text x='568.000000' y='273.800000' style='text-anchor:end; dominant-baseline:central;' class='label' >London</text>
+  </g>
+  <g class='lines'>
+    <circle cx='80.208333' cy='125.957421' r='3.000000' class='point color1' fm:label='Dec: 9.600000' fm:series='Tokyo', style=''></circle>
+    <circle cx='140.625000' cy='162.967762' r='3.000000' class='point color1' fm:label='Nov: 13.900000' fm:series='Tokyo', style=''></circle>
+    <circle cx='201.041667' cy='200.838808' r='3.000000' class='point color1' fm:label='Oct: 18.300000' fm:series='Tokyo', style=''></circle>
+    <circle cx='261.458333' cy='243.874088' r='3.000000' class='point color1' fm:label='Sep: 23.300000' fm:series='Tokyo', style=''></circle>
+    <circle cx='321.875000' cy='271.416667' r='3.000000' class='point color1' fm:label='Aug: 26.500000' fm:series='Tokyo', style=''></circle>
+    <circle cx='382.291667' cy='260.227494' r='3.000000' class='point color1' fm:label='Jul: 25.200000' fm:series='Tokyo', style=''></circle>
+    <circle cx='442.708333' cy='228.381387' r='3.000000' class='point color1' fm:label='Jun: 21.500000' fm:series='Tokyo', style=''></circle>
+    <circle cx='503.125000' cy='199.978102' r='3.000000' class='point color1' fm:label='May: 18.200000' fm:series='Tokyo', style=''></circle>
+    <circle cx='563.541667' cy='168.131995' r='3.000000' class='point color1' fm:label='Apr: 14.500000' fm:series='Tokyo', style=''></circle>
+    <circle cx='623.958333' cy='125.096715' r='3.000000' class='point color1' fm:label='Mar: 9.500000' fm:series='Tokyo', style=''></circle>
+    <circle cx='684.375000' cy='102.718370' r='3.000000' class='point color1' fm:label='Feb: 6.900000' fm:series='Tokyo', style=''></circle>
+    <circle cx='744.791667' cy='103.579075' r='3.000000' class='point color1' fm:label='Jan: 7.000000' fm:series='Tokyo', style=''></circle>
+    <path stroke-width='2.000000' class='line color1' style='' d='M80.208333 125.957421 L140.625000 162.967762 L201.041667 200.838808 L261.458333 243.874088 L321.875000 271.416667 L382.291667 260.227494 L442.708333 228.381387 L503.125000 199.978102 L563.541667 168.131995 L623.958333 125.096715 L684.375000 102.718370 L744.791667 103.579075 ' />
+    <circle cx='80.208333' cy='64.847324' r='3.000000' class='point color2' fm:label='Dec: 2.500000' fm:series='New York', style=''></circle>
+    <circle cx='140.625000' cy='117.350365' r='3.000000' class='point color2' fm:label='Nov: 8.600000' fm:series='New York', style=''></circle>
+    <circle cx='201.041667' cy='164.689173' r='3.000000' class='point color2' fm:label='Oct: 14.100000' fm:series='New York', style=''></circle>
+    <circle cx='261.458333' cy='216.331509' r='3.000000' class='point color2' fm:label='Sep: 20.100000' fm:series='New York', style=''></circle>
+    <circle cx='321.875000' cy='250.759732' r='3.000000' class='point color2' fm:label='Aug: 24.100000' fm:series='New York', style=''></circle>
+    <circle cx='382.291667' cy='256.784672' r='3.000000' class='point color2' fm:label='Jul: 24.800000' fm:series='New York', style=''></circle>
+    <circle cx='442.708333' cy='232.684915' r='3.000000' class='point color2' fm:label='Jun: 22.000000' fm:series='New York', style=''></circle>
+    <circle cx='503.125000' cy='189.649635' r='3.000000' class='point color2' fm:label='May: 17.000000' fm:series='New York', style=''></circle>
+    <circle cx='563.541667' cy='140.589416' r='3.000000' class='point color2' fm:label='Apr: 11.300000' fm:series='New York', style=''></circle>
+    <circle cx='623.958333' cy='92.389903' r='3.000000' class='point color2' fm:label='Mar: 5.700000' fm:series='New York', style=''></circle>
+    <circle cx='684.375000' cy='50.215328' r='3.000000' class='point color2' fm:label='Feb: 0.800000' fm:series='New York', style=''></circle>
+    <circle cx='744.791667' cy='41.608273' r='3.000000' class='point color2' fm:label='Jan: -0.200000' fm:series='New York', style=''></circle>
+    <path stroke-width='2.000000' class='line color2' style='' d='M80.208333 64.847324 L140.625000 117.350365 L201.041667 164.689173 L261.458333 216.331509 L321.875000 250.759732 L382.291667 256.784672 L442.708333 232.684915 L503.125000 189.649635 L563.541667 140.589416 L623.958333 92.389903 L684.375000 50.215328 L744.791667 41.608273 ' />
+    <circle cx='744.791667' cy='35.583333' r='3.000000' class='point color3' fm:label='Jan: -0.900000' fm:series='Berlin', style=''></circle>
+    <circle cx='684.375000' cy='48.493917' r='3.000000' class='point color3' fm:label='Feb: 0.600000' fm:series='Berlin', style=''></circle>
+    <circle cx='623.958333' cy='73.454380' r='3.000000' class='point color3' fm:label='Mar: 3.500000' fm:series='Berlin', style=''></circle>
+    <circle cx='563.541667' cy='115.628954' r='3.000000' class='point color3' fm:label='Apr: 8.400000' fm:series='Berlin', style=''></circle>
+    <circle cx='503.125000' cy='159.524939' r='3.000000' class='point color3' fm:label='May: 13.500000' fm:series='Berlin', style=''></circle>
+    <circle cx='442.708333' cy='189.649635' r='3.000000' class='point color3' fm:label='Jun: 17.000000' fm:series='Berlin', style=''></circle>
+    <circle cx='382.291667' cy='203.420925' r='3.000000' class='point color3' fm:label='Jul: 18.600000' fm:series='Berlin', style=''></circle>
+    <circle cx='321.875000' cy='197.395985' r='3.000000' class='point color3' fm:label='Aug: 17.900000' fm:series='Berlin', style=''></circle>
+    <circle cx='261.458333' cy='166.410584' r='3.000000' class='point color3' fm:label='Sep: 14.300000' fm:series='Berlin', style=''></circle>
+    <circle cx='201.041667' cy='120.793187' r='3.000000' class='point color3' fm:label='Oct: 9.000000' fm:series='Berlin', style=''></circle>
+    <circle cx='140.625000' cy='76.897202' r='3.000000' class='point color3' fm:label='Nov: 3.900000' fm:series='Berlin', style=''></circle>
+    <circle cx='80.208333' cy='51.936740' r='3.000000' class='point color3' fm:label='Dec: 1.000000' fm:series='Berlin', style=''></circle>
+    <path stroke-width='2.000000' class='line color3' style='' d='M744.791667 35.583333 L684.375000 48.493917 L623.958333 73.454380 L563.541667 115.628954 L503.125000 159.524939 L442.708333 189.649635 L382.291667 203.420925 L321.875000 197.395985 L261.458333 166.410584 L201.041667 120.793187 L140.625000 76.897202 L80.208333 51.936740 ' />
+    <circle cx='744.791667' cy='76.897202' r='3.000000' class='point color4' fm:label='Jan: 3.900000' fm:series='London', style=''></circle>
+    <circle cx='684.375000' cy='79.479319' r='3.000000' class='point color4' fm:label='Feb: 4.200000' fm:series='London', style=''></circle>
+    <circle cx='623.958333' cy='92.389903' r='3.000000' class='point color4' fm:label='Mar: 5.700000' fm:series='London', style=''></circle>
+    <circle cx='563.541667' cy='116.489659' r='3.000000' class='point color4' fm:label='Apr: 8.500000' fm:series='London', style=''></circle>
+    <circle cx='503.125000' cy='145.753650' r='3.000000' class='point color4' fm:label='May: 11.900000' fm:series='London', style=''></circle>
+    <circle cx='442.708333' cy='174.156934' r='3.000000' class='point color4' fm:label='Jun: 15.200000' fm:series='London', style=''></circle>
+    <circle cx='382.291667' cy='189.649635' r='3.000000' class='point color4' fm:label='Jul: 17.000000' fm:series='London', style=''></circle>
+    <circle cx='321.875000' cy='186.206813' r='3.000000' class='point color4' fm:label='Aug: 16.600000' fm:series='London', style=''></circle>
+    <circle cx='261.458333' cy='165.549878' r='3.000000' class='point color4' fm:label='Sep: 14.200000' fm:series='London', style=''></circle>
+    <circle cx='201.041667' cy='131.982360' r='3.000000' class='point color4' fm:label='Oct: 10.300000' fm:series='London', style=''></circle>
+    <circle cx='140.625000' cy='100.136253' r='3.000000' class='point color4' fm:label='Nov: 6.600000' fm:series='London', style=''></circle>
+    <circle cx='80.208333' cy='84.643552' r='3.000000' class='point color4' fm:label='Dec: 4.800000' fm:series='London', style=''></circle>
+    <path stroke-width='2.000000' class='line color4' style='' d='M744.791667 76.897202 L684.375000 79.479319 L623.958333 92.389903 L563.541667 116.489659 L503.125000 145.753650 L442.708333 174.156934 L382.291667 189.649635 L321.875000 186.206813 L261.458333 165.549878 L201.041667 131.982360 L140.625000 100.136253 L80.208333 84.643552 ' />
+  </g>
+</svg>
