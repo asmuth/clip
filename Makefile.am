@@ -17,12 +17,14 @@ export AM_CXXFLAGS = \
     -DFNORDMETRIC_VERSION=\"v@PACKAGE_VERSION@\" \
     $(PTHREAD_CFLAGS) \
     -I$(abs_top_srcdir)/src \
-    -L$(abs_top_srcdir)/src/fnordmetric \
     -I$(abs_top_srcdir)/deps/libtransport/src \
-    -L$(abs_top_srcdir)/deps/libtransport/src \
     -I$(abs_top_srcdir)/
 
 FNORDMETRIC_LIBS = \
+    -L$(abs_top_srcdir)/src/fnordmetric \
+    -L$(abs_top_srcdir)/deps/libtransport/src/libtransport/http \
+    -L$(abs_top_srcdir)/deps/libtransport/src/libtransport/json \
+    -L$(abs_top_srcdir)/deps/libtransport/src/libtransport/uri \
     -lfnordmetric-common \
     -ltransport_http \
     -ltransport_json \
