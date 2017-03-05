@@ -94,8 +94,8 @@ libfnordmetric_common_a_SOURCES = \
 
 FNORDMETRIC_LIBS = \
     libfnordmetric-common.a \
-    -L$(abs_top_builddir)/deps/libtransport/src/libtransport/http/libtransport_http.a \
-    -L$(abs_top_builddir)/deps/libtransport/src/libtransport/json/libtransport_json.a \
+    -L$(abs_top_builddir)/deps/libtransport/src/libtransport/http \
+    -L$(abs_top_builddir)/deps/libtransport/src/libtransport/json \
     -L$(abs_top_builddir)/deps/libtransport/src/libtransport/uri \
     -ltransport_http \
     -ltransport_json \
