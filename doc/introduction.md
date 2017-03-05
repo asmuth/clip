@@ -3,11 +3,11 @@
 FnordMetric is a collection of lightweight tools for real-time metrics collection
 and visualization with SQL. The tools allow you to record measurements and
 build beautiful real-time dashboards within minutes. All using your favorite SQL
-database.
+database (currently supported are MySQL, Postgres and EventQL).
 
 <ul>
   <li>
-    <h4>metric-collectd</h4>
+    <h4 style="margin-bottom:.2em; font-size:16px;">metric-collectd</h4>
     <p>
       metric-collectd is a lightweight daemon that collects measurements and other
       timeseries data, pre-aggregates it and stores the resulting tuples into a
@@ -18,7 +18,7 @@ database.
   </li>
 
   <li>
-    <h4>metric-queryd</h4>
+    <h4 style="margin-bottom:.2em; font-size:16px;">metric-queryd</h4>
     <p>
       metric-queryd is a simple HTTP service that executes SQL queries on a backend
       database and plots the results. The HTTP API allows you to create timeseries graphs
