@@ -39,7 +39,7 @@ systems include a small domain specific programming language to define the
 alerting conditions.
 
 We think that SQL is already a very well-suited language for this task and adding
-any kind of rule system on top would actuall make it less powerful. In other words,
+any kind of rule engine on top would actually make it less powerful. In other words,
 we think that we can't add a lot over plain old SQL for checking custom alerting
 rules.
 
