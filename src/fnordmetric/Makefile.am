@@ -13,10 +13,6 @@ libfnordmetric_common_a_SOURCES = \
     config_list.cc \
     config_parser.h \
     config_parser.cc \
-    table.h \
-    table.cc \
-    table_map.h \
-    table_map.cc \
     sample.h \
     sample.cc \
     ingest.h \
@@ -29,6 +25,10 @@ libfnordmetric_common_a_SOURCES = \
     listen_udp.cc \
     listen_http.h \
     listen_http.cc \
+    metric.h \
+    metric.cc \
+    metric_map.h \
+    metric_map.cc \
     fetch_http.h \
     fetch_http.cc \
     query_service.h \

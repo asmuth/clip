@@ -12,113 +12,50 @@
 
 namespace fnordmetric {
 
-MetricMap::~MetricMap() {
-  for (auto& m : metrics_) {
-    if (m.second.second) {
-      delete m.second.first;
-    }
-  }
-}
+MetricMap::~MetricMap() {}
 
-Metric* MetricMap::findMetric(const std::string& key) const {
-  auto iter = metrics_.find(key);
-  if (iter == metrics_.end()) {
+std::shared_ptr<MetricConfig> MetricMap::findMetric(const std::string& key) const {
+  auto iter = tables_.find(key);
+  if (iter == tables_.end()) {
     return nullptr;
   } else {
-    return iter->second.first;
+    return iter->second;
   }
 }
 
-//std::vector<IMetric*> IMetricMap::listMetrics()
-//    const {
-//  std::vector<IMetric*> metrics;
-//
-//  {
-//    std::lock_guard<std::mutex> lock_holder(metrics_mutex_);
-//    for (const auto& iter : metrics_) {
-//      metrics.emplace_back(iter.second.get());
-//    }
-//  }
-//
-//  return metrics;
-//}
+MetricMapBuilder::MetricMapBuilder() : table_map_(std::make_shared<MetricMap>()) {}
 
-MetricMapBuilder::MetricMapBuilder(
-    MetricMap* mm) :
-    metric_map_(std::make_shared<MetricMap>()) {
-  if (mm) {
-    for (auto& m : mm->metrics_) {
-      m.second.second = false;
 
-      metric_map_->metrics_.emplace(
-          m.first,
-          std::make_pair(m.second.first, true));
-    }
-
-    mm->next_ = metric_map_;
-  }
-}
-
-Metric* MetricMapBuilder::findMetric(
+std::shared_ptr<MetricConfig> MetricMapBuilder::findMetric(
     const std::string& key) {
-  return metric_map_->findMetric(key);
+  return table_map_->findMetric(key);
 }
 
 void MetricMapBuilder::addMetric(
-    const std::string& key,
-    std::unique_ptr<Metric> metric) {
-  metric_map_->metrics_.emplace(key, std::make_pair(metric.release(), true));
+    const MetricIDType& key,
+    const MetricConfig& config) {
+  table_map_->tables_.emplace(key, std::make_shared<MetricConfig>(config));
 }
 
 std::shared_ptr<MetricMap> MetricMapBuilder::getMetricMap() {
-  auto mmap = std::move(metric_map_);
-  metric_map_ = std::make_shared<MetricMap>();
+  auto mmap = std::move(table_map_);
+  table_map_ = std::make_shared<MetricMap>();
   return mmap;
 }
 
-VersionedMetricMap::VersionedMetricMap() : metric_map_(new MetricMap()) {}
+VersionedMetricMap::VersionedMetricMap() : table_map_(new MetricMap()) {}
 
 std::shared_ptr<MetricMap> VersionedMetricMap::getMetricMap() const {
   std::unique_lock<std::mutex> lk(mutex_);
-  return metric_map_;
+  return table_map_;
 }
 
 void VersionedMetricMap::updateMetricMap(
-    std::shared_ptr<MetricMap> metric_map) {
+    std::shared_ptr<MetricMap> table_map) {
   std::unique_lock<std::mutex> lk(mutex_);
-  metric_map_ = std::move(metric_map);
+  table_map_ = std::move(table_map);
 }
 
-MetricListCursor::MetricListCursor(
-    std::shared_ptr<MetricMap> metric_map) :
-    metric_map_(std::move(metric_map)),
-    begin_(metric_map_->metrics_.begin()),
-    cur_(begin_),
-    end_(metric_map_->metrics_.end()) {}
-
-MetricListCursor::MetricListCursor(
-    MetricListCursor&& o) :
-    metric_map_(std::move(o.metric_map_)),
-    begin_(std::move(o.begin_)),
-    cur_(std::move(o.cur_)),
-    end_(std::move(o.end_)) {}
-
-const std::string& MetricListCursor::getMetricID() {
-  return cur_->first;
-}
-
-bool MetricListCursor::isValid() const {
-  return cur_ != end_;
-}
-
-bool MetricListCursor::next() {
-  if (cur_ == end_) {
-    return false;
-  } else {
-    ++cur_;
-    return true;
-  }
-}
 
 } // namespace fnordmetric
 

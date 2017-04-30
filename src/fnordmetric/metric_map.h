@@ -9,51 +9,49 @@
  * <http://www.gnu.org/licenses/>.
  */
 #pragma once
-#include <fnordmetric/metric.h>
 #include <map>
 #include <memory>
 #include <mutex>
 #include <string>
 #include <vector>
+#include <fnordmetric/metric.h>
 
 namespace fnordmetric {
 
 class MetricMap {
 friend class MetricMapBuilder;
-friend class MetricListCursor;
 public:
 
   ~MetricMap();
 
-  Metric* findMetric(const std::string& key) const;
+  std::shared_ptr<MetricConfig> findMetric(const std::string& key) const;
 
   std::set<std::string> listMetrics() const;
 
 protected:
 
-  using SlotType = std::pair<Metric*, bool>;
+  using SlotType = std::shared_ptr<MetricConfig>;
   using MapType = std::map<std::string, SlotType>;
   using IterType = MapType::iterator;
 
-  MapType metrics_;
-  std::shared_ptr<MetricMap> next_;
+  MapType tables_;
 };
 
 class MetricMapBuilder {
 public:
 
-  MetricMapBuilder(MetricMap* metric_map);
+  MetricMapBuilder();
 
   void addMetric(
-      const std::string& key,
-      std::unique_ptr<Metric> metric);
+      const MetricIDType& table_id,
+      const MetricConfig& table);
 
-  Metric* findMetric(const std::string& key);
+  std::shared_ptr<MetricConfig> findMetric(const MetricIDType& table_id);
 
   std::shared_ptr<MetricMap> getMetricMap();
 
 protected:
-  std::shared_ptr<MetricMap> metric_map_;
+  std::shared_ptr<MetricMap> table_map_;
 };
 
 class VersionedMetricMap {
@@ -63,31 +61,11 @@ public:
 
   std::shared_ptr<MetricMap> getMetricMap() const;
 
-  void updateMetricMap(std::shared_ptr<MetricMap> metric_map);
+  void updateMetricMap(std::shared_ptr<MetricMap> table_map);
 
 protected:
   mutable std::mutex mutex_;
-  std::shared_ptr<MetricMap> metric_map_;
-};
-
-class MetricListCursor {
-public:
-
-  MetricListCursor(std::shared_ptr<MetricMap> metric_map);
-  MetricListCursor(const MetricListCursor& o) = delete;
-  MetricListCursor(MetricListCursor&& o);
-  MetricListCursor& operator=(const MetricListCursor& o) = delete;
-
-  const std::string& getMetricID();
-
-  bool isValid() const;
-  bool next();
-
-protected:
-  std::shared_ptr<MetricMap> metric_map_;
-  MetricMap::IterType begin_;
-  MetricMap::IterType cur_;
-  MetricMap::IterType end_;
+  std::shared_ptr<MetricMap> table_map_;
 };
 
 } // namespace fnordmetric
