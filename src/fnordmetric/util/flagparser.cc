@@ -41,6 +41,16 @@ bool FlagParser::isSet(const char* longopt) const {
   return false;
 }
 
+bool FlagParser::isSetExplicit(const char* longopt) const {
+  for (auto& flag : flags_) {
+    if (flag.longopt == longopt) {
+      return flag.values.size() > 0;
+    }
+  }
+
+  return false;
+}
+
 std::string FlagParser::getString(const char* longopt) const {
   for (auto& flag : flags_) {
     if (flag.longopt == longopt) {
@@ -211,7 +221,9 @@ ReturnCode FlagParser::parseArgv(const std::vector<std::string>& argv) {
     } else {
       if (i + 1 < argv.size()) {
         flag_ptr->values.emplace_back(argv[++i]);
-      } else if (flag_ptr->required) {
+      } else if (!flag_ptr->required) {
+        flag_ptr->values.emplace_back();
+      } else {
         return ReturnCode::errorf(
             "FLAG_ERROR",
             "flag --$0 has no value",

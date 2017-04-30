@@ -9,27 +9,21 @@
  */
 #pragma once
 #include <fnordmetric/util/return_code.h>
-#include <fnordmetric/config_list.h>
+#include <fnordmetric/cli/command.h>
 
 namespace fnordmetric {
 
-struct CLIContext {
-  ConfigList* config;
-};
-
-class Command {
+class InsertCommand : public Command {
 public:
 
-  virtual ~Command() = default;
-
-  virtual ReturnCode execute(
+  ReturnCode execute(
       CLIContext* ctx,
-      const std::vector<std::string>& argv) = 0;
+      const std::vector<std::string>& argv) override;
 
-  virtual const std::string& getName() const = 0;
-  virtual const std::string& getDescription() const = 0;
+  const std::string& getName() const override;
+  const std::string& getDescription() const override;
 
-  virtual void printHelp() const = 0;
+  void printHelp() const override;
 
 };
 

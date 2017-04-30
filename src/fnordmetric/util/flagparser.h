@@ -35,11 +35,19 @@ public:
       const char* default_value = NULL);
 
   /**
-   * Returns true if the flag is set and false otherwise
+   * Returns true if the flag is set, i.e. if a get() call with the same flag
+   * will return a value (user provided or default)
    *
    * @param longopt the longopt of the flag
    */
   bool isSet(const char* longopt) const;
+
+  /**
+   * Returns true if the flag is explictly set by the user and false otherwise
+   *
+   * @param longopt the longopt of the flag
+   */
+  bool isSetExplicit(const char* longopt) const;
 
   /**
    * Returns the string value of the flag or throws an exception if the value

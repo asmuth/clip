@@ -26,6 +26,7 @@
 #include <fnordmetric/aggregation_service.h>
 #include <fnordmetric/ingest.h>
 #include <fnordmetric/cli/command.h>
+#include <fnordmetric/cli/commands/insert_cmd.h>
 
 using namespace fnordmetric;
 
@@ -52,7 +53,7 @@ int main(int argc, const char** argv) {
       false,
       "V",
       NULL);
-  
+
   /* parse flags */
   {
     auto rc = flags.parseArgv(argc, argv);
@@ -66,6 +67,7 @@ int main(int argc, const char** argv) {
 
   /* init commands */
   std::vector<std::unique_ptr<Command>> commands;
+  commands.emplace_back(new InsertCommand());
 
   /* print help */
   if (flags.isSet("version")) {
@@ -82,7 +84,7 @@ int main(int argc, const char** argv) {
   bool help_requested = false;
   std::string help_topic;
 
-  if (flags.isSet("help")) {
+  if (flags.isSetExplicit("help")) {
     help_requested = true;
     help_topic = flags.getString("help");
   }
@@ -111,15 +113,18 @@ int main(int argc, const char** argv) {
   }
 
   if (help_requested && !help_topic.empty()) {
-    for (const auto& c : commands) {
-      if (c->getName() == help_topic) {
-        c->printHelp();
-        return 0;
-      }
-    }
+    const auto& cmd = std::find_if(
+        commands.begin(),
+        commands.end(),
+        [&help_topic] (const auto& c) { return c->getName() == help_topic; });
 
-    std::cerr << StringUtil::format("No manual entry for evqlctl '$0'\n", help_topic);
-    return 1;
+    if (cmd == commands.end()) {
+      (*cmd)->printHelp();
+      return 0;
+    } else {
+      std::cerr << StringUtil::format("No manual entry for evqlctl '$0'\n", help_topic);
+      return 1;
+    }
   }
 
   /* check flags */
@@ -157,8 +162,35 @@ int main(int argc, const char** argv) {
     }
   }
 
+  if (cmd_argv.empty()) {
+    std::cerr << "ERROR: command is not specified. See 'evqlctl --help'.\n";
+    return 1;
+  }
 
+  /* execute command */
+  const auto& cmd = std::find_if(
+      commands.begin(),
+      commands.end(),
+      [&cmd_argv] (const auto& c) { return c->getName() == cmd_argv.front(); });
 
-  return 0;
+  if (cmd == commands.end()) {
+    std::cerr << StringUtil::format(
+        "ERROR: '$0' is not a evqlctl command. See 'evqlctl --help'.\n",
+        cmd_argv[0]);
+
+    return 1;
+  }
+
+  CLIContext ctx;
+  ctx.config = &config;
+
+  cmd_argv.erase(cmd_argv.begin());
+  auto rc = (*cmd)->execute(&ctx, cmd_argv);
+
+  if (!rc.isSuccess()) {
+    std::cerr << StringUtil::format("ERROR: $0\n", rc.getMessage());
+  }
+
+  return rc.isSuccess() ? 0 : 1;
 }
 

@@ -2,7 +2,7 @@ ACLOCAL_AMFLAGS = -I m4
 AUTOMAKE_OPTIONS = foreign
 
 export AM_CXXFLAGS = \
-    -std=c++0x \
+    -std=c++14 \
     -ftemplate-depth=500 \
     -mno-omit-leaf-frame-pointer \
     -fno-omit-frame-pointer \

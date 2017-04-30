@@ -9,6 +9,9 @@ libfnordmetric_common_a_SOURCES = \
     config_list.cc \
     config_parser.h \
     config_parser.cc \
+    cli/command.h \
+    cli/commands/insert_cmd.h \
+    cli/commands/insert_cmd.cc \
     sample.h \
     sample.cc \
     ingest.h \
