@@ -209,14 +209,14 @@ ReturnCode FlagParser::parseArgv(const std::vector<std::string>& argv) {
 
       flag_ptr->values.emplace_back(arg.substr(eq_len));
     } else {
-      if (i + 1 >= argv.size()) {
+      if (i + 1 < argv.size()) {
+        flag_ptr->values.emplace_back(argv[++i]);
+      } else if (flag_ptr->required) {
         return ReturnCode::errorf(
             "FLAG_ERROR",
             "flag --$0 has no value",
             flag_ptr->longopt);
       }
-
-      flag_ptr->values.emplace_back(argv[++i]);
     }
   }
 
