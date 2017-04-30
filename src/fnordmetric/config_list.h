@@ -27,9 +27,8 @@ public:
   const std::string& getBackendURL() const;
   void setBackendURL(const std::string& backend_url);
 
-  std::map<MetricIDType, MetricConfig>& getMetricConfigs();
-  const std::map<MetricIDType, MetricConfig>& getMetricConfigs() const;
-  const MetricConfig* getMetricConfig(MetricIDType metric_id) const;
+  const std::map<MetricIDType, std::shared_ptr<MetricConfig>>& getMetricConfigs() const;
+  std::shared_ptr<const MetricConfig> getMetricConfig(MetricIDType metric_id) const;
   void addMetricConfig(MetricConfig config);
 
   const std::map<std::string, UnitConfig>& getUnitConfigs() const;
@@ -42,7 +41,7 @@ public:
 protected:
   std::string backend_url_;
   bool create_metrics_;
-  std::map<MetricIDType, MetricConfig> metric_configs_;
+  std::map<MetricIDType, std::shared_ptr<MetricConfig>> metric_configs_;
   std::map<std::string, UnitConfig> unit_configs_;
   std::vector<std::unique_ptr<IngestionTaskConfig>> ingestion_configs_;
 };

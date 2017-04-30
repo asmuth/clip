@@ -136,6 +136,7 @@ bool ConfigParser::parseMetricDefinition(ConfigList* config) {
   }
 
   MetricConfig metric_config;
+  metric_config.metric_id = metric_name;
 
   TokenType ttype;
   std::string tbuf;

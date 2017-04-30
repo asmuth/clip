@@ -45,6 +45,14 @@ ReturnCode InsertCommand::execute(
     return flags_rc;
   }
 
+  auto metric = ctx->config->getMetricConfig(flags.getString("metric"));
+  if (!metric) {
+    return ReturnCode::errorf(
+        "ERUNTIME",
+        "metric not found: '$0'",
+        flags.getString("metric"));
+  }
+
   return ReturnCode::success();
 }
 
