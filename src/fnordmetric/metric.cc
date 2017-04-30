@@ -16,5 +16,46 @@
 
 namespace fnordmetric {
 
+MetricConfig::MetricConfig() :
+    kind{MetricDataType::FLOAT64, MetricReportingScheme::SAMPLE} {}
+
+std::string getMetricDataTypeName(MetricDataType t) {
+  switch (t) {
+    case MetricDataType::UINT64: return "uint64";
+    case MetricDataType::INT64: return "int64";
+    case MetricDataType::FLOAT64: return "float64";
+    case MetricDataType::STRING: return "string";
+  }
+
+  return "???";
+}
+
+bool parseMetricDataType(
+    const std::string& s,
+    MetricDataType* t) {
+  if (s == "uint64") { *t = MetricDataType::UINT64; return true; }
+  if (s == "int64") { *t = MetricDataType::INT64; return true; }
+  if (s == "float64") { *t = MetricDataType::FLOAT64; return true; }
+  if (s == "string") { *t = MetricDataType::STRING; return true; }
+  return false;
+}
+
+std::string getMetricReportingSchemeName(MetricReportingScheme t) {
+  switch (t) {
+    case MetricReportingScheme::SAMPLE: return "sample";
+    case MetricReportingScheme::MONOTONIC: return "monotonic";
+  }
+
+  return "???";
+}
+
+bool parseMetricReportingScheme(
+    const std::string& s,
+    MetricReportingScheme* t) {
+  if (s == "sample") { *t = MetricReportingScheme::SAMPLE; return true; }
+  if (s == "monotonic") { *t = MetricReportingScheme::MONOTONIC; return true; }
+  return false;
+}
+
 } // namespace fnordmetric
 

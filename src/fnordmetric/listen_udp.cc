@@ -116,12 +116,10 @@ void UDPListener::start() {
       continue;
     }
 
-    AggregationService::BatchInsertOptions opts;
-    opts.format = format_;
-    auto rc = aggr_service_->insertSamplesBatch(buf, buf_len, &opts);
-    if (!rc.isSuccess()) {
-      logWarning("error while inserting samples: $0", rc.getMessage());
-    }
+    //auto rc = aggr_service_->insertSamplesBatch(buf, buf_len, &opts);
+    //if (!rc.isSuccess()) {
+    //  logWarning("error while inserting samples: $0", rc.getMessage());
+    //}
   }
 }
 

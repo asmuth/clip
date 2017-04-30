@@ -241,21 +241,21 @@ int main(int argc, const char** argv) {
   }
 
   /* start aggregation service */
-  std::unique_ptr<AggregationService> aggr_service;
-  if (rc.isSuccess()) {
-    rc = AggregationService::startService(backend.get(), &aggr_service);
-  }
+  //std::unique_ptr<AggregationService> aggr_service;
+  //if (rc.isSuccess()) {
+  //  rc = AggregationService::startService(backend.get(), &aggr_service);
+  //}
 
-  if (rc.isSuccess()) {
-    rc = aggr_service->applyConfig(&config);
-  }
+  //if (rc.isSuccess()) {
+  //  rc = aggr_service->applyConfig(&config);
+  //}
 
   /* start ingestion service */
-  std::unique_ptr<IngestionService> ingestion_service;
-  if (rc.isSuccess()) {
-    ingestion_service.reset(new IngestionService(aggr_service.get()));
-    rc = ingestion_service->applyConfig(&config);
-  }
+  //std::unique_ptr<IngestionService> ingestion_service;
+  //if (rc.isSuccess()) {
+  //  ingestion_service.reset(new IngestionService(aggr_service.get()));
+  //  rc = ingestion_service->applyConfig(&config);
+  //}
 
   /* wait for shutdown or reload */
   while (rc.isSuccess()) {
@@ -290,13 +290,13 @@ int main(int argc, const char** argv) {
     close(sig_pipe[1]);
   }
 
-  if (ingestion_service) {
-    ingestion_service->shutdown();
-  }
+  //if (ingestion_service) {
+  //  ingestion_service->shutdown();
+  //}
 
-  if (aggr_service) {
-    aggr_service->shutdown();
-  }
+  //if (aggr_service) {
+  //  aggr_service->shutdown();
+  //}
 
   if (backend) {
     backend->shutdown();

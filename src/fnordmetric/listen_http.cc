@@ -83,27 +83,27 @@ void HTTPPushIngestionTask::handleRequest(
     return;
   }
 
-  AggregationService::BatchInsertOptions opts;
-  opts.format = IngestionSampleFormat::STATSD;
-  if (request->getHeader("Content-Type") == "application/json") {
-    opts.format = IngestionSampleFormat::JSON;
-  }
-  if (request->getHeader("Content-Type") == "text/plain") {
-    opts.format = IngestionSampleFormat::STATSD;
-  }
+  //AggregationService::BatchInsertOptions opts;
+  //Opts.format = IngestionSampleFormat::STATSD;
+  //If (request->getHeader("Content-Type") == "application/json") {
+  //  opts.format = IngestionSampleFormat::JSON;
+  //}
+  //If (request->getHeader("Content-Type") == "text/plain") {
+  //  opts.format = IngestionSampleFormat::STATSD;
+  //}
 
-  auto rc = aggr_service_->insertSamplesBatch(
-      request->body().data(),
-      request->body().size(),
-      &opts);
+  //Auto rc = aggr_service_->insertSamplesBatch(
+  //    request->body().data(),
+  //    request->body().size(),
+  //    &opts);
 
-  if (rc.isSuccess()) {
-    response->setStatus(http::kStatusCreated);
-    response->addBody("OK\n");
-  } else {
-    response->setStatus(http::kStatusInternalServerError);
-    response->addBody(StringUtil::format("ERROR: $0\n", rc.getMessage()));
-  }
+  //If (rc.isSuccess()) {
+  //  response->setStatus(http::kStatusCreated);
+  //  response->addBody("OK\n");
+  //} else {
+  //  response->setStatus(http::kStatusInternalServerError);
+  //  response->addBody(StringUtil::format("ERROR: $0\n", rc.getMessage()));
+  //}
 }
 
 } // namespace fnordmetric

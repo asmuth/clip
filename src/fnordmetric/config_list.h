@@ -13,7 +13,7 @@
 #include <memory>
 #include <string>
 #include "fnordmetric/util/return_code.h"
-#include "fnordmetric/table.h"
+#include "fnordmetric/metric.h"
 #include "fnordmetric/units.h"
 #include "fnordmetric/ingest.h"
 
@@ -27,13 +27,10 @@ public:
   const std::string& getBackendURL() const;
   void setBackendURL(const std::string& backend_url);
 
-  bool getCreateTables() const;
-  void setCreateTables(bool create_tables);
-
-  std::map<TableIDType, TableConfig>& getTableConfigs();
-  const std::map<TableIDType, TableConfig>& getTableConfigs() const;
-  const TableConfig* getTableConfig(TableIDType table_id) const;
-  void addTableConfig(TableConfig config);
+  std::map<MetricIDType, MetricConfig>& getMetricConfigs();
+  const std::map<MetricIDType, MetricConfig>& getMetricConfigs() const;
+  const MetricConfig* getMetricConfig(MetricIDType metric_id) const;
+  void addMetricConfig(MetricConfig config);
 
   const std::map<std::string, UnitConfig>& getUnitConfigs() const;
   const UnitConfig* getUnitConfig(std::string unit_id) const;
@@ -44,8 +41,8 @@ public:
 
 protected:
   std::string backend_url_;
-  bool create_tables_;
-  std::map<TableIDType, TableConfig> table_configs_;
+  bool create_metrics_;
+  std::map<MetricIDType, MetricConfig> metric_configs_;
   std::map<std::string, UnitConfig> unit_configs_;
   std::vector<std::unique_ptr<IngestionTaskConfig>> ingestion_configs_;
 };

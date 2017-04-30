@@ -47,12 +47,10 @@ public:
 protected:
 
   bool parseBackendStanza(ConfigList* config);
-  bool parseCreateTablesStanza(ConfigList* config);
 
-  bool parseTableDefinition(ConfigList* config);
-  bool parseTableDefinitionIntervalStanza(TableConfig* metric_config);
-  bool parseTableDefinitionLabelStanza(TableConfig* metric_config);
-  bool parseTableDefinitionMeasureStanza(TableConfig* metric_config);
+  bool parseMetricDefinition(ConfigList* config);
+  bool parseMetricDefinitionKindStanza(MetricConfig* metric_config);
+  bool parseMetricDefinitionTreeStanza(MetricConfig* metric_config);
 
   bool parseUnitDefinition(ConfigList* config);
   bool parseUnitDefinitionDescriptionStanza(UnitConfig* unit_config);

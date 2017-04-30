@@ -3,10 +3,6 @@ noinst_LIBRARIES = libfnordmetric-common.a
 SUBDIRS = backends/mysql
 
 libfnordmetric_common_a_SOURCES = \
-    aggregate.h \
-    aggregate.cc \
-    aggregation_service.h \
-    aggregation_service.cc \
     backends/backend.h \
     backends/backend.cc \
     config_list.h \

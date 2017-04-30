@@ -76,17 +76,18 @@ ReturnCode HTTPPullIngestionTask::invoke() {
         response.statusCode());
   }
 
-  AggregationService::BatchInsertOptions insert_opts;
-  insert_opts.format = format_;
-  //insert_opts.metric_id_rewrite_enabled = config_->metric_id_rewrite_enabled;
-  //insert_opts.metric_id_rewrite_regex = config_->metric_id_rewrite_regex;
-  //insert_opts.metric_id_rewrite_replace = config_->metric_id_rewrite_replace;
+  return ReturnCode::success();
+  //AggregationService::BatchInsertOptions insert_opts;
+  //insert_opts.format = format_;
+  ////insert_opts.metric_id_rewrite_enabled = config_->metric_id_rewrite_enabled;
+  ////insert_opts.metric_id_rewrite_regex = config_->metric_id_rewrite_regex;
+  ////insert_opts.metric_id_rewrite_replace = config_->metric_id_rewrite_replace;
 
-  const auto& body = response.body();
-  return aggr_service_->insertSamplesBatch(
-      body.data(),
-      body.size(),
-      &insert_opts);
+  //const auto& body = response.body();
+  //return aggr_service_->insertSamplesBatch(
+  //    body.data(),
+  //    body.size(),
+  //    &insert_opts);
 }
 
 } // namespace fnordmetric

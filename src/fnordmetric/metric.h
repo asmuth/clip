@@ -27,25 +27,32 @@ class MetricMap;
 using MetricIDType = std::string;
 using SensorIDType = std::vector<std::string>;
 
-enum MetricKind : uint32_t {
-  SAMPLE_UINT64     = 1,
-  SAMPLE_INT64      = 2,
-  SAMPLE_FLOAT64    = 3,
-  SAMPLE_STRING     = 4,
-  MONOTONIC_UINT64  = 5,
-  MONOTONIC_INT64   = 6,
-  MONOTONIC_FLOAT64 = 7
+enum class MetricDataType {
+  UINT64, INT64, FLOAT64, STRING
 };
 
-std::string getMetricKindName(MetricKind t);
-bool parseMetricKind(const std::string& s, MetricKind* t);
+enum class MetricReportingScheme {
+ SAMPLE, MONOTONIC
+};
+
+struct MetricKind {
+  MetricDataType type;
+  MetricReportingScheme scheme;
+};
 
 struct MetricConfig {
+  MetricConfig();
   std::string metric_id;
   MetricKind kind;
-  std::vector<std::string> sensor_id_labels;
+  std::vector<std::string> tree;
   std::string unit_id;
 };
+
+std::string getMetricDataTypeName(MetricDataType t);
+bool parseMetricDataType(const std::string& s, MetricDataType* t);
+
+std::string getMetricReportingSchemeName(MetricReportingScheme t);
+bool parseMetricReportingScheme(const std::string& s, MetricReportingScheme* t);
 
 } // namespace fnordmetric
 

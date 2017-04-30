@@ -11,7 +11,7 @@
 
 namespace fnordmetric {
 
-ConfigList::ConfigList() : create_tables_(false) {}
+ConfigList::ConfigList() {}
 
 const std::string& ConfigList::getBackendURL() const {
   return backend_url_;
@@ -21,34 +21,26 @@ void ConfigList::setBackendURL(const std::string& backend_url) {
   backend_url_ = backend_url;
 }
 
-bool ConfigList::getCreateTables() const {
-  return create_tables_;
+std::map<MetricIDType, MetricConfig>& ConfigList::getMetricConfigs() {
+  return metric_configs_;
 }
 
-void ConfigList::setCreateTables(bool create_tables) {
-  create_tables_ = create_tables;
-}
-
-std::map<TableIDType, TableConfig>& ConfigList::getTableConfigs() {
-  return table_configs_;
-}
-
-const std::map<TableIDType, TableConfig>& ConfigList::getTableConfigs()
+const std::map<MetricIDType, MetricConfig>& ConfigList::getMetricConfigs()
     const {
-  return table_configs_;
+  return metric_configs_;
 }
 
-const TableConfig* ConfigList::getTableConfig(TableIDType table_id) const {
-  auto table_config = table_configs_.find(table_id);
-  if (table_config == table_configs_.end()) {
+const MetricConfig* ConfigList::getMetricConfig(MetricIDType metric_id) const {
+  auto metric_config = metric_configs_.find(metric_id);
+  if (metric_config == metric_configs_.end()) {
     return nullptr;
   } else {
-    return &table_config->second;
+    return &metric_config->second;
   }
 }
 
-void ConfigList::addTableConfig(TableConfig config) {
-  table_configs_.emplace(config.table_id, std::move(config));
+void ConfigList::addMetricConfig(MetricConfig config) {
+  metric_configs_.emplace(config.metric_id, std::move(config));
 }
 
 const std::map<std::string, UnitConfig>& ConfigList::getUnitConfigs()

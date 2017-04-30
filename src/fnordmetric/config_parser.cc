@@ -39,20 +39,10 @@ ReturnCode ConfigParser::parse(ConfigList* config) {
       }
     }
 
-    /* parse the "create_tables" stanza */
-    if (ttype == T_STRING && tbuf == "create_tables") {
+    /* parse the "metric" definition */
+    if (ttype == T_STRING && tbuf == "metric") {
       consumeToken();
-      if (parseCreateTablesStanza(config)) {
-        continue;
-      } else {
-        break;
-      }
-    }
-
-    /* parse the "table" definition */
-    if (ttype == T_STRING && tbuf == "table") {
-      consumeToken();
-      if (parseTableDefinition(config)) {
+      if (parseMetricDefinition(config)) {
         continue;
       } else {
         break;
@@ -135,31 +125,9 @@ bool ConfigParser::parseBackendStanza(ConfigList* config) {
   return true;
 }
 
-bool ConfigParser::parseCreateTablesStanza(ConfigList* config) {
-  std::string value;
-  if (!expectAndConsumeString(&value)) {
-    return false;
-  }
-
-  if (value == "on") {
-    config->setCreateTables(true);
-  } else if (value == "off") {
-    config->setCreateTables(false);
-  } else {
-    setError(
-        StringUtil::format(
-            "invalid value for create_tables: $1, valid values: {on, off}",
-            value));
-
-    return false;
-  }
-
-  return true;
-}
-
-bool ConfigParser::parseTableDefinition(ConfigList* config) {
-  std::string table_name;
-  if (!expectAndConsumeString(&table_name)) {
+bool ConfigParser::parseMetricDefinition(ConfigList* config) {
+  std::string metric_name;
+  if (!expectAndConsumeString(&metric_name)) {
     return false;
   }
 
@@ -167,7 +135,7 @@ bool ConfigParser::parseTableDefinition(ConfigList* config) {
     return false;
   }
 
-  TableConfig table_config(table_name);
+  MetricConfig metric_config;
 
   TokenType ttype;
   std::string tbuf;
@@ -181,28 +149,19 @@ bool ConfigParser::parseTableDefinition(ConfigList* config) {
       continue;
     }
 
-    /* parse the "interval" stanza */
-    if (ttype == T_STRING && tbuf == "interval") {
+    /* parse the "kind" stanza */
+    if (ttype == T_STRING && tbuf == "kind") {
       consumeToken();
-      if (!parseTableDefinitionIntervalStanza(&table_config)) {
+      if (!parseMetricDefinitionKindStanza(&metric_config)) {
         return false;
       }
       continue;
     }
 
-    /* parse the "label" stanza */
-    if (ttype == T_STRING && tbuf == "label") {
+    /* parse the "tree" stanza */
+    if (ttype == T_STRING && tbuf == "tree") {
       consumeToken();
-      if (!parseTableDefinitionLabelStanza(&table_config)) {
-        return false;
-      }
-      continue;
-    }
-
-    /* parse the "measure" stanza */
-    if (ttype == T_STRING && tbuf == "measure") {
-      consumeToken();
-      if (!parseTableDefinitionMeasureStanza(&table_config)) {
+      if (!parseMetricDefinitionTreeStanza(&metric_config)) {
         return false;
       }
       continue;
@@ -219,66 +178,56 @@ bool ConfigParser::parseTableDefinition(ConfigList* config) {
     return false;
   }
 
-  config->addTableConfig(table_config);
+  config->addMetricConfig(metric_config);
   return true;
 }
 
-bool ConfigParser::parseTableDefinitionIntervalStanza(
-    TableConfig* table_config) {
+bool ConfigParser::parseMetricDefinitionTreeStanza(
+    MetricConfig* metric_config) {
+  size_t arg_count = 0;
+
   TokenType ttype;
   std::string tbuf;
-  if (!getToken(&ttype, &tbuf) || ttype != T_STRING) {
-    setError("interval requires an argument");
+  while (getToken(&ttype, &tbuf)) {
+    if (ttype == T_ENDLINE) {
+      break;
+    }
+    
+    if (ttype == T_COMMA) {
+      consumeToken();
+      continue;
+    }
+
+    std::string column_name;
+    if (!expectAndConsumeString(&column_name)) {
+      return false;
+    }
+
+    metric_config->tree.emplace_back(column_name);
+    ++arg_count;
+  }
+
+  if (arg_count == 0) {
+    setError("'tree' requires at least one argument");
     return false;
   }
 
-  consumeToken();
-
-  uint64_t interval = 0;
-  auto rc = parseDuration(tbuf, &interval);
-  if (!rc.isSuccess()) {
-    setError(
-        StringUtil::format(
-            "invalid value for interval '$0': $1",
-            printToken(ttype, tbuf),
-            rc.getMessage()));
-
-    return false;
-  }
-
-  table_config->interval = interval;
   return true;
 }
 
-bool ConfigParser::parseTableDefinitionLabelStanza(
-    TableConfig* table_config) {
-  std::string column_name;
-  if (!expectAndConsumeString(&column_name)) {
+bool ConfigParser::parseMetricDefinitionKindStanza(
+    MetricConfig* metric_config) {
+  std::string reporting_scheme_str;
+  if (!expectAndConsumeString(&reporting_scheme_str)) {
     return false;
   }
 
-  table_config->labels.emplace_back(LabelConfig(column_name));
-  return true;
-}
-
-bool ConfigParser::parseTableDefinitionMeasureStanza(
-    TableConfig* table_config) {
-  std::string column_name;
-  if (!expectAndConsumeString(&column_name)) {
-    return false;
-  }
-
-  std::string aggregation_fun_str;
-  if (!expectAndConsumeString(&aggregation_fun_str)) {
-    return false;
-  }
-
-  AggregationFunctionType aggregation_fun;
-  if (!parseAggregationFunctionType(aggregation_fun_str, &aggregation_fun)) {
+  MetricReportingScheme reporting_scheme;
+  if (!parseMetricReportingScheme(reporting_scheme_str, &reporting_scheme)) {
     setError(
         StringUtil::format(
-            "invalid aggregation function: $0",
-            aggregation_fun_str));
+            "invalid reporting scheme: $0 - expected one of: sample, monotonic",
+            reporting_scheme_str));
     return false;
   }
 
@@ -291,9 +240,13 @@ bool ConfigParser::parseTableDefinitionMeasureStanza(
     return false;
   }
 
-  DataType data_type;
-  if (!parseDataType(data_type_str, &data_type)) {
-    setError(StringUtil::format("invalid data type: $0", data_type_str));
+  MetricDataType data_type;
+  if (!parseMetricDataType(data_type_str, &data_type)) {
+    setError(
+        StringUtil::format(
+            "invalid data type: $0, expected one of: uint64, int64, float64, string",
+            data_type_str));
+
     return false;
   }
 
@@ -301,8 +254,7 @@ bool ConfigParser::parseTableDefinitionMeasureStanza(
     return false;
   }
 
-  table_config->measures.emplace_back(
-      MeasureConfig(column_name, data_type, aggregation_fun));
+  metric_config->kind = MetricKind{data_type, reporting_scheme};
   return true;
 }
 
