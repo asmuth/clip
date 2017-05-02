@@ -4,8 +4,8 @@ metrictools
 [![Build Status](https://travis-ci.org/paulasmuth/fnordmetric.png?branch=unstable)](http://travis-ci.org/paulasmuth/fnordmetric)
 
 A collection of lightweight tools for real-time metrics collection
-and visualization. The tools allow you to record measurements and build beautiful 
-eal-time dashboards within minutes. All using your favorite backend database
+and visualization. The tools allow you to record measurements and build  
+real-time dashboards within minutes. All using your favorite backend database
 (currently supported are SQLite, MySQL, Postgres and EventQL).
 
 More Information:
@@ -48,7 +48,7 @@ To run the test suite:
 
 ## Documentation
 
-You can find the full documentation at http://fnordmetric.io/
+You can find the full documentation at https://metrictools.org/
 
 
 ## Contributors
