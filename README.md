@@ -1,36 +1,18 @@
-FnordMetric
+metrictools
 ===========
 
 [![Build Status](https://travis-ci.org/paulasmuth/fnordmetric.png?branch=unstable)](http://travis-ci.org/paulasmuth/fnordmetric)
 
-FnordMetric is a collection of lightweight tools for real-time metrics collection
-and visualization with SQL. The tools allow you to record measurements and
-build beautiful real-time dashboards within minutes. All using your favorite SQL
-database (currently supported are MySQL, Postgres and EventQL).
-
-- **metric-collectd** -
-  A lightweight daemon that collects measurements and other
-  timeseries data, pre-aggregates it and stores the resulting tuples into a
-  backend database. metric-collectd can currently listen for samples in
-  Text/StatsD or JSON format via UDP or HTTP. It can also pull samples via
-  HTTP or SNMP.
-
-- **metric-queryd** -
-  A simple HTTP service that executes SQL queries on a backend
-  database and plots the results. The HTTP API allows you to create timeseries graphs
-  and other visualizations using nothing but SQL. You can easily plug the returned
-  charts into a HTML site to create a real-time SQL-powered dashboard.
-
+A collection of lightweight tools for real-time metrics collection
+and visualization. The tools allow you to record measurements and build beautiful 
+eal-time dashboards within minutes. All using your favorite backend database
+(currently supported are SQLite, MySQL, Postgres and EventQL).
 
 More Information:
-[Documentation](http://fnordmetric.io/),
-[Download](https://fnordmetric.io/download/),
-[Getting Started](https://fnordmetric.io/documentation/getting_started)
+[Documentation](http://metrictools.org/),
+[Download](https://metrictools.org/download/),
+[Getting Started](https://metrictools.org/documentation/getting_started)
 
-
-## Web Interface
-
-[ ![Screenshot](https://raw.githubusercontent.com/paulasmuth/fnordmetric/master/fnordmetric-doc/web/assets/img/fnordmetric_server_screen1.png) ](http://github.com/paulasmuth/fnordmetric)
 
 
 ## Build
@@ -44,13 +26,13 @@ you need a modern c++ compiler, libz and autotools.
     # OSX
     $ brew install automake autoconf
 
-To build FnordMetric from a distribution tarball:
+To build metrictools from a distribution tarball:
 
     $ ./configure
     $ make
     $ sudo make install
 
-To build FnordMetric from a git checkout:
+To build metrictools from a git checkout:
 
     $ git clone git@github.com:paulasmuth/fnordmetric.git
     $ cd fnordmetric
@@ -103,19 +85,19 @@ that you might have.
 
 ## License
 
-Copyright (c) 2011-2016 Paul Asmuth
+Copyright (c) 2011-2017 Paul Asmuth
 
-FnordMetric is free software: you can redistribute it and/or modify it under
+metrictools is free software: you can redistribute it and/or modify it under
 the terms of the GNU General Public License as published by the Free Software
 Foundation, either version 3 of the License, or (at your option) any later
 version.
 
-FnordMetric is distributed in the hope that it will be useful,but WITHOUT ANY
+metrictools is distributed in the hope that it will be useful,but WITHOUT ANY
 WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
 PARTICULAR PURPOSE. See the GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License along with
-FnordMetric. If not, see <http://www.gnu.org/licenses/>.
+metrictools. If not, see <http://www.gnu.org/licenses/>.
 
 
   [1]: http://groups.google.com/group/fnordmetric
