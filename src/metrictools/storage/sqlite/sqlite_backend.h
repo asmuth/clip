@@ -11,6 +11,7 @@
 #include <memory>
 #include <mutex>
 #include <vector>
+#include <sqlite3.h>
 #include <metrictools/storage/backend.h>
 
 namespace fnordmetric {
@@ -23,11 +24,20 @@ public:
       const URI& backend_uri,
       std::unique_ptr<Backend>* backend);
 
+  ~SQLiteBackend();
+
   ReturnCode performOperation(const InsertStorageOp& op) override;
 
 protected:
-  SQLiteBackend();
 
+  SQLiteBackend();
+  ReturnCode open(const std::string& path);
+  ReturnCode executeQuery(
+      const std::string& query,
+      std::list<std::vector<std::string>>* rows = nullptr,
+      std::vector<std::string>* columns = nullptr);
+
+  sqlite3* db_;
   std::mutex mutex_;
 };
 
