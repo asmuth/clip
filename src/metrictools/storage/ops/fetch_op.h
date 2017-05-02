@@ -14,6 +14,7 @@
 #include <vector>
 #include <map>
 #include <metrictools/config_list.h>
+#include <metrictools/timeseries.h>
 #include <metrictools/storage/op.h>
 
 namespace fnordmetric {

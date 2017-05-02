@@ -98,7 +98,9 @@ libfnordmetric_common_a_SOURCES = \
     storage/ops/fetch_op.h \
     storage/ops/fetch_op.cc \
     storage/ops/insert_op.h \
-    storage/ops/insert_op.cc
+    storage/ops/insert_op.cc \
+    timeseries.h \
+    timeseries_impl.h
 
 FNORDMETRIC_LIBS = \
     libfnordmetric-common.a \
