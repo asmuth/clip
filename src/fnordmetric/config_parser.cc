@@ -159,10 +159,10 @@ bool ConfigParser::parseMetricDefinition(ConfigList* config) {
       continue;
     }
 
-    /* parse the "tree" stanza */
-    if (ttype == T_STRING && tbuf == "tree") {
+    /* parse the "instance" stanza */
+    if (ttype == T_STRING && tbuf == "instance") {
       consumeToken();
-      if (!parseMetricDefinitionTreeStanza(&metric_config)) {
+      if (!parseMetricDefinitionInstanceStanza(&metric_config)) {
         return false;
       }
       continue;
@@ -183,7 +183,7 @@ bool ConfigParser::parseMetricDefinition(ConfigList* config) {
   return true;
 }
 
-bool ConfigParser::parseMetricDefinitionTreeStanza(
+bool ConfigParser::parseMetricDefinitionInstanceStanza(
     MetricConfig* metric_config) {
   size_t arg_count = 0;
 
@@ -204,12 +204,12 @@ bool ConfigParser::parseMetricDefinitionTreeStanza(
       return false;
     }
 
-    metric_config->tree.emplace_back(column_name);
+    metric_config->instance_path.labels.emplace_back(column_name);
     ++arg_count;
   }
 
   if (arg_count == 0) {
-    setError("'tree' requires at least one argument");
+    setError("'instance' requires at least one argument");
     return false;
   }
 

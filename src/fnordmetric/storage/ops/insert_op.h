@@ -51,24 +51,15 @@ public:
      * time of capture and must be consistent with the values in
      * instance_path_metric.
      */
-    std::shared_ptr<MetricConfig> metric;
+    std::shared_ptr<const MetricConfig> metric;
 
     /**
-     * The global part of the target metric instance path. The vector must
-     * have a length equal to the number of elements in the global instance
-     * path definition and each position in the vector corresponds the respective
-     * label in the path definition.
+     * The metric instance path. The vector must have a length equal to the
+     * number of elements in the global instance path config plus the number of
+     * elements in the metric-specific instance path config. Each position in
+     * the vector corresponds to the respective position in the path definition.
      */
-    std::vector<std::string> instance_path_global;
-
-    /**
-     * The metric-specific part of the target metric instance path. This vector
-     * must have a length equal to the number of elements in the metric-specific
-     * instance path definition and each position in the vector corresponds to
-     * the respective label in the path definition. The definition can be found
-     * in the MetricConfig snapshot which is stored in the `metric` member.
-     */
-    std::vector<std::string> instance_path_metric;
+    MetricInstancePath instance;
 
     /**
      * The value to insert encoded as a human-readable string. For numeric
@@ -98,7 +89,7 @@ public:
    **/
   ReturnCode addMeasurement(
       std::shared_ptr<const MetricConfig> metric,
-      const std::map<std::string, std::string>& instance,
+      const std::map<std::string, std::string>& instance_path,
       const std::string& value) noexcept;
 
   /**

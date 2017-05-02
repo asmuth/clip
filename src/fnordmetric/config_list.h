@@ -19,7 +19,19 @@
 
 namespace fnordmetric {
 
+/**
+ * The GlobalConfig struct contains system-wide settings. Most of these
+ * parameters con be controlled from the configuration file
+ */
 struct GlobalConfig {
+
+  /**
+   * The global metric instance path definition. The global metric instance
+   * path can be used to prepened elements to the instance paths of each metric.
+   * A good example use case would be prepending `datacenter`, `rack` and
+   * `hostname` elements to the instance paths of all metrics
+   */
+  MetricInstancePathConfig global_instance_path;
 
 };
 

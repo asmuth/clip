@@ -40,11 +40,20 @@ struct MetricKind {
   MetricReportingScheme scheme;
 };
 
+struct MetricInstancePathConfig {
+  std::vector<std::string> labels;
+};
+
+struct MetricInstancePath {
+  std::vector<std::string> labels;
+  std::vector<std::string> values;
+};
+
 struct MetricConfig {
   MetricConfig();
   std::string metric_id;
   MetricKind kind;
-  std::vector<std::string> tree;
+  MetricInstancePathConfig instance_path;
   std::string unit_id;
 };
 

@@ -50,7 +50,7 @@ protected:
 
   bool parseMetricDefinition(ConfigList* config);
   bool parseMetricDefinitionKindStanza(MetricConfig* metric_config);
-  bool parseMetricDefinitionTreeStanza(MetricConfig* metric_config);
+  bool parseMetricDefinitionInstanceStanza(MetricConfig* metric_config);
 
   bool parseUnitDefinition(ConfigList* config);
   bool parseUnitDefinitionDescriptionStanza(UnitConfig* unit_config);

@@ -8,6 +8,7 @@
  * <http://www.gnu.org/licenses/>.
  */
 #include <fnordmetric/storage/ops/insert_op.h>
+#include <fnordmetric/util/time.h>
 
 namespace fnordmetric {
 
@@ -23,6 +24,24 @@ ReturnCode InsertStorageOp::addMeasurement(
     std::shared_ptr<const MetricConfig> metric,
     const std::map<std::string, std::string>& instance,
     const std::string& value) noexcept {
+  Measurement mm;
+  mm.time = WallClock::unixMicros();
+  mm.metric = metric;
+  mm.value = value;
+
+  for (const auto& k : global_config_->global_instance_path.labels) {
+    auto v = instance.find(k);
+    mm.instance.labels.emplace_back(k);
+    mm.instance.values.emplace_back(v == instance.end() ? "" : v->second);
+  }
+
+  for (const auto& k : metric->instance_path.labels) {
+    auto v = instance.find(k);
+    mm.instance.labels.emplace_back(k);
+    mm.instance.values.emplace_back(v == instance.end() ? "" : v->second);
+  }
+
+  addMeasurement(std::move(mm));
   return ReturnCode::success();
 }
 
