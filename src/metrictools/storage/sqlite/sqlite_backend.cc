@@ -7,10 +7,17 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
+#include <assert.h>
 #include <metrictools/storage/sqlite/sqlite_backend.h>
 
 namespace fnordmetric {
 namespace sqlite_backend {
+
+/**
+ * TODO:
+ *  - check if schema matches and upgrade table/indexes if possible
+ *  - cache tables creation (should only happen once for a given config combination)
+ */
 
 ReturnCode SQLiteBackend::connect(
     const URI& backend_uri,
@@ -28,14 +35,14 @@ SQLiteBackend::~SQLiteBackend() {
 }
 
 ReturnCode SQLiteBackend::performOperation(const InsertStorageOp& op) {
+  std::unique_lock<std::mutex> lk(mutex_);
+
   auto global_config = op.getGlobalConfig();
 
   for (const auto& m : op.getMeasurements()) {
-    {
-      auto rc = createTables(global_config.get(), m.metric.get());
-      if (!rc.isSuccess()) {
-        return rc;
-      }
+    auto rc = insertMeasurement(global_config.get(), m.metric.get(), m);
+    if (!rc.isSuccess()) {
+      return rc;
     }
   }
 
@@ -84,13 +91,16 @@ ReturnCode SQLiteBackend::createTables(
       break;
   }
 
+  std::vector<std::string> instance_col_names;
   std::vector<std::string> instance_cols;
   for (const auto& l : global_config->global_instance_path.labels) {
-    instance_cols.emplace_back(StringUtil::format("\"$0\" string", l));
+    instance_col_names.emplace_back(escapeString(l));
+    instance_cols.emplace_back(StringUtil::format("$0 string", escapeString(l)));
   }
 
   for (const auto& l : metric_config->instance_path.labels) {
-    instance_cols.emplace_back(StringUtil::format("\"$0\" string", l));
+    instance_col_names.emplace_back(escapeString(l));
+    instance_cols.emplace_back(StringUtil::format("$0 string", escapeString(l)));
   }
 
   {
@@ -99,9 +109,22 @@ ReturnCode SQLiteBackend::createTables(
     cols.emplace_back(value_col);
 
     auto qry = StringUtil::format(
-        "CREATE TABLE IF NOT EXISTS \"$0\" ($1);",
-        metric_config->metric_id + ":last",
+        "CREATE TABLE IF NOT EXISTS $0 ($1);",
+        escapeString(metric_config->metric_id + ":last"),
         StringUtil::join(cols, ", "));
+
+    auto rc = executeQuery(qry);
+    if (!rc.isSuccess()) {
+      return rc;
+    }
+  }
+
+  {
+    auto qry = StringUtil::format(
+        "CREATE UNIQUE INDEX IF NOT EXISTS $0 ON $1 ($2);",
+        escapeString(metric_config->metric_id + ":last_index"),
+        escapeString(metric_config->metric_id + ":last"),
+        StringUtil::join(instance_col_names, ", "));
 
     auto rc = executeQuery(qry);
     if (!rc.isSuccess()) {
@@ -116,8 +139,8 @@ ReturnCode SQLiteBackend::createTables(
     cols.emplace_back(value_col);
 
     auto qry = StringUtil::format(
-        "CREATE TABLE IF NOT EXISTS \"$0\" ($1);",
-        metric_config->metric_id + ":history",
+        "CREATE TABLE IF NOT EXISTS $0 ($1);",
+        escapeString(metric_config->metric_id + ":history"),
         StringUtil::join(cols, ", "));
 
     auto rc = executeQuery(qry);
@@ -126,7 +149,105 @@ ReturnCode SQLiteBackend::createTables(
     }
   }
 
+  {
+    auto qry = StringUtil::format(
+        "CREATE UNIQUE INDEX IF NOT EXISTS $0 ON $1 (time);",
+        escapeString(metric_config->metric_id + ":history_index"),
+        escapeString(metric_config->metric_id + ":history"));
+
+    auto rc = executeQuery(qry);
+    if (!rc.isSuccess()) {
+      return rc;
+    }
+  }
+
   return ReturnCode::success();
+}
+
+ReturnCode SQLiteBackend::insertMeasurement(
+    const GlobalConfig* global_config,
+    const MetricConfig* metric_config,
+    const InsertStorageOp::Measurement& m) {
+  {
+    auto rc = createTables(global_config, metric_config);
+    if (!rc.isSuccess()) {
+      return rc;
+    }
+  }
+
+  {
+    auto rc = executeQuery("BEGIN");
+    if (!rc.isSuccess()) {
+      return rc;
+    }
+  }
+
+  {
+    std::vector<std::string> col_names;
+    std::vector<std::string> col_values;
+
+    assert(m.instance.labels.size() == m.instance.values.size());
+    for (size_t i = 0; i < m.instance.labels.size(); ++i) {
+      col_names.emplace_back(escapeString(m.instance.labels[i]));
+      col_values.emplace_back(escapeString(m.instance.values[i]));
+    }
+
+    col_names.emplace_back("value");
+    col_values.emplace_back(escapeString(m.value));
+
+    auto qry = StringUtil::format(
+        "REPLACE INTO $0 ($1) VALUES ($2);",
+        escapeString(metric_config->metric_id + ":last"),
+        StringUtil::join(col_names, ", "),
+        StringUtil::join(col_values, ", "));
+
+    auto rc = executeQuery(qry);
+    if (!rc.isSuccess()) {
+      return rc;
+    }
+  }
+
+  {
+    std::vector<std::string> col_names;
+    std::vector<std::string> col_values;
+
+    col_names.emplace_back("time");
+    col_values.emplace_back(std::to_string(m.time));
+
+    assert(m.instance.labels.size() == m.instance.values.size());
+    for (size_t i = 0; i < m.instance.labels.size(); ++i) {
+      col_names.emplace_back(escapeString(m.instance.labels[i]));
+      col_values.emplace_back(escapeString(m.instance.values[i]));
+    }
+
+    col_names.emplace_back("value");
+    col_values.emplace_back(escapeString(m.value));
+
+    auto qry = StringUtil::format(
+        "INSERT INTO $0 ($1) VALUES ($2);",
+        escapeString(metric_config->metric_id + ":history"),
+        StringUtil::join(col_names, ", "),
+        StringUtil::join(col_values, ", "));
+
+    auto rc = executeQuery(qry);
+    if (!rc.isSuccess()) {
+      return rc;
+    }
+  }
+
+  {
+    auto rc = executeQuery("COMMIT");
+    if (!rc.isSuccess()) {
+      return rc;
+    }
+  }
+
+  return ReturnCode::success();
+}
+
+std::string SQLiteBackend::escapeString(std::string str) const {
+  StringUtil::replaceAll(&str, "\"", "\\\"");
+  return "\"" + str + "\"";
 }
 
 } // namespace sqlite_backend

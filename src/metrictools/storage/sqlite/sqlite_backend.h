@@ -31,6 +31,7 @@ public:
 protected:
 
   SQLiteBackend();
+
   ReturnCode open(const std::string& path);
   ReturnCode executeQuery(
       const std::string& query,
@@ -40,6 +41,13 @@ protected:
   ReturnCode createTables(
       const GlobalConfig* global_config,
       const MetricConfig* metric_config);
+
+  ReturnCode insertMeasurement(
+      const GlobalConfig* global_config,
+      const MetricConfig* metric_config,
+      const InsertStorageOp::Measurement& m);
+
+  std::string escapeString(std::string str) const;
 
   sqlite3* db_;
   std::mutex mutex_;
