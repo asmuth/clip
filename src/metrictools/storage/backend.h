@@ -11,7 +11,7 @@
 #include <memory>
 #include <vector>
 #include <metrictools/util/return_code.h>
-#include <metrictools/table.h>
+#include <metrictools/storage/ops/insert_op.h>
 #include <libtransport/uri/uri.h>
 
 namespace fnordmetric {
@@ -25,20 +25,7 @@ public:
 
   virtual ~Backend() = default;
 
-  virtual ReturnCode createTable(const TableConfig& table_config) = 0;
-
-  struct InsertOp {
-    std::shared_ptr<TableConfig> table;
-    uint64_t time;
-    std::vector<std::pair<std::string, std::string>> columns;
-  };
-
-  virtual ReturnCode insertRows(const std::vector<InsertOp>& ops) = 0;
-
-  virtual ReturnCode executeQuery(
-      const std::string& query,
-      std::vector<std::string>* header = nullptr,
-      std::list<std::vector<std::string>>* rows = nullptr) = 0;
+  virtual ReturnCode performOperation(const InsertStorageOp& op) = 0;
 
   virtual void shutdown() {}
 

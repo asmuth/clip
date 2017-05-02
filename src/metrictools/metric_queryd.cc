@@ -247,12 +247,12 @@ int main(int argc, const char** argv) {
   }
 
   if (rc.isSuccess()) {
-    QueryService query_service(backend.get());
-    if (flags.isSet("dev_assets")) {
-      query_service.setAssetPath(flags.getString("dev_assets"));
-    }
+    //QueryService query_service(backend.get());
+    //if (flags.isSet("dev_assets")) {
+    //  query_service.setAssetPath(flags.getString("dev_assets"));
+    //}
 
-    query_service.listenAndRun(http_bind, http_port);
+    //query_service.listenAndRun(http_bind, http_port);
   }
 
   if (!rc.isSuccess()) {
