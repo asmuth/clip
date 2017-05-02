@@ -1,4 +1,4 @@
-bin_PROGRAMS = metric-collectd metric-queryd metricctl
+bin_PROGRAMS = metric-collectd metric-queryd metrictl
 noinst_LIBRARIES = libfnordmetric-common.a
 SUBDIRS = storage/mysql
 
@@ -116,5 +116,5 @@ metric_collectd_LDADD = $(FNORDMETRIC_LIBS)
 metric_queryd_SOURCES = metric_queryd.cc
 metric_queryd_LDADD = $(FNORDMETRIC_LIBS)
 
-metricctl_SOURCES = metricctl.cc
-metricctl_LDADD = $(FNORDMETRIC_LIBS)
+metrictl_SOURCES = metrictl.cc
+metrictl_LDADD = $(FNORDMETRIC_LIBS)
