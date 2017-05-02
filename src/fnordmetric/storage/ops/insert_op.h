@@ -102,10 +102,16 @@ public:
    */
   std::shared_ptr<const GlobalConfig> getGlobalConfig() const noexcept;
 
+
 protected:
   std::shared_ptr<const GlobalConfig> global_config_;
   std::vector<Measurement> measurements_;
 };
+
+/**
+ * Print a debug dump of the operation
+ */
+std::ostream& operator<<(std::ostream& out, const InsertStorageOp& op);
 
 } // namespace fnordmetric
 

@@ -55,5 +55,19 @@ InsertStorageOp::getGlobalConfig() const noexcept {
   return global_config_;
 }
 
+std::ostream& operator<<(std::ostream& out, const InsertStorageOp& op) {
+  for (const auto& m : op.getMeasurements()) {
+    out <<
+        "measurement {" << std::endl <<
+        "  metric: " << m.metric->metric_id << std::endl <<
+        "  time: " << UnixTime(m.time).toString() << " (" << m.time << ")" << std::endl <<
+        "  instance: " << m.instance << std::endl <<
+        "  value: " << m.value << std::endl <<
+        "}" << std::endl;
+  }
+
+  return out;
+}
+
 } // namespace fnordmetric
 

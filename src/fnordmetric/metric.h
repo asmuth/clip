@@ -63,5 +63,7 @@ bool parseMetricDataType(const std::string& s, MetricDataType* t);
 std::string getMetricReportingSchemeName(MetricReportingScheme t);
 bool parseMetricReportingScheme(const std::string& s, MetricReportingScheme* t);
 
+std::ostream& operator<<(std::ostream& out, const MetricInstancePath& path);
+
 } // namespace fnordmetric
 

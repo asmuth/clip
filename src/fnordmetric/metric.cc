@@ -57,5 +57,20 @@ bool parseMetricReportingScheme(
   return false;
 }
 
+std::ostream& operator<<(std::ostream& out, const MetricInstancePath& path) {
+  assert(path.labels.size() == path.values.size());
+  out << "[";
+  for (size_t i = 0; i < path.labels.size(); ++i) {
+    if (i > 0) {
+      out << ", ";
+    }
+
+    out << "<" << path.labels[i] << ": '" << path.values[i] << "'>";
+  }
+
+  out << "]";
+  return out;
+}
+
 } // namespace fnordmetric
 

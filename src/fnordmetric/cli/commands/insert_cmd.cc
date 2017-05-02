@@ -71,6 +71,8 @@ ReturnCode InsertCommand::execute(
     }
   }
 
+  std::cerr << op;
+
   return ReturnCode::success();
 }
 
