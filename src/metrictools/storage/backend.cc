@@ -13,12 +13,24 @@
 #include <metrictools/storage/mysql/mysqlbackend.h>
 #endif
 
+#if ENABLE_SQLITE
+#include <metrictools/storage/sqlite/sqlite_backend.h>
+#endif
+
 namespace fnordmetric {
 
 ReturnCode Backend::openBackend(
     const URI& backend_uri,
     std::unique_ptr<Backend>* backend) {
   auto backend_type = backend_uri.scheme();
+
+  if (backend_type == "sqlite") {
+#if ENABLE_SQLITE
+    return sqlite_backend::SQLiteBackend::connect(backend_uri, backend);
+#else
+    return ReturnCode::error("ERUNTIME", "compiled without SQLite support");
+#endif
+  }
 
   if (backend_type == "mysql") {
 #if ENABLE_MYSQL

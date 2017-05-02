@@ -10,11 +10,13 @@
 #pragma once
 #include <metrictools/util/return_code.h>
 #include <metrictools/config_list.h>
+#include <metrictools/storage/backend.h>
 
 namespace fnordmetric {
 
 struct CLIContext {
   ConfigList* config;
+  Backend* storage_backend;
 };
 
 class Command {

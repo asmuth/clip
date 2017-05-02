@@ -40,11 +40,24 @@ else
   AC_MSG_RESULT(["disabled"])
 fi
 
+# --enable-sqlite
+AC_MSG_CHECKING([Feature: SQLite Backend])
+AC_ARG_ENABLE([sqlite], AS_HELP_STRING([--enable-sqlite], [Enable sqlite]))
+AM_CONDITIONAL([ENABLE_SQLITE], [test "x$enable_sqlite" = "xyes"])
+AC_SUBST(ENABLE_SQLITE)
+if test "x$enable_sqlite" = "xyes"; then
+  AC_DEFINE([ENABLE_SQLITE], [1])
+  AC_MSG_RESULT(["enabled"])
+else
+  AC_MSG_RESULT(["disabled"])
+fi
+
 AC_CONFIG_SUBDIRS([deps/libtransport])
 AC_CONFIG_FILES([
     Makefile
     src/metrictools/Makefile
     src/metrictools/storage/mysql/Makefile
+    src/metrictools/storage/sqlite/Makefile
     test/Makefile])
 
 AC_OUTPUT

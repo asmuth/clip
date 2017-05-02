@@ -1,6 +1,6 @@
 bin_PROGRAMS = metric-collectd metric-queryd metrictl
 noinst_LIBRARIES = libfnordmetric-common.a
-SUBDIRS = storage/mysql
+SUBDIRS = storage/mysql storage/sqlite
 
 libfnordmetric_common_a_SOURCES = \
     config_list.h \
@@ -104,6 +104,11 @@ FNORDMETRIC_LIBS = \
 if ENABLE_MYSQL
   FNORDMETRIC_LIBS += storage/mysql/libfnordmetric-backend-mysql.a
   FNORDMETRIC_LIBS += -lmysqlclient
+endif
+
+if ENABLE_SQLITE
+  FNORDMETRIC_LIBS += storage/sqlite/sqlite_backend.a
+  FNORDMETRIC_LIBS += -lsqlite3
 endif
 
 FNORDMETRIC_LIBS += libfnordmetric-common.a

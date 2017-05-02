@@ -71,9 +71,7 @@ ReturnCode InsertCommand::execute(
     }
   }
 
-  std::cerr << op;
-
-  return ReturnCode::success();
+  return ctx->storage_backend->performOperation(op);
 }
 
 const std::string& InsertCommand::getName() const {

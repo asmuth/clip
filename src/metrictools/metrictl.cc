@@ -156,7 +156,7 @@ int main(int argc, const char** argv) {
   std::unique_ptr<Backend> backend;
   {
     auto rc = Backend::openBackend(config.getBackendURL(), &backend);
-    if (rc.isSuccess()) {
+    if (!rc.isSuccess()) {
       std::cerr << "ERROR: " << rc.getMessage() << std::endl;
       return 1;
     }
@@ -183,6 +183,7 @@ int main(int argc, const char** argv) {
 
   CLIContext ctx;
   ctx.config = &config;
+  ctx.storage_backend = backend.get();
 
   cmd_argv.erase(cmd_argv.begin());
   auto rc = (*cmd)->execute(&ctx, cmd_argv);
