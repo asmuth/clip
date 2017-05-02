@@ -1,0 +1,69 @@
+<template id="fnordmetric-metric-detail-tpl">
+  <div class="fnordmetric-metric-detail">
+
+    <div class="page_header">
+      <div class="breadcrumbs">
+        <div class="breadcrumb_section">
+          <a href="/ui/metrics">Metrics</a>
+        </div>
+        <div class="breadcrumb_section metric_name"></div>
+      </div>
+
+      <f-timerange-picker></f-timerange-picker>
+    </div>
+
+    <div class="controls">
+      <div class="control granularity">
+        <label>Granularity <i class="fa fa-caret-down"></i></label>
+      </div>
+
+      <div class="control smoothing">
+        <label>Smoothing <i class="fa fa-caret-down"></i></label>
+      </div>
+
+      <div class="control interpolation">
+        <label>Interpolation <i class="fa fa-caret-down"></i></label>
+      </div>
+
+      <div class="control interpolation">
+        <label>Interpolation <i class="fa fa-caret-down"></i></label>
+      </div>
+
+      <div class="control smoothing">
+        <label>Smoothing <i class="fa fa-caret-down"></i></label>
+      </div>
+
+      <div class="control granularity">
+        <label>Granularity <i class="fa fa-caret-down"></i></label>
+      </div>
+    </div>
+
+    <div class="summary">
+    </div>
+
+    <div class="toolbar">
+      <div class="search">
+        <i class="fa fa-filter"></i>
+        <input type="text" placeholder="/^filter[_-]by[_-]regex$/" />
+      </div>
+
+      <div class="info legend">
+        <span class="circle light_blue"></span>
+        <span class="value">Total Memory Used (Yesterday)</span>
+      </div>
+
+      <div class="info legend">
+        <span class="circle blue"></span>
+        <span class="value">Total Memory Used (Today)</span>
+      </div>
+
+      <div class="info">6/1543 Series</div>
+    </div>
+
+    <div class="series_list">
+    </div>
+
+  </div>
+</template>
+
+

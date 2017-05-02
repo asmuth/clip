@@ -1,0 +1,43 @@
+
+f-popup.fnordmetric-embed-popup f-popup-window {
+  background: #fff;
+  padding: 10px 28px;
+  border-radius: 5px;
+}
+
+f-popup.fnordmetric-embed-popup f-popup-window .inner {
+  height: 100%;
+  margin-bottom: -38px;
+}
+
+f-popup.fnordmetric-embed-popup f-popup-window f-tabbable {
+  border-bottom: none;
+}
+
+f-popup.fnordmetric-embed-popup f-popup-window f-tab-content {
+  padding-top: 12px;
+}
+
+f-popup.fnordmetric-embed-popup code {
+  display: block;
+  font-family: "Monaco", monospace;
+  background-color: #f8f8f8;
+  border: 1px solid #cacaca;
+  border-bottom: 2px solid #cacaca;
+  border-radius: 3px;
+  text-shadow: 0 1px 0 #fff;
+  overflow: auto;
+  font-size: 12px;
+  line-height: 22px;
+  margin: 8px 0 25px 0;
+}
+
+f-popup.fnordmetric-embed-popup f-popup-window .footer {
+  overflow: auto;
+  padding: 5px 0;
+}
+
+f-popup.fnordmetric-embed-popup f-popup-window .footer button.btn {
+  float: right;
+}
+

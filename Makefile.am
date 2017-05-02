@@ -23,7 +23,7 @@ export AM_CXXFLAGS = \
 SUBDIRS = \
     . \
     deps/libtransport \
-    src/fnordmetric \
+    src/metrictools \
     test
 
 EXTRA_DIST =                             \

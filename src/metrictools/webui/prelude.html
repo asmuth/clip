@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>FnordMetric</title>
+    <meta content="text/html; charset=utf-8" http-equiv="Content-type">
+    <link href="/favicon.ico" rel="icon" type="image/x-icon">
+    <style type="text/css">
+      .headbar { display: none; }
+    </style>
+  </head>
+  <body>
+    <nav class="navbar">
+      <div>
+        <h1 class='le_fnord'>F</h1>
+
+        <div class="navi">
+          <div class="main_navi">
+            <a class="smallpadding" href="/ui/metrics">Metrics</a>
+            <a class="smallpadding" href="/ui/sensors" style="display: none">Sensors</a>
+            <a class="smallpadding" href="/ui/query" style="display: none">Query</a>
+          </div>
+
+          <div class="user_navi" style="display: none">
+            <div class="nav_item settings">
+              <f-dropdown class="inline">
+                <button class="btn">
+                  <i class="fa fa-cog"></i> Settings <i class="fa fa-caret-down"></i>
+                </button>
+                <ul>
+                  <li>Settings</li>
+                </ul>
+              </f-dropdown>
+            </div>
+          </div>
+
+          <div class="nav_item new_query" style="display: none">
+            <a href="/"><i class="fa fa-plus"></i> New Query</a>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <div class="viewport">
+      <div id="fm_viewport"></div>
+    </div>
+
+    <script type="text/javascript">
+      window.setTimeout(function() {
+        var http = new XMLHttpRequest();
+        http.open("GET", "/assets/app.html", true);
+        http.send();
+
+        http.onreadystatechange = function() {
+          if (http.readyState == 4) {
+            if (http.status == 200) {
+              var dummy = document.createElement("div");
+              dummy.innerHTML = http.responseText;
+              dummy.style.display = "none";
+              document.body.appendChild(dummy);
+
+              var scripts = dummy.getElementsByTagName('script');
+              for (var i = 0; i < scripts.length; i++) {
+                var script = document.createElement('script');
+                script.type = scripts[i].type;
+                if (scripts[i].src) {
+                  script.src = scripts[i].src;
+                } else {
+                  script.innerHTML = scripts[i].innerHTML;
+                }
+
+                document.head.appendChild(script);
+              }
+
+              FnordMetric.init();
+            } else {
+              console.log("ERROR: unable to load /assets/app.html");
+            }
+          }
+        }
+      }, 0);
+    </script>
+  </body>
+</html>

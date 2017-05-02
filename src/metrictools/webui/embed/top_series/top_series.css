@@ -1,0 +1,93 @@
+.fm-top-series-container {
+  font: 16px/24px "Roboto",'Helvetica Neue',Helvetica,Arial,sans-serif;
+  font-weight: 400;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: subpixel-antialiased;
+}
+
+.fm-top-series-container table.fm-top-series-table {
+  width: 100%;
+  margin-top: 5px;
+  border-collapse: collapse;
+  font-size: 13px;
+  table-layout: fixed;
+}
+
+.fm-top-series-container table.fm-top-series-table tr {
+  border-bottom: 1px solid rgb(226, 232, 237);
+}
+
+.fm-top-series-container table.fm-top-series-table thead th,
+.fm-top-series-container table.fm-top-series-table tbody td {
+  text-align: left;
+  font-weight: 400;
+  border: none;
+  line-height: 1em;
+  padding: .8em;
+}
+
+.fm-top-series-container table.fm-top-series-table tbody td {
+  vertical-align: middle;
+  border-top: 1px solid #e1e1e1;
+  line-height: 21px;
+  padding: 5px 10px;
+}
+
+.fm-top-series-container table.fm-top-series-table thead th {
+  border-right: none;
+  font-weight: 400;
+  color: #999;
+  box-shadow: 0 1px 2px rgba(0,0,0,.09);
+  border-bottom: 1px solid #e1e1e1;
+  background: #f9f9f9;
+  border-top: 1px solid #ddd;
+}
+
+.fm-top-series-container table.fm-top-series-table thead th[align='right'],
+.fm-top-series-container table.fm-top-series-table tbody td[align='right'] {
+  text-align: right;
+}
+
+.fm-top-series-container table.fm-top-series-table thead th[align='center'],
+.fm-top-series-container table.fm-top-series-table tbody td[align='center'] {
+  text-align: center;
+}
+
+.fm-top-series-container table.fm-top-series-table tr:hover td {
+  background-color: #f6f8fa;
+  cursor: pointer;
+}
+
+.fm-top-series-container table.fm-top-series-table thead th .sort {
+  float: right;
+  color: #858585;
+}
+
+.fm-top-series-container table.fm-top-series-table thead th.menu {
+  width: 40px;
+}
+
+.fm-top-series-container table.fm-top-series-table tbody td.id {
+  color: #3d8ad3;
+}
+
+.fm-top-series-container table.fm-top-series-table td.summary .main_summary {
+  display: block;
+  font-size: 17px;
+  color: #333;
+  line-height: 13px;
+}
+
+.fm-top-series-container table.fm-top-series-table td.summary .small_summary {
+  font-size: 11px;
+}
+
+.fm-top-series-container table.fm-top-series-table td.summary .small_summary + .small_summary {
+  margin-left: 4px;
+}
+
+.fm-top-series-container .fm-chart .line {
+  fill: none;
+  stroke-width: 2;
+}
+

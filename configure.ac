@@ -2,7 +2,7 @@
 ## In general, the safest way to proceed is to run ./autogen.sh
 
 AC_PREREQ(2.59)
-AC_INIT([fnordmetric],[0.8.0-dev],[authors@fnordmetric.io],[fnordmetric])
+AC_INIT([metrictools],[0.8.0-dev],[authors@metrictools.org],[metrictools])
 AM_INIT_AUTOMAKE([foreign subdir-objects serial-tests])
 AM_MAINTAINER_MODE([enable])
 AC_CONFIG_SRCDIR([configure.ac])
@@ -43,8 +43,8 @@ fi
 AC_CONFIG_SUBDIRS([deps/libtransport])
 AC_CONFIG_FILES([
     Makefile
-    src/fnordmetric/Makefile
-    src/fnordmetric/backends/mysql/Makefile
+    src/metrictools/Makefile
+    src/metrictools/backends/mysql/Makefile
     test/Makefile])
 
 AC_OUTPUT
