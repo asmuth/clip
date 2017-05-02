@@ -95,6 +95,8 @@ libfnordmetric_common_a_SOURCES = \
     storage/backend.h \
     storage/backend.cc \
     storage/op.h \
+    storage/ops/fetch_op.h \
+    storage/ops/fetch_op.cc \
     storage/ops/insert_op.h \
     storage/ops/insert_op.cc
 

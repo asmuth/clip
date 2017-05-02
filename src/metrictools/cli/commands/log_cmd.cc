@@ -23,6 +23,19 @@ ReturnCode LogCommand::execute(
     return flags_rc;
   }
 
+  if (flags.getArgv().size() != 1) {
+    return ReturnCode::error("EARG", "log requires exactly 1 argument");
+  }
+
+  auto metric_id = flags.getArgv()[0];
+  auto metric = ctx->config->getMetricConfig(metric_id);
+  if (!metric) {
+    return ReturnCode::errorf(
+        "EARG",
+        "metric not found: '$0'",
+        metric_id);
+  }
+
   return ReturnCode::success();
 }
 
