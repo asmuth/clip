@@ -37,6 +37,10 @@ protected:
       std::list<std::vector<std::string>>* rows = nullptr,
       std::vector<std::string>* columns = nullptr);
 
+  ReturnCode createTables(
+      const GlobalConfig* global_config,
+      const MetricConfig* metric_config);
+
   sqlite3* db_;
   std::mutex mutex_;
 };

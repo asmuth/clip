@@ -28,8 +28,18 @@ SQLiteBackend::~SQLiteBackend() {
 }
 
 ReturnCode SQLiteBackend::performOperation(const InsertStorageOp& op) {
-  std::cerr << "PERFORM: " << op;
-  return executeQuery("select 1;");
+  auto global_config = op.getGlobalConfig();
+
+  for (const auto& m : op.getMeasurements()) {
+    {
+      auto rc = createTables(global_config.get(), m.metric.get());
+      if (!rc.isSuccess()) {
+        return rc;
+      }
+    }
+  }
+
+  return ReturnCode::success();
 }
 
 ReturnCode SQLiteBackend::open(const std::string& path) {
@@ -50,6 +60,70 @@ ReturnCode SQLiteBackend::executeQuery(
     auto err_str = std::string(err);
     sqlite3_free(err);
     return ReturnCode::errorf("EIO", "sqlite error: $0", err_str);
+  }
+
+  return ReturnCode::success();
+}
+
+ReturnCode SQLiteBackend::createTables(
+    const GlobalConfig* global_config,
+    const MetricConfig* metric_config) {
+  std::string value_col;
+  switch (metric_config->kind.type) {
+    case MetricDataType::UINT64:
+      value_col = "value bigint";
+      break;
+    case MetricDataType::INT64:
+      value_col = "value bigint";
+      break;
+    case MetricDataType::FLOAT64:
+      value_col = "value float";
+      break;
+    case MetricDataType::STRING:
+      value_col = "value string";
+      break;
+  }
+
+  std::vector<std::string> instance_cols;
+  for (const auto& l : global_config->global_instance_path.labels) {
+    instance_cols.emplace_back(StringUtil::format("\"$0\" string", l));
+  }
+
+  for (const auto& l : metric_config->instance_path.labels) {
+    instance_cols.emplace_back(StringUtil::format("\"$0\" string", l));
+  }
+
+  {
+    std::vector<std::string> cols;
+    cols.insert(cols.end(), instance_cols.begin(), instance_cols.end());
+    cols.emplace_back(value_col);
+
+    auto qry = StringUtil::format(
+        "CREATE TABLE IF NOT EXISTS \"$0\" ($1);",
+        metric_config->metric_id + ":last",
+        StringUtil::join(cols, ", "));
+
+    auto rc = executeQuery(qry);
+    if (!rc.isSuccess()) {
+      return rc;
+    }
+  }
+
+  {
+    std::vector<std::string> cols;
+    cols.emplace_back("time bigint");
+    cols.insert(cols.end(), instance_cols.begin(), instance_cols.end());
+    cols.emplace_back(value_col);
+
+    auto qry = StringUtil::format(
+        "CREATE TABLE IF NOT EXISTS \"$0\" ($1);",
+        metric_config->metric_id + ":history",
+        StringUtil::join(cols, ", "));
+
+    auto rc = executeQuery(qry);
+    if (!rc.isSuccess()) {
+      return rc;
+    }
   }
 
   return ReturnCode::success();
