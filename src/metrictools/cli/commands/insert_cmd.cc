@@ -94,8 +94,8 @@ void InsertCommand::printHelp() const {
       "  -v, --value <val>        The value to insert.\n"
       "\n"
       "Examples:\n"
-      "  $ metricctl insert -m users_online -v 523562\n"
-      "  $ metricctl insert -m load_average -t hostname=localhost -v 0.52\n";
+      "  $ metrictl insert -m users_online -v 523562\n"
+      "  $ metrictl insert -m load_average -t hostname=localhost -v 0.52\n";
 }
 
 } // namespace fnordmetric

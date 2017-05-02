@@ -26,6 +26,7 @@
 #include <metrictools/aggregation_service.h>
 #include <metrictools/ingest.h>
 #include <metrictools/cli/command.h>
+#include <metrictools/cli/commands/list_cmd.h>
 #include <metrictools/cli/commands/insert_cmd.h>
 
 using namespace fnordmetric;
@@ -67,6 +68,7 @@ int main(int argc, const char** argv) {
 
   /* init commands */
   std::vector<std::unique_ptr<Command>> commands;
+  commands.emplace_back(new ListCommand());
   commands.emplace_back(new InsertCommand());
 
   /* print help */
@@ -119,11 +121,11 @@ int main(int argc, const char** argv) {
         [&help_topic] (const auto& c) { return c->getName() == help_topic; });
 
     if (cmd == commands.end()) {
+      std::cerr << StringUtil::format("No manual entry for metrictl '$0'\n", help_topic);
+      return 1;
+    } else {
       (*cmd)->printHelp();
       return 0;
-    } else {
-      std::cerr << StringUtil::format("No manual entry for evqlctl '$0'\n", help_topic);
-      return 1;
     }
   }
 
@@ -163,7 +165,7 @@ int main(int argc, const char** argv) {
   }
 
   if (cmd_argv.empty()) {
-    std::cerr << "ERROR: command is not specified. See 'evqlctl --help'.\n";
+    std::cerr << "ERROR: command is not specified. See 'metrictl --help'.\n";
     return 1;
   }
 
@@ -175,7 +177,7 @@ int main(int argc, const char** argv) {
 
   if (cmd == commands.end()) {
     std::cerr << StringUtil::format(
-        "ERROR: '$0' is not a evqlctl command. See 'evqlctl --help'.\n",
+        "ERROR: '$0' is not a metrictl command. See 'metrictl --help'.\n",
         cmd_argv[0]);
 
     return 1;
