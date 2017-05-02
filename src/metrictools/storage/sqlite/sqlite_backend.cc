@@ -287,6 +287,8 @@ ReturnCode SQLiteBackend::fetchData(
     instance_cols.emplace_back(escapeString(l));
   }
 
+  std::map<std::string, FetchStorageOp::FetchResponse> resp_map;
+
   {
     std::vector<std::string> cols;
     cols.insert(cols.end(), instance_cols.begin(), instance_cols.end());
@@ -308,16 +310,71 @@ ReturnCode SQLiteBackend::fetchData(
         return ReturnCode::error("ERUNTIME", "sqlite error: invalid result");
       }
 
-      FetchStorageOp::FetchResponse res;
-      res.request = request;
-      res.instance.labels = instance_cols;
-      res.last_value = r[r.size() - 1];
+      FetchStorageOp::FetchResponse resp;
+      resp.request = request;
+      resp.instance.labels = instance_cols;
+      resp.last_value = r[r.size() - 1];
       for (size_t i = 0; i < instance_cols.size(); ++i) {
-        res.instance.values.emplace_back(r[i]);
+        resp.instance.values.emplace_back(r[i]);
       }
 
-      op->addResponse(std::move(res));
+      auto resp_key = StringUtil::join(resp.instance.values, "\x1e");
+      resp_map.emplace(resp_key, std::move(resp));
     }
+  }
+
+  {
+    std::vector<std::string> cols;
+    cols.emplace_back("time");
+    cols.emplace_back("value");
+    cols.insert(cols.end(), instance_cols.begin(), instance_cols.end());
+
+    auto qry = StringUtil::format(
+        "SELECT $0 FROM $1;",
+        StringUtil::join(cols, ", "),
+        escapeString(request->metric->metric_id + ":history"));
+
+    std::list<std::vector<std::string>> rows;
+    auto rc = executeQuery(qry, &rows);
+    if (!rc.isSuccess()) {
+      return rc;
+    }
+
+    for (const auto& r : rows) {
+      if (r.size() != cols.size()) {
+        return ReturnCode::error("ERUNTIME", "sqlite error: invalid result");
+      }
+
+      std::vector<std::string> instance;
+      for (size_t i = 0; i < instance_cols.size(); ++i) {
+        instance.emplace_back(r[i + (cols.size() - instance_cols.size())]);
+      }
+
+      auto resp_iter = resp_map.find(StringUtil::join(instance, "\x1e"));
+      if (resp_iter == resp_map.end()) {
+        continue;
+      }
+
+      uint64_t timestamp;
+      try {
+        timestamp = std::stoull(r[0]);
+      } catch (...) {
+        return ReturnCode::error("ERUNTIME", "sqlite error: invalid result");
+      }
+
+      auto& resp_ts = resp_iter->second.history;
+      size_t pos = std::upper_bound(
+          resp_ts.timestamps.begin(),
+          resp_ts.timestamps.end(),
+          timestamp) - resp_ts.timestamps.begin();
+
+      resp_ts.timestamps.insert(resp_ts.timestamps.begin() + pos, timestamp);
+      resp_ts.values.insert(resp_ts.values.begin() + pos, r[1]);
+    }
+  }
+
+  for (auto& r : resp_map) {
+    op->addResponse(std::move(r.second));
   }
 
   return ReturnCode::success();

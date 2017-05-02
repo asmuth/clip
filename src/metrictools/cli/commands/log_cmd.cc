@@ -7,9 +7,11 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
+#include <assert.h>
 #include <iostream>
 #include <metrictools/cli/commands/log_cmd.h>
 #include <metrictools/util/flagparser.h>
+#include <metrictools/util/time.h>
 
 namespace fnordmetric {
 
@@ -34,6 +36,33 @@ ReturnCode LogCommand::execute(
         "EARG",
         "metric not found: '$0'",
         metric_id);
+  }
+
+  FetchStorageOp op(ctx->config->getGlobalConfig());
+  op.addRequest(FetchStorageOp::FetchRequest {
+    .metric = metric,
+    .fetch_last = true,
+    .fetch_history = true,
+    .history_time_begin = WallClock::unixMicros() - 2 * kMicrosPerSecond,
+    .history_time_limit = WallClock::unixMicros()
+  });
+
+  auto rc = ctx->storage_backend->performOperation(&op);
+  if (!rc.isSuccess()) {
+    return rc;
+  }
+
+  for (const auto& res : op.getResponses()) {
+    std::cout << metric->metric_id << " :: " << res.instance << std::endl;
+    assert(res.history.timestamps.size() == res.history.values.size());
+    for (size_t i = 0; i < res.history.timestamps.size(); ++i) {
+      std::cout
+          << "  " << UnixTime(res.history.timestamps[i]).toString()
+          << " -> " << res.history.values[i]
+          << std::endl;
+    }
+
+    std::cout << std::endl;
   }
 
   return ReturnCode::success();
