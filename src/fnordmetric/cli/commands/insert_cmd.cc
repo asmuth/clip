@@ -1,6 +1,6 @@
 /**
  * This file is part of the "FnordMetric" project
- *   Copyright (c) 2016 Paul Asmuth, FnordCorp B.V.
+ *   Copyright (c) 2016 Paul Asmuth, Laura Schlimmer, FnordCorp B.V.
  *
  * FnordMetric is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License v3.0. You should have received a
@@ -48,9 +48,27 @@ ReturnCode InsertCommand::execute(
   auto metric = ctx->config->getMetricConfig(flags.getString("metric"));
   if (!metric) {
     return ReturnCode::errorf(
-        "ERUNTIME",
+        "EARG",
         "metric not found: '$0'",
         flags.getString("metric"));
+  }
+
+  std::map<std::string, std::string> tree;
+  for (const auto& opt : flags.getStrings("tree")) {
+    auto opt_key_end = opt.find("=");
+    if (opt_key_end == String::npos) {
+      return ReturnCode::errorf("EARG", "invalid value for --tree: $0", opt);
+    }
+
+    tree.emplace(opt.substr(0, opt_key_end), opt.substr(opt_key_end + 1));
+  }
+
+  InsertStorageOp op(ctx->config->getGlobalConfig());
+  {
+    auto rc = op.addMeasurement(metric, tree, flags.getString("value"));
+    if (!rc.isSuccess()) {
+      return rc;
+    }
   }
 
   return ReturnCode::success();

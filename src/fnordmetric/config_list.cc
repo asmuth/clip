@@ -11,7 +11,7 @@
 
 namespace fnordmetric {
 
-ConfigList::ConfigList() {}
+ConfigList::ConfigList() : global_config_(new GlobalConfig()) {}
 
 const std::string& ConfigList::getBackendURL() const {
   return backend_url_;
@@ -69,6 +69,10 @@ const std::vector<std::unique_ptr<IngestionTaskConfig>>& ConfigList::getIngestio
 
 void ConfigList::addIngestionTaskConfig(std::unique_ptr<IngestionTaskConfig> config) {
   ingestion_configs_.emplace_back(std::move(config));
+}
+
+std::shared_ptr<const GlobalConfig> ConfigList::getGlobalConfig() const noexcept {
+  return global_config_;
 }
 
 } // namespace fnordmetric

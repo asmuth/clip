@@ -89,7 +89,10 @@ libfnordmetric_common_a_SOURCES = \
     util/base64.h \
     util/autoref_impl.h \
     util/autoref.h \
-    util/autoref.cc
+    util/autoref.cc \
+    storage/op.h \
+    storage/ops/insert_op.h \
+    storage/ops/insert_op.cc
 
 FNORDMETRIC_LIBS = \
     libfnordmetric-common.a \

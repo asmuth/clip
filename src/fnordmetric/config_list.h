@@ -19,6 +19,10 @@
 
 namespace fnordmetric {
 
+struct GlobalConfig {
+
+};
+
 class ConfigList {
 public:
 
@@ -38,9 +42,12 @@ public:
   const std::vector<std::unique_ptr<IngestionTaskConfig>>& getIngestionTaskConfigs() const;
   void addIngestionTaskConfig(std::unique_ptr<IngestionTaskConfig> config);
 
+  std::shared_ptr<const GlobalConfig> getGlobalConfig() const noexcept;
+
 protected:
   std::string backend_url_;
   bool create_metrics_;
+  std::shared_ptr<GlobalConfig> global_config_;
   std::map<MetricIDType, std::shared_ptr<MetricConfig>> metric_configs_;
   std::map<std::string, UnitConfig> unit_configs_;
   std::vector<std::unique_ptr<IngestionTaskConfig>> ingestion_configs_;
