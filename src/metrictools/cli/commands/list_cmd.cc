@@ -31,6 +31,11 @@ static ReturnCode listMetric(
     return rc;
   }
 
+  std::cout << metric->metric_id << std::endl;
+  for (const auto& res : op.getResponses()) {
+    std::cout << "    " << res.instance << " -> " << res.last_value << std::endl;
+  }
+
   return ReturnCode::success();
 }
 

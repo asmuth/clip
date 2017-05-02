@@ -50,6 +50,15 @@ ReturnCode SQLiteBackend::performOperation(InsertStorageOp* op) {
 }
 
 ReturnCode SQLiteBackend::performOperation(FetchStorageOp* op) {
+  std::unique_lock<std::mutex> lk(mutex_);
+
+  for (const auto& request : op->getRequests()) {
+    auto rc = fetchData(op, &request);
+    if (!rc.isSuccess()) {
+      return rc;
+    }
+  }
+
   return ReturnCode::success();
 }
 
@@ -61,12 +70,27 @@ ReturnCode SQLiteBackend::open(const std::string& path) {
   return ReturnCode::success();
 }
 
+static int sqlite_cb(void* udata, int argc, char** argv, char** col_name) {
+  if (!udata) {
+    return 0;
+  }
+
+  std::vector<std::string> row(argc);
+  for (size_t i = 0; i < argc; ++i) {
+    row[i] = std::string(argv[i]);
+  }
+
+  auto rows = static_cast<std::list<std::vector<std::string>>*>(udata);
+  rows->emplace_back(std::move(row)); 
+
+  return 0;
+}
+
 ReturnCode SQLiteBackend::executeQuery(
     const std::string& query,
-    std::list<std::vector<std::string>>* rows /* = nullptr */,
-    std::vector<std::string>* columns /* = nullptr */) {
+    std::list<std::vector<std::string>>* rows /* = nullptr */) {
   char* err = nullptr;
-  auto rc = sqlite3_exec(db_, query.c_str(), nullptr, 0, &err);
+  auto rc = sqlite3_exec(db_, query.c_str(), &sqlite_cb, rows, &err);
   if (rc != SQLITE_OK){
     auto err_str = std::string(err);
     sqlite3_free(err);
@@ -243,6 +267,56 @@ ReturnCode SQLiteBackend::insertMeasurement(
     auto rc = executeQuery("COMMIT");
     if (!rc.isSuccess()) {
       return rc;
+    }
+  }
+
+  return ReturnCode::success();
+}
+
+ReturnCode SQLiteBackend::fetchData(
+    FetchStorageOp* op,
+    const FetchStorageOp::FetchRequest* request) {
+  auto global_config = op->getGlobalConfig();
+
+  std::vector<std::string> instance_cols;
+  for (const auto& l : global_config->global_instance_path.labels) {
+    instance_cols.emplace_back(escapeString(l));
+  }
+
+  for (const auto& l : request->metric->instance_path.labels) {
+    instance_cols.emplace_back(escapeString(l));
+  }
+
+  {
+    std::vector<std::string> cols;
+    cols.insert(cols.end(), instance_cols.begin(), instance_cols.end());
+    cols.emplace_back("value");
+
+    auto qry = StringUtil::format(
+        "SELECT $0 FROM $1;",
+        StringUtil::join(cols, ", "),
+        escapeString(request->metric->metric_id + ":last"));
+
+    std::list<std::vector<std::string>> rows;
+    auto rc = executeQuery(qry, &rows);
+    if (!rc.isSuccess()) {
+      return rc;
+    }
+
+    for (const auto& r : rows) {
+      if (r.size() != cols.size()) {
+        return ReturnCode::error("ERUNTIME", "sqlite error: invalid result");
+      }
+
+      FetchStorageOp::FetchResponse res;
+      res.request = request;
+      res.instance.labels = instance_cols;
+      res.last_value = r[r.size() - 1];
+      for (size_t i = 0; i < instance_cols.size(); ++i) {
+        res.instance.values.emplace_back(r[i]);
+      }
+
+      op->addResponse(std::move(res));
     }
   }
 

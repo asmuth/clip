@@ -37,8 +37,7 @@ protected:
   ReturnCode open(const std::string& path);
   ReturnCode executeQuery(
       const std::string& query,
-      std::list<std::vector<std::string>>* rows = nullptr,
-      std::vector<std::string>* columns = nullptr);
+      std::list<std::vector<std::string>>* rows = nullptr);
 
   ReturnCode createTables(
       const GlobalConfig* global_config,
@@ -48,6 +47,10 @@ protected:
       const GlobalConfig* global_config,
       const MetricConfig* metric_config,
       const InsertStorageOp::Measurement& m);
+
+  ReturnCode fetchData(
+      FetchStorageOp* op,
+      const FetchStorageOp::FetchRequest* request);
 
   std::string escapeString(std::string str) const;
 

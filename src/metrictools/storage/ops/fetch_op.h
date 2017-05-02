@@ -70,7 +70,7 @@ public:
     /**
      * The original request for which this response was generated
      */
-    FetchRequest* request;
+    const FetchRequest* request;
 
     /**
      * The instance path of this response
@@ -115,6 +115,11 @@ public:
    * Get the list of requests
    */
   const std::vector<FetchResponse>& getResponses() const noexcept;
+
+  /**
+   * Get the global config snapshot
+   */
+  std::shared_ptr<const GlobalConfig> getGlobalConfig() const noexcept;
 
 protected:
   std::shared_ptr<const GlobalConfig> global_config_;

@@ -33,6 +33,11 @@ FetchStorageOp::getResponses() const noexcept {
   return responses_;
 }
 
+std::shared_ptr<const GlobalConfig>
+FetchStorageOp::getGlobalConfig() const noexcept {
+  return global_config_;
+}
+
 std::ostream& operator<<(std::ostream& out, const FetchStorageOp& op) {
   return out;
 }
