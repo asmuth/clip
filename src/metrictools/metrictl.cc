@@ -26,8 +26,10 @@
 #include <metrictools/aggregation_service.h>
 #include <metrictools/ingest.h>
 #include <metrictools/cli/command.h>
-#include <metrictools/cli/commands/list_cmd.h>
+#include <metrictools/cli/commands/collect_cmd.h>
 #include <metrictools/cli/commands/insert_cmd.h>
+#include <metrictools/cli/commands/log_cmd.h>
+#include <metrictools/cli/commands/list_cmd.h>
 
 using namespace fnordmetric;
 
@@ -69,6 +71,8 @@ int main(int argc, const char** argv) {
   /* init commands */
   std::vector<std::unique_ptr<Command>> commands;
   commands.emplace_back(new ListCommand());
+  commands.emplace_back(new LogCommand());
+  commands.emplace_back(new CollectCommand());
   commands.emplace_back(new InsertCommand());
 
   /* print help */
