@@ -7,7 +7,7 @@
 set -e
 
 # Check that we're being run from the right directory.
-if test ! -d src/fnordmetric; then
+if test ! -d src/metrictools; then
   cat >&2 << __EOF__
 Could not find source code.  Make sure you are running this script from the
 root of the distribution tree.

@@ -12,8 +12,8 @@
 #include <memory>
 #include <mutex>
 #include <vector>
-#include <metrictools/backends/backend.h>
-#include <metrictools/backends/mysql/mysqlconnection.h>
+#include <metrictools/storage/backend.h>
+#include <metrictools/storage/mysql/mysqlconnection.h>
 
 namespace fnordmetric {
 namespace mysql_backend {

@@ -14,7 +14,7 @@
 #include <libtransport/http/http_request.h>
 #include <libtransport/http/http_response.h>
 #include <libtransport/uri/uri.h>
-#include <metrictools/backends/backend.h>
+#include <metrictools/storage/backend.h>
 
 namespace fnordmetric {
 using namespace libtransport;

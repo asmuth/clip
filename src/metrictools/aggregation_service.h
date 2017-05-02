@@ -21,7 +21,7 @@
 #include "metrictools/table_map.h"
 #include "metrictools/config_list.h"
 #include "metrictools/util/return_code.h"
-#include "metrictools/backends/backend.h"
+#include "metrictools/storage/backend.h"
 
 namespace fnordmetric {
 struct AggregationSlot;

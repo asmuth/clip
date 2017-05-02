@@ -1,10 +1,8 @@
 bin_PROGRAMS = metric-collectd metric-queryd metricctl
 noinst_LIBRARIES = libfnordmetric-common.a
-SUBDIRS = backends/mysql
+SUBDIRS = storage/mysql
 
 libfnordmetric_common_a_SOURCES = \
-    backends/backend.h \
-    backends/backend.cc \
     config_list.h \
     config_list.cc \
     config_parser.h \
@@ -90,6 +88,8 @@ libfnordmetric_common_a_SOURCES = \
     util/autoref_impl.h \
     util/autoref.h \
     util/autoref.cc \
+    storage/backend.h \
+    storage/backend.cc \
     storage/op.h \
     storage/ops/insert_op.h \
     storage/ops/insert_op.cc
@@ -104,7 +104,7 @@ FNORDMETRIC_LIBS = \
     -ltransport_uri
 
 if ENABLE_MYSQL
-  FNORDMETRIC_LIBS += backends/mysql/libfnordmetric-backend-mysql.a
+  FNORDMETRIC_LIBS += storage/mysql/libfnordmetric-backend-mysql.a
   FNORDMETRIC_LIBS += -lmysqlclient
 endif
 

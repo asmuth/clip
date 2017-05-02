@@ -44,7 +44,7 @@ AC_CONFIG_SUBDIRS([deps/libtransport])
 AC_CONFIG_FILES([
     Makefile
     src/metrictools/Makefile
-    src/metrictools/backends/mysql/Makefile
+    src/metrictools/storage/mysql/Makefile
     test/Makefile])
 
 AC_OUTPUT

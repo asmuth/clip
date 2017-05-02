@@ -7,10 +7,10 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#include <metrictools/backends/backend.h>
+#include <metrictools/storage/backend.h>
 
 #if ENABLE_MYSQL
-#include <metrictools/backends/mysql/mysqlbackend.h>
+#include <metrictools/storage/mysql/mysqlbackend.h>
 #endif
 
 namespace fnordmetric {
