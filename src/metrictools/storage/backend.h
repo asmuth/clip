@@ -12,6 +12,7 @@
 #include <vector>
 #include <metrictools/util/return_code.h>
 #include <metrictools/storage/ops/insert_op.h>
+#include <metrictools/storage/ops/fetch_op.h>
 #include <libtransport/uri/uri.h>
 
 namespace fnordmetric {
@@ -25,7 +26,9 @@ public:
 
   virtual ~Backend() = default;
 
-  virtual ReturnCode performOperation(const InsertStorageOp& op) = 0;
+  virtual ReturnCode performOperation(InsertStorageOp* op) = 0;
+
+  virtual ReturnCode performOperation(FetchStorageOp* op) = 0;
 
   virtual void shutdown() {}
 

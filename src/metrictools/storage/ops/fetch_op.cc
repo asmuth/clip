@@ -15,6 +15,24 @@ FetchStorageOp::FetchStorageOp(
     std::shared_ptr<const GlobalConfig> global_config) noexcept :
     global_config_(global_config) {}
 
+void FetchStorageOp::addRequest(FetchRequest&& request) noexcept {
+  requests_.emplace_back(request);
+}
+
+const std::vector<FetchStorageOp::FetchRequest>&
+FetchStorageOp::getRequests() const noexcept {
+  return requests_;
+}
+
+void FetchStorageOp::addResponse(FetchResponse&& response) noexcept {
+  responses_.emplace_back(response);
+}
+
+const std::vector<FetchStorageOp::FetchResponse>&
+FetchStorageOp::getResponses() const noexcept {
+  return responses_;
+}
+
 std::ostream& operator<<(std::ostream& out, const FetchStorageOp& op) {
   return out;
 }

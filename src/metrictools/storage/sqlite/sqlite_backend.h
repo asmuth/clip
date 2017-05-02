@@ -26,7 +26,9 @@ public:
 
   ~SQLiteBackend();
 
-  ReturnCode performOperation(const InsertStorageOp& op) override;
+  ReturnCode performOperation(InsertStorageOp* op) override;
+
+  ReturnCode performOperation(FetchStorageOp* op) override;
 
 protected:
 

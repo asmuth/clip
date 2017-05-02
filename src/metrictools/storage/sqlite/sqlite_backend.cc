@@ -34,18 +34,22 @@ SQLiteBackend::~SQLiteBackend() {
   }
 }
 
-ReturnCode SQLiteBackend::performOperation(const InsertStorageOp& op) {
+ReturnCode SQLiteBackend::performOperation(InsertStorageOp* op) {
   std::unique_lock<std::mutex> lk(mutex_);
 
-  auto global_config = op.getGlobalConfig();
+  auto global_config = op->getGlobalConfig();
 
-  for (const auto& m : op.getMeasurements()) {
+  for (const auto& m : op->getMeasurements()) {
     auto rc = insertMeasurement(global_config.get(), m.metric.get(), m);
     if (!rc.isSuccess()) {
       return rc;
     }
   }
 
+  return ReturnCode::success();
+}
+
+ReturnCode SQLiteBackend::performOperation(FetchStorageOp* op) {
   return ReturnCode::success();
 }
 

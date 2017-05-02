@@ -99,7 +99,7 @@ public:
   /**
    * Add a request/subquery to the fetch operation
    */
-  void addRequest(FetchRequest&& measurement) noexcept;
+  void addRequest(FetchRequest&& request) noexcept;
 
   /**
    * Get the list of requests
@@ -109,7 +109,7 @@ public:
   /**
    * Add a response to the fetch operation
    */
-  void addResponse(FetchResponse&& measurement) noexcept;
+  void addResponse(FetchResponse&& response) noexcept;
 
   /**
    * Get the list of requests

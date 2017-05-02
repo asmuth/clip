@@ -10,8 +10,29 @@
 #include <iostream>
 #include <metrictools/cli/commands/list_cmd.h>
 #include <metrictools/util/flagparser.h>
+#include <metrictools/storage/ops/fetch_op.h>
 
 namespace fnordmetric {
+
+static ReturnCode listMetric(
+    CLIContext* ctx,
+    std::shared_ptr<const MetricConfig> metric) {
+  FetchStorageOp op(ctx->config->getGlobalConfig());
+  op.addRequest(FetchStorageOp::FetchRequest {
+    .metric = metric,
+    .fetch_last = true,
+    .fetch_history = false,
+    .history_time_begin = 0,
+    .history_time_limit = 0,
+  });
+
+  auto rc = ctx->storage_backend->performOperation(&op);
+  if (!rc.isSuccess()) {
+    return rc;
+  }
+
+  return ReturnCode::success();
+}
 
 ReturnCode ListCommand::execute(
     CLIContext* ctx,
@@ -23,7 +44,36 @@ ReturnCode ListCommand::execute(
     return flags_rc;
   }
 
-  return ReturnCode::success();
+  switch (flags.getArgv().size()) {
+
+    case 1: {
+      auto metric_id = flags.getArgv()[0];
+      auto metric = ctx->config->getMetricConfig(metric_id);
+      if (!metric) {
+        return ReturnCode::errorf(
+            "EARG",
+            "metric not found: '$0'",
+            metric_id);
+      }
+
+      return listMetric(ctx, metric);
+    }
+
+    case 0: {
+      for (const auto& m : ctx->config->getMetricConfigs()) {
+        auto rc = listMetric(ctx, m.second);
+        if (!rc.isSuccess()) {
+          return rc;
+        }
+      }
+
+      return ReturnCode::success();
+    }
+
+    default:
+      return ReturnCode::error("EARG", "list requires one or zero arguments");
+
+  }
 }
 
 const std::string& ListCommand::getName() const {
