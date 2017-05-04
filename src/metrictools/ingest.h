@@ -16,12 +16,14 @@
 #include <thread>
 #include <regex>
 #include <metrictools/util/return_code.h>
+#include <metrictools/metric.h>
 
 namespace fnordmetric {
 class ConfigList;
 class IngestionTask;
 class Backend;
 struct IngestionTaskConfig;
+class InsertStorageOp;
 
 enum class IngestionSampleFormat {
   STATSD, JSON
@@ -30,11 +32,21 @@ enum class IngestionSampleFormat {
 std::string getIngestionSampleFormatName(IngestionSampleFormat t);
 bool parseIngestionSampleFormat(const std::string& s, IngestionSampleFormat* t);
 
-ReturnCode mkIngestionTask(
+struct IngestionSample {
+  MetricIDType metric_id;
+  std::map<std::string, std::string> instance;
+  std::string value;
+};
+
+ReturnCode parseSamples(
+    IngestionSampleFormat format,
+    const std::string& input,
+    std::vector<IngestionSample>* samples);
+
+ReturnCode storeSamples(
+    const ConfigList* config,
     Backend* storage_backend,
-    const ConfigList* config_list,
-    const IngestionTaskConfig* config,
-    std::unique_ptr<IngestionTask>* task);
+    const std::vector<IngestionSample>& samples);
 
 struct IngestionTaskConfig {
   IngestionTaskConfig();
@@ -43,6 +55,12 @@ struct IngestionTaskConfig {
   std::regex metric_id_rewrite_regex;
   std::string metric_id_rewrite_replace;
 };
+
+ReturnCode mkIngestionTask(
+    Backend* storage_backend,
+    const ConfigList* config_list,
+    const IngestionTaskConfig* config,
+    std::unique_ptr<IngestionTask>* task);
 
 class IngestionTask {
 public:

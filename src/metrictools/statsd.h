@@ -18,7 +18,7 @@
 #include "metrictools/sample.h"
 
 namespace fnordmetric {
-class MetricService;
+struct IngestionSample;
 
 class StatsdEmitter {
 public:
@@ -48,6 +48,11 @@ bool parseStatsdSample(
     std::string* metric_id,
     std::string* series_id,
     std::string* value);
+
+ReturnCode parseStatsdSamples(
+    const char* data,
+    size_t len,
+    std::vector<IngestionSample>* samples);
 
 } // namespace fnordmetric
 

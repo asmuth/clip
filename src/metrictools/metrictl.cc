@@ -76,7 +76,11 @@ int main(int argc, const char** argv) {
   bool verbose = flags.isSet("verbose");
   auto cmd_argv = flags.getArgv();
   Logger::logToStderrWithoutDecoration();
-  Logger::get()->setMinimumLogLevel(strToLogLevel("DEBUG"));
+  if (verbose) {
+    Logger::get()->setMinimumLogLevel(strToLogLevel("DEBUG"));
+  } else {
+    Logger::get()->setMinimumLogLevel(strToLogLevel("WARNING"));
+  }
 
   /* init commands */
   std::vector<std::unique_ptr<Command>> commands;

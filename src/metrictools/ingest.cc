@@ -15,6 +15,9 @@
 #include <metrictools/listen_http.h>
 #include <metrictools/fetch_http.h>
 #include <metrictools/config_list.h>
+#include <metrictools/statsd.h>
+#include <metrictools/storage/ops/insert_op.h>
+#include <metrictools/storage/backend.h>
 
 namespace fnordmetric {
 
@@ -53,6 +56,45 @@ ReturnCode mkIngestionTask(
   }
 
   return ReturnCode::error("ERUNTIME", "invalid ingestion task config");
+}
+
+ReturnCode parseSamples(
+    IngestionSampleFormat format,
+    const std::string& input,
+    std::vector<IngestionSample>* samples) {
+  switch (format) {
+    case IngestionSampleFormat::STATSD:
+      return parseStatsdSamples(input.data(), input.size(), samples);
+    default:
+      return ReturnCode::error("ERUNTIME", "invalid format");
+  }
+}
+
+ReturnCode storeSamples(
+    const ConfigList* config,
+    Backend* storage_backend,
+    const std::vector<IngestionSample>& samples) {
+  InsertStorageOp op(config->getGlobalConfig());
+  for (const auto& s : samples) {
+    auto metric = config->getMetricConfig(s.metric_id);
+    if (!metric) {
+      logWarning(
+          "batch insert failed: metric not found: '$0'",
+          s.metric_id);
+      continue;
+    }
+
+    auto rc = op.addMeasurement(metric, s.instance, s.value);
+    if (!rc.isSuccess()) {
+      logWarning(
+          "batch insert failed: $0; metric_id=$1 value=$2",
+          rc.getMessage(),
+          s.metric_id,
+          s.value);
+    }
+  }
+
+  return storage_backend->performOperation(&op);
 }
 
 IngestionTaskConfig::IngestionTaskConfig() :

@@ -189,5 +189,32 @@ bool parseStatsdSample(
   return true;
 }
 
+ReturnCode parseStatsdSamples(
+    const char* data,
+    size_t len,
+    std::vector<IngestionSample>* samples) {
+  std::string metric_id;
+  std::string series_id;
+  std::string value;
+  LabelSet labels;
+  char const* cur = data;
+  char const* end = data + len;
+
+  while (cur < end) {
+    if (!parseStatsdSample(&cur, end, &metric_id, &series_id, &value)) {
+      return ReturnCode::error("EPARSE", "invalid packet");
+    }
+
+    IngestionSample smpl;
+    smpl.metric_id = metric_id,
+    smpl.instance = {};
+    smpl.value = value;
+    samples->emplace_back(std::move(smpl));
+  }
+
+  return ReturnCode::success();
+
+}
+
 } // namespace fnordmetric
 

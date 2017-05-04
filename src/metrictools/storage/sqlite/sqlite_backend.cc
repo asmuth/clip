@@ -36,7 +36,7 @@ SQLiteBackend::~SQLiteBackend() {
 }
 
 ReturnCode SQLiteBackend::performOperation(InsertStorageOp* op) {
-  logError("Performing INSERT storage operation (sqlite)");
+  logDebug("Performing INSERT storage operation (sqlite)");
 
   std::unique_lock<std::mutex> lk(mutex_);
 
@@ -53,7 +53,7 @@ ReturnCode SQLiteBackend::performOperation(InsertStorageOp* op) {
 }
 
 ReturnCode SQLiteBackend::performOperation(FetchStorageOp* op) {
-  logError("Performing FETCH storage operation (sqlite)");
+  logDebug("Performing FETCH storage operation (sqlite)");
 
   std::unique_lock<std::mutex> lk(mutex_);
 
@@ -235,6 +235,13 @@ ReturnCode SQLiteBackend::insertMeasurement(
         escapeString(metric_config->metric_id + ":last"),
         StringUtil::join(col_names, ", "),
         StringUtil::join(col_values, ", "));
+
+    if (m.instance.labels.empty()) {
+      qry = StringUtil::format(
+          "DELETE FROM $0; $1",
+          escapeString(metric_config->metric_id + ":last"),
+          qry);
+    }
 
     auto rc = executeQuery(qry);
     if (!rc.isSuccess()) {

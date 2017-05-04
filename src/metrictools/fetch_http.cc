@@ -82,10 +82,13 @@ ReturnCode HTTPPullIngestionTask::invoke() {
         response.statusCode());
   }
 
-  InsertStorageOp op(config_->getGlobalConfig());
-  // FIXME parse measurements with `format_`
+  std::vector<IngestionSample> samples;
+  auto rc = parseSamples(format_, response.body(), &samples);
+  if (!rc.isSuccess()) {
+    return rc;
+  }
 
-  return storage_backend_->performOperation(&op);
+  return storeSamples(config_, storage_backend_, samples);
 }
 
 } // namespace fnordmetric
