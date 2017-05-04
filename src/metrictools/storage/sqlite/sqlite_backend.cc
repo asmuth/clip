@@ -9,6 +9,7 @@
  */
 #include <assert.h>
 #include <metrictools/storage/sqlite/sqlite_backend.h>
+#include <metrictools/util/logging.h>
 
 namespace fnordmetric {
 namespace sqlite_backend {
@@ -89,6 +90,8 @@ static int sqlite_cb(void* udata, int argc, char** argv, char** col_name) {
 ReturnCode SQLiteBackend::executeQuery(
     const std::string& query,
     std::list<std::vector<std::string>>* rows /* = nullptr */) {
+  logDebug("Executing SQLite query: $0", query);
+
   char* err = nullptr;
   auto rc = sqlite3_exec(db_, query.c_str(), &sqlite_cb, rows, &err);
   if (rc != SQLITE_OK){
@@ -147,7 +150,7 @@ ReturnCode SQLiteBackend::createTables(
     }
   }
 
-  {
+  if (!instance_col_names.empty()) {
     auto qry = StringUtil::format(
         "CREATE UNIQUE INDEX IF NOT EXISTS $0 ON $1 ($2);",
         escapeString(metric_config->metric_id + ":last_index"),

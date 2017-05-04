@@ -17,6 +17,7 @@ namespace fnordmetric {
 struct CLIContext {
   ConfigList* config;
   Backend* storage_backend;
+  bool verbose;
 };
 
 class Command {

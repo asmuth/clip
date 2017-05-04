@@ -68,6 +68,9 @@ public:
       const std::string& program_name,
       LogLevel min_log_level = LogLevel::kInfo);
 
+  static void logToStderrWithoutDecoration(
+      LogLevel min_log_level = LogLevel::kInfo);
+
   static void logToSyslog(
       const std::string& name,
       LogLevel min_log_level = LogLevel::kInfo);

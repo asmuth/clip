@@ -90,8 +90,8 @@ void Logger::setMinimumLogLevel(LogLevel min_level) {
 class StderrLogOutputStream : public LogTarget {
 public:
 
-  StderrLogOutputStream(
-      const std::string& program_name);
+  StderrLogOutputStream();
+  StderrLogOutputStream(const std::string& program_name);
 
   void log(
       LogLevel level,
@@ -102,6 +102,8 @@ protected:
   std::mutex mutex_;
 };
 
+StderrLogOutputStream::StderrLogOutputStream() {}
+
 StderrLogOutputStream::StderrLogOutputStream(
     const std::string& program_name) :
     program_name_(program_name) {}
@@ -109,11 +111,16 @@ StderrLogOutputStream::StderrLogOutputStream(
 void StderrLogOutputStream::log(
     LogLevel level,
     const std::string& message) {
-  const auto prefix = StringUtil::format(
-      "$0 $1 [$2] ",
-      WallClock::now().toString("%Y-%m-%d %H:%M:%S"),
-      program_name_,
-      logLevelToStr(level));
+  std::string prefix;
+  if (program_name_.empty()) {
+    prefix = StringUtil::format("[$0] ", logLevelToStr(level));
+  } else {
+    prefix = StringUtil::format(
+        "$0 $1 [$2] ",
+        WallClock::now().toString("%Y-%m-%d %H:%M:%S"),
+        program_name_,
+        logLevelToStr(level));
+  }
 
   std::string lines = prefix + message;
   StringUtil::replaceAll(&lines, "\n", "\n" + prefix);
@@ -127,6 +134,13 @@ void Logger::logToStderr(
     const std::string& program_name,
     LogLevel min_log_level /* = LogLevel::kInfo */) {
   auto logger = new StderrLogOutputStream(program_name);
+  Logger::get()->setMinimumLogLevel(min_log_level);
+  Logger::get()->addTarget(logger);
+}
+
+void Logger::logToStderrWithoutDecoration(
+    LogLevel min_log_level /* = LogLevel::kInfo */) {
+  auto logger = new StderrLogOutputStream();
   Logger::get()->setMinimumLogLevel(min_log_level);
   Logger::get()->addTarget(logger);
 }

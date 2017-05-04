@@ -57,6 +57,13 @@ int main(int argc, const char** argv) {
       "V",
       NULL);
 
+  flags.defineFlag(
+      "verbose",
+      FlagParser::T_SWITCH,
+      false,
+      "v",
+      NULL);
+
   /* parse flags */
   {
     auto rc = flags.parseArgv(argc, argv);
@@ -66,7 +73,10 @@ int main(int argc, const char** argv) {
     }
   }
 
+  bool verbose = flags.isSet("verbose");
   auto cmd_argv = flags.getArgv();
+  Logger::logToStderrWithoutDecoration();
+  Logger::get()->setMinimumLogLevel(strToLogLevel("DEBUG"));
 
   /* init commands */
   std::vector<std::unique_ptr<Command>> commands;
@@ -104,8 +114,9 @@ int main(int argc, const char** argv) {
     std::cerr <<
         "Usage: $ metricctl [OPTIONS]\n"
         "   -c, --config <file>       Load config file\n"
+        "   -v, --verbose             Run in verbose mode\n"
         "   -?, --help <topic>        Display a command's help text and exit\n"
-        "   -v, --version             Display the version of this binary and exit\n"
+        "   -V, --version             Display the version of this binary and exit\n"
         "\n"
         "Commands:\n";
 
@@ -190,6 +201,7 @@ int main(int argc, const char** argv) {
   CLIContext ctx;
   ctx.config = &config;
   ctx.storage_backend = backend.get();
+  ctx.verbose = verbose;
 
   cmd_argv.erase(cmd_argv.begin());
   auto rc = (*cmd)->execute(&ctx, cmd_argv);
