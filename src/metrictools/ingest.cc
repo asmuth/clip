@@ -14,6 +14,7 @@
 #include <metrictools/listen_udp.h>
 #include <metrictools/listen_http.h>
 #include <metrictools/fetch_http.h>
+#include <metrictools/config_list.h>
 
 namespace fnordmetric {
 
@@ -35,19 +36,19 @@ bool parseIngestionSampleFormat(
 }
 
 ReturnCode mkIngestionTask(
-    AggregationService* service,
+    Backend* storage_backend,
     const IngestionTaskConfig* config,
     std::unique_ptr<IngestionTask>* task) {
   if (dynamic_cast<const UDPIngestionTaskConfig*>(config)) {
-    return UDPListener::start(service, config, task);
+    return UDPListener::start(storage_backend, config, task);
   }
 
   if (dynamic_cast<const HTTPPushIngestionTaskConfig*>(config)) {
-    return HTTPPushIngestionTask::start(service, config, task);
+    return HTTPPushIngestionTask::start(storage_backend, config, task);
   }
 
   if (dynamic_cast<const HTTPPullIngestionTaskConfig*>(config)) {
-    return HTTPPullIngestionTask::start(service, config, task);
+    return HTTPPullIngestionTask::start(storage_backend, config, task);
   }
 
   return ReturnCode::error("ERUNTIME", "invalid ingestion task config");
@@ -101,13 +102,13 @@ void PeriodicIngestionTask::shutdown() {
 }
 
 IngestionService::IngestionService(
-    AggregationService* aggregation_service) :
-    aggregation_service_(aggregation_service) {}
+    Backend* storage_backend) :
+    storage_backend_(storage_backend) {}
 
 ReturnCode IngestionService::applyConfig(const ConfigList* config) {
   for (const auto& ic : config->getIngestionTaskConfigs()) {
     std::unique_ptr<IngestionTask> task;
-    auto rc = mkIngestionTask(aggregation_service_, ic.get(), &task);
+    auto rc = mkIngestionTask(storage_backend_, ic.get(), &task);
     if (!rc.isSuccess()) {
       return rc;
     }

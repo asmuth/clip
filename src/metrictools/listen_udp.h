@@ -13,7 +13,7 @@
 #include <atomic>
 #include "metrictools/util/return_code.h"
 #include "metrictools/sample.h"
-#include "metrictools/aggregation_service.h"
+#include "metrictools/ingest.h"
 
 namespace fnordmetric {
 
@@ -28,12 +28,12 @@ class UDPListener : public IngestionTask {
 public:
 
   static ReturnCode start(
-      AggregationService* aggregation_service,
+      Backend* storage_backend,
       const IngestionTaskConfig* config,
       std::unique_ptr<IngestionTask>* task);
 
   UDPListener(
-      AggregationService* aggr_service,
+      Backend* storage_backend,
       IngestionSampleFormat format);
 
   ~UDPListener();
@@ -44,7 +44,7 @@ public:
   void shutdown() override;
 
 protected:
-  AggregationService* aggr_service_;
+  Backend* storage_backend_;
   IngestionSampleFormat format_;
   int ssock_;
   std::atomic<bool> running_;

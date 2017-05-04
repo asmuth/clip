@@ -23,6 +23,16 @@ ReturnCode CollectCommand::execute(
     return flags_rc;
   }
 
+  std::unique_ptr<IngestionService> ingestion_service(
+      new IngestionService(ctx->storage_backend));
+
+  {
+    auto rc = ingestion_service->applyConfig(ctx->config);
+    if (!rc.isSuccess()) {
+      return rc;
+    }
+  }
+
   return ReturnCode::success();
 }
 

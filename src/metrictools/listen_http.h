@@ -20,7 +20,7 @@
 #include <libtransport/json/json_writer.h>
 
 namespace fnordmetric {
-class AggregationService;
+class Backend;
 
 namespace json = libtransport::json;
 namespace http = libtransport::http;
@@ -35,11 +35,11 @@ class HTTPPushIngestionTask : public IngestionTask {
 public:
 
   static ReturnCode start(
-      AggregationService* aggregation_service,
+      Backend* storage_backend,
       const IngestionTaskConfig* config,
       std::unique_ptr<IngestionTask>* task);
 
-  HTTPPushIngestionTask(AggregationService* aggregation_service);
+  HTTPPushIngestionTask(Backend* storage_backend);
 
   ReturnCode listen(const std::string& addr, int port);
 
@@ -52,7 +52,7 @@ protected:
       http::HTTPRequest* request,
       http::HTTPResponse* response);
 
-  AggregationService* aggr_service_;
+  Backend* storage_backend_;
   libtransport::http::HTTPServer http_server_;
 };
 

@@ -18,9 +18,9 @@
 #include <metrictools/util/return_code.h>
 
 namespace fnordmetric {
-class AggregationService;
 class ConfigList;
 class IngestionTask;
+class Backend;
 struct IngestionTaskConfig;
 
 enum class IngestionSampleFormat {
@@ -31,7 +31,7 @@ std::string getIngestionSampleFormatName(IngestionSampleFormat t);
 bool parseIngestionSampleFormat(const std::string& s, IngestionSampleFormat* t);
 
 ReturnCode mkIngestionTask(
-    AggregationService* aggregation_service,
+    Backend* storage_backend,
     const IngestionTaskConfig* config,
     std::unique_ptr<IngestionTask>* task);
 
@@ -73,7 +73,7 @@ protected:
 class IngestionService {
 public:
 
-  IngestionService(AggregationService* aggregation_service);
+  IngestionService(Backend* storage_backend);
 
   ReturnCode applyConfig(const ConfigList* config);
 
@@ -82,7 +82,7 @@ public:
   void shutdown();
 
 protected:
-  AggregationService* aggregation_service_;
+  Backend* storage_backend_;
   std::mutex mutex_;
   std::vector<std::pair<std::thread, std::unique_ptr<IngestionTask>>> tasks_;
 };

@@ -11,7 +11,6 @@
 #include <metrictools/listen_http.h>
 #include <metrictools/util/logging.h>
 #include <metrictools/util/stringutil.h>
-#include <metrictools/aggregation_service.h>
 
 namespace fnordmetric {
 
@@ -20,7 +19,7 @@ HTTPPushIngestionTaskConfig::HTTPPushIngestionTaskConfig() :
     port(8080) {}
 
 ReturnCode HTTPPushIngestionTask::start(
-    AggregationService* aggregation_service,
+    Backend* storage_backend,
     const IngestionTaskConfig* config,
     std::unique_ptr<IngestionTask>* task) {
   auto c = dynamic_cast<const HTTPPushIngestionTaskConfig*>(config);
@@ -32,7 +31,7 @@ ReturnCode HTTPPushIngestionTask::start(
     return ReturnCode::error("ERUNTIME", "missing port");
   }
 
-  auto self = new HTTPPushIngestionTask(aggregation_service);
+  auto self = new HTTPPushIngestionTask(storage_backend);
   task->reset(self);
 
   auto rc = self->listen(c->bind, c->port);
@@ -44,8 +43,8 @@ ReturnCode HTTPPushIngestionTask::start(
 }
 
 HTTPPushIngestionTask::HTTPPushIngestionTask(
-    AggregationService* aggr_service) :
-    aggr_service_(aggr_service) {
+    Backend* storage_backend) :
+    storage_backend_(storage_backend) {
   http_server_.setRequestHandler(
       std::bind(
           &HTTPPushIngestionTask::handleRequest,
@@ -83,7 +82,7 @@ void HTTPPushIngestionTask::handleRequest(
     return;
   }
 
-  //AggregationService::BatchInsertOptions opts;
+  //Backend::BatchInsertOptions opts;
   //Opts.format = IngestionSampleFormat::STATSD;
   //If (request->getHeader("Content-Type") == "application/json") {
   //  opts.format = IngestionSampleFormat::JSON;
@@ -92,7 +91,7 @@ void HTTPPushIngestionTask::handleRequest(
   //  opts.format = IngestionSampleFormat::STATSD;
   //}
 
-  //Auto rc = aggr_service_->insertSamplesBatch(
+  //Auto rc = storage_backend_->insertSamplesBatch(
   //    request->body().data(),
   //    request->body().size(),
   //    &opts);

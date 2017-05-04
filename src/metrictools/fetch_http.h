@@ -23,12 +23,12 @@ class HTTPPullIngestionTask : public PeriodicIngestionTask {
 public:
 
   static ReturnCode start(
-      AggregationService* aggregation_service,
+      Backend* storage_backend,
       const IngestionTaskConfig* config,
       std::unique_ptr<IngestionTask>* task);
 
   HTTPPullIngestionTask(
-      AggregationService* aggregation_service,
+      Backend* storage_backend,
       uint64_t interval,
       const std::string& url,
       IngestionSampleFormat format);
@@ -36,7 +36,7 @@ public:
   ReturnCode invoke() override;
 
 protected:
-  AggregationService* aggr_service_;
+  Backend* storage_backend_;
   std::string url_;
   IngestionSampleFormat format_;
 };

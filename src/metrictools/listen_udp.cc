@@ -22,7 +22,6 @@
 #include <metrictools/statsd.h>
 #include <metrictools/listen_udp.h>
 #include <metrictools/sample.h>
-#include <metrictools/aggregation_service.h>
 
 namespace fnordmetric {
 
@@ -32,7 +31,7 @@ UDPIngestionTaskConfig::UDPIngestionTaskConfig() :
     format(IngestionSampleFormat::STATSD) {}
 
 ReturnCode UDPListener::start(
-    AggregationService* aggregation_service,
+    Backend* storage_backend,
     const IngestionTaskConfig* config,
     std::unique_ptr<IngestionTask>* task) {
   auto c = dynamic_cast<const UDPIngestionTaskConfig*>(config);
@@ -44,7 +43,7 @@ ReturnCode UDPListener::start(
     return ReturnCode::error("ERUNTIME", "missing port");
   }
 
-  auto self = new UDPListener(aggregation_service, c->format);
+  auto self = new UDPListener(storage_backend, c->format);
   task->reset(self);
 
   auto rc = self->listen(c->bind, c->port);
@@ -56,9 +55,9 @@ ReturnCode UDPListener::start(
 }
 
 UDPListener::UDPListener(
-    AggregationService* aggr_service,
+    Backend* storage_backend,
     IngestionSampleFormat format) :
-    aggr_service_(aggr_service),
+    storage_backend_(storage_backend),
     format_(format),
     ssock_(-1) {}
 
@@ -116,7 +115,7 @@ void UDPListener::start() {
       continue;
     }
 
-    //auto rc = aggr_service_->insertSamplesBatch(buf, buf_len, &opts);
+    //auto rc = storage_backend_->insertSamplesBatch(buf, buf_len, &opts);
     //if (!rc.isSuccess()) {
     //  logWarning("error while inserting samples: $0", rc.getMessage());
     //}
