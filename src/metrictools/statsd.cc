@@ -20,8 +20,7 @@
 #include <metrictools/util/logging.h>
 #include <metrictools/util/time.h>
 #include <metrictools/statsd.h>
-#include <metrictools/sample.h>
-#include <metrictools/aggregation_service.h>
+#include <metrictools/collect.h>
 
 namespace fnordmetric {
 

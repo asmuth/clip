@@ -23,7 +23,6 @@
 #include <metrictools/util/return_code.h>
 #include <metrictools/config_list.h>
 #include <metrictools/config_parser.h>
-#include <metrictools/aggregation_service.h>
 #include <metrictools/collect.h>
 #include <metrictools/cli/command.h>
 #include <metrictools/cli/commands/collect_cmd.h>
