@@ -60,3 +60,10 @@ MAINTAINERCLEANFILES =   \
   m4/lt~obsolete.m4      \
   m4/ltoptions.m4
 
+install-exec-local:
+	install -d ${DESTDIR}/etc/metrictools ${DESTDIR}${datadir}/metrictools/plugins
+	install -m 0644 conf/metrictl.conf ${DESTDIR}/etc/metrictools
+	install -m 0644 conf/metricd.conf ${DESTDIR}/etc/metrictools
+	install -m 0644 conf/metrics.conf ${DESTDIR}/etc/metrictools
+	install -m 0644 conf/units-default.conf ${DESTDIR}/etc/metrictools
+
