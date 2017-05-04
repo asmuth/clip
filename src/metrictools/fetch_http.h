@@ -24,11 +24,13 @@ public:
 
   static ReturnCode start(
       Backend* storage_backend,
-      const IngestionTaskConfig* config,
+      const ConfigList* config,
+      const IngestionTaskConfig* task_config,
       std::unique_ptr<IngestionTask>* task);
 
   HTTPPullIngestionTask(
       Backend* storage_backend,
+      const ConfigList* config,
       uint64_t interval,
       const std::string& url,
       IngestionSampleFormat format);
@@ -37,6 +39,7 @@ public:
 
 protected:
   Backend* storage_backend_;
+  const ConfigList* config_;
   std::string url_;
   IngestionSampleFormat format_;
 };

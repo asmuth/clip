@@ -11,6 +11,8 @@
 #include <metrictools/fetch_http.h>
 #include <metrictools/util/time.h>
 #include <metrictools/util/logging.h>
+#include <metrictools/storage/ops/insert_op.h>
+#include <metrictools/storage/backend.h>
 #include <libtransport/uri/uri.h>
 #include <iostream>
 #include <libtransport/http/v1/http_client.h>
@@ -23,9 +25,10 @@ HTTPPullIngestionTaskConfig::HTTPPullIngestionTaskConfig() :
 
 ReturnCode HTTPPullIngestionTask::start(
     Backend* storage_backend,
-    const IngestionTaskConfig* config,
+    const ConfigList* config,
+    const IngestionTaskConfig* task_config,
     std::unique_ptr<IngestionTask>* task) {
-  auto c = dynamic_cast<const HTTPPullIngestionTaskConfig*>(config);
+  auto c = dynamic_cast<const HTTPPullIngestionTaskConfig*>(task_config);
   if (!c) {
     return ReturnCode::error("ERUNTIME", "invalid ingestion task config");
   }
@@ -37,6 +40,7 @@ ReturnCode HTTPPullIngestionTask::start(
   task->reset(
       new HTTPPullIngestionTask(
           storage_backend,
+          config,
           c->interval,
           c->url,
           c->format));
@@ -46,11 +50,13 @@ ReturnCode HTTPPullIngestionTask::start(
 
 HTTPPullIngestionTask::HTTPPullIngestionTask(
     Backend* storage_backend,
+    const ConfigList* config,
     uint64_t interval,
     const std::string& url,
     IngestionSampleFormat format) :
     PeriodicIngestionTask(interval),
     storage_backend_(storage_backend),
+    config_(config),
     url_(url),
     format_(format) {}
 
@@ -76,18 +82,10 @@ ReturnCode HTTPPullIngestionTask::invoke() {
         response.statusCode());
   }
 
-  return ReturnCode::success();
-  //Backend::BatchInsertOptions insert_opts;
-  //insert_opts.format = format_;
-  ////insert_opts.metric_id_rewrite_enabled = config_->metric_id_rewrite_enabled;
-  ////insert_opts.metric_id_rewrite_regex = config_->metric_id_rewrite_regex;
-  ////insert_opts.metric_id_rewrite_replace = config_->metric_id_rewrite_replace;
+  InsertStorageOp op(config_->getGlobalConfig());
+  // FIXME parse measurements with `format_`
 
-  //const auto& body = response.body();
-  //return storage_backend_->insertSamplesBatch(
-  //    body.data(),
-  //    body.size(),
-  //    &insert_opts);
+  return storage_backend_->performOperation(&op);
 }
 
 } // namespace fnordmetric

@@ -32,6 +32,7 @@ bool parseIngestionSampleFormat(const std::string& s, IngestionSampleFormat* t);
 
 ReturnCode mkIngestionTask(
     Backend* storage_backend,
+    const ConfigList* config_list,
     const IngestionTaskConfig* config,
     std::unique_ptr<IngestionTask>* task);
 

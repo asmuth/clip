@@ -36,6 +36,8 @@ SQLiteBackend::~SQLiteBackend() {
 }
 
 ReturnCode SQLiteBackend::performOperation(InsertStorageOp* op) {
+  logError("Performing INSERT storage operation (sqlite)");
+
   std::unique_lock<std::mutex> lk(mutex_);
 
   auto global_config = op->getGlobalConfig();
@@ -51,6 +53,8 @@ ReturnCode SQLiteBackend::performOperation(InsertStorageOp* op) {
 }
 
 ReturnCode SQLiteBackend::performOperation(FetchStorageOp* op) {
+  logError("Performing FETCH storage operation (sqlite)");
+
   std::unique_lock<std::mutex> lk(mutex_);
 
   for (const auto& request : op->getRequests()) {

@@ -37,6 +37,7 @@ bool parseIngestionSampleFormat(
 
 ReturnCode mkIngestionTask(
     Backend* storage_backend,
+    const ConfigList* config_list,
     const IngestionTaskConfig* config,
     std::unique_ptr<IngestionTask>* task) {
   if (dynamic_cast<const UDPIngestionTaskConfig*>(config)) {
@@ -48,7 +49,7 @@ ReturnCode mkIngestionTask(
   }
 
   if (dynamic_cast<const HTTPPullIngestionTaskConfig*>(config)) {
-    return HTTPPullIngestionTask::start(storage_backend, config, task);
+    return HTTPPullIngestionTask::start(storage_backend, config_list, config, task);
   }
 
   return ReturnCode::error("ERUNTIME", "invalid ingestion task config");
@@ -108,7 +109,7 @@ IngestionService::IngestionService(
 ReturnCode IngestionService::applyConfig(const ConfigList* config) {
   for (const auto& ic : config->getIngestionTaskConfigs()) {
     std::unique_ptr<IngestionTask> task;
-    auto rc = mkIngestionTask(storage_backend_, ic.get(), &task);
+    auto rc = mkIngestionTask(storage_backend_, config, ic.get(), &task);
     if (!rc.isSuccess()) {
       return rc;
     }
