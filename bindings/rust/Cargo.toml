@@ -1,0 +1,8 @@
+[package]
+name = "metrictools"
+description = "the metrictools rust binding"
+license = "MIT"
+version = "0.1.0"
+authors = ["Paul Asmuth <paul@asmuth.com>"]
+
+[dependencies]

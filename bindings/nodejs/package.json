@@ -1,0 +1,33 @@
+{
+  "name": "metrictools",
+  "version": "0.0.1",
+  "description": "metrictools nodejs binding",
+  "author": "The metrictools Authors <authors@metrictools.org>",
+  "contributors": [
+    {
+      "name": "Laura Schlimmer",
+      "email": "laura@metrictools.io"
+    },
+    {
+      "name": "Paul Asmuth",
+      "email": "paul@asmuth.com"
+    } 
+  ],
+  "main": "lib/metrictools.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/paulasmuth/metrictools"
+  },
+  "bugs": {
+    "url": "https://github.com/paulasmuth/metrictools/issues"
+  },
+  "keywords": [
+    "metrictools"
+  ],
+  "dependencies": {},
+  "devDependencies": {},
+  "preferGlobal": true,
+  "private": false,
+  "subdomain": "metrictools",
+  "license": "MIT"
+}
