@@ -121,20 +121,25 @@ ReturnCode IngestionService::applyConfig(const ConfigList* config) {
 
 void IngestionService::addTask(std::unique_ptr<IngestionTask> task) {
   std::unique_lock<std::mutex> lk(mutex_);
-  auto task_ptr = task.get();
-  tasks_.emplace_back(
-      std::thread(std::bind(&IngestionTask::start, task_ptr)),
-      std::move(task));
+  tasks_.emplace_back(std::move(task));
+}
+
+void IngestionService::start() {
+  for (auto& t : tasks_) {
+    threads_.emplace_back(
+        std::thread(std::bind(&IngestionTask::start, t.get())));
+  }
 }
 
 void IngestionService::shutdown() {
   std::unique_lock<std::mutex> lk(mutex_);
   for (auto& t : tasks_) {
-    t.second->shutdown();
-    t.first.join();
+    t->shutdown();
   }
 
-  tasks_.clear();
+  for (auto& t : threads_) {
+    t.join();
+  }
 }
 
 } // namespace fnordmetric

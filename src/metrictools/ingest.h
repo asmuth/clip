@@ -79,12 +79,14 @@ public:
 
   void addTask(std::unique_ptr<IngestionTask> task);
 
+  void start();
   void shutdown();
 
 protected:
   Backend* storage_backend_;
   std::mutex mutex_;
-  std::vector<std::pair<std::thread, std::unique_ptr<IngestionTask>>> tasks_;
+  std::vector<std::unique_ptr<IngestionTask>> tasks_;
+  std::vector<std::thread> threads_;
 };
 
 } // namespace fnordmetric

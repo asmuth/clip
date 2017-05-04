@@ -18,6 +18,13 @@ ReturnCode CollectCommand::execute(
     const std::vector<std::string>& argv) {
   FlagParser flags;
 
+  flags.defineFlag(
+      "once",
+      FlagParser::T_SWITCH,
+      false,
+      "1",
+      NULL);
+
   auto flags_rc = flags.parseArgv(argv);
   if (!flags_rc.isSuccess()) {
     return flags_rc;
@@ -31,6 +38,16 @@ ReturnCode CollectCommand::execute(
     if (!rc.isSuccess()) {
       return rc;
     }
+  }
+
+  if (flags.isSet("once")) {
+
+  } else {
+    ingestion_service->start();
+
+    for (;;) {} // FIXME wait for shutdown
+
+    ingestion_service->shutdown();
   }
 
   return ReturnCode::success();
