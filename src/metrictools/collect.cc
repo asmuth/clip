@@ -8,12 +8,12 @@
  * <http://www.gnu.org/licenses/>.
  */
 #include <unistd.h>
-#include <metrictools/ingest.h>
+#include <metrictools/collect.h>
+#include <metrictools/collect_http.h>
 #include <metrictools/util/time.h>
 #include <metrictools/util/logging.h>
 #include <metrictools/listen_udp.h>
 #include <metrictools/listen_http.h>
-#include <metrictools/fetch_http.h>
 #include <metrictools/config_list.h>
 #include <metrictools/statsd.h>
 #include <metrictools/storage/ops/insert_op.h>

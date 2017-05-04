@@ -8,7 +8,7 @@
  * <http://www.gnu.org/licenses/>.
  */
 #pragma once
-#include <metrictools/ingest.h>
+#include <metrictools/collect.h>
 
 namespace fnordmetric {
 

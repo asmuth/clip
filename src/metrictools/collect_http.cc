@@ -7,8 +7,8 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#include <metrictools/ingest.h>
-#include <metrictools/fetch_http.h>
+#include <metrictools/collect.h>
+#include <metrictools/collect_http.h>
 #include <metrictools/util/time.h>
 #include <metrictools/util/logging.h>
 #include <metrictools/storage/ops/insert_op.h>

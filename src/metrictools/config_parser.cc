@@ -59,10 +59,10 @@ ReturnCode ConfigParser::parse(ConfigList* config) {
       }
     }
 
-    /* parse the "fetch_http" definition */
-    if (ttype == T_STRING && tbuf == "fetch_http") {
+    /* parse the "collect_http" definition */
+    if (ttype == T_STRING && tbuf == "collect_http") {
       consumeToken();
-      if (parseFetchHTTPDefinition(config)) {
+      if (parseCollectHTTPDefinition(config)) {
         continue;
       } else {
         break;
@@ -412,7 +412,7 @@ bool ConfigParser::parseRewriteStanza(
   return true;
 }
 
-bool ConfigParser::parseFetchHTTPDefinition(ConfigList* config) {
+bool ConfigParser::parseCollectHTTPDefinition(ConfigList* config) {
   std::unique_ptr<HTTPPullIngestionTaskConfig> ingestion_task(
       new HTTPPullIngestionTaskConfig());
 
@@ -435,7 +435,7 @@ bool ConfigParser::parseFetchHTTPDefinition(ConfigList* config) {
     /* parse the "url" stanza */
     if (ttype == T_STRING && tbuf == "url") {
       consumeToken();
-      if (!parseFetchHTTPDefinitionURLStanza(ingestion_task.get())) {
+      if (!parseCollectHTTPDefinitionURLStanza(ingestion_task.get())) {
         return false;
       }
       continue;
@@ -444,7 +444,7 @@ bool ConfigParser::parseFetchHTTPDefinition(ConfigList* config) {
     /* parse the "format" stanza */
     if (ttype == T_STRING && tbuf == "format") {
       consumeToken();
-      if (!parseFetchHTTPDefinitionFormatStanza(ingestion_task.get())) {
+      if (!parseCollectHTTPDefinitionFormatStanza(ingestion_task.get())) {
         return false;
       }
       continue;
@@ -453,7 +453,7 @@ bool ConfigParser::parseFetchHTTPDefinition(ConfigList* config) {
     /* parse the "interval" stanza */
     if (ttype == T_STRING && tbuf == "interval") {
       consumeToken();
-      if (!parseFetchHTTPDefinitionIntervalStanza(ingestion_task.get())) {
+      if (!parseCollectHTTPDefinitionIntervalStanza(ingestion_task.get())) {
         return false;
       }
       continue;
@@ -471,7 +471,7 @@ bool ConfigParser::parseFetchHTTPDefinition(ConfigList* config) {
   return true;
 }
 
-bool ConfigParser::parseFetchHTTPDefinitionURLStanza(
+bool ConfigParser::parseCollectHTTPDefinitionURLStanza(
     HTTPPullIngestionTaskConfig* config) {
   TokenType ttype;
   std::string tbuf;
@@ -485,7 +485,7 @@ bool ConfigParser::parseFetchHTTPDefinitionURLStanza(
   return true;
 }
 
-bool ConfigParser::parseFetchHTTPDefinitionFormatStanza(
+bool ConfigParser::parseCollectHTTPDefinitionFormatStanza(
     HTTPPullIngestionTaskConfig* config) {
   TokenType ttype;
   std::string tbuf;
@@ -506,7 +506,7 @@ bool ConfigParser::parseFetchHTTPDefinitionFormatStanza(
   }
 }
 
-bool ConfigParser::parseFetchHTTPDefinitionIntervalStanza(
+bool ConfigParser::parseCollectHTTPDefinitionIntervalStanza(
     HTTPPullIngestionTaskConfig* config) {
   TokenType ttype;
   std::string tbuf;

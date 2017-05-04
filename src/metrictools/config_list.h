@@ -15,7 +15,7 @@
 #include "metrictools/util/return_code.h"
 #include "metrictools/metric.h"
 #include "metrictools/units.h"
-#include "metrictools/ingest.h"
+#include "metrictools/collect.h"
 
 namespace fnordmetric {
 

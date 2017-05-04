@@ -9,7 +9,7 @@
  * <http://www.gnu.org/licenses/>.
  */
 #pragma once
-#include <metrictools/ingest.h>
+#include <metrictools/collect.h>
 #include <metrictools/webui/webui.h>
 #include <libtransport/http/v1/http_server.h>
 #include <libtransport/http/http_request.h>

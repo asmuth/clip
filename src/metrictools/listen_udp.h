@@ -13,7 +13,7 @@
 #include <atomic>
 #include "metrictools/util/return_code.h"
 #include "metrictools/sample.h"
-#include "metrictools/ingest.h"
+#include "metrictools/collect.h"
 
 namespace fnordmetric {
 

@@ -13,7 +13,7 @@
 #include <string>
 #include "metrictools/config_list.h"
 #include "metrictools/util/return_code.h"
-#include "metrictools/fetch_http.h"
+#include "metrictools/collect_http.h"
 #include "metrictools/listen_udp.h"
 #include "metrictools/listen_http.h"
 
@@ -58,10 +58,10 @@ protected:
 
   bool parseRewriteStanza(IngestionTaskConfig* sensor_config);
 
-  bool parseFetchHTTPDefinition(ConfigList* config);
-  bool parseFetchHTTPDefinitionURLStanza(HTTPPullIngestionTaskConfig* config);
-  bool parseFetchHTTPDefinitionFormatStanza(HTTPPullIngestionTaskConfig* config);
-  bool parseFetchHTTPDefinitionIntervalStanza(HTTPPullIngestionTaskConfig* config);
+  bool parseCollectHTTPDefinition(ConfigList* config);
+  bool parseCollectHTTPDefinitionURLStanza(HTTPPullIngestionTaskConfig* config);
+  bool parseCollectHTTPDefinitionFormatStanza(HTTPPullIngestionTaskConfig* config);
+  bool parseCollectHTTPDefinitionIntervalStanza(HTTPPullIngestionTaskConfig* config);
 
   bool parseListenHTTPDefinition(ConfigList* config);
   bool parseListenHTTPDefinitionBindStanza(HTTPPushIngestionTaskConfig* config);

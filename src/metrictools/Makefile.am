@@ -1,4 +1,4 @@
-bin_PROGRAMS = metric-collectd metric-queryd metrictl
+bin_PROGRAMS = metrictl
 noinst_LIBRARIES = libfnordmetric-common.a
 SUBDIRS = storage/mysql storage/sqlite
 
@@ -16,10 +16,12 @@ libfnordmetric_common_a_SOURCES = \
     cli/commands/list_cmd.cc \
     cli/commands/log_cmd.h \
     cli/commands/log_cmd.cc \
+    collect.h \
+    collect.cc \
+    collect_http.h \
+    collect_http.cc \
     sample.h \
     sample.cc \
-    ingest.h \
-    ingest.cc \
     units.h \
     units.cc \
     statsd.h \
@@ -32,8 +34,6 @@ libfnordmetric_common_a_SOURCES = \
     metric.cc \
     metric_map.h \
     metric_map.cc \
-    fetch_http.h \
-    fetch_http.cc \
     util/daemonize.h \
     util/daemonize.cc \
     util/time_impl.h \
@@ -122,12 +122,6 @@ if ENABLE_SQLITE
 endif
 
 FNORDMETRIC_LIBS += libfnordmetric-common.a
-
-metric_collectd_SOURCES = metric_collectd.cc
-metric_collectd_LDADD = $(FNORDMETRIC_LIBS)
-
-metric_queryd_SOURCES = metric_queryd.cc
-metric_queryd_LDADD = $(FNORDMETRIC_LIBS)
 
 metrictl_SOURCES = metrictl.cc
 metrictl_LDADD = $(FNORDMETRIC_LIBS)
