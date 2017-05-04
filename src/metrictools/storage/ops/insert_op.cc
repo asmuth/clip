@@ -22,23 +22,23 @@ void InsertStorageOp::addMeasurement(Measurement&& measurement) noexcept {
 
 ReturnCode InsertStorageOp::addMeasurement(
     std::shared_ptr<const MetricConfig> metric,
-    const std::map<std::string, std::string>& instance,
+    const std::map<std::string, std::string>& label,
     const std::string& value) noexcept {
   Measurement mm;
   mm.time = WallClock::unixMicros();
   mm.metric = metric;
   mm.value = value;
 
-  for (const auto& k : global_config_->global_instance_path.labels) {
-    auto v = instance.find(k);
-    mm.instance.labels.emplace_back(k);
-    mm.instance.values.emplace_back(v == instance.end() ? "" : v->second);
+  for /const auto& k : global_config_->global_label_config.labels) {
+    auto v = label.find(k);
+    mm.label.labels.emplace_back(k);
+    mm.label.values.emplace_back(v == label.end() ? "" : v->second);
   }
 
-  for (const auto& k : metric->instance_path.labels) {
-    auto v = instance.find(k);
-    mm.instance.labels.emplace_back(k);
-    mm.instance.values.emplace_back(v == instance.end() ? "" : v->second);
+  for (const auto& k : metric->label_config.labels) {
+    auto v = label.find(k);
+    mm.label.labels.emplace_back(k);
+    mm.label.values.emplace_back(v == label.end() ? "" : v->second);
   }
 
   addMeasurement(std::move(mm));
@@ -61,7 +61,7 @@ std::ostream& operator<<(std::ostream& out, const InsertStorageOp& op) {
         "measurement {" << std::endl <<
         "  metric: " << m.metric->metric_id << std::endl <<
         "  time: " << UnixTime(m.time).toString() << " (" << m.time << ")" << std::endl <<
-        "  instance: " << m.instance << std::endl <<
+        "  label: " << m.label << std::endl <<
         "  value: " << m.value << std::endl <<
         "}" << std::endl;
   }

@@ -57,7 +57,7 @@ bool parseMetricReportingScheme(
   return false;
 }
 
-std::ostream& operator<<(std::ostream& out, const MetricInstancePath& path) {
+std::ostream& operator<<(std::ostream& out, const MetricLabels& path) {
   assert(path.labels.size() == path.values.size());
   out << "[";
   for (size_t i = 0; i < path.labels.size(); ++i) {

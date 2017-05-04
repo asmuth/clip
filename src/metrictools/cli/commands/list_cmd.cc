@@ -33,7 +33,7 @@ static ReturnCode listMetric(
 
   std::cout << metric->metric_id << std::endl;
   for (const auto& res : op.getResponses()) {
-    std::cout << "    " << res.instance << " -> " << res.last_value << std::endl;
+    std::cout << "    " << res.label << " -> " << res.last_value << std::endl;
   }
 
   return ReturnCode::success();
@@ -88,7 +88,7 @@ const std::string& ListCommand::getName() const {
 
 const std::string& ListCommand::getDescription() const {
   static const std::string kDescription =
-      "List metric instances and their latest values";
+      "List metric labels and their latest values";
 
   return kDescription;
 }

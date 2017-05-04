@@ -39,12 +39,12 @@ public:
     std::shared_ptr<const MetricConfig> metric;
 
     /**
-     * If true, fetch the latest value for each metric instance
+     * If true, fetch the latest value for each metric label
      */
     bool fetch_last;
 
     /**
-     * If true, fetch historical data for each metric instance
+     * If true, fetch historical data for each metric label
      */
     bool fetch_history;
 
@@ -63,7 +63,7 @@ public:
   };
 
   /**
-   * Each fetch response contains data for exactly one metric instance
+   * Each fetch response contains data for exactly one metric label
    */
   struct FetchResponse {
 
@@ -73,17 +73,17 @@ public:
     const FetchRequest* request;
 
     /**
-     * The instance path of this response
+     * The label path of this response
      */
-    MetricInstancePath instance;
+    MetricLabels label;
 
     /**
-     * If the latest value was requested, the latest value for this instance
+     * If the latest value was requested, the latest value for this label
      */
     std::string last_value;
 
     /**
-     * If historical data was requested, the historical data for this instance
+     * If historical data was requested, the historical data for this label
      */
     Timeseries<std::string> history;
 

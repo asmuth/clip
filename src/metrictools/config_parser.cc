@@ -159,10 +159,10 @@ bool ConfigParser::parseMetricDefinition(ConfigList* config) {
       continue;
     }
 
-    /* parse the "instance" stanza */
-    if (ttype == T_STRING && tbuf == "instance") {
+    /* parse the "label" stanza */
+    if (ttype == T_STRING && tbuf == "label") {
       consumeToken();
-      if (!parseMetricDefinitionInstanceStanza(&metric_config)) {
+      if (!parseMetricDefinitionLabelStanza(&metric_config)) {
         return false;
       }
       continue;
@@ -183,7 +183,7 @@ bool ConfigParser::parseMetricDefinition(ConfigList* config) {
   return true;
 }
 
-bool ConfigParser::parseMetricDefinitionInstanceStanza(
+bool ConfigParser::parseMetricDefinitionLabelStanza(
     MetricConfig* metric_config) {
   size_t arg_count = 0;
 
@@ -204,12 +204,12 @@ bool ConfigParser::parseMetricDefinitionInstanceStanza(
       return false;
     }
 
-    metric_config->instance_path.labels.emplace_back(column_name);
+    metric_config->label_config.labels.emplace_back(column_name);
     ++arg_count;
   }
 
   if (arg_count == 0) {
-    setError("'instance' requires at least one argument");
+    setError("'label' requires at least one argument");
     return false;
   }
 

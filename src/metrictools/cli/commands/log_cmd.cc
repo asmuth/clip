@@ -53,7 +53,7 @@ ReturnCode LogCommand::execute(
   }
 
   for (const auto& res : op.getResponses()) {
-    std::cout << metric->metric_id << " :: " << res.instance << std::endl;
+    std::cout << metric->metric_id << " :: " << res.label << std::endl;
     assert(res.history.timestamps.size() == res.history.values.size());
     for (size_t i = 0; i < res.history.timestamps.size(); ++i) {
       std::cout
@@ -75,7 +75,7 @@ const std::string& LogCommand::getName() const {
 
 const std::string& LogCommand::getDescription() const {
   static const std::string kDescription =
-      "Log the historical values for one or more metric instances";
+      "Log the historical values for one or more metric labels";
 
   return kDescription;
 }

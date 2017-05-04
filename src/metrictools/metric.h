@@ -40,11 +40,11 @@ struct MetricKind {
   MetricReportingScheme scheme;
 };
 
-struct MetricInstancePathConfig {
+struct MetricLabelConfig {
   std::vector<std::string> labels;
 };
 
-struct MetricInstancePath {
+struct MetricLabels {
   std::vector<std::string> labels;
   std::vector<std::string> values;
 };
@@ -53,7 +53,7 @@ struct MetricConfig {
   MetricConfig();
   std::string metric_id;
   MetricKind kind;
-  MetricInstancePathConfig instance_path;
+  MetricLabelConfig label_config;
   std::string unit_id;
 };
 
@@ -63,7 +63,7 @@ bool parseMetricDataType(const std::string& s, MetricDataType* t);
 std::string getMetricReportingSchemeName(MetricReportingScheme t);
 bool parseMetricReportingScheme(const std::string& s, MetricReportingScheme* t);
 
-std::ostream& operator<<(std::ostream& out, const MetricInstancePath& path);
+std::ostream& operator<<(std::ostream& out, const MetricLabels& path);
 
 } // namespace fnordmetric
 

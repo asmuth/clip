@@ -29,7 +29,7 @@ public:
    * Create a new insert operation
    *
    * @param global_config A snapshot of the global config. The snapshot must
-   * be consitent with the instance_path_global values in all measurements in
+   * be consitent with the label_config_global values in all measurements in
    * the operation.
    */
   InsertStorageOp(std::shared_ptr<const GlobalConfig> global_config) noexcept;
@@ -49,17 +49,17 @@ public:
      * A snapshot of the metric config for the metric into which the measurement
      * should be inserted. The snapshot of the config should be created at the
      * time of capture and must be consistent with the values in
-     * instance_path_metric.
+     * label_config_metric.
      */
     std::shared_ptr<const MetricConfig> metric;
 
     /**
-     * The metric instance path. The vector must have a length equal to the
-     * number of elements in the global instance path config plus the number of
-     * elements in the metric-specific instance path config. Each position in
+     * The metric label path. The vector must have a length equal to the
+     * number of elements in the global label path config plus the number of
+     * elements in the metric-specific label path config. Each position in
      * the vector corresponds to the respective position in the path definition.
      */
-    MetricInstancePath instance;
+    MetricLabels label;
 
     /**
      * The value to insert encoded as a human-readable string. For numeric
@@ -77,19 +77,19 @@ public:
   void addMeasurement(Measurement&& measurement) noexcept;
 
   /**
-   * Add a measurement but supply the instance path as a dictionary of key=value
+   * Add a measurement but supply the label path as a dictionary of key=value
    * pairs. The method will construct a measurement struct (which needs the
-   * instance path as a dense vector of strings in the correct order) and then
+   * label path as a dense vector of strings in the correct order) and then
    * add it to the operation.
    *
    * Currently, this method will silently ignore keys that are not required to
-   * construct the instance path. It will also default all missing keys with
+   * construct the label path. It will also default all missing keys with
    * an empty string. However, this behaviour might change so the return code
    * should be checked for future-proofness.
    **/
   ReturnCode addMeasurement(
       std::shared_ptr<const MetricConfig> metric,
-      const std::map<std::string, std::string>& instance_path,
+      const std::map<std::string, std::string>& label_config,
       const std::string& value) noexcept;
 
   /**

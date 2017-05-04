@@ -126,21 +126,21 @@ ReturnCode SQLiteBackend::createTables(
       break;
   }
 
-  std::vector<std::string> instance_col_names;
-  std::vector<std::string> instance_cols;
-  for (const auto& l : global_config->global_instance_path.labels) {
-    instance_col_names.emplace_back(escapeString(l));
-    instance_cols.emplace_back(StringUtil::format("$0 string", escapeString(l)));
+  std::vector<std::string> label_col_names;
+  std::vector<std::string> label_cols;
+  for (const auto& l : global_config->global_label_config.labels) {
+    label_col_names.emplace_back(escapeString(l));
+    label_cols.emplace_back(StringUtil::format("$0 string", escapeString(l)));
   }
 
-  for (const auto& l : metric_config->instance_path.labels) {
-    instance_col_names.emplace_back(escapeString(l));
-    instance_cols.emplace_back(StringUtil::format("$0 string", escapeString(l)));
+  for (const auto& l : metric_config->label_config.labels) {
+    label_col_names.emplace_back(escapeString(l));
+    label_cols.emplace_back(StringUtil::format("$0 string", escapeString(l)));
   }
 
   {
     std::vector<std::string> cols;
-    cols.insert(cols.end(), instance_cols.begin(), instance_cols.end());
+    cols.insert(cols.end(), label_cols.begin(), label_cols.end());
     cols.emplace_back(value_col);
 
     auto qry = StringUtil::format(
@@ -154,12 +154,12 @@ ReturnCode SQLiteBackend::createTables(
     }
   }
 
-  if (!instance_col_names.empty()) {
+  if (!label_col_names.empty()) {
     auto qry = StringUtil::format(
         "CREATE UNIQUE INDEX IF NOT EXISTS $0 ON $1 ($2);",
         escapeString(metric_config->metric_id + ":last_index"),
         escapeString(metric_config->metric_id + ":last"),
-        StringUtil::join(instance_col_names, ", "));
+        StringUtil::join(label_col_names, ", "));
 
     auto rc = executeQuery(qry);
     if (!rc.isSuccess()) {
@@ -170,7 +170,7 @@ ReturnCode SQLiteBackend::createTables(
   {
     std::vector<std::string> cols;
     cols.emplace_back("time bigint");
-    cols.insert(cols.end(), instance_cols.begin(), instance_cols.end());
+    cols.insert(cols.end(), label_cols.begin(), label_cols.end());
     cols.emplace_back(value_col);
 
     auto qry = StringUtil::format(
@@ -221,10 +221,10 @@ ReturnCode SQLiteBackend::insertMeasurement(
     std::vector<std::string> col_names;
     std::vector<std::string> col_values;
 
-    assert(m.instance.labels.size() == m.instance.values.size());
-    for (size_t i = 0; i < m.instance.labels.size(); ++i) {
-      col_names.emplace_back(escapeString(m.instance.labels[i]));
-      col_values.emplace_back(escapeString(m.instance.values[i]));
+    assert(m.label.labels.size() == m.label.values.size());
+    for (size_t i = 0; i < m.label.labels.size(); ++i) {
+      col_names.emplace_back(escapeString(m.label.labels[i]));
+      col_values.emplace_back(escapeString(m.label.values[i]));
     }
 
     col_names.emplace_back("value");
@@ -236,7 +236,7 @@ ReturnCode SQLiteBackend::insertMeasurement(
         StringUtil::join(col_names, ", "),
         StringUtil::join(col_values, ", "));
 
-    if (m.instance.labels.empty()) {
+    if (m.label.labels.empty()) {
       qry = StringUtil::format(
           "DELETE FROM $0; $1",
           escapeString(metric_config->metric_id + ":last"),
@@ -256,10 +256,10 @@ ReturnCode SQLiteBackend::insertMeasurement(
     col_names.emplace_back("time");
     col_values.emplace_back(std::to_string(m.time));
 
-    assert(m.instance.labels.size() == m.instance.values.size());
-    for (size_t i = 0; i < m.instance.labels.size(); ++i) {
-      col_names.emplace_back(escapeString(m.instance.labels[i]));
-      col_values.emplace_back(escapeString(m.instance.values[i]));
+    assert(m.label.labels.size() == m.label.values.size());
+    for (size_t i = 0; i < m.label.labels.size(); ++i) {
+      col_names.emplace_back(escapeString(m.label.labels[i]));
+      col_values.emplace_back(escapeString(m.label.values[i]));
     }
 
     col_names.emplace_back("value");
@@ -292,20 +292,20 @@ ReturnCode SQLiteBackend::fetchData(
     const FetchStorageOp::FetchRequest* request) {
   auto global_config = op->getGlobalConfig();
 
-  std::vector<std::string> instance_cols;
-  for (const auto& l : global_config->global_instance_path.labels) {
-    instance_cols.emplace_back(escapeString(l));
+  std::vector<std::string> label_cols;
+  for (const auto& l : global_config->global_label_config.labels) {
+    label_cols.emplace_back(escapeString(l));
   }
 
-  for (const auto& l : request->metric->instance_path.labels) {
-    instance_cols.emplace_back(escapeString(l));
+  for (const auto& l : request->metric->label_config.labels) {
+    label_cols.emplace_back(escapeString(l));
   }
 
   std::map<std::string, FetchStorageOp::FetchResponse> resp_map;
 
   {
     std::vector<std::string> cols;
-    cols.insert(cols.end(), instance_cols.begin(), instance_cols.end());
+    cols.insert(cols.end(), label_cols.begin(), label_cols.end());
     cols.emplace_back("value");
 
     auto qry = StringUtil::format(
@@ -326,13 +326,13 @@ ReturnCode SQLiteBackend::fetchData(
 
       FetchStorageOp::FetchResponse resp;
       resp.request = request;
-      resp.instance.labels = instance_cols;
+      resp.label.labels = label_cols;
       resp.last_value = r[r.size() - 1];
-      for (size_t i = 0; i < instance_cols.size(); ++i) {
-        resp.instance.values.emplace_back(r[i]);
+      for (size_t i = 0; i < label_cols.size(); ++i) {
+        resp.label.values.emplace_back(r[i]);
       }
 
-      auto resp_key = StringUtil::join(resp.instance.values, "\x1e");
+      auto resp_key = StringUtil::join(resp.label.values, "\x1e");
       resp_map.emplace(resp_key, std::move(resp));
     }
   }
@@ -341,7 +341,7 @@ ReturnCode SQLiteBackend::fetchData(
     std::vector<std::string> cols;
     cols.emplace_back("time");
     cols.emplace_back("value");
-    cols.insert(cols.end(), instance_cols.begin(), instance_cols.end());
+    cols.insert(cols.end(), label_cols.begin(), label_cols.end());
 
     auto qry = StringUtil::format(
         "SELECT $0 FROM $1;",
@@ -359,12 +359,12 @@ ReturnCode SQLiteBackend::fetchData(
         return ReturnCode::error("ERUNTIME", "sqlite error: invalid result");
       }
 
-      std::vector<std::string> instance;
-      for (size_t i = 0; i < instance_cols.size(); ++i) {
-        instance.emplace_back(r[i + (cols.size() - instance_cols.size())]);
+      std::vector<std::string> label;
+      for (size_t i = 0; i < label_cols.size(); ++i) {
+        label.emplace_back(r[i + (cols.size() - label_cols.size())]);
       }
 
-      auto resp_iter = resp_map.find(StringUtil::join(instance, "\x1e"));
+      auto resp_iter = resp_map.find(StringUtil::join(label, "\x1e"));
       if (resp_iter == resp_map.end()) {
         continue;
       }

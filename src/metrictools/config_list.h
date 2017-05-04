@@ -26,12 +26,12 @@ namespace fnordmetric {
 struct GlobalConfig {
 
   /**
-   * The global metric instance path definition. The global metric instance
-   * path can be used to prepened elements to the instance paths of each metric.
+   * The global metric label path definition. The global metric label
+   * path can be used to prepened elements to the label paths of each metric.
    * A good example use case would be prepending `datacenter`, `rack` and
-   * `hostname` elements to the instance paths of all metrics
+   * `hostname` elements to the label paths of all metrics
    */
-  MetricInstancePathConfig global_instance_path;
+  MetricLabelConfig global_label_config;
 
 };
 
