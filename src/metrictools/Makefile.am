@@ -20,6 +20,8 @@ libfnordmetric_common_a_SOURCES = \
     collect.cc \
     collect_http.h \
     collect_http.cc \
+    collect_proc.h \
+    collect_proc.cc \
     measure.h \
     measure.cc \
     units.h \

@@ -10,6 +10,7 @@
 #include <unistd.h>
 #include <metrictools/collect.h>
 #include <metrictools/collect_http.h>
+#include <metrictools/collect_proc.h>
 #include <metrictools/util/time.h>
 #include <metrictools/util/logging.h>
 #include <metrictools/listen_udp.h>
@@ -35,6 +36,10 @@ ReturnCode mkIngestionTask(
 
   if (dynamic_cast<const HTTPPullIngestionTaskConfig*>(config)) {
     return HTTPPullIngestionTask::start(storage_backend, config_list, config, task);
+  }
+
+  if (dynamic_cast<const CollectProcTaskConfig*>(config)) {
+    return CollectProcTask::start(storage_backend, config_list, config, task);
   }
 
   return ReturnCode::error("ERUNTIME", "invalid ingestion task config");

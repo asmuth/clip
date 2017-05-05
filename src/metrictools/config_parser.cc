@@ -69,6 +69,16 @@ ReturnCode ConfigParser::parse(ConfigList* config) {
       }
     }
 
+    /* parse the "collect_proc" definition */
+    if (ttype == T_STRING && tbuf == "collect_proc") {
+      consumeToken();
+      if (parseCollectProcDefinition(config)) {
+        continue;
+      } else {
+        break;
+      }
+    }
+
     /* parse the "listen_udp" definition */
     if (ttype == T_STRING && tbuf == "listen_udp") {
       consumeToken();
@@ -411,6 +421,122 @@ bool ConfigParser::parseRewriteStanza(
 
   return true;
 }
+
+bool ConfigParser::parseCollectProcDefinition(ConfigList* config) {
+  std::unique_ptr<CollectProcTaskConfig> ingestion_task(
+      new CollectProcTaskConfig());
+
+  if (!expectAndConsumeToken(T_LCBRACE)) {
+    return false;
+  }
+
+  TokenType ttype;
+  std::string tbuf;
+  while (getToken(&ttype, &tbuf)) {
+    if (ttype == T_RCBRACE) {
+      break;
+    }
+
+    if (ttype == T_ENDLINE) {
+      consumeToken();
+      continue;
+    }
+
+    /* parse the "url" stanza */
+    if (ttype == T_STRING && tbuf == "cmd") {
+      consumeToken();
+      if (!parseCollectProcDefinitionCommandStanza(ingestion_task.get())) {
+        return false;
+      }
+      continue;
+    }
+
+    /* parse the "format" stanza */
+    if (ttype == T_STRING && tbuf == "format") {
+      consumeToken();
+      if (!parseCollectProcDefinitionFormatStanza(ingestion_task.get())) {
+        return false;
+      }
+      continue;
+    }
+
+    /* parse the "interval" stanza */
+    if (ttype == T_STRING && tbuf == "interval") {
+      consumeToken();
+      if (!parseCollectProcDefinitionIntervalStanza(ingestion_task.get())) {
+        return false;
+      }
+      continue;
+    }
+
+    setError(StringUtil::format("unexpected token: $0", printToken(ttype, tbuf)));
+    return false;
+  }
+
+  if (!expectAndConsumeToken(T_RCBRACE)) {
+    return false;
+  }
+
+  config->addIngestionTaskConfig(std::move(ingestion_task));
+  return true;
+}
+
+bool ConfigParser::parseCollectProcDefinitionCommandStanza(
+    CollectProcTaskConfig* config) {
+  TokenType ttype;
+  std::string tbuf;
+  if (!getToken(&ttype, &tbuf) || ttype != T_STRING) {
+    setError("cmd requires an argument");
+    return false;
+  }
+
+  config->command = tbuf;
+  consumeToken();
+  return true;
+}
+
+bool ConfigParser::parseCollectProcDefinitionFormatStanza(
+    CollectProcTaskConfig* config) {
+  TokenType ttype;
+  std::string tbuf;
+  if (!getToken(&ttype, &tbuf) || ttype != T_STRING) {
+    setError("format requires an argument");
+    return false;
+  }
+
+  consumeToken();
+
+  MeasurementCoding format;
+  if (parseMeasurementCoding(tbuf, &format)) {
+    config->format = format;
+    return true;
+  } else {
+    setError(std::string("invalid value for format: ") + tbuf);
+    return false;
+  }
+}
+
+bool ConfigParser::parseCollectProcDefinitionIntervalStanza(
+    CollectProcTaskConfig* config) {
+  TokenType ttype;
+  std::string tbuf;
+  if (!getToken(&ttype, &tbuf) || ttype != T_STRING) {
+    setError("interval requires an argument");
+    return false;
+  }
+
+  consumeToken();
+
+  uint64_t interval;
+  if (parseDuration(tbuf, &interval).isSuccess()) {
+    config->interval = interval;
+    return true;
+  } else {
+    setError(std::string("invalid value for interval: ") + tbuf);
+    return false;
+  }
+}
+
 
 bool ConfigParser::parseCollectHTTPDefinition(ConfigList* config) {
   std::unique_ptr<HTTPPullIngestionTaskConfig> ingestion_task(

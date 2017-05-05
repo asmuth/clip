@@ -14,6 +14,7 @@
 #include "metrictools/config_list.h"
 #include "metrictools/util/return_code.h"
 #include "metrictools/collect_http.h"
+#include "metrictools/collect_proc.h"
 #include "metrictools/listen_udp.h"
 #include "metrictools/listen_http.h"
 
@@ -62,6 +63,11 @@ protected:
   bool parseCollectHTTPDefinitionURLStanza(HTTPPullIngestionTaskConfig* config);
   bool parseCollectHTTPDefinitionFormatStanza(HTTPPullIngestionTaskConfig* config);
   bool parseCollectHTTPDefinitionIntervalStanza(HTTPPullIngestionTaskConfig* config);
+
+  bool parseCollectProcDefinition(ConfigList* config);
+  bool parseCollectProcDefinitionCommandStanza(CollectProcTaskConfig* config);
+  bool parseCollectProcDefinitionFormatStanza(CollectProcTaskConfig* config);
+  bool parseCollectProcDefinitionIntervalStanza(CollectProcTaskConfig* config);
 
   bool parseListenHTTPDefinition(ConfigList* config);
   bool parseListenHTTPDefinitionBindStanza(HTTPPushIngestionTaskConfig* config);
