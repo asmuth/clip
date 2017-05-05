@@ -12,32 +12,52 @@
 #include <stdlib.h>
 #include <string>
 #include <map>
+#include <metrictools/metric.h>
 
 namespace fnordmetric {
+class ConfigList;
+class Backend;
 
 using TimestampType = uint64_t;
-using LabelSet = std::map<std::string, std::string>; // FIXME should be a flat map
+using LabelSet = std::map<std::string, std::string>;
+
+enum class SampleFormat {
+  STATSD, JSON
+};
 
 class Sample {
 public:
 
   Sample(
-      const std::string& metric_name,
-      const std::string& value,
+      const MetricIDType& metric_id,
+      const LabelSet& labels,
       TimestampType time,
-      const LabelSet& labels);
+      const std::string& value);
 
-  const std::string& getMetricName() const;
+  const std::string& getMetricID() const;
   const std::string& getValue() const;
   TimestampType getTime() const;
   const LabelSet& getLabels() const;
 
 protected:
-  const std::string metric_name_;
-  const std::string& value_;
-  const TimestampType time_;
+  const MetricIDType metric_id_;
   const LabelSet labels_;
+  const TimestampType time_;
+  const std::string& value_;
 };
+
+std::string getSampleFormatName(SampleFormat t);
+bool parseSampleFormat(const std::string& s, SampleFormat* t);
+
+ReturnCode parseSamples(
+    SampleFormat format,
+    const std::string& input,
+    std::vector<Sample>* samples);
+
+ReturnCode storeSamples(
+    const ConfigList* config,
+    Backend* storage_backend,
+    const std::vector<Sample>& samples);
 
 } // namespace fnordmetric
 

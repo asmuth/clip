@@ -9,21 +9,25 @@
  * <http://www.gnu.org/licenses/>.
  */
 #include <metrictools/sample.h>
+#include <metrictools/statsd.h>
+#include <metrictools/storage/backend.h>
+#include <metrictools/storage/ops/insert_op.h>
+#include <metrictools/util/logging.h>
 
 namespace fnordmetric {
 
 Sample::Sample(
-    const std::string& metric_name,
-    const std::string& value,
+    const std::string& metric_id,
+    const LabelSet& labels,
     TimestampType time,
-    const LabelSet& labels) :
-    metric_name_(metric_name),
-    value_(value),
+    const std::string& value) :
+    metric_id_(metric_id),
+    labels_(labels),
     time_(time),
-    labels_(labels) {}
+    value_(value) {}
 
-const std::string& Sample::getMetricName() const {
-  return metric_name_;
+const std::string& Sample::getMetricID() const {
+  return metric_id_;
 }
 
 const std::string& Sample::getValue() const {
@@ -36,6 +40,62 @@ TimestampType Sample::getTime() const {
 
 const LabelSet& Sample::getLabels() const {
   return labels_;
+}
+
+std::string getSampleFormatName(SampleFormat t) {
+  switch (t) {
+    case SampleFormat::STATSD: return "statsd";
+    case SampleFormat::JSON: return "json";
+  }
+
+  return "???";
+}
+
+bool parseSampleFormat(
+    const std::string& s,
+    SampleFormat* t) {
+  if (s == "statsd") { *t = SampleFormat::STATSD; return true; }
+  if (s == "json") { *t = SampleFormat::JSON; return true; }
+  return false;
+}
+
+ReturnCode parseSamples(
+    SampleFormat format,
+    const std::string& input,
+    std::vector<Sample>* samples) {
+  switch (format) {
+    case SampleFormat::STATSD:
+      return parseStatsdSamples(input.data(), input.size(), samples);
+    default:
+      return ReturnCode::error("ERUNTIME", "invalid format");
+  }
+}
+
+ReturnCode storeSamples(
+    const ConfigList* config,
+    Backend* storage_backend,
+    const std::vector<Sample>& samples) {
+  InsertStorageOp op(config->getGlobalConfig());
+  for (const auto& s : samples) {
+    auto metric = config->getMetricConfig(s.getMetricID());
+    if (!metric) {
+      logWarning(
+          "batch insert failed: metric not found: '$0'",
+          s.getMetricID());
+      continue;
+    }
+
+    auto rc = op.addMeasurement(metric, s.getLabels(), s.getValue());
+    if (!rc.isSuccess()) {
+      logWarning(
+          "batch insert failed: $0; metric_id=$1 value=$2",
+          rc.getMessage(),
+          s.getMetricID(),
+          s.getValue());
+    }
+  }
+
+  return storage_backend->performOperation(&op);
 }
 
 } // namespace fnordmetric

@@ -191,7 +191,7 @@ bool parseStatsdSample(
 ReturnCode parseStatsdSamples(
     const char* data,
     size_t len,
-    std::vector<IngestionSample>* samples) {
+    std::vector<Sample>* samples) {
   std::string metric_id;
   std::string series_id;
   std::string value;
@@ -204,10 +204,12 @@ ReturnCode parseStatsdSamples(
       return ReturnCode::error("EPARSE", "invalid packet");
     }
 
-    IngestionSample smpl;
-    smpl.metric_id = metric_id,
-    smpl.instance = {};
-    smpl.value = value;
+    Sample smpl(
+        metric_id,
+        {},
+        WallClock::unixMicros(),
+        value);
+
     samples->emplace_back(std::move(smpl));
   }
 

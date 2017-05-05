@@ -496,8 +496,8 @@ bool ConfigParser::parseCollectHTTPDefinitionFormatStanza(
 
   consumeToken();
 
-  IngestionSampleFormat format;
-  if (parseIngestionSampleFormat(tbuf, &format)) {
+  SampleFormat format;
+  if (parseSampleFormat(tbuf, &format)) {
     config->format = format;
     return true;
   } else {
@@ -728,8 +728,8 @@ bool ConfigParser::parseListenUDPDefinitionFormatStanza(
 
   consumeToken();
 
-  IngestionSampleFormat format;
-  if (parseIngestionSampleFormat(tbuf, &format)) {
+  SampleFormat format;
+  if (parseSampleFormat(tbuf, &format)) {
     config->format = format;
     return true;
   } else {

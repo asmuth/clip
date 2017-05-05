@@ -21,7 +21,7 @@ struct UDPIngestionTaskConfig : public IngestionTaskConfig {
   UDPIngestionTaskConfig();
   std::string bind;
   uint16_t port;
-  IngestionSampleFormat format;
+  SampleFormat format;
 };
 
 class UDPListener : public IngestionTask {
@@ -34,7 +34,7 @@ public:
 
   UDPListener(
       Backend* storage_backend,
-      IngestionSampleFormat format);
+      SampleFormat format);
 
   ~UDPListener();
 
@@ -45,7 +45,7 @@ public:
 
 protected:
   Backend* storage_backend_;
-  IngestionSampleFormat format_;
+  SampleFormat format_;
   int ssock_;
   std::atomic<bool> running_;
 };

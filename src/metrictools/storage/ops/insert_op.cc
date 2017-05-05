@@ -29,7 +29,7 @@ ReturnCode InsertStorageOp::addMeasurement(
   mm.metric = metric;
   mm.value = value;
 
-  for /const auto& k : global_config_->global_label_config.labels) {
+  for (const auto& k : global_config_->global_label_config.labels) {
     auto v = label.find(k);
     mm.label.labels.emplace_back(k);
     mm.label.values.emplace_back(v == label.end() ? "" : v->second);

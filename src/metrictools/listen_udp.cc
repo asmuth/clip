@@ -28,7 +28,7 @@ namespace fnordmetric {
 UDPIngestionTaskConfig::UDPIngestionTaskConfig() :
     bind("0.0.0.0"),
     port(8125),
-    format(IngestionSampleFormat::STATSD) {}
+    format(SampleFormat::STATSD) {}
 
 ReturnCode UDPListener::start(
     Backend* storage_backend,
@@ -56,7 +56,7 @@ ReturnCode UDPListener::start(
 
 UDPListener::UDPListener(
     Backend* storage_backend,
-    IngestionSampleFormat format) :
+    SampleFormat format) :
     storage_backend_(storage_backend),
     format_(format),
     ssock_(-1) {}

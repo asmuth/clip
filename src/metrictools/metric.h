@@ -9,7 +9,6 @@
  * <http://www.gnu.org/licenses/>.
  */
 #pragma once
-#include <metrictools/sample.h>
 #include <metrictools/util/return_code.h>
 #include <metrictools/util/option.h>
 #include <functional>
