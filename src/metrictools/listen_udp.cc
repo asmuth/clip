@@ -21,14 +21,14 @@
 #include <metrictools/util/time.h>
 #include <metrictools/statsd.h>
 #include <metrictools/listen_udp.h>
-#include <metrictools/sample.h>
+#include <metrictools/measure.h>
 
 namespace fnordmetric {
 
 UDPIngestionTaskConfig::UDPIngestionTaskConfig() :
     bind("0.0.0.0"),
     port(8125),
-    format(SampleFormat::STATSD) {}
+    format(MeasurementCoding::STATSD) {}
 
 ReturnCode UDPListener::start(
     Backend* storage_backend,
@@ -56,7 +56,7 @@ ReturnCode UDPListener::start(
 
 UDPListener::UDPListener(
     Backend* storage_backend,
-    SampleFormat format) :
+    MeasurementCoding format) :
     storage_backend_(storage_backend),
     format_(format),
     ssock_(-1) {}
@@ -115,7 +115,7 @@ void UDPListener::start() {
       continue;
     }
 
-    //auto rc = storage_backend_->insertSamplesBatch(buf, buf_len, &opts);
+    //auto rc = storage_backend_->insertMeasurementsBatch(buf, buf_len, &opts);
     //if (!rc.isSuccess()) {
     //  logWarning("error while inserting samples: $0", rc.getMessage());
     //}

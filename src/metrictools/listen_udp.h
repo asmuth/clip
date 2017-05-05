@@ -12,7 +12,7 @@
 #include <stdlib.h>
 #include <atomic>
 #include "metrictools/util/return_code.h"
-#include "metrictools/sample.h"
+#include "metrictools/measure.h"
 #include "metrictools/collect.h"
 
 namespace fnordmetric {
@@ -21,7 +21,7 @@ struct UDPIngestionTaskConfig : public IngestionTaskConfig {
   UDPIngestionTaskConfig();
   std::string bind;
   uint16_t port;
-  SampleFormat format;
+  MeasurementCoding format;
 };
 
 class UDPListener : public IngestionTask {
@@ -34,7 +34,7 @@ public:
 
   UDPListener(
       Backend* storage_backend,
-      SampleFormat format);
+      MeasurementCoding format);
 
   ~UDPListener();
 
@@ -45,7 +45,7 @@ public:
 
 protected:
   Backend* storage_backend_;
-  SampleFormat format_;
+  MeasurementCoding format_;
   int ssock_;
   std::atomic<bool> running_;
 };

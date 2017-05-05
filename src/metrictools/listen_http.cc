@@ -83,15 +83,15 @@ void HTTPPushIngestionTask::handleRequest(
   }
 
   //Backend::BatchInsertOptions opts;
-  //Opts.format = IngestionSampleFormat::STATSD;
+  //Opts.format = IngestionMeasurementCoding::STATSD;
   //If (request->getHeader("Content-Type") == "application/json") {
-  //  opts.format = IngestionSampleFormat::JSON;
+  //  opts.format = IngestionMeasurementCoding::JSON;
   //}
   //If (request->getHeader("Content-Type") == "text/plain") {
-  //  opts.format = IngestionSampleFormat::STATSD;
+  //  opts.format = IngestionMeasurementCoding::STATSD;
   //}
 
-  //Auto rc = storage_backend_->insertSamplesBatch(
+  //Auto rc = storage_backend_->insertMeasurementsBatch(
   //    request->body().data(),
   //    request->body().size(),
   //    &opts);

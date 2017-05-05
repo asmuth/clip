@@ -496,8 +496,8 @@ bool ConfigParser::parseCollectHTTPDefinitionFormatStanza(
 
   consumeToken();
 
-  SampleFormat format;
-  if (parseSampleFormat(tbuf, &format)) {
+  MeasurementCoding format;
+  if (parseMeasurementCoding(tbuf, &format)) {
     config->format = format;
     return true;
   } else {
@@ -728,8 +728,8 @@ bool ConfigParser::parseListenUDPDefinitionFormatStanza(
 
   consumeToken();
 
-  SampleFormat format;
-  if (parseSampleFormat(tbuf, &format)) {
+  MeasurementCoding format;
+  if (parseMeasurementCoding(tbuf, &format)) {
     config->format = format;
     return true;
   } else {

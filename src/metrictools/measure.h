@@ -21,14 +21,14 @@ class Backend;
 using TimestampType = uint64_t;
 using LabelSet = std::map<std::string, std::string>;
 
-enum class SampleFormat {
+enum class MeasurementCoding {
   STATSD, JSON
 };
 
-class Sample {
+class Measurement {
 public:
 
-  Sample(
+  Measurement(
       const MetricIDType& metric_id,
       const LabelSet& labels,
       TimestampType time,
@@ -46,18 +46,18 @@ protected:
   const std::string& value_;
 };
 
-std::string getSampleFormatName(SampleFormat t);
-bool parseSampleFormat(const std::string& s, SampleFormat* t);
+std::string getMeasurementCodingName(MeasurementCoding t);
+bool parseMeasurementCoding(const std::string& s, MeasurementCoding* t);
 
-ReturnCode parseSamples(
-    SampleFormat format,
+ReturnCode parseMeasurements(
+    MeasurementCoding format,
     const std::string& input,
-    std::vector<Sample>* samples);
+    std::vector<Measurement>* samples);
 
-ReturnCode storeSamples(
+ReturnCode storeMeasurements(
     const ConfigList* config,
     Backend* storage_backend,
-    const std::vector<Sample>& samples);
+    const std::vector<Measurement>& samples);
 
 } // namespace fnordmetric
 

@@ -60,7 +60,7 @@ ReturnCode StatsdEmitter::connect(const std::string& addr) {
   return ReturnCode::success();
 }
 
-void StatsdEmitter::enqueueSample(
+void StatsdEmitter::enqueueMeasurement(
     const std::string& metric,
     const std::string& series_id,
     const std::string& value) {
@@ -75,7 +75,7 @@ void StatsdEmitter::enqueueSample(
   buf_ += "\n";
 }
 
-ReturnCode StatsdEmitter::emitSamples() {
+ReturnCode StatsdEmitter::emitMeasurements() {
   if (fd_ == -1) {
     return ReturnCode::error("EARG", "not connected");
   }
@@ -111,7 +111,7 @@ enum StatsdParseState {
   S_VALUE
 };
 
-bool parseStatsdSample(
+bool parseStatsdMeasurement(
     const char** ucur,
     const char* end,
     std::string* metric_id,
@@ -188,10 +188,10 @@ bool parseStatsdSample(
   return true;
 }
 
-ReturnCode parseStatsdSamples(
+ReturnCode parseStatsdMeasurements(
     const char* data,
     size_t len,
-    std::vector<Sample>* samples) {
+    std::vector<Measurement>* samples) {
   std::string metric_id;
   std::string series_id;
   std::string value;
@@ -200,11 +200,11 @@ ReturnCode parseStatsdSamples(
   char const* end = data + len;
 
   while (cur < end) {
-    if (!parseStatsdSample(&cur, end, &metric_id, &series_id, &value)) {
+    if (!parseStatsdMeasurement(&cur, end, &metric_id, &series_id, &value)) {
       return ReturnCode::error("EPARSE", "invalid packet");
     }
 
-    Sample smpl(
+    Measurement smpl(
         metric_id,
         {},
         WallClock::unixMicros(),

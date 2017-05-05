@@ -15,10 +15,10 @@
 #include <netdb.h>
 #include <netinet/in.h>
 #include "metrictools/util/return_code.h"
-#include "metrictools/sample.h"
+#include "metrictools/measure.h"
 
 namespace fnordmetric {
-struct Sample;
+struct Measurement;
 
 class StatsdEmitter {
 public:
@@ -29,12 +29,12 @@ public:
 
   ReturnCode connect(const std::string& addr);
 
-  void enqueueSample(
+  void enqueueMeasurement(
       const std::string& metric_id,
       const std::string& series_id,
       const std::string& value);
 
-  ReturnCode emitSamples();
+  ReturnCode emitMeasurements();
 
 protected:
   int fd_;
@@ -42,17 +42,17 @@ protected:
   std::string buf_;
 };
 
-bool parseStatsdSample(
+bool parseStatsdMeasurement(
     const char** begin,
     const char* end,
     std::string* metric_id,
     std::string* series_id,
     std::string* value);
 
-ReturnCode parseStatsdSamples(
+ReturnCode parseStatsdMeasurements(
     const char* data,
     size_t len,
-    std::vector<Sample>* samples);
+    std::vector<Measurement>* samples);
 
 } // namespace fnordmetric
 

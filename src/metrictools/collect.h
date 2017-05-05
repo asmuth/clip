@@ -17,7 +17,7 @@
 #include <regex>
 #include <metrictools/util/return_code.h>
 #include <metrictools/metric.h>
-#include <metrictools/sample.h>
+#include <metrictools/measure.h>
 
 namespace fnordmetric {
 class ConfigList;

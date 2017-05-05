@@ -20,8 +20,8 @@ libfnordmetric_common_a_SOURCES = \
     collect.cc \
     collect_http.h \
     collect_http.cc \
-    sample.h \
-    sample.cc \
+    measure.h \
+    measure.cc \
     units.h \
     units.cc \
     statsd.h \

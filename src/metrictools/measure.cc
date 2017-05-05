@@ -8,7 +8,7 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#include <metrictools/sample.h>
+#include <metrictools/measure.h>
 #include <metrictools/statsd.h>
 #include <metrictools/storage/backend.h>
 #include <metrictools/storage/ops/insert_op.h>
@@ -16,7 +16,7 @@
 
 namespace fnordmetric {
 
-Sample::Sample(
+Measurement::Measurement(
     const std::string& metric_id,
     const LabelSet& labels,
     TimestampType time,
@@ -26,55 +26,55 @@ Sample::Sample(
     time_(time),
     value_(value) {}
 
-const std::string& Sample::getMetricID() const {
+const std::string& Measurement::getMetricID() const {
   return metric_id_;
 }
 
-const std::string& Sample::getValue() const {
+const std::string& Measurement::getValue() const {
   return value_;
 }
 
-TimestampType Sample::getTime() const {
+TimestampType Measurement::getTime() const {
   return time_;
 }
 
-const LabelSet& Sample::getLabels() const {
+const LabelSet& Measurement::getLabels() const {
   return labels_;
 }
 
-std::string getSampleFormatName(SampleFormat t) {
+std::string getMeasurementCodingName(MeasurementCoding t) {
   switch (t) {
-    case SampleFormat::STATSD: return "statsd";
-    case SampleFormat::JSON: return "json";
+    case MeasurementCoding::STATSD: return "statsd";
+    case MeasurementCoding::JSON: return "json";
   }
 
   return "???";
 }
 
-bool parseSampleFormat(
+bool parseMeasurementCoding(
     const std::string& s,
-    SampleFormat* t) {
-  if (s == "statsd") { *t = SampleFormat::STATSD; return true; }
-  if (s == "json") { *t = SampleFormat::JSON; return true; }
+    MeasurementCoding* t) {
+  if (s == "statsd") { *t = MeasurementCoding::STATSD; return true; }
+  if (s == "json") { *t = MeasurementCoding::JSON; return true; }
   return false;
 }
 
-ReturnCode parseSamples(
-    SampleFormat format,
+ReturnCode parseMeasurements(
+    MeasurementCoding format,
     const std::string& input,
-    std::vector<Sample>* samples) {
+    std::vector<Measurement>* samples) {
   switch (format) {
-    case SampleFormat::STATSD:
-      return parseStatsdSamples(input.data(), input.size(), samples);
+    case MeasurementCoding::STATSD:
+      return parseStatsdMeasurements(input.data(), input.size(), samples);
     default:
       return ReturnCode::error("ERUNTIME", "invalid format");
   }
 }
 
-ReturnCode storeSamples(
+ReturnCode storeMeasurements(
     const ConfigList* config,
     Backend* storage_backend,
-    const std::vector<Sample>& samples) {
+    const std::vector<Measurement>& samples) {
   InsertStorageOp op(config->getGlobalConfig());
   for (const auto& s : samples) {
     auto metric = config->getMetricConfig(s.getMetricID());

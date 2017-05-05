@@ -21,7 +21,7 @@ namespace fnordmetric {
 
 HTTPPullIngestionTaskConfig::HTTPPullIngestionTaskConfig() :
     interval(10 * kMicrosPerSecond),
-    format(SampleFormat::STATSD) {}
+    format(MeasurementCoding::STATSD) {}
 
 ReturnCode HTTPPullIngestionTask::start(
     Backend* storage_backend,
@@ -53,7 +53,7 @@ HTTPPullIngestionTask::HTTPPullIngestionTask(
     const ConfigList* config,
     uint64_t interval,
     const std::string& url,
-    SampleFormat format) :
+    MeasurementCoding format) :
     PeriodicIngestionTask(interval),
     storage_backend_(storage_backend),
     config_(config),
@@ -82,13 +82,13 @@ ReturnCode HTTPPullIngestionTask::invoke() {
         response.statusCode());
   }
 
-  std::vector<Sample> samples;
-  auto rc = parseSamples(format_, response.body(), &samples);
+  std::vector<Measurement> samples;
+  auto rc = parseMeasurements(format_, response.body(), &samples);
   if (!rc.isSuccess()) {
     return rc;
   }
 
-  return storeSamples(config_, storage_backend_, samples);
+  return storeMeasurements(config_, storage_backend_, samples);
 }
 
 } // namespace fnordmetric
