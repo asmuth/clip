@@ -95,6 +95,10 @@ std::string FileUtil::joinPaths(const std::string& p1, const std::string p2) {
   StringUtil::stripTrailingSlashes(&p1_stripped);
   auto p2_stripped = p2;
   StringUtil::stripTrailingSlashes(&p2_stripped);
+  if (StringUtil::beginsWith(p2_stripped, "./")) {
+    p2_stripped.erase(0, 2);
+  }
+
   return p1_stripped + "/" + p2_stripped;
 }
 

@@ -16,6 +16,7 @@
 #include <metrictools/collect.h>
 #include <metrictools/collect_proc.h>
 #include <metrictools/util/time.h>
+#include <metrictools/util/fileutil.h>
 #include <metrictools/util/logging.h>
 #include <metrictools/storage/ops/insert_op.h>
 #include <metrictools/storage/backend.h>
@@ -25,6 +26,27 @@ namespace fnordmetric {
 CollectProcTaskConfig::CollectProcTaskConfig() :
     interval(10 * kMicrosPerSecond),
     format(MeasurementCoding::STATSD) {}
+
+static ReturnCode findProgram(
+    const CollectProcTaskConfig* config,
+    std::string* cmd_path) {
+  std::vector<std::string> candidates = {
+    FileUtil::joinPaths(config->basepath, config->command)
+  };
+
+  for (const auto& c : candidates) {
+    if (FileUtil::exists(c)) {
+      *cmd_path = c;
+      return ReturnCode::success();
+    }
+  }
+
+  return ReturnCode::errorf(
+      "EIO",
+      "file not found: $0, tried:\n  - $1",
+      config->command,
+      StringUtil::join(candidates, "\n  - "));
+}
 
 ReturnCode CollectProcTask::start(
     Backend* storage_backend,
@@ -40,12 +62,20 @@ ReturnCode CollectProcTask::start(
     return ReturnCode::error("ERUNTIME", "missing command");
   }
 
+  std::string cmd_path;
+  {
+    auto rc = findProgram(c, &cmd_path);
+    if (!rc.isSuccess()) {
+      return rc;
+    }
+  }
+
   task->reset(
       new CollectProcTask(
           storage_backend,
           config,
           c->interval,
-          c->command,
+          cmd_path,
           c->format));
 
   return ReturnCode::success();
