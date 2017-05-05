@@ -13,6 +13,7 @@
 #include <metrictools/storage/backend.h>
 #include <metrictools/storage/ops/insert_op.h>
 #include <metrictools/util/logging.h>
+#include <metrictools/util/time.h>
 
 namespace fnordmetric {
 
@@ -96,6 +97,33 @@ ReturnCode storeMeasurements(
   }
 
   return storage_backend->performOperation(&op);
+}
+
+std::ostream& operator<<(std::ostream& out, const Measurement& m) {
+  out <<
+      "measurement {" << std::endl <<
+      "  metric: " << m.getMetricID() << std::endl <<
+      "  time: " << UnixTime(m.getTime()).toString() << " (" << m.getTime() << ")" << std::endl <<
+      "  labels: " << m.getLabels() << std::endl <<
+      "  value: " << m.getValue() << std::endl <<
+      "}" << std::endl;
+
+  return out;
+}
+
+std::ostream& operator<<(std::ostream& out, const LabelSet& labels) {
+  out << "[";
+  size_t i = 0;
+  for (const auto& l : labels) {
+    if (i++ > 0) {
+      out << ", ";
+    }
+
+    out << "<" << l.first << ": '" << l.second << "'>";
+  }
+
+  out << "]";
+  return out;
 }
 
 } // namespace fnordmetric

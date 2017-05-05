@@ -43,7 +43,7 @@ protected:
   const MetricIDType metric_id_;
   const LabelSet labels_;
   const TimestampType time_;
-  const std::string& value_;
+  const std::string value_;
 };
 
 std::string getMeasurementCodingName(MeasurementCoding t);
@@ -58,6 +58,10 @@ ReturnCode storeMeasurements(
     const ConfigList* config,
     Backend* storage_backend,
     const std::vector<Measurement>& samples);
+
+std::ostream& operator<<(std::ostream& out, const Measurement& m);
+
+std::ostream& operator<<(std::ostream& out, const LabelSet& labels);
 
 } // namespace fnordmetric
 
