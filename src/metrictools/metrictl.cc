@@ -155,10 +155,7 @@ int main(int argc, const char** argv) {
 
   /* load config */
   ConfigList config;
-  auto config_file = FileUtil::read(flags.getString("config"));
-  ConfigParser config_parser(
-      (const char*) config_file.data(),
-      config_file.size());
+  auto config_parser = ConfigParser::openFile(flags.getString("config"));
 
   {
     auto rc = config_parser.parse(&config);

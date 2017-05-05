@@ -33,9 +33,11 @@ public:
     T_RCBRACE
   };
 
+  static ConfigParser openFile(const std::string& path);
+
   ConfigParser(
-      const char* input,
-      size_t input_len);
+      const std::string& input,
+      const std::string& basepath);
 
   ReturnCode parse(ConfigList* config);
 
@@ -99,9 +101,11 @@ protected:
 
   void setError(const std::string& error);
 
+  std::string input_str_;
   const char* input_;
   const char* input_cur_;
   const char* input_end_;
+  std::string basepath_;
   bool has_token_;
   TokenType token_type_;
   std::string token_buf_;

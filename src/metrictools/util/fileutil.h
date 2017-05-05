@@ -46,6 +46,16 @@ public:
   static std::string joinPaths(const std::string& p1, const std::string p2);
 
   /**
+   * Get the basedir
+   */
+  static std::string basedir(const std::string& p);
+
+  /**
+   * Get the realpath
+   */
+  static std::string realpath(const std::string& p);
+
+  /**
    * List files in a directory
    */
   static void ls(

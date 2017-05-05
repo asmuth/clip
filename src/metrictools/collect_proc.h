@@ -17,6 +17,7 @@ struct PipeRef;
 struct CollectProcTaskConfig : public IngestionTaskConfig {
   CollectProcTaskConfig();
   std::string command;
+  std::string basepath;
   uint64_t interval;
   MeasurementCoding format;
 };

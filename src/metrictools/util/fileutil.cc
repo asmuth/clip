@@ -8,6 +8,7 @@
  * <http://www.gnu.org/licenses/>.
  */
 #include <dirent.h>
+#include <limits.h>
 #include <metrictools/util/fileutil.h>
 #include <metrictools/util/exception.h>
 #include <metrictools/util/stringutil.h>
@@ -97,6 +98,35 @@ std::string FileUtil::joinPaths(const std::string& p1, const std::string p2) {
   return p1_stripped + "/" + p2_stripped;
 }
 
+std::string FileUtil::basedir(const std::string& p) {
+  auto basedir = p;
+  StringUtil::stripTrailingSlashes(&basedir);
+  while (basedir.size() > 0) {
+    if (basedir.back() == '/') {
+      basedir.pop_back();
+      break;
+    } else {
+      basedir.pop_back();
+    }
+  }
+
+  if (basedir.empty()) {
+    basedir.push_back('/');
+  }
+
+  return basedir;
+}
+
+std::string FileUtil::realpath(const std::string& p) {
+  char buf[PATH_MAX];
+  char* rc = ::realpath(p.c_str(), buf);
+  if (!rc) {
+    throw std::runtime_error("realpath() failed");
+  }
+
+  return std::string(buf);
+}
+
 void FileUtil::ls(
     const std::string& dirname,
     std::function<bool(const std::string&)> callback) {
@@ -169,7 +199,6 @@ Buffer FileUtil::read(
     RAISEF(kIOError, "$0 while reading file '$1'", e.what(), filename);
   }
 }
-
 
 }
 

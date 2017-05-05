@@ -10,15 +10,26 @@
 #include <regex>
 #include "metrictools/config_parser.h"
 #include "metrictools/util/format.h"
+#include "metrictools/util/fileutil.h"
 
 namespace fnordmetric {
 
+ConfigParser ConfigParser::openFile(const std::string& path) {
+  auto basepath = FileUtil::basedir(FileUtil::realpath(path));
+
+  return ConfigParser(
+      FileUtil::read(path).toString(),
+      basepath);
+}
+
 ConfigParser::ConfigParser(
-    const char* input,
-    size_t input_len) :
-    input_(input),
+    const std::string& input,
+    const std::string& basepath) :
+    input_str_(input),
+    input_(input_str_.data()),
     input_cur_(input_),
-    input_end_(input_ + input_len),
+    input_end_(input_ + input_str_.size()),
+    basepath_(basepath),
     has_token_(false),
     has_error_(false) {}
 
@@ -425,6 +436,8 @@ bool ConfigParser::parseRewriteStanza(
 bool ConfigParser::parseCollectProcDefinition(ConfigList* config) {
   std::unique_ptr<CollectProcTaskConfig> ingestion_task(
       new CollectProcTaskConfig());
+
+  ingestion_task->basepath = basepath_;
 
   if (!expectAndConsumeToken(T_LCBRACE)) {
     return false;
