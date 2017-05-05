@@ -34,9 +34,14 @@ static ReturnCode findProgram(
     return ReturnCode::error("EARG", "missing command");
   }
 
-  std::vector<std::string> candidates = {
-    FileUtil::joinPaths(config->basepath, config->command.front())
-  };
+  std::vector<std::string> candidates = {};
+  const auto& cpath = config->command.front();
+  if (StringUtil::beginsWith(cpath, "/")) {
+    candidates.emplace_back(cpath);
+  } else {
+    candidates.emplace_back(FileUtil::joinPaths(config->basepath, cpath));
+    candidates.emplace_back(FileUtil::joinPaths(FileUtil::cwd(), cpath));
+  }
 
   for (const auto& c : candidates) {
     if (FileUtil::exists(c)) {

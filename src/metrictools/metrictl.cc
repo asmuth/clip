@@ -155,10 +155,15 @@ int main(int argc, const char** argv) {
 
   /* load config */
   ConfigList config;
-  auto config_parser = ConfigParser::openFile(flags.getString("config"));
-
   {
-    auto rc = config_parser.parse(&config);
+    std::unique_ptr<ConfigParser> config_parser;
+    auto rc = ConfigParser::openFile(&config_parser, flags.getString("config"));
+    if (!rc.isSuccess()) {
+      std::cerr << "ERROR: " << rc.getMessage() << std::endl;
+      return 1;
+    }
+
+    rc = config_parser->parse(&config);
     if (!rc.isSuccess()) {
       std::cerr << "ERROR: " << rc.getMessage() << std::endl;
       return 1;

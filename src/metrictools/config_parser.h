@@ -33,7 +33,10 @@ public:
     T_RCBRACE
   };
 
-  static ConfigParser openFile(const std::string& path);
+  static ReturnCode openFile(
+      std::unique_ptr<ConfigParser>* parser,
+      const std::string& path,
+      const std::string& basepath = "");
 
   ConfigParser(
       const std::string& input,
@@ -48,6 +51,8 @@ public:
   void consumeToken();
 
 protected:
+
+  bool parseIncludeStanza(ConfigList* config);
 
   bool parseBackendStanza(ConfigList* config);
 

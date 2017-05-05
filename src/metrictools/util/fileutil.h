@@ -56,6 +56,11 @@ public:
   static std::string realpath(const std::string& p);
 
   /**
+   * Get the current working dir
+   */
+  static std::string cwd();
+
+  /**
    * List files in a directory
    */
   static void ls(

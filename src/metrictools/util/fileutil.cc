@@ -131,6 +131,15 @@ std::string FileUtil::realpath(const std::string& p) {
   return std::string(buf);
 }
 
+std::string FileUtil::cwd() {
+  char buf[PATH_MAX];
+  if (!getcwd(buf, sizeof(buf))) {
+    throw std::runtime_error("getcwd() failed");
+  }
+
+  return std::string(buf);
+}
+
 void FileUtil::ls(
     const std::string& dirname,
     std::function<bool(const std::string&)> callback) {

@@ -14,12 +14,43 @@
 
 namespace fnordmetric {
 
-ConfigParser ConfigParser::openFile(const std::string& path) {
-  auto basepath = FileUtil::basedir(FileUtil::realpath(path));
+ReturnCode ConfigParser::openFile(
+    std::unique_ptr<ConfigParser>* parser,
+    const std::string& path,
+    const std::string& basepath /* = "" */) {
+  std::vector<std::string> candidates = {};
+  if (StringUtil::beginsWith(path, "/")) {
+    candidates.emplace_back(path);
+  } else {
+    if (!basepath.empty()) {
+      candidates.emplace_back(FileUtil::joinPaths(basepath, path));
+    }
 
-  return ConfigParser(
-      FileUtil::read(path).toString(),
-      basepath);
+    candidates.emplace_back(FileUtil::joinPaths(FileUtil::cwd(), path));
+  }
+
+  std::string conf_path;
+  for (const auto& c : candidates) {
+    if (FileUtil::exists(c)) {
+      conf_path = c;
+      break;
+    }
+  }
+
+  if (conf_path.empty()) {
+    return ReturnCode::errorf(
+        "EIO",
+        "file not found: $0, tried:\n  - $1",
+        path,
+        StringUtil::join(candidates, "\n  - "));
+  }  
+
+  parser->reset(
+      new ConfigParser(
+          FileUtil::read(conf_path).toString(),
+          FileUtil::basedir(FileUtil::realpath(conf_path))));
+
+  return ReturnCode::success();
 }
 
 ConfigParser::ConfigParser(
@@ -39,6 +70,16 @@ ReturnCode ConfigParser::parse(ConfigList* config) {
 
   /* a file consists of a list of top-level definitions */
   while (getToken(&ttype, &tbuf)) {
+
+    /* parse the "include" stanza */
+    if (ttype == T_STRING && tbuf == "include") {
+      consumeToken();
+      if (parseIncludeStanza(config)) {
+        continue;
+      } else {
+        break;
+      }
+    }
 
     /* parse the "backend" stanza */
     if (ttype == T_STRING && tbuf == "backend") {
@@ -144,6 +185,28 @@ bool ConfigParser::parseBackendStanza(ConfigList* config) {
 
   config->setBackendURL(value);
   return true;
+}
+
+bool ConfigParser::parseIncludeStanza(ConfigList* config) {
+  std::string path;
+  if (!expectAndConsumeString(&path)) {
+    return false;
+  }
+
+  std::unique_ptr<ConfigParser> parser;
+  auto rc = ConfigParser::openFile(&parser, path, basepath_);
+  if (!rc.isSuccess()) {
+    setError(rc.getMessage());
+    return false;
+  }
+
+  rc = parser->parse(config);
+  if (rc.isSuccess()) {
+    return true;
+  } else {
+    setError(rc.getMessage());
+    return false;
+  }
 }
 
 bool ConfigParser::parseMetricDefinition(ConfigList* config) {
