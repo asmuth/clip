@@ -83,6 +83,10 @@ ReturnCode CollectProcTask::invoke() {
     }
   }
 
+  for (const auto& l : StringUtil::split(stdout_buf, "\n")) {
+    logDebug("$0 <STDOUT> $1", cmd_path_, l);
+  }
+
   std::vector<Measurement> samples;
   {
     auto rc = parseMeasurements(format_, stdout_buf, &samples);
@@ -201,12 +205,14 @@ ReturnCode CollectProcTask::waitProcess(
   pollset[1].fd = stderr_pipe->fds[0];
   pollset[1].events = POLLIN;
 
+  auto rc = ReturnCode::success();
   std::string stderr_buf;
   for (bool hup = false; !hup; ) {
     auto poll_rc = ::poll(pollset, pollset_len, -1);
     if (poll_rc == -1) {
       ::kill(*pid, SIGKILL);
-      return ReturnCode::error("EIO", "poll() failed, killing child");
+      rc = ReturnCode::error("EIO", "poll() failed, killing child");
+      goto exit;
     }
 
     for (size_t i = 0; i < pollset_len; ++i) {
@@ -224,7 +230,8 @@ ReturnCode CollectProcTask::waitProcess(
               eof = true;
               continue;
             } else {
-              return ReturnCode::errorf("EIO", "read() error: $0", strerror(errno));
+              rc = ReturnCode::errorf("EIO", "read() error: $0", strerror(errno));
+              goto exit;
             }
           case 0:
             eof = true;
@@ -242,9 +249,29 @@ ReturnCode CollectProcTask::waitProcess(
         }
       }
     }
+
+    for (;;) {
+      auto eol = stderr_buf.find("\n");
+      if (eol == std::string::npos) {
+        break;
+      } else {
+        logStderr(stderr_buf.substr(0, eol));
+        stderr_buf.erase(0, eol + 1);
+      }
+    }
   }
 
-  return ReturnCode::success();
+exit:
+
+  if (!stderr_buf.empty()) {
+    logStderr(stderr_buf);
+  }
+
+  return rc;
+}
+
+void CollectProcTask::logStderr(const std::string& line) {
+  logWarning("$0 <STDERR> $1", cmd_path_, line);
 }
 
 } // namespace fnordmetric

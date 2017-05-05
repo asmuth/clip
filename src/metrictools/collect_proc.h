@@ -54,6 +54,8 @@ protected:
       std::string* stdout_buf,
       pid_t* pid);
 
+  void logStderr(const std::string& line);
+
   Backend* storage_backend_;
   const ConfigList* config_;
   std::string cmd_path_;
