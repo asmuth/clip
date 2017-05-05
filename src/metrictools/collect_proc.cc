@@ -30,8 +30,12 @@ CollectProcTaskConfig::CollectProcTaskConfig() :
 static ReturnCode findProgram(
     const CollectProcTaskConfig* config,
     std::string* cmd_path) {
+  if (config->command.empty()) {
+    return ReturnCode::error("EARG", "missing command");
+  }
+
   std::vector<std::string> candidates = {
-    FileUtil::joinPaths(config->basepath, config->command)
+    FileUtil::joinPaths(config->basepath, config->command.front())
   };
 
   for (const auto& c : candidates) {
@@ -44,7 +48,7 @@ static ReturnCode findProgram(
   return ReturnCode::errorf(
       "EIO",
       "file not found: $0, tried:\n  - $1",
-      config->command,
+      config->command.front(),
       StringUtil::join(candidates, "\n  - "));
 }
 
@@ -55,11 +59,11 @@ ReturnCode CollectProcTask::start(
     std::unique_ptr<IngestionTask>* task) {
   auto c = dynamic_cast<const CollectProcTaskConfig*>(task_config);
   if (!c) {
-    return ReturnCode::error("ERUNTIME", "invalid ingestion task config");
+    return ReturnCode::error("EARG", "invalid ingestion task config");
   }
 
   if (c->command.empty()) {
-    return ReturnCode::error("ERUNTIME", "missing command");
+    return ReturnCode::error("EARG", "missing command");
   }
 
   std::string cmd_path;
@@ -76,6 +80,7 @@ ReturnCode CollectProcTask::start(
           config,
           c->interval,
           cmd_path,
+          c->command,
           c->format));
 
   return ReturnCode::success();
@@ -86,11 +91,13 @@ CollectProcTask::CollectProcTask(
     const ConfigList* config,
     uint64_t interval,
     const std::string& cmd_path,
+    const std::vector<std::string>& cmd_argv,
     MeasurementCoding format) :
     PeriodicIngestionTask(interval),
     storage_backend_(storage_backend),
     config_(config),
     cmd_path_(cmd_path),
+    cmd_argv_(cmd_argv),
     format_(format) {}
 
 struct PipeRef {
@@ -197,8 +204,11 @@ ReturnCode CollectProcTask::spawnProcess(
       return ReturnCode::success();
   }
 
-  char* argv[1];
-  argv[0] = nullptr;
+  std::vector<const char*> argv;
+  for (const auto& a : cmd_argv_) {
+    argv.emplace_back(a.c_str());
+  }
+  argv.emplace_back(nullptr);
 
   char* envp[1];
   envp[0] = nullptr;
@@ -208,7 +218,7 @@ ReturnCode CollectProcTask::spawnProcess(
   ::dup2(stderr_pipe->fds[1], STDERR_FILENO);
   ::close(stderr_pipe->fds[1]);
 
-  if (::execve(cmd_path_.c_str(), argv, envp) == -1) {
+  if (::execve(cmd_path_.c_str(), (char**) argv.data(), envp) == -1) {
     const char* err = strerror(errno);
     auto rc = ::write(STDERR_FILENO, err, strlen(err));
     (void) rc; // disable unused result warning

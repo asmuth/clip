@@ -16,7 +16,7 @@ struct PipeRef;
 
 struct CollectProcTaskConfig : public IngestionTaskConfig {
   CollectProcTaskConfig();
-  std::string command;
+  std::vector<std::string> command;
   std::string basepath;
   uint64_t interval;
   MeasurementCoding format;
@@ -36,6 +36,7 @@ public:
       const ConfigList* config,
       uint64_t interval,
       const std::string& cmd_path,
+      const std::vector<std::string>& cmd_argv,
       MeasurementCoding format);
 
   ReturnCode invoke() override;
@@ -60,6 +61,7 @@ protected:
   Backend* storage_backend_;
   const ConfigList* config_;
   std::string cmd_path_;
+  std::vector<std::string> cmd_argv_;
   MeasurementCoding format_;
 };
 

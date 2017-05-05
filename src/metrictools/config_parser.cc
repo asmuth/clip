@@ -214,7 +214,7 @@ bool ConfigParser::parseMetricDefinitionLabelStanza(
     if (ttype == T_ENDLINE) {
       break;
     }
-    
+
     if (ttype == T_COMMA) {
       consumeToken();
       continue;
@@ -496,15 +496,29 @@ bool ConfigParser::parseCollectProcDefinition(ConfigList* config) {
 
 bool ConfigParser::parseCollectProcDefinitionCommandStanza(
     CollectProcTaskConfig* config) {
+  size_t arg_count = 0;
+
   TokenType ttype;
   std::string tbuf;
-  if (!getToken(&ttype, &tbuf) || ttype != T_STRING) {
-    setError("cmd requires an argument");
+  while (getToken(&ttype, &tbuf)) {
+    if (ttype == T_ENDLINE) {
+      break;
+    }
+
+    std::string part;
+    if (!expectAndConsumeString(&part)) {
+      return false;
+    }
+
+    config->command.emplace_back(part);
+    ++arg_count;
+  }
+
+  if (arg_count == 0) {
+    setError("'cmd' requires at least one argument");
     return false;
   }
 
-  config->command = tbuf;
-  consumeToken();
   return true;
 }
 
