@@ -31,9 +31,14 @@ static ReturnCode listMetric(
     return rc;
   }
 
+  const UnitConfig* unit = nullptr;
+  if (!metric->unit_id.empty()) {
+    unit = ctx->config->getUnitConfig(metric->unit_id);
+  }
+
   std::cout << metric->metric_id << std::endl;
   for (const auto& res : op.getResponses()) {
-    std::cout << "    " << res.label << " -> " << res.last_value << std::endl;
+    std::cout << "    " << res.label << " -> " << formatValue(res.last_value, unit) << std::endl;
   }
 
   return ReturnCode::success();

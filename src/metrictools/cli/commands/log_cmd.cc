@@ -38,6 +38,11 @@ ReturnCode LogCommand::execute(
         metric_id);
   }
 
+  const UnitConfig* unit = nullptr;
+  if (!metric->unit_id.empty()) {
+    unit = ctx->config->getUnitConfig(metric->unit_id);
+  }
+
   FetchStorageOp op(ctx->config->getGlobalConfig());
   op.addRequest(FetchStorageOp::FetchRequest {
     .metric = metric,
@@ -58,7 +63,7 @@ ReturnCode LogCommand::execute(
     for (size_t i = 0; i < res.history.timestamps.size(); ++i) {
       std::cout
           << "  " << UnixTime(res.history.timestamps[i]).toString()
-          << " -> " << res.history.values[i]
+          << " -> " << formatValue(res.history.values[i], unit)
           << std::endl;
     }
 

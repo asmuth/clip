@@ -444,8 +444,7 @@ bool ConfigParser::parseUnitDefinitionNameStanza(
   UnitNameConfig unc;
 
   TokenType name_type;
-  std::string unit_name;
-  if ((!getToken(&name_type, &unit_name) || name_type != T_STRING))  {
+  if ((!getToken(&name_type, &unc.name) || name_type != T_STRING))  {
     setError(kArgError);
     return false;
   }
@@ -481,7 +480,15 @@ bool ConfigParser::parseUnitDefinitionNameStanza(
   }
   consumeToken();
 
-  unit_config->names.emplace(unit_name, std::move(unc));
+  auto pos = std::lower_bound(
+      unit_config->names.begin(),
+      unit_config->names.end(),
+      std::stod(unc.factor),
+      [] (const UnitNameConfig& a, double b) {
+        return std::stod(a.factor) < b;
+      });
+
+  unit_config->names.insert(pos, std::move(unc));
   return true;
 }
 

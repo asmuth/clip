@@ -15,9 +15,7 @@
 namespace fnordmetric {
 
 struct UnitNameConfig {
-  UnitNameConfig();
-  UnitNameConfig(const UnitNameConfig& other);
-  UnitNameConfig(UnitNameConfig&& other);
+  std::string name;
   std::string factor;
   std::string singular;
   std::string plural;
@@ -27,8 +25,13 @@ struct UnitNameConfig {
 struct UnitConfig {
   std::string unit_id;
   std::string description;
-  std::map<std::string, UnitNameConfig> names;
+  std::vector<UnitNameConfig> names;
 };
+
+std::string formatValue(
+    const std::string& value,
+    const UnitConfig* unit = nullptr,
+    double scale = 1.0);
 
 } // namespace fnordmetric
 
