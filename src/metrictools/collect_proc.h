@@ -8,9 +8,11 @@
  * <http://www.gnu.org/licenses/>.
  */
 #pragma once
+#include <unistd.h>
 #include <metrictools/collect.h>
 
 namespace fnordmetric {
+struct PipeRef;
 
 struct CollectProcTaskConfig : public IngestionTaskConfig {
   CollectProcTaskConfig();
@@ -32,15 +34,29 @@ public:
       Backend* storage_backend,
       const ConfigList* config,
       uint64_t interval,
-      const std::string& command,
+      const std::string& cmd_path,
       MeasurementCoding format);
 
   ReturnCode invoke() override;
 
 protected:
+
+  ReturnCode runProcess(std::string* stdout_buf);
+
+  ReturnCode spawnProcess(
+      PipeRef* stdout_pipe,
+      PipeRef* stderr_pipe,
+      pid_t* pid);
+
+  ReturnCode waitProcess(
+      PipeRef* stdout_pipe,
+      PipeRef* stderr_pipe,
+      std::string* stdout_buf,
+      pid_t* pid);
+
   Backend* storage_backend_;
   const ConfigList* config_;
-  std::string command_;
+  std::string cmd_path_;
   MeasurementCoding format_;
 };
 
