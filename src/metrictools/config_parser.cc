@@ -252,6 +252,15 @@ bool ConfigParser::parseMetricDefinition(ConfigList* config) {
       continue;
     }
 
+    /* parse the "unit" stanza */
+    if (ttype == T_STRING && tbuf == "unit") {
+      consumeToken();
+      if (!parseMetricDefinitionUnitStanza(&metric_config)) {
+        return false;
+      }
+      continue;
+    }
+
     setError(
         StringUtil::format(
             "invalid token: $0",
@@ -340,6 +349,20 @@ bool ConfigParser::parseMetricDefinitionKindStanza(
   }
 
   metric_config->kind = MetricKind{data_type, reporting_scheme};
+  return true;
+}
+
+bool ConfigParser::parseMetricDefinitionUnitStanza(
+    MetricConfig* metric_config) {
+  TokenType ttype;
+  std::string tbuf;
+  if (!getToken(&ttype, &tbuf) || ttype != T_STRING) {
+    setError("unit requires an argument");
+    return false;
+  }
+
+  metric_config->unit_id = tbuf;
+  consumeToken();
   return true;
 }
 

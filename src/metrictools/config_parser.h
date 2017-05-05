@@ -59,6 +59,7 @@ protected:
   bool parseMetricDefinition(ConfigList* config);
   bool parseMetricDefinitionKindStanza(MetricConfig* metric_config);
   bool parseMetricDefinitionLabelStanza(MetricConfig* metric_config);
+  bool parseMetricDefinitionUnitStanza(MetricConfig* metric_config);
 
   bool parseUnitDefinition(ConfigList* config);
   bool parseUnitDefinitionDescriptionStanza(UnitConfig* unit_config);
