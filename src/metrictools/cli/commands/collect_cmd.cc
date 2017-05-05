@@ -8,10 +8,23 @@
  * <http://www.gnu.org/licenses/>.
  */
 #include <iostream>
+#include <unistd.h>
+#include <sys/types.h>
+#include <signal.h>
 #include <metrictools/cli/commands/collect_cmd.h>
 #include <metrictools/util/flagparser.h>
 
 namespace fnordmetric {
+
+int sig_pipe[2] = {-1, -1};
+
+static void sig_handler(int) {
+  char shutdown = 'S';
+  int rc = write(sig_pipe[1], &shutdown, sizeof(shutdown));
+  if (rc != 1) {
+    exit(1);
+  }
+}
 
 ReturnCode CollectCommand::execute(
     CLIContext* ctx,
@@ -33,23 +46,43 @@ ReturnCode CollectCommand::execute(
   std::unique_ptr<IngestionService> ingestion_service(
       new IngestionService(ctx->storage_backend));
 
-  {
-    auto rc = ingestion_service->applyConfig(ctx->config);
-    if (!rc.isSuccess()) {
-      return rc;
-    }
+  auto rc = ingestion_service->applyConfig(ctx->config);
+  if (!rc.isSuccess()) {
+    return rc;
   }
 
   if (flags.isSet("once")) {
-
-  } else {
-    ingestion_service->start();
-
-    for (;;) {} // FIXME wait for shutdown
-
-    ingestion_service->shutdown();
+    return ingestion_service->runOnce();
   }
 
+  if (::pipe(sig_pipe) != 0) {
+    return ReturnCode::error("EIO", "pipe() failed");
+  }
+
+  signal(SIGTERM, sig_handler);
+  signal(SIGINT, sig_handler);
+  signal(SIGHUP, sig_handler);
+  signal(SIGPIPE, SIG_IGN);
+
+  ingestion_service->start();
+
+  for (;;) {
+    char sig;
+    auto read_rc = ::read(sig_pipe[0], &sig, 1);
+    if (read_rc != 1) {
+      break;
+    }
+
+    if (sig == 'S') {
+      break;
+    }
+  }
+
+  signal(SIGTERM, SIG_DFL);
+  signal(SIGINT, SIG_DFL);
+  signal(SIGHUP, SIG_DFL);
+
+  ingestion_service->shutdown();
   return ReturnCode::success();
 }
 

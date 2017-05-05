@@ -72,16 +72,20 @@ void PeriodicIngestionTask::start() {
     lk.unlock();
 
     auto rc = ReturnCode::success();
+    auto t0 = MonotonicClock::now();
     try {
       rc = invoke();
     } catch (const std::exception& e) {
       rc = ReturnCode::error("ERUNTIME", e.what());
     }
 
+    auto t1 = MonotonicClock::now();
+
     if (!rc.isSuccess()) {
       logWarning("Ingestion task failed: $0", rc.getMessage());
     }
 
+    logDebug("Task took $0ms", double(t1 - t0) / 1000.0f);
     lk.lock();
   }
 }
@@ -113,6 +117,10 @@ ReturnCode IngestionService::applyConfig(const ConfigList* config) {
 void IngestionService::addTask(std::unique_ptr<IngestionTask> task) {
   std::unique_lock<std::mutex> lk(mutex_);
   tasks_.emplace_back(std::move(task));
+}
+
+ReturnCode IngestionService::runOnce() {
+  return ReturnCode::success();
 }
 
 void IngestionService::start() {

@@ -70,6 +70,8 @@ public:
 
   void addTask(std::unique_ptr<IngestionTask> task);
 
+  ReturnCode runOnce();
+
   void start();
   void shutdown();
 
