@@ -19,53 +19,44 @@ ReturnCode InsertCommand::execute(
     const std::vector<std::string>& argv) {
   FlagParser flags;
 
-  flags.defineFlag(
-      "metric",
-      FlagParser::T_STRING,
-      true,
-      "m",
-      NULL);
-
-  flags.defineFlag(
-      "tree",
-      FlagParser::T_STRING,
-      false,
-      "t",
-      NULL);
-
-  flags.defineFlag(
-      "value",
-      FlagParser::T_STRING,
-      true,
-      "v",
-      NULL);
-
   auto flags_rc = flags.parseArgv(argv);
   if (!flags_rc.isSuccess()) {
     return flags_rc;
   }
 
-  auto metric = ctx->config->getMetricConfig(flags.getString("metric"));
+  const auto& cmd_argv = flags.getArgv();
+  if (cmd_argv.size() < 2) {
+    return ReturnCode::error("EARG", "insert requires two or more arguments");
+  }
+
+  auto metric_id = cmd_argv[0];
+  auto value = cmd_argv[cmd_argv.size() - 1];
+
+  auto metric = ctx->config->getMetricConfig(metric_id);
   if (!metric) {
     return ReturnCode::errorf(
         "EARG",
         "metric not found: '$0'",
-        flags.getString("metric"));
+        metric_id);
   }
 
-  std::map<std::string, std::string> tree;
-  for (const auto& opt : flags.getStrings("tree")) {
-    auto opt_key_end = opt.find("=");
-    if (opt_key_end == String::npos) {
-      return ReturnCode::errorf("EARG", "invalid value for --tree: $0", opt);
+  LabelSet labels;
+  for (size_t i = 1; i < cmd_argv.size() - 1; ++i) {
+    const auto& lbl = cmd_argv[i];
+    auto lbl_key_end = lbl.find("=");
+    if (lbl_key_end == String::npos) {
+      return ReturnCode::errorf(
+          "EARG",
+          "invalid label: $0 -- format is <key>=<value>",
+          lbl);
     }
 
-    tree.emplace(opt.substr(0, opt_key_end), opt.substr(opt_key_end + 1));
+    labels.emplace(lbl.substr(0, lbl_key_end), lbl.substr(lbl_key_end + 1));
   }
 
   InsertStorageOp op(ctx->config->getGlobalConfig());
   {
-    auto rc = op.addMeasurement(metric, tree, flags.getString("value"));
+    auto rc = op.addMeasurement(metric, labels, value);
     if (!rc.isSuccess()) {
       return rc;
     }
@@ -88,10 +79,7 @@ const std::string& InsertCommand::getDescription() const {
 
 void InsertCommand::printHelp() const {
   std::cerr <<
-      "Usage: $ metricctl insert [OPTIONS]\n"
-      "  -m, --metric <name>      The name of the metric into which to insert.\n"
-      "  -t, --tree <k>=<v>       The tree path of the metric.\n"
-      "  -v, --value <val>        The value to insert.\n"
+      "Usage: $ metricctl insert [<options>] <metric> [<label>=<label>]... <value>\n"
       "\n"
       "Examples:\n"
       "  $ metrictl insert -m users_online -v 523562\n"
