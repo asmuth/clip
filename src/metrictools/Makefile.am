@@ -1,4 +1,4 @@
-bin_PROGRAMS = metrictl
+bin_PROGRAMS = metrictl metricd
 noinst_LIBRARIES = libfnordmetric-common.a
 SUBDIRS = storage/mysql storage/sqlite
 
@@ -134,3 +134,7 @@ FNORDMETRIC_LIBS += libfnordmetric-common.a
 
 metrictl_SOURCES = metrictl.cc
 metrictl_LDADD = $(FNORDMETRIC_LIBS)
+
+metricd_SOURCES = metricd.cc
+metricd_LDADD = $(FNORDMETRIC_LIBS)
+

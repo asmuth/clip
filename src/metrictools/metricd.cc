@@ -22,8 +22,8 @@
 #include <metrictools/util/daemonize.h>
 #include <metrictools/config_list.h>
 #include <metrictools/config_parser.h>
-#include <metrictools/aggregation_service.h>
-#include <metrictools/ingest.h>
+#include <metrictools/collect.h>
+#include <metrictools/storage/backend.h>
 
 using namespace fnordmetric;
 
@@ -67,6 +67,13 @@ int main(int argc, const char** argv) {
       FlagParser::T_SWITCH,
       false,
       "V",
+      NULL);
+
+  flags.defineFlag(
+      "verbose",
+      FlagParser::T_SWITCH,
+      false,
+      "v",
       NULL);
 
   flags.defineFlag(
@@ -114,22 +121,27 @@ int main(int argc, const char** argv) {
   }
 
   /* setup logging */
+  bool verbose = flags.isSet("verbose");
   if (!flags.isSet("nolog_to_stderr") && !flags.isSet("daemonize")) {
-    Logger::logToStderr("metric-collectd");
+    Logger::logToStderr("metricd");
   }
 
   if (flags.isSet("log_to_syslog")) {
-    Logger::logToSyslog("metric-collectd");
+    Logger::logToSyslog("metricd");
   }
 
-  Logger::get()->setMinimumLogLevel(
-      strToLogLevel(flags.getString("loglevel")));
+  if (verbose) {
+    Logger::get()->setMinimumLogLevel(strToLogLevel("DEBUG"));
+  } else {
+    Logger::get()->setMinimumLogLevel(
+        strToLogLevel(flags.getString("loglevel")));
+  }
 
   /* print help */
   if (flags.isSet("help") || flags.isSet("version")) {
     std::cerr <<
         StringUtil::format(
-            "metric-collectd $0\n"
+            "metricd $0\n"
             "Part of the FnordMetric project (http://fnordmetric.io)\n"
             "Copyright (c) 2016, Paul Asmuth et al. All rights reserved.\n\n",
             FNORDMETRIC_VERSION);
@@ -141,7 +153,7 @@ int main(int argc, const char** argv) {
 
   if (flags.isSet("help")) {
     std::cerr <<
-        "Usage: $ metric-collectd [OPTIONS]\n"
+        "Usage: $ metricd [OPTIONS]\n"
         "   -c, --config <file>       Load config file\n"
         "   --daemonize               Daemonize the server\n"
         "   --pidfile <file>          Write a PID file\n"
@@ -149,19 +161,40 @@ int main(int argc, const char** argv) {
         "   --[no]log_to_syslog       Do[n't] log to syslog\n"
         "   --[no]log_to_stderr       Do[n't] log to stderr\n"
         "   -?, --help                Display this help text and exit\n"
-        "   -v, --version             Display the version of this binary and exit\n"
+        "   -V, --version             Display the version of this binary and exit\n"
         "\n"
         "Examples:\n"
-        "   $ metric-collectd -c metrics.conf\n"
-        "   $ metric-collectd -c metrics.conf --daemonize --log_to_syslog\n";
+        "   $ metricd -c /etc/metrictools/metricd.conf\n"
+        "   $ metricd -c /etc/metrictools/metricd.conf --daemonize --log_to_syslog\n";
 
     return 0;
   }
 
-  /* check flags */
-  if (!flags.isSet("config")) {
-    std::cerr << "ERROR: --config flag must be set" << std::endl;
-    return 1;
+  /* search for config */
+  std::string config_path;
+  if (flags.isSet("config")) {
+    config_path = flags.getString("config");
+  } else {
+    std::vector<std::string> candidates = {
+      FileUtil::joinPaths(getenv("HOME"), ".metricd.conf"),
+      "/etc/metrictools/metricd.conf",
+      "/etc/metricd.conf"
+    };
+
+    for (const auto& c : candidates) {
+      if (FileUtil::exists(c)) {
+        config_path = c;
+        break;
+      }
+    }
+
+    if (config_path.empty()) {
+      std::cerr << "ERROR: no config file found (--config), tried:" << std::endl;
+      for (const auto& c : candidates) {
+        std::cerr << "ERROR:   - " << c << std::endl;
+      }
+      return 1;
+    }
   }
 
   /* daemonize */
@@ -210,12 +243,11 @@ int main(int argc, const char** argv) {
   /* load config */
   ConfigList config;
   if (rc.isSuccess()) {
-    auto config_file = FileUtil::read(flags.getString("config"));
-    ConfigParser config_parser(
-        (const char*) config_file.data(),
-        config_file.size());
-
-    rc = config_parser.parse(&config);
+    std::unique_ptr<ConfigParser> config_parser;
+    rc = ConfigParser::openFile(&config_parser, config_path);
+    if (rc.isSuccess()) {
+      rc = config_parser->parse(&config);
+    }
   }
 
   /* open backend */
@@ -240,22 +272,14 @@ int main(int argc, const char** argv) {
     signal(SIGPIPE, SIG_IGN);
   }
 
-  /* start aggregation service */
-  //std::unique_ptr<AggregationService> aggr_service;
-  //if (rc.isSuccess()) {
-  //  rc = AggregationService::startService(backend.get(), &aggr_service);
-  //}
-
-  //if (rc.isSuccess()) {
-  //  rc = aggr_service->applyConfig(&config);
-  //}
-
   /* start ingestion service */
-  //std::unique_ptr<IngestionService> ingestion_service;
-  //if (rc.isSuccess()) {
-  //  ingestion_service.reset(new IngestionService(aggr_service.get()));
-  //  rc = ingestion_service->applyConfig(&config);
-  //}
+  std::unique_ptr<IngestionService> ingestion_service;
+  if (rc.isSuccess()) {
+    ingestion_service.reset(new IngestionService(backend.get()));
+    rc = ingestion_service->applyConfig(&config);
+  }
+
+  ingestion_service->start();
 
   /* wait for shutdown or reload */
   while (rc.isSuccess()) {
@@ -290,13 +314,9 @@ int main(int argc, const char** argv) {
     close(sig_pipe[1]);
   }
 
-  //if (ingestion_service) {
-  //  ingestion_service->shutdown();
-  //}
-
-  //if (aggr_service) {
-  //  aggr_service->shutdown();
-  //}
+  if (ingestion_service) {
+    ingestion_service->shutdown();
+  }
 
   if (backend) {
     backend->shutdown();

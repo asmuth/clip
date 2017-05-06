@@ -1,6 +1,4 @@
 metricd
-metric-queryd
-metric-collectd
 metrictl
 metricd_test_*
 statsd_test
