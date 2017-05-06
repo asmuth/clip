@@ -75,5 +75,9 @@ std::shared_ptr<const GlobalConfig> ConfigList::getGlobalConfig() const noexcept
   return global_config_;
 }
 
+std::shared_ptr<GlobalConfig> ConfigList::getGlobalConfig() noexcept {
+  return global_config_;
+}
+
 } // namespace fnordmetric
 

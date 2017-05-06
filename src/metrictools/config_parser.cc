@@ -71,6 +71,16 @@ ReturnCode ConfigParser::parse(ConfigList* config) {
   /* a file consists of a list of top-level definitions */
   while (getToken(&ttype, &tbuf)) {
 
+    /* parse the "backend" stanza */
+    if (ttype == T_STRING && tbuf == "backend") {
+      consumeToken();
+      if (parseBackendStanza(config)) {
+        continue;
+      } else {
+        break;
+      }
+    }
+
     /* parse the "include" stanza */
     if (ttype == T_STRING && tbuf == "include") {
       consumeToken();
@@ -81,10 +91,10 @@ ReturnCode ConfigParser::parse(ConfigList* config) {
       }
     }
 
-    /* parse the "backend" stanza */
-    if (ttype == T_STRING && tbuf == "backend") {
+    /* parse the "labels" stanza */
+    if (ttype == T_STRING && tbuf == "labels") {
       consumeToken();
-      if (parseBackendStanza(config)) {
+      if (parseLabelsStanza(config)) {
         continue;
       } else {
         break;
@@ -209,6 +219,38 @@ bool ConfigParser::parseIncludeStanza(ConfigList* config) {
   }
 }
 
+bool ConfigParser::parseLabelsStanza(ConfigList* config) {
+  size_t arg_count = 0;
+
+  TokenType ttype;
+  std::string tbuf;
+  while (getToken(&ttype, &tbuf)) {
+    if (ttype == T_ENDLINE) {
+      break;
+    }
+
+    if (ttype == T_COMMA) {
+      consumeToken();
+      continue;
+    }
+
+    std::string column_name;
+    if (!expectAndConsumeString(&column_name)) {
+      return false;
+    }
+
+    config->getGlobalConfig()->global_label_config.labels.emplace_back(column_name);
+    ++arg_count;
+  }
+
+  if (arg_count == 0) {
+    setError("'labels' requires at least one argument");
+    return false;
+  }
+
+  return true;
+}
+
 bool ConfigParser::parseMetricDefinition(ConfigList* config) {
   std::string metric_name;
   if (!expectAndConsumeString(&metric_name)) {
@@ -243,10 +285,10 @@ bool ConfigParser::parseMetricDefinition(ConfigList* config) {
       continue;
     }
 
-    /* parse the "label" stanza */
-    if (ttype == T_STRING && tbuf == "label") {
+    /* parse the "labels" stanza */
+    if (ttype == T_STRING && tbuf == "labels") {
       consumeToken();
-      if (!parseMetricDefinitionLabelStanza(&metric_config)) {
+      if (!parseMetricDefinitionLabelsStanza(&metric_config)) {
         return false;
       }
       continue;
@@ -294,7 +336,7 @@ bool ConfigParser::parseMetricDefinition(ConfigList* config) {
   return true;
 }
 
-bool ConfigParser::parseMetricDefinitionLabelStanza(
+bool ConfigParser::parseMetricDefinitionLabelsStanza(
     MetricConfig* metric_config) {
   size_t arg_count = 0;
 
@@ -320,7 +362,7 @@ bool ConfigParser::parseMetricDefinitionLabelStanza(
   }
 
   if (arg_count == 0) {
-    setError("'label' requires at least one argument");
+    setError("'labels' requires at least one argument");
     return false;
   }
 

@@ -55,6 +55,7 @@ public:
   void addIngestionTaskConfig(std::unique_ptr<IngestionTaskConfig> config);
 
   std::shared_ptr<const GlobalConfig> getGlobalConfig() const noexcept;
+  std::shared_ptr<GlobalConfig> getGlobalConfig() noexcept;
 
 protected:
   std::string backend_url_;
