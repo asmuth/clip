@@ -106,7 +106,8 @@ libfnordmetric_common_a_SOURCES = \
     storage/ops/insert_op.h \
     storage/ops/insert_op.cc \
     timeseries.h \
-    timeseries_impl.h
+    timeseries_impl.h \
+    timeseries.cc
 
 FNORDMETRIC_LIBS = \
     libfnordmetric-common.a \

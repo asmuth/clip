@@ -12,6 +12,7 @@
 #include <stdlib.h>
 #include <stdint.h>
 #include <iostream>
+#include <metrictools/util/return_code.h>
 
 namespace fnordmetric {
 
@@ -28,7 +29,20 @@ struct Timeseries {
    */
   std::vector<T> values;
 
+  /**
+   * Return the number of elements
+   */
+  size_t size() const;
+
 };
+
+/**
+ * Convert a timeseries from one value type to another
+ */
+template <typename T1, typename T2>
+ReturnCode convertTimeseries(
+    const Timeseries<T1>& in,
+    Timeseries<T2>* out);
 
 /**
  * Print a debug dump of the timeseries

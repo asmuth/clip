@@ -8,21 +8,22 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#pragma once
-#include <assert.h>
-#include <iostream>
+#include <metrictools/timeseries.h>
 
 namespace fnordmetric {
 
-template <typename T>
-size_t Timeseries<T>::size() const {
-  assert(values.size() == timestamps.size());
-  return timestamps.size();
-}
+template<>
+ReturnCode convertTimeseries(
+    const Timeseries<std::string>& in,
+    Timeseries<double>* out) try {
+  for (size_t i = 0; i < in.size(); ++i) {
+    out->timestamps.emplace_back(in.timestamps[i]);
+    out->values.emplace_back(std::stod(in.values[i]));
+  }
 
-template <typename T>
-std::ostream& operator<<(std::ostream& out, const Timeseries<T>& op) {
-  return out;
+  return ReturnCode::success();
+} catch (...) {
+  return ReturnCode::error("ERUNTIME", "error while converting timeseries to double");
 }
 
 } // namespace fnordmetric

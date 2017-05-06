@@ -40,7 +40,12 @@ ReturnCode PlotCommand::execute(
     }
   }
 
-  auto plot = plot_builder.getPlot();
+  Plot plot;
+  auto rc = plot_builder.getPlot(&plot);
+  if (!rc.isSuccess()) {
+    return rc;
+  }
+
   return renderPlot(&plot);
 }
 

@@ -16,6 +16,7 @@
 #include "libcplot/pointchart.h"
 #include "libcplot/series.h"
 #include "libcplot/svgtarget.h"
+#include "libcplot/timedomain.h"
 
 namespace cplot = stx::chart;
 

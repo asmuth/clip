@@ -16,10 +16,14 @@
 namespace fnordmetric {
 
 struct PlotSeries {
+  std::string series_name;
   Timeseries<double> data;
 };
 
 struct Plot {
+  uint64_t time_begin;
+  uint64_t time_limit;
+
   std::vector<PlotSeries> series;
 };
 
@@ -32,14 +36,18 @@ public:
 
   ReturnCode addArgument(const std::string& key, const std::string& value);
 
-  ReturnCode addMetric(const std::string& metric_id);
-
-  Plot&& getPlot();
+  ReturnCode getPlot(Plot* plot);
 
 protected:
+
+  ReturnCode addMetric(const std::string& metric_id);
+  ReturnCode flush();
+
   Plot plot_;
   ConfigList* config_;
   Backend* backend_;
+
+  std::string s_metric_;
 };
 
 ReturnCode renderPlot(const Plot* plot);
