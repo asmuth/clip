@@ -13,6 +13,10 @@ documentation:
         url: "/documentation/getting-started"
         file: "getting_started"
       -
+        title: "Data Model"
+        url: "/documentation/data-model"
+        file: "data_model"
+      -
         title: "Installation"
         url: "/documentation/installation"
         file: "installation"
@@ -25,32 +29,55 @@ documentation:
         url: "/documentation/faq"
         file: "faq"
 
-
   -
-    title: "Collecting Data"
+    title: "Configuration"
     pages:
-      -
-        title: "The metric-collectd server"
-        url: "/documentation/metric-collectd"
-        file: "metric_collectd"
-      -
-        title: "Data Model"
-        url: "/documentation/data-model"
-        file: "data_model"
       -
         title: "Configuration File"
         url: "/documentation/configuration-file"
         file: "configuration"
       -
-        title: "Data Types"
-        url: "/documentation/data_types"
-        file: "data_types"
+        title: "Metric Types"
+        url: "/documentation/metric-types"
+        file: "metric_types"
       -
-        title: "Aggregation Functions"
-        url: "/documentation/aggregation-functions"
-        file: "aggregation_functions"
+        title: "Units of Measurement"
+        url: "/documentation/units"
+        file: "units"
+
+  -
+    title: "Commands"
+    pages:
       -
-        title: "Sample Formats"
+        title: "metricd"
+        url: "/documentation/data-model"
+        file: "data_model"
+      -
+        title: "metrictl list"
+        url: "/documentation/metric-types"
+        file: "metric_types"
+      -
+        title: "metrictl log"
+        url: "/documentation/metric-types"
+        file: "metric_types"
+      -
+        title: "metrictl insert"
+        url: "/documentation/metric-types"
+        file: "metric_types"
+      -
+        title: "metrictl collect"
+        url: "/documentation/metric-types"
+        file: "metric_types"
+      -
+        title: "metrictl plot"
+        url: "/documentation/metric-types"
+        file: "metric_types"
+
+  -
+    title: "Collecting Data"
+    pages:
+      -
+        title: "Input Formats"
         url: "/documentation/sample-format"
         file: "sample_format"
       -
@@ -65,10 +92,6 @@ documentation:
   -
     title: "Charts & Visualizations"
     pages:
-      -
-        title: "The metric-queryd server"
-        url: "/documentation/metric-queryd"
-        file: "metric_queryd"
       -
         title: "Building HTML Dashboards"
         url: "/documentation/html-dashboards"
