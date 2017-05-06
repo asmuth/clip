@@ -72,6 +72,8 @@ ReturnCode SQLiteBackend::open(const std::string& path) {
     return ReturnCode::errorf("EIO", "sqlite error: $0", sqlite3_errmsg(db_));
   }
 
+  sqlite3_busy_timeout(db_, 1000);
+
   return ReturnCode::success();
 }
 

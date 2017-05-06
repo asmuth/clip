@@ -38,7 +38,7 @@ std::string formatValue(
     s << " ";
     s << unit_name->symbol;
   } else {
-    s << std::fixed << std::setprecision(1) << val;
+    s << std::fixed << std::setprecision(2) << val;
   }
 
   return s.str();
