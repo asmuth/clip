@@ -37,8 +37,14 @@ ReturnCode HTTPServer::listenAndRun(const std::string& addr, int port) {
     return ReturnCode::error("ERUNTIME", "listen() failed");
   }
 
-  http_server_.run();
+  thread_ = std::thread(
+      std::bind(&libtransport::http::HTTPServer::run, &http_server_));
+
   return ReturnCode::success();
+}
+
+void HTTPServer::shutdown() {
+  thread_.join();
 }
 
 void HTTPServer::handleRequest(

@@ -280,7 +280,7 @@ int main(int argc, const char** argv) {
     signal(SIGPIPE, SIG_IGN);
   }
 
-  /* run http server */
+  /* start http server */
   std::string http_bind;
   uint16_t http_port;
   if (rc.isSuccess()) {
@@ -294,14 +294,14 @@ int main(int argc, const char** argv) {
     }
   }
 
-  /* start http server */
+  std::unique_ptr<HTTPServer> http_server;
   if (rc.isSuccess()) {
-    HTTPServer query_service(backend.get());
+    http_server.reset(new HTTPServer(backend.get()));
     //if (flags.isSet("dev_assets")) {
     //  query_service.setAssetPath(flags.getString("dev_assets"));
     //}
 
-    rc = query_service.listenAndRun(http_bind, http_port);
+    rc = http_server->listenAndRun(http_bind, http_port);
   }
 
   /* start ingestion service */
@@ -344,6 +344,10 @@ int main(int argc, const char** argv) {
 
   if (sig_pipe[1] >= 0) {
     close(sig_pipe[1]);
+  }
+
+  if (http_server) {
+    http_server->shutdown();
   }
 
   if (ingestion_service) {

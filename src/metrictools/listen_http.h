@@ -31,6 +31,7 @@ public:
   HTTPServer(Backend* backend);
 
   ReturnCode listenAndRun(const std::string& addr, int port);
+  void shutdown();
 
   void setAssetPath(const std::string& path);
 
@@ -56,6 +57,7 @@ protected:
   Backend* backend_;
   libtransport::http::HTTPServer http_server_;
   std::string dynamic_asset_path_;
+  std::thread thread_;
 };
 
 struct HTTPPushIngestionTaskConfig : public IngestionTaskConfig {
