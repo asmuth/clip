@@ -55,12 +55,11 @@ protected:
   bool parseBackendStanza(ConfigList* config);
   bool parseIncludeStanza(ConfigList* config);
   bool parseLabelsStanza(ConfigList* config);
-  bool parseLabelSetStanza(ConfigList* config);
+  bool parseLabelSetStanza(MetricLabelOverrideList* overrides);
 
   bool parseMetricDefinition(ConfigList* config);
   bool parseMetricDefinitionKindStanza(MetricConfig* metric_config);
   bool parseMetricDefinitionLabelsStanza(MetricConfig* metric_config);
-  bool parseMetricDefinitionLabelSetStanza(MetricConfig* metric_config);
   bool parseMetricDefinitionUnitStanza(MetricConfig* metric_config);
   bool parseMetricDefinitionRateStanza(MetricConfig* metric_config);
   bool parseMetricDefinitionGranularityStanza(MetricConfig* metric_config);

@@ -90,6 +90,7 @@ static void applyLabelOverrides(
 
 ReturnCode rewriteMeasurements(
     const ConfigList* config,
+    const std::vector<MetricLabelOverride>* extra_label_overrides,
     std::vector<Measurement>* measurements) {
   auto global_cfg = config->getGlobalConfig();
   for (auto& m : *measurements) {
@@ -98,10 +99,17 @@ ReturnCode rewriteMeasurements(
       continue;
     }
 
+    if (extra_label_overrides) {
+      applyLabelOverrides(*extra_label_overrides, &m, true);
+    }
     applyLabelOverrides(metric_cfg->label_overrides, &m, true);
     applyLabelOverrides(global_cfg->global_label_overrides, &m, true);
+
     applyLabelOverrides(global_cfg->global_label_overrides, &m, false);
     applyLabelOverrides(metric_cfg->label_overrides, &m, false);
+    if (extra_label_overrides) {
+      applyLabelOverrides(*extra_label_overrides, &m, false);
+    }
   }
 
   return ReturnCode::success();

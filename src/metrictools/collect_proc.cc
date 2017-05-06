@@ -86,7 +86,8 @@ ReturnCode CollectProcTask::start(
           c->interval,
           cmd_path,
           c->command,
-          c->format));
+          c->format,
+          c->label_overrides));
 
   return ReturnCode::success();
 }
@@ -97,7 +98,8 @@ CollectProcTask::CollectProcTask(
     uint64_t interval,
     const std::string& cmd_path,
     const std::vector<std::string>& cmd_argv,
-    MeasurementCoding format) :
+    MeasurementCoding format,
+    const MetricLabelOverrideList& label_overrides) :
     PeriodicIngestionTask(interval),
     storage_backend_(storage_backend),
     config_(config),
@@ -138,7 +140,7 @@ ReturnCode CollectProcTask::invoke() {
   }
 
   {
-    auto rc = rewriteMeasurements(config_,&samples);
+    auto rc = rewriteMeasurements(config_, &label_overrides_, &samples);
     if (!rc.isSuccess()) {
       return rc;
     }

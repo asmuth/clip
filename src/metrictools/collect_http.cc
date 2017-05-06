@@ -43,7 +43,8 @@ ReturnCode HTTPPullIngestionTask::start(
           config,
           c->interval,
           c->url,
-          c->format));
+          c->format,
+          c->label_overrides));
 
   return ReturnCode::success();
 }
@@ -53,12 +54,14 @@ HTTPPullIngestionTask::HTTPPullIngestionTask(
     const ConfigList* config,
     uint64_t interval,
     const std::string& url,
-    MeasurementCoding format) :
+    MeasurementCoding format,
+    const MetricLabelOverrideList& label_overrides) :
     PeriodicIngestionTask(interval),
     storage_backend_(storage_backend),
     config_(config),
     url_(url),
-    format_(format) {}
+    format_(format),
+    label_overrides_(label_overrides) {}
 
 ReturnCode HTTPPullIngestionTask::invoke() {
   logDebug("Fetching samples via HTTP from $0", url_);
@@ -88,7 +91,7 @@ ReturnCode HTTPPullIngestionTask::invoke() {
     return rc;
   }
 
-  rc = rewriteMeasurements(config_,&samples);
+  rc = rewriteMeasurements(config_, &label_overrides_, &samples);
   if (!rc.isSuccess()) {
     return rc;
   }

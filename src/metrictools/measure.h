@@ -57,6 +57,7 @@ ReturnCode parseMeasurements(
 
 ReturnCode rewriteMeasurements(
     const ConfigList* config,
+    const std::vector<MetricLabelOverride>* extra_label_overrides,
     std::vector<Measurement>* samples);
 
 ReturnCode storeMeasurements(

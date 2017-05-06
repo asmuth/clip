@@ -53,6 +53,8 @@ struct MetricLabelOverride {
   bool is_default;
 };
 
+using MetricLabelOverrideList = std::vector<MetricLabelOverride>;
+
 struct MetricConfig {
   MetricConfig();
   std::string metric_id;

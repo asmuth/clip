@@ -17,6 +17,7 @@ struct HTTPPullIngestionTaskConfig : public IngestionTaskConfig {
   std::string url;
   uint64_t interval;
   MeasurementCoding format;
+  MetricLabelOverrideList label_overrides;
 };
 
 class HTTPPullIngestionTask : public PeriodicIngestionTask {
@@ -33,7 +34,8 @@ public:
       const ConfigList* config,
       uint64_t interval,
       const std::string& url,
-      MeasurementCoding format);
+      MeasurementCoding format,
+      const MetricLabelOverrideList& label_overrides);
 
   ReturnCode invoke() override;
 
@@ -42,6 +44,7 @@ protected:
   const ConfigList* config_;
   std::string url_;
   MeasurementCoding format_;
+  MetricLabelOverrideList label_overrides_;
 };
 
 } // namespace fnordmetric

@@ -20,6 +20,7 @@ struct CollectProcTaskConfig : public IngestionTaskConfig {
   std::string basepath;
   uint64_t interval;
   MeasurementCoding format;
+  MetricLabelOverrideList label_overrides;
 };
 
 class CollectProcTask : public PeriodicIngestionTask {
@@ -37,7 +38,8 @@ public:
       uint64_t interval,
       const std::string& cmd_path,
       const std::vector<std::string>& cmd_argv,
-      MeasurementCoding format);
+      MeasurementCoding format,
+      const MetricLabelOverrideList& label_overrides);
 
   ReturnCode invoke() override;
 
@@ -63,6 +65,7 @@ protected:
   std::string cmd_path_;
   std::vector<std::string> cmd_argv_;
   MeasurementCoding format_;
+  std::vector<MetricLabelOverride> label_overrides_;
 };
 
 } // namespace fnordmetric
