@@ -261,6 +261,24 @@ bool ConfigParser::parseMetricDefinition(ConfigList* config) {
       continue;
     }
 
+    /* parse the "rate" stanza */
+    if (ttype == T_STRING && tbuf == "rate") {
+      consumeToken();
+      if (!parseMetricDefinitionRateStanza(&metric_config)) {
+        return false;
+      }
+      continue;
+    }
+
+    /* parse the "granularity" stanza */
+    if (ttype == T_STRING && tbuf == "granularity") {
+      consumeToken();
+      if (!parseMetricDefinitionGranularityStanza(&metric_config)) {
+        return false;
+      }
+      continue;
+    }
+
     setError(
         StringUtil::format(
             "invalid token: $0",
@@ -364,6 +382,48 @@ bool ConfigParser::parseMetricDefinitionUnitStanza(
   metric_config->unit_id = tbuf;
   consumeToken();
   return true;
+}
+
+bool ConfigParser::parseMetricDefinitionRateStanza(
+    MetricConfig* metric_config) {
+  TokenType ttype;
+  std::string tbuf;
+  if (!getToken(&ttype, &tbuf) || ttype != T_STRING) {
+    setError("rate requires an argument");
+    return false;
+  }
+
+  consumeToken();
+
+  uint64_t rate;
+  if (parseDuration(tbuf, &rate).isSuccess()) {
+    metric_config->rate = rate;
+    return true;
+  } else {
+    setError(std::string("invalid value for rate: ") + tbuf);
+    return false;
+  }
+}
+
+bool ConfigParser::parseMetricDefinitionGranularityStanza(
+    MetricConfig* metric_config) {
+  TokenType ttype;
+  std::string tbuf;
+  if (!getToken(&ttype, &tbuf) || ttype != T_STRING) {
+    setError("granularity requires an argument");
+    return false;
+  }
+
+  consumeToken();
+
+  uint64_t granularity;
+  if (parseDuration(tbuf, &granularity).isSuccess()) {
+    metric_config->granularity = granularity;
+    return true;
+  } else {
+    setError(std::string("invalid value for granularity: ") + tbuf);
+    return false;
+  }
 }
 
 bool ConfigParser::parseUnitDefinition(ConfigList* config) {

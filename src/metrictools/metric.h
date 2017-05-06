@@ -54,6 +54,8 @@ struct MetricConfig {
   MetricKind kind;
   MetricLabelConfig label_config;
   std::string unit_id;
+  uint64_t granularity;
+  uint64_t rate;
 };
 
 std::string getMetricDataTypeName(MetricDataType t);
