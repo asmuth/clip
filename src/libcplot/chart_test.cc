@@ -10,15 +10,15 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-#include "cplot/axisdefinition.h"
-#include "cplot/areachart.h"
-#include "cplot/barchart.h"
-#include "cplot/canvas.h"
-#include "cplot/domain.h"
-#include "cplot/linechart.h"
-#include "cplot/pointchart.h"
-#include "cplot/series.h"
-#include "cplot/svgtarget.h"
+#include "libcplot/axisdefinition.h"
+#include "libcplot/areachart.h"
+#include "libcplot/barchart.h"
+#include "libcplot/canvas.h"
+#include "libcplot/domain.h"
+#include "libcplot/linechart.h"
+#include "libcplot/pointchart.h"
+#include "libcplot/series.h"
+#include "libcplot/svgtarget.h"
 #include "stx/io/fileutil.h"
 #include "stx/test/unittest.h"
 

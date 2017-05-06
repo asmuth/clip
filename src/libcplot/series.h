@@ -14,8 +14,7 @@
 #include <vector>
 #include <unordered_map>
 #include <tuple>
-#include <stx/exception.h>
-#include <stx/stringutil.h>
+#include <metrictools/util/stringutil.h>
 
 namespace stx {
 namespace chart {
@@ -87,7 +86,7 @@ public:
       }
     }
 
-    RAISE(kRuntimeError, "property not set");
+    throw std::runtime_error("property not set");
   }
 
   const std::string& getProperty(kProperty prop, AnyPoint const* point) const {

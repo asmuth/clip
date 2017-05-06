@@ -13,9 +13,9 @@
 #include <stdlib.h>
 #include <vector>
 #include <string>
-#include "cplot/rendertarget.h"
-#include "cplot/styles/style_default.h"
-#include "stx/io/outputstream.h"
+#include "libcplot/rendertarget.h"
+#include "libcplot/styles/style_default.h"
+#include "metrictools/util/outputstream.h"
 
 namespace stx {
 namespace chart {
@@ -25,13 +25,10 @@ public:
 
   /**
    * Create a new SVG target.
-   *
-   * @param output_stream the output stream to write to. does not transfer
-   *                      ownership!
    */
   SVGTarget(
-      OutputStream* output_stream) :
-      output_(output_stream),
+      std::string* output_stream) :
+      output_(StringOutputStream::fromString(output_stream)),
       viewbox_(true),
       indent_(0) {}
 
@@ -242,7 +239,7 @@ public:
 
 protected:
   bool viewbox_;
-  OutputStream* output_;
+  std::unique_ptr<StringOutputStream> output_;
   int indent_;
 };
 

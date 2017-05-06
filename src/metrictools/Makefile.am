@@ -113,6 +113,8 @@ FNORDMETRIC_LIBS = \
     -L$(abs_top_builddir)/deps/libtransport/src/libtransport/http \
     -L$(abs_top_builddir)/deps/libtransport/src/libtransport/json \
     -L$(abs_top_builddir)/deps/libtransport/src/libtransport/uri \
+    -L$(abs_top_builddir)/src/libcplot \
+    -lcplot \
     -ltransport_http \
     -ltransport_json \
     -ltransport_uri

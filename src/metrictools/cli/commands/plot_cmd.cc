@@ -34,10 +34,14 @@ ReturnCode PlotCommand::execute(
 
   PlotBuilder plot_builder(ctx->config, ctx->storage_backend);
   for (const auto& f : flags.getFlagValues()) {
-    plot_builder.addArgument(f.longopt, f.value);
+    auto rc = plot_builder.addArgument(f.longopt, f.value);
+    if (!rc.isSuccess()) {
+      return rc;
+    }
   }
 
-  return ReturnCode::success();
+  auto plot = plot_builder.getPlot();
+  return renderPlot(&plot);
 }
 
 const std::string& PlotCommand::getName() const {

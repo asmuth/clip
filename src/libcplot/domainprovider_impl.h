@@ -9,6 +9,7 @@
  */
 #ifndef _libstx_DOMAINPROVIDER_IMPL_H
 #define _libstx_DOMAINPROVIDER_IMPL_H
+#include <stdexcept>
 
 namespace stx {
 namespace chart {
@@ -18,7 +19,7 @@ T* DomainProvider::getAs() const {
   T* domain = dynamic_cast<T*>(domain_);
 
   if (domain == nullptr) {
-    RAISE(kRuntimeError, "can't convert domain to requested type");
+    throw std::runtime_error("can't convert domain to requested type");
   }
 
   return domain;

@@ -7,10 +7,10 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#include "cplot/domain.h"
-#include "cplot/continuousdomain.h"
-#include "cplot/discretedomain.h"
-#include "cplot/timedomain.h"
+#include "libcplot/domain.h"
+#include "libcplot/continuousdomain.h"
+#include "libcplot/discretedomain.h"
+#include "libcplot/timedomain.h"
 
 using namespace stx;
 namespace stx {
@@ -30,8 +30,8 @@ template <> Domain<double>*
   return new ContinuousDomain<double>();
 }
 
-template <> Domain<stx::UnixTime>*
-    Domain<stx::UnixTime>::mkDomain() {
+template <> Domain<UnixTime>*
+    Domain<UnixTime>::mkDomain() {
   return new TimeDomain();
 }
 

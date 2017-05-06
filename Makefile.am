@@ -23,6 +23,7 @@ export AM_CXXFLAGS = \
 SUBDIRS = \
     . \
     deps/libtransport \
+    src/libcplot \
     src/metrictools \
     test
 

@@ -7,25 +7,25 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#include "stx/UnixTime.h"
-#include "cplot/timedomain.h"
+#include "metrictools/util/time.h"
+#include "libcplot/timedomain.h"
 
 namespace stx {
 namespace chart {
 
 TimeDomain::TimeDomain(
-    stx::UnixTime min_value,
-    stx::UnixTime max_value,
+    UnixTime min_value,
+    UnixTime max_value,
     bool is_logarithmic,
     bool is_inverted) :
-    ContinuousDomain<stx::UnixTime>(
+    ContinuousDomain<UnixTime>(
         min_value,
         max_value,
         is_logarithmic,
         is_inverted) {}
 
-std::string TimeDomain::label(stx::UnixTime value) const {
-  auto range = ContinuousDomain<stx::UnixTime>::getRange();
+std::string TimeDomain::label(UnixTime value) const {
+  auto range = ContinuousDomain<UnixTime>::getRange();
 
   if (range < 60 * 60) {
     return value.toString("%H:%M:%S");

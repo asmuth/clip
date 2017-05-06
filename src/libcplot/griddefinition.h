@@ -9,8 +9,8 @@
  */
 #ifndef _libstx_UI_GRIDDEFINITION_H
 #define _libstx_UI_GRIDDEFINITION_H
-#include "cplot/domain.h"
-#include "cplot/domainprovider.h"
+#include "libcplot/domain.h"
+#include "libcplot/domainprovider.h"
 
 namespace stx {
 namespace chart {

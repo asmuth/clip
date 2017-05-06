@@ -7,23 +7,15 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#include <stdlib.h>
-#include "pointchart.h"
+#include "libcplot/axisdefinition.h"
+#include "libcplot/areachart.h"
+#include "libcplot/barchart.h"
+#include "libcplot/canvas.h"
+#include "libcplot/domain.h"
+#include "libcplot/linechart.h"
+#include "libcplot/pointchart.h"
+#include "libcplot/series.h"
+#include "libcplot/svgtarget.h"
 
-namespace stx {
-namespace chart {
+namespace cplot = stx::chart;
 
-char PointChart::kDefaultPointStyle[] = "circle";
-char PointChart::kDefaultPointSize[] = "3";
-
-PointChart::PointChart(
-    chart::Canvas* canvas) :
-    Drawable(canvas),
-    show_labels_(false) {}
-
-void PointChart::setLabels(bool show_labels) {
-  show_labels_ = show_labels;
-}
-
-}
-}

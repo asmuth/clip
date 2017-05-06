@@ -9,24 +9,24 @@
  */
 #ifndef _libstx_TIMEDOMAIN_H
 #define _libstx_TIMEDOMAIN_H
-#include "stx/UnixTime.h"
-#include "cplot/continuousdomain.h"
+#include "metrictools/util/time.h"
+#include "libcplot/continuousdomain.h"
 
 namespace stx {
 namespace chart {
 
-class TimeDomain : public ContinuousDomain<stx::UnixTime> {
+class TimeDomain : public ContinuousDomain<UnixTime> {
 public:
 
   TimeDomain(
-    stx::UnixTime min_value =
-        std::numeric_limits<stx::UnixTime>::max(),
-    stx::UnixTime max_value =
-        std::numeric_limits<stx::UnixTime>::min(),
+    UnixTime min_value =
+        std::numeric_limits<UnixTime>::max(),
+    UnixTime max_value =
+        std::numeric_limits<UnixTime>::min(),
     bool is_logarithmic = false,
     bool is_inverted = false);
 
-  std::string label(stx::UnixTime value) const;
+  std::string label(UnixTime value) const;
 
 };
 

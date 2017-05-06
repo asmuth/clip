@@ -9,9 +9,8 @@
  */
 #ifndef _libstx_CONTINUOUSDOMAIN_H
 #define _libstx_CONTINUOUSDOMAIN_H
-#include "stx/exception.h"
-#include "stx/stringutil.h"
-#include "cplot/domain.h"
+#include "metrictools/util/stringutil.h"
+#include "libcplot/domain.h"
 
 namespace stx {
 namespace chart {
@@ -49,9 +48,7 @@ public:
 
     if (is_logarithmic_) {
       if (min_value_ < 0) {
-        RAISE(
-            kRuntimeError,
-            "negative value is outside of logarithmic domain");
+        throw std::runtime_error("negative value is outside of logarithmic domain");
       }
 
       double max_log = 0.0f;
@@ -88,9 +85,7 @@ public:
   double valueAt(double index) const {
     if (is_logarithmic_) {
       if (max_value_ < 0) {
-        RAISE(
-            kRuntimeError,
-            "negative value is outside of logarithmic domain");
+        throw std::runtime_error("negative value is outside of logarithmic domain");
       }
 
       double max_log = 0.0f;

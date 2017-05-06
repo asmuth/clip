@@ -9,8 +9,8 @@
  */
 #ifndef _libstx_DISCRETEDOMAIN_H
 #define _libstx_DISCRETEDOMAIN_H
-#include "stx/stringutil.h"
-#include "cplot/domain.h"
+#include "metrictools/util/stringutil.h"
+#include "libcplot/domain.h"
 
 namespace stx {
 namespace chart {
@@ -35,7 +35,7 @@ public:
         value);
 
     if (index < 1) {
-      RAISE(kRuntimeError, "can't scale value");
+      throw std::runtime_error("can't scale value");
     }
 
     double cardinality = (double) categories_.size();
@@ -55,7 +55,7 @@ public:
         value);
 
     if (index < 1) {
-      RAISE(kRuntimeError, "can't scale value");
+      throw std::runtime_error("can't scale value");
     }
 
     auto cardinality = (double) categories_.size();

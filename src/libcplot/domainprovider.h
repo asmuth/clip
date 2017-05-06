@@ -12,8 +12,7 @@
 #include <algorithm>
 #include <stdlib.h>
 #include <math.h>
-#include "cplot/domain.h"
-#include "stx/exception.h"
+#include "libcplot/domain.h"
 
 namespace stx {
 namespace chart {

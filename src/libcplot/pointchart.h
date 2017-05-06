@@ -10,13 +10,13 @@
 #ifndef _libstx_POINTCHART_H
 #define _libstx_POINTCHART_H
 #include <stdlib.h>
-#include "cplot/axisdefinition.h"
-#include "cplot/domain.h"
-#include "cplot/continuousdomain.h"
-#include "cplot/drawable.h"
-#include "cplot/canvas.h"
-#include "cplot/colorpalette.h"
-#include "cplot/rendertarget.h"
+#include "libcplot/axisdefinition.h"
+#include "libcplot/domain.h"
+#include "libcplot/continuousdomain.h"
+#include "libcplot/drawable.h"
+#include "libcplot/canvas.h"
+#include "libcplot/colorpalette.h"
+#include "libcplot/rendertarget.h"
 
 namespace stx {
 namespace chart {
@@ -211,7 +211,7 @@ void PointChart3D<TX, TY, TZ>::render(
     RenderTarget* target,
     Viewport* viewport) const {
   if (x_domain_.get() == nullptr || y_domain_.get() == nullptr) {
-    RAISE(kRuntimeError, "could not build domains");
+    throw std::runtime_error("could not build domains");
   }
 
   x_domain_.get()->build();
@@ -313,7 +313,7 @@ AnyDomain* PointChart3D<TX, TY, TZ>::getDomain(
       return y_domain_.get();
 
     case AnyDomain::DIM_Z:
-      RAISE(kRuntimeError, "PointChart3D does not have a Z domain");
+      throw std::runtime_error("PointChart3D does not have a Z domain");
       return nullptr;
   }
 }
@@ -346,10 +346,7 @@ void PointChart2D<TX, TY>::addSeries(Series2D<TX, TY>* series) {
       point_size = std::stod(
           series->getProperty(Series::P_POINT_SIZE, &point));
     } catch (const std::exception& e) {
-      RAISE(
-          kRuntimeError,
-          "invalid point size: %s",
-          series->getProperty(Series::P_POINT_SIZE, &point).c_str());
+      throw std::runtime_error("invalid point size");
     }
 
     series3d->addDatum(

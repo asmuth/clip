@@ -11,16 +11,15 @@
 #define _libstx_BARCHART_H
 #include <stdlib.h>
 #include <memory>
-#include "cplot/axisdefinition.h"
-#include "cplot/canvas.h"
-#include "cplot/colorpalette.h"
-#include "cplot/domain.h"
-#include "cplot/continuousdomain.h"
-#include "cplot/discretedomain.h"
-#include "cplot/drawable.h"
-#include "cplot/rendertarget.h"
-#include "cplot/seriesjoin.h"
-#include <stx/exception.h>
+#include "libcplot/axisdefinition.h"
+#include "libcplot/canvas.h"
+#include "libcplot/colorpalette.h"
+#include "libcplot/domain.h"
+#include "libcplot/continuousdomain.h"
+#include "libcplot/discretedomain.h"
+#include "libcplot/drawable.h"
+#include "libcplot/rendertarget.h"
+#include "libcplot/seriesjoin.h"
 
 namespace stx {
 namespace chart {
@@ -237,8 +236,7 @@ void BarChart3D<TX, TY, TZ>::addSeries(Series3D<TX, TY, TZ>* series) {
     y_domain->addValue(static_cast<TY>(point.z()));
 
     if (!(point.y() <= point.z())) {
-      RAISE(
-          kRuntimeError,
+      throw std::runtime_error(
           "BarChart error: invalid point in series. Z value must be greater "
           "or equal to Y value for all points");
     }
@@ -340,14 +338,14 @@ void BarChart3D<TX, TY, TZ>::render(
     RenderTarget* target,
     Viewport* viewport) const {
   if (x_domain_.get() == nullptr || y_domain_.get() == nullptr) {
-    RAISE(kRuntimeError, "could not build domains");
+    throw std::runtime_error("could not build domains");
   }
 
   x_domain_.get()->build();
   y_domain_.get()->build();
 
   if (data_.size() == 0) {
-    RAISE(kRuntimeError, "BarChart3D#render called without any data");
+    throw std::runtime_error("BarChart3D#render called without any data");
   }
 
   SeriesJoin3D<TX, TY, TZ> const* data;
@@ -522,7 +520,7 @@ template <typename TX, typename TY, typename TZ>
 const std::string& BarChart3D<TX, TY, TZ>::seriesColor(
     size_t series_index) const {
   if (series_index > series_.size()) {
-    RAISE(kRuntimeError, "invalid series index");
+    throw std::runtime_error("invalid series index");
   }
 
   return series_[series_index]->getProperty(Series::P_COLOR);

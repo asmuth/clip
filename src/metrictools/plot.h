@@ -42,5 +42,7 @@ protected:
   Backend* backend_;
 };
 
+ReturnCode renderPlot(const Plot* plot);
+
 } // namespace fnordmetric
 

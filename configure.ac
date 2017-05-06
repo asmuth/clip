@@ -56,6 +56,7 @@ AC_CONFIG_SUBDIRS([deps/libtransport])
 AC_CONFIG_FILES([
     Makefile
     src/metrictools/Makefile
+    src/libcplot/Makefile
     src/metrictools/storage/mysql/Makefile
     src/metrictools/storage/sqlite/Makefile
     test/Makefile])

@@ -10,13 +10,13 @@
 #ifndef _libstx_AREACHART_H
 #define _libstx_AREACHART_H
 #include <stdlib.h>
-#include "cplot/axisdefinition.h"
-#include "cplot/domain.h"
-#include "cplot/continuousdomain.h"
-#include "cplot/drawable.h"
-#include "cplot/canvas.h"
-#include "cplot/colorpalette.h"
-#include "cplot/rendertarget.h"
+#include "libcplot/axisdefinition.h"
+#include "libcplot/domain.h"
+#include "libcplot/continuousdomain.h"
+#include "libcplot/drawable.h"
+#include "libcplot/canvas.h"
+#include "libcplot/colorpalette.h"
+#include "libcplot/rendertarget.h"
 
 namespace stx {
 namespace chart {
@@ -244,19 +244,13 @@ void AreaChart3D<TX, TY, TZ>::addSeries(Series3D<TX, TY, TZ>* series) {
   try {
     area.line_width = std::stod(series->getProperty(Series::P_LINE_WIDTH));
   } catch (const std::exception& e) {
-    RAISE(
-        kRuntimeError,
-        "invalid line width: %s",
-        series->getProperty(Series::P_LINE_WIDTH).c_str());
+    throw std::runtime_error("invalid line width");
   }
 
   try {
     area.point_size = std::stod(series->getProperty(Series::P_POINT_SIZE));
   } catch (const std::exception& e) {
-    RAISE(
-        kRuntimeError,
-        "invalid point size: %s",
-        series->getProperty(Series::P_POINT_SIZE).c_str());
+    throw std::runtime_error("invalid point size");
   }
 
   for (const auto& point : series->getData()) {
@@ -282,7 +276,7 @@ void AreaChart3D<TX, TY, TZ>::render(
     RenderTarget* target,
     Viewport* viewport) const {
   if (x_domain_.get() == nullptr || y_domain_.get() == nullptr) {
-    RAISE(kRuntimeError, "could not build domains");
+    throw std::runtime_error("could not build domains");
   }
 
   x_domain_.get()->build();
@@ -431,7 +425,7 @@ AnyDomain* AreaChart3D<TX, TY, TZ>::getDomain(
       return y_domain_.get();
 
     case AnyDomain::DIM_Z:
-      RAISE(kRuntimeError, "AreaChart3D does not have a Z domain");
+      throw std::runtime_error("AreaChart3D does not have a Z domain");
       return nullptr;
   }
 }
