@@ -147,17 +147,38 @@ int main(int argc, const char** argv) {
     }
   }
 
-  /* check flags */
-  if (!flags.isSet("config")) {
-    std::cerr << "ERROR: --config flag must be set" << std::endl;
-    return 1;
+  /* search for config */
+  std::string config_path;
+  if (flags.isSet("config")) {
+    config_path = flags.getString("config");
+  } else {
+    std::vector<std::string> candidates = {
+      FileUtil::joinPaths(getenv("HOME"), ".metrictl.conf"),
+      "/etc/metrictools/metrictl.conf",
+      "/etc/metrictl.conf"
+    };
+
+    for (const auto& c : candidates) {
+      if (FileUtil::exists(c)) {
+        config_path = c;
+        break;
+      }
+    }
+
+    if (config_path.empty()) {
+      std::cerr << "ERROR: no config file found (--config), tried:" << std::endl;
+      for (const auto& c : candidates) {
+        std::cerr << "ERROR:   - " << c << std::endl;
+      }
+      return 1;
+    }
   }
 
   /* load config */
   ConfigList config;
   {
     std::unique_ptr<ConfigParser> config_parser;
-    auto rc = ConfigParser::openFile(&config_parser, flags.getString("config"));
+    auto rc = ConfigParser::openFile(&config_parser, config_path);
     if (!rc.isSuccess()) {
       std::cerr << "ERROR: " << rc.getMessage() << std::endl;
       return 1;
@@ -173,6 +194,7 @@ int main(int argc, const char** argv) {
   /* open backend */
   if (config.getBackendURL().empty()) {
    std::cerr << "ERROR: missing backend url";
+   return 1;
   }
 
   std::unique_ptr<Backend> backend;
