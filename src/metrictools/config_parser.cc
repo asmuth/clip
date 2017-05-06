@@ -329,44 +329,47 @@ bool ConfigParser::parseMetricDefinitionLabelStanza(
 
 bool ConfigParser::parseMetricDefinitionKindStanza(
     MetricConfig* metric_config) {
-  std::string reporting_scheme_str;
-  if (!expectAndConsumeString(&reporting_scheme_str)) {
+  std::string kind;
+
+  /* read type name */
+  {
+    TokenType ttype;
+    if (!getToken(&ttype, &kind) || ttype != T_STRING) {
+      setError("kind requires an argument");
+      return false;
+    }
+    consumeToken();
+  }
+
+  /* read optional type arguments */
+  {
+    TokenType ttype;
+    std::string tbuf;
+    if (getToken(&ttype, &tbuf) && ttype == T_LPAREN) {
+      consumeToken();
+
+      if (!getToken(&ttype, &tbuf) || ttype != T_STRING) {
+        setError("invalid argument to 'kind' stanza");
+        return false;
+      }
+
+      kind += "(";
+      kind += tbuf;
+      kind += ")";
+
+      consumeToken();
+
+      if (!expectAndConsumeToken(T_RPAREN)) {
+        return false;
+      }
+    }
+  }
+
+  if (!parseMetricKind(kind, &metric_config->kind)) {
+    setError(StringUtil::format("invalid metric kind: $0", kind));
     return false;
   }
 
-  MetricReportingScheme reporting_scheme;
-  if (!parseMetricReportingScheme(reporting_scheme_str, &reporting_scheme)) {
-    setError(
-        StringUtil::format(
-            "invalid reporting scheme: $0 - expected one of: sample, monotonic",
-            reporting_scheme_str));
-    return false;
-  }
-
-  if (!expectAndConsumeToken(T_LPAREN)) {
-    return false;
-  }
-
-  std::string data_type_str;
-  if (!expectAndConsumeString(&data_type_str)) {
-    return false;
-  }
-
-  MetricDataType data_type;
-  if (!parseMetricDataType(data_type_str, &data_type)) {
-    setError(
-        StringUtil::format(
-            "invalid data type: $0, expected one of: uint64, int64, float64, string",
-            data_type_str));
-
-    return false;
-  }
-
-  if (!expectAndConsumeToken(T_RPAREN)) {
-    return false;
-  }
-
-  metric_config->kind = MetricKind{data_type, reporting_scheme};
   return true;
 }
 

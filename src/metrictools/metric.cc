@@ -17,44 +17,49 @@
 namespace fnordmetric {
 
 MetricConfig::MetricConfig() :
-    kind{MetricDataType::FLOAT64, MetricReportingScheme::SAMPLE} {}
+    kind{MetricKind::GAUGE_FLOAT64} {}
 
-std::string getMetricDataTypeName(MetricDataType t) {
-  switch (t) {
-    case MetricDataType::UINT64: return "uint64";
-    case MetricDataType::INT64: return "int64";
-    case MetricDataType::FLOAT64: return "float64";
-    case MetricDataType::STRING: return "string";
+std::string getMetricKindName(MetricKind t) {
+  static const std::map<MetricKind, std::string> kind_map = {
+    { MetricKind::GAUGE_UINT64,            "gauge(uint64)" },
+    { MetricKind::GAUGE_INT64,             "gauge(int64)" },
+    { MetricKind::GAUGE_FLOAT64,           "gauge(float64)" },
+    { MetricKind::MONOTONIC_UINT64,        "monotonic(uint64)" },
+    { MetricKind::MONOTONIC_FLOAT64,       "monotonic(float64)" },
+    { MetricKind::COUNTER_UINT64,          "counter(uint64)" },
+    { MetricKind::COUNTER_INT64,           "counter(int64)" },
+    { MetricKind::COUNTER_FLOAT64,         "counter(float64)" },
+    { MetricKind::STRING,                  "string" }
+  };
+
+  auto iter = kind_map.find(t);
+  if (iter != kind_map.end()) {
+    return iter->second;
+  } else {
+    return "???";
   }
-
-  return "???";
 }
 
-bool parseMetricDataType(
-    const std::string& s,
-    MetricDataType* t) {
-  if (s == "uint64") { *t = MetricDataType::UINT64; return true; }
-  if (s == "int64") { *t = MetricDataType::INT64; return true; }
-  if (s == "float64") { *t = MetricDataType::FLOAT64; return true; }
-  if (s == "string") { *t = MetricDataType::STRING; return true; }
-  return false;
-}
+bool parseMetricKind(const std::string& s, MetricKind* t) {
+  static const std::map<std::string, MetricKind> kind_map = {
+    { "gauge(uint64)",      MetricKind::GAUGE_UINT64 },
+    { "gauge(int64)",       MetricKind::GAUGE_INT64 },
+    { "gauge(float64)",     MetricKind::GAUGE_FLOAT64 },
+    { "monotonic(uint64)",  MetricKind::MONOTONIC_UINT64 },
+    { "monotonic(float64)", MetricKind::MONOTONIC_FLOAT64 },
+    { "counter(uint64)",    MetricKind::COUNTER_UINT64 },
+    { "counter(int64)",     MetricKind::COUNTER_INT64 },
+    { "counter(float64)",   MetricKind::COUNTER_FLOAT64 },
+    { "string",             MetricKind::STRING }
+  };
 
-std::string getMetricReportingSchemeName(MetricReportingScheme t) {
-  switch (t) {
-    case MetricReportingScheme::SAMPLE: return "sample";
-    case MetricReportingScheme::MONOTONIC: return "monotonic";
+  auto iter = kind_map.find(s);
+  if (iter != kind_map.end()) {
+    *t = iter->second;
+    return true;
+  } else {
+    return false;
   }
-
-  return "???";
-}
-
-bool parseMetricReportingScheme(
-    const std::string& s,
-    MetricReportingScheme* t) {
-  if (s == "sample") { *t = MetricReportingScheme::SAMPLE; return true; }
-  if (s == "monotonic") { *t = MetricReportingScheme::MONOTONIC; return true; }
-  return false;
 }
 
 std::ostream& operator<<(std::ostream& out, const MetricLabels& path) {

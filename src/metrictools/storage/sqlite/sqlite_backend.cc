@@ -113,17 +113,20 @@ ReturnCode SQLiteBackend::createTables(
     const GlobalConfig* global_config,
     const MetricConfig* metric_config) {
   std::string value_col;
-  switch (metric_config->kind.type) {
-    case MetricDataType::UINT64:
+  switch (metric_config->kind) {
+    case MetricKind::GAUGE_UINT64:
+    case MetricKind::GAUGE_INT64:
+    case MetricKind::MONOTONIC_UINT64:
+    case MetricKind::COUNTER_UINT64:
+    case MetricKind::COUNTER_INT64:
       value_col = "value bigint";
       break;
-    case MetricDataType::INT64:
-      value_col = "value bigint";
-      break;
-    case MetricDataType::FLOAT64:
+    case MetricKind::GAUGE_FLOAT64:
+    case MetricKind::MONOTONIC_FLOAT64:
+    case MetricKind::COUNTER_FLOAT64:
       value_col = "value float";
       break;
-    case MetricDataType::STRING:
+    case MetricKind::STRING:
       value_col = "value string";
       break;
   }

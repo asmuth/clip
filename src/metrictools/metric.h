@@ -26,17 +26,16 @@ class MetricMap;
 using MetricIDType = std::string;
 using SensorIDType = std::vector<std::string>;
 
-enum class MetricDataType {
-  UINT64, INT64, FLOAT64, STRING
-};
-
-enum class MetricReportingScheme {
- SAMPLE, MONOTONIC
-};
-
-struct MetricKind {
-  MetricDataType type;
-  MetricReportingScheme scheme;
+enum class MetricKind {
+  GAUGE_UINT64,
+  GAUGE_INT64,
+  GAUGE_FLOAT64,
+  MONOTONIC_UINT64,
+  MONOTONIC_FLOAT64,
+  COUNTER_UINT64,
+  COUNTER_INT64,
+  COUNTER_FLOAT64,
+  STRING
 };
 
 struct MetricLabelConfig {
@@ -58,11 +57,8 @@ struct MetricConfig {
   uint64_t rate;
 };
 
-std::string getMetricDataTypeName(MetricDataType t);
-bool parseMetricDataType(const std::string& s, MetricDataType* t);
-
-std::string getMetricReportingSchemeName(MetricReportingScheme t);
-bool parseMetricReportingScheme(const std::string& s, MetricReportingScheme* t);
+std::string getMetricKindName(MetricKind t);
+bool parseMetricKind(const std::string& s, MetricKind* t);
 
 std::ostream& operator<<(std::ostream& out, const MetricLabels& path);
 
