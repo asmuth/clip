@@ -296,7 +296,7 @@ int main(int argc, const char** argv) {
 
   std::unique_ptr<HTTPServer> http_server;
   if (rc.isSuccess()) {
-    http_server.reset(new HTTPServer(backend.get()));
+    http_server.reset(new HTTPServer(&config, backend.get()));
     //if (flags.isSet("dev_assets")) {
     //  query_service.setAssetPath(flags.getString("dev_assets"));
     //}

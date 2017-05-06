@@ -16,12 +16,17 @@
 #include <libtransport/json/json.h>
 #include <libtransport/json/json_object.h>
 #include <libtransport/json/json_writer.h>
+#include <metrictools/plot.h>
 
 namespace fnordmetric {
 
 namespace json = libtransport::json;
 
-HTTPServer::HTTPServer(Backend* backend) : backend_(backend) {
+HTTPServer::HTTPServer(
+    ConfigList* config,
+    Backend* storage_backend) :
+    config_(config),
+    storage_backend_(storage_backend) {
   http_server_.setRequestHandler(
       std::bind(
           &HTTPServer::handleRequest,
@@ -64,10 +69,10 @@ void HTTPServer::handleRequest(
     return;
   }
 
-  //if (path == "/api/v1/query") {
-  //  handleRequest_QUERY(request, response);
-  //  return;
-  //}
+  if (path == "/api/v1/plot") {
+    handleRequest_PLOT(request, response);
+    return;
+  }
 
   if (path == "/favicon.ico") {
     response->setStatus(http::kStatusOK);
@@ -79,6 +84,45 @@ void HTTPServer::handleRequest(
   response->setStatus(http::kStatusNotFound);
   response->addHeader("Content-Type", "text/plain; charset=utf-8");
   response->addBody("not found");
+}
+
+void HTTPServer::handleRequest_PLOT(
+    http::HTTPRequest* request,
+    http::HTTPResponse* response) {
+  auto params = URI(request->uri()).queryParams();
+
+  PlotBuilder plot_builder(config_, storage_backend_);
+  for (const auto& p : params) {
+    auto rc = plot_builder.addArgument(p.first, p.second);
+    if (!rc.isSuccess()) {
+      response->setStatus(http::kStatusBadRequest);
+      response->addHeader("Content-Type", "text/plain; charset=utf-8");
+      response->addBody(rc.getMessage());
+      return;
+    }
+  }
+
+  Plot plot;
+  auto rc = plot_builder.getPlot(&plot);
+  if (!rc.isSuccess()) {
+    response->setStatus(http::kStatusBadRequest);
+    response->addHeader("Content-Type", "text/plain; charset=utf-8");
+    response->addBody(rc.getMessage());
+    return;
+  }
+
+  std::string plot_target;
+  rc = renderPlot(&plot, &plot_target);
+  if (!rc.isSuccess()) {
+    response->setStatus(http::kStatusBadRequest);
+    response->addHeader("Content-Type", "text/plain; charset=utf-8");
+    response->addBody(rc.getMessage());
+    return;
+  }
+
+  response->setStatus(http::kStatusOK);
+  response->addHeader("Content-Type", "text/html; charset=utf-8");
+  response->addBody(plot_target);
 }
 
 std::string HTTPServer::getPreludeHTML() const {

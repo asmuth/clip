@@ -50,7 +50,7 @@ protected:
   std::string s_metric_;
 };
 
-ReturnCode renderPlot(const Plot* plot);
+ReturnCode renderPlot(const Plot* plot, std::string* out);
 
 } // namespace fnordmetric
 

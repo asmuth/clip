@@ -46,7 +46,14 @@ ReturnCode PlotCommand::execute(
     return rc;
   }
 
-  return renderPlot(&plot);
+  std::string plot_target;
+  rc = renderPlot(&plot, &plot_target);
+  if (!rc.isSuccess()) {
+    return rc;
+  }
+
+  std::cout << plot_target;
+  return ReturnCode::success();
 }
 
 const std::string& PlotCommand::getName() const {

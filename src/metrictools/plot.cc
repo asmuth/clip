@@ -94,7 +94,7 @@ ReturnCode PlotBuilder::getPlot(Plot* plot) {
   return ReturnCode::success();
 }
 
-ReturnCode renderPlot(const Plot* plot) {
+ReturnCode renderPlot(const Plot* plot, std::string* out) {
   Canvas chart;
   TimeDomain x_domain(plot->time_begin, plot->time_limit);
   ContinuousDomain<double> y_domain(0, 1.0, false);
@@ -116,11 +116,8 @@ ReturnCode renderPlot(const Plot* plot) {
   line_chart->addAxis(AxisDefinition::BOTTOM);
   line_chart->addAxis(AxisDefinition::LEFT);
 
-  std::string svg;
-  SVGTarget target(&svg);
+  SVGTarget target(out);
   chart.render(&target);
-
-  std::cout << svg;
 
   return ReturnCode::success();
 }

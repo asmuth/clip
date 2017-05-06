@@ -28,7 +28,7 @@ namespace http = libtransport::http;
 class HTTPServer {
 public:
 
-  HTTPServer(Backend* backend);
+  HTTPServer(ConfigList* config, Backend* storage_backend);
 
   ReturnCode listenAndRun(const std::string& addr, int port);
   void shutdown();
@@ -41,7 +41,7 @@ protected:
       http::HTTPRequest* request,
       http::HTTPResponse* response);
 
-  void handleRequest_QUERY(
+  void handleRequest_PLOT(
       http::HTTPRequest* request,
       http::HTTPResponse* response);
 
@@ -54,7 +54,8 @@ protected:
       const std::string& asset_path,
       const std::string& content_type) const;
 
-  Backend* backend_;
+  ConfigList* config_;
+  Backend* storage_backend_;
   libtransport::http::HTTPServer http_server_;
   std::string dynamic_asset_path_;
   std::thread thread_;
