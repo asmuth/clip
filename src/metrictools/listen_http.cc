@@ -11,8 +11,112 @@
 #include <metrictools/listen_http.h>
 #include <metrictools/util/logging.h>
 #include <metrictools/util/stringutil.h>
+#include <metrictools/util/fileutil.h>
+#include <metrictools/storage/backend.h>
+#include <libtransport/json/json.h>
+#include <libtransport/json/json_object.h>
+#include <libtransport/json/json_writer.h>
 
 namespace fnordmetric {
+
+namespace json = libtransport::json;
+
+HTTPServer::HTTPServer(Backend* backend) : backend_(backend) {
+  http_server_.setRequestHandler(
+      std::bind(
+          &HTTPServer::handleRequest,
+          this,
+          std::placeholders::_1,
+          std::placeholders::_2));
+}
+
+ReturnCode HTTPServer::listenAndRun(const std::string& addr, int port) {
+  logInfo("Starting HTTP server on $0:$1", addr, port);
+
+  if (!http_server_.listen(addr, port)) {
+    return ReturnCode::error("ERUNTIME", "listen() failed");
+  }
+
+  http_server_.run();
+  return ReturnCode::success();
+}
+
+void HTTPServer::handleRequest(
+    http::HTTPRequest* request,
+    http::HTTPResponse* response) {
+  logDebug(
+      "HTTP request: $0 $1",
+      http::getHTTPMethodName(request->method()),
+      request->uri());
+
+  URI uri(request->uri());
+  const auto& path = uri.path();
+
+  if (path == "/") {
+    response->setStatus(http::kStatusOK);
+    response->addBody("ok");
+    return;
+  }
+
+  //if (path == "/api/v1/query") {
+  //  handleRequest_QUERY(request, response);
+  //  return;
+  //}
+
+  if (path == "/favicon.ico") {
+    response->setStatus(http::kStatusOK);
+    response->addHeader("Content-Type", "image/x-icon");
+    response->addBody(getAssetFile("favicon.ico"));
+    return;
+  }
+
+  response->setStatus(http::kStatusNotFound);
+  response->addHeader("Content-Type", "text/plain; charset=utf-8");
+  response->addBody("not found");
+}
+
+std::string HTTPServer::getPreludeHTML() const {
+  return getAssetFile("prelude.html");
+}
+
+std::string HTTPServer::getAppHTML() const {
+  auto assets_lst = getAssetFile("assets.lst");
+
+  std::string app_html;
+  for (const auto& f : StringUtil::split(assets_lst, "\n")) {
+    if (StringUtil::endsWith(f, ".html")) {
+      app_html += getAssetFile(f);
+    }
+
+    if (StringUtil::endsWith(f, ".js")) {
+      auto content = getAssetFile(f);
+      app_html += "<script>" + content + "</script>";
+    }
+
+    if (StringUtil::endsWith(f, ".css")) {
+      auto content = getAssetFile(f);
+      app_html += "<style type='text/css'>" + content + "</style>";
+    }
+  }
+
+  return app_html;
+}
+
+std::string HTTPServer::getAssetFile(const std::string& file) const {
+  if (!dynamic_asset_path_.empty()) {
+    auto file_path = FileUtil::joinPaths(dynamic_asset_path_, file);
+    if (FileUtil::exists(file_path)) {
+      return FileUtil::read(file_path).toString();
+    }
+  }
+
+  return "";
+}
+
+void HTTPServer::setAssetPath(const std::string& path) {
+  dynamic_asset_path_ = path;
+}
+
 
 HTTPPushIngestionTaskConfig::HTTPPushIngestionTaskConfig() :
     bind("0.0.0.0"),

@@ -25,6 +25,39 @@ class Backend;
 namespace json = libtransport::json;
 namespace http = libtransport::http;
 
+class HTTPServer {
+public:
+
+  HTTPServer(Backend* backend);
+
+  ReturnCode listenAndRun(const std::string& addr, int port);
+
+  void setAssetPath(const std::string& path);
+
+protected:
+
+  void handleRequest(
+      http::HTTPRequest* request,
+      http::HTTPResponse* response);
+
+  void handleRequest_QUERY(
+      http::HTTPRequest* request,
+      http::HTTPResponse* response);
+
+  std::string getPreludeHTML() const;
+  std::string getAppHTML() const;
+  std::string getAssetFile(const std::string& file) const;
+
+  void sendAsset(
+      http::HTTPResponse* response,
+      const std::string& asset_path,
+      const std::string& content_type) const;
+
+  Backend* backend_;
+  libtransport::http::HTTPServer http_server_;
+  std::string dynamic_asset_path_;
+};
+
 struct HTTPPushIngestionTaskConfig : public IngestionTaskConfig {
   HTTPPushIngestionTaskConfig();
   std::string bind;

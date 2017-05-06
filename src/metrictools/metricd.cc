@@ -56,6 +56,13 @@ int main(int argc, const char** argv) {
       NULL);
 
   flags.defineFlag(
+      "listen_http",
+      FlagParser::T_STRING,
+      false,
+      NULL,
+      "localhost:8080");
+
+  flags.defineFlag(
       "help",
       FlagParser::T_SWITCH,
       false,
@@ -155,6 +162,7 @@ int main(int argc, const char** argv) {
     std::cerr <<
         "Usage: $ metricd [OPTIONS]\n"
         "   -c, --config <file>       Load config file\n"
+        "   --listen_http             Listen for HTTP connection on this address\n"
         "   --daemonize               Daemonize the server\n"
         "   --pidfile <file>          Write a PID file\n"
         "   --loglevel <level>        Minimum log level (default: INFO)\n"
@@ -266,10 +274,34 @@ int main(int argc, const char** argv) {
       rc = ReturnCode::error("EIO", "pipe() failed");
     }
 
-    signal(SIGTERM, shutdown);
-    signal(SIGINT, shutdown);
-    signal(SIGHUP, shutdown);
+    //signal(SIGTERM, shutdown);
+    //signal(SIGINT, shutdown);
+    //signal(SIGHUP, shutdown);
     signal(SIGPIPE, SIG_IGN);
+  }
+
+  /* run http server */
+  std::string http_bind;
+  uint16_t http_port;
+  if (rc.isSuccess()) {
+    auto parse_rc = parseListenAddr(
+        flags.getString("listen_http"),
+        &http_bind,
+        &http_port);
+
+    if (!parse_rc) {
+      rc = ReturnCode::error("ERUNTIME", "invalid value for --listen_http");
+    }
+  }
+
+  /* start http server */
+  if (rc.isSuccess()) {
+    HTTPServer query_service(backend.get());
+    //if (flags.isSet("dev_assets")) {
+    //  query_service.setAssetPath(flags.getString("dev_assets"));
+    //}
+
+    rc = query_service.listenAndRun(http_bind, http_port);
   }
 
   /* start ingestion service */
