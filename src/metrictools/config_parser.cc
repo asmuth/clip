@@ -101,6 +101,16 @@ ReturnCode ConfigParser::parse(ConfigList* config) {
       }
     }
 
+    /* parse the "label_set" stanza */
+    if (ttype == T_STRING && tbuf == "label_set") {
+      consumeToken();
+      if (parseLabelSetStanza(config)) {
+        continue;
+      } else {
+        break;
+      }
+    }
+
     /* parse the "metric" definition */
     if (ttype == T_STRING && tbuf == "metric") {
       consumeToken();
@@ -251,6 +261,45 @@ bool ConfigParser::parseLabelsStanza(ConfigList* config) {
   return true;
 }
 
+bool ConfigParser::parseLabelSetStanza(ConfigList* config) {
+  std::string label;
+  if (!expectAndConsumeString(&label)) {
+    return false;
+  }
+
+  std::string value;
+  if (!expectAndConsumeString(&value)) {
+    return false;
+  }
+
+  bool is_default = false;
+  {
+    TokenType ttype;
+    std::string tbuf;
+    if (getToken(&ttype, &tbuf) && ttype == T_STRING) {
+      if (tbuf == "default") {
+        is_default = true;
+        consumeToken();
+      } else {
+        setError(
+            StringUtil::format(
+                "unexpected string '$0', expected 'default' or end of line",
+                tbuf));
+        return false;
+      }
+    }
+  }
+
+  config->getGlobalConfig()->global_label_override.emplace_back(
+      MetricLabelOverride {
+        .label = label,
+        .value = value,
+        .is_default = is_default
+      });
+
+  return true;
+}
+
 bool ConfigParser::parseMetricDefinition(ConfigList* config) {
   std::string metric_name;
   if (!expectAndConsumeString(&metric_name)) {
@@ -289,6 +338,15 @@ bool ConfigParser::parseMetricDefinition(ConfigList* config) {
     if (ttype == T_STRING && tbuf == "labels") {
       consumeToken();
       if (!parseMetricDefinitionLabelsStanza(&metric_config)) {
+        return false;
+      }
+      continue;
+    }
+
+    /* parse the "label_set" stanza */
+    if (ttype == T_STRING && tbuf == "label_set") {
+      consumeToken();
+      if (!parseMetricDefinitionLabelSetStanza(&metric_config)) {
         return false;
       }
       continue;
@@ -365,6 +423,46 @@ bool ConfigParser::parseMetricDefinitionLabelsStanza(
     setError("'labels' requires at least one argument");
     return false;
   }
+
+  return true;
+}
+
+bool ConfigParser::parseMetricDefinitionLabelSetStanza(
+    MetricConfig* metric_config) {
+  std::string label;
+  if (!expectAndConsumeString(&label)) {
+    return false;
+  }
+
+  std::string value;
+  if (!expectAndConsumeString(&value)) {
+    return false;
+  }
+
+  bool is_default = false;
+  {
+    TokenType ttype;
+    std::string tbuf;
+    if (getToken(&ttype, &tbuf) && ttype == T_STRING) {
+      if (tbuf == "default") {
+        is_default = true;
+        consumeToken();
+      } else {
+        setError(
+            StringUtil::format(
+                "unexpected string '$0', expected 'default' or end of line",
+                tbuf));
+        return false;
+      }
+    }
+  }
+
+  metric_config->label_overrides.emplace_back(
+      MetricLabelOverride {
+        .label = label,
+        .value = value,
+        .is_default = is_default
+      });
 
   return true;
 }

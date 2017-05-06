@@ -47,11 +47,18 @@ struct MetricLabels {
   std::vector<std::string> values;
 };
 
+struct MetricLabelOverride {
+  std::string label;
+  std::string value;
+  bool is_default;
+};
+
 struct MetricConfig {
   MetricConfig();
   std::string metric_id;
   MetricKind kind;
   MetricLabelConfig label_config;
+  std::vector<MetricLabelOverride> label_overrides;
   std::string unit_id;
   uint64_t granularity;
   uint64_t rate;
