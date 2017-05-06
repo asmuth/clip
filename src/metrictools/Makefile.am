@@ -38,6 +38,8 @@ libfnordmetric_common_a_SOURCES = \
     metric.cc \
     metric_map.h \
     metric_map.cc \
+    plot.h \
+    plot.cc \
     util/daemonize.h \
     util/daemonize.cc \
     util/time_impl.h \

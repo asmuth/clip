@@ -8,14 +8,19 @@
  * <http://www.gnu.org/licenses/>.
  */
 #include <iostream>
+#include <vector>
+#include <metrictools/timeseries.h>
+#include <metrictools/config_list.h>
+#include <metrictools/storage/backend.h>
 
 namespace fnordmetric {
 
 struct PlotSeries {
+  Timeseries<double> data;
 };
 
 struct Plot {
-
+  std::vector<PlotSeries> series;
 };
 
 class PlotBuilder {
@@ -25,9 +30,11 @@ public:
       ConfigList* config,
       Backend* backend);
 
-  void addMetric(const std::string& metric_id);
+  ReturnCode addArgument(const std::string& key, const std::string& value);
 
-  const Plot* getPlot() const;
+  ReturnCode addMetric(const std::string& metric_id);
+
+  Plot&& getPlot();
 
 protected:
   Plot plot_;

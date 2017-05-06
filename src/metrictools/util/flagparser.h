@@ -22,6 +22,12 @@ public:
     T_INTEGER
   };
 
+  struct FlagValue {
+    std::string shortopt;
+    std::string longopt;
+    std::string value;
+  };
+
   FlagParser();
 
   /**
@@ -96,6 +102,11 @@ public:
    */
   const std::vector<std::string>& getArgv() const;
 
+  /**
+   * Get the list of all individual flag values in correct order
+   */
+  const std::vector<FlagValue>& getFlagValues() const;
+
   void ignoreUnknownFlags();
 
 protected:
@@ -110,6 +121,7 @@ protected:
 
   std::vector<std::string> argv_;
   std::vector<FlagState> flags_;
+  std::vector<FlagValue> flag_values_;
   bool ignore_unknown_;
 };
 

@@ -10,6 +10,7 @@
 #include <iostream>
 #include <metrictools/cli/commands/plot_cmd.h>
 #include <metrictools/util/flagparser.h>
+#include <metrictools/plot.h>
 #include <metrictools/storage/ops/fetch_op.h>
 
 namespace fnordmetric {
@@ -19,9 +20,21 @@ ReturnCode PlotCommand::execute(
     const std::vector<std::string>& argv) {
   FlagParser flags;
 
+  flags.defineFlag(
+      "metric",
+      FlagParser::T_STRING,
+      false,
+      "m",
+      NULL);
+
   auto flags_rc = flags.parseArgv(argv);
   if (!flags_rc.isSuccess()) {
     return flags_rc;
+  }
+
+  PlotBuilder plot_builder(ctx->config, ctx->storage_backend);
+  for (const auto& f : flags.getFlagValues()) {
+    plot_builder.addArgument(f.longopt, f.value);
   }
 
   return ReturnCode::success();

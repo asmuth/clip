@@ -209,6 +209,11 @@ ReturnCode FlagParser::parseArgv(const std::vector<std::string>& argv) {
       argv_.push_back(arg);
     } else if (flag_ptr->type == T_SWITCH) {
       flag_ptr->values.emplace_back("true");
+      flag_values_.emplace_back(FlagValue {
+        .shortopt = flag_ptr->shortopt,
+        .longopt = flag_ptr->longopt,
+        .value = "true"
+      });
     } else if (eq_len > 0) {
       if (arg.size() == eq_len) {
         return ReturnCode::errorf(
@@ -218,6 +223,11 @@ ReturnCode FlagParser::parseArgv(const std::vector<std::string>& argv) {
       }
 
       flag_ptr->values.emplace_back(arg.substr(eq_len));
+      flag_values_.emplace_back(FlagValue {
+        .shortopt = flag_ptr->shortopt,
+        .longopt = flag_ptr->longopt,
+        .value = flag_ptr->values.back()
+      });
     } else {
       if (i + 1 < argv.size()) {
         flag_ptr->values.emplace_back(argv[++i]);
@@ -229,6 +239,12 @@ ReturnCode FlagParser::parseArgv(const std::vector<std::string>& argv) {
             "flag --$0 has no value",
             flag_ptr->longopt);
       }
+
+      flag_values_.emplace_back(FlagValue {
+        .shortopt = flag_ptr->shortopt,
+        .longopt = flag_ptr->longopt,
+        .value = flag_ptr->values.back()
+      });
     }
   }
 
@@ -246,6 +262,10 @@ ReturnCode FlagParser::parseArgv(const std::vector<std::string>& argv) {
 
 const std::vector<std::string>& FlagParser::getArgv() const {
   return argv_;
+}
+
+const std::vector<FlagParser::FlagValue>& FlagParser::getFlagValues() const {
+  return flag_values_;
 }
 
 void FlagParser::ignoreUnknownFlags() {
