@@ -22,7 +22,7 @@ using TimestampType = uint64_t;
 using LabelSet = std::map<std::string, std::string>;
 
 enum class MeasurementCoding {
-  STATSD, JSON
+  STATSD, JSON, BORGMON_PROMETHEUS
 };
 
 class Measurement {

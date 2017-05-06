@@ -51,6 +51,7 @@ std::string getMeasurementCodingName(MeasurementCoding t) {
   switch (t) {
     case MeasurementCoding::STATSD: return "statsd";
     case MeasurementCoding::JSON: return "json";
+    case MeasurementCoding::BORGMON_PROMETHEUS: return "borgmon";
   }
 
   return "???";
@@ -61,7 +62,110 @@ bool parseMeasurementCoding(
     MeasurementCoding* t) {
   if (s == "statsd") { *t = MeasurementCoding::STATSD; return true; }
   if (s == "json") { *t = MeasurementCoding::JSON; return true; }
+  if (s == "borgmon") { *t = MeasurementCoding::BORGMON_PROMETHEUS; return true; }
+  if (s == "prometheus") { *t = MeasurementCoding::BORGMON_PROMETHEUS; return true; }
   return false;
+}
+
+static ReturnCode parseMeasurements_BORGMON(
+    const std::string& input,
+    std::vector<Measurement>* samples) {
+  const char* cur = input.c_str();
+  const char* end = cur + input.size();
+  while (cur != end) {
+    /* read metric id */
+    std::string metric_id;
+    while (cur != end) {
+      if (*cur == '{' || *cur == ' ') {
+        break;
+      } else {
+        metric_id.push_back(*cur++);
+      }
+    }
+
+    if (cur == end) {
+      break;
+    }
+
+    /* read labels */
+    LabelSet labels;
+    if (*cur == '{') {
+      while (cur != end && (*cur == '{' || *cur == ',')) {
+        do { ++cur; } while (*cur == ' ');
+
+        /* read label name */
+        std::string label_name;
+        while (cur != end && StringUtil::isShellSafe(*cur)) { 
+          label_name.push_back(*cur++);
+        }
+
+        /* skip whitespace */
+        for (; cur != end && *cur == ' '; ++cur);
+
+        /* expect equal sign */
+        if (cur == end || *cur != '=') {
+          return ReturnCode::error("ERUNTIME", "invalid encoding");
+        }
+
+        /* skip whitespace */
+        do { ++cur; } while (*cur == ' ');
+
+        /* leading double quote */
+        if (cur == end || *cur != '"') {
+          return ReturnCode::error(
+              "ERUNTIME",
+              "invalid encoding (missing double quotes around label value?)");
+        } else {
+          ++cur;
+        }
+
+        /* read label value */
+        std::string label_value;
+        while (cur != end && *cur != '"') {
+          label_value.push_back(*cur++);
+        }
+
+        /* closing double quote */
+        if (cur == end || *cur != '"') {
+          return ReturnCode::error("ERUNTIME", "invalid encoding");
+        }
+
+        /* skip whitespace */
+        do { ++cur; } while (*cur == ' ');
+
+        labels.emplace(label_name, label_value);
+      }
+
+      if (cur == end || *cur++ != '}') {
+        return ReturnCode::error("ERUNTIME", "invalid encoding");
+      }
+    }
+
+    /* skip whitespace */
+    for (; cur != end && *cur == ' '; ++cur);
+
+    /* read value */
+    std::string value;
+    while (cur != end && !(*cur == '\n' || *cur == '\r' || *cur == ' ' || !*cur)) { 
+      value.push_back(*cur++);
+    }
+
+    /* skip whitespace */
+    for (; cur != end && (*cur == ' ' || *cur == '\n' || *cur == '\r'); ++cur);
+
+    /* add measurement */
+    if (!metric_id.empty() && !value.empty()) {
+      Measurement measurement(
+          metric_id,
+          labels,
+          WallClock::unixMicros(),
+          value);
+
+      samples->emplace_back(std::move(measurement));
+    }
+  }
+
+  return ReturnCode::success();
 }
 
 ReturnCode parseMeasurements(
@@ -71,6 +175,8 @@ ReturnCode parseMeasurements(
   switch (format) {
     case MeasurementCoding::STATSD:
       return parseStatsdMeasurements(input.data(), input.size(), samples);
+    case MeasurementCoding::BORGMON_PROMETHEUS:
+      return parseMeasurements_BORGMON(input, samples);
     default:
       return ReturnCode::error("ERUNTIME", "invalid format");
   }

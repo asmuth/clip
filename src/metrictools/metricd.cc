@@ -311,7 +311,9 @@ int main(int argc, const char** argv) {
     rc = ingestion_service->applyConfig(&config);
   }
 
-  ingestion_service->start();
+  if (rc.isSuccess()) {
+    ingestion_service->start();
+  }
 
   /* wait for shutdown or reload */
   while (rc.isSuccess()) {

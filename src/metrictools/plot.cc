@@ -97,7 +97,7 @@ ReturnCode PlotBuilder::getPlot(Plot* plot) {
 ReturnCode renderPlot(const Plot* plot, std::string* out) {
   Canvas chart;
   TimeDomain x_domain(plot->time_begin, plot->time_limit);
-  ContinuousDomain<double> y_domain(0, 1.0, false);
+  ContinuousDomain<double> y_domain(0, 10.0, false);
 
   auto line_chart = chart.addChart<LineChart2D<UnixTime, double>>(
       &x_domain, &y_domain);
