@@ -38,10 +38,11 @@ public:
   const std::string& getValue() const;
   TimestampType getTime() const;
   const LabelSet& getLabels() const;
+  LabelSet& getLabels();
 
 protected:
   const MetricIDType metric_id_;
-  const LabelSet labels_;
+  LabelSet labels_;
   const TimestampType time_;
   const std::string value_;
 };
@@ -52,6 +53,10 @@ bool parseMeasurementCoding(const std::string& s, MeasurementCoding* t);
 ReturnCode parseMeasurements(
     MeasurementCoding format,
     const std::string& input,
+    std::vector<Measurement>* samples);
+
+ReturnCode rewriteMeasurements(
+    const ConfigList* config,
     std::vector<Measurement>* samples);
 
 ReturnCode storeMeasurements(

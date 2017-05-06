@@ -43,6 +43,10 @@ const LabelSet& Measurement::getLabels() const {
   return labels_;
 }
 
+LabelSet& Measurement::getLabels() {
+  return labels_;
+}
+
 std::string getMeasurementCodingName(MeasurementCoding t) {
   switch (t) {
     case MeasurementCoding::STATSD: return "statsd";
@@ -70,6 +74,37 @@ ReturnCode parseMeasurements(
     default:
       return ReturnCode::error("ERUNTIME", "invalid format");
   }
+}
+
+static void applyLabelOverrides(
+    const std::vector<MetricLabelOverride>& overrides,
+    Measurement* measurement,
+    bool defaults) {
+  for (const auto& o : overrides) {
+    auto& labels = measurement->getLabels();
+    if (defaults == o.is_default && (!o.is_default || labels.count(o.label) == 0)) {
+      labels[o.label] = o.value;
+    }
+  }
+}
+
+ReturnCode rewriteMeasurements(
+    const ConfigList* config,
+    std::vector<Measurement>* measurements) {
+  auto global_cfg = config->getGlobalConfig();
+  for (auto& m : *measurements) {
+    auto metric_cfg = config->getMetricConfig(m.getMetricID());
+    if (!metric_cfg) {
+      continue;
+    }
+
+    applyLabelOverrides(metric_cfg->label_overrides, &m, true);
+    applyLabelOverrides(global_cfg->global_label_overrides, &m, true);
+    applyLabelOverrides(global_cfg->global_label_overrides, &m, false);
+    applyLabelOverrides(metric_cfg->label_overrides, &m, false);
+  }
+
+  return ReturnCode::success();
 }
 
 ReturnCode storeMeasurements(

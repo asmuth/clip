@@ -88,6 +88,11 @@ ReturnCode HTTPPullIngestionTask::invoke() {
     return rc;
   }
 
+  rc = rewriteMeasurements(config_,&samples);
+  if (!rc.isSuccess()) {
+    return rc;
+  }
+
   return storeMeasurements(config_, storage_backend_, samples);
 }
 

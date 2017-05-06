@@ -290,7 +290,7 @@ bool ConfigParser::parseLabelSetStanza(ConfigList* config) {
     }
   }
 
-  config->getGlobalConfig()->global_label_override.emplace_back(
+  config->getGlobalConfig()->global_label_overrides.emplace_back(
       MetricLabelOverride {
         .label = label,
         .value = value,

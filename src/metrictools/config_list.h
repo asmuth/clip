@@ -33,7 +33,7 @@ struct GlobalConfig {
    */
   MetricLabelConfig global_label_config;
 
-  std::vector<MetricLabelOverride> global_label_override;
+  std::vector<MetricLabelOverride> global_label_overrides;
 
 };
 
