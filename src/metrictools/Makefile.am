@@ -16,6 +16,8 @@ libfnordmetric_common_a_SOURCES = \
     cli/commands/list_cmd.cc \
     cli/commands/log_cmd.h \
     cli/commands/log_cmd.cc \
+    cli/commands/plot_cmd.h \
+    cli/commands/plot_cmd.cc \
     collect.h \
     collect.cc \
     collect_http.h \
