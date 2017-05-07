@@ -81,6 +81,10 @@ documentation:
         url: "/documentation/sample-format"
         file: "sample_format"
       -
+        title: "Federation"
+        url: "/documentation/federation"
+        file: "federation"
+      -
         title: "Collect via HTTP"
         url: "/documentation/collect-data-via-http"
         file: "collect_via_http"

@@ -1,22 +1,21 @@
 Getting Started with FnordMetric Server
 =======================================
 
-_This guide will walk you through starting a FnordMetric Server instance, inserting
-metric data and querying the metric data with ChartSQL. If you do not have installed
-FnordMetric yet, read the [Installation page](/documentation/installation) first._
+_This guide will walk you through configuring a custom metric, inserting
+measurements and drawing charts from the data. If you do not have installed
+metrictools yet, read the [Installation page](/documentation/installation) first._
 
-Fnordmetric Server is a standalone HTTP server application. It exposes a web UI
-and a HTTP API to run ChartSQL queries and collect timeseries data.
+When you installed metrictools, two main programs were added to your system:
+`metrictl` and `metricd`. 
 
-You can start FnordMetric Server with or without a "storage backend".
-If FnordMetric Server is started without a storage backend you can only use the
-web interface to execute ChartSQL queries against external data sources (like a
-MySQL database). If it is started with a storage backend, you can also use the
-HTTP (and optionally the statsd) API to collect timeseries data into the storage
-backend and subsequently query that timerseries data using ChartSQL.
+  - The `metrictl` program is a command line interface similar to `git`. It allows
+    you to execute a number of commands like inserting data and drawing charts
+    (see below). The `metrictl` utility is a standalone program and does _not_
+    require a running background server.
 
-FnordMetric Server currently supports three storage backends: `inmemory`, `disk`,
-and `hbase`.
+  - The `metricd` program is an optional background server that allows you to execute
+    commands and retrieve data and charts using a HTTP API. Note that running
+    `metricd` is entirely optional.
 
 
 #### Starting Fnordmetric Server
