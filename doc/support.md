@@ -1,9 +1,9 @@
 Support
 =======
 
-There are various ways to get support for FnordMetric:
+There are various ways to get support for metrictools:
 
-+ [Github Issues](http://github.com/paulasmuth/fnordmetric/issues)
-+ [The FnordMetric Google Group](http://groups.google.com/group/fnordmetric)
++ [Github Issues](http://github.com/paulasmuth/metrictools/issues)
++ [The metrictools Google Group](http://groups.google.com/group/metrictools)
 
 

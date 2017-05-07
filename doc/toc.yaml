@@ -50,28 +50,28 @@ documentation:
     pages:
       -
         title: "metricd"
-        url: "/documentation/data-model"
-        file: "data_model"
+        url: "/documentation/metricd"
+        file: "metricd"
       -
         title: "metrictl list"
-        url: "/documentation/metric-types"
-        file: "metric_types"
+        url: "/documentation/metrictl-list"
+        file: "metrictl_list"
       -
         title: "metrictl log"
-        url: "/documentation/metric-types"
-        file: "metric_types"
+        url: "/documentation/metrictl-log"
+        file: "metrictl_log"
       -
         title: "metrictl insert"
-        url: "/documentation/metric-types"
-        file: "metric_types"
+        url: "/documentation/metrictl-insert"
+        file: "metrictl_insert"
       -
         title: "metrictl collect"
-        url: "/documentation/metric-types"
-        file: "metric_types"
+        url: "/documentation/metrictl-collect"
+        file: "metrictl_collect"
       -
         title: "metrictl plot"
-        url: "/documentation/metric-types"
-        file: "metric_types"
+        url: "/documentation/metrictl-plot"
+        file: "metrictl_plot"
 
   -
     title: "Collecting Data"
@@ -89,29 +89,13 @@ documentation:
         url: "/documentation/collect-data-via-http"
         file: "collect_via_http"
       -
+        title: "Collect via Shell/Process"
+        url: "/documentation/collect-data-via-shell"
+        file: "collect_via_shell"
+      -
         title: "Collect via UDP/StatsD"
         url: "/documentation/collect-data-via-statsd"
         file: "collect_via_statsd"
-
-  -
-    title: "Charts & Visualizations"
-    pages:
-      -
-        title: "Building HTML Dashboards"
-        url: "/documentation/html-dashboards"
-        file: "html_dashboards"
-      -
-        title: "Widget: Timeseries"
-        url: "/documentation/widget-timeseries"
-        file: "widget_timeseries"
-      -
-        title: "Widget: Plot"
-        url: "/documentation/widget-linechart"
-        file: "widget_timeseries"
-      -
-        title: "Widget: Barchart"
-        url: "/documentation/widget-linechart"
-        file: "widget_timeseries"
 
   -
     title: "HTTP API"
@@ -122,8 +106,12 @@ documentation:
         file: "http_api"
 
   -
-    title: "Backends"
+    title: "Storage Backends"
     pages:
+      -
+        title: "SQLite Backend"
+        url: "/documentation/backend-sqlite"
+        file: "backend_sqlite"
       -
         title: "MySQL Backend"
         url: "/documentation/backend-mysql"
