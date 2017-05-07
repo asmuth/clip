@@ -68,7 +68,7 @@ Using the command line below we will create a simple line chart with one series.
 Note that the `plot` command is reasonably powerful and accepts a large number of
 options not discussed here.
 
-    $ metricctl plot temperature --from "-30min" --until now --output /tmp/temperature_chart.png
+    $ metricctl plot --metric temperature --from "-30min" --until now --output /tmp/temperature_chart.png
 
 If you open the `/tmp/temperature_chart.png` in the image viewer of your choice,
 you should see something like this:
@@ -91,9 +91,9 @@ configuration of the `celsius` unit below should be self-explanatory.
       unit celsius
     }
 
-Once the unit is configured, all the commands and plots will display it by default.
 For detailed information on the unit configuration please refer to the Units of
-measurement page.
+measurement page. Once the unit is configured, all the commands and plots will
+display it by default &mdash; much better now:
 
     $ metrictl list
     temperature                                          23.5 °C
@@ -151,7 +151,7 @@ instances of the temperature metric:
 
 Let's display all three devices in a single chart:
 
-    $ metricctl plot temperature --from "-30min" --until now --output /tmp/temperature_chart.png
+    $ metricctl plot --metric temperature --from "-30min" --until now --output /tmp/temperature_chart.png
 
 The command should result in a plot similar to the one below. Have a look at the
 page of the `plot` command for  more information on how to filter and aggregate
@@ -167,8 +167,8 @@ the `insert` command is fine and we could continue doing it this way, let's try
 another method for demonstration purposes:
 
 metrictools can also actively collect data through a number of transports. For
-example, you can pull data from any HTTP endpoint using the `collect_http` block.
-Or you can fetch data via SNMP using the `collect_snmp` block.
+example, you can pull data from any HTTP endpoint using the `collect\_http` block.
+Or you can fetch data via SNMP using the `collect\_snmp` block.
 
 For this example, let's use the `collect_proc` block. This block will periodically
 execute any programm (for example, a shell script) and read measurements from
@@ -225,6 +225,37 @@ also add the `--verbose` switch so that we see what's going on
 
 
 ### Building a dashboard from the data
+
+All metrictool commands can also be execute through a HTTP API. This allows you
+to plug the data and charts into pretty much any HTML website (or other app).
+
+To access the HTTP API we have to start the `metricd` program. Execute this
+command line to start metricd in another tab:
+
+    $ metricd --config ~/.metrictl.conf --listen_http localhost:8080
+
+As a simple demonstration, we will create a standalone html page that embeds
+a chart using an iframe. Note that there are other ways to include charts and
+data in the page (besides iframes).
+
+If we run the `metrictl plot` command with the `--format url` flag, it will
+return a url representation of the command. However as you can probably see
+the mapping of command line arguments to url parameters is trivial.
+
+    $ metricctl plot --metric temperature --from "-30min" --until now --format url
+    /api/v1/plot?metric=temperature&from=-30min&until=now
+
+Save this to "temp_dashboard.html" and open it in your browser:
+
+    <!DOCTYPE html>
+    <title>Demo Dashboard</title>
+
+    <iframe
+      src="http://localhost:8080/api/v1/plot?metric=temperature&from=-30min&until=now">
+
+The page should look like this:
+
+  <img src="/img/fnordmetric_ui_example_screen.png" style="width: 100%;">
 
 
 ### Using predefined metrics from plugins
