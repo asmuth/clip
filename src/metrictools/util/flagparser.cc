@@ -241,7 +241,7 @@ ReturnCode FlagParser::parseArgv(const std::vector<std::string>& argv) {
       }
 
       flag_values_.emplace_back(FlagValue {
-        .shortopt = flag_ptr->shortopt,
+        .shortopt = flag_ptr->shortopt ? flag_ptr->shortopt : "",
         .longopt = flag_ptr->longopt,
         .value = flag_ptr->values.back()
       });

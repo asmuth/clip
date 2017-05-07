@@ -17,6 +17,7 @@ ReturnCode parsePointInTime(const std::string& str, uint64_t* timestamp) {
   /* "now" */
   if (str == "now") {
     *timestamp = WallClock::unixMicros();
+    return ReturnCode::success();
   }
 
   /* -<duration> */
@@ -72,7 +73,7 @@ ReturnCode parsePointInTime(const std::string& str, uint64_t* timestamp) {
     return ReturnCode::success();
   }
 
-  return ReturnCode::errorf("EARG", "invalid time: $0", str);
+  return ReturnCode::errorf("EARG", "invalid time: '$0'", str);
 }
 
 ReturnCode parseDuration(const String& str, uint64_t* duration) {

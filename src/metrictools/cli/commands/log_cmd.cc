@@ -12,6 +12,7 @@
 #include <metrictools/cli/commands/log_cmd.h>
 #include <metrictools/util/flagparser.h>
 #include <metrictools/util/time.h>
+#include <metrictools/util/format.h>
 
 namespace fnordmetric {
 
@@ -19,6 +20,20 @@ ReturnCode LogCommand::execute(
     CLIContext* ctx,
     const std::vector<std::string>& argv) {
   FlagParser flags;
+
+  flags.defineFlag(
+      "from",
+      FlagParser::T_STRING,
+      false,
+      NULL,
+      NULL);
+
+  flags.defineFlag(
+      "until",
+      FlagParser::T_STRING,
+      false,
+      NULL,
+      NULL);
 
   auto flags_rc = flags.parseArgv(argv);
   if (!flags_rc.isSuccess()) {
@@ -43,13 +58,30 @@ ReturnCode LogCommand::execute(
     unit = ctx->config->getUnitConfig(metric->unit_id);
   }
 
+  uint64_t time_limit = WallClock::unixMicros();
+  uint64_t time_begin = time_limit - 2 * kMicrosPerSecond;
+
+  if (flags.isSet("from")) {
+    auto rc = parsePointInTime(flags.getString("from"), &time_begin);
+    if (!rc.isSuccess()) {
+      return rc;
+    }
+  }
+
+  if (flags.isSet("until")) {
+    auto rc = parsePointInTime(flags.getString("until"), &time_limit);
+    if (!rc.isSuccess()) {
+      return rc;
+    }
+  }
+
   FetchStorageOp op(ctx->config->getGlobalConfig());
   op.addRequest(FetchStorageOp::FetchRequest {
     .metric = metric,
     .fetch_last = true,
     .fetch_history = true,
-    .history_time_begin = WallClock::unixMicros() - 2 * kMicrosPerSecond,
-    .history_time_limit = WallClock::unixMicros()
+    .history_time_begin = time_begin,
+    .history_time_limit = time_limit
   });
 
   auto rc = ctx->storage_backend->performOperation(&op);
@@ -93,6 +125,8 @@ const std::string& LogCommand::getDescription() const {
 void LogCommand::printHelp() const {
   std::cerr <<
       "Usage: $ metricctl log [<options>] <metric>\n"
+      "  --from <timespec>         Set the start time (inclusive)\n"
+      "  --until <timespec>        Set the end time (exclusive)\n"
       "  -F, --filter <expr>       The tree path of the metric.\n"
       "\n"
       "Examples:\n"

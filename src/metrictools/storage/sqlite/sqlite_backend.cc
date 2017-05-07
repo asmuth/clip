@@ -335,9 +335,11 @@ ReturnCode SQLiteBackend::fetchData(
     cols.insert(cols.end(), label_cols.begin(), label_cols.end());
 
     auto qry = StringUtil::format(
-        "SELECT $0 FROM $1;",
+        "SELECT $0 FROM $1 WHERE time >= $2 AND time < $3;",
         StringUtil::join(cols, ", "),
-        escapeString(request->metric->metric_id + ":history"));
+        escapeString(request->metric->metric_id + ":history"),
+        request->history_time_begin,
+        request->history_time_limit);
 
     std::list<std::vector<std::string>> rows;
     auto rc = executeQuery(qry, &rows);

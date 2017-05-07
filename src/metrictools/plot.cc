@@ -10,6 +10,7 @@
 #include <metrictools/plot.h>
 #include <metrictools/util/time.h>
 #include <metrictools/timeseries.h>
+#include <metrictools/util/format.h>
 #include "libcplot/libcplot.h"
 
 namespace fnordmetric {
@@ -28,11 +29,27 @@ PlotBuilder::PlotBuilder(
 ReturnCode PlotBuilder::addArgument(
     const std::string& key,
     const std::string& value) {
+  if (key == "from") {
+    return setFrom(value);
+  }
+
+  if (key == "until") {
+    return setUntil(value);
+  }
+
   if (key == "metric") {
     return addMetric(value);
   }
 
   return ReturnCode::errorf("EARG", "invalid argument: $0", key);
+}
+
+ReturnCode PlotBuilder::setFrom(const std::string& p) {
+  return parsePointInTime(p, &plot_.time_begin);
+}
+
+ReturnCode PlotBuilder::setUntil(const std::string& p) {
+  return parsePointInTime(p, &plot_.time_limit);
 }
 
 ReturnCode PlotBuilder::addMetric(const std::string& metric_id) {

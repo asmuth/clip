@@ -40,6 +40,9 @@ public:
 
 protected:
 
+  ReturnCode setFrom(const std::string& p);
+  ReturnCode setUntil(const std::string& p);
+
   ReturnCode addMetric(const std::string& metric_id);
   ReturnCode flush();
 
