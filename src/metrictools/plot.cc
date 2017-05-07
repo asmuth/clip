@@ -72,7 +72,7 @@ ReturnCode PlotBuilder::flush() {
   for (const auto& res : op.getResponses()) {
     PlotSeries series;
     series.series_name = "series";
-    auto rc = convertTimeseries(res.history, &series.data);
+    auto rc = convertTimeseries(res.history.get(), &series.data);
     if (!rc.isSuccess()) {
       return rc;
     }

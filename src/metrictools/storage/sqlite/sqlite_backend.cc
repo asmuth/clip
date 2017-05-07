@@ -216,13 +216,6 @@ ReturnCode SQLiteBackend::insertMeasurement(
   }
 
   {
-    auto rc = executeQuery("BEGIN");
-    if (!rc.isSuccess()) {
-      return rc;
-    }
-  }
-
-  {
     std::vector<std::string> col_names;
     std::vector<std::string> col_values;
 
@@ -277,13 +270,6 @@ ReturnCode SQLiteBackend::insertMeasurement(
         StringUtil::join(col_values, ", "));
 
     auto rc = executeQuery(qry);
-    if (!rc.isSuccess()) {
-      return rc;
-    }
-  }
-
-  {
-    auto rc = executeQuery("COMMIT");
     if (!rc.isSuccess()) {
       return rc;
     }
@@ -381,14 +367,20 @@ ReturnCode SQLiteBackend::fetchData(
         return ReturnCode::error("ERUNTIME", "sqlite error: invalid result");
       }
 
-      auto& resp_ts = resp_iter->second.history;
-      size_t pos = std::upper_bound(
-          resp_ts.timestamps.begin(),
-          resp_ts.timestamps.end(),
-          timestamp) - resp_ts.timestamps.begin();
+      auto resp_ts = dynamic_cast<Timeseries<std::string>*>(
+          resp_iter->second.history.get());
+      if (!resp_ts) {
+        resp_ts = new Timeseries<std::string>();
+        resp_iter->second.history.reset(resp_ts);
+      }
 
-      resp_ts.timestamps.insert(resp_ts.timestamps.begin() + pos, timestamp);
-      resp_ts.values.insert(resp_ts.values.begin() + pos, r[1]);
+      size_t pos = std::upper_bound(
+          resp_ts->timestamps.begin(),
+          resp_ts->timestamps.end(),
+          timestamp) - resp_ts->timestamps.begin();
+
+      resp_ts->timestamps.insert(resp_ts->timestamps.begin() + pos, timestamp);
+      resp_ts->values.insert(resp_ts->values.begin() + pos, r[1]);
     }
   }
 

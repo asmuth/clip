@@ -16,8 +16,14 @@
 
 namespace fnordmetric {
 
+struct AnyTimeseries {
+  virtual ~AnyTimeseries() = default;
+};
+
+using TimeseriesRef = std::unique_ptr<AnyTimeseries>;
+
 template <typename T>
-struct Timeseries {
+struct Timeseries : public AnyTimeseries {
 
   /**
    * A list of timestamps, formatted as the number of microseconds since epoch
@@ -39,7 +45,18 @@ struct Timeseries {
 /**
  * Convert a timeseries from one value type to another
  */
-template <typename T1, typename T2>
+template <typename T>
+ReturnCode convertTimeseries(
+    const AnyTimeseries* in,
+    Timeseries<T>* out);
+
+/**
+ * Convert a timeseries from one value type to another
+ */
+template <
+    typename T1,
+    typename T2,
+    typename std::enable_if<!std::is_same<T1, T2>::value>::type* = nullptr>
 ReturnCode convertTimeseries(
     const Timeseries<T1>& in,
     Timeseries<T2>* out);

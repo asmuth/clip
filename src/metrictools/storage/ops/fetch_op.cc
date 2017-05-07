@@ -16,7 +16,7 @@ FetchStorageOp::FetchStorageOp(
     global_config_(global_config) {}
 
 void FetchStorageOp::addRequest(FetchRequest&& request) noexcept {
-  requests_.emplace_back(request);
+  requests_.emplace_back(std::move(request));
 }
 
 const std::vector<FetchStorageOp::FetchRequest>&
@@ -25,7 +25,7 @@ FetchStorageOp::getRequests() const noexcept {
 }
 
 void FetchStorageOp::addResponse(FetchResponse&& response) noexcept {
-  responses_.emplace_back(response);
+  responses_.emplace_back(std::move(response));
 }
 
 const std::vector<FetchStorageOp::FetchResponse>&

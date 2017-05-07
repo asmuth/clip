@@ -85,7 +85,7 @@ public:
     /**
      * If historical data was requested, the historical data for this label
      */
-    Timeseries<std::string> history;
+    TimeseriesRef history;
 
   };
 

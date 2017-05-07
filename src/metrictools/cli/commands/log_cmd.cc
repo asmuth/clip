@@ -58,12 +58,14 @@ ReturnCode LogCommand::execute(
   }
 
   for (const auto& res : op.getResponses()) {
+    Timeseries<std::string> res_ts;
+    convertTimeseries(res.history.get(), &res_ts);
+
     std::cout << metric->metric_id << " :: " << res.label << std::endl;
-    assert(res.history.timestamps.size() == res.history.values.size());
-    for (size_t i = 0; i < res.history.timestamps.size(); ++i) {
+    for (size_t i = 0; i < res_ts.timestamps.size(); ++i) {
       std::cout
-          << "  " << UnixTime(res.history.timestamps[i]).toString()
-          << " -> " << formatValue(res.history.values[i], unit)
+          << "  " << UnixTime(res_ts.timestamps[i]).toString()
+          << " -> " << formatValue(res_ts.values[i], unit)
           << std::endl;
     }
 
