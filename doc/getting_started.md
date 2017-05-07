@@ -162,7 +162,70 @@ metrics.
 
 ### Automating data collection
 
+While our previous approach of explicitly adding values to the metric using
+the `insert` command is fine and we could continue doing it this way, let's try
+another method for demonstration purposes:
+
+metrictools can also actively collect data through a number of transports. For
+example, you can pull data from any HTTP endpoint using the `collect_http` block.
+Or you can fetch data via SNMP using the `collect_snmp` block.
+
+For this example, let's use the `collect_proc` block. This block will periodically
+execute any programm (for example, a shell script) and read measurements from
+the programs standard output.
+
+Save this script to `~/collect_temp.sh` and set the executable bit. (The script
+should be in the same folder as the `metrictl.conf` file)
+
+    #!/bin/bash
+    echo 'temperature device="deviceA" 23.5'
+    echo 'temperature device="deviceB" 22.1'
+    echo 'temperature device="deviceC" 28.7'
+
+When you execute the script it wil simply print three measurements in the
+Borgmon/Prometheus text format:
+
+    $ ~/collect_temp.sh
+    temperature device="deviceA" 23.5
+    temperature device="deviceA" 22.1
+    temperature device="deviceA" 28.7
+
+To tell metrictools to execute the script every 10s and store the output, add
+this block to the configuration file:
+
+    collect_proc {
+      cmd "collect_temp.sh"
+      format borgmon
+      interval 10s
+    }
+
+Our full configuration file should now look like this:
+
+    backend "sqlite:///tmp/test.sqlite"
+
+    unit celsius {
+      unit_name celsius 1 "Celsius" "Celcius" "°C"
+    }
+
+    metric temperature {
+      kind gauge(float64)
+      unit celsius
+    }
+
+    collect_proc {
+      cmd "collect_temp.sh"
+      format borgmon
+      interval 10s
+    }
+
+Then simply run the `collect` command to start the collection process. Let's
+also add the `--verbose` switch so that we see what's going on
+
+    $ metrictl collect --verbose
+
+
 ### Building a dashboard from the data
+
 
 ### Using predefined metrics from plugins
 
