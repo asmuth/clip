@@ -68,7 +68,7 @@ ReturnCode LogCommand::execute(
     for (size_t i = 0; i < res_ts.timestamps.size(); ++i) {
       std::cout
           << "  " << UnixTime(res_ts.timestamps[i]).toString()
-          << " -> " << formatValue(res_ts.values[i], unit)
+          << " -> " << formatValue(res_ts.values[i], unit, metric->rate)
           << std::endl;
     }
 

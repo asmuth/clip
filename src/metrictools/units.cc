@@ -10,12 +10,14 @@
 #include <iomanip>
 #include <sstream>
 #include <metrictools/units.h>
+#include <metrictools/util/time.h>
 
 namespace fnordmetric {
 
 std::string formatValue(
     const std::string& value,
     const UnitConfig* unit /* = nullptr */,
+    uint64_t rate_base /* = 0 */,
     double scale /* = 1.0 */) try {
   auto val = std::stod(value);
   val *= scale;
@@ -39,6 +41,32 @@ std::string formatValue(
     s << unit_name->symbol;
   } else {
     s << std::fixed << std::setprecision(2) << val;
+  }
+
+  if (rate_base > 0) {
+    s << "/";
+
+    if (rate_base == kMicrosPerSecond) {
+      s << "s";
+    } else if (rate_base < kMicrosPerMinute) {
+      s << (rate_base / kMicrosPerSecond);
+      s << "s";
+    } else if (rate_base == kMicrosPerMinute) {
+      s << "min";
+    } else if (rate_base < kMicrosPerHour) {
+      s << (rate_base / kMicrosPerMinute);
+      s << "min";
+    } else if (rate_base == kMicrosPerHour) {
+      s << "h";
+    } else if (rate_base < kMicrosPerDay) {
+      s << (rate_base / kMicrosPerHour);
+      s << "h";
+    } else if (rate_base == kMicrosPerDay) {
+      s << "day";
+    } else {
+      s << (rate_base / kMicrosPerDay);
+      s << "day";
+    }
   }
 
   return s.str();

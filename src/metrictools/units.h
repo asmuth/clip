@@ -31,6 +31,7 @@ struct UnitConfig {
 std::string formatValue(
     const std::string& value,
     const UnitConfig* unit = nullptr,
+    uint64_t rate_base = 0,
     double scale = 1.0);
 
 } // namespace fnordmetric

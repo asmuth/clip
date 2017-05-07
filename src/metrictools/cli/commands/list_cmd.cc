@@ -38,7 +38,7 @@ static ReturnCode listMetric(
 
   std::cout << metric->metric_id << std::endl;
   for (const auto& res : op.getResponses()) {
-    std::cout << "    " << res.label << " -> " << formatValue(res.last_value, unit) << std::endl;
+    std::cout << "    " << res.label << " -> " << formatValue(res.last_value, unit, metric->rate) << std::endl;
   }
 
   return ReturnCode::success();
