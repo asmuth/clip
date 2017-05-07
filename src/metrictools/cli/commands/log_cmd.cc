@@ -59,7 +59,10 @@ ReturnCode LogCommand::execute(
 
   for (const auto& res : op.getResponses()) {
     Timeseries<std::string> res_ts;
-    convertTimeseries(res.history.get(), &res_ts);
+    auto rc = convertTimeseries(res.history.get(), &res_ts);
+    if (!rc.isSuccess()) {
+      return rc;
+    }
 
     std::cout << metric->metric_id << " :: " << res.label << std::endl;
     for (size_t i = 0; i < res_ts.timestamps.size(); ++i) {

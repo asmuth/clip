@@ -40,6 +40,11 @@ struct Timeseries : public AnyTimeseries {
    */
   size_t size() const;
 
+  /**
+   * Clear all elements
+   */
+  void clear();
+
 };
 
 /**
@@ -60,6 +65,19 @@ template <
 ReturnCode convertTimeseries(
     const Timeseries<T1>& in,
     Timeseries<T2>* out);
+
+/**
+ * Convert a timeseries to another type (in place)
+ */
+template <typename T>
+ReturnCode convertTimeseriesTo(TimeseriesRef* ts, Timeseries<T>** out);
+
+/**
+ * Calculate a rate
+ */
+void timeseriesRate(
+    Timeseries<double>* timeseries,
+    uint64_t rate);
 
 /**
  * Print a debug dump of the timeseries

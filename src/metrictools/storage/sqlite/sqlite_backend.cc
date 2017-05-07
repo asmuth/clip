@@ -385,6 +385,34 @@ ReturnCode SQLiteBackend::fetchData(
   }
 
   for (auto& r : resp_map) {
+    switch (request->metric->kind) {
+      case MetricKind::MONOTONIC_UINT64:
+      case MetricKind::MONOTONIC_FLOAT64: {
+        Timeseries<double>* ts = nullptr;
+        auto rc = convertTimeseriesTo<double>(&r.second.history, &ts);
+        if (!rc.isSuccess()) {
+          return rc;
+        }
+
+        assert(r.second.history.get() == ts);
+
+        if (request->metric->rate) {
+          timeseriesRate(ts, request->metric->rate);
+        }
+        break;
+      }
+
+      case MetricKind::GAUGE_INT64:
+      case MetricKind::GAUGE_UINT64:
+      case MetricKind::GAUGE_FLOAT64:
+      case MetricKind::COUNTER_INT64:
+      case MetricKind::COUNTER_UINT64:
+      case MetricKind::COUNTER_FLOAT64:
+      case MetricKind::STRING:
+        break;
+
+    }
+
     op->addResponse(std::move(r.second));
   }
 

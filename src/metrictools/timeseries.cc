@@ -162,5 +162,34 @@ ReturnCode convertTimeseries(
   return ReturnCode::success();
 }
 
+void timeseriesRate(Timeseries<double>* ts, uint64_t rate) {
+  switch (ts->size()) {
+    case 0:
+      return;
+    case 1:
+      ts->clear();
+      return;
+  }
+
+  uint64_t ct = ts->timestamps.front();
+  double cv = ts->values.front();
+
+  for (size_t i = 1; i < ts->size(); ++i) {
+    auto v = ts->values[i];
+    if (v > cv) {
+      v -= cv;
+    }
+
+    ts->values[i - 1] = (v / (ts->timestamps[i] - ct)) * rate;
+    ts->timestamps[i - 1] = ts->timestamps[i];
+
+    ct = ts->timestamps[i];
+    cv = ts->values[i];
+  }
+
+  ts->timestamps.pop_back();
+  ts->values.pop_back();
+}
+
 } // namespace fnordmetric
 

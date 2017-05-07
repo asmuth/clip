@@ -20,6 +20,12 @@ size_t Timeseries<T>::size() const {
   return timestamps.size();
 }
 
+template <typename T>
+void Timeseries<T>::clear() {
+  values.clear();
+  timestamps.clear();
+}
+
 template <
     typename T1,
     typename T2,
@@ -49,6 +55,47 @@ ReturnCode convertTimeseries(
 
   if (dynamic_cast<const Timeseries<double>*>(in)) {
     return convertTimeseries(*dynamic_cast<const Timeseries<double>*>(in), out);
+  }
+
+  return ReturnCode::error("EARG", "invalid timeseries type");
+}
+
+template <typename T1, typename T2>
+ReturnCode convertTimeseriesFromTo(TimeseriesRef* ts, Timeseries<T2>** out) {
+  if (!dynamic_cast<const Timeseries<T1>*>(ts->get())) {
+    return ReturnCode::success();
+  }
+
+  if (std::is_same<T1, T2>::value) {
+    *out = dynamic_cast<Timeseries<T2>*>(ts->get());
+    assert(*out);
+    return ReturnCode::success();
+  }
+
+  *out = new Timeseries<T2>();
+  std::unique_ptr<Timeseries<T2>> out_ref(*out);
+
+  auto rc = convertTimeseries(
+      dynamic_cast<const Timeseries<T1>*>(ts->get()),
+      out_ref.get());
+
+  if (!rc.isSuccess()) {
+    return rc;
+  }
+
+  *ts = std::move(out_ref);
+  return ReturnCode::success();
+}
+
+template <typename T>
+ReturnCode convertTimeseriesTo(TimeseriesRef* ts, Timeseries<T>** out) {
+  *out = nullptr;
+
+  {
+    auto rc = convertTimeseriesFromTo<std::string, T>(ts, out);
+    if (!rc.isSuccess() || *out) {
+      return rc;
+    }
   }
 
   return ReturnCode::error("EARG", "invalid timeseries type");
