@@ -1,18 +1,18 @@
-Installing FnordMetric
+Installing metrictools
 ======================
 
-FnordMetric is written in C++. You can either install a binary release or compile
-from source. Fnordmetric will install two main binaries into your system:
-`metric-collectd` and `metric-queryd`.
+The metrictools are written in C++. You can either install a binary release or
+compile from source. Two main programs will be installed into your system:
+`metrictl` and `metricd`.
 
-You can find the complete [source code on Github](http://github.com/paulasmuth/fnordmetric)
+You can find the complete [source code on Github](http://github.com/paulasmuth/metrictools)
 
 ### Compile from source
 
-You need autotools and a modern c++ compiler. To compile fnordmetric from a git
+You need autotools and a modern c++ compiler. To compile metrictools from a git
 checkout run:
 
-    $ git clone https://github.com/paulasmuth/fnordmetric.git && cd fnordmetric
+    $ git clone https://github.com/paulasmuth/metrictools.git && cd metrictools
     $ ./autogen.sh
     $ ./configure
     $ make
