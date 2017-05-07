@@ -14,11 +14,12 @@ which allows you to execute the same commands that you can execute with `metrict
 Note that running `metricd` is entirely optional and for now we're only interested
 in the `metrictl` program. 
 
-### Adding a metric
+## Adding a metric
 
 In contrast to some other systems, metrictools requires all metrics to be explicitly
-configured in a configuration file. You can find some discussion on why we think
-this is a good idea on the Data Model page. To get started we need to create a
+configured in a [configuration file](/documentation/configuration-file). You can
+find some discussion on why we think this is a good idea on the
+[data model](/documentation/data-model) page. To get started we need to create a
 simple configuration file. Save this to `~/.metrictl.conf`
 
     backend "sqlite:///tmp/test.sqlite"
@@ -34,8 +35,8 @@ the storage backend.
 
 The second `metric` block adds a new metric called `temperature` that we will
 use for our example. We have to specify a metric type, which we will simply set
-to `gauge(float64)` for now (have a look at the Metric Types page for more
-information)
+to `gauge(float64)` for now (have a look at the [metric types](/documentation/metric-types)
+page for more information)
 
 With the config file in place, we can start adding data to our new metric. Run
 this command to store `23.5` as the current temperature value.
@@ -76,7 +77,7 @@ you should see something like this:
 <img src="/examples/linecharts/simple_lines/simple_lines.png" style="width: 100%;">
 
 
-### Adding a unit of measurement
+## Adding a unit of measurement
 
 What good is a measurement if we don't know the unit it's reported in? metrictools
 encourages you to put this information into the configuration of a metric. The
@@ -91,15 +92,15 @@ configuration of the `celsius` unit below should be self-explanatory.
       unit celsius
     }
 
-For detailed information on the unit configuration please refer to the Units of
-measurement page. Once the unit is configured, all the commands and plots will
-display it by default &mdash; much better now:
+For detailed information on the unit configuration please refer to the [units of
+measurement](/documentatio/units-of-measurement) page. Once the unit is configured,
+all the commands and plots will display it by default &mdash; much better now:
 
     $ metrictl list
     temperature                                          23.5 °C
 
 
-### Adding labels
+## Adding labels
 
 For the sake of the example, let's suppose we wanted to measure the temperature
 of three devices `deviceA`, `deviceB` and `deviceC`. Using the knowledge we
@@ -154,25 +155,27 @@ Let's display all three devices in a single chart:
     $ metricctl plot --metric temperature --from "-30min" --until now --output /tmp/temperature_chart.png
 
 The command should result in a plot similar to the one below. Have a look at the
-page of the `plot` command for  more information on how to filter and aggregate
-metrics.
+[page of the `plot` command](/documentation/command-plot) for more information on
+how to filter and aggregate metrics.
 
 <img src="/examples/linecharts/simple_lines/simple_lines.png" style="width: 100%;">
 
 
-### Automating data collection
+## Automating data collection
 
 While our previous approach of explicitly adding values to the metric using
 the `insert` command is fine and we could continue doing it this way, let's try
 another method for demonstration purposes:
 
 metrictools can also actively collect data through a number of transports. For
-example, you can pull data from any HTTP endpoint using the `collect\_http` block.
-Or you can fetch data via SNMP using the `collect\_snmp` block.
+example, you can pull data from any HTTP endpoint using the
+[`collect\_http`](/documentation/collect-data-via-http) block.
+Or you can fetch data via SNMP using the [`collect\_snmp`](/documentation/collect-data-via-snmp)
+block.
 
-For this example, let's use the `collect_proc` block. This block will periodically
-execute any programm (for example, a shell script) and read measurements from
-the programs standard output.
+For this example, let's use the [`collect\_proc`](/documentation/collect-data-via-shell)
+block. This block will periodically execute any programm (for example, a shell script)
+and read measurements from the programs standard output.
 
 Save this script to `~/collect_temp.sh` and set the executable bit. (The script
 should be in the same folder as the `metrictl.conf` file)
@@ -183,34 +186,8 @@ should be in the same folder as the `metrictl.conf` file)
     echo 'temperature device="deviceC" 28.7'
 
 When you execute the script it wil simply print three measurements in the
-Borgmon/Prometheus text format:
-
-    $ ~/collect_temp.sh
-    temperature device="deviceA" 23.5
-    temperature device="deviceA" 22.1
-    temperature device="deviceA" 28.7
-
-To tell metrictools to execute the script every 10s and store the output, add
-this block to the configuration file:
-
-    collect_proc {
-      cmd "collect_temp.sh"
-      format borgmon
-      interval 10s
-    }
-
-Our full configuration file should now look like this:
-
-    backend "sqlite:///tmp/test.sqlite"
-
-    unit celsius {
-      unit_name celsius 1 "Celsius" "Celcius" "°C"
-    }
-
-    metric temperature {
-      kind gauge(float64)
-      unit celsius
-    }
+Borgmon/Prometheus text format. To tell metrictools to execute the script every
+10s and store the output, add this block to the configuration file:
 
     collect_proc {
       cmd "collect_temp.sh"
@@ -224,19 +201,17 @@ also add the `--verbose` switch so that we see what's going on
     $ metrictl collect --verbose
 
 
-### Building a dashboard from the data
+## Building a dashboard from the data
 
-All metrictool commands can also be execute through a HTTP API. This allows you
+All metrictool commands can also be executed through a HTTP API. This allows you
 to plug the data and charts into pretty much any HTML website (or other app).
 
-To access the HTTP API we have to start the `metricd` program. Execute this
-command line to start metricd in another tab:
+To access the HTTP API we have to start the `metricd` program. The metricd server
+will also automatically run the collect command. For more information on
+running metricd, have a look at [the metricd page](/documentation/metricd).
+Execute this command line to start metricd in another tab:
 
     $ metricd --config ~/.metrictl.conf --listen_http localhost:8080
-
-As a simple demonstration, we will create a standalone html page that embeds
-a chart using an iframe. Note that there are other ways to include charts and
-data in the page (besides iframes).
 
 If we run the `metrictl plot` command with the `--format url` flag, it will
 return a url representation of the command. However as you can probably see
@@ -245,21 +220,62 @@ the mapping of command line arguments to url parameters is trivial.
     $ metricctl plot --metric temperature --from "-30min" --until now --format url
     /api/v1/plot?metric=temperature&from=-30min&until=now
 
-Save this to "temp_dashboard.html" and open it in your browser:
+As a simple demonstration, we will create a standalone html page that embeds
+a chart using an iframe. Note that there are other ways to include charts and
+data in the page (besides iframes). Save this to `temp_dashboard.html` and open
+it in your browser:
 
     <!DOCTYPE html>
     <title>Demo Dashboard</title>
 
-    <iframe
-      src="http://localhost:8080/api/v1/plot?metric=temperature&from=-30min&until=now">
+    <iframe src="http://localhost:8080/api/v1/plot?metric=temperature&from=-30min&until=now">
 
 The page should look like this:
 
   <img src="/img/fnordmetric_ui_example_screen.png" style="width: 100%;">
 
 
-### Using predefined metrics from plugins
+## Using predefined metrics from plugins
 
-### Adding global labels
+We've seen how we can configure and display our own custom metrics. Lastly let's
+see how we can use or create prebuilt plugins. A metrictools plugin consists
+of a configuration file (like the one we wrote, but without the `backend` stanza)
+and optionally a list of other files such as the exporter/collection programs
+or html dashboards.
 
+Assuming you're running this on a linux machine and have installed metrictools
+in your system using the default prefix, you should be able to add [the linux
+plugin](/plugins/linux) to your config with one line:
 
+    include "${plugindir}/linux/linux-plugin.conf"
+
+Adding this line to your config will add a long list of metrics (all prefixed
+with `linux.`) as well as a couple of simple dashboards.
+
+By default, most of the linux plugin metrics do not contain any labels. However
+since we might want to combine metrics from more than one machine using Federation
+it seems like a good idea to add a global ``hostname` label to _all_ metrics and
+set a default value for the label. This can be achieved by adding these two
+lines to the config file:
+
+    labels hostname
+    label_set hostname localhost default
+
+Note that hostname is an opaque string in this case. You could also set more than
+one and different default labels. For example `datacenter, rack, machine`
+
+Let's restart our metricd instance and see what our `metrictl list` looks like:
+
+    $ metrictl list
+    temperature                                             23.5
+    temperature                                             23.5
+    temperature                                             23.5
+    temperature                                             23.5
+    temperature                                             23.5
+    temperature                                             23.5
+
+If you open your web browser and navigate to `http://localhost:8080/plugin/linux`
+you should also be able to see a default dashboard that is included in the linux
+plugin:
+
+  <img src="/img/fnordmetric_ui_example_screen.png" style="width: 100%;">
