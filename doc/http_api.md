@@ -1,11 +1,8 @@
 HTTP API
 ========
 
-The HTTP API currently does not support any kind of authentication
-
-## metric-collectd
-
-These are the API methods exposed by `metric-collectd`
+The HTTP API currently does not support any kind of authentication. These are
+the API methods exposed by `metricd`
 
 <table>
   <tr>
@@ -13,34 +10,19 @@ These are the API methods exposed by `metric-collectd`
     <th>Description</th>
   </tr>
   <tr>
-    <td><code><a href="/documentation/collect-data-via-http"><strong>POST /metrics</strong></a></code></td>
+    <td><code><a href="/documentation/metrictl-insert"><strong>POST /api/v1/list</strong></a></code></td>
+    <td>Lorem ipsum dolor sit amet</td>
+  </tr>
+  <tr>
+    <td><code><a href="/documentation/metrictl-insert"><strong>POST /api/v1/log</strong></a></code></td>
+    <td>Lorem ipsum dolor sit amet</td>
+  </tr>
+  <tr>
+    <td><code><a href="/documentation/metrictl-insert"><strong>POST /api/v1/plot</strong></a></code></td>
+    <td>Lorem ipsum dolor sit amet</td>
+  </tr>
+  <tr>
+    <td><code><a href="/documentation/metrictl-insert"><strong>POST /api/v1/insert</strong></a></code></td>
     <td>Submit input samples</td>
-  </tr>
-</table>
-
-## metric-queryd
-
-These are the API methods exposed by `metric-queryd`
-
-<table>
-  <tr>
-    <th>Path</th>
-    <th>Description</th>
-  </tr>
-  <tr>
-    <td><code><a><strong>GET /api/v1/query</strong></a></code></td>
-    <td>Execute a SQL query</td>
-  </tr>
-  <tr>
-    <td><code><a href="/documentation/widget-timeseries"><strong>GET /embed/timeseries</strong></a></code></td>
-    <td>Render a timeseries chart</td>
-  </tr>
-  <tr>
-    <td><code><a href="/documentation/widget-plot"><strong>GET /embed/plot</strong></a></code></td>
-    <td>Render line/area/scatter charts</td>
-  </tr>
-  <tr>
-    <td><code><a href="/documentation/widget-barchart"><strong>GET /embed/barchart</strong></a></code></td>
-    <td>Render a bar chart</td>
   </tr>
 </table>
