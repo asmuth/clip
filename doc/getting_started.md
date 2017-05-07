@@ -9,7 +9,7 @@ When you installed metrictools, two main programs were added to your system:
 `metrictl` and `metricd`. The `metrictl` program is a command line interface
 similar to `git` that allows you to manage and query metric data and create charts.
 
-The `metricd` program is an optional background server that exposes a HTTP API
+The second `metricd` program is a background server that exposes a HTTP API
 which allows you to execute the same commands that you can execute with `metrictl`.
 Note that running `metricd` is entirely optional and for now we're only interested
 in the `metrictl` program. 
@@ -64,9 +64,9 @@ should return one or more lines. Before continuing with the next step, execute
 the insert command a couple of times and make sure there are at least two data
 points.
 
-Now let's create a chart from the data. Using the commandline below we will
-create a simple linechart with one series. Note that the `plot` command is
-reasonably powerful and accepts a large number of options not discussed here.
+Using the command line below we will create a simple line chart with one series.
+Note that the `plot` command is reasonably powerful and accepts a large number of
+options not discussed here.
 
     $ metricctl plot temperature --from "-30min" --until now --output /tmp/temperature_chart.png
 
@@ -77,6 +77,26 @@ you should see something like this:
 
 
 ### Adding a unit of measurement
+
+What good is a measurement if we don't know the unit it's reported in? metrictools
+encourages you to put this information into the configuration of a metric. The
+configuration of the `celsius` unit below should be self-explanatory.
+
+    unit celsius {
+      unit_name celsius 1 "Celsius" "Celcius" "°C"
+    }
+
+    metric temperature {
+      kind gauge(float64)
+      unit celsius
+    }
+
+Once the unit is configured, all the commands and plots will display it by default.
+For detailed information on the unit configuration please refer to the Units of
+measurement page.
+
+    $ metrictl list
+    temperature                                          23.5 °C
 
 
 ### Adding labels
@@ -107,18 +127,14 @@ such as `device\_id` or `hostname`. Each unique combination of label values
 then references an instance of the metric. For example, let's say we add a label
 `device_id` to our temperature metric:
 
-    ...
-
     metric temperature {
       kind gauge(float64)
       unit celsius
       labels device_id
     }
 
-    ...
-
 Now, each `device_id` value will have it's own metric instance. Let's insert
-some example values:
+some example data:
 
     $ metrictl insert device_id=deviceA temperature 23.5
     $ metrictl insert device_id=deviceB temperature 22.1
@@ -138,7 +154,7 @@ Let's display all three devices in a single chart:
     $ metricctl plot temperature --from "-30min" --until now --output /tmp/temperature_chart.png
 
 The command should result in a plot similar to the one below. Have a look at the
-page of the `plot` command about more information on how to filter and aggregate
+page of the `plot` command for  more information on how to filter and aggregate
 metrics.
 
 <img src="/examples/linecharts/simple_lines/simple_lines.png" style="width: 100%;">
