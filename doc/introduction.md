@@ -41,32 +41,24 @@ pages.
   </thead>
   <tbody>
     <tr>
-      <td><code><strong>metrictl list</strong></code></td>
-      <td>Lorem ipsum dolor sit amet</td>
+      <td><code><a href="/documentation/metrictl-list"><strong>metrictl list</strong></a></code></td>
+      <td>List all metrics and their instances and latest values.</td>
     </tr>
     <tr>
-      <td><code><strong>metrictl log</strong></code></td>
-      <td>Lorem ipsum dolor sit amet</td>
+      <td><code><a href="/documentation/metrictl-log"><strong>metrictl log</strong></a></code></td>
+      <td>Rretrieve a logfile of collected measurements for a specific metric.</td>
     </tr>
     <tr>
-      <td><code><strong>metrictl plot</strong></code></td>
-      <td>Lorem ipsum dolor sit amet</td>
+      <td><code><a href="/documentation/metrictl-plot"><strong>metrictl plot</strong></a></code></td>
+      <td>Draw a chart from one or more metrics.</td>
     </tr>
     <tr>
-      <td><code><strong>metrictl table</strong></code></td>
-      <td>Lorem ipsum dolor sit amet</td>
+      <td><code><a href="/documentation/metrictl-insert"><strong>metrictl collect</strong></a></code></td>
+      <td>Collect data (i.e. run the collect_* blocks) from the command line.</td>
     </tr>
     <tr>
-      <td><code><strong>metrictl histogram</strong></code></td>
-      <td>Lorem ipsum dolor sit amet</td>
-    </tr>
-    <tr>
-      <td><code><strong>metrictl insert</strong></code></td>
-      <td>Lorem ipsum dolor sit amet</td>
-    </tr>
-    <tr>
-      <td><code><strong>metrictl collect</strong></code></td>
-      <td>Lorem ipsum dolor sit amet</td>
+      <td><code><a href="/documentation/metrictl-insert"><strong>metrictl insert</strong></a></code></td>
+      <td>Add a measurement to a metric.</td>
     </tr>
   </tbody>
 </table>
@@ -77,7 +69,7 @@ The currently supported data stores are
 [SQLite](/documentation/backend-sqlite),
 [MySQL](/documentation/backend-mysql), 
 [Postgres](/documentation/backend-postgres) and [EventQL](/documentation/backend-eventql).
-If you'd like to add a new backend, please have a look at `src/metrictools/storage` and
+If you'd like to add a new storage backend, please have a look at `src/metrictools/storage` and
 create a pull request on GitHub.
 
 
@@ -87,6 +79,6 @@ To get started with metrictools, have a look at the [Getting Started](/documenta
 [Data Model](/documentation/data-model), [Metric Types](/documentation/metric-types)
 and [Federation](/documentation/federation) pages. If you have any questions please
 don't hesitate to reach out via [Github Issues](http://github.com/paulasmuth/metrictools/issues)
-or [the metrictools google group](http://groups.google.com/group/metrictools).
+or [The metrictools Google Group](http://groups.google.com/group/metrictools).
 
 <script async defer src="https://buttons.github.io/buttons.js"></script>
