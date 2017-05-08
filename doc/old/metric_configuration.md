@@ -1,7 +1,7 @@
 Metric Configuration
 =============
 
-Here is a simple example:
+Here is a simple example for a metric configuration:
 
     metric disk_space_used {
       type sample(uint64)
@@ -10,7 +10,7 @@ Here is a simple example:
     }
 
 
-List of valid stanzas within the `metric` block:
+This is the list of valid stanzas within the `metric` block:
 
 <table>
   <thead>

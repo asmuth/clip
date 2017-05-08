@@ -39,7 +39,7 @@ documentation:
       -
         title: "Metric Configuration"
         url: "/documentation/metric-configuration"
-        file: "configuration"
+        file: "metric_configuration"
       -
         title: "Metric Types"
         url: "/documentation/metric-types"
@@ -48,6 +48,14 @@ documentation:
         title: "Units of Measurement"
         url: "/documentation/units"
         file: "units"
+      -
+        title: "Rewrite Rules"
+        url: "/documentation/rewrite-rules"
+        file: "rewrite_rules"
+      -
+        title: "Retention Policies"
+        url: "/documentation/retention-policies"
+        file: "retention_policies"
 
   -
     title: "Commands"
@@ -100,6 +108,22 @@ documentation:
         title: "Collect via UDP/StatsD"
         url: "/documentation/collect-data-via-statsd"
         file: "collect_via_statsd"
+
+  -
+    title: "Queries & Charts"
+    pages:
+      -
+        title: "Query Syntax"
+        url: "/documentation/query-syntax"
+        file: "query_syntax"
+      -
+        title: "List of Functions"
+        url: "/documentation/query-functions"
+        file: "query_functions"
+      -
+        title: "Chart Options"
+        url: "/documentation/chart-options"
+        file: "chart_options"
 
   -
     title: "HTTP API"
