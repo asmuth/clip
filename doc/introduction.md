@@ -83,9 +83,10 @@ create a pull request on GitHub.
 
 ### Support
 
-To get started with metrictools, have a look at the [Getting Started](/documentation/getting-started) and
-[Data Model](/documentation/data-model) pages. If you have any questions please
-don't hesitate to reach out via [Github Issues](http://github.com/paulasmuth/metrictools/issues)
+To get started with metrictools, have a look at the [Getting Started](/documentation/getting-started),
+[Data Model](/documentation/data-model) and [Metric Types](/documentation/metric-types)
+pages. If you have any questions please don't hesitate to reach out via
+[Github Issues](http://github.com/paulasmuth/metrictools/issues)
 or [the metrictools google group](http://groups.google.com/group/metrictools).
 
 <script async defer src="https://buttons.github.io/buttons.js"></script>

@@ -279,3 +279,9 @@ you should also be able to see a default dashboard that is included in the linux
 plugin:
 
   <img src="/img/fnordmetric_ui_example_screen.png" style="width: 100%;">
+
+---
+
+_If you've read this far and want to learn more, please have a look at the
+[Data Model](/documentation/data-model) and [Metric Types](/documentation/metric-types)
+pages._
