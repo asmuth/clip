@@ -2,7 +2,7 @@ Collecting Data via UDP/StatsD
 ===============================
 
 To listen for samples via UDP, add a `listen_udp` block to your configuration
-file.`metric-collectd` will listen for UDP packets on the specified port. 
+file.`metricd` will listen for UDP packets on the specified port. 
 
     listen_udp {
       port 8125
@@ -33,8 +33,8 @@ This is the list of valid stanzas within the `listen_udp` block:
       <td>The expected input sample format ('statsd' or 'json')</td>
     </tr>
     <tr>
-      <td><code><strong>rewrite</strong></code></td>
-      <td>Rewrite the metric name or labels (see <a href="/documentation/configuration-file#rewrite">Configuration File</a>)</td>
+      <td><code><strong>label_set</strong></code></td>
+      <td>Set a (default) label value.  See <a href="/documentation/rewrite-rules">Rewrite Rules</a></td>
     </tr>
   </tbody>
 </table>
@@ -43,7 +43,7 @@ StatsD Protocol
 ---------------
 
 StatsD is a very simple, text based protocol. For detailed information have a
-look at the [Sample Formats](/documentation/sample-format) page.
+look at the [Input Formats](/documentation/sample-format) page.
 
 When using the statsd protocol, each UDP packet must contain one or more lines.
 Each line is expected to be in this format:
@@ -51,7 +51,7 @@ Each line is expected to be in this format:
     <metricname>:<value>
 
 A simple way to send in metrics from your command line if you have
-metric-collectd running on port 8125 would be to use the `netcat` utility:
+metricd running on port 8125 would be to use the `netcat` utility:
 
     $ echo "foo:1" | nc -u -w0 127.0.0.1 8125
 
@@ -62,7 +62,7 @@ Using metric labels with StatsD
 -------------------------------
 
 The statsd protocol itself does not support labels. However, the statsd
-implementation in metric-collectd understands a common metric naming convention
+implementation in metricd understands a common metric naming convention
 that allows you to specify labels.
 
 The line format for metrics with one label is:
@@ -94,7 +94,7 @@ For example, to insert the values 23, 42 and 5 into the metrics "mymetric-one",
     mymetric-two:42\n
     mymetric-three:5\n
 
- For more information on the format see the [Sample Formats](/documentation/sample-format)
+ For more information on the format see the [Input Formats](/documentation/sample-format)
 page.
 
 
