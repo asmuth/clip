@@ -1,17 +1,39 @@
-Sample Formats
-==============
+Input Formats
+=============
 
-This page describes the various formats in which metric-collectd accepts input
-samples. The formats are generally the same for all pull and push transport
-protocols (currently UDP and HTTP).
+This page describes the various formats in which the metrictools accepts input
+measurements. The formats are generally the same for all pull and push transport
+protocols.
 
+These are the supported measurement encodings:
 
-Text/StatsD Format
-------------------
+<table>
+  <thead>
+    <tr>
+      <th style="width: 26%;">Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code><strong>statsd</strong></code></td>
+      <td>The statsd format</td>
+    </tr>
+    <tr>
+      <td>
+        <code><strong>borgmon</strong></code>,
+        <code><strong>prometheus</strong></code>
+      </td>
+      <td>The borgmon/prometheus format</td>
+    </tr>
+  </tbody>
+</table>
 
-The `statsd` format is compatible with the StatsD and Prometheus/Borgmon
-format. A packet must contain one or more lines. Every line is expected to
-conform to this scheme (labels are optional):
+StatsD Format
+--------------
+
+A packet must contain one or more lines. Every line is expected to conform to
+this scheme (labels are optional):
 
     metric_name:value
     metric_name{label1=value1,label2=value2,...}:value
@@ -44,3 +66,8 @@ For example:
     host_stats.load_avg 1.54
     host_stats.load_avg{hostname="hostxy.prod.mycorp.com"} 1.54
 
+
+Borgmon/Prometheus Format
+-------------------------
+
+Please refer to the [https://prometheus.io/docs/instrumenting/exposition_formats/](https://prometheus.io/docs/instrumenting/exposition_formats/) page.
