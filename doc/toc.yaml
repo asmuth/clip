@@ -52,10 +52,10 @@ documentation:
         title: "Rewrite Rules"
         url: "/documentation/rewrite-rules"
         file: "rewrite_rules"
-      -
-        title: "Retention Policies"
-        url: "/documentation/retention-policies"
-        file: "retention_policies"
+      #-
+      #  title: "Retention Policies"
+      #  url: "/documentation/retention-policies"
+      #  file: "retention_policies"
 
   -
     title: "Commands"
@@ -73,17 +73,17 @@ documentation:
         url: "/documentation/metrictl-log"
         file: "metrictl_log"
       -
-        title: "metrictl insert"
-        url: "/documentation/metrictl-insert"
-        file: "metrictl_insert"
+        title: "metrictl plot"
+        url: "/documentation/metrictl-plot"
+        file: "metrictl_plot"
       -
         title: "metrictl collect"
         url: "/documentation/metrictl-collect"
         file: "metrictl_collect"
       -
-        title: "metrictl plot"
-        url: "/documentation/metrictl-plot"
-        file: "metrictl_plot"
+        title: "metrictl insert"
+        url: "/documentation/metrictl-insert"
+        file: "metrictl_insert"
 
   -
     title: "Collecting Data"
@@ -109,21 +109,21 @@ documentation:
         url: "/documentation/collect-data-via-statsd"
         file: "collect_via_statsd"
 
-  -
-    title: "Queries & Charts"
-    pages:
-      -
-        title: "Query Syntax"
-        url: "/documentation/query-syntax"
-        file: "query_syntax"
-      -
-        title: "List of Functions"
-        url: "/documentation/query-functions"
-        file: "query_functions"
-      -
-        title: "Chart Options"
-        url: "/documentation/chart-options"
-        file: "chart_options"
+  #-
+  #  title: "Queries & Charts"
+  #  pages:
+  #    -
+  #      title: "Query Syntax"
+  #      url: "/documentation/query-syntax"
+  #      file: "query_syntax"
+  #    -
+  #      title: "List of Functions"
+  #      url: "/documentation/query-functions"
+  #      file: "query_functions"
+  #    -
+  #      title: "Chart Options"
+  #      url: "/documentation/chart-options"
+  #      file: "chart_options"
 
   -
     title: "HTTP API"

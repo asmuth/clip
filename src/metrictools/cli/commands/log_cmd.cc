@@ -127,11 +127,11 @@ void LogCommand::printHelp() const {
       "Usage: $ metricctl log [<options>] <metric>\n"
       "  --from <timespec>         Set the start time (inclusive)\n"
       "  --until <timespec>        Set the end time (exclusive)\n"
-      "  -F, --filter <expr>       The tree path of the metric.\n"
+      "  -x, --filter <expr>       Filter the returned metric instances by label.\n"
       "\n"
       "Examples:\n"
       "  $ metrictl log load_average\n"
-      "  $ metrictl log load_average -F 'hostname=localhost'\n";
+      "  $ metrictl log load_average -x 'hostname=localhost'\n";
 }
 
 } // namespace fnordmetric

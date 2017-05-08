@@ -101,11 +101,11 @@ const std::string& ListCommand::getDescription() const {
 void ListCommand::printHelp() const {
   std::cerr <<
       "Usage: $ metricctl list [<options>] [<metric>]\n"
-      "  -F, --filter <expr>       The tree path of the metric.\n"
+      "  -x, --filter <expr>       Filter the returned metric instances by label.\n"
       "\n"
       "Examples:\n"
       "  $ metrictl list\n"
-      "  $ metrictl list load_average -F 'hostname=localhost'\n";
+      "  $ metrictl list load_average -x 'hostname=localhost'\n";
 }
 
 } // namespace fnordmetric

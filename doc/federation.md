@@ -16,6 +16,8 @@ one of them exposes a `/stats` http endpoint that exports the current value
 of the `number\_of\_requests\_processed` metric. We could use the following configuration
 snippet to collect the metric from each of the webservers:
 
+    backend "sqlite:///var/tmp/metrics.sqlite"
+
     metric number_of_requests_processed {
       kind monotonic(uint64)
       rate 1s
@@ -53,6 +55,8 @@ to collect them locally on each machine.
 Reusing our example from above, we would start this config on _each_ of the three
 webservers:
 
+    backend "sqlite:///var/tmp/metrics-local.sqlite"
+
     label_set server_id "${hostname}"
 
     metric number_of_requests_processed {
@@ -68,6 +72,8 @@ webservers:
 
 Then we would run a fourth metricd instance that pulls the data from the three
 other instances:
+
+    backend "sqlite:///var/tmp/metrics-global.sqlite"
 
     metric number_of_requests_processed {
       kind monotonic(uint64)
