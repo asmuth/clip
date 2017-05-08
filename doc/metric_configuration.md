@@ -31,7 +31,19 @@ This is the list of valid stanzas within the `metric` block:
       <td><code><strong>granularity</strong></code></td>
       <td>Set the storage granularity</td>
     </tr>
+    <tr>
+      <td><code><strong>rate</strong></code></td>
+      <td>Optionally enable rate calculation for this metric</td>
+    </tr>
+    <tr>
+      <td><code><strong>label</strong></code></td>
+      <td>Optionall add one or more label names to this metric</td>
+    </tr>
+    <tr>
+      <td><code><strong>label_set</strong></code></td>
+      <td>Set the (default) value for one of the label names</td>
+    </tr>
+
    </tbody>
 </table>
-
 

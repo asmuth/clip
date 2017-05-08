@@ -21,39 +21,27 @@ This is the list of valid stanzas within the `metric` block:
   </thead>
   <tbody>
     <tr>
-      <td><code><strong>type</strong></code></td>
-      <td>Set the metric's type</td>
+      <td><code><strong>kind</strong></code></td>
+      <td>Set the metric's type. See <a href="/documentation/metric-types">Metric Types</a></td>
     </tr>
     <tr>
       <td><code><strong>unit</strong></code></td>
-      <td>Set the metric's unit</td>
-    </tr>
-    <tr>
-      <td><code><strong>unit_scale</strong></code></td>
-      <td></td>
+      <td>Set the metric's unit. See <a href="/documentation/units">Units of Measurement</a></td>
     </tr>
     <tr>
       <td><code><strong>granularity</strong></code></td>
       <td>Set the storage granularity</td>
     </tr>
     <tr>
-      <td><code><strong>retention</strong></code></td>
-      <td>Set the rentention period</td>
+      <td><code><strong>rate</strong></code></td>
+      <td>Optionally enable rate calculation for this metric</td>
     </tr>
     <tr>
-      <td><code><strong>summarize_group</strong></code></td>
+      <td><code><strong>label</strong></code></td>
       <td></td>
     </tr>
     <tr>
-      <td><code><strong>summarize_gross</strong></code></td>
-      <td></td>
-    </tr>
-    <tr>
-      <td><code><strong>interpolate</strong></code></td>
-      <td></td>
-    </tr>
-    <tr>
-      <td><code><strong>smoothing</strong></code></td>
+      <td><code><strong>label_set</strong></code></td>
       <td></td>
     </tr>
    </tbody>
