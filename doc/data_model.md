@@ -1,189 +1,116 @@
 Data Model
-===========
+==========
 
-metric-collectd collects measurements in a "key:value"-style format. The collected
-measurements are aggregated and then stored into tables in your backend SQL database.
+The primary abstractions in metrictools are called "metrics" and "metric instances".
+The metrictools allow you to store and manage a list of "metrics". Each metric
+has a name, for example `load_average` and a number of other properties, such as
+a unit of measurement and a data type.
 
-Each table into which measurements should be written has a corresponding configuration
-entry in the `metric-collectd` configuration file. The table configuration contains
-a list of columns for each table. Columns can either be "labels" or "measures".
+However, the metric itself does not contain any data; instead it is a container
+object for one or more "instances". Each instance in the metric is identified by
+a set of labels and holds a simple timeseries, i.e. a list of `(time, value)`
+data points that are recorded over time. The empty set of labels is valid too,
+so a metric may have only a single instance with no labels.
 
-  - **Labels** are used for columns that identify the row, like a series
-    identifier or attributes. Good examples for labels are `hostname`, `device_id`
-    or `sensor_location`.
-
-  - **Measures** are used for columns that store numeric measurements. Good
-    examples for measurements are `request_count`, `temperature` or `xxx`.
-    Measure columns have a data type (like `uint64`) and an aggregation function
-    (like `sum`, `max` or `latest`).
-
-Consider this example table configuration:
-
-    create_tables on
-
-    table host_stats {
-      interval 10s
-      label datacenter
-      label hostname
-      measure request_count counter(uint64)
-      measure load_avg max(float64)
-    }
-
-When you start metric-collectd with the configuration from above, it will create
-a table `host_stats` in the backend database that looks similar to the one from
-the SQL statement below.
-
-    CREATE TABLE host_stats (
-      time datetime,
-      time_window uint64,
-      datacenter string,
-      hostname string,
-      load_avg float64,
-      request_count uint64,
-      PRIMARY KEY (time, datacenter, hostname)
-    );
-
-Note that two other columns were automatically added to the table:
-
-  - The `time` column stores the end of the time window in which the samples were
-    collected
-
-  - The `time_window` column stores the length of the time window in which the
-    samples were collected.
-
-Now, the input measurements are collected as individual data points called "samples".
-Samples may be actively pushed to metric-collectd or pulled/scraped from a remote endpoint
-using one of the transport protocols.
-
-A sample consists of a "metric name", a value and a timestamp. The timestamp is
-generated implicitly if it is not provided. The metric name is used to identify
-the table and column ("measure") into which the data should be written. The general
-format is `table.column` (i.e. first the table name, then a dot, then the column name).
-
-For example, to report the measure "load_avg" in the table "host_stats", you
-would send samples similar to these:
-
-    ...
-    Sample: host_stats.load_avg:0.42
-    Sample: host_stats.load_avg:0.23
-    ...
-
-The later, you could query the `host_stats` table and retrieve the aggregated
-values:
-
-    > select time, load_avg from host_stats;
-
-    =====================================
-    | time                  | load_avg  |
-    =====================================
-    | 2014-11-08 20:30:40   | 0.913     |
-    | 2014-11-08 20:30:50   | 0.837     |
-    | 2014-11-08 20:31:00   | 0.638     |
-    | 2014-11-08 20:31:10   | 0.326     |
-    | ...                   | ...       |
-
-To allow you to drill down into your measurements in arbitrary dimensions, each
-sample can optionally be labelled with one or more "labels". Each label is a
-key=value pair.
-
-For example, you could record CPU utilization data into the table `host_stats`
-from multiple hosts. You could add a `hostname=...` and a `datacenter=...`
-label to each sample in order to roll up CPU utilization aggregates by host,
-datacenter or a combination of both.
-
-    ...
-    Sample: metric=cpu_util{hostname=machine64,datacenter=ams1}:0.873
-    Sample: metric=cpu_util{hostname=machine65,datacenter=ams1}:0.352
-    Sample: metric=cpu_util{hostname=machine66,datacenter=ams1}:0.543
-    ...
-
-The labels correspond to columns in the target SQL table, so you can filter and
-aggregate/group by label values.
-
-    > select time, hostname, datacenter, load_avg from cpu_util;
-
-    ================================================================
-    | time                  | hostname   | datacenter  | load_avg  |
-    ================================================================
-    | 2014-11-08 20:30:12   | machine64  | ams1        | 0.913     |
-    | 2014-11-08 20:30:12   | machine65  | ams1        | 0.837     |
-    | 2014-11-08 20:30:12   | machine66  | ams1        | 0.638     |
-    | ...                   | ...        | ...         | ...       |
-
-Of course, you can also combine multiple measurements in a single table, so
-for example we could report CPU utilization and number of requests per server in
-a single table:
-
-    Sample: metric=host_stats.load_avg value=0.42
-    Sample: metric=host_stats.request_count value=23
-
-And then query the data using SQL:
-
-    > select time, hostname, load_avg, request_count from cpu_util;
-
-    ==================================================================
-    | time                  | hostname   | load_avg  | request_count |
-    ==================================================================
-    | 2014-11-08 20:30:12   | machine64  | 0.913     | 52362         |
-    | 2014-11-08 20:30:12   | machine65  | 0.837     | 52352         |
-    | 2014-11-08 20:30:12   | machine66  | 0.638     | 63463         |
-    | ...                   | ...        | ...       | ...           |
+Consider this example, but keep in mind that the `host` and `datacenter` labels
+are in no way special. They could just as well be called `planet` and `galaxy`
+or something else:
 
 
-When sending samples to metric-collectd, not every submitted sample will result
-in a write to the backend database. Instead, the values from all samples will
-be aggregated for each label before being written into the database. Accordingly,
-each table has an `interval` setting that controls the length of the aggregation
-time window. The default aggregation window is 10 seconds.
+    Metric               Instance                         Time         Value
 
-For example, if we were sending samples from one to the example table from above
-- so `datacenter` and `hostname` would be the same in every input sample -
-metric-collectd would also insert exactly one row every 10 seconds. The row's
-`load_avg` column would contain the largest of all received `host_stats.load_avg`
-samples (since the aggregation function is `max`) and the row's `request_count`
-column would contain the sum of all received `host_stats.request_count` samples
-(since the aggregation function is `sum`).
+    load_average   ->    host=s01.prod.mycorp.com    ->   2017-01-01   1.32
+                         datacenter=dc1                   2017-01-01   1.32
+                                                          2017-01-01   1.32
+                                                          2017-01-01   1.32
 
-    INSERT INTO host_stats (now(), "dc1", "rack8host2", 0.23, 42);
+                   ->    host=s01.prod.mycorp.com    ->   2017-01-01   1.32
+                         datacenter=dc2                   2017-01-01   1.32
+                                                          2017-01-01   1.32
+                                                          2017-01-01   1.32
 
-If we were reporting data from 2 datacenters with 1,000 servers each,
-metric-collectd would insert 2,000 rows every 10 seconds as there would be
-2,000 unique `(datacenter, hostname)` combinations. Accordingly, each row's
-`load_avg` column would contain the largest of all received `host_stats.load_avg`
-samples for that host and eachs row's `request_count` column would contain the
-sum of all received `host_stats.request_count` samples for that host.
 
-## Aggregation
+In contrast to some other systems, metrictools requires all metrics to be explicitly
+configured in a [configuration file](/documentation/configuration-file). Instances
+on the other hand are created on first insert and do not have any individual
+configuration beyond their labels. It is expected that all instances of a metric
+store data of the same kind, for example when reporting the same measurement from
+a number of sensors.
 
-At the end of every aggregation window, metric-collectd will execute one INSERT
-statement for every unique combination of labels in the input samples received
-during the time window. The values for all measure columns will be computed 
-by applying the aggregation function for that column to all received input
-samples for the column.
+  - **Metrics** must be configured in the configuration file
+  - **Metric Instances** belong to metrics and are automatically created when values are inserted into them
 
-As a result of this, the number of rows written to the backend database depends
-only on the aggregation windpw of a table and the "cardinality" of the input data
-(i.e. the number of unique label values), but not on the number of individual
-samples that are sent to metric-collectd.
+The reason behind this two-level split into metrics and instances is configurability:
+We would like to control settings like granularity and units of measurement for
+each timeseries individually. However if we're collecting data from a large number
+of sensors we do not want to duplicate the configuration for each single instance.
+Metrics allow us to define the common configuration once, for an arbitrary number
+of instances of the same kind.
 
-A table may have zero, one or more label columns. If a table does not have any
-label columns, metric-collectd will always insert exactly one row for every time
-window in which data was received.
+Grouping instances into metrics also results in much cleaner data organization:
+We're separating the semantic type of data (the metric name) from the usually
+machine-generated instance identifier (the set of labels).
 
-While this pre-aggregation scheme always results in a fixed rate-limit on the
-number of backend writes, it does not necessarily imply a loss of precision or
-accuracy. Some aggregation functions like `latest` or `max` will forward the
-sample value to the database in the same precision in which it was received.
+### Collecting data
 
-## Metric Name Format
+The input data is collected as individual data points called "measurements".
+Measurements may be actively pushed to metricd or pulled/scraped from a remote
+endpoint using one of the transports like [HTTP](/documentation/collect-data-via-http)
+or [shell scripts](/documentation/collect-data-via-shell).
+
+A measurements consists of a metric name, a list of labels, a value and a
+timestamp. The timestamp is generated implicitly if it is not provided. For
+example, to report the latest "load_average" value from 3 hosts, you would send
+measurements similar to the ones below. For more information on the various text
+formats and other encodings, visit the [input formats page](/documentation/sample-format).
+
+    Measurement: load_average_avg {host="server1"} 0.42
+    Measurement: load_average_avg {host="server2"} 3.32
+    Measurement: load_average_avg {host="server3"} 1.23
+
+It is worth mentioning that the exact semantics of how measurements are added to
+the metric instances are dependant on the [metric type](/documentation/metric-types).
+The difference in semantics becomes important once we start to send measurements
+from multiple machines and/or run multiple metrictools instances using federation.
+
+While a `counter` type is offered that allows incremental updates into the same
+instance from multiple data sources it does require a bunch of expensive
+statekeeping and should be avoided if possible.
+
+The recommended way of reporting measurements is using the `monotonic` or `gauge`
+types which require no statekeeping and have a number of other nice properties.
+However, both of these metric types require that you report exactly one absolute
+value per metric instance, so if you want to report data from more than one source
+you _must_ make sure each source reports the measurements with a unique combination
+of labels. For more information have a look at the [metric types page](/documentation/metric-types).
+
+### Metric and Label Names
 
 The metric name is chosen by the user and may consist of all alphanumeric
-characters `A-Za-z0-9`, dots `.`, underscores `_`, hyphens, `-` and slashes `/`.
+characters `A-Za-z0-9`, dots `.`, underscores `\_`, hyphens, `-` and slashes `/`.
+Label names and values may consist of all alphanumeric characters `A-Za-z0-9`,
+dots `.`, underscores `_`, hyphens, `-` and slashes `/`.  Label values may contain
+any valid UTF-8. Note that the empty string is not a valid metric name.
 
-Label keys and values may consist of all alphanumeric characters `A-Za-z0-9`,
-dots `.`, underscores `_`, hyphens, `-` and slashes `/`
+Consider these examples of valid metric and label names:
 
-Note that all transports allow you to rewrite metric names on the fly, so you
-can report metric names in a different format and rewrite them on reception in
-metric-collectd.
+    Metric Names:
+        sys.cpu_util
+        myapp.response_time
+        /http/request_latency
+        /apps/myapps/stats.daily_active_users
+        ...
+
+    Label Names:
+        site
+        device_id
+        process_id
+        disk_id
+        hostname
+        datacenter
+        ...
+
+Lastly, keep in mind that all transports allow you to rewrite metric names and
+labels on the fly, so you can export metric names in a different format and
+rewrite them on reception in metrictools.
 

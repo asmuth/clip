@@ -37,6 +37,10 @@ documentation:
         url: "/documentation/configuration-file"
         file: "configuration"
       -
+        title: "Metric Configuration"
+        url: "/documentation/metric-configuration"
+        file: "configuration"
+      -
         title: "Metric Types"
         url: "/documentation/metric-types"
         file: "metric_types"
