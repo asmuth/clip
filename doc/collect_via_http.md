@@ -1,24 +1,23 @@
 Collecting Data via HTTP
 ========================
 
-You can either send data to metric-collectd using the HTTP API, or configure
-metric-collectd to pull from your HTTP endpoint.
+You can either send data to using the HTTP API, or configure metricd to pull
+from your HTTP endpoint.
 
 
 HTTP Pull
 ---------
 
-To fetch ("scrape") samples via HTTP, add a `fetch_http` block to your configuration
-file. `metric-collectd` will peridodically connect to the specified url and
-collect metrics.
+To fetch ("scrape") samples via HTTP, add a `collect_http` block to your configuration
+file. `metricd` will peridodically connect to the specified url and collect metrics.
 
-    fetch_http {
+    collect_http {
       url "http://localhost:9175/stats"
       interval 10s
       format statsd
     }
 
-This is the list of valid stanzas within the `listen_http` block:
+This is the list of valid stanzas within the `collect_http` block:
 
 <table>
   <thead>
@@ -34,7 +33,7 @@ This is the list of valid stanzas within the `listen_http` block:
     </tr>
     <tr>
       <td><code><strong>format</strong></code></td>
-      <td>The expected input sample format ('statsd' or 'json')</td>
+      <td>The expected input sample format ('statsd', 'borgmon' or 'json')</td>
     </tr>
     <tr>
       <td><code><strong>interval</strong></code></td>
@@ -43,14 +42,14 @@ This is the list of valid stanzas within the `listen_http` block:
 example: `1s`, `30min` or `6hours`.</td>
     </tr>
     <tr>
-      <td><code><strong>rewrite</strong></code></td>
-      <td>Rewrite the metric name or labels (see <a href="/documentation/configuration-file#rewrite">Configuration File</a>)</td>
+      <td><code><strong>label_set</strong></code></td>
+      <td>Set a (default) label value.  See <a href="/documentation/rewrite-rules">Rewrite Rules</a></td>
     </tr>
   </tbody>
 </table>
 
-metric-collectd will sends a `HTTP GET` request for the specified URL and expects
-a 200-range response status code. The response body must be either in `statsd`
+metricd sends a `HTTP GET` request for the specified URL and expects a 200-range
+response status code. The response body must be either in `statsd`
 or `json` format. for more information on the format see the [sample formats](/documentation/sample-format)
 page.
 
@@ -59,7 +58,7 @@ HTTP Push
 ---------
 
 To listen for samples via HTTP, add a `listen_http` block to your configuration
-file.`metric-collectd` will listen for HTTP connections on the specified port.
+file.`metricd` will listen for HTTP connections on the specified port.
 
     listen_http {
       port 8080
@@ -84,17 +83,17 @@ This is the list of valid stanzas within the `listen_http` block:
       <td>The port on which the HTTP server should be started</td>
     </tr>
     <tr>
-      <td><code><strong>rewrite</strong></code></td>
-      <td>Rewrite the metric name or labels (see <a href="/documentation/configuration-file#rewrite">Configuration File</a>)</td>
+      <td><code><strong>label_set</strong></code></td>
+      <td>Set a (default) label value.  See <a href="/documentation/rewrite-rules">Rewrite Rules</a></td>
     </tr>
   </tbody>
 </table>
 
-To insert a sample, send a `POST /metrics` request. By default, the API expects
+To insert a sample, send a `POST /api/v1/insert` request. By default, the API expects
 the samples to be in Text/StatsD in the body of the request. You can switch
 to the JSON format by sending a `Content-Type: application/json` header.
 
-    >> POST /metrics
+    >> POST /api/v1/insert
     >> Content-Type: text/plain
     >>
     >> metric_name1:value2\n
@@ -103,9 +102,9 @@ to the JSON format by sending a `Content-Type: application/json` header.
     << HTTP/1.1 201 CREATED
 
 A simple way to send in metrics via HTTP from your command line if you have
-metric-collectd running on HTTP port 8080 would be using the curl utility:
+metricd running on HTTP port 8080 would be using the curl utility:
 
-    $ curl -X POST -d "host_stats.request_count:23.5" localhost:8080/metrics
+    $ curl -X POST -d "host_stats.request_count:23.5" localhost:8080/api/v1/insert
 
 This would insert the value "23.5" into the metric "host_stats.request_count".
 
@@ -116,7 +115,7 @@ with two label dimensions "hostname" and "datacenter", our UDP packets could loo
 like this:
 
 
-    >> POST /metrics
+    >> POST /api/v1/insert
     >> Content-Type: text/plain
     >>
     >> cpu-utilization{hostname=machine83,datacenter=ams1}:0.642\n
@@ -126,9 +125,9 @@ like this:
 
 To send the above request with curl:
 
-    $ curl -X POST -d "cpu-utilization{hostname=machine83,datacenter=ams1}:0.642" localhost:8080/metrics
+    $ curl -X POST -d "cpu-utilization{hostname=machine83,datacenter=ams1}:0.642" localhost:8080/api/v1/insert
 
-For more information on the format see the [Sample Formats](/documentation/sample-format)
+For more information on the format see the [Input Formats](/documentation/sample-format)
 page.
 
 
