@@ -1,5 +1,5 @@
 Metric Configuration
-=============
+====================
 
 Here is a simple example for a metric configuration:
 
