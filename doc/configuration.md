@@ -47,7 +47,7 @@ linked pages.
     </tr>
     <tr>
       <td><code><strong>labels</strong></code></td>
-      <td>Add a global label</td>
+      <td>Add a global label (this label will apply to all metrics)</td>
     </tr>
     <tr>
       <td><code><strong>label_set</strong></code></td>
