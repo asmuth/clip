@@ -18,8 +18,16 @@ linked pages.
       <td>Connection string/URL for the backend database (e.g. `mysql://localhost:3306/mydb?user=root`)</td>
     </tr>
     <tr>
+      <td><code><strong>include</strong></code></td>
+      <td></td>
+    </tr>
+    <tr>
       <td><code><strong>metric</strong></code></td>
-      <td>Declares a target table, i.e. a table into which measurements should be stored (A data sink).</td>
+      <td>Declares a metric. See <a href="/documentation/metric-configuration">Metric Configuration</a></td>
+    </tr>
+    <tr>
+      <td><code><strong>unit</strong></code></td>
+      <td>Declares a unit of measurement. See <a href="/documentation/units">Units of Measurement</a></td>
     </tr>
     <tr>
       <td><code><strong><a href="/documentation/collect-data-via-statsd">listen_udp</a></strong></code></td>
@@ -51,3 +59,39 @@ linked pages.
 
 ### Configuration File Locations
 
+By default, the `metrictl` program will try to find the configuration file in
+these locations in the order in which they are listed:
+
+    ~/.metricttl
+    /etc/metrictools/metrictl.conf
+    /etc/metrictl.conf
+
+The `metricd` program will try these locations in order:
+
+      /etc/metrictools/metricd.conf
+      /etc/metricd.conf
+
+You can always explicitly specify the config file location using the `--config`
+switch, for example:
+
+    $ metrictl --config path/to/metrics.conf ...
+    $ metricd --config path/to/metrics.conf ...
+
+
+### Full Example
+
+
+    backend "sqlite:///tmp/test.sqlite"
+
+    labels "hostname"
+    label_set hostname localhost default
+
+    include "./code/metrictools/etc/units-default.conf"
+    include "./code/metrictools/plugins/linux/linux-plugin.conf"
+
+    collect_http {
+      url "http://localhost:9175/eventql/stats"
+      interval 10s
+      format statsd
+      label_set hostname eventql1
+    }
