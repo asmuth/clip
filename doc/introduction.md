@@ -16,7 +16,8 @@ documentation.:
   - Optional background daemon that runs data collection and exposes a HTTP API
   - Plugins can contain metric configuration, exporters and dashboards (check out
     the linux plugin)
-  - Implemented as self-contained C++; quick to set up and does not require a lot of resources
+  - Implemented as collection of lightweight composable commands in the spirit of the original daemontools project
+  - Written in self-contained C++; quick to set up and does not require a lot of resources
   - The metrictools project was started over 7 years ago and is still actively maintained
 
 

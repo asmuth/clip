@@ -59,6 +59,10 @@ webservers:
 
     label_set server_id "${hostname}"
 
+    listen_http {
+      port 8175
+    }
+
     metric number_of_requests_processed {
       kind monotonic(uint64)
       labels server_id
