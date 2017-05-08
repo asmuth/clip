@@ -181,9 +181,9 @@ Save this script to `~/collect_temp.sh` and set the executable bit. (The script
 should be in the same folder as the `metrictl.conf` file)
 
     #!/bin/bash
-    echo 'temperature device="deviceA" 23.5'
-    echo 'temperature device="deviceB" 22.1'
-    echo 'temperature device="deviceC" 28.7'
+    echo 'temperature {device="deviceA"} 23.5'
+    echo 'temperature {device="deviceB"} 22.1'
+    echo 'temperature {device="deviceC"} 28.7'
 
 When you execute the script it wil simply print three measurements in the
 Borgmon/Prometheus text format. To tell metrictools to execute the script every
