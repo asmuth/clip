@@ -283,5 +283,5 @@ plugin:
 ---
 
 _If you've read this far and want to learn more, please have a look at the
-[Data Model](/documentation/data-model) and [Metric Types](/documentation/metric-types)
-pages._
+[Data Model](/documentation/data-model), [Metric Types](/documentation/metric-types)
+and [Federation](/documentation/federation) pages.
