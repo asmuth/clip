@@ -6,7 +6,7 @@ AC_INIT([metrictools],[0.8.0-dev],[authors@metrictools.org],[metrictools])
 AM_INIT_AUTOMAKE([foreign subdir-objects serial-tests])
 AM_MAINTAINER_MODE([enable])
 AC_CONFIG_SRCDIR([configure.ac])
-AC_CONFIG_MACRO_DIR([m4])
+AC_CONFIG_MACRO_DIR([build])
 AM_SILENT_RULES([yes])
 AC_LANG([C++])
 
@@ -52,13 +52,13 @@ else
   AC_MSG_RESULT(["disabled"])
 fi
 
-AC_CONFIG_SUBDIRS([deps/libtransport])
+AC_CONFIG_SUBDIRS([build/deps/libtransport])
 AC_CONFIG_FILES([
     Makefile
-    src/metrictools/Makefile
-    src/libcplot/Makefile
-    src/metrictools/storage/mysql/Makefile
-    src/metrictools/storage/sqlite/Makefile
+    core/metrictools/Makefile
+    core/libcplot/Makefile
+    core/metrictools/storage/mysql/Makefile
+    core/metrictools/storage/sqlite/Makefile
     test/Makefile])
 
 AC_OUTPUT

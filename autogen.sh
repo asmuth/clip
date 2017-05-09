@@ -7,7 +7,7 @@
 set -e
 
 # Check that we're being run from the right directory.
-if test ! -d src/metrictools; then
+if test ! -d core/metrictools; then
   cat >&2 << __EOF__
 Could not find source code.  Make sure you are running this script from the
 root of the distribution tree.
@@ -18,6 +18,7 @@ fi
 set -ex
 
 autoreconf -fi -Wall,no-obsolete
+sed -i -e 's/rm -f core /rm -f /g' configure
 
 rm -rf autom4te.cache config.h.in~
 exit 0

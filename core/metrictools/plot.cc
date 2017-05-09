@@ -24,6 +24,7 @@ PlotBuilder::PlotBuilder(
     backend_(backend) {
   plot_.time_limit = WallClock::unixMicros();
   plot_.time_begin = plot_.time_limit - 2 * kMicrosPerHour;
+  plot_.series_groups.emplace_back(PlotSeriesGroup{ .chart_type = LINE });
 }
 
 ReturnCode PlotBuilder::addArgument(
@@ -94,7 +95,7 @@ ReturnCode PlotBuilder::flush() {
       return rc;
     }
 
-    plot_.series.emplace_back(series);
+    plot_.series_groups.back().series.emplace_back(series);
   }
 
   s_metric_.clear();
@@ -116,22 +117,24 @@ ReturnCode renderPlot(const Plot* plot, std::string* out) {
   TimeDomain x_domain(plot->time_begin, plot->time_limit);
   ContinuousDomain<double> y_domain(0, 30.0, false);
 
-  auto line_chart = chart.addChart<LineChart2D<UnixTime, double>>(
-      &x_domain, &y_domain);
+  for (const auto& series_group : plot->series_groups) {
+    auto line_chart = chart.addChart<LineChart2D<UnixTime, double>>(
+        &x_domain, &y_domain);
 
-  for (const auto& series : plot->series) {
-    auto s = new Series2D<UnixTime, double>(series.series_name);
-    for (size_t i = 0; i < series.data.size(); ++i) {
-      s->addDatum(series.data.timestamps[i], series.data.values[i]);
+    for (const auto& series : series_group.series) {
+      auto s = new Series2D<UnixTime, double>(series.series_name);
+      for (size_t i = 0; i < series.data.size(); ++i) {
+        s->addDatum(series.data.timestamps[i], series.data.values[i]);
+      }
+
+      line_chart->addSeries(s);
     }
 
-    line_chart->addSeries(s);
+    line_chart->addAxis(AxisDefinition::TOP);
+    line_chart->addAxis(AxisDefinition::RIGHT);
+    line_chart->addAxis(AxisDefinition::BOTTOM);
+    line_chart->addAxis(AxisDefinition::LEFT);
   }
-
-  line_chart->addAxis(AxisDefinition::TOP);
-  line_chart->addAxis(AxisDefinition::RIGHT);
-  line_chart->addAxis(AxisDefinition::BOTTOM);
-  line_chart->addAxis(AxisDefinition::LEFT);
 
   SVGTarget target(out);
   chart.render(&target);

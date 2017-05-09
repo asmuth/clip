@@ -15,16 +15,23 @@
 
 namespace fnordmetric {
 
+enum PlotChartType { LINE, AREA };
+
 struct PlotSeries {
   std::string series_name;
   Timeseries<double> data;
+};
+
+struct PlotSeriesGroup {
+  PlotChartType chart_type;
+  std::vector<PlotSeries> series;
 };
 
 struct Plot {
   uint64_t time_begin;
   uint64_t time_limit;
 
-  std::vector<PlotSeries> series;
+  std::vector<PlotSeriesGroup> series_groups;
 };
 
 class PlotBuilder {

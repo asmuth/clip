@@ -114,7 +114,7 @@ FNORDMETRIC_LIBS = \
     -L$(abs_top_builddir)/deps/libtransport/src/libtransport/http \
     -L$(abs_top_builddir)/deps/libtransport/src/libtransport/json \
     -L$(abs_top_builddir)/deps/libtransport/src/libtransport/uri \
-    -L$(abs_top_builddir)/src/libcplot \
+    -L$(abs_top_builddir)/core/libcplot \
     -lcplot \
     -ltransport_http \
     -ltransport_json \
@@ -126,7 +126,7 @@ if ENABLE_MYSQL
 endif
 
 if ENABLE_SQLITE
-  FNORDMETRIC_LIBS += storage/sqlite/sqlite_backend.a
+  FNORDMETRIC_LIBS += storage/sqlite/libsqlite_backend.a
   FNORDMETRIC_LIBS += -lsqlite3
 endif
 
