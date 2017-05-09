@@ -22,6 +22,8 @@ PlotBuilder::PlotBuilder(
     Backend* backend) :
     config_(config),
     backend_(backend) {
+  plot_.width = 800;
+  plot_.height = 200;
   plot_.time_limit = WallClock::unixMicros();
   plot_.time_begin = plot_.time_limit - 2 * kMicrosPerHour;
   plot_.series_groups.emplace_back(PlotSeriesGroup{ .chart_type = LINE });
@@ -30,6 +32,14 @@ PlotBuilder::PlotBuilder(
 ReturnCode PlotBuilder::addArgument(
     const std::string& key,
     const std::string& value) {
+  if (key == "width") {
+    return setWidth(value);
+  }
+
+  if (key == "height") {
+    return setHeight(value);
+  }
+
   if (key == "from") {
     return setFrom(value);
   }
@@ -43,6 +53,20 @@ ReturnCode PlotBuilder::addArgument(
   }
 
   return ReturnCode::errorf("EARG", "invalid argument: $0", key);
+}
+
+ReturnCode PlotBuilder::setWidth(const std::string& p) try {
+  plot_.width = std::stoul(p);
+  return ReturnCode::success();
+} catch (...) {
+  return ReturnCode::error("EARG", "invalid argument for 'width'");
+}
+
+ReturnCode PlotBuilder::setHeight(const std::string& p) try {
+  plot_.height = std::stoul(p);
+  return ReturnCode::success();
+} catch (...) {
+  return ReturnCode::error("EARG", "invalid argument for 'height'");
 }
 
 ReturnCode PlotBuilder::setFrom(const std::string& p) {
@@ -136,6 +160,8 @@ ReturnCode renderPlotSeries(
 
 ReturnCode renderPlot(const Plot* plot, std::string* out) {
   Canvas chart;
+  chart.setDimensions(plot->width, plot->height);
+
   DomainProvider x_domain(new TimeDomain(plot->time_begin, plot->time_limit));
   DomainProvider y_domain(new ContinuousDomain<double>(0, 1.0, false));
 

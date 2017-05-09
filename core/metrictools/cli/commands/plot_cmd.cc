@@ -21,6 +21,20 @@ ReturnCode PlotCommand::execute(
   FlagParser flags;
 
   flags.defineFlag(
+      "width",
+      FlagParser::T_STRING,
+      false,
+      NULL,
+      NULL);
+
+  flags.defineFlag(
+      "height",
+      FlagParser::T_STRING,
+      false,
+      NULL,
+      NULL);
+
+  flags.defineFlag(
       "from",
       FlagParser::T_STRING,
       false,
@@ -85,10 +99,12 @@ const std::string& PlotCommand::getDescription() const {
 void PlotCommand::printHelp() const {
   std::cerr <<
       "Usage: $ metricctl plot [<options>] [<metric>]\n"
-      "  --from <timespec>         Set the start time (inclusive)\n"
-      "  --until <timespec>        Set the end time (exclusive)\n"
       "  -m, --metric <name>       Add a metric to plot\n"
       "  -x, --filter <expr>       Filter series in the last metric.\n"
+      "  --from <timespec>         Set the start time (inclusive)\n"
+      "  --until <timespec>        Set the end time (exclusive)\n"
+      "  --width <px>              Set the chart width in pixels\n"
+      "  --height <px>             Set the chart height in pixels\n"
       "\n"
       "Examples:\n"
       "  $ metrictl plot -m linux.load_avg_1m --from -2h --until now\n"

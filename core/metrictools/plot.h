@@ -28,6 +28,9 @@ struct PlotSeriesGroup {
 };
 
 struct Plot {
+  uint32_t width;
+  uint32_t height;
+
   uint64_t time_begin;
   uint64_t time_limit;
 
@@ -46,6 +49,9 @@ public:
   ReturnCode getPlot(Plot* plot);
 
 protected:
+
+  ReturnCode setWidth(const std::string& p);
+  ReturnCode setHeight(const std::string& p);
 
   ReturnCode setFrom(const std::string& p);
   ReturnCode setUntil(const std::string& p);
