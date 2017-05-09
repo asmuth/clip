@@ -112,28 +112,58 @@ ReturnCode PlotBuilder::getPlot(Plot* plot) {
   return ReturnCode::success();
 }
 
-ReturnCode renderPlot(const Plot* plot, std::string* out) {
-  Canvas chart;
-  TimeDomain x_domain(plot->time_begin, plot->time_limit);
-  ContinuousDomain<double> y_domain(0, 30.0, false);
+ReturnCode renderPlotSeries(
+    const Plot* plot,
+    const PlotSeriesGroup* series_group,
+    Canvas* chart,
+    DomainProvider* x_domain,
+    DomainProvider* y_domain) {
+  auto line_chart = chart->addChart<LineChart2D<UnixTime, double>>(
+      x_domain->get(),
+      y_domain->get());
 
-  for (const auto& series_group : plot->series_groups) {
-    auto line_chart = chart.addChart<LineChart2D<UnixTime, double>>(
-        &x_domain, &y_domain);
-
-    for (const auto& series : series_group.series) {
-      auto s = new Series2D<UnixTime, double>(series.series_name);
-      for (size_t i = 0; i < series.data.size(); ++i) {
-        s->addDatum(series.data.timestamps[i], series.data.values[i]);
-      }
-
-      line_chart->addSeries(s);
+  for (const auto& series : series_group->series) {
+    auto s = new Series2D<UnixTime, double>(series.series_name);
+    for (size_t i = 0; i < series.data.size(); ++i) {
+      s->addDatum(series.data.timestamps[i], series.data.values[i]);
     }
 
-    line_chart->addAxis(AxisDefinition::TOP);
-    line_chart->addAxis(AxisDefinition::RIGHT);
-    line_chart->addAxis(AxisDefinition::BOTTOM);
-    line_chart->addAxis(AxisDefinition::LEFT);
+    line_chart->addSeries(s);
+  }
+
+  return ReturnCode::success();
+}
+
+ReturnCode renderPlot(const Plot* plot, std::string* out) {
+  Canvas chart;
+  DomainProvider x_domain(new TimeDomain(plot->time_begin, plot->time_limit));
+  DomainProvider y_domain(new ContinuousDomain<double>(0, 1.0, false));
+
+  for (const auto& series_group : plot->series_groups) {
+    auto rc = renderPlotSeries(plot, &series_group, &chart, &x_domain, &y_domain);
+    if (!rc.isSuccess()) {
+      return rc;
+    }
+  }
+
+  {
+    auto axis = chart.addAxis(AxisDefinition::TOP);
+    axis->setDomain(&x_domain);
+  }
+
+  {
+    auto axis = chart.addAxis(AxisDefinition::BOTTOM);
+    axis->setDomain(&x_domain);
+  }
+
+  {
+    auto axis = chart.addAxis(AxisDefinition::LEFT);
+    axis->setDomain(&y_domain);
+  }
+
+  {
+    auto axis = chart.addAxis(AxisDefinition::RIGHT);
+    axis->setDomain(&y_domain);
   }
 
   SVGTarget target(out);
