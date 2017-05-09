@@ -9,7 +9,7 @@
  * <http://www.gnu.org/licenses/>.
  */
 #pragma once
-#include <metrictools/collect.h>
+#include <metrictools/listen.h>
 #include <metrictools/webui/webui.h>
 #include <libtransport/http/v1/http_server.h>
 #include <libtransport/http/http_request.h>
@@ -21,17 +21,23 @@
 
 namespace fnordmetric {
 class Backend;
+class DashboardMap;
 
 namespace json = libtransport::json;
 namespace http = libtransport::http;
 
-class HTTPServer {
+class HTTPServer: public Task {
 public:
 
-  HTTPServer(ConfigList* config, Backend* storage_backend);
+  HTTPServer(
+      const ConfigList* config,
+      Backend* storage_backend,
+      std::unique_ptr<DashboardMap> dashboard_map);
 
   ReturnCode listenAndRun(const std::string& addr, int port);
-  void shutdown();
+
+  void start() override;
+  void shutdown() override;
 
   void setAssetPath(const std::string& path);
 
@@ -41,56 +47,58 @@ protected:
       http::HTTPRequest* request,
       http::HTTPResponse* response);
 
-  void handleRequest_PLOT(
+  void handleAdminUIRequest(
       http::HTTPRequest* request,
       http::HTTPResponse* response);
 
-  std::string getPreludeHTML() const;
-  std::string getAppHTML() const;
+  void handleDashboardRequest(
+      http::HTTPRequest* request,
+      http::HTTPResponse* response);
+
+  void handleAPIRequest_PLOT(
+      http::HTTPRequest* request,
+      http::HTTPResponse* response);
+
+  void sendFile(
+      http::HTTPResponse* response,
+      const std::string& file_path);
+
   std::string getAssetFile(const std::string& file) const;
 
-  void sendAsset(
-      http::HTTPResponse* response,
-      const std::string& asset_path,
-      const std::string& content_type) const;
-
-  ConfigList* config_;
+  const ConfigList* config_;
   Backend* storage_backend_;
   libtransport::http::HTTPServer http_server_;
   std::string dynamic_asset_path_;
+  std::unique_ptr<DashboardMap> dashboard_map_;
   std::thread thread_;
 };
 
-struct HTTPPushIngestionTaskConfig : public IngestionTaskConfig {
-  HTTPPushIngestionTaskConfig();
+struct ListenHTTPTaskConfig : public ListenerConfig {
+  ListenHTTPTaskConfig();
   std::string bind;
   uint16_t port;
 };
 
-class HTTPPushIngestionTask : public IngestionTask {
+class DashboardMap {
 public:
 
-  static ReturnCode start(
-      Backend* storage_backend,
-      const IngestionTaskConfig* config,
-      std::unique_ptr<IngestionTask>* task);
+  struct DashboardInfo {
+    std::string basepath;
+  };
 
-  HTTPPushIngestionTask(Backend* storage_backend);
+  ReturnCode loadConfig(const ConfigList* config);
 
-  ReturnCode listen(const std::string& addr, int port);
-
-  virtual void start() override;
-  virtual void shutdown() override;
+  DashboardInfo* findDashboard(const std::string& dashboard_id);
 
 protected:
-
-  void handleRequest(
-      http::HTTPRequest* request,
-      http::HTTPResponse* response);
-
-  Backend* storage_backend_;
-  libtransport::http::HTTPServer http_server_;
+  std::map<std::string, DashboardInfo> map_;
 };
+
+ReturnCode startHTTPListener(
+    Backend* storage_backend,
+    const ConfigList* config,
+    const ListenerConfig* task_config,
+    std::unique_ptr<Task>* task);
 
 } // namespace fnordmetric
 

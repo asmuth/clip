@@ -43,16 +43,14 @@ ReturnCode CollectCommand::execute(
     return flags_rc;
   }
 
-  std::unique_ptr<IngestionService> ingestion_service(
-      new IngestionService(ctx->storage_backend));
-
-  auto rc = ingestion_service->applyConfig(ctx->config);
+  std::unique_ptr<TaskRunner> task_runner(new TaskRunner());
+  auto rc = startIngestionTasks(ctx->storage_backend, ctx->config, task_runner.get());
   if (!rc.isSuccess()) {
     return rc;
   }
 
   if (flags.isSet("once")) {
-    return ingestion_service->runOnce();
+    return task_runner->runOnce();
   }
 
   if (::pipe(sig_pipe) != 0) {
@@ -64,7 +62,7 @@ ReturnCode CollectCommand::execute(
   signal(SIGHUP, sig_handler);
   signal(SIGPIPE, SIG_IGN);
 
-  ingestion_service->start();
+  task_runner->start();
 
   for (;;) {
     char sig;
@@ -82,7 +80,7 @@ ReturnCode CollectCommand::execute(
   signal(SIGINT, SIG_DFL);
   signal(SIGHUP, SIG_DFL);
 
-  ingestion_service->shutdown();
+  task_runner->shutdown();
   return ReturnCode::success();
 }
 

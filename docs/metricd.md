@@ -13,6 +13,8 @@ a HTTP API that allows you to execute commands.
        --loglevel <level>        Minimum log level (default: INFO)
        --[no]log_to_syslog       Do[n't] log to syslog
        --[no]log_to_stderr       Do[n't] log to stderr
+       --datadir                 Override the default datadir (/usr/share/metrictools)
+       --plugindir               Override the default plugindir (/usr/share/metrictools/plugins)
        -?, --help                Display this help text and exit
        -V, --version             Display the version of this binary and exit
 

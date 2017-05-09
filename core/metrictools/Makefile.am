@@ -30,6 +30,8 @@ libfnordmetric_common_a_SOURCES = \
     units.cc \
     statsd.h \
     statsd.cc \
+    listen.h \
+    listen.cc \
     listen_udp.h \
     listen_udp.cc \
     listen_http.h \
@@ -105,6 +107,8 @@ libfnordmetric_common_a_SOURCES = \
     storage/ops/fetch_op.cc \
     storage/ops/insert_op.h \
     storage/ops/insert_op.cc \
+    task.h \
+    task.cc \
     timeseries.h \
     timeseries_impl.h \
     timeseries.cc

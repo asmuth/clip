@@ -25,16 +25,17 @@
 
 namespace fnordmetric {
 
-UDPIngestionTaskConfig::UDPIngestionTaskConfig() :
+ListenUDPTaskConfig::ListenUDPTaskConfig() :
     bind("0.0.0.0"),
     port(8125),
     format(MeasurementCoding::STATSD) {}
 
 ReturnCode UDPListener::start(
     Backend* storage_backend,
-    const IngestionTaskConfig* config,
-    std::unique_ptr<IngestionTask>* task) {
-  auto c = dynamic_cast<const UDPIngestionTaskConfig*>(config);
+    const ConfigList* config,
+    const ListenerConfig* task_config,
+    std::unique_ptr<Task>* task) {
+  auto c = dynamic_cast<const ListenUDPTaskConfig*>(task_config);
   if (!c) {
     return ReturnCode::error("ERUNTIME", "invalid ingestion task config");
   }

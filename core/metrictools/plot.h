@@ -44,7 +44,7 @@ class PlotBuilder {
 public:
 
   PlotBuilder(
-      ConfigList* config,
+      const ConfigList* config,
       Backend* backend);
 
   ReturnCode addArgument(const std::string& key, const std::string& value);
@@ -64,7 +64,7 @@ protected:
   ReturnCode flush();
 
   Plot plot_;
-  ConfigList* config_;
+  const ConfigList* config_;
   Backend* backend_;
 
   std::string s_metric_;

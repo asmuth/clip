@@ -22,30 +22,22 @@
 
 namespace fnordmetric {
 class ConfigList;
-class IngestionTask;
 class Backend;
-struct IngestionTaskConfig;
-class InsertStorageOp;
 
-struct IngestionTaskConfig {
-  IngestionTaskConfig();
-  virtual ~IngestionTaskConfig() = default;
-  bool metric_id_rewrite_enabled;
-  std::regex metric_id_rewrite_regex;
-  std::string metric_id_rewrite_replace;
+struct ListenerConfig {
+  virtual ~ListenerConfig() = default;
 };
 
-ReturnCode mkIngestionTask(
+ReturnCode mkListenerTask(
     Backend* storage_backend,
     const ConfigList* config_list,
-    const IngestionTaskConfig* config,
-    std::unique_ptr<IngestionTask>* task);
+    const ListenerConfig* config,
+    std::unique_ptr<Task>* task);
 
-ReturnCode startIngestionTasks(
+ReturnCode startListeners(
     Backend* storage_backend,
     const ConfigList* config_list,
     TaskRunner* task_runner);
-
 
 } // namespace fnordmetric
 

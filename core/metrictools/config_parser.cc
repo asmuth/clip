@@ -111,6 +111,26 @@ ReturnCode ConfigParser::parse(ConfigList* config) {
       }
     }
 
+    /* parse the "datadir" stanza */
+    if (ttype == T_STRING && tbuf == "datadir") {
+      consumeToken();
+      if (parseDatadirStanza(config)) {
+        continue;
+      } else {
+        break;
+      }
+    }
+
+    /* parse the "plugindir" stanza */
+    if (ttype == T_STRING && tbuf == "plugindir") {
+      consumeToken();
+      if (parsePlugindirStanza(config)) {
+        continue;
+      } else {
+        break;
+      }
+    }
+
     /* parse the "metric" definition */
     if (ttype == T_STRING && tbuf == "metric") {
       consumeToken();
@@ -165,6 +185,16 @@ ReturnCode ConfigParser::parse(ConfigList* config) {
     if (ttype == T_STRING && tbuf == "listen_http") {
       consumeToken();
       if (parseListenHTTPDefinition(config)) {
+        continue;
+      } else {
+        break;
+      }
+    }
+
+    /* parse the "dashboard" stanza */
+    if (ttype == T_STRING && tbuf == "dashboard") {
+      consumeToken();
+      if (parseDashboardStanza(config)) {
         continue;
       } else {
         break;
@@ -296,6 +326,41 @@ bool ConfigParser::parseLabelSetStanza(MetricLabelOverrideList* overrides) {
         .value = value,
         .is_default = is_default
       });
+
+  return true;
+}
+
+bool ConfigParser::parseDatadirStanza(ConfigList* config) {
+  std::string value;
+  if (!expectAndConsumeString(&value)) {
+    return false;
+  }
+
+  config->setDatadir(value);
+  return true;
+}
+
+bool ConfigParser::parsePlugindirStanza(ConfigList* config) {
+  std::string value;
+  if (!expectAndConsumeString(&value)) {
+    return false;
+  }
+
+  config->setDatadir(value);
+  return true;
+}
+
+bool ConfigParser::parseDashboardStanza(ConfigList* config) {
+  std::string value;
+  if (!expectAndConsumeString(&value)) {
+    return false;
+  }
+
+  if (StringUtil::beginsWith(value, "/")) {
+    config->addDashboardPath(value);
+  } else {
+    config->addDashboardPath(FileUtil::joinPaths(basepath_, value));
+  }
 
   return true;
 }
@@ -831,8 +896,8 @@ bool ConfigParser::parseCollectProcDefinitionIntervalStanza(
 
 
 bool ConfigParser::parseCollectHTTPDefinition(ConfigList* config) {
-  std::unique_ptr<HTTPPullIngestionTaskConfig> ingestion_task(
-      new HTTPPullIngestionTaskConfig());
+  std::unique_ptr<CollectHTTPTaskConfig> ingestion_task(
+      new CollectHTTPTaskConfig());
 
   if (!expectAndConsumeToken(T_LCBRACE)) {
     return false;
@@ -899,7 +964,7 @@ bool ConfigParser::parseCollectHTTPDefinition(ConfigList* config) {
 }
 
 bool ConfigParser::parseCollectHTTPDefinitionURLStanza(
-    HTTPPullIngestionTaskConfig* config) {
+    CollectHTTPTaskConfig* config) {
   TokenType ttype;
   std::string tbuf;
   if (!getToken(&ttype, &tbuf) || ttype != T_STRING) {
@@ -913,7 +978,7 @@ bool ConfigParser::parseCollectHTTPDefinitionURLStanza(
 }
 
 bool ConfigParser::parseCollectHTTPDefinitionFormatStanza(
-    HTTPPullIngestionTaskConfig* config) {
+    CollectHTTPTaskConfig* config) {
   TokenType ttype;
   std::string tbuf;
   if (!getToken(&ttype, &tbuf) || ttype != T_STRING) {
@@ -934,7 +999,7 @@ bool ConfigParser::parseCollectHTTPDefinitionFormatStanza(
 }
 
 bool ConfigParser::parseCollectHTTPDefinitionIntervalStanza(
-    HTTPPullIngestionTaskConfig* config) {
+    CollectHTTPTaskConfig* config) {
   TokenType ttype;
   std::string tbuf;
   if (!getToken(&ttype, &tbuf) || ttype != T_STRING) {
@@ -955,8 +1020,8 @@ bool ConfigParser::parseCollectHTTPDefinitionIntervalStanza(
 }
 
 bool ConfigParser::parseListenHTTPDefinition(ConfigList* config) {
-  std::unique_ptr<HTTPPushIngestionTaskConfig> ingestion_task(
-      new HTTPPushIngestionTaskConfig());
+  std::unique_ptr<ListenHTTPTaskConfig> ingestion_task(
+      new ListenHTTPTaskConfig());
 
   if (!expectAndConsumeToken(T_LCBRACE)) {
     return false;
@@ -1000,12 +1065,12 @@ bool ConfigParser::parseListenHTTPDefinition(ConfigList* config) {
     return false;
   }
 
-  config->addIngestionTaskConfig(std::move(ingestion_task));
+  config->addListenerConfig(std::move(ingestion_task));
   return true;
 }
 
 bool ConfigParser::parseListenHTTPDefinitionBindStanza(
-    HTTPPushIngestionTaskConfig* config) {
+    ListenHTTPTaskConfig* config) {
   TokenType ttype;
   std::string tbuf;
   if (!getToken(&ttype, &tbuf) || ttype != T_STRING) {
@@ -1019,7 +1084,7 @@ bool ConfigParser::parseListenHTTPDefinitionBindStanza(
 }
 
 bool ConfigParser::parseListenHTTPDefinitionPortStanza(
-    HTTPPushIngestionTaskConfig* config) {
+    ListenHTTPTaskConfig* config) {
   TokenType ttype;
   std::string tbuf;
   if (!getToken(&ttype, &tbuf) || ttype != T_STRING) {
@@ -1046,8 +1111,8 @@ bool ConfigParser::parseListenHTTPDefinitionPortStanza(
 
 
 bool ConfigParser::parseListenUDPDefinition(ConfigList* config) {
-  std::unique_ptr<UDPIngestionTaskConfig> ingestion_task(
-      new UDPIngestionTaskConfig());
+  std::unique_ptr<ListenUDPTaskConfig> ingestion_task(
+      new ListenUDPTaskConfig());
 
   if (!expectAndConsumeToken(T_LCBRACE)) {
     return false;
@@ -1100,12 +1165,12 @@ bool ConfigParser::parseListenUDPDefinition(ConfigList* config) {
     return false;
   }
 
-  config->addIngestionTaskConfig(std::move(ingestion_task));
+  config->addListenerConfig(std::move(ingestion_task));
   return true;
 }
 
 bool ConfigParser::parseListenUDPDefinitionBindStanza(
-    UDPIngestionTaskConfig* config) {
+    ListenUDPTaskConfig* config) {
   TokenType ttype;
   std::string tbuf;
   if (!getToken(&ttype, &tbuf) || ttype != T_STRING) {
@@ -1119,7 +1184,7 @@ bool ConfigParser::parseListenUDPDefinitionBindStanza(
 }
 
 bool ConfigParser::parseListenUDPDefinitionPortStanza(
-    UDPIngestionTaskConfig* config) {
+    ListenUDPTaskConfig* config) {
   TokenType ttype;
   std::string tbuf;
   if (!getToken(&ttype, &tbuf) || ttype != T_STRING) {
@@ -1145,7 +1210,7 @@ bool ConfigParser::parseListenUDPDefinitionPortStanza(
 }
 
 bool ConfigParser::parseListenUDPDefinitionFormatStanza(
-    UDPIngestionTaskConfig* config) {
+    ListenUDPTaskConfig* config) {
   TokenType ttype;
   std::string tbuf;
   if (!getToken(&ttype, &tbuf) || ttype != T_STRING) {

@@ -11,7 +11,21 @@
 
 namespace fnordmetric {
 
-ConfigList::ConfigList() : global_config_(new GlobalConfig()) {}
+ConfigList::ConfigList() : global_config_(new GlobalConfig()) {
+  auto datadir = getenv("METRICTOOLS_DATADIR");
+  if (datadir) {
+    datadir_ = std::string(datadir);
+  } else {
+    datadir_ = "/usr/share/metrictools";
+  }
+
+  auto plugindir = getenv("METRICTOOLS_PLUGINDIR");
+  if (plugindir) {
+    plugindir_ = std::string(plugindir);
+  } else {
+    datadir_ = "/usr/share/metrictools/plugins";
+  }
+}
 
 const std::string& ConfigList::getBackendURL() const {
   return backend_url_;
@@ -69,6 +83,38 @@ const std::vector<std::unique_ptr<IngestionTaskConfig>>& ConfigList::getIngestio
 
 void ConfigList::addIngestionTaskConfig(std::unique_ptr<IngestionTaskConfig> config) {
   ingestion_configs_.emplace_back(std::move(config));
+}
+
+const std::vector<std::unique_ptr<ListenerConfig>>& ConfigList::getListenerConfigs() const {
+  return listener_configs_;
+}
+
+void ConfigList::addListenerConfig(std::unique_ptr<ListenerConfig> config) {
+  listener_configs_.emplace_back(std::move(config));
+}
+
+void ConfigList::addDashboardPath(const std::string& path) {
+  dashboard_paths_.insert(path);
+}
+
+const std::set<std::string>& ConfigList::getDashboardPaths() const {
+  return dashboard_paths_;
+}
+
+const std::string& ConfigList::getDatadir() const {
+  return datadir_;
+}
+
+void ConfigList::setDatadir(const std::string& dir) {
+  datadir_ = dir;
+}
+
+const std::string& ConfigList::getPlugindir() const {
+  return plugindir_;
+}
+
+void ConfigList::setPlugindir(const std::string& dir) {
+  plugindir_ = dir;
 }
 
 std::shared_ptr<const GlobalConfig> ConfigList::getGlobalConfig() const noexcept {

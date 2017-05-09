@@ -44,6 +44,20 @@ int main(int argc, const char** argv) {
       NULL);
 
   flags.defineFlag(
+      "datadir",
+      FlagParser::T_STRING,
+      false,
+      NULL,
+      NULL);
+
+  flags.defineFlag(
+      "plugindir",
+      FlagParser::T_STRING,
+      false,
+      NULL,
+      NULL);
+
+  flags.defineFlag(
       "help",
       FlagParser::T_STRING,
       false,
@@ -119,6 +133,8 @@ int main(int argc, const char** argv) {
     std::cerr <<
         "Usage: $ metricctl [OPTIONS]\n"
         "   -c, --config <file>       Load config file\n"
+        "   --datadir                 Override the default datadir (/usr/share/metrictools)\n"
+        "   --plugindir               Override the default plugindir (/usr/share/metrictools/plugins)\n"
         "   -v, --verbose             Run in verbose mode\n"
         "   -?, --help <topic>        Display a command's help text and exit\n"
         "   -V, --version             Display the version of this binary and exit\n"
@@ -191,6 +207,15 @@ int main(int argc, const char** argv) {
       std::cerr << "ERROR: " << rc.getMessage() << std::endl;
       return 1;
     }
+  }
+
+  /* override config from flags */
+  if (flags.isSet("datadir")) {
+    config.setDatadir(flags.getString("datadir"));
+  }
+
+  if (flags.isSet("plugindir")) {
+    config.setPlugindir(flags.getString("plugindir"));
   }
 
   /* open backend */

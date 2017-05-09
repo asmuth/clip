@@ -62,7 +62,7 @@ ReturnCode CollectProcTask::start(
     Backend* storage_backend,
     const ConfigList* config,
     const IngestionTaskConfig* task_config,
-    std::unique_ptr<IngestionTask>* task) {
+    std::unique_ptr<Task>* task) {
   auto c = dynamic_cast<const CollectProcTaskConfig*>(task_config);
   if (!c) {
     return ReturnCode::error("EARG", "invalid ingestion task config");
@@ -101,7 +101,7 @@ CollectProcTask::CollectProcTask(
     const std::vector<std::string>& cmd_argv,
     MeasurementCoding format,
     const MetricLabelOverrideList& label_overrides) :
-    PeriodicIngestionTask(interval),
+    PeriodicTask(interval),
     storage_backend_(storage_backend),
     config_(config),
     cmd_path_(cmd_path),

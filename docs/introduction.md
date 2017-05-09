@@ -47,7 +47,7 @@ pages.
     </tr>
     <tr>
       <td><code><a href="/documentation/metrictl-log"><strong>metrictl log</strong></a></code></td>
-      <td>Rretrieve a logfile of collected measurements for a specific metric.</td>
+      <td>Retrieve a logfile of collected measurements for a specific metric.</td>
     </tr>
     <tr>
       <td><code><a href="/documentation/metrictl-plot"><strong>metrictl plot</strong></a></code></td>
