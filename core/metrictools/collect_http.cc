@@ -19,16 +19,16 @@
 
 namespace fnordmetric {
 
-HTTPPullIngestionTaskConfig::HTTPPullIngestionTaskConfig() :
+CollectHTTPTaskConfig::CollectHTTPTaskConfig() :
     interval(10 * kMicrosPerSecond),
     format(MeasurementCoding::STATSD) {}
 
-ReturnCode HTTPPullIngestionTask::start(
+ReturnCode CollectHTTPTask::start(
     Backend* storage_backend,
     const ConfigList* config,
     const IngestionTaskConfig* task_config,
-    std::unique_ptr<IngestionTask>* task) {
-  auto c = dynamic_cast<const HTTPPullIngestionTaskConfig*>(task_config);
+    std::unique_ptr<Task>* task) {
+  auto c = dynamic_cast<const CollectHTTPTaskConfig*>(task_config);
   if (!c) {
     return ReturnCode::error("ERUNTIME", "invalid ingestion task config");
   }
@@ -38,7 +38,7 @@ ReturnCode HTTPPullIngestionTask::start(
   }
 
   task->reset(
-      new HTTPPullIngestionTask(
+      new CollectHTTPTask(
           storage_backend,
           config,
           c->interval,
@@ -49,21 +49,21 @@ ReturnCode HTTPPullIngestionTask::start(
   return ReturnCode::success();
 }
 
-HTTPPullIngestionTask::HTTPPullIngestionTask(
+CollectHTTPTask::CollectHTTPTask(
     Backend* storage_backend,
     const ConfigList* config,
     uint64_t interval,
     const std::string& url,
     MeasurementCoding format,
     const MetricLabelOverrideList& label_overrides) :
-    PeriodicIngestionTask(interval),
+    PeriodicTask(interval),
     storage_backend_(storage_backend),
     config_(config),
     url_(url),
     format_(format),
     label_overrides_(label_overrides) {}
 
-ReturnCode HTTPPullIngestionTask::invoke() {
+ReturnCode CollectHTTPTask::invoke() {
   logDebug("Fetching samples via HTTP from $0", url_);
 
   URI url(url_);

@@ -71,9 +71,9 @@ protected:
   bool parseRewriteStanza(IngestionTaskConfig* sensor_config);
 
   bool parseCollectHTTPDefinition(ConfigList* config);
-  bool parseCollectHTTPDefinitionURLStanza(HTTPPullIngestionTaskConfig* config);
-  bool parseCollectHTTPDefinitionFormatStanza(HTTPPullIngestionTaskConfig* config);
-  bool parseCollectHTTPDefinitionIntervalStanza(HTTPPullIngestionTaskConfig* config);
+  bool parseCollectHTTPDefinitionURLStanza(CollectHTTPTaskConfig* config);
+  bool parseCollectHTTPDefinitionFormatStanza(CollectHTTPTaskConfig* config);
+  bool parseCollectHTTPDefinitionIntervalStanza(CollectHTTPTaskConfig* config);
 
   bool parseCollectProcDefinition(ConfigList* config);
   bool parseCollectProcDefinitionCommandStanza(CollectProcTaskConfig* config);
@@ -81,13 +81,13 @@ protected:
   bool parseCollectProcDefinitionIntervalStanza(CollectProcTaskConfig* config);
 
   bool parseListenHTTPDefinition(ConfigList* config);
-  bool parseListenHTTPDefinitionBindStanza(HTTPPushIngestionTaskConfig* config);
-  bool parseListenHTTPDefinitionPortStanza(HTTPPushIngestionTaskConfig* config);
+  bool parseListenHTTPDefinitionBindStanza(ListenHTTPTaskConfig* config);
+  bool parseListenHTTPDefinitionPortStanza(ListenHTTPTaskConfig* config);
 
   bool parseListenUDPDefinition(ConfigList* config);
-  bool parseListenUDPDefinitionBindStanza(UDPIngestionTaskConfig* config);
-  bool parseListenUDPDefinitionPortStanza(UDPIngestionTaskConfig* config);
-  bool parseListenUDPDefinitionFormatStanza(UDPIngestionTaskConfig* config);
+  bool parseListenUDPDefinitionBindStanza(ListenUDPTaskConfig* config);
+  bool parseListenUDPDefinitionPortStanza(ListenUDPTaskConfig* config);
+  bool parseListenUDPDefinitionFormatStanza(ListenUDPTaskConfig* config);
 
   bool getToken(
       TokenType* type,

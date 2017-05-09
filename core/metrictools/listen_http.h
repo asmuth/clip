@@ -9,7 +9,7 @@
  * <http://www.gnu.org/licenses/>.
  */
 #pragma once
-#include <metrictools/collect.h>
+#include <metrictools/listen.h>
 #include <metrictools/webui/webui.h>
 #include <libtransport/http/v1/http_server.h>
 #include <libtransport/http/http_request.h>
@@ -25,13 +25,15 @@ class Backend;
 namespace json = libtransport::json;
 namespace http = libtransport::http;
 
-class HTTPServer {
+class HTTPServer: public Task {
 public:
 
-  HTTPServer(ConfigList* config, Backend* storage_backend);
+  HTTPServer(const ConfigList* config, Backend* storage_backend);
 
   ReturnCode listenAndRun(const std::string& addr, int port);
-  void shutdown();
+
+  void start() override;
+  void shutdown() override;
 
   void setAssetPath(const std::string& path);
 
@@ -54,43 +56,24 @@ protected:
       const std::string& asset_path,
       const std::string& content_type) const;
 
-  ConfigList* config_;
+  const ConfigList* config_;
   Backend* storage_backend_;
   libtransport::http::HTTPServer http_server_;
   std::string dynamic_asset_path_;
   std::thread thread_;
 };
 
-struct HTTPPushIngestionTaskConfig : public IngestionTaskConfig {
-  HTTPPushIngestionTaskConfig();
+struct ListenHTTPTaskConfig : public ListenerConfig {
+  ListenHTTPTaskConfig();
   std::string bind;
   uint16_t port;
 };
 
-class HTTPPushIngestionTask : public IngestionTask {
-public:
-
-  static ReturnCode start(
-      Backend* storage_backend,
-      const IngestionTaskConfig* config,
-      std::unique_ptr<IngestionTask>* task);
-
-  HTTPPushIngestionTask(Backend* storage_backend);
-
-  ReturnCode listen(const std::string& addr, int port);
-
-  virtual void start() override;
-  virtual void shutdown() override;
-
-protected:
-
-  void handleRequest(
-      http::HTTPRequest* request,
-      http::HTTPResponse* response);
-
-  Backend* storage_backend_;
-  libtransport::http::HTTPServer http_server_;
-};
+ReturnCode startHTTPListener(
+    Backend* storage_backend,
+    const ConfigList* config,
+    const ListenerConfig* task_config,
+    std::unique_ptr<Task>* task);
 
 } // namespace fnordmetric
 

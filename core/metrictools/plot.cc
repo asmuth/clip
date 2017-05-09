@@ -18,7 +18,7 @@ namespace fnordmetric {
 using namespace cplot;
 
 PlotBuilder::PlotBuilder(
-    ConfigList* config,
+    const ConfigList* config,
     Backend* backend) :
     config_(config),
     backend_(backend) {

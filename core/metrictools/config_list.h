@@ -16,6 +16,7 @@
 #include "metrictools/metric.h"
 #include "metrictools/units.h"
 #include "metrictools/collect.h"
+#include "metrictools/listen.h"
 
 namespace fnordmetric {
 
@@ -56,6 +57,9 @@ public:
   const std::vector<std::unique_ptr<IngestionTaskConfig>>& getIngestionTaskConfigs() const;
   void addIngestionTaskConfig(std::unique_ptr<IngestionTaskConfig> config);
 
+  const std::vector<std::unique_ptr<ListenerConfig>>& getListenerConfigs() const;
+  void addListenerConfig(std::unique_ptr<ListenerConfig> config);
+
   std::shared_ptr<const GlobalConfig> getGlobalConfig() const noexcept;
   std::shared_ptr<GlobalConfig> getGlobalConfig() noexcept;
 
@@ -66,6 +70,7 @@ protected:
   std::map<MetricIDType, std::shared_ptr<MetricConfig>> metric_configs_;
   std::map<std::string, UnitConfig> unit_configs_;
   std::vector<std::unique_ptr<IngestionTaskConfig>> ingestion_configs_;
+  std::vector<std::unique_ptr<ListenerConfig>> listener_configs_;
 };
 
 } // namespace fnordmetric

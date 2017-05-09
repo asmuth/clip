@@ -13,24 +13,18 @@
 #include <atomic>
 #include "metrictools/util/return_code.h"
 #include "metrictools/measure.h"
-#include "metrictools/collect.h"
+#include "metrictools/listen.h"
 
 namespace fnordmetric {
 
-struct UDPIngestionTaskConfig : public IngestionTaskConfig {
-  UDPIngestionTaskConfig();
-  std::string bind;
-  uint16_t port;
-  MeasurementCoding format;
-};
-
-class UDPListener : public IngestionTask {
+class UDPListener : public Task {
 public:
 
   static ReturnCode start(
       Backend* storage_backend,
-      const IngestionTaskConfig* config,
-      std::unique_ptr<IngestionTask>* task);
+      const ConfigList* config,
+      const ListenerConfig* task_config,
+      std::unique_ptr<Task>* task);
 
   UDPListener(
       Backend* storage_backend,
@@ -48,6 +42,13 @@ protected:
   MeasurementCoding format_;
   int ssock_;
   std::atomic<bool> running_;
+};
+
+struct ListenUDPTaskConfig : public ListenerConfig {
+  ListenUDPTaskConfig();
+  std::string bind;
+  uint16_t port;
+  MeasurementCoding format;
 };
 
 } // namespace fnordmetric

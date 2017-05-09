@@ -23,7 +23,7 @@ namespace fnordmetric {
 namespace json = libtransport::json;
 
 HTTPServer::HTTPServer(
-    ConfigList* config,
+    const ConfigList* config,
     Backend* storage_backend) :
     config_(config),
     storage_backend_(storage_backend) {
@@ -42,10 +42,13 @@ ReturnCode HTTPServer::listenAndRun(const std::string& addr, int port) {
     return ReturnCode::error("ERUNTIME", "listen() failed");
   }
 
+  return ReturnCode::success();
+}
+
+void HTTPServer::start() {
+  std::cerr << "start it " << std::endl;
   thread_ = std::thread(
       std::bind(&libtransport::http::HTTPServer::run, &http_server_));
-
-  return ReturnCode::success();
 }
 
 void HTTPServer::shutdown() {
@@ -167,16 +170,16 @@ void HTTPServer::setAssetPath(const std::string& path) {
   dynamic_asset_path_ = path;
 }
 
-
-HTTPPushIngestionTaskConfig::HTTPPushIngestionTaskConfig() :
+ListenHTTPTaskConfig::ListenHTTPTaskConfig() :
     bind("0.0.0.0"),
     port(8080) {}
 
-ReturnCode HTTPPushIngestionTask::start(
+ReturnCode startHTTPListener(
     Backend* storage_backend,
-    const IngestionTaskConfig* config,
-    std::unique_ptr<IngestionTask>* task) {
-  auto c = dynamic_cast<const HTTPPushIngestionTaskConfig*>(config);
+    const ConfigList* config,
+    const ListenerConfig* task_config,
+    std::unique_ptr<Task>* task) {
+  auto c = dynamic_cast<const ListenHTTPTaskConfig*>(task_config);
   if (!c) {
     return ReturnCode::error("ERUNTIME", "invalid ingestion task config");
   }
@@ -185,78 +188,14 @@ ReturnCode HTTPPushIngestionTask::start(
     return ReturnCode::error("ERUNTIME", "missing port");
   }
 
-  auto self = new HTTPPushIngestionTask(storage_backend);
-  task->reset(self);
-
-  auto rc = self->listen(c->bind, c->port);
+  std::unique_ptr<HTTPServer> http_server(new HTTPServer(config, storage_backend));
+  auto rc = http_server->listenAndRun(c->bind, c->port);
   if (!rc.isSuccess()) {
     return rc;
   }
 
+  *task = std::move(http_server);
   return ReturnCode::success();
-}
-
-HTTPPushIngestionTask::HTTPPushIngestionTask(
-    Backend* storage_backend) :
-    storage_backend_(storage_backend) {
-  http_server_.setRequestHandler(
-      std::bind(
-          &HTTPPushIngestionTask::handleRequest,
-          this,
-          std::placeholders::_1,
-          std::placeholders::_2));
-}
-
-ReturnCode HTTPPushIngestionTask::listen(const std::string& addr, int port) {
-  logInfo("Starting HTTP server on $0:$1", addr, port);
-
-  if (http_server_.listen(addr, port)) {
-    return ReturnCode::success();
-  } else {
-    return ReturnCode::error("ERUNTIME", "listen() failed");
-  }
-}
-
-void HTTPPushIngestionTask::start() {
-  http_server_.run();
-}
-
-void HTTPPushIngestionTask::shutdown() {}
-
-void HTTPPushIngestionTask::handleRequest(
-    http::HTTPRequest* request,
-    http::HTTPResponse* response) {
-  URI uri(request->uri());
-  auto path = uri.path();
-
-  static const char kMetricsUrl[] = "/metrics";
-  if (path != kMetricsUrl || request->method() != http::HTTPRequest::M_POST) {
-    response->setStatus(http::kStatusBadRequest);
-    response->addBody("ERROR: please send metrics to POST /metrics\n");
-    return;
-  }
-
-  //Backend::BatchInsertOptions opts;
-  //Opts.format = IngestionMeasurementCoding::STATSD;
-  //If (request->getHeader("Content-Type") == "application/json") {
-  //  opts.format = IngestionMeasurementCoding::JSON;
-  //}
-  //If (request->getHeader("Content-Type") == "text/plain") {
-  //  opts.format = IngestionMeasurementCoding::STATSD;
-  //}
-
-  //Auto rc = storage_backend_->insertMeasurementsBatch(
-  //    request->body().data(),
-  //    request->body().size(),
-  //    &opts);
-
-  //If (rc.isSuccess()) {
-  //  response->setStatus(http::kStatusCreated);
-  //  response->addBody("OK\n");
-  //} else {
-  //  response->setStatus(http::kStatusInternalServerError);
-  //  response->addBody(StringUtil::format("ERROR: $0\n", rc.getMessage()));
-  //}
 }
 
 } // namespace fnordmetric

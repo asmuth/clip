@@ -23,14 +23,14 @@ struct CollectProcTaskConfig : public IngestionTaskConfig {
   MetricLabelOverrideList label_overrides;
 };
 
-class CollectProcTask : public PeriodicIngestionTask {
+class CollectProcTask : public PeriodicTask {
 public:
 
   static ReturnCode start(
       Backend* storage_backend,
       const ConfigList* config,
       const IngestionTaskConfig* task_config,
-      std::unique_ptr<IngestionTask>* task);
+      std::unique_ptr<Task>* task);
 
   CollectProcTask(
       Backend* storage_backend,

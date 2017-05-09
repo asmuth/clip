@@ -71,6 +71,14 @@ void ConfigList::addIngestionTaskConfig(std::unique_ptr<IngestionTaskConfig> con
   ingestion_configs_.emplace_back(std::move(config));
 }
 
+const std::vector<std::unique_ptr<ListenerConfig>>& ConfigList::getListenerConfigs() const {
+  return listener_configs_;
+}
+
+void ConfigList::addListenerConfig(std::unique_ptr<ListenerConfig> config) {
+  listener_configs_.emplace_back(std::move(config));
+}
+
 std::shared_ptr<const GlobalConfig> ConfigList::getGlobalConfig() const noexcept {
   return global_config_;
 }

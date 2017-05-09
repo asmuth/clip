@@ -258,6 +258,27 @@ int main(int argc, const char** argv) {
     }
   }
 
+  /* override config options from flags */
+  if (rc.isSuccess() && flags.isSet("listen_http")) {
+    std::string http_bind;
+    uint16_t http_port;
+    if (rc.isSuccess()) {
+      auto parse_rc = parseListenAddr(
+          flags.getString("listen_http"),
+          &http_bind,
+          &http_port);
+
+      if (parse_rc) {
+        std::unique_ptr<ListenHTTPTaskConfig> listen_http(new ListenHTTPTaskConfig());
+        listen_http->bind = http_bind;
+        listen_http->port = http_port;
+        config.addListenerConfig(std::move(listen_http));
+      } else {
+        rc = ReturnCode::error("ERUNTIME", "invalid value for --listen_http");
+      }
+    }
+  }
+
   /* open backend */
   if (rc.isSuccess() && config.getBackendURL().empty()) {
     rc = ReturnCode::error("ERUNTIME", "missing backend url");
@@ -280,40 +301,23 @@ int main(int argc, const char** argv) {
     signal(SIGPIPE, SIG_IGN);
   }
 
-  /* start http server */
-  std::string http_bind;
-  uint16_t http_port;
+  /* start tasks  */
+  std::unique_ptr<TaskRunner> task_runner(new TaskRunner());
   if (rc.isSuccess()) {
-    auto parse_rc = parseListenAddr(
-        flags.getString("listen_http"),
-        &http_bind,
-        &http_port);
-
-    if (!parse_rc) {
-      rc = ReturnCode::error("ERUNTIME", "invalid value for --listen_http");
-    }
-  }
-
-  std::unique_ptr<HTTPServer> http_server;
-  if (rc.isSuccess()) {
-    http_server.reset(new HTTPServer(&config, backend.get()));
-    //if (flags.isSet("dev_assets")) {
-    //  query_service.setAssetPath(flags.getString("dev_assets"));
-    //}
-
-    rc = http_server->listenAndRun(http_bind, http_port);
-  }
-
-  /* start ingestion service */
-  std::unique_ptr<IngestionService> ingestion_service;
-  if (rc.isSuccess()) {
-    ingestion_service.reset(new IngestionService(backend.get()));
-    rc = ingestion_service->applyConfig(&config);
+    rc = startIngestionTasks(
+        backend.get(),
+        &config,
+        task_runner.get());
   }
 
   if (rc.isSuccess()) {
-    ingestion_service->start();
+    rc = startListeners(
+        backend.get(),
+        &config,
+        task_runner.get());
   }
+
+  task_runner->start();
 
   /* wait for shutdown or reload */
   while (rc.isSuccess()) {
@@ -348,12 +352,8 @@ int main(int argc, const char** argv) {
     close(sig_pipe[1]);
   }
 
-  if (http_server) {
-    http_server->shutdown();
-  }
-
-  if (ingestion_service) {
-    ingestion_service->shutdown();
+  if (task_runner) {
+    task_runner->shutdown();
   }
 
   if (backend) {

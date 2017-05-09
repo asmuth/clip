@@ -12,24 +12,24 @@
 
 namespace fnordmetric {
 
-struct HTTPPullIngestionTaskConfig : public IngestionTaskConfig {
-  HTTPPullIngestionTaskConfig();
+struct CollectHTTPTaskConfig : public IngestionTaskConfig {
+  CollectHTTPTaskConfig();
   std::string url;
   uint64_t interval;
   MeasurementCoding format;
   MetricLabelOverrideList label_overrides;
 };
 
-class HTTPPullIngestionTask : public PeriodicIngestionTask {
+class CollectHTTPTask : public PeriodicTask {
 public:
 
   static ReturnCode start(
       Backend* storage_backend,
       const ConfigList* config,
       const IngestionTaskConfig* task_config,
-      std::unique_ptr<IngestionTask>* task);
+      std::unique_ptr<Task>* task);
 
-  HTTPPullIngestionTask(
+  CollectHTTPTask(
       Backend* storage_backend,
       const ConfigList* config,
       uint64_t interval,
