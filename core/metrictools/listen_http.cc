@@ -24,9 +24,11 @@ namespace json = libtransport::json;
 
 HTTPServer::HTTPServer(
     const ConfigList* config,
-    Backend* storage_backend) :
+    Backend* storage_backend,
+    std::unique_ptr<DashboardMap> dashboard_map) :
     config_(config),
-    storage_backend_(storage_backend) {
+    storage_backend_(storage_backend),
+    dashboard_map_(std::move(dashboard_map)) {
   http_server_.setRequestHandler(
       std::bind(
           &HTTPServer::handleRequest,
@@ -76,6 +78,11 @@ void HTTPServer::handleRequest(
     return;
   }
 
+  if (StringUtil::beginsWith(path, "/dashboard/")) {
+    handleDashboardRequest(request, response);
+    return;
+  }
+
   if (path == "/favicon.ico") {
     response->setStatus(http::kStatusOK);
     response->addHeader("Content-Type", "image/x-icon");
@@ -86,6 +93,55 @@ void HTTPServer::handleRequest(
   response->setStatus(http::kStatusNotFound);
   response->addHeader("Content-Type", "text/plain; charset=utf-8");
   response->addBody("not found");
+}
+
+void HTTPServer::handleDashboardRequest(
+    http::HTTPRequest* request,
+    http::HTTPResponse* response) {
+  auto path_parts = StringUtil::split(URI(request->uri()).path(), "/");
+  if (path_parts.size() < 3) {
+    response->setStatus(http::kStatusBadRequest);
+    return;
+  }
+
+  auto dashboard_id = path_parts[2];
+  path_parts.erase(path_parts.begin(), path_parts.begin() + 3);
+
+  auto dashboard_file = StringUtil::join(path_parts, "/");
+  if (dashboard_file.empty()) {
+    dashboard_file = "index.html";
+  }
+
+  auto dashboard_info = dashboard_map_->findDashboard(dashboard_id);
+  if (!dashboard_info) {
+    response->setStatus(http::kStatusNotFound);
+    response->addHeader("Content-Type", "text/plain; charset=utf-8");
+    response->addBody("dashboard not found");
+    return;
+  }
+
+  std::string realpath;
+  try {
+    realpath = FileUtil::realpath(
+        FileUtil::joinPaths(dashboard_info->basepath, dashboard_file));
+  } catch (...) {}
+
+  if (!StringUtil::beginsWith(realpath, dashboard_info->basepath)) {
+    realpath.clear();
+  }
+
+  if (!realpath.empty() && FileUtil::exists(realpath)) {
+    sendFile(response, realpath);
+  } else {
+    response->setStatus(http::kStatusNotFound);
+    response->addHeader("Content-Type", "text/plain; charset=utf-8");
+    response->addBody(
+        StringUtil::format(
+            "file '$0' not found in dashboard '$1' ($2)",
+            dashboard_file,
+            dashboard_id,
+            dashboard_info->basepath));
+  }
 }
 
 void HTTPServer::handleRequest_PLOT(
@@ -125,6 +181,20 @@ void HTTPServer::handleRequest_PLOT(
   response->setStatus(http::kStatusOK);
   response->addHeader("Content-Type", "text/html; charset=utf-8");
   response->addBody(plot_target);
+}
+
+void HTTPServer::sendFile(
+    http::HTTPResponse* response,
+    const std::string& file_path) {
+  auto mime_type = "application/octet-stream";
+
+  if (StringUtil::endsWith(file_path, ".html")) mime_type = "text/html; charset=utf-8";
+  if (StringUtil::endsWith(file_path, ".js")) mime_type = "application/javascript; charset=utf-8";
+  if (StringUtil::endsWith(file_path, ".css")) mime_type = "text/css; charset=utf-8";
+
+  response->setStatus(http::kStatusOK);
+  response->addHeader("Content-Type", mime_type);
+  response->addBody(FileUtil::read(file_path).toString());
 }
 
 std::string HTTPServer::getPreludeHTML() const {
@@ -187,14 +257,64 @@ ReturnCode startHTTPListener(
     return ReturnCode::error("ERUNTIME", "missing port");
   }
 
-  std::unique_ptr<HTTPServer> http_server(new HTTPServer(config, storage_backend));
-  auto rc = http_server->listenAndRun(c->bind, c->port);
-  if (!rc.isSuccess()) {
-    return rc;
+  std::unique_ptr<DashboardMap> dashboard_map(new DashboardMap());
+  {
+    auto rc = dashboard_map->loadConfig(config);
+    if (!rc.isSuccess()) {
+      return rc;
+    }
+  }
+
+  std::unique_ptr<HTTPServer> http_server(
+      new HTTPServer(
+          config,
+          storage_backend,
+          std::move(dashboard_map)));
+
+  {
+    auto rc = http_server->listenAndRun(c->bind, c->port);
+    if (!rc.isSuccess()) {
+      return rc;
+    }
   }
 
   *task = std::move(http_server);
   return ReturnCode::success();
+}
+
+ReturnCode DashboardMap::loadConfig(const ConfigList* config) {
+  for (const auto& path : config->getDashboardPaths()) {
+    if (!FileUtil::isDirectory(path)) {
+      return ReturnCode::errorf("EARG", "not a valid directory: $0", path);
+    }
+
+    auto path_full = FileUtil::realpath(path);
+    auto path_base = FileUtil::basedir(path_full);
+    auto path_trail = path_full.substr(path_base.size() + 1);
+
+    if (map_.count(path_trail) > 0) {
+      return ReturnCode::errorf(
+          "EARG",
+          "duplicate dashboard directory: $0",
+          path_trail);
+    }
+
+    DashboardInfo info;
+    info.basepath = path_full;
+    map_.emplace(path_trail, info);
+  }
+
+  return ReturnCode::success();
+}
+
+DashboardMap::DashboardInfo* DashboardMap::findDashboard(
+    const std::string& dashboard_id) {
+  auto iter = map_.find(dashboard_id);
+  if (iter == map_.end()) {
+    return nullptr;
+  } else {
+    return &iter->second;
+  }
 }
 
 } // namespace fnordmetric

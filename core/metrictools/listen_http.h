@@ -21,6 +21,7 @@
 
 namespace fnordmetric {
 class Backend;
+class DashboardMap;
 
 namespace json = libtransport::json;
 namespace http = libtransport::http;
@@ -28,7 +29,10 @@ namespace http = libtransport::http;
 class HTTPServer: public Task {
 public:
 
-  HTTPServer(const ConfigList* config, Backend* storage_backend);
+  HTTPServer(
+      const ConfigList* config,
+      Backend* storage_backend,
+      std::unique_ptr<DashboardMap> dashboard_map);
 
   ReturnCode listenAndRun(const std::string& addr, int port);
 
@@ -43,23 +47,27 @@ protected:
       http::HTTPRequest* request,
       http::HTTPResponse* response);
 
+  void handleDashboardRequest(
+      http::HTTPRequest* request,
+      http::HTTPResponse* response);
+
   void handleRequest_PLOT(
       http::HTTPRequest* request,
       http::HTTPResponse* response);
+
+  void sendFile(
+      http::HTTPResponse* response,
+      const std::string& file_path);
 
   std::string getPreludeHTML() const;
   std::string getAppHTML() const;
   std::string getAssetFile(const std::string& file) const;
 
-  void sendAsset(
-      http::HTTPResponse* response,
-      const std::string& asset_path,
-      const std::string& content_type) const;
-
   const ConfigList* config_;
   Backend* storage_backend_;
   libtransport::http::HTTPServer http_server_;
   std::string dynamic_asset_path_;
+  std::unique_ptr<DashboardMap> dashboard_map_;
   std::thread thread_;
 };
 
@@ -67,6 +75,21 @@ struct ListenHTTPTaskConfig : public ListenerConfig {
   ListenHTTPTaskConfig();
   std::string bind;
   uint16_t port;
+};
+
+class DashboardMap {
+public:
+
+  struct DashboardInfo {
+    std::string basepath;
+  };
+
+  ReturnCode loadConfig(const ConfigList* config);
+
+  DashboardInfo* findDashboard(const std::string& dashboard_id);
+
+protected:
+  std::map<std::string, DashboardInfo> map_;
 };
 
 ReturnCode startHTTPListener(
