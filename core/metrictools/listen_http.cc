@@ -68,13 +68,18 @@ void HTTPServer::handleRequest(
   const auto& path = uri.path();
 
   if (path == "/") {
-    response->setStatus(http::kStatusOK);
-    response->addBody("ok");
+    response->setStatus(http::kStatusFound);
+    response->addHeader("Location", "/admin/");
     return;
   }
 
   if (path == "/api/v1/plot") {
-    handleRequest_PLOT(request, response);
+    handleAPIRequest_PLOT(request, response);
+    return;
+  }
+
+  if (StringUtil::beginsWith(path, "/admin/")) {
+    handleAdminUIRequest(request, response);
     return;
   }
 
@@ -93,6 +98,33 @@ void HTTPServer::handleRequest(
   response->setStatus(http::kStatusNotFound);
   response->addHeader("Content-Type", "text/plain; charset=utf-8");
   response->addBody("not found");
+}
+
+void HTTPServer::handleAdminUIRequest(
+    http::HTTPRequest* request,
+    http::HTTPResponse* response) {
+  auto assets_lst = getAssetFile("assets.lst");
+
+  std::string app_html;
+  for (const auto& f : StringUtil::split(assets_lst, "\n")) {
+    if (StringUtil::endsWith(f, ".html")) {
+      app_html += getAssetFile(f);
+    }
+
+    if (StringUtil::endsWith(f, ".js")) {
+      auto content = getAssetFile(f);
+      app_html += "<script>" + content + "</script>";
+    }
+
+    if (StringUtil::endsWith(f, ".css")) {
+      auto content = getAssetFile(f);
+      app_html += "<style type='text/css'>" + content + "</style>";
+    }
+  }
+
+  response->setStatus(http::kStatusOK);
+  response->addHeader("Content-Type", "text/plain; charset=utf-8");
+  response->addBody(app_html);
 }
 
 void HTTPServer::handleDashboardRequest(
@@ -144,7 +176,7 @@ void HTTPServer::handleDashboardRequest(
   }
 }
 
-void HTTPServer::handleRequest_PLOT(
+void HTTPServer::handleAPIRequest_PLOT(
     http::HTTPRequest* request,
     http::HTTPResponse* response) {
   auto params = URI(request->uri()).queryParams();
@@ -195,33 +227,6 @@ void HTTPServer::sendFile(
   response->setStatus(http::kStatusOK);
   response->addHeader("Content-Type", mime_type);
   response->addBody(FileUtil::read(file_path).toString());
-}
-
-std::string HTTPServer::getPreludeHTML() const {
-  return getAssetFile("prelude.html");
-}
-
-std::string HTTPServer::getAppHTML() const {
-  auto assets_lst = getAssetFile("assets.lst");
-
-  std::string app_html;
-  for (const auto& f : StringUtil::split(assets_lst, "\n")) {
-    if (StringUtil::endsWith(f, ".html")) {
-      app_html += getAssetFile(f);
-    }
-
-    if (StringUtil::endsWith(f, ".js")) {
-      auto content = getAssetFile(f);
-      app_html += "<script>" + content + "</script>";
-    }
-
-    if (StringUtil::endsWith(f, ".css")) {
-      auto content = getAssetFile(f);
-      app_html += "<style type='text/css'>" + content + "</style>";
-    }
-  }
-
-  return app_html;
 }
 
 std::string HTTPServer::getAssetFile(const std::string& file) const {

@@ -47,11 +47,15 @@ protected:
       http::HTTPRequest* request,
       http::HTTPResponse* response);
 
+  void handleAdminUIRequest(
+      http::HTTPRequest* request,
+      http::HTTPResponse* response);
+
   void handleDashboardRequest(
       http::HTTPRequest* request,
       http::HTTPResponse* response);
 
-  void handleRequest_PLOT(
+  void handleAPIRequest_PLOT(
       http::HTTPRequest* request,
       http::HTTPResponse* response);
 
@@ -59,8 +63,6 @@ protected:
       http::HTTPResponse* response,
       const std::string& file_path);
 
-  std::string getPreludeHTML() const;
-  std::string getAppHTML() const;
   std::string getAssetFile(const std::string& file) const;
 
   const ConfigList* config_;
