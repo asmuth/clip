@@ -60,6 +60,9 @@ public:
   const std::vector<std::unique_ptr<ListenerConfig>>& getListenerConfigs() const;
   void addListenerConfig(std::unique_ptr<ListenerConfig> config);
 
+  void addDashboardPath(const std::string& path);
+  const std::set<std::string>& getDashboardPaths() const;
+
   std::shared_ptr<const GlobalConfig> getGlobalConfig() const noexcept;
   std::shared_ptr<GlobalConfig> getGlobalConfig() noexcept;
 
@@ -71,6 +74,7 @@ protected:
   std::map<std::string, UnitConfig> unit_configs_;
   std::vector<std::unique_ptr<IngestionTaskConfig>> ingestion_configs_;
   std::vector<std::unique_ptr<ListenerConfig>> listener_configs_;
+  std::set<std::string> dashboard_paths_;
 };
 
 } // namespace fnordmetric

@@ -171,6 +171,16 @@ ReturnCode ConfigParser::parse(ConfigList* config) {
       }
     }
 
+    /* parse the "dashboard" stanza */
+    if (ttype == T_STRING && tbuf == "dashboard") {
+      consumeToken();
+      if (parseDashboardStanza(config)) {
+        continue;
+      } else {
+        break;
+      }
+    }
+
     if (ttype == T_ENDLINE) {
       consumeToken();
       continue;
@@ -296,6 +306,21 @@ bool ConfigParser::parseLabelSetStanza(MetricLabelOverrideList* overrides) {
         .value = value,
         .is_default = is_default
       });
+
+  return true;
+}
+
+bool ConfigParser::parseDashboardStanza(ConfigList* config) {
+  std::string value;
+  if (!expectAndConsumeString(&value)) {
+    return false;
+  }
+
+  if (StringUtil::beginsWith(value, "/")) {
+    config->addDashboardPath(value);
+  } else {
+    config->addDashboardPath(FileUtil::joinPaths(basepath_, value));
+  }
 
   return true;
 }

@@ -46,7 +46,6 @@ ReturnCode HTTPServer::listenAndRun(const std::string& addr, int port) {
 }
 
 void HTTPServer::start() {
-  std::cerr << "start it " << std::endl;
   thread_ = std::thread(
       std::bind(&libtransport::http::HTTPServer::run, &http_server_));
 }

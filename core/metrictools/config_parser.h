@@ -56,6 +56,7 @@ protected:
   bool parseIncludeStanza(ConfigList* config);
   bool parseLabelsStanza(ConfigList* config);
   bool parseLabelSetStanza(MetricLabelOverrideList* overrides);
+  bool parseDashboardStanza(ConfigList* config);
 
   bool parseMetricDefinition(ConfigList* config);
   bool parseMetricDefinitionKindStanza(MetricConfig* metric_config);

@@ -79,6 +79,14 @@ void ConfigList::addListenerConfig(std::unique_ptr<ListenerConfig> config) {
   listener_configs_.emplace_back(std::move(config));
 }
 
+void ConfigList::addDashboardPath(const std::string& path) {
+  dashboard_paths_.insert(path);
+}
+
+const std::set<std::string>& ConfigList::getDashboardPaths() const {
+  return dashboard_paths_;
+}
+
 std::shared_ptr<const GlobalConfig> ConfigList::getGlobalConfig() const noexcept {
   return global_config_;
 }
