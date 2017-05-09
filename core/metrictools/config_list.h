@@ -66,6 +66,12 @@ public:
   std::shared_ptr<const GlobalConfig> getGlobalConfig() const noexcept;
   std::shared_ptr<GlobalConfig> getGlobalConfig() noexcept;
 
+  const std::string& getDatadir() const;
+  void setDatadir(const std::string& dir);
+
+  const std::string& getPlugindir() const;
+  void setPlugindir(const std::string& dir);
+
 protected:
   std::string backend_url_;
   bool create_metrics_;
@@ -75,6 +81,8 @@ protected:
   std::vector<std::unique_ptr<IngestionTaskConfig>> ingestion_configs_;
   std::vector<std::unique_ptr<ListenerConfig>> listener_configs_;
   std::set<std::string> dashboard_paths_;
+  std::string datadir_;
+  std::string plugindir_;
 };
 
 } // namespace fnordmetric

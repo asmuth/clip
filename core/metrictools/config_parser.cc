@@ -111,6 +111,26 @@ ReturnCode ConfigParser::parse(ConfigList* config) {
       }
     }
 
+    /* parse the "datadir" stanza */
+    if (ttype == T_STRING && tbuf == "datadir") {
+      consumeToken();
+      if (parseDatadirStanza(config)) {
+        continue;
+      } else {
+        break;
+      }
+    }
+
+    /* parse the "plugindir" stanza */
+    if (ttype == T_STRING && tbuf == "plugindir") {
+      consumeToken();
+      if (parsePlugindirStanza(config)) {
+        continue;
+      } else {
+        break;
+      }
+    }
+
     /* parse the "metric" definition */
     if (ttype == T_STRING && tbuf == "metric") {
       consumeToken();
@@ -307,6 +327,26 @@ bool ConfigParser::parseLabelSetStanza(MetricLabelOverrideList* overrides) {
         .is_default = is_default
       });
 
+  return true;
+}
+
+bool ConfigParser::parseDatadirStanza(ConfigList* config) {
+  std::string value;
+  if (!expectAndConsumeString(&value)) {
+    return false;
+  }
+
+  config->setDatadir(value);
+  return true;
+}
+
+bool ConfigParser::parsePlugindirStanza(ConfigList* config) {
+  std::string value;
+  if (!expectAndConsumeString(&value)) {
+    return false;
+  }
+
+  config->setDatadir(value);
   return true;
 }
 

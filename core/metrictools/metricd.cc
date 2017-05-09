@@ -63,6 +63,20 @@ int main(int argc, const char** argv) {
       "localhost:8080");
 
   flags.defineFlag(
+      "datadir",
+      FlagParser::T_STRING,
+      false,
+      NULL,
+      NULL);
+
+  flags.defineFlag(
+      "plugindir",
+      FlagParser::T_STRING,
+      false,
+      NULL,
+      NULL);
+
+  flags.defineFlag(
       "help",
       FlagParser::T_SWITCH,
       false,
@@ -168,6 +182,8 @@ int main(int argc, const char** argv) {
         "   --loglevel <level>        Minimum log level (default: INFO)\n"
         "   --[no]log_to_syslog       Do[n't] log to syslog\n"
         "   --[no]log_to_stderr       Do[n't] log to stderr\n"
+        "   --datadir                 Override the default datadir (/usr/share/metrictools)\n"
+        "   --plugindir               Override the default plugindir (/usr/share/metrictools/plugins)\n"
         "   -?, --help                Display this help text and exit\n"
         "   -V, --version             Display the version of this binary and exit\n"
         "\n"
@@ -259,6 +275,14 @@ int main(int argc, const char** argv) {
   }
 
   /* override config options from flags */
+  if (flags.isSet("datadir")) {
+    config.setDatadir(flags.getString("datadir"));
+  }
+
+  if (flags.isSet("plugindir")) {
+    config.setPlugindir(flags.getString("plugindir"));
+  }
+
   if (rc.isSuccess() && flags.isSet("listen_http")) {
     std::string http_bind;
     uint16_t http_port;

@@ -57,6 +57,14 @@ linked pages.
       <td><code><strong>label_set</strong></code></td>
       <td>Set a (default) label value.  See <a href="/documentation/rewrite-rules">Rewrite Rules</a></td>
     </tr>
+    <tr>
+      <td><code><strong>datadir</strong></code></td>
+      <td>Override the default datadir (/usr/share/metrictools)</td>
+    </tr>
+    <tr>
+      <td><code><strong>plugindir</strong></code></td>
+      <td>Override the default plugindri (/usr/share/metrictools/plugins)</td>
+    </tr>
   </tbody>
 </table>
 
