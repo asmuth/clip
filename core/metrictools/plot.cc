@@ -24,14 +24,21 @@ PlotBuilder::PlotBuilder(
     backend_(backend) {
   plot_.width = 800;
   plot_.height = 200;
+  plot_.output_format = PlotOutputFormat::SVG;
   plot_.time_limit = WallClock::unixMicros();
   plot_.time_begin = plot_.time_limit - 2 * kMicrosPerHour;
-  plot_.series_groups.emplace_back(PlotSeriesGroup{ .chart_type = LINE });
+  plot_.series_groups.emplace_back(PlotSeriesGroup{
+    .chart_type = PlotChartType::LINE
+  });
 }
 
 ReturnCode PlotBuilder::addArgument(
     const std::string& key,
     const std::string& value) {
+  if (key == "format") {
+    return setFormat(value);
+  }
+
   if (key == "width") {
     return setWidth(value);
   }
@@ -53,6 +60,14 @@ ReturnCode PlotBuilder::addArgument(
   }
 
   return ReturnCode::errorf("EARG", "invalid argument: $0", key);
+}
+
+ReturnCode PlotBuilder::setFormat(const std::string& p) {
+  if (parsePlotOutputFormat(p, &plot_.output_format)) {
+    return ReturnCode::success();
+  } else {
+    return ReturnCode::error("EARG", "invalid argument for 'format'");
+  }
 }
 
 ReturnCode PlotBuilder::setWidth(const std::string& p) try {
@@ -136,7 +151,7 @@ ReturnCode PlotBuilder::getPlot(Plot* plot) {
   return ReturnCode::success();
 }
 
-ReturnCode renderPlotSeries(
+static ReturnCode renderPlotSeries(
     const Plot* plot,
     const PlotSeriesGroup* series_group,
     Canvas* chart,
@@ -158,7 +173,7 @@ ReturnCode renderPlotSeries(
   return ReturnCode::success();
 }
 
-ReturnCode renderPlot(const Plot* plot, std::string* out) {
+static ReturnCode renderPlot_SVG(const Plot* plot, std::string* out) {
   Canvas chart;
   chart.setDimensions(plot->width, plot->height);
 
@@ -196,6 +211,30 @@ ReturnCode renderPlot(const Plot* plot, std::string* out) {
   chart.render(&target);
 
   return ReturnCode::success();
+}
+
+ReturnCode renderPlot(const Plot* plot, std::string* out) {
+  switch (plot->output_format) {
+    case PlotOutputFormat::SVG:
+      return renderPlot_SVG(plot, out);
+    default:
+      return ReturnCode::error("EARG", "invalid output format");
+  }
+}
+
+bool parsePlotOutputFormat(const std::string& str, PlotOutputFormat* fmt) {
+  static const std::map<std::string, PlotOutputFormat> fmt_map = {
+    { "svg", PlotOutputFormat::SVG },
+    { "iframe", PlotOutputFormat::IFRAME },
+  };
+
+  auto iter = fmt_map.find(str);
+  if (iter != fmt_map.end()) {
+    *fmt = iter->second;
+    return true;
+  } else {
+    return false;
+  }
 }
 
 } // namespace fnordmetric

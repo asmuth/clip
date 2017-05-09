@@ -15,7 +15,9 @@
 
 namespace fnordmetric {
 
-enum PlotChartType { LINE, AREA };
+enum class PlotOutputFormat { SVG, IFRAME };
+
+enum class PlotChartType { LINE, AREA };
 
 struct PlotSeries {
   std::string series_name;
@@ -30,6 +32,7 @@ struct PlotSeriesGroup {
 struct Plot {
   uint32_t width;
   uint32_t height;
+  PlotOutputFormat output_format;
 
   uint64_t time_begin;
   uint64_t time_limit;
@@ -50,6 +53,7 @@ public:
 
 protected:
 
+  ReturnCode setFormat(const std::string& p);
   ReturnCode setWidth(const std::string& p);
   ReturnCode setHeight(const std::string& p);
 
@@ -67,6 +71,8 @@ protected:
 };
 
 ReturnCode renderPlot(const Plot* plot, std::string* out);
+
+bool parsePlotOutputFormat(const std::string& str, PlotOutputFormat* fmt);
 
 } // namespace fnordmetric
 

@@ -21,6 +21,13 @@ ReturnCode PlotCommand::execute(
   FlagParser flags;
 
   flags.defineFlag(
+      "format",
+      FlagParser::T_STRING,
+      false,
+      NULL,
+      NULL);
+
+  flags.defineFlag(
       "width",
       FlagParser::T_STRING,
       false,
@@ -99,10 +106,11 @@ const std::string& PlotCommand::getDescription() const {
 void PlotCommand::printHelp() const {
   std::cerr <<
       "Usage: $ metricctl plot [<options>] [<metric>]\n"
-      "  -m, --metric <name>       Add a metric to plot\n"
-      "  -x, --filter <expr>       Filter series in the last metric.\n"
       "  --from <timespec>         Set the start time (inclusive)\n"
       "  --until <timespec>        Set the end time (exclusive)\n"
+      "  -m, --metric <name>       Add a metric to plot\n"
+      "  -x, --filter <expr>       Filter series in the last metric.\n"
+      "  --format <format>         Set the output format\n"
       "  --width <px>              Set the chart width in pixels\n"
       "  --height <px>             Set the chart height in pixels\n"
       "\n"
