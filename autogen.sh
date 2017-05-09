@@ -18,7 +18,8 @@ fi
 set -ex
 
 autoreconf -fi -Wall,no-obsolete
-sed -i -e 's/rm -f core /rm -f /g' configure
+sed -ix -e 's/rm -f core /rm -f /g' configure
+rm configurex
 
 rm -rf autom4te.cache config.h.in~
 exit 0

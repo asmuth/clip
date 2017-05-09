@@ -7,6 +7,7 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
+#include <sstream>
 #include <metrictools/plot.h>
 #include <metrictools/util/time.h>
 #include <metrictools/timeseries.h>
