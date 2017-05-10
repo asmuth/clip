@@ -55,6 +55,10 @@ protected:
       http::HTTPRequest* request,
       http::HTTPResponse* response);
 
+  void handleAssetRequest(
+      http::HTTPRequest* request,
+      http::HTTPResponse* response);
+
   void handleAPIRequest_PLOT(
       http::HTTPRequest* request,
       http::HTTPResponse* response);

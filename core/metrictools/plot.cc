@@ -7,13 +7,18 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
+#include <sstream>
 #include <metrictools/plot.h>
 #include <metrictools/util/time.h>
 #include <metrictools/timeseries.h>
 #include <metrictools/util/format.h>
+#include <libtransport/json/json.h>
+#include <libtransport/json/json_writer.h>
 #include "libcplot/libcplot.h"
 
 namespace fnordmetric {
+
+namespace json = libtransport::json;
 
 using namespace cplot;
 
@@ -214,27 +219,67 @@ static ReturnCode renderPlot_SVG(const Plot* plot, std::string* out) {
 }
 
 static ReturnCode renderPlot_IFRAME(const Plot* plot, std::string* out) {
+  std::stringstream s;
+  s << "<!DOCTYPE html>" << std::endl;
+  s << "<html>" << std::endl;
+  s << "<head>" << std::endl;
+  s << "<title>plot</title>" << std::endl;
+  s << "<style>html, body { margin: 0; padding: 0; overflow: hidden; }</style>" << std::endl;
+  s << "<link href='/assets/plot.css' rel='stylesheet' >" << std::endl;
+  s << "<script type='text/javascript' src='/assets/plot.js'></script>" << std::endl;
+  s << "</head>" << std::endl;
+  s << "<body>" << std::endl;
+  s << "<div id='metrictools'></div>" << std::endl;
+  s << "</body>" << std::endl;
+  s << "</html>" << std::endl;
+  s << std::endl;
+
+  *out = s.str();
+  return ReturnCode::success();
+}
+
+static ReturnCode renderPlot_JSON(const Plot* plot, std::string* out) {
   std::string svg;
-  auto rc =renderPlot_SVG(plot, &svg);
+  auto rc = renderPlot_SVG(plot, &svg);
   if (!rc.isSuccess()) {
     return rc;
   }
 
-  std::stringstream s;
-  s << "<!DOCTYPE html>" << std::endl;
-  s << "<title>plot</title>" << std::endl;
-  s << "<style>html, body { margin: 0; padding: 0; overflow: hidden; }</style>" << std::endl;
-  s << "<meta http-equiv='refresh' content='1' />" << std::endl;
-  s << std::endl;
+  std::string json_str;
+  json::JSONWriter json(&json_str);
+  json.beginObject();
 
-  s << StringUtil::format(
-      "<div style='width:$0px; height:$1px;'>",
-      plot->width,
-      plot->height);
-  s << svg;
-  s << "</div>";
+  json.addString("svg");
+  json.addString(svg);
 
-  *out = s.str();
+  json.addString("title");
+  json.beginObject();
+  json.addString("position");
+  json.addString("top");
+  json.addString("title");
+  json.addString("Demo");
+  json.endObject();
+
+  json.addString("legend");
+  json.beginObject();
+  json.addString("position");
+  json.addString("top");
+  json.addString("series");
+  json.beginArray();
+  for (const auto& series_group : plot->series_groups) {
+    for (const auto& series : series_group.series) {
+      json.beginObject();
+      json.addString("name");
+      json.addString(series.series_name);
+      json.endObject();
+    }
+  }
+  json.endArray();
+  json.endObject();
+
+  json.endObject();
+
+  *out = json_str;
   return ReturnCode::success();
 }
 
@@ -244,6 +289,8 @@ ReturnCode renderPlot(const Plot* plot, std::string* out) {
       return renderPlot_SVG(plot, out);
     case PlotOutputFormat::IFRAME:
       return renderPlot_IFRAME(plot, out);
+    case PlotOutputFormat::JSON:
+      return renderPlot_JSON(plot, out);
     default:
       return ReturnCode::error("EARG", "invalid output format");
   }
@@ -253,6 +300,7 @@ bool parsePlotOutputFormat(const std::string& str, PlotOutputFormat* fmt) {
   static const std::map<std::string, PlotOutputFormat> fmt_map = {
     { "svg", PlotOutputFormat::SVG },
     { "iframe", PlotOutputFormat::IFRAME },
+    { "json", PlotOutputFormat::JSON }
   };
 
   auto iter = fmt_map.find(str);

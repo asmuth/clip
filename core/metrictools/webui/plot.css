@@ -1,0 +1,98 @@
+#metrictools .legend {
+  padding: 0 20px;
+  font-size: 14px;
+  line-height: 2em;
+}
+
+#metrictools .legend .circle {
+  display: inline-block;
+  height: 1em;
+  width: 1em;
+  border-radius: 50%;
+  background-color: #ddd;
+  vertical-align: -3px;
+  margin-right: 5px;
+}
+
+#metrictools .legend .circle.color1 {
+  background-color: #4572a7;
+}
+
+#metrictools .legend .circle.color2 {
+  background-color: #aa4643;
+}
+
+.container {
+  border: 2px solid #0f0;
+  display: flex;
+  flex-direction: column;
+}
+
+.chart_container {
+  border: 2px solid #f00;
+  display: flex;
+  flex-direction: row;
+  flex: 1;
+}
+
+.chart_container_inner {
+  border: 2px solid #00f;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.title_top {
+  border: 1px solid #000;
+  width: 100%;
+}
+
+.title_bottom {
+  border: 1px solid #000;
+  width: 100%;
+}
+
+.legend_top {
+  border: 1px solid #000;
+  width: 100%;
+}
+
+.legend_top_inner {
+  border: 1px solid #000;
+  width: 100%;
+}
+
+.legend_bottom {
+  border: 1px solid #000;
+  width: 100%;
+}
+
+.legend_bottom_inner {
+  border: 1px solid #000;
+  width: 100%;
+}
+
+.legend_left {
+  border: 1px solid #000;
+}
+
+.legend_right {
+  border: 1px solid #000;
+}
+
+.chart {
+  border: 1px solid #ff0;
+  background: #ff0;
+  flex: 1;
+  overflow: hidden;
+}
+
+.chart_canvas {
+  position: relative;
+  height: 0;
+  width: 0;
+  top: 0;
+  bottom: 0;
+  overflow: visible;
+}
+

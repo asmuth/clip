@@ -88,6 +88,11 @@ void HTTPServer::handleRequest(
     return;
   }
 
+  if (StringUtil::beginsWith(path, "/assets/")) {
+    handleAssetRequest(request, response);
+    return;
+  }
+
   if (path == "/favicon.ico") {
     response->setStatus(http::kStatusOK);
     response->addHeader("Content-Type", "image/x-icon");
@@ -173,6 +178,44 @@ void HTTPServer::handleDashboardRequest(
             dashboard_file,
             dashboard_id,
             dashboard_info->basepath));
+  }
+}
+
+void HTTPServer::handleAssetRequest(
+    http::HTTPRequest* request,
+    http::HTTPResponse* response) {
+  auto path_parts = StringUtil::split(URI(request->uri()).path(), "/");
+  if (path_parts.size() < 2) {
+    response->setStatus(http::kStatusBadRequest);
+    return;
+  }
+
+  path_parts.erase(path_parts.begin(), path_parts.begin() + 2);
+
+  auto asset_basepath = FileUtil::realpath(
+      FileUtil::joinPaths(config_->getDatadir(), "webui"));
+
+  auto asset_path = StringUtil::join(path_parts, "/");
+
+  std::string asset_realpath;
+  try {
+    asset_realpath = FileUtil::realpath(
+        FileUtil::joinPaths(asset_basepath, asset_path));
+  } catch (...) {}
+
+  if (!StringUtil::beginsWith(asset_realpath, asset_basepath)) {
+    asset_realpath.clear();
+  }
+
+  if (!asset_realpath.empty() && FileUtil::exists(asset_realpath)) {
+    sendFile(response, asset_realpath);
+  } else {
+    response->setStatus(http::kStatusNotFound);
+    response->addHeader("Content-Type", "text/plain; charset=utf-8");
+    response->addBody(
+        StringUtil::format(
+            "file '$0' not found",
+            asset_path));
   }
 }
 

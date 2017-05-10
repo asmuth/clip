@@ -13,6 +13,7 @@
 #include <unistd.h>
 #include <poll.h>
 #include <fcntl.h>
+#include <array>
 #include <metrictools/collect.h>
 #include <metrictools/collect_proc.h>
 #include <metrictools/util/time.h>
