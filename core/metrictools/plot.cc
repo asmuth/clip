@@ -215,25 +215,16 @@ static ReturnCode renderPlot_SVG(const Plot* plot, std::string* out) {
 }
 
 static ReturnCode renderPlot_IFRAME(const Plot* plot, std::string* out) {
-  std::string svg;
-  auto rc =renderPlot_SVG(plot, &svg);
-  if (!rc.isSuccess()) {
-    return rc;
-  }
-
   std::stringstream s;
   s << "<!DOCTYPE html>" << std::endl;
+  s << "<html>" << std::endl;
+  s << "<head>" << std::endl;
   s << "<title>plot</title>" << std::endl;
   s << "<style>html, body { margin: 0; padding: 0; overflow: hidden; }</style>" << std::endl;
-  s << "<meta http-equiv='refresh' content='1' />" << std::endl;
+  s << "<script type='text/javascript' src='/plot.js'></script>" << std::endl;
+  s << "</head>" << std::endl;
+  s << "</html>" << std::endl;
   s << std::endl;
-
-  s << StringUtil::format(
-      "<div style='width:$0px; height:$1px;'>",
-      plot->width,
-      plot->height);
-  s << svg;
-  s << "</div>";
 
   *out = s.str();
   return ReturnCode::success();

@@ -95,6 +95,13 @@ void HTTPServer::handleRequest(
     return;
   }
 
+  if (path == "/plot.js") {
+    response->setStatus(http::kStatusOK);
+    response->addHeader("Content-Type", "application/javascript");
+    response->addBody(getAssetFile("plot.js"));
+    return;
+  }
+
   response->setStatus(http::kStatusNotFound);
   response->addHeader("Content-Type", "text/plain; charset=utf-8");
   response->addBody("not found");
