@@ -66,60 +66,64 @@ MetricTools.HTTP.get = function(url, headers, callback) {
   }
 };
 
-function renderChart(elem, opts) {
-  elem.innerHTML = opts.svg;
-}
 
-function renderLegend(elem, opts) {
-  console.log(opts.legend);
-  for (var i = 0; i < opts.legend.series.length; ++i) {
-    var series = opts.legend.series[i];
+MetricTools.Layout = function() {
+  "use strict";
 
-    var circle_elem = document.createElement("span");
-    circle_elem.classList.add("circle", "color" + (i + 1));
-
-    var series_elem = document.createElement("div");
-    series_elem.appendChild(circle_elem);
-    series_elem.innerHTML += MetricTools.DOMUtil.escapeHTML(series.name);
-    elem.appendChild(series_elem);
-  }
-}
-
-function renderLayout(opts) {
   var elem = document.getElementById("metrictools");
 
-  var html = [
-    "<div class='container'>",
-      "<div class='title_top'></div>",
-      "<div class='legend_top'></div>",
-      "<div class='chart_container'>",
-        "<div class='legend_left'></div>",
-        "<div class='chart_container_inner'>",
-          "<div class='legend_top_inner'></div>",
-          "<div class='chart'><div class='chart_canvas'><div style='width: 200px; height: 100px; background:#f0f;'>Test Content</div></div></div>",
-          "<div class='legend_bottom_inner'></div>",
-        "</div>",
-        "<div class='legend_right'></div>",
-      "</div>",
-      "<div class='title_bottom'></div>",
-      "<div class='legend_bottom'></div>",
-    "</div>"
-  ];
+  this.render = function(opts) {
+    var html =
+      "<div class='container'>" +
+        "<div class='title_top'></div>" +
+        "<div class='legend_top'></div>" +
+        "<div class='chart_container'>" +
+          "<div class='legend_left'></div>" +
+          "<div class='chart_container_inner'>" +
+            "<div class='legend_top_inner'></div>" +
+            "<div class='chart'><div class='chart_canvas'><div style='width: 200px; height: 100px; background:#f0f;'>Test Content</div></div></div>" +
+            "<div class='legend_bottom_inner'></div>" +
+          "</div>" +
+          "<div class='legend_right'></div>" +
+        "</div>" +
+        "<div class='title_bottom'></div>" +
+        "<div class='legend_bottom'></div>" +
+      "</div>";
+    elem.innerHTML = html;
 
-  elem.innerHTML = html.join("");
+    renderTitle(opts.title);
+  };
 
-  ///var chart_elem = document.createElement("div");
-  ///chart_elem.classList.add("chart");
+  function renderTitle(title_opts) {
+    if (!title_opts) {
+      return;
+    }
 
-  ///var legend_elem = document.createElement("div");
-  ///legend_elem.classList.add("legend");
+    var title_elem;
+    switch (title_opts.position) {
+      case "top":
+        title_elem = elem.querySelector(".title_top");
+        break;
 
+      case "bottom":
+        title_elem = elem.querySelector(".title_bottom");
+        break;
 
-  ///mt_elem.appendChild(chart_elem);
-  ///renderChart(chart_elem, opts);
+      default:
+        throw "invalid title position: " + title_opts.position;
+    }
 
-  ///mt_elem.appendChild(legend_elem);
-  ///renderLegend(legend_elem, opts);
+    switch (title_opts.height) {
+      case "auto":
+        break;
+
+      default:
+        title_elem.style.height = title_opts.height;
+        break;
+    }
+
+    title_elem.innerHTML = MetricTools.DOMUtil.escapeHTML(title_opts.title);
+  }
 }
 
 function fetch(url) {
@@ -131,10 +135,12 @@ function fetch(url) {
   MetricTools.HTTP.get(fetch_url, {}, function(r) {
     try {
       var result = JSON.parse(r.response);
-      renderLayout(result);
+      var layout = new MetricTools.Layout;
+      layout.render(result);
     } catch (e) {
-      console.log(r.response);
+      throw e; //FIXME handle error
     }
+
   });
 }
 
