@@ -1,0 +1,24 @@
+#metrictools .legend {
+  padding: 0 20px;
+  font-size: 14px;
+  line-height: 2em;
+}
+
+#metrictools .legend .circle {
+  display: inline-block;
+  height: 1em;
+  width: 1em;
+  border-radius: 50%;
+  background-color: #ddd;
+  vertical-align: -3px;
+  margin-right: 5px;
+}
+
+#metrictools .legend .circle.color1 {
+  background-color: #4572a7;
+}
+
+#metrictools .legend .circle.color2 {
+  background-color: #aa4643;
+}
+

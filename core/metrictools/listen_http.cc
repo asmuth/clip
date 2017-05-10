@@ -102,6 +102,13 @@ void HTTPServer::handleRequest(
     return;
   }
 
+  if (path == "/plot.css") {
+    response->setStatus(http::kStatusOK);
+    response->addHeader("Content-Type", "text/css");
+    response->addBody(getAssetFile("plot.css"));
+    return;
+  }
+
   response->setStatus(http::kStatusNotFound);
   response->addHeader("Content-Type", "text/plain; charset=utf-8");
   response->addBody("not found");
