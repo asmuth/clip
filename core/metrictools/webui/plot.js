@@ -86,26 +86,55 @@ function renderLegend(elem, opts) {
 }
 
 function renderLayout(opts) {
-  var mt_elem = document.getElementById("metrictools");
+  var elem = document.getElementById("metrictools");
 
-  var chart_elem = document.createElement("div");
-  chart_elem.classList.add("chart");
+  var html = [
+    "<div class='container'>",
+      "<div class='title_top'></div>",
+      "<div class='legend_top'></div>",
+      "<div class='chart_container'>",
+        "<div class='legend_left'></div>",
+        "<div class='chart_container_inner'>",
+          "<div class='legend_top_inner'></div>",
+          "<div class='chart'><div class='chart_canvas'><div style='width: 200px; height: 100px; background:#f0f;'>Test Content</div></div></div>",
+          "<div class='legend_bottom_inner'></div>",
+        "</div>",
+        "<div class='legend_right'></div>",
+      "</div>",
+      "<div class='title_bottom'></div>",
+      "<div class='legend_bottom'></div>",
+    "</div>"
+  ];
 
-  var legend_elem = document.createElement("div");
-  legend_elem.classList.add("legend");
+  elem.innerHTML = html.join("");
 
-  mt_elem.appendChild(chart_elem);
-  renderChart(chart_elem, opts);
+  ///var chart_elem = document.createElement("div");
+  ///chart_elem.classList.add("chart");
 
-  mt_elem.appendChild(legend_elem);
-  renderLegend(legend_elem, opts);
+  ///var legend_elem = document.createElement("div");
+  ///legend_elem.classList.add("legend");
+
+
+  ///mt_elem.appendChild(chart_elem);
+  ///renderChart(chart_elem, opts);
+
+  ///mt_elem.appendChild(legend_elem);
+  ///renderLegend(legend_elem, opts);
 }
 
 function fetch(url) {
-  var fetch_url = MetricTools.URLUtil.addOrModifyURLParam(url, "format", "json");
+  var fetch_url = MetricTools.URLUtil.addOrModifyURLParam(
+      url,
+      "width",
+      window.innerWidth);
+  fetch_url = MetricTools.URLUtil.addOrModifyURLParam(url, "format", "json");
   MetricTools.HTTP.get(fetch_url, {}, function(r) {
-    var result = JSON.parse(r.response);
-    renderLayout(result);
+    try {
+      var result = JSON.parse(r.response);
+      renderLayout(result);
+    } catch (e) {
+      console.log(r.response);
+    }
   });
 }
 

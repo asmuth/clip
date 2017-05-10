@@ -225,8 +225,8 @@ static ReturnCode renderPlot_IFRAME(const Plot* plot, std::string* out) {
   s << "<head>" << std::endl;
   s << "<title>plot</title>" << std::endl;
   s << "<style>html, body { margin: 0; padding: 0; overflow: hidden; }</style>" << std::endl;
-  s << "<link href='/plot.css' rel='stylesheet' >" << std::endl;
-  s << "<script type='text/javascript' src='/plot.js'></script>" << std::endl;
+  s << "<link href='/assets/plot.css' rel='stylesheet' >" << std::endl;
+  s << "<script type='text/javascript' src='/assets/plot.js'></script>" << std::endl;
   s << "</head>" << std::endl;
   s << "<body>" << std::endl;
   s << "<div id='metrictools'></div>" << std::endl;
