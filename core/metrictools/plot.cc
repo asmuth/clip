@@ -227,6 +227,9 @@ static ReturnCode renderPlot_IFRAME(const Plot* plot, std::string* out) {
   s << "<style>html, body { margin: 0; padding: 0; overflow: hidden; }</style>" << std::endl;
   s << "<script type='text/javascript' src='/plot.js'></script>" << std::endl;
   s << "</head>" << std::endl;
+  s << "<body>" << std::endl;
+  s << "<div id='metrictools'></div>" << std::endl;
+  s << "</body>" << std::endl;
   s << "</html>" << std::endl;
   s << std::endl;
 
