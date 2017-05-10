@@ -15,7 +15,7 @@
 
 namespace fnordmetric {
 
-enum class PlotOutputFormat { SVG, IFRAME };
+enum class PlotOutputFormat { SVG, IFRAME, JSON };
 
 enum class PlotChartType { LINE, AREA };
 

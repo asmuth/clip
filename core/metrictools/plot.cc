@@ -12,9 +12,13 @@
 #include <metrictools/util/time.h>
 #include <metrictools/timeseries.h>
 #include <metrictools/util/format.h>
+#include <libtransport/json/json.h>
+#include <libtransport/json/json_writer.h>
 #include "libcplot/libcplot.h"
 
 namespace fnordmetric {
+
+namespace json = libtransport::json;
 
 using namespace cplot;
 
@@ -230,12 +234,57 @@ static ReturnCode renderPlot_IFRAME(const Plot* plot, std::string* out) {
   return ReturnCode::success();
 }
 
+static ReturnCode renderPlot_JSON(const Plot* plot, std::string* out) {
+  std::string svg;
+  auto rc = renderPlot_SVG(plot, &svg);
+  if (!rc.isSuccess()) {
+    return rc;
+  }
+
+  std::string json_str;
+  json::JSONWriter json(&json_str);
+  json.beginObject();
+
+  json.addString("svg");
+  json.addString(svg);
+
+  json.addString("title");
+  json.beginObject();
+  json.addString("position");
+  json.addString("top");
+  json.endObject();
+
+  json.addString("legend");
+  json.beginObject();
+  json.addString("position");
+  json.addString("top");
+  json.addString("series");
+  json.beginArray();
+  for (const auto& series_group : plot->series_groups) {
+    for (const auto& series : series_group.series) {
+      json.beginObject();
+      json.addString("name");
+      json.addString(series.series_name);
+      json.endObject();
+    }
+  }
+  json.endArray();
+  json.endObject();
+
+  json.endObject();
+
+  *out = json_str;
+  return ReturnCode::success();
+}
+
 ReturnCode renderPlot(const Plot* plot, std::string* out) {
   switch (plot->output_format) {
     case PlotOutputFormat::SVG:
       return renderPlot_SVG(plot, out);
     case PlotOutputFormat::IFRAME:
       return renderPlot_IFRAME(plot, out);
+    case PlotOutputFormat::JSON:
+      return renderPlot_JSON(plot, out);
     default:
       return ReturnCode::error("EARG", "invalid output format");
   }
@@ -245,6 +294,7 @@ bool parsePlotOutputFormat(const std::string& str, PlotOutputFormat* fmt) {
   static const std::map<std::string, PlotOutputFormat> fmt_map = {
     { "svg", PlotOutputFormat::SVG },
     { "iframe", PlotOutputFormat::IFRAME },
+    { "json", PlotOutputFormat::JSON }
   };
 
   auto iter = fmt_map.find(str);
