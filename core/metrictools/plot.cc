@@ -256,6 +256,8 @@ static ReturnCode renderPlot_JSON(const Plot* plot, std::string* out) {
   json.beginObject();
   json.addString("position");
   json.addString("top");
+  json.addString("title");
+  json.addString("Demo");
   json.endObject();
 
   json.addString("legend");
