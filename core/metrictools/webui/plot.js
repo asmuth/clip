@@ -133,42 +133,42 @@ MetricTools.Layout = function() {
     return !opts.chart.height || opts.chart.height == "auto";
   }
 
-  function renderTitle(title_opts) {
-    if (!title_opts) {
-      return;
-    }
-
-    var title_elem;
-    switch (title_opts.position) {
-      case "top":
-        title_elem = elem.querySelector(".title_top");
-        break;
-
-      case "bottom":
-        title_elem = elem.querySelector(".title_bottom");
-        break;
-
-      default:
-        throw "invalid title position: " + title_opts.position;
-    }
-
-    switch (title_opts.height) {
-      case "auto":
-        break;
-
-      default:
-        title_elem.style.height = title_opts.height;
-        break;
-    }
-
-    title_elem.innerHTML = MetricTools.DOMUtil.escapeHTML(title_opts.title);
+  function renderTitle(opts) {
+    var title = new MetricTools.Layout.Title(elem);
+    title.render(opts);
   }
 
   function renderLegend(opts) {
-    if (!opts) {
-      return;
+    var legend = new MetricTools.Layout.Legend(elem);
+    legend.render(opts);
+  }
+
+  function renderChart(opts) {
+    //TODO
+  }
+};
+
+MetricTools.Layout.Title = function(elem) {
+  "use strict";
+
+  this.render = function(opts) {
+    var title_elem = elem.querySelector(".title_" + opts.position);
+    if (!title_elem) {
+      throw "invalid title position: " + title_opts.position;
     }
 
+    if (opts.height != "auto") {
+      title_elem.style.height = opts.height;
+    }
+
+    title_elem.innerHTML = MetricTools.DOMUtil.escapeHTML(opts.title);
+  };
+};
+
+MetricTools.Layout.Legend = function(elem) {
+  "use strict";
+
+  this.render = function(opts) {
     /* render legend layout */
     var legend_elem = elem.querySelector(".legend_" + opts.position);
     if (!legend_elem) {
@@ -201,12 +201,8 @@ MetricTools.Layout = function() {
       series_elem.innerHTML += MetricTools.DOMUtil.escapeHTML(series.name);
       legend_elem.appendChild(series_elem);
     }
-  }
-
-  function renderChart(opts) {
-    //TODO
-  }
-}
+  };
+};
 
 function fetch(url, callback_fn) {
   var fetch_url = MetricTools.URLUtil.addOrModifyURLParam(url, "format", "json");
