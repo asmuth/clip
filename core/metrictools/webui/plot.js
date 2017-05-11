@@ -92,6 +92,7 @@ MetricTools.Layout = function() {
     elem.innerHTML = html;
 
     renderTitle(opts.title);
+    renderLegend(opts.legend);
   };
 
   function renderTitle(title_opts) {
@@ -123,6 +124,45 @@ MetricTools.Layout = function() {
     }
 
     title_elem.innerHTML = MetricTools.DOMUtil.escapeHTML(title_opts.title);
+  }
+
+  function renderLegend(opts) {
+    if (!opts) {
+      return;
+    }
+
+    /* render legend layout */
+    var legend_elem = elem.querySelector(".legend_" + opts.position);
+    if (!legend_elem) {
+      throw "invalid legend position: " + opts.position;
+    }
+
+    switch (opts.position) {
+      case "left":
+      case "right":
+        if (opts.width != "auto") {
+          legend_elem.style.width = opts.width;
+        }
+        break;
+
+      default:
+        if (opts.height != "auto") {
+          legend_elem.style.height = opts.height;
+        }
+        break;
+    }
+
+    /* render legend content */
+    for (var i = 0; i < opts.series.length; ++i) {
+      var series = opts.series[i];
+      var circle_elem = document.createElement("span");
+      circle_elem.classList.add("circle", "color" + (i + 1));
+
+      var series_elem = document.createElement("div");
+      series_elem.appendChild(circle_elem);
+      series_elem.innerHTML += MetricTools.DOMUtil.escapeHTML(series.name);
+      legend_elem.appendChild(series_elem);
+    }
   }
 }
 
