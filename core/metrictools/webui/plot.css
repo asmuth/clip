@@ -83,7 +83,6 @@
 .chart {
   border: 1px solid #ff0;
   background: #ff0;
-  flex: 1;
   overflow: hidden;
 }
 
