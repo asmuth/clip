@@ -319,6 +319,7 @@ ReturnCode SQLiteBackend::fetchData(
       resp.request = request;
       resp.label.labels = label_cols;
       resp.last_value = r[r.size() - 1];
+      resp.history.reset( new Timeseries<std::string>());
       for (size_t i = 0; i < label_cols.size(); ++i) {
         resp.label.values.emplace_back(r[i]);
       }
@@ -371,10 +372,6 @@ ReturnCode SQLiteBackend::fetchData(
 
       auto resp_ts = dynamic_cast<Timeseries<std::string>*>(
           resp_iter->second.history.get());
-      if (!resp_ts) {
-        resp_ts = new Timeseries<std::string>();
-        resp_iter->second.history.reset(resp_ts);
-      }
 
       size_t pos = std::upper_bound(
           resp_ts->timestamps.begin(),

@@ -12,6 +12,26 @@
 
 namespace fnordmetric {
 
+template <>
+std::string Timeseries<std::string>::getTypeName() const {
+  return "string";
+}
+
+template <>
+std::string Timeseries<double>::getTypeName() const {
+  return "float64";
+}
+
+template <>
+std::string Timeseries<int64_t>::getTypeName() const {
+  return "int64";
+}
+
+template <>
+std::string Timeseries<uint64_t>::getTypeName() const {
+  return "uint64";
+}
+
 template<>
 ReturnCode convertTimeseries(
     const Timeseries<double>& in,

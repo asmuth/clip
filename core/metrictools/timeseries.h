@@ -17,7 +17,11 @@
 namespace fnordmetric {
 
 struct AnyTimeseries {
+
   virtual ~AnyTimeseries() = default;
+
+  virtual std::string getTypeName() const = 0;
+
 };
 
 using TimeseriesRef = std::unique_ptr<AnyTimeseries>;
@@ -44,6 +48,11 @@ struct Timeseries : public AnyTimeseries {
    * Clear all elements
    */
   void clear();
+
+  /**
+   * Return the name of T
+   */
+  std::string getTypeName() const override;
 
 };
 

@@ -57,6 +57,7 @@ ReturnCode convertTimeseries(
     return convertTimeseries(*dynamic_cast<const Timeseries<double>*>(in), out);
   }
 
+  assert(false);
   return ReturnCode::error("EARG", "invalid timeseries type");
 }
 
@@ -91,6 +92,8 @@ template <typename T>
 ReturnCode convertTimeseriesTo(TimeseriesRef* ts, Timeseries<T>** out) {
   *out = nullptr;
 
+  assert(ts->get());
+
   {
     auto rc = convertTimeseriesFromTo<std::string, T>(ts, out);
     if (!rc.isSuccess() || *out) {
@@ -98,6 +101,28 @@ ReturnCode convertTimeseriesTo(TimeseriesRef* ts, Timeseries<T>** out) {
     }
   }
 
+  {
+    auto rc = convertTimeseriesFromTo<double, T>(ts, out);
+    if (!rc.isSuccess() || *out) {
+      return rc;
+    }
+  }
+
+  {
+    auto rc = convertTimeseriesFromTo<int64_t, T>(ts, out);
+    if (!rc.isSuccess() || *out) {
+      return rc;
+    }
+  }
+
+  {
+    auto rc = convertTimeseriesFromTo<uint64_t, T>(ts, out);
+    if (!rc.isSuccess() || *out) {
+      return rc;
+    }
+  }
+
+  assert(false);
   return ReturnCode::error("EARG", "invalid timeseries type");
 }
 
