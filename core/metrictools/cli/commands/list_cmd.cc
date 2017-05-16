@@ -36,9 +36,29 @@ static ReturnCode listMetric(
     unit = ctx->config->getUnitConfig(metric->unit_id);
   }
 
-  std::cout << metric->metric_id << std::endl;
-  for (const auto& res : op.getResponses()) {
-    std::cout << "    " << res.label << " -> " << formatValue(res.last_value, unit, metric->rate) << std::endl;
+  std::cout << "\e[1m" << metric->metric_id << "\e[0m"  << std::endl;
+  for (size_t j = 0; j < op.getResponses().size(); ++j) {
+    const auto& res = op.getResponses()[j];
+
+    std::string labels;
+    for (size_t i = 0; i < res.label.values.size(); ++i) {
+      labels += StringUtil::format(
+          "$2$0=$1",
+          res.label.labels[i],
+          res.label.values[i],
+          i > 0 ? " " : "");
+    }
+
+    std::string value = formatValue(res.last_value, unit, metric->rate);
+    std::string decoration = j + 1 < op.getResponses().size() ? "  ├─ " : "  └─ ";
+    std::string padding(80 - (value.size() + decoration.size() + labels.size()), ' ');
+
+    std::cout
+        << decoration
+        << labels
+        << padding
+        << value
+        << std::endl;
   }
 
   return ReturnCode::success();
@@ -75,6 +95,8 @@ ReturnCode ListCommand::execute(
         if (!rc.isSuccess()) {
           return rc;
         }
+
+        std::cout << std::endl;
       }
 
       return ReturnCode::success();
