@@ -17,7 +17,9 @@
 namespace fnordmetric {
 
 MetricConfig::MetricConfig() :
-    kind{MetricKind::GAUGE_FLOAT64} {}
+    kind{MetricKind::GAUGE_FLOAT64},
+    granularity(0),
+    rate(0) {}
 
 std::string getMetricKindName(MetricKind t) {
   static const std::map<MetricKind, std::string> kind_map = {
