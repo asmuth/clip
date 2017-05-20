@@ -1,6 +1,0 @@
-#!/bin/bash
-set -ue
-
-echo "linux.load_avg_1m $(cut -d' ' -f1 < /proc/loadavg)"
-mpstat -P ALL 1 1 | awk '/Average:/ && $2 ~ /[0-9]/ {print $3}' | awk '{printf "linux.cpu_user{core=\"core%d\"} %s\n", NR, $0}'
-cat /proc/vmstat | sed -e 's/^/linux.vmstat./g'
