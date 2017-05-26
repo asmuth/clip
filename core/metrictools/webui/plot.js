@@ -66,11 +66,17 @@ MetricTools.HTTP.get = function(url, headers, callback) {
   }
 };
 
-
 MetricTools.Layout = function() {
   "use strict";
 
   var elem = document.getElementById("metrictools");
+  var resize_callback;
+
+  this.setResizeCallback = function(callback_fn) {
+    resize_callback = callback_fn;
+  };
+
+  this.renderChart = renderChart;
 
   this.render = function(opts) {
     var html =
@@ -92,56 +98,140 @@ MetricTools.Layout = function() {
     elem.innerHTML = html;
 
     renderTitle(opts.title);
+    renderLegend(opts.legend);
+
+    setChartHeight(opts.chart.height);
+
+    if (needsResize(opts)) {
+      resize(opts);
+    } else {
+      renderChart(opts);
+    }
   };
 
-  function renderTitle(title_opts) {
-    if (!title_opts) {
-      return;
-    }
+  function resize(opts) {
+    var iframe_height = window.innerHeight;
+    var container_elem = elem.querySelector(".container");
+    container_elem.style.height = iframe_height + "px";
 
-    var title_elem;
-    switch (title_opts.position) {
-      case "top":
-        title_elem = elem.querySelector(".title_top");
-        break;
+    var chart_elem = elem.querySelector(".chart");
+    var chart_pos = chart_elem.getBoundingClientRect();
 
-      case "bottom":
-        title_elem = elem.querySelector(".title_bottom");
-        break;
-
-      default:
-        throw "invalid title position: " + title_opts.position;
-    }
-
-    switch (title_opts.height) {
-      case "auto":
-        break;
-
-      default:
-        title_elem.style.height = title_opts.height;
-        break;
-    }
-
-    title_elem.innerHTML = MetricTools.DOMUtil.escapeHTML(title_opts.title);
+    resize_callback(chart_pos.height);
   }
-}
 
-function fetch(url) {
-  var fetch_url = MetricTools.URLUtil.addOrModifyURLParam(
-      url,
-      "width",
-      window.innerWidth);
-  fetch_url = MetricTools.URLUtil.addOrModifyURLParam(url, "format", "json");
+  function setChartHeight(height) {
+    var chart_elem = elem.querySelector(".chart");
+    chart_elem.style.height = height;
+
+    if (height == "auto") {
+      chart_elem.style.flex = "1";
+    }
+  }
+
+  function needsResize(opts) {
+    return !opts.chart.height || opts.chart.height == "auto";
+  }
+
+  function renderTitle(opts) {
+    var title = new MetricTools.Layout.Title(elem);
+    title.render(opts);
+  }
+
+  function renderLegend(opts) {
+    var legend = new MetricTools.Layout.Legend(elem);
+    legend.render(opts);
+  }
+
+  function renderChart(opts) {
+    //TODO
+  }
+};
+
+MetricTools.Layout.Title = function(elem) {
+  "use strict";
+
+  this.render = function(opts) {
+    var title_elem = elem.querySelector(".title_" + opts.position);
+    if (!title_elem) {
+      throw "invalid title position: " + title_opts.position;
+    }
+
+    if (opts.height != "auto") {
+      title_elem.style.height = opts.height;
+    }
+
+    title_elem.innerHTML = MetricTools.DOMUtil.escapeHTML(opts.title);
+  };
+};
+
+MetricTools.Layout.Legend = function(elem) {
+  "use strict";
+
+  this.render = function(opts) {
+    /* render legend layout */
+    var legend_elem = elem.querySelector(".legend_" + opts.position);
+    if (!legend_elem) {
+      throw "invalid legend position: " + opts.position;
+    }
+
+    switch (opts.position) {
+      case "left":
+      case "right":
+        if (opts.width != "auto") {
+          legend_elem.style.width = opts.width;
+        }
+        break;
+
+      default:
+        if (opts.height != "auto") {
+          legend_elem.style.height = opts.height;
+        }
+        break;
+    }
+
+    /* render legend content */
+    for (var i = 0; i < opts.series.length; ++i) {
+      var series = opts.series[i];
+      var circle_elem = document.createElement("span");
+      circle_elem.classList.add("circle", "color" + (i + 1));
+
+      var series_elem = document.createElement("div");
+      series_elem.appendChild(circle_elem);
+      series_elem.innerHTML += MetricTools.DOMUtil.escapeHTML(series.name);
+      legend_elem.appendChild(series_elem);
+    }
+  };
+};
+
+function fetch(url, callback_fn) {
+  var fetch_url = MetricTools.URLUtil.addOrModifyURLParam(url, "format", "json");
   MetricTools.HTTP.get(fetch_url, {}, function(r) {
     try {
       var result = JSON.parse(r.response);
-      var layout = new MetricTools.Layout;
-      layout.render(result);
+      callback_fn(result);
     } catch (e) {
       throw e; //FIXME handle error
     }
-
   });
 }
 
-fetch(location.href);
+function render() {
+  var layout;
+  var url = location.href;
+
+  fetch(url, function(result) {
+    layout = new MetricTools.Layout();
+
+    /* fetch the chart with the right height again */
+    layout.setResizeCallback(function(height) {
+      url = MetricTools.URLUtil.addOrModifyURLParam(url, "height", height);
+      fetch(url, layout.renderChart);
+    });
+
+    layout.render(result);
+  });
+}
+
+render();
+

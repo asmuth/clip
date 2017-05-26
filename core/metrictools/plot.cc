@@ -249,8 +249,13 @@ static ReturnCode renderPlot_JSON(const Plot* plot, std::string* out) {
   json::JSONWriter json(&json_str);
   json.beginObject();
 
+  json.addString("chart");
+  json.beginObject();
+  json.addString("height");
+  json.addString("auto");
   json.addString("svg");
   json.addString(svg);
+  json.endObject();
 
   json.addString("title");
   json.beginObject();
