@@ -44,3 +44,10 @@ confdefs.h
 src/fnordmetric/metric-collectd
 src/fnordmetric/metric-queryd
 *.dSYM
+CMakeFiles
+CMakeCache.txt
+cmake_install.cmake
+/example-*
+/*.tgz
+/*.pdf
+zdbtool

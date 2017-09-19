@@ -11,8 +11,8 @@
 #include <stdio.h>
 #include <stdarg.h>
 #include <string.h>
-#include <metrictools/util/exception.h>
-#include <metrictools/util/outputstream.h>
+#include "exception.h"
+#include "outputstream.h"
 
 Exception::Exception() :
     type_name_(nullptr),
@@ -94,27 +94,27 @@ void Exception::appendMessage(const char* message, ...) {
   va_end(args);
 }
 
-void Exception::debugPrint(OutputStream* os /* = nullptr */) const {
-  const char* type_name =
-      type_name_ == nullptr ? "Exception" : type_name_;
-
-  std::unique_ptr<OutputStream> os_local;
-  if (os == nullptr) {
-    os_local = OutputStream::getStderr();
-    os = os_local.get();
-  }
-
-  os->write(
-      StringUtil::format(
-          "$0: $1\n"
-          "    in $2\n"
-          "    in $3:$4\n",
-          type_name,
-          message_,
-          func_,
-          file_,
-          line_));
-}
+//void Exception::debugPrint(OutputStream* os /* = nullptr */) const {
+//  const char* type_name =
+//      type_name_ == nullptr ? "Exception" : type_name_;
+//
+//  std::unique_ptr<OutputStream> os_local;
+//  if (os == nullptr) {
+//    os_local = OutputStream::getStderr();
+//    os = os_local.get();
+//  }
+//
+//  os->write(
+//      StringUtil::format(
+//          "$0: $1\n"
+//          "    in $2\n"
+//          "    in $3:$4\n",
+//          type_name,
+//          message_,
+//          func_,
+//          file_,
+//          line_));
+//}
 
 const char* Exception::what() const noexcept {
   return message_;

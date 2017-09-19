@@ -74,6 +74,26 @@ uint64_t MonotonicClock::now() {
 #endif
 }
 
+MonotonicTimer::MonotonicTimer() { reset(); }
+
+MonotonicTimer::Tick MonotonicTimer::next() {
+  auto tB = MonotonicClock::now();
+  auto t = tB - t0_;
+  auto dt = tB - tA_;
+  tA_ = tB;
+
+  return Tick {
+    .t_us = t,
+    .t = t / double(kMicrosPerSecond),
+    .dt_us = dt,
+    .dt = dt / double(kMicrosPerSecond)
+  };
+}
+
+void MonotonicTimer::reset() {
+  t0_ = tA_ = MonotonicClock::now();
+}
+
 UnixTime::UnixTime() :
     utc_micros_(WallClock::unixMicros()) {}
 
@@ -158,7 +178,7 @@ Option<CivilTime> CivilTime::parseString(
     ct.setDay(t.tm_mday);
     ct.setMonth(t.tm_mon + 1);
     ct.setYear(t.tm_year + 1900);
-    return Some(ct);
+    return Some<CivilTime>(ct);
   }
 }
 
@@ -448,7 +468,7 @@ Option<CivilTime> ISO8601::parse(const String& str) {
     return None<CivilTime>();
   }
 
-  return Some(date);
+  return Some<CivilTime>(date);
 }
 
 bool ISO8601::isLeapYear(uint16_t year) {

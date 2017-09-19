@@ -15,7 +15,7 @@
 #include <inttypes.h>
 #include <limits>
 #include <string>
-#include "metrictools/util/option.h"
+#include "option.h"
 
 constexpr const uint64_t kMicrosPerMilli = 1000;
 constexpr const uint64_t kMicrosPerSecond = 1000000;
@@ -56,6 +56,25 @@ public:
 class MonotonicClock {
 public:
   static uint64_t now();
+};
+
+class MonotonicTimer {
+public:
+
+  struct Tick {
+    uint64_t t_us;
+    double t;
+    uint64_t dt_us;
+    double dt;
+  };
+
+  MonotonicTimer();
+  Tick next();
+  void reset();
+
+protected:
+  uint64_t t0_;
+  uint64_t tA_;
 };
 
 class UnixTime {

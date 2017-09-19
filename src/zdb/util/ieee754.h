@@ -21,6 +21,9 @@ public:
   static uint64_t toBytes(double value);
   static double fromBytes(uint64_t bytes);
 
+  static uint32_t toBytes32(float value);
+  static float fromBytes32(uint32_t bytes);
+
 };
 
 #endif

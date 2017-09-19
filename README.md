@@ -1,92 +1,55 @@
-metrictools
-===========
+libzdb
+======
 
-[![Build Status](https://travis-ci.org/paulasmuth/metrictools.png?branch=unstable)](http://travis-ci.org/paulasmuth/metrictools)
+[![Build Status](https://travis-ci.org/paulasmuth/libzdb.png?branch=master)](http://travis-ci.org/paulasmuth/libzdb)
 
-metrictools is a collection of lightweight tools that allow you to record
-measurements and build beautiful real-time dashboards within minutes. All using
-your favorite backend database (currently supported are SQLite, MySQL, Postgres
-and EventQL). **If you're new to metrictools it's highly recommended that you start
-with the [Getting Started](https://metrictools.org/documentation/getting-started) page.**.
+libzdb is an embedded columnar database. 
 
-Here's a quick rundown of the key features for people who don't like reading
-documentation.:
+* Data is organized into tables and rows. Tables have a strict schema
+* Columnar storage allows for very efficient compression and I/O
+* Implemented as a lightweight C/C++ library
+* Agnostic to data model; supports relational, key-value, timeseries/log-structured, etc.
+* Allows reading/scanning data without copying it (zero-copy)
 
-  - Add your own custom metrics and labels
-  - Insert data, run queries and create charts using a standalone command line interface
-  - Pull ("scrape") measurements via HTTP, shell scripts or SNMP or push via HTTP or UDP/statsd
-  - Include charts and tables in any HTML page using the HTTP API
-  - All metrics are explicitly configured and have a number of rich settings (like units of measurement)
-  - Data is stored in a pluggable storage backend (SQLite, MySQL, Postgres, EventQL)
-  - Optional background daemon that runs data collection and exposes a HTTP API
-  - Plugins can contain metric configuration, exporters and dashboards (check out
-    the linux plugin)
-  - Implemented as a collection of lightweight composable commands in spirit of the original daemontools project
-  - Written in self-contained modern C++; quick to set up and does not require a lot of resources
-  - The metrictools project was started over 7 years ago and is still actively maintained
+[Documentation](http://libzdb.org/) | [Download](http://libzdb.org/download/)
 
-More Information:
-[Documentation](http://metrictools.org/),
-[Download](https://metrictools.org/download/),
-[Getting Started](https://metrictools.org/documentation/getting-started)
+## Building
 
+To build and install libzdb from a distribution tarball or git checkout, run
+these commands:
 
-## Build
-
-Before we can start we need to install some build dependencies. Currently
-you need a modern c++ compiler, libz and autotools.
-
-    # Ubuntu
-    $ apt-get install clang make automake autoconf libtool zlib1g-dev
-
-    # OSX
-    $ brew install automake autoconf
-
-To build metrictools from a distribution tarball:
-
-    $ ./configure
+    $ cmake .
     $ make
-    $ sudo make install
-
-To build metrictools from a git checkout:
-
-    $ git clone git@github.com:paulasmuth/metrictools.git
-    $ cd metrictools
-    $ ./autogen.sh
-    $ ./configure
-    $ make V=1
     $ sudo make install
 
 To run the test suite:
 
-    $ make check
-
+    $ make test
 
 ## Documentation
 
-You can find the full documentation at https://metrictools.org/
-
+You can find the full documentation and screenshots of example programs at
+https://libzdb.org/
 
 ## Contributing
 
 To contribute, please fork this repository, make your changes and run the 
 tests, commit them to your github repository and send a pull request.
-Need help, head on over to our [Google Groups](htt//groups.google.com/group/metrictools)
+Need help, head on over to our [Google Groups](htt//groups.google.com/group/libzdb)
 page to discuss any ideas that you might have.
-
 
 ## License
 
-Copyright (c) 2011-2017 Paul Asmuth, Laura Schlimmer et al.
+Copyright (c) 2011-2017 Paul Asmuth, Laura Schlimmer
 
-metrictools is free software: you can redistribute it and/or modify it under
-the terms of the GNU General Public License as published by the Free Software
-Foundation, either version 3 of the License, or (at your option) any later
-version.
+The libzdb library is free software; you can redistribute it and/or modify it
+under the terms of the GNU Lesser General Public License as published by the Free
+Software Foundation; either version 2.1 of the License, or (at your option) any
+later version.
 
-metrictools is distributed in the hope that it will be useful,but WITHOUT ANY
+libzdb is distributed in the hope that it will be useful,but WITHOUT ANY
 WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
-PARTICULAR PURPOSE. See the GNU General Public License for more details.
+PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
 
-You should have received a copy of the GNU General Public License along with
-metrictools. If not, see <http://www.gnu.org/licenses/>.
+You should have received a copy of the GNU Lesser General Public License along
+with libzdb. If not, see <http://www.gnu.org/licenses/>.

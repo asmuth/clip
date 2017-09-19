@@ -133,6 +133,12 @@ public:
   virtual String readLenencString();
 
   /**
+   * Reads a IEEE754 encoded float from the stream. Throws an exception on
+   * error
+   */
+  virtual float readFloat32();
+
+  /**
    * Reads a IEEE754 encoded double from the stream. Throws an exception on
    * error
    */

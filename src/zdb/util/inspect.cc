@@ -7,7 +7,7 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#include <metrictools/util/inspect.h>
+#include <libpaint/util/inspect.h>
 
 template <>
 std::string inspect<bool>(const bool& value) {

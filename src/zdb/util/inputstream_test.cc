@@ -10,9 +10,9 @@
  */
 #include <stdlib.h>
 #include <stdio.h>
-#include "metrictools/util/exception.h"
-#include "metrictools/util/io/inputstream.h"
-#include "metrictools/util/test/unittest.h"
+#include "libpaint/util/exception.h"
+#include "libpaint/util/io/inputstream.h"
+#include "libpaint/util/test/unittest.h"
 
 UNIT_TEST(FileInputStreamTest);
 

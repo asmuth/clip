@@ -14,10 +14,10 @@
 #include <stdarg.h>
 #include <string>
 #include <unistd.h>
-#include "metrictools/util/buffer.h"
-#include "metrictools/util/exception.h"
-#include "metrictools/util/outputstream.h"
-#include "metrictools/util/ieee754.h"
+#include "libpaint/util/buffer.h"
+#include "libpaint/util/exception.h"
+#include "libpaint/util/outputstream.h"
+#include "libpaint/util/ieee754.h"
 
 std::unique_ptr<OutputStream> OutputStream::getStdout() {
   auto stdout_stream = new FileOutputStream(1, false);

@@ -15,8 +15,6 @@
 #include <string>
 #include "buffer.h"
 
-namespace fnordmetric {
-
 class FileUtil {
 public:
 
@@ -80,12 +78,11 @@ public:
   /**
    * Read a file
    */
-  static Buffer read(
+  static std::string read(
       const std::string& filename,
       size_t offset = 0,
       size_t limit = 0);
 
 };
 
-}
 #endif

@@ -1,20 +1,25 @@
 /**
  * This file is part of the "FnordMetric" project
- *   Copyright (c) 2014 Paul Asmuth, Google Inc.
- *   Copyright (c) 2016 Paul Asmuth, FnordCorp B.V.
+ *   Copyright (c) 2016 Paul Asmuth <paul@asmuth.com>
  *
  * FnordMetric is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License v3.0. You should have received a
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#include <stdlib.h>
-#include <unistd.h>
-#include <metrictools/util/return_code.h>
+#include <map>
+#include <string>
+#include <zdb/zdb.h>
 
-namespace fnordmetric {
+zdb_error_t zdb_open(zdb_t* db, const char* filename) {
+  return static_cast<zdb::zdb*>(db)->open(filename);
+}
 
-ReturnCode daemonize();
+namespace zdb {
 
-} // namespace fnordmetric
+zdb::zdb() {
+  error[0] = '\0';
+}
+
+} // namespace zdb
 
