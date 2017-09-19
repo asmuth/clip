@@ -3,13 +3,13 @@ libzdb
 
 [![Build Status](https://travis-ci.org/paulasmuth/libzdb.png?branch=master)](http://travis-ci.org/paulasmuth/libzdb)
 
-libzdb is an embedded columnar database. 
+libzdb is an embedded columnar database.
 
-* Data is organized into tables and rows. Tables have a strict schema
-* Columnar storage allows for very efficient compression and I/O
-* Implemented as a lightweight C/C++ library
-* Agnostic to data model; supports relational, key-value, timeseries/log-structured, etc.
-* Allows reading/scanning data without copying it (zero-copy)
+  * Data is organized into tables and rows. Tables have a strict schema
+  * Columnar storage allows for very efficient compression and I/O
+  * Implemented as a lightweight C/C++ library
+  * Agnostic to data model; supports relational, key-value, timeseries/log-structured, etc.
+  * Allows reading/scanning data without copying it (zero-copy)
 
 [Documentation](http://libzdb.org/) | [Download](http://libzdb.org/download/)
 
