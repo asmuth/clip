@@ -13,7 +13,7 @@
 
 #include <stdlib.h>
 #include <stdint.h>
-#include "metrictools/util/buffer.h"
+#include "libpaint/util/buffer.h"
 
 class BufferUtil {
 public:

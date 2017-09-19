@@ -8,8 +8,8 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#include "metrictools/util/bufferutil.h"
-#include "metrictools/util/inspect.h"
+#include "libpaint/util/bufferutil.h"
+#include "libpaint/util/inspect.h"
 
 void BufferUtil::stripTrailingBytes(Buffer* buf, unsigned char byte) {
   auto begin = (const unsigned char*) buf->data();

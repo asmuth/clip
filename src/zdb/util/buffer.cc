@@ -7,9 +7,9 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#include <metrictools/util/buffer.h>
-#include <metrictools/util/exception.h>
 #include <string.h>
+#include "buffer.h"
+#include "exception.h"
 
 Buffer::Buffer() : data_(nullptr), size_(0), alloc_(0), mark_(0) {}
 

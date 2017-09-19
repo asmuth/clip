@@ -12,10 +12,10 @@
 #include <string.h>
 #include <unistd.h>
 #include <fcntl.h>
-#include <metrictools/util/buffer.h>
-#include <metrictools/util/exception.h>
-#include <metrictools/util/inputstream.h>
-#include <metrictools/util/ieee754.h>
+#include <libpaint/util/buffer.h>
+#include <libpaint/util/exception.h>
+#include <libpaint/util/inputstream.h>
+#include <libpaint/util/ieee754.h>
 
 std::unique_ptr<FileInputStream> InputStream::getStdin() {
   auto stdin_stream = new FileInputStream(0, false);
@@ -153,6 +153,15 @@ String InputStream::readLenencString() {
   return val;
 }
 
+float InputStream::readFloat32() {
+  uint32_t val;
+  if (readNextBytes(&val, sizeof(uint32_t)) != sizeof(uint32_t)) {
+    RAISE(kEOFError, "unexpected end of stream");
+  }
+
+  return IEEE754::fromBytes32(val);
+}
+
 double InputStream::readDouble() {
   uint64_t val;
   if (readNextBytes(&val, sizeof(uint64_t)) != sizeof(uint64_t)) {
@@ -161,7 +170,6 @@ double InputStream::readDouble() {
 
   return IEEE754::fromBytes(val);
 }
-
 
 std::unique_ptr<FileInputStream> FileInputStream::openFile(
     const std::string& file_path) {

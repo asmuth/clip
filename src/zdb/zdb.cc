@@ -1,26 +1,25 @@
 /**
  * This file is part of the "FnordMetric" project
- *   Copyright (c) 2014 Paul Asmuth, Google Inc.
- *   Copyright (c) 2016 Paul Asmuth, FnordCorp B.V.
+ *   Copyright (c) 2016 Paul Asmuth <paul@asmuth.com>
  *
  * FnordMetric is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License v3.0. You should have received a
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#ifndef _libstx_UTIL_IEEE754_H_
-#define _libstx_UTIL_IEEE754_H_
-
-#include <stdlib.h>
-#include <stdint.h>
+#include <map>
 #include <string>
+#include <zdb/zdb.h>
 
-class IEEE754 {
-public:
+int zdb_open(zdb_t* db, const char* filename) {
+  return static_cast<zdb::zdb*>(db)->open(filename);
+}
 
-  static uint64_t toBytes(double value);
-  static double fromBytes(uint64_t bytes);
+namespace zdb {
 
-};
+zdb::zdb() {
+  error[0] = '\0';
+}
 
-#endif
+} // namespace zdb
+

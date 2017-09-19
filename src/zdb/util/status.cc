@@ -8,9 +8,9 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#include "metrictools/util/inspect.h"
-#include "metrictools/util/exception.h"
-#include "metrictools/util/status.h"
+#include "libpaint/util/inspect.h"
+#include "libpaint/util/exception.h"
+#include "libpaint/util/status.h"
 
 Status Status::success() {
   return Status(eSuccess);

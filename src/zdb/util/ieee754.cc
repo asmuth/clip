@@ -11,8 +11,8 @@
 #include <limits>
 #include <string.h>
 #include <stdio.h>
-#include <metrictools/util/exception.h>
-#include <metrictools/util/ieee754.h>
+#include "exception.h"
+#include "ieee754.h"
 
 uint64_t IEEE754::toBytes(double value) {
   uint64_t bytes;
@@ -40,6 +40,46 @@ double IEEE754::fromBytes(uint64_t bytes) {
   constexpr bool ieee754 =
       std::numeric_limits<double>::is_iec559 &&
       sizeof(double) == sizeof(uint64_t);
+
+  static_assert(
+      ieee754,
+      "IEEE 754 floating point conversion not yet implemented");
+
+  if (ieee754) {
+    memcpy((void *) &value, (void *) &bytes, sizeof(bytes));
+  } else {
+    /* not yet implemented */
+  }
+
+  return value;
+}
+
+uint32_t IEEE754::toBytes32(float value) {
+  uint32_t bytes;
+
+  constexpr bool ieee754 =
+      std::numeric_limits<float>::is_iec559 &&
+      sizeof(float) == sizeof(uint32_t);
+
+  static_assert(
+      ieee754,
+      "IEEE 754 floating point conversion not yet implemented");
+
+  if (ieee754) {
+    memcpy((void *) &bytes, (void *) &value, sizeof(bytes));
+  } else {
+    /* not yet implemented */
+  }
+
+  return bytes;
+}
+
+float IEEE754::fromBytes32(uint32_t bytes) {
+  float value;
+
+  constexpr bool ieee754 =
+      std::numeric_limits<float>::is_iec559 &&
+      sizeof(float) == sizeof(uint32_t);
 
   static_assert(
       ieee754,

@@ -9,17 +9,15 @@
  */
 #include <dirent.h>
 #include <limits.h>
-#include <metrictools/util/fileutil.h>
-#include <metrictools/util/exception.h>
-#include <metrictools/util/stringutil.h>
 #include <string.h>
 #include <sys/fcntl.h>
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <unistd.h>
 #include "file.h"
-
-namespace fnordmetric {
+#include "fileutil.h"
+#include "exception.h"
+#include "stringutil.h"
 
 void FileUtil::mkdir(const std::string& dirname) {
   if (::mkdir(dirname.c_str(), S_IRWXU) != 0) {
@@ -193,7 +191,7 @@ void FileUtil::truncate(const std::string& filename, size_t new_size) {
   }
 }
 
-Buffer FileUtil::read(
+std::string FileUtil::read(
     const std::string& filename,
     size_t offset /* = 0 */,
     size_t limit /* = 0 */) {
@@ -207,11 +205,9 @@ Buffer FileUtil::read(
     auto read_bytes = file.read(&buf);
     buf.truncate(read_bytes);
 
-    return buf;
+    return buf.toString();
   } catch (const std::exception& e) {
     RAISEF(kIOError, "$0 while reading file '$1'", e.what(), filename);
   }
-}
-
 }
 

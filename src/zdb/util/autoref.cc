@@ -8,7 +8,7 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#include "metrictools/util/autoref.h"
+#include "autoref.h"
 
 RefCounted::RefCounted() : refcount_(0) {}
 

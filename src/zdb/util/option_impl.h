@@ -8,8 +8,7 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#ifndef _STX_BASE_OPTION_IMPL_H
-#define _STX_BASE_OPTION_IMPL_H
+#pragma once
 
 template <typename T>
 Option<T>::Option() : value_(nullptr) {}
@@ -19,12 +18,7 @@ Option<T>::Option(std::nullptr_t n) : value_(nullptr) {}
 
 template <typename T>
 Option<T>::Option(
-    const T& value) :
-    value_(new (value_data_) T(value)) {}
-
-template <typename T>
-Option<T>::Option(
-    T&& value) :
+    T value) :
     value_(new (value_data_) T(std::move(value))) {}
 
 template <typename T>
@@ -41,8 +35,8 @@ Option<T>::Option(Option<T>&& other) {
   if (other.value_ == nullptr) {
     value_ = nullptr;
   } else {
-    value_ = new (value_data_) T(std::move(*other.value_));
-    other.value_->~T();
+    value_ = new (value_data_) ValueType(std::move(*other.value_));
+    other.value_->~ValueType();
     other.value_ = nullptr;
   }
 }
@@ -50,14 +44,14 @@ Option<T>::Option(Option<T>&& other) {
 template <typename T>
 Option<T>::~Option() {
   if (value_ != nullptr) {
-    value_->~T();
+    value_->~ValueType();
   }
 }
 
 template <typename T>
 Option<T>& Option<T>::operator=(const Option<T>& other) {
   if (value_ != nullptr) {
-    value_->~T();
+    value_->~ValueType();
   }
 
   if (other.value_ == nullptr) {
@@ -87,6 +81,11 @@ Option<T>& Option<T>::operator=(Option<T>&& other) {
 }
 
 template <typename T>
+Option<T>::operator bool() const {
+  return value_ != nullptr;
+}
+
+template <typename T>
 T& Option<T>::get() const {
   if (value_ == nullptr) {
     RAISE(kRuntimeError, "get() called on empty option");
@@ -101,8 +100,23 @@ bool Option<T>::isEmpty() const {
 }
 
 template <typename T>
+bool Option<T>::isSome() const {
+  return value_ != nullptr;
+}
+
+template <typename T>
+bool Option<T>::isNone() const {
+  return value_ == nullptr;
+}
+
+template <typename T>
 Option<T> Some(const T& value) {
-  return Option<T>(value);
+  return Option<typename std::remove_reference<T>::type>(value);
+}
+
+template <typename T>
+Option<T> Some(T&& value) {
+  return Option<typename std::remove_reference<T>::type>(std::move(value));
 }
 
 template <typename T>
@@ -119,4 +133,28 @@ std::string inspect(const Option<T> value) {
   }
 }
 
-#endif
+template <typename MapType>
+Option<typename MapType::key_type> lookup(
+    const MapType& map,
+    const typename MapType::key_type& key) {
+  auto iter = map.find(key);
+  if (iter == map.end()) {
+    return None<typename MapType::mapped_type>;
+  } else {
+    return Some<typename MapType::mapped_type>(iter->second);
+  }
+}
+
+template <typename MapType>
+typename MapType::mapped_type lookup(
+    const MapType& map,
+    const typename MapType::key_type& key,
+    const typename MapType::mapped_type& fallback) {
+  auto iter = map.find(key);
+  if (iter == map.end()) {
+    return fallback;
+  } else {
+    return iter->second;
+  }
+}
+

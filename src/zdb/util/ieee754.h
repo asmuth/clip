@@ -8,13 +8,22 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
+#ifndef _libstx_UTIL_IEEE754_H_
+#define _libstx_UTIL_IEEE754_H_
+
 #include <stdlib.h>
-#include <unistd.h>
-#include <metrictools/util/return_code.h>
+#include <stdint.h>
+#include <string>
 
-namespace fnordmetric {
+class IEEE754 {
+public:
 
-ReturnCode daemonize();
+  static uint64_t toBytes(double value);
+  static double fromBytes(uint64_t bytes);
 
-} // namespace fnordmetric
+  static uint32_t toBytes32(float value);
+  static float fromBytes32(uint32_t bytes);
 
+};
+
+#endif

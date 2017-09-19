@@ -8,9 +8,9 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#include <metrictools/util/buffer.h>
-#include <metrictools/util/exception.h>
-#include <metrictools/util/file.h>
+#include "buffer.h"
+#include "exception.h"
+#include "file.h"
 #include <sys/fcntl.h>
 #include <sys/stat.h>
 #include <sys/types.h>
