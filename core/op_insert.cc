@@ -8,33 +8,61 @@
  * <http://www.gnu.org/licenses/>.
  */
 #include <assert.h>
-#include <iostream>
-#include "tsdb.h"
-#include "page_index.h"
+#include "zdb.h"
+#include "lock.h"
+#include "database.h"
 
-namespace tsdb {
+namespace zdb {
 
-// bool TSDB::insertUInt64(
-//     uint64_t series_id,
-//     uint64_t time,
-//     uint64_t value) {
-//   tsdb::Cursor cursor;
-//   if (!getCursor(series_id, &cursor, false, SEEK_NONE)) {
-//     return false;
-//   }
-// 
-//   if (cursor.seekTo(time)) {
-//     if (cursor.getTime() == time) {
-//       cursor.update(value);
-//     } else {
-//       cursor.insert(time, value);
-//     }
-//   } else {
-//     cursor.append(time, value);
-//   }
-// 
-//   return true;
-// }
+zdb_err_t put_raw(
+    database_ref db,
+    const std::string& table_name,
+    const void** tuple_vals,
+    const size_t* tuple_lengths,
+    size_t tuple_count) {
+  assert(!!db);
 
-} // namespace tsdb
+  /* check that database is not readonly */
+  if (db->readonly) {
+    return ZDB_ERR_READONLY;
+  }
+
+  /* acquire write lock */
+  lock_guard lk(&db->lock);
+  lk.lock_write();
+
+  /* find table */
+  auto table_iter = db->meta.tables.find(table_name);
+  if (table_iter == db->meta.tables.end()) {
+    return ZDB_ERR_NOTFOUND;
+  }
+
+  auto& table = table_iter->second;
+
+  /* find or create row block */
+  row_block* rblock = nullptr;
+  if (table.row_map.empty()) {
+    table.row_map.emplace_back(row_block(table.columns));
+    rblock = &table.row_map.back();
+  } else {
+    rblock = &table.row_map.back();
+  }
+
+  /* add values to columns */
+  for (size_t i = 0; i < std::min(tuple_count, table.columns.size()); ++i) {
+    /* ensure page is loaded*/
+    if (!rblock->columns[i].page) {
+      rblock->columns[i].page = page_malloc(table.columns[i].type);
+    }
+
+    rblock->columns[i].page->append(tuple_vals[i], tuple_lengths[i]);
+  }
+
+  rblock->row_count++;
+  table.row_count++;
+
+  return ZDB_SUCCESS;
+}
+
+} // namespace zdb
 

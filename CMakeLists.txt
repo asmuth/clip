@@ -14,10 +14,12 @@ add_library(zdb STATIC
     core/metadata.h
     core/metadata.cc
     core/op_meta.cc
+    core/op_insert.cc
+    core/page.h
+    core/page.cc
     core/lock.h
     core/lock.cc
-    core/zdb.h
-    core/zdb.cc)
+    core/zdb.h)
 
 add_executable(zdbtool
     core/util/exception.h

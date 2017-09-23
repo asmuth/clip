@@ -25,10 +25,11 @@ typedef enum {
 } zdb_cursor_advise_t;
 
 typedef enum {
-  ZDB_UINT32 = 1,
-  ZDB_UINT64 = 2,
-  ZDB_INT32 = 3,
-  ZDB_INT64 = 4,
+  ZDB_BOOL = 1,
+  ZDB_UINT32 = 2,
+  ZDB_UINT64 = 3,
+  ZDB_INT32 = 4,
+  ZDB_INT64 = 5,
   ZDB_FLOAT32 = 6,
   ZDB_FLOAT64 = 7,
   ZDB_STRING = 8
@@ -253,11 +254,12 @@ int put(
     const std::string& table_name,
     const tuple_ref& tuple);
 
-int put_raw(
+zdb_err_t put_raw(
     database_ref db,
     const std::string& table_name,
-    const void** tuple,
-    size_t tuple_size);
+    const void** tuple_vals,
+    const size_t* tuple_lengths,
+    size_t tuple_count);
 
 int lookup_uint32(
     database_ref db,

@@ -11,6 +11,13 @@
 
 namespace zdb {
 
+column_block::column_block() : present(false), page(nullptr) {}
+
+row_block::row_block(
+    const column_list& table) :
+    columns(table.size()),
+    row_count(0) {}
+
 metadata::metadata() : dirty(false) {}
 
 } // namespace zdb

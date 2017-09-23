@@ -12,19 +12,34 @@
 #include <map>
 #include <vector>
 #include "zdb.h"
+#include "page.h"
 
 namespace zdb {
-class metadata;
-class page_map;
 
-struct column {
+struct column_info {
   uint16_t id;
   std::string name;
   zdb_type_t type;
 };
 
+struct column_block {
+  column_block();
+  bool present;
+  page_buf* page;
+};
+
+using column_list = std::vector<column_info>;
+
+struct row_block {
+  row_block(const column_list& table);
+  std::vector<column_block> columns;
+  uint64_t row_count;
+};
+
 struct table {
-  std::vector<column> columns;
+  column_list columns;
+  std::vector<row_block> row_map;
+  uint64_t row_count;
 };
 
 struct metadata {

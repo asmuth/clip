@@ -81,7 +81,7 @@ zdb_err_t column_add(
   }
 
   /* create new column */
-  column col;
+  column_info col;
   col.name = column_name;
   col.type = column_type;
   col.id = 0;
@@ -93,9 +93,20 @@ zdb_err_t column_add(
     }
   }
 
-  /* add column */
+  /* add column info to metadata */
   db->meta.dirty = true;
   table.columns.insert(table.columns.begin() + col.id, std::move(col));
+
+  /* add columns to all row blocks */
+  for (auto& row_block : table.row_map) {
+    column_block col_block;
+    col_block.present = false;
+    col_block.page = nullptr;
+
+    row_block.columns.insert(
+        row_block.columns.begin() + col.id,
+        std::move(col_block));
+  }
 
   /* return id */
   if (id) {
