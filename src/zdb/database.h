@@ -8,9 +8,8 @@
  * <http://www.gnu.org/licenses/>.
  */
 #pragma once
-#include "snapshot.h"
-#include "transaction.h"
 #include "tuple.h"
+#include "metadata.h"
 
 namespace zdb {
 

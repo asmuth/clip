@@ -8,6 +8,8 @@
  * <http://www.gnu.org/licenses/>.
  */
 #pragma once
+#include <stdlib.h>
+#include <stdint.h>
 #include <initializer_list>
 
 namespace zdb {
