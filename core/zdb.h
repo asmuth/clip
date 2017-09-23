@@ -1,11 +1,9 @@
 /**
- * This file is part of the "FnordMetric" project
- *   Copyright (c) 2016 Paul Asmuth <paul@asmuth.com>
- *
- * FnordMetric is free software: you can redistribute it and/or modify it under
- * the terms of the GNU General Public License v3.0. You should have received a
- * copy of the GNU General Public License along with this program. If not, see
- * <http://www.gnu.org/licenses/>.
+ * Copyright (c) 2016, Paul Asmuth <paul@asmuth.com>
+ * All rights reserved.
+ * 
+ * This file is part of the "libzdb" project. libzdb is free software licensed
+ * under the 3-Clause BSD License (BSD-3-Clause).
  */
 #pragma once
 #include <stdlib.h>
@@ -52,7 +50,10 @@ typedef void zdb_cursor_t;
 const int ZDB_OPEN_READONLY = 0;
 const int ZDB_OPEN_READWRITE = 1;
 const int ZDB_OPEN_CREATE = 2;
-const int ZDB_OPEN_NOWAIT = 4;
+const int ZDB_OPEN_NOWAIT = 4; // don't wait for lock
+const int ZDB_OPEN_NOSWAP = 8; // load the full database into memory, implies ZDB_OPEN_NONBLOCK
+const int ZDB_OPEN_NONBLOCK = 16; // open in non-blocking mode. currently only useful in combination with NOSWAP
+
 const int ZDB_OPEN_DEFAULT = ZDB_OPEN_READWRITE | ZDB_OPEN_CREATE;
 
 int zdb_open(const char* filename, int oflags, zdb_t** db);
