@@ -1,0 +1,10 @@
+libzdb v0.2.0;
+
+  * Renamed the project from "FnordMetric" to libzdb, removed all components
+    except the storage layer
+
+  * Added support for non-timeseries structured data (arbitrary primary key)
+
+  * Added the new (non-string) data types INT32, INT64, UINT32, UINT64, FLOAT32
+    FLOAT64, BOOL
+
