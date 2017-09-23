@@ -3,14 +3,14 @@ libzdb
 
 [![Build Status](https://travis-ci.org/paulasmuth/libzdb.png?branch=master)](http://travis-ci.org/paulasmuth/libzdb)
 
-libzdb is an embedded columnar database.
+libzdb is a lightweight embedded database:
 
   * Data is organized into tables and rows; tables have a strict schema
-  * Columnar storage allows for very efficient compression and I/O
-  * Full transaction isolation (MVCC with copy-on-write design)
+  * Column-oriented internal storage layout for efficient compression and I/O
+  * Allows reading data without copying it (zero-copy)
+  * Supports non-blocking I/O via io_submit/aio
   * Implemented as a lightweight C/C++ library
-  * Agnostic to data model; supports relational, key-value, timeseries/log-structured, etc.
-  * Allows reading/scanning data without copying it (zero-copy)
+  * Safe to use from multiple threads and processes
 
 [Documentation](http://libzdb.org/) | [Download](http://libzdb.org/download/)
 
