@@ -8,32 +8,26 @@
  * <http://www.gnu.org/licenses/>.
  */
 #pragma once
-#include <initializer_list>
 #include "snapshot.h"
+#include "transaction.h"
 #include "tuple.h"
-#include "cursor.h"
 
 namespace zdb {
 
-class transaction {
+class database {
 public:
 
-  transaction(snapshot_ref snap, bool readonly);
-  transaction(const transaction& o) = delete;
-  transaction(transaction&& o);
-  transaction& operator=(const transaction& o) = delete;
-  transaction& operator=(transaction&& o);
-  ~transaction();
+  database();
+  database(const database& o) = delete;
+  database(database&& o) = delete;
+  ~database();
 
-  int cursor_init(
-      const std::string& table_name,
-      zdb_cursor* cursor);
-
-  int commit();
+  transaction tx_init(bool readonly);
+  void close();
 
 protected:
   snapshot_ref snap;
-  bool readonly;
+  pthread_rwlock_t* lock;
 };
 
 } // namespace zdb

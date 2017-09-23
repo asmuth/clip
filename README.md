@@ -5,8 +5,9 @@ libzdb
 
 libzdb is an embedded columnar database.
 
-  * Data is organized into tables and rows. Tables have a strict schema
+  * Data is organized into tables and rows; tables have a strict schema
   * Columnar storage allows for very efficient compression and I/O
+  * Full transaction isolation (MVCC with copy-on-write design)
   * Implemented as a lightweight C/C++ library
   * Agnostic to data model; supports relational, key-value, timeseries/log-structured, etc.
   * Allows reading/scanning data without copying it (zero-copy)

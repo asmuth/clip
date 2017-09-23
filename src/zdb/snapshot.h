@@ -7,12 +7,30 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
+#pragma once
+#include <mutex>
 #include <map>
-#include <string>
-#include <zdb/zdb.h>
+#include <set>
+#include "page_map.h"
+#include "util/autoref.h"
 
 namespace zdb {
+class metadata;
+class page_map;
 
+struct snapshot : public RefCounted {
+  snapshot();
+  snapshot(snapshot&& o);
+  snapshot(const snapshot& o) = delete;
+  snapshot& operator=(const snapshot& o) = delete;
+  snapshot& operator=(snapshot&& o);
+  ~snapshot();
+
+  metadata* meta;
+  page_map* pages;
+};
+
+using snapshot_ref = RefPtr<snapshot>;
 
 } // namespace zdb
 
