@@ -1,1 +1,1 @@
-# metrictools python binding
+# libzdb python binding

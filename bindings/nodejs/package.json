@@ -1,33 +1,29 @@
 {
-  "name": "metrictools",
+  "name": "libzdb",
   "version": "0.0.1",
-  "description": "metrictools nodejs binding",
-  "author": "The metrictools Authors <authors@metrictools.org>",
+  "description": "libzdb nodejs binding",
+  "author": "The libzdb Authors <authors@libzdb.org>",
   "contributors": [
-    {
-      "name": "Laura Schlimmer",
-      "email": "laura@metrictools.io"
-    },
     {
       "name": "Paul Asmuth",
       "email": "paul@asmuth.com"
-    } 
+    }, 
+    {
+      "name": "Laura Schlimmer",
+      "email": "laura@libzdb.io"
+    }
   ],
-  "main": "lib/metrictools.js",
+  "main": "lib/zdb.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/paulasmuth/metrictools"
-  },
-  "bugs": {
-    "url": "https://github.com/paulasmuth/metrictools/issues"
+    "url": "https://github.com/paulasmuth/zdb"
   },
   "keywords": [
-    "metrictools"
+    "zdb", "libzdb"
   ],
   "dependencies": {},
   "devDependencies": {},
   "preferGlobal": true,
   "private": false,
-  "subdomain": "metrictools",
-  "license": "MIT"
+  "subdomain": "libzdb"
 }

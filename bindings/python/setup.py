@@ -1,12 +1,12 @@
-from distutils.core import setup
+from setuptools import setup
 setup(
-  name = 'metrictools',
-  packages = ['metrictools'],
+  name = 'libzdb',
+  packages = ['libzdb'],
   version = '0.1',
-  description = 'metrictools python binding',
+  description = 'libzdb python binding',
   author = 'Paul Asmuth',
   author_email = 'paul@asmuth.com',
-  url = 'https://github.com/paulasmuth/metrictools',
-  download_url = 'https://github.com/paulasmuth/metrictools/tarball/0.1',
-  keywords = ['metrictools']
+  url = 'https://github.com/paulasmuth/zdb',
+  download_url = 'https://github.com/paulasmuth/zdb/tarball/0.1',
+  keywords = ['libzdb']
 )
