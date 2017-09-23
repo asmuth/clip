@@ -9,10 +9,11 @@
  */
 #pragma once
 #include <stdlib.h>
+#include "zdb.h"
 
 namespace zdb {
 
-class zdb_cursor {
+class cursor {
 public:
 
   void advise(zdb_cursor_advise_t);

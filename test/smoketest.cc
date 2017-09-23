@@ -10,18 +10,21 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <unistd.h>
-#include "metricd/util/exception.h"
-#include "metricd/util/unittest.h"
-#include "metricd/util/time.h"
-#include "tsdb.h"
+#include "zdb/util/exception.h"
+#include "zdb/util/time.h"
+#include "unittest.h"
+#include "zdb/zdb.h"
 
-UNIT_TEST(TSDBTest);
+UNIT_TEST(ZDBTest);
 
-TEST_CASE(TSDBTest, TestCreateAndInsert, [] () {
-  unlink("/tmp/__test.tsdb");
-
+TEST_CASE(ZDBTest, TestCreateAndInsert, [] () {
+  unlink("/tmp/__test.zdb");
   auto t0 = WallClock::unixMicros();
 
+  zdb::database_ref db;
+  EXPECT_SUCCESS(zdb::open("/tmp/__test.zsb", ZDB_OPEN_DEFAULT, &db));
+
+/*
   {
     std::unique_ptr<tsdb::TSDB> db;
     EXPECT(tsdb::TSDB::createDatabase(&db, "/tmp/__test.tsdb") == true);
@@ -180,8 +183,10 @@ TEST_CASE(TSDBTest, TestCreateAndInsert, [] () {
       }
     }
   }
+*/
 });
 
+/*
 TEST_CASE(TSDBTest, TestSeek, [] () {
   unlink("/tmp/__test.tsdb");
 
@@ -323,4 +328,7 @@ TEST_CASE(TSDBTest, TestUpdate, [] () {
       EXPECT(value == 1234);
     }
   }
+
 });
+*/
+

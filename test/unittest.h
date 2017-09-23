@@ -43,6 +43,8 @@
 #define EXPECT_TRUE(X) EXPECT(!!(X))
 #define EXPECT_FALSE(X) EXPECT(!(X))
 
+#define EXPECT_SUCCESS(X) EXPECT((X) == 0)
+
 namespace libtransport {
 
 class UnitTest {

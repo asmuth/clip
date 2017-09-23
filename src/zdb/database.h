@@ -17,17 +17,23 @@ namespace zdb {
 class database {
 public:
 
-  database();
+  database(metadata_ref&& meta, bool readonly);
   database(const database& o) = delete;
   database(database&& o) = delete;
   ~database();
 
-  transaction tx_init(bool readonly);
   void close();
 
+  int cursor_init(
+      const std::string& table_name,
+      cursor_ref* cursor);
+
+  int commit();
+
 protected:
-  snapshot_ref snap;
-  pthread_rwlock_t* lock;
+  metadata_ref meta;
+  bool readonly;
+  pthread_rwlock_t lock;
 };
 
 } // namespace zdb

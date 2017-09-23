@@ -27,7 +27,7 @@ public:
 
   int cursor_init(
       const std::string& table_name,
-      zdb_cursor* cursor);
+      cursor_ref* cursor);
 
   int commit();
 

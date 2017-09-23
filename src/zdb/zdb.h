@@ -16,7 +16,7 @@ extern "C" {
 #endif
 
 /**
- * ZDB C API
+ * ZDB Public C API
  */
 typedef enum {
   ZDB_FETCH_AHEAD = 1,
@@ -34,16 +34,26 @@ typedef enum {
   ZDB_STRING = 8
 } zdb_type_t;
 
+typedef enum {
+  ZDB_SUCCESS = 0,
+  ZDB_ERR_OTHER = 1
+} zdb_err_t;
+
 typedef void zdb_t;
-typedef void zdb_tx_t;
+typedef void zdb_t;
 typedef void zdb_tuple_t;
 typedef void zdb_cursor_t;
 
-int zdb_open(const char* filename, zdb_t** db);
+const int ZDB_OPEN_READONLY = 0;
+const int ZDB_OPEN_READWRITE = 1;
+const int ZDB_OPEN_CREATE = 2;
+const int ZDB_OPEN_NOWAIT = 4;
+const int ZDB_OPEN_DEFAULT = ZDB_OPEN_READWRITE | ZDB_OPEN_CREATE;
+
+int zdb_open(const char* filename, int oflags, zdb_t** db);
 void zdb_close(zdb_t* db);
 
-zdb_tx_t* zdb_tx_init(zdb_tx_t* db);
-int zdb_tx_commit(zdb_tx_t* db);
+int zdb_commit(zdb_t* db);
 
 int zdb_table_add(const char* table_name);
 int zdb_table_delete(const char* table_name);
@@ -72,49 +82,49 @@ int zdb_put_raw(
     size_t tuple_size);
 
 int zdb_lookup_uint32(
-    zdb_tx_t* db,
+    zdb_t* db,
     uint32_t key,
     zdb_tuple_t* tuple,
     int* columns,
     size_t columns_count);
 
 int zdb_lookup_uint64(
-    zdb_tx_t* db,
+    zdb_t* db,
     uint64_t key,
     zdb_tuple_t* tuple,
     int* columns,
     size_t columns_count);
 
 int zdb_lookup_int32(
-    zdb_tx_t* db,
+    zdb_t* db,
     int32_t key,
     zdb_tuple_t* tuple,
     int* columns,
     size_t columns_count);
 
 int zdb_lookup_int64(
-    zdb_tx_t* db,
+    zdb_t* db,
     int64_t key,
     zdb_tuple_t* tuple,
     int* columns,
     size_t columns_count);
 
 int zdb_lookup_float32(
-    zdb_tx_t* db,
+    zdb_t* db,
     float key,
     zdb_tuple_t* tuple,
     int* columns,
     size_t columns_count);
 
 int zdb_lookup_float64(
-    zdb_tx_t* db,
+    zdb_t* db,
     double key,
     zdb_tuple_t* tuple,
     int* columns,
     size_t columns_count);
 
 int zdb_lookup_string(
-    zdb_tx_t* db,
+    zdb_t* db,
     const char* key,
     size_t keylen,
     zdb_tuple_t* tuple,
@@ -149,7 +159,7 @@ void zdb_tuple_get_string(
     const char* data,
     size_t* size);
 
-zdb_cursor_t* zdb_cursor_init(zdb_tx_t* db);
+zdb_cursor_t* zdb_cursor_init(zdb_t* db);
 void zdb_cursor_close(zdb_cursor_t* cursor);
 
 int zdb_cursor_use(zdb_cursor_t* cursor, const char* column);
@@ -188,98 +198,104 @@ int zdb_cursor_seek_primary_key_string(
 
 
 /**
- * ZDB C++ convenience API
+ * ZDB Public C++ API
  */
 #ifdef __cplusplus
-#include "database.h"
-#include "transaction.h"
+#include <memory>
+#include <string>
+#include <initializer_list>
 
 namespace zdb {
+class database;
+using database_ref = std::shared_ptr<database>;
+class tuple;
+using tuple_ref = std::shared_ptr<tuple>;
+class cursor;
+using cursor_ref = std::shared_ptr<cursor>;
 
-int open(const std::string& filename, database** db);
+zdb_err_t open(const std::string& filename, int oflags, database_ref* db);
 
-transaction tx_init(database* db, bool readonly);
-int tx_commit(transaction* tx);
+int commit(database_ref db);
 
-zdb_cursor cursor_init(transaction* tx);
+cursor cursor_init(database_ref db);
 
 int table_add(
-    transaction* tx,
+    database_ref db,
     const std::string& table_name);
 
 int table_delete(
-    transaction* tx,
+    database_ref db,
     const std::string& table_name);
 
+int column_id(
+    database_ref db,
+    const std::string& table_name,
+    const std::string& column_name);
+
 int column_add(
-    transaction* tx,
+    database_ref db,
     const std::string& table_name,
     const std::string& column_name,
     zdb_type_t column_type,
     int* id = nullptr);
 
 int column_delete(
-    transaction* tx,
+    database_ref db,
     const std::string& table_name,
     int id);
 
-int column_id(
-    transaction* tx,
-    const std::string& table_name,
-    const std::string& column_name);
-
 int put(
-    transaction* tx,
+    database_ref db,
     const std::string& table_name,
-    const zdb_tuple& tuple);
+    const tuple_ref& tuple);
 
 int put_raw(
-    transaction* tx,
+    database_ref db,
     const std::string& table_name,
     const void** tuple,
     size_t tuple_size);
 
 int lookup_uint32(
-    transaction* tx,
+    database_ref db,
     uint32_t key,
-    zdb_tuple* tuple,
+    tuple_ref* tuple,
     const std::initializer_list<int> columns = {});
 
 int lookup_uint64(
-    transaction* tx,
+    database_ref db,
     uint64_t key,
-    zdb_tuple* tuple,
+    tuple_ref* tuple,
     const std::initializer_list<int> columns = {});
 
 int lookup_int32(
-    transaction* tx,
+    database_ref db,
     int32_t key,
-    zdb_tuple* tuple,
+    tuple_ref* tuple,
     const std::initializer_list<int> columns = {});
 
 int lookup_int64(
-    transaction* tx,
+    database_ref db,
     int64_t key,
-    zdb_tuple* tuple,
+    tuple_ref* tuple,
     const std::initializer_list<int> columns = {});
 
 int lookup_float32(
-    transaction* tx,
+    database_ref db,
     float key,
-    zdb_tuple* tuple,
+    tuple_ref* tuple,
     const std::initializer_list<int> columns = {});
 
 int lookup_float64(
-    transaction* tx,
+    database_ref db,
     double key,
-    zdb_tuple* tuple,
+    tuple_ref* tuple,
     const std::initializer_list<int> columns = {});
 
 int lookup_string(
-    transaction* tx,
+    database_ref db,
     const char* key,
     size_t keylen,
-    zdb_tuple* tuple,
+    tuple_ref* tuple,
     const std::initializer_list<int> columns = {});
 
 } // namespace zdb

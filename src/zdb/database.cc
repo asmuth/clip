@@ -7,19 +7,33 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#pragma once
 #include "database.h"
+#include <assert.h>
+#include <fcntl.h>
+#include <unistd.h>
+#include <sys/types.h>
+#include <sys/stat.h>
 
 namespace zdb {
 
-zdb::database() {
-  if (pthread_rwlock_init(lock, nullptr)) {
+database::database(
+    metadata_ref&& meta_,
+    bool readonly_) :
+    meta(meta_),
+    readonly(readonly_) {
+  if (pthread_rwlock_init(&lock, nullptr)) {
     throw new std::runtime_error("pthread_rwlock_init failed");
   }
 }
 
-zdb::~database() {
-  pthread_rwlock_destroy(lock);
+database::~database() {
+  pthread_rwlock_destroy(&lock);
+}
+
+zdb_err_t open(const std::string& filename, int oflags, database_ref* db_ref) {
+  auto db = std::make_shared<database>(std::make_shared<metadata>(), true);
+  *db_ref = std::move(db);
+  return ZDB_SUCCESS;
 }
 
 } // namespace zdb

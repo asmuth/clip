@@ -51,3 +51,4 @@ cmake_install.cmake
 /*.tgz
 /*.pdf
 zdbtool
+zdbtest

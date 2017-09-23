@@ -15,7 +15,9 @@
 #include <mutex>
 #include "page_buffer.h"
 
-namespace tsdb {
+namespace zdb {
+
+/*
 
 struct PageInfo {
   uint64_t version;
@@ -24,9 +26,12 @@ struct PageInfo {
   uint64_t disk_size;
 };
 
-class PageMap {
+*/
+
+class page_map {
 public:
 
+/*
   using PageIDType = size_t;
 
   PageMap(int fd);
@@ -81,7 +86,10 @@ protected:
   std::mutex mutex_;
   PageIDType page_id_;
   std::map<PageIDType, PageMapEntry*> map_;
+*/
 };
 
-} // namespace tsdb
+using page_map_ref = std::shared_ptr<page_map>;
+
+} // namespace zdb
 
