@@ -1,5 +1,0 @@
-[http] fix cookies expires timestamp formatting
-[http] implement ssl
-[http] implement http_server_async (w/ requestcontext. three response methods: direct, push/streaming, pull/generator)
-[http] implement http_client_async
-[http] implement http v2
