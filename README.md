@@ -2,6 +2,7 @@ libzdb
 ======
 
 [![Build Status](https://travis-ci.org/paulasmuth/libzdb.png?branch=master)](http://travis-ci.org/paulasmuth/libzdb)
+[![License: BSD](https://img.shields.io/badge/License-BSD-green.svg)](https://opensource.org/licenses/BSD-3-Clause)
 
 libzdb is a lightweight embedded database:
 
@@ -11,8 +12,6 @@ libzdb is a lightweight embedded database:
   * Supports non-blocking I/O via io_submit/aio
   * Implemented as a lightweight C/C++ library
   * Safe to use from multiple threads and processes
-
-[Documentation](http://libzdb.org/) | [Download](http://libzdb.org/download/)
 
 ## Building
 
