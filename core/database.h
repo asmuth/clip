@@ -13,10 +13,9 @@
 
 namespace zdb {
 
-class database {
-public:
+struct database {
 
-  database(metadata_ref&& meta, bool readonly);
+  database(metadata&& meta, bool readonly);
   database(const database& o) = delete;
   database(database&& o) = delete;
   ~database();
@@ -29,9 +28,8 @@ public:
 
   int commit();
 
-protected:
-  metadata_ref meta;
-  bool readonly;
+  metadata meta;
+  const bool readonly;
   pthread_rwlock_t lock;
 };
 

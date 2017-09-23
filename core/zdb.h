@@ -36,7 +36,11 @@ typedef enum {
 
 typedef enum {
   ZDB_SUCCESS = 0,
-  ZDB_ERR_OTHER = 1
+  ZDB_ERR_OTHER,
+  ZDB_ERR_READONLY,
+  ZDB_ERR_EXISTS,
+  ZDB_ERR_NOTFOUND,
+  ZDB_ERR_INVALID_ARGUMENT
 } zdb_err_t;
 
 typedef void zdb_t;
@@ -219,11 +223,11 @@ int commit(database_ref db);
 
 cursor cursor_init(database_ref db);
 
-int table_add(
+zdb_err_t table_add(
     database_ref db,
     const std::string& table_name);
 
-int table_delete(
+zdb_err_t table_delete(
     database_ref db,
     const std::string& table_name);
 
@@ -232,14 +236,14 @@ int column_id(
     const std::string& table_name,
     const std::string& column_name);
 
-int column_add(
+zdb_err_t column_add(
     database_ref db,
     const std::string& table_name,
     const std::string& column_name,
     zdb_type_t column_type,
     int* id = nullptr);
 
-int column_delete(
+zdb_err_t column_delete(
     database_ref db,
     const std::string& table_name,
     int id);

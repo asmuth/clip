@@ -23,6 +23,9 @@ TEST_CASE(ZDBTest, TestCreateAndInsert, [] () {
 
   zdb::database_ref db;
   EXPECT_SUCCESS(zdb::open("/tmp/__test.zsb", ZDB_OPEN_DEFAULT, &db));
+  EXPECT_SUCCESS(zdb::table_add(db, "mytbl"));
+  EXPECT_SUCCESS(zdb::column_add(db, "mytbl", "time", ZDB_UINT64));
+  EXPECT_SUCCESS(zdb::column_add(db, "mytbl", "val", ZDB_UINT64));
 
 /*
   {

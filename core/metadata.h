@@ -29,17 +29,10 @@ struct table {
 
 struct metadata {
   metadata();
-  metadata(metadata&& o);
-  metadata(const metadata& o) = delete;
-  metadata& operator=(const metadata& o) = delete;
-  metadata& operator=(metadata&& o);
-  ~metadata();
 
   bool dirty;
   std::map<std::string, table> tables;
 };
-
-using metadata_ref = std::shared_ptr<metadata>;
 
 } // namespace zdb
 

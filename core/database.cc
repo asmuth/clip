@@ -17,9 +17,9 @@
 namespace zdb {
 
 database::database(
-    metadata_ref&& meta_,
+    metadata&& meta_,
     bool readonly_) :
-    meta(meta_),
+    meta(std::move(meta_)),
     readonly(readonly_) {
   if (pthread_rwlock_init(&lock, nullptr)) {
     throw new std::runtime_error("pthread_rwlock_init failed");
@@ -31,7 +31,7 @@ database::~database() {
 }
 
 zdb_err_t open(const std::string& filename, int oflags, database_ref* db_ref) {
-  auto db = std::make_shared<database>(std::make_shared<metadata>(), true);
+  auto db = std::make_shared<database>(metadata{}, false);
   *db_ref = std::move(db);
   return ZDB_SUCCESS;
 }
