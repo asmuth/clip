@@ -10,10 +10,10 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <unistd.h>
-#include "zdb/util/exception.h"
-#include "zdb/util/time.h"
+#include "../core/util/exception.h"
+#include "../core/util/time.h"
+#include "../core/zdb.h"
 #include "unittest.h"
-#include "zdb/zdb.h"
 
 UNIT_TEST(ZDBTest);
 

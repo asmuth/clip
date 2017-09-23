@@ -13,10 +13,10 @@
 #include <signal.h>
 #include <iostream>
 #include <algorithm>
-#include <zdb/util/flagparser.h>
-#include <zdb/util/fileutil.h>
-#include <zdb/util/return_code.h>
-#include <zdb/zdbtool_init.h>
+#include "../core/util/flagparser.h"
+#include "../core/util/fileutil.h"
+#include "../core/util/return_code.h"
+#include "zdbtool_init.h"
 
 using namespace zdb;
 

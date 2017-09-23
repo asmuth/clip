@@ -7,13 +7,15 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#include <zdb/zdbtool_init.h>
+#pragma once
+#include "../core/util/return_code.h"
 
 namespace zdb {
 
-ReturnCode zdbtool_init(const std::vector<std::string>& argv) {
-  return ReturnCode::success();
-}
+const char kInitCommandDescription[] = "Create a new zdb file";
+const char kInitCommandHelp[] = "Create a new zdb file";
+
+ReturnCode zdbtool_init(const std::vector<std::string>& argv);
 
 } // namespace zdb
 

@@ -6,37 +6,37 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
 find_package(Threads)
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/core)
 
 add_library(zdb STATIC
-    src/zdb/database.h
-    src/zdb/database.cc
-    src/zdb/metadata.h
-    src/zdb/metadata.cc
-    src/zdb/zdb.h
-    src/zdb/zdb.cc)
+    core/database.h
+    core/database.cc
+    core/metadata.h
+    core/metadata.cc
+    core/zdb.h
+    core/zdb.cc)
 
 add_executable(zdbtool
-    src/zdb/util/exception.h
-    src/zdb/util/exception.cc
-    src/zdb/util/flagparser.h
-    src/zdb/util/flagparser.cc
-    src/zdb/util/stringutil.h
-    src/zdb/util/stringutil.cc
-    src/zdb/util/time.h
-    src/zdb/util/time.cc
-    src/zdb/zdbtool.cc
-    src/zdb/zdbtool_init.cc)
+    core/util/exception.h
+    core/util/exception.cc
+    core/util/flagparser.h
+    core/util/flagparser.cc
+    core/util/stringutil.h
+    core/util/stringutil.cc
+    core/util/time.h
+    core/util/time.cc
+    tools/zdbtool.cc
+    tools/zdbtool_init.cc)
 
 add_executable(zdbtest
-    src/zdb/util/exception.h
-    src/zdb/util/exception.cc
-    src/zdb/util/flagparser.h
-    src/zdb/util/flagparser.cc
-    src/zdb/util/stringutil.h
-    src/zdb/util/stringutil.cc
-    src/zdb/util/time.h
-    src/zdb/util/time.cc
+    core/util/exception.h
+    core/util/exception.cc
+    core/util/flagparser.h
+    core/util/flagparser.cc
+    core/util/stringutil.h
+    core/util/stringutil.cc
+    core/util/time.h
+    core/util/time.cc
     test/smoketest.cc)
 
 target_link_libraries(zdbtest zdb pthread)
