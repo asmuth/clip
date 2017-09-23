@@ -1,7 +1,7 @@
 libzdb
 ======
 
-[![Build Status](https://travis-ci.org/paulasmuth/libzdb.png?branch=master)](http://travis-ci.org/paulasmuth/libzdb)
+[![Build Status](https://travis-ci.org/paulasmuth/zdb.png?branch=master)](http://travis-ci.org/paulasmuth/zdb)
 [![License: BSD](https://img.shields.io/badge/License-BSD-green.svg)](https://opensource.org/licenses/BSD-3-Clause)
 
 libzdb is a lightweight embedded database:

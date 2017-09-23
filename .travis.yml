@@ -6,9 +6,9 @@ env:
   - CXXFLAGS="-stdlib=libc++"
 
 script:
-  - ./autogen.sh
-  - ./configure
-  - make check
+  - cmake .
+  - make
+  - ./zdbtest
 
 before_install:
   - sudo apt-get -qq update
