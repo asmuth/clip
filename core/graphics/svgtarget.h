@@ -47,13 +47,13 @@ public:
       const std::string& class_name) {
     if (viewbox_) {
       SVG_appendLine(
-          "<svg viewBox='0 0 %i %i' class='%s'>\n",
+          "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox='0 0 %i %i' class='%s' viewport-fill='white'>\n",
           width,
           height,
           escapeString(class_name).c_str());
     } else {
       SVG_appendLine(
-          "<svg width='%i' height='%i' class='%s'>\n",
+          "<sv xmlns=\"http://www.w3.org/2000/svg\"g width='%i' height='%i' class='%s' viewport-fill='white'>\n",
           width,
           height,
           escapeString(class_name).c_str());

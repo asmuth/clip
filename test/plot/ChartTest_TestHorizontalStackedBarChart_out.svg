@@ -1,4 +1,4 @@
-<svg viewBox='0 0 800 320' class='fm-chart'>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox='0 0 800 320' class='fm-chart' viewport-fill='white'>
   <style type='text/css'>
   <![CDATA[
   .fm-chart text, .fm-tooltip {
