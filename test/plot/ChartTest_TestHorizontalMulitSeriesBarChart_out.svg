@@ -149,13 +149,13 @@
   </style>
   <g class='axis bottom'>
     <text x='50.000000' y='12.500000' style='text-anchor:middle; dominant-baseline:central;' class='label' >0</text>
-    <text x='150.000000' y='12.500000' style='text-anchor:middle; dominant-baseline:central;' class='label' >6.29</text>
-    <text x='250.000000' y='12.500000' style='text-anchor:middle; dominant-baseline:central;' class='label' >12.6</text>
-    <text x='350.000000' y='12.500000' style='text-anchor:middle; dominant-baseline:central;' class='label' >18.9</text>
-    <text x='450.000000' y='12.500000' style='text-anchor:middle; dominant-baseline:central;' class='label' >25.1</text>
-    <text x='550.000000' y='12.500000' style='text-anchor:middle; dominant-baseline:central;' class='label' >31.4</text>
-    <text x='650.000000' y='12.500000' style='text-anchor:middle; dominant-baseline:central;' class='label' >37.7</text>
-    <text x='750.000000' y='12.500000' style='text-anchor:middle; dominant-baseline:central;' class='label' >44.0</text>
+    <text x='150.000000' y='12.500000' style='text-anchor:middle; dominant-baseline:central;' class='label' >10.2</text>
+    <text x='250.000000' y='12.500000' style='text-anchor:middle; dominant-baseline:central;' class='label' >20.4</text>
+    <text x='350.000000' y='12.500000' style='text-anchor:middle; dominant-baseline:central;' class='label' >30.6</text>
+    <text x='450.000000' y='12.500000' style='text-anchor:middle; dominant-baseline:central;' class='label' >40.9</text>
+    <text x='550.000000' y='12.500000' style='text-anchor:middle; dominant-baseline:central;' class='label' >51.1</text>
+    <text x='650.000000' y='12.500000' style='text-anchor:middle; dominant-baseline:central;' class='label' >61.3</text>
+    <text x='750.000000' y='12.500000' style='text-anchor:middle; dominant-baseline:central;' class='label' >71.5</text>
     <line x1='50.000000' y1='25.000000' x2='50.000000' y2='30.000000' class='tick' />
     <line x1='150.000000' y1='25.000000' x2='150.000000' y2='30.000000' class='tick' />
     <line x1='250.000000' y1='25.000000' x2='250.000000' y2='30.000000' class='tick' />
@@ -184,13 +184,13 @@
   </g>
   <g class='axis bottom'>
     <text x='50.000000' y='307.500000' style='text-anchor:middle; dominant-baseline:central;' class='label' >0</text>
-    <text x='150.000000' y='307.500000' style='text-anchor:middle; dominant-baseline:central;' class='label' >6.29</text>
-    <text x='250.000000' y='307.500000' style='text-anchor:middle; dominant-baseline:central;' class='label' >12.6</text>
-    <text x='350.000000' y='307.500000' style='text-anchor:middle; dominant-baseline:central;' class='label' >18.9</text>
-    <text x='450.000000' y='307.500000' style='text-anchor:middle; dominant-baseline:central;' class='label' >25.1</text>
-    <text x='550.000000' y='307.500000' style='text-anchor:middle; dominant-baseline:central;' class='label' >31.4</text>
-    <text x='650.000000' y='307.500000' style='text-anchor:middle; dominant-baseline:central;' class='label' >37.7</text>
-    <text x='750.000000' y='307.500000' style='text-anchor:middle; dominant-baseline:central;' class='label' >44.0</text>
+    <text x='150.000000' y='307.500000' style='text-anchor:middle; dominant-baseline:central;' class='label' >10.2</text>
+    <text x='250.000000' y='307.500000' style='text-anchor:middle; dominant-baseline:central;' class='label' >20.4</text>
+    <text x='350.000000' y='307.500000' style='text-anchor:middle; dominant-baseline:central;' class='label' >30.6</text>
+    <text x='450.000000' y='307.500000' style='text-anchor:middle; dominant-baseline:central;' class='label' >40.9</text>
+    <text x='550.000000' y='307.500000' style='text-anchor:middle; dominant-baseline:central;' class='label' >51.1</text>
+    <text x='650.000000' y='307.500000' style='text-anchor:middle; dominant-baseline:central;' class='label' >61.3</text>
+    <text x='750.000000' y='307.500000' style='text-anchor:middle; dominant-baseline:central;' class='label' >71.5</text>
     <line x1='50.000000' y1='295.000000' x2='50.000000' y2='290.000000' class='tick' />
     <line x1='150.000000' y1='295.000000' x2='150.000000' y2='290.000000' class='tick' />
     <line x1='250.000000' y1='295.000000' x2='250.000000' y2='290.000000' class='tick' />
@@ -218,11 +218,17 @@
     <line x1='50.000000' y1='25.000000' x2='50.000000' y2='295.000000' class='stroke' />
   </g>
   <g class='bars horizontal'>
-    <rect x='50.000000' y='34.900000' width='636.363636' height='25.199999' class='bar color1' fm:series='unnamed' fm:label='A: 40' style=''></rect>
-    <rect x='50.000000' y='79.900000' width='556.818182' height='25.199999' class='bar color1' fm:series='unnamed' fm:label='B: 35' style=''></rect>
-    <rect x='50.000000' y='124.900000' width='477.272727' height='25.199999' class='bar color1' fm:series='unnamed' fm:label='C: 30' style=''></rect>
-    <rect x='50.000000' y='169.900000' width='397.727273' height='25.199999' class='bar color1' fm:series='unnamed' fm:label='D: 25' style=''></rect>
-    <rect x='50.000000' y='214.900000' width='318.181818' height='25.199999' class='bar color1' fm:series='unnamed' fm:label='E: 20' style=''></rect>
-    <rect x='50.000000' y='259.900000' width='238.636364' height='25.199999' class='bar color1' fm:series='unnamed' fm:label='F: 15' style=''></rect>
+    <rect x='50.000000' y='33.325000' width='391.608392' height='12.600000' class='bar color1' fm:series='unnamed' fm:label='A: 40.0, A: 23.0' style=''></rect>
+    <rect x='50.000000' y='49.075000' width='225.174825' height='12.600000' class='bar color2' fm:series='unnamed' fm:label='A: 40.0, A: 23.0' style=''></rect>
+    <rect x='50.000000' y='78.325000' width='342.657343' height='12.600000' class='bar color1' fm:series='unnamed' fm:label='B: 35.0, B: 65.0' style=''></rect>
+    <rect x='50.000000' y='94.075000' width='636.363636' height='12.600000' class='bar color2' fm:series='unnamed' fm:label='B: 35.0, B: 65.0' style=''></rect>
+    <rect x='50.000000' y='123.325000' width='293.706294' height='12.600000' class='bar color1' fm:series='unnamed' fm:label='C: 30.0, C: 43.0' style=''></rect>
+    <rect x='50.000000' y='139.075000' width='420.979021' height='12.600000' class='bar color2' fm:series='unnamed' fm:label='C: 30.0, C: 43.0' style=''></rect>
+    <rect x='50.000000' y='168.325000' width='244.755245' height='12.600000' class='bar color1' fm:series='unnamed' fm:label='D: 25.0, D: 12.0' style=''></rect>
+    <rect x='50.000000' y='184.075000' width='117.482517' height='12.600000' class='bar color2' fm:series='unnamed' fm:label='D: 25.0, D: 12.0' style=''></rect>
+    <rect x='50.000000' y='213.325000' width='195.804196' height='12.600000' class='bar color1' fm:series='unnamed' fm:label='E: 20.0, E: 54.0' style=''></rect>
+    <rect x='50.000000' y='229.075000' width='528.671329' height='12.600000' class='bar color2' fm:series='unnamed' fm:label='E: 20.0, E: 54.0' style=''></rect>
+    <rect x='50.000000' y='258.325000' width='146.853147' height='12.600000' class='bar color1' fm:series='unnamed' fm:label='F: 15.0, F: 31.0' style=''></rect>
+    <rect x='50.000000' y='274.075000' width='303.496503' height='12.600000' class='bar color2' fm:series='unnamed' fm:label='F: 15.0, F: 31.0' style=''></rect>
   </g>
 </svg>

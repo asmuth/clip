@@ -20,6 +20,7 @@
 #include "../../core/plot/pointchart.h"
 #include "../../core/plot/series.h"
 #include "../../core/util/fileutil.h"
+#include "../../core/util/stringutil.h"
 #include "../unittest.h"
 
 UNIT_TEST(ChartTest);
@@ -44,21 +45,21 @@ using signaltk::chart::Series3D;
 using signaltk::chart::SVGTarget;
 using signaltk::FileOutputStream;
 using signaltk::FileUtil;
+using signaltk::StringUtil;
 using signaltk::test::UnitTest;
 
 static void compareChart(
     Canvas* chart,
     const std::string& file_name) {
-  auto output_stream = FileOutputStream::openFile(
-      FileUtil::joinPaths(UnitTest::tempFilePath(), file_name));
+  auto output_path = file_name;
+  StringUtil::replaceAll(&output_path, ".svg", ".actual.svg");
+
+  auto output_stream = FileOutputStream::openFile(output_path);
 
   SVGTarget target(output_stream.get());
   chart->render(&target);
 
-  EXPECT_FILES_EQ(
-      FileUtil::joinPaths(UnitTest::tempFilePath(), file_name),
-      FileUtil::joinPaths(
-          UnitTest::testDataPath(), "chart/testdata/" + file_name));
+  EXPECT_FILES_EQ(file_name, output_path);
 }
 
 TEST_CASE(ChartTest, TestCanvasWithLeftAxis, [] () {
@@ -80,7 +81,7 @@ TEST_CASE(ChartTest, TestCanvasWithLeftAxis, [] () {
 
   compareChart(
       &canvas,
-      "ChartTest_TestCanvasWithLeftAxis_out.svg.html");
+      "ChartTest_TestCanvasWithLeftAxis_out.svg");
 });
 
 TEST_CASE(ChartTest, TestCanvasWithLeftAxisAndTitle, [] () {
@@ -103,7 +104,7 @@ TEST_CASE(ChartTest, TestCanvasWithLeftAxisAndTitle, [] () {
 
   compareChart(
       &canvas,
-      "ChartTest_TestCanvasWithLeftAxisAndTitle_out.svg.html");
+      "ChartTest_TestCanvasWithLeftAxisAndTitle_out.svg");
 });
 
 TEST_CASE(ChartTest, TestCanvasWithLeftAndBottomAxis, [] () {
@@ -139,7 +140,7 @@ TEST_CASE(ChartTest, TestCanvasWithLeftAndBottomAxis, [] () {
 
   compareChart(
       &canvas,
-      "ChartTest_TestCanvasWithLeftAndBottomAxis_out.svg.html");
+      "ChartTest_TestCanvasWithLeftAndBottomAxis_out.svg");
 });
 
 TEST_CASE(ChartTest, TestCanvasWithAllAxis, [] () {
@@ -203,7 +204,7 @@ TEST_CASE(ChartTest, TestCanvasWithAllAxis, [] () {
 
   compareChart(
       &canvas,
-      "ChartTest_TestCanvasWithAllAxis_out.svg.html");
+      "ChartTest_TestCanvasWithAllAxis_out.svg");
 });
 
 TEST_CASE(ChartTest, TestCanvasWithAllMultiAxis, [] () {
@@ -335,7 +336,7 @@ TEST_CASE(ChartTest, TestCanvasWithAllMultiAxis, [] () {
 
   compareChart(
       &canvas,
-      "ChartTest_TestCanvasWithAllMultiAxis_out.svg.html");
+      "ChartTest_TestCanvasWithAllMultiAxis_out.svg");
 });
 
 TEST_CASE(ChartTest, TestCanvasWithMultiLeftAxis, [] () {
@@ -370,7 +371,7 @@ TEST_CASE(ChartTest, TestCanvasWithMultiLeftAxis, [] () {
 
   compareChart(
       &canvas,
-      "ChartTest_TestCanvasWithMultiLeftAxis_out.svg.html");
+      "ChartTest_TestCanvasWithMultiLeftAxis_out.svg");
 });
 
 TEST_CASE(ChartTest, TestCanvasWithAxisFromNumericalDomain, [] () {
@@ -384,7 +385,7 @@ TEST_CASE(ChartTest, TestCanvasWithAxisFromNumericalDomain, [] () {
 
   compareChart(
       &canvas,
-      "ChartTest_TestCanvasWithAxisFromNumericalDomain_out.svg.html");
+      "ChartTest_TestCanvasWithAxisFromNumericalDomain_out.svg");
 });
 
 
@@ -411,7 +412,7 @@ static signaltk::test::UnitTest::TestCase __test_simple_bar_chart_(
 
   compareChart(
       &canvas,
-      "ChartTest_TestSimpleBarChart_out.svg.html");
+      "ChartTest_TestSimpleBarChart_out.svg");
 });
 
 static signaltk::test::UnitTest::TestCase __test_mulitseries_bar_chart_(
@@ -445,7 +446,7 @@ static signaltk::test::UnitTest::TestCase __test_mulitseries_bar_chart_(
 
   compareChart(
       &canvas,
-      "ChartTest_TestMultiSeriesBarChart_out.svg.html");
+      "ChartTest_TestMultiSeriesBarChart_out.svg");
 });
 
 static signaltk::test::UnitTest::TestCase __test_stacked_bar_chart_(
@@ -479,7 +480,7 @@ static signaltk::test::UnitTest::TestCase __test_stacked_bar_chart_(
 
   compareChart(
       &canvas,
-      "ChartTest_TestStackedBarChart_out.svg.html");
+      "ChartTest_TestStackedBarChart_out.svg");
 });
 
 static signaltk::test::UnitTest::TestCase __test_horizontal_bar_chart_(
@@ -504,7 +505,7 @@ static signaltk::test::UnitTest::TestCase __test_horizontal_bar_chart_(
 
   compareChart(
       &canvas,
-      "ChartTest_TestHorizontalBarChart_out.svg.html");
+      "ChartTest_TestHorizontalBarChart_out.svg");
 });
 
 static signaltk::test::UnitTest::TestCase __test_horizontal_mulit_bar_chart_(
@@ -538,7 +539,7 @@ static signaltk::test::UnitTest::TestCase __test_horizontal_mulit_bar_chart_(
 
   compareChart(
       &canvas,
-      "ChartTest_TestHorizontalMulitSeriesBarChart_out.svg.html");
+      "ChartTest_TestHorizontalMulitSeriesBarChart_out.svg");
 });
 
 static signaltk::test::UnitTest::TestCase __test_horiz_stacked_bar_chart_(
@@ -571,7 +572,7 @@ static signaltk::test::UnitTest::TestCase __test_horiz_stacked_bar_chart_(
 
   compareChart(
       &canvas,
-      "ChartTest_TestHorizontalStackedBarChart_out.svg.html");
+      "ChartTest_TestHorizontalStackedBarChart_out.svg");
 });
 
 static signaltk::test::UnitTest::TestCase __test_range_bar_chart_(
@@ -604,7 +605,7 @@ static signaltk::test::UnitTest::TestCase __test_range_bar_chart_(
 
   compareChart(
       &canvas,
-      "ChartTest_TestRangeBarChart_out.svg.html");
+      "ChartTest_TestRangeBarChart_out.svg");
 });
 
 static signaltk::test::UnitTest::TestCase __test_horiz_range_bar_chart_(
@@ -637,7 +638,7 @@ static signaltk::test::UnitTest::TestCase __test_horiz_range_bar_chart_(
 
   compareChart(
       &canvas,
-      "ChartTest_TestHorizontalRangeBarChart_out.svg.html");
+      "ChartTest_TestHorizontalRangeBarChart_out.svg");
 });
 
 static signaltk::test::UnitTest::TestCase __test_simple_point_chart_(
@@ -669,7 +670,7 @@ static signaltk::test::UnitTest::TestCase __test_simple_point_chart_(
 
   compareChart(
       &canvas,
-      "ChartTest_TestSimplePointChart_out.svg.html");
+      "ChartTest_TestSimplePointChart_out.svg");
 });
 
 static signaltk::test::UnitTest::TestCase __test_variablesize_point_chart_(
@@ -701,7 +702,7 @@ static signaltk::test::UnitTest::TestCase __test_variablesize_point_chart_(
 
   compareChart(
       &canvas,
-      "ChartTest_TestVariableSizePointChart_out.svg.html");
+      "ChartTest_TestVariableSizePointChart_out.svg");
 });
 
 static signaltk::test::UnitTest::TestCase __test_simple_line_chart_(
@@ -737,7 +738,7 @@ static signaltk::test::UnitTest::TestCase __test_simple_line_chart_(
 
   compareChart(
       &canvas,
-      "ChartTest_TestSimpleLineChart_out.svg.html");
+      "ChartTest_TestSimpleLineChart_out.svg");
 });
 
 static signaltk::test::UnitTest::TestCase __test_point_line_chart_(
@@ -774,7 +775,7 @@ static signaltk::test::UnitTest::TestCase __test_point_line_chart_(
 
   compareChart(
       &canvas,
-      "ChartTest_TestPointLineChart_out.svg.html");
+      "ChartTest_TestPointLineChart_out.svg");
 });
 
 static signaltk::test::UnitTest::TestCase __test_multi_chart_(
@@ -846,7 +847,7 @@ static signaltk::test::UnitTest::TestCase __test_multi_chart_(
 
   compareChart(
       &canvas,
-      "ChartTest_TestMultiChart_out.svg.html");
+      "ChartTest_TestMultiChart_out.svg");
 });
 
 static signaltk::test::UnitTest::TestCase __test_simple_area_chart_(
@@ -875,7 +876,7 @@ static signaltk::test::UnitTest::TestCase __test_simple_area_chart_(
 
   compareChart(
       &canvas,
-      "ChartTest_TestSimpleAreaChart_out.svg.html");
+      "ChartTest_TestSimpleAreaChart_out.svg");
 });
 
 static signaltk::test::UnitTest::TestCase __test_range_area_chart_(
@@ -904,7 +905,7 @@ static signaltk::test::UnitTest::TestCase __test_range_area_chart_(
 
   compareChart(
       &canvas,
-      "ChartTest_TestRangeAreaChart_out.svg.html");
+      "ChartTest_TestRangeAreaChart_out.svg");
 });
 
 static signaltk::test::UnitTest::TestCase __test_multi_range_area_chart_(
@@ -940,7 +941,7 @@ static signaltk::test::UnitTest::TestCase __test_multi_range_area_chart_(
 
   compareChart(
       &canvas,
-      "ChartTest_TestMultiRangeAreaChart_out.svg.html");
+      "ChartTest_TestMultiRangeAreaChart_out.svg");
 });
 
 static signaltk::test::UnitTest::TestCase __test_multi_range_area_line_(
@@ -989,5 +990,5 @@ static signaltk::test::UnitTest::TestCase __test_multi_range_area_line_(
 
   compareChart(
       &canvas,
-      "ChartTest_TestMultiRangeAreaLineChart_out.svg.html");
+      "ChartTest_TestMultiRangeAreaLineChart_out.svg");
 });
