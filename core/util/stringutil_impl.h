@@ -1,5 +1,6 @@
 /**
  * This file is part of the "FnordMetric" project
+ *   Copyright (c) 2018 Paul Asmuth
  *   Copyright (c) 2014 Paul Asmuth, Google Inc.
  *
  * FnordMetric is free software: you can redistribute it and/or modify it under
@@ -122,5 +123,6 @@ std::string StringUtil::formatNumberMetric(T orig_value) {
 
   return std::string(buf, len);
 }
+
 
 } // namespace signaltk
