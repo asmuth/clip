@@ -1,4 +1,10 @@
 build
-build-dbg
 .DS_Store
-.dev_assets
+CMakeFiles
+CMakeCache.txt
+Makefile
+cmake_install.cmake
+*.a
+*.so
+*.dll
+*.dylib
