@@ -224,17 +224,17 @@
     <line x1='50.000000' y1='25.000000' x2='50.000000' y2='295.000000' class='stroke' />
   </g>
   <g class='points'>
-    <circle cx='458.333333' cy='77.279412' r='5.000000' class='point color1' fm:label='10.0: 34.0, 5.0' fm:series='myseries1', style=''></circle>
-    <circle cx='487.500000' cy='249.338235' r='23.000000' class='point color1' fm:label='15.0: -18.0, 23.0' fm:series='myseries1', style=''></circle>
-    <circle cx='516.666667' cy='47.500000' r='11.000000' class='point color1' fm:label='20.0: 43.0, 11.0' fm:series='myseries1', style=''></circle>
-    <circle cx='575.000000' cy='252.647059' r='9.000000' class='point color1' fm:label='30.0: -19.0, 9.0' fm:series='myseries1', style=''></circle>
-    <circle cx='633.333333' cy='107.058824' r='14.000000' class='point color1' fm:label='40.0: 25.0, 14.0' fm:series='myseries1', style=''></circle>
-    <circle cx='691.666667' cy='80.588235' r='8.000000' class='point color1' fm:label='50.0: 33.0, 8.0' fm:series='myseries1', style=''></circle>
-    <circle cx='341.666667' cy='77.279412' r='5.000000' class='point color2' fm:label='-10.0: 34.0, 5.0' fm:series='myseries1', style=''></circle>
-    <circle cx='312.500000' cy='130.220588' r='8.000000' class='point color2' fm:label='-15.0: 18.0, 8.0' fm:series='myseries1', style=''></circle>
-    <circle cx='283.333333' cy='203.014706' r='23.000000' class='point color2' fm:label='-20.0: -4.0, 23.0' fm:series='myseries1', style=''></circle>
-    <circle cx='225.000000' cy='126.911765' r='2.000000' class='point color2' fm:label='-30.0: 19.0, 2.0' fm:series='myseries1', style=''></circle>
-    <circle cx='166.666667' cy='272.500000' r='4.000000' class='point color2' fm:label='-40.0: -25.0, 4.0' fm:series='myseries1', style=''></circle>
-    <circle cx='108.333333' cy='265.882353' r='17.000000' class='point color2' fm:label='-50.0: -23.0, 17.0' fm:series='myseries1', style=''></circle>
+    <circle cx='458.333333' cy='77.279412' r='5.000000' class='point color1' style=''></circle>
+    <circle cx='487.500000' cy='249.338235' r='23.000000' class='point color1' style=''></circle>
+    <circle cx='516.666667' cy='47.500000' r='11.000000' class='point color1' style=''></circle>
+    <circle cx='575.000000' cy='252.647059' r='9.000000' class='point color1' style=''></circle>
+    <circle cx='633.333333' cy='107.058824' r='14.000000' class='point color1' style=''></circle>
+    <circle cx='691.666667' cy='80.588235' r='8.000000' class='point color1' style=''></circle>
+    <circle cx='341.666667' cy='77.279412' r='5.000000' class='point color2' style=''></circle>
+    <circle cx='312.500000' cy='130.220588' r='8.000000' class='point color2' style=''></circle>
+    <circle cx='283.333333' cy='203.014706' r='23.000000' class='point color2' style=''></circle>
+    <circle cx='225.000000' cy='126.911765' r='2.000000' class='point color2' style=''></circle>
+    <circle cx='166.666667' cy='272.500000' r='4.000000' class='point color2' style=''></circle>
+    <circle cx='108.333333' cy='265.882353' r='17.000000' class='point color2' style=''></circle>
   </g>
 </svg>

@@ -186,19 +186,19 @@
     <line x1='50.000000' y1='12.000000' x2='50.000000' y2='295.000000' class='stroke' />
   </g>
   <g class='lines'>
-    <circle cx='50.000000' cy='102.560000' r='3.000000' class='point color1' fm:label='10.0: 34.0' fm:series='myseries1', style=''></circle>
-    <circle cx='140.625000' cy='79.920000' r='3.000000' class='point color1' fm:label='15.0: 38.0' fm:series='myseries1', style=''></circle>
-    <circle cx='231.250000' cy='51.620000' r='3.000000' class='point color1' fm:label='20.0: 43.0' fm:series='myseries1', style=''></circle>
-    <circle cx='412.500000' cy='108.220000' r='3.000000' class='point color1' fm:label='30.0: 33.0' fm:series='myseries1', style=''></circle>
-    <circle cx='593.750000' cy='176.140000' r='3.000000' class='point color1' fm:label='40.0: 21.0' fm:series='myseries1', style=''></circle>
-    <circle cx='775.000000' cy='108.220000' r='3.000000' class='point color1' fm:label='50.0: 33.0' fm:series='myseries1', style=''></circle>
+    <circle cx='50.000000' cy='102.560000' r='3.000000' class='point color1' style=''></circle>
+    <circle cx='140.625000' cy='79.920000' r='3.000000' class='point color1' style=''></circle>
+    <circle cx='231.250000' cy='51.620000' r='3.000000' class='point color1' style=''></circle>
+    <circle cx='412.500000' cy='108.220000' r='3.000000' class='point color1' style=''></circle>
+    <circle cx='593.750000' cy='176.140000' r='3.000000' class='point color1' style=''></circle>
+    <circle cx='775.000000' cy='108.220000' r='3.000000' class='point color1' style=''></circle>
     <path stroke-width='2.000000' class='line color1' style='' d='M50.000000 102.560000 L140.625000 79.920000 L231.250000 51.620000 L412.500000 108.220000 L593.750000 176.140000 L775.000000 108.220000 ' />
-    <circle cx='50.000000' cy='187.460000' r='3.000000' class='point color2' fm:label='10.0: 19.0' fm:series='myseries1', style=''></circle>
-    <circle cx='140.625000' cy='193.120000' r='3.000000' class='point color2' fm:label='15.0: 18.0' fm:series='myseries1', style=''></circle>
-    <circle cx='231.250000' cy='170.480000' r='3.000000' class='point color2' fm:label='20.0: 22.0' fm:series='myseries1', style=''></circle>
-    <circle cx='412.500000' cy='164.820000' r='3.000000' class='point color2' fm:label='30.0: 23.0' fm:series='myseries1', style=''></circle>
-    <circle cx='593.750000' cy='193.120000' r='3.000000' class='point color2' fm:label='40.0: 18.0' fm:series='myseries1', style=''></circle>
-    <circle cx='775.000000' cy='176.140000' r='3.000000' class='point color2' fm:label='50.0: 21.0' fm:series='myseries1', style=''></circle>
+    <circle cx='50.000000' cy='187.460000' r='3.000000' class='point color2' style=''></circle>
+    <circle cx='140.625000' cy='193.120000' r='3.000000' class='point color2' style=''></circle>
+    <circle cx='231.250000' cy='170.480000' r='3.000000' class='point color2' style=''></circle>
+    <circle cx='412.500000' cy='164.820000' r='3.000000' class='point color2' style=''></circle>
+    <circle cx='593.750000' cy='193.120000' r='3.000000' class='point color2' style=''></circle>
+    <circle cx='775.000000' cy='176.140000' r='3.000000' class='point color2' style=''></circle>
     <path stroke-width='2.000000' class='line color2' style='' d='M50.000000 187.460000 L140.625000 193.120000 L231.250000 170.480000 L412.500000 164.820000 L593.750000 193.120000 L775.000000 176.140000 ' />
   </g>
 </svg>

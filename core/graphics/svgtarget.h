@@ -92,14 +92,12 @@ public:
     // FIXPAUL escape me
     SVG_appendLine(
         "<rect x='%f' y='%f' width='%f' height='%f' class='%s' "
-            "fm:series='%s' fm:label='%s' style='%s'></rect>\n",
+            "style='%s'></rect>\n",
         x,
         y,
         width,
         height,
         escapeString(class_str).c_str(),
-        escapeString(series).c_str(),
-        escapeString(label).c_str(),
         escapeString(style_str).c_str());
   }
 
@@ -174,14 +172,11 @@ public:
     /* point_type: circle */
     // FIXPAUL escape label
     SVG_appendLine(
-        "<circle cx='%f' cy='%f' r='%f' class='%s' fm:label='%s' "
-            "fm:series='%s', style='%s'></circle>\n",
+        "<circle cx='%f' cy='%f' r='%f' class='%s' style='%s'></circle>\n",
         x,
         y,
         point_type == "none" ? 0 : point_size,
         escapeString(class_str).c_str(),
-        escapeString(label).c_str(),
-        escapeString(series).c_str(),
         escapeString(style_str).c_str());
   }
 
