@@ -8,15 +8,10 @@
 
 # chart
 add_library(signaltk-plot STATIC
-    canvas.cc
+    plot_layout.cc
     axisdefinition.cc
-    areachart.cc
-    barchart.cc
-    linechart.cc
-    pointchart.cc
     domain.cc
     domainprovider.cc
-    drawable.cc
     griddefinition.cc
     legenddefinition.cc
     series.cc

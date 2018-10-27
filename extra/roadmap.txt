@@ -1,0 +1,3 @@
+- align background grid to domain
+- gradient fill for bar/area chart
+

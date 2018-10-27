@@ -21,7 +21,7 @@ namespace signaltk {
 namespace chart {
 class RenderTarget;
 
-class Canvas {
+class PlotLayout {
 public:
   static const int kAxisPadding = 0; // FIXPAUL make configurable
   static const int kTickLength = 5; // FIXPAUL make configurable
@@ -29,44 +29,10 @@ public:
   static const int kAxisLabelWidth = 50; // FIXPAUL make configurable
   static const int kAxisTitleLength = 20; // FIXPAUL make configurable
   static const int kCharWidth = 6.0f; // FIXPAUL make configurable
-  static const int kTitleLineHeight = 20; // FIXPAUL make configurable
-  static const int kSubtitleLineHeight = 20; // FIXPAUL make configurable
-  static const int kLegendLabelPadding = 20; // FIXPAUL make configurable
-  static const int kLegendLineHeight = 20; // FIXPAUL make configurable
-  static const int kLegendInsideVertPadding = 10;
-  static const int kLegendInsideHorizPadding = 15;
-  static const int kLegendOutsideVertPadding = 10;
-  static const int kLegendOutsideHorizPadding = 25;
-  static const int kLegendPointY = 6;
-  static const int kLegendPointWidth = 8;
-  static const int kLegendPointSize = 3;
 
-  Canvas();
-
-  /**
-   * Set the title for this canvas
-   */
-  void setTitle(const std::string& title);
-
-  /**
-   * Set the subtitle for this canvas
-   */
-  void setSubtitle(const std::string& subtitle);
+  PlotLayout();
 
   void setDimensions(int width, int height);
-
-  /**
-   * FIXPAUL overcomplicated, just accept a ptr
-   *
-   * The returned pointer is owned by the canvas instance and must not be freed
-   * by the caller.
-   */
-  template <typename ChartType, typename... Args>
-  ChartType* addChart(Args... args) {
-    auto drawable = new ChartType(this, args...);
-    drawables_.emplace_back(drawable);
-    return drawable;
-  }
 
   /**
    * Add an axis to this canvas. Usually axes are not specified manually via
@@ -79,20 +45,6 @@ public:
   AxisDefinition* addAxis(AxisDefinition::kPosition position);
 
   /**
-   * Add a leged to this canvas. Usually legends are not specified manually via
-   * this method but through one of the Chart subclasses. However it is safe
-   * to call this method to explicitly define a custom legend.
-   *
-   * The returned pointer is owned by the canvas instance and must not be freed
-   * by the caller.
-   */
-  LegendDefinition* addLegend(
-      LegendDefinition::kVerticalPosition vert_pos,
-      LegendDefinition::kHorizontalPosition horiz_pos,
-      LegendDefinition::kPlacement placement,
-      const std::string& title);
-
-  /**
    * Add a grid to this canvas. Usually grids are not specified manually via
    * this method but through one of the Chart subclasses. However it is safe
    * to call this method to explicitly define a custom grid.
@@ -101,11 +53,6 @@ public:
    * by the caller.
    */
   GridDefinition* addGrid(GridDefinition::kPlacement placement);
-
-  /**
-   * Return the legend or nullptr
-   */
-  LegendDefinition* legend() const;
 
   /**
    * Render the contents of this canvas to the provided render target
@@ -120,16 +67,6 @@ protected:
   int estimateTextLength(const std::string& str) const {
     return str.size() * kCharWidth;
   }
-
-  /**
-   * Render the chart title
-   */
-  void renderTitle(RenderTarget* target, Viewport* viewport) const;
-
-  /**
-   * Render the charts
-   */
-  void renderCharts(RenderTarget* target, Viewport* viewport) const;
 
   /**
    * Render the axes
@@ -193,32 +130,6 @@ protected:
       int left) const;
 
   /**
-   * Render the legends
-   */
-  void renderOutsideLegends(RenderTarget* target, Viewport* viewport) const;
-
-  /**
-   * Render the legends
-   */
-  void renderInsideLegends(RenderTarget* target, Viewport* viewport) const;
-
-  void renderRightLegend(
-      RenderTarget* target,
-      Viewport* viewport,
-      LegendDefinition* legend,
-      double horiz_padding,
-      bool bottom,
-      bool outside) const;
-
-  void renderLeftLegend(
-      RenderTarget* target,
-      Viewport* viewport,
-      LegendDefinition* legend,
-      double horiz_padding,
-      bool bottom,
-      bool outside) const;
-
-  /**
    * Render the grids
    */
   void renderGrids(RenderTarget* target, Viewport* viewport) const;
@@ -226,12 +137,9 @@ protected:
   // FIXPAUL this belongs into the rendertarget
   int width_;
   int height_;
+
   std::vector<std::unique_ptr<AxisDefinition>> axes_;
-  std::vector<std::unique_ptr<LegendDefinition>> legends_;
   std::vector<std::unique_ptr<GridDefinition>> grids_;
-  std::vector<std::unique_ptr<Drawable>> drawables_;
-  std::string title_;
-  std::string subtitle_;
 };
 
 }
