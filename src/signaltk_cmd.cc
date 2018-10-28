@@ -10,39 +10,24 @@
 #include <signaltk.h>
 #include <signaltk/core/image_api.h>
 #include <signaltk/plot/plot_api.h>
-#include <iostream>
 
 namespace signaltk {
 
-int cmd(
-    Context* ctx,
-    const char** args,
-    int arg_count) {
-  for (const auto& cmd : command_list) {
-    if (cmd.name.size() > arg_count) {
-      continue;
-    }
+const std::vector<Command> command_list {
 
-    bool match = true;
-    for (size_t i = 0; i < cmd.name.size(); ++i) {
-      if (cmd.name[i] != args[i]) {
-        match = false;
-        break;
-      }
-    }
+  // command: img new
+  Command {
+    .name = {"img", "new"},
+    .fn = &cmd_image_new,
+  },
 
-    if (!match) {
-      continue;
-    }
+  // command: plot gridlines
+  Command {
+    .name = {"plot", "gridlines"},
+    .fn = &cmd_plot_gridlines,
+  },
 
-    return cmd.fn(
-        ctx,
-        args + cmd.name.size(),
-        arg_count - cmd.name.size());
-  }
-
-  return -1;
-}
+};
 
 } // namespace signaltk
 

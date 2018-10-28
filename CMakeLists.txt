@@ -19,7 +19,7 @@ add_subdirectory(src/signaltk/core)
 add_subdirectory(src/signaltk/plot)
 add_subdirectory(src/signaltk/util)
 
-add_executable(signaltk src/signaltk_cli.cc src/signaltk.cc)
+add_executable(signaltk src/signaltk_cli.cc src/signaltk_cmd.cc src/signaltk.cc)
 target_link_libraries(signaltk signaltk-plot signaltk-graphics signaltk-util ${CAIRO_LIBRARIES})
 
 add_custom_target(check ALL DEPENDS signaltk COMMAND "${CMAKE_CURRENT_SOURCE_DIR}/test/test_runner.sh")
