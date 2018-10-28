@@ -8,6 +8,7 @@
  * <http://www.gnu.org/licenses/>.
  */
 #include <signaltk.h>
+#include <signaltk/core/image_api.h>
 #include <iostream>
 
 namespace signaltk {
@@ -17,6 +18,7 @@ const std::vector<Command> command_list {
   // command: img new
   Command {
     .name = {"img", "new"},
+    .fn = &cmd_image_new,
   },
 
 };
@@ -36,7 +38,10 @@ int cmd(
       }
     }
 
-    return 0;
+    return cmd.fn(
+        ctx,
+        args + cmd.name.size(),
+        arg_count - cmd.name.size());
   }
 
   return -1;

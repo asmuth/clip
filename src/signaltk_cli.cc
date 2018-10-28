@@ -26,6 +26,7 @@
 using namespace signaltk;
 
 int main(int argc, const char** argv) {
+  /*
   FlagParser flags;
 
   flags.defineFlag(
@@ -49,7 +50,6 @@ int main(int argc, const char** argv) {
       "V",
       NULL);
 
-  /* parse flags */
   {
     auto rc = flags.parseArgv(argc, argv);
     if (!rc.isSuccess()) {
@@ -60,7 +60,6 @@ int main(int argc, const char** argv) {
 
   auto cmd_argv = flags.getArgv();
 
-  /* print help */
   if (flags.isSet("version")) {
     std::cerr <<
         StringUtil::format(
@@ -103,7 +102,6 @@ int main(int argc, const char** argv) {
     return 0;
   }
 
-  /*
   if (help_requested && !help_topic.empty()) {
     const auto& cmd = std::find_if(
         commands.begin(),

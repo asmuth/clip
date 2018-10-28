@@ -12,7 +12,8 @@ add_library(signaltk-graphics STATIC
     brush.cc
     colour.cc
     layer.cc
-    text.cc)
+    text.cc
+    image_api.cc)
 
 #add_executable(test-cplot chart_test.cc)
 #target_link_libraries(test-cplot cplot stx-base)

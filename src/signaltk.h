@@ -20,6 +20,7 @@ struct Context {
 
 struct Command {
   std::vector<std::string> name;
+  int (*fn)(Context*, const char**, int);
 };
 
 extern const std::vector<Command> command_list;
