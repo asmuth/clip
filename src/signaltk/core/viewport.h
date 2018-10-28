@@ -11,7 +11,6 @@
 #define _libstx_UI_VIEWPORT_H
 
 namespace signaltk {
-namespace chart {
 
 class Viewport {
 public:
@@ -82,6 +81,5 @@ public:
   std::tuple<int, int, int, int> padding_;
 };
 
-}
 }
 #endif

@@ -9,6 +9,7 @@
  */
 #include <signaltk.h>
 #include <signaltk/core/image_api.h>
+#include <signaltk/plot/plot_api.h>
 #include <iostream>
 
 namespace signaltk {
@@ -19,6 +20,12 @@ const std::vector<Command> command_list {
   Command {
     .name = {"img", "new"},
     .fn = &cmd_image_new,
+  },
+
+  // command: plot gridlines
+  Command {
+    .name = {"plot", "gridlines"},
+    .fn = &cmd_plot_gridlines,
   },
 
 };
@@ -32,10 +39,16 @@ int cmd(
       continue;
     }
 
+    bool match = true;
     for (size_t i = 0; i < cmd.name.size(); ++i) {
       if (cmd.name[i] != args[i]) {
-        continue;
+        match = false;
+        break;
       }
+    }
+
+    if (!match) {
+      continue;
     }
 
     return cmd.fn(
