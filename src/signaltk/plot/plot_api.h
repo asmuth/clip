@@ -12,6 +12,7 @@
 
 namespace signaltk {
 
+int cmd_plot_axes(Context* ctx, const char** args, int arg_count);
 int cmd_plot_gridlines(Context* ctx, const char** args, int arg_count);
 
 } // namespace signaltk

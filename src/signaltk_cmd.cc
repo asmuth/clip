@@ -21,6 +21,12 @@ const std::vector<Command> command_list {
     .fn = &cmd_image_new,
   },
 
+  // command: plot axes
+  Command {
+    .name = {"plot", "axes"},
+    .fn = &cmd_plot_axes,
+  },
+
   // command: plot gridlines
   Command {
     .name = {"plot", "gridlines"},

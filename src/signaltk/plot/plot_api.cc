@@ -15,6 +15,34 @@
 
 namespace signaltk {
 
+int cmd_plot_axes(Context* ctx, const char** args, int arg_count) {
+  FlagParser flag_parser;
+
+  std::string flag_in;
+  flag_parser.defineString("in", true, &flag_in);
+
+  std::string flag_out;
+  flag_parser.defineString("out", true, &flag_out);
+
+  bool flag_left;
+  flag_parser.defineSwitch("left", &flag_left);
+
+  auto rc = flag_parser.parseArgv(arg_count, args);
+  if (!rc.isSuccess()) {
+    std::cerr << "ERROR: " << rc.getMessage() << std::endl;
+    return -1;
+  }
+
+  Layer target;
+  if (!target.loadPNG(flag_in.c_str())) {
+    return -1; // FIXME error
+  }
+
+  target.writePNG(flag_out.c_str());
+
+  return 0;
+}
+
 int cmd_plot_gridlines(Context* ctx, const char** args, int arg_count) {
   FlagParser flag_parser;
 
