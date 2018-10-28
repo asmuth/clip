@@ -13,9 +13,14 @@ find_package(Threads)
 find_package(Cairo)
 include_directories(${CAIRO_INCLUDE_DIRS})
 
+add_definitions(-DFNORDMETRIC_VERSION="unstable")
+
 add_subdirectory(src/signaltk/core)
 add_subdirectory(src/signaltk/plot)
 add_subdirectory(src/signaltk/util)
+
+add_executable(signaltk src/signaltk_cli.cc)
+target_link_libraries(signaltk signaltk-plot signaltk-graphics signaltk-util ${CAIRO_LIBRARIES})
 
 add_subdirectory(test/plot)
 

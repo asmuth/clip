@@ -20,6 +20,7 @@ add_library(signaltk-util STATIC
     file.cc
     outputstream.cc
     inputstream.cc
+    flagparser.cc
     ISO8601.cc
     UTF8.cc
     wallclock.cc)

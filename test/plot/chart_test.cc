@@ -76,15 +76,27 @@ TEST_CASE(ChartTest, TestPlotLayoutWithLeftAxis, [] () {
   //axis_left->addLabel(1.0, "5");
 
   //plot_layout.render(&target);
-  GridDefinition grid(GridDefinition::GRID_HORIZONTAL);
-  grid.addTick(0.0);
-  grid.addTick(0.2);
-  grid.addTick(0.4);
-  grid.addTick(0.6);
-  grid.addTick(0.8);
-  grid.addTick(1.0);
+  {
+    GridDefinition grid(GridDefinition::GRID_HORIZONTAL);
+    grid.addTick(0.0);
+    grid.addTick(0.2);
+    grid.addTick(0.4);
+    grid.addTick(0.6);
+    grid.addTick(0.8);
+    grid.addTick(1.0);
+    renderGrid(grid, Viewport{target.width, target.height}, &target);
+  }
 
-  renderGrid(grid, Viewport{target.width, target.height}, &target);
+  {
+    GridDefinition grid(GridDefinition::GRID_VERTICAL);
+    grid.addTick(0.0);
+    grid.addTick(0.2);
+    grid.addTick(0.4);
+    grid.addTick(0.6);
+    grid.addTick(0.8);
+    grid.addTick(1.0);
+    renderGrid(grid, Viewport{target.width, target.height}, &target);
+  }
 
   target.writePNG("test_plot_layout_with_left_axis.png");
 });
