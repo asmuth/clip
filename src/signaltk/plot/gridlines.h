@@ -15,12 +15,38 @@
 #include <tuple>
 #include <signaltk/core/layer.h>
 #include <signaltk/core/viewport.h>
-#include "axes.h"
-#include "griddefinition.h"
-#include "legenddefinition.h"
 
 namespace signaltk {
 namespace chart {
+
+class GridDefinition {
+public:
+
+  enum kPlacement {
+    GRID_HORIZONTAL = 0,
+    GRID_VERTICAL = 1
+  };
+
+  /**
+   * Create a new grid definition
+   */
+  GridDefinition(kPlacement placement);
+
+  /**
+   * Add a "tick" to this axis
+   *
+   * @param tick_position the position of the tick [0.0-1.0]
+   */
+  void addTick(double tick_position);
+
+  kPlacement placement() const;
+
+  const std::vector<double> ticks() const;
+
+protected:
+  kPlacement placement_;
+  std::vector<double> ticks_;
+};
 
 /**
  * Render the grid

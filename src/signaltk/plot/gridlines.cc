@@ -18,6 +18,22 @@
 namespace signaltk {
 namespace chart {
 
+GridDefinition::GridDefinition(
+    kPlacement placement) :
+    placement_(placement) {}
+
+GridDefinition::kPlacement GridDefinition::placement() const {
+  return placement_;
+}
+
+void GridDefinition::addTick(double tick_position) {
+  ticks_.push_back(tick_position);
+}
+
+const std::vector<double> GridDefinition::ticks() const {
+  return ticks_;
+}
+
 void renderGrid(
     const GridDefinition& grid,
     const Viewport& viewport,
