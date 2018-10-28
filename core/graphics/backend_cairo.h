@@ -33,23 +33,6 @@ public:
 
   void clear(double r, double g, double b, double a);
 
-  void drawRect(
-      double x,
-      double y,
-      double width,
-      double height,
-      const std::string& color,
-      const std::string& class_name,
-      const std::string& label,
-      const std::string& series) override;
-
-  void drawLine(
-      double x1,
-      double y1,
-      double x2,
-      double y2,
-      const std::string& class_name) override;
-
   void drawText(
       const std::string& text,
       double x,
@@ -69,13 +52,10 @@ public:
       const std::string& label /* = "" */,
       const std::string& series /* = "" */) override;
 
-   void drawPath(
-      const std::vector<std::pair<double, double>>& points,
-      const std::string& line_style,
-      double line_width,
-      bool smooth,
-      const std::string& color,
-      const std::string& class_name = "") override;
+  void strokePath(
+      const PathData* point_data,
+      size_t point_count,
+      const StrokeStyle& stroke_style) override;
 
   void beginGroup(const std::string& class_name) override;
 

@@ -41,31 +41,6 @@ void CairoBackend::clear(double r, double g, double b, double a) {
   cairo_fill(ctx_);
 }
 
-void CairoBackend::drawRect(
-    double x,
-    double y,
-    double width,
-    double height,
-    const std::string& color,
-    const std::string& class_name,
-    const std::string& label,
-    const std::string& series) {}
-
-void CairoBackend::drawLine(
-    double x1,
-    double y1,
-    double x2,
-    double y2,
-    const std::string& class_name) {
-  cairo_set_source_rgb(ctx_, 0, 0, 0);
-  cairo_set_line_width(ctx_, 0.5);
-
-  cairo_move_to(ctx_, x1, y1);
-  cairo_line_to(ctx_, x2, y2);
-
-  cairo_stroke(ctx_);
-}
-
 void CairoBackend::drawText(
     const std::string& text,
     double x,
@@ -85,23 +60,33 @@ void CairoBackend::drawPoint(
     const std::string& label /* = "" */,
     const std::string& series /* = "" */) {}
 
-void CairoBackend::drawPath(
-    const std::vector<std::pair<double, double>>& points,
-    const std::string& line_style,
-    double line_width,
-    bool smooth,
-    const std::string& color,
-    const std::string& class_name) {
-  if (points.size() < 2) {
+void CairoBackend::strokePath(
+    const PathData* point_data,
+    size_t point_count,
+    const StrokeStyle& style) {
+  if (point_count < 2) {
     return;
   }
 
-  cairo_set_source_rgba(ctx_, 0, 0, 0, 1);
-  cairo_set_line_width(ctx_, line_width);
+  cairo_set_source_rgba(
+      ctx_,
+      style.colour.red(),
+      style.colour.green(),
+      style.colour.blue(),
+      style.colour.alpha());
 
-  cairo_move_to(ctx_, points[0].first, points[0].second);
-  for (size_t i = 1; i < points.size(); ++i) {
-    cairo_line_to(ctx_, points[i].first, points[i].second);
+  cairo_set_line_width(ctx_, style.line_width);
+
+  for (size_t i = 0; i < point_count; ++i) {
+    const auto& cmd = point_data[i];
+    switch (cmd.command) {
+      case PathCommand::MOVE_TO:
+        cairo_move_to(ctx_, cmd[0], cmd[1]);
+        break;
+      case PathCommand::LINE_TO:
+        cairo_line_to(ctx_, cmd[0], cmd[1]);
+        break;
+    }
   }
 
   cairo_stroke(ctx_);

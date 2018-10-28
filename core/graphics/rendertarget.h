@@ -1,5 +1,6 @@
 /**
- * This file is part of the "libstx" project
+ * This file is part of the "signaltk" project
+ *   Copyright (c) 2018 Paul Asmuth
  *   Copyright (c) 2014 Paul Asmuth, Google Inc.
  *
  * libstx is free software: you can redistribute it and/or modify it under
@@ -12,6 +13,9 @@
 #include <stdlib.h>
 #include <vector>
 #include <string>
+#include "colour.h"
+#include "path.h"
+#include "stroke.h"
 
 namespace signaltk {
 namespace chart {
@@ -29,13 +33,6 @@ public:
 
   virtual void beginGroup(const std::string& class_name) = 0;
   virtual void finishGroup() = 0;
-
-  virtual void drawLine(
-      double x1,
-      double y1,
-      double x2,
-      double y2,
-      const std::string& class_name) = 0;
 
   virtual void drawText(
       const std::string& text,
@@ -56,23 +53,22 @@ public:
       const std::string& label = "",
       const std::string& series = "") = 0;
 
-  virtual void drawRect(
-      double x,
-      double y,
-      double width,
-      double height,
-      const std::string& color,
-      const std::string& class_name = "",
-      const std::string& label = "",
-      const std::string& series = "") = 0;
+  virtual void strokePath(
+      const PathData* point_data,
+      size_t point_count,
+      const StrokeStyle& style) = 0;
 
-  virtual void drawPath(
-      const std::vector<std::pair<double, double>>& points,
-      const std::string& line_style,
-      double line_width,
-      bool smooth,
-      const std::string& color,
-      const std::string& class_name = "") = 0;
+  void strokeLine(
+      double x1,
+      double y1,
+      double x2,
+      double y2,
+      const StrokeStyle& style) {
+    Path p;
+    p.moveTo(x1, y1);
+    p.lineTo(x2, y2);
+    strokePath(p.data(), p.size(), style);
+  }
 
 };
 

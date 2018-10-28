@@ -8,6 +8,8 @@
 
 # chart
 add_library(signaltk-graphics STATIC
+    path.cc
+    colour.cc
     backend_cairo.cc)
 
 #add_executable(test-cplot chart_test.cc)

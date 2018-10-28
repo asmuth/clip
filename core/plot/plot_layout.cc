@@ -9,7 +9,6 @@
  */
 #include <stdlib.h>
 #include "../graphics/rendertarget.h"
-#include "../graphics/svgtarget.h"
 #include "plot_layout.h"
 #include "domain.h"
 
@@ -125,6 +124,8 @@ void PlotLayout::renderTopAxis(
     Viewport* viewport,
     AxisDefinition* axis,
     int top) const {
+  StrokeStyle style;
+
   int padding_left = viewport->paddingLeft();
   int inner_width = viewport->innerWidth();
 
@@ -165,21 +166,21 @@ void PlotLayout::renderTopAxis(
   for (const auto& tick : axis->getTicks()) {
     auto tick_x = padding_left + inner_width * tick;
 
-    target->drawLine(
+    target->strokeLine(
         tick_x,
         top,
         tick_x,
         top + kTickLength,
-        "tick");
+        style);
   }
 
   /* draw stroke */
-  target->drawLine(
+  target->strokeLine(
       padding_left,
       top,
       padding_left + inner_width,
       top,
-      "stroke");
+      style);
 
   target->finishGroup();
 }
@@ -190,6 +191,8 @@ void PlotLayout::renderRightAxis(
     Viewport* viewport,
     AxisDefinition* axis,
     int right) const {
+  StrokeStyle style;
+
   int padding_top = viewport->paddingTop();
   int inner_height = viewport->innerHeight();
 
@@ -230,21 +233,21 @@ void PlotLayout::renderRightAxis(
   for (const auto& tick : axis->getTicks()) {
     auto tick_y = padding_top + inner_height * (1.0 - tick);
 
-    target->drawLine(
+    target->strokeLine(
         width_ - right,
         tick_y,
         width_ - right - kTickLength,
         tick_y,
-        "tick");
+        style);
   }
 
   /* draw stroke */
-  target->drawLine(
+  target->strokeLine(
       width_ - right,
       padding_top,
       width_ - right,
       padding_top + inner_height,
-      "stroke");
+      style);
 
   target->finishGroup();
 }
@@ -254,6 +257,8 @@ void PlotLayout::renderBottomAxis(
     Viewport* viewport,
     AxisDefinition* axis,
     int bottom) const {
+  StrokeStyle style;
+
   int padding_left = viewport->paddingLeft();
   int inner_width = viewport->innerWidth();
 
@@ -294,21 +299,21 @@ void PlotLayout::renderBottomAxis(
   for (const auto& tick : axis->getTicks()) {
     auto tick_x = padding_left + inner_width * tick;
 
-    target->drawLine(
+    target->strokeLine(
         tick_x,
         height_ - bottom,
         tick_x,
         height_ - bottom - kTickLength,
-        "tick");
+        style);
   }
 
   /* draw stroke */
-  target->drawLine(
+  target->strokeLine(
       padding_left,
       height_ - bottom,
       padding_left + inner_width,
       height_ - bottom,
-      "stroke");
+      style);
 
   target->finishGroup();
 }
@@ -318,6 +323,8 @@ void PlotLayout::renderLeftAxis(
     Viewport* viewport,
     AxisDefinition* axis,
     int left) const {
+  StrokeStyle style;
+
   int padding_top = viewport->paddingTop();
   int inner_height = viewport->innerHeight();
 
@@ -359,26 +366,28 @@ void PlotLayout::renderLeftAxis(
   for (const auto& tick : axis->getTicks()) {
     auto tick_y = padding_top + inner_height * (1.0 - tick);
 
-    target->drawLine(
+    target->strokeLine(
         left,
         tick_y,
         left + kTickLength,
         tick_y,
-        "tick");
+        style);
   }
 
   /* draw stroke */
-  target->drawLine(
+  target->strokeLine(
       left,
       padding_top,
       left,
       padding_top + inner_height,
-      "stroke");
+      style);
 
   target->finishGroup();
 }
 
 void PlotLayout::renderGrids(RenderTarget* target, Viewport* viewport) const {
+  StrokeStyle style;
+
   for (const auto& grid : grids_) {
     switch (grid->placement()) {
 
@@ -388,12 +397,12 @@ void PlotLayout::renderGrids(RenderTarget* target, Viewport* viewport) const {
           auto line_y = viewport->paddingTop() +
               viewport->innerHeight() * (1.0 - tick);
 
-          target->drawLine(
+          target->strokeLine(
               viewport->paddingLeft(),
               line_y,
               viewport->paddingLeft() + viewport->innerWidth(),
               line_y,
-              "gridline");
+              style);
         }
         target->finishGroup();
         break;
@@ -403,12 +412,12 @@ void PlotLayout::renderGrids(RenderTarget* target, Viewport* viewport) const {
         for (const auto& tick : grid->ticks()) {
           auto line_x = viewport->paddingLeft() + viewport->innerWidth() * tick;
 
-          target->drawLine(
+          target->strokeLine(
               line_x,
               viewport->paddingTop(),
               line_x,
               viewport->paddingTop() + viewport->innerHeight(),
-              "gridline");
+              style);
         }
         target->finishGroup();
         break;

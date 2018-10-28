@@ -98,7 +98,7 @@ void LineChart::render(
   target->beginGroup("lines");
 
   for (const auto& series : series_) {
-    std::vector<std::pair<double, double>> coords;
+    Path path;
 
     auto point_style = series->getProperty(Series::P_POINT_STYLE);
     double point_size;
@@ -152,16 +152,20 @@ void LineChart::render(
           label,
           series->name());
 
-      coords.emplace_back(ss_x, ss_y);
+      if (path.empty()) {
+        path.moveTo(ss_x, ss_y);
+      } else {
+        path.lineTo(ss_x, ss_y);
+      }
     }
 
-    target->drawPath(
-        coords,
-        line_style,
-        line_width,
-        false,
-        color,
-        "line");
+    StrokeStyle style;
+    style.line_width = line_width;
+    //style.colour = colour;
+    target->strokePath(
+        path.data(),
+        path.size(),
+        style);
   }
 
   target->finishGroup();

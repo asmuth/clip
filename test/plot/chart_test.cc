@@ -10,7 +10,6 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-#include "../../core/graphics/svgtarget.h"
 #include "../../core/graphics/backend_cairo.h"
 #include "../../core/plot/plot_layout.h"
 #include "../../core/plot/axisdefinition.h"
@@ -44,7 +43,6 @@ using signaltk::chart::ContinuousDomain;
 using signaltk::chart::Series;
 using signaltk::chart::Series2D;
 using signaltk::chart::Series3D;
-using signaltk::chart::SVGTarget;
 using signaltk::FileOutputStream;
 using signaltk::FileUtil;
 using signaltk::StringUtil;
@@ -65,6 +63,8 @@ using signaltk::test::UnitTest;
 
 TEST_CASE(ChartTest, TestPlotLayoutWithLeftAxis, [] () {
   CairoBackend target;
+  target.clear(1, 1, 1, 1);
+
   PlotLayout plot_layout;
 
   auto axis_left = plot_layout.addAxis(AxisDefinition::LEFT);
