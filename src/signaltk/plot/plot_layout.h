@@ -15,7 +15,7 @@
 #include <tuple>
 #include <signaltk/core/layer.h>
 #include <signaltk/core/viewport.h>
-#include "axisdefinition.h"
+#include "axes.h"
 #include "griddefinition.h"
 #include "legenddefinition.h"
 

@@ -7,35 +7,22 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#include "axisdefinition.h"
-#include "domain.h"
+#include "axes.h"
 
 namespace signaltk {
 namespace chart {
 
-AxisDefinition::AxisDefinition(
-    kPosition axis_position) :
-    AxisDefinition(axis_position, nullptr) {}
-
-AxisDefinition::AxisDefinition(
-    kPosition axis_position,
-    DomainProvider* domain) :
-    position_(axis_position),
-    domain_(domain),
+AxisDefinition::AxisDefinition() :
+    enabled_(false),
     has_ticks_(false),
     has_labels_(false) {}
 
 void AxisDefinition::addTick(double tick_position) {
-  has_ticks_ = true;
   ticks_.push_back(tick_position);
 }
 
 const std::vector<double> AxisDefinition::getTicks() const {
-  if (has_ticks_ || domain_ == nullptr) {
-    return ticks_;
-  }
-
-  return domain_->getTicks();
+  return ticks_;
 }
 
 void AxisDefinition::addLabel(
@@ -51,35 +38,15 @@ void AxisDefinition::removeLabels() {
 
 const std::vector<std::pair<double, std::string>> AxisDefinition::getLabels()
     const {
-  if (has_labels_ || domain_ == nullptr) {
-    return labels_;
-  }
-
-  return domain_->getLabels();
+  return labels_;
 }
 
 bool AxisDefinition::hasLabels() const {
-  return has_labels_ || domain_ != nullptr;
-}
-
-AxisDefinition::kPosition AxisDefinition::getPosition() const {
-  return position_;
-}
-
-void AxisDefinition::setLabelPosition(kLabelPosition pos) {
-  printf("set label pos: %i", pos);
+  return has_labels_;
 }
 
 AxisDefinition::kLabelPosition AxisDefinition::getLabelPosition() const {
   return LABELS_INSIDE;
-}
-
-void AxisDefinition::setLabelRotation(double deg) {
-  printf("axis label rot: %f\n", deg);
-}
-
-double AxisDefinition::getLabelRotation() const {
-  return 0.0f;
 }
 
 void AxisDefinition::setTitle(const std::string& title) {
@@ -92,10 +59,6 @@ const std::string& AxisDefinition::getTitle() {
 
 bool AxisDefinition::hasTitle() const {
   return title_.length() > 0;
-}
-
-void AxisDefinition::setDomain(DomainProvider* domain) {
-  domain_ = domain;
 }
 
 }

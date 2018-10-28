@@ -7,8 +7,7 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#ifndef _libstx_AXISDEFINITION_H
-#define _libstx_AXISDEFINITION_H
+#pragma once
 #include <utility>
 #include <string>
 #include <vector>
@@ -20,16 +19,6 @@ namespace chart {
 
 class AxisDefinition {
 public:
-
-  /**
-   * The axis positions/placements
-   */
-  enum kPosition {
-    TOP = 0,
-    RIGHT = 1,
-    BOTTOM = 2,
-    LEFT = 3
-  };
 
   /**
    * The axis tick position
@@ -45,15 +34,7 @@ public:
    *
    * @param axis_position the position of the axis ({TOP,RIGHT,BOTTOM,LEFT})
    */
-  AxisDefinition(kPosition axis_position);
-
-  /**
-   * Create a new axis definition from a domain
-   *
-   * @param axis_position the position of the axis ({TOP,RIGHT,BOTTOM,LEFT})
-   * @param domain the domain. does not transfer ownership
-   */
-  AxisDefinition(kPosition axis_position, DomainProvider* domain);
+  AxisDefinition();
 
   /**
    * Add a "tick" to this axis
@@ -89,11 +70,6 @@ public:
    * Returns true if this axis has labels, false otherwise
    */
   bool hasLabels() const;
-
-  /**
-   * Return the position/placement of this axis
-   */
-  kPosition getPosition() const;
 
   /**
    * Set the label position for this axis
@@ -136,9 +112,7 @@ public:
    */
   void setDomain(DomainProvider* domain);
 
-protected:
-  kPosition position_;
-  DomainProvider* domain_;
+  bool enabled_;
   std::string title_;
   std::vector<double> ticks_;
   bool has_ticks_;
@@ -146,6 +120,13 @@ protected:
   bool has_labels_;
 };
 
-}
-}
-#endif
+struct AxisDefinitions {
+  AxisDefinition top;
+  AxisDefinition right;
+  AxisDefinition bottom;
+  AxisDefinition left;
+};
+
+} // namespace chart
+} // namespace signaltk
+
