@@ -24,13 +24,6 @@ public:
 
   void writePNG(const char* path);
 
-  void beginChart(
-      int width,
-      int height,
-      const std::string& class_name);
-
-  void finishChart();
-
   void clear(double r, double g, double b, double a);
 
   void drawText(
@@ -42,24 +35,10 @@ public:
       const std::string& class_name,
       double rotate = 0.0f) override;
 
-  void drawPoint(
-      double x,
-      double y,
-      const std::string& point_type,
-      double point_size,
-      const std::string& color,
-      const std::string& class_name /* = "" */,
-      const std::string& label /* = "" */,
-      const std::string& series /* = "" */) override;
-
   void strokePath(
       const PathData* point_data,
       size_t point_count,
       const StrokeStyle& stroke_style) override;
-
-  void beginGroup(const std::string& class_name) override;
-
-  void finishGroup() override;
 
   uint32_t width() const {
     return width_;

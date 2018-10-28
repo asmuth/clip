@@ -24,16 +24,6 @@ class RenderTarget {
 public:
   virtual ~RenderTarget() {}
 
-  virtual void beginChart(
-      int width,
-      int height,
-      const std::string& class_name) = 0;
-
-  virtual void finishChart() = 0;
-
-  virtual void beginGroup(const std::string& class_name) = 0;
-  virtual void finishGroup() = 0;
-
   virtual void drawText(
       const std::string& text,
       double x,
@@ -42,16 +32,6 @@ public:
       const std::string& valign,
       const std::string& class_name,
       double rotate = 0.0f) = 0;
-
-  virtual void drawPoint(
-      double x,
-      double y,
-      const std::string& point_type,
-      double point_size,
-      const std::string& color,
-      const std::string& class_name = "",
-      const std::string& label = "",
-      const std::string& series = "") = 0;
 
   virtual void strokePath(
       const PathData* point_data,

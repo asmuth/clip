@@ -33,10 +33,8 @@ void PlotLayout::render(RenderTarget* target) const {
   // FIXPAUL: initialize from rendertarget
   Viewport viewport(width_, height_);
 
-  target->beginChart(width_, height_, "fm-chart");
   renderAxes(target, &viewport);
   renderGrids(target, &viewport);
-  target->finishChart();
 }
 
 void PlotLayout::renderAxes(RenderTarget* target, Viewport* viewport) const {
@@ -130,7 +128,6 @@ void PlotLayout::renderTopAxis(
   int inner_width = viewport->innerWidth();
 
   top += kAxisPadding;
-  target->beginGroup("axis bottom");
 
   /* draw title */
   if (axis->hasTitle()) {
@@ -182,7 +179,6 @@ void PlotLayout::renderTopAxis(
       top,
       style);
 
-  target->finishGroup();
 }
 
 
@@ -197,7 +193,6 @@ void PlotLayout::renderRightAxis(
   int inner_height = viewport->innerHeight();
 
   right += kAxisPadding;
-  target->beginGroup("axis right");
 
   /* draw title */
   if (axis->hasTitle()) {
@@ -249,7 +244,6 @@ void PlotLayout::renderRightAxis(
       padding_top + inner_height,
       style);
 
-  target->finishGroup();
 }
 
 void PlotLayout::renderBottomAxis(
@@ -263,7 +257,6 @@ void PlotLayout::renderBottomAxis(
   int inner_width = viewport->innerWidth();
 
   bottom += kAxisPadding;
-  target->beginGroup("axis bottom");
 
   /* draw title */
   if (axis->hasTitle()) {
@@ -315,7 +308,6 @@ void PlotLayout::renderBottomAxis(
       height_ - bottom,
       style);
 
-  target->finishGroup();
 }
 
 void PlotLayout::renderLeftAxis(
@@ -329,7 +321,6 @@ void PlotLayout::renderLeftAxis(
   int inner_height = viewport->innerHeight();
 
   left += kAxisPadding;
-  target->beginGroup("axis left");
 
   /* draw title */
   if (axis->hasTitle()) {
@@ -382,7 +373,6 @@ void PlotLayout::renderLeftAxis(
       padding_top + inner_height,
       style);
 
-  target->finishGroup();
 }
 
 void PlotLayout::renderGrids(RenderTarget* target, Viewport* viewport) const {
@@ -392,7 +382,6 @@ void PlotLayout::renderGrids(RenderTarget* target, Viewport* viewport) const {
     switch (grid->placement()) {
 
       case GridDefinition::GRID_HORIZONTAL:
-        target->beginGroup("grid horizontal");
         for (const auto& tick : grid->ticks()) {
           auto line_y = viewport->paddingTop() +
               viewport->innerHeight() * (1.0 - tick);
@@ -404,11 +393,9 @@ void PlotLayout::renderGrids(RenderTarget* target, Viewport* viewport) const {
               line_y,
               style);
         }
-        target->finishGroup();
         break;
 
       case GridDefinition::GRID_VERTICAL:
-        target->beginGroup("grid vertical");
         for (const auto& tick : grid->ticks()) {
           auto line_x = viewport->paddingLeft() + viewport->innerWidth() * tick;
 
@@ -419,7 +406,6 @@ void PlotLayout::renderGrids(RenderTarget* target, Viewport* viewport) const {
               viewport->paddingTop() + viewport->innerHeight(),
               style);
         }
-        target->finishGroup();
         break;
 
     }

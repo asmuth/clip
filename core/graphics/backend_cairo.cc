@@ -28,13 +28,6 @@ void CairoBackend::writePNG(const char* path) {
   cairo_surface_write_to_png(surface_, path);
 }
 
-void CairoBackend::beginChart(
-    int width,
-    int height,
-    const std::string& class_name) {}
-
-void CairoBackend::finishChart() {}
-
 void CairoBackend::clear(double r, double g, double b, double a) {
   cairo_set_source_rgba(ctx_, r, g, b, a);
   cairo_rectangle(ctx_, 0, 0, width_, height_);
@@ -48,17 +41,9 @@ void CairoBackend::drawText(
     const std::string& halign,
     const std::string& valign,
     const std::string& class_name,
-    double rotate) {}
-
-void CairoBackend::drawPoint(
-    double x,
-    double y,
-    const std::string& point_type,
-    double point_size,
-    const std::string& color,
-    const std::string& class_name /* = "" */,
-    const std::string& label /* = "" */,
-    const std::string& series /* = "" */) {}
+    double rotate) {
+  // here be dragons
+}
 
 void CairoBackend::strokePath(
     const PathData* point_data,
@@ -91,9 +76,5 @@ void CairoBackend::strokePath(
 
   cairo_stroke(ctx_);
 }
-
-void CairoBackend::beginGroup(const std::string& class_name) {}
-
-void CairoBackend::finishGroup() {}
 
 } // namespace signaltk

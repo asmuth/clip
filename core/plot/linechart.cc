@@ -95,7 +95,6 @@ void LineChart::render(
   x_domain_.get()->build();
   y_domain_.get()->build();
 
-  target->beginGroup("lines");
 
   for (const auto& series : series_) {
     Path path;
@@ -142,15 +141,15 @@ void LineChart::render(
             "label");
       }
 
-      target->drawPoint(
-          ss_x,
-          ss_y,
-          point_style,
-          point_size,
-          color,
-          "point",
-          label,
-          series->name());
+      //target->drawPoint(
+      //    ss_x,
+      //    ss_y,
+      //    point_style,
+      //    point_size,
+      //    color,
+      //    "point",
+      //    label,
+      //    series->name());
 
       if (path.empty()) {
         path.moveTo(ss_x, ss_y);
@@ -168,7 +167,6 @@ void LineChart::render(
         style);
   }
 
-  target->finishGroup();
 }
 
 AnyDomain* LineChart::getDomain(AnyDomain::kDimension dimension) {
