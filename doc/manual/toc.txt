@@ -1,0 +1,24 @@
+
+Overview:
+  - Build & Installation
+  - Getting Started
+
+Usage:
+  - Command Line
+  - C API
+  - Ruby API
+  - Python API
+  - Rust API
+
+Commands:
+
+  - Image:
+    ...
+
+  - Plot
+   ...
+
+  ...
+
+
+

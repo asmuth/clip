@@ -1,5 +1,18 @@
+- line/point styles
+- inside/outside axis labels
+- rotated axis labels
+- max interpolation gap
+- middle axis
+- histogram
+- heatmap
+- stacked area charts
+- events (annotations)
+- ganttchart
+- boxplot
+- error bars
+- candlesticks
+- (holtwinters, moving average, derivative, etc)
 - math + chem xp
 - align background grid to domain
 - gradient fill for bar/area chart
 - sankey/flow diagrams
-
