@@ -12,6 +12,19 @@ Documentation
 
 You can find the full documentation at https://signaltk.org/
 
+
+Building
+--------
+
+To build signaltk, you need an up-to-date C++ compiler, cmake and libcairo. Run:
+
+    $ cmake .
+    $ make
+
+To run the test suite, run `make check`:
+
+    $ make check
+
 License
 -------
 
