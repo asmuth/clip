@@ -15,5 +15,7 @@ include_directories(${CAIRO_INCLUDE_DIRS})
 
 add_subdirectory(core/plot)
 add_subdirectory(core/util)
+add_subdirectory(core/graphics)
 
 add_subdirectory(test/plot)
+

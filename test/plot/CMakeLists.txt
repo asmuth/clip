@@ -7,4 +7,4 @@
 # <http://www.gnu.org/licenses/>.
 
 add_executable(chart_test chart_test.cc)
-target_link_libraries(chart_test signaltk-plot signaltk-util)
+target_link_libraries(chart_test signaltk-plot signaltk-graphics signaltk-util ${CAIRO_LIBRARIES})

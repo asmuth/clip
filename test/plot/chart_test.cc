@@ -11,12 +11,13 @@
 #include <stdio.h>
 #include <string.h>
 #include "../../core/graphics/svgtarget.h"
+#include "../../core/graphics/backend_cairo.h"
 #include "../../core/plot/plot_layout.h"
 #include "../../core/plot/axisdefinition.h"
 #include "../../core/plot/domain.h"
 //#include "../../core/plot/areachart.h"
 //#include "../../core/plot/barchart.h"
-//#include "../../core/plot/linechart.h"
+#include "../../core/plot/linechart.h"
 //#include "../../core/plot/pointchart.h"
 #include "../../core/plot/series.h"
 #include "../../core/util/fileutil.h"
@@ -33,11 +34,12 @@ using signaltk::chart::AxisDefinition;
 //using signaltk::chart::BarChart;
 //using signaltk::chart::BarChart2D;
 //using signaltk::chart::BarChart3D;
-//using signaltk::chart::LineChart2D;
+using signaltk::chart::LineChart;
 //using signaltk::chart::PointChart2D;
 //using signaltk::chart::PointChart3D;
 using signaltk::chart::PlotLayout;
-//using signaltk::chart::ContinuousDomain;
+using signaltk::chart::Viewport;
+using signaltk::chart::ContinuousDomain;
 //using signaltk::chart::DomainProvider;
 using signaltk::chart::Series;
 using signaltk::chart::Series2D;
@@ -46,26 +48,26 @@ using signaltk::chart::SVGTarget;
 using signaltk::FileOutputStream;
 using signaltk::FileUtil;
 using signaltk::StringUtil;
+using signaltk::CairoBackend;
 using signaltk::test::UnitTest;
 
-static void compareChart(
-    PlotLayout* chart,
-    const std::string& file_name) {
-  auto output_path = file_name;
-  StringUtil::replaceAll(&output_path, ".svg", ".actual.svg");
-
-  auto output_stream = FileOutputStream::openFile(output_path);
-
-  SVGTarget target(output_stream.get());
-  chart->render(&target);
-
-  EXPECT_FILES_EQ(file_name, output_path);
-}
+//static void compareChart(
+//    PlotLayout* chart,
+//    const std::string& file_name) {
+//  auto output_path = file_name;
+//  StringUtil::replaceAll(&output_path, ".svg", ".actual.svg");
+//
+//  auto output_stream = FileOutputStream::openFile(output_path);
+//
+//
+//  EXPECT_FILES_EQ(file_name, output_path);
+//}
 
 TEST_CASE(ChartTest, TestPlotLayoutWithLeftAxis, [] () {
-  PlotLayout canvas;
+  CairoBackend target;
+  PlotLayout plot_layout;
 
-  auto axis_left = canvas.addAxis(AxisDefinition::LEFT);
+  auto axis_left = plot_layout.addAxis(AxisDefinition::LEFT);
   axis_left->addTick(0.0);
   axis_left->addTick(0.2);
   axis_left->addTick(0.4);
@@ -79,9 +81,8 @@ TEST_CASE(ChartTest, TestPlotLayoutWithLeftAxis, [] () {
   axis_left->addLabel(0.8, "4");
   axis_left->addLabel(1.0, "5");
 
-  compareChart(
-      &canvas,
-      "test_plot_layout_with_left_axis.svg");
+  plot_layout.render(&target);
+  target.writePNG("test_plot_layout_with_left_axis.png");
 });
 
 //TEST_CASE(ChartTest, TestPlotLayoutWithLeftAxisAndTitle, [] () {
@@ -705,42 +706,44 @@ TEST_CASE(ChartTest, TestPlotLayoutWithLeftAxis, [] () {
 //      "ChartTest_TestVariableSizePointChart_out.svg");
 //});
 //
-//static signaltk::test::UnitTest::TestCase __test_simple_line_chart_(
-//    &ChartTest, "TestSimpleLineChart", [] () {
-//  auto series1 = new Series2D<double, double>("myseries1");
-//  series1->addDatum(10, 34);
-//  series1->addDatum(15, 38);
-//  series1->addDatum(20, 43);
-//  series1->addDatum(30, 33);
-//  series1->addDatum(40, 21);
-//  series1->addDatum(50, 33);
-//
-//  auto series2 = new Series2D<double, double>("myseries1");
-//  series2->addDatum(10, 19);
-//  series2->addDatum(15, 18);
-//  series2->addDatum(20, 22);
-//  series2->addDatum(30, 23);
-//  series2->addDatum(40, 18);
-//  series2->addDatum(50, 21);
-//
-//  ContinuousDomain<double> x_domain(10, 50, false);
-//  ContinuousDomain<double> y_domain(0, 50, false);
-//
-//  PlotLayout canvas;
-//  auto line_chart = canvas.addChart<LineChart2D<double, double>>(
-//      &x_domain, &y_domain);
-//  line_chart->addSeries(series1);
-//  line_chart->addSeries(series2);
-//  line_chart->addAxis(AxisDefinition::TOP);
-//  line_chart->addAxis(AxisDefinition::RIGHT);
-//  line_chart->addAxis(AxisDefinition::BOTTOM);
-//  line_chart->addAxis(AxisDefinition::LEFT);
-//
-//  compareChart(
-//      &canvas,
-//      "ChartTest_TestSimpleLineChart_out.svg");
-//});
-//
+static signaltk::test::UnitTest::TestCase __test_simple_line_chart_(
+    &ChartTest, "TestSimpleLineChart", [] () {
+  CairoBackend target;
+  target.clear(1, 1, 1, 1);
+
+  auto series1 = new Series2D<double, double>("myseries1");
+  series1->addDatum(10, 34);
+  series1->addDatum(15, 38);
+  series1->addDatum(20, 43);
+  series1->addDatum(30, 33);
+  series1->addDatum(40, 21);
+  series1->addDatum(50, 33);
+
+  auto series2 = new Series2D<double, double>("myseries1");
+  series2->addDatum(10, 19);
+  series2->addDatum(15, 18);
+  series2->addDatum(20, 22);
+  series2->addDatum(30, 23);
+  series2->addDatum(40, 18);
+  series2->addDatum(50, 21);
+
+  ContinuousDomain<double> x_domain(10, 50, false);
+  ContinuousDomain<double> y_domain(0, 50, false);
+
+  PlotLayout plot_layout;
+  LineChart line_chart(&plot_layout, &x_domain, &y_domain);
+  line_chart.addSeries(series1);
+  line_chart.addSeries(series2);
+
+  Viewport vp(target.width(), target.height());
+  line_chart.render(&target, &vp);
+
+  target.writePNG("test_simple_line_chart.png");
+  //compareChart(
+  //    &canvas,
+  //    "ChartTest_TestSimpleLineChart_out.svg");
+});
+
 //static signaltk::test::UnitTest::TestCase __test_point_line_chart_(
 //    &ChartTest, "TestPointLineChart", [] () {
 //  auto series1 = new Series2D<double, double>("myseries1");

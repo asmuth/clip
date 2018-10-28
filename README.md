@@ -1,7 +1,8 @@
 signaltk
 ========
 
-signaltk is a toolkit for creating high-quality visualizations of telemetry data.
+signaltk is a toolkit for creating dynamic visualizations, such as charts, diagrams
+or digital signage.
 
 Documentation: [signaltk.org](http://signaltk.org/)
 

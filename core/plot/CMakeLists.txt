@@ -15,4 +15,5 @@ add_library(signaltk-plot STATIC
     griddefinition.cc
     legenddefinition.cc
     series.cc
-    timedomain.cc)
+    timedomain.cc
+    linechart.cc)
