@@ -15,7 +15,7 @@
 #include <string>
 #include "colour.h"
 #include "path.h"
-#include "stroke.h"
+#include "brush.h"
 
 namespace signaltk {
 namespace chart {
