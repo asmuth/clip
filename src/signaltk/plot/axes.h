@@ -11,11 +11,17 @@
 #include <utility>
 #include <string>
 #include <vector>
-#include "domain.h"
-#include "domainprovider.h"
+#include <signaltk/core/layer.h>
+#include <signaltk/core/viewport.h>
 
 namespace signaltk {
 namespace chart {
+
+static const int kAxisPadding = 0; // FIXPAUL make configurable
+static const int kTickLength = 5; // FIXPAUL make configurable
+static const int kAxisLabelHeight = 25; // FIXPAUL make configurable
+static const int kAxisLabelWidth = 50; // FIXPAUL make configurable
+static const int kAxisTitleLength = 20; // FIXPAUL make configurable
 
 class AxisDefinition {
 public:
@@ -107,11 +113,6 @@ public:
    */
   bool hasTitle() const;
 
-  /**
-   * Set the domain for this axis
-   */
-  void setDomain(DomainProvider* domain);
-
   bool enabled_;
   std::string title_;
   std::vector<double> ticks_;
@@ -126,6 +127,70 @@ struct AxisDefinitions {
   AxisDefinition bottom;
   AxisDefinition left;
 };
+
+/**
+ * Render the axes
+ */
+void renderAxes(
+    const Layer& input,
+    Layer* target,
+    Viewport* viewport);
+
+/**
+ * Render a top axis
+ *
+ * @param target the render target
+ * @param axis the axis definition
+ * @param padding the padding state
+ * @param top the top padding for this axis
+ */
+void renderTopAxis(
+    Layer* target,
+    Viewport* viewport,
+    AxisDefinition* axis,
+    int top);
+
+/**
+ * Render a right axis
+ *
+ * @param target the render target
+ * @param axis the axis definition
+ * @param padding the padding state
+ * @param right the right padding for this axis
+ */
+void renderRightAxis(
+    Layer* target,
+    Viewport* viewport,
+    AxisDefinition* axis,
+    int right);
+
+/**
+ * Render a bottom axis
+ *
+ * @param target the render target
+ * @param axis the axis definition
+ * @param padding the padding state
+ * @param bottom the bottom padding for this axis
+ */
+void renderBottomAxis(
+    Layer* target,
+    Viewport* viewport,
+    AxisDefinition* axis,
+    int bottom);
+
+/**
+ * Render a left axis
+ *
+ * @param target the render target
+ * @param axis the axis definition
+ * @param padding the padding state
+ * @param left the left padding for this axis
+ */
+void renderLeftAxis(
+    Layer* target,
+    Viewport* viewport,
+    AxisDefinition* axis,
+    int left);
 
 } // namespace chart
 } // namespace signaltk
