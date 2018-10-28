@@ -1,6 +1,10 @@
 #!/bin/bash
 set -u
 
+realpath() {
+    [[ $1 = /* ]] && echo "$1" || echo "$PWD/${1#./}"
+}
+
 echo_yellow () {
   printf "\033[1;33m%s\033[0m\n" "$1"
 }
@@ -13,7 +17,7 @@ echo_red () {
   printf "\033[1;31m%s\033[0m\n" "$1"
 }
 
-test_dir=$(dirname "$(readlink -f "$0")")
+test_dir=$(dirname "$(realpath "$0")")
 base_dir="${test_dir}/.."
 
 num_total=0
@@ -25,7 +29,7 @@ for test_file in $(find $test_dir -mindepth 2 -name "test_*.sh"); do
   test_masterfile=${test_file/.sh/.png}
   test_outfile=${test_file/.sh/.actual.png}
 
-  echo -n " + $(realpath --relative-to="${test_dir}" "${test_file}") "
+  echo -n " + ${test_file/${test_dir}\//} "
   num_total=$[ $num_total + 1 ]
 
   (
