@@ -17,6 +17,7 @@
 #include <sys/time.h>
 #include <sys/resource.h>
 #include <sys/file.h>
+#include <signaltk.h>
 #include <signaltk/util/flagparser.h>
 #include <signaltk/util/fileutil.h>
 #include <signaltk/util/return_code.h>
@@ -145,7 +146,12 @@ int main(int argc, const char** argv) {
   }
   */
 
-  auto rc = ReturnCode::success();
+  signaltk::Context ctx;
+  auto rc = signaltk::cmd(&ctx, argv + 1, argc - 1); // FIXME
 
-  return rc.isSuccess() ? 0 : 1;
+  if (rc == 0) {
+    return EXIT_SUCCESS;
+  } else {
+    return EXIT_FAILURE;
+  }
 }
