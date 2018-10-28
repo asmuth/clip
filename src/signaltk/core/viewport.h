@@ -16,69 +16,69 @@ class Viewport {
 public:
 
   Viewport(
-      int width,
-      int height) :
-      Viewport(width, height, std::tuple<int, int, int, int>(0,0,0,0)) {}
+      uint32_t width,
+      uint32_t height) :
+      Viewport(width, height, std::tuple<uint32_t, uint32_t, uint32_t, uint32_t>(0,0,0,0)) {}
 
   Viewport(
-      int width,
-      int height,
-      const std::tuple<int, int, int, int>& padding) :
+      uint32_t width,
+      uint32_t height,
+      const std::tuple<uint32_t, uint32_t, uint32_t, uint32_t>& padding) :
       width_(width),
       height_(height),
       padding_(padding) {}
 
-  int innerWidth() const {
+  uint32_t innerWidth() const {
     return width_ - paddingRight() - paddingLeft();
   }
 
-  int innerHeight() const {
+  uint32_t innerHeight() const {
     return height_ - paddingTop() - paddingBottom();
   }
 
-  int paddingTop() const {
+  uint32_t paddingTop() const {
     return std::get<0>(padding_);
   }
 
-  int paddingRight() const {
+  uint32_t paddingRight() const {
     return std::get<1>(padding_);
   }
 
-  int paddingBottom() const {
+  uint32_t paddingBottom() const {
     return std::get<2>(padding_);
   }
 
-  int paddingLeft() const {
+  uint32_t paddingLeft() const {
     return std::get<3>(padding_);
   }
 
-  const std::tuple<int, int, int, int>& padding() {
+  const std::tuple<uint32_t, uint32_t, uint32_t, uint32_t>& padding() {
     return padding_;
   }
 
-  void setPadding(const std::tuple<int, int, int, int>& padding) {
+  void setPadding(const std::tuple<uint32_t, uint32_t, uint32_t, uint32_t>& padding) {
     padding_ = padding;
   }
 
-  void setPaddingTop(int val) {
+  void setPaddingTop(uint32_t val) {
     std::get<0>(padding_) = val;
   }
 
-  void setPaddingRight(int val) {
+  void setPaddingRight(uint32_t val) {
     std::get<1>(padding_) = val;
   }
 
-  void setPaddingBottom(int val) {
+  void setPaddingBottom(uint32_t val) {
     std::get<2>(padding_) = val;
   }
 
-  void setPaddingLeft(int val) {
+  void setPaddingLeft(uint32_t val) {
     std::get<3>(padding_) = val;
   }
 
-  int width_;
-  int height_;
-  std::tuple<int, int, int, int> padding_;
+  uint32_t width_;
+  uint32_t height_;
+  std::tuple<uint32_t, uint32_t, uint32_t, uint32_t> padding_;
 };
 
 }
