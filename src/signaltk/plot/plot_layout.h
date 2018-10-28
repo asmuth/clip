@@ -19,7 +19,7 @@
 
 namespace signaltk {
 namespace chart {
-class RenderTarget;
+class Layer;
 
 class PlotLayout {
 public:
@@ -57,9 +57,9 @@ public:
   /**
    * Render the contents of this canvas to the provided render target
    *
-   * @param target a RenderTarget subclass instance. Does not transfer ownership
+   * @param target a Layer subclass instance. Does not transfer ownership
    */
-  void render(RenderTarget* target) const;
+  void render(Layer* target) const;
 
 protected:
 
@@ -71,7 +71,7 @@ protected:
   /**
    * Render the axes
    */
-  void renderAxes(RenderTarget* target, Viewport* viewport) const;
+  void renderAxes(Layer* target, Viewport* viewport) const;
 
   /**
    * Render a top axis
@@ -82,7 +82,7 @@ protected:
    * @param top the top padding for this axis
    */
   void renderTopAxis(
-      RenderTarget* target,
+      Layer* target,
       Viewport* viewport,
       AxisDefinition* axis,
       int top) const;
@@ -96,7 +96,7 @@ protected:
    * @param right the right padding for this axis
    */
   void renderRightAxis(
-      RenderTarget* target,
+      Layer* target,
       Viewport* viewport,
       AxisDefinition* axis,
       int right) const;
@@ -110,7 +110,7 @@ protected:
    * @param bottom the bottom padding for this axis
    */
   void renderBottomAxis(
-      RenderTarget* target,
+      Layer* target,
       Viewport* viewport,
       AxisDefinition* axis,
       int bottom) const;
@@ -124,7 +124,7 @@ protected:
    * @param left the left padding for this axis
    */
   void renderLeftAxis(
-      RenderTarget* target,
+      Layer* target,
       Viewport* viewport,
       AxisDefinition* axis,
       int left) const;
@@ -132,9 +132,9 @@ protected:
   /**
    * Render the grids
    */
-  void renderGrids(RenderTarget* target, Viewport* viewport) const;
+  void renderGrids(Layer* target, Viewport* viewport) const;
 
-  // FIXPAUL this belongs into the rendertarget
+  // FIXPAUL this belongs into the layer
   int width_;
   int height_;
 

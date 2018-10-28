@@ -1,59 +1,58 @@
 /**
  * This file is part of the "signaltk" project
  *   Copyright (c) 2018 Paul Asmuth
+ *   Copyright (c) 2014 Paul Asmuth, Google Inc.
  *
  * libstx is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License v3.0. You should have received a
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#pragma once
+#ifndef _libstx_Image_H
+#define _libstx_Image_H
 #include <stdlib.h>
-#include <cairo.h>
 #include <vector>
 #include <string>
-#include "layer.h"
+#include "colour.h"
+#include "path.h"
+#include "brush.h"
 
 namespace signaltk {
+namespace chart {
 
-class CairoBackend : public chart::Layer {
+class Image {
 public:
+  virtual ~Image() {}
 
-  CairoBackend();
-  ~CairoBackend();
-
-  void writePNG(const char* path);
-
-  void clear(double r, double g, double b, double a);
-
-  void drawText(
+  virtual void drawText(
       const std::string& text,
       double x,
       double y,
       const std::string& halign,
       const std::string& valign,
       const std::string& class_name,
-      double rotate = 0.0f) override;
+      double rotate = 0.0f) = 0;
 
-  void strokePath(
+  virtual void strokePath(
       const PathData* point_data,
       size_t point_count,
-      const StrokeStyle& stroke_style) override;
+      const StrokeStyle& style) = 0;
 
-  uint32_t width() const {
-    return width_;
+  void strokeLine(
+      double x1,
+      double y1,
+      double x2,
+      double y2,
+      const StrokeStyle& style) {
+    Path p;
+    p.moveTo(x1, y1);
+    p.lineTo(x2, y2);
+    strokePath(p.data(), p.size(), style);
   }
 
-  uint32_t height() const {
-    return height_;
-  }
-
-protected:
-  uint32_t width_;
-  uint32_t height_;
-  cairo_surface_t* surface_;
-  cairo_t* ctx_;
 };
 
 
-} // namespace signaltk
+}
+}
+#endif

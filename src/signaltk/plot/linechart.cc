@@ -86,7 +86,7 @@ void LineChart::addSeries(Series2D<TX, TY>* series) {
 }
 
 void LineChart::render(
-    RenderTarget* target,
+    Layer* target,
     Viewport* viewport) const {
   if (x_domain_.get() == nullptr || y_domain_.get() == nullptr) {
     RAISE(kRuntimeError, "could not build domains");

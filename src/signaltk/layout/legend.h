@@ -19,7 +19,7 @@
 
 namespace signaltk {
 namespace chart {
-class RenderTarget;
+class Layer;
 
 class Legend {
 public:
@@ -56,24 +56,24 @@ public:
   /**
    * Render the contents of this canvas to the provided render target
    *
-   * @param target a RenderTarget subclass instance. Does not transfer ownership
+   * @param target a Layer subclass instance. Does not transfer ownership
    */
-  void render(RenderTarget* target) const;
+  void render(Layer* target) const;
 
 protected:
 
   /**
    * Render the legends
    */
-  void renderOutsideLegends(RenderTarget* target, Viewport* viewport) const;
+  void renderOutsideLegends(Layer* target, Viewport* viewport) const;
 
   /**
    * Render the legends
    */
-  void renderInsideLegends(RenderTarget* target, Viewport* viewport) const;
+  void renderInsideLegends(Layer* target, Viewport* viewport) const;
 
   void renderRightLegend(
-      RenderTarget* target,
+      Layer* target,
       Viewport* viewport,
       LegendDefinition* legend,
       double horiz_padding,
@@ -81,7 +81,7 @@ protected:
       bool outside) const;
 
   void renderLeftLegend(
-      RenderTarget* target,
+      Layer* target,
       Viewport* viewport,
       LegendDefinition* legend,
       double horiz_padding,

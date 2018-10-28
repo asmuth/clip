@@ -11,7 +11,7 @@
 #pragma once
 #include <stdlib.h>
 #include "plot_layout.h"
-#include "../core/rendertarget.h"
+#include "../core/layer.h"
 #include "axisdefinition.h"
 #include "continuousdomain.h"
 #include "domain.h"
@@ -84,7 +84,7 @@ public:
   void setLabels(bool show_labels);
 
   void render(
-      RenderTarget* target,
+      Layer* target,
       Viewport* viewport) const;
 
 protected:

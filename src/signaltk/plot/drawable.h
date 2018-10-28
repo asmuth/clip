@@ -19,7 +19,7 @@
 
 namespace signaltk {
 namespace chart {
-class RenderTarget;
+class Layer;
 class Canvas;
 
 // FIXPAUL: rename to chart
@@ -88,7 +88,7 @@ public:
 protected:
 
   void addSeries(Series* series);
-  virtual void render(RenderTarget* target, Viewport* viewport) const = 0;
+  virtual void render(Layer* target, Viewport* viewport) const = 0;
 
   Canvas* canvas_;
 private:

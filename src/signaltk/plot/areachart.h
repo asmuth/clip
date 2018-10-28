@@ -16,7 +16,7 @@
 #include "continuousdomain.h"
 #include "drawable.h"
 #include "colorpalette.h"
-#include "../core/rendertarget.h"
+#include "../core/layer.h"
 
 namespace signaltk {
 namespace chart {
@@ -125,7 +125,7 @@ protected:
   };
 
   void render(
-      RenderTarget* target,
+      Layer* target,
       Viewport* viewport) const override;
 
   DomainProvider x_domain_;
@@ -279,7 +279,7 @@ void AreaChart3D<TX, TY, TZ>::addSeries(Series3D<TX, TY, TZ>* series) {
 
 template <typename TX, typename TY, typename TZ>
 void AreaChart3D<TX, TY, TZ>::render(
-    RenderTarget* target,
+    Layer* target,
     Viewport* viewport) const {
   if (x_domain_.get() == nullptr || y_domain_.get() == nullptr) {
     RAISE(kRuntimeError, "could not build domains");

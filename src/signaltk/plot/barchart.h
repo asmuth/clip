@@ -11,7 +11,7 @@
 #define _libstx_BARCHART_H
 #include <stdlib.h>
 #include <memory>
-#include "../core/rendertarget.h"
+#include "../core/layer.h"
 #include "canvas.h"
 #include "axisdefinition.h"
 #include "colorpalette.h"
@@ -149,15 +149,15 @@ public:
 
 protected:
 
-  void render(RenderTarget* target, Viewport* viewport) const override;
+  void render(Layer* target, Viewport* viewport) const override;
 
   void renderVerticalBars(
-      RenderTarget* target,
+      Layer* target,
       Viewport* viewport,
       SeriesJoin3D<TX, TY, TZ> const* data) const;
 
   void renderHorizontalBars(
-      RenderTarget* target,
+      Layer* target,
       Viewport* viewport,
       SeriesJoin3D<TX, TY, TZ> const* data) const;
 
@@ -337,7 +337,7 @@ GridDefinition* BarChart3D<TX, TY, TZ>::addGrid(
 
 template <typename TX, typename TY, typename TZ>
 void BarChart3D<TX, TY, TZ>::render(
-    RenderTarget* target,
+    Layer* target,
     Viewport* viewport) const {
   if (x_domain_.get() == nullptr || y_domain_.get() == nullptr) {
     RAISE(kRuntimeError, "could not build domains");
@@ -375,7 +375,7 @@ void BarChart3D<TX, TY, TZ>::render(
 
 template <typename TX, typename TY, typename TZ>
 void BarChart3D<TX, TY, TZ>::renderHorizontalBars(
-    RenderTarget* target,
+    Layer* target,
     Viewport* viewport,
     SeriesJoin3D<TX, TY, TZ> const* data) const {
   auto x_domain = x_domain_.getAs<Domain<TX>>();
@@ -436,7 +436,7 @@ void BarChart3D<TX, TY, TZ>::renderHorizontalBars(
 
 template <typename TX, typename TY, typename TZ>
 void BarChart3D<TX, TY, TZ>::renderVerticalBars(
-    RenderTarget* target,
+    Layer* target,
     Viewport* viewport,
     SeriesJoin3D<TX, TY, TZ> const* data) const {
   auto x_domain = x_domain_.getAs<Domain<TX>>();

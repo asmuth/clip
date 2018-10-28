@@ -8,7 +8,7 @@
  * <http://www.gnu.org/licenses/>.
  */
 #include <stdlib.h>
-#include "../core/rendertarget.h"
+#include "../core/layer.h"
 #include "plot_layout.h"
 #include "domain.h"
 
@@ -29,15 +29,15 @@ void PlotLayout::setDimensions(int width, int height) {
   }
 }
 
-void PlotLayout::render(RenderTarget* target) const {
-  // FIXPAUL: initialize from rendertarget
+void PlotLayout::render(Layer* target) const {
+  // FIXPAUL: initialize from layer
   Viewport viewport(width_, height_);
 
   renderAxes(target, &viewport);
   renderGrids(target, &viewport);
 }
 
-void PlotLayout::renderAxes(RenderTarget* target, Viewport* viewport) const {
+void PlotLayout::renderAxes(Layer* target, Viewport* viewport) const {
   std::tuple<int, int, int, int> padding = viewport->padding();
   std::vector<std::pair<int, AxisDefinition*>> top;
   std::vector<std::pair<int, AxisDefinition*>> right;
@@ -118,7 +118,7 @@ void PlotLayout::renderAxes(RenderTarget* target, Viewport* viewport) const {
 }
 
 void PlotLayout::renderTopAxis(
-    RenderTarget* target,
+    Layer* target,
     Viewport* viewport,
     AxisDefinition* axis,
     int top) const {
@@ -183,7 +183,7 @@ void PlotLayout::renderTopAxis(
 
 
 void PlotLayout::renderRightAxis(
-    RenderTarget* target,
+    Layer* target,
     Viewport* viewport,
     AxisDefinition* axis,
     int right) const {
@@ -247,7 +247,7 @@ void PlotLayout::renderRightAxis(
 }
 
 void PlotLayout::renderBottomAxis(
-    RenderTarget* target,
+    Layer* target,
     Viewport* viewport,
     AxisDefinition* axis,
     int bottom) const {
@@ -311,7 +311,7 @@ void PlotLayout::renderBottomAxis(
 }
 
 void PlotLayout::renderLeftAxis(
-    RenderTarget* target,
+    Layer* target,
     Viewport* viewport,
     AxisDefinition* axis,
     int left) const {
@@ -375,7 +375,7 @@ void PlotLayout::renderLeftAxis(
 
 }
 
-void PlotLayout::renderGrids(RenderTarget* target, Viewport* viewport) const {
+void PlotLayout::renderGrids(Layer* target, Viewport* viewport) const {
   StrokeStyle style;
 
   for (const auto& grid : grids_) {

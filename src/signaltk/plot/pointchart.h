@@ -11,7 +11,7 @@
 #define _libstx_POINTCHART_H
 #include <stdlib.h>
 #include "canvas.h"
-#include "../core/rendertarget.h"
+#include "../core/layer.h"
 #include "axisdefinition.h"
 #include "domain.h"
 #include "continuousdomain.h"
@@ -101,7 +101,7 @@ public:
 protected:
 
   void render(
-      RenderTarget* target,
+      Layer* target,
       Viewport* viewport) const override;
 
   DomainProvider x_domain_;
@@ -208,7 +208,7 @@ void PointChart3D<TX, TY, TZ>::addSeries(Series3D<TX, TY, TZ>* series) {
 
 template <typename TX, typename TY, typename TZ>
 void PointChart3D<TX, TY, TZ>::render(
-    RenderTarget* target,
+    Layer* target,
     Viewport* viewport) const {
   if (x_domain_.get() == nullptr || y_domain_.get() == nullptr) {
     RAISE(kRuntimeError, "could not build domains");

@@ -8,7 +8,7 @@
  * <http://www.gnu.org/licenses/>.
  */
 #include <stdlib.h>
-#include "../core/rendertarget.h"
+#include "../core/layer.h"
 #include "../graphics/svgtarget.h"
 #include "canvas.h"
 #include "domain.h"
@@ -21,7 +21,7 @@ Legend::Legend() :
     height_(320) {}
 
 void Legend::renderOutsideLegends(
-    RenderTarget* target,
+    Layer* target,
     Viewport* viewport) const {
   for (const auto& legend : legends_) {
     if (legend->placement() != LegendDefinition::LEGEND_OUTSIDE) {
@@ -92,7 +92,7 @@ void Legend::renderOutsideLegends(
 }
 
 void Legend::renderInsideLegends(
-    RenderTarget* target,
+    Layer* target,
     Viewport* viewport) const {
   auto orig_padding = viewport->padding();
 
@@ -135,7 +135,7 @@ void Legend::renderInsideLegends(
 }
 
 void Legend::renderRightLegend(
-    RenderTarget* target,
+    Layer* target,
     Viewport* viewport,
     LegendDefinition* legend,
     double horiz_padding,
@@ -212,7 +212,7 @@ void Legend::renderRightLegend(
 }
 
 void Legend::renderLeftLegend(
-    RenderTarget* target,
+    Layer* target,
     Viewport* viewport,
     LegendDefinition* legend,
     double horiz_padding,

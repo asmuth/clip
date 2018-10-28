@@ -20,9 +20,9 @@
 namespace signaltk {
 namespace chart {
 
-class RenderTarget {
+class Layer {
 public:
-  virtual ~RenderTarget() {}
+  virtual ~Layer() {}
 
   virtual void drawText(
       const std::string& text,
