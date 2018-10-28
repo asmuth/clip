@@ -10,7 +10,6 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-#include "signaltk/core/backend_cairo.h"
 #include "signaltk/plot/plot_layout.h"
 #include "signaltk/plot/axisdefinition.h"
 #include "signaltk/plot/domain.h"
@@ -43,7 +42,7 @@ using signaltk::chart::Series3D;
 using signaltk::FileOutputStream;
 using signaltk::FileUtil;
 using signaltk::StringUtil;
-using signaltk::CairoBackend;
+using signaltk::Layer;
 using signaltk::test::UnitTest;
 
 //static void compareChart(
@@ -59,7 +58,7 @@ using signaltk::test::UnitTest;
 //}
 
 TEST_CASE(ChartTest, TestPlotLayoutWithLeftAxis, [] () {
-  CairoBackend target;
+  Layer target(1000, 600);
   target.clear(1, 1, 1, 1);
 
   PlotLayout plot_layout;
@@ -705,7 +704,7 @@ TEST_CASE(ChartTest, TestPlotLayoutWithLeftAxis, [] () {
 //
 static signaltk::test::UnitTest::TestCase __test_simple_line_chart_(
     &ChartTest, "TestSimpleLineChart", [] () {
-  CairoBackend target;
+  Layer target(1000, 600);
   target.clear(1, 1, 1, 1);
 
   auto series1 = new Series2D<double, double>("myseries1");
@@ -732,7 +731,7 @@ static signaltk::test::UnitTest::TestCase __test_simple_line_chart_(
   line_chart.addSeries(series1);
   line_chart.addSeries(series2);
 
-  Viewport vp(target.width(), target.height());
+  Viewport vp(target.width, target.height);
   line_chart.render(&target, &vp);
 
   target.writePNG("test_simple_line_chart.png");

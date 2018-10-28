@@ -13,13 +13,14 @@
 #include <vector>
 #include <string>
 #include <tuple>
+#include <signaltk/core/layer.h>
+#include <signaltk/core/viewport.h>
 #include "axisdefinition.h"
-#include "drawable.h"
+#include "griddefinition.h"
 #include "legenddefinition.h"
 
 namespace signaltk {
 namespace chart {
-class Layer;
 
 class PlotLayout {
 public:

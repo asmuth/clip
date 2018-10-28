@@ -12,6 +12,8 @@
 #include <stdlib.h>
 #include <stdint.h>
 #include "colour.h"
+#include "layer.h"
+#include "path.h"
 
 namespace signaltk {
 
@@ -30,6 +32,20 @@ struct StrokeStyle {
   StrokeLineCap line_cap;
   Colour colour;
 };
+
+void strokePath(
+    Layer* layer,
+    const PathData* path_data,
+    size_t path_data_count,
+    const StrokeStyle& style);
+
+void strokeLine(
+    Layer* layer,
+    double x1,
+    double y1,
+    double x2,
+    double y2,
+    const StrokeStyle& style);
 
 } // namespace signaltk
 

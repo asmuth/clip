@@ -9,8 +9,10 @@
 # chart
 add_library(signaltk-graphics STATIC
     path.cc
+    brush.cc
     colour.cc
-    backend_cairo.cc)
+    layer.cc
+    text.cc)
 
 #add_executable(test-cplot chart_test.cc)
 #target_link_libraries(test-cplot cplot stx-base)

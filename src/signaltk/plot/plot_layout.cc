@@ -9,6 +9,8 @@
  */
 #include <stdlib.h>
 #include "../core/layer.h"
+#include "../core/brush.h"
+#include "../core/text.h"
 #include "plot_layout.h"
 #include "domain.h"
 
@@ -131,7 +133,7 @@ void PlotLayout::renderTopAxis(
 
   /* draw title */
   if (axis->hasTitle()) {
-    target->drawText(
+    drawText(target,
         axis->getTitle(),
         padding_left + inner_width* 0.5f,
         top,
@@ -149,7 +151,7 @@ void PlotLayout::renderTopAxis(
     for (const auto& label : axis->getLabels()) {
       auto tick_x = padding_left + inner_width * label.first;
 
-      target->drawText(
+      drawText(target,
           label.second,
           tick_x,
           top - kAxisLabelHeight * 0.5f,
@@ -163,7 +165,7 @@ void PlotLayout::renderTopAxis(
   for (const auto& tick : axis->getTicks()) {
     auto tick_x = padding_left + inner_width * tick;
 
-    target->strokeLine(
+    strokeLine(target,
         tick_x,
         top,
         tick_x,
@@ -172,7 +174,7 @@ void PlotLayout::renderTopAxis(
   }
 
   /* draw stroke */
-  target->strokeLine(
+  strokeLine(target,
       padding_left,
       top,
       padding_left + inner_width,
@@ -197,7 +199,7 @@ void PlotLayout::renderRightAxis(
   /* draw title */
   if (axis->hasTitle()) {
     right += kAxisTitleLength;
-    target->drawText(
+    drawText(target,
         axis->getTitle(),
         width_ - right,
         padding_top + inner_height * 0.5f,
@@ -214,7 +216,7 @@ void PlotLayout::renderRightAxis(
     for (const auto& label : axis->getLabels()) {
       auto tick_y = padding_top + inner_height * (1.0 - label.first);
 
-      target->drawText(
+      drawText(target,
           label.second,
           width_ - right + (kTickLength * 2),
           tick_y,
@@ -228,7 +230,7 @@ void PlotLayout::renderRightAxis(
   for (const auto& tick : axis->getTicks()) {
     auto tick_y = padding_top + inner_height * (1.0 - tick);
 
-    target->strokeLine(
+    strokeLine(target,
         width_ - right,
         tick_y,
         width_ - right - kTickLength,
@@ -237,7 +239,7 @@ void PlotLayout::renderRightAxis(
   }
 
   /* draw stroke */
-  target->strokeLine(
+  strokeLine(target,
       width_ - right,
       padding_top,
       width_ - right,
@@ -260,7 +262,7 @@ void PlotLayout::renderBottomAxis(
 
   /* draw title */
   if (axis->hasTitle()) {
-    target->drawText(
+    drawText(target,
         axis->getTitle(),
         padding_left + inner_width* 0.5f,
         height_ - bottom,
@@ -278,7 +280,7 @@ void PlotLayout::renderBottomAxis(
     for (const auto& label : axis->getLabels()) {
       auto tick_x = padding_left + inner_width * label.first;
 
-      target->drawText(
+      drawText(target,
           label.second,
           tick_x,
           height_ - bottom + kAxisLabelHeight * 0.5f,
@@ -292,7 +294,7 @@ void PlotLayout::renderBottomAxis(
   for (const auto& tick : axis->getTicks()) {
     auto tick_x = padding_left + inner_width * tick;
 
-    target->strokeLine(
+    strokeLine(target,
         tick_x,
         height_ - bottom,
         tick_x,
@@ -301,7 +303,7 @@ void PlotLayout::renderBottomAxis(
   }
 
   /* draw stroke */
-  target->strokeLine(
+  strokeLine(target,
       padding_left,
       height_ - bottom,
       padding_left + inner_width,
@@ -324,7 +326,7 @@ void PlotLayout::renderLeftAxis(
 
   /* draw title */
   if (axis->hasTitle()) {
-    target->drawText(
+    drawText(target,
         axis->getTitle(),
         left,
         padding_top + inner_height * 0.5f,
@@ -343,7 +345,7 @@ void PlotLayout::renderLeftAxis(
     for (const auto& label : axis->getLabels()) {
       auto tick_y = padding_top + inner_height * (1.0 - label.first);
 
-      target->drawText(
+      drawText(target,
           label.second,
           left - (kTickLength * 2),
           tick_y,
@@ -357,7 +359,7 @@ void PlotLayout::renderLeftAxis(
   for (const auto& tick : axis->getTicks()) {
     auto tick_y = padding_top + inner_height * (1.0 - tick);
 
-    target->strokeLine(
+    strokeLine(target,
         left,
         tick_y,
         left + kTickLength,
@@ -366,7 +368,7 @@ void PlotLayout::renderLeftAxis(
   }
 
   /* draw stroke */
-  target->strokeLine(
+  strokeLine(target,
       left,
       padding_top,
       left,
@@ -386,7 +388,7 @@ void PlotLayout::renderGrids(Layer* target, Viewport* viewport) const {
           auto line_y = viewport->paddingTop() +
               viewport->innerHeight() * (1.0 - tick);
 
-          target->strokeLine(
+          strokeLine(target,
               viewport->paddingLeft(),
               line_y,
               viewport->paddingLeft() + viewport->innerWidth(),
@@ -399,7 +401,7 @@ void PlotLayout::renderGrids(Layer* target, Viewport* viewport) const {
         for (const auto& tick : grid->ticks()) {
           auto line_x = viewport->paddingLeft() + viewport->innerWidth() * tick;
 
-          target->strokeLine(
+          strokeLine(target,
               line_x,
               viewport->paddingTop(),
               line_x,

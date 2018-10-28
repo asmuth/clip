@@ -12,10 +12,10 @@
 #include <stdlib.h>
 #include "plot_layout.h"
 #include "../core/layer.h"
+#include "series.h"
 #include "axisdefinition.h"
 #include "continuousdomain.h"
 #include "domain.h"
-#include "drawable.h"
 #include "colorpalette.h"
 
 namespace signaltk {

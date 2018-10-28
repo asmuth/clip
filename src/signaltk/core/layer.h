@@ -8,51 +8,30 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#ifndef _libstx_RENDERTARGET_H
-#define _libstx_RENDERTARGET_H
+#pragma once
 #include <stdlib.h>
 #include <vector>
 #include <string>
+#include <cairo.h>
 #include "colour.h"
-#include "path.h"
-#include "brush.h"
 
 namespace signaltk {
-namespace chart {
 
-class Layer {
-public:
-  virtual ~Layer() {}
+struct Layer {
+  Layer(uint32_t width, uint32_t height);
+  ~Layer();
+  Layer(const Layer&) = delete;
+  Layer& operator=(const Layer&) = delete;
 
-  virtual void drawText(
-      const std::string& text,
-      double x,
-      double y,
-      const std::string& halign,
-      const std::string& valign,
-      const std::string& class_name,
-      double rotate = 0.0f) = 0;
+  void writePNG(const char* path);
 
-  virtual void strokePath(
-      const PathData* point_data,
-      size_t point_count,
-      const StrokeStyle& style) = 0;
+  void clear(double r, double g, double b, double a);
 
-  void strokeLine(
-      double x1,
-      double y1,
-      double x2,
-      double y2,
-      const StrokeStyle& style) {
-    Path p;
-    p.moveTo(x1, y1);
-    p.lineTo(x2, y2);
-    strokePath(p.data(), p.size(), style);
-  }
-
+  const uint32_t width;
+  const uint32_t height;
+  cairo_surface_t* surface;
+  cairo_t* ctx;
 };
 
+} // namespace signaltk
 
-}
-}
-#endif

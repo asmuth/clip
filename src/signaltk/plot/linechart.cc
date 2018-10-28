@@ -8,6 +8,9 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
+#include <signaltk/core/path.h>
+#include <signaltk/core/brush.h>
+#include <signaltk/core/text.h>
 #include "linechart.h"
 
 namespace signaltk {
@@ -132,7 +135,8 @@ void LineChart::render(
       auto label = series->labelFor(&point);
 
       if (show_labels_) {
-        target->drawText(
+        drawText(
+            target,
             label,
             ss_x,
             ss_y - point_size - kLabelPadding,
@@ -161,7 +165,8 @@ void LineChart::render(
     StrokeStyle style;
     style.line_width = line_width;
     //style.colour = colour;
-    target->strokePath(
+    strokePath(
+        target,
         path.data(),
         path.size(),
         style);
