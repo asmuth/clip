@@ -14,8 +14,8 @@
 #include <vector>
 #include <unordered_map>
 #include <tuple>
-#include <core/util/exception.h>
-#include <core/util/stringutil.h>
+#include <signaltk/util/exception.h>
+#include <signaltk/util/stringutil.h>
 
 namespace signaltk {
 namespace chart {

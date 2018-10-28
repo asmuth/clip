@@ -10,17 +10,14 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-#include "../../core/graphics/backend_cairo.h"
-#include "../../core/plot/plot_layout.h"
-#include "../../core/plot/axisdefinition.h"
-#include "../../core/plot/domain.h"
-//#include "../../core/plot/areachart.h"
-//#include "../../core/plot/barchart.h"
-#include "../../core/plot/linechart.h"
-//#include "../../core/plot/pointchart.h"
-#include "../../core/plot/series.h"
-#include "../../core/util/fileutil.h"
-#include "../../core/util/stringutil.h"
+#include "signaltk/graphics/backend_cairo.h"
+#include "signaltk/plot/plot_layout.h"
+#include "signaltk/plot/axisdefinition.h"
+#include "signaltk/plot/domain.h"
+#include "signaltk/plot/linechart.h"
+#include "signaltk/plot/series.h"
+#include "signaltk/util/fileutil.h"
+#include "signaltk/util/stringutil.h"
 #include "../unittest.h"
 
 UNIT_TEST(ChartTest);

@@ -5,7 +5,7 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/extra/cm
 set(CMAKE_CXX_STANDARD 11)
 
 # INCLUDES
-include_directories(${CMAKE_CURRENT_SOURCE_DIR})
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src)
 
 # DEPENDENCIES
 find_package(Threads)
@@ -13,9 +13,9 @@ find_package(Threads)
 find_package(Cairo)
 include_directories(${CAIRO_INCLUDE_DIRS})
 
-add_subdirectory(core/plot)
-add_subdirectory(core/util)
-add_subdirectory(core/graphics)
+add_subdirectory(src/signaltk/plot)
+add_subdirectory(src/signaltk/util)
+add_subdirectory(src/signaltk/graphics)
 
 add_subdirectory(test/plot)
 

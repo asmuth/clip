@@ -9,8 +9,8 @@
  */
 #ifndef _libstx_CONTINUOUSDOMAIN_H
 #define _libstx_CONTINUOUSDOMAIN_H
-#include "core/util/exception.h"
-#include "core/util/stringutil.h"
+#include "signaltk/util/exception.h"
+#include "signaltk/util/stringutil.h"
 #include "domain.h"
 
 namespace signaltk {

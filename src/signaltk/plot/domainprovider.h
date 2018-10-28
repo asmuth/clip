@@ -13,7 +13,7 @@
 #include <stdlib.h>
 #include <math.h>
 #include "domain.h"
-#include "core/util/exception.h"
+#include "signaltk/util/exception.h"
 
 namespace signaltk {
 namespace chart {

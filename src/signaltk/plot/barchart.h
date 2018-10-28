@@ -20,7 +20,7 @@
 #include "discretedomain.h"
 #include "drawable.h"
 #include "seriesjoin.h"
-#include <core/util/exception.h>
+#include <signaltk/util/exception.h>
 
 namespace signaltk {
 namespace chart {

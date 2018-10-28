@@ -16,12 +16,12 @@
 #include <string>
 #include <string.h>
 
-#include "core/util/exception.h"
-#include "core/util/fileutil.h"
-#include "core/util/inputstream.h"
-#include "core/util/outputstream.h"
-#include "core/util/inspect.h"
-#include "core/util/random.h"
+#include "signaltk/util/exception.h"
+#include "signaltk/util/fileutil.h"
+#include "signaltk/util/inputstream.h"
+#include "signaltk/util/outputstream.h"
+#include "signaltk/util/inspect.h"
+#include "signaltk/util/random.h"
 
 const char kExpectationFailed[] = "ExpectationFailed";
 

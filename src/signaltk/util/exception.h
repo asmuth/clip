@@ -12,9 +12,9 @@
 #include <errno.h>
 #include <exception>
 #include <string>
-#include "core/util/stringutil.h"
-#include "core/util/stdtypes.h"
-#include "core/util/outputstream.h"
+#include "signaltk/util/stringutil.h"
+#include "signaltk/util/stdtypes.h"
+#include "signaltk/util/outputstream.h"
 
 const char kBufferOverflowError[] = "BufferOverflowError";
 const char kConcurrentModificationError[] = "ConcurrentModificationError";

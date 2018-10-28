@@ -9,7 +9,7 @@
  */
 #ifndef _libstx_DISCRETEDOMAIN_H
 #define _libstx_DISCRETEDOMAIN_H
-#include "core/util/stringutil.h"
+#include "signaltk/util/stringutil.h"
 #include "domain.h"
 
 namespace signaltk {

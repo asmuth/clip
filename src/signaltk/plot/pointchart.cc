@@ -9,7 +9,7 @@
  */
 #include <stdlib.h>
 #include "pointchart.h"
-#include <core/util/exception.h>
+#include <signaltk/util/exception.h>
 
 namespace signaltk {
 namespace chart {

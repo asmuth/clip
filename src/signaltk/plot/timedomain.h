@@ -9,7 +9,7 @@
  */
 #ifndef _libstx_TIMEDOMAIN_H
 #define _libstx_TIMEDOMAIN_H
-#include "core/util/UnixTime.h"
+#include "signaltk/util/UnixTime.h"
 #include "continuousdomain.h"
 
 namespace signaltk {
