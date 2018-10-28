@@ -7,6 +7,8 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
+#include <string.h>
+#include <signaltk/util/stringutil.h>
 #include "colour.h"
 
 namespace signaltk {
@@ -17,6 +19,10 @@ Colour Colour::fromRGBA(double red, double green, double blue, double alpha) {
 
 Colour Colour::fromRGB(double red, double green, double blue) {
   return Colour({ red, green, blue, 1.0 });
+}
+
+Colour::Colour() {
+  memset(components_, 0, sizeof(components_));
 }
 
 Colour::Colour(
@@ -55,6 +61,57 @@ double Colour::operator[](size_t idx) const {
 
 double& Colour::operator[](size_t idx) {
   return components_[idx];
+}
+
+bool Colour::parse(const std::string& str) {
+  if (StringUtil::beginsWith(str, "#")) {
+    switch (str.size()) {
+      case 4:
+        return parseHexShort(str);
+      case 7:
+        return parseHex(str);
+      case 9:
+        return parseHexAlpha(str);
+    }
+  }
+
+  return false;
+}
+
+bool Colour::parseHex(const std::string& str) {
+  if (str.size() != 7) {
+    return false;
+  }
+
+  components_[0] = std::stoi(str.substr(1, 2), nullptr, 16) / 255.0f;
+  components_[1] = std::stoi(str.substr(3, 2), nullptr, 16) / 255.0f;
+  components_[2] = std::stoi(str.substr(5, 2), nullptr, 16) / 255.0f;
+  components_[3] = 1.0f;
+  return true;
+}
+
+bool Colour::parseHexAlpha(const std::string& str) {
+  if (str.size() != 9) {
+    return false;
+  }
+
+  components_[0] = std::stoi(str.substr(1, 2), nullptr, 16) / 255.0f;
+  components_[1] = std::stoi(str.substr(3, 2), nullptr, 16) / 255.0f;
+  components_[2] = std::stoi(str.substr(5, 2), nullptr, 16) / 255.0f;
+  components_[3] = std::stoi(str.substr(7, 2), nullptr, 16) / 255.0f;
+  return true;
+}
+
+bool Colour::parseHexShort(const std::string& str) {
+  if (str.size() != 4) {
+    return false;
+  }
+
+  components_[0] = std::stoi(str.substr(1, 1), nullptr, 16) / 16.0f;
+  components_[1] = std::stoi(str.substr(2, 1), nullptr, 16) / 16.0f;
+  components_[2] = std::stoi(str.substr(3, 1), nullptr, 16) / 16.0f;
+  components_[3] = 1.0f;
+  return true;
 }
 
 } // namespace signaltk

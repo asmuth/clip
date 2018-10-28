@@ -12,6 +12,7 @@
 #include <stdlib.h>
 #include <stdint.h>
 #include <vector>
+#include <string>
 
 namespace signaltk {
 
@@ -22,6 +23,7 @@ public:
   static Colour fromRGB(double red, double green, double blue);
   static Colour fromRGBA(double red, double green, double blue, double alpha);
 
+  Colour();
   Colour(const std::initializer_list<double>& components);
 
   double red() const;
@@ -32,6 +34,11 @@ public:
   double component(size_t idx) const;
   double operator[](size_t idx) const;
   double& operator[](size_t idx);
+
+  bool parse(const std::string& str);
+  bool parseHex(const std::string& str);
+  bool parseHexAlpha(const std::string& str);
+  bool parseHexShort(const std::string& str);
 
 protected:
   double components_[kMaxComponents];
