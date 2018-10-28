@@ -18,7 +18,7 @@ add_executable(signaltk
     src/signaltk/core/layer.cc
     src/signaltk/core/text.cc
     src/signaltk/core/image_api.cc
-    src/signaltk/plot/plot_layout.cc
+    src/signaltk/plot/gridlines.cc
     src/signaltk/plot/axes.cc
     src/signaltk/plot/domain.cc
     src/signaltk/plot/domainprovider.cc

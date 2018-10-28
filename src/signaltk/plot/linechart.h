@@ -10,11 +10,12 @@
  */
 #pragma once
 #include <stdlib.h>
-#include "plot_layout.h"
-#include "../core/layer.h"
+#include <signaltk/core/layer.h>
+#include <signaltk/core/viewport.h>
 #include "series.h"
 #include "continuousdomain.h"
 #include "domain.h"
+#include "domainprovider.h"
 #include "colorpalette.h"
 
 namespace signaltk {

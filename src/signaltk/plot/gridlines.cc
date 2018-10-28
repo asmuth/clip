@@ -1,5 +1,6 @@
 /**
  * This file is part of the "libstx" project
+ *   Copyright (c) 2018 Paul Asmuth
  *   Copyright (c) 2014 Paul Asmuth, Google Inc.
  *
  * libstx is free software: you can redistribute it and/or modify it under
@@ -11,16 +12,11 @@
 #include "../core/layer.h"
 #include "../core/brush.h"
 #include "../core/text.h"
-#include "plot_layout.h"
+#include "gridlines.h"
 #include "domain.h"
 
 namespace signaltk {
 namespace chart {
-
-// FIXME
-int estimateTextLength(const std::string& str) {
-  return str.size() * kCharWidth;
-}
 
 void renderGrid(
     const GridDefinition& grid,

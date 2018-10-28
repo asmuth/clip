@@ -9,7 +9,8 @@
  */
 #include <iostream>
 #include <signaltk/core/layer.h>
-#include <signaltk/plot/plot_layout.h>
+#include <signaltk/plot/axes.h>
+#include <signaltk/plot/gridlines.h>
 #include <signaltk/util/flagparser.h>
 #include "plot_api.h"
 
