@@ -77,7 +77,6 @@ public:
     std::get<3>(padding_) = val;
   }
 
-protected:
   int width_;
   int height_;
   std::tuple<int, int, int, int> padding_;

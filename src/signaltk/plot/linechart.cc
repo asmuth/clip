@@ -22,14 +22,9 @@ char LineChart::kDefaultPointStyle[] = "none";
 char LineChart::kDefaultPointSize[] = "3";
 
 LineChart::LineChart(
-    PlotLayout* canvas) :
-    show_labels_(false) {}
-
-LineChart::LineChart(
-    PlotLayout* canvas,
     AnyDomain* x_domain,
     AnyDomain* y_domain) :
-    LineChart(canvas) {
+    show_labels_(false) {
   x_domain_.reset(x_domain);
   y_domain_.reset(y_domain);
 }

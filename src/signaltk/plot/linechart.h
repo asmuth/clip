@@ -48,16 +48,7 @@ public:
    * @param x_domain the x domain. does not transfer ownership
    * @param y_domain the y domain. does not transfer ownership
    */
-  LineChart(PlotLayout* canvas);
-
-  /**
-   * Create a new line chart
-   *
-   * @param canvas the canvas to draw this chart on. does not transfer ownership
-   * @param x_domain the x domain. does not transfer ownership
-   * @param y_domain the y domain. does not transfer ownership
-   */
-  LineChart(PlotLayout* canvas, AnyDomain* x_domain, AnyDomain* y_domain);
+  LineChart(AnyDomain* x_domain, AnyDomain* y_domain);
 
   /**
    * Add a (x: string, y: double) series. This will draw one connected line

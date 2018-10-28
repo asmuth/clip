@@ -22,126 +22,84 @@
 namespace signaltk {
 namespace chart {
 
-class PlotLayout {
-public:
-  static const int kAxisPadding = 0; // FIXPAUL make configurable
-  static const int kTickLength = 5; // FIXPAUL make configurable
-  static const int kAxisLabelHeight = 25; // FIXPAUL make configurable
-  static const int kAxisLabelWidth = 50; // FIXPAUL make configurable
-  static const int kAxisTitleLength = 20; // FIXPAUL make configurable
-  static const int kCharWidth = 6.0f; // FIXPAUL make configurable
+static const int kAxisPadding = 0; // FIXPAUL make configurable
+static const int kTickLength = 5; // FIXPAUL make configurable
+static const int kAxisLabelHeight = 25; // FIXPAUL make configurable
+static const int kAxisLabelWidth = 50; // FIXPAUL make configurable
+static const int kAxisTitleLength = 20; // FIXPAUL make configurable
+static const int kCharWidth = 6.0f; // FIXPAUL make configurable
 
-  PlotLayout();
+/**
+ * Render the axes
+ */
+void renderAxes(
+    const Layer& input,
+    Layer* target,
+    Viewport* viewport);
 
-  void setDimensions(int width, int height);
+/**
+ * Render a top axis
+ *
+ * @param target the render target
+ * @param axis the axis definition
+ * @param padding the padding state
+ * @param top the top padding for this axis
+ */
+void renderTopAxis(
+    Layer* target,
+    Viewport* viewport,
+    AxisDefinition* axis,
+    int top);
 
-  /**
-   * Add an axis to this canvas. Usually axes are not specified manually via
-   * this method but through one of the Chart subclasses. However it is safe
-   * to call this method to explicitly define a custom axis.
-   *
-   * The returned pointer is owned by the canvas instance and must not be freed
-   * by the caller.
-   */
-  AxisDefinition* addAxis(AxisDefinition::kPosition position);
+/**
+ * Render a right axis
+ *
+ * @param target the render target
+ * @param axis the axis definition
+ * @param padding the padding state
+ * @param right the right padding for this axis
+ */
+void renderRightAxis(
+    Layer* target,
+    Viewport* viewport,
+    AxisDefinition* axis,
+    int right);
 
-  /**
-   * Add a grid to this canvas. Usually grids are not specified manually via
-   * this method but through one of the Chart subclasses. However it is safe
-   * to call this method to explicitly define a custom grid.
-   *
-   * The returned pointer is owned by the canvas instance and must not be freed
-   * by the caller.
-   */
-  GridDefinition* addGrid(GridDefinition::kPlacement placement);
+/**
+ * Render a bottom axis
+ *
+ * @param target the render target
+ * @param axis the axis definition
+ * @param padding the padding state
+ * @param bottom the bottom padding for this axis
+ */
+void renderBottomAxis(
+    Layer* target,
+    Viewport* viewport,
+    AxisDefinition* axis,
+    int bottom);
 
-  /**
-   * Render the contents of this canvas to the provided render target
-   *
-   * @param target a Layer subclass instance. Does not transfer ownership
-   */
-  void render(Layer* target) const;
+/**
+ * Render a left axis
+ *
+ * @param target the render target
+ * @param axis the axis definition
+ * @param padding the padding state
+ * @param left the left padding for this axis
+ */
+void renderLeftAxis(
+    Layer* target,
+    Viewport* viewport,
+    AxisDefinition* axis,
+    int left);
 
-protected:
-
-  // FIXPAUL
-  int estimateTextLength(const std::string& str) const {
-    return str.size() * kCharWidth;
-  }
-
-  /**
-   * Render the axes
-   */
-  void renderAxes(Layer* target, Viewport* viewport) const;
-
-  /**
-   * Render a top axis
-   *
-   * @param target the render target
-   * @param axis the axis definition
-   * @param padding the padding state
-   * @param top the top padding for this axis
-   */
-  void renderTopAxis(
-      Layer* target,
-      Viewport* viewport,
-      AxisDefinition* axis,
-      int top) const;
-
-  /**
-   * Render a right axis
-   *
-   * @param target the render target
-   * @param axis the axis definition
-   * @param padding the padding state
-   * @param right the right padding for this axis
-   */
-  void renderRightAxis(
-      Layer* target,
-      Viewport* viewport,
-      AxisDefinition* axis,
-      int right) const;
-
-  /**
-   * Render a bottom axis
-   *
-   * @param target the render target
-   * @param axis the axis definition
-   * @param padding the padding state
-   * @param bottom the bottom padding for this axis
-   */
-  void renderBottomAxis(
-      Layer* target,
-      Viewport* viewport,
-      AxisDefinition* axis,
-      int bottom) const;
-
-  /**
-   * Render a left axis
-   *
-   * @param target the render target
-   * @param axis the axis definition
-   * @param padding the padding state
-   * @param left the left padding for this axis
-   */
-  void renderLeftAxis(
-      Layer* target,
-      Viewport* viewport,
-      AxisDefinition* axis,
-      int left) const;
-
-  /**
-   * Render the grids
-   */
-  void renderGrids(Layer* target, Viewport* viewport) const;
-
-  // FIXPAUL this belongs into the layer
-  int width_;
-  int height_;
-
-  std::vector<std::unique_ptr<AxisDefinition>> axes_;
-  std::vector<std::unique_ptr<GridDefinition>> grids_;
-};
+/**
+ * Render the grid
+ */
+void renderGrid(
+    const GridDefinition& grid_config,
+    const Viewport& viewport,
+    Layer* target);
 
 }
 }

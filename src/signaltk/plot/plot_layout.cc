@@ -17,29 +17,13 @@
 namespace signaltk {
 namespace chart {
 
-PlotLayout::PlotLayout() :
-    width_(800),
-    height_(320) {}
-
-void PlotLayout::setDimensions(int width, int height) {
-  if (width > 0) {
-    width_ = width;
-  }
-
-  if (height > 0) {
-    height_ = height;
-  }
+// FIXME
+int estimateTextLength(const std::string& str) {
+  return str.size() * kCharWidth;
 }
 
-void PlotLayout::render(Layer* target) const {
-  // FIXPAUL: initialize from layer
-  Viewport viewport(width_, height_);
-
-  renderAxes(target, &viewport);
-  renderGrids(target, &viewport);
-}
-
-void PlotLayout::renderAxes(Layer* target, Viewport* viewport) const {
+/*
+void renderAxes(Layer* target, Viewport* viewport) {
   std::tuple<int, int, int, int> padding = viewport->padding();
   std::vector<std::pair<int, AxisDefinition*>> top;
   std::vector<std::pair<int, AxisDefinition*>> right;
@@ -119,11 +103,13 @@ void PlotLayout::renderAxes(Layer* target, Viewport* viewport) const {
   }
 }
 
-void PlotLayout::renderTopAxis(
+*/
+
+void renderTopAxis(
     Layer* target,
     Viewport* viewport,
     AxisDefinition* axis,
-    int top) const {
+    int top) {
   StrokeStyle style;
 
   int padding_left = viewport->paddingLeft();
@@ -184,11 +170,11 @@ void PlotLayout::renderTopAxis(
 }
 
 
-void PlotLayout::renderRightAxis(
+void renderRightAxis(
     Layer* target,
     Viewport* viewport,
     AxisDefinition* axis,
-    int right) const {
+    int right) {
   StrokeStyle style;
 
   int padding_top = viewport->paddingTop();
@@ -201,7 +187,7 @@ void PlotLayout::renderRightAxis(
     right += kAxisTitleLength;
     drawText(target,
         axis->getTitle(),
-        width_ - right,
+        viewport->width_ - right,
         padding_top + inner_height * 0.5f,
         "middle",
         "text-before-edge",
@@ -218,7 +204,7 @@ void PlotLayout::renderRightAxis(
 
       drawText(target,
           label.second,
-          width_ - right + (kTickLength * 2),
+          viewport->width_ - right + (kTickLength * 2),
           tick_y,
           "start",
           "middle",
@@ -231,28 +217,28 @@ void PlotLayout::renderRightAxis(
     auto tick_y = padding_top + inner_height * (1.0 - tick);
 
     strokeLine(target,
-        width_ - right,
+        viewport->width_ - right,
         tick_y,
-        width_ - right - kTickLength,
+        viewport->width_ - right - kTickLength,
         tick_y,
         style);
   }
 
   /* draw stroke */
   strokeLine(target,
-      width_ - right,
+      viewport->width_ - right,
       padding_top,
-      width_ - right,
+      viewport->width_ - right,
       padding_top + inner_height,
       style);
 
 }
 
-void PlotLayout::renderBottomAxis(
+void renderBottomAxis(
     Layer* target,
     Viewport* viewport,
     AxisDefinition* axis,
-    int bottom) const {
+    int bottom) {
   StrokeStyle style;
 
   int padding_left = viewport->paddingLeft();
@@ -265,7 +251,7 @@ void PlotLayout::renderBottomAxis(
     drawText(target,
         axis->getTitle(),
         padding_left + inner_width* 0.5f,
-        height_ - bottom,
+        viewport->height_ - bottom,
         "middle",
         "no-change",
         "title");
@@ -283,7 +269,7 @@ void PlotLayout::renderBottomAxis(
       drawText(target,
           label.second,
           tick_x,
-          height_ - bottom + kAxisLabelHeight * 0.5f,
+          viewport->height_ - bottom + kAxisLabelHeight * 0.5f,
           "middle",
           "central",
           "label");
@@ -296,27 +282,27 @@ void PlotLayout::renderBottomAxis(
 
     strokeLine(target,
         tick_x,
-        height_ - bottom,
+        viewport->height_ - bottom,
         tick_x,
-        height_ - bottom - kTickLength,
+        viewport->height_ - bottom - kTickLength,
         style);
   }
 
   /* draw stroke */
   strokeLine(target,
       padding_left,
-      height_ - bottom,
+      viewport->height_ - bottom,
       padding_left + inner_width,
-      height_ - bottom,
+      viewport->height_ - bottom,
       style);
 
 }
 
-void PlotLayout::renderLeftAxis(
+void renderLeftAxis(
     Layer* target,
     Viewport* viewport,
     AxisDefinition* axis,
-    int left) const {
+    int left) {
   StrokeStyle style;
 
   int padding_top = viewport->paddingTop();
@@ -377,51 +363,45 @@ void PlotLayout::renderLeftAxis(
 
 }
 
-void PlotLayout::renderGrids(Layer* target, Viewport* viewport) const {
+
+void renderGrid(
+    const GridDefinition& grid,
+    const Viewport& viewport,
+    Layer* target) {
   StrokeStyle style;
 
-  for (const auto& grid : grids_) {
-    switch (grid->placement()) {
+  switch (grid.placement()) {
 
-      case GridDefinition::GRID_HORIZONTAL:
-        for (const auto& tick : grid->ticks()) {
-          auto line_y = viewport->paddingTop() +
-              viewport->innerHeight() * (1.0 - tick);
+    case GridDefinition::GRID_HORIZONTAL:
+      for (const auto& tick : grid.ticks()) {
+        auto line_y = viewport.paddingTop() +
+            viewport.innerHeight() * (1.0 - tick);
 
-          strokeLine(target,
-              viewport->paddingLeft(),
-              line_y,
-              viewport->paddingLeft() + viewport->innerWidth(),
-              line_y,
-              style);
-        }
-        break;
+        strokeLine(
+            target,
+            viewport.paddingLeft(),
+            line_y,
+            viewport.paddingLeft() + viewport.innerWidth(),
+            line_y,
+            style);
+      }
+      break;
 
-      case GridDefinition::GRID_VERTICAL:
-        for (const auto& tick : grid->ticks()) {
-          auto line_x = viewport->paddingLeft() + viewport->innerWidth() * tick;
+    case GridDefinition::GRID_VERTICAL:
+      for (const auto& tick : grid.ticks()) {
+        auto line_x = viewport.paddingLeft() + viewport.innerWidth() * tick;
 
-          strokeLine(target,
-              line_x,
-              viewport->paddingTop(),
-              line_x,
-              viewport->paddingTop() + viewport->innerHeight(),
-              style);
-        }
-        break;
+        strokeLine(
+            target,
+            line_x,
+            viewport.paddingTop(),
+            line_x,
+            viewport.paddingTop() + viewport.innerHeight(),
+            style);
+      }
+      break;
 
-    }
   }
-}
-
-AxisDefinition* PlotLayout::addAxis(AxisDefinition::kPosition position) {
-  axes_.emplace_back(new AxisDefinition(position));
-  return axes_.back().get();
-}
-
-GridDefinition* PlotLayout::addGrid(GridDefinition::kPlacement placement) {
-  grids_.emplace_back(new GridDefinition(placement));
-  return grids_.back().get();
 }
 
 }

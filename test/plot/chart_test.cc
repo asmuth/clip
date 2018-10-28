@@ -32,7 +32,7 @@ using signaltk::chart::AxisDefinition;
 using signaltk::chart::LineChart;
 //using signaltk::chart::PointChart2D;
 //using signaltk::chart::PointChart3D;
-using signaltk::chart::PlotLayout;
+using namespace signaltk::chart;
 using signaltk::chart::Viewport;
 using signaltk::chart::ContinuousDomain;
 //using signaltk::chart::DomainProvider;
@@ -61,23 +61,31 @@ TEST_CASE(ChartTest, TestPlotLayoutWithLeftAxis, [] () {
   Layer target(1000, 600);
   target.clear(1, 1, 1, 1);
 
-  PlotLayout plot_layout;
+  //auto axis_left = plot_layout.addAxis(AxisDefinition::LEFT);
+  //axis_left->addTick(0.0);
+  //axis_left->addTick(0.2);
+  //axis_left->addTick(0.4);
+  //axis_left->addTick(0.6);
+  //axis_left->addTick(0.8);
+  //axis_left->addTick(1.0);
+  //axis_left->addLabel(0.0, "0");
+  //axis_left->addLabel(0.2, "1");
+  //axis_left->addLabel(0.4, "2");
+  //axis_left->addLabel(0.6, "3");
+  //axis_left->addLabel(0.8, "4");
+  //axis_left->addLabel(1.0, "5");
 
-  auto axis_left = plot_layout.addAxis(AxisDefinition::LEFT);
-  axis_left->addTick(0.0);
-  axis_left->addTick(0.2);
-  axis_left->addTick(0.4);
-  axis_left->addTick(0.6);
-  axis_left->addTick(0.8);
-  axis_left->addTick(1.0);
-  axis_left->addLabel(0.0, "0");
-  axis_left->addLabel(0.2, "1");
-  axis_left->addLabel(0.4, "2");
-  axis_left->addLabel(0.6, "3");
-  axis_left->addLabel(0.8, "4");
-  axis_left->addLabel(1.0, "5");
+  //plot_layout.render(&target);
+  GridDefinition grid(GridDefinition::GRID_HORIZONTAL);
+  grid.addTick(0.0);
+  grid.addTick(0.2);
+  grid.addTick(0.4);
+  grid.addTick(0.6);
+  grid.addTick(0.8);
+  grid.addTick(1.0);
 
-  plot_layout.render(&target);
+  renderGrid(grid, Viewport{target.width, target.height}, &target);
+
   target.writePNG("test_plot_layout_with_left_axis.png");
 });
 
@@ -726,8 +734,7 @@ static signaltk::test::UnitTest::TestCase __test_simple_line_chart_(
   ContinuousDomain<double> x_domain(10, 50, false);
   ContinuousDomain<double> y_domain(0, 50, false);
 
-  PlotLayout plot_layout;
-  LineChart line_chart(&plot_layout, &x_domain, &y_domain);
+  LineChart line_chart(&x_domain, &y_domain);
   line_chart.addSeries(series1);
   line_chart.addSeries(series2);
 
