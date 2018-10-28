@@ -9,3 +9,7 @@ cmake_install.cmake
 *.dll
 *.dylib
 /signaltk
+.ninja_deps
+.ninja_log
+*.ninja
+
