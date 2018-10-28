@@ -18,17 +18,19 @@
 namespace signaltk {
 
 struct Layer {
+  Layer();
   Layer(uint32_t width, uint32_t height);
   ~Layer();
   Layer(const Layer&) = delete;
   Layer& operator=(const Layer&) = delete;
 
-  void writePNG(const char* path);
+  bool loadPNG(const char* path);
+  bool writePNG(const char* path) const;
 
   void clear(const Colour& c);
 
-  const uint32_t width;
-  const uint32_t height;
+  uint32_t width;
+  uint32_t height;
   cairo_surface_t* surface;
   cairo_t* ctx;
 };

@@ -12,6 +12,8 @@
 
 namespace signaltk {
 
+Layer::Layer() : width(0), height(0), surface(nullptr), ctx(nullptr) {}
+
 Layer::Layer(
   uint32_t w,
   uint32_t h) :
@@ -32,8 +34,33 @@ void Layer::clear(const Colour& c) {
   cairo_fill(ctx);
 }
 
-void Layer::writePNG(const char* path) {
-  cairo_surface_write_to_png(surface, path);
+bool Layer::loadPNG(const char* path) {
+  if (surface || ctx) {
+    return false;
+  }
+
+  surface = cairo_image_surface_create_from_png(path);
+  if (cairo_surface_status(surface) != CAIRO_STATUS_SUCCESS) {
+    return false;
+  }
+
+  ctx = cairo_create(surface);
+
+  double extent[4];
+  cairo_clip_extents(ctx, extent + 0, extent + 1, extent + 2, extent + 3);
+  width = extent[2] - extent[0];
+  height = extent[3] - extent[1];
+
+  return true;
+}
+
+bool Layer::writePNG(const char* path) const {
+  if (!surface || !ctx) {
+    return false;
+  }
+
+  auto rc = cairo_surface_write_to_png(surface, path);
+  return rc == CAIRO_STATUS_SUCCESS;
 }
 
 } // namespace signaltk
