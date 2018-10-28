@@ -32,6 +32,7 @@ using signaltk::chart::AxisDefinition;
 using signaltk::chart::LineChart;
 //using signaltk::chart::PointChart2D;
 //using signaltk::chart::PointChart3D;
+using signaltk::Colour;
 using namespace signaltk::chart;
 using signaltk::chart::Viewport;
 using signaltk::chart::ContinuousDomain;
@@ -59,7 +60,7 @@ using signaltk::test::UnitTest;
 
 TEST_CASE(ChartTest, TestPlotLayoutWithLeftAxis, [] () {
   Layer target(1000, 600);
-  target.clear(1, 1, 1, 1);
+  target.clear(Colour{1, 1, 1, 1});
 
   //auto axis_left = plot_layout.addAxis(AxisDefinition::LEFT);
   //axis_left->addTick(0.0);
@@ -725,7 +726,7 @@ TEST_CASE(ChartTest, TestPlotLayoutWithLeftAxis, [] () {
 static signaltk::test::UnitTest::TestCase __test_simple_line_chart_(
     &ChartTest, "TestSimpleLineChart", [] () {
   Layer target(1000, 600);
-  target.clear(1, 1, 1, 1);
+  target.clear(Colour{ 1, 1, 1, 1 });
 
   auto series1 = new Series2D<double, double>("myseries1");
   series1->addDatum(10, 34);

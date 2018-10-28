@@ -25,7 +25,7 @@ struct Layer {
 
   void writePNG(const char* path);
 
-  void clear(double r, double g, double b, double a);
+  void clear(const Colour& c);
 
   const uint32_t width;
   const uint32_t height;

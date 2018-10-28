@@ -25,11 +25,27 @@ int cmd_image_new(Context* ctx, const char** args, int arg_count) {
   uint64_t flag_height;
   flag_parser.defineUInt64("height", true, &flag_height);
 
+  std::string flag_clear;
+  flag_parser.defineString("clear", true, &flag_clear);
+
   auto rc = flag_parser.parseArgv(arg_count, args);
   if (!rc.isSuccess()) {
     std::cerr << "ERROR: " << rc.getMessage() << std::endl;
     return -1;
   }
+
+  Layer target(flag_width, flag_height);
+
+  if (!flag_clear.empty()) {
+    Colour clear_colour;
+    if (!clear_colour.parse(flag_clear)) {
+      return -1; // FIXME error
+    }
+
+    target.clear(clear_colour);
+  }
+
+  target.writePNG(flag_out.c_str());
 
   return 0;
 }

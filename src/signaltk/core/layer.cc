@@ -26,8 +26,8 @@ Layer::~Layer() {
   cairo_surface_destroy(surface);
 }
 
-void Layer::clear(double r, double g, double b, double a) {
-  cairo_set_source_rgba(ctx, r, g, b, a);
+void Layer::clear(const Colour& c) {
+  cairo_set_source_rgba(ctx, c.red(), c.green(), c.blue(), c.alpha());
   cairo_rectangle(ctx, 0, 0, width, height);
   cairo_fill(ctx);
 }
