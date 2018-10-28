@@ -16,7 +16,7 @@
 #include "continuousdomain.h"
 #include "drawable.h"
 #include "colorpalette.h"
-#include "../graphics/rendertarget.h"
+#include "../core/rendertarget.h"
 
 namespace signaltk {
 namespace chart {

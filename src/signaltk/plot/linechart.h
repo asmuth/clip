@@ -11,7 +11,7 @@
 #pragma once
 #include <stdlib.h>
 #include "plot_layout.h"
-#include "../graphics/rendertarget.h"
+#include "../core/rendertarget.h"
 #include "axisdefinition.h"
 #include "continuousdomain.h"
 #include "domain.h"

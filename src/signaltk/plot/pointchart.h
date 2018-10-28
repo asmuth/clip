@@ -11,7 +11,7 @@
 #define _libstx_POINTCHART_H
 #include <stdlib.h>
 #include "canvas.h"
-#include "../graphics/rendertarget.h"
+#include "../core/rendertarget.h"
 #include "axisdefinition.h"
 #include "domain.h"
 #include "continuousdomain.h"

@@ -10,7 +10,7 @@
 
 #include <stdlib.h>
 #include "canvas.h"
-#include "../graphics/rendertarget.h"
+#include "../core/rendertarget.h"
 #include "areachart.h"
 
 namespace signaltk {

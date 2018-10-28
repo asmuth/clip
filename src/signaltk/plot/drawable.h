@@ -15,7 +15,7 @@
 #include "griddefinition.h"
 #include "legenddefinition.h"
 #include "series.h"
-#include "../graphics/viewport.h"
+#include "../core/viewport.h"
 
 namespace signaltk {
 namespace chart {

@@ -10,7 +10,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-#include "signaltk/graphics/backend_cairo.h"
+#include "signaltk/core/backend_cairo.h"
 #include "signaltk/plot/plot_layout.h"
 #include "signaltk/plot/axisdefinition.h"
 #include "signaltk/plot/domain.h"

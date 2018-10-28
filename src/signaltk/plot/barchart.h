@@ -11,7 +11,7 @@
 #define _libstx_BARCHART_H
 #include <stdlib.h>
 #include <memory>
-#include "../graphics/rendertarget.h"
+#include "../core/rendertarget.h"
 #include "canvas.h"
 #include "axisdefinition.h"
 #include "colorpalette.h"

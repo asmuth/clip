@@ -8,7 +8,7 @@
  * <http://www.gnu.org/licenses/>.
  */
 #include <stdlib.h>
-#include "../graphics/rendertarget.h"
+#include "../core/rendertarget.h"
 #include "../graphics/svgtarget.h"
 #include "canvas.h"
 #include "domain.h"

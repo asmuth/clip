@@ -13,9 +13,9 @@ find_package(Threads)
 find_package(Cairo)
 include_directories(${CAIRO_INCLUDE_DIRS})
 
+add_subdirectory(src/signaltk/core)
 add_subdirectory(src/signaltk/plot)
 add_subdirectory(src/signaltk/util)
-add_subdirectory(src/signaltk/graphics)
 
 add_subdirectory(test/plot)
 
