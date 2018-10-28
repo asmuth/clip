@@ -8,4 +8,4 @@ cmake_install.cmake
 *.so
 *.dll
 *.dylib
-signaltk
+/signaltk
