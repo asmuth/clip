@@ -19,7 +19,7 @@ namespace signaltk {
 
 struct Layer {
   Layer();
-  Layer(uint32_t width, uint32_t height);
+  Layer(uint32_t width, uint32_t height, uint32_t dpi = 100);
   ~Layer();
   Layer(const Layer&) = delete;
   Layer& operator=(const Layer&) = delete;
@@ -32,6 +32,7 @@ struct Layer {
 
   uint32_t width;
   uint32_t height;
+  uint32_t dpi;
   cairo_surface_t* surface;
   cairo_t* ctx;
 };

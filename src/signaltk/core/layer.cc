@@ -15,10 +15,12 @@ namespace signaltk {
 Layer::Layer() : width(0), height(0), surface(nullptr), ctx(nullptr) {}
 
 Layer::Layer(
-  uint32_t w,
-  uint32_t h) :
-  width(w),
-  height(h) {
+    uint32_t w,
+    uint32_t h,
+    uint32_t dpi_ /* = 300 */) :
+    width(w),
+    height(h),
+    dpi(dpi_) {
   surface = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, width, height);
   ctx = cairo_create(surface);
 }
