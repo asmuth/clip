@@ -8,10 +8,11 @@
  * <http://www.gnu.org/licenses/>.
  */
 #pragma once
-#include "layer.h"
+#include <signaltk.h>
 #include "path.h"
 
 namespace signaltk {
+class Layer;
 
 enum class TextHAlign {
   LEFT, CENTER, RIGHT
@@ -28,11 +29,28 @@ struct TextStyle {
   double font_size;
 };
 
-void drawText(
+struct FontInfo {
+  std::string font_file;
+  double font_size;
+};
+
+struct GlyphPlacement {
+  uint32_t codepoint;
+  double x;
+  double y;
+};
+
+Status drawText(
     const std::string& text,
     const TextStyle& text_style,
     double x,
     double y,
+    Layer* layer);
+
+Status drawTextGlyphs(
+    const FontInfo& font_info,
+    const GlyphPlacement* glyphs,
+    size_t glyph_count,
     Layer* layer);
 
 

@@ -14,6 +14,7 @@
 #include <string>
 
 #include "colour.h"
+#include <signaltk/text/text_shaper.h>
 #include <signaltk/core/rasterize.h>
 
 namespace signaltk {
@@ -34,6 +35,7 @@ struct Layer {
   uint32_t width;
   uint32_t height;
   uint32_t dpi;
+  text::TextShaper text_shaper;
   Rasterizer rasterizer;
 };
 
