@@ -22,6 +22,7 @@ add_library(signaltk STATIC
     src/signaltk/core/layer.cc
     src/signaltk/core/text.cc
     src/signaltk/core/image_api.cc
+    src/signaltk/core/rasterize.cc
     src/signaltk/plot/gridlines.cc
     src/signaltk/plot/axes.cc
     src/signaltk/plot/domain.cc

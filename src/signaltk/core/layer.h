@@ -12,8 +12,9 @@
 #include <stdlib.h>
 #include <vector>
 #include <string>
-#include <cairo.h>
+
 #include "colour.h"
+#include <signaltk/core/rasterize.h>
 
 namespace signaltk {
 
@@ -33,8 +34,7 @@ struct Layer {
   uint32_t width;
   uint32_t height;
   uint32_t dpi;
-  cairo_surface_t* surface;
-  cairo_t* ctx;
+  Rasterizer rasterizer;
 };
 
 } // namespace signaltk

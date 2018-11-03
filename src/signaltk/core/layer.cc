@@ -12,51 +12,50 @@
 
 namespace signaltk {
 
-Layer::Layer() : width(0), height(0), surface(nullptr), ctx(nullptr) {}
-
 Layer::Layer(
     uint32_t w,
     uint32_t h,
     uint32_t dpi_ /* = 300 */) :
     width(w),
     height(h),
-    dpi(dpi_) {
-  surface = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, width, height);
-  ctx = cairo_create(surface);
-}
+    dpi(dpi_),
+    text_shaper(dpi),
+    rasterizer(width, height, dpi) {}
 
-Layer::~Layer() {
-  cairo_destroy(ctx);
-  cairo_surface_destroy(surface);
-}
+Layer::~Layer() {}
 
 void Layer::clear(const Colour& c) {
+  auto ctx = rasterizer.ctx;
   cairo_set_source_rgba(ctx, c.red(), c.green(), c.blue(), c.alpha());
   cairo_rectangle(ctx, 0, 0, width, height);
   cairo_fill(ctx);
 }
 
-bool Layer::loadPNG(const char* path) {
-  if (surface || ctx) {
-    return false;
-  }
-
-  surface = cairo_image_surface_create_from_png(path);
-  if (cairo_surface_status(surface) != CAIRO_STATUS_SUCCESS) {
-    return false;
-  }
-
-  ctx = cairo_create(surface);
-
-  double extent[4];
-  cairo_clip_extents(ctx, extent + 0, extent + 1, extent + 2, extent + 3);
-  width = extent[2] - extent[0];
-  height = extent[3] - extent[1];
-
-  return true;
-}
+//bool Layer::loadPNG(const char* path) {
+//  auto surface = rasterizer.surface;
+//  auto ctx = rasterizer.ctx;
+//  if (surface || ctx) {
+//    return false;
+//  }
+//
+//  surface = cairo_image_surface_create_from_png(path);
+//  if (cairo_surface_status(surface) != CAIRO_STATUS_SUCCESS) {
+//    return false;
+//  }
+//
+//  ctx = cairo_create(surface);
+//
+//  double extent[4];
+//  cairo_clip_extents(ctx, extent + 0, extent + 1, extent + 2, extent + 3);
+//  width = extent[2] - extent[0];
+//  height = extent[3] - extent[1];
+//
+//  return true;
+//}
 
 bool Layer::writePNG(const char* path) const {
+  auto surface = rasterizer.surface;
+  auto ctx = rasterizer.ctx;
   if (!surface || !ctx) {
     return false;
   }

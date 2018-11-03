@@ -17,7 +17,7 @@ void strokePath(
     const PathData* point_data,
     size_t point_count,
     const StrokeStyle& style) {
-  auto ctx = layer->ctx;
+  auto ctx = layer->rasterizer.ctx;
 
   if (point_count < 2) {
     return;
