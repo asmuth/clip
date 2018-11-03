@@ -132,7 +132,7 @@ struct AxisDefinitions {
 };
 
 /**
- * Render the axes
+ * Render a vertical axis
  */
 void renderAxisVertical(
     const AxisDefinition& axis_config,
@@ -142,60 +142,14 @@ void renderAxisVertical(
     Layer* target);
 
 /**
- * Render a top axis
- *
- * @param target the render target
- * @param axis the axis definition
- * @param padding the padding state
- * @param top the top padding for this axis
+ * Render a horizontal axis
  */
-void renderTopAxis(
-    Layer* target,
-    Viewport* viewport,
-    AxisDefinition* axis,
-    int top);
-
-/**
- * Render a right axis
- *
- * @param target the render target
- * @param axis the axis definition
- * @param padding the padding state
- * @param right the right padding for this axis
- */
-void renderRightAxis(
-    Layer* target,
-    Viewport* viewport,
-    AxisDefinition* axis,
-    int right);
-
-/**
- * Render a bottom axis
- *
- * @param target the render target
- * @param axis the axis definition
- * @param padding the padding state
- * @param bottom the bottom padding for this axis
- */
-void renderBottomAxis(
-    Layer* target,
-    Viewport* viewport,
-    AxisDefinition* axis,
-    int bottom);
-
-/**
- * Render a left axis
- *
- * @param target the render target
- * @param axis the axis definition
- * @param padding the padding state
- * @param left the left padding for this axis
- */
-void renderLeftAxis(
-    Layer* target,
-    Viewport* viewport,
-    AxisDefinition* axis,
-    int left);
+void renderAxisHorizontal(
+    const AxisDefinition& axis_config,
+    double y,
+    double x0,
+    double x1,
+    Layer* target);
 
 } // namespace chart
 } // namespace signaltk

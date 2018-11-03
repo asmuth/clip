@@ -13,25 +13,12 @@ using namespace signaltk;
 using namespace signaltk::chart;
 
 int main(int argc, char** argv) {
-  Layer target(1000, 600);
+  Layer target(1200, 800);
   target.clear(Colour{1, 1, 1, 1});
 
-  double padding = 20;
+  double padding = 80;
 
   // draw left axis
-  {
-    AxisDefinition axis;
-    axis.label_placement = AxisDefinition::LABELS_RIGHT;
-    axis.addTick(0.0);
-    axis.addTick(0.2);
-    axis.addTick(0.4);
-    axis.addTick(0.6);
-    axis.addTick(0.8);
-    axis.addTick(1.0);
-    renderAxisVertical(axis, padding, padding, target.height - padding, &target);
-  }
-
-  // draw right axis
   {
     AxisDefinition axis;
     axis.label_placement = AxisDefinition::LABELS_LEFT;
@@ -41,23 +28,71 @@ int main(int argc, char** argv) {
     axis.addTick(0.6);
     axis.addTick(0.8);
     axis.addTick(1.0);
+    axis.addLabel(0.0, "asd");
+    axis.addLabel(0.2, "blah");
+    axis.addLabel(0.4, "xxx");
+    axis.addLabel(0.6, "d");
+    axis.addLabel(0.8, "e");
+    axis.addLabel(1.0, "f");
+    renderAxisVertical(axis, padding, padding, target.height - padding, &target);
+  }
+
+  // draw right axis
+  {
+    AxisDefinition axis;
+    axis.label_placement = AxisDefinition::LABELS_RIGHT;
+    axis.addTick(0.0);
+    axis.addTick(0.2);
+    axis.addTick(0.4);
+    axis.addTick(0.6);
+    axis.addTick(0.8);
+    axis.addTick(1.0);
+    axis.addLabel(0.0, "a");
+    axis.addLabel(0.2, "b");
+    axis.addLabel(0.4, "c");
+    axis.addLabel(0.6, "d");
+    axis.addLabel(0.8, "e");
+    axis.addLabel(1.0, "f");
     renderAxisVertical(axis, target.width - padding, padding, target.height - padding, &target);
   }
 
-  //axis_left->setTitle("my axis");
-  //axis_left->addTick(0.0);
-  //axis_left->addTick(0.2);
-  //axis_left->addTick(0.4);
-  //axis_left->addTick(0.6);
-  //axis_left->addTick(0.8);
-  //axis_left->addTick(1.0);
-  //axis_left->addLabel(0.0, "0");
-  //axis_left->addLabel(0.2, "1");
-  //axis_left->addLabel(0.4, "2");
-  //axis_left->addLabel(0.6, "3");
-  //axis_left->addLabel(0.8, "4");
-  //axis_left->addLabel(1.0, "5");
+  // draw top axis
+  {
+    AxisDefinition axis;
+    axis.label_placement = AxisDefinition::LABELS_TOP;
+    axis.addTick(0.0);
+    axis.addTick(0.2);
+    axis.addTick(0.4);
+    axis.addTick(0.6);
+    axis.addTick(0.8);
+    axis.addTick(1.0);
+    axis.addLabel(0.0, "a");
+    axis.addLabel(0.2, "b");
+    axis.addLabel(0.4, "c");
+    axis.addLabel(0.6, "d");
+    axis.addLabel(0.8, "e");
+    axis.addLabel(1.0, "f");
+    renderAxisHorizontal(axis, padding, padding, target.width - padding, &target);
+  }
 
+  // draw bottom axis
+  {
+    AxisDefinition axis;
+    axis.label_placement = AxisDefinition::LABELS_BOTTOM;
+    axis.addTick(0.0);
+    axis.addTick(0.2);
+    axis.addTick(0.4);
+    axis.addTick(0.6);
+    axis.addTick(0.8);
+    axis.addTick(1.0);
+    axis.addLabel(0.0, "a");
+    axis.addLabel(0.2, "b");
+    axis.addLabel(0.4, "c");
+    axis.addLabel(0.6, "d");
+    axis.addLabel(0.8, "e");
+    axis.addLabel(1.0, "f");
+    renderAxisHorizontal(axis, target.height - padding, padding, target.width - padding, &target);
+  }
 
   target.writePNG(std::string(argv[0]) + ".png");
 }

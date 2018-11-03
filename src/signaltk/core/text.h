@@ -13,15 +13,28 @@
 
 namespace signaltk {
 
+enum class TextHAlign {
+  LEFT, CENTER, RIGHT
+};
+
+enum class TextVAlign {
+  TOP, CENTER, BOTTOM
+};
+
+struct TextStyle {
+  TextStyle();
+  TextHAlign halign;
+  TextVAlign valign;
+  double font_size;
+};
+
 void drawText(
-    Layer* layer,
     const std::string& text,
+    const TextStyle& text_style,
     double x,
     double y,
-    const std::string& halign,
-    const std::string& valign,
-    const std::string& class_name,
-    double rotate = 0.0f);
+    Layer* layer);
+
 
 } // namespace signaltk
 
