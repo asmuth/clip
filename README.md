@@ -1,8 +1,8 @@
 signaltk
 ========
 
-signaltk is a toolkit for creating dynamic visualizations, such as charts, diagrams
-or digital signage.
+A set of command line utilities and C++ classes for creating toolkit for creating
+high-quality charts, figures and dashboards.
 
 Documentation: [signaltk.org](http://signaltk.org/)
 

@@ -1,9 +1,11 @@
 cmake_minimum_required(VERSION 2.8.8)
 project(signaltk)
+enable_testing()
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/extra/cmake")
 set(CMAKE_CXX_STANDARD 11)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
 find_package(Threads)
 find_package(Cairo)
@@ -11,7 +13,7 @@ include_directories(${CAIRO_INCLUDE_DIRS})
 
 add_definitions(-DFNORDMETRIC_VERSION="unstable")
 
-add_executable(signaltk
+add_library(signaltk STATIC
     src/signaltk/core/path.cc
     src/signaltk/core/brush.cc
     src/signaltk/core/colour.cc
@@ -45,14 +47,19 @@ add_executable(signaltk
     src/signaltk/util/UTF8.cc
     src/signaltk/util/wallclock.cc
     src/signaltk_cli.cc
-    src/signaltk_cmd.cc
-    src/signaltk.cc)
+    src/signaltk_cmd.cc)
 
-target_link_libraries(signaltk
-    ${CAIRO_LIBRARIES})
+set(SIGNALTK_LDFLAGS signaltk ${CAIRO_LIBRARIES})
 
-add_custom_target(check
-    ALL
-    DEPENDS signaltk
-    COMMAND "${CMAKE_CURRENT_SOURCE_DIR}/test/test_runner.sh")
+file(GLOB test_files "test/**/test_*.cc")
+foreach(test_path ${test_files})
+  get_filename_component(test_name ${test_path} NAME_WE)
+  get_filename_component(test_srcdir ${test_path} DIRECTORY)
 
+  add_executable(${test_name} ${test_path})
+  target_link_libraries(${test_name} ${SIGNALTK_LDFLAGS})
+
+  add_test(
+      NAME ${test_name}
+      COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/test/test_runner.sh ${CMAKE_CURRENT_BINARY_DIR}/${test_name} ${test_srcdir}/${test_name}.png)
+endforeach()

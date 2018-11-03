@@ -1,4 +1,4 @@
-build
+/build
 .DS_Store
 CMakeFiles
 CMakeCache.txt
@@ -9,7 +9,10 @@ cmake_install.cmake
 *.dll
 *.dylib
 /signaltk
-.ninja_deps
-.ninja_log
-*.ninja
-
+/.ninja_deps
+/.ninja_log
+/*.ninja
+/test_*.png
+/test_*
+Testing
+CTestTestfile.cmake

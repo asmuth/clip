@@ -26,6 +26,7 @@ struct Layer {
 
   bool loadPNG(const char* path);
   bool writePNG(const char* path) const;
+  bool writePNG(const std::string& path) const;
 
   void clear(const Colour& c);
 

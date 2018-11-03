@@ -63,5 +63,9 @@ bool Layer::writePNG(const char* path) const {
   return rc == CAIRO_STATUS_SUCCESS;
 }
 
+bool Layer::writePNG(const std::string& path) const {
+  return writePNG(path.c_str());
+}
+
 } // namespace signaltk
 
