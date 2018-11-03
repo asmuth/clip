@@ -29,10 +29,12 @@ public:
   /**
    * The axis tick position
    */
-  enum kLabelPosition {
-    LABELS_INSIDE = 0,
-    LABELS_OUTSIDE = 1,
-    LABELS_OFF = 2
+  enum kLabelPlacement {
+    LABELS_LEFT,
+    LABELS_RIGHT,
+    LABELS_TOP,
+    LABELS_BOTTOM,
+    LABELS_OFF
   };
 
   /**
@@ -80,12 +82,12 @@ public:
   /**
    * Set the label position for this axis
    */
-  void setLabelPosition(kLabelPosition pos);
+  void setLabelPlacement(kLabelPlacement pos);
 
   /**
    * Return the label position for this axis
    */
-  kLabelPosition getLabelPosition() const;
+  kLabelPlacement getLabelPlacement() const;
 
   /**
    * Set the label rotation for this axis
@@ -119,6 +121,7 @@ public:
   bool has_ticks_;
   std::vector<std::pair<double, std::string>> labels_;
   bool has_labels_;
+  kLabelPlacement label_placement;
 };
 
 struct AxisDefinitions {
@@ -131,10 +134,12 @@ struct AxisDefinitions {
 /**
  * Render the axes
  */
-void renderAxes(
-    const Layer& input,
-    Layer* target,
-    Viewport* viewport);
+void renderAxisVertical(
+    const AxisDefinition& axis_config,
+    double x,
+    double y0,
+    double y1,
+    Layer* target);
 
 /**
  * Render a top axis

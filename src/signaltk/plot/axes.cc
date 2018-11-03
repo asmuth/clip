@@ -47,10 +47,6 @@ bool AxisDefinition::hasLabels() const {
   return has_labels_;
 }
 
-AxisDefinition::kLabelPosition AxisDefinition::getLabelPosition() const {
-  return LABELS_INSIDE;
-}
-
 void AxisDefinition::setTitle(const std::string& title) {
   title_ = title;
 }
@@ -339,69 +335,36 @@ void renderBottomAxis(
 
 }
 
-void renderLeftAxis(
-    Layer* target,
-    Viewport* viewport,
-    AxisDefinition* axis,
-    int left) {
-  StrokeStyle style;
-
-  int padding_top = viewport->paddingTop();
-  int inner_height = viewport->innerHeight();
-
-  left += kAxisPadding;
-
-  /* draw title */
-  if (axis->hasTitle()) {
-    drawText(target,
-        axis->getTitle(),
-        left,
-        padding_top + inner_height * 0.5f,
-        "middle",
-        "text-before-edge",
-        "title",
-        270);
-
-    left += kAxisTitleLength;
+void renderAxisVertical(
+    const AxisDefinition& axis_config,
+    double x,
+    double y0,
+    double y1,
+    Layer* target) {
+  /* draw axis line */ 
+  {
+    StrokeStyle style;
+    strokeLine(target, x, y0, x, y1, style);
   }
 
-  /* draw labels */
-  if (axis->hasLabels()) {
-    left += kAxisLabelWidth; // FIXPAUL: calculate label width?
-
-    for (const auto& label : axis->getLabels()) {
-      auto tick_y = padding_top + inner_height * (1.0 - label.first);
-
-      drawText(target,
-          label.second,
-          left - (kTickLength * 2),
-          tick_y,
-          "end",
-          "middle",
-          "label");
-    }
+  double label_placement = 0;
+  switch (axis_config.label_placement) {
+    case AxisDefinition::LABELS_RIGHT:
+      label_placement = 1;
+      break;
+    case AxisDefinition::LABELS_LEFT:
+      label_placement = -1;
+      break;
+    default:
+      break;
   }
 
   /* draw ticks */
-  for (const auto& tick : axis->getTicks()) {
-    auto tick_y = padding_top + inner_height * (1.0 - tick);
-
-    strokeLine(target,
-        left,
-        tick_y,
-        left + kTickLength,
-        tick_y,
-        style);
+  for (const auto& tick : axis_config.getTicks()) {
+    auto y = y0 + (y1 - y0) * tick;
+    StrokeStyle style;
+    strokeLine(target, x, y, x + kTickLength * label_placement, y, style);
   }
-
-  /* draw stroke */
-  strokeLine(target,
-      left,
-      padding_top,
-      left,
-      padding_top + inner_height,
-      style);
-
 }
 
 }
