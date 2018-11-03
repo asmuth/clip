@@ -31,6 +31,7 @@ add_library(signaltk STATIC
     src/signaltk/plot/series.cc
     src/signaltk/plot/timedomain.cc
     src/signaltk/plot/plot_api.cc
+    src/signaltk/text/text_shaper.cc
     src/signaltk/util/random.cc
     src/signaltk/util/bufferutil.cc
     src/signaltk/util/exception.cc
@@ -51,7 +52,7 @@ add_library(signaltk STATIC
     src/signaltk_cli.cc
     src/signaltk_cmd.cc)
 
-set(SIGNALTK_LDFLAGS signaltk ${CAIRO_LIBRARIES} ${FREETYPE_LIBRARIES} ${HARFBUZZ_LIBRARIES} harfbuzz-icu)
+set(SIGNALTK_LDFLAGS signaltk ${CAIRO_LIBRARIES} ${FREETYPE_LIBRARIES} ${HARFBUZZ_LIBRARIES} ${HARFBUZZ_ICU_LIBRARIES})
 
 file(GLOB test_files "test/**/test_*.cc")
 foreach(test_path ${test_files})
