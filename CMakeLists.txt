@@ -3,13 +3,15 @@ project(signaltk)
 enable_testing()
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/extra/cmake")
-set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 17)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
 find_package(Threads)
 find_package(Cairo)
-include_directories(${CAIRO_INCLUDE_DIRS})
+find_package(Freetype)
+find_package(HarfBuzz)
+include_directories(${CAIRO_INCLUDE_DIRS} ${FREETYPE_INCLUDE_DIRS} ${HARFBUZZ_INCLUDE_DIRS})
 
 add_definitions(-DFNORDMETRIC_VERSION="unstable")
 
@@ -27,7 +29,6 @@ add_library(signaltk STATIC
     src/signaltk/plot/legenddefinition.cc
     src/signaltk/plot/series.cc
     src/signaltk/plot/timedomain.cc
-    src/signaltk/plot/linechart.cc
     src/signaltk/plot/plot_api.cc
     src/signaltk/util/random.cc
     src/signaltk/util/bufferutil.cc
@@ -49,7 +50,7 @@ add_library(signaltk STATIC
     src/signaltk_cli.cc
     src/signaltk_cmd.cc)
 
-set(SIGNALTK_LDFLAGS signaltk ${CAIRO_LIBRARIES})
+set(SIGNALTK_LDFLAGS signaltk ${CAIRO_LIBRARIES} ${FREETYPE_LIBRARIES} ${HARFBUZZ_LIBRARIES} harfbuzz-icu)
 
 file(GLOB test_files "test/**/test_*.cc")
 foreach(test_path ${test_files})
