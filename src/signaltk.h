@@ -19,7 +19,9 @@ struct Context {
 };
 
 enum Status : int {
-  OK, ERROR
+  OK,
+  ERROR,
+  ERROR_NOT_IMPLEMENTED
 };
 
 struct Command {

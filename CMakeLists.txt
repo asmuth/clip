@@ -31,6 +31,7 @@ add_library(signaltk STATIC
     src/signaltk/plot/series.cc
     src/signaltk/plot/timedomain.cc
     src/signaltk/plot/plot_api.cc
+    src/signaltk/text/text_layout.cc
     src/signaltk/text/text_shaper.cc
     src/signaltk/util/random.cc
     src/signaltk/util/bufferutil.cc

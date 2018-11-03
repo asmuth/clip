@@ -29,12 +29,6 @@ namespace text {
 class TextShaper {
 public:
 
-  struct GlyphPlacement {
-    uint32_t codepoint;
-    double advance_y;
-    double advance_x;
-  };
-
   TextShaper(double dpi);
   ~TextShaper();
   TextShaper(const TextShaper&) = delete;
@@ -43,7 +37,7 @@ public:
   Status shapeText(
       const std::string& text,
       const FontInfo& font_info,
-      std::function<void (const GlyphPlacement&)> glyph_cb);
+      std::function<void (const GlyphInfo&)> glyph_cb);
 
 protected:
   double dpi;

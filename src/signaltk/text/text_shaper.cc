@@ -27,7 +27,7 @@ TextShaper::~TextShaper() {
 Status TextShaper::shapeText(
     const std::string& text,
     const FontInfo& font_info,
-    std::function<void (const TextShaper::GlyphPlacement&)> glyph_cb) {
+    std::function<void (const GlyphInfo&)> glyph_cb) {
   if (!ft_ready) {
     if (FT_Init_FreeType(&ft)) {
       return ERROR;
@@ -60,7 +60,7 @@ Status TextShaper::shapeText(
   auto glyph_infos = hb_buffer_get_glyph_infos(hb_buf, &glyph_count);
   auto glyph_positions = hb_buffer_get_glyph_positions(hb_buf, &glyph_count);
   for (size_t i = 0; i < glyph_count; ++i) {
-    GlyphPlacement  g;
+    GlyphInfo  g;
     g.codepoint = glyph_infos[i].codepoint;
     g.advance_x = glyph_positions[i].x_advance / 64.0;
     g.advance_y = glyph_positions[i].y_advance / 64.0;

@@ -14,6 +14,10 @@
 namespace signaltk {
 class Layer;
 
+enum class TextDirection {
+  LTR, RTL
+};
+
 enum class TextHAlign {
   LEFT, CENTER, RIGHT
 };
@@ -24,6 +28,7 @@ enum class TextVAlign {
 
 struct TextStyle {
   TextStyle();
+  TextDirection direction;
   TextHAlign halign;
   TextVAlign valign;
   double font_size;
@@ -32,6 +37,12 @@ struct TextStyle {
 struct FontInfo {
   std::string font_file;
   double font_size;
+};
+
+struct GlyphInfo {
+  uint32_t codepoint;
+  double advance_y;
+  double advance_x;
 };
 
 struct GlyphPlacement {

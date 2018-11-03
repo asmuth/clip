@@ -9,11 +9,13 @@
  */
 #include <signaltk/core/text.h>
 #include <signaltk/text/text_shaper.h>
+#include <signaltk/text/text_layout.h>
 #include <signaltk/core/layer.h>
 
 namespace signaltk {
 
 TextStyle::TextStyle() :
+    direction(TextDirection::LTR),
     halign(TextHAlign::LEFT),
     valign(TextVAlign::CENTER),
     font_size(32) {}
@@ -29,21 +31,20 @@ Status drawText(
 
   FontInfo font_info {
     .font_file = "/Library/Fonts/Arial.ttf",
-    .font_size = 42
+    .font_size = 16
   };
 
   std::vector<GlyphPlacement> glyphs;
-  auto rc = layer->text_shaper.shapeText(
+  auto rc = text::layoutText(
       text,
+      x,
+      y,
       font_info,
-      [&glyphs] (const text::TextShaper::GlyphPlacement& gi) {
-         GlyphPlacement g;
-         glyphs.emplace_back(GlyphPlacement {
-           .codepoint = gi.codepoint,
-           .x = 100,
-           .y = 100
-         });
-      });
+      text_style.direction,
+      text_style.halign,
+      text_style.valign,
+      &layer->text_shaper,
+      [&glyphs] (const GlyphPlacement& g) { glyphs.emplace_back(g); });
 
   if (rc != OK) {
     return rc;

@@ -54,9 +54,10 @@ Status Rasterizer::drawTextGlyphs(
   }
 
   auto cairo_font = cairo_ft_font_face_create_for_ft_face(ft_font, 0);
-  auto cairo_glyphs = static_cast<cairo_glyph_t*>(malloc(sizeof(cairo_glyph_t) * glyph_count));
+  auto cairo_glyphs = cairo_glyph_allocate(glyph_count);
 
   for (int i = 0; i < glyph_count; ++i) {
+    printf("render glyph @ %f, %f\n", glyphs[i].x, glyphs[i].y);
     cairo_glyphs[i].index = glyphs[i].codepoint;
     cairo_glyphs[i].x = glyphs[i].x;
     cairo_glyphs[i].y = glyphs[i].y;
@@ -67,7 +68,7 @@ Status Rasterizer::drawTextGlyphs(
   cairo_set_font_size(ctx, font_info.font_size);
   cairo_show_glyphs(ctx, cairo_glyphs, glyph_count);
 
-  free(cairo_glyphs);
+  cairo_glyph_free(cairo_glyphs);
   FT_Done_Face(ft_font);
 
   return OK;
