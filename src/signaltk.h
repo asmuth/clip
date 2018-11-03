@@ -18,6 +18,10 @@ struct Context {
 
 };
 
+enum Status : int {
+  OK, ERROR
+};
+
 struct Command {
   std::vector<std::string> name;
   int (*fn)(Context*, const char**, int);
