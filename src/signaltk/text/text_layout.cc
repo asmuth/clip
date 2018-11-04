@@ -67,8 +67,11 @@ Status layoutText(
       return layoutTextLTR(text, x, y, font_info, halign, valign, shaper, glyph_cb);
     case TextDirection::RTL:
       return ERROR_NOT_IMPLEMENTED;
+    default:
+      return ERROR_INVALID_ARGUMENT;
   }
 }
+
 
 } // namespace text
 } // namespace signaltk

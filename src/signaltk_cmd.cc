@@ -8,18 +8,11 @@
  * <http://www.gnu.org/licenses/>.
  */
 #include <signaltk.h>
-#include <signaltk/core/image_api.h>
 #include <signaltk/plot/plot_api.h>
 
 namespace signaltk {
 
 const std::vector<Command> command_list {
-
-  // command: img new
-  Command {
-    .name = {"img", "new"},
-    .fn = &cmd_image_new,
-  },
 
   // command: plot axes
   Command {

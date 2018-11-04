@@ -1,58 +1,74 @@
 /**
  * This file is part of the "signaltk" project
- *   Copyright (c) 2018 Paul Asmuth
- *   Copyright (c) 2014 Paul Asmuth, Google Inc.
+ *   Copyright (c) 2017 Paul Asmuth
  *
- * libstx is free software: you can redistribute it and/or modify it under
+ * signaltk is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License v3.0. You should have received a
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#ifndef _libstx_Image_H
-#define _libstx_Image_H
+#pragma once
 #include <stdlib.h>
-#include <vector>
 #include <string>
+#include <vector>
 #include "colour.h"
-#include "path.h"
-#include "brush.h"
 
 namespace signaltk {
-namespace chart {
+
+enum class PixelFormat {
+  RGB8, RGBA8
+};
 
 class Image {
 public:
-  virtual ~Image() {}
 
-  virtual void drawText(
-      const std::string& text,
-      double x,
-      double y,
-      const std::string& halign,
-      const std::string& valign,
-      const std::string& class_name,
-      double rotate = 0.0f) = 0;
+  Image(
+      PixelFormat pixel_format,
+      size_t width,
+      size_t height);
 
-  virtual void strokePath(
-      const PathData* point_data,
-      size_t point_count,
-      const StrokeStyle& style) = 0;
+  ~Image();
+  Image(const Image& other) = delete;
+  Image(Image&& other);
+  Image& operator=(const Image& other) = delete;
 
-  void strokeLine(
-      double x1,
-      double y1,
-      double x2,
-      double y2,
-      const StrokeStyle& style) {
-    Path p;
-    p.moveTo(x1, y1);
-    p.lineTo(x2, y2);
-    strokePath(p.data(), p.size(), style);
-  }
+  PixelFormat getPixelFormat() const;
+  size_t getPixelSize() const;
+  size_t getPixelCount() const;
+  size_t getWidth() const;
+  size_t getHeight() const;
+  const void* getData() const;
+  void* getData();
+  size_t getDataSize() const;
 
+  Colour getPixel(size_t x, size_t y);
+  Colour getPixel(size_t idx);
+  void setPixel(size_t x, size_t y, const Colour& colour);
+  void setPixel(size_t idx, const Colour& colour);
+  void clear(const Colour& colour);
+
+protected:
+  PixelFormat pixel_format_;
+  size_t width_;
+  size_t height_;
+  void* pixmap_;
 };
 
+Image convertImage_RGB8_RGBA8(const Image& img);
+Image convertImage_RGBA8_RGB8(const Image& img);
 
-}
-}
-#endif
+size_t getPixelSize(PixelFormat pixel_format);
+
+void encodePixel(
+    PixelFormat pixel_format,
+    const Colour& colour,
+    char* data,
+    size_t size);
+
+Colour decodePixel(
+    PixelFormat pixel_format,
+    char* data,
+    size_t size);
+
+} // namespace signaltk
+

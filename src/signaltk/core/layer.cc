@@ -19,6 +19,7 @@ Layer::Layer(
     width(w),
     height(h),
     dpi(dpi_),
+    pixmap(PixelFormat::RGBA8, w, h),
     text_shaper(dpi),
     rasterizer(width, height, dpi) {}
 
