@@ -27,11 +27,12 @@
 #include <signaltk/core/text.h>
 
 namespace signaltk {
+class Image;
 
 class Rasterizer {
 public:
 
-  Rasterizer(double width, double height, double dpi);
+  Rasterizer(Image* pixmap, double dpi);
   ~Rasterizer();
   Rasterizer(const Rasterizer&) = delete;
   Rasterizer& operator=(const Rasterizer&) = delete;
@@ -42,8 +43,7 @@ public:
       size_t glyph_count);
 
   double dpi;
-  cairo_surface_t* surface;
-  cairo_t* ctx;
+  Image* pixmap;
   FT_Library ft;
   bool ft_ready;
 };

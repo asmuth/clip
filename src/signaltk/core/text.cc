@@ -26,12 +26,9 @@ Status drawText(
     double x,
     double y,
     Layer* layer) {
-  auto ctx = layer->rasterizer.ctx;
-  auto dpi = layer->dpi;
-
   FontInfo font_info {
-    .font_file = "/Library/Fonts/Arial.ttf",
-    .font_size = 16
+    .font_file = "/usr/share/fonts/google-roboto/Roboto-Regular.ttf",
+    .font_size = 12
   };
 
   std::vector<GlyphPlacement> glyphs;

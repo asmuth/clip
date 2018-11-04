@@ -8,26 +8,25 @@
  * <http://www.gnu.org/licenses/>.
  */
 #include <signaltk/core/rasterize.h>
+#include <signaltk/core/image.h>
 
 namespace signaltk {
 
 Rasterizer::Rasterizer(
-    double width,
-    double height,
+    Image* pixmap_,
     double dpi_) :
+    pixmap(pixmap_),
     dpi(dpi_),
     ft_ready(false) {
-  surface = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, width, height);
-  ctx = cairo_create(surface);
+  if (!FT_Init_FreeType(&ft)) {
+    ft_ready = true;
+  }
 }
 
 Rasterizer::~Rasterizer() {
   if (ft_ready) {
     FT_Done_FreeType(ft);
   }
-
-  cairo_destroy(ctx);
-  cairo_surface_destroy(surface);
 }
 
 Status Rasterizer::drawTextGlyphs(
@@ -35,11 +34,7 @@ Status Rasterizer::drawTextGlyphs(
     const GlyphPlacement* glyphs,
     size_t glyph_count) {
   if (!ft_ready) {
-    if (FT_Init_FreeType(&ft)) {
-      return ERROR;
-    }
-
-    ft_ready = true;
+    return ERROR;
   }
 
   // FIXME cache
@@ -53,24 +48,32 @@ Status Rasterizer::drawTextGlyphs(
     return ERROR;
   }
 
-  auto cairo_font = cairo_ft_font_face_create_for_ft_face(ft_font, 0);
-  auto cairo_glyphs = cairo_glyph_allocate(glyph_count);
-
   for (int i = 0; i < glyph_count; ++i) {
-    printf("render glyph @ %f, %f\n", glyphs[i].x, glyphs[i].y);
-    cairo_glyphs[i].index = glyphs[i].codepoint;
-    cairo_glyphs[i].x = glyphs[i].x;
-    cairo_glyphs[i].y = glyphs[i].y;
+    const auto& g = glyphs[i];
+
+    // FIXME also cache this
+    FT_Load_Glyph(ft_font, g.codepoint, FT_LOAD_DEFAULT);
+    FT_Render_Glyph(ft_font->glyph, FT_RENDER_MODE_NORMAL);
+
+    const auto& ft_bitmap = ft_font->glyph->bitmap;
+    for (uint32_t y = 0; y < ft_bitmap.rows; ++y) {
+      for (uint32_t x = 0; x < ft_bitmap.width; ++x) {
+        auto v = 1.0 - (ft_bitmap.buffer[y * ft_bitmap.width + x] / 255.0);
+
+        auto ox = x + g.x + ft_font->glyph->bitmap_left;
+        auto oy = y + g.y - ft_font->glyph->bitmap_top;
+
+        if (ox >= pixmap->getWidth() || oy >= pixmap->getHeight()) {
+          continue;
+        }
+
+        // FIXME alpha blend instead
+        pixmap->setPixel(ox, oy, Colour::fromRGBA(v, v, v, 1));
+      }
+    }
   }
 
-  cairo_set_source_rgba(ctx, 0, 0, 0, 1.0);
-  cairo_set_font_face(ctx, cairo_font);
-  cairo_set_font_size(ctx, font_info.font_size);
-  cairo_show_glyphs(ctx, cairo_glyphs, glyph_count);
-
-  cairo_glyph_free(cairo_glyphs);
   FT_Done_Face(ft_font);
-
   return OK;
 }
 
