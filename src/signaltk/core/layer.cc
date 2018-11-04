@@ -9,6 +9,8 @@
  * <http://www.gnu.org/licenses/>.
  */
 #include "layer.h"
+#include <signaltk/util/stringutil.h>
+#include <signaltk/codec/png.h>
 
 namespace signaltk {
 
@@ -25,48 +27,20 @@ Layer::Layer(
 
 Layer::~Layer() {}
 
-void Layer::clear(const Colour& c) {
-  auto ctx = rasterizer.ctx;
-  cairo_set_source_rgba(ctx, c.red(), c.green(), c.blue(), c.alpha());
-  cairo_rectangle(ctx, 0, 0, width, height);
-  cairo_fill(ctx);
-}
-
-//bool Layer::loadPNG(const char* path) {
-//  auto surface = rasterizer.surface;
-//  auto ctx = rasterizer.ctx;
-//  if (surface || ctx) {
-//    return false;
-//  }
-//
-//  surface = cairo_image_surface_create_from_png(path);
-//  if (cairo_surface_status(surface) != CAIRO_STATUS_SUCCESS) {
-//    return false;
-//  }
-//
-//  ctx = cairo_create(surface);
-//
-//  double extent[4];
-//  cairo_clip_extents(ctx, extent + 0, extent + 1, extent + 2, extent + 3);
-//  width = extent[2] - extent[0];
-//  height = extent[3] - extent[1];
-//
-//  return true;
-//}
-
-bool Layer::writePNG(const char* path) const {
-  auto surface = rasterizer.surface;
-  auto ctx = rasterizer.ctx;
-  if (!surface || !ctx) {
-    return false;
+Status Layer::writeToFile(const std::string& path) {
+  if (StringUtil::endsWith(path, ".png")) {
+    return pngWriteImageFile(pixmap, path);
   }
 
-  auto rc = cairo_surface_write_to_png(surface, path);
-  return rc == CAIRO_STATUS_SUCCESS;
+  return ERROR_INVALID_ARGUMENT;
 }
 
-bool Layer::writePNG(const std::string& path) const {
-  return writePNG(path.c_str());
+Status Layer::loadFromFile(const std::string& path) const {
+  return ERROR_INVALID_ARGUMENT;
+}
+
+void Layer::clear(const Colour& c) {
+  pixmap.clear(c);
 }
 
 } // namespace signaltk

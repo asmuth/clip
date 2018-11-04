@@ -63,6 +63,12 @@ void EXPECT_FALSE(bool val) {
   }
 }
 
+void CHECK_RC(signaltk::Status rc) {
+  if (rc != signaltk::OK) {
+    std::exit(1);
+  }
+}
+
 template <typename T1, typename T2>
 void EXPECT_EQ(T1 left, T2 right) {
   if (!(left == right)) {

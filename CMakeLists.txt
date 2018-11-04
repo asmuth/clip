@@ -11,7 +11,8 @@ find_package(Threads)
 find_package(Cairo)
 find_package(Freetype)
 find_package(HarfBuzz)
-include_directories(${CAIRO_INCLUDE_DIRS} ${FREETYPE_INCLUDE_DIRS} ${HARFBUZZ_INCLUDE_DIRS})
+find_package(PNG)
+include_directories(${CAIRO_INCLUDE_DIRS} ${FREETYPE_INCLUDE_DIRS} ${HARFBUZZ_INCLUDE_DIRS} ${PNG_INCLUDE_DIRS})
 
 add_definitions(-DFNORDMETRIC_VERSION="unstable")
 
@@ -23,6 +24,7 @@ add_library(signaltk STATIC
     src/signaltk/core/layer.cc
     src/signaltk/core/text.cc
     src/signaltk/core/rasterize.cc
+    src/signaltk/codec/png.cc
     src/signaltk/plot/gridlines.cc
     src/signaltk/plot/axes.cc
     src/signaltk/plot/domain.cc
@@ -30,7 +32,6 @@ add_library(signaltk STATIC
     src/signaltk/plot/legenddefinition.cc
     src/signaltk/plot/series.cc
     src/signaltk/plot/timedomain.cc
-    src/signaltk/plot/plot_api.cc
     src/signaltk/text/text_layout.cc
     src/signaltk/text/text_shaper.cc
     src/signaltk/util/random.cc
@@ -53,7 +54,7 @@ add_library(signaltk STATIC
     src/signaltk_cli.cc
     src/signaltk_cmd.cc)
 
-set(SIGNALTK_LDFLAGS signaltk ${CAIRO_LIBRARIES} ${FREETYPE_LIBRARIES} ${HARFBUZZ_LIBRARIES} ${HARFBUZZ_ICU_LIBRARIES})
+set(SIGNALTK_LDFLAGS signaltk ${CAIRO_LIBRARIES} ${FREETYPE_LIBRARIES} ${HARFBUZZ_LIBRARIES} ${HARFBUZZ_ICU_LIBRARIES} ${PNG_LIBRARIES})
 
 file(GLOB test_files "test/**/test_*.cc")
 foreach(test_path ${test_files})

@@ -8,6 +8,7 @@
  * <http://www.gnu.org/licenses/>.
  */
 #include "signaltk/plot/axes.h"
+#include "../unittest.h"
 
 using namespace signaltk;
 using namespace signaltk::chart;
@@ -94,6 +95,6 @@ int main(int argc, char** argv) {
     renderAxisHorizontal(axis, target.height - padding, padding, target.width - padding, &target);
   }
 
-  target.writePNG(std::string(argv[0]) + ".png");
+  CHECK_RC(target.writeToFile(std::string(argv[0]) + ".png"));
 }
 

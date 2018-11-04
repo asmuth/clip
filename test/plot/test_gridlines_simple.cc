@@ -13,6 +13,7 @@
 #include "signaltk/plot/gridlines.h"
 #include "signaltk/util/fileutil.h"
 #include "signaltk/util/stringutil.h"
+#include "../unittest.h"
 
 using namespace signaltk;
 using namespace signaltk::chart;
@@ -42,6 +43,6 @@ int main(int argc, char** argv) {
     renderGrid(grid, Viewport{target.width, target.height}, &target);
   }
 
-  target.writePNG(std::string(argv[0]) + ".png");
+  CHECK_RC(target.writeToFile(std::string(argv[0]) + ".png"));
 }
 

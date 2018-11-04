@@ -14,6 +14,7 @@
 #include <string>
 
 #include "colour.h"
+#include <signaltk.h>
 #include <signaltk/text/text_shaper.h>
 #include <signaltk/core/rasterize.h>
 #include <signaltk/core/image.h>
@@ -27,9 +28,8 @@ struct Layer {
   Layer(const Layer&) = delete;
   Layer& operator=(const Layer&) = delete;
 
-  bool loadPNG(const char* path);
-  bool writePNG(const char* path) const;
-  bool writePNG(const std::string& path) const;
+  Status writeToFile(const std::string& path);
+  Status loadFromFile(const std::string& path) const;
 
   void clear(const Colour& c);
 

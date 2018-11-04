@@ -21,6 +21,7 @@ struct Context {
 enum Status : int {
   OK,
   ERROR,
+  ERROR_IO,
   ERROR_NOT_IMPLEMENTED,
   ERROR_INVALID_ARGUMENT
 };
