@@ -12,10 +12,10 @@
 #include <stdlib.h>
 #include <stdint.h>
 #include "colour.h"
-#include "layer.h"
 #include "path.h"
 
 namespace signaltk {
+class Layer;
 
 enum class StrokeLineJoin { MITER, ROUND, BEVEL };
 enum class StrokeLineCap { BUTT, SQUARE, ROUND};

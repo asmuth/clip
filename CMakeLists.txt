@@ -54,7 +54,7 @@ add_library(signaltk STATIC
     src/signaltk_cli.cc
     src/signaltk_cmd.cc)
 
-set(SIGNALTK_LDFLAGS signaltk ${CAIRO_LIBRARIES} ${FREETYPE_LIBRARIES} ${HARFBUZZ_LIBRARIES} ${HARFBUZZ_ICU_LIBRARIES} ${PNG_LIBRARIES} agg)
+set(SIGNALTK_LDFLAGS signaltk ${CAIRO_LIBRARIES} ${FREETYPE_LIBRARIES} ${HARFBUZZ_LIBRARIES} ${HARFBUZZ_ICU_LIBRARIES} ${PNG_LIBRARIES})
 
 file(GLOB test_files "test/**/test_*.cc")
 foreach(test_path ${test_files})

@@ -9,6 +9,7 @@
  */
 #include <iostream>
 #include "brush.h"
+#include "layer.h"
 
 namespace signaltk {
 
@@ -17,7 +18,7 @@ void strokePath(
     const PathData* point_data,
     size_t point_count,
     const StrokeStyle& style) {
-  layer->rasterizer.rasterizePath(point_data, point_count);
+  layer->rasterizer.strokePath(point_data, point_count, style);
 }
 
 void strokeLine(
@@ -28,15 +29,12 @@ void strokeLine(
     double y2,
     const StrokeStyle& style) {
   Path p;
-  p.moveTo(10, 10);
-  p.lineTo(10, 100);
-  p.lineTo(100, 100);
-  p.lineTo(100, 10);
-  p.closePath();
+  p.moveTo(x1, y1);
+  p.lineTo(x2, y2);
+  p.lineTo(x2, y2);
+  p.lineTo(x2, y2);
   strokePath(layer, p.data(), p.size(), style);
 }
-
-/* rasterize path using Maxim Shemanarev's libagg */
 
 } // namespace signaltk
 

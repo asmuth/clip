@@ -25,6 +25,7 @@
 #include <harfbuzz/hb-icu.h>
 
 #include <signaltk/core/text.h>
+#include <signaltk/core/brush.h>
 
 namespace signaltk {
 class Image;
@@ -37,9 +38,10 @@ public:
   Rasterizer(const Rasterizer&) = delete;
   Rasterizer& operator=(const Rasterizer&) = delete;
 
-  Status rasterizePath(
+  Status strokePath(
       const PathData* point_data,
-      size_t point_count);
+      size_t point_count,
+      const StrokeStyle& style);
 
   Status drawTextGlyphs(
       const FontInfo& font_info,
@@ -50,6 +52,8 @@ public:
   Image* pixmap;
   FT_Library ft;
   bool ft_ready;
+  cairo_surface_t* cr_surface;
+  cairo_t* cr_ctx;
 };
 
 
