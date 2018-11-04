@@ -17,34 +17,7 @@ void strokePath(
     const PathData* point_data,
     size_t point_count,
     const StrokeStyle& style) {
-  //auto ctx = layer->rasterizer.ctx;
-
-  //if (point_count < 2) {
-  //  return;
-  //}
-
-  //cairo_set_source_rgba(
-  //    ctx,
-  //    style.colour.red(),
-  //    style.colour.green(),
-  //    style.colour.blue(),
-  //    style.colour.alpha());
-
-  //cairo_set_line_width(ctx, style.line_width);
-
-  //for (size_t i = 0; i < point_count; ++i) {
-  //  const auto& cmd = point_data[i];
-  //  switch (cmd.command) {
-  //    case PathCommand::MOVE_TO:
-  //      cairo_move_to(ctx, cmd[0], cmd[1]);
-  //      break;
-  //    case PathCommand::LINE_TO:
-  //      cairo_line_to(ctx, cmd[0], cmd[1]);
-  //      break;
-  //  }
-  //}
-
-  //cairo_stroke(ctx);
+  layer->rasterizer.rasterizePath(point_data, point_count);
 }
 
 void strokeLine(
@@ -55,10 +28,15 @@ void strokeLine(
     double y2,
     const StrokeStyle& style) {
   Path p;
-  p.moveTo(x1, y1);
-  p.lineTo(x2, y2);
+  p.moveTo(10, 10);
+  p.lineTo(10, 100);
+  p.lineTo(100, 100);
+  p.lineTo(100, 10);
+  p.closePath();
   strokePath(layer, p.data(), p.size(), style);
 }
+
+/* rasterize path using Maxim Shemanarev's libagg */
 
 } // namespace signaltk
 

@@ -37,6 +37,10 @@ public:
   Rasterizer(const Rasterizer&) = delete;
   Rasterizer& operator=(const Rasterizer&) = delete;
 
+  Status rasterizePath(
+      const PathData* point_data,
+      size_t point_count);
+
   Status drawTextGlyphs(
       const FontInfo& font_info,
       const GlyphPlacement* glyphs,
