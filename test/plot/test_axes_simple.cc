@@ -35,7 +35,7 @@ int main(int argc, char** argv) {
     axis.addLabel(0.6, "d");
     axis.addLabel(0.8, "e");
     axis.addLabel(1.0, "f");
-    renderAxisVertical(axis, padding, padding, target.height - padding, &target);
+    CHECK_RC(renderAxisVertical(axis, padding, padding, target.height - padding, &target));
   }
 
   // draw right axis
@@ -54,7 +54,7 @@ int main(int argc, char** argv) {
     axis.addLabel(0.6, "d");
     axis.addLabel(0.8, "e");
     axis.addLabel(1.0, "f");
-    renderAxisVertical(axis, target.width - padding, padding, target.height - padding, &target);
+    CHECK_RC(renderAxisVertical(axis, target.width - padding, padding, target.height - padding, &target));
   }
 
   // draw top axis
@@ -73,7 +73,7 @@ int main(int argc, char** argv) {
     axis.addLabel(0.6, "d");
     axis.addLabel(0.8, "e");
     axis.addLabel(1.0, "f");
-    renderAxisHorizontal(axis, padding, padding, target.width - padding, &target);
+    CHECK_RC(renderAxisHorizontal(axis, padding, padding, target.width - padding, &target));
   }
 
   // draw bottom axis
@@ -92,7 +92,7 @@ int main(int argc, char** argv) {
     axis.addLabel(0.6, "d");
     axis.addLabel(0.8, "e");
     axis.addLabel(1.0, "f");
-    renderAxisHorizontal(axis, target.height - padding, padding, target.width - padding, &target);
+    CHECK_RC(renderAxisHorizontal(axis, target.height - padding, padding, target.width - padding, &target));
   }
 
   CHECK_RC(target.writeToFile(std::string(argv[0]) + ".png"));

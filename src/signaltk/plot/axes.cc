@@ -59,7 +59,7 @@ bool AxisDefinition::hasTitle() const {
   return title_.length() > 0;
 }
 
-void renderAxisVertical(
+Status renderAxisVertical(
     const AxisDefinition& axis_config,
     double x,
     double y0,
@@ -98,16 +98,15 @@ void renderAxisVertical(
     TextStyle style;
     style.halign = TextHAlign::LEFT;
     style.valign = TextVAlign::TOP;
-    drawText(
-        label_text,
-        style,
-        x,
-        y,
-        target);
+    if (auto rc = drawText(label_text, style, x, y, target); rc != OK) {
+      return rc;
+    }
   }
+
+  return OK;
 }
 
-void renderAxisHorizontal(
+Status renderAxisHorizontal(
     const AxisDefinition& axis_config,
     double y,
     double x0,
@@ -137,6 +136,8 @@ void renderAxisHorizontal(
     StrokeStyle style;
     strokeLine(target, x, y, x, y + kTickLength * label_placement, style);
   }
+
+  return OK;
 }
 
 }

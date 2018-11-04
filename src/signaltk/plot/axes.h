@@ -134,7 +134,7 @@ struct AxisDefinitions {
 /**
  * Render a vertical axis
  */
-void renderAxisVertical(
+Status renderAxisVertical(
     const AxisDefinition& axis_config,
     double x,
     double y0,
@@ -144,7 +144,7 @@ void renderAxisVertical(
 /**
  * Render a horizontal axis
  */
-void renderAxisHorizontal(
+Status renderAxisHorizontal(
     const AxisDefinition& axis_config,
     double y,
     double x0,
