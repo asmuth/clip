@@ -23,7 +23,7 @@ namespace signaltk {
 
 struct Layer {
   Layer();
-  Layer(uint32_t width, uint32_t height, uint32_t dpi = 100);
+  Layer(double width, double height, double rem = 12, double dpi = 96);
   ~Layer();
   Layer(const Layer&) = delete;
   Layer& operator=(const Layer&) = delete;
@@ -33,13 +33,19 @@ struct Layer {
 
   void clear(const Colour& c);
 
-  uint32_t width;
-  uint32_t height;
-  uint32_t dpi;
+  double width;
+  double height;
+  double rem;
+  double dpi;
   Image pixmap;
   text::TextShaper text_shaper;
   Rasterizer rasterizer;
 };
+
+double from_rem(const Layer& l, double v);
+double from_px(const Layer& l, double v);
+double from_pt(const Layer& l, double v);
+double to_pt(const Layer& l, double v);
 
 } // namespace signaltk
 

@@ -15,12 +15,14 @@
 namespace signaltk {
 
 Layer::Layer(
-    uint32_t w,
-    uint32_t h,
-    uint32_t dpi_ /* = 300 */) :
+    double w,
+    double h,
+    double rem_ /* = 12 */,
+    double dpi_ /* = 96 */) :
     width(w),
     height(h),
     dpi(dpi_),
+    rem(rem_),
     pixmap(PixelFormat::RGBA8, w, h),
     text_shaper(dpi),
     rasterizer(&pixmap, dpi) {}
@@ -41,6 +43,22 @@ Status Layer::loadFromFile(const std::string& path) const {
 
 void Layer::clear(const Colour& c) {
   pixmap.clear(c);
+}
+
+double from_rem(const Layer& l, double v) {
+  return from_pt(l, l.rem) * v;
+}
+
+double from_px(const Layer& l, double v) {
+  return 1.0; // FIXME: dpi scaling
+}
+
+double from_pt(const Layer& l, double v) {
+  return (v / 72.0) * l.dpi;
+}
+
+double to_pt(const Layer& l, double v) {
+  return (v / l.dpi) * 72;
 }
 
 } // namespace signaltk
