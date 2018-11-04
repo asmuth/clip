@@ -53,9 +53,9 @@ struct GlyphPlacement {
 
 Status drawText(
     const std::string& text,
-    const TextStyle& text_style,
     double x,
     double y,
+    const TextStyle& text_style,
     Layer* layer);
 
 Status drawTextGlyphs(

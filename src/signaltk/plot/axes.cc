@@ -98,7 +98,7 @@ Status renderAxisVertical(
     TextStyle style;
     style.halign = TextHAlign::LEFT;
     style.valign = TextVAlign::TOP;
-    if (auto rc = drawText(label_text, style, x, y, target); rc != OK) {
+    if (auto rc = drawText(label_text, x, y, style, target); rc != OK) {
       return rc;
     }
   }

@@ -1,8 +1,8 @@
 signaltk
 ========
 
-A set of command line utilities and C++ classes for creating toolkit for creating
-high-quality charts, figures and dashboards.
+A toolkit for creating data-driven graphics, such as charts, figures and
+dashboards.
 
 Documentation: [signaltk.org](http://signaltk.org/)
 

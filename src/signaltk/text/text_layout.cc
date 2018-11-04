@@ -38,6 +38,18 @@ Status layoutTextLTR(
 
   auto gx = x;
   auto gy = y;
+
+  switch (halign) {
+    case TextHAlign::LEFT:
+      break;
+    case TextHAlign::CENTER:
+      gx -= line_length / 2;
+      break;
+    case TextHAlign::RIGHT:
+      gx -= line_length;
+      break;
+  }
+
   for (const auto& gi : glyphs) {
     GlyphPlacement g;
     glyph_cb(GlyphPlacement {

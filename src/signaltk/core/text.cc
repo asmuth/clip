@@ -22,12 +22,12 @@ TextStyle::TextStyle() :
 
 Status drawText(
     const std::string& text,
-    const TextStyle& text_style,
     double x,
     double y,
+    const TextStyle& text_style,
     Layer* layer) {
   FontInfo font_info {
-    .font_file = "/usr/share/fonts/google-roboto/Roboto-Regular.ttf",
+    .font_file = "/Library/Fonts/Arial.ttf",
     .font_size = 12
   };
 
