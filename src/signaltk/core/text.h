@@ -23,7 +23,7 @@ enum class TextHAlign {
 };
 
 enum class TextVAlign {
-  TOP, CENTER, BOTTOM
+  BASELINE, MIDDLE, TOP, BOTTOM
 };
 
 struct TextStyle {
@@ -43,6 +43,8 @@ struct GlyphInfo {
   uint32_t codepoint;
   double advance_y;
   double advance_x;
+  double metrics_ascender;
+  double metrics_descender;
 };
 
 struct GlyphPlacement {

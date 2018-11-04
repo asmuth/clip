@@ -64,6 +64,8 @@ Status TextShaper::shapeText(
     g.codepoint = glyph_infos[i].codepoint;
     g.advance_x = glyph_positions[i].x_advance / 64.0;
     g.advance_y = glyph_positions[i].y_advance / 64.0;
+    g.metrics_ascender = ft_font->size->metrics.ascender / 64.0; // FIXME this is constant for all glyphs
+    g.metrics_descender = ft_font->size->metrics.descender / 64.0; // FIXME this is constant for all glyphs
     glyph_cb(g);
   }
 

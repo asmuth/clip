@@ -17,7 +17,7 @@ namespace signaltk {
 TextStyle::TextStyle() :
     direction(TextDirection::LTR),
     halign(TextHAlign::LEFT),
-    valign(TextVAlign::CENTER),
+    valign(TextVAlign::BASELINE),
     font_size(32) {}
 
 Status drawText(

@@ -51,11 +51,28 @@ Status layoutTextLTR(
   }
 
   for (const auto& gi : glyphs) {
+    // FIXME: this is constant for every glpyh in the same font
+    double baseline_offset = 0;
+
+    switch (valign) {
+      case TextVAlign::BASELINE:
+        break;
+      case TextVAlign::TOP:
+        baseline_offset = gi.metrics_ascender;
+        break;
+      case TextVAlign::MIDDLE:
+        baseline_offset = gi.metrics_ascender - (gi.metrics_ascender + -gi.metrics_descender) / 2;
+        break;
+      case TextVAlign::BOTTOM:
+        baseline_offset = gi.metrics_descender;
+        break;
+    }
+
     GlyphPlacement g;
     glyph_cb(GlyphPlacement {
       .codepoint = gi.codepoint,
       .x = gx,
-      .y = gy
+      .y = gy + baseline_offset
     });
 
     gx += gi.advance_x;
