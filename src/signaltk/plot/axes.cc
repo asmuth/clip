@@ -17,7 +17,10 @@ namespace chart {
 AxisDefinition::AxisDefinition() :
     enabled_(false),
     has_ticks_(false),
-    has_labels_(false) {}
+    has_labels_(false),
+    label_padding_horiz_rem(kDefaultLabelPaddingHorizREM),
+    label_padding_vert_rem(kDefaultLabelPaddingVertREM),
+    tick_length_rem(kDefaultTickLengthREM) {}
 
 void AxisDefinition::addTick(double tick_position) {
   ticks_.push_back(tick_position);
@@ -87,18 +90,26 @@ Status renderAxisVertical(
   for (const auto& tick : axis_config.getTicks()) {
     auto y = y0 + (y1 - y0) * tick;
     StrokeStyle style;
-    strokeLine(target, x, y, x + kTickLength * label_placement, y, style);
+    strokeLine(
+        target,
+        x,
+        y,
+        x + from_rem(*target, axis_config.tick_length_rem) * label_placement,
+        y,
+        style);
   }
 
   /* draw labels */
+  auto label_padding = from_rem(*target, axis_config.label_padding_horiz_rem);
   for (const auto& label : axis_config.getLabels()) {
     auto [ tick, label_text ] = label;
-    auto y = y0 + (y1 - y0) * tick;
+    auto sy = y0 + (y1 - y0) * tick;
+    auto sx = x + label_padding * label_placement;
 
     TextStyle style;
-    style.halign = TextHAlign::LEFT;
-    style.valign = TextVAlign::TOP;
-    if (auto rc = drawText(label_text, x, y, style, target); rc != OK) {
+    style.halign = label_placement > 0 ? TextHAlign::LEFT : TextHAlign::RIGHT;
+    style.valign = TextVAlign::MIDDLE;
+    if (auto rc = drawText(label_text, sx, sy, style, target); rc != OK) {
       return rc;
     }
   }
@@ -134,7 +145,28 @@ Status renderAxisHorizontal(
   for (const auto& tick : axis_config.getTicks()) {
     auto x = x0 + (x1 - x0) * tick;
     StrokeStyle style;
-    strokeLine(target, x, y, x, y + kTickLength * label_placement, style);
+    strokeLine(
+        target,
+        x,
+        y,
+        x,
+        y + from_rem(*target, axis_config.tick_length_rem) * label_placement,
+        style);
+  }
+
+  /* draw labels */
+  auto label_padding = from_rem(*target, axis_config.label_padding_vert_rem);
+  for (const auto& label : axis_config.getLabels()) {
+    auto [ tick, label_text ] = label;
+    auto sx = x0 + (x1 - x0) * tick;
+    auto sy = y + label_padding * label_placement;
+
+    TextStyle style;
+    style.halign = TextHAlign::CENTER;
+    style.valign = label_placement > 0 ? TextVAlign::TOP : TextVAlign::BOTTOM;
+    if (auto rc = drawText(label_text, sx, sy, style, target); rc != OK) {
+      return rc;
+    }
   }
 
   return OK;

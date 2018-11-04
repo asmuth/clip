@@ -17,11 +17,9 @@
 namespace signaltk {
 namespace chart {
 
-static const int kAxisPadding = 0; // FIXPAUL make configurable
-static const int kTickLength = 5; // FIXPAUL make configurable
-static const int kAxisLabelHeight = 25; // FIXPAUL make configurable
-static const int kAxisLabelWidth = 50; // FIXPAUL make configurable
-static const int kAxisTitleLength = 20; // FIXPAUL make configurable
+static const double kDefaultLabelPaddingVertREM = 0.8f;
+static const double kDefaultLabelPaddingHorizREM = 1.0f;
+static const double kDefaultTickLengthREM = 0.4f;
 
 class AxisDefinition {
 public:
@@ -122,6 +120,9 @@ public:
   std::vector<std::pair<double, std::string>> labels_;
   bool has_labels_;
   kLabelPlacement label_placement;
+  double label_padding_horiz_rem;
+  double label_padding_vert_rem;
+  double tick_length_rem;
 };
 
 struct AxisDefinitions {

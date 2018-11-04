@@ -29,9 +29,9 @@ int main(int argc, char** argv) {
     axis.addTick(0.6);
     axis.addTick(0.8);
     axis.addTick(1.0);
-    axis.addLabel(0.0, "fnord");
-    axis.addLabel(0.2, "blah");
-    axis.addLabel(0.4, "xxx");
+    axis.addLabel(0.0, "a");
+    axis.addLabel(0.2, "b");
+    axis.addLabel(0.4, "c");
     axis.addLabel(0.6, "d");
     axis.addLabel(0.8, "e");
     axis.addLabel(1.0, "f");

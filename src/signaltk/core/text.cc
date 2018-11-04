@@ -28,7 +28,7 @@ Status drawText(
     Layer* layer) {
   FontInfo font_info {
     .font_file = "/Library/Fonts/Arial.ttf",
-    .font_size = 12
+    .font_size = text_style.font_size
   };
 
   std::vector<GlyphPlacement> glyphs;
