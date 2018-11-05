@@ -4,7 +4,7 @@ enable_testing()
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/extra/cmake")
 set(CMAKE_CXX_STANDARD 17)
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/toolkit)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
 find_package(Threads)
@@ -17,42 +17,42 @@ include_directories(${CAIRO_INCLUDE_DIRS} ${FREETYPE_INCLUDE_DIRS} ${HARFBUZZ_IN
 add_definitions(-DFNORDMETRIC_VERSION="unstable")
 
 add_library(signaltk STATIC
-    src/signaltk/core/path.cc
-    src/signaltk/core/brush.cc
-    src/signaltk/core/colour.cc
-    src/signaltk/core/image.cc
-    src/signaltk/core/layer.cc
-    src/signaltk/core/text.cc
-    src/signaltk/core/rasterize.cc
-    src/signaltk/codec/png.cc
-    src/signaltk/plot/gridlines.cc
-    src/signaltk/plot/axes.cc
-    src/signaltk/plot/domain.cc
-    src/signaltk/plot/domainprovider.cc
-    src/signaltk/plot/legenddefinition.cc
-    src/signaltk/plot/series.cc
-    src/signaltk/plot/timedomain.cc
-    src/signaltk/text/text_layout.cc
-    src/signaltk/text/text_shaper.cc
-    src/signaltk/util/random.cc
-    src/signaltk/util/bufferutil.cc
-    src/signaltk/util/exception.cc
-    src/signaltk/util/UnixTime.cc
-    src/signaltk/util/inspect.cc
-    src/signaltk/util/stringutil.cc
-    src/signaltk/util/duration.cc
-    src/signaltk/util/CivilTime.cc
-    src/signaltk/util/buffer.cc
-    src/signaltk/util/fileutil.cc
-    src/signaltk/util/file.cc
-    src/signaltk/util/outputstream.cc
-    src/signaltk/util/inputstream.cc
-    src/signaltk/util/flagparser.cc
-    src/signaltk/util/ISO8601.cc
-    src/signaltk/util/UTF8.cc
-    src/signaltk/util/wallclock.cc
-    src/signaltk_cli.cc
-    src/signaltk_cmd.cc)
+    graphics/path.cc
+    graphics/brush.cc
+    graphics/colour.cc
+    graphics/image.cc
+    graphics/layer.cc
+    graphics/text.cc
+    graphics/text_layout.cc
+    graphics/text_shaper.cc
+    graphics/rasterize.cc
+    graphics/png.cc
+    components/plot/gridlines.cc
+    components/plot/axes.cc
+    components/plot/domain.cc
+    components/plot/domainprovider.cc
+    components/plot/legenddefinition.cc
+    components/plot/series.cc
+    components/plot/timedomain.cc
+    utils/random.cc
+    utils/bufferutil.cc
+    utils/exception.cc
+    utils/UnixTime.cc
+    utils/inspect.cc
+    utils/stringutil.cc
+    utils/duration.cc
+    utils/CivilTime.cc
+    utils/buffer.cc
+    utils/fileutil.cc
+    utils/file.cc
+    utils/outputstream.cc
+    utils/inputstream.cc
+    utils/flagparser.cc
+    utils/ISO8601.cc
+    utils/UTF8.cc
+    utils/wallclock.cc
+    signaltk_cli.cc
+    signaltk_cmd.cc)
 
 set(SIGNALTK_LDFLAGS signaltk ${CAIRO_LIBRARIES} ${FREETYPE_LIBRARIES} ${HARFBUZZ_LIBRARIES} ${HARFBUZZ_ICU_LIBRARIES} ${PNG_LIBRARIES})
 

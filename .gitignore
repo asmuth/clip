@@ -14,5 +14,4 @@ cmake_install.cmake
 /*.ninja
 /test_*.png
 /test_*
-Testing
 CTestTestfile.cmake
