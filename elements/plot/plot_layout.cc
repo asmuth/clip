@@ -14,27 +14,9 @@
 namespace signaltk {
 
 Status plot_render(Context* ctx) {
-  double padding = 80;
-
-  // draw left axis
-  {
-    AxisDefinition axis;
-    axis.label_placement = AxisDefinition::LABELS_LEFT;
-    axis.addTick(0.0);
-    axis.addTick(0.2);
-    axis.addTick(0.4);
-    axis.addTick(0.6);
-    axis.addTick(0.8);
-    axis.addTick(1.0);
-    axis.addLabel(0.0, "x");
-    axis.addLabel(0.2, "x");
-    axis.addLabel(0.4, "x");
-    axis.addLabel(0.6, "x");
-    axis.addLabel(0.8, "x");
-    axis.addLabel(1.0, "x");
-    auto rc = renderAxisVertical(axis, padding, padding, ctx->frame.height - padding, &ctx->frame);
-
-    if (!rc) {
+  // draw axes
+  for (size_t i = 0; i < ctx->plot_config.axes.size(); ++i) {
+    if (auto rc = plot_render_axis(ctx, i); rc) {
       return rc;
     }
   }

@@ -16,7 +16,7 @@ namespace signaltk {
 struct Context;
 
 enum Status : int {
-  OK,
+  OK = 0,
   ERROR,
   ERROR_IO,
   ERROR_NOT_IMPLEMENTED,

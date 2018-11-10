@@ -11,6 +11,7 @@
 #include "signaltk.h"
 #include "axes.h"
 #include "plot_domain.h"
+#include <memory>
 
 namespace signaltk {
 
@@ -21,10 +22,7 @@ struct PlotConfig {
   PlotDomain y_domain;
   double y_min;
   double y_max;
-  AxisDefinition axis_top;
-  AxisDefinition axis_right;
-  AxisDefinition axis_bottom;
-  AxisDefinition axis_left;
+  std::vector<std::unique_ptr<AxisDefinition>> axes;
 };
 
 } // namespace signaltk

@@ -8,60 +8,56 @@
  * <http://www.gnu.org/licenses/>.
  */
 #include "axes.h"
+#include <assert.h>
+#include <elements/context.h>
 #include <graphics/text.h>
 #include <graphics/brush.h>
 
 namespace signaltk {
 
 AxisDefinition::AxisDefinition() :
-    enabled_(false),
-    has_ticks_(false),
-    has_labels_(false),
+    mode(AxisMode::DISABLED),
+    label_placement(AxisLabelPlacement::OFF),
     label_padding_horiz_rem(kDefaultLabelPaddingHorizREM),
     label_padding_vert_rem(kDefaultLabelPaddingVertREM),
     tick_length_rem(kDefaultTickLengthREM) {}
 
-void AxisDefinition::addTick(double tick_position) {
-  ticks_.push_back(tick_position);
+Status plot_axis_add(Context* ctx, AxisPosition pos) {
+  auto axis_config = std::make_unique<AxisDefinition>();
+  axis_config->position = pos;
+
+  switch (pos) {
+    case AxisPosition::LEFT:
+      axis_config->label_placement = AxisLabelPlacement::LEFT;
+      break;
+    case AxisPosition::RIGHT:
+      axis_config->label_placement = AxisLabelPlacement::RIGHT;
+      break;
+    case AxisPosition::TOP:
+      axis_config->label_placement = AxisLabelPlacement::TOP;
+      break;
+    case AxisPosition::BOTTOM:
+      axis_config->label_placement = AxisLabelPlacement::BOTTOM;
+      break;
+  }
+
+  ctx->plot_config.axes.emplace_back(std::move(axis_config));
+  return OK;
 }
 
-const std::vector<double> AxisDefinition::getTicks() const {
-  return ticks_;
+Status plot_axis_addtick(Context* ctx, float offset) {
+  auto& axis_config = ctx->plot_config.axes.back();
+  axis_config->ticks.emplace_back(offset);
+  return OK;
 }
 
-void AxisDefinition::addLabel(
-    double label_position,
-    const std::string& label_text) {
-  has_labels_ = true;
-  labels_.emplace_back(label_position, label_text);
+Status plot_axis_addlabel(Context* ctx, float offset, const char* label) {
+  auto& axis_config = ctx->plot_config.axes.back();
+  axis_config->labels.emplace_back(offset, label);
+  return OK;
 }
 
-void AxisDefinition::removeLabels() {
-  labels_.clear();
-}
-
-const std::vector<std::pair<double, std::string>> AxisDefinition::getLabels()
-    const {
-  return labels_;
-}
-
-bool AxisDefinition::hasLabels() const {
-  return has_labels_;
-}
-
-void AxisDefinition::setTitle(const std::string& title) {
-  title_ = title;
-}
-
-const std::string& AxisDefinition::getTitle() {
-  return title_;
-}
-
-bool AxisDefinition::hasTitle() const {
-  return title_.length() > 0;
-}
-
-Status renderAxisVertical(
+Status plot_render_axis_vertical(
     const AxisDefinition& axis_config,
     double x,
     double y0,
@@ -75,10 +71,10 @@ Status renderAxisVertical(
 
   double label_placement = 0;
   switch (axis_config.label_placement) {
-    case AxisDefinition::LABELS_RIGHT:
+    case AxisLabelPlacement::RIGHT:
       label_placement = 1;
       break;
-    case AxisDefinition::LABELS_LEFT:
+    case AxisLabelPlacement::LEFT:
       label_placement = -1;
       break;
     default:
@@ -86,7 +82,7 @@ Status renderAxisVertical(
   }
 
   /* draw ticks */
-  for (const auto& tick : axis_config.getTicks()) {
+  for (const auto& tick : axis_config.ticks) {
     auto y = y0 + (y1 - y0) * tick;
     StrokeStyle style;
     strokeLine(
@@ -100,7 +96,7 @@ Status renderAxisVertical(
 
   /* draw labels */
   auto label_padding = from_rem(*target, axis_config.label_padding_horiz_rem);
-  for (const auto& label : axis_config.getLabels()) {
+  for (const auto& label : axis_config.labels) {
     auto [ tick, label_text ] = label;
     auto sy = y0 + (y1 - y0) * tick;
     auto sx = x + label_padding * label_placement;
@@ -116,7 +112,7 @@ Status renderAxisVertical(
   return OK;
 }
 
-Status renderAxisHorizontal(
+Status plot_render_axis_horizontal(
     const AxisDefinition& axis_config,
     double y,
     double x0,
@@ -130,10 +126,10 @@ Status renderAxisHorizontal(
 
   double label_placement = 0;
   switch (axis_config.label_placement) {
-    case AxisDefinition::LABELS_BOTTOM:
+    case AxisLabelPlacement::BOTTOM:
       label_placement = 1;
       break;
-    case AxisDefinition::LABELS_TOP:
+    case AxisLabelPlacement::TOP:
       label_placement = -1;
       break;
     default:
@@ -141,7 +137,7 @@ Status renderAxisHorizontal(
   }
 
   /* draw ticks */
-  for (const auto& tick : axis_config.getTicks()) {
+  for (const auto& tick : axis_config.ticks) {
     auto x = x0 + (x1 - x0) * tick;
     StrokeStyle style;
     strokeLine(
@@ -155,7 +151,7 @@ Status renderAxisHorizontal(
 
   /* draw labels */
   auto label_padding = from_rem(*target, axis_config.label_padding_vert_rem);
-  for (const auto& label : axis_config.getLabels()) {
+  for (const auto& label : axis_config.labels) {
     auto [ tick, label_text ] = label;
     auto sx = x0 + (x1 - x0) * tick;
     auto sy = y + label_padding * label_placement;
@@ -163,12 +159,58 @@ Status renderAxisHorizontal(
     TextStyle style;
     style.halign = TextHAlign::CENTER;
     style.valign = label_placement > 0 ? TextVAlign::TOP : TextVAlign::BOTTOM;
-    if (auto rc = drawText(label_text, sx, sy, style, target); rc != OK) {
+    if (auto rc = drawText(label_text, sx, sy, style, target); rc) {
       return rc;
     }
   }
 
   return OK;
 }
+
+Status plot_render_axis(Context* ctx, int i) {
+  assert(i < ctx->plot_config.axes.size());
+
+  int padding = 80;
+  const auto& axis = ctx->plot_config.axes[i];
+
+  Status rc;
+  switch (axis->position) {
+    case AxisPosition::LEFT:
+      rc = plot_render_axis_vertical(
+          *axis,
+          padding,
+          padding,
+          ctx->frame.height - padding,
+          &ctx->frame);
+      break;
+    case AxisPosition::RIGHT:
+      rc = plot_render_axis_vertical(
+          *axis,
+          ctx->frame.width - padding,
+          padding,
+          ctx->frame.height - padding,
+          &ctx->frame);
+      break;
+    case AxisPosition::TOP:
+      rc = plot_render_axis_horizontal(
+          *axis,
+          padding,
+          padding,
+          ctx->frame.width - padding,
+          &ctx->frame);
+      break;
+    case AxisPosition::BOTTOM:
+      rc = plot_render_axis_horizontal(
+          *axis,
+          ctx->frame.height - padding,
+          padding,
+          ctx->frame.width - padding,
+          &ctx->frame);
+      break;
+  }
+
+  return rc;
+}
+
 
 }
