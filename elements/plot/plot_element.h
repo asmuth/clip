@@ -8,9 +8,22 @@
  * <http://www.gnu.org/licenses/>.
  */
 #pragma once
+#include <memory>
 #include "signaltk.h"
+#include "axes.h"
+#include "plot_domain.h"
 
 namespace signaltk {
+
+struct PlotConfig {
+  PlotDomain x_domain;
+  double x_min;
+  double x_max;
+  PlotDomain y_domain;
+  double y_min;
+  double y_max;
+  std::vector<std::unique_ptr<AxisDefinition>> axes;
+};
 
 Status plot_add(Context* ctx);
 

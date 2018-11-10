@@ -10,7 +10,6 @@
 #pragma once
 #include <stack>
 #include "element.h"
-#include "elements/plot/plot_config.h"
 #include "graphics/layer.h"
 
 namespace signaltk {
@@ -19,12 +18,13 @@ class Context {
 public:
 
   template <typename T>
-  Status element_get(T** elem);
+  Status element_config(T** elem);
 
   template <typename T>
-  Status element_get(T const** elem) const;
+  Status element_config(T const** elem) const;
 
-  Status element_add(ElementRef elem);
+  template <typename T>
+  Status element_add();
 
   std::unique_ptr<Layer> frame;
 

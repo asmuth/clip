@@ -9,15 +9,17 @@
  */
 #pragma once
 #include <memory>
+#include <functional>
+#include <signaltk.h>
 
 namespace signaltk {
+class Layer;
+class Viewport;
 
 struct Element {
-
-  virtual ~Element() = default;
-
-  //virtual render(Layer* frame) = 0;
-
+  ~Element();
+  void* config;
+  std::function<void (Element* e)> destroy;
 };
 
 using ElementRef = std::unique_ptr<Element>;

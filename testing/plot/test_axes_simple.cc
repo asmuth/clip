@@ -7,8 +7,7 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#include "elements/plot/axes.h"
-#include "elements/plot/plot_layout.h"
+#include "elements/plot/plot_element.h"
 #include "elements/context.h"
 #include "../unittest.h"
 

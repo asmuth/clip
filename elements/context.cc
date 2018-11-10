@@ -11,10 +11,5 @@
 
 namespace signaltk {
 
-Status Context::element_add(ElementRef elem) {
-  elements.emplace(std::move(elem));
-  return Status::OK;
-}
-
 } // namespace signaltk
 

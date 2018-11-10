@@ -28,10 +28,11 @@ add_library(signaltk STATIC
     graphics/rasterize.cc
     graphics/png.cc
     elements/context.cc
+    elements/element.cc
     elements/plot/gridlines.cc
     elements/plot/axes.cc
     elements/plot/plot_domain.cc
-    elements/plot/plot_layout.cc
+    elements/plot/plot_element.cc
     elements/plot/legenddefinition.cc
     elements/plot/series.cc
     utils/random.cc

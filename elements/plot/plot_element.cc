@@ -8,19 +8,20 @@
  * <http://www.gnu.org/licenses/>.
  */
 #include "elements/context.h"
-#include "elements/plot/plot_layout.h"
-#include "elements/plot/axes.h"
+#include "elements/plot/plot_element.h"
 
 namespace signaltk {
 
+static constexpr const char* ID = "plot";
+
 Status plot_add(Context* ctx) {
-  ctx->element_add(std::make_unique<PlotConfig>());
+  ctx->element_add<PlotConfig>();
   return OK;
 }
 
 Status plot_render(Context* ctx) {
   PlotConfig* elem;
-  if (auto rc = ctx->element_get(&elem); rc) {
+  if (auto rc = ctx->element_config(&elem); rc) {
     return rc;
   }
 
