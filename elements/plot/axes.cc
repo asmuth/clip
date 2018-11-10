@@ -24,7 +24,7 @@ AxisDefinition::AxisDefinition() :
 
 Status plot_axis_add(Context* ctx, AxisPosition pos) {
   PlotConfig* elem;
-  if (auto rc = stack_head(ctx, &elem); rc) {
+  if (auto rc = stack_head_config(ctx, &elem); rc) {
     return rc;
   }
 
@@ -52,7 +52,7 @@ Status plot_axis_add(Context* ctx, AxisPosition pos) {
 
 Status plot_axis_addtick(Context* ctx, float offset) {
   PlotConfig* elem;
-  if (auto rc = stack_head(ctx, &elem); rc) {
+  if (auto rc = stack_head_config(ctx, &elem); rc) {
     return rc;
   }
 
@@ -63,7 +63,7 @@ Status plot_axis_addtick(Context* ctx, float offset) {
 
 Status plot_axis_addlabel(Context* ctx, float offset, const char* label) {
   PlotConfig* elem;
-  if (auto rc = stack_head(ctx, &elem); rc) {
+  if (auto rc = stack_head_config(ctx, &elem); rc) {
     return rc;
   }
 
@@ -183,8 +183,8 @@ Status plot_render_axis_horizontal(
 }
 
 Status plot_render_axis(Context* ctx, int i) {
-  PlotConfig* elem;
-  if (auto rc = stack_head(ctx, &elem); rc) {
+  const PlotConfig* elem;
+  if (auto rc = stack_head_config(*ctx, &elem); rc) {
     return rc;
   }
 

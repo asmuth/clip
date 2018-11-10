@@ -12,22 +12,22 @@
 namespace signaltk {
 
 template <typename T>
-Status stack_head(Context* ctx, T** head) {
+Status stack_head_config(Context* ctx, T** head) {
   if (ctx->elements.empty()) {
     return Status::ERROR_INVALID_ELEM;
   }
 
-  *head = static_cast<T*>(ctx->elements.top().get());
+  *head = static_cast<T*>(ctx->elements.top().config.get());
   return OK;
 }
 
 template <typename T>
-Status stack_head(const Context& ctx, T const** head) {
+Status stack_head_config(const Context& ctx, T const** head) {
   if (ctx.elements.empty()) {
     return Status::ERROR_INVALID_ELEM;
   }
 
-  *head = static_cast<const T*>(ctx.elements.top().get());
+  *head = static_cast<const T*>(ctx.elements.top().config.get());
   return OK;
 }
 

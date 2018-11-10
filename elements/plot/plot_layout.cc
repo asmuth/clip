@@ -15,7 +15,7 @@ namespace signaltk {
 
 Status plot_render(Context* ctx) {
   PlotConfig* elem;
-  if (auto rc = stack_head(ctx, &elem); rc) {
+  if (auto rc = stack_head_config(ctx, &elem); rc) {
     return rc;
   }
 

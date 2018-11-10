@@ -21,10 +21,10 @@ struct Context {
 };
 
 template <typename T>
-Status stack_head(Context* ctx, T** head);
+Status stack_head_config(Context* ctx, T** head);
 
 template <typename T>
-Status stack_head(const Context& ctx, T const** head);
+Status stack_head_config(const Context& ctx, T const** head);
 
 } // namespace signaltk
 
