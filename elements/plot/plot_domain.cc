@@ -7,15 +7,13 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#include "domain.h"
-#include "continuousdomain.h"
-#include "discretedomain.h"
-#include "timedomain.h"
+#include "plot_domain.h"
 
 using namespace signaltk;
 namespace signaltk {
 namespace chart {
 
+/*
 const char AnyDomain::kDimensionLetters[] = "xyz";
 const int AnyDomain::kDefaultNumTicks = 8;
 const double AnyDomain::kDefaultDomainPadding = 0.1;
@@ -38,6 +36,7 @@ template <> Domain<UnixTime>*
 template <> Domain<std::string>* Domain<std::string>::mkDomain() {
   return new DiscreteDomain<std::string>();
 }
+*/
 
 }
 }

@@ -17,6 +17,11 @@
 
 // FIXPAUL too many copies T val...
 namespace signaltk {
+
+enum class PlotDomain {
+  LINEAR, LOGARITHMIC
+};
+
 namespace chart {
 
 /**

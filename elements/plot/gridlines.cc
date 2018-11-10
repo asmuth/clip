@@ -13,7 +13,6 @@
 #include "graphics/brush.h"
 #include "graphics/text.h"
 #include "gridlines.h"
-#include "domain.h"
 
 namespace signaltk {
 namespace chart {

@@ -9,8 +9,8 @@
  */
 #include <iostream>
 #include <graphics/layer.h>
-#include <components/plot/axes.h>
-#include <components/plot/gridlines.h>
+#include <elements/plot/axes.h>
+#include <elements/plot/gridlines.h>
 #include <utils/flagparser.h>
 #include "plot_api.h"
 

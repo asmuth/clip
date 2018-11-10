@@ -27,13 +27,12 @@ add_library(signaltk STATIC
     graphics/text_shaper.cc
     graphics/rasterize.cc
     graphics/png.cc
-    components/plot/gridlines.cc
-    components/plot/axes.cc
-    components/plot/domain.cc
-    components/plot/domainprovider.cc
-    components/plot/legenddefinition.cc
-    components/plot/series.cc
-    components/plot/timedomain.cc
+    elements/plot/gridlines.cc
+    elements/plot/axes.cc
+    elements/plot/plot_domain.cc
+    elements/plot/plot_layout.cc
+    elements/plot/legenddefinition.cc
+    elements/plot/series.cc
     utils/random.cc
     utils/bufferutil.cc
     utils/exception.cc
@@ -51,12 +50,11 @@ add_library(signaltk STATIC
     utils/ISO8601.cc
     utils/UTF8.cc
     utils/wallclock.cc
-    signaltk_cli.cc
     signaltk_cmd.cc)
 
 set(SIGNALTK_LDFLAGS signaltk ${CAIRO_LIBRARIES} ${FREETYPE_LIBRARIES} ${HARFBUZZ_LIBRARIES} ${HARFBUZZ_ICU_LIBRARIES} ${PNG_LIBRARIES})
 
-file(GLOB test_files "test/**/test_*.cc")
+file(GLOB test_files "testing/**/test_*.cc")
 foreach(test_path ${test_files})
   get_filename_component(test_name ${test_path} NAME_WE)
   get_filename_component(test_srcdir ${test_path} DIRECTORY)
@@ -66,5 +64,5 @@ foreach(test_path ${test_files})
 
   add_test(
       NAME ${test_name}
-      COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/test/test_runner.sh ${CMAKE_CURRENT_BINARY_DIR}/${test_name} ${test_srcdir}/${test_name}.png)
+      COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/testing/test_runner.sh ${CMAKE_CURRENT_BINARY_DIR}/${test_name} ${test_srcdir}/${test_name}.png)
 endforeach()

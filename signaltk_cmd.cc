@@ -8,7 +8,7 @@
  * <http://www.gnu.org/licenses/>.
  */
 #include "signaltk.h"
-#include <components/plot/plot_api.h>
+#include <elements/plot/plot_api.h>
 
 namespace signaltk {
 

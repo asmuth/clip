@@ -9,7 +9,7 @@
  */
 #include "signaltk.h"
 #include <graphics/image_api.h>
-#include <components/plot/plot_api.h>
+#include <elements/plot/plot_api.h>
 #include <iostream>
 
 namespace signaltk {

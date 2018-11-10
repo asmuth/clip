@@ -7,11 +7,13 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#include "plot/axes.h"
+#include "graphics/brush.h"
+#include "graphics/colour.h"
+#include "graphics/layer.h"
+#include "graphics/text.h"
 #include "../unittest.h"
 
 using namespace signaltk;
-using namespace signaltk::chart;
 
 Status drawTestAt(Layer* l, uint32_t x, uint32_t y, TextStyle s) {
   StrokeStyle ss;

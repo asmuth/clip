@@ -13,10 +13,7 @@
 #include <string>
 
 namespace signaltk {
-
-struct Context {
-
-};
+struct Context;
 
 enum Status : int {
   OK,

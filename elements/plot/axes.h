@@ -15,7 +15,6 @@
 #include <graphics/viewport.h>
 
 namespace signaltk {
-namespace chart {
 
 static const double kDefaultLabelPaddingVertREM = 0.8f;
 static const double kDefaultLabelPaddingHorizREM = 1.0f;
@@ -152,6 +151,5 @@ Status renderAxisHorizontal(
     double x1,
     Layer* target);
 
-} // namespace chart
 } // namespace signaltk
 

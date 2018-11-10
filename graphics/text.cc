@@ -27,7 +27,7 @@ Status drawText(
     const TextStyle& text_style,
     Layer* layer) {
   FontInfo font_info {
-    .font_file = "/Library/Fonts/Arial.ttf",
+    .font_file = "/usr/share/fonts/google-roboto/Roboto-Medium.ttf",
     .font_size = text_style.font_size
   };
 

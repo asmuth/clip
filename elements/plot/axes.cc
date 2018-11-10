@@ -12,7 +12,6 @@
 #include <graphics/brush.h>
 
 namespace signaltk {
-namespace chart {
 
 AxisDefinition::AxisDefinition() :
     enabled_(false),
@@ -172,5 +171,4 @@ Status renderAxisHorizontal(
   return OK;
 }
 
-}
 }

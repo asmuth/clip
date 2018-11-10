@@ -10,7 +10,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-#include "plot/gridlines.h"
+#include "elements/plot/gridlines.h"
 #include "utils/fileutil.h"
 #include "utils/stringutil.h"
 #include "../unittest.h"
