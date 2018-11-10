@@ -56,7 +56,6 @@ struct AxisDefinition {
   double tick_length_rem;
 };
 
-Status plot_add(Context* ctx);
 Status plot_axis_add(Context* ctx, AxisPosition pos);
 Status plot_axis_addtick(Context* ctx, float offset);
 Status plot_axis_addlabel(Context* ctx, float offset, const char* label);

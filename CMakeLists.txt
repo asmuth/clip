@@ -27,6 +27,7 @@ add_library(signaltk STATIC
     graphics/text_shaper.cc
     graphics/rasterize.cc
     graphics/png.cc
+    elements/context.cc
     elements/plot/gridlines.cc
     elements/plot/axes.cc
     elements/plot/plot_domain.cc

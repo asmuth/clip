@@ -22,6 +22,8 @@ int main(int argc, char** argv) {
 
   ctx.frame.clear(Colour{1, 1, 1, 1});
 
+  CHECK_RC(plot_add(&ctx));
+
   CHECK_RC(plot_axis_add(&ctx, AxisPosition::LEFT));
   CHECK_RC(plot_axis_addtick(&ctx, 0.0f));
   CHECK_RC(plot_axis_addtick(&ctx, 0.2f));

@@ -7,14 +7,19 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#pragma once
-#include "signaltk.h"
+#include "context.h"
 
 namespace signaltk {
 
-Status plot_add(Context* ctx);
+Status stack_add(
+    Context* ctx,
+    std::unique_ptr<ElementConfig> config) {
+  ctx->elements.emplace(ElementRef {
+    .config = std::move(config)
+  });
 
-Status plot_render(Context* ctx);
+  return Status::OK;
+}
 
 } // namespace signaltk
 

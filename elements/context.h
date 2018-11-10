@@ -26,6 +26,10 @@ Status stack_head_config(Context* ctx, T** head);
 template <typename T>
 Status stack_head_config(const Context& ctx, T const** head);
 
+Status stack_add(
+    Context* ctx,
+    std::unique_ptr<ElementConfig> config);
+
 } // namespace signaltk
 
 #include "context_impl.h"
