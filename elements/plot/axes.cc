@@ -23,9 +23,9 @@ AxisDefinition::AxisDefinition() :
     label_padding_vert_rem(kDefaultLabelPaddingVertREM),
     tick_length_rem(kDefaultTickLengthREM) {}
 
-Status plot_axis_add(Context* ctx, AxisPosition pos) {
+Status plot_axis_add(context* ctx, AxisPosition pos) {
   PlotConfig* elem;
-  if (auto rc = ctx->element_config(&elem); rc) {
+  if (auto rc = element_config_as(ctx, &elem); rc) {
     return rc;
   }
 
@@ -51,9 +51,9 @@ Status plot_axis_add(Context* ctx, AxisPosition pos) {
   return OK;
 }
 
-Status plot_axis_addtick(Context* ctx, float offset) {
+Status plot_axis_addtick(context* ctx, float offset) {
   PlotConfig* elem;
-  if (auto rc = ctx->element_config(&elem); rc) {
+  if (auto rc = element_config_as(ctx, &elem); rc) {
     return rc;
   }
 
@@ -62,9 +62,9 @@ Status plot_axis_addtick(Context* ctx, float offset) {
   return OK;
 }
 
-Status plot_axis_addlabel(Context* ctx, float offset, const char* label) {
+Status plot_axis_addlabel(context* ctx, float offset, const char* label) {
   PlotConfig* elem;
-  if (auto rc = ctx->element_config(&elem); rc) {
+  if (auto rc = element_config_as(ctx, &elem); rc) {
     return rc;
   }
 
@@ -183,9 +183,9 @@ Status plot_render_axis_horizontal(
   return OK;
 }
 
-Status plot_render_axis(Context* ctx, int i) {
+Status plot_render_axis(context* ctx, int i) {
   const PlotConfig* elem;
-  if (auto rc = ctx->element_config(&elem); rc) {
+  if (auto rc = element_config_as(ctx, &elem); rc) {
     return rc;
   }
 
@@ -201,32 +201,32 @@ Status plot_render_axis(Context* ctx, int i) {
           *axis,
           padding,
           padding,
-          ctx->frame->height - padding,
-          ctx->frame.get());
+          context_height(ctx) - padding,
+          context_frame(ctx));
       break;
     case AxisPosition::RIGHT:
       rc = plot_render_axis_vertical(
           *axis,
-          ctx->frame->width - padding,
+          context_width(ctx) - padding,
           padding,
-          ctx->frame->height - padding,
-          ctx->frame.get());
+          context_height(ctx) - padding,
+          context_frame(ctx));
       break;
     case AxisPosition::TOP:
       rc = plot_render_axis_horizontal(
           *axis,
           padding,
           padding,
-          ctx->frame->width - padding,
-          ctx->frame.get());
+          context_width(ctx) - padding,
+          context_frame(ctx));
       break;
     case AxisPosition::BOTTOM:
       rc = plot_render_axis_horizontal(
           *axis,
-          ctx->frame->height - padding,
+          context_height(ctx) - padding,
           padding,
-          ctx->frame->width - padding,
-          ctx->frame.get());
+          context_width(ctx) - padding,
+          context_frame(ctx));
       break;
   }
 

@@ -12,33 +12,33 @@
 namespace signaltk {
 
 template <typename T>
-Status Context::element_config(T** elem) {
-  if (elements.empty()) {
-    return Status::ERROR_INVALID_ELEM;
+Status element_config_as(context* ctx, T** elem) {
+  void* e;
+  if (auto rc = element_config(ctx, &e); rc) {
+    return rc;
   }
 
-  *elem = static_cast<T*>(elements.top()->config);
+  *elem = static_cast<T*>(e);
   return OK;
 }
 
 template <typename T>
-Status Context::element_config(T const** elem) const {
-  if (elements.empty()) {
-    return Status::ERROR_INVALID_ELEM;
+Status element_config_as(const context* ctx, T const** elem) {
+  const void* e;
+  if (auto rc = element_config(ctx, &e); rc) {
+    return rc;
   }
 
-  *elem = static_cast<const T*>(elements.top()->config);
+  *elem = static_cast<const T*>(e);
   return OK;
 }
 
 template <typename T>
-Status Context::element_add() {
-  auto e = std::make_unique<Element>();
-  e->config = new T();
-  e->destroy = [] (Element* e) { delete static_cast<T*>(e->config); };
-
-  elements.emplace(std::move(e));
-  return OK;
+Status element_add(context* ctx) {
+  return element_add(
+      ctx,
+      new T(),
+      [] (void* c) { delete static_cast<T*>(c); });
 }
 
 } // namespace signaltk

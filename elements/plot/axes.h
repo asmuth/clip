@@ -11,6 +11,7 @@
 #include <utility>
 #include <string>
 #include <vector>
+#include <elements/context.h>
 #include <graphics/layer.h>
 #include <graphics/viewport.h>
 
@@ -56,13 +57,13 @@ struct AxisDefinition {
   double tick_length_rem;
 };
 
-Status plot_axis_add(Context* ctx, AxisPosition pos);
-Status plot_axis_addtick(Context* ctx, float offset);
-Status plot_axis_addlabel(Context* ctx, float offset, const char* label);
-Status plot_axis_setauto(Context* ctx);
-Status plot_axis_setmanual(Context* ctx);
+Status plot_axis_add(context* ctx, AxisPosition pos);
+Status plot_axis_addtick(context* ctx, float offset);
+Status plot_axis_addlabel(context* ctx, float offset, const char* label);
+Status plot_axis_setauto(context* ctx);
+Status plot_axis_setmanual(context* ctx);
 
-Status plot_render_axis(Context* ctx, int idx);
+Status plot_render_axis(context* ctx, int idx);
 
 } // namespace signaltk
 

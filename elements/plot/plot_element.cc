@@ -14,14 +14,14 @@ namespace signaltk {
 
 static constexpr const char* ID = "plot";
 
-Status plot_add(Context* ctx) {
-  ctx->element_add<PlotConfig>();
+Status plot_add(context* ctx) {
+  element_add<PlotConfig>(ctx);
   return OK;
 }
 
-Status plot_render(Context* ctx) {
+Status plot_render(context* ctx) {
   PlotConfig* elem;
-  if (auto rc = ctx->element_config(&elem); rc) {
+  if (auto rc = element_config_as(ctx, &elem); rc) {
     return rc;
   }
 

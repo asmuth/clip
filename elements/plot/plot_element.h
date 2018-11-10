@@ -25,9 +25,9 @@ struct PlotConfig {
   std::vector<std::unique_ptr<AxisDefinition>> axes;
 };
 
-Status plot_add(Context* ctx);
+Status plot_add(context* ctx);
 
-Status plot_render(Context* ctx);
+Status plot_render(context* ctx);
 
 } // namespace signaltk
 

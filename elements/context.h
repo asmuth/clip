@@ -9,28 +9,28 @@
  */
 #pragma once
 #include <stack>
-#include "element.h"
 #include "graphics/layer.h"
 
 namespace signaltk {
 
-class Context {
-public:
+struct context;
 
-  template <typename T>
-  Status element_config(T** elem);
+context* context_create_image(uint32_t width, uint32_t height);
+void context_reset(context* ctx);
+void context_destroy(context* ctx);
 
-  template <typename T>
-  Status element_config(T const** elem) const;
+uint32_t context_width(const context* ctx);
+uint32_t context_height(const context* ctx);
+Layer* context_frame(context* ctx);
 
-  template <typename T>
-  Status element_add();
+Status element_config(context* ctx, void** elem);
 
-  std::unique_ptr<Layer> frame;
+Status element_config(const context* ctx, const void** elem);
 
-protected:
-  std::stack<ElementRef> elements;
-};
+Status element_add(
+    context* ctx,
+    void* config,
+    std::function<void(void* config)> config_destroy);
 
 } // namespace signaltk
 
