@@ -15,20 +15,22 @@
 
 namespace signaltk {
 
-struct Context {
+class Context {
+public:
+
+  template <typename T>
+  Status element_get(T** elem);
+
+  template <typename T>
+  Status element_get(T const** elem) const;
+
+  Status element_add(ElementRef elem);
+
+  std::unique_ptr<Layer> frame;
+
+protected:
   std::stack<ElementRef> elements;
-  Layer frame;
 };
-
-template <typename T>
-Status stack_head_config(Context* ctx, T** head);
-
-template <typename T>
-Status stack_head_config(const Context& ctx, T const** head);
-
-Status stack_add(
-    Context* ctx,
-    std::unique_ptr<ElementConfig> config);
 
 } // namespace signaltk
 

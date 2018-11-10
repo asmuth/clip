@@ -11,13 +11,8 @@
 
 namespace signaltk {
 
-Status stack_add(
-    Context* ctx,
-    std::unique_ptr<ElementConfig> config) {
-  ctx->elements.emplace(ElementRef {
-    .config = std::move(config)
-  });
-
+Status Context::element_add(ElementRef elem) {
+  elements.emplace(std::move(elem));
   return Status::OK;
 }
 

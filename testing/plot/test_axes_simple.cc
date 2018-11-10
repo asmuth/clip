@@ -16,11 +16,9 @@ using namespace signaltk;
 using namespace signaltk::chart;
 
 int main(int argc, char** argv) {
-  Context ctx {
-    .frame = Layer(1200, 800),
-  };
-
-  ctx.frame.clear(Colour{1, 1, 1, 1});
+  Context ctx;
+  ctx.frame = std::make_unique<Layer>(1200, 800);
+  ctx.frame->clear(Colour{1, 1, 1, 1});
 
   CHECK_RC(plot_add(&ctx));
 
@@ -80,6 +78,6 @@ int main(int argc, char** argv) {
 
   CHECK_RC(plot_render(&ctx));
 
-  CHECK_RC(ctx.frame.writeToFile(std::string(argv[0]) + ".png"));
+  CHECK_RC(ctx.frame->writeToFile(std::string(argv[0]) + ".png"));
 }
 

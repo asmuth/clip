@@ -12,13 +12,15 @@
 
 namespace signaltk {
 
-struct ElementConfig {
-  virtual ~ElementConfig() = default;
+struct Element {
+
+  virtual ~Element() = default;
+
+  //virtual render(Layer* frame) = 0;
+
 };
 
-struct ElementRef {
-  std::unique_ptr<ElementConfig> config;
-};
+using ElementRef = std::unique_ptr<Element>;
 
 } // namespace signaltk
 

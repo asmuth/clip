@@ -14,13 +14,13 @@
 namespace signaltk {
 
 Status plot_add(Context* ctx) {
-  stack_add(ctx, std::make_unique<PlotConfig>());
+  ctx->element_add(std::make_unique<PlotConfig>());
   return OK;
 }
 
 Status plot_render(Context* ctx) {
   PlotConfig* elem;
-  if (auto rc = stack_head_config(ctx, &elem); rc) {
+  if (auto rc = ctx->element_get(&elem); rc) {
     return rc;
   }
 

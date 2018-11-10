@@ -24,7 +24,7 @@ AxisDefinition::AxisDefinition() :
 
 Status plot_axis_add(Context* ctx, AxisPosition pos) {
   PlotConfig* elem;
-  if (auto rc = stack_head_config(ctx, &elem); rc) {
+  if (auto rc = ctx->element_get(&elem); rc) {
     return rc;
   }
 
@@ -52,7 +52,7 @@ Status plot_axis_add(Context* ctx, AxisPosition pos) {
 
 Status plot_axis_addtick(Context* ctx, float offset) {
   PlotConfig* elem;
-  if (auto rc = stack_head_config(ctx, &elem); rc) {
+  if (auto rc = ctx->element_get(&elem); rc) {
     return rc;
   }
 
@@ -63,7 +63,7 @@ Status plot_axis_addtick(Context* ctx, float offset) {
 
 Status plot_axis_addlabel(Context* ctx, float offset, const char* label) {
   PlotConfig* elem;
-  if (auto rc = stack_head_config(ctx, &elem); rc) {
+  if (auto rc = ctx->element_get(&elem); rc) {
     return rc;
   }
 
@@ -184,7 +184,7 @@ Status plot_render_axis_horizontal(
 
 Status plot_render_axis(Context* ctx, int i) {
   const PlotConfig* elem;
-  if (auto rc = stack_head_config(*ctx, &elem); rc) {
+  if (auto rc = ctx->element_get(&elem); rc) {
     return rc;
   }
 
@@ -200,32 +200,32 @@ Status plot_render_axis(Context* ctx, int i) {
           *axis,
           padding,
           padding,
-          ctx->frame.height - padding,
-          &ctx->frame);
+          ctx->frame->height - padding,
+          ctx->frame.get());
       break;
     case AxisPosition::RIGHT:
       rc = plot_render_axis_vertical(
           *axis,
-          ctx->frame.width - padding,
+          ctx->frame->width - padding,
           padding,
-          ctx->frame.height - padding,
-          &ctx->frame);
+          ctx->frame->height - padding,
+          ctx->frame.get());
       break;
     case AxisPosition::TOP:
       rc = plot_render_axis_horizontal(
           *axis,
           padding,
           padding,
-          ctx->frame.width - padding,
-          &ctx->frame);
+          ctx->frame->width - padding,
+          ctx->frame.get());
       break;
     case AxisPosition::BOTTOM:
       rc = plot_render_axis_horizontal(
           *axis,
-          ctx->frame.height - padding,
+          ctx->frame->height - padding,
           padding,
-          ctx->frame.width - padding,
-          &ctx->frame);
+          ctx->frame->width - padding,
+          ctx->frame.get());
       break;
   }
 

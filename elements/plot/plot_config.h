@@ -16,7 +16,7 @@
 
 namespace signaltk {
 
-struct PlotConfig : public ElementConfig {
+struct PlotConfig : Element {
   static constexpr const char* ID = "plot";
 
   PlotDomain x_domain;
