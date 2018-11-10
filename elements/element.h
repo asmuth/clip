@@ -8,25 +8,17 @@
  * <http://www.gnu.org/licenses/>.
  */
 #pragma once
-#include "signaltk.h"
-#include "axes.h"
-#include "plot_domain.h"
-#include "elements/element.h"
 #include <memory>
 
 namespace signaltk {
 
-struct PlotConfig : public Element {
-  static constexpr const char* ID = "plot";
+struct Element {
 
-  PlotDomain x_domain;
-  double x_min;
-  double x_max;
-  PlotDomain y_domain;
-  double y_min;
-  double y_max;
-  std::vector<std::unique_ptr<AxisDefinition>> axes;
+  virtual ~Element() = default;
+
 };
+
+using ElementRef = std::unique_ptr<Element>;
 
 } // namespace signaltk
 

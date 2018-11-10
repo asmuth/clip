@@ -8,15 +8,24 @@
  * <http://www.gnu.org/licenses/>.
  */
 #pragma once
+#include <stack>
+#include "element.h"
 #include "elements/plot/plot_config.h"
 #include "graphics/layer.h"
 
 namespace signaltk {
 
 struct Context {
-  PlotConfig plot_config;
+  std::stack<ElementRef> elements;
   Layer frame;
 };
 
+template <typename T>
+Status stack_head(Context* ctx, T** head);
+
+template <typename T>
+Status stack_head(const Context& ctx, T const** head);
+
 } // namespace signaltk
 
+#include "context_impl.h"

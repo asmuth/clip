@@ -23,6 +23,11 @@ AxisDefinition::AxisDefinition() :
     tick_length_rem(kDefaultTickLengthREM) {}
 
 Status plot_axis_add(Context* ctx, AxisPosition pos) {
+  PlotConfig* elem;
+  if (auto rc = stack_head(ctx, &elem); rc) {
+    return rc;
+  }
+
   auto axis_config = std::make_unique<AxisDefinition>();
   axis_config->position = pos;
 
@@ -41,18 +46,28 @@ Status plot_axis_add(Context* ctx, AxisPosition pos) {
       break;
   }
 
-  ctx->plot_config.axes.emplace_back(std::move(axis_config));
+  elem->axes.emplace_back(std::move(axis_config));
   return OK;
 }
 
 Status plot_axis_addtick(Context* ctx, float offset) {
-  auto& axis_config = ctx->plot_config.axes.back();
+  PlotConfig* elem;
+  if (auto rc = stack_head(ctx, &elem); rc) {
+    return rc;
+  }
+
+  auto& axis_config = elem->axes.back();
   axis_config->ticks.emplace_back(offset);
   return OK;
 }
 
 Status plot_axis_addlabel(Context* ctx, float offset, const char* label) {
-  auto& axis_config = ctx->plot_config.axes.back();
+  PlotConfig* elem;
+  if (auto rc = stack_head(ctx, &elem); rc) {
+    return rc;
+  }
+
+  auto& axis_config = elem->axes.back();
   axis_config->labels.emplace_back(offset, label);
   return OK;
 }
@@ -168,10 +183,15 @@ Status plot_render_axis_horizontal(
 }
 
 Status plot_render_axis(Context* ctx, int i) {
-  assert(i < ctx->plot_config.axes.size());
+  PlotConfig* elem;
+  if (auto rc = stack_head(ctx, &elem); rc) {
+    return rc;
+  }
+
+  assert(i < elem->axes.size());
 
   int padding = 80;
-  const auto& axis = ctx->plot_config.axes[i];
+  const auto& axis = elem->axes[i];
 
   Status rc;
   switch (axis->position) {

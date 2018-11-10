@@ -7,25 +7,27 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#include "elements/context.h"
-#include "elements/plot/plot_layout.h"
-#include "elements/plot/axes.h"
+#pragma once
 
 namespace signaltk {
 
-Status plot_render(Context* ctx) {
-  PlotConfig* elem;
-  if (auto rc = stack_head(ctx, &elem); rc) {
-    return rc;
+template <typename T>
+Status stack_head(Context* ctx, T** head) {
+  if (ctx->elements.empty()) {
+    return Status::ERROR_INVALID_ELEM;
   }
 
-  // draw axes
-  for (size_t i = 0; i < elem->axes.size(); ++i) {
-    if (auto rc = plot_render_axis(ctx, i); rc) {
-      return rc;
-    }
+  *head = static_cast<T*>(ctx->elements.top().get());
+  return OK;
+}
+
+template <typename T>
+Status stack_head(const Context& ctx, T const** head) {
+  if (ctx.elements.empty()) {
+    return Status::ERROR_INVALID_ELEM;
   }
 
+  *head = static_cast<const T*>(ctx.elements.top().get());
   return OK;
 }
 
