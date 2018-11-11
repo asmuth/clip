@@ -60,15 +60,24 @@ set(SIGNALTK_LDFLAGS signaltk ${CAIRO_LIBRARIES} ${FREETYPE_LIBRARIES} ${HARFBUZ
 add_executable(plotfx platform/signaltk_cli.cc)
 target_link_libraries(plotfx ${SIGNALTK_LDFLAGS})
 
-file(GLOB test_files "testing/unit/test_*.cc")
-foreach(test_path ${test_files})
-  get_filename_component(test_name ${test_path} NAME_WE)
-  get_filename_component(test_srcdir ${test_path} DIRECTORY)
+file(GLOB unit_test_files "testing/**/test_*.cc")
+foreach(unit_test_path ${unit_test_files})
+  get_filename_component(unit_test_name ${unit_test_path} NAME_WE)
+  get_filename_component(unit_test_srcdir ${unit_test_path} DIRECTORY)
 
-  add_executable(${test_name} ${test_path})
-  target_link_libraries(${test_name} ${SIGNALTK_LDFLAGS})
+  add_executable(${unit_test_name} ${unit_test_path})
+  target_link_libraries(${unit_test_name} ${SIGNALTK_LDFLAGS})
 
   add_test(
-      NAME ${test_name}
-      COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/testing/test_runner.sh ${CMAKE_CURRENT_BINARY_DIR}/${test_name} ${test_srcdir}/${test_name}.png)
+      NAME ${unit_test_name}
+      COMMAND ${CMAKE_CURRENT_BINARY_DIR}/${unit_test_name})
+endforeach()
+
+file(GLOB spec_test_files "testing/**/test_*.spec")
+foreach(spec_test_path ${spec_test_files})
+  get_filename_component(spec_test_name ${spec_test_path} NAME_WE)
+  get_filename_component(spec_test_srcdir ${spec_test_path} DIRECTORY)
+  add_test(
+      NAME ${spec_test_name}
+      COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/testing/test_runner.sh ${CMAKE_CURRENT_BINARY_DIR}/plotfx ${spec_test_path} ${CMAKE_CURRENT_BINARY_DIR}/${spec_test_name}.png ${spec_test_srcdir}/${spec_test_name}.png)
 endforeach()
