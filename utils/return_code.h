@@ -14,6 +14,7 @@
 #include <string>
 #include <stdarg.h>
 #include "stringutil.h"
+#include "signaltk.h"
 
 namespace signaltk {
 
@@ -58,6 +59,11 @@ public:
       T... args) {
     return ReturnCode::error(code, StringUtil::format(message, args...));
   }
+
+  inline ReturnCode(const Status& status) :
+      success_(status == OK),
+      code_("RTERR"),
+      message_("runtime error") {}
 
   inline bool isError() const {
     return !success_;
