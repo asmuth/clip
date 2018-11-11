@@ -13,7 +13,7 @@
 #include "elements/element.h"
 #include "elements/element_spec.h"
 #include "utils/return_code.h"
-#include "axes.h"
+#include "plot_axis.h"
 #include "plot_domain.h"
 
 namespace signaltk {

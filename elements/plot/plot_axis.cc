@@ -7,7 +7,7 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
-#include "axes.h"
+#include "plot_axis.h"
 #include <assert.h>
 #include <elements/plot/plot_element.h>
 #include <graphics/text.h>
