@@ -30,6 +30,7 @@ add_library(signaltk STATIC
     elements/context.cc
     elements/element_factory.cc
     elements/element_spec_parser.cc
+    elements/element_tree.cc
     elements/plot/gridlines.cc
     elements/plot/axes.cc
     elements/plot/plot_domain.cc
