@@ -18,13 +18,18 @@
 #include <sys/resource.h>
 #include <sys/file.h>
 #include "signaltk.h"
-#include "elements/context.h"
+#include "elements/element_tree.h"
+#include "graphics/layer.h"
 #include <utils/flagparser.h>
 #include <utils/fileutil.h>
 #include <utils/return_code.h>
 #include <utils/stringutil.h>
 
 using namespace signaltk;
+
+void printError(const ReturnCode& rc) {
+  std::cerr << StringUtil::format("ERROR: $0", rc.getMessage()) << std::endl;
+}
 
 int main(int argc, const char** argv) {
   FlagParser flag_parser;
@@ -73,15 +78,24 @@ int main(int argc, const char** argv) {
     return 0;
   }
 
-  auto ctx = context_create_image(1200, 800);
-  context_frame(ctx)->clear(Colour{1, 1, 1, 1});
-
-  auto rc = context_frame(ctx)->writeToFile(flag_out);
-
-  if (rc) {
-    std::cerr << StringUtil::format("ERROR: $0\n", "...");
+  auto spec = FileUtil::read(flag_in).toString(); // FIXME
+  signaltk::ElementTree elems;
+  if (auto rc = buildElementTree(spec, &elems); !rc.isSuccess()) {
+    printError(rc);
     return EXIT_FAILURE;
-  } else {
-    return EXIT_SUCCESS;
   }
+
+  Layer frame{1200, 800};
+  frame.clear(Colour{1, 1, 1, 1});
+  if (auto rc = renderElements(elems, &frame); !rc.isSuccess()) {
+    printError(rc);
+    return EXIT_FAILURE;
+  }
+
+  if (auto rc = frame.writeToFile(flag_out); rc) {
+    std::cerr << "ERROR: can't write output file" << std::endl;
+    return EXIT_FAILURE;
+  }
+
+  return EXIT_SUCCESS;
 }
