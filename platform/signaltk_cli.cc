@@ -18,6 +18,7 @@
 #include <sys/resource.h>
 #include <sys/file.h>
 #include "signaltk.h"
+#include "elements/context.h"
 #include <utils/flagparser.h>
 #include <utils/fileutil.h>
 #include <utils/return_code.h>
@@ -26,41 +27,29 @@
 using namespace signaltk;
 
 int main(int argc, const char** argv) {
-  /*
-  FlagParser flags;
+  FlagParser flag_parser;
 
-  flags.defineFlag(
-      "config",
-      FlagParser::T_STRING,
-      false,
-      "c",
-      NULL);
+  std::string flag_in;
+  flag_parser.defineString("in", true, &flag_in);
 
-  flags.defineFlag(
-      "help",
-      FlagParser::T_STRING,
-      false,
-      "?",
-      "");
+  std::string flag_out;
+  flag_parser.defineString("out", true, &flag_out);
 
-  flags.defineFlag(
-      "version",
-      FlagParser::T_SWITCH,
-      false,
-      "V",
-      NULL);
+  bool flag_help;
+  flag_parser.defineSwitch("help", &flag_help);
+
+  bool flag_version;
+  flag_parser.defineSwitch("version", &flag_version);
 
   {
-    auto rc = flags.parseArgv(argc, argv);
+    auto rc = flag_parser.parseArgv(argc - 1, argv + 1);
     if (!rc.isSuccess()) {
       std::cerr << "ERROR: " << rc.getMessage() << std::endl;
-      return 1;
+      return -1;
     }
   }
 
-  auto cmd_argv = flags.getArgv();
-
-  if (flags.isSet("version")) {
+  if (flag_version) {
     std::cerr <<
         StringUtil::format(
             "signaltk $0\n"
@@ -71,85 +60,28 @@ int main(int argc, const char** argv) {
     return 0;
   }
 
-  bool help_requested = false;
-  std::string help_topic;
-
-  if (flags.isSetExplicit("help")) {
-    help_requested = true;
-    help_topic = flags.getString("help");
-  }
- 
-  if (cmd_argv.size() > 0 && cmd_argv[0] == "help") {
-    help_requested = true;
-    help_topic = cmd_argv.size() > 1 ? cmd_argv[1] : "";
-  }
-
-  if (help_requested && help_topic.empty()) {
+  if (flag_help) {
     std::cerr <<
         "Usage: $ signaltk [OPTIONS]\n"
-        "   -c, --config <file>       Load config file\n"
-        "   -?, --help <topic>        Display a command's help text and exit\n"
-        "   -v, --version             Display the version of this binary and exit\n"
+        "   --help                Display this help text and exit\n"
+        "   --version             Display the version of this binary and exit\n"
         "\n"
         "Commands:\n";
 
-    //for (const auto& c : commands) {
-      //stdout_os->printf("   %-26.26s", c->getName().c_str());
-      //stdout_os->printf("%-80.80s\n", c->getDescription().c_str());
-    //}
 
     std::cerr << "\nSee 'signaltk help <command>' for information about a specific subcommand.\n";
     return 0;
   }
 
-  if (help_requested && !help_topic.empty()) {
-    const auto& cmd = std::find_if(
-        commands.begin(),
-        commands.end(),
-        [&help_topic] (const auto& c) { return c->getName() == help_topic; });
+  auto ctx = context_create_image(1200, 800);
+  context_frame(ctx)->clear(Colour{1, 1, 1, 1});
 
-    if (cmd == commands.end()) {
-      std::cerr << StringUtil::format("No manual entry for signaltk '$0'\n", help_topic);
-      return 1;
-    } else {
-      (*cmd)->printHelp();
-      return 0;
-    }
-  }
-  */
+  auto rc = context_frame(ctx)->writeToFile(flag_out);
 
-  /*
-  const auto& cmd = std::find_if(
-      commands.begin(),
-      commands.end(),
-      [&cmd_argv] (const auto& c) { return c->getName() == cmd_argv.front(); });
-
-  if (cmd == commands.end()) {
-    std::cerr << StringUtil::format(
-        "ERROR: '$0' is not a signaltk command. See 'signaltk --help'.\n",
-        cmd_argv[0]);
-
-    return 1;
-  }
-
-  CLIContext ctx;
-  ctx.config = &config;
-  ctx.storage_backend = backend.get();
-
-  cmd_argv.erase(cmd_argv.begin());
-  auto rc = (*cmd)->execute(&ctx, cmd_argv);
-
-  if (!rc.isSuccess()) {
-    std::cerr << StringUtil::format("ERROR: $0\n", rc.getMessage());
-  }
-  */
-
-  signaltk::Context ctx;
-  auto rc = signaltk::cmd(&ctx, argv + 1, argc - 1); // FIXME
-
-  if (rc == 0) {
-    return EXIT_SUCCESS;
-  } else {
+  if (rc) {
+    std::cerr << StringUtil::format("ERROR: $0\n", "...");
     return EXIT_FAILURE;
+  } else {
+    return EXIT_SUCCESS;
   }
 }

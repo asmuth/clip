@@ -56,6 +56,9 @@ add_library(signaltk STATIC
 
 set(SIGNALTK_LDFLAGS signaltk ${CAIRO_LIBRARIES} ${FREETYPE_LIBRARIES} ${HARFBUZZ_LIBRARIES} ${HARFBUZZ_ICU_LIBRARIES} ${PNG_LIBRARIES})
 
+add_executable(plotfx platform/signaltk_cli.cc)
+target_link_libraries(plotfx ${SIGNALTK_LDFLAGS})
+
 file(GLOB test_files "testing/**/test_*.cc")
 foreach(test_path ${test_files})
   get_filename_component(test_name ${test_path} NAME_WE)
