@@ -28,6 +28,7 @@ add_library(signaltk STATIC
     graphics/rasterize.cc
     graphics/png.cc
     elements/context.cc
+    elements/element_factory.cc
     elements/element_spec_parser.cc
     elements/plot/gridlines.cc
     elements/plot/axes.cc
@@ -59,7 +60,7 @@ set(SIGNALTK_LDFLAGS signaltk ${CAIRO_LIBRARIES} ${FREETYPE_LIBRARIES} ${HARFBUZ
 add_executable(plotfx platform/signaltk_cli.cc)
 target_link_libraries(plotfx ${SIGNALTK_LDFLAGS})
 
-file(GLOB test_files "testing/**/test_*.cc")
+file(GLOB test_files "testing/unit/test_*.cc")
 foreach(test_path ${test_files})
   get_filename_component(test_name ${test_path} NAME_WE)
   get_filename_component(test_srcdir ${test_path} DIRECTORY)

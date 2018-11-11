@@ -10,6 +10,9 @@
 #pragma once
 #include <memory>
 #include "signaltk.h"
+#include "elements/element.h"
+#include "elements/element_spec.h"
+#include "utils/return_code.h"
 #include "axes.h"
 #include "plot_domain.h"
 
@@ -25,9 +28,14 @@ struct PlotConfig {
   std::vector<std::unique_ptr<AxisDefinition>> axes;
 };
 
-Status plot_add(context* ctx);
+class PlotElement : public Element {
+public:
 
-Status plot_render(context* ctx);
+  static ReturnCode configure(
+      const PropertyList& plist,
+      std::unique_ptr<Element>* elem);
+
+};
 
 } // namespace signaltk
 

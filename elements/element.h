@@ -15,10 +15,13 @@
 namespace signaltk {
 
 class Element {
+public:
 
   virtual ~Element() = default;
 
-}
+};
+
+using ElementRef = std::unique_ptr<Element>;
 
 
 } // namespace signaltk
