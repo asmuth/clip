@@ -11,7 +11,6 @@
 #include <utility>
 #include <string>
 #include <vector>
-#include <elements/context.h>
 #include <graphics/layer.h>
 #include <graphics/viewport.h>
 
@@ -56,12 +55,6 @@ struct AxisDefinition {
   double label_padding_vert_rem;
   double tick_length_rem;
 };
-
-Status plot_axis_add(context* ctx, AxisPosition pos);
-Status plot_axis_addtick(context* ctx, float offset);
-Status plot_axis_addlabel(context* ctx, float offset, const char* label);
-Status plot_axis_setauto(context* ctx);
-Status plot_axis_setmanual(context* ctx);
 
 Status renderAxis(const AxisDefinition& axis, Layer* frame);
 

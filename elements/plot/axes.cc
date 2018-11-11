@@ -9,7 +9,6 @@
  */
 #include "axes.h"
 #include <assert.h>
-#include <elements/context.h>
 #include <elements/plot/plot_element.h>
 #include <graphics/text.h>
 #include <graphics/brush.h>

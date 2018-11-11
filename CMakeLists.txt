@@ -27,7 +27,6 @@ add_library(signaltk STATIC
     graphics/text_shaper.cc
     graphics/rasterize.cc
     graphics/png.cc
-    elements/context.cc
     elements/element_factory.cc
     elements/element_spec_parser.cc
     elements/element_tree.cc
