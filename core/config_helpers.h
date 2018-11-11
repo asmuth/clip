@@ -10,8 +10,6 @@
 #pragma once
 #include <unordered_map>
 #include "utils/return_code.h"
-#include "element.h"
-#include "element_spec.h"
 
 namespace signaltk {
 

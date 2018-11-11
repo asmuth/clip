@@ -8,7 +8,7 @@
  * <http://www.gnu.org/licenses/>.
  */
 #include "elements/plot/plot_element.h"
-#include "elements/element_config_helpers.h"
+#include "core/config_helpers.h"
 
 namespace signaltk {
 

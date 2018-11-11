@@ -10,7 +10,7 @@
 #include "plot_axis.h"
 #include <assert.h>
 #include <elements/plot/plot_element.h>
-#include <elements/element_config_helpers.h>
+#include <core/config_helpers.h>
 #include <graphics/text.h>
 #include <graphics/brush.h>
 
