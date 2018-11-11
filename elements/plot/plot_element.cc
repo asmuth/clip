@@ -8,6 +8,7 @@
  * <http://www.gnu.org/licenses/>.
  */
 #include "elements/plot/plot_element.h"
+#include "elements/element_config_helpers.h"
 
 namespace signaltk {
 
@@ -48,7 +49,38 @@ ReturnCode renderPlot(const PlotConfig& config, Layer* frame) {
   return ReturnCode::success();
 }
 
+ReturnCode configurePlotAxisTop(const std::string& value, PlotConfig* config) {
+  config->axis_top_enabled = (value == "on");
+  return ReturnCode::success();
+}
+
+ReturnCode configurePlotAxisRight(const std::string& value, PlotConfig* config) {
+  config->axis_right_enabled = (value == "on");
+  return ReturnCode::success();
+}
+
+ReturnCode configurePlotAxisBottom(const std::string& value, PlotConfig* config) {
+  config->axis_bottom_enabled = (value == "on");
+  return ReturnCode::success();
+}
+
+ReturnCode configurePlotAxisLeft(const std::string& value, PlotConfig* config) {
+  config->axis_left_enabled = (value == "on");
+  return ReturnCode::success();
+}
+
 ReturnCode configurePlot(const PropertyList& plist, PlotConfig* config) {
+  static const PropertyDefinitions<PlotConfig> pdefs = {
+    {"axis-top", &configurePlotAxisTop},
+    {"axis-right", &configurePlotAxisRight},
+    {"axis-bottom", &configurePlotAxisBottom},
+    {"axis-left", &configurePlotAxisLeft},
+  };
+
+  if (auto rc = configureProperties(plist, pdefs, config); !rc.isSuccess()) {
+    return rc;
+  }
+
   return ReturnCode::success();
 }
 
