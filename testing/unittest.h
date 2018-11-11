@@ -22,6 +22,7 @@
 #include "utils/outputstream.h"
 #include "utils/inspect.h"
 #include "utils/random.h"
+#include "utils/return_code.h"
 
 const char kExpectationFailed[] = "ExpectationFailed";
 
@@ -66,6 +67,14 @@ void EXPECT_FALSE(bool val) {
 void CHECK_RC(signaltk::Status rc) {
   if (rc != signaltk::OK) {
     std::exit(1);
+  }
+}
+
+void CHECK_RC(signaltk::ReturnCode rc) {
+  if (!rc.isSuccess()) {
+    RAISE(
+        kExpectationFailed,
+        rc.getMessage());
   }
 }
 
