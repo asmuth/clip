@@ -8,6 +8,7 @@
  * <http://www.gnu.org/licenses/>.
  */
 #include <regex>
+#include <iostream>
 #include "element_spec_parser.h"
 
 namespace signaltk {
@@ -22,48 +23,7 @@ SpecParser::SpecParser(
     has_error_(false) {}
 
 ReturnCode SpecParser::parse(PropertyList* plist) {
-  TokenType ttype;
-  std::string tbuf;
-
-  /* a file consists of a list of top-level definitions */
-  while (getToken(&ttype, &tbuf)) {
-    std::string pname;
-    switch (ttype) {
-      case T_ENDLINE:
-        consumeToken();
-        continue;
-      case T_STRING:
-        pname = tbuf;
-        consumeToken();
-        break;
-      default:
-        setError(
-            StringUtil::format(
-                "unexpected token '$0'; expected STRING or ENDLINE",
-                printToken(ttype, tbuf)));
-        break;
-    }
-
-    if (has_error_) {
-      break;
-    }
-
-    if (!getToken(&ttype, &tbuf)) {
-      setError("unexpected end of file; expected COLON or LCBRACE");
-      break;
-    }
-
-    switch (ttype) {
-      case T_LCBRACE:
-        consumeToken();
-        break;
-      case T_COLON:
-        consumeToken();
-        break;
-    }
-  }
-
-  if (has_error_) {
+  if (!parseDefinitions(plist)) {
     return ReturnCode::error(
         "EPARSE",
         StringUtil::format(
@@ -71,9 +31,81 @@ ReturnCode SpecParser::parse(PropertyList* plist) {
             error_lineno_,
             error_colno_,
             error_msg_));
-  } else {
-    return ReturnCode::success();
   }
+
+  return ReturnCode::success();
+}
+
+bool SpecParser::parseDefinitions(PropertyList* plist) {
+  TokenType ttype;
+  std::string tbuf;
+  while (getToken(&ttype, &tbuf)) {
+    if (!parsePropertyOrList(plist)) {
+      return false;
+    }
+  }
+
+  return true;
+}
+
+bool SpecParser::parsePropertyOrList(PropertyList* plist) {
+  std::string pname;
+  if (!expectAndConsumeString(&pname)) {
+    return false;
+  }
+
+  TokenType ttype;
+  std::string tbuf;
+  if (!getToken(&ttype, &tbuf)) {
+    setError("unexpected end of file; expected COLON or LCBRACE");
+    return false;
+  }
+
+  switch (ttype) {
+    case T_COLON:
+      return
+          consumeToken() &&
+          parseProperty(pname, plist) &&
+          expectAndConsumeToken(T_SEMICOLON);
+
+    case T_LCBRACE:
+      return
+          consumeToken() &&
+          parsePropertyList(pname, plist) &&
+          expectAndConsumeToken(T_RCBRACE);
+
+    default:
+      setError(
+          StringUtil::format(
+              "unexpected token '$0'; expected COLON OR LCBRACE",
+              printToken(ttype, tbuf)));
+      return false;
+  }
+}
+
+bool SpecParser::parseProperty(const std::string& pname, PropertyList* plist) {
+  std::string pvalue;
+  if (!expectAndConsumeString(&pvalue)) {
+    return false;
+  }
+
+  plist->properties.emplace_back(pname, pvalue);
+  return true;
+}
+
+bool SpecParser::parsePropertyList(const std::string& pname, PropertyList* plist) {
+  auto pvalue = std::make_unique<PropertyList>();
+
+  TokenType ttype;
+  std::string tbuf;
+  while (getToken(&ttype, &tbuf) && ttype != T_RCBRACE) {
+    if (!parsePropertyOrList(pvalue.get())) {
+      return false;
+    }
+  }
+
+  plist->children.emplace_back(pname, std::move(pvalue));
+  return true;
 }
 
 bool SpecParser::getToken(
@@ -105,6 +137,7 @@ bool SpecParser::getToken(
   /* skip whitespace */
   while (input_cur_ < input_end_) {
     if (*input_cur_ == ' ' ||
+        *input_cur_ == '\n' ||
         *input_cur_ == '\t' ||
         *input_cur_ == '\r') {
       ++input_cur_;
@@ -138,12 +171,6 @@ bool SpecParser::getToken(
 
   /* single character tokens */
   switch (*input_cur_) {
-
-    case '\n': {
-      token_type_ = T_ENDLINE;
-      input_cur_++;
-      goto return_token;
-    }
 
     case ':': {
       token_type_ = T_COLON;
@@ -251,9 +278,52 @@ return_token:
   return true;
 }
 
-void SpecParser::consumeToken() {
+bool SpecParser::consumeToken() {
   has_token_ = false;
   token_buf_.clear();
+  return true;
+}
+
+bool SpecParser::expectAndConsumeToken(TokenType desired_type) {
+  TokenType actual_type;
+  const char* tbuf = nullptr;
+  size_t tbuf_len = 0;
+
+  if (!getToken(&actual_type, &tbuf, &tbuf_len)) {
+    return false;
+  }
+
+  if (actual_type != desired_type) {
+    setError(
+        StringUtil::format(
+            "unexpected token; expected: $0, got: $1",
+            printToken(desired_type),
+            printToken(actual_type, tbuf, tbuf_len)));
+
+    return false;
+  }
+
+  consumeToken();
+  return true;
+}
+
+bool SpecParser::expectAndConsumeString(std::string* buf) {
+  TokenType ttype;
+  if (!getToken(&ttype, buf)) {
+    return false;
+  }
+
+  if (ttype != T_STRING) {
+    setError(
+        StringUtil::format(
+            "unexpected token; expected: STRING, got: $0",
+            printToken(ttype, *buf)));
+
+    return false;
+  }
+
+  consumeToken();
+  return true;
 }
 
 std::string SpecParser::printToken(TokenType type) {
@@ -273,7 +343,6 @@ std::string SpecParser::printToken(
   std::string out;
   switch (type) {
     case T_STRING: out = "STRING"; break;
-    case T_ENDLINE: out = "ENDLINE"; break;
     case T_COLON: out = "COLON"; break;
     case T_SEMICOLON: out = "SEMICOLON"; break;
     case T_LCBRACE: out = "LCBRACE"; break;

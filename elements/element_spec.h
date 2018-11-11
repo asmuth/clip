@@ -15,8 +15,8 @@
 namespace signaltk {
 
 struct PropertyList {
-  std::list<std::pair<std::string, std::string>> properties;
-  std::list<std::pair<std::string, std::unique_ptr<PropertyList>>> children;
+  std::vector<std::pair<std::string, std::string>> properties;
+  std::vector<std::pair<std::string, std::unique_ptr<PropertyList>>> children;
 };
 
 

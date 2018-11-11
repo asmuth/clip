@@ -40,14 +40,22 @@ public:
 
   bool hasToken() const;
 
-  void consumeToken();
+  bool consumeToken();
 
 protected:
+
+  bool parseDefinitions(PropertyList* plist);
+  bool parsePropertyOrList(PropertyList* plist);
+  bool parseProperty(const std::string& pname, PropertyList* plist);
+  bool parsePropertyList(const std::string& pname, PropertyList* plist);
 
   bool getToken(
       TokenType* type,
       const char** buf,
       size_t* buf_len) const;
+
+  bool expectAndConsumeToken(TokenType type);
+  bool expectAndConsumeString(std::string* buf);
 
   std::string printToken(TokenType type);
 
