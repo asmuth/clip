@@ -11,13 +11,17 @@
 #include <atomic>
 #include <memory>
 #include <string>
+#include "utils/return_code.h"
 
 namespace signaltk {
+class Layer;
 
 class Element {
 public:
 
   virtual ~Element() = default;
+
+  virtual ReturnCode renderTo(Layer* frame) const = 0;
 
 };
 

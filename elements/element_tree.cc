@@ -44,5 +44,18 @@ ReturnCode buildElementTree(
   return buildElementTree(plist, tree);
 }
 
+ReturnCode renderElements(
+    const ElementTree& tree,
+    Layer* frame) {
+  for (const auto& e : tree.roots) {
+    if (auto rc = e->renderTo(frame); !rc.isSuccess()) {
+      return rc;
+    }
+  }
+
+  return ReturnCode::success();
+}
+
+
 } // namespace signaltk
 
