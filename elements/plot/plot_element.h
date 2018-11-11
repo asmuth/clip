@@ -25,7 +25,7 @@ struct PlotConfig {
   PlotDomain y_domain;
   double y_min;
   double y_max;
-  std::vector<std::unique_ptr<AxisDefinition>> axes;
+  std::vector<AxisDefinition> axes;
 };
 
 class PlotElement : public Element {
@@ -35,6 +35,10 @@ public:
       const PropertyList& plist,
       std::unique_ptr<Element>* elem);
 
+  ReturnCode renderTo(Layer* frame) const override;
+
+protected:
+  PlotConfig config;
 };
 
 } // namespace signaltk

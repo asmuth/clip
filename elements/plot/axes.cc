@@ -23,57 +23,7 @@ AxisDefinition::AxisDefinition() :
     label_padding_vert_rem(kDefaultLabelPaddingVertREM),
     tick_length_rem(kDefaultTickLengthREM) {}
 
-Status plot_axis_add(context* ctx, AxisPosition pos) {
-  PlotConfig* elem;
-  if (auto rc = element_config_as(ctx, &elem); rc) {
-    return rc;
-  }
-
-  auto axis_config = std::make_unique<AxisDefinition>();
-  axis_config->position = pos;
-
-  switch (pos) {
-    case AxisPosition::LEFT:
-      axis_config->label_placement = AxisLabelPlacement::LEFT;
-      break;
-    case AxisPosition::RIGHT:
-      axis_config->label_placement = AxisLabelPlacement::RIGHT;
-      break;
-    case AxisPosition::TOP:
-      axis_config->label_placement = AxisLabelPlacement::TOP;
-      break;
-    case AxisPosition::BOTTOM:
-      axis_config->label_placement = AxisLabelPlacement::BOTTOM;
-      break;
-  }
-
-  elem->axes.emplace_back(std::move(axis_config));
-  return OK;
-}
-
-Status plot_axis_addtick(context* ctx, float offset) {
-  PlotConfig* elem;
-  if (auto rc = element_config_as(ctx, &elem); rc) {
-    return rc;
-  }
-
-  auto& axis_config = elem->axes.back();
-  axis_config->ticks.emplace_back(offset);
-  return OK;
-}
-
-Status plot_axis_addlabel(context* ctx, float offset, const char* label) {
-  PlotConfig* elem;
-  if (auto rc = element_config_as(ctx, &elem); rc) {
-    return rc;
-  }
-
-  auto& axis_config = elem->axes.back();
-  axis_config->labels.emplace_back(offset, label);
-  return OK;
-}
-
-Status plot_render_axis_vertical(
+static Status renderAxisVertical(
     const AxisDefinition& axis_config,
     double x,
     double y0,
@@ -128,7 +78,7 @@ Status plot_render_axis_vertical(
   return OK;
 }
 
-Status plot_render_axis_horizontal(
+static Status renderAxisHorizontal(
     const AxisDefinition& axis_config,
     double y,
     double x0,
@@ -183,50 +133,44 @@ Status plot_render_axis_horizontal(
   return OK;
 }
 
-Status plot_render_axis(context* ctx, int i) {
-  const PlotConfig* elem;
-  if (auto rc = element_config_as(ctx, &elem); rc) {
-    return rc;
-  }
-
-  assert(i < elem->axes.size());
-
+Status renderAxis(
+    const AxisDefinition& axis,
+    Layer* frame) {
   int padding = 80;
-  const auto& axis = elem->axes[i];
 
   Status rc;
-  switch (axis->position) {
+  switch (axis.position) {
     case AxisPosition::LEFT:
-      rc = plot_render_axis_vertical(
-          *axis,
+      rc = renderAxisVertical(
+          axis,
           padding,
           padding,
-          context_height(ctx) - padding,
-          context_frame(ctx));
+          frame->height - padding,
+          frame);
       break;
     case AxisPosition::RIGHT:
-      rc = plot_render_axis_vertical(
-          *axis,
-          context_width(ctx) - padding,
+      rc = renderAxisVertical(
+          axis,
+          frame->width - padding,
           padding,
-          context_height(ctx) - padding,
-          context_frame(ctx));
+          frame->height - padding,
+          frame);
       break;
     case AxisPosition::TOP:
-      rc = plot_render_axis_horizontal(
-          *axis,
+      rc = renderAxisHorizontal(
+          axis,
           padding,
           padding,
-          context_width(ctx) - padding,
-          context_frame(ctx));
+          frame->width - padding,
+          frame);
       break;
     case AxisPosition::BOTTOM:
-      rc = plot_render_axis_horizontal(
-          *axis,
-          context_height(ctx) - padding,
+      rc = renderAxisHorizontal(
+          axis,
+          frame->height - padding,
           padding,
-          context_width(ctx) - padding,
-          context_frame(ctx));
+          frame->width - padding,
+          frame);
       break;
   }
 

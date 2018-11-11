@@ -14,25 +14,23 @@ namespace signaltk {
 
 static constexpr const char* ID = "plot";
 
-Status plot_add(context* ctx) {
-  element_add<PlotConfig>(ctx);
-  return OK;
+ReturnCode PlotElement::configure(
+    const PropertyList& plist,
+    std::unique_ptr<Element>* elem) {
+  elem->reset(new PlotElement());
+
+  return ReturnCode::success();
 }
 
-Status plot_render(context* ctx) {
-  PlotConfig* elem;
-  if (auto rc = element_config_as(ctx, &elem); rc) {
-    return rc;
-  }
-
-  // draw axes
-  for (size_t i = 0; i < elem->axes.size(); ++i) {
-    if (auto rc = plot_render_axis(ctx, i); rc) {
+ReturnCode PlotElement::renderTo(Layer* frame) const {
+  // render axes
+  for (const auto& axis : config.axes) {
+    if (auto rc = renderAxis(axis, frame); rc) {
       return rc;
     }
   }
 
-  return OK;
+  return ReturnCode::success();
 }
 
 } // namespace signaltk

@@ -63,7 +63,8 @@ Status plot_axis_addlabel(context* ctx, float offset, const char* label);
 Status plot_axis_setauto(context* ctx);
 Status plot_axis_setmanual(context* ctx);
 
-Status plot_render_axis(context* ctx, int idx);
+Status renderAxis(const AxisDefinition& axis, Layer* frame);
+
 
 } // namespace signaltk
 
