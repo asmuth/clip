@@ -37,5 +37,22 @@ ReturnCode configureProperties(
   return ReturnCode::success();
 }
 
+template <typename T>
+using EnumDefinitions = std::unordered_map<std::string, T>;
+
+template<typename T>
+ReturnCode parseEnum(
+    const EnumDefinitions<T>& defs,
+    const std::string& str,
+    T* value) {
+  const auto& def = defs.find(str);
+  if (def == defs.end()) {
+    return ReturnCode::errorf("EPARSE", "invalid value '$0'", str);
+  }
+
+  *value = def->second;
+  return ReturnCode::success();
+}
+
 } // namespace signaltk
 

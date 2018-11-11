@@ -10,17 +10,30 @@
 #include "plot_axis.h"
 #include <assert.h>
 #include <elements/plot/plot_element.h>
+#include <elements/element_config_helpers.h>
 #include <graphics/text.h>
 #include <graphics/brush.h>
 
 namespace signaltk {
 
 AxisDefinition::AxisDefinition() :
-    mode(AxisMode::DISABLED),
+    mode(AxisMode::OFF),
     label_placement(AxisLabelPlacement::OFF),
     label_padding_horiz_rem(kDefaultLabelPaddingHorizREM),
     label_padding_vert_rem(kDefaultLabelPaddingVertREM),
     tick_length_rem(kDefaultTickLengthREM) {}
+
+ReturnCode parseAxisMode(
+    const std::string& str,
+    AxisMode* value) {
+  static const EnumDefinitions<AxisMode> defs = {
+    { "auto", AxisMode::AUTO },
+    { "off", AxisMode::OFF },
+    { "manual", AxisMode::MANUAL },
+  };
+
+  return parseEnum(defs, str, value);
+}
 
 static Status renderAxisVertical(
     const AxisDefinition& axis_config,
@@ -136,6 +149,13 @@ Status renderAxis(
     const AxisDefinition& axis,
     AxisPosition axis_position,
     Layer* frame) {
+  switch (axis.mode) {
+    case AxisMode::OFF:
+      return OK;
+    default:
+      break;
+  };
+
   int padding = 80;
 
   Status rc;

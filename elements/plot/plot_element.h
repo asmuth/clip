@@ -27,13 +27,9 @@ struct PlotConfig {
   std::optional<double> y_min;
   std::optional<double> y_max;
   AxisDefinition axis_top;
-  bool axis_top_enabled;
   AxisDefinition axis_right;
-  bool axis_right_enabled;
   AxisDefinition axis_bottom;
-  bool axis_bottom_enabled;
   AxisDefinition axis_left;
-  bool axis_left_enabled;
 };
 
 ReturnCode renderPlot(const PlotConfig& config, Layer* frame);

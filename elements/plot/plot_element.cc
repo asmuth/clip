@@ -14,59 +14,43 @@ namespace signaltk {
 
 PlotConfig::PlotConfig() :
     x_domain(PlotDomain::LINEAR),
-    y_domain(PlotDomain::LINEAR),
-    axis_top_enabled(true),
-    axis_right_enabled(true),
-    axis_bottom_enabled(true),
-    axis_left_enabled(true) {}
+    y_domain(PlotDomain::LINEAR) {}
 
 ReturnCode renderPlot(const PlotConfig& config, Layer* frame) {
   // render axes
-  if (config.axis_top_enabled) {
-    if (auto rc = renderAxis(config.axis_top, AxisPosition::TOP, frame); rc) {
-      return rc;
-    }
+  if (auto rc = renderAxis(config.axis_top, AxisPosition::TOP, frame); rc) {
+    return rc;
   }
 
-  if (config.axis_right_enabled) {
-    if (auto rc = renderAxis(config.axis_right, AxisPosition::RIGHT, frame); rc) {
-      return rc;
-    }
+  if (auto rc = renderAxis(config.axis_right, AxisPosition::RIGHT, frame); rc) {
+    return rc;
   }
 
-  if (config.axis_bottom_enabled) {
-    if (auto rc = renderAxis(config.axis_bottom, AxisPosition::BOTTOM, frame); rc) {
-      return rc;
-    }
+  if (auto rc = renderAxis(config.axis_bottom, AxisPosition::BOTTOM, frame); rc) {
+    return rc;
   }
 
-  if (config.axis_left_enabled) {
-    if (auto rc = renderAxis(config.axis_left, AxisPosition::LEFT, frame); rc) {
-      return rc;
-    }
+  if (auto rc = renderAxis(config.axis_left, AxisPosition::LEFT, frame); rc) {
+    return rc;
   }
 
   return ReturnCode::success();
 }
 
 ReturnCode configurePlotAxisTop(const std::string& value, PlotConfig* config) {
-  config->axis_top_enabled = (value == "on");
-  return ReturnCode::success();
+  return parseAxisMode(value, &config->axis_top.mode);
 }
 
 ReturnCode configurePlotAxisRight(const std::string& value, PlotConfig* config) {
-  config->axis_right_enabled = (value == "on");
-  return ReturnCode::success();
+  return parseAxisMode(value, &config->axis_right.mode);
 }
 
 ReturnCode configurePlotAxisBottom(const std::string& value, PlotConfig* config) {
-  config->axis_bottom_enabled = (value == "on");
-  return ReturnCode::success();
+  return parseAxisMode(value, &config->axis_bottom.mode);
 }
 
 ReturnCode configurePlotAxisLeft(const std::string& value, PlotConfig* config) {
-  config->axis_left_enabled = (value == "on");
-  return ReturnCode::success();
+  return parseAxisMode(value, &config->axis_left.mode);
 }
 
 ReturnCode configurePlot(const PropertyList& plist, PlotConfig* config) {

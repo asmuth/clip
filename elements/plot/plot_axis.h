@@ -13,6 +13,7 @@
 #include <vector>
 #include <graphics/layer.h>
 #include <graphics/viewport.h>
+#include <utils/return_code.h>
 
 namespace signaltk {
 
@@ -30,7 +31,7 @@ enum class AxisPosition {
 };
 
 enum class AxisMode {
-  DISABLED,
+  OFF,
   AUTO,
   MANUAL
 };
@@ -54,6 +55,10 @@ struct AxisDefinition {
   double label_padding_vert_rem;
   double tick_length_rem;
 };
+
+ReturnCode parseAxisMode(
+    const std::string& str,
+    AxisMode* value);
 
 Status renderAxis(
     const AxisDefinition& axis,

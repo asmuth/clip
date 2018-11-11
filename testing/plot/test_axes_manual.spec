@@ -1,4 +1,4 @@
 plot {
-  axis-top: off;
-  axis-right: off;
+  axis-left: manual;
+  axis-bottom: manual;
 }
