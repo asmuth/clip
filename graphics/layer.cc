@@ -50,7 +50,7 @@ double from_rem(const Layer& l, double v) {
 }
 
 double from_px(const Layer& l, double v) {
-  return 1.0; // FIXME: dpi scaling
+  return v;
 }
 
 double from_pt(const Layer& l, double v) {

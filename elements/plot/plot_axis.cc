@@ -19,9 +19,10 @@ namespace signaltk {
 AxisDefinition::AxisDefinition() :
     mode(AxisMode::OFF),
     label_placement(AxisLabelPlacement::OFF),
-    label_padding_horiz_rem(kDefaultLabelPaddingHorizREM),
-    label_padding_vert_rem(kDefaultLabelPaddingVertREM),
-    tick_length_rem(kDefaultTickLengthREM) {}
+    padding_rem(4.0f),
+    label_padding_rem(1.0f),
+    label_font_size_rem(1.0f),
+    tick_length_rem(0.4f) {}
 
 ReturnCode parseAxisMode(
     const std::string& str,
@@ -73,7 +74,7 @@ static Status renderAxisVertical(
   }
 
   /* draw labels */
-  auto label_padding = from_rem(*target, axis_config.label_padding_horiz_rem);
+  auto label_padding = from_rem(*target, axis_config.label_padding_rem);
   for (const auto& label : axis_config.labels) {
     auto [ tick, label_text ] = label;
     auto sy = y0 + (y1 - y0) * tick;
@@ -128,7 +129,7 @@ static Status renderAxisHorizontal(
   }
 
   /* draw labels */
-  auto label_padding = from_rem(*target, axis_config.label_padding_vert_rem);
+  auto label_padding = from_rem(*target, axis_config.label_padding_rem);
   for (const auto& label : axis_config.labels) {
     auto [ tick, label_text ] = label;
     auto sx = x0 + (x1 - x0) * tick;
@@ -156,7 +157,7 @@ Status renderAxis(
       break;
   };
 
-  int padding = 80;
+  auto padding = from_rem(*frame, axis.padding_rem);
 
   Status rc;
   switch (axis_position) {

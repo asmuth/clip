@@ -17,10 +17,6 @@
 
 namespace signaltk {
 
-static const double kDefaultLabelPaddingVertREM = 0.8f;
-static const double kDefaultLabelPaddingHorizREM = 1.0f;
-static const double kDefaultTickLengthREM = 0.4f;
-
 enum class AxisPosition {
   TOP,
   RIGHT,
@@ -51,8 +47,9 @@ struct AxisDefinition {
   std::vector<double> ticks;
   std::vector<std::pair<double, std::string>> labels;
   AxisLabelPlacement label_placement;
-  double label_padding_horiz_rem;
-  double label_padding_vert_rem;
+  double padding_rem;
+  double label_padding_rem;
+  double label_font_size_rem;
   double tick_length_rem;
 };
 
