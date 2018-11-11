@@ -19,14 +19,26 @@
 namespace signaltk {
 
 struct PlotConfig {
+  PlotConfig();
   PlotDomain x_domain;
-  double x_min;
-  double x_max;
+  std::optional<double> x_min;
+  std::optional<double> x_max;
   PlotDomain y_domain;
-  double y_min;
-  double y_max;
-  std::vector<AxisDefinition> axes;
+  std::optional<double> y_min;
+  std::optional<double> y_max;
+  AxisDefinition axis_top;
+  bool axis_top_enabled;
+  AxisDefinition axis_right;
+  bool axis_right_enabled;
+  AxisDefinition axis_bottom;
+  bool axis_bottom_enabled;
+  AxisDefinition axis_left;
+  bool axis_left_enabled;
 };
+
+ReturnCode renderPlot(const PlotConfig& config, Layer* frame);
+
+ReturnCode configurePlot(const PropertyList& plist, PlotConfig* config);
 
 class PlotElement : public Element {
 public:
@@ -34,6 +46,8 @@ public:
   static ReturnCode configure(
       const PropertyList& plist,
       std::unique_ptr<Element>* elem);
+
+  explicit PlotElement(const PlotConfig& config);
 
   ReturnCode renderTo(Layer* frame) const override;
 

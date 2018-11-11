@@ -45,7 +45,6 @@ enum class AxisLabelPlacement {
 
 struct AxisDefinition {
   AxisDefinition();
-  AxisPosition position;
   AxisMode mode;
   std::string title;
   std::vector<double> ticks;
@@ -56,7 +55,10 @@ struct AxisDefinition {
   double tick_length_rem;
 };
 
-Status renderAxis(const AxisDefinition& axis, Layer* frame);
+Status renderAxis(
+    const AxisDefinition& axis,
+    AxisPosition axis_position,
+    Layer* frame);
 
 
 } // namespace signaltk

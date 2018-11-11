@@ -134,11 +134,12 @@ static Status renderAxisHorizontal(
 
 Status renderAxis(
     const AxisDefinition& axis,
+    AxisPosition axis_position,
     Layer* frame) {
   int padding = 80;
 
   Status rc;
-  switch (axis.position) {
+  switch (axis_position) {
     case AxisPosition::LEFT:
       rc = renderAxisVertical(
           axis,

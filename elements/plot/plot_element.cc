@@ -11,25 +11,63 @@
 
 namespace signaltk {
 
-static constexpr const char* ID = "plot";
+PlotConfig::PlotConfig() :
+    x_domain(PlotDomain::LINEAR),
+    y_domain(PlotDomain::LINEAR),
+    axis_top_enabled(true),
+    axis_right_enabled(true),
+    axis_bottom_enabled(true),
+    axis_left_enabled(true) {}
 
-ReturnCode PlotElement::configure(
-    const PropertyList& plist,
-    std::unique_ptr<Element>* elem) {
-  elem->reset(new PlotElement());
-
-  return ReturnCode::success();
-}
-
-ReturnCode PlotElement::renderTo(Layer* frame) const {
+ReturnCode renderPlot(const PlotConfig& config, Layer* frame) {
   // render axes
-  for (const auto& axis : config.axes) {
-    if (auto rc = renderAxis(axis, frame); rc) {
+  if (config.axis_top_enabled) {
+    if (auto rc = renderAxis(config.axis_top, AxisPosition::TOP, frame); rc) {
+      return rc;
+    }
+  }
+
+  if (config.axis_right_enabled) {
+    if (auto rc = renderAxis(config.axis_right, AxisPosition::RIGHT, frame); rc) {
+      return rc;
+    }
+  }
+
+  if (config.axis_bottom_enabled) {
+    if (auto rc = renderAxis(config.axis_bottom, AxisPosition::BOTTOM, frame); rc) {
+      return rc;
+    }
+  }
+
+  if (config.axis_left_enabled) {
+    if (auto rc = renderAxis(config.axis_left, AxisPosition::LEFT, frame); rc) {
       return rc;
     }
   }
 
   return ReturnCode::success();
+}
+
+ReturnCode configurePlot(const PropertyList& plist, PlotConfig* config) {
+  return ReturnCode::success();
+}
+
+ReturnCode PlotElement::configure(
+    const PropertyList& plist,
+    std::unique_ptr<Element>* elem) {
+  PlotConfig config;
+  if (auto rc = configurePlot(plist, &config); !rc.isSuccess()) {
+    return rc;
+  }
+
+  *elem = std::make_unique<PlotElement>(config);
+  return ReturnCode::success();
+}
+
+PlotElement::PlotElement(const PlotConfig& c) : config(c) {}
+
+ReturnCode PlotElement::renderTo(Layer* frame) const {
+  return renderPlot(config, frame);
 }
 
 } // namespace signaltk
