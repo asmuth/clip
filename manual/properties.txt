@@ -1,0 +1,5 @@
+plot
+plot axis-top
+plot axis-right
+plot-axis-bottom
+plot axis-left
