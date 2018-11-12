@@ -11,10 +11,13 @@
 #include <atomic>
 #include <memory>
 #include <string>
+#include "core/plist/plist.h"
 #include "utils/return_code.h"
 
 namespace signaltk {
 class Layer;
+
+using plist::PropertyList;
 
 class Element {
 public:

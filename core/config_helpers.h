@@ -16,17 +16,23 @@ namespace signaltk {
 template <typename T>
 using PropertyDefinitions = std::unordered_map<
     std::string,
-    std::function<ReturnCode (const std::string&, T*)>>;
+    std::function<ReturnCode (const plist::Property&, T*)>>;
 
 template<typename T>
 ReturnCode configureProperties(
     const PropertyList& plist,
     const PropertyDefinitions<T>& pdefs,
     T* config) {
-  for (const auto& prop : plist.properties) {
-    const auto& pdef = pdefs.find(prop.first);
+  for (const auto& prop : plist) {
+    const auto& pdef = pdefs.find(prop.name);
     if (pdef != pdefs.end()) {
-      if (auto rc = pdef->second(prop.second, config); !rc.isSuccess()) {
+      if (auto rc = pdef->second(prop, config); !rc.isSuccess()) {
+        return ReturnCode::errorf(
+            "EPARSE",
+            "error while parsing property '$0': $1",
+            prop.name,
+            rc.getMessage());
+
         return rc;
       }
     }

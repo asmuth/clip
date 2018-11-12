@@ -11,28 +11,34 @@
 #include <atomic>
 #include <memory>
 #include <string>
-#include "utils/return_code.h"
-#include "element_spec.h"
+#include "plist.h"
 
-namespace signaltk {
+namespace plist {
 
-class SpecParser {
+class PropertyListParser {
 public:
 
-  enum TokenType {
-    T_STRING,
-    T_ENDLINE,
-    T_COLON,
-    T_SEMICOLON,
-    T_LCBRACE,
-    T_RCBRACE
-  };
-
-  SpecParser(
+  PropertyListParser(
       const char* input,
       size_t input_len);
 
-  ReturnCode parse(PropertyList* plist);
+  bool parse(PropertyList* plist);
+
+  const std::string& get_error() const;
+
+protected:
+
+  enum TokenType {
+    T_STRING,
+    T_STRING_QUOTED,
+    T_COMMA,
+    T_COLON,
+    T_SEMICOLON,
+    T_LPAREN,
+    T_RPAREN,
+    T_LCBRACE,
+    T_RCBRACE
+  };
 
   bool getToken(
       TokenType* type,
@@ -42,9 +48,6 @@ public:
 
   bool consumeToken();
 
-protected:
-
-  bool parseDefinitions(PropertyList* plist);
   bool parsePropertyOrList(PropertyList* plist);
   bool parseProperty(const std::string& pname, PropertyList* plist);
   bool parsePropertyList(const std::string& pname, PropertyList* plist);
@@ -86,5 +89,5 @@ protected:
   size_t error_colno_;
 };
 
-} // namespace signaltk
+} // namespace plist
 

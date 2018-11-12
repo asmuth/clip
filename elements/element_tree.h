@@ -10,7 +10,6 @@
 #pragma once
 #include "utils/return_code.h"
 #include "element.h"
-#include "element_spec.h"
 
 namespace signaltk {
 class Layer;

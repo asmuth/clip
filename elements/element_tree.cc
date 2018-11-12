@@ -7,9 +7,9 @@
  * copy of the GNU General Public License along with this program. If not, see
  * <http://www.gnu.org/licenses/>.
  */
+#include "core/plist/plist_parser.h"
 #include "element_factory.h"
 #include "element_tree.h"
-#include "element_spec_parser.h"
 #include "graphics/layer.h"
 
 namespace signaltk {
@@ -17,9 +17,9 @@ namespace signaltk {
 ReturnCode buildElementTree(
     const PropertyList& plist,
     ElementTree* tree) {
-  for (size_t i = 0; i < plist.children.size(); ++i) {
-    const auto& elem_name = plist.children[i].first;
-    const auto& elem_config = plist.children[i].second;
+  for (size_t i = 0; i < plist.size(); ++i) {
+    const auto& elem_name = plist[i].name;
+    const auto& elem_config = plist[i].child.get();
 
     std::unique_ptr<Element> elem;
     if (auto rc = buildElement(elem_name, *elem_config, &elem); !rc.isSuccess()) {
@@ -36,9 +36,12 @@ ReturnCode buildElementTree(
     const std::string& spec,
     ElementTree* tree) {
   PropertyList plist;
-  SpecParser parser(spec.data(), spec.size());
-  if (auto rc = parser.parse(&plist); !rc.isSuccess()) {
-    return rc;
+  plist::PropertyListParser plist_parser(spec.data(), spec.size());
+  if (!plist_parser.parse(&plist)) {
+    return ReturnCode::errorf(
+        "EPARSE",
+        "invalid element specification: $0",
+        plist_parser.get_error());
   }
 
   return buildElementTree(plist, tree);

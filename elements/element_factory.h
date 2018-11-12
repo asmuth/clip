@@ -10,13 +10,12 @@
 #pragma once
 #include "utils/return_code.h"
 #include "element.h"
-#include "element_spec.h"
 
 namespace signaltk {
 
 ReturnCode buildElement(
     const std::string& name,
-    const PropertyList& plist,
+    const plist::PropertyList& plist,
     std::unique_ptr<Element>* elem);
 
 } // namespace signaltk

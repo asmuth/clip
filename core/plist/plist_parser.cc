@@ -9,11 +9,13 @@
  */
 #include <regex>
 #include <iostream>
-#include "element_spec_parser.h"
+#include "plist_parser.h"
+#include "utils/stringutil.h"
 
-namespace signaltk {
+namespace plist {
+using signaltk::StringUtil;
 
-SpecParser::SpecParser(
+PropertyListParser::PropertyListParser(
     const char* input,
     size_t input_len) :
     input_(input),
@@ -22,21 +24,11 @@ SpecParser::SpecParser(
     has_token_(false),
     has_error_(false) {}
 
-ReturnCode SpecParser::parse(PropertyList* plist) {
-  if (!parseDefinitions(plist)) {
-    return ReturnCode::error(
-        "EPARSE",
-        StringUtil::format(
-            "<$0:$1> $2",
-            error_lineno_,
-            error_colno_,
-            error_msg_));
-  }
-
-  return ReturnCode::success();
+const std::string& PropertyListParser::get_error() const {
+  return error_msg_;
 }
 
-bool SpecParser::parseDefinitions(PropertyList* plist) {
+bool PropertyListParser::parse(PropertyList* plist) {
   TokenType ttype;
   std::string tbuf;
   while (getToken(&ttype, &tbuf)) {
@@ -48,7 +40,7 @@ bool SpecParser::parseDefinitions(PropertyList* plist) {
   return true;
 }
 
-bool SpecParser::parsePropertyOrList(PropertyList* plist) {
+bool PropertyListParser::parsePropertyOrList(PropertyList* plist) {
   std::string pname;
   if (!expectAndConsumeString(&pname)) {
     return false;
@@ -83,32 +75,65 @@ bool SpecParser::parsePropertyOrList(PropertyList* plist) {
   }
 }
 
-bool SpecParser::parseProperty(const std::string& pname, PropertyList* plist) {
-  std::string pvalue;
-  if (!expectAndConsumeString(&pvalue)) {
-    return false;
+bool PropertyListParser::parseProperty(const std::string& pname, PropertyList* plist) {
+  Property prop;
+  prop.name = pname;
+
+  TokenType ttype;
+  std::string tbuf;
+  for (; getToken(&ttype, &tbuf) && ttype != T_SEMICOLON; consumeToken()) {
+    PropertyValue pval;
+    pval.is_literal = true;
+
+    switch (ttype) {
+      case T_COMMA:
+        pval.data = ",";
+        break;
+      case T_LPAREN:
+        pval.data = "(";
+        break;
+      case T_RPAREN:
+        pval.data = ")";
+        break;
+      case T_STRING_QUOTED:
+        pval.is_literal = false;
+        /* fallthrough */
+      case T_STRING:
+        pval.data = tbuf;
+        break;
+      default:
+        setError(
+            StringUtil::format(
+                "unexpected token '$0'; expected one of: STRING, COMMA, LPAREN, RPAREN",
+                printToken(ttype, tbuf)));
+        return false;
+    }
+
+    prop.values.emplace_back(pval);
   }
 
-  plist->properties.emplace_back(pname, pvalue);
+  plist->emplace_back(std::move(prop));
   return true;
 }
 
-bool SpecParser::parsePropertyList(const std::string& pname, PropertyList* plist) {
-  auto pvalue = std::make_unique<PropertyList>();
+bool PropertyListParser::parsePropertyList(const std::string& pname, PropertyList* plist) {
+  Property prop;
+  prop.name = pname;
+  prop.child = std::make_unique<PropertyList>();
 
   TokenType ttype;
   std::string tbuf;
   while (getToken(&ttype, &tbuf) && ttype != T_RCBRACE) {
-    if (!parsePropertyOrList(pvalue.get())) {
+    if (!parsePropertyOrList(prop.child.get())) {
       return false;
     }
   }
 
-  plist->children.emplace_back(pname, std::move(pvalue));
+  plist->emplace_back(std::move(prop));
   return true;
 }
 
-bool SpecParser::getToken(
+bool PropertyListParser::getToken(
     TokenType* ttype,
     std::string* tbuf) const {
   const char* tbuf_cstr = nullptr;
@@ -124,7 +149,7 @@ bool SpecParser::getToken(
   return ret;
 }
 
-bool SpecParser::getToken(
+bool PropertyListParser::getToken(
     TokenType* ttype,
     const char** tbuf,
     size_t* tbuf_len) const {
@@ -172,6 +197,12 @@ bool SpecParser::getToken(
   /* single character tokens */
   switch (*input_cur_) {
 
+    case ',': {
+      token_type_ = T_COMMA;
+      input_cur_++;
+      goto return_token;
+    }
+
     case ':': {
       token_type_ = T_COLON;
       input_cur_++;
@@ -180,6 +211,18 @@ bool SpecParser::getToken(
 
     case ';': {
       token_type_ = T_SEMICOLON;
+      input_cur_++;
+      goto return_token;
+    }
+
+    case '(': {
+      token_type_ = T_LPAREN;
+      input_cur_++;
+      goto return_token;
+    }
+
+    case ')': {
+      token_type_ = T_RPAREN;
       input_cur_++;
       goto return_token;
     }
@@ -209,7 +252,7 @@ bool SpecParser::getToken(
   }
 
   /* [un]quoted strings */
-  token_type_ = T_STRING;
+  token_type_ = quote_char ? T_STRING_QUOTED : T_STRING;
 
   if (quote_char) {
     bool escaped = false;
@@ -258,6 +301,8 @@ bool SpecParser::getToken(
         *input_cur_ != ',' &&
         *input_cur_ != ':' &&
         *input_cur_ != ';' &&
+        *input_cur_ != '(' &&
+        *input_cur_ != ')' &&
         *input_cur_ != '{' &&
         *input_cur_ != '}' &&
         *input_cur_ != '"' &&
@@ -273,18 +318,18 @@ bool SpecParser::getToken(
 return_token:
   has_token_ = true;
   *ttype = token_type_;
-  *tbuf = token_buf_.data();
+  *tbuf = token_buf_.c_str();
   *tbuf_len = token_buf_.size();
   return true;
 }
 
-bool SpecParser::consumeToken() {
+bool PropertyListParser::consumeToken() {
   has_token_ = false;
   token_buf_.clear();
   return true;
 }
 
-bool SpecParser::expectAndConsumeToken(TokenType desired_type) {
+bool PropertyListParser::expectAndConsumeToken(TokenType desired_type) {
   TokenType actual_type;
   const char* tbuf = nullptr;
   size_t tbuf_len = 0;
@@ -307,13 +352,13 @@ bool SpecParser::expectAndConsumeToken(TokenType desired_type) {
   return true;
 }
 
-bool SpecParser::expectAndConsumeString(std::string* buf) {
+bool PropertyListParser::expectAndConsumeString(std::string* buf) {
   TokenType ttype;
   if (!getToken(&ttype, buf)) {
     return false;
   }
 
-  if (ttype != T_STRING) {
+  if (ttype != T_STRING && ttype != T_STRING_QUOTED) {
     setError(
         StringUtil::format(
             "unexpected token; expected: STRING, got: $0",
@@ -326,25 +371,29 @@ bool SpecParser::expectAndConsumeString(std::string* buf) {
   return true;
 }
 
-std::string SpecParser::printToken(TokenType type) {
+std::string PropertyListParser::printToken(TokenType type) {
   return printToken(type, nullptr, 0);
 }
 
-std::string SpecParser::printToken(
+std::string PropertyListParser::printToken(
     TokenType type,
     const std::string& buf) {
-  return printToken(type, buf.data(), buf.size());
+  return printToken(type, buf.c_str(), buf.size());
 }
 
-std::string SpecParser::printToken(
+std::string PropertyListParser::printToken(
     TokenType type,
     const char* buf,
     size_t buf_len) {
   std::string out;
   switch (type) {
     case T_STRING: out = "STRING"; break;
+    case T_STRING_QUOTED: out = "STRING"; break;
     case T_COLON: out = "COLON"; break;
+    case T_COMMA: out = "COMMA"; break;
     case T_SEMICOLON: out = "SEMICOLON"; break;
+    case T_LPAREN: out = "LPAREN"; break;
+    case T_RPAREN: out = "RPAREN"; break;
     case T_LCBRACE: out = "LCBRACE"; break;
     case T_RCBRACE: out = "RCBRACE"; break;
   }
@@ -358,11 +407,11 @@ std::string SpecParser::printToken(
   return out;
 }
 
-void SpecParser::setError(const std::string& error) {
+void PropertyListParser::setError(const std::string& error) {
   has_error_ = true;
   error_msg_ = error;
   error_lineno_ = 0;
   error_colno_ = 0;
 }
 
-} // namespace signaltk
+} // namespace plist

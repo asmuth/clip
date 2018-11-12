@@ -10,8 +10,8 @@
 #pragma once
 #include <memory>
 #include "signaltk.h"
+#include "core/plist/plist.h"
 #include "elements/element.h"
-#include "elements/element_spec.h"
 #include "utils/return_code.h"
 #include "plot_axis.h"
 #include "plot_domain.h"
@@ -21,11 +21,11 @@ namespace signaltk {
 struct PlotConfig {
   PlotConfig();
   PlotDomain x_domain;
-  std::optional<double> x_min;
-  std::optional<double> x_max;
+  //std::optional<double> x_min;
+  //std::optional<double> x_max;
   PlotDomain y_domain;
-  std::optional<double> y_min;
-  std::optional<double> y_max;
+  //std::optional<double> y_min;
+  //std::optional<double> y_max;
   AxisDefinition axis_top;
   AxisDefinition axis_right;
   AxisDefinition axis_bottom;
@@ -34,13 +34,13 @@ struct PlotConfig {
 
 ReturnCode renderPlot(const PlotConfig& config, Layer* frame);
 
-ReturnCode configurePlot(const PropertyList& plist, PlotConfig* config);
+ReturnCode configurePlot(const plist::PropertyList& plist, PlotConfig* config);
 
 class PlotElement : public Element {
 public:
 
   static ReturnCode configure(
-      const PropertyList& plist,
+      const plist::PropertyList& plist,
       std::unique_ptr<Element>* elem);
 
   explicit PlotElement(const PlotConfig& config);

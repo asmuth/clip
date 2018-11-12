@@ -4,7 +4,7 @@ enable_testing()
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/extra/cmake")
 set(CMAKE_CXX_STANDARD 17)
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/toolkit)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/core)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
 find_package(Threads)
@@ -17,6 +17,8 @@ include_directories(${CAIRO_INCLUDE_DIRS} ${FREETYPE_INCLUDE_DIRS} ${HARFBUZZ_IN
 add_definitions(-DFNORDMETRIC_VERSION="unstable")
 
 add_library(signaltk STATIC
+    core/plist/plist.cc
+    core/plist/plist_parser.cc
     graphics/path.cc
     graphics/brush.cc
     graphics/colour.cc
@@ -28,7 +30,6 @@ add_library(signaltk STATIC
     graphics/rasterize.cc
     graphics/png.cc
     elements/element_factory.cc
-    elements/element_spec_parser.cc
     elements/element_tree.cc
     elements/plot/gridlines.cc
     elements/plot/plot_axis.cc
