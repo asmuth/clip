@@ -1,4 +1,4 @@
-# This file is part of the "libstx" project
+# * This file is part of the "plotfx" project
 #   Copyright (c) 2014 Paul Asmuth, Google Inc.
 #
 # libstx is free software: you can redistribute it and/or modify it under
