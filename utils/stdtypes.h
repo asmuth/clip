@@ -43,7 +43,7 @@
 #include <vector>
 #include <functional>
 
-namespace signaltk {
+namespace plotfx {
 
 using String = std::string;
 using WString = std::wstring;
@@ -81,5 +81,5 @@ using HashMap = std::unordered_map<T1, T2>;
 template <typename T>
 using Stack = std::stack<T>;
 
-} // namespace signaltk
+} // namespace plotfx
 #endif

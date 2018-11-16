@@ -31,7 +31,7 @@
 #include <string.h>
 #include "image.h"
 
-namespace signaltk {
+namespace plotfx {
 
 Image::Image(
     PixelFormat pixel_format,
@@ -74,7 +74,7 @@ size_t Image::getPixelCount() const {
 }
 
 size_t Image::getPixelSize() const {
-  return signaltk::getPixelSize(pixel_format_);
+  return plotfx::getPixelSize(pixel_format_);
 }
 
 size_t Image::getWidth() const {
@@ -231,5 +231,5 @@ Image convertImage_RGB8A_RGB8(const Image& img) {
   return newimg;
 }
 
-} // namespace signaltk
+} // namespace plotfx
 

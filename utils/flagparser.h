@@ -33,7 +33,7 @@
 #include <vector>
 #include "return_code.h"
 
-namespace signaltk {
+namespace plotfx {
 
 enum kFlagType {
   T_SWITCH,

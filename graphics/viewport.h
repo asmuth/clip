@@ -31,7 +31,7 @@
 #define _libstx_UI_VIEWPORT_H
 #include <tuple>
 
-namespace signaltk {
+namespace plotfx {
 
 class Viewport {
 public:

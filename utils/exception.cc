@@ -32,7 +32,7 @@
 #include <string.h>
 #include "exception.h"
 
-namespace signaltk {
+namespace plotfx {
 
 Exception::Exception() :
     type_name_(nullptr),
@@ -160,5 +160,5 @@ int Exception::line() const {
   return line_;
 }
 
-} // namespace signaltk
+} // namespace plotfx
 

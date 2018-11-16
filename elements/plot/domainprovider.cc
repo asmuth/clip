@@ -29,7 +29,7 @@
  */
 #include "domainprovider.h"
 
-namespace signaltk {
+namespace plotfx {
 namespace chart {
 
 DomainProvider::DomainProvider(

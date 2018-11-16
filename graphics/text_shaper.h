@@ -43,7 +43,7 @@
 
 #include "text.h"
 
-namespace signaltk {
+namespace plotfx {
 namespace text {
 
 class TextShaper {
@@ -67,5 +67,5 @@ protected:
 };
 
 } // namespace text
-} // namespace signaltk
+} // namespace plotfx
 

@@ -33,7 +33,7 @@
 #include <graphics/text.h>
 #include "linechart.h"
 
-namespace signaltk {
+namespace plotfx {
 namespace chart {
 
 char LineChart::kDefaultLineStyle[] = "solid";

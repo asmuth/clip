@@ -29,7 +29,7 @@
  */
 #include "barchart.h"
 
-namespace signaltk {
+namespace plotfx {
 namespace chart {
 
 BarChart::BarChart(

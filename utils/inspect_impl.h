@@ -30,7 +30,7 @@
 #include "stringutil.h"
 #include "outputstream.h"
 
-namespace signaltk {
+namespace plotfx {
 
 template <typename T1, typename T2>
 std::string inspect(const std::pair<T1, T2>& value) {

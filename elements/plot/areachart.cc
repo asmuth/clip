@@ -33,7 +33,7 @@
 #include "../core/layer.h"
 #include "areachart.h"
 
-namespace signaltk {
+namespace plotfx {
 namespace chart {
 
 char AreaChart::kDefaultLineStyle[] = "none";

@@ -31,7 +31,7 @@
 #include <graphics/text.h>
 #include <graphics/text_shaper.h>
 
-namespace signaltk {
+namespace plotfx {
 namespace text {
 
 /**
@@ -49,5 +49,5 @@ Status layoutText(
     std::function<void (const GlyphPlacement&)> glyph_cb);
 
 } // namespace text
-} // namespace signaltk
+} // namespace plotfx
 

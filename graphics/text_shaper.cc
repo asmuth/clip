@@ -29,7 +29,7 @@
  */
 #include <graphics/text_shaper.h>
 
-namespace signaltk {
+namespace plotfx {
 namespace text {
 
 TextShaper::TextShaper(
@@ -96,5 +96,5 @@ Status TextShaper::shapeText(
 }
 
 } // namespace text
-} // namespace signaltk
+} // namespace plotfx
 

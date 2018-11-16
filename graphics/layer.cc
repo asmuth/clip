@@ -32,7 +32,7 @@
 #include <utils/stringutil.h>
 #include "png.h"
 
-namespace signaltk {
+namespace plotfx {
 
 Layer::Layer(
     double w,
@@ -81,5 +81,5 @@ double to_pt(const Layer& l, double v) {
   return (v / l.dpi) * 72;
 }
 
-} // namespace signaltk
+} // namespace plotfx
 

@@ -29,7 +29,7 @@
  */
 #include "inspect.h"
 
-namespace signaltk {
+namespace plotfx {
 
 template <>
 std::string inspect<bool>(const bool& value) {
@@ -114,5 +114,5 @@ std::string inspect<std::exception>(const std::exception& e) {
   return e.what();
 }
 
-} // namespace signaltk
+} // namespace plotfx
 

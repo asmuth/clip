@@ -31,7 +31,7 @@
 #include "pointchart.h"
 #include <utils/exception.h>
 
-namespace signaltk {
+namespace plotfx {
 namespace chart {
 
 char PointChart::kDefaultPointStyle[] = "circle";

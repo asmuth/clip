@@ -30,7 +30,7 @@
 #include <iostream>
 #include "path.h"
 
-namespace signaltk {
+namespace plotfx {
 
 double PathData::operator[](size_t idx) const {
   return coefficients[idx];
@@ -141,4 +141,4 @@ bool Path::empty() const {
   return data_.size() == 0;
 }
 
-} // namespace signaltk
+} // namespace plotfx

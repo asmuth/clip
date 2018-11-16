@@ -34,7 +34,7 @@
 #include <graphics/text.h>
 #include <graphics/brush.h>
 
-namespace signaltk {
+namespace plotfx {
 
 AxisDefinition::AxisDefinition() :
     mode(AxisMode::OFF),

@@ -27,26 +27,31 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-#include "signaltk.h"
-#include <elements/plot/plot_api.h>
+#pragma once
+#include <stdlib.h>
+#include <vector>
+#include <string>
 
-namespace signaltk {
+namespace plotfx {
+struct Context;
 
-const std::vector<Command> command_list {
-
-  // command: plot axes
-  Command {
-    .name = {"plot", "axes"},
-    .fn = &cmd_plot_axes,
-  },
-
-  // command: plot gridlines
-  Command {
-    .name = {"plot", "gridlines"},
-    .fn = &cmd_plot_gridlines,
-  },
-
+enum Status : int {
+  OK = 0,
+  ERROR,
+  ERROR_IO,
+  ERROR_NOT_IMPLEMENTED,
+  ERROR_INVALID_ARGUMENT,
+  ERROR_INVALID_ELEM
 };
 
-} // namespace signaltk
+struct Command {
+  std::vector<std::string> name;
+  int (*fn)(Context*, const char**, int);
+};
+
+extern const std::vector<Command> command_list;
+
+int cmd(Context*, const char** args, int arg_count);
+
+} // namespace plotfx
 

@@ -35,7 +35,7 @@
 #include "utils/file.h"
 #include "utils/fileutil.h"
 
-namespace signaltk {
+namespace plotfx {
 
 Status pngWriteImageFile(
     const Image& image,
@@ -101,5 +101,5 @@ Status pngWriteImageFile(
   return OK;
 }
 
-} // namespace signaltk
+} // namespace plotfx
 

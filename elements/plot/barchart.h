@@ -42,7 +42,7 @@
 #include "seriesjoin.h"
 #include <utils/exception.h>
 
-namespace signaltk {
+namespace plotfx {
 namespace chart {
 
 /**

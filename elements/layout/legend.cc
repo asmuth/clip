@@ -33,7 +33,7 @@
 #include "canvas.h"
 #include "domain.h"
 
-namespace signaltk {
+namespace plotfx {
 namespace chart {
 
 Legend::Legend() :

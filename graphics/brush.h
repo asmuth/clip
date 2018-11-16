@@ -34,7 +34,7 @@
 #include "colour.h"
 #include "path.h"
 
-namespace signaltk {
+namespace plotfx {
 class Layer;
 
 enum class StrokeLineJoin { MITER, ROUND, BEVEL };
@@ -67,5 +67,5 @@ void strokeLine(
     double y2,
     const StrokeStyle& style);
 
-} // namespace signaltk
+} // namespace plotfx
 

@@ -39,7 +39,7 @@
 #include "fileutil.h"
 #include "file.h"
 
-namespace signaltk {
+namespace plotfx {
 
 void FileUtil::mkdir(const std::string& dirname) {
   if (::mkdir(dirname.c_str(), S_IRWXU) != 0) {
@@ -122,9 +122,9 @@ void FileUtil::mkdir_p(const std::string& dirname) {
 
 std::string FileUtil::joinPaths(const std::string& p1, const std::string p2) {
   String p1_stripped = p1;
-  signaltk::StringUtil::stripTrailingSlashes(&p1_stripped);
+  plotfx::StringUtil::stripTrailingSlashes(&p1_stripped);
   String p2_stripped = p2;
-  signaltk::StringUtil::stripTrailingSlashes(&p2_stripped);
+  plotfx::StringUtil::stripTrailingSlashes(&p2_stripped);
   return p1_stripped + "/" + p2_stripped;
 }
 

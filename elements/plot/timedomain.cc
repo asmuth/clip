@@ -30,7 +30,7 @@
 #include "utils/UnixTime.h"
 #include "timedomain.h"
 
-namespace signaltk {
+namespace plotfx {
 namespace chart {
 
 TimeDomain::TimeDomain(

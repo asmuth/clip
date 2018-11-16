@@ -34,7 +34,7 @@
 #include <vector>
 #include <string>
 
-namespace signaltk {
+namespace plotfx {
 
 class Colour {
 public:
@@ -64,5 +64,5 @@ protected:
   double components_[kMaxComponents];
 };
 
-} // namespace signaltk
+} // namespace plotfx
 

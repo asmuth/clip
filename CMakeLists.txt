@@ -1,10 +1,10 @@
 cmake_minimum_required(VERSION 2.8.8)
-project(signaltk)
+project(plotfx)
 enable_testing()
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/extra/cmake")
 set(CMAKE_CXX_STANDARD 17)
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/toolkit)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/core)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
 find_package(Threads)
@@ -16,7 +16,9 @@ include_directories(${CAIRO_INCLUDE_DIRS} ${FREETYPE_INCLUDE_DIRS} ${HARFBUZZ_IN
 
 add_definitions(-DFNORDMETRIC_VERSION="unstable")
 
-add_library(signaltk STATIC
+add_library(plotfx STATIC
+    core/plist/plist.cc
+    core/plist/plist_parser.cc
     graphics/path.cc
     graphics/brush.cc
     graphics/colour.cc
@@ -28,7 +30,6 @@ add_library(signaltk STATIC
     graphics/rasterize.cc
     graphics/png.cc
     elements/element_factory.cc
-    elements/element_spec_parser.cc
     elements/element_tree.cc
     elements/plot/gridlines.cc
     elements/plot/plot_axis.cc
@@ -53,11 +54,11 @@ add_library(signaltk STATIC
     utils/ISO8601.cc
     utils/UTF8.cc
     utils/wallclock.cc
-    signaltk_cmd.cc)
+    plotfx_cmd.cc)
 
-set(SIGNALTK_LDFLAGS signaltk ${CAIRO_LIBRARIES} ${FREETYPE_LIBRARIES} ${HARFBUZZ_LIBRARIES} ${HARFBUZZ_ICU_LIBRARIES} ${PNG_LIBRARIES})
+set(SIGNALTK_LDFLAGS plotfx ${CAIRO_LIBRARIES} ${FREETYPE_LIBRARIES} ${HARFBUZZ_LIBRARIES} ${HARFBUZZ_ICU_LIBRARIES} ${PNG_LIBRARIES})
 
-add_executable(plotfx platform/signaltk_cli.cc)
+add_executable(plotfx platform/plotfx_cli.cc)
 target_link_libraries(plotfx ${SIGNALTK_LDFLAGS})
 
 file(GLOB unit_test_files "testing/**/test_*.cc")

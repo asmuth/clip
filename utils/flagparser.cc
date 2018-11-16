@@ -33,7 +33,7 @@
 #include <assert.h>
 #include "flagparser.h"
 
-namespace signaltk {
+namespace plotfx {
 
 FlagParser::FlagParser() {}
 
@@ -251,5 +251,5 @@ ReturnCode FlagParser::parseArgv(const std::vector<std::string>& argv) {
   return ReturnCode::success();
 }
 
-} // namespace signaltk
+} // namespace plotfx
 

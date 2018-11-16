@@ -31,7 +31,7 @@
 #define _libstx_UI_COLORPALETTE_H
 #include <stdlib.h>
 
-namespace signaltk {
+namespace plotfx {
 namespace chart {
 
 class ColorPalette {

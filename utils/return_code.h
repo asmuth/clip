@@ -34,9 +34,9 @@
 #include <string>
 #include <stdarg.h>
 #include "stringutil.h"
-#include "signaltk.h"
+#include "plotfx.h"
 
-namespace signaltk {
+namespace plotfx {
 
 class ReturnCode {
 public:
@@ -108,5 +108,5 @@ protected:
   std::string message_;
 };
 
-} // namespace signaltk
+} // namespace plotfx
 

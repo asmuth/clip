@@ -37,7 +37,7 @@
 #include <vector>
 #include "stdtypes.h"
 
-namespace signaltk {
+namespace plotfx {
 
 class StringUtil {
 public:
@@ -415,7 +415,7 @@ protected:
 
 };
 
-} // namespace signaltk
+} // namespace plotfx
 
 #include "stringutil_impl.h"
 #endif

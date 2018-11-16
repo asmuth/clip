@@ -30,7 +30,7 @@
 #include "elements/plot/plot_element.h"
 #include "core/config_helpers.h"
 
-namespace signaltk {
+namespace plotfx {
 
 PlotConfig::PlotConfig() :
     x_domain(PlotDomain::LINEAR),
@@ -57,20 +57,48 @@ ReturnCode renderPlot(const PlotConfig& config, Layer* frame) {
   return ReturnCode::success();
 }
 
-ReturnCode configurePlotAxisTop(const std::string& value, PlotConfig* config) {
-  return parseAxisMode(value, &config->axis_top.mode);
+ReturnCode configurePlotAxisTop(const plist::Property& prop, PlotConfig* config) {
+  if (prop.size() != 1) {
+    return ReturnCode::errorf(
+        "EARG",
+        "incorrect number of arguments; expected: 1, got: $0",
+        prop.size());
+  }
+
+  return parseAxisMode(prop[0], &config->axis_top.mode);
 }
 
-ReturnCode configurePlotAxisRight(const std::string& value, PlotConfig* config) {
-  return parseAxisMode(value, &config->axis_right.mode);
+ReturnCode configurePlotAxisRight(const plist::Property& prop, PlotConfig* config) {
+  if (prop.size() != 1) {
+    return ReturnCode::errorf(
+        "EARG",
+        "incorrect number of arguments; expected: 1, got: $0",
+        prop.size());
+  }
+
+  return parseAxisMode(prop[0], &config->axis_right.mode);
 }
 
-ReturnCode configurePlotAxisBottom(const std::string& value, PlotConfig* config) {
-  return parseAxisMode(value, &config->axis_bottom.mode);
+ReturnCode configurePlotAxisBottom(const plist::Property& prop, PlotConfig* config) {
+  if (prop.size() != 1) {
+    return ReturnCode::errorf(
+        "EARG",
+        "incorrect number of arguments; expected: 1, got: $0",
+        prop.size());
+  }
+
+  return parseAxisMode(prop[0], &config->axis_bottom.mode);
 }
 
-ReturnCode configurePlotAxisLeft(const std::string& value, PlotConfig* config) {
-  return parseAxisMode(value, &config->axis_left.mode);
+ReturnCode configurePlotAxisLeft(const plist::Property& prop, PlotConfig* config) {
+  if (prop.size() != 1) {
+    return ReturnCode::errorf(
+        "EARG",
+        "incorrect number of arguments; expected: 1, got: $0",
+        prop.size());
+  }
+
+  return parseAxisMode(prop[0], &config->axis_left.mode);
 }
 
 ReturnCode configurePlot(const PropertyList& plist, PlotConfig* config) {
@@ -106,5 +134,5 @@ ReturnCode PlotElement::renderTo(Layer* frame) const {
   return renderPlot(config, frame);
 }
 
-} // namespace signaltk
+} // namespace plotfx
 

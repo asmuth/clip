@@ -31,7 +31,7 @@
 #include "canvas.h"
 #include "drawable.h"
 
-namespace signaltk {
+namespace plotfx {
 namespace chart {
 
 Drawable::Drawable(Canvas* canvas) : canvas_(canvas) {}

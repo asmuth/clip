@@ -38,7 +38,7 @@
 #include "drawable.h"
 #include "colorpalette.h"
 
-namespace signaltk {
+namespace plotfx {
 namespace chart {
 
 /**

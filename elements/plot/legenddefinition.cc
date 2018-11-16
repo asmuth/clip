@@ -29,7 +29,7 @@
  */
 #include "legenddefinition.h"
 
-namespace signaltk {
+namespace plotfx {
 namespace chart {
 
 LegendDefinition::LegendDefinition(

@@ -69,24 +69,24 @@ const char kFutureError[] = "FutureError";
 
 #define RAISE(E, ...) \
     RAISE_EXCEPTION( \
-        signaltk::Exception( __VA_ARGS__).setTypeName(E)); \
+        plotfx::Exception( __VA_ARGS__).setTypeName(E)); \
         while(0) {}
 
 #define RAISEF(E, ...) \
     RAISE_EXCEPTION( \
-        signaltk::Exception( \
-            signaltk::StringUtil::format(__VA_ARGS__)).setTypeName(E)); \
+        plotfx::Exception( \
+            plotfx::StringUtil::format(__VA_ARGS__)).setTypeName(E)); \
         while(0) {}
 
 #define RAISE_ERRNO(E, ...) \
     { \
       int e = errno; \
       RAISE_EXCEPTION( \
-          signaltk::Exception( \
+          plotfx::Exception( \
               __VA_ARGS__).setTypeName(E).setErrno(e)); \
     }
 
-namespace signaltk {
+namespace plotfx {
 
 using StandardException = std::exception;
 
@@ -120,6 +120,6 @@ private:
   char message_[1024];
 };
 
-} // namespace signaltk
+} // namespace plotfx
 
 #endif

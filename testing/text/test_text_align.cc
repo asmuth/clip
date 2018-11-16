@@ -33,7 +33,7 @@
 #include "graphics/text.h"
 #include "../unittest.h"
 
-using namespace signaltk;
+using namespace plotfx;
 
 Status drawTestAt(Layer* l, uint32_t x, uint32_t y, TextStyle s) {
   StrokeStyle ss;

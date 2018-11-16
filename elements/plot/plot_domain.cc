@@ -29,8 +29,8 @@
  */
 #include "plot_domain.h"
 
-using namespace signaltk;
-namespace signaltk {
+using namespace plotfx;
+namespace plotfx {
 namespace chart {
 
 /*

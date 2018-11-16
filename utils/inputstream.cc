@@ -35,7 +35,7 @@
 #include "exception.h"
 #include "inputstream.h"
 
-namespace signaltk {
+namespace plotfx {
 
 std::unique_ptr<InputStream> InputStream::getStdin() {
   auto stdin_stream = new FileInputStream(0, false);

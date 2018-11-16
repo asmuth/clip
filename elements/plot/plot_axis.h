@@ -35,7 +35,7 @@
 #include <graphics/viewport.h>
 #include <utils/return_code.h>
 
-namespace signaltk {
+namespace plotfx {
 
 enum class AxisPosition {
   TOP,
@@ -83,5 +83,5 @@ Status renderAxis(
     Layer* frame);
 
 
-} // namespace signaltk
+} // namespace plotfx
 

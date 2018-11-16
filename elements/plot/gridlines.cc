@@ -34,7 +34,7 @@
 #include "graphics/text.h"
 #include "gridlines.h"
 
-namespace signaltk {
+namespace plotfx {
 namespace chart {
 
 GridDefinition::GridDefinition(

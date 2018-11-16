@@ -27,10 +27,10 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-#include "signaltk.h"
+#include "plotfx.h"
 #include "graphics/text_layout.h"
 
-namespace signaltk {
+namespace plotfx {
 namespace text {
 
 Status layoutTextLTR(
@@ -123,5 +123,5 @@ Status layoutText(
 
 
 } // namespace text
-} // namespace signaltk
+} // namespace plotfx
 

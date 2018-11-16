@@ -28,12 +28,12 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 #pragma once
-#include "signaltk.h"
+#include "plotfx.h"
 
-namespace signaltk {
+namespace plotfx {
 
 int cmd_plot_axes(Context* ctx, const char** args, int arg_count);
 int cmd_plot_gridlines(Context* ctx, const char** args, int arg_count);
 
-} // namespace signaltk
+} // namespace plotfx
 

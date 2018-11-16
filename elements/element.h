@@ -31,10 +31,13 @@
 #include <atomic>
 #include <memory>
 #include <string>
+#include "core/plist/plist.h"
 #include "utils/return_code.h"
 
-namespace signaltk {
+namespace plotfx {
 class Layer;
+
+using plist::PropertyList;
 
 class Element {
 public:
@@ -48,5 +51,5 @@ public:
 using ElementRef = std::unique_ptr<Element>;
 
 
-} // namespace signaltk
+} // namespace plotfx
 

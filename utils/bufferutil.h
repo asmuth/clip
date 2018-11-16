@@ -34,7 +34,7 @@
 #include <stdint.h>
 #include "buffer.h"
 
-namespace signaltk {
+namespace plotfx {
 
 class BufferUtil {
 public:
@@ -74,6 +74,6 @@ public:
 
 };
 
-} // namespace signaltk
+} // namespace plotfx
 
 #endif

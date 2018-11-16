@@ -29,7 +29,7 @@
  */
 #include "series.h"
 
-namespace signaltk {
+namespace plotfx {
 namespace chart {
 
 template <>

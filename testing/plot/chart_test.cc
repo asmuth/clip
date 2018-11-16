@@ -41,30 +41,30 @@
 
 UNIT_TEST(ChartTest);
 
-using signaltk::chart::AnyDomain;
-using signaltk::chart::AxisDefinition;
-//using signaltk::chart::AreaChart;
-//using signaltk::chart::AreaChart2D;
-//using signaltk::chart::AreaChart3D;
-//using signaltk::chart::BarChart;
-//using signaltk::chart::BarChart2D;
-//using signaltk::chart::BarChart3D;
-using signaltk::chart::LineChart;
-//using signaltk::chart::PointChart2D;
-//using signaltk::chart::PointChart3D;
-using signaltk::Colour;
-using signaltk::Viewport;
-using namespace signaltk::chart;
-using signaltk::chart::ContinuousDomain;
-//using signaltk::chart::DomainProvider;
-using signaltk::chart::Series;
-using signaltk::chart::Series2D;
-using signaltk::chart::Series3D;
-using signaltk::FileOutputStream;
-using signaltk::FileUtil;
-using signaltk::StringUtil;
-using signaltk::Layer;
-using signaltk::test::UnitTest;
+using plotfx::chart::AnyDomain;
+using plotfx::chart::AxisDefinition;
+//using plotfx::chart::AreaChart;
+//using plotfx::chart::AreaChart2D;
+//using plotfx::chart::AreaChart3D;
+//using plotfx::chart::BarChart;
+//using plotfx::chart::BarChart2D;
+//using plotfx::chart::BarChart3D;
+using plotfx::chart::LineChart;
+//using plotfx::chart::PointChart2D;
+//using plotfx::chart::PointChart3D;
+using plotfx::Colour;
+using plotfx::Viewport;
+using namespace plotfx::chart;
+using plotfx::chart::ContinuousDomain;
+//using plotfx::chart::DomainProvider;
+using plotfx::chart::Series;
+using plotfx::chart::Series2D;
+using plotfx::chart::Series3D;
+using plotfx::FileOutputStream;
+using plotfx::FileUtil;
+using plotfx::StringUtil;
+using plotfx::Layer;
+using plotfx::test::UnitTest;
 
 //static void compareChart(
 //    PlotLayout* chart,
@@ -427,7 +427,7 @@ TEST_CASE(ChartTest, TestPlotLayoutWithLeftAxis, [] () {
 //});
 //
 //
-//static signaltk::test::UnitTest::TestCase __test_simple_bar_chart_(
+//static plotfx::test::UnitTest::TestCase __test_simple_bar_chart_(
 //    &ChartTest, "TestSimpleBarChart", [] () {
 //  auto series = new Series2D<std::string, double>("myseries");
 //
@@ -453,7 +453,7 @@ TEST_CASE(ChartTest, TestPlotLayoutWithLeftAxis, [] () {
 //      "ChartTest_TestSimpleBarChart_out.svg");
 //});
 //
-//static signaltk::test::UnitTest::TestCase __test_mulitseries_bar_chart_(
+//static plotfx::test::UnitTest::TestCase __test_mulitseries_bar_chart_(
 //    &ChartTest, "TestMultiSeriesBarChart", [] () {
 //  auto series1 = new Series2D<std::string, double>("myseries1");
 //  series1->addDatum("A", 40);
@@ -487,7 +487,7 @@ TEST_CASE(ChartTest, TestPlotLayoutWithLeftAxis, [] () {
 //      "ChartTest_TestMultiSeriesBarChart_out.svg");
 //});
 //
-//static signaltk::test::UnitTest::TestCase __test_stacked_bar_chart_(
+//static plotfx::test::UnitTest::TestCase __test_stacked_bar_chart_(
 //    &ChartTest, "TestStackedBarChart", [] () {
 //  auto series1 = new Series2D<std::string, double>("myseries1");
 //  series1->addDatum("A", 40);
@@ -521,7 +521,7 @@ TEST_CASE(ChartTest, TestPlotLayoutWithLeftAxis, [] () {
 //      "ChartTest_TestStackedBarChart_out.svg");
 //});
 //
-//static signaltk::test::UnitTest::TestCase __test_horizontal_bar_chart_(
+//static plotfx::test::UnitTest::TestCase __test_horizontal_bar_chart_(
 //    &ChartTest, "TestHorizontalBarChart", [] () {
 //  auto series1 = new Series2D<std::string, double>("myseries1");
 //  series1->addDatum("A", 40);
@@ -546,7 +546,7 @@ TEST_CASE(ChartTest, TestPlotLayoutWithLeftAxis, [] () {
 //      "ChartTest_TestHorizontalBarChart_out.svg");
 //});
 //
-//static signaltk::test::UnitTest::TestCase __test_horizontal_mulit_bar_chart_(
+//static plotfx::test::UnitTest::TestCase __test_horizontal_mulit_bar_chart_(
 //    &ChartTest, "TestHorizontalMulitSeriesBarChart", [] () {
 //  auto series1 = new Series2D<std::string, double>("myseries1");
 //  series1->addDatum("A", 40);
@@ -580,7 +580,7 @@ TEST_CASE(ChartTest, TestPlotLayoutWithLeftAxis, [] () {
 //      "ChartTest_TestHorizontalMulitSeriesBarChart_out.svg");
 //});
 //
-//static signaltk::test::UnitTest::TestCase __test_horiz_stacked_bar_chart_(
+//static plotfx::test::UnitTest::TestCase __test_horiz_stacked_bar_chart_(
 //    &ChartTest, "TestHorizontalStackedBarChart", [] () {
 //  auto series1 = new Series2D<std::string, double>("myseries1");
 //  series1->addDatum("A", 40);
@@ -613,7 +613,7 @@ TEST_CASE(ChartTest, TestPlotLayoutWithLeftAxis, [] () {
 //      "ChartTest_TestHorizontalStackedBarChart_out.svg");
 //});
 //
-//static signaltk::test::UnitTest::TestCase __test_range_bar_chart_(
+//static plotfx::test::UnitTest::TestCase __test_range_bar_chart_(
 //    &ChartTest, "TestRangeBarChart", [] () {
 //  auto series1 = new Series3D<std::string, double, double>("myseries1");
 //  series1->addDatum("A", -40, +40);
@@ -646,7 +646,7 @@ TEST_CASE(ChartTest, TestPlotLayoutWithLeftAxis, [] () {
 //      "ChartTest_TestRangeBarChart_out.svg");
 //});
 //
-//static signaltk::test::UnitTest::TestCase __test_horiz_range_bar_chart_(
+//static plotfx::test::UnitTest::TestCase __test_horiz_range_bar_chart_(
 //    &ChartTest, "TestHorizontalRangeBarChart", [] () {
 //  auto series1 = new Series3D<std::string, double, double>("myseries1");
 //  series1->addDatum("A", -40, +40);
@@ -679,7 +679,7 @@ TEST_CASE(ChartTest, TestPlotLayoutWithLeftAxis, [] () {
 //      "ChartTest_TestHorizontalRangeBarChart_out.svg");
 //});
 //
-//static signaltk::test::UnitTest::TestCase __test_simple_point_chart_(
+//static plotfx::test::UnitTest::TestCase __test_simple_point_chart_(
 //    &ChartTest, "TestSimplePointChart", [] () {
 //  auto series1 = new Series2D<double, double>("myseries1");
 //  series1->addDatum(10, 34);
@@ -711,7 +711,7 @@ TEST_CASE(ChartTest, TestPlotLayoutWithLeftAxis, [] () {
 //      "ChartTest_TestSimplePointChart_out.svg");
 //});
 //
-//static signaltk::test::UnitTest::TestCase __test_variablesize_point_chart_(
+//static plotfx::test::UnitTest::TestCase __test_variablesize_point_chart_(
 //    &ChartTest, "TestVariableSizePointChart", [] () {
 //  auto series1 = new Series3D<double, double, double>("myseries1");
 //  series1->addDatum(10, 34, 5);
@@ -743,7 +743,7 @@ TEST_CASE(ChartTest, TestPlotLayoutWithLeftAxis, [] () {
 //      "ChartTest_TestVariableSizePointChart_out.svg");
 //});
 //
-static signaltk::test::UnitTest::TestCase __test_simple_line_chart_(
+static plotfx::test::UnitTest::TestCase __test_simple_line_chart_(
     &ChartTest, "TestSimpleLineChart", [] () {
   Layer target(1000, 600);
   target.clear(Colour{ 1, 1, 1, 1 });
@@ -780,7 +780,7 @@ static signaltk::test::UnitTest::TestCase __test_simple_line_chart_(
   //    "ChartTest_TestSimpleLineChart_out.svg");
 });
 
-//static signaltk::test::UnitTest::TestCase __test_point_line_chart_(
+//static plotfx::test::UnitTest::TestCase __test_point_line_chart_(
 //    &ChartTest, "TestPointLineChart", [] () {
 //  auto series1 = new Series2D<double, double>("myseries1");
 //  series1->addDatum(10, 34);
@@ -817,7 +817,7 @@ static signaltk::test::UnitTest::TestCase __test_simple_line_chart_(
 //      "ChartTest_TestPointLineChart_out.svg");
 //});
 //
-//static signaltk::test::UnitTest::TestCase __test_multi_chart_(
+//static plotfx::test::UnitTest::TestCase __test_multi_chart_(
 //    &ChartTest, "TestMultiChart", [] () {
 //  auto series1 = new Series2D<double, double>("myseries1");
 //  series1->addDatum(10, 34);
@@ -889,7 +889,7 @@ static signaltk::test::UnitTest::TestCase __test_simple_line_chart_(
 //      "ChartTest_TestMultiChart_out.svg");
 //});
 //
-//static signaltk::test::UnitTest::TestCase __test_simple_area_chart_(
+//static plotfx::test::UnitTest::TestCase __test_simple_area_chart_(
 //    &ChartTest, "TestSimpleAreaChart", [] () {
 //  auto series1 = new Series2D<double, double>("myseries1");
 //  series1->addDatum(10, 34);
@@ -918,7 +918,7 @@ static signaltk::test::UnitTest::TestCase __test_simple_line_chart_(
 //      "ChartTest_TestSimpleAreaChart_out.svg");
 //});
 //
-//static signaltk::test::UnitTest::TestCase __test_range_area_chart_(
+//static plotfx::test::UnitTest::TestCase __test_range_area_chart_(
 //    &ChartTest, "TestRangeAreaChart", [] () {
 //  auto series1 = new Series3D<double, double, double>("myseries1");
 //  series1->addDatum(10, -34, 34);
@@ -947,7 +947,7 @@ static signaltk::test::UnitTest::TestCase __test_simple_line_chart_(
 //      "ChartTest_TestRangeAreaChart_out.svg");
 //});
 //
-//static signaltk::test::UnitTest::TestCase __test_multi_range_area_chart_(
+//static plotfx::test::UnitTest::TestCase __test_multi_range_area_chart_(
 //    &ChartTest, "TestMultiRangeAreaChart", [] () {
 //  auto series1 = new Series3D<double, double, double>("myseries1");
 //  series1->addDatum(10, -34, 34);
@@ -983,7 +983,7 @@ static signaltk::test::UnitTest::TestCase __test_simple_line_chart_(
 //      "ChartTest_TestMultiRangeAreaChart_out.svg");
 //});
 //
-//static signaltk::test::UnitTest::TestCase __test_multi_range_area_line_(
+//static plotfx::test::UnitTest::TestCase __test_multi_range_area_line_(
 //    &ChartTest, "TestMultiRangeAreaLineChart", [] () {
 //  auto series1 = new Series3D<double, double, double>("myseries1");
 //  series1->addDatum(10, -34, 34);

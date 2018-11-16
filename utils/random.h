@@ -34,7 +34,7 @@
 #include <string>
 #include <random>
 
-namespace signaltk {
+namespace plotfx {
 
 class Random {
 public:

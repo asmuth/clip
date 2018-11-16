@@ -34,7 +34,7 @@
 #include "stringutil.h"
 #include "UTF8.h"
 
-namespace signaltk {
+namespace plotfx {
 
 void StringUtil::toStringVImpl(std::vector<std::string>* target) {}
 
@@ -508,4 +508,4 @@ String StringUtil::stripShell(const std::string& str) {
   return out;
 }
 
-} // namespace signaltk
+} // namespace plotfx

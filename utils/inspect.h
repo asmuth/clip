@@ -27,14 +27,14 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-#ifndef _signaltk_UTIL_INSPECT_H_
-#define _signaltk_UTIL_INSPECT_H_
+#ifndef _plotfx_UTIL_INSPECT_H_
+#define _plotfx_UTIL_INSPECT_H_
 #include <set>
 #include <string>
 #include <vector>
 #include "outputstream.h"
 
-namespace signaltk {
+namespace plotfx {
 
 template <typename T>
 std::string inspect(const T& value);

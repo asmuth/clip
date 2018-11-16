@@ -35,7 +35,7 @@
 #include <sys/types.h>
 #include <unistd.h>
 
-namespace signaltk {
+namespace plotfx {
 
 File File::openFile(
     const std::string& filename,

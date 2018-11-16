@@ -27,14 +27,14 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-#ifndef _signaltk_OUTPUTSTREAM_H
-#define _signaltk_OUTPUTSTREAM_H
+#ifndef _plotfx_OUTPUTSTREAM_H
+#define _plotfx_OUTPUTSTREAM_H
 #include <fcntl.h>
 #include <memory>
 #include <mutex>
 #include "buffer.h"
 
-namespace signaltk {
+namespace plotfx {
 
 class OutputStream {
 public:

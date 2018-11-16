@@ -37,7 +37,7 @@
 #include "exception.h"
 #include "outputstream.h"
 
-namespace signaltk {
+namespace plotfx {
 
 std::unique_ptr<OutputStream> OutputStream::getStdout() {
   auto stdout_stream = new FileOutputStream(1, false);

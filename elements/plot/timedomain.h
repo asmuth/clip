@@ -32,7 +32,7 @@
 #include "utils/UnixTime.h"
 #include "continuousdomain.h"
 
-namespace signaltk {
+namespace plotfx {
 namespace chart {
 
 class TimeDomain : public ContinuousDomain<UnixTime> {

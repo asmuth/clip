@@ -27,12 +27,12 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-#ifndef _signaltk_UTIL_FILEUTIL_H_
-#define _signaltk_UTIL_FILEUTIL_H_
+#ifndef _plotfx_UTIL_FILEUTIL_H_
+#define _plotfx_UTIL_FILEUTIL_H_
 #include "buffer.h"
 #include "stdtypes.h"
 
-namespace signaltk {
+namespace plotfx {
 
 class FileUtil {
 public:

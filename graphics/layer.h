@@ -34,12 +34,12 @@
 #include <string>
 
 #include "colour.h"
-#include "signaltk.h"
+#include "plotfx.h"
 #include "text_shaper.h"
 #include "rasterize.h"
 #include "image.h"
 
-namespace signaltk {
+namespace plotfx {
 
 struct Layer {
   Layer();
@@ -67,5 +67,5 @@ double from_px(const Layer& l, double v);
 double from_pt(const Layer& l, double v);
 double to_pt(const Layer& l, double v);
 
-} // namespace signaltk
+} // namespace plotfx
 

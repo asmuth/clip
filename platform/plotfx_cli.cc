@@ -37,7 +37,7 @@
 #include <sys/time.h>
 #include <sys/resource.h>
 #include <sys/file.h>
-#include "signaltk.h"
+#include "plotfx.h"
 #include "elements/element_tree.h"
 #include "graphics/layer.h"
 #include <utils/flagparser.h>
@@ -45,7 +45,7 @@
 #include <utils/return_code.h>
 #include <utils/stringutil.h>
 
-using namespace signaltk;
+using namespace plotfx;
 
 void printError(const ReturnCode& rc) {
   std::cerr << StringUtil::format("ERROR: $0", rc.getMessage()) << std::endl;
@@ -77,7 +77,7 @@ int main(int argc, const char** argv) {
   if (flag_version) {
     std::cerr <<
         StringUtil::format(
-            "signaltk $0\n"
+            "plotfx $0\n"
             "Part of the FnordMetric project (http://fnordmetric.io)\n"
             "Copyright (c) 2016, Paul Asmuth et al. All rights reserved.\n\n",
             FNORDMETRIC_VERSION);
@@ -87,19 +87,19 @@ int main(int argc, const char** argv) {
 
   if (flag_help) {
     std::cerr <<
-        "Usage: $ signaltk [OPTIONS]\n"
+        "Usage: $ plotfx [OPTIONS]\n"
         "   --help                Display this help text and exit\n"
         "   --version             Display the version of this binary and exit\n"
         "\n"
         "Commands:\n";
 
 
-    std::cerr << "\nSee 'signaltk help <command>' for information about a specific subcommand.\n";
+    std::cerr << "\nSee 'plotfx help <command>' for information about a specific subcommand.\n";
     return 0;
   }
 
   auto spec = FileUtil::read(flag_in).toString(); // FIXME
-  signaltk::ElementTree elems;
+  plotfx::ElementTree elems;
   if (auto rc = buildElementTree(spec, &elems); !rc.isSuccess()) {
     printError(rc);
     return EXIT_FAILURE;

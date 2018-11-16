@@ -37,7 +37,7 @@
 #include "drawable.h"
 #include "legenddefinition.h"
 
-namespace signaltk {
+namespace plotfx {
 namespace chart {
 class Layer;
 

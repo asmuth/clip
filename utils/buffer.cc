@@ -31,7 +31,7 @@
 #include "exception.h"
 #include <string.h>
 
-namespace signaltk {
+namespace plotfx {
 
 Buffer::Buffer() : data_(nullptr), size_(0), alloc_(0), mark_(0) {}
 

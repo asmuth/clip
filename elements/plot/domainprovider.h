@@ -35,7 +35,7 @@
 #include "domain.h"
 #include "utils/exception.h"
 
-namespace signaltk {
+namespace plotfx {
 namespace chart {
 
 class DomainProvider {

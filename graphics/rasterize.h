@@ -47,7 +47,7 @@
 #include "text.h"
 #include "brush.h"
 
-namespace signaltk {
+namespace plotfx {
 class Image;
 
 class Rasterizer {
@@ -77,5 +77,5 @@ public:
 };
 
 
-} // namespace signaltk
+} // namespace plotfx
 

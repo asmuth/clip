@@ -33,7 +33,7 @@
 #include "utils/stringutil.h"
 #include "domain.h"
 
-namespace signaltk {
+namespace plotfx {
 namespace chart {
 
 class AnyContinuousDomain {

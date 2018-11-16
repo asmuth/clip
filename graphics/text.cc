@@ -32,7 +32,7 @@
 #include "graphics/text_layout.h"
 #include <graphics/layer.h>
 
-namespace signaltk {
+namespace plotfx {
 
 TextStyle::TextStyle() :
     direction(TextDirection::LTR),
@@ -78,5 +78,5 @@ Status drawTextGlyphs(
   return layer->rasterizer.drawTextGlyphs(font_info, glyphs, glyph_count);
 }
 
-} // namespace signaltk
+} // namespace plotfx
 

@@ -34,7 +34,7 @@
 #include <utils/flagparser.h>
 #include "plot_api.h"
 
-namespace signaltk {
+namespace plotfx {
 
 int cmd_plot_axes(Context* ctx, const char** args, int arg_count) {
   FlagParser flag_parser;
@@ -111,5 +111,5 @@ int cmd_plot_gridlines(Context* ctx, const char** args, int arg_count) {
   return 0;
 }
 
-} // namespace signaltk
+} // namespace plotfx
 

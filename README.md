@@ -29,8 +29,6 @@ To run the test suite, run `make check`:
 License
 -------
 
-    The plotfx License (BSD-3-Clause)
-
     Copyright (c) 2018, Paul Asmuth, Laura Schlimmer
     All rights reserved.
 

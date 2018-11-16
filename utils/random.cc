@@ -32,7 +32,7 @@
 #include "random.h"
 #include "stringutil.h"
 
-namespace signaltk {
+namespace plotfx {
 
 Random::Random() {
   std::random_device r;

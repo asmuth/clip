@@ -8,7 +8,7 @@ cmake_install.cmake
 *.so
 *.dll
 *.dylib
-/signaltk
+/plotfx
 /.ninja_deps
 /.ninja_log
 /*.ninja

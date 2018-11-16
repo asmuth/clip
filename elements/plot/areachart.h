@@ -38,7 +38,7 @@
 #include "colorpalette.h"
 #include "../core/layer.h"
 
-namespace signaltk {
+namespace plotfx {
 namespace chart {
 
 class AreaChart : public Drawable {

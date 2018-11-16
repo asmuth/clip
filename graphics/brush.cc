@@ -31,7 +31,7 @@
 #include "brush.h"
 #include "layer.h"
 
-namespace signaltk {
+namespace plotfx {
 
 void strokePath(
     Layer* layer,
@@ -56,5 +56,5 @@ void strokeLine(
   strokePath(layer, p.data(), p.size(), style);
 }
 
-} // namespace signaltk
+} // namespace plotfx
 

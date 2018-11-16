@@ -32,7 +32,7 @@
 #include "fnord-base/stringutil.h"
 #include "fnord-base/test/unittest.h"
 
-using namespace signaltk;
+using namespace plotfx;
 
 UNIT_TEST(StringUtilTest);
 

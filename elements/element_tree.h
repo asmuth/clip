@@ -30,9 +30,8 @@
 #pragma once
 #include "utils/return_code.h"
 #include "element.h"
-#include "element_spec.h"
 
-namespace signaltk {
+namespace plotfx {
 class Layer;
 
 struct ElementTree {
@@ -51,5 +50,5 @@ ReturnCode renderElements(
     const ElementTree& tree,
     Layer* frame);
 
-} // namespace signaltk
+} // namespace plotfx
 

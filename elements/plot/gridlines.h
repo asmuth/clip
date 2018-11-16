@@ -36,7 +36,7 @@
 #include <graphics/layer.h>
 #include <graphics/viewport.h>
 
-namespace signaltk {
+namespace plotfx {
 namespace chart {
 
 class GridDefinition {

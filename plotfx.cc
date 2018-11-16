@@ -27,31 +27,42 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-#pragma once
-#include <stdlib.h>
-#include <vector>
-#include <string>
+#include "plotfx.h"
+#include <graphics/image_api.h>
+#include <elements/plot/plot_api.h>
+#include <iostream>
 
-namespace signaltk {
-struct Context;
+namespace plotfx {
 
-enum Status : int {
-  OK = 0,
-  ERROR,
-  ERROR_IO,
-  ERROR_NOT_IMPLEMENTED,
-  ERROR_INVALID_ARGUMENT,
-  ERROR_INVALID_ELEM
-};
+int cmd(
+    Context* ctx,
+    const char** args,
+    int arg_count) {
+  for (const auto& cmd : command_list) {
+    if (cmd.name.size() > arg_count) {
+      continue;
+    }
 
-struct Command {
-  std::vector<std::string> name;
-  int (*fn)(Context*, const char**, int);
-};
+    bool match = true;
+    for (size_t i = 0; i < cmd.name.size(); ++i) {
+      if (cmd.name[i] != args[i]) {
+        match = false;
+        break;
+      }
+    }
 
-extern const std::vector<Command> command_list;
+    if (!match) {
+      continue;
+    }
 
-int cmd(Context*, const char** args, int arg_count);
+    return cmd.fn(
+        ctx,
+        args + cmd.name.size(),
+        arg_count - cmd.name.size());
+  }
 
-} // namespace signaltk
+  return -1;
+}
+
+} // namespace plotfx
 

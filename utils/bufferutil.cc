@@ -30,7 +30,7 @@
 #include "bufferutil.h"
 #include "inspect.h"
 
-namespace signaltk {
+namespace plotfx {
 
 void BufferUtil::stripTrailingBytes(Buffer* buf, unsigned char byte) {
   auto begin = (const unsigned char*) buf->data();
@@ -74,5 +74,5 @@ std::string BufferUtil::hexPrint(
 
   return str;
 }
-} // namespace signaltk
+} // namespace plotfx
 

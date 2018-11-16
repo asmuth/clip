@@ -34,7 +34,7 @@
 #include <stdint.h>
 #include <string>
 
-namespace signaltk {
+namespace plotfx {
 class Buffer;
 
 #undef O_APPEND

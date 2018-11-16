@@ -37,7 +37,7 @@
 #include "series.h"
 #include "../core/viewport.h"
 
-namespace signaltk {
+namespace plotfx {
 namespace chart {
 class Layer;
 class Canvas;

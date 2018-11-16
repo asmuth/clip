@@ -31,7 +31,7 @@
 #include <utils/stringutil.h>
 #include "colour.h"
 
-namespace signaltk {
+namespace plotfx {
 
 Colour Colour::fromRGBA(double red, double green, double blue, double alpha) {
   return Colour({ red, green, blue, alpha });
@@ -134,5 +134,5 @@ bool Colour::parseHexShort(const std::string& str) {
   return true;
 }
 
-} // namespace signaltk
+} // namespace plotfx
 

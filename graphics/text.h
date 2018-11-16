@@ -28,10 +28,10 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 #pragma once
-#include "signaltk.h"
+#include "plotfx.h"
 #include "path.h"
 
-namespace signaltk {
+namespace plotfx {
 class Layer;
 
 enum class TextDirection {
@@ -87,5 +87,5 @@ Status drawTextGlyphs(
     Layer* layer);
 
 
-} // namespace signaltk
+} // namespace plotfx
 

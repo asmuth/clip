@@ -36,7 +36,7 @@
 #include <string>
 
 // FIXPAUL too many copies T val...
-namespace signaltk {
+namespace plotfx {
 
 enum class PlotDomain {
   LINEAR, LOGARITHMIC

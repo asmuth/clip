@@ -37,7 +37,7 @@
 #include <utils/exception.h>
 #include <utils/stringutil.h>
 
-namespace signaltk {
+namespace plotfx {
 namespace chart {
 
 class Series {

@@ -33,7 +33,7 @@
 #include <vector>
 #include "colour.h"
 
-namespace signaltk {
+namespace plotfx {
 
 enum class PixelFormat {
   RGB8, RGBA8
@@ -90,5 +90,5 @@ Colour decodePixel(
     char* data,
     size_t size);
 
-} // namespace signaltk
+} // namespace plotfx
 

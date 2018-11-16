@@ -33,7 +33,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-namespace signaltk {
+namespace plotfx {
 
 static const std::string kStyleSheetDefault = R"(
   .fm-chart text, .fm-tooltip {

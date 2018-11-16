@@ -33,7 +33,7 @@
 #include <string>
 #include <vector>
 
-namespace signaltk {
+namespace plotfx {
 namespace chart {
 
 template <typename TX, typename TY, typename TZ>

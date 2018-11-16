@@ -30,7 +30,7 @@
 #include <graphics/rasterize.h>
 #include <graphics/image.h>
 
-namespace signaltk {
+namespace plotfx {
 
 Rasterizer::Rasterizer(
     Image* pixmap_,
@@ -237,5 +237,5 @@ Status Rasterizer::drawTextGlyphs(
   return OK;
 }
 
-} // namespace signaltk
+} // namespace plotfx
 

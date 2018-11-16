@@ -33,7 +33,7 @@
 #include <stdint.h>
 #include <vector>
 
-namespace signaltk {
+namespace plotfx {
 
 enum class PathCommand {
   MOVE_TO,
@@ -81,5 +81,5 @@ protected:
   std::vector<PathData> data_;
 };
 
-} // namespace signaltk
+} // namespace plotfx
 

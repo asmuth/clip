@@ -34,7 +34,7 @@
 #include <string>
 #include "stdtypes.h"
 
-namespace signaltk {
+namespace plotfx {
 
 class Buffer {
 public:

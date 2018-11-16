@@ -31,14 +31,14 @@
 #include <stdlib.h>
 #include <string>
 #include <vector>
-#include "signaltk.h"
+#include "plotfx.h"
 #include <graphics/image.h>
 
-namespace signaltk {
+namespace plotfx {
 
 Status pngWriteImageFile(
     const Image& image,
     const std::string& filename);
 
-} // namespace signaltk
+} // namespace plotfx
 

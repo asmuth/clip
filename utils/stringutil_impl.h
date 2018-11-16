@@ -33,7 +33,7 @@
 #include <stdint.h>
 #include <string>
 
-namespace signaltk {
+namespace plotfx {
 
 template <typename H, typename... T>
 void StringUtil::toStringVImpl(
@@ -145,4 +145,4 @@ std::string StringUtil::formatNumberMetric(T orig_value) {
 }
 
 
-} // namespace signaltk
+} // namespace plotfx

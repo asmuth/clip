@@ -31,7 +31,7 @@
 #include "elements/plot/plot_element.h"
 #include <unordered_map>
 
-namespace signaltk {
+namespace plotfx {
 
 using ElementConfigureFn = std::function<ReturnCode (const PropertyList&, ElementRef*)>;
 
@@ -51,5 +51,5 @@ ReturnCode buildElement(
   return elem_entry->second(plist, elem);
 }
 
-} // namespace signaltk
+} // namespace plotfx
 
