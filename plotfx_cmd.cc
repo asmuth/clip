@@ -28,7 +28,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 #include "plotfx.h"
-#include <elements/plot/plot_api.h>
+#include <charts/plot_api.h>
 
 namespace plotfx {
 

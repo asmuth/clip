@@ -31,7 +31,7 @@
 #include <atomic>
 #include <memory>
 #include <string>
-#include "core/plist/plist.h"
+#include "plist/plist.h"
 #include "utils/return_code.h"
 
 namespace plotfx {

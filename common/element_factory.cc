@@ -28,7 +28,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 #include "element_factory.h"
-#include "elements/plot/plot_element.h"
+#include "charts/plot_element.h"
 #include <unordered_map>
 
 namespace plotfx {

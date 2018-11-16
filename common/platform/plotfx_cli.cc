@@ -38,7 +38,7 @@
 #include <sys/resource.h>
 #include <sys/file.h>
 #include "plotfx.h"
-#include "elements/element_tree.h"
+#include "common/element_tree.h"
 #include "graphics/layer.h"
 #include <utils/flagparser.h>
 #include <utils/fileutil.h>

@@ -30,8 +30,8 @@
 #pragma once
 #include <memory>
 #include "plotfx.h"
-#include "core/plist/plist.h"
-#include "elements/element.h"
+#include "plist/plist.h"
+#include "common/element.h"
 #include "utils/return_code.h"
 #include "plot_axis.h"
 #include "plot_domain.h"

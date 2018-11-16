@@ -29,7 +29,7 @@
  */
 #include "plotfx.h"
 #include <graphics/image_api.h>
-#include <elements/plot/plot_api.h>
+#include <charts/plot_api.h>
 #include <iostream>
 
 namespace plotfx {

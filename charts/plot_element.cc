@@ -27,8 +27,8 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-#include "elements/plot/plot_element.h"
-#include "core/config_helpers.h"
+#include "charts/plot_element.h"
+#include "common/config_helpers.h"
 
 namespace plotfx {
 

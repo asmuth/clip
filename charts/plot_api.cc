@@ -29,8 +29,8 @@
  */
 #include <iostream>
 #include <graphics/layer.h>
-#include <elements/plot/axes.h>
-#include <elements/plot/gridlines.h>
+#include <charts/axes.h>
+#include <charts/gridlines.h>
 #include <utils/flagparser.h>
 #include "plot_api.h"
 

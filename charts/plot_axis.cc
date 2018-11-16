@@ -29,8 +29,8 @@
  */
 #include "plot_axis.h"
 #include <assert.h>
-#include <elements/plot/plot_element.h>
-#include <core/config_helpers.h>
+#include <charts/plot_element.h>
+#include <common/config_helpers.h>
 #include <graphics/text.h>
 #include <graphics/brush.h>
 
