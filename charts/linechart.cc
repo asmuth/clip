@@ -28,14 +28,18 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+#include <plotfx.h>
 #include <graphics/path.h>
 #include <graphics/brush.h>
 #include <graphics/text.h>
 #include "linechart.h"
+#include "common/config_helpers.h"
 
 namespace plotfx {
-namespace chart {
+namespace linechart {
 
+/*
+ *
 char LineChart::kDefaultLineStyle[] = "solid";
 char LineChart::kDefaultLineWidth[] = "2";
 char LineChart::kDefaultPointStyle[] = "none";
@@ -207,5 +211,97 @@ void LineChart::setLabels(bool show_labels) {
   show_labels_ = show_labels;
 }
 
+*/
+
+LinechartConfig::LinechartConfig() :
+    x_domain(PlotDomain::LINEAR),
+    y_domain(PlotDomain::LINEAR) {}
+
+ReturnCode draw(const LinechartConfig& config, Layer* frame) {
+  // render axes
+  if (auto rc = renderAxis(config.axis_top, AxisPosition::TOP, frame); rc) {
+    return rc;
+  }
+
+  if (auto rc = renderAxis(config.axis_right, AxisPosition::RIGHT, frame); rc) {
+    return rc;
+  }
+
+  if (auto rc = renderAxis(config.axis_bottom, AxisPosition::BOTTOM, frame); rc) {
+    return rc;
+  }
+
+  if (auto rc = renderAxis(config.axis_left, AxisPosition::LEFT, frame); rc) {
+    return rc;
+  }
+
+  return ReturnCode::success();
 }
+
+ReturnCode configureAxisTop(const plist::Property& prop, LinechartConfig* config) {
+  if (prop.size() != 1) {
+    return ReturnCode::errorf(
+        "EARG",
+        "incorrect number of arguments; expected: 1, got: $0",
+        prop.size());
+  }
+
+  return parseAxisMode(prop[0], &config->axis_top.mode);
 }
+
+ReturnCode configureAxisRight(const plist::Property& prop, LinechartConfig* config) {
+  if (prop.size() != 1) {
+    return ReturnCode::errorf(
+        "EARG",
+        "incorrect number of arguments; expected: 1, got: $0",
+        prop.size());
+  }
+
+  return parseAxisMode(prop[0], &config->axis_right.mode);
+}
+
+ReturnCode configureAxisBottom(const plist::Property& prop, LinechartConfig* config) {
+  if (prop.size() != 1) {
+    return ReturnCode::errorf(
+        "EARG",
+        "incorrect number of arguments; expected: 1, got: $0",
+        prop.size());
+  }
+
+  return parseAxisMode(prop[0], &config->axis_bottom.mode);
+}
+
+ReturnCode configureAxisLeft(const plist::Property& prop, LinechartConfig* config) {
+  if (prop.size() != 1) {
+    return ReturnCode::errorf(
+        "EARG",
+        "incorrect number of arguments; expected: 1, got: $0",
+        prop.size());
+  }
+
+  return parseAxisMode(prop[0], &config->axis_left.mode);
+}
+
+ReturnCode configure(const plist::PropertyList& plist, ElementRef* elem) {
+  static const PropertyDefinitions<LinechartConfig> pdefs = {
+    {"axis-top", &configureAxisTop},
+    {"axis-right", &configureAxisRight},
+    {"axis-bottom", &configureAxisBottom},
+    {"axis-left", &configureAxisLeft},
+  };
+
+  LinechartConfig config;
+  if (auto rc = configureProperties(plist, pdefs, &config); !rc.isSuccess()) {
+    return rc;
+  }
+
+  auto e = std::make_unique<Element>();
+  e->draw = std::bind(&draw, config, std::placeholders::_1);
+  *elem = std::move(e);
+
+  return ReturnCode::success();
+}
+
+} // namespace linechart
+} // namespace plotfx
+

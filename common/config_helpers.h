@@ -29,6 +29,7 @@
  */
 #pragma once
 #include <unordered_map>
+#include <plist/plist.h>
 #include "utils/return_code.h"
 
 namespace plotfx {
@@ -40,7 +41,7 @@ using PropertyDefinitions = std::unordered_map<
 
 template<typename T>
 ReturnCode configureProperties(
-    const PropertyList& plist,
+    const plist::PropertyList& plist,
     const PropertyDefinitions<T>& pdefs,
     T* config) {
   for (const auto& prop : plist) {

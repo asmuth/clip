@@ -28,7 +28,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 #include "element_factory.h"
-#include "charts/plot_element.h"
+#include "charts/linechart.h"
 #include <unordered_map>
 
 namespace plotfx {
@@ -36,7 +36,7 @@ namespace plotfx {
 using ElementConfigureFn = std::function<ReturnCode (const PropertyList&, ElementRef*)>;
 
 static std::unordered_map<std::string, ElementConfigureFn> elems = {
-  {"plot", &PlotElement::configure}
+  {"linechart", &linechart::configure}
 };
 
 ReturnCode buildElement(

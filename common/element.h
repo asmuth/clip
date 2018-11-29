@@ -31,6 +31,7 @@
 #include <atomic>
 #include <memory>
 #include <string>
+#include <functional>
 #include "plist/plist.h"
 #include "utils/return_code.h"
 
@@ -39,13 +40,8 @@ class Layer;
 
 using plist::PropertyList;
 
-class Element {
-public:
-
-  virtual ~Element() = default;
-
-  virtual ReturnCode renderTo(Layer* frame) const = 0;
-
+struct Element {
+  std::function<ReturnCode (Layer*)> draw;
 };
 
 using ElementRef = std::unique_ptr<Element>;

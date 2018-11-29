@@ -71,7 +71,7 @@ ReturnCode renderElements(
     const ElementTree& tree,
     Layer* frame) {
   for (const auto& e : tree.roots) {
-    if (auto rc = e->renderTo(frame); !rc.isSuccess()) {
+    if (auto rc = e->draw(frame); !rc.isSuccess()) {
       return rc;
     }
   }

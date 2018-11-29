@@ -17,10 +17,10 @@ include_directories(${CAIRO_INCLUDE_DIRS} ${FREETYPE_INCLUDE_DIRS} ${HARFBUZZ_IN
 add_definitions(-DFNORDMETRIC_VERSION="unstable")
 
 add_library(plotfxlib STATIC
+    charts/linechart.cc
     charts/gridlines.cc
     charts/plot_axis.cc
     charts/plot_domain.cc
-    charts/plot_element.cc
     charts/legenddefinition.cc
     charts/series.cc
     common/plist/plist.cc
