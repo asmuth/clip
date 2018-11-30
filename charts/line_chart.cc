@@ -33,7 +33,7 @@
 #include <graphics/brush.h>
 #include <graphics/text.h>
 #include <graphics/layout.h>
-#include "linechart.h"
+#include "line_chart.h"
 #include "common/config_helpers.h"
 
 namespace plotfx {

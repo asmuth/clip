@@ -28,7 +28,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 #include "element_factory.h"
-#include "charts/linechart.h"
+#include "charts/line_chart.h"
 #include <unordered_map>
 
 namespace plotfx {
