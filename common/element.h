@@ -37,11 +37,12 @@
 
 namespace plotfx {
 class Layer;
+class Rectangle;
 
 using plist::PropertyList;
 
 struct Element {
-  std::function<ReturnCode (Layer*)> draw;
+  std::function<ReturnCode (const Rectangle&, Layer*)> draw;
 };
 
 using ElementRef = std::unique_ptr<Element>;

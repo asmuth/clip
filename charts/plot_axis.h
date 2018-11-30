@@ -37,6 +37,7 @@
 
 namespace plotfx {
 struct DomainConfig;
+struct Rectangle;
 
 enum class AxisPosition {
   TOP,
@@ -69,7 +70,6 @@ struct AxisDefinition {
   std::vector<double> ticks;
   std::vector<std::pair<double, std::string>> labels;
   AxisLabelPlacement label_placement;
-  double padding_rem;
   double label_padding_rem;
   double label_font_size_rem;
   double tick_length_rem;
@@ -81,6 +81,7 @@ ReturnCode parseAxisMode(
 
 Status renderAxis(
     const AxisDefinition& axis,
+    const Rectangle& clip,
     AxisPosition axis_position,
     Layer* frame);
 

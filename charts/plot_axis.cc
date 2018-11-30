@@ -32,6 +32,7 @@
 #include <iostream>
 #include <common/config_helpers.h>
 #include <graphics/text.h>
+#include <graphics/layout.h>
 #include <graphics/brush.h>
 
 namespace plotfx {
@@ -39,7 +40,6 @@ namespace plotfx {
 AxisDefinition::AxisDefinition() :
     mode(AxisMode::OFF),
     label_placement(AxisLabelPlacement::OUTSIDE),
-    padding_rem(4.0f),
     label_padding_rem(1.0f),
     label_font_size_rem(1.0f),
     tick_length_rem(0.4f) {}
@@ -168,6 +168,7 @@ static Status renderAxisHorizontal(
 
 Status renderAxis(
     const AxisDefinition& axis,
+    const Rectangle& clip,
     AxisPosition axis_position,
     Layer* frame) {
   switch (axis.mode) {
@@ -177,40 +178,40 @@ Status renderAxis(
       break;
   };
 
-  auto padding = from_rem(*frame, axis.padding_rem);
+  auto padding = from_rem(*frame, 1); // FIXME
 
   Status rc;
   switch (axis_position) {
     case AxisPosition::LEFT:
       rc = renderAxisVertical(
           axis,
-          padding,
-          padding,
-          frame->height - padding,
+          clip.x,
+          clip.y,
+          clip.y + clip.h,
           frame);
       break;
     case AxisPosition::RIGHT:
       rc = renderAxisVertical(
           axis,
-          frame->width - padding,
-          padding,
-          frame->height - padding,
+          clip.x + clip.w,
+          clip.y,
+          clip.y + clip.h,
           frame);
       break;
     case AxisPosition::TOP:
       rc = renderAxisHorizontal(
           axis,
-          padding,
-          padding,
-          frame->width - padding,
+          clip.y,
+          clip.x,
+          clip.x + clip.w,
           frame);
       break;
     case AxisPosition::BOTTOM:
       rc = renderAxisHorizontal(
           axis,
-          frame->height - padding,
-          padding,
-          frame->width - padding,
+          clip.y + clip.h,
+          clip.x,
+          clip.x + clip.w,
           frame);
       break;
   }

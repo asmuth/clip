@@ -31,6 +31,7 @@
 #include "element_factory.h"
 #include "element_tree.h"
 #include "graphics/layer.h"
+#include "graphics/layout.h"
 
 namespace plotfx {
 
@@ -70,8 +71,10 @@ ReturnCode buildElementTree(
 ReturnCode renderElements(
     const ElementTree& tree,
     Layer* frame) {
+  Rectangle clip(0, 0, frame->width, frame->height);
+
   for (const auto& e : tree.roots) {
-    if (auto rc = e->draw(frame); !rc.isSuccess()) {
+    if (auto rc = e->draw(clip, frame); !rc.isSuccess()) {
       return rc;
     }
   }

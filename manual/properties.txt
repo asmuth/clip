@@ -1,5 +1,5 @@
-plot
-plot axis-top
-plot axis-right
-plot-axis-bottom
-plot axis-left
+linechart
+    axis-top -> off, auto, manual
+    axis-right -> off, auto, manual
+    axis-bottom -> off auto, manual
+    axis-left -> off, auto, manual

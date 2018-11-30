@@ -48,9 +48,11 @@ struct LinechartConfig {
   AxisDefinition axis_right;
   AxisDefinition axis_bottom;
   AxisDefinition axis_left;
+  double margin_rem;
+  double padding_rem;
 };
 
-ReturnCode draw(const LinechartConfig& config, Layer* frame);
+ReturnCode draw(const LinechartConfig& config, const Rectangle& clip, Layer* frame);
 
 ReturnCode configure(
     const plist::PropertyList& plist,

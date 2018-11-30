@@ -32,6 +32,7 @@
 #include <graphics/path.h>
 #include <graphics/brush.h>
 #include <graphics/text.h>
+#include <graphics/layout.h>
 #include "linechart.h"
 #include "common/config_helpers.h"
 
@@ -192,35 +193,29 @@ void LineChart::render(
   }
 
 }
-
-AnyDomain* LineChart::getDomain(AnyDomain::kDimension dimension) {
-  switch (dimension) {
-    case AnyDomain::DIM_X:
-      return x_domain_.get();
-
-    case AnyDomain::DIM_Y:
-      return y_domain_.get();
-
-    case AnyDomain::DIM_Z:
-      RAISE(kRuntimeError, "LineChart does not have a Z domain");
-      return nullptr;
-  }
-}
-
-void LineChart::setLabels(bool show_labels) {
-  show_labels_ = show_labels;
-}
-
 */
 
 LinechartConfig::LinechartConfig() :
     x_domain(PlotDomain::LINEAR),
-    y_domain(PlotDomain::LINEAR) {}
+    y_domain(PlotDomain::LINEAR),
+    margin_rem(4.0f),
+    padding_rem(0.0f) {}
 
-ReturnCode draw(const LinechartConfig& config, Layer* frame) {
+ReturnCode draw(
+    const LinechartConfig& config,
+    const Rectangle& clip,
+    Layer* layer) {
   // setup domains
   DomainConfig domain_x;
   DomainConfig domain_y;
+
+  // setup layout
+  auto border_box = layout_margin_box(
+      clip,
+      from_rem(*layer, config.margin_rem),
+      from_rem(*layer, config.margin_rem),
+      from_rem(*layer, config.margin_rem),
+      from_rem(*layer, config.margin_rem));
 
   // render axes
   AxisDefinition axis_top;
@@ -228,7 +223,7 @@ ReturnCode draw(const LinechartConfig& config, Layer* frame) {
     return rc;
   }
 
-  if (auto rc = renderAxis(axis_top, AxisPosition::TOP, frame); rc) {
+  if (auto rc = renderAxis(axis_top, border_box, AxisPosition::TOP, layer); rc) {
     return rc;
   }
 
@@ -237,7 +232,7 @@ ReturnCode draw(const LinechartConfig& config, Layer* frame) {
     return rc;
   }
 
-  if (auto rc = renderAxis(axis_right, AxisPosition::RIGHT, frame); rc) {
+  if (auto rc = renderAxis(axis_right, border_box, AxisPosition::RIGHT, layer); rc) {
     return rc;
   }
 
@@ -246,7 +241,7 @@ ReturnCode draw(const LinechartConfig& config, Layer* frame) {
     return rc;
   }
 
-  if (auto rc = renderAxis(axis_bottom, AxisPosition::BOTTOM, frame); rc) {
+  if (auto rc = renderAxis(axis_bottom, border_box, AxisPosition::BOTTOM, layer); rc) {
     return rc;
   }
 
@@ -255,7 +250,7 @@ ReturnCode draw(const LinechartConfig& config, Layer* frame) {
     return rc;
   }
 
-  if (auto rc = renderAxis(axis_left, AxisPosition::LEFT, frame); rc) {
+  if (auto rc = renderAxis(axis_left, border_box, AxisPosition::LEFT, layer); rc) {
     return rc;
   }
 
@@ -320,7 +315,7 @@ ReturnCode configure(const plist::PropertyList& plist, ElementRef* elem) {
   }
 
   auto e = std::make_unique<Element>();
-  e->draw = std::bind(&draw, config, std::placeholders::_1);
+  e->draw = std::bind(&draw, config, std::placeholders::_1, std::placeholders::_2);
   *elem = std::move(e);
 
   return ReturnCode::success();
