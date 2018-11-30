@@ -20,10 +20,10 @@ add_library(plotfxlib STATIC
     charts/linechart.cc
     charts/gridlines.cc
     charts/plot_axis.cc
-    charts/plot_domain.cc
     charts/legenddefinition.cc
     charts/series.cc
     common/config_helpers.cc
+    common/domain.cc
     common/format.cc
     common/plist/plist.cc
     common/plist/plist_parser.cc

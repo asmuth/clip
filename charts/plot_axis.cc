@@ -31,7 +31,7 @@
 #include <assert.h>
 #include <iostream>
 #include <common/config_helpers.h>
-#include <charts/plot_domain.h>
+#include <common/domain.h>
 #include <graphics/text.h>
 #include <graphics/layout.h>
 #include <graphics/brush.h>

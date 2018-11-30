@@ -33,9 +33,9 @@
 #include <plist/plist.h>
 #include <graphics/layer.h>
 #include <graphics/viewport.h>
+#include <common/domain.h>
 #include <common/element.h>
 #include "plot_axis.h"
-#include "plot_domain.h"
 
 namespace plotfx {
 namespace linechart {
