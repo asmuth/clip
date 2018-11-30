@@ -31,6 +31,19 @@
 
 using namespace plotfx;
 namespace plotfx {
+
+void domain_fit(const std::vector<double>& data, DomainConfig* domain) {
+  for (const auto& d : data) {
+    if (!domain->min || *domain->min > d) {
+      domain->min = std::optional<double>(d);
+    }
+    if (!domain->max || *domain->max < d) {
+      domain->max = std::optional<double>(d);
+    }
+  }
+}
+
+
 namespace chart {
 
 /*

@@ -49,6 +49,8 @@ struct DomainConfig {
   std::optional<double> max;
 };
 
+void domain_fit(const std::vector<double>& data, DomainConfig* domain);
+
 namespace chart {
 
 /**

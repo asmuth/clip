@@ -225,7 +225,7 @@ ReturnCode axis_expand_linear_geom(
     AxisDefinition* axis) {
   uint32_t num_ticks = 6; // FIXME make configurable
   double min = domain.min.value_or(0.0f);
-  double max = domain.min.value_or(0.0f);
+  double max = domain.max.value_or(0.0f);
 
   for (size_t i = 0; i < num_ticks; ++i) {
     auto o = (1.0f / (num_ticks - 1)) * i;

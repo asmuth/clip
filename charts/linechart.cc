@@ -208,6 +208,11 @@ ReturnCode draw(
   DomainConfig domain_x;
   DomainConfig domain_y;
 
+  for (const auto& s : config.series) {
+    domain_fit(s.xs, &domain_x);
+    domain_fit(s.ys, &domain_y);
+  }
+
   // setup layout
   auto border_box = layout_margin_box(
       clip,
@@ -316,6 +321,7 @@ ReturnCode configureSeries(const plist::Property& prop, LinechartConfig* config)
     return rc;
   }
 
+  config->series.emplace_back(std::move(series));
   return OK;
 }
 
