@@ -49,6 +49,7 @@ struct DomainConfig {
   bool inverted;
   std::optional<double> min;
   std::optional<double> max;
+  double padding;
 };
 
 void domain_fit(const std::vector<double>& data, DomainConfig* domain);

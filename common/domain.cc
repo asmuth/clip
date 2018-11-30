@@ -33,7 +33,8 @@ namespace plotfx {
 
 DomainConfig::DomainConfig() :
     kind(DomainKind::LINEAR),
-    inverted(false) {}
+    inverted(false),
+    padding(0.0f) {}
 
 void domain_fit(const std::vector<double>& data, DomainConfig* domain) {
   bool fit_min = !domain->min;
@@ -46,6 +47,17 @@ void domain_fit(const std::vector<double>& data, DomainConfig* domain) {
     if (fit_max && (!domain->max || *domain->max < d)) {
       domain->max = std::optional<double>(d);
     }
+  }
+
+  auto range = domain->max.value_or(0.0f) - domain->min.value_or(0.0f);
+  if (fit_max) {
+    domain->max = std::optional<double>(
+        domain->max.value_or(0.0f) + range * domain->padding);
+  }
+
+  if (fit_min) {
+    domain->min = std::optional<double>(
+        domain->min.value_or(0.0f) - range * domain->padding);
   }
 }
 

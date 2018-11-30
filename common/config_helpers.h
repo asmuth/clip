@@ -93,6 +93,10 @@ ReturnCode configure_colour(
     const plist::Property& prop,
     Colour* value);
 
+ReturnCode configure_float(
+    const plist::Property& prop,
+    double* value);
+
 ReturnCode configure_float_opt(
     const plist::Property& prop,
     std::optional<double>* value);

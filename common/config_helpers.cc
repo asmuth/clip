@@ -93,6 +93,25 @@ ReturnCode configure_colour(
   return ReturnCode::error("EARG", "invalid colour");
 }
 
+ReturnCode configure_float(
+    const plist::Property& prop,
+    double* value) {
+  if (prop.size() != 1) {
+    return ReturnCode::errorf(
+        "EARG",
+        "incorrect number of arguments; expected: 1, got: $0",
+        prop.size());
+  }
+
+  try {
+    *value = std::stod(prop[0].data);
+  } catch (... ) {
+    return ERROR_INVALID_ARGUMENT;
+  }
+
+  return OK;
+}
+
 ReturnCode configure_float_opt(
     const plist::Property& prop,
     std::optional<double>* value) {

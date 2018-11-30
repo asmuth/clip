@@ -55,7 +55,9 @@ LinechartConfig::LinechartConfig() :
         Measure(Unit::REM, 4.0f),
         Measure(Unit::REM, 4.0f),
         Measure(Unit::REM, 4.0f),
-        Measure(Unit::REM, 4.0f)}) {}
+        Measure(Unit::REM, 4.0f)}) {
+  domain_y.padding = 0.1f;
+}
 
 ReturnCode drawSeries(
     const LinechartSeries& series,
@@ -198,6 +200,8 @@ ReturnCode configure(const plist::PropertyList& plist, ElementRef* elem) {
     {"axis-right", std::bind(&parseAxisModeProp, std::placeholders::_1, &config.axis_right.mode)},
     {"axis-bottom", std::bind(&parseAxisModeProp, std::placeholders::_1, &config.axis_bottom.mode)},
     {"axis-left", std::bind(&parseAxisModeProp, std::placeholders::_1, &config.axis_left.mode)},
+    {"xdomain-padding", std::bind(&configure_float, std::placeholders::_1, &config.domain_x.padding)},
+    {"ydomain-padding", std::bind(&configure_float, std::placeholders::_1, &config.domain_y.padding)},
     {"xmin", std::bind(&configure_float_opt, std::placeholders::_1, &config.domain_x.min)},
     {"xmax", std::bind(&configure_float_opt, std::placeholders::_1, &config.domain_x.max)},
     {"ymin", std::bind(&configure_float_opt, std::placeholders::_1, &config.domain_y.min)},
