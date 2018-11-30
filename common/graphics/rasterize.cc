@@ -36,8 +36,8 @@ namespace plotfx {
 Rasterizer::Rasterizer(
     uint32_t width,
     uint32_t height,
-    double dpi_) :
-    dpi(dpi_),
+    MeasureTable measures_) :
+    measures(measures_),
     ft_ready(false) {
   if (!FT_Init_FreeType(&ft)) {
     ft_ready = true;
@@ -76,7 +76,8 @@ Status Rasterizer::strokePath(
      style.colour.blue(),
      style.colour.alpha());
 
-  cairo_set_line_width(cr_ctx, style.line_width);
+  cairo_set_line_width(cr_ctx, to_px(measures, style.line_width));
+
   for (size_t i = 0; i < point_count; ++i) {
     const auto& cmd = path_data[i];
     switch (cmd.command) {
@@ -108,6 +109,7 @@ Status Rasterizer::drawTextGlyphs(
     return ERROR;
   }
 
+  auto dpi = measures.dpi;
   if (FT_Set_Char_Size(ft_font, 0, font_info.font_size * 64, dpi, dpi)) {
     FT_Done_Face(ft_font);
     return ERROR;

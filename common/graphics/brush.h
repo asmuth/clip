@@ -33,6 +33,7 @@
 #include <stdint.h>
 #include "colour.h"
 #include "path.h"
+#include "measure.h"
 
 namespace plotfx {
 class Layer;
@@ -42,12 +43,12 @@ enum class StrokeLineCap { BUTT, SQUARE, ROUND};
 
 struct StrokeStyle {
   StrokeStyle() :
-    line_width(1.0),
+    line_width(Unit::PT, 1.0),
     line_join(StrokeLineJoin::MITER),
     line_cap(StrokeLineCap::SQUARE),
     colour(Colour::fromRGB(0, 0, 0)) {}
 
-  float line_width;
+  Measure line_width;
   StrokeLineJoin line_join;
   StrokeLineCap line_cap;
   Colour colour;

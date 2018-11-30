@@ -1,7 +1,6 @@
 /**
  * This file is part of the "plotfx" project
  *   Copyright (c) 2018 Paul Asmuth
- *   Copyright (c) 2014 Paul Asmuth, Google Inc.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -28,44 +27,40 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-#pragma once
-#include <stdlib.h>
-#include <vector>
-#include <string>
-
-#include "colour.h"
-#include "plotfx.h"
-#include "text_shaper.h"
-#include "rasterize.h"
-#include "image.h"
 #include "measure.h"
 
 namespace plotfx {
 
-struct Layer {
-  Layer();
-  Layer(double width, double height, double rem = 12, double dpi = 96);
-  ~Layer();
-  Layer(const Layer&) = delete;
-  Layer& operator=(const Layer&) = delete;
+Measure::Measure() : Measure(Unit::UNIT, 0.0f) {}
 
-  Status writeToFile(const std::string& path);
-  Status loadFromFile(const std::string& path) const;
+Measure::Measure(
+    Unit _unit,
+    double _value) :
+    unit(_unit),
+    value(_value) {}
 
-  void clear(const Colour& c);
+Measure::operator double() const {
+  return value;
+}
 
-  double width;
-  double height;
-  MeasureTable measures;
-  //Image pixmap;
-  text::TextShaper text_shaper;
-  Rasterizer rasterizer;
-};
+Measure to_px(const MeasureTable& t, const Measure& v) {
+  double v_px;
 
-double from_rem(const Layer& l, double v);
-double from_px(const Layer& l, double v);
-double from_pt(const Layer& l, double v);
-double to_pt(const Layer& l, double v);
+  switch (v.unit) {
+    case Unit::UNIT:
+    case Unit::PX:
+      v_px = v.value;
+      break;
+    case Unit::PT:
+      v_px = (v.value / 72.0) * t.dpi;
+      break;
+    case Unit::REM:
+      v_px = ((v.value * t.rem) / 72.0) * t.dpi;
+      break;
+  }
+
+  return Measure{.unit = Unit::PX, .value = v_px};
+}
 
 } // namespace plotfx
 

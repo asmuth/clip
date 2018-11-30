@@ -1,7 +1,6 @@
 /**
  * This file is part of the "plotfx" project
  *   Copyright (c) 2018 Paul Asmuth
- *   Copyright (c) 2014 Paul Asmuth, Google Inc.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -33,39 +32,26 @@
 #include <vector>
 #include <string>
 
-#include "colour.h"
-#include "plotfx.h"
-#include "text_shaper.h"
-#include "rasterize.h"
-#include "image.h"
-#include "measure.h"
-
 namespace plotfx {
 
-struct Layer {
-  Layer();
-  Layer(double width, double height, double rem = 12, double dpi = 96);
-  ~Layer();
-  Layer(const Layer&) = delete;
-  Layer& operator=(const Layer&) = delete;
-
-  Status writeToFile(const std::string& path);
-  Status loadFromFile(const std::string& path) const;
-
-  void clear(const Colour& c);
-
-  double width;
-  double height;
-  MeasureTable measures;
-  //Image pixmap;
-  text::TextShaper text_shaper;
-  Rasterizer rasterizer;
+enum class Unit {
+  UNIT, PT, PX, REM
 };
 
-double from_rem(const Layer& l, double v);
-double from_px(const Layer& l, double v);
-double from_pt(const Layer& l, double v);
-double to_pt(const Layer& l, double v);
+struct MeasureTable {
+  double dpi;
+  double rem;
+};
+
+struct Measure {
+  Measure();
+  Measure(Unit unit, double value);
+  Unit unit;
+  double value;
+  operator double() const;
+};
+
+Measure to_px(const MeasureTable& t, const Measure& v);
 
 } // namespace plotfx
 

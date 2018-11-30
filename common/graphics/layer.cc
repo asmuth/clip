@@ -37,15 +37,14 @@ namespace plotfx {
 Layer::Layer(
     double w,
     double h,
-    double rem_ /* = 12 */,
-    double dpi_ /* = 96 */) :
+    double rem /* = 12 */,
+    double dpi /* = 96 */) :
     width(w),
     height(h),
-    dpi(dpi_),
-    rem(rem_),
+    measures{.dpi = dpi, .rem = rem},
     //pixmap(PixelFormat::RGBA8, w, h),
     text_shaper(dpi),
-    rasterizer(w, h, dpi) {}
+    rasterizer(w, h, measures) {}
 
 Layer::~Layer() {}
 
@@ -78,7 +77,7 @@ void Layer::clear(const Colour& c) {
 }
 
 double from_rem(const Layer& l, double v) {
-  return from_pt(l, l.rem) * v;
+  return from_pt(l, l.measures.rem) * v;
 }
 
 double from_px(const Layer& l, double v) {
@@ -86,11 +85,11 @@ double from_px(const Layer& l, double v) {
 }
 
 double from_pt(const Layer& l, double v) {
-  return (v / 72.0) * l.dpi;
+  return (v / 72.0) * l.measures.dpi;
 }
 
 double to_pt(const Layer& l, double v) {
-  return (v / l.dpi) * 72;
+  return (v / l.measures.dpi) * 72;
 }
 
 } // namespace plotfx

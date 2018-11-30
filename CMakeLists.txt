@@ -32,6 +32,7 @@ add_library(plotfxlib STATIC
     common/graphics/image.cc
     common/graphics/layer.cc
     common/graphics/layout.cc
+    common/graphics/measure.cc
     common/graphics/text.cc
     common/graphics/text_layout.cc
     common/graphics/text_shaper.cc
