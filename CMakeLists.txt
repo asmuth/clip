@@ -24,6 +24,7 @@ add_library(plotfxlib STATIC
     charts/legenddefinition.cc
     charts/series.cc
     common/config_helpers.cc
+    common/format.cc
     common/plist/plist.cc
     common/plist/plist_parser.cc
     common/graphics/path.cc

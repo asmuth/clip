@@ -1,6 +1,6 @@
 /**
  * This file is part of the "plotfx" project
- *   Copyright (c) 2011-2014 Paul Asmuth, Google Inc.
+ *   Copyright (c) 2018 Paul Asmuth
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -27,76 +27,33 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-#pragma once
-#include <utility>
-#include <string>
-#include <vector>
-#include <plist/plist.h>
-#include <graphics/layer.h>
-#include <graphics/viewport.h>
-#include <utils/return_code.h>
-#include <common/format.h>
+#include <sstream>
+#include <iomanip>
+#include "format.h"
 
 namespace plotfx {
-struct DomainConfig;
-struct Rectangle;
 
-enum class AxisPosition {
-  TOP,
-  RIGHT,
-  BOTTOM,
-  LEFT,
-  CENTER_HORIZ,
-  CENTER_VERT
-};
+Formatter format_decimal_scientific(size_t precision) {
+  Formatter f;
+  f.format_number = [precision] (double v) -> std::string {
+    std::stringstream s;
+    s << std::scientific << std::setprecision(precision) << v;
+    return s.str();
+  };
 
-enum class AxisMode {
-  OFF,
-  AUTO,
-  MANUAL
-};
+  return f;
+}
 
-enum class AxisLabelPlacement {
-  LEFT,
-  RIGHT,
-  TOP,
-  BOTTOM,
-  INSIDE,
-  OUTSIDE,
-};
+Formatter format_decimal_fixed(size_t precision) {
+  Formatter f;
+  f.format_number = [precision] (double v) -> std::string {
+    std::stringstream s;
+    s << std::fixed << std::setprecision(precision) << v;
+    return s.str();
+  };
 
-struct AxisDefinition {
-  AxisDefinition();
-  AxisMode mode;
-  std::string title;
-  std::vector<double> ticks;
-  std::vector<std::pair<double, std::string>> labels;
-  AxisLabelPlacement label_placement;
-  Formatter label_formatter;
-  double label_padding_rem;
-  double label_font_size_rem;
-  double tick_length_rem;
-};
-
-ReturnCode parseAxisMode(
-    const std::string& str,
-    AxisMode* value);
-
-ReturnCode parseAxisModeProp(
-    const plist::Property& prop,
-    AxisMode* value);
-
-Status renderAxis(
-    const AxisDefinition& axis,
-    const Rectangle& clip,
-    AxisPosition axis_position,
-    Layer* frame);
-
-ReturnCode axis_expand_auto(
-    const AxisDefinition& in,
-    const AxisPosition& pos,
-    const DomainConfig& domain,
-    AxisDefinition* out);
+  return f;
+}
 
 } // namespace plotfx
 

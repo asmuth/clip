@@ -1,6 +1,6 @@
 /**
  * This file is part of the "plotfx" project
- *   Copyright (c) 2011-2014 Paul Asmuth, Google Inc.
+ *   Copyright (c) 2018 Paul Asmuth
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -28,75 +28,21 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 #pragma once
-#include <utility>
-#include <string>
-#include <vector>
+#include <unordered_map>
+#include <optional>
 #include <plist/plist.h>
-#include <graphics/layer.h>
-#include <graphics/viewport.h>
-#include <utils/return_code.h>
-#include <common/format.h>
+#include "utils/return_code.h"
 
 namespace plotfx {
-struct DomainConfig;
-struct Rectangle;
 
-enum class AxisPosition {
-  TOP,
-  RIGHT,
-  BOTTOM,
-  LEFT,
-  CENTER_HORIZ,
-  CENTER_VERT
+struct Formatter {
+  std::function<std::string (double)> format_number;
+  std::function<std::string (const std::string&)> format_string;
 };
 
-enum class AxisMode {
-  OFF,
-  AUTO,
-  MANUAL
-};
+Formatter format_decimal_scientific(size_t precision);
 
-enum class AxisLabelPlacement {
-  LEFT,
-  RIGHT,
-  TOP,
-  BOTTOM,
-  INSIDE,
-  OUTSIDE,
-};
-
-struct AxisDefinition {
-  AxisDefinition();
-  AxisMode mode;
-  std::string title;
-  std::vector<double> ticks;
-  std::vector<std::pair<double, std::string>> labels;
-  AxisLabelPlacement label_placement;
-  Formatter label_formatter;
-  double label_padding_rem;
-  double label_font_size_rem;
-  double tick_length_rem;
-};
-
-ReturnCode parseAxisMode(
-    const std::string& str,
-    AxisMode* value);
-
-ReturnCode parseAxisModeProp(
-    const plist::Property& prop,
-    AxisMode* value);
-
-Status renderAxis(
-    const AxisDefinition& axis,
-    const Rectangle& clip,
-    AxisPosition axis_position,
-    Layer* frame);
-
-ReturnCode axis_expand_auto(
-    const AxisDefinition& in,
-    const AxisPosition& pos,
-    const DomainConfig& domain,
-    AxisDefinition* out);
+Formatter format_decimal_fixed(size_t precision);
 
 } // namespace plotfx
 

@@ -41,6 +41,7 @@ namespace plotfx {
 AxisDefinition::AxisDefinition() :
     mode(AxisMode::AUTO),
     label_placement(AxisLabelPlacement::OUTSIDE),
+    label_formatter(format_decimal_fixed(1)),
     label_padding_rem(1.0f),
     label_font_size_rem(1.0f),
     tick_length_rem(0.4f) {}
@@ -242,7 +243,10 @@ ReturnCode axis_expand_linear_geom(
     auto o = (1.0f / (num_ticks - 1)) * i;
     auto v = min + (max - min) * o;
     axis->ticks.emplace_back(o);
-    axis->labels.emplace_back(o, std::to_string(v)); // FIXME formatter
+
+    if (axis->label_formatter.format_number) {
+      axis->labels.emplace_back(o, axis->label_formatter.format_number(v));
+    }
   }
 
   return OK;
