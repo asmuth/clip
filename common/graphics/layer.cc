@@ -43,15 +43,20 @@ Layer::Layer(
     height(h),
     dpi(dpi_),
     rem(rem_),
-    pixmap(PixelFormat::RGBA8, w, h),
+    //pixmap(PixelFormat::RGBA8, w, h),
     text_shaper(dpi),
-    rasterizer(&pixmap, dpi) {}
+    rasterizer(w, h, dpi) {}
 
 Layer::~Layer() {}
 
 Status Layer::writeToFile(const std::string& path) {
   if (StringUtil::endsWith(path, ".png")) {
-    return pngWriteImageFile(pixmap, path);
+    auto rc = cairo_surface_write_to_png(rasterizer.cr_surface, path.c_str());
+    if (rc == CAIRO_STATUS_SUCCESS) {
+      return OK;
+    } else {
+      return ERROR_IO;
+    }
   }
 
   return ERROR_INVALID_ARGUMENT;
@@ -62,7 +67,14 @@ Status Layer::loadFromFile(const std::string& path) const {
 }
 
 void Layer::clear(const Colour& c) {
-  pixmap.clear(c);
+  cairo_set_source_rgba(
+      rasterizer.cr_ctx,
+      c.red(),
+      c.green(),
+      c.blue(),
+      c.alpha());
+
+  cairo_paint(rasterizer.cr_ctx);
 }
 
 double from_rem(const Layer& l, double v) {

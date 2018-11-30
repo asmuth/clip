@@ -57,7 +57,7 @@ struct Layer {
   double height;
   double rem;
   double dpi;
-  Image pixmap;
+  //Image pixmap;
   text::TextShaper text_shaper;
   Rasterizer rasterizer;
 };

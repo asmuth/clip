@@ -53,7 +53,7 @@ class Image;
 class Rasterizer {
 public:
 
-  Rasterizer(Image* pixmap, double dpi);
+  Rasterizer(uint32_t width, uint32_t height, double dpi);
   ~Rasterizer();
   Rasterizer(const Rasterizer&) = delete;
   Rasterizer& operator=(const Rasterizer&) = delete;
@@ -69,7 +69,6 @@ public:
       size_t glyph_count);
 
   double dpi;
-  Image* pixmap;
   FT_Library ft;
   bool ft_ready;
   cairo_surface_t* cr_surface;

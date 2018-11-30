@@ -27,15 +27,16 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+#include <iostream>
 #include <graphics/rasterize.h>
 #include <graphics/image.h>
 
 namespace plotfx {
 
 Rasterizer::Rasterizer(
-    Image* pixmap_,
+    uint32_t width,
+    uint32_t height,
     double dpi_) :
-    pixmap(pixmap_),
     dpi(dpi_),
     ft_ready(false) {
   if (!FT_Init_FreeType(&ft)) {
@@ -43,9 +44,9 @@ Rasterizer::Rasterizer(
   }
 
   cr_surface = cairo_image_surface_create(
-      CAIRO_FORMAT_A8,
-      pixmap->getWidth(),
-      pixmap->getHeight());
+      CAIRO_FORMAT_ARGB32,
+      width,
+      height);
 
   cr_ctx = cairo_create(cr_surface);
 }
@@ -60,7 +61,6 @@ Rasterizer::~Rasterizer() {
 }
 
 /* rasterize using libcairo */
-/* FIXME: this is stupid.... */
 Status Rasterizer::strokePath(
     const PathData* path_data,
     size_t point_count,
@@ -91,103 +91,8 @@ Status Rasterizer::strokePath(
 
   cairo_stroke(cr_ctx);
 
-  auto cr_bitmap = cairo_image_surface_get_data(cr_surface);
-  auto width = pixmap->getWidth();
-  auto height = pixmap->getHeight();
-  for (uint32_t y = 0; y < height; ++y) {
-    for (uint32_t x = 0; x < width; ++x) {
-      auto v = 1.0 - (cr_bitmap[y * width + x] / 255.0);
-
-      if (v == 1.0f) {
-        continue;
-      }
-
-      // FIXME alpha blend instead
-      pixmap->setPixel(x, y, Colour::fromRGBA(v, v, v, 1));
-    }
-  }
-}
-
-/* rasterize path using Maxim Shemanarev's libagg */
-/*
-Status Rasterizer::rasterizePath(
-    const PathData* point_data,
-    size_t point_count) {
-  if (point_count < 2) {
-    return ERROR_INVALID_ARGUMENT;
-  }
-
-  agg::rasterizer_scanline_aa<> rasterizer;
-  rasterizer.reset();
-  rasterizer.filling_rule(agg::fill_even_odd);
-  //rasterizer.gamma(agg::gamma_power(m_gamma.value() * 2.0));
-
-  agg::path_storage agg_path;
-  for (size_t i = 0; i < point_count; ++i) {
-    const auto& d = point_data[i];
-
-    switch (d.command) {
-      case PathCommand::MOVE_TO:
-        printf("...move %f, %f\n", d.coefficients[0], d.coefficients[1]);
-        rasterizer.move_to(d.coefficients[0], d.coefficients[1]);
-        break;
-      case PathCommand::LINE_TO:
-        printf("...lien %f, %f\n", d.coefficients[0], d.coefficients[1]);
-        rasterizer.line_to(d.coefficients[0], d.coefficients[1]);
-        break;
-      case PathCommand::QUADRATIC_CURVE_TO:
-        //agg_path.curve3(
-        //    d.coefficients[0],
-        //    d.coefficients[1],
-        //    d.coefficients[2],
-        //    d.coefficients[3]);
-        break;
-      case PathCommand::CUBIC_CURVE_TO:
-        //agg_path.curve4(
-        //    d.coefficients[0],
-        //    d.coefficients[1],
-        //    d.coefficients[2],
-        //    d.coefficients[3],
-        //    d.coefficients[4],
-        //    d.coefficients[5]);
-        break;
-      case PathCommand::CLOSE:
-        agg_path.close_polygon();
-        break;
-    }
-  }
-
-  printf("... %u, %u\n", rasterizer.min_x(), rasterizer.max_x());
-
-  //agg::conv_curve<agg::path_storage> agg_path_polyline(agg_path);
-  //rasterizer.add_path(agg_path_polyline);
-
-  //agg::scanline_u8 scanline;
-  //scanline.reset(rasterizer.min_x(), 200);
-  //while (rasterizer.sweep_scanline(scanline)) {
-  //  for (size_t j = 0; j < scanline.num_spans(); ++j) {
-  //    //auto span = scanline.begin() + j;
-
-  //    //for (size_t i = 0; i < std::abs(span->len); ++i) {
-  //    //  double v = span->covers[i] / 255.0f;
-  //    //  uint32_t ox = span->x + i;
-  //    //  uint32_t oy = scanline.y();
-
-  //    //  if (ox >= pixmap->getWidth() || oy >= pixmap->getHeight()) {
-  //    //    continue;
-  //    //  }
-
-  //    //  printf("setpixel %u %u\n", ox, oy);
-
-  //    //  // FIXME alpha blend instead
-  //    //  pixmap->setPixel(ox, oy, Colour::fromRGBA(v, v, v, 1));
-  //    //}
-  //  }
-  //}
-
   return OK;
 }
-*/
 
 Status Rasterizer::drawTextGlyphs(
     const FontInfo& font_info,
@@ -208,30 +113,39 @@ Status Rasterizer::drawTextGlyphs(
     return ERROR;
   }
 
+  auto cairo_face = cairo_ft_font_face_create_for_ft_face(ft_font, 0);
+  cairo_set_font_face(cr_ctx, cairo_face);
+  cairo_set_font_size(cr_ctx, (font_info.font_size / 72.0) * dpi);
+
+  auto cairo_glyphs = cairo_glyph_allocate(glyph_count);
   for (int i = 0; i < glyph_count; ++i) {
     const auto& g = glyphs[i];
+    //FT_Load_Glyph(ft_font, g.codepoint, FT_LOAD_DEFAULT);
 
-    // FIXME also cache this
-    FT_Load_Glyph(ft_font, g.codepoint, FT_LOAD_DEFAULT);
-    FT_Render_Glyph(ft_font->glyph, FT_RENDER_MODE_NORMAL);
 
-    const auto& ft_bitmap = ft_font->glyph->bitmap;
-    for (uint32_t y = 0; y < ft_bitmap.rows; ++y) {
-      for (uint32_t x = 0; x < ft_bitmap.width; ++x) {
-        auto v = 1.0 - (ft_bitmap.buffer[y * ft_bitmap.width + x] / 255.0);
+    cairo_glyphs[i].index = g.codepoint;
+    cairo_glyphs[i].x = g.x;
+    cairo_glyphs[i].y = g.y;
 
-        auto ox = x + g.x + ft_font->glyph->bitmap_left;
-        auto oy = y + g.y - ft_font->glyph->bitmap_top;
-
-        if (ox >= pixmap->getWidth() || oy >= pixmap->getHeight()) {
-          continue;
-        }
-
-        // FIXME alpha blend instead
-        pixmap->setPixel(ox, oy, Colour::fromRGBA(v, v, v, 1));
-      }
-    }
+    //// render with freetype
+    // FT_Render_Glyph(ft_font->glyph, FT_RENDER_MODE_NORMAL);
+    // const auto& ft_bitmap = ft_font->glyph->bitmap;
+    // for (uint32_t y = 0; y < ft_bitmap.rows; ++y) {
+    //   for (uint32_t x = 0; x < ft_bitmap.width; ++x) {
+    //     auto v = 1.0 - (ft_bitmap.buffer[y * ft_bitmap.width + x] / 255.0);
+    //     auto ox = x + g.x + ft_font->glyph->bitmap_left;
+    //     auto oy = y + g.y - ft_font->glyph->bitmap_top;
+    //     if (ox >= pixmap->getWidth() || oy >= pixmap->getHeight()) {
+    //       continue;
+    //     }
+    //     pixmap->setPixel(ox, oy, Colour::fromRGBA(v, v, v, 1));
+    //   }
+    // }
   }
+
+  cairo_show_glyphs(cr_ctx, cairo_glyphs, glyph_count);
+  cairo_glyph_free(cairo_glyphs);
+  cairo_font_face_destroy(cairo_face);
 
   FT_Done_Face(ft_font);
   return OK;

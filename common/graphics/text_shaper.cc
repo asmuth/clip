@@ -28,6 +28,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 #include <graphics/text_shaper.h>
+#include <iostream>
 
 namespace plotfx {
 namespace text {
@@ -80,7 +81,7 @@ Status TextShaper::shapeText(
   auto glyph_infos = hb_buffer_get_glyph_infos(hb_buf, &glyph_count);
   auto glyph_positions = hb_buffer_get_glyph_positions(hb_buf, &glyph_count);
   for (size_t i = 0; i < glyph_count; ++i) {
-    GlyphInfo  g;
+    GlyphInfo g;
     g.codepoint = glyph_infos[i].codepoint;
     g.advance_x = glyph_positions[i].x_advance / 64.0;
     g.advance_y = glyph_positions[i].y_advance / 64.0;
