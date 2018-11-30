@@ -31,6 +31,7 @@
 #include <utility>
 #include <string>
 #include <vector>
+#include <plist/plist.h>
 #include <graphics/layer.h>
 #include <graphics/viewport.h>
 #include <utils/return_code.h>
@@ -77,6 +78,10 @@ struct AxisDefinition {
 
 ReturnCode parseAxisMode(
     const std::string& str,
+    AxisMode* value);
+
+ReturnCode parseAxisModeProp(
+    const plist::Property& prop,
     AxisMode* value);
 
 Status renderAxis(

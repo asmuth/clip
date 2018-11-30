@@ -60,34 +60,6 @@ inline ReturnCode parseAll(
 }
 
 template <typename T>
-using PropertyDefinitions = std::unordered_map<
-    std::string,
-    std::function<ReturnCode (const plist::Property&, T*)>>;
-
-template<typename T>
-ReturnCode configureProperties(
-    const plist::PropertyList& plist,
-    const PropertyDefinitions<T>& pdefs,
-    T* config) {
-  for (const auto& prop : plist) {
-    const auto& pdef = pdefs.find(prop.name);
-    if (pdef != pdefs.end()) {
-      if (auto rc = pdef->second(prop, config); !rc.isSuccess()) {
-        return ReturnCode::errorf(
-            "EPARSE",
-            "error while parsing property '$0': $1",
-            prop.name,
-            rc.getMessage());
-
-        return rc;
-      }
-    }
-  }
-
-  return ReturnCode::success();
-}
-
-template <typename T>
 using EnumDefinitions = std::unordered_map<std::string, T>;
 
 template<typename T>

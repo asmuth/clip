@@ -57,6 +57,17 @@ ReturnCode parseAxisMode(
   return parseEnum(defs, str, value);
 }
 
+ReturnCode parseAxisModeProp(const plist::Property& prop, AxisMode* value) {
+  if (prop.size() != 1) {
+    return ReturnCode::errorf(
+        "EARG",
+        "incorrect number of arguments; expected: 1, got: $0",
+        prop.size());
+  }
+
+  return parseAxisMode(prop[0], value);
+}
+
 static Status renderAxisVertical(
     const AxisDefinition& axis_config,
     double x,

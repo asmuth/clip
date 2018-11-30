@@ -149,51 +149,6 @@ ReturnCode draw(
   return ReturnCode::success();
 }
 
-ReturnCode configureAxisTop(const plist::Property& prop, LinechartConfig* config) {
-  if (prop.size() != 1) {
-    return ReturnCode::errorf(
-        "EARG",
-        "incorrect number of arguments; expected: 1, got: $0",
-        prop.size());
-  }
-
-  return parseAxisMode(prop[0], &config->axis_top.mode);
-}
-
-ReturnCode configureAxisRight(const plist::Property& prop, LinechartConfig* config) {
-  if (prop.size() != 1) {
-    return ReturnCode::errorf(
-        "EARG",
-        "incorrect number of arguments; expected: 1, got: $0",
-        prop.size());
-  }
-
-  return parseAxisMode(prop[0], &config->axis_right.mode);
-}
-
-ReturnCode configureAxisBottom(const plist::Property& prop, LinechartConfig* config) {
-  if (prop.size() != 1) {
-    return ReturnCode::errorf(
-        "EARG",
-        "incorrect number of arguments; expected: 1, got: $0",
-        prop.size());
-  }
-
-  return parseAxisMode(prop[0], &config->axis_bottom.mode);
-}
-
-ReturnCode configureAxisLeft(const plist::Property& prop, LinechartConfig* config) {
-  if (prop.size() != 1) {
-    return ReturnCode::errorf(
-        "EARG",
-        "incorrect number of arguments; expected: 1, got: $0",
-        prop.size());
-  }
-
-  return parseAxisMode(prop[0], &config->axis_left.mode);
-}
-
-
 ReturnCode configureSeries(const plist::Property& prop, LinechartConfig* config) {
   if (!prop.child) {
     return ERROR_INVALID_ARGUMENT;
@@ -214,16 +169,16 @@ ReturnCode configureSeries(const plist::Property& prop, LinechartConfig* config)
 }
 
 ReturnCode configure(const plist::PropertyList& plist, ElementRef* elem) {
-  static const PropertyDefinitions<LinechartConfig> pdefs = {
-    {"axis-top", &configureAxisTop},
-    {"axis-right", &configureAxisRight},
-    {"axis-bottom", &configureAxisBottom},
-    {"axis-left", &configureAxisLeft},
-    {"series", &configureSeries},
+  LinechartConfig config;
+  static const ParserDefinitions pdefs = {
+    {"axis-top", std::bind(&parseAxisModeProp, std::placeholders::_1, &config.axis_top.mode)},
+    {"axis-right", std::bind(&parseAxisModeProp, std::placeholders::_1, &config.axis_right.mode)},
+    {"axis-bottom", std::bind(&parseAxisModeProp, std::placeholders::_1, &config.axis_bottom.mode)},
+    {"axis-left", std::bind(&parseAxisModeProp, std::placeholders::_1, &config.axis_left.mode)},
+    {"series", std::bind(&configureSeries, std::placeholders::_1, &config)},
   };
 
-  LinechartConfig config;
-  if (auto rc = configureProperties(plist, pdefs, &config); !rc.isSuccess()) {
+  if (auto rc = parseAll(plist, pdefs); !rc.isSuccess()) {
     return rc;
   }
 

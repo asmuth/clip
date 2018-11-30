@@ -3,3 +3,6 @@ linechart
     axis-right -> off, auto, manual
     axis-bottom -> off auto, manual
     axis-left -> off, auto, manual
+    series
+        xs -> data
+        ys -> data
