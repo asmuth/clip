@@ -55,6 +55,11 @@ struct StrokeStyle {
 
 void strokePath(
     Layer* layer,
+    const Path& path,
+    const StrokeStyle& style);
+
+void strokePath(
+    Layer* layer,
     const PathData* path_data,
     size_t path_data_count,
     const StrokeStyle& style);

@@ -35,6 +35,13 @@ namespace plotfx {
 
 void strokePath(
     Layer* layer,
+    const Path& path,
+    const StrokeStyle& style) {
+  strokePath(layer, path.data(), path.size(), style);
+}
+
+void strokePath(
+    Layer* layer,
     const PathData* point_data,
     size_t point_count,
     const StrokeStyle& style) {
