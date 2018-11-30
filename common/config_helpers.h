@@ -31,6 +31,7 @@
 #include <unordered_map>
 #include <plist/plist.h>
 #include <graphics/measure.h>
+#include <graphics/colour.h>
 #include "utils/return_code.h"
 
 namespace plotfx {
@@ -84,6 +85,10 @@ ReturnCode parseDataSeries(
 ReturnCode parseMeasureProp(
     const plist::Property& prop,
     Measure* value);
+
+ReturnCode configure_colour(
+    const plist::Property& prop,
+    Colour* value);
 
 } // namespace plotfx
 

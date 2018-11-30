@@ -62,5 +62,24 @@ ReturnCode parseMeasureProp(
   return parse_measure(prop[0], value);
 }
 
+ReturnCode configure_colour(
+    const plist::Property& prop,
+    Colour* value) {
+  if (prop.size() != 1) {
+    return ReturnCode::errorf(
+        "EARG",
+        "incorrect number of arguments; expected: 1, got: $0",
+        prop.size());
+  }
+
+  if (prop.size() > 0 && StringUtil::beginsWith(prop[0].data, "#")) {
+    if (value->parse(prop[0].data)) {
+      return OK;
+    }
+  }
+
+  return ReturnCode::error("EARG", "invalid colour");
+}
+
 } // namespace plotfx
 
