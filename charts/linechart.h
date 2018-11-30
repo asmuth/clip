@@ -41,8 +41,11 @@ namespace plotfx {
 namespace linechart {
 
 struct LinechartSeries {
+  LinechartSeries();
   std::vector<double> xs;
   std::vector<double> ys;
+  Measure line_width;
+  Colour line_colour;
 };
 
 struct LinechartConfig {
