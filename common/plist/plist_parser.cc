@@ -192,23 +192,23 @@ bool PropertyListParser::getToken(
   }
 
   /* skip comments */
-  while (input_cur_ < input_end_ && *input_cur_ == '#') {
-    while (input_cur_ < input_end_) {
-      if (*input_cur_++ == '\n') {
-        break;
-      }
-    }
+  //while (input_cur_ < input_end_ && *input_cur_ == '#') {
+  //  while (input_cur_ < input_end_) {
+  //    if (*input_cur_++ == '\n') {
+  //      break;
+  //    }
+  //  }
 
-    while (input_cur_ < input_end_) {
-      if (*input_cur_ == ' ' ||
-          *input_cur_ == '\t' ||
-          *input_cur_ == '\r') {
-        ++input_cur_;
-      } else {
-        break;
-      }
-    }
-  }
+  //  while (input_cur_ < input_end_) {
+  //    if (*input_cur_ == ' ' ||
+  //        *input_cur_ == '\t' ||
+  //        *input_cur_ == '\r') {
+  //      ++input_cur_;
+  //    } else {
+  //      break;
+  //    }
+  //  }
+  //}
 
   if (input_cur_ >= input_end_) {
     return false;
@@ -313,7 +313,6 @@ bool PropertyListParser::getToken(
     goto return_token;
   } else {
     while (
-        *input_cur_ != '#' &&
         *input_cur_ != ' ' &&
         *input_cur_ != '\t' &&
         *input_cur_ != '\n' &&
