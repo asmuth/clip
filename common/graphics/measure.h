@@ -35,7 +35,7 @@
 namespace plotfx {
 
 enum class Unit {
-  UNIT, PT, PX, REM
+  UNIT, PX, PT, REM
 };
 
 struct MeasureTable {
@@ -50,6 +50,11 @@ struct Measure {
   double value;
   operator double() const;
 };
+
+Measure from_unit(double v);
+Measure from_px(double v);
+Measure from_pt(double v);
+Measure from_rem(double v);
 
 Measure to_px(const MeasureTable& t, const Measure& v);
 

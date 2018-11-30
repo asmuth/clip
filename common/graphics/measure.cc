@@ -43,6 +43,22 @@ Measure::operator double() const {
   return value;
 }
 
+Measure from_unit(double v) {
+  return Measure{.unit = Unit::UNIT, .value = v};
+}
+
+Measure from_px(double v) {
+  return Measure{.unit = Unit::PX, .value = v};
+}
+
+Measure from_pt(double v) {
+  return Measure{.unit = Unit::PT, .value = v};
+}
+
+Measure from_rem(double v) {
+  return Measure{.unit = Unit::REM, .value = v};
+}
+
 Measure to_px(const MeasureTable& t, const Measure& v) {
   double v_px;
 
