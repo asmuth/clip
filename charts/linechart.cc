@@ -181,6 +181,15 @@ ReturnCode configureSeries(const plist::Property& prop, LinechartConfig* config)
 ReturnCode configure(const plist::PropertyList& plist, ElementRef* elem) {
   LinechartConfig config;
   static const ParserDefinitions pdefs = {
+    {
+      "margin",
+      configure_multiprop({
+          std::bind(&parseMeasureProp, std::placeholders::_1, &config.margins[0]),
+          std::bind(&parseMeasureProp, std::placeholders::_1, &config.margins[1]),
+          std::bind(&parseMeasureProp, std::placeholders::_1, &config.margins[2]),
+          std::bind(&parseMeasureProp, std::placeholders::_1, &config.margins[3])
+      })
+    },
     {"margin-top", std::bind(&parseMeasureProp, std::placeholders::_1, &config.margins[0])},
     {"margin-right", std::bind(&parseMeasureProp, std::placeholders::_1, &config.margins[1])},
     {"margin-bottom", std::bind(&parseMeasureProp, std::placeholders::_1, &config.margins[2])},

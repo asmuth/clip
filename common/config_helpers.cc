@@ -62,6 +62,18 @@ ReturnCode parseMeasureProp(
   return parse_measure(prop[0], value);
 }
 
+ParserFn configure_multiprop(const std::vector<ParserFn>& parsers) {
+  return [parsers] (const plist::Property& prop) -> ReturnCode {
+    for (const auto& p : parsers) {
+      if (auto rc = p(prop); !rc) {
+        return rc;
+      }
+    }
+
+    return OK;
+  };
+}
+
 ReturnCode configure_colour(
     const plist::Property& prop,
     Colour* value) {

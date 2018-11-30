@@ -37,9 +37,9 @@
 
 namespace plotfx {
 
-using ParserDefinitions = std::unordered_map<
-    std::string,
-    std::function<ReturnCode (const plist::Property&)>>;
+using ParserFn = std::function<ReturnCode (const plist::Property&)>;
+
+using ParserDefinitions = std::unordered_map<std::string, ParserFn>;
 
 inline ReturnCode parseAll(
     const plist::PropertyList& plist,
@@ -78,6 +78,8 @@ ReturnCode parseEnum(
   *value = def->second;
   return ReturnCode::success();
 }
+
+ParserFn configure_multiprop(const std::vector<ParserFn>& parsers);
 
 ReturnCode parseDataSeries(
     const plist::Property& prop,
