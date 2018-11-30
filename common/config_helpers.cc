@@ -1,7 +1,6 @@
 /**
  * This file is part of the "plotfx" project
  *   Copyright (c) 2018 Paul Asmuth
- *   Copyright (c) 2014 Paul Asmuth, Google Inc.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -28,41 +27,28 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-#pragma once
-#include <stdlib.h>
-#include <plist/plist.h>
-#include <graphics/layer.h>
-#include <graphics/viewport.h>
-#include <common/element.h>
-#include "plot_axis.h"
-#include "plot_domain.h"
+#include "config_helpers.h"
+#include <iostream>
 
 namespace plotfx {
-namespace linechart {
 
-struct LinechartSeries {
-  std::vector<double> xs;
-  std::vector<double> ys;
-};
+ReturnCode parseDataSeries(
+    const plist::Property& prop,
+    std::vector<double>* data) {
+  std::cerr << "configure series data " << prop.size() << " \n";
+  for (const auto& v : prop.values) {
+    double value;
+    try {
+      value = std::stod(v.data);
+    } catch (... ) {
+      return ERROR_INVALID_ARGUMENT;
+    }
 
-struct LinechartConfig {
-  LinechartConfig();
-  PlotDomain x_domain;
-  PlotDomain y_domain;
-  AxisDefinition axis_top;
-  AxisDefinition axis_right;
-  AxisDefinition axis_bottom;
-  AxisDefinition axis_left;
-  double margin_rem;
-  std::vector<LinechartSeries> series;
-};
+    data->emplace_back(value);
+  }
 
-ReturnCode draw(const LinechartConfig& config, const Rectangle& clip, Layer* frame);
+  return OK;
+}
 
-ReturnCode configure(
-    const plist::PropertyList& plist,
-    ElementRef* elem);
-
-} // namespace linechart
 } // namespace plotfx
 

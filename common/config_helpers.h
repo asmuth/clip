@@ -34,6 +34,31 @@
 
 namespace plotfx {
 
+using ParserDefinitions = std::unordered_map<
+    std::string,
+    std::function<ReturnCode (const plist::Property&)>>;
+
+inline ReturnCode parseAll(
+    const plist::PropertyList& plist,
+    const ParserDefinitions& pdefs) {
+  for (const auto& prop : plist) {
+    const auto& pdef = pdefs.find(prop.name);
+    if (pdef != pdefs.end()) {
+      if (auto rc = pdef->second(prop); !rc.isSuccess()) {
+        return ReturnCode::errorf(
+            "EPARSE",
+            "error while parsing property '$0': $1",
+            prop.name,
+            rc.getMessage());
+
+        return rc;
+      }
+    }
+  }
+
+  return ReturnCode::success();
+}
+
 template <typename T>
 using PropertyDefinitions = std::unordered_map<
     std::string,
@@ -78,6 +103,10 @@ ReturnCode parseEnum(
   *value = def->second;
   return ReturnCode::success();
 }
+
+ReturnCode parseDataSeries(
+    const plist::Property& prop,
+    std::vector<double>* data);
 
 } // namespace plotfx
 

@@ -198,8 +198,7 @@ void LineChart::render(
 LinechartConfig::LinechartConfig() :
     x_domain(PlotDomain::LINEAR),
     y_domain(PlotDomain::LINEAR),
-    margin_rem(4.0f),
-    padding_rem(0.0f) {}
+    margin_rem(4.0f) {}
 
 ReturnCode draw(
     const LinechartConfig& config,
@@ -301,12 +300,32 @@ ReturnCode configureAxisLeft(const plist::Property& prop, LinechartConfig* confi
   return parseAxisMode(prop[0], &config->axis_left.mode);
 }
 
+
+ReturnCode configureSeries(const plist::Property& prop, LinechartConfig* config) {
+  if (!prop.child) {
+    return ERROR_INVALID_ARGUMENT;
+  }
+
+  LinechartSeries series;
+  static const ParserDefinitions pdefs = {
+    {"xs", std::bind(&parseDataSeries, std::placeholders::_1, &series.xs)},
+    {"ys", std::bind(&parseDataSeries, std::placeholders::_1, &series.ys)},
+  };
+
+  if (auto rc = parseAll(*prop.child, pdefs); !rc) {
+    return rc;
+  }
+
+  return OK;
+}
+
 ReturnCode configure(const plist::PropertyList& plist, ElementRef* elem) {
   static const PropertyDefinitions<LinechartConfig> pdefs = {
     {"axis-top", &configureAxisTop},
     {"axis-right", &configureAxisRight},
     {"axis-bottom", &configureAxisBottom},
     {"axis-left", &configureAxisLeft},
+    {"series", &configureSeries},
   };
 
   LinechartConfig config;
