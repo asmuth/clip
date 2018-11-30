@@ -77,7 +77,7 @@ foreach(unit_test_path ${unit_test_files})
       COMMAND ${CMAKE_CURRENT_BINARY_DIR}/${unit_test_name})
 endforeach()
 
-file(GLOB spec_test_files "tests/**/test_*.spec")
+file(GLOB spec_test_files "tests/**/test_*.plot")
 foreach(spec_test_path ${spec_test_files})
   get_filename_component(spec_test_name ${spec_test_path} NAME_WE)
   get_filename_component(spec_test_srcdir ${spec_test_path} DIRECTORY)
