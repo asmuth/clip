@@ -58,7 +58,8 @@ enum class AxisLabelPlacement {
   RIGHT,
   TOP,
   BOTTOM,
-  OFF
+  INSIDE,
+  OUTSIDE,
 };
 
 struct AxisDefinition {
@@ -85,6 +86,7 @@ Status renderAxis(
 
 ReturnCode axis_expand_auto(
     const AxisDefinition& in,
+    const AxisPosition& pos,
     const DomainConfig& domain,
     AxisDefinition* out);
 

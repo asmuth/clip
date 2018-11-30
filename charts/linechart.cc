@@ -224,7 +224,7 @@ ReturnCode draw(const LinechartConfig& config, Layer* frame) {
 
   // render axes
   AxisDefinition axis_top;
-  if (auto rc = axis_expand_auto(config.axis_top, domain_x, &axis_top); !rc) {
+  if (auto rc = axis_expand_auto(config.axis_top, AxisPosition::TOP, domain_x, &axis_top); !rc) {
     return rc;
   }
 
@@ -233,7 +233,7 @@ ReturnCode draw(const LinechartConfig& config, Layer* frame) {
   }
 
   AxisDefinition axis_right;
-  if (auto rc = axis_expand_auto(config.axis_right, domain_y, &axis_right); !rc) {
+  if (auto rc = axis_expand_auto(config.axis_right, AxisPosition::RIGHT, domain_y, &axis_right); !rc) {
     return rc;
   }
 
@@ -242,7 +242,7 @@ ReturnCode draw(const LinechartConfig& config, Layer* frame) {
   }
 
   AxisDefinition axis_bottom;
-  if (auto rc = axis_expand_auto(config.axis_bottom, domain_x, &axis_bottom); !rc) {
+  if (auto rc = axis_expand_auto(config.axis_bottom, AxisPosition::BOTTOM, domain_x, &axis_bottom); !rc) {
     return rc;
   }
 
@@ -251,7 +251,7 @@ ReturnCode draw(const LinechartConfig& config, Layer* frame) {
   }
 
   AxisDefinition axis_left;
-  if (auto rc = axis_expand_auto(config.axis_left, domain_y, &axis_left); !rc) {
+  if (auto rc = axis_expand_auto(config.axis_left, AxisPosition::LEFT, domain_y, &axis_left); !rc) {
     return rc;
   }
 

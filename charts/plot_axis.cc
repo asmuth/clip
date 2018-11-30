@@ -38,7 +38,7 @@ namespace plotfx {
 
 AxisDefinition::AxisDefinition() :
     mode(AxisMode::OFF),
-    label_placement(AxisLabelPlacement::OFF),
+    label_placement(AxisLabelPlacement::OUTSIDE),
     padding_rem(4.0f),
     label_padding_rem(1.0f),
     label_font_size_rem(1.0f),
@@ -234,9 +234,46 @@ ReturnCode axis_expand_linear_geom(
 
 ReturnCode axis_expand_auto(
     const AxisDefinition& in,
+    const AxisPosition& pos,
     const DomainConfig& domain,
     AxisDefinition* out) {
   *out = in;
+
+  switch (out->label_placement) {
+    case AxisLabelPlacement::OUTSIDE:
+      switch (pos) {
+        case AxisPosition::TOP:
+          out->label_placement = AxisLabelPlacement::TOP;
+          break;
+        case AxisPosition::RIGHT:
+          out->label_placement = AxisLabelPlacement::RIGHT;
+          break;
+        case AxisPosition::BOTTOM:
+          out->label_placement = AxisLabelPlacement::BOTTOM;
+          break;
+        case AxisPosition::LEFT:
+          out->label_placement = AxisLabelPlacement::LEFT;
+          break;
+      }
+      break;
+    case AxisLabelPlacement::INSIDE:
+      switch (pos) {
+        case AxisPosition::TOP:
+          out->label_placement = AxisLabelPlacement::BOTTOM;
+          break;
+        case AxisPosition::RIGHT:
+          out->label_placement = AxisLabelPlacement::LEFT;
+          break;
+        case AxisPosition::BOTTOM:
+          out->label_placement = AxisLabelPlacement::TOP;
+          break;
+        case AxisPosition::LEFT:
+          out->label_placement = AxisLabelPlacement::RIGHT;
+          break;
+      }
+      break;
+  };
+
   return axis_expand_linear_geom(domain, out); // FIXME
 }
 
