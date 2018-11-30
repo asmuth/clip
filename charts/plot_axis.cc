@@ -94,7 +94,7 @@ static Status renderAxisVertical(
 
   /* draw ticks */
   for (const auto& tick : axis_config.ticks) {
-    auto y = y0 + (y1 - y0) * tick;
+    auto y = y0 + (y1 - y0) * (1.0 - tick);
     StrokeStyle style;
     strokeLine(
         target,
@@ -109,7 +109,7 @@ static Status renderAxisVertical(
   auto label_padding = from_rem(*target, axis_config.label_padding_rem);
   for (const auto& label : axis_config.labels) {
     auto [ tick, label_text ] = label;
-    auto sy = y0 + (y1 - y0) * tick;
+    auto sy = y0 + (y1 - y0) * (1.0 - tick);
     auto sx = x + label_padding * label_placement;
 
     TextStyle style;

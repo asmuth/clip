@@ -71,7 +71,7 @@ ReturnCode drawSeries(
     auto x = series.xs[i];
     auto y = series.ys[i];
     auto sx = clip.x + domain_translate(domain_x, x) * clip.w;
-    auto sy = clip.y + domain_translate(domain_y, y) * clip.h;
+    auto sy = clip.y + (1.0 - domain_translate(domain_y, y)) * clip.h;
 
     if (i == 0) {
       path.moveTo(sx, sy);
