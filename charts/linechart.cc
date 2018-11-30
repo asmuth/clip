@@ -48,7 +48,7 @@ char LineChart::kDefaultPointSize[] = "3";
 
 LinechartSeries::LinechartSeries() :
     line_width(from_pt(2)),
-    colour(Colour::fromRGB(0, 0, 0)) {}
+    line_colour(Colour::fromRGB(0, 0, 0)) {}
 
 LinechartConfig::LinechartConfig() :
     margins({
@@ -86,7 +86,7 @@ ReturnCode drawSeries(
 
   StrokeStyle style;
   style.line_width = series.line_width;
-  style.colour = series.colour;
+  style.colour = series.line_colour;
   strokePath(layer, clip, path, style);
 
   return OK;
@@ -168,7 +168,13 @@ ReturnCode configureSeries(const plist::Property& prop, LinechartConfig* config)
   static const ParserDefinitions pdefs = {
     {"xs", std::bind(&parseDataSeries, std::placeholders::_1, &series.xs)},
     {"ys", std::bind(&parseDataSeries, std::placeholders::_1, &series.ys)},
-    {"colour", std::bind(&configure_colour, std::placeholders::_1, &series.colour)},
+    {
+      "colour",
+      configure_multiprop({
+          std::bind(&configure_colour, std::placeholders::_1, &series.line_colour),
+      })
+    },
+    {"line-colour", std::bind(&configure_colour, std::placeholders::_1, &series.line_colour)},
     {"line-width", std::bind(&parseMeasureProp, std::placeholders::_1, &series.line_width)},
   };
 

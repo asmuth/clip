@@ -17,4 +17,5 @@ linechart
         xs -> data
         ys -> data
         colour
+        line-colour
         line-width
