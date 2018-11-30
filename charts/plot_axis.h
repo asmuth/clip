@@ -36,6 +36,7 @@
 #include <utils/return_code.h>
 
 namespace plotfx {
+struct DomainConfig;
 
 enum class AxisPosition {
   TOP,
@@ -82,6 +83,10 @@ Status renderAxis(
     AxisPosition axis_position,
     Layer* frame);
 
+ReturnCode axis_expand_auto(
+    const AxisDefinition& in,
+    const DomainConfig& domain,
+    AxisDefinition* out);
 
 } // namespace plotfx
 

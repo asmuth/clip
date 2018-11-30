@@ -218,20 +218,44 @@ LinechartConfig::LinechartConfig() :
     y_domain(PlotDomain::LINEAR) {}
 
 ReturnCode draw(const LinechartConfig& config, Layer* frame) {
+  // setup domains
+  DomainConfig domain_x;
+  DomainConfig domain_y;
+
   // render axes
-  if (auto rc = renderAxis(config.axis_top, AxisPosition::TOP, frame); rc) {
+  AxisDefinition axis_top;
+  if (auto rc = axis_expand_auto(config.axis_top, domain_x, &axis_top); !rc) {
     return rc;
   }
 
-  if (auto rc = renderAxis(config.axis_right, AxisPosition::RIGHT, frame); rc) {
+  if (auto rc = renderAxis(axis_top, AxisPosition::TOP, frame); rc) {
     return rc;
   }
 
-  if (auto rc = renderAxis(config.axis_bottom, AxisPosition::BOTTOM, frame); rc) {
+  AxisDefinition axis_right;
+  if (auto rc = axis_expand_auto(config.axis_right, domain_y, &axis_right); !rc) {
     return rc;
   }
 
-  if (auto rc = renderAxis(config.axis_left, AxisPosition::LEFT, frame); rc) {
+  if (auto rc = renderAxis(axis_right, AxisPosition::RIGHT, frame); rc) {
+    return rc;
+  }
+
+  AxisDefinition axis_bottom;
+  if (auto rc = axis_expand_auto(config.axis_bottom, domain_x, &axis_bottom); !rc) {
+    return rc;
+  }
+
+  if (auto rc = renderAxis(axis_bottom, AxisPosition::BOTTOM, frame); rc) {
+    return rc;
+  }
+
+  AxisDefinition axis_left;
+  if (auto rc = axis_expand_auto(config.axis_left, domain_y, &axis_left); !rc) {
+    return rc;
+  }
+
+  if (auto rc = renderAxis(axis_left, AxisPosition::LEFT, frame); rc) {
     return rc;
   }
 

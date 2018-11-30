@@ -34,12 +34,19 @@
 #include <stdlib.h>
 #include <vector>
 #include <string>
+#include <optional>
 
 // FIXPAUL too many copies T val...
 namespace plotfx {
 
 enum class PlotDomain {
   LINEAR, LOGARITHMIC
+};
+
+struct DomainConfig {
+  PlotDomain space;
+  std::optional<double> min;
+  std::optional<double> max;
 };
 
 namespace chart {

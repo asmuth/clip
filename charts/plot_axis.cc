@@ -29,6 +29,7 @@
  */
 #include "plot_axis.h"
 #include <assert.h>
+#include <iostream>
 #include <common/config_helpers.h>
 #include <graphics/text.h>
 #include <graphics/brush.h>
@@ -215,6 +216,28 @@ Status renderAxis(
   }
 
   return rc;
+}
+
+ReturnCode axis_expand_linear_geom(
+    const DomainConfig& domain,
+    AxisDefinition* axis) {
+  uint32_t num_ticks = 6;
+
+  for (size_t i = 0; i < num_ticks; ++i) {
+    auto o = (1.0f / (num_ticks - 1)) * i;
+    axis->ticks.emplace_back(o);
+    axis->labels.emplace_back(o, std::to_string(o)); // FIXME
+  }
+
+  return OK;
+}
+
+ReturnCode axis_expand_auto(
+    const AxisDefinition& in,
+    const DomainConfig& domain,
+    AxisDefinition* out) {
+  *out = in;
+  return axis_expand_linear_geom(domain, out); // FIXME
 }
 
 
