@@ -35,7 +35,6 @@ namespace plotfx {
 ReturnCode parseDataSeries(
     const plist::Property& prop,
     std::vector<double>* data) {
-  std::cerr << "configure series data " << prop.size() << " \n";
   for (const auto& v : prop.values) {
     double value;
     try {
@@ -48,6 +47,19 @@ ReturnCode parseDataSeries(
   }
 
   return OK;
+}
+
+ReturnCode parseMeasureProp(
+    const plist::Property& prop,
+    Measure* value) {
+  if (prop.size() != 1) {
+    return ReturnCode::errorf(
+        "EARG",
+        "incorrect number of arguments; expected: 1, got: $0",
+        prop.size());
+  }
+
+  return parse_measure(prop[0], value);
 }
 
 } // namespace plotfx

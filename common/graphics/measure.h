@@ -31,6 +31,7 @@
 #include <stdlib.h>
 #include <vector>
 #include <string>
+#include <utils/return_code.h>
 
 namespace plotfx {
 
@@ -57,6 +58,8 @@ Measure from_pt(double v);
 Measure from_rem(double v);
 
 Measure to_px(const MeasureTable& t, const Measure& v);
+
+ReturnCode parse_measure(const std::string& s, Measure* value);
 
 } // namespace plotfx
 

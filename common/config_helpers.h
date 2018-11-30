@@ -30,6 +30,7 @@
 #pragma once
 #include <unordered_map>
 #include <plist/plist.h>
+#include <graphics/measure.h>
 #include "utils/return_code.h"
 
 namespace plotfx {
@@ -79,6 +80,10 @@ ReturnCode parseEnum(
 ReturnCode parseDataSeries(
     const plist::Property& prop,
     std::vector<double>* data);
+
+ReturnCode parseMeasureProp(
+    const plist::Property& prop,
+    Measure* value);
 
 } // namespace plotfx
 

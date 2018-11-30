@@ -28,6 +28,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 #include "measure.h"
+#include <iostream>
 
 namespace plotfx {
 
@@ -76,6 +77,34 @@ Measure to_px(const MeasureTable& t, const Measure& v) {
   }
 
   return Measure{.unit = Unit::PX, .value = v_px};
+}
+
+ReturnCode parse_measure(const std::string& s, Measure* measure) {
+  double value;
+  size_t unit_pos;
+  try {
+    value = std::stod(s, &unit_pos);
+  } catch (... ) {
+    return ERROR_INVALID_ARGUMENT;
+  }
+
+  auto unit = s.substr(unit_pos);
+  if (unit == "px") {
+    *measure = from_px(value);
+    return OK;
+  }
+
+  if (unit == "pt") {
+    *measure = from_pt(value);
+    return OK;
+  }
+
+  if (unit == "rem") {
+    *measure = from_rem(value);
+    return OK;
+  }
+
+  return ERROR_INVALID_ARGUMENT;
 }
 
 } // namespace plotfx
