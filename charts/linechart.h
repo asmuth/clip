@@ -56,7 +56,7 @@ struct LinechartConfig {
   AxisDefinition axis_right;
   AxisDefinition axis_bottom;
   AxisDefinition axis_left;
-  double margin_rem;
+  Measure margins[4];
   std::vector<LinechartSeries> series;
 };
 

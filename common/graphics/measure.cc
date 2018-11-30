@@ -79,6 +79,25 @@ Measure to_px(const MeasureTable& t, const Measure& v) {
   return Measure{.unit = Unit::PX, .value = v_px};
 }
 
+Measure to_unit(const MeasureTable& t, const Measure& v) {
+  double v_unit;
+
+  switch (v.unit) {
+    case Unit::UNIT:
+    case Unit::PX:
+      v_unit = v.value;
+      break;
+    case Unit::PT:
+      v_unit = (v.value / 72.0) * t.dpi;
+      break;
+    case Unit::REM:
+      v_unit = ((v.value * t.rem) / 72.0) * t.dpi;
+      break;
+  }
+
+  return Measure{.unit = Unit::UNIT, .value = v_unit};
+}
+
 ReturnCode parse_measure(const std::string& s, Measure* measure) {
   double value;
   size_t unit_pos;

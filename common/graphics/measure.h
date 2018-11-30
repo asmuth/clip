@@ -58,6 +58,7 @@ Measure from_pt(double v);
 Measure from_rem(double v);
 
 Measure to_px(const MeasureTable& t, const Measure& v);
+Measure to_unit(const MeasureTable& t, const Measure& v);
 
 ReturnCode parse_measure(const std::string& s, Measure* value);
 

@@ -1,4 +1,8 @@
 linechart
+    margin-top
+    margin-right
+    margin-bottom
+    margin-left
     axis-top -> off, auto, manual
     axis-right -> off, auto, manual
     axis-bottom -> off auto, manual

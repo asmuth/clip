@@ -51,7 +51,11 @@ LinechartSeries::LinechartSeries() :
     colour(Colour::fromRGB(0, 0, 0)) {}
 
 LinechartConfig::LinechartConfig() :
-    margin_rem(4.0f) {}
+    margins({
+        Measure(Unit::REM, 4.0f),
+        Measure(Unit::REM, 4.0f),
+        Measure(Unit::REM, 4.0f),
+        Measure(Unit::REM, 4.0f)}) {}
 
 ReturnCode drawSeries(
     const LinechartSeries& series,
@@ -102,10 +106,10 @@ ReturnCode draw(
   // setup layout
   auto border_box = layout_margin_box(
       clip,
-      from_rem(*layer, config.margin_rem),
-      from_rem(*layer, config.margin_rem),
-      from_rem(*layer, config.margin_rem),
-      from_rem(*layer, config.margin_rem));
+      to_unit(layer->measures, config.margins[0]).value,
+      to_unit(layer->measures, config.margins[1]).value,
+      to_unit(layer->measures, config.margins[2]).value,
+      to_unit(layer->measures, config.margins[3]).value);
 
   // render axes
   AxisDefinition axis_top;
@@ -177,6 +181,10 @@ ReturnCode configureSeries(const plist::Property& prop, LinechartConfig* config)
 ReturnCode configure(const plist::PropertyList& plist, ElementRef* elem) {
   LinechartConfig config;
   static const ParserDefinitions pdefs = {
+    {"margin-top", std::bind(&parseMeasureProp, std::placeholders::_1, &config.margins[0])},
+    {"margin-right", std::bind(&parseMeasureProp, std::placeholders::_1, &config.margins[1])},
+    {"margin-bottom", std::bind(&parseMeasureProp, std::placeholders::_1, &config.margins[2])},
+    {"margin-left", std::bind(&parseMeasureProp, std::placeholders::_1, &config.margins[3])},
     {"axis-top", std::bind(&parseAxisModeProp, std::placeholders::_1, &config.axis_top.mode)},
     {"axis-right", std::bind(&parseAxisModeProp, std::placeholders::_1, &config.axis_right.mode)},
     {"axis-bottom", std::bind(&parseAxisModeProp, std::placeholders::_1, &config.axis_bottom.mode)},
