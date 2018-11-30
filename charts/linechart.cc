@@ -83,7 +83,7 @@ ReturnCode drawSeries(
   StrokeStyle style;
   style.line_width = series.line_width;
   style.colour = series.line_colour;
-  strokePath(layer, path, style);
+  strokePath(layer, clip, path, style);
 
   return OK;
 }

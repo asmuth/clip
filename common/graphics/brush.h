@@ -34,6 +34,7 @@
 #include "colour.h"
 #include "path.h"
 #include "measure.h"
+#include "layout.h"
 
 namespace plotfx {
 class Layer;
@@ -61,6 +62,13 @@ void strokePath(
 
 void strokePath(
     Layer* layer,
+    const Rectangle& clip,
+    const Path& path,
+    const StrokeStyle& style);
+
+void strokePath(
+    Layer* layer,
+    const Rectangle& clip,
     const PathData* path_data,
     size_t path_data_count,
     const StrokeStyle& style);

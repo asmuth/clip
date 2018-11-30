@@ -62,6 +62,7 @@ Rasterizer::~Rasterizer() {
 
 /* rasterize using libcairo */
 Status Rasterizer::strokePath(
+    const Rectangle& clip,
     const PathData* path_data,
     size_t point_count,
     const StrokeStyle& style) {
@@ -77,6 +78,10 @@ Status Rasterizer::strokePath(
      style.colour.alpha());
 
   cairo_set_line_width(cr_ctx, to_px(measures, style.line_width));
+
+  cairo_rectangle(cr_ctx, clip.x, clip.y, clip.w, clip.h);
+  cairo_clip(cr_ctx);
+  cairo_new_path(cr_ctx);
 
   for (size_t i = 0; i < point_count; ++i) {
     const auto& cmd = path_data[i];

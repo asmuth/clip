@@ -37,15 +37,29 @@ void strokePath(
     Layer* layer,
     const Path& path,
     const StrokeStyle& style) {
-  strokePath(layer, path.data(), path.size(), style);
+  strokePath(
+      layer,
+      Rectangle(0, 0, layer->width, layer->height),
+      path.data(),
+      path.size(),
+      style);
 }
 
 void strokePath(
     Layer* layer,
+    const Rectangle& clip,
+    const Path& path,
+    const StrokeStyle& style) {
+  strokePath(layer, clip, path.data(), path.size(), style);
+}
+
+void strokePath(
+    Layer* layer,
+    const Rectangle& clip,
     const PathData* point_data,
     size_t point_count,
     const StrokeStyle& style) {
-  layer->rasterizer.strokePath(point_data, point_count, style);
+  layer->rasterizer.strokePath(clip, point_data, point_count, style);
 }
 
 void strokeLine(
@@ -60,7 +74,9 @@ void strokeLine(
   p.lineTo(x2, y2);
   p.lineTo(x2, y2);
   p.lineTo(x2, y2);
-  strokePath(layer, p.data(), p.size(), style);
+
+  Rectangle clip(0, 0, layer->width, layer->height);
+  strokePath(layer, clip, p.data(), p.size(), style);
 }
 
 } // namespace plotfx

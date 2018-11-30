@@ -46,6 +46,7 @@
 
 #include "text.h"
 #include "brush.h"
+#include "layout.h"
 
 namespace plotfx {
 class Image;
@@ -59,6 +60,7 @@ public:
   Rasterizer& operator=(const Rasterizer&) = delete;
 
   Status strokePath(
+      const Rectangle& clip,
       const PathData* point_data,
       size_t point_count,
       const StrokeStyle& style);
