@@ -31,6 +31,7 @@
 #include <assert.h>
 #include <iostream>
 #include <common/config_helpers.h>
+#include <charts/plot_domain.h>
 #include <graphics/text.h>
 #include <graphics/layout.h>
 #include <graphics/brush.h>
@@ -222,12 +223,15 @@ Status renderAxis(
 ReturnCode axis_expand_linear_geom(
     const DomainConfig& domain,
     AxisDefinition* axis) {
-  uint32_t num_ticks = 6;
+  uint32_t num_ticks = 6; // FIXME make configurable
+  double min = domain.min.value_or(0.0f);
+  double max = domain.min.value_or(0.0f);
 
   for (size_t i = 0; i < num_ticks; ++i) {
     auto o = (1.0f / (num_ticks - 1)) * i;
+    auto v = min + (max - min) * o;
     axis->ticks.emplace_back(o);
-    axis->labels.emplace_back(o, std::to_string(o)); // FIXME
+    axis->labels.emplace_back(o, std::to_string(v)); // FIXME formatter
   }
 
   return OK;
