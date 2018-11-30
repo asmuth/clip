@@ -32,7 +32,8 @@
 namespace plotfx {
 
 DomainConfig::DomainConfig() :
-    space(PlotDomain::LINEAR) {}
+    kind(DomainKind::LINEAR),
+    inverted(false) {}
 
 void domain_fit(const std::vector<double>& data, DomainConfig* domain) {
   bool fit_min = !domain->min;
@@ -52,14 +53,37 @@ double domain_translate(const DomainConfig& domain, double v) {
   auto min = domain.min.value_or(0.0f);
   auto max = domain.max.value_or(0.0f);
 
-  switch (domain.space) {
-    case PlotDomain::LINEAR:
-      return (v - min) / (max - min);
-    default:
-      return 0.0f;
+  auto vt = 0.0;
+  switch (domain.kind) {
+    case DomainKind::LINEAR:
+      vt = (v - min) / (max - min);
+      break;
   }
+
+  if (domain.inverted) {
+    vt = 1.0 - vt;
+  }
+
+  return vt;
 }
 
+double domain_untranslate(const DomainConfig& domain, double vt) {
+  auto min = domain.min.value_or(0.0f);
+  auto max = domain.max.value_or(0.0f);
+
+  if (domain.inverted) {
+    vt = 1.0 - vt;
+  }
+
+  auto v = 0.0;
+  switch (domain.kind) {
+    case DomainKind::LINEAR:
+      v = min + (max - min) * vt;
+      break;
+  }
+
+  return v;
+}
 
 namespace chart {
 

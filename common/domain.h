@@ -39,13 +39,14 @@
 // FIXPAUL too many copies T val...
 namespace plotfx {
 
-enum class PlotDomain {
+enum class DomainKind {
   LINEAR
 };
 
 struct DomainConfig {
   DomainConfig();
-  PlotDomain space;
+  DomainKind kind;
+  bool inverted;
   std::optional<double> min;
   std::optional<double> max;
 };
@@ -53,6 +54,8 @@ struct DomainConfig {
 void domain_fit(const std::vector<double>& data, DomainConfig* domain);
 
 double domain_translate(const DomainConfig& domain, double v);
+
+double domain_untranslate(const DomainConfig& domain, double v);
 
 namespace chart {
 

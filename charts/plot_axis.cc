@@ -241,7 +241,7 @@ ReturnCode axis_expand_linear_geom(
 
   for (size_t i = 0; i < num_ticks; ++i) {
     auto o = (1.0f / (num_ticks - 1)) * i;
-    auto v = min + (max - min) * o;
+    auto v = domain_untranslate(domain, o);
     axis->ticks.emplace_back(o);
 
     if (axis->label_formatter.format_number) {
