@@ -44,6 +44,7 @@ enum class PlotDomain {
 };
 
 struct DomainConfig {
+  DomainConfig();
   PlotDomain space;
   std::optional<double> min;
   std::optional<double> max;

@@ -29,8 +29,11 @@
  */
 #include "plot_domain.h"
 
-using namespace plotfx;
 namespace plotfx {
+
+DomainConfig::DomainConfig() :
+    space(PlotDomain::LINEAR) {}
+
 
 void domain_fit(const std::vector<double>& data, DomainConfig* domain) {
   for (const auto& d : data) {
