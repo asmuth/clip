@@ -40,7 +40,7 @@
 namespace plotfx {
 
 enum class PlotDomain {
-  LINEAR, LOGARITHMIC
+  LINEAR
 };
 
 struct DomainConfig {
@@ -50,6 +50,8 @@ struct DomainConfig {
 };
 
 void domain_fit(const std::vector<double>& data, DomainConfig* domain);
+
+double domain_translate(const DomainConfig& domain, double v);
 
 namespace chart {
 

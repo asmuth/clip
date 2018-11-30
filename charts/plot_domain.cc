@@ -43,6 +43,18 @@ void domain_fit(const std::vector<double>& data, DomainConfig* domain) {
   }
 }
 
+double domain_translate(const DomainConfig& domain, double v) {
+  auto min = domain.min.value_or(0.0f);
+  auto max = domain.max.value_or(0.0f);
+
+  switch (domain.space) {
+    case PlotDomain::LINEAR:
+      return (v - min) / (max - min);
+    default:
+      return 0.0f;
+  }
+}
+
 
 namespace chart {
 
