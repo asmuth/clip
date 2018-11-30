@@ -31,6 +31,7 @@
 #include <assert.h>
 #include <stdlib.h>
 #include <stdint.h>
+#include <iostream>
 #include <vector>
 #include <string>
 
@@ -63,6 +64,8 @@ public:
 protected:
   double components_[kMaxComponents];
 };
+
+std::ostream& operator <<(std::ostream& os, const Colour& c);
 
 } // namespace plotfx
 

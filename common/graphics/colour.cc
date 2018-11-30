@@ -134,5 +134,18 @@ bool Colour::parseHexShort(const std::string& str) {
   return true;
 }
 
+std::ostream& operator <<(std::ostream& os, const Colour& c) {
+  os << "Colour(";
+  os << c[0];
+  os << ", ";
+  os << c[1];
+  os << ", ";
+  os << c[2];
+  os << ", ";
+  os << c[3];
+  os << ")";
+  return os;
+}
+
 } // namespace plotfx
 
