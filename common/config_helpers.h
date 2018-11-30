@@ -29,6 +29,7 @@
  */
 #pragma once
 #include <unordered_map>
+#include <optional>
 #include <plist/plist.h>
 #include <graphics/measure.h>
 #include <graphics/colour.h>
@@ -89,6 +90,10 @@ ReturnCode parseMeasureProp(
 ReturnCode configure_colour(
     const plist::Property& prop,
     Colour* value);
+
+ReturnCode configure_float_opt(
+    const plist::Property& prop,
+    std::optional<double>* value);
 
 } // namespace plotfx
 

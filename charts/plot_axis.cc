@@ -39,7 +39,7 @@
 namespace plotfx {
 
 AxisDefinition::AxisDefinition() :
-    mode(AxisMode::OFF),
+    mode(AxisMode::AUTO),
     label_placement(AxisLabelPlacement::OUTSIDE),
     label_padding_rem(1.0f),
     label_font_size_rem(1.0f),

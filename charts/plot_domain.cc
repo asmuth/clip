@@ -34,13 +34,15 @@ namespace plotfx {
 DomainConfig::DomainConfig() :
     space(PlotDomain::LINEAR) {}
 
-
 void domain_fit(const std::vector<double>& data, DomainConfig* domain) {
+  bool fit_min = !domain->min;
+  bool fit_max = !domain->max;
+
   for (const auto& d : data) {
-    if (!domain->min || *domain->min > d) {
+    if (fit_min && (!domain->min || *domain->min > d)) {
       domain->min = std::optional<double>(d);
     }
-    if (!domain->max || *domain->max < d) {
+    if (fit_max && (!domain->max || *domain->max < d)) {
       domain->max = std::optional<double>(d);
     }
   }

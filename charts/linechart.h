@@ -50,8 +50,8 @@ struct LinechartSeries {
 
 struct LinechartConfig {
   LinechartConfig();
-  PlotDomain x_domain;
-  PlotDomain y_domain;
+  DomainConfig domain_x;
+  DomainConfig domain_y;
   AxisDefinition axis_top;
   AxisDefinition axis_right;
   AxisDefinition axis_bottom;

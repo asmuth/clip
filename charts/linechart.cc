@@ -51,8 +51,6 @@ LinechartSeries::LinechartSeries() :
     colour(Colour::fromRGB(0, 0, 0)) {}
 
 LinechartConfig::LinechartConfig() :
-    x_domain(PlotDomain::LINEAR),
-    y_domain(PlotDomain::LINEAR),
     margin_rem(4.0f) {}
 
 ReturnCode drawSeries(
@@ -93,8 +91,8 @@ ReturnCode draw(
     const Rectangle& clip,
     Layer* layer) {
   // setup domains
-  DomainConfig domain_x;
-  DomainConfig domain_y;
+  auto domain_x = config.domain_x;
+  auto domain_y = config.domain_y;
 
   for (const auto& s : config.series) {
     domain_fit(s.xs, &domain_x);
@@ -183,6 +181,10 @@ ReturnCode configure(const plist::PropertyList& plist, ElementRef* elem) {
     {"axis-right", std::bind(&parseAxisModeProp, std::placeholders::_1, &config.axis_right.mode)},
     {"axis-bottom", std::bind(&parseAxisModeProp, std::placeholders::_1, &config.axis_bottom.mode)},
     {"axis-left", std::bind(&parseAxisModeProp, std::placeholders::_1, &config.axis_left.mode)},
+    {"xmin", std::bind(&configure_float_opt, std::placeholders::_1, &config.domain_x.min)},
+    {"xmax", std::bind(&configure_float_opt, std::placeholders::_1, &config.domain_x.max)},
+    {"ymin", std::bind(&configure_float_opt, std::placeholders::_1, &config.domain_y.min)},
+    {"ymax", std::bind(&configure_float_opt, std::placeholders::_1, &config.domain_y.max)},
     {"series", std::bind(&configureSeries, std::placeholders::_1, &config)},
   };
 

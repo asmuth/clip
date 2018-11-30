@@ -3,6 +3,12 @@ linechart
     axis-right -> off, auto, manual
     axis-bottom -> off auto, manual
     axis-left -> off, auto, manual
+    xmin
+    xmax
+    ymin
+    ymax
     series
         xs -> data
         ys -> data
+        colour
+        line-width
