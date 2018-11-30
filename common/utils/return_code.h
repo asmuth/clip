@@ -93,6 +93,10 @@ public:
     return success_;
   }
 
+  inline operator bool() const {
+    return success_;
+  }
+
   inline const std::string& getCode() const {
     return code_;
   }
