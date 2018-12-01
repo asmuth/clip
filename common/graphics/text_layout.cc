@@ -38,6 +38,7 @@ Status layoutTextLTR(
     double x,
     double y,
     const FontInfo& font_info,
+    double font_size,
     TextHAlign halign,
     TextVAlign valign,
     TextShaper* shaper,
@@ -47,6 +48,7 @@ Status layoutTextLTR(
   auto rc = shaper->shapeText(
       text,
       font_info,
+      font_size,
       [&] (const GlyphInfo& gi) {
         line_length += gi.advance_x;
         glyphs.emplace_back(gi);
@@ -105,7 +107,8 @@ Status layoutText(
     const std::string& text,
     double x,
     double y,
-    const FontInfo& font_info,
+    const FontInfo& font,
+    double font_size,
     TextDirection direction,
     TextHAlign halign,
     TextVAlign valign,
@@ -113,7 +116,7 @@ Status layoutText(
     std::function<void (const GlyphPlacement&)> glyph_cb) {
   switch (direction) {
     case TextDirection::LTR:
-      return layoutTextLTR(text, x, y, font_info, halign, valign, shaper, glyph_cb);
+      return layoutTextLTR(text, x, y, font, font_size, halign, valign, shaper, glyph_cb);
     case TextDirection::RTL:
       return ERROR_NOT_IMPLEMENTED;
     default:

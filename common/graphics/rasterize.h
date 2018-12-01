@@ -72,7 +72,6 @@ public:
       const StrokeStyle& style);
 
   Status drawTextGlyphs(
-      const FontInfo& font_info,
       const GlyphPlacement* glyphs,
       size_t glyph_count,
       const TextStyle& style);

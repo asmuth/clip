@@ -56,7 +56,8 @@ public:
 
   Status shapeText(
       const std::string& text,
-      const FontInfo& font_info,
+      const FontInfo& font,
+      double font_size,
       std::function<void (const GlyphInfo&)> glyph_cb);
 
 protected:

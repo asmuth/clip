@@ -46,17 +46,13 @@ Status drawText(
     double y,
     const TextStyle& style,
     Layer* layer) {
-  FontInfo font_info {
-    .font_file = style.font_file,
-    .font_size = style.font_size
-  };
-
   std::vector<GlyphPlacement> glyphs;
   auto rc = text::layoutText(
       text,
       x,
       y,
-      font_info,
+      style.font,
+      style.font_size,
       style.direction,
       style.halign,
       style.valign,
@@ -67,16 +63,19 @@ Status drawText(
     return rc;
   }
 
-  return drawTextGlyphs(font_info, glyphs.data(), glyphs.size(), style, layer);
+  return drawTextGlyphs(
+      glyphs.data(),
+      glyphs.size(),
+      style,
+      layer);
 }
 
 Status drawTextGlyphs(
-    const FontInfo& font_info,
     const GlyphPlacement* glyphs,
     size_t glyph_count,
     const TextStyle& style,
     Layer* layer) {
-  return layer->rasterizer.drawTextGlyphs(font_info, glyphs, glyph_count, style);
+  return layer->rasterizer.drawTextGlyphs(glyphs, glyph_count, style);
 }
 
 } // namespace plotfx

@@ -47,19 +47,18 @@ enum class TextVAlign {
   BASELINE, MIDDLE, TOP, BOTTOM
 };
 
+struct FontInfo {
+  std::string font_file;
+};
+
 struct TextStyle {
   TextStyle();
   TextDirection direction;
   TextHAlign halign;
   TextVAlign valign;
-  std::string font_file;
+  FontInfo font;
   double font_size;
   Colour colour;
-};
-
-struct FontInfo {
-  std::string font_file;
-  double font_size;
 };
 
 struct GlyphInfo {
@@ -84,7 +83,6 @@ Status drawText(
     Layer* layer);
 
 Status drawTextGlyphs(
-    const FontInfo& font_info,
     const GlyphPlacement* glyphs,
     size_t glyph_count,
     const TextStyle& style,

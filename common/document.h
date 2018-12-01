@@ -31,6 +31,7 @@
 #include "utils/return_code.h"
 #include "graphics/measure.h"
 #include "graphics/colour.h"
+#include "graphics/text.h"
 #include "element.h"
 
 namespace plotfx {
@@ -44,9 +45,9 @@ struct Document {
   Colour background_colour;
   Colour text_colour;
   Colour border_colour;
-  std::string font_serif;
-  std::string font_sans;
-  std::string font_mono;
+  FontInfo font_serif;
+  FontInfo font_sans;
+  FontInfo font_mono;
   std::vector<std::string> font_searchpath;
   std::vector<ElementRef> roots;
 };

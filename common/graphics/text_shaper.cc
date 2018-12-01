@@ -47,7 +47,8 @@ TextShaper::~TextShaper() {
 
 Status TextShaper::shapeText(
     const std::string& text,
-    const FontInfo& font_info,
+    const FontInfo& font,
+    double font_size,
     std::function<void (const GlyphInfo&)> glyph_cb) {
   if (!ft_ready) {
     if (FT_Init_FreeType(&ft)) {
@@ -59,11 +60,11 @@ Status TextShaper::shapeText(
 
   // FIXME cache
   FT_Face ft_font;
-  if (FT_New_Face(ft, font_info.font_file.c_str(), 0, &ft_font)) {
+  if (FT_New_Face(ft, font.font_file.c_str(), 0, &ft_font)) {
     return ERROR;
   }
 
-  if (FT_Set_Char_Size(ft_font, 0, font_info.font_size * 64, dpi, dpi)) {
+  if (FT_Set_Char_Size(ft_font, 0, font_size * 64, dpi, dpi)) {
     FT_Done_Face(ft_font);
     return ERROR;
   }

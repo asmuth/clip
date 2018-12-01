@@ -143,7 +143,6 @@ Status Rasterizer::strokePath(
 }
 
 Status Rasterizer::drawTextGlyphs(
-    const FontInfo& font_info,
     const GlyphPlacement* glyphs,
     size_t glyph_count,
     const TextStyle& style) {
@@ -153,12 +152,12 @@ Status Rasterizer::drawTextGlyphs(
 
   // FIXME cache
   FT_Face ft_font;
-  if (FT_New_Face(ft, font_info.font_file.c_str(), 0, &ft_font)) {
+  if (FT_New_Face(ft, style.font.font_file.c_str(), 0, &ft_font)) {
     return ERROR;
   }
 
   auto dpi = measures.dpi;
-  if (FT_Set_Char_Size(ft_font, 0, font_info.font_size * 64, dpi, dpi)) {
+  if (FT_Set_Char_Size(ft_font, 0, style.font_size * 64, dpi, dpi)) {
     FT_Done_Face(ft_font);
     return ERROR;
   }
@@ -172,13 +171,12 @@ Status Rasterizer::drawTextGlyphs(
 
   auto cairo_face = cairo_ft_font_face_create_for_ft_face(ft_font, 0);
   cairo_set_font_face(cr_ctx, cairo_face);
-  cairo_set_font_size(cr_ctx, (font_info.font_size / 72.0) * dpi);
+  cairo_set_font_size(cr_ctx, (style.font_size / 72.0) * dpi);
 
   auto cairo_glyphs = cairo_glyph_allocate(glyph_count);
   for (int i = 0; i < glyph_count; ++i) {
     const auto& g = glyphs[i];
     //FT_Load_Glyph(ft_font, g.codepoint, FT_LOAD_DEFAULT);
-
 
     cairo_glyphs[i].index = g.codepoint;
     cairo_glyphs[i].x = g.x;

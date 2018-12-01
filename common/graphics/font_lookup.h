@@ -29,13 +29,14 @@
  */
 #pragma once
 #include "plotfx.h"
+#include "text.h"
 
 namespace plotfx {
 
 bool findFontSimple(
     const std::string& font_name,
     const std::vector<std::string>& search_paths,
-    std::string* font_file);
+    FontInfo* font_file);
 
 } // namespace plotfx
 
