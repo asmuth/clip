@@ -63,6 +63,14 @@ documentation:
         file: "plot_style"
 
   -
+    title: "Data Sources"
+    pages:
+      -
+        title: "Data Source: CSV"
+        url: "/documentation/data-csv"
+        file: "data-csv"
+
+  -
     title: "Examples"
     pages:
       -
