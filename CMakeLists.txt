@@ -17,11 +17,9 @@ include_directories(${CAIRO_INCLUDE_DIRS} ${FREETYPE_INCLUDE_DIRS} ${HARFBUZZ_IN
 add_definitions(-DFNORDMETRIC_VERSION="unstable")
 
 add_library(plotfxlib STATIC
-    charts/line_chart.cc
-    charts/gridlines.cc
-    charts/plot_axis.cc
-    charts/legenddefinition.cc
-    charts/series.cc
+    elements/line_chart.cc
+    elements/gridlines.cc
+    elements/plot_axis.cc
     common/config_helpers.cc
     common/domain.cc
     common/format.cc
@@ -57,8 +55,7 @@ add_library(plotfxlib STATIC
     common/utils/flagparser.cc
     common/utils/ISO8601.cc
     common/utils/UTF8.cc
-    common/utils/wallclock.cc
-    plotfx_cmd.cc)
+    common/utils/wallclock.cc)
 
 set(PLOTFX_LDFLAGS plotfxlib ${CAIRO_LIBRARIES} ${FREETYPE_LIBRARIES} ${HARFBUZZ_LIBRARIES} ${HARFBUZZ_ICU_LIBRARIES} ${PNG_LIBRARIES})
 
