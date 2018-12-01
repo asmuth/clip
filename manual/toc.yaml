@@ -1,0 +1,238 @@
+---
+
+documentation:
+  -
+    title: "Getting Started"
+    pages:
+      -
+        title: "Introduction"
+        url: "/"
+        file: "introduction"
+      -
+        title: "Getting Started"
+        url: "/documentation/getting-started"
+        file: "getting_started"
+      -
+        title: "Installation"
+        url: "/documentation/installation"
+        file: "installation"
+      -
+        title: "Download"
+        url: "/documentation/download"
+        file: "download"
+      -
+        title: "FAQ"
+        url: "/documentation/faq"
+        file: "faq"
+
+
+  -
+    title: "Charts & Visualizations"
+    pages:
+      -
+        title: "Plot: Domains"
+        url: "/documentation/plot-lines"
+        file: "metric_queryd"
+      -
+        title: "Plot: Axes"
+        url: "/documentation/plot-lines"
+        file: "metric_queryd"
+      -
+        title: "Plot: Gridlines"
+        url: "/documentation/plot-lines"
+        file: "metric_queryd"
+      -
+        title: "Plot: Lines"
+        url: "/documentation/plot-lines"
+        file: "metric_queryd"
+      -
+        title: "Plot: Scatter"
+        url: "/documentation/plot-lines"
+        file: "metric_queryd"
+      -
+        title: "Plot: Areas"
+        url: "/documentation/plot-lines"
+        file: "metric_queryd"
+      -
+        title: "Plot: Bars"
+        url: "/documentation/plot-lines"
+        file: "metric_queryd"
+
+  -
+    title: "Examples"
+    pages:
+      -
+        title: "Example Gallery"
+        url: "/examples"
+        file: "examples"
+        pages:
+          -
+            title: "Simple timeseries line chart"
+            file: "examples/simple_lines"
+            path: "examples"
+            url: "/examples/linecharts/simple_lines"
+            attachments:
+              - "simple_lines.png"
+          -
+            title: "Lines with points"
+            file: "examples/lines_with_points"
+            path: "examples"
+            url: "/examples/linecharts/lines_with_points"
+            attachments:
+              - "lines_with_points.png"
+          -
+            title: "Explicit range/domain"
+            file: "examples/explicit_domain"
+            path: "examples"
+            url: "/examples/linecharts/explicit_domain"
+            attachments:
+              - "explicit_domain.png"
+          -
+            title: "Lines with data labels"
+            file: "examples/lines_with_labels"
+            path: "examples"
+            url: "/examples/linecharts/lines_with_labels"
+            attachments:
+              - "lines_with_labels.png"
+          -
+            title: "Multiple Y Axes"
+            file: "examples/multiple_y_axes"
+            path: "examples"
+            url: "/examples/linecharts/multiple_y_axes"
+            attachments:
+              - "multiple_y_axes.png"
+          -
+            title: "Logarithmic domain"
+            file: "examples/logarithmic_domain"
+            path: "examples"
+            url: "/examples/linecharts/logarithmic_domain"
+            attachments:
+              - "logarithmic_domain.png"
+          -
+            title: "Data with irregular intervals"
+            file: "examples/irregular_intervals"
+            path: "examples"
+            url: "/examples/linecharts/irregular_data"
+            attachments:
+              - "irregular_data.png"
+          -
+            title: "Inverted Axis"
+            file: "examples/inverted_axis"
+            path: "examples"
+            url: "/examples/linecharts/inverted_axis"
+            attachments:
+              - "inverted_axis.png"
+          -
+            title: "Simple area chart"
+            file: "examples/simple_area"
+            path: "examples"
+            url: "/examples/areacharts/simple_area"
+            attachments:
+              - "simple_area.png"
+          -
+            title: "Area with borders/points"
+            file: "examples/area_with_points"
+            path: "examples"
+            url: "/examples/areacharts/area_with_points"
+            attachments:
+              - "area_with_points.png"
+          -
+            title: "Area ranges"
+            file: "examples/area_ranges"
+            path: "examples"
+            url: "/examples/areacharts/area_ranges"
+            attachments:
+              - "area_ranges.png"
+          -
+            title: "Vertical bar chart, multiple series"
+            file: "examples/vertical_bars"
+            path: "examples"
+            url: "/examples/barcharts/vertical_bars"
+            attachments:
+              - "vertical_bars.png"
+          -
+            title: "Horizontal bar chart with labels"
+            file: "examples/horizontal_bars"
+            path: "examples"
+            url: "/examples/barcharts/horizontal_bars"
+            attachments:
+              - "horizontal_bars.png"
+          -
+            title: "Stacked Bar Chart"
+            file: "examples/stacked_bars"
+            path: "examples"
+            url: "/examples/barcharts/stacked_bars"
+            attachments:
+              - "stacked_bars.png"
+          -
+            title: "Vertical range bars"
+            file: "examples/vertical_ranges"
+            path: "examples"
+            url: "/examples/barcharts/vertical_ranges"
+            attachments:
+              - "vertical_ranges.png"
+          -
+            title: "Horizontal range bars"
+            file: "examples/horizontal_ranges"
+            path: "examples"
+            url: "/examples/barcharts/horizontal_ranges"
+            attachments:
+              - "horizontal_ranges.png"
+          -
+            title: "Bars with negative values"
+            file: "examples/negative_values"
+            path: "examples"
+            url: "/examples/barcharts/negative_values"
+            attachments:
+              - "negative_values.png"
+          -
+            title: "Simple bubble chart"
+            file: "examples/simple_bubble_chart"
+            path: "examples"
+            url: "/examples/pointcharts/simple_bubbles"
+            attachments:
+              - "simple_bubbles.png"
+          -
+            title: "Simple scatter chart"
+            file: "examples/simple_scatter_chart"
+            path: "examples"
+            url: "/examples/pointcharts/simple_scatter"
+            attachments:
+              - "simple_scatter.png"
+          -
+            title: "Point chart with data labels"
+            file: "examples/pointchart_with_labels"
+            path: "examples"
+            url: "/examples/pointcharts/pointchart_with_labels"
+            attachments:
+              - "pointchart_with_labels.png"
+          -
+            title: "Bars and Lines"
+            file: "examples/bars_and_lines"
+            path: "examples"
+            url: "/examples/combined/barsandlines"
+            attachments:
+              - "barsandlines.png"
+          -
+            title: "Areas with lines"
+            file: "examples/arearange_and_line"
+            path: "examples"
+            url: "/examples/combined/arearange_and_line"
+            attachments:
+              - "arearange_and_line.png"
+
+  -
+    title: "Community"
+    pages:
+      -
+        title: "Support"
+        url: "/documentation/support"
+        file: "support"
+      -
+        title: "Contributing"
+        url: "/documentation/contributing"
+        file: "contributing"
+      -
+        title: "License"
+        url: "/documentation/license"
+        file: "license"
