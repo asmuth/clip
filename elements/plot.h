@@ -1,6 +1,7 @@
 /**
  * This file is part of the "plotfx" project
  *   Copyright (c) 2018 Paul Asmuth
+ *   Copyright (c) 2014 Paul Asmuth, Google Inc.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -27,29 +28,41 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-#include "element_factory.h"
-#include "elements/plot.h"
-#include <unordered_map>
+#pragma once
+#include <stdlib.h>
+#include <plist/plist.h>
+#include <graphics/layer.h>
+#include <graphics/viewport.h>
+#include <common/domain.h>
+#include <common/element.h>
+#include "plot_axis.h"
 
 namespace plotfx {
+namespace plot {
+struct PlotConfig;
 
-using ElementConfigureFn = std::function<ReturnCode (const PropertyList&, ElementRef*)>;
-
-static std::unordered_map<std::string, ElementConfigureFn> elems = {
-  {"plot", &plot::configure}
+struct PlotSeries {
+  std::function<ReturnCode (const PlotConfig& plot, const Rectangle& clip, Layer* frame)> draw;
 };
 
-ReturnCode buildElement(
-    const std::string& name,
-    const PropertyList& plist,
-    std::unique_ptr<Element>* elem) {
-  const auto& elem_entry = elems.find(name);
-  if (elem_entry == elems.end()) {
-    return ReturnCode::errorf("NOTFOUND", "no such element: $0", name);
-  }
+struct PlotConfig {
+  PlotConfig();
+  DomainConfig domain_x;
+  DomainConfig domain_y;
+  AxisDefinition axis_top;
+  AxisDefinition axis_right;
+  AxisDefinition axis_bottom;
+  AxisDefinition axis_left;
+  Measure margins[4];
+  std::vector<PlotSeries> series;
+};
 
-  return elem_entry->second(plist, elem);
-}
+ReturnCode draw(const PlotConfig& config, const Rectangle& clip, Layer* frame);
 
+ReturnCode configure(
+    const plist::PropertyList& plist,
+    ElementRef* elem);
+
+} // namespace plot
 } // namespace plotfx
 

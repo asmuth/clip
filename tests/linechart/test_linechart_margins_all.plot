@@ -1,4 +1,4 @@
-linechart {
+plot {
   margin: 130px;
 
   series {

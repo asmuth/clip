@@ -28,42 +28,29 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+#include "plot_lines.h"
 #include <plotfx.h>
 #include <graphics/path.h>
 #include <graphics/brush.h>
 #include <graphics/text.h>
 #include <graphics/layout.h>
-#include "line_chart.h"
 #include "common/config_helpers.h"
 
 namespace plotfx {
-namespace linechart {
+namespace plot {
+namespace lines {
 
-/*
-char LineChart::kDefaultLineStyle[] = "solid";
-char LineChart::kDefaultLineWidth[] = "2";
-char LineChart::kDefaultPointStyle[] = "none";
-char LineChart::kDefaultPointSize[] = "3";
-*/
-
-LinechartSeries::LinechartSeries() :
+PlotLinesConfig::PlotLinesConfig() :
     line_width(from_pt(2)) {}
 
-LinechartConfig::LinechartConfig() :
-    margins({
-        Measure(Unit::REM, 4.0f),
-        Measure(Unit::REM, 4.0f),
-        Measure(Unit::REM, 4.0f),
-        Measure(Unit::REM, 4.0f)}) {
-  domain_y.padding = 0.1f;
-}
-
-ReturnCode drawSeries(
-    const LinechartSeries& series,
-    const DomainConfig& domain_x,
-    const DomainConfig& domain_y,
+ReturnCode draw_lines(
+    const PlotConfig& plot,
+    const PlotLinesConfig& series,
     const Rectangle& clip,
     Layer* layer) {
+  const auto& domain_x = plot.domain_x;
+  const auto& domain_y = plot.domain_y;
+
   if (series.xs.size() != series.ys.size()) {
     // FIXME error msg
     return ERROR_INVALID_ARGUMENT;
@@ -113,57 +100,12 @@ ReturnCode drawSeries(
   return OK;
 }
 
-ReturnCode draw(
-    const LinechartConfig& config,
-    const Rectangle& clip,
-    Layer* layer) {
-  // setup domains
-  auto domain_x = config.domain_x;
-  auto domain_y = config.domain_y;
-
-  for (const auto& s : config.series) {
-    domain_fit(s.xs, &domain_x);
-    domain_fit(s.ys, &domain_y);
-  }
-
-  // setup layout
-  auto border_box = layout_margin_box(
-      clip,
-      to_unit(layer->measures, config.margins[0]).value,
-      to_unit(layer->measures, config.margins[1]).value,
-      to_unit(layer->measures, config.margins[2]).value,
-      to_unit(layer->measures, config.margins[3]).value);
-
-  // render axes
-  if (auto rc = axis_draw_all(
-        border_box,
-        domain_x,
-        domain_y,
-        config.axis_top,
-        config.axis_right,
-        config.axis_bottom,
-        config.axis_left,
-        layer);
-        !rc) {
-    return rc;
-  }
-
-  // render series
-  for (const auto& s : config.series) {
-    if (auto rc = drawSeries(s, domain_x, domain_y, border_box, layer); !rc) {
-      return rc;
-    }
-  }
-
-  return ReturnCode::success();
-}
-
-ReturnCode configureSeries(const plist::Property& prop, LinechartConfig* config) {
+ReturnCode configure(const plist::Property& prop, PlotConfig* config) {
   if (!prop.child) {
     return ERROR_INVALID_ARGUMENT;
   }
 
-  LinechartSeries series;
+  PlotLinesConfig series;
   static const ParserDefinitions pdefs = {
     {"xs", std::bind(&parseDataSeries, std::placeholders::_1, &series.xs)},
     {"ys", std::bind(&parseDataSeries, std::placeholders::_1, &series.ys)},
@@ -184,50 +126,22 @@ ReturnCode configureSeries(const plist::Property& prop, LinechartConfig* config)
     return rc;
   }
 
-  config->series.emplace_back(std::move(series));
+  domain_fit(series.xs, &config->domain_x);
+  domain_fit(series.ys, &config->domain_y);
+
+  config->series.emplace_back(PlotSeries {
+    .draw = std::bind(
+        &draw_lines,
+        std::placeholders::_1,
+        series,
+        std::placeholders::_2,
+        std::placeholders::_3),
+  });
+
   return OK;
 }
 
-ReturnCode configure(const plist::PropertyList& plist, ElementRef* elem) {
-  LinechartConfig config;
-  static const ParserDefinitions pdefs = {
-    {
-      "margin",
-      configure_multiprop({
-          std::bind(&parseMeasureProp, std::placeholders::_1, &config.margins[0]),
-          std::bind(&parseMeasureProp, std::placeholders::_1, &config.margins[1]),
-          std::bind(&parseMeasureProp, std::placeholders::_1, &config.margins[2]),
-          std::bind(&parseMeasureProp, std::placeholders::_1, &config.margins[3])
-      })
-    },
-    {"margin-top", std::bind(&parseMeasureProp, std::placeholders::_1, &config.margins[0])},
-    {"margin-right", std::bind(&parseMeasureProp, std::placeholders::_1, &config.margins[1])},
-    {"margin-bottom", std::bind(&parseMeasureProp, std::placeholders::_1, &config.margins[2])},
-    {"margin-left", std::bind(&parseMeasureProp, std::placeholders::_1, &config.margins[3])},
-    {"axis-top", std::bind(&parseAxisModeProp, std::placeholders::_1, &config.axis_top.mode)},
-    {"axis-right", std::bind(&parseAxisModeProp, std::placeholders::_1, &config.axis_right.mode)},
-    {"axis-bottom", std::bind(&parseAxisModeProp, std::placeholders::_1, &config.axis_bottom.mode)},
-    {"axis-left", std::bind(&parseAxisModeProp, std::placeholders::_1, &config.axis_left.mode)},
-    {"xdomain-padding", std::bind(&configure_float, std::placeholders::_1, &config.domain_x.padding)},
-    {"ydomain-padding", std::bind(&configure_float, std::placeholders::_1, &config.domain_y.padding)},
-    {"xmin", std::bind(&configure_float_opt, std::placeholders::_1, &config.domain_x.min)},
-    {"xmax", std::bind(&configure_float_opt, std::placeholders::_1, &config.domain_x.max)},
-    {"ymin", std::bind(&configure_float_opt, std::placeholders::_1, &config.domain_y.min)},
-    {"ymax", std::bind(&configure_float_opt, std::placeholders::_1, &config.domain_y.max)},
-    {"series", std::bind(&configureSeries, std::placeholders::_1, &config)},
-  };
-
-  if (auto rc = parseAll(plist, pdefs); !rc.isSuccess()) {
-    return rc;
-  }
-
-  auto e = std::make_unique<Element>();
-  e->draw = std::bind(&draw, config, std::placeholders::_1, std::placeholders::_2);
-  *elem = std::move(e);
-
-  return ReturnCode::success();
-}
-
-} // namespace linechart
+} // namespace lines
+} // namespace plot
 } // namespace plotfx
 

@@ -1,4 +1,4 @@
-linechart {
+plot {
 
   xmin: 20;
   xmax: 80;

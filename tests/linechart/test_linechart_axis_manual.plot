@@ -1,4 +1,4 @@
-linechart {
+plot {
   axis-top: manual;
   axis-right: manual;
   axis-bottom: manual;

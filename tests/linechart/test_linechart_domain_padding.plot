@@ -1,4 +1,4 @@
-linechart {
+plot {
   xdomain-padding: 0.1;
   ydomain-padding: 0.3;
 

@@ -36,12 +36,14 @@
 #include <common/domain.h>
 #include <common/element.h>
 #include "plot_axis.h"
+#include "plot.h"
 
 namespace plotfx {
-namespace linechart {
+namespace plot {
+namespace lines {
 
-struct LinechartSeries {
-  LinechartSeries();
+struct PlotLinesConfig {
+  PlotLinesConfig();
   std::vector<double> xs;
   std::vector<double> ys;
   Measure line_width;
@@ -50,24 +52,13 @@ struct LinechartSeries {
   Colour point_colour;
 };
 
-struct LinechartConfig {
-  LinechartConfig();
-  DomainConfig domain_x;
-  DomainConfig domain_y;
-  AxisDefinition axis_top;
-  AxisDefinition axis_right;
-  AxisDefinition axis_bottom;
-  AxisDefinition axis_left;
-  Measure margins[4];
-  std::vector<LinechartSeries> series;
-};
-
-ReturnCode draw(const LinechartConfig& config, const Rectangle& clip, Layer* frame);
+ReturnCode draw(const PlotLinesConfig& config, const Rectangle& clip, Layer* frame);
 
 ReturnCode configure(
-    const plist::PropertyList& plist,
-    ElementRef* elem);
+    const plist::Property& prop,
+    plot::PlotConfig* plot);
 
-} // namespace linechart
+} // namespace lines
+} // namespace plot
 } // namespace plotfx
 
