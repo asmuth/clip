@@ -29,12 +29,17 @@
  */
 #pragma once
 #include "utils/return_code.h"
+#include "graphics/measure.h"
 #include "element.h"
 
 namespace plotfx {
 class Layer;
 
 struct Document {
+  Document();
+  MeasureTable measures;
+  Measure width;
+  Measure height;
   std::vector<ElementRef> roots;
 };
 

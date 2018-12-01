@@ -35,6 +35,10 @@
 
 namespace plotfx {
 
+Document::Document() :
+    width({Unit::PX, 1200}),
+    height({Unit::PX, 600}) {}
+
 ReturnCode buildDocument(
     const PropertyList& plist,
     Document* tree) {

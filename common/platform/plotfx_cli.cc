@@ -105,7 +105,11 @@ int main(int argc, const char** argv) {
     return EXIT_FAILURE;
   }
 
-  Layer frame{1200, 600};
+  Layer frame(
+      to_px(doc.measures, doc.width).value,
+      to_px(doc.measures, doc.height).value,
+      doc.measures);
+
   frame.clear(Colour{1, 1, 1, 1});
   if (auto rc = renderElements(doc, &frame); !rc.isSuccess()) {
     printError(rc);

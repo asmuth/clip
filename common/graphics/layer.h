@@ -44,7 +44,7 @@ namespace plotfx {
 
 struct Layer {
   Layer();
-  Layer(double width, double height, double rem = 12, double dpi = 96);
+  Layer(double width, double height, const MeasureTable& measures = MeasureTable{});
   ~Layer();
   Layer(const Layer&) = delete;
   Layer& operator=(const Layer&) = delete;

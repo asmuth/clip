@@ -37,14 +37,13 @@ namespace plotfx {
 Layer::Layer(
     double w,
     double h,
-    double rem /* = 12 */,
-    double dpi /* = 96 */) :
+    const MeasureTable& m /* = MeasureTable{} */) :
     width(w),
     height(h),
-    measures{.dpi = dpi, .rem = rem},
+    measures(m),
     //pixmap(PixelFormat::RGBA8, w, h),
-    text_shaper(dpi),
-    rasterizer(w, h, measures) {}
+    text_shaper(m.dpi),
+    rasterizer(w, h, m) {}
 
 Layer::~Layer() {}
 
