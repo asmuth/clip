@@ -145,7 +145,8 @@ Status Rasterizer::strokePath(
 Status Rasterizer::drawTextGlyphs(
     const FontInfo& font_info,
     const GlyphPlacement* glyphs,
-    size_t glyph_count) {
+    size_t glyph_count,
+    const TextStyle& style) {
   if (!ft_ready) {
     return ERROR;
   }
@@ -161,6 +162,13 @@ Status Rasterizer::drawTextGlyphs(
     FT_Done_Face(ft_font);
     return ERROR;
   }
+
+  cairo_set_source_rgba(
+     cr_ctx,
+     style.colour.red(),
+     style.colour.green(),
+     style.colour.blue(),
+     style.colour.alpha());
 
   auto cairo_face = cairo_ft_font_face_create_for_ft_face(ft_font, 0);
   cairo_set_font_face(cr_ctx, cairo_face);

@@ -74,7 +74,8 @@ public:
   Status drawTextGlyphs(
       const FontInfo& font_info,
       const GlyphPlacement* glyphs,
-      size_t glyph_count);
+      size_t glyph_count,
+      const TextStyle& style);
 
   MeasureTable measures;
   FT_Library ft;

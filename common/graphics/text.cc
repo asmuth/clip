@@ -44,11 +44,11 @@ Status drawText(
     const std::string& text,
     double x,
     double y,
-    const TextStyle& text_style,
+    const TextStyle& style,
     Layer* layer) {
   FontInfo font_info {
     .font_file = "/usr/share/fonts/google-roboto/Roboto-Medium.ttf",
-    .font_size = text_style.font_size
+    .font_size = style.font_size
   };
 
   std::vector<GlyphPlacement> glyphs;
@@ -57,9 +57,9 @@ Status drawText(
       x,
       y,
       font_info,
-      text_style.direction,
-      text_style.halign,
-      text_style.valign,
+      style.direction,
+      style.halign,
+      style.valign,
       &layer->text_shaper,
       [&glyphs] (const GlyphPlacement& g) { glyphs.emplace_back(g); });
 
@@ -67,15 +67,16 @@ Status drawText(
     return rc;
   }
 
-  return drawTextGlyphs(font_info, glyphs.data(), glyphs.size(), layer);
+  return drawTextGlyphs(font_info, glyphs.data(), glyphs.size(), style, layer);
 }
 
 Status drawTextGlyphs(
     const FontInfo& font_info,
     const GlyphPlacement* glyphs,
     size_t glyph_count,
+    const TextStyle& style,
     Layer* layer) {
-  return layer->rasterizer.drawTextGlyphs(font_info, glyphs, glyph_count);
+  return layer->rasterizer.drawTextGlyphs(font_info, glyphs, glyph_count, style);
 }
 
 } // namespace plotfx

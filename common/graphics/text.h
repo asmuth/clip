@@ -30,6 +30,7 @@
 #pragma once
 #include "plotfx.h"
 #include "path.h"
+#include "colour.h"
 
 namespace plotfx {
 class Layer;
@@ -52,6 +53,7 @@ struct TextStyle {
   TextHAlign halign;
   TextVAlign valign;
   double font_size;
+  Colour colour;
 };
 
 struct FontInfo {
@@ -84,6 +86,7 @@ Status drawTextGlyphs(
     const FontInfo& font_info,
     const GlyphPlacement* glyphs,
     size_t glyph_count,
+    const TextStyle& style,
     Layer* layer);
 
 
