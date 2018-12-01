@@ -5,7 +5,7 @@ plot {
   axis-top: off;
   axis-right: off;
 
-  ydomain-format: scientific;
+  ydomain-format: fixed(1);
 
   series {
     xs: csv('tests/testdata/measurement.csv', 0);

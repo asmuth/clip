@@ -79,6 +79,11 @@ ReturnCode parseEnum(
   return ReturnCode::success();
 }
 
+ReturnCode parse_classlike(
+    const plist::Property& prop,
+    const std::string& fn,
+    std::vector<std::string>* args);
+
 ParserFn configure_multiprop(const std::vector<ParserFn>& parsers);
 
 ReturnCode parseDataSeries(

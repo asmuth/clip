@@ -30,6 +30,7 @@
 #include <sstream>
 #include <iomanip>
 #include "format.h"
+#include "common/config_helpers.h"
 
 namespace plotfx {
 
@@ -44,6 +45,33 @@ Formatter format_decimal_scientific(size_t precision) {
   return f;
 }
 
+ReturnCode confgure_format_decimal_scientific(
+    const plist::Property& prop,
+    Formatter* formatter) {
+  std::vector<std::string> args;
+  if (auto rc = parse_classlike(prop, "scientific", &args); !rc) {
+    return rc;
+  }
+
+  uint32_t precision = 1;
+  switch (args.size()) {
+    case 0:
+      break;
+    case 1:
+      try {
+        precision = std::stod(args[0]);
+        break;
+      } catch (... ) {
+        return ERROR_INVALID_ARGUMENT;
+      }
+    default:
+      return ERROR_INVALID_ARGUMENT;
+  }
+
+  *formatter = format_decimal_scientific(precision);
+  return OK;
+}
+
 Formatter format_decimal_fixed(size_t precision) {
   Formatter f;
   f.format_number = [precision] (double v) -> std::string {
@@ -55,6 +83,33 @@ Formatter format_decimal_fixed(size_t precision) {
   return f;
 }
 
+ReturnCode confgure_format_decimal_fixed(
+    const plist::Property& prop,
+    Formatter* formatter) {
+  std::vector<std::string> args;
+  if (auto rc = parse_classlike(prop, "fixed", &args); !rc) {
+    return rc;
+  }
+
+  uint32_t precision = 1;
+  switch (args.size()) {
+    case 0:
+      break;
+    case 1:
+      try {
+        precision = std::stod(args[0]);
+        break;
+      } catch (... ) {
+        return ERROR_INVALID_ARGUMENT;
+      }
+    default:
+      return ERROR_INVALID_ARGUMENT;
+  }
+
+  *formatter = format_decimal_fixed(precision);
+  return OK;
+}
+
 ReturnCode confgure_format(
     const plist::Property& prop,
     Formatter* formatter) {
@@ -63,13 +118,11 @@ ReturnCode confgure_format(
   }
 
   if (prop[0].data == "fixed") {
-    *formatter = format_decimal_fixed(1); // FIXME
-    return OK;
+    return confgure_format_decimal_fixed(prop, formatter);
   }
 
   if (prop[0].data == "scientific") {
-    *formatter = format_decimal_scientific(1); // FIXME
-    return OK;
+    return confgure_format_decimal_scientific(prop, formatter);
   }
 
   return OK;
