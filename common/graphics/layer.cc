@@ -75,21 +75,5 @@ void Layer::clear(const Colour& c) {
   cairo_paint(rasterizer.cr_ctx);
 }
 
-double from_rem(const Layer& l, double v) {
-  return from_pt(l, l.measures.rem) * v;
-}
-
-double from_px(const Layer& l, double v) {
-  return v;
-}
-
-double from_pt(const Layer& l, double v) {
-  return (v / 72.0) * l.measures.dpi;
-}
-
-double to_pt(const Layer& l, double v) {
-  return (v / l.measures.dpi) * 72;
-}
-
 } // namespace plotfx
 

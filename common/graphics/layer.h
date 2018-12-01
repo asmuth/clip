@@ -62,10 +62,5 @@ struct Layer {
   Rasterizer rasterizer;
 };
 
-double from_rem(const Layer& l, double v);
-double from_px(const Layer& l, double v);
-double from_pt(const Layer& l, double v);
-double to_pt(const Layer& l, double v);
-
 } // namespace plotfx
 

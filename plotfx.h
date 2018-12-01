@@ -44,14 +44,5 @@ enum Status : int {
   ERROR_INVALID_ELEM
 };
 
-struct Command {
-  std::vector<std::string> name;
-  int (*fn)(Context*, const char**, int);
-};
-
-extern const std::vector<Command> command_list;
-
-int cmd(Context*, const char** args, int arg_count);
-
 } // namespace plotfx
 

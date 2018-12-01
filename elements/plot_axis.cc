@@ -168,7 +168,7 @@ static Status renderAxisHorizontal(
   }
 
   /* draw labels */
-  auto label_padding = from_rem(*target, axis_config.label_padding);
+  auto label_padding = to_px(target->measures, axis_config.label_padding).value;
   for (const auto& label : axis_config.labels) {
     auto [ tick, label_text ] = label;
     auto sx = x0 + (x1 - x0) * tick;
@@ -198,8 +198,6 @@ Status renderAxis(
     default:
       break;
   };
-
-  auto padding = from_rem(*frame, 1); // FIXME
 
   Status rc;
   switch (axis_position) {
