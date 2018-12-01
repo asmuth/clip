@@ -32,6 +32,7 @@
 #include "element_factory.h"
 #include "graphics/layer.h"
 #include "graphics/layout.h"
+#include "common/config_helpers.h"
 
 namespace plotfx {
 
@@ -41,9 +42,23 @@ Document::Document() :
 
 ReturnCode buildDocument(
     const PropertyList& plist,
-    Document* tree) {
+    Document* doc) {
+  static const ParserDefinitions pdefs = {
+    {"width", std::bind(&parseMeasureProp, std::placeholders::_1, &doc->width)},
+    {"height", std::bind(&parseMeasureProp, std::placeholders::_1, &doc->height)},
+  };
+
+  if (auto rc = parseAll(plist, pdefs); !rc.isSuccess()) {
+    return rc;
+  }
+
   for (size_t i = 0; i < plist.size(); ++i) {
     const auto& elem_name = plist[i].name;
+
+    if (!plist[i].child) {
+      continue;
+    }
+
     const auto& elem_config = plist[i].child.get();
 
     std::unique_ptr<Element> elem;
@@ -51,7 +66,7 @@ ReturnCode buildDocument(
       return rc;
     }
 
-    tree->roots.emplace_back(std::move(elem));
+    doc->roots.emplace_back(std::move(elem));
   }
 
   return ReturnCode::success();

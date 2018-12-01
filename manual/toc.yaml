@@ -25,10 +25,17 @@ documentation:
         url: "/documentation/faq"
         file: "faq"
 
-
   -
     title: "Charts & Visualizations"
     pages:
+      -
+        title: "Document Setup"
+        url: "/documentation/document-settings"
+        file: "doc_settings"
+      -
+        title: "Units & Formatters"
+        url: "/documentation/formatter"
+        file: "formatters"
       -
         title: "Plot: Domains"
         url: "/documentation/plot-domains"
