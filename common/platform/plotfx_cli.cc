@@ -105,7 +105,7 @@ int main(int argc, const char** argv) {
     return EXIT_FAILURE;
   }
 
-  Layer frame{1200, 800};
+  Layer frame{1200, 600};
   frame.clear(Colour{1, 1, 1, 1});
   if (auto rc = renderElements(elems, &frame); !rc.isSuccess()) {
     printError(rc);

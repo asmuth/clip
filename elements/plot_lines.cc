@@ -51,6 +51,7 @@ ReturnCode draw_lines(
   const auto& domain_x = plot.domain_x;
   const auto& domain_y = plot.domain_y;
 
+
   if (series.xs.size() != series.ys.size()) {
     // FIXME error msg
     return ERROR_INVALID_ARGUMENT;

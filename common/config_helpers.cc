@@ -28,12 +28,109 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 #include "config_helpers.h"
+#include "utils/fileutil.h"
+#include "utils/csv.h"
 #include <iostream>
 
 namespace plotfx {
 
-ReturnCode parseDataSeries(
+
+ReturnCode parse_classlike(
     const plist::Property& prop,
+    const std::string& fn,
+    std::vector<std::string>* args) {
+  if (prop.size() < 3) {
+    return ERROR_INVALID_ARGUMENT;
+  }
+
+  if (!prop[0].is_literal || prop[0].data != fn) {
+    return ERROR_INVALID_ARGUMENT;
+  }
+
+  if (!prop[1].is_literal || prop[1].data != "(") {
+    return ERROR_INVALID_ARGUMENT;
+  }
+
+  size_t argidx = 2;
+  for (; argidx < prop.size() - 1; ++argidx) {
+    if (prop[argidx].is_literal && prop[argidx].data == ",") {
+      continue;
+    }
+
+    if (prop[argidx].is_literal && prop[argidx].data == ")") {
+      break;
+    }
+
+    args->emplace_back(prop[argidx].data);
+    continue;
+  }
+
+  if (argidx >= prop.size()) {
+    return ERROR_INVALID_ARGUMENT;
+  }
+
+  if (!prop[argidx].is_literal || prop[argidx].data != ")") {
+    return ERROR_INVALID_ARGUMENT;
+  }
+
+  return OK;
+}
+
+ReturnCode parse_data_series_csv(
+    const plist::Property& prop ,
+    std::vector<double>* data) {
+  std::vector<std::string> args;
+  if (auto rc = parse_classlike(prop, "csv", &args); !rc) {
+    return rc;
+  }
+
+  if (args.size() < 2) {
+    return ERROR_INVALID_ARGUMENT; // FIXME
+  }
+
+  const auto& csv_path = args[0];
+  const auto& csv_column = args[1];
+
+  size_t csv_column_idx = 0;
+  try {
+    csv_column_idx = std::stoul(csv_column);
+  } catch (... ) {
+    return ERROR_INVALID_ARGUMENT; // FIXME
+  }
+
+  auto csv_data_str = FileUtil::read(csv_path).toString();
+  auto csv_data = CSVData{};
+  auto csv_opts = CSVParserConfig{};
+
+  for (size_t i = 2; i < args.size(); ++i) {
+    if (args[i] == "noheaders") {
+      csv_opts.headers = false;
+      continue;
+    }
+  }
+
+  if (auto rc = parseCSV(csv_data_str, csv_opts, &csv_data); !rc) {
+    return rc;
+  }
+
+  for (const auto& row : csv_data) {
+    if (row.size() > csv_column_idx) {
+      double value;
+      try {
+        value = std::stod(row[csv_column_idx]);
+      } catch (... ) {
+        return ERROR_INVALID_ARGUMENT; // FIXME
+      }
+
+      data->emplace_back(value);
+    }
+  }
+
+  return OK;
+}
+
+ReturnCode parse_data_series_inline(
+    const plist::Property& prop ,
     std::vector<double>* data) {
   for (const auto& v : prop.values) {
     double value;
@@ -47,6 +144,16 @@ ReturnCode parseDataSeries(
   }
 
   return OK;
+}
+
+ReturnCode parseDataSeries(
+    const plist::Property& prop,
+    std::vector<double>* data) {
+  if (prop.size() > 0 && prop[0].is_literal && prop[0].data == "csv") {
+    return parse_data_series_csv(prop, data);
+  }
+
+  return parse_data_series_inline(prop, data);
 }
 
 ReturnCode parseMeasureProp(
