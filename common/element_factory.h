@@ -32,8 +32,10 @@
 #include "element.h"
 
 namespace plotfx {
+struct Document;
 
 ReturnCode buildElement(
+    const Document& doc,
     const std::string& name,
     const plist::PropertyList& plist,
     std::unique_ptr<Element>* elem);

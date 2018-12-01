@@ -78,6 +78,7 @@ static Status renderAxisVertical(
   /* draw axis line */ 
   {
     StrokeStyle style;
+    style.colour = axis_config.border_colour;
     strokeLine(target, x, y0, x, y1, style);
   }
 
@@ -97,6 +98,7 @@ static Status renderAxisVertical(
   for (const auto& tick : axis_config.ticks) {
     auto y = y0 + (y1 - y0) * (1.0 - tick);
     StrokeStyle style;
+    style.colour = axis_config.border_colour;
     strokeLine(
         target,
         x,
@@ -114,6 +116,7 @@ static Status renderAxisVertical(
     auto sx = x + label_padding * label_placement;
 
     TextStyle style;
+    style.colour = axis_config.text_colour;
     style.halign = label_placement > 0 ? TextHAlign::LEFT : TextHAlign::RIGHT;
     style.valign = TextVAlign::MIDDLE;
     if (auto rc = drawText(label_text, sx, sy, style, target); rc != OK) {
@@ -133,6 +136,7 @@ static Status renderAxisHorizontal(
   /* draw axis line */ 
   {
     StrokeStyle style;
+    style.colour = axis_config.border_colour;
     strokeLine(target, x0, y, x1, y, style);
   }
 
@@ -152,6 +156,7 @@ static Status renderAxisHorizontal(
   for (const auto& tick : axis_config.ticks) {
     auto x = x0 + (x1 - x0) * tick;
     StrokeStyle style;
+    style.colour = axis_config.border_colour;
     strokeLine(
         target,
         x,
@@ -171,6 +176,7 @@ static Status renderAxisHorizontal(
     TextStyle style;
     style.halign = TextHAlign::CENTER;
     style.valign = label_placement > 0 ? TextVAlign::TOP : TextVAlign::BOTTOM;
+    style.colour = axis_config.text_colour;
     if (auto rc = drawText(label_text, sx, sy, style, target); rc) {
       return rc;
     }

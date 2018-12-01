@@ -73,7 +73,7 @@ ReturnCode buildDocument(
     const auto& elem_config = plist[i].child.get();
 
     std::unique_ptr<Element> elem;
-    if (auto rc = buildElement(elem_name, *elem_config, &elem); !rc.isSuccess()) {
+    if (auto rc = buildElement(*doc, elem_name, *elem_config, &elem); !rc.isSuccess()) {
       return rc;
     }
 

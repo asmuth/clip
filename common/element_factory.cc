@@ -33,13 +33,14 @@
 
 namespace plotfx {
 
-using ElementConfigureFn = std::function<ReturnCode (const PropertyList&, ElementRef*)>;
+using ElementConfigureFn = std::function<ReturnCode (const Document&, const PropertyList&, ElementRef*)>;
 
 static std::unordered_map<std::string, ElementConfigureFn> elems = {
   {"plot", &plot::configure}
 };
 
 ReturnCode buildElement(
+    const Document& doc,
     const std::string& name,
     const PropertyList& plist,
     std::unique_ptr<Element>* elem) {
@@ -48,7 +49,7 @@ ReturnCode buildElement(
     return ReturnCode::errorf("NOTFOUND", "no such element: $0", name);
   }
 
-  return elem_entry->second(plist, elem);
+  return elem_entry->second(doc, plist, elem);
 }
 
 } // namespace plotfx

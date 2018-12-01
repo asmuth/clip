@@ -35,6 +35,7 @@
 #include <graphics/viewport.h>
 #include <common/domain.h>
 #include <common/element.h>
+#include <common/document.h>
 #include "plot_axis.h"
 
 namespace plotfx {
@@ -60,6 +61,7 @@ struct PlotConfig {
 ReturnCode draw(const PlotConfig& config, const Rectangle& clip, Layer* frame);
 
 ReturnCode configure(
+    const Document& doc,
     const plist::PropertyList& plist,
     ElementRef* elem);
 

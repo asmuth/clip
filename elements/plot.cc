@@ -97,8 +97,22 @@ ReturnCode configure_series(const plist::Property& prop, PlotConfig* config) {
   return OK;
 }
 
-ReturnCode configure(const plist::PropertyList& plist, ElementRef* elem) {
+ReturnCode configure(
+    const Document& doc,
+    const plist::PropertyList& plist,
+    ElementRef* elem) {
   PlotConfig config;
+
+  // FIXME
+  config.axis_top.border_colour = doc.border_colour;
+  config.axis_top.text_colour = doc.text_colour;
+  config.axis_right.border_colour = doc.border_colour;
+  config.axis_right.text_colour = doc.text_colour;
+  config.axis_bottom.border_colour = doc.border_colour;
+  config.axis_bottom.text_colour = doc.text_colour;
+  config.axis_left.border_colour = doc.border_colour;
+  config.axis_left.text_colour = doc.text_colour;
+
   static const ParserDefinitions pdefs = {
     {
       "margin",
