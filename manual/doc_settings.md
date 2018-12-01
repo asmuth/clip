@@ -21,6 +21,10 @@ Lorem ipsum dolor sit amet.
       <td><code><strong>height</strong></code></td>
       <td>Here be dragons</td>
     </tr>
+    <tr>
+      <td><code><strong>background-colour</strong></code></td>
+      <td>Here be dragons</td>
+    </tr>
   </tbody>
 </table>
 
@@ -40,6 +44,14 @@ Lorem ipsum dolor sit amet.
 Lorem ipsum dolor sit amet.
 
     height: <size>;
+
+--
+
+### background-colour
+
+Lorem ipsum dolor sit amet.
+
+    background-colour: <colour>;
 
 
 ## Examples

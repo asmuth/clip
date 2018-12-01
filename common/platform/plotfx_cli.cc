@@ -110,7 +110,8 @@ int main(int argc, const char** argv) {
       to_px(doc.measures, doc.height).value,
       doc.measures);
 
-  frame.clear(Colour{1, 1, 1, 1});
+  frame.clear(doc.background_colour);
+
   if (auto rc = renderElements(doc, &frame); !rc.isSuccess()) {
     printError(rc);
     return EXIT_FAILURE;

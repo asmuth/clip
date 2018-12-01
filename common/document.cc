@@ -38,7 +38,8 @@ namespace plotfx {
 
 Document::Document() :
     width({Unit::PX, 1200}),
-    height({Unit::PX, 600}) {}
+    height({Unit::PX, 600}),
+    background_colour(Colour::fromRGB(1,1,1)) {}
 
 ReturnCode buildDocument(
     const PropertyList& plist,
@@ -46,6 +47,7 @@ ReturnCode buildDocument(
   static const ParserDefinitions pdefs = {
     {"width", std::bind(&parseMeasureProp, std::placeholders::_1, &doc->width)},
     {"height", std::bind(&parseMeasureProp, std::placeholders::_1, &doc->height)},
+    {"background-colour", std::bind(&configure_colour, std::placeholders::_1, &doc->background_colour)},
   };
 
   if (auto rc = parseAll(plist, pdefs); !rc.isSuccess()) {

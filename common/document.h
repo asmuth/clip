@@ -30,6 +30,7 @@
 #pragma once
 #include "utils/return_code.h"
 #include "graphics/measure.h"
+#include "graphics/colour.h"
 #include "element.h"
 
 namespace plotfx {
@@ -40,6 +41,7 @@ struct Document {
   MeasureTable measures;
   Measure width;
   Measure height;
+  Colour background_colour;
   std::vector<ElementRef> roots;
 };
 
