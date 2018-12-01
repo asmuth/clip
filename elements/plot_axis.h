@@ -76,9 +76,9 @@ struct AxisDefinition {
   Colour text_colour;
   Colour border_colour;
   FontInfo font;
-  double label_padding_rem;
-  double label_font_size_rem;
-  double tick_length_rem;
+  Measure label_padding;
+  Measure label_font_size;
+  Measure tick_length;
 };
 
 ReturnCode parseAxisMode(

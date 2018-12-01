@@ -42,9 +42,9 @@ AxisDefinition::AxisDefinition() :
     mode(AxisMode::AUTO),
     label_placement(AxisLabelPlacement::OUTSIDE),
     label_formatter(format_decimal_fixed(1)),
-    label_padding_rem(1.0f),
-    label_font_size_rem(1.0f),
-    tick_length_rem(0.4f) {}
+    label_padding({Unit::REM, 0.8f}),
+    label_font_size({Unit::REM, 1.0f}),
+    tick_length({Unit::REM, 0.4f}) {}
 
 ReturnCode parseAxisMode(
     const std::string& str,
@@ -103,13 +103,13 @@ static Status renderAxisVertical(
         target,
         x,
         y,
-        x + from_rem(*target, axis_config.tick_length_rem) * label_placement,
+        x + to_px(target->measures, axis_config.tick_length).value * label_placement,
         y,
         style);
   }
 
   /* draw labels */
-  auto label_padding = from_rem(*target, axis_config.label_padding_rem);
+  auto label_padding = to_px(target->measures, axis_config.label_padding).value;
   for (const auto& label : axis_config.labels) {
     auto [ tick, label_text ] = label;
     auto sy = y0 + (y1 - y0) * (1.0 - tick);
@@ -163,12 +163,12 @@ static Status renderAxisHorizontal(
         x,
         y,
         x,
-        y + from_rem(*target, axis_config.tick_length_rem) * label_placement,
+        y + to_px(target->measures, axis_config.tick_length).value * label_placement,
         style);
   }
 
   /* draw labels */
-  auto label_padding = from_rem(*target, axis_config.label_padding_rem);
+  auto label_padding = from_rem(*target, axis_config.label_padding);
   for (const auto& label : axis_config.labels) {
     auto [ tick, label_text ] = label;
     auto sx = x0 + (x1 - x0) * tick;
