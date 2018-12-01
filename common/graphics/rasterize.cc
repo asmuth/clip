@@ -60,7 +60,46 @@ Rasterizer::~Rasterizer() {
   cairo_surface_destroy(cr_surface);
 }
 
-/* rasterize using libcairo */
+Status Rasterizer::fillPath(
+    const Rectangle& clip,
+    const PathData* path_data,
+    size_t point_count,
+    const FillStyle& style) {
+  if (point_count < 2) {
+    return ERROR_INVALID_ARGUMENT;
+  }
+
+  cairo_set_source_rgba(
+     cr_ctx,
+     style.colour.red(),
+     style.colour.green(),
+     style.colour.blue(),
+     style.colour.alpha());
+
+  cairo_rectangle(cr_ctx, clip.x, clip.y, clip.w, clip.h);
+  cairo_clip(cr_ctx);
+  cairo_new_path(cr_ctx);
+
+  for (size_t i = 0; i < point_count; ++i) {
+    const auto& cmd = path_data[i];
+    switch (cmd.command) {
+      case PathCommand::MOVE_TO:
+        cairo_move_to(cr_ctx, cmd[0], cmd[1]);
+        break;
+      case PathCommand::LINE_TO:
+        cairo_line_to(cr_ctx, cmd[0], cmd[1]);
+        break;
+      case PathCommand::ARC_TO:
+        cairo_arc(cr_ctx, cmd[0], cmd[1], cmd[2], cmd[3], cmd[4]);
+        break;
+    }
+  }
+
+  cairo_fill(cr_ctx);
+
+  return OK;
+}
+
 Status Rasterizer::strokePath(
     const Rectangle& clip,
     const PathData* path_data,
@@ -91,6 +130,9 @@ Status Rasterizer::strokePath(
         break;
       case PathCommand::LINE_TO:
         cairo_line_to(cr_ctx, cmd[0], cmd[1]);
+        break;
+      case PathCommand::ARC_TO:
+        cairo_arc(cr_ctx, cmd[0], cmd[1], cmd[2], cmd[3], cmd[4]);
         break;
     }
   }

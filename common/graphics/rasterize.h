@@ -59,6 +59,12 @@ public:
   Rasterizer(const Rasterizer&) = delete;
   Rasterizer& operator=(const Rasterizer&) = delete;
 
+  Status fillPath(
+      const Rectangle& clip,
+      const PathData* point_data,
+      size_t point_count,
+      const FillStyle& style);
+
   Status strokePath(
       const Rectangle& clip,
       const PathData* point_data,

@@ -33,6 +33,36 @@
 
 namespace plotfx {
 
+void fillPath(
+    Layer* layer,
+    const Path& path,
+    const FillStyle& style) {
+  fillPath(
+      layer,
+      Rectangle(0, 0, layer->width, layer->height),
+      path.data(),
+      path.size(),
+      style);
+}
+
+void fillPath(
+    Layer* layer,
+    const Rectangle& clip,
+    const Path& path,
+    const FillStyle& style) {
+  fillPath(layer, clip, path.data(), path.size(), style);
+}
+
+void fillPath(
+    Layer* layer,
+    const Rectangle& clip,
+    const PathData* point_data,
+    size_t point_count,
+    const FillStyle& style) {
+  layer->rasterizer.fillPath(clip, point_data, point_count, style);
+}
+
+
 void strokePath(
     Layer* layer,
     const Path& path,

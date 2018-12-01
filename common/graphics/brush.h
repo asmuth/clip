@@ -55,6 +55,31 @@ struct StrokeStyle {
   Colour colour;
 };
 
+struct FillStyle {
+  FillStyle() :
+    colour(Colour::fromRGB(0, 0, 0)) {}
+
+  Colour colour;
+};
+
+void fillPath(
+    Layer* layer,
+    const Path& path,
+    const FillStyle& style);
+
+void fillPath(
+    Layer* layer,
+    const Rectangle& clip,
+    const Path& path,
+    const FillStyle& style);
+
+void fillPath(
+    Layer* layer,
+    const Rectangle& clip,
+    const PathData* path_data,
+    size_t path_data_count,
+    const FillStyle& style);
+
 void strokePath(
     Layer* layer,
     const Path& path,
