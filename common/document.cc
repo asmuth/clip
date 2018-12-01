@@ -39,7 +39,9 @@ namespace plotfx {
 Document::Document() :
     width({Unit::PX, 1200}),
     height({Unit::PX, 600}),
-    background_colour(Colour::fromRGB(1,1,1)) {}
+    background_colour(Colour::fromRGB(1,1,1)),
+    text_colour(Colour::fromRGB(.3,.3,.3)),
+    border_colour(Colour::fromRGB(.45,.45,.45)) {}
 
 ReturnCode buildDocument(
     const PropertyList& plist,
