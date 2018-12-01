@@ -41,6 +41,7 @@ add_library(plotfxlib STATIC
     common/element_factory.cc
     common/element_tree.cc
     common/utils/random.cc
+    common/utils/csv.cc
     common/utils/bufferutil.cc
     common/utils/exception.cc
     common/utils/UnixTime.cc
