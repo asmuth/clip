@@ -55,6 +55,7 @@ struct PlotConfig {
   AxisDefinition axis_bottom;
   AxisDefinition axis_left;
   Measure margins[4];
+  ColourScheme colour_scheme;
   std::vector<PlotSeries> series;
 };
 

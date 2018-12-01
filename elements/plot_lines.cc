@@ -106,7 +106,12 @@ ReturnCode configure(const plist::Property& prop, PlotConfig* config) {
     return ERROR_INVALID_ARGUMENT;
   }
 
+  auto colour = config->colour_scheme.next();
+
   PlotLinesConfig series;
+  series.line_colour.parse(colour);
+  series.point_colour.parse(colour);
+
   static const ParserDefinitions pdefs = {
     {"xs", std::bind(&parseDataSeries, std::placeholders::_1, &series.xs)},
     {"ys", std::bind(&parseDataSeries, std::placeholders::_1, &series.ys)},

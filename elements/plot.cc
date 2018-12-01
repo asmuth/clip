@@ -104,6 +104,7 @@ ReturnCode configure(
   PlotConfig config;
 
   // FIXME
+  config.colour_scheme = doc.colour_scheme;
   config.axis_top.font = doc.font_sans;
   config.axis_top.border_colour = doc.border_colour;
   config.axis_top.text_colour = doc.text_colour;
