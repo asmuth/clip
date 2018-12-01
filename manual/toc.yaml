@@ -32,15 +32,15 @@ documentation:
       -
         title: "Plot: Domains"
         url: "/documentation/plot-domains"
-        file: "metric_queryd"
+        file: "plot_domains"
       -
         title: "Plot: Axes"
         url: "/documentation/plot-axes"
-        file: "metric_queryd"
+        file: "plot_axes"
       -
         title: "Plot: Gridlines"
         url: "/documentation/plot-gridlines"
-        file: "metric_queryd"
+        file: ""
       -
         title: "Plot: Lines"
         url: "/documentation/plot-lines"
@@ -48,15 +48,19 @@ documentation:
       -
         title: "Plot: Scatter"
         url: "/documentation/plot-scatter"
-        file: "metric_queryd"
+        file: ""
       -
         title: "Plot: Areas"
         url: "/documentation/plot-areas"
-        file: "metric_queryd"
+        file: ""
       -
         title: "Plot: Bars"
         url: "/documentation/plot-bars"
-        file: "metric_queryd"
+        file: ""
+      -
+        title: "Plot: Styling"
+        url: "/documentation/plot-style"
+        file: "plot_style"
 
   -
     title: "Examples"

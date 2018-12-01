@@ -3,19 +3,3 @@ linechart
     margin-right
     margin-bottom
     margin-left
-    axis-top -> off, auto, manual
-    axis-right -> off, auto, manual
-    axis-bottom -> off auto, manual
-    axis-left -> off, auto, manual
-    xdomain-padding
-    ydomain-padding
-    xmin
-    xmax
-    ymin
-    ymax
-    series
-        xs -> data
-        ys -> data
-        colour
-        line-colour
-        line-width
