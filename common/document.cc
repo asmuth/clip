@@ -32,6 +32,7 @@
 #include "element_factory.h"
 #include "graphics/layer.h"
 #include "graphics/layout.h"
+#include "graphics/font_lookup.h"
 #include "common/config_helpers.h"
 
 namespace plotfx {
@@ -44,9 +45,24 @@ Document::Document() :
     border_colour(Colour::fromRGB(.45,.45,.45)) {}
 
 ReturnCode setupDocumentDefaults(Document* doc) {
-  doc->font_serif = "/usr/share/fonts/google-roboto/Roboto-Medium.ttf";
-  doc->font_sans = "/usr/share/fonts/google-roboto/Roboto-Medium.ttf";
-  doc->font_mono = "/usr/share/fonts/google-roboto/Roboto-Medium.ttf";
+  if (auto path = getenv("PLOTFX_FONT_PATH"); path) {
+    auto path_parts = StringUtil::split(path, ":");
+    doc->font_searchpath.insert(
+        doc->font_searchpath.end(),
+        path_parts.begin(),
+        path_parts.end());
+  }
+
+
+  static const auto default_font_sans = "Roboto-Medium";
+  if (!findFontSimple(default_font_sans, doc->font_searchpath, &doc->font_sans)) {
+    return ReturnCode::errorf(
+        "EARG",
+        "unable to find default sans-sans font ($0); searched in: $1",
+        default_font_sans,
+        StringUtil::join(doc->font_searchpath, ", "));
+  }
+
   return OK;
 }
 

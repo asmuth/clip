@@ -47,6 +47,7 @@ struct Document {
   std::string font_serif;
   std::string font_sans;
   std::string font_mono;
+  std::vector<std::string> font_searchpath;
   std::vector<ElementRef> roots;
 };
 

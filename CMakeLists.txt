@@ -38,6 +38,7 @@ add_library(plotfxlib STATIC
     common/graphics/text_shaper.cc
     common/graphics/rasterize.cc
     common/graphics/png.cc
+    common/graphics/font_lookup.cc
     common/element_factory.cc
     common/document.cc
     common/utils/random.cc
