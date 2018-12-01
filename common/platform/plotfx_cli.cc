@@ -38,7 +38,7 @@
 #include <sys/resource.h>
 #include <sys/file.h>
 #include "plotfx.h"
-#include "common/element_tree.h"
+#include "common/document.h"
 #include "graphics/layer.h"
 #include <utils/flagparser.h>
 #include <utils/fileutil.h>
@@ -99,15 +99,15 @@ int main(int argc, const char** argv) {
   }
 
   auto spec = FileUtil::read(flag_in).toString(); // FIXME
-  plotfx::ElementTree elems;
-  if (auto rc = buildElementTree(spec, &elems); !rc.isSuccess()) {
+  plotfx::Document doc;
+  if (auto rc = buildDocument(spec, &doc); !rc.isSuccess()) {
     printError(rc);
     return EXIT_FAILURE;
   }
 
   Layer frame{1200, 600};
   frame.clear(Colour{1, 1, 1, 1});
-  if (auto rc = renderElements(elems, &frame); !rc.isSuccess()) {
+  if (auto rc = renderElements(doc, &frame); !rc.isSuccess()) {
     printError(rc);
     return EXIT_FAILURE;
   }

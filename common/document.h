@@ -34,20 +34,20 @@
 namespace plotfx {
 class Layer;
 
-struct ElementTree {
+struct Document {
   std::vector<ElementRef> roots;
 };
 
-ReturnCode buildElementTree(
+ReturnCode buildDocument(
     const PropertyList& plist,
-    ElementTree* tree);
+    Document* tree);
 
-ReturnCode buildElementTree(
+ReturnCode buildDocument(
     const std::string& spec,
-    ElementTree* tree);
+    Document* tree);
 
 ReturnCode renderElements(
-    const ElementTree& tree,
+    const Document& tree,
     Layer* frame);
 
 } // namespace plotfx

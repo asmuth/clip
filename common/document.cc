@@ -27,17 +27,17 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+#include "document.h"
 #include "plist/plist_parser.h"
 #include "element_factory.h"
-#include "element_tree.h"
 #include "graphics/layer.h"
 #include "graphics/layout.h"
 
 namespace plotfx {
 
-ReturnCode buildElementTree(
+ReturnCode buildDocument(
     const PropertyList& plist,
-    ElementTree* tree) {
+    Document* tree) {
   for (size_t i = 0; i < plist.size(); ++i) {
     const auto& elem_name = plist[i].name;
     const auto& elem_config = plist[i].child.get();
@@ -53,9 +53,9 @@ ReturnCode buildElementTree(
   return ReturnCode::success();
 }
 
-ReturnCode buildElementTree(
+ReturnCode buildDocument(
     const std::string& spec,
-    ElementTree* tree) {
+    Document* tree) {
   PropertyList plist;
   plist::PropertyListParser plist_parser(spec.data(), spec.size());
   if (!plist_parser.parse(&plist)) {
@@ -65,11 +65,11 @@ ReturnCode buildElementTree(
         plist_parser.get_error());
   }
 
-  return buildElementTree(plist, tree);
+  return buildDocument(plist, tree);
 }
 
 ReturnCode renderElements(
-    const ElementTree& tree,
+    const Document& tree,
     Layer* frame) {
   Rectangle clip(0, 0, frame->width, frame->height);
 

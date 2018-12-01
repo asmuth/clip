@@ -39,7 +39,7 @@ add_library(plotfxlib STATIC
     common/graphics/rasterize.cc
     common/graphics/png.cc
     common/element_factory.cc
-    common/element_tree.cc
+    common/document.cc
     common/utils/random.cc
     common/utils/csv.cc
     common/utils/bufferutil.cc
