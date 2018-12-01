@@ -48,6 +48,15 @@ ReturnCode buildDocument(
     {"width", std::bind(&parseMeasureProp, std::placeholders::_1, &doc->width)},
     {"height", std::bind(&parseMeasureProp, std::placeholders::_1, &doc->height)},
     {"background-colour", std::bind(&configure_colour, std::placeholders::_1, &doc->background_colour)},
+    {
+      "foreground-colour",
+      configure_multiprop({
+          std::bind(&configure_colour, std::placeholders::_1, &doc->text_colour),
+          std::bind(&configure_colour, std::placeholders::_1, &doc->border_colour),
+      })
+    },
+    {"text-colour", std::bind(&configure_colour, std::placeholders::_1, &doc->text_colour)},
+    {"border-colour", std::bind(&configure_colour, std::placeholders::_1, &doc->border_colour)},
   };
 
   if (auto rc = parseAll(plist, pdefs); !rc.isSuccess()) {

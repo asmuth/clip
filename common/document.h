@@ -42,6 +42,8 @@ struct Document {
   Measure width;
   Measure height;
   Colour background_colour;
+  Colour text_colour;
+  Colour border_colour;
   std::vector<ElementRef> roots;
 };
 

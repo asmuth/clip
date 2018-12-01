@@ -25,6 +25,18 @@ Lorem ipsum dolor sit amet.
       <td><code><strong>background-colour</strong></code></td>
       <td>Here be dragons</td>
     </tr>
+    <tr>
+      <td><code><strong>foreground-colour</strong></code></td>
+      <td>Here be dragons</td>
+    </tr>
+    <tr>
+      <td><code><strong>text-colour</strong></code></td>
+      <td>Here be dragons</td>
+    </tr>
+    <tr>
+      <td><code><strong>border-colour</strong></code></td>
+      <td>Here be dragons</td>
+    </tr>
   </tbody>
 </table>
 
@@ -53,5 +65,27 @@ Lorem ipsum dolor sit amet.
 
     background-colour: <colour>;
 
+--
+
+### foreground-colour
+
+Lorem ipsum dolor sit amet.
+
+    foreground-colour: <colour>;
+
+--
+
+### text-colour
+
+Lorem ipsum dolor sit amet.
+
+    text-colour: <colour>;
+--
+
+### border-colour
+
+Lorem ipsum dolor sit amet.
+
+    border-colour: <colour>;
 
 ## Examples
