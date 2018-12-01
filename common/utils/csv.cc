@@ -25,21 +25,22 @@
 
 namespace plotfx {
 
-ReturnCode parseCSVLine(
-    const std::string& line,
-    std::vector<std::string>* columns,
-    char column_separator /* = ',' */,
-    char quote_char /* = '"' */,
-    char escape_char /* = '\\' */) {
-  columns->clear();
-  std::string column;
+ReturnCode parseCSV(
+    std::string input,
+    const CSVParserConfig& opts,
+    std::list<std::vector<std::string>>* output) {
+  input.push_back(0);
+
+  std::vector<std::string> row;
+  std::string buffer;
   bool quoted = false;
   bool escaped = false;
+  size_t row_index = 0;
 
-  for (const auto& byte : line) {
-    if (byte == escape_char) {
+  for (const auto& byte : input) {
+    if (byte == opts.escape_char) {
       if (escaped) {
-        column += escape_char;
+        buffer += opts.escape_char;
         escaped = false;
       } else {
         escaped = true;
@@ -47,28 +48,41 @@ ReturnCode parseCSVLine(
       continue;
     }
 
-    if (!escaped && byte == quote_char) {
+    if (!escaped && byte == opts.quote_char) {
       quoted = !quoted;
       continue;
     }
 
-    if (!quoted && byte == column_separator) {
-      columns->emplace_back(column);
-      column.clear();
+    if ((!quoted && byte == opts.column_separator) ||
+        (!quoted && byte == opts.line_separator) ||
+        (!quoted && byte == 0)) {
+      row.emplace_back(buffer);
+      buffer.clear();
+
+      if (byte == opts.line_separator) {
+        ++row_index;
+
+        if (row_index > 1 || !opts.headers) {
+          output->push_back(row);
+        }
+
+        row.clear();
+      }
+
       continue;
     }
 
-    column += byte;
+    buffer += byte;
     escaped = false;
   }
 
-  if (quoted) {
+  if (quoted || buffer.size() > 0) {
     return ReturnCode::error("EIO", "invalid csv line");
-  } else {
-    columns->emplace_back(column);
-    return ReturnCode::success();
   }
+
+  return ReturnCode::success();
 }
 
 } // namespace plotfx
+
 

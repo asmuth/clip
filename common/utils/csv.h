@@ -28,12 +28,27 @@
 
 namespace plotfx {
 
-ReturnCode parseCSVLine(
-    const std::string& line,
-    std::vector<std::string>* columns,
-    char column_separator = ',',
-    char quote_char = '"',
-    char escape_char = '\\');
+struct CSVParserConfig {
+  CSVParserConfig() :
+      headers(true),
+      line_separator('\n'),
+      column_separator(','),
+      quote_char('\"'),
+      escape_char('\\') {}
+
+  bool headers;
+  char line_separator;
+  char column_separator;
+  char quote_char;
+  char escape_char;
+};
+
+using CSVData = std::list<std::vector<std::string>>;
+
+ReturnCode parseCSV(
+    std::string input,
+    const CSVParserConfig& config,
+    CSVData* output);
 
 } // namespace plotfx
 
