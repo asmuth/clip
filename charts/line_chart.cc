@@ -47,8 +47,7 @@ char LineChart::kDefaultPointSize[] = "3";
 */
 
 LinechartSeries::LinechartSeries() :
-    line_width(from_pt(2)),
-    line_colour(Colour::fromRGB(0, 0, 0)) {}
+    line_width(from_pt(2)) {}
 
 LinechartConfig::LinechartConfig() :
     margins({
@@ -70,24 +69,46 @@ ReturnCode drawSeries(
     return ERROR_INVALID_ARGUMENT;
   }
 
-  Path path;
-  for (size_t i = 0; i < series.xs.size(); ++i) {
-    auto x = series.xs[i];
-    auto y = series.ys[i];
-    auto sx = clip.x + domain_translate(domain_x, x) * clip.w;
-    auto sy = clip.y + (1.0 - domain_translate(domain_y, y)) * clip.h;
+  // draw line
+  {
+    Path path;
+    for (size_t i = 0; i < series.xs.size(); ++i) {
+      auto x = series.xs[i];
+      auto y = series.ys[i];
+      auto sx = clip.x + domain_translate(domain_x, x) * clip.w;
+      auto sy = clip.y + (1.0 - domain_translate(domain_y, y)) * clip.h;
 
-    if (i == 0) {
-      path.moveTo(sx, sy);
-    } else {
-      path.lineTo(sx, sy);
+      if (i == 0) {
+        path.moveTo(sx, sy);
+      } else {
+        path.lineTo(sx, sy);
+      }
     }
+
+    StrokeStyle style;
+    style.line_width = series.line_width;
+    style.colour = series.line_colour;
+    strokePath(layer, clip, path, style);
   }
 
-  StrokeStyle style;
-  style.line_width = series.line_width;
-  style.colour = series.line_colour;
-  strokePath(layer, clip, path, style);
+  // draw points
+  auto point_size = to_px(layer->measures, series.point_size);
+  if (point_size > 0) {
+    FillStyle style;
+    style.colour = series.point_colour;
+    for (size_t i = 0; i < series.xs.size(); ++i) {
+      auto x = series.xs[i];
+      auto y = series.ys[i];
+      auto sx = clip.x + domain_translate(domain_x, x) * clip.w;
+      auto sy = clip.y + (1.0 - domain_translate(domain_y, y)) * clip.h;
+
+      // FIXME point style
+      Path path;
+      path.moveTo(sx + point_size, sy);
+      path.arcTo(sx, sy, point_size, 0, M_PI * 2);
+      fillPath(layer, clip, path, style);
+    }
+  }
 
   return OK;
 }
@@ -172,10 +193,13 @@ ReturnCode configureSeries(const plist::Property& prop, LinechartConfig* config)
       "colour",
       configure_multiprop({
           std::bind(&configure_colour, std::placeholders::_1, &series.line_colour),
+          std::bind(&configure_colour, std::placeholders::_1, &series.point_colour),
       })
     },
     {"line-colour", std::bind(&configure_colour, std::placeholders::_1, &series.line_colour)},
     {"line-width", std::bind(&parseMeasureProp, std::placeholders::_1, &series.line_width)},
+    {"point-colour", std::bind(&configure_colour, std::placeholders::_1, &series.point_colour)},
+    {"point-size", std::bind(&parseMeasureProp, std::placeholders::_1, &series.point_size)},
   };
 
   if (auto rc = parseAll(*prop.child, pdefs); !rc) {

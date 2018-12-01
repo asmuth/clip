@@ -46,6 +46,8 @@ struct LinechartSeries {
   std::vector<double> ys;
   Measure line_width;
   Colour line_colour;
+  Measure point_size;
+  Colour point_colour;
 };
 
 struct LinechartConfig {
