@@ -55,5 +55,25 @@ Formatter format_decimal_fixed(size_t precision) {
   return f;
 }
 
+ReturnCode confgure_format(
+    const plist::Property& prop,
+    Formatter* formatter) {
+  if (prop.size() < 1) {
+    return ERROR_INVALID_ARGUMENT;
+  }
+
+  if (prop[0].data == "fixed") {
+    *formatter = format_decimal_fixed(1); // FIXME
+    return OK;
+  }
+
+  if (prop[0].data == "scientific") {
+    *formatter = format_decimal_scientific(1); // FIXME
+    return OK;
+  }
+
+  return OK;
+}
+
 } // namespace plotfx
 

@@ -133,9 +133,27 @@ ReturnCode configure(
     {"margin-bottom", std::bind(&parseMeasureProp, std::placeholders::_1, &config.margins[2])},
     {"margin-left", std::bind(&parseMeasureProp, std::placeholders::_1, &config.margins[3])},
     {"axis-top", std::bind(&parseAxisModeProp, std::placeholders::_1, &config.axis_top.mode)},
+    {"axis-top-format", std::bind(&confgure_format, std::placeholders::_1, &config.axis_top.label_formatter)},
     {"axis-right", std::bind(&parseAxisModeProp, std::placeholders::_1, &config.axis_right.mode)},
+    {"axis-right-format", std::bind(&confgure_format, std::placeholders::_1, &config.axis_right.label_formatter)},
     {"axis-bottom", std::bind(&parseAxisModeProp, std::placeholders::_1, &config.axis_bottom.mode)},
+    {"axis-bottom-format", std::bind(&confgure_format, std::placeholders::_1, &config.axis_bottom.label_formatter)},
     {"axis-left", std::bind(&parseAxisModeProp, std::placeholders::_1, &config.axis_left.mode)},
+    {"axis-left-format", std::bind(&confgure_format, std::placeholders::_1, &config.axis_left.label_formatter)},
+    {
+      "xdomain-format",
+      configure_multiprop({
+          std::bind(&confgure_format, std::placeholders::_1, &config.axis_top.label_formatter),
+          std::bind(&confgure_format, std::placeholders::_1, &config.axis_bottom.label_formatter),
+      })
+    },
+    {
+      "ydomain-format",
+      configure_multiprop({
+          std::bind(&confgure_format, std::placeholders::_1, &config.axis_left.label_formatter),
+          std::bind(&confgure_format, std::placeholders::_1, &config.axis_right.label_formatter),
+      })
+    },
     {"xdomain-padding", std::bind(&configure_float, std::placeholders::_1, &config.domain_x.padding)},
     {"ydomain-padding", std::bind(&configure_float, std::placeholders::_1, &config.domain_y.padding)},
     {"xmin", std::bind(&configure_float_opt, std::placeholders::_1, &config.domain_x.min)},

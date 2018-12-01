@@ -32,6 +32,14 @@ Lorem ipsum dolor sit amet.
       <td>Here be dragons</td>
     </tr>
     <tr>
+      <td><code><strong>xdomain-format</strong></code></td>
+      <td>Here be dragons</td>
+    </tr>
+    <tr>
+      <td><code><strong>ydomain-format</strong></code></td>
+      <td>Here be dragons</td>
+    </tr>
+    <tr>
       <td><code><strong>xdomain-padding</strong></code></td>
       <td>Here be dragons</td>
     </tr>
@@ -77,6 +85,21 @@ Lorem ipsum dolor sit amet.
 
 --
 
+### xdomain-format
+
+Lorem ipsum dolor sit amet.
+
+    xdomain-format: fixed | scientific | datetime;
+
+--
+
+### ydomain-format
+
+Lorem ipsum dolor sit amet.
+
+    ydomain-format: fixed | scientific | datetime;
+
+--
 
 ### xdomain-padding
 

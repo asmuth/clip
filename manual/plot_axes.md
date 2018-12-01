@@ -31,6 +31,22 @@ Lorem ipsum dolor sit amet.
       <td><code><strong>axis-left</strong></code></td>
       <td>Here be dragons</td>
     </tr>
+    <tr>
+      <td><code><strong>axis-top-format</strong></code></td>
+      <td>Here be dragons</td>
+    </tr>
+    <tr>
+      <td><code><strong>axis-right-format</strong></code></td>
+      <td>Here be dragons</td>
+    </tr>
+    <tr>
+      <td><code><strong>axis-bottom-format</strong></code></td>
+      <td>Here be dragons</td>
+    </tr>
+    <tr>
+      <td><code><strong>axis-left-format</strong></code></td>
+      <td>Here be dragons</td>
+    </tr>
   </tbody>
 </table>
 
@@ -66,6 +82,39 @@ Lorem ipsum dolor sit amet.
 Lorem ipsum dolor sit amet.
 
     axis-left: auto | manual | off;
+
+--
+
+### axis-top-format
+
+Lorem ipsum dolor sit amet.
+
+    axis-top-format: fixed | scientific | datetime;
+
+--
+
+### axis-right-format
+
+Lorem ipsum dolor sit amet.
+
+    axis-right-format: fixed | scientific | datetime;
+
+--
+
+### axis-bottom-format
+
+Lorem ipsum dolor sit amet.
+
+    axis-bottom-format: fixed | scientific | datetime;
+
+--
+
+### axis-left-format
+
+Lorem ipsum dolor sit amet.
+
+    axis-left-format: fixed | scientific | datetime;
+
 
 
 ## Examples

@@ -44,5 +44,9 @@ Formatter format_decimal_scientific(size_t precision);
 
 Formatter format_decimal_fixed(size_t precision);
 
+ReturnCode confgure_format(
+    const plist::Property& prop,
+    Formatter* formatter);
+
 } // namespace plotfx
 
