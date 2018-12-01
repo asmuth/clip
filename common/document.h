@@ -29,6 +29,7 @@
  */
 #pragma once
 #include "utils/return_code.h"
+#include "common/colour_scheme.h"
 #include "graphics/measure.h"
 #include "graphics/colour.h"
 #include "graphics/text.h"
@@ -42,6 +43,7 @@ struct Document {
   MeasureTable measures;
   Measure width;
   Measure height;
+  ColourScheme colour_scheme;
   Colour background_colour;
   Colour text_colour;
   Colour border_colour;

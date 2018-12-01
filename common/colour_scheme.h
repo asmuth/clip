@@ -27,17 +27,15 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-#ifndef _libstx_UI_COLORPALETTE_H
-#define _libstx_UI_COLORPALETTE_H
+#pragma once
 #include <stdlib.h>
 
 namespace plotfx {
-namespace chart {
 
-class ColorPalette {
+class ColourScheme {
 public:
 
-  ColorPalette(
+  ColourScheme(
       const std::vector<std::string>& colors = std::vector<std::string>{
           "color1",
           "color2",
@@ -48,10 +46,8 @@ public:
           colors_(colors),
           color_index_(0) {}
 
-  void setNextColor(Series* series) {
-    series->setDefaultProperty(
-        Series::P_COLOR,
-        colors_[color_index_++ % colors_.size()]);
+  std::string next() {
+    return colors_[color_index_++ % colors_.size()];
   }
 
 protected:
@@ -59,6 +55,5 @@ protected:
   size_t color_index_;
 };
 
-}
-}
-#endif
+} // namespace plotfx
+
