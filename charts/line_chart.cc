@@ -135,42 +135,20 @@ ReturnCode draw(
       to_unit(layer->measures, config.margins[3]).value);
 
   // render axes
-  AxisDefinition axis_top;
-  if (auto rc = axis_expand_auto(config.axis_top, AxisPosition::TOP, domain_x, &axis_top); !rc) {
+  if (auto rc = axis_draw_all(
+        border_box,
+        domain_x,
+        domain_y,
+        config.axis_top,
+        config.axis_right,
+        config.axis_bottom,
+        config.axis_left,
+        layer);
+        !rc) {
     return rc;
   }
 
-  if (auto rc = renderAxis(axis_top, border_box, AxisPosition::TOP, layer); rc) {
-    return rc;
-  }
-
-  AxisDefinition axis_right;
-  if (auto rc = axis_expand_auto(config.axis_right, AxisPosition::RIGHT, domain_y, &axis_right); !rc) {
-    return rc;
-  }
-
-  if (auto rc = renderAxis(axis_right, border_box, AxisPosition::RIGHT, layer); rc) {
-    return rc;
-  }
-
-  AxisDefinition axis_bottom;
-  if (auto rc = axis_expand_auto(config.axis_bottom, AxisPosition::BOTTOM, domain_x, &axis_bottom); !rc) {
-    return rc;
-  }
-
-  if (auto rc = renderAxis(axis_bottom, border_box, AxisPosition::BOTTOM, layer); rc) {
-    return rc;
-  }
-
-  AxisDefinition axis_left;
-  if (auto rc = axis_expand_auto(config.axis_left, AxisPosition::LEFT, domain_y, &axis_left); !rc) {
-    return rc;
-  }
-
-  if (auto rc = renderAxis(axis_left, border_box, AxisPosition::LEFT, layer); rc) {
-    return rc;
-  }
-
+  // render series
   for (const auto& s : config.series) {
     if (auto rc = drawSeries(s, domain_x, domain_y, border_box, layer); !rc) {
       return rc;

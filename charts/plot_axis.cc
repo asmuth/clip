@@ -297,5 +297,53 @@ ReturnCode axis_expand_auto(
   return axis_expand_linear_geom(domain, out); // FIXME
 }
 
+ReturnCode axis_draw_all(
+    const Rectangle& clip,
+    const DomainConfig& domain_x,
+    const DomainConfig& domain_y,
+    const AxisDefinition& axis_top_,
+    const AxisDefinition& axis_right_,
+    const AxisDefinition& axis_bottom_,
+    const AxisDefinition& axis_left_,
+    Layer* layer) {
+  AxisDefinition axis_top;
+  if (auto rc = axis_expand_auto(axis_top_, AxisPosition::TOP, domain_x, &axis_top); !rc) {
+    return rc;
+  }
 
+  if (auto rc = renderAxis(axis_top, clip, AxisPosition::TOP, layer); rc) {
+    return rc;
+  }
+
+  AxisDefinition axis_right;
+  if (auto rc = axis_expand_auto(axis_right_, AxisPosition::RIGHT, domain_y, &axis_right); !rc) {
+    return rc;
+  }
+
+  if (auto rc = renderAxis(axis_right, clip, AxisPosition::RIGHT, layer); rc) {
+    return rc;
+  }
+
+  AxisDefinition axis_bottom;
+  if (auto rc = axis_expand_auto(axis_bottom_, AxisPosition::BOTTOM, domain_x, &axis_bottom); !rc) {
+    return rc;
+  }
+
+  if (auto rc = renderAxis(axis_bottom, clip, AxisPosition::BOTTOM, layer); rc) {
+    return rc;
+  }
+
+  AxisDefinition axis_left;
+  if (auto rc = axis_expand_auto(axis_left_, AxisPosition::LEFT, domain_y, &axis_left); !rc) {
+    return rc;
+  }
+
+  if (auto rc = renderAxis(axis_left, clip, AxisPosition::LEFT, layer); rc) {
+    return rc;
+  }
+
+  return OK;
 }
+
+} // namespace plotfx
+

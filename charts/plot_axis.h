@@ -98,5 +98,15 @@ ReturnCode axis_expand_auto(
     const DomainConfig& domain,
     AxisDefinition* out);
 
+ReturnCode axis_draw_all(
+    const Rectangle& clip,
+    const DomainConfig& domain_x,
+    const DomainConfig& domain_y,
+    const AxisDefinition& axis_top,
+    const AxisDefinition& axis_right,
+    const AxisDefinition& axis_bottom,
+    const AxisDefinition& axis_left,
+    Layer* layer);
+
 } // namespace plotfx
 
