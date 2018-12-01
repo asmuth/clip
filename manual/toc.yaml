@@ -67,8 +67,8 @@ documentation:
     pages:
       -
         title: "Data Source: CSV"
-        url: "/documentation/data-csv"
-        file: "data-csv"
+        url: "/documentation/data-csvx"
+        file: "data_csv"
 
   -
     title: "Examples"
