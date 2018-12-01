@@ -31,31 +31,31 @@ documentation:
     pages:
       -
         title: "Plot: Domains"
-        url: "/documentation/plot-lines"
+        url: "/documentation/plot-domains"
         file: "metric_queryd"
       -
         title: "Plot: Axes"
-        url: "/documentation/plot-lines"
+        url: "/documentation/plot-axes"
         file: "metric_queryd"
       -
         title: "Plot: Gridlines"
-        url: "/documentation/plot-lines"
+        url: "/documentation/plot-gridlines"
         file: "metric_queryd"
       -
         title: "Plot: Lines"
         url: "/documentation/plot-lines"
-        file: "metric_queryd"
+        file: "plot_lines"
       -
         title: "Plot: Scatter"
-        url: "/documentation/plot-lines"
+        url: "/documentation/plot-scatter"
         file: "metric_queryd"
       -
         title: "Plot: Areas"
-        url: "/documentation/plot-lines"
+        url: "/documentation/plot-areas"
         file: "metric_queryd"
       -
         title: "Plot: Bars"
-        url: "/documentation/plot-lines"
+        url: "/documentation/plot-bars"
         file: "metric_queryd"
 
   -
