@@ -5,6 +5,7 @@ plot {
   axis-top: off;
   axis-right: off;
 
+  xdomain-format: datetime("%H:%M:%S");
   ydomain-format: fixed(1);
 
   series {

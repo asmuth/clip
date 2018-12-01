@@ -31,6 +31,7 @@
 #include <iomanip>
 #include "format.h"
 #include "common/config_helpers.h"
+#include "common/utils/UnixTime.h"
 
 namespace plotfx {
 
@@ -110,6 +111,39 @@ ReturnCode confgure_format_decimal_fixed(
   return OK;
 }
 
+Formatter format_datetime(const std::string& fmt) {
+  Formatter f;
+  f.format_number = [fmt] (double v) -> std::string {
+    UnixTime v_t(v * 1000000);
+    return v_t.toString(fmt.c_str());
+  };
+
+  return f;
+}
+
+ReturnCode confgure_format_datetime(
+    const plist::Property& prop,
+    Formatter* formatter) {
+  std::vector<std::string> args;
+  if (auto rc = parse_classlike(prop, "datetime", &args); !rc) {
+    return rc;
+  }
+
+  std::string fmtspec = "%Y-%m-%d %H:%M:%S"; // FIXME improved auto format
+  switch (args.size()) {
+    case 0:
+      break;
+    case 1:
+      fmtspec = args[0];
+      break;
+    default:
+      return ERROR_INVALID_ARGUMENT;
+  }
+
+  *formatter = format_datetime(fmtspec);
+  return OK;
+}
+
 ReturnCode confgure_format(
     const plist::Property& prop,
     Formatter* formatter) {
@@ -123,6 +157,10 @@ ReturnCode confgure_format(
 
   if (prop[0].data == "scientific") {
     return confgure_format_decimal_scientific(prop, formatter);
+  }
+
+  if (prop[0].data == "datetime") {
+    return confgure_format_datetime(prop, formatter);
   }
 
   return OK;
