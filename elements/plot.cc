@@ -104,12 +104,16 @@ ReturnCode configure(
   PlotConfig config;
 
   // FIXME
+  config.axis_top.font = doc.font_sans;
   config.axis_top.border_colour = doc.border_colour;
   config.axis_top.text_colour = doc.text_colour;
+  config.axis_right.font = doc.font_sans;
   config.axis_right.border_colour = doc.border_colour;
   config.axis_right.text_colour = doc.text_colour;
+  config.axis_bottom.font = doc.font_sans;
   config.axis_bottom.border_colour = doc.border_colour;
   config.axis_bottom.text_colour = doc.text_colour;
+  config.axis_left.font = doc.font_sans;
   config.axis_left.border_colour = doc.border_colour;
   config.axis_left.text_colour = doc.text_colour;
 

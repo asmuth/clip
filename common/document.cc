@@ -43,6 +43,13 @@ Document::Document() :
     text_colour(Colour::fromRGB(.3,.3,.3)),
     border_colour(Colour::fromRGB(.45,.45,.45)) {}
 
+ReturnCode setupDocumentDefaults(Document* doc) {
+  doc->font_serif = "/usr/share/fonts/google-roboto/Roboto-Medium.ttf";
+  doc->font_sans = "/usr/share/fonts/google-roboto/Roboto-Medium.ttf";
+  doc->font_mono = "/usr/share/fonts/google-roboto/Roboto-Medium.ttf";
+  return OK;
+}
+
 ReturnCode buildDocument(
     const PropertyList& plist,
     Document* doc) {

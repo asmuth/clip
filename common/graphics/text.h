@@ -52,6 +52,7 @@ struct TextStyle {
   TextDirection direction;
   TextHAlign halign;
   TextVAlign valign;
+  std::string font_file;
   double font_size;
   Colour colour;
 };

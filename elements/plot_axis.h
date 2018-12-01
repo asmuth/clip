@@ -75,6 +75,7 @@ struct AxisDefinition {
   Formatter label_formatter;
   Colour text_colour;
   Colour border_colour;
+  std::string font;
   double label_padding_rem;
   double label_font_size_rem;
   double tick_length_rem;

@@ -44,8 +44,13 @@ struct Document {
   Colour background_colour;
   Colour text_colour;
   Colour border_colour;
+  std::string font_serif;
+  std::string font_sans;
+  std::string font_mono;
   std::vector<ElementRef> roots;
 };
+
+ReturnCode setupDocumentDefaults(Document* doc);
 
 ReturnCode buildDocument(
     const PropertyList& plist,

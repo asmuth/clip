@@ -116,6 +116,7 @@ static Status renderAxisVertical(
     auto sx = x + label_padding * label_placement;
 
     TextStyle style;
+    style.font_file = axis_config.font;
     style.colour = axis_config.text_colour;
     style.halign = label_placement > 0 ? TextHAlign::LEFT : TextHAlign::RIGHT;
     style.valign = TextVAlign::MIDDLE;
@@ -174,6 +175,7 @@ static Status renderAxisHorizontal(
     auto sy = y + label_padding * label_placement;
 
     TextStyle style;
+    style.font_file = axis_config.font;
     style.halign = TextHAlign::CENTER;
     style.valign = label_placement > 0 ? TextVAlign::TOP : TextVAlign::BOTTOM;
     style.colour = axis_config.text_colour;

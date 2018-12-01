@@ -100,6 +100,11 @@ int main(int argc, const char** argv) {
 
   auto spec = FileUtil::read(flag_in).toString(); // FIXME
   plotfx::Document doc;
+  if (auto rc = setupDocumentDefaults(&doc); !rc.isSuccess()) {
+    printError(rc);
+    return EXIT_FAILURE;
+  }
+
   if (auto rc = buildDocument(spec, &doc); !rc.isSuccess()) {
     printError(rc);
     return EXIT_FAILURE;
