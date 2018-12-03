@@ -17,20 +17,21 @@ struct Property;
 
 using PropertyList = std::vector<Property>;
 
-struct PropertyValue {
-  std::string data;
-  bool is_literal;
-  operator const std::string&() const;
+enum class PropertyKind {
+  MAP, TUPLE, LIST, VALUE, VALUE_LITERAL
 };
 
 struct Property {
   std::string name;
-  std::vector<PropertyValue> values;
-  std::unique_ptr<std::vector<Property>> child;
+  PropertyKind kind;
+  std::unique_ptr<std::vector<Property>> next;
+  std::string value;
 
-  const PropertyValue& get(size_t i) const;
-  const PropertyValue& operator[](size_t i) const;
+  const Property& operator[](size_t i) const;
   size_t size() const;
+
+  operator const std::string&() const;
+
 };
 
 } // namespace plist

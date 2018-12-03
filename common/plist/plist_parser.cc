@@ -30,10 +30,9 @@
 #include <regex>
 #include <iostream>
 #include "plist_parser.h"
-#include "utils/stringutil.h"
+#include "stringutil.h"
 
 namespace plist {
-using plotfx::StringUtil;
 
 PropertyListParser::PropertyListParser(
     const char* input,
@@ -52,7 +51,7 @@ bool PropertyListParser::parse(PropertyList* plist) {
   TokenType ttype;
   std::string tbuf;
   while (getToken(&ttype, &tbuf)) {
-    if (!parsePropertyOrList(plist)) {
+    if (!parsePropertyOrMap(plist)) {
       return false;
     }
   }
@@ -60,7 +59,7 @@ bool PropertyListParser::parse(PropertyList* plist) {
   return true;
 }
 
-bool PropertyListParser::parsePropertyOrList(PropertyList* plist) {
+bool PropertyListParser::parsePropertyOrMap(PropertyList* plist) {
   std::string pname;
   if (!expectAndConsumeString(&pname)) {
     return false;
@@ -83,7 +82,7 @@ bool PropertyListParser::parsePropertyOrList(PropertyList* plist) {
     case T_LCBRACE:
       return
           consumeToken() &&
-          parsePropertyList(pname, plist) &&
+          parsePropertyMap(pname, plist) &&
           expectAndConsumeToken(T_RCBRACE);
 
     default:
@@ -99,52 +98,148 @@ bool PropertyListParser::parseProperty(const std::string& pname, PropertyList* p
   Property prop;
   prop.name = pname;
 
-  TokenType ttype;
-  std::string tbuf;
-  for (; getToken(&ttype, &tbuf) && ttype != T_SEMICOLON; consumeToken()) {
-    PropertyValue pval;
-    pval.is_literal = true;
+  PropertyList args;
+  if (!parsePropertyListOrTuple(&args)) {
+    return false;
+  }
 
-    switch (ttype) {
-      case T_COMMA:
-        pval.data = ",";
-        break;
-      case T_LPAREN:
-        pval.data = "(";
-        break;
-      case T_RPAREN:
-        pval.data = ")";
-        break;
-      case T_STRING_QUOTED:
-        pval.is_literal = false;
-        /* fallthrough */
-      case T_STRING:
-        pval.data = tbuf;
-        break;
-      default:
-        setError(
-            StringUtil::format(
-                "unexpected token '$0'; expected one of: STRING, COMMA, LPAREN, RPAREN",
-                printToken(ttype, tbuf)));
-        return false;
-    }
-
-    prop.values.emplace_back(pval);
+  if (args.size() == 1) {
+    prop.kind = args[0].kind;
+    prop.value = args[0].value;
+    prop.next = std::move(args[0].next);
+  } else {
+    prop.kind = PropertyKind::LIST;
+    prop.next = std::make_unique<PropertyList>(std::move(args));
   }
 
   plist->emplace_back(std::move(prop));
   return true;
 }
 
-bool PropertyListParser::parsePropertyList(const std::string& pname, PropertyList* plist) {
+bool PropertyListParser::parsePropertyListOrTuple(PropertyList* plist) {
+  TokenType ttype;
+  std::string tbuf;
+  while (getToken(&ttype, &tbuf) && ttype != T_SEMICOLON) {
+    Property prop;
+    if (!parsePropertyTupleOrValue(&prop)) {
+      return false;
+    }
+
+    plist->emplace_back(std::move(prop));
+
+    if (!getToken(&ttype, &tbuf)) {
+      return false;
+    }
+
+    switch (ttype) {
+      case T_SEMICOLON:
+        return true;
+
+      case T_COMMA:
+        consumeToken();
+        continue;
+
+      default:
+        setError(
+            StringUtil::format(
+                "unexpected token '$0'; expected SEMICOLON OR COMMA",
+                printToken(ttype, tbuf)));
+        return false;
+    }
+  }
+
+  return true;
+}
+
+bool PropertyListParser::parsePropertyTupleOrValue(Property* prop) {
+  PropertyList args;
+  if (!parsePropertyTuple(&args)) {
+    return false;
+  }
+
+  if (args.size() == 1) {
+    prop->kind = args[0].kind;
+    prop->value = args[0].value;
+  } else {
+    prop->kind = PropertyKind::TUPLE;
+    prop->next = std::make_unique<PropertyList>(std::move(args));
+  }
+
+  return true;
+}
+
+bool PropertyListParser::parsePropertyTuple(PropertyList* plist) {
+  TokenType ttype;
+  std::string tbuf;
+  while (getToken(&ttype, &tbuf) && ttype != T_SEMICOLON) {
+    switch (ttype) {
+      case T_STRING_QUOTED:
+      case T_STRING: {
+        Property prop;
+        if (!parsePropertyValue(&prop)) {
+          return false;
+        }
+
+        plist->emplace_back(std::move(prop));
+        break;
+      }
+
+      case T_COMMA:
+        return true;
+
+      default:
+        setError(
+            StringUtil::format(
+                "unexpected token '$0'; expected STRING",
+                printToken(ttype, tbuf)));
+        return false;
+    }
+
+  }
+
+  return true;
+}
+
+bool PropertyListParser::parsePropertyValue(Property* prop) {
+  TokenType ttype;
+  std::string tbuf;
+  if (!getToken(&ttype, &tbuf)) {
+    return false;
+  }
+
+  switch (ttype) {
+    case T_STRING_QUOTED:
+      prop->kind = PropertyKind::VALUE;
+      prop->value = tbuf;
+      consumeToken();
+      break;
+    case T_STRING:
+      prop->kind = PropertyKind::VALUE_LITERAL;
+      prop->value = tbuf;
+      consumeToken();
+      break;
+    default:
+      setError(
+          StringUtil::format(
+              "unexpected token '$0'; expected STRING",
+              printToken(ttype, tbuf)));
+      return false;
+  }
+
+
+  return true;
+}
+
+bool PropertyListParser::parsePropertyMap(const std::string& pname, PropertyList* plist) {
   Property prop;
   prop.name = pname;
-  prop.child = std::make_unique<PropertyList>();
+  prop.kind = PropertyKind::MAP;
+  prop.next = std::make_unique<PropertyList>();
 
   TokenType ttype;
   std::string tbuf;
   while (getToken(&ttype, &tbuf) && ttype != T_RCBRACE) {
-    if (!parsePropertyOrList(prop.child.get())) {
+    if (!parsePropertyOrMap(prop.next.get())) {
       return false;
     }
   }

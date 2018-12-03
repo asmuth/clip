@@ -12,22 +12,22 @@
 
 namespace plist {
 
-PropertyValue::operator const std::string&() const {
-  return data;
-}
-
-const PropertyValue& Property::get(size_t i) const {
-  assert(i < values.size());
-  return values[i];
-}
-
-const PropertyValue& Property::operator[](size_t i) const {
-  assert(i < values.size());
-  return values[i];
+const Property& Property::operator[](size_t i) const {
+  assert(next);
+  assert(i < next->size());
+  return (*next)[i];
 }
 
 size_t Property::size() const {
-  return values.size();
+  if (next) {
+    return next->size();
+  } else {
+    return 0;
+  }
+}
+
+Property::operator const std::string&() const {
+  return value;
 }
 
 } // namespace plist

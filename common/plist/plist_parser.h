@@ -68,9 +68,13 @@ protected:
 
   bool consumeToken();
 
-  bool parsePropertyOrList(PropertyList* plist);
+  bool parsePropertyOrMap(PropertyList* plist);
   bool parseProperty(const std::string& pname, PropertyList* plist);
-  bool parsePropertyList(const std::string& pname, PropertyList* plist);
+  bool parsePropertyListOrTuple(PropertyList* plist);
+  bool parsePropertyTupleOrValue(Property* prop);
+  bool parsePropertyTuple(PropertyList* plist);
+  bool parsePropertyValue(Property* plist);
+  bool parsePropertyMap(const std::string& pname, PropertyList* plist);
 
   bool getToken(
       TokenType* type,
