@@ -135,6 +135,9 @@ bool PropertyListParser::parsePropertyListOrTuple(PropertyList* plist) {
       case T_SEMICOLON:
         return true;
 
+      case T_RPAREN:
+        return true;
+
       case T_COMMA:
         consumeToken();
         continue;
@@ -160,6 +163,7 @@ bool PropertyListParser::parsePropertyTupleOrValue(Property* prop) {
   if (args.size() == 1) {
     prop->kind = args[0].kind;
     prop->value = args[0].value;
+    prop->next = std::move(args[0].next);
   } else {
     prop->kind = PropertyKind::TUPLE;
     prop->next = std::make_unique<PropertyList>(std::move(args));
@@ -176,13 +180,16 @@ bool PropertyListParser::parsePropertyTuple(PropertyList* plist) {
       case T_STRING_QUOTED:
       case T_STRING: {
         Property prop;
-        if (!parsePropertyValue(&prop)) {
+        if (!parsePropertyValueOrEnum(&prop)) {
           return false;
         }
 
         plist->emplace_back(std::move(prop));
         break;
       }
+
+      case T_RPAREN:
+        return true;
 
       case T_COMMA:
         return true;
@@ -196,6 +203,35 @@ bool PropertyListParser::parsePropertyTuple(PropertyList* plist) {
     }
 
   }
+
+  return true;
+}
+
+bool PropertyListParser::parsePropertyValueOrEnum(Property* prop) {
+  if (!parsePropertyValue(prop)) {
+    return false;
+  }
+
+  if (prop->kind != PropertyKind::VALUE_LITERAL) {
+    return true;
+  }
+
+  TokenType ttype;
+  std::string tbuf;
+  if (!getToken(&ttype, &tbuf) || ttype != T_LPAREN) {
+    return true;
+  }
+
+  prop->kind = PropertyKind::ENUM;
+  prop->next = std::make_unique<PropertyList>();
+
+  expectAndConsumeToken(T_LPAREN);
+
+  if (!parsePropertyListOrTuple(prop->next.get())) {
+    return false;
+  }
+
+  expectAndConsumeToken(T_RPAREN);
 
   return true;
 }

@@ -18,7 +18,7 @@ struct Property;
 using PropertyList = std::vector<Property>;
 
 enum class PropertyKind {
-  MAP, TUPLE, LIST, VALUE, VALUE_LITERAL
+  MAP, TUPLE, LIST, ENUM, VALUE, VALUE_LITERAL
 };
 
 struct Property {

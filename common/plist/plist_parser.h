@@ -73,7 +73,9 @@ protected:
   bool parsePropertyListOrTuple(PropertyList* plist);
   bool parsePropertyTupleOrValue(Property* prop);
   bool parsePropertyTuple(PropertyList* plist);
-  bool parsePropertyValue(Property* plist);
+  bool parsePropertyValueOrEnum(Property* prop);
+  bool parsePropertyEnum(Property* prop);
+  bool parsePropertyValue(Property* prop);
   bool parsePropertyMap(const std::string& pname, PropertyList* plist);
 
   bool getToken(
