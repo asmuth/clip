@@ -47,6 +47,7 @@
 #include "text.h"
 #include "brush.h"
 #include "layout.h"
+#include "text_shaper.h"
 
 namespace plotfx {
 class Image;
@@ -54,29 +55,26 @@ class Image;
 class Rasterizer {
 public:
 
-  Rasterizer(uint32_t width, uint32_t height, MeasureTable measures);
+  Rasterizer(uint32_t width, uint32_t height, MeasureTable measures, text::TextShaper* text_shaper);
   ~Rasterizer();
   Rasterizer(const Rasterizer&) = delete;
   Rasterizer& operator=(const Rasterizer&) = delete;
 
-  Status fillPath(
-      const Rectangle& clip,
-      const PathData* point_data,
-      size_t point_count,
-      const FillStyle& style);
+  void clear(const Colour& c);
 
-  Status strokePath(
-      const Rectangle& clip,
-      const PathData* point_data,
-      size_t point_count,
-      const StrokeStyle& style);
+  Status fillPath(const BrushFillOp& op);
+  Status strokePath(const BrushStrokeOp& op);
 
+  Status drawText(const TextSpanOp& op);
   Status drawTextGlyphs(
       const GlyphPlacement* glyphs,
       size_t glyph_count,
       const TextStyle& style);
 
+  Status writeToFile(const std::string& path);
+
   MeasureTable measures;
+  text::TextShaper* text_shaper;
   FT_Library ft;
   bool ft_ready;
   cairo_surface_t* cr_surface;

@@ -32,6 +32,8 @@ add_library(plotfxlib STATIC
     common/graphics/colour.cc
     common/graphics/image.cc
     common/graphics/layer.cc
+    common/graphics/layer_pixmap.cc
+    common/graphics/layer_svg.cc
     common/graphics/layout.cc
     common/graphics/measure.cc
     common/graphics/text.cc
@@ -66,18 +68,18 @@ set(PLOTFX_LDFLAGS plotfxlib ${CAIRO_LIBRARIES} ${FREETYPE_LIBRARIES} ${HARFBUZZ
 add_executable(plotfx common/platform/plotfx_cli.cc)
 target_link_libraries(plotfx ${PLOTFX_LDFLAGS})
 
-file(GLOB unit_test_files "tests/**/test_*.cc")
-foreach(unit_test_path ${unit_test_files})
-  get_filename_component(unit_test_name ${unit_test_path} NAME_WE)
-  get_filename_component(unit_test_srcdir ${unit_test_path} DIRECTORY)
-
-  add_executable(${unit_test_name} ${unit_test_path})
-  target_link_libraries(${unit_test_name} ${PLOTFX_LDFLAGS})
-
-  add_test(
-      NAME ${unit_test_name}
-      COMMAND ${CMAKE_CURRENT_BINARY_DIR}/${unit_test_name})
-endforeach()
+#file(GLOB unit_test_files "tests/**/test_*.cc")
+#foreach(unit_test_path ${unit_test_files})
+#  get_filename_component(unit_test_name ${unit_test_path} NAME_WE)
+#  get_filename_component(unit_test_srcdir ${unit_test_path} DIRECTORY)
+#
+#  add_executable(${unit_test_name} ${unit_test_path})
+#  target_link_libraries(${unit_test_name} ${PLOTFX_LDFLAGS})
+#
+#  add_test(
+#      NAME ${unit_test_name}
+#      COMMAND ${CMAKE_CURRENT_BINARY_DIR}/${unit_test_name})
+#endforeach()
 
 file(GLOB spec_test_files "tests/**/test_*.plot")
 foreach(spec_test_path ${spec_test_files})

@@ -1,6 +1,5 @@
 /**
  * This file is part of the "plotfx" project
- *   Copyright (c) 2018 Paul Asmuth
  *   Copyright (c) 2014 Paul Asmuth, Google Inc.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -29,37 +28,12 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 #pragma once
-#include <stdlib.h>
-#include <vector>
-#include <string>
-
-#include "colour.h"
-#include "plotfx.h"
-#include "text_shaper.h"
-#include "rasterize.h"
-#include "image.h"
-#include "measure.h"
+#include "layer.h"
 
 namespace plotfx {
+class Rasterizer;
 
-struct Layer {
-  Layer();
-  Layer(double width, double height, const MeasureTable& measures = MeasureTable{});
-  ~Layer();
-  Layer(const Layer&) = delete;
-  Layer& operator=(const Layer&) = delete;
-
-  double width;
-  double height;
-  MeasureTable measures;
-  Colour background_colour;
-
-  std::function<Status (const BrushStrokeOp&)> op_brush_stroke;
-  std::function<Status (const BrushFillOp&)> op_brush_fill;
-  std::function<Status (const TextSpanOp&)> op_text_span;
-
-  text::TextShaper text_shaper;
-};
+ReturnCode layer_new_pixmap(Layer* layer, Rasterizer* raster);
 
 } // namespace plotfx
 

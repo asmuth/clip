@@ -62,6 +62,18 @@ struct FillStyle {
   Colour colour;
 };
 
+struct BrushStrokeOp {
+  Rectangle clip;
+  Path path;
+  StrokeStyle style;
+};
+
+struct BrushFillOp {
+  Rectangle clip;
+  Path path;
+  FillStyle style;
+};
+
 void fillPath(
     Layer* layer,
     const Path& path,

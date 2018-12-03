@@ -30,14 +30,17 @@
 #include <iostream>
 #include <graphics/rasterize.h>
 #include <graphics/image.h>
+#include <graphics/text_layout.h>
 
 namespace plotfx {
 
 Rasterizer::Rasterizer(
     uint32_t width,
     uint32_t height,
-    MeasureTable measures_) :
+    MeasureTable measures_,
+    text::TextShaper* text_shaper_) :
     measures(measures_),
+    text_shaper(text_shaper_),
     ft_ready(false) {
   if (!FT_Init_FreeType(&ft)) {
     ft_ready = true;
@@ -60,12 +63,11 @@ Rasterizer::~Rasterizer() {
   cairo_surface_destroy(cr_surface);
 }
 
-Status Rasterizer::fillPath(
-    const Rectangle& clip,
-    const PathData* path_data,
-    size_t point_count,
-    const FillStyle& style) {
-  if (point_count < 2) {
+Status Rasterizer::fillPath(const BrushFillOp& op) {
+  const auto& clip = op.clip;
+  const auto& path = op.path;
+  const auto& style = op.style;
+  if (path.size() < 2) {
     return ERROR_INVALID_ARGUMENT;
   }
 
@@ -80,8 +82,7 @@ Status Rasterizer::fillPath(
   cairo_clip(cr_ctx);
   cairo_new_path(cr_ctx);
 
-  for (size_t i = 0; i < point_count; ++i) {
-    const auto& cmd = path_data[i];
+  for (const auto& cmd : path) {
     switch (cmd.command) {
       case PathCommand::MOVE_TO:
         cairo_move_to(cr_ctx, cmd[0], cmd[1]);
@@ -100,12 +101,12 @@ Status Rasterizer::fillPath(
   return OK;
 }
 
-Status Rasterizer::strokePath(
-    const Rectangle& clip,
-    const PathData* path_data,
-    size_t point_count,
-    const StrokeStyle& style) {
-  if (point_count < 2) {
+Status Rasterizer::strokePath(const BrushStrokeOp& op) {
+  const auto& clip = op.clip;
+  const auto& path = op.path;
+  const auto& style = op.style;
+
+  if (path.size() < 2) {
     return ERROR_INVALID_ARGUMENT;
   }
 
@@ -122,8 +123,7 @@ Status Rasterizer::strokePath(
   cairo_clip(cr_ctx);
   cairo_new_path(cr_ctx);
 
-  for (size_t i = 0; i < point_count; ++i) {
-    const auto& cmd = path_data[i];
+  for (const auto& cmd : path) {
     switch (cmd.command) {
       case PathCommand::MOVE_TO:
         cairo_move_to(cr_ctx, cmd[0], cmd[1]);
@@ -140,6 +140,30 @@ Status Rasterizer::strokePath(
   cairo_stroke(cr_ctx);
 
   return OK;
+}
+
+Status Rasterizer::drawText(const TextSpanOp& op) {
+  std::vector<GlyphPlacement> glyphs;
+  auto rc = text::layoutText(
+      op.text,
+      op.x,
+      op.y,
+      op.style.font,
+      op.style.font_size,
+      op.style.direction,
+      op.style.halign,
+      op.style.valign,
+      text_shaper,
+      [&glyphs] (const GlyphPlacement& g) { glyphs.emplace_back(g); });
+
+  if (rc != OK) {
+    return rc;
+  }
+
+  return drawTextGlyphs(
+      glyphs.data(),
+      glyphs.size(),
+      op.style);
 }
 
 Status Rasterizer::drawTextGlyphs(
@@ -204,6 +228,30 @@ Status Rasterizer::drawTextGlyphs(
 
   FT_Done_Face(ft_font);
   return OK;
+}
+
+void Rasterizer::clear(const Colour& c) {
+  cairo_set_source_rgba(
+      cr_ctx,
+      c.red(),
+      c.green(),
+      c.blue(),
+      c.alpha());
+
+  cairo_paint(cr_ctx);
+}
+
+Status Rasterizer::writeToFile(const std::string& path) {
+  if (StringUtil::endsWith(path, ".png")) {
+    auto rc = cairo_surface_write_to_png(cr_surface, path.c_str());
+    if (rc == CAIRO_STATUS_SUCCESS) {
+      return OK;
+    } else {
+      return ERROR_IO;
+    }
+  }
+
+  return ERROR_INVALID_ARGUMENT;
 }
 
 } // namespace plotfx

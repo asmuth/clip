@@ -50,7 +50,14 @@ void fillPath(
     const Rectangle& clip,
     const Path& path,
     const FillStyle& style) {
-  fillPath(layer, clip, path.data(), path.size(), style);
+  BrushFillOp op;
+  op.clip = clip;
+  op.path = path;
+  op.style = style;
+
+  if (layer->op_brush_fill) {
+    layer->op_brush_fill(op);
+  }
 }
 
 void fillPath(
@@ -59,9 +66,8 @@ void fillPath(
     const PathData* point_data,
     size_t point_count,
     const FillStyle& style) {
-  layer->rasterizer.fillPath(clip, point_data, point_count, style);
+  return fillPath(layer, clip, Path(point_data, point_count), style);
 }
-
 
 void strokePath(
     Layer* layer,
@@ -80,7 +86,14 @@ void strokePath(
     const Rectangle& clip,
     const Path& path,
     const StrokeStyle& style) {
-  strokePath(layer, clip, path.data(), path.size(), style);
+  BrushStrokeOp op;
+  op.clip = clip;
+  op.path = path;
+  op.style = style;
+
+  if (layer->op_brush_stroke) {
+    layer->op_brush_stroke(op);
+  }
 }
 
 void strokePath(
@@ -89,7 +102,7 @@ void strokePath(
     const PathData* point_data,
     size_t point_count,
     const StrokeStyle& style) {
-  layer->rasterizer.strokePath(clip, point_data, point_count, style);
+  strokePath(layer, clip, Path(point_data, point_count), style);
 }
 
 void strokeLine(
@@ -106,7 +119,7 @@ void strokeLine(
   p.lineTo(x2, y2);
 
   Rectangle clip(0, 0, layer->width, layer->height);
-  strokePath(layer, clip, p.data(), p.size(), style);
+  strokePath(layer, clip, p, style);
 }
 
 } // namespace plotfx

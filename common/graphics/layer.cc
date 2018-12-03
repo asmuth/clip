@@ -41,39 +41,9 @@ Layer::Layer(
     width(w),
     height(h),
     measures(m),
-    //pixmap(PixelFormat::RGBA8, w, h),
-    text_shaper(m.dpi),
-    rasterizer(w, h, m) {}
+    text_shaper(m.dpi) {}
 
 Layer::~Layer() {}
-
-Status Layer::writeToFile(const std::string& path) {
-  if (StringUtil::endsWith(path, ".png")) {
-    auto rc = cairo_surface_write_to_png(rasterizer.cr_surface, path.c_str());
-    if (rc == CAIRO_STATUS_SUCCESS) {
-      return OK;
-    } else {
-      return ERROR_IO;
-    }
-  }
-
-  return ERROR_INVALID_ARGUMENT;
-}
-
-Status Layer::loadFromFile(const std::string& path) const {
-  return ERROR_INVALID_ARGUMENT;
-}
-
-void Layer::clear(const Colour& c) {
-  cairo_set_source_rgba(
-      rasterizer.cr_ctx,
-      c.red(),
-      c.green(),
-      c.blue(),
-      c.alpha());
-
-  cairo_paint(rasterizer.cr_ctx);
-}
 
 } // namespace plotfx
 

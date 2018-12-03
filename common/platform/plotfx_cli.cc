@@ -40,6 +40,8 @@
 #include "plotfx.h"
 #include "common/document.h"
 #include "graphics/layer.h"
+#include "graphics/layer_svg.h"
+#include "graphics/layer_pixmap.h"
 #include <utils/flagparser.h>
 #include <utils/fileutil.h>
 #include <utils/return_code.h>
@@ -115,14 +117,25 @@ int main(int argc, const char** argv) {
       to_px(doc.measures, doc.height).value,
       doc.measures);
 
-  frame.clear(doc.background_colour);
+  frame.background_colour = doc.background_colour;
+
+  Rasterizer raster(
+      to_px(doc.measures, doc.width).value,
+      to_px(doc.measures, doc.height).value,
+      doc.measures,
+      &frame.text_shaper);
+
+  if (auto rc = layer_new_pixmap(&frame, &raster); !rc.isSuccess()) {
+    printError(rc);
+    return EXIT_FAILURE;
+  }
 
   if (auto rc = renderElements(doc, &frame); !rc.isSuccess()) {
     printError(rc);
     return EXIT_FAILURE;
   }
 
-  if (auto rc = frame.writeToFile(flag_out); rc) {
+  if (auto rc = raster.writeToFile(flag_out); rc) {
     std::cerr << "ERROR: can't write output file" << std::endl;
     return EXIT_FAILURE;
   }

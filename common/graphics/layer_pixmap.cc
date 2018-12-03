@@ -1,6 +1,5 @@
 /**
  * This file is part of the "plotfx" project
- *   Copyright (c) 2018 Paul Asmuth
  *   Copyright (c) 2014 Paul Asmuth, Google Inc.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -28,38 +27,30 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-#pragma once
-#include <stdlib.h>
-#include <vector>
-#include <string>
-
-#include "colour.h"
-#include "plotfx.h"
-#include "text_shaper.h"
-#include "rasterize.h"
-#include "image.h"
-#include "measure.h"
+#include "layer_pixmap.h"
 
 namespace plotfx {
 
-struct Layer {
-  Layer();
-  Layer(double width, double height, const MeasureTable& measures = MeasureTable{});
-  ~Layer();
-  Layer(const Layer&) = delete;
-  Layer& operator=(const Layer&) = delete;
+ReturnCode layer_new_pixmap(Layer* layer, Rasterizer* raster) {
+  raster->clear(layer->background_colour);
 
-  double width;
-  double height;
-  MeasureTable measures;
-  Colour background_colour;
+  layer->op_brush_stroke = std::bind(
+      &Rasterizer::strokePath,
+      raster,
+      std::placeholders::_1);
 
-  std::function<Status (const BrushStrokeOp&)> op_brush_stroke;
-  std::function<Status (const BrushFillOp&)> op_brush_fill;
-  std::function<Status (const TextSpanOp&)> op_text_span;
+  layer->op_brush_fill = std::bind(
+      &Rasterizer::fillPath,
+      raster,
+      std::placeholders::_1);
 
-  text::TextShaper text_shaper;
-};
+  layer->op_text_span = std::bind(
+      &Rasterizer::drawText,
+      raster,
+      std::placeholders::_1);
+
+  return OK;
+}
 
 } // namespace plotfx
 

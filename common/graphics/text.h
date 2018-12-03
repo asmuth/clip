@@ -75,6 +75,13 @@ struct GlyphPlacement {
   double y;
 };
 
+struct TextSpanOp {
+  std::string text;
+  double x;
+  double y;
+  TextStyle style;
+};
+
 Status drawText(
     const std::string& text,
     double x,

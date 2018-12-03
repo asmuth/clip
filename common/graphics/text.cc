@@ -46,37 +46,19 @@ Status drawText(
     double y,
     const TextStyle& style,
     Layer* layer) {
-  std::vector<GlyphPlacement> glyphs;
-  auto rc = text::layoutText(
-      text,
-      x,
-      y,
-      style.font,
-      style.font_size,
-      style.direction,
-      style.halign,
-      style.valign,
-      &layer->text_shaper,
-      [&glyphs] (const GlyphPlacement& g) { glyphs.emplace_back(g); });
-
-  if (rc != OK) {
-    return rc;
+  if (!layer->op_text_span) {
+    return ERROR_IO;
   }
 
-  return drawTextGlyphs(
-      glyphs.data(),
-      glyphs.size(),
-      style,
-      layer);
+  TextSpanOp op;
+  op.text = text;
+  op.x = x;
+  op.y = y;
+  op.style = style;
+
+  return layer->op_text_span(op);
 }
 
-Status drawTextGlyphs(
-    const GlyphPlacement* glyphs,
-    size_t glyph_count,
-    const TextStyle& style,
-    Layer* layer) {
-  return layer->rasterizer.drawTextGlyphs(glyphs, glyph_count, style);
-}
 
 } // namespace plotfx
 
