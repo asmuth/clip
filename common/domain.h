@@ -52,7 +52,7 @@ struct DomainConfig {
   double padding;
 };
 
-void domain_fit(const std::vector<double>& data, DomainConfig* domain);
+void domain_fit(const std::vector<double>& data, DomainConfig* domain, bool snap_zero);
 
 double domain_translate(const DomainConfig& domain, double v);
 

@@ -36,7 +36,7 @@ DomainConfig::DomainConfig() :
     inverted(false),
     padding(0.0f) {}
 
-void domain_fit(const std::vector<double>& data, DomainConfig* domain) {
+void domain_fit(const std::vector<double>& data, DomainConfig* domain, bool snap_zero) {
   bool fit_min = !domain->min;
   bool fit_max = !domain->max;
 
@@ -49,15 +49,19 @@ void domain_fit(const std::vector<double>& data, DomainConfig* domain) {
     }
   }
 
-  auto range = domain->max.value_or(0.0f) - domain->min.value_or(0.0f);
+  auto range = domain->max.value_or(0) - domain->min.value_or(0);
   if (fit_max) {
     domain->max = std::optional<double>(
-        domain->max.value_or(0.0f) + range * domain->padding);
+        domain->max.value_or(0) + range * domain->padding);
   }
 
   if (fit_min) {
-    domain->min = std::optional<double>(
-        domain->min.value_or(0.0f) - range * domain->padding);
+    if (snap_zero && domain->min.value_or(0) > 0) {
+      domain->min = std::optional<double>(0);
+    } else {
+      domain->min = std::optional<double>(
+          domain->min.value_or(0) - range * domain->padding);
+    }
   }
 }
 

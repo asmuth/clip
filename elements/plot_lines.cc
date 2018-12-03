@@ -132,8 +132,8 @@ ReturnCode configure(const plist::Property& prop, PlotConfig* config) {
     return rc;
   }
 
-  domain_fit(series.xs, &config->domain_x);
-  domain_fit(series.ys, &config->domain_y);
+  domain_fit(series.xs, &config->domain_x, false);
+  domain_fit(series.ys, &config->domain_y, true);
 
   config->series.emplace_back(PlotSeries {
     .draw = std::bind(
