@@ -28,11 +28,26 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 #pragma once
+#include <iostream>
+#include <sstream>
 #include "layer.h"
+#include "utils/outputstream.h"
 
 namespace plotfx {
 
-ReturnCode layer_new_svg(Layer* layer);
+class SVGData {
+public:
+  SVGData();
+  std::stringstream buffer;
+
+  uint32_t width;
+  uint32_t height;
+
+  std::string to_svg() const;
+  Status writeToFile(const std::string& path);
+};
+
+ReturnCode layer_new_svg(Layer* layer, SVGData* svg);
 
 } // namespace plotfx
 

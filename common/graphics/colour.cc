@@ -28,6 +28,8 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 #include <string.h>
+#include <iostream>
+#include <iomanip>
 #include <utils/stringutil.h>
 #include "colour.h"
 
@@ -132,6 +134,20 @@ bool Colour::parseHexShort(const std::string& str) {
   components_[2] = std::stoi(str.substr(3, 1), nullptr, 16) / 16.0f;
   components_[3] = 1.0f;
   return true;
+}
+
+std::string Colour::to_hex_str() const {
+  std::stringstream ss;
+  ss
+    << "#"
+    << std::setfill('0')
+    << std::setw(2)
+    << std::hex
+    << int(components_[0] * 255)
+    << int(components_[1] * 255)
+    << int(components_[2] * 255);
+
+  return ss.str();
 }
 
 std::ostream& operator <<(std::ostream& os, const Colour& c) {

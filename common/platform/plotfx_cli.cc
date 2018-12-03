@@ -125,17 +125,23 @@ int main(int argc, const char** argv) {
       doc.measures,
       &frame.text_shaper);
 
-  if (auto rc = layer_new_pixmap(&frame, &raster); !rc.isSuccess()) {
+  SVGData svg;
+  if (auto rc = layer_new_svg(&frame, &svg); !rc.isSuccess()) {
     printError(rc);
     return EXIT_FAILURE;
   }
+
+  //if (auto rc = layer_new_pixmap(&frame, &raster); !rc.isSuccess()) {
+  //  printError(rc);
+  //  return EXIT_FAILURE;
+  //}
 
   if (auto rc = renderElements(doc, &frame); !rc.isSuccess()) {
     printError(rc);
     return EXIT_FAILURE;
   }
 
-  if (auto rc = raster.writeToFile(flag_out); rc) {
+  if (auto rc = svg.writeToFile(flag_out); rc) {
     std::cerr << "ERROR: can't write output file" << std::endl;
     return EXIT_FAILURE;
   }

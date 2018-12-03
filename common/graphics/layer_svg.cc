@@ -28,10 +28,88 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 #include "layer_svg.h"
+#include "utils/fileutil.h"
+#include "utils/exception.h"
 
 namespace plotfx {
 
-ReturnCode layer_new_svg(Layer* layer) {
+SVGData::SVGData() {}
+
+Status svg_text_span(const TextSpanOp& op, SVGData* svg) {
+  const auto& style = op.style;
+
+  std::string anchor = "middle";
+  std::string baseline = "middle";
+
+  svg->buffer
+    << "  "
+    << "<text "
+    << "x='" << op.x << "' "
+    << "y='" << op.y << "' "
+    << "fill='" << style.colour.to_hex_str() << "' "
+    << "font-size='" << style.font_size << "' "
+    << "text-anchor='" << anchor << "' "
+    << "dominant-baseline='" << baseline << "' "
+    << ">"
+    << op.text // FIXME escape
+    << "</text>";
+
+  return OK;
+}
+
+Status svg_stroke_path(const BrushStrokeOp& op, SVGData* svg) {
+  const auto& clip = op.clip;
+  const auto& path = op.path;
+  const auto& style = op.style;
+
+  if (path.size() < 2) {
+    return ERROR_INVALID_ARGUMENT;
+  }
+
+  svg->buffer << StringUtil::format(
+      "  <path stroke-width='$0' stroke='$1' fill='none' d=\"",
+      style.line_width.value, // FIXME
+      style.colour.to_hex_str());
+
+  for (const auto& cmd : path) {
+    switch (cmd.command) {
+      case PathCommand::MOVE_TO:
+        svg->buffer << StringUtil::format("M$0 $1 ", cmd[0], cmd[1]);
+        break;
+      case PathCommand::LINE_TO:
+        svg->buffer << StringUtil::format("L$0 $1 ", cmd[0], cmd[1]);
+        break;
+      case PathCommand::ARC_TO:
+        break;
+    }
+  }
+
+  svg->buffer << "\" />\n";
+
+  return OK;
+}
+
+std::string SVGData::to_svg() const {
+  return StringUtil::format(
+      "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox='0 0 $0 $1' viewport-fill='white'>\n$2\n</svg>",
+      width,
+      height,
+      buffer.str());
+}
+
+Status SVGData::writeToFile(const std::string& path) {
+  auto svg = to_svg();
+  FileUtil::write(path, Buffer(svg.data(), svg.size()));
+  return OK;
+}
+
+ReturnCode layer_new_svg(Layer* layer, SVGData* svg) {
+  svg->width = layer->width;
+  svg->height = layer->height;
+
+  layer->op_brush_stroke = std::bind(&svg_stroke_path, std::placeholders::_1, svg);
+  layer->op_brush_fill = [] (auto op) { return OK; };
+  layer->op_text_span = std::bind(&svg_text_span, std::placeholders::_1, svg);
 
   return OK;
 }

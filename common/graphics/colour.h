@@ -61,6 +61,8 @@ public:
   bool parseHexAlpha(const std::string& str);
   bool parseHexShort(const std::string& str);
 
+  std::string to_hex_str() const;
+
 protected:
   double components_[kMaxComponents];
 };
