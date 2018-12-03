@@ -91,11 +91,11 @@ ReturnCode buildDocument(
   for (size_t i = 0; i < plist.size(); ++i) {
     const auto& elem_name = plist[i].name;
 
-    if (!plist[i].child) {
+    if (!plist::is_map(plist[i])) {
       continue;
     }
 
-    const auto& elem_config = plist[i].child.get();
+    const auto& elem_config = plist[i].next.get();
 
     std::unique_ptr<Element> elem;
     if (auto rc = buildElement(*doc, elem_name, *elem_config, &elem); !rc.isSuccess()) {

@@ -102,7 +102,7 @@ ReturnCode draw_lines(
 }
 
 ReturnCode configure(const plist::Property& prop, PlotConfig* config) {
-  if (!prop.child) {
+  if (!plist::is_map(prop)) {
     return ERROR_INVALID_ARGUMENT;
   }
 
@@ -128,7 +128,7 @@ ReturnCode configure(const plist::Property& prop, PlotConfig* config) {
     {"point-size", std::bind(&parseMeasureProp, std::placeholders::_1, &series.point_size)},
   };
 
-  if (auto rc = parseAll(*prop.child, pdefs); !rc) {
+  if (auto rc = parseAll(*prop.next, pdefs); !rc) {
     return rc;
   }
 

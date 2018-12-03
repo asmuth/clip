@@ -49,18 +49,17 @@ Formatter format_decimal_scientific(size_t precision) {
 ReturnCode confgure_format_decimal_scientific(
     const plist::Property& prop,
     Formatter* formatter) {
-  std::vector<std::string> args;
-  if (auto rc = parse_classlike(prop, "scientific", &args); !rc) {
-    return rc;
+  if (!plist::is_enum(prop, "scientific")) {
+    return ERROR_INVALID_ARGUMENT;
   }
 
   uint32_t precision = 1;
-  switch (args.size()) {
+  switch (prop.size()) {
     case 0:
       break;
     case 1:
       try {
-        precision = std::stod(args[0]);
+        precision = std::stod(prop[0]);
         break;
       } catch (... ) {
         return ERROR_INVALID_ARGUMENT;
@@ -87,18 +86,17 @@ Formatter format_decimal_fixed(size_t precision) {
 ReturnCode confgure_format_decimal_fixed(
     const plist::Property& prop,
     Formatter* formatter) {
-  std::vector<std::string> args;
-  if (auto rc = parse_classlike(prop, "fixed", &args); !rc) {
-    return rc;
+  if (!plist::is_enum(prop, "fixed")) {
+    return ERROR_INVALID_ARGUMENT;
   }
 
   uint32_t precision = 1;
-  switch (args.size()) {
+  switch (prop.size()) {
     case 0:
       break;
     case 1:
       try {
-        precision = std::stod(args[0]);
+        precision = std::stod(prop[0]);
         break;
       } catch (... ) {
         return ERROR_INVALID_ARGUMENT;
@@ -124,17 +122,16 @@ Formatter format_datetime(const std::string& fmt) {
 ReturnCode confgure_format_datetime(
     const plist::Property& prop,
     Formatter* formatter) {
-  std::vector<std::string> args;
-  if (auto rc = parse_classlike(prop, "datetime", &args); !rc) {
-    return rc;
+  if (!plist::is_enum(prop, "datetime")) {
+    return ERROR_INVALID_ARGUMENT;
   }
 
   std::string fmtspec = "%Y-%m-%d %H:%M:%S"; // FIXME improved auto format
-  switch (args.size()) {
+  switch (prop.size()) {
     case 0:
       break;
     case 1:
-      fmtspec = args[0];
+      fmtspec = prop[0];
       break;
     default:
       return ERROR_INVALID_ARGUMENT;
@@ -151,15 +148,18 @@ ReturnCode confgure_format(
     return ERROR_INVALID_ARGUMENT;
   }
 
-  if (prop[0].data == "fixed") {
+  if (plist::is_value(prop, "fixed") ||
+      plist::is_enum(prop, "fixed")) {
     return confgure_format_decimal_fixed(prop, formatter);
   }
 
-  if (prop[0].data == "scientific") {
+  if (plist::is_value(prop, "scientific") ||
+      plist::is_enum(prop, "scientific")) {
     return confgure_format_decimal_scientific(prop, formatter);
   }
 
-  if (prop[0].data == "datetime") {
+  if (plist::is_value(prop, "datetime") ||
+      plist::is_enum(prop, "datetime")) {
     return confgure_format_datetime(prop, formatter);
   }
 

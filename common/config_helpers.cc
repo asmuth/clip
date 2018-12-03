@@ -34,62 +34,19 @@
 
 namespace plotfx {
 
-
-ReturnCode parse_classlike(
-    const plist::Property& prop,
-    const std::string& fn,
-    std::vector<std::string>* args) {
-  if (prop.size() < 3) {
-    return ERROR_INVALID_ARGUMENT;
-  }
-
-  if (!prop[0].is_literal || prop[0].data != fn) {
-    return ERROR_INVALID_ARGUMENT;
-  }
-
-  if (!prop[1].is_literal || prop[1].data != "(") {
-    return ERROR_INVALID_ARGUMENT;
-  }
-
-  size_t argidx = 2;
-  for (; argidx < prop.size() - 1; ++argidx) {
-    if (prop[argidx].is_literal && prop[argidx].data == ",") {
-      continue;
-    }
-
-    if (prop[argidx].is_literal && prop[argidx].data == ")") {
-      break;
-    }
-
-    args->emplace_back(prop[argidx].data);
-    continue;
-  }
-
-  if (argidx >= prop.size()) {
-    return ERROR_INVALID_ARGUMENT;
-  }
-
-  if (!prop[argidx].is_literal || prop[argidx].data != ")") {
-    return ERROR_INVALID_ARGUMENT;
-  }
-
-  return OK;
-}
-
 ReturnCode parse_data_series_csv(
     const plist::Property& prop ,
     std::vector<double>* data) {
-  std::vector<std::string> args;
-  if (auto rc = parse_classlike(prop, "csv", &args); !rc) {
-    return rc;
+  if (!plist::is_enum(prop, "csv")) {
+    return ERROR_INVALID_ARGUMENT;
   }
 
-  if (args.size() < 2) {
+  if (prop.size() < 2) {
     return ERROR_INVALID_ARGUMENT; // FIXME
   }
 
-  const auto& csv_path = args[0];
-  const auto& csv_column = args[1];
+  const auto& csv_path = prop[0].value;
+  const auto& csv_column = prop[1].value;
 
   size_t csv_column_idx = 0;
   try {
@@ -102,8 +59,8 @@ ReturnCode parse_data_series_csv(
   auto csv_data = CSVData{};
   auto csv_opts = CSVParserConfig{};
 
-  for (size_t i = 2; i < args.size(); ++i) {
-    if (args[i] == "noheaders") {
+  for (size_t i = 2; i < prop.size(); ++i) {
+    if (prop[i].value == "noheaders") {
       csv_opts.headers = false;
       continue;
     }
@@ -132,10 +89,14 @@ ReturnCode parse_data_series_csv(
 ReturnCode parse_data_series_inline(
     const plist::Property& prop ,
     std::vector<double>* data) {
-  for (const auto& v : prop.values) {
+  if (!plist::is_list(prop)) {
+    return ERROR_INVALID_ARGUMENT;
+  }
+
+  for (const auto& v : *prop.next) {
     double value;
     try {
-      value = std::stod(v.data);
+      value = std::stod(v);
     } catch (... ) {
       return ERROR_INVALID_ARGUMENT;
     }
@@ -149,24 +110,28 @@ ReturnCode parse_data_series_inline(
 ReturnCode parseDataSeries(
     const plist::Property& prop,
     std::vector<double>* data) {
-  if (prop.size() > 0 && prop[0].is_literal && prop[0].data == "csv") {
+  if (plist::is_enum(prop, "csv")) {
     return parse_data_series_csv(prop, data);
   }
 
-  return parse_data_series_inline(prop, data);
+  if (plist::is_list(prop)) {
+    return parse_data_series_inline(prop, data);
+  }
+
+  return ERROR_INVALID_ARGUMENT;
 }
 
 ReturnCode parseMeasureProp(
     const plist::Property& prop,
     Measure* value) {
-  if (prop.size() != 1) {
+  if (!plist::is_value(prop)) {
     return ReturnCode::errorf(
         "EARG",
         "incorrect number of arguments; expected: 1, got: $0",
         prop.size());
   }
 
-  return parse_measure(prop[0], value);
+  return parse_measure(prop, value);
 }
 
 ParserFn configure_multiprop(const std::vector<ParserFn>& parsers) {
@@ -184,15 +149,15 @@ ParserFn configure_multiprop(const std::vector<ParserFn>& parsers) {
 ReturnCode configure_colour(
     const plist::Property& prop,
     Colour* value) {
-  if (prop.size() != 1) {
+  if (!plist::is_value(prop)) {
     return ReturnCode::errorf(
         "EARG",
         "incorrect number of arguments; expected: 1, got: $0",
         prop.size());
   }
 
-  if (prop.size() > 0 && StringUtil::beginsWith(prop[0].data, "#")) {
-    if (value->parse(prop[0].data)) {
+  if (StringUtil::beginsWith(prop, "#")) {
+    if (value->parse(prop)) {
       return OK;
     }
   }
@@ -203,7 +168,7 @@ ReturnCode configure_colour(
 ReturnCode configure_float(
     const plist::Property& prop,
     double* value) {
-  if (prop.size() != 1) {
+  if (!plist::is_value(prop)) {
     return ReturnCode::errorf(
         "EARG",
         "incorrect number of arguments; expected: 1, got: $0",
@@ -211,7 +176,7 @@ ReturnCode configure_float(
   }
 
   try {
-    *value = std::stod(prop[0].data);
+    *value = std::stod(prop);
   } catch (... ) {
     return ERROR_INVALID_ARGUMENT;
   }
@@ -222,7 +187,7 @@ ReturnCode configure_float(
 ReturnCode configure_float_opt(
     const plist::Property& prop,
     std::optional<double>* value) {
-  if (prop.size() != 1) {
+  if (!plist::is_value(prop)) {
     return ReturnCode::errorf(
         "EARG",
         "incorrect number of arguments; expected: 1, got: $0",
@@ -230,7 +195,7 @@ ReturnCode configure_float_opt(
   }
 
   try {
-    *value = std::optional<double>(std::stod(prop[0].data));
+    *value = std::optional<double>(std::stod(prop));
   } catch (... ) {
     return ERROR_INVALID_ARGUMENT;
   }

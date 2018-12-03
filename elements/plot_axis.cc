@@ -59,14 +59,14 @@ ReturnCode parseAxisMode(
 }
 
 ReturnCode parseAxisModeProp(const plist::Property& prop, AxisMode* value) {
-  if (prop.size() != 1) {
+  if (!plist::is_value(prop)) {
     return ReturnCode::errorf(
         "EARG",
         "incorrect number of arguments; expected: 1, got: $0",
         prop.size());
   }
 
-  return parseAxisMode(prop[0], value);
+  return parseAxisMode(prop, value);
 }
 
 static Status renderAxisVertical(
