@@ -34,6 +34,8 @@
 
 namespace plist {
 
+using plotfx::StringUtil;
+
 PropertyListParser::PropertyListParser(
     const char* input,
     size_t input_len) :

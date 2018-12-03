@@ -30,5 +30,63 @@ Property::operator const std::string&() const {
   return value;
 }
 
+bool is_map(const Property& prop) {
+  return prop.kind == PropertyKind::MAP;
+}
+
+bool is_list(const Property& prop) {
+  return prop.kind == PropertyKind::LIST;
+}
+
+bool is_tuple(const Property& prop) {
+  return prop.kind == PropertyKind::TUPLE;
+}
+
+bool is_enum(const Property& prop) {
+  return prop.kind == PropertyKind::ENUM;
+}
+
+bool is_enum(const Property& prop, const std::string& cmp) {
+  return prop.kind == PropertyKind::ENUM && prop.value == cmp;
+}
+
+bool is_value(const Property& prop) {
+  switch (prop.kind) {
+    case PropertyKind::VALUE_LITERAL:
+    case PropertyKind::VALUE:
+      return true;
+    default:
+      return false;
+  }
+}
+
+bool is_value(const Property& prop, const std::string& cmp) {
+  switch (prop.kind) {
+    case PropertyKind::VALUE_LITERAL:
+    case PropertyKind::VALUE:
+      break;
+    default:
+      return false;
+  }
+
+  return prop.value == cmp;
+}
+
+bool is_value_literal(const Property& prop) {
+  return prop.kind == PropertyKind::VALUE_LITERAL;
+}
+
+bool is_value_literal(const Property& prop, const std::string& cmp) {
+  return prop.kind == PropertyKind::VALUE_LITERAL && prop.value == cmp;
+}
+
+bool is_value_quoted(const Property& prop) {
+  return prop.kind == PropertyKind::VALUE;
+}
+
+bool is_value_quoted(const Property& prop, const std::string& cmp) {
+  return prop.kind == PropertyKind::VALUE && prop.value == cmp;
+}
+
 } // namespace plist
 

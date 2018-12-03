@@ -34,5 +34,17 @@ struct Property {
 
 };
 
+bool is_map(const Property& prop);
+bool is_list(const Property& prop);
+bool is_tuple(const Property& prop);
+bool is_enum(const Property& prop);
+bool is_enum(const Property& prop, const std::string& cmp);
+bool is_value(const Property& prop);
+bool is_value(const Property& prop, const std::string& cmp);
+bool is_value_literal(const Property& prop);
+bool is_value_literal(const Property& prop, const std::string& cmp);
+bool is_value_quoted(const Property& prop);
+bool is_value_quoted(const Property& prop, const std::string& cmp);
+
 } // namespace plist
 
