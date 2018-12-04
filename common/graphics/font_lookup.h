@@ -40,7 +40,7 @@ bool findFontSimple(
 
 bool findFontSystem(
     const std::string& font_pattenr,
-    FontInfo* font_file);
+    std::string* font_file);
 
 } // namespace plotfx
 

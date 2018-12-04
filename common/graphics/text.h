@@ -43,6 +43,7 @@ enum class TextDirection {
 
 struct FontInfo {
   std::string font_file;
+  std::string font_family_css;
 };
 
 struct TextStyle {

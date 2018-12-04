@@ -53,7 +53,7 @@ bool findFontSimple(
 
 bool findFontSystem(
     const std::string& font_pattern,
-    FontInfo* font_file) {
+    std::string* font_file) {
   std::string file;
 
   {
@@ -78,10 +78,7 @@ bool findFontSystem(
     return false;
   }
 
-  *font_file = FontInfo {
-    .font_file = file
-  };
-
+  *font_file = file;
   return true;
 }
 

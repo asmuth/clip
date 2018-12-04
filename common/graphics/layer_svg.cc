@@ -48,7 +48,6 @@ Status svg_text_span(
     SVGDataRef svg) {
   const auto& style = op.style;
 
-
   svg->buffer
     << "  "
     << "<text "
@@ -56,7 +55,7 @@ Status svg_text_span(
     << "y='" << op.y << "' "
     << "fill='" << style.colour.to_hex_str() << "' "
     << "font-size='" << to_px(measures, style.font_size).value << "' "
-    << "font-family='" << "\"Roboto Medium\", sans-serif" << "' "
+    << "font-family='" << style.font.font_family_css << "' " // FIXME escape
     << ">"
     << op.text // FIXME escape
     << "</text>";
