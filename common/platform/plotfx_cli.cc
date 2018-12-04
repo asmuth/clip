@@ -115,62 +115,16 @@ int main(int argc, const char** argv) {
     return EXIT_FAILURE;
   }
 
-  std::string layer_fmt = flag_out_fmt;
-  if (layer_fmt.empty()) {
-    if (StringUtil::endsWith(flag_out, ".svg")) { layer_fmt = "svg"; }
-    if (StringUtil::endsWith(flag_out, ".png")) { layer_fmt = "png"; }
+  std::string fmt = flag_out_fmt;
+  if (fmt.empty()) {
+    if (StringUtil::endsWith(flag_out, ".svg")) { fmt = "svg"; }
+    if (StringUtil::endsWith(flag_out, ".png")) { fmt = "png"; }
   }
 
-  LayerRef layer;
-  if (layer_fmt == "svg") {
-    auto rc = layer_bind_svg(
-        to_px(doc.measures, doc.width).value,
-        to_px(doc.measures, doc.height).value,
-        doc.measures,
-        [flag_out] (auto svg) {
-          FileUtil::write(flag_out, Buffer(svg.data(), svg.size()));
-          return OK;
-        },
-        &layer);
-
-    if (!rc.isSuccess()) {
-      printError(rc);
-      return EXIT_FAILURE;
-    }
-  }
-
-  if (layer_fmt == "png") {
-    auto rc = layer_bind_png(
-        to_px(doc.measures, doc.width).value,
-        to_px(doc.measures, doc.height).value,
-        doc.measures,
-        doc.background_colour,
-        [flag_out] (auto png) {
-          FileUtil::write(flag_out, Buffer(png.data(), png.size()));
-          return OK;
-        },
-        &layer);
-
-    if (!rc.isSuccess()) {
-      printError(rc);
-      return EXIT_FAILURE;
-    }
-  }
-
-  if (!layer) {
-    std::cerr << "ERROR: unknown output format: " << layer_fmt << std::endl;
-    return EXIT_FAILURE;
-  }
-
-  if (auto rc = renderElements(doc, layer.get()); !rc.isSuccess()) {
+  if (auto rc = document_render(doc, fmt, flag_out); rc.isSuccess()) {
+    return EXIT_SUCCESS;
+  } else {
     printError(rc);
     return EXIT_FAILURE;
   }
-
-  if (auto rc = layer_submit(layer.get()); !rc.isSuccess()) {
-    printError(rc);
-    return EXIT_FAILURE;
-  }
-
-  return EXIT_SUCCESS;
 }

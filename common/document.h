@@ -68,5 +68,18 @@ ReturnCode renderElements(
     const Document& tree,
     Layer* frame);
 
+ReturnCode document_render(
+    const Document& doc,
+    const std::string& format,
+    const std::string& filename);
+
+ReturnCode document_render_svg(
+    const Document& doc,
+    const std::string& filename);
+
+ReturnCode document_render_png(
+    const Document& doc,
+    const std::string& filename);
+
 } // namespace plotfx
 

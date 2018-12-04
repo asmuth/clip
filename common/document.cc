@@ -31,9 +31,12 @@
 #include "plist/plist_parser.h"
 #include "element_factory.h"
 #include "graphics/layer.h"
+#include "graphics/layer_svg.h"
+#include "graphics/layer_pixmap.h"
 #include "graphics/layout.h"
 #include "graphics/font_lookup.h"
 #include "common/config_helpers.h"
+#include "utils/fileutil.h"
 
 namespace plotfx {
 
@@ -137,6 +140,78 @@ ReturnCode renderElements(
   return ReturnCode::success();
 }
 
+ReturnCode document_render(
+    const Document& doc,
+    const std::string& format,
+    const std::string& filename) {
+  if (format == "svg")
+    return document_render_svg(doc, filename);
+  if (format == "png")
+    return document_render_png(doc, filename);
+
+  return ReturnCode::errorf("EARG", "invalid output format: $0", format);
+}
+
+ReturnCode document_render_svg(
+    const Document& doc,
+    const std::string& filename) {
+  LayerRef layer;
+
+  auto rc = layer_bind_svg(
+      to_px(doc.measures, doc.width).value,
+      to_px(doc.measures, doc.height).value,
+      doc.measures,
+      [filename] (auto svg) {
+        FileUtil::write(filename, Buffer(svg.data(), svg.size()));
+        return OK;
+      },
+      &layer);
+
+  if (!rc.isSuccess()) {
+    return rc;
+  }
+
+  if (auto rc = renderElements(doc, layer.get()); !rc.isSuccess()) {
+    return rc;
+  }
+
+  if (auto rc = layer_submit(layer.get()); !rc.isSuccess()) {
+    return rc;
+  }
+
+  return OK;
+}
+
+ReturnCode document_render_png(
+    const Document& doc,
+    const std::string& filename) {
+  LayerRef layer;
+
+  auto rc = layer_bind_png(
+      to_px(doc.measures, doc.width).value,
+      to_px(doc.measures, doc.height).value,
+      doc.measures,
+      doc.background_colour,
+      [filename] (auto png) {
+        FileUtil::write(filename, Buffer(png.data(), png.size()));
+        return OK;
+      },
+      &layer);
+
+  if (!rc.isSuccess()) {
+    return rc;
+  }
+
+  if (auto rc = renderElements(doc, layer.get()); !rc.isSuccess()) {
+    return rc;
+  }
+
+  if (auto rc = layer_submit(layer.get()); !rc.isSuccess()) {
+    return rc;
+  }
+
+  return OK;
+}
 
 } // namespace plotfx
 
