@@ -14,6 +14,7 @@ specfile="$2"
 outfile="$3"
 masterfile="$4"
 
+rm -rf ${outfile}
 ${binfile} --in ${specfile} --out ${outfile} || exit 1
 
 if [[ ! -e ${masterfile} ]]; then

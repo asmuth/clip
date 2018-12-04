@@ -33,9 +33,16 @@
 
 namespace plotfx {
 
-SVGData::SVGData() {}
+struct SVGData {
+  std::stringstream buffer;
+  uint32_t width;
+  uint32_t height;
+  std::string to_svg() const;
+};
 
-Status svg_text_span(const TextSpanOp& op, SVGData* svg) {
+using SVGDataRef = std::shared_ptr<SVGData>;
+
+Status svg_text_span(const TextSpanOp& op, SVGDataRef svg) {
   const auto& style = op.style;
 
   std::string anchor = "middle";
@@ -57,7 +64,7 @@ Status svg_text_span(const TextSpanOp& op, SVGData* svg) {
   return OK;
 }
 
-Status svg_stroke_path(const BrushStrokeOp& op, SVGData* svg) {
+Status svg_stroke_path(const BrushStrokeOp& op, SVGDataRef svg) {
   const auto& clip = op.clip;
   const auto& path = op.path;
   const auto& style = op.style;
@@ -97,19 +104,22 @@ std::string SVGData::to_svg() const {
       buffer.str());
 }
 
-Status SVGData::writeToFile(const std::string& path) {
-  auto svg = to_svg();
-  FileUtil::write(path, Buffer(svg.data(), svg.size()));
-  return OK;
-}
-
-ReturnCode layer_new_svg(Layer* layer, SVGData* svg) {
-  svg->width = layer->width;
-  svg->height = layer->height;
-
-  layer->op_brush_stroke = std::bind(&svg_stroke_path, std::placeholders::_1, svg);
-  layer->op_brush_fill = [] (auto op) { return OK; };
-  layer->op_text_span = std::bind(&svg_text_span, std::placeholders::_1, svg);
+ReturnCode layer_bind_svg(
+    double width,
+    double height,
+    const MeasureTable& measures,
+    LayerRef* layer) {
+  auto svg = std::make_shared<SVGData>();
+  layer->reset(new Layer{
+    .width = svg->width = width,
+    .height = svg->height = height,
+    .measures = measures,
+    .text_shaper = std::make_shared<text::TextShaper>(),
+    .op_brush_stroke = std::bind(&svg_stroke_path, std::placeholders::_1, svg),
+    .op_brush_fill = [] (auto op) { return OK; },
+    .op_text_span = std::bind(&svg_text_span, std::placeholders::_1, svg),
+    .data = [svg] () { return svg->to_svg(); },
+  });
 
   return OK;
 }

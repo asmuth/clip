@@ -35,19 +35,11 @@
 
 namespace plotfx {
 
-class SVGData {
-public:
-  SVGData();
-  std::stringstream buffer;
-
-  uint32_t width;
-  uint32_t height;
-
-  std::string to_svg() const;
-  Status writeToFile(const std::string& path);
-};
-
-ReturnCode layer_new_svg(Layer* layer, SVGData* svg);
+ReturnCode layer_bind_svg(
+    double width,
+    double height,
+    const MeasureTable& measures,
+    LayerRef* layer);
 
 } // namespace plotfx
 

@@ -31,23 +31,35 @@
 
 namespace plotfx {
 
-ReturnCode layer_new_pixmap(Layer* layer, Rasterizer* raster) {
-  raster->clear(layer->background_colour);
+ReturnCode layer_bind_png(
+    double width,
+    double height,
+    const MeasureTable& measures,
+    const Colour& background_colour,
+    LayerRef* layer) {
+  auto text_shaper = std::make_shared<text::TextShaper>();
+  auto raster = std::make_shared<Rasterizer>(width, height, measures, text_shaper);
+  raster->clear(background_colour);
 
-  layer->op_brush_stroke = std::bind(
-      &Rasterizer::strokePath,
-      raster,
-      std::placeholders::_1);
-
-  layer->op_brush_fill = std::bind(
-      &Rasterizer::fillPath,
-      raster,
-      std::placeholders::_1);
-
-  layer->op_text_span = std::bind(
-      &Rasterizer::drawText,
-      raster,
-      std::placeholders::_1);
+  layer->reset(new Layer {
+    .width = width,
+    .height = height,
+    .measures = measures,
+    .text_shaper = text_shaper,
+    .op_brush_stroke = std::bind(
+        &Rasterizer::strokePath,
+        raster.get(), // safe
+        std::placeholders::_1),
+    .op_brush_fill = std::bind(
+        &Rasterizer::fillPath,
+        raster.get(), // safe
+        std::placeholders::_1),
+    .op_text_span = std::bind(
+        &Rasterizer::drawText,
+        raster.get(), // safe
+        std::placeholders::_1),
+    .data = [raster] { return raster->to_png(); },
+  });
 
   return OK;
 }

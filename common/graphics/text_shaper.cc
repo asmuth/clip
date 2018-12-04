@@ -33,9 +33,7 @@
 namespace plotfx {
 namespace text {
 
-TextShaper::TextShaper(
-    double dpi_) :
-    dpi(dpi_),
+TextShaper::TextShaper() :
     ft_ready(false),
     hb_buf(hb_buffer_create()) {}
 
@@ -49,6 +47,7 @@ Status TextShaper::shapeText(
     const std::string& text,
     const FontInfo& font,
     double font_size,
+    double dpi,
     std::function<void (const GlyphInfo&)> glyph_cb) {
   if (!ft_ready) {
     if (FT_Init_FreeType(&ft)) {

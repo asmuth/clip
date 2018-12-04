@@ -38,7 +38,7 @@ Rasterizer::Rasterizer(
     uint32_t width,
     uint32_t height,
     MeasureTable measures_,
-    text::TextShaper* text_shaper_) :
+    std::shared_ptr<text::TextShaper> text_shaper_) :
     measures(measures_),
     text_shaper(text_shaper_),
     ft_ready(false) {
@@ -150,10 +150,11 @@ Status Rasterizer::drawText(const TextSpanOp& op) {
       op.y,
       op.style.font,
       op.style.font_size,
+      measures.dpi,
       op.style.direction,
       op.style.halign,
       op.style.valign,
-      text_shaper,
+      text_shaper.get(),
       [&glyphs] (const GlyphPlacement& g) { glyphs.emplace_back(g); });
 
   if (rc != OK) {
@@ -239,6 +240,20 @@ void Rasterizer::clear(const Colour& c) {
       c.alpha());
 
   cairo_paint(cr_ctx);
+}
+
+cairo_status_t cr_copy(
+    void* closure,
+    const unsigned char* data,
+    unsigned int length) {
+  *static_cast<std::string*>(closure) += std::string((const char*) data, length);
+  return CAIRO_STATUS_SUCCESS;
+}
+
+std::string Rasterizer::to_png() const {
+  std::string buf;
+  cairo_surface_write_to_png_stream(cr_surface, cr_copy, &buf);
+  return buf;
 }
 
 Status Rasterizer::writeToFile(const std::string& path) {

@@ -55,7 +55,7 @@ class Image;
 class Rasterizer {
 public:
 
-  Rasterizer(uint32_t width, uint32_t height, MeasureTable measures, text::TextShaper* text_shaper);
+  Rasterizer(uint32_t width, uint32_t height, MeasureTable measures, std::shared_ptr<text::TextShaper> text_shaper);
   ~Rasterizer();
   Rasterizer(const Rasterizer&) = delete;
   Rasterizer& operator=(const Rasterizer&) = delete;
@@ -73,14 +73,17 @@ public:
 
   Status writeToFile(const std::string& path);
 
+  std::string to_png() const;
+
   MeasureTable measures;
-  text::TextShaper* text_shaper;
+  std::shared_ptr<text::TextShaper> text_shaper;
   FT_Library ft;
   bool ft_ready;
   cairo_surface_t* cr_surface;
   cairo_t* cr_ctx;
 };
 
+using RasterizerRef = std::shared_ptr<Rasterizer>;
 
 } // namespace plotfx
 

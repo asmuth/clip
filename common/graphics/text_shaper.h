@@ -49,7 +49,7 @@ namespace text {
 class TextShaper {
 public:
 
-  TextShaper(double dpi);
+  TextShaper();
   ~TextShaper();
   TextShaper(const TextShaper&) = delete;
   TextShaper& operator=(const TextShaper&) = delete;
@@ -58,6 +58,7 @@ public:
       const std::string& text,
       const FontInfo& font,
       double font_size,
+      double dpi,
       std::function<void (const GlyphInfo&)> glyph_cb);
 
 protected:

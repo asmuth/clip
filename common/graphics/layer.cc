@@ -34,16 +34,7 @@
 
 namespace plotfx {
 
-Layer::Layer(
-    double w,
-    double h,
-    const MeasureTable& m /* = MeasureTable{} */) :
-    width(w),
-    height(h),
-    measures(m),
-    text_shaper(m.dpi) {}
-
-Layer::~Layer() {}
+//Layer::Layer() : width(0), height(0) {}
 
 } // namespace plotfx
 

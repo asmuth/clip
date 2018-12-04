@@ -43,23 +43,17 @@
 namespace plotfx {
 
 struct Layer {
-  Layer();
-  Layer(double width, double height, const MeasureTable& measures = MeasureTable{});
-  ~Layer();
-  Layer(const Layer&) = delete;
-  Layer& operator=(const Layer&) = delete;
-
-  double width;
-  double height;
-  MeasureTable measures;
-  Colour background_colour;
-
-  std::function<Status (const BrushStrokeOp&)> op_brush_stroke;
-  std::function<Status (const BrushFillOp&)> op_brush_fill;
-  std::function<Status (const TextSpanOp&)> op_text_span;
-
-  text::TextShaper text_shaper;
+  const double width;
+  const double height;
+  const MeasureTable measures;
+  const std::shared_ptr<text::TextShaper> text_shaper;
+  const std::function<Status (const BrushStrokeOp&)> op_brush_stroke;
+  const std::function<Status (const BrushFillOp&)> op_brush_fill;
+  const std::function<Status (const TextSpanOp&)> op_text_span;
+  const std::function<std::string ()> data;
 };
+
+using LayerRef = std::unique_ptr<Layer>;
 
 } // namespace plotfx
 

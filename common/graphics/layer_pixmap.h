@@ -33,7 +33,12 @@
 namespace plotfx {
 class Rasterizer;
 
-ReturnCode layer_new_pixmap(Layer* layer, Rasterizer* raster);
+ReturnCode layer_bind_png(
+    double width,
+    double height,
+    const MeasureTable& measures,
+    const Colour& background_colour,
+    LayerRef* layer);
 
 } // namespace plotfx
 

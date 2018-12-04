@@ -62,6 +62,9 @@ int main(int argc, const char** argv) {
   std::string flag_out;
   flag_parser.defineString("out", true, &flag_out);
 
+  std::string flag_out_fmt;
+  flag_parser.defineString("outfmt", false, &flag_out_fmt);
+
   bool flag_help;
   flag_parser.defineSwitch("help", &flag_help);
 
@@ -112,39 +115,52 @@ int main(int argc, const char** argv) {
     return EXIT_FAILURE;
   }
 
-  Layer frame(
-      to_px(doc.measures, doc.width).value,
-      to_px(doc.measures, doc.height).value,
-      doc.measures);
+  std::string layer_fmt = flag_out_fmt;
+  if (layer_fmt.empty()) {
+    if (StringUtil::endsWith(flag_out, ".svg")) { layer_fmt = "svg"; }
+    if (StringUtil::endsWith(flag_out, ".png")) { layer_fmt = "png"; }
+  }
 
-  frame.background_colour = doc.background_colour;
+  LayerRef layer;
+  if (layer_fmt == "svg") {
+    auto rc = layer_bind_svg(
+        to_px(doc.measures, doc.width).value,
+        to_px(doc.measures, doc.height).value,
+        doc.measures,
+        &layer);
 
-  Rasterizer raster(
-      to_px(doc.measures, doc.width).value,
-      to_px(doc.measures, doc.height).value,
-      doc.measures,
-      &frame.text_shaper);
+    if (!rc.isSuccess()) {
+      printError(rc);
+      return EXIT_FAILURE;
+    }
+  }
 
-  SVGData svg;
-  if (auto rc = layer_new_svg(&frame, &svg); !rc.isSuccess()) {
+  if (layer_fmt == "png") {
+    auto rc = layer_bind_png(
+        to_px(doc.measures, doc.width).value,
+        to_px(doc.measures, doc.height).value,
+        doc.measures,
+        doc.background_colour,
+        &layer);
+
+    if (!rc.isSuccess()) {
+      printError(rc);
+      return EXIT_FAILURE;
+    }
+  }
+
+  if (!layer) {
+    std::cerr << "ERROR: unknown output format: " << layer_fmt << std::endl;
+    return EXIT_FAILURE;
+  }
+
+  if (auto rc = renderElements(doc, layer.get()); !rc.isSuccess()) {
     printError(rc);
     return EXIT_FAILURE;
   }
 
-  //if (auto rc = layer_new_pixmap(&frame, &raster); !rc.isSuccess()) {
-  //  printError(rc);
-  //  return EXIT_FAILURE;
-  //}
-
-  if (auto rc = renderElements(doc, &frame); !rc.isSuccess()) {
-    printError(rc);
-    return EXIT_FAILURE;
-  }
-
-  if (auto rc = svg.writeToFile(flag_out); rc) {
-    std::cerr << "ERROR: can't write output file" << std::endl;
-    return EXIT_FAILURE;
-  }
+  auto output = layer->data();
+  FileUtil::write(flag_out, Buffer(output.data(), output.size()));
 
   return EXIT_SUCCESS;
 }

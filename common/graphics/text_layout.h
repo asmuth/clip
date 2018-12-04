@@ -43,6 +43,7 @@ Status layoutText(
     double y,
     const FontInfo& font,
     double font_size,
+    double dpi,
     TextDirection direction,
     TextHAlign halign,
     TextVAlign valign,
