@@ -82,6 +82,39 @@ bool findFontSystem(
   return true;
 }
 
+ReturnCode font_load(DefaultFont font_name, FontInfo* font_info) {
+  std::string font_css;
+  std::string font_fc;
+
+  switch (font_name) {
+    default:
+    case SANS_REGULAR:
+    case HELVETICA_REGULAR:
+      font_css = "Helvetica,'Helvetica Neue','Nimbus Sans L',Arial,sans-serif";
+      font_fc = "Helvetica,Helvetica Neue,Nimbus Sans L,Arial:style=Regular,Roman";
+      break;
+
+    case SANS_MEDIUM:
+    case HELVETICA_MEDIUM:
+      font_css = "Helvetica,'Helvetica Neue','Nimbus Sans L',Arial,sans-serif";
+      font_fc = "Helvetica,Helvetica Neue,Nimbus Sans L,Arial:style=Medium,Roman";
+      break;
+
+    case SANS_BOLD:
+    case HELVETICA_BOLD:
+      font_css = "Helvetica,'Helvetica Neue','Nimbus Sans L',Arial,sans-serif";
+      font_fc = "Helvetica,Helvetica Neue,Nimbus Sans L,Arial:style=Bold,Roman";
+      break;
+  }
+
+  font_info->font_family_css = font_css;
+
+  if (!findFontSystem(font_fc, &font_info->font_file)) {
+    return ERROR;
+  }
+
+  return OK;
+}
 
 } // namespace plotfx
 

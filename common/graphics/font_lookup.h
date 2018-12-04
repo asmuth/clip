@@ -39,8 +39,19 @@ bool findFontSimple(
     FontInfo* font_file);
 
 bool findFontSystem(
-    const std::string& font_pattenr,
+    const std::string& font_pattern,
     std::string* font_file);
+
+enum DefaultFont {
+  SANS_REGULAR,
+  SANS_MEDIUM,
+  SANS_BOLD,
+  HELVETICA_REGULAR,
+  HELVETICA_MEDIUM,
+  HELVETICA_BOLD,
+};
+
+ReturnCode font_load(DefaultFont font_name, FontInfo* font_info);
 
 } // namespace plotfx
 

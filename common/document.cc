@@ -56,13 +56,10 @@ ReturnCode document_setup_defaults(Document* doc) {
         path_parts.end());
   }
 
-  static const auto default_font_sans = "Arial,Helvetica:style=Regular,Roman";
-  doc->font_sans.font_family_css = "Helvetica, Arial, sans-serif";
-  if (!findFontSystem(default_font_sans, &doc->font_sans.font_file)) {
-    return ReturnCode::errorf(
+  if (!font_load(DefaultFont::HELVETICA_REGULAR, &doc->font_sans)) {
+    return ReturnCode::error(
         "EARG",
-        "unable to find default sans-sans font ($0)",
-        default_font_sans);
+        "unable to find default sans-sans font (Helvetica/Arial)");
   }
 
   return OK;
