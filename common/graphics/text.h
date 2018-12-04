@@ -56,8 +56,7 @@ struct TextStyle {
 
 Status drawTextLabel(
     const std::string& text,
-    double x,
-    double y,
+    const Point& position,
     HAlign align_x,
     VAlign align_y,
     const TextStyle& text_style,

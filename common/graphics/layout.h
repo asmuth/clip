@@ -55,12 +55,9 @@ Rectangle layout_margin_box(
  * calculate a translate offset (ox, oy) for the bounding box so that new
  * bounding box midpoint point is equal to the target point.
  */
-void layout_align(
+Point layout_align(
     const Rectangle& bbox,
-    double tx,
-    double ty,
-    double* ox,
-    double* oy);
+    const Point& target);
 
 /**
  * Given a bounding box and a target point (tx, ty) and (sx, sy) == (0, 0),
@@ -68,14 +65,11 @@ void layout_align(
  * bounding box alignment point is equal to the target point. You can choose
  * from one of 9 alignment points using the halign and valign parameters.
  */
-void layout_align(
+Point layout_align(
     const Rectangle& bbox,
-    double tx,
-    double ty,
+    Point target,
     HAlign halign,
-    VAlign valign,
-    double* ox,
-    double* oy);
+    VAlign valign);
 
 
 } // namespace plotfx

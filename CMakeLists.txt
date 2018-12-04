@@ -19,7 +19,6 @@ include_directories(${CAIRO_INCLUDE_DIRS} ${FREETYPE_INCLUDE_DIRS} ${HARFBUZZ_IN
 add_definitions(-DFNORDMETRIC_VERSION="unstable")
 
 add_library(plotfxlib STATIC
-    elements/gridlines.cc
     elements/plot.cc
     elements/plot_axis.cc
     elements/plot_lines.cc

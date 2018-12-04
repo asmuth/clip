@@ -40,8 +40,7 @@ TextStyle::TextStyle() :
 
 Status drawTextLabel(
     const std::string& text,
-    double x,
-    double y,
+    const Point& position,
     HAlign align_x,
     VAlign align_y,
     const TextStyle& style,
@@ -55,8 +54,7 @@ Status drawTextLabel(
       layer->text_shaper.get(),
       &bbox);
 
-  double ox, oy;
-  layout_align(bbox, x, y, align_x, align_y, &ox, &oy);
+  auto offset = layout_align(bbox, position, align_x, align_y);
 
   if (rc != OK) {
     return rc;
@@ -64,8 +62,7 @@ Status drawTextLabel(
 
   layer_ops::TextSpanOp op;
   op.text = text;
-  op.x = ox;
-  op.y = oy;
+  op.position = offset;
   op.style = style;
 
   return layer->apply(op);

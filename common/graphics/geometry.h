@@ -34,6 +34,13 @@
 
 namespace plotfx {
 
+struct Point {
+  Point();
+  Point(double x, double y);
+  double x;
+  double y;
+};
+
 struct Rectangle {
   Rectangle();
   Rectangle(double x, double y, double w, double h);
@@ -43,6 +50,7 @@ struct Rectangle {
   double h;
 };
 
+std::ostream& operator <<(std::ostream& os, const Point& c);
 std::ostream& operator <<(std::ostream& os, const Rectangle& c);
 
 } // namespace plotfx

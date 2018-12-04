@@ -79,7 +79,7 @@ static Status renderAxisVertical(
   {
     StrokeStyle style;
     style.colour = axis_config.border_colour;
-    strokeLine(target, x, y0, x, y1, style);
+    strokeLine(target, {x, y0}, {x, y1}, style);
   }
 
   double label_placement = 0;
@@ -101,10 +101,8 @@ static Status renderAxisVertical(
     style.colour = axis_config.border_colour;
     strokeLine(
         target,
-        x,
-        y,
-        x + to_px(target->measures, axis_config.tick_length).value * label_placement,
-        y,
+        {x, y},
+        {x + to_px(target->measures, axis_config.tick_length).value * label_placement, y},
         style);
   }
 
@@ -112,15 +110,18 @@ static Status renderAxisVertical(
   auto label_padding = to_px(target->measures, axis_config.label_padding).value;
   for (const auto& label : axis_config.labels) {
     auto [ tick, label_text ] = label;
-    auto sy = y0 + (y1 - y0) * (1.0 - tick);
-    auto sx = x + label_padding * label_placement;
+
+    auto p = Point {
+     .x = x + label_padding * label_placement,
+     .y = y0 + (y1 - y0) * (1.0 - tick),
+    };
 
     TextStyle style;
     style.font = axis_config.font;
     style.colour = axis_config.text_colour;
     auto ax = label_placement > 0 ? HAlign::LEFT : HAlign::RIGHT;
     auto ay = VAlign::CENTER;
-    if (auto rc = drawTextLabel(label_text, sx, sy, ax, ay, style, target); rc != OK) {
+    if (auto rc = drawTextLabel(label_text, p, ax, ay, style, target); rc != OK) {
       return rc;
     }
   }
@@ -138,7 +139,7 @@ static Status renderAxisHorizontal(
   {
     StrokeStyle style;
     style.colour = axis_config.border_colour;
-    strokeLine(target, x0, y, x1, y, style);
+    strokeLine(target, {x0, y}, {x1, y}, style);
   }
 
   double label_placement = 0;
@@ -160,10 +161,8 @@ static Status renderAxisHorizontal(
     style.colour = axis_config.border_colour;
     strokeLine(
         target,
-        x,
-        y,
-        x,
-        y + to_px(target->measures, axis_config.tick_length).value * label_placement,
+        {x, y},
+        {x, y + to_px(target->measures, axis_config.tick_length).value * label_placement},
         style);
   }
 
@@ -171,15 +170,17 @@ static Status renderAxisHorizontal(
   auto label_padding = to_px(target->measures, axis_config.label_padding).value;
   for (const auto& label : axis_config.labels) {
     auto [ tick, label_text ] = label;
-    auto sx = x0 + (x1 - x0) * tick;
-    auto sy = y + label_padding * label_placement;
+    auto p = Point {
+      .x = x0 + (x1 - x0) * tick,
+      .y = y + label_padding * label_placement,
+    };
 
     TextStyle style;
     style.font = axis_config.font;
     style.colour = axis_config.text_colour;
     auto ax = HAlign::CENTER;
     auto ay = label_placement > 0 ? VAlign::TOP : VAlign::BOTTOM;
-    if (auto rc = drawTextLabel(label_text, sx, sy, ax, ay, style, target); rc) {
+    if (auto rc = drawTextLabel(label_text, p, ax, ay, style, target); rc) {
       return rc;
     }
   }

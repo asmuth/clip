@@ -58,8 +58,7 @@ struct BrushFillOp {
 
 struct TextSpanOp {
   std::string text;
-  double x;
-  double y;
+  Point position;
   TextStyle style;
 };
 

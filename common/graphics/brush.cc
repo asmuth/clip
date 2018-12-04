@@ -102,16 +102,12 @@ void strokePath(
 
 void strokeLine(
     Layer* layer,
-    double x1,
-    double y1,
-    double x2,
-    double y2,
+    const Point& p1,
+    const Point& p2,
     const StrokeStyle& style) {
   Path p;
-  p.moveTo(x1, y1);
-  p.lineTo(x2, y2);
-  p.lineTo(x2, y2);
-  p.lineTo(x2, y2);
+  p.moveTo(p1.x, p1.y);
+  p.lineTo(p2.x, p2.y);
 
   Rectangle clip(0, 0, layer->width, layer->height);
   strokePath(layer, clip, p, style);
@@ -119,17 +115,16 @@ void strokeLine(
 
 void strokeRectangle(
     Layer* layer,
-    double x,
-    double y,
-    double w,
-    double h,
+    const Point& origin,
+    double width,
+    double height,
     const StrokeStyle& style) {
   Path p;
-  p.moveTo(x, y);
-  p.lineTo(x + w, y);
-  p.lineTo(x + w, y + h);
-  p.lineTo(x, y + h);
-  p.lineTo(x, y);
+  p.moveTo(origin.x, origin.y);
+  p.lineTo(origin.x + width, origin.y);
+  p.lineTo(origin.x + width, origin.y + height);
+  p.lineTo(origin.x, origin.y + height);
+  p.lineTo(origin.x, origin.y);
 
   Rectangle clip(0, 0, layer->width, layer->height);
   strokePath(layer, clip, p, style);

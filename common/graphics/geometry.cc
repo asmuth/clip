@@ -33,6 +33,25 @@
 
 namespace plotfx {
 
+Point::Point() :
+    x(0.0f),
+    y(0.0f) {}
+
+Point::Point(
+    double _x,
+    double _y) :
+    x(_x),
+    y(_y) {}
+
+std::ostream& operator <<(std::ostream& os, const Point& p) {
+  os << "Point(";
+  os << p.x;
+  os << ", ";
+  os << p.y;
+  os << ")";
+  return os;
+}
+
 Rectangle::Rectangle() :
     x(0.0f),
     y(0.0f),

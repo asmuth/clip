@@ -51,8 +51,8 @@ Status svg_text_span(
   svg->buffer
     << "  "
     << "<text "
-    << "x='" << op.x << "' "
-    << "y='" << op.y << "' "
+    << "x='" << op.position.x << "' "
+    << "y='" << op.position.y << "' "
     << "fill='" << style.colour.to_hex_str() << "' "
     << "font-size='" << to_px(measures, style.font_size).value << "' "
     << "font-family='" << style.font.font_family_css << "' " // FIXME escape

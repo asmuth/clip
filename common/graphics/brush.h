@@ -100,18 +100,15 @@ void strokePath(
 
 void strokeLine(
     Layer* layer,
-    double x1,
-    double y1,
-    double x2,
-    double y2,
+    const Point& p1,
+    const Point& p2,
     const StrokeStyle& style);
 
 void strokeRectangle(
     Layer* layer,
-    double x,
-    double y,
-    double w,
-    double h,
+    const Point& origin,
+    double width,
+    double height,
     const StrokeStyle& style);
 
 } // namespace plotfx

@@ -146,8 +146,8 @@ Status Rasterizer::drawText(const layer_ops::TextSpanOp& op) {
   std::vector<text::GlyphPlacement> glyphs;
   auto rc = text::layoutText(
       op.text,
-      op.x,
-      op.y,
+      op.position.x,
+      op.position.y,
       op.style.font,
       op.style.font_size,
       measures.dpi,
