@@ -40,7 +40,7 @@ enum class Unit {
 };
 
 struct MeasureTable {
-  MeasureTable() : dpi(96), rem(12) {}
+  MeasureTable() : dpi(96), rem(11) {}
   double dpi;
   double rem;
 };

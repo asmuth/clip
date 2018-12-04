@@ -38,7 +38,7 @@ TextStyle::TextStyle() :
     direction(TextDirection::LTR),
     halign(TextHAlign::LEFT),
     valign(TextVAlign::BASELINE),
-    font_size(12) {}
+    font_size(from_pt(11)) {}
 
 Status drawText(
     const std::string& text,

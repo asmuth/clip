@@ -31,6 +31,7 @@
 #include "plotfx.h"
 #include "path.h"
 #include "colour.h"
+#include "measure.h"
 
 namespace plotfx {
 class Layer;
@@ -57,7 +58,7 @@ struct TextStyle {
   TextHAlign halign;
   TextVAlign valign;
   FontInfo font;
-  double font_size;
+  Measure font_size;
   Colour colour;
 };
 

@@ -241,7 +241,7 @@ Status renderAxis(
 ReturnCode axis_expand_linear_geom(
     const DomainConfig& domain,
     AxisDefinition* axis) {
-  uint32_t num_ticks = 6; // FIXME make configurable
+  uint32_t num_ticks = 8; // FIXME make configurable
   double min = domain.min.value_or(0.0f);
   double max = domain.max.value_or(0.0f);
 

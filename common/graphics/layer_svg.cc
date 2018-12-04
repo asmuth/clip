@@ -42,10 +42,25 @@ struct SVGData {
 
 using SVGDataRef = std::shared_ptr<SVGData>;
 
-Status svg_text_span(const layer_ops::TextSpanOp& op, SVGDataRef svg) {
+Status svg_text_span(
+    const layer_ops::TextSpanOp& op,
+    const MeasureTable& measures,
+    SVGDataRef svg) {
   const auto& style = op.style;
 
-  std::string anchor = "middle";
+  std::string anchor;
+  switch (style.halign) {
+    case TextHAlign::CENTER:
+      anchor = "middle";
+      break;
+    case TextHAlign::LEFT:
+      anchor = "start";
+      break;
+    case TextHAlign::RIGHT:
+      anchor = "end";
+      break;
+  }
+
   std::string baseline = "middle";
 
   svg->buffer
@@ -54,7 +69,8 @@ Status svg_text_span(const layer_ops::TextSpanOp& op, SVGDataRef svg) {
     << "x='" << op.x << "' "
     << "y='" << op.y << "' "
     << "fill='" << style.colour.to_hex_str() << "' "
-    << "font-size='" << style.font_size << "' "
+    << "font-size='" << to_px(measures, style.font_size).value << "' "
+    << "font-family='" << "\"Helvetica Neue\", Helvetica, Arial, sans-serif" << "' "
     << "text-anchor='" << anchor << "' "
     << "dominant-baseline='" << baseline << "' "
     << ">"
@@ -64,7 +80,10 @@ Status svg_text_span(const layer_ops::TextSpanOp& op, SVGDataRef svg) {
   return OK;
 }
 
-Status svg_stroke_path(const layer_ops::BrushStrokeOp& op, SVGDataRef svg) {
+Status svg_stroke_path(
+    const layer_ops::BrushStrokeOp& op,
+    const MeasureTable& measures,
+    SVGDataRef svg) {
   const auto& clip = op.clip;
   const auto& path = op.path;
   const auto& style = op.style;
@@ -75,7 +94,7 @@ Status svg_stroke_path(const layer_ops::BrushStrokeOp& op, SVGDataRef svg) {
 
   svg->buffer << StringUtil::format(
       "  <path stroke-width='$0' stroke='$1' fill='none' d=\"",
-      style.line_width.value, // FIXME
+      to_px(measures, style.line_width).value,
       style.colour.to_hex_str());
 
   for (const auto& cmd : path) {
@@ -116,13 +135,13 @@ ReturnCode layer_bind_svg(
     .height = svg->height = height,
     .measures = measures,
     .text_shaper = std::make_shared<text::TextShaper>(),
-    .apply = [svg, submit] (const auto& op) {
-      return std::visit([svg, submit] (auto&& op) {
+    .apply = [svg, submit, measures] (const auto& op) {
+      return std::visit([svg, submit, measures] (auto&& op) {
         using T = std::decay_t<decltype(op)>;
         if constexpr (std::is_same_v<T, layer_ops::BrushStrokeOp>)
-          return svg_stroke_path(op, svg);
+          return svg_stroke_path(op, measures, svg);
         if constexpr (std::is_same_v<T, layer_ops::TextSpanOp>)
-          return svg_text_span(op, svg);
+          return svg_text_span(op, measures, svg);
         if constexpr (std::is_same_v<T, layer_ops::SubmitOp>)
           return submit(svg->to_svg());
         else
