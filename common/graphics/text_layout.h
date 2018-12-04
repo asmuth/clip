@@ -29,11 +29,25 @@
  */
 #pragma once
 #include <graphics/text.h>
-#include <graphics/text_shaper.h>
 #include <graphics/layout.h>
 
 namespace plotfx {
 namespace text {
+class TextShaper;
+
+struct GlyphInfo {
+  uint32_t codepoint;
+  double advance_y;
+  double advance_x;
+  double metrics_ascender;
+  double metrics_descender;
+};
+
+struct GlyphPlacement {
+  uint32_t codepoint;
+  double x;
+  double y;
+};
 
 /**
  * Measure the size of a span of text where (0, 0) is the baseline of the first
@@ -44,7 +58,6 @@ Status text_measure_span(
     const FontInfo& font_info,
     double font_size,
     double dpi,
-    TextHAlign align,
     TextShaper* shaper,
     Rectangle* rect);
 
@@ -59,8 +72,6 @@ Status layoutText(
     double font_size,
     double dpi,
     TextDirection direction,
-    TextHAlign halign,
-    TextVAlign valign,
     TextShaper* shaper,
     std::function<void (const GlyphPlacement&)> glyph_cb);
 

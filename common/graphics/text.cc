@@ -36,25 +36,40 @@ namespace plotfx {
 
 TextStyle::TextStyle() :
     direction(TextDirection::LTR),
-    halign(TextHAlign::LEFT),
-    valign(TextVAlign::BASELINE),
     font_size(from_pt(11)) {}
 
-Status drawText(
+Status drawTextLabel(
     const std::string& text,
     double x,
     double y,
+    HAlign align_x,
+    VAlign align_y,
     const TextStyle& style,
     Layer* layer) {
+  Rectangle bbox;
+  auto rc = text::text_measure_span(
+      text,
+      style.font,
+      style.font_size,
+      layer->measures.dpi,
+      layer->text_shaper.get(),
+      &bbox);
+
+  double ox, oy;
+  layout_align(bbox, x, y, align_x, align_y, &ox, &oy);
+
+  if (rc != OK) {
+    return rc;
+  }
+
   layer_ops::TextSpanOp op;
   op.text = text;
-  op.x = x;
-  op.y = y;
+  op.x = ox;
+  op.y = oy;
   op.style = style;
 
   return layer->apply(op);
 }
-
 
 } // namespace plotfx
 

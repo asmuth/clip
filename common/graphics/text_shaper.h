@@ -41,6 +41,7 @@
 #include <harfbuzz/hb-ft.h>
 #include <harfbuzz/hb-icu.h>
 
+#include "graphics/text_layout.h"
 #include "text.h"
 
 namespace plotfx {

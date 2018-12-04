@@ -143,7 +143,7 @@ Status Rasterizer::strokePath(const layer_ops::BrushStrokeOp& op) {
 }
 
 Status Rasterizer::drawText(const layer_ops::TextSpanOp& op) {
-  std::vector<GlyphPlacement> glyphs;
+  std::vector<text::GlyphPlacement> glyphs;
   auto rc = text::layoutText(
       op.text,
       op.x,
@@ -152,10 +152,8 @@ Status Rasterizer::drawText(const layer_ops::TextSpanOp& op) {
       op.style.font_size,
       measures.dpi,
       op.style.direction,
-      op.style.halign,
-      op.style.valign,
       text_shaper.get(),
-      [&glyphs] (const GlyphPlacement& g) { glyphs.emplace_back(g); });
+      [&glyphs] (const text::GlyphPlacement& g) { glyphs.emplace_back(g); });
 
   if (rc != OK) {
     return rc;
@@ -168,7 +166,7 @@ Status Rasterizer::drawText(const layer_ops::TextSpanOp& op) {
 }
 
 Status Rasterizer::drawTextGlyphs(
-    const GlyphPlacement* glyphs,
+    const text::GlyphPlacement* glyphs,
     size_t glyph_count,
     const TextStyle& style) {
   if (!ft_ready) {

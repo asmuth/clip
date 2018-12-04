@@ -118,9 +118,9 @@ static Status renderAxisVertical(
     TextStyle style;
     style.font = axis_config.font;
     style.colour = axis_config.text_colour;
-    style.halign = label_placement > 0 ? TextHAlign::LEFT : TextHAlign::RIGHT;
-    style.valign = TextVAlign::MIDDLE;
-    if (auto rc = drawText(label_text, sx, sy, style, target); rc != OK) {
+    auto ax = label_placement > 0 ? HAlign::LEFT : HAlign::RIGHT;
+    auto ay = VAlign::CENTER;
+    if (auto rc = drawTextLabel(label_text, sx, sy, ax, ay, style, target); rc != OK) {
       return rc;
     }
   }
@@ -176,10 +176,10 @@ static Status renderAxisHorizontal(
 
     TextStyle style;
     style.font = axis_config.font;
-    style.halign = TextHAlign::CENTER;
-    style.valign = label_placement > 0 ? TextVAlign::TOP : TextVAlign::BOTTOM;
     style.colour = axis_config.text_colour;
-    if (auto rc = drawText(label_text, sx, sy, style, target); rc) {
+    auto ax = HAlign::CENTER;
+    auto ay = label_placement > 0 ? VAlign::TOP : VAlign::BOTTOM;
+    if (auto rc = drawTextLabel(label_text, sx, sy, ax, ay, style, target); rc) {
       return rc;
     }
   }

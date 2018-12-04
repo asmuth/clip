@@ -29,6 +29,7 @@
  */
 #include "plotfx.h"
 #include "graphics/text_layout.h"
+#include "graphics/text_shaper.h"
 
 namespace plotfx {
 namespace text {
@@ -38,7 +39,6 @@ Status text_measure_span(
     const FontInfo& font_info,
     double font_size,
     double dpi,
-    TextHAlign align,
     TextShaper* shaper,
     Rectangle* rect) {
   double line_length = 0;
@@ -62,19 +62,7 @@ Status text_measure_span(
     return rc;
   }
 
-  auto left = 0;
-  switch (align) {
-    case TextHAlign::LEFT:
-      break;
-    case TextHAlign::CENTER:
-      left = -line_length / 2;
-      break;
-    case TextHAlign::RIGHT:
-      left = -line_length;
-      break;
-  }
-
-  *rect = Rectangle(left, top, line_length, bottom - top);
+  *rect = Rectangle(0, top, line_length, bottom - top);
   return OK;
 }
 
@@ -85,8 +73,6 @@ Status layoutTextLTR(
     const FontInfo& font_info,
     double font_size,
     double dpi,
-    TextHAlign halign,
-    TextVAlign valign,
     TextShaper* shaper,
     std::function<void (const GlyphPlacement&)> glyph_cb) {
   double line_length;
@@ -108,34 +94,9 @@ Status layoutTextLTR(
   auto gx = x;
   auto gy = y;
 
-  switch (halign) {
-    case TextHAlign::LEFT:
-      break;
-    case TextHAlign::CENTER:
-      gx -= line_length / 2;
-      break;
-    case TextHAlign::RIGHT:
-      gx -= line_length;
-      break;
-  }
 
   for (const auto& gi : glyphs) {
-    // FIXME: this is constant for every glpyh in the same font
     double baseline_offset = 0;
-
-    switch (valign) {
-      case TextVAlign::BASELINE:
-        break;
-      case TextVAlign::TOP:
-        baseline_offset = gi.metrics_ascender;
-        break;
-      case TextVAlign::MIDDLE:
-        baseline_offset = gi.metrics_ascender - (gi.metrics_ascender + -gi.metrics_descender) / 2;
-        break;
-      case TextVAlign::BOTTOM:
-        baseline_offset = gi.metrics_descender;
-        break;
-    }
 
     GlyphPlacement g;
     glyph_cb(GlyphPlacement {
@@ -158,13 +119,11 @@ Status layoutText(
     double font_size,
     double dpi,
     TextDirection direction,
-    TextHAlign halign,
-    TextVAlign valign,
     TextShaper* shaper,
     std::function<void (const GlyphPlacement&)> glyph_cb) {
   switch (direction) {
     case TextDirection::LTR:
-      return layoutTextLTR(text, x, y, font, font_size, dpi, halign, valign, shaper, glyph_cb);
+      return layoutTextLTR(text, x, y, font, font_size, dpi, shaper, glyph_cb);
     case TextDirection::RTL:
       return ERROR_NOT_IMPLEMENTED;
     default:

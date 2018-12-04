@@ -32,20 +32,13 @@
 #include "path.h"
 #include "colour.h"
 #include "measure.h"
+#include "layout.h"
 
 namespace plotfx {
 class Layer;
 
 enum class TextDirection {
   LTR, RTL
-};
-
-enum class TextHAlign {
-  LEFT, CENTER, RIGHT
-};
-
-enum class TextVAlign {
-  BASELINE, MIDDLE, TOP, BOTTOM
 };
 
 struct FontInfo {
@@ -55,40 +48,19 @@ struct FontInfo {
 struct TextStyle {
   TextStyle();
   TextDirection direction;
-  TextHAlign halign;
-  TextVAlign valign;
   FontInfo font;
   Measure font_size;
   Colour colour;
 };
 
-struct GlyphInfo {
-  uint32_t codepoint;
-  double advance_y;
-  double advance_x;
-  double metrics_ascender;
-  double metrics_descender;
-};
-
-struct GlyphPlacement {
-  uint32_t codepoint;
-  double x;
-  double y;
-};
-
-Status drawText(
+Status drawTextLabel(
     const std::string& text,
     double x,
     double y,
+    HAlign align_x,
+    VAlign align_y,
     const TextStyle& text_style,
     Layer* layer);
-
-Status drawTextGlyphs(
-    const GlyphPlacement* glyphs,
-    size_t glyph_count,
-    const TextStyle& style,
-    Layer* layer);
-
 
 } // namespace plotfx
 

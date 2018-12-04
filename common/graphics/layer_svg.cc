@@ -48,20 +48,6 @@ Status svg_text_span(
     SVGDataRef svg) {
   const auto& style = op.style;
 
-  std::string anchor;
-  switch (style.halign) {
-    case TextHAlign::CENTER:
-      anchor = "middle";
-      break;
-    case TextHAlign::LEFT:
-      anchor = "start";
-      break;
-    case TextHAlign::RIGHT:
-      anchor = "end";
-      break;
-  }
-
-  std::string baseline = "middle";
 
   svg->buffer
     << "  "
@@ -70,9 +56,7 @@ Status svg_text_span(
     << "y='" << op.y << "' "
     << "fill='" << style.colour.to_hex_str() << "' "
     << "font-size='" << to_px(measures, style.font_size).value << "' "
-    << "font-family='" << "\"Helvetica Neue\", Helvetica, Arial, sans-serif" << "' "
-    << "text-anchor='" << anchor << "' "
-    << "dominant-baseline='" << baseline << "' "
+    << "font-family='" << "\"Roboto Medium\", sans-serif" << "' "
     << ">"
     << op.text // FIXME escape
     << "</text>";
