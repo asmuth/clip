@@ -168,6 +168,7 @@ ReturnCode document_render_svg(
       to_px(doc.measures, doc.width).value,
       to_px(doc.measures, doc.height).value,
       doc.measures,
+      doc.background_colour,
       [filename] (auto svg) {
         FileUtil::write(filename, Buffer(svg.data(), svg.size()));
         return OK;

@@ -37,6 +37,7 @@ struct SVGData {
   std::stringstream buffer;
   uint32_t width;
   uint32_t height;
+  Colour background_colour;
   std::string to_svg() const;
 };
 
@@ -50,12 +51,12 @@ Status svg_text_span(
 
   svg->buffer
     << "  "
-    << "<text "
-    << "x='" << op.position.x << "' "
-    << "y='" << op.position.y << "' "
-    << "fill='" << style.colour.to_hex_str() << "' "
-    << "font-size='" << to_px(measures, style.font_size).value << "' "
-    << "font-family='" << style.font.font_family_css << "' " // FIXME escape
+    << "<text"
+    << " x='" << op.position.x << "'"
+    << " y='" << op.position.y << "'"
+    << " fill='" << style.colour.to_hex_str() << "'"
+    << " font-size='" << to_px(measures, style.font_size).value << "'"
+    << " font-family='" << style.font.font_family_css << "'" // FIXME escape
     << ">"
     << op.text // FIXME escape
     << "</text>";
@@ -75,10 +76,13 @@ Status svg_stroke_path(
     return ERROR_INVALID_ARGUMENT;
   }
 
-  svg->buffer << StringUtil::format(
-      "  <path stroke-width='$0' stroke='$1' fill='none' d=\"",
-      to_px(measures, style.line_width).value,
-      style.colour.to_hex_str());
+  svg->buffer
+      << "  "
+      << "<path"
+      << " stroke-width='" << to_px(measures, style.line_width).value << "'"
+      << " stroke='" << style.colour.to_hex_str() << "'"
+      << " fill='none'"
+      << " d=\"";
 
   for (const auto& cmd : path) {
     switch (cmd.command) {
@@ -93,26 +97,33 @@ Status svg_stroke_path(
     }
   }
 
-  svg->buffer << "\" />\n";
-
+  svg->buffer << "\"/>\n";
   return OK;
 }
 
 std::string SVGData::to_svg() const {
-  return StringUtil::format(
-      "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox='0 0 $0 $1' viewport-fill='white'>\n$2\n</svg>",
-      width,
-      height,
-      buffer.str());
+  std::stringstream svg;
+  svg
+    << "<svg xmlns=\"http://www.w3.org/2000/svg\""
+    << " viewBox='0 0 " << width << " " << height << "'"
+    << " viewport-fill='" << background_colour.to_hex_str() << "'"
+    << ">\n"
+    << buffer.str()
+    << "</svg>";
+
+  return svg.str();
 }
 
 ReturnCode layer_bind_svg(
     double width,
     double height,
     const MeasureTable& measures,
+    const Colour& background_colour,
     std::function<Status (const std::string&)> submit,
     LayerRef* layer) {
   auto svg = std::make_shared<SVGData>();
+  svg->background_colour = background_colour;
+
   layer->reset(new Layer{
     .width = svg->width = width,
     .height = svg->height = height,
