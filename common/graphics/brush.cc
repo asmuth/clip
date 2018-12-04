@@ -117,5 +117,24 @@ void strokeLine(
   strokePath(layer, clip, p, style);
 }
 
+void strokeRectangle(
+    Layer* layer,
+    double x,
+    double y,
+    double w,
+    double h,
+    const StrokeStyle& style) {
+  Path p;
+  p.moveTo(x, y);
+  p.lineTo(x + w, y);
+  p.lineTo(x + w, y + h);
+  p.lineTo(x, y + h);
+  p.lineTo(x, y);
+
+  Rectangle clip(0, 0, layer->width, layer->height);
+  strokePath(layer, clip, p, style);
+}
+
+
 } // namespace plotfx
 

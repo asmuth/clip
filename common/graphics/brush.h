@@ -106,5 +106,13 @@ void strokeLine(
     double y2,
     const StrokeStyle& style);
 
+void strokeRectangle(
+    Layer* layer,
+    double x,
+    double y,
+    double w,
+    double h,
+    const StrokeStyle& style);
+
 } // namespace plotfx
 
