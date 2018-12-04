@@ -47,7 +47,7 @@ Document::Document() :
     text_colour(Colour::fromRGB(.3,.3,.3)),
     border_colour(Colour::fromRGB(.45,.45,.45)) {}
 
-ReturnCode setupDocumentDefaults(Document* doc) {
+ReturnCode document_setup_defaults(Document* doc) {
   if (auto path = getenv("PLOTFX_FONT_PATH"); path) {
     auto path_parts = StringUtil::split(path, ":");
     doc->font_searchpath.insert(
@@ -69,9 +69,13 @@ ReturnCode setupDocumentDefaults(Document* doc) {
   return OK;
 }
 
-ReturnCode buildDocument(
+ReturnCode document_load(
     const PropertyList& plist,
     Document* doc) {
+  if (auto rc = document_setup_defaults(doc); !rc.isSuccess()) {
+    return rc;
+  }
+
   static const ParserDefinitions pdefs = {
     {"width", std::bind(&parseMeasureProp, std::placeholders::_1, &doc->width)},
     {"height", std::bind(&parseMeasureProp, std::placeholders::_1, &doc->height)},
@@ -111,7 +115,7 @@ ReturnCode buildDocument(
   return ReturnCode::success();
 }
 
-ReturnCode buildDocument(
+ReturnCode document_load(
     const std::string& spec,
     Document* tree) {
   PropertyList plist;
@@ -123,18 +127,22 @@ ReturnCode buildDocument(
         plist_parser.get_error());
   }
 
-  return buildDocument(plist, tree);
+  return document_load(plist, tree);
 }
 
-ReturnCode renderElements(
+ReturnCode document_render_to(
     const Document& tree,
-    Layer* frame) {
-  Rectangle clip(0, 0, frame->width, frame->height);
+    Layer* layer) {
+  Rectangle clip(0, 0, layer->width, layer->height);
 
   for (const auto& e : tree.roots) {
-    if (auto rc = e->draw(clip, frame); !rc.isSuccess()) {
+    if (auto rc = e->draw(clip, layer); !rc.isSuccess()) {
       return rc;
     }
+  }
+
+  if (auto rc = layer_submit(layer); !rc.isSuccess()) {
+    return rc;
   }
 
   return ReturnCode::success();
@@ -171,11 +179,7 @@ ReturnCode document_render_svg(
     return rc;
   }
 
-  if (auto rc = renderElements(doc, layer.get()); !rc.isSuccess()) {
-    return rc;
-  }
-
-  if (auto rc = layer_submit(layer.get()); !rc.isSuccess()) {
+  if (auto rc = document_render_to(doc, layer.get()); !rc.isSuccess()) {
     return rc;
   }
 
@@ -202,11 +206,7 @@ ReturnCode document_render_png(
     return rc;
   }
 
-  if (auto rc = renderElements(doc, layer.get()); !rc.isSuccess()) {
-    return rc;
-  }
-
-  if (auto rc = layer_submit(layer.get()); !rc.isSuccess()) {
+  if (auto rc = document_render_to(doc, layer.get()); !rc.isSuccess()) {
     return rc;
   }
 

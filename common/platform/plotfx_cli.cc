@@ -103,14 +103,10 @@ int main(int argc, const char** argv) {
     return 0;
   }
 
-  auto spec = FileUtil::read(flag_in).toString(); // FIXME
-  plotfx::Document doc;
-  if (auto rc = setupDocumentDefaults(&doc); !rc.isSuccess()) {
-    printError(rc);
-    return EXIT_FAILURE;
-  }
+  auto doc_raw = FileUtil::read(flag_in).toString(); // FIXME
 
-  if (auto rc = buildDocument(spec, &doc); !rc.isSuccess()) {
+  plotfx::Document doc;
+  if (auto rc = document_load(doc_raw, &doc); !rc.isSuccess()) {
     printError(rc);
     return EXIT_FAILURE;
   }

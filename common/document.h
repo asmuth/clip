@@ -54,19 +54,13 @@ struct Document {
   std::vector<ElementRef> roots;
 };
 
-ReturnCode setupDocumentDefaults(Document* doc);
-
-ReturnCode buildDocument(
+ReturnCode document_load(
     const PropertyList& plist,
     Document* tree);
 
-ReturnCode buildDocument(
+ReturnCode document_load(
     const std::string& spec,
     Document* tree);
-
-ReturnCode renderElements(
-    const Document& tree,
-    Layer* frame);
 
 ReturnCode document_render(
     const Document& doc,
