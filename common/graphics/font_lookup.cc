@@ -28,6 +28,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 #include <iostream>
+#include <fontconfig/fontconfig.h>
 #include "font_lookup.h"
 #include "utils/fileutil.h"
 
@@ -49,6 +50,41 @@ bool findFontSimple(
 
   return false;
 }
+
+bool findFontSystem(
+    const std::string& font_pattern,
+    FontInfo* font_file) {
+  std::string file;
+
+  {
+    auto fc_config = FcInitLoadConfigAndFonts();
+    auto fc_pattern = FcNameParse((FcChar8*) font_pattern.c_str());
+    FcDefaultSubstitute(fc_pattern);
+    FcConfigSubstitute(fc_config, fc_pattern, FcMatchPattern);
+    FcResult fc_res;
+    auto fc_font = FcFontMatch(fc_config, fc_pattern, &fc_res);
+    if (fc_font && fc_res == FcResultMatch) {
+      char* fc_file;
+      if (FcPatternGetString(fc_font, FC_FILE, 0, (FcChar8**) &fc_file) == FcResultMatch) {
+        file = std::string(fc_file);
+      }
+      FcPatternDestroy(fc_font);
+    }
+    FcPatternDestroy(fc_pattern);
+    FcConfigDestroy(fc_config);
+  }
+
+  if (file.empty()) {
+    return false;
+  }
+
+  *font_file = FontInfo {
+    .font_file = file
+  };
+
+  return true;
+}
+
 
 } // namespace plotfx
 

@@ -38,5 +38,9 @@ bool findFontSimple(
     const std::vector<std::string>& search_paths,
     FontInfo* font_file);
 
+bool findFontSystem(
+    const std::string& font_pattenr,
+    FontInfo* font_file);
+
 } // namespace plotfx
 

@@ -56,14 +56,12 @@ ReturnCode document_setup_defaults(Document* doc) {
         path_parts.end());
   }
 
-
-  static const auto default_font_sans = "Roboto-Medium";
-  if (!findFontSimple(default_font_sans, doc->font_searchpath, &doc->font_sans)) {
+  static const auto default_font_sans = "Arial,Helvetica:style=Regular,Roman";
+  if (!findFontSystem(default_font_sans, &doc->font_sans)) {
     return ReturnCode::errorf(
         "EARG",
-        "unable to find default sans-sans font ($0); searched in: $1",
-        default_font_sans,
-        StringUtil::join(doc->font_searchpath, ", "));
+        "unable to find default sans-sans font ($0)",
+        default_font_sans);
   }
 
   return OK;

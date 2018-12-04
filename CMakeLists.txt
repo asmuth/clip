@@ -12,6 +12,7 @@ find_package(Threads)
 find_package(Cairo)
 find_package(Freetype)
 find_package(HarfBuzz)
+find_package(Fontconfig)
 find_package(PNG)
 include_directories(${CAIRO_INCLUDE_DIRS} ${FREETYPE_INCLUDE_DIRS} ${HARFBUZZ_INCLUDE_DIRS} ${PNG_INCLUDE_DIRS})
 
@@ -63,7 +64,7 @@ add_library(plotfxlib STATIC
     common/utils/UTF8.cc
     common/utils/wallclock.cc)
 
-set(PLOTFX_LDFLAGS plotfxlib ${CAIRO_LIBRARIES} ${FREETYPE_LIBRARIES} ${HARFBUZZ_LIBRARIES} ${HARFBUZZ_ICU_LIBRARIES} ${PNG_LIBRARIES})
+set(PLOTFX_LDFLAGS plotfxlib ${CAIRO_LIBRARIES} ${FREETYPE_LIBRARIES} ${HARFBUZZ_LIBRARIES} ${HARFBUZZ_ICU_LIBRARIES} ${PNG_LIBRARIES} ${FONTCONFIG_LIBRARIES})
 
 add_executable(plotfx common/platform/plotfx_cli.cc)
 target_link_libraries(plotfx ${PLOTFX_LDFLAGS})
