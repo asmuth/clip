@@ -28,6 +28,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 #include "layer_pixmap.h"
+#include "rasterize.h"
 
 namespace plotfx {
 
@@ -46,18 +47,19 @@ ReturnCode layer_bind_png(
     .height = height,
     .measures = measures,
     .text_shaper = text_shaper,
-    .op_brush_stroke = std::bind(
-        &Rasterizer::strokePath,
-        raster.get(), // safe
-        std::placeholders::_1),
-    .op_brush_fill = std::bind(
-        &Rasterizer::fillPath,
-        raster.get(), // safe
-        std::placeholders::_1),
-    .op_text_span = std::bind(
-        &Rasterizer::drawText,
-        raster.get(), // safe
-        std::placeholders::_1),
+    .apply = [raster] (auto op) {
+      return std::visit([raster] (auto&& op) {
+        using T = std::decay_t<decltype(op)>;
+        if constexpr (std::is_same_v<T, layer_ops::BrushStrokeOp>)
+          return raster->strokePath(op);
+        if constexpr (std::is_same_v<T, layer_ops::BrushFillOp>)
+          return raster->fillPath(op);
+        if constexpr (std::is_same_v<T, layer_ops::TextSpanOp>)
+          return raster->drawText(op);
+        else
+          return ERROR_NOT_IMPLEMENTED;
+      }, op);
+    },
     .data = [raster] { return raster->to_png(); },
   });
 

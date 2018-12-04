@@ -63,7 +63,7 @@ Rasterizer::~Rasterizer() {
   cairo_surface_destroy(cr_surface);
 }
 
-Status Rasterizer::fillPath(const BrushFillOp& op) {
+Status Rasterizer::fillPath(const layer_ops::BrushFillOp& op) {
   const auto& clip = op.clip;
   const auto& path = op.path;
   const auto& style = op.style;
@@ -101,7 +101,7 @@ Status Rasterizer::fillPath(const BrushFillOp& op) {
   return OK;
 }
 
-Status Rasterizer::strokePath(const BrushStrokeOp& op) {
+Status Rasterizer::strokePath(const layer_ops::BrushStrokeOp& op) {
   const auto& clip = op.clip;
   const auto& path = op.path;
   const auto& style = op.style;
@@ -142,7 +142,7 @@ Status Rasterizer::strokePath(const BrushStrokeOp& op) {
   return OK;
 }
 
-Status Rasterizer::drawText(const TextSpanOp& op) {
+Status Rasterizer::drawText(const layer_ops::TextSpanOp& op) {
   std::vector<GlyphPlacement> glyphs;
   auto rc = text::layoutText(
       op.text,

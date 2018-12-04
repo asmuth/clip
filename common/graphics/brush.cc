@@ -50,14 +50,12 @@ void fillPath(
     const Rectangle& clip,
     const Path& path,
     const FillStyle& style) {
-  BrushFillOp op;
+  layer_ops::BrushFillOp op;
   op.clip = clip;
   op.path = path;
   op.style = style;
 
-  if (layer->op_brush_fill) {
-    layer->op_brush_fill(op);
-  }
+  layer->apply(op);
 }
 
 void fillPath(
@@ -86,14 +84,11 @@ void strokePath(
     const Rectangle& clip,
     const Path& path,
     const StrokeStyle& style) {
-  BrushStrokeOp op;
+  layer_ops::BrushStrokeOp op;
   op.clip = clip;
   op.path = path;
   op.style = style;
-
-  if (layer->op_brush_stroke) {
-    layer->op_brush_stroke(op);
-  }
+  layer->apply(op);
 }
 
 void strokePath(

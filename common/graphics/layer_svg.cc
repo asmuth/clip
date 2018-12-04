@@ -42,7 +42,7 @@ struct SVGData {
 
 using SVGDataRef = std::shared_ptr<SVGData>;
 
-Status svg_text_span(const TextSpanOp& op, SVGDataRef svg) {
+Status svg_text_span(const layer_ops::TextSpanOp& op, SVGDataRef svg) {
   const auto& style = op.style;
 
   std::string anchor = "middle";
@@ -64,7 +64,7 @@ Status svg_text_span(const TextSpanOp& op, SVGDataRef svg) {
   return OK;
 }
 
-Status svg_stroke_path(const BrushStrokeOp& op, SVGDataRef svg) {
+Status svg_stroke_path(const layer_ops::BrushStrokeOp& op, SVGDataRef svg) {
   const auto& clip = op.clip;
   const auto& path = op.path;
   const auto& style = op.style;
@@ -104,6 +104,18 @@ std::string SVGData::to_svg() const {
       buffer.str());
 }
 
+Status svg_apply(const layer_ops::Op& op, SVGDataRef svg) {
+  return std::visit([svg] (auto&& op) {
+    using T = std::decay_t<decltype(op)>;
+    if constexpr (std::is_same_v<T, layer_ops::BrushStrokeOp>)
+      return svg_stroke_path(op, svg);
+    if constexpr (std::is_same_v<T, layer_ops::TextSpanOp>)
+      return svg_text_span(op, svg);
+    else
+      return ERROR_NOT_IMPLEMENTED;
+  }, op);
+}
+
 ReturnCode layer_bind_svg(
     double width,
     double height,
@@ -115,9 +127,7 @@ ReturnCode layer_bind_svg(
     .height = svg->height = height,
     .measures = measures,
     .text_shaper = std::make_shared<text::TextShaper>(),
-    .op_brush_stroke = std::bind(&svg_stroke_path, std::placeholders::_1, svg),
-    .op_brush_fill = [] (auto op) { return OK; },
-    .op_text_span = std::bind(&svg_text_span, std::placeholders::_1, svg),
+    .apply = std::bind(&svg_apply, std::placeholders::_1, svg),
     .data = [svg] () { return svg->to_svg(); },
   });
 

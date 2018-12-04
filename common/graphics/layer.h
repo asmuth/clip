@@ -36,9 +36,8 @@
 #include "colour.h"
 #include "plotfx.h"
 #include "text_shaper.h"
-#include "rasterize.h"
-#include "image.h"
 #include "measure.h"
+#include "layer_ops.h"
 
 namespace plotfx {
 
@@ -47,9 +46,7 @@ struct Layer {
   const double height;
   const MeasureTable measures;
   const std::shared_ptr<text::TextShaper> text_shaper;
-  const std::function<Status (const BrushStrokeOp&)> op_brush_stroke;
-  const std::function<Status (const BrushFillOp&)> op_brush_fill;
-  const std::function<Status (const TextSpanOp&)> op_text_span;
+  const std::function<Status (const layer_ops::Op&)> apply;
   const std::function<std::string ()> data;
 };
 

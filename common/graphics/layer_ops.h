@@ -1,6 +1,7 @@
 /**
  * This file is part of the "plotfx" project
  *   Copyright (c) 2018 Paul Asmuth
+ *   Copyright (c) 2014 Paul Asmuth, Google Inc.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -28,83 +29,43 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 #pragma once
-#include <assert.h>
 #include <stdlib.h>
-#include <stdint.h>
+#include <vector>
+#include <string>
+#include <variant>
+
 #include "colour.h"
-#include "path.h"
 #include "measure.h"
-#include "layout.h"
+#include "brush.h"
+#include "text.h"
 
 namespace plotfx {
-class Layer;
+namespace layer_ops {
 
-enum class StrokeLineJoin { MITER, ROUND, BEVEL };
-enum class StrokeLineCap { BUTT, SQUARE, ROUND};
-
-struct StrokeStyle {
-  StrokeStyle() :
-    line_width(Unit::PT, 1.0),
-    line_join(StrokeLineJoin::MITER),
-    line_cap(StrokeLineCap::SQUARE),
-    colour(Colour::fromRGB(0, 0, 0)) {}
-
-  Measure line_width;
-  StrokeLineJoin line_join;
-  StrokeLineCap line_cap;
-  Colour colour;
+struct BrushStrokeOp {
+  Rectangle clip;
+  Path path;
+  StrokeStyle style;
 };
 
-struct FillStyle {
-  FillStyle() :
-    colour(Colour::fromRGB(0, 0, 0)) {}
-
-  Colour colour;
+struct BrushFillOp {
+  Rectangle clip;
+  Path path;
+  FillStyle style;
 };
 
-void fillPath(
-    Layer* layer,
-    const Path& path,
-    const FillStyle& style);
+struct TextSpanOp {
+  std::string text;
+  double x;
+  double y;
+  TextStyle style;
+};
 
-void fillPath(
-    Layer* layer,
-    const Rectangle& clip,
-    const Path& path,
-    const FillStyle& style);
+using Op = std::variant<
+    BrushFillOp,
+    BrushStrokeOp,
+    TextSpanOp>;
 
-void fillPath(
-    Layer* layer,
-    const Rectangle& clip,
-    const PathData* path_data,
-    size_t path_data_count,
-    const FillStyle& style);
-
-void strokePath(
-    Layer* layer,
-    const Path& path,
-    const StrokeStyle& style);
-
-void strokePath(
-    Layer* layer,
-    const Rectangle& clip,
-    const Path& path,
-    const StrokeStyle& style);
-
-void strokePath(
-    Layer* layer,
-    const Rectangle& clip,
-    const PathData* path_data,
-    size_t path_data_count,
-    const StrokeStyle& style);
-
-void strokeLine(
-    Layer* layer,
-    double x1,
-    double y1,
-    double x2,
-    double y2,
-    const StrokeStyle& style);
-
+} // namespace layer_ops
 } // namespace plotfx
 

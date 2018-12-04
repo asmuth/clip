@@ -1,5 +1,5 @@
-width: 1200px;
-height: 600px;
+width: 900px;
+height: 360px;
 
 plot {
   axis-top: off;

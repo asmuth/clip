@@ -46,17 +46,13 @@ Status drawText(
     double y,
     const TextStyle& style,
     Layer* layer) {
-  if (!layer->op_text_span) {
-    return ERROR_IO;
-  }
-
-  TextSpanOp op;
+  layer_ops::TextSpanOp op;
   op.text = text;
   op.x = x;
   op.y = y;
   op.style = style;
 
-  return layer->op_text_span(op);
+  return layer->apply(op);
 }
 
 

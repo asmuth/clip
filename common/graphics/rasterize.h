@@ -47,6 +47,7 @@
 #include "text.h"
 #include "brush.h"
 #include "layout.h"
+#include "layer.h"
 #include "text_shaper.h"
 
 namespace plotfx {
@@ -62,10 +63,10 @@ public:
 
   void clear(const Colour& c);
 
-  Status fillPath(const BrushFillOp& op);
-  Status strokePath(const BrushStrokeOp& op);
+  Status fillPath(const layer_ops::BrushFillOp& op);
+  Status strokePath(const layer_ops::BrushStrokeOp& op);
 
-  Status drawText(const TextSpanOp& op);
+  Status drawText(const layer_ops::TextSpanOp& op);
   Status drawTextGlyphs(
       const GlyphPlacement* glyphs,
       size_t glyph_count,
