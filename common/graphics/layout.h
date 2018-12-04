@@ -43,6 +43,16 @@ struct Rectangle {
   double h;
 };
 
+std::ostream& operator <<(std::ostream& os, const Rectangle& c);
+
+enum class HAlign {
+  LEFT, CENTER, RIGHT
+};
+
+enum class VAlign {
+  TOP, CENTER, BOTTOM
+};
+
 Rectangle layout_margin_box(
     const Rectangle& parent,
     double margin_top,
@@ -50,7 +60,33 @@ Rectangle layout_margin_box(
     double margin_bottom,
     double margin_left);
 
-std::ostream& operator <<(std::ostream& os, const Rectangle& c);
+/**
+ * Given a bounding box and a target point (tx, ty) and (sx, sy) == (0, 0),
+ * calculate a translate offset (ox, oy) for the bounding box so that new
+ * bounding box midpoint point is equal to the target point.
+ */
+void layout_align(
+    const Rectangle& bbox,
+    double tx,
+    double ty,
+    double* ox,
+    double* oy);
+
+/**
+ * Given a bounding box and a target point (tx, ty) and (sx, sy) == (0, 0),
+ * calculate a translate offset (ox, oy) for the bounding box so that new
+ * bounding box alignment point is equal to the target point. You can choose
+ * from one of 9 alignment points using the halign and valign parameters.
+ */
+void layout_align(
+    const Rectangle& bbox,
+    double tx,
+    double ty,
+    HAlign halign,
+    VAlign valign,
+    double* ox,
+    double* oy);
+
 
 } // namespace plotfx
 

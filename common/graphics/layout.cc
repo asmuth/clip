@@ -63,6 +63,51 @@ Rectangle layout_margin_box(
   return box;
 }
 
+void layout_align(
+    const Rectangle& bbox,
+    double tx,
+    double ty,
+    double* ox,
+    double* oy) {
+  double mx = bbox.x + bbox.w / 2;
+  double my = bbox.y + bbox.h / 2;
+  *ox = (tx - mx);
+  *oy = (ty - my);
+}
+
+void layout_align(
+    const Rectangle& bbox,
+    double tx,
+    double ty,
+    HAlign align_x,
+    VAlign align_y,
+    double* ox,
+    double* oy) {
+  switch (align_x) {
+    case HAlign::LEFT:
+      tx += bbox.w / 2;
+      break;
+    case HAlign::RIGHT:
+      tx -= bbox.w / 2;
+      break;
+    case HAlign::CENTER:
+      break;
+  }
+
+  switch (align_y) {
+    case VAlign::TOP:
+      ty += bbox.h / 2;
+      break;
+    case VAlign::BOTTOM:
+      ty -= bbox.h / 2;
+      break;
+    case VAlign::CENTER:
+      break;
+  }
+
+  return layout_align(bbox, tx, ty, ox, oy);
+}
+
 std::ostream& operator <<(std::ostream& os, const Rectangle& r) {
   os << "Rectangle(";
   os << r.x;
