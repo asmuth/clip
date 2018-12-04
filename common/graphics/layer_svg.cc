@@ -43,6 +43,53 @@ struct SVGData {
 
 using SVGDataRef = std::shared_ptr<SVGData>;
 
+std::string svg_attr(const std::string& name, const std::string& val) {
+  std::string buf = " ";
+
+  buf += name;
+  buf += "=\"";
+
+  for (const auto& c : val) {
+    switch (c) {
+      case '\"':
+        buf += "\\\"";
+        break;
+      default:
+        buf += c;
+        break;
+    }
+  }
+
+  buf += "\"";
+  return buf;
+}
+
+std::string svg_attr(const std::string& name, double val) {
+  return svg_attr(name, std::to_string(val));
+}
+
+std::string svg_body(const std::string& in) {
+  std::string out;
+  for (const auto& c : in) {
+    switch (c) {
+      case '&':
+        out += "&amp;";
+        break;
+      case '<':
+        out += "&lt;";
+        break;
+      case '>':
+        out += "&gt;";
+        break;
+      default:
+        out += c;
+        break;
+    }
+  }
+
+  return out;
+}
+
 Status svg_text_span(
     const layer_ops::TextSpanOp& op,
     const MeasureTable& measures,
@@ -52,14 +99,15 @@ Status svg_text_span(
   svg->buffer
     << "  "
     << "<text"
-    << " x='" << op.position.x << "'"
-    << " y='" << op.position.y << "'"
-    << " fill='" << style.colour.to_hex_str() << "'"
-    << " font-size='" << to_px(measures, style.font_size).value << "'"
-    << " font-family='" << style.font.font_family_css << "'" // FIXME escape
+    << svg_attr("x", op.position.x)
+    << svg_attr("y", op.position.y)
+    << svg_attr("fill", style.colour.to_hex_str())
+    << svg_attr("font-size", to_px(measures, style.font_size).value)
+    << svg_attr("font-family", style.font.font_family_css)
     << ">"
-    << op.text // FIXME escape
-    << "</text>";
+    << svg_body(op.text)
+    << "</text>"
+    << "\n";
 
   return OK;
 }
@@ -76,38 +124,42 @@ Status svg_stroke_path(
     return ERROR_INVALID_ARGUMENT;
   }
 
-  svg->buffer
-      << "  "
-      << "<path"
-      << " stroke-width='" << to_px(measures, style.line_width).value << "'"
-      << " stroke='" << style.colour.to_hex_str() << "'"
-      << " fill='none'"
-      << " d=\"";
-
+  std::stringstream path_data;
   for (const auto& cmd : path) {
     switch (cmd.command) {
       case PathCommand::MOVE_TO:
-        svg->buffer << StringUtil::format("M$0 $1 ", cmd[0], cmd[1]);
+        path_data << StringUtil::format("M$0 $1 ", cmd[0], cmd[1]);
         break;
       case PathCommand::LINE_TO:
-        svg->buffer << StringUtil::format("L$0 $1 ", cmd[0], cmd[1]);
+        path_data << StringUtil::format("L$0 $1 ", cmd[0], cmd[1]);
         break;
       case PathCommand::ARC_TO:
         break;
     }
   }
 
-  svg->buffer << "\"/>\n";
+  svg->buffer
+      << "  "
+      << "<path"
+      << svg_attr("stroke-width", to_px(measures, style.line_width).value)
+      << svg_attr("stroke", style.colour.to_hex_str())
+      << svg_attr("fill", "none")
+      << svg_attr("d", path_data.str())
+      << "/>"
+      << "\n";
+
   return OK;
 }
 
 std::string SVGData::to_svg() const {
   std::stringstream svg;
   svg
-    << "<svg xmlns=\"http://www.w3.org/2000/svg\""
-    << " viewBox='0 0 " << width << " " << height << "'"
-    << " viewport-fill='" << background_colour.to_hex_str() << "'"
-    << ">\n"
+    << "<svg"
+    << svg_attr("xmlns", "http://www.w3.org/2000/svg")
+    << svg_attr("viewBox", StringUtil::format("0 0 $0 $1", width, height))
+    << svg_attr("viewport-fill", background_colour.to_hex_str())
+    << ">"
+    << "\n"
     << buffer.str()
     << "</svg>";
 
