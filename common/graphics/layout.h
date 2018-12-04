@@ -31,19 +31,9 @@
 #include <assert.h>
 #include <stdlib.h>
 #include <stdint.h>
+#include "geometry.h"
 
 namespace plotfx {
-
-struct Rectangle {
-  Rectangle();
-  Rectangle(double x, double y, double w, double h);
-  double x;
-  double y;
-  double w;
-  double h;
-};
-
-std::ostream& operator <<(std::ostream& os, const Rectangle& c);
 
 enum class HAlign {
   LEFT, CENTER, RIGHT

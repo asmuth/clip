@@ -31,6 +31,7 @@ add_library(plotfxlib STATIC
     common/graphics/path.cc
     common/graphics/brush.cc
     common/graphics/colour.cc
+    common/graphics/geometry.cc
     common/graphics/image.cc
     common/graphics/layer.cc
     common/graphics/layer_pixmap.cc

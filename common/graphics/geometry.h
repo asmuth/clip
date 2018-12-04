@@ -27,70 +27,23 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-#include <algorithm>
-#include <iostream>
-#include "layout.h"
+#pragma once
+#include <assert.h>
+#include <stdlib.h>
+#include <stdint.h>
 
 namespace plotfx {
 
-Rectangle layout_margin_box(
-    const Rectangle& parent,
-    double margin_top,
-    double margin_right,
-    double margin_bottom,
-    double margin_left) {
-  Rectangle box;
-  box.x = parent.x + margin_left;
-  box.y = parent.y + margin_top;
-  box.w = std::max(parent.w - (margin_left + margin_right), 0.0);
-  box.h = std::max(parent.h - (margin_top + margin_bottom), 0.0);
-  return box;
-}
+struct Rectangle {
+  Rectangle();
+  Rectangle(double x, double y, double w, double h);
+  double x;
+  double y;
+  double w;
+  double h;
+};
 
-void layout_align(
-    const Rectangle& bbox,
-    double tx,
-    double ty,
-    double* ox,
-    double* oy) {
-  double mx = bbox.x + bbox.w / 2;
-  double my = bbox.y + bbox.h / 2;
-  *ox = (tx - mx);
-  *oy = (ty - my);
-}
-
-void layout_align(
-    const Rectangle& bbox,
-    double tx,
-    double ty,
-    HAlign align_x,
-    VAlign align_y,
-    double* ox,
-    double* oy) {
-  switch (align_x) {
-    case HAlign::LEFT:
-      tx += bbox.w / 2;
-      break;
-    case HAlign::RIGHT:
-      tx -= bbox.w / 2;
-      break;
-    case HAlign::CENTER:
-      break;
-  }
-
-  switch (align_y) {
-    case VAlign::TOP:
-      ty += bbox.h / 2;
-      break;
-    case VAlign::BOTTOM:
-      ty -= bbox.h / 2;
-      break;
-    case VAlign::CENTER:
-      break;
-  }
-
-  return layout_align(bbox, tx, ty, ox, oy);
-}
+std::ostream& operator <<(std::ostream& os, const Rectangle& c);
 
 } // namespace plotfx
 

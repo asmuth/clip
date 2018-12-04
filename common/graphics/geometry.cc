@@ -33,63 +33,33 @@
 
 namespace plotfx {
 
-Rectangle layout_margin_box(
-    const Rectangle& parent,
-    double margin_top,
-    double margin_right,
-    double margin_bottom,
-    double margin_left) {
-  Rectangle box;
-  box.x = parent.x + margin_left;
-  box.y = parent.y + margin_top;
-  box.w = std::max(parent.w - (margin_left + margin_right), 0.0);
-  box.h = std::max(parent.h - (margin_top + margin_bottom), 0.0);
-  return box;
-}
+Rectangle::Rectangle() :
+    x(0.0f),
+    y(0.0f),
+    w(0.0f),
+    h(0.0f) {}
 
-void layout_align(
-    const Rectangle& bbox,
-    double tx,
-    double ty,
-    double* ox,
-    double* oy) {
-  double mx = bbox.x + bbox.w / 2;
-  double my = bbox.y + bbox.h / 2;
-  *ox = (tx - mx);
-  *oy = (ty - my);
-}
+Rectangle::Rectangle(
+    double _x,
+    double _y,
+    double _w,
+    double _h) :
+    x(_x),
+    y(_y),
+    w(_w),
+    h(_h) {}
 
-void layout_align(
-    const Rectangle& bbox,
-    double tx,
-    double ty,
-    HAlign align_x,
-    VAlign align_y,
-    double* ox,
-    double* oy) {
-  switch (align_x) {
-    case HAlign::LEFT:
-      tx += bbox.w / 2;
-      break;
-    case HAlign::RIGHT:
-      tx -= bbox.w / 2;
-      break;
-    case HAlign::CENTER:
-      break;
-  }
-
-  switch (align_y) {
-    case VAlign::TOP:
-      ty += bbox.h / 2;
-      break;
-    case VAlign::BOTTOM:
-      ty -= bbox.h / 2;
-      break;
-    case VAlign::CENTER:
-      break;
-  }
-
-  return layout_align(bbox, tx, ty, ox, oy);
+std::ostream& operator <<(std::ostream& os, const Rectangle& r) {
+  os << "Rectangle(";
+  os << r.x;
+  os << ", ";
+  os << r.y;
+  os << ", ";
+  os << r.w;
+  os << ", ";
+  os << r.h;
+  os << ")";
+  return os;
 }
 
 } // namespace plotfx
