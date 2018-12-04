@@ -30,9 +30,23 @@
 #pragma once
 #include <graphics/text.h>
 #include <graphics/text_shaper.h>
+#include <graphics/layout.h>
 
 namespace plotfx {
 namespace text {
+
+/**
+ * Measure the size of a span of text where (0, 0) is the baseline of the first
+ * glyph
+ */
+Status text_measure_span(
+    const std::string& text,
+    const FontInfo& font_info,
+    double font_size,
+    double dpi,
+    TextHAlign align,
+    TextShaper* shaper,
+    Rectangle* rect);
 
 /**
  * Layout a single line of text

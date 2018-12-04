@@ -33,6 +33,51 @@
 namespace plotfx {
 namespace text {
 
+Status text_measure_span(
+    const std::string& text,
+    const FontInfo& font_info,
+    double font_size,
+    double dpi,
+    TextHAlign align,
+    TextShaper* shaper,
+    Rectangle* rect) {
+  double line_length = 0;
+  double top = 0.0f;
+  double bottom = 0.0f;
+
+  std::vector<GlyphInfo> glyphs;
+  auto rc = shaper->shapeText(
+      text,
+      font_info,
+      font_size,
+      dpi,
+      [&] (const GlyphInfo& gi) {
+        line_length += gi.advance_x;
+        top = std::min(-gi.metrics_ascender, top);
+        bottom = std::max(-gi.metrics_descender, bottom);
+        glyphs.emplace_back(gi);
+      });
+
+  if (rc != OK) {
+    return rc;
+  }
+
+  auto left = 0;
+  switch (align) {
+    case TextHAlign::LEFT:
+      break;
+    case TextHAlign::CENTER:
+      left = -line_length / 2;
+      break;
+    case TextHAlign::RIGHT:
+      left = -line_length;
+      break;
+  }
+
+  *rect = Rectangle(left, top, line_length, bottom - top);
+  return OK;
+}
+
 Status layoutTextLTR(
     const std::string& text,
     double x,
