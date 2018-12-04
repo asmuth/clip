@@ -38,6 +38,7 @@ ReturnCode layer_bind_png(
     double height,
     const MeasureTable& measures,
     const Colour& background_colour,
+    std::function<Status (const std::string&)> submit,
     LayerRef* layer);
 
 } // namespace plotfx

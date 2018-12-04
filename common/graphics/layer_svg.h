@@ -39,6 +39,7 @@ ReturnCode layer_bind_svg(
     double width,
     double height,
     const MeasureTable& measures,
+    std::function<Status (const std::string&)> submit,
     LayerRef* layer);
 
 } // namespace plotfx

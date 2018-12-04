@@ -127,6 +127,10 @@ int main(int argc, const char** argv) {
         to_px(doc.measures, doc.width).value,
         to_px(doc.measures, doc.height).value,
         doc.measures,
+        [flag_out] (auto svg) {
+          FileUtil::write(flag_out, Buffer(svg.data(), svg.size()));
+          return OK;
+        },
         &layer);
 
     if (!rc.isSuccess()) {
@@ -141,6 +145,10 @@ int main(int argc, const char** argv) {
         to_px(doc.measures, doc.height).value,
         doc.measures,
         doc.background_colour,
+        [flag_out] (auto png) {
+          FileUtil::write(flag_out, Buffer(png.data(), png.size()));
+          return OK;
+        },
         &layer);
 
     if (!rc.isSuccess()) {
@@ -159,8 +167,10 @@ int main(int argc, const char** argv) {
     return EXIT_FAILURE;
   }
 
-  auto output = layer->data();
-  FileUtil::write(flag_out, Buffer(output.data(), output.size()));
+  if (auto rc = layer_submit(layer.get()); !rc.isSuccess()) {
+    printError(rc);
+    return EXIT_FAILURE;
+  }
 
   return EXIT_SUCCESS;
 }

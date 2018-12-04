@@ -29,12 +29,12 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 #include "layer.h"
-#include <utils/stringutil.h>
-#include "png.h"
 
 namespace plotfx {
 
-//Layer::Layer() : width(0), height(0) {}
+ReturnCode layer_submit(Layer* layer) {
+  return layer->apply(layer_ops::SubmitOp{});
+}
 
 } // namespace plotfx
 

@@ -104,22 +104,11 @@ std::string SVGData::to_svg() const {
       buffer.str());
 }
 
-Status svg_apply(const layer_ops::Op& op, SVGDataRef svg) {
-  return std::visit([svg] (auto&& op) {
-    using T = std::decay_t<decltype(op)>;
-    if constexpr (std::is_same_v<T, layer_ops::BrushStrokeOp>)
-      return svg_stroke_path(op, svg);
-    if constexpr (std::is_same_v<T, layer_ops::TextSpanOp>)
-      return svg_text_span(op, svg);
-    else
-      return ERROR_NOT_IMPLEMENTED;
-  }, op);
-}
-
 ReturnCode layer_bind_svg(
     double width,
     double height,
     const MeasureTable& measures,
+    std::function<Status (const std::string&)> submit,
     LayerRef* layer) {
   auto svg = std::make_shared<SVGData>();
   layer->reset(new Layer{
@@ -127,8 +116,19 @@ ReturnCode layer_bind_svg(
     .height = svg->height = height,
     .measures = measures,
     .text_shaper = std::make_shared<text::TextShaper>(),
-    .apply = std::bind(&svg_apply, std::placeholders::_1, svg),
-    .data = [svg] () { return svg->to_svg(); },
+    .apply = [svg, submit] (const auto& op) {
+      return std::visit([svg, submit] (auto&& op) {
+        using T = std::decay_t<decltype(op)>;
+        if constexpr (std::is_same_v<T, layer_ops::BrushStrokeOp>)
+          return svg_stroke_path(op, svg);
+        if constexpr (std::is_same_v<T, layer_ops::TextSpanOp>)
+          return svg_text_span(op, svg);
+        if constexpr (std::is_same_v<T, layer_ops::SubmitOp>)
+          return submit(svg->to_svg());
+        else
+          return ERROR_NOT_IMPLEMENTED;
+      }, op);
+    },
   });
 
   return OK;

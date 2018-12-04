@@ -37,6 +37,7 @@ ReturnCode layer_bind_png(
     double height,
     const MeasureTable& measures,
     const Colour& background_colour,
+    std::function<Status (const std::string&)> submit,
     LayerRef* layer) {
   auto text_shaper = std::make_shared<text::TextShaper>();
   auto raster = std::make_shared<Rasterizer>(width, height, measures, text_shaper);
@@ -47,8 +48,8 @@ ReturnCode layer_bind_png(
     .height = height,
     .measures = measures,
     .text_shaper = text_shaper,
-    .apply = [raster] (auto op) {
-      return std::visit([raster] (auto&& op) {
+    .apply = [submit, raster] (auto op) {
+      return std::visit([submit, raster] (auto&& op) {
         using T = std::decay_t<decltype(op)>;
         if constexpr (std::is_same_v<T, layer_ops::BrushStrokeOp>)
           return raster->strokePath(op);
@@ -56,11 +57,12 @@ ReturnCode layer_bind_png(
           return raster->fillPath(op);
         if constexpr (std::is_same_v<T, layer_ops::TextSpanOp>)
           return raster->drawText(op);
+        if constexpr (std::is_same_v<T, layer_ops::SubmitOp>)
+          return submit(raster->to_png());
         else
           return ERROR_NOT_IMPLEMENTED;
       }, op);
     },
-    .data = [raster] { return raster->to_png(); },
   });
 
   return OK;

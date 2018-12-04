@@ -42,6 +42,8 @@
 namespace plotfx {
 namespace layer_ops {
 
+struct SubmitOp {};
+
 struct BrushStrokeOp {
   Rectangle clip;
   Path path;
@@ -62,6 +64,7 @@ struct TextSpanOp {
 };
 
 using Op = std::variant<
+    SubmitOp,
     BrushFillOp,
     BrushStrokeOp,
     TextSpanOp>;

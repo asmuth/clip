@@ -57,9 +57,6 @@ namespace plotfx {
  * of interacting directly with the Layer. Nevertheless, all supported drawing
  * operation are available through the `apply` method of the layer. Please refer
  * to `layer_op.h` for more information on the low-level operations API.
- *
- * Once you are done with all drawing calls, you can retrieve the result image by
- * calling the `data` function.
  */
 struct Layer {
   const double width;
@@ -67,10 +64,15 @@ struct Layer {
   const MeasureTable measures;
   const std::shared_ptr<text::TextShaper> text_shaper;
   const std::function<Status (const layer_ops::Op&)> apply;
-  const std::function<std::string ()> data;
 };
 
 using LayerRef = std::unique_ptr<Layer>;
+
+/**
+ * Submit the layer to the rendering backend. Depending on the rendering backend,
+ * this will return a value to the user or swap the current screen buffer
+ */
+ReturnCode layer_submit(Layer* layer);
 
 } // namespace plotfx
 
