@@ -45,18 +45,18 @@ namespace plotfx {
  * The layer is the central rendering context on which 2D vector graphics
  * operations, such as rendering text and drawing polygons, take place.
  *
- * The Layer struct itself is an abstract, transparent handle. It consists mostly
- * of function pointers that have to be bound to some specific rendering backend
- * for the Layer to be useful.
- *
- * Users should create layers using one of the layer_bind_* methods, for example
- * `layer_bind_png` or `layer_bind_svg`.
+ * Layers are container objects and have to be bound to a specific rendering
+ * backend before they can be used. Users should create layers using one of the
+ * layer_bind_* methods, for example `layer_bind_png` or `layer_bind_svg`.
  *
  * Since the layer is a low-level interface, it is recommended that you use one
  * of the many drawing helper functions, such as `strokePath` or `drawText`, instead
  * of interacting directly with the Layer. Nevertheless, all supported drawing
- * operation are available through the `apply` method of the layer. Please refer
+ * operations are available through the `apply` method of the layer. Please refer
  * to `layer_op.h` for more information on the low-level operations API.
+ *
+ * Once you are finished with all drawing operations, it is important to call
+ * `layer_submit` to make the results visible.
  */
 struct Layer {
   const double width;
