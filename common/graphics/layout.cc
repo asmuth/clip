@@ -28,6 +28,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 #include <algorithm>
+#include <iostream>
 #include "layout.h"
 
 namespace plotfx {
@@ -62,6 +63,18 @@ Rectangle layout_margin_box(
   return box;
 }
 
+std::ostream& operator <<(std::ostream& os, const Rectangle& r) {
+  os << "Rectangle(";
+  os << r.x;
+  os << ", ";
+  os << r.y;
+  os << ", ";
+  os << r.w;
+  os << ", ";
+  os << r.h;
+  os << ")";
+  return os;
+}
 
 } // namespace plotfx
 

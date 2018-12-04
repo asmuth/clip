@@ -50,5 +50,7 @@ Rectangle layout_margin_box(
     double margin_bottom,
     double margin_left);
 
+std::ostream& operator <<(std::ostream& os, const Rectangle& c);
+
 } // namespace plotfx
 
