@@ -7,8 +7,6 @@ print_error () {
   printf "\033[0m\n"
 }
 
-export PLOTFX_FONT_PATH="$(pwd)/extra/fonts"
-
 binfile="$1"
 specfile="$2"
 outfile="$3"

@@ -48,14 +48,6 @@ Document::Document() :
     border_colour(Colour::fromRGB(.66,.66,.66)) {}
 
 ReturnCode document_setup_defaults(Document* doc) {
-  if (auto path = getenv("PLOTFX_FONT_PATH"); path) {
-    auto path_parts = StringUtil::split(path, ":");
-    doc->font_searchpath.insert(
-        doc->font_searchpath.end(),
-        path_parts.begin(),
-        path_parts.end());
-  }
-
   if (!font_load(DefaultFont::HELVETICA_REGULAR, &doc->font_sans)) {
     return ReturnCode::error(
         "EARG",

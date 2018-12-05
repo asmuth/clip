@@ -34,22 +34,6 @@
 
 namespace plotfx {
 
-bool findFontSimple(
-    const std::string& font_name,
-    const std::vector<std::string>& search_paths,
-    FontInfo* font) {
-  for (const auto& p : search_paths) {
-    auto candidate = FileUtil::joinPaths(p, font_name + ".ttf");
-    if (FileUtil::exists(candidate)) {
-      *font = FontInfo {
-        .font_file = candidate
-      };
-      return true;
-    }
-  }
-
-  return false;
-}
 
 bool findFontSystem(
     const std::string& font_pattern,

@@ -50,7 +50,6 @@ struct Document {
   FontInfo font_serif;
   FontInfo font_sans;
   FontInfo font_mono;
-  std::vector<std::string> font_searchpath;
   std::vector<ElementRef> roots;
 };
 
