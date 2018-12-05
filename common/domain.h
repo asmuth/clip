@@ -61,7 +61,9 @@ std::vector<double> domain_translate(
     const DomainConfig& domain,
     const Series& series);
 
-double domain_untranslate(const DomainConfig& domain, double v);
+Series domain_untranslate(
+    const DomainConfig& domain,
+    const std::vector<double>& data);
 
 ReturnCode confgure_domain_kind(
     const plist::Property& prop,

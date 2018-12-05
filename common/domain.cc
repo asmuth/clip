@@ -28,6 +28,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 #include "domain.h"
+#include <assert.h>
 
 namespace plotfx {
 
@@ -144,25 +145,37 @@ std::vector<double> domain_translate(
       return domain_translate_linear(domain, series);
     case DomainKind::CATEGORICAL:
       return domain_translate_categorical(domain, series);
+    default:
+      assert(false);
   }
 }
 
-double domain_untranslate(const DomainConfig& domain, double vt) {
+Series domain_untranslate_linear(const DomainConfig& domain, std::vector<double> values) {
   auto min = domain.min.value_or(0.0f);
   auto max = domain.max.value_or(0.0f);
 
-  if (domain.inverted) {
-    vt = 1.0 - vt;
+  Series s;
+  for (auto vt : values) {
+    if (domain.inverted) {
+      vt = 1.0 - vt;
+    }
+
+    s.emplace_back(value_from_float(min + (max - min) * vt));
   }
 
-  auto v = 0.0;
+  return s;
+}
+
+Series domain_untranslate(
+    const DomainConfig& domain,
+    const std::vector<double>& values) {
   switch (domain.kind) {
     case DomainKind::LINEAR:
-      v = min + (max - min) * vt;
-      break;
+    case DomainKind::CATEGORICAL:
+      return domain_untranslate_linear(domain, values);
+    default:
+      assert(false);
   }
-
-  return v;
 }
 
 ReturnCode confgure_domain_kind(
@@ -181,33 +194,5 @@ ReturnCode confgure_domain_kind(
   return ERROR_INVALID_ARGUMENT;
 }
 
-namespace chart {
-
-/*
-const char AnyDomain::kDimensionLetters[] = "xyz";
-const int AnyDomain::kDefaultNumTicks = 8;
-const double AnyDomain::kDefaultDomainPadding = 0.1;
-
-template <> Domain<int64_t>*
-    Domain<int64_t>::mkDomain() {
-  return new ContinuousDomain<int64_t>();
-}
-
-template <> Domain<double>*
-    Domain<double>::mkDomain() {
-  return new ContinuousDomain<double>();
-}
-
-template <> Domain<UnixTime>*
-    Domain<UnixTime>::mkDomain() {
-  return new TimeDomain();
-}
-
-template <> Domain<std::string>* Domain<std::string>::mkDomain() {
-  return new DiscreteDomain<std::string>();
-}
-*/
-
-}
-}
+} // namespace plotfx
 

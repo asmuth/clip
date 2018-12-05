@@ -55,5 +55,9 @@ double value_to_float(const Value& v) {
   }
 }
 
+Value value_from_float(double v) {
+  return std::to_string(v);
+}
+
 } // namespace plotfx
 

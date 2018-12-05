@@ -246,14 +246,18 @@ ReturnCode axis_expand_linear_geom(
   double min = domain.min.value_or(0.0f);
   double max = domain.max.value_or(0.0f);
 
-  for (size_t i = 0; i < num_ticks; ++i) {
-    auto o = (1.0f / (num_ticks - 1)) * i;
-    auto v = domain_untranslate(domain, o);
-    axis->ticks.emplace_back(o);
+  axis->ticks.clear();
+  axis->labels.clear();
 
-    if (axis->label_formatter.format_number) {
-      axis->labels.emplace_back(o, axis->label_formatter.format_number(v));
-    }
+  for (size_t i = 0; i < num_ticks; ++i) {
+    axis->ticks.emplace_back((1.0f / (num_ticks - 1)) * i);
+  }
+
+  auto tick_values = domain_untranslate(domain, axis->ticks);
+  for (size_t i = 0; i < num_ticks; ++i) {
+    axis->labels.emplace_back(
+        axis->ticks[i],
+        axis->label_formatter.format_value(tick_values[i]));
   }
 
   return OK;

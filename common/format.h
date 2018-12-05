@@ -32,12 +32,12 @@
 #include <optional>
 #include <plist/plist.h>
 #include "utils/return_code.h"
+#include "series.h"
 
 namespace plotfx {
 
 struct Formatter {
-  std::function<std::string (double)> format_number;
-  std::function<std::string (const std::string&)> format_string;
+  std::function<std::string (const Value&)> format_value;
 };
 
 Formatter format_decimal_scientific(size_t precision);

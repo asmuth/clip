@@ -48,6 +48,7 @@ size_t series_len(const Series& s);
 std::vector<double> series_to_float(const Series& s);
 
 double value_to_float(const Value&);
+Value value_from_float(double);
 
 } // namespace plotfx
 
