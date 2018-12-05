@@ -117,7 +117,14 @@ ReturnCode axis_draw_all(
     const AxisDefinition& axis_left,
     Layer* layer);
 
+ReturnCode axis_place_labels_default(
+    const DomainConfig& domain,
+    AxisDefinition* axis);
 ReturnCode axis_place_labels_geom(
+    const DomainConfig& domain,
+    AxisDefinition* axis);
+
+ReturnCode axis_place_labels_categorical(
     const DomainConfig& domain,
     AxisDefinition* axis);
 

@@ -286,7 +286,7 @@ ReturnCode axis_expand_auto(
       return rc;
     }
   } else {
-    if (auto rc = axis_place_labels_geom(domain, out); !rc) {
+    if (auto rc = axis_place_labels_default(domain, out); !rc) {
       return rc;
     }
   }
@@ -342,6 +342,16 @@ ReturnCode axis_draw_all(
   return OK;
 }
 
+ReturnCode axis_place_labels_default(
+    const DomainConfig& domain,
+    AxisDefinition* axis) {
+  if (domain.kind == DomainKind::CATEGORICAL) {
+    return axis_place_labels_categorical(domain, axis);
+  }
+
+  return axis_place_labels_geom(domain, axis);
+}
+
 ReturnCode axis_place_labels_geom(
     const DomainConfig& domain,
     AxisDefinition* axis) {
@@ -366,6 +376,38 @@ ReturnCode axis_place_labels_geom(
   return OK;
 }
 
+ReturnCode axis_place_labels_categorical(
+    const DomainConfig& domain,
+    AxisDefinition* axis) {
+  if (domain.kind != DomainKind::CATEGORICAL) {
+    return ReturnCode::error(
+        "EARG",
+        "axis-label-placement: categorial is invalid for non-categorical domains");
+  }
+
+  auto category_count = domain.categories.size();
+
+  axis->labels.clear();
+  axis->ticks.clear();
+  axis->ticks.push_back(0.0f);
+
+  std::vector<double> label_positions;
+  for (size_t i = 0; i < category_count; ++i) {
+    auto o = (1.0f / category_count) * (i + 1);
+    label_positions.push_back(o - 0.5 / category_count);
+    axis->ticks.push_back(o);
+  }
+
+  auto label_values = domain_untranslate(domain, label_positions);
+  for (size_t i = 0; i < label_positions.size(); ++i) {
+    axis->labels.emplace_back(
+        label_positions[i],
+        axis->label_formatter.format_value(label_values[i]));
+  }
+
+  return OK;
+}
+
 ReturnCode axis_configure_label_placement(
     const plist::Property& prop,
     AxisLabelPlacement* label_placement) {
@@ -375,6 +417,16 @@ ReturnCode axis_configure_label_placement(
 
   if (plist::is_value(prop, "geometric") ||
       plist::is_enum(prop, "geometric")) {
+    *label_placement = std::bind(
+        &axis_place_labels_geom,
+        std::placeholders::_1,
+        std::placeholders::_2);
+
+    return OK;
+  }
+
+  if (plist::is_value(prop, "categorical") ||
+      plist::is_enum(prop, "categorical")) {
     *label_placement = std::bind(
         &axis_place_labels_geom,
         std::placeholders::_1,
