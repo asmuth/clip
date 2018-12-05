@@ -29,6 +29,7 @@
  */
 #pragma once
 #include <stdlib.h>
+#include "graphics/colour.h"
 
 namespace plotfx {
 
@@ -47,8 +48,10 @@ public:
           colors_(colors),
           color_index_(0) {}
 
-  std::string next() {
-    return colors_[color_index_++ % colors_.size()];
+  Colour next() {
+    Colour c;
+    c.parse(colors_[color_index_++ % colors_.size()]);
+    return c;
   }
 
 protected:
