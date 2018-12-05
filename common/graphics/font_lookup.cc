@@ -74,20 +74,20 @@ ReturnCode font_load(DefaultFont font_name, FontInfo* font_info) {
     default:
     case SANS_REGULAR:
     case HELVETICA_REGULAR:
-      font_css = "Helvetica,'Helvetica Neue','Nimbus Sans L',Arial,sans-serif";
-      font_fc = "Helvetica,Helvetica Neue,Nimbus Sans L,Arial:style=Regular,Roman";
+      font_css = "Arial,Helvetica,'Helvetica Neue',sans-serif";
+      font_fc = "Arial,Helvetica,Helvetica Neue:style=Regular,Roman";
       break;
 
     case SANS_MEDIUM:
     case HELVETICA_MEDIUM:
-      font_css = "Helvetica,'Helvetica Neue','Nimbus Sans L',Arial,sans-serif";
-      font_fc = "Helvetica,Helvetica Neue,Nimbus Sans L,Arial:style=Medium,Roman";
+      font_css = "Arial,Helvetica,'Helvetica Neue',sans-serif";
+      font_fc = "Arial,Helvetica,Helvetica Neue:style=Medium,Roman";
       break;
 
     case SANS_BOLD:
     case HELVETICA_BOLD:
-      font_css = "Helvetica,'Helvetica Neue','Nimbus Sans L',Arial,sans-serif";
-      font_fc = "Helvetica,Helvetica Neue,Nimbus Sans L,Arial:style=Bold,Roman";
+      font_css = "Arial,Helvetica,'Helvetica Neue',sans-serif";
+      font_fc = "Arial,Helvetica,Helvetica Neue:style=Bold,Roman";
       break;
   }
 
