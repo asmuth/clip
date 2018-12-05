@@ -45,6 +45,7 @@ add_library(plotfxlib STATIC
     common/graphics/font_lookup.cc
     common/element_factory.cc
     common/document.cc
+    common/series.cc
     common/utils/random.cc
     common/utils/csv.cc
     common/utils/bufferutil.cc

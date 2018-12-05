@@ -36,7 +36,7 @@ namespace plotfx {
 
 ReturnCode parse_data_series_csv(
     const plist::Property& prop ,
-    std::vector<double>* data) {
+    Series* data) {
   if (!plist::is_enum(prop, "csv")) {
     return ERROR_INVALID_ARGUMENT;
   }
@@ -72,13 +72,7 @@ ReturnCode parse_data_series_csv(
 
   for (const auto& row : csv_data) {
     if (row.size() > csv_column_idx) {
-      double value;
-      try {
-        value = std::stod(row[csv_column_idx]);
-      } catch (... ) {
-        return ERROR_INVALID_ARGUMENT; // FIXME
-      }
-
+      const auto& value = row[csv_column_idx];
       data->emplace_back(value);
     }
   }
@@ -88,28 +82,21 @@ ReturnCode parse_data_series_csv(
 
 ReturnCode parse_data_series_inline(
     const plist::Property& prop ,
-    std::vector<double>* data) {
+    Series* data) {
   if (!plist::is_list(prop)) {
     return ERROR_INVALID_ARGUMENT;
   }
 
-  for (const auto& v : *prop.next) {
-    double value;
-    try {
-      value = std::stod(v);
-    } catch (... ) {
-      return ERROR_INVALID_ARGUMENT;
-    }
-
+  for (const auto& value : *prop.next) {
     data->emplace_back(value);
   }
 
   return OK;
 }
 
-ReturnCode parseDataSeries(
+ReturnCode configure_series(
     const plist::Property& prop,
-    std::vector<double>* data) {
+    Series* data) {
   if (plist::is_enum(prop, "csv")) {
     return parse_data_series_csv(prop, data);
   }

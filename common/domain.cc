@@ -36,7 +36,8 @@ DomainConfig::DomainConfig() :
     inverted(false),
     padding(0.0f) {}
 
-void domain_fit(const std::vector<double>& data, DomainConfig* domain, bool snap_zero) {
+void domain_fit_linear(const Series& data_raw, DomainConfig* domain, bool snap_zero) {
+  auto data = series_to_float(data_raw);
   bool fit_min = !domain->min;
   bool fit_max = !domain->max;
 
@@ -65,22 +66,34 @@ void domain_fit(const std::vector<double>& data, DomainConfig* domain, bool snap
   }
 }
 
-double domain_translate(const DomainConfig& domain, double v) {
+void domain_fit(const Series& data, DomainConfig* domain, bool snap_zero) {
+  switch (domain->kind) {
+    case DomainKind::LINEAR:
+      return domain_fit_linear(data, domain, snap_zero);
+  }
+}
+
+double domain_translate_linear(const DomainConfig& domain, const Value& v) {
   auto min = domain.min.value_or(0.0f);
   auto max = domain.max.value_or(0.0f);
 
-  auto vt = 0.0;
-  switch (domain.kind) {
-    case DomainKind::LINEAR:
-      vt = (v - min) / (max - min);
-      break;
-  }
+  auto vf = value_to_float(v);
+  auto vt = (vf - min) / (max - min);
 
   if (domain.inverted) {
     vt = 1.0 - vt;
   }
 
   return vt;
+}
+
+double domain_translate(const DomainConfig& domain, const Value& v) {
+  switch (domain.kind) {
+    case DomainKind::LINEAR:
+      return domain_translate_linear(domain, v);
+  }
+
+  return 0;
 }
 
 double domain_untranslate(const DomainConfig& domain, double vt) {

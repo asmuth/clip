@@ -34,6 +34,9 @@
 #include <vector>
 #include <string>
 #include <optional>
+#include "utils/return_code.h"
+#include "plist/plist.h"
+#include "common/series.h"
 
 namespace plotfx {
 
@@ -50,10 +53,9 @@ struct DomainConfig {
   double padding;
 };
 
-void domain_fit(const std::vector<double>& data, DomainConfig* domain, bool snap_zero);
+void domain_fit(const Series& data, DomainConfig* domain, bool snap_zero);
 
-double domain_translate(const DomainConfig& domain, double v);
-
+double domain_translate(const DomainConfig& domain, const Value& v);
 double domain_untranslate(const DomainConfig& domain, double v);
 
 } // namespace plotfx

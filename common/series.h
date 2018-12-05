@@ -1,7 +1,6 @@
 /**
  * This file is part of the "plotfx" project
- *   Copyright (c) 2018 Paul Asmuth
- *   Copyright (c) 2014 Paul Asmuth, Google Inc.
+ *   Copyright (c) 2018 Paul Asmuth.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -29,37 +28,26 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 #pragma once
+#include <algorithm>
+#include <math.h>
 #include <stdlib.h>
-#include <plist/plist.h>
-#include <graphics/layer.h>
-#include <graphics/viewport.h>
-#include <common/domain.h>
-#include <common/element.h>
-#include <common/series.h>
-#include "plot_axis.h"
-#include "plot.h"
+#include <vector>
+#include <string>
+#include <optional>
+#include <variant>
+#include "utils/return_code.h"
+#include "plist/plist.h"
 
 namespace plotfx {
-namespace plot {
-namespace lines {
 
-struct PlotLinesConfig {
-  PlotLinesConfig();
-  Series xs;
-  Series ys;
-  Measure line_width;
-  Colour line_colour;
-  Measure point_size;
-  Colour point_colour;
-};
+using Value = std::string;
+using Series = std::vector<Value>;
 
-ReturnCode draw(const PlotLinesConfig& config, const Rectangle& clip, Layer* frame);
+size_t series_len(const Series& s);
 
-ReturnCode configure(
-    const plist::Property& prop,
-    plot::PlotConfig* plot);
+std::vector<double> series_to_float(const Series& s);
 
-} // namespace lines
-} // namespace plot
+double value_to_float(const Value&);
+
 } // namespace plotfx
 

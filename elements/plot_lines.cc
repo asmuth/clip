@@ -45,14 +45,13 @@ PlotLinesConfig::PlotLinesConfig() :
 
 ReturnCode draw_lines(
     const PlotConfig& plot,
-    const PlotLinesConfig& series,
+    const PlotLinesConfig& config,
     const Rectangle& clip,
     Layer* layer) {
   const auto& domain_x = plot.domain_x;
   const auto& domain_y = plot.domain_y;
 
-
-  if (series.xs.size() != series.ys.size()) {
+  if (series_len(config.xs) != series_len(config.ys)) {
     // FIXME error msg
     return ERROR_INVALID_ARGUMENT;
   }
@@ -60,9 +59,9 @@ ReturnCode draw_lines(
   // draw line
   {
     Path path;
-    for (size_t i = 0; i < series.xs.size(); ++i) {
-      auto x = series.xs[i];
-      auto y = series.ys[i];
+    for (size_t i = 0; i < series_len(config.xs); ++i) {
+      auto x = config.xs[i];
+      auto y = config.ys[i];
       auto sx = clip.x + domain_translate(domain_x, x) * clip.w;
       auto sy = clip.y + (1.0 - domain_translate(domain_y, y)) * clip.h;
 
@@ -74,19 +73,19 @@ ReturnCode draw_lines(
     }
 
     StrokeStyle style;
-    style.line_width = series.line_width;
-    style.colour = series.line_colour;
+    style.line_width = config.line_width;
+    style.colour = config.line_colour;
     strokePath(layer, clip, path, style);
   }
 
   // draw points
-  auto point_size = to_px(layer->measures, series.point_size);
+  auto point_size = to_px(layer->measures, config.point_size);
   if (point_size > 0) {
     FillStyle style;
-    style.colour = series.point_colour;
-    for (size_t i = 0; i < series.xs.size(); ++i) {
-      auto x = series.xs[i];
-      auto y = series.ys[i];
+    style.colour = config.point_colour;
+    for (size_t i = 0; i < config.xs.size(); ++i) {
+      auto x = config.xs[i];
+      auto y = config.ys[i];
       auto sx = clip.x + domain_translate(domain_x, x) * clip.w;
       auto sy = clip.y + (1.0 - domain_translate(domain_y, y)) * clip.h;
 
@@ -113,8 +112,8 @@ ReturnCode configure(const plist::Property& prop, PlotConfig* config) {
   series.point_colour.parse(colour);
 
   static const ParserDefinitions pdefs = {
-    {"xs", std::bind(&parseDataSeries, std::placeholders::_1, &series.xs)},
-    {"ys", std::bind(&parseDataSeries, std::placeholders::_1, &series.ys)},
+    {"xs", std::bind(&configure_series, std::placeholders::_1, &series.xs)},
+    {"ys", std::bind(&configure_series, std::placeholders::_1, &series.ys)},
     {
       "colour",
       configure_multiprop({

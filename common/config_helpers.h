@@ -34,6 +34,7 @@
 #include <graphics/measure.h>
 #include <graphics/colour.h>
 #include "utils/return_code.h"
+#include "common/series.h"
 
 namespace plotfx {
 
@@ -86,9 +87,9 @@ ReturnCode parse_classlike(
 
 ParserFn configure_multiprop(const std::vector<ParserFn>& parsers);
 
-ReturnCode parseDataSeries(
+ReturnCode configure_series(
     const plist::Property& prop,
-    std::vector<double>* data);
+    Series* data);
 
 ReturnCode parseMeasureProp(
     const plist::Property& prop,
