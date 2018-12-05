@@ -47,6 +47,7 @@ struct PlotLinesConfig {
   PlotLinesConfig();
   Series xs;
   Series ys;
+  std::string title;
   Measure line_width;
   Colour line_colour;
   Measure point_size;

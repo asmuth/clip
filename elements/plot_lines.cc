@@ -108,12 +108,13 @@ ReturnCode configure(const plist::Property& prop, PlotConfig* config) {
   auto colour = config->colour_scheme.next();
 
   PlotLinesConfig series;
-  series.line_colour.parse(colour);
-  series.point_colour.parse(colour);
+  series.line_colour = colour;
+  series.point_colour = colour;
 
   static const ParserDefinitions pdefs = {
     {"xs", std::bind(&configure_series, std::placeholders::_1, &series.xs)},
     {"ys", std::bind(&configure_series, std::placeholders::_1, &series.ys)},
+    {"title", std::bind(&configure_string, std::placeholders::_1, &series.title)},
     {
       "colour",
       configure_multiprop({
@@ -143,6 +144,7 @@ ReturnCode configure(const plist::Property& prop, PlotConfig* config) {
         std::placeholders::_3),
   });
 
+  config->legend.addEntry(series.title, colour);
   return OK;
 }
 

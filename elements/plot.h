@@ -37,6 +37,7 @@
 #include <common/element.h>
 #include <common/document.h>
 #include "plot_axis.h"
+#include "legend.h"
 
 namespace plotfx {
 namespace plot {
@@ -57,6 +58,7 @@ struct PlotConfig {
   Measure margins[4];
   ColourScheme colour_scheme;
   std::vector<PlotSeries> series;
+  LegendDefinition legend;
 };
 
 ReturnCode draw(const PlotConfig& config, const Rectangle& clip, Layer* frame);

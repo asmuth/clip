@@ -34,15 +34,14 @@
 
 namespace plotfx {
 
-LegendDefinition::LegendDefinition(
-    kVerticalPosition vert_pos,
-    kHorizontalPosition horiz_pos,
-    kPlacement placement,
-    const std::string& title) :
-    vert_pos_(vert_pos),
-    horiz_pos_(horiz_pos),
-    placement_(placement),
-    title_ (title) {}
+LegendDefinition::LegendDefinition() :
+    padding_horiz({Unit::REM, 2.4}),
+    padding_vert({Unit::REM, 1.2}),
+    padding_item_horiz({Unit::REM, 2.2}),
+    padding_item_vert({Unit::REM, 1.0}),
+    vert_pos_(LEGEND_TOP),
+    horiz_pos_(LEGEND_LEFT),
+    placement_(LEGEND_INSIDE) {}
 
 const std::string LegendDefinition::title() const {
   return title_;
@@ -64,12 +63,12 @@ LegendDefinition::kPlacement LegendDefinition::placement() const {
 
 void LegendDefinition::addEntry(
     const std::string& name,
-    const std::string& color,
+    const Colour& color,
     const std::string& shape /* = "circle" */) {
   entries_.emplace_back(name, color, shape);
 }
 
-const std::vector<std::tuple<std::string, std::string, std::string>>
+const std::vector<std::tuple<std::string, Colour, std::string>>
     LegendDefinition::entries() const {
   return entries_;
 }
@@ -360,6 +359,60 @@ LegendDefinition* Legend::legend() const {
   }
 }
 */
+ReturnCode legend_draw(
+    const LegendDefinition& legend,
+    const Rectangle& bbox,
+    Layer* layer) {
+  double padding_horiz = to_px(layer->measures, legend.padding_horiz);
+  double padding_vert = to_px(layer->measures, legend.padding_vert);
+  double padding_item_horiz = to_px(layer->measures, legend.padding_item_horiz);
+  double padding_item_vert = to_px(layer->measures, legend.padding_item_vert);
+  double point_size = 5;
+  double line_height = 14;
+  double sx = bbox.x + padding_horiz;
+  double sy = bbox.y + padding_vert + line_height / 2;
+
+  for (const auto& e : legend.entries()) {
+    const auto& label_text = std::get<0>(e);
+
+    {
+      FillStyle style;
+      style.colour = std::get<1>(e);
+      Path path;
+      path.moveTo(sx + point_size, sy);
+      path.arcTo(sx, sy, point_size, 0, M_PI * 2);
+      fillPath(layer, path, style);
+      sx += point_size * 2.4;
+    }
+
+    {
+      TextStyle style;
+      style.colour = legend.text_colour;
+      style.font = legend.font;
+
+      Rectangle label_bbox;
+      auto rc = text::text_measure_span(
+          label_text,
+          style.font,
+          style.font_size,
+          layer->measures.dpi,
+          layer->text_shaper.get(),
+          &label_bbox);
+
+      if (auto rc = drawTextLabel(
+            label_text,
+            Point(sx, sy),
+            HAlign::LEFT,
+            VAlign::CENTER,
+            style,
+            layer); rc != OK) {
+        return rc;
+      }
+
+      sx += label_bbox.w + padding_item_horiz;
+    }
+  }
+}
 
 } // namespace plotfx
 

@@ -87,6 +87,11 @@ ReturnCode draw(
     }
   }
 
+  // render legend
+  if (auto rc = legend_draw(config.legend, border_box, layer); !rc) {
+    return rc;
+  }
+
   return ReturnCode::success();
 }
 
@@ -106,6 +111,9 @@ ReturnCode configure(
 
   // FIXME
   config.colour_scheme = doc.colour_scheme;
+  config.legend.font = doc.font_sans;
+  config.legend.border_colour = doc.border_colour;
+  config.legend.text_colour = doc.text_colour;
   config.axis_top.font = doc.font_sans;
   config.axis_top.border_colour = doc.border_colour;
   config.axis_top.text_colour = doc.text_colour;

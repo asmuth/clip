@@ -64,14 +64,7 @@ public:
     LEGEND_OUTSIDE = 1
   };
 
-  /**
-   * Create a new legend definition
-   */
-  LegendDefinition(
-      kVerticalPosition vert_pos,
-      kHorizontalPosition horiz_pos,
-      kPlacement placement,
-      const std::string& title);
+  LegendDefinition();
 
   const std::string title() const;
   kVerticalPosition verticalPosition() const;
@@ -80,18 +73,26 @@ public:
 
   void addEntry(
       const std::string& name,
-      const std::string& color,
+      const Colour& color,
       const std::string& shape = "circle");
 
-  const std::vector<std::tuple<std::string, std::string, std::string>>
+  const std::vector<std::tuple<std::string, Colour, std::string>>
       entries() const;
+
+  Colour text_colour;
+  Colour border_colour;
+  FontInfo font;
+  Measure padding_horiz;
+  Measure padding_vert;
+  Measure padding_item_horiz;
+  Measure padding_item_vert;
 
 protected:
   kVerticalPosition vert_pos_;
   kHorizontalPosition horiz_pos_;
   kPlacement placement_;
   const std::string title_;
-  std::vector<std::tuple<std::string, std::string, std::string>> entries_;
+  std::vector<std::tuple<std::string, Colour, std::string>> entries_;
 };
 
 void renderOutsideLegends(Layer* target, const Rectangle& clip);
@@ -114,6 +115,10 @@ void renderLeftLegend(
     bool bottom,
     bool outside);
 
+ReturnCode legend_draw(
+    const LegendDefinition& legend,
+    const Rectangle& bbox,
+    Layer* layer);
 
 } // namespace plotfx
 
