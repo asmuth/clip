@@ -112,18 +112,7 @@ Status svg_text_span(
   return OK;
 }
 
-Status svg_stroke_path(
-    const layer_ops::BrushStrokeOp& op,
-    const MeasureTable& measures,
-    SVGDataRef svg) {
-  const auto& clip = op.clip;
-  const auto& path = op.path;
-  const auto& style = op.style;
-
-  if (path.size() < 2) {
-    return ERROR_INVALID_ARGUMENT;
-  }
-
+std::string svg_path_data(const Path& path) {
   std::stringstream path_data;
   for (const auto& cmd : path) {
     switch (cmd.command) {
@@ -134,9 +123,24 @@ Status svg_stroke_path(
         path_data << StringUtil::format("L$0 $1 ", cmd[0], cmd[1]);
         break;
       case PathCommand::ARC_TO:
+        // FIXME: respect angle1/2 arguments
+        path_data << StringUtil::format("M$0 $1 ", cmd[0] - cmd[2], cmd[1]);
+        path_data << StringUtil::format("a$0 $0 0 1 0 $1 0 ", cmd[2], cmd[2] * 2);
+        path_data << StringUtil::format("a$0 $0 0 1 0 $1 0 ", cmd[2], -cmd[2] * 2);
         break;
     }
   }
+
+  return path_data.str();
+}
+
+Status svg_stroke_path(
+    const layer_ops::BrushStrokeOp& op,
+    const MeasureTable& measures,
+    SVGDataRef svg) {
+  const auto& clip = op.clip;
+  const auto& path = op.path;
+  const auto& style = op.style;
 
   svg->buffer
       << "  "
@@ -144,7 +148,26 @@ Status svg_stroke_path(
       << svg_attr("stroke-width", to_px(measures, style.line_width).value)
       << svg_attr("stroke", style.colour.to_hex_str())
       << svg_attr("fill", "none")
-      << svg_attr("d", path_data.str())
+      << svg_attr("d", svg_path_data(path))
+      << "/>"
+      << "\n";
+
+  return OK;
+}
+
+Status svg_fill_path(
+    const layer_ops::BrushFillOp& op,
+    const MeasureTable& measures,
+    SVGDataRef svg) {
+  const auto& clip = op.clip;
+  const auto& path = op.path;
+  const auto& style = op.style;
+
+  svg->buffer
+      << "  "
+      << "<path"
+      << svg_attr("fill", style.colour.to_hex_str())
+      << svg_attr("d", svg_path_data(path))
       << "/>"
       << "\n";
 
@@ -186,6 +209,8 @@ ReturnCode layer_bind_svg(
         using T = std::decay_t<decltype(op)>;
         if constexpr (std::is_same_v<T, layer_ops::BrushStrokeOp>)
           return svg_stroke_path(op, measures, svg);
+        if constexpr (std::is_same_v<T, layer_ops::BrushFillOp>)
+          return svg_fill_path(op, measures, svg);
         if constexpr (std::is_same_v<T, layer_ops::TextSpanOp>)
           return svg_text_span(op, measures, svg);
         if constexpr (std::is_same_v<T, layer_ops::SubmitOp>)
