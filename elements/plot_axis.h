@@ -40,6 +40,7 @@
 namespace plotfx {
 struct DomainConfig;
 struct Rectangle;
+struct AxisDefinition;
 
 enum class AxisPosition {
   TOP,
@@ -65,6 +66,10 @@ enum class AxisLabelPosition {
   OUTSIDE,
 };
 
+using AxisLabelPlacement = std::function<ReturnCode (
+    const DomainConfig& domain,
+    AxisDefinition*)>;
+
 struct AxisDefinition {
   AxisDefinition();
   AxisMode mode;
@@ -72,6 +77,7 @@ struct AxisDefinition {
   std::vector<double> ticks;
   std::vector<std::pair<double, std::string>> labels;
   AxisLabelPosition label_position;
+  AxisLabelPlacement label_placement;
   Formatter label_formatter;
   Colour text_colour;
   Colour border_colour;
@@ -110,6 +116,14 @@ ReturnCode axis_draw_all(
     const AxisDefinition& axis_bottom,
     const AxisDefinition& axis_left,
     Layer* layer);
+
+ReturnCode axis_place_labels_geom(
+    const DomainConfig& domain,
+    AxisDefinition* axis);
+
+ReturnCode axis_configure_label_placement(
+    const plist::Property& prop,
+    AxisLabelPlacement* placement);
 
 } // namespace plotfx
 

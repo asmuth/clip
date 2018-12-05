@@ -239,30 +239,6 @@ Status renderAxis(
   return rc;
 }
 
-ReturnCode axis_expand_linear_geom(
-    const DomainConfig& domain,
-    AxisDefinition* axis) {
-  uint32_t num_ticks = 8; // FIXME make configurable
-  double min = domain.min.value_or(0.0f);
-  double max = domain.max.value_or(0.0f);
-
-  axis->ticks.clear();
-  axis->labels.clear();
-
-  for (size_t i = 0; i < num_ticks; ++i) {
-    axis->ticks.emplace_back((1.0f / (num_ticks - 1)) * i);
-  }
-
-  auto tick_values = domain_untranslate(domain, axis->ticks);
-  for (size_t i = 0; i < num_ticks; ++i) {
-    axis->labels.emplace_back(
-        axis->ticks[i],
-        axis->label_formatter.format_value(tick_values[i]));
-  }
-
-  return OK;
-}
-
 ReturnCode axis_expand_auto(
     const AxisDefinition& in,
     const AxisPosition& pos,
@@ -305,7 +281,17 @@ ReturnCode axis_expand_auto(
       break;
   };
 
-  return axis_expand_linear_geom(domain, out); // FIXME
+  if (in.label_placement) {
+    if (auto rc = in.label_placement(domain, out); !rc) {
+      return rc;
+    }
+  } else {
+    if (auto rc = axis_place_labels_geom(domain, out); !rc) {
+      return rc;
+    }
+  }
+
+  return OK;
 }
 
 ReturnCode axis_draw_all(
@@ -354,6 +340,50 @@ ReturnCode axis_draw_all(
   }
 
   return OK;
+}
+
+ReturnCode axis_place_labels_geom(
+    const DomainConfig& domain,
+    AxisDefinition* axis) {
+  uint32_t num_ticks = 8; // FIXME make configurable
+  double min = domain.min.value_or(0.0f);
+  double max = domain.max.value_or(0.0f);
+
+  axis->ticks.clear();
+  axis->labels.clear();
+
+  for (size_t i = 0; i < num_ticks; ++i) {
+    axis->ticks.emplace_back((1.0f / (num_ticks - 1)) * i);
+  }
+
+  auto tick_values = domain_untranslate(domain, axis->ticks);
+  for (size_t i = 0; i < num_ticks; ++i) {
+    axis->labels.emplace_back(
+        axis->ticks[i],
+        axis->label_formatter.format_value(tick_values[i]));
+  }
+
+  return OK;
+}
+
+ReturnCode axis_configure_label_placement(
+    const plist::Property& prop,
+    AxisLabelPlacement* label_placement) {
+  if (prop.size() < 1) {
+    return ERROR_INVALID_ARGUMENT;
+  }
+
+  if (plist::is_value(prop, "geometric") ||
+      plist::is_enum(prop, "geometric")) {
+    *label_placement = std::bind(
+        &axis_place_labels_geom,
+        std::placeholders::_1,
+        std::placeholders::_2);
+
+    return OK;
+  }
+
+  return ERROR_INVALID_ARGUMENT;
 }
 
 } // namespace plotfx

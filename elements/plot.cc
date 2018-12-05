@@ -134,12 +134,40 @@ ReturnCode configure(
     {"margin-left", std::bind(&parseMeasureProp, std::placeholders::_1, &config.margins[3])},
     {"axis-top", std::bind(&parseAxisModeProp, std::placeholders::_1, &config.axis_top.mode)},
     {"axis-top-format", std::bind(&confgure_format, std::placeholders::_1, &config.axis_top.label_formatter)},
+    {
+      "axis-top-label-placement",
+      std::bind(
+          &axis_configure_label_placement,
+          std::placeholders::_1,
+          &config.axis_top.label_placement),
+    },
     {"axis-right", std::bind(&parseAxisModeProp, std::placeholders::_1, &config.axis_right.mode)},
     {"axis-right-format", std::bind(&confgure_format, std::placeholders::_1, &config.axis_right.label_formatter)},
+    {
+      "axis-right-label-placement",
+      std::bind(
+          &axis_configure_label_placement,
+          std::placeholders::_1,
+          &config.axis_right.label_placement),
+    },
     {"axis-bottom", std::bind(&parseAxisModeProp, std::placeholders::_1, &config.axis_bottom.mode)},
     {"axis-bottom-format", std::bind(&confgure_format, std::placeholders::_1, &config.axis_bottom.label_formatter)},
+    {
+      "axis-bottom-label-placement",
+      std::bind(
+          &axis_configure_label_placement,
+          std::placeholders::_1,
+          &config.axis_bottom.label_placement),
+    },
     {"axis-left", std::bind(&parseAxisModeProp, std::placeholders::_1, &config.axis_left.mode)},
     {"axis-left-format", std::bind(&confgure_format, std::placeholders::_1, &config.axis_left.label_formatter)},
+    {
+      "axis-left-label-placement",
+      std::bind(
+          &axis_configure_label_placement,
+          std::placeholders::_1,
+          &config.axis_left.label_placement),
+    },
     {"xdomain", std::bind(&confgure_domain_kind, std::placeholders::_1, &config.domain_x.kind)},
     {"ydomain", std::bind(&confgure_domain_kind, std::placeholders::_1, &config.domain_y.kind)},
     {
@@ -150,10 +178,24 @@ ReturnCode configure(
       })
     },
     {
+      "xdomain-label-placement",
+      configure_multiprop({
+          std::bind(&axis_configure_label_placement, std::placeholders::_1, &config.axis_top.label_placement),
+          std::bind(&axis_configure_label_placement, std::placeholders::_1, &config.axis_bottom.label_placement),
+      })
+    },
+    {
       "ydomain-format",
       configure_multiprop({
           std::bind(&confgure_format, std::placeholders::_1, &config.axis_left.label_formatter),
           std::bind(&confgure_format, std::placeholders::_1, &config.axis_right.label_formatter),
+      })
+    },
+    {
+      "ydomain-label-placement",
+      configure_multiprop({
+          std::bind(&axis_configure_label_placement, std::placeholders::_1, &config.axis_left.label_placement),
+          std::bind(&axis_configure_label_placement, std::placeholders::_1, &config.axis_right.label_placement),
       })
     },
     {"xdomain-padding", std::bind(&configure_float, std::placeholders::_1, &config.domain_x.padding)},
