@@ -14,15 +14,16 @@ plot {
   ymin: -3;
   ymax: 30;
   xdomain: categorical;
+  xdomain-format: string;
 
   series {
-    xs: 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12;
+    xs: Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct, Nov, Dec;
     ys: -0.2, 0.8, 5.7, 11.3, 17.0, 22.0, 24.8, 24.1, 20.1, 14.1, 8.6, 2.5;
     point-size: 3.3pt;
   }
 
   series {
-    xs: 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12;
+    xs: Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct, Nov, Dec;
     ys: 4.8, 6.6, 10.3, 14.2, 16.6, 17.0, 15.2, 11.9, 8.5, 5.7, 4.2, 3.9;
     point-size: 3.3pt;
   }

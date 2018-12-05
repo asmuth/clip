@@ -166,13 +166,35 @@ Series domain_untranslate_linear(const DomainConfig& domain, std::vector<double>
   return s;
 }
 
+Series domain_untranslate_categorical(
+    const DomainConfig& domain,
+    std::vector<double> values) {
+  Series s;
+  for (auto vt : values) {
+    if (domain.inverted) {
+      vt = 1.0 - vt;
+    }
+
+    std::string v;
+    size_t vidx = vt * domain.categories.size();
+    if (vidx >= 0 && vidx < domain.categories.size()) {
+      v = domain.categories[vidx];
+    }
+
+    s.emplace_back(std::move(v));
+  }
+
+  return s;
+}
+
 Series domain_untranslate(
     const DomainConfig& domain,
     const std::vector<double>& values) {
   switch (domain.kind) {
     case DomainKind::LINEAR:
-    case DomainKind::CATEGORICAL:
       return domain_untranslate_linear(domain, values);
+    case DomainKind::CATEGORICAL:
+      return domain_untranslate_categorical(domain, values);
     default:
       assert(false);
   }
