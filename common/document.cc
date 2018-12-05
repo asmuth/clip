@@ -44,7 +44,7 @@ Document::Document() :
     width({Unit::PX, 1200}),
     height({Unit::PX, 600}),
     background_colour(Colour::fromRGB(1,1,1)),
-    text_colour(Colour::fromRGB(.4,.4,.4)),
+    text_colour(Colour::fromRGB(.2,.2,.2)),
     border_colour(Colour::fromRGB(.66,.66,.66)) {}
 
 ReturnCode document_setup_defaults(Document* doc) {
