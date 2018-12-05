@@ -56,14 +56,16 @@ ReturnCode draw_lines(
     return ERROR_INVALID_ARGUMENT;
   }
 
+  auto x = domain_translate(domain_x, config.xs);
+  auto y = domain_translate(domain_y, config.ys);
+
   // draw line
   {
     Path path;
+
     for (size_t i = 0; i < series_len(config.xs); ++i) {
-      auto x = config.xs[i];
-      auto y = config.ys[i];
-      auto sx = clip.x + domain_translate(domain_x, x) * clip.w;
-      auto sy = clip.y + (1.0 - domain_translate(domain_y, y)) * clip.h;
+      auto sx = clip.x + x[i] * clip.w;
+      auto sy = clip.y + (1.0 - y[i]) * clip.h;
 
       if (i == 0) {
         path.moveTo(sx, sy);
@@ -84,10 +86,8 @@ ReturnCode draw_lines(
     FillStyle style;
     style.colour = config.point_colour;
     for (size_t i = 0; i < config.xs.size(); ++i) {
-      auto x = config.xs[i];
-      auto y = config.ys[i];
-      auto sx = clip.x + domain_translate(domain_x, x) * clip.w;
-      auto sy = clip.y + (1.0 - domain_translate(domain_y, y)) * clip.h;
+      auto sx = clip.x + x[i] * clip.w;
+      auto sy = clip.y + (1.0 - y[i]) * clip.h;
 
       // FIXME point style
       Path path;

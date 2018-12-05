@@ -140,6 +140,8 @@ ReturnCode configure(
     {"axis-bottom-format", std::bind(&confgure_format, std::placeholders::_1, &config.axis_bottom.label_formatter)},
     {"axis-left", std::bind(&parseAxisModeProp, std::placeholders::_1, &config.axis_left.mode)},
     {"axis-left-format", std::bind(&confgure_format, std::placeholders::_1, &config.axis_left.label_formatter)},
+    {"xdomain", std::bind(&confgure_domain_kind, std::placeholders::_1, &config.domain_x.kind)},
+    {"ydomain", std::bind(&confgure_domain_kind, std::placeholders::_1, &config.domain_y.kind)},
     {
       "xdomain-format",
       configure_multiprop({

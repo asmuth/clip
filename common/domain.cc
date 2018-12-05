@@ -66,34 +66,85 @@ void domain_fit_linear(const Series& data_raw, DomainConfig* domain, bool snap_z
   }
 }
 
+void domain_fit_categorical(const Series& data, DomainConfig* domain) {
+  std::set<std::string> cache;
+  for (const auto& d : domain->categories) {
+    cache.insert(d);
+  }
+
+  for (const auto& d : data) {
+    if (cache.count(d) > 0) {
+      continue;
+    }
+
+    domain->categories.emplace_back(d);
+    cache.insert(d);
+  }
+}
+
 void domain_fit(const Series& data, DomainConfig* domain, bool snap_zero) {
   switch (domain->kind) {
     case DomainKind::LINEAR:
       return domain_fit_linear(data, domain, snap_zero);
+    case DomainKind::CATEGORICAL:
+      return domain_fit_categorical(data, domain);
   }
 }
 
-double domain_translate_linear(const DomainConfig& domain, const Value& v) {
+std::vector<double> domain_translate_linear(
+    const DomainConfig& domain,
+    const Series& series) {
   auto min = domain.min.value_or(0.0f);
   auto max = domain.max.value_or(0.0f);
 
-  auto vf = value_to_float(v);
-  auto vt = (vf - min) / (max - min);
+  std::vector<double> mapped;
+  for (const auto& v : series) {
+    auto vf = value_to_float(v);
+    auto vt = (vf - min) / (max - min);
 
-  if (domain.inverted) {
-    vt = 1.0 - vt;
+    if (domain.inverted) {
+      vt = 1.0 - vt;
+    }
+
+    mapped.push_back(vt);
   }
 
-  return vt;
+  return mapped;
 }
 
-double domain_translate(const DomainConfig& domain, const Value& v) {
-  switch (domain.kind) {
-    case DomainKind::LINEAR:
-      return domain_translate_linear(domain, v);
+std::vector<double> domain_translate_categorical(
+    const DomainConfig& domain,
+    const Series& series) {
+  std::unordered_map<std::string, double> cache;
+  for (size_t i = 0; i < domain.categories.size(); ++i) {
+    cache.emplace(domain.categories[i], double(i));
   }
 
-  return 0;
+  double category_count = domain.categories.size();
+
+  std::vector<double> mapped;
+  for (const auto& v : series) {
+    auto vt = (cache[v] / category_count) + (0.5 / category_count);
+
+    if (domain.inverted) {
+      vt = 1.0 - vt;
+    }
+
+    mapped.push_back(vt);
+  }
+
+  return mapped;
+}
+
+std::vector<double> domain_translate(
+    const DomainConfig& domain,
+    const Series& series) {
+  switch (domain.kind) {
+    case DomainKind::LINEAR:
+      return domain_translate_linear(domain, series);
+    case DomainKind::CATEGORICAL:
+      return domain_translate_categorical(domain, series);
+  }
 }
 
 double domain_untranslate(const DomainConfig& domain, double vt) {
@@ -112,6 +163,22 @@ double domain_untranslate(const DomainConfig& domain, double vt) {
   }
 
   return v;
+}
+
+ReturnCode confgure_domain_kind(
+    const plist::Property& prop,
+    DomainKind* kind) {
+  if (plist::is_value(prop, "linear")) {
+    *kind = DomainKind::LINEAR;
+    return OK;
+  }
+
+  if (plist::is_value(prop, "categorical")) {
+    *kind = DomainKind::CATEGORICAL;
+    return OK;
+  }
+
+  return ERROR_INVALID_ARGUMENT;
 }
 
 namespace chart {

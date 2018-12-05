@@ -34,6 +34,7 @@
 #include <vector>
 #include <string>
 #include <optional>
+#include <unordered_map>
 #include "utils/return_code.h"
 #include "plist/plist.h"
 #include "common/series.h"
@@ -41,7 +42,7 @@
 namespace plotfx {
 
 enum class DomainKind {
-  LINEAR
+  LINEAR, CATEGORICAL
 };
 
 struct DomainConfig {
@@ -50,13 +51,21 @@ struct DomainConfig {
   bool inverted;
   std::optional<double> min;
   std::optional<double> max;
+  std::vector<std::string> categories;
   double padding;
 };
 
 void domain_fit(const Series& data, DomainConfig* domain, bool snap_zero);
 
-double domain_translate(const DomainConfig& domain, const Value& v);
+std::vector<double> domain_translate(
+    const DomainConfig& domain,
+    const Series& series);
+
 double domain_untranslate(const DomainConfig& domain, double v);
+
+ReturnCode confgure_domain_kind(
+    const plist::Property& prop,
+    DomainKind* kind);
 
 } // namespace plotfx
 
