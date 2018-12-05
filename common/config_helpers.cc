@@ -190,5 +190,19 @@ ReturnCode configure_float_opt(
   return OK;
 }
 
+ReturnCode configure_string(
+    const plist::Property& prop,
+    std::string* value) {
+  if (!plist::is_value(prop)) {
+    return ReturnCode::errorf(
+        "EARG",
+        "incorrect number of arguments; expected: 1, got: $0",
+        prop.size());
+  }
+
+  *value = prop;
+  return OK;
+}
+
 } // namespace plotfx
 

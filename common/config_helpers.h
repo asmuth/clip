@@ -103,6 +103,10 @@ ReturnCode configure_float(
     const plist::Property& prop,
     double* value);
 
+ReturnCode configure_string(
+    const plist::Property& prop,
+    std::string* value);
+
 ReturnCode configure_float_opt(
     const plist::Property& prop,
     std::optional<double>* value);
