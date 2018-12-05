@@ -40,7 +40,7 @@ namespace plotfx {
 
 AxisDefinition::AxisDefinition() :
     mode(AxisMode::AUTO),
-    label_placement(AxisLabelPlacement::OUTSIDE),
+    label_position(AxisLabelPosition::OUTSIDE),
     label_formatter(format_decimal_fixed(1)),
     label_padding({Unit::REM, 0.8f}),
     label_font_size({Unit::REM, 1.0f}),
@@ -82,13 +82,13 @@ static Status renderAxisVertical(
     strokeLine(target, {x, y0}, {x, y1}, style);
   }
 
-  double label_placement = 0;
-  switch (axis_config.label_placement) {
-    case AxisLabelPlacement::RIGHT:
-      label_placement = 1;
+  double label_position = 0;
+  switch (axis_config.label_position) {
+    case AxisLabelPosition::RIGHT:
+      label_position = 1;
       break;
-    case AxisLabelPlacement::LEFT:
-      label_placement = -1;
+    case AxisLabelPosition::LEFT:
+      label_position = -1;
       break;
     default:
       break;
@@ -102,7 +102,7 @@ static Status renderAxisVertical(
     strokeLine(
         target,
         {x, y},
-        {x + to_px(target->measures, axis_config.tick_length).value * label_placement, y},
+        {x + to_px(target->measures, axis_config.tick_length).value * label_position, y},
         style);
   }
 
@@ -112,14 +112,14 @@ static Status renderAxisVertical(
     auto [ tick, label_text ] = label;
 
     auto p = Point {
-     .x = x + label_padding * label_placement,
+     .x = x + label_padding * label_position,
      .y = y0 + (y1 - y0) * (1.0 - tick),
     };
 
     TextStyle style;
     style.font = axis_config.font;
     style.colour = axis_config.text_colour;
-    auto ax = label_placement > 0 ? HAlign::LEFT : HAlign::RIGHT;
+    auto ax = label_position > 0 ? HAlign::LEFT : HAlign::RIGHT;
     auto ay = VAlign::CENTER;
     if (auto rc = drawTextLabel(label_text, p, ax, ay, style, target); rc != OK) {
       return rc;
@@ -142,13 +142,13 @@ static Status renderAxisHorizontal(
     strokeLine(target, {x0, y}, {x1, y}, style);
   }
 
-  double label_placement = 0;
-  switch (axis_config.label_placement) {
-    case AxisLabelPlacement::BOTTOM:
-      label_placement = 1;
+  double label_position = 0;
+  switch (axis_config.label_position) {
+    case AxisLabelPosition::BOTTOM:
+      label_position = 1;
       break;
-    case AxisLabelPlacement::TOP:
-      label_placement = -1;
+    case AxisLabelPosition::TOP:
+      label_position = -1;
       break;
     default:
       break;
@@ -162,7 +162,7 @@ static Status renderAxisHorizontal(
     strokeLine(
         target,
         {x, y},
-        {x, y + to_px(target->measures, axis_config.tick_length).value * label_placement},
+        {x, y + to_px(target->measures, axis_config.tick_length).value * label_position},
         style);
   }
 
@@ -172,14 +172,14 @@ static Status renderAxisHorizontal(
     auto [ tick, label_text ] = label;
     auto p = Point {
       .x = x0 + (x1 - x0) * tick,
-      .y = y + label_padding * label_placement,
+      .y = y + label_padding * label_position,
     };
 
     TextStyle style;
     style.font = axis_config.font;
     style.colour = axis_config.text_colour;
     auto ax = HAlign::CENTER;
-    auto ay = label_placement > 0 ? VAlign::TOP : VAlign::BOTTOM;
+    auto ay = label_position > 0 ? VAlign::TOP : VAlign::BOTTOM;
     if (auto rc = drawTextLabel(label_text, p, ax, ay, style, target); rc) {
       return rc;
     }
@@ -270,36 +270,36 @@ ReturnCode axis_expand_auto(
     AxisDefinition* out) {
   *out = in;
 
-  switch (out->label_placement) {
-    case AxisLabelPlacement::OUTSIDE:
+  switch (out->label_position) {
+    case AxisLabelPosition::OUTSIDE:
       switch (pos) {
         case AxisPosition::TOP:
-          out->label_placement = AxisLabelPlacement::TOP;
+          out->label_position = AxisLabelPosition::TOP;
           break;
         case AxisPosition::RIGHT:
-          out->label_placement = AxisLabelPlacement::RIGHT;
+          out->label_position = AxisLabelPosition::RIGHT;
           break;
         case AxisPosition::BOTTOM:
-          out->label_placement = AxisLabelPlacement::BOTTOM;
+          out->label_position = AxisLabelPosition::BOTTOM;
           break;
         case AxisPosition::LEFT:
-          out->label_placement = AxisLabelPlacement::LEFT;
+          out->label_position = AxisLabelPosition::LEFT;
           break;
       }
       break;
-    case AxisLabelPlacement::INSIDE:
+    case AxisLabelPosition::INSIDE:
       switch (pos) {
         case AxisPosition::TOP:
-          out->label_placement = AxisLabelPlacement::BOTTOM;
+          out->label_position = AxisLabelPosition::BOTTOM;
           break;
         case AxisPosition::RIGHT:
-          out->label_placement = AxisLabelPlacement::LEFT;
+          out->label_position = AxisLabelPosition::LEFT;
           break;
         case AxisPosition::BOTTOM:
-          out->label_placement = AxisLabelPlacement::TOP;
+          out->label_position = AxisLabelPosition::TOP;
           break;
         case AxisPosition::LEFT:
-          out->label_placement = AxisLabelPlacement::RIGHT;
+          out->label_position = AxisLabelPosition::RIGHT;
           break;
       }
       break;

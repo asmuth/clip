@@ -56,7 +56,7 @@ enum class AxisMode {
   MANUAL
 };
 
-enum class AxisLabelPlacement {
+enum class AxisLabelPosition {
   LEFT,
   RIGHT,
   TOP,
@@ -71,7 +71,7 @@ struct AxisDefinition {
   std::string title;
   std::vector<double> ticks;
   std::vector<std::pair<double, std::string>> labels;
-  AxisLabelPlacement label_placement;
+  AxisLabelPosition label_position;
   Formatter label_formatter;
   Colour text_colour;
   Colour border_colour;
