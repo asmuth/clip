@@ -22,6 +22,7 @@ add_library(plotfxlib STATIC
     elements/plot.cc
     elements/plot_axis.cc
     elements/plot_lines.cc
+    elements/legend.cc
     common/config_helpers.cc
     common/domain.cc
     common/format.cc

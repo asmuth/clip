@@ -36,6 +36,7 @@
 #include <graphics/layout.h>
 #include "common/config_helpers.h"
 #include "plot_lines.h"
+#include "legend.h"
 
 namespace plotfx {
 namespace plot {

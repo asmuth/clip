@@ -27,14 +27,24 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-#ifndef _libstx_UI_LEGENDDEFINITION_H
-#define _libstx_UI_LEGENDDEFINITION_H
-#include <tuple>
-#include <string>
+#pragma once
+#include <memory>
 #include <vector>
+#include <string>
+#include <tuple>
+#include "graphics/layer.h"
 
 namespace plotfx {
-namespace chart {
+
+static const int kLegendLabelPadding = 20; // FIXME make configurable
+static const int kLegendLineHeight = 20; // FIXME make configurable
+static const int kLegendInsideVertPadding = 10;
+static const int kLegendInsideHorizPadding = 15;
+static const int kLegendOutsideVertPadding = 10;
+static const int kLegendOutsideHorizPadding = 25;
+static const int kLegendPointY = 6;
+static const int kLegendPointWidth = 8;
+static const int kLegendPointSize = 3;
 
 class LegendDefinition {
 public:
@@ -84,6 +94,26 @@ protected:
   std::vector<std::tuple<std::string, std::string, std::string>> entries_;
 };
 
-}
-}
-#endif
+void renderOutsideLegends(Layer* target, const Rectangle& clip);
+
+void renderInsideLegends(Layer* target, const Rectangle& clip);
+
+void renderRightLegend(
+    Layer* target,
+    const Rectangle& clip,
+    LegendDefinition* legend,
+    double horiz_padding,
+    bool bottom,
+    bool outside);
+
+void renderLeftLegend(
+    Layer* target,
+    const Rectangle& clip,
+    LegendDefinition* legend,
+    double horiz_padding,
+    bool bottom,
+    bool outside);
+
+
+} // namespace plotfx
+

@@ -28,21 +28,56 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 #include <stdlib.h>
-#include "../core/layer.h"
-#include "../graphics/svgtarget.h"
-#include "canvas.h"
-#include "domain.h"
+#include "graphics/layer.h"
+#include "common/domain.h"
+#include "legend.h"
 
 namespace plotfx {
-namespace chart {
 
-Legend::Legend() :
-    width_(800),
-    height_(320) {}
+LegendDefinition::LegendDefinition(
+    kVerticalPosition vert_pos,
+    kHorizontalPosition horiz_pos,
+    kPlacement placement,
+    const std::string& title) :
+    vert_pos_(vert_pos),
+    horiz_pos_(horiz_pos),
+    placement_(placement),
+    title_ (title) {}
 
+const std::string LegendDefinition::title() const {
+  return title_;
+}
+
+LegendDefinition::kVerticalPosition LegendDefinition::verticalPosition() 
+    const {
+  return vert_pos_;
+}
+
+LegendDefinition::kHorizontalPosition LegendDefinition::horizontalPosition() 
+    const {
+  return horiz_pos_;
+}
+
+LegendDefinition::kPlacement LegendDefinition::placement() const {
+  return placement_;
+}
+
+void LegendDefinition::addEntry(
+    const std::string& name,
+    const std::string& color,
+    const std::string& shape /* = "circle" */) {
+  entries_.emplace_back(name, color, shape);
+}
+
+const std::vector<std::tuple<std::string, std::string, std::string>>
+    LegendDefinition::entries() const {
+  return entries_;
+}
+
+/*
 void Legend::renderOutsideLegends(
     Layer* target,
-    Viewport* viewport) const {
+    const Rectangle& clip) const {
   for (const auto& legend : legends_) {
     if (legend->placement() != LegendDefinition::LEGEND_OUTSIDE) {
       continue;
@@ -113,7 +148,7 @@ void Legend::renderOutsideLegends(
 
 void Legend::renderInsideLegends(
     Layer* target,
-    Viewport* viewport) const {
+    const Rectangle& clip) const {
   auto orig_padding = viewport->padding();
 
   for (const auto& legend : legends_) {
@@ -156,7 +191,7 @@ void Legend::renderInsideLegends(
 
 void Legend::renderRightLegend(
     Layer* target,
-    Viewport* viewport,
+    const Rectangle& clip,
     LegendDefinition* legend,
     double horiz_padding,
     bool bottom,
@@ -187,7 +222,6 @@ void Legend::renderRightLegend(
     auto this_len = estimateTextLength(std::get<0>(entry)) +
         kLegendLabelPadding;
 
-    /* line wrap */
     if (lx - this_len < lx_boundary) {
       lx = viewport->paddingLeft() + viewport->innerWidth() - horiz_padding;
       height += bottom ? -1 * kLegendLineHeight : kLegendLineHeight;
@@ -233,7 +267,7 @@ void Legend::renderRightLegend(
 
 void Legend::renderLeftLegend(
     Layer* target,
-    Viewport* viewport,
+    const Rectangle& clip,
     LegendDefinition* legend,
     double horiz_padding,
     bool bottom,
@@ -264,7 +298,6 @@ void Legend::renderLeftLegend(
     auto this_len = estimateTextLength(std::get<0>(entry)) + 
         kLegendLabelPadding;
 
-    /* line wrap */
     if (lx + this_len > lx_boundary) {
       lx = viewport->paddingLeft() + horiz_padding;
       lx_boundary = viewport->paddingLeft() + viewport->innerWidth() -
@@ -326,6 +359,7 @@ LegendDefinition* Legend::legend() const {
     return legends_.back().get();
   }
 }
+*/
 
-}
-}
+} // namespace plotfx
+
