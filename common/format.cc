@@ -141,13 +141,25 @@ ReturnCode confgure_format_datetime(
   return OK;
 }
 
+Formatter format_string() {
+  Formatter f;
+  f.format_value = [] (const Value& v) -> std::string {
+    return v;
+  };
+
+  return f;
+}
+
+ReturnCode confgure_format_string(
+    const plist::Property& prop,
+    Formatter* formatter) {
+  *formatter = format_string();
+  return OK;
+}
+
 ReturnCode confgure_format(
     const plist::Property& prop,
     Formatter* formatter) {
-  if (prop.size() < 1) {
-    return ERROR_INVALID_ARGUMENT;
-  }
-
   if (plist::is_value(prop, "fixed") ||
       plist::is_enum(prop, "fixed")) {
     return confgure_format_decimal_fixed(prop, formatter);
@@ -161,6 +173,11 @@ ReturnCode confgure_format(
   if (plist::is_value(prop, "datetime") ||
       plist::is_enum(prop, "datetime")) {
     return confgure_format_datetime(prop, formatter);
+  }
+
+  if (plist::is_value(prop, "string") ||
+      plist::is_enum(prop, "string")) {
+    return confgure_format_string(prop, formatter);
   }
 
   return OK;
