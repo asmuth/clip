@@ -93,6 +93,8 @@ Status Rasterizer::fillPath(const layer_ops::BrushFillOp& op) {
       case PathCommand::ARC_TO:
         cairo_arc(cr_ctx, cmd[0], cmd[1], cmd[2], cmd[3], cmd[4]);
         break;
+      default:
+        break; // not yet implemented
     }
   }
 
@@ -134,6 +136,8 @@ Status Rasterizer::strokePath(const layer_ops::BrushStrokeOp& op) {
       case PathCommand::ARC_TO:
         cairo_arc(cr_ctx, cmd[0], cmd[1], cmd[2], cmd[3], cmd[4]);
         break;
+      default:
+        break; // not yet implemented
     }
   }
 

@@ -128,6 +128,8 @@ std::string svg_path_data(const Path& path) {
         path_data << StringUtil::format("a$0 $0 0 1 0 $1 0 ", cmd[2], cmd[2] * 2);
         path_data << StringUtil::format("a$0 $0 0 1 0 $1 0 ", cmd[2], -cmd[2] * 2);
         break;
+      default:
+        break; // not yet implemented
     }
   }
 

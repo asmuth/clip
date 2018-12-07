@@ -257,6 +257,9 @@ Status renderAxis(
           clip.x + clip.w,
           frame);
       break;
+    case AxisPosition::CENTER_HORIZ:
+    case AxisPosition::CENTER_VERT:
+      return ERROR_NOT_IMPLEMENTED;
   }
 
   return rc;
@@ -284,6 +287,9 @@ ReturnCode axis_expand_auto(
         case AxisPosition::LEFT:
           out->tick_position = AxisLabelPosition::LEFT;
           break;
+        case AxisPosition::CENTER_HORIZ:
+        case AxisPosition::CENTER_VERT:
+          return ERROR_NOT_IMPLEMENTED;
       }
       break;
     case AxisLabelPosition::INSIDE:
@@ -300,7 +306,12 @@ ReturnCode axis_expand_auto(
         case AxisPosition::LEFT:
           out->tick_position = AxisLabelPosition::RIGHT;
           break;
+        case AxisPosition::CENTER_HORIZ:
+        case AxisPosition::CENTER_VERT:
+          return ERROR_NOT_IMPLEMENTED;
       }
+      break;
+    default:
       break;
   };
 
@@ -319,6 +330,9 @@ ReturnCode axis_expand_auto(
         case AxisPosition::LEFT:
           out->label_position = AxisLabelPosition::LEFT;
           break;
+        case AxisPosition::CENTER_HORIZ:
+        case AxisPosition::CENTER_VERT:
+          return ERROR_NOT_IMPLEMENTED;
       }
       break;
     case AxisLabelPosition::INSIDE:
@@ -335,7 +349,12 @@ ReturnCode axis_expand_auto(
         case AxisPosition::LEFT:
           out->label_position = AxisLabelPosition::RIGHT;
           break;
+        case AxisPosition::CENTER_HORIZ:
+        case AxisPosition::CENTER_VERT:
+          return ERROR_NOT_IMPLEMENTED;
       }
+      break;
+    default:
       break;
   };
 
