@@ -1,0 +1,14 @@
+language: cpp
+compiler: clang
+dist: trusty
+
+env:
+  - CXXFLAGS="-stdlib=libc++"
+
+script:
+  - cmake .
+  - make all test CTEST_OUTPUT_ON_FAILURE=1
+
+before_install:
+  - sudo apt-get -qq update
+  - sudo apt-get install -y libc++-dev cmake libcairo2-dev libharfbuzz-dev libfreetype6-dev
