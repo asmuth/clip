@@ -25,5 +25,7 @@ if !(diff ${outfile} ${masterfile} &>/dev/null); then
   print_error "ERROR: output files do not match:\n    - actual: ${outfile}\n    - master: ${masterfile}"
   echo
   echo -e "If the modification is intended, fix by running:\n    cp ${outfile} ${masterfile}"
+  echo
+  diff ${outfile} ${masterfile}
   exit 1
 fi
