@@ -43,7 +43,7 @@ Input File (`example_chart.plot`):
         title: "北京市";
         point-size: 3.3pt;
         xs: csv(testdata/city_temperatures.csv, month);
-        ys: csv(testdata/city_temperatures.csv, bejing);
+        ys: csv(testdata/city_temperatures.csv, beijing);
       }
 
       # ...
