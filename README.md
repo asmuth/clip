@@ -110,6 +110,7 @@ For more examples, please see [the examples page](https://github.com/plotfx/plot
 License
 -------
 
+    The PlotFX License (https://plotfx.org)
     Copyright (c) 2018, Paul Asmuth, Laura Schlimmer
     All rights reserved.
 
