@@ -56,7 +56,7 @@ For more examples, please see [the examples page](https://github.com/plotfx/plot
 Building
 --------
 
-To build PlotFX, you need an up-to-date C++ compiler, cmake, liharfbuzz, libpng
+To build PlotFX, you need an up-to-date C++ compiler, cmake, harfbuzz, libpng
 and libcairo. Run:
 
     $ cmake .
