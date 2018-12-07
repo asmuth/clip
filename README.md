@@ -21,7 +21,7 @@ Here is how to generate a simple line chart using plotfx:
 
 Output File (`example_chart.svg`):
 
-![A simple line chart](./examples/linecharts/lines_with_points.svg)
+[![A simple line chart](./examples/linecharts/lines_with_points.svg)](./examples/linecharts/lines_with_points.plot)
 
 Input File (`example_chart.plot`):
 

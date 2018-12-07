@@ -24,7 +24,7 @@ plot {
   }
 
   series {
-    title: "Beijing";
+    title: "北京市  ";
     xs: Jan, Feb, Mar, Apr,  May,  Jun,  Jul,  Aug,  Sep,  Oct,  Nov, Dec;
     ys: -4, -1.4, 5.4, 13.5, 19.9, 24.3, 26.3, 24.9, 19.9, 13.1, 4.7, -1.8;
     point-size: 3.3pt;
