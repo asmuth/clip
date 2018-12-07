@@ -62,9 +62,13 @@ libfreetype. Run:
     $ cmake .
     $ make
 
-To run the test suite, run `make check`:
+To install plotfx into your system, run `make install`:
 
-    $ make check
+    $ make install
+
+To run the test suite, run `make test`:
+
+    $ make test
 
 
 More Examples
