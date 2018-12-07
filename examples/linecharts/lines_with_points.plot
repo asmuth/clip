@@ -1,6 +1,3 @@
-width: 1200px;
-height: 480px;
-
 plot {
   axis-top: off;
   axis-right: off;

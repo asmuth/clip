@@ -108,6 +108,14 @@ ReturnCode axis_expand_auto(
     const DomainConfig& domain,
     AxisDefinition* out);
 
+ReturnCode axis_layout(
+    const Rectangle& parent,
+    const AxisDefinition& axis_top,
+    const AxisDefinition& axis_right,
+    const AxisDefinition& axis_bottom,
+    const AxisDefinition& axis_left,
+    Rectangle* bbox);
+
 ReturnCode axis_draw_all(
     const Rectangle& clip,
     const DomainConfig& domain_x,
@@ -121,6 +129,7 @@ ReturnCode axis_draw_all(
 ReturnCode axis_place_labels_default(
     const DomainConfig& domain,
     AxisDefinition* axis);
+
 ReturnCode axis_place_labels_geom(
     const DomainConfig& domain,
     AxisDefinition* axis);

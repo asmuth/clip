@@ -59,16 +59,27 @@ ReturnCode draw(
   auto domain_y = config.domain_y;
 
   // setup layout
-  auto border_box = layout_margin_box(
-      clip,
-      to_unit(layer->measures, config.margins[0]).value,
-      to_unit(layer->measures, config.margins[1]).value,
-      to_unit(layer->measures, config.margins[2]).value,
-      to_unit(layer->measures, config.margins[3]).value);
+  auto bbox = clip;
+
+  if (auto rc = axis_layout(
+        bbox,
+        config.axis_top,
+        config.axis_right,
+        config.axis_bottom,
+        config.axis_left,
+        &bbox); !rc) {
+    return rc;
+  }
+  //auto bbox = layout_margin_box(
+  //    clip,
+  //    to_unit(layer->measures, config.margins[0]).value,
+  //    to_unit(layer->measures, config.margins[1]).value,
+  //    to_unit(layer->measures, config.margins[2]).value,
+  //    to_unit(layer->measures, config.margins[3]).value);
 
   // render axes
   if (auto rc = axis_draw_all(
-        border_box,
+        bbox,
         domain_x,
         domain_y,
         config.axis_top,
@@ -82,13 +93,13 @@ ReturnCode draw(
 
   // render series
   for (const auto& s : config.series) {
-    if (auto rc = s.draw(config, border_box, layer); !rc) {
+    if (auto rc = s.draw(config, bbox, layer); !rc) {
       return rc;
     }
   }
 
   // render legend
-  if (auto rc = legend_draw(config.legend, border_box, layer); !rc) {
+  if (auto rc = legend_draw(config.legend, bbox, layer); !rc) {
     return rc;
   }
 

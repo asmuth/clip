@@ -371,6 +371,84 @@ ReturnCode axis_expand_auto(
   return OK;
 }
 
+void axis_layout(
+    const AxisDefinition& axis,
+    const AxisPosition& axis_position,
+    double* margin) {
+  /* add margin for ticks */
+  bool reflow_ticks = false;
+  switch (axis.label_position) {
+    case AxisLabelPosition::OUTSIDE:
+      reflow_ticks = true;
+      break;
+    case AxisLabelPosition::INSIDE:
+      reflow_ticks = false;
+      break;
+    case AxisLabelPosition::TOP:
+      reflow_ticks = (axis_position == AxisPosition::TOP);
+      break;
+    case AxisLabelPosition::RIGHT:
+      reflow_ticks = (axis_position == AxisPosition::RIGHT);
+      break;
+    case AxisLabelPosition::BOTTOM:
+      reflow_ticks = (axis_position == AxisPosition::BOTTOM);
+      break;
+    case AxisLabelPosition::LEFT:
+      reflow_ticks = (axis_position == AxisPosition::LEFT);
+      break;
+  }
+
+  /* add margin for labels */
+  bool reflow_labels = true;
+  switch (axis.label_position) {
+    case AxisLabelPosition::OUTSIDE:
+      reflow_labels = true;
+      break;
+    case AxisLabelPosition::INSIDE:
+      reflow_labels = false;
+      break;
+    case AxisLabelPosition::TOP:
+      reflow_labels = (axis_position == AxisPosition::TOP);
+      break;
+    case AxisLabelPosition::RIGHT:
+      reflow_labels = (axis_position == AxisPosition::RIGHT);
+      break;
+    case AxisLabelPosition::BOTTOM:
+      reflow_labels = (axis_position == AxisPosition::BOTTOM);
+      break;
+    case AxisLabelPosition::LEFT:
+      reflow_labels = (axis_position == AxisPosition::LEFT);
+      break;
+  }
+
+  if (reflow_labels) {
+    *margin += 0;
+  }
+}
+
+ReturnCode axis_layout(
+    const Rectangle& parent,
+    const AxisDefinition& axis_top,
+    const AxisDefinition& axis_right,
+    const AxisDefinition& axis_bottom,
+    const AxisDefinition& axis_left,
+    Rectangle* bbox) {
+  double margins[4] = {0, 0, 0, 0};
+  axis_layout(axis_top, AxisPosition::TOP, &margins[0]);
+  axis_layout(axis_right, AxisPosition::RIGHT, &margins[1]);
+  axis_layout(axis_bottom, AxisPosition::BOTTOM, &margins[2]);
+  axis_layout(axis_left, AxisPosition::LEFT, &margins[3]);
+
+  *bbox = layout_margin_box(
+      parent,
+      margins[0],
+      margins[1],
+      margins[2],
+      margins[3]);
+
+  return OK;
+}
+
 ReturnCode axis_draw_all(
     const Rectangle& clip,
     const DomainConfig& domain_x,
