@@ -36,16 +36,17 @@
 #include "utils/return_code.h"
 
 namespace plotfx {
-class Layer;
-class Rectangle;
+struct Layer;
+struct Rectangle;
+struct Document;
 
 using plist::PropertyList;
 
 struct Element {
-  std::function<ReturnCode (const Rectangle&, Layer*)> draw;
+  std::function<ReturnCode (const Document&, const Rectangle&, Layer*)> draw;
 };
 
-using ElementRef = std::unique_ptr<Element>;
+using ElementRef = std::shared_ptr<Element>;
 
 
 } // namespace plotfx

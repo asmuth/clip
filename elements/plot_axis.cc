@@ -38,14 +38,16 @@
 
 namespace plotfx {
 
+static const double kDefaultLabelPaddingEM = 0.8;
+static const double kDefaultLabelFontSizeEM = 1;
+static const double kDefaultLineWidthPT = 1;
+static const double kDefaultTickLengthPT = 4;
+
 AxisDefinition::AxisDefinition() :
     mode(AxisMode::AUTO),
     label_position(AxisLabelPosition::OUTSIDE),
     tick_position(AxisLabelPosition::INSIDE),
-    label_formatter(format_decimal_fixed(1)),
-    label_padding({Unit::REM, 0.8f}),
-    label_font_size({Unit::REM, 1.0f}),
-    tick_length({Unit::REM, 0.4f}) {}
+    label_formatter(format_decimal_fixed(1)) {}
 
 ReturnCode parseAxisMode(
     const std::string& str,
@@ -80,6 +82,7 @@ static Status renderAxisVertical(
   {
     StrokeStyle style;
     style.colour = axis_config.border_colour;
+    style.line_width =  from_pt(kDefaultLineWidthPT, target->dpi);
     strokeLine(target, {x, y0}, {x, y1}, style);
   }
 
@@ -96,14 +99,19 @@ static Status renderAxisVertical(
       break;
   }
 
+  auto tick_length = measure_or(
+      axis_config.tick_length,
+      from_pt(kDefaultTickLengthPT, target->dpi));
+
   for (const auto& tick : axis_config.ticks) {
     auto y = y0 + (y1 - y0) * (1.0 - tick);
     StrokeStyle style;
     style.colour = axis_config.border_colour;
+    style.line_width =  from_pt(kDefaultLineWidthPT, target->dpi);
     strokeLine(
         target,
         {x, y},
-        {x + to_px(target->measures, axis_config.tick_length).value * tick_position, y},
+        {x + tick_length * tick_position, y},
         style);
   }
 
@@ -120,7 +128,10 @@ static Status renderAxisVertical(
       break;
   }
 
-  auto label_padding = to_px(target->measures, axis_config.label_padding).value;
+  auto label_padding = measure_or(
+      axis_config.label_padding,
+      from_em(kDefaultLabelPaddingEM, target->font_size));
+
   for (const auto& label : axis_config.labels) {
     auto [ tick, label_text ] = label;
 
@@ -131,6 +142,8 @@ static Status renderAxisVertical(
     TextStyle style;
     style.font = axis_config.font;
     style.colour = axis_config.text_colour;
+    style.font_size = from_em(kDefaultLabelFontSizeEM, target->font_size);
+
     auto ax = label_position > 0 ? HAlign::LEFT : HAlign::RIGHT;
     auto ay = VAlign::CENTER;
     if (auto rc = drawTextLabel(label_text, p, ax, ay, style, target); rc != OK) {
@@ -151,6 +164,7 @@ static Status renderAxisHorizontal(
   {
     StrokeStyle style;
     style.colour = axis_config.border_colour;
+    style.line_width =  from_pt(kDefaultLineWidthPT, target->dpi);
     strokeLine(target, {x0, y}, {x1, y}, style);
   }
 
@@ -167,14 +181,19 @@ static Status renderAxisHorizontal(
       break;
   }
 
+  auto tick_length = measure_or(
+      axis_config.tick_length,
+      from_pt(kDefaultTickLengthPT, target->dpi));
+
   for (const auto& tick : axis_config.ticks) {
     auto x = x0 + (x1 - x0) * tick;
     StrokeStyle style;
     style.colour = axis_config.border_colour;
+    style.line_width =  from_pt(kDefaultLineWidthPT, target->dpi);
     strokeLine(
         target,
         {x, y},
-        {x, y + to_px(target->measures, axis_config.tick_length).value * tick_position},
+        {x, y + tick_length * tick_position},
         style);
   }
 
@@ -191,7 +210,10 @@ static Status renderAxisHorizontal(
       break;
   }
 
-  auto label_padding = to_px(target->measures, axis_config.label_padding).value;
+  auto label_padding = measure_or(
+      axis_config.label_padding,
+      from_em(kDefaultLabelPaddingEM, target->font_size));
+
   for (const auto& label : axis_config.labels) {
     auto [ tick, label_text ] = label;
     Point p;
@@ -201,6 +223,8 @@ static Status renderAxisHorizontal(
     TextStyle style;
     style.font = axis_config.font;
     style.colour = axis_config.text_colour;
+    style.font_size = from_em(kDefaultLabelFontSizeEM, target->font_size);
+
     auto ax = HAlign::CENTER;
     auto ay = label_position > 0 ? VAlign::TOP : VAlign::BOTTOM;
     if (auto rc = drawTextLabel(label_text, p, ax, ay, style, target); rc) {

@@ -43,7 +43,7 @@ ReturnCode buildElement(
     const Document& doc,
     const std::string& name,
     const PropertyList& plist,
-    std::unique_ptr<Element>* elem) {
+    ElementRef* elem) {
   const auto& elem_entry = elems.find(name);
   if (elem_entry == elems.end()) {
     return ReturnCode::errorf("NOTFOUND", "no such element: $0", name);

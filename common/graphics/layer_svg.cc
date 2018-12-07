@@ -92,7 +92,6 @@ std::string svg_body(const std::string& in) {
 
 Status svg_text_span(
     const layer_ops::TextSpanOp& op,
-    const MeasureTable& measures,
     SVGDataRef svg) {
   const auto& style = op.style;
 
@@ -102,7 +101,7 @@ Status svg_text_span(
     << svg_attr("x", op.position.x)
     << svg_attr("y", op.position.y)
     << svg_attr("fill", style.colour.to_hex_str())
-    << svg_attr("font-size", to_px(measures, style.font_size).value)
+    << svg_attr("font-size", style.font_size)
     << svg_attr("font-family", style.font.font_family_css)
     << ">"
     << svg_body(op.text)
@@ -138,7 +137,6 @@ std::string svg_path_data(const Path& path) {
 
 Status svg_stroke_path(
     const layer_ops::BrushStrokeOp& op,
-    const MeasureTable& measures,
     SVGDataRef svg) {
   const auto& clip = op.clip;
   const auto& path = op.path;
@@ -147,7 +145,7 @@ Status svg_stroke_path(
   svg->buffer
       << "  "
       << "<path"
-      << svg_attr("stroke-width", to_px(measures, style.line_width).value)
+      << svg_attr("stroke-width", style.line_width)
       << svg_attr("stroke", style.colour.to_hex_str())
       << svg_attr("fill", "none")
       << svg_attr("d", svg_path_data(path))
@@ -159,7 +157,6 @@ Status svg_stroke_path(
 
 Status svg_fill_path(
     const layer_ops::BrushFillOp& op,
-    const MeasureTable& measures,
     SVGDataRef svg) {
   const auto& clip = op.clip;
   const auto& path = op.path;
@@ -196,7 +193,8 @@ std::string SVGData::to_svg() const {
 ReturnCode layer_bind_svg(
     double width,
     double height,
-    const MeasureTable& measures,
+    double dpi,
+    Measure font_size,
     const Colour& background_colour,
     std::function<Status (const std::string&)> submit,
     LayerRef* layer) {
@@ -206,17 +204,18 @@ ReturnCode layer_bind_svg(
   layer->reset(new Layer{
     .width = svg->width = width,
     .height = svg->height = height,
-    .measures = measures,
+    .dpi = dpi,
+    .font_size = font_size,
     .text_shaper = std::make_shared<text::TextShaper>(),
-    .apply = [svg, submit, measures] (const auto& op) {
-      return std::visit([svg, submit, measures] (auto&& op) {
+    .apply = [svg, submit] (const auto& op) {
+      return std::visit([svg, submit] (auto&& op) {
         using T = std::decay_t<decltype(op)>;
         if constexpr (std::is_same_v<T, layer_ops::BrushStrokeOp>)
-          return svg_stroke_path(op, measures, svg);
+          return svg_stroke_path(op, svg);
         if constexpr (std::is_same_v<T, layer_ops::BrushFillOp>)
-          return svg_fill_path(op, measures, svg);
+          return svg_fill_path(op, svg);
         if constexpr (std::is_same_v<T, layer_ops::TextSpanOp>)
-          return svg_text_span(op, measures, svg);
+          return svg_text_span(op, svg);
         if constexpr (std::is_same_v<T, layer_ops::SubmitOp>)
           return submit(svg->to_svg());
         else

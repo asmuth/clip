@@ -35,8 +35,7 @@
 namespace plotfx {
 
 TextStyle::TextStyle() :
-    direction(TextDirection::LTR),
-    font_size(from_pt(11)) {}
+    direction(TextDirection::LTR) {}
 
 Status drawTextLabel(
     const std::string& text,
@@ -50,7 +49,7 @@ Status drawTextLabel(
       text,
       style.font,
       style.font_size,
-      layer->measures.dpi,
+      layer->dpi,
       layer->text_shaper.get(),
       &bbox);
 

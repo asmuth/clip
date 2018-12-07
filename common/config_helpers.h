@@ -91,8 +91,10 @@ ReturnCode configure_series(
     const plist::Property& prop,
     Series* data);
 
-ReturnCode parseMeasureProp(
+ReturnCode configure_measure_rel(
     const plist::Property& prop,
+    double dpi,
+    double font_size,
     Measure* value);
 
 ReturnCode configure_colour(

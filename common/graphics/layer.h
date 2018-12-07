@@ -61,7 +61,8 @@ namespace plotfx {
 struct Layer {
   const double width;
   const double height;
-  const MeasureTable measures;
+  double dpi;
+  Measure font_size;
   const std::shared_ptr<text::TextShaper> text_shaper;
   const std::function<Status (const layer_ops::Op&)> apply;
 };

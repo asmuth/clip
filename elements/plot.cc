@@ -41,17 +41,13 @@
 namespace plotfx {
 namespace plot {
 
-PlotConfig::PlotConfig() :
-    margins{
-        Measure(Unit::REM, 4.0f),
-        Measure(Unit::REM, 5.0f),
-        Measure(Unit::REM, 4.0f),
-        Measure(Unit::REM, 5.0f)} {
+PlotConfig::PlotConfig() {
   domain_y.padding = 0.1f;
 }
 
 ReturnCode draw(
     const PlotConfig& config,
+    const Document& doc,
     const Rectangle& clip,
     Layer* layer) {
   // setup domains
@@ -93,7 +89,7 @@ ReturnCode draw(
 
   // render series
   for (const auto& s : config.series) {
-    if (auto rc = s.draw(config, bbox, layer); !rc) {
+    if (auto rc = s.draw(config, doc, bbox, layer); !rc) {
       return rc;
     }
   }
@@ -106,8 +102,8 @@ ReturnCode draw(
   return ReturnCode::success();
 }
 
-ReturnCode configure_series(const plist::Property& prop, PlotConfig* config) {
-  if (auto rc = lines::configure(prop, config); !rc) {
+ReturnCode configure_series(const plist::Property& prop, const Document& doc, PlotConfig* config) {
+  if (auto rc = lines::configure(prop, doc, config); !rc) {
     return rc;
   }
 
@@ -142,16 +138,16 @@ ReturnCode configure(
     {
       "margin",
       configure_multiprop({
-          std::bind(&parseMeasureProp, std::placeholders::_1, &config.margins[0]),
-          std::bind(&parseMeasureProp, std::placeholders::_1, &config.margins[1]),
-          std::bind(&parseMeasureProp, std::placeholders::_1, &config.margins[2]),
-          std::bind(&parseMeasureProp, std::placeholders::_1, &config.margins[3])
+          std::bind(&configure_measure_rel, std::placeholders::_1, doc.dpi, doc.font_size, &config.margins[0]),
+          std::bind(&configure_measure_rel, std::placeholders::_1, doc.dpi, doc.font_size, &config.margins[1]),
+          std::bind(&configure_measure_rel, std::placeholders::_1, doc.dpi, doc.font_size, &config.margins[2]),
+          std::bind(&configure_measure_rel, std::placeholders::_1, doc.dpi, doc.font_size, &config.margins[3])
       })
     },
-    {"margin-top", std::bind(&parseMeasureProp, std::placeholders::_1, &config.margins[0])},
-    {"margin-right", std::bind(&parseMeasureProp, std::placeholders::_1, &config.margins[1])},
-    {"margin-bottom", std::bind(&parseMeasureProp, std::placeholders::_1, &config.margins[2])},
-    {"margin-left", std::bind(&parseMeasureProp, std::placeholders::_1, &config.margins[3])},
+    {"margin-top", std::bind(&configure_measure_rel, std::placeholders::_1, doc.dpi, doc.font_size, &config.margins[0])},
+    {"margin-right", std::bind(&configure_measure_rel, std::placeholders::_1, doc.dpi, doc.font_size, &config.margins[1])},
+    {"margin-bottom", std::bind(&configure_measure_rel, std::placeholders::_1, doc.dpi, doc.font_size, &config.margins[2])},
+    {"margin-left", std::bind(&configure_measure_rel, std::placeholders::_1, doc.dpi, doc.font_size, &config.margins[3])},
     {"axis-top", std::bind(&parseAxisModeProp, std::placeholders::_1, &config.axis_top.mode)},
     {"axis-top-format", std::bind(&confgure_format, std::placeholders::_1, &config.axis_top.label_formatter)},
     {
@@ -231,7 +227,7 @@ ReturnCode configure(
   }
 
   static const ParserDefinitions pdefs_series = {
-    {"series", std::bind(&configure_series, std::placeholders::_1, &config)}
+    {"series", std::bind(&configure_series, std::placeholders::_1, doc, &config)}
   };
 
   if (auto rc = parseAll(plist, pdefs_series); !rc.isSuccess()) {
@@ -239,7 +235,13 @@ ReturnCode configure(
   }
 
   auto e = std::make_unique<Element>();
-  e->draw = std::bind(&draw, config, std::placeholders::_1, std::placeholders::_2);
+  e->draw = std::bind(
+      &draw,
+      config,
+      std::placeholders::_1,
+      std::placeholders::_2,
+      std::placeholders::_3);
+
   *elem = std::move(e);
 
   return ReturnCode::success();

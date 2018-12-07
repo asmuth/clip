@@ -37,9 +37,9 @@ namespace plotfx {
 Rasterizer::Rasterizer(
     uint32_t width,
     uint32_t height,
-    MeasureTable measures_,
+    double dpi_,
     std::shared_ptr<text::TextShaper> text_shaper_) :
-    measures(measures_),
+    dpi(dpi_),
     text_shaper(text_shaper_),
     ft_ready(false) {
   if (!FT_Init_FreeType(&ft)) {
@@ -119,7 +119,7 @@ Status Rasterizer::strokePath(const layer_ops::BrushStrokeOp& op) {
      style.colour.blue(),
      style.colour.alpha());
 
-  cairo_set_line_width(cr_ctx, to_px(measures, style.line_width));
+  cairo_set_line_width(cr_ctx, style.line_width);
 
   cairo_rectangle(cr_ctx, clip.x, clip.y, clip.w, clip.h);
   cairo_clip(cr_ctx);
@@ -154,7 +154,7 @@ Status Rasterizer::drawText(const layer_ops::TextSpanOp& op) {
       op.position.y,
       op.style.font,
       op.style.font_size,
-      measures.dpi,
+      96, // FIXME
       op.style.direction,
       text_shaper.get(),
       [&glyphs] (const text::GlyphPlacement& g) { glyphs.emplace_back(g); });
@@ -183,7 +183,6 @@ Status Rasterizer::drawTextGlyphs(
     return ERROR;
   }
 
-  auto dpi = measures.dpi;
   if (FT_Set_Char_Size(ft_font, 0, style.font_size * 64, dpi, dpi)) {
     FT_Done_Face(ft_font);
     return ERROR;

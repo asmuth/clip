@@ -41,11 +41,13 @@
 namespace plotfx {
 
 Document::Document() :
-    width({Unit::PX, 1200}),
-    height({Unit::PX, 600}),
+    width(1200),
+    height(600),
     background_colour(Colour::fromRGB(1,1,1)),
     text_colour(Colour::fromRGB(.2,.2,.2)),
-    border_colour(Colour::fromRGB(.66,.66,.66)) {}
+    border_colour(Colour::fromRGB(.66,.66,.66)),
+    dpi(96),
+    font_size(from_pt(11, dpi)) {}
 
 ReturnCode document_setup_defaults(Document* doc) {
   if (!font_load(DefaultFont::HELVETICA_REGULAR, &doc->font_sans)) {
@@ -64,9 +66,11 @@ ReturnCode document_load(
     return rc;
   }
 
+  // IMPORTANT: parse dpi + font size first
+
   static const ParserDefinitions pdefs = {
-    {"width", std::bind(&parseMeasureProp, std::placeholders::_1, &doc->width)},
-    {"height", std::bind(&parseMeasureProp, std::placeholders::_1, &doc->height)},
+    {"width", std::bind(&configure_measure_rel, std::placeholders::_1, doc->dpi, doc->font_size, &doc->width)},
+    {"height", std::bind(&configure_measure_rel, std::placeholders::_1, doc->dpi, doc->font_size, &doc->height)},
     {"background-colour", std::bind(&configure_colour, std::placeholders::_1, &doc->background_colour)},
     {
       "foreground-colour",
@@ -92,7 +96,7 @@ ReturnCode document_load(
 
     const auto& elem_config = plist[i].next.get();
 
-    std::unique_ptr<Element> elem;
+    ElementRef elem;
     if (auto rc = buildElement(*doc, elem_name, *elem_config, &elem); !rc.isSuccess()) {
       return rc;
     }
@@ -124,7 +128,7 @@ ReturnCode document_render_to(
   Rectangle clip(0, 0, layer->width, layer->height);
 
   for (const auto& e : tree.roots) {
-    if (auto rc = e->draw(clip, layer); !rc.isSuccess()) {
+    if (auto rc = e->draw(tree, clip, layer); !rc.isSuccess()) {
       return rc;
     }
   }
@@ -154,9 +158,10 @@ ReturnCode document_render_svg(
   LayerRef layer;
 
   auto rc = layer_bind_svg(
-      to_px(doc.measures, doc.width).value,
-      to_px(doc.measures, doc.height).value,
-      doc.measures,
+      doc.width,
+      doc.height,
+      doc.dpi,
+      doc.font_size,
       doc.background_colour,
       [filename] (auto svg) {
         FileUtil::write(filename, Buffer(svg.data(), svg.size()));
@@ -181,9 +186,10 @@ ReturnCode document_render_png(
   LayerRef layer;
 
   auto rc = layer_bind_png(
-      to_px(doc.measures, doc.width).value,
-      to_px(doc.measures, doc.height).value,
-      doc.measures,
+      doc.width,
+      doc.height,
+      doc.dpi,
+      doc.font_size,
       doc.background_colour,
       [filename] (auto png) {
         FileUtil::write(filename, Buffer(png.data(), png.size()));

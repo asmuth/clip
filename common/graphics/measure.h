@@ -39,29 +39,33 @@ enum class Unit {
   UNIT, PX, PT, REM
 };
 
-struct MeasureTable {
-  MeasureTable() : dpi(96), rem(11) {}
-  double dpi;
-  double rem;
-};
-
 struct Measure {
   Measure();
-  Measure(Unit unit, double value);
-  Unit unit;
+  explicit Measure(double value);
   double value;
   operator double() const;
 };
 
 Measure from_unit(double v);
 Measure from_px(double v);
-Measure from_pt(double v);
-Measure from_rem(double v);
+Measure from_pt(double v, double dpi);
+Measure from_em(double v, double font_size);
 
-Measure to_px(const MeasureTable& t, const Measure& v);
-Measure to_unit(const MeasureTable& t, const Measure& v);
+//Measure to_px(const MeasureTable& t, const Measure& v);
+//Measure to_unit(const MeasureTable& t, const Measure& v);
 
-ReturnCode parse_measure(const std::string& s, Measure* value);
+ReturnCode parse_measure_abs(
+    const std::string& s,
+    double dpi,
+    Measure* value);
+
+ReturnCode parse_measure_rel(
+    const std::string& s,
+    double dpi,
+    double font_size,
+    Measure* value);
+
+Measure measure_or(const Measure& primary, const Measure& fallback);
 
 } // namespace plotfx
 

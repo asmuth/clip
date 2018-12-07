@@ -53,7 +53,7 @@ class Image;
 class Rasterizer {
 public:
 
-  Rasterizer(uint32_t width, uint32_t height, MeasureTable measures, std::shared_ptr<text::TextShaper> text_shaper);
+  Rasterizer(uint32_t width, uint32_t height, double dpi, std::shared_ptr<text::TextShaper> text_shaper);
   ~Rasterizer();
   Rasterizer(const Rasterizer&) = delete;
   Rasterizer& operator=(const Rasterizer&) = delete;
@@ -73,7 +73,7 @@ public:
 
   std::string to_png() const;
 
-  MeasureTable measures;
+  double dpi;
   std::shared_ptr<text::TextShaper> text_shaper;
   FT_Library ft;
   bool ft_ready;

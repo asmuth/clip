@@ -40,7 +40,6 @@ class Layer;
 
 struct Document {
   Document();
-  MeasureTable measures;
   Measure width;
   Measure height;
   ColourScheme colour_scheme;
@@ -51,6 +50,8 @@ struct Document {
   FontInfo font_sans;
   FontInfo font_mono;
   std::vector<ElementRef> roots;
+  double dpi;
+  Measure font_size;
 };
 
 ReturnCode document_load(

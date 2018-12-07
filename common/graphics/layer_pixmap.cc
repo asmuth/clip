@@ -35,18 +35,20 @@ namespace plotfx {
 ReturnCode layer_bind_png(
     double width,
     double height,
-    const MeasureTable& measures,
+    double dpi,
+    Measure font_size,
     const Colour& background_colour,
     std::function<Status (const std::string&)> submit,
     LayerRef* layer) {
   auto text_shaper = std::make_shared<text::TextShaper>();
-  auto raster = std::make_shared<Rasterizer>(width, height, measures, text_shaper);
+  auto raster = std::make_shared<Rasterizer>(width, height, dpi, text_shaper);
   raster->clear(background_colour);
 
   layer->reset(new Layer {
     .width = width,
     .height = height,
-    .measures = measures,
+    .dpi = dpi,
+    .font_size = font_size,
     .text_shaper = text_shaper,
     .apply = [submit, raster] (auto op) {
       return std::visit([submit, raster] (auto&& op) {

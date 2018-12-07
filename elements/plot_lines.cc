@@ -40,12 +40,14 @@ namespace plotfx {
 namespace plot {
 namespace lines {
 
-PlotLinesConfig::PlotLinesConfig() :
-    line_width(from_pt(2)) {}
+static const double kDefaultLineWidthPT = 2;
+
+PlotLinesConfig::PlotLinesConfig() {}
 
 ReturnCode draw_lines(
     const PlotConfig& plot,
     const PlotLinesConfig& config,
+    const Document& doc,
     const Rectangle& clip,
     Layer* layer) {
   const auto& domain_x = plot.domain_x;
@@ -75,13 +77,16 @@ ReturnCode draw_lines(
     }
 
     StrokeStyle style;
-    style.line_width = config.line_width;
+    style.line_width = measure_or(
+        config.line_width,
+        from_pt(kDefaultLineWidthPT, doc.dpi));
+
     style.colour = config.line_colour;
     strokePath(layer, clip, path, style);
   }
 
   // draw points
-  auto point_size = to_px(layer->measures, config.point_size);
+  auto point_size = config.point_size;
   if (point_size > 0) {
     FillStyle style;
     style.colour = config.point_colour;
@@ -100,7 +105,7 @@ ReturnCode draw_lines(
   return OK;
 }
 
-ReturnCode configure(const plist::Property& prop, PlotConfig* config) {
+ReturnCode configure(const plist::Property& prop, const Document& doc, PlotConfig* config) {
   if (!plist::is_map(prop)) {
     return ERROR_INVALID_ARGUMENT;
   }
@@ -123,9 +128,9 @@ ReturnCode configure(const plist::Property& prop, PlotConfig* config) {
       })
     },
     {"line-colour", std::bind(&configure_colour, std::placeholders::_1, &series.line_colour)},
-    {"line-width", std::bind(&parseMeasureProp, std::placeholders::_1, &series.line_width)},
+    {"line-width", std::bind(&configure_measure_rel, std::placeholders::_1, doc.dpi, doc.font_size, &series.line_width)},
     {"point-colour", std::bind(&configure_colour, std::placeholders::_1, &series.point_colour)},
-    {"point-size", std::bind(&parseMeasureProp, std::placeholders::_1, &series.point_size)},
+    {"point-size", std::bind(&configure_measure_rel, std::placeholders::_1, doc.dpi, doc.font_size, &series.point_size)},
   };
 
   if (auto rc = parseAll(*prop.next, pdefs); !rc) {
@@ -141,7 +146,8 @@ ReturnCode configure(const plist::Property& prop, PlotConfig* config) {
         std::placeholders::_1,
         series,
         std::placeholders::_2,
-        std::placeholders::_3),
+        std::placeholders::_3,
+        std::placeholders::_4),
   });
 
   config->legend.addEntry(series.title, colour);

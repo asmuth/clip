@@ -108,8 +108,10 @@ ReturnCode configure_series(
   return ERROR_INVALID_ARGUMENT;
 }
 
-ReturnCode parseMeasureProp(
+ReturnCode configure_measure_rel(
     const plist::Property& prop,
+    double dpi,
+    double font_size,
     Measure* value) {
   if (!plist::is_value(prop)) {
     return ReturnCode::errorf(
@@ -118,7 +120,7 @@ ReturnCode parseMeasureProp(
         prop.size());
   }
 
-  return parse_measure(prop, value);
+  return parse_measure_rel(prop, dpi, font_size, value);
 }
 
 ParserFn configure_multiprop(const std::vector<ParserFn>& parsers) {

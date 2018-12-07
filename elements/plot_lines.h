@@ -54,10 +54,15 @@ struct PlotLinesConfig {
   Colour point_colour;
 };
 
-ReturnCode draw(const PlotLinesConfig& config, const Rectangle& clip, Layer* frame);
+ReturnCode draw(
+    const PlotLinesConfig& config,
+    const Document& doc,
+    const Rectangle& clip,
+    Layer* frame);
 
 ReturnCode configure(
     const plist::Property& prop,
+    const Document& doc,
     plot::PlotConfig* plot);
 
 } // namespace lines

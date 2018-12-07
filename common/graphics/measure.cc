@@ -32,73 +32,34 @@
 
 namespace plotfx {
 
-Measure::Measure() : Measure(Unit::UNIT, 0.0f) {}
+Measure::Measure() : Measure(0) {}
 
-Measure::Measure(
-    Unit _unit,
-    double _value) :
-    unit(_unit),
-    value(_value) {}
+Measure::Measure(double v) : value(v) {}
 
 Measure::operator double() const {
   return value;
 }
 
 Measure from_unit(double v) {
-  return Measure(Unit::UNIT, v);
+  return Measure(v);
 }
 
 Measure from_px(double v) {
-  return Measure(Unit::PX, v);
+  return Measure(v);
 }
 
-Measure from_pt(double v) {
-  return Measure(Unit::PT, v);
+Measure from_pt(double v, double dpi) {
+  return Measure((v / 72.0) * dpi);
 }
 
-Measure from_rem(double v) {
-  return Measure(Unit::REM, v);
+Measure from_em(double v, double font_size) {
+  return Measure(v * font_size);
 }
 
-Measure to_px(const MeasureTable& t, const Measure& v) {
-  double v_px;
-
-  switch (v.unit) {
-    case Unit::UNIT:
-    case Unit::PX:
-      v_px = v.value;
-      break;
-    case Unit::PT:
-      v_px = (v.value / 72.0) * t.dpi;
-      break;
-    case Unit::REM:
-      v_px = ((v.value * t.rem) / 72.0) * t.dpi;
-      break;
-  }
-
-  return Measure{Unit::PX, v_px};
-}
-
-Measure to_unit(const MeasureTable& t, const Measure& v) {
-  double v_unit;
-
-  switch (v.unit) {
-    case Unit::UNIT:
-    case Unit::PX:
-      v_unit = v.value;
-      break;
-    case Unit::PT:
-      v_unit = (v.value / 72.0) * t.dpi;
-      break;
-    case Unit::REM:
-      v_unit = ((v.value * t.rem) / 72.0) * t.dpi;
-      break;
-  }
-
-  return Measure{Unit::UNIT, v_unit};
-}
-
-ReturnCode parse_measure(const std::string& s, Measure* measure) {
+ReturnCode parse_measure_abs(
+    const std::string& s,
+    double dpi,
+    Measure* measure) {
   double value;
   size_t unit_pos;
   try {
@@ -114,16 +75,51 @@ ReturnCode parse_measure(const std::string& s, Measure* measure) {
   }
 
   if (unit == "pt") {
-    *measure = from_pt(value);
-    return OK;
-  }
-
-  if (unit == "rem") {
-    *measure = from_rem(value);
+    *measure = from_pt(value, dpi);
     return OK;
   }
 
   return ERROR_INVALID_ARGUMENT;
+}
+
+ReturnCode parse_measure_rel(
+    const std::string& s,
+    double dpi,
+    double font_size,
+    Measure* measure) {
+  double value;
+  size_t unit_pos;
+  try {
+    value = std::stod(s, &unit_pos);
+  } catch (... ) {
+    return ERROR_INVALID_ARGUMENT;
+  }
+
+  auto unit = s.substr(unit_pos);
+  if (unit == "px") {
+    *measure = from_px(value);
+    return OK;
+  }
+
+  if (unit == "pt") {
+    *measure = from_pt(value, dpi);
+    return OK;
+  }
+
+  if (unit == "em" || unit == "rem") {
+    *measure = from_em(value, font_size);
+    return OK;
+  }
+
+  return ERROR_INVALID_ARGUMENT;
+}
+
+Measure measure_or(const Measure& primary, const Measure& fallback) {
+  if (primary == 0) {
+    return fallback;
+  } else {
+    return primary;
+  }
 }
 
 } // namespace plotfx

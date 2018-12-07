@@ -34,11 +34,13 @@
 
 namespace plotfx {
 
+static const double kDefaultLabelFontSizeEM = 1;
+static const double kDefaultPaddingHorizEM = 2.4;
+static const double kDefaultPaddingVertEM = 1.2;
+static const double kDefaultItemPaddingHorizEM = 2.2;
+static const double kDefaultItemPaddingVertEM = 1.0;
+
 LegendDefinition::LegendDefinition() :
-    padding_horiz({Unit::REM, 2.4}),
-    padding_vert({Unit::REM, 1.2}),
-    padding_item_horiz({Unit::REM, 2.2}),
-    padding_item_vert({Unit::REM, 1.0}),
     vert_pos_(LEGEND_TOP),
     horiz_pos_(LEGEND_LEFT),
     placement_(LEGEND_INSIDE) {}
@@ -363,12 +365,27 @@ ReturnCode legend_draw(
     const LegendDefinition& legend,
     const Rectangle& bbox,
     Layer* layer) {
-  double padding_horiz = to_px(layer->measures, legend.padding_horiz);
-  double padding_vert = to_px(layer->measures, legend.padding_vert);
-  double padding_item_horiz = to_px(layer->measures, legend.padding_item_horiz);
-  double padding_item_vert = to_px(layer->measures, legend.padding_item_vert);
+  auto font_size = from_em(kDefaultLabelFontSizeEM, layer->font_size);
+
+  double padding_horiz = measure_or(
+      legend.padding_horiz,
+      from_em(kDefaultPaddingHorizEM, font_size));
+
+  double padding_vert = measure_or(
+      legend.padding_vert,
+      from_em(kDefaultPaddingVertEM, font_size));
+
+  double padding_item_horiz = measure_or(
+      legend.padding_horiz,
+      from_em(kDefaultItemPaddingHorizEM, font_size));
+
+  double padding_item_vert = measure_or(
+      legend.padding_vert,
+      from_em(kDefaultItemPaddingVertEM, font_size));
+
   double point_size = 5;
   double line_height = 14;
+
   double sx = bbox.x + padding_horiz;
   double sy = bbox.y + padding_vert + line_height / 2;
 
@@ -389,13 +406,14 @@ ReturnCode legend_draw(
       TextStyle style;
       style.colour = legend.text_colour;
       style.font = legend.font;
+      style.font_size = font_size;
 
       Rectangle label_bbox;
       auto rc = text::text_measure_span(
           label_text,
           style.font,
           style.font_size,
-          layer->measures.dpi,
+          layer->dpi,
           layer->text_shaper.get(),
           &label_bbox);
 

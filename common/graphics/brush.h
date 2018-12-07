@@ -44,7 +44,6 @@ enum class StrokeLineCap { BUTT, SQUARE, ROUND};
 
 struct StrokeStyle {
   StrokeStyle() :
-    line_width(Unit::PT, 1.0),
     line_join(StrokeLineJoin::MITER),
     line_cap(StrokeLineCap::SQUARE),
     colour(Colour::fromRGB(0, 0, 0)) {}

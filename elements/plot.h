@@ -43,8 +43,15 @@ namespace plotfx {
 namespace plot {
 struct PlotConfig;
 
+using PlotSeriesDrawFn = std::function<
+    ReturnCode (
+        const PlotConfig& plot,
+        const Document& doc,
+        const Rectangle& clip,
+        Layer* frame)>;
+
 struct PlotSeries {
-  std::function<ReturnCode (const PlotConfig& plot, const Rectangle& clip, Layer* frame)> draw;
+  PlotSeriesDrawFn draw;
 };
 
 struct PlotConfig {
@@ -61,7 +68,11 @@ struct PlotConfig {
   LegendDefinition legend;
 };
 
-ReturnCode draw(const PlotConfig& config, const Rectangle& clip, Layer* frame);
+ReturnCode draw(
+    const PlotConfig& config,
+    const Document& doc,
+    const Rectangle& clip,
+    Layer* frame);
 
 ReturnCode configure(
     const Document& doc,
