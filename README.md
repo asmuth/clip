@@ -1,10 +1,11 @@
 PlotFX
 ======
 
-[![Build Status](https://travis-ci.org/plotfx/plotfx.png?branch=master)](http://travis-ci.org/plotfx/plotfx)
+[![Build Status](https://img.shields.io/travis/plotfx/plotfx/master.svg?style=flat-square)](http://travis-ci.org/plotfx/plotfx)
+![BSD-License](https://img.shields.io/badge/license-BSD-blue.svg?style=flat-square)
 
 `plotfx` is a command line tool for creating charts from CSV files. It supports a
-number of different plot types and other diagrams. Each chart can be customized
+number of different plot types and other diagrams. Charts can be customized
 using a configuration language similar to CSS.
 
 [Examples](https://github.com/plotfx/plotfx/tree/master/examples) |
