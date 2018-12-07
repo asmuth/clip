@@ -42,11 +42,11 @@ namespace plotfx {
 namespace plot {
 
 PlotConfig::PlotConfig() :
-    margins({
+    margins{
         Measure(Unit::REM, 4.0f),
         Measure(Unit::REM, 5.0f),
         Measure(Unit::REM, 4.0f),
-        Measure(Unit::REM, 5.0f)}) {
+        Measure(Unit::REM, 5.0f)} {
   domain_y.padding = 0.1f;
 }
 

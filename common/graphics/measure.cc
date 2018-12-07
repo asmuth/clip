@@ -45,19 +45,19 @@ Measure::operator double() const {
 }
 
 Measure from_unit(double v) {
-  return Measure{.unit = Unit::UNIT, .value = v};
+  return Measure(Unit::UNIT, v);
 }
 
 Measure from_px(double v) {
-  return Measure{.unit = Unit::PX, .value = v};
+  return Measure(Unit::PX, v);
 }
 
 Measure from_pt(double v) {
-  return Measure{.unit = Unit::PT, .value = v};
+  return Measure(Unit::PT, v);
 }
 
 Measure from_rem(double v) {
-  return Measure{.unit = Unit::REM, .value = v};
+  return Measure(Unit::REM, v);
 }
 
 Measure to_px(const MeasureTable& t, const Measure& v) {
@@ -76,7 +76,7 @@ Measure to_px(const MeasureTable& t, const Measure& v) {
       break;
   }
 
-  return Measure{.unit = Unit::PX, .value = v_px};
+  return Measure{Unit::PX, v_px};
 }
 
 Measure to_unit(const MeasureTable& t, const Measure& v) {
@@ -95,7 +95,7 @@ Measure to_unit(const MeasureTable& t, const Measure& v) {
       break;
   }
 
-  return Measure{.unit = Unit::UNIT, .value = v_unit};
+  return Measure{Unit::UNIT, v_unit};
 }
 
 ReturnCode parse_measure(const std::string& s, Measure* measure) {

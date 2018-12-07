@@ -412,6 +412,8 @@ ReturnCode legend_draw(
       sx += label_bbox.w + padding_item_horiz;
     }
   }
+
+  return OK;
 }
 
 } // namespace plotfx

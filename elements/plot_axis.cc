@@ -124,10 +124,9 @@ static Status renderAxisVertical(
   for (const auto& label : axis_config.labels) {
     auto [ tick, label_text ] = label;
 
-    auto p = Point {
-     .x = x + label_padding * label_position,
-     .y = y0 + (y1 - y0) * (1.0 - tick),
-    };
+    Point p;
+    p.x = x + label_padding * label_position;
+    p.y = y0 + (y1 - y0) * (1.0 - tick);
 
     TextStyle style;
     style.font = axis_config.font;
@@ -195,10 +194,9 @@ static Status renderAxisHorizontal(
   auto label_padding = to_px(target->measures, axis_config.label_padding).value;
   for (const auto& label : axis_config.labels) {
     auto [ tick, label_text ] = label;
-    auto p = Point {
-      .x = x0 + (x1 - x0) * tick,
-      .y = y + label_padding * label_position,
-    };
+    Point p;
+    p.x = x0 + (x1 - x0) * tick;
+    p.y = y + label_padding * label_position;
 
     TextStyle style;
     style.font = axis_config.font;

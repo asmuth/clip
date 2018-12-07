@@ -35,8 +35,8 @@ namespace plotfx {
 
 struct SVGData {
   std::stringstream buffer;
-  uint32_t width;
-  uint32_t height;
+  double width;
+  double height;
   Colour background_colour;
   std::string to_svg() const;
 };

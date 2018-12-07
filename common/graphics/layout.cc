@@ -50,10 +50,10 @@ Rectangle layout_margin_box(
 Point layout_align(
     const Rectangle& bbox,
     const Point& target) {
-  return Point {
-    .x = (target.x - (bbox.x + bbox.w / 2)),
-    .y = (target.y - (bbox.y + bbox.h / 2)),
-  };
+  Point p;
+  p.x = (target.x - (bbox.x + bbox.w / 2));
+  p.y = (target.y - (bbox.y + bbox.h / 2));
+  return p;
 }
 
 Point layout_align(
