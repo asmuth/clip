@@ -62,7 +62,7 @@ libfreetype. Run:
     $ cmake .
     $ make
 
-To install plotfx into your system, run `make install`:
+To install the `plotfx` binary into your system, run `make install`:
 
     $ make install
 

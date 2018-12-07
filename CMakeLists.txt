@@ -72,6 +72,7 @@ set(PLOTFX_LDFLAGS plotfxlib ${CAIRO_LIBRARIES} ${FREETYPE_LIBRARIES} ${HARFBUZZ
 
 add_executable(plotfx common/platform/plotfx_cli.cc)
 target_link_libraries(plotfx ${PLOTFX_LDFLAGS})
+install(TARGETS plotfx DESTINATION bin)
 
 #file(GLOB unit_test_files "tests/**/test_*.cc")
 #foreach(unit_test_path ${unit_test_files})

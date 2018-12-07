@@ -16,3 +16,4 @@ cmake_install.cmake
 /test_*
 CTestTestfile.cmake
 Testing
+install_manifest.txt
