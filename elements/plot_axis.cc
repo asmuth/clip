@@ -41,6 +41,7 @@ namespace plotfx {
 AxisDefinition::AxisDefinition() :
     mode(AxisMode::AUTO),
     label_position(AxisLabelPosition::OUTSIDE),
+    tick_position(AxisLabelPosition::INSIDE),
     label_formatter(format_decimal_fixed(1)),
     label_padding({Unit::REM, 0.8f}),
     label_font_size({Unit::REM, 1.0f}),
@@ -75,13 +76,38 @@ static Status renderAxisVertical(
     double y0,
     double y1,
     Layer* target) {
-  /* draw axis line */ 
+  /* draw axis line */
   {
     StrokeStyle style;
     style.colour = axis_config.border_colour;
     strokeLine(target, {x, y0}, {x, y1}, style);
   }
 
+  /* draw ticks */
+  double tick_position = 0;
+  switch (axis_config.tick_position) {
+    case AxisLabelPosition::RIGHT:
+      tick_position = 1;
+      break;
+    case AxisLabelPosition::LEFT:
+      tick_position = -1;
+      break;
+    default:
+      break;
+  }
+
+  for (const auto& tick : axis_config.ticks) {
+    auto y = y0 + (y1 - y0) * (1.0 - tick);
+    StrokeStyle style;
+    style.colour = axis_config.border_colour;
+    strokeLine(
+        target,
+        {x, y},
+        {x + to_px(target->measures, axis_config.tick_length).value * tick_position, y},
+        style);
+  }
+
+  /* draw labels */
   double label_position = 0;
   switch (axis_config.label_position) {
     case AxisLabelPosition::RIGHT:
@@ -94,19 +120,6 @@ static Status renderAxisVertical(
       break;
   }
 
-  /* draw ticks */
-  for (const auto& tick : axis_config.ticks) {
-    auto y = y0 + (y1 - y0) * (1.0 - tick);
-    StrokeStyle style;
-    style.colour = axis_config.border_colour;
-    strokeLine(
-        target,
-        {x, y},
-        {x + to_px(target->measures, axis_config.tick_length).value * label_position, y},
-        style);
-  }
-
-  /* draw labels */
   auto label_padding = to_px(target->measures, axis_config.label_padding).value;
   for (const auto& label : axis_config.labels) {
     auto [ tick, label_text ] = label;
@@ -142,6 +155,31 @@ static Status renderAxisHorizontal(
     strokeLine(target, {x0, y}, {x1, y}, style);
   }
 
+  /* draw ticks */
+  double tick_position = 0;
+  switch (axis_config.tick_position) {
+    case AxisLabelPosition::BOTTOM:
+      tick_position = 1;
+      break;
+    case AxisLabelPosition::TOP:
+      tick_position = -1;
+      break;
+    default:
+      break;
+  }
+
+  for (const auto& tick : axis_config.ticks) {
+    auto x = x0 + (x1 - x0) * tick;
+    StrokeStyle style;
+    style.colour = axis_config.border_colour;
+    strokeLine(
+        target,
+        {x, y},
+        {x, y + to_px(target->measures, axis_config.tick_length).value * tick_position},
+        style);
+  }
+
+  /* draw labels */
   double label_position = 0;
   switch (axis_config.label_position) {
     case AxisLabelPosition::BOTTOM:
@@ -154,19 +192,6 @@ static Status renderAxisHorizontal(
       break;
   }
 
-  /* draw ticks */
-  for (const auto& tick : axis_config.ticks) {
-    auto x = x0 + (x1 - x0) * tick;
-    StrokeStyle style;
-    style.colour = axis_config.border_colour;
-    strokeLine(
-        target,
-        {x, y},
-        {x, y + to_px(target->measures, axis_config.tick_length).value * label_position},
-        style);
-  }
-
-  /* draw labels */
   auto label_padding = to_px(target->measures, axis_config.label_padding).value;
   for (const auto& label : axis_config.labels) {
     auto [ tick, label_text ] = label;
@@ -245,6 +270,41 @@ ReturnCode axis_expand_auto(
     const DomainConfig& domain,
     AxisDefinition* out) {
   *out = in;
+
+  switch (out->tick_position) {
+    case AxisLabelPosition::OUTSIDE:
+      switch (pos) {
+        case AxisPosition::TOP:
+          out->tick_position = AxisLabelPosition::TOP;
+          break;
+        case AxisPosition::RIGHT:
+          out->tick_position = AxisLabelPosition::RIGHT;
+          break;
+        case AxisPosition::BOTTOM:
+          out->tick_position = AxisLabelPosition::BOTTOM;
+          break;
+        case AxisPosition::LEFT:
+          out->tick_position = AxisLabelPosition::LEFT;
+          break;
+      }
+      break;
+    case AxisLabelPosition::INSIDE:
+      switch (pos) {
+        case AxisPosition::TOP:
+          out->tick_position = AxisLabelPosition::BOTTOM;
+          break;
+        case AxisPosition::RIGHT:
+          out->tick_position = AxisLabelPosition::LEFT;
+          break;
+        case AxisPosition::BOTTOM:
+          out->tick_position = AxisLabelPosition::TOP;
+          break;
+        case AxisPosition::LEFT:
+          out->tick_position = AxisLabelPosition::RIGHT;
+          break;
+      }
+      break;
+  };
 
   switch (out->label_position) {
     case AxisLabelPosition::OUTSIDE:

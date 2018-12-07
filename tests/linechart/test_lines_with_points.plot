@@ -12,7 +12,7 @@ plot {
   margin-right: 3.4rem;
 
   ymin: -10;
-  ymax: 30;
+  ymax: 32;
   xdomain: categorical;
   xdomain-format: string;
 

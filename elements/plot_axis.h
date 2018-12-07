@@ -76,6 +76,7 @@ struct AxisDefinition {
   std::string title;
   std::vector<double> ticks;
   std::vector<std::pair<double, std::string>> labels;
+  AxisLabelPosition tick_position;
   AxisLabelPosition label_position;
   AxisLabelPlacement label_placement;
   Formatter label_formatter;
