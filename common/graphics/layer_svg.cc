@@ -181,6 +181,8 @@ std::string SVGData::to_svg() const {
   svg
     << "<svg"
     << svg_attr("xmlns", "http://www.w3.org/2000/svg")
+    << svg_attr("width", width)
+    << svg_attr("height", height)
     << svg_attr("viewBox", StringUtil::format("0 0 $0 $1", width, height))
     << svg_attr("viewport-fill", background_colour.to_hex_str())
     << ">"
