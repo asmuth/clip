@@ -55,14 +55,22 @@ ReturnCode draw(
   auto domain_y = config.domain_y;
 
   // setup layout
-  auto bbox = clip;
+  auto bbox = layout_margin_box(
+      clip,
+      config.margins[0],
+      config.margins[1],
+      config.margins[2],
+      config.margins[3]);
 
   if (auto rc = axis_layout(
         bbox,
+        domain_x,
+        domain_y,
         config.axis_top,
         config.axis_right,
         config.axis_bottom,
         config.axis_left,
+        *layer,
         &bbox); !rc) {
     return rc;
   }
@@ -122,17 +130,26 @@ ReturnCode configure(
   config.legend.border_colour = doc.border_colour;
   config.legend.text_colour = doc.text_colour;
   config.axis_top.font = doc.font_sans;
+  config.axis_top.label_font_size = doc.font_size;
   config.axis_top.border_colour = doc.border_colour;
   config.axis_top.text_colour = doc.text_colour;
   config.axis_right.font = doc.font_sans;
+  config.axis_right.label_font_size = doc.font_size;
   config.axis_right.border_colour = doc.border_colour;
   config.axis_right.text_colour = doc.text_colour;
   config.axis_bottom.font = doc.font_sans;
+  config.axis_bottom.label_font_size = doc.font_size;
   config.axis_bottom.border_colour = doc.border_colour;
   config.axis_bottom.text_colour = doc.text_colour;
   config.axis_left.font = doc.font_sans;
+  config.axis_left.label_font_size = doc.font_size;
   config.axis_left.border_colour = doc.border_colour;
   config.axis_left.text_colour = doc.text_colour;
+
+  config.margins[0] = from_em(1.0, doc.font_size);
+  config.margins[1] = from_em(1.0, doc.font_size);
+  config.margins[2] = from_em(1.0, doc.font_size);
+  config.margins[3] = from_em(1.0, doc.font_size);
 
   static const ParserDefinitions pdefs = {
     {
@@ -231,6 +248,18 @@ ReturnCode configure(
   };
 
   if (auto rc = parseAll(plist, pdefs_series); !rc.isSuccess()) {
+    return rc;
+  }
+
+  /* configure axes */
+  if (auto rc = axis_configure(
+        config.domain_x,
+        config.domain_y,
+        &config.axis_top,
+        &config.axis_right,
+        &config.axis_bottom,
+        &config.axis_left);
+        !rc) {
     return rc;
   }
 

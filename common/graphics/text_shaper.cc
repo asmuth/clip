@@ -48,7 +48,7 @@ Status TextShaper::shapeText(
     const FontInfo& font,
     double font_size,
     double dpi,
-    std::function<void (const GlyphInfo&)> glyph_cb) {
+    std::function<void (const GlyphInfo&)> glyph_cb) const {
   if (!ft_ready) {
     if (FT_Init_FreeType(&ft)) {
       return ERROR;
@@ -63,7 +63,8 @@ Status TextShaper::shapeText(
     return ERROR;
   }
 
-  if (FT_Set_Char_Size(ft_font, 0, font_size * 64, dpi, dpi)) {
+  auto font_size_ft = font_size * (72.0 / dpi) * 64;
+  if (FT_Set_Char_Size(ft_font, 0, font_size_ft, dpi, dpi)) {
     FT_Done_Face(ft_font);
     return ERROR;
   }

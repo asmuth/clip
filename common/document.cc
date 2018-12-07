@@ -42,7 +42,7 @@ namespace plotfx {
 
 Document::Document() :
     width(1200),
-    height(600),
+    height(480),
     background_colour(Colour::fromRGB(1,1,1)),
     text_colour(Colour::fromRGB(.2,.2,.2)),
     border_colour(Colour::fromRGB(.66,.66,.66)),

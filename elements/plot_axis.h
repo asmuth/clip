@@ -102,18 +102,15 @@ Status renderAxis(
     AxisPosition axis_position,
     Layer* frame);
 
-ReturnCode axis_expand_auto(
-    const AxisDefinition& in,
-    const AxisPosition& pos,
-    const DomainConfig& domain,
-    AxisDefinition* out);
-
 ReturnCode axis_layout(
     const Rectangle& parent,
+    const DomainConfig& domain_x,
+    const DomainConfig& domain_y,
     const AxisDefinition& axis_top,
     const AxisDefinition& axis_right,
     const AxisDefinition& axis_bottom,
     const AxisDefinition& axis_left,
+    const Layer& layer,
     Rectangle* bbox);
 
 ReturnCode axis_draw_all(
@@ -141,6 +138,19 @@ ReturnCode axis_place_labels_categorical(
 ReturnCode axis_configure_label_placement(
     const plist::Property& prop,
     AxisLabelPlacement* placement);
+
+ReturnCode axis_configure(
+    AxisDefinition* axis,
+    const AxisLabelPosition& axis_position,
+    const DomainConfig& domain);
+
+ReturnCode axis_configure(
+    const DomainConfig& domain_x,
+    const DomainConfig& domain_y,
+    AxisDefinition* axis_top,
+    AxisDefinition* axis_right,
+    AxisDefinition* axis_bottom,
+    AxisDefinition* axis_left);
 
 } // namespace plotfx
 

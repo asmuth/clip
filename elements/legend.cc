@@ -37,7 +37,7 @@ namespace plotfx {
 static const double kDefaultLabelFontSizeEM = 1;
 static const double kDefaultPaddingHorizEM = 2.4;
 static const double kDefaultPaddingVertEM = 1.2;
-static const double kDefaultItemPaddingHorizEM = 2.2;
+static const double kDefaultItemPaddingHorizEM = 2.4;
 static const double kDefaultItemPaddingVertEM = 1.0;
 
 LegendDefinition::LegendDefinition() :

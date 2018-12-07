@@ -57,13 +57,13 @@ public:
       const FontInfo& font,
       double font_size,
       double dpi,
-      std::function<void (const GlyphInfo&)> glyph_cb);
+      std::function<void (const GlyphInfo&)> glyph_cb) const;
 
 protected:
   double dpi;
-  FT_Library ft;
-  bool ft_ready;
-  hb_buffer_t* hb_buf;
+  mutable FT_Library ft;
+  mutable bool ft_ready;
+  mutable hb_buffer_t* hb_buf;
 };
 
 } // namespace text

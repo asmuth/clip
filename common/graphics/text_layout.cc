@@ -39,7 +39,7 @@ Status text_measure_span(
     const FontInfo& font_info,
     double font_size,
     double dpi,
-    TextShaper* shaper,
+    const TextShaper* shaper,
     Rectangle* rect) {
   double line_length = 0;
   double top = 0.0f;
@@ -73,7 +73,7 @@ Status layoutTextLTR(
     const FontInfo& font_info,
     double font_size,
     double dpi,
-    TextShaper* shaper,
+    const TextShaper* shaper,
     std::function<void (const GlyphPlacement&)> glyph_cb) {
   double line_length;
   std::vector<GlyphInfo> glyphs;
@@ -119,7 +119,7 @@ Status layoutText(
     double font_size,
     double dpi,
     TextDirection direction,
-    TextShaper* shaper,
+    const TextShaper* shaper,
     std::function<void (const GlyphPlacement&)> glyph_cb) {
   switch (direction) {
     case TextDirection::LTR:

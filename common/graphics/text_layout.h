@@ -58,7 +58,7 @@ Status text_measure_span(
     const FontInfo& font_info,
     double font_size,
     double dpi,
-    TextShaper* shaper,
+    const TextShaper* shaper,
     Rectangle* rect);
 
 /**
@@ -72,7 +72,7 @@ Status layoutText(
     double font_size,
     double dpi,
     TextDirection direction,
-    TextShaper* shaper,
+    const TextShaper* shaper,
     std::function<void (const GlyphPlacement&)> glyph_cb);
 
 } // namespace text

@@ -39,7 +39,6 @@
 namespace plotfx {
 
 static const double kDefaultLabelPaddingEM = 0.8;
-static const double kDefaultLabelFontSizeEM = 1;
 static const double kDefaultLineWidthPT = 1;
 static const double kDefaultTickLengthPT = 4;
 
@@ -142,7 +141,7 @@ static Status renderAxisVertical(
     TextStyle style;
     style.font = axis_config.font;
     style.colour = axis_config.text_colour;
-    style.font_size = from_em(kDefaultLabelFontSizeEM, target->font_size);
+    style.font_size = axis_config.label_font_size;
 
     auto ax = label_position > 0 ? HAlign::LEFT : HAlign::RIGHT;
     auto ay = VAlign::CENTER;
@@ -223,7 +222,7 @@ static Status renderAxisHorizontal(
     TextStyle style;
     style.font = axis_config.font;
     style.colour = axis_config.text_colour;
-    style.font_size = from_em(kDefaultLabelFontSizeEM, target->font_size);
+    style.font_size = axis_config.label_font_size;
 
     auto ax = HAlign::CENTER;
     auto ay = label_position > 0 ? VAlign::TOP : VAlign::BOTTOM;
@@ -289,116 +288,61 @@ Status renderAxis(
   return rc;
 }
 
-ReturnCode axis_expand_auto(
-    const AxisDefinition& in,
-    const AxisPosition& pos,
+ReturnCode axis_layout_labels(
+    const AxisDefinition& axis,
+    const AxisPosition& axis_position,
     const DomainConfig& domain,
-    AxisDefinition* out) {
-  *out = in;
+    const Layer& layer,
+    double* margin) {
+  double max = 0;
 
-  switch (out->tick_position) {
-    case AxisLabelPosition::OUTSIDE:
-      switch (pos) {
-        case AxisPosition::TOP:
-          out->tick_position = AxisLabelPosition::TOP;
-          break;
-        case AxisPosition::RIGHT:
-          out->tick_position = AxisLabelPosition::RIGHT;
-          break;
-        case AxisPosition::BOTTOM:
-          out->tick_position = AxisLabelPosition::BOTTOM;
-          break;
-        case AxisPosition::LEFT:
-          out->tick_position = AxisLabelPosition::LEFT;
-          break;
-        case AxisPosition::CENTER_HORIZ:
-        case AxisPosition::CENTER_VERT:
-          return ERROR_NOT_IMPLEMENTED;
-      }
-      break;
-    case AxisLabelPosition::INSIDE:
-      switch (pos) {
-        case AxisPosition::TOP:
-          out->tick_position = AxisLabelPosition::BOTTOM;
-          break;
-        case AxisPosition::RIGHT:
-          out->tick_position = AxisLabelPosition::LEFT;
-          break;
-        case AxisPosition::BOTTOM:
-          out->tick_position = AxisLabelPosition::TOP;
-          break;
-        case AxisPosition::LEFT:
-          out->tick_position = AxisLabelPosition::RIGHT;
-          break;
-        case AxisPosition::CENTER_HORIZ:
-        case AxisPosition::CENTER_VERT:
-          return ERROR_NOT_IMPLEMENTED;
-      }
-      break;
-    default:
-      break;
-  };
+  for (const auto& label : axis.labels) {
+    auto [ tick, label_text ] = label;
 
-  switch (out->label_position) {
-    case AxisLabelPosition::OUTSIDE:
-      switch (pos) {
-        case AxisPosition::TOP:
-          out->label_position = AxisLabelPosition::TOP;
-          break;
-        case AxisPosition::RIGHT:
-          out->label_position = AxisLabelPosition::RIGHT;
-          break;
-        case AxisPosition::BOTTOM:
-          out->label_position = AxisLabelPosition::BOTTOM;
-          break;
-        case AxisPosition::LEFT:
-          out->label_position = AxisLabelPosition::LEFT;
-          break;
-        case AxisPosition::CENTER_HORIZ:
-        case AxisPosition::CENTER_VERT:
-          return ERROR_NOT_IMPLEMENTED;
-      }
-      break;
-    case AxisLabelPosition::INSIDE:
-      switch (pos) {
-        case AxisPosition::TOP:
-          out->label_position = AxisLabelPosition::BOTTOM;
-          break;
-        case AxisPosition::RIGHT:
-          out->label_position = AxisLabelPosition::LEFT;
-          break;
-        case AxisPosition::BOTTOM:
-          out->label_position = AxisLabelPosition::TOP;
-          break;
-        case AxisPosition::LEFT:
-          out->label_position = AxisLabelPosition::RIGHT;
-          break;
-        case AxisPosition::CENTER_HORIZ:
-        case AxisPosition::CENTER_VERT:
-          return ERROR_NOT_IMPLEMENTED;
-      }
-      break;
-    default:
-      break;
-  };
+    TextStyle style;
+    style.font = axis.font;
+    style.font_size = axis.label_font_size;
 
-  if (in.label_placement) {
-    if (auto rc = in.label_placement(domain, out); !rc) {
+    Rectangle label_bbox;
+    if (auto rc = text::text_measure_span(
+          label_text,
+          axis.font,
+          axis.label_font_size,
+          layer.dpi,
+          layer.text_shaper.get(),
+          &label_bbox);
+         rc != Status::OK) {
       return rc;
     }
-  } else {
-    if (auto rc = axis_place_labels_default(domain, out); !rc) {
-      return rc;
+
+    switch (axis_position) {
+      case AxisPosition::TOP:
+      case AxisPosition::BOTTOM:
+      case AxisPosition::CENTER_HORIZ:
+        max = std::max(max, label_bbox.h);
+        break;
+      case AxisPosition::LEFT:
+      case AxisPosition::RIGHT:
+      case AxisPosition::CENTER_VERT:
+        max = std::max(max, label_bbox.w);
+        break;
     }
   }
 
+  *margin += max;
   return OK;
 }
 
-void axis_layout(
+ReturnCode axis_layout(
     const AxisDefinition& axis,
     const AxisPosition& axis_position,
+    const DomainConfig& domain,
+    const Layer& layer,
     double* margin) {
+  if (axis.mode == AxisMode::OFF) {
+    return OK;
+  }
+
   /* add margin for ticks */
   bool reflow_ticks = false;
   switch (axis.label_position) {
@@ -446,22 +390,40 @@ void axis_layout(
   }
 
   if (reflow_labels) {
-    *margin += 0;
+    *margin += measure_or(
+        axis.label_padding,
+        from_em(kDefaultLabelPaddingEM, axis.label_font_size));
+
+    if (auto rc = axis_layout_labels(
+          axis,
+          axis_position,
+          domain,
+          layer,
+          margin);
+          !rc) {
+      return rc;
+    }
   }
+
+  return OK;
 }
 
 ReturnCode axis_layout(
     const Rectangle& parent,
+    const DomainConfig& domain_x,
+    const DomainConfig& domain_y,
     const AxisDefinition& axis_top,
     const AxisDefinition& axis_right,
     const AxisDefinition& axis_bottom,
     const AxisDefinition& axis_left,
+    const Layer& layer,
     Rectangle* bbox) {
   double margins[4] = {0, 0, 0, 0};
-  axis_layout(axis_top, AxisPosition::TOP, &margins[0]);
-  axis_layout(axis_right, AxisPosition::RIGHT, &margins[1]);
-  axis_layout(axis_bottom, AxisPosition::BOTTOM, &margins[2]);
-  axis_layout(axis_left, AxisPosition::LEFT, &margins[3]);
+
+  axis_layout(axis_top, AxisPosition::TOP, domain_x, layer, &margins[0]);
+  axis_layout(axis_right, AxisPosition::RIGHT, domain_y, layer, &margins[1]);
+  axis_layout(axis_bottom, AxisPosition::BOTTOM, domain_x, layer, &margins[2]);
+  axis_layout(axis_left, AxisPosition::LEFT, domain_y, layer, &margins[3]);
 
   *bbox = layout_margin_box(
       parent,
@@ -477,22 +439,12 @@ ReturnCode axis_draw_all(
     const Rectangle& clip,
     const DomainConfig& domain_x,
     const DomainConfig& domain_y,
-    const AxisDefinition& axis_top_,
-    const AxisDefinition& axis_right_,
-    const AxisDefinition& axis_bottom_,
-    const AxisDefinition& axis_left_,
+    const AxisDefinition& axis_top,
+    const AxisDefinition& axis_right,
+    const AxisDefinition& axis_bottom,
+    const AxisDefinition& axis_left,
     Layer* layer) {
-  AxisDefinition axis_top;
-  if (auto rc = axis_expand_auto(axis_top_, AxisPosition::TOP, domain_x, &axis_top); !rc) {
-    return rc;
-  }
-
   if (auto rc = renderAxis(axis_top, clip, AxisPosition::TOP, layer); rc) {
-    return rc;
-  }
-
-  AxisDefinition axis_right;
-  if (auto rc = axis_expand_auto(axis_right_, AxisPosition::RIGHT, domain_y, &axis_right); !rc) {
     return rc;
   }
 
@@ -500,17 +452,7 @@ ReturnCode axis_draw_all(
     return rc;
   }
 
-  AxisDefinition axis_bottom;
-  if (auto rc = axis_expand_auto(axis_bottom_, AxisPosition::BOTTOM, domain_x, &axis_bottom); !rc) {
-    return rc;
-  }
-
   if (auto rc = renderAxis(axis_bottom, clip, AxisPosition::BOTTOM, layer); rc) {
-    return rc;
-  }
-
-  AxisDefinition axis_left;
-  if (auto rc = axis_expand_auto(axis_left_, AxisPosition::LEFT, domain_y, &axis_left); !rc) {
     return rc;
   }
 
@@ -617,5 +559,133 @@ ReturnCode axis_configure_label_placement(
   return ERROR_INVALID_ARGUMENT;
 }
 
+ReturnCode axis_configure(
+    AxisDefinition* axis,
+    const AxisPosition& pos,
+    const DomainConfig& domain) {
+  switch (axis->tick_position) {
+    case AxisLabelPosition::OUTSIDE:
+      switch (pos) {
+        case AxisPosition::TOP:
+          axis->tick_position = AxisLabelPosition::TOP;
+          break;
+        case AxisPosition::RIGHT:
+          axis->tick_position = AxisLabelPosition::RIGHT;
+          break;
+        case AxisPosition::BOTTOM:
+          axis->tick_position = AxisLabelPosition::BOTTOM;
+          break;
+        case AxisPosition::LEFT:
+          axis->tick_position = AxisLabelPosition::LEFT;
+          break;
+        case AxisPosition::CENTER_HORIZ:
+        case AxisPosition::CENTER_VERT:
+          return ERROR_NOT_IMPLEMENTED;
+      }
+      break;
+    case AxisLabelPosition::INSIDE:
+      switch (pos) {
+        case AxisPosition::TOP:
+          axis->tick_position = AxisLabelPosition::BOTTOM;
+          break;
+        case AxisPosition::RIGHT:
+          axis->tick_position = AxisLabelPosition::LEFT;
+          break;
+        case AxisPosition::BOTTOM:
+          axis->tick_position = AxisLabelPosition::TOP;
+          break;
+        case AxisPosition::LEFT:
+          axis->tick_position = AxisLabelPosition::RIGHT;
+          break;
+        case AxisPosition::CENTER_HORIZ:
+        case AxisPosition::CENTER_VERT:
+          return ERROR_NOT_IMPLEMENTED;
+      }
+      break;
+    default:
+      break;
+  };
+
+  switch (axis->label_position) {
+    case AxisLabelPosition::OUTSIDE:
+      switch (pos) {
+        case AxisPosition::TOP:
+          axis->label_position = AxisLabelPosition::TOP;
+          break;
+        case AxisPosition::RIGHT:
+          axis->label_position = AxisLabelPosition::RIGHT;
+          break;
+        case AxisPosition::BOTTOM:
+          axis->label_position = AxisLabelPosition::BOTTOM;
+          break;
+        case AxisPosition::LEFT:
+          axis->label_position = AxisLabelPosition::LEFT;
+          break;
+        case AxisPosition::CENTER_HORIZ:
+        case AxisPosition::CENTER_VERT:
+          return ERROR_NOT_IMPLEMENTED;
+      }
+      break;
+    case AxisLabelPosition::INSIDE:
+      switch (pos) {
+        case AxisPosition::TOP:
+          axis->label_position = AxisLabelPosition::BOTTOM;
+          break;
+        case AxisPosition::RIGHT:
+          axis->label_position = AxisLabelPosition::LEFT;
+          break;
+        case AxisPosition::BOTTOM:
+          axis->label_position = AxisLabelPosition::TOP;
+          break;
+        case AxisPosition::LEFT:
+          axis->label_position = AxisLabelPosition::RIGHT;
+          break;
+        case AxisPosition::CENTER_HORIZ:
+        case AxisPosition::CENTER_VERT:
+          return ERROR_NOT_IMPLEMENTED;
+      }
+      break;
+    default:
+      break;
+  };
+
+  if (axis->label_placement) {
+    if (auto rc = axis->label_placement(domain, axis); !rc) {
+      return rc;
+    }
+  } else {
+    if (auto rc = axis_place_labels_default(domain, axis); !rc) {
+      return rc;
+    }
+  }
+
+  return OK;
+}
+
+ReturnCode axis_configure(
+    const DomainConfig& domain_x,
+    const DomainConfig& domain_y,
+    AxisDefinition* axis_top,
+    AxisDefinition* axis_right,
+    AxisDefinition* axis_bottom,
+    AxisDefinition* axis_left) {
+  if (auto rc = axis_configure(axis_top, AxisPosition::TOP, domain_x); !rc) {
+    return rc;
+  }
+
+  if (auto rc = axis_configure(axis_right, AxisPosition::RIGHT, domain_y); !rc) {
+    return rc;
+  }
+
+  if (auto rc = axis_configure(axis_bottom, AxisPosition::BOTTOM, domain_x); !rc) {
+    return rc;
+  }
+
+  if (auto rc = axis_configure(axis_left, AxisPosition::LEFT, domain_y); !rc) {
+    return rc;
+  }
+
+  return OK;
+}
 } // namespace plotfx
 

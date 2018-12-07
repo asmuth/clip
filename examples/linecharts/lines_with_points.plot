@@ -1,12 +1,7 @@
 plot {
   axis-top: off;
   axis-right: off;
-
-  margin: 0px;
-  margin-top: 1.1rem;
-  margin-bottom: 2.6rem;
-  margin-left: 5rem;
-  margin-right: 3.4rem;
+  margin-right: 2.4em;
 
   ymin: -10;
   ymax: 32;
@@ -21,7 +16,7 @@ plot {
   }
 
   series {
-    title: "北京市  ";
+    title: "北京市   ";
     xs: Jan, Feb, Mar, Apr,  May,  Jun,  Jul,  Aug,  Sep,  Oct,  Nov, Dec;
     ys: -4, -1.4, 5.4, 13.5, 19.9, 24.3, 26.3, 24.9, 19.9, 13.1, 4.7, -1.8;
     point-size: 3.3pt;

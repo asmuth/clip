@@ -59,6 +59,10 @@ Status drawTextLabel(
     return rc;
   }
 
+  StrokeStyle ss;
+  ss.line_width = Measure(1.0);
+  ss.colour = Colour::fromRGB(0.5,0.5,0.5);
+
   layer_ops::TextSpanOp op;
   op.text = text;
   op.position = offset;
