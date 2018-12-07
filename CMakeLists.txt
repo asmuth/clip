@@ -96,12 +96,3 @@ foreach(spec_test_path ${spec_test_files})
       COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_runner.sh ${CMAKE_CURRENT_BINARY_DIR}/plotfx ${spec_test_path} ${CMAKE_CURRENT_BINARY_DIR}/${spec_test_name}.svg ${spec_test_srcdir}/${spec_test_name}.svg)
 endforeach()
 
-file(GLOB spec_test_files "tests/**/test_*.plot")
-foreach(spec_test_path ${spec_test_files})
-  get_filename_component(spec_test_name ${spec_test_path} NAME_WE)
-  get_filename_component(spec_test_srcdir ${spec_test_path} DIRECTORY)
-  add_test(
-      NAME ${spec_test_name}_png
-      WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-      COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_runner.sh ${CMAKE_CURRENT_BINARY_DIR}/plotfx ${spec_test_path} ${CMAKE_CURRENT_BINARY_DIR}/${spec_test_name}.png ${spec_test_srcdir}/${spec_test_name}.png)
-endforeach()
