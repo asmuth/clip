@@ -1,6 +1,7 @@
 /**
  * This file is part of the "plotfx" project
- *   Copyright (c) 2011-2014 Paul Asmuth, Google Inc.
+ *   Copyright (c) 2018 Paul Asmuth
+ *   Copyright (c) 2014 Paul Asmuth, Google Inc.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -39,9 +40,9 @@
 namespace plotfx {
 
 enum class LegendPlacement {
-  OFF = 0,
-  INSIDE = 1,
-  OUTSIDE = 2
+  OFF,
+  INSIDE,
+  OUTSIDE
 };
 
 struct LegendConfig {
@@ -66,26 +67,6 @@ struct LegendConfig {
   std::string title;
   std::vector<std::tuple<std::string, Color, std::string>> entries;
 };
-
-void renderOutsideLegends(Layer* target, const Rectangle& clip);
-
-void renderInsideLegends(Layer* target, const Rectangle& clip);
-
-void renderRightLegend(
-    Layer* target,
-    const Rectangle& clip,
-    LegendConfig* legend,
-    double horiz_padding,
-    bool bottom,
-    bool outside);
-
-void renderLeftLegend(
-    Layer* target,
-    const Rectangle& clip,
-    LegendConfig* legend,
-    double horiz_padding,
-    bool bottom,
-    bool outside);
 
 ReturnCode legend_configure(
     const Document& doc,
