@@ -46,5 +46,7 @@ bool is_value_literal(const Property& prop, const std::string& cmp);
 bool is_value_quoted(const Property& prop);
 bool is_value_quoted(const Property& prop, const std::string& cmp);
 
+std::vector<std::string> flatten(const Property& prop);
+
 } // namespace plist
 

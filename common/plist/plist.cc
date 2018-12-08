@@ -88,5 +88,26 @@ bool is_value_quoted(const Property& prop, const std::string& cmp) {
   return prop.kind == PropertyKind::VALUE && prop.value == cmp;
 }
 
+std::vector<std::string> flatten(const Property& prop) {
+  switch (prop.kind) {
+    case PropertyKind::VALUE_LITERAL:
+    case PropertyKind::VALUE:
+      return {prop.value};
+    case PropertyKind::TUPLE:
+    case PropertyKind::LIST:
+      break;
+    default:
+      return {};
+  }
+
+  std::vector<std::string> flat;
+  for (const auto& n : *prop.next) {
+    auto next = flatten(n);
+    flat.insert(flat.end(), next.begin(), next.end());
+  }
+
+  return flat;
+}
+
 } // namespace plist
 
