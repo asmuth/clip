@@ -69,6 +69,7 @@ ReturnCode document_load(
   // IMPORTANT: parse dpi + font size first
 
   static const ParserDefinitions pdefs = {
+    {"font-size", std::bind(&configure_measure_rel, std::placeholders::_1, doc->dpi, doc->font_size, &doc->font_size)},
     {"width", std::bind(&configure_measure_rel, std::placeholders::_1, doc->dpi, doc->font_size, &doc->width)},
     {"height", std::bind(&configure_measure_rel, std::placeholders::_1, doc->dpi, doc->font_size, &doc->height)},
     {"background-color", std::bind(&configure_color, std::placeholders::_1, &doc->background_color)},
