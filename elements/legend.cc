@@ -42,9 +42,9 @@ static const double kDefaultItemPaddingHorizEM = 2.4;
 static const double kDefaultItemPaddingVertEM = 1.0;
 
 LegendConfig::LegendConfig() :
-    vert_pos(LEGEND_TOP),
-    horiz_pos(LEGEND_LEFT),
-    placement(LEGEND_INSIDE) {}
+    placement(LegendPlacement::INSIDE),
+    position_horiz(HAlign::LEFT),
+    position_vert(VAlign::TOP) {}
 
 void LegendConfig::addEntry(
     const std::string& name,
@@ -339,7 +339,7 @@ LegendConfig* Legend::legend() const {
   }
 }
 */
-ReturnCode legend_draw(
+ReturnCode legend_draw_inside(
     const LegendConfig& legend,
     const Rectangle& bbox,
     Layer* layer) {
@@ -412,6 +412,76 @@ ReturnCode legend_draw(
   return OK;
 }
 
+ReturnCode legend_draw(
+    const LegendConfig& config,
+    const Rectangle& bbox,
+    Layer* layer) {
+  switch (config.placement) {
+    case LegendPlacement::INSIDE:
+      return legend_draw_inside(config, bbox, layer);
+    case LegendPlacement::OUTSIDE:
+    case LegendPlacement::OFF:
+    default:
+      return OK;
+  }
+}
+
+ReturnCode legend_configure_position(
+    const plist::Property& prop,
+    LegendPlacement* placement,
+    HAlign* position_horiz,
+    VAlign* position_vert) {
+  auto args = plist::flatten(prop);
+  bool position_horiz_set = false;
+  bool position_vert_set = false;
+  for (const auto& prop : args) {
+    if (prop == "off") {
+      *placement = LegendPlacement::OFF;
+      return OK;
+    }
+
+    if (prop == "inside") {
+      *placement = LegendPlacement::INSIDE;
+      continue;
+    }
+
+    if (prop == "outside") {
+      *placement = LegendPlacement::OUTSIDE;
+      continue;
+    }
+
+    if (prop == "top") {
+      *position_vert = VAlign::TOP;
+      continue;
+    }
+
+    if (prop == "bottom") {
+      *position_vert = VAlign::BOTTOM;
+      continue;
+    }
+
+    if (prop == "left") {
+      *position_horiz = HAlign::LEFT;
+      continue;
+    }
+
+    if (prop == "right") {
+      *position_horiz = HAlign::RIGHT;
+      continue;
+    }
+
+    if (prop == "center") {
+      if (!position_horiz_set) *position_horiz = HAlign::CENTER;
+      if (!position_vert_set) *position_vert = VAlign::CENTER;
+      continue;
+    }
+
+    return ERROR_INVALID_ARGUMENT;
+  }
+
+  return OK;
+}
+
 ReturnCode legend_configure(
     const Document& doc,
     const plist::PropertyList& plist,
@@ -421,6 +491,16 @@ ReturnCode legend_configure(
   config->text_color = doc.text_color;
 
   static const ParserDefinitions pdefs = {
+    {
+      "legend",
+      std::bind(
+          &legend_configure_position,
+          std::placeholders::_1,
+          &config->placement,
+          &config->position_horiz,
+          &config->position_vert)
+    },
+    {"legend-title", std::bind(&configure_string, std::placeholders::_1, &config->title)},
     {"legend-text-color", std::bind(&configure_color, std::placeholders::_1, &config->text_color)},
     {"legend-border-color", std::bind(&configure_color, std::placeholders::_1, &config->border_color)},
   };

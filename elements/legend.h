@@ -33,25 +33,18 @@
 #include <string>
 #include <tuple>
 #include "graphics/layer.h"
+#include "graphics/layout.h"
 #include "common/document.h"
 
 namespace plotfx {
 
+enum class LegendPlacement {
+  OFF = 0,
+  INSIDE = 1,
+  OUTSIDE = 2
+};
+
 struct LegendConfig {
-  enum kVerticalPosition {
-    LEGEND_TOP = 0,
-    LEGEND_BOTTOM = 1
-  };
-
-  enum kHorizontalPosition {
-    LEGEND_LEFT = 0,
-    LEGEND_RIGHT = 1
-  };
-
-  enum kPlacement {
-    LEGEND_INSIDE = 0,
-    LEGEND_OUTSIDE = 1
-  };
 
   LegendConfig();
 
@@ -67,10 +60,10 @@ struct LegendConfig {
   Measure padding_vert;
   Measure padding_item_horiz;
   Measure padding_item_vert;
-  kVerticalPosition vert_pos;
-  kHorizontalPosition horiz_pos;
-  kPlacement placement;
-  const std::string title;
+  LegendPlacement placement;
+  HAlign position_horiz;
+  VAlign position_vert;
+  std::string title;
   std::vector<std::tuple<std::string, Color, std::string>> entries;
 };
 
