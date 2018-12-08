@@ -1,8 +1,8 @@
 #!/bin/bash
 set -uex
 
-cd "${0%/*}"
+cd "${0%/*}/.."
 
-find -name "*.plot" | while read f; do
+find examples -name "*.plot" | while read f; do
   plotfx --in "$f" --out "${f/.plot/.svg}"
 done
