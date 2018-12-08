@@ -38,7 +38,7 @@ namespace plotfx {
 
 static const double kDefaultLabelFontSizeEM = 1;
 static const double kDefaultPaddingHorizEM = 2.4;
-static const double kDefaultPaddingVertEM = 1.2;
+static const double kDefaultPaddingVertEM = 1.6;
 static const double kDefaultItemPaddingHorizEM = 2.4;
 static const double kDefaultItemPaddingVertEM = 1.0;
 
@@ -57,6 +57,67 @@ void LegendConfig::addEntry(
   entries.emplace_back(std::move(item));
 }
 
+ReturnCode legend_layout(
+    const LegendConfig& legend,
+    Point origin,
+    std::function<ReturnCode (size_t idx, Point p)> on_label,
+    const Layer* layer,
+    Rectangle* bbox) {
+  auto font_size = from_em(kDefaultLabelFontSizeEM, layer->font_size);
+  auto padding_item_right = measure_or(
+      legend.item_margins[1],
+      from_em(kDefaultItemPaddingHorizEM, font_size));
+
+  double point_size = 5; // FIXME
+  double line_height = font_size; // FIXME
+
+  double sx = origin.x;
+  double sy = origin.y;
+
+  for (size_t idx = 0; idx < legend.entries.size(); ++idx) {
+    const auto& e = legend.entries[idx];
+    const auto& label_text = e.title;
+
+    if (on_label) {
+      if (auto rc = on_label(idx, Point(sx, sy + line_height / 2)); !rc) {
+        return rc;
+      }
+    }
+
+    TextStyle style;
+    style.font = legend.font;
+    style.font_size = font_size;
+
+    Rectangle label_bbox;
+    auto rc = text::text_measure_span(
+        label_text,
+        style.font,
+        style.font_size,
+        layer->dpi,
+        layer->text_shaper.get(),
+        &label_bbox);
+
+    if (rc != OK) {
+      return rc;
+    }
+
+    sx += point_size * 2.8; // FIXME
+    sx += label_bbox.w;
+
+    if (idx + 1< legend.entries.size()) {
+      sx += padding_item_right;
+    }
+  }
+
+  sy += line_height;
+
+  if (bbox) {
+    *bbox = Rectangle(origin.x, origin.y, sx - origin.x, sy - origin.y);
+  }
+
+  return OK;
+}
+
 ReturnCode legend_draw_inside(
     const LegendConfig& legend,
     const Rectangle& bbox,
@@ -65,6 +126,10 @@ ReturnCode legend_draw_inside(
 
   double padding_left = measure_or(
       legend.margins[3],
+      from_em(kDefaultPaddingHorizEM, font_size));
+
+  double padding_right = measure_or(
+      legend.margins[1],
       from_em(kDefaultPaddingHorizEM, font_size));
 
   double padding_top = measure_or(
@@ -81,35 +146,59 @@ ReturnCode legend_draw_inside(
 
   double point_size = 5; // FIXME
 
-  double sx = bbox.x + padding_left;
-  double sy = 0;
-  double line_height;
-  switch (legend.position_vert) {
-    case VAlign::TOP:
-      line_height = font_size; // FIXME
-      sy = bbox.y + padding_top + line_height / 2;
+  Rectangle content_bbox;
+  if (auto rc = legend_layout(
+      legend,
+      Point(0, 0),
+      nullptr,
+      layer,
+      &content_bbox);
+      !rc) {
+    return rc;
+  }
+
+  Point origin(0, 0);
+
+  switch (legend.position_horiz) {
+    case HAlign::LEFT:
+      origin.x = std::min(
+          bbox.x + padding_left,
+          bbox.x + bbox.w);
       break;
-    case VAlign::BOTTOM:
-      line_height = -font_size; // FIXME
-      sy = bbox.y + bbox.h - padding_bottom + line_height / 2;
+    case HAlign::RIGHT:
+      origin.x = std::max(
+          bbox.x + bbox.w - content_bbox.w - padding_right,
+          bbox.x);
       break;
-    case VAlign::CENTER:
-      line_height = font_size; // FIXME
-      sy = bbox.y + bbox.h / 2;
+    case HAlign::CENTER:
+      origin.x = bbox.x + bbox.w / 2 - content_bbox.w / 2;
       break;
   }
 
-  for (const auto& e : legend.entries) {
+  switch (legend.position_vert) {
+    case VAlign::TOP:
+      origin.y = bbox.y + padding_top;
+      break;
+    case VAlign::BOTTOM:
+      origin.y = bbox.y + bbox.h - content_bbox.h - padding_bottom;
+      break;
+    case VAlign::CENTER:
+      origin.y = bbox.y + bbox.h / 2;
+      break;
+  }
+
+  auto draw_label = [&] (size_t idx, Point pos) {
+    const auto& e = legend.entries[idx];
     const auto& label_text = e.title;
 
     {
       FillStyle style;
       style.color = e.color;
       Path path;
-      path.moveTo(sx + point_size, sy);
-      path.arcTo(sx, sy, point_size, 0, M_PI * 2);
+      path.moveTo(pos.x + point_size + point_size / 2, pos.y);
+      path.arcTo(pos.x + point_size / 2, pos.y, point_size, 0, M_PI * 2);
       fillPath(layer, path, style);
-      sx += point_size * 2.4;
+      pos.x += point_size * 2.8; // FIXME
     }
 
     {
@@ -118,27 +207,28 @@ ReturnCode legend_draw_inside(
       style.font = legend.font;
       style.font_size = font_size;
 
-      Rectangle label_bbox;
-      auto rc = text::text_measure_span(
-          label_text,
-          style.font,
-          style.font_size,
-          layer->dpi,
-          layer->text_shaper.get(),
-          &label_bbox);
-
       if (auto rc = drawTextLabel(
             label_text,
-            Point(sx, sy),
+            pos,
             HAlign::LEFT,
             VAlign::CENTER,
             style,
             layer); rc != OK) {
         return rc;
       }
-
-      sx += label_bbox.w + padding_item_right;
     }
+
+    return OK;
+  };
+
+  if (auto rc = legend_layout(
+      legend,
+      origin,
+      draw_label,
+      layer,
+      nullptr);
+      !rc) {
+    return rc;
   }
 
   return OK;
@@ -184,21 +274,25 @@ ReturnCode legend_configure_position(
 
     if (prop == "top") {
       *position_vert = VAlign::TOP;
+      position_vert_set = true;
       continue;
     }
 
     if (prop == "bottom") {
       *position_vert = VAlign::BOTTOM;
+      position_vert_set = true;
       continue;
     }
 
     if (prop == "left") {
       *position_horiz = HAlign::LEFT;
+      position_horiz_set = true;
       continue;
     }
 
     if (prop == "right") {
       *position_horiz = HAlign::RIGHT;
+      position_horiz_set = true;
       continue;
     }
 

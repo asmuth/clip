@@ -2,7 +2,7 @@ width: 1200px;
 height: 480px;
 
 plot {
-  legend: inside top left;
+  legend: inside center center;
   legend-title: "The quick brown fox";
 
   series {
@@ -17,3 +17,4 @@ plot {
     ys: csv('tests/testdata/measurement.csv', 4);
   }
 }
+

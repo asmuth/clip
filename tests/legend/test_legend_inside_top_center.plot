@@ -2,7 +2,7 @@ width: 1200px;
 height: 480px;
 
 plot {
-  legend: inside top left;
+  legend: inside top center;
   legend-title: "The quick brown fox";
 
   series {
