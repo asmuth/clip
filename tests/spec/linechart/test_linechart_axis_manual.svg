@@ -1,4 +1,5 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1200.000000" height="480.000000" viewBox="0 0 1200.0 480.0" viewport-fill="#ffffff">
+<svg xmlns="http://www.w3.org/2000/svg" width="1200.000000" height="480.000000" viewBox="0 0 1200.0 480.0">
+  <rect width="1200.000000" height="480.000000" fill="#ffffff"/>
   <path stroke-width="1.333333" stroke="#a8a8a8" fill="none" d="M46.790625 44.4 L1153.209375 44.4 "/>
   <path stroke-width="1.333333" stroke="#a8a8a8" fill="none" d="M46.790625 44.4 L46.790625 49.733333 "/>
   <path stroke-width="1.333333" stroke="#a8a8a8" fill="none" d="M204.850453 44.4 L204.850453 49.733333 "/>

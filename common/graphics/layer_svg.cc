@@ -37,7 +37,6 @@ struct SVGData {
   std::stringstream buffer;
   double width;
   double height;
-  Color background_color;
   std::string to_svg() const;
 };
 
@@ -181,7 +180,6 @@ std::string SVGData::to_svg() const {
     << svg_attr("width", width)
     << svg_attr("height", height)
     << svg_attr("viewBox", StringUtil::format("0 0 $0 $1", width, height))
-    << svg_attr("viewport-fill", background_color.to_hex_str())
     << ">"
     << "\n"
     << buffer.str()
@@ -199,7 +197,15 @@ ReturnCode layer_bind_svg(
     std::function<Status (const std::string&)> submit,
     LayerRef* layer) {
   auto svg = std::make_shared<SVGData>();
-  svg->background_color = background_color;
+
+  svg->buffer
+      << "  "
+      << "<rect"
+      << svg_attr("width", width)
+      << svg_attr("height", height)
+      << svg_attr("fill", background_color.to_hex_str())
+      << "/>"
+      << "\n";
 
   layer->reset(new Layer{
     .width = svg->width = width,
