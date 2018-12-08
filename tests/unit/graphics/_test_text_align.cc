@@ -49,85 +49,85 @@ int main(int argc, char** argv) {
 
   {
     TextStyle s;
-    s.halign = TextHAlign::LEFT;
-    s.valign = TextVAlign::BASELINE;
+    //s.halign = TextHAlign::LEFT;
+    //s.valign = TextVAlign::BASELINE;
     drawTestAt(&l, 100,  100, s);
   }
 
   {
     TextStyle s;
-    s.halign = TextHAlign::CENTER;
-    s.valign = TextVAlign::BASELINE;
+    //s.halign = TextHAlign::CENTER;
+    //s.valign = TextVAlign::BASELINE;
     drawTestAt(&l, 400,  100, s);
   }
 
   {
     TextStyle s;
-    s.halign = TextHAlign::RIGHT;
-    s.valign = TextVAlign::BASELINE;
+    //s.halign = TextHAlign::RIGHT;
+    //s.valign = TextVAlign::BASELINE;
     drawTestAt(&l, 700,  100, s);
   }
 
   {
     TextStyle s;
-    s.halign = TextHAlign::LEFT;
-    s.valign = TextVAlign::TOP;
+    //s.halign = TextHAlign::LEFT;
+    //s.valign = TextVAlign::TOP;
     drawTestAt(&l, 100,  200, s);
   }
 
   {
     TextStyle s;
-    s.halign = TextHAlign::CENTER;
-    s.valign = TextVAlign::TOP;
+    //s.halign = TextHAlign::CENTER;
+    //s.valign = TextVAlign::TOP;
     drawTestAt(&l, 400,  200, s);
   }
 
   {
     TextStyle s;
-    s.halign = TextHAlign::RIGHT;
-    s.valign = TextVAlign::TOP;
+    //s.halign = TextHAlign::RIGHT;
+    //s.valign = TextVAlign::TOP;
     drawTestAt(&l, 700,  200, s);
   }
 
   {
     TextStyle s;
-    s.halign = TextHAlign::LEFT;
-    s.valign = TextVAlign::MIDDLE;
+    //s.halign = TextHAlign::LEFT;
+    //s.valign = TextVAlign::MIDDLE;
     drawTestAt(&l, 100,  300, s);
   }
 
   {
     TextStyle s;
-    s.halign = TextHAlign::CENTER;
-    s.valign = TextVAlign::MIDDLE;
+    //s.halign = TextHAlign::CENTER;
+    //s.valign = TextVAlign::MIDDLE;
     drawTestAt(&l, 400,  300, s);
   }
 
   {
     TextStyle s;
-    s.halign = TextHAlign::RIGHT;
-    s.valign = TextVAlign::MIDDLE;
+    //s.halign = TextHAlign::RIGHT;
+    //s.valign = TextVAlign::MIDDLE;
     drawTestAt(&l, 700,  300, s);
   }
 
   {
     TextStyle s;
-    s.halign = TextHAlign::LEFT;
-    s.valign = TextVAlign::BOTTOM;
+    //s.halign = TextHAlign::LEFT;
+    //s.valign = TextVAlign::BOTTOM;
     drawTestAt(&l, 100,  400, s);
   }
 
   {
     TextStyle s;
-    s.halign = TextHAlign::CENTER;
-    s.valign = TextVAlign::BOTTOM;
+    //s.halign = TextHAlign::CENTER;
+    //s.valign = TextVAlign::BOTTOM;
     drawTestAt(&l, 400,  400, s);
   }
 
   {
     TextStyle s;
-    s.halign = TextHAlign::RIGHT;
-    s.valign = TextVAlign::BOTTOM;
+    //s.halign = TextHAlign::RIGHT;
+    //s.valign = TextVAlign::BOTTOM;
     drawTestAt(&l, 700,  400, s);
   }
 

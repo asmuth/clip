@@ -74,26 +74,26 @@ add_executable(plotfx common/platform/plotfx_cli.cc)
 target_link_libraries(plotfx ${PLOTFX_LDFLAGS})
 install(TARGETS plotfx DESTINATION bin)
 
-#file(GLOB unit_test_files "tests/**/test_*.cc")
-#foreach(unit_test_path ${unit_test_files})
-#  get_filename_component(unit_test_name ${unit_test_path} NAME_WE)
-#  get_filename_component(unit_test_srcdir ${unit_test_path} DIRECTORY)
-#
-#  add_executable(${unit_test_name} ${unit_test_path})
-#  target_link_libraries(${unit_test_name} ${PLOTFX_LDFLAGS})
-#
-#  add_test(
-#      NAME ${unit_test_name}
-#      COMMAND ${CMAKE_CURRENT_BINARY_DIR}/${unit_test_name})
-#endforeach()
+file(GLOB unit_test_files "tests/unit/**/test_*.cc")
+foreach(unit_test_path ${unit_test_files})
+  get_filename_component(unit_test_name ${unit_test_path} NAME_WE)
+  get_filename_component(unit_test_srcdir ${unit_test_path} DIRECTORY)
 
-file(GLOB spec_test_files "tests/**/test_*.plot")
+  add_executable(${unit_test_name} ${unit_test_path})
+  target_link_libraries(${unit_test_name} ${PLOTFX_LDFLAGS})
+
+  add_test(
+      NAME ${unit_test_name}
+      COMMAND ${CMAKE_CURRENT_BINARY_DIR}/${unit_test_name})
+endforeach()
+
+file(GLOB spec_test_files "tests/spec/**/test_*.plot")
 foreach(spec_test_path ${spec_test_files})
   get_filename_component(spec_test_name ${spec_test_path} NAME_WE)
   get_filename_component(spec_test_srcdir ${spec_test_path} DIRECTORY)
   add_test(
       NAME ${spec_test_name}_svg
       WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-      COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_runner.sh ${CMAKE_CURRENT_BINARY_DIR}/plotfx ${spec_test_path} ${CMAKE_CURRENT_BINARY_DIR}/${spec_test_name}.svg ${spec_test_srcdir}/${spec_test_name}.svg)
+      COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/tests/spec/test_runner.sh ${CMAKE_CURRENT_BINARY_DIR}/plotfx ${spec_test_path} ${CMAKE_CURRENT_BINARY_DIR}/${spec_test_name}.svg ${spec_test_srcdir}/${spec_test_name}.svg)
 endforeach()
 
