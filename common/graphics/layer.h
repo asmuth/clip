@@ -33,7 +33,7 @@
 #include <vector>
 #include <string>
 
-#include "colour.h"
+#include "color.h"
 #include "plotfx.h"
 #include "text_shaper.h"
 #include "measure.h"

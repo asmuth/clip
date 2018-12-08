@@ -30,7 +30,7 @@
 #pragma once
 #include "plotfx.h"
 #include "path.h"
-#include "colour.h"
+#include "color.h"
 #include "measure.h"
 #include "layout.h"
 
@@ -51,7 +51,7 @@ struct TextStyle {
   TextDirection direction;
   FontInfo font;
   Measure font_size;
-  Colour colour;
+  Color color;
 };
 
 Status drawTextLabel(

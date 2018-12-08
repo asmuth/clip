@@ -58,7 +58,7 @@ public:
   Rasterizer(const Rasterizer&) = delete;
   Rasterizer& operator=(const Rasterizer&) = delete;
 
-  void clear(const Colour& c);
+  void clear(const Color& c);
 
   Status fillPath(const layer_ops::BrushFillOp& op);
   Status strokePath(const layer_ops::BrushStrokeOp& op);

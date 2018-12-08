@@ -125,23 +125,23 @@ ReturnCode configure(
   PlotConfig config;
 
   // FIXME
-  config.colour_scheme = doc.colour_scheme;
+  config.color_scheme = doc.color_scheme;
   config.axis_top.font = doc.font_sans;
   config.axis_top.label_font_size = doc.font_size;
-  config.axis_top.border_colour = doc.border_colour;
-  config.axis_top.text_colour = doc.text_colour;
+  config.axis_top.border_color = doc.border_color;
+  config.axis_top.text_color = doc.text_color;
   config.axis_right.font = doc.font_sans;
   config.axis_right.label_font_size = doc.font_size;
-  config.axis_right.border_colour = doc.border_colour;
-  config.axis_right.text_colour = doc.text_colour;
+  config.axis_right.border_color = doc.border_color;
+  config.axis_right.text_color = doc.text_color;
   config.axis_bottom.font = doc.font_sans;
   config.axis_bottom.label_font_size = doc.font_size;
-  config.axis_bottom.border_colour = doc.border_colour;
-  config.axis_bottom.text_colour = doc.text_colour;
+  config.axis_bottom.border_color = doc.border_color;
+  config.axis_bottom.text_color = doc.text_color;
   config.axis_left.font = doc.font_sans;
   config.axis_left.label_font_size = doc.font_size;
-  config.axis_left.border_colour = doc.border_colour;
-  config.axis_left.text_colour = doc.text_colour;
+  config.axis_left.border_color = doc.border_color;
+  config.axis_left.text_color = doc.text_color;
 
   config.margins[0] = from_em(1.0, doc.font_size);
   config.margins[1] = from_em(1.0, doc.font_size);

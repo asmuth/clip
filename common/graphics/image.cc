@@ -97,11 +97,11 @@ size_t Image::getDataSize() const {
   return width_ * height_ * getPixelSize();
 }
 
-Colour Image::getPixel(size_t x, size_t y) {
+Color Image::getPixel(size_t x, size_t y) {
   return getPixel(y * width_ + x);
 }
 
-Colour Image::getPixel(size_t idx) {
+Color Image::getPixel(size_t idx) {
   assert(idx < width_ * height_);
 
   auto pixel_size = getPixelSize();
@@ -111,27 +111,27 @@ Colour Image::getPixel(size_t idx) {
       pixel_size);
 }
 
-void Image::setPixel(size_t x, size_t y, const Colour& colour) {
-  return setPixel(y * width_ + x, colour);
+void Image::setPixel(size_t x, size_t y, const Color& color) {
+  return setPixel(y * width_ + x, color);
 }
 
-void Image::setPixel(size_t idx, const Colour& colour) {
+void Image::setPixel(size_t idx, const Color& color) {
   assert(idx < width_ * height_);
 
   auto pixel_size = getPixelSize();
   encodePixel(
       pixel_format_,
-      colour,
+      color,
       static_cast<char*>(pixmap_) + idx * pixel_size,
       pixel_size);
 }
 
-void Image::clear(const Colour& colour) {
+void Image::clear(const Color& color) {
   auto pixel_size = getPixelSize();
   for (size_t i = 0; i < width_ * height_; ++i) {
     encodePixel(
         pixel_format_,
-        colour,
+        color,
         static_cast<char*>(pixmap_) + i * pixel_size,
         pixel_size);
   }
@@ -153,25 +153,25 @@ size_t getPixelSize(PixelFormat pixel_format) {
 }
 
 void encodePixel_RGBA8(
-    const Colour& colour,
+    const Color& color,
     char* data,
     size_t size) {
   assert(size >= 4);
-  data[0] = colour[0] * 255;
-  data[1] = colour[1] * 255;
-  data[2] = colour[2] * 255;
-  data[3] = colour[3] * 255;
+  data[0] = color[0] * 255;
+  data[1] = color[1] * 255;
+  data[2] = color[2] * 255;
+  data[3] = color[3] * 255;
 }
 
 void encodePixel(
     PixelFormat pixel_format,
-    const Colour& colour,
+    const Color& color,
     char* data,
     size_t size) {
   switch (pixel_format) {
 
     case PixelFormat::RGBA8:
-      return encodePixel_RGBA8(colour, data, size);
+      return encodePixel_RGBA8(color, data, size);
 
     default:
       return;
@@ -179,11 +179,11 @@ void encodePixel(
   }
 }
 
-Colour decodePixel_RGBA8(
+Color decodePixel_RGBA8(
     char* data,
     size_t size) {
   assert(size >= 4);
-  Colour c;
+  Color c;
   c[0] = data[0] / 255.0f;
   c[1] = data[1] / 255.0f;
   c[2] = data[2] / 255.0f;
@@ -191,7 +191,7 @@ Colour decodePixel_RGBA8(
   return c;
 }
 
-Colour decodePixel(
+Color decodePixel(
     PixelFormat pixel_format,
     char* data,
     size_t size) {
@@ -201,7 +201,7 @@ Colour decodePixel(
       return decodePixel_RGBA8(data, size);
 
     default:
-      return Colour{};
+      return Color{};
 
   }
 }

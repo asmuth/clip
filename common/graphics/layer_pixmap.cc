@@ -37,12 +37,12 @@ ReturnCode layer_bind_png(
     double height,
     double dpi,
     Measure font_size,
-    const Colour& background_colour,
+    const Color& background_color,
     std::function<Status (const std::string&)> submit,
     LayerRef* layer) {
   auto text_shaper = std::make_shared<text::TextShaper>();
   auto raster = std::make_shared<Rasterizer>(width, height, dpi, text_shaper);
-  raster->clear(background_colour);
+  raster->clear(background_color);
 
   layer->reset(new Layer {
     .width = width,

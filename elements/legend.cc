@@ -48,7 +48,7 @@ LegendConfig::LegendConfig() :
 
 void LegendConfig::addEntry(
     const std::string& name,
-    const Colour& color,
+    const Color& color,
     const std::string& shape /* = "circle" */) {
   entries.emplace_back(name, color, shape);
 }
@@ -372,7 +372,7 @@ ReturnCode legend_draw(
 
     {
       FillStyle style;
-      style.colour = std::get<1>(e);
+      style.color = std::get<1>(e);
       Path path;
       path.moveTo(sx + point_size, sy);
       path.arcTo(sx, sy, point_size, 0, M_PI * 2);
@@ -382,7 +382,7 @@ ReturnCode legend_draw(
 
     {
       TextStyle style;
-      style.colour = legend.text_colour;
+      style.color = legend.text_color;
       style.font = legend.font;
       style.font_size = font_size;
 
@@ -417,12 +417,12 @@ ReturnCode legend_configure(
     const plist::PropertyList& plist,
     LegendConfig* config) {
   config->font = doc.font_sans;
-  config->border_colour = doc.border_colour;
-  config->text_colour = doc.text_colour;
+  config->border_color = doc.border_color;
+  config->text_color = doc.text_color;
 
   static const ParserDefinitions pdefs = {
-    {"legend-text-colour", std::bind(&configure_colour, std::placeholders::_1, &config->text_colour)},
-    {"legend-border-colour", std::bind(&configure_colour, std::placeholders::_1, &config->border_colour)},
+    {"legend-text-color", std::bind(&configure_color, std::placeholders::_1, &config->text_color)},
+    {"legend-border-color", std::bind(&configure_color, std::placeholders::_1, &config->border_color)},
   };
 
   if (auto rc = parseAll(plist, pdefs); !rc.isSuccess()) {

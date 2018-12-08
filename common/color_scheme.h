@@ -29,14 +29,14 @@
  */
 #pragma once
 #include <stdlib.h>
-#include "graphics/colour.h"
+#include "graphics/color.h"
 
 namespace plotfx {
 
-class ColourScheme {
+class ColorScheme {
 public:
 
-  ColourScheme(
+  ColorScheme(
       const std::vector<std::string>& colors = std::vector<std::string>{
           "#4572a7",
           "#aa4643",
@@ -48,8 +48,8 @@ public:
           colors_(colors),
           color_index_(0) {}
 
-  Colour next() {
-    Colour c;
+  Color next() {
+    Color c;
     c.parse(colors_[color_index_++ % colors_.size()]);
     return c;
   }

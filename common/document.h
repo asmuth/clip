@@ -29,9 +29,9 @@
  */
 #pragma once
 #include "utils/return_code.h"
-#include "common/colour_scheme.h"
+#include "common/color_scheme.h"
 #include "graphics/measure.h"
-#include "graphics/colour.h"
+#include "graphics/color.h"
 #include "graphics/text.h"
 #include "element.h"
 
@@ -42,10 +42,10 @@ struct Document {
   Document();
   Measure width;
   Measure height;
-  ColourScheme colour_scheme;
-  Colour background_colour;
-  Colour text_colour;
-  Colour border_colour;
+  ColorScheme color_scheme;
+  Color background_color;
+  Color text_color;
+  Color border_color;
   FontInfo font_serif;
   FontInfo font_sans;
   FontInfo font_mono;

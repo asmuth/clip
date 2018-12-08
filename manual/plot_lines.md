@@ -31,7 +31,7 @@ Lorem ipsum dolor sit amet.
       <td>Here be dragons</td>
     </tr>
     <tr>
-      <td><code><strong>colour</strong></code></td>
+      <td><code><strong>color</strong></code></td>
       <td>Here be dragons</td>
     </tr>
     <tr>
@@ -39,7 +39,7 @@ Lorem ipsum dolor sit amet.
       <td>Here be dragons</td>
     </tr>
     <tr>
-      <td><code><strong>line-colour</strong></code></td>
+      <td><code><strong>line-color</strong></code></td>
       <td>Here be dragons</td>
     </tr>
     <tr>
@@ -47,7 +47,7 @@ Lorem ipsum dolor sit amet.
       <td>Here be dragons</td>
     </tr>
     <tr>
-      <td><code><strong>point-colour</strong></code></td>
+      <td><code><strong>point-color</strong></code></td>
       <td>Here be dragons</td>
     </tr>
   </tbody>
@@ -72,11 +72,11 @@ Lorem ipsum dolor sit amet.
 
 --
 
-### colour
+### color
 
 Lorem ipsum dolor sit amet.
 
-    colour: <size>;
+    color: <size>;
 
 Values:
 
@@ -98,11 +98,11 @@ Values:
 
 --
 
-### line-colour
+### line-color
 
 Lorem ipsum dolor sit amet.
 
-    line-colour: <size>;
+    line-color: <size>;
 
 Values:
 
@@ -124,11 +124,11 @@ Values:
 
 --
 
-### point-colour
+### point-color
 
 Lorem ipsum dolor sit amet.
 
-    point-colour: <size>;
+    point-color: <size>;
 
 Values:
 

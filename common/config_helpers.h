@@ -32,7 +32,7 @@
 #include <optional>
 #include <plist/plist.h>
 #include <graphics/measure.h>
-#include <graphics/colour.h>
+#include <graphics/color.h>
 #include "utils/return_code.h"
 #include "common/series.h"
 
@@ -97,9 +97,9 @@ ReturnCode configure_measure_rel(
     double font_size,
     Measure* value);
 
-ReturnCode configure_colour(
+ReturnCode configure_color(
     const plist::Property& prop,
-    Colour* value);
+    Color* value);
 
 ReturnCode configure_float(
     const plist::Property& prop,

@@ -43,9 +43,9 @@ namespace plotfx {
 Document::Document() :
     width(1200),
     height(480),
-    background_colour(Colour::fromRGB(1,1,1)),
-    text_colour(Colour::fromRGB(.2,.2,.2)),
-    border_colour(Colour::fromRGB(.66,.66,.66)),
+    background_color(Color::fromRGB(1,1,1)),
+    text_color(Color::fromRGB(.2,.2,.2)),
+    border_color(Color::fromRGB(.66,.66,.66)),
     dpi(96),
     font_size(from_pt(11, dpi)) {}
 
@@ -71,16 +71,16 @@ ReturnCode document_load(
   static const ParserDefinitions pdefs = {
     {"width", std::bind(&configure_measure_rel, std::placeholders::_1, doc->dpi, doc->font_size, &doc->width)},
     {"height", std::bind(&configure_measure_rel, std::placeholders::_1, doc->dpi, doc->font_size, &doc->height)},
-    {"background-colour", std::bind(&configure_colour, std::placeholders::_1, &doc->background_colour)},
+    {"background-color", std::bind(&configure_color, std::placeholders::_1, &doc->background_color)},
     {
-      "foreground-colour",
+      "foreground-color",
       configure_multiprop({
-          std::bind(&configure_colour, std::placeholders::_1, &doc->text_colour),
-          std::bind(&configure_colour, std::placeholders::_1, &doc->border_colour),
+          std::bind(&configure_color, std::placeholders::_1, &doc->text_color),
+          std::bind(&configure_color, std::placeholders::_1, &doc->border_color),
       })
     },
-    {"text-colour", std::bind(&configure_colour, std::placeholders::_1, &doc->text_colour)},
-    {"border-colour", std::bind(&configure_colour, std::placeholders::_1, &doc->border_colour)},
+    {"text-color", std::bind(&configure_color, std::placeholders::_1, &doc->text_color)},
+    {"border-color", std::bind(&configure_color, std::placeholders::_1, &doc->border_color)},
   };
 
   if (auto rc = parseAll(plist, pdefs); !rc.isSuccess()) {
@@ -162,7 +162,7 @@ ReturnCode document_render_svg(
       doc.height,
       doc.dpi,
       doc.font_size,
-      doc.background_colour,
+      doc.background_color,
       [filename] (auto svg) {
         FileUtil::write(filename, Buffer(svg.data(), svg.size()));
         return OK;
@@ -190,7 +190,7 @@ ReturnCode document_render_png(
       doc.height,
       doc.dpi,
       doc.font_size,
-      doc.background_colour,
+      doc.background_color,
       [filename] (auto png) {
         FileUtil::write(filename, Buffer(png.data(), png.size()));
         return OK;

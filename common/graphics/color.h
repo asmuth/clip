@@ -37,15 +37,15 @@
 
 namespace plotfx {
 
-class Colour {
+class Color {
 public:
   static const size_t kMaxComponents = 4;
 
-  static Colour fromRGB(double red, double green, double blue);
-  static Colour fromRGBA(double red, double green, double blue, double alpha);
+  static Color fromRGB(double red, double green, double blue);
+  static Color fromRGBA(double red, double green, double blue, double alpha);
 
-  Colour();
-  Colour(const std::initializer_list<double>& components);
+  Color();
+  Color(const std::initializer_list<double>& components);
 
   double red() const;
   double green() const;
@@ -67,7 +67,7 @@ protected:
   double components_[kMaxComponents];
 };
 
-std::ostream& operator <<(std::ostream& os, const Colour& c);
+std::ostream& operator <<(std::ostream& os, const Color& c);
 
 } // namespace plotfx
 

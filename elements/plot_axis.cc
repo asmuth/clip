@@ -80,7 +80,7 @@ static Status renderAxisVertical(
   /* draw axis line */
   {
     StrokeStyle style;
-    style.colour = axis_config.border_colour;
+    style.color = axis_config.border_color;
     style.line_width =  from_pt(kDefaultLineWidthPT, target->dpi);
     strokeLine(target, {x, y0}, {x, y1}, style);
   }
@@ -105,7 +105,7 @@ static Status renderAxisVertical(
   for (const auto& tick : axis_config.ticks) {
     auto y = y0 + (y1 - y0) * (1.0 - tick);
     StrokeStyle style;
-    style.colour = axis_config.border_colour;
+    style.color = axis_config.border_color;
     style.line_width =  from_pt(kDefaultLineWidthPT, target->dpi);
     strokeLine(
         target,
@@ -140,7 +140,7 @@ static Status renderAxisVertical(
 
     TextStyle style;
     style.font = axis_config.font;
-    style.colour = axis_config.text_colour;
+    style.color = axis_config.text_color;
     style.font_size = axis_config.label_font_size;
 
     auto ax = label_position > 0 ? HAlign::LEFT : HAlign::RIGHT;
@@ -162,7 +162,7 @@ static Status renderAxisHorizontal(
   /* draw axis line */ 
   {
     StrokeStyle style;
-    style.colour = axis_config.border_colour;
+    style.color = axis_config.border_color;
     style.line_width =  from_pt(kDefaultLineWidthPT, target->dpi);
     strokeLine(target, {x0, y}, {x1, y}, style);
   }
@@ -187,7 +187,7 @@ static Status renderAxisHorizontal(
   for (const auto& tick : axis_config.ticks) {
     auto x = x0 + (x1 - x0) * tick;
     StrokeStyle style;
-    style.colour = axis_config.border_colour;
+    style.color = axis_config.border_color;
     style.line_width =  from_pt(kDefaultLineWidthPT, target->dpi);
     strokeLine(
         target,
@@ -221,7 +221,7 @@ static Status renderAxisHorizontal(
 
     TextStyle style;
     style.font = axis_config.font;
-    style.colour = axis_config.text_colour;
+    style.color = axis_config.text_color;
     style.font_size = axis_config.label_font_size;
 
     auto ax = HAlign::CENTER;

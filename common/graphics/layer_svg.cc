@@ -37,7 +37,7 @@ struct SVGData {
   std::stringstream buffer;
   double width;
   double height;
-  Colour background_colour;
+  Color background_color;
   std::string to_svg() const;
 };
 
@@ -100,7 +100,7 @@ Status svg_text_span(
     << "<text"
     << svg_attr("x", op.position.x)
     << svg_attr("y", op.position.y)
-    << svg_attr("fill", style.colour.to_hex_str())
+    << svg_attr("fill", style.color.to_hex_str())
     << svg_attr("font-size", style.font_size)
     << svg_attr("font-family", style.font.font_family_css)
     << ">"
@@ -146,7 +146,7 @@ Status svg_stroke_path(
       << "  "
       << "<path"
       << svg_attr("stroke-width", style.line_width)
-      << svg_attr("stroke", style.colour.to_hex_str())
+      << svg_attr("stroke", style.color.to_hex_str())
       << svg_attr("fill", "none")
       << svg_attr("d", svg_path_data(path))
       << "/>"
@@ -165,7 +165,7 @@ Status svg_fill_path(
   svg->buffer
       << "  "
       << "<path"
-      << svg_attr("fill", style.colour.to_hex_str())
+      << svg_attr("fill", style.color.to_hex_str())
       << svg_attr("d", svg_path_data(path))
       << "/>"
       << "\n";
@@ -181,7 +181,7 @@ std::string SVGData::to_svg() const {
     << svg_attr("width", width)
     << svg_attr("height", height)
     << svg_attr("viewBox", StringUtil::format("0 0 $0 $1", width, height))
-    << svg_attr("viewport-fill", background_colour.to_hex_str())
+    << svg_attr("viewport-fill", background_color.to_hex_str())
     << ">"
     << "\n"
     << buffer.str()
@@ -195,11 +195,11 @@ ReturnCode layer_bind_svg(
     double height,
     double dpi,
     Measure font_size,
-    const Colour& background_colour,
+    const Color& background_color,
     std::function<Status (const std::string&)> submit,
     LayerRef* layer) {
   auto svg = std::make_shared<SVGData>();
-  svg->background_colour = background_colour;
+  svg->background_color = background_color;
 
   layer->reset(new Layer{
     .width = svg->width = width,

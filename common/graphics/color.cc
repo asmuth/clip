@@ -32,23 +32,23 @@
 #include <sstream>
 #include <iomanip>
 #include <utils/stringutil.h>
-#include "colour.h"
+#include "color.h"
 
 namespace plotfx {
 
-Colour Colour::fromRGBA(double red, double green, double blue, double alpha) {
-  return Colour({ red, green, blue, alpha });
+Color Color::fromRGBA(double red, double green, double blue, double alpha) {
+  return Color({ red, green, blue, alpha });
 }
 
-Colour Colour::fromRGB(double red, double green, double blue) {
-  return Colour({ red, green, blue, 1.0 });
+Color Color::fromRGB(double red, double green, double blue) {
+  return Color({ red, green, blue, 1.0 });
 }
 
-Colour::Colour() {
+Color::Color() {
   memset(components_, 0, sizeof(components_));
 }
 
-Colour::Colour(
+Color::Color(
     const std::initializer_list<double>& components) {
   assert(components.size() <= kMaxComponents);
 
@@ -58,35 +58,35 @@ Colour::Colour(
   }
 }
 
-double Colour::red() const {
+double Color::red() const {
   return components_[0];
 }
 
-double Colour::green() const {
+double Color::green() const {
   return components_[1];
 }
 
-double Colour::blue() const {
+double Color::blue() const {
   return components_[2];
 }
 
-double Colour::alpha() const {
+double Color::alpha() const {
   return components_[3];
 }
 
-double Colour::component(size_t idx) const {
+double Color::component(size_t idx) const {
   return components_[idx];
 }
 
-double Colour::operator[](size_t idx) const {
+double Color::operator[](size_t idx) const {
   return components_[idx];
 }
 
-double& Colour::operator[](size_t idx) {
+double& Color::operator[](size_t idx) {
   return components_[idx];
 }
 
-bool Colour::parse(const std::string& str) {
+bool Color::parse(const std::string& str) {
   if (StringUtil::beginsWith(str, "#")) {
     switch (str.size()) {
       case 4:
@@ -101,7 +101,7 @@ bool Colour::parse(const std::string& str) {
   return false;
 }
 
-bool Colour::parseHex(const std::string& str) {
+bool Color::parseHex(const std::string& str) {
   if (str.size() != 7) {
     return false;
   }
@@ -113,7 +113,7 @@ bool Colour::parseHex(const std::string& str) {
   return true;
 }
 
-bool Colour::parseHexAlpha(const std::string& str) {
+bool Color::parseHexAlpha(const std::string& str) {
   if (str.size() != 9) {
     return false;
   }
@@ -125,7 +125,7 @@ bool Colour::parseHexAlpha(const std::string& str) {
   return true;
 }
 
-bool Colour::parseHexShort(const std::string& str) {
+bool Color::parseHexShort(const std::string& str) {
   if (str.size() != 4) {
     return false;
   }
@@ -137,7 +137,7 @@ bool Colour::parseHexShort(const std::string& str) {
   return true;
 }
 
-std::string Colour::to_hex_str() const {
+std::string Color::to_hex_str() const {
   std::stringstream ss;
   ss
     << "#"
@@ -151,8 +151,8 @@ std::string Colour::to_hex_str() const {
   return ss.str();
 }
 
-std::ostream& operator <<(std::ostream& os, const Colour& c) {
-  os << "Colour(";
+std::ostream& operator <<(std::ostream& os, const Color& c) {
+  os << "Color(";
   os << c[0];
   os << ", ";
   os << c[1];

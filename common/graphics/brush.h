@@ -31,7 +31,7 @@
 #include <assert.h>
 #include <stdlib.h>
 #include <stdint.h>
-#include "colour.h"
+#include "color.h"
 #include "path.h"
 #include "measure.h"
 #include "layout.h"
@@ -46,19 +46,19 @@ struct StrokeStyle {
   StrokeStyle() :
     line_join(StrokeLineJoin::MITER),
     line_cap(StrokeLineCap::SQUARE),
-    colour(Colour::fromRGB(0, 0, 0)) {}
+    color(Color::fromRGB(0, 0, 0)) {}
 
   Measure line_width;
   StrokeLineJoin line_join;
   StrokeLineCap line_cap;
-  Colour colour;
+  Color color;
 };
 
 struct FillStyle {
   FillStyle() :
-    colour(Colour::fromRGB(0, 0, 0)) {}
+    color(Color::fromRGB(0, 0, 0)) {}
 
-  Colour colour;
+  Color color;
 };
 
 void fillPath(

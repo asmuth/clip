@@ -38,7 +38,7 @@ ReturnCode layer_bind_png(
     double height,
     double dpi,
     Measure font_size,
-    const Colour& background_colour,
+    const Color& background_color,
     std::function<Status (const std::string&)> submit,
     LayerRef* layer);
 

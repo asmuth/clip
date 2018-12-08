@@ -34,7 +34,7 @@
 #include <string>
 #include <variant>
 
-#include "colour.h"
+#include "color.h"
 #include "measure.h"
 #include "brush.h"
 #include "text.h"

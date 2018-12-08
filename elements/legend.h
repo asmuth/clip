@@ -57,11 +57,11 @@ struct LegendConfig {
 
   void addEntry(
       const std::string& name,
-      const Colour& color,
+      const Color& color,
       const std::string& shape = "circle");
 
-  Colour text_colour;
-  Colour border_colour;
+  Color text_color;
+  Color border_color;
   FontInfo font;
   Measure padding_horiz;
   Measure padding_vert;
@@ -71,7 +71,7 @@ struct LegendConfig {
   kHorizontalPosition horiz_pos;
   kPlacement placement;
   const std::string title;
-  std::vector<std::tuple<std::string, Colour, std::string>> entries;
+  std::vector<std::tuple<std::string, Color, std::string>> entries;
 };
 
 void renderOutsideLegends(Layer* target, const Rectangle& clip);

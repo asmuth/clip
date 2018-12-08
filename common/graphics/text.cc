@@ -61,7 +61,7 @@ Status drawTextLabel(
 
   StrokeStyle ss;
   ss.line_width = Measure(1.0);
-  ss.colour = Colour::fromRGB(0.5,0.5,0.5);
+  ss.color = Color::fromRGB(0.5,0.5,0.5);
 
   layer_ops::TextSpanOp op;
   op.text = text;

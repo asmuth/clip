@@ -81,7 +81,7 @@ ReturnCode draw_lines(
         config.line_width,
         from_pt(kDefaultLineWidthPT, doc.dpi));
 
-    style.colour = config.line_colour;
+    style.color = config.line_color;
     strokePath(layer, clip, path, style);
   }
 
@@ -89,7 +89,7 @@ ReturnCode draw_lines(
   auto point_size = config.point_size;
   if (point_size > 0) {
     FillStyle style;
-    style.colour = config.point_colour;
+    style.color = config.point_color;
     for (size_t i = 0; i < config.xs.size(); ++i) {
       auto sx = clip.x + x[i] * clip.w;
       auto sy = clip.y + (1.0 - y[i]) * clip.h;
@@ -110,26 +110,26 @@ ReturnCode configure(const plist::Property& prop, const Document& doc, PlotConfi
     return ERROR_INVALID_ARGUMENT;
   }
 
-  auto colour = config->colour_scheme.next();
+  auto color = config->color_scheme.next();
 
   PlotLinesConfig series;
-  series.line_colour = colour;
-  series.point_colour = colour;
+  series.line_color = color;
+  series.point_color = color;
 
   static const ParserDefinitions pdefs = {
     {"xs", std::bind(&configure_series, std::placeholders::_1, &series.xs)},
     {"ys", std::bind(&configure_series, std::placeholders::_1, &series.ys)},
     {"title", std::bind(&configure_string, std::placeholders::_1, &series.title)},
     {
-      "colour",
+      "color",
       configure_multiprop({
-          std::bind(&configure_colour, std::placeholders::_1, &series.line_colour),
-          std::bind(&configure_colour, std::placeholders::_1, &series.point_colour),
+          std::bind(&configure_color, std::placeholders::_1, &series.line_color),
+          std::bind(&configure_color, std::placeholders::_1, &series.point_color),
       })
     },
-    {"line-colour", std::bind(&configure_colour, std::placeholders::_1, &series.line_colour)},
+    {"line-color", std::bind(&configure_color, std::placeholders::_1, &series.line_color)},
     {"line-width", std::bind(&configure_measure_rel, std::placeholders::_1, doc.dpi, doc.font_size, &series.line_width)},
-    {"point-colour", std::bind(&configure_colour, std::placeholders::_1, &series.point_colour)},
+    {"point-color", std::bind(&configure_color, std::placeholders::_1, &series.point_color)},
     {"point-size", std::bind(&configure_measure_rel, std::placeholders::_1, doc.dpi, doc.font_size, &series.point_size)},
   };
 
@@ -150,7 +150,7 @@ ReturnCode configure(const plist::Property& prop, const Document& doc, PlotConfi
         std::placeholders::_4),
   });
 
-  config->legend.addEntry(series.title, colour);
+  config->legend.addEntry(series.title, color);
   return OK;
 }
 

@@ -135,9 +135,9 @@ ParserFn configure_multiprop(const std::vector<ParserFn>& parsers) {
   };
 }
 
-ReturnCode configure_colour(
+ReturnCode configure_color(
     const plist::Property& prop,
-    Colour* value) {
+    Color* value) {
   if (!plist::is_value(prop)) {
     return ReturnCode::errorf(
         "EARG",
@@ -151,7 +151,7 @@ ReturnCode configure_colour(
     }
   }
 
-  return ReturnCode::error("EARG", "invalid colour");
+  return ReturnCode::error("EARG", "invalid color");
 }
 
 ReturnCode configure_float(

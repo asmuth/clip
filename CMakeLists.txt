@@ -32,7 +32,7 @@ add_library(plotfxlib STATIC
     common/plist/plist_parser.cc
     common/graphics/path.cc
     common/graphics/brush.cc
-    common/graphics/colour.cc
+    common/graphics/color.cc
     common/graphics/geometry.cc
     common/graphics/image.cc
     common/graphics/layer.cc

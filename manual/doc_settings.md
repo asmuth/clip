@@ -22,19 +22,19 @@ Lorem ipsum dolor sit amet.
       <td>Here be dragons</td>
     </tr>
     <tr>
-      <td><code><strong>background-colour</strong></code></td>
+      <td><code><strong>background-color</strong></code></td>
       <td>Here be dragons</td>
     </tr>
     <tr>
-      <td><code><strong>foreground-colour</strong></code></td>
+      <td><code><strong>foreground-color</strong></code></td>
       <td>Here be dragons</td>
     </tr>
     <tr>
-      <td><code><strong>text-colour</strong></code></td>
+      <td><code><strong>text-color</strong></code></td>
       <td>Here be dragons</td>
     </tr>
     <tr>
-      <td><code><strong>border-colour</strong></code></td>
+      <td><code><strong>border-color</strong></code></td>
       <td>Here be dragons</td>
     </tr>
   </tbody>
@@ -59,33 +59,33 @@ Lorem ipsum dolor sit amet.
 
 --
 
-### background-colour
+### background-color
 
 Lorem ipsum dolor sit amet.
 
-    background-colour: <colour>;
+    background-color: <color>;
 
 --
 
-### foreground-colour
+### foreground-color
 
 Lorem ipsum dolor sit amet.
 
-    foreground-colour: <colour>;
+    foreground-color: <color>;
 
 --
 
-### text-colour
+### text-color
 
 Lorem ipsum dolor sit amet.
 
-    text-colour: <colour>;
+    text-color: <color>;
 --
 
-### border-colour
+### border-color
 
 Lorem ipsum dolor sit amet.
 
-    border-colour: <colour>;
+    border-color: <color>;
 
 ## Examples

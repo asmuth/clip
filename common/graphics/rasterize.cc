@@ -73,10 +73,10 @@ Status Rasterizer::fillPath(const layer_ops::BrushFillOp& op) {
 
   cairo_set_source_rgba(
      cr_ctx,
-     style.colour.red(),
-     style.colour.green(),
-     style.colour.blue(),
-     style.colour.alpha());
+     style.color.red(),
+     style.color.green(),
+     style.color.blue(),
+     style.color.alpha());
 
   cairo_rectangle(cr_ctx, clip.x, clip.y, clip.w, clip.h);
   cairo_clip(cr_ctx);
@@ -114,10 +114,10 @@ Status Rasterizer::strokePath(const layer_ops::BrushStrokeOp& op) {
 
   cairo_set_source_rgba(
      cr_ctx,
-     style.colour.red(),
-     style.colour.green(),
-     style.colour.blue(),
-     style.colour.alpha());
+     style.color.red(),
+     style.color.green(),
+     style.color.blue(),
+     style.color.alpha());
 
   cairo_set_line_width(cr_ctx, style.line_width);
 
@@ -191,10 +191,10 @@ Status Rasterizer::drawTextGlyphs(
 
   cairo_set_source_rgba(
      cr_ctx,
-     style.colour.red(),
-     style.colour.green(),
-     style.colour.blue(),
-     style.colour.alpha());
+     style.color.red(),
+     style.color.green(),
+     style.color.blue(),
+     style.color.alpha());
 
   auto cairo_face = cairo_ft_font_face_create_for_ft_face(ft_font, 0);
   cairo_set_font_face(cr_ctx, cairo_face);
@@ -220,7 +220,7 @@ Status Rasterizer::drawTextGlyphs(
     //     if (ox >= pixmap->getWidth() || oy >= pixmap->getHeight()) {
     //       continue;
     //     }
-    //     pixmap->setPixel(ox, oy, Colour::fromRGBA(v, v, v, 1));
+    //     pixmap->setPixel(ox, oy, Color::fromRGBA(v, v, v, 1));
     //   }
     // }
   }
@@ -233,7 +233,7 @@ Status Rasterizer::drawTextGlyphs(
   return OK;
 }
 
-void Rasterizer::clear(const Colour& c) {
+void Rasterizer::clear(const Color& c) {
   cairo_set_source_rgba(
       cr_ctx,
       c.red(),

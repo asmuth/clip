@@ -28,7 +28,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 #include "graphics/brush.h"
-#include "graphics/colour.h"
+#include "graphics/color.h"
 #include "graphics/layer.h"
 #include "graphics/text.h"
 #include "../unittest.h"
@@ -44,7 +44,7 @@ Status drawTestAt(Layer* l, uint32_t x, uint32_t y, TextStyle s) {
 
 int main(int argc, char** argv) {
   Layer l(800, 500);
-  l.clear(Colour{1, 1, 1, 1});
+  l.clear(Color{1, 1, 1, 1});
 
 
   {

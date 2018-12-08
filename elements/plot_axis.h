@@ -80,8 +80,8 @@ struct AxisDefinition {
   AxisLabelPosition label_position;
   AxisLabelPlacement label_placement;
   Formatter label_formatter;
-  Colour text_colour;
-  Colour border_colour;
+  Color text_color;
+  Color border_color;
   FontInfo font;
   Measure label_padding;
   Measure label_font_size;

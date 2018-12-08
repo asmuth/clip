@@ -52,7 +52,7 @@ using plotfx::chart::AxisDefinition;
 using plotfx::chart::LineChart;
 //using plotfx::chart::PointChart2D;
 //using plotfx::chart::PointChart3D;
-using plotfx::Colour;
+using plotfx::Color;
 using plotfx::Viewport;
 using namespace plotfx::chart;
 using plotfx::chart::ContinuousDomain;
@@ -80,7 +80,7 @@ using plotfx::test::UnitTest;
 
 TEST_CASE(ChartTest, TestPlotLayoutWithLeftAxis, [] () {
   Layer target(1000, 600);
-  target.clear(Colour{1, 1, 1, 1});
+  target.clear(Color{1, 1, 1, 1});
 
   //auto axis_left = plot_layout.addAxis(AxisDefinition::LEFT);
   //axis_left->addTick(0.0);
@@ -746,7 +746,7 @@ TEST_CASE(ChartTest, TestPlotLayoutWithLeftAxis, [] () {
 static plotfx::test::UnitTest::TestCase __test_simple_line_chart_(
     &ChartTest, "TestSimpleLineChart", [] () {
   Layer target(1000, 600);
-  target.clear(Colour{ 1, 1, 1, 1 });
+  target.clear(Color{ 1, 1, 1, 1 });
 
   auto series1 = new Series2D<double, double>("myseries1");
   series1->addDatum(10, 34);

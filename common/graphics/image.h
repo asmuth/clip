@@ -31,7 +31,7 @@
 #include <stdlib.h>
 #include <string>
 #include <vector>
-#include "colour.h"
+#include "color.h"
 
 namespace plotfx {
 
@@ -61,11 +61,11 @@ public:
   void* getData();
   size_t getDataSize() const;
 
-  Colour getPixel(size_t x, size_t y);
-  Colour getPixel(size_t idx);
-  void setPixel(size_t x, size_t y, const Colour& colour);
-  void setPixel(size_t idx, const Colour& colour);
-  void clear(const Colour& colour);
+  Color getPixel(size_t x, size_t y);
+  Color getPixel(size_t idx);
+  void setPixel(size_t x, size_t y, const Color& color);
+  void setPixel(size_t idx, const Color& color);
+  void clear(const Color& color);
 
 protected:
   PixelFormat pixel_format_;
@@ -81,11 +81,11 @@ size_t getPixelSize(PixelFormat pixel_format);
 
 void encodePixel(
     PixelFormat pixel_format,
-    const Colour& colour,
+    const Color& color,
     char* data,
     size_t size);
 
-Colour decodePixel(
+Color decodePixel(
     PixelFormat pixel_format,
     char* data,
     size_t size);
