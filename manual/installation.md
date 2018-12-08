@@ -9,13 +9,19 @@ You can find the complete [source code on Github](http://github.com/plotfx/plotf
 
 ### Compile from source
 
-You need autotools and a modern c++ compiler. To compile fnordmetric from a git
-checkout run:
+To build PlotFX, you need an up-to-date C++ compiler, cmake, libharfbuzz and
+libfreetype. Run:
 
-    $ git clone https://github.com/paulasmuth/fnordmetric.git && cd fnordmetric
-    $ ./autogen.sh
-    $ ./configure
+    $ git clone git@github.com:plotfx/plotfx.git
+    $ cd plotfx
+    $ cmake .
     $ make
-    $ sudo make install
 
+To install the `plotfx` binary into your system, run `make install`:
+
+    $ make install
+
+To run the test suite, run `make test`:
+
+    $ make test
 
