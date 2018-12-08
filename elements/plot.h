@@ -65,7 +65,7 @@ struct PlotConfig {
   Measure margins[4];
   ColourScheme colour_scheme;
   std::vector<PlotSeries> series;
-  LegendDefinition legend;
+  LegendConfig legend;
 };
 
 ReturnCode draw(

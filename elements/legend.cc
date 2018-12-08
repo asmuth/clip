@@ -30,6 +30,7 @@
 #include <stdlib.h>
 #include "graphics/layer.h"
 #include "common/domain.h"
+#include "common/config_helpers.h"
 #include "legend.h"
 
 namespace plotfx {
@@ -40,39 +41,16 @@ static const double kDefaultPaddingVertEM = 1.2;
 static const double kDefaultItemPaddingHorizEM = 2.4;
 static const double kDefaultItemPaddingVertEM = 1.0;
 
-LegendDefinition::LegendDefinition() :
-    vert_pos_(LEGEND_TOP),
-    horiz_pos_(LEGEND_LEFT),
-    placement_(LEGEND_INSIDE) {}
+LegendConfig::LegendConfig() :
+    vert_pos(LEGEND_TOP),
+    horiz_pos(LEGEND_LEFT),
+    placement(LEGEND_INSIDE) {}
 
-const std::string LegendDefinition::title() const {
-  return title_;
-}
-
-LegendDefinition::kVerticalPosition LegendDefinition::verticalPosition() 
-    const {
-  return vert_pos_;
-}
-
-LegendDefinition::kHorizontalPosition LegendDefinition::horizontalPosition() 
-    const {
-  return horiz_pos_;
-}
-
-LegendDefinition::kPlacement LegendDefinition::placement() const {
-  return placement_;
-}
-
-void LegendDefinition::addEntry(
+void LegendConfig::addEntry(
     const std::string& name,
     const Colour& color,
     const std::string& shape /* = "circle" */) {
-  entries_.emplace_back(name, color, shape);
-}
-
-const std::vector<std::tuple<std::string, Colour, std::string>>
-    LegendDefinition::entries() const {
-  return entries_;
+  entries.emplace_back(name, color, shape);
 }
 
 /*
@@ -80,16 +58,16 @@ void Legend::renderOutsideLegends(
     Layer* target,
     const Rectangle& clip) const {
   for (const auto& legend : legends_) {
-    if (legend->placement() != LegendDefinition::LEGEND_OUTSIDE) {
+    if (legend->placement() != LegendConfig::LEGEND_OUTSIDE) {
       continue;
     }
 
     target->beginGroup("legend");
 
     switch (legend->verticalPosition()) {
-      case LegendDefinition::LEGEND_TOP: {
+      case LegendConfig::LEGEND_TOP: {
         switch (legend->horizontalPosition()) {
-          case LegendDefinition::LEGEND_LEFT:
+          case LegendConfig::LEGEND_LEFT:
             renderLeftLegend(
                 target,
                 viewport,
@@ -98,7 +76,7 @@ void Legend::renderOutsideLegends(
                 false,
                 true);
             break;
-          case LegendDefinition::LEGEND_RIGHT:
+          case LegendConfig::LEGEND_RIGHT:
             renderRightLegend(
                 target,
                 viewport,
@@ -114,9 +92,9 @@ void Legend::renderOutsideLegends(
         break;
       }
 
-      case LegendDefinition::LEGEND_BOTTOM: {
+      case LegendConfig::LEGEND_BOTTOM: {
         switch (legend->horizontalPosition()) {
-          case LegendDefinition::LEGEND_LEFT:
+          case LegendConfig::LEGEND_LEFT:
             renderLeftLegend(
                 target,
                 viewport,
@@ -125,7 +103,7 @@ void Legend::renderOutsideLegends(
                 true,
                 true);
             break;
-          case LegendDefinition::LEGEND_RIGHT:
+          case LegendConfig::LEGEND_RIGHT:
             renderRightLegend(
                 target,
                 viewport,
@@ -153,7 +131,7 @@ void Legend::renderInsideLegends(
   auto orig_padding = viewport->padding();
 
   for (const auto& legend : legends_) {
-    if (legend->placement() != LegendDefinition::LEGEND_INSIDE) {
+    if (legend->placement() != LegendConfig::LEGEND_INSIDE) {
       continue;
     }
 
@@ -164,22 +142,22 @@ void Legend::renderInsideLegends(
         viewport->paddingBottom() + kLegendInsideVertPadding);
 
     switch (legend->horizontalPosition()) {
-      case LegendDefinition::LEGEND_LEFT:
+      case LegendConfig::LEGEND_LEFT:
         renderLeftLegend(
             target,
             viewport,
             legend.get(),
             kLegendOutsideHorizPadding,
-            legend->verticalPosition() == LegendDefinition::LEGEND_BOTTOM,
+            legend->verticalPosition() == LegendConfig::LEGEND_BOTTOM,
             false);
         break;
-      case LegendDefinition::LEGEND_RIGHT:
+      case LegendConfig::LEGEND_RIGHT:
         renderRightLegend(
             target,
             viewport,
             legend.get(),
             kLegendOutsideHorizPadding,
-            legend->verticalPosition() == LegendDefinition::LEGEND_BOTTOM,
+            legend->verticalPosition() == LegendConfig::LEGEND_BOTTOM,
             false);
         break;
       }
@@ -193,7 +171,7 @@ void Legend::renderInsideLegends(
 void Legend::renderRightLegend(
     Layer* target,
     const Rectangle& clip,
-    LegendDefinition* legend,
+    LegendConfig* legend,
     double horiz_padding,
     bool bottom,
     bool outside) const {
@@ -269,7 +247,7 @@ void Legend::renderRightLegend(
 void Legend::renderLeftLegend(
     Layer* target,
     const Rectangle& clip,
-    LegendDefinition* legend,
+    LegendConfig* legend,
     double horiz_padding,
     bool bottom,
     bool outside) const {
@@ -343,17 +321,17 @@ void Legend::renderLeftLegend(
   }
 }
 
-LegendDefinition* Legend::addLegend(
-    LegendDefinition::kVerticalPosition vert_pos,
-    LegendDefinition::kHorizontalPosition horiz_pos,
-    LegendDefinition::kPlacement placement,
+LegendConfig* Legend::addLegend(
+    LegendConfig::kVerticalPosition vert_pos,
+    LegendConfig::kHorizontalPosition horiz_pos,
+    LegendConfig::kPlacement placement,
     const std::string& title) {
   legends_.emplace_back(
-      new LegendDefinition(vert_pos, horiz_pos, placement, title));
+      new LegendConfig(vert_pos, horiz_pos, placement, title));
   return legends_.back().get();
 }
 
-LegendDefinition* Legend::legend() const {
+LegendConfig* Legend::legend() const {
   if (legends_.size() == 0) {
     return nullptr;
   } else {
@@ -362,7 +340,7 @@ LegendDefinition* Legend::legend() const {
 }
 */
 ReturnCode legend_draw(
-    const LegendDefinition& legend,
+    const LegendConfig& legend,
     const Rectangle& bbox,
     Layer* layer) {
   auto font_size = from_em(kDefaultLabelFontSizeEM, layer->font_size);
@@ -389,7 +367,7 @@ ReturnCode legend_draw(
   double sx = bbox.x + padding_horiz;
   double sy = bbox.y + padding_vert + line_height / 2;
 
-  for (const auto& e : legend.entries()) {
+  for (const auto& e : legend.entries) {
     const auto& label_text = std::get<0>(e);
 
     {
@@ -429,6 +407,26 @@ ReturnCode legend_draw(
 
       sx += label_bbox.w + padding_item_horiz;
     }
+  }
+
+  return OK;
+}
+
+ReturnCode legend_configure(
+    const Document& doc,
+    const plist::PropertyList& plist,
+    LegendConfig* config) {
+  config->font = doc.font_sans;
+  config->border_colour = doc.border_colour;
+  config->text_colour = doc.text_colour;
+
+  static const ParserDefinitions pdefs = {
+    {"legend-text-colour", std::bind(&configure_colour, std::placeholders::_1, &config->text_colour)},
+    {"legend-border-colour", std::bind(&configure_colour, std::placeholders::_1, &config->border_colour)},
+  };
+
+  if (auto rc = parseAll(plist, pdefs); !rc.isSuccess()) {
+    return rc;
   }
 
   return OK;

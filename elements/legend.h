@@ -33,22 +33,11 @@
 #include <string>
 #include <tuple>
 #include "graphics/layer.h"
+#include "common/document.h"
 
 namespace plotfx {
 
-static const int kLegendLabelPadding = 20; // FIXME make configurable
-static const int kLegendLineHeight = 20; // FIXME make configurable
-static const int kLegendInsideVertPadding = 10;
-static const int kLegendInsideHorizPadding = 15;
-static const int kLegendOutsideVertPadding = 10;
-static const int kLegendOutsideHorizPadding = 25;
-static const int kLegendPointY = 6;
-static const int kLegendPointWidth = 8;
-static const int kLegendPointSize = 3;
-
-class LegendDefinition {
-public:
-
+struct LegendConfig {
   enum kVerticalPosition {
     LEGEND_TOP = 0,
     LEGEND_BOTTOM = 1
@@ -64,20 +53,12 @@ public:
     LEGEND_OUTSIDE = 1
   };
 
-  LegendDefinition();
-
-  const std::string title() const;
-  kVerticalPosition verticalPosition() const;
-  kHorizontalPosition horizontalPosition() const;
-  kPlacement placement() const;
+  LegendConfig();
 
   void addEntry(
       const std::string& name,
       const Colour& color,
       const std::string& shape = "circle");
-
-  const std::vector<std::tuple<std::string, Colour, std::string>>
-      entries() const;
 
   Colour text_colour;
   Colour border_colour;
@@ -86,13 +67,11 @@ public:
   Measure padding_vert;
   Measure padding_item_horiz;
   Measure padding_item_vert;
-
-protected:
-  kVerticalPosition vert_pos_;
-  kHorizontalPosition horiz_pos_;
-  kPlacement placement_;
-  const std::string title_;
-  std::vector<std::tuple<std::string, Colour, std::string>> entries_;
+  kVerticalPosition vert_pos;
+  kHorizontalPosition horiz_pos;
+  kPlacement placement;
+  const std::string title;
+  std::vector<std::tuple<std::string, Colour, std::string>> entries;
 };
 
 void renderOutsideLegends(Layer* target, const Rectangle& clip);
@@ -102,7 +81,7 @@ void renderInsideLegends(Layer* target, const Rectangle& clip);
 void renderRightLegend(
     Layer* target,
     const Rectangle& clip,
-    LegendDefinition* legend,
+    LegendConfig* legend,
     double horiz_padding,
     bool bottom,
     bool outside);
@@ -110,13 +89,18 @@ void renderRightLegend(
 void renderLeftLegend(
     Layer* target,
     const Rectangle& clip,
-    LegendDefinition* legend,
+    LegendConfig* legend,
     double horiz_padding,
     bool bottom,
     bool outside);
 
+ReturnCode legend_configure(
+    const Document& doc,
+    const plist::PropertyList& plist,
+    LegendConfig* config);
+
 ReturnCode legend_draw(
-    const LegendDefinition& legend,
+    const LegendConfig& legend,
     const Rectangle& bbox,
     Layer* layer);
 

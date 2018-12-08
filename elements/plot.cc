@@ -126,9 +126,6 @@ ReturnCode configure(
 
   // FIXME
   config.colour_scheme = doc.colour_scheme;
-  config.legend.font = doc.font_sans;
-  config.legend.border_colour = doc.border_colour;
-  config.legend.text_colour = doc.text_colour;
   config.axis_top.font = doc.font_sans;
   config.axis_top.label_font_size = doc.font_size;
   config.axis_top.border_colour = doc.border_colour;
@@ -260,6 +257,11 @@ ReturnCode configure(
         &config.axis_bottom,
         &config.axis_left);
         !rc) {
+    return rc;
+  }
+
+  /* configure legend */
+  if (auto rc = legend_configure(doc, plist, &config.legend); !rc) {
     return rc;
   }
 
