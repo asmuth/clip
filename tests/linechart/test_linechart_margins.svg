@@ -34,6 +34,6 @@
   <text x="101.093750" y="94.999971" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif">11.5</text>
   <text x="100.000000" y="35.000000" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif">13.4</text>
   <path stroke-width="2.666667" stroke="#005fbf" fill="none" d="M140.280208 411.531015 L242.440162 314.889419 L344.600116 348.97982 L446.760069 248.897908 L548.920023 342.099188 L651.079977 64.684638 L753.239931 195.416636 L855.399884 287.366893 L957.559838 340.535409 L1059.719792 381.193685 "/>
-  <path fill="#4572a7" d="M180.480208 54.6 M170.480208 54.6 a5.0 5.0 0 1 0 10.0 0 a5.0 5.0 0 1 0 -10.0 0 "/>
-  <text x="187.480208" y="54.600000" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif"></text>
+  <path fill="#4572a7" d="M180.480208 54.933333 M170.480208 54.933333 a5.0 5.0 0 1 0 10.0 0 a5.0 5.0 0 1 0 -10.0 0 "/>
+  <text x="187.480208" y="54.933333" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif"></text>
 </svg>

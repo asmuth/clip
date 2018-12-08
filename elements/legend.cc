@@ -51,7 +51,10 @@ void LegendConfig::addEntry(
     const std::string& name,
     const Color& color,
     const std::string& shape /* = "circle" */) {
-  entries.emplace_back(name, color, shape);
+  LegendItem item;
+  item.title = name;
+  item.color = color;
+  entries.emplace_back(std::move(item));
 }
 
 ReturnCode legend_draw_inside(
@@ -60,34 +63,48 @@ ReturnCode legend_draw_inside(
     Layer* layer) {
   auto font_size = from_em(kDefaultLabelFontSizeEM, layer->font_size);
 
-  double padding_horiz = measure_or(
-      legend.padding_horiz,
+  double padding_left = measure_or(
+      legend.margins[3],
       from_em(kDefaultPaddingHorizEM, font_size));
 
-  double padding_vert = measure_or(
-      legend.padding_vert,
+  double padding_top = measure_or(
+      legend.margins[0],
       from_em(kDefaultPaddingVertEM, font_size));
 
-  double padding_item_horiz = measure_or(
-      legend.padding_horiz,
+  double padding_bottom = measure_or(
+      legend.margins[2],
+      from_em(kDefaultPaddingVertEM, font_size));
+
+  double padding_item_right = measure_or(
+      legend.item_margins[1],
       from_em(kDefaultItemPaddingHorizEM, font_size));
 
-  double padding_item_vert = measure_or(
-      legend.padding_vert,
-      from_em(kDefaultItemPaddingVertEM, font_size));
+  double point_size = 5; // FIXME
 
-  double point_size = 5;
-  double line_height = 14;
-
-  double sx = bbox.x + padding_horiz;
-  double sy = bbox.y + padding_vert + line_height / 2;
+  double sx = bbox.x + padding_left;
+  double sy = 0;
+  double line_height;
+  switch (legend.position_vert) {
+    case VAlign::TOP:
+      line_height = font_size; // FIXME
+      sy = bbox.y + padding_top + line_height / 2;
+      break;
+    case VAlign::BOTTOM:
+      line_height = -font_size; // FIXME
+      sy = bbox.y + bbox.h - padding_bottom + line_height / 2;
+      break;
+    case VAlign::CENTER:
+      line_height = font_size; // FIXME
+      sy = bbox.y + bbox.h / 2;
+      break;
+  }
 
   for (const auto& e : legend.entries) {
-    const auto& label_text = std::get<0>(e);
+    const auto& label_text = e.title;
 
     {
       FillStyle style;
-      style.color = std::get<1>(e);
+      style.color = e.color;
       Path path;
       path.moveTo(sx + point_size, sy);
       path.arcTo(sx, sy, point_size, 0, M_PI * 2);
@@ -120,7 +137,7 @@ ReturnCode legend_draw_inside(
         return rc;
       }
 
-      sx += label_bbox.w + padding_item_horiz;
+      sx += label_bbox.w + padding_item_right;
     }
   }
 
@@ -215,9 +232,92 @@ ReturnCode legend_configure(
           &config->position_horiz,
           &config->position_vert)
     },
-    {"legend-title", std::bind(&configure_string, std::placeholders::_1, &config->title)},
-    {"legend-text-color", std::bind(&configure_color, std::placeholders::_1, &config->text_color)},
-    {"legend-border-color", std::bind(&configure_color, std::placeholders::_1, &config->border_color)},
+    {
+      "legend-title",
+      std::bind(
+          &configure_string,
+          std::placeholders::_1,
+          &config->title)
+      },
+    {
+      "legend-text-color",
+      std::bind(
+          &configure_color,
+          std::placeholders::_1,
+          &config->text_color)
+    },
+    {
+      "legend-border-color",
+      std::bind(
+          &configure_color,
+          std::placeholders::_1,
+          &config->border_color)
+    },
+    {
+      "legend-item-margin",
+      configure_multiprop({
+          std::bind(
+              &configure_measure_rel,
+              std::placeholders::_1,
+              doc.dpi,
+              doc.font_size,
+              &config->item_margins[0]),
+          std::bind(
+              &configure_measure_rel,
+              std::placeholders::_1,
+              doc.dpi,
+              doc.font_size,
+              &config->item_margins[1]),
+          std::bind(
+              &configure_measure_rel,
+              std::placeholders::_1,
+              doc.dpi,
+              doc.font_size,
+              &config->item_margins[2]),
+          std::bind(
+              &configure_measure_rel,
+              std::placeholders::_1,
+              doc.dpi,
+              doc.font_size,
+              &config->item_margins[3])
+      })
+    },
+    {
+      "legend-item-margin-top",
+      std::bind(
+          &configure_measure_rel,
+          std::placeholders::_1,
+          doc.dpi,
+          doc.font_size,
+          &config->item_margins[0])
+    },
+    {
+      "legend-item-margin-right",
+      std::bind(
+          &configure_measure_rel,
+          std::placeholders::_1,
+          doc.dpi,
+          doc.font_size,
+          &config->item_margins[1])
+    },
+    {
+      "legend-item-margin-bottom",
+      std::bind(
+          &configure_measure_rel,
+          std::placeholders::_1,
+          doc.dpi,
+          doc.font_size,
+          &config->item_margins[2])
+    },
+    {
+      "legend-item-margin-left",
+      std::bind(
+          &configure_measure_rel,
+          std::placeholders::_1,
+          doc.dpi,
+          doc.font_size,
+          &config->item_margins[3])
+    },
   };
 
   if (auto rc = parseAll(plist, pdefs); !rc.isSuccess()) {

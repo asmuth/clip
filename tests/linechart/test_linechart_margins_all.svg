@@ -68,6 +68,6 @@
   <text x="131.093750" y="187.666656" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif">11.5</text>
   <text x="130.000000" y="164.733333" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif">13.4</text>
   <path stroke-width="2.666667" stroke="#005fbf" fill="none" d="M170.280208 305.562966 L265.773495 268.6244 L361.266782 281.654509 L456.760069 243.400978 L552.253356 279.024579 L647.746644 172.990573 L743.239931 222.959248 L838.733218 258.104679 L934.226505 278.426867 L1029.719792 293.967364 "/>
-  <path fill="#4572a7" d="M210.480208 184.333333 M200.480208 184.333333 a5.0 5.0 0 1 0 10.0 0 a5.0 5.0 0 1 0 -10.0 0 "/>
-  <text x="217.480208" y="184.333333" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif"></text>
+  <path fill="#4572a7" d="M210.480208 184.666667 M200.480208 184.666667 a5.0 5.0 0 1 0 10.0 0 a5.0 5.0 0 1 0 -10.0 0 "/>
+  <text x="217.480208" y="184.666667" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif"></text>
 </svg>

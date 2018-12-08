@@ -45,6 +45,11 @@ enum class LegendPlacement {
   OUTSIDE
 };
 
+struct LegendItem {
+  std::string title;
+  Color color;
+};
+
 struct LegendConfig {
 
   LegendConfig();
@@ -61,11 +66,13 @@ struct LegendConfig {
   Measure padding_vert;
   Measure padding_item_horiz;
   Measure padding_item_vert;
+  Measure margins[4];
+  Measure item_margins[4];
   LegendPlacement placement;
   HAlign position_horiz;
   VAlign position_vert;
   std::string title;
-  std::vector<std::tuple<std::string, Color, std::string>> entries;
+  std::vector<LegendItem> entries;
 };
 
 ReturnCode legend_configure(
