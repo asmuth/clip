@@ -42,7 +42,7 @@
 namespace plotfx {
 
 enum class DomainKind {
-  LINEAR, CATEGORICAL
+  LINEAR, LOGARITHMIC, CATEGORICAL
 };
 
 struct DomainConfig {
@@ -51,6 +51,7 @@ struct DomainConfig {
   bool inverted;
   std::optional<double> min;
   std::optional<double> max;
+  std::optional<double> log_base;
   std::vector<std::string> categories;
   double padding;
 };

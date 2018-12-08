@@ -29,8 +29,11 @@
  */
 #include "domain.h"
 #include <assert.h>
+#include <iostream>
 
 namespace plotfx {
+
+static const double kDefaultLogBase = 10;
 
 DomainConfig::DomainConfig() :
     kind(DomainKind::LINEAR),
@@ -113,6 +116,35 @@ std::vector<double> domain_translate_linear(
   return mapped;
 }
 
+std::vector<double> domain_translate_log(
+    const DomainConfig& domain,
+    const Series& series) {
+  auto min = domain.min.value_or(0.0f);
+  auto max = domain.max.value_or(0.0f);
+  auto log_base = domain.log_base.value_or(kDefaultLogBase);
+  double range = max - min;
+  double range_log = log(range) / log(log_base);
+
+  std::vector<double> mapped;
+  for (const auto& v : series) {
+    auto vf = value_to_float(v) - min;
+    if (vf > 1.0) {
+      vf = log(vf) / log(log_base);
+    } else {
+      vf = 0;
+    }
+
+    auto vt = vf / range_log;
+    if (domain.inverted) {
+      vt = 1.0 - vt;
+    }
+
+    mapped.push_back(vt);
+  }
+
+  return mapped;
+}
+
 std::vector<double> domain_translate_categorical(
     const DomainConfig& domain,
     const Series& series) {
@@ -143,11 +175,13 @@ std::vector<double> domain_translate(
   switch (domain.kind) {
     case DomainKind::LINEAR:
       return domain_translate_linear(domain, series);
+    case DomainKind::LOGARITHMIC:
+      return domain_translate_log(domain, series);
     case DomainKind::CATEGORICAL:
       return domain_translate_categorical(domain, series);
-    default:
-      assert(false);
   }
+
+  return {};
 }
 
 Series domain_untranslate_linear(const DomainConfig& domain, std::vector<double> values) {
@@ -161,6 +195,25 @@ Series domain_untranslate_linear(const DomainConfig& domain, std::vector<double>
     }
 
     s.emplace_back(value_from_float(min + (max - min) * vt));
+  }
+
+  return s;
+}
+
+Series domain_untranslate_log(const DomainConfig& domain, std::vector<double> values) {
+  auto min = domain.min.value_or(0.0f);
+  auto max = domain.max.value_or(0.0f);
+  auto log_base = domain.log_base.value_or(kDefaultLogBase);
+  double range = max - min;
+  double range_log = log(range) / log(log_base);
+
+  Series s;
+  for (auto vt : values) {
+    if (domain.inverted) {
+      vt = 1.0 - vt;
+    }
+
+    s.emplace_back(value_from_float(min + pow(log_base, vt * range_log)));
   }
 
   return s;
@@ -193,11 +246,13 @@ Series domain_untranslate(
   switch (domain.kind) {
     case DomainKind::LINEAR:
       return domain_untranslate_linear(domain, values);
+    case DomainKind::LOGARITHMIC:
+      return domain_untranslate_log(domain, values);
     case DomainKind::CATEGORICAL:
       return domain_untranslate_categorical(domain, values);
-    default:
-      assert(false);
   }
+
+  return {};
 }
 
 ReturnCode confgure_domain_kind(
@@ -205,6 +260,12 @@ ReturnCode confgure_domain_kind(
     DomainKind* kind) {
   if (plist::is_value(prop, "linear")) {
     *kind = DomainKind::LINEAR;
+    return OK;
+  }
+
+  if (plist::is_value(prop, "logarithmic") ||
+      plist::is_value(prop, "log")) {
+    *kind = DomainKind::LOGARITHMIC;
     return OK;
   }
 
