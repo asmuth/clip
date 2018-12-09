@@ -259,26 +259,37 @@ Series domain_untranslate(
   return {};
 }
 
-ReturnCode confgure_domain_kind(
+ReturnCode domain_configure(
     const plist::Property& prop,
-    DomainKind* kind) {
-  if (plist::is_value(prop, "linear")) {
-    *kind = DomainKind::LINEAR;
-    return OK;
+    DomainConfig* domain) {
+  auto args = plist::flatten(prop);
+  for (const auto& prop : args) {
+    if (prop == "linear") {
+      domain->kind = DomainKind::LINEAR;
+      continue;
+    }
+
+    if (prop == "log" ||
+        prop == "logarithmic") {
+      domain->kind = DomainKind::LOGARITHMIC;
+      continue;
+    }
+
+    if (prop == "categorical") {
+      domain->kind = DomainKind::CATEGORICAL;
+      continue;
+    }
+
+    if (prop == "invert" ||
+        prop == "inverted") {
+      domain->inverted = true;
+      continue;
+    }
+
+    return ERROR_INVALID_ARGUMENT;
   }
 
-  if (plist::is_value(prop, "logarithmic") ||
-      plist::is_value(prop, "log")) {
-    *kind = DomainKind::LOGARITHMIC;
-    return OK;
-  }
-
-  if (plist::is_value(prop, "categorical")) {
-    *kind = DomainKind::CATEGORICAL;
-    return OK;
-  }
-
-  return ERROR_INVALID_ARGUMENT;
+  return OK;
 }
 
 } // namespace plotfx

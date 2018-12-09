@@ -199,8 +199,8 @@ ReturnCode configure(
           std::placeholders::_1,
           &config.axis_left.label_placement),
     },
-    {"xdomain", std::bind(&confgure_domain_kind, std::placeholders::_1, &config.domain_x.kind)},
-    {"ydomain", std::bind(&confgure_domain_kind, std::placeholders::_1, &config.domain_y.kind)},
+    {"xdomain", std::bind(&domain_configure, std::placeholders::_1, &config.domain_x)},
+    {"ydomain", std::bind(&domain_configure, std::placeholders::_1, &config.domain_y)},
     {
       "xdomain-format",
       configure_multiprop({

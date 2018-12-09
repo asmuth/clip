@@ -69,9 +69,9 @@ Series domain_untranslate(
     const DomainConfig& domain,
     const std::vector<double>& data);
 
-ReturnCode confgure_domain_kind(
+ReturnCode domain_configure(
     const plist::Property& prop,
-    DomainKind* kind);
+    DomainConfig* domain);
 
 } // namespace plotfx
 
