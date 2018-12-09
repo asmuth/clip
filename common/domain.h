@@ -50,13 +50,16 @@ struct DomainConfig {
   DomainKind kind;
   bool inverted;
   std::optional<double> min;
+  std::optional<double> min_auto;
+  bool min_auto_snap_zero;
   std::optional<double> max;
+  std::optional<double> max_auto;
   std::optional<double> log_base;
   std::vector<std::string> categories;
   double padding;
 };
 
-void domain_fit(const Series& data, DomainConfig* domain, bool snap_zero);
+void domain_fit(const Series& data, DomainConfig* domain);
 
 std::vector<double> domain_translate(
     const DomainConfig& domain,

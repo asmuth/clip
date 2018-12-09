@@ -43,6 +43,7 @@ namespace plot {
 
 PlotConfig::PlotConfig() {
   domain_y.padding = 0.1f;
+  domain_y.min_auto_snap_zero = true;
 }
 
 ReturnCode draw(

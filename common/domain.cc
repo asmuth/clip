@@ -37,35 +37,19 @@ static const double kDefaultLogBase = 10;
 
 DomainConfig::DomainConfig() :
     kind(DomainKind::LINEAR),
+    min_auto_snap_zero(false),
     inverted(false),
     padding(0.0f) {}
 
-void domain_fit_linear(const Series& data_raw, DomainConfig* domain, bool snap_zero) {
+void domain_fit_continuous(const Series& data_raw, DomainConfig* domain) {
   auto data = series_to_float(data_raw);
-  bool fit_min = !domain->min;
-  bool fit_max = !domain->max;
 
   for (const auto& d : data) {
-    if (fit_min && (!domain->min || *domain->min > d)) {
-      domain->min = std::optional<double>(d);
+    if (!domain->min_auto || *domain->min_auto > d) {
+      domain->min_auto = std::optional<double>(d);
     }
-    if (fit_max && (!domain->max || *domain->max < d)) {
-      domain->max = std::optional<double>(d);
-    }
-  }
-
-  auto range = domain->max.value_or(0) - domain->min.value_or(0);
-  if (fit_max) {
-    domain->max = std::optional<double>(
-        domain->max.value_or(0) + range * domain->padding);
-  }
-
-  if (fit_min) {
-    if (snap_zero && domain->min.value_or(0) > 0) {
-      domain->min = std::optional<double>(0);
-    } else {
-      domain->min = std::optional<double>(
-          domain->min.value_or(0) - range * domain->padding);
+    if (!domain->max_auto || *domain->max_auto < d) {
+      domain->max_auto = std::optional<double>(d);
     }
   }
 }
@@ -86,20 +70,40 @@ void domain_fit_categorical(const Series& data, DomainConfig* domain) {
   }
 }
 
-void domain_fit(const Series& data, DomainConfig* domain, bool snap_zero) {
+void domain_fit(const Series& data, DomainConfig* domain) {
   switch (domain->kind) {
     case DomainKind::LINEAR:
-      return domain_fit_linear(data, domain, snap_zero);
+    case DomainKind::LOGARITHMIC:
+      return domain_fit_continuous(data, domain);
     case DomainKind::CATEGORICAL:
       return domain_fit_categorical(data, domain);
   }
 }
 
+double domain_min(const DomainConfig& domain) {
+  auto min = domain.min.value_or(domain.min_auto.value_or(0));
+  auto max = domain.max.value_or(domain.max_auto.value_or(0));
+
+  auto min_auto = 0;
+  if (!domain.min_auto_snap_zero || min < 0) {
+    min_auto = min - (max - min) * domain.padding;
+  }
+
+  return domain.min.value_or(min_auto);
+}
+
+double domain_max(const DomainConfig& domain) {
+  auto min = domain.min.value_or(domain.min_auto.value_or(0));
+  auto max = domain.max.value_or(domain.max_auto.value_or(0));
+  auto max_auto = max + (max - min) * domain.padding;
+  return domain.max.value_or(max_auto);
+}
+
 std::vector<double> domain_translate_linear(
     const DomainConfig& domain,
     const Series& series) {
-  auto min = domain.min.value_or(0.0f);
-  auto max = domain.max.value_or(0.0f);
+  auto min = domain_min(domain);
+  auto max = domain_max(domain);
 
   std::vector<double> mapped;
   for (const auto& v : series) {
@@ -119,8 +123,8 @@ std::vector<double> domain_translate_linear(
 std::vector<double> domain_translate_log(
     const DomainConfig& domain,
     const Series& series) {
-  auto min = domain.min.value_or(0.0f);
-  auto max = domain.max.value_or(0.0f);
+  auto min = domain_min(domain);
+  auto max = domain_max(domain);
   auto log_base = domain.log_base.value_or(kDefaultLogBase);
   double range = max - min;
   double range_log = log(range) / log(log_base);
@@ -185,8 +189,8 @@ std::vector<double> domain_translate(
 }
 
 Series domain_untranslate_linear(const DomainConfig& domain, std::vector<double> values) {
-  auto min = domain.min.value_or(0.0f);
-  auto max = domain.max.value_or(0.0f);
+  auto min = domain_min(domain);
+  auto max = domain_max(domain);
 
   Series s;
   for (auto vt : values) {
@@ -201,8 +205,8 @@ Series domain_untranslate_linear(const DomainConfig& domain, std::vector<double>
 }
 
 Series domain_untranslate_log(const DomainConfig& domain, std::vector<double> values) {
-  auto min = domain.min.value_or(0.0f);
-  auto max = domain.max.value_or(0.0f);
+  auto min = domain_min(domain);
+  auto max = domain_max(domain);
   auto log_base = domain.log_base.value_or(kDefaultLogBase);
   double range = max - min;
   double range_log = log(range) / log(log_base);
