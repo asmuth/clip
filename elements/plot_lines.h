@@ -48,6 +48,11 @@ struct PlotLinesConfig {
   Series xs;
   Series ys;
   std::string title;
+  Series labels;
+  FontInfo label_font;
+  Measure label_padding;
+  Measure label_font_size;
+  Color label_color;
   Measure line_width;
   Color line_color;
   Measure point_size;

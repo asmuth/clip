@@ -41,6 +41,7 @@ namespace plot {
 namespace lines {
 
 static const double kDefaultLineWidthPT = 2;
+static const double kDefaultLabelPaddingEM = 0.8;
 
 PlotLinesConfig::PlotLinesConfig() {}
 
@@ -61,7 +62,7 @@ ReturnCode draw_lines(
   auto x = domain_translate(domain_x, config.xs);
   auto y = domain_translate(domain_y, config.ys);
 
-  // draw line
+  /* draw line */
   {
     Path path;
 
@@ -85,7 +86,7 @@ ReturnCode draw_lines(
     strokePath(layer, clip, path, style);
   }
 
-  // draw points
+  /* draw points */
   auto point_size = config.point_size;
   if (point_size > 0) {
     FillStyle style;
@@ -102,6 +103,33 @@ ReturnCode draw_lines(
     }
   }
 
+  /* draw labels */
+  for (size_t i = 0; i < config.xs.size(); ++i) {
+    if (i >= config.labels.size()) {
+      break;
+    }
+
+    const auto& label_text = config.labels[i];
+    auto label_padding = measure_or(
+        config.label_padding,
+        from_em(kDefaultLabelPaddingEM, config.label_font_size));
+
+    Point p(
+        clip.x + x[i] * clip.w,
+        clip.y + (1.0 - y[i]) * clip.h - label_padding);
+
+    TextStyle style;
+    style.font = config.label_font;
+    style.color = config.label_color;
+    style.font_size = config.label_font_size;
+
+    auto ax = HAlign::CENTER;
+    auto ay = VAlign::BOTTOM;
+    if (auto rc = drawTextLabel(label_text, p, ax, ay, style, layer); rc != OK) {
+      return rc;
+    }
+  }
+
   return OK;
 }
 
@@ -115,11 +143,15 @@ ReturnCode configure(const plist::Property& prop, const Document& doc, PlotConfi
   PlotLinesConfig series;
   series.line_color = color;
   series.point_color = color;
+  series.label_font = doc.font_sans;
+  series.label_font_size = doc.font_size;
+  series.label_color = doc.text_color; // FIXME: lighten by 20%
 
   static const ParserDefinitions pdefs = {
     {"xs", std::bind(&configure_series, std::placeholders::_1, &series.xs)},
     {"ys", std::bind(&configure_series, std::placeholders::_1, &series.ys)},
     {"title", std::bind(&configure_string, std::placeholders::_1, &series.title)},
+    {"labels", std::bind(&configure_series, std::placeholders::_1, &series.labels)},
     {
       "color",
       configure_multiprop({
