@@ -36,6 +36,7 @@
 #include <common/domain.h>
 #include <common/element.h>
 #include <common/document.h>
+#include <common/data_frame.h>
 #include "plot_axis.h"
 #include "legend.h"
 
@@ -56,6 +57,9 @@ struct PlotSeries {
 
 struct PlotConfig {
   PlotConfig();
+  DataFrame data;
+  std::string column_x;
+  std::string column_y;
   DomainConfig domain_x;
   DomainConfig domain_y;
   AxisDefinition axis_top;

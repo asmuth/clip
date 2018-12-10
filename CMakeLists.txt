@@ -26,6 +26,7 @@ add_library(plotfxlib STATIC
     elements/plot_lines.cc
     elements/legend.cc
     common/config_helpers.cc
+    common/data_frame.cc
     common/domain.cc
     common/format.cc
     common/plist/plist.cc
@@ -48,7 +49,6 @@ add_library(plotfxlib STATIC
     common/graphics/font_lookup.cc
     common/element_factory.cc
     common/document.cc
-    common/series.cc
     common/utils/random.cc
     common/utils/csv.cc
     common/utils/bufferutil.cc

@@ -37,7 +37,7 @@
 #include <unordered_map>
 #include "utils/return_code.h"
 #include "plist/plist.h"
-#include "common/series.h"
+#include "common/data_frame.h"
 
 namespace plotfx {
 

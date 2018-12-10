@@ -32,7 +32,7 @@
 #include <optional>
 #include <plist/plist.h>
 #include "utils/return_code.h"
-#include "series.h"
+#include "common/data_frame.h"
 
 namespace plotfx {
 

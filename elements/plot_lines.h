@@ -35,7 +35,6 @@
 #include <graphics/viewport.h>
 #include <common/domain.h>
 #include <common/element.h>
-#include <common/series.h>
 #include "plot_axis.h"
 #include "plot.h"
 
@@ -45,8 +44,6 @@ namespace lines {
 
 struct PlotLinesConfig {
   PlotLinesConfig();
-  Series xs;
-  Series ys;
   std::string title;
   Series labels;
   FontInfo label_font;

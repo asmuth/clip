@@ -34,7 +34,7 @@
 #include <graphics/measure.h>
 #include <graphics/color.h>
 #include "utils/return_code.h"
-#include "common/series.h"
+#include "common/data_frame.h"
 
 namespace plotfx {
 
@@ -87,10 +87,6 @@ ReturnCode parse_classlike(
 
 ParserFn configure_multiprop(const std::vector<ParserFn>& parsers);
 
-ReturnCode configure_series(
-    const plist::Property& prop,
-    Series* data);
-
 ReturnCode configure_measure_rel(
     const plist::Property& prop,
     double dpi,
@@ -112,6 +108,10 @@ ReturnCode configure_string(
 ReturnCode configure_float_opt(
     const plist::Property& prop,
     std::optional<double>* value);
+
+ReturnCode configure_data_frame(
+    const plist::Property& prop,
+    DataFrame* data);
 
 } // namespace plotfx
 

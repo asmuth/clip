@@ -51,22 +51,32 @@ ReturnCode draw_lines(
     const Document& doc,
     const Rectangle& clip,
     Layer* layer) {
+  const DataColumn* column_x = nullptr;
+  if (auto rc = column_find(plot.data, plot.column_x, &column_x); !rc) {
+    return rc;
+  }
+
+  const DataColumn* column_y = nullptr;
+  if (auto rc = column_find(plot.data, plot.column_y, &column_y); !rc) {
+    return rc;
+  }
+
   const auto& domain_x = plot.domain_x;
   const auto& domain_y = plot.domain_y;
 
-  if (series_len(config.xs) != series_len(config.ys)) {
+  if (column_x->data.size() != column_y->data.size()) {
     // FIXME error msg
     return ERROR_INVALID_ARGUMENT;
   }
 
-  auto x = domain_translate(domain_x, config.xs);
-  auto y = domain_translate(domain_y, config.ys);
+  auto x = domain_translate(domain_x, column_x->data);
+  auto y = domain_translate(domain_y, column_y->data);
 
   /* draw line */
   {
     Path path;
 
-    for (size_t i = 0; i < series_len(config.xs); ++i) {
+    for (size_t i = 0; i < column_x->data.size(); ++i) {
       auto sx = clip.x + x[i] * clip.w;
       auto sy = clip.y + (1.0 - y[i]) * clip.h;
 
@@ -91,7 +101,7 @@ ReturnCode draw_lines(
   if (point_size > 0) {
     FillStyle style;
     style.color = config.point_color;
-    for (size_t i = 0; i < config.xs.size(); ++i) {
+    for (size_t i = 0; i < column_x->data.size(); ++i) {
       auto sx = clip.x + x[i] * clip.w;
       auto sy = clip.y + (1.0 - y[i]) * clip.h;
 
@@ -104,7 +114,7 @@ ReturnCode draw_lines(
   }
 
   /* draw labels */
-  for (size_t i = 0; i < config.xs.size(); ++i) {
+  for (size_t i = 0; i < column_x->data.size(); ++i) {
     if (i >= config.labels.size()) {
       break;
     }
@@ -148,10 +158,7 @@ ReturnCode configure(const plist::Property& prop, const Document& doc, PlotConfi
   series.label_color = doc.text_color; // FIXME: lighten by 20%
 
   static const ParserDefinitions pdefs = {
-    {"xs", std::bind(&configure_series, std::placeholders::_1, &series.xs)},
-    {"ys", std::bind(&configure_series, std::placeholders::_1, &series.ys)},
     {"title", std::bind(&configure_string, std::placeholders::_1, &series.title)},
-    {"labels", std::bind(&configure_series, std::placeholders::_1, &series.labels)},
     {
       "color",
       configure_multiprop({
@@ -168,9 +175,6 @@ ReturnCode configure(const plist::Property& prop, const Document& doc, PlotConfi
   if (auto rc = parseAll(*prop.next, pdefs); !rc) {
     return rc;
   }
-
-  domain_fit(series.xs, &config->domain_x);
-  domain_fit(series.ys, &config->domain_y);
 
   config->series.emplace_back(PlotSeries {
     .draw = std::bind(

@@ -27,11 +27,23 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-#include "series.h"
+#include "data_frame.h"
 
 namespace plotfx {
 
-using Series = std::vector<std::string>;
+ReturnCode column_find(
+    const DataFrame& frame,
+    const std::string& column_name,
+    const DataColumn** column) {
+  for (const auto& c : frame.columns) {
+    if (c.name == column_name) {
+      *column = &c;
+      return OK;
+    }
+  }
+
+  return ReturnCode::errorf("EARG", "column not found: $0", column_name);
+}
 
 size_t series_len(const Series& s) {
   return s.size();

@@ -28,20 +28,29 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 #pragma once
-#include <algorithm>
-#include <math.h>
-#include <stdlib.h>
-#include <vector>
 #include <string>
-#include <optional>
-#include <variant>
-#include "utils/return_code.h"
-#include "plist/plist.h"
+#include <vector>
+#include "common/utils/return_code.h"
 
 namespace plotfx {
 
 using Value = std::string;
 using Series = std::vector<Value>;
+
+// FIXME: rename to column?
+struct DataColumn {
+  std::string name;
+  Series data;
+};
+
+struct DataFrame {
+  std::vector<DataColumn> columns;
+};
+
+ReturnCode column_find(
+    const DataFrame& frame,
+    const std::string& column_name,
+    const DataColumn** column);
 
 size_t series_len(const Series& s);
 

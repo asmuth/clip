@@ -150,6 +150,9 @@ ReturnCode configure(
   config.margins[3] = from_em(1.0, doc.font_size);
 
   static const ParserDefinitions pdefs = {
+    {"data", std::bind(&configure_data_frame, std::placeholders::_1, &config.data)},
+    {"x", std::bind(&configure_string, std::placeholders::_1, &config.column_x)},
+    {"y", std::bind(&configure_string, std::placeholders::_1, &config.column_y)},
     {
       "margin",
       configure_multiprop({
@@ -248,6 +251,26 @@ ReturnCode configure(
   if (auto rc = parseAll(plist, pdefs_series); !rc.isSuccess()) {
     return rc;
   }
+
+  /* configure columns */
+  const DataColumn* column_x = nullptr;
+  if (auto rc = column_find(config.data, config.column_x, &column_x); !rc) {
+    return rc;
+  }
+
+  const DataColumn* column_y = nullptr;
+  if (auto rc = column_find(config.data, config.column_y, &column_y); !rc) {
+    return rc;
+  }
+
+  if (column_x->data.size() != column_y->data.size()) {
+    // FIXME error msg
+    return ERROR_INVALID_ARGUMENT;
+  }
+
+  /* configure domains */
+  domain_fit(column_x->data, &config.domain_x);
+  domain_fit(column_y->data, &config.domain_y);
 
   /* configure axes */
   if (auto rc = axis_configure(

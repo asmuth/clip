@@ -34,80 +34,6 @@
 
 namespace plotfx {
 
-ReturnCode parse_data_series_csv(
-    const plist::Property& prop ,
-    Series* data) {
-  if (!plist::is_enum(prop, "csv")) {
-    return ERROR_INVALID_ARGUMENT;
-  }
-
-  if (prop.size() < 2) {
-    return ERROR_INVALID_ARGUMENT; // FIXME
-  }
-
-  const auto& csv_path = prop[0].value;
-  const auto& csv_column = prop[1].value;
-
-  size_t csv_column_idx = 0;
-  try {
-    csv_column_idx = std::stoul(csv_column);
-  } catch (... ) {
-    return ERROR_INVALID_ARGUMENT; // FIXME
-  }
-
-  auto csv_data_str = FileUtil::read(csv_path).toString();
-  auto csv_data = CSVData{};
-  auto csv_opts = CSVParserConfig{};
-
-  for (size_t i = 2; i < prop.size(); ++i) {
-    if (prop[i].value == "noheaders") {
-      csv_opts.headers = false;
-      continue;
-    }
-  }
-
-  if (auto rc = parseCSV(csv_data_str, csv_opts, &csv_data); !rc) {
-    return rc;
-  }
-
-  for (const auto& row : csv_data) {
-    if (row.size() > csv_column_idx) {
-      const auto& value = row[csv_column_idx];
-      data->emplace_back(value);
-    }
-  }
-
-  return OK;
-}
-
-ReturnCode parse_data_series_inline(
-    const plist::Property& prop ,
-    Series* data) {
-  if (!plist::is_list(prop)) {
-    return ERROR_INVALID_ARGUMENT;
-  }
-
-  for (const auto& value : *prop.next) {
-    data->emplace_back(value);
-  }
-
-  return OK;
-}
-
-ReturnCode configure_series(
-    const plist::Property& prop,
-    Series* data) {
-  if (plist::is_enum(prop, "csv")) {
-    return parse_data_series_csv(prop, data);
-  }
-
-  if (plist::is_list(prop)) {
-    return parse_data_series_inline(prop, data);
-  }
-
-  return ERROR_INVALID_ARGUMENT;
-}
-
 ReturnCode configure_measure_rel(
     const plist::Property& prop,
     double dpi,
@@ -204,6 +130,63 @@ ReturnCode configure_string(
 
   *value = prop;
   return OK;
+}
+
+ReturnCode parse_data_frame_csv(
+    const plist::Property& prop ,
+    DataFrame* data) {
+  if (!plist::is_enum(prop, "csv")) {
+    return ERROR_INVALID_ARGUMENT;
+  }
+
+  if (prop.size() < 1) {
+    return ERROR_INVALID_ARGUMENT; // FIXME
+  }
+
+  const auto& csv_path = prop[0].value;
+  auto csv_data_str = FileUtil::read(csv_path).toString();
+  auto csv_data = CSVData{};
+  auto csv_opts = CSVParserConfig{};
+
+  for (size_t i = 1; i < prop.size(); ++i) {
+    if (prop[i].value == "noheaders") {
+      csv_opts.headers = false;
+      continue;
+    }
+  }
+
+  if (auto rc = parseCSV(csv_data_str, csv_opts, &csv_data); !rc) {
+    return rc;
+  }
+
+  std::optional<size_t> column_count;
+  for (const auto& row : csv_data) {
+    if (!column_count || row.size() < column_count) {
+      column_count = row.size();
+    }
+  }
+
+  for (size_t i = 0; i < column_count; ++i) {
+    DataColumn column;
+    column.name = std::to_string(i);
+    for (const auto& row : csv_data) {
+      column.data.push_back(row[i]);
+    }
+
+    data->columns.emplace_back(column);
+  }
+
+  return OK;
+}
+
+ReturnCode configure_data_frame(
+    const plist::Property& prop,
+    DataFrame* data) {
+  if (plist::is_enum(prop, "csv")) {
+    return parse_data_frame_csv(prop, data);
+  }
+
+  return ERROR_INVALID_ARGUMENT;
 }
 
 } // namespace plotfx
