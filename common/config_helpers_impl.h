@@ -28,13 +28,13 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 #pragma once
+
 namespace plotfx {
 
 template <typename T>
 ReturnCode resolve_slot(
     const Slot<T>& slot,
     std::function<ReturnCode (const DimensionConfig&, const Value&, T*)> map,
-    const DimensionMap& dimensions,
     const DataFrame& data,
     size_t data_idx,
     T* val) {
@@ -43,14 +43,9 @@ ReturnCode resolve_slot(
     return OK;
   }
 
-  if (!slot.key.empty()) {
-    auto dimension = dimension_find(dimensions, slot.key);
-    if (!dimension) {
-      return ReturnCode::errorf("EARG", "dimension not found: $0", slot.key);
-    }
-
-    const auto& data_val = data_lookup(data, slot.key, data_idx);
-    if (auto rc = map(*dimension, data_val, val); !rc) {
+  if (slot.dimension) {
+    const auto& data_val = data_lookup(data, slot.dimension->key, data_idx);
+    if (auto rc = map(*slot.dimension, data_val, val); !rc) {
       return rc;
     }
 
@@ -66,8 +61,9 @@ ReturnCode configure_slot(
     DimensionMap* dimensions,
     Slot<T>* slot) {
   if (plist::is_value(prop) && prop.value.size() > 0 && prop.value[0] == '$') {
-    slot->key = prop.value.substr(1);
-    dimension_add(dimensions, slot->key);
+    DimensionConfig d;
+    d.key = prop.value.substr(1);
+    slot->dimension = d;
   }
 
   return OK;

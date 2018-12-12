@@ -101,7 +101,6 @@ ReturnCode draw_lines(
     if (auto rc = resolve_slot(
           config.line_color,
           dimension_map_color_discrete(config.line_color_palette),
-          plot.dimensions,
           plot.data,
           group.begin, // FIXME
           &color); !rc) {
@@ -144,6 +143,12 @@ ReturnCode configure(const plist::Property& prop, const Document& doc, PlotConfi
 
   if (auto rc = parseAll(*prop.next, pdefs); !rc) {
     return rc;
+  }
+
+  if (layer.line_color.dimension) {
+    if (auto rc = dimension_resolve(config->data, &*layer.line_color.dimension); !rc) {
+      return rc;
+    }
   }
 
   config->layers.emplace_back(PlotLayer {

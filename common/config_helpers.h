@@ -88,7 +88,7 @@ ReturnCode parse_classlike(
 
 template <typename T>
 struct Slot {
-  std::string key;
+  std::optional<DimensionConfig> dimension;
   std::optional<T> constant;
 };
 
@@ -96,7 +96,6 @@ template <typename T>
 ReturnCode resolve_slot(
     const Slot<T>& slot,
     std::function<ReturnCode (const DimensionConfig&, const Value&, T*)> map,
-    const DimensionMap& dimensions,
     const DataFrame& data,
     size_t data_idx,
     T* val);

@@ -87,7 +87,6 @@ ReturnCode draw_points(
     if (auto rc = resolve_slot(
           config.point_color,
           dimension_map_color_discrete(config.point_color_palette),
-          plot.dimensions,
           plot.data,
           i,
           &style.color); !rc) {
@@ -118,6 +117,12 @@ ReturnCode configure(const plist::Property& prop, const Document& doc, PlotConfi
 
   if (auto rc = parseAll(*prop.next, pdefs); !rc) {
     return rc;
+  }
+
+  if (layer.point_color.dimension) {
+    if (auto rc = dimension_resolve(config->data, &*layer.point_color.dimension); !rc) {
+      return rc;
+    }
   }
 
   config->layers.emplace_back(PlotLayer {
