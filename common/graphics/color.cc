@@ -141,11 +141,15 @@ std::string Color::to_hex_str() const {
   std::stringstream ss;
   ss
     << "#"
+    << std::hex
     << std::setfill('0')
     << std::setw(2)
-    << std::hex
     << int(components_[0] * 255)
+    << std::setfill('0')
+    << std::setw(2)
     << int(components_[1] * 255)
+    << std::setfill('0')
+    << std::setw(2)
     << int(components_[2] * 255);
 
   return ss.str();
