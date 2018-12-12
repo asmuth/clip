@@ -5,9 +5,8 @@ PlotFX
 ![BSD-License](https://img.shields.io/badge/license-BSD-blue.svg?style=flat-square)
 
 `plotfx` is a command line tool for creating charts and other data-driven
-visualizations. It is partially based on ideas from the "Grammar of Graphics" and
-the ggplot2 R library. One of the main goals for PlotFX is that using it should be
-simple and fun.
+visualizations. It is partially based on ideas from the "Grammar of Graphics" [0].
+One of the main goals for PlotFX is that using it should be simple and fun.
 
 PlotFX is a standalone tool - it is not required to know any specific programming
 language to use it. Charts are specified using a lightweight syntax that is very
@@ -39,27 +38,20 @@ Output File (`example_chart.svg`):
 Input File (`example_chart.plot`):
 
     plot {
-      axis-top: off;
-      axis-right: off;
+      data: csv('city_temperatures.csv');
 
-      ymin: -10;
-      ymax: 32;
+      x: $month;
+      y: $temperature;
+      group: $city;
 
-      series {
-        title: "New York";
-        point-size: 3.3pt;
-        xs: csv(testdata/city_temperatures.csv, month);
-        ys: csv(testdata/city_temperatures.csv, new_york);
+      layer {
+        type: lines;
       }
 
-      series {
-        title: "北京市";
-        point-size: 3.3pt;
-        xs: csv(testdata/city_temperatures.csv, month);
-        ys: csv(testdata/city_temperatures.csv, beijing);
+      layer {
+        type: points;
+        point-size: 3pt;
       }
-
-      # ...
     }
 
 
@@ -130,8 +122,9 @@ Acknowledgements
 PlotFX is the successor of the FnordMetric ChartSQL project by the same authors.
 
 Parts of the new chart specification syntax and semantics were inspired by ideas
-from the "Grammar of Graphics" and the ggplot2 project.
+from the "Grammar of Graphics" [0] and the ggplot2 project.
 
+[0] Wilkinson, L. (1999). The Grammar of Graphics (Springer)
 
 License
 -------
