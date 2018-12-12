@@ -1,7 +1,6 @@
 /**
  * This file is part of the "plotfx" project
  *   Copyright (c) 2018 Paul Asmuth
- *   Copyright (c) 2014 Paul Asmuth, Google Inc.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -29,46 +28,45 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 #pragma once
-#include <stdlib.h>
-#include <plist/plist.h>
-#include <graphics/layer.h>
-#include <graphics/viewport.h>
-#include <common/domain.h>
-#include <common/element.h>
-#include <common/config_helpers.h>
-#include "plot_axis.h"
-#include "plot.h"
+#include <string>
+#include <unordered_map>
+#include "common/domain.h"
 
 namespace plotfx {
-namespace plot {
-namespace lines {
 
-struct PlotLinesConfig {
-  PlotLinesConfig();
-  std::string title;
-  Series labels;
-  FontInfo label_font;
-  Measure label_padding;
-  Measure label_font_size;
-  Color label_color;
-  Measure line_width;
-  Slot<Color> line_color;
-  Measure point_size;
-  Color point_color;
+struct DimensionConfig {
+  std::string key;
+  DomainConfig domain;
+  ColorScheme colors;
 };
 
-ReturnCode draw(
-    const PlotLinesConfig& config,
-    const Document& doc,
-    const Rectangle& clip,
-    Layer* frame);
+using DimensionMap = std::unordered_map<std::string, DimensionConfig>;
 
-ReturnCode configure(
-    const plist::Property& prop,
-    const Document& doc,
-    plot::PlotConfig* plot);
+template <typename T>
+using DimensionMapFn = std::function<
+    ReturnCode(
+        const DimensionConfig& dimension,
+        const Value& val_in,
+        T* val_out)>;
 
-} // namespace lines
-} // namespace plot
+const DimensionConfig* dimension_find(
+    const DimensionMap& map,
+    const std::string& key);
+
+void dimension_add(
+    DimensionMap* map,
+    const std::string& key);
+
+DimensionMapFn<Color> dimension_map_color_continuous();
+DimensionMapFn<Color> dimension_map_color_discrete();
+
+ReturnCode dimension_resolve(
+    const DataFrame& data,
+    DimensionConfig* dimension);
+
+ReturnCode dimension_resolve_all(
+    const DataFrame& data,
+    DimensionMap* map);
+
 } // namespace plotfx
 

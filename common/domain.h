@@ -43,7 +43,7 @@
 namespace plotfx {
 
 enum class DomainKind {
-  LINEAR, LOGARITHMIC, CATEGORICAL
+  AUTO, LINEAR, LOGARITHMIC, CATEGORICAL
 };
 
 struct DomainConfig {
@@ -58,23 +58,28 @@ struct DomainConfig {
   std::optional<double> log_base;
   std::vector<std::string> categories;
   std::unordered_map<std::string, double> map;
-  ColorScheme colors;
   double padding;
 };
 
 void domain_fit(const Series& data, DomainConfig* domain);
 
+size_t domain_cardinality(const DomainConfig& domain);
+
+double domain_translate(
+    const DomainConfig& domain,
+    const Value& value);
+
 std::vector<double> domain_translate(
     const DomainConfig& domain,
     const Series& series);
 
+Value domain_untranslate(
+    const DomainConfig& domain,
+    double data);
+
 Series domain_untranslate(
     const DomainConfig& domain,
     const std::vector<double>& data);
-
-Color domain_get_color(
-    const DomainConfig& domain,
-    const Value& value);
 
 ReturnCode domain_configure(
     const plist::Property& prop,

@@ -559,10 +559,31 @@ ReturnCode axis_configure_label_placement(
   return ERROR_INVALID_ARGUMENT;
 }
 
-ReturnCode axis_configure(
-    AxisDefinition* axis,
+ReturnCode axis_resolve(
     const AxisPosition& pos,
-    const DomainConfig& domain) {
+    const DimensionMap& dims,
+    const std::string& dim_x,
+    const std::string& dim_y,
+    AxisDefinition* axis) {
+  std::string dimension_key;
+  switch (pos) {
+    case AxisPosition::LEFT:
+    case AxisPosition::RIGHT:
+    case AxisPosition::CENTER_VERT:
+      dimension_key = dim_y; // FIXME
+      break;
+    case AxisPosition::TOP:
+    case AxisPosition::BOTTOM:
+    case AxisPosition::CENTER_HORIZ:
+      dimension_key = dim_x; // FIXME
+      break;
+  }
+
+  auto dimension = dimension_find(dims, dimension_key);
+  if (!dimension) {
+    return ReturnCode::errorf("EARG", "dimension not found: $0", dimension_key);
+  }
+
   switch (axis->tick_position) {
     case AxisLabelPosition::OUTSIDE:
       switch (pos) {
@@ -649,6 +670,7 @@ ReturnCode axis_configure(
       break;
   };
 
+  const auto& domain = dimension->domain;
   if (axis->label_placement) {
     if (auto rc = axis->label_placement(domain, axis); !rc) {
       return rc;
@@ -662,30 +684,32 @@ ReturnCode axis_configure(
   return OK;
 }
 
-ReturnCode axis_configure(
-    const DomainConfig& domain_x,
-    const DomainConfig& domain_y,
+ReturnCode axis_resolve(
+    const DimensionMap& dims,
+    const std::string& dim_x,
+    const std::string& dim_y,
     AxisDefinition* axis_top,
     AxisDefinition* axis_right,
     AxisDefinition* axis_bottom,
     AxisDefinition* axis_left) {
-  if (auto rc = axis_configure(axis_top, AxisPosition::TOP, domain_x); !rc) {
+  if (auto rc = axis_resolve(AxisPosition::TOP, dims, dim_x, dim_y, axis_top); !rc) {
     return rc;
   }
 
-  if (auto rc = axis_configure(axis_right, AxisPosition::RIGHT, domain_y); !rc) {
+  if (auto rc = axis_resolve(AxisPosition::RIGHT, dims, dim_x, dim_y, axis_right); !rc) {
     return rc;
   }
 
-  if (auto rc = axis_configure(axis_bottom, AxisPosition::BOTTOM, domain_x); !rc) {
+  if (auto rc = axis_resolve(AxisPosition::BOTTOM, dims, dim_x, dim_y, axis_bottom); !rc) {
     return rc;
   }
 
-  if (auto rc = axis_configure(axis_left, AxisPosition::LEFT, domain_y); !rc) {
+  if (auto rc = axis_resolve(AxisPosition::LEFT, dims, dim_x, dim_y, axis_left); !rc) {
     return rc;
   }
 
   return OK;
 }
+
 } // namespace plotfx
 

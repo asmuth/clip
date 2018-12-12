@@ -1,7 +1,6 @@
 /**
  * This file is part of the "plotfx" project
  *   Copyright (c) 2018 Paul Asmuth
- *   Copyright (c) 2014 Paul Asmuth, Google Inc.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -28,47 +27,75 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-#pragma once
-#include <stdlib.h>
-#include <plist/plist.h>
-#include <graphics/layer.h>
-#include <graphics/viewport.h>
-#include <common/domain.h>
-#include <common/element.h>
-#include <common/config_helpers.h>
-#include "plot_axis.h"
-#include "plot.h"
+#include "dimension.h"
+#include <iostream>
 
 namespace plotfx {
-namespace plot {
-namespace lines {
 
-struct PlotLinesConfig {
-  PlotLinesConfig();
-  std::string title;
-  Series labels;
-  FontInfo label_font;
-  Measure label_padding;
-  Measure label_font_size;
-  Color label_color;
-  Measure line_width;
-  Slot<Color> line_color;
-  Measure point_size;
-  Color point_color;
-};
+const DimensionConfig* dimension_find(
+    const DimensionMap& map,
+    const std::string& key) {
+  const auto& iter = map.find(key);
+  if (iter == map.end()) {
+    return nullptr;
+  } else {
+    return &iter->second;
+  }
+}
 
-ReturnCode draw(
-    const PlotLinesConfig& config,
-    const Document& doc,
-    const Rectangle& clip,
-    Layer* frame);
+void dimension_add(
+    DimensionMap* map,
+    const std::string& key) {
+  if (dimension_find(*map, key)) {
+    return;
+  }
 
-ReturnCode configure(
-    const plist::Property& prop,
-    const Document& doc,
-    plot::PlotConfig* plot);
+  DimensionConfig d;
+  d.key = key;
+  map->emplace(d.key, d);
+}
 
-} // namespace lines
-} // namespace plot
+DimensionMapFn<Color> dimension_map_color_continuous() {
+  return [] (const auto& dimension, const auto& value, Color* color) {
+    *color = dimension.colors.get(domain_translate(dimension.domain, value));
+    return OK;
+  };
+}
+
+DimensionMapFn<Color> dimension_map_color_discrete() {
+  return [] (const auto& dimension, const auto& value, Color* color) {
+    auto idx =
+        domain_translate(dimension.domain, value) *
+        domain_cardinality(dimension.domain);
+
+    *color = dimension.colors.get(idx);
+    return OK;
+  };
+}
+
+ReturnCode dimension_resolve(
+    const DataFrame& data,
+    DimensionConfig* dimension) {
+  const DataColumn* column = nullptr;
+  if (auto rc = column_find(data, dimension->key, &column); !rc) {
+    return rc;
+  }
+
+  domain_fit(column->data, &dimension->domain);
+  return OK;
+}
+
+ReturnCode dimension_resolve_all(
+    const DataFrame& data,
+    DimensionMap* map) {
+  for (auto& e : *map) {
+    if (auto rc = dimension_resolve(data, &e.second); !rc) {
+      return rc;
+    }
+  }
+
+  return OK;
+}
+
 } // namespace plotfx
 

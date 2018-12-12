@@ -254,50 +254,42 @@ ReturnCode configure(
     return rc;
   }
 
-  /* configure columns */
-  const DataColumn* column_x = nullptr;
-  if (auto rc = column_find(config.data, config.column_x, &column_x); !rc) {
+  /* configure legend */
+  if (auto rc = legend_configure(doc, plist, &config.legend); !rc) {
     return rc;
   }
 
-  const DataColumn* column_y = nullptr;
-  if (auto rc = column_find(config.data, config.column_y, &column_y); !rc) {
+  // FIXME
+  {
+    DimensionConfig d;
+    d.key = config.column_x;
+    d.domain = config.domain_x;
+    config.dimensions.emplace(d.key, d);
+  }
+
+  // FIXME
+  {
+    DimensionConfig d;
+    d.key = config.column_y;
+    d.domain = config.domain_y;
+    config.dimensions.emplace(d.key, d);
+  }
+
+  /* resolve domains */
+  if (auto rc = dimension_resolve_all(config.data, &config.dimensions); !rc) {
     return rc;
   }
 
-  const DataColumn* column_group = nullptr;
-  if (!config.column_group.empty()) {
-    if (auto rc = column_find(config.data, config.column_group, &column_group); !rc) {
-      return rc;
-    }
-  }
-
-  if (column_x->data.size() != column_y->data.size()) {
-    // FIXME error msg
-    return ERROR_INVALID_ARGUMENT;
-  }
-
-  /* configure domains */
-  domain_fit(column_x->data, &config.domain_x);
-  domain_fit(column_y->data, &config.domain_y);
-  if (column_group) {
-    domain_fit(column_group->data, &config.domain_group);
-  }
-
-  /* configure axes */
-  if (auto rc = axis_configure(
-        config.domain_x,
-        config.domain_y,
+  /* resolve axes */
+  if (auto rc = axis_resolve(
+        config.dimensions,
+        config.column_x,
+        config.column_y,
         &config.axis_top,
         &config.axis_right,
         &config.axis_bottom,
         &config.axis_left);
         !rc) {
-    return rc;
-  }
-
-  /* configure legend */
-  if (auto rc = legend_configure(doc, plist, &config.legend); !rc) {
     return rc;
   }
 

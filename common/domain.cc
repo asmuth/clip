@@ -36,7 +36,7 @@ namespace plotfx {
 static const double kDefaultLogBase = 10;
 
 DomainConfig::DomainConfig() :
-    kind(DomainKind::LINEAR),
+    kind(DomainKind::AUTO),
     min_auto_snap_zero(false),
     inverted(false),
     padding(0.0f) {}
@@ -65,13 +65,34 @@ void domain_fit_categorical(const Series& data, DomainConfig* domain) {
   }
 }
 
+void domain_fit_kind(const Series& data, DomainConfig* domain) {
+  if (series_is_numeric(data)) {
+    domain->kind = DomainKind::LINEAR;
+  } else {
+    domain->kind = DomainKind::CATEGORICAL;
+  }
+}
+
 void domain_fit(const Series& data, DomainConfig* domain) {
+  if (domain->kind == DomainKind::AUTO) {
+    domain_fit_kind(data, domain);
+  }
+
   switch (domain->kind) {
     case DomainKind::LINEAR:
     case DomainKind::LOGARITHMIC:
       return domain_fit_continuous(data, domain);
     case DomainKind::CATEGORICAL:
       return domain_fit_categorical(data, domain);
+  }
+}
+
+size_t domain_cardinality(const DomainConfig& domain) {
+  switch (domain.kind) {
+    case DomainKind::CATEGORICAL:
+      return domain.categories.size();
+    default:
+      return 1;
   }
 }
 
@@ -94,186 +115,156 @@ double domain_max(const DomainConfig& domain) {
   return domain.max.value_or(max_auto);
 }
 
-std::vector<double> domain_translate_linear(
+double domain_translate_linear(
     const DomainConfig& domain,
-    const Series& series) {
+    const Value& v) {
   auto min = domain_min(domain);
   auto max = domain_max(domain);
 
-  std::vector<double> mapped;
-  for (const auto& v : series) {
-    auto vf = value_to_float(v);
-    auto vt = (vf - min) / (max - min);
+  auto vf = value_to_float(v);
+  auto vt = (vf - min) / (max - min);
 
-    if (domain.inverted) {
-      vt = 1.0 - vt;
-    }
-
-    mapped.push_back(vt);
+  if (domain.inverted) {
+    vt = 1.0 - vt;
   }
 
-  return mapped;
+  return vt;
 }
 
-std::vector<double> domain_translate_log(
+double domain_translate_log(
     const DomainConfig& domain,
-    const Series& series) {
+    const Value& v) {
   auto min = domain_min(domain);
   auto max = domain_max(domain);
   auto log_base = domain.log_base.value_or(kDefaultLogBase);
   double range = max - min;
   double range_log = log(range) / log(log_base);
 
-  std::vector<double> mapped;
-  for (const auto& v : series) {
-    auto vf = value_to_float(v) - min;
-    if (vf > 1.0) {
-      vf = log(vf) / log(log_base);
-    } else {
-      vf = 0;
-    }
-
-    auto vt = vf / range_log;
-    if (domain.inverted) {
-      vt = 1.0 - vt;
-    }
-
-    mapped.push_back(vt);
+  auto vf = value_to_float(v) - min;
+  if (vf > 1.0) {
+    vf = log(vf) / log(log_base);
+  } else {
+    vf = 0;
   }
 
-  return mapped;
+  auto vt = vf / range_log;
+  if (domain.inverted) {
+    vt = 1.0 - vt;
+  }
+
+  return vt;
 }
 
-std::vector<double> domain_translate_categorical(
+double domain_translate_categorical(
     const DomainConfig& domain,
-    const Series& series) {
+    const Value& v) {
   double category_count = domain.categories.size();
 
-  std::vector<double> mapped;
-  for (const auto& v : series) {
-    size_t vi = 0;
-    if (auto vm = domain.map.find(v); vm != domain.map.end()) {
-      vi = vm->second;
-    }
-
-    auto vt = (vi / category_count) + (0.5 / category_count);
-
-    if (domain.inverted) {
-      vt = 1.0 - vt;
-    }
-
-    mapped.push_back(vt);
+  size_t vi = 0;
+  if (auto vm = domain.map.find(v); vm != domain.map.end()) {
+    vi = vm->second;
   }
 
-  return mapped;
+  auto vt = (vi / category_count) + (0.5 / category_count);
+
+  if (domain.inverted) {
+    vt = 1.0 - vt;
+  }
+
+  return vt;
+}
+
+double domain_translate(
+    const DomainConfig& domain,
+    const Value& value) {
+  switch (domain.kind) {
+    case DomainKind::LINEAR:
+      return domain_translate_linear(domain, value);
+    case DomainKind::LOGARITHMIC:
+      return domain_translate_log(domain, value);
+    case DomainKind::CATEGORICAL:
+      return domain_translate_categorical(domain, value);
+  }
+
+  return 0.0f;
 }
 
 std::vector<double> domain_translate(
     const DomainConfig& domain,
     const Series& series) {
-  switch (domain.kind) {
-    case DomainKind::LINEAR:
-      return domain_translate_linear(domain, series);
-    case DomainKind::LOGARITHMIC:
-      return domain_translate_log(domain, series);
-    case DomainKind::CATEGORICAL:
-      return domain_translate_categorical(domain, series);
+  std::vector<double> values;
+  for (const auto& v : series) {
+    values.push_back(domain_translate(domain, v));
   }
 
-  return {};
+  return values;
 }
 
-Series domain_untranslate_linear(const DomainConfig& domain, std::vector<double> values) {
+Value domain_untranslate_linear(const DomainConfig& domain, double vt) {
   auto min = domain_min(domain);
   auto max = domain_max(domain);
 
-  Series s;
-  for (auto vt : values) {
-    if (domain.inverted) {
-      vt = 1.0 - vt;
-    }
-
-    s.emplace_back(value_from_float(min + (max - min) * vt));
+  if (domain.inverted) {
+    vt = 1.0 - vt;
   }
 
-  return s;
+  return value_from_float(min + (max - min) * vt);
 }
 
-Series domain_untranslate_log(const DomainConfig& domain, std::vector<double> values) {
+Value domain_untranslate_log(const DomainConfig& domain, double vt) {
   auto min = domain_min(domain);
   auto max = domain_max(domain);
   auto log_base = domain.log_base.value_or(kDefaultLogBase);
   double range = max - min;
   double range_log = log(range) / log(log_base);
 
-  Series s;
-  for (auto vt : values) {
-    if (domain.inverted) {
-      vt = 1.0 - vt;
-    }
-
-    s.emplace_back(value_from_float(min + pow(log_base, vt * range_log)));
+  if (domain.inverted) {
+    vt = 1.0 - vt;
   }
 
-  return s;
+  return value_from_float(min + pow(log_base, vt * range_log));
 }
 
-Series domain_untranslate_categorical(
+Value domain_untranslate_categorical(
     const DomainConfig& domain,
-    std::vector<double> values) {
-  Series s;
-  for (auto vt : values) {
-    if (domain.inverted) {
-      vt = 1.0 - vt;
-    }
-
-    std::string v;
-    size_t vidx = vt * domain.categories.size();
-    if (vidx >= 0 && vidx < domain.categories.size()) {
-      v = domain.categories[vidx];
-    }
-
-    s.emplace_back(std::move(v));
+    double vt) {
+  if (domain.inverted) {
+    vt = 1.0 - vt;
   }
 
-  return s;
+  std::string v;
+  size_t vidx = vt * domain.categories.size();
+  if (vidx >= 0 && vidx < domain.categories.size()) {
+    v = domain.categories[vidx];
+  }
+
+  return v;
 }
 
-Series domain_untranslate(
+Value domain_untranslate(
     const DomainConfig& domain,
-    const std::vector<double>& values) {
+    double value) {
   switch (domain.kind) {
     case DomainKind::LINEAR:
-      return domain_untranslate_linear(domain, values);
+      return domain_untranslate_linear(domain, value);
     case DomainKind::LOGARITHMIC:
-      return domain_untranslate_log(domain, values);
+      return domain_untranslate_log(domain, value);
     case DomainKind::CATEGORICAL:
-      return domain_untranslate_categorical(domain, values);
+      return domain_untranslate_categorical(domain, value);
   }
 
   return {};
 }
 
-Color domain_get_color_categorical(
+Series domain_untranslate(
     const DomainConfig& domain,
-    const Value& value) {
-  size_t seq = 0;
-  if (auto iter = domain.map.find(value); iter != domain.map.end()) {
-    seq = iter->second;
+    const std::vector<double>& values) {
+  Series s;
+  for (const auto& v : values) {
+    s.emplace_back(domain_untranslate(domain, v));
   }
 
-  return domain.colors.get(seq);
-}
-
-Color domain_get_color(
-    const DomainConfig& domain,
-    const Value& value) {
-  switch (domain.kind) {
-    case DomainKind::CATEGORICAL:
-      return domain_get_color_categorical(domain, value);
-    default:
-      return Color::fromRGB(0,0,0);
-  }
+  return s;
 }
 
 ReturnCode domain_configure(

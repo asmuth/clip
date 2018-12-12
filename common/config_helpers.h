@@ -35,6 +35,7 @@
 #include <graphics/color.h>
 #include "utils/return_code.h"
 #include "common/data_frame.h"
+#include "common/dimension.h"
 
 namespace plotfx {
 
@@ -85,6 +86,24 @@ ReturnCode parse_classlike(
     const std::string& fn,
     std::vector<std::string>* args);
 
+template <typename T>
+struct Slot {
+  std::string key;
+  std::optional<T> constant;
+};
+
+template <typename T>
+ReturnCode resolve_slot(
+    const Slot<T>& slot,
+    std::function<ReturnCode (const DimensionConfig&, const Value&, T*)> map,
+    const DimensionMap& dimensions,
+    const DataFrame& data,
+    size_t data_idx,
+    T* val);
+
+template <typename T>
+ParserFn configure_slot(DimensionMap* dimensions, Slot<T>* slot);
+
 ParserFn configure_multiprop(const std::vector<ParserFn>& parsers);
 
 ReturnCode configure_measure_rel(
@@ -115,3 +134,4 @@ ReturnCode configure_data_frame(
 
 } // namespace plotfx
 
+#include "config_helpers_impl.h"

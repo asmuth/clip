@@ -36,6 +36,7 @@
 #include <graphics/viewport.h>
 #include <utils/return_code.h>
 #include <common/format.h>
+#include <common/dimension.h>
 
 namespace plotfx {
 struct DomainConfig;
@@ -144,9 +145,10 @@ ReturnCode axis_configure(
     const AxisLabelPosition& axis_position,
     const DomainConfig& domain);
 
-ReturnCode axis_configure(
-    const DomainConfig& domain_x,
-    const DomainConfig& domain_y,
+ReturnCode axis_resolve(
+    const DimensionMap& dimensions,
+    const std::string& dim_x,
+    const std::string& dim_y,
     AxisDefinition* axis_top,
     AxisDefinition* axis_right,
     AxisDefinition* axis_bottom,

@@ -39,6 +39,7 @@
 #include <common/data_frame.h>
 #include "plot_axis.h"
 #include "legend.h"
+#include "dimension.h"
 
 namespace plotfx {
 namespace plot {
@@ -70,6 +71,7 @@ struct PlotConfig {
   AxisDefinition axis_left;
   Measure margins[4];
   ColorScheme color_scheme;
+  DimensionMap dimensions;
   std::vector<PlotLayer> layers;
   LegendConfig legend;
 };

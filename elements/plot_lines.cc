@@ -51,13 +51,23 @@ ReturnCode draw_lines(
     const Document& doc,
     const Rectangle& clip,
     Layer* layer) {
+  auto dim_x = dimension_find(plot.dimensions, plot.column_x);
+  if (!dim_x) {
+    return ReturnCode::errorf("EARG", "dimension not found: $0", plot.column_x);
+  }
+
+  auto dim_y = dimension_find(plot.dimensions, plot.column_y);
+  if (!dim_y) {
+    return ReturnCode::errorf("EARG", "dimension not found: $0", plot.column_y);
+  }
+
   const DataColumn* column_x = nullptr;
-  if (auto rc = column_find(plot.data, plot.column_x, &column_x); !rc) {
+  if (auto rc = column_find(plot.data, dim_x->key, &column_x); !rc) {
     return rc;
   }
 
   const DataColumn* column_y = nullptr;
-  if (auto rc = column_find(plot.data, plot.column_y, &column_y); !rc) {
+  if (auto rc = column_find(plot.data, dim_y->key, &column_y); !rc) {
     return rc;
   }
 
@@ -83,16 +93,24 @@ ReturnCode draw_lines(
     groups.emplace_back(g);
   }
 
-  const auto& domain_x = plot.domain_x;
-  const auto& domain_y = plot.domain_y;
   const auto& domain_group = plot.domain_group;
 
   for (const auto& group : groups) {
-    auto x = domain_translate(domain_x, column_x->data);
-    auto y = domain_translate(domain_y, column_y->data);
+    auto x = domain_translate(dim_x->domain, column_x->data);
+    auto y = domain_translate(dim_y->domain, column_y->data);
+
+    Color color;
+    if (auto rc = resolve_slot(
+          config.line_color,
+          dimension_map_color_discrete(),
+          plot.dimensions,
+          plot.data,
+          group.begin, // FIXME
+          &color); !rc) {
+      return rc;
+    }
 
     Path path;
-
     for (size_t i = group.begin; i < group.end; ++i) {
       auto sx = clip.x + x[i] * clip.w;
       auto sy = clip.y + (1.0 - y[i]) * clip.h;
@@ -105,11 +123,11 @@ ReturnCode draw_lines(
     }
 
     StrokeStyle style;
+    style.color = color;
     style.line_width = measure_or(
         config.line_width,
         from_pt(kDefaultLineWidthPT, doc.dpi));
 
-    style.color = domain_get_color(domain_group, group.key);
     strokePath(layer, clip, path, style);
   }
 
@@ -165,28 +183,13 @@ ReturnCode configure(const plist::Property& prop, const Document& doc, PlotConfi
     return ERROR_INVALID_ARGUMENT;
   }
 
-  auto color = config->color_scheme.next();
-
   PlotLinesConfig layer;
-  layer.line_color = color;
-  layer.point_color = color;
-  layer.label_font = doc.font_sans;
-  layer.label_font_size = doc.font_size;
-  layer.label_color = doc.text_color; // FIXME: lighten by 20%
+  //layer.line_color = color;
+  //layer.label_font = doc.font_sans; // FIXME
+  //layer.label_font_size = doc.font_size; // FIXME
 
   static const ParserDefinitions pdefs = {
-    {"title", std::bind(&configure_string, std::placeholders::_1, &layer.title)},
-    {
-      "color",
-      configure_multiprop({
-          std::bind(&configure_color, std::placeholders::_1, &layer.line_color),
-          std::bind(&configure_color, std::placeholders::_1, &layer.point_color),
-      })
-    },
-    {"line-color", std::bind(&configure_color, std::placeholders::_1, &layer.line_color)},
-    {"line-width", std::bind(&configure_measure_rel, std::placeholders::_1, doc.dpi, doc.font_size, &layer.line_width)},
-    {"point-color", std::bind(&configure_color, std::placeholders::_1, &layer.point_color)},
-    {"point-size", std::bind(&configure_measure_rel, std::placeholders::_1, doc.dpi, doc.font_size, &layer.point_size)},
+    {"line-color", configure_slot(&config->dimensions, &layer.line_color)},
   };
 
   if (auto rc = parseAll(*prop.next, pdefs); !rc) {
@@ -203,7 +206,6 @@ ReturnCode configure(const plist::Property& prop, const Document& doc, PlotConfi
         std::placeholders::_4),
   });
 
-  config->legend.addEntry(layer.title, color);
   return OK;
 }
 

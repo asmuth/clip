@@ -46,8 +46,43 @@ ReturnCode column_find(
   return ReturnCode::errorf("EARG", "column not found: $0", column_name);
 }
 
+Value data_lookup(
+    const DataFrame& data,
+    const std::string& key,
+    size_t idx) {
+  const DataColumn* column;
+  if (auto rc = column_find(data, key, &column); !rc) {
+    return {};
+  }
+
+  if (idx < column->data.size()) {
+    return column->data[idx];
+  } else {
+    return {};
+  }
+}
+
 size_t series_len(const Series& s) {
   return s.size();
+}
+
+bool series_is_numeric(const Series& s) {
+  for (const auto& v : s) {
+    if (!StringUtil::isNumber(v)) {
+      size_t idx;
+      try {
+        std::stod(v, &idx);
+      } catch (...) {
+        return false;
+      }
+
+      if (idx != v.size()) {
+        return false;
+      }
+    }
+  }
+
+  return true;
 }
 
 std::vector<double> series_to_float(const Series& s) {
@@ -83,7 +118,7 @@ std::vector<DataGroup> column_group(const DataColumn& col) {
     g.end = idx;
 
     while (g.end < col.data.size() && col.data[g.end] == col.data[g.begin]) {
-      g.end = idx++;
+      g.end = ++idx;
     }
 
     groups.emplace_back(g);

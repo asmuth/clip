@@ -58,9 +58,16 @@ struct DataGroup {
   size_t end;
 };
 
+Value data_lookup(
+    const DataFrame& data,
+    const std::string& key,
+    size_t idx);
+
 std::vector<DataGroup> column_group(const DataColumn& col);
 
 size_t series_len(const Series& s);
+
+bool series_is_numeric(const Series& s);
 
 std::vector<double> series_to_float(const Series& s);
 
