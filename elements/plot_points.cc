@@ -98,12 +98,10 @@ ReturnCode draw_points(
       return rc;
     }
 
-    auto point_size = 5; // FIXME
-
     // FIXME point style
     Path path;
-    path.moveTo(sx + point_size, sy);
-    path.arcTo(sx, sy, point_size, 0, M_PI * 2);
+    path.moveTo(sx + config.point_size, sy);
+    path.arcTo(sx, sy, config.point_size, 0, M_PI * 2);
     fillPath(layer, clip, path, style);
   }
 
@@ -125,6 +123,7 @@ ReturnCode configure(const plist::Property& prop, const Document& doc, PlotConfi
     {"y", configure_key(&layer.y_key)},
     {"y-scale", std::bind(&configure_string, std::placeholders::_1, &layer.y_scale)},
     {"point-color", configure_slot(&layer.point_color)},
+    {"point-size", std::bind(&configure_measure_rel, std::placeholders::_1, doc.dpi, doc.font_size, &layer.point_size)},
   };
 
   if (auto rc = parseAll(*prop.next, pdefs); !rc) {

@@ -157,6 +157,7 @@ ReturnCode configure(
     {"y-scale", std::bind(&configure_string, std::placeholders::_1, &layer.y_scale)},
     {"group", std::bind(&configure_string, std::placeholders::_1, &layer.group_key)},
     {"line-color", configure_slot(&layer.line_color)},
+    {"line-width", std::bind(&configure_measure_rel, std::placeholders::_1, doc.dpi, doc.font_size, &layer.line_width)},
   };
 
   if (auto rc = parseAll(*prop.next, pdefs); !rc) {

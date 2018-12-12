@@ -51,14 +51,7 @@ struct LegendItem {
 };
 
 struct LegendConfig {
-
   LegendConfig();
-
-  void addEntry(
-      const std::string& name,
-      const Color& color,
-      const std::string& shape = "circle");
-
   Color text_color;
   Color border_color;
   FontInfo font;

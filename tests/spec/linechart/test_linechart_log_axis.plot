@@ -2,20 +2,27 @@ width: 1200px;
 height: 480px;
 
 plot {
-  axis-top: off;
-  axis-right: off;
+  title: "To the Moon";
 
-  xdomain: log;
-  xmin: 0;
-  xmax: 5;
+  data: csv('examples/data/log_example.csv', 0);
+  x: $0;
+  y: $1;
 
-  ydomain: log;
-  ymin: 0;
-  ymax: 10000;
+  axis-x-type: log;
+  axis-x-min: 0;
+  axis-x-max: 5;
 
-  series {
-    title: "To the Moon";
-    xs: csv('examples/data/log_example.csv', 0);
-    ys: csv('examples/data/log_example.csv', 1);
+  axis-y-type: log;
+  axis-y-min: 0;
+  axis-y-max: 10000;
+
+  layer {
+    type: lines;
+    line-color: $0;
+  }
+
+  layer {
+    type: points;
+    line-color: $0;
   }
 }

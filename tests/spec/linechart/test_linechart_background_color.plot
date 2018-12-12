@@ -5,9 +5,14 @@ background-color: #000;
 foreground-color: #fff;
 
 plot {
-  series {
-    xs: csv('tests/testdata/measurement.csv', 0);
-    ys: csv('tests/testdata/measurement.csv', 2);
-    color: #06c;
+  data: csv('tests/testdata/measurement.csv');
+  x: $0;
+  y: $2;
+
+  axis-x-format: datetime("%H:%M:%S");
+
+  layer {
+    type: lines;
+    line-color: $0;
   }
 }

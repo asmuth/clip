@@ -2,20 +2,14 @@ width: 1200px;
 height: 480px;
 
 plot {
-  axis-top: off;
-  axis-right: off;
+  data: csv('tests/testdata/measurement.csv');
+  x: $0;
+  y: $2;
 
-  margin: 0px;
-  margin-top: 1.1rem;
-  margin-bottom: 2.6rem;
-  margin-left: 5rem;
-  margin-right: 3.4rem;
+  axis-x-format: datetime("%H:%M:%S");
 
-  xdomain-format: datetime("%H:%M:%S");
-  ydomain-format: fixed(1);
-
-  series {
-    xs: csv('tests/testdata/measurement.csv', 0);
-    ys: csv('tests/testdata/measurement.csv', 2);
+  layer {
+    type: lines;
+    line-color: $0;
   }
 }

@@ -47,16 +47,6 @@ LegendConfig::LegendConfig() :
     position_horiz(HAlign::LEFT),
     position_vert(VAlign::TOP) {}
 
-void LegendConfig::addEntry(
-    const std::string& name,
-    const Color& color,
-    const std::string& shape /* = "circle" */) {
-  LegendItem item;
-  item.title = name;
-  item.color = color;
-  entries.emplace_back(std::move(item));
-}
-
 ReturnCode legend_layout(
     const LegendConfig& legend,
     Point origin,

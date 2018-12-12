@@ -3,12 +3,13 @@ height: 480px;
 
 plot {
   data: csv('tests/testdata/measurement.csv');
-  x: 0;
-  y: 2;
+  x: $0;
+  y: $2;
 
-  xdomain-format: datetime("%H:%M:%S");
+  axis-x-format: datetime("%H:%M:%S");
 
-  series {
+  layer {
+    type: lines;
+    line-color: $0;
   }
-
 }

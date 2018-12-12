@@ -1,28 +1,40 @@
 city,month,temperature
-Tokyo,Dec,9.6
-Tokyo,Nov,13.9
-Tokyo,Oct,18.3
-Tokyo,Sep,23.3
-Tokyo,Aug,26.5
-Tokyo,Jul,25.2
-Tokyo,Jun,21.5
-Tokyo,May,18.2
-Tokyo,Apr,14.5
-Tokyo,Mar,9.5
-Tokyo,Feb,6.9
-Tokyo,Jan,7.0
-New York,Dec,2.5
-New York,Nov,8.6
-New York,Oct,14.1
-New York,Sep,20.1
-New York,Aug,24.1
-New York,Jul,24.8
-New York,Jun,22.0
-New York,May,17.0
-New York,Apr,11.3
-New York,Mar,5.7
-New York,Feb,0.8
 New York,Jan,-0.2
+New York,Feb,0.8
+New York,Mar,5.7
+New York,Apr,11.3
+New York,May,17.0
+New York,Jun,22.0
+New York,Jul,24.8
+New York,Aug,24.1
+New York,Sep,20.1
+New York,Oct,14.1
+New York,Nov,8.6
+New York,Dec,2.5
+北京市   ,Jan,-7.4
+北京市   ,Feb,-5.8
+北京市   ,Mar,-0.1
+北京市   ,Apr,7.1
+北京市   ,May,14.7
+北京市   ,Jun,17.7
+北京市   ,Jul,20.6
+北京市   ,Aug,18.8
+北京市   ,Sep,12.6
+北京市   ,Oct,6.1
+北京市   ,Nov,1.1
+北京市   ,Dec,-3.6
+Москва,Jan,-4
+Москва,Feb,-1.4
+Москва,Mar,5.4
+Москва,Apr,13.5
+Москва,May,19.9
+Москва,Jun,24.3
+Москва,Jul,26.3
+Москва,Aug,24.9
+Москва,Sep,19.9
+Москва,Oct,13.1
+Москва,Nov,4.7
+Москва,Dec,-1.8
 Berlin,Jan,-0.9
 Berlin,Feb,0.6
 Berlin,Mar,3.5
@@ -35,15 +47,3 @@ Berlin,Sep,14.3
 Berlin,Oct,9.0
 Berlin,Nov,3.9
 Berlin,Dec,1.0
-London,Jan,3.9
-London,Feb,4.2
-London,Mar,5.7
-London,Apr,8.5
-London,May,11.9
-London,Jun,15.2
-London,Jul,17.0
-London,Aug,16.6
-London,Sep,14.2
-London,Oct,10.3
-London,Nov,6.6
-London,Dec,4.8
