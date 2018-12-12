@@ -71,5 +71,21 @@ Value value_from_float(double v) {
   return std::to_string(v);
 }
 
+std::vector<std::pair<size_t, size_t>> column_group(const DataColumn& col) {
+  std::vector<std::pair<size_t, size_t>> groups;
+
+  for (size_t idx = 0; idx < col.data.size(); ) {
+    auto begin = idx;
+    auto end = idx;
+    while (end < col.data.size() && col.data[end] == col.data[begin]) {
+      end = idx++;
+    }
+
+    groups.emplace_back(begin, end);
+  }
+
+  return groups;
+}
+
 } // namespace plotfx
 

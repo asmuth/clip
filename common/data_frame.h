@@ -52,6 +52,8 @@ ReturnCode column_find(
     const std::string& column_name,
     const DataColumn** column);
 
+std::vector<std::pair<size_t, size_t>> column_group(const DataColumn& col);
+
 size_t series_len(const Series& s);
 
 std::vector<double> series_to_float(const Series& s);
