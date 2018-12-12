@@ -52,7 +52,13 @@ ReturnCode column_find(
     const std::string& column_name,
     const DataColumn** column);
 
-std::vector<std::pair<size_t, size_t>> column_group(const DataColumn& col);
+struct DataGroup {
+  Value key;
+  size_t begin;
+  size_t end;
+};
+
+std::vector<DataGroup> column_group(const DataColumn& col);
 
 size_t series_len(const Series& s);
 

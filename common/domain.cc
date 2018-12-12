@@ -55,18 +55,13 @@ void domain_fit_continuous(const Series& data_raw, DomainConfig* domain) {
 }
 
 void domain_fit_categorical(const Series& data, DomainConfig* domain) {
-  std::set<std::string> cache;
-  for (const auto& d : domain->categories) {
-    cache.insert(d);
-  }
-
   for (const auto& d : data) {
-    if (cache.count(d) > 0) {
+    if (domain->map.count(d) > 0) {
       continue;
     }
 
+    domain->map.emplace(d, domain->categories.size());
     domain->categories.emplace_back(d);
-    cache.insert(d);
   }
 }
 
@@ -152,16 +147,16 @@ std::vector<double> domain_translate_log(
 std::vector<double> domain_translate_categorical(
     const DomainConfig& domain,
     const Series& series) {
-  std::unordered_map<std::string, double> cache;
-  for (size_t i = 0; i < domain.categories.size(); ++i) {
-    cache.emplace(domain.categories[i], double(i));
-  }
-
   double category_count = domain.categories.size();
 
   std::vector<double> mapped;
   for (const auto& v : series) {
-    auto vt = (cache[v] / category_count) + (0.5 / category_count);
+    size_t vi = 0;
+    if (auto vm = domain.map.find(v); vm != domain.map.end()) {
+      vi = vm->second;
+    }
+
+    auto vt = (vi / category_count) + (0.5 / category_count);
 
     if (domain.inverted) {
       vt = 1.0 - vt;
@@ -257,6 +252,28 @@ Series domain_untranslate(
   }
 
   return {};
+}
+
+Color domain_get_color_categorical(
+    const DomainConfig& domain,
+    const Value& value) {
+  size_t seq = 0;
+  if (auto iter = domain.map.find(value); iter != domain.map.end()) {
+    seq = iter->second;
+  }
+
+  return domain.colors.get(seq);
+}
+
+Color domain_get_color(
+    const DomainConfig& domain,
+    const Value& value) {
+  switch (domain.kind) {
+    case DomainKind::CATEGORICAL:
+      return domain_get_color_categorical(domain, value);
+    default:
+      return Color::fromRGB(0,0,0);
+  }
 }
 
 ReturnCode domain_configure(

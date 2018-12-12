@@ -48,6 +48,12 @@ public:
           colors_(colors),
           color_index_(0) {}
 
+  Color get(size_t seq) const {
+    Color c;
+    c.parse(colors_[seq % colors_.size()]);
+    return c;
+  }
+
   Color next() {
     Color c;
     c.parse(colors_[color_index_++ % colors_.size()]);

@@ -61,26 +61,43 @@ ReturnCode draw_lines(
     return rc;
   }
 
-  const auto& domain_x = plot.domain_x;
-  const auto& domain_y = plot.domain_y;
-
   if (column_x->data.size() != column_y->data.size()) {
     // FIXME error msg
     return ERROR_INVALID_ARGUMENT;
   }
 
-  auto x = domain_translate(domain_x, column_x->data);
-  auto y = domain_translate(domain_y, column_y->data);
+  const DataColumn* column_group = nullptr;
+  if (!plot.column_group.empty()) {
+    if (auto rc = column_find(plot.data, plot.column_group, &column_group); !rc) {
+      return rc;
+    }
+  }
 
-  /* draw line */
-  {
+  std::vector<DataGroup> groups;
+  if (column_group) {
+    groups = plotfx::column_group(*column_group);
+  } else {
+    DataGroup g;
+    g.begin = 0;
+    g.end = column_x->data.size();
+    groups.emplace_back(g);
+  }
+
+  const auto& domain_x = plot.domain_x;
+  const auto& domain_y = plot.domain_y;
+  const auto& domain_group = plot.domain_group;
+
+  for (const auto& group : groups) {
+    auto x = domain_translate(domain_x, column_x->data);
+    auto y = domain_translate(domain_y, column_y->data);
+
     Path path;
 
-    for (size_t i = 0; i < column_x->data.size(); ++i) {
+    for (size_t i = group.begin; i < group.end; ++i) {
       auto sx = clip.x + x[i] * clip.w;
       auto sy = clip.y + (1.0 - y[i]) * clip.h;
 
-      if (i == 0) {
+      if (i == group.begin) {
         path.moveTo(sx, sy);
       } else {
         path.lineTo(sx, sy);
@@ -92,53 +109,53 @@ ReturnCode draw_lines(
         config.line_width,
         from_pt(kDefaultLineWidthPT, doc.dpi));
 
-    style.color = config.line_color;
+    style.color = domain_get_color(domain_group, group.key);
     strokePath(layer, clip, path, style);
   }
 
-  /* draw points */
-  auto point_size = config.point_size;
-  if (point_size > 0) {
-    FillStyle style;
-    style.color = config.point_color;
-    for (size_t i = 0; i < column_x->data.size(); ++i) {
-      auto sx = clip.x + x[i] * clip.w;
-      auto sy = clip.y + (1.0 - y[i]) * clip.h;
+  ///* draw points */
+  //auto point_size = config.point_size;
+  //if (point_size > 0) {
+  //  FillStyle style;
+  //  style.color = config.point_color;
+  //  for (size_t i = 0; i < column_x->data.size(); ++i) {
+  //    auto sx = clip.x + x[i] * clip.w;
+  //    auto sy = clip.y + (1.0 - y[i]) * clip.h;
 
-      // FIXME point style
-      Path path;
-      path.moveTo(sx + point_size, sy);
-      path.arcTo(sx, sy, point_size, 0, M_PI * 2);
-      fillPath(layer, clip, path, style);
-    }
-  }
+  //    // FIXME point style
+  //    Path path;
+  //    path.moveTo(sx + point_size, sy);
+  //    path.arcTo(sx, sy, point_size, 0, M_PI * 2);
+  //    fillPath(layer, clip, path, style);
+  //  }
+  //}
 
-  /* draw labels */
-  for (size_t i = 0; i < column_x->data.size(); ++i) {
-    if (i >= config.labels.size()) {
-      break;
-    }
+  ///* draw labels */
+  //for (size_t i = 0; i < column_x->data.size(); ++i) {
+  //  if (i >= config.labels.size()) {
+  //    break;
+  //  }
 
-    const auto& label_text = config.labels[i];
-    auto label_padding = measure_or(
-        config.label_padding,
-        from_em(kDefaultLabelPaddingEM, config.label_font_size));
+  //  const auto& label_text = config.labels[i];
+  //  auto label_padding = measure_or(
+  //      config.label_padding,
+  //      from_em(kDefaultLabelPaddingEM, config.label_font_size));
 
-    Point p(
-        clip.x + x[i] * clip.w,
-        clip.y + (1.0 - y[i]) * clip.h - label_padding);
+  //  Point p(
+  //      clip.x + x[i] * clip.w,
+  //      clip.y + (1.0 - y[i]) * clip.h - label_padding);
 
-    TextStyle style;
-    style.font = config.label_font;
-    style.color = config.label_color;
-    style.font_size = config.label_font_size;
+  //  TextStyle style;
+  //  style.font = config.label_font;
+  //  style.color = config.label_color;
+  //  style.font_size = config.label_font_size;
 
-    auto ax = HAlign::CENTER;
-    auto ay = VAlign::BOTTOM;
-    if (auto rc = drawTextLabel(label_text, p, ax, ay, style, layer); rc != OK) {
-      return rc;
-    }
-  }
+  //  auto ax = HAlign::CENTER;
+  //  auto ay = VAlign::BOTTOM;
+  //  if (auto rc = drawTextLabel(label_text, p, ax, ay, style, layer); rc != OK) {
+  //    return rc;
+  //  }
+  //}
 
   return OK;
 }
@@ -150,43 +167,43 @@ ReturnCode configure(const plist::Property& prop, const Document& doc, PlotConfi
 
   auto color = config->color_scheme.next();
 
-  PlotLinesConfig series;
-  series.line_color = color;
-  series.point_color = color;
-  series.label_font = doc.font_sans;
-  series.label_font_size = doc.font_size;
-  series.label_color = doc.text_color; // FIXME: lighten by 20%
+  PlotLinesConfig layer;
+  layer.line_color = color;
+  layer.point_color = color;
+  layer.label_font = doc.font_sans;
+  layer.label_font_size = doc.font_size;
+  layer.label_color = doc.text_color; // FIXME: lighten by 20%
 
   static const ParserDefinitions pdefs = {
-    {"title", std::bind(&configure_string, std::placeholders::_1, &series.title)},
+    {"title", std::bind(&configure_string, std::placeholders::_1, &layer.title)},
     {
       "color",
       configure_multiprop({
-          std::bind(&configure_color, std::placeholders::_1, &series.line_color),
-          std::bind(&configure_color, std::placeholders::_1, &series.point_color),
+          std::bind(&configure_color, std::placeholders::_1, &layer.line_color),
+          std::bind(&configure_color, std::placeholders::_1, &layer.point_color),
       })
     },
-    {"line-color", std::bind(&configure_color, std::placeholders::_1, &series.line_color)},
-    {"line-width", std::bind(&configure_measure_rel, std::placeholders::_1, doc.dpi, doc.font_size, &series.line_width)},
-    {"point-color", std::bind(&configure_color, std::placeholders::_1, &series.point_color)},
-    {"point-size", std::bind(&configure_measure_rel, std::placeholders::_1, doc.dpi, doc.font_size, &series.point_size)},
+    {"line-color", std::bind(&configure_color, std::placeholders::_1, &layer.line_color)},
+    {"line-width", std::bind(&configure_measure_rel, std::placeholders::_1, doc.dpi, doc.font_size, &layer.line_width)},
+    {"point-color", std::bind(&configure_color, std::placeholders::_1, &layer.point_color)},
+    {"point-size", std::bind(&configure_measure_rel, std::placeholders::_1, doc.dpi, doc.font_size, &layer.point_size)},
   };
 
   if (auto rc = parseAll(*prop.next, pdefs); !rc) {
     return rc;
   }
 
-  config->series.emplace_back(PlotSeries {
+  config->layers.emplace_back(PlotLayer {
     .draw = std::bind(
         &draw_lines,
         std::placeholders::_1,
-        series,
+        layer,
         std::placeholders::_2,
         std::placeholders::_3,
         std::placeholders::_4),
   });
 
-  config->legend.addEntry(series.title, color);
+  config->legend.addEntry(layer.title, color);
   return OK;
 }
 

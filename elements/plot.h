@@ -44,15 +44,15 @@ namespace plotfx {
 namespace plot {
 struct PlotConfig;
 
-using PlotSeriesDrawFn = std::function<
+using PlotLayerDrawFn = std::function<
     ReturnCode (
         const PlotConfig& plot,
         const Document& doc,
         const Rectangle& clip,
         Layer* frame)>;
 
-struct PlotSeries {
-  PlotSeriesDrawFn draw;
+struct PlotLayer {
+  PlotLayerDrawFn draw;
 };
 
 struct PlotConfig {
@@ -60,15 +60,17 @@ struct PlotConfig {
   DataFrame data;
   std::string column_x;
   std::string column_y;
+  std::string column_group;
   DomainConfig domain_x;
   DomainConfig domain_y;
+  DomainConfig domain_group;
   AxisDefinition axis_top;
   AxisDefinition axis_right;
   AxisDefinition axis_bottom;
   AxisDefinition axis_left;
   Measure margins[4];
   ColorScheme color_scheme;
-  std::vector<PlotSeries> series;
+  std::vector<PlotLayer> layers;
   LegendConfig legend;
 };
 

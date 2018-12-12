@@ -37,6 +37,7 @@
 #include <unordered_map>
 #include "utils/return_code.h"
 #include "plist/plist.h"
+#include "common/color_scheme.h"
 #include "common/data_frame.h"
 
 namespace plotfx {
@@ -56,6 +57,8 @@ struct DomainConfig {
   std::optional<double> max_auto;
   std::optional<double> log_base;
   std::vector<std::string> categories;
+  std::unordered_map<std::string, double> map;
+  ColorScheme colors;
   double padding;
 };
 
@@ -68,6 +71,10 @@ std::vector<double> domain_translate(
 Series domain_untranslate(
     const DomainConfig& domain,
     const std::vector<double>& data);
+
+Color domain_get_color(
+    const DomainConfig& domain,
+    const Value& value);
 
 ReturnCode domain_configure(
     const plist::Property& prop,

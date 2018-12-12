@@ -96,8 +96,8 @@ ReturnCode draw(
     return rc;
   }
 
-  // render series
-  for (const auto& s : config.series) {
+  // render layer
+  for (const auto& s : config.layers) {
     if (auto rc = s.draw(config, doc, bbox, layer); !rc) {
       return rc;
     }
@@ -111,7 +111,7 @@ ReturnCode draw(
   return ReturnCode::success();
 }
 
-ReturnCode configure_series(const plist::Property& prop, const Document& doc, PlotConfig* config) {
+ReturnCode configure_layer(const plist::Property& prop, const Document& doc, PlotConfig* config) {
   if (auto rc = lines::configure(prop, doc, config); !rc) {
     return rc;
   }
@@ -126,6 +126,7 @@ ReturnCode configure(
   PlotConfig config;
 
   // FIXME
+  config.domain_group.kind = DomainKind::CATEGORICAL;
   config.color_scheme = doc.color_scheme;
   config.axis_top.font = doc.font_sans;
   config.axis_top.label_font_size = doc.font_size;
@@ -153,6 +154,7 @@ ReturnCode configure(
     {"data", std::bind(&configure_data_frame, std::placeholders::_1, &config.data)},
     {"x", std::bind(&configure_string, std::placeholders::_1, &config.column_x)},
     {"y", std::bind(&configure_string, std::placeholders::_1, &config.column_y)},
+    {"group", std::bind(&configure_string, std::placeholders::_1, &config.column_group)},
     {
       "margin",
       configure_multiprop({
@@ -244,11 +246,11 @@ ReturnCode configure(
     return rc;
   }
 
-  static const ParserDefinitions pdefs_series = {
-    {"series", std::bind(&configure_series, std::placeholders::_1, doc, &config)}
+  static const ParserDefinitions pdefs_layer = {
+    {"layer", std::bind(&configure_layer, std::placeholders::_1, doc, &config)}
   };
 
-  if (auto rc = parseAll(plist, pdefs_series); !rc.isSuccess()) {
+  if (auto rc = parseAll(plist, pdefs_layer); !rc.isSuccess()) {
     return rc;
   }
 
@@ -263,6 +265,13 @@ ReturnCode configure(
     return rc;
   }
 
+  const DataColumn* column_group = nullptr;
+  if (!config.column_group.empty()) {
+    if (auto rc = column_find(config.data, config.column_group, &column_group); !rc) {
+      return rc;
+    }
+  }
+
   if (column_x->data.size() != column_y->data.size()) {
     // FIXME error msg
     return ERROR_INVALID_ARGUMENT;
@@ -271,6 +280,9 @@ ReturnCode configure(
   /* configure domains */
   domain_fit(column_x->data, &config.domain_x);
   domain_fit(column_y->data, &config.domain_y);
+  if (column_group) {
+    domain_fit(column_group->data, &config.domain_group);
+  }
 
   /* configure axes */
   if (auto rc = axis_configure(
