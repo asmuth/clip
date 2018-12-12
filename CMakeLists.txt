@@ -23,7 +23,9 @@ add_definitions(-DFNORDMETRIC_VERSION="unstable")
 add_library(plotfxlib STATIC
     elements/plot.cc
     elements/plot_axis.cc
+    elements/plot_labels.cc
     elements/plot_lines.cc
+    elements/plot_points.cc
     elements/legend.cc
     common/config_helpers.cc
     common/data_frame.cc

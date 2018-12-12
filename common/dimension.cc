@@ -55,20 +55,22 @@ void dimension_add(
   map->emplace(d.key, d);
 }
 
-DimensionMapFn<Color> dimension_map_color_continuous() {
-  return [] (const auto& dimension, const auto& value, Color* color) {
-    *color = dimension.colors.get(domain_translate(dimension.domain, value));
+DimensionMapFn<Color> dimension_map_color_continuous(
+    const ColorScheme& palette) {
+  return [palette] (const auto& dimension, const auto& value, Color* color) {
+    *color = palette.get(domain_translate(dimension.domain, value));
     return OK;
   };
 }
 
-DimensionMapFn<Color> dimension_map_color_discrete() {
-  return [] (const auto& dimension, const auto& value, Color* color) {
+DimensionMapFn<Color> dimension_map_color_discrete(
+    const ColorScheme& palette) {
+  return [palette] (const auto& dimension, const auto& value, Color* color) {
     auto idx =
         domain_translate(dimension.domain, value) *
         domain_cardinality(dimension.domain);
 
-    *color = dimension.colors.get(idx);
+    *color = palette.get(idx);
     return OK;
   };
 }

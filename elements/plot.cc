@@ -35,7 +35,9 @@
 #include <graphics/text.h>
 #include <graphics/layout.h>
 #include "common/config_helpers.h"
+#include "plot_labels.h"
 #include "plot_lines.h"
+#include "plot_points.h"
 #include "legend.h"
 
 namespace plotfx {
@@ -112,11 +114,21 @@ ReturnCode draw(
 }
 
 ReturnCode configure_layer(const plist::Property& prop, const Document& doc, PlotConfig* config) {
-  if (auto rc = lines::configure(prop, doc, config); !rc) {
+  std::string type = "points";
+  static const ParserDefinitions pdefs = {
+    {"type", std::bind(&configure_string, std::placeholders::_1, &type)},
+  };
+
+  if (auto rc = parseAll(*prop.next, pdefs); !rc) {
     return rc;
   }
 
-  return OK;
+  // FIXME proper lookup
+  if (type == "labels") return labels::configure(prop, doc, config);
+  if (type == "lines") return lines::configure(prop, doc, config);
+  if (type == "points") return points::configure(prop, doc, config);
+
+  return ReturnCode::errorf("EARG", "invalid layer type: '$0'", type);
 }
 
 ReturnCode configure(
@@ -126,8 +138,6 @@ ReturnCode configure(
   PlotConfig config;
 
   // FIXME
-  config.domain_group.kind = DomainKind::CATEGORICAL;
-  config.color_scheme = doc.color_scheme;
   config.axis_top.font = doc.font_sans;
   config.axis_top.label_font_size = doc.font_size;
   config.axis_top.border_color = doc.border_color;

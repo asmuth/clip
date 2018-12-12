@@ -35,56 +35,34 @@
 #include <graphics/viewport.h>
 #include <common/domain.h>
 #include <common/element.h>
-#include <common/document.h>
-#include <common/data_frame.h>
+#include <common/config_helpers.h>
 #include "plot_axis.h"
-#include "legend.h"
-#include "dimension.h"
+#include "plot.h"
 
 namespace plotfx {
 namespace plot {
-struct PlotConfig;
+namespace labels {
 
-using PlotLayerDrawFn = std::function<
-    ReturnCode (
-        const PlotConfig& plot,
-        const Document& doc,
-        const Rectangle& clip,
-        Layer* frame)>;
-
-struct PlotLayer {
-  PlotLayerDrawFn draw;
-};
-
-struct PlotConfig {
-  PlotConfig();
-  DataFrame data;
-  std::string column_x;
-  std::string column_y;
-  std::string column_group;
-  DomainConfig domain_x;
-  DomainConfig domain_y;
-  AxisDefinition axis_top;
-  AxisDefinition axis_right;
-  AxisDefinition axis_bottom;
-  AxisDefinition axis_left;
-  Measure margins[4];
-  DimensionMap dimensions;
-  std::vector<PlotLayer> layers;
-  LegendConfig legend;
+struct PlotLabelsConfig {
+  PlotLabelsConfig();
+  FontInfo label_font;
+  Measure label_padding;
+  Measure label_font_size;
+  Color label_color;
 };
 
 ReturnCode draw(
-    const PlotConfig& config,
+    const PlotLabelsConfig& config,
     const Document& doc,
     const Rectangle& clip,
     Layer* frame);
 
 ReturnCode configure(
+    const plist::Property& prop,
     const Document& doc,
-    const plist::PropertyList& plist,
-    ElementRef* elem);
+    plot::PlotConfig* plot);
 
+} // namespace labels
 } // namespace plot
 } // namespace plotfx
 

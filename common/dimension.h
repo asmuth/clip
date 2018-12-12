@@ -37,7 +37,6 @@ namespace plotfx {
 struct DimensionConfig {
   std::string key;
   DomainConfig domain;
-  ColorScheme colors;
 };
 
 using DimensionMap = std::unordered_map<std::string, DimensionConfig>;
@@ -57,8 +56,8 @@ void dimension_add(
     DimensionMap* map,
     const std::string& key);
 
-DimensionMapFn<Color> dimension_map_color_continuous();
-DimensionMapFn<Color> dimension_map_color_discrete();
+DimensionMapFn<Color> dimension_map_color_continuous(const ColorScheme& palette);
+DimensionMapFn<Color> dimension_map_color_discrete(const ColorScheme& palette);
 
 ReturnCode dimension_resolve(
     const DataFrame& data,

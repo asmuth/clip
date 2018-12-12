@@ -28,7 +28,7 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-#include "plot_lines.h"
+#include "plot_labels.h"
 #include <plotfx.h>
 #include <graphics/path.h>
 #include <graphics/brush.h>
@@ -38,16 +38,16 @@
 
 namespace plotfx {
 namespace plot {
-namespace lines {
+namespace labels {
 
 static const double kDefaultLineWidthPT = 2;
 static const double kDefaultLabelPaddingEM = 0.8;
 
-PlotLinesConfig::PlotLinesConfig() {}
+PlotLabelsConfig::PlotLabelsConfig() {}
 
-ReturnCode draw_lines(
+ReturnCode draw_labels(
     const PlotConfig& plot,
-    const PlotLinesConfig& config,
+    const PlotLabelsConfig& config,
     const Document& doc,
     const Rectangle& clip,
     Layer* layer) {
@@ -76,58 +76,32 @@ ReturnCode draw_lines(
     return ERROR_INVALID_ARGUMENT;
   }
 
-  const DataColumn* column_group = nullptr;
-  if (!plot.column_group.empty()) {
-    if (auto rc = column_find(plot.data, plot.column_group, &column_group); !rc) {
-      return rc;
-    }
-  }
+  ///* draw labels */
+  //for (size_t i = 0; i < column_x->data.size(); ++i) {
+  //  if (i >= config.labels.size()) {
+  //    break;
+  //  }
 
-  std::vector<DataGroup> groups;
-  if (column_group) {
-    groups = plotfx::column_group(*column_group);
-  } else {
-    DataGroup g;
-    g.begin = 0;
-    g.end = column_x->data.size();
-    groups.emplace_back(g);
-  }
+  //  const auto& label_text = config.labels[i];
+  //  auto label_padding = measure_or(
+  //      config.label_padding,
+  //      from_em(kDefaultLabelPaddingEM, config.label_font_size));
 
-  for (const auto& group : groups) {
-    auto x = domain_translate(dim_x->domain, column_x->data);
-    auto y = domain_translate(dim_y->domain, column_y->data);
+  //  Point p(
+  //      clip.x + x[i] * clip.w,
+  //      clip.y + (1.0 - y[i]) * clip.h - label_padding);
 
-    Color color;
-    if (auto rc = resolve_slot(
-          config.line_color,
-          dimension_map_color_discrete(config.line_color_palette),
-          plot.dimensions,
-          plot.data,
-          group.begin, // FIXME
-          &color); !rc) {
-      return rc;
-    }
+  //  TextStyle style;
+  //  style.font = config.label_font;
+  //  style.color = config.label_color;
+  //  style.font_size = config.label_font_size;
 
-    Path path;
-    for (size_t i = group.begin; i < group.end; ++i) {
-      auto sx = clip.x + x[i] * clip.w;
-      auto sy = clip.y + (1.0 - y[i]) * clip.h;
-
-      if (i == group.begin) {
-        path.moveTo(sx, sy);
-      } else {
-        path.lineTo(sx, sy);
-      }
-    }
-
-    StrokeStyle style;
-    style.color = color;
-    style.line_width = measure_or(
-        config.line_width,
-        from_pt(kDefaultLineWidthPT, doc.dpi));
-
-    strokePath(layer, clip, path, style);
-  }
+  //  auto ax = HAlign::CENTER;
+  //  auto ay = VAlign::BOTTOM;
+  //  if (auto rc = drawTextLabel(label_text, p, ax, ay, style, layer); rc != OK) {
+  //    return rc;
+  //  }
+  //}
 
   return OK;
 }
@@ -137,9 +111,11 @@ ReturnCode configure(const plist::Property& prop, const Document& doc, PlotConfi
     return ERROR_INVALID_ARGUMENT;
   }
 
-  PlotLinesConfig layer;
+  PlotLabelsConfig layer;
+  layer.label_font = doc.font_sans; // FIXME
+  layer.label_font_size = doc.font_size; // FIXME
+
   static const ParserDefinitions pdefs = {
-    {"line-color", configure_slot(&config->dimensions, &layer.line_color)},
   };
 
   if (auto rc = parseAll(*prop.next, pdefs); !rc) {
@@ -148,7 +124,7 @@ ReturnCode configure(const plist::Property& prop, const Document& doc, PlotConfi
 
   config->layers.emplace_back(PlotLayer {
     .draw = std::bind(
-        &draw_lines,
+        &draw_labels,
         std::placeholders::_1,
         layer,
         std::placeholders::_2,
@@ -159,7 +135,7 @@ ReturnCode configure(const plist::Property& prop, const Document& doc, PlotConfi
   return OK;
 }
 
-} // namespace lines
+} // namespace labels
 } // namespace plot
 } // namespace plotfx
 

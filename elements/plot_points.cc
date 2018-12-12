@@ -28,7 +28,7 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-#include "plot_lines.h"
+#include "plot_points.h"
 #include <plotfx.h>
 #include <graphics/path.h>
 #include <graphics/brush.h>
@@ -38,16 +38,16 @@
 
 namespace plotfx {
 namespace plot {
-namespace lines {
+namespace points {
 
 static const double kDefaultLineWidthPT = 2;
 static const double kDefaultLabelPaddingEM = 0.8;
 
-PlotLinesConfig::PlotLinesConfig() {}
+PlotPointsConfig::PlotPointsConfig() {}
 
-ReturnCode draw_lines(
+ReturnCode draw_points(
     const PlotConfig& plot,
-    const PlotLinesConfig& config,
+    const PlotPointsConfig& config,
     const Document& doc,
     const Rectangle& clip,
     Layer* layer) {
@@ -76,57 +76,31 @@ ReturnCode draw_lines(
     return ERROR_INVALID_ARGUMENT;
   }
 
-  const DataColumn* column_group = nullptr;
-  if (!plot.column_group.empty()) {
-    if (auto rc = column_find(plot.data, plot.column_group, &column_group); !rc) {
-      return rc;
-    }
-  }
+  auto x = domain_translate(dim_x->domain, column_x->data);
+  auto y = domain_translate(dim_y->domain, column_y->data);
 
-  std::vector<DataGroup> groups;
-  if (column_group) {
-    groups = plotfx::column_group(*column_group);
-  } else {
-    DataGroup g;
-    g.begin = 0;
-    g.end = column_x->data.size();
-    groups.emplace_back(g);
-  }
+  for (size_t i = 0; i < column_x->data.size(); ++i) {
+    auto sx = clip.x + x[i] * clip.w;
+    auto sy = clip.y + (1.0 - y[i]) * clip.h;
 
-  for (const auto& group : groups) {
-    auto x = domain_translate(dim_x->domain, column_x->data);
-    auto y = domain_translate(dim_y->domain, column_y->data);
-
-    Color color;
+    FillStyle style;
     if (auto rc = resolve_slot(
-          config.line_color,
-          dimension_map_color_discrete(config.line_color_palette),
+          config.point_color,
+          dimension_map_color_discrete(config.point_color_palette),
           plot.dimensions,
           plot.data,
-          group.begin, // FIXME
-          &color); !rc) {
+          i,
+          &style.color); !rc) {
       return rc;
     }
 
+    auto point_size = 5; // FIXME
+
+    // FIXME point style
     Path path;
-    for (size_t i = group.begin; i < group.end; ++i) {
-      auto sx = clip.x + x[i] * clip.w;
-      auto sy = clip.y + (1.0 - y[i]) * clip.h;
-
-      if (i == group.begin) {
-        path.moveTo(sx, sy);
-      } else {
-        path.lineTo(sx, sy);
-      }
-    }
-
-    StrokeStyle style;
-    style.color = color;
-    style.line_width = measure_or(
-        config.line_width,
-        from_pt(kDefaultLineWidthPT, doc.dpi));
-
-    strokePath(layer, clip, path, style);
+    path.moveTo(sx + point_size, sy);
+    path.arcTo(sx, sy, point_size, 0, M_PI * 2);
+    fillPath(layer, clip, path, style);
   }
 
   return OK;
@@ -137,9 +111,9 @@ ReturnCode configure(const plist::Property& prop, const Document& doc, PlotConfi
     return ERROR_INVALID_ARGUMENT;
   }
 
-  PlotLinesConfig layer;
+  PlotPointsConfig layer;
   static const ParserDefinitions pdefs = {
-    {"line-color", configure_slot(&config->dimensions, &layer.line_color)},
+    {"point-color", configure_slot(&config->dimensions, &layer.point_color)},
   };
 
   if (auto rc = parseAll(*prop.next, pdefs); !rc) {
@@ -148,7 +122,7 @@ ReturnCode configure(const plist::Property& prop, const Document& doc, PlotConfi
 
   config->layers.emplace_back(PlotLayer {
     .draw = std::bind(
-        &draw_lines,
+        &draw_points,
         std::placeholders::_1,
         layer,
         std::placeholders::_2,
@@ -159,7 +133,7 @@ ReturnCode configure(const plist::Property& prop, const Document& doc, PlotConfi
   return OK;
 }
 
-} // namespace lines
+} // namespace points
 } // namespace plot
 } // namespace plotfx
 

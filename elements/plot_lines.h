@@ -45,16 +45,9 @@ namespace lines {
 
 struct PlotLinesConfig {
   PlotLinesConfig();
-  std::string title;
-  Series labels;
-  FontInfo label_font;
-  Measure label_padding;
-  Measure label_font_size;
-  Color label_color;
-  Measure line_width;
   Slot<Color> line_color;
-  Measure point_size;
-  Color point_color;
+  ColorScheme line_color_palette;
+  Measure line_width;
 };
 
 ReturnCode draw(

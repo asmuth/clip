@@ -1,6 +1,7 @@
 /**
  * This file is part of the "plotfx" project
- *   Copyright (c) 2011-2014 Paul Asmuth, Google Inc.
+ *   Copyright (c) 2018 Paul Asmuth
+ *   Copyright (c) 2014 Paul Asmuth, Google Inc.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -27,24 +28,41 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+#pragma once
 #include <stdlib.h>
-#include "pointchart.h"
-#include <utils/exception.h>
+#include <plist/plist.h>
+#include <graphics/layer.h>
+#include <graphics/viewport.h>
+#include <common/domain.h>
+#include <common/element.h>
+#include <common/config_helpers.h>
+#include "plot_axis.h"
+#include "plot.h"
 
 namespace plotfx {
-namespace chart {
+namespace plot {
+namespace points {
 
-char PointChart::kDefaultPointStyle[] = "circle";
-char PointChart::kDefaultPointSize[] = "3";
+struct PlotPointsConfig {
+  PlotPointsConfig();
+  Measure line_width;
+  Slot<Color> point_color;
+  ColorScheme point_color_palette;
+  Measure point_size;
+};
 
-PointChart::PointChart(
-    chart::Canvas* canvas) :
-    Drawable(canvas),
-    show_labels_(false) {}
+ReturnCode draw(
+    const PlotPointsConfig& config,
+    const Document& doc,
+    const Rectangle& clip,
+    Layer* frame);
 
-void PointChart::setLabels(bool show_labels) {
-  show_labels_ = show_labels;
-}
+ReturnCode configure(
+    const plist::Property& prop,
+    const Document& doc,
+    plot::PlotConfig* plot);
 
-}
-}
+} // namespace points
+} // namespace plot
+} // namespace plotfx
+
