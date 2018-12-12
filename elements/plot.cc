@@ -44,8 +44,17 @@ namespace plotfx {
 namespace plot {
 
 PlotConfig::PlotConfig() {
-  domain_y.padding = 0.1f;
-  domain_y.min_auto_snap_zero = true;
+  {
+    DomainConfig d;
+    scales.emplace("x", d);
+  }
+
+  {
+    DomainConfig d;
+    d.padding = 0.1f;
+    d.min_auto_snap_zero = true;
+    scales.emplace("y", d);
+  }
 }
 
 ReturnCode draw(
@@ -53,10 +62,6 @@ ReturnCode draw(
     const Document& doc,
     const Rectangle& clip,
     Layer* layer) {
-  // setup domains
-  auto domain_x = config.domain_x;
-  auto domain_y = config.domain_y;
-
   // setup layout
   auto bbox = layout_margin_box(
       clip,
@@ -67,8 +72,6 @@ ReturnCode draw(
 
   if (auto rc = axis_layout(
         bbox,
-        domain_x,
-        domain_y,
         config.axis_top,
         config.axis_right,
         config.axis_bottom,
@@ -77,18 +80,10 @@ ReturnCode draw(
         &bbox); !rc) {
     return rc;
   }
-  //auto bbox = layout_margin_box(
-  //    clip,
-  //    to_unit(layer->measures, config.margins[0]).value,
-  //    to_unit(layer->measures, config.margins[1]).value,
-  //    to_unit(layer->measures, config.margins[2]).value,
-  //    to_unit(layer->measures, config.margins[3]).value);
 
   // render axes
   if (auto rc = axis_draw_all(
         bbox,
-        domain_x,
-        domain_y,
         config.axis_top,
         config.axis_right,
         config.axis_bottom,
@@ -160,24 +155,48 @@ ReturnCode configure(
   config.margins[2] = from_em(1.0, doc.font_size);
   config.margins[3] = from_em(1.0, doc.font_size);
 
+  auto domain_x = domain_find(&config.scales, "x");
+  auto domain_y = domain_find(&config.scales, "y");
+
   static const ParserDefinitions pdefs = {
     {"data", std::bind(&configure_data_frame, std::placeholders::_1, &config.data)},
-    {"x", std::bind(&configure_string, std::placeholders::_1, &config.column_x)},
-    {"y", std::bind(&configure_string, std::placeholders::_1, &config.column_y)},
-    {"group", std::bind(&configure_string, std::placeholders::_1, &config.column_group)},
+    {"group", std::bind(&configure_string, std::placeholders::_1, &config.default_group_key)},
+    {"x", std::bind(&configure_string, std::placeholders::_1, &config.default_x_key)},
+    {"y", std::bind(&configure_string, std::placeholders::_1, &config.default_y_key)},
+    {"axis-x-type", std::bind(&domain_configure, std::placeholders::_1, domain_x)},
+    {"axis-x-min", std::bind(&configure_float_opt, std::placeholders::_1, &domain_x->min)},
+    {"axis-x-max", std::bind(&configure_float_opt, std::placeholders::_1, &domain_x->max)},
     {
-      "margin",
+      "axis-x-format",
       configure_multiprop({
-          std::bind(&configure_measure_rel, std::placeholders::_1, doc.dpi, doc.font_size, &config.margins[0]),
-          std::bind(&configure_measure_rel, std::placeholders::_1, doc.dpi, doc.font_size, &config.margins[1]),
-          std::bind(&configure_measure_rel, std::placeholders::_1, doc.dpi, doc.font_size, &config.margins[2]),
-          std::bind(&configure_measure_rel, std::placeholders::_1, doc.dpi, doc.font_size, &config.margins[3])
+          std::bind(&confgure_format, std::placeholders::_1, &config.axis_top.label_formatter),
+          std::bind(&confgure_format, std::placeholders::_1, &config.axis_bottom.label_formatter),
       })
     },
-    {"margin-top", std::bind(&configure_measure_rel, std::placeholders::_1, doc.dpi, doc.font_size, &config.margins[0])},
-    {"margin-right", std::bind(&configure_measure_rel, std::placeholders::_1, doc.dpi, doc.font_size, &config.margins[1])},
-    {"margin-bottom", std::bind(&configure_measure_rel, std::placeholders::_1, doc.dpi, doc.font_size, &config.margins[2])},
-    {"margin-left", std::bind(&configure_measure_rel, std::placeholders::_1, doc.dpi, doc.font_size, &config.margins[3])},
+    {
+      "axis-x-label-placement",
+      configure_multiprop({
+          std::bind(&axis_configure_label_placement, std::placeholders::_1, &config.axis_top.label_placement),
+          std::bind(&axis_configure_label_placement, std::placeholders::_1, &config.axis_bottom.label_placement),
+      })
+    },
+    {"axis-y-type", std::bind(&domain_configure, std::placeholders::_1, domain_y)},
+    {"axis-y-min", std::bind(&configure_float_opt, std::placeholders::_1, &domain_y->min)},
+    {"axis-y-max", std::bind(&configure_float_opt, std::placeholders::_1, &domain_y->max)},
+    {
+      "axis-y-format",
+      configure_multiprop({
+          std::bind(&confgure_format, std::placeholders::_1, &config.axis_left.label_formatter),
+          std::bind(&confgure_format, std::placeholders::_1, &config.axis_right.label_formatter),
+      })
+    },
+    {
+      "axis-y-label-placement",
+      configure_multiprop({
+          std::bind(&axis_configure_label_placement, std::placeholders::_1, &config.axis_left.label_placement),
+          std::bind(&axis_configure_label_placement, std::placeholders::_1, &config.axis_right.label_placement),
+      })
+    },
     {"axis-top", std::bind(&parseAxisModeProp, std::placeholders::_1, &config.axis_top.mode)},
     {"axis-top-format", std::bind(&confgure_format, std::placeholders::_1, &config.axis_top.label_formatter)},
     {
@@ -214,42 +233,19 @@ ReturnCode configure(
           std::placeholders::_1,
           &config.axis_left.label_placement),
     },
-    {"xdomain", std::bind(&domain_configure, std::placeholders::_1, &config.domain_x)},
-    {"ydomain", std::bind(&domain_configure, std::placeholders::_1, &config.domain_y)},
     {
-      "xdomain-format",
+      "margin",
       configure_multiprop({
-          std::bind(&confgure_format, std::placeholders::_1, &config.axis_top.label_formatter),
-          std::bind(&confgure_format, std::placeholders::_1, &config.axis_bottom.label_formatter),
+          std::bind(&configure_measure_rel, std::placeholders::_1, doc.dpi, doc.font_size, &config.margins[0]),
+          std::bind(&configure_measure_rel, std::placeholders::_1, doc.dpi, doc.font_size, &config.margins[1]),
+          std::bind(&configure_measure_rel, std::placeholders::_1, doc.dpi, doc.font_size, &config.margins[2]),
+          std::bind(&configure_measure_rel, std::placeholders::_1, doc.dpi, doc.font_size, &config.margins[3])
       })
     },
-    {
-      "xdomain-label-placement",
-      configure_multiprop({
-          std::bind(&axis_configure_label_placement, std::placeholders::_1, &config.axis_top.label_placement),
-          std::bind(&axis_configure_label_placement, std::placeholders::_1, &config.axis_bottom.label_placement),
-      })
-    },
-    {
-      "ydomain-format",
-      configure_multiprop({
-          std::bind(&confgure_format, std::placeholders::_1, &config.axis_left.label_formatter),
-          std::bind(&confgure_format, std::placeholders::_1, &config.axis_right.label_formatter),
-      })
-    },
-    {
-      "ydomain-label-placement",
-      configure_multiprop({
-          std::bind(&axis_configure_label_placement, std::placeholders::_1, &config.axis_left.label_placement),
-          std::bind(&axis_configure_label_placement, std::placeholders::_1, &config.axis_right.label_placement),
-      })
-    },
-    {"xdomain-padding", std::bind(&configure_float, std::placeholders::_1, &config.domain_x.padding)},
-    {"ydomain-padding", std::bind(&configure_float, std::placeholders::_1, &config.domain_y.padding)},
-    {"xmin", std::bind(&configure_float_opt, std::placeholders::_1, &config.domain_x.min)},
-    {"xmax", std::bind(&configure_float_opt, std::placeholders::_1, &config.domain_x.max)},
-    {"ymin", std::bind(&configure_float_opt, std::placeholders::_1, &config.domain_y.min)},
-    {"ymax", std::bind(&configure_float_opt, std::placeholders::_1, &config.domain_y.max)},
+    {"margin-top", std::bind(&configure_measure_rel, std::placeholders::_1, doc.dpi, doc.font_size, &config.margins[0])},
+    {"margin-right", std::bind(&configure_measure_rel, std::placeholders::_1, doc.dpi, doc.font_size, &config.margins[1])},
+    {"margin-bottom", std::bind(&configure_measure_rel, std::placeholders::_1, doc.dpi, doc.font_size, &config.margins[2])},
+    {"margin-left", std::bind(&configure_measure_rel, std::placeholders::_1, doc.dpi, doc.font_size, &config.margins[3])},
   };
 
   if (auto rc = parseAll(plist, pdefs); !rc.isSuccess()) {
@@ -269,32 +265,9 @@ ReturnCode configure(
     return rc;
   }
 
-  // FIXME
-  {
-    DimensionConfig d;
-    d.key = config.column_x;
-    d.domain = config.domain_x;
-    config.dimensions.emplace(d.key, d);
-  }
-
-  // FIXME
-  {
-    DimensionConfig d;
-    d.key = config.column_y;
-    d.domain = config.domain_y;
-    config.dimensions.emplace(d.key, d);
-  }
-
-  /* resolve domains */
-  if (auto rc = dimension_resolve_all(config.data, &config.dimensions); !rc) {
-    return rc;
-  }
-
   /* resolve axes */
   if (auto rc = axis_resolve(
-        config.dimensions,
-        config.column_x,
-        config.column_y,
+        config.scales,
         &config.axis_top,
         &config.axis_right,
         &config.axis_bottom,

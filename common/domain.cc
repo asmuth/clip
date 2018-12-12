@@ -41,6 +41,28 @@ DomainConfig::DomainConfig() :
     inverted(false),
     padding(0.0f) {}
 
+const DomainConfig* domain_find(
+    const DomainMap& map,
+    const std::string& key) {
+  const auto& iter = map.find(key);
+  if (iter == map.end()) {
+    return nullptr;
+  } else {
+    return &iter->second;
+  }
+}
+
+DomainConfig* domain_find(
+    DomainMap* map,
+    const std::string& key) {
+  auto iter = map->find(key);
+  if (iter == map->end()) {
+    return nullptr;
+  } else {
+    return &iter->second;
+  }
+}
+
 void domain_fit_continuous(const Series& data_raw, DomainConfig* domain) {
   auto data = series_to_float(data_raw);
 
@@ -85,6 +107,24 @@ void domain_fit(const Series& data, DomainConfig* domain) {
     case DomainKind::CATEGORICAL:
       return domain_fit_categorical(data, domain);
   }
+}
+
+void domain_fit(
+    const DataFrame& data,
+    const std::string& data_key,
+    const std::string& key,
+    DomainMap* domains) {
+  const DataColumn* column = nullptr;
+  if (auto rc = column_find(data, data_key, &column); !rc) {
+    return;
+  }
+
+  auto domain = domain_find(domains, key);
+  if (!domain) {
+    return;
+  }
+
+  domain_fit(column->data, domain);
 }
 
 size_t domain_cardinality(const DomainConfig& domain) {

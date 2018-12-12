@@ -45,7 +45,10 @@ namespace points {
 
 struct PlotPointsConfig {
   PlotPointsConfig();
-  Measure line_width;
+  std::string x_key;
+  std::string x_scale;
+  std::string y_key;
+  std::string y_scale;
   Slot<Color> point_color;
   ColorScheme point_color_palette;
   Measure point_size;

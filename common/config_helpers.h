@@ -101,7 +101,7 @@ ReturnCode resolve_slot(
     T* val);
 
 template <typename T>
-ParserFn configure_slot(DimensionMap* dimensions, Slot<T>* slot);
+ParserFn configure_slot(Slot<T>* slot);
 
 ParserFn configure_multiprop(const std::vector<ParserFn>& parsers);
 

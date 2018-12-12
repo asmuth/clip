@@ -74,6 +74,7 @@ using AxisLabelPlacement = std::function<ReturnCode (
 struct AxisDefinition {
   AxisDefinition();
   AxisMode mode;
+  std::string scale;
   std::string title;
   std::vector<double> ticks;
   std::vector<std::pair<double, std::string>> labels;
@@ -105,8 +106,6 @@ Status renderAxis(
 
 ReturnCode axis_layout(
     const Rectangle& parent,
-    const DomainConfig& domain_x,
-    const DomainConfig& domain_y,
     const AxisDefinition& axis_top,
     const AxisDefinition& axis_right,
     const AxisDefinition& axis_bottom,
@@ -116,8 +115,6 @@ ReturnCode axis_layout(
 
 ReturnCode axis_draw_all(
     const Rectangle& clip,
-    const DomainConfig& domain_x,
-    const DomainConfig& domain_y,
     const AxisDefinition& axis_top,
     const AxisDefinition& axis_right,
     const AxisDefinition& axis_bottom,
@@ -146,9 +143,7 @@ ReturnCode axis_configure(
     const DomainConfig& domain);
 
 ReturnCode axis_resolve(
-    const DimensionMap& dimensions,
-    const std::string& dim_x,
-    const std::string& dim_y,
+    const DomainMap& scales,
     AxisDefinition* axis_top,
     AxisDefinition* axis_right,
     AxisDefinition* axis_bottom,

@@ -43,7 +43,9 @@ namespace lines {
 static const double kDefaultLineWidthPT = 2;
 static const double kDefaultLabelPaddingEM = 0.8;
 
-PlotLinesConfig::PlotLinesConfig() {}
+PlotLinesConfig::PlotLinesConfig() :
+    x_scale("x"),
+    y_scale("y") {}
 
 ReturnCode draw_lines(
     const PlotConfig& plot,
@@ -51,23 +53,14 @@ ReturnCode draw_lines(
     const Document& doc,
     const Rectangle& clip,
     Layer* layer) {
-  auto dim_x = dimension_find(plot.dimensions, plot.column_x);
-  if (!dim_x) {
-    return ReturnCode::errorf("EARG", "dimension not found: $0", plot.column_x);
-  }
-
-  auto dim_y = dimension_find(plot.dimensions, plot.column_y);
-  if (!dim_y) {
-    return ReturnCode::errorf("EARG", "dimension not found: $0", plot.column_y);
-  }
-
+  /* fetch columns */
   const DataColumn* column_x = nullptr;
-  if (auto rc = column_find(plot.data, dim_x->key, &column_x); !rc) {
+  if (auto rc = column_find(plot.data, config.x_key, &column_x); !rc) {
     return rc;
   }
 
   const DataColumn* column_y = nullptr;
-  if (auto rc = column_find(plot.data, dim_y->key, &column_y); !rc) {
+  if (auto rc = column_find(plot.data, config.y_key, &column_y); !rc) {
     return rc;
   }
 
@@ -77,12 +70,24 @@ ReturnCode draw_lines(
   }
 
   const DataColumn* column_group = nullptr;
-  if (!plot.column_group.empty()) {
-    if (auto rc = column_find(plot.data, plot.column_group, &column_group); !rc) {
+  if (!config.group_key.empty()) {
+    if (auto rc = column_find(plot.data, config.group_key, &column_group); !rc) {
       return rc;
     }
   }
 
+  /* fetch domains */
+  auto domain_x = domain_find(plot.scales, config.x_scale);
+  if (!domain_x) {
+    return ReturnCode::errorf("EARG", "scale not found: $0", config.x_scale);
+  }
+
+  auto domain_y = domain_find(plot.scales, config.y_scale);
+  if (!domain_y) {
+    return ReturnCode::errorf("EARG", "scale not found: $0", config.y_scale);
+  }
+
+  /* group data */
   std::vector<DataGroup> groups;
   if (column_group) {
     groups = plotfx::column_group(*column_group);
@@ -93,9 +98,10 @@ ReturnCode draw_lines(
     groups.emplace_back(g);
   }
 
+  /* draw lines */
   for (const auto& group : groups) {
-    auto x = domain_translate(dim_x->domain, column_x->data);
-    auto y = domain_translate(dim_y->domain, column_y->data);
+    auto x = domain_translate(*domain_x, column_x->data);
+    auto y = domain_translate(*domain_y, column_y->data);
 
     Color color;
     if (auto rc = resolve_slot(
@@ -131,14 +137,26 @@ ReturnCode draw_lines(
   return OK;
 }
 
-ReturnCode configure(const plist::Property& prop, const Document& doc, PlotConfig* config) {
+ReturnCode configure(
+    const plist::Property& prop,
+    const Document& doc,
+    PlotConfig* config) {
   if (!plist::is_map(prop)) {
     return ERROR_INVALID_ARGUMENT;
   }
 
   PlotLinesConfig layer;
+  layer.x_key = config->default_x_key;
+  layer.y_key = config->default_y_key;
+  layer.group_key = config->default_group_key;
+
   static const ParserDefinitions pdefs = {
-    {"line-color", configure_slot(&config->dimensions, &layer.line_color)},
+    {"x", std::bind(&configure_string, std::placeholders::_1, &layer.x_key)},
+    {"x-scale", std::bind(&configure_string, std::placeholders::_1, &layer.x_scale)},
+    {"y", std::bind(&configure_string, std::placeholders::_1, &layer.y_key)},
+    {"y-scale", std::bind(&configure_string, std::placeholders::_1, &layer.y_scale)},
+    {"group", std::bind(&configure_string, std::placeholders::_1, &layer.group_key)},
+    {"line-color", configure_slot(&layer.line_color)},
   };
 
   if (auto rc = parseAll(*prop.next, pdefs); !rc) {
@@ -150,6 +168,9 @@ ReturnCode configure(const plist::Property& prop, const Document& doc, PlotConfi
       return rc;
     }
   }
+
+  domain_fit(config->data, layer.x_key, layer.x_scale, &config->scales);
+  domain_fit(config->data, layer.y_key, layer.y_scale, &config->scales);
 
   config->layers.emplace_back(PlotLayer {
     .draw = std::bind(

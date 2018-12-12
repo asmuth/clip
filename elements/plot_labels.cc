@@ -51,31 +51,6 @@ ReturnCode draw_labels(
     const Document& doc,
     const Rectangle& clip,
     Layer* layer) {
-  auto dim_x = dimension_find(plot.dimensions, plot.column_x);
-  if (!dim_x) {
-    return ReturnCode::errorf("EARG", "dimension not found: $0", plot.column_x);
-  }
-
-  auto dim_y = dimension_find(plot.dimensions, plot.column_y);
-  if (!dim_y) {
-    return ReturnCode::errorf("EARG", "dimension not found: $0", plot.column_y);
-  }
-
-  const DataColumn* column_x = nullptr;
-  if (auto rc = column_find(plot.data, dim_x->key, &column_x); !rc) {
-    return rc;
-  }
-
-  const DataColumn* column_y = nullptr;
-  if (auto rc = column_find(plot.data, dim_y->key, &column_y); !rc) {
-    return rc;
-  }
-
-  if (column_x->data.size() != column_y->data.size()) {
-    // FIXME error msg
-    return ERROR_INVALID_ARGUMENT;
-  }
-
   ///* draw labels */
   //for (size_t i = 0; i < column_x->data.size(); ++i) {
   //  if (i >= config.labels.size()) {

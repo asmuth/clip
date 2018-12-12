@@ -45,6 +45,11 @@ namespace lines {
 
 struct PlotLinesConfig {
   PlotLinesConfig();
+  std::string x_key;
+  std::string x_scale;
+  std::string y_key;
+  std::string y_scale;
+  std::string group_key;
   Slot<Color> line_color;
   ColorScheme line_color_palette;
   Measure line_width;

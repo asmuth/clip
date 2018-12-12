@@ -291,7 +291,6 @@ Status renderAxis(
 ReturnCode axis_layout_labels(
     const AxisDefinition& axis,
     const AxisPosition& axis_position,
-    const DomainConfig& domain,
     const Layer& layer,
     double* margin) {
   double max = 0;
@@ -336,7 +335,6 @@ ReturnCode axis_layout_labels(
 ReturnCode axis_layout(
     const AxisDefinition& axis,
     const AxisPosition& axis_position,
-    const DomainConfig& domain,
     const Layer& layer,
     double* margin) {
   if (axis.mode == AxisMode::OFF) {
@@ -397,7 +395,6 @@ ReturnCode axis_layout(
     if (auto rc = axis_layout_labels(
           axis,
           axis_position,
-          domain,
           layer,
           margin);
           !rc) {
@@ -410,8 +407,6 @@ ReturnCode axis_layout(
 
 ReturnCode axis_layout(
     const Rectangle& parent,
-    const DomainConfig& domain_x,
-    const DomainConfig& domain_y,
     const AxisDefinition& axis_top,
     const AxisDefinition& axis_right,
     const AxisDefinition& axis_bottom,
@@ -420,10 +415,10 @@ ReturnCode axis_layout(
     Rectangle* bbox) {
   double margins[4] = {0, 0, 0, 0};
 
-  axis_layout(axis_top, AxisPosition::TOP, domain_x, layer, &margins[0]);
-  axis_layout(axis_right, AxisPosition::RIGHT, domain_y, layer, &margins[1]);
-  axis_layout(axis_bottom, AxisPosition::BOTTOM, domain_x, layer, &margins[2]);
-  axis_layout(axis_left, AxisPosition::LEFT, domain_y, layer, &margins[3]);
+  axis_layout(axis_top, AxisPosition::TOP, layer, &margins[0]);
+  axis_layout(axis_right, AxisPosition::RIGHT, layer, &margins[1]);
+  axis_layout(axis_bottom, AxisPosition::BOTTOM, layer, &margins[2]);
+  axis_layout(axis_left, AxisPosition::LEFT, layer, &margins[3]);
 
   *bbox = layout_margin_box(
       parent,
@@ -437,8 +432,6 @@ ReturnCode axis_layout(
 
 ReturnCode axis_draw_all(
     const Rectangle& clip,
-    const DomainConfig& domain_x,
-    const DomainConfig& domain_y,
     const AxisDefinition& axis_top,
     const AxisDefinition& axis_right,
     const AxisDefinition& axis_bottom,
@@ -561,27 +554,26 @@ ReturnCode axis_configure_label_placement(
 
 ReturnCode axis_resolve(
     const AxisPosition& pos,
-    const DimensionMap& dims,
-    const std::string& dim_x,
-    const std::string& dim_y,
+    const DomainMap& scales,
     AxisDefinition* axis) {
-  std::string dimension_key;
-  switch (pos) {
-    case AxisPosition::LEFT:
-    case AxisPosition::RIGHT:
-    case AxisPosition::CENTER_VERT:
-      dimension_key = dim_y; // FIXME
-      break;
-    case AxisPosition::TOP:
-    case AxisPosition::BOTTOM:
-    case AxisPosition::CENTER_HORIZ:
-      dimension_key = dim_x; // FIXME
-      break;
+  if (axis->scale.empty()) {
+    switch (pos) {
+      case AxisPosition::LEFT:
+      case AxisPosition::RIGHT:
+      case AxisPosition::CENTER_VERT:
+        axis->scale = "y";
+        break;
+      case AxisPosition::TOP:
+      case AxisPosition::BOTTOM:
+      case AxisPosition::CENTER_HORIZ:
+        axis->scale = "x";
+        break;
+    }
   }
 
-  auto dimension = dimension_find(dims, dimension_key);
-  if (!dimension) {
-    return ReturnCode::errorf("EARG", "dimension not found: $0", dimension_key);
+  auto domain = domain_find(scales, axis->scale);
+  if (!domain) {
+    return ReturnCode::errorf("EARG", "scale not found: $0", axis->scale);
   }
 
   switch (axis->tick_position) {
@@ -670,13 +662,12 @@ ReturnCode axis_resolve(
       break;
   };
 
-  const auto& domain = dimension->domain;
   if (axis->label_placement) {
-    if (auto rc = axis->label_placement(domain, axis); !rc) {
+    if (auto rc = axis->label_placement(*domain, axis); !rc) {
       return rc;
     }
   } else {
-    if (auto rc = axis_place_labels_default(domain, axis); !rc) {
+    if (auto rc = axis_place_labels_default(*domain, axis); !rc) {
       return rc;
     }
   }
@@ -685,26 +676,24 @@ ReturnCode axis_resolve(
 }
 
 ReturnCode axis_resolve(
-    const DimensionMap& dims,
-    const std::string& dim_x,
-    const std::string& dim_y,
+    const DomainMap& scales,
     AxisDefinition* axis_top,
     AxisDefinition* axis_right,
     AxisDefinition* axis_bottom,
     AxisDefinition* axis_left) {
-  if (auto rc = axis_resolve(AxisPosition::TOP, dims, dim_x, dim_y, axis_top); !rc) {
+  if (auto rc = axis_resolve(AxisPosition::TOP, scales, axis_top); !rc) {
     return rc;
   }
 
-  if (auto rc = axis_resolve(AxisPosition::RIGHT, dims, dim_x, dim_y, axis_right); !rc) {
+  if (auto rc = axis_resolve(AxisPosition::RIGHT, scales, axis_right); !rc) {
     return rc;
   }
 
-  if (auto rc = axis_resolve(AxisPosition::BOTTOM, dims, dim_x, dim_y, axis_bottom); !rc) {
+  if (auto rc = axis_resolve(AxisPosition::BOTTOM, scales, axis_bottom); !rc) {
     return rc;
   }
 
-  if (auto rc = axis_resolve(AxisPosition::LEFT, dims, dim_x, dim_y, axis_left); !rc) {
+  if (auto rc = axis_resolve(AxisPosition::LEFT, scales, axis_left); !rc) {
     return rc;
   }
 

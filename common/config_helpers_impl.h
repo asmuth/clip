@@ -58,7 +58,6 @@ ReturnCode resolve_slot(
 template <typename T>
 ReturnCode configure_slot(
     const plist::Property& prop,
-    DimensionMap* dimensions,
     Slot<T>* slot) {
   if (plist::is_value(prop) && prop.value.size() > 0 && prop.value[0] == '$') {
     DimensionConfig d;
@@ -70,9 +69,9 @@ ReturnCode configure_slot(
 }
 
 template <typename T>
-ParserFn configure_slot(DimensionMap* dimensions, Slot<T>* slot) {
-  return [dimensions, slot] (const plist::Property& prop) {
-    return configure_slot(prop, dimensions, slot);
+ParserFn configure_slot(Slot<T>* slot) {
+  return [slot] (const plist::Property& prop) {
+    return configure_slot(prop, slot);
   };
 }
 

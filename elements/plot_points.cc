@@ -43,7 +43,9 @@ namespace points {
 static const double kDefaultLineWidthPT = 2;
 static const double kDefaultLabelPaddingEM = 0.8;
 
-PlotPointsConfig::PlotPointsConfig() {}
+PlotPointsConfig::PlotPointsConfig() :
+    x_scale("x"),
+    y_scale("y") {}
 
 ReturnCode draw_points(
     const PlotConfig& plot,
@@ -51,23 +53,14 @@ ReturnCode draw_points(
     const Document& doc,
     const Rectangle& clip,
     Layer* layer) {
-  auto dim_x = dimension_find(plot.dimensions, plot.column_x);
-  if (!dim_x) {
-    return ReturnCode::errorf("EARG", "dimension not found: $0", plot.column_x);
-  }
-
-  auto dim_y = dimension_find(plot.dimensions, plot.column_y);
-  if (!dim_y) {
-    return ReturnCode::errorf("EARG", "dimension not found: $0", plot.column_y);
-  }
-
+  /* fetch columns */
   const DataColumn* column_x = nullptr;
-  if (auto rc = column_find(plot.data, dim_x->key, &column_x); !rc) {
+  if (auto rc = column_find(plot.data, config.x_key, &column_x); !rc) {
     return rc;
   }
 
   const DataColumn* column_y = nullptr;
-  if (auto rc = column_find(plot.data, dim_y->key, &column_y); !rc) {
+  if (auto rc = column_find(plot.data, config.y_key, &column_y); !rc) {
     return rc;
   }
 
@@ -76,8 +69,20 @@ ReturnCode draw_points(
     return ERROR_INVALID_ARGUMENT;
   }
 
-  auto x = domain_translate(dim_x->domain, column_x->data);
-  auto y = domain_translate(dim_y->domain, column_y->data);
+  /* fetch domains */
+  auto domain_x = domain_find(plot.scales, config.x_scale);
+  if (!domain_x) {
+    return ReturnCode::errorf("EARG", "scale not found: $0", config.x_scale);
+  }
+
+  auto domain_y = domain_find(plot.scales, config.y_scale);
+  if (!domain_y) {
+    return ReturnCode::errorf("EARG", "scale not found: $0", config.y_scale);
+  }
+
+  /* draw points */
+  auto x = domain_translate(*domain_x, column_x->data);
+  auto y = domain_translate(*domain_y, column_y->data);
 
   for (size_t i = 0; i < column_x->data.size(); ++i) {
     auto sx = clip.x + x[i] * clip.w;
@@ -111,8 +116,15 @@ ReturnCode configure(const plist::Property& prop, const Document& doc, PlotConfi
   }
 
   PlotPointsConfig layer;
+  layer.x_key = config->default_x_key;
+  layer.y_key = config->default_y_key;
+
   static const ParserDefinitions pdefs = {
-    {"point-color", configure_slot(&config->dimensions, &layer.point_color)},
+    {"x", std::bind(&configure_string, std::placeholders::_1, &layer.x_key)},
+    {"x-scale", std::bind(&configure_string, std::placeholders::_1, &layer.x_scale)},
+    {"y", std::bind(&configure_string, std::placeholders::_1, &layer.y_key)},
+    {"y-scale", std::bind(&configure_string, std::placeholders::_1, &layer.y_scale)},
+    {"point-color", configure_slot(&layer.point_color)},
   };
 
   if (auto rc = parseAll(*prop.next, pdefs); !rc) {

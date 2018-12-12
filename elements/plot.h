@@ -59,19 +59,17 @@ struct PlotLayer {
 struct PlotConfig {
   PlotConfig();
   DataFrame data;
-  std::string column_x;
-  std::string column_y;
-  std::string column_group;
-  DomainConfig domain_x;
-  DomainConfig domain_y;
+  std::vector<PlotLayer> layers;
+  DomainMap scales;
   AxisDefinition axis_top;
   AxisDefinition axis_right;
   AxisDefinition axis_bottom;
   AxisDefinition axis_left;
-  Measure margins[4];
-  DimensionMap dimensions;
-  std::vector<PlotLayer> layers;
   LegendConfig legend;
+  Measure margins[4];
+  std::string default_x_key;
+  std::string default_y_key;
+  std::string default_group_key;
 };
 
 ReturnCode draw(
