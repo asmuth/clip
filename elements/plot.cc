@@ -160,9 +160,9 @@ ReturnCode configure(
 
   static const ParserDefinitions pdefs = {
     {"data", std::bind(&configure_data_frame, std::placeholders::_1, &config.data)},
-    {"group", std::bind(&configure_string, std::placeholders::_1, &config.default_group_key)},
-    {"x", std::bind(&configure_string, std::placeholders::_1, &config.default_x_key)},
-    {"y", std::bind(&configure_string, std::placeholders::_1, &config.default_y_key)},
+    {"group", configure_key(&config.default_group_key)},
+    {"x", configure_key(&config.default_x_key)},
+    {"y", configure_key(&config.default_y_key)},
     {"axis-x-type", std::bind(&domain_configure, std::placeholders::_1, domain_x)},
     {"axis-x-min", std::bind(&configure_float_opt, std::placeholders::_1, &domain_x->min)},
     {"axis-x-max", std::bind(&configure_float_opt, std::placeholders::_1, &domain_x->max)},

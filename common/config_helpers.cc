@@ -189,5 +189,19 @@ ReturnCode configure_data_frame(
   return ERROR_INVALID_ARGUMENT;
 }
 
+ParserFn configure_key(std::string* key) {
+  return [key] (const plist::Property& prop) -> ReturnCode {
+    if (plist::is_value(prop) && prop.value.size() > 0 && prop.value[0] == '$') {
+      *key = prop.value.substr(1);
+      return OK;
+    } else {
+      return ReturnCode::errorf(
+          "EARG",
+          "invalid value '$0'; keys must start with a dollar sign ($)",
+          prop.value);
+    }
+  };
+}
+
 } // namespace plotfx
 

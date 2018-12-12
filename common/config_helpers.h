@@ -105,6 +105,8 @@ ParserFn configure_slot(Slot<T>* slot);
 
 ParserFn configure_multiprop(const std::vector<ParserFn>& parsers);
 
+ParserFn configure_key(std::string* key);
+
 ReturnCode configure_measure_rel(
     const plist::Property& prop,
     double dpi,

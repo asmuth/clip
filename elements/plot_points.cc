@@ -120,9 +120,9 @@ ReturnCode configure(const plist::Property& prop, const Document& doc, PlotConfi
   layer.y_key = config->default_y_key;
 
   static const ParserDefinitions pdefs = {
-    {"x", std::bind(&configure_string, std::placeholders::_1, &layer.x_key)},
+    {"x", configure_key(&layer.x_key)},
     {"x-scale", std::bind(&configure_string, std::placeholders::_1, &layer.x_scale)},
-    {"y", std::bind(&configure_string, std::placeholders::_1, &layer.y_key)},
+    {"y", configure_key(&layer.y_key)},
     {"y-scale", std::bind(&configure_string, std::placeholders::_1, &layer.y_scale)},
     {"point-color", configure_slot(&layer.point_color)},
   };
