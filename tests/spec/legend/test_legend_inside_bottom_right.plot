@@ -2,18 +2,21 @@ width: 1200px;
 height: 480px;
 
 plot {
-  legend: inside bottom right;
-  legend-title: "The quick brown fox";
+  data: csv('tests/testdata/city_temperatures.csv');
+  x: $1;
+  y: $2;
+  group: $0;
 
-  series {
-    title: "Series 1";
-    xs: csv('tests/testdata/measurement.csv', 0);
-    ys: csv('tests/testdata/measurement.csv', 2);
+  axis-x-format: string;
+  axis-y-min: -10;
+  axis-y-max: 32;
+
+  legend {
+    position: bottom right inside;
   }
 
-  series {
-    title: "Series 2";
-    xs: csv('tests/testdata/measurement.csv', 0);
-    ys: csv('tests/testdata/measurement.csv', 4);
+  layer {
+    type: lines;
+    line-color: $0;
   }
 }

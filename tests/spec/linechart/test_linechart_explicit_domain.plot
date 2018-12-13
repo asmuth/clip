@@ -1,20 +1,18 @@
+width: 1200px;
+height: 480px;
+
 plot {
+  data: csv('tests/testdata/city_temperatures.csv');
+  x: $1;
+  y: $2;
+  group: $0;
 
-  xmin: 20;
-  xmax: 80;
+  axis-x-format: string;
+  axis-y-min: -30;
+  axis-y-max: 50;
 
-  ymin: -100.0f;
-  ymax: 100.0f;
-
-  series {
-    xs: 10,   20,   30,   40,   50,   60,    70,   80,  90,  100;
-    ys: 1.23, 4.32, 3.23, 6.43, 3.45, 11.32, 8.14, 5.2, 3.5, 2.2;
-    color: #06c;
-  }
-
-  series {
-    xs: 10,   15,   30,   50,   70,   80,    90,   90,  95,  100;
-    ys: 1.23, 4.32, 3.23, 6.43, 5.45, 12.32, 8.14, 5.2, 3.5, 2.2;
-    color: #6c0;
+  layer {
+    type: lines;
+    line-color: $0;
   }
 }

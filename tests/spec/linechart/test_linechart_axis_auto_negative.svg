@@ -68,7 +68,5 @@
   <text x="22.822917" y="161.171422" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif">7.9</text>
   <text x="15.760417" y="105.285688" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif">11.0</text>
   <text x="14.666667" y="49.400000" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif">14.2</text>
-  <path stroke-width="2.666667" stroke="#005fbf" fill="none" d="M54.946875 272.915792 L176.069792 370.737824 L297.192708 351.525929 L418.315625 407.927822 L539.438542 233.786979 L660.561458 77.447984 L781.684375 151.122956 L902.807292 386.248344 L1023.930208 356.284839 L1145.053125 255.818968 "/>
-  <path fill="#4572a7" d="M97.646875 75.2 M87.646875 75.2 a5.0 5.0 0 1 0 10.0 0 a5.0 5.0 0 1 0 -10.0 0 "/>
-  <text x="104.146875" y="75.200000" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif"></text>
+  <path stroke-width="2.666667" stroke="#000000" fill="none" d="M54.946875 272.915792 L176.069792 370.737824 L297.192708 351.525929 L418.315625 407.927822 L539.438542 233.786979 L660.561458 77.447984 L781.684375 151.122956 L902.807292 386.248344 L1023.930208 356.284839 L1145.053125 255.818968 "/>
 </svg>
