@@ -38,6 +38,7 @@
 #include <common/config_helpers.h>
 #include "plot_axis.h"
 #include "plot.h"
+#include "legend.h"
 
 namespace plotfx {
 namespace plot {
@@ -53,6 +54,7 @@ struct PlotLinesConfig {
   Slot<Color> line_color;
   ColorScheme line_color_palette;
   Measure line_width;
+  std::string legend_key;
 };
 
 ReturnCode draw(

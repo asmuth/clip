@@ -11,6 +11,10 @@ plot {
   axis-right: off;
   margin-right: 2.4em;
 
+  legend {
+    position: top left inside;
+  }
+
   layer {
     type: lines;
     line-color: $0;

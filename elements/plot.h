@@ -61,11 +61,11 @@ struct PlotConfig {
   DataFrame data;
   std::vector<PlotLayer> layers;
   DomainMap scales;
+  LegendMap legends;
   AxisDefinition axis_top;
   AxisDefinition axis_right;
   AxisDefinition axis_bottom;
   AxisDefinition axis_left;
-  LegendConfig legend;
   Measure margins[4];
   std::string default_x_key;
   std::string default_y_key;

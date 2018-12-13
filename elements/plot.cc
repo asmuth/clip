@@ -101,7 +101,7 @@ ReturnCode draw(
   }
 
   // render legend
-  if (auto rc = legend_draw(config.legend, bbox, layer); !rc) {
+  if (auto rc = legend_draw(config.legends, bbox, layer); !rc) {
     return rc;
   }
 
@@ -252,16 +252,16 @@ ReturnCode configure(
     return rc;
   }
 
+  /* configure legend */
+  if (auto rc = legend_configure_all(doc, plist, &config.legends); !rc) {
+    return rc;
+  }
+
   static const ParserDefinitions pdefs_layer = {
     {"layer", std::bind(&configure_layer, std::placeholders::_1, doc, &config)}
   };
 
   if (auto rc = parseAll(plist, pdefs_layer); !rc.isSuccess()) {
-    return rc;
-  }
-
-  /* configure legend */
-  if (auto rc = legend_configure(doc, plist, &config.legend); !rc) {
     return rc;
   }
 

@@ -45,7 +45,8 @@ static const double kDefaultLabelPaddingEM = 0.8;
 
 PlotLinesConfig::PlotLinesConfig() :
     x_scale("x"),
-    y_scale("y") {}
+    y_scale("y"),
+    legend_key(LEGEND_DEFAULT) {}
 
 ReturnCode draw_lines(
     const PlotConfig& plot,
@@ -65,7 +66,6 @@ ReturnCode draw_lines(
   }
 
   if (column_x->data.size() != column_y->data.size()) {
-    // FIXME error msg
     return ERROR_INVALID_ARGUMENT;
   }
 
@@ -108,7 +108,7 @@ ReturnCode draw_lines(
           config.line_color,
           dimension_map_color_discrete(config.line_color_palette),
           plot.data,
-          group.begin, // FIXME
+          group.begin,
           &color); !rc) {
       return rc;
     }
@@ -137,6 +137,58 @@ ReturnCode draw_lines(
   return OK;
 }
 
+ReturnCode configure_legend(
+    const PlotConfig& plot,
+    const PlotLinesConfig& config,
+    LegendConfig* legend) {
+  /* fetch columns */
+  const DataColumn* column_x = nullptr;
+  if (auto rc = column_find(plot.data, config.x_key, &column_x); !rc) {
+    return rc;
+  }
+
+  const DataColumn* column_y = nullptr;
+  if (auto rc = column_find(plot.data, config.y_key, &column_y); !rc) {
+    return rc;
+  }
+
+  if (column_x->data.size() != column_y->data.size()) {
+    return ERROR_INVALID_ARGUMENT;
+  }
+
+  const DataColumn* column_group = nullptr;
+  if (!config.group_key.empty()) {
+    if (auto rc = column_find(plot.data, config.group_key, &column_group); !rc) {
+      return rc;
+    }
+  }
+
+  /* group data */
+  std::vector<DataGroup> groups;
+  if (!column_group) {
+    return OK;
+  }
+
+  /* add legend items */
+  LegendGroup g;
+  for (const auto& group : plotfx::column_group(*column_group)) {
+    Color color;
+    if (auto rc = resolve_slot(
+          config.line_color,
+          dimension_map_color_discrete(config.line_color_palette),
+          plot.data,
+          group.begin,
+          &color); !rc) {
+      return rc;
+    }
+
+    legend_add_item(&g, group.key, color);
+  }
+
+  legend->groups.emplace_back(g);
+  return OK;
+}
+
 ReturnCode configure(
     const plist::Property& prop,
     const Document& doc,
@@ -156,6 +208,7 @@ ReturnCode configure(
     {"y", configure_key(&layer.y_key)},
     {"y-scale", std::bind(&configure_string, std::placeholders::_1, &layer.y_scale)},
     {"group", std::bind(&configure_string, std::placeholders::_1, &layer.group_key)},
+    {"legend", std::bind(&configure_string, std::placeholders::_1, &layer.legend_key)},
     {"line-color", configure_slot(&layer.line_color)},
     {"line-width", std::bind(&configure_measure_rel, std::placeholders::_1, doc.dpi, doc.font_size, &layer.line_width)},
   };
@@ -172,6 +225,12 @@ ReturnCode configure(
 
   domain_fit(config->data, layer.x_key, layer.x_scale, &config->scales);
   domain_fit(config->data, layer.y_key, layer.y_scale, &config->scales);
+
+  if (auto legend = legend_find(&config->legends, layer.legend_key); legend) {
+    if (auto rc = configure_legend(*config, layer, legend); !rc) {
+      return rc;
+    }
+  }
 
   config->layers.emplace_back(PlotLayer {
     .draw = std::bind(

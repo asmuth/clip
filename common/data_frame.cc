@@ -113,7 +113,6 @@ std::vector<DataGroup> column_group(const DataColumn& col) {
   for (size_t idx = 0; idx < col.data.size(); ) {
     DataGroup g;
     g.key = col.data[idx];
-    g.key = col.data[idx];
     g.begin = idx;
     g.end = idx;
 

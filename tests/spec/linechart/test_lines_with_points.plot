@@ -1,6 +1,3 @@
-width: 1200px;
-height: 480px;
-
 plot {
   data: csv('tests/testdata/city_temperatures.csv');
   x: $1;
@@ -13,6 +10,10 @@ plot {
   axis-top: off;
   axis-right: off;
   margin-right: 2.4em;
+
+  legend {
+    position: top left inside;
+  }
 
   layer {
     type: lines;

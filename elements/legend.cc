@@ -43,12 +43,46 @@ static const double kDefaultItemPaddingHorizEM = 2.4;
 static const double kDefaultItemPaddingVertEM = 1.0;
 
 LegendConfig::LegendConfig() :
+    key(LEGEND_DEFAULT),
     placement(LegendPlacement::INSIDE),
     position_horiz(HAlign::LEFT),
     position_vert(VAlign::TOP) {}
 
-ReturnCode legend_layout(
+const LegendConfig* legend_find(
+    const LegendMap& map,
+    const std::string& key) {
+  const auto& iter = map.find(key);
+  if (iter == map.end()) {
+    return nullptr;
+  } else {
+    return &iter->second;
+  }
+}
+
+LegendConfig* legend_find(
+    LegendMap* map,
+    const std::string& key) {
+  auto iter = map->find(key);
+  if (iter == map->end()) {
+    return nullptr;
+  } else {
+    return &iter->second;
+  }
+}
+
+void legend_add_item(
+    LegendGroup* group,
+    const std::string& title,
+    const Color& color) {
+  LegendItem item;
+  item.title = title;
+  item.color = color;
+  group->items.emplace_back(std::move(item));
+}
+
+ReturnCode legend_layout_items(
     const LegendConfig& legend,
+    const LegendItemList& legend_items,
     Point origin,
     std::function<ReturnCode (size_t idx, Point p)> on_label,
     const Layer* layer,
@@ -64,8 +98,8 @@ ReturnCode legend_layout(
   double sx = origin.x;
   double sy = origin.y;
 
-  for (size_t idx = 0; idx < legend.entries.size(); ++idx) {
-    const auto& e = legend.entries[idx];
+  for (size_t idx = 0; idx < legend_items.size(); ++idx) {
+    const auto& e = legend_items[idx];
     const auto& label_text = e.title;
 
     if (on_label) {
@@ -94,7 +128,7 @@ ReturnCode legend_layout(
     sx += point_size * 2.8; // FIXME
     sx += label_bbox.w;
 
-    if (idx + 1< legend.entries.size()) {
+    if (idx + 1< legend_items.size()) {
       sx += padding_item_right;
     }
   }
@@ -135,90 +169,93 @@ ReturnCode legend_draw_inside(
       from_em(kDefaultItemPaddingHorizEM, font_size));
 
   double point_size = 5; // FIXME
+  for (const auto& group : legend.groups) {
+    auto draw_label = [&] (size_t idx, Point pos) {
+      const auto& e = group.items[idx];
+      const auto& label_text = e.title;
 
-  Rectangle content_bbox;
-  if (auto rc = legend_layout(
-      legend,
-      Point(0, 0),
-      nullptr,
-      layer,
-      &content_bbox);
-      !rc) {
-    return rc;
-  }
-
-  Point origin(0, 0);
-
-  switch (legend.position_horiz) {
-    case HAlign::LEFT:
-      origin.x = std::min(
-          bbox.x + padding_left,
-          bbox.x + bbox.w);
-      break;
-    case HAlign::RIGHT:
-      origin.x = std::max(
-          bbox.x + bbox.w - content_bbox.w - padding_right,
-          bbox.x);
-      break;
-    case HAlign::CENTER:
-      origin.x = bbox.x + bbox.w / 2 - content_bbox.w / 2;
-      break;
-  }
-
-  switch (legend.position_vert) {
-    case VAlign::TOP:
-      origin.y = bbox.y + padding_top;
-      break;
-    case VAlign::BOTTOM:
-      origin.y = bbox.y + bbox.h - content_bbox.h - padding_bottom;
-      break;
-    case VAlign::CENTER:
-      origin.y = bbox.y + bbox.h / 2;
-      break;
-  }
-
-  auto draw_label = [&] (size_t idx, Point pos) {
-    const auto& e = legend.entries[idx];
-    const auto& label_text = e.title;
-
-    {
-      FillStyle style;
-      style.color = e.color;
-      Path path;
-      path.moveTo(pos.x + point_size + point_size / 2, pos.y);
-      path.arcTo(pos.x + point_size / 2, pos.y, point_size, 0, M_PI * 2);
-      fillPath(layer, path, style);
-      pos.x += point_size * 2.8; // FIXME
-    }
-
-    {
-      TextStyle style;
-      style.color = legend.text_color;
-      style.font = legend.font;
-      style.font_size = font_size;
-
-      if (auto rc = drawTextLabel(
-            label_text,
-            pos,
-            HAlign::LEFT,
-            VAlign::CENTER,
-            style,
-            layer); rc != OK) {
-        return rc;
+      {
+        FillStyle style;
+        style.color = e.color;
+        Path path;
+        path.moveTo(pos.x + point_size + point_size / 2, pos.y);
+        path.arcTo(pos.x + point_size / 2, pos.y, point_size, 0, M_PI * 2);
+        fillPath(layer, path, style);
+        pos.x += point_size * 2.8; // FIXME
       }
+
+      {
+        TextStyle style;
+        style.color = legend.text_color;
+        style.font = legend.font;
+        style.font_size = font_size;
+
+        if (auto rc = drawTextLabel(
+              label_text,
+              pos,
+              HAlign::LEFT,
+              VAlign::CENTER,
+              style,
+              layer); rc != OK) {
+          return rc;
+        }
+      }
+
+      return OK;
+    };
+
+    Rectangle content_bbox;
+    if (auto rc = legend_layout_items(
+        legend,
+        group.items,
+        Point(0, 0),
+        nullptr,
+        layer,
+        &content_bbox);
+        !rc) {
+      return rc;
     }
 
-    return OK;
-  };
+    Point origin(0, 0);
 
-  if (auto rc = legend_layout(
-      legend,
-      origin,
-      draw_label,
-      layer,
-      nullptr);
-      !rc) {
-    return rc;
+    switch (legend.position_horiz) {
+      case HAlign::LEFT:
+        origin.x = std::min(
+            bbox.x + padding_left,
+            bbox.x + bbox.w);
+        break;
+      case HAlign::RIGHT:
+        origin.x = std::max(
+            bbox.x + bbox.w - content_bbox.w - padding_right,
+            bbox.x);
+        break;
+      case HAlign::CENTER:
+        origin.x = bbox.x + bbox.w / 2 - content_bbox.w / 2;
+        break;
+    }
+
+    switch (legend.position_vert) {
+      case VAlign::TOP:
+        origin.y = bbox.y + padding_top;
+        break;
+      case VAlign::BOTTOM:
+        origin.y = bbox.y + bbox.h - content_bbox.h - padding_bottom;
+        break;
+      case VAlign::CENTER:
+        origin.y = bbox.y + bbox.h / 2;
+        break;
+    }
+
+    if (auto rc = legend_layout_items(
+        legend,
+        group.items,
+        origin,
+        draw_label,
+        layer,
+        nullptr);
+        !rc) {
+      return rc;
+    }
   }
 
   return OK;
@@ -236,6 +273,19 @@ ReturnCode legend_draw(
     default:
       return OK;
   }
+}
+
+ReturnCode legend_draw(
+    const LegendMap& legends,
+    const Rectangle& bbox,
+    Layer* layer) {
+  for (const auto& e : legends) {
+    if (auto rc = legend_draw(e.second, bbox, layer); !rc) {
+      return rc;
+    }
+  }
+
+  return OK;
 }
 
 ReturnCode legend_configure_position(
@@ -300,107 +350,137 @@ ReturnCode legend_configure_position(
 
 ReturnCode legend_configure(
     const Document& doc,
-    const plist::PropertyList& plist,
-    LegendConfig* config) {
-  config->font = doc.font_sans;
-  config->border_color = doc.border_color;
-  config->text_color = doc.text_color;
+    const plist::Property& prop,
+    LegendMap* map) {
+  if (!plist::is_map(prop)) {
+    return ERROR_INVALID_ARGUMENT;
+  }
+
+  const auto& plist = *prop.next;
+
+  LegendConfig config;
+  config.font = doc.font_sans;
+  config.border_color = doc.border_color;
+  config.text_color = doc.text_color;
 
   static const ParserDefinitions pdefs = {
     {
-      "legend",
+      "position",
       std::bind(
           &legend_configure_position,
           std::placeholders::_1,
-          &config->placement,
-          &config->position_horiz,
-          &config->position_vert)
+          &config.placement,
+          &config.position_horiz,
+          &config.position_vert)
     },
     {
-      "legend-title",
+      "title",
       std::bind(
           &configure_string,
           std::placeholders::_1,
-          &config->title)
+          &config.title)
       },
     {
-      "legend-text-color",
+      "text-color",
       std::bind(
           &configure_color,
           std::placeholders::_1,
-          &config->text_color)
+          &config.text_color)
     },
     {
-      "legend-border-color",
+      "border-color",
       std::bind(
           &configure_color,
           std::placeholders::_1,
-          &config->border_color)
+          &config.border_color)
     },
     {
-      "legend-item-margin",
+      "item-margin",
       configure_multiprop({
           std::bind(
               &configure_measure_rel,
               std::placeholders::_1,
               doc.dpi,
               doc.font_size,
-              &config->item_margins[0]),
+              &config.item_margins[0]),
           std::bind(
               &configure_measure_rel,
               std::placeholders::_1,
               doc.dpi,
               doc.font_size,
-              &config->item_margins[1]),
+              &config.item_margins[1]),
           std::bind(
               &configure_measure_rel,
               std::placeholders::_1,
               doc.dpi,
               doc.font_size,
-              &config->item_margins[2]),
+              &config.item_margins[2]),
           std::bind(
               &configure_measure_rel,
               std::placeholders::_1,
               doc.dpi,
               doc.font_size,
-              &config->item_margins[3])
+              &config.item_margins[3])
       })
     },
     {
-      "legend-item-margin-top",
+      "item-margin-top",
       std::bind(
           &configure_measure_rel,
           std::placeholders::_1,
           doc.dpi,
           doc.font_size,
-          &config->item_margins[0])
+          &config.item_margins[0])
     },
     {
-      "legend-item-margin-right",
+      "item-margin-right",
       std::bind(
           &configure_measure_rel,
           std::placeholders::_1,
           doc.dpi,
           doc.font_size,
-          &config->item_margins[1])
+          &config.item_margins[1])
     },
     {
-      "legend-item-margin-bottom",
+      "item-margin-bottom",
       std::bind(
           &configure_measure_rel,
           std::placeholders::_1,
           doc.dpi,
           doc.font_size,
-          &config->item_margins[2])
+          &config.item_margins[2])
     },
     {
-      "legend-item-margin-left",
+      "item-margin-left",
       std::bind(
           &configure_measure_rel,
           std::placeholders::_1,
           doc.dpi,
           doc.font_size,
-          &config->item_margins[3])
+          &config.item_margins[3])
+    },
+  };
+
+  if (auto rc = parseAll(plist, pdefs); !rc.isSuccess()) {
+    return rc;
+  }
+
+  map->emplace(config.key, config);
+  return OK;
+}
+
+ReturnCode legend_configure_all(
+    const Document& doc,
+    const plist::PropertyList& plist,
+    LegendMap* config) {
+  static const ParserDefinitions pdefs = {
+    {
+      "legend",
+      std::bind(
+          &legend_configure,
+          doc,
+          std::placeholders::_1,
+          config),
     },
   };
 

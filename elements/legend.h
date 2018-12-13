@@ -39,6 +39,8 @@
 
 namespace plotfx {
 
+const std::string LEGEND_DEFAULT = "default";
+
 enum class LegendPlacement {
   OFF,
   INSIDE,
@@ -50,8 +52,16 @@ struct LegendItem {
   Color color;
 };
 
+using LegendItemList = std::vector<LegendItem>;
+
+struct LegendGroup {
+  std::vector<LegendItem> items;
+  std::string title;
+};
+
 struct LegendConfig {
   LegendConfig();
+  std::string key;
   Color text_color;
   Color border_color;
   FontInfo font;
@@ -65,16 +75,41 @@ struct LegendConfig {
   HAlign position_horiz;
   VAlign position_vert;
   std::string title;
-  std::vector<LegendItem> entries;
+  std::vector<LegendGroup> groups;
 };
+
+using LegendMap = std::unordered_map<std::string, LegendConfig>;
+
+const LegendConfig* legend_find(
+    const LegendMap& map,
+    const std::string& key);
+
+LegendConfig* legend_find(
+    LegendMap* map,
+    const std::string& key);
+
+void legend_add_item(
+    LegendGroup* group,
+    const std::string& title,
+    const Color& color);
 
 ReturnCode legend_configure(
     const Document& doc,
+    const plist::Property& prop,
+    LegendMap* config);
+
+ReturnCode legend_configure_all(
+    const Document& doc,
     const plist::PropertyList& plist,
-    LegendConfig* config);
+    LegendMap* config);
 
 ReturnCode legend_draw(
     const LegendConfig& legend,
+    const Rectangle& bbox,
+    Layer* layer);
+
+ReturnCode legend_draw(
+    const LegendMap& legends,
     const Rectangle& bbox,
     Layer* layer);
 

@@ -98,7 +98,6 @@ public:
   Exception(const Exception& other);
   Exception& operator=(const Exception& other) = delete;
 
-  void debugPrint(OutputStream* os = nullptr) const;
   std::string getMessage() const;
   std::string getTypeName() const;
   std::string method() const;

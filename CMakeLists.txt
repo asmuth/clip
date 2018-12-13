@@ -64,8 +64,6 @@ add_library(plotfxlib STATIC
     common/utils/buffer.cc
     common/utils/fileutil.cc
     common/utils/file.cc
-    common/utils/outputstream.cc
-    common/utils/inputstream.cc
     common/utils/flagparser.cc
     common/utils/ISO8601.cc
     common/utils/UTF8.cc
