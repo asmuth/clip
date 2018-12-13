@@ -65,8 +65,7 @@ ReturnCode draw_points(
   }
 
   if (column_x->data.size() != column_y->data.size()) {
-    // FIXME error msg
-    return ERROR_INVALID_ARGUMENT;
+    return ReturnCode::error("EARG", "columns have differing lengths");
   }
 
   /* fetch domains */

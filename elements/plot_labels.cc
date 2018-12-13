@@ -43,7 +43,9 @@ namespace labels {
 static const double kDefaultLineWidthPT = 2;
 static const double kDefaultLabelPaddingEM = 0.8;
 
-PlotLabelsConfig::PlotLabelsConfig() {}
+PlotLabelsConfig::PlotLabelsConfig() :
+    x_scale("x"),
+    y_scale("y") {}
 
 ReturnCode draw_labels(
     const PlotConfig& plot,
@@ -51,32 +53,62 @@ ReturnCode draw_labels(
     const Document& doc,
     const Rectangle& clip,
     Layer* layer) {
-  ///* draw labels */
-  //for (size_t i = 0; i < column_x->data.size(); ++i) {
-  //  if (i >= config.labels.size()) {
-  //    break;
-  //  }
+  /* fetch columns */
+  const DataColumn* column_x = nullptr;
+  if (auto rc = column_find(plot.data, config.x_key, &column_x); !rc) {
+    return rc;
+  }
 
-  //  const auto& label_text = config.labels[i];
-  //  auto label_padding = measure_or(
-  //      config.label_padding,
-  //      from_em(kDefaultLabelPaddingEM, config.label_font_size));
+  const DataColumn* column_y = nullptr;
+  if (auto rc = column_find(plot.data, config.y_key, &column_y); !rc) {
+    return rc;
+  }
 
-  //  Point p(
-  //      clip.x + x[i] * clip.w,
-  //      clip.y + (1.0 - y[i]) * clip.h - label_padding);
+  const DataColumn* labels = nullptr;
+  if (auto rc = column_find(plot.data, config.label_key, &labels); !rc) {
+    return rc;
+  }
 
-  //  TextStyle style;
-  //  style.font = config.label_font;
-  //  style.color = config.label_color;
-  //  style.font_size = config.label_font_size;
+  if (column_x->data.size() != column_y->data.size() ||
+      column_x->data.size() != labels->data.size()) {
+    return ReturnCode::error("EARG", "columns have differing lengths");
+  }
 
-  //  auto ax = HAlign::CENTER;
-  //  auto ay = VAlign::BOTTOM;
-  //  if (auto rc = drawTextLabel(label_text, p, ax, ay, style, layer); rc != OK) {
-  //    return rc;
-  //  }
-  //}
+  /* fetch domains */
+  auto domain_x = domain_find(plot.scales, config.x_scale);
+  if (!domain_x) {
+    return ReturnCode::errorf("EARG", "scale not found: $0", config.x_scale);
+  }
+
+  auto domain_y = domain_find(plot.scales, config.y_scale);
+  if (!domain_y) {
+    return ReturnCode::errorf("EARG", "scale not found: $0", config.y_scale);
+  }
+
+  /* draw labels */
+  auto x = domain_translate(*domain_x, column_x->data);
+  auto y = domain_translate(*domain_y, column_y->data);
+  for (size_t i = 0; i < column_x->data.size(); ++i) {
+    const auto& label_text = labels->data[i];
+    auto label_padding = measure_or(
+        config.label_padding,
+        from_em(kDefaultLabelPaddingEM, config.label_font_size));
+
+    Point p(
+        clip.x + x[i] * clip.w,
+        clip.y + (1.0 - y[i]) * clip.h - label_padding);
+
+    TextStyle style;
+    style.font = config.label_font;
+    style.color = config.label_color;
+    style.font_size = config.label_font_size;
+
+    auto ax = HAlign::CENTER;
+    auto ay = VAlign::BOTTOM;
+    if (auto rc = drawTextLabel(label_text, p, ax, ay, style, layer); rc != OK) {
+      return rc;
+    }
+  }
 
   return OK;
 }
@@ -87,10 +119,18 @@ ReturnCode configure(const plist::Property& prop, const Document& doc, PlotConfi
   }
 
   PlotLabelsConfig layer;
-  layer.label_font = doc.font_sans; // FIXME
-  layer.label_font_size = doc.font_size; // FIXME
+  layer.x_key = config->default_x_key;
+  layer.y_key = config->default_y_key;
+  layer.label_key = config->default_y_key;
+  layer.label_font = doc.font_sans;
+  layer.label_font_size = doc.font_size;
 
   static const ParserDefinitions pdefs = {
+    {"x", configure_key(&layer.x_key)},
+    {"x-scale", std::bind(&configure_string, std::placeholders::_1, &layer.x_scale)},
+    {"y", configure_key(&layer.y_key)},
+    {"y-scale", std::bind(&configure_string, std::placeholders::_1, &layer.y_scale)},
+    {"label", configure_key(&layer.label_key)},
   };
 
   if (auto rc = parseAll(*prop.next, pdefs); !rc) {

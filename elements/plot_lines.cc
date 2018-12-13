@@ -99,10 +99,9 @@ ReturnCode draw_lines(
   }
 
   /* draw lines */
+  auto x = domain_translate(*domain_x, column_x->data);
+  auto y = domain_translate(*domain_y, column_y->data);
   for (const auto& group : groups) {
-    auto x = domain_translate(*domain_x, column_x->data);
-    auto y = domain_translate(*domain_y, column_y->data);
-
     Color color;
     if (auto rc = resolve_slot(
           config.line_color,
@@ -153,7 +152,7 @@ ReturnCode configure_legend(
   }
 
   if (column_x->data.size() != column_y->data.size()) {
-    return ERROR_INVALID_ARGUMENT;
+    return ReturnCode::error("EARG", "columns have differing lengths");
   }
 
   const DataColumn* column_group = nullptr;

@@ -45,6 +45,11 @@ namespace labels {
 
 struct PlotLabelsConfig {
   PlotLabelsConfig();
+  std::string x_key;
+  std::string x_scale;
+  std::string y_key;
+  std::string y_scale;
+  std::string label_key;
   FontInfo label_font;
   Measure label_padding;
   Measure label_font_size;
