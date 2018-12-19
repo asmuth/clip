@@ -52,7 +52,8 @@ void dimension_add(
     DimensionMap* map,
     const std::string& key);
 
-DimensionMapFn<Color> series_to_colors(
+std::vector<Color> series_to_colors(
+    SeriesRef series,
     const DomainConfig& domain_config,
     const ColorScheme& palette);
 

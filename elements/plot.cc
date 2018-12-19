@@ -99,6 +99,7 @@ ReturnCode draw(
 ReturnCode configure_layer(
     const plist::Property& prop,
     const Document& doc,
+    const DataContext& data,
     const DomainMap& scales,
     PlotConfig* config) {
   std::string type = "points";
@@ -116,17 +117,17 @@ ReturnCode configure_layer(
   // FIXME proper lookup
   if (type == "labels")
     layer_builder = elem_builder<labels::PlotLabelsConfig>(
-        bind(&labels::configure, _1, _2, scales, _3),
+        bind(&labels::configure, _1, _2, data, scales, _3),
         &labels::draw);
 
   if (type == "lines")
     layer_builder = elem_builder<lines::PlotLinesConfig>(
-        bind(&lines::configure, _1, _2, scales, _3),
+        bind(&lines::configure, _1, _2, data, scales, _3),
         &lines::draw);
 
   if (type == "points")
     layer_builder = elem_builder<points::PlotPointsConfig>(
-        bind(&points::configure, _1, _2, scales, _3),
+        bind(&points::configure, _1, _2, data, scales, _3),
         &points::draw);
 
   if (!layer_builder) {
@@ -144,6 +145,7 @@ ReturnCode configure_layer(
 
 ReturnCode configure_scales_auto(
     const plist::PropertyList& plist,
+    const DataContext& data,
     DomainMap* scales) {
   for (const auto& prop : plist) {
     if (prop.name != "layer") {
@@ -154,8 +156,8 @@ ReturnCode configure_scales_auto(
       return ERROR_INVALID_ARGUMENT;
     }
 
-    SeriesRef data_x;
-    SeriesRef data_y;
+    SeriesRef data_x = series_find(data.defaults, "x");
+    SeriesRef data_y = series_find(data.defaults, "y");
     std::string scale_x = SCALE_DEFAULT_X;
     std::string scale_y = SCALE_DEFAULT_Y;
 
@@ -170,18 +172,23 @@ ReturnCode configure_scales_auto(
       return rc;
     }
 
-    auto domain_x = domain_find(scales, scale_x);
-    if (!domain_x) {
-      return ReturnCode::errorf("EARG", "scale not found: $0", scale_x);
+    if (data_x) {
+      auto domain_x = domain_find(scales, scale_x);
+      if (!domain_x) {
+        return ReturnCode::errorf("EARG", "scale not found: $0", scale_x);
+      }
+
+      domain_fit(*data_x, domain_x);
     }
 
-    auto domain_y = domain_find(scales, scale_y);
-    if (!domain_y) {
-      return ReturnCode::errorf("EARG", "scale not found: $0", scale_x);
-    }
+    if (data_y) {
+      auto domain_y = domain_find(scales, scale_y);
+      if (!domain_y) {
+        return ReturnCode::errorf("EARG", "scale not found: $0", scale_y);
+      }
 
-    domain_fit(*data_x, domain_x);
-    domain_fit(*data_y, domain_y);
+      domain_fit(*data_y, domain_y);
+    }
   }
 
   return OK;
@@ -245,10 +252,14 @@ ReturnCode configure(
   auto domain_x = domain_find(&scales, SCALE_DEFAULT_X);
   auto domain_y = domain_find(&scales, SCALE_DEFAULT_Y);
 
+  SeriesRef data_x;
+  SeriesRef data_y;
+  SeriesRef data_group;
+
   static const ParserDefinitions pdefs = {
-    //{"group", configure_key(&config->default_group_key)},
-    //{"x", configure_key(&config->default_x_key)},
-    //{"y", configure_key(&config->default_y_key)},
+    {"x", configure_series_fn(&data_x)},
+    {"y", configure_series_fn(&data_y)},
+    {"group", configure_series_fn(&data_group)},
     {"axis-x-type", bind(&domain_configure, _1, domain_x)},
     {"axis-x-min", bind(&configure_float_opt, _1, &domain_x->min)},
     {"axis-x-max", bind(&configure_float_opt, _1, &domain_x->max)},
@@ -338,19 +349,25 @@ ReturnCode configure(
     return rc;
   }
 
+  /* prepare data context */
+  DataContext data;
+  data.defaults["x"] = data_x;
+  data.defaults["y"] = data_y;
+  data.defaults["group"] = data_group;
+
   /* configure legend */
   if (auto rc = legend_configure_all(doc, plist, &config->legends); !rc) {
     return rc;
   }
 
   /* fit scales */
-  if (auto rc = configure_scales_auto(plist, &scales); !rc) {
+  if (auto rc = configure_scales_auto(plist, data, &scales); !rc) {
     return rc;
   }
 
   /* configure layers */
   static const ParserDefinitions pdefs_layer = {
-    {"layer", bind(&configure_layer, _1, doc, scales, config)}
+    {"layer", bind(&configure_layer, _1, doc, data, scales, config)}
   };
 
   if (auto rc = parseAll(plist, pdefs_layer); !rc.isSuccess()) {

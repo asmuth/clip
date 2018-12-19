@@ -72,18 +72,20 @@ ReturnCode draw(
 ReturnCode configure(
     const plist::PropertyList& plist,
     const Document& doc,
+    const DataContext& data,
     const DomainMap& scales,
     PlotPointsConfig* config) {
-  SeriesRef data_x;
-  SeriesRef data_y;
-  SeriesRef data_group;
+  SeriesRef data_x = series_find(data.defaults, "x");
+  SeriesRef data_y = series_find(data.defaults, "y");
 
   std::string scale_x = SCALE_DEFAULT_X;
   std::string scale_y = SCALE_DEFAULT_Y;
 
-  Variable<Color> color;
+  std::optional<Color> color_default;
+  SeriesRef color_var = series_find(data.defaults, "color");
   DomainConfig color_domain;
   ColorScheme color_palette;
+
   Measure point_size;
 
   static const ParserDefinitions pdefs = {
@@ -91,7 +93,7 @@ ReturnCode configure(
     {"x-scale", bind(&configure_string, _1, &scale_x)},
     {"y", configure_series_fn(&data_y)},
     {"y-scale", bind(&configure_string, _1, &scale_y)},
-    {"color", configure_var(&color, configure_color_fn())},
+    {"color", configure_var(&color_var, configure_color_opt(&color_default))},
     {"size", bind(&configure_measure_rel, _1, doc.dpi, doc.font_size, &point_size)},
   };
 
@@ -101,11 +103,13 @@ ReturnCode configure(
 
   /* check dataset */
   if (!data_x || !data_y) {
-    return ERROR_INVALID_ARGUMENT;
+    return ReturnCode::error("EARG", "the following properties are required: x, y");
   }
 
   if (data_x->size() != data_y->size()) {
-    return ERROR_INVALID_ARGUMENT;
+    return ReturnCode::error(
+        "EARG",
+        "the length of the 'x' and 'y' properties must be equal");
   }
 
   /* fetch domains */
@@ -123,7 +127,9 @@ ReturnCode configure(
   config->x = domain_translate(*domain_x, *data_x);
   config->y = domain_translate(*domain_y, *data_y);
   config->point_size = measure_or(point_size, from_pt(kDefaultPointSizePT, doc.dpi));
-  config->colors = resolve(color, series_to_colors(color_domain, color_palette));
+  config->colors = fallback(
+      series_to_colors(color_var, color_domain, color_palette),
+      color_default);
 
   return OK;
 }

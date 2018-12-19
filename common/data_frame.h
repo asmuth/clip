@@ -36,7 +36,8 @@ namespace plotfx {
 
 using Value = std::string;
 using Series = std::vector<Value>;
-using SeriesRef = std::shared_ptr<Series>;
+using SeriesRef = std::shared_ptr<const Series>;
+using SeriesMap = std::unordered_map<std::string, SeriesRef>;
 
 // FIXME: rename to column?
 struct DataColumn {
@@ -46,6 +47,11 @@ struct DataColumn {
 
 struct DataFrame {
   std::vector<DataColumn> columns;
+};
+
+struct DataContext {
+  SeriesMap by_name;
+  SeriesMap defaults;
 };
 
 ReturnCode column_find(
@@ -67,6 +73,10 @@ Value data_lookup(
 std::vector<DataGroup> column_group(const DataColumn& col);
 
 std::vector<DataGroup> series_group(const Series& data);
+
+SeriesRef series_find(
+    const SeriesMap& map,
+    const std::string& key);
 
 size_t series_len(const Series& s);
 

@@ -90,10 +90,11 @@ ReturnCode bind(
 ReturnCode configure(
     const plist::PropertyList& plist,
     const Document& doc,
+    const DataContext& data,
     const DomainMap& scales,
     PlotLabelsConfig* config) {
-  SeriesRef data_x;
-  SeriesRef data_y;
+  SeriesRef data_x = series_find(data.defaults, "x");
+  SeriesRef data_y = series_find(data.defaults, "y");
   SeriesRef data_labels;
 
   std::string scale_x = SCALE_DEFAULT_X;
@@ -116,12 +117,14 @@ ReturnCode configure(
 
   /* check dataset */
   if (!data_x || !data_y || !data_labels) {
-    return ERROR_INVALID_ARGUMENT;
+    return ReturnCode::error("EARG", "the following properties are required: x, y, label");
   }
 
   if ((data_x->size() != data_y->size()) ||
       (data_x->size() != data_labels->size())) {
-    return ERROR_INVALID_ARGUMENT;
+    return ReturnCode::error(
+        "EARG",
+        "the length of the 'x', 'y' and 'label' properties must be equal");
   }
 
   /* fetch domains */

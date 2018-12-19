@@ -62,6 +62,17 @@ Value data_lookup(
   }
 }
 
+SeriesRef series_find(
+    const SeriesMap& map,
+    const std::string& key) {
+  const auto& iter = map.find(key);
+  if (iter == map.end()) {
+    return nullptr;
+  } else {
+    return iter->second;
+  }
+}
+
 size_t series_len(const Series& s) {
   return s.size();
 }

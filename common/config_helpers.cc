@@ -36,6 +36,27 @@ using namespace std::placeholders;
 
 namespace plotfx {
 
+ReturnCode parseAll(
+    const plist::PropertyList& plist,
+    const ParserDefinitions& pdefs) {
+  for (const auto& prop : plist) {
+    const auto& pdef = pdefs.find(prop.name);
+    if (pdef != pdefs.end()) {
+      if (auto rc = pdef->second(prop); !rc.isSuccess()) {
+        return ReturnCode::errorf(
+            "EPARSE",
+            "error while parsing property '$0': $1",
+            prop.name,
+            rc.getMessage());
+
+        return rc;
+      }
+    }
+  }
+
+  return ReturnCode::success();
+}
+
 ReturnCode configure_measure_rel(
     const plist::Property& prop,
     double dpi,
@@ -82,8 +103,16 @@ ReturnCode configure_color(
   return ReturnCode::error("EARG", "invalid color");
 }
 
-ParserAtFn<Color> configure_color_fn() {
-  return bind(&configure_color, _1, _2);
+ParserFn configure_color_opt(std::optional<Color>* var) {
+  return [=] (const plist::Property& prop) -> ReturnCode {
+    Color c;
+    if (auto rc = configure_color(prop, &c); !rc) {
+      return rc;
+    }
+
+    *var = c;
+    return OK;
+  };
 }
 
 ParserFn configure_color_fn(Color* var) {
@@ -294,6 +323,18 @@ ReturnCode configure_series(
 
 ParserFn configure_series_fn(SeriesRef* series) {
   return bind(&configure_series, _1, series);
+}
+
+ParserFn configure_var(
+    SeriesRef* series,
+    ParserFn parser) {
+  return [=] (const plist::Property& prop) -> ReturnCode {
+    if (plist::is_enum(prop, "csv")) {
+      return configure_series(prop, series);
+    } else {
+      return parser(prop);
+    }
+  };
 }
 
 } // namespace plotfx

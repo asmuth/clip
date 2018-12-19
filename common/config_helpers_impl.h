@@ -31,35 +31,49 @@
 
 namespace plotfx {
 
-template <typename T>
-ParserFn configure_var(
-    Variable<T>* var,
-    ParserAtFn<T> parser) {
-  return [=] (const plist::Property& prop) -> ReturnCode {
-    if (plist::is_enum(prop, "csv")) {
-      return configure_series(prop, &var->variable);
-    } else {
-      T c;
-      if (auto rc = parser(prop, &c); !rc) {
-        return rc;
-      }
+template<typename T>
+ReturnCode parseEnum(
+    const EnumDefinitions<T>& defs,
+    const std::string& str,
+    T* value) {
+  const auto& def = defs.find(str);
+  if (def == defs.end()) {
+    return ReturnCode::errorf("EPARSE", "invalid value '$0'", str);
+  }
 
-      var->constant = c;
-      return OK;
-    }
-  };
+  *value = def->second;
+  return ReturnCode::success();
 }
 
-template <typename T>
-std::vector<T> resolve(
-    const Variable<T>& var,
-    const DimensionMapFn<T>& map) {
-  if (var.constant) {
-    return {*var.constant};
-  } else if (var.variable) {
-    return map(*var.variable);
+template <typename H>
+std::vector<H> fallback(const std::vector<H>& head) {
+  return head;
+}
+
+template <typename H, typename... T>
+std::vector<H> fallback(const std::vector<H>& head, const T&... tail) {
+  if (head.empty()) {
+    return fallback(tail...);
+  } else {
+    return head;
+  }
+}
+
+template <typename H>
+std::vector<H> fallback(const std::optional<H>& head) {
+  if (head) {
+    return {*head};
   } else {
     return {};
+  }
+}
+
+template <typename H, typename... T>
+std::vector<H> fallback(const std::optional<H>& head, const T&... tail) {
+  if (head) {
+    return {*head};
+  } else {
+    return fallback(tail...);
   }
 }
 

@@ -41,31 +41,11 @@ namespace plotfx {
 
 using ParserFn = std::function<ReturnCode (const plist::Property&)>;
 
-template <typename T>
-using ParserAtFn = std::function<ReturnCode (const plist::Property&, T*)>;
-
 using ParserDefinitions = std::unordered_map<std::string, ParserFn>;
 
-inline ReturnCode parseAll(
+ReturnCode parseAll(
     const plist::PropertyList& plist,
-    const ParserDefinitions& pdefs) {
-  for (const auto& prop : plist) {
-    const auto& pdef = pdefs.find(prop.name);
-    if (pdef != pdefs.end()) {
-      if (auto rc = pdef->second(prop); !rc.isSuccess()) {
-        return ReturnCode::errorf(
-            "EPARSE",
-            "error while parsing property '$0': $1",
-            prop.name,
-            rc.getMessage());
-
-        return rc;
-      }
-    }
-  }
-
-  return ReturnCode::success();
-}
+    const ParserDefinitions& pdefs);
 
 template <typename T>
 using EnumDefinitions = std::unordered_map<std::string, T>;
@@ -74,15 +54,7 @@ template<typename T>
 ReturnCode parseEnum(
     const EnumDefinitions<T>& defs,
     const std::string& str,
-    T* value) {
-  const auto& def = defs.find(str);
-  if (def == defs.end()) {
-    return ReturnCode::errorf("EPARSE", "invalid value '$0'", str);
-  }
-
-  *value = def->second;
-  return ReturnCode::success();
-}
+    T* value);
 
 ReturnCode parse_classlike(
     const plist::Property& prop,
@@ -90,20 +62,9 @@ ReturnCode parse_classlike(
     std::vector<std::string>* args);
 
 template <typename T>
-struct Variable {
-  std::optional<T> constant;
-  SeriesRef variable;
-};
+ParserFn configure_opt(ParserFn parser);
 
-template <typename T>
-std::vector<T> resolve(
-    const Variable<T>& var,
-    const DimensionMapFn<T>& map);
-
-template <typename T>
-ParserFn configure_var(
-    Variable<T>* var,
-    ParserAtFn<T> parser);
+ParserFn configure_var(SeriesRef* series, ParserFn parser);
 
 ParserFn configure_multiprop(const std::vector<ParserFn>& parsers);
 
@@ -120,7 +81,7 @@ ReturnCode configure_color(
     Color* value);
 
 ParserFn configure_color_fn(Color* var);
-ParserAtFn<Color> configure_color_fn();
+ParserFn configure_color_opt(std::optional<Color>* var);
 
 ReturnCode configure_float(
     const plist::Property& prop,
@@ -143,6 +104,12 @@ ReturnCode configure_series(
     SeriesRef* data);
 
 ParserFn configure_series_fn(SeriesRef* data);
+
+template <typename H, typename... T>
+std::vector<H> fallback(const std::vector<H>& head, const T&... tail);
+
+template <typename H, typename... T>
+std::vector<H> fallback(const std::optional<H>& head, const T&... tail);
 
 } // namespace plotfx
 
