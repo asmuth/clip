@@ -34,6 +34,13 @@
 namespace plotfx {
 struct Document;
 
+using ElementBuilder = std::function<ReturnCode (const Document&, const plist::PropertyList&, ElementRef* elem)>;
+
+template <typename T>
+ElementBuilder elem_builder(
+    ElementConfigureAsFn<T> config_fn,
+    ElementDrawAsFn<T> draw_fn);
+
 ReturnCode buildElement(
     const Document& doc,
     const std::string& name,
@@ -42,3 +49,4 @@ ReturnCode buildElement(
 
 } // namespace plotfx
 
+#include "element_factory_impl.h"

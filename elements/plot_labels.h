@@ -41,6 +41,7 @@
 
 namespace plotfx {
 namespace plot {
+namespace labels {
 
 struct PlotLabelsConfig {
   std::vector<double> x;
@@ -52,16 +53,18 @@ struct PlotLabelsConfig {
   Color label_color;
 };
 
-ReturnCode plot_labels_bind(
+ReturnCode draw(
     const PlotLabelsConfig& config,
-    ElementRef* elem);
+    const Rectangle& clip,
+    Layer* layer);;
 
-ReturnCode plot_labels_configure(
-    const Document& doc,
+ReturnCode configure(
     const plist::PropertyList& plist,
+    const Document& doc,
     const DomainMap& scales,
-    ElementRef* elem);
+    PlotLabelsConfig* config);
 
+} // namespace labels
 } // namespace plot
 } // namespace plotfx
 

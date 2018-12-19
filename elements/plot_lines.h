@@ -42,6 +42,7 @@
 
 namespace plotfx {
 namespace plot {
+namespace lines {
 
 struct PlotLinesConfig {
   std::vector<double> x;
@@ -51,16 +52,18 @@ struct PlotLinesConfig {
   Measure line_width;
 };
 
-ReturnCode plot_lines_bind(
+ReturnCode draw(
     const PlotLinesConfig& config,
-    ElementRef* elem);
+    const Rectangle& clip,
+    Layer* layer);
 
-ReturnCode plot_lines_configure(
-    const Document& doc,
+ReturnCode configure(
     const plist::PropertyList& plist,
+    const Document& doc,
     const DomainMap& scales,
-    ElementRef* elem);
+    PlotLinesConfig* config);
 
+} // namespace lines
 } // namespace plot
 } // namespace plotfx
 

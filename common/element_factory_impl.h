@@ -28,33 +28,32 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 #pragma once
-#include <atomic>
-#include <memory>
-#include <string>
-#include <functional>
-#include "plist/plist.h"
-#include "utils/return_code.h"
 
 namespace plotfx {
-struct Layer;
-struct Rectangle;
-struct Document;
-
-using plist::PropertyList;
-
-using ElementDrawFn = std::function<ReturnCode (const Rectangle&, Layer*)>;
 
 template <typename T>
-using ElementDrawAsFn = std::function<ReturnCode (const T&, const Rectangle&, Layer*)>;
+ElementBuilder elem_builder(
+    ElementConfigureAsFn<T> config_fn,
+    ElementDrawAsFn<T> draw_fn) {
+  using namespace std::placeholders;
 
-template <typename T>
-using ElementConfigureAsFn = std::function<ReturnCode (const plist::PropertyList&, const Document&, T*)>;
+  return [=] (
+      const Document& doc,
+      const plist::PropertyList& prop,
+      ElementRef* elem) -> ReturnCode {
 
-struct Element {
-  ElementDrawFn draw;
-};
+    T config;
+    if (auto rc = config_fn(prop, doc, &config); !rc) {
+      return rc;
+    }
 
-using ElementRef = std::shared_ptr<Element>;
+    auto e = std::make_unique<Element>();
+    e->draw = bind(draw_fn, config, _1, _2);
+    *elem = std::move(e);
+    return OK;
+  };
+
+}
 
 } // namespace plotfx
 

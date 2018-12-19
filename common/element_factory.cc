@@ -35,8 +35,8 @@ namespace plotfx {
 
 using ElementConfigureFn = std::function<ReturnCode (const Document&, const PropertyList&, ElementRef*)>;
 
-static std::unordered_map<std::string, ElementConfigureFn> elems = {
-  {"plot", &plot::plot_configure}
+static std::unordered_map<std::string, ElementBuilder> elems = {
+  {"plot", elem_builder<plot::PlotConfig>(&plot::configure, &plot::draw)},
 };
 
 ReturnCode buildElement(

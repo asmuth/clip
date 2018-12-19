@@ -35,15 +35,18 @@
 #include <graphics/text.h>
 #include <graphics/layout.h>
 #include "common/config_helpers.h"
+#include "common/element_factory.h"
 #include "plot_labels.h"
 #include "plot_lines.h"
 #include "plot_points.h"
 #include "legend.h"
 
+using namespace std::placeholders;
+
 namespace plotfx {
 namespace plot {
 
-ReturnCode plot_draw(
+ReturnCode draw(
     const PlotConfig& config,
     const Rectangle& clip,
     Layer* layer) {
@@ -100,22 +103,38 @@ ReturnCode configure_layer(
     PlotConfig* config) {
   std::string type = "points";
   static const ParserDefinitions pdefs = {
-    {"type", std::bind(&configure_string, std::placeholders::_1, &type)},
+    {"type", bind(&configure_string, _1, &type)},
   };
 
   if (auto rc = parseAll(*prop.next, pdefs); !rc) {
     return rc;
   }
 
-  ElementRef layer;
-  auto rc = ReturnCode::errorf("EARG", "invalid layer type: '$0'", type);
+  const auto& layer_props = *prop.next;
+  ElementBuilder layer_builder;
 
   // FIXME proper lookup
-  if (type == "labels") rc = plot_labels_configure(doc, *prop.next, scales, &layer);
-  if (type == "lines") rc = plot_lines_configure(doc, *prop.next, scales, &layer);
-  if (type == "points") rc = plot_points_configure(doc, *prop.next, scales, &layer);
+  if (type == "labels")
+    layer_builder = elem_builder<labels::PlotLabelsConfig>(
+        bind(&labels::configure, _1, _2, scales, _3),
+        &labels::draw);
 
-  if (!rc) {
+  if (type == "lines")
+    layer_builder = elem_builder<lines::PlotLinesConfig>(
+        bind(&lines::configure, _1, _2, scales, _3),
+        &lines::draw);
+
+  if (type == "points")
+    layer_builder = elem_builder<points::PlotPointsConfig>(
+        bind(&points::configure, _1, _2, scales, _3),
+        &points::draw);
+
+  if (!layer_builder) {
+    return ReturnCode::errorf("EARG", "invalid layer type: '$0'", type);
+  }
+
+  ElementRef layer;
+  if (auto rc = layer_builder(doc, layer_props, &layer); !rc) {
     return rc;
   }
 
@@ -142,9 +161,9 @@ ReturnCode configure_scales_auto(
 
     static const ParserDefinitions pdefs = {
       {"x", configure_series_fn(&data_x)},
-      {"x-scale", std::bind(&configure_string, std::placeholders::_1, &scale_x)},
+      {"x-scale", bind(&configure_string, _1, &scale_x)},
       {"y", configure_series_fn(&data_y)},
-      {"y-scale", std::bind(&configure_string, std::placeholders::_1, &scale_y)},
+      {"y-scale", bind(&configure_string, _1, &scale_y)},
     };
 
     if (auto rc = parseAll(*prop.next, pdefs); !rc) {
@@ -168,48 +187,46 @@ ReturnCode configure_scales_auto(
   return OK;
 }
 
-ReturnCode plot_bind(
+ReturnCode bind(
     const PlotConfig& config,
     ElementRef* elem) {
   auto e = std::make_unique<Element>();
-  e->draw = std::bind(
-      &plot_draw,
+  e->draw = bind(
+      &draw,
       config,
-      std::placeholders::_1,
-      std::placeholders::_2);
+      _1,
+      _2);
 
   *elem = std::move(e);
   return OK;
 }
 
-ReturnCode plot_configure(
-    const Document& doc,
+ReturnCode configure(
     const plist::PropertyList& plist,
-    ElementRef* elem) {
-  PlotConfig config;
-
+    const Document& doc,
+    PlotConfig* config) {
   // FIXME
-  config.axis_top.font = doc.font_sans;
-  config.axis_top.label_font_size = doc.font_size;
-  config.axis_top.border_color = doc.border_color;
-  config.axis_top.text_color = doc.text_color;
-  config.axis_right.font = doc.font_sans;
-  config.axis_right.label_font_size = doc.font_size;
-  config.axis_right.border_color = doc.border_color;
-  config.axis_right.text_color = doc.text_color;
-  config.axis_bottom.font = doc.font_sans;
-  config.axis_bottom.label_font_size = doc.font_size;
-  config.axis_bottom.border_color = doc.border_color;
-  config.axis_bottom.text_color = doc.text_color;
-  config.axis_left.font = doc.font_sans;
-  config.axis_left.label_font_size = doc.font_size;
-  config.axis_left.border_color = doc.border_color;
-  config.axis_left.text_color = doc.text_color;
+  config->axis_top.font = doc.font_sans;
+  config->axis_top.label_font_size = doc.font_size;
+  config->axis_top.border_color = doc.border_color;
+  config->axis_top.text_color = doc.text_color;
+  config->axis_right.font = doc.font_sans;
+  config->axis_right.label_font_size = doc.font_size;
+  config->axis_right.border_color = doc.border_color;
+  config->axis_right.text_color = doc.text_color;
+  config->axis_bottom.font = doc.font_sans;
+  config->axis_bottom.label_font_size = doc.font_size;
+  config->axis_bottom.border_color = doc.border_color;
+  config->axis_bottom.text_color = doc.text_color;
+  config->axis_left.font = doc.font_sans;
+  config->axis_left.label_font_size = doc.font_size;
+  config->axis_left.border_color = doc.border_color;
+  config->axis_left.text_color = doc.text_color;
 
-  config.margins[0] = from_em(1.0, doc.font_size);
-  config.margins[1] = from_em(1.0, doc.font_size);
-  config.margins[2] = from_em(1.0, doc.font_size);
-  config.margins[3] = from_em(1.0, doc.font_size);
+  config->margins[0] = from_em(1.0, doc.font_size);
+  config->margins[1] = from_em(1.0, doc.font_size);
+  config->margins[2] = from_em(1.0, doc.font_size);
+  config->margins[3] = from_em(1.0, doc.font_size);
 
   DomainMap scales;
 
@@ -229,92 +246,92 @@ ReturnCode plot_configure(
   auto domain_y = domain_find(&scales, SCALE_DEFAULT_Y);
 
   static const ParserDefinitions pdefs = {
-    //{"group", configure_key(&config.default_group_key)},
-    //{"x", configure_key(&config.default_x_key)},
-    //{"y", configure_key(&config.default_y_key)},
-    {"axis-x-type", std::bind(&domain_configure, std::placeholders::_1, domain_x)},
-    {"axis-x-min", std::bind(&configure_float_opt, std::placeholders::_1, &domain_x->min)},
-    {"axis-x-max", std::bind(&configure_float_opt, std::placeholders::_1, &domain_x->max)},
+    //{"group", configure_key(&config->default_group_key)},
+    //{"x", configure_key(&config->default_x_key)},
+    //{"y", configure_key(&config->default_y_key)},
+    {"axis-x-type", bind(&domain_configure, _1, domain_x)},
+    {"axis-x-min", bind(&configure_float_opt, _1, &domain_x->min)},
+    {"axis-x-max", bind(&configure_float_opt, _1, &domain_x->max)},
     {
       "axis-x-format",
       configure_multiprop({
-          std::bind(&confgure_format, std::placeholders::_1, &config.axis_top.label_formatter),
-          std::bind(&confgure_format, std::placeholders::_1, &config.axis_bottom.label_formatter),
+          bind(&confgure_format, _1, &config->axis_top.label_formatter),
+          bind(&confgure_format, _1, &config->axis_bottom.label_formatter),
       })
     },
     {
       "axis-x-label-placement",
       configure_multiprop({
-          std::bind(&axis_configure_label_placement, std::placeholders::_1, &config.axis_top.label_placement),
-          std::bind(&axis_configure_label_placement, std::placeholders::_1, &config.axis_bottom.label_placement),
+          bind(&axis_configure_label_placement, _1, &config->axis_top.label_placement),
+          bind(&axis_configure_label_placement, _1, &config->axis_bottom.label_placement),
       })
     },
-    {"axis-y-type", std::bind(&domain_configure, std::placeholders::_1, domain_y)},
-    {"axis-y-min", std::bind(&configure_float_opt, std::placeholders::_1, &domain_y->min)},
-    {"axis-y-max", std::bind(&configure_float_opt, std::placeholders::_1, &domain_y->max)},
+    {"axis-y-type", bind(&domain_configure, _1, domain_y)},
+    {"axis-y-min", bind(&configure_float_opt, _1, &domain_y->min)},
+    {"axis-y-max", bind(&configure_float_opt, _1, &domain_y->max)},
     {
       "axis-y-format",
       configure_multiprop({
-          std::bind(&confgure_format, std::placeholders::_1, &config.axis_left.label_formatter),
-          std::bind(&confgure_format, std::placeholders::_1, &config.axis_right.label_formatter),
+          bind(&confgure_format, _1, &config->axis_left.label_formatter),
+          bind(&confgure_format, _1, &config->axis_right.label_formatter),
       })
     },
     {
       "axis-y-label-placement",
       configure_multiprop({
-          std::bind(&axis_configure_label_placement, std::placeholders::_1, &config.axis_left.label_placement),
-          std::bind(&axis_configure_label_placement, std::placeholders::_1, &config.axis_right.label_placement),
+          bind(&axis_configure_label_placement, _1, &config->axis_left.label_placement),
+          bind(&axis_configure_label_placement, _1, &config->axis_right.label_placement),
       })
     },
-    {"axis-top", std::bind(&parseAxisModeProp, std::placeholders::_1, &config.axis_top.mode)},
-    {"axis-top-format", std::bind(&confgure_format, std::placeholders::_1, &config.axis_top.label_formatter)},
+    {"axis-top", bind(&parseAxisModeProp, _1, &config->axis_top.mode)},
+    {"axis-top-format", bind(&confgure_format, _1, &config->axis_top.label_formatter)},
     {
       "axis-top-label-placement",
-      std::bind(
+      bind(
           &axis_configure_label_placement,
-          std::placeholders::_1,
-          &config.axis_top.label_placement),
+          _1,
+          &config->axis_top.label_placement),
     },
-    {"axis-right", std::bind(&parseAxisModeProp, std::placeholders::_1, &config.axis_right.mode)},
-    {"axis-right-format", std::bind(&confgure_format, std::placeholders::_1, &config.axis_right.label_formatter)},
+    {"axis-right", bind(&parseAxisModeProp, _1, &config->axis_right.mode)},
+    {"axis-right-format", bind(&confgure_format, _1, &config->axis_right.label_formatter)},
     {
       "axis-right-label-placement",
-      std::bind(
+      bind(
           &axis_configure_label_placement,
-          std::placeholders::_1,
-          &config.axis_right.label_placement),
+          _1,
+          &config->axis_right.label_placement),
     },
-    {"axis-bottom", std::bind(&parseAxisModeProp, std::placeholders::_1, &config.axis_bottom.mode)},
-    {"axis-bottom-format", std::bind(&confgure_format, std::placeholders::_1, &config.axis_bottom.label_formatter)},
+    {"axis-bottom", bind(&parseAxisModeProp, _1, &config->axis_bottom.mode)},
+    {"axis-bottom-format", bind(&confgure_format, _1, &config->axis_bottom.label_formatter)},
     {
       "axis-bottom-label-placement",
-      std::bind(
+      bind(
           &axis_configure_label_placement,
-          std::placeholders::_1,
-          &config.axis_bottom.label_placement),
+          _1,
+          &config->axis_bottom.label_placement),
     },
-    {"axis-left", std::bind(&parseAxisModeProp, std::placeholders::_1, &config.axis_left.mode)},
-    {"axis-left-format", std::bind(&confgure_format, std::placeholders::_1, &config.axis_left.label_formatter)},
+    {"axis-left", bind(&parseAxisModeProp, _1, &config->axis_left.mode)},
+    {"axis-left-format", bind(&confgure_format, _1, &config->axis_left.label_formatter)},
     {
       "axis-left-label-placement",
-      std::bind(
+      bind(
           &axis_configure_label_placement,
-          std::placeholders::_1,
-          &config.axis_left.label_placement),
+          _1,
+          &config->axis_left.label_placement),
     },
     {
       "margin",
       configure_multiprop({
-          std::bind(&configure_measure_rel, std::placeholders::_1, doc.dpi, doc.font_size, &config.margins[0]),
-          std::bind(&configure_measure_rel, std::placeholders::_1, doc.dpi, doc.font_size, &config.margins[1]),
-          std::bind(&configure_measure_rel, std::placeholders::_1, doc.dpi, doc.font_size, &config.margins[2]),
-          std::bind(&configure_measure_rel, std::placeholders::_1, doc.dpi, doc.font_size, &config.margins[3])
+          bind(&configure_measure_rel, _1, doc.dpi, doc.font_size, &config->margins[0]),
+          bind(&configure_measure_rel, _1, doc.dpi, doc.font_size, &config->margins[1]),
+          bind(&configure_measure_rel, _1, doc.dpi, doc.font_size, &config->margins[2]),
+          bind(&configure_measure_rel, _1, doc.dpi, doc.font_size, &config->margins[3])
       })
     },
-    {"margin-top", std::bind(&configure_measure_rel, std::placeholders::_1, doc.dpi, doc.font_size, &config.margins[0])},
-    {"margin-right", std::bind(&configure_measure_rel, std::placeholders::_1, doc.dpi, doc.font_size, &config.margins[1])},
-    {"margin-bottom", std::bind(&configure_measure_rel, std::placeholders::_1, doc.dpi, doc.font_size, &config.margins[2])},
-    {"margin-left", std::bind(&configure_measure_rel, std::placeholders::_1, doc.dpi, doc.font_size, &config.margins[3])},
+    {"margin-top", bind(&configure_measure_rel, _1, doc.dpi, doc.font_size, &config->margins[0])},
+    {"margin-right", bind(&configure_measure_rel, _1, doc.dpi, doc.font_size, &config->margins[1])},
+    {"margin-bottom", bind(&configure_measure_rel, _1, doc.dpi, doc.font_size, &config->margins[2])},
+    {"margin-left", bind(&configure_measure_rel, _1, doc.dpi, doc.font_size, &config->margins[3])},
   };
 
   if (auto rc = parseAll(plist, pdefs); !rc.isSuccess()) {
@@ -322,7 +339,7 @@ ReturnCode plot_configure(
   }
 
   /* configure legend */
-  if (auto rc = legend_configure_all(doc, plist, &config.legends); !rc) {
+  if (auto rc = legend_configure_all(doc, plist, &config->legends); !rc) {
     return rc;
   }
 
@@ -333,7 +350,7 @@ ReturnCode plot_configure(
 
   /* configure layers */
   static const ParserDefinitions pdefs_layer = {
-    {"layer", std::bind(&configure_layer, std::placeholders::_1, doc, scales, &config)}
+    {"layer", bind(&configure_layer, _1, doc, scales, config)}
   };
 
   if (auto rc = parseAll(plist, pdefs_layer); !rc.isSuccess()) {
@@ -343,15 +360,15 @@ ReturnCode plot_configure(
   /* resolve axes */
   if (auto rc = axis_resolve(
         scales,
-        &config.axis_top,
-        &config.axis_right,
-        &config.axis_bottom,
-        &config.axis_left);
+        &config->axis_top,
+        &config->axis_right,
+        &config->axis_bottom,
+        &config->axis_left);
         !rc) {
     return rc;
   }
 
-  return plot_bind(config, elem);
+  return OK;
 }
 
 } // namespace plot

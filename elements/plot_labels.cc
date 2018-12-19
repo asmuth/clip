@@ -38,10 +38,11 @@
 
 namespace plotfx {
 namespace plot {
+namespace labels {
 
 static const double kDefaultLabelPaddingEM = 0.8;
 
-ReturnCode plot_labels_draw(
+ReturnCode draw(
     const PlotLabelsConfig& config,
     const Rectangle& clip,
     Layer* layer) {
@@ -70,12 +71,12 @@ ReturnCode plot_labels_draw(
   return OK;
 }
 
-ReturnCode plot_labels_bind(
+ReturnCode bind(
     const PlotLabelsConfig& config,
     ElementRef* elem) {
   auto e = std::make_unique<Element>();
   e->draw = std::bind(
-      &plot_labels_draw,
+      &draw,
       config,
       std::placeholders::_1,
       std::placeholders::_2);
@@ -84,11 +85,11 @@ ReturnCode plot_labels_bind(
   return OK;
 }
 
-ReturnCode plot_labels_configure(
-    const Document& doc,
+ReturnCode configure(
     const plist::PropertyList& plist,
+    const Document& doc,
     const DomainMap& scales,
-    ElementRef* elem) {
+    PlotLabelsConfig* config) {
   SeriesRef data_x;
   SeriesRef data_y;
   SeriesRef data_labels;
@@ -96,9 +97,8 @@ ReturnCode plot_labels_configure(
   std::string scale_x = SCALE_DEFAULT_X;
   std::string scale_y = SCALE_DEFAULT_Y;
 
-  PlotLabelsConfig config;
-  config.label_font = doc.font_sans;
-  config.label_font_size = doc.font_size;
+  config->label_font = doc.font_sans;
+  config->label_font_size = doc.font_size;
 
   static const ParserDefinitions pdefs = {
     {"x", configure_series_fn(&data_x)},
@@ -134,13 +134,14 @@ ReturnCode plot_labels_configure(
   }
 
   /* return element */
-  config.x = domain_translate(*domain_x, *data_x);
-  config.y = domain_translate(*domain_y, *data_y);
-  config.labels = *data_labels;
+  config->x = domain_translate(*domain_x, *data_x);
+  config->y = domain_translate(*domain_y, *data_y);
+  config->labels = *data_labels;
 
-  return plot_labels_bind(config, elem);
+  return OK;
 }
 
+} // namespace labels
 } // namespace plot
 } // namespace plotfx
 

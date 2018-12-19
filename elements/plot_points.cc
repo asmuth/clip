@@ -38,10 +38,11 @@
 
 namespace plotfx {
 namespace plot {
+namespace points {
 
 static const double kDefaultPointSizePT = 3;
 
-ReturnCode draw_points(
+ReturnCode draw(
     const PlotPointsConfig& config,
     const Rectangle& clip,
     Layer* layer) {
@@ -66,25 +67,11 @@ ReturnCode draw_points(
   return OK;
 }
 
-ReturnCode plot_points_bind(
-    const PlotPointsConfig& config,
-    ElementRef* elem) {
-  auto e = std::make_unique<Element>();
-  e->draw = std::bind(
-      &draw_points,
-      config,
-      std::placeholders::_1,
-      std::placeholders::_2);
-
-  *elem = std::move(e);
-  return OK;
-}
-
-ReturnCode plot_points_configure(
-    const Document& doc,
+ReturnCode configure(
     const plist::PropertyList& plist,
+    const Document& doc,
     const DomainMap& scales,
-    ElementRef* elem) {
+    PlotPointsConfig* config) {
   SeriesRef data_x;
   SeriesRef data_y;
   SeriesRef data_group;
@@ -131,15 +118,15 @@ ReturnCode plot_points_configure(
   }
 
   /* return element */
-  PlotPointsConfig config;
-  config.x = domain_translate(*domain_x, *data_x);
-  config.y = domain_translate(*domain_y, *data_y);
-  config.point_size = measure_or(point_size, from_pt(kDefaultPointSizePT, doc.dpi));
-  config.colors = resolve(color, series_to_colors(color_domain, color_palette));
+  config->x = domain_translate(*domain_x, *data_x);
+  config->y = domain_translate(*domain_y, *data_y);
+  config->point_size = measure_or(point_size, from_pt(kDefaultPointSizePT, doc.dpi));
+  config->colors = resolve(color, series_to_colors(color_domain, color_palette));
 
-  return plot_points_bind(config, elem);
+  return OK;
 }
 
+} // namespace points
 } // namespace plot
 } // namespace plotfx
 

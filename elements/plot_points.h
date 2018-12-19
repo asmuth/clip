@@ -41,6 +41,7 @@
 
 namespace plotfx {
 namespace plot {
+namespace points {
 
 struct PlotPointsConfig {
   std::vector<double> x;
@@ -49,16 +50,18 @@ struct PlotPointsConfig {
   Measure point_size;
 };
 
-ReturnCode plot_points_bind(
+ReturnCode draw(
     const PlotPointsConfig& config,
-    ElementRef* elem);
+    const Rectangle& clip,
+    Layer* layer);
 
-ReturnCode plot_points_configure(
-    const Document& doc,
+ReturnCode configure(
     const plist::PropertyList& plist,
+    const Document& doc,
     const DomainMap& scales,
-    ElementRef* elem);
+    PlotPointsConfig* config);
 
+} // namespace points
 } // namespace plot
 } // namespace plotfx
 

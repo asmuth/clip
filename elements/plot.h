@@ -55,14 +55,15 @@ struct PlotConfig {
   LegendMap legends;
 };
 
-ReturnCode plot_bind(
+ReturnCode draw(
     const PlotConfig& config,
-    ElementRef* elem);
+    const Rectangle& clip,
+    Layer* layer);
 
-ReturnCode plot_configure(
-    const Document& doc,
+ReturnCode configure(
     const plist::PropertyList& plist,
-    ElementRef* elem);
+    const Document& doc,
+    PlotConfig* config);
 
 } // namespace plot
 } // namespace plotfx

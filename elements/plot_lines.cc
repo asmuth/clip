@@ -38,10 +38,11 @@
 
 namespace plotfx {
 namespace plot {
+namespace lines {
 
 static const double kDefaultLineWidthPT = 2;
 
-ReturnCode plot_lines_draw(
+ReturnCode draw(
     const PlotLinesConfig& config,
     const Rectangle& clip,
     Layer* layer) {
@@ -70,25 +71,11 @@ ReturnCode plot_lines_draw(
   return OK;
 }
 
-ReturnCode plot_lines_bind(
-    PlotLinesConfig& config,
-    ElementRef* elem) {
-  auto e = std::make_unique<Element>();
-  e->draw = std::bind(
-      &plot_lines_draw,
-      config,
-      std::placeholders::_1,
-      std::placeholders::_2);
-
-  *elem = std::move(e);
-  return OK;
-}
-
-ReturnCode plot_lines_configure(
-    const Document& doc,
+ReturnCode configure(
     const plist::PropertyList& plist,
+    const Document& doc,
     const DomainMap& scales,
-    ElementRef* elem) {
+    PlotLinesConfig* config) {
   SeriesRef data_x;
   SeriesRef data_y;
   SeriesRef data_group;
@@ -137,11 +124,10 @@ ReturnCode plot_lines_configure(
   }
 
   /* load data */
-  PlotLinesConfig config;
-  config.x = domain_translate(*domain_x, *data_x);
-  config.y = domain_translate(*domain_y, *data_y);
-  config.line_width = measure_or(line_width, from_pt(kDefaultLineWidthPT, doc.dpi));
-  config.colors = resolve(color, series_to_colors(color_domain, color_palette));
+  config->x = domain_translate(*domain_x, *data_x);
+  config->y = domain_translate(*domain_y, *data_y);
+  config->line_width = measure_or(line_width, from_pt(kDefaultLineWidthPT, doc.dpi));
+  config->colors = resolve(color, series_to_colors(color_domain, color_palette));
 
   /* group data */
   if (data_group) {
@@ -149,17 +135,18 @@ ReturnCode plot_lines_configure(
       return ERROR_INVALID_ARGUMENT;
     }
 
-    config.groups = plotfx::series_group(*data_group);
+    config->groups = plotfx::series_group(*data_group);
   } else {
     DataGroup g;
     g.begin = 0;
     g.end = data_x->size();
-    config.groups.emplace_back(g);
+    config->groups.emplace_back(g);
   }
 
-  return plot_lines_bind(config, elem);
+  return OK;
 }
 
+} // namespace lines
 } // namespace plot
 } // namespace plotfx
 
