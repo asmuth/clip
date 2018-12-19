@@ -31,6 +31,7 @@
 #include <string>
 #include <unordered_map>
 #include "common/domain.h"
+#include "common/data_frame.h"
 
 namespace plotfx {
 
@@ -55,6 +56,10 @@ void dimension_add(
 std::vector<Color> series_to_colors(
     SeriesRef series,
     const DomainConfig& domain_config,
+    const ColorScheme& palette);
+
+std::vector<Color> groups_to_colors(
+    const std::vector<DataGroup>& groups,
     const ColorScheme& palette);
 
 } // namespace plotfx

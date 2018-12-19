@@ -75,5 +75,26 @@ std::vector<Color> series_to_colors(
   return colors;
 }
 
+std::vector<Color> groups_to_colors(
+    const std::vector<DataGroup>& groups,
+    const ColorScheme& palette) {
+  auto max_idx =
+      std::max_element(
+          groups.begin(),
+          groups.end(),
+          [] (const DataGroup& a, const DataGroup& b) { return a.end < b.end; })
+      ->end;
+
+  std::vector<Color> colors(max_idx);
+  for (size_t i = 0; i < groups.size(); ++i) {
+    std::fill(
+        colors.begin() + groups[i].begin,
+        colors.begin() + groups[i].end,
+        palette.get(i));
+  }
+
+  return colors;
+}
+
 } // namespace plotfx
 

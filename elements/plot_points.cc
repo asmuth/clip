@@ -77,6 +77,7 @@ ReturnCode configure(
     PlotPointsConfig* config) {
   SeriesRef data_x = series_find(data.defaults, "x");
   SeriesRef data_y = series_find(data.defaults, "y");
+  SeriesRef data_group = series_find(data.defaults, "group");
 
   std::string scale_x = SCALE_DEFAULT_X;
   std::string scale_y = SCALE_DEFAULT_Y;
@@ -93,6 +94,7 @@ ReturnCode configure(
     {"x-scale", bind(&configure_string, _1, &scale_x)},
     {"y", configure_series_fn(&data_y)},
     {"y-scale", bind(&configure_string, _1, &scale_y)},
+    {"group", configure_series_fn(&data_group)},
     {"color", configure_var(&color_var, configure_color_opt(&color_default))},
     {"size", bind(&configure_measure_rel, _1, doc.dpi, doc.font_size, &point_size)},
   };
@@ -123,13 +125,29 @@ ReturnCode configure(
     return ReturnCode::errorf("EARG", "scale not found: $0", scale_y);
   }
 
+  /* group data */
+  std::vector<DataGroup> groups;
+  if (data_group) {
+    if (data_x->size() != data_group->size()) {
+      return ERROR_INVALID_ARGUMENT;
+    }
+
+    groups = plotfx::series_group(*data_group);
+  } else {
+    DataGroup g;
+    g.begin = 0;
+    g.end = data_x->size();
+    groups.emplace_back(g);
+  }
+
   /* return element */
   config->x = domain_translate(*domain_x, *data_x);
   config->y = domain_translate(*domain_y, *data_y);
   config->point_size = measure_or(point_size, from_pt(kDefaultPointSizePT, doc.dpi));
   config->colors = fallback(
       series_to_colors(color_var, color_domain, color_palette),
-      color_default);
+      color_default,
+      groups_to_colors(groups, color_palette));
 
   return OK;
 }

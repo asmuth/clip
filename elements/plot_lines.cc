@@ -130,14 +130,6 @@ ReturnCode configure(
     return ReturnCode::errorf("EARG", "scale not found: $0", scale_y);
   }
 
-  /* load data */
-  config->x = domain_translate(*domain_x, *data_x);
-  config->y = domain_translate(*domain_y, *data_y);
-  config->line_width = measure_or(line_width, from_pt(kDefaultLineWidthPT, doc.dpi));
-  config->colors = fallback(
-      series_to_colors(color_var, color_domain, color_palette),
-      color_default);
-
   /* group data */
   if (data_group) {
     if (data_x->size() != data_group->size()) {
@@ -151,6 +143,15 @@ ReturnCode configure(
     g.end = data_x->size();
     config->groups.emplace_back(g);
   }
+
+  /* return element */
+  config->x = domain_translate(*domain_x, *data_x);
+  config->y = domain_translate(*domain_y, *data_y);
+  config->line_width = measure_or(line_width, from_pt(kDefaultLineWidthPT, doc.dpi));
+  config->colors = fallback(
+      series_to_colors(color_var, color_domain, color_palette),
+      color_default,
+      groups_to_colors(config->groups, color_palette));
 
   return OK;
 }
