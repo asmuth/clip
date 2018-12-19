@@ -42,15 +42,25 @@
 
 namespace plotfx {
 namespace plot {
-namespace lines {
 
-ReturnCode configure(
+struct PlotLinesConfig {
+  std::vector<double> x;
+  std::vector<double> y;
+  std::vector<DataGroup> groups;
+  std::vector<Color> colors;
+  Measure line_width;
+};
+
+ReturnCode plot_lines_bind(
+    const PlotLinesConfig& config,
+    ElementRef* elem);
+
+ReturnCode plot_lines_configure(
     const Document& doc,
     const plist::PropertyList& plist,
     const DomainMap& scales,
     ElementRef* elem);
 
-} // namespace lines
 } // namespace plot
 } // namespace plotfx
 

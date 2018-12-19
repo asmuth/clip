@@ -45,50 +45,21 @@ namespace plotfx {
 namespace plot {
 struct PlotConfig;
 
-using PlotLayerDrawFn = std::function<
-    ReturnCode (
-        const PlotConfig& plot,
-        const Document& doc,
-        const Rectangle& clip,
-        Layer* frame)>;
-
-using PlotLayerFitFn = std::function<ReturnCode (DomainMap*)>;
-
-using PlotDimensionMap = std::unordered_map<std::string, SeriesRef>;
-
-struct PlotDimension {
-  SeriesRef data;
-  std::string scale;
-};
-
-struct PlotLayer {
-  PlotLayerDrawFn draw;
-  std::vector<PlotDimension> dimensions;
-};
-
 struct PlotConfig {
-  PlotConfig();
-  DataFrame data;
-  std::vector<ElementRef> layers;
-  DomainMap scales;
-  LegendMap legends;
   AxisDefinition axis_top;
   AxisDefinition axis_right;
   AxisDefinition axis_bottom;
   AxisDefinition axis_left;
   Measure margins[4];
-  std::string default_x_key;
-  std::string default_y_key;
-  std::string default_group_key;
+  std::vector<ElementRef> layers;
+  LegendMap legends;
 };
 
-ReturnCode draw(
+ReturnCode plot_bind(
     const PlotConfig& config,
-    const Document& doc,
-    const Rectangle& clip,
-    Layer* frame);
+    ElementRef* elem);
 
-ReturnCode configure(
+ReturnCode plot_configure(
     const Document& doc,
     const plist::PropertyList& plist,
     ElementRef* elem);

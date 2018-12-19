@@ -43,23 +43,8 @@
 namespace plotfx {
 namespace plot {
 
-PlotConfig::PlotConfig() {
-  {
-    DomainConfig d;
-    scales.emplace("x", d);
-  }
-
-  {
-    DomainConfig d;
-    d.padding = 0.1f;
-    d.min_auto_snap_zero = true;
-    scales.emplace("y", d);
-  }
-}
-
-ReturnCode draw(
+ReturnCode plot_draw(
     const PlotConfig& config,
-    const Document& doc,
     const Rectangle& clip,
     Layer* layer) {
   // setup layout
@@ -95,7 +80,7 @@ ReturnCode draw(
 
   // render layer
   for (const auto& e : config.layers) {
-    if (auto rc = e->draw(doc, bbox, layer); !rc) {
+    if (auto rc = e->draw(bbox, layer); !rc) {
       return rc;
     }
   }
@@ -108,7 +93,11 @@ ReturnCode draw(
   return ReturnCode::success();
 }
 
-ReturnCode configure_layer(const plist::Property& prop, const Document& doc, PlotConfig* config) {
+ReturnCode configure_layer(
+    const plist::Property& prop,
+    const Document& doc,
+    const DomainMap& scales,
+    PlotConfig* config) {
   std::string type = "points";
   static const ParserDefinitions pdefs = {
     {"type", std::bind(&configure_string, std::placeholders::_1, &type)},
@@ -122,9 +111,9 @@ ReturnCode configure_layer(const plist::Property& prop, const Document& doc, Plo
   auto rc = ReturnCode::errorf("EARG", "invalid layer type: '$0'", type);
 
   // FIXME proper lookup
-  if (type == "labels") rc = labels::configure(doc, *prop.next, config->scales, &layer);
-  if (type == "lines") rc = lines::configure(doc, *prop.next, config->scales, &layer);
-  if (type == "points") rc = points::configure(doc, *prop.next, config->scales, &layer);
+  if (type == "labels") rc = plot_labels_configure(doc, *prop.next, scales, &layer);
+  if (type == "lines") rc = plot_lines_configure(doc, *prop.next, scales, &layer);
+  if (type == "points") rc = plot_points_configure(doc, *prop.next, scales, &layer);
 
   if (!rc) {
     return rc;
@@ -179,7 +168,21 @@ ReturnCode configure_scales_auto(
   return OK;
 }
 
-ReturnCode configure(
+ReturnCode plot_bind(
+    const PlotConfig& config,
+    ElementRef* elem) {
+  auto e = std::make_unique<Element>();
+  e->draw = std::bind(
+      &plot_draw,
+      config,
+      std::placeholders::_1,
+      std::placeholders::_2);
+
+  *elem = std::move(e);
+  return OK;
+}
+
+ReturnCode plot_configure(
     const Document& doc,
     const plist::PropertyList& plist,
     ElementRef* elem) {
@@ -208,14 +211,27 @@ ReturnCode configure(
   config.margins[2] = from_em(1.0, doc.font_size);
   config.margins[3] = from_em(1.0, doc.font_size);
 
-  auto domain_x = domain_find(&config.scales, "x");
-  auto domain_y = domain_find(&config.scales, "y");
+  DomainMap scales;
+
+  {
+    DomainConfig d;
+    scales.emplace("x", d);
+  }
+
+  {
+    DomainConfig d;
+    d.padding = 0.1f;
+    d.min_auto_snap_zero = true;
+    scales.emplace("y", d);
+  }
+
+  auto domain_x = domain_find(&scales, SCALE_DEFAULT_X);
+  auto domain_y = domain_find(&scales, SCALE_DEFAULT_Y);
 
   static const ParserDefinitions pdefs = {
-    {"data", std::bind(&configure_data_frame, std::placeholders::_1, &config.data)},
-    {"group", configure_key(&config.default_group_key)},
-    {"x", configure_key(&config.default_x_key)},
-    {"y", configure_key(&config.default_y_key)},
+    //{"group", configure_key(&config.default_group_key)},
+    //{"x", configure_key(&config.default_x_key)},
+    //{"y", configure_key(&config.default_y_key)},
     {"axis-x-type", std::bind(&domain_configure, std::placeholders::_1, domain_x)},
     {"axis-x-min", std::bind(&configure_float_opt, std::placeholders::_1, &domain_x->min)},
     {"axis-x-max", std::bind(&configure_float_opt, std::placeholders::_1, &domain_x->max)},
@@ -311,13 +327,13 @@ ReturnCode configure(
   }
 
   /* fit scales */
-  if (auto rc = configure_scales_auto(plist, &config.scales); !rc) {
+  if (auto rc = configure_scales_auto(plist, &scales); !rc) {
     return rc;
   }
 
   /* configure layers */
   static const ParserDefinitions pdefs_layer = {
-    {"layer", std::bind(&configure_layer, std::placeholders::_1, doc, &config)}
+    {"layer", std::bind(&configure_layer, std::placeholders::_1, doc, scales, &config)}
   };
 
   if (auto rc = parseAll(plist, pdefs_layer); !rc.isSuccess()) {
@@ -326,7 +342,7 @@ ReturnCode configure(
 
   /* resolve axes */
   if (auto rc = axis_resolve(
-        config.scales,
+        scales,
         &config.axis_top,
         &config.axis_right,
         &config.axis_bottom,
@@ -335,17 +351,7 @@ ReturnCode configure(
     return rc;
   }
 
-  auto e = std::make_unique<Element>();
-  e->draw = std::bind(
-      &draw,
-      config,
-      std::placeholders::_1,
-      std::placeholders::_2,
-      std::placeholders::_3);
-
-  *elem = std::move(e);
-
-  return ReturnCode::success();
+  return plot_bind(config, elem);
 }
 
 } // namespace plot

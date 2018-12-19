@@ -42,8 +42,10 @@ struct Document;
 
 using plist::PropertyList;
 
+using ElementDrawFn = std::function<ReturnCode (const Rectangle&, Layer*)>;
+
 struct Element {
-  std::function<ReturnCode (const Document&, const Rectangle&, Layer*)> draw;
+  ElementDrawFn draw;
 };
 
 using ElementRef = std::shared_ptr<Element>;

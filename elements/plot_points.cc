@@ -38,19 +38,10 @@
 
 namespace plotfx {
 namespace plot {
-namespace points {
 
 static const double kDefaultPointSizePT = 3;
 
-struct PlotPointsConfig {
-  std::vector<double> x;
-  std::vector<double> y;
-  std::vector<Color> colors;
-  Measure point_size;
-};
-
 ReturnCode draw_points(
-    const Document& doc,
     const PlotPointsConfig& config,
     const Rectangle& clip,
     Layer* layer) {
@@ -75,7 +66,21 @@ ReturnCode draw_points(
   return OK;
 }
 
-ReturnCode configure(
+ReturnCode plot_points_bind(
+    const PlotPointsConfig& config,
+    ElementRef* elem) {
+  auto e = std::make_unique<Element>();
+  e->draw = std::bind(
+      &draw_points,
+      config,
+      std::placeholders::_1,
+      std::placeholders::_2);
+
+  *elem = std::move(e);
+  return OK;
+}
+
+ReturnCode plot_points_configure(
     const Document& doc,
     const plist::PropertyList& plist,
     const DomainMap& scales,
@@ -125,27 +130,16 @@ ReturnCode configure(
     return ReturnCode::errorf("EARG", "scale not found: $0", scale_y);
   }
 
-  /* load data */
+  /* return element */
   PlotPointsConfig config;
   config.x = domain_translate(*domain_x, *data_x);
   config.y = domain_translate(*domain_y, *data_y);
   config.point_size = measure_or(point_size, from_pt(kDefaultPointSizePT, doc.dpi));
   config.colors = resolve(color, series_to_colors(color_domain, color_palette));
 
-  /* return element */
-  auto e = std::make_unique<Element>();
-  e->draw = std::bind(
-      &draw_points,
-      std::placeholders::_1,
-      config,
-      std::placeholders::_2,
-      std::placeholders::_3);
-
-  *elem = std::move(e);
-  return OK;
+  return plot_points_bind(config, elem);
 }
 
-} // namespace points
 } // namespace plot
 } // namespace plotfx
 

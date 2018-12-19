@@ -38,20 +38,10 @@
 
 namespace plotfx {
 namespace plot {
-namespace lines {
 
 static const double kDefaultLineWidthPT = 2;
 
-struct PlotLinesConfig {
-  std::vector<double> x;
-  std::vector<double> y;
-  std::vector<DataGroup> groups;
-  std::vector<Color> colors;
-  Measure line_width;
-};
-
-ReturnCode draw_lines(
-    const Document& doc,
+ReturnCode plot_lines_draw(
     const PlotLinesConfig& config,
     const Rectangle& clip,
     Layer* layer) {
@@ -80,7 +70,21 @@ ReturnCode draw_lines(
   return OK;
 }
 
-ReturnCode configure(
+ReturnCode plot_lines_bind(
+    PlotLinesConfig& config,
+    ElementRef* elem) {
+  auto e = std::make_unique<Element>();
+  e->draw = std::bind(
+      &plot_lines_draw,
+      config,
+      std::placeholders::_1,
+      std::placeholders::_2);
+
+  *elem = std::move(e);
+  return OK;
+}
+
+ReturnCode plot_lines_configure(
     const Document& doc,
     const plist::PropertyList& plist,
     const DomainMap& scales,
@@ -153,20 +157,9 @@ ReturnCode configure(
     config.groups.emplace_back(g);
   }
 
-  /* return element */
-  auto e = std::make_unique<Element>();
-  e->draw = std::bind(
-      &draw_lines,
-      std::placeholders::_1,
-      config,
-      std::placeholders::_2,
-      std::placeholders::_3);
-
-  *elem = std::move(e);
-  return OK;
+  return plot_lines_bind(config, elem);
 }
 
-} // namespace lines
 } // namespace plot
 } // namespace plotfx
 

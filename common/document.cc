@@ -129,7 +129,7 @@ ReturnCode document_render_to(
   Rectangle clip(0, 0, layer->width, layer->height);
 
   for (const auto& e : tree.roots) {
-    if (auto rc = e->draw(tree, clip, layer); !rc.isSuccess()) {
+    if (auto rc = e->draw(clip, layer); !rc.isSuccess()) {
       return rc;
     }
   }

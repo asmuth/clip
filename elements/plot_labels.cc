@@ -38,22 +38,10 @@
 
 namespace plotfx {
 namespace plot {
-namespace labels {
 
 static const double kDefaultLabelPaddingEM = 0.8;
 
-struct PlotLabelsConfig {
-  std::vector<double> x;
-  std::vector<double> y;
-  std::vector<std::string> labels;
-  FontInfo label_font;
-  Measure label_padding;
-  Measure label_font_size;
-  Color label_color;
-};
-
-ReturnCode draw_labels(
-    const Document& doc,
+ReturnCode plot_labels_draw(
     const PlotLabelsConfig& config,
     const Rectangle& clip,
     Layer* layer) {
@@ -82,7 +70,21 @@ ReturnCode draw_labels(
   return OK;
 }
 
-ReturnCode configure(
+ReturnCode plot_labels_bind(
+    const PlotLabelsConfig& config,
+    ElementRef* elem) {
+  auto e = std::make_unique<Element>();
+  e->draw = std::bind(
+      &plot_labels_draw,
+      config,
+      std::placeholders::_1,
+      std::placeholders::_2);
+
+  *elem = std::move(e);
+  return OK;
+}
+
+ReturnCode plot_labels_configure(
     const Document& doc,
     const plist::PropertyList& plist,
     const DomainMap& scales,
@@ -131,25 +133,14 @@ ReturnCode configure(
     return ReturnCode::errorf("EARG", "scale not found: $0", scale_y);
   }
 
-  /* load data */
+  /* return element */
   config.x = domain_translate(*domain_x, *data_x);
   config.y = domain_translate(*domain_y, *data_y);
   config.labels = *data_labels;
 
-  /* return element */
-  auto e = std::make_unique<Element>();
-  e->draw = std::bind(
-      &draw_labels,
-      std::placeholders::_1,
-      config,
-      std::placeholders::_2,
-      std::placeholders::_3);
-
-  *elem = std::move(e);
-  return OK;
+  return plot_labels_bind(config, elem);
 }
 
-} // namespace labels
 } // namespace plot
 } // namespace plotfx
 
