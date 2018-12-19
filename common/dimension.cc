@@ -55,48 +55,21 @@ void dimension_add(
   map->emplace(d.key, d);
 }
 
-DimensionMapFn<Color> dimension_map_color_continuous(
+DimensionMapFn<Color> series_to_colors(
+    const DomainConfig& domain_config,
     const ColorScheme& palette) {
-  return [palette] (const auto& dimension, const auto& value, Color* color) {
-    *color = palette.get(domain_translate(dimension.domain, value));
-    return OK;
-  };
-}
+  return [=] (const Series& series) {
+    auto domain = domain_config;
+    domain_fit(series, &domain);
 
-DimensionMapFn<Color> dimension_map_color_discrete(
-    const ColorScheme& palette) {
-  return [palette] (const auto& dimension, const auto& value, Color* color) {
-    auto idx =
-        domain_translate(dimension.domain, value) *
-        domain_cardinality(dimension.domain);
-
-    *color = palette.get(idx);
-    return OK;
-  };
-}
-
-ReturnCode dimension_resolve(
-    const DataFrame& data,
-    DimensionConfig* dimension) {
-  const DataColumn* column = nullptr;
-  if (auto rc = column_find(data, dimension->key, &column); !rc) {
-    return rc;
-  }
-
-  domain_fit(column->data, &dimension->domain);
-  return OK;
-}
-
-ReturnCode dimension_resolve_all(
-    const DataFrame& data,
-    DimensionMap* map) {
-  for (auto& e : *map) {
-    if (auto rc = dimension_resolve(data, &e.second); !rc) {
-      return rc;
+    std::vector<Color> colors;
+    for (const auto& v : series) {
+      auto value = domain_translate(domain, v) * domain_cardinality(domain);
+      colors.emplace_back(palette.get(value));
     }
-  }
 
-  return OK;
+    return colors;
+  };
 }
 
 } // namespace plotfx

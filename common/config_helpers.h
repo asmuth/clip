@@ -41,6 +41,9 @@ namespace plotfx {
 
 using ParserFn = std::function<ReturnCode (const plist::Property&)>;
 
+template <typename T>
+using ParserAtFn = std::function<ReturnCode (const plist::Property&, T*)>;
+
 using ParserDefinitions = std::unordered_map<std::string, ParserFn>;
 
 inline ReturnCode parseAll(
@@ -87,33 +90,20 @@ ReturnCode parse_classlike(
     std::vector<std::string>* args);
 
 template <typename T>
-struct Slot {
-  std::optional<DimensionConfig> dimension;
+struct Variable {
   std::optional<T> constant;
+  SeriesRef variable;
 };
 
 template <typename T>
-ReturnCode resolve_slot(
-    const Slot<T>& slot,
-    std::function<ReturnCode (const DimensionConfig&, const Value&, T*)> map,
-    const DataFrame& data,
-    size_t data_idx,
-    T* val);
+std::vector<T> resolve(
+    const Variable<T>& var,
+    const DimensionMapFn<T>& map);
 
 template <typename T>
-struct VariableSlot {
-  std::string variable;
-  std::vector<T> values;
-};
-
-template <typename T>
-using ScalarParseFn = std::function<ReturnCode (const plist::Property&, T*)>;
-
-template <typename T>
-using ListParseFn = std::function<ReturnCode (const plist::Property&, std::vector<T>*)>;
-
-template <typename T>
-ParserFn configure_slot(Slot<T>* slot);
+ParserFn configure_var(
+    Variable<T>* var,
+    ParserAtFn<T> parser);
 
 ParserFn configure_multiprop(const std::vector<ParserFn>& parsers);
 
@@ -129,7 +119,8 @@ ReturnCode configure_color(
     const plist::Property& prop,
     Color* value);
 
-ParserFn configure_color_var(Color* var);
+ParserFn configure_color_fn(Color* var);
+ParserAtFn<Color> configure_color_fn();
 
 ReturnCode configure_float(
     const plist::Property& prop,
@@ -151,12 +142,7 @@ ReturnCode configure_series(
     const plist::Property& prop,
     SeriesRef* data);
 
-ParserFn configure_series_var(SeriesRef* data);
-
-template <typename T>
-ParserFn configure_var(
-    ScalarParseFn<T> parser,
-    T* value);
+ParserFn configure_series_fn(SeriesRef* data);
 
 } // namespace plotfx
 

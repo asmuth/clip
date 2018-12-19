@@ -42,11 +42,7 @@ struct DimensionConfig {
 using DimensionMap = std::unordered_map<std::string, DimensionConfig>;
 
 template <typename T>
-using DimensionMapFn = std::function<
-    ReturnCode(
-        const DimensionConfig& dimension,
-        const Value& val_in,
-        T* val_out)>;
+using DimensionMapFn = std::function<std::vector<T> (const Series&)>;
 
 const DimensionConfig* dimension_find(
     const DimensionMap& map,
@@ -56,16 +52,9 @@ void dimension_add(
     DimensionMap* map,
     const std::string& key);
 
-DimensionMapFn<Color> dimension_map_color_continuous(const ColorScheme& palette);
-DimensionMapFn<Color> dimension_map_color_discrete(const ColorScheme& palette);
-
-ReturnCode dimension_resolve(
-    const DataFrame& data,
-    DimensionConfig* dimension);
-
-ReturnCode dimension_resolve_all(
-    const DataFrame& data,
-    DimensionMap* map);
+DimensionMapFn<Color> series_to_colors(
+    const DomainConfig& domain_config,
+    const ColorScheme& palette);
 
 } // namespace plotfx
 

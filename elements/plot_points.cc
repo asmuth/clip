@@ -40,6 +40,8 @@ namespace plotfx {
 namespace plot {
 namespace points {
 
+static const double kDefaultPointSizePT = 3;
+
 struct PlotPointsConfig {
   std::vector<double> x;
   std::vector<double> y;
@@ -85,14 +87,18 @@ ReturnCode configure(
   std::string scale_x = SCALE_DEFAULT_X;
   std::string scale_y = SCALE_DEFAULT_Y;
 
-  PlotPointsConfig config;
+  Variable<Color> color;
+  DomainConfig color_domain;
+  ColorScheme color_palette;
+  Measure point_size;
+
   static const ParserDefinitions pdefs = {
-    {"x", configure_series_var(&data_x)},
+    {"x", configure_series_fn(&data_x)},
     {"x-scale", std::bind(&configure_string, std::placeholders::_1, &scale_x)},
-    {"y", configure_series_var(&data_y)},
+    {"y", configure_series_fn(&data_y)},
     {"y-scale", std::bind(&configure_string, std::placeholders::_1, &scale_y)},
-    //{"point-color", configure_slot(&layer.point_color)},
-    {"point-size", std::bind(&configure_measure_rel, std::placeholders::_1, doc.dpi, doc.font_size, &config.point_size)},
+    {"color", configure_var(&color, configure_color_fn())},
+    {"size", std::bind(&configure_measure_rel, std::placeholders::_1, doc.dpi, doc.font_size, &point_size)},
   };
 
   if (auto rc = parseAll(plist, pdefs); !rc) {
@@ -120,8 +126,11 @@ ReturnCode configure(
   }
 
   /* load data */
+  PlotPointsConfig config;
   config.x = domain_translate(*domain_x, *data_x);
   config.y = domain_translate(*domain_y, *data_y);
+  config.point_size = measure_or(point_size, from_pt(kDefaultPointSizePT, doc.dpi));
+  config.colors = resolve(color, series_to_colors(color_domain, color_palette));
 
   /* return element */
   auto e = std::make_unique<Element>();

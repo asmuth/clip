@@ -80,11 +80,12 @@ ReturnCode configure_color(
   return ReturnCode::error("EARG", "invalid color");
 }
 
-ParserFn configure_color_var(Color* var) {
-  return configure_var(
-      static_cast<ScalarParseFn<Color>>(
-          std::bind(&configure_color, std::placeholders::_1, std::placeholders::_2)),
-      var);
+ParserAtFn<Color> configure_color_fn() {
+  return std::bind(&configure_color, std::placeholders::_1, std::placeholders::_2);
+}
+
+ParserFn configure_color_fn(Color* var) {
+  return std::bind(&configure_color, std::placeholders::_1, var);
 }
 
 ReturnCode configure_float(
@@ -289,11 +290,8 @@ ReturnCode configure_series(
   return ERROR_INVALID_ARGUMENT;
 }
 
-ParserFn configure_series_var(SeriesRef* series) {
-  return configure_var(
-      static_cast<ScalarParseFn<SeriesRef>>(
-          std::bind(&configure_series, std::placeholders::_1, std::placeholders::_2)),
-      series);
+ParserFn configure_series_fn(SeriesRef* series) {
+  return std::bind(&configure_series, std::placeholders::_1, series);
 }
 
 } // namespace plotfx

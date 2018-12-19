@@ -99,11 +99,11 @@ ReturnCode configure(
   config.label_font_size = doc.font_size;
 
   static const ParserDefinitions pdefs = {
-    {"x", configure_series_var(&data_x)},
+    {"x", configure_series_fn(&data_x)},
     {"x-scale", std::bind(&configure_string, std::placeholders::_1, &scale_x)},
-    {"y", configure_series_var(&data_y)},
+    {"y", configure_series_fn(&data_y)},
     {"y-scale", std::bind(&configure_string, std::placeholders::_1, &scale_y)},
-    {"label", configure_series_var(&data_labels)},
+    {"label", configure_series_fn(&data_labels)},
   };
 
   if (auto rc = parseAll(plist, pdefs); !rc) {

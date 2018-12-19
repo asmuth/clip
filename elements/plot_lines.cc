@@ -56,10 +56,6 @@ ReturnCode draw_lines(
     const Rectangle& clip,
     Layer* layer) {
   for (const auto& group : config.groups) {
-    const auto& color = config.colors.empty()
-        ? Color{}
-        : config.colors[group.begin % config.colors.size()];
-
     Path path;
     for (size_t i = group.begin; i < group.end; ++i) {
       auto sx = clip.x + config.x[i] * clip.w;
@@ -73,10 +69,10 @@ ReturnCode draw_lines(
     }
 
     StrokeStyle style;
-    style.color = color;
-    style.line_width = measure_or(
-        config.line_width,
-        from_pt(kDefaultLineWidthPT, doc.dpi));
+    style.line_width = config.line_width;
+    style.color = config.colors.empty()
+        ? Color{}
+        : config.colors[group.begin % config.colors.size()];
 
     strokePath(layer, clip, path, style);
   }
@@ -96,15 +92,19 @@ ReturnCode configure(
   std::string scale_x = SCALE_DEFAULT_X;
   std::string scale_y = SCALE_DEFAULT_Y;
 
-  PlotLinesConfig config;
+  Variable<Color> color;
+  DomainConfig color_domain;
+  ColorScheme color_palette;
+  Measure line_width;
+
   static const ParserDefinitions pdefs = {
-    {"x", configure_series_var(&data_x)},
+    {"x", configure_series_fn(&data_x)},
     {"x-scale", std::bind(&configure_string, std::placeholders::_1, &scale_x)},
-    {"y", configure_series_var(&data_y)},
+    {"y", configure_series_fn(&data_y)},
     {"y-scale", std::bind(&configure_string, std::placeholders::_1, &scale_y)},
-    {"group", configure_series_var(&data_group)},
-    //{"color", configure_color_var(&layer.colors)},
-    {"line-width", std::bind(&configure_measure_rel, std::placeholders::_1, doc.dpi, doc.font_size, &config.line_width)},
+    {"group", configure_series_fn(&data_group)},
+    {"color", configure_var(&color, configure_color_fn())},
+    {"width", std::bind(&configure_measure_rel, std::placeholders::_1, doc.dpi, doc.font_size, &line_width)},
   };
 
   if (auto rc = parseAll(plist, pdefs); !rc) {
@@ -133,8 +133,11 @@ ReturnCode configure(
   }
 
   /* load data */
+  PlotLinesConfig config;
   config.x = domain_translate(*domain_x, *data_x);
   config.y = domain_translate(*domain_y, *data_y);
+  config.line_width = measure_or(line_width, from_pt(kDefaultLineWidthPT, doc.dpi));
+  config.colors = resolve(color, series_to_colors(color_domain, color_palette));
 
   /* group data */
   if (data_group) {

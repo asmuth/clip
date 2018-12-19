@@ -152,9 +152,9 @@ ReturnCode configure_scales_auto(
     std::string scale_y = SCALE_DEFAULT_Y;
 
     static const ParserDefinitions pdefs = {
-      {"x", configure_series_var(&data_x)},
+      {"x", configure_series_fn(&data_x)},
       {"x-scale", std::bind(&configure_string, std::placeholders::_1, &scale_x)},
-      {"y", configure_series_var(&data_y)},
+      {"y", configure_series_fn(&data_y)},
       {"y-scale", std::bind(&configure_string, std::placeholders::_1, &scale_y)},
     };
 
