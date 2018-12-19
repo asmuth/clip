@@ -43,29 +43,11 @@ namespace plotfx {
 namespace plot {
 namespace labels {
 
-struct PlotLabelsConfig {
-  PlotLabelsConfig();
-  std::string x_key;
-  std::string x_scale;
-  std::string y_key;
-  std::string y_scale;
-  std::string label_key;
-  FontInfo label_font;
-  Measure label_padding;
-  Measure label_font_size;
-  Color label_color;
-};
-
-ReturnCode draw(
-    const PlotLabelsConfig& config,
-    const Document& doc,
-    const Rectangle& clip,
-    Layer* frame);
-
 ReturnCode configure(
-    const plist::Property& prop,
     const Document& doc,
-    plot::PlotConfig* plot);
+    const plist::PropertyList& plist,
+    const DomainMap& scales,
+    ElementRef* elem);
 
 } // namespace labels
 } // namespace plot

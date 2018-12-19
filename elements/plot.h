@@ -52,14 +52,24 @@ using PlotLayerDrawFn = std::function<
         const Rectangle& clip,
         Layer* frame)>;
 
+using PlotLayerFitFn = std::function<ReturnCode (DomainMap*)>;
+
+using PlotDimensionMap = std::unordered_map<std::string, SeriesRef>;
+
+struct PlotDimension {
+  SeriesRef data;
+  std::string scale;
+};
+
 struct PlotLayer {
   PlotLayerDrawFn draw;
+  std::vector<PlotDimension> dimensions;
 };
 
 struct PlotConfig {
   PlotConfig();
   DataFrame data;
-  std::vector<PlotLayer> layers;
+  std::vector<ElementRef> layers;
   DomainMap scales;
   LegendMap legends;
   AxisDefinition axis_top;

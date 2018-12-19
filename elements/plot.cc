@@ -94,8 +94,8 @@ ReturnCode draw(
   }
 
   // render layer
-  for (const auto& s : config.layers) {
-    if (auto rc = s.draw(config, doc, bbox, layer); !rc) {
+  for (const auto& e : config.layers) {
+    if (auto rc = e->draw(doc, bbox, layer); !rc) {
       return rc;
     }
   }
@@ -118,12 +118,65 @@ ReturnCode configure_layer(const plist::Property& prop, const Document& doc, Plo
     return rc;
   }
 
-  // FIXME proper lookup
-  if (type == "labels") return labels::configure(prop, doc, config);
-  if (type == "lines") return lines::configure(prop, doc, config);
-  if (type == "points") return points::configure(prop, doc, config);
+  ElementRef layer;
+  auto rc = ReturnCode::errorf("EARG", "invalid layer type: '$0'", type);
 
-  return ReturnCode::errorf("EARG", "invalid layer type: '$0'", type);
+  // FIXME proper lookup
+  if (type == "labels") rc = labels::configure(doc, *prop.next, config->scales, &layer);
+  if (type == "lines") rc = lines::configure(doc, *prop.next, config->scales, &layer);
+  if (type == "points") rc = points::configure(doc, *prop.next, config->scales, &layer);
+
+  if (!rc) {
+    return rc;
+  }
+
+  config->layers.emplace_back(layer);
+  return OK;
+}
+
+ReturnCode configure_scales_auto(
+    const plist::PropertyList& plist,
+    DomainMap* scales) {
+  for (const auto& prop : plist) {
+    if (prop.name != "layer") {
+      continue;
+    }
+
+    if (!plist::is_map(prop)) {
+      return ERROR_INVALID_ARGUMENT;
+    }
+
+    SeriesRef data_x;
+    SeriesRef data_y;
+    std::string scale_x = SCALE_DEFAULT_X;
+    std::string scale_y = SCALE_DEFAULT_Y;
+
+    static const ParserDefinitions pdefs = {
+      {"x", configure_series_var(&data_x)},
+      {"x-scale", std::bind(&configure_string, std::placeholders::_1, &scale_x)},
+      {"y", configure_series_var(&data_y)},
+      {"y-scale", std::bind(&configure_string, std::placeholders::_1, &scale_y)},
+    };
+
+    if (auto rc = parseAll(*prop.next, pdefs); !rc) {
+      return rc;
+    }
+
+    auto domain_x = domain_find(scales, scale_x);
+    if (!domain_x) {
+      return ReturnCode::errorf("EARG", "scale not found: $0", scale_x);
+    }
+
+    auto domain_y = domain_find(scales, scale_y);
+    if (!domain_y) {
+      return ReturnCode::errorf("EARG", "scale not found: $0", scale_x);
+    }
+
+    domain_fit(*data_x, domain_x);
+    domain_fit(*data_y, domain_y);
+  }
+
+  return OK;
 }
 
 ReturnCode configure(
@@ -257,6 +310,12 @@ ReturnCode configure(
     return rc;
   }
 
+  /* fit scales */
+  if (auto rc = configure_scales_auto(plist, &config.scales); !rc) {
+    return rc;
+  }
+
+  /* configure layers */
   static const ParserDefinitions pdefs_layer = {
     {"layer", std::bind(&configure_layer, std::placeholders::_1, doc, &config)}
   };

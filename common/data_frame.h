@@ -36,6 +36,7 @@ namespace plotfx {
 
 using Value = std::string;
 using Series = std::vector<Value>;
+using SeriesRef = std::shared_ptr<Series>;
 
 // FIXME: rename to column?
 struct DataColumn {
@@ -64,6 +65,8 @@ Value data_lookup(
     size_t idx);
 
 std::vector<DataGroup> column_group(const DataColumn& col);
+
+std::vector<DataGroup> series_group(const Series& data);
 
 size_t series_len(const Series& s);
 

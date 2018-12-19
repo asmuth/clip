@@ -44,29 +44,11 @@ namespace plotfx {
 namespace plot {
 namespace lines {
 
-struct PlotLinesConfig {
-  PlotLinesConfig();
-  std::string x_key;
-  std::string x_scale;
-  std::string y_key;
-  std::string y_scale;
-  std::string group_key;
-  Slot<Color> line_color;
-  ColorScheme line_color_palette;
-  Measure line_width;
-  std::string legend_key;
-};
-
-ReturnCode draw(
-    const PlotLinesConfig& config,
-    const Document& doc,
-    const Rectangle& clip,
-    Layer* frame);
-
 ReturnCode configure(
-    const plist::Property& prop,
     const Document& doc,
-    plot::PlotConfig* plot);
+    const plist::PropertyList& plist,
+    const DomainMap& scales,
+    ElementRef* elem);
 
 } // namespace lines
 } // namespace plot

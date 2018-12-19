@@ -40,62 +40,28 @@ namespace plotfx {
 namespace plot {
 namespace points {
 
-static const double kDefaultLineWidthPT = 2;
-static const double kDefaultLabelPaddingEM = 0.8;
-
-PlotPointsConfig::PlotPointsConfig() :
-    x_scale("x"),
-    y_scale("y") {}
+struct PlotPointsConfig {
+  std::vector<double> x;
+  std::vector<double> y;
+  std::vector<Color> colors;
+  Measure point_size;
+};
 
 ReturnCode draw_points(
-    const PlotConfig& plot,
-    const PlotPointsConfig& config,
     const Document& doc,
+    const PlotPointsConfig& config,
     const Rectangle& clip,
     Layer* layer) {
-  /* fetch columns */
-  const DataColumn* column_x = nullptr;
-  if (auto rc = column_find(plot.data, config.x_key, &column_x); !rc) {
-    return rc;
-  }
+  for (size_t i = 0; i < config.x.size(); ++i) {
+    auto sx = clip.x + config.x[i] * clip.w;
+    auto sy = clip.y + (1.0 - config.y[i]) * clip.h;
 
-  const DataColumn* column_y = nullptr;
-  if (auto rc = column_find(plot.data, config.y_key, &column_y); !rc) {
-    return rc;
-  }
-
-  if (column_x->data.size() != column_y->data.size()) {
-    return ReturnCode::error("EARG", "columns have differing lengths");
-  }
-
-  /* fetch domains */
-  auto domain_x = domain_find(plot.scales, config.x_scale);
-  if (!domain_x) {
-    return ReturnCode::errorf("EARG", "scale not found: $0", config.x_scale);
-  }
-
-  auto domain_y = domain_find(plot.scales, config.y_scale);
-  if (!domain_y) {
-    return ReturnCode::errorf("EARG", "scale not found: $0", config.y_scale);
-  }
-
-  /* draw points */
-  auto x = domain_translate(*domain_x, column_x->data);
-  auto y = domain_translate(*domain_y, column_y->data);
-
-  for (size_t i = 0; i < column_x->data.size(); ++i) {
-    auto sx = clip.x + x[i] * clip.w;
-    auto sy = clip.y + (1.0 - y[i]) * clip.h;
+    const auto& color = config.colors.empty()
+        ? Color{}
+        : config.colors[i % config.colors.size()];
 
     FillStyle style;
-    if (auto rc = resolve_slot(
-          config.point_color,
-          dimension_map_color_discrete(config.point_color_palette),
-          plot.data,
-          i,
-          &style.color); !rc) {
-      return rc;
-    }
+    style.color = color;
 
     // FIXME point style
     Path path;
@@ -107,44 +73,66 @@ ReturnCode draw_points(
   return OK;
 }
 
-ReturnCode configure(const plist::Property& prop, const Document& doc, PlotConfig* config) {
-  if (!plist::is_map(prop)) {
-    return ERROR_INVALID_ARGUMENT;
-  }
+ReturnCode configure(
+    const Document& doc,
+    const plist::PropertyList& plist,
+    const DomainMap& scales,
+    ElementRef* elem) {
+  SeriesRef data_x;
+  SeriesRef data_y;
+  SeriesRef data_group;
 
-  PlotPointsConfig layer;
-  layer.x_key = config->default_x_key;
-  layer.y_key = config->default_y_key;
+  std::string scale_x = SCALE_DEFAULT_X;
+  std::string scale_y = SCALE_DEFAULT_Y;
 
+  PlotPointsConfig config;
   static const ParserDefinitions pdefs = {
-    {"x", configure_key(&layer.x_key)},
-    {"x-scale", std::bind(&configure_string, std::placeholders::_1, &layer.x_scale)},
-    {"y", configure_key(&layer.y_key)},
-    {"y-scale", std::bind(&configure_string, std::placeholders::_1, &layer.y_scale)},
-    {"point-color", configure_slot(&layer.point_color)},
-    {"point-size", std::bind(&configure_measure_rel, std::placeholders::_1, doc.dpi, doc.font_size, &layer.point_size)},
+    {"x", configure_series_var(&data_x)},
+    {"x-scale", std::bind(&configure_string, std::placeholders::_1, &scale_x)},
+    {"y", configure_series_var(&data_y)},
+    {"y-scale", std::bind(&configure_string, std::placeholders::_1, &scale_y)},
+    //{"point-color", configure_slot(&layer.point_color)},
+    {"point-size", std::bind(&configure_measure_rel, std::placeholders::_1, doc.dpi, doc.font_size, &config.point_size)},
   };
 
-  if (auto rc = parseAll(*prop.next, pdefs); !rc) {
+  if (auto rc = parseAll(plist, pdefs); !rc) {
     return rc;
   }
 
-  if (layer.point_color.dimension) {
-    if (auto rc = dimension_resolve(config->data, &*layer.point_color.dimension); !rc) {
-      return rc;
-    }
+  /* check dataset */
+  if (!data_x || !data_y) {
+    return ERROR_INVALID_ARGUMENT;
   }
 
-  config->layers.emplace_back(PlotLayer {
-    .draw = std::bind(
-        &draw_points,
-        std::placeholders::_1,
-        layer,
-        std::placeholders::_2,
-        std::placeholders::_3,
-        std::placeholders::_4),
-  });
+  if (data_x->size() != data_y->size()) {
+    return ERROR_INVALID_ARGUMENT;
+  }
 
+  /* fetch domains */
+  auto domain_x = domain_find(scales, scale_x);
+  if (!domain_x) {
+    return ReturnCode::errorf("EARG", "scale not found: $0", scale_x);
+  }
+
+  auto domain_y = domain_find(scales, scale_y);
+  if (!domain_y) {
+    return ReturnCode::errorf("EARG", "scale not found: $0", scale_y);
+  }
+
+  /* load data */
+  config.x = domain_translate(*domain_x, *data_x);
+  config.y = domain_translate(*domain_y, *data_y);
+
+  /* return element */
+  auto e = std::make_unique<Element>();
+  e->draw = std::bind(
+      &draw_points,
+      std::placeholders::_1,
+      config,
+      std::placeholders::_2,
+      std::placeholders::_3);
+
+  *elem = std::move(e);
   return OK;
 }
 

@@ -63,6 +63,9 @@ struct DomainConfig {
 
 using DomainMap = std::unordered_map<std::string, DomainConfig>;
 
+static const std::string SCALE_DEFAULT_X = "x";
+static const std::string SCALE_DEFAULT_Y = "y";
+
 const DomainConfig* domain_find(
     const DomainMap& map,
     const std::string& key);

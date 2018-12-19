@@ -43,27 +43,11 @@ namespace plotfx {
 namespace plot {
 namespace points {
 
-struct PlotPointsConfig {
-  PlotPointsConfig();
-  std::string x_key;
-  std::string x_scale;
-  std::string y_key;
-  std::string y_scale;
-  Slot<Color> point_color;
-  ColorScheme point_color_palette;
-  Measure point_size;
-};
-
-ReturnCode draw(
-    const PlotPointsConfig& config,
-    const Document& doc,
-    const Rectangle& clip,
-    Layer* frame);
-
 ReturnCode configure(
-    const plist::Property& prop,
     const Document& doc,
-    plot::PlotConfig* plot);
+    const plist::PropertyList& plist,
+    const DomainMap& scales,
+    ElementRef* elem);
 
 } // namespace points
 } // namespace plot

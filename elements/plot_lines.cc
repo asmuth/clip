@@ -41,81 +41,29 @@ namespace plot {
 namespace lines {
 
 static const double kDefaultLineWidthPT = 2;
-static const double kDefaultLabelPaddingEM = 0.8;
 
-PlotLinesConfig::PlotLinesConfig() :
-    x_scale("x"),
-    y_scale("y"),
-    legend_key(LEGEND_DEFAULT) {}
+struct PlotLinesConfig {
+  std::vector<double> x;
+  std::vector<double> y;
+  std::vector<DataGroup> groups;
+  std::vector<Color> colors;
+  Measure line_width;
+};
 
 ReturnCode draw_lines(
-    const PlotConfig& plot,
-    const PlotLinesConfig& config,
     const Document& doc,
+    const PlotLinesConfig& config,
     const Rectangle& clip,
     Layer* layer) {
-  /* fetch columns */
-  const DataColumn* column_x = nullptr;
-  if (auto rc = column_find(plot.data, config.x_key, &column_x); !rc) {
-    return rc;
-  }
-
-  const DataColumn* column_y = nullptr;
-  if (auto rc = column_find(plot.data, config.y_key, &column_y); !rc) {
-    return rc;
-  }
-
-  if (column_x->data.size() != column_y->data.size()) {
-    return ERROR_INVALID_ARGUMENT;
-  }
-
-  const DataColumn* column_group = nullptr;
-  if (!config.group_key.empty()) {
-    if (auto rc = column_find(plot.data, config.group_key, &column_group); !rc) {
-      return rc;
-    }
-  }
-
-  /* fetch domains */
-  auto domain_x = domain_find(plot.scales, config.x_scale);
-  if (!domain_x) {
-    return ReturnCode::errorf("EARG", "scale not found: $0", config.x_scale);
-  }
-
-  auto domain_y = domain_find(plot.scales, config.y_scale);
-  if (!domain_y) {
-    return ReturnCode::errorf("EARG", "scale not found: $0", config.y_scale);
-  }
-
-  /* group data */
-  std::vector<DataGroup> groups;
-  if (column_group) {
-    groups = plotfx::column_group(*column_group);
-  } else {
-    DataGroup g;
-    g.begin = 0;
-    g.end = column_x->data.size();
-    groups.emplace_back(g);
-  }
-
-  /* draw lines */
-  auto x = domain_translate(*domain_x, column_x->data);
-  auto y = domain_translate(*domain_y, column_y->data);
-  for (const auto& group : groups) {
-    Color color;
-    if (auto rc = resolve_slot(
-          config.line_color,
-          dimension_map_color_discrete(config.line_color_palette),
-          plot.data,
-          group.begin,
-          &color); !rc) {
-      return rc;
-    }
+  for (const auto& group : config.groups) {
+    const auto& color = config.colors.empty()
+        ? Color{}
+        : config.colors[group.begin % config.colors.size()];
 
     Path path;
     for (size_t i = group.begin; i < group.end; ++i) {
-      auto sx = clip.x + x[i] * clip.w;
-      auto sy = clip.y + (1.0 - y[i]) * clip.h;
+      auto sx = clip.x + config.x[i] * clip.w;
+      auto sy = clip.y + (1.0 - config.y[i]) * clip.h;
 
       if (i == group.begin) {
         path.moveTo(sx, sy);
@@ -136,111 +84,82 @@ ReturnCode draw_lines(
   return OK;
 }
 
-ReturnCode configure_legend(
-    const PlotConfig& plot,
-    const PlotLinesConfig& config,
-    LegendConfig* legend) {
-  /* fetch columns */
-  const DataColumn* column_x = nullptr;
-  if (auto rc = column_find(plot.data, config.x_key, &column_x); !rc) {
-    return rc;
-  }
-
-  const DataColumn* column_y = nullptr;
-  if (auto rc = column_find(plot.data, config.y_key, &column_y); !rc) {
-    return rc;
-  }
-
-  if (column_x->data.size() != column_y->data.size()) {
-    return ReturnCode::error("EARG", "columns have differing lengths");
-  }
-
-  const DataColumn* column_group = nullptr;
-  if (!config.group_key.empty()) {
-    if (auto rc = column_find(plot.data, config.group_key, &column_group); !rc) {
-      return rc;
-    }
-  }
-
-  /* group data */
-  std::vector<DataGroup> groups;
-  if (!column_group) {
-    return OK;
-  }
-
-  /* add legend items */
-  LegendGroup g;
-  for (const auto& group : plotfx::column_group(*column_group)) {
-    Color color;
-    if (auto rc = resolve_slot(
-          config.line_color,
-          dimension_map_color_discrete(config.line_color_palette),
-          plot.data,
-          group.begin,
-          &color); !rc) {
-      return rc;
-    }
-
-    legend_add_item(&g, group.key, color);
-  }
-
-  legend->groups.emplace_back(g);
-  return OK;
-}
-
 ReturnCode configure(
-    const plist::Property& prop,
     const Document& doc,
-    PlotConfig* config) {
-  if (!plist::is_map(prop)) {
+    const plist::PropertyList& plist,
+    const DomainMap& scales,
+    ElementRef* elem) {
+  SeriesRef data_x;
+  SeriesRef data_y;
+  SeriesRef data_group;
+
+  std::string scale_x = SCALE_DEFAULT_X;
+  std::string scale_y = SCALE_DEFAULT_Y;
+
+  PlotLinesConfig config;
+  static const ParserDefinitions pdefs = {
+    {"x", configure_series_var(&data_x)},
+    {"x-scale", std::bind(&configure_string, std::placeholders::_1, &scale_x)},
+    {"y", configure_series_var(&data_y)},
+    {"y-scale", std::bind(&configure_string, std::placeholders::_1, &scale_y)},
+    {"group", configure_series_var(&data_group)},
+    //{"color", configure_color_var(&layer.colors)},
+    {"line-width", std::bind(&configure_measure_rel, std::placeholders::_1, doc.dpi, doc.font_size, &config.line_width)},
+  };
+
+  if (auto rc = parseAll(plist, pdefs); !rc) {
+    return rc;
+  }
+
+  /* check dataset */
+  if (!data_x || !data_y) {
     return ERROR_INVALID_ARGUMENT;
   }
 
-  PlotLinesConfig layer;
-  layer.x_key = config->default_x_key;
-  layer.y_key = config->default_y_key;
-  layer.group_key = config->default_group_key;
-
-  static const ParserDefinitions pdefs = {
-    {"x", configure_key(&layer.x_key)},
-    {"x-scale", std::bind(&configure_string, std::placeholders::_1, &layer.x_scale)},
-    {"y", configure_key(&layer.y_key)},
-    {"y-scale", std::bind(&configure_string, std::placeholders::_1, &layer.y_scale)},
-    {"group", std::bind(&configure_string, std::placeholders::_1, &layer.group_key)},
-    {"legend", std::bind(&configure_string, std::placeholders::_1, &layer.legend_key)},
-    {"line-color", configure_slot(&layer.line_color)},
-    {"line-width", std::bind(&configure_measure_rel, std::placeholders::_1, doc.dpi, doc.font_size, &layer.line_width)},
-  };
-
-  if (auto rc = parseAll(*prop.next, pdefs); !rc) {
-    return rc;
+  if ((data_x->size() != data_y->size()) ||
+      (data_x->size() != data_group->size())) {
+    return ERROR_INVALID_ARGUMENT;
   }
 
-  if (layer.line_color.dimension) {
-    if (auto rc = dimension_resolve(config->data, &*layer.line_color.dimension); !rc) {
-      return rc;
+  /* fetch domains */
+  auto domain_x = domain_find(scales, scale_x);
+  if (!domain_x) {
+    return ReturnCode::errorf("EARG", "scale not found: $0", scale_x);
+  }
+
+  auto domain_y = domain_find(scales, scale_y);
+  if (!domain_y) {
+    return ReturnCode::errorf("EARG", "scale not found: $0", scale_y);
+  }
+
+  /* load data */
+  config.x = domain_translate(*domain_x, *data_x);
+  config.y = domain_translate(*domain_y, *data_y);
+
+  /* group data */
+  if (data_group) {
+    if (data_x->size() != data_group->size()) {
+      return ERROR_INVALID_ARGUMENT;
     }
+
+    config.groups = plotfx::series_group(*data_group);
+  } else {
+    DataGroup g;
+    g.begin = 0;
+    g.end = data_x->size();
+    config.groups.emplace_back(g);
   }
 
-  domain_fit(config->data, layer.x_key, layer.x_scale, &config->scales);
-  domain_fit(config->data, layer.y_key, layer.y_scale, &config->scales);
+  /* return element */
+  auto e = std::make_unique<Element>();
+  e->draw = std::bind(
+      &draw_lines,
+      std::placeholders::_1,
+      config,
+      std::placeholders::_2,
+      std::placeholders::_3);
 
-  if (auto legend = legend_find(&config->legends, layer.legend_key); legend) {
-    if (auto rc = configure_legend(*config, layer, legend); !rc) {
-      return rc;
-    }
-  }
-
-  config->layers.emplace_back(PlotLayer {
-    .draw = std::bind(
-        &draw_lines,
-        std::placeholders::_1,
-        layer,
-        std::placeholders::_2,
-        std::placeholders::_3,
-        std::placeholders::_4),
-  });
-
+  *elem = std::move(e);
   return OK;
 }
 

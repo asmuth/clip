@@ -80,6 +80,13 @@ ReturnCode configure_color(
   return ReturnCode::error("EARG", "invalid color");
 }
 
+ParserFn configure_color_var(Color* var) {
+  return configure_var(
+      static_cast<ScalarParseFn<Color>>(
+          std::bind(&configure_color, std::placeholders::_1, std::placeholders::_2)),
+      var);
+}
+
 ReturnCode configure_float(
     const plist::Property& prop,
     double* value) {
@@ -201,6 +208,92 @@ ParserFn configure_key(std::string* key) {
           prop.value);
     }
   };
+}
+
+ReturnCode parse_data_series_csv(
+    const plist::Property& prop ,
+    SeriesRef* data_ref) {
+  if (!plist::is_enum(prop, "csv")) {
+    return ERROR_INVALID_ARGUMENT;
+  }
+
+  if (prop.size() < 2) {
+    return ERROR_INVALID_ARGUMENT; // FIXME
+  }
+
+  const auto& csv_path = prop[0].value;
+  const auto& csv_column = prop[1].value;
+
+  size_t csv_column_idx = 0;
+  try {
+    csv_column_idx = std::stoul(csv_column);
+  } catch (... ) {
+    return ERROR_INVALID_ARGUMENT; // FIXME
+  }
+
+  auto csv_data_str = FileUtil::read(csv_path).toString();
+  auto csv_data = CSVData{};
+  auto csv_opts = CSVParserConfig{};
+
+  for (size_t i = 2; i < prop.size(); ++i) {
+    if (prop[i].value == "noheaders") {
+      csv_opts.headers = false;
+      continue;
+    }
+  }
+
+  if (auto rc = parseCSV(csv_data_str, csv_opts, &csv_data); !rc) {
+    return rc;
+  }
+
+  auto data = std::make_shared<Series>();
+  for (const auto& row : csv_data) {
+    if (row.size() > csv_column_idx) {
+      const auto& value = row[csv_column_idx];
+      data->emplace_back(value);
+    }
+  }
+
+  *data_ref = data;
+  return OK;
+}
+
+
+ReturnCode parse_data_series_inline(
+    const plist::Property& prop,
+    SeriesRef* data_ref) {
+  if (!plist::is_list(prop)) {
+    return ERROR_INVALID_ARGUMENT;
+  }
+
+  auto data = std::make_shared<Series>();
+  for (const auto& value : *prop.next) {
+    data->emplace_back(value);
+  }
+
+  *data_ref = data;
+  return OK;
+}
+
+ReturnCode configure_series(
+    const plist::Property& prop,
+    SeriesRef* data) {
+  if (plist::is_enum(prop, "csv")) {
+    return parse_data_series_csv(prop, data);
+  }
+
+  if (plist::is_list(prop)) {
+    return parse_data_series_inline(prop, data);
+  }
+
+  return ERROR_INVALID_ARGUMENT;
+}
+
+ParserFn configure_series_var(SeriesRef* series) {
+  return configure_var(
+      static_cast<ScalarParseFn<SeriesRef>>(
+          std::bind(&configure_series, std::placeholders::_1, std::placeholders::_2)),
+      series);
 }
 
 } // namespace plotfx

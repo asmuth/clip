@@ -1,9 +1,4 @@
 plot {
-  data: csv('tests/testdata/city_temperatures.csv');
-  x: $1;
-  y: $2;
-  group: $0;
-
   axis-x-format: string;
   axis-y-min: -10;
   axis-y-max: 32;
@@ -17,12 +12,17 @@ plot {
 
   layer {
     type: lines;
-    line-color: $0;
+    group: csv('tests/testdata/city_temperatures.csv', 0);
+    color: csv('tests/testdata/city_temperatures.csv', 0);
+    x: csv('tests/testdata/city_temperatures.csv', 1);
+    y: csv('tests/testdata/city_temperatures.csv', 2);
   }
 
   layer {
     type: points;
+    color: csv('tests/testdata/city_temperatures.csv', 0);
+    x: csv('tests/testdata/city_temperatures.csv', 1);
+    y: csv('tests/testdata/city_temperatures.csv', 2);
     point-size: 3.3pt;
-    point-color: $0;
   }
 }

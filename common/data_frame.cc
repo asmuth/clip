@@ -126,5 +126,24 @@ std::vector<DataGroup> column_group(const DataColumn& col) {
   return groups;
 }
 
+std::vector<DataGroup> series_group(const Series& data) {
+  std::vector<DataGroup> groups;
+
+  for (size_t idx = 0; idx < data.size(); ) {
+    DataGroup g;
+    g.key = data[idx];
+    g.begin = idx;
+    g.end = idx;
+
+    while (g.end < data.size() && data[g.end] == data[g.begin]) {
+      g.end = ++idx;
+    }
+
+    groups.emplace_back(g);
+  }
+
+  return groups;
+}
+
 } // namespace plotfx
 

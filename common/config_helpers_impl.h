@@ -75,5 +75,26 @@ ParserFn configure_slot(Slot<T>* slot) {
   };
 }
 
+template <typename T>
+ReturnCode configure_var(
+    const plist::Property& prop,
+    ScalarParseFn<T> parser,
+    T* value) {
+  if (auto rc = parser(prop, value); !rc) {
+    return rc;
+  }
+
+  return OK;
+}
+
+template <typename T>
+ParserFn configure_var(
+    ScalarParseFn<T> parser,
+    T* value) {
+  return [parser, value] (const plist::Property& prop) {
+    return configure_var(prop, parser, value);
+  };
+}
+
 } // namespace plotfx
 

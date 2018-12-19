@@ -101,6 +101,18 @@ ReturnCode resolve_slot(
     T* val);
 
 template <typename T>
+struct VariableSlot {
+  std::string variable;
+  std::vector<T> values;
+};
+
+template <typename T>
+using ScalarParseFn = std::function<ReturnCode (const plist::Property&, T*)>;
+
+template <typename T>
+using ListParseFn = std::function<ReturnCode (const plist::Property&, std::vector<T>*)>;
+
+template <typename T>
 ParserFn configure_slot(Slot<T>* slot);
 
 ParserFn configure_multiprop(const std::vector<ParserFn>& parsers);
@@ -117,6 +129,8 @@ ReturnCode configure_color(
     const plist::Property& prop,
     Color* value);
 
+ParserFn configure_color_var(Color* var);
+
 ReturnCode configure_float(
     const plist::Property& prop,
     double* value);
@@ -132,6 +146,17 @@ ReturnCode configure_float_opt(
 ReturnCode configure_data_frame(
     const plist::Property& prop,
     DataFrame* data);
+
+ReturnCode configure_series(
+    const plist::Property& prop,
+    SeriesRef* data);
+
+ParserFn configure_series_var(SeriesRef* data);
+
+template <typename T>
+ParserFn configure_var(
+    ScalarParseFn<T> parser,
+    T* value);
 
 } // namespace plotfx
 
