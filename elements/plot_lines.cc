@@ -36,6 +36,8 @@
 #include <graphics/layout.h>
 #include "common/config_helpers.h"
 
+using namespace std::placeholders;
+
 namespace plotfx {
 namespace plot {
 namespace lines {
@@ -90,12 +92,12 @@ ReturnCode configure(
 
   static const ParserDefinitions pdefs = {
     {"x", configure_series_fn(&data_x)},
-    {"x-scale", std::bind(&configure_string, std::placeholders::_1, &scale_x)},
+    {"x-scale", bind(&configure_string, _1, &scale_x)},
     {"y", configure_series_fn(&data_y)},
-    {"y-scale", std::bind(&configure_string, std::placeholders::_1, &scale_y)},
+    {"y-scale", bind(&configure_string, _1, &scale_y)},
     {"group", configure_series_fn(&data_group)},
     {"color", configure_var(&color, configure_color_fn())},
-    {"width", std::bind(&configure_measure_rel, std::placeholders::_1, doc.dpi, doc.font_size, &line_width)},
+    {"width", bind(&configure_measure_rel, _1, doc.dpi, doc.font_size, &line_width)},
   };
 
   if (auto rc = parseAll(plist, pdefs); !rc) {

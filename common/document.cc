@@ -38,6 +38,8 @@
 #include "common/config_helpers.h"
 #include "utils/fileutil.h"
 
+using namespace std::placeholders;
+
 namespace plotfx {
 
 Document::Document() :
@@ -69,19 +71,19 @@ ReturnCode document_load(
   // IMPORTANT: parse dpi + font size first
 
   static const ParserDefinitions pdefs = {
-    {"font-size", std::bind(&configure_measure_rel, std::placeholders::_1, doc->dpi, doc->font_size, &doc->font_size)},
-    {"width", std::bind(&configure_measure_rel, std::placeholders::_1, doc->dpi, doc->font_size, &doc->width)},
-    {"height", std::bind(&configure_measure_rel, std::placeholders::_1, doc->dpi, doc->font_size, &doc->height)},
-    {"background-color", std::bind(&configure_color, std::placeholders::_1, &doc->background_color)},
+    {"font-size", bind(&configure_measure_rel, _1, doc->dpi, doc->font_size, &doc->font_size)},
+    {"width", bind(&configure_measure_rel, _1, doc->dpi, doc->font_size, &doc->width)},
+    {"height", bind(&configure_measure_rel, _1, doc->dpi, doc->font_size, &doc->height)},
+    {"background-color", bind(&configure_color, _1, &doc->background_color)},
     {
       "foreground-color",
       configure_multiprop({
-          std::bind(&configure_color, std::placeholders::_1, &doc->text_color),
-          std::bind(&configure_color, std::placeholders::_1, &doc->border_color),
+          bind(&configure_color, _1, &doc->text_color),
+          bind(&configure_color, _1, &doc->border_color),
       })
     },
-    {"text-color", std::bind(&configure_color, std::placeholders::_1, &doc->text_color)},
-    {"border-color", std::bind(&configure_color, std::placeholders::_1, &doc->border_color)},
+    {"text-color", bind(&configure_color, _1, &doc->text_color)},
+    {"border-color", bind(&configure_color, _1, &doc->border_color)},
   };
 
   if (auto rc = parseAll(plist, pdefs); !rc.isSuccess()) {

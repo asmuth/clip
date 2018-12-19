@@ -36,6 +36,8 @@
 #include <graphics/layout.h>
 #include "common/config_helpers.h"
 
+using namespace std::placeholders;
+
 namespace plotfx {
 namespace plot {
 namespace labels {
@@ -75,11 +77,11 @@ ReturnCode bind(
     const PlotLabelsConfig& config,
     ElementRef* elem) {
   auto e = std::make_unique<Element>();
-  e->draw = std::bind(
+  e->draw = bind(
       &draw,
       config,
-      std::placeholders::_1,
-      std::placeholders::_2);
+      _1,
+      _2);
 
   *elem = std::move(e);
   return OK;
@@ -102,9 +104,9 @@ ReturnCode configure(
 
   static const ParserDefinitions pdefs = {
     {"x", configure_series_fn(&data_x)},
-    {"x-scale", std::bind(&configure_string, std::placeholders::_1, &scale_x)},
+    {"x-scale", bind(&configure_string, _1, &scale_x)},
     {"y", configure_series_fn(&data_y)},
-    {"y-scale", std::bind(&configure_string, std::placeholders::_1, &scale_y)},
+    {"y-scale", bind(&configure_string, _1, &scale_y)},
     {"label", configure_series_fn(&data_labels)},
   };
 

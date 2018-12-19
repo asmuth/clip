@@ -32,6 +32,8 @@
 #include "utils/csv.h"
 #include <iostream>
 
+using namespace std::placeholders;
+
 namespace plotfx {
 
 ReturnCode configure_measure_rel(
@@ -81,11 +83,11 @@ ReturnCode configure_color(
 }
 
 ParserAtFn<Color> configure_color_fn() {
-  return std::bind(&configure_color, std::placeholders::_1, std::placeholders::_2);
+  return bind(&configure_color, _1, _2);
 }
 
 ParserFn configure_color_fn(Color* var) {
-  return std::bind(&configure_color, std::placeholders::_1, var);
+  return bind(&configure_color, _1, var);
 }
 
 ReturnCode configure_float(
@@ -291,7 +293,7 @@ ReturnCode configure_series(
 }
 
 ParserFn configure_series_fn(SeriesRef* series) {
-  return std::bind(&configure_series, std::placeholders::_1, series);
+  return bind(&configure_series, _1, series);
 }
 
 } // namespace plotfx

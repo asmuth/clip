@@ -36,6 +36,8 @@
 #include <graphics/layout.h>
 #include <graphics/brush.h>
 
+using namespace std::placeholders;
+
 namespace plotfx {
 
 static const double kDefaultLabelPaddingEM = 0.8;
@@ -531,20 +533,20 @@ ReturnCode axis_configure_label_placement(
 
   if (plist::is_value(prop, "geometric") ||
       plist::is_enum(prop, "geometric")) {
-    *label_placement = std::bind(
+    *label_placement = bind(
         &axis_place_labels_geom,
-        std::placeholders::_1,
-        std::placeholders::_2);
+        _1,
+        _2);
 
     return OK;
   }
 
   if (plist::is_value(prop, "categorical") ||
       plist::is_enum(prop, "categorical")) {
-    *label_placement = std::bind(
+    *label_placement = bind(
         &axis_place_labels_geom,
-        std::placeholders::_1,
-        std::placeholders::_2);
+        _1,
+        _2);
 
     return OK;
   }

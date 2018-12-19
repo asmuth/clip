@@ -34,6 +34,8 @@
 #include "common/config_helpers.h"
 #include "legend.h"
 
+using namespace std::placeholders;
+
 namespace plotfx {
 
 static const double kDefaultLabelFontSizeEM = 1;
@@ -366,58 +368,58 @@ ReturnCode legend_configure(
   static const ParserDefinitions pdefs = {
     {
       "position",
-      std::bind(
+      bind(
           &legend_configure_position,
-          std::placeholders::_1,
+          _1,
           &config.placement,
           &config.position_horiz,
           &config.position_vert)
     },
     {
       "title",
-      std::bind(
+      bind(
           &configure_string,
-          std::placeholders::_1,
+          _1,
           &config.title)
       },
     {
       "text-color",
-      std::bind(
+      bind(
           &configure_color,
-          std::placeholders::_1,
+          _1,
           &config.text_color)
     },
     {
       "border-color",
-      std::bind(
+      bind(
           &configure_color,
-          std::placeholders::_1,
+          _1,
           &config.border_color)
     },
     {
       "item-margin",
       configure_multiprop({
-          std::bind(
+          bind(
               &configure_measure_rel,
-              std::placeholders::_1,
+              _1,
               doc.dpi,
               doc.font_size,
               &config.item_margins[0]),
-          std::bind(
+          bind(
               &configure_measure_rel,
-              std::placeholders::_1,
+              _1,
               doc.dpi,
               doc.font_size,
               &config.item_margins[1]),
-          std::bind(
+          bind(
               &configure_measure_rel,
-              std::placeholders::_1,
+              _1,
               doc.dpi,
               doc.font_size,
               &config.item_margins[2]),
-          std::bind(
+          bind(
               &configure_measure_rel,
-              std::placeholders::_1,
+              _1,
               doc.dpi,
               doc.font_size,
               &config.item_margins[3])
@@ -425,36 +427,36 @@ ReturnCode legend_configure(
     },
     {
       "item-margin-top",
-      std::bind(
+      bind(
           &configure_measure_rel,
-          std::placeholders::_1,
+          _1,
           doc.dpi,
           doc.font_size,
           &config.item_margins[0])
     },
     {
       "item-margin-right",
-      std::bind(
+      bind(
           &configure_measure_rel,
-          std::placeholders::_1,
+          _1,
           doc.dpi,
           doc.font_size,
           &config.item_margins[1])
     },
     {
       "item-margin-bottom",
-      std::bind(
+      bind(
           &configure_measure_rel,
-          std::placeholders::_1,
+          _1,
           doc.dpi,
           doc.font_size,
           &config.item_margins[2])
     },
     {
       "item-margin-left",
-      std::bind(
+      bind(
           &configure_measure_rel,
-          std::placeholders::_1,
+          _1,
           doc.dpi,
           doc.font_size,
           &config.item_margins[3])
@@ -476,10 +478,10 @@ ReturnCode legend_configure_all(
   static const ParserDefinitions pdefs = {
     {
       "legend",
-      std::bind(
+      bind(
           &legend_configure,
           doc,
-          std::placeholders::_1,
+          _1,
           config),
     },
   };
