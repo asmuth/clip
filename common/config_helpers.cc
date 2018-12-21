@@ -172,31 +172,10 @@ ReturnCode configure_string(
   return OK;
 }
 
-ReturnCode parse_datasource_csv(
-    const plist::Property& prop ,
-    DataContext* ctx) {
-  if (!plist::is_enum(prop, "csv")) {
-    return ERROR_INVALID_ARGUMENT;
-  }
-
-  if (prop.size() < 1) {
-    return ERROR_INVALID_ARGUMENT; // FIXME
-  }
-
-  std::string csv_path;
-  bool csv_headers = true;
-  for (size_t i = 0; i < prop.size(); ++i) {
-    if (i == 0) {
-      csv_path = prop[i].value;
-      continue;
-    }
-
-    if (prop[i].value == "noheaders") {
-      csv_headers = false;
-      continue;
-    }
-  }
-
+ReturnCode load_csv(
+    const std::string& csv_path,
+    bool csv_headers,
+    SeriesMap* data) {
   auto csv_data_str = FileUtil::read(csv_path).toString();
   auto csv_data = CSVData{};
   CSVParserConfig csv_opts;
@@ -232,10 +211,38 @@ ReturnCode parse_datasource_csv(
       }
     }
 
-    ctx->by_name[series_name] = series;
+    (*data)[series_name] = series;
   }
 
   return OK;
+}
+
+ReturnCode parse_datasource_csv(
+    const plist::Property& prop ,
+    DataContext* ctx) {
+  if (!plist::is_enum(prop, "csv")) {
+    return ERROR_INVALID_ARGUMENT;
+  }
+
+  if (prop.size() < 1) {
+    return ERROR_INVALID_ARGUMENT; // FIXME
+  }
+
+  std::string csv_path;
+  bool csv_headers = true;
+  for (size_t i = 0; i < prop.size(); ++i) {
+    if (i == 0) {
+      csv_path = prop[i].value;
+      continue;
+    }
+
+    if (prop[i].value == "noheaders") {
+      csv_headers = false;
+      continue;
+    }
+  }
+
+  return load_csv(csv_path, csv_headers, &ctx->by_name);
 }
 
 ReturnCode configure_datasource_prop(
@@ -273,7 +280,7 @@ ParserFn configure_key(std::string* key) {
 }
 
 ReturnCode parse_data_series_csv(
-    const plist::Property& prop ,
+    const plist::Property& prop,
     SeriesRef* data_ref) {
   if (!plist::is_enum(prop, "csv")) {
     return ERROR_INVALID_ARGUMENT;
@@ -285,40 +292,32 @@ ReturnCode parse_data_series_csv(
 
   const auto& csv_path = prop[0].value;
   const auto& csv_column = prop[1].value;
-
-  size_t csv_column_idx = 0;
-  try {
-    csv_column_idx = std::stoul(csv_column);
-  } catch (... ) {
-    return ERROR_INVALID_ARGUMENT; // FIXME
-  }
-
-  auto csv_data_str = FileUtil::read(csv_path).toString();
-  auto csv_data = CSVData{};
-  auto csv_opts = CSVParserConfig{};
+  bool csv_headers = true;
 
   for (size_t i = 2; i < prop.size(); ++i) {
     if (prop[i].value == "noheaders") {
+      csv_headers = false;
       continue;
     }
   }
 
-  if (auto rc = parseCSV(csv_data_str, csv_opts, &csv_data); !rc) {
+  SeriesMap csv_data;
+  if (auto rc = load_csv(csv_path, csv_headers, &csv_data); !rc) {
     return rc;
   }
 
-  auto data = std::make_shared<Series>();
-  for (const auto& row : csv_data) {
-    if (row.size() > csv_column_idx) {
-      const auto& value = row[csv_column_idx];
-      data->emplace_back(value);
-    }
+  *data_ref = find_maybe(csv_data, csv_column);
+
+  if (*data_ref) {
+    return OK;
+  } else {
+    return ReturnCode::errorf(
+        "EARG",
+        "CSV file '$0' has no column named '$1'", 
+        csv_path,
+        csv_column);
   }
-
-  *data_ref = data;
-  return OK;
 }
-
 
 ReturnCode parse_data_series_inline(
     const plist::Property& prop,

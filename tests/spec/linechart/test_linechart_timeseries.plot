@@ -6,7 +6,7 @@ plot {
 
   layer {
     type: lines;
-    x: csv('tests/testdata/measurement.csv', 0);
-    y: csv('tests/testdata/measurement.csv', 2);
+    x: csv('tests/testdata/measurement.csv', time);
+    y: csv('tests/testdata/measurement.csv', value2);
   }
 }
