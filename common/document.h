@@ -30,7 +30,7 @@
 #pragma once
 #include "utils/return_code.h"
 #include "common/color_scheme.h"
-#include "common/data_frame.h"
+#include "common/data_model.h"
 #include "graphics/measure.h"
 #include "graphics/color.h"
 #include "graphics/text.h"

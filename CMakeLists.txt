@@ -28,7 +28,7 @@ add_library(plotfxlib STATIC
     elements/plot_points.cc
     elements/legend.cc
     common/config_helpers.cc
-    common/data_frame.cc
+    common/data_model.cc
     common/dimension.cc
     common/domain.cc
     common/document.cc

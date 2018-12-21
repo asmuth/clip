@@ -36,7 +36,7 @@
 #include <common/domain.h>
 #include <common/element.h>
 #include <common/document.h>
-#include <common/data_frame.h>
+#include <common/data_model.h>
 #include "plot_axis.h"
 #include "legend.h"
 #include "dimension.h"

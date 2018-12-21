@@ -31,7 +31,7 @@
 #include <string>
 #include <unordered_map>
 #include "common/domain.h"
-#include "common/data_frame.h"
+#include "common/data_model.h"
 
 namespace plotfx {
 

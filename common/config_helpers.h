@@ -34,7 +34,7 @@
 #include <graphics/measure.h>
 #include <graphics/color.h>
 #include "utils/return_code.h"
-#include "common/data_frame.h"
+#include "common/data_model.h"
 #include "common/dimension.h"
 
 namespace plotfx {
