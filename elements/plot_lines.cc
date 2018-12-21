@@ -94,12 +94,12 @@ ReturnCode configure(
   Measure line_width;
 
   static const ParserDefinitions pdefs = {
-    {"x", configure_series_fn(&data_x)},
+    {"x", configure_series_fn(data, &data_x)},
     {"x-scale", bind(&configure_string, _1, &scale_x)},
-    {"y", configure_series_fn(&data_y)},
+    {"y", configure_series_fn(data, &data_y)},
     {"y-scale", bind(&configure_string, _1, &scale_y)},
-    {"group", configure_series_fn(&data_group)},
-    {"color", configure_var(&color_var, configure_color_opt(&color_default))},
+    {"group", configure_series_fn(data, &data_group)},
+    {"color", configure_var(&color_var, data, configure_color_opt(&color_default))},
     {"width", bind(&configure_measure_rel, _1, doc.dpi, doc.font_size, &line_width)},
   };
 

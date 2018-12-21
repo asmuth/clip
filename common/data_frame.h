@@ -39,16 +39,6 @@ using Series = std::vector<Value>;
 using SeriesRef = std::shared_ptr<const Series>;
 using SeriesMap = std::unordered_map<std::string, SeriesRef>;
 
-// FIXME: rename to column?
-struct DataColumn {
-  std::string name;
-  Series data;
-};
-
-struct DataFrame {
-  std::vector<DataColumn> columns;
-};
-
 struct DataContext {
   SeriesMap by_name;
   SeriesMap defaults;

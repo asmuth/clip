@@ -30,6 +30,7 @@
 #include "config_helpers.h"
 #include "utils/fileutil.h"
 #include "utils/csv.h"
+#include "utils/algo.h"
 #include <iostream>
 
 using namespace std::placeholders;
@@ -171,9 +172,9 @@ ReturnCode configure_string(
   return OK;
 }
 
-ReturnCode parse_data_frame_csv(
+ReturnCode parse_datasource_csv(
     const plist::Property& prop ,
-    DataFrame* data) {
+    DataContext* ctx) {
   if (!plist::is_enum(prop, "csv")) {
     return ERROR_INVALID_ARGUMENT;
   }
@@ -182,18 +183,23 @@ ReturnCode parse_data_frame_csv(
     return ERROR_INVALID_ARGUMENT; // FIXME
   }
 
-  const auto& csv_path = prop[0].value;
-  auto csv_data_str = FileUtil::read(csv_path).toString();
-  auto csv_data = CSVData{};
-  auto csv_opts = CSVParserConfig{};
+  std::string csv_path;
+  bool csv_headers = true;
+  for (size_t i = 0; i < prop.size(); ++i) {
+    if (i == 0) {
+      csv_path = prop[i].value;
+      continue;
+    }
 
-  for (size_t i = 1; i < prop.size(); ++i) {
     if (prop[i].value == "noheaders") {
-      csv_opts.headers = false;
+      csv_headers = false;
       continue;
     }
   }
 
+  auto csv_data_str = FileUtil::read(csv_path).toString();
+  auto csv_data = CSVData{};
+  CSVParserConfig csv_opts;
   if (auto rc = parseCSV(csv_data_str, csv_opts, &csv_data); !rc) {
     return rc;
   }
@@ -206,26 +212,50 @@ ReturnCode parse_data_frame_csv(
   }
 
   for (size_t i = 0; i < column_count; ++i) {
-    DataColumn column;
-    column.name = std::to_string(i);
-    for (const auto& row : csv_data) {
-      column.data.push_back(row[i]);
+    std::string series_name;
+
+    auto row = csv_data.begin();
+    if (csv_headers &&
+        row != csv_data.end() &&
+        row->size() > i) {
+      series_name = (row++)->at(i);
+    } else {
+      series_name = std::to_string(i);
     }
 
-    data->columns.emplace_back(column);
+    auto series = std::make_shared<Series>();
+    for (; row != csv_data.end(); ++row) {
+      if (row->size() > i) {
+        series->emplace_back(row->at(i));
+      } else {
+        series->emplace_back();
+      }
+    }
+
+    ctx->by_name[series_name] = series;
   }
 
   return OK;
 }
 
-ReturnCode configure_data_frame(
+ReturnCode configure_datasource_prop(
     const plist::Property& prop,
-    DataFrame* data) {
+    DataContext* data) {
   if (plist::is_enum(prop, "csv")) {
-    return parse_data_frame_csv(prop, data);
+    return parse_datasource_csv(prop, data);
   }
 
   return ERROR_INVALID_ARGUMENT;
+}
+
+ReturnCode configure_datasource(
+    const plist::PropertyList& plist,
+    DataContext* data) {
+  static const ParserDefinitions pdefs = {
+    {"data", bind(&configure_datasource_prop, _1, data)},
+  };
+
+  return parseAll(plist, pdefs);
 }
 
 ParserFn configure_key(std::string* key) {
@@ -269,7 +299,6 @@ ReturnCode parse_data_series_csv(
 
   for (size_t i = 2; i < prop.size(); ++i) {
     if (prop[i].value == "noheaders") {
-      csv_opts.headers = false;
       continue;
     }
   }
@@ -307,11 +336,38 @@ ReturnCode parse_data_series_inline(
   return OK;
 }
 
+ReturnCode parse_data_series_var(
+    const plist::Property& prop,
+    const DataContext& ctx,
+    SeriesRef* data) {
+  if (!plist::is_enum(prop, "var")) {
+    return ERROR_INVALID_ARGUMENT;
+  }
+
+  if (prop.size() != 1) {
+    return ReturnCode::errorf("EARG", "var() takes exactly one argument, got: $0", prop.size());
+  }
+
+  const auto& var_name = prop[0].value;
+  auto var_data = find_maybe(ctx.by_name, var_name);
+  if (!var_data) {
+    return ReturnCode::errorf("EARG", "variable not found: '$0'", var_name);
+  }
+
+  *data = var_data;
+  return OK;
+}
+
 ReturnCode configure_series(
     const plist::Property& prop,
+    const DataContext& ctx,
     SeriesRef* data) {
   if (plist::is_enum(prop, "csv")) {
     return parse_data_series_csv(prop, data);
+  }
+
+  if (plist::is_enum(prop, "var")) {
+    return parse_data_series_var(prop, ctx, data);
   }
 
   if (plist::is_list(prop)) {
@@ -321,16 +377,20 @@ ReturnCode configure_series(
   return ERROR_INVALID_ARGUMENT;
 }
 
-ParserFn configure_series_fn(SeriesRef* series) {
-  return bind(&configure_series, _1, series);
+ParserFn configure_series_fn(
+    const DataContext& ctx,
+    SeriesRef* series) {
+  return bind(&configure_series, _1, ctx, series);
 }
 
 ParserFn configure_var(
     SeriesRef* series,
+    const DataContext& ctx,
     ParserFn parser) {
   return [=] (const plist::Property& prop) -> ReturnCode {
-    if (plist::is_enum(prop, "csv")) {
-      return configure_series(prop, series);
+    if (plist::is_enum(prop, "csv") ||
+        plist::is_enum(prop, "var")) {
+      return configure_series(prop, ctx, series);
     } else {
       return parser(prop);
     }

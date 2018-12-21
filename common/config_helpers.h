@@ -64,7 +64,10 @@ ReturnCode parse_classlike(
 template <typename T>
 ParserFn configure_opt(ParserFn parser);
 
-ParserFn configure_var(SeriesRef* series, ParserFn parser);
+ParserFn configure_var(
+    SeriesRef* series,
+    const DataContext& ctx,
+    ParserFn parser);
 
 ParserFn configure_multiprop(const std::vector<ParserFn>& parsers);
 
@@ -95,15 +98,22 @@ ReturnCode configure_float_opt(
     const plist::Property& prop,
     std::optional<double>* value);
 
-ReturnCode configure_data_frame(
+ReturnCode configure_datasource_prop(
     const plist::Property& prop,
-    DataFrame* data);
+    DataContext* data);
+
+ReturnCode configure_datasource(
+    const plist::PropertyList& plist,
+    DataContext* data);
 
 ReturnCode configure_series(
     const plist::Property& prop,
+    const DataContext& ctx,
     SeriesRef* data);
 
-ParserFn configure_series_fn(SeriesRef* data);
+ParserFn configure_series_fn(
+    const DataContext& ctx,
+    SeriesRef* data);
 
 } // namespace plotfx
 

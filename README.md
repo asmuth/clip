@@ -38,11 +38,13 @@ Output File (`example_chart.svg`):
 Input File (`example_chart.plot`):
 
     plot {
-      data: csv('city_temperatures.csv');
+      data: csv('testdata/city_temperatures.csv');
+      x: var(month);
+      y: var(temperature);
+      group: var(city);
 
-      x: $month;
-      y: $temperature;
-      group: $city;
+      axis-y-min: -10;
+      axis-y-max: 32;
 
       layer {
         type: lines;
@@ -50,7 +52,7 @@ Input File (`example_chart.plot`):
 
       layer {
         type: points;
-        point-size: 3pt;
+        size: 3.3pt;
       }
     }
 

@@ -163,9 +163,9 @@ ReturnCode configure_scales_auto(
     std::string scale_y = SCALE_DEFAULT_Y;
 
     static const ParserDefinitions pdefs = {
-      {"x", configure_series_fn(&data_x)},
+      {"x", configure_series_fn(data, &data_x)},
       {"x-scale", bind(&configure_string, _1, &scale_x)},
-      {"y", configure_series_fn(&data_y)},
+      {"y", configure_series_fn(data, &data_y)},
       {"y-scale", bind(&configure_string, _1, &scale_y)},
     };
 
@@ -243,10 +243,17 @@ ReturnCode configure(
   SeriesRef data_y;
   SeriesRef data_group;
 
+  /* load data source */
+  DataContext data;
+  if (auto rc = configure_datasource(plist, &data); !rc) {
+    return rc;
+  }
+
+  /* parse properties */
   static const ParserDefinitions pdefs = {
-    {"x", configure_series_fn(&data_x)},
-    {"y", configure_series_fn(&data_y)},
-    {"group", configure_series_fn(&data_group)},
+    {"x", configure_series_fn(data, &data_x)},
+    {"y", configure_series_fn(data, &data_y)},
+    {"group", configure_series_fn(data, &data_group)},
     {"axis-x-type", bind(&domain_configure, _1, domain_x)},
     {"axis-x-min", bind(&configure_float_opt, _1, &domain_x->min)},
     {"axis-x-max", bind(&configure_float_opt, _1, &domain_x->max)},
@@ -336,8 +343,7 @@ ReturnCode configure(
     return rc;
   }
 
-  /* prepare data context */
-  DataContext data;
+  /* extend data context */
   data.defaults["x"] = data_x;
   data.defaults["y"] = data_y;
   data.defaults["group"] = data_group;

@@ -30,13 +30,11 @@ namespace plotfx {
 
 struct CSVParserConfig {
   CSVParserConfig() :
-      headers(true),
       line_separator('\n'),
       column_separator(','),
       quote_char('\"'),
       escape_char('\\') {}
 
-  bool headers;
   char line_separator;
   char column_separator;
   char quote_char;

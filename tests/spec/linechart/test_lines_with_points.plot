@@ -1,7 +1,8 @@
 plot {
-  x: csv('tests/testdata/city_temperatures.csv', 1);
-  y: csv('tests/testdata/city_temperatures.csv', 2);
-  group: csv('tests/testdata/city_temperatures.csv', 0);
+  data: csv('tests/testdata/city_temperatures.csv');
+  x: var(month);
+  y: var(temperature);
+  group: var(city);
 
   axis-x-format: string;
   axis-y-min: -10;
@@ -9,10 +10,6 @@ plot {
   axis-top: off;
   axis-right: off;
   margin-right: 2.4em;
-
-  legend {
-    position: top left inside;
-  }
 
   layer {
     type: lines;

@@ -61,11 +61,7 @@ ReturnCode parseCSV(
 
       if (byte == opts.line_separator) {
         ++row_index;
-
-        if (row_index > 1 || !opts.headers) {
-          output->push_back(row);
-        }
-
+        output->push_back(row);
         row.clear();
       }
 
