@@ -32,21 +32,10 @@
 
 namespace plotfx {
 
-const DimensionConfig* dimension_find(
-    const DimensionMap& map,
-    const std::string& key) {
-  const auto& iter = map.find(key);
-  if (iter == map.end()) {
-    return nullptr;
-  } else {
-    return &iter->second;
-  }
-}
-
 void dimension_add(
     DimensionMap* map,
     const std::string& key) {
-  if (dimension_find(*map, key)) {
+  if (map->count(key)) {
     return;
   }
 

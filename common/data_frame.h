@@ -54,27 +54,13 @@ struct DataContext {
   SeriesMap defaults;
 };
 
-ReturnCode column_find(
-    const DataFrame& frame,
-    const std::string& column_name,
-    const DataColumn** column);
-
 struct DataGroup {
   Value key;
   size_t begin;
   size_t end;
 };
 
-Value data_lookup(
-    const DataFrame& data,
-    const std::string& key,
-    size_t idx);
-
 std::vector<DataGroup> series_group(const Series& data);
-
-SeriesRef series_find(
-    const SeriesMap& map,
-    const std::string& key);
 
 size_t series_len(const Series& s);
 

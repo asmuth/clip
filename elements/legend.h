@@ -80,14 +80,6 @@ struct LegendConfig {
 
 using LegendMap = std::unordered_map<std::string, LegendConfig>;
 
-const LegendConfig* legend_find(
-    const LegendMap& map,
-    const std::string& key);
-
-LegendConfig* legend_find(
-    LegendMap* map,
-    const std::string& key);
-
 void legend_add_item(
     LegendGroup* group,
     const std::string& title,

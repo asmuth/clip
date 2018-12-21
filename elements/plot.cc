@@ -36,6 +36,7 @@
 #include <graphics/layout.h>
 #include "common/config_helpers.h"
 #include "common/element_factory.h"
+#include "common/utils/algo.h"
 #include "plot_labels.h"
 #include "plot_lines.h"
 #include "plot_points.h"
@@ -156,8 +157,8 @@ ReturnCode configure_scales_auto(
       return ERROR_INVALID_ARGUMENT;
     }
 
-    SeriesRef data_x = series_find(data.defaults, "x");
-    SeriesRef data_y = series_find(data.defaults, "y");
+    SeriesRef data_x = find_maybe(data.defaults, "x");
+    SeriesRef data_y = find_maybe(data.defaults, "y");
     std::string scale_x = SCALE_DEFAULT_X;
     std::string scale_y = SCALE_DEFAULT_Y;
 
@@ -173,7 +174,7 @@ ReturnCode configure_scales_auto(
     }
 
     if (data_x) {
-      auto domain_x = domain_find(scales, scale_x);
+      auto domain_x = find_ptr(scales, scale_x);
       if (!domain_x) {
         return ReturnCode::errorf("EARG", "scale not found: $0", scale_x);
       }
@@ -182,7 +183,7 @@ ReturnCode configure_scales_auto(
     }
 
     if (data_y) {
-      auto domain_y = domain_find(scales, scale_y);
+      auto domain_y = find_ptr(scales, scale_y);
       if (!domain_y) {
         return ReturnCode::errorf("EARG", "scale not found: $0", scale_y);
       }
@@ -235,8 +236,8 @@ ReturnCode configure(
     scales.emplace(SCALE_DEFAULT_Y, d);
   }
 
-  auto domain_x = domain_find(&scales, SCALE_DEFAULT_X);
-  auto domain_y = domain_find(&scales, SCALE_DEFAULT_Y);
+  auto domain_x = find_ptr(&scales, SCALE_DEFAULT_X);
+  auto domain_y = find_ptr(&scales, SCALE_DEFAULT_Y);
 
   SeriesRef data_x;
   SeriesRef data_y;

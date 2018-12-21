@@ -50,28 +50,6 @@ LegendConfig::LegendConfig() :
     position_horiz(HAlign::LEFT),
     position_vert(VAlign::TOP) {}
 
-const LegendConfig* legend_find(
-    const LegendMap& map,
-    const std::string& key) {
-  const auto& iter = map.find(key);
-  if (iter == map.end()) {
-    return nullptr;
-  } else {
-    return &iter->second;
-  }
-}
-
-LegendConfig* legend_find(
-    LegendMap* map,
-    const std::string& key) {
-  auto iter = map->find(key);
-  if (iter == map->end()) {
-    return nullptr;
-  } else {
-    return &iter->second;
-  }
-}
-
 void legend_add_item(
     LegendGroup* group,
     const std::string& title,

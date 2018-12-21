@@ -32,47 +32,6 @@
 
 namespace plotfx {
 
-ReturnCode column_find(
-    const DataFrame& frame,
-    const std::string& column_name,
-    const DataColumn** column) {
-  for (const auto& c : frame.columns) {
-    if (c.name == column_name) {
-      *column = &c;
-      return OK;
-    }
-  }
-
-  return ReturnCode::errorf("EARG", "column not found: $0", column_name);
-}
-
-Value data_lookup(
-    const DataFrame& data,
-    const std::string& key,
-    size_t idx) {
-  const DataColumn* column;
-  if (auto rc = column_find(data, key, &column); !rc) {
-    return {};
-  }
-
-  if (idx < column->data.size()) {
-    return column->data[idx];
-  } else {
-    return {};
-  }
-}
-
-SeriesRef series_find(
-    const SeriesMap& map,
-    const std::string& key) {
-  const auto& iter = map.find(key);
-  if (iter == map.end()) {
-    return nullptr;
-  } else {
-    return iter->second;
-  }
-}
-
 size_t series_len(const Series& s) {
   return s.size();
 }

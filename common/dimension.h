@@ -45,10 +45,6 @@ using DimensionMap = std::unordered_map<std::string, DimensionConfig>;
 template <typename T>
 using DimensionMapFn = std::function<std::vector<T> (const Series&)>;
 
-const DimensionConfig* dimension_find(
-    const DimensionMap& map,
-    const std::string& key);
-
 void dimension_add(
     DimensionMap* map,
     const std::string& key);

@@ -35,6 +35,7 @@
 #include <graphics/text.h>
 #include <graphics/layout.h>
 #include "common/config_helpers.h"
+#include "common/utils/algo.h"
 
 using namespace std::placeholders;
 
@@ -93,8 +94,8 @@ ReturnCode configure(
     const DataContext& data,
     const DomainMap& scales,
     PlotLabelsConfig* config) {
-  SeriesRef data_x = series_find(data.defaults, "x");
-  SeriesRef data_y = series_find(data.defaults, "y");
+  SeriesRef data_x = find_maybe(data.defaults, "x");
+  SeriesRef data_y = find_maybe(data.defaults, "y");
   SeriesRef data_labels;
 
   std::string scale_x = SCALE_DEFAULT_X;
@@ -128,12 +129,12 @@ ReturnCode configure(
   }
 
   /* fetch domains */
-  auto domain_x = domain_find(scales, scale_x);
+  auto domain_x = find_ptr(scales, scale_x);
   if (!domain_x) {
     return ReturnCode::errorf("EARG", "scale not found: $0", scale_x);
   }
 
-  auto domain_y = domain_find(scales, scale_y);
+  auto domain_y = find_ptr(scales, scale_y);
   if (!domain_y) {
     return ReturnCode::errorf("EARG", "scale not found: $0", scale_y);
   }

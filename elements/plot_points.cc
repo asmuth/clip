@@ -76,15 +76,15 @@ ReturnCode configure(
     const DataContext& data,
     const DomainMap& scales,
     PlotPointsConfig* config) {
-  SeriesRef data_x = series_find(data.defaults, "x");
-  SeriesRef data_y = series_find(data.defaults, "y");
-  SeriesRef data_group = series_find(data.defaults, "group");
+  SeriesRef data_x = find_maybe(data.defaults, "x");
+  SeriesRef data_y = find_maybe(data.defaults, "y");
+  SeriesRef data_group = find_maybe(data.defaults, "group");
 
   std::string scale_x = SCALE_DEFAULT_X;
   std::string scale_y = SCALE_DEFAULT_Y;
 
   std::optional<Color> color_default;
-  SeriesRef color_var = series_find(data.defaults, "color");
+  SeriesRef color_var = find_maybe(data.defaults, "color");
   DomainConfig color_domain;
   ColorScheme color_palette;
 
@@ -116,12 +116,12 @@ ReturnCode configure(
   }
 
   /* fetch domains */
-  auto domain_x = domain_find(scales, scale_x);
+  auto domain_x = find_ptr(scales, scale_x);
   if (!domain_x) {
     return ReturnCode::errorf("EARG", "scale not found: $0", scale_x);
   }
 
-  auto domain_y = domain_find(scales, scale_y);
+  auto domain_y = find_ptr(scales, scale_y);
   if (!domain_y) {
     return ReturnCode::errorf("EARG", "scale not found: $0", scale_y);
   }

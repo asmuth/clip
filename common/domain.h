@@ -66,21 +66,7 @@ using DomainMap = std::unordered_map<std::string, DomainConfig>;
 static const std::string SCALE_DEFAULT_X = "x";
 static const std::string SCALE_DEFAULT_Y = "y";
 
-const DomainConfig* domain_find(
-    const DomainMap& map,
-    const std::string& key);
-
-DomainConfig* domain_find(
-    DomainMap* map,
-    const std::string& key);
-
 void domain_fit(const Series& data, DomainConfig* domain);
-
-void domain_fit(
-    const DataFrame& data,
-    const std::string& data_key,
-    const std::string& key,
-    DomainMap* domains);
 
 size_t domain_cardinality(const DomainConfig& domain);
 

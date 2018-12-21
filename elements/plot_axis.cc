@@ -32,6 +32,7 @@
 #include <iostream>
 #include <common/config_helpers.h>
 #include <common/domain.h>
+#include "common/utils/algo.h"
 #include <graphics/text.h>
 #include <graphics/layout.h>
 #include <graphics/brush.h>
@@ -573,7 +574,7 @@ ReturnCode axis_resolve(
     }
   }
 
-  auto domain = domain_find(scales, axis->scale);
+  auto domain = find_ptr(scales, axis->scale);
   if (!domain) {
     return ReturnCode::errorf("EARG", "scale not found: $0", axis->scale);
   }

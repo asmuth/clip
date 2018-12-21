@@ -33,6 +33,21 @@
 
 namespace plotfx {
 
+template <typename T>
+const typename T::mapped_type* find_ptr(
+    const T& map,
+    const typename T::key_type& key);
+
+template <typename T>
+typename T::mapped_type* find_ptr(
+    T* map,
+    const typename T::key_type& key);
+
+template <typename T>
+typename T::mapped_type find_maybe(
+    const T& map,
+    const typename T::key_type& key);
+
 template <typename H, typename... T>
 std::vector<H> fallback(const std::vector<H>& head, const T&... tail);
 
