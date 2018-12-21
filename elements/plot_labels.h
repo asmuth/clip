@@ -60,8 +60,8 @@ ReturnCode draw(
 
 ReturnCode configure(
     const plist::PropertyList& plist,
-    const Document& doc,
     const DataContext& data,
+    const Document& doc,
     const DomainMap& scales,
     PlotLabelsConfig* config);
 

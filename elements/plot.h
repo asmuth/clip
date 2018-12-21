@@ -62,6 +62,7 @@ ReturnCode draw(
 
 ReturnCode configure(
     const plist::PropertyList& plist,
+    const DataContext& data,
     const Document& doc,
     PlotConfig* config);
 

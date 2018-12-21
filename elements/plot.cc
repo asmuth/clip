@@ -116,20 +116,20 @@ ReturnCode configure_layer(
   const auto& layer_props = *prop.next;
   ElementBuilder layer_builder;
 
-  // FIXME proper lookup
+  // TODO: proper lookup
   if (type == "labels")
     layer_builder = elem_builder<labels::PlotLabelsConfig>(
-        bind(&labels::configure, _1, _2, data, scales, _3),
+        bind(&labels::configure, _1, _2, _3, scales, _4),
         &labels::draw);
 
   if (type == "lines")
     layer_builder = elem_builder<lines::PlotLinesConfig>(
-        bind(&lines::configure, _1, _2, data, scales, _3),
+        bind(&lines::configure, _1, _2, _3, scales, _4),
         &lines::draw);
 
   if (type == "points")
     layer_builder = elem_builder<points::PlotPointsConfig>(
-        bind(&points::configure, _1, _2, data, scales, _3),
+        bind(&points::configure, _1, _2, _3, scales, _4),
         &points::draw);
 
   if (!layer_builder) {
@@ -137,7 +137,7 @@ ReturnCode configure_layer(
   }
 
   ElementRef layer;
-  if (auto rc = layer_builder(doc, layer_props, &layer); !rc) {
+  if (auto rc = layer_builder(layer_props, data, doc, &layer); !rc) {
     return rc;
   }
 
@@ -371,9 +371,10 @@ ReturnCode configure_style(
 
 ReturnCode configure(
     const plist::PropertyList& plist,
+    const DataContext& data_in,
     const Document& doc,
     PlotConfig* config) {
-  DataContext data;
+  DataContext data = data_in;
   DomainMap scales;
 
   return try_chain({

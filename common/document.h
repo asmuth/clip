@@ -30,6 +30,7 @@
 #pragma once
 #include "utils/return_code.h"
 #include "common/color_scheme.h"
+#include "common/data_frame.h"
 #include "graphics/measure.h"
 #include "graphics/color.h"
 #include "graphics/text.h"
@@ -50,6 +51,7 @@ struct Document {
   FontInfo font_sans;
   FontInfo font_mono;
   std::vector<ElementRef> roots;
+  DataContext data;
   double dpi;
   Measure font_size;
 };

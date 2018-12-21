@@ -100,7 +100,14 @@ ReturnCode document_load(
     const auto& elem_config = plist[i].next.get();
 
     ElementRef elem;
-    if (auto rc = buildElement(*doc, elem_name, *elem_config, &elem); !rc.isSuccess()) {
+    auto rc = buildElement(
+        elem_name,
+        *elem_config,
+        doc->data,
+        *doc,
+        &elem);
+
+    if (!rc) {
       return rc;
     }
 

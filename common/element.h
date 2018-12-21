@@ -39,6 +39,7 @@ namespace plotfx {
 struct Layer;
 struct Rectangle;
 struct Document;
+struct DataContext;
 
 using plist::PropertyList;
 
@@ -48,7 +49,11 @@ template <typename T>
 using ElementDrawAsFn = std::function<ReturnCode (const T&, const Rectangle&, Layer*)>;
 
 template <typename T>
-using ElementConfigureAsFn = std::function<ReturnCode (const plist::PropertyList&, const Document&, T*)>;
+using ElementConfigureAsFn = std::function<ReturnCode (
+    const plist::PropertyList&,
+    const DataContext&,
+    const Document&,
+    T*)>;
 
 struct Element {
   ElementDrawFn draw;

@@ -38,12 +38,13 @@ ElementBuilder elem_builder(
   using namespace std::placeholders;
 
   return [=] (
-      const Document& doc,
       const plist::PropertyList& prop,
+      const DataContext& data,
+      const Document& doc,
       ElementRef* elem) -> ReturnCode {
 
     T config;
-    if (auto rc = config_fn(prop, doc, &config); !rc) {
+    if (auto rc = config_fn(prop, data, doc, &config); !rc) {
       return rc;
     }
 

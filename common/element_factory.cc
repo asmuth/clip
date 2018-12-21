@@ -40,16 +40,17 @@ static std::unordered_map<std::string, ElementBuilder> elems = {
 };
 
 ReturnCode buildElement(
-    const Document& doc,
     const std::string& name,
-    const PropertyList& plist,
+    const plist::PropertyList& plist,
+    const DataContext& ctx,
+    const Document& doc,
     ElementRef* elem) {
   const auto& elem_entry = elems.find(name);
   if (elem_entry == elems.end()) {
     return ReturnCode::errorf("NOTFOUND", "no such element: $0", name);
   }
 
-  return elem_entry->second(doc, plist, elem);
+  return elem_entry->second(plist, ctx, doc, elem);
 }
 
 } // namespace plotfx

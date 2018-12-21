@@ -34,7 +34,11 @@
 namespace plotfx {
 struct Document;
 
-using ElementBuilder = std::function<ReturnCode (const Document&, const plist::PropertyList&, ElementRef* elem)>;
+using ElementBuilder = std::function<ReturnCode (
+    const plist::PropertyList&,
+    const DataContext&,
+    const Document&,
+    ElementRef* elem)>;
 
 template <typename T>
 ElementBuilder elem_builder(
@@ -42,9 +46,10 @@ ElementBuilder elem_builder(
     ElementDrawAsFn<T> draw_fn);
 
 ReturnCode buildElement(
-    const Document& doc,
     const std::string& name,
     const plist::PropertyList& plist,
+    const DataContext& ctx,
+    const Document& doc,
     ElementRef* elem);
 
 } // namespace plotfx
