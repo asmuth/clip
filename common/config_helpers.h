@@ -105,12 +105,6 @@ ReturnCode configure_series(
 
 ParserFn configure_series_fn(SeriesRef* data);
 
-template <typename H, typename... T>
-std::vector<H> fallback(const std::vector<H>& head, const T&... tail);
-
-template <typename H, typename... T>
-std::vector<H> fallback(const std::optional<H>& head, const T&... tail);
-
 } // namespace plotfx
 
 #include "config_helpers_impl.h"

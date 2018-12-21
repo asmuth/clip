@@ -34,6 +34,7 @@
 #include <graphics/brush.h>
 #include <graphics/text.h>
 #include <graphics/layout.h>
+#include <common/utils/algo.h>
 #include "common/config_helpers.h"
 
 using namespace std::placeholders;

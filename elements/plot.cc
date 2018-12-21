@@ -194,20 +194,6 @@ ReturnCode configure_scales_auto(
   return OK;
 }
 
-ReturnCode bind(
-    const PlotConfig& config,
-    ElementRef* elem) {
-  auto e = std::make_unique<Element>();
-  e->draw = bind(
-      &draw,
-      config,
-      _1,
-      _2);
-
-  *elem = std::move(e);
-  return OK;
-}
-
 ReturnCode configure(
     const plist::PropertyList& plist,
     const Document& doc,
@@ -239,14 +225,14 @@ ReturnCode configure(
 
   {
     DomainConfig d;
-    scales.emplace("x", d);
+    scales.emplace(SCALE_DEFAULT_X, d);
   }
 
   {
     DomainConfig d;
     d.padding = 0.1f;
     d.min_auto_snap_zero = true;
-    scales.emplace("y", d);
+    scales.emplace(SCALE_DEFAULT_Y, d);
   }
 
   auto domain_x = domain_find(&scales, SCALE_DEFAULT_X);

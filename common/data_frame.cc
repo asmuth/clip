@@ -118,25 +118,6 @@ Value value_from_float(double v) {
   return std::to_string(v);
 }
 
-std::vector<DataGroup> column_group(const DataColumn& col) {
-  std::vector<DataGroup> groups;
-
-  for (size_t idx = 0; idx < col.data.size(); ) {
-    DataGroup g;
-    g.key = col.data[idx];
-    g.begin = idx;
-    g.end = idx;
-
-    while (g.end < col.data.size() && col.data[g.end] == col.data[g.begin]) {
-      g.end = ++idx;
-    }
-
-    groups.emplace_back(g);
-  }
-
-  return groups;
-}
-
 std::vector<DataGroup> series_group(const Series& data) {
   std::vector<DataGroup> groups;
 

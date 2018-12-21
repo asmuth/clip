@@ -1,6 +1,6 @@
 /**
  * This file is part of the "plotfx" project
- *   Copyright (c) 2018 Paul Asmuth.
+ *   Copyright (c) 2018 Paul Asmuth
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -28,62 +28,17 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 #pragma once
-#include <string>
+#include <optional>
 #include <vector>
-#include "common/utils/return_code.h"
 
 namespace plotfx {
 
-using Value = std::string;
-using Series = std::vector<Value>;
-using SeriesRef = std::shared_ptr<const Series>;
-using SeriesMap = std::unordered_map<std::string, SeriesRef>;
+template <typename H, typename... T>
+std::vector<H> fallback(const std::vector<H>& head, const T&... tail);
 
-// FIXME: rename to column?
-struct DataColumn {
-  std::string name;
-  Series data;
-};
-
-struct DataFrame {
-  std::vector<DataColumn> columns;
-};
-
-struct DataContext {
-  SeriesMap by_name;
-  SeriesMap defaults;
-};
-
-ReturnCode column_find(
-    const DataFrame& frame,
-    const std::string& column_name,
-    const DataColumn** column);
-
-struct DataGroup {
-  Value key;
-  size_t begin;
-  size_t end;
-};
-
-Value data_lookup(
-    const DataFrame& data,
-    const std::string& key,
-    size_t idx);
-
-std::vector<DataGroup> series_group(const Series& data);
-
-SeriesRef series_find(
-    const SeriesMap& map,
-    const std::string& key);
-
-size_t series_len(const Series& s);
-
-bool series_is_numeric(const Series& s);
-
-std::vector<double> series_to_float(const Series& s);
-
-double value_to_float(const Value&);
-Value value_from_float(double);
+template <typename H, typename... T>
+std::vector<H> fallback(const std::optional<H>& head, const T&... tail);
 
 } // namespace plotfx
 
+#include "algo_impl.h"

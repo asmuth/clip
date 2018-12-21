@@ -36,6 +36,7 @@
 #include <common/domain.h>
 #include <common/element.h>
 #include <common/config_helpers.h>
+#include <common/utils/algo.h>
 #include "plot_axis.h"
 #include "plot.h"
 #include "legend.h"

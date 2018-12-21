@@ -45,37 +45,5 @@ ReturnCode parseEnum(
   return ReturnCode::success();
 }
 
-template <typename H>
-std::vector<H> fallback(const std::vector<H>& head) {
-  return head;
-}
-
-template <typename H, typename... T>
-std::vector<H> fallback(const std::vector<H>& head, const T&... tail) {
-  if (head.empty()) {
-    return fallback(tail...);
-  } else {
-    return head;
-  }
-}
-
-template <typename H>
-std::vector<H> fallback(const std::optional<H>& head) {
-  if (head) {
-    return {*head};
-  } else {
-    return {};
-  }
-}
-
-template <typename H, typename... T>
-std::vector<H> fallback(const std::optional<H>& head, const T&... tail) {
-  if (head) {
-    return {*head};
-  } else {
-    return fallback(tail...);
-  }
-}
-
 } // namespace plotfx
 
