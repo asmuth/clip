@@ -2,15 +2,14 @@ width: 1200px;
 height: 480px;
 
 plot {
-  data: csv('tests/testdata/measurement.csv');
-  x: $0;
-  y: $2;
+  x: csv('tests/testdata/measurement.csv', time);
+  y: csv('tests/testdata/measurement.csv', value2);
 
   axis-x-format: datetime("%H:%M:%S");
 
   layer {
     type: lines;
-    line-width: 8pt;
-    color: #06c;
+    width: 8pt;
+    color: #ccc;
   }
 }

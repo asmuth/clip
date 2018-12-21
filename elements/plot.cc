@@ -277,7 +277,7 @@ ReturnCode configure_style(
   auto domain_y = find_ptr(scales, SCALE_DEFAULT_Y);
 
   static const ParserDefinitions pdefs = {
-    {"axis-x-type", bind(&domain_configure, _1, domain_x)},
+    {"axis-x", bind(&domain_configure, _1, domain_x)},
     {"axis-x-min", bind(&configure_float_opt, _1, &domain_x->min)},
     {"axis-x-max", bind(&configure_float_opt, _1, &domain_x->max)},
     {
@@ -294,7 +294,7 @@ ReturnCode configure_style(
           bind(&axis_configure_label_placement, _1, &config->axis_bottom.label_placement),
       })
     },
-    {"axis-y-type", bind(&domain_configure, _1, domain_y)},
+    {"axis-y", bind(&domain_configure, _1, domain_y)},
     {"axis-y-min", bind(&configure_float_opt, _1, &domain_y->min)},
     {"axis-y-max", bind(&configure_float_opt, _1, &domain_y->max)},
     {

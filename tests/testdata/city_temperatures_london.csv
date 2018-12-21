@@ -1,4 +1,4 @@
-city,month,temperature
+city,month,temperature,temperature_str
 London,Jan,3.9,3.9°C
 London,Feb,4.2,4.2°C
 London,Mar,5.7,5.7°C

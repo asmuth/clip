@@ -2,9 +2,8 @@ width: 1200px;
 height: 800px;
 
 plot {
-  data: csv('tests/testdata/measurement.csv');
-  x: $0;
-  y: $2;
+  x: csv('tests/testdata/measurement.csv', time);
+  y: csv('tests/testdata/measurement.csv', value2);
 
   margin: 300px;
 
