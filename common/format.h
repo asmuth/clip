@@ -36,9 +36,7 @@
 
 namespace plotfx {
 
-struct Formatter {
-  std::function<std::string (const Value&)> format_value;
-};
+using Formatter = std::function<std::string (const Value&)>;
 
 Formatter format_decimal_fixed(size_t precision);
 Formatter format_decimal_scientific(size_t precision);

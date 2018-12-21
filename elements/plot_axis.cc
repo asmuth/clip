@@ -48,8 +48,7 @@ static const double kDefaultTickLengthPT = 4;
 AxisDefinition::AxisDefinition() :
     mode(AxisMode::AUTO),
     label_position(AxisLabelPosition::OUTSIDE),
-    tick_position(AxisLabelPosition::INSIDE),
-    label_formatter(format_decimal_fixed(1)) {}
+    tick_position(AxisLabelPosition::INSIDE) {}
 
 ReturnCode parseAxisMode(
     const std::string& str,
@@ -487,7 +486,7 @@ ReturnCode axis_place_labels_geom(
   for (size_t i = 0; i < num_ticks; ++i) {
     axis->labels.emplace_back(
         axis->ticks[i],
-        axis->label_formatter.format_value(tick_values[i]));
+        axis->label_formatter(tick_values[i]));
   }
 
   return OK;
@@ -519,7 +518,7 @@ ReturnCode axis_place_labels_categorical(
   for (size_t i = 0; i < label_positions.size(); ++i) {
     axis->labels.emplace_back(
         label_positions[i],
-        axis->label_formatter.format_value(label_values[i]));
+        axis->label_formatter(label_values[i]));
   }
 
   return OK;
@@ -577,6 +576,15 @@ ReturnCode axis_resolve(
   auto domain = find_ptr(scales, axis->scale);
   if (!domain) {
     return ReturnCode::errorf("EARG", "scale not found: $0", axis->scale);
+  }
+
+  if (!axis->label_formatter) {
+    // TODO: improved automatic formatter config
+    if (domain->kind == DomainKind::CATEGORICAL) {
+      axis->label_formatter = format_string();
+    } else {
+      axis->label_formatter = format_decimal_fixed(1);
+    }
   }
 
   switch (axis->tick_position) {

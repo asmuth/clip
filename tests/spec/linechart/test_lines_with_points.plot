@@ -4,7 +4,6 @@ plot {
   y: var(temperature);
   group: var(city);
 
-  axis-x-format: string;
   axis-y-min: -10;
   axis-y-max: 32;
   axis-top: off;
