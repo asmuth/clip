@@ -33,6 +33,7 @@
 #include <stdlib.h>
 #include <string>
 #include <stdarg.h>
+#include <initializer_list>
 #include "stringutil.h"
 #include "plotfx.h"
 
@@ -111,6 +112,17 @@ protected:
   std::string code_;
   std::string message_;
 };
+
+inline ReturnCode try_chain(
+    const std::initializer_list<std::function<ReturnCode ()>>& op) {
+  for (const auto& o : op) {
+    if (auto rc = o(); !rc) {
+      return rc;
+    }
+  }
+
+  return OK;
+}
 
 } // namespace plotfx
 

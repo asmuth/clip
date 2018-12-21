@@ -43,6 +43,7 @@
 #include "legend.h"
 
 using namespace std::placeholders;
+using std::ref;
 
 namespace plotfx {
 namespace plot {
@@ -144,10 +145,35 @@ ReturnCode configure_layer(
   return OK;
 }
 
-ReturnCode configure_scales_auto(
+ReturnCode configure_layers(
+    const plist::PropertyList& plist,
+    const Document& doc,
+    const DataContext& data,
+    const DomainMap& scales,
+    PlotConfig* config) {
+  static const ParserDefinitions pdefs_layer = {
+    {"layer", bind(&configure_layer, _1, doc, data, scales, config)}
+  };
+
+  return parseAll(plist, pdefs_layer);
+}
+
+ReturnCode configure_scales(
     const plist::PropertyList& plist,
     const DataContext& data,
     DomainMap* scales) {
+  {
+    DomainConfig d;
+    scales->emplace(SCALE_DEFAULT_X, d);
+  }
+
+  {
+    DomainConfig d;
+    d.padding = 0.1f;
+    d.min_auto_snap_zero = true;
+    scales->emplace(SCALE_DEFAULT_Y, d);
+  }
+
   for (const auto& prop : plist) {
     if (prop.name != "layer") {
       continue;
@@ -195,11 +221,36 @@ ReturnCode configure_scales_auto(
   return OK;
 }
 
-ReturnCode configure(
+ReturnCode configure_data_refs(
+    const plist::PropertyList& plist,
+    DataContext* data) {
+  SeriesRef data_x;
+  SeriesRef data_y;
+  SeriesRef data_group;
+
+  auto rc = parseAll(plist, {
+    {"x", configure_series_fn(*data, &data_x)},
+    {"y", configure_series_fn(*data, &data_y)},
+    {"group", configure_series_fn(*data, &data_group)},
+  });
+
+  if (!rc) {
+    return rc;
+  }
+
+  /* extend data context */
+  data->defaults["x"] = data_x;
+  data->defaults["y"] = data_y;
+  data->defaults["group"] = data_group;
+  return OK;
+}
+
+ReturnCode configure_style(
     const plist::PropertyList& plist,
     const Document& doc,
+    DomainMap* scales,
     PlotConfig* config) {
-  // FIXME
+  // TODO: improved style configuration
   config->axis_top.font = doc.font_sans;
   config->axis_top.label_font_size = doc.font_size;
   config->axis_top.border_color = doc.border_color;
@@ -222,38 +273,10 @@ ReturnCode configure(
   config->margins[2] = from_em(1.0, doc.font_size);
   config->margins[3] = from_em(1.0, doc.font_size);
 
-  DomainMap scales;
+  auto domain_x = find_ptr(scales, SCALE_DEFAULT_X);
+  auto domain_y = find_ptr(scales, SCALE_DEFAULT_Y);
 
-  {
-    DomainConfig d;
-    scales.emplace(SCALE_DEFAULT_X, d);
-  }
-
-  {
-    DomainConfig d;
-    d.padding = 0.1f;
-    d.min_auto_snap_zero = true;
-    scales.emplace(SCALE_DEFAULT_Y, d);
-  }
-
-  auto domain_x = find_ptr(&scales, SCALE_DEFAULT_X);
-  auto domain_y = find_ptr(&scales, SCALE_DEFAULT_Y);
-
-  SeriesRef data_x;
-  SeriesRef data_y;
-  SeriesRef data_group;
-
-  /* load data source */
-  DataContext data;
-  if (auto rc = configure_datasource(plist, &data); !rc) {
-    return rc;
-  }
-
-  /* parse properties */
   static const ParserDefinitions pdefs = {
-    {"x", configure_series_fn(data, &data_x)},
-    {"y", configure_series_fn(data, &data_y)},
-    {"group", configure_series_fn(data, &data_group)},
     {"axis-x-type", bind(&domain_configure, _1, domain_x)},
     {"axis-x-min", bind(&configure_float_opt, _1, &domain_x->min)},
     {"axis-x-max", bind(&configure_float_opt, _1, &domain_x->max)},
@@ -343,42 +366,30 @@ ReturnCode configure(
     return rc;
   }
 
-  /* extend data context */
-  data.defaults["x"] = data_x;
-  data.defaults["y"] = data_y;
-  data.defaults["group"] = data_group;
+  return OK;
+}
 
-  /* configure legend */
-  if (auto rc = legend_configure_all(doc, plist, &config->legends); !rc) {
-    return rc;
-  }
+ReturnCode configure(
+    const plist::PropertyList& plist,
+    const Document& doc,
+    PlotConfig* config) {
+  DataContext data;
+  DomainMap scales;
 
-  /* fit scales */
-  if (auto rc = configure_scales_auto(plist, data, &scales); !rc) {
-    return rc;
-  }
-
-  /* configure layers */
-  static const ParserDefinitions pdefs_layer = {
-    {"layer", bind(&configure_layer, _1, doc, data, scales, config)}
-  };
-
-  if (auto rc = parseAll(plist, pdefs_layer); !rc.isSuccess()) {
-    return rc;
-  }
-
-  /* resolve axes */
-  if (auto rc = axis_resolve(
-        scales,
+  return try_chain({
+    bind(&configure_datasource, ref(plist), &data),
+    bind(&configure_data_refs, ref(plist), &data),
+    bind(&configure_scales, ref(plist), ref(data), &scales),
+    bind(&configure_style, ref(plist), doc, &scales, ref(config)),
+    bind(&configure_layers, ref(plist), doc, ref(data), ref(scales), ref(config)),
+    bind(&legend_configure_all, doc, ref(plist), &config->legends),
+    bind(&axis_resolve,
+        ref(scales),
         &config->axis_top,
         &config->axis_right,
         &config->axis_bottom,
-        &config->axis_left);
-        !rc) {
-    return rc;
-  }
-
-  return OK;
+        &config->axis_left),
+  });
 }
 
 } // namespace plot
