@@ -103,6 +103,7 @@ ReturnCode configure_layer(
     const Document& doc,
     const DataContext& data,
     const DomainMap& scales,
+    LegendItemMap* legend_items,
     PlotConfig* config) {
   std::string type = "points";
   static const ParserDefinitions pdefs = {
@@ -124,7 +125,7 @@ ReturnCode configure_layer(
 
   if (type == "lines")
     layer_builder = elem_builder<lines::PlotLinesConfig>(
-        bind(&lines::configure, _1, _2, _3, scales, _4),
+        bind(&lines::configure, _1, _2, _3, scales, legend_items, _4),
         &lines::draw);
 
   if (type == "points")
@@ -150,9 +151,10 @@ ReturnCode configure_layers(
     const Document& doc,
     const DataContext& data,
     const DomainMap& scales,
+    LegendItemMap* legend_items,
     PlotConfig* config) {
   static const ParserDefinitions pdefs_layer = {
-    {"layer", bind(&configure_layer, _1, doc, data, scales, config)}
+    {"layer", bind(&configure_layer, _1, doc, data, scales, legend_items, config)}
   };
 
   return parseAll(plist, pdefs_layer);
@@ -376,14 +378,25 @@ ReturnCode configure(
     PlotConfig* config) {
   DataContext data = data_in;
   DomainMap scales;
+  LegendItemMap legend_items;
 
   return try_chain({
     bind(&configure_datasource, ref(plist), &data),
     bind(&configure_data_refs, ref(plist), &data),
     bind(&configure_scales, ref(plist), ref(data), &scales),
     bind(&configure_style, ref(plist), doc, &scales, ref(config)),
-    bind(&configure_layers, ref(plist), doc, ref(data), ref(scales), ref(config)),
-    bind(&legend_configure_all, doc, ref(plist), &config->legends),
+    bind(&configure_layers,
+        ref(plist),
+        doc,
+        ref(data),
+        ref(scales),
+        &legend_items,
+        config),
+    bind(&legend_configure_all,
+        doc,
+        ref(plist),
+        ref(legend_items),
+        &config->legends),
     bind(&axis_resolve,
         ref(scales),
         &config->axis_top,

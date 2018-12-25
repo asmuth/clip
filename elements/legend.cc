@@ -32,6 +32,7 @@
 #include "graphics/layer.h"
 #include "common/domain.h"
 #include "common/config_helpers.h"
+#include "common/utils/algo.h"
 #include "legend.h"
 
 using namespace std::placeholders;
@@ -50,14 +51,11 @@ LegendConfig::LegendConfig() :
     position_horiz(HAlign::LEFT),
     position_vert(VAlign::TOP) {}
 
-void legend_add_item(
-    LegendGroup* group,
-    const std::string& title,
-    const Color& color) {
-  LegendItem item;
-  item.title = title;
-  item.color = color;
-  group->items.emplace_back(std::move(item));
+void legend_items_add(
+    const std::string& key,
+    LegendItemGroup items,
+    LegendItemMap* map) {
+  (*map)[key].emplace_back(std::move(items));
 }
 
 ReturnCode legend_layout_items(
@@ -331,6 +329,7 @@ ReturnCode legend_configure_position(
 ReturnCode legend_configure(
     const Document& doc,
     const plist::Property& prop,
+    const LegendItemMap& item_map,
     LegendMap* map) {
   if (!plist::is_map(prop)) {
     return ERROR_INVALID_ARGUMENT;
@@ -445,6 +444,10 @@ ReturnCode legend_configure(
     return rc;
   }
 
+  if (auto items = find_ptr(item_map, config.key); items) {
+    config.groups.insert(config.groups.end(), items->begin(), items->end());
+  }
+
   map->emplace(config.key, config);
   return OK;
 }
@@ -452,6 +455,7 @@ ReturnCode legend_configure(
 ReturnCode legend_configure_all(
     const Document& doc,
     const plist::PropertyList& plist,
+    const LegendItemMap& items,
     LegendMap* config) {
   static const ParserDefinitions pdefs = {
     {
@@ -460,6 +464,7 @@ ReturnCode legend_configure_all(
           &legend_configure,
           doc,
           _1,
+          items,
           config),
     },
   };

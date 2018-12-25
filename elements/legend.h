@@ -52,12 +52,13 @@ struct LegendItem {
   Color color;
 };
 
-using LegendItemList = std::vector<LegendItem>;
-
-struct LegendGroup {
+struct LegendItemGroup {
   std::vector<LegendItem> items;
   std::string title;
 };
+
+using LegendItemList = std::vector<LegendItem>;
+using LegendItemMap = std::unordered_map<std::string, std::vector<LegendItemGroup>>;
 
 struct LegendConfig {
   LegendConfig();
@@ -75,24 +76,26 @@ struct LegendConfig {
   HAlign position_horiz;
   VAlign position_vert;
   std::string title;
-  std::vector<LegendGroup> groups;
+  std::vector<LegendItemGroup> groups;
 };
 
 using LegendMap = std::unordered_map<std::string, LegendConfig>;
 
-void legend_add_item(
-    LegendGroup* group,
-    const std::string& title,
-    const Color& color);
+void legend_items_add(
+    const std::string& key,
+    LegendItemGroup item_group,
+    LegendItemMap* map);
 
 ReturnCode legend_configure(
     const Document& doc,
     const plist::Property& prop,
+    const LegendItemMap& items,
     LegendMap* config);
 
 ReturnCode legend_configure_all(
     const Document& doc,
     const plist::PropertyList& plist,
+    const LegendItemMap& items,
     LegendMap* config);
 
 ReturnCode legend_draw(

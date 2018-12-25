@@ -63,6 +63,7 @@ ReturnCode configure(
     const DataContext& data,
     const Document& doc,
     const DomainMap& scales,
+    LegendItemMap* legend,
     PlotLinesConfig* config);
 
 } // namespace lines

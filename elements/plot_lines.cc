@@ -78,6 +78,7 @@ ReturnCode configure(
     const DataContext& data,
     const Document& doc,
     const DomainMap& scales,
+    LegendItemMap* legend,
     PlotLinesConfig* config) {
   SeriesRef data_x = find_maybe(data.defaults, "x");
   SeriesRef data_y = find_maybe(data.defaults, "y");
@@ -85,6 +86,8 @@ ReturnCode configure(
 
   std::string scale_x = SCALE_DEFAULT_X;
   std::string scale_y = SCALE_DEFAULT_Y;
+
+  std::string legend_key = LEGEND_DEFAULT;
 
   std::optional<Color> color_default;
   SeriesRef color_var = find_maybe(data.defaults, "color");
