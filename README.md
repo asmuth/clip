@@ -4,17 +4,15 @@ PlotFX
 [![Build Status](https://img.shields.io/travis/plotfx/plotfx/master.svg?style=flat-square)](http://travis-ci.org/plotfx/plotfx)
 ![BSD-License](https://img.shields.io/badge/license-BSD-blue.svg?style=flat-square)
 
-`plotfx` is a command line tool for creating charts and other data-driven
-visualizations. It is partially based on ideas from the "Grammar of Graphics" [0].
+`plotfx` is a standalone tool for creating charts and other data-driven graphics.
+
+It allows you to create and customize visualizations using a lightweight syntax
+that is very similar to CSS. You can run PlotFX from the command line, where it
+generates SVG, PNG and PDF output files. Additionally, you can embed it into your
+own application using the C API.
+
+PlotFX is partially based on ideas from the "Grammar of Graphics" [0].
 One of the main goals for PlotFX is that using it should be simple and fun.
-
-PlotFX is a standalone tool - it is not required to know any specific programming
-language to use it. Charts are specified using a lightweight syntax that is very
-similar to CSS and input data is usually read from CSV files.
-
-You can run PlotFX from the command line, where it generates SVG, PNG and PDF
-output files. Additionally, you can embed it into your own application using the
-C API.
 
 **WARNING**: The project is currently a work-in-progress. I'm currently working
 on removing the old SQL chart specification language and replacing it with the
@@ -27,7 +25,7 @@ new CSS-like syntax. This might take a while...
 Getting Started
 ---------------
 
-Here is how to generate a simple line chart using plotfx:
+Here is how to create a simple line chart using plotfx:
 
     $ plotfx -in example_chart.plot -out example_chart.svg
 
