@@ -35,14 +35,25 @@ Output File (`example_chart.svg`):
 
 Input File (`example_chart.plot`):
 
+    width: 1200px;
+    height: 480px;
+
     plot {
+      data: csv('tests/testdata/city_temperatures.csv');
+      x: month;
+      y: temperature;
+      group: city;
+
       axis-y-min: -10;
       axis-y-max: 32;
 
       layer {
-        x: csv('data.csv', month);
-        y: csv('data.csv', temperature);
-        group: csv('data.csv', city);
+        type: lines;
+        stroke: 2pt;
+      }
+
+      legend {
+        position: top left inside;
       }
     }
 
