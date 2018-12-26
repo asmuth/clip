@@ -45,8 +45,7 @@ public:
           "#3d96ae",
           "#db843d",
           }) :
-          colors_(colors),
-          color_index_(0) {}
+          colors_(colors) {}
 
   Color get(size_t seq) const {
     Color c;
@@ -54,15 +53,8 @@ public:
     return c;
   }
 
-  Color next() {
-    Color c;
-    c.parse(colors_[color_index_++ % colors_.size()]);
-    return c;
-  }
-
 protected:
   std::vector<std::string> colors_;
-  size_t color_index_;
 };
 
 } // namespace plotfx
