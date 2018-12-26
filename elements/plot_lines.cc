@@ -75,13 +75,14 @@ ReturnCode draw(
 
 ReturnCode build_legend(
     const PlotLinesConfig& config,
+    const std::string& title,
     const std::string& legend_key,
     LegendItemMap* legend) {
   LegendItemGroup legend_items;
 
   for (const auto& g : config.groups) {
     LegendItem li;
-    li.title = g.key;
+    li.title = g.key.empty() ? title :g.key;
     li.color = config.colors.empty()
         ? Color{}
         : config.colors[g.begin % config.colors.size()];
@@ -107,6 +108,8 @@ ReturnCode configure(
   std::string scale_x = SCALE_DEFAULT_X;
   std::string scale_y = SCALE_DEFAULT_Y;
 
+  std::string title;
+
   std::string legend_key = LEGEND_DEFAULT;
 
   std::optional<Color> color;
@@ -122,6 +125,7 @@ ReturnCode configure(
     {"y", configure_series_fn(data, &data_y)},
     {"y-scale", bind(&configure_string, _1, &scale_y)},
     {"group", configure_series_fn(data, &data_group)},
+    {"title", bind(&configure_string, _1, &title)},
     {"color", configure_color_opt(&color)},
     {"colors", configure_series_fn(data, &colors)},
     {"stroke", bind(&configure_measure_rel, _1, doc.dpi, doc.font_size, &line_width)},
@@ -178,7 +182,7 @@ ReturnCode configure(
       groups_to_colors(config->groups, color_palette));
 
   /* build legend items */
-  if (auto rc = build_legend(*config, legend_key, legend); !rc) {
+  if (auto rc = build_legend(*config, title, legend_key, legend); !rc) {
     return rc;
   }
 

@@ -10,6 +10,7 @@ plot {
 
   layer {
     type: lines;
+    title: "London";
   }
 
   layer {
@@ -19,5 +20,9 @@ plot {
   layer {
     type: labels;
     label: csv('tests/testdata/city_temperatures_london.csv', temperature_str);
+  }
+
+  legend {
+    position: top left inside;
   }
 }

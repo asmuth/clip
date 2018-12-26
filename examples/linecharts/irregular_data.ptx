@@ -2,16 +2,20 @@ width: 1200px;
 height: 480px;
 
 plot {
-  series {
-    xs: csv('examples/data/irregular_data2.csv', 0);
-    ys: csv('examples/data/irregular_data2.csv', 1);
-    point-size: 3pt;
-    title: "series 1";
+  data: csv('examples/data/irregular_data.csv');
+  x: x;
+  y: y;
+  group: series;
+
+  layer {
+    type: lines;
   }
-  series {
-    xs: csv('examples/data/irregular_data1.csv', 0);
-    ys: csv('examples/data/irregular_data1.csv', 1);
-    point-size: 3pt;
-    title: "series 1";
+
+  layer {
+    type: points;
+  }
+
+  legend {
+    position: top left inside;
   }
 }
