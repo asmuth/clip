@@ -296,6 +296,7 @@ ReturnCode configure_style(
           bind(&axis_configure_label_placement, _1, &config->axis_bottom.label_placement),
       })
     },
+    {"axis-x-padding", bind(&configure_float, _1, &domain_x->padding)},
     {"axis-y", bind(&domain_configure, _1, domain_y)},
     {"axis-y-min", bind(&configure_float_opt, _1, &domain_y->min)},
     {"axis-y-max", bind(&configure_float_opt, _1, &domain_y->max)},
@@ -313,6 +314,7 @@ ReturnCode configure_style(
           bind(&axis_configure_label_placement, _1, &config->axis_right.label_placement),
       })
     },
+    {"axis-y-padding", bind(&configure_float, _1, &domain_y->padding)},
     {"axis-top", bind(&parseAxisModeProp, _1, &config->axis_top.mode)},
     {"axis-top-format", bind(&confgure_format, _1, &config->axis_top.label_formatter)},
     {

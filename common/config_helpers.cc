@@ -388,7 +388,8 @@ ParserFn configure_var(
     ParserFn parser) {
   return [=] (const plist::Property& prop) -> ReturnCode {
     if (plist::is_enum(prop, "csv") ||
-        plist::is_enum(prop, "var")) {
+        plist::is_enum(prop, "var") ||
+        plist::is_list(prop)) {
       return configure_series(prop, ctx, series);
     } else {
       return parser(prop);
