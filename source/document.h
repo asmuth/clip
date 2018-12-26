@@ -1,6 +1,6 @@
 /**
  * This file is part of the "plotfx" project
- *   Copyright (c) 2011-2014 Paul Asmuth, Google Inc.
+ *   Copyright (c) 2018 Paul Asmuth
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -27,25 +27,55 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
-#include <stdlib.h>
-#include "canvas.h"
-#include "../core/layer.h"
-#include "areachart.h"
+#pragma once
+#include "utils/return_code.h"
+#include "source/color_scheme.h"
+#include "source/data_model.h"
+#include "graphics/measure.h"
+#include "graphics/color.h"
+#include "graphics/text.h"
+#include "element.h"
 
 namespace plotfx {
-namespace chart {
+class Layer;
 
-char AreaChart::kDefaultLineStyle[] = "none";
-char AreaChart::kDefaultLineWidth[] = "1";
-char AreaChart::kDefaultPointStyle[] = "none";
-char AreaChart::kDefaultPointSize[] = "2";
+struct Document {
+  Document();
+  Measure width;
+  Measure height;
+  ColorScheme color_scheme;
+  Color background_color;
+  Color text_color;
+  Color border_color;
+  FontInfo font_serif;
+  FontInfo font_sans;
+  FontInfo font_mono;
+  std::vector<ElementRef> roots;
+  DataContext data;
+  double dpi;
+  Measure font_size;
+};
 
-AreaChart::AreaChart(
-    chart::Canvas* canvas,
-    bool stacked) :
-    Drawable(canvas),
-    stacked_(stacked) {}
+ReturnCode document_load(
+    const PropertyList& plist,
+    Document* tree);
 
-}
-}
+ReturnCode document_load(
+    const std::string& spec,
+    Document* tree);
+
+ReturnCode document_render(
+    const Document& doc,
+    const std::string& format,
+    const std::string& filename);
+
+ReturnCode document_render_svg(
+    const Document& doc,
+    const std::string& filename);
+
+ReturnCode document_render_png(
+    const Document& doc,
+    const std::string& filename);
+
+} // namespace plotfx
+

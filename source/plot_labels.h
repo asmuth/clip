@@ -33,40 +33,39 @@
 #include <plist/plist.h>
 #include <graphics/layer.h>
 #include <graphics/viewport.h>
-#include <common/domain.h>
-#include <common/element.h>
-#include <common/config_helpers.h>
-#include <common/utils/algo.h>
+#include <source/domain.h>
+#include <source/element.h>
+#include <source/config_helpers.h>
 #include "plot_axis.h"
 #include "plot.h"
-#include "legend.h"
 
 namespace plotfx {
 namespace plot {
-namespace lines {
+namespace labels {
 
-struct PlotLinesConfig {
+struct PlotLabelsConfig {
   std::vector<double> x;
   std::vector<double> y;
-  std::vector<DataGroup> groups;
-  std::vector<Color> colors;
-  Measure line_width;
+  std::vector<std::string> labels;
+  FontInfo label_font;
+  Measure label_padding;
+  Measure label_font_size;
+  Color label_color;
 };
 
 ReturnCode draw(
-    const PlotLinesConfig& config,
+    const PlotLabelsConfig& config,
     const Rectangle& clip,
-    Layer* layer);
+    Layer* layer);;
 
 ReturnCode configure(
     const plist::PropertyList& plist,
     const DataContext& data,
     const Document& doc,
     const DomainMap& scales,
-    LegendItemMap* legend,
-    PlotLinesConfig* config);
+    PlotLabelsConfig* config);
 
-} // namespace lines
+} // namespace labels
 } // namespace plot
 } // namespace plotfx
 

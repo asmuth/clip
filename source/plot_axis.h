@@ -35,8 +35,8 @@
 #include <graphics/layer.h>
 #include <graphics/viewport.h>
 #include <utils/return_code.h>
-#include <common/format.h>
-#include <common/dimension.h>
+#include <source/format.h>
+#include <source/dimension.h>
 
 namespace plotfx {
 struct DomainConfig;

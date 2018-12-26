@@ -30,9 +30,9 @@
 #include "plot_axis.h"
 #include <assert.h>
 #include <iostream>
-#include <common/config_helpers.h>
-#include <common/domain.h>
-#include "common/utils/algo.h"
+#include <source/config_helpers.h>
+#include <source/domain.h>
+#include "source/utils/algo.h"
 #include <graphics/text.h>
 #include <graphics/layout.h>
 #include <graphics/brush.h>

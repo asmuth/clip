@@ -34,9 +34,9 @@
 #include <graphics/brush.h>
 #include <graphics/text.h>
 #include <graphics/layout.h>
-#include "common/config_helpers.h"
-#include "common/element_factory.h"
-#include "common/utils/algo.h"
+#include "source/config_helpers.h"
+#include "source/element_factory.h"
+#include "source/utils/algo.h"
 #include "plot_labels.h"
 #include "plot_lines.h"
 #include "plot_points.h"

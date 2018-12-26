@@ -1,6 +1,7 @@
 /**
  * This file is part of the "plotfx" project
- *   Copyright (c) 2011-2014 Paul Asmuth, Google Inc.
+ *   Copyright (c) 2018 Paul Asmuth
+ *   Copyright (c) 2014 Paul Asmuth, Google Inc.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -28,67 +29,40 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 #pragma once
-#include <algorithm>
-#include <math.h>
 #include <stdlib.h>
-#include <vector>
-#include <string>
-#include <optional>
-#include <unordered_map>
-#include "utils/return_code.h"
-#include "plist/plist.h"
-#include "common/color_scheme.h"
-#include "common/data_model.h"
+#include <plist/plist.h>
+#include <graphics/layer.h>
+#include <graphics/viewport.h>
+#include <source/domain.h>
+#include <source/element.h>
+#include <source/config_helpers.h>
+#include "plot_axis.h"
+#include "plot.h"
 
 namespace plotfx {
+namespace plot {
+namespace points {
 
-enum class DomainKind {
-  AUTO, LINEAR, LOGARITHMIC, CATEGORICAL
+struct PlotPointsConfig {
+  std::vector<double> x;
+  std::vector<double> y;
+  std::vector<Color> colors;
+  Measure point_size;
 };
 
-struct DomainConfig {
-  DomainConfig();
-  DomainKind kind;
-  bool inverted;
-  std::optional<double> min;
-  std::optional<double> min_auto;
-  bool min_auto_snap_zero;
-  std::optional<double> max;
-  std::optional<double> max_auto;
-  std::optional<double> log_base;
-  std::vector<std::string> categories;
-  std::unordered_map<std::string, double> map;
-  double padding;
-};
+ReturnCode draw(
+    const PlotPointsConfig& config,
+    const Rectangle& clip,
+    Layer* layer);
 
-using DomainMap = std::unordered_map<std::string, DomainConfig>;
+ReturnCode configure(
+    const plist::PropertyList& plist,
+    const DataContext& data,
+    const Document& doc,
+    const DomainMap& scales,
+    PlotPointsConfig* config);
 
-static const std::string SCALE_DEFAULT_X = "x";
-static const std::string SCALE_DEFAULT_Y = "y";
-
-void domain_fit(const Series& data, DomainConfig* domain);
-
-size_t domain_cardinality(const DomainConfig& domain);
-
-double domain_translate(
-    const DomainConfig& domain,
-    const Value& value);
-
-std::vector<double> domain_translate(
-    const DomainConfig& domain,
-    const Series& series);
-
-Value domain_untranslate(
-    const DomainConfig& domain,
-    double data);
-
-Series domain_untranslate(
-    const DomainConfig& domain,
-    const std::vector<double>& data);
-
-ReturnCode domain_configure(
-    const plist::Property& prop,
-    DomainConfig* domain);
-
+} // namespace points
+} // namespace plot
 } // namespace plotfx
 

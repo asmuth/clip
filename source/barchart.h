@@ -31,7 +31,7 @@
 #define _libstx_BARCHART_H
 #include <stdlib.h>
 #include <memory>
-#include "../core/layer.h"
+#include "../source/layer.h"
 #include "canvas.h"
 #include "axisdefinition.h"
 #include "colorpalette.h"

@@ -27,25 +27,31 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-#pragma once
+#include "element_factory.h"
+#include "source/plot.h"
 #include <unordered_map>
-#include <optional>
-#include <plist/plist.h>
-#include "utils/return_code.h"
-#include "common/data_model.h"
 
 namespace plotfx {
 
-using Formatter = std::function<std::string (const Value&)>;
+using ElementConfigureFn = std::function<ReturnCode (const Document&, const PropertyList&, ElementRef*)>;
 
-Formatter format_decimal_fixed(size_t precision);
-Formatter format_decimal_scientific(size_t precision);
-Formatter format_datetime(const std::string& fmt);
-Formatter format_string();
+static std::unordered_map<std::string, ElementBuilder> elems = {
+  {"plot", elem_builder<plot::PlotConfig>(&plot::configure, &plot::draw)},
+};
 
-ReturnCode confgure_format(
-    const plist::Property& prop,
-    Formatter* formatter);
+ReturnCode buildElement(
+    const std::string& name,
+    const plist::PropertyList& plist,
+    const DataContext& ctx,
+    const Document& doc,
+    ElementRef* elem) {
+  const auto& elem_entry = elems.find(name);
+  if (elem_entry == elems.end()) {
+    return ReturnCode::errorf("NOTFOUND", "no such element: $0", name);
+  }
+
+  return elem_entry->second(plist, ctx, doc, elem);
+}
 
 } // namespace plotfx
 

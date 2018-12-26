@@ -1,6 +1,7 @@
 /**
  * This file is part of the "plotfx" project
  *   Copyright (c) 2018 Paul Asmuth
+ *   Copyright (c) 2014 Paul Asmuth, Google Inc.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -28,35 +29,84 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 #pragma once
+#include <memory>
+#include <vector>
 #include <string>
-#include <unordered_map>
-#include "common/domain.h"
-#include "common/data_model.h"
+#include <tuple>
+#include "graphics/layer.h"
+#include "graphics/layout.h"
+#include "source/document.h"
 
 namespace plotfx {
 
-struct DimensionConfig {
-  std::string key;
-  DomainConfig domain;
+const std::string LEGEND_DEFAULT = "default";
+
+enum class LegendPlacement {
+  OFF,
+  INSIDE,
+  OUTSIDE
 };
 
-using DimensionMap = std::unordered_map<std::string, DimensionConfig>;
+struct LegendItem {
+  std::string title;
+  Color color;
+};
 
-template <typename T>
-using DimensionMapFn = std::function<std::vector<T> (const Series&)>;
+struct LegendItemGroup {
+  std::vector<LegendItem> items;
+  std::string title;
+};
 
-void dimension_add(
-    DimensionMap* map,
-    const std::string& key);
+using LegendItemList = std::vector<LegendItem>;
+using LegendItemMap = std::unordered_map<std::string, std::vector<LegendItemGroup>>;
 
-std::vector<Color> series_to_colors(
-    SeriesRef series,
-    const DomainConfig& domain_config,
-    const ColorScheme& palette);
+struct LegendConfig {
+  LegendConfig();
+  std::string key;
+  Color text_color;
+  Color border_color;
+  FontInfo font;
+  Measure padding_horiz;
+  Measure padding_vert;
+  Measure padding_item_horiz;
+  Measure padding_item_vert;
+  Measure margins[4];
+  Measure item_margins[4];
+  LegendPlacement placement;
+  HAlign position_horiz;
+  VAlign position_vert;
+  std::string title;
+  std::vector<LegendItemGroup> groups;
+};
 
-std::vector<Color> groups_to_colors(
-    const std::vector<DataGroup>& groups,
-    const ColorScheme& palette);
+using LegendMap = std::unordered_map<std::string, LegendConfig>;
+
+ReturnCode legend_configure(
+    const Document& doc,
+    const plist::Property& prop,
+    const LegendItemMap& items,
+    LegendMap* config);
+
+ReturnCode legend_configure_all(
+    const Document& doc,
+    const plist::PropertyList& plist,
+    const LegendItemMap& items,
+    LegendMap* config);
+
+ReturnCode legend_draw(
+    const LegendConfig& legend,
+    const Rectangle& bbox,
+    Layer* layer);
+
+ReturnCode legend_draw(
+    const LegendMap& legends,
+    const Rectangle& bbox,
+    Layer* layer);
+
+void legend_items_add(
+    const std::string& key,
+    LegendItemGroup item_group,
+    LegendItemMap* map);
 
 } // namespace plotfx
 

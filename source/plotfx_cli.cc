@@ -38,7 +38,7 @@
 #include <sys/resource.h>
 #include <sys/file.h>
 #include "plotfx.h"
-#include "common/document.h"
+#include "source/document.h"
 #include "graphics/layer.h"
 #include "graphics/layer_svg.h"
 #include "graphics/layer_pixmap.h"

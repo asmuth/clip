@@ -1,7 +1,6 @@
 /**
  * This file is part of the "plotfx" project
  *   Copyright (c) 2018 Paul Asmuth
- *   Copyright (c) 2014 Paul Asmuth, Google Inc.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -29,40 +28,35 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 #pragma once
-#include <stdlib.h>
-#include <plist/plist.h>
-#include <graphics/layer.h>
-#include <graphics/viewport.h>
-#include <common/domain.h>
-#include <common/element.h>
-#include <common/config_helpers.h>
-#include "plot_axis.h"
-#include "plot.h"
+#include <string>
+#include <unordered_map>
+#include "source/domain.h"
+#include "source/data_model.h"
 
 namespace plotfx {
-namespace plot {
-namespace points {
 
-struct PlotPointsConfig {
-  std::vector<double> x;
-  std::vector<double> y;
-  std::vector<Color> colors;
-  Measure point_size;
+struct DimensionConfig {
+  std::string key;
+  DomainConfig domain;
 };
 
-ReturnCode draw(
-    const PlotPointsConfig& config,
-    const Rectangle& clip,
-    Layer* layer);
+using DimensionMap = std::unordered_map<std::string, DimensionConfig>;
 
-ReturnCode configure(
-    const plist::PropertyList& plist,
-    const DataContext& data,
-    const Document& doc,
-    const DomainMap& scales,
-    PlotPointsConfig* config);
+template <typename T>
+using DimensionMapFn = std::function<std::vector<T> (const Series&)>;
 
-} // namespace points
-} // namespace plot
+void dimension_add(
+    DimensionMap* map,
+    const std::string& key);
+
+std::vector<Color> series_to_colors(
+    SeriesRef series,
+    const DomainConfig& domain_config,
+    const ColorScheme& palette);
+
+std::vector<Color> groups_to_colors(
+    const std::vector<DataGroup>& groups,
+    const ColorScheme& palette);
+
 } // namespace plotfx
 

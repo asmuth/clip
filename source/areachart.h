@@ -36,7 +36,7 @@
 #include "continuousdomain.h"
 #include "drawable.h"
 #include "colorpalette.h"
-#include "../core/layer.h"
+#include "../source/layer.h"
 
 namespace plotfx {
 namespace chart {

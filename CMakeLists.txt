@@ -6,8 +6,8 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/extra/cm
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Werror")
 
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/common)
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/common/utils)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/source)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/source/utils)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
 find_package(Threads)
@@ -21,57 +21,57 @@ include_directories(${CAIRO_INCLUDE_DIRS} ${FREETYPE_INCLUDE_DIRS} ${HARFBUZZ_IN
 add_definitions(-DFNORDMETRIC_VERSION="unstable")
 
 add_library(plotfxlib STATIC
-    elements/plot.cc
-    elements/plot_axis.cc
-    elements/plot_labels.cc
-    elements/plot_lines.cc
-    elements/plot_points.cc
-    elements/legend.cc
-    common/config_helpers.cc
-    common/data_model.cc
-    common/dimension.cc
-    common/domain.cc
-    common/document.cc
-    common/format.cc
-    common/plist/plist.cc
-    common/plist/plist_parser.cc
-    common/graphics/path.cc
-    common/graphics/brush.cc
-    common/graphics/color.cc
-    common/graphics/geometry.cc
-    common/graphics/image.cc
-    common/graphics/layer.cc
-    common/graphics/layer_pixmap.cc
-    common/graphics/layer_svg.cc
-    common/graphics/layout.cc
-    common/graphics/measure.cc
-    common/graphics/text.cc
-    common/graphics/text_layout.cc
-    common/graphics/text_shaper.cc
-    common/graphics/rasterize.cc
-    common/graphics/png.cc
-    common/graphics/font_lookup.cc
-    common/element_factory.cc
-    common/utils/random.cc
-    common/utils/csv.cc
-    common/utils/bufferutil.cc
-    common/utils/exception.cc
-    common/utils/UnixTime.cc
-    common/utils/inspect.cc
-    common/utils/stringutil.cc
-    common/utils/duration.cc
-    common/utils/CivilTime.cc
-    common/utils/buffer.cc
-    common/utils/fileutil.cc
-    common/utils/file.cc
-    common/utils/flagparser.cc
-    common/utils/ISO8601.cc
-    common/utils/UTF8.cc
-    common/utils/wallclock.cc)
+    source/plot.cc
+    source/plot_axis.cc
+    source/plot_labels.cc
+    source/plot_lines.cc
+    source/plot_points.cc
+    source/legend.cc
+    source/config_helpers.cc
+    source/data_model.cc
+    source/dimension.cc
+    source/domain.cc
+    source/document.cc
+    source/format.cc
+    source/plist/plist.cc
+    source/plist/plist_parser.cc
+    source/graphics/path.cc
+    source/graphics/brush.cc
+    source/graphics/color.cc
+    source/graphics/geometry.cc
+    source/graphics/image.cc
+    source/graphics/layer.cc
+    source/graphics/layer_pixmap.cc
+    source/graphics/layer_svg.cc
+    source/graphics/layout.cc
+    source/graphics/measure.cc
+    source/graphics/text.cc
+    source/graphics/text_layout.cc
+    source/graphics/text_shaper.cc
+    source/graphics/rasterize.cc
+    source/graphics/png.cc
+    source/graphics/font_lookup.cc
+    source/element_factory.cc
+    source/utils/random.cc
+    source/utils/csv.cc
+    source/utils/bufferutil.cc
+    source/utils/exception.cc
+    source/utils/UnixTime.cc
+    source/utils/inspect.cc
+    source/utils/stringutil.cc
+    source/utils/duration.cc
+    source/utils/CivilTime.cc
+    source/utils/buffer.cc
+    source/utils/fileutil.cc
+    source/utils/file.cc
+    source/utils/flagparser.cc
+    source/utils/ISO8601.cc
+    source/utils/UTF8.cc
+    source/utils/wallclock.cc)
 
 set(PLOTFX_LDFLAGS plotfxlib ${CAIRO_LIBRARIES} ${FREETYPE_LIBRARIES} ${HARFBUZZ_LIBRARIES} ${HARFBUZZ_ICU_LIBRARIES} ${PNG_LIBRARIES} ${FONTCONFIG_LIBRARIES})
 
-add_executable(plotfx common/platform/plotfx_cli.cc)
+add_executable(plotfx source/plotfx_cli.cc)
 target_link_libraries(plotfx ${PLOTFX_LDFLAGS})
 install(TARGETS plotfx DESTINATION bin)
 

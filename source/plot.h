@@ -1,6 +1,7 @@
 /**
  * This file is part of the "plotfx" project
  *   Copyright (c) 2018 Paul Asmuth
+ *   Copyright (c) 2014 Paul Asmuth, Google Inc.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -27,31 +28,44 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-#include "element_factory.h"
-#include "elements/plot.h"
-#include <unordered_map>
+#pragma once
+#include <stdlib.h>
+#include <plist/plist.h>
+#include <graphics/layer.h>
+#include <graphics/viewport.h>
+#include <source/domain.h>
+#include <source/element.h>
+#include <source/document.h>
+#include <source/data_model.h>
+#include "plot_axis.h"
+#include "legend.h"
+#include "dimension.h"
 
 namespace plotfx {
+namespace plot {
+struct PlotConfig;
 
-using ElementConfigureFn = std::function<ReturnCode (const Document&, const PropertyList&, ElementRef*)>;
-
-static std::unordered_map<std::string, ElementBuilder> elems = {
-  {"plot", elem_builder<plot::PlotConfig>(&plot::configure, &plot::draw)},
+struct PlotConfig {
+  AxisDefinition axis_top;
+  AxisDefinition axis_right;
+  AxisDefinition axis_bottom;
+  AxisDefinition axis_left;
+  Measure margins[4];
+  std::vector<ElementRef> layers;
+  LegendMap legends;
 };
 
-ReturnCode buildElement(
-    const std::string& name,
+ReturnCode draw(
+    const PlotConfig& config,
+    const Rectangle& clip,
+    Layer* layer);
+
+ReturnCode configure(
     const plist::PropertyList& plist,
-    const DataContext& ctx,
+    const DataContext& data,
     const Document& doc,
-    ElementRef* elem) {
-  const auto& elem_entry = elems.find(name);
-  if (elem_entry == elems.end()) {
-    return ReturnCode::errorf("NOTFOUND", "no such element: $0", name);
-  }
+    PlotConfig* config);
 
-  return elem_entry->second(plist, ctx, doc, elem);
-}
-
+} // namespace plot
 } // namespace plotfx
 

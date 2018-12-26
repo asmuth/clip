@@ -35,7 +35,7 @@
 #include "graphics/layer_pixmap.h"
 #include "graphics/layout.h"
 #include "graphics/font_lookup.h"
-#include "common/config_helpers.h"
+#include "source/config_helpers.h"
 #include "utils/fileutil.h"
 
 using namespace std::placeholders;

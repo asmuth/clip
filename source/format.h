@@ -1,7 +1,6 @@
 /**
  * This file is part of the "plotfx" project
  *   Copyright (c) 2018 Paul Asmuth
- *   Copyright (c) 2014 Paul Asmuth, Google Inc.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -29,43 +28,24 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 #pragma once
-#include <stdlib.h>
+#include <unordered_map>
+#include <optional>
 #include <plist/plist.h>
-#include <graphics/layer.h>
-#include <graphics/viewport.h>
-#include <common/domain.h>
-#include <common/element.h>
-#include <common/document.h>
-#include <common/data_model.h>
-#include "plot_axis.h"
-#include "legend.h"
-#include "dimension.h"
+#include "utils/return_code.h"
+#include "source/data_model.h"
 
 namespace plotfx {
-namespace plot {
-struct PlotConfig;
 
-struct PlotConfig {
-  AxisDefinition axis_top;
-  AxisDefinition axis_right;
-  AxisDefinition axis_bottom;
-  AxisDefinition axis_left;
-  Measure margins[4];
-  std::vector<ElementRef> layers;
-  LegendMap legends;
-};
+using Formatter = std::function<std::string (const Value&)>;
 
-ReturnCode draw(
-    const PlotConfig& config,
-    const Rectangle& clip,
-    Layer* layer);
+Formatter format_decimal_fixed(size_t precision);
+Formatter format_decimal_scientific(size_t precision);
+Formatter format_datetime(const std::string& fmt);
+Formatter format_string();
 
-ReturnCode configure(
-    const plist::PropertyList& plist,
-    const DataContext& data,
-    const Document& doc,
-    PlotConfig* config);
+ReturnCode confgure_format(
+    const plist::Property& prop,
+    Formatter* formatter);
 
-} // namespace plot
 } // namespace plotfx
 

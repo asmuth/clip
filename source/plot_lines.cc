@@ -28,45 +28,69 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-#include "plot_points.h"
+#include "plot_lines.h"
 #include <plotfx.h>
 #include <graphics/path.h>
 #include <graphics/brush.h>
 #include <graphics/text.h>
 #include <graphics/layout.h>
-#include <common/utils/algo.h>
-#include "common/config_helpers.h"
+#include "source/config_helpers.h"
 
 using namespace std::placeholders;
 
 namespace plotfx {
 namespace plot {
-namespace points {
+namespace lines {
 
-static const double kDefaultPointSizePT = 3;
+static const double kDefaultLineWidthPT = 2;
 
 ReturnCode draw(
-    const PlotPointsConfig& config,
+    const PlotLinesConfig& config,
     const Rectangle& clip,
     Layer* layer) {
-  for (size_t i = 0; i < config.x.size(); ++i) {
-    auto sx = clip.x + config.x[i] * clip.w;
-    auto sy = clip.y + (1.0 - config.y[i]) * clip.h;
-
-    const auto& color = config.colors.empty()
-        ? Color{}
-        : config.colors[i % config.colors.size()];
-
-    FillStyle style;
-    style.color = color;
-
-    // FIXME point style
+  for (const auto& group : config.groups) {
     Path path;
-    path.moveTo(sx + config.point_size, sy);
-    path.arcTo(sx, sy, config.point_size, 0, M_PI * 2);
-    fillPath(layer, clip, path, style);
+    for (size_t i = group.begin; i < group.end; ++i) {
+      auto sx = clip.x + config.x[i] * clip.w;
+      auto sy = clip.y + (1.0 - config.y[i]) * clip.h;
+
+      if (i == group.begin) {
+        path.moveTo(sx, sy);
+      } else {
+        path.lineTo(sx, sy);
+      }
+    }
+
+    StrokeStyle style;
+    style.line_width = config.line_width;
+    style.color = config.colors.empty()
+        ? Color{}
+        : config.colors[group.begin % config.colors.size()];
+
+    strokePath(layer, clip, path, style);
   }
 
+  return OK;
+}
+
+ReturnCode build_legend(
+    const PlotLinesConfig& config,
+    const std::string& title,
+    const std::string& legend_key,
+    LegendItemMap* legend) {
+  LegendItemGroup legend_items;
+
+  for (const auto& g : config.groups) {
+    LegendItem li;
+    li.title = g.key.empty() ? title : g.key;
+    li.color = config.colors.empty()
+        ? Color{}
+        : config.colors[g.begin % config.colors.size()];
+
+    legend_items.items.emplace_back(li);
+  }
+
+  legend_items_add(legend_key, legend_items, legend);
   return OK;
 }
 
@@ -75,7 +99,8 @@ ReturnCode configure(
     const DataContext& data,
     const Document& doc,
     const DomainMap& scales,
-    PlotPointsConfig* config) {
+    LegendItemMap* legend,
+    PlotLinesConfig* config) {
   SeriesRef data_x = find_maybe(data.defaults, "x");
   SeriesRef data_y = find_maybe(data.defaults, "y");
   SeriesRef data_group = find_maybe(data.defaults, "group");
@@ -83,12 +108,16 @@ ReturnCode configure(
   std::string scale_x = SCALE_DEFAULT_X;
   std::string scale_y = SCALE_DEFAULT_Y;
 
+  std::string title;
+
+  std::string legend_key = LEGEND_DEFAULT;
+
   std::optional<Color> color;
   SeriesRef colors = find_maybe(data.defaults, "colors");
   DomainConfig color_domain;
   ColorScheme color_palette;
 
-  Measure point_size;
+  Measure line_width;
 
   static const ParserDefinitions pdefs = {
     {"x", configure_series_fn(data, &data_x)},
@@ -96,9 +125,10 @@ ReturnCode configure(
     {"y", configure_series_fn(data, &data_y)},
     {"y-scale", bind(&configure_string, _1, &scale_y)},
     {"group", configure_series_fn(data, &data_group)},
+    {"title", bind(&configure_string, _1, &title)},
     {"color", configure_color_opt(&color)},
     {"colors", configure_series_fn(data, &colors)},
-    {"size", bind(&configure_measure_rel, _1, doc.dpi, doc.font_size, &point_size)},
+    {"stroke", bind(&configure_measure_rel, _1, doc.dpi, doc.font_size, &line_width)},
   };
 
   if (auto rc = parseAll(plist, pdefs); !rc) {
@@ -110,10 +140,11 @@ ReturnCode configure(
     return ReturnCode::error("EARG", "the following properties are required: x, y");
   }
 
-  if (data_x->size() != data_y->size()) {
+  if ((data_x->size() != data_y->size()) ||
+      (data_group && data_x->size() != data_group->size())) {
     return ReturnCode::error(
         "EARG",
-        "the length of the 'x' and 'y' properties must be equal");
+        "the length of the 'x', 'y' and 'group' properties must be equal");
   }
 
   /* fetch domains */
@@ -128,33 +159,37 @@ ReturnCode configure(
   }
 
   /* group data */
-  std::vector<DataGroup> groups;
   if (data_group) {
     if (data_x->size() != data_group->size()) {
       return ERROR_INVALID_ARGUMENT;
     }
 
-    groups = plotfx::series_group(*data_group);
+    config->groups = plotfx::series_group(*data_group);
   } else {
     DataGroup g;
     g.begin = 0;
     g.end = data_x->size();
-    groups.emplace_back(g);
+    config->groups.emplace_back(g);
   }
 
-  /* return element */
+  /* setup config */
   config->x = domain_translate(*domain_x, *data_x);
   config->y = domain_translate(*domain_y, *data_y);
-  config->point_size = measure_or(point_size, from_pt(kDefaultPointSizePT, doc.dpi));
+  config->line_width = measure_or(line_width, from_pt(kDefaultLineWidthPT, doc.dpi));
   config->colors = fallback(
       color,
       series_to_colors(colors, color_domain, color_palette),
-      groups_to_colors(groups, color_palette));
+      groups_to_colors(config->groups, color_palette));
+
+  /* build legend items */
+  if (auto rc = build_legend(*config, title, legend_key, legend); !rc) {
+    return rc;
+  }
 
   return OK;
 }
 
-} // namespace points
+} // namespace lines
 } // namespace plot
 } // namespace plotfx
 

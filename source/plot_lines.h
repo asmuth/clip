@@ -29,84 +29,44 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 #pragma once
-#include <memory>
-#include <vector>
-#include <string>
-#include <tuple>
-#include "graphics/layer.h"
-#include "graphics/layout.h"
-#include "common/document.h"
+#include <stdlib.h>
+#include <plist/plist.h>
+#include <graphics/layer.h>
+#include <graphics/viewport.h>
+#include <source/domain.h>
+#include <source/element.h>
+#include <source/config_helpers.h>
+#include <source/utils/algo.h>
+#include "plot_axis.h"
+#include "plot.h"
+#include "legend.h"
 
 namespace plotfx {
+namespace plot {
+namespace lines {
 
-const std::string LEGEND_DEFAULT = "default";
-
-enum class LegendPlacement {
-  OFF,
-  INSIDE,
-  OUTSIDE
+struct PlotLinesConfig {
+  std::vector<double> x;
+  std::vector<double> y;
+  std::vector<DataGroup> groups;
+  std::vector<Color> colors;
+  Measure line_width;
 };
 
-struct LegendItem {
-  std::string title;
-  Color color;
-};
+ReturnCode draw(
+    const PlotLinesConfig& config,
+    const Rectangle& clip,
+    Layer* layer);
 
-struct LegendItemGroup {
-  std::vector<LegendItem> items;
-  std::string title;
-};
-
-using LegendItemList = std::vector<LegendItem>;
-using LegendItemMap = std::unordered_map<std::string, std::vector<LegendItemGroup>>;
-
-struct LegendConfig {
-  LegendConfig();
-  std::string key;
-  Color text_color;
-  Color border_color;
-  FontInfo font;
-  Measure padding_horiz;
-  Measure padding_vert;
-  Measure padding_item_horiz;
-  Measure padding_item_vert;
-  Measure margins[4];
-  Measure item_margins[4];
-  LegendPlacement placement;
-  HAlign position_horiz;
-  VAlign position_vert;
-  std::string title;
-  std::vector<LegendItemGroup> groups;
-};
-
-using LegendMap = std::unordered_map<std::string, LegendConfig>;
-
-ReturnCode legend_configure(
-    const Document& doc,
-    const plist::Property& prop,
-    const LegendItemMap& items,
-    LegendMap* config);
-
-ReturnCode legend_configure_all(
-    const Document& doc,
+ReturnCode configure(
     const plist::PropertyList& plist,
-    const LegendItemMap& items,
-    LegendMap* config);
+    const DataContext& data,
+    const Document& doc,
+    const DomainMap& scales,
+    LegendItemMap* legend,
+    PlotLinesConfig* config);
 
-ReturnCode legend_draw(
-    const LegendConfig& legend,
-    const Rectangle& bbox,
-    Layer* layer);
-
-ReturnCode legend_draw(
-    const LegendMap& legends,
-    const Rectangle& bbox,
-    Layer* layer);
-
-void legend_items_add(
-    const std::string& key,
-    LegendItemGroup item_group,
-    LegendItemMap* map);
-
+} // namespace lines
+} // namespace plot
 } // namespace plotfx
 

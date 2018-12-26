@@ -30,9 +30,9 @@
  */
 #include <stdlib.h>
 #include "graphics/layer.h"
-#include "common/domain.h"
-#include "common/config_helpers.h"
-#include "common/utils/algo.h"
+#include "source/domain.h"
+#include "source/config_helpers.h"
+#include "source/utils/algo.h"
 #include "legend.h"
 
 using namespace std::placeholders;
