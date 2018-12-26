@@ -28,7 +28,7 @@ Getting Started
 
 Here is how to create a simple line chart using plotfx:
 
-    $ plotfx -in example_chart.ptx -out example_chart.svg
+    $ plotfx --in example_chart.ptx --out example_chart.svg
 
 Output File (`example_chart.svg`):
 
