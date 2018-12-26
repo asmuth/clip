@@ -22,10 +22,9 @@ fi
 # FIXME image diff
 if !(diff ${outfile} ${masterfile} &>/dev/null); then
   echo
-  print_error "ERROR: output files do not match:\n    - actual: ${outfile}\n    - master: ${masterfile}"
-  echo
+  print_error "ERROR: output files do not match"
   echo -e "If the modification is intended, fix by running:\n    cp ${outfile} ${masterfile}"
   echo
-  diff ${outfile} ${masterfile}
+  echo -e "To view the diff, run:\n    diff ${outfile} ${masterfile}"
   exit 1
 fi
