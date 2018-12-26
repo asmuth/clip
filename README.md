@@ -6,13 +6,14 @@ PlotFX
 
 `plotfx` is a standalone tool for creating charts and other data-driven graphics.
 
-It allows you to create and customize visualizations using a lightweight syntax
-that is very similar to CSS. You can run PlotFX from the command line, where it
-generates SVG, PNG and PDF output files. Additionally, you can embed it into your
-own application using the C API.
+Charts can be customized using a lightweight syntax that is very similar to CSS.
+You can run PlotFX from the command line, where it generates SVG, PNG and PDF
+output files. Additionally, you can embed it into your own application using the
+C API.
 
 PlotFX is partially based on ideas from the "Grammar of Graphics" [0].
-One of the main goals for PlotFX is that using it should be simple and fun.
+One of the main goals for PlotFX is that creating charts should be quick, simple
+and fun.
 
 **WARNING**: The project is currently a work-in-progress. I'm currently working
 on removing the old SQL chart specification language and replacing it with the
@@ -27,13 +28,13 @@ Getting Started
 
 Here is how to create a simple line chart using plotfx:
 
-    $ plotfx -in example_chart.plot -out example_chart.svg
+    $ plotfx -in example_chart.ptx -out example_chart.svg
 
 Output File (`example_chart.svg`):
 
-[![A simple line chart](./examples/linecharts/lines_with_points.svg)](./examples/linecharts/lines_with_points.plot)
+[![A simple line chart](./examples/linecharts/lines_with_points.svg)](./examples/linecharts/lines_with_points.ptx)
 
-Input File (`example_chart.plot`):
+Input File (`example_chart.ptx`):
 
     width: 1200px;
     height: 480px;
