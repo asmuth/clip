@@ -166,12 +166,12 @@ ReturnCode configure_scales(
     DomainMap* scales) {
   {
     DomainConfig d;
+    d.padding = 0;
     scales->emplace(SCALE_DEFAULT_X, d);
   }
 
   {
     DomainConfig d;
-    d.padding = 0.1f;
     d.min_auto_snap_zero = true;
     scales->emplace(SCALE_DEFAULT_Y, d);
   }
@@ -199,6 +199,14 @@ ReturnCode configure_scales(
 
     if (auto rc = parseAll(*prop.next, pdefs); !rc) {
       return rc;
+    }
+
+    if (!scales->count(scale_x)) {
+      scales->emplace(scale_x, DomainConfig{});
+    }
+
+    if (!scales->count(scale_y)) {
+      scales->emplace(scale_y, DomainConfig{});
     }
 
     if (data_x) {
@@ -316,6 +324,7 @@ ReturnCode configure_style(
     },
     {"axis-y-padding", bind(&configure_float, _1, &domain_y->padding)},
     {"axis-top", bind(&parseAxisModeProp, _1, &config->axis_top.mode)},
+    {"axis-top-scale", bind(&configure_string, _1, &config->axis_top.scale)},
     {"axis-top-format", bind(&confgure_format, _1, &config->axis_top.label_formatter)},
     {
       "axis-top-label-placement",
@@ -325,6 +334,7 @@ ReturnCode configure_style(
           &config->axis_top.label_placement),
     },
     {"axis-right", bind(&parseAxisModeProp, _1, &config->axis_right.mode)},
+    {"axis-right-scale", bind(&configure_string, _1, &config->axis_right.scale)},
     {"axis-right-format", bind(&confgure_format, _1, &config->axis_right.label_formatter)},
     {
       "axis-right-label-placement",
@@ -334,6 +344,7 @@ ReturnCode configure_style(
           &config->axis_right.label_placement),
     },
     {"axis-bottom", bind(&parseAxisModeProp, _1, &config->axis_bottom.mode)},
+    {"axis-bottom-scale", bind(&configure_string, _1, &config->axis_bottom.scale)},
     {"axis-bottom-format", bind(&confgure_format, _1, &config->axis_bottom.label_formatter)},
     {
       "axis-bottom-label-placement",
@@ -343,6 +354,7 @@ ReturnCode configure_style(
           &config->axis_bottom.label_placement),
     },
     {"axis-left", bind(&parseAxisModeProp, _1, &config->axis_left.mode)},
+    {"axis-left-scale", bind(&configure_string, _1, &config->axis_left.scale)},
     {"axis-left-format", bind(&confgure_format, _1, &config->axis_left.label_formatter)},
     {
       "axis-left-label-placement",

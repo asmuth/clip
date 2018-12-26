@@ -40,7 +40,7 @@ DomainConfig::DomainConfig() :
     kind(DomainKind::AUTO),
     min_auto_snap_zero(false),
     inverted(false),
-    padding(0.0f) {}
+    padding(0.1f) {}
 
 void domain_fit_continuous(const Series& data_raw, DomainConfig* domain) {
   auto data = series_to_float(data_raw);
@@ -101,7 +101,7 @@ double domain_min(const DomainConfig& domain) {
   auto min = domain.min.value_or(domain.min_auto.value_or(0));
   auto max = domain.max.value_or(domain.max_auto.value_or(0));
 
-  auto min_auto = 0;
+  double min_auto = 0;
   if (!domain.min_auto_snap_zero || min < 0) {
     min_auto = min - (max - min) * domain.padding;
   }
@@ -112,15 +112,15 @@ double domain_min(const DomainConfig& domain) {
 double domain_max(const DomainConfig& domain) {
   auto min = domain.min.value_or(domain.min_auto.value_or(0));
   auto max = domain.max.value_or(domain.max_auto.value_or(0));
-  auto max_auto = max + (max - min) * domain.padding;
+  double max_auto = max + (max - min) * domain.padding;
   return domain.max.value_or(max_auto);
 }
 
 double domain_translate_linear(
     const DomainConfig& domain,
     const Value& v) {
-  auto min = domain_min(domain);
-  auto max = domain_max(domain);
+  double min = domain_min(domain);
+  double max = domain_max(domain);
 
   auto vf = value_to_float(v);
   auto vt = (vf - min) / (max - min);
@@ -185,6 +185,8 @@ double domain_translate(
       return domain_translate_log(domain, value);
     case DomainKind::CATEGORICAL:
       return domain_translate_categorical(domain, value);
+    default:
+      return std::numeric_limits<double>::quiet_NaN();
   }
 
   return 0.0f;
