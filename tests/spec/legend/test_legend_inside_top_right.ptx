@@ -3,9 +3,9 @@ height: 480px;
 
 plot {
   data: csv('tests/testdata/city_temperatures.csv');
-  x: var(month);
-  y: var(temperature);
-  group: var(city);
+  x: month;
+  y: temperature;
+  group: city;
 
   axis-y-min: -10;
   axis-y-max: 32;

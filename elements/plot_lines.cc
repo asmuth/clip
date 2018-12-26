@@ -109,8 +109,8 @@ ReturnCode configure(
 
   std::string legend_key = LEGEND_DEFAULT;
 
-  std::optional<Color> color_default;
-  SeriesRef color_var = find_maybe(data.defaults, "color");
+  std::optional<Color> color;
+  SeriesRef colors = find_maybe(data.defaults, "colors");
   DomainConfig color_domain;
   ColorScheme color_palette;
 
@@ -122,7 +122,8 @@ ReturnCode configure(
     {"y", configure_series_fn(data, &data_y)},
     {"y-scale", bind(&configure_string, _1, &scale_y)},
     {"group", configure_series_fn(data, &data_group)},
-    {"color", configure_var(&color_var, data, configure_color_opt(&color_default))},
+    {"color", configure_color_opt(&color)},
+    {"colors", configure_series_fn(data, &colors)},
     {"width", bind(&configure_measure_rel, _1, doc.dpi, doc.font_size, &line_width)},
   };
 
@@ -172,8 +173,8 @@ ReturnCode configure(
   config->y = domain_translate(*domain_y, *data_y);
   config->line_width = measure_or(line_width, from_pt(kDefaultLineWidthPT, doc.dpi));
   config->colors = fallback(
-      series_to_colors(color_var, color_domain, color_palette),
-      color_default,
+      color,
+      series_to_colors(colors, color_domain, color_palette),
       groups_to_colors(config->groups, color_palette));
 
   /* build legend items */

@@ -3,9 +3,9 @@ height: 480px;
 
 plot {
   data: csv('examples/data/irregular_data.csv');
-  x: var(x);
-  y: var(y);
-  group: var(series);
+  x: x;
+  y: y;
+  group: series;
 
   layer {
     type: lines;

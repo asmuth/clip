@@ -287,7 +287,7 @@ ReturnCode parse_data_series_csv(
   }
 
   if (prop.size() < 2) {
-    return ERROR_INVALID_ARGUMENT; // FIXME
+    return ReturnCode::errorf("EARG", "csv() takes exactly two or more arguments, got: $0", prop.size());
   }
 
   const auto& csv_path = prop[0].value;
@@ -322,7 +322,7 @@ ReturnCode parse_data_series_csv(
 ReturnCode parse_data_series_inline(
     const plist::Property& prop,
     SeriesRef* data_ref) {
-  if (!plist::is_list(prop)) {
+  if (!plist::is_enum(prop, "inline")) {
     return ERROR_INVALID_ARGUMENT;
   }
 
@@ -339,15 +339,11 @@ ReturnCode parse_data_series_var(
     const plist::Property& prop,
     const DataContext& ctx,
     SeriesRef* data) {
-  if (!plist::is_enum(prop, "var")) {
+  if (!plist::is_value_literal(prop)) {
     return ERROR_INVALID_ARGUMENT;
   }
 
-  if (prop.size() != 1) {
-    return ReturnCode::errorf("EARG", "var() takes exactly one argument, got: $0", prop.size());
-  }
-
-  const auto& var_name = prop[0].value;
+  const auto& var_name = prop.value;
   auto var_data = find_maybe(ctx.by_name, var_name);
   if (!var_data) {
     return ReturnCode::errorf("EARG", "variable not found: '$0'", var_name);
@@ -365,12 +361,12 @@ ReturnCode configure_series(
     return parse_data_series_csv(prop, data);
   }
 
-  if (plist::is_enum(prop, "var")) {
-    return parse_data_series_var(prop, ctx, data);
+  if (plist::is_enum(prop, "inline")) {
+    return parse_data_series_inline(prop, data);
   }
 
-  if (plist::is_list(prop)) {
-    return parse_data_series_inline(prop, data);
+  if (plist::is_value_literal(prop)) {
+    return parse_data_series_var(prop, ctx, data);
   }
 
   return ERROR_INVALID_ARGUMENT;
@@ -388,8 +384,8 @@ ParserFn configure_var(
     ParserFn parser) {
   return [=] (const plist::Property& prop) -> ReturnCode {
     if (plist::is_enum(prop, "csv") ||
-        plist::is_enum(prop, "var") ||
-        plist::is_list(prop)) {
+        plist::is_enum(prop, "inline") ||
+        plist::is_value_literal(prop)) {
       return configure_series(prop, ctx, series);
     } else {
       return parser(prop);

@@ -83,8 +83,8 @@ ReturnCode configure(
   std::string scale_x = SCALE_DEFAULT_X;
   std::string scale_y = SCALE_DEFAULT_Y;
 
-  std::optional<Color> color_default;
-  SeriesRef color_var = find_maybe(data.defaults, "color");
+  std::optional<Color> color;
+  SeriesRef colors = find_maybe(data.defaults, "colors");
   DomainConfig color_domain;
   ColorScheme color_palette;
 
@@ -96,7 +96,8 @@ ReturnCode configure(
     {"y", configure_series_fn(data, &data_y)},
     {"y-scale", bind(&configure_string, _1, &scale_y)},
     {"group", configure_series_fn(data, &data_group)},
-    {"color", configure_var(&color_var, data, configure_color_opt(&color_default))},
+    {"color", configure_color_opt(&color)},
+    {"colors", configure_series_fn(data, &colors)},
     {"size", bind(&configure_measure_rel, _1, doc.dpi, doc.font_size, &point_size)},
   };
 
@@ -146,8 +147,8 @@ ReturnCode configure(
   config->y = domain_translate(*domain_y, *data_y);
   config->point_size = measure_or(point_size, from_pt(kDefaultPointSizePT, doc.dpi));
   config->colors = fallback(
-      series_to_colors(color_var, color_domain, color_palette),
-      color_default,
+      color,
+      series_to_colors(colors, color_domain, color_palette),
       groups_to_colors(groups, color_palette));
 
   return OK;

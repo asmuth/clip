@@ -1,8 +1,8 @@
 plot {
   data: csv('tests/testdata/city_temperatures.csv');
-  x: var(month);
-  y: var(temperature);
-  group: var(city);
+  x: month;
+  y: temperature;
+  group: city;
 
   axis-y: inverted;
   axis-y-min: -10;
