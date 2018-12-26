@@ -378,20 +378,5 @@ ParserFn configure_series_fn(
   return bind(&configure_series, _1, ctx, series);
 }
 
-ParserFn configure_var(
-    SeriesRef* series,
-    const DataContext& ctx,
-    ParserFn parser) {
-  return [=] (const plist::Property& prop) -> ReturnCode {
-    if (plist::is_enum(prop, "csv") ||
-        plist::is_enum(prop, "inline") ||
-        plist::is_value_literal(prop)) {
-      return configure_series(prop, ctx, series);
-    } else {
-      return parser(prop);
-    }
-  };
-}
-
 } // namespace plotfx
 

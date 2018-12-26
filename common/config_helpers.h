@@ -64,11 +64,6 @@ ReturnCode parse_classlike(
 template <typename T>
 ParserFn configure_opt(ParserFn parser);
 
-ParserFn configure_var(
-    SeriesRef* series,
-    const DataContext& ctx,
-    ParserFn parser);
-
 ParserFn configure_multiprop(const std::vector<ParserFn>& parsers);
 
 ParserFn configure_key(std::string* key);
