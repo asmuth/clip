@@ -18,4 +18,8 @@ plot {
     type: points;
     point-size: 3.3pt;
   }
+
+  legend {
+    position: top left inside;
+  }
 }

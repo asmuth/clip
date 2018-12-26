@@ -73,6 +73,26 @@ ReturnCode draw(
   return OK;
 }
 
+ReturnCode build_legend(
+    const PlotLinesConfig& config,
+    const std::string& legend_key,
+    LegendItemMap* legend) {
+  LegendItemGroup legend_items;
+
+  for (const auto& g : config.groups) {
+    LegendItem li;
+    li.title = g.key;
+    li.color = config.colors.empty()
+        ? Color{}
+        : config.colors[g.begin % config.colors.size()];
+
+    legend_items.items.emplace_back(li);
+  }
+
+  legend_items_add(legend_key, legend_items, legend);
+  return OK;
+}
+
 ReturnCode configure(
     const plist::PropertyList& plist,
     const DataContext& data,
@@ -147,7 +167,7 @@ ReturnCode configure(
     config->groups.emplace_back(g);
   }
 
-  /* return element */
+  /* setup config */
   config->x = domain_translate(*domain_x, *data_x);
   config->y = domain_translate(*domain_y, *data_y);
   config->line_width = measure_or(line_width, from_pt(kDefaultLineWidthPT, doc.dpi));
@@ -155,6 +175,11 @@ ReturnCode configure(
       series_to_colors(color_var, color_domain, color_palette),
       color_default,
       groups_to_colors(config->groups, color_palette));
+
+  /* build legend items */
+  if (auto rc = build_legend(*config, legend_key, legend); !rc) {
+    return rc;
+  }
 
   return OK;
 }

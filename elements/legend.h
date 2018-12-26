@@ -81,11 +81,6 @@ struct LegendConfig {
 
 using LegendMap = std::unordered_map<std::string, LegendConfig>;
 
-void legend_items_add(
-    const std::string& key,
-    LegendItemGroup item_group,
-    LegendItemMap* map);
-
 ReturnCode legend_configure(
     const Document& doc,
     const plist::Property& prop,
@@ -107,6 +102,11 @@ ReturnCode legend_draw(
     const LegendMap& legends,
     const Rectangle& bbox,
     Layer* layer);
+
+void legend_items_add(
+    const std::string& key,
+    LegendItemGroup item_group,
+    LegendItemMap* map);
 
 } // namespace plotfx
 
