@@ -9,7 +9,7 @@ plot {
 
   layer {
     type: lines;
-    width: 8pt;
+    stroke: 8pt;
     color: #ccc;
   }
 }

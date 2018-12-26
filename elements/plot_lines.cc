@@ -124,7 +124,7 @@ ReturnCode configure(
     {"group", configure_series_fn(data, &data_group)},
     {"color", configure_color_opt(&color)},
     {"colors", configure_series_fn(data, &colors)},
-    {"width", bind(&configure_measure_rel, _1, doc.dpi, doc.font_size, &line_width)},
+    {"stroke", bind(&configure_measure_rel, _1, doc.dpi, doc.font_size, &line_width)},
   };
 
   if (auto rc = parseAll(plist, pdefs); !rc) {
