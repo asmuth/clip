@@ -32,7 +32,7 @@ Here is how to create a simple line chart using plotfx:
 
 Output File (`example_chart.svg`):
 
-[![A simple line chart](https://plotfx.org/examples/linecharts/lines_with_points)](./examples/linecharts/lines_with_points.ptx)
+[![A simple line chart](/examples/linecharts/lines_with_points.svg)](./examples/linecharts/lines_with_points.ptx)
 
 Input File (`example_chart.ptx`):
 
