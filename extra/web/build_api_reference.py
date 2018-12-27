@@ -60,6 +60,7 @@ def main():
     {{{html}}}
   """
 
-  print(build_layout(TPL.render(tpl, {'html': html})))
+  write_file("/_reference.gen.html", html)
+
 
 main()

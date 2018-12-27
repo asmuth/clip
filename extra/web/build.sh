@@ -6,7 +6,7 @@ if [[ ! $# -eq 1 ]]; then
   exit 1
 fi
 
-output_dir="$1"
+export output_dir="$1"
 
 if [[ ! -d "${output_dir}" ]]; then
   echo "error: directory does not exist: ${output_dir}" >&2
@@ -14,5 +14,7 @@ if [[ ! -d "${output_dir}" ]]; then
 fi
 
 cp extra/web/documentation.css "${output_dir}"
+./extra/web/build_api_reference.py
+./extra/web/build_pages.py
+find "${output_dir}" -name "_*" -delete
 
-./extra/web/build_api_reference.py > $1/index.html

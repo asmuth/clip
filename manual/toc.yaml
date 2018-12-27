@@ -26,6 +26,14 @@ documentation:
         file: "faq"
 
   -
+    title: "API Reference"
+    pages:
+      -
+        title: "API Reference"
+        url: "/reference"
+        file: "reference"
+
+  -
     title: "Charts & Visualizations"
     pages:
       -
