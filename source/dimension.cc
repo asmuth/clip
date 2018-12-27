@@ -73,5 +73,26 @@ std::vector<Color> groups_to_colors(
   return colors;
 }
 
+std::vector<Measure> series_to_sizes(
+    SeriesRef series,
+    const DomainConfig& domain_config,
+    const Measure& low,
+    const Measure& high) {
+  if (!series) {
+    return {};
+  }
+
+  auto domain = domain_config;
+  domain_fit(*series, &domain);
+
+  std::vector<Measure> sizes;
+  for (const auto& v : *series) {
+    auto value = domain_translate(domain, v) * domain_cardinality(domain);
+    sizes.emplace_back(low.value + (high.value - low.value) * value);
+  }
+
+  return sizes;
+}
+
 } // namespace plotfx
 

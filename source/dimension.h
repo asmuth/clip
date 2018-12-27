@@ -45,5 +45,12 @@ std::vector<Color> groups_to_colors(
     const std::vector<DataGroup>& groups,
     const ColorScheme& palette);
 
+std::vector<Measure> series_to_sizes(
+    SeriesRef series,
+    const DomainConfig& domain_config,
+    const Measure& low,
+    const Measure& high);
+
+
 } // namespace plotfx
 

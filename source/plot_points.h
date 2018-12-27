@@ -47,7 +47,7 @@ struct PlotPointsConfig {
   std::vector<double> x;
   std::vector<double> y;
   std::vector<Color> colors;
-  Measure point_size;
+  std::vector<Measure> sizes;
 };
 
 ReturnCode draw(

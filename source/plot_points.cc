@@ -44,6 +44,8 @@ namespace plot {
 namespace points {
 
 static const double kDefaultPointSizePT = 3;
+static const double kDefaultPointSizeMinPT = 1;
+static const double kDefaultPointSizeMaxPT = 24;
 
 ReturnCode draw(
     const PlotPointsConfig& config,
@@ -57,13 +59,17 @@ ReturnCode draw(
         ? Color{}
         : config.colors[i % config.colors.size()];
 
+    auto size = config.sizes.empty()
+        ? Measure(0)
+        : config.sizes[i % config.sizes.size()];
+
     FillStyle style;
     style.color = color;
 
-    // FIXME point style
+    // TODO point style
     Path path;
-    path.moveTo(sx + config.point_size, sy);
-    path.arcTo(sx, sy, config.point_size, 0, M_PI * 2);
+    path.moveTo(sx + size, sy);
+    path.arcTo(sx, sy, size, 0, M_PI * 2);
     fillPath(layer, clip, path, style);
   }
 
@@ -88,7 +94,11 @@ ReturnCode configure(
   DomainConfig color_domain;
   ColorScheme color_palette;
 
-  Measure point_size;
+  SeriesRef sizes;
+  DomainConfig size_domain;
+  std::optional<Measure> size;
+  Measure size_min;
+  Measure size_max;
 
   static const ParserDefinitions pdefs = {
     {"x", configure_series_fn(data, &data_x)},
@@ -98,7 +108,10 @@ ReturnCode configure(
     {"group", configure_series_fn(data, &data_group)},
     {"color", configure_color_opt(&color)},
     {"colors", configure_series_fn(data, &colors)},
-    {"size", bind(&configure_measure_rel, _1, doc.dpi, doc.font_size, &point_size)},
+    {"size", bind(&configure_measure_rel_opt, _1, doc.dpi, doc.font_size, &size)},
+    {"size-min", bind(&configure_measure_rel, _1, doc.dpi, doc.font_size, &size_min)},
+    {"size-max", bind(&configure_measure_rel, _1, doc.dpi, doc.font_size, &size_max)},
+    {"sizes", configure_series_fn(data, &sizes)},
   };
 
   if (auto rc = parseAll(plist, pdefs); !rc) {
@@ -145,7 +158,16 @@ ReturnCode configure(
   /* return element */
   config->x = domain_translate(*domain_x, *data_x);
   config->y = domain_translate(*domain_y, *data_y);
-  config->point_size = measure_or(point_size, from_pt(kDefaultPointSizePT, doc.dpi));
+
+  config->sizes = fallback(
+      size,
+      series_to_sizes(
+          sizes,
+          size_domain,
+          measure_or(size_min, from_pt(kDefaultPointSizeMinPT, doc.dpi)),
+          measure_or(size_max, from_pt(kDefaultPointSizeMaxPT, doc.dpi))),
+      std::optional(from_pt(kDefaultPointSizePT, doc.dpi)));
+
   config->colors = fallback(
       color,
       series_to_colors(colors, color_domain, color_palette),

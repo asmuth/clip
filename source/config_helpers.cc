@@ -73,6 +73,20 @@ ReturnCode configure_measure_rel(
   return parse_measure_rel(prop, dpi, font_size, value);
 }
 
+ReturnCode configure_measure_rel_opt(
+    const plist::Property& prop,
+    double dpi,
+    double font_size,
+    std::optional<Measure>* value) {
+  Measure v;
+  if (auto rc = configure_measure_rel(prop, dpi, font_size, &v); !rc) {
+    return rc;
+  }
+
+  *value = v;
+  return OK;
+}
+
 ParserFn configure_multiprop(const std::vector<ParserFn>& parsers) {
   return [parsers] (const plist::Property& prop) -> ReturnCode {
     for (const auto& p : parsers) {

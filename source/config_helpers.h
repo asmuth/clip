@@ -74,6 +74,12 @@ ReturnCode configure_measure_rel(
     double font_size,
     Measure* value);
 
+ReturnCode configure_measure_rel_opt(
+    const plist::Property& prop,
+    double dpi,
+    double font_size,
+    std::optional<Measure>* value);
+
 ReturnCode configure_color(
     const plist::Property& prop,
     Color* value);

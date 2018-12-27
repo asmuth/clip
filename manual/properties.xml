@@ -78,6 +78,9 @@
     <prop name="color" />
     <prop name="colors" />
     <prop name="size" />
+    <prop name="size-min" />
+    <prop name="size-max" />
+    <prop name="sizes" />
   </elem>
 
   <elem path="plot.layer" cond="type = lines">
