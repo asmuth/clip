@@ -41,6 +41,12 @@
     <prop name="axis-left-scale" />
     <prop name="axis-left-format" />
     <prop name="axis-left-label-placement" />
+    <prop name="grid" />
+    <prop name="grid-x" />
+    <prop name="grid-y" />
+    <prop name="grid-x-scale" />
+    <prop name="grid-y-scale" />
+    <prop name="grid-stroke" />
     <prop name="margin" />
     <prop name="margin-top" />
     <prop name="margin-right" />
@@ -73,7 +79,7 @@
     <prop name="colors" />
     <prop name="size" />
   </elem>
-  
+
   <elem path="plot.layer" cond="type = lines">
     <prop name="type" />
     <prop name="x" />

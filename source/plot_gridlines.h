@@ -55,6 +55,7 @@ ReturnCode grid_draw(
 ReturnCode grid_configure(
     const PropertyList& plist,
     const Document& doc,
+    const DomainMap& scales,
     GridlineDefinition* grid);
 
 } // namespace plot

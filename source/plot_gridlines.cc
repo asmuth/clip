@@ -30,6 +30,7 @@
  */
 #include "plot_gridlines.h"
 #include "document.h"
+#include "utils/algo.h"
 
 using namespace std::placeholders;
 
@@ -37,26 +38,6 @@ namespace plotfx {
 namespace plot {
 
 static const double kDefaultLineWidthPT = 1;
-
-ReturnCode grid_configure(
-    const PropertyList& plist,
-    const Document& doc,
-    GridlineDefinition* grid) {
-  Measure line_width;
-  Color line_color = Color::fromRGB(.9, .9, .9); // TODO
-
-  static const ParserDefinitions pdefs = {
-    {"grid-stroke", bind(&configure_measure_rel, _1, doc.dpi, doc.font_size, &line_width)},
-  };
-
-  if (auto rc = parseAll(plist, pdefs); !rc) {
-    return rc;
-  }
-
-  grid->line_width = measure_or(line_width, from_pt(kDefaultLineWidthPT, doc.dpi));
-  grid->line_color = line_color;
-  return OK;
-}
 
 ReturnCode grid_draw(
     const GridlineDefinition& grid,
@@ -88,6 +69,96 @@ ReturnCode grid_draw(
 
   return OK;
 }
+
+ReturnCode grid_place_lines_geom(
+    const DomainConfig& domain,
+    std::vector<double>* ticks) {
+  uint32_t num_ticks = 8; // FIXME make configurable
+  double min = domain.min.value_or(0.0f);
+  double max = domain.max.value_or(0.0f);
+
+  ticks->clear();
+
+  for (size_t i = 0; i < num_ticks; ++i) {
+    ticks->emplace_back((1.0f / (num_ticks - 1)) * i);
+  }
+
+  return OK;
+}
+
+using GridPlacement = std::function<
+    ReturnCode (
+        const DomainConfig& domain,
+        std::vector<double>* ticks)>;
+
+ReturnCode grid_configure_placement(
+    const plist::Property& prop,
+    GridPlacement* placement) {
+  if (plist::is_value_literal(prop, "geom")) {
+    *placement = bind(&grid_place_lines_geom, _1, _2);
+    return OK;
+  }
+
+  return ReturnCode::errorf(
+      "EARG",
+      "invalid value for 'grid': $0; expected one of: geom(...)",
+      prop.value);
+}
+
+ReturnCode grid_configure(
+    const PropertyList& plist,
+    const Document& doc,
+    const DomainMap& scales,
+    GridlineDefinition* grid) {
+  Measure line_width;
+  Color line_color = Color::fromRGB(.9, .9, .9); // TODO
+
+  GridPlacement placement_horiz;
+  GridPlacement placement_vert;
+
+  std::string scale_horiz = SCALE_DEFAULT_X;
+  std::string scale_vert = SCALE_DEFAULT_Y;
+  static const ParserDefinitions pdefs = {
+    {
+      "grid",
+      configure_multiprop({
+        bind(&grid_configure_placement, _1, &placement_horiz),
+        bind(&grid_configure_placement, _1, &placement_vert)
+      })
+    },
+    {"grid-x", bind(&grid_configure_placement, _1, &placement_horiz)},
+    {"grid-x-scale", bind(&configure_string, _1, &scale_horiz)},
+    {"grid-y", bind(&grid_configure_placement, _1, &placement_horiz)},
+    {"grid-y-scale", bind(&configure_string, _1, &scale_vert)},
+    {"grid-stroke", bind(&configure_measure_rel, _1, doc.dpi, doc.font_size, &line_width)},
+  };
+
+  if (auto rc = parseAll(plist, pdefs); !rc) {
+    return rc;
+  }
+
+  grid->line_width = measure_or(line_width, from_pt(kDefaultLineWidthPT, doc.dpi));
+  grid->line_color = line_color;
+
+  auto domain_horiz = find_ptr(scales, scale_horiz);
+  auto domain_vert = find_ptr(scales, scale_vert);
+
+  if (domain_horiz && placement_horiz) {
+    if (auto rc = placement_horiz(*domain_horiz, &grid->ticks_horiz); !rc) {
+      return rc;
+    }
+  }
+
+  if (domain_vert && placement_vert) {
+    if (auto rc = placement_vert(*domain_vert, &grid->ticks_vert); !rc) {
+      return rc;
+    }
+  }
+
+  return OK;
+}
+
+
 
 } // namespace plot
 } // namespace plotfx
