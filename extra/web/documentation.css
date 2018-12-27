@@ -315,6 +315,14 @@ code strong {
   font-weight: bold;
 }
 
+#documentation h1 code,
+#documentation h2 code {
+  font-size: 86%;
+  background: transparent;
+  color: #000;
+  font-weight: 500;
+}
+
 pre code {
   padding: 10px 15px;
   display: block;
@@ -377,6 +385,7 @@ table.invisible tr, table.invisible td {
 
 #documentation .api_ref {
   border: 1px solid #ddd;
+  margin-top: 2em;
   margin-bottom: 3em;
   border-radius: 2px;
   padding-top: .5em;
@@ -400,13 +409,6 @@ table.invisible tr, table.invisible td {
   margin-top: 0;
   padding-top: 0;
   line-height: 16pt;
-}
-
-#documentation .api_ref h2 code {
-  font-size: 86%;
-  background: transparent;
-  color: #000;
-  font-weight: 500;
 }
 
 #documentation .api_ref table {

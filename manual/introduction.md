@@ -1,8 +1,19 @@
 # PlotFX v0.1.0
 
-PlotFX is a command line tool for creating charts from CSV files. It supports a
-number of different plot types and other diagrams. Charts can be customized
-using a configuration language similar to CSS.
+PlotFX is a standalone tool for creating charts and other data-driven graphics.
+
+Charts are defined using a lightweight syntax that is very similar to CSS.
+You can run PlotFX from the command line, where it generates SVG, PNG and PDF
+output files. Additionally, you can embed it into your own application using the
+C API.
+
+PlotFX is partially based on ideas from the "Grammar of Graphics" [0].
+One of the main goals for PlotFX is that creating charts should be quick, simple
+and fun.
+
+**WARNING**: The project is currently a work-in-progress. I'm currently working
+on removing the old SQL chart specification language and replacing it with the
+new CSS-like syntax. This might take a while...
 
 <div class="notice">
   <div style="float:right;"><a class="github-button" data-style="mega" href="https://github.com/plotfx/plotfx" data-count-href="/plotfx/plotfx/stargazers" data-count-api="/repos/plotfx/plotfx#stargazers_count" data-count-aria-label="# stargazers on GitHub" aria-label="Star plotfx/plotfx on GitHub">View on GitHub</a></div>
@@ -17,45 +28,36 @@ using a configuration language similar to CSS.
 The simple line chart from above was generated with PlotFX using the following
 command line:
 
-    $ plotfx -in example_chart.plot -out example_chart.svg
+    $ plotfx --in example_chart.plot --out example_chart.svg
 
-Running the command from above, will generate the following output file
-(`example_chart.svg`):
+Here is the input file from which the above plot was generated (`example_chart.plot`):
 
-Input File (`example_chart.plot`):
+    width: 1200px;
+    height: 480px;
 
     plot {
-      axis-top: off;
-      axis-right: off;
+      data: csv('tests/testdata/city_temperatures.csv');
+      x: month;
+      y: temperature;
+      group: city;
 
-      ymin: -10;
-      ymax: 32;
+      axis-y-min: -10;
+      axis-y-max: 32;
 
-      series {
-        title: "New York";
-        point-size: 3.3pt;
-        xs: csv(testdata/city_temperatures.csv, month);
-        ys: csv(testdata/city_temperatures.csv, new_york);
+      layer {
+        type: lines;
+        stroke: 2pt;
       }
 
-      series {
-        title: "北京市";
-        point-size: 3.3pt;
-        xs: csv(testdata/city_temperatures.csv, month);
-        ys: csv(testdata/city_temperatures.csv, beijing);
+      legend {
+        position: top left inside;
       }
-
-      # ...
     }
 
 
-For more examples, please see [the examples page](https://github.com/plotfx/plotfx/tree/master/examples).
-
-To get started with PlotFX, have a look at the [Getting Started](/documentation/getting-started) and
-[Data Model](/documentation/data-model) pages. If you have any questions please
-don't hesitate to reach out via [Github Issues](http://github.com/plotfx/plotfx/issues)
-or [the PlotFX google group](http://groups.google.com/group/fnordmetric).
-
+More examples can be found on [the examples page](https://github.com/plotfx/plotfx/tree/master/examples).
+For a more detailed introduction to PlotFX, see the [Getting Started](/documentation/getting-started) page. 
+If you have any questions please don't hesitate to reach out via [the PlotFX email group](http://groups.google.com/group/fnordmetric).
 
 ## More Examples
 

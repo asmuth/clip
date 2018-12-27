@@ -3,7 +3,6 @@ from build_layout import *
 import yaml
 import markdown
 from pathlib import Path
-from mdx_gfm import GithubFlavoredMarkdownExtension
 import re
 
 def build_page(page):
@@ -16,9 +15,7 @@ def build_page(page):
   else:
     source = "file not found"
 
-  html = markdown.markdown(
-      source,
-      extensions=[GithubFlavoredMarkdownExtension()])
+  html = markdown.markdown(source)
 
   html = re.sub(
       r'{%([^%]+)%}',

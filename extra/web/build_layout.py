@@ -3,6 +3,7 @@ import pystache as TPL
 import yaml
 import os
 from pathlib import Path
+from shutil import copyfile
 
 tpl = """
 <!DOCTYPE html>
@@ -72,3 +73,7 @@ def write_file(path, content):
   output_dir.mkdir(parents=True, exist_ok=True)
   with open(output_path, "w+") as f:
     f.write(content)
+
+def copy_file(path, src_path):
+  output_path = os.environ["output_dir"] + path
+  copyfile(src_path, output_path)

@@ -15,6 +15,7 @@ fi
 
 cp extra/web/documentation.css "${output_dir}"
 ./extra/web/build_api_reference.py
+./extra/web/build_examples.py
 ./extra/web/build_pages.py
 find "${output_dir}" -name "_*" -delete
 
