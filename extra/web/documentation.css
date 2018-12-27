@@ -1,0 +1,417 @@
+@import url(https://fonts.googleapis.com/css?family=Roboto:400,300,500,700);
+
+html {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: Helvetica, Arial, sans-serif;
+  font-size: 14px;
+  line-height: 20px;
+  background-color: #fff;
+  color: #000;
+  text-rendering: optimizelegibility;
+  /*text-shadow:0 0 1px #000;*/
+}
+
+h1, h2, h3, h4, h5, h6 {
+  margin: 10px 0;
+  font-family: inherit;
+  font-weight: bold;
+  line-height: 20px;
+  color: inherit;
+  font-family: "Roboto", "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+h1, h2, h3 { line-height: 40px; }
+h1 { font-size: 38.5px; }
+h2 { font-size: 22px; }
+h3 { font-size: 18px; }
+h4 { font-size: 100%; font-weight: 500; }
+h5 { font-size: 100%; font-weight: 500; }
+
+h3 {
+  margin-bottom: 0;
+  margin-top: 1em;
+  padding-top: 0;
+  font-weight: 500;
+  color: #c7254e;
+}
+
+h2 {
+  border-bottom: 2px solid #eee;
+  margin-top: 2em;
+  margin-bottom: .4em;
+  padding-bottom: .2em;
+  font-weight: 600;
+}
+
+hr {
+  border:none;
+  border-top: 1px solid #222;
+}
+
+ul {
+  padding: 0 0 0 40px;
+  margin: 0;
+}
+
+ul li > ul {
+  margin: 0.2em 0 1em 0;
+}
+
+ul li p {
+  padding: 0;
+  margin: 0;
+}
+
+.wrap {
+  max-width: 1100px;
+  margin: auto;
+}
+
+.doc_wrap {
+  max-width: 1100px;
+  margin: auto;
+  min-height: 100vh;
+}
+
+@media (max-width: 1260px) {
+  .wrap {
+    margin:0 30px;
+  }
+}
+
+#header {
+  margin: 0;
+  padding: 1px 0 0 0;
+  height: 56px;
+  line-height: 56px;
+}
+
+#header {
+  font-family: "Roboto", "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+#header.border {
+  border-bottom: 1px solid #ddd;
+}
+
+#header h1 {
+  font-size:23.5px;
+  line-height: 56px;
+  margin: 0;
+  padding: 0;
+}
+
+#header h1 a {
+  text-decoration:none;
+  background: linear-gradient(90deg, rgba(199,37,78,1) 0%, rgba(148,24,56,1) 58%, rgba(148,26,57,1) 100%);
+  color: transparent;
+  -webkit-background-clip: text;
+}
+
+#header a.menu {
+  float:right;
+  text-decoration:none;
+  padding: 0 10px;
+  margin-left: 10px;
+  line-height: 32px;
+  margin-top: 12px;
+  color: #941838;
+}
+
+#header a.menu.active {
+  color: #333;
+}
+
+
+.notice {
+  margin-top: 2em;
+  margin-bottom: 3em;
+  background: #f9f9f9;
+  border: 1px solid #ddd;
+  padding: 14px;
+  font-size: 15px;
+  color: #666;
+}
+
+.notice a {
+  color: #357bbd;
+  font-weight: 500;
+}
+
+#footer {
+  padding:18px 0;
+  font-size: 90%;
+  color:#777;
+  border-top: 1px solid #ddd;
+}
+
+#footer a {
+  color:#777;
+}
+
+#navigation {
+  padding: 2em 2em 0 0;
+  width: 250px;
+  top: 65px;
+  font-size: 16px;
+}
+
+#navigation ul {
+  list-style-type:none;
+  margin: 0;
+  border-left: 1px solid #ddd;
+  padding: 0 0 0 1em;
+  margin-left: 2px;
+}
+
+#navigation ul ul {
+  padding-left: 29px;
+  margin-bottom: .4em;
+  list-style-type: disc;
+  border-left: none;
+  display: none;
+}
+
+#navigation ul ul li {
+  line-height: 24px;
+}
+
+#navigation ul li {
+  font-size: 14px;
+  line-height: 28px;
+}
+
+#navigation a.nav_title:first-child  {
+  border-top: none;
+  box-shadow: none;
+  padding-top: 0;
+  margin-top: 0;
+}
+
+#navigation ul li a {
+  text-decoration: none;
+  color: #333;
+}
+
+#navigation ul li.active a {
+  color: #941838;
+}
+
+#navigation ul li a:hover {
+  text-decoration: underline;
+}
+
+#navigation a.nav_title {
+  display:block;
+  font-weight: 600;
+  margin: 1em 0 8px 0;
+  padding: 25px 0 0 0;
+  color:#333;
+}
+
+.doc_container {
+  display: flex;
+  overflow: auto;
+  margin-bottom: 2em;
+}
+
+#documentation {
+  flex: 1;
+  color: #444;
+  background: #fff;
+  font-size: 16px;
+  font-weight: 400;
+  margin: 0;
+  padding: 35px 0 50px 0;
+  overflow: hidden;
+}
+
+#documentation h1 {
+  margin-bottom: 0.6em;
+  padding-bottom: 0;
+  font-size: 26.5px;
+  font-weight: 500;
+}
+
+#documentation h1:first-child {
+  margin-top: 0;
+}
+
+
+#documentation h4 {
+  margin-top: 2em;
+}
+
+#documentation h5  {
+  color: #666;
+}
+
+#documentation h1 + h2,
+#documentation h2 + h3 {
+  margin-top: 1em;
+}
+
+#documentation pre + h3 {
+  margin-top: 2em;
+}
+
+#documentation p {
+  margin-top: 0;
+  margin-bottom: .6em;
+  font-weight: 400;
+  line-height: 22px;
+  color: #444;
+}
+
+#documentation p, #documentation li, #documentation td, #documentation th {
+  font-size: 96%;
+}
+
+#documentation hr {
+  margin: 24px 0 35px 0;
+  border: none;
+  border-bottom: 1px solid #eee;
+}
+
+#documentation a {
+  color: #941838;
+  text-decoration: none;
+}
+
+#documentation a:hover {
+  text-decoration: underline;
+}
+
+#documentation table {
+  margin-bottom: 25px;
+}
+
+#documentation img {
+  width: 100%;
+}
+
+code {
+  padding: 2px 5px;
+  font-family: "Monaco", monospace;
+  background-color: #f6f6f6;
+  border-radius: 3px;
+  text-shadow: 0 1px 0 #fff;
+  overflow: auto;
+  font-size:12px;
+  line-height: 22px;
+}
+
+code em, code strong {
+  color: #c7254e;
+}
+
+code strong {
+  font-weight: bold;
+}
+
+pre code {
+  padding: 10px 15px;
+  display: block;
+}
+
+pre {
+  margin-bottom: 25px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+table td, table th {
+  padding: 4px 6px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+  vertical-align: top;
+}
+
+table th {
+  font-weight: 600;
+  color: #333;
+  width: 125px;
+  border-bottom: 2px solid #ddd;
+}
+
+table th i {
+  font-weight: 400;
+  font-size: 12px;
+}
+
+table tr:nth-child(2n+0) { background-color: #f8f8f8; }
+
+table td p {
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+
+table.invisible tr, table.invisible td {
+  background-color: transparent!important;
+  border-bottom: none!important;
+  padding: 0;
+}
+
+#documentation p.breadcrumb {
+  padding-bottom: 30px;
+  border-bottom: 1px solid #eee;
+  font-size: 90%;
+  margin-top: -5px;
+  margin-bottom: 0;
+}
+
+#documentation ul {
+  margin-bottom: 1.5em;
+  margin-top: .6em;
+  padding-left: 2em;
+}
+
+#documentation .api_ref {
+  border: 1px solid #ddd;
+  margin-bottom: 3em;
+  border-radius: 2px;
+  padding-top: .5em;
+}
+
+#documentation .api_ref h2 {
+  border-bottom: none;
+  margin-top: .2em;
+  margin-bottom: 0;
+  padding-bottom: 0;
+  font-weight: 600;
+  padding-left: 14px;
+  font-size: 14pt;
+  line-height: 18pt;
+  font-weight: 400;
+  color: #888;
+}
+
+#documentation .api_ref h2.sub {
+  font-size: 11pt;
+  margin-top: 0;
+  padding-top: 0;
+  line-height: 16pt;
+}
+
+#documentation .api_ref h2 code {
+  font-size: 86%;
+  background: transparent;
+  color: #000;
+  font-weight: 500;
+}
+
+#documentation .api_ref table {
+  border-top: 2px solid #ddd;
+  margin-top: .6em;
+  margin-bottom: 0;
+}
+

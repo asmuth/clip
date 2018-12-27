@@ -1,0 +1,86 @@
+<properties>
+
+  <elem path="global">
+    <prop name="width" />
+    <prop name="height" />
+    <prop name="font-size" />
+    <prop name="background-color" />
+    <prop name="foreground-color" />
+    <prop name="text-color" />
+    <prop name="border-color" />
+  </elem>
+
+  <elem path="plot">
+    <prop name="x" />
+    <prop name="y" />
+    <prop name="group" />
+    <prop name="x-scale" />
+    <prop name="y-scale" />
+    <prop name="axis-x" />
+    <prop name="axis-x-min" />
+    <prop name="axis-x-max" />
+    <prop name="axis-x-format" />
+    <prop name="axis-x-label-placement" />
+    <prop name="axis-x-padding" />
+    <prop name="axis-y" />
+    <prop name="axis-y-min" />
+    <prop name="axis-y-max" />
+    <prop name="axis-y-format" />
+    <prop name="axis-y-label-placement" />
+    <prop name="axis-y-padding" />
+    <prop name="axis-top" />
+    <prop name="axis-top-scale" />
+    <prop name="axis-top-format" />
+    <prop name="axis-top-label-placement" />
+    <prop name="axis-right-scale" />
+    <prop name="axis-right-format" />
+    <prop name="axis-right-label-placement" />
+    <prop name="axis-bottom-scale" />
+    <prop name="axis-bottom-format" />
+    <prop name="axis-bottom-label-placement" />
+    <prop name="axis-left-scale" />
+    <prop name="axis-left-format" />
+    <prop name="axis-left-label-placement" />
+    <prop name="margin" />
+    <prop name="margin-top" />
+    <prop name="margin-right" />
+    <prop name="margin-bottom" />
+    <prop name="margin-left" />
+    <prop name="layer" />
+  </elem>
+
+  <elem path="plot.layer" cond="type = lines">
+    <prop name="type" />
+    <prop name="x" />
+    <prop name="y" />
+    <prop name="group" />
+    <prop name="x-scale" />
+    <prop name="y-scale" />
+    <prop name="title" />
+    <prop name="color" />
+    <prop name="colors" />
+    <prop name="stroke" />
+  </elem>
+
+  <elem path="plot.layer" cond="type = points">
+    <prop name="type" />
+    <prop name="x" />
+    <prop name="y" />
+    <prop name="group" />
+    <prop name="x-scale" />
+    <prop name="y-scale" />
+    <prop name="color" />
+    <prop name="colors" />
+    <prop name="size" />
+  </elem>
+  
+  <elem path="plot.layer" cond="type = lines">
+    <prop name="type" />
+    <prop name="x" />
+    <prop name="y" />
+    <prop name="x-scale" />
+    <prop name="y-scale" />
+    <prop name="label" />
+  </elem>
+
+</properties>
