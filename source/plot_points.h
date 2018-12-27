@@ -48,6 +48,11 @@ struct PlotPointsConfig {
   std::vector<double> y;
   std::vector<Color> colors;
   std::vector<Measure> sizes;
+  std::vector<std::string> labels;
+  FontInfo label_font;
+  Measure label_padding;
+  Measure label_font_size;
+  Color label_color;
 };
 
 ReturnCode draw(

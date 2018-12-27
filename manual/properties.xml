@@ -81,6 +81,7 @@
     <prop name="size-min" />
     <prop name="size-max" />
     <prop name="sizes" />
+    <prop name="labels" />
   </elem>
 
   <elem path="plot.layer" cond="type = lines">
@@ -89,7 +90,7 @@
     <prop name="y" />
     <prop name="x-scale" />
     <prop name="y-scale" />
-    <prop name="label" />
+    <prop name="labels" />
   </elem>
 
 </properties>

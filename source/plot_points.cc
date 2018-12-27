@@ -46,6 +46,7 @@ namespace points {
 static const double kDefaultPointSizePT = 3;
 static const double kDefaultPointSizeMinPT = 1;
 static const double kDefaultPointSizeMaxPT = 24;
+static const double kDefaultLabelPaddingEM = 0.4;
 
 ReturnCode draw(
     const PlotPointsConfig& config,
@@ -73,6 +74,33 @@ ReturnCode draw(
     fillPath(layer, clip, path, style);
   }
 
+  for (size_t i = 0; i < config.labels.size(); ++i) {
+    const auto& label_text = config.labels[i];
+
+    auto size = config.sizes.empty()
+        ? 0
+        : config.sizes[i % config.sizes.size()].value;
+
+    auto label_padding = size + measure_or(
+        config.label_padding,
+        from_em(kDefaultLabelPaddingEM, config.label_font_size));
+
+    Point p(
+        clip.x + config.x[i] * clip.w,
+        clip.y + (1.0 - config.y[i]) * clip.h - label_padding);
+
+    TextStyle style;
+    style.font = config.label_font;
+    style.color = config.label_color;
+    style.font_size = config.label_font_size;
+
+    auto ax = HAlign::CENTER;
+    auto ay = VAlign::BOTTOM;
+    if (auto rc = drawTextLabel(label_text, p, ax, ay, style, layer); rc != OK) {
+      return rc;
+    }
+  }
+
   return OK;
 }
 
@@ -85,6 +113,7 @@ ReturnCode configure(
   SeriesRef data_x = find_maybe(data.defaults, "x");
   SeriesRef data_y = find_maybe(data.defaults, "y");
   SeriesRef data_group = find_maybe(data.defaults, "group");
+  SeriesRef data_labels;
 
   std::string scale_x = SCALE_DEFAULT_X;
   std::string scale_y = SCALE_DEFAULT_Y;
@@ -112,6 +141,7 @@ ReturnCode configure(
     {"size-min", bind(&configure_measure_rel, _1, doc.dpi, doc.font_size, &size_min)},
     {"size-max", bind(&configure_measure_rel, _1, doc.dpi, doc.font_size, &size_max)},
     {"sizes", configure_series_fn(data, &sizes)},
+    {"labels", configure_series_fn(data, &data_labels)},
   };
 
   if (auto rc = parseAll(plist, pdefs); !rc) {
@@ -127,6 +157,12 @@ ReturnCode configure(
     return ReturnCode::error(
         "EARG",
         "the length of the 'x' and 'y' properties must be equal");
+  }
+
+  if (data_labels && (data_x->size() != data_labels->size())) {
+    return ReturnCode::error(
+        "EARG",
+        "the length of the 'x', 'y' and 'labels' properties must be equal");
   }
 
   /* fetch domains */
@@ -172,6 +208,12 @@ ReturnCode configure(
       color,
       series_to_colors(colors, color_domain, color_palette),
       groups_to_colors(groups, color_palette));
+
+  config->label_font = doc.font_sans;
+  config->label_font_size = doc.font_size;
+  if (data_labels) {
+    config->labels = *data_labels;
+  }
 
   return OK;
 }

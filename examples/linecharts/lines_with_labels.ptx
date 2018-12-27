@@ -22,7 +22,7 @@ plot {
 
   layer {
     type: labels;
-    label: csv('tests/testdata/city_temperatures_london.csv', temperature_str);
+    labels: csv('tests/testdata/city_temperatures_london.csv', temperature_str);
   }
 
   legend {

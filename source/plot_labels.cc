@@ -109,7 +109,7 @@ ReturnCode configure(
     {"x-scale", bind(&configure_string, _1, &scale_x)},
     {"y", configure_series_fn(data, &data_y)},
     {"y-scale", bind(&configure_string, _1, &scale_y)},
-    {"label", configure_series_fn(data, &data_labels)},
+    {"labels", configure_series_fn(data, &data_labels)},
   };
 
   if (auto rc = parseAll(plist, pdefs); !rc) {
@@ -125,7 +125,7 @@ ReturnCode configure(
       (data_x->size() != data_labels->size())) {
     return ReturnCode::error(
         "EARG",
-        "the length of the 'x', 'y' and 'label' properties must be equal");
+        "the length of the 'x', 'y' and 'labels' properties must be equal");
   }
 
   /* fetch domains */
