@@ -83,7 +83,12 @@ ReturnCode draw(
     return rc;
   }
 
-  // render layer
+  // render grid
+  if (auto rc = grid_draw(config.grid, bbox, layer); !rc) {
+    return rc;
+  }
+
+  // render layers
   for (const auto& e : config.layers) {
     if (auto rc = e->draw(bbox, layer); !rc) {
       return rc;
@@ -406,6 +411,10 @@ ReturnCode configure(
         ref(scales),
         &legend_items,
         config),
+    bind(&grid_configure,
+        ref(plist),
+        doc,
+        &config->grid),
     bind(&legend_configure_all,
         doc,
         ref(plist),

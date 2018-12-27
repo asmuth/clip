@@ -23,6 +23,7 @@ add_definitions(-DFNORDMETRIC_VERSION="unstable")
 add_library(plotfxlib STATIC
     source/plot.cc
     source/plot_axis.cc
+    source/plot_gridlines.cc
     source/plot_labels.cc
     source/plot_lines.cc
     source/plot_points.cc

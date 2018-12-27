@@ -28,70 +28,67 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-#include <stdlib.h>
-#include "graphics/layer.h"
-#include "graphics/brush.h"
-#include "graphics/text.h"
-#include "gridlines.h"
+#include "plot_gridlines.h"
+#include "document.h"
+
+using namespace std::placeholders;
 
 namespace plotfx {
-namespace chart {
+namespace plot {
 
-GridDefinition::GridDefinition(
-    kPlacement placement) :
-    placement_(placement) {}
+static const double kDefaultLineWidthPT = 1;
 
-GridDefinition::kPlacement GridDefinition::placement() const {
-  return placement_;
-}
+ReturnCode grid_configure(
+    const PropertyList& plist,
+    const Document& doc,
+    GridlineDefinition* grid) {
+  Measure line_width;
+  Color line_color = Color::fromRGB(.9, .9, .9); // TODO
 
-void GridDefinition::addTick(double tick_position) {
-  ticks_.push_back(tick_position);
-}
+  static const ParserDefinitions pdefs = {
+    {"grid-stroke", bind(&configure_measure_rel, _1, doc.dpi, doc.font_size, &line_width)},
+  };
 
-const std::vector<double> GridDefinition::ticks() const {
-  return ticks_;
-}
-
-void renderGrid(
-    const GridDefinition& grid,
-    const Viewport& viewport,
-    Layer* target) {
-  StrokeStyle style;
-
-  switch (grid.placement()) {
-
-    case GridDefinition::GRID_HORIZONTAL:
-      for (const auto& tick : grid.ticks()) {
-        auto line_y = viewport.paddingTop() +
-            viewport.innerHeight() * (1.0 - tick);
-
-        strokeLine(
-            target,
-            viewport.paddingLeft(),
-            line_y,
-            viewport.paddingLeft() + viewport.innerWidth(),
-            line_y,
-            style);
-      }
-      break;
-
-    case GridDefinition::GRID_VERTICAL:
-      for (const auto& tick : grid.ticks()) {
-        auto line_x = viewport.paddingLeft() + viewport.innerWidth() * tick;
-
-        strokeLine(
-            target,
-            line_x,
-            viewport.paddingTop(),
-            line_x,
-            viewport.paddingTop() + viewport.innerHeight(),
-            style);
-      }
-      break;
-
+  if (auto rc = parseAll(plist, pdefs); !rc) {
+    return rc;
   }
+
+  grid->line_width = measure_or(line_width, from_pt(kDefaultLineWidthPT, doc.dpi));
+  grid->line_color = line_color;
+  return OK;
 }
 
+ReturnCode grid_draw(
+    const GridlineDefinition& grid,
+    const Rectangle& bbox,
+    Layer* layer) {
+  StrokeStyle style;
+  style.line_width = grid.line_width;
+  style.color = grid.line_color;
+
+  for (const auto& tick : grid.ticks_horiz) {
+    auto line_y = bbox.y + bbox.h * (1.0 - tick);
+
+    strokeLine(
+        layer,
+        Point(bbox.x, line_y),
+        Point(bbox.x + bbox.w, line_y),
+        style);
+  }
+
+  for (const auto& tick : grid.ticks_vert) {
+    auto line_x = bbox.x + bbox.w * tick;
+
+    strokeLine(
+        layer,
+        Point(line_x, bbox.y),
+        Point(line_x, bbox.y + bbox.h),
+        style);
+  }
+
+  return OK;
 }
-}
+
+} // namespace plot
+} // namespace plotfx
+
