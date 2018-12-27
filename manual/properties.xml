@@ -68,6 +68,20 @@
     <prop name="stroke" />
   </elem>
 
+  <elem path="plot.layer" cond="type = area">
+    <prop name="type" />
+    <prop name="x" />
+    <prop name="y" />
+    <prop name="y1" />
+    <prop name="y2" />
+    <prop name="group" />
+    <prop name="x-scale" />
+    <prop name="y-scale" />
+    <prop name="title" />
+    <prop name="color" />
+    <prop name="colors" />
+  </elem>
+
   <elem path="plot.layer" cond="type = points">
     <prop name="type" />
     <prop name="x" />

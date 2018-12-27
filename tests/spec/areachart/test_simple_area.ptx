@@ -1,0 +1,16 @@
+width: 1200px;
+height: 480px;
+
+plot {
+  axis-x-format: datetime("%H:%M:%S");
+
+  data: csv('tests/testdata/measurement.csv', time);
+  x: time;
+  y: value2;
+
+  grid-x: geom;
+
+  layer {
+    type: area;
+  }
+}

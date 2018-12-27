@@ -197,14 +197,17 @@ ReturnCode configure_scales(
     }
 
     SeriesRef data_x = find_maybe(data.defaults, "x");
-    SeriesRef data_y = find_maybe(data.defaults, "y");
+    SeriesRef data_y1 = find_maybe(data.defaults, "y");
+    SeriesRef data_y2 = find_maybe(data.defaults, "y");
     std::string scale_x = SCALE_DEFAULT_X;
     std::string scale_y = SCALE_DEFAULT_Y;
 
     static const ParserDefinitions pdefs = {
       {"x", configure_series_fn(data, &data_x)},
       {"x-scale", bind(&configure_string, _1, &scale_x)},
-      {"y", configure_series_fn(data, &data_y)},
+      {"y", configure_series_fn(data, &data_y1)},
+      {"y1", configure_series_fn(data, &data_y1)},
+      {"y2", configure_series_fn(data, &data_y2)},
       {"y-scale", bind(&configure_string, _1, &scale_y)},
     };
 
@@ -229,13 +232,22 @@ ReturnCode configure_scales(
       domain_fit(*data_x, domain_x);
     }
 
-    if (data_y) {
+    if (data_y1) {
       auto domain_y = find_ptr(scales, scale_y);
       if (!domain_y) {
         return ReturnCode::errorf("EARG", "scale not found: $0", scale_y);
       }
 
-      domain_fit(*data_y, domain_y);
+      domain_fit(*data_y1, domain_y);
+    }
+
+    if (data_y2) {
+      auto domain_y = find_ptr(scales, scale_y);
+      if (!domain_y) {
+        return ReturnCode::errorf("EARG", "scale not found: $0", scale_y);
+      }
+
+      domain_fit(*data_y2, domain_y);
     }
   }
 

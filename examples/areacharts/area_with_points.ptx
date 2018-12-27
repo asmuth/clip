@@ -1,0 +1,22 @@
+width: 1200px;
+height: 480px;
+
+plot {
+  data: csv('examples/data/areadata.csv', time);
+  x: x;
+  y: y;
+
+  axis-y-max: 60;
+
+  layer {
+    type: area;
+  }
+
+  layer {
+    type: lines;
+  }
+
+  layer {
+    type: points;
+  }
+}
