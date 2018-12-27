@@ -37,6 +37,7 @@
 #include "source/config_helpers.h"
 #include "source/element_factory.h"
 #include "source/utils/algo.h"
+#include "plot_area.h"
 #include "plot_labels.h"
 #include "plot_lines.h"
 #include "plot_points.h"
@@ -123,6 +124,11 @@ ReturnCode configure_layer(
   ElementBuilder layer_builder;
 
   // TODO: proper lookup
+  if (type == "area")
+    layer_builder = elem_builder<area::PlotAreaConfig>(
+        bind(&area::configure, _1, _2, _3, scales, legend_items, _4),
+        &area::draw);
+
   if (type == "labels")
     layer_builder = elem_builder<labels::PlotLabelsConfig>(
         bind(&labels::configure, _1, _2, _3, scales, _4),

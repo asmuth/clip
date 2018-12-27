@@ -1,6 +1,7 @@
 /**
  * This file is part of the "plotfx" project
- *   Copyright (c) 2011-2014 Paul Asmuth, Google Inc.
+ *   Copyright (c) 2018 Paul Asmuth
+ *   Copyright (c) 2014 Paul Asmuth, Google Inc.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -27,25 +28,44 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
+#pragma once
 #include <stdlib.h>
-#include "canvas.h"
-#include "../source/layer.h"
-#include "areachart.h"
+#include <plist/plist.h>
+#include <graphics/layer.h>
+#include <graphics/viewport.h>
+#include <source/domain.h>
+#include <source/element.h>
+#include <source/config_helpers.h>
+#include <source/utils/algo.h>
+#include "plot_axis.h"
+#include "plot.h"
+#include "legend.h"
 
 namespace plotfx {
-namespace chart {
+namespace plot {
+namespace area {
 
-char AreaChart::kDefaultLineStyle[] = "none";
-char AreaChart::kDefaultLineWidth[] = "1";
-char AreaChart::kDefaultPointStyle[] = "none";
-char AreaChart::kDefaultPointSize[] = "2";
+struct PlotAreaConfig {
+  std::vector<double> x;
+  std::vector<double> y;
+  std::vector<DataGroup> groups;
+  std::vector<Color> colors;
+};
 
-AreaChart::AreaChart(
-    chart::Canvas* canvas,
-    bool stacked) :
-    Drawable(canvas),
-    stacked_(stacked) {}
+ReturnCode draw(
+    const PlotAreaConfig& config,
+    const Rectangle& clip,
+    Layer* layer);
 
-}
-}
+ReturnCode configure(
+    const plist::PropertyList& plist,
+    const DataContext& data,
+    const Document& doc,
+    const DomainMap& scales,
+    LegendItemMap* legend,
+    PlotAreaConfig* config);
+
+} // namespace area
+} // namespace plot
+} // namespace plotfx
+
