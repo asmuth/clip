@@ -68,15 +68,15 @@ for more.
 <div style="height: .6em;"></div>
 
 _Example: Simple timeseries chart_
-<a href="/examples/linecharts/simple_lines"><img src="/examples/areacharts/examples_simple_lines.png" style="width: 100%;" /></a>
+<a href="/examples/linecharts/simple_timeseries"><img src="/examples/linecharts/simple_timeseries.svg" style="width: 100%;" /></a>
 
 _Example: Chart with explicit domain and legend_
-<a href="/examples/linecharts/explicit_domain"><img src="/examples/linecharts/examples_explicit_domain.png" style="width: 100%;" /></a>
+<a href="/examples/linecharts/explicit_domain"><img src="/examples/linecharts/explicit_domain.svg" style="width: 100%;" /></a>
 
 _Example: Horizontal barchart_
-<a href="/examples/barcharts/horizontal_bars"><img src="/examples/barcharts/examples_horizontal_bars.png" style="width: 100%;" /></a>
+<a href="/examples/barcharts/horizontal_bars"><img src="/examples/barcharts/horizontal_bars.svg" style="width: 100%;" /></a>
 
 _Example: Scatter chart with lables_
-<a href="/examples/pointcharts/pointchart_with_labels"><img src="/examples/pointcharts/examples_pointchart_with_labels.png" style="width: 100%;" /></a>
+<a href="/examples/pointcharts/pointchart_with_labels"><img src="/examples/pointcharts/pointchart_with_labels.svg" style="width: 100%;" /></a>
 
 <script async defer src="https://buttons.github.io/buttons.js"></script>

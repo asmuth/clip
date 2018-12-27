@@ -17,7 +17,7 @@ def build_example(url):
 
   html = TPL.render(tpl, env)
   write_page(path, html)
-  copy_file(path + "/output.svg", os.path.join("examples", url + ".svg"))
+  copy_file(path + ".svg", os.path.join("examples", url + ".svg"))
 
 def build_example_list(examples):
   tpl = """
