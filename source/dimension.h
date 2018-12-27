@@ -30,24 +30,11 @@
 #pragma once
 #include <string>
 #include <unordered_map>
-#include "source/domain.h"
-#include "source/data_model.h"
+#include "domain.h"
+#include "data_model.h"
+#include "graphics/measure.h"
 
 namespace plotfx {
-
-struct DimensionConfig {
-  std::string key;
-  DomainConfig domain;
-};
-
-using DimensionMap = std::unordered_map<std::string, DimensionConfig>;
-
-template <typename T>
-using DimensionMapFn = std::function<std::vector<T> (const Series&)>;
-
-void dimension_add(
-    DimensionMap* map,
-    const std::string& key);
 
 std::vector<Color> series_to_colors(
     SeriesRef series,

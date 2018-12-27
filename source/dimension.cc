@@ -32,18 +32,6 @@
 
 namespace plotfx {
 
-void dimension_add(
-    DimensionMap* map,
-    const std::string& key) {
-  if (map->count(key)) {
-    return;
-  }
-
-  DimensionConfig d;
-  d.key = key;
-  map->emplace(d.key, d);
-}
-
 std::vector<Color> series_to_colors(
     SeriesRef series,
     const DomainConfig& domain_config,
