@@ -1,0 +1,13 @@
+width: 1200px;
+height: 480px;
+
+plot {
+  data: csv('examples/data/point_example.csv');
+  x: x;
+  y: y;
+  group: series;
+
+  layer {
+    type: points;
+  }
+}
