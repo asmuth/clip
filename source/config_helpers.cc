@@ -186,6 +186,24 @@ ReturnCode configure_string(
   return OK;
 }
 
+ReturnCode configure_direction(
+    const plist::Property& prop,
+    Direction* value) {
+  if (!plist::is_value(prop)) {
+    return ReturnCode::errorf(
+        "EARG",
+        "incorrect number of arguments; expected: 1, got: $0",
+        prop.size());
+  }
+
+  static const EnumDefinitions<Direction> defs = {
+    { "horizontal", Direction::HORIZONTAL },
+    { "vertical", Direction::VERTICAL },
+  };
+
+  return parseEnum(defs, prop.value, value);
+}
+
 ReturnCode load_csv(
     const std::string& csv_path,
     bool csv_headers,

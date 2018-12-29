@@ -1,6 +1,7 @@
 /**
  * This file is part of the "plotfx" project
- *   Copyright (c) 2011-2014 Paul Asmuth, Google Inc.
+ *   Copyright (c) 2018 Paul Asmuth
+ *   Copyright (c) 2014 Paul Asmuth, Google Inc.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -27,27 +28,50 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-#include "barchart.h"
+#pragma once
+#include <stdlib.h>
+#include <plist/plist.h>
+#include <graphics/layer.h>
+#include <graphics/viewport.h>
+#include <source/domain.h>
+#include <source/element.h>
+#include <source/config_helpers.h>
+#include "plot_axis.h"
+#include "plot.h"
 
 namespace plotfx {
-namespace chart {
+namespace plot {
+namespace bars {
 
-BarChart::BarChart(
-    chart::Canvas* canvas,
-    kBarChartOrientation orient /* = O_VERTICAL */,
-    bool stacked /* = false */) :
-    Drawable(canvas),
-    orientation_(orient),
-    stacked_(stacked),
-    show_labels_(false) {}
+struct PlotBarsConfig {
+  PlotBarsConfig();
+  Direction direction;
+  std::vector<double> x1;
+  std::vector<double> x2;
+  std::vector<double> y1;
+  std::vector<double> y2;
+  std::vector<Color> colors;
+  std::vector<Measure> sizes;
+  std::vector<std::string> labels;
+  FontInfo label_font;
+  Measure label_padding;
+  Measure label_font_size;
+  Color label_color;
+};
 
-void BarChart::setOrientation(kBarChartOrientation orientation) {
-  orientation_ = orientation;
-}
+ReturnCode draw(
+    const PlotBarsConfig& config,
+    const Rectangle& clip,
+    Layer* layer);
 
-void BarChart::setLabels(bool show_labels) {
-  show_labels_ = show_labels;
-}
+ReturnCode configure(
+    const plist::PropertyList& plist,
+    const DataContext& data,
+    const Document& doc,
+    const DomainMap& scales,
+    PlotBarsConfig* config);
 
-}
-}
+} // namespace bars
+} // namespace plot
+} // namespace plotfx
+

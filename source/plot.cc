@@ -38,6 +38,7 @@
 #include "source/element_factory.h"
 #include "source/utils/algo.h"
 #include "plot_area.h"
+#include "plot_bars.h"
 #include "plot_labels.h"
 #include "plot_lines.h"
 #include "plot_points.h"
@@ -128,6 +129,11 @@ ReturnCode configure_layer(
     layer_builder = elem_builder<area::PlotAreaConfig>(
         bind(&area::configure, _1, _2, _3, scales, legend_items, _4),
         &area::draw);
+
+  if (type == "bars")
+    layer_builder = elem_builder<bars::PlotBarsConfig>(
+        bind(&bars::configure, _1, _2, _3, scales, _4),
+        &bars::draw);
 
   if (type == "labels")
     layer_builder = elem_builder<labels::PlotLabelsConfig>(

@@ -98,13 +98,30 @@
     <prop name="labels" />
   </elem>
 
-  <elem path="plot.layer" cond="type = lines">
+  <elem path="plot.layer" cond="type = labels">
     <prop name="type" />
     <prop name="x" />
     <prop name="y" />
     <prop name="x-scale" />
     <prop name="y-scale" />
     <prop name="labels" />
+  </elem>
+
+  <elem path="plot.layer" cond="type = bars">
+    <prop name="type" />
+    <prop name="x" />
+    <prop name="x1" />
+    <prop name="x2" />
+    <prop name="y" />
+    <prop name="y1" />
+    <prop name="y2" />
+    <prop name="group" />
+    <prop name="x-scale" />
+    <prop name="y-scale" />
+    <prop name="title" />
+    <prop name="directon" />
+    <prop name="color" />
+    <prop name="colors" />
   </elem>
 
 </properties>

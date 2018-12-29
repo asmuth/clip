@@ -34,6 +34,9 @@
 namespace plotfx {
 
 template <typename T>
+const T& at_or(const std::vector<T>& vec, size_t idx, const T& fallback);
+
+template <typename T>
 const typename T::mapped_type* find_ptr(
     const T& map,
     const typename T::key_type& key);

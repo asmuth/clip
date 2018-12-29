@@ -24,6 +24,7 @@ add_library(plotfxlib STATIC
     source/plot.cc
     source/plot_area.cc
     source/plot_axis.cc
+    source/plot_bars.cc
     source/plot_gridlines.cc
     source/plot_labels.cc
     source/plot_lines.cc

@@ -43,6 +43,10 @@ enum class VAlign {
   TOP, CENTER, BOTTOM
 };
 
+enum class Direction {
+  HORIZONTAL, VERTICAL
+};
+
 Rectangle layout_margin_box(
     const Rectangle& parent,
     double margin_top,

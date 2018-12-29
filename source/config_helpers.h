@@ -33,6 +33,7 @@
 #include <plist/plist.h>
 #include <graphics/measure.h>
 #include <graphics/color.h>
+#include "graphics/layout.h"
 #include "utils/return_code.h"
 #include "source/data_model.h"
 #include "source/dimension.h"
@@ -94,6 +95,10 @@ ReturnCode configure_float(
 ReturnCode configure_string(
     const plist::Property& prop,
     std::string* value);
+
+ReturnCode configure_direction(
+    const plist::Property& prop,
+    Direction* value);
 
 ReturnCode configure_float_opt(
     const plist::Property& prop,
