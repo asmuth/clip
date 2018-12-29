@@ -4,8 +4,8 @@ height: 480px;
 plot {
   title: "To the Moon";
 
-  x: csv('examples/data/log_example.csv', x);
-  y: csv('examples/data/log_example.csv', y);
+  x: csv('tests/testdata/log_example.csv', x);
+  y: csv('tests/testdata/log_example.csv', y);
 
   axis-x: log;
   axis-x-min: 0;

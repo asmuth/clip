@@ -1,5 +1,5 @@
 IMPORT TABLE gdp_per_capita
-   FROM 'csv:examples/data/gdp_per_capita.csv?headers=true';
+   FROM 'csv:tests/testdata/gdp_per_capita.csv?headers=true';
 
 DRAW BARCHART WITH
   ORIENTATION HORIZONTAL

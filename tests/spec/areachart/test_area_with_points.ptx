@@ -2,7 +2,7 @@ width: 1200px;
 height: 480px;
 
 plot {
-  data: csv('examples/data/areadata.csv', time);
+  data: csv('tests/testdata/areadata.csv', time);
   x: x;
   y: y;
 

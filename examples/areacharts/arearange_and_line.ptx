@@ -4,7 +4,7 @@ height: 480px;
 plot {
   axis-x-format: datetime("%H:%M:%S");
 
-  data: csv('examples/data/areadata2.csv', time);
+  data: csv('tests/testdata/areadata2.csv', time);
 
   grid-x: geom;
 
