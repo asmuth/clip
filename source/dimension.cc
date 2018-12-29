@@ -53,21 +53,16 @@ std::vector<Color> series_to_colors(
 }
 
 std::vector<Color> groups_to_colors(
+    size_t count,
     const std::vector<DataGroup>& groups,
     const ColorScheme& palette) {
-  auto max_idx =
-      std::max_element(
-          groups.begin(),
-          groups.end(),
-          [] (const DataGroup& a, const DataGroup& b) { return a.end < b.end; })
-      ->end;
-
-  std::vector<Color> colors(max_idx);
-  for (size_t i = 0; i < groups.size(); ++i) {
-    std::fill(
-        colors.begin() + groups[i].begin,
-        colors.begin() + groups[i].end,
-        palette.get(i));
+  std::vector<Color> colors(count);
+  for (size_t gi = 0; gi < groups.size(); ++gi) {
+    for (auto i : groups[gi].index) {
+      if (i < colors.size()) {
+        colors[i] = palette.get(gi);
+      }
+    }
   }
 
   return colors;

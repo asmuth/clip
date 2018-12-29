@@ -42,6 +42,7 @@ std::vector<Color> series_to_colors(
     const ColorScheme& palette);
 
 std::vector<Color> groups_to_colors(
+    size_t count,
     const std::vector<DataGroup>& groups,
     const ColorScheme& palette);
 

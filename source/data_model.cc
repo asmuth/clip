@@ -28,6 +28,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 #include "data_model.h"
+#include <assert.h>
 #include <iostream>
 
 namespace plotfx {
@@ -79,18 +80,20 @@ Value value_from_float(double v) {
 
 std::vector<DataGroup> series_group(const Series& data) {
   std::vector<DataGroup> groups;
+  std::unordered_map<Value, size_t> group_map;
 
-  for (size_t idx = 0; idx < data.size(); ) {
-    DataGroup g;
-    g.key = data[idx];
-    g.begin = idx;
-    g.end = idx;
-
-    while (g.end < data.size() && data[g.end] == data[g.begin]) {
-      g.end = ++idx;
+  for (size_t idx = 0; idx < data.size(); ++idx) {
+    size_t group_idx = group_map[data[idx]];
+    if (!group_idx) {
+      DataGroup g;
+      g.key = data[idx];
+      groups.emplace_back(g);
+      group_idx = groups.size();
+      group_map[data[idx]] = group_idx;
     }
 
-    groups.emplace_back(g);
+    assert(group_idx > 0);
+    groups[group_idx - 1].index.push_back(idx);
   }
 
   return groups;

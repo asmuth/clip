@@ -28,6 +28,7 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+#include <numeric>
 #include "plot_area.h"
 #include <plotfx.h>
 #include <graphics/path.h>
@@ -51,20 +52,20 @@ ReturnCode draw(
   for (const auto& group : config.groups) {
     Path path;
 
-    for (size_t i = group.begin; i < group.end; ++i) {
+    for (auto i : group.index) {
       auto sx = clip.x + config.x[i] * clip.w;
       auto sy = clip.y + (1.0 - config.y1[i]) * clip.h;
 
-      if (i == group.begin) {
+      if (i == group.index[0]) {
         path.moveTo(sx, sy);
       } else {
         path.lineTo(sx, sy);
       }
     }
 
-    for (size_t i = group.end; i > group.begin; --i) {
-      auto sx = clip.x + config.x[i - 1] * clip.w;
-      auto sy = clip.y + (1.0 - config.y2[i - 1]) * clip.h;
+    for (auto i = group.index.rbegin(); i != group.index.rend(); ++i) {
+      auto sx = clip.x + config.x[*i] * clip.w;
+      auto sy = clip.y + (1.0 - config.y2[*i]) * clip.h;
       path.lineTo(sx, sy);
     }
 
@@ -73,7 +74,7 @@ ReturnCode draw(
     FillStyle style;
     style.color = config.colors.empty()
         ? Color{}
-        : config.colors[group.begin % config.colors.size()];
+        : config.colors[group.index[0]];
 
     fillPath(layer, clip, path, style);
   }
@@ -93,7 +94,7 @@ ReturnCode build_legend(
     li.title = g.key.empty() ? title : g.key;
     li.color = config.colors.empty()
         ? Color{}
-        : config.colors[g.begin % config.colors.size()];
+        : config.colors[g.index[0] % config.colors.size()];
 
     legend_items.items.emplace_back(li);
   }
@@ -176,8 +177,8 @@ ReturnCode configure(
     config->groups = plotfx::series_group(*data_group);
   } else {
     DataGroup g;
-    g.begin = 0;
-    g.end = data_x->size();
+    g.index = std::vector<size_t>(data_x->size());
+    std::iota(g.index.begin(), g.index.end(), 0);
     config->groups.emplace_back(g);
   }
 
@@ -193,7 +194,7 @@ ReturnCode configure(
   config->colors = fallback(
       color,
       series_to_colors(colors, color_domain, color_palette),
-      groups_to_colors(config->groups, color_palette));
+      groups_to_colors(data_x->size(), config->groups, color_palette));
 
   /* build legend items */
   if (auto rc = build_legend(*config, title, legend_key, legend); !rc) {

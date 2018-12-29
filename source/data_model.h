@@ -46,8 +46,7 @@ struct DataContext {
 
 struct DataGroup {
   Value key;
-  size_t begin;
-  size_t end;
+  std::vector<size_t> index;
 };
 
 std::vector<DataGroup> series_group(const Series& data);

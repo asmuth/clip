@@ -28,6 +28,7 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+#include <numeric>
 #include "plot_bars.h"
 #include <plotfx.h>
 #include <graphics/path.h>
@@ -72,7 +73,7 @@ ReturnCode draw_horizontal(
   for (size_t group_idx = 0; group_idx < config.groups.size(); ++group_idx) {
     const auto group = config.groups[group_idx];
 
-    for (size_t i = group.begin; i < group.end; ++i) {
+    for (auto i : group.index) {
       auto sx1 = clip.x + config.x1[i] * clip.w;
       auto sx2 = clip.x + config.x2[i] * clip.w;
       const double sy =
@@ -157,7 +158,7 @@ ReturnCode draw_vertical(
   for (size_t group_idx = 0; group_idx < config.groups.size(); ++group_idx) {
     const auto group = config.groups[group_idx];
 
-    for (size_t i = group.begin; i < group.end; ++i) {
+    for (auto i : group.index) {
       const double sx =
           clip.x + config.x1[i] * clip.w +
           slot_width * -.5 +
@@ -317,8 +318,8 @@ ReturnCode configure(
     config->groups = plotfx::series_group(*data_group);
   } else {
     DataGroup g;
-    g.begin = 0;
-    g.end = data_x1->size();
+    g.index = std::vector<size_t>(data_x1->size());
+    std::iota(g.index.begin(), g.index.end(), 0);
     config->groups.emplace_back(g);
   }
 
@@ -342,7 +343,7 @@ ReturnCode configure(
   config->colors = fallback(
       color,
       series_to_colors(colors, color_domain, color_palette),
-      groups_to_colors(config->groups, color_palette));
+      groups_to_colors(data_x1->size(), config->groups, color_palette));
 
   config->label_font = doc.font_sans;
   config->label_font_size = doc.font_size;

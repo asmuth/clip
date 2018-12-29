@@ -1,14 +1,13 @@
-width: 1200px;
+width: 1280px;
 height: 480px;
 
 plot {
-  data: csv('tests/testdata/city_temperatures.csv');
-  x: month;
-  y: temperature;
-  group: city;
+  data: csv(tests/testdata/gdp_per_capita_small.csv);
+  x: country;
+  y: gdp;
+  group: year;
 
-  axis-y-min: -10;
-  axis-y-max: 32;
+  axis-y-max: 40000;
 
   layer {
     type: bars;
