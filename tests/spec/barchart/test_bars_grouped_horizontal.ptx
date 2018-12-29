@@ -1,0 +1,21 @@
+width: 1200px;
+height: 900px;
+
+plot {
+  data: csv('tests/testdata/city_temperatures.csv');
+  x: temperature;
+  y: month;
+  group: city;
+
+  axis-x-min: -10;
+  axis-x-max: 32;
+
+  layer {
+    type: bars;
+    direction: horizontal;
+  }
+
+  legend {
+    position: top left inside;
+  }
+}

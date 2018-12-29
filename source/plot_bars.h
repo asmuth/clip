@@ -50,6 +50,7 @@ struct PlotBarsConfig {
   std::vector<double> x2;
   std::vector<double> y1;
   std::vector<double> y2;
+  std::vector<DataGroup> groups;
   std::vector<Color> colors;
   std::vector<Measure> sizes;
   std::vector<std::string> labels;

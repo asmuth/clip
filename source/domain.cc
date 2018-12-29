@@ -129,7 +129,7 @@ double domain_translate_linear(
     vt = 1.0 - vt;
   }
 
-  return vt;
+  return std::clamp(vt, 0.0, 1.0);
 }
 
 double domain_translate_log(
@@ -153,7 +153,7 @@ double domain_translate_log(
     vt = 1.0 - vt;
   }
 
-  return vt;
+  return std::clamp(vt, 0.0, 1.0);
 }
 
 double domain_translate_categorical(
@@ -172,7 +172,7 @@ double domain_translate_categorical(
     vt = 1.0 - vt;
   }
 
-  return vt;
+  return std::clamp(vt, 0.0, 1.0);
 }
 
 double domain_translate(

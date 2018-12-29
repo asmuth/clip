@@ -44,6 +44,7 @@ namespace plot {
 namespace bars {
 
 static const double kDefaultBarPadding = 0.44;
+static const double kDefaultBarGroupPadding = 0.24;
 static const double kDefaultLabelPaddingEM = 0.4;
 
 PlotBarsConfig::PlotBarsConfig() :
@@ -53,35 +54,52 @@ ReturnCode draw_horizontal(
     const PlotBarsConfig& config,
     const Rectangle& clip,
     Layer* layer) {
+  assert(config.x1.size() == config.x2.size());
   assert(config.x1.size() == config.y1.size());
+  assert(config.y1.size() == config.y2.size());
 
-  // TODO: make configurable
-  auto bar_width = (clip.h / config.y1.size()) * 0.5 * (1.0 - kDefaultBarPadding);
+  const double group_cnt = config.groups.size();
+  const double groups_cnt = (config.x1.size() / group_cnt);
 
-  for (size_t i = 0; i < config.y1.size(); ++i) {
-    auto sx1 = clip.x + config.x1[i] * clip.w;
-    auto sx2 = clip.x + at_or(config.x2, i, 0.0) * clip.w;
-    auto sy = clip.y + (1.0 - config.y1[i]) * clip.h;
+  const double slot_width =
+      (clip.h / groups_cnt) *
+      (1.0 - kDefaultBarPadding);
 
-    const auto& color = config.colors.empty()
-        ? Color{}
-        : config.colors[i % config.colors.size()];
+  const double bar_width =
+      (slot_width / group_cnt) *
+      (group_cnt > 1 ? (1.0 - kDefaultBarGroupPadding) : 1.0);
 
-    auto size = config.sizes.empty()
-        ? Measure(0)
-        : config.sizes[i % config.sizes.size()];
+  for (size_t group_idx = 0; group_idx < config.groups.size(); ++group_idx) {
+    const auto group = config.groups[group_idx];
 
-    FillStyle style;
-    style.color = color;
+    for (size_t i = group.begin; i < group.end; ++i) {
+      auto sx1 = clip.x + config.x1[i] * clip.w;
+      auto sx2 = clip.x + config.x2[i] * clip.w;
+      const double sy =
+          clip.y + (1.0 - config.y1[i]) * clip.h +
+          slot_width * -.5 +
+          (slot_width / group_cnt) * (group_idx + .5);
 
-    Path path;
-    path.moveTo(sx1, sy - bar_width);
-    path.lineTo(sx2, sy - bar_width);
-    path.lineTo(sx2, sy + bar_width);
-    path.lineTo(sx1, sy + bar_width);
-    path.closePath();
+      const auto& color = config.colors.empty()
+          ? Color{}
+          : config.colors[i % config.colors.size()];
 
-    fillPath(layer, clip, path, style);
+      auto size = config.sizes.empty()
+          ? Measure(0)
+          : config.sizes[i % config.sizes.size()];
+
+      FillStyle style;
+      style.color = color;
+
+      Path path;
+      path.moveTo(sx1, sy - bar_width * 0.5);
+      path.lineTo(sx2, sy - bar_width * 0.5);
+      path.lineTo(sx2, sy + bar_width * 0.5);
+      path.lineTo(sx1, sy + bar_width * 0.5);
+      path.closePath();
+
+      fillPath(layer, clip, path, style);
+    }
   }
 
   /*
@@ -120,35 +138,54 @@ ReturnCode draw_vertical(
     const PlotBarsConfig& config,
     const Rectangle& clip,
     Layer* layer) {
+  assert(config.x1.size() == config.x2.size());
   assert(config.x1.size() == config.y1.size());
+  assert(config.y1.size() == config.y2.size());
+
+  const double group_cnt = config.groups.size();
+  const double groups_cnt = (config.x1.size() / group_cnt);
 
   // TODO: make configurable
-  auto bar_width = (clip.w / config.x1.size()) * 0.5 * (1.0 - kDefaultBarPadding);
+  const double slot_width =
+      (clip.w / groups_cnt) *
+      (1.0 - kDefaultBarPadding);
 
-  for (size_t i = 0; i < config.x1.size(); ++i) {
-    auto sx = clip.x + config.x1[i] * clip.w;
-    auto sy1 = clip.y + (1.0 - config.y1[i]) * clip.h;
-    auto sy2 = clip.y + (1.0 - at_or(config.y2, i, 0.0)) * clip.h;
+  const double bar_width =
+      (slot_width / group_cnt) *
+      (group_cnt > 1 ? (1.0 - kDefaultBarGroupPadding) : 1.0);
 
-    const auto& color = config.colors.empty()
-        ? Color{}
-        : config.colors[i % config.colors.size()];
+  for (size_t group_idx = 0; group_idx < config.groups.size(); ++group_idx) {
+    const auto group = config.groups[group_idx];
 
-    auto size = config.sizes.empty()
-        ? Measure(0)
-        : config.sizes[i % config.sizes.size()];
+    for (size_t i = group.begin; i < group.end; ++i) {
+      const double sx =
+          clip.x + config.x1[i] * clip.w +
+          slot_width * -.5 +
+          (slot_width / group_cnt) * (group_idx + .5);
 
-    FillStyle style;
-    style.color = color;
+      const double sy1 = clip.y + (1.0 - config.y1[i]) * clip.h;
+      const double sy2 = clip.y + (1.0 - config.y2[i]) * clip.h;
 
-    Path path;
-    path.moveTo(sx - bar_width, sy1);
-    path.lineTo(sx - bar_width, sy2);
-    path.lineTo(sx + bar_width, sy2);
-    path.lineTo(sx + bar_width, sy1);
-    path.closePath();
+      const auto& color = config.colors.empty()
+          ? Color{}
+          : config.colors[i % config.colors.size()];
 
-    fillPath(layer, clip, path, style);
+      auto size = config.sizes.empty()
+          ? Measure(0)
+          : config.sizes[i % config.sizes.size()];
+
+      FillStyle style;
+      style.color = color;
+
+      Path path;
+      path.moveTo(sx - bar_width * 0.5, sy1);
+      path.lineTo(sx - bar_width * 0.5, sy2);
+      path.lineTo(sx + bar_width * 0.5, sy2);
+      path.lineTo(sx + bar_width * 0.5, sy1);
+      path.closePath();
+
+      fillPath(layer, clip, path, style);
+    }
   }
 
   /*
@@ -272,18 +309,17 @@ ReturnCode configure(
   }
 
   /* group data */
-  std::vector<DataGroup> groups;
   if (data_group) {
     if (data_x1->size() != data_group->size()) {
       return ERROR_INVALID_ARGUMENT;
     }
 
-    groups = plotfx::series_group(*data_group);
+    config->groups = plotfx::series_group(*data_group);
   } else {
     DataGroup g;
     g.begin = 0;
     g.end = data_x1->size();
-    groups.emplace_back(g);
+    config->groups.emplace_back(g);
   }
 
   /* return element */
@@ -294,19 +330,19 @@ ReturnCode configure(
       *domain_x,
       data_x2
           ? *data_x2
-          : std::vector<Value>{});
+          : std::vector<Value>(data_x1->size(), "0.0"));
 
   config->y1 = domain_translate(*domain_y, *data_y1);
   config->y2 = domain_translate(
       *domain_y,
       data_y2
           ? *data_y2
-          : std::vector<Value>{});
+          : std::vector<Value>(data_y1->size(), "0.0"));
 
   config->colors = fallback(
       color,
       series_to_colors(colors, color_domain, color_palette),
-      groups_to_colors(groups, color_palette));
+      groups_to_colors(config->groups, color_palette));
 
   config->label_font = doc.font_sans;
   config->label_font_size = doc.font_size;
