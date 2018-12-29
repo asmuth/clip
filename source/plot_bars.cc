@@ -46,7 +46,8 @@ namespace bars {
 
 static const double kDefaultBarPadding = 0.44;
 static const double kDefaultBarGroupPadding = 0.24;
-static const double kDefaultLabelPaddingEM = 0.4;
+static const double kDefaultLabelPaddingHorizEM = 0.4;
+static const double kDefaultLabelPaddingVertEM = 0.4;
 
 PlotBarsConfig::PlotBarsConfig() :
     direction(Direction::VERTICAL) {}
@@ -103,7 +104,6 @@ ReturnCode draw_horizontal(
     }
   }
 
-  /*
   for (size_t i = 0; i < config.labels.size(); ++i) {
     const auto& label_text = config.labels[i];
 
@@ -113,24 +113,23 @@ ReturnCode draw_horizontal(
 
     auto label_padding = size + measure_or(
         config.label_padding,
-        from_em(kDefaultLabelPaddingEM, config.label_font_size));
+        from_em(kDefaultLabelPaddingHorizEM, config.label_font_size));
 
     Point p(
-        clip.x + config.x[i] * clip.w,
-        clip.y + (1.0 - config.y[i]) * clip.h - label_padding);
+        clip.x + config.x1[i] * clip.w + label_padding,
+        clip.y + (1.0 - config.y1[i]) * clip.h);
 
     TextStyle style;
     style.font = config.label_font;
     style.color = config.label_color;
     style.font_size = config.label_font_size;
 
-    auto ax = HAlign::CENTER;
-    auto ay = VAlign::BOTTOM;
+    auto ax = HAlign::LEFT;
+    auto ay = VAlign::CENTER;
     if (auto rc = drawTextLabel(label_text, p, ax, ay, style, layer); rc != OK) {
       return rc;
     }
   }
-  */
 
   return OK;
 }
@@ -189,7 +188,6 @@ ReturnCode draw_vertical(
     }
   }
 
-  /*
   for (size_t i = 0; i < config.labels.size(); ++i) {
     const auto& label_text = config.labels[i];
 
@@ -199,11 +197,11 @@ ReturnCode draw_vertical(
 
     auto label_padding = size + measure_or(
         config.label_padding,
-        from_em(kDefaultLabelPaddingEM, config.label_font_size));
+        from_em(kDefaultLabelPaddingVertEM, config.label_font_size));
 
     Point p(
-        clip.x + config.x[i] * clip.w,
-        clip.y + (1.0 - config.y[i]) * clip.h - label_padding);
+        clip.x + config.x1[i] * clip.w,
+        clip.y + (1.0 - config.y1[i]) * clip.h - label_padding);
 
     TextStyle style;
     style.font = config.label_font;
@@ -216,7 +214,6 @@ ReturnCode draw_vertical(
       return rc;
     }
   }
-  */
 
   return OK;
 }

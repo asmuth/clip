@@ -1,0 +1,19 @@
+width: 1280px;
+height: 480px;
+
+plot {
+  data: csv(tests/testdata/city_temperatures_london.csv);
+  x: month;
+  y: temperature;
+
+  axis-y-max: 30;
+
+  layer {
+    type: bars;
+    labels: temperature_str;
+  }
+
+  legend {
+    position: top left inside;
+  }
+}
