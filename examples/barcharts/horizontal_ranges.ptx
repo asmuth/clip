@@ -1,0 +1,19 @@
+width: 1280px;
+height: 480px;
+
+plot {
+  data: csv(tests/testdata/bardata.csv);
+  y: var0;
+  group: series;
+
+  axis-x-max: 75;
+  axis-x-min: -25;
+
+  layer {
+    type: bars;
+    x1: var2;
+    x2: var3;
+    direction: horizontal;
+  }
+
+}

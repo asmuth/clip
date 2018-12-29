@@ -1,0 +1,22 @@
+width: 1280px;
+height: 480px;
+
+plot {
+  data: csv(tests/testdata/gdp_per_capita_small.csv);
+  x: country;
+  y: gdp;
+  group: year;
+
+  axis-y-max: 40000;
+  axis-top: off;
+
+  grid-x: geom;
+
+  layer {
+    type: bars;
+  }
+
+  legend {
+    position: top left inside;
+  }
+}
