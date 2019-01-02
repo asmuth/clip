@@ -6,6 +6,7 @@ documentation:
     pages:
       -
         title: "Introduction"
+        doctitle: "PlotFX - The open-source plotting toolkit"
         url: "/"
         file: "introduction"
       -
@@ -18,7 +19,7 @@ documentation:
         file: "installation"
       -
         title: "Download"
-        url: "/documentation/download"
+        url: "/download"
         file: "download"
       -
         title: "FAQ"
