@@ -21,7 +21,7 @@ tpl = """
         <a class="menu {{menu_active_reference}}" href="/reference">API Reference</a>
         <a class="menu {{menu_active_examples}}" href="/examples">Examples</a>
         <a class="menu {{menu_active_documentation}}" href="/">Documentation</a>
-        <h1><a href="/">PlotFX</a></h1>
+        <a href="/"><img src="/logo.png" alt="PlotFX" class="logo" /></a>
       </div>
     </div>
 
