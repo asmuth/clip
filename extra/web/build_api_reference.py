@@ -11,8 +11,8 @@ def build_prop(parent):
         <tbody>
           {{#props}}
             <tr>
-              <td width="40%"><code><strong>{{name}}</strong></code></td>
-              <td>Description goes here</td>
+              <td width="35%"><code><strong>{{name}}</strong></code></td>
+              <td>{{desc}}</td>
             </tr>
           {{/props}}
         </tbody>
@@ -39,7 +39,8 @@ def build_prop(parent):
   props = []
   for prop in parent.findall("./prop"):
     props.append({
-      "name": prop.attrib["name"]
+      "name": prop.attrib["name"],
+      "desc": prop.attrib["desc"] if "desc" in prop.attrib else "",
     })
 
   return TPL.render(tpl, {

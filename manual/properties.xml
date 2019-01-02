@@ -1,127 +1,125 @@
 <properties>
 
   <elem path="global">
-    <prop name="width" />
-    <prop name="height" />
-    <prop name="font-size" />
-    <prop name="background-color" />
-    <prop name="foreground-color" />
-    <prop name="text-color" />
-    <prop name="border-color" />
+    <prop name="width" desc="Set the width (in px/cm/in) of the output file" />
+    <prop name="height" desc="Set the height (in px/cm/in) of the output file" />
+    <prop name="font-size" desc="Set the root font size" />
+    <prop name="background-color" desc="Set the root background colour" />
+    <prop name="foreground-color" desc="Set the root foreground colour" />
+    <prop name="text-color" desc="Set the root text colour" />
+    <prop name="border-color" desc="Set the root border colour" />
   </elem>
 
   <elem path="plot">
-    <prop name="x" />
-    <prop name="y" />
-    <prop name="group" />
-    <prop name="x-scale" />
-    <prop name="y-scale" />
-    <prop name="axis-x" />
-    <prop name="axis-x-min" />
-    <prop name="axis-x-max" />
-    <prop name="axis-x-format" />
-    <prop name="axis-x-label-placement" />
-    <prop name="axis-x-padding" />
-    <prop name="axis-y" />
-    <prop name="axis-y-min" />
-    <prop name="axis-y-max" />
-    <prop name="axis-y-format" />
-    <prop name="axis-y-label-placement" />
-    <prop name="axis-y-padding" />
-    <prop name="axis-top" />
-    <prop name="axis-top-scale" />
-    <prop name="axis-top-format" />
-    <prop name="axis-top-label-placement" />
-    <prop name="axis-right-scale" />
-    <prop name="axis-right-format" />
-    <prop name="axis-right-label-placement" />
-    <prop name="axis-bottom-scale" />
-    <prop name="axis-bottom-format" />
-    <prop name="axis-bottom-label-placement" />
-    <prop name="axis-left-scale" />
-    <prop name="axis-left-format" />
-    <prop name="axis-left-label-placement" />
-    <prop name="grid" />
-    <prop name="grid-x" />
-    <prop name="grid-y" />
-    <prop name="grid-x-scale" />
-    <prop name="grid-y-scale" />
-    <prop name="grid-stroke" />
-    <prop name="margin" />
-    <prop name="margin-top" />
-    <prop name="margin-right" />
-    <prop name="margin-bottom" />
-    <prop name="margin-left" />
-    <prop name="layer" />
+    <prop name="x" desc="Set the default 'x' data for the plot" />
+    <prop name="y" desc="Set the default 'y' data for the plot" />
+    <prop name="group" desc="Group the input data into series/groups" />
+    <prop name="axis-x" desc="Set the 'x' axis type" />
+    <prop name="axis-x-min" desc="Set the 'x' axis lower limit" />
+    <prop name="axis-x-max" desc="Set the 'x' axis upper limit" />
+    <prop name="axis-x-format" desc="Set the 'x' axis label formatter" />
+    <prop name="axis-x-label-placement" desc="Set the 'x' axis label placement" />
+    <prop name="axis-x-padding" desc="Set the 'x' axis default limit padding" />
+    <prop name="axis-y" desc="Set the 'y' axis type" />
+    <prop name="axis-y-min" desc="Set the 'y' axis lower limit" />
+    <prop name="axis-y-may" desc="Set the 'y' axis upper limit" />
+    <prop name="axis-y-format" desc="Set the 'y' axis label formatter" />
+    <prop name="axis-y-label-placement" desc="Set the 'y' axis label placement" />
+    <prop name="axis-y-padding" desc="Set the 'y' axis default limit padding" />
+    <prop name="axis-top" desc="Set the top axis type" />
+    <prop name="axis-top-scale" desc="Use an alternative scale for the top axis" />
+    <prop name="axis-top-format" desc="Set the top axis label formatter" />
+    <prop name="axis-top-label-placement" desc="Set the top axis label placement" />
+    <prop name="axis-right" desc="Set the right axis type" />
+    <prop name="axis-right-scale" desc="Use an alternative scale for the right axis" />
+    <prop name="axis-right-format" desc="Set the right axis label formatter" />
+    <prop name="axis-right-label-placement" desc="Set the right axis label placement" />
+    <prop name="axis-bottom" desc="Set the bottom axis type" />
+    <prop name="axis-bottom-scale" desc="Use an alternative scale for the bottom axis" />
+    <prop name="axis-bottom-format" desc="Set the bottom axis label formatter" />
+    <prop name="axis-bottom-label-placement" desc="Set the bottom axis label placement" />
+    <prop name="axis-left" desc="Set the left axis type" />
+    <prop name="axis-left-scale" desc="Use an alternative scale for the left axis" />
+    <prop name="axis-left-format" desc="Set the left axis label formatter" />
+    <prop name="axis-left-label-placement" desc="Set the left axis label placement" />
+    <prop name="grid" desc="Set the background gridline spacing and visibility" />
+    <prop name="grid-x" desc="Set the background gridline spacing and visibility for the 'x' axis" />
+    <prop name="grid-y" desc="Set the background gridline spacing and visibility for the 'y' axis" />
+    <prop name="grid-x-scale" desc="Draw the background grid using an alternative 'x' scale" />
+    <prop name="grid-y-scale" desc="Draw the background grid using an alternative 'y' scale" />
+    <prop name="grid-stroke" desc="Set the background gridline stroke and width" />
+    <prop name="margin" desc="Set the margins" />
+    <prop name="margin-top" desc="Set the top margin" />
+    <prop name="margin-right" desc="Set the right margin" />
+    <prop name="margin-bottom" desc="Set the bottom margin" />
+    <prop name="margin-left" desc="Set the left margin" />
+    <prop name="layer" desc="Add a layer to the plot" />
   </elem>
 
   <elem path="plot.layer" cond="type = lines">
-    <prop name="type" />
-    <prop name="x" />
-    <prop name="y" />
-    <prop name="group" />
-    <prop name="x-scale" />
-    <prop name="y-scale" />
-    <prop name="title" />
-    <prop name="color" />
-    <prop name="colors" />
-    <prop name="stroke" />
+    <prop name="type" desc="Must be 'lines'" />
+    <prop name="x" desc="Set the 'x' data" />
+    <prop name="y" desc="Set the 'y' data" />
+    <prop name="group" desc="Group the input data into series/groups" />
+    <prop name="x-scale" desc="Use an alternative 'x' scale" />
+    <prop name="y-scale" desc="Use an alternative 'y' scale" />
+    <prop name="title" desc="Add a title to this layer" />
+    <prop name="color" desc="Set the line colour" />
+    <prop name="colors" desc="Compute line colours from input data" />
+    <prop name="stroke" desc="Set the stroke width and style" />
   </elem>
 
   <elem path="plot.layer" cond="type = area">
-    <prop name="type" />
-    <prop name="x" />
-    <prop name="y" />
-    <prop name="y1" />
-    <prop name="y2" />
-    <prop name="group" />
-    <prop name="x-scale" />
-    <prop name="y-scale" />
-    <prop name="title" />
-    <prop name="color" />
-    <prop name="colors" />
+    <prop name="type" desc="Must be 'area'" />
+    <prop name="x" desc="Set the 'x' data" />
+    <prop name="y" desc="Set the 'y' data" />
+    <prop name="x2" desc="" />
+    <prop name="y2" desc="" />
+    <prop name="group" desc="Group the input data into series/groups" />
+    <prop name="x-scale" desc="Use an alternative 'x' scale" />
+    <prop name="y-scale" desc="Use an alternative 'y' scale" />
+    <prop name="title" desc="Add a title to this layer" />
+    <prop name="color" desc="Set the area colour" />
+    <prop name="colors" desc="Compute area colours from input data" />
   </elem>
 
   <elem path="plot.layer" cond="type = points">
-    <prop name="type" />
-    <prop name="x" />
-    <prop name="y" />
-    <prop name="group" />
-    <prop name="x-scale" />
-    <prop name="y-scale" />
-    <prop name="color" />
-    <prop name="colors" />
-    <prop name="size" />
-    <prop name="size-min" />
-    <prop name="size-max" />
-    <prop name="sizes" />
-    <prop name="labels" />
+    <prop name="type" desc="Must be 'points'" />
+    <prop name="x" desc="Set the 'x' data" />
+    <prop name="y" desc="Set the 'y' data" />
+    <prop name="group" desc="Group the input data into series/groups" />
+    <prop name="x-scale" desc="Use an alternative 'x' scale" />
+    <prop name="y-scale" desc="Use an alternative 'y' scale" />
+    <prop name="color" desc="Set the point colour" />
+    <prop name="colors" desc="Compute point colours from input data" />
+    <prop name="size" desc="Set the point size" />
+    <prop name="sizes" desc="Compute point sizes from input data" />
+    <prop name="size-min" desc="Set the mininum point size (for computed point sizes)" />
+    <prop name="size-max" desc="Set the maximum point size (for computed point sizes)" />
+    <prop name="labels" desc="Set the (optional) label text data" />
   </elem>
 
   <elem path="plot.layer" cond="type = labels">
-    <prop name="type" />
-    <prop name="x" />
-    <prop name="y" />
-    <prop name="x-scale" />
-    <prop name="y-scale" />
-    <prop name="labels" />
+    <prop name="type" desc="Must be 'labels'" />
+    <prop name="x" desc="Set the 'x' data" />
+    <prop name="y" desc="Set the 'y' data" />
+    <prop name="x-scale" desc="Use an alternative 'x' scale" />
+    <prop name="y-scale" desc="Use an alternative 'y' scale" />
+    <prop name="labels" desc="Set the label text data" />
   </elem>
 
   <elem path="plot.layer" cond="type = bars">
-    <prop name="type" />
-    <prop name="x" />
-    <prop name="x1" />
-    <prop name="x2" />
-    <prop name="y" />
-    <prop name="y1" />
-    <prop name="y2" />
-    <prop name="group" />
-    <prop name="x-scale" />
-    <prop name="y-scale" />
-    <prop name="title" />
-    <prop name="directon" />
-    <prop name="color" />
-    <prop name="colors" />
+    <prop name="type" desc="Must be 'bars'" />
+    <prop name="x" desc="Set the 'x' data" />
+    <prop name="y" desc="Set the 'y' data" />
+    <prop name="x2" desc="" />
+    <prop name="y2" desc="" />
+    <prop name="group" desc="Group the input data into series/groups" />
+    <prop name="x-scale" desc="Use an alternative 'x' scale" />
+    <prop name="y-scale" desc="Use an alternative 'y' scale" />
+    <prop name="directon" desc="Set the bar direction (horizontal/vertical)" />
+    <prop name="color" desc="Set the bar colour" />
+    <prop name="colors" desc="Compute bar colours from input data" />
   </elem>
 
 </properties>
