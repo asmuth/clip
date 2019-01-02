@@ -17,6 +17,7 @@ cd "$(dirname "$0")/../.."
 
 cp extra/web/documentation.css "${output_dir}"
 cp extra/web/redirects.txt "${output_dir}/_redirects"
+cp extra/web/favicon.ico "${output_dir}"
 ./extra/web/build_api_reference.py
 ./extra/web/build_examples.py
 ./extra/web/build_pages.py
