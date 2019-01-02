@@ -181,17 +181,29 @@ ReturnCode configure_scales(
     const plist::PropertyList& plist,
     const DataContext& data,
     DomainMap* scales) {
-  {
-    DomainConfig d;
-    d.padding = 0;
-    scales->emplace(SCALE_DEFAULT_X, d);
+  DomainConfig domain_x;
+  domain_x.padding = 0;
+
+  DomainConfig domain_y;
+  domain_y.min_auto_snap_zero = true;
+
+  static const ParserDefinitions pdefs = {
+    {"axis-x", bind(&domain_configure, _1, &domain_x)},
+    {"axis-x-min", bind(&configure_float_opt, _1, &domain_x.min)},
+    {"axis-x-max", bind(&configure_float_opt, _1, &domain_x.max)},
+    {"axis-x-padding", bind(&configure_float, _1, &domain_x.padding)},
+    {"axis-y", bind(&domain_configure, _1, &domain_y)},
+    {"axis-y-min", bind(&configure_float_opt, _1, &domain_y.min)},
+    {"axis-y-max", bind(&configure_float_opt, _1, &domain_y.max)},
+    {"axis-y-padding", bind(&configure_float, _1, &domain_y.padding)},
+  };
+
+  if (auto rc = parseAll(plist, pdefs); !rc.isSuccess()) {
+    return rc;
   }
 
-  {
-    DomainConfig d;
-    d.min_auto_snap_zero = true;
-    scales->emplace(SCALE_DEFAULT_Y, d);
-  }
+  scales->emplace(SCALE_DEFAULT_X, domain_x);
+  scales->emplace(SCALE_DEFAULT_Y, domain_y);
 
   for (const auto& prop : plist) {
     if (prop.name != "layer") {
@@ -328,9 +340,6 @@ ReturnCode configure_style(
   auto domain_y = find_ptr(scales, SCALE_DEFAULT_Y);
 
   static const ParserDefinitions pdefs = {
-    {"axis-x", bind(&domain_configure, _1, domain_x)},
-    {"axis-x-min", bind(&configure_float_opt, _1, &domain_x->min)},
-    {"axis-x-max", bind(&configure_float_opt, _1, &domain_x->max)},
     {
       "axis-x-format",
       configure_multiprop({
@@ -345,10 +354,6 @@ ReturnCode configure_style(
           bind(&axis_configure_label_placement, _1, &config->axis_bottom.label_placement),
       })
     },
-    {"axis-x-padding", bind(&configure_float, _1, &domain_x->padding)},
-    {"axis-y", bind(&domain_configure, _1, domain_y)},
-    {"axis-y-min", bind(&configure_float_opt, _1, &domain_y->min)},
-    {"axis-y-max", bind(&configure_float_opt, _1, &domain_y->max)},
     {
       "axis-y-format",
       configure_multiprop({
@@ -363,7 +368,6 @@ ReturnCode configure_style(
           bind(&axis_configure_label_placement, _1, &config->axis_right.label_placement),
       })
     },
-    {"axis-y-padding", bind(&configure_float, _1, &domain_y->padding)},
     {"axis-top", bind(&parseAxisModeProp, _1, &config->axis_top.mode)},
     {"axis-top-scale", bind(&configure_string, _1, &config->axis_top.scale)},
     {"axis-top-format", bind(&confgure_format, _1, &config->axis_top.label_formatter)},
