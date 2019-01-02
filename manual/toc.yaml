@@ -19,7 +19,7 @@ documentation:
         file: "installation"
       -
         title: "Download"
-        url: "/documentation/download"
+        url: "/download"
         file: "download"
       -
         title: "FAQ"

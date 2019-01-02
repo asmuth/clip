@@ -17,10 +17,10 @@ tpl = """
     <div id="header" class="border">
       <div class="doc_wrap">
         <a class="menu" href="http://github.com/plotfx/plotfx" target="_blank">Github</a>
-        <a class="menu" href="/documentation/download">Download</a>
-        <a class="menu active" href="/reference">API Reference</a>
-        <a class="menu" href="/examples">Examples</a>
-        <a class="menu active" href="/">Documentation</a>
+        <a class="menu {{menu_active_download}}" href="/download">Download</a>
+        <a class="menu {{menu_active_reference}}" href="/reference">API Reference</a>
+        <a class="menu {{menu_active_examples}}" href="/examples">Examples</a>
+        <a class="menu {{menu_active_documentation}}" href="/">Documentation</a>
         <h1><a href="/">PlotFX</a></h1>
       </div>
     </div>
@@ -62,7 +62,16 @@ tpl = """
 
 def build_layout(url, content, title=""):
   toc = yaml.load(Path("manual/toc.yaml").read_text())["documentation"]
-  return TPL.render(tpl, {"content": content, "url": url, "toc": toc, "title": title})
+  return TPL.render(tpl, {
+    "content": content,
+    "url": url,
+    "toc": toc,
+    "title": title,
+    "menu_active_documentation": "active" if (url.startswith("/documentation") or url == "/") else "",
+    "menu_active_download": "active" if url.startswith("/download") else "",
+    "menu_active_examples": "active" if url.startswith("/examples") else "",
+    "menu_active_reference": "active" if url.startswith("/reference") else "",
+  })
 
 def write_page(url, content, title=""):
   write_file(url + "/index.html", build_layout(url, content, title=title))
