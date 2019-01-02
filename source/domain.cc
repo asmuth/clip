@@ -160,6 +160,9 @@ double domain_translate_categorical(
     const DomainConfig& domain,
     const Value& v) {
   double category_count = domain.categories.size();
+  if (category_count == 0) {
+    return 0;
+  }
 
   size_t vi = 0;
   if (auto vm = domain.map.find(v); vm != domain.map.end()) {
