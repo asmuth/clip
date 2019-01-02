@@ -391,6 +391,10 @@ table.invisible tr, table.invisible td {
   padding-top: .5em;
 }
 
+#documentation .api_ref code strong {
+  font-size: 110%;
+}
+
 #documentation .api_ref h2 {
   border-bottom: none;
   margin-top: .2em;
