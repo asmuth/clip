@@ -117,7 +117,7 @@
     <prop name="group" desc="Group the input data into series/groups" />
     <prop name="x-scale" desc="Use an alternative 'x' scale" />
     <prop name="y-scale" desc="Use an alternative 'y' scale" />
-    <prop name="directon" desc="Set the bar direction (horizontal/vertical)" />
+    <prop name="direction" desc="Set the bar direction (horizontal/vertical)" />
     <prop name="color" desc="Set the bar colour" />
     <prop name="colors" desc="Compute bar colours from input data" />
   </elem>
