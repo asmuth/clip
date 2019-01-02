@@ -94,17 +94,15 @@ ul li p {
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
-#header.border {
-  border-bottom: 1px solid #ddd;
-}
-
 #header .logo {
   height: 24px;
+  width: 87.5px;
   margin-top: 16px;
+  margin-right: 122px;
+  float: left;
 }
 
 #header a.menu {
-  float:right;
   text-decoration:none;
   padding: 0 10px;
   margin-left: 10px;
@@ -146,7 +144,7 @@ ul li p {
 
 #navigation {
   padding: 2em 2em 0 0;
-  width: 250px;
+  width: 200px;
   top: 65px;
   font-size: 16px;
 }
@@ -208,6 +206,8 @@ ul li p {
   display: flex;
   overflow: auto;
   margin-bottom: 2em;
+  border-top: 1px solid #ddd;
+  padding-top: 10px;
 }
 
 #documentation {
@@ -217,14 +217,14 @@ ul li p {
   font-size: 16px;
   font-weight: 400;
   margin: 0;
-  padding: 35px 0 50px 0;
+  padding: 16px 0 50px 0;
   overflow: hidden;
 }
 
 #documentation h1 {
   margin-bottom: 0.6em;
   padding-bottom: 0;
-  font-size: 26.5px;
+  font-size: 30px;
   font-weight: 500;
 }
 
@@ -259,7 +259,7 @@ ul li p {
 }
 
 #documentation p, #documentation li, #documentation td, #documentation th {
-  font-size: 96%;
+  line-height: 155%;
 }
 
 #documentation hr {

@@ -16,12 +16,12 @@ tpl = """
   <body>
     <div id="header" class="border">
       <div class="doc_wrap">
-        <a class="menu" href="http://github.com/plotfx/plotfx" target="_blank">Github</a>
-        <a class="menu {{menu_active_download}}" href="/download">Download</a>
-        <a class="menu {{menu_active_reference}}" href="/reference">API Reference</a>
-        <a class="menu {{menu_active_examples}}" href="/examples">Examples</a>
-        <a class="menu {{menu_active_documentation}}" href="/">Documentation</a>
         <a href="/"><img src="/logo.png" alt="PlotFX" class="logo" /></a>
+        <a class="menu {{menu_active_documentation}}" href="/">Documentation</a>
+        <a class="menu {{menu_active_examples}}" href="/examples">Examples</a>
+        <a class="menu {{menu_active_reference}}" href="/reference">API Reference</a>
+        <a class="menu {{menu_active_download}}" href="/download">Download</a>
+        <a class="menu" href="http://github.com/plotfx/plotfx" target="_blank">Github</a>
       </div>
     </div>
 
