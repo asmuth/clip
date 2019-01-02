@@ -9,7 +9,7 @@ tpl = """
 <!DOCTYPE html>
 <html>
   <head>
-    <title>plotfx | <%= @title || "Collect and visualize timeseries data with SQL" %></title>
+    <title>{{title}} | plotfx</title>
     <link href='/documentation.css' type='text/css' rel='stylesheet' />
     <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
   </head>
@@ -60,12 +60,12 @@ tpl = """
 </html>
 """
 
-def build_layout(url, content):
+def build_layout(url, content, title=""):
   toc = yaml.load(Path("manual/toc.yaml").read_text())["documentation"]
-  return TPL.render(tpl, {"content": content, "url": url, "toc": toc})
+  return TPL.render(tpl, {"content": content, "url": url, "toc": toc, "title": title})
 
-def write_page(url, content):
-  write_file(url + "/index.html", build_layout(url, content))
+def write_page(url, content, title=""):
+  write_file(url + "/index.html", build_layout(url, content, title=title))
 
 def write_file(path, content):
   output_path = os.environ["output_dir"] + path

@@ -13,10 +13,11 @@ def build_example(url):
   env = {
     "example_url": url,
     "example_src": Path(os.path.join("examples", url + ".ptx")).read_text(),
+    "title": "Example: %s" % url,
   }
 
   html = TPL.render(tpl, env)
-  write_page(path, html)
+  write_page(path, html, title=env["title"])
   copy_file(path + ".svg", os.path.join("examples", url + ".svg"))
 
 def build_example_list(examples):
@@ -28,7 +29,7 @@ def build_example_list(examples):
     </ul>
   """
   env = {
-    "list": map(lambda x: { "name": x }, examples)
+    "list": map(lambda x: { "name": x }, examples),
   }
 
   write_file("/_example_list.gen.html", TPL.render(tpl, env))

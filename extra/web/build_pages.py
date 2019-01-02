@@ -9,6 +9,7 @@ def build_page(page):
   print("> Building page: %s" % page["url"])
   url = page["url"]
   path = "manual/" + page["file"] + ".md"
+  title = page.get("doctitle", page["title"])
 
   if os.path.isfile(path):
     source = Path(path).read_text()
@@ -22,7 +23,7 @@ def build_page(page):
       lambda m: Path(os.path.join(os.environ["output_dir"], m[1])).read_text(),
       html)
 
-  write_page(url, html)
+  write_page(url, html, title=title)
 
 def build_toc(toc):
   for page in toc:
