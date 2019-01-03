@@ -23,14 +23,14 @@ new CSS-like syntax. This might take a while...
 
 ## Getting Started
 
-[![A simple line chart](./examples/linecharts/lines_with_points.svg)](./examples/linecharts/lines_with_points.plot)
+[![A simple line chart](./examples/linecharts/lines_with_points.svg)](./examples/linecharts/lines_with_points)
 
 The simple line chart from above was generated with PlotFX using the following
 command line:
 
-    $ plotfx --in example_chart.plot --out example_chart.svg
+    $ plotfx --in example_chart.ptx --out example_chart.svg
 
-Here is the input file from which the above plot was generated (`example_chart.plot`):
+Here is the input file from which the above plot was generated (`example_chart.ptx`):
 
     width: 1200px;
     height: 480px;
