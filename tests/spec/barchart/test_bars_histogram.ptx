@@ -1,0 +1,26 @@
+width: 1200px;
+height: 480px;
+
+plot {
+  data: csv(tests/testdata/histogram.csv);
+  y: var1;
+  x: var0;
+
+  axis-top: off;
+
+  axis-y: log;
+  axis-x: categorical;
+
+  axis-y-max: 80000;
+
+  grid-x: geom;
+
+  layer {
+    type: bars;
+    labels: var1;
+  }
+
+  legend {
+    position: top left inside;
+  }
+}
