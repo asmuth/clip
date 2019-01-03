@@ -10,8 +10,6 @@ plot {
   axis-y-min: -30;
   axis-y-max: 40;
 
-  margin-right: 2.4em;
-
   layer {
     type: lines;
   }

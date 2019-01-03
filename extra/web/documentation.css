@@ -6,7 +6,7 @@ html {
 body {
   margin: 0;
   padding: 0;
-  font-family: Helvetica, Arial, sans-serif;
+  font-family: "Roboto", Helvetica, Arial, sans-serif;
   font-size: 14px;
   line-height: 20px;
   background-color: #fff;
@@ -45,6 +45,19 @@ h2 {
   margin-bottom: .4em;
   padding-bottom: .2em;
   font-weight: 600;
+}
+
+h3.section {
+  font-size: 19px;
+  margin-top: 2em;
+  margin-bottom: 1em;
+  border-bottom: 1px solid #ddd;
+  font-weight: 500;
+}
+
+section {
+  border-top: 1px solid #ddd;
+  margin-bottom: 2em;
 }
 
 hr {
@@ -212,9 +225,9 @@ ul li p {
 
 #documentation {
   flex: 1;
-  color: #444;
+  color: #000;
   background: #fff;
-  font-size: 16px;
+  font-size: 14.5px;
   font-weight: 400;
   margin: 0;
   padding: 16px 0 50px 0;
@@ -224,7 +237,7 @@ ul li p {
 #documentation h1 {
   margin-bottom: 0.6em;
   padding-bottom: 0;
-  font-size: 30px;
+  font-size: 28px;
   font-weight: 500;
 }
 
@@ -246,8 +259,12 @@ ul li p {
   margin-top: 1em;
 }
 
-#documentation pre + h3 {
-  margin-top: 2em;
+#documentation h3 + pre {
+  margin-top: 0.2em;
+}
+
+#documentation pre + h3.section {
+  margin-top: 1.8em;
 }
 
 #documentation p {
@@ -255,11 +272,11 @@ ul li p {
   margin-bottom: .6em;
   font-weight: 400;
   line-height: 22px;
-  color: #444;
+  color: #000;
 }
 
 #documentation p, #documentation li, #documentation td, #documentation th {
-  line-height: 155%;
+  line-height: 150%;
 }
 
 #documentation hr {
@@ -372,6 +389,19 @@ table.invisible tr, table.invisible td {
   padding-left: 2em;
 }
 
+#documentation dl {
+  margin-top: 0;
+  margin-bottom: 2em;
+}
+
+#documentation dl dt {
+  margin-top: 1em;
+}
+
+#documentation dl dt:first-child {
+  margin-top: 0;
+}
+
 #documentation .api_ref {
   border: 1px solid #ddd;
   margin-top: 2em;
@@ -404,9 +434,32 @@ table.invisible tr, table.invisible td {
   line-height: 16pt;
 }
 
-#documentation .api_ref table {
+#documentation .api_ref .plist {
+  display: table;
   border-top: 2px solid #ddd;
   margin-top: .6em;
   margin-bottom: 0;
+  width: 100%;
 }
 
+#documentation .api_ref .prop {
+  display: table-row;
+  width: 100%;
+  color: inherit;
+}
+
+#documentation .api_ref .prop:nth-child(2n+0) { background-color: #f8f8f8; }
+
+#documentation .api_ref .prop:hover {
+  background: #00f;
+  color: #fff;
+  text-decoration: none;
+}
+
+#documentation .api_ref .prop > span {
+  display: table-cell;
+  padding: 6px 6px 5px 6px;
+  text-align: left;
+  vertical-align: top;
+  border-bottom: 1px solid #eee;
+}

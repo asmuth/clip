@@ -1,5 +1,5 @@
-Installing PlotFX
-======================
+Installation
+============
 
 PlotFX is written in C++. You can either install a binary release or compile
 from source. Once the installation is complete, you will have a `plotfx` binary

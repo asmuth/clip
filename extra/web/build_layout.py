@@ -12,6 +12,9 @@ tpl = """
     <title>{{title}} | plotfx</title>
     <link href='/documentation.css' type='text/css' rel='stylesheet' />
     <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+    <link href="https://fonts.googleapis.com/css?family=Roboto:400,400i,500,700" rel="stylesheet">
+    <meta name="google-site-verification" content="YeeIR81CPKSaRurQUh6j82N5tH5lcNXTsdqBICkNpyU" />
+    <meta name="google-site-verification" content="GxeOO-JtsPc9Doi_WQTvQFI-b7TQgCYxjsVTNtsA7Rc" />
   </head>
   <body>
     <div id="header" class="border">

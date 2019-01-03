@@ -1,0 +1,726 @@
+---
+proto: &margin_values
+  - value: "auto"
+    desc: "Automatically select a suitable margin to use."
+  - value: "<length>"
+    desc: "Set the margin to an explicit size"
+
+proto: &prop_group
+  name: group
+  desc_short: Group the input data into series/groups
+  desc: |
+    The 'group' dataset allows to group the input data into series or
+    groups.
+  demo: |
+    group: ...;
+  syntax_formal: "group: <dataset>"
+  syntax_example: |
+    /* Set the group dataset to the literal values 10, 20, 30, 40, 50 */
+    group: inline(10, 20, 30, 40, 50);
+
+    /* Load the group dataset from the CSV file 'data.csv', colum name 'mycolgroup' */
+    group: csv('data.csv', mycolgroup);
+
+    /* Set the group dataset to the 'city' variable (assuming a 'city' variable exists)*/
+    group: city;
+  values:
+    - value: "inline(values...)"
+      desc: "Specify the group dataset as a list of inline values"
+    - value: "csv(file, column, opts...)"
+      desc: "Load the group dataset from a CSV file"
+    - value: "<variable>"
+      desc: "Set the group dataset to a variable"
+  default: |
+    This property has no default value.
+  scope: |
+    The `group` property is valid inside the following scopes: `plot`, `plot.layer`.
+  scope_example: |
+    plot {
+      /* set default group dataset for all layers */
+      group: inline(10, 20, 30, 40, 50);
+
+      layer {
+        /* override group dataset per layer */
+        group: inline(15, 25, 35, 45, 55);
+      }   
+
+proto: &prop_x
+  name: x
+  desc_short: Set the default 'x' data for the plot
+  desc: |
+    Set the 'x' dataset for the plot. The 'x' dataset will be used to
+    calculate the horizontal position of geometry.
+  demo: |
+    x: ...;
+  syntax_formal: "x: <dataset>"
+  syntax_example: |
+    /* Set the x dataset to the literal values 10, 20, 30, 40, 50 */
+    x: inline(10, 20, 30, 40, 50);
+
+    /* Load the x dataset from the CSV file 'data.csv', colum name 'mycolx' */
+    x: csv('data.csv', mycolx);
+
+    /* Set the x dataset to the 'city' variable (assuming a 'city' variable exists)*/
+    x: city;
+  values:
+    - value: "inline(values...)"
+      desc: "Specify the x dataset as a list of inline values"
+    - value: "csv(file, column, opts...)"
+      desc: "Load the x dataset from a CSV file"
+    - value: "<variable>"
+      desc: "Set the x dataset to a variable"
+  default: |
+    This property has no default value.
+  scope: |
+    The `x` property is valid inside the following scopes: `plot`, `plot.layer`.
+  scope_example: |
+    plot {
+      /* set default x dataset for all layers */
+      x: inline(10, 20, 30, 40, 50);
+
+      layer {
+        /* override x dataset per layer */
+        x: inline(15, 25, 35, 45, 55);
+      }
+    }
+
+proto: &prop_y
+  name: y
+  desc_short: Set the default 'y' data for the plot
+  desc: |
+    Set the 'y' dataset for the plot. The 'y' dataset will be used to
+    calculate the horizontal position of geometry.
+  demo: |
+    y: ...;
+  syntax_formal: "y: <dataset>"
+  syntax_example: |
+    /* Set the y dataset to the literal values 10, 20, 30, 40, 50 */
+    y: inline(10, 20, 30, 40, 50);
+
+    /* Load the y dataset from the CSV file 'data.csv', colum name 'mycoly' */
+    y: csv('data.csv', mycoly);
+
+    /* Set the y dataset to the 'city' variable (assuming a 'city' variable exists)*/
+    y: city;
+  values:
+    - value: "inline(values...)"
+      desc: "Specify the y dataset as a list of inline values"
+    - value: "csv(file, column, opts...)"
+      desc: "Load the y dataset from a CSV file"
+    - value: "<variable>"
+      desc: "Set the y dataset to a variable"
+  default: |
+    This property has no default value.
+  scope: |
+    The `y` property is valid inside the following scopes: `plot`, `plot.layer`.
+  scope_example: |
+    plot {
+      /* set default y dataset for all layers */
+      y: inline(10, 20, 30, 40, 50);
+
+      layer {
+        /* override y dataset per layer */
+        y: inline(15, 25, 35, 45, 55);
+      }
+    }
+
+
+elements:
+
+  # global
+  # ----------------------------------------------------------------------------
+  - path: global
+    id: global
+    properties:
+
+    # global > width
+    - name: width
+      desc_short: Set the width (in px/cm/in) of the output file
+      demo: |
+        width: ...;
+      syntax_formal: "width: auto | <length-abs>"
+      syntax_example: |
+        /* Set the document width to 1024px */
+        width: 1024px;
+
+        /* Set document width to automatic (default) */
+        width: auto;
+      values:
+        - value: "auto"
+          desc: "Automatically select a suitable document width to use."
+        - value: "<length-abs>"
+          desc: "Set an explicit width"
+      default: |
+        The default value is `auto`.
+      scope: |
+        The `width` property is valid inside the root scope (i.e. outside of any element).
+      scope_example: |
+        width: ...;
+
+    # global > height
+    - name: height
+      desc_short: Set the height (in px/cm/in) of the output file
+      demo: |
+        height: ...;
+      syntax_formal: "height: auto | <length-abs>"
+      syntax_example: |
+        /* Set the document height to 1024px */
+        height: 1024px;
+
+        /* Set document height to automatic (default) */
+        height: auto;
+      values:
+        - value: "auto"
+          desc: "Automatically select a suitable document height to use."
+        - value: "<length-abs>"
+          desc: "Set an explicit height"
+      default: |
+        The default value is `auto`.
+      scope: |
+        The `height` property is valid inside the root scope (i.e. outside of any element).
+      scope_example: |
+        height: ...;
+
+    # global > font-size
+    - name: font-size
+      desc_short: Set the root font size
+      desc: |
+        Set the root font size of the document. By default, all graphical elements
+        that take a font-size will inherit this root font size. Changing the root
+        font size will also affect any measurements that are specified relative to
+        the font size, such as 'em' units.
+      demo: |
+        font-size: ...;
+      syntax_formal: "font-size: <length-abs>"
+      syntax_example: |
+        /* Set the root font-size to 12pt */
+        font-size: 12pt;
+
+        /* Set the root font-size to 14px */
+        font-size: 14px;
+      values:
+        - value: "<length-abs>"
+          desc: "Set an explicit font size"
+      default: |
+        The default value is `11pt`.
+      scope: |
+        The `font-size` property is valid inside the root scope (i.e. outside of any element).
+      scope_example: |
+        font-size: ...;
+
+    # global > background-color
+    - name: background-color
+      desc_short: Set the root background colour
+      desc: |
+        Set the root background colour of the document. By default, all graphical
+        elements that take a background colour will inherit this root background
+        colour.
+      demo: |
+        background-color: ...;
+      syntax_formal: "background-color: <color>"
+      syntax_example: |
+        /* Set the background colour to black */
+        background-color: #000;
+
+        /* Set the background color to 50% transparent red */
+        background-color: rgba(1,0,0,.5);
+      values:
+        - value: "<color>"
+          desc: "Set an explicit background color"
+      default: |
+        The default value is `#fff` (white).
+      scope: |
+        The `background-color` property is valid inside the root scope (i.e. outside of any element).
+      scope_example: |
+        background-color: ...;
+
+    # global > foreground-color
+    - name: foreground-color
+      desc_short: Set the root foreground colour
+      desc: |
+        Set the root foreground colour of the document. By default, all graphical
+        elements that take a foreground colour will inherit this root foreground
+        colour.
+      demo: |
+        foreground-color: ...;
+      syntax_formal: "foreground-color: <color>"
+      syntax_example: |
+        /* Set the foreground colour to black */
+        foreground-color: #000;
+
+        /* Set the foreground color to 50% transparent red */
+        foreground-color: rgba(1,0,0,.5);
+      values:
+        - value: "<color>"
+          desc: "Set an explicit foreground color"
+      default: |
+        The default value is `#000` (black).
+      scope: |
+        The `foreground-color` property is valid inside the root scope (i.e. outside of any element).
+      scope_example: |
+        foreground-color: ...;
+
+    # global > text-color
+    - name: text-color
+      desc_short: Set the root text colour
+      desc: |
+        Set the root text colour of the document. By default, all graphical
+        elements that take a text colour will inherit this root text
+        colour.
+      demo: |
+        text-color: ...;
+      syntax_formal: "text-color: <color>"
+      syntax_example: |
+        /* Set the text colour to black */
+        text-color: #000;
+
+        /* Set the text color to 50% transparent red */
+        text-color: rgba(1,0,0,.5);
+      values:
+        - value: "<color>"
+          desc: "Set an explicit text color"
+      default: |
+        The default value is `#000` (black).
+      scope: |
+        The `text-color` property is valid inside the root scope (i.e. outside of any element).
+      scope_example: |
+        text-color: ...;
+
+    # global > border-color
+    - name: border-color
+      desc_short: Set the root border colour
+      desc: |
+        Set the root border colour of the document. By default, all graphical
+        elements that take a border colour will inherit this root border
+        colour.
+      demo: |
+        border-color: ...;
+      syntax_formal: "border-color: <color>"
+      syntax_example: |
+        /* Set the border colour to black */
+        border-color: #000;
+
+        /* Set the border color to 50% transparent red */
+        border-color: rgba(1,0,0,.5);
+      values:
+        - value: "<color>"
+          desc: "Set an explicit border color"
+      default: |
+        The default value is `#000` (black).
+      scope: |
+        The `border-color` property is valid inside the root scope (i.e. outside of any element).
+      scope_example: |
+        border-color: ...;
+
+
+  # plot
+  # ----------------------------------------------------------------------------
+  - path: plot
+    id: plot
+    properties:
+
+    # plot > x
+    - *prop_x
+
+    # plot > y
+    - *prop_y
+
+    # plot > group
+    - *prop_group
+
+    - name: axis-x
+      desc_short: Set the 'x' axis type
+    - name: axis-x-min
+      desc_short: Set the 'x' axis lower limit
+    - name: axis-x-max
+      desc_short: Set the 'x' axis upper limit
+    - name: axis-x-format
+      desc_short: Set the 'x' axis label formatter
+    - name: axis-x-label-placement
+      desc_short: Set the 'x' axis label placement
+    - name: axis-x-padding
+      desc_short: Set the 'x' axis default limit padding
+    - name: axis-y
+      desc_short: Set the 'y' axis type
+    - name: axis-y-min
+      desc_short: Set the 'y' axis lower limit
+    - name: axis-y-may
+      desc_short: Set the 'y' axis upper limit
+    - name: axis-y-format
+      desc_short: Set the 'y' axis label formatter
+    - name: axis-y-label-placement
+      desc_short: Set the 'y' axis label placement
+    - name: axis-y-padding
+      desc_short: Set the 'y' axis default limit padding
+    - name: axis-top
+      desc_short: Set the top axis type
+    - name: axis-top-scale
+      desc_short: Use an alternative scale for the top axis
+    - name: axis-top-format
+      desc_short: Set the top axis label formatter
+    - name: axis-top-label-placement
+      desc_short: Set the top axis label placement
+    - name: axis-right
+      desc_short: Set the right axis type
+    - name: axis-right-scale
+      desc_short: Use an alternative scale for the right axis
+    - name: axis-right-format
+      desc_short: Set the right axis label formatter
+    - name: axis-right-label-placement
+      desc_short: Set the right axis label placement
+    - name: axis-bottom
+      desc_short: Set the bottom axis type
+    - name: axis-bottom-scale
+      desc_short: Use an alternative scale for the bottom axis
+    - name: axis-bottom-format
+      desc_short: Set the bottom axis label formatter
+    - name: axis-bottom-label-placement
+      desc_short: Set the bottom axis label placement
+    - name: axis-left
+      desc_short: Set the left axis type
+    - name: axis-left-scale
+      desc_short: Use an alternative scale for the left axis
+    - name: axis-left-format
+      desc_short: Set the left axis label formatter
+    - name: axis-left-label-placement
+      desc_short: Set the left axis label placement
+    - name: grid
+      desc_short: Set the background gridline spacing and visibility
+    - name: grid-x
+      desc_short: Set the background gridline spacing and visibility for the 'x' axis
+    - name: grid-y
+      desc_short: Set the background gridline spacing and visibility for the 'y' axis
+    - name: grid-x-scale
+      desc_short: Draw the background grid using an alternative 'x' scale
+    - name: grid-y-scale
+      desc_short: Draw the background grid using an alternative 'y' scale
+    - name: grid-stroke
+      desc_short: Set the background gridline stroke and width
+
+    # plot > margin
+    - name: margin
+      desc_short: Set the margins
+      desc: |
+        The `margin` property sets the margin area on all four sides of the element.
+        It is a shorthand for the `margin-top`, `margin-right`, `margin-bottom`, and `margin-left`
+        properties.
+      demo: |
+        plot {
+          margin: ...;
+        }
+      syntax_formal: "margin: auto | <length>"
+      syntax_example: |
+        /* Set margin of all four sides */
+        margin: 10px;
+        margin: 1em;
+
+        /* Set automatic margins (default) */
+        margin: auto;
+      values: *margin_values
+      default: |
+        The default value is `auto`.
+      scope: |
+        The `margin` property is valid inside the `plot` element.
+      scope_example: |
+        plot {
+          margin: ...;
+        }
+
+    # plot > margin-top
+    - name: margin-top
+      desc_short: Set the top margin
+      desc: |
+        The `margin-top` property sets the size of the top margin area of the
+        element.
+      demo: |
+        plot {
+          margin-top: ...;
+        }
+      syntax_formal: "margin-top: auto | <length>"
+      syntax_example: |
+        /* Set the top margin to an explicit value */
+        margin-top: 10px;
+        margin-top: 1em;
+
+        /* Set an automatic top margin (default) */
+        margin-top: auto;
+      values: *margin_values
+      default: |
+        The default value is `auto`.
+      scope: |
+        The `margin-top` property is valid inside the `plot` element.
+      scope_example: |
+        plot {
+          margin-top: ...;
+        }
+
+    # plot > margin-right
+    - name: margin-right
+      desc_short: Set the right margin
+      desc: |
+        The `margin-right` property sets the size of the right margin area of the
+        element.
+      demo: |
+        plot {
+          margin-right: ...;
+        }
+      syntax_formal: "margin-right: auto | <length>"
+      syntax_example: |
+        /* Set the right margin to an explicit value */
+        margin-right: 10px;
+        margin-right: 1em;
+
+        /* Set an automatic right margin (default) */
+        margin-right: auto;
+      values: *margin_values
+      default: |
+        The default value is `auto`.
+      scope: |
+        The `margin-right` property is valid inside the `plot` element.
+      scope_example: |
+        plot {
+          margin-right: ...;
+        }
+
+    # plot > margin-bottom
+    - name: margin-bottom
+      desc_short: Set the bottom margin
+      desc: |
+        The `margin-bottom` property sets the size of the bottom margin area of the
+        element.
+      demo: |
+        plot {
+          margin-bottom: ...;
+        }
+      syntax_formal: "margin-bottom: auto | <length>"
+      syntax_example: |
+        /* Set the bottom margin to an explicit value */
+        margin-bottom: 10px;
+        margin-bottom: 1em;
+
+        /* Set an automatic bottom margin (default) */
+        margin-bottom: auto;
+      values: *margin_values
+      default: |
+        The default value is `auto`.
+      scope: |
+        The `margin-bottom` property is valid inside the `plot` element.
+      scope_example: |
+        plot {
+          margin-bottom: ...;
+        }
+
+    # plot > margin-left
+    - name: margin-left
+      desc_short: Set the left margin
+      desc: |
+        The `margin-left` property sets the size of the left margin area of the
+        element.
+      demo: |
+        plot {
+          margin-left: ...;
+        }
+      syntax_formal: "margin-left: auto | <length>"
+      syntax_example: |
+        /* Set the left margin to an explicit value */
+        margin-left: 10px;
+        margin-left: 1em;
+
+        /* Set an automatic left margin (default) */
+        margin-left: auto;
+      values: *margin_values
+      default: |
+        The default value is `auto`.
+      scope: |
+        The `margin-left` property is valid inside the `plot` element.
+      scope_example: |
+        plot {
+          margin-left: ...;
+        }
+
+    - name: layer
+      desc_short: Add a layer to the plot
+
+
+  - path: plot.layer
+    id: plot-layer-lines
+    cond: "type = lines"
+    properties:
+    - name: type
+      desc_short: Must be 'lines'
+
+    # plot > layer > lines  > x
+    - *prop_x
+
+    # plot > layer > lines > y
+    - *prop_y
+
+    # plot > layer > lines > group
+    - *prop_group
+
+    - name: x-scale
+      desc_short: Use an alternative 'x' scale
+    - name: y-scale
+      desc_short: Use an alternative 'y' scale
+    - name: title
+      desc_short: Add a title to this layer
+    - name: color
+      desc_short: Set the line colour
+    - name: colors
+      desc_short: Compute line colours from input data
+    - name: stroke
+      desc_short: Set the stroke width and style
+
+  - path: plot.layer
+    id: plot-layer-area
+    cond: "type = area"
+    properties:
+    - name: type
+      desc_short: Must be 'area'
+
+    # plot > layer > area > x
+    - *prop_x
+
+    # plot > layer > area > y
+    - *prop_y
+
+    - name: x2
+      desc_short: ''
+    - name: y2
+      desc_short: ''
+
+    # plot > layer > area > group
+    - *prop_group
+
+    - name: group
+      desc_short: Group the input data into series/groups
+    - name: x-scale
+      desc_short: Use an alternative 'x' scale
+    - name: y-scale
+      desc_short: Use an alternative 'y' scale
+    - name: title
+      desc_short: Add a title to this layer
+    - name: color
+      desc_short: Set the area colour
+    - name: colors
+      desc_short: Compute area colours from input data
+
+  - path: plot.layer
+    id: plot-layer-points
+    cond: "type = points"
+    properties:
+    - name: type
+      desc_short: Must be 'points'
+
+    # plot > layer > points > x
+    - *prop_x
+
+    # plot > layer > points > y
+    - *prop_y
+
+    # plot > layer > points > group
+    - *prop_group
+
+    - name: x-scale
+      desc_short: Use an alternative 'x' scale
+    - name: y-scale
+      desc_short: Use an alternative 'y' scale
+    - name: color
+      desc_short: Set the point colour
+    - name: colors
+      desc_short: Compute point colours from input data
+    - name: size
+      desc_short: Set the point size
+    - name: sizes
+      desc_short: Compute point sizes from input data
+    - name: size-min
+      desc_short: Set the mininum point size (for computed point sizes)
+    - name: size-max
+      desc_short: Set the maximum point size (for computed point sizes)
+    - name: labels
+      desc_short: Set the (optional) label text data
+
+  - path: plot.layer
+    id: plot-layer-labels
+    cond: "type = labels"
+    properties:
+    - name: type
+      desc_short: Must be 'labels'
+
+    # plot > layer > labels > x
+    - *prop_x
+
+    # plot > layer > labels > y
+    - *prop_y
+
+    - name: x-scale
+      desc_short: Use an alternative 'x' scale
+    - name: y-scale
+      desc_short: Use an alternative 'y' scale
+    - name: labels
+      desc_short: Set the label text data
+
+  - path: plot.layer
+    id: plot-layer-bars
+    cond: "type = bars"
+    properties:
+    - name: type
+      desc_short: Must be 'bars'
+
+    # plot > layer > bars > x
+    - *prop_x
+
+    # plot > layer > bars > y
+    - *prop_y
+
+    - name: x2
+      desc_short: ''
+    - name: y2
+      desc_short: ''
+
+    # plot > layer > bars > group
+    - *prop_group
+
+    - name: x-scale
+      desc_short: Use an alternative 'x' scale
+    - name: y-scale
+      desc_short: Use an alternative 'y' scale
+    - name: direction
+      desc_short: Set the bar direction (horizontal/vertical)
+      demo: |
+        plot {
+          layer {
+            type: bars;
+            direction: ...;
+          }
+        }
+
+      syntax_formal: "direction: horizontal | vertical"
+      syntax_example: |
+        /* Plot a horizontal bar chart */
+        direction: horizontal;
+
+        /* Plot a vertical bar chart */
+        direction: vertical;
+      values:
+        - value: horizontal
+          desc: Draw horizontal bars
+        - value: vertical
+          desc: Draw verticak bars
+      default: |
+        The default value is `vertical`.
+      scope: |
+        The `direction` property is valid inside the `plot > layer` element
+        where the layer `type = bars`.
+      scope_example: |
+        plot {
+          layer {
+            type: bars;
+            direction: ...;
+          }
+        }
+
+    - name: color
+      desc_short: Set the bar colour
+    - name: colors
+      desc_short: Compute bar colours from input data
