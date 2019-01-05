@@ -18,7 +18,7 @@ find_package(Fontconfig)
 find_package(PNG)
 include_directories(${CAIRO_INCLUDE_DIRS} ${FREETYPE_INCLUDE_DIRS} ${HARFBUZZ_INCLUDE_DIRS} ${PNG_INCLUDE_DIRS})
 
-add_definitions(-DFNORDMETRIC_VERSION="unstable")
+add_definitions(-DPLOTFX_VERSION="v0.2.0")
 
 add_library(plotfxlib STATIC
     source/plot.cc

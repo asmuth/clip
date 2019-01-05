@@ -86,7 +86,7 @@ int main(int argc, const char** argv) {
             "Part of the PlotFX project (https://plotfx.org)\n"
             "Copyright (c) 2019, Paul Asmuth, Laura Schlimmer.\n"
             "All rights reserved.\n\n",
-            FNORDMETRIC_VERSION);
+            PLOTFX_VERSION);
 
     return 0;
   }

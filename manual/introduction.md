@@ -1,4 +1,4 @@
-# PlotFX v0.1.0
+# PlotFX v0.2.0
 
 PlotFX is a standalone tool for creating charts and other data-driven graphics.
 
