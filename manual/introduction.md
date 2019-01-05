@@ -57,7 +57,7 @@ Here is the input file from which the above plot was generated (`example_chart.p
 
 More examples can be found on [the examples page](https://github.com/plotfx/plotfx/tree/master/examples).
 For a more detailed introduction to PlotFX, see the [Getting Started](/documentation/getting-started) page. 
-If you have any questions please don't hesitate to reach out via [the PlotFX email group](http://groups.google.com/group/fnordmetric).
+If you have any questions please don't hesitate to reach out via [the PlotFX email group](http://groups.google.com/group/plotfx).
 
 ## More Examples
 

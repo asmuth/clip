@@ -83,8 +83,9 @@ int main(int argc, const char** argv) {
     std::cerr <<
         StringUtil::format(
             "plotfx $0\n"
-            "Part of the FnordMetric project (http://fnordmetric.io)\n"
-            "Copyright (c) 2016, Paul Asmuth et al. All rights reserved.\n\n",
+            "Part of the PlotFX project (https://plotfx.org)\n"
+            "Copyright (c) 2019, Paul Asmuth, Laura Schlimmer.\n"
+            "All rights reserved.\n\n",
             FNORDMETRIC_VERSION);
 
     return 0;
