@@ -339,7 +339,7 @@ ReturnCode configure_style(
 
   static const ParserDefinitions pdefs = {
     {
-      "axis-x-format",
+      "axis-x-labels",
       configure_multiprop({
           bind(&confgure_format, _1, &config->axis_top.label_formatter),
           bind(&confgure_format, _1, &config->axis_bottom.label_formatter),
@@ -353,7 +353,7 @@ ReturnCode configure_style(
       })
     },
     {
-      "axis-y-format",
+      "axis-y-labels",
       configure_multiprop({
           bind(&confgure_format, _1, &config->axis_left.label_formatter),
           bind(&confgure_format, _1, &config->axis_right.label_formatter),
@@ -368,7 +368,7 @@ ReturnCode configure_style(
     },
     {"axis-top", bind(&parseAxisModeProp, _1, &config->axis_top.mode)},
     {"axis-top-scale", bind(&configure_string, _1, &config->axis_top.scale)},
-    {"axis-top-format", bind(&confgure_format, _1, &config->axis_top.label_formatter)},
+    {"axis-top-labels", bind(&confgure_format, _1, &config->axis_top.label_formatter)},
     {
       "axis-top-ticks",
       bind(
@@ -378,7 +378,7 @@ ReturnCode configure_style(
     },
     {"axis-right", bind(&parseAxisModeProp, _1, &config->axis_right.mode)},
     {"axis-right-scale", bind(&configure_string, _1, &config->axis_right.scale)},
-    {"axis-right-format", bind(&confgure_format, _1, &config->axis_right.label_formatter)},
+    {"axis-right-labels", bind(&confgure_format, _1, &config->axis_right.label_formatter)},
     {
       "axis-right-ticks",
       bind(
@@ -388,7 +388,7 @@ ReturnCode configure_style(
     },
     {"axis-bottom", bind(&parseAxisModeProp, _1, &config->axis_bottom.mode)},
     {"axis-bottom-scale", bind(&configure_string, _1, &config->axis_bottom.scale)},
-    {"axis-bottom-format", bind(&confgure_format, _1, &config->axis_bottom.label_formatter)},
+    {"axis-bottom-labels", bind(&confgure_format, _1, &config->axis_bottom.label_formatter)},
     {
       "axis-bottom-ticks",
       bind(
@@ -398,7 +398,7 @@ ReturnCode configure_style(
     },
     {"axis-left", bind(&parseAxisModeProp, _1, &config->axis_left.mode)},
     {"axis-left-scale", bind(&configure_string, _1, &config->axis_left.scale)},
-    {"axis-left-format", bind(&confgure_format, _1, &config->axis_left.label_formatter)},
+    {"axis-left-labels", bind(&confgure_format, _1, &config->axis_left.label_formatter)},
     {
       "axis-left-ticks",
       bind(

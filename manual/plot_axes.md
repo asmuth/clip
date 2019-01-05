@@ -32,19 +32,19 @@ Lorem ipsum dolor sit amet.
       <td>Here be dragons</td>
     </tr>
     <tr>
-      <td><code><strong>axis-top-format</strong></code></td>
+      <td><code><strong>axis-top-labels</strong></code></td>
       <td>Here be dragons</td>
     </tr>
     <tr>
-      <td><code><strong>axis-right-format</strong></code></td>
+      <td><code><strong>axis-right-labels</strong></code></td>
       <td>Here be dragons</td>
     </tr>
     <tr>
-      <td><code><strong>axis-bottom-format</strong></code></td>
+      <td><code><strong>axis-bottom-labels</strong></code></td>
       <td>Here be dragons</td>
     </tr>
     <tr>
-      <td><code><strong>axis-left-format</strong></code></td>
+      <td><code><strong>axis-left-labels</strong></code></td>
       <td>Here be dragons</td>
     </tr>
   </tbody>
@@ -85,35 +85,35 @@ Lorem ipsum dolor sit amet.
 
 --
 
-### axis-top-format
+### axis-top-labels
 
 Lorem ipsum dolor sit amet.
 
-    axis-top-format: fixed | scientific | datetime;
+    axis-top-labels: fixed | scientific | datetime;
 
 --
 
-### axis-right-format
+### axis-right-labels
 
 Lorem ipsum dolor sit amet.
 
-    axis-right-format: fixed | scientific | datetime;
+    axis-right-labels: fixed | scientific | datetime;
 
 --
 
-### axis-bottom-format
+### axis-bottom-labels
 
 Lorem ipsum dolor sit amet.
 
-    axis-bottom-format: fixed | scientific | datetime;
+    axis-bottom-labels: fixed | scientific | datetime;
 
 --
 
-### axis-left-format
+### axis-left-labels
 
 Lorem ipsum dolor sit amet.
 
-    axis-left-format: fixed | scientific | datetime;
+    axis-left-labels: fixed | scientific | datetime;
 
 
 

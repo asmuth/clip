@@ -5,7 +5,7 @@ background-color: #000;
 foreground-color: #fff;
 
 plot {
-  axis-x-format: datetime("%H:%M:%S");
+  axis-x-labels: datetime("%H:%M:%S");
 
   layer {
     type: lines;

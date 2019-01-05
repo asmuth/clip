@@ -334,7 +334,7 @@ elements:
       desc_short: Set the 'x' axis lower limit
     - name: axis-x-max
       desc_short: Set the 'x' axis upper limit
-    - name: axis-x-format
+    - name: axis-x-labels
       desc_short: Set the 'x' axis label formatter
     - name: axis-x-ticks
       desc_short: Set the 'x' axis label placement
@@ -346,7 +346,7 @@ elements:
       desc_short: Set the 'y' axis lower limit
     - name: axis-y-may
       desc_short: Set the 'y' axis upper limit
-    - name: axis-y-format
+    - name: axis-y-labels
       desc_short: Set the 'y' axis label formatter
     - name: axis-y-ticks
       desc_short: Set the 'y' axis label placement
@@ -356,7 +356,7 @@ elements:
       desc_short: Set the top axis type
     - name: axis-top-scale
       desc_short: Use an alternative scale for the top axis
-    - name: axis-top-format
+    - name: axis-top-labels
       desc_short: Set the top axis label formatter
     - name: axis-top-ticks
       desc_short: Set the top axis label placement
@@ -364,7 +364,7 @@ elements:
       desc_short: Set the right axis type
     - name: axis-right-scale
       desc_short: Use an alternative scale for the right axis
-    - name: axis-right-format
+    - name: axis-right-labels
       desc_short: Set the right axis label formatter
     - name: axis-right-ticks
       desc_short: Set the right axis label placement
@@ -372,7 +372,7 @@ elements:
       desc_short: Set the bottom axis type
     - name: axis-bottom-scale
       desc_short: Use an alternative scale for the bottom axis
-    - name: axis-bottom-format
+    - name: axis-bottom-labels
       desc_short: Set the bottom axis label formatter
     - name: axis-bottom-ticks
       desc_short: Set the bottom axis label placement
@@ -380,7 +380,7 @@ elements:
       desc_short: Set the left axis type
     - name: axis-left-scale
       desc_short: Use an alternative scale for the left axis
-    - name: axis-left-format
+    - name: axis-left-labels
       desc_short: Set the left axis label formatter
     - name: axis-left-ticks
       desc_short: Set the left axis label placement
