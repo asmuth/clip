@@ -498,7 +498,7 @@ ReturnCode axis_place_labels_categorical(
   if (domain.kind != DomainKind::CATEGORICAL) {
     return ReturnCode::error(
         "EARG",
-        "axis-label-placement: categorial is invalid for non-categorical domains");
+        "axis-ticks: categorial is invalid for non-categorical domains");
   }
 
   auto category_count = domain.categories.size();

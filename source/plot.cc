@@ -346,7 +346,7 @@ ReturnCode configure_style(
       })
     },
     {
-      "axis-x-label-placement",
+      "axis-x-ticks",
       configure_multiprop({
           bind(&axis_configure_label_placement, _1, &config->axis_top.label_placement),
           bind(&axis_configure_label_placement, _1, &config->axis_bottom.label_placement),
@@ -360,7 +360,7 @@ ReturnCode configure_style(
       })
     },
     {
-      "axis-y-label-placement",
+      "axis-y-ticks",
       configure_multiprop({
           bind(&axis_configure_label_placement, _1, &config->axis_left.label_placement),
           bind(&axis_configure_label_placement, _1, &config->axis_right.label_placement),
@@ -370,7 +370,7 @@ ReturnCode configure_style(
     {"axis-top-scale", bind(&configure_string, _1, &config->axis_top.scale)},
     {"axis-top-format", bind(&confgure_format, _1, &config->axis_top.label_formatter)},
     {
-      "axis-top-label-placement",
+      "axis-top-ticks",
       bind(
           &axis_configure_label_placement,
           _1,
@@ -380,7 +380,7 @@ ReturnCode configure_style(
     {"axis-right-scale", bind(&configure_string, _1, &config->axis_right.scale)},
     {"axis-right-format", bind(&confgure_format, _1, &config->axis_right.label_formatter)},
     {
-      "axis-right-label-placement",
+      "axis-right-ticks",
       bind(
           &axis_configure_label_placement,
           _1,
@@ -390,7 +390,7 @@ ReturnCode configure_style(
     {"axis-bottom-scale", bind(&configure_string, _1, &config->axis_bottom.scale)},
     {"axis-bottom-format", bind(&confgure_format, _1, &config->axis_bottom.label_formatter)},
     {
-      "axis-bottom-label-placement",
+      "axis-bottom-ticks",
       bind(
           &axis_configure_label_placement,
           _1,
@@ -400,7 +400,7 @@ ReturnCode configure_style(
     {"axis-left-scale", bind(&configure_string, _1, &config->axis_left.scale)},
     {"axis-left-format", bind(&confgure_format, _1, &config->axis_left.label_formatter)},
     {
-      "axis-left-label-placement",
+      "axis-left-ticks",
       bind(
           &axis_configure_label_placement,
           _1,

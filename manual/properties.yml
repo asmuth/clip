@@ -336,7 +336,7 @@ elements:
       desc_short: Set the 'x' axis upper limit
     - name: axis-x-format
       desc_short: Set the 'x' axis label formatter
-    - name: axis-x-label-placement
+    - name: axis-x-ticks
       desc_short: Set the 'x' axis label placement
     - name: axis-x-padding
       desc_short: Set the 'x' axis default limit padding
@@ -348,7 +348,7 @@ elements:
       desc_short: Set the 'y' axis upper limit
     - name: axis-y-format
       desc_short: Set the 'y' axis label formatter
-    - name: axis-y-label-placement
+    - name: axis-y-ticks
       desc_short: Set the 'y' axis label placement
     - name: axis-y-padding
       desc_short: Set the 'y' axis default limit padding
@@ -358,7 +358,7 @@ elements:
       desc_short: Use an alternative scale for the top axis
     - name: axis-top-format
       desc_short: Set the top axis label formatter
-    - name: axis-top-label-placement
+    - name: axis-top-ticks
       desc_short: Set the top axis label placement
     - name: axis-right
       desc_short: Set the right axis type
@@ -366,7 +366,7 @@ elements:
       desc_short: Use an alternative scale for the right axis
     - name: axis-right-format
       desc_short: Set the right axis label formatter
-    - name: axis-right-label-placement
+    - name: axis-right-ticks
       desc_short: Set the right axis label placement
     - name: axis-bottom
       desc_short: Set the bottom axis type
@@ -374,7 +374,7 @@ elements:
       desc_short: Use an alternative scale for the bottom axis
     - name: axis-bottom-format
       desc_short: Set the bottom axis label formatter
-    - name: axis-bottom-label-placement
+    - name: axis-bottom-ticks
       desc_short: Set the bottom axis label placement
     - name: axis-left
       desc_short: Set the left axis type
@@ -382,7 +382,7 @@ elements:
       desc_short: Use an alternative scale for the left axis
     - name: axis-left-format
       desc_short: Set the left axis label formatter
-    - name: axis-left-label-placement
+    - name: axis-left-ticks
       desc_short: Set the left axis label placement
     - name: grid
       desc_short: Set the background gridline spacing and visibility
