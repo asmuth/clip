@@ -33,6 +33,79 @@ documentation:
         title: "API Reference"
         url: "/reference"
         file: "reference"
+
+  -
+    title: "Chart Options"
+    pages:
+      -
+        title: "Scales"
+        url: "/documentation/plot-scales"
+        file: "scales"
+      #-
+      #  title: "Colours"
+      #  url: "/documentation/color-palette"
+      #  file: "color_palette"
+      -
+        title: "Units & Formats"
+        url: "/documentation/formatter"
+        file: "formatter"
+      -
+        title: "Axis Styles"
+        url: "/documentation/plot-axes"
+        file: "axes"
+      #-
+      #  title: "Gridlines"
+      #  url: "/documentation/plot-gridlines"
+      #  file: "gridlines"
+      #-
+      #  title: "Line Styles"
+      #  url: "/documentation/line-styles"
+      #  file: "line_styles"
+      #-
+      #  title: "Point Styles"
+      #  url: "/documentation/point-styles"
+      #  file: "point_styles"
+      #-
+      #  title: "Caption"
+      #  url: "/documentation/caption"
+      #  file: "caption"
+      #-
+      #  title: "Legend"
+      #  url: "/documentation/legend"
+      #  file: "legend"
+      #-
+      #  title: "Layout"
+      #  url: "/documentation/layout"
+      #  file: "layout"
+
+  #-
+  #  title: "Chart Types"
+  #  pages:
+  #    -
+  #      title: "Linechart"
+  #      url: "/documentation/plot-lines"
+  #      file: "plot_lines"
+  #    -
+  #      title: "Scatter / Point"
+  #      url: "/documentation/plot-scatter"
+  #      file: ""
+  #    -
+  #      title: "Areachart"
+  #      url: "/documentation/plot-areas"
+  #      file: ""
+  #    -
+  #      title: "Barchart"
+  #      url: "/documentation/plot-bars"
+  #      file: ""
+
+  #-
+  #  title: "Data Sources"
+  #  pages:
+  #    -
+  #      title: "CSV"
+  #      url: "/documentation/data-csvx"
+  #      file: "data_csv"
+
   -
     title: "Examples"
     pages:
@@ -40,62 +113,6 @@ documentation:
         title: "Example Gallery"
         url: "/examples"
         file: "examples"
-
-  -
-    title: "Chart Options"
-    pages:
-  #    -
-  #      title: "Document Setup"
-  #      url: "/documentation/document-settings"
-  #      file: "doc_settings"
-  #    -
-  #      title: "Units & Formatters"
-  #      url: "/documentation/formatter"
-  #      file: "formatters"
-      -
-        title: "Scales"
-        url: "/documentation/plot-scales"
-        file: "scales"
-      -
-        title: "Axes"
-        url: "/documentation/plot-axes"
-        file: "axes"
-      -
-        title: "Unit Formats"
-        url: "/documentation/formatter"
-        file: "formatter"
-  #    -
-  #      title: "Plot: Gridlines"
-  #      url: "/documentation/plot-gridlines"
-  #      file: ""
-  #    -
-  #      title: "Plot: Lines"
-  #      url: "/documentation/plot-lines"
-  #      file: "plot_lines"
-  #    -
-  #      title: "Plot: Scatter"
-  #      url: "/documentation/plot-scatter"
-  #      file: ""
-  #    -
-  #      title: "Plot: Areas"
-  #      url: "/documentation/plot-areas"
-  #      file: ""
-  #    -
-  #      title: "Plot: Bars"
-  #      url: "/documentation/plot-bars"
-  #      file: ""
-  #    -
-  #      title: "Plot: Styling"
-  #      url: "/documentation/plot-style"
-  #      file: "plot_style"
-
-  #-
-  #  title: "Data Sources"
-  #  pages:
-  #    -
-  #      title: "Data Source: CSV"
-  #      url: "/documentation/data-csvx"
-  #      file: "data_csv"
 
   -
     title: "Community"

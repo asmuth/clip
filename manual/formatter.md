@@ -1,5 +1,5 @@
-Unit Formats
-============
+Units & Formats
+===============
 
 The `<label-format>` setting controls how values are formatted for display. Here
 is the list of valid values:
