@@ -458,7 +458,7 @@ ReturnCode axis_draw_all(
   return OK;
 }
 
-ReturnCode axis_place_labels_even(
+ReturnCode axis_place_labels_subdivide(
     const DomainConfig& domain,
     AxisDefinition* axis) {
   uint32_t num_ticks = 8; // FIXME make configurable
@@ -513,16 +513,16 @@ ReturnCode axis_place_labels_default(
     return axis_place_labels_discrete(domain, axis);
   }
 
-  return axis_place_labels_even(domain, axis);
+  return axis_place_labels_subdivide(domain, axis);
 }
 
 ReturnCode axis_configure_label_placement(
     const plist::Property& prop,
     AxisLabelPlacement* label_placement) {
-  if (plist::is_value(prop, "even") ||
-      plist::is_enum(prop, "even")) {
+  if (plist::is_value(prop, "subdivide") ||
+      plist::is_enum(prop, "subdivide")) {
     *label_placement = bind(
-        &axis_place_labels_even,
+        &axis_place_labels_subdivide,
         _1,
         _2);
 
@@ -542,7 +542,7 @@ ReturnCode axis_configure_label_placement(
   return ReturnCode::errorf(
       "EARG",
       "invalid value '$0', expected one of: \n"
-      "  - even\n"
+      "  - subdivide\n"
       "  - discrete\n",
       prop.value);
 }

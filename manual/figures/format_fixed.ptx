@@ -8,7 +8,9 @@ plot {
   axis-top: off;
   axis-left: off;
   axis-right: off;
-  axis-bottom-layout: even;
+
+  axis-bottom-layout: subdivide;
+  axis-bottom-format: fixed(1);
 
   x: inline(0, 5);
 }
