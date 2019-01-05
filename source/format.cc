@@ -46,10 +46,6 @@ Formatter format_decimal_scientific(size_t precision) {
 ReturnCode confgure_format_decimal_scientific(
     const plist::Property& prop,
     Formatter* formatter) {
-  if (!plist::is_enum(prop, "scientific")) {
-    return ERROR_INVALID_ARGUMENT;
-  }
-
   uint32_t precision = 1;
   switch (prop.size()) {
     case 0:
@@ -168,7 +164,14 @@ ReturnCode confgure_format(
     return confgure_format_string(prop, formatter);
   }
 
-  return OK;
+  return ReturnCode::errorf(
+      "EARG",
+      "invalid value '$0', expected one of: \n"
+      "  - fixed\n"
+      "  - scientific\n",
+      "  - datetime\n",
+      "  - string\n",
+      prop.value);
 }
 
 } // namespace plotfx

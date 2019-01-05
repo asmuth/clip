@@ -55,6 +55,10 @@ h3.section {
   font-weight: 500;
 }
 
+h4 code {
+  font-size: 96%;
+}
+
 section {
   border-top: 1px solid #ddd;
   margin-bottom: 2em;
@@ -255,8 +259,22 @@ ul li p {
 }
 
 #documentation h1 + h2,
-#documentation h2 + h3 {
+#documentation h2 + h3,
+#documentation h3 + h4 {
   margin-top: 1em;
+}
+
+#documentation h3 + hr {
+  margin-top: .2em;
+  margin-bottom: 1.6em;
+}
+
+#documentation hr + h4 {
+  margin-top: 0;
+}
+
+#documentation h4 + h4 {
+  margin-top: 0;
 }
 
 #documentation h3 + pre {
@@ -280,7 +298,7 @@ ul li p {
 }
 
 #documentation hr {
-  margin: 24px 0 35px 0;
+  margin: 24px 0 2em 0;
   border: none;
   border-bottom: 1px solid #eee;
 }
@@ -322,7 +340,8 @@ code strong {
 }
 
 #documentation h1 code,
-#documentation h2 code {
+#documentation h2 code,
+#documentation h3 code {
   font-size: 86%;
   background: transparent;
   color: #000;

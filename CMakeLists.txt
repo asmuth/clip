@@ -111,3 +111,12 @@ foreach(example_test_path ${example_test_files})
       COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/tests/spec/test_runner.sh ${CMAKE_CURRENT_BINARY_DIR}/plotfx ${example_test_path} ${CMAKE_CURRENT_BINARY_DIR}/${example_test_name}.svg ${example_test_srcdir}/${example_test_name}.svg)
 endforeach()
 
+file(GLOB doc_test_files "manual/figures/*.ptx")
+foreach(doc_test_path ${doc_test_files})
+  get_filename_component(doc_test_name ${doc_test_path} NAME_WE)
+  get_filename_component(doc_test_srcdir ${doc_test_path} DIRECTORY)
+  add_test(
+      NAME test_doc_${doc_test_name}_svg
+      WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+      COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/tests/spec/test_runner.sh ${CMAKE_CURRENT_BINARY_DIR}/plotfx ${doc_test_path} ${CMAKE_CURRENT_BINARY_DIR}/${doc_test_name}.svg ${doc_test_srcdir}/${doc_test_name}.svg)
+endforeach()

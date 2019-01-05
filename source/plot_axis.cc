@@ -458,22 +458,10 @@ ReturnCode axis_draw_all(
   return OK;
 }
 
-ReturnCode axis_place_labels_default(
-    const DomainConfig& domain,
-    AxisDefinition* axis) {
-  if (domain.kind == DomainKind::CATEGORICAL) {
-    return axis_place_labels_categorical(domain, axis);
-  }
-
-  return axis_place_labels_geom(domain, axis);
-}
-
-ReturnCode axis_place_labels_geom(
+ReturnCode axis_place_labels_even(
     const DomainConfig& domain,
     AxisDefinition* axis) {
   uint32_t num_ticks = 8; // FIXME make configurable
-  double min = domain.min.value_or(0.0f);
-  double max = domain.max.value_or(0.0f);
 
   axis->ticks.clear();
   axis->labels.clear();
@@ -492,16 +480,10 @@ ReturnCode axis_place_labels_geom(
   return OK;
 }
 
-ReturnCode axis_place_labels_categorical(
+ReturnCode axis_place_labels_discrete(
     const DomainConfig& domain,
     AxisDefinition* axis) {
-  if (domain.kind != DomainKind::CATEGORICAL) {
-    return ReturnCode::error(
-        "EARG",
-        "axis-ticks: categorial is invalid for non-categorical domains");
-  }
-
-  auto category_count = domain.categories.size();
+  auto category_count = domain_cardinality(domain);
 
   axis->labels.clear();
   axis->ticks.clear();
@@ -524,34 +506,45 @@ ReturnCode axis_place_labels_categorical(
   return OK;
 }
 
+ReturnCode axis_place_labels_default(
+    const DomainConfig& domain,
+    AxisDefinition* axis) {
+  if (domain.kind == DomainKind::CATEGORICAL) {
+    return axis_place_labels_discrete(domain, axis);
+  }
+
+  return axis_place_labels_even(domain, axis);
+}
+
 ReturnCode axis_configure_label_placement(
     const plist::Property& prop,
     AxisLabelPlacement* label_placement) {
-  if (prop.size() < 1) {
-    return ERROR_INVALID_ARGUMENT;
-  }
-
-  if (plist::is_value(prop, "geometric") ||
-      plist::is_enum(prop, "geometric")) {
+  if (plist::is_value(prop, "even") ||
+      plist::is_enum(prop, "even")) {
     *label_placement = bind(
-        &axis_place_labels_geom,
+        &axis_place_labels_even,
         _1,
         _2);
 
     return OK;
   }
 
-  if (plist::is_value(prop, "categorical") ||
-      plist::is_enum(prop, "categorical")) {
+  if (plist::is_value(prop, "discrete") ||
+      plist::is_enum(prop, "discrete")) {
     *label_placement = bind(
-        &axis_place_labels_geom,
+        &axis_place_labels_discrete,
         _1,
         _2);
 
     return OK;
   }
 
-  return ERROR_INVALID_ARGUMENT;
+  return ReturnCode::errorf(
+      "EARG",
+      "invalid value '$0', expected one of: \n"
+      "  - even\n"
+      "  - discrete\n",
+      prop.value);
 }
 
 ReturnCode axis_resolve(

@@ -350,33 +350,33 @@ elements:
       desc_short: Set the top axis type
     - name: axis-top-scale
       desc_short: Use an alternative scale for the top axis
-    - name: axis-top-labels
+    - name: axis-top-format
       desc_short: Set the top axis label formatter
-    - name: axis-top-ticks
+    - name: axis-top-layout
       desc_short: Set the top axis label placement
     - name: axis-right
       desc_short: Set the right axis type
     - name: axis-right-scale
       desc_short: Use an alternative scale for the right axis
-    - name: axis-right-labels
+    - name: axis-right-format
       desc_short: Set the right axis label formatter
-    - name: axis-right-ticks
+    - name: axis-right-layout
       desc_short: Set the right axis label placement
     - name: axis-bottom
       desc_short: Set the bottom axis type
     - name: axis-bottom-scale
       desc_short: Use an alternative scale for the bottom axis
-    - name: axis-bottom-labels
+    - name: axis-bottom-format
       desc_short: Set the bottom axis label formatter
-    - name: axis-bottom-ticks
+    - name: axis-bottom-layout
       desc_short: Set the bottom axis label placement
     - name: axis-left
       desc_short: Set the left axis type
     - name: axis-left-scale
       desc_short: Use an alternative scale for the left axis
-    - name: axis-left-labels
+    - name: axis-left-format
       desc_short: Set the left axis label formatter
-    - name: axis-left-ticks
+    - name: axis-left-layout
       desc_short: Set the left axis label placement
 
     - name: grid

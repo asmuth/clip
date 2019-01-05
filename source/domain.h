@@ -69,6 +69,8 @@ static const std::string SCALE_DEFAULT_Y = "y";
 void domain_fit(const Series& data, DomainConfig* domain);
 
 size_t domain_cardinality(const DomainConfig& domain);
+double domain_min(const DomainConfig& domain);
+double domain_max(const DomainConfig& domain);
 
 double domain_translate(
     const DomainConfig& domain,

@@ -7,7 +7,7 @@ plot {
 
   margin: 300px;
 
-  axis-x-labels: datetime("%H:%M:%S");
+  axis-x-format: datetime("%H:%M:%S");
 
   layer {
     type: lines;

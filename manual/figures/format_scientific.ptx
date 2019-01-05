@@ -1,0 +1,16 @@
+width: 1200px;
+height: 80px;
+
+plot {
+  margin-left: 40px;
+  margin-right: 40px;
+
+  axis-top: off;
+  axis-left: off;
+  axis-right: off;
+  axis-bottom-layout: even;
+
+  axis-bottom-format: scientific;
+
+  x: inline(0, 5);
+}

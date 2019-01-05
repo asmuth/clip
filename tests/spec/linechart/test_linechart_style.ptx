@@ -5,7 +5,7 @@ plot {
   x: csv('tests/testdata/measurement.csv', time);
   y: csv('tests/testdata/measurement.csv', value2);
 
-  axis-x-labels: datetime("%H:%M:%S");
+  axis-x-format: datetime("%H:%M:%S");
 
   layer {
     type: lines;

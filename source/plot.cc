@@ -187,6 +187,16 @@ ReturnCode configure_scales(
   DomainConfig domain_y;
   domain_y.min_auto_snap_zero = true;
 
+  if (data.defaults.count(SCALE_DEFAULT_X) &&
+      data.defaults.at(SCALE_DEFAULT_X)) {
+    domain_fit(*data.defaults.at(SCALE_DEFAULT_X), &domain_x);
+  }
+
+  if (data.defaults.count(SCALE_DEFAULT_Y) &&
+    data.defaults.at(SCALE_DEFAULT_Y)) {
+    domain_fit(*data.defaults.at(SCALE_DEFAULT_Y), &domain_y);
+  }
+
   static const ParserDefinitions pdefs = {
     {"scale-x", bind(&domain_configure, _1, &domain_x)},
     {"scale-x-min", bind(&configure_float_opt, _1, &domain_x.min)},
@@ -340,9 +350,9 @@ ReturnCode configure_style(
   static const ParserDefinitions pdefs = {
     {"axis-top", bind(&parseAxisModeProp, _1, &config->axis_top.mode)},
     {"axis-top-scale", bind(&configure_string, _1, &config->axis_top.scale)},
-    {"axis-top-labels", bind(&confgure_format, _1, &config->axis_top.label_formatter)},
+    {"axis-top-format", bind(&confgure_format, _1, &config->axis_top.label_formatter)},
     {
-      "axis-top-ticks",
+      "axis-top-layout",
       bind(
           &axis_configure_label_placement,
           _1,
@@ -350,9 +360,9 @@ ReturnCode configure_style(
     },
     {"axis-right", bind(&parseAxisModeProp, _1, &config->axis_right.mode)},
     {"axis-right-scale", bind(&configure_string, _1, &config->axis_right.scale)},
-    {"axis-right-labels", bind(&confgure_format, _1, &config->axis_right.label_formatter)},
+    {"axis-right-format", bind(&confgure_format, _1, &config->axis_right.label_formatter)},
     {
-      "axis-right-ticks",
+      "axis-right-layout",
       bind(
           &axis_configure_label_placement,
           _1,
@@ -360,9 +370,9 @@ ReturnCode configure_style(
     },
     {"axis-bottom", bind(&parseAxisModeProp, _1, &config->axis_bottom.mode)},
     {"axis-bottom-scale", bind(&configure_string, _1, &config->axis_bottom.scale)},
-    {"axis-bottom-labels", bind(&confgure_format, _1, &config->axis_bottom.label_formatter)},
+    {"axis-bottom-format", bind(&confgure_format, _1, &config->axis_bottom.label_formatter)},
     {
-      "axis-bottom-ticks",
+      "axis-bottom-layout",
       bind(
           &axis_configure_label_placement,
           _1,
@@ -370,37 +380,37 @@ ReturnCode configure_style(
     },
     {"axis-left", bind(&parseAxisModeProp, _1, &config->axis_left.mode)},
     {"axis-left-scale", bind(&configure_string, _1, &config->axis_left.scale)},
-    {"axis-left-labels", bind(&confgure_format, _1, &config->axis_left.label_formatter)},
+    {"axis-left-format", bind(&confgure_format, _1, &config->axis_left.label_formatter)},
     {
-      "axis-left-ticks",
+      "axis-left-layout",
       bind(
           &axis_configure_label_placement,
           _1,
           &config->axis_left.label_placement),
     },
     {
-      "axis-x-labels",
+      "axis-x-format",
       configure_multiprop({
           bind(&confgure_format, _1, &config->axis_top.label_formatter),
           bind(&confgure_format, _1, &config->axis_bottom.label_formatter),
       })
     },
     {
-      "axis-x-ticks",
+      "axis-x-layout",
       configure_multiprop({
           bind(&axis_configure_label_placement, _1, &config->axis_top.label_placement),
           bind(&axis_configure_label_placement, _1, &config->axis_bottom.label_placement),
       })
     },
     {
-      "axis-y-labels",
+      "axis-y-format",
       configure_multiprop({
           bind(&confgure_format, _1, &config->axis_left.label_formatter),
           bind(&confgure_format, _1, &config->axis_right.label_formatter),
       })
     },
     {
-      "axis-y-ticks",
+      "axis-y-layout",
       configure_multiprop({
           bind(&axis_configure_label_placement, _1, &config->axis_left.label_placement),
           bind(&axis_configure_label_placement, _1, &config->axis_right.label_placement),

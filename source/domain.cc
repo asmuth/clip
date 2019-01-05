@@ -93,7 +93,7 @@ size_t domain_cardinality(const DomainConfig& domain) {
     case DomainKind::CATEGORICAL:
       return domain.categories.size();
     default:
-      return 1;
+      return std::ceil(domain_max(domain) - domain_min(domain));
   }
 }
 

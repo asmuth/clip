@@ -2,7 +2,7 @@ width: 1200px;
 height: 480px;
 
 plot {
-  axis-x-labels: datetime("%H:%M:%S");
+  axis-x-format: datetime("%H:%M:%S");
 
   data: csv('tests/testdata/measurement.csv', time);
   x: time;

@@ -41,9 +41,9 @@ documentation:
         url: "/examples"
         file: "examples"
 
-  #-
-  #  title: "Charts & Visualizations"
-  #  pages:
+  -
+    title: "Chart Options"
+    pages:
   #    -
   #      title: "Document Setup"
   #      url: "/documentation/document-settings"
@@ -52,14 +52,18 @@ documentation:
   #      title: "Units & Formatters"
   #      url: "/documentation/formatter"
   #      file: "formatters"
-  #    -
-  #      title: "Plot: Domains"
-  #      url: "/documentation/plot-domains"
-  #      file: "plot_domains"
-  #    -
-  #      title: "Plot: Axes"
-  #      url: "/documentation/plot-axes"
-  #      file: "plot_axes"
+      -
+        title: "Scales"
+        url: "/documentation/plot-scales"
+        file: "scales"
+      -
+        title: "Axes"
+        url: "/documentation/plot-axes"
+        file: "axes"
+      -
+        title: "Unit Formats"
+        url: "/documentation/formatter"
+        file: "formatter"
   #    -
   #      title: "Plot: Gridlines"
   #      url: "/documentation/plot-gridlines"
