@@ -54,7 +54,7 @@ ReturnCode draw(
 
     for (auto i : group.index) {
       auto sx = clip.x + config.x[i] * clip.w;
-      auto sy = clip.y + (1.0 - config.y1[i]) * clip.h;
+      auto sy = clip.y + (1.0 - config.y[i]) * clip.h;
 
       if (i == group.index[0]) {
         path.moveTo(sx, sy);
@@ -65,7 +65,7 @@ ReturnCode draw(
 
     for (auto i = group.index.rbegin(); i != group.index.rend(); ++i) {
       auto sx = clip.x + config.x[*i] * clip.w;
-      auto sy = clip.y + (1.0 - config.y2[*i]) * clip.h;
+      auto sy = clip.y + (1.0 - config.yoffset[*i]) * clip.h;
       path.lineTo(sx, sy);
     }
 
@@ -111,8 +111,8 @@ ReturnCode configure(
     LegendItemMap* legend,
     PlotAreaConfig* config) {
   SeriesRef data_x = find_maybe(data.defaults, "x");
-  SeriesRef data_y1 = find_maybe(data.defaults, "y");
-  SeriesRef data_y2;
+  SeriesRef data_y = find_maybe(data.defaults, "y");
+  SeriesRef data_yoffset;
   SeriesRef data_group = find_maybe(data.defaults, "group");
 
   std::string scale_x = SCALE_DEFAULT_X;
@@ -130,9 +130,8 @@ ReturnCode configure(
   static const ParserDefinitions pdefs = {
     {"x", configure_series_fn(data, &data_x)},
     {"x-scale", bind(&configure_string, _1, &scale_x)},
-    {"y", configure_series_fn(data, &data_y1)},
-    {"y1", configure_series_fn(data, &data_y1)},
-    {"y2", configure_series_fn(data, &data_y2)},
+    {"y", configure_series_fn(data, &data_y)},
+    {"y-offset", configure_series_fn(data, &data_yoffset)},
     {"y-scale", bind(&configure_string, _1, &scale_y)},
     {"group", configure_series_fn(data, &data_group)},
     {"title", bind(&configure_string, _1, &title)},
@@ -145,16 +144,16 @@ ReturnCode configure(
   }
 
   /* check dataset */
-  if (!data_x || !data_y1) {
+  if (!data_x || !data_y) {
     return ReturnCode::error("EARG", "the following properties are required: x, y");
   }
 
-  if ((data_x->size() != data_y1->size()) ||
-      (data_y2 && data_x->size() != data_y2->size()) ||
+  if ((data_x->size() != data_y->size()) ||
+      (data_yoffset && data_x->size() != data_yoffset->size()) ||
       (data_group && data_x->size() != data_group->size())) {
     return ReturnCode::error(
         "EARG",
-        "the length of the 'x', 'y', 'y1', 'y2' and 'group' properties must be equal");
+        "the length of the 'x', 'y', 'x-offset', 'y-offset' and 'group' properties must be equal");
   }
 
   /* fetch domains */
@@ -184,12 +183,12 @@ ReturnCode configure(
 
   /* setup config */
   config->x = domain_translate(*domain_x, *data_x);
-  config->y1 = domain_translate(*domain_y, *data_y1);
-  config->y2 = domain_translate(
+  config->y = domain_translate(*domain_y, *data_y);
+  config->yoffset = domain_translate(
       *domain_y,
-      data_y2
-          ? *data_y2
-          : std::vector<Value>(data_y1->size(), "0.0"));
+      data_yoffset
+          ? *data_yoffset
+          : std::vector<Value>(data_y->size(), "0.0"));
 
   config->colors = fallback(
       color,

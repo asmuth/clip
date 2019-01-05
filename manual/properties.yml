@@ -584,9 +584,9 @@ elements:
     # plot > layer > area > y
     - *prop_y
 
-    - name: x2
+    - name: x-offset
       desc_short: ''
-    - name: y2
+    - name: y-offset
       desc_short: ''
 
     # plot > layer > area > group
@@ -673,9 +673,9 @@ elements:
     # plot > layer > bars > y
     - *prop_y
 
-    - name: x2
+    - name: x-offset
       desc_short: ''
-    - name: y2
+    - name: y-offset
       desc_short: ''
 
     # plot > layer > bars > group

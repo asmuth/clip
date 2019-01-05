@@ -11,8 +11,8 @@ plot {
 
   layer {
     type: bars;
-    y1: var2;
-    y2: var3;
+    y: var2;
+    y-offset: var3;
   }
 
 }

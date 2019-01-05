@@ -12,7 +12,7 @@ plot {
 
   layer {
     type: area;
-    y1: y;
-    y2: z;
+    y: y;
+    y-offset: z;
   }
 }

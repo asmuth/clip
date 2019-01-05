@@ -56,12 +56,12 @@ ReturnCode draw_horizontal(
     const PlotBarsConfig& config,
     const Rectangle& clip,
     Layer* layer) {
-  assert(config.x1.size() == config.x2.size());
-  assert(config.x1.size() == config.y1.size());
-  assert(config.y1.size() == config.y2.size());
+  assert(config.x.size() == config.xoffset.size());
+  assert(config.x.size() == config.y.size());
+  assert(config.y.size() == config.yoffset.size());
 
   const double group_cnt = config.groups.size();
-  const double groups_cnt = (config.x1.size() / group_cnt);
+  const double groups_cnt = (config.x.size() / group_cnt);
 
   const double slot_width =
       (clip.h / groups_cnt) *
@@ -75,10 +75,10 @@ ReturnCode draw_horizontal(
     const auto group = config.groups[group_idx];
 
     for (auto i : group.index) {
-      auto sx1 = clip.x + config.x1[i] * clip.w;
-      auto sx2 = clip.x + config.x2[i] * clip.w;
+      auto sx1 = clip.x + config.x[i] * clip.w;
+      auto sx2 = clip.x + config.xoffset[i] * clip.w;
       const double sy =
-          clip.y + (1.0 - config.y1[i]) * clip.h +
+          clip.y + (1.0 - config.y[i]) * clip.h +
           slot_width * -.5 +
           (slot_width / group_cnt) * (group_idx + .5);
 
@@ -116,8 +116,8 @@ ReturnCode draw_horizontal(
         from_em(kDefaultLabelPaddingHorizEM, config.label_font_size));
 
     Point p(
-        clip.x + config.x1[i] * clip.w + label_padding,
-        clip.y + (1.0 - config.y1[i]) * clip.h);
+        clip.x + config.x[i] * clip.w + label_padding,
+        clip.y + (1.0 - config.y[i]) * clip.h);
 
     TextStyle style;
     style.font = config.label_font;
@@ -138,12 +138,12 @@ ReturnCode draw_vertical(
     const PlotBarsConfig& config,
     const Rectangle& clip,
     Layer* layer) {
-  assert(config.x1.size() == config.x2.size());
-  assert(config.x1.size() == config.y1.size());
-  assert(config.y1.size() == config.y2.size());
+  assert(config.x.size() == config.xoffset.size());
+  assert(config.x.size() == config.y.size());
+  assert(config.y.size() == config.yoffset.size());
 
   const double group_cnt = config.groups.size();
-  const double groups_cnt = (config.x1.size() / group_cnt);
+  const double groups_cnt = (config.x.size() / group_cnt);
 
   // TODO: make configurable
   const double slot_width =
@@ -158,13 +158,12 @@ ReturnCode draw_vertical(
     const auto group = config.groups[group_idx];
 
     for (auto i : group.index) {
+      const double sy1 = clip.y + (1.0 - config.y[i]) * clip.h;
+      const double sy2 = clip.y + (1.0 - config.yoffset[i]) * clip.h;
       const double sx =
-          clip.x + config.x1[i] * clip.w +
+          clip.x + config.x[i] * clip.w +
           slot_width * -.5 +
           (slot_width / group_cnt) * (group_idx + .5);
-
-      const double sy1 = clip.y + (1.0 - config.y1[i]) * clip.h;
-      const double sy2 = clip.y + (1.0 - config.y2[i]) * clip.h;
 
       const auto& color = config.colors.empty()
           ? Color{}
@@ -200,8 +199,8 @@ ReturnCode draw_vertical(
         from_em(kDefaultLabelPaddingVertEM, config.label_font_size));
 
     Point p(
-        clip.x + config.x1[i] * clip.w,
-        clip.y + (1.0 - config.y1[i]) * clip.h - label_padding);
+        clip.x + config.x[i] * clip.w,
+        clip.y + (1.0 - config.y[i]) * clip.h - label_padding);
 
     TextStyle style;
     style.font = config.label_font;
@@ -238,10 +237,10 @@ ReturnCode configure(
     const Document& doc,
     const DomainMap& scales,
     PlotBarsConfig* config) {
-  SeriesRef data_x1 = find_maybe(data.defaults, "x");
-  SeriesRef data_x2;
-  SeriesRef data_y1 = find_maybe(data.defaults, "y");
-  SeriesRef data_y2;
+  SeriesRef data_x = find_maybe(data.defaults, "x");
+  SeriesRef data_xoffset;
+  SeriesRef data_y = find_maybe(data.defaults, "y");
+  SeriesRef data_yoffset;
   SeriesRef data_group = find_maybe(data.defaults, "group");
   SeriesRef data_labels;
 
@@ -256,13 +255,11 @@ ReturnCode configure(
   ColorScheme color_palette;
 
   static const ParserDefinitions pdefs = {
-    {"x", configure_series_fn(data, &data_x1)},
-    {"x1", configure_series_fn(data, &data_x1)},
-    {"x2", configure_series_fn(data, &data_x2)},
+    {"x", configure_series_fn(data, &data_x)},
+    {"x-offset", configure_series_fn(data, &data_xoffset)},
     {"x-scale", bind(&configure_string, _1, &scale_x)},
-    {"y", configure_series_fn(data, &data_y1)},
-    {"y1", configure_series_fn(data, &data_y1)},
-    {"y2", configure_series_fn(data, &data_y2)},
+    {"y", configure_series_fn(data, &data_y)},
+    {"y-offset", configure_series_fn(data, &data_yoffset)},
     {"y-scale", bind(&configure_string, _1, &scale_y)},
     {"direction", bind(&configure_direction, _1, &direction)},
     {"group", configure_series_fn(data, &data_group)},
@@ -276,20 +273,20 @@ ReturnCode configure(
   }
 
   /* check dataset */
-  if (!data_x1 || !data_y1) {
+  if (!data_x || !data_y) {
     return ReturnCode::error("EARG", "the following properties are required: x, y");
   }
 
-  if ((data_x1->size() != data_y1->size()) ||
-      (data_x2 && data_x1->size() != data_x2->size()) ||
-      (data_y2 && data_x1->size() != data_y2->size()) ||
-      (data_group && data_x1->size() != data_group->size())) {
+  if ((data_x->size() != data_y->size()) ||
+      (data_xoffset && data_x->size() != data_xoffset->size()) ||
+      (data_yoffset && data_x->size() != data_yoffset->size()) ||
+      (data_group && data_x->size() != data_group->size())) {
     return ReturnCode::error(
         "EARG",
-        "the length of the 'x', 'y', 'y1', 'y2' and 'group' properties must be equal");
+        "the length of the 'x', 'y', 'y', 'yoffset' and 'group' properties must be equal");
   }
 
-  if (data_labels && (data_x1->size() != data_labels->size())) {
+  if (data_labels && (data_x->size() != data_labels->size())) {
     return ReturnCode::error(
         "EARG",
         "the length of the 'x', 'y' and 'labels' properties must be equal");
@@ -308,14 +305,14 @@ ReturnCode configure(
 
   /* group data */
   if (data_group) {
-    if (data_x1->size() != data_group->size()) {
+    if (data_x->size() != data_group->size()) {
       return ERROR_INVALID_ARGUMENT;
     }
 
     config->groups = plotfx::series_group(*data_group);
   } else {
     DataGroup g;
-    g.index = std::vector<size_t>(data_x1->size());
+    g.index = std::vector<size_t>(data_x->size());
     std::iota(g.index.begin(), g.index.end(), 0);
     config->groups.emplace_back(g);
   }
@@ -323,24 +320,24 @@ ReturnCode configure(
   /* return element */
   config->direction = direction;
 
-  config->x1 = domain_translate(*domain_x, *data_x1);
-  config->x2 = domain_translate(
+  config->x = domain_translate(*domain_x, *data_x);
+  config->xoffset = domain_translate(
       *domain_x,
-      data_x2
-          ? *data_x2
-          : std::vector<Value>(data_x1->size(), "0.0"));
+      data_xoffset
+          ? *data_xoffset
+          : std::vector<Value>(data_x->size(), "0.0"));
 
-  config->y1 = domain_translate(*domain_y, *data_y1);
-  config->y2 = domain_translate(
+  config->y = domain_translate(*domain_y, *data_y);
+  config->yoffset = domain_translate(
       *domain_y,
-      data_y2
-          ? *data_y2
-          : std::vector<Value>(data_y1->size(), "0.0"));
+      data_yoffset
+          ? *data_yoffset
+          : std::vector<Value>(data_y->size(), "0.0"));
 
   config->colors = fallback(
       color,
       series_to_colors(colors, color_domain, color_palette),
-      groups_to_colors(data_x1->size(), config->groups, color_palette));
+      groups_to_colors(data_x->size(), config->groups, color_palette));
 
   config->label_font = doc.font_sans;
   config->label_font_size = doc.font_size;

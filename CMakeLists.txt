@@ -91,7 +91,7 @@ foreach(unit_test_path ${unit_test_files})
       COMMAND ${CMAKE_CURRENT_BINARY_DIR}/${unit_test_name})
 endforeach()
 
-file(GLOB spec_test_files "tests/spec/**/test_*.ptx" "examples/**/*.ptx")
+file(GLOB spec_test_files "tests/spec/**/test_*.ptx")
 foreach(spec_test_path ${spec_test_files})
   get_filename_component(spec_test_name ${spec_test_path} NAME_WE)
   get_filename_component(spec_test_srcdir ${spec_test_path} DIRECTORY)
@@ -99,5 +99,15 @@ foreach(spec_test_path ${spec_test_files})
       NAME ${spec_test_name}_svg
       WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
       COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/tests/spec/test_runner.sh ${CMAKE_CURRENT_BINARY_DIR}/plotfx ${spec_test_path} ${CMAKE_CURRENT_BINARY_DIR}/${spec_test_name}.svg ${spec_test_srcdir}/${spec_test_name}.svg)
+endforeach()
+
+file(GLOB example_test_files "examples/**/*.ptx")
+foreach(example_test_path ${example_test_files})
+  get_filename_component(example_test_name ${example_test_path} NAME_WE)
+  get_filename_component(example_test_srcdir ${example_test_path} DIRECTORY)
+  add_test(
+      NAME test_example_${example_test_name}_svg
+      WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+      COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/tests/spec/test_runner.sh ${CMAKE_CURRENT_BINARY_DIR}/plotfx ${example_test_path} ${CMAKE_CURRENT_BINARY_DIR}/${example_test_name}.svg ${example_test_srcdir}/${example_test_name}.svg)
 endforeach()
 

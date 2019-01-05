@@ -223,12 +223,10 @@ ReturnCode configure_scales(
 
     static const ParserDefinitions pdefs = {
       {"x", configure_series_fn(data, &data_x1)},
-      {"x1", configure_series_fn(data, &data_x1)},
-      {"x2", configure_series_fn(data, &data_x2)},
+      {"x-offset", configure_series_fn(data, &data_x2)},
       {"x-scale", bind(&configure_string, _1, &scale_x)},
       {"y", configure_series_fn(data, &data_y1)},
-      {"y1", configure_series_fn(data, &data_y1)},
-      {"y2", configure_series_fn(data, &data_y2)},
+      {"y-offset", configure_series_fn(data, &data_y2)},
       {"y-scale", bind(&configure_string, _1, &scale_y)},
     };
 

@@ -12,8 +12,8 @@ plot {
     type: area;
     x: x;
     group: series;
-    y1: y;
-    y2: z;
+    y: y;
+    y-offset: z;
   }
 
   layer {

@@ -46,10 +46,10 @@ namespace bars {
 struct PlotBarsConfig {
   PlotBarsConfig();
   Direction direction;
-  std::vector<double> x1;
-  std::vector<double> x2;
-  std::vector<double> y1;
-  std::vector<double> y2;
+  std::vector<double> x;
+  std::vector<double> xoffset;
+  std::vector<double> y;
+  std::vector<double> yoffset;
   std::vector<DataGroup> groups;
   std::vector<Color> colors;
   std::vector<Measure> sizes;
