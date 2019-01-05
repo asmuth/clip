@@ -57,10 +57,10 @@ int main(int argc, const char** argv) {
   FlagParser flag_parser;
 
   std::string flag_in;
-  flag_parser.defineString("in", true, &flag_in);
+  flag_parser.defineString("in", false, &flag_in);
 
   std::string flag_out;
-  flag_parser.defineString("out", true, &flag_out);
+  flag_parser.defineString("out", false, &flag_out);
 
   std::string flag_out_fmt;
   flag_parser.defineString("outfmt", false, &flag_out_fmt);
@@ -102,6 +102,16 @@ int main(int argc, const char** argv) {
 
     std::cerr << "\nSee 'plotfx help <command>' for information about a specific subcommand.\n";
     return 0;
+  }
+
+  if (flag_in.empty()) {
+    std::cerr << "Need an input file (--in)\n";
+    return 1;
+  }
+
+  if (flag_out.empty()) {
+    std::cerr << "Need an output file (--out)\n";
+    return 1;
   }
 
   auto doc_raw = FileUtil::read(flag_in).toString(); // FIXME
