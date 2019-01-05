@@ -6,8 +6,8 @@ plot {
   x: var0;
   group: series;
 
-  axis-y-max: 75;
-  axis-y-min: -25;
+  scale-y-max: 75;
+  scale-y-min: -25;
 
   layer {
     type: bars;

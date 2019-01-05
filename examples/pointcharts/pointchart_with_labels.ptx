@@ -7,11 +7,11 @@ plot {
   y: y;
   group: series;
 
-  axis-y-min: -40;
-  axis-y-max: 60;
+  scale-y-min: -40;
+  scale-y-max: 60;
 
-  axis-x-min: -60;
-  axis-x-max: 60;
+  scale-x-min: -60;
+  scale-x-max: 60;
 
   layer {
     type: points;

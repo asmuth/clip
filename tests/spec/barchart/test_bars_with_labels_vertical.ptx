@@ -6,7 +6,7 @@ plot {
   x: month;
   y: temperature;
 
-  axis-y-max: 30;
+  scale-y-max: 30;
 
   layer {
     type: bars;

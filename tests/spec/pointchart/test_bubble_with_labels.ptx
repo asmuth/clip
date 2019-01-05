@@ -7,8 +7,8 @@ plot {
   y: y;
   group: series;
 
-  axis-x-min: -60;
-  axis-x-max: 60;
+  scale-x-min: -60;
+  scale-x-max: 60;
 
   layer {
     type: points;

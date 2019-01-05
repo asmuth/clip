@@ -328,30 +328,24 @@ elements:
     # plot > group
     - *prop_group
 
-    - name: axis-x
-      desc_short: Set the 'x' axis type
-    - name: axis-x-min
-      desc_short: Set the 'x' axis lower limit
-    - name: axis-x-max
-      desc_short: Set the 'x' axis upper limit
-    - name: axis-x-labels
-      desc_short: Set the 'x' axis label formatter
-    - name: axis-x-ticks
-      desc_short: Set the 'x' axis label placement
-    - name: axis-x-padding
-      desc_short: Set the 'x' axis default limit padding
-    - name: axis-y
-      desc_short: Set the 'y' axis type
-    - name: axis-y-min
-      desc_short: Set the 'y' axis lower limit
-    - name: axis-y-may
-      desc_short: Set the 'y' axis upper limit
-    - name: axis-y-labels
-      desc_short: Set the 'y' axis label formatter
-    - name: axis-y-ticks
-      desc_short: Set the 'y' axis label placement
-    - name: axis-y-padding
-      desc_short: Set the 'y' axis default limit padding
+    - name: scale-x
+      desc_short: Set the 'x' scale type
+    - name: scale-x-min
+      desc_short: Set the 'x' scale lower limit
+    - name: scale-x-max
+      desc_short: Set the 'x' scale upper limit
+    - name: scale-x-padding
+      desc_short: Set the 'x' scale default limit padding
+
+    - name: scale-y
+      desc_short: Set the 'y' scale type
+    - name: scale-y-min
+      desc_short: Set the 'y' scale lower limit
+    - name: scale-y-max
+      desc_short: Set the 'y' scale upper limit
+    - name: scale-y-padding
+      desc_short: Set the 'y' scale default limit padding
+
     - name: axis-top
       desc_short: Set the top axis type
     - name: axis-top-scale
@@ -384,15 +378,16 @@ elements:
       desc_short: Set the left axis label formatter
     - name: axis-left-ticks
       desc_short: Set the left axis label placement
+
     - name: grid
       desc_short: Set the background gridline spacing and visibility
     - name: grid-x
       desc_short: Set the background gridline spacing and visibility for the 'x' axis
     - name: grid-y
       desc_short: Set the background gridline spacing and visibility for the 'y' axis
-    - name: grid-x-scale
+    - name: grid-scale-x
       desc_short: Draw the background grid using an alternative 'x' scale
-    - name: grid-y-scale
+    - name: grid-scale-y
       desc_short: Draw the background grid using an alternative 'y' scale
     - name: grid-stroke
       desc_short: Set the background gridline stroke and width
@@ -558,9 +553,9 @@ elements:
     # plot > layer > lines > group
     - *prop_group
 
-    - name: x-scale
+    - name: scale-x
       desc_short: Use an alternative 'x' scale
-    - name: y-scale
+    - name: scale-y
       desc_short: Use an alternative 'y' scale
     - name: title
       desc_short: Add a title to this layer
@@ -594,9 +589,9 @@ elements:
 
     - name: group
       desc_short: Group the input data into series/groups
-    - name: x-scale
+    - name: scale-x
       desc_short: Use an alternative 'x' scale
-    - name: y-scale
+    - name: scale-y
       desc_short: Use an alternative 'y' scale
     - name: title
       desc_short: Add a title to this layer
@@ -621,9 +616,9 @@ elements:
     # plot > layer > points > group
     - *prop_group
 
-    - name: x-scale
+    - name: scale-x
       desc_short: Use an alternative 'x' scale
-    - name: y-scale
+    - name: scale-y
       desc_short: Use an alternative 'y' scale
     - name: color
       desc_short: Set the point colour
@@ -653,9 +648,9 @@ elements:
     # plot > layer > labels > y
     - *prop_y
 
-    - name: x-scale
+    - name: scale-x
       desc_short: Use an alternative 'x' scale
-    - name: y-scale
+    - name: scale-y
       desc_short: Use an alternative 'y' scale
     - name: labels
       desc_short: Set the label text data
@@ -681,9 +676,9 @@ elements:
     # plot > layer > bars > group
     - *prop_group
 
-    - name: x-scale
+    - name: scale-x
       desc_short: Use an alternative 'x' scale
-    - name: y-scale
+    - name: scale-y
       desc_short: Use an alternative 'y' scale
     - name: direction
       desc_short: Set the bar direction (horizontal/vertical)

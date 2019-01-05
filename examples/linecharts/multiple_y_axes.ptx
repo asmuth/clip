@@ -12,13 +12,13 @@ plot {
     type: lines;
     y: temp_london;
     color: #0c6;
-    y-scale: y1;
+    scale-y: y1;
   }
 
   layer {
     type: lines;
     y: temp_beijing;
     color: #06c;
-    y-scale: y2;
+    scale-y: y2;
   }
 }

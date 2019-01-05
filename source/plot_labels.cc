@@ -106,9 +106,9 @@ ReturnCode configure(
 
   static const ParserDefinitions pdefs = {
     {"x", configure_series_fn(data, &data_x)},
-    {"x-scale", bind(&configure_string, _1, &scale_x)},
+    {"scale-x", bind(&configure_string, _1, &scale_x)},
     {"y", configure_series_fn(data, &data_y)},
-    {"y-scale", bind(&configure_string, _1, &scale_y)},
+    {"scale-y", bind(&configure_string, _1, &scale_y)},
     {"labels", configure_series_fn(data, &data_labels)},
   };
 

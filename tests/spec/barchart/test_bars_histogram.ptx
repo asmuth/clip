@@ -8,10 +8,10 @@ plot {
 
   axis-top: off;
 
-  axis-y: log;
-  axis-x: categorical;
+  scale-y: log;
+  scale-x: categorical;
 
-  axis-y-max: 80000;
+  scale-y-max: 80000;
 
   grid-x: geom;
 

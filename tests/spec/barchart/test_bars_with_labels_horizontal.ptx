@@ -6,8 +6,8 @@ plot {
   y: country;
   x: gdp;
 
-  axis-x-min: 0;
-  axis-x-max: 22;
+  scale-x-min: 0;
+  scale-x-max: 22;
 
   layer {
     type: bars;

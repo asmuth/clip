@@ -41,8 +41,8 @@ Here is the input file from which the above plot was generated (`example_chart.p
       y: temperature;
       group: city;
 
-      axis-y-min: -10;
-      axis-y-max: 32;
+      scale-y-min: -10;
+      scale-y-max: 32;
 
       layer {
         type: lines;

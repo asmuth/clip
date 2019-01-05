@@ -188,14 +188,14 @@ ReturnCode configure_scales(
   domain_y.min_auto_snap_zero = true;
 
   static const ParserDefinitions pdefs = {
-    {"axis-x", bind(&domain_configure, _1, &domain_x)},
-    {"axis-x-min", bind(&configure_float_opt, _1, &domain_x.min)},
-    {"axis-x-max", bind(&configure_float_opt, _1, &domain_x.max)},
-    {"axis-x-padding", bind(&configure_float, _1, &domain_x.padding)},
-    {"axis-y", bind(&domain_configure, _1, &domain_y)},
-    {"axis-y-min", bind(&configure_float_opt, _1, &domain_y.min)},
-    {"axis-y-max", bind(&configure_float_opt, _1, &domain_y.max)},
-    {"axis-y-padding", bind(&configure_float, _1, &domain_y.padding)},
+    {"scale-x", bind(&domain_configure, _1, &domain_x)},
+    {"scale-x-min", bind(&configure_float_opt, _1, &domain_x.min)},
+    {"scale-x-max", bind(&configure_float_opt, _1, &domain_x.max)},
+    {"scale-x-padding", bind(&configure_float, _1, &domain_x.padding)},
+    {"scale-y", bind(&domain_configure, _1, &domain_y)},
+    {"scale-y-min", bind(&configure_float_opt, _1, &domain_y.min)},
+    {"scale-y-max", bind(&configure_float_opt, _1, &domain_y.max)},
+    {"scale-y-padding", bind(&configure_float, _1, &domain_y.padding)},
   };
 
   if (auto rc = parseAll(plist, pdefs); !rc.isSuccess()) {
@@ -224,10 +224,10 @@ ReturnCode configure_scales(
     static const ParserDefinitions pdefs = {
       {"x", configure_series_fn(data, &data_x1)},
       {"x-offset", configure_series_fn(data, &data_x2)},
-      {"x-scale", bind(&configure_string, _1, &scale_x)},
+      {"scale-x", bind(&configure_string, _1, &scale_x)},
       {"y", configure_series_fn(data, &data_y1)},
       {"y-offset", configure_series_fn(data, &data_y2)},
-      {"y-scale", bind(&configure_string, _1, &scale_y)},
+      {"scale-y", bind(&configure_string, _1, &scale_y)},
     };
 
     if (auto rc = parseAll(*prop.next, pdefs); !rc) {
@@ -338,34 +338,6 @@ ReturnCode configure_style(
   auto domain_y = find_ptr(scales, SCALE_DEFAULT_Y);
 
   static const ParserDefinitions pdefs = {
-    {
-      "axis-x-labels",
-      configure_multiprop({
-          bind(&confgure_format, _1, &config->axis_top.label_formatter),
-          bind(&confgure_format, _1, &config->axis_bottom.label_formatter),
-      })
-    },
-    {
-      "axis-x-ticks",
-      configure_multiprop({
-          bind(&axis_configure_label_placement, _1, &config->axis_top.label_placement),
-          bind(&axis_configure_label_placement, _1, &config->axis_bottom.label_placement),
-      })
-    },
-    {
-      "axis-y-labels",
-      configure_multiprop({
-          bind(&confgure_format, _1, &config->axis_left.label_formatter),
-          bind(&confgure_format, _1, &config->axis_right.label_formatter),
-      })
-    },
-    {
-      "axis-y-ticks",
-      configure_multiprop({
-          bind(&axis_configure_label_placement, _1, &config->axis_left.label_placement),
-          bind(&axis_configure_label_placement, _1, &config->axis_right.label_placement),
-      })
-    },
     {"axis-top", bind(&parseAxisModeProp, _1, &config->axis_top.mode)},
     {"axis-top-scale", bind(&configure_string, _1, &config->axis_top.scale)},
     {"axis-top-labels", bind(&confgure_format, _1, &config->axis_top.label_formatter)},
@@ -405,6 +377,34 @@ ReturnCode configure_style(
           &axis_configure_label_placement,
           _1,
           &config->axis_left.label_placement),
+    },
+    {
+      "axis-x-labels",
+      configure_multiprop({
+          bind(&confgure_format, _1, &config->axis_top.label_formatter),
+          bind(&confgure_format, _1, &config->axis_bottom.label_formatter),
+      })
+    },
+    {
+      "axis-x-ticks",
+      configure_multiprop({
+          bind(&axis_configure_label_placement, _1, &config->axis_top.label_placement),
+          bind(&axis_configure_label_placement, _1, &config->axis_bottom.label_placement),
+      })
+    },
+    {
+      "axis-y-labels",
+      configure_multiprop({
+          bind(&confgure_format, _1, &config->axis_left.label_formatter),
+          bind(&confgure_format, _1, &config->axis_right.label_formatter),
+      })
+    },
+    {
+      "axis-y-ticks",
+      configure_multiprop({
+          bind(&axis_configure_label_placement, _1, &config->axis_left.label_placement),
+          bind(&axis_configure_label_placement, _1, &config->axis_right.label_placement),
+      })
     },
     {
       "margin",

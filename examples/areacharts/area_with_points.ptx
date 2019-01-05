@@ -6,7 +6,7 @@ plot {
   x: x;
   y: y;
 
-  axis-y-max: 60;
+  scale-y-max: 60;
 
   layer {
     type: area;

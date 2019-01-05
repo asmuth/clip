@@ -7,9 +7,9 @@ plot {
   y: temperature;
   group: city;
 
-  axis-y: inverted;
-  axis-y-min: -10;
-  axis-y-max: 32;
+  scale-y: inverted;
+  scale-y-min: -10;
+  scale-y-max: 32;
 
   margin-right: 2.4em;
 

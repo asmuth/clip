@@ -127,9 +127,9 @@ ReturnCode grid_configure(
       })
     },
     {"grid-x", bind(&grid_configure_placement, _1, &placement_horiz)},
-    {"grid-x-scale", bind(&configure_string, _1, &scale_horiz)},
+    {"grid-scale-x", bind(&configure_string, _1, &scale_horiz)},
     {"grid-y", bind(&grid_configure_placement, _1, &placement_horiz)},
-    {"grid-y-scale", bind(&configure_string, _1, &scale_vert)},
+    {"grid-scale-y", bind(&configure_string, _1, &scale_vert)},
     {"grid-stroke", bind(&configure_measure_rel, _1, doc.dpi, doc.font_size, &line_width)},
   };
 

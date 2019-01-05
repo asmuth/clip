@@ -7,13 +7,13 @@ plot {
   x: csv('tests/testdata/log_example.csv', x);
   y: csv('tests/testdata/log_example.csv', y);
 
-  axis-x: log;
-  axis-x-min: 0;
-  axis-x-max: 5;
+  scale-x: log;
+  scale-x-min: 0;
+  scale-x-max: 5;
 
-  axis-y: log;
-  axis-y-min: 0;
-  axis-y-max: 10000;
+  scale-y: log;
+  scale-y-min: 0;
+  scale-y-max: 10000;
 
   layer {
     type: lines;

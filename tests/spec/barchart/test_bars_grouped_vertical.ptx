@@ -7,7 +7,7 @@ plot {
   y: gdp;
   group: year;
 
-  axis-y-max: 40000;
+  scale-y-max: 40000;
 
   layer {
     type: bars;

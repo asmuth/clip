@@ -257,10 +257,10 @@ ReturnCode configure(
   static const ParserDefinitions pdefs = {
     {"x", configure_series_fn(data, &data_x)},
     {"x-offset", configure_series_fn(data, &data_xoffset)},
-    {"x-scale", bind(&configure_string, _1, &scale_x)},
+    {"scale-x", bind(&configure_string, _1, &scale_x)},
     {"y", configure_series_fn(data, &data_y)},
     {"y-offset", configure_series_fn(data, &data_yoffset)},
-    {"y-scale", bind(&configure_string, _1, &scale_y)},
+    {"scale-y", bind(&configure_string, _1, &scale_y)},
     {"direction", bind(&configure_direction, _1, &direction)},
     {"group", configure_series_fn(data, &data_group)},
     {"color", configure_color_opt(&color)},

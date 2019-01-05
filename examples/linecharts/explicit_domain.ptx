@@ -7,8 +7,8 @@ plot {
   y: temperature;
   group: city;
 
-  axis-y-min: -30;
-  axis-y-max: 40;
+  scale-y-min: -30;
+  scale-y-max: 40;
 
   layer {
     type: lines;

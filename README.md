@@ -45,8 +45,8 @@ Input File (`example_chart.ptx`):
       y: temperature;
       group: city;
 
-      axis-y-min: -10;
-      axis-y-max: 32;
+      scale-y-min: -10;
+      scale-y-max: 32;
 
       layer {
         type: lines;

@@ -3,7 +3,7 @@ height: 480px;
 
 plot {
 
-  axis-y-max: 34;
+  scale-y-max: 34;
 
   layer {
     type: bars;
