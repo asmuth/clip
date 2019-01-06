@@ -82,7 +82,7 @@ std::vector<Measure> series_to_sizes(
 
   std::vector<Measure> sizes;
   for (const auto& v : *series) {
-    auto value = domain_translate(domain, v) * domain_cardinality(domain);
+    auto value = domain_translate(domain, v);
     sizes.emplace_back(low.value + (high.value - low.value) * value);
   }
 
