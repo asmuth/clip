@@ -1,7 +1,7 @@
 PlotFX
 ======
 
-[![Build Status](https://img.shields.io/travis/plotfx/plotfx/master.svg?style=flat-square)](http://travis-ci.org/plotfx/plotfx)
+[![Build status](https://ci.appveyor.com/api/projects/status/8h07x0erafnxsumi/branch/master?svg=true)](https://ci.appveyor.com/project/plotfx/plotfx/branch/master)
 ![BSD-License](https://img.shields.io/badge/license-BSD-blue.svg?style=flat-square)
 
 `plotfx` is a standalone tool for creating charts and other data-driven graphics.
