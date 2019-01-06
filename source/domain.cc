@@ -240,7 +240,7 @@ Value domain_untranslate_categorical(
 
   std::string v;
   size_t vidx = vt * domain.categories.size();
-  if (vidx >= 0 && vidx < domain.categories.size()) {
+  if (vidx < domain.categories.size()) {
     v = domain.categories[vidx];
   }
 
