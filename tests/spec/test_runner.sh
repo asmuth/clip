@@ -19,12 +19,15 @@ if [[ ! -e ${masterfile} ]]; then
   cp ${outfile} ${masterfile}
 fi
 
+echo
+
 # FIXME image diff
 if !(diff ${outfile} ${masterfile} &>/dev/null); then
   echo
   print_error "ERROR: output files do not match"
-  echo -e "If the modification is intended, fix by running:\n    cp ${outfile} ${masterfile}"
+  echo "Diff:"
+  diff ${outfile} ${masterfile}
   echo
-  echo -e "To view the diff, run:\n    diff ${outfile} ${masterfile}"
+  echo -e "If the modification is intended, fix by running:\n    cp ${outfile} ${masterfile}"
   exit 1
 fi

@@ -458,20 +458,40 @@ ReturnCode axis_draw_all(
   return OK;
 }
 
-ReturnCode axis_place_labels_subdivide(
+ReturnCode axis_place_labels_linear(
     const DomainConfig& domain,
-    AxisDefinition* axis) {
-  uint32_t num_ticks = 8; // FIXME make configurable
-
+    AxisDefinition* axis,
+    double step,
+    std::optional<double> align) {
   axis->ticks.clear();
   axis->labels.clear();
 
-  for (size_t i = 0; i < num_ticks; ++i) {
-    axis->ticks.emplace_back((1.0f / (num_ticks - 1)) * i);
+  auto begin = std::max(align.value_or(domain_min(domain)), domain_min(domain));
+  auto end = domain_max(domain);
+
+  for (auto v = begin; v <= end; v += step) {
+    auto vs = std::to_string(v); // TODO remove to_string;
+    auto vp = domain_translate(domain, vs);
+    axis->ticks.emplace_back(vp);
+    axis->labels.emplace_back(vp, axis->label_formatter(vs));
+  }
+
+  return OK;
+}
+
+ReturnCode axis_place_labels_subdivide(
+    const DomainConfig& domain,
+    AxisDefinition* axis,
+    uint32_t divisions) {
+  axis->ticks.clear();
+  axis->labels.clear();
+
+  for (size_t i = 0; i < divisions; ++i) {
+    axis->ticks.emplace_back((1.0f / (divisions - 1)) * i);
   }
 
   auto tick_values = domain_untranslate(domain, axis->ticks);
-  for (size_t i = 0; i < num_ticks; ++i) {
+  for (size_t i = 0; i < divisions; ++i) {
     axis->labels.emplace_back(
         axis->ticks[i],
         axis->label_formatter(tick_values[i]));
@@ -513,20 +533,93 @@ ReturnCode axis_place_labels_default(
     return axis_place_labels_discrete(domain, axis);
   }
 
-  return axis_place_labels_subdivide(domain, axis);
+  return axis_place_labels_subdivide(domain, axis, 8); // TODO: automatically choose a good value
+}
+
+
+ReturnCode configure_label_placement_linear(
+    const plist::Property& prop,
+    AxisLabelPlacement* label_placement) {
+  double step = 0;
+  std::optional<double> align;
+  switch (prop.size()) {
+    case 0:
+      step = 1; // TODO: automatically choose a good value
+      break;
+    case 1:
+    default:
+      try {
+        step = std::stod(prop[0]);
+        break;
+      } catch (... ) {
+        return ERROR_INVALID_ARGUMENT;
+      }
+  }
+
+  for (size_t i = 1; i < prop.size(); ++i) {
+    if (plist::is_tuple(prop[i]) &&
+        prop[i].size() == 2 &&
+        prop[i][0].value == "align") {
+      try {
+        align = std::stod(prop[i][1].value);
+        break;
+      } catch (... ) {
+        return ERROR_INVALID_ARGUMENT;
+      }
+
+      continue;
+    }
+  }
+
+  *label_placement = bind(
+      &axis_place_labels_linear,
+      _1,
+      _2,
+      step,
+      align);
+
+  return OK;
+}
+
+ReturnCode configure_label_placement_subdivide(
+    const plist::Property& prop,
+    AxisLabelPlacement* label_placement) {
+  double subdivisions = 0;
+  switch (prop.size()) {
+    case 0:
+      subdivisions = 8; // TODO: automatically choose a good value
+      break;
+    case 1:
+      try {
+        subdivisions = std::stod(prop[0]);
+        break;
+      } catch (... ) {
+        return ERROR_INVALID_ARGUMENT;
+      }
+    default:
+      return ERROR_INVALID_ARGUMENT;
+  }
+
+  *label_placement = bind(
+      &axis_place_labels_subdivide,
+      _1,
+      _2,
+      subdivisions);
+
+  return OK;
 }
 
 ReturnCode axis_configure_label_placement(
     const plist::Property& prop,
     AxisLabelPlacement* label_placement) {
+  if (plist::is_value(prop, "linear") ||
+      plist::is_enum(prop, "linear")) {
+    return configure_label_placement_linear(prop, label_placement);
+  }
+
   if (plist::is_value(prop, "subdivide") ||
       plist::is_enum(prop, "subdivide")) {
-    *label_placement = bind(
-        &axis_place_labels_subdivide,
-        _1,
-        _2);
-
-    return OK;
+    return configure_label_placement_subdivide(prop, label_placement);
   }
 
   if (plist::is_value(prop, "discrete") ||
@@ -542,6 +635,7 @@ ReturnCode axis_configure_label_placement(
   return ReturnCode::errorf(
       "EARG",
       "invalid value '$0', expected one of: \n"
+      "  - linear\n"
       "  - subdivide\n"
       "  - discrete\n",
       prop.value);

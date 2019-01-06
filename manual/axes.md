@@ -29,7 +29,7 @@ valid `<axis-layout>` values is:
 The `linear` layout will place a 'tick' every `N` units. If no `N` parameter
 is provided it will be chosen automatically.
 
-![axis_discrete.svg](/documentation/figures/axis_discrete.svg)
+![axis_linear.svg](/documentation/figures/axis_linear.svg)
 
 ---
 
@@ -38,7 +38,7 @@ is provided it will be chosen automatically.
 The same as the `linear` layout, but the ticks will be aligned to an arbitrary
 start value `A`.
 
-![axis_discrete.svg](/documentation/figures/axis_discrete.svg)
+![axis_linear_align.svg](/documentation/figures/axis_linear_aligned.svg)
 
 ---
 
