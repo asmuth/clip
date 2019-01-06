@@ -65,10 +65,10 @@ int main(int argc, const char** argv) {
   std::string flag_out_fmt;
   flag_parser.defineString("outfmt", false, &flag_out_fmt);
 
-  bool flag_help;
+  bool flag_help = false;
   flag_parser.defineSwitch("help", &flag_help);
 
-  bool flag_version;
+  bool flag_version = false;
   flag_parser.defineSwitch("version", &flag_version);
 
   {
