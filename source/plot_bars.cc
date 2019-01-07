@@ -232,11 +232,33 @@ ReturnCode draw(
   }
 }
 
+ReturnCode build_legend(
+    const PlotBarsConfig& config,
+    const std::string& title,
+    const std::string& legend_key,
+    LegendItemMap* legend) {
+  LegendItemGroup legend_items;
+
+  for (const auto& g : config.groups) {
+    LegendItem li;
+    li.title = g.key.empty() ? title : g.key;
+    li.color = config.colors.empty()
+        ? Color{}
+        : config.colors[g.index[0] % config.colors.size()];
+
+    legend_items.items.emplace_back(li);
+  }
+
+  legend_items_add(legend_key, legend_items, legend);
+  return OK;
+}
+
 ReturnCode configure(
     const plist::PropertyList& plist,
     const DataContext& data,
     const Document& doc,
     const DomainMap& scales,
+    LegendItemMap* legend,
     PlotBarsConfig* config) {
   SeriesRef data_x1 = find_maybe(data.defaults, "x");
   SeriesRef data_x2;
@@ -247,6 +269,10 @@ ReturnCode configure(
 
   std::string scale_x = SCALE_DEFAULT_X;
   std::string scale_y = SCALE_DEFAULT_Y;
+
+  std::string title;
+
+  std::string legend_key = LEGEND_DEFAULT;
 
   Direction direction = Direction::VERTICAL;
 
@@ -269,6 +295,7 @@ ReturnCode configure(
     {"color", configure_color_opt(&color)},
     {"colors", configure_series_fn(data, &colors)},
     {"labels", configure_series_fn(data, &data_labels)},
+    {"title", bind(&configure_string, _1, &title)},
   };
 
   if (auto rc = parseAll(plist, pdefs); !rc) {
@@ -346,6 +373,11 @@ ReturnCode configure(
   config->label_font_size = doc.font_size;
   if (data_labels) {
     config->labels = *data_labels;
+  }
+
+  /* build legend items */
+  if (auto rc = build_legend(*config, title, legend_key, legend); !rc) {
+    return rc;
   }
 
   return OK;
