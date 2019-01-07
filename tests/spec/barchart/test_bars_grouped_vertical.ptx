@@ -12,8 +12,4 @@ plot {
   layer {
     type: bars;
   }
-
-  legend {
-    position: top left inside;
-  }
 }
