@@ -18,6 +18,5 @@ plot {
   layer {
     type: bars;
     labels: var1;
-    title: "Histogram";
   }
 }
