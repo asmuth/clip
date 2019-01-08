@@ -11,6 +11,7 @@ plot {
   layer {
     type: bars;
     labels: temperature_str;
+    title: "London";
   }
 
   legend {

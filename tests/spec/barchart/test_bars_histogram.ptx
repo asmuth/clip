@@ -19,8 +19,4 @@ plot {
     type: bars;
     labels: var1;
   }
-
-  legend {
-    position: top left inside;
-  }
 }

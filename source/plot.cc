@@ -132,7 +132,7 @@ ReturnCode configure_layer(
 
   if (type == "bars")
     layer_builder = elem_builder<bars::PlotBarsConfig>(
-        bind(&bars::configure, _1, _2, _3, scales, _4),
+        bind(&bars::configure, _1, _2, _3, scales, legend_items, _4),
         &bars::draw);
 
   if (type == "labels")

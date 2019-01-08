@@ -70,6 +70,7 @@ ReturnCode configure(
     const DataContext& data,
     const Document& doc,
     const DomainMap& scales,
+    LegendItemMap* legend,
     PlotBarsConfig* config);
 
 } // namespace bars

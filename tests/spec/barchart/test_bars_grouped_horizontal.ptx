@@ -14,8 +14,4 @@ plot {
     type: bars;
     direction: horizontal;
   }
-
-  legend {
-    position: top left inside;
-  }
 }
