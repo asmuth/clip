@@ -31,21 +31,11 @@
  */
 #include <stdlib.h>
 #include <unistd.h>
-#include <signal.h>
-#include <regex>
 #include <iostream>
-#include <sys/time.h>
-#include <sys/resource.h>
-#include <sys/file.h>
 #include "plotfx.h"
-#include "source/document.h"
-#include "graphics/layer.h"
-#include "graphics/layer_svg.h"
-#include "graphics/layer_pixmap.h"
-#include <utils/flagparser.h>
-#include <utils/fileutil.h>
-#include <utils/return_code.h>
-#include <utils/stringutil.h>
+#include "utils/flagparser.h"
+#include "utils/return_code.h"
+#include "utils/stringutil.h"
 
 using namespace plotfx;
 
@@ -70,6 +60,9 @@ int main(int argc, const char** argv) {
 
   bool flag_version = false;
   flag_parser.defineSwitch("version", &flag_version);
+
+  bool flag_debug = true;
+  flag_parser.defineSwitch("debug", &flag_debug);
 
   {
     auto rc = flag_parser.parseArgv(argc - 1, argv + 1);
@@ -114,24 +107,33 @@ int main(int argc, const char** argv) {
     return 1;
   }
 
-  auto doc_raw = FileUtil::read(flag_in).toString(); // FIXME
-
-  plotfx::Document doc;
-  if (auto rc = document_load(doc_raw, &doc); !rc.isSuccess()) {
-    printError(rc);
-    return EXIT_FAILURE;
-  }
-
   std::string fmt = flag_out_fmt;
   if (fmt.empty()) {
     if (StringUtil::endsWith(flag_out, ".svg")) { fmt = "svg"; }
     if (StringUtil::endsWith(flag_out, ".png")) { fmt = "png"; }
   }
 
-  if (auto rc = document_render(doc, fmt, flag_out); rc.isSuccess()) {
-    return EXIT_SUCCESS;
-  } else {
-    printError(rc);
+  plotfx_t* ctx = plotfx_init();
+  if (!ctx) {
+    std::cerr << "ERROR: error while initializing PlotFX" << std::endl;
     return EXIT_FAILURE;
   }
+
+  if (!plotfx_configure_file(ctx, flag_in.c_str())) {
+    std::cerr
+        << "ERROR: error while parsing configuration: "
+        << plotfx_geterror(ctx)
+        << std::endl;
+    return EXIT_FAILURE;
+  }
+
+  if (!plotfx_render_file(ctx, flag_out.c_str(), fmt.c_str())) {
+    std::cerr
+        << "ERROR: error while rendering"
+        << plotfx_geterror(ctx)
+        << std::endl;
+    return EXIT_FAILURE;
+  }
+
+  return EXIT_SUCCESS;
 }

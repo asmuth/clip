@@ -1,5 +1,10 @@
-cmake_minimum_required(VERSION 2.8.8)
 project(plotfx)
+add_definitions("-DPLOTFX_VERSION='\"v0.2.0\"'")
+
+
+# CMake Setup
+# -----------------------------------------------------------------------------
+cmake_minimum_required(VERSION 2.8.8)
 enable_testing()
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/extra/cmake")
@@ -10,6 +15,9 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/source)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/source/utils)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
+
+# Dependencies
+# -----------------------------------------------------------------------------
 find_package(Threads)
 find_package(Cairo)
 find_package(Freetype)
@@ -18,9 +26,12 @@ find_package(Fontconfig)
 find_package(PNG)
 include_directories(${CAIRO_INCLUDE_DIRS} ${FREETYPE_INCLUDE_DIRS} ${HARFBUZZ_INCLUDE_DIRS} ${PNG_INCLUDE_DIRS})
 
-add_definitions(-DPLOTFX_VERSION="v0.2.0")
 
-add_library(plotfxlib STATIC
+# Build: PlotFX Library
+# -----------------------------------------------------------------------------
+add_library(plotfx STATIC
+    source/plotfx.cc
+    source/plotfx_sdl.cc # TODO: only if SDL enabled
     source/plot.cc
     source/plot_area.cc
     source/plot_axis.cc
@@ -72,12 +83,27 @@ add_library(plotfxlib STATIC
     source/utils/UTF8.cc
     source/utils/wallclock.cc)
 
-set(PLOTFX_LDFLAGS plotfxlib ${CAIRO_LIBRARIES} ${FREETYPE_LIBRARIES} ${HARFBUZZ_LIBRARIES} ${HARFBUZZ_ICU_LIBRARIES} ${PNG_LIBRARIES} ${FONTCONFIG_LIBRARIES})
+set_target_properties(plotfx PROPERTIES
+    PUBLIC_HEADER "source/plotfx.h;source/plotfx_sdl.h")
 
-add_executable(plotfx source/plotfx_cli.cc)
-target_link_libraries(plotfx ${PLOTFX_LDFLAGS})
-install(TARGETS plotfx DESTINATION bin)
+set(PLOTFX_LDFLAGS plotfx ${CAIRO_LIBRARIES} ${FREETYPE_LIBRARIES} ${HARFBUZZ_LIBRARIES} ${HARFBUZZ_ICU_LIBRARIES} ${PNG_LIBRARIES} ${FONTCONFIG_LIBRARIES})
 
+
+# Build: CLI
+# -----------------------------------------------------------------------------
+add_executable(plotfx-cli source/plotfx_cli.cc)
+target_link_libraries(plotfx-cli ${PLOTFX_LDFLAGS})
+set_target_properties(plotfx-cli PROPERTIES OUTPUT_NAME plotfx)
+
+
+# Installation
+# -----------------------------------------------------------------------------
+install(TARGETS plotfx ARCHIVE DESTINATION lib PUBLIC_HEADER DESTINATION include/plotfx)
+install(TARGETS plotfx-cli DESTINATION bin)
+
+
+# Testing
+# -----------------------------------------------------------------------------
 file(GLOB unit_test_files "tests/unit/**/test_*.cc")
 foreach(unit_test_path ${unit_test_files})
   get_filename_component(unit_test_name ${unit_test_path} NAME_WE)
