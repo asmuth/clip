@@ -32,6 +32,44 @@
 
 namespace plotfx {
 
+ReturnCode layer_bind_img(
+    double width,
+    double height,
+    double dpi,
+    Measure font_size,
+    const Color& background_color,
+    std::function<Status (const unsigned char* data, size_t len)> submit,
+    LayerRef* layer) {
+  auto text_shaper = std::make_shared<text::TextShaper>();
+  auto raster = std::make_shared<Rasterizer>(width, height, dpi, text_shaper);
+  raster->clear(background_color);
+
+  layer->reset(new Layer {
+    .width = width,
+    .height = height,
+    .dpi = dpi,
+    .font_size = font_size,
+    .text_shaper = text_shaper,
+    .apply = [submit, raster] (auto op) {
+      return std::visit([submit, raster] (auto&& op) {
+        using T = std::decay_t<decltype(op)>;
+        if constexpr (std::is_same_v<T, layer_ops::BrushStrokeOp>)
+          return raster->strokePath(op);
+        if constexpr (std::is_same_v<T, layer_ops::BrushFillOp>)
+          return raster->fillPath(op);
+        if constexpr (std::is_same_v<T, layer_ops::TextSpanOp>)
+          return raster->drawText(op);
+        if constexpr (std::is_same_v<T, layer_ops::SubmitOp>)
+          return submit(raster->data(), raster->size());
+        else
+          return ERROR;
+      }, op);
+    },
+  });
+
+  return OK;
+}
+
 ReturnCode layer_bind_png(
     double width,
     double height,

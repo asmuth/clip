@@ -35,10 +35,12 @@
 namespace plotfx {
 
 Rasterizer::Rasterizer(
-    uint32_t width,
-    uint32_t height,
+    uint32_t width_,
+    uint32_t height_,
     double dpi_,
     std::shared_ptr<text::TextShaper> text_shaper_) :
+    width(width_),
+    height(height_),
     dpi(dpi_),
     text_shaper(text_shaper_),
     ft_ready(false) {
@@ -198,7 +200,7 @@ Status Rasterizer::drawTextGlyphs(
 
   auto cairo_face = cairo_ft_font_face_create_for_ft_face(ft_font, 0);
   cairo_set_font_face(cr_ctx, cairo_face);
-  cairo_set_font_size(cr_ctx, (style.font_size / 72.0) * dpi);
+  cairo_set_font_size(cr_ctx, style.font_size);
 
   auto cairo_glyphs = cairo_glyph_allocate(glyph_count);
   for (int i = 0; i < glyph_count; ++i) {
@@ -242,6 +244,14 @@ void Rasterizer::clear(const Color& c) {
       c.alpha());
 
   cairo_paint(cr_ctx);
+}
+
+const unsigned char* Rasterizer::data() const {
+  return cairo_image_surface_get_data(cr_surface);
+}
+
+size_t Rasterizer::size() const {
+  return width * height * 4;
 }
 
 cairo_status_t cr_copy(

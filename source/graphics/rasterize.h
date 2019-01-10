@@ -72,7 +72,11 @@ public:
   Status writeToFile(const std::string& path);
 
   std::string to_png() const;
+  const unsigned char* data() const;
+  size_t size() const;
 
+  uint32_t width;
+  uint32_t height;
   double dpi;
   std::shared_ptr<text::TextShaper> text_shaper;
   FT_Library ft;

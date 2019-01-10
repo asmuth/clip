@@ -33,6 +33,15 @@
 namespace plotfx {
 class Rasterizer;
 
+ReturnCode layer_bind_img(
+    double width,
+    double height,
+    double dpi,
+    Measure font_size,
+    const Color& background_color,
+    std::function<Status (const unsigned char* data, size_t len)> submit,
+    LayerRef* layer);
+
 ReturnCode layer_bind_png(
     double width,
     double height,
