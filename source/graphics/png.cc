@@ -52,7 +52,7 @@ Status pngWriteImageFile(
       color_type = PNG_COLOR_TYPE_RGB_ALPHA;
       break;
     default:
-      return ERROR_INVALID_ARGUMENT;
+      return ERROR;
   }
 
   FILE* file = fopen(filename.c_str(), "wb");
@@ -60,14 +60,14 @@ Status pngWriteImageFile(
   auto png = png_create_write_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
   if (!png) {
     fclose(file);
-    return ERROR_IO;
+    return ERROR;
   }
 
   auto png_info = png_create_info_struct(png);
   if (!png_info) {
     fclose(file);
     png_destroy_write_struct(&png, NULL);
-    return ERROR_IO;
+    return ERROR;
   }
 
   png_init_io(png, file);

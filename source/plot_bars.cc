@@ -227,7 +227,7 @@ ReturnCode draw(
     case Direction::VERTICAL:
       return draw_vertical(config, clip, layer);
     default:
-      return ERROR_INVALID_ARGUMENT;
+      return ERROR;
   }
 }
 
@@ -333,7 +333,7 @@ ReturnCode configure(
   /* group data */
   if (data_group) {
     if (data_x->size() != data_group->size()) {
-      return ERROR_INVALID_ARGUMENT;
+      return ERROR;
     }
 
     config->groups = plotfx::series_group(*data_group);

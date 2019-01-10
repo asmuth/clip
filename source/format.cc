@@ -55,10 +55,10 @@ ReturnCode confgure_format_decimal_scientific(
         precision = std::stod(prop[0]);
         break;
       } catch (... ) {
-        return ERROR_INVALID_ARGUMENT;
+        return ERROR;
       }
     default:
-      return ERROR_INVALID_ARGUMENT;
+      return ERROR;
   }
 
   *formatter = format_decimal_scientific(precision);
@@ -77,7 +77,7 @@ ReturnCode confgure_format_decimal_fixed(
     const plist::Property& prop,
     Formatter* formatter) {
   if (!plist::is_enum(prop, "fixed")) {
-    return ERROR_INVALID_ARGUMENT;
+    return ERROR;
   }
 
   uint32_t precision = 1;
@@ -89,10 +89,10 @@ ReturnCode confgure_format_decimal_fixed(
         precision = std::stod(prop[0]);
         break;
       } catch (... ) {
-        return ERROR_INVALID_ARGUMENT;
+        return ERROR;
       }
     default:
-      return ERROR_INVALID_ARGUMENT;
+      return ERROR;
   }
 
   *formatter = format_decimal_fixed(precision);
@@ -110,7 +110,7 @@ ReturnCode confgure_format_datetime(
     const plist::Property& prop,
     Formatter* formatter) {
   if (!plist::is_enum(prop, "datetime")) {
-    return ERROR_INVALID_ARGUMENT;
+    return ERROR;
   }
 
   std::string fmtspec = "%Y-%m-%d %H:%M:%S"; // FIXME improved auto format
@@ -121,7 +121,7 @@ ReturnCode confgure_format_datetime(
       fmtspec = prop[0];
       break;
     default:
-      return ERROR_INVALID_ARGUMENT;
+      return ERROR;
   }
 
   *formatter = format_datetime(fmtspec);

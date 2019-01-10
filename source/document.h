@@ -28,6 +28,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 #pragma once
+#include <memory>
 #include "utils/return_code.h"
 #include "source/color_scheme.h"
 #include "source/data_model.h"
@@ -38,6 +39,11 @@
 
 namespace plotfx {
 class Layer;
+
+struct Context {
+  std::unique_ptr<Document> document;
+  mutable std::string error;
+};
 
 struct Document {
   Document();
@@ -69,6 +75,10 @@ ReturnCode document_render(
     const std::string& format,
     const std::string& filename);
 
+ReturnCode document_render_to(
+    const Document& tree,
+    Layer* layer);
+
 ReturnCode document_render_svg(
     const Document& doc,
     const std::string& filename);
@@ -76,6 +86,9 @@ ReturnCode document_render_svg(
 ReturnCode document_render_png(
     const Document& doc,
     const std::string& filename);
+
+void ctx_seterrf(plotfx_t* ctx, const std::string& err);
+void ctx_seterr(plotfx_t* ctx, const ReturnCode& err);
 
 } // namespace plotfx
 

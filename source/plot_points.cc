@@ -181,7 +181,7 @@ ReturnCode configure(
   std::vector<DataGroup> groups;
   if (data_group) {
     if (data_x->size() != data_group->size()) {
-      return ERROR_INVALID_ARGUMENT;
+      return ERROR;
     }
 
     groups = plotfx::series_group(*data_group);

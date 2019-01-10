@@ -68,7 +68,7 @@ Status Rasterizer::fillPath(const layer_ops::BrushFillOp& op) {
   const auto& path = op.path;
   const auto& style = op.style;
   if (path.size() < 2) {
-    return ERROR_INVALID_ARGUMENT;
+    return ERROR;
   }
 
   cairo_set_source_rgba(
@@ -109,7 +109,7 @@ Status Rasterizer::strokePath(const layer_ops::BrushStrokeOp& op) {
   const auto& style = op.style;
 
   if (path.size() < 2) {
-    return ERROR_INVALID_ARGUMENT;
+    return ERROR;
   }
 
   cairo_set_source_rgba(
@@ -264,11 +264,11 @@ Status Rasterizer::writeToFile(const std::string& path) {
     if (rc == CAIRO_STATUS_SUCCESS) {
       return OK;
     } else {
-      return ERROR_IO;
+      return ERROR;
     }
   }
 
-  return ERROR_INVALID_ARGUMENT;
+  return ERROR;
 }
 
 } // namespace plotfx

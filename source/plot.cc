@@ -221,7 +221,7 @@ ReturnCode configure_scales(
     }
 
     if (!plist::is_map(prop)) {
-      return ERROR_INVALID_ARGUMENT;
+      return ERROR;
     }
 
     SeriesRef data_x1 = find_maybe(data.defaults, "x");

@@ -300,7 +300,7 @@ ReturnCode domain_configure(
       continue;
     }
 
-    return ERROR_INVALID_ARGUMENT;
+    return ERROR;
   }
 
   return OK;

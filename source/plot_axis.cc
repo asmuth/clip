@@ -228,7 +228,7 @@ static Status renderAxisHorizontal(
 
     auto ax = HAlign::CENTER;
     auto ay = label_position > 0 ? VAlign::TOP : VAlign::BOTTOM;
-    if (auto rc = drawTextLabel(label_text, p, ax, ay, style, target); rc) {
+    if (auto rc = drawTextLabel(label_text, p, ax, ay, style, target); !rc) {
       return rc;
     }
   }
@@ -284,7 +284,7 @@ Status renderAxis(
       break;
     case AxisPosition::CENTER_HORIZ:
     case AxisPosition::CENTER_VERT:
-      return ERROR_NOT_IMPLEMENTED;
+      return ERROR;
   }
 
   return rc;
@@ -439,19 +439,19 @@ ReturnCode axis_draw_all(
     const AxisDefinition& axis_bottom,
     const AxisDefinition& axis_left,
     Layer* layer) {
-  if (auto rc = renderAxis(axis_top, clip, AxisPosition::TOP, layer); rc) {
+  if (auto rc = renderAxis(axis_top, clip, AxisPosition::TOP, layer); !rc) {
     return rc;
   }
 
-  if (auto rc = renderAxis(axis_right, clip, AxisPosition::RIGHT, layer); rc) {
+  if (auto rc = renderAxis(axis_right, clip, AxisPosition::RIGHT, layer); !rc) {
     return rc;
   }
 
-  if (auto rc = renderAxis(axis_bottom, clip, AxisPosition::BOTTOM, layer); rc) {
+  if (auto rc = renderAxis(axis_bottom, clip, AxisPosition::BOTTOM, layer); !rc) {
     return rc;
   }
 
-  if (auto rc = renderAxis(axis_left, clip, AxisPosition::LEFT, layer); rc) {
+  if (auto rc = renderAxis(axis_left, clip, AxisPosition::LEFT, layer); !rc) {
     return rc;
   }
 
@@ -552,7 +552,7 @@ ReturnCode configure_label_placement_linear(
         step = std::stod(prop[0]);
         break;
       } catch (... ) {
-        return ERROR_INVALID_ARGUMENT;
+        return ERROR;
       }
   }
 
@@ -564,7 +564,7 @@ ReturnCode configure_label_placement_linear(
         align = std::stod(prop[i][1].value);
         break;
       } catch (... ) {
-        return ERROR_INVALID_ARGUMENT;
+        return ERROR;
       }
 
       continue;
@@ -594,10 +594,10 @@ ReturnCode configure_label_placement_subdivide(
         subdivisions = std::stod(prop[0]);
         break;
       } catch (... ) {
-        return ERROR_INVALID_ARGUMENT;
+        return ERROR;
       }
     default:
-      return ERROR_INVALID_ARGUMENT;
+      return ERROR;
   }
 
   *label_placement = bind(
@@ -691,7 +691,7 @@ ReturnCode axis_resolve(
           break;
         case AxisPosition::CENTER_HORIZ:
         case AxisPosition::CENTER_VERT:
-          return ERROR_NOT_IMPLEMENTED;
+          return ERROR;
       }
       break;
     case AxisLabelPosition::INSIDE:
@@ -710,7 +710,7 @@ ReturnCode axis_resolve(
           break;
         case AxisPosition::CENTER_HORIZ:
         case AxisPosition::CENTER_VERT:
-          return ERROR_NOT_IMPLEMENTED;
+          return ERROR;
       }
       break;
     default:
@@ -734,7 +734,7 @@ ReturnCode axis_resolve(
           break;
         case AxisPosition::CENTER_HORIZ:
         case AxisPosition::CENTER_VERT:
-          return ERROR_NOT_IMPLEMENTED;
+          return ERROR;
       }
       break;
     case AxisLabelPosition::INSIDE:
@@ -753,7 +753,7 @@ ReturnCode axis_resolve(
           break;
         case AxisPosition::CENTER_HORIZ:
         case AxisPosition::CENTER_VERT:
-          return ERROR_NOT_IMPLEMENTED;
+          return ERROR;
       }
       break;
     default:

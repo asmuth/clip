@@ -65,7 +65,7 @@ ReturnCode parse_measure_abs(
   try {
     value = std::stod(s, &unit_pos);
   } catch (... ) {
-    return ERROR_INVALID_ARGUMENT;
+    return ERROR;
   }
 
   auto unit = s.substr(unit_pos);
@@ -79,7 +79,7 @@ ReturnCode parse_measure_abs(
     return OK;
   }
 
-  return ERROR_INVALID_ARGUMENT;
+  return ERROR;
 }
 
 ReturnCode parse_measure_rel(
@@ -92,7 +92,7 @@ ReturnCode parse_measure_rel(
   try {
     value = std::stod(s, &unit_pos);
   } catch (... ) {
-    return ERROR_INVALID_ARGUMENT;
+    return ERROR;
   }
 
   auto unit = s.substr(unit_pos);
@@ -111,7 +111,7 @@ ReturnCode parse_measure_rel(
     return OK;
   }
 
-  return ERROR_INVALID_ARGUMENT;
+  return ERROR;
 }
 
 Measure measure_or(const Measure& primary, const Measure& fallback) {

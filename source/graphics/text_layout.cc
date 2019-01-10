@@ -125,9 +125,9 @@ Status layoutText(
     case TextDirection::LTR:
       return layoutTextLTR(text, x, y, font, font_size, dpi, shaper, glyph_cb);
     case TextDirection::RTL:
-      return ERROR_NOT_IMPLEMENTED;
+      return ERROR;
     default:
-      return ERROR_INVALID_ARGUMENT;
+      return ERROR;
   }
 }
 

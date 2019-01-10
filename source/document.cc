@@ -218,5 +218,13 @@ ReturnCode document_render_png(
   return OK;
 }
 
+void ctx_seterrf(plotfx_t* ctx, const std::string& err) {
+  static_cast<Context*>(ctx)->error = err;
+}
+
+void ctx_seterr(plotfx_t* ctx, const ReturnCode& err) {
+  static_cast<Context*>(ctx)->error = err.getMessage();
+}
+
 } // namespace plotfx
 

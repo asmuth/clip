@@ -225,7 +225,7 @@ ReturnCode layer_bind_svg(
         if constexpr (std::is_same_v<T, layer_ops::SubmitOp>)
           return submit(svg->to_svg());
         else
-          return ERROR_NOT_IMPLEMENTED;
+          return ERROR;
       }, op);
     },
   });

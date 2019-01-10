@@ -62,7 +62,7 @@ ReturnCode layer_bind_png(
         if constexpr (std::is_same_v<T, layer_ops::SubmitOp>)
           return submit(raster->to_png());
         else
-          return ERROR_NOT_IMPLEMENTED;
+          return ERROR;
       }, op);
     },
   });

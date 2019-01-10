@@ -320,7 +320,7 @@ ReturnCode legend_configure_position(
       continue;
     }
 
-    return ERROR_INVALID_ARGUMENT;
+    return ERROR;
   }
 
   return OK;
@@ -332,7 +332,7 @@ ReturnCode legend_configure(
     const LegendItemMap& item_map,
     LegendMap* map) {
   if (!plist::is_map(prop)) {
-    return ERROR_INVALID_ARGUMENT;
+    return ERROR;
   }
 
   const auto& plist = *prop.next;

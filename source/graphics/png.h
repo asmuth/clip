@@ -33,6 +33,7 @@
 #include <vector>
 #include "plotfx.h"
 #include <graphics/image.h>
+#include <utils/return_code.h>
 
 namespace plotfx {
 

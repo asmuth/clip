@@ -170,7 +170,7 @@ ReturnCode configure(
   /* group data */
   if (data_group) {
     if (data_x->size() != data_group->size()) {
-      return ERROR_INVALID_ARGUMENT;
+      return ERROR;
     }
 
     config->groups = plotfx::series_group(*data_group);

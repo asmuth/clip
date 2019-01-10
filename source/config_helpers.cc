@@ -147,7 +147,7 @@ ReturnCode configure_float(
   try {
     *value = std::stod(prop);
   } catch (... ) {
-    return ERROR_INVALID_ARGUMENT;
+    return ERROR;
   }
 
   return OK;
@@ -166,7 +166,7 @@ ReturnCode configure_float_opt(
   try {
     *value = std::optional<double>(std::stod(prop));
   } catch (... ) {
-    return ERROR_INVALID_ARGUMENT;
+    return ERROR;
   }
 
   return OK;
@@ -253,11 +253,11 @@ ReturnCode parse_datasource_csv(
     const plist::Property& prop ,
     DataContext* ctx) {
   if (!plist::is_enum(prop, "csv")) {
-    return ERROR_INVALID_ARGUMENT;
+    return ERROR;
   }
 
   if (prop.size() < 1) {
-    return ERROR_INVALID_ARGUMENT; // FIXME
+    return ERROR; // FIXME
   }
 
   std::string csv_path;
@@ -284,7 +284,7 @@ ReturnCode configure_datasource_prop(
     return parse_datasource_csv(prop, data);
   }
 
-  return ERROR_INVALID_ARGUMENT;
+  return ERROR;
 }
 
 ReturnCode configure_datasource(
@@ -315,7 +315,7 @@ ReturnCode parse_data_series_csv(
     const plist::Property& prop,
     SeriesRef* data_ref) {
   if (!plist::is_enum(prop, "csv")) {
-    return ERROR_INVALID_ARGUMENT;
+    return ERROR;
   }
 
   if (prop.size() < 2) {
@@ -355,7 +355,7 @@ ReturnCode parse_data_series_inline(
     const plist::Property& prop,
     SeriesRef* data_ref) {
   if (!plist::is_enum(prop, "inline")) {
-    return ERROR_INVALID_ARGUMENT;
+    return ERROR;
   }
 
   auto data = std::make_shared<Series>();
@@ -372,7 +372,7 @@ ReturnCode parse_data_series_var(
     const DataContext& ctx,
     SeriesRef* data) {
   if (!plist::is_value_literal(prop)) {
-    return ERROR_INVALID_ARGUMENT;
+    return ERROR;
   }
 
   const auto& var_name = prop.value;
@@ -401,7 +401,7 @@ ReturnCode configure_series(
     return parse_data_series_var(prop, ctx, data);
   }
 
-  return ERROR_INVALID_ARGUMENT;
+  return ERROR;
 }
 
 ParserFn configure_series_fn(

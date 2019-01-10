@@ -39,6 +39,11 @@
 
 namespace plotfx {
 
+enum Status : int {
+  ERROR = 0,
+  OK = 1,
+};
+
 class ReturnCode {
 public:
 
@@ -50,7 +55,6 @@ public:
       const std::string& code,
       const std::string& message) {
     ReturnCode rc(false);
-    rc.code_ = code;
     rc.message_ = message;
     return rc;
   }
@@ -60,8 +64,6 @@ public:
       const char* message,
       ...) {
     ReturnCode rc(false);
-    rc.code_ = code;
-
     va_list args;
     va_start(args, message);
     int bufsize = 1024;//vsnprintf(nullptr, 0, message, args);
@@ -81,10 +83,13 @@ public:
     return ReturnCode::error(code, StringUtil::format(message, args...));
   }
 
-  inline ReturnCode(const Status& status) :
+  inline ReturnCode(Status status) :
       success_(status == OK),
-      code_("RTERR"),
       message_("runtime error") {}
+
+  inline ReturnCode(Status status, std::string message) :
+      success_(status == ERROR),
+      message_(message) {}
 
   inline bool isError() const {
     return !success_;
@@ -98,10 +103,6 @@ public:
     return success_;
   }
 
-  inline const std::string& getCode() const {
-    return code_;
-  }
-
   inline const std::string& getMessage() const {
     return message_;
   }
@@ -109,7 +110,6 @@ public:
 protected:
   ReturnCode(bool success) : success_(success) {}
   bool success_;
-  std::string code_;
   std::string message_;
 };
 
