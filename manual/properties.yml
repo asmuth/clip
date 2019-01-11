@@ -35,14 +35,13 @@ proto: &prop_group
   scope: |
     The `group` property is valid inside the following scopes: `plot`, `plot.layer`.
   scope_example: |
-    plot {
-      /* set default group dataset for all layers */
-      group: inline(10, 20, 30, 40, 50);
+    /* set default group dataset for all layers */
+    group: inline(10, 20, 30, 40, 50);
 
-      layer {
-        /* override group dataset per layer */
-        group: inline(15, 25, 35, 45, 55);
-      }   
+    layer {
+      /* override group dataset per layer */
+      group: inline(15, 25, 35, 45, 55);
+    }
 
 proto: &prop_x
   name: x
@@ -74,14 +73,12 @@ proto: &prop_x
   scope: |
     The `x` property is valid inside the following scopes: `plot`, `plot.layer`.
   scope_example: |
-    plot {
-      /* set default x dataset for all layers */
-      x: inline(10, 20, 30, 40, 50);
+    /* set default x dataset for all layers */
+    x: inline(10, 20, 30, 40, 50);
 
-      layer {
-        /* override x dataset per layer */
-        x: inline(15, 25, 35, 45, 55);
-      }
+    layer {
+      /* override x dataset per layer */
+      x: inline(15, 25, 35, 45, 55);
     }
 
 proto: &prop_y
@@ -114,14 +111,12 @@ proto: &prop_y
   scope: |
     The `y` property is valid inside the following scopes: `plot`, `plot.layer`.
   scope_example: |
-    plot {
-      /* set default y dataset for all layers */
-      y: inline(10, 20, 30, 40, 50);
+    /* set default y dataset for all layers */
+    y: inline(10, 20, 30, 40, 50);
 
-      layer {
-        /* override y dataset per layer */
-        y: inline(15, 25, 35, 45, 55);
-      }
+    layer {
+      /* override y dataset per layer */
+      y: inline(15, 25, 35, 45, 55);
     }
 
 
@@ -400,9 +395,7 @@ elements:
         It is a shorthand for the `margin-top`, `margin-right`, `margin-bottom`, and `margin-left`
         properties.
       demo: |
-        plot {
-          margin: ...;
-        }
+        margin: ...;
       syntax_formal: "margin: auto | <length>"
       syntax_example: |
         /* Set margin of all four sides */
@@ -417,9 +410,7 @@ elements:
       scope: |
         The `margin` property is valid inside the `plot` element.
       scope_example: |
-        plot {
-          margin: ...;
-        }
+        margin: ...;
 
     # plot > margin-top
     - name: margin-top
@@ -428,9 +419,7 @@ elements:
         The `margin-top` property sets the size of the top margin area of the
         element.
       demo: |
-        plot {
-          margin-top: ...;
-        }
+        margin-top: ...;
       syntax_formal: "margin-top: auto | <length>"
       syntax_example: |
         /* Set the top margin to an explicit value */
@@ -445,9 +434,7 @@ elements:
       scope: |
         The `margin-top` property is valid inside the `plot` element.
       scope_example: |
-        plot {
-          margin-top: ...;
-        }
+        margin-top: ...;
 
     # plot > margin-right
     - name: margin-right
@@ -456,9 +443,7 @@ elements:
         The `margin-right` property sets the size of the right margin area of the
         element.
       demo: |
-        plot {
-          margin-right: ...;
-        }
+        margin-right: ...;
       syntax_formal: "margin-right: auto | <length>"
       syntax_example: |
         /* Set the right margin to an explicit value */
@@ -473,9 +458,7 @@ elements:
       scope: |
         The `margin-right` property is valid inside the `plot` element.
       scope_example: |
-        plot {
-          margin-right: ...;
-        }
+        margin-right: ...;
 
     # plot > margin-bottom
     - name: margin-bottom
@@ -484,9 +467,7 @@ elements:
         The `margin-bottom` property sets the size of the bottom margin area of the
         element.
       demo: |
-        plot {
-          margin-bottom: ...;
-        }
+        margin-bottom: ...;
       syntax_formal: "margin-bottom: auto | <length>"
       syntax_example: |
         /* Set the bottom margin to an explicit value */
@@ -501,9 +482,7 @@ elements:
       scope: |
         The `margin-bottom` property is valid inside the `plot` element.
       scope_example: |
-        plot {
-          margin-bottom: ...;
-        }
+        margin-bottom: ...;
 
     # plot > margin-left
     - name: margin-left
@@ -512,9 +491,7 @@ elements:
         The `margin-left` property sets the size of the left margin area of the
         element.
       demo: |
-        plot {
-          margin-left: ...;
-        }
+        margin-left: ...;
       syntax_formal: "margin-left: auto | <length>"
       syntax_example: |
         /* Set the left margin to an explicit value */
@@ -529,9 +506,7 @@ elements:
       scope: |
         The `margin-left` property is valid inside the `plot` element.
       scope_example: |
-        plot {
-          margin-left: ...;
-        }
+        margin-left: ...;
 
     - name: layer
       desc_short: Add a layer to the plot
@@ -683,11 +658,9 @@ elements:
     - name: direction
       desc_short: Set the bar direction (horizontal/vertical)
       demo: |
-        plot {
-          layer {
-            type: bars;
-            direction: ...;
-          }
+        layer {
+          type: bars;
+          direction: ...;
         }
 
       syntax_formal: "direction: horizontal | vertical"
@@ -708,11 +681,9 @@ elements:
         The `direction` property is valid inside the `plot > layer` element
         where the layer `type = bars`.
       scope_example: |
-        plot {
-          layer {
-            type: bars;
-            direction: ...;
-          }
+        layer {
+          type: bars;
+          direction: ...;
         }
 
     - name: color

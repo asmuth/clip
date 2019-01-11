@@ -1,28 +1,27 @@
-plot {
-  x: csv('tests/testdata/city_temperatures_london.csv', month);
-  y: csv('tests/testdata/city_temperatures_london.csv', temperature);
 
-  axis-top: off;
-  axis-right: off;
+x: csv('tests/testdata/city_temperatures_london.csv', month);
+y: csv('tests/testdata/city_temperatures_london.csv', temperature);
 
-  scale-y-min: -10;
-  scale-y-max: 32;
+axis-top: off;
+axis-right: off;
 
-  layer {
-    type: lines;
-    title: "London";
-  }
+scale-y-min: -10;
+scale-y-max: 32;
 
-  layer {
-    type: points;
-  }
+layer {
+  type: lines;
+  title: "London";
+}
 
-  layer {
-    type: labels;
-    labels: csv('tests/testdata/city_temperatures_london.csv', temperature_str);
-  }
+layer {
+  type: points;
+}
 
-  legend {
-    position: top left inside;
-  }
+layer {
+  type: labels;
+  labels: csv('tests/testdata/city_temperatures_london.csv', temperature_str);
+}
+
+legend {
+  position: top left inside;
 }

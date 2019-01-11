@@ -1,12 +1,10 @@
 width: 1280px;
 height: 480px;
 
-plot {
-  data: csv(tests/testdata/city_temperatures_london.csv);
-  x: month;
-  y: temperature;
+data: csv(tests/testdata/city_temperatures_london.csv);
+x: month;
+y: temperature;
 
-  layer {
-    type: bars;
-  }
+layer {
+  type: bars;
 }

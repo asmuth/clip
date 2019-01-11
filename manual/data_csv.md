@@ -5,10 +5,8 @@ Lorem ipsum dolor sit amet.
 
 #### Example:
 
-    plot {
-      series {
-        xs: csv(myfile.csv, column1);
-      }
+    series {
+      xs: csv(myfile.csv, column1);
     }
 
 

@@ -1,16 +1,14 @@
 width: 1200px;
 height: 800px;
 
-plot {
-  x: csv('tests/testdata/measurement.csv', time);
-  y: csv('tests/testdata/measurement.csv', value2);
+x: csv('tests/testdata/measurement.csv', time);
+y: csv('tests/testdata/measurement.csv', value2);
 
-  margin: 300px;
+margin: 300px;
 
-  axis-x-format: datetime("%H:%M:%S");
+axis-x-format: datetime("%H:%M:%S");
 
-  layer {
-    type: lines;
-    line-color: $0;
-  }
+layer {
+  type: lines;
+  line-color: $0;
 }

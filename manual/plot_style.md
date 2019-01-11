@@ -5,9 +5,7 @@ Lorem ipsum dolor sit amet.
 
 #### Example:
 
-    plot {
-      margin: 100px
-    }
+    margin: 100px
 
 
 #### Properties:

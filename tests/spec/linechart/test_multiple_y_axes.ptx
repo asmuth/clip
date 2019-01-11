@@ -1,24 +1,22 @@
 width: 1200px;
 height: 480px;
 
-plot {
-  data: csv('tests/testdata/city_temperatures_pivot.csv');
-  x: month;
+data: csv('tests/testdata/city_temperatures_pivot.csv');
+x: month;
 
-  axis-left-scale: y1;
-  axis-right-scale: y2;
+axis-left-scale: y1;
+axis-right-scale: y2;
 
-  layer {
-    type: lines;
-    y: temp_london;
-    color: #0c6;
-    scale-y: y1;
-  }
+layer {
+  type: lines;
+  y: temp_london;
+  color: #0c6;
+  scale-y: y1;
+}
 
-  layer {
-    type: lines;
-    y: temp_beijing;
-    color: #06c;
-    scale-y: y2;
-  }
+layer {
+  type: lines;
+  y: temp_beijing;
+  color: #06c;
+  scale-y: y2;
 }

@@ -1,15 +1,12 @@
 width: 1200px;
 height: 80px;
 
-plot {
-  margin-left: 40px;
-  margin-right: 40px;
+margin-left: 40px;
+margin-right: 40px;
 
-  axis-top: off;
-  axis-left: off;
-  axis-right: off;
+axis-top: off;
+axis-left: off;
+axis-right: off;
+axis-bottom-layout: subdivide;
 
-  axis-bottom-layout: subdivide;
-
-  x: inline(0, 16);
-}
+x: inline(0, 16);

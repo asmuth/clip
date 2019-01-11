@@ -1,17 +1,15 @@
 width: 1200px;
 height: 900px;
 
-plot {
-  data: csv('tests/testdata/city_temperatures.csv');
-  x: temperature;
-  y: month;
-  group: city;
+data: csv('tests/testdata/city_temperatures.csv');
+x: temperature;
+y: month;
+group: city;
 
-  scale-x-min: -10;
-  scale-x-max: 32;
+scale-x-min: -10;
+scale-x-max: 32;
 
-  layer {
-    type: bars;
-    direction: horizontal;
-  }
+layer {
+  type: bars;
+  direction: horizontal;
 }

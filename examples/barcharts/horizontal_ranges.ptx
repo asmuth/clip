@@ -1,19 +1,16 @@
 width: 1280px;
 height: 480px;
 
-plot {
-  data: csv(tests/testdata/bardata.csv);
-  y: var0;
-  group: series;
+data: csv(tests/testdata/bardata.csv);
+y: var0;
+group: series;
 
-  scale-x-max: 75;
-  scale-x-min: -25;
+scale-x-max: 75;
+scale-x-min: -25;
 
-  layer {
-    type: bars;
-    x: var2;
-    x-offset: var3;
-    direction: horizontal;
-  }
-
+layer {
+  type: bars;
+  x: var2;
+  x-offset: var3;
+  direction: horizontal;
 }

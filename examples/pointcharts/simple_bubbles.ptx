@@ -1,17 +1,15 @@
 width: 1200px;
 height: 480px;
 
-plot {
-  data: csv('tests/testdata/point_example.csv');
-  x: x;
-  y: y;
-  group: series;
+data: csv('tests/testdata/point_example.csv');
+x: x;
+y: y;
+group: series;
 
-  scale-x-min: -60;
-  scale-x-max: 60;
+scale-x-min: -60;
+scale-x-max: 60;
 
-  layer {
-    type: points;
-    sizes: z;
-  }
+layer {
+  type: points;
+  sizes: z;
 }

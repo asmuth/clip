@@ -1,15 +1,12 @@
 width: 1200px;
 height: 80px;
 
-plot {
-  margin-left: 40px;
-  margin-right: 40px;
+margin-left: 40px;
+margin-right: 40px;
 
-  axis-top: off;
-  axis-left: off;
-  axis-right: off;
+axis-top: off;
+axis-left: off;
+axis-right: off;
+axis-bottom-format: string;
 
-  axis-bottom-format: string;
-
-  x: inline(A, B, C, D, E, F, G, H, I, J, K);
-}
+x: inline(A, B, C, D, E, F, G, H, I, J, K);

@@ -1,32 +1,30 @@
 width: 1200px;
 height: 480px;
 
-plot {
-  axis-x-format: datetime("%H:%M:%S");
+axis-x-format: datetime("%H:%M:%S");
 
-  data: csv('tests/testdata/areadata2.csv', time);
+data: csv('tests/testdata/areadata2.csv', time);
 
-  grid-x: geom;
+grid-x: geom;
 
-  layer {
-    type: area;
-    x: x;
-    group: series;
-    y: y;
-    y-offset: z;
-  }
+layer {
+  type: area;
+  x: x;
+  group: series;
+  y: y;
+  y-offset: z;
+}
 
-  layer {
-    type: lines;
-    x: inline(10, 15, 20, 30, 40, 50);
-    y: inline(4,  8,  13, 2,  1,  9);
-    color: #000;
-  }
+layer {
+  type: lines;
+  x: inline(10, 15, 20, 30, 40, 50);
+  y: inline(4,  8,  13, 2,  1,  9);
+  color: #000;
+}
 
-  layer {
-    type: points;
-    x: inline(10, 15, 20, 30, 40, 50);
-    y: inline(4,  8,  13, 2,  1,  9);
-    color: #000;
-  }
+layer {
+  type: points;
+  x: inline(10, 15, 20, 30, 40, 50);
+  y: inline(4,  8,  13, 2,  1,  9);
+  color: #000;
 }

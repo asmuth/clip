@@ -1,27 +1,24 @@
 width: 1280px;
 height: 480px;
 
-plot {
+scale-y-max: 34;
 
-  scale-y-max: 34;
+layer {
+  type: bars;
+  x: csv(tests/testdata/city_temperatures_london.csv, month);
+  y: csv(tests/testdata/city_temperatures_london.csv, temperature);
+}
 
-  layer {
-    type: bars;
-    x: csv(tests/testdata/city_temperatures_london.csv, month);
-    y: csv(tests/testdata/city_temperatures_london.csv, temperature);
-  }
+layer {
+  type: lines;
+  x: csv(tests/testdata/city_temperatures_tokyo.csv, month);
+  y: csv(tests/testdata/city_temperatures_tokyo.csv, temperature);
+  color: #aa4643;
+}
 
-  layer {
-    type: lines;
-    x: csv(tests/testdata/city_temperatures_tokyo.csv, month);
-    y: csv(tests/testdata/city_temperatures_tokyo.csv, temperature);
-    color: #aa4643;
-  }
-
-  layer {
-    type: points;
-    x: csv(tests/testdata/city_temperatures_tokyo.csv, month);
-    y: csv(tests/testdata/city_temperatures_tokyo.csv, temperature);
-    color: #aa4643;
-  }
+layer {
+  type: points;
+  x: csv(tests/testdata/city_temperatures_tokyo.csv, month);
+  y: csv(tests/testdata/city_temperatures_tokyo.csv, temperature);
+  color: #aa4643;
 }

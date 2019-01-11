@@ -1,21 +1,19 @@
 width: 1200px;
 height: 480px;
 
-plot {
-  data: csv('tests/testdata/irregular_data.csv');
-  x: x;
-  y: y;
-  group: series;
+data: csv('tests/testdata/irregular_data.csv');
+x: x;
+y: y;
+group: series;
 
-  layer {
-    type: lines;
-  }
+layer {
+  type: lines;
+}
 
-  layer {
-    type: points;
-  }
+layer {
+  type: points;
+}
 
-  legend {
-    position: top left inside;
-  }
+legend {
+  position: top left inside;
 }

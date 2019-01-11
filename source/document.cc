@@ -37,6 +37,7 @@
 #include "graphics/font_lookup.h"
 #include "source/config_helpers.h"
 #include "utils/fileutil.h"
+#include "plot.h"
 
 using namespace std::placeholders;
 
@@ -90,31 +91,14 @@ ReturnCode document_load(
     return rc;
   }
 
-  for (size_t i = 0; i < plist.size(); ++i) {
-    const auto& elem_name = plist[i].name;
-
-    if (!plist::is_map(plist[i])) {
-      continue;
-    }
-
-    const auto& elem_config = plist[i].next.get();
-
-    ElementRef elem;
-    auto rc = buildElement(
-        elem_name,
-        *elem_config,
-        doc->data,
-        *doc,
-        &elem);
-
-    if (!rc) {
-      return rc;
-    }
-
-    doc->roots.emplace_back(std::move(elem));
+  plot::PlotConfig root_config;
+  if (auto rc = plot::configure(plist, doc->data, *doc, &root_config); !rc) {
+    return rc;
   }
 
-  return ReturnCode::success();
+  doc->root = std::make_unique<Element>();
+  doc->root->draw = bind(&plot::draw, root_config, _1, _2);
+  return OK;
 }
 
 ReturnCode document_load(
@@ -137,10 +121,12 @@ ReturnCode document_render_to(
     Layer* layer) {
   Rectangle clip(0, 0, layer->width, layer->height);
 
-  for (const auto& e : tree.roots) {
-    if (auto rc = e->draw(clip, layer); !rc.isSuccess()) {
-      return rc;
-    }
+  if (!tree.root) {
+    return {ERROR, "document has no root - empty configuration?"};
+  }
+
+  if (auto rc = tree.root->draw(clip, layer); !rc.isSuccess()) {
+    return rc;
   }
 
   if (auto rc = layer_submit(layer); !rc.isSuccess()) {

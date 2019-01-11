@@ -56,7 +56,7 @@ struct Document {
   FontInfo font_serif;
   FontInfo font_sans;
   FontInfo font_mono;
-  std::vector<ElementRef> roots;
+  ElementRef root;
   DataContext data;
   double dpi;
   Measure font_size;

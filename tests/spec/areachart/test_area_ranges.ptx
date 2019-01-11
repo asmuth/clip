@@ -1,18 +1,16 @@
 width: 1200px;
 height: 480px;
 
-plot {
-  axis-x-format: datetime("%H:%M:%S");
+axis-x-format: datetime("%H:%M:%S");
 
-  data: csv('tests/testdata/areadata2.csv', time);
-  x: x;
-  group: series;
+data: csv('tests/testdata/areadata2.csv', time);
+x: x;
+group: series;
 
-  grid-x: geom;
+grid-x: geom;
 
-  layer {
-    type: area;
-    y: y;
-    y-offset: z;
-  }
+layer {
+  type: area;
+  y: y;
+  y-offset: z;
 }

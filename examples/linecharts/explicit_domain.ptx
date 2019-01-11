@@ -1,24 +1,22 @@
 width: 1200px;
 height: 480px;
 
-plot {
-  data: csv('tests/testdata/city_temperatures.csv');
-  x: month;
-  y: temperature;
-  group: city;
+data: csv('tests/testdata/city_temperatures.csv');
+x: month;
+y: temperature;
+group: city;
 
-  scale-y-min: -30;
-  scale-y-max: 40;
+scale-y-min: -30;
+scale-y-max: 40;
 
-  layer {
-    type: lines;
-  }
+layer {
+  type: lines;
+}
 
-  layer {
-    type: points;
-  }
+layer {
+  type: points;
+}
 
-  legend {
-    position: bottom left inside;
-  }
+legend {
+  position: bottom left inside;
 }

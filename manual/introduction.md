@@ -35,23 +35,21 @@ Here is the input file from which the above plot was generated (`example_chart.p
     width: 1200px;
     height: 480px;
 
-    plot {
-      data: csv('tests/testdata/city_temperatures.csv');
-      x: month;
-      y: temperature;
-      group: city;
+    data: csv('tests/testdata/city_temperatures.csv');
+    x: month;
+    y: temperature;
+    group: city;
 
-      scale-y-min: -10;
-      scale-y-max: 32;
+    scale-y-min: -10;
+    scale-y-max: 32;
 
-      layer {
-        type: lines;
-        stroke: 2pt;
-      }
+    layer {
+      type: lines;
+      stroke: 2pt;
+    }
 
-      legend {
-        position: top left inside;
-      }
+    legend {
+      position: top left inside;
     }
 
 

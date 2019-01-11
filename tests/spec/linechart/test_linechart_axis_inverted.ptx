@@ -1,21 +1,20 @@
-plot {
-  data: csv('tests/testdata/city_temperatures.csv');
-  x: month;
-  y: temperature;
-  group: city;
 
-  scale-y: inverted;
-  scale-y-min: -10;
-  scale-y-max: 32;
-  axis-top: off;
-  axis-right: off;
+data: csv('tests/testdata/city_temperatures.csv');
+x: month;
+y: temperature;
+group: city;
 
-  layer {
-    type: lines;
-  }
+scale-y: inverted;
+scale-y-min: -10;
+scale-y-max: 32;
+axis-top: off;
+axis-right: off;
 
-  layer {
-    type: points;
-    point-size: 3.3pt;
-  }
+layer {
+  type: lines;
+}
+
+layer {
+  type: points;
+  point-size: 3.3pt;
 }

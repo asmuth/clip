@@ -8,10 +8,8 @@ Scale settings control how input data is mapped to plot coordinates.
 You can change the scale type using the `scale-x` and `scale-y` properties on
 the `plot` element:
 
-    plot {
-      scale-x: <scale-options>;
-      scale-y: <scale-options>;
-    }
+    scale-x: <scale-options>;
+    scale-y: <scale-options>;
 
 The following scale options are currently supported:
 
@@ -26,12 +24,10 @@ The scale limits are the smallest (min) and largest (max) values that will be
 displayed on the plot. Configure using the `axis-x-min`, `axis-x-max`, `axis-y-min` 
 and `axis-y-max` properties.
 
-    plot {
-      scale-x-min: <value>;
-      scale-x-max: <value>;
-      scale-y-min: <value>;
-      scale-y-max: <value>;
-    }
+    scale-x-min: <value>;
+    scale-x-max: <value>;
+    scale-y-min: <value>;
+    scale-y-max: <value>;
 
 
 ## Categorical Values

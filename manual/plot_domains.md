@@ -5,10 +5,8 @@ Lorem ipsum dolor sit amet.
 
 #### Example:
 
-    plot {
-      xmin: 0;
-      xmax: 100;
-    }
+    xmin: 0;
+    xmax: 100;
 
 
 #### Properties:

@@ -36,17 +36,15 @@
 
 /* The plot configuration that we are going to display */
 static const char* kScript = R"(
-  plot {
-    scale-x-padding: 0.1;
-    scale-y-padding: 0.3;
+  scale-x-padding: 0.1;
+  scale-y-padding: 0.3;
 
-    x: inline(10,   20,   30,   40,   50,   60,    70,   80,  90,  100);
-    y: inline(1.23, 4.32, 3.23, 6.43, 3.45, 12.32, 8.14, 5.2, 3.5, 2.2);
+  x: inline(10,   20,   30,   40,   50,   60,    70,   80,  90,  100);
+  y: inline(1.23, 4.32, 3.23, 6.43, 3.45, 12.32, 8.14, 5.2, 3.5, 2.2);
 
-    layer {
-      type: lines;
-      color: #06c;
-    }
+  layer {
+    type: lines;
+    color: #06c;
   }
 )";
 

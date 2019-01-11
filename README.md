@@ -36,26 +36,21 @@ Output File (`example_chart.svg`):
 
 Input File (`example_chart.ptx`):
 
-    width: 1200px;
-    height: 480px;
+    data: csv('tests/testdata/city_temperatures.csv');
+    x: month;
+    y: temperature;
+    group: city;
 
-    plot {
-      data: csv('tests/testdata/city_temperatures.csv');
-      x: month;
-      y: temperature;
-      group: city;
+    scale-y-min: -10;
+    scale-y-max: 32;
 
-      scale-y-min: -10;
-      scale-y-max: 32;
+    layer {
+      type: lines;
+      stroke: 2pt;
+    }
 
-      layer {
-        type: lines;
-        stroke: 2pt;
-      }
-
-      legend {
-        position: top left inside;
-      }
+    legend {
+      position: top left inside;
     }
 
 
