@@ -1,0 +1,4 @@
+extra/* linguist-documentation
+manual/* linguist-documentation
+examples/* linguist-documentation=false
+
