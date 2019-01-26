@@ -99,38 +99,10 @@ ReturnCode configure_layer(
 
   const auto& layer_props = *prop.next;
   ElementBuilder layer_builder;
-
-  // TODO: proper lookup
-  if (type == "area")
-    layer_builder = elem_builder<area::PlotAreaConfig>(
-        bind(&area::configure, _1, _2, _3, scales, legend_items, _4),
-        &area::draw);
-
-  if (type == "bars")
-    layer_builder = elem_builder<bars::PlotBarsConfig>(
-        bind(&bars::configure, _1, _2, _3, scales, legend_items, _4),
-        &bars::draw);
-
-  if (type == "labels")
-    layer_builder = elem_builder<labels::PlotLabelsConfig>(
-        bind(&labels::configure, _1, _2, _3, scales, _4),
-        &labels::draw);
-
-  if (type == "lines")
-    layer_builder = elem_builder<lines::PlotLinesConfig>(
-        bind(&lines::configure, _1, _2, _3, scales, legend_items, _4),
-        &lines::draw);
-
   if (!layer_builder) {
     return ReturnCode::errorf("EARG", "invalid layer type: '$0'", type);
   }
 
-  ElementRef layer;
-  if (auto rc = layer_builder(layer_props, data, doc, &layer); !rc) {
-    return rc;
-  }
-
-  config->layers.emplace_back(layer);
   return OK;
 }
 

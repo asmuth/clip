@@ -46,13 +46,14 @@ ReturnCode buildElement(
     const plist::PropertyList& plist,
     const DataContext& ctx,
     const Document& doc,
+    const Environment& env,
     ElementRef* elem) {
   const auto& elem_entry = elems.find(name);
   if (elem_entry == elems.end()) {
     return ReturnCode::errorf("NOTFOUND", "no such element: $0", name);
   }
 
-  return elem_entry->second(plist, ctx, doc, elem);
+  return elem_entry->second(plist, ctx, doc, env, elem);
 }
 
 } // namespace plotfx

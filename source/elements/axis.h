@@ -38,6 +38,7 @@
 #include <source/format.h>
 #include <source/dimension.h>
 #include <document.h>
+#include "environment.h"
 
 namespace plotfx {
 struct DomainConfig;
@@ -103,6 +104,7 @@ ReturnCode configure(
     const plist::PropertyList& plist,
     const DataContext& data,
     const Document& doc,
+    const Environment& env,
     AxisDefinition* config);
 
 

@@ -645,6 +645,7 @@ ReturnCode configure(
     const plist::PropertyList& plist,
     const DataContext& data,
     const Document& doc,
+    const Environment& env,
     AxisDefinition* config) {
   config->font = doc.font_sans;
   config->label_font_size = doc.font_size;

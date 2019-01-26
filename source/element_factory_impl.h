@@ -41,10 +41,11 @@ ElementBuilder elem_builder(
       const plist::PropertyList& prop,
       const DataContext& data,
       const Document& doc,
+      const Environment& env,
       ElementRef* elem) -> ReturnCode {
 
     T config;
-    if (auto rc = config_fn(prop, data, doc, &config); !rc) {
+    if (auto rc = config_fn(prop, data, doc, env, &config); !rc) {
       return rc;
     }
 

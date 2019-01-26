@@ -27,69 +27,12 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-#pragma once
-#include <memory>
-#include "utils/return_code.h"
-#include "source/color_scheme.h"
-#include "source/data_model.h"
-#include "graphics/measure.h"
-#include "graphics/color.h"
-#include "graphics/text.h"
-#include "element.h"
+#include "environment.h"
 
 namespace plotfx {
-class Layer;
 
-struct Context {
-  std::unique_ptr<Document> document;
-  mutable std::string error;
-};
-
-struct Document {
-  Document();
-  Measure width;
-  Measure height;
-  Environment env;
-  ColorScheme color_scheme;
-  Color background_color;
-  Color text_color;
-  Color border_color;
-  FontInfo font_serif;
-  FontInfo font_sans;
-  FontInfo font_mono;
-  std::vector<ElementRef> roots;
-  DataContext data;
-  double dpi;
-  Measure font_size;
-};
-
-ReturnCode document_load(
-    const PropertyList& plist,
-    Document* tree);
-
-ReturnCode document_load(
-    const std::string& spec,
-    Document* tree);
-
-ReturnCode document_render(
-    const Document& doc,
-    const std::string& format,
-    const std::string& filename);
-
-ReturnCode document_render_to(
-    const Document& tree,
-    Layer* layer);
-
-ReturnCode document_render_svg(
-    const Document& doc,
-    const std::string& filename);
-
-ReturnCode document_render_png(
-    const Document& doc,
-    const std::string& filename);
-
-void ctx_seterrf(plotfx_t* ctx, const std::string& err);
-void ctx_seterr(plotfx_t* ctx, const ReturnCode& err);
+Environment::Environment() {}
 
 } // namespace plotfx
+
 

@@ -34,12 +34,14 @@
 #include <functional>
 #include "plist/plist.h"
 #include "utils/return_code.h"
+#include "environment.h"
 
 namespace plotfx {
 struct Layer;
 struct Rectangle;
 struct Document;
 struct DataContext;
+struct Environment;
 
 using plist::PropertyList;
 
@@ -53,6 +55,7 @@ using ElementConfigureAsFn = std::function<ReturnCode (
     const plist::PropertyList&,
     const DataContext&,
     const Document&,
+    const Environment&,
     T*)>;
 
 struct Element {

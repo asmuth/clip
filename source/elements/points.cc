@@ -110,6 +110,7 @@ ReturnCode configure(
     const plist::PropertyList& plist,
     const DataContext& data,
     const Document& doc,
+    const Environment& env,
     PlotPointsConfig* config) {
   DomainMap scales;
   SeriesRef data_labels;

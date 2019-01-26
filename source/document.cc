@@ -105,6 +105,7 @@ ReturnCode document_load(
        *elem_config,
        doc->data,
        *doc,
+       doc->env,
        &elem);
 
    if (!rc) {

@@ -33,11 +33,13 @@
 
 namespace plotfx {
 struct Document;
+struct Environment;
 
 using ElementBuilder = std::function<ReturnCode (
     const plist::PropertyList&,
     const DataContext&,
     const Document&,
+    const Environment&,
     ElementRef* elem)>;
 
 template <typename T>
@@ -50,6 +52,7 @@ ReturnCode buildElement(
     const plist::PropertyList& plist,
     const DataContext& ctx,
     const Document& doc,
+    const Environment& env,
     ElementRef* elem);
 
 } // namespace plotfx
