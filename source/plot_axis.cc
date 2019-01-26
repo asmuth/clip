@@ -657,6 +657,11 @@ ReturnCode configure(
 
   static const ParserDefinitions pdefs = {
     {"position", bind(&parseAxisPositionProp, _1, &config->position)},
+    {"scale", bind(&domain_configure, _1, &domain)},
+    {"scale-min", bind(&configure_float_opt, _1, &domain.min)},
+    {"scale-max", bind(&configure_float_opt, _1, &domain.max)},
+    {"scale-padding", bind(&configure_float, _1, &domain.padding)},
+    {"layout", bind(&axis_configure_label_placement, _1, &config->label_placement)},
   };
 
   if (auto rc = parseAll(plist, pdefs); !rc) {

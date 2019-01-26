@@ -5,5 +5,5 @@ axis {
   scale: linear(1);
   scale-min: 0;
   scale-max: 16;
-  layout: linear(1);
+  layout: subdivide(10);
 }
