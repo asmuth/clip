@@ -1,0 +1,6 @@
+width: 1200px;
+height: 90px;
+
+axis {
+  scale: linear(1);
+}
