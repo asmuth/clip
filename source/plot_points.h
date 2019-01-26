@@ -64,7 +64,6 @@ ReturnCode configure(
     const plist::PropertyList& plist,
     const DataContext& data,
     const Document& doc,
-    const DomainMap& scales,
     PlotPointsConfig* config);
 
 } // namespace points

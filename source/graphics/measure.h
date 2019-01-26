@@ -67,5 +67,6 @@ ReturnCode parse_measure_rel(
 
 Measure measure_or(const Measure& primary, const Measure& fallback);
 
+
 } // namespace plotfx
 

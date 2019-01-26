@@ -91,13 +91,30 @@ ReturnCode document_load(
     return rc;
   }
 
-  plot::PlotConfig root_config;
-  if (auto rc = plot::configure(plist, doc->data, *doc, &root_config); !rc) {
-    return rc;
+ for (size_t i = 0; i < plist.size(); ++i) {
+   const auto& elem_name = plist[i].name;
+
+   if (!plist::is_map(plist[i])) {
+     continue;
+   }
+
+   const auto& elem_config = plist[i].next.get();
+
+   ElementRef elem;
+   auto rc = buildElement(
+       elem_name,
+       *elem_config,
+       doc->data,
+       *doc,
+       &elem);
+
+   if (!rc) {
+     return rc;
+   }
+
+   doc->roots.emplace_back(std::move(elem));
   }
 
-  doc->root = std::make_unique<Element>();
-  doc->root->draw = bind(&plot::draw, root_config, _1, _2);
   return OK;
 }
 
@@ -119,14 +136,22 @@ ReturnCode document_load(
 ReturnCode document_render_to(
     const Document& tree,
     Layer* layer) {
-  Rectangle clip(0, 0, layer->width, layer->height);
+  Rectangle bbox_layer(0, 0, layer->width, layer->height);
 
-  if (!tree.root) {
-    return {ERROR, "document has no root - empty configuration?"};
-  }
+  auto bbox_elem = layout_margin_box(
+      bbox_layer,
+      40,
+      40,
+      40,
+      40);
+  //if (!tree.roots.empty()) {
+  //  return {ERROR, "document has no root - empty configuration?"};
+  //}
 
-  if (auto rc = tree.root->draw(clip, layer); !rc.isSuccess()) {
-    return rc;
+  for (const auto& e : tree.roots) {
+    if (auto rc = e->draw(bbox_elem, layer); !rc.isSuccess()) {
+      return rc;
+    }
   }
 
   if (auto rc = layer_submit(layer); !rc.isSuccess()) {

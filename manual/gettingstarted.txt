@@ -1,0 +1,6 @@
+This page will guide you through creating a simple first plot and then give you
+pointers to more detailed documentation.
+
+Unlike a classical chart generator, a PlotFX file initially starts out as a blank
+slate.
+

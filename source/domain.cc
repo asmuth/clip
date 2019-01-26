@@ -37,7 +37,7 @@ namespace plotfx {
 static const double kDefaultLogBase = 10;
 
 DomainConfig::DomainConfig() :
-    kind(DomainKind::AUTO),
+    kind(DomainKind::LINEAR),
     min_auto_snap_zero(false),
     inverted(false),
     padding(0.1f) {}

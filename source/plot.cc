@@ -145,11 +145,6 @@ ReturnCode configure_layer(
         bind(&lines::configure, _1, _2, _3, scales, legend_items, _4),
         &lines::draw);
 
-  if (type == "points")
-    layer_builder = elem_builder<points::PlotPointsConfig>(
-        bind(&points::configure, _1, _2, _3, scales, _4),
-        &points::draw);
-
   if (!layer_builder) {
     return ReturnCode::errorf("EARG", "invalid layer type: '$0'", type);
   }

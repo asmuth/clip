@@ -37,6 +37,7 @@
 #include <utils/return_code.h>
 #include <source/format.h>
 #include <source/dimension.h>
+#include <document.h>
 
 namespace plotfx {
 struct DomainConfig;
@@ -74,6 +75,7 @@ using AxisLabelPlacement = std::function<ReturnCode (
 struct AxisDefinition {
   AxisDefinition();
   AxisMode mode;
+  AxisPosition position;
   std::string scale;
   std::string title;
   std::vector<double> ticks;
@@ -90,52 +92,20 @@ struct AxisDefinition {
   Measure tick_length;
 };
 
-ReturnCode parseAxisMode(
-    const std::string& str,
-    AxisMode* value);
+namespace axis {
 
-ReturnCode parseAxisModeProp(
-    const plist::Property& prop,
-    AxisMode* value);
-
-Status renderAxis(
-    const AxisDefinition& axis,
+ReturnCode draw(
+    const AxisDefinition& config,
     const Rectangle& clip,
-    AxisPosition axis_position,
-    Layer* frame);
-
-ReturnCode axis_layout(
-    const Rectangle& parent,
-    const AxisDefinition& axis_top,
-    const AxisDefinition& axis_right,
-    const AxisDefinition& axis_bottom,
-    const AxisDefinition& axis_left,
-    const Layer& layer,
-    Rectangle* bbox);
-
-ReturnCode axis_draw_all(
-    const Rectangle& clip,
-    const AxisDefinition& axis_top,
-    const AxisDefinition& axis_right,
-    const AxisDefinition& axis_bottom,
-    const AxisDefinition& axis_left,
     Layer* layer);
 
-ReturnCode axis_configure_label_placement(
-    const plist::Property& prop,
-    AxisLabelPlacement* placement);
+ReturnCode configure(
+    const plist::PropertyList& plist,
+    const DataContext& data,
+    const Document& doc,
+    AxisDefinition* config);
 
-ReturnCode axis_configure(
-    AxisDefinition* axis,
-    const AxisLabelPosition& axis_position,
-    const DomainConfig& domain);
 
-ReturnCode axis_resolve(
-    const DomainMap& scales,
-    AxisDefinition* axis_top,
-    AxisDefinition* axis_right,
-    AxisDefinition* axis_bottom,
-    AxisDefinition* axis_left);
-
+} // namespace axis
 } // namespace plotfx
 

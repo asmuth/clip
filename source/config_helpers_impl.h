@@ -45,5 +45,25 @@ ReturnCode parseEnum(
   return ReturnCode::success();
 }
 
+template <typename T>
+ParserFn configure_vec(ParseToFn<T> parser, std::vector<T>* values) {
+  return [parser, values] (const plist::Property& prop) -> ReturnCode {
+    if (!plist::is_list(prop)) {
+      return ERROR;
+    }
+
+    for (const auto& cld : *prop.next) {
+      T val;
+      if (auto rc = parser(cld, &val); !rc) {
+        return rc;
+      }
+
+      values->emplace_back(val);
+    }
+
+    return OK;
+  };
+}
+
 } // namespace plotfx
 

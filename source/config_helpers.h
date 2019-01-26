@@ -42,6 +42,9 @@ namespace plotfx {
 
 using ParserFn = std::function<ReturnCode (const plist::Property&)>;
 
+template <typename T>
+using ParseToFn = std::function<ReturnCode (const plist::Property&, T* value)>;
+
 using ParserDefinitions = std::unordered_map<std::string, ParserFn>;
 
 ReturnCode parseAll(
@@ -64,6 +67,9 @@ ReturnCode parse_classlike(
 
 template <typename T>
 ParserFn configure_opt(ParserFn parser);
+
+template <typename T>
+ParserFn configure_vec(ParseToFn<T> parser, std::vector<T>* values);
 
 ParserFn configure_multiprop(const std::vector<ParserFn>& parsers);
 
