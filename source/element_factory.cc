@@ -28,9 +28,8 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 #include "element_factory.h"
-#include "source/plot.h"
-#include "plot_axis.h"
-#include "plot_points.h"
+#include "elements/axis.h"
+#include "elements/points.h"
 #include <unordered_map>
 
 namespace plotfx {

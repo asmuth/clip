@@ -37,7 +37,6 @@
 #include "graphics/font_lookup.h"
 #include "source/config_helpers.h"
 #include "utils/fileutil.h"
-#include "plot.h"
 
 using namespace std::placeholders;
 

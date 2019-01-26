@@ -28,14 +28,15 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+#include "points.h"
 #include <numeric>
-#include "plot_points.h"
-#include <plotfx.h>
-#include <graphics/path.h>
-#include <graphics/brush.h>
-#include <graphics/text.h>
-#include <graphics/layout.h>
-#include <source/utils/algo.h>
+#include "plotfx.h"
+#include "document.h"
+#include "graphics/path.h"
+#include "graphics/brush.h"
+#include "graphics/text.h"
+#include "graphics/layout.h"
+#include "source/utils/algo.h"
 #include "source/config_helpers.h"
 
 using namespace std::placeholders;

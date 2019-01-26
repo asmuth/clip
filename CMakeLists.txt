@@ -32,13 +32,8 @@ include_directories(${CAIRO_INCLUDE_DIRS} ${FREETYPE_INCLUDE_DIRS} ${HARFBUZZ_IN
 add_library(plotfx STATIC
     source/plotfx.cc
     source/plotfx_sdl.cc # TODO: only if SDL enabled
-    source/plot_area.cc
-    source/plot_axis.cc
-    source/plot_bars.cc
-    source/plot_gridlines.cc
-    source/plot_labels.cc
-    source/plot_lines.cc
-    source/plot_points.cc
+    source/elements/axis.cc
+    source/elements/points.cc
     source/legend.cc
     source/config_helpers.cc
     source/data_model.cc
