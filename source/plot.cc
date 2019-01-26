@@ -41,7 +41,6 @@
 #include "plot_bars.h"
 #include "plot_labels.h"
 #include "plot_lines.h"
-#include "plot_points.h"
 #include "legend.h"
 
 using namespace std::placeholders;
@@ -61,29 +60,6 @@ ReturnCode draw(
       config.margins[1],
       config.margins[2],
       config.margins[3]);
-
-  if (auto rc = axis_layout(
-        bbox,
-        config.axis_top,
-        config.axis_right,
-        config.axis_bottom,
-        config.axis_left,
-        *layer,
-        &bbox); !rc) {
-    return rc;
-  }
-
-  // render axes
-  if (auto rc = axis_draw_all(
-        bbox,
-        config.axis_top,
-        config.axis_right,
-        config.axis_bottom,
-        config.axis_left,
-        layer);
-        !rc) {
-    return rc;
-  }
 
   // render grid
   if (auto rc = grid_draw(config.grid, bbox, layer); !rc) {
@@ -343,74 +319,6 @@ ReturnCode configure_style(
   auto domain_y = find_ptr(scales, SCALE_DEFAULT_Y);
 
   static const ParserDefinitions pdefs = {
-    {"axis-top", bind(&parseAxisModeProp, _1, &config->axis_top.mode)},
-    {"axis-top-scale", bind(&configure_string, _1, &config->axis_top.scale)},
-    {"axis-top-format", bind(&confgure_format, _1, &config->axis_top.label_formatter)},
-    {
-      "axis-top-layout",
-      bind(
-          &axis_configure_label_placement,
-          _1,
-          &config->axis_top.label_placement),
-    },
-    {"axis-right", bind(&parseAxisModeProp, _1, &config->axis_right.mode)},
-    {"axis-right-scale", bind(&configure_string, _1, &config->axis_right.scale)},
-    {"axis-right-format", bind(&confgure_format, _1, &config->axis_right.label_formatter)},
-    {
-      "axis-right-layout",
-      bind(
-          &axis_configure_label_placement,
-          _1,
-          &config->axis_right.label_placement),
-    },
-    {"axis-bottom", bind(&parseAxisModeProp, _1, &config->axis_bottom.mode)},
-    {"axis-bottom-scale", bind(&configure_string, _1, &config->axis_bottom.scale)},
-    {"axis-bottom-format", bind(&confgure_format, _1, &config->axis_bottom.label_formatter)},
-    {
-      "axis-bottom-layout",
-      bind(
-          &axis_configure_label_placement,
-          _1,
-          &config->axis_bottom.label_placement),
-    },
-    {"axis-left", bind(&parseAxisModeProp, _1, &config->axis_left.mode)},
-    {"axis-left-scale", bind(&configure_string, _1, &config->axis_left.scale)},
-    {"axis-left-format", bind(&confgure_format, _1, &config->axis_left.label_formatter)},
-    {
-      "axis-left-layout",
-      bind(
-          &axis_configure_label_placement,
-          _1,
-          &config->axis_left.label_placement),
-    },
-    {
-      "axis-x-format",
-      configure_multiprop({
-          bind(&confgure_format, _1, &config->axis_top.label_formatter),
-          bind(&confgure_format, _1, &config->axis_bottom.label_formatter),
-      })
-    },
-    {
-      "axis-x-layout",
-      configure_multiprop({
-          bind(&axis_configure_label_placement, _1, &config->axis_top.label_placement),
-          bind(&axis_configure_label_placement, _1, &config->axis_bottom.label_placement),
-      })
-    },
-    {
-      "axis-y-format",
-      configure_multiprop({
-          bind(&confgure_format, _1, &config->axis_left.label_formatter),
-          bind(&confgure_format, _1, &config->axis_right.label_formatter),
-      })
-    },
-    {
-      "axis-y-layout",
-      configure_multiprop({
-          bind(&axis_configure_label_placement, _1, &config->axis_left.label_placement),
-          bind(&axis_configure_label_placement, _1, &config->axis_right.label_placement),
-      })
-    },
     {
       "margin",
       configure_multiprop({
@@ -464,12 +372,6 @@ ReturnCode configure(
         ref(plist),
         ref(legend_items),
         &config->legends),
-    bind(&axis_resolve,
-        ref(scales),
-        &config->axis_top,
-        &config->axis_right,
-        &config->axis_bottom,
-        &config->axis_left),
   });
 }
 

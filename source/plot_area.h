@@ -37,7 +37,7 @@
 #include <source/element.h>
 #include <source/config_helpers.h>
 #include <source/utils/algo.h>
-#include "plot_axis.h"
+#include "elements/axis.h"
 #include "plot.h"
 #include "legend.h"
 

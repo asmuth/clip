@@ -29,57 +29,10 @@ include_directories(${CAIRO_INCLUDE_DIRS} ${FREETYPE_INCLUDE_DIRS} ${HARFBUZZ_IN
 
 # Build: PlotFX Library
 # -----------------------------------------------------------------------------
-add_library(plotfx STATIC
-    source/plotfx.cc
-    source/plotfx_sdl.cc # TODO: only if SDL enabled
-    source/elements/axis.cc
-    source/elements/points.cc
-    source/legend.cc
-    source/config_helpers.cc
-    source/data_model.cc
-    source/dimension.cc
-    source/domain.cc
-    source/document.cc
-    source/format.cc
-    source/plist/plist.cc
-    source/plist/plist_parser.cc
-    source/graphics/path.cc
-    source/graphics/brush.cc
-    source/graphics/color.cc
-    source/graphics/geometry.cc
-    source/graphics/image.cc
-    source/graphics/layer.cc
-    source/graphics/layer_pixmap.cc
-    source/graphics/layer_svg.cc
-    source/graphics/layout.cc
-    source/graphics/measure.cc
-    source/graphics/text.cc
-    source/graphics/text_layout.cc
-    source/graphics/text_shaper.cc
-    source/graphics/rasterize.cc
-    source/graphics/png.cc
-    source/graphics/font_lookup.cc
-    source/element_factory.cc
-    source/utils/random.cc
-    source/utils/csv.cc
-    source/utils/bufferutil.cc
-    source/utils/exception.cc
-    source/utils/UnixTime.cc
-    source/utils/inspect.cc
-    source/utils/stringutil.cc
-    source/utils/duration.cc
-    source/utils/CivilTime.cc
-    source/utils/buffer.cc
-    source/utils/fileutil.cc
-    source/utils/file.cc
-    source/utils/flagparser.cc
-    source/utils/ISO8601.cc
-    source/utils/UTF8.cc
-    source/utils/wallclock.cc)
-
-set_target_properties(plotfx PROPERTIES
-    PUBLIC_HEADER "source/plotfx.h;source/plotfx_sdl.h")
-
+file(GLOB source_files "source/**/*.cc" "source/*.cc")
+list(REMOVE_ITEM source_files "source/plotfx_cli.cc")
+add_library(plotfx STATIC ${source_files})
+set_target_properties(plotfx PROPERTIES PUBLIC_HEADER "source/plotfx.h;source/plotfx_sdl.h")
 set(PLOTFX_LDFLAGS plotfx ${CAIRO_LIBRARIES} ${FREETYPE_LIBRARIES} ${HARFBUZZ_LIBRARIES} ${HARFBUZZ_ICU_LIBRARIES} ${PNG_LIBRARIES} ${FONTCONFIG_LIBRARIES})
 
 

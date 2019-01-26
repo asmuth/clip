@@ -37,7 +37,7 @@
 #include <source/element.h>
 #include <source/document.h>
 #include <source/data_model.h>
-#include "plot_axis.h"
+#include "elements/axis.h"
 #include "plot_gridlines.h"
 #include "legend.h"
 #include "dimension.h"

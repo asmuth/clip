@@ -36,7 +36,7 @@
 #include <source/domain.h>
 #include <source/element.h>
 #include <source/config_helpers.h>
-#include "plot_axis.h"
+#include "elements/axis.h"
 #include "plot.h"
 
 namespace plotfx {
