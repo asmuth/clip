@@ -128,6 +128,10 @@ ParserFn configure_series_fn(
     const DataContext& ctx,
     SeriesRef* data);
 
+ReturnCode configure_measures(
+    const plist::Property& prop,
+    std::vector<Measure>* measures);
+
 } // namespace plotfx
 
 #include "config_helpers_impl.h"

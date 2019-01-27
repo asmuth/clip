@@ -2,8 +2,8 @@ width: 1200px;
 height: 480px;
 
 points {
-  xs: 60, 50%, 200;
-  ys: 60px, 50%, 14em;
+  xs: csv('tests/testdata/measurement.csv', time);
+  ys: csv('tests/testdata/measurement.csv', value2);
   sizes: 4pt, 20pt;
 }
 

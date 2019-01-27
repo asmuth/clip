@@ -417,5 +417,24 @@ ParserFn configure_series_fn(
   return bind(&configure_series, _1, ctx, series);
 }
 
+ReturnCode configure_measures(
+    const plist::Property& prop,
+    std::vector<Measure>* measures) {
+  if (plist::is_enum(prop, "csv")) {
+    SeriesRef data;
+    if (auto rc = parse_data_series_csv(prop, &data); !rc) {
+      return rc;
+    }
+
+    for (auto v : series_to_float(*data)) {
+      measures->emplace_back(from_user(v));
+    }
+
+    return OK;
+  }
+
+  return configure_vec<Measure>(bind(&configure_measure, _1, _2), measures)(prop);
+}
+
 } // namespace plotfx
 

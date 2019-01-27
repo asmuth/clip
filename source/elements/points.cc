@@ -149,13 +149,10 @@ ReturnCode configure(
   DomainConfig color_domain;
   ColorScheme color_palette;
 
-  ParseToFn<Measure> parse_measure =
-      bind(&configure_measure, _1, _2);
-
   static const ParserDefinitions pdefs = {
-    {"xs", configure_vec(parse_measure, &config->x)},
-    {"ys", configure_vec(parse_measure, &config->y)},
-    {"sizes", configure_vec(parse_measure, &config->sizes)},
+    {"xs", bind(&configure_measures, _1, &config->x)},
+    {"ys", bind(&configure_measures, _1, &config->y)},
+    {"sizes", bind(&configure_measures, _1, &config->sizes)},
     //{"color", configure_color_opt(&color)},
     //{"colors", configure_series_fn(data, &colors)},
     //{"labels", configure_series_fn(data, &data_labels)},
