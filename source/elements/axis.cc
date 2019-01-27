@@ -448,16 +448,16 @@ ReturnCode axis_place_labels_subdivide(
 ReturnCode axis_place_labels_discrete(
     const DomainConfig& domain,
     AxisDefinition* axis) {
-  auto category_count = domain_cardinality(domain);
+  auto range = domain_max(domain) + 1;
 
   axis->labels.clear();
   axis->ticks.clear();
   axis->ticks.push_back(0.0f);
 
   std::vector<double> label_positions;
-  for (size_t i = 0; i < category_count; ++i) {
-    auto o = (1.0f / category_count) * (i + 1);
-    label_positions.push_back(o - 0.5 / category_count);
+  for (size_t i = 0; i < range; ++i) {
+    auto o = (1.0f / range) * (i + 1);
+    label_positions.push_back(o - 0.5 / range);
     axis->ticks.push_back(o);
   }
 
@@ -474,7 +474,7 @@ ReturnCode axis_place_labels_discrete(
 ReturnCode axis_place_labels_default(
     const DomainConfig& domain,
     AxisDefinition* axis) {
-  if (domain.kind == DomainKind::CATEGORICAL) {
+  if (domain.kind == DomainKind::DISCRETE) {
     return axis_place_labels_discrete(domain, axis);
   }
 
@@ -670,12 +670,7 @@ ReturnCode configure(
   }
 
   if (!config->label_formatter) {
-    // TODO: improved automatic formatter config
-    if (domain.kind == DomainKind::CATEGORICAL) {
-      config->label_formatter = format_string();
-    } else {
-      config->label_formatter = format_decimal_fixed(1);
-    }
+    config->label_formatter = format_decimal_fixed(1);
   }
 
   switch (config->tick_position) {

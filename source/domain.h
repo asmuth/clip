@@ -43,7 +43,7 @@
 namespace plotfx {
 
 enum class DomainKind {
-  AUTO, LINEAR, LOGARITHMIC, CATEGORICAL
+  AUTO, LINEAR, LOGARITHMIC, DISCRETE
 };
 
 struct DomainConfig {

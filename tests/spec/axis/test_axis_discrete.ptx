@@ -1,0 +1,9 @@
+width: 1200px;
+height: 90px;
+
+axis {
+  scale: discrete;
+  scale-min: 0;
+  scale-max: 16;
+  layout: discrete;
+}

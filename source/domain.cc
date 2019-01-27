@@ -70,7 +70,7 @@ void domain_fit_kind(const Series& data, DomainConfig* domain) {
   if (series_is_numeric(data)) {
     domain->kind = DomainKind::LINEAR;
   } else {
-    domain->kind = DomainKind::CATEGORICAL;
+    domain->kind = DomainKind::DISCRETE;
   }
 }
 
@@ -83,14 +83,14 @@ void domain_fit(const Series& data, DomainConfig* domain) {
     case DomainKind::LINEAR:
     case DomainKind::LOGARITHMIC:
       return domain_fit_continuous(data, domain);
-    case DomainKind::CATEGORICAL:
+    case DomainKind::DISCRETE:
       return domain_fit_categorical(data, domain);
   }
 }
 
 size_t domain_cardinality(const DomainConfig& domain) {
   switch (domain.kind) {
-    case DomainKind::CATEGORICAL:
+    case DomainKind::DISCRETE:
       return domain.categories.size();
     default:
       return std::ceil(domain_max(domain) - domain_min(domain));
@@ -156,20 +156,14 @@ double domain_translate_log(
   return std::clamp(vt, 0.0, 1.0);
 }
 
-double domain_translate_categorical(
+double domain_translate_discrete(
     const DomainConfig& domain,
     const Value& v) {
-  double category_count = domain.categories.size();
-  if (category_count == 0) {
-    return 0;
-  }
+  double min = domain_min(domain);
+  double max = domain_max(domain) + 1;
 
-  size_t vi = 0;
-  if (auto vm = domain.map.find(v); vm != domain.map.end()) {
-    vi = vm->second;
-  }
-
-  auto vt = (vi / category_count) + (0.5 / category_count);
+  auto vf = value_to_float(v);
+  auto vt = (vf - min) / (max - min);
 
   if (domain.inverted) {
     vt = 1.0 - vt;
@@ -186,8 +180,8 @@ double domain_translate(
       return domain_translate_linear(domain, value);
     case DomainKind::LOGARITHMIC:
       return domain_translate_log(domain, value);
-    case DomainKind::CATEGORICAL:
-      return domain_translate_categorical(domain, value);
+    case DomainKind::DISCRETE:
+      return domain_translate_discrete(domain, value);
     default:
       return std::numeric_limits<double>::quiet_NaN();
   }
@@ -231,20 +225,20 @@ Value domain_untranslate_log(const DomainConfig& domain, double vt) {
   return value_from_float(min + pow(log_base, vt * range_log));
 }
 
-Value domain_untranslate_categorical(
+Value domain_untranslate_discrete(
     const DomainConfig& domain,
     double vt) {
+  auto min = domain_min(domain);
+  auto max = domain_max(domain) + 1;
+  auto range = max - min;
+
+  vt -= 0.5 / range;
+
   if (domain.inverted) {
     vt = 1.0 - vt;
   }
 
-  std::string v;
-  size_t vidx = vt * domain.categories.size();
-  if (vidx < domain.categories.size()) {
-    v = domain.categories[vidx];
-  }
-
-  return v;
+  return value_from_float(min + (max - min) * vt);
 }
 
 Value domain_untranslate(
@@ -255,8 +249,8 @@ Value domain_untranslate(
       return domain_untranslate_linear(domain, value);
     case DomainKind::LOGARITHMIC:
       return domain_untranslate_log(domain, value);
-    case DomainKind::CATEGORICAL:
-      return domain_untranslate_categorical(domain, value);
+    case DomainKind::DISCRETE:
+      return domain_untranslate_discrete(domain, value);
   }
 
   return {};
@@ -289,8 +283,8 @@ ReturnCode domain_configure(
       continue;
     }
 
-    if (prop == "categorical") {
-      domain->kind = DomainKind::CATEGORICAL;
+    if (prop == "discrete") {
+      domain->kind = DomainKind::DISCRETE;
       continue;
     }
 
@@ -300,7 +294,14 @@ ReturnCode domain_configure(
       continue;
     }
 
-    return ERROR;
+    return err_invalid_value(prop, {
+      "linear",
+      "log",
+      "logarithmic",
+      "discrete",
+      "inverted",
+      "inverted"
+    });
   }
 
   return OK;
