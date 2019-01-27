@@ -43,8 +43,8 @@ namespace plot {
 namespace points {
 
 struct PlotPointsConfig {
-  std::vector<double> x;
-  std::vector<double> y;
+  std::vector<Measure> x;
+  std::vector<Measure> y;
   std::vector<Color> colors;
   std::vector<Measure> sizes;
   std::vector<std::string> labels;

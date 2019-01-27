@@ -87,7 +87,7 @@ ReturnCode draw_horizontal(
           : config.colors[i % config.colors.size()];
 
       auto size = config.sizes.empty()
-          ? Measure(0)
+          ? Measure{}
           : config.sizes[i % config.sizes.size()];
 
       FillStyle style;
@@ -170,7 +170,7 @@ ReturnCode draw_vertical(
           : config.colors[i % config.colors.size()];
 
       auto size = config.sizes.empty()
-          ? Measure(0)
+          ? Measure{}
           : config.sizes[i % config.sizes.size()];
 
       FillStyle style;

@@ -130,7 +130,7 @@ ReturnCode grid_configure(
     {"grid-scale-x", bind(&configure_string, _1, &scale_horiz)},
     {"grid-y", bind(&grid_configure_placement, _1, &placement_horiz)},
     {"grid-scale-y", bind(&configure_string, _1, &scale_vert)},
-    {"grid-stroke", bind(&configure_measure_rel, _1, doc.dpi, doc.font_size, &line_width)},
+    {"grid-stroke", bind(&configure_measure, _1, &line_width)},
   };
 
   if (auto rc = parseAll(plist, pdefs); !rc) {

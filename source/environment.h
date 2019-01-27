@@ -35,7 +35,7 @@
 #include "graphics/measure.h"
 #include "graphics/color.h"
 #include "graphics/text.h"
-#include "element.h"
+#include "domain.h"
 
 namespace plotfx {
 class Layer;
@@ -49,6 +49,8 @@ struct Environment {
   Color background_color;
   Color text_color;
   Color border_color;
+  DomainConfig scale_x;
+  DomainConfig scale_y;
 };
 
 } // namespace plotfx

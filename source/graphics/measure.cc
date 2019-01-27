@@ -32,33 +32,44 @@
 
 namespace plotfx {
 
-Measure::Measure() : Measure(0) {}
+Measure::Measure() : Measure(Unit::UNIT, 0) {}
 
-Measure::Measure(double v) : value(v) {}
+Measure::Measure(Unit u, double v) : unit(u), value(v) {}
 
 Measure::operator double() const {
   return value;
 }
 
 Measure from_unit(double v) {
-  return Measure(v);
+  return Measure(Unit::UNIT, v);
 }
 
 Measure from_px(double v) {
-  return Measure(v);
+  return Measure(Unit::PX, v);
+}
+
+Measure from_pt(double v) {
+  return Measure(Unit::PT, v);
 }
 
 Measure from_pt(double v, double dpi) {
-  return Measure((v / 72.0) * dpi);
+  return Measure(Unit::UNIT, (v / 72.0) * dpi);
 }
 
 Measure from_em(double v, double font_size) {
-  return Measure(v * font_size);
+  return Measure(Unit::UNIT, v * font_size);
 }
 
-ReturnCode parse_measure_abs(
+Measure from_em(double v) {
+  return Measure(Unit::REM, v);
+}
+
+Measure from_user(double v) {
+  return Measure(Unit::USER, v);
+}
+
+ReturnCode parse_measure(
     const std::string& s,
-    double dpi,
     Measure* measure) {
   double value;
   size_t unit_pos;
@@ -68,31 +79,9 @@ ReturnCode parse_measure_abs(
     return ERROR;
   }
 
-  auto unit = s.substr(unit_pos);
-  if (unit == "px") {
-    *measure = from_px(value);
+  if (unit_pos == s.size()) {
+    *measure = from_user(value);
     return OK;
-  }
-
-  if (unit == "pt") {
-    *measure = from_pt(value, dpi);
-    return OK;
-  }
-
-  return ERROR;
-}
-
-ReturnCode parse_measure_rel(
-    const std::string& s,
-    double dpi,
-    double font_size,
-    Measure* measure) {
-  double value;
-  size_t unit_pos;
-  try {
-    value = std::stod(s, &unit_pos);
-  } catch (... ) {
-    return ERROR;
   }
 
   auto unit = s.substr(unit_pos);
@@ -102,12 +91,12 @@ ReturnCode parse_measure_rel(
   }
 
   if (unit == "pt") {
-    *measure = from_pt(value, dpi);
+    *measure = from_pt(value);
     return OK;
   }
 
   if (unit == "em" || unit == "rem") {
-    *measure = from_em(value, font_size);
+    *measure = from_em(value);
     return OK;
   }
 

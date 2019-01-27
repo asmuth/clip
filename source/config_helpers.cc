@@ -58,10 +58,8 @@ ReturnCode parseAll(
   return ReturnCode::success();
 }
 
-ReturnCode configure_measure_rel(
+ReturnCode configure_measure(
     const plist::Property& prop,
-    double dpi,
-    double font_size,
     Measure* value) {
   if (!plist::is_value(prop)) {
     return ReturnCode::errorf(
@@ -70,16 +68,14 @@ ReturnCode configure_measure_rel(
         prop.size());
   }
 
-  return parse_measure_rel(prop, dpi, font_size, value);
+  return parse_measure(prop, value);
 }
 
-ReturnCode configure_measure_rel_opt(
+ReturnCode configure_measure_opt(
     const plist::Property& prop,
-    double dpi,
-    double font_size,
     std::optional<Measure>* value) {
   Measure v;
-  if (auto rc = configure_measure_rel(prop, dpi, font_size, &v); !rc) {
+  if (auto rc = configure_measure(prop, &v); !rc) {
     return rc;
   }
 
@@ -96,6 +92,17 @@ ParserFn configure_multiprop(const std::vector<ParserFn>& parsers) {
     }
 
     return OK;
+  };
+}
+
+ParserFn configure_alt(const ParserDefinitions& parsers) {
+  return [parsers] (const plist::Property& prop) -> ReturnCode {
+    std::string parser_key = "";
+    if (plist::is_enum(prop) && parsers.count(prop.value)) {
+      parser_key = prop.value;
+    }
+
+    return parsers.at(parser_key)(prop);
   };
 }
 

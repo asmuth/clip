@@ -68,6 +68,7 @@ std::vector<Color> groups_to_colors(
   return colors;
 }
 
+/*
 std::vector<Measure> series_to_sizes(
     SeriesRef series,
     const DomainConfig& domain_config,
@@ -88,6 +89,7 @@ std::vector<Measure> series_to_sizes(
 
   return sizes;
 }
+*/
 
 } // namespace plotfx
 

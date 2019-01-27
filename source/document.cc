@@ -43,8 +43,8 @@ using namespace std::placeholders;
 namespace plotfx {
 
 Document::Document() :
-    width(1200),
-    height(480),
+    width(Unit::UNIT, 1200),
+    height(Unit::UNIT, 480),
     background_color(Color::fromRGB(1,1,1)),
     text_color(Color::fromRGB(.2,.2,.2)),
     border_color(Color::fromRGB(.66,.66,.66)),
@@ -68,22 +68,31 @@ ReturnCode document_load(
     return rc;
   }
 
+  auto env = &doc->env;
   // IMPORTANT: parse dpi + font size first
 
   static const ParserDefinitions pdefs = {
-    {"font-size", bind(&configure_measure_rel, _1, doc->dpi, doc->font_size, &doc->font_size)},
-    {"width", bind(&configure_measure_rel, _1, doc->dpi, doc->font_size, &doc->width)},
-    {"height", bind(&configure_measure_rel, _1, doc->dpi, doc->font_size, &doc->height)},
-    {"background-color", bind(&configure_color, _1, &doc->background_color)},
-    {
-      "foreground-color",
-      configure_multiprop({
-          bind(&configure_color, _1, &doc->text_color),
-          bind(&configure_color, _1, &doc->border_color),
-      })
-    },
-    {"text-color", bind(&configure_color, _1, &doc->text_color)},
-    {"border-color", bind(&configure_color, _1, &doc->border_color)},
+    //{"font-size", bind(&configure_measure_rel, _1, doc->dpi, doc->font_size, &doc->font_size)},
+    {"width", bind(&configure_measure, _1, &doc->width)},
+    {"height", bind(&configure_measure, _1, &doc->height)},
+    //{"background-color", bind(&configure_color, _1, &doc->background_color)},
+    //{
+    //  "foreground-color",
+    //  configure_multiprop({
+    //      bind(&configure_color, _1, &doc->text_color),
+    //      bind(&configure_color, _1, &doc->border_color),
+    //  })
+    //},
+    //{"text-color", bind(&configure_color, _1, &doc->text_color)},
+    //{"border-color", bind(&configure_color, _1, &doc->border_color)},
+    //{"scale-x", bind(&domain_configure, _1, &env->scale_x)},
+    //{"scale-x-min", bind(&configure_float_opt, _1, &env->scale_x.min)},
+    //{"scale-x-max", bind(&configure_float_opt, _1, &env->scale_x.max)},
+    //{"scale-x-padding", bind(&configure_float, _1, &env->scale_x.padding)},
+    //{"scale-y", bind(&domain_configure, _1, &env->scale_y)},
+    //{"scale-y-min", bind(&configure_float_opt, _1, &env->scale_y.min)},
+    //{"scale-y-max", bind(&configure_float_opt, _1, &env->scale_y.max)},
+    //{"scale-y-padding", bind(&configure_float, _1, &env->scale_y.padding)},
   };
 
   if (auto rc = parseAll(plist, pdefs); !rc.isSuccess()) {

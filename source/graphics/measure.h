@@ -36,12 +36,18 @@
 namespace plotfx {
 
 enum class Unit {
-  UNIT, PX, PT, REM
+  UNIT,  // Screen units
+  PX,    // Pixels
+  PT,    // Typographic Points
+  REM,   // Typographic "em" size
+  REL,   // Relative to the enclosing element (0..1),
+  USER,  // User units on arbitrary scale
 };
 
 struct Measure {
   Measure();
-  explicit Measure(double value);
+  explicit Measure(Unit unit, double value);
+  Unit unit;
   double value;
   operator double() const;
 };
@@ -49,20 +55,13 @@ struct Measure {
 Measure from_unit(double v);
 Measure from_px(double v);
 Measure from_pt(double v, double dpi);
+Measure from_pt(double v);
 Measure from_em(double v, double font_size);
+Measure from_em(double v);
+Measure from_user(double v);
 
-//Measure to_px(const MeasureTable& t, const Measure& v);
-//Measure to_unit(const MeasureTable& t, const Measure& v);
-
-ReturnCode parse_measure_abs(
+ReturnCode parse_measure(
     const std::string& s,
-    double dpi,
-    Measure* value);
-
-ReturnCode parse_measure_rel(
-    const std::string& s,
-    double dpi,
-    double font_size,
     Measure* value);
 
 Measure measure_or(const Measure& primary, const Measure& fallback);

@@ -1,12 +1,16 @@
 width: 1200px;
 height: 480px;
 
-axis-x-format: datetime("%H:%M:%S");
+points {
+  xs: 60, 200, 14;
+  ys: 60px, 200px, 14em;
+  sizes: 4pt, 20pt;
+}
 
-data: csv('tests/testdata/measurement.csv', time);
-x: time;
-y: value2;
+axis {
+  position: bottom;
+}
 
-layer {
-  type: lines;
+axis {
+  position: left;
 }

@@ -377,65 +377,49 @@ ReturnCode legend_configure(
       "item-margin",
       configure_multiprop({
           bind(
-              &configure_measure_rel,
+              &configure_measure,
               _1,
-              doc.dpi,
-              doc.font_size,
               &config.item_margins[0]),
           bind(
-              &configure_measure_rel,
+              &configure_measure,
               _1,
-              doc.dpi,
-              doc.font_size,
               &config.item_margins[1]),
           bind(
-              &configure_measure_rel,
+              &configure_measure,
               _1,
-              doc.dpi,
-              doc.font_size,
               &config.item_margins[2]),
           bind(
-              &configure_measure_rel,
+              &configure_measure,
               _1,
-              doc.dpi,
-              doc.font_size,
               &config.item_margins[3])
       })
     },
     {
       "item-margin-top",
       bind(
-          &configure_measure_rel,
+          &configure_measure,
           _1,
-          doc.dpi,
-          doc.font_size,
           &config.item_margins[0])
     },
     {
       "item-margin-right",
       bind(
-          &configure_measure_rel,
+          &configure_measure,
           _1,
-          doc.dpi,
-          doc.font_size,
           &config.item_margins[1])
     },
     {
       "item-margin-bottom",
       bind(
-          &configure_measure_rel,
+          &configure_measure,
           _1,
-          doc.dpi,
-          doc.font_size,
           &config.item_margins[2])
     },
     {
       "item-margin-left",
       bind(
-          &configure_measure_rel,
+          &configure_measure,
           _1,
-          doc.dpi,
-          doc.font_size,
           &config.item_margins[3])
     },
   };

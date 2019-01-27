@@ -63,7 +63,7 @@ ReturnCode draw(
         : config.colors[i % config.colors.size()];
 
     auto size = config.sizes.empty()
-        ? Measure(0)
+        ? Measure{}
         : config.sizes[i % config.sizes.size()];
 
     FillStyle style;
@@ -115,8 +115,8 @@ ReturnCode configure(
   DomainMap scales;
   SeriesRef data_labels;
 
-  std::string scale_x = SCALE_DEFAULT_X;
-  std::string scale_y = SCALE_DEFAULT_Y;
+  DomainConfig domain_x = env.scale_x;
+  DomainConfig domain_y = env.scale_y;
 
   std::optional<Color> color;
   SeriesRef colors = find_maybe(data.defaults, "colors");
@@ -127,11 +127,14 @@ ReturnCode configure(
   //DomainConfig size_domain;
   std::optional<Measure> size;
 
+  SeriesRef data_x;
+  SeriesRef data_y;
+
   std::vector<Measure> pos_x;
   std::vector<Measure> pos_y;
 
   ParseToFn<Measure> parse_measure =
-      bind(&configure_measure_rel, _1, doc.dpi, doc.font_size, _2);
+      bind(&configure_measure, _1, _2);
 
   static const ParserDefinitions pdefs = {
     {"xs", configure_vec(parse_measure, &pos_x)},
@@ -199,11 +202,11 @@ ReturnCode configure(
   //    groups_to_colors(data_x->size(), groups, color_palette));
 
   for (const auto& v : pos_x) {
-    config->x.emplace_back(v.value);
+    config->x.emplace_back(v);
   }
 
   for (const auto& v : pos_y) {
-    config->y.emplace_back(v.value);
+    config->y.emplace_back(v);
   }
 
   config->label_font = doc.font_sans;

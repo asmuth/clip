@@ -73,15 +73,16 @@ ParserFn configure_vec(ParseToFn<T> parser, std::vector<T>* values);
 
 ParserFn configure_multiprop(const std::vector<ParserFn>& parsers);
 
+ParserFn configure_alt(
+    const ParserDefinitions& parsers);
+
 ParserFn configure_key(std::string* key);
 
-ReturnCode configure_measure_rel(
+ReturnCode configure_measure(
     const plist::Property& prop,
-    double dpi,
-    double font_size,
     Measure* value);
 
-ReturnCode configure_measure_rel_opt(
+ReturnCode configure_measure_opt(
     const plist::Property& prop,
     double dpi,
     double font_size,

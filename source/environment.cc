@@ -31,7 +31,9 @@
 
 namespace plotfx {
 
-Environment::Environment() {}
+Environment::Environment() {
+  scale_y.max = 100;
+}
 
 } // namespace plotfx
 

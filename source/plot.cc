@@ -294,16 +294,16 @@ ReturnCode configure_style(
     {
       "margin",
       configure_multiprop({
-          bind(&configure_measure_rel, _1, doc.dpi, doc.font_size, &config->margins[0]),
-          bind(&configure_measure_rel, _1, doc.dpi, doc.font_size, &config->margins[1]),
-          bind(&configure_measure_rel, _1, doc.dpi, doc.font_size, &config->margins[2]),
-          bind(&configure_measure_rel, _1, doc.dpi, doc.font_size, &config->margins[3])
+          bind(&configure_measure, _1, &config->margins[0]),
+          bind(&configure_measure, _1, &config->margins[1]),
+          bind(&configure_measure, _1, &config->margins[2]),
+          bind(&configure_measure, _1, &config->margins[3])
       })
     },
-    {"margin-top", bind(&configure_measure_rel, _1, doc.dpi, doc.font_size, &config->margins[0])},
-    {"margin-right", bind(&configure_measure_rel, _1, doc.dpi, doc.font_size, &config->margins[1])},
-    {"margin-bottom", bind(&configure_measure_rel, _1, doc.dpi, doc.font_size, &config->margins[2])},
-    {"margin-left", bind(&configure_measure_rel, _1, doc.dpi, doc.font_size, &config->margins[3])},
+    {"margin-top", bind(&configure_measure, _1, &config->margins[0])},
+    {"margin-right", bind(&configure_measure, _1, &config->margins[1])},
+    {"margin-bottom", bind(&configure_measure, _1,&config->margins[2])},
+    {"margin-left", bind(&configure_measure, _1, &config->margins[3])},
   };
 
   if (auto rc = parseAll(plist, pdefs); !rc.isSuccess()) {

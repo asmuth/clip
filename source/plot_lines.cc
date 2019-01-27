@@ -129,7 +129,7 @@ ReturnCode configure(
     {"title", bind(&configure_string, _1, &title)},
     {"color", configure_color_opt(&color)},
     {"colors", configure_series_fn(data, &colors)},
-    {"stroke", bind(&configure_measure_rel, _1, doc.dpi, doc.font_size, &line_width)},
+    {"stroke", bind(&configure_measure, _1, &line_width)},
   };
 
   if (auto rc = parseAll(plist, pdefs); !rc) {
