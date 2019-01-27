@@ -51,9 +51,34 @@ static const double kDefaultPointSizeMaxPT = 24;
 static const double kDefaultLabelPaddingEM = 0.4;
 
 ReturnCode draw(
-    const PlotPointsConfig& config,
+    PlotPointsConfig config,
     const Rectangle& clip,
     Layer* layer) {
+  /* convert units */
+  convert_units(
+      {
+        bind(&convert_unit_typographic, layer->dpi, layer->font_size.value, _1),
+        bind(&convert_unit_relative, clip.x, clip.x + clip.w, _1)
+      },
+      &*config.x.begin(),
+      &*config.x.end());
+
+  convert_units(
+      {
+        bind(&convert_unit_typographic, layer->dpi, layer->font_size.value, _1),
+        bind(&convert_unit_relative, clip.y, clip.y + clip.h, _1)
+      },
+      &*config.y.begin(),
+      &*config.y.end());
+
+  convert_units(
+      {
+        bind(&convert_unit_typographic, layer->dpi, layer->font_size.value, _1)
+      },
+      &*config.sizes.begin(),
+      &*config.sizes.end());
+
+  /* draw points */
   for (size_t i = 0; i < config.x.size(); ++i) {
     auto sx = clip.x + config.x[i];
     auto sy = clip.y + config.y[i];
@@ -76,6 +101,7 @@ ReturnCode draw(
     fillPath(layer, clip, path, style);
   }
 
+  /* draw labels */
   for (size_t i = 0; i < config.labels.size(); ++i) {
     const auto& label_text = config.labels[i];
 
@@ -123,22 +149,12 @@ ReturnCode configure(
   DomainConfig color_domain;
   ColorScheme color_palette;
 
-  //SeriesRef sizes;
-  //DomainConfig size_domain;
-  std::optional<Measure> size;
-
-  SeriesRef data_x;
-  SeriesRef data_y;
-
-  std::vector<Measure> pos_x;
-  std::vector<Measure> pos_y;
-
   ParseToFn<Measure> parse_measure =
       bind(&configure_measure, _1, _2);
 
   static const ParserDefinitions pdefs = {
-    {"xs", configure_vec(parse_measure, &pos_x)},
-    {"ys", configure_vec(parse_measure, &pos_y)},
+    {"xs", configure_vec(parse_measure, &config->x)},
+    {"ys", configure_vec(parse_measure, &config->y)},
     {"sizes", configure_vec(parse_measure, &config->sizes)},
     //{"color", configure_color_opt(&color)},
     //{"colors", configure_series_fn(data, &colors)},
@@ -150,11 +166,7 @@ ReturnCode configure(
   }
 
   /* check dataset */
-  //if (!data_x || !data_y) {
-  //  return ReturnCode::error("EARG", "the following properties are required: x, y");
-  //}
-
-  if (pos_x.size() != pos_y.size()) {
+  if (config->x.size() != config->y.size()) {
     return ReturnCode::error(
         "EARG",
         "the length of the 'x' and 'y' properties must be equal");
@@ -200,14 +212,6 @@ ReturnCode configure(
   //    color,
   //    series_to_colors(colors, color_domain, color_palette),
   //    groups_to_colors(data_x->size(), groups, color_palette));
-
-  for (const auto& v : pos_x) {
-    config->x.emplace_back(v);
-  }
-
-  for (const auto& v : pos_y) {
-    config->y.emplace_back(v);
-  }
 
   config->label_font = doc.font_sans;
   config->label_font_size = doc.font_size;

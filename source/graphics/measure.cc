@@ -28,6 +28,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 #include "measure.h"
+#include <assert.h>
 #include <iostream>
 
 namespace plotfx {
@@ -68,6 +69,10 @@ Measure from_user(double v) {
   return Measure(Unit::USER, v);
 }
 
+Measure from_rel(double v) {
+  return Measure(Unit::REL, v);
+}
+
 ReturnCode parse_measure(
     const std::string& s,
     Measure* measure) {
@@ -100,7 +105,22 @@ ReturnCode parse_measure(
     return OK;
   }
 
-  return ERROR;
+  if (unit == "%") {
+    *measure = from_rel(value / 100.0);
+    return OK;
+  }
+
+  if (unit == "rel") {
+    *measure = from_rel(value);
+    return OK;
+  }
+
+  return {
+    ERROR,
+    StringUtil::format(
+        "invalid unit: '$0', expected one of 'px', 'pt', 'em', 'rem', 'rel' or '%'",
+        unit)
+  };
 }
 
 Measure measure_or(const Measure& primary, const Measure& fallback) {
@@ -108,6 +128,48 @@ Measure measure_or(const Measure& primary, const Measure& fallback) {
     return fallback;
   } else {
     return primary;
+  }
+}
+
+void convert_units(
+    const std::vector<UnitConverter>& converters,
+    Measure* begin,
+    Measure* end) {
+  assert(begin <= end);
+
+  for (auto cur = begin; cur != end; ++cur) {
+    for (const auto& c : converters) {
+      c(cur);
+    }
+  }
+}
+
+void convert_unit_typographic(
+    double dpi,
+    double font_size,
+    Measure* measure) {
+  switch (measure->unit) {
+    case Unit::PT:
+      measure->value = (measure->value / 72.0) * dpi;
+      measure->unit = Unit::UNIT;
+      break;
+    case Unit::REM:
+      measure->value = (measure->value / 72.0) * dpi * font_size;
+      measure->unit = Unit::UNIT;
+      break;
+  }
+}
+
+void convert_unit_relative(
+    double range_begin,
+    double range_end,
+    Measure* measure) {
+  switch (measure->unit) {
+    case Unit::REL:
+      measure->unit = Unit::UNIT;
+      measure->value =
+          range_begin + std::clamp(measure->value, 0.0, 1.0) * (range_end - range_begin);
+      break;
   }
 }
 

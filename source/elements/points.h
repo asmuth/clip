@@ -55,7 +55,7 @@ struct PlotPointsConfig {
 };
 
 ReturnCode draw(
-    const PlotPointsConfig& config,
+    PlotPointsConfig config,
     const Rectangle& clip,
     Layer* layer);
 

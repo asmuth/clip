@@ -88,7 +88,7 @@ public:
       message_("runtime error") {}
 
   inline ReturnCode(Status status, std::string message) :
-      success_(status == ERROR),
+      success_(status != ERROR),
       message_(message) {}
 
   inline bool isError() const {

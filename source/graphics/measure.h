@@ -34,6 +34,7 @@
 #include <utils/return_code.h>
 
 namespace plotfx {
+struct Rectangle;
 
 enum class Unit {
   UNIT,  // Screen units
@@ -58,6 +59,7 @@ Measure from_pt(double v, double dpi);
 Measure from_pt(double v);
 Measure from_em(double v, double font_size);
 Measure from_em(double v);
+Measure from_rel(double v);
 Measure from_user(double v);
 
 ReturnCode parse_measure(
@@ -66,6 +68,22 @@ ReturnCode parse_measure(
 
 Measure measure_or(const Measure& primary, const Measure& fallback);
 
+using UnitConverter = std::function<void (Measure*)>;
+
+void convert_units(
+    const std::vector<UnitConverter>& converters,
+    Measure* begin,
+    Measure* end);
+
+void convert_unit_typographic(
+    double dpi,
+    double font_size_pt,
+    Measure* measure);
+
+void convert_unit_relative(
+    double range_begin,
+    double range_end,
+    Measure* measure);
 
 } // namespace plotfx
 

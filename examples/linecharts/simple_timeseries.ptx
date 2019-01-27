@@ -2,8 +2,8 @@ width: 1200px;
 height: 480px;
 
 points {
-  xs: 60, 200, 14;
-  ys: 60px, 200px, 14em;
+  xs: 60, 50%, 200;
+  ys: 60px, 50%, 14em;
   sizes: 4pt, 20pt;
 }
 
