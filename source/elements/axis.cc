@@ -662,6 +662,8 @@ ReturnCode configure(
     {"scale-max", bind(&configure_float_opt, _1, &domain.max)},
     {"scale-padding", bind(&configure_float, _1, &domain.padding)},
     {"layout", bind(&axis_configure_label_placement, _1, &config->label_placement)},
+    {"format", bind(&confgure_format, _1, &config->label_formatter)},
+
   };
 
   if (auto rc = parseAll(plist, pdefs); !rc) {

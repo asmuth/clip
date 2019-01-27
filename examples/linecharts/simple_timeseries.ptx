@@ -17,6 +17,7 @@ axis {
   position: bottom;
   scale-min: 1404270100;
   scale-max: 1404280100;
+  format: datetime("%H:%M:%S");
 }
 
 axis {
