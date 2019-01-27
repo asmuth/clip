@@ -4,12 +4,13 @@ height: 480px;
 scale-x-min: 1404270100;
 scale-x-max: 1404320100;
 scale-y-min: 0;
-scale-y-max: 100;
+scale-y-max: 150;
 
 points {
   xs: csv('tests/testdata/measurement.csv', time);
   ys: csv('tests/testdata/measurement.csv', value2);
-  sizes: 1pt, 1pt;
+  sizes: 2pt, 3pt;
+  colors: #06c, #c06;
 }
 
 axis {

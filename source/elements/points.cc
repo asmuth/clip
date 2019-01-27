@@ -147,11 +147,6 @@ ReturnCode configure(
   config->label_font_size = doc.font_size;
 
   /* parse properties */
-  std::optional<Color> color;
-  SeriesRef colors = find_maybe(data.defaults, "colors");
-  DomainConfig color_domain;
-  ColorScheme color_palette;
-
   static const ParserDefinitions pdefs = {
     {"xs", bind(&configure_measures, _1, &config->x)},
     {"ys", bind(&configure_measures, _1, &config->y)},
@@ -164,8 +159,7 @@ ReturnCode configure(
     {"scale-y-max", bind(&configure_float_opt, _1, &config->scale_y.max)},
     {"scale-y-padding", bind(&configure_float, _1, &config->scale_y.padding)},
     {"sizes", bind(&configure_measures, _1, &config->sizes)},
-    //{"color", configure_color_opt(&color)},
-    //{"colors", configure_series_fn(data, &colors)},
+    {"colors", configure_vec<Color>(bind(&configure_color, _1, _2), &config->colors)},
     //{"labels", configure_series_fn(data, &data_labels)},
   };
 
@@ -185,13 +179,6 @@ ReturnCode configure(
   //      "EARG",
   //      "the length of the 'x', 'y' and 'labels' properties must be equal");
   //}
-
-  /* return element */
-  //config->colors = fallback(
-  //    color,
-  //    series_to_colors(colors, color_domain, color_palette),
-  //    groups_to_colors(data_x->size(), groups, color_palette));
-
 
   return OK;
 }
