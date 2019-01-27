@@ -124,5 +124,9 @@ inline ReturnCode try_chain(
   return OK;
 }
 
+ReturnCode err_invalid_value(
+    const std::string& value,
+    std::vector<std::string> expected_values);
+
 } // namespace plotfx
 
