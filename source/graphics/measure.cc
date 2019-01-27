@@ -173,5 +173,16 @@ void convert_unit_relative(
   }
 }
 
+void convert_unit_user(
+    std::function<double (double)> converter,
+    Measure* measure) {
+  switch (measure->unit) {
+    case Unit::USER:
+      measure->unit = Unit::REL;
+      measure->value = converter(measure->value);
+      break;
+  }
+}
+
 } // namespace plotfx
 

@@ -1,16 +1,25 @@
 width: 1200px;
 height: 480px;
 
+scale-x-min: 1404270100;
+scale-x-max: 1404320100;
+scale-y-min: 0;
+scale-y-max: 100;
+
 points {
   xs: csv('tests/testdata/measurement.csv', time);
   ys: csv('tests/testdata/measurement.csv', value2);
-  sizes: 4pt, 20pt;
+  sizes: 1pt, 1pt;
 }
 
 axis {
   position: bottom;
+  scale-min: 1404270100;
+  scale-max: 1404280100;
 }
 
 axis {
   position: left;
+  scale-min: 0;
+  scale-max: 100;
 }

@@ -347,19 +347,19 @@ ReturnCode configure(
   /* return element */
   config->direction = direction;
 
-  config->x = domain_translate(*domain_x, *data_x);
-  config->xoffset = domain_translate(
-      *domain_x,
-      data_xoffset
-          ? *data_xoffset
-          : std::vector<Value>(data_x->size(), "0.0"));
+  //config->x = domain_translate(*domain_x, *data_x);
+  //config->xoffset = domain_translate(
+  //    *domain_x,
+  //    data_xoffset
+  //        ? *data_xoffset
+  //        : std::vector<Value>(data_x->size(), "0.0"));
 
-  config->y = domain_translate(*domain_y, *data_y);
-  config->yoffset = domain_translate(
-      *domain_y,
-      data_yoffset
-          ? *data_yoffset
-          : std::vector<Value>(data_y->size(), "0.0"));
+  //config->y = domain_translate(*domain_y, *data_y);
+  //config->yoffset = domain_translate(
+  //    *domain_y,
+  //    data_yoffset
+  //        ? *data_yoffset
+  //        : std::vector<Value>(data_y->size(), "0.0"));
 
   config->colors = fallback(
       color,

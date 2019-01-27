@@ -74,11 +74,9 @@ double domain_max(const DomainConfig& domain);
 
 double domain_translate(
     const DomainConfig& domain,
-    const Value& value);
+    double value);
 
-std::vector<double> domain_translate(
-    const DomainConfig& domain,
-    const Series& series);
+std::function<double (double)> domain_translate_fn(const DomainConfig& domain);
 
 Value domain_untranslate(
     const DomainConfig& domain,

@@ -85,5 +85,9 @@ void convert_unit_relative(
     double range_end,
     Measure* measure);
 
+void convert_unit_user(
+    std::function<double (double)> converter,
+    Measure* measure);
+
 } // namespace plotfx
 

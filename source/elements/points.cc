@@ -58,6 +58,7 @@ ReturnCode draw(
   convert_units(
       {
         bind(&convert_unit_typographic, layer->dpi, layer->font_size.value, _1),
+        bind(&convert_unit_user, domain_translate_fn(config.scale_x), _1),
         bind(&convert_unit_relative, clip.x, clip.x + clip.w, _1)
       },
       &*config.x.begin(),
@@ -66,6 +67,7 @@ ReturnCode draw(
   convert_units(
       {
         bind(&convert_unit_typographic, layer->dpi, layer->font_size.value, _1),
+        bind(&convert_unit_user, domain_translate_fn(config.scale_y), _1),
         bind(&convert_unit_relative, clip.y, clip.y + clip.h, _1)
       },
       &*config.y.begin(),
@@ -138,12 +140,13 @@ ReturnCode configure(
     const Document& doc,
     const Environment& env,
     PlotPointsConfig* config) {
-  DomainMap scales;
-  SeriesRef data_labels;
+  /* set defaults from environment */
+  config->scale_x = env.scale_x;
+  config->scale_y = env.scale_y;
+  config->label_font = doc.font_sans;
+  config->label_font_size = doc.font_size;
 
-  DomainConfig domain_x = env.scale_x;
-  DomainConfig domain_y = env.scale_y;
-
+  /* parse properties */
   std::optional<Color> color;
   SeriesRef colors = find_maybe(data.defaults, "colors");
   DomainConfig color_domain;
@@ -152,6 +155,14 @@ ReturnCode configure(
   static const ParserDefinitions pdefs = {
     {"xs", bind(&configure_measures, _1, &config->x)},
     {"ys", bind(&configure_measures, _1, &config->y)},
+    {"scale-x", bind(&domain_configure, _1, &config->scale_x)},
+    {"scale-x-min", bind(&configure_float_opt, _1, &config->scale_x.min)},
+    {"scale-x-max", bind(&configure_float_opt, _1, &config->scale_x.max)},
+    {"scale-x-padding", bind(&configure_float, _1, &config->scale_x.padding)},
+    {"scale-y", bind(&domain_configure, _1, &config->scale_y)},
+    {"scale-y-min", bind(&configure_float_opt, _1, &config->scale_y.min)},
+    {"scale-y-max", bind(&configure_float_opt, _1, &config->scale_y.max)},
+    {"scale-y-padding", bind(&configure_float, _1, &config->scale_y.padding)},
     {"sizes", bind(&configure_measures, _1, &config->sizes)},
     //{"color", configure_color_opt(&color)},
     //{"colors", configure_series_fn(data, &colors)},
@@ -162,7 +173,7 @@ ReturnCode configure(
     return rc;
   }
 
-  /* check dataset */
+  /* check configuraton */
   if (config->x.size() != config->y.size()) {
     return ReturnCode::error(
         "EARG",
@@ -175,46 +186,12 @@ ReturnCode configure(
   //      "the length of the 'x', 'y' and 'labels' properties must be equal");
   //}
 
-  ///* fetch domains */
-  //auto domain_x = find_ptr(scales, scale_x);
-  //if (!domain_x) {
-  //  return ReturnCode::errorf("EARG", "scale not found: $0", scale_x);
-  //}
-
-  //auto domain_y = find_ptr(scales, scale_y);
-  //if (!domain_y) {
-  //  return ReturnCode::errorf("EARG", "scale not found: $0", scale_y);
-  //}
-
-  /* group data */
-  //std::vector<DataGroup> groups;
-  //if (data_group) {
-  //  if (data_x->size() != data_group->size()) {
-  //    return ERROR;
-  //  }
-
-  //  groups = plotfx::series_group(*data_group);
-  //} else {
-  //  DataGroup g;
-  //  g.index = std::vector<size_t>(data_x->size());
-  //  std::iota(g.index.begin(), g.index.end(), 0);
-  //  groups.emplace_back(g);
-  //}
-
   /* return element */
-  //config->x = domain_translate(*domain_x, *data_x);
-  //config->y = domain_translate(*domain_y, *data_y);
-
   //config->colors = fallback(
   //    color,
   //    series_to_colors(colors, color_domain, color_palette),
   //    groups_to_colors(data_x->size(), groups, color_palette));
 
-  config->label_font = doc.font_sans;
-  config->label_font_size = doc.font_size;
-  if (data_labels) {
-    config->labels = *data_labels;
-  }
 
   return OK;
 }

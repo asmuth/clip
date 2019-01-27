@@ -44,10 +44,10 @@ std::vector<Color> series_to_colors(
   domain_fit(*series, &domain);
 
   std::vector<Color> colors;
-  for (const auto& v : *series) {
-    auto value = domain_translate(domain, v) * domain_cardinality(domain);
-    colors.emplace_back(palette.get(value));
-  }
+  //for (const auto& v : *series) {
+  //  auto value = domain_translate(domain, v) * domain_cardinality(domain);
+  //  colors.emplace_back(palette.get(value));
+  //}
 
   return colors;
 }

@@ -118,12 +118,11 @@ double domain_max(const DomainConfig& domain) {
 
 double domain_translate_linear(
     const DomainConfig& domain,
-    const Value& v) {
+    double v) {
   double min = domain_min(domain);
   double max = domain_max(domain);
 
-  auto vf = value_to_float(v);
-  auto vt = (vf - min) / (max - min);
+  auto vt = (v - min) / (max - min);
 
   if (domain.inverted) {
     vt = 1.0 - vt;
@@ -134,14 +133,14 @@ double domain_translate_linear(
 
 double domain_translate_log(
     const DomainConfig& domain,
-    const Value& v) {
+    double v) {
   auto min = domain_min(domain);
   auto max = domain_max(domain);
   auto log_base = domain.log_base.value_or(kDefaultLogBase);
   double range = max - min;
   double range_log = log(range) / log(log_base);
 
-  auto vf = value_to_float(v) - min;
+  auto vf = v - min;
   if (vf > 1.0) {
     vf = log(vf) / log(log_base);
   } else {
@@ -158,12 +157,11 @@ double domain_translate_log(
 
 double domain_translate_discrete(
     const DomainConfig& domain,
-    const Value& v) {
+    double v) {
   double min = domain_min(domain);
   double max = domain_max(domain) + 1;
 
-  auto vf = value_to_float(v);
-  auto vt = (vf - min) / (max - min);
+  auto vt = (v - min) / (max - min);
 
   if (domain.inverted) {
     vt = 1.0 - vt;
@@ -174,7 +172,7 @@ double domain_translate_discrete(
 
 double domain_translate(
     const DomainConfig& domain,
-    const Value& value) {
+    double value) {
   switch (domain.kind) {
     case DomainKind::LINEAR:
       return domain_translate_linear(domain, value);
@@ -189,15 +187,8 @@ double domain_translate(
   return 0.0f;
 }
 
-std::vector<double> domain_translate(
-    const DomainConfig& domain,
-    const Series& series) {
-  std::vector<double> values;
-  for (const auto& v : series) {
-    values.push_back(domain_translate(domain, v));
-  }
-
-  return values;
+std::function<double (double)> domain_translate_fn(const DomainConfig& domain) {
+  return bind(&domain_translate, domain, std::placeholders::_1);
 }
 
 Value domain_untranslate_linear(const DomainConfig& domain, double vt) {

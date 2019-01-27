@@ -182,13 +182,13 @@ ReturnCode configure(
   }
 
   /* setup config */
-  config->x = domain_translate(*domain_x, *data_x);
-  config->y = domain_translate(*domain_y, *data_y);
-  config->yoffset = domain_translate(
-      *domain_y,
-      data_yoffset
-          ? *data_yoffset
-          : std::vector<Value>(data_y->size(), "0.0"));
+  //config->x = domain_translate(*domain_x, *data_x);
+  //config->y = domain_translate(*domain_y, *data_y);
+  //config->yoffset = domain_translate(
+  //    *domain_y,
+  //    data_yoffset
+  //        ? *data_yoffset
+  //        : std::vector<Value>(data_y->size(), "0.0"));
 
   config->colors = fallback(
       color,

@@ -415,10 +415,9 @@ ReturnCode axis_place_labels_linear(
   auto end = domain_max(domain);
 
   for (auto v = begin; v <= end; v += step) {
-    auto vs = std::to_string(v); // TODO remove to_string;
-    auto vp = domain_translate(domain, vs);
+    auto vp = domain_translate(domain, v);
     axis->ticks.emplace_back(vp);
-    axis->labels.emplace_back(vp, axis->label_formatter(vs));
+    axis->labels.emplace_back(vp, axis->label_formatter(std::to_string(v)));
   }
 
   return OK;

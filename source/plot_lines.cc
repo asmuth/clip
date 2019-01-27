@@ -174,8 +174,8 @@ ReturnCode configure(
   }
 
   /* setup config */
-  config->x = domain_translate(*domain_x, *data_x);
-  config->y = domain_translate(*domain_y, *data_y);
+  //config->x = domain_translate(*domain_x, *data_x);
+  //config->y = domain_translate(*domain_y, *data_y);
   config->line_width = measure_or(line_width, from_pt(kDefaultLineWidthPT, doc.dpi));
   config->colors = fallback(
       color,

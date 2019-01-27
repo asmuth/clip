@@ -140,8 +140,8 @@ ReturnCode configure(
   }
 
   /* return element */
-  config->x = domain_translate(*domain_x, *data_x);
-  config->y = domain_translate(*domain_y, *data_y);
+  //config->x = domain_translate(*domain_x, *data_x);
+  //config->y = domain_translate(*domain_y, *data_y);
   config->labels = *data_labels;
 
   return OK;
