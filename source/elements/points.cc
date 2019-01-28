@@ -83,7 +83,7 @@ ReturnCode draw(
   /* draw points */
   for (size_t i = 0; i < config.x.size(); ++i) {
     auto sx = clip.x + config.x[i];
-    auto sy = clip.y + config.y[i];
+    auto sy = clip.y + clip.h - config.y[i];
 
     const auto& color = config.colors.empty()
         ? Color{}
@@ -116,8 +116,8 @@ ReturnCode draw(
         from_em(kDefaultLabelPaddingEM, config.label_font_size));
 
     Point p(
-        clip.x + config.x[i] * clip.w,
-        clip.y + (1.0 - config.y[i]) * clip.h - label_padding);
+        clip.x + config.x[i],
+        clip.y + clip.h - config.y[i] - label_padding);
 
     TextStyle style;
     style.font = config.label_font;
@@ -160,7 +160,7 @@ ReturnCode configure(
     {"scale-y-padding", bind(&configure_float, _1, &config->scale_y.padding)},
     {"sizes", bind(&configure_measures, _1, &config->sizes)},
     {"colors", configure_vec<Color>(bind(&configure_color, _1, _2), &config->colors)},
-    //{"labels", configure_series_fn(data, &data_labels)},
+    {"labels", bind(&configure_strings, _1, &config->labels)},
   };
 
   if (auto rc = parseAll(plist, pdefs); !rc) {
@@ -174,11 +174,12 @@ ReturnCode configure(
         "the length of the 'x' and 'y' properties must be equal");
   }
 
-  //if (data_labels && (data_x->size() != data_labels->size())) {
-  //  return ReturnCode::error(
-  //      "EARG",
-  //      "the length of the 'x', 'y' and 'labels' properties must be equal");
-  //}
+  if (config->x.size() != config->y.size()) {
+    return ReturnCode::error(
+        "EARG",
+        "the length of the 'labels' property must be larger or equal to that of "
+        "the 'x' property");
+  }
 
   return OK;
 }

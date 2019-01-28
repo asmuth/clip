@@ -417,6 +417,25 @@ ParserFn configure_series_fn(
   return bind(&configure_series, _1, ctx, series);
 }
 
+ReturnCode configure_strings(
+    const plist::Property& prop,
+    std::vector<std::string>* data) {
+  if (plist::is_enum(prop, "csv")) {
+    SeriesRef d;
+    if (auto rc = parse_data_series_csv(prop, &d); !rc) {
+      return rc;
+    }
+
+    for (auto v : *d) {
+      data->emplace_back(v);
+    }
+
+    return OK;
+  }
+
+  return configure_vec<std::string>(bind(&configure_string, _1, _2), data)(prop);
+}
+
 ReturnCode configure_measures(
     const plist::Property& prop,
     std::vector<Measure>* measures) {
