@@ -120,121 +120,6 @@ ReturnCode configure_layers(
   return parseAll(plist, pdefs_layer);
 }
 
-ReturnCode configure_scales(
-    const plist::PropertyList& plist,
-    const DataContext& data,
-    DomainMap* scales) {
-  DomainConfig domain_x;
-  domain_x.padding = 0;
-
-  DomainConfig domain_y;
-  domain_y.min_auto_snap_zero = true;
-
-  if (data.defaults.count(SCALE_DEFAULT_X) &&
-      data.defaults.at(SCALE_DEFAULT_X)) {
-    domain_fit(*data.defaults.at(SCALE_DEFAULT_X), &domain_x);
-  }
-
-  if (data.defaults.count(SCALE_DEFAULT_Y) &&
-    data.defaults.at(SCALE_DEFAULT_Y)) {
-    domain_fit(*data.defaults.at(SCALE_DEFAULT_Y), &domain_y);
-  }
-
-  static const ParserDefinitions pdefs = {
-    {"scale-x", bind(&domain_configure, _1, &domain_x)},
-    {"scale-x-min", bind(&configure_float_opt, _1, &domain_x.min)},
-    {"scale-x-max", bind(&configure_float_opt, _1, &domain_x.max)},
-    {"scale-x-padding", bind(&configure_float, _1, &domain_x.padding)},
-    {"scale-y", bind(&domain_configure, _1, &domain_y)},
-    {"scale-y-min", bind(&configure_float_opt, _1, &domain_y.min)},
-    {"scale-y-max", bind(&configure_float_opt, _1, &domain_y.max)},
-    {"scale-y-padding", bind(&configure_float, _1, &domain_y.padding)},
-  };
-
-  if (auto rc = parseAll(plist, pdefs); !rc.isSuccess()) {
-    return rc;
-  }
-
-  scales->emplace(SCALE_DEFAULT_X, domain_x);
-  scales->emplace(SCALE_DEFAULT_Y, domain_y);
-
-  for (const auto& prop : plist) {
-    if (prop.name != "layer") {
-      continue;
-    }
-
-    if (!plist::is_map(prop)) {
-      return ERROR;
-    }
-
-    SeriesRef data_x1 = find_maybe(data.defaults, "x");
-    SeriesRef data_x2 = find_maybe(data.defaults, "x");
-    SeriesRef data_y1 = find_maybe(data.defaults, "y");
-    SeriesRef data_y2 = find_maybe(data.defaults, "y");
-    std::string scale_x = SCALE_DEFAULT_X;
-    std::string scale_y = SCALE_DEFAULT_Y;
-
-    static const ParserDefinitions pdefs = {
-      {"x", configure_series_fn(data, &data_x1)},
-      {"x-offset", configure_series_fn(data, &data_x2)},
-      {"scale-x", bind(&configure_string, _1, &scale_x)},
-      {"y", configure_series_fn(data, &data_y1)},
-      {"y-offset", configure_series_fn(data, &data_y2)},
-      {"scale-y", bind(&configure_string, _1, &scale_y)},
-    };
-
-    if (auto rc = parseAll(*prop.next, pdefs); !rc) {
-      return rc;
-    }
-
-    if (!scales->count(scale_x)) {
-      scales->emplace(scale_x, DomainConfig{});
-    }
-
-    if (!scales->count(scale_y)) {
-      scales->emplace(scale_y, DomainConfig{});
-    }
-
-    if (data_x1) {
-      auto domain_x = find_ptr(scales, scale_x);
-      if (!domain_x) {
-        return ReturnCode::errorf("EARG", "scale not found: $0", scale_x);
-      }
-
-      domain_fit(*data_x1, domain_x);
-    }
-
-    if (data_x2) {
-      auto domain_x = find_ptr(scales, scale_x);
-      if (!domain_x) {
-        return ReturnCode::errorf("EARG", "scale not found: $0", scale_x);
-      }
-
-      domain_fit(*data_x2, domain_x);
-    }
-
-    if (data_y1) {
-      auto domain_y = find_ptr(scales, scale_y);
-      if (!domain_y) {
-        return ReturnCode::errorf("EARG", "scale not found: $0", scale_y);
-      }
-
-      domain_fit(*data_y1, domain_y);
-    }
-
-    if (data_y2) {
-      auto domain_y = find_ptr(scales, scale_y);
-      if (!domain_y) {
-        return ReturnCode::errorf("EARG", "scale not found: $0", scale_y);
-      }
-
-      domain_fit(*data_y2, domain_y);
-    }
-  }
-
-  return OK;
-}
-
 ReturnCode configure_data_refs(
     const plist::PropertyList& plist,
     DataContext* data) {
@@ -325,7 +210,6 @@ ReturnCode configure(
   return try_chain({
     bind(&configure_datasource, ref(plist), &data),
     bind(&configure_data_refs, ref(plist), &data),
-    bind(&configure_scales, ref(plist), ref(data), &scales),
     bind(&configure_style, ref(plist), doc, &scales, ref(config)),
     bind(&configure_layers,
         ref(plist),

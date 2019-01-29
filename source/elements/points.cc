@@ -181,6 +181,19 @@ ReturnCode configure(
         "the 'x' property");
   }
 
+  /* scale autoconfig */
+  for (const auto& v : config->x) {
+    if (v.unit == Unit::USER) {
+      domain_fit(v.value, &config->scale_x);
+    }
+  }
+
+  for (const auto& v : config->y) {
+    if (v.unit == Unit::USER) {
+      domain_fit(v.value, &config->scale_y);
+    }
+  }
+
   return OK;
 }
 

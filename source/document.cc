@@ -149,10 +149,10 @@ ReturnCode document_render_to(
 
   auto bbox_elem = layout_margin_box(
       bbox_layer,
-      40,
-      40,
-      40,
-      40);
+      60,
+      60,
+      60,
+      60);
   //if (!tree.roots.empty()) {
   //  return {ERROR, "document has no root - empty configuration?"};
   //}

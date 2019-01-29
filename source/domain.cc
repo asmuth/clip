@@ -40,31 +40,8 @@ DomainConfig::DomainConfig() :
     kind(DomainKind::LINEAR),
     min_auto_snap_zero(false),
     inverted(false),
-    padding(0.1f) {}
-
-void domain_fit_continuous(const Series& data_raw, DomainConfig* domain) {
-  auto data = series_to_float(data_raw);
-
-  for (const auto& d : data) {
-    if (!domain->min_auto || *domain->min_auto > d) {
-      domain->min_auto = std::optional<double>(d);
-    }
-    if (!domain->max_auto || *domain->max_auto < d) {
-      domain->max_auto = std::optional<double>(d);
-    }
-  }
-}
-
-void domain_fit_categorical(const Series& data, DomainConfig* domain) {
-  for (const auto& d : data) {
-    if (domain->map.count(d) > 0) {
-      continue;
-    }
-
-    domain->map.emplace(d, domain->categories.size());
-    domain->categories.emplace_back(d);
-  }
-}
+    padding(0.1f),
+    limit_hints(std::make_shared<DomainLimitHints>()) {}
 
 void domain_fit_kind(const Series& data, DomainConfig* domain) {
   if (series_is_numeric(data)) {
@@ -74,17 +51,16 @@ void domain_fit_kind(const Series& data, DomainConfig* domain) {
   }
 }
 
-void domain_fit(const Series& data, DomainConfig* domain) {
-  if (domain->kind == DomainKind::AUTO) {
-    domain_fit_kind(data, domain);
-  }
+void domain_fit(double value, DomainConfig* domain) {
+  //if (domain->kind == DomainKind::AUTO) {
+  //  domain_fit_kind(data, domain);
+  //}
 
-  switch (domain->kind) {
-    case DomainKind::LINEAR:
-    case DomainKind::LOGARITHMIC:
-      return domain_fit_continuous(data, domain);
-    case DomainKind::DISCRETE:
-      return domain_fit_categorical(data, domain);
+  if (!domain->limit_hints->min_value || *domain->limit_hints->min_value > value) {
+    domain->limit_hints->min_value = std::optional<double>(value);
+  }
+  if (!domain->limit_hints->max_value || *domain->limit_hints->max_value < value) {
+    domain->limit_hints->max_value = std::optional<double>(value);
   }
 }
 
@@ -98,8 +74,8 @@ size_t domain_cardinality(const DomainConfig& domain) {
 }
 
 double domain_min(const DomainConfig& domain) {
-  auto min = domain.min.value_or(domain.min_auto.value_or(0));
-  auto max = domain.max.value_or(domain.max_auto.value_or(0));
+  auto min = domain.min.value_or(domain.limit_hints->min_value.value_or(0));
+  auto max = domain.max.value_or(domain.limit_hints->max_value.value_or(0));
 
   double min_auto = 0;
   if (!domain.min_auto_snap_zero || min < 0) {
@@ -110,8 +86,8 @@ double domain_min(const DomainConfig& domain) {
 }
 
 double domain_max(const DomainConfig& domain) {
-  auto min = domain.min.value_or(domain.min_auto.value_or(0));
-  auto max = domain.max.value_or(domain.max_auto.value_or(0));
+  auto min = domain.min.value_or(domain.limit_hints->min_value.value_or(0));
+  auto max = domain.max.value_or(domain.limit_hints->max_value.value_or(0));
   double max_auto = max + (max - min) * domain.padding;
   return domain.max.value_or(max_auto);
 }

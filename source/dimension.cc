@@ -41,7 +41,7 @@ std::vector<Color> series_to_colors(
   }
 
   auto domain = domain_config;
-  domain_fit(*series, &domain);
+  //domain_fit(*series, &domain);
 
   std::vector<Color> colors;
   //for (const auto& v : *series) {

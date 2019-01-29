@@ -1,10 +1,8 @@
 width: 1200px;
 height: 480px;
 
-scale-x-min: 1404270100;
-scale-x-max: 1404320100;
-scale-y-min: 0;
-scale-y-max: 150;
+scale-y-min: -1;
+scale-y-max: 200;
 
 points {
   xs: csv('tests/testdata/measurement.csv', time);
@@ -15,13 +13,9 @@ points {
 
 axis {
   position: bottom;
-  scale-min: 1404270100;
-  scale-max: 1404280100;
   format: datetime("%H:%M:%S");
 }
 
 axis {
   position: left;
-  scale-min: 0;
-  scale-max: 100;
 }

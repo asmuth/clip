@@ -651,23 +651,44 @@ ReturnCode configure(
   config->border_color = doc.border_color;
   config->text_color = doc.text_color;
 
+  {
+    static const ParserDefinitions pdefs = {
+      {"position", bind(&parseAxisPositionProp, _1, &config->position)},
+      {"layout", bind(&axis_configure_label_placement, _1, &config->label_placement)},
+      {"format", bind(&confgure_format, _1, &config->label_formatter)},
+
+    };
+
+    if (auto rc = parseAll(plist, pdefs); !rc) {
+      return rc;
+    }
+  }
+
   DomainConfig domain;
-  domain.min = 0;
-  domain.max = 1;
-
-  static const ParserDefinitions pdefs = {
-    {"position", bind(&parseAxisPositionProp, _1, &config->position)},
-    {"scale", bind(&domain_configure, _1, &domain)},
-    {"scale-min", bind(&configure_float_opt, _1, &domain.min)},
-    {"scale-max", bind(&configure_float_opt, _1, &domain.max)},
-    {"scale-padding", bind(&configure_float, _1, &domain.padding)},
-    {"layout", bind(&axis_configure_label_placement, _1, &config->label_placement)},
-    {"format", bind(&confgure_format, _1, &config->label_formatter)},
-
+  switch (config->position) {
+    case AxisPosition::TOP:
+    case AxisPosition::BOTTOM:
+    case AxisPosition::CENTER_HORIZ:
+      domain = env.scale_x;
+      break;
+    case AxisPosition::LEFT:
+    case AxisPosition::RIGHT:
+    case AxisPosition::CENTER_VERT:
+      domain = env.scale_y;
+      break;
   };
 
-  if (auto rc = parseAll(plist, pdefs); !rc) {
-    return rc;
+  {
+    static const ParserDefinitions pdefs = {
+      {"scale", bind(&domain_configure, _1, &domain)},
+      {"scale-min", bind(&configure_float_opt, _1, &domain.min)},
+      {"scale-max", bind(&configure_float_opt, _1, &domain.max)},
+      {"scale-padding", bind(&configure_float, _1, &domain.padding)},
+    };
+
+    if (auto rc = parseAll(plist, pdefs); !rc) {
+      return rc;
+    }
   }
 
   if (!config->label_formatter) {
