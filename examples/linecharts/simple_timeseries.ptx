@@ -7,7 +7,7 @@ scale-y-max: 200;
 lines {
   xs: csv('tests/testdata/measurement.csv', time);
   ys: csv('tests/testdata/measurement.csv', value2);
-  colors: #06c, #c06;
+  colors: #06c;
 }
 
 axis {
