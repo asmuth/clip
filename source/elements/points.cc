@@ -168,7 +168,9 @@ ReturnCode configure(
     {"scale-y-min", bind(&configure_float_opt, _1, &config->scale_y.min)},
     {"scale-y-max", bind(&configure_float_opt, _1, &config->scale_y.max)},
     {"scale-y-padding", bind(&configure_float, _1, &config->scale_y.padding)},
+    {"size", bind(&configure_measures, _1, &config->sizes)},
     {"sizes", bind(&configure_measures, _1, &config->sizes)},
+    {"color", configure_vec<Color>(bind(&configure_color, _1, _2), &config->colors)},
     {"colors", configure_vec<Color>(bind(&configure_color, _1, _2), &config->colors)},
     {"labels", bind(&configure_strings, _1, &config->labels)},
   };

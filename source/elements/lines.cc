@@ -147,8 +147,9 @@ ReturnCode configure(
     {"scale-y-min", bind(&configure_float_opt, _1, &config->scale_y.min)},
     {"scale-y-max", bind(&configure_float_opt, _1, &config->scale_y.max)},
     {"scale-y-padding", bind(&configure_float, _1, &config->scale_y.padding)},
+    {"color", configure_vec<Color>(bind(&configure_color, _1, _2), &config->colors)},
     {"colors", configure_vec<Color>(bind(&configure_color, _1, _2), &config->colors)},
-    //{"stroke", bind(&configure_measure, _1, &line_width)},
+    {"stroke", bind(&configure_measure, _1, &config->line_width)},
   };
 
   if (auto rc = parseAll(plist, pdefs); !rc) {
