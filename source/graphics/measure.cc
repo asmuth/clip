@@ -161,14 +161,12 @@ void convert_unit_typographic(
 }
 
 void convert_unit_relative(
-    double range_begin,
-    double range_end,
+    double range,
     Measure* measure) {
   switch (measure->unit) {
     case Unit::REL:
       measure->unit = Unit::UNIT;
-      measure->value =
-          range_begin + std::clamp(measure->value, 0.0, 1.0) * (range_end - range_begin);
+      measure->value = std::clamp(measure->value, 0.0, 1.0) * range;
       break;
   }
 }
@@ -179,7 +177,7 @@ void convert_unit_user(
   switch (measure->unit) {
     case Unit::USER:
       measure->unit = Unit::REL;
-      measure->value = converter(measure->value);
+      measure->value = std::clamp(converter(measure->value), 0.0, 1.0);
       break;
   }
 }

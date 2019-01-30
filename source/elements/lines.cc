@@ -56,7 +56,7 @@ ReturnCode draw(
       {
         bind(&convert_unit_typographic, layer->dpi, layer->font_size.value, _1),
         bind(&convert_unit_user, domain_translate_fn(config.scale_x), _1),
-        bind(&convert_unit_relative, clip.x, clip.x + clip.w, _1)
+        bind(&convert_unit_relative, clip.w, _1)
       },
       &*config.x.begin(),
       &*config.x.end());
@@ -65,7 +65,7 @@ ReturnCode draw(
       {
         bind(&convert_unit_typographic, layer->dpi, layer->font_size.value, _1),
         bind(&convert_unit_user, domain_translate_fn(config.scale_y), _1),
-        bind(&convert_unit_relative, clip.y, clip.y + clip.h, _1)
+        bind(&convert_unit_relative, clip.h, _1)
       },
       &*config.y.begin(),
       &*config.y.end());

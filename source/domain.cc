@@ -40,7 +40,7 @@ DomainConfig::DomainConfig() :
     kind(DomainKind::LINEAR),
     min_auto_snap_zero(false),
     inverted(false),
-    padding(0.1f),
+    padding(0.01f),
     limit_hints(std::make_shared<DomainLimitHints>()) {}
 
 void domain_fit_kind(const Series& data, DomainConfig* domain) {

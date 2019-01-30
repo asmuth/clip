@@ -81,8 +81,7 @@ void convert_unit_typographic(
     Measure* measure);
 
 void convert_unit_relative(
-    double range_begin,
-    double range_end,
+    double range,
     Measure* measure);
 
 void convert_unit_user(
