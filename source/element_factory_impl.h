@@ -34,6 +34,7 @@ namespace plotfx {
 template <typename T>
 ElementBuilder elem_builder(
     ElementConfigureAsFn<T> config_fn,
+    ElementLayoutAsFn<T> layout_fn,
     ElementDrawAsFn<T> draw_fn) {
   using namespace std::placeholders;
 
@@ -50,6 +51,7 @@ ElementBuilder elem_builder(
     }
 
     auto e = std::make_unique<Element>();
+    e->layout = bind(layout_fn, config, _1, _2);
     e->draw = bind(draw_fn, config, _1, _2);
     *elem = std::move(e);
     return OK;

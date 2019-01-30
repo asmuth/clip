@@ -28,51 +28,41 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 #pragma once
-#include <atomic>
-#include <memory>
-#include <string>
-#include <functional>
-#include "plist/plist.h"
-#include "utils/return_code.h"
-#include "environment.h"
-#include "layout.h"
+#include <assert.h>
+#include <stdlib.h>
+#include <stdint.h>
 
 namespace plotfx {
-struct Layer;
-struct LayoutInfo;
-struct Document;
-struct DataContext;
-struct Environment;
 
-using plist::PropertyList;
+struct LayoutInfo {
 
-using ElementDrawFn = std::function<ReturnCode (const LayoutInfo&, Layer*)>;
+  /**
+   * The elements bounding box
+   */
+  Rectangle bounding_box;
 
-template <typename T>
-using ElementDrawAsFn = std::function<ReturnCode (const T&, const LayoutInfo&, Layer*)>;
+  /**
+   * If set to true, constrain the size of the bounding box in the (x, y)
+   * dimension, i.e. disallow it from growing
+   */
+  std::array<bool, 2> constraint;
 
-template <typename T>
-using ElementConfigureAsFn = std::function<ReturnCode (
-    const plist::PropertyList&,
-    const DataContext&,
-    const Document&,
-    const Environment&,
-    T*)>;
+  /**
+   * The inner ("content") bounding box
+   */
+  Rectangle content_box;
 
-template <typename T>
-using ElementDrawAsFn = std::function<ReturnCode (const T&, const LayoutInfo&, Layer*)>;
+  /**
+   * The elements bounding box
+   */
+  Rectangle element_box;
 
-using ElementLayoutFn = std::function<ReturnCode (const Layer&, LayoutInfo*)>;
-
-template <typename T>
-using ElementLayoutAsFn = std::function<ReturnCode (const T&, const Layer&, LayoutInfo*)>;
-
-struct Element {
-  ElementLayoutFn layout;
-  ElementDrawFn draw;
 };
 
-using ElementRef = std::shared_ptr<Element>;
+enum class LayoutPhase {
+  BLOCK, LAYER
+};
+
 
 } // namespace plotfx
 

@@ -145,20 +145,33 @@ ReturnCode document_load(
 ReturnCode document_render_to(
     const Document& tree,
     Layer* layer) {
-  Rectangle bbox_layer(0, 0, layer->width, layer->height);
+  auto bounding_box = Rectangle(0, 0, layer->width, layer->height);
+  auto content_box = layout_margin_box(bounding_box, 20, 20, 20, 20);
 
-  auto bbox_elem = layout_margin_box(
-      bbox_layer,
-      60,
-      60,
-      60,
-      60);
-  //if (!tree.roots.empty()) {
-  //  return {ERROR, "document has no root - empty configuration?"};
-  //}
-
+  std::vector<Rectangle> element_boxes;
   for (const auto& e : tree.roots) {
-    if (auto rc = e->draw(bbox_elem, layer); !rc.isSuccess()) {
+    LayoutInfo layout;
+    layout.bounding_box = bounding_box;
+    layout.constraint = {true, true};
+    layout.content_box = content_box;
+
+    if (auto rc = e->layout(*layer, &layout); !rc.isSuccess()) {
+      return rc;
+    }
+
+    content_box = layout.content_box;
+    element_boxes.emplace_back(layout.element_box);
+  }
+
+  for (size_t i = 0; i < tree.roots.size(); ++i) {
+    const auto& element = tree.roots[i];
+    LayoutInfo layout;
+    layout.bounding_box = bounding_box;
+    layout.constraint = {true, true};
+    layout.content_box = content_box;
+    layout.element_box = element_boxes[i];
+
+    if (auto rc = element->draw(layout, layer); !rc.isSuccess()) {
       return rc;
     }
   }
@@ -178,7 +191,6 @@ ReturnCode document_render(
     return document_render_svg(doc, filename);
   if (format == "png")
     return document_render_png(doc, filename);
-
   return ReturnCode::errorf("EARG", "invalid output format: $0", format);
 }
 

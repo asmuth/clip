@@ -74,20 +74,6 @@ ReturnCode draw(
   return OK;
 }
 
-ReturnCode bind(
-    const PlotLabelsConfig& config,
-    ElementRef* elem) {
-  auto e = std::make_unique<Element>();
-  e->draw = bind(
-      &draw,
-      config,
-      _1,
-      _2);
-
-  *elem = std::move(e);
-  return OK;
-}
-
 ReturnCode configure(
     const plist::PropertyList& plist,
     const DataContext& data,

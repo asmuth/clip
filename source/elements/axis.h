@@ -42,7 +42,7 @@
 
 namespace plotfx {
 struct DomainConfig;
-struct Rectangle;
+struct LayoutInfo;
 struct AxisDefinition;
 
 enum class AxisPosition {
@@ -97,8 +97,13 @@ namespace axis {
 
 ReturnCode draw(
     const AxisDefinition& config,
-    const Rectangle& clip,
+    const LayoutInfo& clip,
     Layer* layer);
+
+ReturnCode layout(
+    const AxisDefinition& config,
+    const Layer& layer,
+    LayoutInfo* layout);
 
 ReturnCode configure(
     const plist::PropertyList& plist,

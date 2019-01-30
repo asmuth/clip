@@ -37,8 +37,8 @@ namespace plotfx {
 using ElementConfigureFn = std::function<ReturnCode (const Document&, const PropertyList&, ElementRef*)>;
 
 static std::unordered_map<std::string, ElementBuilder> elems = {
-  {"axis", elem_builder<AxisDefinition>(&axis::configure, &axis::draw)},
-  {"points", elem_builder<plot::points::PlotPointsConfig>(&plot::points::configure, &plot::points::draw)},
+  {"axis", elem_builder<AxisDefinition>(&axis::configure, &axis::layout, &axis::draw)},
+  {"points", elem_builder<plot::points::PlotPointsConfig>(&plot::points::configure, &plot::points::layout, &plot::points::draw)},
 };
 
 ReturnCode buildElement(

@@ -14,9 +14,21 @@ points {
 axis {
   position: bottom;
   format: datetime("%H:%M:%S");
+  layout: linear(3600, align 3600);
 }
 
 axis {
   position: left;
   layout: linear(20);
 }
+
+axis {
+  position: right;
+  layout: linear(10);
+}
+
+axis {
+  position: top;
+  format: datetime("%H:%M:%S");
+}
+

@@ -66,13 +66,6 @@ ReturnCode draw(
     return rc;
   }
 
-  // render layers
-  for (const auto& e : config.layers) {
-    if (auto rc = e->draw(bbox, layer); !rc) {
-      return rc;
-    }
-  }
-
   // render legend
   if (auto rc = legend_draw(config.legends, bbox, layer); !rc) {
     return rc;

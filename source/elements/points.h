@@ -58,8 +58,13 @@ struct PlotPointsConfig {
 
 ReturnCode draw(
     PlotPointsConfig config,
-    const Rectangle& clip,
+    const LayoutInfo& clip,
     Layer* layer);
+
+ReturnCode layout(
+    const PlotPointsConfig& config,
+    const Layer& layer,
+    LayoutInfo* layout);
 
 ReturnCode configure(
     const plist::PropertyList& plist,

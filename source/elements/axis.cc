@@ -589,8 +589,10 @@ namespace axis {
 
 ReturnCode draw(
     const AxisDefinition& axis,
-    const Rectangle& clip,
+    const LayoutInfo& layout,
     Layer* frame) {
+  const auto& clip = layout.element_box;
+
   switch (axis.mode) {
     case AxisMode::OFF:
       return OK;
@@ -603,33 +605,33 @@ ReturnCode draw(
     case AxisPosition::LEFT:
       rc = renderAxisVertical(
           axis,
-          clip.x,
-          clip.y,
-          clip.y + clip.h,
+          layout.element_box.x,
+          layout.content_box.y,
+          layout.content_box.y + layout.content_box.h,
           frame);
       break;
     case AxisPosition::RIGHT:
       rc = renderAxisVertical(
           axis,
-          clip.x + clip.w,
-          clip.y,
-          clip.y + clip.h,
+          layout.element_box.x + layout.element_box.w,
+          layout.content_box.y,
+          layout.content_box.y + layout.content_box.h,
           frame);
       break;
     case AxisPosition::TOP:
       rc = renderAxisHorizontal(
           axis,
-          clip.y,
-          clip.x,
-          clip.x + clip.w,
+          layout.element_box.y,
+          layout.content_box.x,
+          layout.content_box.x + layout.content_box.w,
           frame);
       break;
     case AxisPosition::BOTTOM:
       rc = renderAxisHorizontal(
           axis,
-          clip.y + clip.h,
-          clip.x,
-          clip.x + clip.w,
+          layout.element_box.y + layout.element_box.h,
+          layout.content_box.x,
+          layout.content_box.x + layout.content_box.w,
           frame);
       break;
     case AxisPosition::CENTER_HORIZ:
@@ -638,6 +640,39 @@ ReturnCode draw(
   }
 
   return rc;
+}
+
+ReturnCode layout(
+    const AxisDefinition& axis,
+    const Layer& layer,
+    LayoutInfo* layout) {
+  double margins[4] = {0, 0, 0, 0};
+
+  switch (axis.position) {
+    case AxisPosition::TOP:
+      axis_layout(axis, axis.position, layer, &margins[0]);
+      break;
+    case AxisPosition::RIGHT:
+      axis_layout(axis, axis.position, layer, &margins[1]);
+      break;
+    case AxisPosition::BOTTOM:
+      axis_layout(axis, axis.position, layer, &margins[2]);
+      break;
+    case AxisPosition::LEFT:
+      axis_layout(axis, axis.position, layer, &margins[3]);
+      break;
+  }
+
+  layout->content_box = layout_margin_box(
+      layout->content_box,
+      margins[0],
+      margins[1],
+      margins[2],
+      margins[3]);
+
+  layout->element_box = layout->content_box;
+
+  return OK;
 }
 
 ReturnCode configure(

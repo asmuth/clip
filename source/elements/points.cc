@@ -52,8 +52,10 @@ static const double kDefaultLabelPaddingEM = 0.4;
 
 ReturnCode draw(
     PlotPointsConfig config,
-    const Rectangle& clip,
+    const LayoutInfo& layout,
     Layer* layer) {
+  const auto& clip = layout.content_box;
+
   /* convert units */
   convert_units(
       {
@@ -131,6 +133,14 @@ ReturnCode draw(
     }
   }
 
+  return OK;
+}
+
+ReturnCode layout(
+    const PlotPointsConfig& config,
+    const Layer& layer,
+    LayoutInfo* layout) {
+  /* nothing to do */
   return OK;
 }
 
