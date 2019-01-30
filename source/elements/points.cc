@@ -184,13 +184,6 @@ ReturnCode configure(
         "the length of the 'x' and 'y' properties must be equal");
   }
 
-  if (config->x.size() != config->y.size()) {
-    return ReturnCode::error(
-        "EARG",
-        "the length of the 'labels' property must be larger or equal to that of "
-        "the 'x' property");
-  }
-
   /* scale autoconfig */
   for (const auto& v : config->x) {
     if (v.unit == Unit::USER) {

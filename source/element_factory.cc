@@ -30,6 +30,7 @@
 #include "element_factory.h"
 #include "elements/axis.h"
 #include "elements/points.h"
+#include "elements/lines.h"
 #include <unordered_map>
 
 namespace plotfx {
@@ -38,7 +39,20 @@ using ElementConfigureFn = std::function<ReturnCode (const Document&, const Prop
 
 static std::unordered_map<std::string, ElementBuilder> elems = {
   {"axis", elem_builder<AxisDefinition>(&axis::configure, &axis::layout, &axis::draw)},
-  {"points", elem_builder<plot::points::PlotPointsConfig>(&plot::points::configure, &plot::points::layout, &plot::points::draw)},
+  {
+    "points",
+    elem_builder<plot::points::PlotPointsConfig>(
+        &plot::points::configure,
+        &plot::points::layout,
+        &plot::points::draw)
+  },
+  {
+    "lines",
+    elem_builder<plot::lines::PlotLinesConfig>(
+        &plot::lines::configure,
+        &plot::lines::layout,
+        &plot::lines::draw)
+  },
 };
 
 ReturnCode buildElement(

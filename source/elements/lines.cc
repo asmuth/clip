@@ -28,8 +28,8 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+#include "lines.h"
 #include <numeric>
-#include "plot_lines.h"
 #include <plotfx.h>
 #include <graphics/path.h>
 #include <graphics/brush.h>
@@ -46,14 +46,36 @@ namespace lines {
 static const double kDefaultLineWidthPT = 2;
 
 ReturnCode draw(
-    const PlotLinesConfig& config,
-    const Rectangle& clip,
+    PlotLinesConfig config,
+    const LayoutInfo& layout,
     Layer* layer) {
+  const auto& clip = layout.content_box;
+
+  /* convert units */
+  convert_units(
+      {
+        bind(&convert_unit_typographic, layer->dpi, layer->font_size.value, _1),
+        bind(&convert_unit_user, domain_translate_fn(config.scale_x), _1),
+        bind(&convert_unit_relative, clip.x, clip.x + clip.w, _1)
+      },
+      &*config.x.begin(),
+      &*config.x.end());
+
+  convert_units(
+      {
+        bind(&convert_unit_typographic, layer->dpi, layer->font_size.value, _1),
+        bind(&convert_unit_user, domain_translate_fn(config.scale_y), _1),
+        bind(&convert_unit_relative, clip.y, clip.y + clip.h, _1)
+      },
+      &*config.y.begin(),
+      &*config.y.end());
+
+  /* draw lines */
   for (const auto& group : config.groups) {
     Path path;
     for (auto i : group.index) {
-      auto sx = clip.x + config.x[i] * clip.w;
-      auto sy = clip.y + (1.0 - config.y[i]) * clip.h;
+      auto sx = clip.x + config.x[i];
+      auto sy = clip.y + clip.h - config.y[i];
 
       if (i == group.index[0]) {
         path.moveTo(sx, sy);
@@ -95,96 +117,70 @@ ReturnCode build_legend(
   return OK;
 }
 
+ReturnCode layout(
+    const PlotLinesConfig& config,
+    const Layer& layer,
+    LayoutInfo* layout) {
+  /* nothing to do */
+  return OK;
+}
+
 ReturnCode configure(
     const plist::PropertyList& plist,
     const DataContext& data,
     const Document& doc,
-    const DomainMap& scales,
-    LegendItemMap* legend,
+    const Environment& env,
     PlotLinesConfig* config) {
-  SeriesRef data_x = find_maybe(data.defaults, "x");
-  SeriesRef data_y = find_maybe(data.defaults, "y");
-  SeriesRef data_group = find_maybe(data.defaults, "group");
-
-  std::string scale_x = SCALE_DEFAULT_X;
-  std::string scale_y = SCALE_DEFAULT_Y;
-
-  std::string title;
-
-  std::string legend_key = LEGEND_DEFAULT;
-
-  std::optional<Color> color;
-  SeriesRef colors = find_maybe(data.defaults, "colors");
-  DomainConfig color_domain;
-  ColorScheme color_palette;
-
-  Measure line_width;
+  /* set defaults from environment */
+  config->scale_x = env.scale_x;
+  config->scale_y = env.scale_y;
+  config->line_width = from_pt(kDefaultLineWidthPT);
 
   static const ParserDefinitions pdefs = {
-    {"x", configure_series_fn(data, &data_x)},
-    {"scale-x", bind(&configure_string, _1, &scale_x)},
-    {"y", configure_series_fn(data, &data_y)},
-    {"scale-y", bind(&configure_string, _1, &scale_y)},
-    {"group", configure_series_fn(data, &data_group)},
-    {"title", bind(&configure_string, _1, &title)},
-    {"color", configure_color_opt(&color)},
-    {"colors", configure_series_fn(data, &colors)},
-    {"stroke", bind(&configure_measure, _1, &line_width)},
+    {"xs", bind(&configure_measures, _1, &config->x)},
+    {"ys", bind(&configure_measures, _1, &config->y)},
+    {"scale-x", bind(&domain_configure, _1, &config->scale_x)},
+    {"scale-x-min", bind(&configure_float_opt, _1, &config->scale_x.min)},
+    {"scale-x-max", bind(&configure_float_opt, _1, &config->scale_x.max)},
+    {"scale-x-padding", bind(&configure_float, _1, &config->scale_x.padding)},
+    {"scale-y", bind(&domain_configure, _1, &config->scale_y)},
+    {"scale-y-min", bind(&configure_float_opt, _1, &config->scale_y.min)},
+    {"scale-y-max", bind(&configure_float_opt, _1, &config->scale_y.max)},
+    {"scale-y-padding", bind(&configure_float, _1, &config->scale_y.padding)},
+    {"colors", configure_vec<Color>(bind(&configure_color, _1, _2), &config->colors)},
+    //{"stroke", bind(&configure_measure, _1, &line_width)},
   };
 
   if (auto rc = parseAll(plist, pdefs); !rc) {
     return rc;
   }
 
-  /* check dataset */
-  if (!data_x || !data_y) {
-    return ReturnCode::error("EARG", "the following properties are required: x, y");
-  }
-
-  if ((data_x->size() != data_y->size()) ||
-      (data_group && data_x->size() != data_group->size())) {
+  /* check configuraton */
+  if (config->x.size() != config->y.size()) {
     return ReturnCode::error(
         "EARG",
-        "the length of the 'x', 'y' and 'group' properties must be equal");
-  }
-
-  /* fetch domains */
-  auto domain_x = find_ptr(scales, scale_x);
-  if (!domain_x) {
-    return ReturnCode::errorf("EARG", "scale not found: $0", scale_x);
-  }
-
-  auto domain_y = find_ptr(scales, scale_y);
-  if (!domain_y) {
-    return ReturnCode::errorf("EARG", "scale not found: $0", scale_y);
+        "the length of the 'x' and 'y' properties must be equal");
   }
 
   /* group data */
-  if (data_group) {
-    if (data_x->size() != data_group->size()) {
-      return ERROR;
-    }
-
-    config->groups = plotfx::series_group(*data_group);
-  } else {
+  {
     DataGroup g;
-    g.index = std::vector<size_t>(data_x->size());
+    g.index = std::vector<size_t>(config->x.size());
     std::iota(g.index.begin(), g.index.end(), 0);
     config->groups.emplace_back(g);
   }
 
-  /* setup config */
-  //config->x = domain_translate(*domain_x, *data_x);
-  //config->y = domain_translate(*domain_y, *data_y);
-  config->line_width = measure_or(line_width, from_pt(kDefaultLineWidthPT, doc.dpi));
-  config->colors = fallback(
-      color,
-      series_to_colors(colors, color_domain, color_palette),
-      groups_to_colors(data_x->size(), config->groups, color_palette));
+  /* scale autoconfig */
+  for (const auto& v : config->x) {
+    if (v.unit == Unit::USER) {
+      domain_fit(v.value, &config->scale_x);
+    }
+  }
 
-  /* build legend items */
-  if (auto rc = build_legend(*config, title, legend_key, legend); !rc) {
-    return rc;
+  for (const auto& v : config->y) {
+    if (v.unit == Unit::USER) {
+      domain_fit(v.value, &config->scale_y);
+    }
   }
 
   return OK;

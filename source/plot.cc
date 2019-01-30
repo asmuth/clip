@@ -40,7 +40,6 @@
 #include "plot_area.h"
 #include "plot_bars.h"
 #include "plot_labels.h"
-#include "plot_lines.h"
 #include "legend.h"
 
 using namespace std::placeholders;

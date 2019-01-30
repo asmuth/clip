@@ -46,24 +46,30 @@ namespace plot {
 namespace lines {
 
 struct PlotLinesConfig {
-  std::vector<double> x;
-  std::vector<double> y;
+  std::vector<Measure> x;
+  std::vector<Measure> y;
+  DomainConfig scale_x;
+  DomainConfig scale_y;
   std::vector<DataGroup> groups;
   std::vector<Color> colors;
   Measure line_width;
 };
 
 ReturnCode draw(
-    const PlotLinesConfig& config,
-    const Rectangle& clip,
+    PlotLinesConfig config,
+    const LayoutInfo& layout,
     Layer* layer);
+
+ReturnCode layout(
+    const PlotLinesConfig& config,
+    const Layer& layer,
+    LayoutInfo* layout);
 
 ReturnCode configure(
     const plist::PropertyList& plist,
     const DataContext& data,
     const Document& doc,
-    const DomainMap& scales,
-    LegendItemMap* legend,
+    const Environment& env,
     PlotLinesConfig* config);
 
 } // namespace lines
