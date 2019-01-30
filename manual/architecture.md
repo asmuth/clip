@@ -38,20 +38,27 @@ users of the PlotFX program. ... normal users are not required to understand the
 
 Each elements specifies it's preferred 'placement'. The placement dscribes how
 the element wishes to be placed with relation to a parent bounding box. It can
-take any of
-the following values:
+take any of the following values:
 
     - FILL
-    - TOP
-    - RIGHT
-    - BOTTOM
-    - LEFT
+    - EX_TOP
+    - EX_RIGHT
+    - EX_BOTTOM
+    - EX_LEFT
 
 
 To understand what these values mean consider the following "virtual" box. The
 virtual box is divided into five partially overlapping regions:
 
     [figure]
+
+If an element requests the `fill` placement it will be drawn onto the inner
+box. All elements with `fill` placement will simply be drawn on top of each
+other in the order in which they were specified.
+
+If an element requests one of the `EX_*` (exclusive) placements, some exclusive
+space for the element will be subtracted from the corresponding side of the
+parent bounding box and reserved for the element.
 
 
 ### Element placement
@@ -86,9 +93,50 @@ sub-region of it's own bounding box. It is also allowed to use a different paren
 bounding box for each child element. This is required to implement layout container
 elements such as `grid` or `legend`.
 
+
 ### Finding the document size
 
 
+
+### Alignment with the inner bounding box
+
+
+### Difference to CSS
+
+Most readers will know CSS so it might be useful to point out the similarities
+and differences between PlotFX and HTML/CSS, since both lay out elements as a
+nested tree of boxes and have very similar syntax.
+
+However, that is pretty much where the similarities end. Since CSS is intended for
+creating documents, it is based around a concept of universal "page flow", i.e.
+by default block elements in CSS will be stacked vertically from top to bottom,
+similar to the way rows are stacked on top of each other in a document of text.
+
+This concept of page flow, or text layout, is entirely absent from PlotFX.
+PlotFX is not a document layouting system, so it does make sense to assume "row
+by row" as a default element placement strategy. Most of the rest of CSS's layout
+features build from this core assumption so they are equally unapplicable from PlotFX.
+
+Instead of being stacked horizontally like in CSS, boxes in PlotFX will, by default,
+simply be drawn on top of each other with each one filling up the entirety of the
+parent box.
+
+This is a much more useful default behaviour for creating illustrations where in
+many cases an element more closely resembles the concept of a 'layer' as found in
+graphics editing software such as Photoshop or Illustrator than that of a row of
+text.
+
+In the cases where you *do* want a behaviour that is more similar to CSS, i.e.
+you want multiple elements to be placed in a non-overlapping fashion, PlotFX gives
+you two options:
+
+  - Set an absolute position and size (relative to the parent element) on each
+    of the elements and manually ensure the assigned regions don't overlap. This
+    is somewhat similar to 'position: absolute' in CSS>
+
+  - Use an explicit layout element, such as 'hbox', 'vbox' or 'grid'. This is
+    similar in spirit to an HTML 'table' element and also similar to the approach
+    taken by many GUI frameworks
 
 
 ----
