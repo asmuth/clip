@@ -4,20 +4,20 @@ PlotFX
 [![Build status](https://ci.appveyor.com/api/projects/status/8h07x0erafnxsumi/branch/master?svg=true)](https://ci.appveyor.com/project/plotfx/plotfx/branch/master)
 ![BSD-License](https://img.shields.io/badge/license-BSD-blue.svg?style=flat-square)
 
-`plotfx` is a standalone tool for creating charts and other data-driven graphics.
+`plotfx` is a tool for creating data-driven graphics. The primary use case for it
+is creating custom charts ("graphs"), dashboards and other highly parametric
+illustrations.
 
-Charts can be customized using a lightweight syntax that is very similar to CSS.
+Drawings are defined using a lightweight syntax that is very similar to CSS.
+One of the main goals for PlotFX is that using it should be quick, simple and fun.
+
 You can run PlotFX from the command line, where it generates SVG, PNG and PDF
 output files. Additionally, you can embed it into your own application using the
 C API.
 
-PlotFX is partially based on ideas from the "Grammar of Graphics" [0].
-One of the main goals for PlotFX is that creating charts should be quick, simple
-and fun.
-
-**WARNING**: The project is currently a work-in-progress. I'm currently working
-on removing the old SQL chart specification language and replacing it with the
-new CSS-like syntax. This might take a while...
+**WARNING**: The master branch recently underwent a large refactoring and the
+stability is currently beta/experimental. Maybe not even that. Polishing everything
+up will take a few more weeks...
 
 [Examples](https://plotfx.org/examples) |
 [Documentation](https://plotfx.org/reference)
@@ -26,7 +26,7 @@ new CSS-like syntax. This might take a while...
 Getting Started
 ---------------
 
-Here is how to create a simple line chart using plotfx:
+Here is how to draw a simple scatter plot using plotfx:
 
     $ plotfx --in example_chart.ptx --out example_chart.svg
 

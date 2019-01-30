@@ -1,6 +1,37 @@
 This page will guide you through creating a simple first plot and then give you
 pointers to more detailed documentation.
 
-Unlike a classical chart generator, a PlotFX file initially starts out as a blank
-slate.
 
+### The first image
+
+A minimal example file for PlotFX is this one:
+
+    width: 1200px;
+    height: 600px;
+
+    points {
+      xs: 10px 40px;
+      ys: 20px 400px;
+      colors: #06c #c06;
+    }
+
+Save this to `example.ptx` and run it using the command line below:
+
+    plotfx --in example.ptx --out example.svg
+
+If you do that, PlotFX will produce a white 1200x600 pixel image with two coloured
+dots:
+
+    [ image ]
+
+It's not the most useful example in the world, but it shows how to run files
+through PlotFX and illustrates that PlotFX is in a way more similar to a drawing
+tool like Inkscape than to a chart generator.
+
+### Parametric drawing
+
+
+### Adding a scale, title and legend
+
+
+### Diving deeper
