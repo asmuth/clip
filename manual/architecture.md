@@ -1,22 +1,45 @@
 Architecture
 ============
 
-This page contains a high level explanation of the internal steps performed to
-render an illustration. The intended target audience are PlotFX developers and
-users that wish to "look behind the curtain". If you're just trying to get started
-with using PlotFX, it is not nesseccarily recommended to read this page first as
-all the nitty gritty details might be confusing at fist.
+This page describes some of the "high-level" internal parts of PlotFX that are
+not mentioned elsewhere in the documentation, but which are helpful to understand
+how things fit together in the codebase.
+
+The intended target audience are PlotFX developers and users that wish to "look
+behind the curtain". If you're just trying to get started with using PlotFX, it
+is not nesseccarily recommended or helpful to read this page.
 
 
-### Step 1: Configuration
+Code Structure
+--------------
 
-### Step 2: Layouting
+   - Graphics Backend
+   - Parser
+   - Elements
+
+
+Data Flow
+---------
+
+This section gives a brief overview of the internal steps performed to
+render an illustration to the screen. 
+
+### Step 1: Parsing & Configuration
+
+   - Read config file
+   - Read parameters/variables
+   - Run configure functions to build up element tree
+
+### Step 2: Layout
+
+   - Input to this step is the config for each element
+   - Run layout functions to find bounding boxes for all elements
 
 ### Step 3: Rendering
 
-Before the document, consisting of a tree of `Element`s is rendered, a layouting
-step is performed.
-
+   - Input to this step is the config and the bounding box for each element
+   - Run draw functions for all elements; draw functions perform low-level layout
+     such as placing of text and individual shapes, call the rendering backend.
 
 
 Elements
@@ -31,14 +54,16 @@ Elements
 Layout Rules
 ------------
 
-Note that the layouting rules described in this section are not exposed to normal
-users of the PlotFX program. ... normal users are not required to understand these.
+It's imporant to point out that normal users of the PlotFX program will not have
+to understand the layouting rules described below. If you are new to PlotFX, please
+don't let this section be the only thing you read -- it makes things sound much
+more complex than they are!
 
 ### Virtual Box Model
 
-Each elements specifies it's preferred 'placement'. The placement dscribes how
+Each elements specifies its preferred 'placement'. The placement describes how
 the element wishes to be placed with relation to a parent bounding box. It can
-take the values `LAYER` or `BLOCK`.
+take the two values `LAYER` or `BLOCK`.
 
 To understand what these values mean consider the following "virtual" box. The
 virtual box is divided into concentric regions:
@@ -55,7 +80,7 @@ space for the element will be reserved in the outer box.
 *Usually*, the size of the outer box is constrained; in that case reserving space
 for a block element means shrinking the layer region and growing the block region,
 i.e. subtracing space from the inner box. However, when either the width or the
-height of the parent box are unspecified, space for BLOCK elements can be reserved
+height of the parent box are unspecified, space for BLOCK elements may be reserved
 by simply growing the outer box and leaving the inner box untouched.
 
 
@@ -76,9 +101,9 @@ descend from the root node.
 The initial parent bounding box is by definition set to the size of the screen. To
 find the bounding boxes for the elements, we first consider all children that
 have requested BLOCK placement. For each element, we reserve a sub-region of
-current bounding box for the element and then remove the sub-region from the
-parent bounding box. This is done in the order in which the block elements were
-defined.
+the current parent bounding box for the element and then remove the sub-region
+from the parent bounding box. This is done in the order in which the block elements
+were defined.
 
 Once we have placed all BLOCK elements using this method, we simply copy the
 remaining parent bounding box to children that have requested `LAYER` placement.
