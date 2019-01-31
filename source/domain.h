@@ -43,8 +43,7 @@
 namespace plotfx {
 
 enum class DomainKind {
-  AUTO, LINEAR, LOGARITHMIC, DISCRETE
-
+  LINEAR, LOGARITHMIC
 };
 
 struct DomainLimitHints {
@@ -55,13 +54,10 @@ struct DomainLimitHints {
 struct DomainConfig {
   DomainConfig();
   DomainKind kind;
-  bool inverted;
   std::optional<double> min;
-  bool min_auto_snap_zero;
   std::optional<double> max;
   std::optional<double> log_base;
-  std::vector<std::string> categories;
-  std::unordered_map<std::string, double> map;
+  bool inverted;
   double padding;
   std::shared_ptr<DomainLimitHints> limit_hints;
 };
@@ -73,7 +69,6 @@ static const std::string SCALE_DEFAULT_Y = "y";
 
 void domain_fit(double value, DomainConfig* domain);
 
-size_t domain_cardinality(const DomainConfig& domain);
 double domain_min(const DomainConfig& domain);
 double domain_max(const DomainConfig& domain);
 

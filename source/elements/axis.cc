@@ -484,11 +484,8 @@ ReturnCode axis_place_labels_discrete(
 ReturnCode axis_place_labels_default(
     const DomainConfig& domain,
     AxisDefinition* axis) {
-  if (domain.kind == DomainKind::DISCRETE) {
-    return axis_place_labels_discrete(domain, axis);
-  }
-
-  return axis_place_labels_subdivide(domain, axis, 8); // TODO: automatically choose a good value
+  // TODO: improved default label placement
+  return axis_place_labels_subdivide(domain, axis, 8);
 }
 
 

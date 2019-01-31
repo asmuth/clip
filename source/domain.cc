@@ -38,24 +38,11 @@ static const double kDefaultLogBase = 10;
 
 DomainConfig::DomainConfig() :
     kind(DomainKind::LINEAR),
-    min_auto_snap_zero(false),
     inverted(false),
-    padding(0.01f),
+    padding(0),
     limit_hints(std::make_shared<DomainLimitHints>()) {}
 
-void domain_fit_kind(const Series& data, DomainConfig* domain) {
-  if (series_is_numeric(data)) {
-    domain->kind = DomainKind::LINEAR;
-  } else {
-    domain->kind = DomainKind::DISCRETE;
-  }
-}
-
 void domain_fit(double value, DomainConfig* domain) {
-  //if (domain->kind == DomainKind::AUTO) {
-  //  domain_fit_kind(data, domain);
-  //}
-
   if (!domain->limit_hints->min_value || *domain->limit_hints->min_value > value) {
     domain->limit_hints->min_value = std::optional<double>(value);
   }
@@ -64,31 +51,21 @@ void domain_fit(double value, DomainConfig* domain) {
   }
 }
 
-size_t domain_cardinality(const DomainConfig& domain) {
-  switch (domain.kind) {
-    case DomainKind::DISCRETE:
-      return domain.categories.size();
-    default:
-      return std::ceil(domain_max(domain) - domain_min(domain));
-  }
-}
-
 double domain_min(const DomainConfig& domain) {
-  auto min = domain.min.value_or(domain.limit_hints->min_value.value_or(0));
-  auto max = domain.max.value_or(domain.limit_hints->max_value.value_or(0));
-
-  double min_auto = 0;
-  if (!domain.min_auto_snap_zero || min < 0) {
-    min_auto = min - (max - min) * domain.padding;
+  auto min_auto = 1.0f;
+  if (domain.limit_hints->min_value) {
+    min_auto = *domain.limit_hints->min_value - domain.padding;
   }
 
   return domain.min.value_or(min_auto);
 }
 
 double domain_max(const DomainConfig& domain) {
-  auto min = domain.min.value_or(domain.limit_hints->min_value.value_or(0));
-  auto max = domain.max.value_or(domain.limit_hints->max_value.value_or(0));
-  double max_auto = max + (max - min) * domain.padding;
+  auto max_auto = 1.0f;
+  if (domain.limit_hints->max_value) {
+    max_auto = *domain.limit_hints->max_value + domain.padding;
+  }
+
   return domain.max.value_or(max_auto);
 }
 
@@ -131,21 +108,6 @@ double domain_translate_log(
   return vt;
 }
 
-double domain_translate_discrete(
-    const DomainConfig& domain,
-    double v) {
-  double min = domain_min(domain);
-  double max = domain_max(domain) + 1;
-
-  auto vt = (v - min) / (max - min);
-
-  if (domain.inverted) {
-    vt = 1.0 - vt;
-  }
-
-  return vt;
-}
-
 double domain_translate(
     const DomainConfig& domain,
     double value) {
@@ -154,8 +116,6 @@ double domain_translate(
       return domain_translate_linear(domain, value);
     case DomainKind::LOGARITHMIC:
       return domain_translate_log(domain, value);
-    case DomainKind::DISCRETE:
-      return domain_translate_discrete(domain, value);
     default:
       return std::numeric_limits<double>::quiet_NaN();
   }
@@ -192,22 +152,6 @@ Value domain_untranslate_log(const DomainConfig& domain, double vt) {
   return value_from_float(min + pow(log_base, vt * range_log));
 }
 
-Value domain_untranslate_discrete(
-    const DomainConfig& domain,
-    double vt) {
-  auto min = domain_min(domain);
-  auto max = domain_max(domain) + 1;
-  auto range = max - min;
-
-  vt -= 0.5 / range;
-
-  if (domain.inverted) {
-    vt = 1.0 - vt;
-  }
-
-  return value_from_float(min + (max - min) * vt);
-}
-
 Value domain_untranslate(
     const DomainConfig& domain,
     double value) {
@@ -216,8 +160,6 @@ Value domain_untranslate(
       return domain_untranslate_linear(domain, value);
     case DomainKind::LOGARITHMIC:
       return domain_untranslate_log(domain, value);
-    case DomainKind::DISCRETE:
-      return domain_untranslate_discrete(domain, value);
   }
 
   return {};
@@ -250,11 +192,6 @@ ReturnCode domain_configure(
       continue;
     }
 
-    if (prop == "discrete") {
-      domain->kind = DomainKind::DISCRETE;
-      continue;
-    }
-
     if (prop == "invert" ||
         prop == "inverted") {
       domain->inverted = true;
@@ -265,7 +202,6 @@ ReturnCode domain_configure(
       "linear",
       "log",
       "logarithmic",
-      "discrete",
       "inverted",
       "inverted"
     });
