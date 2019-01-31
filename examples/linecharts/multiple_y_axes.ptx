@@ -33,7 +33,7 @@ axis {
 
 axis {
   position: bottom;
-  layout: discrete;
+  layout: linear(1, align 1);
 }
 
 axis {

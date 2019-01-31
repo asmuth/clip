@@ -447,24 +447,35 @@ ReturnCode axis_place_labels_subdivide(
 ReturnCode axis_place_labels_discrete(
     const DomainConfig& domain,
     AxisDefinition* axis) {
-  auto range = domain_max(domain) + 1;
+  uint32_t step = 1;
+  uint32_t range = domain_max(domain) - domain_min(domain);
 
   axis->labels.clear();
   axis->ticks.clear();
-  axis->ticks.push_back(0.0f);
 
-  std::vector<double> label_positions;
-  for (size_t i = 0; i < range; ++i) {
-    auto o = (1.0f / range) * (i + 1);
-    label_positions.push_back(o - 0.5 / range);
-    axis->ticks.push_back(o);
-  }
+  for (size_t i = 0; i <= range; i += step) {
+    auto o = domain_translate(domain, i);
+    auto o1 = domain_translate(domain, i - step * 0.5);
+    auto o2 = domain_translate(domain, i + step * 0.5);
+    auto v = uint32_t(domain_min(domain)) + i;
 
-  auto label_values = domain_untranslate(domain, label_positions);
-  for (size_t i = 0; i < label_positions.size(); ++i) {
-    axis->labels.emplace_back(
-        label_positions[i],
-        axis->label_formatter(label_values[i]));
+    auto label = axis->label_formatter(std::to_string(i));
+    if (step > 1) {
+      label += " - ";
+      label += axis->label_formatter(std::to_string(i + step));
+    }
+
+    if (o1 >= 0 && o2 <= 1) {
+      axis->labels.emplace_back(o, label);
+    }
+
+    if (o1 >= 0 && o1 <= 1) {
+      axis->ticks.push_back(o1);
+    }
+
+    if (o2 >= 0 && o2 <= 1) {
+      axis->ticks.push_back(o2);
+    }
   }
 
   return OK;
