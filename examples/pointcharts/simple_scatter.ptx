@@ -1,10 +1,16 @@
-width: 300px;
+width: 400px;
 height: 400px;
 
+scale-x-min: 0;
+scale-x-max: 200;
+
+scale-y-min: 0;
+scale-y-max: 210;
+
 points {
-  xs: 10px, 60px, 12em;
-  ys: 60px, 200px, 14em;
-  sizes: 4pt, 20pt;
+  xs: 10, 60, 160, 130;
+  ys: 60, 150, 180, 30;
+  sizes: 4pt, 20pt, 8pt, 6pt;
 }
 
 axis {
@@ -14,4 +20,5 @@ axis {
 
 axis {
   position: top;
+  layout: subdivide(5);
 }

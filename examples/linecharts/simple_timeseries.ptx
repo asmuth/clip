@@ -1,8 +1,8 @@
 width: 1200px;
-height: 480px;
+height: 280px;
 
 scale-y-min: 0;
-scale-y-max: 200;
+scale-y-max: 140;
 
 lines {
   xs: csv('tests/testdata/measurement.csv', time);

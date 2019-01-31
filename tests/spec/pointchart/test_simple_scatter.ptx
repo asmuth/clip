@@ -1,13 +1,24 @@
-width: 1200px;
-height: 480px;
+width: 400px;
+height: 400px;
 
-data: csv('tests/testdata/point_example.csv');
-x: x;
-y: y;
-group: series;
+scale-x-min: 0;
+scale-x-max: 200;
 
-grid: geom;
+scale-y-min: 0;
+scale-y-max: 210;
 
-layer {
-  type: points;
+points {
+  xs: 10, 60, 160, 130;
+  ys: 60, 150, 180, 30;
+  sizes: 4pt, 20pt, 8pt, 6pt;
+}
+
+axis {
+  position: bottom;
+  layout: subdivide(5);
+}
+
+axis {
+  position: top;
+  layout: subdivide(5);
 }

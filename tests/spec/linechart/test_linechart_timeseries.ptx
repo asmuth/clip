@@ -1,10 +1,22 @@
 width: 1200px;
-height: 480px;
+height: 280px;
 
-axis-x-format: datetime("%H:%M:%S");
+scale-y-min: 0;
+scale-y-max: 140;
 
-layer {
-  type: lines;
-  x: csv('tests/testdata/measurement.csv', time);
-  y: csv('tests/testdata/measurement.csv', value2);
+lines {
+  xs: csv('tests/testdata/measurement.csv', time);
+  ys: csv('tests/testdata/measurement.csv', value2);
+  colors: #06c;
 }
+
+axis {
+  position: bottom;
+  format: datetime("%H:%M:%S");
+}
+
+axis {
+  position: left;
+  layout: linear(20);
+}
+

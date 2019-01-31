@@ -1,9 +1,6 @@
 width: 1200px;
 height: 480px;
 
-x: csv('tests/testdata/log_example.csv', x);
-y: csv('tests/testdata/log_example.csv', y);
-
 scale-x: log;
 scale-x-min: 0;
 scale-x-max: 5;
@@ -12,14 +9,17 @@ scale-y: log;
 scale-y-min: 0;
 scale-y-max: 10000;
 
-axis-top: off;
-axis-right: off;
-
-layer {
-  type: lines;
-  title: "To the Moon";
+lines {
+  xs: csv('tests/testdata/log_example.csv', x);
+  ys: csv('tests/testdata/log_example.csv', y);
+  color: #06c;
 }
 
-legend {
-  position: top left inside;
+axis {
+  position: left;
 }
+
+axis {
+  position: bottom;
+}
+

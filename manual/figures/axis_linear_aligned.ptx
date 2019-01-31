@@ -1,12 +1,9 @@
 width: 1200px;
-height: 80px;
+height: 90px;
 
-margin-left: 40px;
-margin-right: 40px;
-
-axis-top: off;
-axis-left: off;
-axis-right: off;
-axis-bottom-layout: linear(1, align 0.5);
-
-x: inline(0, 16);
+axis {
+  scale: linear(1);
+  scale-min: 0;
+  scale-max: 16;
+  layout: linear(1, align 0.5);
+}

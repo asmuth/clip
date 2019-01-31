@@ -1,22 +1,42 @@
 width: 1200px;
 height: 480px;
 
-data: csv('tests/testdata/city_temperatures_pivot.csv');
-x: month;
-
-axis-left-scale: y1;
-axis-right-scale: y2;
-
-layer {
-  type: lines;
-  y: temp_london;
-  color: #0c6;
-  scale-y: y1;
+lines {
+  xs: csv('tests/testdata/city_temperatures_pivot.csv', month);
+  ys: csv('tests/testdata/city_temperatures_pivot.csv', temp_london);
+  colors: #06c;
+  scale-y-max: 30;
+  scale-y-min: -5;
 }
 
-layer {
-  type: lines;
-  y: temp_beijing;
-  color: #06c;
-  scale-y: y2;
+lines {
+  xs: csv('tests/testdata/city_temperatures_pivot.csv', month);
+  ys: csv('tests/testdata/city_temperatures_pivot.csv', temp_beijing);
+  colors: #c06;
+  scale-y-max: 30;
+  scale-y-min: -15;
+}
+
+axis {
+  position: left;
+  layout: linear(5);
+  scale-max: 30;
+  scale-min: -5;
+}
+
+axis {
+  position: right;
+  layout: linear(5);
+  scale-max: 30;
+  scale-min: -15;
+}
+
+axis {
+  position: bottom;
+  layout: discrete;
+}
+
+axis {
+  position: top;
+  layout: discrete;
 }
