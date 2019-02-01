@@ -1,14 +1,34 @@
 width: 1200px;
 height: 480px;
 
-axis-x-format: datetime("%H:%M:%S");
+scale-x-padding: 0.5;
 
-data: csv('tests/testdata/measurement.csv', time);
-x: time;
-y: value2;
+gridlines {
 
-grid-x: geom;
+}
 
-layer {
-  type: area;
+areas {
+  xs: csv('tests/testdata/measurement.csv', time);
+  ys: csv('tests/testdata/measurement.csv', value2);
+  color: #4572a7;
+}
+
+axis {
+  position: top;
+  format: datetime("%H:%M:%S");
+}
+
+axis {
+  position: bottom;
+  format: datetime("%H:%M:%S");
+}
+
+axis {
+  position: left;
+  layout: linear(10, align 10);
+}
+
+axis {
+  position: right;
+  layout: linear(10, align 10);
 }

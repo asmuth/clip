@@ -31,6 +31,7 @@
 #include "elements/areas.h"
 #include "elements/axis.h"
 #include "elements/bars.h"
+#include "elements/gridlines.h"
 #include "elements/lines.h"
 #include "elements/points.h"
 
@@ -48,13 +49,26 @@ static std::unordered_map<std::string, ElementBuilder> elems = {
         &plot::area::layout,
         &plot::area::draw)
   },
-  {"axis", elem_builder<AxisDefinition>(&axis::configure, &axis::layout, &axis::draw)},
+  {
+    "axis",
+    elem_builder<AxisDefinition>(
+        &axis::configure,
+        &axis::layout,
+        &axis::draw)
+  },
   {
     "bars",
     elem_builder<plot::bars::PlotBarsConfig>(
         &plot::bars::configure,
         &plot::bars::layout,
         &plot::bars::draw)
+  },
+  {
+    "gridlines",
+    elem_builder<gridlines::GridlineDefinition>(
+        &gridlines::configure,
+        &gridlines::layout,
+        &gridlines::draw)
   },
   {
     "lines",

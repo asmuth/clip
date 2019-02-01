@@ -56,11 +56,6 @@ ReturnCode draw(
       config.margins[2],
       config.margins[3]);
 
-  // render grid
-  if (auto rc = grid_draw(config.grid, bbox, layer); !rc) {
-    return rc;
-  }
-
   // render legend
   if (auto rc = legend_draw(config.legends, bbox, layer); !rc) {
     return rc;
@@ -206,11 +201,6 @@ ReturnCode configure(
         ref(scales),
         &legend_items,
         config),
-    bind(&grid_configure,
-        ref(plist),
-        ref(doc),
-        ref(scales),
-        &config->grid),
     bind(&legend_configure_all,
         doc,
         ref(plist),

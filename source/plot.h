@@ -38,7 +38,6 @@
 #include <source/document.h>
 #include <source/data_model.h>
 #include "elements/axis.h"
-#include "plot_gridlines.h"
 #include "legend.h"
 #include "dimension.h"
 
@@ -51,7 +50,6 @@ struct PlotConfig {
   AxisDefinition axis_right;
   AxisDefinition axis_bottom;
   AxisDefinition axis_left;
-  GridlineDefinition grid;
   Measure margins[4];
   std::vector<ElementRef> layers;
   LegendMap legends;

@@ -38,26 +38,38 @@
 #include <config_helpers.h>
 
 namespace plotfx {
-namespace plot {
+namespace gridlines {
+
+using GridlineLayout = std::function<ReturnCode (
+    const DomainConfig& domain,
+    std::vector<double>*)>;
 
 struct GridlineDefinition {
-  std::vector<double> ticks_horiz;
-  std::vector<double> ticks_vert;
+  DomainConfig scale_x;
+  DomainConfig scale_y;
+  GridlineLayout layout_x;
+  GridlineLayout layout_y;
   Measure line_width;
   Color line_color;
 };
 
-ReturnCode grid_draw(
-    const GridlineDefinition& grid,
-    const Rectangle& bbox,
+ReturnCode draw(
+    const GridlineDefinition& config,
+    const LayoutInfo& clip,
     Layer* layer);
 
-ReturnCode grid_configure(
-    const PropertyList& plist,
-    const Document& doc,
-    const DomainMap& scales,
-    GridlineDefinition* grid);
+ReturnCode layout(
+    const GridlineDefinition& config,
+    const Layer& layer,
+    LayoutInfo* layout);
 
-} // namespace plot
+ReturnCode configure(
+    const plist::PropertyList& plist,
+    const DataContext& data,
+    const Document& doc,
+    const Environment& env,
+    GridlineDefinition* config);
+
+} // namespace gridlines
 } // namespace plotfx
 

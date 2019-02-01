@@ -28,26 +28,33 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-#include "plot_gridlines.h"
+#include "gridlines.h"
 #include "document.h"
 #include "utils/algo.h"
 
 using namespace std::placeholders;
 
 namespace plotfx {
-namespace plot {
+namespace gridlines {
 
 static const double kDefaultLineWidthPT = 1;
 
-ReturnCode grid_draw(
+ReturnCode draw(
     const GridlineDefinition& grid,
-    const Rectangle& bbox,
+    const LayoutInfo& layout,
     Layer* layer) {
+  const auto& bbox = layout.content_box;
+
   StrokeStyle style;
   style.line_width = grid.line_width;
   style.color = grid.line_color;
 
-  for (const auto& tick : grid.ticks_horiz) {
+  std::vector<double> ticks_horiz;
+  if (auto rc = grid.layout_x(grid.scale_x, &ticks_horiz); !rc) {
+    return rc;
+  }
+
+  for (const auto& tick : ticks_horiz) {
     auto line_y = bbox.y + bbox.h * (1.0 - tick);
 
     strokeLine(
@@ -57,7 +64,12 @@ ReturnCode grid_draw(
         style);
   }
 
-  for (const auto& tick : grid.ticks_vert) {
+  std::vector<double> ticks_vert;
+  if (auto rc = grid.layout_y(grid.scale_y, &ticks_vert); !rc) {
+    return rc;
+  }
+
+  for (const auto& tick : ticks_vert) {
     auto line_x = bbox.x + bbox.w * tick;
 
     strokeLine(
@@ -70,7 +82,7 @@ ReturnCode grid_draw(
   return OK;
 }
 
-ReturnCode grid_place_lines_geom(
+ReturnCode grid_layout_geom(
     const DomainConfig& domain,
     std::vector<double>* ticks) {
   uint32_t num_ticks = 8; // FIXME make configurable
@@ -86,16 +98,11 @@ ReturnCode grid_place_lines_geom(
   return OK;
 }
 
-using GridPlacement = std::function<
-    ReturnCode (
-        const DomainConfig& domain,
-        std::vector<double>* ticks)>;
-
-ReturnCode grid_configure_placement(
+ReturnCode configure_grid_layout(
     const plist::Property& prop,
-    GridPlacement* placement) {
+    GridlineLayout* layout) {
   if (plist::is_value_literal(prop, "geom")) {
-    *placement = bind(&grid_place_lines_geom, _1, _2);
+    *layout = bind(&grid_layout_geom, _1, _2);
     return OK;
   }
 
@@ -105,61 +112,50 @@ ReturnCode grid_configure_placement(
       prop.value);
 }
 
-ReturnCode grid_configure(
-    const PropertyList& plist,
+ReturnCode layout(
+    const GridlineDefinition& config,
+    const Layer& layer,
+    LayoutInfo* layout) {
+  /* nothing to do */
+  return OK;
+}
+
+ReturnCode configure(
+    const plist::PropertyList& plist,
+    const DataContext& data,
     const Document& doc,
-    const DomainMap& scales,
-    GridlineDefinition* grid) {
-  Measure line_width;
-  Color line_color = Color::fromRGB(.9, .9, .9); // TODO
+    const Environment& env,
+    GridlineDefinition* config) {
+  /* set defaults from environment */
+  config->scale_x = env.scale_x;
+  config->scale_y = env.scale_y;
+  config->layout_x = bind(&grid_layout_geom, _1, _2);
+  config->layout_y = bind(&grid_layout_geom, _1, _2);
+  config->line_width = from_pt(1);
+  config->line_color = Color::fromRGB(.9, .9, .9); // TODO
 
-  GridPlacement placement_horiz;
-  GridPlacement placement_vert;
-
-  std::string scale_horiz = SCALE_DEFAULT_X;
-  std::string scale_vert = SCALE_DEFAULT_Y;
+  /* parse properties */
   static const ParserDefinitions pdefs = {
-    {
-      "grid",
-      configure_multiprop({
-        bind(&grid_configure_placement, _1, &placement_horiz),
-        bind(&grid_configure_placement, _1, &placement_vert)
-      })
-    },
-    {"grid-x", bind(&grid_configure_placement, _1, &placement_horiz)},
-    {"grid-scale-x", bind(&configure_string, _1, &scale_horiz)},
-    {"grid-y", bind(&grid_configure_placement, _1, &placement_horiz)},
-    {"grid-scale-y", bind(&configure_string, _1, &scale_vert)},
-    {"grid-stroke", bind(&configure_measure, _1, &line_width)},
+    {"scale-x", bind(&domain_configure, _1, &config->scale_x)},
+    {"scale-x-min", bind(&configure_float_opt, _1, &config->scale_x.min)},
+    {"scale-x-max", bind(&configure_float_opt, _1, &config->scale_x.max)},
+    {"scale-x-padding", bind(&configure_float, _1, &config->scale_x.padding)},
+    {"scale-y", bind(&domain_configure, _1, &config->scale_y)},
+    {"scale-y-min", bind(&configure_float_opt, _1, &config->scale_y.min)},
+    {"scale-y-max", bind(&configure_float_opt, _1, &config->scale_y.max)},
+    {"scale-y-padding", bind(&configure_float, _1, &config->scale_y.padding)},
+    {"layout-x", bind(&configure_grid_layout, _1, &config->layout_x)},
+    {"stroke", bind(&configure_measure, _1, &config->line_width)},
+    {"color", bind(&configure_color, _1, &config->line_color)},
   };
 
   if (auto rc = parseAll(plist, pdefs); !rc) {
     return rc;
   }
 
-  grid->line_width = measure_or(line_width, from_pt(kDefaultLineWidthPT, doc.dpi));
-  grid->line_color = line_color;
-
-  auto domain_horiz = find_ptr(scales, scale_horiz);
-  auto domain_vert = find_ptr(scales, scale_vert);
-
-  if (domain_horiz && placement_horiz) {
-    if (auto rc = placement_horiz(*domain_horiz, &grid->ticks_horiz); !rc) {
-      return rc;
-    }
-  }
-
-  if (domain_vert && placement_vert) {
-    if (auto rc = placement_vert(*domain_vert, &grid->ticks_vert); !rc) {
-      return rc;
-    }
-  }
-
   return OK;
 }
 
-
-
-} // namespace plot
+} // namespace gridlines
 } // namespace plotfx
 
