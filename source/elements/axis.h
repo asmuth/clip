@@ -33,7 +33,6 @@
 #include <vector>
 #include <plist/plist.h>
 #include <graphics/layer.h>
-#include <graphics/viewport.h>
 #include <utils/return_code.h>
 #include <source/format.h>
 #include <source/dimension.h>

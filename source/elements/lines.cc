@@ -96,27 +96,6 @@ ReturnCode draw(
   return OK;
 }
 
-ReturnCode build_legend(
-    const PlotLinesConfig& config,
-    const std::string& title,
-    const std::string& legend_key,
-    LegendItemMap* legend) {
-  LegendItemGroup legend_items;
-
-  for (const auto& g : config.groups) {
-    LegendItem li;
-    li.title = g.key.empty() ? title : g.key;
-    li.color = config.colors.empty()
-        ? Color{}
-        : config.colors[g.index[0] % config.colors.size()];
-
-    legend_items.items.emplace_back(li);
-  }
-
-  legend_items_add(legend_key, legend_items, legend);
-  return OK;
-}
-
 ReturnCode layout(
     const PlotLinesConfig& config,
     const Layer& layer,

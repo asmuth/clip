@@ -32,12 +32,9 @@
 #include <stdlib.h>
 #include <plist/plist.h>
 #include <graphics/layer.h>
-#include <graphics/viewport.h>
 #include <source/common/scale.h>
 #include <source/element.h>
 #include <source/config_helpers.h>
-#include "elements/axis.h"
-#include "plot.h"
 
 namespace plotfx {
 namespace plot {
@@ -62,7 +59,6 @@ ReturnCode configure(
     const plist::PropertyList& plist,
     const DataContext& data,
     const Document& doc,
-    const DomainMap& scales,
     PlotLabelsConfig* config);
 
 } // namespace labels

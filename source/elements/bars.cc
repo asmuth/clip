@@ -37,6 +37,7 @@
 #include <graphics/layout.h>
 #include <source/utils/algo.h>
 #include "source/config_helpers.h"
+#include "document.h"
 
 using namespace std::placeholders;
 

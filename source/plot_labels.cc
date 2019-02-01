@@ -74,65 +74,6 @@ ReturnCode draw(
   return OK;
 }
 
-ReturnCode configure(
-    const plist::PropertyList& plist,
-    const DataContext& data,
-    const Document& doc,
-    const DomainMap& scales,
-    PlotLabelsConfig* config) {
-  SeriesRef data_x = find_maybe(data.defaults, "x");
-  SeriesRef data_y = find_maybe(data.defaults, "y");
-  SeriesRef data_labels;
-
-  std::string scale_x = SCALE_DEFAULT_X;
-  std::string scale_y = SCALE_DEFAULT_Y;
-
-  config->label_font = doc.font_sans;
-  config->label_font_size = doc.font_size;
-
-  static const ParserDefinitions pdefs = {
-    {"x", configure_series_fn(data, &data_x)},
-    {"scale-x", bind(&configure_string, _1, &scale_x)},
-    {"y", configure_series_fn(data, &data_y)},
-    {"scale-y", bind(&configure_string, _1, &scale_y)},
-    {"labels", configure_series_fn(data, &data_labels)},
-  };
-
-  if (auto rc = parseAll(plist, pdefs); !rc) {
-    return rc;
-  }
-
-  /* check dataset */
-  if (!data_x || !data_y || !data_labels) {
-    return ReturnCode::error("EARG", "the following properties are required: x, y, label");
-  }
-
-  if ((data_x->size() != data_y->size()) ||
-      (data_x->size() != data_labels->size())) {
-    return ReturnCode::error(
-        "EARG",
-        "the length of the 'x', 'y' and 'labels' properties must be equal");
-  }
-
-  /* fetch domains */
-  auto domain_x = find_ptr(scales, scale_x);
-  if (!domain_x) {
-    return ReturnCode::errorf("EARG", "scale not found: $0", scale_x);
-  }
-
-  auto domain_y = find_ptr(scales, scale_y);
-  if (!domain_y) {
-    return ReturnCode::errorf("EARG", "scale not found: $0", scale_y);
-  }
-
-  /* return element */
-  //config->x = domain_translate(*domain_x, *data_x);
-  //config->y = domain_translate(*domain_y, *data_y);
-  config->labels = *data_labels;
-
-  return OK;
-}
-
 } // namespace labels
 } // namespace plot
 } // namespace plotfx

@@ -62,11 +62,6 @@ struct DomainConfig {
   std::shared_ptr<DomainLimitHints> limit_hints;
 };
 
-using DomainMap = std::unordered_map<std::string, DomainConfig>;
-
-static const std::string SCALE_DEFAULT_X = "x";
-static const std::string SCALE_DEFAULT_Y = "y";
-
 void domain_fit(double value, DomainConfig* domain);
 
 double domain_min(const DomainConfig& domain);
