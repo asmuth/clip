@@ -31,7 +31,7 @@
 #include <assert.h>
 #include <iostream>
 #include <source/config_helpers.h>
-#include <source/domain.h>
+#include <source/common/scale.h>
 #include "source/utils/algo.h"
 #include <graphics/text.h>
 #include <graphics/layout.h>

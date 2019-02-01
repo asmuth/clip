@@ -33,7 +33,7 @@
 #include <plist/plist.h>
 #include <graphics/layer.h>
 #include <graphics/viewport.h>
-#include <domain.h>
+#include <common/scale.h>
 #include <element.h>
 #include <config_helpers.h>
 

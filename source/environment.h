@@ -35,7 +35,7 @@
 #include "graphics/measure.h"
 #include "graphics/color.h"
 #include "graphics/text.h"
-#include "domain.h"
+#include "common/scale.h"
 
 namespace plotfx {
 class Layer;

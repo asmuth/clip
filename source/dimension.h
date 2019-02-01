@@ -30,7 +30,7 @@
 #pragma once
 #include <string>
 #include <unordered_map>
-#include "domain.h"
+#include "common/scale.h"
 #include "data_model.h"
 #include "graphics/measure.h"
 

@@ -30,7 +30,7 @@
  */
 #include <stdlib.h>
 #include "graphics/layer.h"
-#include "source/domain.h"
+#include "source/common/scale.h"
 #include "source/config_helpers.h"
 #include "source/utils/algo.h"
 #include "legend.h"
