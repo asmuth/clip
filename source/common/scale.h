@@ -62,6 +62,15 @@ struct DomainConfig {
   std::shared_ptr<DomainLimitHints> limit_hints;
 };
 
+struct ScaleLayout {
+  std::vector<double> ticks;
+  std::vector<double> labels;
+};
+
+using ScaleLayoutFn = std::function<void (
+    const DomainConfig& domain,
+    ScaleLayout*)>;
+
 void domain_fit(double value, DomainConfig* domain);
 
 double domain_min(const DomainConfig& domain);
@@ -84,6 +93,25 @@ std::vector<double> domain_untranslate(
 ReturnCode domain_configure(
     const plist::Property& prop,
     DomainConfig* domain);
+
+ReturnCode scale_layout_linear(
+    const DomainConfig& domain,
+    ScaleLayout* layout,
+    double step,
+    std::optional<double> align);
+
+ReturnCode scale_layout_subdivide(
+    const DomainConfig& domain,
+    ScaleLayout* layout,
+    uint32_t divisions);
+
+ReturnCode scale_layout_discrete(
+    const DomainConfig& domain,
+    ScaleLayout* layout);
+
+ReturnCode configure_scale_layout(
+    const plist::Property& prop,
+    ScaleLayoutFn* layout);
 
 } // namespace plotfx
 

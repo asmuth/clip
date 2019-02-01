@@ -51,6 +51,8 @@ struct Environment {
   Color border_color;
   DomainConfig scale_x;
   DomainConfig scale_y;
+  ScaleLayoutFn scale_layout_x;
+  ScaleLayoutFn scale_layout_y;
 };
 
 } // namespace plotfx

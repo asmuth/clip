@@ -3,9 +3,9 @@ height: 480px;
 
 scale-x-padding: 0.5;
 
-gridlines {
+scale-y-layout: linear(10, align 10);
 
-}
+gridlines {}
 
 areas {
   xs: csv('tests/testdata/measurement.csv', time);
@@ -25,10 +25,8 @@ axis {
 
 axis {
   position: left;
-  layout: linear(10, align 10);
 }
 
 axis {
   position: right;
-  layout: linear(10, align 10);
 }

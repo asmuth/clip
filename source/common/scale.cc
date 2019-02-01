@@ -28,9 +28,13 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 #include "common/scale.h"
+#include "utils/algo.h"
+
 #include <assert.h>
 #include <iostream>
-#include "utils/algo.h"
+#include <functional>
+
+using namespace std::placeholders;
 
 namespace plotfx {
 
@@ -208,6 +212,175 @@ ReturnCode domain_configure(
   }
 
   return OK;
+}
+
+ReturnCode scale_layout_linear(
+    const DomainConfig& domain,
+    ScaleLayout* layout,
+    double step,
+    std::optional<double> align) {
+  layout->ticks.clear();
+  layout->labels.clear();
+
+  auto begin = std::max(align.value_or(domain_min(domain)), domain_min(domain));
+  auto end = domain_max(domain);
+
+  size_t label_idx = 0;
+  for (auto v = begin; v <= end; v += step) {
+    auto vp = domain_translate(domain, v);
+    layout->ticks.emplace_back(vp);
+    layout->labels.emplace_back(vp);
+  }
+
+  return OK;
+}
+
+ReturnCode scale_layout_subdivide(
+    const DomainConfig& domain,
+    ScaleLayout* layout,
+    uint32_t divisions) {
+  layout->ticks.clear();
+  layout->labels.clear();
+
+  for (size_t i = 0; i < divisions; ++i) {
+    auto o = (1.0f / (divisions - 1)) * i;
+    layout->ticks.emplace_back(o);
+    layout->labels.emplace_back(o);
+  }
+
+  return OK;
+}
+
+ReturnCode scale_layout_discrete(
+    const DomainConfig& domain,
+    ScaleLayout* layout) {
+  uint32_t step = 1;
+  uint32_t range = domain_max(domain) - domain_min(domain);
+
+  layout->labels.clear();
+  layout->ticks.clear();
+
+  for (size_t i = 0; i <= range; i += step) {
+    auto o = domain_translate(domain, i * step);
+    auto o1 = domain_translate(domain, i * step - step * 0.5);
+    auto o2 = domain_translate(domain, i * step + step * 0.5);
+    auto v = uint32_t(domain_min(domain)) + i * step;
+    auto vn = uint32_t(domain_min(domain)) + (i + 1) * step;
+
+    if (o1 >= 0 && o2 <= 1) {
+      layout->labels.emplace_back(o);
+    }
+
+    if (o1 >= 0 && o1 <= 1) {
+      layout->ticks.push_back(o1);
+    }
+
+    if (o2 >= 0 && o2 <= 1) {
+      layout->ticks.push_back(o2);
+    }
+  }
+
+  return OK;
+}
+
+ReturnCode configure_scale_layout_linear(
+    const plist::Property& prop,
+    ScaleLayoutFn* layout) {
+  double step = 0;
+  std::optional<double> align;
+  switch (prop.size()) {
+    case 0:
+      step = 1; // TODO: automatically choose a good value
+      break;
+    case 1:
+    default:
+      try {
+        step = std::stod(prop[0]);
+        break;
+      } catch (... ) {
+        return ERROR;
+      }
+  }
+
+  for (size_t i = 1; i < prop.size(); ++i) {
+    if (plist::is_tuple(prop[i]) &&
+        prop[i].size() == 2 &&
+        prop[i][0].value == "align") {
+      try {
+        align = std::stod(prop[i][1].value);
+        break;
+      } catch (... ) {
+        return ERROR;
+      }
+
+      continue;
+    }
+  }
+
+  *layout = bind(
+      &scale_layout_linear,
+      _1,
+      _2,
+      step,
+      align);
+
+  return OK;
+}
+
+ReturnCode configure_scale_layout_subdivide(
+    const plist::Property& prop,
+    ScaleLayoutFn* layout) {
+  double subdivisions = 0;
+  switch (prop.size()) {
+    case 0:
+      subdivisions = 8; // TODO: automatically choose a good value
+      break;
+    case 1:
+      try {
+        subdivisions = std::stod(prop[0]);
+        break;
+      } catch (... ) {
+        return ERROR;
+      }
+    default:
+      return ERROR;
+  }
+
+  *layout = bind(
+      &scale_layout_subdivide,
+      _1,
+      _2,
+      subdivisions);
+
+  return OK;
+}
+
+ReturnCode configure_scale_layout(
+    const plist::Property& prop,
+    ScaleLayoutFn* layout) {
+  if (plist::is_value(prop, "linear") ||
+      plist::is_enum(prop, "linear")) {
+    return configure_scale_layout_linear(prop, layout);
+  }
+
+  if (plist::is_value(prop, "subdivide") ||
+      plist::is_enum(prop, "subdivide")) {
+    return configure_scale_layout_subdivide(prop, layout);
+  }
+
+  if (plist::is_value(prop, "discrete") ||
+      plist::is_enum(prop, "discrete")) {
+    *layout = bind(&scale_layout_discrete, _1, _2);
+    return OK;
+  }
+
+  return ReturnCode::errorf(
+      "EARG",
+      "invalid value '$0', expected one of: \n"
+      "  - linear\n"
+      "  - subdivide\n"
+      "  - discrete\n",
+      prop.value);
 }
 
 } // namespace plotfx

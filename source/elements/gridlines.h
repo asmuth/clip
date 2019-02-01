@@ -46,8 +46,8 @@ using GridlineLayout = std::function<ReturnCode (
 struct GridlineDefinition {
   DomainConfig scale_x;
   DomainConfig scale_y;
-  GridlineLayout layout_x;
-  GridlineLayout layout_y;
+  ScaleLayoutFn layout_x;
+  ScaleLayoutFn layout_y;
   Measure line_width;
   Color line_color;
 };

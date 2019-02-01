@@ -28,10 +28,17 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 #include "environment.h"
+#include "common/scale.h"
+
+#include <functional>
+
+using namespace std::placeholders;
 
 namespace plotfx {
 
-Environment::Environment() {}
+Environment::Environment() :
+    scale_layout_x(bind(&scale_layout_subdivide, _1, _2, 8)),
+    scale_layout_y(bind(&scale_layout_subdivide, _1, _2, 8)) {}
 
 } // namespace plotfx
 

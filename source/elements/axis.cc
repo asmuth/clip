@@ -46,33 +46,9 @@ static const double kDefaultLineWidthPT = 1;
 static const double kDefaultTickLengthPT = 4;
 
 AxisDefinition::AxisDefinition() :
-    mode(AxisMode::AUTO),
     position(AxisPosition::BOTTOM),
     label_position(AxisLabelPosition::OUTSIDE),
     tick_position(AxisLabelPosition::INSIDE) {}
-
-ReturnCode parseAxisMode(
-    const std::string& str,
-    AxisMode* value) {
-  static const EnumDefinitions<AxisMode> defs = {
-    { "auto", AxisMode::AUTO },
-    { "off", AxisMode::OFF },
-    { "manual", AxisMode::MANUAL },
-  };
-
-  return parseEnum(defs, str, value);
-}
-
-ReturnCode parseAxisModeProp(const plist::Property& prop, AxisMode* value) {
-  if (!plist::is_value(prop)) {
-    return ReturnCode::errorf(
-        "EARG",
-        "incorrect number of arguments; expected: 1, got: $0",
-        prop.size());
-  }
-
-  return parseAxisMode(prop, value);
-}
 
 ReturnCode parseAxisPosition(
     const std::string& str,
@@ -98,12 +74,34 @@ ReturnCode parseAxisPositionProp(const plist::Property& prop, AxisPosition* valu
   return parseAxisPosition(prop, value);
 }
 
+std::string axis_get_label(
+    const AxisDefinition& axis,
+    size_t idx,
+    double offset) {
+  const auto& domain = axis.scale;
+  auto value = domain_untranslate(domain, offset);
+
+  if (axis.label_override.size()) {
+    if (idx < axis.label_override.size()) {
+      return axis.label_override[idx];
+    } else {
+      return "";
+    }
+  }
+
+  return axis.label_formatter(std::to_string(value));
+}
+
 static Status renderAxisVertical(
     const AxisDefinition& axis_config,
     double x,
     double y0,
     double y1,
     Layer* target) {
+  /* compute layout */
+  ScaleLayout slayout;
+  axis_config.layout(axis_config.scale, &slayout);
+
   /* draw axis line */
   {
     StrokeStyle style;
@@ -129,7 +127,7 @@ static Status renderAxisVertical(
       axis_config.tick_length,
       from_pt(kDefaultTickLengthPT, target->dpi));
 
-  for (const auto& tick : axis_config.ticks) {
+  for (const auto& tick : slayout.ticks) {
     auto y = y0 + (y1 - y0) * (1.0 - tick);
     StrokeStyle style;
     style.color = axis_config.border_color;
@@ -158,8 +156,9 @@ static Status renderAxisVertical(
       axis_config.label_padding,
       from_em(kDefaultLabelPaddingEM, target->font_size));
 
-  for (const auto& label : axis_config.labels) {
-    auto [ tick, label_text ] = label;
+  for (size_t i = 0; i < slayout.labels.size(); ++i) {
+    auto tick = slayout.labels[i];
+    auto label_text = axis_get_label(axis_config, i, tick);
 
     Point p;
     p.x = x + label_padding * label_position;
@@ -186,7 +185,11 @@ static Status renderAxisHorizontal(
     double x0,
     double x1,
     Layer* target) {
-  /* draw axis line */ 
+  /* compute layout */
+  ScaleLayout slayout;
+  axis_config.layout(axis_config.scale, &slayout);
+
+  /* draw axis line */
   {
     StrokeStyle style;
     style.color = axis_config.border_color;
@@ -211,7 +214,7 @@ static Status renderAxisHorizontal(
       axis_config.tick_length,
       from_pt(kDefaultTickLengthPT, target->dpi));
 
-  for (const auto& tick : axis_config.ticks) {
+  for (const auto& tick : slayout.ticks) {
     auto x = x0 + (x1 - x0) * tick;
     StrokeStyle style;
     style.color = axis_config.border_color;
@@ -240,8 +243,10 @@ static Status renderAxisHorizontal(
       axis_config.label_padding,
       from_em(kDefaultLabelPaddingEM, target->font_size));
 
-  for (const auto& label : axis_config.labels) {
-    auto [ tick, label_text ] = label;
+  for (size_t i = 0; i < slayout.labels.size(); ++i) {
+    auto tick = slayout.labels[i];
+    auto label_text = axis_get_label(axis_config, i, tick);
+
     Point p;
     p.x = x0 + (x1 - x0) * tick;
     p.y = y + label_padding * label_position;
@@ -266,10 +271,15 @@ ReturnCode axis_layout_labels(
     const AxisPosition& axis_position,
     const Layer& layer,
     double* margin) {
-  double max = 0;
+  /* compute scale layout */
+  ScaleLayout slayout;
+  axis.layout(axis.scale, &slayout);
 
-  for (const auto& label : axis.labels) {
-    auto [ tick, label_text ] = label;
+  /* compute label size */
+  double max = 0;
+  for (size_t i = 0; i < slayout.labels.size(); ++i) {
+    auto tick = slayout.labels[i];
+    auto label_text = axis_get_label(axis, i, tick);
 
     TextStyle style;
     style.font = axis.font;
@@ -310,10 +320,6 @@ ReturnCode axis_layout(
     const AxisPosition& axis_position,
     const Layer& layer,
     double* margin) {
-  if (axis.mode == AxisMode::OFF) {
-    return OK;
-  }
-
   /* add margin for ticks */
   bool reflow_ticks = false;
   switch (axis.label_position) {
@@ -403,217 +409,6 @@ ReturnCode axis_layout(
   return OK;
 }
 
-std::string axis_get_label(
-    const DomainConfig& domain,
-    const AxisDefinition& axis,
-    size_t idx,
-    double value) {
-  if (axis.label_override.size()) {
-    if (idx < axis.label_override.size()) {
-      return axis.label_override[idx];
-    } else {
-      return "";
-    }
-  }
-
-  return axis.label_formatter(std::to_string(value));
-}
-
-ReturnCode axis_place_labels_linear(
-    const DomainConfig& domain,
-    AxisDefinition* axis,
-    double step,
-    std::optional<double> align) {
-  axis->ticks.clear();
-  axis->labels.clear();
-
-  auto begin = std::max(align.value_or(domain_min(domain)), domain_min(domain));
-  auto end = domain_max(domain);
-
-  size_t label_idx = 0;
-  for (auto v = begin; v <= end; v += step) {
-    auto vp = domain_translate(domain, v);
-    axis->ticks.emplace_back(vp);
-    axis->labels.emplace_back(vp, axis_get_label(domain, *axis, label_idx++, v));
-  }
-
-  return OK;
-}
-
-ReturnCode axis_place_labels_subdivide(
-    const DomainConfig& domain,
-    AxisDefinition* axis,
-    uint32_t divisions) {
-  axis->ticks.clear();
-  axis->labels.clear();
-
-  for (size_t i = 0; i < divisions; ++i) {
-    axis->ticks.emplace_back((1.0f / (divisions - 1)) * i);
-  }
-
-  auto tick_values = domain_untranslate(domain, axis->ticks);
-  size_t label_idx = 0;
-  for (size_t i = 0; i < divisions; ++i) {
-    axis->labels.emplace_back(
-        axis->ticks[i],
-        axis_get_label(domain, *axis, label_idx++, tick_values[i]));
-  }
-
-  return OK;
-}
-
-ReturnCode axis_place_labels_discrete(
-    const DomainConfig& domain,
-    AxisDefinition* axis) {
-  uint32_t step = 1;
-  uint32_t range = domain_max(domain) - domain_min(domain);
-
-  axis->labels.clear();
-  axis->ticks.clear();
-
-  size_t label_idx = 0;
-  for (size_t i = 0; i <= range; i += step) {
-    auto o = domain_translate(domain, i * step);
-    auto o1 = domain_translate(domain, i * step - step * 0.5);
-    auto o2 = domain_translate(domain, i * step + step * 0.5);
-    auto v = uint32_t(domain_min(domain)) + i * step;
-    auto vn = uint32_t(domain_min(domain)) + (i + 1) * step;
-
-    if (o1 >= 0 && o2 <= 1) {
-      auto label = axis_get_label(domain, *axis, label_idx, v);
-      if (step > 1) {
-        label += " - ";
-        label += axis_get_label(domain, *axis, label_idx, vn);
-      }
-
-      axis->labels.emplace_back(o, label);
-      ++label_idx;
-    }
-
-    if (o1 >= 0 && o1 <= 1) {
-      axis->ticks.push_back(o1);
-    }
-
-    if (o2 >= 0 && o2 <= 1) {
-      axis->ticks.push_back(o2);
-    }
-  }
-
-  return OK;
-}
-
-ReturnCode axis_place_labels_default(
-    const DomainConfig& domain,
-    AxisDefinition* axis) {
-  // TODO: improved default label placement
-  return axis_place_labels_subdivide(domain, axis, 8);
-}
-
-
-ReturnCode configure_label_placement_linear(
-    const plist::Property& prop,
-    AxisLabelPlacement* label_placement) {
-  double step = 0;
-  std::optional<double> align;
-  switch (prop.size()) {
-    case 0:
-      step = 1; // TODO: automatically choose a good value
-      break;
-    case 1:
-    default:
-      try {
-        step = std::stod(prop[0]);
-        break;
-      } catch (... ) {
-        return ERROR;
-      }
-  }
-
-  for (size_t i = 1; i < prop.size(); ++i) {
-    if (plist::is_tuple(prop[i]) &&
-        prop[i].size() == 2 &&
-        prop[i][0].value == "align") {
-      try {
-        align = std::stod(prop[i][1].value);
-        break;
-      } catch (... ) {
-        return ERROR;
-      }
-
-      continue;
-    }
-  }
-
-  *label_placement = bind(
-      &axis_place_labels_linear,
-      _1,
-      _2,
-      step,
-      align);
-
-  return OK;
-}
-
-ReturnCode configure_label_placement_subdivide(
-    const plist::Property& prop,
-    AxisLabelPlacement* label_placement) {
-  double subdivisions = 0;
-  switch (prop.size()) {
-    case 0:
-      subdivisions = 8; // TODO: automatically choose a good value
-      break;
-    case 1:
-      try {
-        subdivisions = std::stod(prop[0]);
-        break;
-      } catch (... ) {
-        return ERROR;
-      }
-    default:
-      return ERROR;
-  }
-
-  *label_placement = bind(
-      &axis_place_labels_subdivide,
-      _1,
-      _2,
-      subdivisions);
-
-  return OK;
-}
-
-ReturnCode axis_configure_label_placement(
-    const plist::Property& prop,
-    AxisLabelPlacement* label_placement) {
-  if (plist::is_value(prop, "linear") ||
-      plist::is_enum(prop, "linear")) {
-    return configure_label_placement_linear(prop, label_placement);
-  }
-
-  if (plist::is_value(prop, "subdivide") ||
-      plist::is_enum(prop, "subdivide")) {
-    return configure_label_placement_subdivide(prop, label_placement);
-  }
-
-  if (plist::is_value(prop, "discrete") ||
-      plist::is_enum(prop, "discrete")) {
-    *label_placement = bind(
-        &axis_place_labels_discrete,
-        _1,
-        _2);
-
-    return OK;
-  }
-
-  return ReturnCode::errorf(
-      "EARG",
-      "invalid value '$0', expected one of: \n"
-      "  - linear\n"
-      "  - subdivide\n"
-      "  - discrete\n",
-      prop.value);
-}
-
 namespace axis {
 
 ReturnCode draw(
@@ -621,13 +416,6 @@ ReturnCode draw(
     const LayoutInfo& layout,
     Layer* frame) {
   const auto& clip = layout.element_box;
-
-  switch (axis.mode) {
-    case AxisMode::OFF:
-      return OK;
-    default:
-      break;
-  };
 
   Status rc;
   switch (axis.position) {
@@ -718,9 +506,6 @@ ReturnCode configure(
   {
     static const ParserDefinitions pdefs = {
       {"position", bind(&parseAxisPositionProp, _1, &config->position)},
-      {"layout", bind(&axis_configure_label_placement, _1, &config->label_placement)},
-      {"format", bind(&confgure_format, _1, &config->label_formatter)},
-      {"labels", bind(&configure_strings, _1, &config->label_override)},
     };
 
     if (auto rc = parseAll(plist, pdefs); !rc) {
@@ -728,26 +513,30 @@ ReturnCode configure(
     }
   }
 
-  DomainConfig domain;
   switch (config->position) {
     case AxisPosition::TOP:
     case AxisPosition::BOTTOM:
     case AxisPosition::CENTER_HORIZ:
-      domain = env.scale_x;
+      config->scale = env.scale_x;
+      config->layout = env.scale_layout_x;
       break;
     case AxisPosition::LEFT:
     case AxisPosition::RIGHT:
     case AxisPosition::CENTER_VERT:
-      domain = env.scale_y;
+      config->scale = env.scale_y;
+      config->layout = env.scale_layout_y;
       break;
   };
 
   {
     static const ParserDefinitions pdefs = {
-      {"scale", bind(&domain_configure, _1, &domain)},
-      {"scale-min", bind(&configure_float_opt, _1, &domain.min)},
-      {"scale-max", bind(&configure_float_opt, _1, &domain.max)},
-      {"scale-padding", bind(&configure_float, _1, &domain.padding)},
+      {"format", bind(&confgure_format, _1, &config->label_formatter)},
+      {"labels", bind(&configure_strings, _1, &config->label_override)},
+      {"layout", bind(&configure_scale_layout, _1, &config->layout)},
+      {"scale", bind(&domain_configure, _1, &config->scale)},
+      {"scale-min", bind(&configure_float_opt, _1, &config->scale.min)},
+      {"scale-max", bind(&configure_float_opt, _1, &config->scale.max)},
+      {"scale-padding", bind(&configure_float, _1, &config->scale.padding)},
     };
 
     if (auto rc = parseAll(plist, pdefs); !rc) {
@@ -844,16 +633,6 @@ ReturnCode configure(
     default:
       break;
   };
-
-  if (config->label_placement) {
-    if (auto rc = config->label_placement(domain, config); !rc) {
-      return rc;
-    }
-  } else {
-    if (auto rc = axis_place_labels_default(domain, config); !rc) {
-      return rc;
-    }
-  }
 
   return OK;
 }

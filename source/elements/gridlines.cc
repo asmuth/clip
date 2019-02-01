@@ -49,27 +49,13 @@ ReturnCode draw(
   style.line_width = grid.line_width;
   style.color = grid.line_color;
 
-  std::vector<double> ticks_horiz;
-  if (auto rc = grid.layout_x(grid.scale_x, &ticks_horiz); !rc) {
-    return rc;
-  }
+  ScaleLayout slayout_x;
+  grid.layout_x(grid.scale_x, &slayout_x);
 
-  for (const auto& tick : ticks_horiz) {
-    auto line_y = bbox.y + bbox.h * (1.0 - tick);
+  ScaleLayout slayout_y;
+  grid.layout_y(grid.scale_y, &slayout_y);
 
-    strokeLine(
-        layer,
-        Point(bbox.x, line_y),
-        Point(bbox.x + bbox.w, line_y),
-        style);
-  }
-
-  std::vector<double> ticks_vert;
-  if (auto rc = grid.layout_y(grid.scale_y, &ticks_vert); !rc) {
-    return rc;
-  }
-
-  for (const auto& tick : ticks_vert) {
+  for (const auto& tick : slayout_x.ticks) {
     auto line_x = bbox.x + bbox.w * tick;
 
     strokeLine(
@@ -79,37 +65,17 @@ ReturnCode draw(
         style);
   }
 
-  return OK;
-}
+  for (const auto& tick : slayout_y.ticks) {
+    auto line_y = bbox.y + bbox.h * (1.0 - tick);
 
-ReturnCode grid_layout_geom(
-    const DomainConfig& domain,
-    std::vector<double>* ticks) {
-  uint32_t num_ticks = 8; // FIXME make configurable
-  double min = domain.min.value_or(0.0f);
-  double max = domain.max.value_or(0.0f);
-
-  ticks->clear();
-
-  for (size_t i = 0; i < num_ticks; ++i) {
-    ticks->emplace_back((1.0f / (num_ticks - 1)) * i);
+    strokeLine(
+        layer,
+        Point(bbox.x, line_y),
+        Point(bbox.x + bbox.w, line_y),
+        style);
   }
 
   return OK;
-}
-
-ReturnCode configure_grid_layout(
-    const plist::Property& prop,
-    GridlineLayout* layout) {
-  if (plist::is_value_literal(prop, "geom")) {
-    *layout = bind(&grid_layout_geom, _1, _2);
-    return OK;
-  }
-
-  return ReturnCode::errorf(
-      "EARG",
-      "invalid value for 'grid': $0; expected one of: geom(...)",
-      prop.value);
 }
 
 ReturnCode layout(
@@ -129,8 +95,8 @@ ReturnCode configure(
   /* set defaults from environment */
   config->scale_x = env.scale_x;
   config->scale_y = env.scale_y;
-  config->layout_x = bind(&grid_layout_geom, _1, _2);
-  config->layout_y = bind(&grid_layout_geom, _1, _2);
+  config->layout_x = env.scale_layout_x;
+  config->layout_y = env.scale_layout_y;
   config->line_width = from_pt(1);
   config->line_color = Color::fromRGB(.9, .9, .9); // TODO
 
@@ -144,7 +110,8 @@ ReturnCode configure(
     {"scale-y-min", bind(&configure_float_opt, _1, &config->scale_y.min)},
     {"scale-y-max", bind(&configure_float_opt, _1, &config->scale_y.max)},
     {"scale-y-padding", bind(&configure_float, _1, &config->scale_y.padding)},
-    {"layout-x", bind(&configure_grid_layout, _1, &config->layout_x)},
+    {"layout-x", bind(&configure_scale_layout, _1, &config->layout_x)},
+    {"layout-y", bind(&configure_scale_layout, _1, &config->layout_y)},
     {"stroke", bind(&configure_measure, _1, &config->line_width)},
     {"color", bind(&configure_color, _1, &config->line_color)},
   };

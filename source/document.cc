@@ -89,10 +89,12 @@ ReturnCode document_load(
     {"scale-x-min", bind(&configure_float_opt, _1, &env->scale_x.min)},
     {"scale-x-max", bind(&configure_float_opt, _1, &env->scale_x.max)},
     {"scale-x-padding", bind(&configure_float, _1, &env->scale_x.padding)},
+    {"scale-x-layout", bind(&configure_scale_layout, _1, &env->scale_layout_x)},
     {"scale-y", bind(&domain_configure, _1, &env->scale_y)},
     {"scale-y-min", bind(&configure_float_opt, _1, &env->scale_y.min)},
     {"scale-y-max", bind(&configure_float_opt, _1, &env->scale_y.max)},
     {"scale-y-padding", bind(&configure_float, _1, &env->scale_y.padding)},
+    {"scale-y-layout", bind(&configure_scale_layout, _1, &env->scale_layout_y)},
   };
 
   if (auto rc = parseAll(plist, pdefs); !rc.isSuccess()) {

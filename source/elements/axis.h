@@ -53,12 +53,6 @@ enum class AxisPosition {
   CENTER_VERT
 };
 
-enum class AxisMode {
-  OFF,
-  AUTO,
-  MANUAL
-};
-
 enum class AxisLabelPosition {
   LEFT,
   RIGHT,
@@ -74,16 +68,13 @@ using AxisLabelPlacement = std::function<ReturnCode (
 
 struct AxisDefinition {
   AxisDefinition();
-  AxisMode mode;
   AxisPosition position;
-  std::string scale;
+  DomainConfig scale;
   std::string title;
-  std::vector<double> ticks;
-  std::vector<std::pair<double, std::string>> labels;
   std::vector<std::string> label_override;
   AxisLabelPosition tick_position;
   AxisLabelPosition label_position;
-  AxisLabelPlacement label_placement;
+  ScaleLayoutFn layout;
   Formatter label_formatter;
   Color text_color;
   Color border_color;
