@@ -127,7 +127,7 @@ std::function<double (double)> domain_translate_fn(const DomainConfig& domain) {
   return bind(&domain_translate, domain, std::placeholders::_1);
 }
 
-Value domain_untranslate_linear(const DomainConfig& domain, double vt) {
+double  domain_untranslate_linear(const DomainConfig& domain, double vt) {
   auto min = domain_min(domain);
   auto max = domain_max(domain);
 
@@ -135,10 +135,10 @@ Value domain_untranslate_linear(const DomainConfig& domain, double vt) {
     vt = 1.0 - vt;
   }
 
-  return value_from_float(min + (max - min) * vt);
+  return min + (max - min) * vt;
 }
 
-Value domain_untranslate_log(const DomainConfig& domain, double vt) {
+double domain_untranslate_log(const DomainConfig& domain, double vt) {
   auto min = domain_min(domain);
   auto max = domain_max(domain);
   auto log_base = domain.log_base.value_or(kDefaultLogBase);
@@ -149,10 +149,10 @@ Value domain_untranslate_log(const DomainConfig& domain, double vt) {
     vt = 1.0 - vt;
   }
 
-  return value_from_float(min + pow(log_base, vt * range_log));
+  return min + pow(log_base, vt * range_log);
 }
 
-Value domain_untranslate(
+double domain_untranslate(
     const DomainConfig& domain,
     double value) {
   switch (domain.kind) {
@@ -165,10 +165,10 @@ Value domain_untranslate(
   return {};
 }
 
-Series domain_untranslate(
+std::vector<double> domain_untranslate(
     const DomainConfig& domain,
     const std::vector<double>& values) {
-  Series s;
+  std::vector<double> s;
   for (const auto& v : values) {
     s.emplace_back(domain_untranslate(domain, v));
   }

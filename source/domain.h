@@ -78,11 +78,11 @@ double domain_translate(
 
 std::function<double (double)> domain_translate_fn(const DomainConfig& domain);
 
-Value domain_untranslate(
+double domain_untranslate(
     const DomainConfig& domain,
     double data);
 
-Series domain_untranslate(
+std::vector<double> domain_untranslate(
     const DomainConfig& domain,
     const std::vector<double>& data);
 

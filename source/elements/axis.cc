@@ -403,6 +403,22 @@ ReturnCode axis_layout(
   return OK;
 }
 
+std::string axis_get_label(
+    const DomainConfig& domain,
+    const AxisDefinition& axis,
+    size_t idx,
+    double value) {
+  if (axis.label_override.size()) {
+    if (idx < axis.label_override.size()) {
+      return axis.label_override[idx];
+    } else {
+      return "";
+    }
+  }
+
+  return axis.label_formatter(std::to_string(value));
+}
+
 ReturnCode axis_place_labels_linear(
     const DomainConfig& domain,
     AxisDefinition* axis,
@@ -414,10 +430,11 @@ ReturnCode axis_place_labels_linear(
   auto begin = std::max(align.value_or(domain_min(domain)), domain_min(domain));
   auto end = domain_max(domain);
 
+  size_t label_idx = 0;
   for (auto v = begin; v <= end; v += step) {
     auto vp = domain_translate(domain, v);
     axis->ticks.emplace_back(vp);
-    axis->labels.emplace_back(vp, axis->label_formatter(std::to_string(v)));
+    axis->labels.emplace_back(vp, axis_get_label(domain, *axis, label_idx++, vp));
   }
 
   return OK;
@@ -435,10 +452,11 @@ ReturnCode axis_place_labels_subdivide(
   }
 
   auto tick_values = domain_untranslate(domain, axis->ticks);
+  size_t label_idx = 0;
   for (size_t i = 0; i < divisions; ++i) {
     axis->labels.emplace_back(
         axis->ticks[i],
-        axis->label_formatter(tick_values[i]));
+        axis_get_label(domain, *axis, label_idx++, tick_values[i]));
   }
 
   return OK;
@@ -453,20 +471,23 @@ ReturnCode axis_place_labels_discrete(
   axis->labels.clear();
   axis->ticks.clear();
 
+  size_t label_idx = 0;
   for (size_t i = 0; i <= range; i += step) {
-    auto o = domain_translate(domain, i);
-    auto o1 = domain_translate(domain, i - step * 0.5);
-    auto o2 = domain_translate(domain, i + step * 0.5);
-    auto v = uint32_t(domain_min(domain)) + i;
-
-    auto label = axis->label_formatter(std::to_string(i));
-    if (step > 1) {
-      label += " - ";
-      label += axis->label_formatter(std::to_string(i + step));
-    }
+    auto o = domain_translate(domain, i * step);
+    auto o1 = domain_translate(domain, i * step - step * 0.5);
+    auto o2 = domain_translate(domain, i * step + step * 0.5);
+    auto v = uint32_t(domain_min(domain)) + i * step;
+    auto vn = uint32_t(domain_min(domain)) + (i + 1) * step;
 
     if (o1 >= 0 && o2 <= 1) {
+      auto label = axis_get_label(domain, *axis, label_idx, v);
+      if (step > 1) {
+        label += " - ";
+        label += axis_get_label(domain, *axis, label_idx, vn);
+      }
+
       axis->labels.emplace_back(o, label);
+      ++label_idx;
     }
 
     if (o1 >= 0 && o1 <= 1) {
@@ -699,7 +720,7 @@ ReturnCode configure(
       {"position", bind(&parseAxisPositionProp, _1, &config->position)},
       {"layout", bind(&axis_configure_label_placement, _1, &config->label_placement)},
       {"format", bind(&confgure_format, _1, &config->label_formatter)},
-
+      {"labels", bind(&configure_strings, _1, &config->label_override)},
     };
 
     if (auto rc = parseAll(plist, pdefs); !rc) {

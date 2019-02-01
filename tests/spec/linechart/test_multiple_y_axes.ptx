@@ -1,6 +1,8 @@
 width: 1200px;
 height: 480px;
 
+scale-x-padding: 0.6;
+
 lines {
   xs: csv('tests/testdata/city_temperatures_pivot.csv', month);
   ys: csv('tests/testdata/city_temperatures_pivot.csv', temp_london);
@@ -32,11 +34,13 @@ axis {
 }
 
 axis {
-  position: bottom;
-  layout: discrete;
+  position: top;
+  layout: linear(1, align 1);
+  labels: csv('tests/testdata/city_temperatures_pivot.csv', month_name);
 }
 
 axis {
-  position: top;
+  position: bottom;
   layout: discrete;
+  labels: csv('tests/testdata/city_temperatures_pivot.csv', month_name);
 }

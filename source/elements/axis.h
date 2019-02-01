@@ -81,6 +81,7 @@ struct AxisDefinition {
   std::string title;
   std::vector<double> ticks;
   std::vector<std::pair<double, std::string>> labels;
+  std::vector<std::string> label_override;
   AxisLabelPosition tick_position;
   AxisLabelPosition label_position;
   AxisLabelPlacement label_placement;

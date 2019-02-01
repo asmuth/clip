@@ -35,10 +35,12 @@ axis {
 
 axis {
   position: top;
-  layout: discrete;
+  layout: linear(1, align 1);
+  labels: csv('tests/testdata/city_temperatures_pivot.csv', month_name);
 }
 
 axis {
   position: bottom;
-  layout: linear(1, align 1);
+  layout: discrete;
+  labels: csv('tests/testdata/city_temperatures_pivot.csv', month_name);
 }
