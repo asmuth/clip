@@ -38,7 +38,6 @@
 #include "source/element_factory.h"
 #include "source/utils/algo.h"
 #include "plot_area.h"
-#include "plot_bars.h"
 #include "plot_labels.h"
 #include "legend.h"
 

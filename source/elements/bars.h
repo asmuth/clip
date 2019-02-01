@@ -46,11 +46,12 @@ namespace bars {
 struct PlotBarsConfig {
   PlotBarsConfig();
   Direction direction;
-  std::vector<double> x;
-  std::vector<double> xoffset;
-  std::vector<double> y;
-  std::vector<double> yoffset;
-  std::vector<DataGroup> groups;
+  std::vector<Measure> x;
+  std::vector<Measure> xoffset;
+  std::vector<Measure> y;
+  std::vector<Measure> yoffset;
+  DomainConfig scale_x;
+  DomainConfig scale_y;
   std::vector<Color> colors;
   std::vector<Measure> sizes;
   std::vector<std::string> labels;
@@ -62,15 +63,19 @@ struct PlotBarsConfig {
 
 ReturnCode draw(
     const PlotBarsConfig& config,
-    const Rectangle& clip,
+    const LayoutInfo& clip,
     Layer* layer);
+
+ReturnCode layout(
+    const PlotBarsConfig& config,
+    const Layer& layer,
+    LayoutInfo* layout);
 
 ReturnCode configure(
     const plist::PropertyList& plist,
     const DataContext& data,
     const Document& doc,
-    const DomainMap& scales,
-    LegendItemMap* legend,
+    const Environment& env,
     PlotBarsConfig* config);
 
 } // namespace bars

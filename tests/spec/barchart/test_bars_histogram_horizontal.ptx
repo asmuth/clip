@@ -1,0 +1,22 @@
+width: 400px;
+height: 280px;
+
+scale-y-padding: 0.8;
+scale-x: log;
+
+bars {
+  ys: csv(tests/testdata/histogram.csv, var0);
+  xs: csv(tests/testdata/histogram.csv, var1);
+  direction: horizontal;
+  color: #888;
+  size: 14pt;
+}
+
+axis {
+  position: bottom;
+}
+
+axis {
+  position: left;
+  layout: linear(1, align 1);
+}

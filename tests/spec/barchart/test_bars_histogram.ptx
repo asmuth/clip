@@ -1,20 +1,21 @@
-width: 1200px;
-height: 480px;
+width: 400px;
+height: 280px;
 
-data: csv(tests/testdata/histogram.csv);
-y: var1;
-x: var0;
-
-axis-top: off;
-
+scale-x-padding: 0.5;
 scale-y: log;
-scale-x: categorical;
 
-scale-y-max: 80000;
+bars {
+  xs: csv(tests/testdata/histogram.csv, var0);
+  ys: csv(tests/testdata/histogram.csv, var1);
+  color: #888;
+  size: 14pt;
+}
 
-grid-x: geom;
+axis {
+  position: bottom;
+  layout: linear(1, align 1);
+}
 
-layer {
-  type: bars;
-  labels: var1;
+axis {
+  position: left;
 }
