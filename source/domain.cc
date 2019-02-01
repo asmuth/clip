@@ -52,7 +52,7 @@ void domain_fit(double value, DomainConfig* domain) {
 }
 
 double domain_min(const DomainConfig& domain) {
-  auto min_auto = 1.0f;
+  auto min_auto = 0.0f;
   if (domain.limit_hints->min_value) {
     min_auto = *domain.limit_hints->min_value - domain.padding;
   }

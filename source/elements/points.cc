@@ -92,7 +92,7 @@ ReturnCode draw(
         : config.colors[i % config.colors.size()];
 
     auto size = config.sizes.empty()
-        ? Measure{}
+        ? from_pt(kDefaultPointSizePT, layer->dpi)
         : config.sizes[i % config.sizes.size()];
 
     FillStyle style;

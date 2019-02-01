@@ -1,19 +1,41 @@
 width: 1200px;
 height: 480px;
 
-data: csv('tests/testdata/irregular_data.csv');
-x: x;
-y: y;
-group: series;
+scale-y-max: 50;
+scale-y-min: -35;
 
-layer {
-  type: lines;
+scale-x-min: -12;
+scale-x-max: 22;
+
+
+lines {
+  xs: csv('tests/testdata/irregular_data1.csv', x);
+  ys: csv('tests/testdata/irregular_data1.csv', y);
+  colors: #06c;
 }
 
-layer {
-  type: points;
+points {
+  xs: csv('tests/testdata/irregular_data1.csv', x);
+  ys: csv('tests/testdata/irregular_data1.csv', y);
+  colors: #06c;
 }
 
-legend {
-  position: top left inside;
+lines {
+  xs: csv('tests/testdata/irregular_data2.csv', x);
+  ys: csv('tests/testdata/irregular_data2.csv', y);
+  colors: #c06;
+}
+
+points {
+  xs: csv('tests/testdata/irregular_data2.csv', x);
+  ys: csv('tests/testdata/irregular_data2.csv', y);
+  colors: #c06;
+}
+
+axis {
+  position: left;
+}
+
+axis {
+  position: bottom;
 }

@@ -1,26 +1,42 @@
 width: 1200px;
 height: 480px;
 
-data: csv('tests/testdata/city_temperatures.csv');
-x: month;
-y: temperature;
-group: city;
+scale-x-padding: 0.6;
 
-scale-y-min: -10;
 scale-y-max: 32;
-axis-top: off;
-axis-right: off;
+scale-y-min: -10;
 
-margin-right: 2.4em;
-
-layer {
-  type: lines;
+lines {
+  xs: csv('tests/testdata/city_temperatures_pivot.csv', month);
+  ys: csv('tests/testdata/city_temperatures_pivot.csv', temp_london);
+  colors: #06c;
 }
 
-layer {
-  type: points;
+lines {
+  xs: csv('tests/testdata/city_temperatures_pivot.csv', month);
+  ys: csv('tests/testdata/city_temperatures_pivot.csv', temp_beijing);
+  colors: #c06;
 }
 
-legend {
-  position: top left inside;
+points {
+  xs: csv('tests/testdata/city_temperatures_pivot.csv', month);
+  ys: csv('tests/testdata/city_temperatures_pivot.csv', temp_london);
+  colors: #06c;
+}
+
+points {
+  xs: csv('tests/testdata/city_temperatures_pivot.csv', month);
+  ys: csv('tests/testdata/city_temperatures_pivot.csv', temp_beijing);
+  colors: #c06;
+}
+
+axis {
+  position: left;
+  layout: linear(5);
+}
+
+axis {
+  position: bottom;
+  layout: linear(1, align 1);
+  labels: csv('tests/testdata/city_temperatures_pivot.csv', month_name);
 }

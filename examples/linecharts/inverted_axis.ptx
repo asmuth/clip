@@ -1,25 +1,23 @@
 width: 1200px;
-height: 480px;
+height: 280px;
 
-data: csv('tests/testdata/city_temperatures.csv');
-x: month;
-y: temperature;
-group: city;
+scale-y: linear inverted;
+scale-y-min: 0;
+scale-y-max: 140;
 
-scale-y: inverted;
-scale-y-min: -10;
-scale-y-max: 32;
-
-margin-right: 2.4em;
-
-layer {
-  type: lines;
+lines {
+  xs: csv('tests/testdata/measurement.csv', time);
+  ys: csv('tests/testdata/measurement.csv', value2);
+  colors: #06c;
 }
 
-layer {
-  type: points;
+axis {
+  position: bottom;
+  format: datetime("%H:%M:%S");
 }
 
-legend {
-  position: bottom left inside;
+axis {
+  position: left;
+  layout: linear(20);
 }
+

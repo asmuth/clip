@@ -1,0 +1,18 @@
+width: 1200px;
+height: 480px;
+
+axis {
+  position: top;
+}
+
+axis {
+  position: right;
+}
+
+axis {
+  position: bottom;
+}
+
+axis {
+  position: left;
+}

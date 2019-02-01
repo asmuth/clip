@@ -434,7 +434,7 @@ ReturnCode axis_place_labels_linear(
   for (auto v = begin; v <= end; v += step) {
     auto vp = domain_translate(domain, v);
     axis->ticks.emplace_back(vp);
-    axis->labels.emplace_back(vp, axis_get_label(domain, *axis, label_idx++, vp));
+    axis->labels.emplace_back(vp, axis_get_label(domain, *axis, label_idx++, v));
   }
 
   return OK;
