@@ -1,20 +1,34 @@
 width: 1200px;
 height: 480px;
 
-data: csv('tests/testdata/areadata.csv', time);
-x: x;
-y: y;
-
+scale-y-min: 0;
 scale-y-max: 60;
+scale-y-layout: linear(10, align 10);
 
-layer {
-  type: area;
+areas {
+  xs: csv('tests/testdata/areadata.csv', x);
+  ys: csv('tests/testdata/areadata.csv', y);
+  color: #4572a7;
 }
 
-layer {
-  type: lines;
+points {
+  xs: csv('tests/testdata/areadata.csv', x);
+  ys: csv('tests/testdata/areadata.csv', y);
+  color: #4572a7;
 }
 
-layer {
-  type: points;
+axis {
+  position: top;
+}
+
+axis {
+  position: bottom;
+}
+
+axis {
+  position: left;
+}
+
+axis {
+  position: right;
 }
