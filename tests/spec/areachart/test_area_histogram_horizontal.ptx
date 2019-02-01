@@ -1,15 +1,15 @@
 width: 400px;
 height: 280px;
 
-scale-y-padding: 0.8;
 scale-x: log;
+scale-y: invert;
+scale-y-padding: 0.5;
 
-bars {
+areas {
   xs: csv(tests/testdata/histogram.csv, var1);
   ys: csv(tests/testdata/histogram.csv, var0);
-  direction: horizontal;
   color: #888;
-  size: 14pt;
+  direction: horizontal;
 }
 
 axis {
@@ -20,3 +20,4 @@ axis {
   position: left;
   layout: linear(1, align 1);
 }
+

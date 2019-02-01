@@ -46,24 +46,32 @@ namespace plot {
 namespace area {
 
 struct PlotAreaConfig {
-  std::vector<double> x;
-  std::vector<double> y;
-  std::vector<double> yoffset;
-  std::vector<DataGroup> groups;
+  PlotAreaConfig();
+  Direction direction;
+  std::vector<Measure> x;
+  std::vector<Measure> xoffset;
+  std::vector<Measure> y;
+  std::vector<Measure> yoffset;
+  DomainConfig scale_x;
+  DomainConfig scale_y;
   std::vector<Color> colors;
 };
 
 ReturnCode draw(
     const PlotAreaConfig& config,
-    const Rectangle& clip,
+    const LayoutInfo& layout,
     Layer* layer);
+
+ReturnCode layout(
+    const PlotAreaConfig& config,
+    const Layer& layer,
+    LayoutInfo* layout);
 
 ReturnCode configure(
     const plist::PropertyList& plist,
     const DataContext& data,
     const Document& doc,
-    const DomainMap& scales,
-    LegendItemMap* legend,
+    const Environment& env,
     PlotAreaConfig* config);
 
 } // namespace area

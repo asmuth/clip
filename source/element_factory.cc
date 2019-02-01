@@ -28,6 +28,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 #include "element_factory.h"
+#include "elements/areas.h"
 #include "elements/axis.h"
 #include "elements/bars.h"
 #include "elements/lines.h"
@@ -40,6 +41,13 @@ namespace plotfx {
 using ElementConfigureFn = std::function<ReturnCode (const Document&, const PropertyList&, ElementRef*)>;
 
 static std::unordered_map<std::string, ElementBuilder> elems = {
+  {
+    "areas",
+    elem_builder<plot::area::PlotAreaConfig>(
+        &plot::area::configure,
+        &plot::area::layout,
+        &plot::area::draw)
+  },
   {"axis", elem_builder<AxisDefinition>(&axis::configure, &axis::layout, &axis::draw)},
   {
     "bars",

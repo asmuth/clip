@@ -37,9 +37,6 @@
 #include "source/config_helpers.h"
 #include "source/element_factory.h"
 #include "source/utils/algo.h"
-#include "plot_area.h"
-#include "plot_labels.h"
-#include "legend.h"
 
 using namespace std::placeholders;
 using std::ref;

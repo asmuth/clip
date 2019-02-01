@@ -129,7 +129,7 @@ int main(int argc, const char** argv) {
 
   if (!plotfx_render_file(ctx, flag_out.c_str(), fmt.c_str())) {
     std::cerr
-        << "ERROR: error while rendering"
+        << "ERROR: error while rendering: "
         << plotfx_geterror(ctx)
         << std::endl;
     return EXIT_FAILURE;
