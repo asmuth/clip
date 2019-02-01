@@ -36,6 +36,7 @@
 #include <source/element.h>
 #include <source/config_helpers.h>
 #include <source/utils/algo.h>
+#include "common/environment.h"
 
 namespace plotfx {
 namespace plot {

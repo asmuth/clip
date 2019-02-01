@@ -35,6 +35,7 @@
 #include "graphics/measure.h"
 #include "graphics/color.h"
 #include "graphics/text.h"
+#include "common/environment.h"
 #include "element.h"
 
 namespace plotfx {

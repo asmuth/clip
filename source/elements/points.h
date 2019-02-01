@@ -35,7 +35,7 @@
 #include <source/common/scale.h>
 #include <source/element.h>
 #include <source/config_helpers.h>
-#include "environment.h"
+#include "common/format.h"
 
 namespace plotfx {
 namespace plot {

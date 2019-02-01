@@ -27,19 +27,39 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-#include "environment.h"
-#include "common/scale.h"
+#pragma once
+#include "graphics/geometry.h"
 
-#include <functional>
-
-using namespace std::placeholders;
+#include <assert.h>
+#include <stdlib.h>
+#include <stdint.h>
 
 namespace plotfx {
 
-Environment::Environment() :
-    scale_layout_x(bind(&scale_layout_subdivide, _1, _2, 8)),
-    scale_layout_y(bind(&scale_layout_subdivide, _1, _2, 8)) {}
+struct LayoutInfo {
+
+  /**
+   * The elements bounding box
+   */
+  Rectangle bounding_box;
+
+  /**
+   * If set to true, constrain the size of the bounding box in the (x, y)
+   * dimension, i.e. disallow it from growing
+   */
+  std::array<bool, 2> constraint;
+
+  /**
+   * The inner ("content") bounding box
+   */
+  Rectangle content_box;
+
+  /**
+   * The elements bounding box
+   */
+  Rectangle element_box;
+
+};
 
 } // namespace plotfx
-
 

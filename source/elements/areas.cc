@@ -35,6 +35,7 @@
 #include "graphics/text.h"
 #include "graphics/layout.h"
 #include "config_helpers.h"
+#include "common/environment.h"
 
 #include <numeric>
 
