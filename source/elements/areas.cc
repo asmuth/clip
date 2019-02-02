@@ -67,11 +67,29 @@ ReturnCode draw_horizontal(
   convert_units(
       {
         bind(&convert_unit_typographic, layer->dpi, layer->font_size.value, _1),
+        bind(&convert_unit_user, domain_translate_fn(config.scale_x), _1),
+        bind(&convert_unit_relative, clip.w, _1)
+      },
+      &*config.xoffset.begin(),
+      &*config.xoffset.end());
+
+  convert_units(
+      {
+        bind(&convert_unit_typographic, layer->dpi, layer->font_size.value, _1),
         bind(&convert_unit_user, domain_translate_fn(config.scale_y), _1),
         bind(&convert_unit_relative, clip.h, _1)
       },
       &*config.y.begin(),
       &*config.y.end());
+
+  convert_units(
+      {
+        bind(&convert_unit_typographic, layer->dpi, layer->font_size.value, _1),
+        bind(&convert_unit_user, domain_translate_fn(config.scale_y), _1),
+        bind(&convert_unit_relative, clip.h, _1)
+      },
+      &*config.yoffset.begin(),
+      &*config.yoffset.end());
 
   /* draw areas */
   Path path;
@@ -87,8 +105,9 @@ ReturnCode draw_horizontal(
     }
   }
 
+  auto x0 = clip.h * std::clamp(domain_translate(config.scale_x, 0), 0.0, 1.0);
   for (int i = config.x.size() - 1; i >= 0; --i) {
-    auto sx = clip.x;
+    auto sx = clip.x + (config.xoffset.empty() ? x0 : config.xoffset[i]);
     auto sy = clip.y + clip.h - config.y[i];
     path.lineTo(sx, sy);
   }
@@ -124,11 +143,29 @@ ReturnCode draw_vertical(
   convert_units(
       {
         bind(&convert_unit_typographic, layer->dpi, layer->font_size.value, _1),
+        bind(&convert_unit_user, domain_translate_fn(config.scale_x), _1),
+        bind(&convert_unit_relative, clip.w, _1)
+      },
+      &*config.xoffset.begin(),
+      &*config.xoffset.end());
+
+  convert_units(
+      {
+        bind(&convert_unit_typographic, layer->dpi, layer->font_size.value, _1),
         bind(&convert_unit_user, domain_translate_fn(config.scale_y), _1),
         bind(&convert_unit_relative, clip.h, _1)
       },
       &*config.y.begin(),
       &*config.y.end());
+
+  convert_units(
+      {
+        bind(&convert_unit_typographic, layer->dpi, layer->font_size.value, _1),
+        bind(&convert_unit_user, domain_translate_fn(config.scale_y), _1),
+        bind(&convert_unit_relative, clip.h, _1)
+      },
+      &*config.yoffset.begin(),
+      &*config.yoffset.end());
 
   /* draw areas */
   Path path;
@@ -144,9 +181,10 @@ ReturnCode draw_vertical(
     }
   }
 
+  auto y0 = clip.h * std::clamp(domain_translate(config.scale_y, 0), 0.0, 1.0);
   for (int i = config.x.size() - 1; i >= 0; --i) {
     auto sx = clip.x + config.x[i];
-    auto sy = clip.y + clip.h;
+    auto sy = clip.y + clip.h - (config.yoffset.empty() ? y0 : config.yoffset[i]);
     path.lineTo(sx, sy);
   }
 
@@ -198,6 +236,8 @@ ReturnCode configure(
   static const ParserDefinitions pdefs = {
     {"xs", bind(&configure_measures, _1, &config->x)},
     {"ys", bind(&configure_measures, _1, &config->y)},
+    {"x-offsets", bind(&configure_measures, _1, &config->xoffset)},
+    {"y-offsets", bind(&configure_measures, _1, &config->yoffset)},
     {"scale-x", bind(&domain_configure, _1, &config->scale_x)},
     {"scale-x-min", bind(&configure_float_opt, _1, &config->scale_x.min)},
     {"scale-x-max", bind(&configure_float_opt, _1, &config->scale_x.max)},
@@ -215,6 +255,27 @@ ReturnCode configure(
     return rc;
   }
 
+  /* check configuraton */
+  if (config->x.size() != config->y.size()) {
+    return ReturnCode::error(
+        "EARG",
+        "the length of the 'xs' and 'ys' properties must be equal");
+  }
+
+  if (!config->xoffset.empty() &&
+      config->xoffset.size() != config->x.size()) {
+    return ReturnCode::error(
+        "EARG",
+        "the length of the 'xs' and 'x-offsets' properties must be equal");
+  }
+
+  if (!config->yoffset.empty() &&
+      config->yoffset.size() != config->y.size()) {
+    return ReturnCode::error(
+        "EARG",
+        "the length of the 'ys' and 'y-offsets' properties must be equal");
+  }
+
   /* scale autoconfig */
   for (const auto& v : config->x) {
     if (v.unit == Unit::USER) {
@@ -222,7 +283,19 @@ ReturnCode configure(
     }
   }
 
+  for (const auto& v : config->xoffset) {
+    if (v.unit == Unit::USER) {
+      domain_fit(v.value, &config->scale_x);
+    }
+  }
+
   for (const auto& v : config->y) {
+    if (v.unit == Unit::USER) {
+      domain_fit(v.value, &config->scale_y);
+    }
+  }
+
+  for (const auto& v : config->yoffset) {
     if (v.unit == Unit::USER) {
       domain_fit(v.value, &config->scale_y);
     }

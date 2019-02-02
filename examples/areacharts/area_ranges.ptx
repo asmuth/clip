@@ -1,16 +1,37 @@
 width: 1200px;
 height: 480px;
 
-axis-x-format: datetime("%H:%M:%S");
+scale-y-min: -50;
+scale-y-max: 50;
 
-data: csv('tests/testdata/areadata2.csv', time);
-x: x;
-group: series;
+areas {
+  xs: csv('tests/testdata/areadata2.csv', x);
+  ys: csv('tests/testdata/areadata2.csv', z);
+  y-offsets: csv('tests/testdata/areadata2.csv', y);
+  color: #4572a7;
+}
 
-grid-x: geom;
+areas {
+  xs: csv('tests/testdata/areadata2.csv', x);
+  ys: csv('tests/testdata/areadata2.csv', z2);
+  y-offsets: csv('tests/testdata/areadata2.csv', y2);
+  color: #aa4643;
+}
 
-layer {
-  type: area;
-  y: y;
-  y-offset: z;
+axis {
+  position: top;
+  format: datetime("%H:%M:%S");
+}
+
+axis {
+  position: bottom;
+  format: datetime("%H:%M:%S");
+}
+
+axis {
+  position: left;
+}
+
+axis {
+  position: right;
 }
