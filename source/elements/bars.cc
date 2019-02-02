@@ -46,8 +46,8 @@ namespace plot {
 namespace bars {
 
 static const double kDefaultBarSizePT = 10;
-static const double kDefaultLabelPaddingHorizEM = 0.4;
-static const double kDefaultLabelPaddingVertEM = 0.4;
+static const double kDefaultLabelPaddingHorizEM = 0.6;
+static const double kDefaultLabelPaddingVertEM = 0.6;
 
 PlotBarsConfig::PlotBarsConfig() :
     direction(Direction::VERTICAL) {}
@@ -71,6 +71,15 @@ ReturnCode draw_horizontal(
   convert_units(
       {
         bind(&convert_unit_typographic, layer->dpi, layer->font_size.value, _1),
+        bind(&convert_unit_user, domain_translate_fn(config.scale_x), _1),
+        bind(&convert_unit_relative, clip.w, _1)
+      },
+      &*config.xoffset.begin(),
+      &*config.xoffset.end());
+
+  convert_units(
+      {
+        bind(&convert_unit_typographic, layer->dpi, layer->font_size.value, _1),
         bind(&convert_unit_user, domain_translate_fn(config.scale_y), _1),
         bind(&convert_unit_relative, clip.h, _1)
       },
@@ -79,20 +88,41 @@ ReturnCode draw_horizontal(
 
   convert_units(
       {
+        bind(&convert_unit_typographic, layer->dpi, layer->font_size.value, _1),
+        bind(&convert_unit_user, domain_translate_fn(config.scale_y), _1),
+        bind(&convert_unit_relative, clip.h, _1)
+      },
+      &*config.yoffset.begin(),
+      &*config.yoffset.end());
+
+  convert_units(
+      {
         bind(&convert_unit_typographic, layer->dpi, layer->font_size.value, _1)
       },
       &*config.sizes.begin(),
       &*config.sizes.end());
 
+  convert_units(
+      {
+        bind(&convert_unit_typographic, layer->dpi, layer->font_size.value, _1)
+      },
+      &*config.offsets.begin(),
+      &*config.offsets.end());
+
   /* draw bars */
+  auto x0 = std::clamp(clip.h * domain_translate(config.scale_x, 0), 0.0, 1.0);
   for (size_t i = 0; i < config.x.size(); ++i) {
     auto sy = clip.y + clip.h - config.y[i];
-    auto sx1 = clip.x;
+    auto sx1 = clip.x + (config.xoffset.empty() ? x0 : config.xoffset[i]);
     auto sx2 = clip.x + config.x[i];
 
     auto size = config.sizes.empty()
         ? from_pt(kDefaultBarSizePT, layer->dpi)
         : config.sizes[i % config.sizes.size()];
+
+    auto offset = config.offsets.empty()
+        ? 0
+        : config.offsets[i % config.offsets.size()];
 
     const auto& color = config.colors.empty()
         ? Color{}
@@ -102,10 +132,10 @@ ReturnCode draw_horizontal(
     style.color = color;
 
     Path path;
-    path.moveTo(sx1, sy - size * 0.5);
-    path.lineTo(sx2, sy - size * 0.5);
-    path.lineTo(sx2, sy + size * 0.5);
-    path.lineTo(sx1, sy + size * 0.5);
+    path.moveTo(sx1, sy + -offset - size * 0.5);
+    path.lineTo(sx2, sy + -offset - size * 0.5);
+    path.lineTo(sx2, sy + -offset + size * 0.5);
+    path.lineTo(sx1, sy + -offset + size * 0.5);
     path.closePath();
 
 
@@ -114,19 +144,19 @@ ReturnCode draw_horizontal(
 
   /* draw labels */
   for (size_t i = 0; i < config.labels.size(); ++i) {
-    const auto& label_text = config.labels[i];
+    const auto& text = config.labels[i];
 
-    auto size = config.sizes.empty()
+    auto offset = config.offsets.empty()
         ? 0
-        : config.sizes[i % config.sizes.size()].value;
+        : config.offsets[i % config.offsets.size()];
 
-    auto label_padding = size + measure_or(
+    auto padding = measure_or(
         config.label_padding,
         from_em(kDefaultLabelPaddingHorizEM, config.label_font_size));
 
     Point p(
-        clip.x + config.x[i] + label_padding,
-        clip.y + clip.h - config.y[i]);
+        clip.x + config.x[i] + padding,
+        clip.y + -offset + clip.h - config.y[i]);
 
     TextStyle style;
     style.font = config.label_font;
@@ -135,7 +165,7 @@ ReturnCode draw_horizontal(
 
     auto ax = HAlign::LEFT;
     auto ay = VAlign::CENTER;
-    if (auto rc = drawTextLabel(label_text, p, ax, ay, style, layer); rc != OK) {
+    if (auto rc = drawTextLabel(text, p, ax, ay, style, layer); rc != OK) {
       return rc;
     }
   }
@@ -162,6 +192,15 @@ ReturnCode draw_vertical(
   convert_units(
       {
         bind(&convert_unit_typographic, layer->dpi, layer->font_size.value, _1),
+        bind(&convert_unit_user, domain_translate_fn(config.scale_x), _1),
+        bind(&convert_unit_relative, clip.w, _1)
+      },
+      &*config.xoffset.begin(),
+      &*config.xoffset.end());
+
+  convert_units(
+      {
+        bind(&convert_unit_typographic, layer->dpi, layer->font_size.value, _1),
         bind(&convert_unit_user, domain_translate_fn(config.scale_y), _1),
         bind(&convert_unit_relative, clip.h, _1)
       },
@@ -170,20 +209,41 @@ ReturnCode draw_vertical(
 
   convert_units(
       {
+        bind(&convert_unit_typographic, layer->dpi, layer->font_size.value, _1),
+        bind(&convert_unit_user, domain_translate_fn(config.scale_y), _1),
+        bind(&convert_unit_relative, clip.h, _1)
+      },
+      &*config.yoffset.begin(),
+      &*config.yoffset.end());
+
+  convert_units(
+      {
         bind(&convert_unit_typographic, layer->dpi, layer->font_size.value, _1)
       },
       &*config.sizes.begin(),
       &*config.sizes.end());
 
+  convert_units(
+      {
+        bind(&convert_unit_typographic, layer->dpi, layer->font_size.value, _1)
+      },
+      &*config.offsets.begin(),
+      &*config.offsets.end());
+
   /* draw bars */
+  auto y0 = clip.h * std::clamp(domain_translate(config.scale_y, 0), 0.0, 1.0);
   for (size_t i = 0; i < config.x.size(); ++i) {
     auto sx = clip.x + config.x[i];
-    auto sy1 = clip.y + clip.h;
+    auto sy1 = clip.y + clip.h - (config.yoffset.empty() ? y0 : config.yoffset[i]);
     auto sy2 = clip.y + clip.h - config.y[i];
 
     auto size = config.sizes.empty()
         ? from_pt(kDefaultBarSizePT, layer->dpi)
         : config.sizes[i % config.sizes.size()];
+
+    auto offset = config.offsets.empty()
+        ? 0
+        : config.offsets[i % config.offsets.size()];
 
     const auto& color = config.colors.empty()
         ? Color{}
@@ -193,10 +253,10 @@ ReturnCode draw_vertical(
     style.color = color;
 
     Path path;
-    path.moveTo(sx - size * 0.5, sy1);
-    path.lineTo(sx - size * 0.5, sy2);
-    path.lineTo(sx + size * 0.5, sy2);
-    path.lineTo(sx + size * 0.5, sy1);
+    path.moveTo(sx + offset - size * 0.5, sy1);
+    path.lineTo(sx + offset - size * 0.5, sy2);
+    path.lineTo(sx + offset + size * 0.5, sy2);
+    path.lineTo(sx + offset + size * 0.5, sy1);
     path.closePath();
 
     fillPath(layer, clip, path, style);
@@ -204,19 +264,19 @@ ReturnCode draw_vertical(
 
   /* draw labels */
   for (size_t i = 0; i < config.labels.size(); ++i) {
-    const auto& label_text = config.labels[i];
+    const auto& text = config.labels[i];
 
-    auto size = config.sizes.empty()
+    auto offset = config.offsets.empty()
         ? 0
-        : config.sizes[i % config.sizes.size()].value;
+        : config.offsets[i % config.offsets.size()];
 
-    auto label_padding = size + measure_or(
+    auto padding = measure_or(
         config.label_padding,
         from_em(kDefaultLabelPaddingVertEM, config.label_font_size));
 
     Point p(
-        clip.x + config.x[i],
-        clip.y + clip.h - config.y[i] - label_padding);
+        clip.x + offset + config.x[i],
+        clip.y + clip.h - config.y[i] - padding);
 
     TextStyle style;
     style.font = config.label_font;
@@ -225,7 +285,7 @@ ReturnCode draw_vertical(
 
     auto ax = HAlign::CENTER;
     auto ay = VAlign::BOTTOM;
-    if (auto rc = drawTextLabel(label_text, p, ax, ay, style, layer); rc != OK) {
+    if (auto rc = drawTextLabel(text, p, ax, ay, style, layer); rc != OK) {
       return rc;
     }
   }
@@ -270,6 +330,8 @@ ReturnCode configure(
   static const ParserDefinitions pdefs = {
     {"xs", bind(&configure_measures, _1, &config->x)},
     {"ys", bind(&configure_measures, _1, &config->y)},
+    {"x-offsets", bind(&configure_measures, _1, &config->xoffset)},
+    {"y-offsets", bind(&configure_measures, _1, &config->yoffset)},
     {"scale-x", bind(&domain_configure, _1, &config->scale_x)},
     {"scale-x-min", bind(&configure_float_opt, _1, &config->scale_x.min)},
     {"scale-x-max", bind(&configure_float_opt, _1, &config->scale_x.max)},
@@ -280,6 +342,8 @@ ReturnCode configure(
     {"scale-y-padding", bind(&configure_float, _1, &config->scale_y.padding)},
     {"size", bind(&configure_measures, _1, &config->sizes)},
     {"sizes", bind(&configure_measures, _1, &config->sizes)},
+    {"offset", bind(&configure_measures, _1, &config->offsets)},
+    {"offsets", bind(&configure_measures, _1, &config->offsets)},
     {"direction", bind(&configure_direction, _1, &config->direction)},
     {"color", configure_vec<Color>(bind(&configure_color, _1, _2), &config->colors)},
     {"colors", configure_vec<Color>(bind(&configure_color, _1, _2), &config->colors)},
@@ -290,6 +354,27 @@ ReturnCode configure(
     return rc;
   }
 
+  /* check configuraton */
+  if (config->x.size() != config->y.size()) {
+    return ReturnCode::error(
+        "EARG",
+        "the length of the 'xs' and 'ys' properties must be equal");
+  }
+
+  if (!config->xoffset.empty() &&
+      config->xoffset.size() != config->x.size()) {
+    return ReturnCode::error(
+        "EARG",
+        "the length of the 'xs' and 'x-offsets' properties must be equal");
+  }
+
+  if (!config->yoffset.empty() &&
+      config->yoffset.size() != config->y.size()) {
+    return ReturnCode::error(
+        "EARG",
+        "the length of the 'ys' and 'y-offsets' properties must be equal");
+  }
+
   /* scale autoconfig */
   for (const auto& v : config->x) {
     if (v.unit == Unit::USER) {
@@ -297,7 +382,19 @@ ReturnCode configure(
     }
   }
 
+  for (const auto& v : config->xoffset) {
+    if (v.unit == Unit::USER) {
+      domain_fit(v.value, &config->scale_x);
+    }
+  }
+
   for (const auto& v : config->y) {
+    if (v.unit == Unit::USER) {
+      domain_fit(v.value, &config->scale_y);
+    }
+  }
+
+  for (const auto& v : config->yoffset) {
     if (v.unit == Unit::USER) {
       domain_fit(v.value, &config->scale_y);
     }

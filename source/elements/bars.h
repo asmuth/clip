@@ -51,6 +51,7 @@ struct PlotBarsConfig {
   DomainConfig scale_y;
   std::vector<Color> colors;
   std::vector<Measure> sizes;
+  std::vector<Measure> offsets;
   std::vector<std::string> labels;
   FontInfo label_font;
   Measure label_padding;

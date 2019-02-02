@@ -1,16 +1,49 @@
 width: 1280px;
 height: 480px;
 
-data: csv(tests/testdata/bardata.csv);
-y: var0;
-group: series;
-
 scale-x-max: 75;
 scale-x-min: -25;
 
-layer {
-  type: bars;
-  x: var2;
-  x-offset: var3;
+scale-y-padding: 0.9;
+
+bars {
+  ys: csv(tests/testdata/bardata.csv, var0);
+  xs: csv(tests/testdata/bardata.csv, var1);
+  x-offsets: csv(tests/testdata/bardata.csv, var2);
+  size: .6em;
+  offset: .4em;
+  color: #4572a7;
   direction: horizontal;
+}
+
+bars {
+  ys: csv(tests/testdata/bardata.csv, var0);
+  xs: csv(tests/testdata/bardata.csv, var4);
+  x-offsets: csv(tests/testdata/bardata.csv, var5);
+  size: .6em;
+  offset: -.4em;
+  color: #aa4643;
+  direction: horizontal;
+}
+
+axis {
+  position: top;
+  layout: linear(10, align -20);
+}
+
+axis {
+  position: bottom;
+  layout: linear(10, align -20);
+}
+
+axis {
+  position: left;
+  layout: discrete;
+  labels: A, B, C, D, E, F;
+}
+
+axis {
+  position: right;
+  layout: discrete;
+  labels: A, B, C, D, E, F;
 }

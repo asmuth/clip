@@ -139,7 +139,7 @@ ReturnCode configure(
   if (config->x.size() != config->y.size()) {
     return ReturnCode::error(
         "EARG",
-        "the length of the 'x' and 'y' properties must be equal");
+        "the length of the 'xs' and 'ys' properties must be equal");
   }
 
   /* group data */
