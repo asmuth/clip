@@ -1,19 +1,18 @@
 # PlotFX v0.2.0
 
-PlotFX is a standalone tool for creating charts and other data-driven graphics.
+PlotFX is a tool for creating data-driven graphics; it allows you to create
+parametric illustrations such as charts and dashboards using a lighweight
+CSS-like syntax.
 
-Charts are defined using a lightweight syntax that is very similar to CSS.
 You can run PlotFX from the command line, where it generates SVG, PNG and PDF
 output files. Additionally, you can embed it into your own application using the
 C API.
 
-PlotFX is partially based on ideas from the "Grammar of Graphics" [0].
-One of the main goals for PlotFX is that creating charts should be quick, simple
-and fun.
+PlotFX is built in the hope that using it will be quick, simple and fun.
 
-**WARNING**: The project is currently a work-in-progress. I'm currently working
-on removing the old SQL chart specification language and replacing it with the
-new CSS-like syntax. This might take a while...
+**WARNING**: The master branch recently underwent a significant refactoring and the
+stability is currently beta/experimental. Maybe not even that. It will take a few
+more weeks to stabilize and document everything.
 
 <div class="notice">
   <div style="float:right;"><a class="github-button" data-style="mega" href="https://github.com/plotfx/plotfx" data-count-href="/plotfx/plotfx/stargazers" data-count-api="/repos/plotfx/plotfx#stargazers_count" data-count-aria-label="# stargazers on GitHub" aria-label="Star plotfx/plotfx on GitHub">View on GitHub</a></div>
@@ -23,7 +22,7 @@ new CSS-like syntax. This might take a while...
 
 ## Getting Started
 
-[![A simple line chart](./examples/linecharts/lines_with_points.svg)](./examples/linecharts/lines_with_points)
+[![A simple line chart](./examples/linecharts/simple_timeseries.svg)](./examples/linecharts/simple_timeseries)
 
 The simple line chart from above was generated with PlotFX using the following
 command line:
@@ -33,23 +32,25 @@ command line:
 Here is the input file from which the above plot was generated (`example_chart.ptx`):
 
     width: 1200px;
-    height: 480px;
+    height: 280px;
 
-    data: csv('tests/testdata/city_temperatures.csv');
-    x: month;
-    y: temperature;
-    group: city;
+    scale-y-min: 0;
+    scale-y-max: 140;
 
-    scale-y-min: -10;
-    scale-y-max: 32;
-
-    layer {
-      type: lines;
-      stroke: 2pt;
+    lines {
+      xs: csv('measurement.csv', time);
+      ys: csv('measurement.csv', value2);
+      colors: #06c;
     }
 
-    legend {
-      position: top left inside;
+    axis {
+      position: bottom;
+      format: datetime("%H:%M:%S");
+    }
+
+    axis {
+      position: left;
+      layout: linear(20);
     }
 
 
@@ -68,13 +69,10 @@ for more.
 _Example: Simple timeseries chart_
 <a href="/examples/linecharts/simple_timeseries"><img src="/examples/linecharts/simple_timeseries.svg" style="width: 100%;" /></a>
 
-_Example: Chart with explicit domain and legend_
-<a href="/examples/linecharts/explicit_domain"><img src="/examples/linecharts/explicit_domain.svg" style="width: 100%;" /></a>
-
 _Example: Horizontal barchart_
 <a href="/examples/barcharts/horizontal_bars"><img src="/examples/barcharts/horizontal_bars.svg" style="width: 100%;" /></a>
 
-_Example: Scatter chart with lables_
+_Example: Scatter chart with labels_
 <a href="/examples/pointcharts/pointchart_with_labels"><img src="/examples/pointcharts/pointchart_with_labels.svg" style="width: 100%;" /></a>
 
 <script async defer src="https://buttons.github.io/buttons.js"></script>

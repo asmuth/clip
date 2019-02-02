@@ -4,20 +4,19 @@ PlotFX
 [![Build status](https://ci.appveyor.com/api/projects/status/8h07x0erafnxsumi/branch/master?svg=true)](https://ci.appveyor.com/project/plotfx/plotfx/branch/master)
 ![BSD-License](https://img.shields.io/badge/license-BSD-blue.svg?style=flat-square)
 
-`plotfx` is a tool for creating data-driven graphics. The primary use case for it
-is creating custom charts ("graphs"), dashboards and other highly parametric
-illustrations.
-
-Drawings are defined using a lightweight syntax that is very similar to CSS.
-One of the main goals for PlotFX is that using it should be quick, simple and fun.
+PlotFX is a tool for creating data-driven graphics; it allows you to create
+parametric illustrations such as charts and dashboards using a lighweight
+CSS-like syntax.
 
 You can run PlotFX from the command line, where it generates SVG, PNG and PDF
 output files. Additionally, you can embed it into your own application using the
 C API.
 
-**WARNING**: The master branch recently underwent a large refactoring and the
-stability is currently beta/experimental. Maybe not even that. Polishing everything
-up will take a few more weeks...
+PlotFX is built in the hope that using it will be quick, simple and fun.
+
+**WARNING**: The master branch recently underwent a significant refactoring and the
+stability is currently beta/experimental. Maybe not even that. It will take a few
+more weeks to stabilize and document everything.
 
 [Examples](https://plotfx.org/examples) |
 [Documentation](https://plotfx.org/reference)
@@ -26,31 +25,36 @@ up will take a few more weeks...
 Getting Started
 ---------------
 
-Here is how to draw a simple scatter plot using plotfx:
+Here is how to draw a simple timeseries chart using plotfx:
 
     $ plotfx --in example_chart.ptx --out example_chart.svg
 
 Output File (`example_chart.svg`):
 
-[![A simple line chart](/examples/linecharts/lines_with_points.svg)](./examples/linecharts/lines_with_points.ptx)
+[![A simple line chart](/examples/linecharts/simple_timeseries.svg)](./examples/linecharts/simple_timeseries.ptx)
 
 Input File (`example_chart.ptx`):
 
-    data: csv('tests/testdata/city_temperatures.csv');
-    x: month;
-    y: temperature;
-    group: city;
+    width: 1200px;
+    height: 280px;
 
-    scale-y-min: -10;
-    scale-y-max: 32;
+    scale-y-min: 0;
+    scale-y-max: 140;
 
-    layer {
-      type: lines;
-      stroke: 2pt;
+    lines {
+      xs: csv('measurement.csv', time);
+      ys: csv('measurement.csv', value2);
+      colors: #06c;
     }
 
-    legend {
-      position: top left inside;
+    axis {
+      position: bottom;
+      format: datetime("%H:%M:%S");
+    }
+
+    axis {
+      position: left;
+      layout: linear(20);
     }
 
 
