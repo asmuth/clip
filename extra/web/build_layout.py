@@ -22,7 +22,7 @@ tpl = """
         <a href="/"><img src="/logo.png" alt="PlotFX" class="logo" /></a>
         <a class="menu {{menu_active_documentation}}" href="/">Documentation</a>
         <a class="menu {{menu_active_examples}}" href="/examples">Examples</a>
-        <a class="menu {{menu_active_reference}}" href="/reference">API Reference</a>
+        <a class="menu {{menu_active_reference}}" href="/reference">Reference</a>
         <a class="menu {{menu_active_download}}" href="/download">Download</a>
         <a class="menu" href="http://github.com/plotfx/plotfx" target="_blank">Github</a>
       </div>
@@ -37,6 +37,13 @@ tpl = """
               {{#pages}}
                 <li>
                   <a href="{{url}}">{{title}}</a>
+                  <ul>
+                    {{#pages}}
+                      <li>
+                        <a href="{{url}}">{{title}}</a>
+                      </li>
+                    {{/pages}}
+                  </ul>
                 </li>
               {{/pages}}
             </ul>
@@ -63,8 +70,18 @@ tpl = """
 </html>
 """
 
+def extend_toc(entry):
+  if "pages" in entry:
+    entry["pages"] = map(lambda x: extend_toc(x), entry["pages"])
+  else:
+    entry["pages"] = []
+
+  return entry
+
 def build_layout(url, content, title=""):
   toc = yaml.load(Path("manual/toc.yaml").read_text())["documentation"]
+  toc = map(lambda x: extend_toc(x), toc)
+
   return TPL.render(tpl, {
     "content": content,
     "url": url,

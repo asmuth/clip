@@ -1,10 +1,10 @@
-Units & Formats
-===============
+Formatters
+==========
 
-The `<label-format>` setting controls how values are formatted for display. Here
+The `<format>` setting controls how values are formatted for display. Here
 is the list of valid values:
 
-### List of `<label-format>` values
+### List of `<format>` values
 
 ---
 
@@ -22,12 +22,6 @@ If no parameter `N` is given, it defaults to one (1).
 #### `scientific`
 
 ![format_scientific.svg](/documentation/figures/format_scientific.svg)
-
----
-
-#### `string`
-
-![format_string.svg](/documentation/figures/format_string.svg)
 
 ---
 

@@ -53,7 +53,6 @@ def build_prop_detail(parent, prop):
   url = parent["id"] + "/" + prop["name"]
   print("> Building page: /reference/%s" % url)
 
-  print(prop)
   title = "%s | %s | API Reference" % (prop["name"], parent["path"])
   tpl = Path("extra/web/reference_detail.tpl.html").read_text()
   path = "/reference/" + url
@@ -76,7 +75,6 @@ def main():
   tree = yaml.load(open('manual/properties.yml'))
   html = ""
 
-  print(tree)
   for elem in tree["elements"]:
     html += build_prop_overview(elem)
 

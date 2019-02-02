@@ -1,5 +1,5 @@
-Plot: Lines
-============
+Element: `lines`
+================
 
 Lorem ipsum dolor sit amet.
 
