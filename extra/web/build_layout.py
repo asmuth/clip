@@ -9,7 +9,7 @@ tpl = """
 <!DOCTYPE html>
 <html>
   <head>
-    <title>{{title}} | plotfx</title>
+    <title>{{title}}</title>
     <link href='/documentation.css' type='text/css' rel='stylesheet' />
     <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
     <link href="https://fonts.googleapis.com/css?family=Roboto:400,400i,500,700" rel="stylesheet">
@@ -80,6 +80,9 @@ def extend_toc(entry):
 def build_layout(url, content, title=""):
   toc = yaml.load(Path("manual/toc.yaml").read_text())["documentation"]
   toc = map(lambda x: extend_toc(x), toc)
+
+  if title != "PlotFX":
+    title += " - PlotFX"
 
   return TPL.render(tpl, {
     "content": content,

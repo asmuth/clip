@@ -6,7 +6,7 @@ documentation:
     pages:
       -
         title: "Introduction"
-        doctitle: "PlotFX - The open-source plotting toolkit"
+        doctitle: "PlotFX"
         url: "/"
         file: "introduction"
       -

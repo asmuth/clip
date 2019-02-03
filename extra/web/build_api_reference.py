@@ -23,7 +23,7 @@ def build_elem_page(elem_file):
   elem["properties"] = list(map(lambda p: load_prop(p), elem["properties"]))
   url = "/documentation/elements/" + elem["name"]
   print("> Building page: %s" % url)
-  title = "%s | API Reference" % (elem["name"])
+  title = elem["name"]
   tpl = Path("extra/web/reference_detail.tpl.html").read_text()
   html = TPL.render(tpl, elem)
   write_page(url, html, title=title)
