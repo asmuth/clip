@@ -420,61 +420,63 @@ table.invisible tr, table.invisible td {
   margin-top: 0;
 }
 
-#documentation .api_ref {
+#documentation .info_box {
   border: 1px solid #ddd;
-  margin-top: 2em;
   margin-bottom: 3em;
   border-radius: 2px;
   padding-top: .5em;
 }
 
-#documentation .api_ref code strong {
+#documentation .info_box code strong {
   font-size: 110%;
 }
 
-#documentation .api_ref h2 {
+#documentation .info_box h2 {
   border-bottom: none;
-  margin-top: .2em;
+  margin-top: .1em;
   margin-bottom: 0;
   padding-bottom: 0;
   font-weight: 600;
   padding-left: 14px;
-  font-size: 14pt;
-  line-height: 18pt;
+  font-size: 11pt;
+  line-height: 12pt;
   font-weight: 400;
   color: #888;
 }
 
-#documentation .api_ref h2.sub {
+#documentation .info_box h2.sub {
   font-size: 11pt;
   margin-top: 0;
   padding-top: 0;
   line-height: 16pt;
 }
 
-#documentation .api_ref .plist {
-  display: table;
+#documentation .info_box > div {
   border-top: 2px solid #ddd;
   margin-top: .6em;
+}
+
+#documentation .plist {
+  display: table;
   margin-bottom: 0;
   width: 100%;
 }
 
-#documentation .api_ref .prop {
+#documentation .plist .prop {
   display: table-row;
   width: 100%;
   color: inherit;
 }
 
-#documentation .api_ref .prop:nth-child(2n+0) { background-color: #f8f8f8; }
+#documentation .plist .prop:nth-child(2n+0) { background-color: #f8f8f8; }
 
-#documentation .api_ref .prop:hover {
+#documentation .plist .prop:hover {
   background: #00f;
   color: #fff;
   text-decoration: none;
 }
 
-#documentation .api_ref .prop > span {
+#documentation .plist .prop > span {
   display: table-cell;
   padding: 6px 6px 5px 6px;
   text-align: left;

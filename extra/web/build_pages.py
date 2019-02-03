@@ -6,6 +6,9 @@ from pathlib import Path
 import re
 
 def build_page(page):
+  if not "file" in page:
+    return
+
   print("> Building page: %s" % page["url"])
   url = page["url"]
   path = "manual/" + page["file"] + ".md"

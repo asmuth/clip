@@ -1,0 +1,79 @@
+name: areas
+desc_short: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. 
+desc: The areas element is used to create area charts.
+
+demo: |
+  areas {
+    xs: <dataset>;
+    ys: <dataset>;
+  }
+
+
+properties:
+
+  # prop: xs
+  - name: xs
+    desc_short: Set the default 'x' dataset for the element
+    desc: |
+      Set the 'x' dataset for the element. The 'x' dataset will be used to
+      calculate the horizontal position of geometry.
+    syntax_formal: "x: <dataset>"
+    syntax_example: |
+      /* Set the x dataset to the literal values 10, 20, 30, 40, 50 */
+      x: inline(10, 20, 30, 40, 50);
+
+      /* Load the x dataset from the CSV file 'data.csv', colum name 'mycolx' */
+      x: csv('data.csv', mycolx);
+
+      /* Set the x dataset to the 'city' variable (assuming a 'city' variable exists)*/
+      x: city;
+    values:
+      - value: "inline(values...)"
+        desc: "Specify the x dataset as a list of inline values"
+      - value: "csv(file, column, opts...)"
+        desc: "Load the x dataset from a CSV file"
+      - value: "<variable>"
+        desc: "Set the x dataset to a variable"
+    default: |
+      This property has no default value.
+
+  # prop: ys
+  - name: ys
+    desc_short: Set the default 'y' dataset for the element
+    desc: |
+      Set the 'y' dataset for the element. The 'y' dataset will be used to
+      calculate the horizontal position of geometry.
+    syntax_formal: "y: <dataset>"
+    syntax_example: |
+      /* Set the y dataset to the literal values 10, 20, 30, 40, 50 */
+      y: inline(10, 20, 30, 40, 50);
+
+      /* Load the y dataset from the CSV file 'data.csv', colum name 'mycoly' */
+      y: csv('data.csv', mycoly);
+
+      /* Set the y dataset to the 'city' variable (assuming a 'city' variable exists)*/
+      y: city;
+    values:
+      - value: "inline(values...)"
+        desc: "Specify the y dataset as a list of inline values"
+      - value: "csv(file, column, opts...)"
+        desc: "Load the y dataset from a CSV file"
+      - value: "<variable>"
+        desc: "Set the y dataset to a variable"
+    default: |
+      This property has no default value.
+
+  - name: x-offset
+    desc_short: ''
+  - name: y-offset
+    desc_short: ''
+  - name: scale-x
+    desc_short: Use an alternative 'x' scale
+  - name: scale-y
+    desc_short: Use an alternative 'y' scale
+  - name: color
+    desc_short: Set the area colour
+  - name: colors
+    desc_short: Set the area colours
+
+

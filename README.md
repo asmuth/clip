@@ -5,7 +5,7 @@ PlotFX
 ![BSD-License](https://img.shields.io/badge/license-BSD-blue.svg?style=flat-square)
 
 PlotFX is a tool for creating data-driven graphics; it allows you to create
-parametric illustrations such as charts and dashboards using a lighweight
+parametric illustrations such as charts and dashboards using a lightweight
 CSS-like syntax.
 
 You can run PlotFX from the command line, where it generates SVG, PNG and PDF

@@ -540,41 +540,6 @@ elements:
       desc_short: Compute line colours from input data
     - name: stroke
       desc_short: Set the stroke width and style
-
-  - path: plot.layer
-    id: plot-layer-area
-    cond: "type = area"
-    properties:
-    - name: type
-      desc_short: Must be 'area'
-
-    # plot > layer > area > x
-    - *prop_x
-
-    # plot > layer > area > y
-    - *prop_y
-
-    - name: x-offset
-      desc_short: ''
-    - name: y-offset
-      desc_short: ''
-
-    # plot > layer > area > group
-    - *prop_group
-
-    - name: group
-      desc_short: Group the input data into series/groups
-    - name: scale-x
-      desc_short: Use an alternative 'x' scale
-    - name: scale-y
-      desc_short: Use an alternative 'y' scale
-    - name: title
-      desc_short: Add a title to this layer
-    - name: color
-      desc_short: Set the area colour
-    - name: colors
-      desc_short: Compute area colours from input data
-
   - path: plot.layer
     id: plot-layer-points
     cond: "type = points"

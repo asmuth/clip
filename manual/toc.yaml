@@ -65,27 +65,21 @@ documentation:
           -
             title: "areas"
             url: "/elements/areas"
-            file: "elem_areas"
           -
             title: "axis"
             url: "/elements/axis"
-            file: "elem_axis"
           -
             title: "bars"
             url: "/elements/bars"
-            file: "elem_bars"
           -
             title: "gridlines"
             url: "/elements/gridlines"
-            file: "elem_gridlines"
           -
             title: "lines"
             url: "/elements/lines"
-            file: "elem_lines"
           -
             title: "points"
             url: "/elements/points"
-            file: "elem_points"
 
       -
         title: "Scales"
