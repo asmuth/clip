@@ -1,7 +1,7 @@
 # PlotFX v0.2.0
 
 PlotFX is a tool for creating data-driven graphics; it allows you to create
-parametric illustrations such as charts and dashboards using a lighweight
+parametric illustrations such as charts and dashboards using a lightweight
 CSS-like syntax.
 
 You can run PlotFX from the command line, where it generates SVG, PNG and PDF

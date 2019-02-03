@@ -1,10 +1,10 @@
-name: areas
-desc_short: The areas element is used to create area charts.
-desc: The areas element is used to create area charts.
-demo_img: /examples/areacharts/simple_area.svg
+name: lines
+desc_short: The lines element is used to create line charts.
+desc: The lines element is used to create line charts.
+demo_img: /examples/linecharts/simple_timeseries.svg
 
 demo: |
-  areas {
+  lines {
     xs: <dataset>;
     ys: <dataset>;
   }
@@ -18,14 +18,6 @@ properties:
   # prop: ys
   - name: ys
     inherit: ys
-
-  # prop: x-offsets
-  - name: x-offsets
-    inherit: x_offsets
-
-  # prop: y-offsets
-  - name: y-offsets
-    inherit: y_offsets
 
   # prop: scale-x
   - name: scale-x
@@ -59,9 +51,6 @@ properties:
   - name: scale-y-padding
     inherit: scale_y_padding
 
-  # prop: direction
-  - name: direction
-
   # prop: color
   - name: color
     inherit: color
@@ -70,3 +59,6 @@ properties:
   - name: colors
     inherit: colors
 
+  # prop: stroke
+  - name: stroke
+    inherit: stroke

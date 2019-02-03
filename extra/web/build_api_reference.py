@@ -5,10 +5,23 @@ from build_layout import *
 import markdown
 import yaml
 import glob
+import os
+
+def load_prop(p):
+  if "inherit" in p:
+    path = "manual/prop_%s.yaml" % p.get("inherit", "")
+    if os.path.exists(path):
+      p = {**yaml.load(open(path)), **p}
+
+  if not "desc_short" in p:
+    p["desc_short"] = ""
+
+  return p
 
 def build_elem_page(elem_file):
   elem = yaml.load(open(elem_file))
-  url = "/elements/" + elem["name"]
+  elem["properties"] = list(map(lambda p: load_prop(p), elem["properties"]))
+  url = "/documentation/elements/" + elem["name"]
   print("> Building page: %s" % url)
   title = "%s | API Reference" % (elem["name"])
   tpl = Path("extra/web/reference_detail.tpl.html").read_text()

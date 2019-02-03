@@ -22,9 +22,8 @@ tpl = """
         <a href="/"><img src="/logo.png" alt="PlotFX" class="logo" /></a>
         <a class="menu {{menu_active_documentation}}" href="/">Documentation</a>
         <a class="menu {{menu_active_examples}}" href="/examples">Examples</a>
-        <a class="menu {{menu_active_reference}}" href="/reference">Reference</a>
         <a class="menu {{menu_active_download}}" href="/download">Download</a>
-        <a class="menu" href="http://github.com/plotfx/plotfx" target="_blank">Github</a>
+        <a class="menu github" href="http://github.com/plotfx/plotfx" target="_blank">View on <img src="https://github.githubassets.com/images/modules/logos_page/GitHub-Logo.png" style="height: 12px; position: relative; top: 1px; left: 1px;"></a>
       </div>
     </div>
 

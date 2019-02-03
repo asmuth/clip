@@ -1,0 +1,19 @@
+name: ys
+desc_short: Set the default 'y' dataset for the element
+desc: |
+  Set the 'y' dataset for the element. The 'y' dataset will be used to
+  calculate the horizontal position of geometry.
+syntax_formal: "ys: <dataset>"
+values:
+  - value: "value [, value]..."
+    desc: "Specify the y dataset as a list of inline values"
+  - value: "csv(file, column, opts...)"
+    desc: "Load the y dataset from a CSV file"
+default: |
+  This property has no default value.
+syntax_example: |
+  /* Set the y dataset to the literal values 10, 20, 30, 40, 50 */
+  ys: 10, 20, 30, 40, 50;
+
+  /* Load the y dataset from the CSV file 'data.csv', colum name 'mycoly' */
+  ys: csv('data.csv', mycoly);

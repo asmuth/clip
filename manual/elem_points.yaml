@@ -1,10 +1,10 @@
-name: areas
-desc_short: The areas element is used to create area charts.
-desc: The areas element is used to create area charts.
-demo_img: /examples/areacharts/simple_area.svg
+name: points
+desc_short: The points element is used to create point charts.
+desc: The points element is used to create point charts.
+demo_img: /examples/pointcharts/pointchart_with_labels.svg
 
 demo: |
-  areas {
+  points {
     xs: <dataset>;
     ys: <dataset>;
   }
@@ -18,14 +18,6 @@ properties:
   # prop: ys
   - name: ys
     inherit: ys
-
-  # prop: x-offsets
-  - name: x-offsets
-    inherit: x_offsets
-
-  # prop: y-offsets
-  - name: y-offsets
-    inherit: y_offsets
 
   # prop: scale-x
   - name: scale-x
@@ -59,8 +51,13 @@ properties:
   - name: scale-y-padding
     inherit: scale_y_padding
 
-  # prop: direction
-  - name: direction
+  # prop: size
+  - name: size
+    inherit: size
+
+  # prop: sizes
+  - name: sizes
+    inherit: sizes
 
   # prop: color
   - name: color
@@ -70,3 +67,6 @@ properties:
   - name: colors
     inherit: colors
 
+  # prop: labels
+  - name: labels
+    inherit: labels

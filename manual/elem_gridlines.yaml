@@ -1,31 +1,11 @@
-name: areas
-desc_short: The areas element is used to create area charts.
-desc: The areas element is used to create area charts.
-demo_img: /examples/areacharts/simple_area.svg
+name: gridlines
+desc_short: The gridlines element is used to draw background grid lines.
+desc: The gridlines element is used to draw background grid lines.
 
 demo: |
-  areas {
-    xs: <dataset>;
-    ys: <dataset>;
-  }
+  gridlines {}
 
 properties:
-
-  # prop: xs
-  - name: xs
-    inherit: xs
-
-  # prop: ys
-  - name: ys
-    inherit: ys
-
-  # prop: x-offsets
-  - name: x-offsets
-    inherit: x_offsets
-
-  # prop: y-offsets
-  - name: y-offsets
-    inherit: y_offsets
 
   # prop: scale-x
   - name: scale-x
@@ -59,14 +39,17 @@ properties:
   - name: scale-y-padding
     inherit: scale_y_padding
 
-  # prop: direction
-  - name: direction
+  # prop: layout-x
+  - name: layout-x
+
+  # prop: layout-y
+  - name: layout-y
+
+  # prop: stroke
+  - name: stroke
+    inherit: stroke
 
   # prop: color
   - name: color
     inherit: color
-
-  # prop: colors
-  - name: colors
-    inherit: colors
 

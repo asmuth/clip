@@ -59,27 +59,27 @@ documentation:
       #  file: "units"
       -
         title: "Elements"
-        url: "/elements"
+        url: "/documentation/elements"
         file: "elements"
         pages:
           -
             title: "areas"
-            url: "/elements/areas"
+            url: "/documentation/elements/areas"
           -
             title: "axis"
-            url: "/elements/axis"
+            url: "/documentation/elements/axis"
           -
             title: "bars"
-            url: "/elements/bars"
+            url: "/documentation/elements/bars"
           -
             title: "gridlines"
-            url: "/elements/gridlines"
+            url: "/documentation/elements/gridlines"
           -
             title: "lines"
-            url: "/elements/lines"
+            url: "/documentation/elements/lines"
           -
             title: "points"
-            url: "/elements/points"
+            url: "/documentation/elements/points"
 
       -
         title: "Scales"

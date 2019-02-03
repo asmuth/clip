@@ -1,10 +1,10 @@
-name: areas
-desc_short: The areas element is used to create area charts.
-desc: The areas element is used to create area charts.
-demo_img: /examples/areacharts/simple_area.svg
+name: bars
+desc_short: The bars element is used to create bar charts.
+desc: The bars element is used to create bar charts.
+demo_img: /examples/barcharts/bars_with_labels.svg
 
 demo: |
-  areas {
+  bars {
     xs: <dataset>;
     ys: <dataset>;
   }
@@ -59,6 +59,20 @@ properties:
   - name: scale-y-padding
     inherit: scale_y_padding
 
+  # prop: size
+  - name: size
+    inherit: size
+
+  # prop: sizes
+  - name: sizes
+    inherit: sizes
+
+  # prop: offset
+  - name: offset
+
+  # prop: offsets
+  - name: offsets
+
   # prop: direction
   - name: direction
 
@@ -70,3 +84,6 @@ properties:
   - name: colors
     inherit: colors
 
+  # prop: labels
+  - name: labels
+    inherit: labels
