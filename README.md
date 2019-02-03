@@ -19,7 +19,7 @@ stability is currently beta/experimental. Maybe not even that. It will take a fe
 more weeks to stabilize and document everything.
 
 [Examples](https://plotfx.org/examples) |
-[Documentation](https://plotfx.org/reference)
+[Documentation](https://plotfx.org/)
 
 
 Getting Started
