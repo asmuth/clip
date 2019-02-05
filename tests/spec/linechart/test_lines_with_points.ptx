@@ -3,32 +3,57 @@ height: 480px;
 
 scale-x-padding: 0.6;
 
-scale-y-max: 32;
-scale-y-min: -10;
+scale-y-max: 35;
+scale-y-min: -20;
 
 lines {
   xs: csv('tests/testdata/city_temperatures_pivot.csv', month);
-  ys: csv('tests/testdata/city_temperatures_pivot.csv', temp_london);
-  colors: #06c;
+  ys: csv('tests/testdata/city_temperatures_pivot.csv', temp_nyc);
+  colors: #4572a7;
+}
+
+points {
+  xs: csv('tests/testdata/city_temperatures_pivot.csv', month);
+  ys: csv('tests/testdata/city_temperatures_pivot.csv', temp_nyc);
+  colors: #4572a7;
 }
 
 lines {
   xs: csv('tests/testdata/city_temperatures_pivot.csv', month);
   ys: csv('tests/testdata/city_temperatures_pivot.csv', temp_beijing);
-  colors: #c06;
-}
-
-points {
-  xs: csv('tests/testdata/city_temperatures_pivot.csv', month);
-  ys: csv('tests/testdata/city_temperatures_pivot.csv', temp_london);
-  colors: #06c;
+  colors: #aa4643;
 }
 
 points {
   xs: csv('tests/testdata/city_temperatures_pivot.csv', month);
   ys: csv('tests/testdata/city_temperatures_pivot.csv', temp_beijing);
-  colors: #c06;
+  colors: #aa4643;
 }
+
+lines {
+  xs: csv('tests/testdata/city_temperatures_pivot.csv', month);
+  ys: csv('tests/testdata/city_temperatures_pivot.csv', temp_moscow);
+  colors: #89a54e;
+}
+
+points {
+  xs: csv('tests/testdata/city_temperatures_pivot.csv', month);
+  ys: csv('tests/testdata/city_temperatures_pivot.csv', temp_moscow);
+  colors: #89a54e;
+}
+
+lines {
+  xs: csv('tests/testdata/city_temperatures_pivot.csv', month);
+  ys: csv('tests/testdata/city_temperatures_pivot.csv', temp_berlin);
+  colors: #80699b;
+}
+
+points {
+  xs: csv('tests/testdata/city_temperatures_pivot.csv', month);
+  ys: csv('tests/testdata/city_temperatures_pivot.csv', temp_berlin);
+  colors: #80699b;
+}
+
 
 axis {
   position: left;
