@@ -32,6 +32,7 @@
 #include "elements/axis.h"
 #include "elements/bars.h"
 #include "elements/gridlines.h"
+#include "elements/legend.h"
 #include "elements/lines.h"
 #include "elements/points.h"
 
@@ -69,6 +70,13 @@ static std::unordered_map<std::string, ElementBuilder> elems = {
         &gridlines::configure,
         &gridlines::layout,
         &gridlines::draw)
+  },
+  {
+    "legend",
+    elem_builder<LegendConfig>(
+        &legend::configure,
+        &legend::layout,
+        &legend::draw)
   },
   {
     "lines",

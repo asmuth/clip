@@ -47,18 +47,7 @@ enum class LegendPlacement {
   OUTSIDE
 };
 
-struct LegendItem {
-  std::string title;
-  Color color;
-};
-
-struct LegendItemGroup {
-  std::vector<LegendItem> items;
-  std::string title;
-};
-
-using LegendItemList = std::vector<LegendItem>;
-using LegendItemMap = std::unordered_map<std::string, std::vector<LegendItemGroup>>;
+using LegendItemList = std::vector<std::string>;
 
 struct LegendConfig {
   LegendConfig();
@@ -76,7 +65,8 @@ struct LegendConfig {
   HAlign position_horiz;
   VAlign position_vert;
   std::string title;
-  std::vector<LegendItemGroup> groups;
+  std::vector<std::string> items;
+  std::vector<Color> colors;
 };
 
 namespace legend {

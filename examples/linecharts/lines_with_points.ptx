@@ -54,7 +54,6 @@ points {
   colors: #80699b;
 }
 
-
 axis {
   position: left;
   layout: linear(5);
@@ -65,3 +64,10 @@ axis {
   layout: linear(1, align 1);
   labels: csv('tests/testdata/city_temperatures_pivot.csv', month_name);
 }
+
+legend {
+  position: bottom left inside;
+  items: "New York", "Beijing", "Moscow", "Berlin";
+  colors: #4572a7, #aa4643, #89a54e, #80699b;
+}
+

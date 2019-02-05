@@ -51,16 +51,9 @@ LegendConfig::LegendConfig() :
     position_horiz(HAlign::LEFT),
     position_vert(VAlign::TOP) {}
 
-void legend_items_add(
-    const std::string& key,
-    LegendItemGroup items,
-    LegendItemMap* map) {
-  (*map)[key].emplace_back(std::move(items));
-}
-
 ReturnCode legend_layout_items(
     const LegendConfig& legend,
-    const LegendItemList& legend_items,
+    const std::vector<std::string>& legend_items,
     Point origin,
     std::function<ReturnCode (size_t idx, Point p)> on_label,
     const Layer* layer,
@@ -70,15 +63,14 @@ ReturnCode legend_layout_items(
       legend.item_margins[1],
       from_em(kDefaultItemPaddingHorizEM, font_size));
 
-  double point_size = 5; // FIXME
-  double line_height = font_size; // FIXME
+  double point_size = 5; // TODO
+  double line_height = font_size; // TODO
 
   double sx = origin.x;
   double sy = origin.y;
 
   for (size_t idx = 0; idx < legend_items.size(); ++idx) {
-    const auto& e = legend_items[idx];
-    const auto& label_text = e.title;
+    const auto& label_text = legend_items[idx];
 
     if (on_label) {
       if (auto rc = on_label(idx, Point(sx, sy + line_height / 2)); !rc) {
@@ -103,10 +95,10 @@ ReturnCode legend_layout_items(
       return rc;
     }
 
-    sx += point_size * 2.8; // FIXME
+    sx += point_size * 2.8; // TODO
     sx += label_bbox.w;
 
-    if (idx + 1< legend_items.size()) {
+    if (idx + 1 < legend_items.size()) {
       sx += padding_item_right;
     }
   }
@@ -146,121 +138,95 @@ ReturnCode legend_draw_inside(
       legend.item_margins[1],
       from_em(kDefaultItemPaddingHorizEM, font_size));
 
-  double point_size = 5; // FIXME
-  for (const auto& group : legend.groups) {
-    auto draw_label = [&] (size_t idx, Point pos) {
-      const auto& e = group.items[idx];
-      const auto& label_text = e.title;
+  double point_size = 5; // TODO
+  auto draw_label = [&] (size_t idx, Point pos) {
+    const auto& label_text = legend.items[idx];
 
-      {
-        FillStyle style;
-        style.color = e.color;
-        Path path;
-        path.moveTo(pos.x + point_size + point_size / 2, pos.y);
-        path.arcTo(pos.x + point_size / 2, pos.y, point_size, 0, M_PI * 2);
-        fillPath(layer, path, style);
-        pos.x += point_size * 2.8; // FIXME
+    const auto& color = legend.colors.empty()
+        ? Color{}
+        : legend.colors[idx % legend.colors.size()];
+
+    {
+      FillStyle style;
+      style.color = color;
+      Path path;
+      path.moveTo(pos.x + point_size + point_size / 2, pos.y);
+      path.arcTo(pos.x + point_size / 2, pos.y, point_size, 0, M_PI * 2);
+      fillPath(layer, path, style);
+      pos.x += point_size * 2.8; // TODO
+    }
+
+    {
+      TextStyle style;
+      style.color = legend.text_color;
+      style.font = legend.font;
+      style.font_size = font_size;
+
+      if (auto rc = drawTextLabel(
+            label_text,
+            pos,
+            HAlign::LEFT,
+            VAlign::CENTER,
+            style,
+            layer); rc != OK) {
+        return rc;
       }
-
-      {
-        TextStyle style;
-        style.color = legend.text_color;
-        style.font = legend.font;
-        style.font_size = font_size;
-
-        if (auto rc = drawTextLabel(
-              label_text,
-              pos,
-              HAlign::LEFT,
-              VAlign::CENTER,
-              style,
-              layer); rc != OK) {
-          return rc;
-        }
-      }
-
-      return OK;
-    };
-
-    Rectangle content_bbox;
-    if (auto rc = legend_layout_items(
-        legend,
-        group.items,
-        Point(0, 0),
-        nullptr,
-        layer,
-        &content_bbox);
-        !rc) {
-      return rc;
     }
 
-    Point origin(0, 0);
+    return OK;
+  };
 
-    switch (legend.position_horiz) {
-      case HAlign::LEFT:
-        origin.x = std::min(
-            bbox.x + padding_left,
-            bbox.x + bbox.w);
-        break;
-      case HAlign::RIGHT:
-        origin.x = std::max(
-            bbox.x + bbox.w - content_bbox.w - padding_right,
-            bbox.x);
-        break;
-      case HAlign::CENTER:
-        origin.x = bbox.x + bbox.w / 2 - content_bbox.w / 2;
-        break;
-    }
-
-    switch (legend.position_vert) {
-      case VAlign::TOP:
-        origin.y = bbox.y + padding_top;
-        break;
-      case VAlign::BOTTOM:
-        origin.y = bbox.y + bbox.h - content_bbox.h - padding_bottom;
-        break;
-      case VAlign::CENTER:
-        origin.y = bbox.y + bbox.h / 2;
-        break;
-    }
-
-    if (auto rc = legend_layout_items(
-        legend,
-        group.items,
-        origin,
-        draw_label,
-        layer,
-        nullptr);
-        !rc) {
-      return rc;
-    }
+  Rectangle content_bbox;
+  if (auto rc = legend_layout_items(
+      legend,
+      legend.items,
+      Point(0, 0),
+      nullptr,
+      layer,
+      &content_bbox);
+      !rc) {
+    return rc;
   }
 
-  return OK;
-}
+  Point origin(0, 0);
 
-ReturnCode legend_draw(
-    const LegendConfig& config,
-    const Rectangle& bbox,
-    Layer* layer) {
-  switch (config.placement) {
-    case LegendPlacement::INSIDE:
-      return legend_draw_inside(config, bbox, layer);
-    case LegendPlacement::OUTSIDE:
-    case LegendPlacement::OFF:
-    default:
-      return OK;
+  switch (legend.position_horiz) {
+    case HAlign::LEFT:
+      origin.x = std::min(
+          bbox.x + padding_left,
+          bbox.x + bbox.w);
+      break;
+    case HAlign::RIGHT:
+      origin.x = std::max(
+          bbox.x + bbox.w - content_bbox.w - padding_right,
+          bbox.x);
+      break;
+    case HAlign::CENTER:
+      origin.x = bbox.x + bbox.w / 2 - content_bbox.w / 2;
+      break;
   }
-}
 
-ReturnCode legend_draw(
-    const LegendMap& legends,
-    const Rectangle& bbox,
-    Layer* layer) {
-  for (const auto& e : legends) {
-    if (auto rc = legend_draw(e.second, bbox, layer); !rc) {
-      return rc;
-    }
+  switch (legend.position_vert) {
+    case VAlign::TOP:
+      origin.y = bbox.y + padding_top;
+      break;
+    case VAlign::BOTTOM:
+      origin.y = bbox.y + bbox.h - content_bbox.h - padding_bottom;
+      break;
+    case VAlign::CENTER:
+      origin.y = bbox.y + bbox.h / 2;
+      break;
+  }
+
+  if (auto rc = legend_layout_items(
+      legend,
+      legend.items,
+      origin,
+      draw_label,
+      layer,
+      nullptr);
+      !rc) {
+    return rc;
   }
 
   return OK;
@@ -326,52 +292,79 @@ ReturnCode legend_configure_position(
   return OK;
 }
 
-ReturnCode legend_configure(
-    const Document& doc,
-    const plist::Property& prop,
-    const LegendItemMap& item_map,
-    LegendMap* map) {
-  if (!plist::is_map(prop)) {
-    return ERROR;
+namespace legend {
+
+ReturnCode draw(
+    const LegendConfig& config,
+    const LayoutInfo& layout,
+    Layer* layer) {
+  switch (config.placement) {
+    case LegendPlacement::INSIDE:
+      return legend_draw_inside(config, layout.content_box, layer);
+    case LegendPlacement::OUTSIDE:
+    case LegendPlacement::OFF:
+    default:
+      return ERROR; // TODO: not implemented
   }
+}
 
-  const auto& plist = *prop.next;
+ReturnCode layout(
+    const LegendConfig& config,
+    const Layer& layer,
+    LayoutInfo* layout) {
+  switch (config.placement) {
+    case LegendPlacement::INSIDE:
+      /* nothing to do */
+      return OK;
+    case LegendPlacement::OUTSIDE:
+    case LegendPlacement::OFF:
+    default:
+      return ERROR; // TODO: not implemented
+  }
+}
 
-  LegendConfig config;
-  config.font = doc.font_sans;
-  config.border_color = doc.border_color;
-  config.text_color = doc.text_color;
+ReturnCode configure(
+    const plist::PropertyList& plist,
+    const DataContext& data,
+    const Document& doc,
+    const Environment& env,
+    LegendConfig* config) {
+  /* inherit defaults */
+  config->font = doc.font_sans;
+  config->border_color = doc.border_color;
+  config->text_color = doc.text_color;
 
+  /* parse properties */
   static const ParserDefinitions pdefs = {
     {
       "position",
       bind(
           &legend_configure_position,
           _1,
-          &config.placement,
-          &config.position_horiz,
-          &config.position_vert)
+          &config->placement,
+          &config->position_horiz,
+          &config->position_vert)
     },
     {
       "title",
       bind(
           &configure_string,
           _1,
-          &config.title)
+          &config->title)
       },
     {
       "text-color",
       bind(
           &configure_color,
           _1,
-          &config.text_color)
+          &config->text_color)
     },
     {
       "border-color",
       bind(
           &configure_color,
           _1,
-          &config.border_color)
+          &config->border_color)
     },
     {
       "item-margin",
@@ -379,19 +372,19 @@ ReturnCode legend_configure(
           bind(
               &configure_measure,
               _1,
-              &config.item_margins[0]),
+              &config->item_margins[0]),
           bind(
               &configure_measure,
               _1,
-              &config.item_margins[1]),
+              &config->item_margins[1]),
           bind(
               &configure_measure,
               _1,
-              &config.item_margins[2]),
+              &config->item_margins[2]),
           bind(
               &configure_measure,
               _1,
-              &config.item_margins[3])
+              &config->item_margins[3])
       })
     },
     {
@@ -399,58 +392,32 @@ ReturnCode legend_configure(
       bind(
           &configure_measure,
           _1,
-          &config.item_margins[0])
+          &config->item_margins[0])
     },
     {
       "item-margin-right",
       bind(
           &configure_measure,
           _1,
-          &config.item_margins[1])
+          &config->item_margins[1])
     },
     {
       "item-margin-bottom",
       bind(
           &configure_measure,
           _1,
-          &config.item_margins[2])
+          &config->item_margins[2])
     },
     {
       "item-margin-left",
       bind(
           &configure_measure,
           _1,
-          &config.item_margins[3])
+          &config->item_margins[3])
     },
-  };
-
-  if (auto rc = parseAll(plist, pdefs); !rc.isSuccess()) {
-    return rc;
-  }
-
-  if (auto items = find_ptr(item_map, config.key); items) {
-    config.groups.insert(config.groups.end(), items->begin(), items->end());
-  }
-
-  map->emplace(config.key, config);
-  return OK;
-}
-
-ReturnCode legend_configure_all(
-    const Document& doc,
-    const plist::PropertyList& plist,
-    const LegendItemMap& items,
-    LegendMap* config) {
-  static const ParserDefinitions pdefs = {
-    {
-      "legend",
-      bind(
-          &legend_configure,
-          doc,
-          _1,
-          items,
-          config),
-    },
+    {"color", configure_vec<Color>(bind(&configure_color, _1, _2), &config->colors)},
+    {"colors", configure_vec<Color>(bind(&configure_color, _1, _2), &config->colors)},
+    {"items", bind(&configure_strings, _1, &config->items)},
   };
 
   if (auto rc = parseAll(plist, pdefs); !rc.isSuccess()) {
@@ -460,5 +427,6 @@ ReturnCode legend_configure_all(
   return OK;
 }
 
+} // namespace legend
 } // namespace plotfx
 
