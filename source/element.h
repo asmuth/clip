@@ -54,8 +54,6 @@ using ElementDrawAsFn = std::function<ReturnCode (const T&, const LayoutInfo&, L
 template <typename T>
 using ElementConfigureAsFn = std::function<ReturnCode (
     const plist::PropertyList&,
-    const DataContext&,
-    const Document&,
     const Environment&,
     T*)>;
 

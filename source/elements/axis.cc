@@ -494,14 +494,12 @@ ReturnCode layout(
 
 ReturnCode configure(
     const plist::PropertyList& plist,
-    const DataContext& data,
-    const Document& doc,
     const Environment& env,
     AxisDefinition* config) {
-  config->font = doc.font_sans;
-  config->label_font_size = doc.font_size;
-  config->border_color = doc.border_color;
-  config->text_color = doc.text_color;
+  config->font = env.font;
+  config->label_font_size = env.font_size;
+  config->border_color = env.border_color;
+  config->text_color = env.text_color;
 
   {
     static const ParserDefinitions pdefs = {

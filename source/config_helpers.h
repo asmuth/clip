@@ -76,8 +76,6 @@ ParserFn configure_multiprop(const std::vector<ParserFn>& parsers);
 ParserFn configure_alt(
     const ParserDefinitions& parsers);
 
-ParserFn configure_key(std::string* key);
-
 ReturnCode configure_measure(
     const plist::Property& prop,
     Measure* value);
@@ -111,23 +109,6 @@ ReturnCode configure_float_opt(
     const plist::Property& prop,
     std::optional<double>* value);
 
-ReturnCode configure_datasource_prop(
-    const plist::Property& prop,
-    DataContext* data);
-
-ReturnCode configure_datasource(
-    const plist::PropertyList& plist,
-    DataContext* data);
-
-ReturnCode configure_series(
-    const plist::Property& prop,
-    const DataContext& ctx,
-    SeriesRef* data);
-
-ParserFn configure_series_fn(
-    const DataContext& ctx,
-    SeriesRef* data);
-
 ReturnCode configure_strings(
     const plist::Property& prop,
     std::vector<std::string>* data);
@@ -135,6 +116,7 @@ ReturnCode configure_strings(
 ReturnCode configure_measures(
     const plist::Property& prop,
     std::vector<Measure>* measures);
+
 
 } // namespace plotfx
 

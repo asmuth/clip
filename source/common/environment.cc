@@ -30,16 +30,68 @@
 #include "environment.h"
 #include "common/format.h"
 #include "common/scale.h"
-
-#include <functional>
+#include "config_helpers.h"
+#include "graphics/font_lookup.h"
 
 using namespace std::placeholders;
 
 namespace plotfx {
 
 Environment::Environment() :
+    screen_width(Unit::UNIT, 1200),
+    screen_height(Unit::UNIT, 480),
+    dpi(96),
     scale_layout_x(bind(&scale_layout_subdivide, _1, _2, 8)),
-    scale_layout_y(bind(&scale_layout_subdivide, _1, _2, 8)) {}
+    scale_layout_y(bind(&scale_layout_subdivide, _1, _2, 8)),
+    background_color(Color::fromRGB(1,1,1)),
+    text_color(Color::fromRGB(.2,.2,.2)),
+    border_color(Color::fromRGB(.66,.66,.66)),
+    font_size(from_pt(11, dpi)) {}
+
+ReturnCode environment_setup_defaults(Environment* env) {
+  if (!font_load(DefaultFont::HELVETICA_REGULAR, &env->font)) {
+    return ReturnCode::error(
+        "EARG",
+        "unable to find default sans-sans font (Helvetica/Arial)");
+  }
+
+  return OK;
+}
+
+ReturnCode environment_configure(
+    const plist::PropertyList& plist,
+    Environment* env) {
+  if (auto rc = environment_setup_defaults(env); !rc.isSuccess()) {
+    return rc;
+  }
+
+  static const ParserDefinitions pdefs = {
+    {"width", bind(&configure_measure, _1, &env->screen_width)},
+    {"height", bind(&configure_measure, _1, &env->screen_height)},
+    {"background-color", bind(&configure_color, _1, &env->background_color)},
+    {
+      "foreground-color",
+      configure_multiprop({
+          bind(&configure_color, _1, &env->text_color),
+          bind(&configure_color, _1, &env->border_color),
+      })
+    },
+    {"text-color", bind(&configure_color, _1, &env->text_color)},
+    {"border-color", bind(&configure_color, _1, &env->border_color)},
+    {"scale-x", bind(&domain_configure, _1, &env->scale_x)},
+    {"scale-x-min", bind(&configure_float_opt, _1, &env->scale_x.min)},
+    {"scale-x-max", bind(&configure_float_opt, _1, &env->scale_x.max)},
+    {"scale-x-padding", bind(&configure_float, _1, &env->scale_x.padding)},
+    {"scale-x-layout", bind(&configure_scale_layout, _1, &env->scale_layout_x)},
+    {"scale-y", bind(&domain_configure, _1, &env->scale_y)},
+    {"scale-y-min", bind(&configure_float_opt, _1, &env->scale_y.min)},
+    {"scale-y-max", bind(&configure_float_opt, _1, &env->scale_y.max)},
+    {"scale-y-padding", bind(&configure_float, _1, &env->scale_y.padding)},
+    {"scale-y-layout", bind(&configure_scale_layout, _1, &env->scale_layout_y)},
+  };
+
+  return parseAll(plist, pdefs);
+}
 
 } // namespace plotfx
 

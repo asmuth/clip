@@ -256,68 +256,6 @@ ReturnCode load_csv(
   return OK;
 }
 
-ReturnCode parse_datasource_csv(
-    const plist::Property& prop ,
-    DataContext* ctx) {
-  if (!plist::is_enum(prop, "csv")) {
-    return ERROR;
-  }
-
-  if (prop.size() < 1) {
-    return ERROR; // FIXME
-  }
-
-  std::string csv_path;
-  bool csv_headers = true;
-  for (size_t i = 0; i < prop.size(); ++i) {
-    if (i == 0) {
-      csv_path = prop[i].value;
-      continue;
-    }
-
-    if (prop[i].value == "noheaders") {
-      csv_headers = false;
-      continue;
-    }
-  }
-
-  return load_csv(csv_path, csv_headers, &ctx->by_name);
-}
-
-ReturnCode configure_datasource_prop(
-    const plist::Property& prop,
-    DataContext* data) {
-  if (plist::is_enum(prop, "csv")) {
-    return parse_datasource_csv(prop, data);
-  }
-
-  return ERROR;
-}
-
-ReturnCode configure_datasource(
-    const plist::PropertyList& plist,
-    DataContext* data) {
-  static const ParserDefinitions pdefs = {
-    {"data", bind(&configure_datasource_prop, _1, data)},
-  };
-
-  return parseAll(plist, pdefs);
-}
-
-ParserFn configure_key(std::string* key) {
-  return [key] (const plist::Property& prop) -> ReturnCode {
-    if (plist::is_value(prop) && prop.value.size() > 0 && prop.value[0] == '$') {
-      *key = prop.value.substr(1);
-      return OK;
-    } else {
-      return ReturnCode::errorf(
-          "EARG",
-          "invalid value '$0'; keys must start with a dollar sign ($)",
-          prop.value);
-    }
-  };
-}
-
 ReturnCode parse_data_series_csv(
     const plist::Property& prop,
     SeriesRef* data_ref) {
@@ -356,65 +294,6 @@ ReturnCode parse_data_series_csv(
         csv_path,
         csv_column);
   }
-}
-
-ReturnCode parse_data_series_inline(
-    const plist::Property& prop,
-    SeriesRef* data_ref) {
-  if (!plist::is_enum(prop, "inline")) {
-    return ERROR;
-  }
-
-  auto data = std::make_shared<Series>();
-  for (const auto& value : *prop.next) {
-    data->emplace_back(value);
-  }
-
-  *data_ref = data;
-  return OK;
-}
-
-ReturnCode parse_data_series_var(
-    const plist::Property& prop,
-    const DataContext& ctx,
-    SeriesRef* data) {
-  if (!plist::is_value_literal(prop)) {
-    return ERROR;
-  }
-
-  const auto& var_name = prop.value;
-  auto var_data = find_maybe(ctx.by_name, var_name);
-  if (!var_data) {
-    return ReturnCode::errorf("EARG", "variable not found: '$0'", var_name);
-  }
-
-  *data = var_data;
-  return OK;
-}
-
-ReturnCode configure_series(
-    const plist::Property& prop,
-    const DataContext& ctx,
-    SeriesRef* data) {
-  if (plist::is_enum(prop, "csv")) {
-    return parse_data_series_csv(prop, data);
-  }
-
-  if (plist::is_enum(prop, "inline")) {
-    return parse_data_series_inline(prop, data);
-  }
-
-  if (plist::is_value_literal(prop)) {
-    return parse_data_series_var(prop, ctx, data);
-  }
-
-  return ERROR;
-}
-
-ParserFn configure_series_fn(
-    const DataContext& ctx,
-    SeriesRef* series) {
-  return bind(&configure_series, _1, ctx, series);
 }
 
 ReturnCode configure_strings(

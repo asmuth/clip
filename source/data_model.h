@@ -39,11 +39,6 @@ using Series = std::vector<Value>;
 using SeriesRef = std::shared_ptr<const Series>;
 using SeriesMap = std::unordered_map<std::string, SeriesRef>;
 
-struct DataContext {
-  SeriesMap by_name;
-  SeriesMap defaults;
-};
-
 struct DataGroup {
   Value key;
   std::vector<size_t> index;

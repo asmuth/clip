@@ -34,19 +34,18 @@
  * The PlotFX C API
  *
  * How to use:
- *  1) Call `plotfx_init_*` to create a new context, for example `plotfx_init_svgfile`
- *  2) Call `plotfx_configure` and pass the configuration string
- *  3) Optional: Call `plotfx_setvar` to override/set dynamic variables
- *  4) Call `plotfx_submit`
- *  5) Optional: Retrieve the result using `plotfx_getimage`
- *  6) Optional: Repeat steps 2..6
- *  7) Once you're done with the PlotFX context, free it using `plotfx_destroy`
+ *  1) Call `plotfx_init` to create a new context
+ *  2) Call `plotfx_configure` with your configuration string
+ *  3) Optional: Set parameters using `plotfx_setparam_*`
+ *  4) Call `plotfx_render_*`, e.g. `plotx_render_svg_file`
+ *  5) Optional: Repeat steps 2..4
+ *  6) Once you're done with the PlotFX context, free it using `plotfx_destroy`
  */
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-typedef void plotfx_t;
+typedef struct plotfx_s plotfx_t;
 
 /**
  * Initialize a new PlotFX context.
@@ -54,22 +53,6 @@ typedef void plotfx_t;
  * @returns: A plotfx context that must be free'd using `plotfx_destroy`
  */
 plotfx_t* plotfx_init();
-
-/**
- * Render the context to an file. If format is nullptr, the filetype is inferred
- * from the filename.
- *
- * @returns: One (1) on success and zero (0) if an error has occured
- */
-int plotfx_render_file(plotfx_t* ctx, const char* path, const char* format);
-
-/**
- * Render the context to an SVG file. The result image will
- * be written to the provided filesystem path once you call `plotfx_Submit`
- *
- * @returns: One (1) on success and zero (0) if an error has occured
- */
-int plotfx_render_svgfile(plotfx_t* ctx, const char* path);
 
 /**
  * Free a PlotFX context
@@ -97,28 +80,56 @@ int plotfx_configure_file(
     const char* path);
 
 /**
+ * Render the context to a file. If format is nullptr, the filetype is inferred
+ * from the filename.
+ *
+ * @returns: One (1) on success and zero (0) if an error has occured
+ */
+int plotfx_render_file(plotfx_t* ctx, const char* path, const char* format);
+
+/**
+ * Render the context to a SVG file. The result image will
+ * be written to the provided filesystem path once you call `plotfx_submit`
+ *
+ * @returns: One (1) on success and zero (0) if an error has occured
+ */
+int plotfx_render_svg_file(plotfx_t* ctx, const char* path);
+
+/**
+ * Render the context to a PNG file. The result image will
+ * be written to the provided filesystem path once you call `plotfx_submit`
+ *
+ * @returns: One (1) on success and zero (0) if an error has occured
+ */
+int plotfx_render_png_file(plotfx_t* ctx, const char* path);
+
+/**
+ * Render the context to a user-provided backend. This method is only useful
+ * if you want to extend PlotFX. Normal users are not expected to ever call this.
+ *
+ * @returns: One (1) on success and zero (0) if an error has occured
+ */
+int plotfx_render_to(plotfx_t* ctx, void* backend);
+
+/**
  * Retrieve the last error message. The returned pointer is valid until the next
  * `plotfx_*` method is called on the context.
  */
 const char* plotfx_geterror(const plotfx_t* ctx);
 
 /**
- * Set a variable in the given PlotFX context.
- *
- * NOTE: If you use this to override a variable that is also set in the
- * configuration file, the order in which you call the `plotfx_configure` and
- * `plotfx_setvar` methods is significant.
+ * Set a user-defined parameter
  */
-void plotfx_setvar_f64(
+void plotfx_setparam_f64(
     plotfx_t* ctx,
     const char* name,
     size_t name_len,
     double value);
 
 /**
- * Set a variable in the given PlotFX context.
+ * Set a user-defined parameter
  */
-void plotfx_setvar_f64v(
+void plotfx_setparam_f64v(
     plotfx_t* ctx,
     const char* name,
     size_t name_len,
@@ -126,9 +137,9 @@ void plotfx_setvar_f64v(
     size_t value_count);
 
 /**
- * Set a variable in the given PlotFX context.
+ * Set a user-defined parameter
  */
-void plotfx_setvar_str(
+void plotfx_setparam_str(
     plotfx_t* ctx,
     const char* name,
     size_t name_len,
@@ -136,9 +147,9 @@ void plotfx_setvar_str(
     size_t value_len);
 
 /**
- * Set a variable in the given PlotFX context.
+ * Set a user-defined parameter
  */
-void plotfx_setvar_strv(
+void plotfx_setparam_strv(
     plotfx_t* ctx,
     const char* name,
     size_t name_len,

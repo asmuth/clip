@@ -65,8 +65,6 @@ ReturnCode layout(
 
 ReturnCode configure(
     const plist::PropertyList& plist,
-    const DataContext& data,
-    const Document& doc,
     const Environment& env,
     PlotAreaConfig* config);
 

@@ -36,8 +36,9 @@
 #include <utils/return_code.h>
 #include <source/common/format.h>
 #include <source/dimension.h>
-#include <document.h>
 #include "common/format.h"
+#include "common/environment.h"
+#include "common/layout.h"
 
 namespace plotfx {
 struct DomainConfig;
@@ -98,8 +99,6 @@ ReturnCode layout(
 
 ReturnCode configure(
     const plist::PropertyList& plist,
-    const DataContext& data,
-    const Document& doc,
     const Environment& env,
     AxisDefinition* config);
 

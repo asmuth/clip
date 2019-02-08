@@ -37,8 +37,6 @@ struct Environment;
 
 using ElementBuilder = std::function<ReturnCode (
     const plist::PropertyList&,
-    const DataContext&,
-    const Document&,
     const Environment&,
     ElementRef* elem)>;
 
@@ -51,8 +49,6 @@ ElementBuilder elem_builder(
 ReturnCode buildElement(
     const std::string& name,
     const plist::PropertyList& plist,
-    const DataContext& ctx,
-    const Document& doc,
     const Environment& env,
     ElementRef* elem);
 

@@ -29,7 +29,8 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 #include "gridlines.h"
-#include "document.h"
+#include "common/environment.h"
+#include "common/layout.h"
 #include "utils/algo.h"
 
 using namespace std::placeholders;
@@ -88,8 +89,6 @@ ReturnCode layout(
 
 ReturnCode configure(
     const plist::PropertyList& plist,
-    const DataContext& data,
-    const Document& doc,
     const Environment& env,
     GridlineDefinition* config) {
   /* set defaults from environment */

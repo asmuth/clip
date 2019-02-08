@@ -28,7 +28,6 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 #include "plotfx_sdl.h"
-#include "document.h"
 #include "utils/return_code.h"
 #include "graphics/layer.h"
 #include "graphics/layer_pixmap.h"
@@ -53,6 +52,7 @@ static void blit(
    SDL_FreeSurface(image);
 }
 
+/*
 int plotfx_render_sdl2(plotfx_t* ctx, SDL_Surface* surface) {
   const auto& doc = static_cast<const Context*>(ctx)->document;
   if (!doc) {
@@ -86,4 +86,5 @@ int plotfx_render_sdl2(plotfx_t* ctx, SDL_Surface* surface) {
 
   return OK;
 }
+*/
 

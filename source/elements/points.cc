@@ -31,7 +31,8 @@
 #include "points.h"
 #include <numeric>
 #include "plotfx.h"
-#include "document.h"
+#include "common/environment.h"
+#include "common/layout.h"
 #include "graphics/path.h"
 #include "graphics/brush.h"
 #include "graphics/text.h"
@@ -146,15 +147,13 @@ ReturnCode layout(
 
 ReturnCode configure(
     const plist::PropertyList& plist,
-    const DataContext& data,
-    const Document& doc,
     const Environment& env,
     PlotPointsConfig* config) {
   /* set defaults from environment */
   config->scale_x = env.scale_x;
   config->scale_y = env.scale_y;
-  config->label_font = doc.font_sans;
-  config->label_font_size = doc.font_size;
+  config->label_font = env.font;
+  config->label_font_size = env.font_size;
 
   /* parse properties */
   static const ParserDefinitions pdefs = {

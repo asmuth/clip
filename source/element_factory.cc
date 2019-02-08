@@ -40,8 +40,6 @@
 
 namespace plotfx {
 
-using ElementConfigureFn = std::function<ReturnCode (const Document&, const PropertyList&, ElementRef*)>;
-
 static std::unordered_map<std::string, ElementBuilder> elems = {
   {
     "areas",
@@ -97,8 +95,6 @@ static std::unordered_map<std::string, ElementBuilder> elems = {
 ReturnCode buildElement(
     const std::string& name,
     const plist::PropertyList& plist,
-    const DataContext& ctx,
-    const Document& doc,
     const Environment& env,
     ElementRef* elem) {
   const auto& elem_entry = elems.find(name);
@@ -106,7 +102,7 @@ ReturnCode buildElement(
     return ReturnCode::errorf("NOTFOUND", "no such element: $0", name);
   }
 
-  return elem_entry->second(plist, ctx, doc, env, elem);
+  return elem_entry->second(plist, env, elem);
 }
 
 } // namespace plotfx

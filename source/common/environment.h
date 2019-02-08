@@ -36,12 +36,15 @@
 #include "graphics/color.h"
 #include "graphics/text.h"
 #include "common/scale.h"
+#include "plist/plist.h"
 
 namespace plotfx {
 class Layer;
 
 struct Environment {
   Environment();
+  Measure screen_width;
+  Measure screen_height;
   double dpi;
   FontInfo font;
   Measure font_size;
@@ -54,6 +57,10 @@ struct Environment {
   ScaleLayoutFn scale_layout_x;
   ScaleLayoutFn scale_layout_y;
 };
+
+ReturnCode environment_configure(
+    const plist::PropertyList& plist,
+    Environment* env);
 
 } // namespace plotfx
 
