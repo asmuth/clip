@@ -37,8 +37,8 @@
 #include <graphics/layout.h>
 #include <source/utils/algo.h>
 #include "source/config_helpers.h"
-#include "common/environment.h"
-#include "common/layout.h"
+#include "core/environment.h"
+#include "core/layout.h"
 
 using namespace std::placeholders;
 

@@ -34,8 +34,8 @@
 #include <functional>
 #include "plist/plist.h"
 #include "utils/return_code.h"
-#include "common/format.h"
-#include "common/layout.h"
+#include "core/format.h"
+#include "core/layout.h"
 
 namespace plotfx {
 struct Layer;

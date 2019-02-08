@@ -31,8 +31,8 @@
 #include "points.h"
 #include <numeric>
 #include "plotfx.h"
-#include "common/environment.h"
-#include "common/layout.h"
+#include "core/environment.h"
+#include "core/layout.h"
 #include "graphics/path.h"
 #include "graphics/brush.h"
 #include "graphics/text.h"

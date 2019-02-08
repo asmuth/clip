@@ -29,7 +29,7 @@
  */
 #include <sstream>
 #include <iomanip>
-#include "common/format.h"
+#include "core/format.h"
 #include "source/config_helpers.h"
 #include "source/utils/UnixTime.h"
 

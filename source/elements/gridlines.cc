@@ -29,8 +29,8 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 #include "gridlines.h"
-#include "common/environment.h"
-#include "common/layout.h"
+#include "core/environment.h"
+#include "core/layout.h"
 #include "utils/algo.h"
 
 using namespace std::placeholders;

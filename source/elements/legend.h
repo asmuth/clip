@@ -34,8 +34,8 @@
 #include <string>
 #include <tuple>
 #include "graphics/layer.h"
-#include "common/environment.h"
-#include "common/layout.h"
+#include "core/environment.h"
+#include "core/layout.h"
 
 namespace plotfx {
 

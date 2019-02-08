@@ -28,8 +28,8 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 #include "environment.h"
-#include "common/format.h"
-#include "common/scale.h"
+#include "core/format.h"
+#include "core/scale.h"
 #include "config_helpers.h"
 #include "graphics/font_lookup.h"
 

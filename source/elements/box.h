@@ -1,7 +1,6 @@
 /**
  * This file is part of the "plotfx" project
  *   Copyright (c) 2018 Paul Asmuth
- *   Copyright (c) 2014 Paul Asmuth, Google Inc.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -29,52 +28,41 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 #pragma once
-#include <stdlib.h>
-#include <plist/plist.h>
-#include <graphics/layer.h>
-#include <source/core/scale.h>
-#include <source/element.h>
-#include <source/config_helpers.h>
+#include "plist/plist.h"
+#include "core/environment.h"
 
 namespace plotfx {
 namespace plot {
-namespace bars {
+namespace box {
 
-struct PlotBarsConfig {
-  PlotBarsConfig();
-  Direction direction;
+struct PlotLinesConfig {
   std::vector<Measure> x;
-  std::vector<Measure> xoffset;
   std::vector<Measure> y;
-  std::vector<Measure> yoffset;
   DomainConfig scale_x;
   DomainConfig scale_y;
+  std::vector<DataGroup> groups;
   std::vector<Color> colors;
-  std::vector<Measure> sizes;
-  std::vector<Measure> offsets;
-  std::vector<std::string> labels;
-  FontInfo label_font;
-  Measure label_padding;
-  Measure label_font_size;
-  Color label_color;
+  Measure line_width;
 };
 
 ReturnCode draw(
-    const PlotBarsConfig& config,
-    const LayoutInfo& clip,
+    PlotLinesConfig config,
+    const LayoutInfo& layout,
     Layer* layer);
 
 ReturnCode layout(
-    const PlotBarsConfig& config,
+    const PlotLinesConfig& config,
     const Layer& layer,
     LayoutInfo* layout);
 
 ReturnCode configure(
     const plist::PropertyList& plist,
+    const DataContext& data,
+    const Document& doc,
     const Environment& env,
-    PlotBarsConfig* config);
+    PlotLinesConfig* config);
 
-} // namespace bars
+} // namespace box 
 } // namespace plot
 } // namespace plotfx
 

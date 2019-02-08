@@ -34,11 +34,11 @@
 #include <plist/plist.h>
 #include <graphics/layer.h>
 #include <utils/return_code.h>
-#include <source/common/format.h>
+#include <source/core/format.h>
 #include <source/dimension.h>
-#include "common/format.h"
-#include "common/environment.h"
-#include "common/layout.h"
+#include "core/format.h"
+#include "core/environment.h"
+#include "core/layout.h"
 
 namespace plotfx {
 struct DomainConfig;

@@ -32,7 +32,7 @@
 #include <stdlib.h>
 #include <plist/plist.h>
 #include <graphics/layer.h>
-#include <source/common/scale.h>
+#include <source/core/scale.h>
 #include <source/element.h>
 #include <source/config_helpers.h>
 

@@ -35,7 +35,7 @@
 #include "graphics/measure.h"
 #include "graphics/color.h"
 #include "graphics/text.h"
-#include "common/scale.h"
+#include "core/scale.h"
 #include "plist/plist.h"
 
 namespace plotfx {

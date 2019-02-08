@@ -35,7 +35,7 @@
 #include "graphics/layer_svg.h"
 #include "graphics/layer_pixmap.h"
 #include "utils/fileutil.h"
-#include "common/environment.h"
+#include "core/environment.h"
 
 #include <iostream>
 #include <fstream>
