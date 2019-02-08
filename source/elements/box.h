@@ -30,39 +30,32 @@
 #pragma once
 #include "plist/plist.h"
 #include "core/environment.h"
+#include "element.h"
 
 namespace plotfx {
-namespace plot {
 namespace box {
 
-struct PlotLinesConfig {
-  std::vector<Measure> x;
-  std::vector<Measure> y;
-  DomainConfig scale_x;
-  DomainConfig scale_y;
-  std::vector<DataGroup> groups;
-  std::vector<Color> colors;
-  Measure line_width;
+struct BoxConfig {
+  std::vector<ElementRef> children;
+  std::array<Measure, 4> margins;
+  Measure font_size;
 };
 
 ReturnCode draw(
-    PlotLinesConfig config,
+    const BoxConfig& config,
     const LayoutInfo& layout,
     Layer* layer);
 
 ReturnCode layout(
-    const PlotLinesConfig& config,
+    const BoxConfig& config,
     const Layer& layer,
     LayoutInfo* layout);
 
 ReturnCode configure(
     const plist::PropertyList& plist,
-    const DataContext& data,
-    const Document& doc,
     const Environment& env,
-    PlotLinesConfig* config);
+    BoxConfig* config);
 
-} // namespace box 
-} // namespace plot
+} // namespace box
 } // namespace plotfx
 

@@ -36,6 +36,7 @@
 #include "graphics/layer_pixmap.h"
 #include "utils/fileutil.h"
 #include "core/environment.h"
+#include "elements/box.h"
 
 #include <iostream>
 #include <fstream>
@@ -113,72 +114,23 @@ int plotfx_configure_file(
 }
 
 int plotfx_render_to(plotfx_t* ctx, void* backend) {
-  auto& plist = ctx->plist;
   auto layer = static_cast<Layer*>(backend);
 
-  std::vector<ElementRef> roots;
-  for (size_t i = 0; i < plist.size(); ++i) {
-    const auto& elem_name = plist[i].name;
+  LayoutInfo layout;
+  layout.constraint = {true, true};
+  layout.bounding_box = Rectangle(0, 0, layer->width, layer->height);
+  layout.content_box = layout.bounding_box;
 
-    if (!plist::is_map(plist[i])) {
-      continue;
-    }
+  box::BoxConfig root;
+  root.margins = {from_px(20), from_px(20), from_px(20), from_px(20)};
 
-    const auto& elem_config = plist[i].next.get();
+  auto rc = try_chain({
+    [&] { return box::configure(ctx->plist, ctx->env, &root); },
+    [&] { return box::draw(root, layout, layer); },
+    [&] { return layer_submit(layer); },
+  });
 
-    ElementRef elem;
-    auto rc = buildElement(
-        elem_name,
-        *elem_config,
-        ctx->env,
-        &elem);
-
-    if (!rc) {
-      plotfx_seterr(ctx, rc);
-      return rc;
-    }
-
-    roots.emplace_back(std::move(elem));
-  }
-
-  auto bounding_box = Rectangle(0, 0, layer->width, layer->height);
-  auto content_box = layout_margin_box(bounding_box, 20, 20, 20, 20);
-
-  std::vector<Rectangle> element_boxes;
-  for (const auto& e : roots) {
-    LayoutInfo layout;
-    layout.bounding_box = bounding_box;
-    layout.constraint = {true, true};
-    layout.content_box = content_box;
-
-    if (auto rc = e->layout(*layer, &layout); !rc.isSuccess()) {
-      plotfx_seterr(ctx, rc);
-      return rc;
-    }
-
-    content_box = layout.content_box;
-    element_boxes.emplace_back(layout.element_box);
-  }
-
-  for (size_t i = 0; i < roots.size(); ++i) {
-    const auto& element = roots[i];
-    LayoutInfo layout;
-    layout.bounding_box = bounding_box;
-    layout.constraint = {true, true};
-    layout.content_box = content_box;
-    layout.element_box = element_boxes[i];
-
-    if (auto rc = element->draw(layout, layer); !rc.isSuccess()) {
-      plotfx_seterr(ctx, rc);
-      return rc;
-    }
-  }
-
-  if (auto rc = layer_submit(layer); !rc.isSuccess()) {
-    plotfx_seterr(ctx, rc);
-    return rc;
-  }
-
+  plotfx_seterr(ctx, rc);
   return OK;
 }
 
