@@ -110,5 +110,12 @@ void strokeRectangle(
     double height,
     const StrokeStyle& style);
 
+void fillRectangle(
+    Layer* layer,
+    const Point& origin,
+    double width,
+    double height,
+    const FillStyle& style);
+
 } // namespace plotfx
 

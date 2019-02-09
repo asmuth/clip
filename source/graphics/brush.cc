@@ -130,6 +130,23 @@ void strokeRectangle(
   strokePath(layer, clip, p, style);
 }
 
+void fillRectangle(
+    Layer* layer,
+    const Point& origin,
+    double width,
+    double height,
+    const FillStyle& style) {
+  Path p;
+  p.moveTo(origin.x, origin.y);
+  p.lineTo(origin.x + width, origin.y);
+  p.lineTo(origin.x + width, origin.y + height);
+  p.lineTo(origin.x, origin.y + height);
+  p.lineTo(origin.x, origin.y);
+
+  Rectangle clip(0, 0, layer->width, layer->height);
+  fillPath(layer, clip, p, style);
+}
+
 
 } // namespace plotfx
 
