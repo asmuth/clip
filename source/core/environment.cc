@@ -68,26 +68,6 @@ ReturnCode environment_configure(
   static const ParserDefinitions pdefs = {
     {"width", bind(&configure_measure, _1, &env->screen_width)},
     {"height", bind(&configure_measure, _1, &env->screen_height)},
-    {"background-color", bind(&configure_color, _1, &env->background_color)},
-    {
-      "foreground-color",
-      configure_multiprop({
-          bind(&configure_color, _1, &env->text_color),
-          bind(&configure_color, _1, &env->border_color),
-      })
-    },
-    {"text-color", bind(&configure_color, _1, &env->text_color)},
-    {"border-color", bind(&configure_color, _1, &env->border_color)},
-    {"scale-x", bind(&domain_configure, _1, &env->scale_x)},
-    {"scale-x-min", bind(&configure_float_opt, _1, &env->scale_x.min)},
-    {"scale-x-max", bind(&configure_float_opt, _1, &env->scale_x.max)},
-    {"scale-x-padding", bind(&configure_float, _1, &env->scale_x.padding)},
-    {"scale-x-layout", bind(&configure_scale_layout, _1, &env->scale_layout_x)},
-    {"scale-y", bind(&domain_configure, _1, &env->scale_y)},
-    {"scale-y-min", bind(&configure_float_opt, _1, &env->scale_y.min)},
-    {"scale-y-max", bind(&configure_float_opt, _1, &env->scale_y.max)},
-    {"scale-y-padding", bind(&configure_float, _1, &env->scale_y.padding)},
-    {"scale-y-layout", bind(&configure_scale_layout, _1, &env->scale_layout_y)},
   };
 
   return parseAll(plist, pdefs);

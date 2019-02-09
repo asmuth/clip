@@ -42,15 +42,14 @@ ElementBuilder elem_builder(
       const plist::PropertyList& prop,
       const Environment& env,
       ElementRef* elem) -> ReturnCode {
+    auto e = std::make_unique<ElementInstance<T>>();
 
-    T config;
-    if (auto rc = config_fn(prop, env, &config); !rc) {
+    if (auto rc = config_fn(prop, env, &e->config); !rc) {
       return rc;
     }
 
-    auto e = std::make_unique<Element>();
-    e->layout = bind(layout_fn, config, _1, _2);
-    e->draw = bind(draw_fn, config, _1, _2);
+    e->layout = bind(layout_fn, e->config, _1, _2);
+    e->draw = bind(draw_fn, e->config, _1, _2);
     *elem = std::move(e);
     return OK;
   };

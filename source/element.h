@@ -66,8 +66,14 @@ template <typename T>
 using ElementLayoutAsFn = std::function<ReturnCode (const T&, const Layer&, LayoutInfo*)>;
 
 struct Element {
+  virtual ~Element() = default;
   ElementLayoutFn layout;
   ElementDrawFn draw;
+};
+
+template <typename T>
+struct ElementInstance : public Element {
+  T config;
 };
 
 using ElementRef = std::shared_ptr<Element>;

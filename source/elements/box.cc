@@ -43,6 +43,22 @@ ReturnCode draw(
     const BoxConfig& config,
     const LayoutInfo& parent_layout,
     Layer* layer) {
+
+  /* draw background */
+  {
+    const auto& bg_box = parent_layout.content_box;
+    FillStyle bg_fill;
+    bg_fill.color = config.background_color;
+
+    fillRectangle(
+        layer,
+        Point(bg_box.x, bg_box.y),
+        bg_box.w,
+        bg_box.h,
+        bg_fill);
+  }
+
+  /* calculate margin box */
   auto margins = config.margins;
   for (auto& m : margins) {
     convert_unit_typographic(layer->dpi, config.font_size, &m);
@@ -56,6 +72,8 @@ ReturnCode draw(
       margins[3]);
 
   auto content_box = bounding_box;
+
+  /* layout and draw children */
   std::vector<Rectangle> element_boxes;
   for (const auto& e : config.children) {
     LayoutInfo layout;
@@ -99,9 +117,18 @@ ReturnCode configure(
     const plist::PropertyList& plist,
     const Environment& env,
     BoxConfig* config) {
+  config->font = env.font;
   config->font_size = env.font_size;
+  config->color_scheme = env.color_scheme;
+  config->text_color = env.text_color;
+  config->border_color = env.border_color;
+  config->background_color = env.background_color;
+  config->scale_x = env.scale_x;
+  config->scale_y = env.scale_y;
+  config->scale_layout_x = env.scale_layout_x;
+  config->scale_layout_y = env.scale_layout_y;
 
-  static const ParserDefinitions pdefs = {
+  ParserDefinitions pdefs = {
     {
       "margin",
       configure_multiprop({
@@ -115,11 +142,46 @@ ReturnCode configure(
     {"margin-right", bind(&configure_measure, _1, &config->margins[1])},
     {"margin-bottom", bind(&configure_measure, _1, &config->margins[2])},
     {"margin-left", bind(&configure_measure, _1, &config->margins[3])},
+    {"scale-x", bind(&domain_configure, _1, &config->scale_x)},
+    {"scale-x-min", bind(&configure_float_opt, _1, &config->scale_x.min)},
+    {"scale-x-max", bind(&configure_float_opt, _1, &config->scale_x.max)},
+    {"scale-x-padding", bind(&configure_float, _1, &config->scale_x.padding)},
+    {"scale-x-layout", bind(&configure_scale_layout, _1, &config->scale_layout_x)},
+    {"scale-y", bind(&domain_configure, _1, &config->scale_y)},
+    {"scale-y-min", bind(&configure_float_opt, _1, &config->scale_y.min)},
+    {"scale-y-max", bind(&configure_float_opt, _1, &config->scale_y.max)},
+    {"scale-y-padding", bind(&configure_float, _1, &config->scale_y.padding)},
+    {"scale-y-layout", bind(&configure_scale_layout, _1, &config->scale_layout_y)},
+    {"background-color", bind(&configure_color, _1, &config->background_color)},
+    {
+      "foreground-color",
+      configure_multiprop({
+          bind(&configure_color, _1, &config->text_color),
+          bind(&configure_color, _1, &config->border_color),
+      })
+    },
+    {"text-color", bind(&configure_color, _1, &config->text_color)},
+    {"border-color", bind(&configure_color, _1, &config->border_color)},
   };
 
   if (auto rc = parseAll(plist, pdefs); !rc) {
     return rc;
   }
+
+  Environment child_env;
+  child_env.screen_width = env.screen_width;
+  child_env.screen_height = env.screen_height;
+  child_env.dpi = env.dpi;
+  child_env.font = config->font;
+  child_env.font_size = config->font_size;
+  child_env.color_scheme = config->color_scheme;
+  child_env.text_color = config->text_color;
+  child_env.border_color = config->border_color;
+  child_env.background_color = config->background_color;
+  child_env.scale_x = config->scale_x;
+  child_env.scale_y = config->scale_y;
+  child_env.scale_layout_x = config->scale_layout_x;
+  child_env.scale_layout_y = config->scale_layout_y;
 
   for (size_t i = 0; i < plist.size(); ++i) {
     if (!plist::is_map(plist[i])) {
@@ -133,7 +195,7 @@ ReturnCode configure(
     auto rc = buildElement(
         elem_name,
         *elem_config,
-        env,
+        child_env,
         &elem);
 
     if (!rc) {
