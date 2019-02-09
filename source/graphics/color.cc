@@ -44,9 +44,7 @@ Color Color::fromRGB(double red, double green, double blue) {
   return Color({ red, green, blue, 1.0 });
 }
 
-Color::Color() {
-  memset(components_, 0, sizeof(components_));
-}
+Color::Color() : components_{0, 0, 0, 0} {}
 
 Color::Color(
     const std::initializer_list<double>& components) {
@@ -130,9 +128,9 @@ bool Color::parseHexShort(const std::string& str) {
     return false;
   }
 
-  components_[0] = std::stoi(str.substr(1, 1), nullptr, 16) / 16.0f;
-  components_[1] = std::stoi(str.substr(2, 1), nullptr, 16) / 16.0f;
-  components_[2] = std::stoi(str.substr(3, 1), nullptr, 16) / 16.0f;
+  components_[0] = std::stoi(str.substr(1, 1), nullptr, 16) / 15.0f;
+  components_[1] = std::stoi(str.substr(2, 1), nullptr, 16) / 15.0f;
+  components_[2] = std::stoi(str.substr(3, 1), nullptr, 16) / 15.0f;
   components_[3] = 1.0f;
   return true;
 }

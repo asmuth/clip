@@ -32,6 +32,7 @@
 #include <stdlib.h>
 #include <stdint.h>
 #include <iostream>
+#include <array>
 #include <vector>
 #include <string>
 
@@ -64,7 +65,7 @@ public:
   std::string to_hex_str() const;
 
 protected:
-  double components_[kMaxComponents];
+  std::array<double, kMaxComponents> components_;
 };
 
 std::ostream& operator <<(std::ostream& os, const Color& c);
