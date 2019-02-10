@@ -31,6 +31,7 @@
 #include "plist/plist.h"
 #include "core/environment.h"
 #include "element.h"
+#include "core/layout.h"
 
 namespace plotfx {
 namespace box {

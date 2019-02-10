@@ -34,7 +34,7 @@ namespace plotfx {
 
 LayoutSettings::LayoutSettings() : position(Position::RELATIVE) {}
 
-ReturnCode layout_compute(
+ReturnCode layout_element(
     const LayoutSettings& config,
     double bbox_w,
     double bbox_h,
@@ -114,5 +114,53 @@ ReturnCode layout_compute(
 
   return OK;
 }
+
+ReturnCode layout_elements(
+    const Layer& layer,
+    const Rectangle& parent_bbox,
+    const std::vector<ElementRef>& elements,
+    std::vector<LayoutInfo>* element_layouts) {
+  LayoutState layout_state;
+  layout_state.content_box = parent_bbox;
+
+  for (const auto& e : elements) {
+    double bbox_w = 0.0;
+    double bbox_h = 0.0;
+
+    if (auto rc =
+          e->layout(
+              layer,
+              layout_state.content_box.w,
+              layout_state.content_box.h,
+              &bbox_w,
+              &bbox_h);
+          !rc.isSuccess()) {
+      return rc;
+    }
+
+    LayoutInfo l;
+    l.bounding_box = parent_bbox;
+
+    if (auto rc =
+          layout_element(
+              e->layout_settings(),
+              bbox_w,
+              bbox_h,
+              &layout_state,
+              &l.content_box);
+          !rc.isSuccess()) {
+      return rc;
+    }
+
+    element_layouts->emplace_back(l);
+  }
+
+  for (auto& l : *element_layouts) {
+    l.inner_box = layout_state.content_box;
+  }
+
+  return OK;
+}
+
 } // namespace plotfx
 

@@ -35,11 +35,11 @@
 #include "plist/plist.h"
 #include "utils/return_code.h"
 #include "core/format.h"
-#include "core/layout.h"
 
 namespace plotfx {
 struct Layer;
-struct LayoutState;
+struct LayoutInfo;
+struct LayoutSettings;
 struct Document;
 struct DataContext;
 struct Environment;

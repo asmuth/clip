@@ -29,7 +29,9 @@
  */
 #pragma once
 #include "graphics/geometry.h"
+#include "graphics/layer.h"
 #include "graphics/measure.h"
+#include "element.h"
 
 #include <assert.h>
 #include <stdlib.h>
@@ -88,12 +90,18 @@ struct LayoutInfo {
 
 };
 
-ReturnCode layout_compute(
+ReturnCode layout_element(
     const LayoutSettings& config,
     double bbox_w,
     double bbox_h,
     LayoutState* parent_layout,
     Rectangle* bbox);
+
+ReturnCode layout_elements(
+    const Layer& layer,
+    const Rectangle& parent_bbox,
+    const std::vector<ElementRef>& elements,
+    std::vector<LayoutInfo>* element_layouts);
 
 } // namespace plotfx
 

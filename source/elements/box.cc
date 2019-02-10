@@ -49,45 +49,13 @@ ReturnCode draw(
     convert_unit_typographic(layer->dpi, config.font_size, &m);
   }
 
-  /* layout children */
-  LayoutState layout_state;
-  layout_state.content_box = layout_margin_box(
+  /* calculate margin box */
+  auto margin_box = layout_margin_box(
       layout.content_box,
       margins[0],
       margins[1],
       margins[2],
       margins[3]);
-
-  std::vector<Rectangle> child_bboxes;
-  for (const auto& e : config.children) {
-    double bbox_w = 0.0;
-    double bbox_h = 0.0;
-
-    if (auto rc =
-          e->layout(
-              *layer,
-              layout.content_box.w,
-              layout.content_box.h,
-              &bbox_w,
-              &bbox_h);
-          !rc.isSuccess()) {
-      return rc;
-    }
-
-    Rectangle bbox;
-    if (auto rc =
-          layout_compute(
-              e->layout_settings(),
-              bbox_w,
-              bbox_h,
-              &layout_state,
-              &bbox);
-          !rc.isSuccess()) {
-      return rc;
-    }
-
-    child_bboxes.emplace_back(bbox);
-  }
 
   /* draw background */
   {
@@ -103,14 +71,21 @@ ReturnCode draw(
         bg_fill);
   }
 
-  /* draw children */
+  /* layout and draw children */
+  std::vector<LayoutInfo> child_layouts;
+  if (auto rc =
+        layout_elements(
+            *layer,
+            margin_box,
+            config.children,
+            &child_layouts);
+        !rc) {
+    return rc;
+  }
+
   for (size_t i = 0; i < config.children.size(); ++i) {
     const auto& e = config.children[i];
-
-    LayoutInfo l;
-    l.bounding_box = layout.bounding_box;
-    l.content_box = child_bboxes[i];
-    l.inner_box = layout_state.content_box;
+    const auto& l = child_layouts[i];
 
     if (auto rc = e->draw(l, layer); !rc.isSuccess()) {
       return rc;
