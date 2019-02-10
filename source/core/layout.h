@@ -38,7 +38,7 @@
 
 namespace plotfx {
 
-struct LayoutInfo {
+struct LayoutState {
 
   /**
    * The elements bounding box
@@ -76,8 +76,8 @@ struct LayoutSettings {
 
 ReturnCode layout_compute(
     const LayoutSettings& config,
-    LayoutInfo* parent_layout,
-    LayoutInfo* layout);
+    LayoutState* parent_layout,
+    LayoutState* layout);
 
 } // namespace plotfx
 

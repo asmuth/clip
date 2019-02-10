@@ -296,7 +296,7 @@ namespace legend {
 
 ReturnCode draw(
     const LegendConfig& config,
-    const LayoutInfo& layout,
+    const LayoutState& layout,
     Layer* layer) {
   switch (config.placement) {
     case LegendPlacement::INSIDE:
@@ -311,7 +311,7 @@ ReturnCode draw(
 ReturnCode layout(
     const LegendConfig& config,
     const Layer& layer,
-    LayoutInfo* layout) {
+    LayoutState* layout) {
   switch (config.placement) {
     case LegendPlacement::INSIDE:
       /* nothing to do */

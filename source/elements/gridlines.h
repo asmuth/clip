@@ -55,13 +55,13 @@ struct GridlineDefinition {
 
 ReturnCode draw(
     const GridlineDefinition& config,
-    const LayoutInfo& clip,
+    const LayoutState& clip,
     Layer* layer);
 
 ReturnCode layout(
     const GridlineDefinition& config,
     const Layer& layer,
-    LayoutInfo* layout);
+    LayoutState* layout);
 
 ReturnCode configure(
     const plist::PropertyList& plist,

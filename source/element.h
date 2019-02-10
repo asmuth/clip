@@ -39,17 +39,17 @@
 
 namespace plotfx {
 struct Layer;
-struct LayoutInfo;
+struct LayoutState;
 struct Document;
 struct DataContext;
 struct Environment;
 
 using plist::PropertyList;
 
-using ElementDrawFn = std::function<ReturnCode (const LayoutInfo&, Layer*)>;
+using ElementDrawFn = std::function<ReturnCode (const LayoutState&, Layer*)>;
 
 template <typename T>
-using ElementDrawAsFn = std::function<ReturnCode (const T&, const LayoutInfo&, Layer*)>;
+using ElementDrawAsFn = std::function<ReturnCode (const T&, const LayoutState&, Layer*)>;
 
 template <typename T>
 using ElementConfigureAsFn = std::function<ReturnCode (
@@ -58,12 +58,12 @@ using ElementConfigureAsFn = std::function<ReturnCode (
     T*)>;
 
 template <typename T>
-using ElementDrawAsFn = std::function<ReturnCode (const T&, const LayoutInfo&, Layer*)>;
+using ElementDrawAsFn = std::function<ReturnCode (const T&, const LayoutState&, Layer*)>;
 
-using ElementLayoutFn = std::function<ReturnCode (const Layer&, LayoutInfo*)>;
+using ElementLayoutFn = std::function<ReturnCode (const Layer&, LayoutState*)>;
 
 template <typename T>
-using ElementLayoutAsFn = std::function<ReturnCode (const T&, const Layer&, LayoutInfo*)>;
+using ElementLayoutAsFn = std::function<ReturnCode (const T&, const Layer&, LayoutState*)>;
 
 struct Element {
   virtual ~Element() = default;

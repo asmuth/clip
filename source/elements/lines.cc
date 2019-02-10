@@ -47,7 +47,7 @@ static const double kDefaultLineWidthPT = 2;
 
 ReturnCode draw(
     PlotLinesConfig config,
-    const LayoutInfo& layout,
+    const LayoutState& layout,
     Layer* layer) {
   const auto& clip = layout.content_box;
 
@@ -99,7 +99,7 @@ ReturnCode draw(
 ReturnCode layout(
     const PlotLinesConfig& config,
     const Layer& layer,
-    LayoutInfo* layout) {
+    LayoutState* layout) {
   /* nothing to do */
   return OK;
 }

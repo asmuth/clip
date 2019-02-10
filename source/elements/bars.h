@@ -62,13 +62,13 @@ struct PlotBarsConfig {
 
 ReturnCode draw(
     const PlotBarsConfig& config,
-    const LayoutInfo& clip,
+    const LayoutState& clip,
     Layer* layer);
 
 ReturnCode layout(
     const PlotBarsConfig& config,
     const Layer& layer,
-    LayoutInfo* layout);
+    LayoutState* layout);
 
 ReturnCode configure(
     const plist::PropertyList& plist,

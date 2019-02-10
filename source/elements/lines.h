@@ -55,13 +55,13 @@ struct PlotLinesConfig {
 
 ReturnCode draw(
     PlotLinesConfig config,
-    const LayoutInfo& layout,
+    const LayoutState& layout,
     Layer* layer);
 
 ReturnCode layout(
     const PlotLinesConfig& config,
     const Layer& layer,
-    LayoutInfo* layout);
+    LayoutState* layout);
 
 ReturnCode configure(
     const plist::PropertyList& plist,

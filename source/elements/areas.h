@@ -56,13 +56,13 @@ struct PlotAreaConfig {
 
 ReturnCode draw(
     const PlotAreaConfig& config,
-    const LayoutInfo& layout,
+    const LayoutState& layout,
     Layer* layer);
 
 ReturnCode layout(
     const PlotAreaConfig& config,
     const Layer& layer,
-    LayoutInfo* layout);
+    LayoutState* layout);
 
 ReturnCode configure(
     const plist::PropertyList& plist,

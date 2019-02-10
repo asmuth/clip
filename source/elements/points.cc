@@ -53,7 +53,7 @@ static const double kDefaultLabelPaddingEM = 0.4;
 
 ReturnCode draw(
     PlotPointsConfig config,
-    const LayoutInfo& layout,
+    const LayoutState& layout,
     Layer* layer) {
   const auto& clip = layout.content_box;
 
@@ -140,7 +140,7 @@ ReturnCode draw(
 ReturnCode layout(
     const PlotPointsConfig& config,
     const Layer& layer,
-    LayoutInfo* layout) {
+    LayoutState* layout) {
   /* nothing to do */
   return OK;
 }

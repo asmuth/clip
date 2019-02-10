@@ -50,7 +50,7 @@ PlotAreaConfig::PlotAreaConfig() :
 
 ReturnCode draw_horizontal(
     PlotAreaConfig config,
-    const LayoutInfo& layout,
+    const LayoutState& layout,
     Layer* layer) {
   const auto& clip = layout.content_box;
 
@@ -126,7 +126,7 @@ ReturnCode draw_horizontal(
 
 ReturnCode draw_vertical(
     PlotAreaConfig config,
-    const LayoutInfo& layout,
+    const LayoutState& layout,
     Layer* layer) {
   const auto& clip = layout.content_box;
 
@@ -203,14 +203,14 @@ ReturnCode draw_vertical(
 ReturnCode layout(
     const PlotAreaConfig& config,
     const Layer& layer,
-    LayoutInfo* layout) {
+    LayoutState* layout) {
   /* nothing to do */
   return OK;
 }
 
 ReturnCode draw(
     const PlotAreaConfig& config,
-    const LayoutInfo& layout,
+    const LayoutState& layout,
     Layer* layer) {
   switch (config.direction) {
     case Direction::HORIZONTAL:

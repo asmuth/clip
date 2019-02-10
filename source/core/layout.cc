@@ -36,8 +36,8 @@ LayoutSettings::LayoutSettings() : position(Position::RELATIVE) {}
 
 ReturnCode layout_compute(
     const LayoutSettings& config,
-    LayoutInfo* parent_layout,
-    LayoutInfo* layout) {
+    LayoutState* parent_layout,
+    LayoutState* layout) {
   layout->content_box = layout->bounding_box;
   auto width = config.width;
   auto width_min = width.value_or(from_unit(0));

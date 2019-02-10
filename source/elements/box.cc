@@ -41,7 +41,7 @@ namespace box {
 
 ReturnCode draw(
     const BoxConfig& config,
-    const LayoutInfo& parent_layout,
+    const LayoutState& parent_layout,
     Layer* layer) {
   auto layout = parent_layout;
 
@@ -73,9 +73,9 @@ ReturnCode draw(
   }
 
   /* layout and draw children */
-  std::vector<LayoutInfo> child_layouts;
+  std::vector<LayoutState> child_layouts;
   for (const auto& e : config.children) {
-    LayoutInfo l;
+    LayoutState l;
 
     if (auto rc = layout_compute(e->layout_settings(), &layout, &l); !rc.isSuccess()) {
       return rc;
@@ -92,7 +92,7 @@ ReturnCode draw(
 ReturnCode layout(
     const BoxConfig& config,
     const Layer& layer,
-    LayoutInfo* layout) {
+    LayoutState* layout) {
   /* nothing to do */
   return OK;
 }

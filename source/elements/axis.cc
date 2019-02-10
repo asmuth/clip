@@ -413,7 +413,7 @@ namespace axis {
 
 ReturnCode draw(
     const AxisDefinition& axis,
-    const LayoutInfo& layout,
+    const LayoutState& layout,
     Layer* frame) {
   const auto& clip = layout.content_box;
 
@@ -462,7 +462,7 @@ ReturnCode draw(
 ReturnCode layout(
     const AxisDefinition& axis,
     const Layer& layer,
-    LayoutInfo* layout) {
+    LayoutState* layout) {
   double margins[4] = {0, 0, 0, 0};
 
   switch (axis.position) {

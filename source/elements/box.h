@@ -53,13 +53,13 @@ struct BoxConfig {
 
 ReturnCode draw(
     const BoxConfig& config,
-    const LayoutInfo& layout,
+    const LayoutState& layout,
     Layer* layer);
 
 ReturnCode layout(
     const BoxConfig& config,
     const Layer& layer,
-    LayoutInfo* layout);
+    LayoutState* layout);
 
 ReturnCode configure(
     const plist::PropertyList& plist,

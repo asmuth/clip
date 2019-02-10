@@ -84,13 +84,13 @@ namespace legend {
 
 ReturnCode draw(
     const LegendConfig& config,
-    const LayoutInfo& clip,
+    const LayoutState& clip,
     Layer* layer);
 
 ReturnCode layout(
     const LegendConfig& config,
     const Layer& layer,
-    LayoutInfo* layout);
+    LayoutState* layout);
 
 ReturnCode configure(
     const plist::PropertyList& plist,
