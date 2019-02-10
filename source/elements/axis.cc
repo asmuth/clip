@@ -532,6 +532,8 @@ ReturnCode configure(
 
   {
     ParserDefinitions pdefs = {
+      {"width", bind(&configure_measure_opt, _1, &config->layout.width)},
+      {"height", bind(&configure_measure_opt, _1, &config->layout.height)},
       {"format", bind(&confgure_format, _1, &config->label_formatter)},
       {"labels", bind(&configure_strings, _1, &config->label_override)},
       {"layout", bind(&configure_scale_layout, _1, &config->scale_layout)},
