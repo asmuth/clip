@@ -1,4 +1,4 @@
-width: 1440px;
+width: 1439px;
 height: 980px;
 
 margin: 2pt;
@@ -20,7 +20,7 @@ box {
     width: 490px;
     position: left;
 
-    margin-left: .75em;
+    margin-right: 2em;
 
     scale-y-min: 0;
     scale-y-max: 55;
@@ -69,8 +69,8 @@ box {
     width: 430px;
     position: left;
 
-    margin-left: .75em;
-    margin-right: .75em;
+    margin-left: 1em;
+    margin-right: 1em;
 
     scale-x-padding: 0.5;
     scale-y-min: 5;
@@ -113,7 +113,7 @@ box {
     width: 490px;
     position: left;
 
-    margin-left: .75em;
+    margin-left: 2em;
 
     scale-x-padding: 0.5;
 
@@ -154,95 +154,165 @@ box {
 
 box {
   position: top;
+  margin-top: 2em;
   height: 420px;
 
   box {
-    position: right;
-    width: 200px;
-  }
-
-  box {
     position: top;
-    height: 160px;
-    width: 920px;
-    margin-top: 1em;
-    margin-left: .75em;
-    margin-right: .75em;
+    height: 130px;
+    margin-bottom: 1em;
 
-    scale-y-min: 0;
-    scale-y-max: 140;
-
-    lines {
-      xs: csv('tests/testdata/measurement.csv', time);
-      ys: csv('tests/testdata/measurement.csv', value2);
-      colors: #06c;
-    }
-
-    axis {
-      position: top;
-      format: datetime("%H:%M:%S");
-    }
-
-    axis {
+    box {
       position: left;
-      width: 60px;
-      layout: linear(20);
-    }
-  }
+      width: 320px;
+      height: 120px;
+      margin-left: 1em;
+      margin-right: 1em;
+      margin-top: 30px;
 
+      box {
+        margin-top: 10px;
+        margin-bottom: 10px;
+        border-bottom-width: 1px;
+        border-bottom-color: #ccc;
+        border-top-width: 1px;
+        border-top-color: #ccc;
+
+        box {
+          background-color: #f2f2f2;
+        }
+      }
+    }
+
+    box {
+      scale-y-min: 0;
+      scale-y-max: 140;
+
+      lines {
+        xs: csv('tests/testdata/measurement.csv', time);
+        ys: csv('tests/testdata/measurement.csv', value2);
+        colors: #06c;
+      }
+
+      axis {
+        position: top;
+        format: datetime("%H:%M:%S");
+        height: 30px;
+      }
+
+      axis {
+        position: right;
+        width: 60px;
+      }
+
+      legend {
+        position: top left inside;
+        items: "Channel 1";
+        colors: #4572a7;
+      }
+    }
+
+  }
   box {
     position: top;
     height: 100px;
-    width: 920px;
-    margin-top: 1em;
-    margin-left: .75em;
-    margin-right: .75em;
+    margin-bottom: 1em;
 
-    scale-y-min: 0;
-    scale-y-max: 140;
+    box {
+      position: left;
+      width: 320px;
+      height: 90px;
+      margin-left: 1em;
+      margin-right: 1em;
 
-    lines {
-      xs: csv('tests/testdata/measurement.csv', time);
-      ys: csv('tests/testdata/measurement.csv', value2);
-      colors: #06c;
+      box {
+        margin-top: 10px;
+        margin-bottom: 10px;
+        border-top-width: 1px;
+        border-top-color: #ccc;
+        border-bottom-width: 1px;
+        border-bottom-color: #ccc;
+
+        box {
+          background-color: #f2f2f2;
+        }
+      }
     }
 
-    axis {
-      position: left;
-      width: 60px;
-      layout: linear(20);
+    box {
+      scale-y-min: 0;
+      scale-y-max: 140;
+
+      lines {
+        xs: csv('tests/testdata/measurement.csv', time);
+        ys: csv('tests/testdata/measurement.csv', value2);
+        colors: #06c;
+      }
+
+      axis {
+        position: right;
+        width: 60px;
+      }
+
+      legend {
+        position: top left inside;
+        items: "Channel 1";
+        colors: #4572a7;
+      }
     }
   }
-
   box {
     position: top;
-    height: 160px;
-    width: 920px;
-    margin-top: 1em;
-    margin-left: .75em;
-    margin-right: .75em;
+    height: 130px;
+    margin-bottom: 1em;
 
-    scale-y-min: 0;
-    scale-y-max: 140;
-
-    lines {
-      xs: csv('tests/testdata/measurement.csv', time);
-      ys: csv('tests/testdata/measurement.csv', value2);
-      colors: #06c;
-    }
-
-    axis {
-      position: bottom;
-      format: datetime("%H:%M:%S");
-      height: 60px;
-    }
-
-    axis {
+    box {
       position: left;
-      width: 60px;
-      layout: linear(20);
+      width: 320px;
+      height: 80px;
+      margin-left: 1em;
+      margin-right: 1em;
+
+      box {
+        border-bottom-width: 1px;
+        border-bottom-color: #ccc;
+        margin-bottom: 10px;
+
+        box {
+          background-color: #f2f2f2;
+        }
+      }
+    }
+
+    box {
+      scale-y-min: 0;
+      scale-y-max: 140;
+
+      lines {
+        xs: csv('tests/testdata/measurement.csv', time);
+        ys: csv('tests/testdata/measurement.csv', value2);
+        colors: #06c;
+      }
+
+      axis {
+        position: bottom;
+        format: datetime("%H:%M:%S");
+        height: 30px;
+      }
+
+      axis {
+        position: right;
+        width: 60px;
+      }
+
+      legend {
+        position: top left inside;
+        items: "Channel 1";
+        colors: #4572a7;
+      }
     }
   }
+
 
 }
 
@@ -257,7 +327,7 @@ box {
     width: 490px;
     position: left;
 
-    margin-left: .75em;
+    margin-right: 2em;
 
     scale-y-min: 0;
     scale-y-max: 55;
@@ -306,26 +376,36 @@ box {
     width: 430px;
     position: left;
 
-    margin-left: .75em;
-    margin-right: .75em;
+    margin-left: 1em;
+    margin-right: 1em;
 
     scale-x-padding: 0.5;
     scale-y-min: 5;
     scale-y-max: 60;
 
-    areas {
+    lines {
       xs: 0, 1, 2, 3, 4, 5, 6;
-      ys: 10, 28, 20, 26, 41, 44, 37;
-      size: .6em;
-      offset: .45em;
+      ys: 32, 28, 20, 26, 41, 44, 37;
       color: #4572a7;
     }
 
-    areas {
+    points {
       xs: 0, 1, 2, 3, 4, 5, 6;
-      ys: 8, 19, 16, 23, 35, 29, 33;
-      size: .6em;
-      offset: -.45em;
+      ys: 32, 28, 20, 26, 41, 44, 37;
+      size: 3pt;
+      color: #4572a7;
+    }
+
+    lines {
+      xs: 0, 1, 2, 3, 4, 5, 6;
+      ys: 24, 19, 16, 23, 35, 29, 24;
+      color: #aa4643;
+    }
+
+    points {
+      xs: 0, 1, 2, 3, 4, 5, 6;
+      ys: 24, 19, 16, 23, 35, 29, 24;
+      size: 3pt;
       color: #aa4643;
     }
 
@@ -350,7 +430,7 @@ box {
     width: 490px;
     position: left;
 
-    margin-left: .75em;
+    margin-left: 2em;
 
     scale-y-min: 0;
     scale-y-max: 30;
