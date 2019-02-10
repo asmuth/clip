@@ -415,40 +415,38 @@ ReturnCode draw(
     const AxisDefinition& axis,
     const LayoutInfo& layout,
     Layer* frame) {
-  const auto& clip = layout.content_box;
-
   Status rc;
   switch (axis.position) {
     case AxisPosition::LEFT:
       rc = renderAxisVertical(
           axis,
-          layout.content_box.x,
-          layout.content_box.y,
-          layout.content_box.y + layout.content_box.h,
+          layout.content_box.x + layout.content_box.w,
+          layout.inner_box.y,
+          layout.inner_box.y + layout.inner_box.h,
           frame);
       break;
     case AxisPosition::RIGHT:
       rc = renderAxisVertical(
           axis,
-          layout.content_box.x + layout.content_box.w,
-          layout.content_box.y,
-          layout.content_box.y + layout.content_box.h,
+          layout.content_box.x,
+          layout.inner_box.y,
+          layout.inner_box.y + layout.inner_box.h,
           frame);
       break;
     case AxisPosition::TOP:
       rc = renderAxisHorizontal(
           axis,
-          layout.content_box.y,
-          layout.content_box.x,
-          layout.content_box.x + layout.content_box.w,
+          layout.content_box.y + layout.content_box.h,
+          layout.inner_box.x,
+          layout.inner_box.x + layout.inner_box.w,
           frame);
       break;
     case AxisPosition::BOTTOM:
       rc = renderAxisHorizontal(
           axis,
-          layout.content_box.y + layout.content_box.h,
-          layout.content_box.x,
-          layout.content_box.x + layout.content_box.w,
+          layout.content_box.y,
+          layout.inner_box.x,
+          layout.inner_box.x + layout.inner_box.w,
           frame);
       break;
     case AxisPosition::CENTER_HORIZ:
@@ -514,6 +512,21 @@ ReturnCode configure(
     case AxisPosition::CENTER_VERT:
       config->scale = env.scale_y;
       config->scale_layout = env.scale_layout_y;
+      break;
+  };
+
+  switch (config->position) {
+    case AxisPosition::TOP:
+      config->layout.position = Position::TOP;
+      break;
+    case AxisPosition::BOTTOM:
+      config->layout.position = Position::BOTTOM;
+      break;
+    case AxisPosition::LEFT:
+      config->layout.position = Position::LEFT;
+      break;
+    case AxisPosition::RIGHT:
+      config->layout.position = Position::RIGHT;
       break;
   };
 
