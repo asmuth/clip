@@ -111,8 +111,6 @@ ReturnCode configure(
   config->color_scheme = env.color_scheme;
   config->text_color = env.text_color;
   config->border_color = env.border_color;
-  config->scale_x = env.scale_x;
-  config->scale_y = env.scale_y;
   config->scale_layout_x = env.scale_layout_x;
   config->scale_layout_y = env.scale_layout_y;
 
