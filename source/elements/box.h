@@ -41,7 +41,7 @@ struct BoxConfig {
   FontInfo font;
   Measure font_size;
   ColorScheme color_scheme;
-  Color background_color;
+  std::optional<Color> background;
   Color text_color;
   Color border_color;
   DomainConfig scale_x;

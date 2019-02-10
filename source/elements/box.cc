@@ -58,10 +58,10 @@ ReturnCode draw(
       margins[3]);
 
   /* draw background */
-  {
+  if (config.background) {
     const auto& bg_box = layout.content_box;
     FillStyle bg_fill;
-    bg_fill.color = config.background_color;
+    bg_fill.color = *config.background;
 
     fillRectangle(
         layer,
@@ -112,7 +112,6 @@ ReturnCode configure(
   config->color_scheme = env.color_scheme;
   config->text_color = env.text_color;
   config->border_color = env.border_color;
-  config->background_color = env.background_color;
   config->scale_x = env.scale_x;
   config->scale_y = env.scale_y;
   config->scale_layout_x = env.scale_layout_x;
@@ -145,7 +144,7 @@ ReturnCode configure(
     {"scale-y-max", bind(&configure_float_opt, _1, &config->scale_y.max)},
     {"scale-y-padding", bind(&configure_float, _1, &config->scale_y.padding)},
     {"scale-y-layout", bind(&configure_scale_layout, _1, &config->scale_layout_y)},
-    {"background-color", bind(&configure_color, _1, &config->background_color)},
+    {"background-color", configure_color_opt(&config->background)},
     {
       "foreground-color",
       configure_multiprop({
@@ -170,7 +169,7 @@ ReturnCode configure(
   child_env.color_scheme = config->color_scheme;
   child_env.text_color = config->text_color;
   child_env.border_color = config->border_color;
-  child_env.background_color = config->background_color;
+  child_env.background_color = config->background.value_or(env.background_color);
   child_env.scale_x = config->scale_x;
   child_env.scale_y = config->scale_y;
   child_env.scale_layout_x = config->scale_layout_x;
