@@ -35,10 +35,10 @@
 #include <functional>
 
 using namespace std::placeholders;
-
 namespace plotfx {
 
 static const double kDefaultLogBase = 10;
+static const size_t kMaxTicks = 8192;
 
 DomainConfig::DomainConfig() :
     kind(DomainKind::LINEAR),
@@ -224,6 +224,10 @@ ReturnCode scale_layout_linear(
 
   auto begin = std::max(align.value_or(domain_min(domain)), domain_min(domain));
   auto end = domain_max(domain);
+
+  if (((end - begin) / step) > kMaxTicks) {
+    return {ERROR, "too many ticks"};
+  }
 
   size_t label_idx = 0;
   for (auto v = begin; v <= end; v += step) {
