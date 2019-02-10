@@ -43,6 +43,11 @@ using ElementBuilder = std::function<ReturnCode (
 template <typename T>
 ElementBuilder elem_builder(
     ElementConfigureAsFn<T> config_fn,
+    ElementDrawAsFn<T> draw_fn);
+
+template <typename T>
+ElementBuilder elem_builder(
+    ElementConfigureAsFn<T> config_fn,
     ElementReflowAsFn<T> layout_fn,
     ElementDrawAsFn<T> draw_fn);
 

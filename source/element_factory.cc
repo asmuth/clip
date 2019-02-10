@@ -46,7 +46,6 @@ static std::unordered_map<std::string, ElementBuilder> elems = {
     "areas",
     elem_builder<plot::area::PlotAreaConfig>(
         &plot::area::configure,
-        &plot::area::reflow,
         &plot::area::draw)
   },
   {
@@ -60,21 +59,18 @@ static std::unordered_map<std::string, ElementBuilder> elems = {
     "bars",
     elem_builder<plot::bars::PlotBarsConfig>(
         &plot::bars::configure,
-        &plot::bars::reflow,
         &plot::bars::draw)
   },
   {
     "box",
     elem_builder<box::BoxConfig>(
         &box::configure,
-        &box::reflow,
         &box::draw)
   },
   {
     "gridlines",
     elem_builder<gridlines::GridlineDefinition>(
         &gridlines::configure,
-        &gridlines::reflow,
         &gridlines::draw)
   },
   {
@@ -88,14 +84,12 @@ static std::unordered_map<std::string, ElementBuilder> elems = {
     "lines",
     elem_builder<plot::lines::PlotLinesConfig>(
         &plot::lines::configure,
-        &plot::lines::reflow,
         &plot::lines::draw)
   },
   {
     "points",
     elem_builder<plot::points::PlotPointsConfig>(
         &plot::points::configure,
-        &plot::points::reflow,
         &plot::points::draw)
   },
 };

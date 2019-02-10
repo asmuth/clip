@@ -137,17 +137,6 @@ ReturnCode draw(
   return OK;
 }
 
-ReturnCode reflow(
-    const PlotPointsConfig& config,
-    const Layer& layer,
-    const std::optional<double> max_width,
-    const std::optional<double> max_height,
-    double* min_width,
-    double* min_height) {
-  /* nothing to do */
-  return OK;
-}
-
 ReturnCode configure(
     const plist::PropertyList& plist,
     const Environment& env,

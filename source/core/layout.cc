@@ -135,15 +135,17 @@ ReturnCode layout_elements(
     double bbox_w = 0.0;
     double bbox_h = 0.0;
 
-    if (auto rc =
-          e.element->reflow(
-              layer,
-              layout_state.content_box.w,
-              layout_state.content_box.h,
-              &bbox_w,
-              &bbox_h);
-          !rc.isSuccess()) {
-      return rc;
+    if (e.element->reflow) {
+      if (auto rc =
+            e.element->reflow(
+                layer,
+                layout_state.content_box.w,
+                layout_state.content_box.h,
+                &bbox_w,
+                &bbox_h);
+            !rc.isSuccess()) {
+        return rc;
+      }
     }
 
     if (auto rc =

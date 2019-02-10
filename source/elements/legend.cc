@@ -315,15 +315,7 @@ ReturnCode reflow(
     const std::optional<double> max_height,
     double* min_width,
     double* min_height) {
-  switch (config.placement) {
-    case LegendPlacement::INSIDE:
-      /* nothing to do */
-      return OK;
-    case LegendPlacement::OUTSIDE:
-    case LegendPlacement::OFF:
-    default:
-      return ERROR; // TODO: not implemented
-  }
+  return OK; // TODO
 }
 
 ReturnCode configure(

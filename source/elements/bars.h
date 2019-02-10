@@ -65,14 +65,6 @@ ReturnCode draw(
     const LayoutInfo& layout,
     Layer* layer);
 
-ReturnCode reflow(
-    const PlotBarsConfig& config,
-    const Layer& layer,
-    const std::optional<double> max_width,
-    const std::optional<double> max_height,
-    double* min_width,
-    double* min_height);
-
 ReturnCode configure(
     const plist::PropertyList& plist,
     const Environment& env,
