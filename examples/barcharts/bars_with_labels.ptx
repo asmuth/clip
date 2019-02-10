@@ -5,6 +5,14 @@ scale-y-min: 0;
 scale-y-max: 30;
 scale-x-padding: 0.6;
 
+bars {
+  xs: csv(tests/testdata/city_temperatures_london.csv, month);
+  ys: csv(tests/testdata/city_temperatures_london.csv, temperature);
+  labels: csv(tests/testdata/city_temperatures_london.csv, temperature_str);
+  size: 2.6em;
+  color: #4572a7;
+}
+
 axis {
   position: left;
   layout: linear(5);
@@ -27,10 +35,3 @@ axis {
   labels: csv(tests/testdata/city_temperatures_london.csv, month_name);
 }
 
-bars {
-  xs: csv(tests/testdata/city_temperatures_london.csv, month);
-  ys: csv(tests/testdata/city_temperatures_london.csv, temperature);
-  labels: csv(tests/testdata/city_temperatures_london.csv, temperature_str);
-  size: 2.6em;
-  color: #4572a7;
-}

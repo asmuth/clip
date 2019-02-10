@@ -90,6 +90,11 @@ struct LayoutInfo {
 
 };
 
+struct ElementPlacement {
+  ElementRef element;
+  LayoutInfo layout;
+};
+
 ReturnCode layout_element(
     const LayoutSettings& config,
     double bbox_w,
@@ -100,8 +105,7 @@ ReturnCode layout_element(
 ReturnCode layout_elements(
     const Layer& layer,
     const Rectangle& parent_bbox,
-    const std::vector<ElementRef>& elements,
-    std::vector<LayoutInfo>* element_layouts);
+    std::vector<ElementPlacement>* elements);
 
 } // namespace plotfx
 

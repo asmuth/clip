@@ -72,22 +72,19 @@ ReturnCode draw(
   }
 
   /* layout and draw children */
-  std::vector<LayoutInfo> child_layouts;
-  if (auto rc =
-        layout_elements(
-            *layer,
-            margin_box,
-            config.children,
-            &child_layouts);
-        !rc) {
+  std::vector<ElementPlacement> children;
+  for (const auto& c : config.children) {
+    ElementPlacement e;
+    e.element = c;
+    children.emplace_back(e);
+  }
+
+  if (auto rc = layout_elements(*layer, margin_box, &children); !rc) {
     return rc;
   }
 
-  for (size_t i = 0; i < config.children.size(); ++i) {
-    const auto& e = config.children[i];
-    const auto& l = child_layouts[i];
-
-    if (auto rc = e->draw(l, layer); !rc.isSuccess()) {
+  for (const auto& c : children) {
+    if (auto rc = c.element->draw(c.layout, layer); !rc.isSuccess()) {
       return rc;
     }
   }

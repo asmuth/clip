@@ -118,17 +118,25 @@ ReturnCode layout_element(
 ReturnCode layout_elements(
     const Layer& layer,
     const Rectangle& parent_bbox,
-    const std::vector<ElementRef>& elements,
-    std::vector<LayoutInfo>* element_layouts) {
+    std::vector<ElementPlacement>* elements) {
+  /* sort elements by z-index */
+  std::stable_sort(
+      elements->begin(),
+      elements->end(),
+      [] (const ElementPlacement& a, const ElementPlacement& b) {
+        return a.element->z_index() < b.element->z_index();
+      });
+
+  /* compute bounding boxes */
   LayoutState layout_state;
   layout_state.content_box = parent_bbox;
 
-  for (const auto& e : elements) {
+  for (auto& e : *elements) {
     double bbox_w = 0.0;
     double bbox_h = 0.0;
 
     if (auto rc =
-          e->layout(
+          e.element->layout(
               layer,
               layout_state.content_box.w,
               layout_state.content_box.h,
@@ -138,25 +146,21 @@ ReturnCode layout_elements(
       return rc;
     }
 
-    LayoutInfo l;
-    l.bounding_box = parent_bbox;
-
     if (auto rc =
           layout_element(
-              e->layout_settings(),
+              e.element->layout_settings(),
               bbox_w,
               bbox_h,
               &layout_state,
-              &l.content_box);
+              &e.layout.content_box);
           !rc.isSuccess()) {
       return rc;
     }
-
-    element_layouts->emplace_back(l);
   }
 
-  for (auto& l : *element_layouts) {
-    l.inner_box = layout_state.content_box;
+  for (auto& e : *elements) {
+    e.layout.bounding_box = parent_bbox;
+    e.layout.inner_box = layout_state.content_box;
   }
 
   return OK;
