@@ -1,0 +1,297 @@
+width: 2000px;
+height: 1080px;
+
+background-color: #000;
+margin: 2pt;
+
+box {
+  background-color: #fff;
+  position: right;
+  width: 600px;
+
+  margin-top: 2em;
+
+  box {
+    position: top;
+    height: 500px;
+
+    scale-y-min: 0;
+    scale-y-max: 140;
+
+    gridlines {}
+
+    areas {
+      xs: csv('tests/testdata/measurement.csv', time);
+      ys: csv('tests/testdata/measurement.csv', value2);
+      colors: #06c;
+    }
+
+    axis {
+      position: bottom;
+      format: datetime("%H:%M:%S");
+      height: 60px;
+    }
+
+    axis {
+      position: left;
+      width: 60px;
+      layout: linear(20);
+    }
+
+    axis {
+      position: right;
+      width: 60px;
+      layout: linear(20);
+    }
+  }
+
+  box {
+    position: top;
+    height: 500px;
+
+    scale-y-min: 0;
+    scale-y-max: 140;
+
+    gridlines {}
+
+    areas {
+      xs: csv('tests/testdata/measurement.csv', time);
+      ys: csv('tests/testdata/measurement.csv', value2);
+      colors: #06c;
+    }
+
+    axis {
+      position: bottom;
+      format: datetime("%H:%M:%S");
+      height: 60px;
+    }
+
+    axis {
+      position: left;
+      width: 60px;
+      layout: linear(20);
+    }
+
+    axis {
+      position: right;
+      width: 60px;
+      layout: linear(20);
+    }
+  }
+}
+
+box {
+  height: 250px;
+  position: top;
+  margin-top: 1em;
+  margin-bottom: 1em;
+  background-color: #fff;
+
+  box {
+    width: 460px;
+    position: left;
+
+    margin-left: .75em;
+
+    scale-x-padding: 0.5;
+    scale-y: log;
+
+    bars {
+      xs: csv(tests/testdata/histogram.csv, var0);
+      ys: csv(tests/testdata/histogram.csv, var1);
+      color: #888;
+      size: 14pt;
+    }
+
+    axis {
+      position: bottom;
+      layout: linear(1, align 1);
+    }
+
+    axis {
+      position: top;
+      layout: linear(1, align 1);
+    }
+
+    axis {
+      position: left;
+      width: 60px;
+    }
+
+    legend {
+      position: top right inside;
+      items: "New York";
+      colors: #4572a7;
+    }
+  }
+
+  box {
+    width: 400px;
+    position: left;
+
+    margin-left: .75em;
+    margin-right: .75em;
+
+    scale-x-padding: 0.5;
+    scale-y: log;
+
+    bars {
+      xs: csv(tests/testdata/histogram.csv, var0);
+      ys: csv(tests/testdata/histogram.csv, var1);
+      color: #888;
+      size: 14pt;
+    }
+
+    axis {
+      position: bottom;
+      layout: linear(1, align 1);
+    }
+
+    axis {
+      position: top;
+      layout: linear(1, align 1);
+    }
+
+    legend {
+      position: top right inside;
+      items: "New York";
+      colors: #4572a7;
+    }
+  }
+
+  box {
+    width: 460px;
+    position: left;
+
+    margin-left: .75em;
+
+    scale-x-padding: 0.5;
+    scale-y: log;
+
+    bars {
+      xs: csv(tests/testdata/histogram.csv, var0);
+      ys: csv(tests/testdata/histogram.csv, var1);
+      color: #888;
+      size: 14pt;
+    }
+
+    axis {
+      position: bottom;
+      layout: linear(1, align 1);
+    }
+
+    axis {
+      position: right;
+      width: 60px;
+    }
+
+    axis {
+      position: top;
+      layout: linear(1, align 1);
+    }
+
+    legend {
+      position: top right inside;
+      items: "New York";
+      colors: #4572a7;
+    }
+  }
+}
+
+box {
+  position: top;
+  height: 280px;
+  margin-top: 1em;
+  background-color: #fff;
+
+  scale-y-min: 0;
+  scale-y-max: 140;
+
+  lines {
+    xs: csv('tests/testdata/measurement.csv', time);
+    ys: csv('tests/testdata/measurement.csv', value2);
+    colors: #06c;
+  }
+
+  axis {
+    position: top;
+    format: datetime("%H:%M:%S");
+    height: 60px;
+  }
+
+  axis {
+    position: left;
+    width: 60px;
+    layout: linear(20);
+  }
+
+  axis {
+    position: right;
+    width: 60px;
+    layout: linear(20);
+  }
+}
+
+box {
+  position: top;
+  height: 220px;
+  margin-top: 1em;
+  background-color: #fff;
+
+  scale-y-min: 0;
+  scale-y-max: 140;
+
+  lines {
+    xs: csv('tests/testdata/measurement.csv', time);
+    ys: csv('tests/testdata/measurement.csv', value2);
+    colors: #06c;
+  }
+
+  axis {
+    position: left;
+    width: 60px;
+    layout: linear(20);
+  }
+
+  axis {
+    position: right;
+    width: 60px;
+    layout: linear(20);
+  }
+}
+
+box {
+  position: top;
+  height: 280px;
+  margin-top: 1em;
+  background-color: #fff;
+
+  scale-y-min: 0;
+  scale-y-max: 140;
+
+  areas {
+    xs: csv('tests/testdata/measurement.csv', time);
+    ys: csv('tests/testdata/measurement.csv', value2);
+    colors: #06c;
+  }
+
+  axis {
+    position: bottom;
+    format: datetime("%H:%M:%S");
+    height: 60px;
+  }
+
+  axis {
+    position: left;
+    width: 60px;
+    layout: linear(20);
+  }
+
+  axis {
+    position: right;
+    width: 60px;
+    layout: linear(20);
+  }
+
+}
+
