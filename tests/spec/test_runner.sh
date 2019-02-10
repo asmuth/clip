@@ -27,4 +27,5 @@ if !(diff ${outfile} ${masterfile} &>/dev/null); then
   print_error "ERROR: output files do not match"
   echo "Diff:"
   diff ${outfile} ${masterfile} || true
+  exit 1
 fi

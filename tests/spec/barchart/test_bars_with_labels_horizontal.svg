@@ -19,22 +19,22 @@
   <text x="92.562500" y="283.260859" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif">India</text>
   <text x="97.453125" y="322.391292" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif">Italy</text>
   <text x="87.671875" y="361.521725" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif">Brazil</text>
-  <path fill="#4572a7" d="M20.0 31.744926 L1069.716364 31.744926 L1069.716364 55.211593 L20.0 55.211593 "/>
-  <path fill="#4572a7" d="M20.0 70.87536 L652.287273 70.87536 L652.287273 94.342026 L20.0 94.342026 "/>
-  <path fill="#4572a7" d="M20.0 110.005793 L298.210909 110.005793 L298.210909 133.472459 L20.0 133.472459 "/>
-  <path fill="#4572a7" d="M20.0 149.136226 L215.976364 149.136226 L215.976364 172.602893 L20.0 172.602893 "/>
-  <path fill="#4572a7" d="M20.0 188.266659 L169.194545 188.266659 L169.194545 211.733326 L20.0 211.733326 "/>
-  <path fill="#4572a7" d="M20.0 227.397092 L158.936364 227.397092 L158.936364 250.863759 L20.0 250.863759 "/>
-  <path fill="#4572a7" d="M20.0 266.527525 L147.325455 266.527525 L147.325455 289.994192 L20.0 289.994192 "/>
-  <path fill="#4572a7" d="M20.0 305.657959 L124.723636 305.657959 L124.723636 329.124625 L20.0 329.124625 "/>
-  <path fill="#4572a7" d="M20.0 344.788392 L121.172727 344.788392 L121.172727 368.255058 L20.0 368.255058 "/>
-  <text x="1078.516364" y="48.478260" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif">$18,624bln</text>
-  <text x="661.087273" y="87.608693" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif">$11,218bln</text>
-  <text x="307.010909" y="126.739126" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif">$11,218bln</text>
-  <text x="224.776364" y="165.869559" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif">$11,218bln</text>
-  <text x="177.994545" y="204.999992" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif">$11,218bln</text>
-  <text x="167.736364" y="244.130426" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif">$2,465bln</text>
-  <text x="156.125455" y="283.260859" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif">$2.259bln</text>
-  <text x="133.523636" y="322.391292" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif">$1.858bln</text>
-  <text x="129.972727" y="361.521725" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif">$1.795bln</text>
+  <path fill="#4572a7" d="M136.108333 31.744926 L1087.533715 31.744926 L1087.533715 55.211593 L136.108333 55.211593 "/>
+  <path fill="#4572a7" d="M136.108333 70.87536 L709.190911 70.87536 L709.190911 94.342026 L136.108333 94.342026 "/>
+  <path fill="#4572a7" d="M136.108333 110.005793 L388.268755 110.005793 L388.268755 133.472459 L136.108333 133.472459 "/>
+  <path fill="#4572a7" d="M136.108333 149.136226 L313.734303 149.136226 L313.734303 172.602893 L136.108333 172.602893 "/>
+  <path fill="#4572a7" d="M136.108333 188.266659 L271.332935 188.266659 L271.332935 211.733326 L136.108333 211.733326 "/>
+  <path fill="#4572a7" d="M136.108333 227.397092 L262.035286 227.397092 L262.035286 250.863759 L136.108333 250.863759 "/>
+  <path fill="#4572a7" d="M136.108333 266.527525 L251.511573 266.527525 L251.511573 289.994192 L136.108333 289.994192 "/>
+  <path fill="#4572a7" d="M136.108333 305.657959 L231.026093 305.657959 L231.026093 329.124625 L136.108333 329.124625 "/>
+  <path fill="#4572a7" d="M136.108333 344.788392 L227.807676 344.788392 L227.807676 368.255058 L136.108333 368.255058 "/>
+  <text x="1096.333715" y="48.478260" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif">$18,624bln</text>
+  <text x="717.990911" y="87.608693" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif">$11,218bln</text>
+  <text x="397.068755" y="126.739126" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif">$11,218bln</text>
+  <text x="322.534303" y="165.869559" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif">$11,218bln</text>
+  <text x="280.132935" y="204.999992" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif">$11,218bln</text>
+  <text x="270.835286" y="244.130426" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif">$2,465bln</text>
+  <text x="260.311573" y="283.260859" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif">$2.259bln</text>
+  <text x="239.826093" y="322.391292" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif">$1.858bln</text>
+  <text x="236.607676" y="361.521725" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif">$1.795bln</text>
 </svg>
