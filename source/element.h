@@ -67,6 +67,7 @@ using ElementLayoutAsFn = std::function<ReturnCode (const T&, const Layer&, Layo
 
 struct Element {
   virtual ~Element() = default;
+  virtual const LayoutSettings& layout_settings() const = 0;
   ElementLayoutFn layout;
   ElementDrawFn draw;
 };
@@ -74,6 +75,10 @@ struct Element {
 template <typename T>
 struct ElementInstance : public Element {
   T config;
+
+  const LayoutSettings& layout_settings() const override {
+    return config.layout;
+  }
 };
 
 using ElementRef = std::shared_ptr<Element>;

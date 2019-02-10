@@ -51,6 +51,7 @@ struct PlotAreaConfig {
   DomainConfig scale_x;
   DomainConfig scale_y;
   std::vector<Color> colors;
+  LayoutSettings layout;
 };
 
 ReturnCode draw(

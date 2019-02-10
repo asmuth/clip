@@ -37,7 +37,6 @@ namespace box {
 
 struct BoxConfig {
   std::vector<ElementRef> children;
-  std::array<Measure, 4> margins;
   FontInfo font;
   Measure font_size;
   ColorScheme color_scheme;
@@ -48,6 +47,8 @@ struct BoxConfig {
   DomainConfig scale_y;
   ScaleLayoutFn scale_layout_x;
   ScaleLayoutFn scale_layout_y;
+  std::array<Measure, 4> margins;
+  LayoutSettings layout;
 };
 
 ReturnCode draw(

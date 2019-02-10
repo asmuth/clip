@@ -57,6 +57,7 @@ struct PlotBarsConfig {
   Measure label_padding;
   Measure label_font_size;
   Color label_color;
+  LayoutSettings layout;
 };
 
 ReturnCode draw(

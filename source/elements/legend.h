@@ -67,6 +67,7 @@ struct LegendConfig {
   std::string title;
   std::vector<std::string> items;
   std::vector<Color> colors;
+  LayoutSettings layout;
 };
 
 namespace legend {

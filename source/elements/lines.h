@@ -50,6 +50,7 @@ struct PlotLinesConfig {
   std::vector<DataGroup> groups;
   std::vector<Color> colors;
   Measure line_width;
+  LayoutSettings layout;
 };
 
 ReturnCode draw(

@@ -100,7 +100,7 @@ static Status renderAxisVertical(
     Layer* target) {
   /* compute layout */
   ScaleLayout slayout;
-  axis_config.layout(axis_config.scale, &slayout);
+  axis_config.scale_layout(axis_config.scale, &slayout);
 
   /* draw axis line */
   {
@@ -187,7 +187,7 @@ static Status renderAxisHorizontal(
     Layer* target) {
   /* compute layout */
   ScaleLayout slayout;
-  axis_config.layout(axis_config.scale, &slayout);
+  axis_config.scale_layout(axis_config.scale, &slayout);
 
   /* draw axis line */
   {
@@ -273,7 +273,7 @@ ReturnCode axis_layout_labels(
     double* margin) {
   /* compute scale layout */
   ScaleLayout slayout;
-  axis.layout(axis.scale, &slayout);
+  axis.scale_layout(axis.scale, &slayout);
 
   /* compute label size */
   double max = 0;
@@ -415,14 +415,14 @@ ReturnCode draw(
     const AxisDefinition& axis,
     const LayoutInfo& layout,
     Layer* frame) {
-  const auto& clip = layout.element_box;
+  const auto& clip = layout.content_box;
 
   Status rc;
   switch (axis.position) {
     case AxisPosition::LEFT:
       rc = renderAxisVertical(
           axis,
-          layout.element_box.x,
+          layout.content_box.x,
           layout.content_box.y,
           layout.content_box.y + layout.content_box.h,
           frame);
@@ -430,7 +430,7 @@ ReturnCode draw(
     case AxisPosition::RIGHT:
       rc = renderAxisVertical(
           axis,
-          layout.element_box.x + layout.element_box.w,
+          layout.content_box.x + layout.content_box.w,
           layout.content_box.y,
           layout.content_box.y + layout.content_box.h,
           frame);
@@ -438,7 +438,7 @@ ReturnCode draw(
     case AxisPosition::TOP:
       rc = renderAxisHorizontal(
           axis,
-          layout.element_box.y,
+          layout.content_box.y,
           layout.content_box.x,
           layout.content_box.x + layout.content_box.w,
           frame);
@@ -446,7 +446,7 @@ ReturnCode draw(
     case AxisPosition::BOTTOM:
       rc = renderAxisHorizontal(
           axis,
-          layout.element_box.y + layout.element_box.h,
+          layout.content_box.y + layout.content_box.h,
           layout.content_box.x,
           layout.content_box.x + layout.content_box.w,
           frame);
@@ -487,7 +487,7 @@ ReturnCode layout(
       margins[2],
       margins[3]);
 
-  layout->element_box = layout->content_box;
+  layout->content_box = layout->content_box;
 
   return OK;
 }
@@ -516,13 +516,13 @@ ReturnCode configure(
     case AxisPosition::BOTTOM:
     case AxisPosition::CENTER_HORIZ:
       config->scale = env.scale_x;
-      config->layout = env.scale_layout_x;
+      config->scale_layout = env.scale_layout_x;
       break;
     case AxisPosition::LEFT:
     case AxisPosition::RIGHT:
     case AxisPosition::CENTER_VERT:
       config->scale = env.scale_y;
-      config->layout = env.scale_layout_y;
+      config->scale_layout = env.scale_layout_y;
       break;
   };
 
@@ -530,7 +530,7 @@ ReturnCode configure(
     static const ParserDefinitions pdefs = {
       {"format", bind(&confgure_format, _1, &config->label_formatter)},
       {"labels", bind(&configure_strings, _1, &config->label_override)},
-      {"layout", bind(&configure_scale_layout, _1, &config->layout)},
+      {"layout", bind(&configure_scale_layout, _1, &config->scale_layout)},
       {"scale", bind(&domain_configure, _1, &config->scale)},
       {"scale-min", bind(&configure_float_opt, _1, &config->scale.min)},
       {"scale-max", bind(&configure_float_opt, _1, &config->scale.max)},

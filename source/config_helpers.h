@@ -37,6 +37,7 @@
 #include "utils/return_code.h"
 #include "source/data_model.h"
 #include "source/dimension.h"
+#include "core/layout.h"
 
 namespace plotfx {
 
@@ -82,8 +83,6 @@ ReturnCode configure_measure(
 
 ReturnCode configure_measure_opt(
     const plist::Property& prop,
-    double dpi,
-    double font_size,
     std::optional<Measure>* value);
 
 ReturnCode configure_color(
@@ -104,6 +103,10 @@ ReturnCode configure_string(
 ReturnCode configure_direction(
     const plist::Property& prop,
     Direction* value);
+
+ReturnCode configure_position(
+    const plist::Property& prop,
+    Position* value);
 
 ReturnCode configure_float_opt(
     const plist::Property& prop,

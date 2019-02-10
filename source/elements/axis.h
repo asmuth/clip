@@ -71,11 +71,11 @@ struct AxisDefinition {
   AxisDefinition();
   AxisPosition position;
   DomainConfig scale;
+  ScaleLayoutFn scale_layout;
   std::string title;
   std::vector<std::string> label_override;
   AxisLabelPosition tick_position;
   AxisLabelPosition label_position;
-  ScaleLayoutFn layout;
   Formatter label_formatter;
   Color text_color;
   Color border_color;
@@ -83,6 +83,7 @@ struct AxisDefinition {
   Measure label_padding;
   Measure label_font_size;
   Measure tick_length;
+  LayoutSettings layout;
 };
 
 namespace axis {

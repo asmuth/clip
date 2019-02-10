@@ -77,6 +77,7 @@ struct LegendConfig {
   VAlign position_vert;
   std::string title;
   std::vector<LegendItemGroup> groups;
+  LayoutSettings layout;
 };
 
 namespace legend {

@@ -57,7 +57,7 @@ ReturnCode draw_horizontal(
     PlotBarsConfig config,
     const LayoutInfo& layout,
     Layer* layer) {
-  const auto& clip = layout.content_box;
+  const auto& clip = layout.bounding_box;
 
   /* convert units */
   convert_units(

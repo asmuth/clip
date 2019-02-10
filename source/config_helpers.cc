@@ -211,6 +211,28 @@ ReturnCode configure_direction(
   return parseEnum(defs, prop.value, value);
 }
 
+ReturnCode configure_position(
+    const plist::Property& prop,
+    Position* value) {
+  if (!plist::is_value(prop)) {
+    return ReturnCode::errorf(
+        "EARG",
+        "incorrect number of arguments; expected: 1, got: $0",
+        prop.size());
+  }
+
+  static const EnumDefinitions<Position> defs = {
+    { "relative", Position::RELATIVE },
+    { "absolute", Position::ABSOLUTE },
+    { "top", Position::TOP },
+    { "right", Position::RIGHT },
+    { "bottom", Position::BOTTOM },
+    { "left", Position::LEFT },
+  };
+
+  return parseEnum(defs, prop.value, value);
+}
+
 ReturnCode load_csv(
     const std::string& csv_path,
     bool csv_headers,

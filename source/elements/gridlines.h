@@ -50,6 +50,7 @@ struct GridlineDefinition {
   ScaleLayoutFn layout_y;
   Measure line_width;
   Color line_color;
+  LayoutSettings layout;
 };
 
 ReturnCode draw(

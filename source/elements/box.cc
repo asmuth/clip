@@ -43,10 +43,24 @@ ReturnCode draw(
     const BoxConfig& config,
     const LayoutInfo& parent_layout,
     Layer* layer) {
+  auto layout = parent_layout;
+
+  /* calculate margin box */
+  auto margins = config.margins;
+  for (auto& m : margins) {
+    convert_unit_typographic(layer->dpi, config.font_size, &m);
+  }
+
+  layout.content_box = layout_margin_box(
+      layout.content_box,
+      margins[0],
+      margins[1],
+      margins[2],
+      margins[3]);
 
   /* draw background */
   {
-    const auto& bg_box = parent_layout.content_box;
+    const auto& bg_box = layout.bounding_box;
     FillStyle bg_fill;
     bg_fill.color = config.background_color;
 
@@ -58,46 +72,16 @@ ReturnCode draw(
         bg_fill);
   }
 
-  /* calculate margin box */
-  auto margins = config.margins;
-  for (auto& m : margins) {
-    convert_unit_typographic(layer->dpi, config.font_size, &m);
-  }
-
-  auto bounding_box = layout_margin_box(
-      parent_layout.content_box,
-      margins[0],
-      margins[1],
-      margins[2],
-      margins[3]);
-
-  auto content_box = bounding_box;
-
   /* layout and draw children */
-  std::vector<Rectangle> element_boxes;
+  std::vector<LayoutInfo> child_layouts;
   for (const auto& e : config.children) {
-    LayoutInfo layout;
-    layout.bounding_box = bounding_box;
-    layout.constraint = {true, true};
-    layout.content_box = content_box;
+    LayoutInfo l;
 
-    if (auto rc = e->layout(*layer, &layout); !rc.isSuccess()) {
+    if (auto rc = layout_compute(e->layout_settings(), &layout, &l); !rc.isSuccess()) {
       return rc;
     }
 
-    content_box = layout.content_box;
-    element_boxes.emplace_back(layout.element_box);
-  }
-
-  for (size_t i = 0; i < config.children.size(); ++i) {
-    const auto& element = config.children[i];
-    LayoutInfo layout;
-    layout.bounding_box = bounding_box;
-    layout.constraint = {true, true};
-    layout.content_box = content_box;
-    layout.element_box = element_boxes[i];
-
-    if (auto rc = element->draw(layout, layer); !rc.isSuccess()) {
+    if (auto rc = e->draw(l, layer); !rc.isSuccess()) {
       return rc;
     }
   }
@@ -129,6 +113,9 @@ ReturnCode configure(
   config->scale_layout_y = env.scale_layout_y;
 
   ParserDefinitions pdefs = {
+    {"position", bind(&configure_position, _1, &config->layout.position)},
+    {"width", bind(&configure_measure_opt, _1, &config->layout.width)},
+    {"height", bind(&configure_measure_opt, _1, &config->layout.height)},
     {
       "margin",
       configure_multiprop({

@@ -29,10 +29,12 @@
  */
 #pragma once
 #include "graphics/geometry.h"
+#include "graphics/measure.h"
 
 #include <assert.h>
 #include <stdlib.h>
 #include <stdint.h>
+#include <optional>
 
 namespace plotfx {
 
@@ -54,12 +56,28 @@ struct LayoutInfo {
    */
   Rectangle content_box;
 
-  /**
-   * The elements bounding box
-   */
-  Rectangle element_box;
-
 };
+
+enum class Position {
+  RELATIVE,
+  ABSOLUTE,
+  TOP,
+  RIGHT,
+  BOTTOM,
+  LEFT
+};
+
+struct LayoutSettings {
+  LayoutSettings();
+  Position position;
+  std::optional<Measure> width;
+  std::optional<Measure> height;
+};
+
+ReturnCode layout_compute(
+    const LayoutSettings& config,
+    LayoutInfo* parent_layout,
+    LayoutInfo* layout);
 
 } // namespace plotfx
 
