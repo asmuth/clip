@@ -1,7 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1200.000000" height="480.000000" viewBox="0 0 1200.0 480.0">
   <rect width="1200.000000" height="480.000000" fill="#ffffff"/>
-  <path stroke-width="2.000000" stroke="#005fbf" fill="none" d="M113.126876 333.502476 L201.204657 330.240762 L289.282438 313.93219 L377.360219 283.489524 L465.437999 246.523429 L553.51578 210.644571 L641.593561 191.074286 L729.671342 195.423238 L817.749122 221.516952 L905.826903 263.919238 L993.904684 304.147048 L1081.982465 323.717333 "/>
-  <path stroke-width="2.000000" stroke="#bf005f" fill="none" d="M113.126876 337.247407 L201.204657 315.261037 L289.282438 257.758222 L377.360219 189.262222 L465.437999 135.141926 L553.51578 97.934222 L641.593561 81.02163 L729.671342 92.860444 L817.749122 135.141926 L905.826903 192.644741 L993.904684 263.67763 L1081.982465 318.643556 "/>
   <path stroke-width="1.333333" stroke="#a8a8a8" fill="none" d="M60.280208 49.733333 L60.280208 430.266667 "/>
   <path stroke-width="1.333333" stroke="#a8a8a8" fill="none" d="M60.280208 430.266667 L65.613542 430.266667 "/>
   <path stroke-width="1.333333" stroke="#a8a8a8" fill="none" d="M60.280208 375.904762 L65.613542 375.904762 "/>
@@ -40,31 +38,6 @@
   <text x="1146.562500" y="139.296296" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif">20.0</text>
   <text x="1146.562500" y="97.014815" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif">25.0</text>
   <text x="1146.562500" y="54.733333" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif">30.0</text>
-  <path stroke-width="1.333333" stroke="#a8a8a8" fill="none" d="M60.280208 49.733333 L1134.829167 49.733333 "/>
-  <path stroke-width="1.333333" stroke="#a8a8a8" fill="none" d="M113.126876 49.733333 L113.126876 55.066667 "/>
-  <path stroke-width="1.333333" stroke="#a8a8a8" fill="none" d="M201.204657 49.733333 L201.204657 55.066667 "/>
-  <path stroke-width="1.333333" stroke="#a8a8a8" fill="none" d="M289.282438 49.733333 L289.282438 55.066667 "/>
-  <path stroke-width="1.333333" stroke="#a8a8a8" fill="none" d="M377.360219 49.733333 L377.360219 55.066667 "/>
-  <path stroke-width="1.333333" stroke="#a8a8a8" fill="none" d="M465.437999 49.733333 L465.437999 55.066667 "/>
-  <path stroke-width="1.333333" stroke="#a8a8a8" fill="none" d="M553.51578 49.733333 L553.51578 55.066667 "/>
-  <path stroke-width="1.333333" stroke="#a8a8a8" fill="none" d="M641.593561 49.733333 L641.593561 55.066667 "/>
-  <path stroke-width="1.333333" stroke="#a8a8a8" fill="none" d="M729.671342 49.733333 L729.671342 55.066667 "/>
-  <path stroke-width="1.333333" stroke="#a8a8a8" fill="none" d="M817.749122 49.733333 L817.749122 55.066667 "/>
-  <path stroke-width="1.333333" stroke="#a8a8a8" fill="none" d="M905.826903 49.733333 L905.826903 55.066667 "/>
-  <path stroke-width="1.333333" stroke="#a8a8a8" fill="none" d="M993.904684 49.733333 L993.904684 55.066667 "/>
-  <path stroke-width="1.333333" stroke="#a8a8a8" fill="none" d="M1081.982465 49.733333 L1081.982465 55.066667 "/>
-  <text x="101.298751" y="34.000000" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif">Jan</text>
-  <text x="188.564032" y="34.000000" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif">Feb</text>
-  <text x="276.649625" y="34.000000" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif">Mar</text>
-  <text x="365.946156" y="34.000000" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif">Apr</text>
-  <text x="451.578624" y="34.000000" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif">May</text>
-  <text x="541.687655" y="34.000000" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif">Jun</text>
-  <text x="632.210748" y="34.000000" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif">Jul</text>
-  <text x="716.624467" y="34.000000" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif">Aug</text>
-  <text x="804.702247" y="34.000000" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif">Sep</text>
-  <text x="894.412841" y="34.000000" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif">Oct</text>
-  <text x="980.857809" y="34.000000" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif">Nov</text>
-  <text x="1068.935590" y="34.000000" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif">Dec</text>
   <path stroke-width="1.333333" stroke="#a8a8a8" fill="none" d="M60.280208 430.266667 L1134.829167 430.266667 "/>
   <path stroke-width="1.333333" stroke="#a8a8a8" fill="none" d="M69.087986 430.266667 L69.087986 424.933333 "/>
   <path stroke-width="1.333333" stroke="#a8a8a8" fill="none" d="M69.087986 430.266667 L69.087986 424.933333 "/>
@@ -103,4 +76,31 @@
   <text x="894.412841" y="456.000000" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif">Oct</text>
   <text x="980.857809" y="456.000000" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif">Nov</text>
   <text x="1068.935590" y="456.000000" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif">Dec</text>
+  <path stroke-width="1.333333" stroke="#a8a8a8" fill="none" d="M60.280208 49.733333 L1134.829167 49.733333 "/>
+  <path stroke-width="1.333333" stroke="#a8a8a8" fill="none" d="M113.126876 49.733333 L113.126876 55.066667 "/>
+  <path stroke-width="1.333333" stroke="#a8a8a8" fill="none" d="M201.204657 49.733333 L201.204657 55.066667 "/>
+  <path stroke-width="1.333333" stroke="#a8a8a8" fill="none" d="M289.282438 49.733333 L289.282438 55.066667 "/>
+  <path stroke-width="1.333333" stroke="#a8a8a8" fill="none" d="M377.360219 49.733333 L377.360219 55.066667 "/>
+  <path stroke-width="1.333333" stroke="#a8a8a8" fill="none" d="M465.437999 49.733333 L465.437999 55.066667 "/>
+  <path stroke-width="1.333333" stroke="#a8a8a8" fill="none" d="M553.51578 49.733333 L553.51578 55.066667 "/>
+  <path stroke-width="1.333333" stroke="#a8a8a8" fill="none" d="M641.593561 49.733333 L641.593561 55.066667 "/>
+  <path stroke-width="1.333333" stroke="#a8a8a8" fill="none" d="M729.671342 49.733333 L729.671342 55.066667 "/>
+  <path stroke-width="1.333333" stroke="#a8a8a8" fill="none" d="M817.749122 49.733333 L817.749122 55.066667 "/>
+  <path stroke-width="1.333333" stroke="#a8a8a8" fill="none" d="M905.826903 49.733333 L905.826903 55.066667 "/>
+  <path stroke-width="1.333333" stroke="#a8a8a8" fill="none" d="M993.904684 49.733333 L993.904684 55.066667 "/>
+  <path stroke-width="1.333333" stroke="#a8a8a8" fill="none" d="M1081.982465 49.733333 L1081.982465 55.066667 "/>
+  <text x="101.298751" y="34.000000" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif">Jan</text>
+  <text x="188.564032" y="34.000000" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif">Feb</text>
+  <text x="276.649625" y="34.000000" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif">Mar</text>
+  <text x="365.946156" y="34.000000" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif">Apr</text>
+  <text x="451.578624" y="34.000000" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif">May</text>
+  <text x="541.687655" y="34.000000" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif">Jun</text>
+  <text x="632.210748" y="34.000000" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif">Jul</text>
+  <text x="716.624467" y="34.000000" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif">Aug</text>
+  <text x="804.702247" y="34.000000" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif">Sep</text>
+  <text x="894.412841" y="34.000000" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif">Oct</text>
+  <text x="980.857809" y="34.000000" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif">Nov</text>
+  <text x="1068.935590" y="34.000000" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif">Dec</text>
+  <path stroke-width="2.000000" stroke="#0066cc" fill="none" d="M113.126876 333.502476 L201.204657 330.240762 L289.282438 313.93219 L377.360219 283.489524 L465.437999 246.523429 L553.51578 210.644571 L641.593561 191.074286 L729.671342 195.423238 L817.749122 221.516952 L905.826903 263.919238 L993.904684 304.147048 L1081.982465 323.717333 "/>
+  <path stroke-width="2.000000" stroke="#cc0066" fill="none" d="M113.126876 337.247407 L201.204657 315.261037 L289.282438 257.758222 L377.360219 189.262222 L465.437999 135.141926 L553.51578 97.934222 L641.593561 81.02163 L729.671342 92.860444 L817.749122 135.141926 L905.826903 192.644741 L993.904684 263.67763 L1081.982465 318.643556 "/>
 </svg>

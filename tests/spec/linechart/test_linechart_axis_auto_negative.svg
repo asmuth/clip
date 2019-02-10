@@ -1,6 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1200.000000" height="480.000000" viewBox="0 0 1200.0 480.0">
   <rect width="1200.000000" height="480.000000" fill="#ffffff"/>
-  <path stroke-width="2.000000" stroke="#000000" fill="none" d="M60.280208 262.659057 L184.693519 384.097994 L309.106829 360.247824 L433.520139 430.266667 L557.933449 214.083483 L682.346759 20.0 L806.760069 111.462111 L931.17338 403.353176 L1055.58669 366.155664 L1180.0 241.434595 "/>
   <path stroke-width="1.333333" stroke="#a8a8a8" fill="none" d="M60.280208 20.0 L60.280208 430.266667 "/>
   <path stroke-width="1.333333" stroke="#a8a8a8" fill="none" d="M60.280208 430.266667 L65.613542 430.266667 "/>
   <path stroke-width="1.333333" stroke="#a8a8a8" fill="none" d="M60.280208 371.65714 L65.613542 371.65714 "/>
@@ -35,4 +34,5 @@
   <text x="845.806641" y="456.000000" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif">74.3</text>
   <text x="1005.766669" y="456.000000" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif">87.1</text>
   <text x="1161.648438" y="456.000000" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif">100.0</text>
+  <path stroke-width="2.000000" stroke="#000000" fill="none" d="M60.280208 262.659057 L184.693519 384.097994 L309.106829 360.247824 L433.520139 430.266667 L557.933449 214.083483 L682.346759 20.0 L806.760069 111.462111 L931.17338 403.353176 L1055.58669 366.155664 L1180.0 241.434595 "/>
 </svg>
