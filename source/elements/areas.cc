@@ -200,7 +200,7 @@ ReturnCode draw_vertical(
   return OK;
 }
 
-ReturnCode layout(
+ReturnCode reflow(
     const PlotAreaConfig& config,
     const Layer& layer,
     const std::optional<double> max_width,

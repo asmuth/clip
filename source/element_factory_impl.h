@@ -34,7 +34,7 @@ namespace plotfx {
 template <typename T>
 ElementBuilder elem_builder(
     ElementConfigureAsFn<T> config_fn,
-    ElementLayoutAsFn<T> layout_fn,
+    ElementReflowAsFn<T> reflow_fn,
     ElementDrawAsFn<T> draw_fn) {
   using namespace std::placeholders;
 
@@ -48,7 +48,7 @@ ElementBuilder elem_builder(
       return rc;
     }
 
-    e->layout = bind(layout_fn, e->config, _1, _2, _3, _4, _5);
+    e->reflow = bind(reflow_fn, e->config, _1, _2, _3, _4, _5);
     e->draw = bind(draw_fn, e->config, _1, _2);
     *elem = std::move(e);
     return OK;

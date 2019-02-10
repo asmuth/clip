@@ -92,7 +92,7 @@ ReturnCode draw(
   return OK;
 }
 
-ReturnCode layout(
+ReturnCode reflow(
     const BoxConfig& config,
     const Layer& layer,
     const std::optional<double> max_width,

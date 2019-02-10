@@ -62,11 +62,11 @@ more complex than they are!
 ### Virtual Box Model
 
 Each elements specifies its preferred 'placement'. The placement describes how
-the element wishes to be placed with relation to a parent bounding box. It can
-take the two values `LAYER` or `BLOCK`.
+the element wishes to be placed with relation to a parent bounding box.
 
-To understand what these values mean consider the following "virtual" box. The
-virtual box is divided into concentric regions:
+The placement parameter can take six different values with correspond to the six
+(partially) overlapping sections of the parent bounding box shown in the illustration
+below.
 
     [figure]
 
@@ -94,45 +94,12 @@ of the element tree. At each step all sibling elements are placed into the
 bounding box of their parent element. Note that the placement process assumes
 that an absolute document size is already known.
 
-Let's first consider the simple case where the element tree has a depth of one,
-i.e. it contains the virtual root node and a list of sibling elements which
-descend from the root node.
-
-The initial parent bounding box is by definition set to the size of the screen. To
-find the bounding boxes for the elements, we first consider all children that
-have requested BLOCK placement. For each element, we reserve a sub-region of
-the current parent bounding box for the element and then remove the sub-region
-from the parent bounding box. This is done in the order in which the block elements
-were defined.
-
-Once we have placed all BLOCK elements using this method, we simply copy the
-remaining parent bounding box to children that have requested `LAYER` placement.
-
-In other words:
-  - Initialize the parent bounding box to the size of the parent element
-  - For each element with block placement, subtract the element box from the
-    parent bounding box
-  - Once all block elements are placed, assign the remaining parent bounding
-    box to all layer elements.
-
-This process continues recursively for nested elements (i.e. elements that have
-children). Note that while each element has to respect the layout rules described
-above when placing its children it is free to use any parent bounding that is a
-sub-region of it's own bounding box. It is also allowed to use a different parent
-bounding box for each child element. This is required to implement layout container
-elements such as `grid` or `legend`.
-
-
 ### Finding the document size
 
 Illustrations usually have a fixed desired output size, so in most cases the
 document size is simply defined by the user.
 
 FIXME: describe how we come up with auto width/height
-
-
-### Alignment with the inner bounding box
-
 
 
 ### Difference to CSS

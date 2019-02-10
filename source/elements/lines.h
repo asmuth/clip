@@ -58,7 +58,7 @@ ReturnCode draw(
     const LayoutInfo& layout,
     Layer* layer);
 
-ReturnCode layout(
+ReturnCode reflow(
     const PlotLinesConfig& config,
     const Layer& layer,
     const std::optional<double> max_width,

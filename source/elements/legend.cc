@@ -308,7 +308,7 @@ ReturnCode draw(
   }
 }
 
-ReturnCode layout(
+ReturnCode reflow(
     const LegendConfig& config,
     const Layer& layer,
     const std::optional<double> max_width,

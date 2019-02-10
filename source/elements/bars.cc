@@ -308,7 +308,7 @@ ReturnCode draw(
   }
 }
 
-ReturnCode layout(
+ReturnCode reflow(
     const PlotBarsConfig& config,
     const Layer& layer,
     const std::optional<double> max_width,

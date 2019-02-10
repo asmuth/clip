@@ -457,7 +457,7 @@ ReturnCode draw(
   return rc;
 }
 
-ReturnCode layout(
+ReturnCode reflow(
     const AxisDefinition& axis,
     const Layer& layer,
     const std::optional<double> max_width,

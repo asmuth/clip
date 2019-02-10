@@ -136,7 +136,7 @@ ReturnCode layout_elements(
     double bbox_h = 0.0;
 
     if (auto rc =
-          e.element->layout(
+          e.element->reflow(
               layer,
               layout_state.content_box.w,
               layout_state.content_box.h,

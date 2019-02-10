@@ -61,7 +61,7 @@ using ElementDrawAsFn = std::function<ReturnCode (
     const LayoutInfo&,
     Layer*)>;
 
-using ElementLayoutFn = std::function<ReturnCode (
+using ElementReflowFn = std::function<ReturnCode (
     const Layer&,
     const std::optional<double> max_width,
     const std::optional<double> max_height,
@@ -69,7 +69,7 @@ using ElementLayoutFn = std::function<ReturnCode (
     double* min_height)>;
 
 template <typename T>
-using ElementLayoutAsFn = std::function<ReturnCode (
+using ElementReflowAsFn = std::function<ReturnCode (
     const T&,
     const Layer&,
     const std::optional<double> max_width,
@@ -81,7 +81,7 @@ struct Element {
   virtual ~Element() = default;
   virtual const LayoutSettings& layout_settings() const = 0;
   int32_t z_index() const;
-  ElementLayoutFn layout;
+  ElementReflowFn reflow;
   ElementDrawFn draw;
 };
 
