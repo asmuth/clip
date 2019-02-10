@@ -55,7 +55,7 @@ struct GridlineDefinition {
 
 ReturnCode draw(
     const GridlineDefinition& config,
-    const LayoutState& clip,
+    const LayoutInfo& layout,
     Layer* layer);
 
 ReturnCode layout(

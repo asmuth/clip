@@ -55,7 +55,7 @@ struct PlotLinesConfig {
 
 ReturnCode draw(
     PlotLinesConfig config,
-    const LayoutState& layout,
+    const LayoutInfo& layout,
     Layer* layer);
 
 ReturnCode layout(

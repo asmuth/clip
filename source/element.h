@@ -46,21 +46,18 @@ struct Environment;
 
 using plist::PropertyList;
 
-using ElementDrawFn = std::function<ReturnCode (const LayoutState&, Layer*)>;
-
-template <typename T>
-using ElementDrawAsFn = std::function<ReturnCode (const T&, const LayoutState&, Layer*)>;
-
 template <typename T>
 using ElementConfigureAsFn = std::function<ReturnCode (
     const plist::PropertyList&,
     const Environment&,
     T*)>;
 
+using ElementDrawFn = std::function<ReturnCode (const LayoutInfo&, Layer*)>;
+
 template <typename T>
 using ElementDrawAsFn = std::function<ReturnCode (
     const T&,
-    const LayoutState&,
+    const LayoutInfo&,
     Layer*)>;
 
 using ElementLayoutFn = std::function<ReturnCode (

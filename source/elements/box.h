@@ -53,7 +53,7 @@ struct BoxConfig {
 
 ReturnCode draw(
     const BoxConfig& config,
-    const LayoutState& layout,
+    const LayoutInfo& layout,
     Layer* layer);
 
 ReturnCode layout(

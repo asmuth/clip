@@ -74,7 +74,7 @@ namespace legend {
 
 ReturnCode draw(
     const LegendConfig& config,
-    const LayoutState& clip,
+    const LayoutInfo& layout,
     Layer* layer);
 
 ReturnCode layout(

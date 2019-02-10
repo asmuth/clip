@@ -56,7 +56,7 @@ struct PlotAreaConfig {
 
 ReturnCode draw(
     const PlotAreaConfig& config,
-    const LayoutState& layout,
+    const LayoutInfo& layout,
     Layer* layer);
 
 ReturnCode layout(

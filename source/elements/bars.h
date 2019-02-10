@@ -62,7 +62,7 @@ struct PlotBarsConfig {
 
 ReturnCode draw(
     const PlotBarsConfig& config,
-    const LayoutState& clip,
+    const LayoutInfo& layout,
     Layer* layer);
 
 ReturnCode layout(

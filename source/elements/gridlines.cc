@@ -42,7 +42,7 @@ static const double kDefaultLineWidthPT = 1;
 
 ReturnCode draw(
     const GridlineDefinition& grid,
-    const LayoutState& layout,
+    const LayoutInfo& layout,
     Layer* layer) {
   const auto& bbox = layout.content_box;
 

@@ -58,7 +58,7 @@ struct PlotPointsConfig {
 
 ReturnCode draw(
     PlotPointsConfig config,
-    const LayoutState& clip,
+    const LayoutInfo& layout,
     Layer* layer);
 
 ReturnCode layout(

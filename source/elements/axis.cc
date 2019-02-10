@@ -413,7 +413,7 @@ namespace axis {
 
 ReturnCode draw(
     const AxisDefinition& axis,
-    const LayoutState& layout,
+    const LayoutInfo& layout,
     Layer* frame) {
   const auto& clip = layout.content_box;
 

@@ -55,7 +55,7 @@ PlotBarsConfig::PlotBarsConfig() :
 
 ReturnCode draw_horizontal(
     PlotBarsConfig config,
-    const LayoutState& layout,
+    const LayoutInfo& layout,
     Layer* layer) {
   const auto& clip = layout.bounding_box;
 
@@ -176,7 +176,7 @@ ReturnCode draw_horizontal(
 
 ReturnCode draw_vertical(
     PlotBarsConfig config,
-    const LayoutState& layout,
+    const LayoutInfo& layout,
     Layer* layer) {
   const auto& clip = layout.content_box;
 
@@ -296,7 +296,7 @@ ReturnCode draw_vertical(
 
 ReturnCode draw(
     const PlotBarsConfig& config,
-    const LayoutState& layout,
+    const LayoutInfo& layout,
     Layer* layer) {
   switch (config.direction) {
     case Direction::HORIZONTAL:

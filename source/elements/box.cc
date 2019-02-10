@@ -41,41 +41,25 @@ namespace box {
 
 ReturnCode draw(
     const BoxConfig& config,
-    const LayoutState& parent_layout,
+    const LayoutInfo& layout,
     Layer* layer) {
-  auto layout = parent_layout;
-
-  /* calculate margin box */
+  /* convert units  */
   auto margins = config.margins;
   for (auto& m : margins) {
     convert_unit_typographic(layer->dpi, config.font_size, &m);
   }
 
-  layout.content_box = layout_margin_box(
+  /* layout children */
+  LayoutState layout_state;
+  layout_state.content_box = layout_margin_box(
       layout.content_box,
       margins[0],
       margins[1],
       margins[2],
       margins[3]);
 
-  /* draw background */
-  {
-    const auto& bg_box = layout.bounding_box;
-    FillStyle bg_fill;
-    bg_fill.color = config.background_color;
-
-    fillRectangle(
-        layer,
-        Point(bg_box.x, bg_box.y),
-        bg_box.w,
-        bg_box.h,
-        bg_fill);
-  }
-
-  /* layout and draw children */
-  std::vector<LayoutState> child_layouts;
+  std::vector<Rectangle> child_bboxes;
   for (const auto& e : config.children) {
-    LayoutState l;
     double bbox_w = 0.0;
     double bbox_h = 0.0;
 
@@ -90,16 +74,43 @@ ReturnCode draw(
       return rc;
     }
 
+    Rectangle bbox;
     if (auto rc =
           layout_compute(
               e->layout_settings(),
               bbox_w,
               bbox_h,
-              &layout,
-              &l);
+              &layout_state,
+              &bbox);
           !rc.isSuccess()) {
       return rc;
     }
+
+    child_bboxes.emplace_back(bbox);
+  }
+
+  /* draw background */
+  {
+    const auto& bg_box = layout.content_box;
+    FillStyle bg_fill;
+    bg_fill.color = config.background_color;
+
+    fillRectangle(
+        layer,
+        Point(bg_box.x, bg_box.y),
+        bg_box.w,
+        bg_box.h,
+        bg_fill);
+  }
+
+  /* draw children */
+  for (size_t i = 0; i < config.children.size(); ++i) {
+    const auto& e = config.children[i];
+
+    LayoutInfo l;
+    l.bounding_box = layout.bounding_box;
+    l.content_box = child_bboxes[i];
+    l.inner_box = layout_state.content_box;
 
     if (auto rc = e->draw(l, layer); !rc.isSuccess()) {
       return rc;

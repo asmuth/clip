@@ -41,11 +41,6 @@ namespace plotfx {
 struct LayoutState {
 
   /**
-   * The elements bounding box
-   */
-  Rectangle bounding_box;
-
-  /**
    * If set to true, constrain the size of the bounding box in the (x, y)
    * dimension, i.e. disallow it from growing
    */
@@ -74,12 +69,31 @@ struct LayoutSettings {
   std::optional<Measure> height;
 };
 
+struct LayoutInfo {
+
+  /**
+   * The outer bounding box
+   */
+  Rectangle bounding_box;
+
+  /**
+   * The elements bounding box
+   */
+  Rectangle content_box;
+
+  /**
+   * The inner bounding box
+   */
+  Rectangle inner_box;
+
+};
+
 ReturnCode layout_compute(
     const LayoutSettings& config,
     double bbox_w,
     double bbox_h,
     LayoutState* parent_layout,
-    LayoutState* layout);
+    Rectangle* bbox);
 
 } // namespace plotfx
 

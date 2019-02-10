@@ -38,82 +38,75 @@ ReturnCode layout_compute(
     const LayoutSettings& config,
     double bbox_w,
     double bbox_h,
-    LayoutState* parent_layout,
-    LayoutState* layout) {
-  layout->content_box = layout->bounding_box;
+    LayoutState* state,
+    Rectangle* bbox) {
   auto width = config.width;
   auto width_min = width.value_or(from_unit(bbox_w));
-  auto width_max = width.value_or(from_unit(parent_layout->content_box.w));
+  auto width_max = width.value_or(from_unit(state->content_box.w));
 
   auto height = config.height;
   auto height_min = height.value_or(from_unit(bbox_h));
-  auto height_max = height.value_or(from_unit(parent_layout->content_box.h));
+  auto height_max = height.value_or(from_unit(state->content_box.h));
 
   double extent[4] = {0, 0, 0, 0};
   switch (config.position) {
 
     case Position::RELATIVE:
-      layout->bounding_box = Rectangle(
-          parent_layout->content_box.x,
-          parent_layout->content_box.y,
+      *bbox = Rectangle(
+          state->content_box.x,
+          state->content_box.y,
           width_max,
           height_max);
-
-      layout->content_box = layout->bounding_box;
       break;
 
     case Position::TOP: {
-      layout->bounding_box = Rectangle(
-          parent_layout->content_box.x,
-          parent_layout->content_box.y,
+      *bbox = Rectangle(
+          state->content_box.x,
+          state->content_box.y,
           width_max,
           height_min);
 
-      layout->content_box = layout->bounding_box;
       extent[0] = height_min;
       break;
     }
 
     case Position::RIGHT: {
-      layout->bounding_box = Rectangle(
-          parent_layout->content_box.x + parent_layout->content_box.w - width_min,
-          parent_layout->content_box.y,
+      *bbox = Rectangle(
+          state->content_box.x + state->content_box.w - width_min,
+          state->content_box.y,
           width_min,
           height_max);
 
-      layout->content_box = layout->bounding_box;
       extent[1] = width_min;
       break;
     }
 
     case Position::BOTTOM: {
-      layout->bounding_box = Rectangle(
-          parent_layout->content_box.x,
-          parent_layout->content_box.y + parent_layout->content_box.h - height_min,
+      *bbox = Rectangle(
+          state->content_box.x,
+          state->content_box.y + state->content_box.h - height_min,
           width_max,
           height_min);
 
-      layout->content_box = layout->bounding_box;
       extent[2] = height_min;
       break;
     }
 
     case Position::LEFT: {
-      layout->bounding_box = Rectangle(
-          parent_layout->content_box.x,
-          parent_layout->content_box.y,
+      *bbox = Rectangle(
+          state->content_box.x,
+          state->content_box.y,
           width_min,
           height_max);
 
-      layout->content_box = layout->bounding_box;
       extent[3] = width_min;
       break;
     }
 
   }
 
-  parent_layout->content_box = layout_margin_box(
-      parent_layout->content_box,
+  state->content_box = layout_margin_box(
+      state->content_box,
       extent[0],
       extent[1],
       extent[2],
