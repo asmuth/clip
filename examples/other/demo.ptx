@@ -1,29 +1,52 @@
-width: 2000px;
-height: 1080px;
+width: 1920px;
+height: 1200px;
 
-background-color: #000;
 margin: 2pt;
 
+border-top-width: 4px;
+border-right-width: 4px;
+border-bottom-width: 4px;
+border-left-width: 4px;
+
 box {
-  background-color: #fff;
+  position: top;
+  height: 100px;
+  background-color: #eee;
+  border-bottom-width: 1px;
+  border-bottom-color: #ccc;
+}
+
+box {
   position: right;
-  width: 600px;
+  width: 570px;
 
   margin-top: 2em;
+  margin-left: 1em;
+
+  border-left-width: 1px;
+  border-left-color: #ccc;
 
   box {
     position: top;
-    height: 500px;
+    height: 400px;
 
     scale-y-min: 0;
     scale-y-max: 140;
 
+    scale-y-max: 60;
+    scale-y-min: -40;
+    scale-x-min: -60;
+    scale-x-max: 60;
+
     gridlines {}
 
-    areas {
-      xs: csv('tests/testdata/measurement.csv', time);
-      ys: csv('tests/testdata/measurement.csv', value2);
-      colors: #06c;
+    points {
+      xs: csv('tests/testdata/point_example.csv', x);
+      ys: csv('tests/testdata/point_example.csv', y);
+      sizes: csv('tests/testdata/point_example.csv', z);
+      labels: csv('tests/testdata/point_example.csv', z);
+      colors: #4572a7, #aa4643;
+      size: 2pt;
     }
 
     axis {
@@ -47,7 +70,7 @@ box {
 
   box {
     position: top;
-    height: 500px;
+    height: 400px;
 
     scale-y-min: 0;
     scale-y-max: 140;
@@ -82,10 +105,13 @@ box {
 
 box {
   height: 250px;
+
   position: top;
   margin-top: 1em;
   margin-bottom: 1em;
-  background-color: #fff;
+
+  border-bottom-width: 1px;
+  border-bottom-color: #ccc;
 
   box {
     width: 460px;
@@ -93,35 +119,46 @@ box {
 
     margin-left: .75em;
 
-    scale-x-padding: 0.5;
-    scale-y: log;
+    scale-y-min: 0;
+    scale-y-max: 55;
+    scale-x-min: -3.5;
+    scale-x-max: 3.5;
 
     bars {
-      xs: csv(tests/testdata/histogram.csv, var0);
-      ys: csv(tests/testdata/histogram.csv, var1);
-      color: #888;
-      size: 14pt;
+      xs: -3, -2, -1, 0, 1, 2, 3;
+      ys: 10, 28, 20, 26, 41, 44, 37;
+      size: .6em;
+      offset: .45em;
+      color: #4572a7;
+    }
+
+    bars {
+      xs: -3, -2, -1, 0, 1, 2, 3;
+      ys: 12, 19, 23, 30, 35, 43, 33;
+      size: .6em;
+      offset: -.45em;
+      color: #aa4643;
+    }
+
+    legend {
+      position: top left inside;
+      items: A, B;
+      colors: #4572a7, #aa4643;
     }
 
     axis {
       position: bottom;
-      layout: linear(1, align 1);
+      layout: linear(1, align -3);
     }
 
     axis {
       position: top;
-      layout: linear(1, align 1);
     }
 
     axis {
       position: left;
       width: 60px;
-    }
-
-    legend {
-      position: top right inside;
-      items: "New York";
-      colors: #4572a7;
+      layout: linear(10);
     }
   }
 
@@ -133,29 +170,39 @@ box {
     margin-right: .75em;
 
     scale-x-padding: 0.5;
-    scale-y: log;
+    scale-y-min: 5;
+    scale-y-max: 60;
 
-    bars {
-      xs: csv(tests/testdata/histogram.csv, var0);
-      ys: csv(tests/testdata/histogram.csv, var1);
-      color: #888;
-      size: 14pt;
+    areas {
+      xs: 0, 1, 2, 3, 4, 5, 6;
+      ys: 10, 28, 20, 26, 41, 44, 37;
+      size: .6em;
+      offset: .45em;
+      color: #4572a7;
+    }
+
+    areas {
+      xs: 0, 1, 2, 3, 4, 5, 6;
+      ys: 8, 19, 16, 23, 35, 29, 33;
+      size: .6em;
+      offset: -.45em;
+      color: #aa4643;
+    }
+
+    legend {
+      position: top left inside;
+      items: A, B;
+      colors: #4572a7, #aa4643;
     }
 
     axis {
       position: bottom;
-      layout: linear(1, align 1);
+      layout: discrete;
+      labels: A, B, C, D, E, F, G;
     }
 
     axis {
       position: top;
-      layout: linear(1, align 1);
-    }
-
-    legend {
-      position: top right inside;
-      items: "New York";
-      colors: #4572a7;
     }
   }
 
@@ -166,34 +213,38 @@ box {
     margin-left: .75em;
 
     scale-x-padding: 0.5;
-    scale-y: log;
 
-    bars {
-      xs: csv(tests/testdata/histogram.csv, var0);
-      ys: csv(tests/testdata/histogram.csv, var1);
-      color: #888;
-      size: 14pt;
+    scale-x-min: 0;
+    scale-x-max: 200;
+    scale-y-min: 0;
+    scale-y-max: 280;
+
+    points {
+      xs: 10, 60, 160, 130, 150, 30, 115;
+      ys: 80, 150, 180, 50, 80, 100, 190;
+      sizes: 2pt, 9pt, 3pt, 6pt, 4pt, 3pt;
+      colors: #4572a7, #aa4643;
+    }
+
+    legend {
+      position: top left inside;
+      items: A, B;
+      colors: #4572a7, #aa4643;
     }
 
     axis {
       position: bottom;
-      layout: linear(1, align 1);
+      layout: linear(40);
     }
 
     axis {
       position: right;
       width: 60px;
+      layout: linear(50);
     }
 
     axis {
       position: top;
-      layout: linear(1, align 1);
-    }
-
-    legend {
-      position: top right inside;
-      items: "New York";
-      colors: #4572a7;
     }
   }
 }
@@ -201,8 +252,8 @@ box {
 box {
   position: top;
   height: 280px;
+  width: 1320px;
   margin-top: 1em;
-  background-color: #fff;
 
   scale-y-min: 0;
   scale-y-max: 140;
@@ -235,8 +286,8 @@ box {
 box {
   position: top;
   height: 220px;
+  width: 1320px;
   margin-top: 1em;
-  background-color: #fff;
 
   scale-y-min: 0;
   scale-y-max: 140;
@@ -263,8 +314,8 @@ box {
 box {
   position: top;
   height: 280px;
+  width: 1320px;
   margin-top: 1em;
-  background-color: #fff;
 
   scale-y-min: 0;
   scale-y-max: 140;

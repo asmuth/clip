@@ -43,6 +43,8 @@ ReturnCode draw(
     const BoxConfig& config,
     const LayoutInfo& layout,
     Layer* layer) {
+  const auto bbox = layout.content_box;
+
   /* convert units  */
   auto margins = config.margins;
   for (auto& m : margins) {
@@ -51,7 +53,7 @@ ReturnCode draw(
 
   /* calculate margin box */
   auto margin_box = layout_margin_box(
-      layout.content_box,
+      bbox,
       margins[0],
       margins[1],
       margins[2],
@@ -59,7 +61,7 @@ ReturnCode draw(
 
   /* draw background */
   if (config.background) {
-    const auto& bg_box = layout.content_box;
+    const auto& bg_box = bbox;
     FillStyle bg_fill;
     bg_fill.color = *config.background;
 
@@ -69,6 +71,58 @@ ReturnCode draw(
         bg_box.w,
         bg_box.h,
         bg_fill);
+  }
+
+  /* draw top border  */
+  if (config.borders[0].width > 0) {
+    StrokeStyle border_style;
+    border_style.line_width = config.borders[0].width;
+    border_style.color = config.borders[0].color;
+
+    strokeLine(
+        layer,
+        Point(bbox.x, bbox.y),
+        Point(bbox.x + bbox.w, bbox.y),
+        border_style);
+  }
+
+  /* draw right border  */
+  if (config.borders[1].width > 0) {
+    StrokeStyle border_style;
+    border_style.line_width = config.borders[1].width;
+    border_style.color = config.borders[1].color;
+
+    strokeLine(
+        layer,
+        Point(bbox.x + bbox.w, bbox.y),
+        Point(bbox.x + bbox.w, bbox.y + bbox.h),
+        border_style);
+  }
+
+  /* draw top border  */
+  if (config.borders[2].width > 0) {
+    StrokeStyle border_style;
+    border_style.line_width = config.borders[2].width;
+    border_style.color = config.borders[2].color;
+
+    strokeLine(
+        layer,
+        Point(bbox.x, bbox.y + bbox.h),
+        Point(bbox.x + bbox.w, bbox.y + bbox.h),
+        border_style);
+  }
+
+  /* draw left border  */
+  if (config.borders[3].width > 0) {
+    StrokeStyle border_style;
+    border_style.line_width = config.borders[3].width;
+    border_style.color = config.borders[3].color;
+
+    strokeLine(
+        layer,
+        Point(bbox.x, bbox.y),
+        Point(bbox.x, bbox.y + bbox.h),
+        border_style);
   }
 
   /* layout and draw children */
@@ -131,6 +185,14 @@ ReturnCode configure(
     {"margin-right", bind(&configure_measure, _1, &config->margins[1])},
     {"margin-bottom", bind(&configure_measure, _1, &config->margins[2])},
     {"margin-left", bind(&configure_measure, _1, &config->margins[3])},
+    {"border-top-color", bind(&configure_color, _1, &config->borders[0].color)},
+    {"border-right-color", bind(&configure_color, _1, &config->borders[1].color)},
+    {"border-bottom-color", bind(&configure_color, _1, &config->borders[2].color)},
+    {"border-left-color", bind(&configure_color, _1, &config->borders[3].color)},
+    {"border-top-width", bind(&configure_measure, _1, &config->borders[0].width)},
+    {"border-right-width", bind(&configure_measure, _1, &config->borders[1].width)},
+    {"border-bottom-width", bind(&configure_measure, _1, &config->borders[2].width)},
+    {"border-left-width", bind(&configure_measure, _1, &config->borders[3].width)},
     {"scale-x", bind(&domain_configure, _1, &config->scale_x)},
     {"scale-x-min", bind(&configure_float_opt, _1, &config->scale_x.min)},
     {"scale-x-max", bind(&configure_float_opt, _1, &config->scale_x.max)},

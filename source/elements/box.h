@@ -36,6 +36,11 @@
 namespace plotfx {
 namespace box {
 
+struct BoxBorderConfig {
+  Color color;
+  Measure width;
+};
+
 struct BoxConfig {
   std::vector<ElementRef> children;
   FontInfo font;
@@ -49,6 +54,7 @@ struct BoxConfig {
   ScaleLayoutFn scale_layout_x;
   ScaleLayoutFn scale_layout_y;
   std::array<Measure, 4> margins;
+  std::array<BoxBorderConfig, 4> borders;
   LayoutSettings layout;
 };
 
