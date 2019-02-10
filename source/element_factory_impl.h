@@ -48,7 +48,7 @@ ElementBuilder elem_builder(
       return rc;
     }
 
-    e->layout = bind(layout_fn, e->config, _1, _2);
+    e->layout = bind(layout_fn, e->config, _1, _2, _3, _4, _5);
     e->draw = bind(draw_fn, e->config, _1, _2);
     *elem = std::move(e);
     return OK;

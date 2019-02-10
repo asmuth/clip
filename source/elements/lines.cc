@@ -99,7 +99,10 @@ ReturnCode draw(
 ReturnCode layout(
     const PlotLinesConfig& config,
     const Layer& layer,
-    LayoutState* layout) {
+    const std::optional<double> max_width,
+    const std::optional<double> max_height,
+    double* min_width,
+    double* min_height) {
   /* nothing to do */
   return OK;
 }
@@ -113,7 +116,7 @@ ReturnCode configure(
   config->scale_y = env.scale_y;
   config->line_width = from_pt(kDefaultLineWidthPT);
 
-  static const ParserDefinitions pdefs = {
+  ParserDefinitions pdefs = {
     {"xs", bind(&configure_measures, _1, &config->x)},
     {"ys", bind(&configure_measures, _1, &config->y)},
     {"scale-x", bind(&domain_configure, _1, &config->scale_x)},

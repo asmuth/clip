@@ -76,8 +76,28 @@ ReturnCode draw(
   std::vector<LayoutState> child_layouts;
   for (const auto& e : config.children) {
     LayoutState l;
+    double bbox_w = 0.0;
+    double bbox_h = 0.0;
 
-    if (auto rc = layout_compute(e->layout_settings(), &layout, &l); !rc.isSuccess()) {
+    if (auto rc =
+          e->layout(
+              *layer,
+              layout.content_box.w,
+              layout.content_box.h,
+              &bbox_w,
+              &bbox_h);
+          !rc.isSuccess()) {
+      return rc;
+    }
+
+    if (auto rc =
+          layout_compute(
+              e->layout_settings(),
+              bbox_w,
+              bbox_h,
+              &layout,
+              &l);
+          !rc.isSuccess()) {
       return rc;
     }
 
@@ -92,7 +112,10 @@ ReturnCode draw(
 ReturnCode layout(
     const BoxConfig& config,
     const Layer& layer,
-    LayoutState* layout) {
+    const std::optional<double> max_width,
+    const std::optional<double> max_height,
+    double* min_width,
+    double* min_height) {
   /* nothing to do */
   return OK;
 }

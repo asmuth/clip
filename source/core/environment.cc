@@ -65,7 +65,7 @@ ReturnCode environment_configure(
     return rc;
   }
 
-  static const ParserDefinitions pdefs = {
+  ParserDefinitions pdefs = {
     {"width", bind(&configure_measure, _1, &env->screen_width)},
     {"height", bind(&configure_measure, _1, &env->screen_height)},
   };

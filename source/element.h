@@ -58,12 +58,26 @@ using ElementConfigureAsFn = std::function<ReturnCode (
     T*)>;
 
 template <typename T>
-using ElementDrawAsFn = std::function<ReturnCode (const T&, const LayoutState&, Layer*)>;
+using ElementDrawAsFn = std::function<ReturnCode (
+    const T&,
+    const LayoutState&,
+    Layer*)>;
 
-using ElementLayoutFn = std::function<ReturnCode (const Layer&, LayoutState*)>;
+using ElementLayoutFn = std::function<ReturnCode (
+    const Layer&,
+    const std::optional<double> max_width,
+    const std::optional<double> max_height,
+    double* min_width,
+    double* min_height)>;
 
 template <typename T>
-using ElementLayoutAsFn = std::function<ReturnCode (const T&, const Layer&, LayoutState*)>;
+using ElementLayoutAsFn = std::function<ReturnCode (
+    const T&,
+    const Layer&,
+    const std::optional<double> max_width,
+    const std::optional<double> max_height,
+    double* min_width,
+    double* min_height)>;
 
 struct Element {
   virtual ~Element() = default;

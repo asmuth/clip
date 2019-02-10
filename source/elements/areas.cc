@@ -203,7 +203,10 @@ ReturnCode draw_vertical(
 ReturnCode layout(
     const PlotAreaConfig& config,
     const Layer& layer,
-    LayoutState* layout) {
+    const std::optional<double> max_width,
+    const std::optional<double> max_height,
+    double* min_width,
+    double* min_height) {
   /* nothing to do */
   return OK;
 }
@@ -231,7 +234,7 @@ ReturnCode configure(
   config->scale_y = env.scale_y;
 
   /* parse properties */
-  static const ParserDefinitions pdefs = {
+  ParserDefinitions pdefs = {
     {"xs", bind(&configure_measures, _1, &config->x)},
     {"ys", bind(&configure_measures, _1, &config->y)},
     {"x-offsets", bind(&configure_measures, _1, &config->xoffset)},

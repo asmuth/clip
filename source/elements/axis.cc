@@ -462,32 +462,23 @@ ReturnCode draw(
 ReturnCode layout(
     const AxisDefinition& axis,
     const Layer& layer,
-    LayoutState* layout) {
-  double margins[4] = {0, 0, 0, 0};
+    const std::optional<double> max_width,
+    const std::optional<double> max_height,
+    double* min_width,
+    double* min_height) {
+  double size = 0.0;
+  axis_layout(axis, axis.position, layer, &size);
 
   switch (axis.position) {
     case AxisPosition::TOP:
-      axis_layout(axis, axis.position, layer, &margins[0]);
+    case AxisPosition::BOTTOM:
+      *min_height = size;
       break;
     case AxisPosition::RIGHT:
-      axis_layout(axis, axis.position, layer, &margins[1]);
-      break;
-    case AxisPosition::BOTTOM:
-      axis_layout(axis, axis.position, layer, &margins[2]);
-      break;
     case AxisPosition::LEFT:
-      axis_layout(axis, axis.position, layer, &margins[3]);
+      *min_width = size;
       break;
   }
-
-  layout->content_box = layout_margin_box(
-      layout->content_box,
-      margins[0],
-      margins[1],
-      margins[2],
-      margins[3]);
-
-  layout->content_box = layout->content_box;
 
   return OK;
 }
@@ -502,7 +493,7 @@ ReturnCode configure(
   config->text_color = env.text_color;
 
   {
-    static const ParserDefinitions pdefs = {
+    ParserDefinitions pdefs = {
       {"position", bind(&parseAxisPositionProp, _1, &config->position)},
     };
 
@@ -527,7 +518,7 @@ ReturnCode configure(
   };
 
   {
-    static const ParserDefinitions pdefs = {
+    ParserDefinitions pdefs = {
       {"format", bind(&confgure_format, _1, &config->label_formatter)},
       {"labels", bind(&configure_strings, _1, &config->label_override)},
       {"layout", bind(&configure_scale_layout, _1, &config->scale_layout)},

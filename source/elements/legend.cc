@@ -311,7 +311,10 @@ ReturnCode draw(
 ReturnCode layout(
     const LegendConfig& config,
     const Layer& layer,
-    LayoutState* layout) {
+    const std::optional<double> max_width,
+    const std::optional<double> max_height,
+    double* min_width,
+    double* min_height) {
   switch (config.placement) {
     case LegendPlacement::INSIDE:
       /* nothing to do */
@@ -333,7 +336,7 @@ ReturnCode configure(
   config->text_color = env.text_color;
 
   /* parse properties */
-  static const ParserDefinitions pdefs = {
+  ParserDefinitions pdefs = {
     {
       "position",
       bind(

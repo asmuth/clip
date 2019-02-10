@@ -76,6 +76,8 @@ struct LayoutSettings {
 
 ReturnCode layout_compute(
     const LayoutSettings& config,
+    double bbox_w,
+    double bbox_h,
     LayoutState* parent_layout,
     LayoutState* layout);
 

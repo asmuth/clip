@@ -36,15 +36,17 @@ LayoutSettings::LayoutSettings() : position(Position::RELATIVE) {}
 
 ReturnCode layout_compute(
     const LayoutSettings& config,
+    double bbox_w,
+    double bbox_h,
     LayoutState* parent_layout,
     LayoutState* layout) {
   layout->content_box = layout->bounding_box;
   auto width = config.width;
-  auto width_min = width.value_or(from_unit(0));
+  auto width_min = width.value_or(from_unit(bbox_w));
   auto width_max = width.value_or(from_unit(parent_layout->content_box.w));
 
   auto height = config.height;
-  auto height_min = height.value_or(from_unit(0));
+  auto height_min = height.value_or(from_unit(bbox_h));
   auto height_max = height.value_or(from_unit(parent_layout->content_box.h));
 
   double extent[4] = {0, 0, 0, 0};

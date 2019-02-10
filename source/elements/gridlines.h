@@ -61,7 +61,10 @@ ReturnCode draw(
 ReturnCode layout(
     const GridlineDefinition& config,
     const Layer& layer,
-    LayoutState* layout);
+    const std::optional<double> max_width,
+    const std::optional<double> max_height,
+    double* min_width,
+    double* min_height);
 
 ReturnCode configure(
     const plist::PropertyList& plist,

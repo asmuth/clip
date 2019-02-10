@@ -82,7 +82,10 @@ ReturnCode draw(
 ReturnCode layout(
     const GridlineDefinition& config,
     const Layer& layer,
-    LayoutState* layout) {
+    const std::optional<double> max_width,
+    const std::optional<double> max_height,
+    double* min_width,
+    double* min_height) {
   /* nothing to do */
   return OK;
 }
@@ -100,7 +103,7 @@ ReturnCode configure(
   config->line_color = Color::fromRGB(.9, .9, .9); // TODO
 
   /* parse properties */
-  static const ParserDefinitions pdefs = {
+  ParserDefinitions pdefs = {
     {"scale-x", bind(&domain_configure, _1, &config->scale_x)},
     {"scale-x-min", bind(&configure_float_opt, _1, &config->scale_x.min)},
     {"scale-x-max", bind(&configure_float_opt, _1, &config->scale_x.max)},
