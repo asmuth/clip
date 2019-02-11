@@ -45,7 +45,7 @@ Environment::Environment() :
     scale_layout_y(bind(&scale_layout_subdivide, _1, _2, 8)),
     background_color(Color::fromRGB(1,1,1)),
     text_color(Color::fromRGB(.2,.2,.2)),
-    border_color(Color::fromRGB(.66,.66,.66)),
+    border_color(Color::fromRGB(.2,.2,.2)),
     font_size(from_pt(11, dpi)) {}
 
 ReturnCode environment_setup_defaults(Environment* env) {

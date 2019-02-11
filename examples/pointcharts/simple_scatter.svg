@@ -1,22 +1,22 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="400.000000" height="400.000000" viewBox="0 0 400.0 400.0">
   <rect width="400.000000" height="400.000000" fill="#ffffff"/>
-  <path stroke-width="1.333333" stroke="#a8a8a8" fill="none" d="M20.0 350.266667 L380.0 350.266667 "/>
-  <path stroke-width="1.333333" stroke="#a8a8a8" fill="none" d="M20.0 350.266667 L20.0 344.933333 "/>
-  <path stroke-width="1.333333" stroke="#a8a8a8" fill="none" d="M110.0 350.266667 L110.0 344.933333 "/>
-  <path stroke-width="1.333333" stroke="#a8a8a8" fill="none" d="M200.0 350.266667 L200.0 344.933333 "/>
-  <path stroke-width="1.333333" stroke="#a8a8a8" fill="none" d="M290.0 350.266667 L290.0 344.933333 "/>
-  <path stroke-width="1.333333" stroke="#a8a8a8" fill="none" d="M380.0 350.266667 L380.0 344.933333 "/>
+  <path stroke-width="1.333333" stroke="#333333" fill="none" d="M20.0 350.266667 L380.0 350.266667 "/>
+  <path stroke-width="1.333333" stroke="#333333" fill="none" d="M20.0 350.266667 L20.0 344.933333 "/>
+  <path stroke-width="1.333333" stroke="#333333" fill="none" d="M110.0 350.266667 L110.0 344.933333 "/>
+  <path stroke-width="1.333333" stroke="#333333" fill="none" d="M200.0 350.266667 L200.0 344.933333 "/>
+  <path stroke-width="1.333333" stroke="#333333" fill="none" d="M290.0 350.266667 L290.0 344.933333 "/>
+  <path stroke-width="1.333333" stroke="#333333" fill="none" d="M380.0 350.266667 L380.0 344.933333 "/>
   <text x="9.804688" y="376.000000" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif">0.0</text>
   <text x="95.726562" y="376.000000" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif">50.0</text>
   <text x="181.648438" y="376.000000" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif">100.0</text>
   <text x="271.648438" y="376.000000" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif">150.0</text>
   <text x="361.648438" y="376.000000" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif">200.0</text>
-  <path stroke-width="1.333333" stroke="#a8a8a8" fill="none" d="M20.0 49.733333 L380.0 49.733333 "/>
-  <path stroke-width="1.333333" stroke="#a8a8a8" fill="none" d="M20.0 49.733333 L20.0 55.066667 "/>
-  <path stroke-width="1.333333" stroke="#a8a8a8" fill="none" d="M110.0 49.733333 L110.0 55.066667 "/>
-  <path stroke-width="1.333333" stroke="#a8a8a8" fill="none" d="M200.0 49.733333 L200.0 55.066667 "/>
-  <path stroke-width="1.333333" stroke="#a8a8a8" fill="none" d="M290.0 49.733333 L290.0 55.066667 "/>
-  <path stroke-width="1.333333" stroke="#a8a8a8" fill="none" d="M380.0 49.733333 L380.0 55.066667 "/>
+  <path stroke-width="1.333333" stroke="#333333" fill="none" d="M20.0 49.733333 L380.0 49.733333 "/>
+  <path stroke-width="1.333333" stroke="#333333" fill="none" d="M20.0 49.733333 L20.0 55.066667 "/>
+  <path stroke-width="1.333333" stroke="#333333" fill="none" d="M110.0 49.733333 L110.0 55.066667 "/>
+  <path stroke-width="1.333333" stroke="#333333" fill="none" d="M200.0 49.733333 L200.0 55.066667 "/>
+  <path stroke-width="1.333333" stroke="#333333" fill="none" d="M290.0 49.733333 L290.0 55.066667 "/>
+  <path stroke-width="1.333333" stroke="#333333" fill="none" d="M380.0 49.733333 L380.0 55.066667 "/>
   <text x="9.804688" y="34.000000" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif">0.0</text>
   <text x="95.726562" y="34.000000" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif">50.0</text>
   <text x="181.648438" y="34.000000" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif">100.0</text>
