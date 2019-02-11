@@ -91,6 +91,7 @@ def build_layout(url, content, title=""):
     "url": url,
     "toc": toc,
     "title": title,
+    "title_seo": title_seo,
     "menu_active_documentation": "active" if (url.startswith("/documentation") or url == "/") else "",
     "menu_active_download": "active" if url.startswith("/download") else "",
     "menu_active_examples": "active" if url.startswith("/examples") else "",

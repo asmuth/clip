@@ -9,7 +9,7 @@ files. Additionally, you can embed it into your own application using the C API.
 PlotFX is built in the hope that using it will be quick, simple and fun.
 
 <div style="margin-top: 1.2em;">
-  <a href="/documentation/getting_started" style="">Getting Started</a>
+  <a href="/documentation/getting-started" style="">Getting Started</a>
   <span style="margin: 0 .3em">·</span>
   <a href="/examples">Examples</a>
   <span style="margin: 0 .3em">·</span>
