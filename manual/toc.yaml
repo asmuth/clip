@@ -26,6 +26,13 @@ documentation:
         url: "/documentation/faq"
         file: "faq"
 
+  -
+    title: "Examples"
+    pages:
+      -
+        title: "Example Gallery"
+        url: "/examples"
+        file: "examples"
   #-
   #  title: "Building Charts"
   #  pages:
@@ -58,30 +65,6 @@ documentation:
       #  url: "/documentation/units"
       #  file: "units"
       -
-        title: "Elements"
-        url: "/documentation/elements"
-        file: "elements"
-        pages:
-          -
-            title: "areas"
-            url: "/documentation/elements/areas"
-          -
-            title: "axis"
-            url: "/documentation/elements/axis"
-          -
-            title: "bars"
-            url: "/documentation/elements/bars"
-          -
-            title: "gridlines"
-            url: "/documentation/elements/gridlines"
-          -
-            title: "lines"
-            url: "/documentation/elements/lines"
-          -
-            title: "points"
-            url: "/documentation/elements/points"
-
-      -
         title: "Scales"
         url: "/documentation/plot-scales"
         file: "scales"
@@ -105,14 +88,30 @@ documentation:
       #  title: "Layout"
       #  url: "/documentation/layout"
       #  file: "layout"
-
   -
-    title: "Examples"
+    title: "Elements"
+    url: "/documentation/elements"
+    file: "elements"
     pages:
       -
-        title: "Example Gallery"
-        url: "/examples"
-        file: "examples"
+        title: "areas"
+        url: "/documentation/elements/areas"
+      -
+        title: "axis"
+        url: "/documentation/elements/axis"
+      -
+        title: "bars"
+        url: "/documentation/elements/bars"
+      -
+        title: "gridlines"
+        url: "/documentation/elements/gridlines"
+      -
+        title: "lines"
+        url: "/documentation/elements/lines"
+      -
+        title: "points"
+        url: "/documentation/elements/points"
+
 
   -
     title: "Community"

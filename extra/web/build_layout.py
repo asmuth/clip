@@ -9,7 +9,7 @@ tpl = """
 <!DOCTYPE html>
 <html>
   <head>
-    <title>{{title}}</title>
+    <title>{{title_seo}}</title>
     <link href='/documentation.css' type='text/css' rel='stylesheet' />
     <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
     <link href="https://fonts.googleapis.com/css?family=Roboto:400,400i,500,700" rel="stylesheet">
@@ -17,54 +17,55 @@ tpl = """
     <meta name="google-site-verification" content="GxeOO-JtsPc9Doi_WQTvQFI-b7TQgCYxjsVTNtsA7Rc" />
   </head>
   <body>
-    <div id="header" class="border">
-      <div class="doc_wrap">
-        <a href="/"><img src="/logo.png" alt="PlotFX" class="logo" /></a>
-        <a class="menu {{menu_active_documentation}}" href="/">Documentation</a>
-        <a class="menu {{menu_active_examples}}" href="/examples">Examples</a>
-        <a class="menu {{menu_active_download}}" href="/download">Download</a>
-        <a class="menu github" href="http://github.com/plotfx/plotfx" target="_blank">View on <img src="https://github.githubassets.com/images/modules/logos_page/GitHub-Logo.png" style="height: 12px; position: relative; top: 1px; left: 1px;"></a>
-      </div>
+    <div id="navigation">
+      <a href="/" style="display: block; margin-bottom: -.4em; "><img src="/logo.png" alt="PlotFX" class="logo"/></a>
+
+      {{#toc}}
+        <a class="nav_title">{{title}}</a>
+        <ul>
+          {{#pages}}
+            <li>
+              <a href="{{url}}">{{title}}</a>
+              <ul>
+                {{#pages}}
+                  <li>
+                    <a href="{{url}}">{{title}}</a>
+                  </li>
+                {{/pages}}
+              </ul>
+            </li>
+          {{/pages}}
+        </ul>
+      {{/toc}}
     </div>
 
-    <div class="doc_wrap">
-      <div class="doc_container">
-        <div id="navigation">
-          {{#toc}}
-            <a class="nav_title">{{title}}</a>
-            <ul>
-              {{#pages}}
-                <li>
-                  <a href="{{url}}">{{title}}</a>
-                  <ul>
-                    {{#pages}}
-                      <li>
-                        <a href="{{url}}">{{title}}</a>
-                      </li>
-                    {{/pages}}
-                  </ul>
-                </li>
-              {{/pages}}
-            </ul>
-          {{/toc}}
-        </div>
+    <article>
+      <div class="header">
+        <a style="display: block; text-decoration: none; color: #666; float: right; margin-top: 2em;" href="http://github.com/plotfx/plotfx" target="_blank">
+          View on <img src="https://github.githubassets.com/images/modules/logos_page/GitHub-Logo.png" style="height: 12px; position: relative; top: 1px; margin-left: 2px;">
+        </a>
 
-        <div id="documentation">
-          <a target="_blank" href="https://github.com/plotfx/plotfx/blob/master/manual" style="float: right; margin-top:18px; font-size: 80%;">
-            Edit this page on GitHub
-          </a>
-
-          {{{content}}}
-        </div>
+        <ul class="crumbs">
+          <li><a>Documentation</a></li>
+          <li><a>{{title}}</a></li>
+        </ul>
       </div>
-    </div>
 
-    <div id="footer">
-      <div class="wrap">
+      <div id="documentation">
+        {{{content}}}
+      </div>
+
+      <div style="text-align: right; margin-top: 10em; font-size: 80%;">
+        <a class="link" target="_blank" href="https://github.com/plotfx/plotfx/blob/master/manual">
+          Edit this page on GitHub
+        </a>
+      </div>
+
+      <div id="footer">
         Copyright &copy; 2011-2018 Paul Asmuth, Laura Schlimmer et al. &mdash;
         PlotFX is free software licensed under a 3-Clause BSD License
       </div>
-    </div>
+    </article>
   </body>
 </html>
 """
@@ -81,8 +82,9 @@ def build_layout(url, content, title=""):
   toc = yaml.load(Path("manual/toc.yaml").read_text())["documentation"]
   toc = map(lambda x: extend_toc(x), toc)
 
-  if title != "PlotFX":
-    title += " - PlotFX"
+  title_seo = title
+  if title_seo != "PlotFX":
+    title_seo += " - PlotFX"
 
   return TPL.render(tpl, {
     "content": content,

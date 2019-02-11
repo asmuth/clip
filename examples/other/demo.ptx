@@ -158,158 +158,145 @@ box {
   height: 420px;
 
   box {
-    position: top;
-    height: 130px;
-    margin-bottom: 1em;
+    width: 490px;
+    position: right;
+    margin-right: .5em;
+    height: 340px;
 
-    box {
-      position: left;
-      width: 320px;
-      height: 120px;
-      margin-left: 1em;
-      margin-right: 1em;
-      margin-top: 30px;
+    scale-y-min: 0;
+    scale-y-max: 55;
+    scale-x-min: -3.5;
+    scale-x-max: 3.5;
 
-      box {
-        margin-top: 10px;
-        margin-bottom: 10px;
-        border-bottom-width: 1px;
-        border-bottom-color: #ccc;
-        border-top-width: 1px;
-        border-top-color: #ccc;
-
-        box {
-          background-color: #f2f2f2;
-        }
-      }
+    bars {
+      xs: -3, -2, -1, 0, 1, 2, 3;
+      ys: 10, 28, 20, 26, 41, 44, 37;
+      size: .6em;
+      offset: .45em;
+      color: #4572a7;
     }
 
-    box {
-      scale-y-min: 0;
-      scale-y-max: 140;
+    bars {
+      xs: -3, -2, -1, 0, 1, 2, 3;
+      ys: 12, 19, 23, 30, 35, 43, 33;
+      size: .6em;
+      offset: -.45em;
+      color: #aa4643;
+    }
 
-      lines {
-        xs: csv('tests/testdata/measurement.csv', time);
-        ys: csv('tests/testdata/measurement.csv', value2);
-        colors: #06c;
-      }
+    legend {
+      position: top left inside;
+      items: A, B;
+      colors: #4572a7, #aa4643;
+    }
 
-      axis {
-        position: top;
-        format: datetime("%H:%M:%S");
-        height: 30px;
-      }
+    axis {
+      position: bottom;
+      layout: linear(1, align -3);
+    }
 
-      axis {
-        position: right;
-        width: 60px;
-      }
+    axis {
+      position: top;
+    }
 
-      legend {
-        position: top left inside;
-        items: "Channel 1";
-        colors: #4572a7;
-      }
+    axis {
+      position: right;
+      width: 60px;
+      layout: linear(10);
     }
 
   }
+
   box {
     position: top;
+    width: 900px;
+    height: 130px;
+    margin-bottom: 1em;
+    scale-y-min: 0;
+    scale-y-max: 140;
+
+    lines {
+      xs: csv('tests/testdata/measurement.csv', time);
+      ys: csv('tests/testdata/measurement.csv', value2);
+      colors: #06c;
+    }
+
+    axis {
+      position: top;
+      format: datetime("%H:%M:%S");
+      height: 30px;
+    }
+
+    axis {
+      position: left;
+      width: 60px;
+      layout: linear(40);
+    }
+
+    legend {
+      position: top left inside;
+      items: "Channel 1";
+      colors: #4572a7;
+    }
+
+  }
+
+  box {
+    position: top;
+    width: 900px;
     height: 100px;
     margin-bottom: 1em;
+    scale-y-min: 0;
+    scale-y-max: 140;
 
-    box {
-      position: left;
-      width: 320px;
-      height: 90px;
-      margin-left: 1em;
-      margin-right: 1em;
-
-      box {
-        margin-top: 10px;
-        margin-bottom: 10px;
-        border-top-width: 1px;
-        border-top-color: #ccc;
-        border-bottom-width: 1px;
-        border-bottom-color: #ccc;
-
-        box {
-          background-color: #f2f2f2;
-        }
-      }
+    lines {
+      xs: csv('tests/testdata/measurement.csv', time);
+      ys: csv('tests/testdata/measurement.csv', value2);
+      colors: #06c;
     }
 
-    box {
-      scale-y-min: 0;
-      scale-y-max: 140;
+    axis {
+      position: left;
+      width: 60px;
+      layout: linear(40);
+    }
 
-      lines {
-        xs: csv('tests/testdata/measurement.csv', time);
-        ys: csv('tests/testdata/measurement.csv', value2);
-        colors: #06c;
-      }
-
-      axis {
-        position: right;
-        width: 60px;
-      }
-
-      legend {
-        position: top left inside;
-        items: "Channel 1";
-        colors: #4572a7;
-      }
+    legend {
+      position: top left inside;
+      items: "Channel 1";
+      colors: #4572a7;
     }
   }
   box {
     position: top;
+    width: 900px;
     height: 130px;
     margin-bottom: 1em;
+    scale-y-min: 0;
+    scale-y-max: 140;
 
-    box {
-      position: left;
-      width: 320px;
-      height: 80px;
-      margin-left: 1em;
-      margin-right: 1em;
-
-      box {
-        border-bottom-width: 1px;
-        border-bottom-color: #ccc;
-        margin-bottom: 10px;
-
-        box {
-          background-color: #f2f2f2;
-        }
-      }
+    lines {
+      xs: csv('tests/testdata/measurement.csv', time);
+      ys: csv('tests/testdata/measurement.csv', value2);
+      colors: #06c;
     }
 
-    box {
-      scale-y-min: 0;
-      scale-y-max: 140;
+    axis {
+      position: bottom;
+      format: datetime("%H:%M:%S");
+      height: 30px;
+    }
 
-      lines {
-        xs: csv('tests/testdata/measurement.csv', time);
-        ys: csv('tests/testdata/measurement.csv', value2);
-        colors: #06c;
-      }
+    axis {
+      position: left;
+      width: 60px;
+      layout: linear(40);
+    }
 
-      axis {
-        position: bottom;
-        format: datetime("%H:%M:%S");
-        height: 30px;
-      }
-
-      axis {
-        position: right;
-        width: 60px;
-      }
-
-      legend {
-        position: top left inside;
-        items: "Channel 1";
-        colors: #4572a7;
-      }
+    legend {
+      position: top left inside;
+      items: "Channel 1";
+      colors: #4572a7;
     }
   }
 

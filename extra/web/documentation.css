@@ -1,6 +1,7 @@
 html {
   margin: 0;
   padding: 0;
+  min-height: 100%;
 }
 
 body {
@@ -12,7 +13,9 @@ body {
   background-color: #fff;
   color: #000;
   text-rendering: optimizelegibility;
-  /*text-shadow:0 0 1px #000;*/
+  display: flex;
+  flex-direction: row;
+  min-height: 100vh;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -83,65 +86,46 @@ ul li p {
   margin: 0;
 }
 
-.wrap {
-  max-width: 1100px;
-  margin: auto;
-}
-
 .doc_wrap {
   max-width: 1100px;
-  margin: auto;
-  min-height: 100vh;
 }
 
-@media (max-width: 1260px) {
-  .wrap {
-    margin:0 30px;
-  }
-}
-
-#header {
-  margin: 0;
-  padding: 1px 0 0 0;
-  height: 56px;
-  line-height: 56px;
-}
-
-#header {
-  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-}
-
-#header .logo {
+.logo, #documentation .logo {
   height: 24px;
   width: 87.5px;
-  margin-top: 16px;
-  margin-right: 122px;
-  float: left;
 }
 
-#header a.menu {
-  text-decoration:none;
-  padding: 0 10px;
-  margin-left: 10px;
-  line-height: 32px;
-  margin-top: 12px;
+.header {
+  border-bottom: 1px solid #ddd;
+  overflow: auto;
+  padding-bottom: 1em;
+  margin-bottom: 1em;
+}
+
+.header ul.crumbs {
+  margin: 2em 0 0 0;
+  padding: 0;
+}
+
+.header ul.crumbs li {
+  display: inline-block;
+  list-style-type: none;
+}
+
+.header ul.crumbs li:after {
+  margin-left: .5em;
+  margin-right: .2em;
+  content: "›";
+}
+
+.header ul.crumbs li:last-child:after {
+  content: "";
+}
+
+.header ul.crumbs li:hover a {
   color: #04f;
+  cursor: pointer;
 }
-
-#header a.menu.github {
-  font-size: 10pt;
-  color: #333;
-  float: right;
-}
-
-#header a.menu.github:hover {
-  color: #04f;
-}
-
-#header a.menu.active {
-  color: #333;
-}
-
 
 .notice {
   margin-top: 2em;
@@ -163,6 +147,7 @@ ul li p {
   font-size: 90%;
   color:#777;
   border-top: 1px solid #ddd;
+  margin-top: 1em;
 }
 
 #footer a {
@@ -171,16 +156,27 @@ ul li p {
 
 #navigation {
   padding: 2em 2em 0 0;
-  width: 200px;
-  top: 65px;
   font-size: 16px;
+  border-right: 1px solid #e8e8e8;
+  margin-right: 4em;
+  padding-left: 2em;
+  max-width: 160px;
+  flex: 1;
+}
+
+#navigation h1 {
+  font-size: 18pt;
+}
+
+#navigation h1 span {
+  display: block;
+  font-size: 12pt;
 }
 
 #navigation ul {
   list-style-type:none;
   margin: 0;
-  border-left: 1px solid #ddd;
-  padding: 0 0 0 1em;
+  padding: 0 0 0 0;
   margin-left: 2px;
 }
 
@@ -188,16 +184,17 @@ ul li p {
   padding-left: 29px;
   margin-bottom: .4em;
   list-style-type: disc;
-  border-left: none;
+  border-left: 1px solid #eee;
 }
 
 #navigation ul ul li {
   line-height: 24px;
+  display: none;
 }
 
 #navigation ul li {
   font-size: 14px;
-  line-height: 28px;
+  line-height: 24px;
 }
 
 #navigation a.nav_title:first-child  {
@@ -232,25 +229,30 @@ ul li p {
   display: flex;
   overflow: auto;
   margin-bottom: 2em;
-  border-top: 1px solid #ddd;
-  padding-top: 10px;
+}
+
+article {
+  max-width: 860px;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
 }
 
 #documentation {
-  flex: 1;
   color: #000;
   background: #fff;
   font-size: 14.5px;
   font-weight: 400;
   margin: 0;
-  padding: 16px 0 50px 0;
+  padding-top: 1em;
   overflow: hidden;
+  flex: 1;
 }
 
 #documentation h1 {
   margin-bottom: 0.6em;
   padding-bottom: 0;
-  font-size: 28px;
+  font-size: 30px;
   font-weight: 500;
 }
 
@@ -312,12 +314,12 @@ ul li p {
   border-bottom: 1px solid #eee;
 }
 
-#documentation a {
+#documentation a, a.link {
   color: #04f;
   text-decoration: none;
 }
 
-#documentation a:hover {
+#documentation a:hover, a.link:hover {
   text-decoration: underline;
 }
 
