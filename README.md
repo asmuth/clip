@@ -4,7 +4,7 @@ PlotFX
 PlotFX is a command line tool and library for plotting data. The appearance of
 plots can be customized using a lightweight syntax that is very similar to CSS.
 
-You can run PlotFX from the command line, where it generates SVG, PNG or PDF
+You can run PlotFX from the command line, where it generates SVG, PNG and PDF
 output files. Additionally, you can embed it into your own application using the
 C API.
 
