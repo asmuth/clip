@@ -117,9 +117,8 @@ documentation:
     title: "Community"
     pages:
       -
-        title: "Support"
-        url: "/documentation/support"
-        file: "support"
+        title: "GitHub"
+        url: "https://github.com/plotfx/plotfx"
       -
         title: "Contributing"
         url: "/documentation/contributing"
