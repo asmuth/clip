@@ -1,25 +1,26 @@
 # PlotFX v0.2.0
 
-PlotFX is a tool for creating data-driven graphics; it allows you to create
-parametric illustrations such as charts and dashboards using a lightweight
-CSS-like syntax.
+PlotFX is a command line tool and library for plotting data. The appearance of
+plots can be customized using a lightweight syntax that is very similar to CSS.
 
-You can run PlotFX from the command line, where it generates SVG, PNG and PDF
-output files. Additionally, you can embed it into your own application using the
-C API.
+You can run PlotFX from the command line, where it generates SVG, PNG or PDF output
+files. Additionally, you can embed it into your own application using the C API.
 
 PlotFX is built in the hope that using it will be quick, simple and fun.
 
+<div style="margin-top: 1.2em;">
+  <a href="/documentation/getting_started" style="">Getting Started</a>
+  <span style="margin: 0 .3em">·</span>
+  <a href="/examples">Examples</a>
+  <span style="margin: 0 .3em">·</span>
+  <a href="/download">Download</a>
+</div>
+
+---
+
 <p align="center">
-  <img src="/examples/other/demo.svg" style="width: 90%; margin-top: 2em; margin-bottom: 2em;">
+  <img src="/examples/other/demo.svg" style="margin-top: 1em; margin-bottom: 1em;">
+  <span style="font-style: italic; color: #666;">A collection of example plots generated with PlotFX</span>
 </p>
 
-**WARNING**: The master branch recently underwent a significant refactoring and the
-stability is currently beta/experimental. Maybe not even that. It will take a few
-more weeks to stabilize and document everything.
-
-<div class="notice">
-  <div style="float:right;"><a class="github-button" data-style="mega" href="https://github.com/plotfx/plotfx" data-count-href="/plotfx/plotfx/stargazers" data-count-api="/repos/plotfx/plotfx#stargazers_count" data-count-aria-label="# stargazers on GitHub" aria-label="Star plotfx/plotfx on GitHub">View on GitHub</a></div>
-  Join PlotFX development now on GitHub. We're always appreciating new pull requests, bugs and feature requests!
-</div>
 

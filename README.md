@@ -1,37 +1,32 @@
-<h1 align="center">PlotFX - Open-source plotting toolkit</h1>
+PlotFX
+======
 
-<p align="center">
-  <a href="https://github.com/plotfx/plotfx/blob/master/LICENSE"><img src="https://img.shields.io/badge/license-BSD-blue.svg" alt="License: BSD"></a>
-  <a href="https://ci.appveyor.com/project/plotfx/plotfx/branch/master"><img src="https://ci.appveyor.com/api/projects/status/8h07x0erafnxsumi/branch/master?svg=true" alt="Build Status"></a>
-  <br>
-  <br>
-  <img src="/examples/other/demo.svg" width="90%">
-</p>
+PlotFX is a command line tool and library for plotting data. The appearance of
+plots can be customized using a lightweight syntax that is very similar to CSS.
 
-<p align="center" width="90%">
-  PlotFX is a tool for creating data-driven graphics; it allows you to create
-  parametric illustrations such as charts and dashboards using a lightweight
-  CSS-like syntax.
-</p>
+You can run PlotFX from the command line, where it generates SVG, PNG or PDF
+output files. Additionally, you can embed it into your own application using the
+C API.
 
-<h4 align="center">
+<h4>
+  <a href="https://plotfx.org/documentation/getting-started">Getting Started</a> &middot;
   <a href="https://plotfx.org/examples">Examples</a> &middot;
   <a href="https://plotfx.org">Documentation</a>
 </h4>
 
+<p align="center">
+  <br>
+  <img src="/examples/other/demo.svg" width="90%">
+</p>
 
-Introduction
-------------
+<p align="center">
+  <i>A collection of examples generated with PlotFX.</i>
+  <br><br>
+</p>
 
-PlotFX is a tool for creating data-driven graphics; it allows you to create
-parametric illustrations such as charts and dashboards using a lightweight
-CSS-like syntax.
 
-You can run PlotFX from the command line, where it generates SVG, PNG and PDF
-output files. Additionally, you can embed it into your own application using the
-C API.
-
-PlotFX is built in the hope that using it will be quick, simple and fun.
+Project Status
+--------------
 
 **WARNING**: The master branch recently underwent a significant refactoring and the
 stability is currently beta/experimental. Maybe not even that. It will take a few
