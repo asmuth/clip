@@ -28,23 +28,18 @@ C API.
 Project Status
 --------------
 
-**WARNING**: The master branch recently underwent a significant refactoring and the
-stability is currently beta/experimental. Maybe not even that. It will take a few
-more weeks to stabilize and document everything.
+**WARNING**: The stability is currently beta/experimental. Maybe not even that.
+It will take a few more weeks to stabilize and document everything.
 
 
-Getting Started
----------------
+Example / Demo
+--------------
 
-Here is how to draw a simple timeseries chart using plotfx:
-
-    $ plotfx --in example_chart.ptx --out example_chart.svg
-
-Output File (`example_chart.svg`):
-
-[![A simple line chart](/examples/linecharts/simple_timeseries.svg)](./examples/linecharts/simple_timeseries.ptx)
-
-Input File (`example_chart.ptx`):
+Being a highly visual tool, PlotFX is best explained by example. So here is a PlotFX
+file that defines a simple timeseries chart (`example_chart.ptx`). Note that this
+example is only intended to give you an idea of what the syntax looks like and to
+get you started quickly; for an in-depth description of all parameters, please refer
+to the documentation.
 
     width: 1200px;
     height: 280px;
@@ -68,8 +63,20 @@ Input File (`example_chart.ptx`):
       layout: linear(20);
     }
 
+Here is how you can run the above example file through PlotFX:
 
-For more examples, please see [the examples page](https://plotfx.org/examples).
+    $ plotfx --in example_chart.ptx --out example_chart.svg
+
+When running the example locally, you can use your own input CSV file, or you
+can download the example CSV file [from here](/tests/testdata/measurement.csv).
+If everything works, you should get an output file similar to  the one below
+(`example_chart.svg`):
+
+[![A simple line chart](/examples/linecharts/simple_timeseries.svg)](./examples/linecharts/simple_timeseries.ptx)
+
+More examples can be found on [the examples page](https://plotfx.org/examples).
+For a more detailed introduction to PlotFX, see the [Getting Started](https://plotfx.org/documentation/getting-started) page.
+If you have any questions please don't hesitate to reach out via [GitHub issues](https://github.com/plotfx/plotfx).
 
 
 Building
@@ -99,6 +106,7 @@ Parts of the new chart specification syntax and semantics were inspired by ideas
 from the "Grammar of Graphics" [0] and the ggplot2 project.
 
 [0] Wilkinson, L. (1999). The Grammar of Graphics (Springer)
+
 
 License
 -------
