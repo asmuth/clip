@@ -1,6 +1,23 @@
 Frequently Asked Questions
 ==========================
 
+### I'm getting build errors when compiling the code
+
+PlotFX needs a reasonably modern C++ compiler and standard library. In most
+cases where the code doesn't build it's due to some problem with the local build
+environment. We always appreciate bug reports so we improve our build system, but
+often the best workaround for the moment is to download a binary release from the
+downloads page.
+
+
+### The test suite fails on my machine because text placement is slightly offset
+
+The test suite requires that you have the original Microsoft Arial TTF files
+installed on your machine. To verify that this is the case, run `fc-match
+'Arial,Helvetica,Helvetica Neue:style=Regular,Roman'` and check that it returns
+the correct 'arial.ttf' file.
+
+
 ### What are some differences between PlotFX and other chart generators?
 
 While PlotFX's primary usecase *is* creating charts, it is at the core not a
@@ -33,24 +50,12 @@ stacked vertically from top to bottom, similar to the way rows of text are place
 one after another other in a page.
 
 This concept of page flow, or page layout does not exit in PlotFX.
-PlotFX is a tool for creating illustrations, not a document publishin system, so
-it does make sense to assume "row by row" as a default element placement strategy.
-Most of the rest of CSS's layout features build from this core assumption so they
-are equally unapplicable to PlotFX.
+PlotFX is a tool for creating illustrations, not a document publishing system, so
+it does make sense to assume "top to bottom" as a default element placement strategy.
 
-Instead of being stacked horizontally within the parent box, like in CSS, boxes
+So instead of being stacked horizontally within the parent box, like in CSS, boxes
 in PlotFX will, by default, simply be drawn on top of each other with each one
 filling up the entirety of the parent box. This is a much more useful default
 behaviour for creating illustrations where in many cases an element more closely
 resembles the concept of a 'layer' as found in graphics editing software such as
 Photoshop or Illustrator than that of a row of text.
-
-
-### I'm getting build errors when compiling the code
-
-PlotFX needs a reasonably modern C++ compiler and standard library. In most
-cases where the code doesn't build it's due to some problem with the local build
-environment. We always appreciate bug reports so we improve our build system, but
-often the best workaround for the moment is to download a binary release from the
-downloads page.
-

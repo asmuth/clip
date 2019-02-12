@@ -232,7 +232,7 @@ ul li p {
 }
 
 article {
-  max-width: 860px;
+  max-width: 800px;
   display: flex;
   flex: 1;
   flex-direction: column;
@@ -434,9 +434,19 @@ table.invisible tr, table.invisible td {
 
 #documentation .info_box {
   border: 1px solid #ddd;
-  margin-bottom: 3em;
+  margin-top: 1em;
+  margin-bottom: 25px;
   border-radius: 2px;
   padding-top: .5em;
+}
+
+#documentation .info_box > .example {
+  background: #f6f6f6;
+  padding: .3em;
+}
+
+#documentation .info_box > .example img {
+  display: block;
 }
 
 #documentation .info_box code strong {
