@@ -39,8 +39,6 @@
 #include "elements/box.h"
 
 #include <iostream>
-#include <fstream>
-#include <sstream>
 #include <string.h>
 
 using namespace plotfx;
@@ -99,18 +97,15 @@ int plotfx_configure(
 int plotfx_configure_file(
     plotfx_t* ctx,
     const char* path) {
-  std::stringstream config_buf;
-  {
-    std::ifstream config_file(path);
-    if (!config_file.is_open()) {
-      plotfx_seterrf(ctx, StringUtil::format("file not found: $0", path));
-      return ERROR;
-    }
+  std::string config_path(path);
+  std::string config_buf;
 
-    config_buf << config_file.rdbuf();
+  if (auto rc = read_file(config_path, &config_buf); !rc) {
+    plotfx_seterr(ctx, rc);
+    return rc;
   }
 
-  return plotfx_configure(ctx, config_buf.str().c_str());
+  return plotfx_configure(ctx, config_buf.c_str());
 }
 
 int plotfx_render_to(plotfx_t* ctx, void* backend) {
@@ -131,7 +126,7 @@ int plotfx_render_to(plotfx_t* ctx, void* backend) {
   });
 
   plotfx_seterr(ctx, rc);
-  return OK;
+  return rc;
 }
 
 int plotfx_render_file(plotfx_t* ctx, const char* path, const char* fmt) {

@@ -33,6 +33,8 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <unistd.h>
+#include <sstream>
+#include <fstream>
 #include "buffer.h"
 #include "exception.h"
 #include "stringutil.h"
@@ -223,5 +225,23 @@ size_t FileUtil::du_c(const std::string& path) {
   return size;
 }
 
+ReturnCode read_file(const std::string& path, std::string* data) {
+  std::stringstream buffer;
+  {
+    std::ifstream file(path);
+    if (!file.is_open()) {
+      return ReturnCode::errorf(
+          "EIO",
+          "error while reading file: '$0': $1",
+          path,
+          strerror(errno));
+    }
+
+    buffer << file.rdbuf();
+  }
+
+  *data = buffer.str();
+  return OK;
+}
 
 }

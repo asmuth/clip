@@ -31,6 +31,7 @@
 #define _plotfx_UTIL_FILEUTIL_H_
 #include "buffer.h"
 #include "stdtypes.h"
+#include "return_code.h"
 
 namespace plotfx {
 
@@ -110,6 +111,8 @@ public:
   static size_t du_c(const std::string& path);
 
 };
+
+ReturnCode read_file(const std::string& path, std::string* data);
 
 }
 #endif

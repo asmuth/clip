@@ -237,7 +237,11 @@ ReturnCode load_csv(
     const std::string& csv_path,
     bool csv_headers,
     SeriesMap* data) {
-  auto csv_data_str = FileUtil::read(csv_path).toString();
+  std::string csv_data_str;
+  if (auto rc = read_file(csv_path, &csv_data_str); !rc) {
+    return rc;
+  }
+
   auto csv_data = CSVData{};
   CSVParserConfig csv_opts;
   if (auto rc = parseCSV(csv_data_str, csv_opts, &csv_data); !rc) {
