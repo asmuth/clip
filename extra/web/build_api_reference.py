@@ -16,6 +16,9 @@ def load_prop(p):
   if not "desc_short" in p:
     p["desc_short"] = ""
 
+  if not "name" in p:
+    p["name"] = p["prop"]
+
   return p
 
 def build_elem_page(elem_file):
@@ -29,7 +32,7 @@ def build_elem_page(elem_file):
   write_page(url, html, title=title)
 
 def main():
-  elems = glob.glob("manual/elem_*.yaml*")
+  elems = glob.glob("manual/elem_*.yaml")
 
   for elem in elems:
     build_elem_page(elem)

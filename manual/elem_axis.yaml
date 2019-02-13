@@ -13,6 +13,18 @@ properties:
   # prop: position
   - name: position
 
+  - prop: width
+  - prop: height
+
+  # prop: format
+  - name: format
+
+  # prop: labels
+  - name: labels
+
+  # prop: layout
+  - name: layout
+
   # prop: scale-x
   - name: scale
     inherit: scale
@@ -29,11 +41,3 @@ properties:
   - name: scale-padding
     inherit: scale_padding
 
-  # prop: format
-  - name: format
-
-  # prop: labels
-  - name: labels
-
-  # prop: layout
-  - name: layout

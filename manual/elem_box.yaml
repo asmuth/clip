@@ -1,0 +1,52 @@
+name: box
+desc_short: The box element is used for creating (block) layouts
+desc: |
+  The box element is used for creating (block) layouts. It is not visible
+  unless you specify a border. A box element can have any other element as a child.
+  It is somewhat comparable to HTML's 'div' element.
+
+demo_img: /examples/barcharts/bars_with_labels.svg
+
+demo: |
+  box {
+    width: <width>;
+    height: <height>;
+  }
+
+properties:
+
+  - prop: position
+
+  - prop: width
+    name: width
+
+  - prop: height
+    name: height
+
+  - prop: margin
+  - prop: margin-top
+  - prop: margin-right
+  - prop: margin-bottom
+  - prop: margin-left
+  - prop: border-top-color
+  - prop: border-right-color
+  - prop: border-bottom-color
+  - prop: border-left-color
+  - prop: border-top-width
+  - prop: border-right-width
+  - prop: border-bottom-width
+  - prop: border-left-width
+  - prop: scale-x
+  - prop: scale-x-min
+  - prop: scale-x-max
+  - prop: scale-x-padding
+  - prop: scale-x-layout
+  - prop: scale-y
+  - prop: scale-y-min
+  - prop: scale-y-max
+  - prop: scale-y-padding
+  - prop: scale-y-layout
+  - prop: background-color
+  - prop: foreground-color
+  - prop: text-color
+  - prop: border-color

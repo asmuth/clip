@@ -1,0 +1,26 @@
+name: legend
+desc_short: The legend element is used to draw a chart legend.
+desc: The legend element is used to draw a chart legend.
+
+demo: |
+  legend {
+    items: <items>;
+  }
+
+properties:
+
+  - prop: position
+  - prop: title
+  - prop: items
+  - prop: text-color
+  - prop: border-color
+  - prop: item-margin
+  - prop: item-margin-top
+  - prop: item-margin-right
+  - prop: item-margin-bottom
+  - prop: item-margin-left
+  - prop: color
+
+  # prop: colors
+  - name: colors
+    inherit: colors
