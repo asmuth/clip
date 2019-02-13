@@ -32,7 +32,6 @@ documentation:
       -
         title: "Example Gallery"
         url: "/examples"
-        file: "examples"
   #-
   #  title: "Building Charts"
   #  pages:

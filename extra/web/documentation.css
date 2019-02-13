@@ -319,7 +319,13 @@ article {
   text-decoration: none;
 }
 
-#documentation a:hover, a.link:hover {
+#documentation a:hover,
+#documentation a:hover h1,
+#documentation a:hover h2,
+#documentation a:hover h3,
+#documentation a:hover h4,
+a.link:hover{
+  color: #04f;
   text-decoration: underline;
 }
 
@@ -328,7 +334,9 @@ article {
 }
 
 #documentation img {
-  width: 100%;
+  max-width: 100%;
+  max-height: 100%;
+  margin: auto;
 }
 
 code {
@@ -433,15 +441,15 @@ table.invisible tr, table.invisible td {
 }
 
 #documentation .info_box {
-  border: 1px solid #ddd;
+  border: 1px solid #ccc;
   margin-top: 1em;
   margin-bottom: 25px;
   border-radius: 2px;
-  padding-top: .5em;
+  box-shadow: 0 0 2px rgba(0, 0, 0, .2);
 }
 
 #documentation .info_box > .example {
-  background: #f6f6f6;
+  border: 1px solid #f6f6f6;
   padding: .3em;
 }
 
@@ -455,15 +463,16 @@ table.invisible tr, table.invisible td {
 
 #documentation .info_box h2 {
   border-bottom: none;
-  margin-top: .1em;
+  margin-top: .6em;
   margin-bottom: 0;
-  padding-bottom: 0;
+  padding-bottom: .6em;
   font-weight: 600;
   padding-left: 14px;
   font-size: 11pt;
   line-height: 12pt;
   font-weight: 400;
   color: #888;
+  border-bottom: 2px solid #ddd;
 }
 
 #documentation .info_box h2.sub {
@@ -471,11 +480,6 @@ table.invisible tr, table.invisible td {
   margin-top: 0;
   padding-top: 0;
   line-height: 16pt;
-}
-
-#documentation .info_box > div {
-  border-top: 2px solid #ddd;
-  margin-top: .6em;
 }
 
 #documentation .plist {
