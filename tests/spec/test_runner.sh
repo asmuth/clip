@@ -1,5 +1,5 @@
 #!/bin/bash
-set -ue
+set -e
 
 print_error () {
   printf "\033[1;31m"
@@ -15,7 +15,7 @@ masterfile="$4"
 rm -rf ${outfile}
 ${binfile} --in ${specfile} --out ${outfile} || exit 1
 
-if [[ ! -e ${masterfile} ]]; then
+if [[ ! -e ${masterfile} || ! -z "${PLOTFX_TEST_FORCE}" ]]; then
   cp ${outfile} ${masterfile}
 fi
 

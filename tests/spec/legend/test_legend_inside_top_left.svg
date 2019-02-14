@@ -1,11 +1,11 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1200.000000" height="480.000000" viewBox="0 0 1200.0 480.0">
   <rect width="1200.000000" height="480.000000" fill="#ffffff"/>
-  <path fill="#4572a7" d="M62.7 50.8 M52.7 50.8 a5.0 5.0 0 1 0 10.0 0 a5.0 5.0 0 1 0 -10.0 0 "/>
-  <text x="69.200000" y="55.800000" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif">New York</text>
-  <path fill="#aa4643" d="M173.884375 50.8 M163.884375 50.8 a5.0 5.0 0 1 0 10.0 0 a5.0 5.0 0 1 0 -10.0 0 "/>
-  <text x="180.384375" y="55.800000" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif">Beijing</text>
-  <path fill="#89a54e" d="M267.13125 50.8 M257.13125 50.8 a5.0 5.0 0 1 0 10.0 0 a5.0 5.0 0 1 0 -10.0 0 "/>
-  <text x="273.631250" y="55.800000" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif">Moscow</text>
-  <path fill="#3d96ae" d="M370.14375 50.8 M360.14375 50.8 a5.0 5.0 0 1 0 10.0 0 a5.0 5.0 0 1 0 -10.0 0 "/>
-  <text x="376.643750" y="55.800000" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif">London</text>
+  <path fill="#4572a7" d="M53.9 47.866667 M43.9 47.866667 a5.0 5.0 0 1 0 10.0 0 a5.0 5.0 0 1 0 -10.0 0 "/>
+  <text x="60.400000" y="52.866667" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif">New York</text>
+  <path fill="#aa4643" d="M165.084375 47.866667 M155.084375 47.866667 a5.0 5.0 0 1 0 10.0 0 a5.0 5.0 0 1 0 -10.0 0 "/>
+  <text x="171.584375" y="52.866667" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif">Beijing</text>
+  <path fill="#89a54e" d="M258.33125 47.866667 M248.33125 47.866667 a5.0 5.0 0 1 0 10.0 0 a5.0 5.0 0 1 0 -10.0 0 "/>
+  <text x="264.831250" y="52.866667" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif">Moscow</text>
+  <path fill="#3d96ae" d="M361.34375 47.866667 M351.34375 47.866667 a5.0 5.0 0 1 0 10.0 0 a5.0 5.0 0 1 0 -10.0 0 "/>
+  <text x="367.843750" y="52.866667" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif">London</text>
 </svg>

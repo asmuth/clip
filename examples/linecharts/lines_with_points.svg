@@ -102,12 +102,12 @@
   <path fill="#80699b" d="M946.413429 213.944242 M938.413429 213.944242 a4.0 4.0 0 1 0 8.0 0 a4.0 4.0 0 1 0 -8.0 0 "/>
   <path fill="#80699b" d="M1037.792866 251.987152 M1029.792866 251.987152 a4.0 4.0 0 1 0 8.0 0 a4.0 4.0 0 1 0 -8.0 0 "/>
   <path fill="#80699b" d="M1129.172303 273.619394 M1121.172303 273.619394 a4.0 4.0 0 1 0 8.0 0 a4.0 4.0 0 1 0 -8.0 0 "/>
-  <path fill="#4572a7" d="M107.870833 399.466667 M97.870833 399.466667 a5.0 5.0 0 1 0 10.0 0 a5.0 5.0 0 1 0 -10.0 0 "/>
-  <text x="114.370833" y="404.466667" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif">New York</text>
-  <path fill="#aa4643" d="M219.055208 399.466667 M209.055208 399.466667 a5.0 5.0 0 1 0 10.0 0 a5.0 5.0 0 1 0 -10.0 0 "/>
-  <text x="225.555208" y="404.466667" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif">Beijing</text>
-  <path fill="#89a54e" d="M312.302083 399.466667 M302.302083 399.466667 a5.0 5.0 0 1 0 10.0 0 a5.0 5.0 0 1 0 -10.0 0 "/>
-  <text x="318.802083" y="404.466667" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif">Moscow</text>
-  <path fill="#80699b" d="M415.314583 399.466667 M405.314583 399.466667 a5.0 5.0 0 1 0 10.0 0 a5.0 5.0 0 1 0 -10.0 0 "/>
-  <text x="421.814583" y="404.466667" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif">Berlin</text>
+  <path fill="#4572a7" d="M99.070833 402.4 M89.070833 402.4 a5.0 5.0 0 1 0 10.0 0 a5.0 5.0 0 1 0 -10.0 0 "/>
+  <text x="105.570833" y="407.400000" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif">New York</text>
+  <path fill="#aa4643" d="M210.255208 402.4 M200.255208 402.4 a5.0 5.0 0 1 0 10.0 0 a5.0 5.0 0 1 0 -10.0 0 "/>
+  <text x="216.755208" y="407.400000" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif">北京市   </text>
+  <path fill="#89a54e" d="M304.689583 402.4 M294.689583 402.4 a5.0 5.0 0 1 0 10.0 0 a5.0 5.0 0 1 0 -10.0 0 "/>
+  <text x="311.189583" y="407.400000" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif">Москва</text>
+  <path fill="#80699b" d="M403.983333 402.4 M393.983333 402.4 a5.0 5.0 0 1 0 10.0 0 a5.0 5.0 0 1 0 -10.0 0 "/>
+  <text x="410.483333" y="407.400000" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif">Berlin</text>
 </svg>

@@ -29,3 +29,9 @@ axis {
   layout: linear(1, align 1);
   labels: csv('tests/testdata/city_temperatures_london.csv', month_name);
 }
+
+legend {
+  position: bottom left inside;
+  items: "London";
+  colors: #4572a7, #aa4643, #89a54e, #80699b;
+}

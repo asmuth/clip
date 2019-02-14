@@ -212,13 +212,14 @@ box {
     width: 900px;
     height: 130px;
     margin-bottom: 1em;
-    scale-y-min: 0;
-    scale-y-max: 140;
+    scale-y-min: -4;
+    scale-y-max: 8;
 
     lines {
-      xs: csv('tests/testdata/measurement.csv', time);
-      ys: csv('tests/testdata/measurement.csv', value2);
-      colors: #06c;
+      xs: csv('tests/testdata/measurement2.csv', time);
+      ys: csv('tests/testdata/measurement2.csv', value1);
+      colors: #4572a7;
+      stroke: 2pt;
     }
 
     axis {
@@ -230,7 +231,8 @@ box {
     axis {
       position: left;
       width: 60px;
-      layout: linear(40);
+      layout: linear(4, align -2);
+      labels: "-1.0", "0", "1.0";
     }
 
     legend {
@@ -246,25 +248,27 @@ box {
     width: 900px;
     height: 100px;
     margin-bottom: 1em;
-    scale-y-min: 0;
-    scale-y-max: 140;
+    scale-y-min: -4;
+    scale-y-max: 8;
 
     lines {
-      xs: csv('tests/testdata/measurement.csv', time);
-      ys: csv('tests/testdata/measurement.csv', value2);
-      colors: #06c;
+      xs: csv('tests/testdata/measurement2.csv', time);
+      ys: csv('tests/testdata/measurement2.csv', value2);
+      colors: #aa4643;
+      stroke: 2pt;
     }
 
     axis {
       position: left;
       width: 60px;
-      layout: linear(40);
+      layout: linear(4, align -2);
+      labels: "-1.0", "0", "1.0";
     }
 
     legend {
       position: top left inside;
-      items: "Channel 1";
-      colors: #4572a7;
+      items: "Channel 2";
+      colors: #aa4643;
     }
   }
   box {
@@ -272,13 +276,14 @@ box {
     width: 900px;
     height: 130px;
     margin-bottom: 1em;
-    scale-y-min: 0;
-    scale-y-max: 140;
+    scale-y-min: -4;
+    scale-y-max: 8;
 
     lines {
-      xs: csv('tests/testdata/measurement.csv', time);
-      ys: csv('tests/testdata/measurement.csv', value2);
-      colors: #06c;
+      xs: csv('tests/testdata/measurement2.csv', time);
+      ys: csv('tests/testdata/measurement2.csv', value3);
+      colors: #89a54e;
+      stroke: 2pt;
     }
 
     axis {
@@ -290,13 +295,14 @@ box {
     axis {
       position: left;
       width: 60px;
-      layout: linear(40);
+      layout: linear(4, align -2);
+      labels: "-1.0", "0", "1.0";
     }
 
     legend {
       position: top left inside;
-      items: "Channel 1";
-      colors: #4572a7;
+      items: "Channel 3";
+      colors: #89a54e;
     }
   }
 

@@ -69,4 +69,6 @@
   <text x="919.905616" y="222.104444" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif">10.3°C</text>
   <text x="1015.363178" y="258.246984" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif">6.6°C</text>
   <text x="1106.742615" y="275.829841" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif">4.8°C</text>
+  <path fill="#4572a7" d="M99.070833 402.4 M89.070833 402.4 a5.0 5.0 0 1 0 10.0 0 a5.0 5.0 0 1 0 -10.0 0 "/>
+  <text x="105.570833" y="407.400000" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif">London</text>
 </svg>

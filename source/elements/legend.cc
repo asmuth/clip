@@ -40,8 +40,8 @@ using namespace std::placeholders;
 namespace plotfx {
 
 static const double kDefaultLabelFontSizeEM = 1;
-static const double kDefaultPaddingHorizEM = 2.4;
-static const double kDefaultPaddingVertEM = 1.6;
+static const double kDefaultPaddingHorizEM = 1.8;
+static const double kDefaultPaddingVertEM = 1.4;
 static const double kDefaultItemPaddingHorizEM = 2.4;
 static const double kDefaultItemPaddingVertEM = 1.0;
 

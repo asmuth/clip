@@ -39,3 +39,9 @@ axis {
 axis {
   position: bottom;
 }
+
+legend {
+  position: bottom left inside;
+  items: "Series A", "Series B";
+  colors: #06c, #c06;
+}

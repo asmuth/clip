@@ -67,7 +67,7 @@ axis {
 
 legend {
   position: bottom left inside;
-  items: "New York", "Beijing", "Moscow", "Berlin";
+  items: "New York", "北京市   ", "Москва", "Berlin";
   colors: #4572a7, #aa4643, #89a54e, #80699b;
 }
 
