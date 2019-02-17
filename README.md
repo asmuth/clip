@@ -30,8 +30,10 @@ C API.
 Project Status
 --------------
 
-**WARNING**: The stability is currently beta/experimental. Maybe not even that.
-It will take a few more weeks to stabilize and document everything.
+**WARNING**: The current project status is "beta", i.e. the software works, but
+it's still rough around the edges. It is also severely underdocumented. I'm working
+on polishing everything up and filling in the blanks in the documentation, but we're
+not quite there yet...
 
 
 Example / Demo
