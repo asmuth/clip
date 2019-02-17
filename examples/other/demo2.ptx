@@ -46,7 +46,7 @@ box {
 
     axis {
       position: left;
-      layout: linear(100);
+      layout: linear(40);
     }
 
     legend {
@@ -62,41 +62,42 @@ box {
     position: right;
 
     scale-x-min: 0;
-    scale-x-max: 400;
+    scale-x-max: 8000;
 
-    scale-y-min: 0;
-    scale-y-max: 200;
+    scale-y-min: -10;
+    scale-y-max: 10;
 
     background-color: #eee;
 
     gridlines {
       color: #fff;
       stroke: 2pt;
-      layout-x: linear(40);
-      layout-y: linear(40);
+      layout-x: linear(800);
+      layout-y: linear(4);
     }
 
     gridlines {
       color: #fff;
       stroke: 1pt;
-      layout-x: linear(20);
-      layout-y: linear(20);
+      layout-x: linear(400);
+      layout-y: linear(2);
     }
 
-    points {
-      xs: csv(tests/testdata/gauss2d.csv, x);
-      ys: csv(tests/testdata/gauss2d.csv, y);
+    lines {
+      xs: csv(tests/testdata/measurement2.csv, time);
+      ys: csv(tests/testdata/measurement2.csv, value1);
       size: 2pt;
     }
 
     axis {
       position: bottom;
-      layout: linear(40);
+      layout: linear(1200);
+      format: datetime("%H:%M:%S");
     }
 
     axis {
       position: right;
-      layout: linear(100);
+      layout: linear(2);
     }
 
     legend {
