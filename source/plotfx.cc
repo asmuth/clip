@@ -36,7 +36,7 @@
 #include "graphics/layer_pixmap.h"
 #include "utils/fileutil.h"
 #include "core/environment.h"
-#include "elements/box.h"
+#include "elements/plot.h"
 
 #include <iostream>
 #include <string.h>
@@ -116,12 +116,12 @@ int plotfx_render_to(plotfx_t* ctx, void* backend) {
   layout.content_box = layout.bounding_box;
   layout.inner_box = layout.bounding_box;
 
-  box::BoxConfig root;
+  plot::PlotConfig root;
   root.margins = {from_px(20), from_px(20), from_px(20), from_px(20)};
 
   auto rc = try_chain({
-    [&] { return box::configure(ctx->plist, ctx->env, &root); },
-    [&] { return box::draw(root, layout, layer); },
+    [&] { return plot::configure(ctx->plist, ctx->env, &root); },
+    [&] { return plot::draw(root, layout, layer); },
     [&] { return layer_submit(layer); },
   });
 

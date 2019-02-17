@@ -35,6 +35,7 @@
 #include "elements/gridlines.h"
 #include "elements/legend.h"
 #include "elements/lines.h"
+#include "elements/plot.h"
 #include "elements/points.h"
 
 #include <unordered_map>
@@ -85,6 +86,12 @@ static std::unordered_map<std::string, ElementBuilder> elems = {
     elem_builder<plot::lines::PlotLinesConfig>(
         &plot::lines::configure,
         &plot::lines::draw)
+  },
+  {
+    "plot",
+    elem_builder<plot::PlotConfig>(
+        &plot::configure,
+        &plot::draw)
   },
   {
     "points",

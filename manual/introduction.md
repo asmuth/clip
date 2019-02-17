@@ -19,7 +19,7 @@ PlotFX is built in the hope that using it will be quick, simple and fun.
 ---
 
 <p align="center">
-  <img src="/examples/other/demo.svg" style="margin-top: 1em; margin-bottom: 1em;">
+  <img src="/examples/other/demo2.svg" style="margin-top: 1em; margin-bottom: 1em;">
   <span style="font-style: italic; color: #666;">A collection of example plots generated with PlotFX</span>
 </p>
 

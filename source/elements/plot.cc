@@ -27,7 +27,7 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-#include "elements/box.h"
+#include "elements/plot.h"
 #include "element_factory.h"
 #include "config_helpers.h"
 #include "graphics/layer.h"
@@ -37,10 +37,10 @@
 using namespace std::placeholders;
 
 namespace plotfx {
-namespace box {
+namespace plot {
 
 ReturnCode draw(
-    const BoxConfig& config,
+    const PlotConfig& config,
     const LayoutInfo& layout,
     Layer* layer) {
   const auto bbox = layout.content_box;
@@ -74,7 +74,7 @@ ReturnCode draw(
 
   /* draw background */
   if (config.background) {
-    const auto& bg_box = bbox;
+    const auto& bg_box = content_box;
     FillStyle bg_fill;
     bg_fill.color = *config.background;
 
@@ -101,8 +101,8 @@ ReturnCode draw(
 
     strokeLine(
         layer,
-        Point(bbox.x, bbox.y),
-        Point(bbox.x + bbox.w, bbox.y),
+        Point(content_box.x, content_box.y),
+        Point(content_box.x + content_box.w, content_box.y),
         border_style);
   }
 
@@ -114,8 +114,8 @@ ReturnCode draw(
 
     strokeLine(
         layer,
-        Point(bbox.x + bbox.w, bbox.y),
-        Point(bbox.x + bbox.w, bbox.y + bbox.h),
+        Point(content_box.x + content_box.w, content_box.y),
+        Point(content_box.x + content_box.w, content_box.y + content_box.h),
         border_style);
   }
 
@@ -127,8 +127,8 @@ ReturnCode draw(
 
     strokeLine(
         layer,
-        Point(bbox.x, bbox.y + bbox.h),
-        Point(bbox.x + bbox.w, bbox.y + bbox.h),
+        Point(content_box.x, content_box.y + content_box.h),
+        Point(content_box.x + content_box.w, content_box.y + content_box.h),
         border_style);
   }
 
@@ -140,8 +140,8 @@ ReturnCode draw(
 
     strokeLine(
         layer,
-        Point(bbox.x, bbox.y),
-        Point(bbox.x, bbox.y + bbox.h),
+        Point(content_box.x, content_box.y),
+        Point(content_box.x, content_box.y + content_box.h),
         border_style);
   }
 
@@ -149,7 +149,7 @@ ReturnCode draw(
 }
 
 ReturnCode reflow(
-    const BoxConfig& config,
+    const PlotConfig& config,
     const Layer& layer,
     const std::optional<double> max_width,
     const std::optional<double> max_height,
@@ -161,12 +161,14 @@ ReturnCode reflow(
 ReturnCode configure(
     const plist::PropertyList& plist,
     const Environment& env,
-    BoxConfig* config) {
+    PlotConfig* config) {
   config->font = env.font;
   config->font_size = env.font_size;
   config->color_scheme = env.color_scheme;
   config->text_color = env.text_color;
   config->border_color = env.border_color;
+  config->scale_layout_x = env.scale_layout_x;
+  config->scale_layout_y = env.scale_layout_y;
 
   ParserDefinitions pdefs = {
     {"position", bind(&configure_position, _1, &config->layout.position)},
@@ -193,6 +195,16 @@ ReturnCode configure(
     {"border-right-width", bind(&configure_measure, _1, &config->borders[1].width)},
     {"border-bottom-width", bind(&configure_measure, _1, &config->borders[2].width)},
     {"border-left-width", bind(&configure_measure, _1, &config->borders[3].width)},
+    {"scale-x", bind(&domain_configure, _1, &config->scale_x)},
+    {"scale-x-min", bind(&configure_float_opt, _1, &config->scale_x.min)},
+    {"scale-x-max", bind(&configure_float_opt, _1, &config->scale_x.max)},
+    {"scale-x-padding", bind(&configure_float, _1, &config->scale_x.padding)},
+    {"scale-x-layout", bind(&configure_scale_layout, _1, &config->scale_layout_x)},
+    {"scale-y", bind(&domain_configure, _1, &config->scale_y)},
+    {"scale-y-min", bind(&configure_float_opt, _1, &config->scale_y.min)},
+    {"scale-y-max", bind(&configure_float_opt, _1, &config->scale_y.max)},
+    {"scale-y-padding", bind(&configure_float, _1, &config->scale_y.padding)},
+    {"scale-y-layout", bind(&configure_scale_layout, _1, &config->scale_layout_y)},
     {"background-color", configure_color_opt(&config->background)},
     {
       "foreground-color",
@@ -219,6 +231,10 @@ ReturnCode configure(
   child_env.text_color = config->text_color;
   child_env.border_color = config->border_color;
   child_env.background_color = config->background.value_or(env.background_color);
+  child_env.scale_x = config->scale_x;
+  child_env.scale_y = config->scale_y;
+  child_env.scale_layout_x = config->scale_layout_x;
+  child_env.scale_layout_y = config->scale_layout_y;
 
   for (size_t i = 0; i < plist.size(); ++i) {
     if (!plist::is_map(plist[i])) {
@@ -245,6 +261,6 @@ ReturnCode configure(
   return OK;
 }
 
-} // namespace box
+} // namespace plot
 } // namespace plotfx
 

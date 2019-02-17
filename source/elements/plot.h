@@ -34,14 +34,14 @@
 #include "core/layout.h"
 
 namespace plotfx {
-namespace box {
+namespace plot {
 
-struct BoxBorderConfig {
+struct PlotBorderConfig {
   Color color;
   Measure width;
 };
 
-struct BoxConfig {
+struct PlotConfig {
   std::vector<ElementRef> children;
   FontInfo font;
   Measure font_size;
@@ -49,18 +49,22 @@ struct BoxConfig {
   std::optional<Color> background;
   Color text_color;
   Color border_color;
+  DomainConfig scale_x;
+  DomainConfig scale_y;
+  ScaleLayoutFn scale_layout_x;
+  ScaleLayoutFn scale_layout_y;
   std::array<Measure, 4> margins;
-  std::array<BoxBorderConfig, 4> borders;
+  std::array<PlotBorderConfig, 4> borders;
   LayoutSettings layout;
 };
 
 ReturnCode draw(
-    const BoxConfig& config,
+    const PlotConfig& config,
     const LayoutInfo& layout,
     Layer* layer);
 
 ReturnCode reflow(
-    const BoxConfig& config,
+    const PlotConfig& config,
     const Layer& layer,
     const std::optional<double> max_width,
     const std::optional<double> max_height,
@@ -70,8 +74,8 @@ ReturnCode reflow(
 ReturnCode configure(
     const plist::PropertyList& plist,
     const Environment& env,
-    BoxConfig* config);
+    PlotConfig* config);
 
-} // namespace box
+} // namespace plot
 } // namespace plotfx
 

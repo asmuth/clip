@@ -1,11 +1,11 @@
 width: 1730px;
-height: 920px;
+height: 950px;
 
 box {
   position: top;
   height: 480px;
 
-  box {
+  plot {
     width: 800px;
     height: 400px;
 
@@ -55,7 +55,7 @@ box {
     }
   }
 
-  box {
+  plot {
     width: 800px;
     height: 400px;
 
@@ -110,7 +110,7 @@ box {
 box {
   position: top;
 
-  box {
+  plot {
     width: 800px;
     height: 400px;
 
@@ -160,7 +160,7 @@ box {
     }
   }
 
-  box {
+  plot {
     width: 800px;
     height: 400px;
 
@@ -209,5 +209,5 @@ box {
       items: "Random Data";
     }
   }
-
 }
+

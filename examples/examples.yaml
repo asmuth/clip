@@ -1,7 +1,7 @@
 - section: Basic Charts
   files:
     - file: pointcharts/simple_scatter
-      desc: A minimal scatter plot.
+      desc: A simple scatter plot.
 
 - section: Line Charts
   files:
@@ -52,4 +52,6 @@
 - section: Other
   files:
     - file: other/demo
-      desc: A collection of examples generated with PlotFX (in a single file!)
+      desc: A collection of examples generated with PlotFX
+    - file: other/demo2
+      desc: A collection of examples generated with PlotFX
