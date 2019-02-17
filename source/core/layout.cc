@@ -118,7 +118,8 @@ ReturnCode layout_element(
 ReturnCode layout_elements(
     const Layer& layer,
     const Rectangle& parent_bbox,
-    std::vector<ElementPlacement>* elements) {
+    std::vector<ElementPlacement>* elements,
+    Rectangle* content_box) {
   /* sort elements by z-index */
   std::stable_sort(
       elements->begin(),
@@ -165,6 +166,7 @@ ReturnCode layout_elements(
     e.layout.inner_box = layout_state.content_box;
   }
 
+  *content_box = layout_state.content_box;
   return OK;
 }
 

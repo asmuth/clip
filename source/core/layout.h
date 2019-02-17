@@ -105,7 +105,8 @@ ReturnCode layout_element(
 ReturnCode layout_elements(
     const Layer& layer,
     const Rectangle& parent_bbox,
-    std::vector<ElementPlacement>* elements);
+    std::vector<ElementPlacement>* elements,
+    Rectangle* content_box);
 
 } // namespace plotfx
 

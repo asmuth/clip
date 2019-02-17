@@ -59,9 +59,22 @@ ReturnCode draw(
       margins[2],
       margins[3]);
 
+  /* layout children */
+  std::vector<ElementPlacement> children;
+  for (const auto& c : config.children) {
+    ElementPlacement e;
+    e.element = c;
+    children.emplace_back(e);
+  }
+
+  Rectangle content_box;
+  if (auto rc = layout_elements(*layer, margin_box, &children, &content_box); !rc) {
+    return rc;
+  }
+
   /* draw background */
   if (config.background) {
-    const auto& bg_box = bbox;
+    const auto& bg_box = content_box;
     FillStyle bg_fill;
     bg_fill.color = *config.background;
 
@@ -73,6 +86,13 @@ ReturnCode draw(
         bg_fill);
   }
 
+  /* draw children */
+  for (const auto& c : children) {
+    if (auto rc = c.element->draw(c.layout, layer); !rc.isSuccess()) {
+      return rc;
+    }
+  }
+
   /* draw top border  */
   if (config.borders[0].width > 0) {
     StrokeStyle border_style;
@@ -81,8 +101,8 @@ ReturnCode draw(
 
     strokeLine(
         layer,
-        Point(bbox.x, bbox.y),
-        Point(bbox.x + bbox.w, bbox.y),
+        Point(content_box.x, content_box.y),
+        Point(content_box.x + content_box.w, content_box.y),
         border_style);
   }
 
@@ -94,8 +114,8 @@ ReturnCode draw(
 
     strokeLine(
         layer,
-        Point(bbox.x + bbox.w, bbox.y),
-        Point(bbox.x + bbox.w, bbox.y + bbox.h),
+        Point(content_box.x + content_box.w, content_box.y),
+        Point(content_box.x + content_box.w, content_box.y + content_box.h),
         border_style);
   }
 
@@ -107,8 +127,8 @@ ReturnCode draw(
 
     strokeLine(
         layer,
-        Point(bbox.x, bbox.y + bbox.h),
-        Point(bbox.x + bbox.w, bbox.y + bbox.h),
+        Point(content_box.x, content_box.y + content_box.h),
+        Point(content_box.x + content_box.w, content_box.y + content_box.h),
         border_style);
   }
 
@@ -120,27 +140,9 @@ ReturnCode draw(
 
     strokeLine(
         layer,
-        Point(bbox.x, bbox.y),
-        Point(bbox.x, bbox.y + bbox.h),
+        Point(content_box.x, content_box.y),
+        Point(content_box.x, content_box.y + content_box.h),
         border_style);
-  }
-
-  /* layout and draw children */
-  std::vector<ElementPlacement> children;
-  for (const auto& c : config.children) {
-    ElementPlacement e;
-    e.element = c;
-    children.emplace_back(e);
-  }
-
-  if (auto rc = layout_elements(*layer, margin_box, &children); !rc) {
-    return rc;
-  }
-
-  for (const auto& c : children) {
-    if (auto rc = c.element->draw(c.layout, layer); !rc.isSuccess()) {
-      return rc;
-    }
   }
 
   return OK;
