@@ -1,24 +1,45 @@
-width: 400px;
-height: 400px;
+width: 1200px;
+height: 600px;
 
 scale-x-min: 0;
-scale-x-max: 200;
+scale-x-max: 400;
 
 scale-y-min: 0;
-scale-y-max: 210;
+scale-y-max: 200;
+
+background-color: #eee;
+
+gridlines {
+  color: #fff;
+  stroke: 2pt;
+  layout-x: linear(40);
+  layout-y: linear(40);
+}
+
+gridlines {
+  color: #fff;
+  stroke: 1pt;
+  layout-x: linear(20);
+  layout-y: linear(20);
+}
 
 points {
-  xs: 10, 60, 160, 130;
-  ys: 60, 150, 180, 30;
-  sizes: 4pt, 20pt, 8pt, 6pt;
+  xs: csv(tests/testdata/gauss2d.csv, x);
+  ys: csv(tests/testdata/gauss2d.csv, y);
+  size: 2pt;
 }
 
 axis {
   position: bottom;
-  layout: subdivide(5);
+  layout: linear(40);
 }
 
 axis {
-  position: top;
-  layout: subdivide(5);
+  position: left;
+  layout: linear(100);
+}
+
+legend {
+  position: top right inside;
+  items: "Random Data";
 }
