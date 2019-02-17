@@ -4,11 +4,6 @@ height: 980px;
 margin: 2pt;
 margin-top: 1em;
 
-border-top-width: 4px;
-border-right-width: 4px;
-border-bottom-width: 4px;
-border-left-width: 4px;
-
 box {
   height: 260px;
 
@@ -16,7 +11,7 @@ box {
   margin-top: 1em;
   margin-bottom: 1em;
 
-  box {
+  plot {
     width: 490px;
     position: left;
 
@@ -65,7 +60,7 @@ box {
     }
   }
 
-  box {
+  plot {
     width: 430px;
     position: left;
 
@@ -109,7 +104,7 @@ box {
     }
   }
 
-  box {
+  plot {
     width: 490px;
     position: left;
 
@@ -157,7 +152,7 @@ box {
   margin-top: 2em;
   height: 420px;
 
-  box {
+  plot {
     width: 490px;
     position: right;
     margin-right: .5em;
@@ -207,7 +202,7 @@ box {
 
   }
 
-  box {
+  plot {
     position: top;
     width: 900px;
     height: 130px;
@@ -243,7 +238,7 @@ box {
 
   }
 
-  box {
+  plot {
     position: top;
     width: 900px;
     height: 100px;
@@ -271,7 +266,8 @@ box {
       colors: #aa4643;
     }
   }
-  box {
+
+  plot{
     position: top;
     width: 900px;
     height: 130px;
@@ -316,7 +312,7 @@ box {
   margin-top: 1em;
   margin-bottom: 1em;
 
-  box {
+  plot {
     width: 490px;
     position: left;
 
@@ -365,7 +361,7 @@ box {
     }
   }
 
-  box {
+  plot {
     width: 430px;
     position: left;
 
@@ -419,7 +415,7 @@ box {
     }
   }
 
-  box {
+  plot {
     width: 490px;
     position: left;
 
