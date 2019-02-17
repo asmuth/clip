@@ -14,9 +14,11 @@ C API.
   <a href="https://plotfx.org">Documentation</a>
 </h4>
 
+---
+
 <p align="center">
   <br>
-  <img src="/examples/other/demo.svg" width="90%">
+  <img src="/examples/other/demo2.svg">
 </p>
 
 <p align="center">

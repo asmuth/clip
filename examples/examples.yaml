@@ -1,3 +1,8 @@
+- section: Basic Charts
+  files:
+    - file: pointcharts/simple_scatter
+      desc: A minimal scatter plot.
+
 - section: Line Charts
   files:
     - file: linecharts/simple_timeseries
@@ -32,8 +37,6 @@
 
 - section: Scatter Plots
   files:
-    - file: pointcharts/simple_scatter
-      desc: A minimal scatter plot.
 
     - file: pointcharts/pointchart_with_labels
       desc: A scatter plot with labelled data points.
