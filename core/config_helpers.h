@@ -49,11 +49,6 @@ using ParserDefinitions = std::unordered_map<std::string, ParserFn>;
 ReturnCode parseAll(
     const Expr* expr,
     const ParserDefinitions& pdefs);
-
-ReturnCode configure_string(
-    const Expr* prop,
-    std::string* value);
-
 /*
 template <typename T>
 using EnumDefinitions = std::unordered_map<std::string, T>;

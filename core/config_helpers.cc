@@ -37,49 +37,6 @@ using namespace std::placeholders;
 
 namespace plotfx {
 
-ReturnCode parseAll(
-    const Expr* expr,
-    const ParserDefinitions& pdefs) {
-  for (; expr; expr = expr_next(expr)) {
-    if (!expr_is_value_literal(expr)) {
-      return ReturnCode::error("EARG", "expected a literal");
-    }
-
-    auto param = expr_get_value(expr);
-    const auto& pdef = pdefs.find(param);
-    if (pdef == pdefs.end()) {
-      return ReturnCode::errorf("EARG", "invalid paramter: '$0'", param);
-    }
-
-    if (expr = expr_next(expr); !expr) {
-      return ReturnCode::errorf("EARG", "expected an argument for '$0'", param);
-    }
-
-    if (auto rc = pdef->second(expr); !rc.isSuccess()) {
-      return ReturnCode::errorf(
-          "EPARSE",
-          "error while parsing property '$0': $1",
-          param,
-          rc.getMessage());
-
-      return rc;
-    }
-  }
-
-  return OK;
-}
-
-ReturnCode configure_string(
-    const Expr* expr,
-    std::string* value) {
-  if (!expr_is_value(expr)) {
-    return ReturnCode::error("EARG", "expected value");
-  }
-
-  *value = expr_get_value(expr);
-  return OK;
-}
-
 /*
 ReturnCode configure_measure(
     const Expr* prop,
