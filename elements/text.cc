@@ -4,18 +4,18 @@
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * * Redistributions of source code must retain the above copyright notice, this
  *   list of conditions and the following disclaimer.
- * 
+ *
  * * Redistributions in binary form must reproduce the above copyright notice,
  *   this list of conditions and the following disclaimer in the documentation
  *   and/or other materials provided with the distribution.
- * 
+ *
  * * Neither the name of the copyright holder nor the names of its
  *   contributors may be used to endorse or promote products derived from
  *   this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -27,34 +27,42 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-#include "element_factory.h"
+#include "text.h"
 
-#include <unordered_map>
+using namespace std::placeholders;
 
-namespace plotfx {
+namespace plotfx::elements::text {
 
-ReturnCode element_build(
-    const ElementMap& factory,
-    const Expr* expr,
-    ElementRef* elem) {
-  if (!expr || !expr_is_value(expr)) {
-    return ReturnCode::error("EARG", "expected an element name");
+struct TextElement {
+  std::string text;
+};
+
+ReturnCode draw(
+    std::shared_ptr<TextElement> config,
+    const Environment& env,
+    Layer* layer) {
+  TextStyle style;
+  style.font = env.font;
+  style.font_size = env.font_size;
+
+  Point p(50, 50);
+  auto ax = HAlign::CENTER;
+  auto ay = VAlign::BOTTOM;
+  if (auto rc = drawTextLabel(config->text, p, ax, ay, style, layer); rc != OK) {
+    return rc;
   }
 
-  auto elem_name = expr_get_value(expr);
-  auto elem_iter = factory.elements.find(elem_name);
-  if (elem_iter == factory.elements.end()) {
-    return ReturnCode::errorf("EARG", "no such element: $0", elem_name);
-  }
-
-  return elem_iter->second(expr_next(expr), elem);
+  return OK;
 }
 
-void element_bind(
-    ElementMap* factory,
-    const std::string& name,
-    ElementConfigureFn configure_fn) {
-  factory->elements[name] = configure_fn;
+ReturnCode configure(const Expr* expr, ElementRef* elem) {
+  auto config = std::make_shared<TextElement>();
+  config->text = "fnord";
+
+  *elem = std::make_shared<Element>();
+  (*elem)->draw = bind(&draw, config, _1, _2);
+  return OK;
 }
 
-} // namespace plotfx
+} // namespace plotfx::elements::text
+

@@ -28,35 +28,25 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 #pragma once
+#include <unordered_map>
+
 #include "utils/return_code.h"
 #include "element.h"
 
 namespace plotfx {
-struct Document;
-struct Environment;
 
-using ElementBuilder = std::function<ReturnCode (
-    const plist::PropertyList&,
-    const Environment&,
-    ElementRef* elem)>;
+struct ElementMap {
+  std::unordered_map<std::string, ElementConfigureFn> elements;
+};
 
-template <typename T>
-ElementBuilder elem_builder(
-    ElementConfigureAsFn<T> config_fn,
-    ElementDrawAsFn<T> draw_fn);
-
-template <typename T>
-ElementBuilder elem_builder(
-    ElementConfigureAsFn<T> config_fn,
-    ElementReflowAsFn<T> layout_fn,
-    ElementDrawAsFn<T> draw_fn);
-
-ReturnCode buildElement(
-    const std::string& name,
-    const plist::PropertyList& plist,
-    const Environment& env,
+ReturnCode element_build(
+    const ElementMap& factory,
+    const Expr* expr,
     ElementRef* elem);
 
-} // namespace plotfx
+void element_bind(
+    ElementMap* factory,
+    const std::string& name,
+    ElementConfigureFn configure_fn);
 
-#include "element_factory_impl.h"
+} // namespace plotfx

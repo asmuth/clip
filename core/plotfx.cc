@@ -28,29 +28,31 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 #include "plotfx.h"
-//#include "config_helpers.h"
-//#include "element_factory.h"
+#include "element_factory.h"
 #include "sexpr_parser.h"
 #include "graphics/layer.h"
 #include "graphics/layer_svg.h"
 #include "graphics/layer_pixmap.h"
 #include "utils/fileutil.h"
 #include "core/environment.h"
-//#include "elements/plot.h"
+#include "elements/text.h"
 
 #include <iostream>
 #include <string.h>
 
+using namespace std::placeholders;
 using namespace plotfx;
 
 struct plotfx_s {
   Environment env;
+  ElementMap elements;
   ExprStorage expr;
   std::string error;
 };
 
 plotfx_t* plotfx_init() {
   auto ctx = std::make_unique<plotfx_t>();
+  element_bind(&ctx->elements, "text", bind(elements::text::configure, _1, _2));
   return ctx.release();
 }
 
@@ -83,6 +85,10 @@ int plotfx_configure(
     return ERROR;
   }
 
+  if (auto rc = environment_setup_defaults(&ctx->env); !rc.isSuccess()) {
+    return rc;
+  }
+
   return OK;
 }
 
@@ -111,14 +117,15 @@ int plotfx_render_to(plotfx_t* ctx, void* backend) {
   //plot::PlotConfig root;
   //root.margins = {from_px(20), from_px(20), from_px(20), from_px(20)};
 
+  ElementRef root;
   auto rc = try_chain({
-  //  [&] { return plot::configure(ctx->plist, ctx->env, &root); },
-  //  [&] { return plot::draw(root, layout, layer); },
+    [&] { return element_build(ctx->elements, ctx->expr.get(), &root); },
+    [&] { return root->draw(ctx->env, layer); },
     [&] { return layer_submit(layer); },
   });
 
   plotfx_seterr(ctx, rc);
-  return OK;
+  return rc;
 }
 
 int plotfx_render_file(plotfx_t* ctx, const char* path, const char* fmt) {

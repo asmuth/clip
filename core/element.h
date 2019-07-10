@@ -32,70 +32,30 @@
 #include <memory>
 #include <string>
 #include <functional>
+#include "environment.h"
 #include "sexpr.h"
 #include "utils/return_code.h"
-#include "core/format.h"
-#include "graphics/geometry.h"
+#include "graphics/layer.h"
 
 namespace plotfx {
-struct Layer;
-struct LayoutInfo;
-struct LayoutSettings;
-struct Document;
-struct DataContext;
-struct Environment;
 
-using plist::PropertyList;
+struct Element;
+using ElementRef = std::shared_ptr<Element>;
 
-template <typename T>
-using ElementConfigureAsFn = std::function<ReturnCode (
-    const plist::PropertyList&,
-    const Environment&,
-    T*)>;
+using ElementConfigureFn = std::function<
+    ReturnCode (
+        const Expr* expr,
+        ElementRef* elem)>;
 
-using ElementDrawFn = std::function<ReturnCode (const LayoutInfo&, Layer*)>;
-
-template <typename T>
-using ElementDrawAsFn = std::function<ReturnCode (
-    const T&,
-    const LayoutInfo&,
-    Layer*)>;
-
-using ElementReflowFn = std::function<ReturnCode (
-    const Layer&,
-    const std::optional<double> max_width,
-    const std::optional<double> max_height,
-    double* min_width,
-    double* min_height)>;
-
-template <typename T>
-using ElementReflowAsFn = std::function<ReturnCode (
-    const T&,
-    const Layer&,
-    const std::optional<double> max_width,
-    const std::optional<double> max_height,
-    double* min_width,
-    double* min_height)>;
+using ElementDrawFn = std::function<
+    ReturnCode (
+        const Environment& env,
+        Layer* layer)>;
 
 struct Element {
-  virtual ~Element() = default;
-  virtual const LayoutSettings& layout_settings() const = 0;
-  int32_t z_index() const;
-  ElementReflowFn reflow;
   ElementDrawFn draw;
 };
 
-template <typename T>
-struct ElementInstance : public Element {
-  T config;
-
-  const LayoutSettings& layout_settings() const override {
-    return config.layout;
-  }
-
-};
-
-using ElementRef = std::shared_ptr<Element>;
 
 } // namespace plotfx
 

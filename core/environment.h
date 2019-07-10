@@ -52,6 +52,8 @@ struct Environment {
   Color border_color;
 };
 
+ReturnCode environment_setup_defaults(Environment* env);
+
 } // namespace plotfx
 
 
