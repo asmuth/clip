@@ -28,7 +28,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 #pragma once
-#include "plist/plist.h"
+#include "sexpr.h"
 #include "core/environment.h"
 #include "element.h"
 #include "core/layout.h"

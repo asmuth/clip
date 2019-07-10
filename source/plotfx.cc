@@ -28,15 +28,15 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 #include "plotfx.h"
-#include "config_helpers.h"
-#include "element_factory.h"
-#include "plist/plist_parser.h"
+//#include "config_helpers.h"
+//#include "element_factory.h"
+#include "sexpr_parser.h"
 #include "graphics/layer.h"
 #include "graphics/layer_svg.h"
 #include "graphics/layer_pixmap.h"
 #include "utils/fileutil.h"
-#include "core/environment.h"
-#include "elements/plot.h"
+//#include "core/environment.h"
+//#include "elements/plot.h"
 
 #include <iostream>
 #include <string.h>

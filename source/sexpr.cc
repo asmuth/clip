@@ -28,17 +28,17 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 #include <assert.h>
-#include "plist.h"
+#include "sexpr.h"
 
-namespace plist {
+namespace plotfx {
 
-const Property& Property::operator[](size_t i) const {
+const Expr& Expr::operator[](size_t i) const {
   assert(next);
   assert(i < next->size());
   return (*next)[i];
 }
 
-size_t Property::size() const {
+size_t Expr::size() const {
   if (next) {
     return next->size();
   } else {
@@ -46,88 +46,52 @@ size_t Property::size() const {
   }
 }
 
-Property::operator const std::string&() const {
+Expr::operator const std::string&() const {
   return value;
 }
 
-bool is_map(const Property& prop) {
-  return prop.kind == PropertyKind::MAP;
+
+bool is_list(const Expr& e) {
+  return e.kind == ExprKind::LIST;
 }
 
-bool is_list(const Property& prop) {
-  return prop.kind == PropertyKind::LIST;
-}
-
-bool is_tuple(const Property& prop) {
-  return prop.kind == PropertyKind::TUPLE;
-}
-
-bool is_enum(const Property& prop) {
-  return prop.kind == PropertyKind::ENUM;
-}
-
-bool is_enum(const Property& prop, const std::string& cmp) {
-  return prop.kind == PropertyKind::ENUM && prop.value == cmp;
-}
-
-bool is_value(const Property& prop) {
-  switch (prop.kind) {
-    case PropertyKind::VALUE_LITERAL:
-    case PropertyKind::VALUE:
+bool is_value(const Expr& e) {
+  switch (e.kind) {
+    case ExprKind::VALUE_LITERAL:
+    case ExprKind::VALUE:
       return true;
     default:
       return false;
   }
 }
 
-bool is_value(const Property& prop, const std::string& cmp) {
-  switch (prop.kind) {
-    case PropertyKind::VALUE_LITERAL:
-    case PropertyKind::VALUE:
+bool is_value(const Expr& e, const std::string& cmp) {
+  switch (e.kind) {
+    case ExprKind::VALUE_LITERAL:
+    case ExprKind::VALUE:
       break;
     default:
       return false;
   }
 
-  return prop.value == cmp;
+  return e.value == cmp;
 }
 
-bool is_value_literal(const Property& prop) {
-  return prop.kind == PropertyKind::VALUE_LITERAL;
+bool is_value_literal(const Expr& e) {
+  return e.kind == ExprKind::VALUE_LITERAL;
 }
 
-bool is_value_literal(const Property& prop, const std::string& cmp) {
-  return prop.kind == PropertyKind::VALUE_LITERAL && prop.value == cmp;
+bool is_value_literal(const Expr& e, const std::string& cmp) {
+  return e.kind == ExprKind::VALUE_LITERAL && e.value == cmp;
 }
 
-bool is_value_quoted(const Property& prop) {
-  return prop.kind == PropertyKind::VALUE;
+bool is_value_quoted(const Expr& e) {
+  return e.kind == ExprKind::VALUE;
 }
 
-bool is_value_quoted(const Property& prop, const std::string& cmp) {
-  return prop.kind == PropertyKind::VALUE && prop.value == cmp;
+bool is_value_quoted(const Expr& e, const std::string& cmp) {
+  return e.kind == ExprKind::VALUE && e.value == cmp;
 }
 
-std::vector<std::string> flatten(const Property& prop) {
-  switch (prop.kind) {
-    case PropertyKind::VALUE_LITERAL:
-    case PropertyKind::VALUE:
-      return {prop.value};
-    case PropertyKind::TUPLE:
-    case PropertyKind::LIST:
-      break;
-    default:
-      return {};
-  }
-
-  std::vector<std::string> flat;
-  for (const auto& n : *prop.next) {
-    auto next = flatten(n);
-    flat.insert(flat.end(), next.begin(), next.end());
-  }
-
-  return flat;
-}
-
-} // namespace plist
+} // namespace plotfx
 

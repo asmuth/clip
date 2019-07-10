@@ -36,7 +36,7 @@
 #include "graphics/color.h"
 #include "graphics/text.h"
 #include "core/scale.h"
-#include "plist/plist.h"
+#include "sexpr.h"
 
 namespace plotfx {
 class Layer;

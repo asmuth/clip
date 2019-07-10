@@ -30,7 +30,7 @@
  */
 #pragma once
 #include <stdlib.h>
-#include <plist/plist.h>
+#include <sexpr.h>
 #include <graphics/layer.h>
 #include <core/scale.h>
 #include <element.h>

@@ -28,24 +28,36 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 #pragma once
-#include <unordered_map>
-#include <optional>
-#include <sexpr.h>
-#include "utils/return_code.h"
-#include "source/data_model.h"
+#include <memory>
+#include <string>
+#include <vector>
 
 namespace plotfx {
+struct Property;
 
-using Formatter = std::function<std::string (const Value&)>;
+enum class ExprKind {
+  LIST, VALUE, VALUE_LITERAL
+};
 
-Formatter format_decimal_fixed(size_t precision);
-Formatter format_decimal_scientific(size_t precision);
-Formatter format_datetime(const std::string& fmt);
-Formatter format_string();
+struct Expr {
+  ExprKind kind;
+  std::unique_ptr<std::vector<Expr>> next;
+  std::string value;
 
-ReturnCode confgure_format(
-    const plist::Property& prop,
-    Formatter* formatter);
+  const Expr& operator[](size_t i) const;
+  size_t size() const;
+
+  operator const std::string&() const;
+
+};
+
+bool is_list(const Property& prop);
+bool is_value(const Property& prop);
+bool is_value(const Property& prop, const std::string& cmp);
+bool is_value_literal(const Property& prop);
+bool is_value_literal(const Property& prop, const std::string& cmp);
+bool is_value_quoted(const Property& prop);
+bool is_value_quoted(const Property& prop, const std::string& cmp);
 
 } // namespace plotfx
 

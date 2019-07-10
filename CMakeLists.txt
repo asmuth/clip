@@ -29,7 +29,7 @@ include_directories(${CAIRO_INCLUDE_DIRS} ${FREETYPE_INCLUDE_DIRS} ${HARFBUZZ_IN
 
 # Build: PlotFX Library
 # -----------------------------------------------------------------------------
-file(GLOB source_files "source/**/*.cc" "source/*.cc")
+file(GLOB source_files "source/graphics/*.cc" "source/utils/**.cc" "source/sexpr*.cc")
 list(REMOVE_ITEM source_files "source/plotfx_cli.cc")
 add_library(plotfx STATIC ${source_files})
 set_target_properties(plotfx PROPERTIES PUBLIC_HEADER "source/plotfx.h;source/plotfx_sdl.h")
@@ -38,20 +38,20 @@ set(PLOTFX_LDFLAGS plotfx ${CAIRO_LIBRARIES} ${FREETYPE_LIBRARIES} ${HARFBUZZ_LI
 
 # Build: CLI
 # -----------------------------------------------------------------------------
-add_executable(plotfx-cli source/plotfx_cli.cc)
-target_link_libraries(plotfx-cli ${PLOTFX_LDFLAGS})
-set_target_properties(plotfx-cli PROPERTIES OUTPUT_NAME plotfx)
+#add_executable(plotfx-cli source/plotfx_cli.cc)
+#target_link_libraries(plotfx-cli ${PLOTFX_LDFLAGS})
+#set_target_properties(plotfx-cli PROPERTIES OUTPUT_NAME plotfx)
 
 
 # Installation
 # -----------------------------------------------------------------------------
-install(TARGETS plotfx ARCHIVE DESTINATION lib PUBLIC_HEADER DESTINATION include/plotfx)
-install(TARGETS plotfx-cli DESTINATION bin)
+#install(TARGETS plotfx ARCHIVE DESTINATION lib PUBLIC_HEADER DESTINATION include/plotfx)
+#install(TARGETS plotfx-cli DESTINATION bin)
 
 
 # Testing
 # -----------------------------------------------------------------------------
-file(GLOB unit_test_files "tests/unit/**/test_*.cc")
+file(GLOB unit_test_files "tests/unit/test_*.cc")
 foreach(unit_test_path ${unit_test_files})
   get_filename_component(unit_test_name ${unit_test_path} NAME_WE)
   get_filename_component(unit_test_srcdir ${unit_test_path} DIRECTORY)

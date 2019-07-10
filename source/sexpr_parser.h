@@ -1,6 +1,6 @@
 /**
  * This file is part of the "plotfx" project
- *   Copyright (c) 2018 Paul Asmuth
+ *   Copyright (c) 2016 Paul Asmuth, FnordCorp B.V. <paul@asmuth.com>
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -28,45 +28,18 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 #pragma once
+#include <atomic>
 #include <memory>
 #include <string>
-#include <vector>
+#include "sexpr.h"
+#include "utils/return_code.h"
 
-namespace plist {
-struct Property;
+namespace plotfx {
 
-using PropertyList = std::vector<Property>;
+ReturnCode expr_parse(
+    const char* input,
+    size_t input_len,
+    Expr* expr);
 
-enum class PropertyKind {
-  MAP, TUPLE, LIST, ENUM, VALUE, VALUE_LITERAL
-};
-
-struct Property {
-  std::string name;
-  PropertyKind kind;
-  std::unique_ptr<std::vector<Property>> next;
-  std::string value;
-
-  const Property& operator[](size_t i) const;
-  size_t size() const;
-
-  operator const std::string&() const;
-
-};
-
-bool is_map(const Property& prop);
-bool is_list(const Property& prop);
-bool is_tuple(const Property& prop);
-bool is_enum(const Property& prop);
-bool is_enum(const Property& prop, const std::string& cmp);
-bool is_value(const Property& prop);
-bool is_value(const Property& prop, const std::string& cmp);
-bool is_value_literal(const Property& prop);
-bool is_value_literal(const Property& prop, const std::string& cmp);
-bool is_value_quoted(const Property& prop);
-bool is_value_quoted(const Property& prop, const std::string& cmp);
-
-std::vector<std::string> flatten(const Property& prop);
-
-} // namespace plist
+} // namespace plotfx
 

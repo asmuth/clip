@@ -31,7 +31,7 @@
 #include <utility>
 #include <string>
 #include <vector>
-#include <plist/plist.h>
+#include <sexpr.h>
 #include <graphics/layer.h>
 #include <utils/return_code.h>
 #include <source/core/format.h>

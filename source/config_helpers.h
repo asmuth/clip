@@ -30,7 +30,7 @@
 #pragma once
 #include <unordered_map>
 #include <optional>
-#include <plist/plist.h>
+#include <sexpr.h>
 #include <graphics/measure.h>
 #include <graphics/color.h>
 #include "graphics/layout.h"
