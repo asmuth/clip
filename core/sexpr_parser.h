@@ -39,7 +39,7 @@ namespace plotfx {
 ReturnCode expr_parse(
     const char* input,
     size_t input_len,
-    Expr* expr);
+    ExprStorage* expr);
 
 } // namespace plotfx
 

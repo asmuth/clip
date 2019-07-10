@@ -28,36 +28,33 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 #pragma once
+#include <functional>
 #include <memory>
 #include <string>
-#include <vector>
 
 namespace plotfx {
-struct Property;
 
-enum class ExprKind {
-  LIST, VALUE, VALUE_LITERAL
-};
+struct Expr;
+using ExprStorage = std::unique_ptr<Expr, std::function<void (Expr*)>>;
 
-struct Expr {
-  ExprKind kind;
-  std::unique_ptr<std::vector<Expr>> next;
-  std::string value;
+ExprStorage expr_create_list();
+ExprStorage expr_create_value(const std::string& str);
+ExprStorage expr_create_value_literal(const std::string& str);
 
-  const Expr& operator[](size_t i) const;
-  size_t size() const;
+const Expr* expr_next(const Expr* expr);
+ExprStorage* expr_get_next_storage(Expr* expr);
 
-  operator const std::string&() const;
+bool expr_is_list(const Expr* expr);
+const Expr* expr_get_list(const Expr* expr);
+ExprStorage* expr_get_list_storage(Expr* expr);
 
-};
-
-bool is_list(const Property& prop);
-bool is_value(const Property& prop);
-bool is_value(const Property& prop, const std::string& cmp);
-bool is_value_literal(const Property& prop);
-bool is_value_literal(const Property& prop, const std::string& cmp);
-bool is_value_quoted(const Property& prop);
-bool is_value_quoted(const Property& prop, const std::string& cmp);
+bool expr_is_value(const Expr* expr);
+bool expr_is_value(const Expr* expr, const std::string& cmp);
+bool expr_is_value_literal(const Expr* expr);
+bool expr_is_value_literal(const Expr* expr, const std::string& cmp);
+bool expr_is_value_quoted(const Expr* expr);
+bool expr_is_value_quoted(const Expr* expr, const std::string& cmp);
+const std::string& expr_get_value(const Expr* expr);
 
 } // namespace plotfx
 

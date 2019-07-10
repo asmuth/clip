@@ -30,67 +30,91 @@
 #include <assert.h>
 #include "sexpr.h"
 
+using namespace std::placeholders;
+
 namespace plotfx {
 
-const Expr& Expr::operator[](size_t i) const {
-  assert(next);
-  assert(i < next->size());
-  return (*next)[i];
+enum class ExprType {
+  LIST, VALUE_LITERAL, VALUE
+};
+
+struct Expr {
+  ExprType type;
+  std::string value;
+  ExprStorage list;
+  ExprStorage next;
+};
+
+void expr_destroy(Expr* expr) {
+  delete expr;
 }
 
-size_t Expr::size() const {
-  if (next) {
-    return next->size();
-  } else {
-    return 0;
-  }
+ExprStorage expr_create_list() {
+  auto e = ExprStorage(new Expr, bind(&expr_destroy, _1));
+  e->type = ExprType::LIST;
+  return e;
 }
 
-Expr::operator const std::string&() const {
-  return value;
+ExprStorage expr_create_value(const std::string& str) {
+  auto e = ExprStorage(new Expr, bind(&expr_destroy, _1));
+  e->type = ExprType::VALUE;
+  e->value = str;
+  return e;
 }
 
-
-bool is_list(const Expr& e) {
-  return e.kind == ExprKind::LIST;
+ExprStorage expr_create_value_literal(const std::string& str) {
+  auto e = ExprStorage(new Expr, bind(&expr_destroy, _1));
+  e->type = ExprType::VALUE_LITERAL;
+  e->value = str;
+  return e;
 }
 
-bool is_value(const Expr& e) {
-  switch (e.kind) {
-    case ExprKind::VALUE_LITERAL:
-    case ExprKind::VALUE:
-      return true;
-    default:
-      return false;
-  }
+const Expr* expr_next(const Expr* expr) {
+  return expr->next.get();
 }
 
-bool is_value(const Expr& e, const std::string& cmp) {
-  switch (e.kind) {
-    case ExprKind::VALUE_LITERAL:
-    case ExprKind::VALUE:
-      break;
-    default:
-      return false;
-  }
-
-  return e.value == cmp;
+ExprStorage* expr_get_next_storage(Expr* expr) {
+  return &expr->next;
 }
 
-bool is_value_literal(const Expr& e) {
-  return e.kind == ExprKind::VALUE_LITERAL;
+bool expr_is_list(const Expr* expr) {
+  return expr->type == ExprType::LIST;
 }
 
-bool is_value_literal(const Expr& e, const std::string& cmp) {
-  return e.kind == ExprKind::VALUE_LITERAL && e.value == cmp;
+const Expr* expr_get_list(const Expr* expr) {
+  return expr->list.get();
 }
 
-bool is_value_quoted(const Expr& e) {
-  return e.kind == ExprKind::VALUE;
+ExprStorage* expr_get_list_storage(Expr* expr) {
+  return &expr->list;
 }
 
-bool is_value_quoted(const Expr& e, const std::string& cmp) {
-  return e.kind == ExprKind::VALUE && e.value == cmp;
+bool expr_is_value(const Expr* expr) {
+  return expr->type == ExprType::VALUE || expr->type == ExprType::VALUE_LITERAL;
+}
+
+bool expr_is_value(const Expr* expr, const std::string& cmp) {
+  return expr_is_value(expr) && expr->value == cmp;
+}
+
+bool expr_is_value_literal(const Expr* expr) {
+  return expr->type == ExprType::VALUE_LITERAL;
+}
+
+bool expr_is_value_literal(const Expr* expr, const std::string& cmp) {
+  return expr->type == ExprType::VALUE_LITERAL && expr->value == cmp;
+}
+
+bool expr_is_value_quoted(const Expr* expr) {
+  return expr->type == ExprType::VALUE;
+}
+
+bool expr_is_value_quoted(const Expr* expr, const std::string& cmp) {
+  return expr->type == ExprType::VALUE && expr->value == cmp;
+}
+
+const std::string& expr_get_value(const Expr* expr) {
+  return expr->value;
 }
 
 } // namespace plotfx

@@ -37,7 +37,7 @@ namespace plotfx {
 ReturnCode expr_parse_literal(
     const char** cur,
     const char* end,
-    Expr* parent) {
+    ExprStorage* expr) {
   std::string literal;
 
   for (bool match = true; *cur != end && match;) {
@@ -46,6 +46,9 @@ ReturnCode expr_parse_literal(
       case '\n':
       case '\t':
       case '\r':
+      case '\\':
+      case '\'':
+      case '\"':
       case '(':
       case ')':
         match = false;
@@ -57,11 +60,7 @@ ReturnCode expr_parse_literal(
     }
   }
 
-  Expr e;
-  e.kind = ExprKind::VALUE_LITERAL;
-  e.value = std::move(literal);
-  parent->next->emplace_back(std::move(e));
-
+  *expr = expr_create_value_literal(std::move(literal));
   return OK;
 }
 
@@ -89,7 +88,7 @@ ReturnCode expr_parse_string_escape(
 ReturnCode expr_parse_string(
     const char** cur,
     const char* end,
-    Expr* parent) {
+    ExprStorage* expr) {
   auto quote_char = *(*cur)++;
 
   std::string string;
@@ -113,27 +112,21 @@ ReturnCode expr_parse_string(
     ++(*cur);
   }
 
-  Expr e;
-  e.kind = ExprKind::VALUE;
-  e.value = std::move(string);
-  parent->next->emplace_back(std::move(e));
+  *expr = expr_create_value(std::move(string));
   return OK;
 }
 
 ReturnCode expr_parse(
     const char* input,
     size_t input_len,
-    Expr* expr) {
+    ExprStorage* expr) {
   auto cur = input;
   auto end = input + input_len;
 
-  expr->kind = ExprKind::LIST;
-  expr->next.reset(new std::vector<Expr>());
-
-  std::stack<Expr*> stack;
+  std::stack<ExprStorage*> stack;
   stack.push(expr);
 
-  while(cur != end) {
+  while (cur != end) {
     switch (*cur) {
       case ' ':
       case '\n':
@@ -143,12 +136,14 @@ ReturnCode expr_parse(
         continue;
 
       case '(': {
-        Expr e;
-        e.kind = ExprKind::LIST;
-        e.next.reset(new std::vector<Expr>());
+        *stack.top() = expr_create_list();
 
-        stack.top()->next->emplace_back(std::move(e));
-        stack.push(&stack.top()->next->back());
+        auto next = expr_get_next_storage(stack.top()->get());
+        auto list = expr_get_list_storage(stack.top()->get());
+
+        stack.pop();
+        stack.push(next);
+        stack.push(list);
 
         ++cur;
         continue;
@@ -167,6 +162,9 @@ ReturnCode expr_parse(
       case '\'':
       case '"': {
         if (auto rc = expr_parse_string(&cur, end, stack.top()); rc) {
+          auto next = expr_get_next_storage(stack.top()->get());
+          stack.pop();
+          stack.push(next);
           continue;
         } else {
           return rc;
@@ -175,11 +173,19 @@ ReturnCode expr_parse(
 
       default:
         if (auto rc = expr_parse_literal(&cur, end, stack.top()); rc) {
-          continue;
+          auto next = expr_get_next_storage(stack.top()->get());
+          stack.pop();
+          stack.push(next);
         } else {
           return rc;
         }
     }
+  }
+
+  stack.pop();
+
+  if (!stack.empty()) {
+    return ReturnCode::error("EARG", "unbalanced parens");
   }
 
   return OK;

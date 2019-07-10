@@ -58,76 +58,76 @@ void test_parse_literals() {
   std::string confstr =
       R"(1337 hello world)";
 
-  Expr e;
-  EXPECT_OK(expr_parse(confstr.data(), confstr.size(), &e));
+  ExprStorage es;
+  EXPECT_OK(expr_parse(confstr.data(), confstr.size(), &es));
 
-  EXPECT_EQ(e.kind, ExprKind::LIST);
-  EXPECT_EQ(e.size(), 3);
-  EXPECT_EQ(e[0].kind, ExprKind::VALUE_LITERAL);
-  EXPECT_STREQ(e[0], "1337");
-  EXPECT_EQ(e[1].kind, ExprKind::VALUE_LITERAL);
-  EXPECT_STREQ(e[1], "hello");
-  EXPECT_EQ(e[2].kind, ExprKind::VALUE_LITERAL);
-  EXPECT_STREQ(e[2], "world");
+  const Expr* e = es.get();
+  EXPECT(expr_is_value_literal(e, "1337"));
+  EXPECT((e = expr_next(e)) != nullptr);
+  EXPECT(expr_is_value_literal(e, "hello"));
+  EXPECT((e = expr_next(e)) != nullptr);
+  EXPECT(expr_is_value_literal(e, "world"));
+  EXPECT((e = expr_next(e)) == nullptr);
 }
 
 void test_parse_lists() {
   std::string confstr =
-      R"((1337 hello (world galaxy) xxx) yyy)";
+      R"(aaa (1337 hello (world galaxy) xxx) yyy)";
 
-  Expr e;
-  EXPECT_OK(expr_parse(confstr.data(), confstr.size(), &e));
+  ExprStorage es;
+  EXPECT_OK(expr_parse(confstr.data(), confstr.size(), &es));
 
-  EXPECT_EQ(e.kind, ExprKind::LIST);
-  EXPECT_EQ(e.size(), 2);
-  EXPECT_EQ(e[0].kind, ExprKind::LIST);
-  EXPECT_EQ(e[0].size(), 4);
-  EXPECT_EQ(e[0][0].kind, ExprKind::VALUE_LITERAL);
-  EXPECT_STREQ(e[0][0], "1337");
-  EXPECT_EQ(e[0][1].kind, ExprKind::VALUE_LITERAL);
-  EXPECT_STREQ(e[0][1], "hello");
-  EXPECT_EQ(e[0][2].kind, ExprKind::LIST);
-  EXPECT_EQ(e[0][2].size(), 2);
-  EXPECT_EQ(e[0][2][0].kind, ExprKind::VALUE_LITERAL);
-  EXPECT_STREQ(e[0][2][0], "world");
-  EXPECT_EQ(e[0][2][1].kind, ExprKind::VALUE_LITERAL);
-  EXPECT_STREQ(e[0][2][1], "galaxy");
-  EXPECT_EQ(e[0][3].kind, ExprKind::VALUE_LITERAL);
-  EXPECT_STREQ(e[0][3], "xxx");
-  EXPECT_EQ(e[1].kind, ExprKind::VALUE_LITERAL);
-  EXPECT_STREQ(e[1], "yyy");
+  const Expr* e = es.get();
+  EXPECT(expr_is_value_literal(e, "aaa"));
+  EXPECT((e = expr_next(e)) != nullptr);
+  EXPECT(expr_is_list(e));
+  auto l1 = expr_get_list(e);
+  EXPECT(expr_is_value_literal(l1, "1337"));
+  EXPECT((l1 = expr_next(l1)) != nullptr);
+  EXPECT(expr_is_value_literal(l1, "hello"));
+  EXPECT((l1 = expr_next(l1)) != nullptr);
+  EXPECT(expr_is_list(l1));
+  auto l2 = expr_get_list(l1);
+  EXPECT(expr_is_value_literal(l2, "world"));
+  EXPECT((l2 = expr_next(l2)) != nullptr);
+  EXPECT(expr_is_value_literal(l2, "galaxy"));
+  EXPECT((l2 = expr_next(l2)) == nullptr);
+  EXPECT((l1 = expr_next(l1)) != nullptr);
+  EXPECT(expr_is_value_literal(l1, "xxx"));
+  EXPECT((l1 = expr_next(l1)) == nullptr);
+  EXPECT((e = expr_next(e)) != nullptr);
+  EXPECT(expr_is_value_literal(e, "yyy"));
+  EXPECT((e = expr_next(e)) == nullptr);
 }
 
 void test_parse_strings() {
   std::string confstr =
       R"(1337 "hello" 'world')";
 
-  Expr e;
-  EXPECT_OK(expr_parse(confstr.data(), confstr.size(), &e));
+  ExprStorage es;
+  EXPECT_OK(expr_parse(confstr.data(), confstr.size(), &es));
 
-  EXPECT_EQ(e.kind, ExprKind::LIST);
-  EXPECT_EQ(e.size(), 3);
-  EXPECT_EQ(e[0].kind, ExprKind::VALUE_LITERAL);
-  EXPECT_STREQ(e[0], "1337");
-  EXPECT_EQ(e[1].kind, ExprKind::VALUE);
-  EXPECT_STREQ(e[1], "hello");
-  EXPECT_EQ(e[2].kind, ExprKind::VALUE);
-  EXPECT_STREQ(e[2], "world");
+  const Expr* e = es.get();
+  EXPECT(expr_is_value_literal(e, "1337"));
+  EXPECT((e = expr_next(e)) != nullptr);
+  EXPECT(expr_is_value_quoted(e, "hello"));
+  EXPECT((e = expr_next(e)) != nullptr);
+  EXPECT(expr_is_value_quoted(e, "world"));
+  EXPECT((e = expr_next(e)) == nullptr);
 }
 
 void test_parse_string_escapes() {
   std::string confstr =
       R"("escape \" me" "hello \\ world")";
 
-  Expr e;
-  EXPECT_OK(expr_parse(confstr.data(), confstr.size(), &e));
+  ExprStorage es;
+  EXPECT_OK(expr_parse(confstr.data(), confstr.size(), &es));
 
-  EXPECT_EQ(e.kind, ExprKind::LIST);
-  EXPECT_EQ(e.size(), 2);
-  EXPECT_EQ(e[0].kind, ExprKind::VALUE);
-  EXPECT_STREQ(e[0], "escape \" me");
-  EXPECT_EQ(e[1].kind, ExprKind::VALUE);
-  EXPECT_STREQ(e[1], "hello \\ world");
+  const Expr* e = es.get();
+  EXPECT(expr_is_value(e, "escape \" me"));
+  EXPECT((e = expr_next(e)) != nullptr);
+  EXPECT(expr_is_value(e, "hello \\ world"));
+  EXPECT((e = expr_next(e)) == nullptr);
 }
 
 int main() {
