@@ -117,10 +117,18 @@ int plotfx_render_to(plotfx_t* ctx, void* backend) {
   //plot::PlotConfig root;
   //root.margins = {from_px(20), from_px(20), from_px(20), from_px(20)};
 
-  ElementRef root;
+  std::vector<ElementRef> roots;
   auto rc = try_chain({
-    [&] { return element_build(ctx->elements, ctx->expr.get(), &root); },
-    [&] { return root->draw(ctx->env, layer); },
+    [&] { return element_build_all(ctx->elements, ctx->expr.get(), &roots); },
+    [&] () -> ReturnCode {
+      for (const auto& e : roots) {
+        if (auto rc = e->draw(ctx->env, layer); !rc) {
+          return rc;
+        }
+      }
+
+      return OK;
+    },
     [&] { return layer_submit(layer); },
   });
 

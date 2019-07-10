@@ -44,6 +44,11 @@ ReturnCode element_build(
     const Expr* expr,
     ElementRef* elem);
 
+ReturnCode element_build_all(
+    const ElementMap& factory,
+    const Expr* expr,
+    std::vector<ElementRef>* elems);
+
 void element_bind(
     ElementMap* factory,
     const std::string& name,

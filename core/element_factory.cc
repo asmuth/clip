@@ -50,6 +50,26 @@ ReturnCode element_build(
   return elem_iter->second(expr_next(expr), elem);
 }
 
+ReturnCode element_build_all(
+    const ElementMap& factory,
+    const Expr* expr,
+    std::vector<ElementRef>* elems) {
+  for (; expr; expr = expr_next(expr)) {
+    if (!expr_is_list(expr)) {
+      return ReturnCode::error("EARG", "expected an element list");
+    }
+
+    ElementRef elem;
+    if (auto rc = element_build(factory, expr_get_list(expr), &elem); !rc) {
+      return rc;
+    }
+
+    elems->emplace_back(std::move(elem));
+  }
+
+  return OK;
+}
+
 void element_bind(
     ElementMap* factory,
     const std::string& name,
