@@ -11,8 +11,8 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/extra/cm
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Werror")
 
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/source)
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/source/utils)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/core)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/core/utils)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
 
@@ -29,7 +29,7 @@ include_directories(${CAIRO_INCLUDE_DIRS} ${FREETYPE_INCLUDE_DIRS} ${HARFBUZZ_IN
 
 # Build: PlotFX Library
 # -----------------------------------------------------------------------------
-file(GLOB source_files "source/graphics/*.cc" "source/utils/**.cc" "source/sexpr*.cc")
+file(GLOB source_files "core/graphics/*.cc" "core/utils/**.cc" "core/sexpr*.cc")
 list(REMOVE_ITEM source_files "source/plotfx_cli.cc")
 add_library(plotfx STATIC ${source_files})
 set_target_properties(plotfx PROPERTIES PUBLIC_HEADER "source/plotfx.h;source/plotfx_sdl.h")
