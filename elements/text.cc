@@ -27,6 +27,7 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+#include "config_helpers.h"
 #include "text.h"
 
 using namespace std::placeholders;
@@ -57,7 +58,14 @@ ReturnCode draw(
 
 ReturnCode configure(const Expr* expr, ElementRef* elem) {
   auto config = std::make_shared<TextElement>();
-  config->text = "fnord";
+
+  ParserDefinitions pdefs = {
+    {"content", bind(&configure_string, _1, &config->text)},
+  };
+
+  if (auto rc = parseAll(expr, pdefs); !rc) {
+    return rc;
+  }
 
   *elem = std::make_shared<Element>();
   (*elem)->draw = bind(&draw, config, _1, _2);

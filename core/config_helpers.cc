@@ -38,28 +38,51 @@ using namespace std::placeholders;
 namespace plotfx {
 
 ReturnCode parseAll(
-    const plist::PropertyList& plist,
+    const Expr* expr,
     const ParserDefinitions& pdefs) {
-  for (const auto& prop : plist) {
-    const auto& pdef = pdefs.find(prop.name);
-    if (pdef != pdefs.end()) {
-      if (auto rc = pdef->second(prop); !rc.isSuccess()) {
-        return ReturnCode::errorf(
-            "EPARSE",
-            "error while parsing property '$0': $1",
-            prop.name,
-            rc.getMessage());
+  for (; expr; expr = expr_next(expr)) {
+    if (!expr_is_value_literal(expr)) {
+      return ReturnCode::error("EARG", "expected a literal");
+    }
 
-        return rc;
-      }
+    auto param = expr_get_value(expr);
+    const auto& pdef = pdefs.find(param);
+    if (pdef == pdefs.end()) {
+      return ReturnCode::errorf("EARG", "invalid paramter: '$0'", param);
+    }
+
+    if (expr = expr_next(expr); !expr) {
+      return ReturnCode::errorf("EARG", "expected an argument for '$0'", param);
+    }
+
+    if (auto rc = pdef->second(expr); !rc.isSuccess()) {
+      return ReturnCode::errorf(
+          "EPARSE",
+          "error while parsing property '$0': $1",
+          param,
+          rc.getMessage());
+
+      return rc;
     }
   }
 
-  return ReturnCode::success();
+  return OK;
 }
 
+ReturnCode configure_string(
+    const Expr* expr,
+    std::string* value) {
+  if (!expr_is_value(expr)) {
+    return ReturnCode::error("EARG", "expected value");
+  }
+
+  *value = expr_get_value(expr);
+  return OK;
+}
+
+/*
 ReturnCode configure_measure(
-    const plist::Property& prop,
+    const Expr* prop,
     Measure* value) {
   if (!plist::is_value(prop)) {
     return ReturnCode::errorf(
@@ -72,7 +95,7 @@ ReturnCode configure_measure(
 }
 
 ReturnCode configure_measure_opt(
-    const plist::Property& prop,
+    const Expr* prop,
     std::optional<Measure>* value) {
   Measure v;
   if (auto rc = configure_measure(prop, &v); !rc) {
@@ -84,7 +107,7 @@ ReturnCode configure_measure_opt(
 }
 
 ParserFn configure_multiprop(const std::vector<ParserFn>& parsers) {
-  return [parsers] (const plist::Property& prop) -> ReturnCode {
+  return [parsers] (const Expr* prop) -> ReturnCode {
     for (const auto& p : parsers) {
       if (auto rc = p(prop); !rc) {
         return rc;
@@ -96,7 +119,7 @@ ParserFn configure_multiprop(const std::vector<ParserFn>& parsers) {
 }
 
 ParserFn configure_alt(const ParserDefinitions& parsers) {
-  return [parsers] (const plist::Property& prop) -> ReturnCode {
+  return [parsers] (const Expr* prop) -> ReturnCode {
     std::string parser_key = "";
     if (plist::is_enum(prop) && parsers.count(prop.value)) {
       parser_key = prop.value;
@@ -107,7 +130,7 @@ ParserFn configure_alt(const ParserDefinitions& parsers) {
 }
 
 ReturnCode configure_color(
-    const plist::Property& prop,
+    const Expr* prop,
     Color* value) {
   if (!plist::is_value(prop)) {
     return ReturnCode::errorf(
@@ -126,7 +149,7 @@ ReturnCode configure_color(
 }
 
 ParserFn configure_color_opt(std::optional<Color>* var) {
-  return [=] (const plist::Property& prop) -> ReturnCode {
+  return [=] (const Expr* prop) -> ReturnCode {
     Color c;
     if (auto rc = configure_color(prop, &c); !rc) {
       return rc;
@@ -142,7 +165,7 @@ ParserFn configure_color_fn(Color* var) {
 }
 
 ReturnCode configure_float(
-    const plist::Property& prop,
+    const Expr* prop,
     double* value) {
   if (!plist::is_value(prop)) {
     return ReturnCode::errorf(
@@ -161,7 +184,7 @@ ReturnCode configure_float(
 }
 
 ReturnCode configure_float_opt(
-    const plist::Property& prop,
+    const Expr* prop,
     std::optional<double>* value) {
   if (!plist::is_value(prop)) {
     return ReturnCode::errorf(
@@ -178,23 +201,12 @@ ReturnCode configure_float_opt(
 
   return OK;
 }
+*/
 
-ReturnCode configure_string(
-    const plist::Property& prop,
-    std::string* value) {
-  if (!plist::is_value(prop)) {
-    return ReturnCode::errorf(
-        "EARG",
-        "incorrect number of arguments; expected: 1, got: $0",
-        prop.size());
-  }
 
-  *value = prop;
-  return OK;
-}
-
+/*
 ReturnCode configure_direction(
-    const plist::Property& prop,
+    const Expr* prop,
     Direction* value) {
   if (!plist::is_value(prop)) {
     return ReturnCode::errorf(
@@ -212,7 +224,7 @@ ReturnCode configure_direction(
 }
 
 ReturnCode configure_position(
-    const plist::Property& prop,
+    const Expr* prop,
     Position* value) {
   if (!plist::is_value(prop)) {
     return ReturnCode::errorf(
@@ -283,7 +295,7 @@ ReturnCode load_csv(
 }
 
 ReturnCode parse_data_series_csv(
-    const plist::Property& prop,
+    const Expr* prop,
     SeriesRef* data_ref) {
   if (!plist::is_enum(prop, "csv")) {
     return ERROR;
@@ -323,7 +335,7 @@ ReturnCode parse_data_series_csv(
 }
 
 ReturnCode configure_strings(
-    const plist::Property& prop,
+    const Expr* prop,
     std::vector<std::string>* data) {
   if (plist::is_enum(prop, "csv")) {
     SeriesRef d;
@@ -342,7 +354,7 @@ ReturnCode configure_strings(
 }
 
 ReturnCode configure_measures(
-    const plist::Property& prop,
+    const Expr* prop,
     std::vector<Measure>* measures) {
   if (plist::is_enum(prop, "csv")) {
     SeriesRef data;
@@ -359,6 +371,6 @@ ReturnCode configure_measures(
 
   return configure_vec<Measure>(bind(&configure_measure, _1, _2), measures)(prop);
 }
-
+*/
 } // namespace plotfx
 

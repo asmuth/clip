@@ -39,17 +39,22 @@
 
 namespace plotfx {
 
-using ParserFn = std::function<ReturnCode (const plist::Property&)>;
+using ParserFn = std::function<ReturnCode (const Expr*)>;
 
 template <typename T>
-using ParseToFn = std::function<ReturnCode (const plist::Property&, T* value)>;
+using ParseToFn = std::function<ReturnCode (const Expr*, T* value)>;
 
 using ParserDefinitions = std::unordered_map<std::string, ParserFn>;
 
 ReturnCode parseAll(
-    const plist::PropertyList& plist,
+    const Expr* expr,
     const ParserDefinitions& pdefs);
 
+ReturnCode configure_string(
+    const Expr* prop,
+    std::string* value);
+
+/*
 template <typename T>
 using EnumDefinitions = std::unordered_map<std::string, T>;
 
@@ -60,7 +65,7 @@ ReturnCode parseEnum(
     T* value);
 
 ReturnCode parse_classlike(
-    const plist::Property& prop,
+    const Expr* prop,
     const std::string& fn,
     std::vector<std::string>* args);
 
@@ -76,48 +81,44 @@ ParserFn configure_alt(
     const ParserDefinitions& parsers);
 
 ReturnCode configure_measure(
-    const plist::Property& prop,
+    const Expr* prop,
     Measure* value);
 
 ReturnCode configure_measure_opt(
-    const plist::Property& prop,
+    const Expr* prop,
     std::optional<Measure>* value);
 
 ReturnCode configure_color(
-    const plist::Property& prop,
+    const Expr* prop,
     Color* value);
 
 ParserFn configure_color_fn(Color* var);
 ParserFn configure_color_opt(std::optional<Color>* var);
 
 ReturnCode configure_float(
-    const plist::Property& prop,
+    const Expr* prop,
     double* value);
 
-ReturnCode configure_string(
-    const plist::Property& prop,
-    std::string* value);
-
 ReturnCode configure_direction(
-    const plist::Property& prop,
+    const Expr* prop,
     Direction* value);
 
 ReturnCode configure_position(
-    const plist::Property& prop,
+    const Expr* prop,
     Position* value);
 
 ReturnCode configure_float_opt(
-    const plist::Property& prop,
+    const Expr* prop,
     std::optional<double>* value);
 
 ReturnCode configure_strings(
-    const plist::Property& prop,
+    const Expr* prop,
     std::vector<std::string>* data);
 
 ReturnCode configure_measures(
-    const plist::Property& prop,
+    const Expr* prop,
     std::vector<Measure>* measures);
-
+*/
 
 } // namespace plotfx
 

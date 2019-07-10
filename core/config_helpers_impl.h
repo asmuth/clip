@@ -31,6 +31,7 @@
 
 namespace plotfx {
 
+/*
 template<typename T>
 ReturnCode parseEnum(
     const EnumDefinitions<T>& defs,
@@ -76,6 +77,7 @@ ParserFn configure_vec(ParseToFn<T> parser, std::vector<T>* values) {
     }
   };
 }
+*/
 
 } // namespace plotfx
 
