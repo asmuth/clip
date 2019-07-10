@@ -36,7 +36,7 @@
 namespace plotfx {
 
 Formatter format_decimal_scientific(size_t precision) {
-  return [precision] (const Value& v) -> std::string {
+  return [precision] (const std::string& v) -> std::string {
     std::stringstream s;
     s << std::scientific << std::setprecision(precision) << value_to_float(v);
     return s.str();
@@ -66,7 +66,7 @@ ReturnCode confgure_format_decimal_scientific(
 }
 
 Formatter format_decimal_fixed(size_t precision) {
-  return [precision] (const Value& v) -> std::string {
+  return [precision] (const std::string& v) -> std::string {
     std::stringstream s;
     s << std::fixed << std::setprecision(precision) << value_to_float(v);
     return s.str();
@@ -100,7 +100,7 @@ ReturnCode confgure_format_decimal_fixed(
 }
 
 Formatter format_datetime(const std::string& fmt) {
-  return [fmt] (const Value& v) -> std::string {
+  return [fmt] (const std::string& v) -> std::string {
     UnixTime v_t(value_to_float(v) * 1000000);
     return v_t.toString(fmt.c_str());
   };
@@ -129,7 +129,7 @@ ReturnCode confgure_format_datetime(
 }
 
 Formatter format_string() {
-  return [] (const Value& v) -> std::string {
+  return [] (const std::string& v) -> std::string {
     return v;
   };
 }

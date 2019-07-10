@@ -27,41 +27,32 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-#pragma once
-#include <memory>
-#include "utils/return_code.h"
-#include "source/color_scheme.h"
-#include "source/data_model.h"
-#include "graphics/measure.h"
-#include "graphics/color.h"
-#include "graphics/text.h"
-#include "core/scale.h"
-#include "sexpr.h"
+#include "environment.h"
+#include "core/format.h"
+#include "graphics/font_lookup.h"
+
+using namespace std::placeholders;
 
 namespace plotfx {
-class Layer;
 
-struct Environment {
-  Environment();
-  Measure screen_width;
-  Measure screen_height;
-  double dpi;
-  FontInfo font;
-  Measure font_size;
-  ColorScheme color_scheme;
-  Color background_color;
-  Color text_color;
-  Color border_color;
-  DomainConfig scale_x;
-  DomainConfig scale_y;
-  ScaleLayoutFn scale_layout_x;
-  ScaleLayoutFn scale_layout_y;
-};
+Environment::Environment() :
+    screen_width(Unit::UNIT, 1200),
+    screen_height(Unit::UNIT, 480),
+    dpi(96),
+    background_color(Color::fromRGB(1,1,1)),
+    text_color(Color::fromRGB(.2,.2,.2)),
+    border_color(Color::fromRGB(.2,.2,.2)),
+    font_size(from_pt(11, dpi)) {}
 
-ReturnCode environment_configure(
-    const plist::PropertyList& plist,
-    Environment* env);
+ReturnCode environment_setup_defaults(Environment* env) {
+  if (!font_load(DefaultFont::HELVETICA_REGULAR, &env->font)) {
+    return ReturnCode::error(
+        "EARG",
+        "unable to find default sans-sans font (Helvetica/Arial)");
+  }
+
+  return OK;
+}
 
 } // namespace plotfx
-
 

@@ -27,52 +27,24 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-#include "environment.h"
-#include "core/format.h"
-#include "core/scale.h"
-#include "config_helpers.h"
-#include "graphics/font_lookup.h"
-
-using namespace std::placeholders;
+#pragma once
+#include <unordered_map>
+#include <optional>
+#include <sexpr.h>
+#include "utils/return_code.h"
 
 namespace plotfx {
 
-Environment::Environment() :
-    screen_width(Unit::UNIT, 1200),
-    screen_height(Unit::UNIT, 480),
-    dpi(96),
-    scale_layout_x(bind(&scale_layout_subdivide, _1, _2, 8)),
-    scale_layout_y(bind(&scale_layout_subdivide, _1, _2, 8)),
-    background_color(Color::fromRGB(1,1,1)),
-    text_color(Color::fromRGB(.2,.2,.2)),
-    border_color(Color::fromRGB(.2,.2,.2)),
-    font_size(from_pt(11, dpi)) {}
+using Formatter = std::function<std::string (const std::string&)>;
 
-ReturnCode environment_setup_defaults(Environment* env) {
-  if (!font_load(DefaultFont::HELVETICA_REGULAR, &env->font)) {
-    return ReturnCode::error(
-        "EARG",
-        "unable to find default sans-sans font (Helvetica/Arial)");
-  }
+Formatter format_decimal_fixed(size_t precision);
+Formatter format_decimal_scientific(size_t precision);
+Formatter format_datetime(const std::string& fmt);
+Formatter format_string();
 
-  return OK;
-}
-
-ReturnCode environment_configure(
-    const plist::PropertyList& plist,
-    Environment* env) {
-  if (auto rc = environment_setup_defaults(env); !rc.isSuccess()) {
-    return rc;
-  }
-
-  ParserDefinitions pdefs = {
-    {"width", bind(&configure_measure, _1, &env->screen_width)},
-    {"height", bind(&configure_measure, _1, &env->screen_height)},
-  };
-
-  return parseAll(plist, pdefs);
-}
+ReturnCode confgure_format(
+    const Expr* expr,
+    Formatter* formatter);
 
 } // namespace plotfx
-
 

@@ -28,24 +28,30 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 #pragma once
-#include <unordered_map>
-#include <optional>
-#include <sexpr.h>
+#include <memory>
 #include "utils/return_code.h"
-#include "source/data_model.h"
+#include "color_scheme.h"
+#include "graphics/measure.h"
+#include "graphics/color.h"
+#include "graphics/text.h"
+#include "sexpr.h"
 
 namespace plotfx {
+class Layer;
 
-using Formatter = std::function<std::string (const Value&)>;
-
-Formatter format_decimal_fixed(size_t precision);
-Formatter format_decimal_scientific(size_t precision);
-Formatter format_datetime(const std::string& fmt);
-Formatter format_string();
-
-ReturnCode confgure_format(
-    const plist::Property& prop,
-    Formatter* formatter);
+struct Environment {
+  Environment();
+  Measure screen_width;
+  Measure screen_height;
+  double dpi;
+  FontInfo font;
+  Measure font_size;
+  ColorScheme color_scheme;
+  Color background_color;
+  Color text_color;
+  Color border_color;
+};
 
 } // namespace plotfx
+
 

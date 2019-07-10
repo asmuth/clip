@@ -29,8 +29,8 @@ include_directories(${CAIRO_INCLUDE_DIRS} ${FREETYPE_INCLUDE_DIRS} ${HARFBUZZ_IN
 
 # Build: PlotFX Library
 # -----------------------------------------------------------------------------
-file(GLOB source_files "core/graphics/*.cc" "core/utils/**.cc" "core/sexpr*.cc")
-list(REMOVE_ITEM source_files "source/plotfx_cli.cc")
+file(GLOB source_files "core/graphics/*.cc" "core/utils/**.cc" "core/sexpr*.cc" "core/plotfx.cc" "core/environment.cc")
+list(REMOVE_ITEM source_files "core/plotfx_cli.cc")
 add_library(plotfx STATIC ${source_files})
 set_target_properties(plotfx PROPERTIES PUBLIC_HEADER "source/plotfx.h;source/plotfx_sdl.h")
 set(PLOTFX_LDFLAGS plotfx ${CAIRO_LIBRARIES} ${FREETYPE_LIBRARIES} ${HARFBUZZ_LIBRARIES} ${HARFBUZZ_ICU_LIBRARIES} ${PNG_LIBRARIES} ${FONTCONFIG_LIBRARIES})
@@ -38,15 +38,15 @@ set(PLOTFX_LDFLAGS plotfx ${CAIRO_LIBRARIES} ${FREETYPE_LIBRARIES} ${HARFBUZZ_LI
 
 # Build: CLI
 # -----------------------------------------------------------------------------
-#add_executable(plotfx-cli source/plotfx_cli.cc)
-#target_link_libraries(plotfx-cli ${PLOTFX_LDFLAGS})
-#set_target_properties(plotfx-cli PROPERTIES OUTPUT_NAME plotfx)
+add_executable(plotfx-cli core/plotfx_cli.cc)
+target_link_libraries(plotfx-cli ${PLOTFX_LDFLAGS})
+set_target_properties(plotfx-cli PROPERTIES OUTPUT_NAME plotfx)
 
 
 # Installation
 # -----------------------------------------------------------------------------
-#install(TARGETS plotfx ARCHIVE DESTINATION lib PUBLIC_HEADER DESTINATION include/plotfx)
-#install(TARGETS plotfx-cli DESTINATION bin)
+install(TARGETS plotfx ARCHIVE DESTINATION lib PUBLIC_HEADER DESTINATION include/plotfx)
+install(TARGETS plotfx-cli DESTINATION bin)
 
 
 # Testing

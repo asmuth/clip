@@ -37,8 +37,8 @@
 #include <unordered_map>
 #include "utils/return_code.h"
 #include "sexpr.h"
-#include "source/color_scheme.h"
-#include "source/data_model.h"
+#include "color_scheme.h"
+#include "data_model.h"
 
 namespace plotfx {
 

@@ -35,7 +35,7 @@
 #include "graphics/layer_svg.h"
 #include "graphics/layer_pixmap.h"
 #include "utils/fileutil.h"
-//#include "core/environment.h"
+#include "core/environment.h"
 //#include "elements/plot.h"
 
 #include <iostream>
@@ -45,7 +45,7 @@ using namespace plotfx;
 
 struct plotfx_s {
   Environment env;
-  PropertyList plist;
+  ExprStorage expr;
   std::string error;
 };
 
@@ -74,21 +74,13 @@ void plotfx_seterr(plotfx_t* ctx, const ReturnCode& err) {
 int plotfx_configure(
     plotfx_t* ctx,
     const char* config) {
-  auto& plist = ctx->plist;
-
-  plist::PropertyListParser plist_parser(config, strlen(config));
-  if (!plist_parser.parse(&plist)) {
+  if (auto rc = expr_parse(config, strlen(config), &ctx->expr); !rc) {
     plotfx_seterrf(
         ctx,
         "invalid element specification: $0",
-        plist_parser.get_error());
+        rc.getMessage());
 
     return ERROR;
-  }
-
-  if (auto rc = environment_configure(plist, &ctx->env); !rc) {
-    plotfx_seterr(ctx, rc);
-    return rc;
   }
 
   return OK;
@@ -111,22 +103,22 @@ int plotfx_configure_file(
 int plotfx_render_to(plotfx_t* ctx, void* backend) {
   auto layer = static_cast<Layer*>(backend);
 
-  LayoutInfo layout;
-  layout.bounding_box = Rectangle(0, 0, layer->width, layer->height);
-  layout.content_box = layout.bounding_box;
-  layout.inner_box = layout.bounding_box;
+  //LayoutInfo layout;
+  //layout.bounding_box = Rectangle(0, 0, layer->width, layer->height);
+  //layout.content_box = layout.bounding_box;
+  //layout.inner_box = layout.bounding_box;
 
-  plot::PlotConfig root;
-  root.margins = {from_px(20), from_px(20), from_px(20), from_px(20)};
+  //plot::PlotConfig root;
+  //root.margins = {from_px(20), from_px(20), from_px(20), from_px(20)};
 
   auto rc = try_chain({
-    [&] { return plot::configure(ctx->plist, ctx->env, &root); },
-    [&] { return plot::draw(root, layout, layer); },
+  //  [&] { return plot::configure(ctx->plist, ctx->env, &root); },
+  //  [&] { return plot::draw(root, layout, layer); },
     [&] { return layer_submit(layer); },
   });
 
   plotfx_seterr(ctx, rc);
-  return rc;
+  return OK;
 }
 
 int plotfx_render_file(plotfx_t* ctx, const char* path, const char* fmt) {
