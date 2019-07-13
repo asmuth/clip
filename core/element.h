@@ -33,23 +33,25 @@
 #include <string>
 #include <functional>
 #include "environment.h"
+#include "graphics/layer.h"
 #include "sexpr.h"
 #include "utils/return_code.h"
-#include "graphics/layer.h"
 
 namespace plotfx {
+struct LayoutInfo;
 
 struct Element;
 using ElementRef = std::shared_ptr<Element>;
 
 using ElementConfigureFn = std::function<
     ReturnCode (
+        const Environment& env,
         const Expr* expr,
         ElementRef* elem)>;
 
 using ElementDrawFn = std::function<
     ReturnCode (
-        const Environment& env,
+        const LayoutInfo& layout,
         Layer* layer)>;
 
 struct Element {

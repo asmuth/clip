@@ -34,6 +34,7 @@
 namespace plotfx {
 
 ReturnCode element_build(
+    const Environment& env,
     const ElementMap& factory,
     const Expr* expr,
     ElementRef* elem) {
@@ -47,10 +48,11 @@ ReturnCode element_build(
     return ReturnCode::errorf("EARG", "no such element: $0", elem_name);
   }
 
-  return elem_iter->second(expr_next(expr), elem);
+  return elem_iter->second(env, expr, elem);
 }
 
 ReturnCode element_build_all(
+    const Environment& env,
     const ElementMap& factory,
     const Expr* expr,
     std::vector<ElementRef>* elems) {
@@ -60,7 +62,7 @@ ReturnCode element_build_all(
     }
 
     ElementRef elem;
-    if (auto rc = element_build(factory, expr_get_list(expr), &elem); !rc) {
+    if (auto rc = element_build(env, factory, expr_get_list(expr), &elem); !rc) {
       return rc;
     }
 

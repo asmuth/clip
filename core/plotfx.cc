@@ -29,6 +29,7 @@
  */
 #include "plotfx.h"
 #include "element_factory.h"
+#include "layout.h"
 #include "sexpr_parser.h"
 #include "graphics/layer.h"
 #include "graphics/layer_svg.h"
@@ -52,7 +53,7 @@ struct plotfx_s {
 
 plotfx_t* plotfx_init() {
   auto ctx = std::make_unique<plotfx_t>();
-  element_bind(&ctx->elements, "text", bind(elements::text::configure, _1, _2));
+  element_bind(&ctx->elements, "text", bind(elements::text::build, _1, _2, _3));
   return ctx.release();
 }
 
@@ -109,20 +110,20 @@ int plotfx_configure_file(
 int plotfx_render_to(plotfx_t* ctx, void* backend) {
   auto layer = static_cast<Layer*>(backend);
 
-  //LayoutInfo layout;
-  //layout.bounding_box = Rectangle(0, 0, layer->width, layer->height);
-  //layout.content_box = layout.bounding_box;
-  //layout.inner_box = layout.bounding_box;
+  LayoutInfo layout;
+  layout.bounding_box = Rectangle(0, 0, layer->width, layer->height);
+  layout.content_box = layout.bounding_box;
+  layout.inner_box = layout.bounding_box;
 
   //plot::PlotConfig root;
   //root.margins = {from_px(20), from_px(20), from_px(20), from_px(20)};
 
   std::vector<ElementRef> roots;
   auto rc = try_chain({
-    [&] { return element_build_all(ctx->elements, ctx->expr.get(), &roots); },
+    [&] { return element_build_all(ctx->env, ctx->elements, ctx->expr.get(), &roots); },
     [&] () -> ReturnCode {
       for (const auto& e : roots) {
-        if (auto rc = e->draw(ctx->env, layer); !rc) {
+        if (auto rc = e->draw(layout, layer); !rc) {
           return rc;
         }
       }

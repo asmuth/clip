@@ -32,7 +32,10 @@
 
 namespace plotfx::elements::text {
 
-ReturnCode configure(const Expr* expr, ElementRef* elem);
+ReturnCode build(
+    const Environment& env,
+    const Expr* expr,
+    ElementRef* elem);
 
 } // namespace plotfx::elements::text
 
