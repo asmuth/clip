@@ -180,6 +180,8 @@ std::vector<double> domain_untranslate(
   return s;
 }
 
+/*
+
 ReturnCode domain_configure(
     const plist::Property& prop,
     DomainConfig* domain) {
@@ -213,6 +215,8 @@ ReturnCode domain_configure(
 
   return OK;
 }
+
+*/
 
 ReturnCode scale_layout_linear(
     const DomainConfig& domain,
@@ -286,6 +290,8 @@ ReturnCode scale_layout_discrete(
 
   return OK;
 }
+
+/*
 
 ReturnCode configure_scale_layout_linear(
     const plist::Property& prop,
@@ -386,6 +392,8 @@ ReturnCode configure_scale_layout(
       "  - discrete\n",
       prop.value);
 }
+
+*/
 
 } // namespace plotfx
 

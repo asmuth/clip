@@ -27,11 +27,12 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+#include "format.h"
+#include "data_model.h"
+#include "utils/UnixTime.h"
+
 #include <sstream>
 #include <iomanip>
-#include "core/format.h"
-#include "source/config_helpers.h"
-#include "source/utils/UnixTime.h"
 
 namespace plotfx {
 
@@ -43,6 +44,7 @@ Formatter format_decimal_scientific(size_t precision) {
   };
 }
 
+/*
 ReturnCode confgure_format_decimal_scientific(
     const plist::Property& prop,
     Formatter* formatter) {
@@ -64,6 +66,7 @@ ReturnCode confgure_format_decimal_scientific(
   *formatter = format_decimal_scientific(precision);
   return OK;
 }
+*/
 
 Formatter format_decimal_fixed(size_t precision) {
   return [precision] (const std::string& v) -> std::string {
@@ -73,6 +76,7 @@ Formatter format_decimal_fixed(size_t precision) {
   };
 }
 
+/*
 ReturnCode confgure_format_decimal_fixed(
     const plist::Property& prop,
     Formatter* formatter) {
@@ -98,6 +102,7 @@ ReturnCode confgure_format_decimal_fixed(
   *formatter = format_decimal_fixed(precision);
   return OK;
 }
+*/
 
 Formatter format_datetime(const std::string& fmt) {
   return [fmt] (const std::string& v) -> std::string {
@@ -106,6 +111,7 @@ Formatter format_datetime(const std::string& fmt) {
   };
 }
 
+/*
 ReturnCode confgure_format_datetime(
     const plist::Property& prop,
     Formatter* formatter) {
@@ -127,6 +133,7 @@ ReturnCode confgure_format_datetime(
   *formatter = format_datetime(fmtspec);
   return OK;
 }
+*/
 
 Formatter format_string() {
   return [] (const std::string& v) -> std::string {
@@ -134,6 +141,7 @@ Formatter format_string() {
   };
 }
 
+/*
 ReturnCode confgure_format_string(
     const plist::Property& prop,
     Formatter* formatter) {
@@ -173,6 +181,7 @@ ReturnCode confgure_format(
       "  - string\n",
       prop.value);
 }
+*/
 
 } // namespace plotfx
 

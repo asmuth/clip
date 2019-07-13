@@ -90,9 +90,9 @@ std::vector<double> domain_untranslate(
     const DomainConfig& domain,
     const std::vector<double>& data);
 
-ReturnCode domain_configure(
-    const plist::Property& prop,
-    DomainConfig* domain);
+//ReturnCode domain_configure(
+//    const plist::Property& prop,
+//    DomainConfig* domain);
 
 ReturnCode scale_layout_linear(
     const DomainConfig& domain,
@@ -109,9 +109,9 @@ ReturnCode scale_layout_discrete(
     const DomainConfig& domain,
     ScaleLayout* layout);
 
-ReturnCode configure_scale_layout(
-    const plist::Property& prop,
-    ScaleLayoutFn* layout);
+//ReturnCode configure_scale_layout(
+//    const plist::Property& prop,
+//    ScaleLayoutFn* layout);
 
 } // namespace plotfx
 

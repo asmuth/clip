@@ -115,60 +115,60 @@ ReturnCode layout_element(
   return OK;
 }
 
-ReturnCode layout_elements(
-    const Layer& layer,
-    const Rectangle& parent_bbox,
-    std::vector<ElementPlacement>* elements,
-    Rectangle* content_box) {
-  /* sort elements by z-index */
-  std::stable_sort(
-      elements->begin(),
-      elements->end(),
-      [] (const ElementPlacement& a, const ElementPlacement& b) {
-        return a.element->z_index() < b.element->z_index();
-      });
-
-  /* compute bounding boxes */
-  LayoutState layout_state;
-  layout_state.content_box = parent_bbox;
-
-  for (auto& e : *elements) {
-    double bbox_w = 0.0;
-    double bbox_h = 0.0;
-
-    if (e.element->reflow) {
-      if (auto rc =
-            e.element->reflow(
-                layer,
-                layout_state.content_box.w,
-                layout_state.content_box.h,
-                &bbox_w,
-                &bbox_h);
-            !rc.isSuccess()) {
-        return rc;
-      }
-    }
-
-    if (auto rc =
-          layout_element(
-              e.element->layout_settings(),
-              bbox_w,
-              bbox_h,
-              &layout_state,
-              &e.layout.content_box);
-          !rc.isSuccess()) {
-      return rc;
-    }
-  }
-
-  for (auto& e : *elements) {
-    e.layout.bounding_box = parent_bbox;
-    e.layout.inner_box = layout_state.content_box;
-  }
-
-  *content_box = layout_state.content_box;
-  return OK;
-}
+//ReturnCode layout_elements(
+//    const Layer& layer,
+//    const Rectangle& parent_bbox,
+//    std::vector<ElementPlacement>* elements,
+//    Rectangle* content_box) {
+//  /* sort elements by z-index */
+//  std::stable_sort(
+//      elements->begin(),
+//      elements->end(),
+//      [] (const ElementPlacement& a, const ElementPlacement& b) {
+//        return a.element->z_index() < b.element->z_index();
+//      });
+//
+//  /* compute bounding boxes */
+//  LayoutState layout_state;
+//  layout_state.content_box = parent_bbox;
+//
+//  for (auto& e : *elements) {
+//    double bbox_w = 0.0;
+//    double bbox_h = 0.0;
+//
+//    if (e.element->reflow) {
+//      if (auto rc =
+//            e.element->reflow(
+//                layer,
+//                layout_state.content_box.w,
+//                layout_state.content_box.h,
+//                &bbox_w,
+//                &bbox_h);
+//            !rc.isSuccess()) {
+//        return rc;
+//      }
+//    }
+//
+//    if (auto rc =
+//          layout_element(
+//              e.element->layout_settings(),
+//              bbox_w,
+//              bbox_h,
+//              &layout_state,
+//              &e.layout.content_box);
+//          !rc.isSuccess()) {
+//      return rc;
+//    }
+//  }
+//
+//  for (auto& e : *elements) {
+//    e.layout.bounding_box = parent_bbox;
+//    e.layout.inner_box = layout_state.content_box;
+//  }
+//
+//  *content_box = layout_state.content_box;
+//  return OK;
+//}
 
 } // namespace plotfx
 
