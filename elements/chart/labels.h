@@ -12,39 +12,14 @@
  * limitations under the License.
  */
 #pragma once
-#include <stdlib.h>
-#include <sexpr.h>
-#include <graphics/layer.h>
-#include <source/core/scale.h>
-#include <source/element.h>
-#include <source/config_helpers.h>
+#include "element.h"
 
-namespace fviz {
-namespace plot {
-namespace labels {
+namespace fviz::elements::chart::labels {
 
-struct PlotLabelsConfig {
-  std::vector<double> x;
-  std::vector<double> y;
-  std::vector<std::string> labels;
-  FontInfo label_font;
-  Measure label_padding;
-  Measure label_font_size;
-  Color label_color;
-};
+ReturnCode build(
+    const Environment& env,
+    const Expr* expr,
+    ElementRef* elem);
 
-ReturnCode draw(
-    const PlotLabelsConfig& config,
-    const Rectangle& clip,
-    Layer* layer);;
-
-ReturnCode configure(
-    const plist::PropertyList& plist,
-    const DataContext& data,
-    const Document& doc,
-    PlotLabelsConfig* config);
-
-} // namespace labels
-} // namespace plot
-} // namespace fviz
+} // namespace fviz::elements::chart::labels
 
