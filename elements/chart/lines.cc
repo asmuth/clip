@@ -12,24 +12,35 @@
  * limitations under the License.
  */
 #include "lines.h"
+#include "sexpr_conv.h"
+#include "sexpr_util.h"
+#include "scale.h"
+#include "layout.h"
+#include "graphics/path.h"
+#include "graphics/brush.h"
+#include "graphics/text.h"
+#include "graphics/layout.h"
+
 #include <numeric>
-#include <fviz.h>
-#include <graphics/path.h>
-#include <graphics/brush.h>
-#include <graphics/text.h>
-#include <graphics/layout.h>
-#include "source/config_helpers.h"
 
 using namespace std::placeholders;
 
-namespace fviz {
-namespace plot {
-namespace lines {
+namespace fviz::elements::chart::lines {
 
 static const double kDefaultLineWidthPT = 2;
 
+struct PlotLinesConfig {
+  std::vector<Measure> x;
+  std::vector<Measure> y;
+  ScaleConfig scale_x;
+  ScaleConfig scale_y;
+  std::vector<DataGroup> groups;
+  std::vector<Color> colors;
+  Measure line_width;
+};
+
 ReturnCode draw(
-    PlotLinesConfig config,
+    std::shared_ptr<PlotLinesConfig> config,
     const LayoutInfo& layout,
     Layer* layer) {
   const auto& clip = layout.content_box;
@@ -38,27 +49,27 @@ ReturnCode draw(
   convert_units(
       {
         bind(&convert_unit_typographic, layer->dpi, layer->font_size.value, _1),
-        bind(&convert_unit_user, domain_translate_fn(config.scale_x), _1),
+        bind(&convert_unit_user, scale_translate_fn(config->scale_x), _1),
         bind(&convert_unit_relative, clip.w, _1)
       },
-      &*config.x.begin(),
-      &*config.x.end());
+      &*config->x.begin(),
+      &*config->x.end());
 
   convert_units(
       {
         bind(&convert_unit_typographic, layer->dpi, layer->font_size.value, _1),
-        bind(&convert_unit_user, domain_translate_fn(config.scale_y), _1),
+        bind(&convert_unit_user, scale_translate_fn(config->scale_y), _1),
         bind(&convert_unit_relative, clip.h, _1)
       },
-      &*config.y.begin(),
-      &*config.y.end());
+      &*config->y.begin(),
+      &*config->y.end());
 
   /* draw lines */
-  for (const auto& group : config.groups) {
+  for (const auto& group : config->groups) {
     Path path;
     for (auto i : group.index) {
-      auto sx = clip.x + config.x[i];
-      auto sy = clip.y + clip.h - config.y[i];
+      auto sx = clip.x + config->x[i];
+      auto sy = clip.y + clip.h - config->y[i];
 
       if (i == group.index[0]) {
         path.moveTo(sx, sy);
@@ -68,10 +79,10 @@ ReturnCode draw(
     }
 
     StrokeStyle style;
-    style.line_width = config.line_width;
-    style.color = config.colors.empty()
+    style.line_width = config->line_width;
+    style.color = config->colors.empty()
         ? Color{}
-        : config.colors[group.index[0] % config.colors.size()];
+        : config->colors[group.index[0] % config->colors.size()];
 
     strokePath(layer, clip, path, style);
   }
@@ -79,33 +90,33 @@ ReturnCode draw(
   return OK;
 }
 
-ReturnCode configure(
-    const plist::PropertyList& plist,
+ReturnCode build(
     const Environment& env,
-    PlotLinesConfig* config) {
+    const Expr* expr,
+    ElementRef* elem) {
   /* set defaults from environment */
-  config->scale_x = env.scale_x;
-  config->scale_y = env.scale_y;
+  auto config = std::make_shared<PlotLinesConfig>();
   config->line_width = from_pt(kDefaultLineWidthPT);
 
-  ParserDefinitions pdefs = {
-    {"xs", bind(&configure_measures, _1, &config->x)},
-    {"ys", bind(&configure_measures, _1, &config->y)},
-    {"scale-x", bind(&domain_configure, _1, &config->scale_x)},
-    {"scale-x-min", bind(&configure_float_opt, _1, &config->scale_x.min)},
-    {"scale-x-max", bind(&configure_float_opt, _1, &config->scale_x.max)},
-    {"scale-x-padding", bind(&configure_float, _1, &config->scale_x.padding)},
-    {"scale-y", bind(&domain_configure, _1, &config->scale_y)},
-    {"scale-y-min", bind(&configure_float_opt, _1, &config->scale_y.min)},
-    {"scale-y-max", bind(&configure_float_opt, _1, &config->scale_y.max)},
-    {"scale-y-padding", bind(&configure_float, _1, &config->scale_y.padding)},
-    {"color", configure_vec<Color>(bind(&configure_color, _1, _2), &config->colors)},
-    {"colors", configure_vec<Color>(bind(&configure_color, _1, _2), &config->colors)},
-    {"stroke", bind(&configure_measure, _1, &config->line_width)},
-  };
+  /* parse properties */
+  auto config_rc = expr_walk_map(expr_next(expr), {
+    {"xdata", bind(&expr_to_measures, _1, &config->x)},
+    {"ydata", bind(&expr_to_measures, _1, &config->y)},
+    {"xmin", bind(&expr_to_float64_opt, _1, &config->scale_x.min)},
+    {"xmax", bind(&expr_to_float64_opt, _1, &config->scale_x.max)},
+    {"xscale", bind(&scale_configure_kind, _1, &config->scale_x)},
+    {"xscale-padding", bind(&expr_to_float64, _1, &config->scale_x.padding)},
+    {"ymin", bind(&expr_to_float64_opt, _1, &config->scale_y.min)},
+    {"ymax", bind(&expr_to_float64_opt, _1, &config->scale_y.max)},
+    {"yscale", bind(&scale_configure_kind, _1, &config->scale_y)},
+    {"yscale-padding", bind(&expr_to_float64, _1, &config->scale_y.padding)},
+    {"color", expr_tov_fn<Color>(bind(&expr_to_color, _1, _2), &config->colors)},
+    {"colors", expr_tov_fn<Color>(bind(&expr_to_color, _1, _2), &config->colors)},
+    {"stroke", bind(&expr_to_measure, _1, &config->line_width)},
+  });
 
-  if (auto rc = parseAll(plist, pdefs); !rc) {
-    return rc;
+  if (!config_rc) {
+    return config_rc;
   }
 
   /* check configuraton */
@@ -126,20 +137,20 @@ ReturnCode configure(
   /* scale autoconfig */
   for (const auto& v : config->x) {
     if (v.unit == Unit::USER) {
-      domain_fit(v.value, &config->scale_x);
+      scale_fit(v.value, &config->scale_x);
     }
   }
 
   for (const auto& v : config->y) {
     if (v.unit == Unit::USER) {
-      domain_fit(v.value, &config->scale_y);
+      scale_fit(v.value, &config->scale_y);
     }
   }
 
+  *elem = std::make_shared<Element>();
+  (*elem)->draw = bind(&draw, config, _1, _2);
   return OK;
 }
 
-} // namespace lines
-} // namespace plot
-} // namespace fviz
+} // namespace fviz::elements::chart::lines
 

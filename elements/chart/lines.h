@@ -12,41 +12,14 @@
  * limitations under the License.
  */
 #pragma once
-#include <stdlib.h>
-#include <sexpr.h>
-#include <graphics/layer.h>
-#include <source/core/scale.h>
-#include <source/element.h>
-#include <source/config_helpers.h>
-#include <source/utils/algo.h>
-#include "core/environment.h"
+#include "element.h"
 
-namespace fviz {
-namespace plot {
-namespace lines {
+namespace fviz::elements::chart::lines {
 
-struct PlotLinesConfig {
-  std::vector<Measure> x;
-  std::vector<Measure> y;
-  DomainConfig scale_x;
-  DomainConfig scale_y;
-  std::vector<DataGroup> groups;
-  std::vector<Color> colors;
-  Measure line_width;
-  LayoutSettings layout;
-};
-
-ReturnCode draw(
-    PlotLinesConfig config,
-    const LayoutInfo& layout,
-    Layer* layer);
-
-ReturnCode configure(
-    const plist::PropertyList& plist,
+ReturnCode build(
     const Environment& env,
-    PlotLinesConfig* config);
+    const Expr* expr,
+    ElementRef* elem);
 
-} // namespace lines
-} // namespace plot
-} // namespace fviz
+} // namespace fviz::elements::chart::lines
 

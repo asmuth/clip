@@ -24,6 +24,7 @@
 #include "elements/text.h"
 #include "elements/chart/axis.h"
 #include "elements/chart/layout.h"
+#include "elements/chart/lines.h"
 #include "elements/chart/points.h"
 #include "elements/layout/padding.h"
 
@@ -50,6 +51,7 @@ fviz_t* fviz_init() {
   element_bind(elems, "chart/axis-bottom", bind(elements::chart::axis::build, _1, _2, _3));
   element_bind(elems, "chart/axis-left", bind(elements::chart::axis::build, _1, _2, _3));
   element_bind(elems, "chart/layout", bind(elements::chart::layout::build, _1, _2, _3));
+  element_bind(elems, "chart/lines", bind(elements::chart::lines::build, _1, _2, _3));
   element_bind(elems, "chart/points", bind(elements::chart::points::build, _1, _2, _3));
   element_bind(elems, "layout/padding", bind(elements::layout::padding::build, _1, _2, _3));
   return ctx.release();
