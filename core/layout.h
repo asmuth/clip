@@ -74,19 +74,9 @@ struct LayoutSettings {
 struct LayoutInfo {
 
   /**
-   * The outer bounding box
-   */
-  Rectangle bounding_box;
-
-  /**
    * The elements bounding box
    */
   Rectangle content_box;
-
-  /**
-   * The inner bounding box
-   */
-  Rectangle inner_box;
 
 };
 

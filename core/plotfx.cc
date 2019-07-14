@@ -116,12 +116,7 @@ int plotfx_render_to(plotfx_t* ctx, void* backend) {
   auto layer = static_cast<Layer*>(backend);
 
   LayoutInfo layout;
-  layout.bounding_box = Rectangle(0, 0, layer->width, layer->height);
-  layout.content_box = layout.bounding_box;
-  layout.inner_box = layout.bounding_box;
-
-  //plot::PlotConfig root;
-  //root.margins = {from_px(20), from_px(20), from_px(20), from_px(20)};
+  layout.content_box = Rectangle(0, 0, layer->width, layer->height);
 
   std::vector<ElementRef> roots;
   auto rc = try_chain({
