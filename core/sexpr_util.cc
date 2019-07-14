@@ -65,6 +65,17 @@ ExprVisitor expr_calln_fn(const std::initializer_list<ExprVisitor>& fns) {
   return bind(&expr_calln, _1, fns);
 }
 
+std::vector<const Expr*> expr_collect(const Expr* expr) {
+  std::vector<const Expr*> exprs;
+
+  while (expr) {
+    exprs.push_back(expr);
+    expr = expr_next(expr);
+  }
+
+  return exprs;
+}
+
 } // namespace fviz
 
 

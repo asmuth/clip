@@ -31,5 +31,7 @@ ReturnCode expr_calln(
 
 ExprVisitor expr_calln_fn(const std::initializer_list<ExprVisitor>& fns);
 
+std::vector<const Expr*> expr_collect(const Expr* expr);
+
 } // namespace fviz
 
