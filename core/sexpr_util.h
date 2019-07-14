@@ -35,11 +35,17 @@
 
 namespace plotfx {
 
+using ExprVisitor = std::function<ReturnCode (const Expr*)>;
+
 ReturnCode expr_walk_map(
     const Expr* expr,
-    const std::unordered_map<
-        std::string,
-        std::function<ReturnCode (const Expr*)>>& pdefs);
+    const std::unordered_map<std::string, ExprVisitor>& fns);
+
+ReturnCode expr_calln(
+    const Expr* expr,
+    const std::initializer_list<ExprVisitor>& fns);
+
+ExprVisitor expr_calln_fn(const std::initializer_list<ExprVisitor>& fns);
 
 } // namespace plotfx
 

@@ -38,17 +38,6 @@ using namespace std::placeholders;
 namespace plotfx {
 
 /*
-ParserFn configure_multiprop(const std::vector<ParserFn>& parsers) {
-  return [parsers] (const Expr* prop) -> ReturnCode {
-    for (const auto& p : parsers) {
-      if (auto rc = p(prop); !rc) {
-        return rc;
-      }
-    }
-
-    return OK;
-  };
-}
 
 ParserFn configure_alt(const ParserDefinitions& parsers) {
   return [parsers] (const Expr* prop) -> ReturnCode {
