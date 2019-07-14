@@ -38,6 +38,34 @@ ReturnCode expr_to_strings(
   return expr_tov<std::string>(expr, bind(&expr_to_string, _1, _2), values);
 }
 
+ReturnCode expr_to_float64(
+    const Expr* expr,
+    double* value) {
+  if (!expr_is_value(expr)) {
+    return ReturnCode::error("EARG", "expected value");
+  }
+
+  try {
+    *value = std::stod(expr_get_value(expr));
+  } catch (... ) {
+    return ReturnCode::errorf("EARG", "invalid number: $0", expr_get_value(expr));
+  }
+
+  return OK;
+}
+
+ReturnCode expr_to_float64_opt(
+    const Expr* expr,
+    std::optional<double>* value) {
+  double v;
+  if (auto rc = expr_to_float64(expr, &v); !rc) {
+    return rc;
+  }
+
+  *value = v;
+  return OK;
+}
+
 ReturnCode expr_to_measure(
     const Expr* expr,
     Measure* value) {

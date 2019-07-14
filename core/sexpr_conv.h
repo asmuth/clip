@@ -31,6 +31,14 @@ ReturnCode expr_to_strings(
     const Expr* prop,
     std::vector<std::string>* values);
 
+ReturnCode expr_to_float64(
+    const Expr* prop,
+    double* value);
+
+ReturnCode expr_to_float64_opt(
+    const Expr* prop,
+    std::optional<double>* value);
+
 ReturnCode expr_to_measure(
     const Expr* expr,
     Measure* value);
