@@ -34,6 +34,7 @@
 #include "sexpr_conv.h"
 #include "sexpr_util.h"
 
+#include <numeric>
 #include <functional>
 
 using namespace std::placeholders;
@@ -54,10 +55,7 @@ struct PlotConfig {
   std::optional<Color> background;
   std::array<PlotBorderConfig, 4> borders;
   std::vector<ElementRef> body_elements;
-  std::vector<ElementRef> top_elements;
-  std::vector<ElementRef> right_elements;
-  std::vector<ElementRef> bottom_elements;
-  std::vector<ElementRef> left_elements;
+  std::array<std::vector<ElementRef>, 4> margin_elements;
 };
 
 ReturnCode draw(
@@ -70,41 +68,77 @@ ReturnCode draw(
     convert_unit_typographic(layer->dpi, config->font_size, &m);
   }
 
-  /* calculate boxes */
-  const auto& content_box = layout.content_box;
-
-  auto body_box = layout_margin_box(
-      content_box,
+  /* calculate the outer margin box */
+  auto content_box = layout_margin_box(
+      layout.content_box,
       margins[0],
       margins[1],
       margins[2],
       margins[3]);
 
-  auto top_box = Rectangle(
+  /* calculate the inner body box and the margin boxes */
+  std::array<Measure, 4> padding;
+  for (size_t i = 0; i < config->margin_elements.size(); ++i) {
+    for (const auto& e : config->margin_elements[i]) {
+      if (!e->size_hint) {
+        continue;
+      }
+
+      double e_width = 0;
+      double e_height = 0;
+      if (auto rc =
+            e->size_hint(
+              *layer,
+              content_box.w,
+              content_box.h,
+              &e_width,
+              &e_height);
+          !rc) {
+        return rc;
+      }
+
+      padding[i] = from_unit(
+          std::max(
+              double(padding[i]),
+              i % 2 ? e_width : e_height));
+    }
+  }
+
+  auto body_box = layout_margin_box(
+      content_box,
+      padding[0],
+      padding[1],
+      padding[2],
+      padding[3]);
+
+  std::array<Rectangle, 4> margin_boxes = {
+    Rectangle {
       body_box.x,
       content_box.y,
       body_box.w,
-      margins[0]);
-
-  auto bottom_box = Rectangle(
-      body_box.x,
-      content_box.y + content_box.h - margins[2],
-      body_box.w,
-      margins[2]);
-
-  auto right_box = Rectangle(
-      content_box.x + content_box.w - margins[1],
+      padding[0],
+    },
+    Rectangle {
+      content_box.x + content_box.w - padding[1],
       body_box.y,
-      margins[1],
-      body_box.h);
-
-  auto left_box = Rectangle(
+      padding[1],
+      body_box.h,
+    },
+    Rectangle {
+      body_box.x,
+      content_box.y + content_box.h - padding[2],
+      body_box.w,
+      padding[2],
+    },
+    Rectangle {
       content_box.x,
       body_box.y,
-      margins[3],
-      body_box.h);
+      padding[3],
+      body_box.h,
+    }
+  };
 
-  /* draw background */
+  /* draw the background */
   if (config->background) {
     const auto& bg_box = layout.content_box;
     FillStyle bg_fill;
@@ -118,7 +152,7 @@ ReturnCode draw(
         bg_fill);
   }
 
-  /* draw content elements  */
+  /* draw the body elements  */
   for (const auto& e : config->body_elements) {
     LayoutInfo layout;
     layout.content_box = body_box;
@@ -128,47 +162,19 @@ ReturnCode draw(
     }
   }
 
-  /* draw top elements  */
-  for (const auto& e : config->top_elements) {
-    LayoutInfo layout;
-    layout.content_box = top_box;
+  /* draw the margin elements  */
+  for (size_t i = 0; i < config->margin_elements.size(); ++i) {
+    for (const auto& e : config->margin_elements[i]) {
+      LayoutInfo layout;
+      layout.content_box = margin_boxes[i];
 
-    if (auto rc = e->draw(layout, layer); !rc.isSuccess()) {
-      return rc;
+      if (auto rc = e->draw(layout, layer); !rc.isSuccess()) {
+        return rc;
+      }
     }
   }
 
-  /* draw right elements  */
-  for (const auto& e : config->right_elements) {
-    LayoutInfo layout;
-    layout.content_box = right_box;
-
-    if (auto rc = e->draw(layout, layer); !rc.isSuccess()) {
-      return rc;
-    }
-  }
-
-  /* draw bottom elements  */
-  for (const auto& e : config->bottom_elements) {
-    LayoutInfo layout;
-    layout.content_box = bottom_box;
-
-    if (auto rc = e->draw(layout, layer); !rc.isSuccess()) {
-      return rc;
-    }
-  }
-
-  /* draw left elements  */
-  for (const auto& e : config->left_elements) {
-    LayoutInfo layout;
-    layout.content_box = left_box;
-
-    if (auto rc = e->draw(layout, layer); !rc.isSuccess()) {
-      return rc;
-    }
-  }
-
-  /* draw top border  */
+  /* draw the top border  */
   if (config->borders[0].width > 0) {
     StrokeStyle border_style;
     border_style.line_width = config->borders[0].width;
@@ -181,7 +187,7 @@ ReturnCode draw(
         border_style);
   }
 
-  /* draw right border  */
+  /* draw the right border  */
   if (config->borders[1].width > 0) {
     StrokeStyle border_style;
     border_style.line_width = config->borders[1].width;
@@ -194,7 +200,7 @@ ReturnCode draw(
         border_style);
   }
 
-  /* draw top border  */
+  /* draw the bottom border  */
   if (config->borders[2].width > 0) {
     StrokeStyle border_style;
     border_style.line_width = config->borders[2].width;
@@ -207,7 +213,7 @@ ReturnCode draw(
         border_style);
   }
 
-  /* draw left border  */
+  /* draw the left border  */
   if (config->borders[3].width > 0) {
     StrokeStyle border_style;
     border_style.line_width = config->borders[3].width;
@@ -232,7 +238,7 @@ ReturnCode build(
   config->font_size = env.font_size;
   config->text_color = env.text_color;
   config->border_color = env.border_color;
-  config->margins = {from_em(2), from_em(2), from_em(2), from_em(2)};
+  config->margins = {from_em(1), from_em(1), from_em(1), from_em(1)};
 
   auto config_rc = expr_walk_map(expr_next(expr), {
     {
@@ -267,10 +273,10 @@ ReturnCode build(
     {"text-color", bind(&expr_to_color, _1, &config->text_color)},
     {"border-color", bind(&expr_to_color, _1, &config->border_color)},
     {"body", bind(&element_build_list, env, _1, &config->body_elements)},
-    {"top", bind(&element_build_list, env, _1, &config->top_elements)},
-    {"right", bind(&element_build_list, env, _1, &config->right_elements)},
-    {"bottom", bind(&element_build_list, env, _1, &config->bottom_elements)},
-    {"left", bind(&element_build_list, env, _1, &config->left_elements)},
+    {"top", bind(&element_build_list, env, _1, &config->margin_elements[0])},
+    {"right", bind(&element_build_list, env, _1, &config->margin_elements[1])},
+    {"bottom", bind(&element_build_list, env, _1, &config->margin_elements[2])},
+    {"left", bind(&element_build_list, env, _1, &config->margin_elements[3])},
   });
 
   if (!config_rc) {
