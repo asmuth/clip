@@ -12,7 +12,9 @@
  * limitations under the License.
  */
 #include "areas.h"
-#include "fviz.h"
+#include "scale.h"
+#include "sexpr_conv.h"
+#include "sexpr_util.h"
 #include "graphics/path.h"
 #include "graphics/brush.h"
 #include "graphics/text.h"
@@ -24,9 +26,20 @@
 
 using namespace std::placeholders;
 
-namespace fviz {
-namespace plot {
-namespace area {
+namespace fviz::elements::chart::areas {
+
+struct PlotAreaConfig {
+  PlotAreaConfig();
+  Direction direction;
+  std::vector<Measure> x;
+  std::vector<Measure> xoffset;
+  std::vector<Measure> y;
+  std::vector<Measure> yoffset;
+  ScaleConfig scale_x;
+  ScaleConfig scale_y;
+  std::vector<Color> colors;
+  LayoutSettings layout;
+};
 
 PlotAreaConfig::PlotAreaConfig() :
     direction(Direction::VERTICAL) {}
@@ -41,7 +54,7 @@ ReturnCode draw_horizontal(
   convert_units(
       {
         bind(&convert_unit_typographic, layer->dpi, layer->font_size.value, _1),
-        bind(&convert_unit_user, domain_translate_fn(config.scale_x), _1),
+        bind(&convert_unit_user, scale_translate_fn(config.scale_x), _1),
         bind(&convert_unit_relative, clip.w, _1)
       },
       &*config.x.begin(),
@@ -50,7 +63,7 @@ ReturnCode draw_horizontal(
   convert_units(
       {
         bind(&convert_unit_typographic, layer->dpi, layer->font_size.value, _1),
-        bind(&convert_unit_user, domain_translate_fn(config.scale_x), _1),
+        bind(&convert_unit_user, scale_translate_fn(config.scale_x), _1),
         bind(&convert_unit_relative, clip.w, _1)
       },
       &*config.xoffset.begin(),
@@ -59,7 +72,7 @@ ReturnCode draw_horizontal(
   convert_units(
       {
         bind(&convert_unit_typographic, layer->dpi, layer->font_size.value, _1),
-        bind(&convert_unit_user, domain_translate_fn(config.scale_y), _1),
+        bind(&convert_unit_user, scale_translate_fn(config.scale_y), _1),
         bind(&convert_unit_relative, clip.h, _1)
       },
       &*config.y.begin(),
@@ -68,7 +81,7 @@ ReturnCode draw_horizontal(
   convert_units(
       {
         bind(&convert_unit_typographic, layer->dpi, layer->font_size.value, _1),
-        bind(&convert_unit_user, domain_translate_fn(config.scale_y), _1),
+        bind(&convert_unit_user, scale_translate_fn(config.scale_y), _1),
         bind(&convert_unit_relative, clip.h, _1)
       },
       &*config.yoffset.begin(),
@@ -88,7 +101,7 @@ ReturnCode draw_horizontal(
     }
   }
 
-  auto x0 = clip.h * std::clamp(domain_translate(config.scale_x, 0), 0.0, 1.0);
+  auto x0 = clip.h * std::clamp(scale_translate(config.scale_x, 0), 0.0, 1.0);
   for (int i = config.x.size() - 1; i >= 0; --i) {
     auto sx = clip.x + (config.xoffset.empty() ? x0 : config.xoffset[i]);
     auto sy = clip.y + clip.h - config.y[i];
@@ -117,7 +130,7 @@ ReturnCode draw_vertical(
   convert_units(
       {
         bind(&convert_unit_typographic, layer->dpi, layer->font_size.value, _1),
-        bind(&convert_unit_user, domain_translate_fn(config.scale_x), _1),
+        bind(&convert_unit_user, scale_translate_fn(config.scale_x), _1),
         bind(&convert_unit_relative, clip.w, _1)
       },
       &*config.x.begin(),
@@ -126,7 +139,7 @@ ReturnCode draw_vertical(
   convert_units(
       {
         bind(&convert_unit_typographic, layer->dpi, layer->font_size.value, _1),
-        bind(&convert_unit_user, domain_translate_fn(config.scale_x), _1),
+        bind(&convert_unit_user, scale_translate_fn(config.scale_x), _1),
         bind(&convert_unit_relative, clip.w, _1)
       },
       &*config.xoffset.begin(),
@@ -135,7 +148,7 @@ ReturnCode draw_vertical(
   convert_units(
       {
         bind(&convert_unit_typographic, layer->dpi, layer->font_size.value, _1),
-        bind(&convert_unit_user, domain_translate_fn(config.scale_y), _1),
+        bind(&convert_unit_user, scale_translate_fn(config.scale_y), _1),
         bind(&convert_unit_relative, clip.h, _1)
       },
       &*config.y.begin(),
@@ -144,7 +157,7 @@ ReturnCode draw_vertical(
   convert_units(
       {
         bind(&convert_unit_typographic, layer->dpi, layer->font_size.value, _1),
-        bind(&convert_unit_user, domain_translate_fn(config.scale_y), _1),
+        bind(&convert_unit_user, scale_translate_fn(config.scale_y), _1),
         bind(&convert_unit_relative, clip.h, _1)
       },
       &*config.yoffset.begin(),
@@ -164,7 +177,7 @@ ReturnCode draw_vertical(
     }
   }
 
-  auto y0 = clip.h * std::clamp(domain_translate(config.scale_y, 0), 0.0, 1.0);
+  auto y0 = clip.h * std::clamp(scale_translate(config.scale_y, 0), 0.0, 1.0);
   for (int i = config.x.size() - 1; i >= 0; --i) {
     auto sx = clip.x + config.x[i];
     auto sy = clip.y + clip.h - (config.yoffset.empty() ? y0 : config.yoffset[i]);
@@ -184,48 +197,47 @@ ReturnCode draw_vertical(
 }
 
 ReturnCode draw(
-    const PlotAreaConfig& config,
+    std::shared_ptr<PlotAreaConfig> config,
     const LayoutInfo& layout,
     Layer* layer) {
-  switch (config.direction) {
+  switch (config->direction) {
     case Direction::HORIZONTAL:
-      return draw_horizontal(config, layout, layer);
+      return draw_horizontal(*config, layout, layer);
     case Direction::VERTICAL:
-      return draw_vertical(config, layout, layer);
+      return draw_vertical(*config, layout, layer);
     default:
       return ERROR;
   }
 }
 
-ReturnCode configure(
-    const plist::PropertyList& plist,
+ReturnCode build(
     const Environment& env,
-    PlotAreaConfig* config) {
+    const Expr* expr,
+    ElementRef* elem) {
   /* set defaults from environment */
-  config->scale_x = env.scale_x;
-  config->scale_y = env.scale_y;
+  auto config = std::make_shared<PlotAreaConfig>();
 
   /* parse properties */
-  ParserDefinitions pdefs = {
-    {"xs", bind(&configure_measures, _1, &config->x)},
-    {"ys", bind(&configure_measures, _1, &config->y)},
-    {"x-offsets", bind(&configure_measures, _1, &config->xoffset)},
-    {"y-offsets", bind(&configure_measures, _1, &config->yoffset)},
-    {"scale-x", bind(&domain_configure, _1, &config->scale_x)},
-    {"scale-x-min", bind(&configure_float_opt, _1, &config->scale_x.min)},
-    {"scale-x-max", bind(&configure_float_opt, _1, &config->scale_x.max)},
-    {"scale-x-padding", bind(&configure_float, _1, &config->scale_x.padding)},
-    {"scale-y", bind(&domain_configure, _1, &config->scale_y)},
-    {"scale-y-min", bind(&configure_float_opt, _1, &config->scale_y.min)},
-    {"scale-y-max", bind(&configure_float_opt, _1, &config->scale_y.max)},
-    {"scale-y-padding", bind(&configure_float, _1, &config->scale_y.padding)},
-    {"direction", bind(&configure_direction, _1, &config->direction)},
-    {"color", configure_vec<Color>(bind(&configure_color, _1, _2), &config->colors)},
-    {"colors", configure_vec<Color>(bind(&configure_color, _1, _2), &config->colors)},
-  };
+  auto config_rc = expr_walk_map(expr_next(expr), {
+    {"xdata", bind(&expr_to_measures, _1, &config->x)},
+    {"ydata", bind(&expr_to_measures, _1, &config->y)},
+    {"xoffsetdata", bind(&expr_to_measures, _1, &config->xoffset)},
+    {"yoffsetdata", bind(&expr_to_measures, _1, &config->yoffset)},
+    {"xmin", bind(&expr_to_float64_opt, _1, &config->scale_x.min)},
+    {"xmax", bind(&expr_to_float64_opt, _1, &config->scale_x.max)},
+    {"xscale", bind(&scale_configure_kind, _1, &config->scale_x)},
+    {"xscale-padding", bind(&expr_to_float64, _1, &config->scale_x.padding)},
+    {"ymin", bind(&expr_to_float64_opt, _1, &config->scale_y.min)},
+    {"ymax", bind(&expr_to_float64_opt, _1, &config->scale_y.max)},
+    {"yscale", bind(&scale_configure_kind, _1, &config->scale_y)},
+    {"yscale-padding", bind(&expr_to_float64, _1, &config->scale_y.padding)},
+    //{"direction", bind(&expr_to_direction, _1, &config->direction)},
+    {"color", expr_tov_fn<Color>(bind(&expr_to_color, _1, _2), &config->colors)},
+    {"colors", expr_tov_fn<Color>(bind(&expr_to_color, _1, _2), &config->colors)},
+  });
 
-  if (auto rc = parseAll(plist, pdefs); !rc) {
-    return rc;
+  if (!config_rc) {
+    return config_rc;
   }
 
   /* check configuraton */
@@ -252,32 +264,32 @@ ReturnCode configure(
   /* scale autoconfig */
   for (const auto& v : config->x) {
     if (v.unit == Unit::USER) {
-      domain_fit(v.value, &config->scale_x);
+      scale_fit(v.value, &config->scale_x);
     }
   }
 
   for (const auto& v : config->xoffset) {
     if (v.unit == Unit::USER) {
-      domain_fit(v.value, &config->scale_x);
+      scale_fit(v.value, &config->scale_x);
     }
   }
 
   for (const auto& v : config->y) {
     if (v.unit == Unit::USER) {
-      domain_fit(v.value, &config->scale_y);
+      scale_fit(v.value, &config->scale_y);
     }
   }
 
   for (const auto& v : config->yoffset) {
     if (v.unit == Unit::USER) {
-      domain_fit(v.value, &config->scale_y);
+      scale_fit(v.value, &config->scale_y);
     }
   }
 
+  *elem = std::make_shared<Element>();
+  (*elem)->draw = bind(&draw, config, _1, _2);
   return OK;
 }
 
-} // namespace area
-} // namespace plot
-} // namespace fviz
+} // namespace fviz::elements::chart::areas
 
