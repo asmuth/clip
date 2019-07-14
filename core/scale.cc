@@ -244,7 +244,6 @@ ReturnCode scale_layout_linear(
 }
 
 ReturnCode scale_layout_subdivide(
-    const DomainConfig& domain,
     ScaleLayout* layout,
     uint32_t divisions) {
   layout->ticks.clear();

@@ -67,9 +67,7 @@ struct ScaleLayout {
   std::vector<double> labels;
 };
 
-using ScaleLayoutFn = std::function<void (
-    const DomainConfig& domain,
-    ScaleLayout*)>;
+using ScaleLayoutFn = std::function<void (ScaleLayout*)>;
 
 void domain_fit(double value, DomainConfig* domain);
 
@@ -101,7 +99,6 @@ ReturnCode scale_layout_linear(
     std::optional<double> align);
 
 ReturnCode scale_layout_subdivide(
-    const DomainConfig& domain,
     ScaleLayout* layout,
     uint32_t divisions);
 

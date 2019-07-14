@@ -28,51 +28,71 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 #include "axis.h"
+#include "graphics/text.h"
+#include "graphics/layout.h"
+#include "graphics/brush.h"
+#include "core/scale.h"
+#include "core/format.h"
+#include "core/layout.h"
+#include "sexpr_util.h"
+
 #include <assert.h>
-#include <iostream>
-#include <source/config_helpers.h>
-#include <source/core/scale.h>
-#include "source/utils/algo.h"
-#include <graphics/text.h>
-#include <graphics/layout.h>
-#include <graphics/brush.h>
 
 using namespace std::placeholders;
 
-namespace plotfx {
+namespace plotfx::elements::chart::axis {
 
 static const double kDefaultLabelPaddingEM = 0.8;
 static const double kDefaultLineWidthPT = 1;
 static const double kDefaultTickLengthPT = 4;
 
+enum class AxisPosition {
+  TOP,
+  RIGHT,
+  BOTTOM,
+  LEFT,
+  CENTER_HORIZ,
+  CENTER_VERT
+};
+
+enum class AxisLabelPosition {
+  LEFT,
+  RIGHT,
+  TOP,
+  BOTTOM,
+  INSIDE,
+  OUTSIDE,
+};
+
+struct AxisDefinition;
+
+using AxisLabelPlacement = std::function<ReturnCode (
+    const DomainConfig& domain,
+    AxisDefinition*)>;
+
+struct AxisDefinition {
+  AxisDefinition();
+  AxisPosition position;
+  DomainConfig scale;
+  ScaleLayoutFn scale_layout;
+  std::string title;
+  std::vector<std::string> label_override;
+  AxisLabelPosition tick_position;
+  AxisLabelPosition label_position;
+  Formatter label_formatter;
+  Color text_color;
+  Color border_color;
+  FontInfo font;
+  Measure label_padding;
+  Measure label_font_size;
+  Measure tick_length;
+  LayoutSettings layout;
+};
+
 AxisDefinition::AxisDefinition() :
     position(AxisPosition::BOTTOM),
     label_position(AxisLabelPosition::OUTSIDE),
     tick_position(AxisLabelPosition::INSIDE) {}
-
-ReturnCode parseAxisPosition(
-    const std::string& str,
-    AxisPosition* value) {
-  static const EnumDefinitions<AxisPosition> defs = {
-    { "top", AxisPosition::TOP },
-    { "right", AxisPosition::RIGHT },
-    { "bottom", AxisPosition::BOTTOM },
-    { "left", AxisPosition::LEFT },
-  };
-
-  return parseEnum(defs, str, value);
-}
-
-ReturnCode parseAxisPositionProp(const plist::Property& prop, AxisPosition* value) {
-  if (!plist::is_value(prop)) {
-    return ReturnCode::errorf(
-        "EARG",
-        "incorrect number of arguments; expected: 1, got: $0",
-        prop.size());
-  }
-
-  return parseAxisPosition(prop, value);
-}
 
 std::string axis_get_label(
     const AxisDefinition& axis,
@@ -100,7 +120,7 @@ static Status renderAxisVertical(
     Layer* target) {
   /* compute layout */
   ScaleLayout slayout;
-  axis_config.scale_layout(axis_config.scale, &slayout);
+  axis_config.scale_layout(&slayout);
 
   /* draw axis line */
   {
@@ -187,7 +207,7 @@ static Status renderAxisHorizontal(
     Layer* target) {
   /* compute layout */
   ScaleLayout slayout;
-  axis_config.scale_layout(axis_config.scale, &slayout);
+  axis_config.scale_layout(&slayout);
 
   /* draw axis line */
   {
@@ -273,7 +293,7 @@ ReturnCode axis_layout_labels(
     double* margin) {
   /* compute scale layout */
   ScaleLayout slayout;
-  axis.scale_layout(axis.scale, &slayout);
+  axis.scale_layout(&slayout);
 
   /* compute label size */
   double max = 0;
@@ -409,45 +429,45 @@ ReturnCode axis_layout(
   return OK;
 }
 
-namespace axis {
-
 ReturnCode draw(
-    const AxisDefinition& axis,
+    std::shared_ptr<AxisDefinition> config,
     const LayoutInfo& layout,
-    Layer* frame) {
+    Layer* layer) {
+  const auto& axis = *config;
+
   Status rc;
   switch (axis.position) {
     case AxisPosition::LEFT:
       rc = renderAxisVertical(
           axis,
           layout.content_box.x + layout.content_box.w,
-          layout.inner_box.y,
-          layout.inner_box.y + layout.inner_box.h,
-          frame);
+          layout.content_box.y,
+          layout.content_box.y + layout.content_box.h,
+          layer);
       break;
     case AxisPosition::RIGHT:
       rc = renderAxisVertical(
           axis,
           layout.content_box.x,
-          layout.inner_box.y,
-          layout.inner_box.y + layout.inner_box.h,
-          frame);
+          layout.content_box.y,
+          layout.content_box.y + layout.content_box.h,
+          layer);
       break;
     case AxisPosition::TOP:
       rc = renderAxisHorizontal(
           axis,
           layout.content_box.y + layout.content_box.h,
-          layout.inner_box.x,
-          layout.inner_box.x + layout.inner_box.w,
-          frame);
+          layout.content_box.x,
+          layout.content_box.x + layout.content_box.w,
+          layer);
       break;
     case AxisPosition::BOTTOM:
       rc = renderAxisHorizontal(
           axis,
           layout.content_box.y,
-          layout.inner_box.x,
-          layout.inner_box.x + layout.inner_box.w,
-          frame);
+          layout.content_box.x,
+          layout.content_box.x + layout.content_box.w,
+          layer);
       break;
     case AxisPosition::CENTER_HORIZ:
     case AxisPosition::CENTER_VERT:
@@ -481,39 +501,31 @@ ReturnCode reflow(
   return OK;
 }
 
-ReturnCode configure(
-    const plist::PropertyList& plist,
-    const Environment& env,
-    AxisDefinition* config) {
+ReturnCode build(const Environment& env, const Expr* expr, ElementRef* elem) {
+  auto elem_name = expr_get_value(expr);
+
+  auto config = std::make_shared<AxisDefinition>();
   config->font = env.font;
   config->label_font_size = env.font_size;
   config->border_color = env.border_color;
   config->text_color = env.text_color;
+  config->scale_layout = bind(&scale_layout_subdivide, _1, 6);
 
-  {
-    ParserDefinitions pdefs = {
-      {"position", bind(&parseAxisPositionProp, _1, &config->position)},
-    };
-
-    if (auto rc = parseAll(plist, pdefs); !rc) {
-      return rc;
-    }
+  if (elem_name == "chart/axis-top") {
+    config->position = AxisPosition::TOP;
   }
 
-  switch (config->position) {
-    case AxisPosition::TOP:
-    case AxisPosition::BOTTOM:
-    case AxisPosition::CENTER_HORIZ:
-      config->scale = env.scale_x;
-      config->scale_layout = env.scale_layout_x;
-      break;
-    case AxisPosition::LEFT:
-    case AxisPosition::RIGHT:
-    case AxisPosition::CENTER_VERT:
-      config->scale = env.scale_y;
-      config->scale_layout = env.scale_layout_y;
-      break;
-  };
+  if (elem_name == "chart/axis-right") {
+    config->position = AxisPosition::RIGHT;
+  }
+
+  if (elem_name == "chart/axis-bottom") {
+    config->position = AxisPosition::BOTTOM;
+  }
+
+  if (elem_name == "chart/axis-left") {
+    config->position = AxisPosition::LEFT;
+  }
 
   switch (config->position) {
     case AxisPosition::TOP:
@@ -531,19 +543,19 @@ ReturnCode configure(
   };
 
   {
-    ParserDefinitions pdefs = {
-      {"width", bind(&configure_measure_opt, _1, &config->layout.width)},
-      {"height", bind(&configure_measure_opt, _1, &config->layout.height)},
-      {"format", bind(&confgure_format, _1, &config->label_formatter)},
-      {"labels", bind(&configure_strings, _1, &config->label_override)},
-      {"layout", bind(&configure_scale_layout, _1, &config->scale_layout)},
-      {"scale", bind(&domain_configure, _1, &config->scale)},
-      {"scale-min", bind(&configure_float_opt, _1, &config->scale.min)},
-      {"scale-max", bind(&configure_float_opt, _1, &config->scale.max)},
-      {"scale-padding", bind(&configure_float, _1, &config->scale.padding)},
-    };
+    auto rc = expr_walk_map(expr_next(expr), {
+      //{"width", bind(&configure_measure_opt, _1, &config->layout.width)},
+      //{"height", bind(&configure_measure_opt, _1, &config->layout.height)},
+      //{"format", bind(&confgure_format, _1, &config->label_formatter)},
+      //{"labels", bind(&configure_strings, _1, &config->label_override)},
+      //{"layout", bind(&configure_scale_layout, _1, &config->scale_layout)},
+      //{"scale", bind(&domain_configure, _1, &config->scale)},
+      //{"scale-min", bind(&configure_float_opt, _1, &config->scale.min)},
+      //{"scale-max", bind(&configure_float_opt, _1, &config->scale.max)},
+      //{"scale-padding", bind(&configure_float, _1, &config->scale.padding)},
+    });
 
-    if (auto rc = parseAll(plist, pdefs); !rc) {
+    if (!rc) {
       return rc;
     }
   }
@@ -638,10 +650,10 @@ ReturnCode configure(
       break;
   };
 
+
+  *elem = std::make_shared<Element>();
+  (*elem)->draw = bind(&draw, config, _1, _2);
   return OK;
 }
 
-
-} // namespace axis
-} // namespace plotfx
-
+} // namespace plotfx::elements::chart::axis

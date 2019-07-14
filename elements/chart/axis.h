@@ -28,85 +28,14 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 #pragma once
-#include <utility>
-#include <string>
-#include <vector>
-#include <sexpr.h>
-#include <graphics/layer.h>
-#include <utils/return_code.h>
-#include <source/core/format.h>
-#include <source/dimension.h>
-#include "core/format.h"
-#include "core/environment.h"
-#include "core/layout.h"
+#include "element.h"
 
-namespace plotfx {
-struct DomainConfig;
-struct LayoutState;
-struct AxisDefinition;
+namespace plotfx::elements::chart::axis {
 
-enum class AxisPosition {
-  TOP,
-  RIGHT,
-  BOTTOM,
-  LEFT,
-  CENTER_HORIZ,
-  CENTER_VERT
-};
-
-enum class AxisLabelPosition {
-  LEFT,
-  RIGHT,
-  TOP,
-  BOTTOM,
-  INSIDE,
-  OUTSIDE,
-};
-
-using AxisLabelPlacement = std::function<ReturnCode (
-    const DomainConfig& domain,
-    AxisDefinition*)>;
-
-struct AxisDefinition {
-  AxisDefinition();
-  AxisPosition position;
-  DomainConfig scale;
-  ScaleLayoutFn scale_layout;
-  std::string title;
-  std::vector<std::string> label_override;
-  AxisLabelPosition tick_position;
-  AxisLabelPosition label_position;
-  Formatter label_formatter;
-  Color text_color;
-  Color border_color;
-  FontInfo font;
-  Measure label_padding;
-  Measure label_font_size;
-  Measure tick_length;
-  LayoutSettings layout;
-};
-
-namespace axis {
-
-ReturnCode draw(
-    const AxisDefinition& config,
-    const LayoutInfo& layout,
-    Layer* layer);
-
-ReturnCode reflow(
-    const AxisDefinition& config,
-    const Layer& layer,
-    const std::optional<double> max_width,
-    const std::optional<double> max_height,
-    double* min_width,
-    double* min_height);
-
-ReturnCode configure(
-    const plist::PropertyList& plist,
+ReturnCode build(
     const Environment& env,
-    AxisDefinition* config);
+    const Expr* expr,
+    ElementRef* elem);
 
-
-} // namespace axis
-} // namespace plotfx
+} // namespace plotfx::elements::chart::axis
 

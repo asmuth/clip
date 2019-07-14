@@ -37,6 +37,7 @@
 #include "utils/fileutil.h"
 #include "core/environment.h"
 #include "elements/text.h"
+#include "elements/chart/axis.h"
 
 #include <iostream>
 #include <string.h>
@@ -54,6 +55,10 @@ struct plotfx_s {
 plotfx_t* plotfx_init() {
   auto ctx = std::make_unique<plotfx_t>();
   element_bind(&ctx->elements, "text", bind(elements::text::build, _1, _2, _3));
+  element_bind(&ctx->elements, "chart/axis-top", bind(elements::chart::axis::build, _1, _2, _3));
+  element_bind(&ctx->elements, "chart/axis-right", bind(elements::chart::axis::build, _1, _2, _3));
+  element_bind(&ctx->elements, "chart/axis-bottom", bind(elements::chart::axis::build, _1, _2, _3));
+  element_bind(&ctx->elements, "chart/axis-left", bind(elements::chart::axis::build, _1, _2, _3));
   return ctx.release();
 }
 
