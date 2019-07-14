@@ -11,7 +11,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#include "config_helpers.h"
+#include "sexpr_conv.h"
 #include "utils/fileutil.h"
 #include "utils/csv.h"
 #include "utils/algo.h"
@@ -55,6 +55,12 @@ ReturnCode expr_to_measure_opt(
 
   *value = v;
   return OK;
+}
+
+ReturnCode expr_to_measures(
+    const Expr* expr,
+    std::vector<Measure>* measures) {
+  return expr_tov<Measure>(expr, bind(&expr_to_measure, _1, _2), measures);
 }
 
 ReturnCode expr_to_color(

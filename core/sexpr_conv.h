@@ -20,6 +20,9 @@ namespace fviz {
 
 using ExprConv = std::function<ReturnCode (const Expr*)>;
 
+template <typename T>
+using ExprConvTo = std::function<ReturnCode (const Expr*, T* to)>;
+
 ReturnCode expr_to_string(
     const Expr* prop,
     std::string* value);
@@ -32,6 +35,10 @@ ReturnCode expr_to_measure_opt(
     const Expr* expr,
     std::optional<Measure>* value);
 
+ReturnCode expr_to_measures(
+    const Expr* expr,
+    std::vector<Measure>* measures);
+
 ReturnCode expr_to_color(
     const Expr* prop,
     Color* value);
@@ -40,5 +47,17 @@ ReturnCode expr_to_color_opt(
     const Expr* expr,
     std::optional<Color>* var);
 
+template <typename T>
+ReturnCode expr_tov(
+    const Expr* expr,
+    ExprConvTo<T> conv,
+    std::vector<T>* values);
+
+template <typename T>
+ExprConv expr_tov_fn(
+    ExprConvTo<T> conv,
+    std::vector<T>* values);
+
 } // namespace fviz
 
+#include "sexpr_conv_impl.h"

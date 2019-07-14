@@ -222,25 +222,6 @@ ReturnCode configure_strings(
 
   return configure_vec<std::string>(bind(&configure_string, _1, _2), data)(prop);
 }
-
-ReturnCode configure_measures(
-    const Expr* prop,
-    std::vector<Measure>* measures) {
-  if (plist::is_enum(prop, "csv")) {
-    SeriesRef data;
-    if (auto rc = parse_data_series_csv(prop, &data); !rc) {
-      return rc;
-    }
-
-    for (auto v : series_to_float(*data)) {
-      measures->emplace_back(from_user(v));
-    }
-
-    return OK;
-  }
-
-  return configure_vec<Measure>(bind(&configure_measure, _1, _2), measures)(prop);
-}
 */
 } // namespace fviz
 

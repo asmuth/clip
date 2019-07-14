@@ -29,38 +29,6 @@ ReturnCode parseEnum(
   *value = def->second;
   return ReturnCode::success();
 }
-
-template <typename T>
-ParserFn configure_vec(ParseToFn<T> parser, std::vector<T>* values) {
-  return [parser, values] (const plist::Property& prop) -> ReturnCode {
-    switch (plist::is_list(prop)) {
-
-      case true: {
-        for (const auto& cld : *prop.next) {
-          T val;
-          if (auto rc = parser(cld, &val); !rc) {
-            return rc;
-          }
-
-          values->emplace_back(val);
-        }
-
-        return OK;
-      }
-
-      case false: {
-        T val;
-        if (auto rc = parser(prop, &val); !rc) {
-          return rc;
-        }
-
-        values->emplace_back(val);
-        return OK;
-      }
-
-    }
-  };
-}
 */
 
 } // namespace fviz
