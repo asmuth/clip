@@ -22,7 +22,7 @@ namespace fviz {
 
 std::vector<Color> series_to_colors(
     SeriesRef series,
-    const DomainConfig& domain_config,
+    const ScaleConfig& domain_config,
     const ColorScheme& palette);
 
 std::vector<Color> groups_to_colors(
@@ -32,7 +32,7 @@ std::vector<Color> groups_to_colors(
 
 std::vector<Measure> series_to_sizes(
     SeriesRef series,
-    const DomainConfig& domain_config,
+    const ScaleConfig& domain_config,
     const Measure& low,
     const Measure& high);
 

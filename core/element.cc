@@ -16,18 +16,5 @@
 
 namespace fviz {
 
-int32_t Element::z_index() const {
-  auto layout = layout_settings();
-
-  switch (layout.position) {
-    case Position::RELATIVE:
-      return 1;
-    case Position::TOP:
-      return 0;
-  }
-
-  return -1;
-}
-
 } // namespace fviz
 

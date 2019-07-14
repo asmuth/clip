@@ -153,7 +153,7 @@ ReturnCode build(
     {"xscale", bind(&scale_configure_kind, _1, &config->scale_x)},
     {"xscale-padding", bind(&expr_to_float64, _1, &config->scale_x.padding)},
     {"ymin", bind(&expr_to_float64_opt, _1, &config->scale_y.min)},
-    {"ymay", bind(&expr_to_float64_opt, _1, &config->scale_y.max)},
+    {"ymax", bind(&expr_to_float64_opt, _1, &config->scale_y.max)},
     {"yscale", bind(&scale_configure_kind, _1, &config->scale_y)},
     {"yscale-padding", bind(&expr_to_float64, _1, &config->scale_y.padding)},
     {"size", bind(&expr_to_measures, _1, &config->sizes)},
