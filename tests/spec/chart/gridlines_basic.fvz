@@ -1,0 +1,7 @@
+(layout/box
+  margin 1em
+  body (
+    (chart/gridlines
+      xlayout (linear 1)
+      xmin 0
+      xmax 16)))

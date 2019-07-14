@@ -12,40 +12,14 @@
  * limitations under the License.
  */
 #pragma once
-#include <stdlib.h>
-#include <sexpr.h>
-#include <graphics/layer.h>
-#include <core/scale.h>
-#include <element.h>
-#include <config_helpers.h>
+#include "element.h"
 
-namespace fviz {
-namespace gridlines {
+namespace fviz::elements::chart::gridlines {
 
-using GridlineLayout = std::function<ReturnCode (
-    const DomainConfig& domain,
-    std::vector<double>*)>;
-
-struct GridlineDefinition {
-  DomainConfig scale_x;
-  DomainConfig scale_y;
-  ScaleLayoutFn layout_x;
-  ScaleLayoutFn layout_y;
-  Measure line_width;
-  Color line_color;
-  LayoutSettings layout;
-};
-
-ReturnCode draw(
-    const GridlineDefinition& config,
-    const LayoutInfo& layout,
-    Layer* layer);
-
-ReturnCode configure(
-    const plist::PropertyList& plist,
+ReturnCode build(
     const Environment& env,
-    GridlineDefinition* config);
+    const Expr* expr,
+    ElementRef* elem);
 
-} // namespace gridlines
-} // namespace fviz
+} // namespace fviz::elements::chart::gridlines
 

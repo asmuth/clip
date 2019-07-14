@@ -12,32 +12,50 @@
  * limitations under the License.
  */
 #include "gridlines.h"
-#include "core/environment.h"
-#include "core/layout.h"
-#include "utils/algo.h"
+#include "environment.h"
+#include "format.h"
+#include "layout.h"
+#include "graphics/text.h"
+#include "graphics/layout.h"
+#include "graphics/brush.h"
+#include "scale.h"
+#include "sexpr_conv.h"
+#include "sexpr_util.h"
 
 using namespace std::placeholders;
 
-namespace fviz {
-namespace gridlines {
+namespace fviz::elements::chart::gridlines {
 
 static const double kDefaultLineWidthPT = 1;
 
+using GridlineLayout = std::function<ReturnCode (
+    const ScaleConfig& domain,
+    std::vector<double>*)>;
+
+struct GridlineDefinition {
+  ScaleConfig scale_x;
+  ScaleConfig scale_y;
+  ScaleLayoutFn layout_x;
+  ScaleLayoutFn layout_y;
+  Measure line_width;
+  Color line_color;
+};
+
 ReturnCode draw(
-    const GridlineDefinition& grid,
+    std::shared_ptr<GridlineDefinition> config,
     const LayoutInfo& layout,
     Layer* layer) {
   const auto& bbox = layout.content_box;
 
   StrokeStyle style;
-  style.line_width = grid.line_width;
-  style.color = grid.line_color;
+  style.line_width = config->line_width;
+  style.color = config->line_color;
 
   ScaleLayout slayout_x;
-  grid.layout_x(grid.scale_x, &slayout_x);
+  config->layout_x(config->scale_x, &slayout_x);
 
   ScaleLayout slayout_y;
-  grid.layout_y(grid.scale_y, &slayout_y);
+  config->layout_y(config->scale_y, &slayout_y);
 
   for (const auto& tick : slayout_x.ticks) {
     auto line_x = bbox.x + bbox.w * tick;
@@ -62,41 +80,38 @@ ReturnCode draw(
   return OK;
 }
 
-ReturnCode configure(
-    const plist::PropertyList& plist,
-    const Environment& env,
-    GridlineDefinition* config) {
+ReturnCode build(const Environment& env, const Expr* expr, ElementRef* elem) {
   /* set defaults from environment */
-  config->scale_x = env.scale_x;
-  config->scale_y = env.scale_y;
-  config->layout_x = env.scale_layout_x;
-  config->layout_y = env.scale_layout_y;
+  auto config = std::make_shared<GridlineDefinition>();
   config->line_width = from_pt(1);
   config->line_color = Color::fromRGB(.9, .9, .9); // TODO
+  config->layout_x = bind(&scale_layout_subdivide, _1, _2, 6);
+  config->layout_y = bind(&scale_layout_subdivide, _1, _2, 6);
 
   /* parse properties */
-  ParserDefinitions pdefs = {
-    {"scale-x", bind(&domain_configure, _1, &config->scale_x)},
-    {"scale-x-min", bind(&configure_float_opt, _1, &config->scale_x.min)},
-    {"scale-x-max", bind(&configure_float_opt, _1, &config->scale_x.max)},
-    {"scale-x-padding", bind(&configure_float, _1, &config->scale_x.padding)},
-    {"scale-y", bind(&domain_configure, _1, &config->scale_y)},
-    {"scale-y-min", bind(&configure_float_opt, _1, &config->scale_y.min)},
-    {"scale-y-max", bind(&configure_float_opt, _1, &config->scale_y.max)},
-    {"scale-y-padding", bind(&configure_float, _1, &config->scale_y.padding)},
-    {"layout-x", bind(&configure_scale_layout, _1, &config->layout_x)},
-    {"layout-y", bind(&configure_scale_layout, _1, &config->layout_y)},
-    {"stroke", bind(&configure_measure, _1, &config->line_width)},
-    {"color", bind(&configure_color, _1, &config->line_color)},
-  };
+  auto config_rc = expr_walk_map(expr_next(expr), {
+    {"xmin", bind(&expr_to_float64_opt, _1, &config->scale_x.min)},
+    {"xmax", bind(&expr_to_float64_opt, _1, &config->scale_x.max)},
+    {"xlayout", bind(&scale_configure_layout, _1, &config->layout_x)},
+    {"xscale", bind(&scale_configure_kind, _1, &config->scale_x)},
+    {"xscale-padding", bind(&expr_to_float64, _1, &config->scale_x.padding)},
+    {"ymin", bind(&expr_to_float64_opt, _1, &config->scale_y.min)},
+    {"ymax", bind(&expr_to_float64_opt, _1, &config->scale_y.max)},
+    {"ylayout", bind(&scale_configure_layout, _1, &config->layout_y)},
+    {"yscale", bind(&scale_configure_kind, _1, &config->scale_y)},
+    {"yscale-padding", bind(&expr_to_float64, _1, &config->scale_y.padding)},
+    {"color", bind(&expr_to_color, _1, &config->line_color)},
+    {"stroke", bind(&expr_to_measure, _1, &config->line_width)},
+  });
 
-  if (auto rc = parseAll(plist, pdefs); !rc) {
-    return rc;
+  if (!config_rc) {
+    return config_rc;
   }
 
+  *elem = std::make_shared<Element>();
+  (*elem)->draw = bind(&draw, config, _1, _2);
   return OK;
 }
 
-} // namespace gridlines
-} // namespace fviz
+} // namespace fviz::elements::chart::gridlines
 
