@@ -1,5 +1,5 @@
 project(fviz)
-add_definitions("-Dfviz_VERSION='\"v0.2.0\"'")
+add_definitions("-Dfviz_VERSION='\"v0.4.0\"'")
 
 
 # CMake Setup
