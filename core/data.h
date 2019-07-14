@@ -13,12 +13,33 @@
  */
 #pragma once
 #include <string>
-#include <unordered_map>
-#include "core/scale.h"
-#include "data_model.h"
+#include <vector>
+#include "return_code.h"
 #include "graphics/measure.h"
+#include "scale.h"
 
 namespace fviz {
+
+using Value = std::string;
+using Series = std::vector<Value>;
+using SeriesRef = std::shared_ptr<const Series>;
+using SeriesMap = std::unordered_map<std::string, SeriesRef>;
+
+struct DataGroup {
+  Value key;
+  std::vector<size_t> index;
+};
+
+std::vector<DataGroup> series_group(const Series& data);
+
+size_t series_len(const Series& s);
+
+bool series_is_numeric(const Series& s);
+
+std::vector<double> series_to_float(const Series& s);
+
+double value_to_float(const Value&);
+Value value_from_float(double);
 
 std::vector<Color> series_to_colors(
     SeriesRef series,
@@ -35,7 +56,6 @@ std::vector<Measure> series_to_sizes(
     const ScaleConfig& domain_config,
     const Measure& low,
     const Measure& high);
-
 
 } // namespace fviz
 

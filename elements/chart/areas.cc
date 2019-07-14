@@ -12,6 +12,9 @@
  * limitations under the License.
  */
 #include "areas.h"
+
+#include "environment.h"
+#include "layout.h"
 #include "scale.h"
 #include "sexpr_conv.h"
 #include "sexpr_util.h"
@@ -19,8 +22,6 @@
 #include "graphics/brush.h"
 #include "graphics/text.h"
 #include "graphics/layout.h"
-#include "config_helpers.h"
-#include "core/environment.h"
 
 #include <numeric>
 
@@ -38,7 +39,6 @@ struct PlotAreaConfig {
   ScaleConfig scale_x;
   ScaleConfig scale_y;
   std::vector<Color> colors;
-  LayoutSettings layout;
 };
 
 PlotAreaConfig::PlotAreaConfig() :

@@ -12,6 +12,7 @@
  * limitations under the License.
  */
 #include "lines.h"
+#include "data.h"
 #include "sexpr_conv.h"
 #include "sexpr_util.h"
 #include "scale.h"

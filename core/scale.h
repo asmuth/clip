@@ -22,7 +22,6 @@
 #include "utils/return_code.h"
 #include "sexpr.h"
 #include "color_scheme.h"
-#include "data_model.h"
 
 namespace fviz {
 
