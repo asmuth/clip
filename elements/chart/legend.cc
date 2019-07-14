@@ -11,22 +11,57 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#include <stdlib.h>
-#include "graphics/layer.h"
-#include "source/core/scale.h"
-#include "source/config_helpers.h"
-#include "source/utils/algo.h"
 #include "legend.h"
+
+#include "layout.h"
+#include "scale.h"
+#include "sexpr.h"
+#include "sexpr_conv.h"
+#include "sexpr_util.h"
+#include "graphics/path.h"
+#include "graphics/brush.h"
+#include "graphics/text.h"
+#include "graphics/layout.h"
 
 using namespace std::placeholders;
 
-namespace fviz {
+namespace fviz::elements::chart::legend {
 
-static const double kDefaultLabelFontSizeEM = 1;
-static const double kDefaultPaddingHorizEM = 1.8;
-static const double kDefaultPaddingVertEM = 1.4;
-static const double kDefaultItemPaddingHorizEM = 2.4;
-static const double kDefaultItemPaddingVertEM = 1.0;
+const double kDefaultLabelFontSizeEM = 1;
+const double kDefaultPaddingHorizEM = 1.8;
+const double kDefaultPaddingVertEM = 1.4;
+const double kDefaultItemPaddingHorizEM = 2.4;
+const double kDefaultItemPaddingVertEM = 1.0;
+const std::string LEGEND_DEFAULT = "default";
+
+enum class LegendPlacement {
+  OFF,
+  INSIDE,
+  OUTSIDE
+};
+
+using LegendItemList = std::vector<std::string>;
+
+struct LegendConfig {
+  LegendConfig();
+  std::string key;
+  Color text_color;
+  Color border_color;
+  FontInfo font;
+  Measure padding_horiz;
+  Measure padding_vert;
+  Measure padding_item_horiz;
+  Measure padding_item_vert;
+  Measure margins[4];
+  Measure item_margins[4];
+  LegendPlacement placement;
+  HAlign position_horiz;
+  VAlign position_vert;
+  std::string title;
+  std::vector<std::string> items;
+  std::vector<Color> colors;
+  LayoutSettings layout;
+};
 
 LegendConfig::LegendConfig() :
     key(LEGEND_DEFAULT),
@@ -215,55 +250,76 @@ ReturnCode legend_draw_inside(
   return OK;
 }
 
+ReturnCode legend_draw(
+    std::shared_ptr<LegendConfig> config,
+    const LayoutInfo& layout,
+    Layer* layer) {
+  switch (config->placement) {
+    case LegendPlacement::INSIDE:
+      return legend_draw_inside(*config, layout.content_box, layer);
+    case LegendPlacement::OUTSIDE:
+    case LegendPlacement::OFF:
+    default:
+      return ERROR; // TODO: not implemented
+  }
+}
+
 ReturnCode legend_configure_position(
-    const plist::Property& prop,
+    const Expr* expr,
     LegendPlacement* placement,
     HAlign* position_horiz,
     VAlign* position_vert) {
-  auto args = plist::flatten(prop);
+  if (!expr || !expr_is_list(expr)) {
+    return ReturnCode::errorf(
+        "EARG",
+        "invalid argument; expected a list but got: $0",
+        "..."); // FIXME
+  }
+
   bool position_horiz_set = false;
   bool position_vert_set = false;
-  for (const auto& prop : args) {
-    if (prop == "off") {
+
+  for (expr = expr_get_list(expr); expr; expr = expr_next(expr)) {
+    if (expr_is_value(expr, "off")) {
       *placement = LegendPlacement::OFF;
       return OK;
     }
 
-    if (prop == "inside") {
+    if (expr_is_value(expr, "inside")) {
       *placement = LegendPlacement::INSIDE;
       continue;
     }
 
-    if (prop == "outside") {
+    if (expr_is_value(expr, "outside")) {
       *placement = LegendPlacement::OUTSIDE;
       continue;
     }
 
-    if (prop == "top") {
+    if (expr_is_value(expr, "top")) {
       *position_vert = VAlign::TOP;
       position_vert_set = true;
       continue;
     }
 
-    if (prop == "bottom") {
+    if (expr_is_value(expr, "bottom")) {
       *position_vert = VAlign::BOTTOM;
       position_vert_set = true;
       continue;
     }
 
-    if (prop == "left") {
+    if (expr_is_value(expr, "left")) {
       *position_horiz = HAlign::LEFT;
       position_horiz_set = true;
       continue;
     }
 
-    if (prop == "right") {
+    if (expr_is_value(expr, "right")) {
       *position_horiz = HAlign::RIGHT;
       position_horiz_set = true;
       continue;
     }
 
-    if (prop == "center") {
+    if (expr_is_value(expr, "center")) {
       if (!position_horiz_set) *position_horiz = HAlign::CENTER;
       if (!position_vert_set) *position_vert = VAlign::CENTER;
       continue;
@@ -275,43 +331,18 @@ ReturnCode legend_configure_position(
   return OK;
 }
 
-namespace legend {
-
-ReturnCode draw(
-    const LegendConfig& config,
-    const LayoutInfo& layout,
-    Layer* layer) {
-  switch (config.placement) {
-    case LegendPlacement::INSIDE:
-      return legend_draw_inside(config, layout.content_box, layer);
-    case LegendPlacement::OUTSIDE:
-    case LegendPlacement::OFF:
-    default:
-      return ERROR; // TODO: not implemented
-  }
-}
-
-ReturnCode reflow(
-    const LegendConfig& config,
-    const Layer& layer,
-    const std::optional<double> max_width,
-    const std::optional<double> max_height,
-    double* min_width,
-    double* min_height) {
-  return OK; // TODO
-}
-
-ReturnCode configure(
-    const plist::PropertyList& plist,
+ReturnCode build(
     const Environment& env,
-    LegendConfig* config) {
+    const Expr* expr,
+    ElementRef* elem) {
   /* inherit defaults */
+  auto config = std::make_shared<LegendConfig>();
   config->font = env.font;
   config->border_color = env.border_color;
   config->text_color = env.text_color;
 
-  /* parse properties */
-  ParserDefinitions pdefs = {
+  /* parse exprerties */
+  auto config_rc = expr_walk_map(expr_next(expr), {
     {
       "position",
       bind(
@@ -321,88 +352,34 @@ ReturnCode configure(
           &config->position_horiz,
           &config->position_vert)
     },
-    {
-      "title",
-      bind(
-          &configure_string,
-          _1,
-          &config->title)
-      },
-    {
-      "text-color",
-      bind(
-          &configure_color,
-          _1,
-          &config->text_color)
-    },
-    {
-      "border-color",
-      bind(
-          &configure_color,
-          _1,
-          &config->border_color)
-    },
+    {"title", bind( &expr_to_string, _1, &config->title)},
+    {"text-color", bind(&expr_to_color, _1, &config->text_color)},
+    {"border-color", bind(&expr_to_color, _1, &config->border_color)},
     {
       "item-margin",
-      configure_multiprop({
-          bind(
-              &configure_measure,
-              _1,
-              &config->item_margins[0]),
-          bind(
-              &configure_measure,
-              _1,
-              &config->item_margins[1]),
-          bind(
-              &configure_measure,
-              _1,
-              &config->item_margins[2]),
-          bind(
-              &configure_measure,
-              _1,
-              &config->item_margins[3])
+      expr_calln_fn({
+          bind(&expr_to_measure, _1, &config->item_margins[0]),
+          bind(&expr_to_measure, _1, &config->item_margins[1]),
+          bind(&expr_to_measure, _1, &config->item_margins[2]),
+          bind(&expr_to_measure, _1, &config->item_margins[3])
       })
     },
-    {
-      "item-margin-top",
-      bind(
-          &configure_measure,
-          _1,
-          &config->item_margins[0])
-    },
-    {
-      "item-margin-right",
-      bind(
-          &configure_measure,
-          _1,
-          &config->item_margins[1])
-    },
-    {
-      "item-margin-bottom",
-      bind(
-          &configure_measure,
-          _1,
-          &config->item_margins[2])
-    },
-    {
-      "item-margin-left",
-      bind(
-          &configure_measure,
-          _1,
-          &config->item_margins[3])
-    },
-    {"color", configure_vec<Color>(bind(&configure_color, _1, _2), &config->colors)},
-    {"colors", configure_vec<Color>(bind(&configure_color, _1, _2), &config->colors)},
-    {"items", bind(&configure_strings, _1, &config->items)},
-  };
+    {"item-margin-top", bind(&expr_to_measure, _1, &config->item_margins[0])},
+    {"item-margin-right", bind(&expr_to_measure, _1, &config->item_margins[1])},
+    {"item-margin-bottom", bind(&expr_to_measure, _1, &config->item_margins[2])},
+    {"item-margin-left", bind(&expr_to_measure, _1, &config->item_margins[3])},
+    {"color", expr_tov_fn<Color>(bind(&expr_to_color, _1, _2), &config->colors)},
+    {"colors", expr_tov_fn<Color>(bind(&expr_to_color, _1, _2), &config->colors)},
+    {"items", bind(&expr_to_strings, _1, &config->items)},
+  });
 
-  if (auto rc = parseAll(plist, pdefs); !rc.isSuccess()) {
-    return rc;
+  if (!config_rc) {
+    return config_rc;
   }
-
+  *elem = std::make_shared<Element>();
+  (*elem)->draw = bind(&legend_draw, config, _1, _2);
   return OK;
 }
 
-} // namespace legend
-} // namespace fviz
+} // namespace fviz::elements::chart::legend
 
