@@ -54,8 +54,17 @@ using ElementDrawFn = std::function<
         const LayoutInfo& layout,
         Layer* layer)>;
 
+using ElementSizeHintFn = std::function<
+    ReturnCode (
+        const Layer& layer,
+        const std::optional<double> max_width,
+        const std::optional<double> max_height,
+        double* min_width,
+        double* min_height)>;
+
 struct Element {
   ElementDrawFn draw;
+  ElementSizeHintFn size_hint;
 };
 
 

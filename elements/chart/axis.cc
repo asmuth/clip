@@ -430,7 +430,31 @@ ReturnCode axis_layout(
   return OK;
 }
 
-ReturnCode draw(
+ReturnCode axis_calculate_size(
+    std::shared_ptr<AxisDefinition> axis,
+    const Layer& layer,
+    const std::optional<double> max_width,
+    const std::optional<double> max_height,
+    double* min_width,
+    double* min_height) {
+  double size = 0.0;
+  axis_layout(*axis, axis->position, layer, &size);
+
+  switch (axis->position) {
+    case AxisPosition::TOP:
+    case AxisPosition::BOTTOM:
+      *min_height = size;
+      break;
+    case AxisPosition::RIGHT:
+    case AxisPosition::LEFT:
+      *min_width = size;
+      break;
+  }
+
+  return OK;
+}
+
+ReturnCode axis_draw(
     std::shared_ptr<AxisDefinition> config,
     const LayoutInfo& layout,
     Layer* layer) {
@@ -476,30 +500,6 @@ ReturnCode draw(
   }
 
   return rc;
-}
-
-ReturnCode reflow(
-    const AxisDefinition& axis,
-    const Layer& layer,
-    const std::optional<double> max_width,
-    const std::optional<double> max_height,
-    double* min_width,
-    double* min_height) {
-  double size = 0.0;
-  axis_layout(axis, axis.position, layer, &size);
-
-  switch (axis.position) {
-    case AxisPosition::TOP:
-    case AxisPosition::BOTTOM:
-      *min_height = size;
-      break;
-    case AxisPosition::RIGHT:
-    case AxisPosition::LEFT:
-      *min_width = size;
-      break;
-  }
-
-  return OK;
 }
 
 ReturnCode build(const Environment& env, const Expr* expr, ElementRef* elem) {
@@ -653,7 +653,8 @@ ReturnCode build(const Environment& env, const Expr* expr, ElementRef* elem) {
 
 
   *elem = std::make_shared<Element>();
-  (*elem)->draw = bind(&draw, config, _1, _2);
+  (*elem)->draw = bind(&axis_draw, config, _1, _2);
+  (*elem)->size_hint = bind(&axis_calculate_size, config, _1, _2, _3, _4, _5);
   return OK;
 }
 
