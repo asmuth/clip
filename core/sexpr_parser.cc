@@ -1,5 +1,5 @@
 /**
- * This file is part of the "plotfx" project
+ * This file is part of the "fviz" project
  *   Copyright (c) 2018 Paul Asmuth
  *
  * Redistribution and use in source and binary forms, with or without
@@ -32,7 +32,7 @@
 #include "sexpr_parser.h"
 #include "stringutil.h"
 
-namespace plotfx {
+namespace fviz {
 
 ReturnCode expr_parse_literal(
     const char** cur,
@@ -191,4 +191,4 @@ ReturnCode expr_parse(
   return OK;
 }
 
-} // namespace plotfx
+} // namespace fviz

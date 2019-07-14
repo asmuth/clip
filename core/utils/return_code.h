@@ -1,5 +1,5 @@
 /**
- * This file is part of the "plotfx" project
+ * This file is part of the "fviz" project
  *   Copyright (c) 2016 Paul Asmuth, FnordCorp B.V.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -35,9 +35,9 @@
 #include <stdarg.h>
 #include <initializer_list>
 #include "stringutil.h"
-#include "plotfx.h"
+#include "fviz.h"
 
-namespace plotfx {
+namespace fviz {
 
 enum Status : int {
   ERROR = 0,
@@ -128,5 +128,5 @@ ReturnCode err_invalid_value(
     const std::string& value,
     std::vector<std::string> expected_values);
 
-} // namespace plotfx
+} // namespace fviz
 

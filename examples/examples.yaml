@@ -52,6 +52,6 @@
 - section: Other
   files:
     - file: other/demo
-      desc: A collection of examples generated with PlotFX
+      desc: A collection of examples generated with fviz
     - file: other/demo2
-      desc: A collection of examples generated with PlotFX
+      desc: A collection of examples generated with fviz

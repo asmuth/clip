@@ -6,7 +6,7 @@ documentation:
     pages:
       -
         title: "Introduction"
-        doctitle: "PlotFX"
+        doctitle: "fviz"
         url: "/"
         file: "introduction"
       -
@@ -123,7 +123,7 @@ documentation:
     pages:
       -
         title: "GitHub"
-        url: "https://github.com/plotfx/plotfx"
+        url: "https://github.com/fviz/fviz"
       -
         title: "Contributing"
         url: "/documentation/contributing"

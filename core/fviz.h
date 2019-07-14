@@ -1,5 +1,5 @@
 /**
- * This file is part of the "plotfx" project
+ * This file is part of the "fviz" project
  *   Copyright (c) 2018 Paul Asmuth
  *
  * Redistribution and use in source and binary forms, with or without
@@ -31,52 +31,52 @@
 #include <stdlib.h>
 
 /**
- * The PlotFX C API
+ * The fviz C API
  *
  * How to use:
- *  1) Call `plotfx_init` to create a new context
- *  2) Call `plotfx_configure` with your configuration string
- *  3) Optional: Set parameters using `plotfx_setparam_*`
- *  4) Call `plotfx_render_*`, e.g. `plotx_render_svg_file`
+ *  1) Call `fviz_init` to create a new context
+ *  2) Call `fviz_configure` with your configuration string
+ *  3) Optional: Set parameters using `fviz_setparam_*`
+ *  4) Call `fviz_render_*`, e.g. `plotx_render_svg_file`
  *  5) Optional: Repeat steps 2..4
- *  6) Once you're done with the PlotFX context, free it using `plotfx_destroy`
+ *  6) Once you're done with the fviz context, free it using `fviz_destroy`
  */
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-typedef struct plotfx_s plotfx_t;
+typedef struct fviz_s fviz_t;
 
 /**
- * Initialize a new PlotFX context.
+ * Initialize a new fviz context.
  *
- * @returns: A plotfx context that must be free'd using `plotfx_destroy`
+ * @returns: A fviz context that must be free'd using `fviz_destroy`
  */
-plotfx_t* plotfx_init();
+fviz_t* fviz_init();
 
 /**
- * Free a PlotFX context
+ * Free a fviz context
  */
-void plotfx_destroy(plotfx_t* ctx);
+void fviz_destroy(fviz_t* ctx);
 
 /**
- * Set the configuration of the PlotFX context. Please refer to the documentation
- * for the syntax and available properties in the PlotFX configuration file.
+ * Set the configuration of the fviz context. Please refer to the documentation
+ * for the syntax and available properties in the fviz configuration file.
  *
  * @returns: One (1) on success and zero (0) if an error has occured
  */
-int plotfx_configure(
-    plotfx_t* ctx,
+int fviz_configure(
+    fviz_t* ctx,
     const char* config);
 
 /**
- * Set the configuration of the PlotFX context. Please refer to the documentation
- * for the syntax and available properties in the PlotFX configuration file.
+ * Set the configuration of the fviz context. Please refer to the documentation
+ * for the syntax and available properties in the fviz configuration file.
  *
  * @returns: One (1) on success and zero (0) if an error has occured
  */
-int plotfx_configure_file(
-    plotfx_t* ctx,
+int fviz_configure_file(
+    fviz_t* ctx,
     const char* path);
 
 /**
@@ -85,43 +85,43 @@ int plotfx_configure_file(
  *
  * @returns: One (1) on success and zero (0) if an error has occured
  */
-int plotfx_render_file(plotfx_t* ctx, const char* path, const char* format);
+int fviz_render_file(fviz_t* ctx, const char* path, const char* format);
 
 /**
  * Render the context to a SVG file. The result image will
- * be written to the provided filesystem path once you call `plotfx_submit`
+ * be written to the provided filesystem path once you call `fviz_submit`
  *
  * @returns: One (1) on success and zero (0) if an error has occured
  */
-int plotfx_render_svg_file(plotfx_t* ctx, const char* path);
+int fviz_render_svg_file(fviz_t* ctx, const char* path);
 
 /**
  * Render the context to a PNG file. The result image will
- * be written to the provided filesystem path once you call `plotfx_submit`
+ * be written to the provided filesystem path once you call `fviz_submit`
  *
  * @returns: One (1) on success and zero (0) if an error has occured
  */
-int plotfx_render_png_file(plotfx_t* ctx, const char* path);
+int fviz_render_png_file(fviz_t* ctx, const char* path);
 
 /**
  * Render the context to a user-provided backend. This method is only useful
- * if you want to extend PlotFX. Normal users are not expected to ever call this.
+ * if you want to extend fviz. Normal users are not expected to ever call this.
  *
  * @returns: One (1) on success and zero (0) if an error has occured
  */
-int plotfx_render_to(plotfx_t* ctx, void* backend);
+int fviz_render_to(fviz_t* ctx, void* backend);
 
 /**
  * Retrieve the last error message. The returned pointer is valid until the next
- * `plotfx_*` method is called on the context.
+ * `fviz_*` method is called on the context.
  */
-const char* plotfx_geterror(const plotfx_t* ctx);
+const char* fviz_geterror(const fviz_t* ctx);
 
 /**
  * Set a user-defined parameter
  */
-void plotfx_setparam_f64(
-    plotfx_t* ctx,
+void fviz_setparam_f64(
+    fviz_t* ctx,
     const char* name,
     size_t name_len,
     double value);
@@ -129,8 +129,8 @@ void plotfx_setparam_f64(
 /**
  * Set a user-defined parameter
  */
-void plotfx_setparam_f64v(
-    plotfx_t* ctx,
+void fviz_setparam_f64v(
+    fviz_t* ctx,
     const char* name,
     size_t name_len,
     const double* values,
@@ -139,8 +139,8 @@ void plotfx_setparam_f64v(
 /**
  * Set a user-defined parameter
  */
-void plotfx_setparam_str(
-    plotfx_t* ctx,
+void fviz_setparam_str(
+    fviz_t* ctx,
     const char* name,
     size_t name_len,
     const char* value,
@@ -149,8 +149,8 @@ void plotfx_setparam_str(
 /**
  * Set a user-defined parameter
  */
-void plotfx_setparam_strv(
-    plotfx_t* ctx,
+void fviz_setparam_strv(
+    fviz_t* ctx,
     const char* name,
     size_t name_len,
     const char** values,

@@ -1,5 +1,5 @@
 /**
- * This file is part of the "plotfx" project
+ * This file is part of the "fviz" project
  *   Copyright (c) 2018 Paul Asmuth
  *
  * Redistribution and use in source and binary forms, with or without
@@ -33,7 +33,7 @@
 #include "graphics/text.h"
 #include "../unittest.h"
 
-using namespace plotfx;
+using namespace fviz;
 
 Status drawTestAt(Layer* l, uint32_t x, uint32_t y, TextStyle s) {
   StrokeStyle ss;

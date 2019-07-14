@@ -32,7 +32,7 @@
 #include "stdtypes.h"
 #include "option.h"
 
-using namespace plotfx; // FIXME
+using namespace fviz; // FIXME
 
 /**
  * Class representing an instance of time in the gregorian calendar

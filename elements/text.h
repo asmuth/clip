@@ -1,5 +1,5 @@
 /**
- * This file is part of the "plotfx" project
+ * This file is part of the "fviz" project
  *   Copyright (c) 2018 Paul Asmuth
  *
  * Redistribution and use in source and binary forms, with or without
@@ -30,12 +30,12 @@
 #pragma once
 #include "element.h"
 
-namespace plotfx::elements::text {
+namespace fviz::elements::text {
 
 ReturnCode build(
     const Environment& env,
     const Expr* expr,
     ElementRef* elem);
 
-} // namespace plotfx::elements::text
+} // namespace fviz::elements::text
 

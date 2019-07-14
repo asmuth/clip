@@ -1,5 +1,5 @@
 /**
- * This file is part of the "plotfx" project
+ * This file is part of the "fviz" project
  *   Copyright (c) 2018 Paul Asmuth
  *
  * Redistribution and use in source and binary forms, with or without
@@ -32,7 +32,7 @@
 #include <graphics/image.h>
 #include <graphics/text_layout.h>
 
-namespace plotfx {
+namespace fviz {
 
 Rasterizer::Rasterizer(
     uint32_t width_,
@@ -281,5 +281,5 @@ Status Rasterizer::writeToFile(const std::string& path) {
   return ERROR;
 }
 
-} // namespace plotfx
+} // namespace fviz
 

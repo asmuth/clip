@@ -1,5 +1,5 @@
 /**
- * This file is part of the "plotfx" project
+ * This file is part of the "fviz" project
  *   Copyright (c) 2018 Paul Asmuth
  *
  * Redistribution and use in source and binary forms, with or without
@@ -33,12 +33,12 @@
 #include "element.h"
 #include "core/layout.h"
 
-namespace plotfx::elements::chart::layout {
+namespace fviz::elements::chart::layout {
 
 ReturnCode build(
     const Environment& env,
     const Expr* expr,
     ElementRef* elem);
 
-} // namespace plotfx::elements::chart::layout
+} // namespace fviz::elements::chart::layout
 

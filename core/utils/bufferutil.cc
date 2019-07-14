@@ -1,5 +1,5 @@
 /**
- * This file is part of the "plotfx" project
+ * This file is part of the "fviz" project
  *   Copyright (c) 2014 Paul Asmuth, Google Inc.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -30,7 +30,7 @@
 #include "bufferutil.h"
 #include "inspect.h"
 
-namespace plotfx {
+namespace fviz {
 
 void BufferUtil::stripTrailingBytes(Buffer* buf, unsigned char byte) {
   auto begin = (const unsigned char*) buf->data();
@@ -74,5 +74,5 @@ std::string BufferUtil::hexPrint(
 
   return str;
 }
-} // namespace plotfx
+} // namespace fviz
 

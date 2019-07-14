@@ -36,7 +36,7 @@
 #include <locale>
 #include "stdtypes.h"
 
-namespace plotfx {
+namespace fviz {
 
 class UTF8 {
 public:
@@ -50,4 +50,4 @@ public:
 
 };
 
-} // namespace plotfx
+} // namespace fviz

@@ -1,5 +1,5 @@
 /**
- * This file is part of the "plotfx" project
+ * This file is part of the "fviz" project
  *   Copyright (c) 2018 Paul Asmuth
  *
  * Redistribution and use in source and binary forms, with or without
@@ -30,7 +30,7 @@
 #include "dimension.h"
 #include <iostream>
 
-namespace plotfx {
+namespace fviz {
 
 std::vector<Color> series_to_colors(
     SeriesRef series,
@@ -91,5 +91,5 @@ std::vector<Measure> series_to_sizes(
 }
 */
 
-} // namespace plotfx
+} // namespace fviz
 

@@ -1,5 +1,5 @@
 /**
- * This file is part of the "plotfx" project
+ * This file is part of the "fviz" project
  *   Copyright (c) 2018 Paul Asmuth
  *   Copyright (c) 2014 Paul Asmuth, Google Inc.
  *
@@ -34,12 +34,12 @@
 #include <string>
 
 #include "color.h"
-#include "plotfx.h"
+#include "fviz.h"
 #include "text_shaper.h"
 #include "measure.h"
 #include "layer_ops.h"
 
-namespace plotfx {
+namespace fviz {
 
 /**
  * The layer is the central rendering context on which 2D vector graphics
@@ -75,5 +75,5 @@ using LayerRef = std::unique_ptr<Layer>;
  */
 ReturnCode layer_submit(Layer* layer);
 
-} // namespace plotfx
+} // namespace fviz
 

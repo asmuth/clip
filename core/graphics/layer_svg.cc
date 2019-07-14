@@ -1,5 +1,5 @@
 /**
- * This file is part of the "plotfx" project
+ * This file is part of the "fviz" project
  *   Copyright (c) 2014 Paul Asmuth, Google Inc.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -31,7 +31,7 @@
 #include "utils/fileutil.h"
 #include "utils/exception.h"
 
-namespace plotfx {
+namespace fviz {
 
 struct SVGData {
   std::stringstream buffer;
@@ -233,5 +233,5 @@ ReturnCode layer_bind_svg(
   return OK;
 }
 
-} // namespace plotfx
+} // namespace fviz
 

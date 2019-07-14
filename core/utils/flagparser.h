@@ -1,5 +1,5 @@
 /**
- * This file is part of the "plotfx" project
+ * This file is part of the "fviz" project
  *   Copyright (c) 2014 Paul Asmuth, Google Inc.
  *   Copyright (c) 2016 Paul Asmuth, FnordCorp B.V.
  *
@@ -33,7 +33,7 @@
 #include <vector>
 #include "return_code.h"
 
-namespace plotfx {
+namespace fviz {
 
 enum kFlagType {
   T_SWITCH,

@@ -1,5 +1,5 @@
 /**
- * This file is part of the "plotfx" project
+ * This file is part of the "fviz" project
  *   Copyright (c) 2018 Paul Asmuth
  *   Copyright (c) 2014 Paul Asmuth, Google Inc.
  *
@@ -37,7 +37,7 @@
 #include "core/environment.h"
 #include "core/layout.h"
 
-namespace plotfx {
+namespace fviz {
 
 const std::string LEGEND_DEFAULT = "default";
 
@@ -92,5 +92,5 @@ ReturnCode configure(
 
 
 } // namespace legned
-} // namespace plotfx
+} // namespace fviz
 

@@ -1,5 +1,5 @@
 /**
- * This file is part of the "plotfx" project
+ * This file is part of the "fviz" project
  *   Copyright (c) 2018 Paul Asmuth
  *   Copyright (c) 2011-2014 Paul Asmuth, Google Inc.
  *
@@ -30,7 +30,7 @@
  */
 #include "lines.h"
 #include <numeric>
-#include <plotfx.h>
+#include <fviz.h>
 #include <graphics/path.h>
 #include <graphics/brush.h>
 #include <graphics/text.h>
@@ -39,7 +39,7 @@
 
 using namespace std::placeholders;
 
-namespace plotfx {
+namespace fviz {
 namespace plot {
 namespace lines {
 
@@ -158,5 +158,5 @@ ReturnCode configure(
 
 } // namespace lines
 } // namespace plot
-} // namespace plotfx
+} // namespace fviz
 

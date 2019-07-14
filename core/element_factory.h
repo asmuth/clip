@@ -1,5 +1,5 @@
 /**
- * This file is part of the "plotfx" project
+ * This file is part of the "fviz" project
  *   Copyright (c) 2018 Paul Asmuth
  *
  * Redistribution and use in source and binary forms, with or without
@@ -33,7 +33,7 @@
 #include "utils/return_code.h"
 #include "element.h"
 
-namespace plotfx {
+namespace fviz {
 
 struct ElementMap {
   std::unordered_map<std::string, ElementConfigureFn> elements;
@@ -59,4 +59,4 @@ void element_bind(
     const std::string& name,
     ElementConfigureFn configure_fn);
 
-} // namespace plotfx
+} // namespace fviz

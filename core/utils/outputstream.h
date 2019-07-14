@@ -1,5 +1,5 @@
 /**
- * This file is part of the "plotfx" project
+ * This file is part of the "fviz" project
  *   Copyright (c) 2014 Paul Asmuth, Google Inc.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -27,14 +27,14 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-#ifndef _plotfx_OUTPUTSTREAM_H
-#define _plotfx_OUTPUTSTREAM_H
+#ifndef _fviz_OUTPUTSTREAM_H
+#define _fviz_OUTPUTSTREAM_H
 #include <fcntl.h>
 #include <memory>
 #include <mutex>
 #include "buffer.h"
 
-namespace plotfx {
+namespace fviz {
 
 class OutputStream {
 public:

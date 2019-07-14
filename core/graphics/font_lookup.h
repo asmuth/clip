@@ -1,5 +1,5 @@
 /**
- * This file is part of the "plotfx" project
+ * This file is part of the "fviz" project
  *   Copyright (c) 2018 Paul Asmuth
  *
  * Redistribution and use in source and binary forms, with or without
@@ -28,10 +28,10 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 #pragma once
-#include "plotfx.h"
+#include "fviz.h"
 #include "text.h"
 
-namespace plotfx {
+namespace fviz {
 
 bool findFontSystem(
     const std::string& font_pattern,
@@ -48,5 +48,5 @@ enum DefaultFont {
 
 ReturnCode font_load(DefaultFont font_name, FontInfo* font_info);
 
-} // namespace plotfx
+} // namespace fviz
 

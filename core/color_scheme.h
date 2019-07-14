@@ -1,5 +1,5 @@
 /**
- * This file is part of the "plotfx" project
+ * This file is part of the "fviz" project
  *   Copyright (c) 2011-2014 Paul Asmuth, Google Inc.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -31,7 +31,7 @@
 #include <stdlib.h>
 #include "graphics/color.h"
 
-namespace plotfx {
+namespace fviz {
 
 class ColorScheme {
 public:
@@ -57,5 +57,5 @@ protected:
   std::vector<std::string> colors_;
 };
 
-} // namespace plotfx
+} // namespace fviz
 

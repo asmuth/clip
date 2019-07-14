@@ -1,5 +1,5 @@
 /**
- * This file is part of the "plotfx" project
+ * This file is part of the "fviz" project
  *   Copyright (c) 2018 Paul Asmuth
  *
  * Redistribution and use in source and binary forms, with or without
@@ -32,7 +32,7 @@
 #include "graphics/text_layout.h"
 #include <graphics/layer.h>
 
-namespace plotfx {
+namespace fviz {
 
 TextStyle::TextStyle() :
     direction(TextDirection::LTR) {}
@@ -71,5 +71,5 @@ Status drawTextLabel(
   return layer->apply(op);
 }
 
-} // namespace plotfx
+} // namespace fviz
 

@@ -1,5 +1,5 @@
 /**
- * This file is part of the "plotfx" project
+ * This file is part of the "fviz" project
  *   Copyright (c) 2018 Paul Asmuth
  *   Copyright (c) 2014 Paul Asmuth, Google Inc.
  *
@@ -34,7 +34,7 @@
 #include "stringutil.h"
 #include "UTF8.h"
 
-namespace plotfx {
+namespace fviz {
 
 void StringUtil::toStringVImpl(std::vector<std::string>* target) {}
 
@@ -508,4 +508,4 @@ String StringUtil::stripShell(const std::string& str) {
   return out;
 }
 
-} // namespace plotfx
+} // namespace fviz

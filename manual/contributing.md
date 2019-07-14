@@ -1,4 +1,4 @@
-Contributing to PlotFX
+Contributing to fviz
 ======================
 
 To contribute, please fork the github repository, make your changes and run the 
@@ -6,15 +6,15 @@ specs, commit them to your github repository and send me a pull request.
 Need help, head on over to our [Google Groups][1] page to discuss any ideas
 that you might have.
 
-Here are some ways to contribute to PlotFX:
+Here are some ways to contribute to fviz:
 
   + Report bugs or suggest new features
   + Suggest or implement new options for existing charts or new chart types
   + Improve the documentation
   + Publish howtos, tutorials and videos
 
-## Individual Contributors to PlotFX
+## Individual Contributors to fviz
 
-[View the list of individual contributors on Github](http://github.com/plotfx/plotfx/graphs/contributors)
+[View the list of individual contributors on Github](http://github.com/fviz/fviz/graphs/contributors)
 
 

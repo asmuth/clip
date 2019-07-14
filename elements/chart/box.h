@@ -1,5 +1,5 @@
 /**
- * This file is part of the "plotfx" project
+ * This file is part of the "fviz" project
  *   Copyright (c) 2018 Paul Asmuth
  *
  * Redistribution and use in source and binary forms, with or without
@@ -33,7 +33,7 @@
 #include "element.h"
 #include "core/layout.h"
 
-namespace plotfx {
+namespace fviz {
 namespace box {
 
 struct BoxBorderConfig {
@@ -73,5 +73,5 @@ ReturnCode configure(
     BoxConfig* config);
 
 } // namespace box
-} // namespace plotfx
+} // namespace fviz
 

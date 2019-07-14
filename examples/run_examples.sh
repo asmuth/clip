@@ -3,6 +3,6 @@ set -uex
 
 cd "${0%/*}/.."
 
-find examples -name "*.ptx" | while read f; do
-  plotfx --in "$f" --out "${f/.ptx/.svg}"
+find examples -name "*.fvz" | while read f; do
+  fviz --in "$f" --out "${f/.fvz/.svg}"
 done

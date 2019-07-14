@@ -1,5 +1,5 @@
 /**
- * This file is part of the "plotfx" project
+ * This file is part of the "fviz" project
  *   Copyright (c) 2014 Paul Asmuth
  *
  * Redistribution and use in source and binary forms, with or without
@@ -30,7 +30,7 @@
 #include <iostream>
 #include "path.h"
 
-namespace plotfx {
+namespace fviz {
 
 double PathData::operator[](size_t idx) const {
   return coefficients[idx];
@@ -141,4 +141,4 @@ bool Path::empty() const {
   return data_.size() == 0;
 }
 
-} // namespace plotfx
+} // namespace fviz

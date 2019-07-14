@@ -18,7 +18,7 @@ tpl = """
   </head>
   <body>
     <div id="navigation">
-      <a href="/" style="display: block; margin-bottom: -.4em; "><img src="/logo.png" alt="PlotFX" class="logo"/></a>
+      <a href="/" style="display: block; margin-bottom: -.4em; "><img src="/logo.png" alt="fviz" class="logo"/></a>
 
       {{#toc}}
         <a class="nav_title">{{title}}</a>
@@ -41,7 +41,7 @@ tpl = """
 
     <article>
       <div class="header">
-        <a style="display: block; text-decoration: none; color: #666; float: right; margin-top: 2em;" href="http://github.com/plotfx/plotfx" target="_blank">
+        <a style="display: block; text-decoration: none; color: #666; float: right; margin-top: 2em;" href="http://github.com/fviz/fviz" target="_blank">
           View on <img src="https://github.githubassets.com/images/modules/logos_page/GitHub-Logo.png" style="height: 12px; position: relative; top: 1px; margin-left: 2px;">
         </a>
 
@@ -56,14 +56,14 @@ tpl = """
       </div>
 
       <div style="text-align: right; margin-top: 10em; font-size: 80%;">
-        <a class="link" target="_blank" href="https://github.com/plotfx/plotfx/blob/master/manual">
+        <a class="link" target="_blank" href="https://github.com/fviz/fviz/blob/master/manual">
           Edit this page on GitHub
         </a>
       </div>
 
       <div id="footer">
         Copyright &copy; 2011-2018 Paul Asmuth, Laura Schlimmer et al. &mdash;
-        PlotFX is free software licensed under a 3-Clause BSD License
+        fviz is free software licensed under a 3-Clause BSD License
       </div>
     </article>
   </body>
@@ -83,8 +83,8 @@ def build_layout(url, content, title=""):
   toc = map(lambda x: extend_toc(x), toc)
 
   title_seo = title
-  if title_seo != "PlotFX":
-    title_seo += " - PlotFX"
+  if title_seo != "fviz":
+    title_seo += " - fviz"
 
   return TPL.render(tpl, {
     "content": content,

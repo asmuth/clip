@@ -23,7 +23,7 @@
  */
 #include "csv.h"
 
-namespace plotfx {
+namespace fviz {
 
 ReturnCode parseCSV(
     std::string input,
@@ -79,6 +79,6 @@ ReturnCode parseCSV(
   return ReturnCode::success();
 }
 
-} // namespace plotfx
+} // namespace fviz
 
 

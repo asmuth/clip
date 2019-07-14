@@ -1,7 +1,7 @@
 License
 =======
 
-The PlotFX License (https://plotfx.org)
+The fviz License (https://fviz.org)
 
 Copyright (c) 2018, Paul Asmuth, Laura Schlimmer<br />
 All rights reserved.

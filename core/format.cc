@@ -1,5 +1,5 @@
 /**
- * This file is part of the "plotfx" project
+ * This file is part of the "fviz" project
  *   Copyright (c) 2018 Paul Asmuth
  *
  * Redistribution and use in source and binary forms, with or without
@@ -34,7 +34,7 @@
 #include <sstream>
 #include <iomanip>
 
-namespace plotfx {
+namespace fviz {
 
 Formatter format_decimal_scientific(size_t precision) {
   return [precision] (const std::string& v) -> std::string {
@@ -183,5 +183,5 @@ ReturnCode confgure_format(
 }
 */
 
-} // namespace plotfx
+} // namespace fviz
 

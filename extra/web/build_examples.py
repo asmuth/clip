@@ -14,7 +14,7 @@ def build_example(example):
   path = "/examples/" + url
   env = {
     "example_url": url,
-    "example_src": Path(os.path.join("examples", url + ".ptx")).read_text(),
+    "example_src": Path(os.path.join("examples", url + ".fvz")).read_text(),
     "title": "Example: %s" % url,
   }
 

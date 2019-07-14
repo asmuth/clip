@@ -1,5 +1,5 @@
 /**
- * This file is part of the "plotfx" project
+ * This file is part of the "fviz" project
  *   Copyright (c) 2018 Paul Asmuth
  *   Copyright (c) 2014 Paul Asmuth, Google Inc.
  *
@@ -37,7 +37,7 @@
 #include <vector>
 #include "stdtypes.h"
 
-namespace plotfx {
+namespace fviz {
 
 class StringUtil {
 public:
@@ -415,7 +415,7 @@ protected:
 
 };
 
-} // namespace plotfx
+} // namespace fviz
 
 #include "stringutil_impl.h"
 #endif

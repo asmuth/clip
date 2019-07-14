@@ -1,5 +1,5 @@
 /**
- * This file is part of the "plotfx" project
+ * This file is part of the "fviz" project
  *   Copyright (c) 2018 Paul Asmuth
  *   Copyright (c) 2011-2014 Paul Asmuth, Google Inc.
  *
@@ -29,7 +29,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 #include "areas.h"
-#include "plotfx.h"
+#include "fviz.h"
 #include "graphics/path.h"
 #include "graphics/brush.h"
 #include "graphics/text.h"
@@ -41,7 +41,7 @@
 
 using namespace std::placeholders;
 
-namespace plotfx {
+namespace fviz {
 namespace plot {
 namespace area {
 
@@ -296,5 +296,5 @@ ReturnCode configure(
 
 } // namespace area
 } // namespace plot
-} // namespace plotfx
+} // namespace fviz
 

@@ -1,10 +1,10 @@
 # Redirect domain aliases to primary domain
-https://plotfx.net/* https://plotfx.org/:splat 301!
-https://www.plotfx.net/* https://plotfx.org/:splat 301!
-https://fnordmetric.io/* https://plotfx.org/:splat 301!
-https://fnordmetric.com/* https://plotfx.org/:splat 301!
-https://www.fnordmetric.com/* https://plotfx.org/:splat 301!
-https://www.fnordmetric.io/* https://plotfx.org/:splat 301!
+https://fviz.net/* https://fviz.org/:splat 301!
+https://www.fviz.net/* https://fviz.org/:splat 301!
+https://fnordmetric.io/* https://fviz.org/:splat 301!
+https://fnordmetric.com/* https://fviz.org/:splat 301!
+https://www.fnordmetric.com/* https://fviz.org/:splat 301!
+https://www.fnordmetric.io/* https://fviz.org/:splat 301!
 
 # Optional: Redirect default Netlify subdomain to primary domain
-https://plotfx.netlify.com/* https://plotfx.org/:splat 301!
+https://fviz.netlify.com/* https://fviz.org/:splat 301!

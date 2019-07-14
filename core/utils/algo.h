@@ -1,5 +1,5 @@
 /**
- * This file is part of the "plotfx" project
+ * This file is part of the "fviz" project
  *   Copyright (c) 2018 Paul Asmuth
  *
  * Redistribution and use in source and binary forms, with or without
@@ -31,7 +31,7 @@
 #include <optional>
 #include <vector>
 
-namespace plotfx {
+namespace fviz {
 
 template <typename T>
 const T& at_or(const std::vector<T>& vec, size_t idx, const T& fallback);
@@ -57,6 +57,6 @@ std::vector<H> fallback(const std::vector<H>& head, const T&... tail);
 template <typename H, typename... T>
 std::vector<H> fallback(const std::optional<H>& head, const T&... tail);
 
-} // namespace plotfx
+} // namespace fviz
 
 #include "algo_impl.h"

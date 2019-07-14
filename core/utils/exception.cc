@@ -1,5 +1,5 @@
 /**
- * This file is part of the "plotfx" project
+ * This file is part of the "fviz" project
  *   Copyright (c) 2014 Paul Asmuth, Google Inc.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -32,7 +32,7 @@
 #include <string.h>
 #include "exception.h"
 
-namespace plotfx {
+namespace fviz {
 
 Exception::Exception() :
     type_name_(nullptr),
@@ -138,5 +138,5 @@ int Exception::line() const {
   return line_;
 }
 
-} // namespace plotfx
+} // namespace fviz
 

@@ -1,8 +1,8 @@
 Support
 =======
 
-There are various ways to get support for PlotFX:
+There are various ways to get support for fviz:
 
-+ [The PlotFX Google Group](http://groups.google.com/group/plotfx)
++ [The fviz Google Group](http://groups.google.com/group/fviz)
 
 

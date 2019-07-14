@@ -1,5 +1,5 @@
 /**
- * This file is part of the "plotfx" project
+ * This file is part of the "fviz" project
  *   Copyright (c) 2018 Paul Asmuth
  *   Copyright (c) 2016 Paul Asmuth, Laura Schlimmer, FnordCorp B.V.
  *   Copyright (c) 2014 Paul Asmuth, Google Inc.
@@ -32,12 +32,12 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <iostream>
-#include "plotfx.h"
+#include "fviz.h"
 #include "utils/flagparser.h"
 #include "utils/return_code.h"
 #include "utils/stringutil.h"
 
-using namespace plotfx;
+using namespace fviz;
 
 void printError(const ReturnCode& rc) {
   std::cerr << StringUtil::format("ERROR: $0", rc.getMessage()) << std::endl;
@@ -75,25 +75,25 @@ int main(int argc, const char** argv) {
   if (flag_version) {
     std::cerr <<
         StringUtil::format(
-            "plotfx $0\n"
-            "Part of the PlotFX project (https://plotfx.org)\n"
+            "fviz $0\n"
+            "Part of the fviz project (https://fviz.org)\n"
             "Copyright (c) 2019, Paul Asmuth, Laura Schlimmer.\n"
             "All rights reserved.\n\n",
-            PLOTFX_VERSION);
+            fviz_VERSION);
 
     return 0;
   }
 
   if (flag_help) {
     std::cerr <<
-        "Usage: $ plotfx [OPTIONS]\n"
+        "Usage: $ fviz [OPTIONS]\n"
         "   --help                Display this help text and exit\n"
         "   --version             Display the version of this binary and exit\n"
         "\n"
         "Commands:\n";
 
 
-    std::cerr << "\nSee 'plotfx help <command>' for information about a specific subcommand.\n";
+    std::cerr << "\nSee 'fviz help <command>' for information about a specific subcommand.\n";
     return 0;
   }
 
@@ -113,24 +113,24 @@ int main(int argc, const char** argv) {
     if (StringUtil::endsWith(flag_out, ".png")) { fmt = "png"; }
   }
 
-  plotfx_t* ctx = plotfx_init();
+  fviz_t* ctx = fviz_init();
   if (!ctx) {
-    std::cerr << "ERROR: error while initializing PlotFX" << std::endl;
+    std::cerr << "ERROR: error while initializing fviz" << std::endl;
     return EXIT_FAILURE;
   }
 
-  if (!plotfx_configure_file(ctx, flag_in.c_str())) {
+  if (!fviz_configure_file(ctx, flag_in.c_str())) {
     std::cerr
         << "ERROR: error while parsing configuration: "
-        << plotfx_geterror(ctx)
+        << fviz_geterror(ctx)
         << std::endl;
     return EXIT_FAILURE;
   }
 
-  if (!plotfx_render_file(ctx, flag_out.c_str(), fmt.c_str())) {
+  if (!fviz_render_file(ctx, flag_out.c_str(), fmt.c_str())) {
     std::cerr
         << "ERROR: error while rendering: "
-        << plotfx_geterror(ctx)
+        << fviz_geterror(ctx)
         << std::endl;
     return EXIT_FAILURE;
   }

@@ -31,7 +31,7 @@
 #include "UTF8.h"
 #include "exception.h"
 
-namespace plotfx {
+namespace fviz {
 
 char32_t UTF8::nextCodepoint(const char** cur, const char* end_) {
   auto begin = reinterpret_cast<const uint8_t*>(*cur);
@@ -225,5 +225,5 @@ void UTF8::encodeCodepoint(char32_t codepoint, String* target) {
   }
 }
 
-} // namespace plotfx
+} // namespace fviz
 

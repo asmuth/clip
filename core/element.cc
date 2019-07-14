@@ -1,5 +1,5 @@
 /**
- * This file is part of the "plotfx" project
+ * This file is part of the "fviz" project
  *   Copyright (c) 2018 Paul Asmuth
  *
  * Redistribution and use in source and binary forms, with or without
@@ -30,7 +30,7 @@
 #include "element.h"
 #include "core/layout.h"
 
-namespace plotfx {
+namespace fviz {
 
 int32_t Element::z_index() const {
   auto layout = layout_settings();
@@ -45,5 +45,5 @@ int32_t Element::z_index() const {
   return -1;
 }
 
-} // namespace plotfx
+} // namespace fviz
 

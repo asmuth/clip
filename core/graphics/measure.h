@@ -1,5 +1,5 @@
 /**
- * This file is part of the "plotfx" project
+ * This file is part of the "fviz" project
  *   Copyright (c) 2018 Paul Asmuth
  *
  * Redistribution and use in source and binary forms, with or without
@@ -33,7 +33,7 @@
 #include <string>
 #include <utils/return_code.h>
 
-namespace plotfx {
+namespace fviz {
 struct Rectangle;
 
 enum class Unit {
@@ -88,5 +88,5 @@ void convert_unit_user(
     std::function<double (double)> converter,
     Measure* measure);
 
-} // namespace plotfx
+} // namespace fviz
 

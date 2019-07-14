@@ -1,5 +1,5 @@
 /**
- * This file is part of the "plotfx" project
+ * This file is part of the "fviz" project
  *   Copyright (c) 2014 Paul Asmuth, Google Inc.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -69,24 +69,24 @@ const char kFutureError[] = "FutureError";
 
 #define RAISE(E, ...) \
     RAISE_EXCEPTION( \
-        plotfx::Exception( __VA_ARGS__).setTypeName(E)); \
+        fviz::Exception( __VA_ARGS__).setTypeName(E)); \
         while(0) {}
 
 #define RAISEF(E, ...) \
     RAISE_EXCEPTION( \
-        plotfx::Exception( \
-            plotfx::StringUtil::format(__VA_ARGS__)).setTypeName(E)); \
+        fviz::Exception( \
+            fviz::StringUtil::format(__VA_ARGS__)).setTypeName(E)); \
         while(0) {}
 
 #define RAISE_ERRNO(E, ...) \
     { \
       int e = errno; \
       RAISE_EXCEPTION( \
-          plotfx::Exception( \
+          fviz::Exception( \
               __VA_ARGS__).setTypeName(E).setErrno(e)); \
     }
 
-namespace plotfx {
+namespace fviz {
 
 using StandardException = std::exception;
 
@@ -119,6 +119,6 @@ private:
   char message_[1024];
 };
 
-} // namespace plotfx
+} // namespace fviz
 
 #endif

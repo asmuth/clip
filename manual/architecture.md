@@ -1,12 +1,12 @@
 Architecture
 ============
 
-This page describes some of the "high-level" internal parts of PlotFX that are
+This page describes some of the "high-level" internal parts of fviz that are
 not mentioned elsewhere in the documentation, but which are helpful to understand
 how things fit together in the codebase.
 
-The intended target audience are PlotFX developers and users that wish to "look
-behind the curtain". If you're just trying to get started with using PlotFX, it
+The intended target audience are fviz developers and users that wish to "look
+behind the curtain". If you're just trying to get started with using fviz, it
 is not nesseccarily recommended or helpful to read this page.
 
 
@@ -54,8 +54,8 @@ Elements
 Layout Rules
 ------------
 
-It's imporant to point out that normal users of the PlotFX program will not have
-to understand the layouting rules described below. If you are new to PlotFX, please
+It's imporant to point out that normal users of the fviz program will not have
+to understand the layouting rules described below. If you are new to fviz, please
 don't let this section be the only thing you read -- it makes things sound much
 more complex than they are!
 
@@ -105,7 +105,7 @@ FIXME: describe how we come up with auto width/height
 ### Difference to CSS
 
 Most readers will know CSS so it might be useful to point out the similarities
-and differences between PlotFX and HTML/CSS, since both lay out elements as a
+and differences between fviz and HTML/CSS, since both lay out elements as a
 nested tree of boxes and have very similar syntax.
 
 However, that is pretty much where the similarities end. Since CSS is (also) intended
@@ -113,13 +113,13 @@ for creating text documents, it is based around a concept of universal "page flo
 i.e. by default block elements in CSS will be stacked vertically from top to bottom,
 similar to the way rows of text are placed one after another other in a page.
 
-This concept of page flow, or text layout, is entirely absent from PlotFX.
-PlotFX is not a document layouting system, so it does make sense to assume "row
+This concept of page flow, or text layout, is entirely absent from fviz.
+fviz is not a document layouting system, so it does make sense to assume "row
 by row" as a default element placement strategy. Most of the rest of CSS's layout
-features build from this core assumption so they are equally unapplicable to PlotFX.
+features build from this core assumption so they are equally unapplicable to fviz.
 
 Instead of being stacked horizontally within the parent box, like in CSS, boxes
-in PlotFX will, by default, simply be drawn on top of each other with each one
+in fviz will, by default, simply be drawn on top of each other with each one
 filling up the entirety of the parent box.
 
 This is a much more useful default behaviour for creating illustrations where in
@@ -128,7 +128,7 @@ graphics editing software such as Photoshop or Illustrator than that of a row of
 text.
 
 In the cases where you *do* want a behaviour that is more similar to CSS, i.e.
-you want multiple elements to be placed in a non-overlapping fashion, PlotFX gives
+you want multiple elements to be placed in a non-overlapping fashion, fviz gives
 you two options:
 
   - Set an absolute position and size (relative to the parent element) on each

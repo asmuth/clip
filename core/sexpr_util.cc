@@ -1,5 +1,5 @@
 /**
- * This file is part of the "plotfx" project
+ * This file is part of the "fviz" project
  *   Copyright (c) 2018 Paul Asmuth
  *
  * Redistribution and use in source and binary forms, with or without
@@ -31,7 +31,7 @@
 
 using namespace std::placeholders;
 
-namespace plotfx {
+namespace fviz {
 
 ReturnCode expr_walk_map(
     const Expr* expr,
@@ -81,6 +81,6 @@ ExprVisitor expr_calln_fn(const std::initializer_list<ExprVisitor>& fns) {
   return bind(&expr_calln, _1, fns);
 }
 
-} // namespace plotfx
+} // namespace fviz
 
 

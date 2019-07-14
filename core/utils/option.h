@@ -36,7 +36,7 @@
 #include <stdlib.h>
 #include "exception.h"
 
-namespace plotfx {
+namespace fviz {
 
 template <typename T>
 class Option {
@@ -66,7 +66,7 @@ Option<T> Some(const T& value);
 template <typename T>
 Option<T> None();
 
-} // namespace plotfx
+} // namespace fviz
 
 #include "option_impl.h"
 #endif

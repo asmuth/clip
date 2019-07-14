@@ -1,5 +1,5 @@
 /**
- * This file is part of the "plotfx" project
+ * This file is part of the "fviz" project
  *   Copyright (c) 2018 Paul Asmuth.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -31,7 +31,7 @@
 #include <assert.h>
 #include <iostream>
 
-namespace plotfx {
+namespace fviz {
 
 size_t series_len(const Series& s) {
   return s.size();
@@ -99,5 +99,5 @@ std::vector<DataGroup> series_group(const Series& data) {
   return groups;
 }
 
-} // namespace plotfx
+} // namespace fviz
 

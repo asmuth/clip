@@ -1,5 +1,5 @@
 /**
- * This file is part of the "plotfx" project
+ * This file is part of the "fviz" project
  *   Copyright (c) 2018 Paul Asmuth
  *
  * Redistribution and use in source and binary forms, with or without
@@ -35,7 +35,7 @@
 
 using namespace std::placeholders;
 
-namespace plotfx {
+namespace fviz {
 
 /*
 
@@ -258,5 +258,5 @@ ReturnCode configure_measures(
   return configure_vec<Measure>(bind(&configure_measure, _1, _2), measures)(prop);
 }
 */
-} // namespace plotfx
+} // namespace fviz
 

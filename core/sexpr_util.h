@@ -1,5 +1,5 @@
 /**
- * This file is part of the "plotfx" project
+ * This file is part of the "fviz" project
  *   Copyright (c) 2018 Paul Asmuth
  *
  * Redistribution and use in source and binary forms, with or without
@@ -33,7 +33,7 @@
 #include "sexpr.h"
 #include "utils/return_code.h"
 
-namespace plotfx {
+namespace fviz {
 
 using ExprVisitor = std::function<ReturnCode (const Expr*)>;
 
@@ -47,5 +47,5 @@ ReturnCode expr_calln(
 
 ExprVisitor expr_calln_fn(const std::initializer_list<ExprVisitor>& fns);
 
-} // namespace plotfx
+} // namespace fviz
 

@@ -1,5 +1,5 @@
 /**
- * This file is part of the "plotfx" project
+ * This file is part of the "fviz" project
  *   Copyright (c) 2018 Paul Asmuth
  *
  * Redistribution and use in source and binary forms, with or without
@@ -34,7 +34,7 @@
 #include <utils/stringutil.h>
 #include "color.h"
 
-namespace plotfx {
+namespace fviz {
 
 Color Color::fromRGBA(double red, double green, double blue, double alpha) {
   return Color({ red, green, blue, alpha });
@@ -166,5 +166,5 @@ std::ostream& operator <<(std::ostream& os, const Color& c) {
   return os;
 }
 
-} // namespace plotfx
+} // namespace fviz
 

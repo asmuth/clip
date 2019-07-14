@@ -1,5 +1,5 @@
 /**
- * This file is part of the "plotfx" project
+ * This file is part of the "fviz" project
  *   Copyright (c) 2018 Paul Asmuth
  *
  * Redistribution and use in source and binary forms, with or without
@@ -32,7 +32,7 @@
 
 using namespace std::placeholders;
 
-namespace plotfx {
+namespace fviz {
 
 enum class ExprType {
   LIST, VALUE_LITERAL, VALUE
@@ -117,5 +117,5 @@ const std::string& expr_get_value(const Expr* expr) {
   return expr->value;
 }
 
-} // namespace plotfx
+} // namespace fviz
 

@@ -1,5 +1,5 @@
 /**
- * This file is part of the "plotfx" project
+ * This file is part of the "fviz" project
  *   Copyright (c) 2014 Paul Asmuth, Google Inc.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -29,7 +29,7 @@
  */
 #include "inspect.h"
 
-namespace plotfx {
+namespace fviz {
 
 template <>
 std::string inspect<bool>(const bool& value) {
@@ -114,5 +114,5 @@ std::string inspect<std::exception>(const std::exception& e) {
   return e.what();
 }
 
-} // namespace plotfx
+} // namespace fviz
 

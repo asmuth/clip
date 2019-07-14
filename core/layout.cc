@@ -1,5 +1,5 @@
 /**
- * This file is part of the "plotfx" project
+ * This file is part of the "fviz" project
  *   Copyright (c) 2018 Paul Asmuth
  *
  * Redistribution and use in source and binary forms, with or without
@@ -30,7 +30,7 @@
 #include "layout.h"
 #include "graphics/layout.h"
 
-namespace plotfx {
+namespace fviz {
 
 LayoutSettings::LayoutSettings() : position(Position::RELATIVE) {}
 
@@ -170,5 +170,5 @@ ReturnCode layout_element(
 //  return OK;
 //}
 
-} // namespace plotfx
+} // namespace fviz
 

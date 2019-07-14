@@ -1,5 +1,5 @@
 /**
- * This file is part of the "plotfx" project
+ * This file is part of the "fviz" project
  *   Copyright (c) 2011-2014 Paul Asmuth, Google Inc.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -40,7 +40,7 @@
 #include "color_scheme.h"
 #include "data_model.h"
 
-namespace plotfx {
+namespace fviz {
 
 enum class DomainKind {
   LINEAR, LOGARITHMIC
@@ -110,5 +110,5 @@ ReturnCode scale_layout_discrete(
 //    const plist::Property& prop,
 //    ScaleLayoutFn* layout);
 
-} // namespace plotfx
+} // namespace fviz
 

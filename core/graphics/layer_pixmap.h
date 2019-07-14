@@ -1,5 +1,5 @@
 /**
- * This file is part of the "plotfx" project
+ * This file is part of the "fviz" project
  *   Copyright (c) 2014 Paul Asmuth, Google Inc.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -30,7 +30,7 @@
 #pragma once
 #include "layer.h"
 
-namespace plotfx {
+namespace fviz {
 class Rasterizer;
 
 ReturnCode layer_bind_img(
@@ -51,5 +51,5 @@ ReturnCode layer_bind_png(
     std::function<Status (const std::string&)> submit,
     LayerRef* layer);
 
-} // namespace plotfx
+} // namespace fviz
 

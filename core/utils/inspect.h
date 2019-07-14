@@ -1,5 +1,5 @@
 /**
- * This file is part of the "plotfx" project
+ * This file is part of the "fviz" project
  *   Copyright (c) 2014 Paul Asmuth, Google Inc.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -27,14 +27,14 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-#ifndef _plotfx_UTIL_INSPECT_H_
-#define _plotfx_UTIL_INSPECT_H_
+#ifndef _fviz_UTIL_INSPECT_H_
+#define _fviz_UTIL_INSPECT_H_
 #include <set>
 #include <string>
 #include <vector>
 #include "outputstream.h"
 
-namespace plotfx {
+namespace fviz {
 
 template <typename T>
 std::string inspect(const T& value);

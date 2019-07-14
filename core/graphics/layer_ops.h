@@ -1,5 +1,5 @@
 /**
- * This file is part of the "plotfx" project
+ * This file is part of the "fviz" project
  *   Copyright (c) 2018 Paul Asmuth
  *   Copyright (c) 2014 Paul Asmuth, Google Inc.
  *
@@ -39,7 +39,7 @@
 #include "brush.h"
 #include "text.h"
 
-namespace plotfx {
+namespace fviz {
 namespace layer_ops {
 
 struct SubmitOp {};
@@ -69,5 +69,5 @@ using Op = std::variant<
     TextSpanOp>;
 
 } // namespace layer_ops
-} // namespace plotfx
+} // namespace fviz
 

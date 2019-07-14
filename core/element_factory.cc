@@ -1,5 +1,5 @@
 /**
- * This file is part of the "plotfx" project
+ * This file is part of the "fviz" project
  *   Copyright (c) 2018 Paul Asmuth
  *
  * Redistribution and use in source and binary forms, with or without
@@ -32,7 +32,7 @@
 
 #include <unordered_map>
 
-namespace plotfx {
+namespace fviz {
 
 ReturnCode element_build(
     const Environment& env,
@@ -89,4 +89,4 @@ void element_bind(
   factory->elements[name] = configure_fn;
 }
 
-} // namespace plotfx
+} // namespace fviz

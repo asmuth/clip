@@ -1,5 +1,5 @@
 /**
- * This file is part of the "plotfx" project
+ * This file is part of the "fviz" project
  *   Copyright (c) 2014 Paul Asmuth, Google Inc.
  *   Copyright (c) 2016 Paul Asmuth, FnordCorp B.V.
  *
@@ -33,7 +33,7 @@
 #include <assert.h>
 #include "flagparser.h"
 
-namespace plotfx {
+namespace fviz {
 
 FlagParser::FlagParser() {}
 
@@ -251,5 +251,5 @@ ReturnCode FlagParser::parseArgv(const std::vector<std::string>& argv) {
   return ReturnCode::success();
 }
 
-} // namespace plotfx
+} // namespace fviz
 

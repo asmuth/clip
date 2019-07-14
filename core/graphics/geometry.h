@@ -1,5 +1,5 @@
 /**
- * This file is part of the "plotfx" project
+ * This file is part of the "fviz" project
  *   Copyright (c) 2018 Paul Asmuth
  *
  * Redistribution and use in source and binary forms, with or without
@@ -33,7 +33,7 @@
 #include <stdint.h>
 #include <iostream>
 
-namespace plotfx {
+namespace fviz {
 
 struct Point {
   Point();
@@ -54,5 +54,5 @@ struct Rectangle {
 std::ostream& operator <<(std::ostream& os, const Point& c);
 std::ostream& operator <<(std::ostream& os, const Rectangle& c);
 
-} // namespace plotfx
+} // namespace fviz
 

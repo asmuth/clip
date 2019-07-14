@@ -1,5 +1,5 @@
 /**
- * This file is part of the "plotfx" project
+ * This file is part of the "fviz" project
  *   Copyright (c) 2014 Paul Asmuth, Google Inc.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -43,7 +43,7 @@
 #include <vector>
 #include <functional>
 
-namespace plotfx {
+namespace fviz {
 
 using String = std::string;
 using WString = std::wstring;
@@ -81,5 +81,5 @@ using HashMap = std::unordered_map<T1, T2>;
 template <typename T>
 using Stack = std::stack<T>;
 
-} // namespace plotfx
+} // namespace fviz
 #endif

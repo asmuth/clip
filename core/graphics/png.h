@@ -1,5 +1,5 @@
 /**
- * This file is part of the "plotfx" project
+ * This file is part of the "fviz" project
  *   Copyright (c) 2017 Paul Asmuth
  *
  * Redistribution and use in source and binary forms, with or without
@@ -31,15 +31,15 @@
 #include <stdlib.h>
 #include <string>
 #include <vector>
-#include "plotfx.h"
+#include "fviz.h"
 #include <graphics/image.h>
 #include <utils/return_code.h>
 
-namespace plotfx {
+namespace fviz {
 
 Status pngWriteImageFile(
     const Image& image,
     const std::string& filename);
 
-} // namespace plotfx
+} // namespace fviz
 

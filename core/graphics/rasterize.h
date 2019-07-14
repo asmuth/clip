@@ -1,5 +1,5 @@
 /**
- * This file is part of the "plotfx" project
+ * This file is part of the "fviz" project
  *   Copyright (c) 2018 Paul Asmuth
  *
  * Redistribution and use in source and binary forms, with or without
@@ -47,7 +47,7 @@
 #include "layer.h"
 #include "text_layout.h"
 
-namespace plotfx {
+namespace fviz {
 class Image;
 
 class Rasterizer {
@@ -87,5 +87,5 @@ public:
 
 using RasterizerRef = std::shared_ptr<Rasterizer>;
 
-} // namespace plotfx
+} // namespace fviz
 

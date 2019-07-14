@@ -26,7 +26,7 @@
 #include <vector>
 #include "utils/return_code.h"
 
-namespace plotfx {
+namespace fviz {
 
 struct CSVParserConfig {
   CSVParserConfig() :
@@ -48,5 +48,5 @@ ReturnCode parseCSV(
     const CSVParserConfig& config,
     CSVData* output);
 
-} // namespace plotfx
+} // namespace fviz
 

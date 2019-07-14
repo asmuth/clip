@@ -1,5 +1,5 @@
 /**
- * This file is part of the "plotfx" project
+ * This file is part of the "fviz" project
  *   Copyright (c) 2018 Paul Asmuth
  *
  * Redistribution and use in source and binary forms, with or without
@@ -28,7 +28,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 #pragma once
-#include "plotfx.h"
+#include "fviz.h"
 #include "SDL2/SDL.h"
 
 #ifdef __cplusplus
@@ -36,11 +36,11 @@ extern "C" {
 #endif
 
 /**
- * Initialize a new PlotFX context that will draw to the provided SDL2 surface.
+ * Initialize a new fviz context that will draw to the provided SDL2 surface.
  *
  * @returns: One (1) on success and zero (0) if an error has occured
  */
-int plotfx_render_sdl2(plotfx_t* ctx, SDL_Surface* surface);
+int fviz_render_sdl2(fviz_t* ctx, SDL_Surface* surface);
 
 #ifdef __cplusplus
 } // extern C

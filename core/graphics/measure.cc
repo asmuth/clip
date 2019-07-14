@@ -1,5 +1,5 @@
 /**
- * This file is part of the "plotfx" project
+ * This file is part of the "fviz" project
  *   Copyright (c) 2018 Paul Asmuth
  *
  * Redistribution and use in source and binary forms, with or without
@@ -31,7 +31,7 @@
 #include <assert.h>
 #include <iostream>
 
-namespace plotfx {
+namespace fviz {
 
 Measure::Measure() : Measure(Unit::UNIT, 0) {}
 
@@ -182,5 +182,5 @@ void convert_unit_user(
   }
 }
 
-} // namespace plotfx
+} // namespace fviz
 

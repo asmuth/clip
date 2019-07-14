@@ -1,5 +1,5 @@
 /**
- * This file is part of the "plotfx" project
+ * This file is part of the "fviz" project
  *   Copyright (c) 2018 Paul Asmuth
  *   Copyright (c) 2014 Paul Asmuth, Google Inc.
  *
@@ -35,7 +35,7 @@
 
 using namespace std::placeholders;
 
-namespace plotfx {
+namespace fviz {
 namespace gridlines {
 
 static const double kDefaultLineWidthPT = 1;
@@ -115,5 +115,5 @@ ReturnCode configure(
 }
 
 } // namespace gridlines
-} // namespace plotfx
+} // namespace fviz
 

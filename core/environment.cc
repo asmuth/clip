@@ -1,5 +1,5 @@
 /**
- * This file is part of the "plotfx" project
+ * This file is part of the "fviz" project
  *   Copyright (c) 2018 Paul Asmuth
  *
  * Redistribution and use in source and binary forms, with or without
@@ -33,7 +33,7 @@
 
 using namespace std::placeholders;
 
-namespace plotfx {
+namespace fviz {
 
 Environment::Environment() :
     screen_width(Unit::UNIT, 1200),
@@ -54,5 +54,5 @@ ReturnCode environment_setup_defaults(Environment* env) {
   return OK;
 }
 
-} // namespace plotfx
+} // namespace fviz
 

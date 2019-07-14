@@ -1,5 +1,5 @@
 /**
- * This file is part of the "plotfx" project
+ * This file is part of the "fviz" project
  *   Copyright (c) 2011-2014 Paul Asmuth, Google Inc.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -41,7 +41,7 @@
 
 using namespace std::placeholders;
 
-namespace plotfx::elements::chart::axis {
+namespace fviz::elements::chart::axis {
 
 static const double kDefaultLabelPaddingEM = 0.8;
 static const double kDefaultLineWidthPT = 1;
@@ -658,4 +658,4 @@ ReturnCode build(const Environment& env, const Expr* expr, ElementRef* elem) {
   return OK;
 }
 
-} // namespace plotfx::elements::chart::axis
+} // namespace fviz::elements::chart::axis

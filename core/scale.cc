@@ -1,5 +1,5 @@
 /**
- * This file is part of the "plotfx" project
+ * This file is part of the "fviz" project
  *   Copyright (c) 2011-2014 Paul Asmuth, Google Inc.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -35,7 +35,7 @@
 #include <functional>
 
 using namespace std::placeholders;
-namespace plotfx {
+namespace fviz {
 
 static const double kDefaultLogBase = 10;
 static const size_t kMaxTicks = 8192;
@@ -394,5 +394,5 @@ ReturnCode configure_scale_layout(
 
 */
 
-} // namespace plotfx
+} // namespace fviz
 

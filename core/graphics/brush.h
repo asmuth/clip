@@ -1,5 +1,5 @@
 /**
- * This file is part of the "plotfx" project
+ * This file is part of the "fviz" project
  *   Copyright (c) 2018 Paul Asmuth
  *
  * Redistribution and use in source and binary forms, with or without
@@ -36,7 +36,7 @@
 #include "measure.h"
 #include "layout.h"
 
-namespace plotfx {
+namespace fviz {
 class Layer;
 
 enum class StrokeLineJoin { MITER, ROUND, BEVEL };
@@ -117,5 +117,5 @@ void fillRectangle(
     double height,
     const FillStyle& style);
 
-} // namespace plotfx
+} // namespace fviz
 

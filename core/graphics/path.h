@@ -1,5 +1,5 @@
 /**
- * This file is part of the "plotfx" project
+ * This file is part of the "fviz" project
  *   Copyright (c) 2018 Paul Asmuth
  *
  * Redistribution and use in source and binary forms, with or without
@@ -33,7 +33,7 @@
 #include <stdint.h>
 #include <vector>
 
-namespace plotfx {
+namespace fviz {
 
 enum class PathCommand {
   MOVE_TO,
@@ -81,5 +81,5 @@ protected:
   std::vector<PathData> data_;
 };
 
-} // namespace plotfx
+} // namespace fviz
 

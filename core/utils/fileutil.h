@@ -1,5 +1,5 @@
 /**
- * This file is part of the "plotfx" project
+ * This file is part of the "fviz" project
  *   Copyright (c) 2014 Paul Asmuth, Google Inc.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -27,13 +27,13 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-#ifndef _plotfx_UTIL_FILEUTIL_H_
-#define _plotfx_UTIL_FILEUTIL_H_
+#ifndef _fviz_UTIL_FILEUTIL_H_
+#define _fviz_UTIL_FILEUTIL_H_
 #include "buffer.h"
 #include "stdtypes.h"
 #include "return_code.h"
 
-namespace plotfx {
+namespace fviz {
 
 class FileUtil {
 public:

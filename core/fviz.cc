@@ -1,5 +1,5 @@
 /**
- * This file is part of the "plotfx" project
+ * This file is part of the "fviz" project
  *   Copyright (c) 2018 Paul Asmuth
  *
  * Redistribution and use in source and binary forms, with or without
@@ -27,7 +27,7 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-#include "plotfx.h"
+#include "fviz.h"
 #include "element_factory.h"
 #include "layout.h"
 #include "sexpr_parser.h"
@@ -45,17 +45,17 @@
 #include <string.h>
 
 using namespace std::placeholders;
-using namespace plotfx;
+using namespace fviz;
 
-struct plotfx_s {
+struct fviz_s {
   Environment env;
   ElementMap elements;
   ExprStorage expr;
   std::string error;
 };
 
-plotfx_t* plotfx_init() {
-  auto ctx = std::make_unique<plotfx_t>();
+fviz_t* fviz_init() {
+  auto ctx = std::make_unique<fviz_t>();
   auto elems = &ctx->env.element_map;
   element_bind(elems, "fill", bind(elements::fill::build, _1, _2, _3));
   element_bind(elems, "text", bind(elements::text::build, _1, _2, _3));
@@ -67,28 +67,28 @@ plotfx_t* plotfx_init() {
   return ctx.release();
 }
 
-const char* plotfx_geterror(const plotfx_t* ctx) {
+const char* fviz_geterror(const fviz_t* ctx) {
   return ctx->error.c_str();
 }
 
-void plotfx_seterrf(plotfx_t* ctx, const std::string& err) {
+void fviz_seterrf(fviz_t* ctx, const std::string& err) {
   ctx->error = err;
 }
 
 template <typename... T>
-void plotfx_seterrf(plotfx_t* ctx, const std::string& err, T... args) {
+void fviz_seterrf(fviz_t* ctx, const std::string& err, T... args) {
   ctx->error = StringUtil::format(err, args...);
 }
 
-void plotfx_seterr(plotfx_t* ctx, const ReturnCode& err) {
+void fviz_seterr(fviz_t* ctx, const ReturnCode& err) {
   ctx->error = err.getMessage();
 }
 
-int plotfx_configure(
-    plotfx_t* ctx,
+int fviz_configure(
+    fviz_t* ctx,
     const char* config) {
   if (auto rc = expr_parse(config, strlen(config), &ctx->expr); !rc) {
-    plotfx_seterrf(
+    fviz_seterrf(
         ctx,
         "invalid element specification: $0",
         rc.getMessage());
@@ -103,21 +103,21 @@ int plotfx_configure(
   return OK;
 }
 
-int plotfx_configure_file(
-    plotfx_t* ctx,
+int fviz_configure_file(
+    fviz_t* ctx,
     const char* path) {
   std::string config_path(path);
   std::string config_buf;
 
   if (auto rc = read_file(config_path, &config_buf); !rc) {
-    plotfx_seterr(ctx, rc);
+    fviz_seterr(ctx, rc);
     return rc;
   }
 
-  return plotfx_configure(ctx, config_buf.c_str());
+  return fviz_configure(ctx, config_buf.c_str());
 }
 
-int plotfx_render_to(plotfx_t* ctx, void* backend) {
+int fviz_render_to(fviz_t* ctx, void* backend) {
   auto layer = static_cast<Layer*>(backend);
 
   LayoutInfo layout;
@@ -138,24 +138,24 @@ int plotfx_render_to(plotfx_t* ctx, void* backend) {
     [&] { return layer_submit(layer); },
   });
 
-  plotfx_seterr(ctx, rc);
+  fviz_seterr(ctx, rc);
   return rc;
 }
 
-int plotfx_render_file(plotfx_t* ctx, const char* path, const char* fmt) {
+int fviz_render_file(fviz_t* ctx, const char* path, const char* fmt) {
   std::string format = fmt;
 
   if (format == "svg")
-    return plotfx_render_svg_file(ctx, path);
+    return fviz_render_svg_file(ctx, path);
 
   if (format == "png")
-    return plotfx_render_png_file(ctx, path);
+    return fviz_render_png_file(ctx, path);
 
-  plotfx_seterrf(ctx, "invalid output format: $0", format);
+  fviz_seterrf(ctx, "invalid output format: $0", format);
   return ERROR;
 }
 
-int plotfx_render_svg_file(plotfx_t* ctx, const char* path) {
+int fviz_render_svg_file(fviz_t* ctx, const char* path) {
   std::string path_str(path);
 
   LayerRef layer;
@@ -172,14 +172,14 @@ int plotfx_render_svg_file(plotfx_t* ctx, const char* path) {
       &layer);
 
   if (!rc.isSuccess()) {
-    plotfx_seterr(ctx, rc);
+    fviz_seterr(ctx, rc);
     return rc;
   }
 
-  return plotfx_render_to(ctx, layer.get());
+  return fviz_render_to(ctx, layer.get());
 }
 
-int plotfx_render_png_file(plotfx_t* ctx, const char* path) {
+int fviz_render_png_file(fviz_t* ctx, const char* path) {
   std::string path_str(path);
 
   LayerRef layer;
@@ -196,10 +196,10 @@ int plotfx_render_png_file(plotfx_t* ctx, const char* path) {
       &layer);
 
   if (!rc.isSuccess()) {
-    plotfx_seterr(ctx, rc);
+    fviz_seterr(ctx, rc);
     return rc;
   }
 
-  return plotfx_render_to(ctx, layer.get());
+  return fviz_render_to(ctx, layer.get());
 }
 

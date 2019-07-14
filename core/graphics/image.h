@@ -1,5 +1,5 @@
 /**
- * This file is part of the "plotfx" project
+ * This file is part of the "fviz" project
  *   Copyright (c) 2017 Paul Asmuth
  *
  * Redistribution and use in source and binary forms, with or without
@@ -33,7 +33,7 @@
 #include <vector>
 #include "color.h"
 
-namespace plotfx {
+namespace fviz {
 
 enum class PixelFormat {
   RGB8, RGBA8
@@ -90,5 +90,5 @@ Color decodePixel(
     char* data,
     size_t size);
 
-} // namespace plotfx
+} // namespace fviz
 

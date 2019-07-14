@@ -1,5 +1,5 @@
 /**
- * This file is part of the "plotfx" project
+ * This file is part of the "fviz" project
  *   Copyright (c) 2017 Paul Asmuth
  *
  * Redistribution and use in source and binary forms, with or without
@@ -31,7 +31,7 @@
 #include <string.h>
 #include "image.h"
 
-namespace plotfx {
+namespace fviz {
 
 Image::Image(
     PixelFormat pixel_format,
@@ -74,7 +74,7 @@ size_t Image::getPixelCount() const {
 }
 
 size_t Image::getPixelSize() const {
-  return plotfx::getPixelSize(pixel_format_);
+  return fviz::getPixelSize(pixel_format_);
 }
 
 size_t Image::getWidth() const {
@@ -231,5 +231,5 @@ Image convertImage_RGB8A_RGB8(const Image& img) {
   return newimg;
 }
 
-} // namespace plotfx
+} // namespace fviz
 

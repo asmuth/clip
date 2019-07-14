@@ -31,8 +31,8 @@
 #include <unistd.h>
 #include <iostream>
 #include <SDL2/SDL.h>
-#include <plotfx/plotfx.h>
-#include <plotfx/plotfx_sdl.h>
+#include <fviz/fviz.h>
+#include <fviz/fviz_sdl.h>
 
 /* The plot configuration that we are going to display */
 static const char* kScript = R"(
@@ -53,7 +53,7 @@ int main(int argc, const char** argv) {
   SDL_Init(SDL_INIT_VIDEO);
 
   auto window = SDL_CreateWindow(
-      "PlotFX Example",
+      "fviz Example",
       SDL_WINDOWPOS_UNDEFINED,
       SDL_WINDOWPOS_UNDEFINED,
       1200,
@@ -65,26 +65,26 @@ int main(int argc, const char** argv) {
     return EXIT_FAILURE;
   }
 
-  /* Setup PlotFX */
-  plotfx_t* plot = plotfx_init();
+  /* Setup fviz */
+  fviz_t* plot = fviz_init();
   if (!plot) {
-    std::cerr << "ERROR: error while initializing PlotFX" << std::endl;
+    std::cerr << "ERROR: error while initializing fviz" << std::endl;
     return EXIT_FAILURE;
   }
 
-  if (!plotfx_configure(plot, kScript)) {
+  if (!fviz_configure(plot, kScript)) {
     std::cerr
         << "ERROR: error while parsing configuration: "
-        << plotfx_geterror(plot)
+        << fviz_geterror(plot)
         << std::endl;
     return EXIT_FAILURE;
   }
 
   /* Render the plot */
-  if (!plotfx_render_sdl2(plot, SDL_GetWindowSurface(window))) {
+  if (!fviz_render_sdl2(plot, SDL_GetWindowSurface(window))) {
     std::cerr
         << "ERROR: error while rendering: "
-        << plotfx_geterror(plot)
+        << fviz_geterror(plot)
         << std::endl;
     return EXIT_FAILURE;
   }

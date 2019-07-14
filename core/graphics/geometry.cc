@@ -1,5 +1,5 @@
 /**
- * This file is part of the "plotfx" project
+ * This file is part of the "fviz" project
  *   Copyright (c) 2018 Paul Asmuth
  *
  * Redistribution and use in source and binary forms, with or without
@@ -31,7 +31,7 @@
 #include <iostream>
 #include "layout.h"
 
-namespace plotfx {
+namespace fviz {
 
 Point::Point() :
     x(0.0f),
@@ -81,5 +81,5 @@ std::ostream& operator <<(std::ostream& os, const Rectangle& r) {
   return os;
 }
 
-} // namespace plotfx
+} // namespace fviz
 

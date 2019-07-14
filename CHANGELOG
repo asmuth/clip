@@ -1,6 +1,6 @@
-PlotFX v0.2.0; unreleased
+fviz v0.2.0; unreleased
 
-  * Renamed the project from "FnordMetric" to "PlotFX", set version to "0.2.0"
+  * Renamed the project from "FnordMetric" to "fviz", set version to "0.2.0"
 
   * Changed the license to 3-Clause BSD
 
@@ -10,7 +10,7 @@ PlotFX v0.2.0; unreleased
 
   * Added support for reading input data from CSV files
 
-  * Added support for embedding PlotFX as a library
+  * Added support for embedding fviz as a library
 
   * Added support for exporting images as bitmaps (PNG) and PDF files through
     libcairo

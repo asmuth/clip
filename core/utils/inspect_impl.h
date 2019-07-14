@@ -1,5 +1,5 @@
 /**
- * This file is part of the "plotfx" project
+ * This file is part of the "fviz" project
  *   Copyright (c) 2014 Paul Asmuth, Google Inc.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -30,7 +30,7 @@
 #include "stringutil.h"
 #include "outputstream.h"
 
-namespace plotfx {
+namespace fviz {
 
 template <typename T1, typename T2>
 std::string inspect(const std::pair<T1, T2>& value) {

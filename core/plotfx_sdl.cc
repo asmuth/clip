@@ -1,5 +1,5 @@
 /**
- * This file is part of the "plotfx" project
+ * This file is part of the "fviz" project
  *   Copyright (c) 2018 Paul Asmuth
  *
  * Redistribution and use in source and binary forms, with or without
@@ -27,13 +27,13 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-#include "plotfx_sdl.h"
+#include "fviz_sdl.h"
 #include "utils/return_code.h"
 #include "graphics/layer.h"
 #include "graphics/layer_pixmap.h"
 #include "SDL2/SDL.h"
 
-using namespace plotfx;
+using namespace fviz;
 
 static void blit(
     const unsigned char* image_data,
@@ -53,7 +53,7 @@ static void blit(
 }
 
 /*
-int plotfx_render_sdl2(plotfx_t* ctx, SDL_Surface* surface) {
+int fviz_render_sdl2(fviz_t* ctx, SDL_Surface* surface) {
   const auto& doc = static_cast<const Context*>(ctx)->document;
   if (!doc) {
     ctx_seterrf(ctx, "no configuration loaded");

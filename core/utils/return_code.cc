@@ -1,5 +1,5 @@
 /**
- * This file is part of the "plotfx" project
+ * This file is part of the "fviz" project
  *   Copyright (c) 2016 Paul Asmuth, FnordCorp B.V.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -29,7 +29,7 @@
  */
 #include "return_code.h"
 
-namespace plotfx {
+namespace fviz {
 
 ReturnCode err_invalid_value(
     const std::string& value,
@@ -47,5 +47,5 @@ ReturnCode err_invalid_value(
   };
 }
 
-} // namespace plotfx
+} // namespace fviz
 

@@ -1,5 +1,5 @@
 /**
- * This file is part of the "plotfx" project
+ * This file is part of the "fviz" project
  *   Copyright (c) 2018 Paul Asmuth
  *   Copyright (c) 2014 Paul Asmuth, Google Inc.
  *
@@ -36,7 +36,7 @@
 #include <source/element.h>
 #include <source/config_helpers.h>
 
-namespace plotfx {
+namespace fviz {
 namespace plot {
 namespace labels {
 
@@ -63,5 +63,5 @@ ReturnCode configure(
 
 } // namespace labels
 } // namespace plot
-} // namespace plotfx
+} // namespace fviz
 

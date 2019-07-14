@@ -1,5 +1,5 @@
 /**
- * This file is part of the "plotfx" project
+ * This file is part of the "fviz" project
  *   Copyright (c) 2018 Paul Asmuth
  *
  * Redistribution and use in source and binary forms, with or without
@@ -36,7 +36,7 @@
 #include <vector>
 #include <string>
 
-namespace plotfx {
+namespace fviz {
 
 class Color {
 public:
@@ -70,5 +70,5 @@ protected:
 
 std::ostream& operator <<(std::ostream& os, const Color& c);
 
-} // namespace plotfx
+} // namespace fviz
 

@@ -1,5 +1,5 @@
 /**
- * This file is part of the "plotfx" project
+ * This file is part of the "fviz" project
  *   Copyright (c) 2018 Paul Asmuth
  *
  * Redistribution and use in source and binary forms, with or without
@@ -33,7 +33,7 @@
 #include <stdint.h>
 #include "geometry.h"
 
-namespace plotfx {
+namespace fviz {
 
 enum class HAlign {
   LEFT, CENTER, RIGHT
@@ -76,5 +76,5 @@ Point layout_align(
     VAlign valign);
 
 
-} // namespace plotfx
+} // namespace fviz
 

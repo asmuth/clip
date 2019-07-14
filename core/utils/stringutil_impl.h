@@ -1,5 +1,5 @@
 /**
- * This file is part of the "plotfx" project
+ * This file is part of the "fviz" project
  *   Copyright (c) 2018 Paul Asmuth
  *   Copyright (c) 2014 Paul Asmuth, Google Inc.
  *
@@ -33,7 +33,7 @@
 #include <stdint.h>
 #include <string>
 
-namespace plotfx {
+namespace fviz {
 
 template <typename H, typename... T>
 void StringUtil::toStringVImpl(
@@ -145,4 +145,4 @@ std::string StringUtil::formatNumberMetric(T orig_value) {
 }
 
 
-} // namespace plotfx
+} // namespace fviz

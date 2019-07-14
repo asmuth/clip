@@ -1,5 +1,5 @@
 /**
- * This file is part of the "plotfx" project
+ * This file is part of the "fviz" project
  *   Copyright (c) 2017 Paul Asmuth
  *
  * Redistribution and use in source and binary forms, with or without
@@ -35,7 +35,7 @@
 #include "utils/file.h"
 #include "utils/fileutil.h"
 
-namespace plotfx {
+namespace fviz {
 
 Status pngWriteImageFile(
     const Image& image,
@@ -101,5 +101,5 @@ Status pngWriteImageFile(
   return OK;
 }
 
-} // namespace plotfx
+} // namespace fviz
 

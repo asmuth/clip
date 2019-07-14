@@ -1,5 +1,5 @@
 /**
- * This file is part of the "plotfx" project
+ * This file is part of the "fviz" project
  *   Copyright (c) 2018 Paul Asmuth
  *
  * Redistribution and use in source and binary forms, with or without
@@ -31,7 +31,7 @@
 #include <graphics/text.h>
 #include <graphics/layout.h>
 
-namespace plotfx {
+namespace fviz {
 namespace text {
 class TextShaper;
 
@@ -76,5 +76,5 @@ Status layoutText(
     std::function<void (const GlyphPlacement&)> glyph_cb);
 
 } // namespace text
-} // namespace plotfx
+} // namespace fviz
 

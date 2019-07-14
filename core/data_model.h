@@ -1,5 +1,5 @@
 /**
- * This file is part of the "plotfx" project
+ * This file is part of the "fviz" project
  *   Copyright (c) 2018 Paul Asmuth.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -32,7 +32,7 @@
 #include <vector>
 #include "return_code.h"
 
-namespace plotfx {
+namespace fviz {
 
 using Value = std::string;
 using Series = std::vector<Value>;
@@ -55,5 +55,5 @@ std::vector<double> series_to_float(const Series& s);
 double value_to_float(const Value&);
 Value value_from_float(double);
 
-} // namespace plotfx
+} // namespace fviz
 

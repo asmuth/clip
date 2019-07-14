@@ -1,17 +1,17 @@
-PlotFX
-======
+fviz
+====
 
-PlotFX is a command line tool and library for plotting data. The appearance of
+fviz is a command line tool and library for plotting data. The appearance of
 plots can be customized using a lightweight syntax that is very similar to CSS.
 
-You can run PlotFX from the command line, where it generates SVG, PNG and PDF
+You can run fviz from the command line, where it generates SVG, PNG and PDF
 output files. Additionally, you can embed it into your own application using the
 C API.
 
 <h4>
-  <a href="https://plotfx.org/documentation/getting-started">Getting Started</a> &middot;
-  <a href="https://plotfx.org/examples">Examples</a> &middot;
-  <a href="https://plotfx.org">Documentation</a>
+  <a href="https://fviz.org/documentation/getting-started">Getting Started</a> &middot;
+  <a href="https://fviz.org/examples">Examples</a> &middot;
+  <a href="https://fviz.org">Documentation</a>
 </h4>
 
 ---
@@ -22,7 +22,7 @@ C API.
 </p>
 
 <p align="center">
-  <i>A collection of examples generated with PlotFX.</i>
+  <i>A collection of examples generated with fviz.</i>
   <br><br>
 </p>
 
@@ -39,8 +39,8 @@ not quite there yet...
 Example / Demo
 --------------
 
-Being a highly visual tool, PlotFX is best explained by example. So here is a PlotFX
-file that defines a simple timeseries chart (`example_chart.ptx`). Note that this
+Being a highly visual tool, fviz is best explained by example. So here is a fviz
+file that defines a simple timeseries chart (`example_chart.fvz`). Note that this
 example is only intended to give you an idea of what the syntax looks like and to
 get you started quickly; for an in-depth description of all parameters, please refer
 to the documentation.
@@ -67,32 +67,32 @@ to the documentation.
       layout: linear(20);
     }
 
-Here is how you can run the above example file through PlotFX:
+Here is how you can run the above example file through fviz:
 
-    $ plotfx --in example_chart.ptx --out example_chart.svg
+    $ fviz --in example_chart.fvz --out example_chart.svg
 
 When running the example locally, you can use your own input CSV file, or you
 can download the example CSV file [from here](/tests/testdata/measurement.csv).
 If everything works, you should get an output file similar to  the one below
 (`example_chart.svg`):
 
-[![A simple line chart](/examples/linecharts/simple_timeseries.svg)](./examples/linecharts/simple_timeseries.ptx)
+[![A simple line chart](/examples/linecharts/simple_timeseries.svg)](./examples/linecharts/simple_timeseries.fvz)
 
-More examples can be found on [the examples page](https://plotfx.org/examples).
-For a more detailed introduction to PlotFX, see the [Getting Started](https://plotfx.org/documentation/getting-started) page.
-If you have any questions please don't hesitate to reach out via [GitHub issues](https://github.com/plotfx/plotfx).
+More examples can be found on [the examples page](https://fviz.org/examples).
+For a more detailed introduction to fviz, see the [Getting Started](https://fviz.org/documentation/getting-started) page.
+If you have any questions please don't hesitate to reach out via [GitHub issues](https://github.com/fviz/fviz).
 
 
 Building
 --------
 
-To build PlotFX, you need an up-to-date C++ compiler, cmake, libharfbuzz and
+To build fviz, you need an up-to-date C++ compiler, cmake, libharfbuzz and
 libfreetype. Run:
 
     $ cmake .
     $ make
 
-To install the `plotfx` binary into your system, run `make install`:
+To install the `fviz` binary into your system, run `make install`:
 
     $ make install
 
@@ -104,7 +104,7 @@ To run the test suite, run `make test`:
 Acknowledgements
 ----------------
 
-PlotFX is the successor of the FnordMetric ChartSQL project by the same authors.
+fviz is the successor of the FnordMetric ChartSQL project by the same authors.
 
 Parts of the new chart specification syntax and semantics were inspired by ideas
 from the "Grammar of Graphics" [0] and the ggplot2 project.
@@ -115,7 +115,7 @@ from the "Grammar of Graphics" [0] and the ggplot2 project.
 License
 -------
 
-    The PlotFX License (https://plotfx.org)
+    The fviz License (https://fviz.org)
     Copyright (c) 2018, Paul Asmuth, Laura Schlimmer
     All rights reserved.
 

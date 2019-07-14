@@ -1,5 +1,5 @@
 /**
- * This file is part of the "plotfx" project
+ * This file is part of the "fviz" project
  *   Copyright (c) 2018 Paul Asmuth
  *
  * Redistribution and use in source and binary forms, with or without
@@ -32,7 +32,7 @@
 #include "graphics/color.h"
 #include "graphics/measure.h"
 
-namespace plotfx {
+namespace fviz {
 
 using ExprConv = std::function<ReturnCode (const Expr*)>;
 
@@ -56,5 +56,5 @@ ReturnCode expr_to_color_opt(
     const Expr* expr,
     std::optional<Color>* var);
 
-} // namespace plotfx
+} // namespace fviz
 

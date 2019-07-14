@@ -1,5 +1,5 @@
 /**
- * This file is part of the "plotfx" project
+ * This file is part of the "fviz" project
  *   Copyright (c) 2018 Paul Asmuth
  *
  * Redistribution and use in source and binary forms, with or without
@@ -27,11 +27,11 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-#include "plotfx.h"
+#include "fviz.h"
 #include "graphics/text_layout.h"
 #include "graphics/text_shaper.h"
 
-namespace plotfx {
+namespace fviz {
 namespace text {
 
 Status text_measure_span(
@@ -133,5 +133,5 @@ Status layoutText(
 
 
 } // namespace text
-} // namespace plotfx
+} // namespace fviz
 

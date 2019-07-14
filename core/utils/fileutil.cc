@@ -1,5 +1,5 @@
 /**
- * This file is part of the "plotfx" project
+ * This file is part of the "fviz" project
  *   Copyright (c) 2014 Paul Asmuth, Google Inc.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -41,7 +41,7 @@
 #include "fileutil.h"
 #include "file.h"
 
-namespace plotfx {
+namespace fviz {
 
 void FileUtil::mkdir(const std::string& dirname) {
   if (::mkdir(dirname.c_str(), S_IRWXU) != 0) {
@@ -124,9 +124,9 @@ void FileUtil::mkdir_p(const std::string& dirname) {
 
 std::string FileUtil::joinPaths(const std::string& p1, const std::string p2) {
   String p1_stripped = p1;
-  plotfx::StringUtil::stripTrailingSlashes(&p1_stripped);
+  fviz::StringUtil::stripTrailingSlashes(&p1_stripped);
   String p2_stripped = p2;
-  plotfx::StringUtil::stripTrailingSlashes(&p2_stripped);
+  fviz::StringUtil::stripTrailingSlashes(&p2_stripped);
   return p1_stripped + "/" + p2_stripped;
 }
 

@@ -1,5 +1,5 @@
 /**
- * This file is part of the "plotfx" project
+ * This file is part of the "fviz" project
  *   Copyright (c) 2018 Paul Asmuth
  *   Copyright (c) 2014 Paul Asmuth, Google Inc.
  *
@@ -38,7 +38,7 @@
 #include <source/utils/algo.h>
 #include "core/environment.h"
 
-namespace plotfx {
+namespace fviz {
 namespace plot {
 namespace lines {
 
@@ -65,5 +65,5 @@ ReturnCode configure(
 
 } // namespace lines
 } // namespace plot
-} // namespace plotfx
+} // namespace fviz
 

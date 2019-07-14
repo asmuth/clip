@@ -1,5 +1,5 @@
 /**
- * This file is part of the "plotfx" project
+ * This file is part of the "fviz" project
  *   Copyright (c) 2018 Paul Asmuth
  *
  * Redistribution and use in source and binary forms, with or without
@@ -37,7 +37,7 @@
 #include "sexpr.h"
 #include "element_factory.h"
 
-namespace plotfx {
+namespace fviz {
 class Layer;
 
 struct Environment {
@@ -56,6 +56,6 @@ struct Environment {
 
 ReturnCode environment_setup_defaults(Environment* env);
 
-} // namespace plotfx
+} // namespace fviz
 
 

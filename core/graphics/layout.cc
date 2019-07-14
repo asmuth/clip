@@ -1,5 +1,5 @@
 /**
- * This file is part of the "plotfx" project
+ * This file is part of the "fviz" project
  *   Copyright (c) 2018 Paul Asmuth
  *
  * Redistribution and use in source and binary forms, with or without
@@ -31,7 +31,7 @@
 #include <iostream>
 #include "layout.h"
 
-namespace plotfx {
+namespace fviz {
 
 Rectangle layout_margin_box(
     const Rectangle& parent,
@@ -86,5 +86,5 @@ Point layout_align(
   return layout_align(bbox, target);
 }
 
-} // namespace plotfx
+} // namespace fviz
 

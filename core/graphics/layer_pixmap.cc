@@ -1,5 +1,5 @@
 /**
- * This file is part of the "plotfx" project
+ * This file is part of the "fviz" project
  *   Copyright (c) 2014 Paul Asmuth, Google Inc.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -30,7 +30,7 @@
 #include "layer_pixmap.h"
 #include "rasterize.h"
 
-namespace plotfx {
+namespace fviz {
 
 ReturnCode layer_bind_img(
     double width,
@@ -108,5 +108,5 @@ ReturnCode layer_bind_png(
   return OK;
 }
 
-} // namespace plotfx
+} // namespace fviz
 

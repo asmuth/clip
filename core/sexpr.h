@@ -1,5 +1,5 @@
 /**
- * This file is part of the "plotfx" project
+ * This file is part of the "fviz" project
  *   Copyright (c) 2018 Paul Asmuth
  *
  * Redistribution and use in source and binary forms, with or without
@@ -32,7 +32,7 @@
 #include <memory>
 #include <string>
 
-namespace plotfx {
+namespace fviz {
 
 struct Expr;
 using ExprStorage = std::unique_ptr<Expr, std::function<void (Expr*)>>;
@@ -56,5 +56,5 @@ bool expr_is_value_quoted(const Expr* expr);
 bool expr_is_value_quoted(const Expr* expr, const std::string& cmp);
 const std::string& expr_get_value(const Expr* expr);
 
-} // namespace plotfx
+} // namespace fviz
 

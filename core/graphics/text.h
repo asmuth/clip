@@ -1,5 +1,5 @@
 /**
- * This file is part of the "plotfx" project
+ * This file is part of the "fviz" project
  *   Copyright (c) 2018 Paul Asmuth
  *
  * Redistribution and use in source and binary forms, with or without
@@ -28,13 +28,13 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 #pragma once
-#include "plotfx.h"
+#include "fviz.h"
 #include "path.h"
 #include "color.h"
 #include "measure.h"
 #include "layout.h"
 
-namespace plotfx {
+namespace fviz {
 class Layer;
 
 enum class TextDirection {
@@ -62,5 +62,5 @@ Status drawTextLabel(
     const TextStyle& text_style,
     Layer* layer);
 
-} // namespace plotfx
+} // namespace fviz
 

@@ -1,5 +1,5 @@
 /**
- * This file is part of the "plotfx" project
+ * This file is part of the "fviz" project
  *   Copyright (c) 2018 Paul Asmuth
  *
  * Redistribution and use in source and binary forms, with or without
@@ -32,7 +32,7 @@
 #include "font_lookup.h"
 #include "utils/fileutil.h"
 
-namespace plotfx {
+namespace fviz {
 
 
 bool findFontSystem(
@@ -100,5 +100,5 @@ ReturnCode font_load(DefaultFont font_name, FontInfo* font_info) {
   return OK;
 }
 
-} // namespace plotfx
+} // namespace fviz
 

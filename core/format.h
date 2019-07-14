@@ -1,5 +1,5 @@
 /**
- * This file is part of the "plotfx" project
+ * This file is part of the "fviz" project
  *   Copyright (c) 2018 Paul Asmuth
  *
  * Redistribution and use in source and binary forms, with or without
@@ -33,7 +33,7 @@
 #include <sexpr.h>
 #include "utils/return_code.h"
 
-namespace plotfx {
+namespace fviz {
 
 using Formatter = std::function<std::string (const std::string&)>;
 
@@ -46,5 +46,5 @@ ReturnCode confgure_format(
     const Expr* expr,
     Formatter* formatter);
 
-} // namespace plotfx
+} // namespace fviz
 
