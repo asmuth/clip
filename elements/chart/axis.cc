@@ -53,13 +53,13 @@ enum class AxisLabelPosition {
 struct AxisDefinition;
 
 using AxisLabelPlacement = std::function<ReturnCode (
-    const DomainConfig& domain,
+    const ScaleConfig& domain,
     AxisDefinition*)>;
 
 struct AxisDefinition {
   AxisDefinition();
   AxisPosition position;
-  DomainConfig scale;
+  ScaleConfig scale;
   ScaleLayoutFn scale_layout;
   std::string title;
   std::vector<std::string> label_override;
@@ -85,7 +85,7 @@ std::string axis_get_label(
     size_t idx,
     double offset) {
   const auto& domain = axis.scale;
-  auto value = domain_untranslate(domain, offset);
+  auto value = scale_untranslate(domain, offset);
 
   if (axis.label_override.size()) {
     if (idx < axis.label_override.size()) {
@@ -533,7 +533,7 @@ ReturnCode build(const Environment& env, const Expr* expr, ElementRef* elem) {
       {"layout", bind(&scale_configure_layout, _1, &config->scale_layout)},
       {"min", bind(&expr_to_float64_opt, _1, &config->scale.min)},
       {"max", bind(&expr_to_float64_opt, _1, &config->scale.max)},
-      {"scale", bind(&domain_configure_kind, _1, &config->scale)},
+      {"scale", bind(&scale_configure_kind, _1, &config->scale)},
       {"scale-padding", bind(&expr_to_float64, _1, &config->scale.padding)},
       {"labels", bind(&expr_to_strings, _1, &config->label_override)},
     });

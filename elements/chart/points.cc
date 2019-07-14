@@ -37,8 +37,8 @@ static const double kDefaultLabelPaddingEM = 0.4;
 struct PlotPointsConfig {
   std::vector<Measure> x;
   std::vector<Measure> y;
-  DomainConfig scale_x;
-  DomainConfig scale_y;
+  ScaleConfig scale_x;
+  ScaleConfig scale_y;
   std::vector<Color> colors;
   std::vector<Measure> sizes;
   std::vector<std::string> labels;
@@ -59,7 +59,7 @@ ReturnCode draw(
   convert_units(
       {
         bind(&convert_unit_typographic, layer->dpi, layer->font_size.value, _1),
-        bind(&convert_unit_user, domain_translate_fn(config->scale_x), _1),
+        bind(&convert_unit_user, scale_translate_fn(config->scale_x), _1),
         bind(&convert_unit_relative, clip.w, _1)
       },
       &*config->x.begin(),
@@ -68,7 +68,7 @@ ReturnCode draw(
   convert_units(
       {
         bind(&convert_unit_typographic, layer->dpi, layer->font_size.value, _1),
-        bind(&convert_unit_user, domain_translate_fn(config->scale_y), _1),
+        bind(&convert_unit_user, scale_translate_fn(config->scale_y), _1),
         bind(&convert_unit_relative, clip.h, _1)
       },
       &*config->y.begin(),
@@ -150,11 +150,11 @@ ReturnCode build(
     {"ydata", bind(&expr_to_measures, _1, &config->y)},
     {"xmin", bind(&expr_to_float64_opt, _1, &config->scale_x.min)},
     {"xmax", bind(&expr_to_float64_opt, _1, &config->scale_x.max)},
-    {"xscale", bind(&domain_configure_kind, _1, &config->scale_x)},
+    {"xscale", bind(&scale_configure_kind, _1, &config->scale_x)},
     {"xscale-padding", bind(&expr_to_float64, _1, &config->scale_x.padding)},
     {"ymin", bind(&expr_to_float64_opt, _1, &config->scale_y.min)},
     {"ymay", bind(&expr_to_float64_opt, _1, &config->scale_y.max)},
-    {"yscale", bind(&domain_configure_kind, _1, &config->scale_y)},
+    {"yscale", bind(&scale_configure_kind, _1, &config->scale_y)},
     {"yscale-padding", bind(&expr_to_float64, _1, &config->scale_y.padding)},
     {"size", bind(&expr_to_measures, _1, &config->sizes)},
     {"sizes", bind(&expr_to_measures, _1, &config->sizes)},
@@ -178,13 +178,13 @@ ReturnCode build(
   /* scale autoconfig */
   for (const auto& v : config->x) {
     if (v.unit == Unit::USER) {
-      domain_fit(v.value, &config->scale_x);
+      scale_fit(v.value, &config->scale_x);
     }
   }
 
   for (const auto& v : config->y) {
     if (v.unit == Unit::USER) {
-      domain_fit(v.value, &config->scale_y);
+      scale_fit(v.value, &config->scale_y);
     }
   }
 

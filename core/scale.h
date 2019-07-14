@@ -26,24 +26,24 @@
 
 namespace fviz {
 
-enum class DomainKind {
+enum class ScaleKind {
   LINEAR, LOGARITHMIC
 };
 
-struct DomainLimitHints {
+struct ScaleLimitHints {
   std::optional<double> min_value;
   std::optional<double> max_value;
 };
 
-struct DomainConfig {
-  DomainConfig();
-  DomainKind kind;
+struct ScaleConfig {
+  ScaleConfig();
+  ScaleKind kind;
   std::optional<double> min;
   std::optional<double> max;
   std::optional<double> log_base;
   bool inverted;
   double padding;
-  std::shared_ptr<DomainLimitHints> limit_hints;
+  std::shared_ptr<ScaleLimitHints> limit_hints;
 };
 
 struct ScaleLayout {
@@ -51,44 +51,44 @@ struct ScaleLayout {
   std::vector<double> labels;
 };
 
-using ScaleLayoutFn = std::function<void (const DomainConfig&, ScaleLayout*)>;
+using ScaleLayoutFn = std::function<void (const ScaleConfig&, ScaleLayout*)>;
 
-void domain_fit(double value, DomainConfig* domain);
+void scale_fit(double value, ScaleConfig* domain);
 
-double domain_min(const DomainConfig& domain);
-double domain_max(const DomainConfig& domain);
+double scale_min(const ScaleConfig& domain);
+double scale_max(const ScaleConfig& domain);
 
-double domain_translate(
-    const DomainConfig& domain,
+double scale_translate(
+    const ScaleConfig& domain,
     double value);
 
-std::function<double (double)> domain_translate_fn(const DomainConfig& domain);
+std::function<double (double)> scale_translate_fn(const ScaleConfig& domain);
 
-double domain_untranslate(
-    const DomainConfig& domain,
+double scale_untranslate(
+    const ScaleConfig& domain,
     double data);
 
-std::vector<double> domain_untranslate(
-    const DomainConfig& domain,
+std::vector<double> scale_untranslate(
+    const ScaleConfig& domain,
     const std::vector<double>& data);
 
-ReturnCode domain_configure_kind(
+ReturnCode scale_configure_kind(
     const Expr* expr,
-    DomainConfig* domain);
+    ScaleConfig* domain);
 
 ReturnCode scale_layout_linear(
-    const DomainConfig& domain,
+    const ScaleConfig& domain,
     ScaleLayout* layout,
     double step,
     std::optional<double> align);
 
 ReturnCode scale_layout_subdivide(
-    const DomainConfig& domain,
+    const ScaleConfig& domain,
     ScaleLayout* layout,
     uint32_t divisions);
 
 ReturnCode scale_layout_discrete(
-    const DomainConfig& domain,
+    const ScaleConfig& domain,
     ScaleLayout* layout);
 
 ReturnCode scale_configure_layout(

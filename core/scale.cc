@@ -25,13 +25,13 @@ namespace fviz {
 static const double kDefaultLogBase = 10;
 static const size_t kMaxTicks = 8192;
 
-DomainConfig::DomainConfig() :
-    kind(DomainKind::LINEAR),
+ScaleConfig::ScaleConfig() :
+    kind(ScaleKind::LINEAR),
     inverted(false),
     padding(0),
-    limit_hints(std::make_shared<DomainLimitHints>()) {}
+    limit_hints(std::make_shared<ScaleLimitHints>()) {}
 
-void domain_fit(double value, DomainConfig* domain) {
+void scale_fit(double value, ScaleConfig* domain) {
   if (!domain->limit_hints->min_value || *domain->limit_hints->min_value > value) {
     domain->limit_hints->min_value = std::optional<double>(value);
   }
@@ -40,7 +40,7 @@ void domain_fit(double value, DomainConfig* domain) {
   }
 }
 
-double domain_min(const DomainConfig& domain) {
+double scale_min(const ScaleConfig& domain) {
   auto min_auto = 0.0f;
   if (domain.limit_hints->min_value) {
     min_auto = *domain.limit_hints->min_value - domain.padding;
@@ -49,7 +49,7 @@ double domain_min(const DomainConfig& domain) {
   return domain.min.value_or(min_auto);
 }
 
-double domain_max(const DomainConfig& domain) {
+double scale_max(const ScaleConfig& domain) {
   auto max_auto = 1.0f;
   if (domain.limit_hints->max_value) {
     max_auto = *domain.limit_hints->max_value + domain.padding;
@@ -58,11 +58,11 @@ double domain_max(const DomainConfig& domain) {
   return domain.max.value_or(max_auto);
 }
 
-double domain_translate_linear(
-    const DomainConfig& domain,
+double scale_translate_linear(
+    const ScaleConfig& domain,
     double v) {
-  double min = domain_min(domain);
-  double max = domain_max(domain);
+  double min = scale_min(domain);
+  double max = scale_max(domain);
 
   auto vt = (v - min) / (max - min);
 
@@ -73,11 +73,11 @@ double domain_translate_linear(
   return vt;
 }
 
-double domain_translate_log(
-    const DomainConfig& domain,
+double scale_translate_log(
+    const ScaleConfig& domain,
     double v) {
-  auto min = domain_min(domain);
-  auto max = domain_max(domain);
+  auto min = scale_min(domain);
+  auto max = scale_max(domain);
   auto log_base = domain.log_base.value_or(kDefaultLogBase);
   double range = max - min;
   double range_log = log(range) / log(log_base);
@@ -97,14 +97,14 @@ double domain_translate_log(
   return vt;
 }
 
-double domain_translate(
-    const DomainConfig& domain,
+double scale_translate(
+    const ScaleConfig& domain,
     double value) {
   switch (domain.kind) {
-    case DomainKind::LINEAR:
-      return domain_translate_linear(domain, value);
-    case DomainKind::LOGARITHMIC:
-      return domain_translate_log(domain, value);
+    case ScaleKind::LINEAR:
+      return scale_translate_linear(domain, value);
+    case ScaleKind::LOGARITHMIC:
+      return scale_translate_log(domain, value);
     default:
       return std::numeric_limits<double>::quiet_NaN();
   }
@@ -112,13 +112,13 @@ double domain_translate(
   return 0.0f;
 }
 
-std::function<double (double)> domain_translate_fn(const DomainConfig& domain) {
-  return bind(&domain_translate, domain, std::placeholders::_1);
+std::function<double (double)> scale_translate_fn(const ScaleConfig& domain) {
+  return bind(&scale_translate, domain, std::placeholders::_1);
 }
 
-double  domain_untranslate_linear(const DomainConfig& domain, double vt) {
-  auto min = domain_min(domain);
-  auto max = domain_max(domain);
+double  scale_untranslate_linear(const ScaleConfig& domain, double vt) {
+  auto min = scale_min(domain);
+  auto max = scale_max(domain);
 
   if (domain.inverted) {
     vt = 1.0 - vt;
@@ -127,9 +127,9 @@ double  domain_untranslate_linear(const DomainConfig& domain, double vt) {
   return min + (max - min) * vt;
 }
 
-double domain_untranslate_log(const DomainConfig& domain, double vt) {
-  auto min = domain_min(domain);
-  auto max = domain_max(domain);
+double scale_untranslate_log(const ScaleConfig& domain, double vt) {
+  auto min = scale_min(domain);
+  auto max = scale_max(domain);
   auto log_base = domain.log_base.value_or(kDefaultLogBase);
   double range = max - min;
   double range_log = log(range) / log(log_base);
@@ -141,42 +141,42 @@ double domain_untranslate_log(const DomainConfig& domain, double vt) {
   return min + pow(log_base, vt * range_log);
 }
 
-double domain_untranslate(
-    const DomainConfig& domain,
+double scale_untranslate(
+    const ScaleConfig& domain,
     double value) {
   switch (domain.kind) {
-    case DomainKind::LINEAR:
-      return domain_untranslate_linear(domain, value);
-    case DomainKind::LOGARITHMIC:
-      return domain_untranslate_log(domain, value);
+    case ScaleKind::LINEAR:
+      return scale_untranslate_linear(domain, value);
+    case ScaleKind::LOGARITHMIC:
+      return scale_untranslate_log(domain, value);
   }
 
   return {};
 }
 
-std::vector<double> domain_untranslate(
-    const DomainConfig& domain,
+std::vector<double> scale_untranslate(
+    const ScaleConfig& domain,
     const std::vector<double>& values) {
   std::vector<double> s;
   for (const auto& v : values) {
-    s.emplace_back(domain_untranslate(domain, v));
+    s.emplace_back(scale_untranslate(domain, v));
   }
 
   return s;
 }
 
-ReturnCode domain_configure_kind(
+ReturnCode scale_configure_kind(
     const Expr* expr,
-    DomainConfig* domain) {
+    ScaleConfig* domain) {
   for (; expr; expr = expr_next(expr)) {
     if (expr_is_value(expr, "linear")) {
-      domain->kind = DomainKind::LINEAR;
+      domain->kind = ScaleKind::LINEAR;
       continue;
     }
 
     if (expr_is_value(expr, "log") ||
         expr_is_value(expr, "logarithmic")) {
-      domain->kind = DomainKind::LOGARITHMIC;
+      domain->kind = ScaleKind::LOGARITHMIC;
       continue;
     }
 
@@ -199,15 +199,15 @@ ReturnCode domain_configure_kind(
 }
 
 ReturnCode scale_layout_linear(
-    const DomainConfig& domain,
+    const ScaleConfig& domain,
     ScaleLayout* layout,
     double step,
     std::optional<double> align) {
   layout->ticks.clear();
   layout->labels.clear();
 
-  auto begin = std::max(align.value_or(domain_min(domain)), domain_min(domain));
-  auto end = domain_max(domain);
+  auto begin = std::max(align.value_or(scale_min(domain)), scale_min(domain));
+  auto end = scale_max(domain);
 
   if (((end - begin) / step) > kMaxTicks) {
     return {ERROR, "too many ticks"};
@@ -215,7 +215,7 @@ ReturnCode scale_layout_linear(
 
   size_t label_idx = 0;
   for (auto v = begin; v <= end; v += step) {
-    auto vp = domain_translate(domain, v);
+    auto vp = scale_translate(domain, v);
     layout->ticks.emplace_back(vp);
     layout->labels.emplace_back(vp);
   }
@@ -224,7 +224,7 @@ ReturnCode scale_layout_linear(
 }
 
 ReturnCode scale_layout_subdivide(
-    const DomainConfig& domain,
+    const ScaleConfig& domain,
     ScaleLayout* layout,
     uint32_t divisions) {
   layout->ticks.clear();
@@ -240,20 +240,20 @@ ReturnCode scale_layout_subdivide(
 }
 
 ReturnCode scale_layout_discrete(
-    const DomainConfig& domain,
+    const ScaleConfig& domain,
     ScaleLayout* layout) {
   uint32_t step = 1;
-  uint32_t range = domain_max(domain) - domain_min(domain);
+  uint32_t range = scale_max(domain) - scale_min(domain);
 
   layout->labels.clear();
   layout->ticks.clear();
 
   for (size_t i = 0; i <= range; i += step) {
-    auto o = domain_translate(domain, i * step);
-    auto o1 = domain_translate(domain, i * step - step * 0.5);
-    auto o2 = domain_translate(domain, i * step + step * 0.5);
-    auto v = uint32_t(domain_min(domain)) + i * step;
-    auto vn = uint32_t(domain_min(domain)) + (i + 1) * step;
+    auto o = scale_translate(domain, i * step);
+    auto o1 = scale_translate(domain, i * step - step * 0.5);
+    auto o2 = scale_translate(domain, i * step + step * 0.5);
+    auto v = uint32_t(scale_min(domain)) + i * step;
+    auto vn = uint32_t(scale_min(domain)) + (i + 1) * step;
 
     if (o1 >= 0 && o2 <= 1) {
       layout->labels.emplace_back(o);
