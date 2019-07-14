@@ -16,6 +16,41 @@
 namespace fviz {
 
 template <typename T>
+ReturnCode expr_to_enum(
+    const Expr* expr,
+    const std::unordered_map<std::string, T> value_defs,
+    T* value) {
+  if (!expr || !expr_is_value(expr)) {
+    return ReturnCode::errorf(
+        "EARG",
+        "argument error; expected a list, got: $0",
+        "..."); // FIXME
+  }
+
+  const auto& value_def = value_defs.find(expr_get_value(expr));
+  if (value_def == value_defs.end()) {
+    return ReturnCode::errorf(
+        "EPARSE",
+        "invalid value '$0'",
+        expr_get_value(expr));
+  }
+
+  *value = value_def->second;
+  return ReturnCode::success();
+}
+
+template <typename T>
+ExprConv expr_to_enum_fn(
+    T* value,
+    const std::unordered_map<std::string, T> value_defs) {
+  return bind(
+      &expr_to_enum<T>,
+      std::placeholders::_1,
+      value_defs,
+      value);
+}
+
+template <typename T>
 ReturnCode expr_tov(
     const Expr* expr,
     ExprConvTo<T> conv,

@@ -29,6 +29,10 @@ using namespace std::placeholders;
 
 namespace fviz::elements::chart::bars {
 
+static const double kDefaultBarSizePT = 10;
+static const double kDefaultLabelPaddingHorizEM = 0.6;
+static const double kDefaultLabelPaddingVertEM = 0.6;
+
 struct PlotBarsConfig {
   PlotBarsConfig();
   Direction direction;
@@ -47,10 +51,6 @@ struct PlotBarsConfig {
   Measure label_font_size;
   Color label_color;
 };
-
-static const double kDefaultBarSizePT = 10;
-static const double kDefaultLabelPaddingHorizEM = 0.6;
-static const double kDefaultLabelPaddingVertEM = 0.6;
 
 PlotBarsConfig::PlotBarsConfig() :
     direction(Direction::VERTICAL) {}
@@ -335,7 +335,13 @@ ReturnCode build(
     {"yscale-padding", bind(&expr_to_float64, _1, &config->scale_y.padding)},
     {"size", bind(&expr_to_measures, _1, &config->sizes)},
     {"sizes", bind(&expr_to_measures, _1, &config->sizes)},
-    //{"direction", bind(&expr_to_direction, _1, &config->direction)},
+    {
+      "direction",
+      expr_to_enum_fn<Direction>(&config->direction, {
+        { "horizontal", Direction::HORIZONTAL },
+        { "vertical", Direction::VERTICAL },
+      })
+    },
     {"color", expr_tov_fn<Color>(bind(&expr_to_color, _1, _2), &config->colors)},
     {"colors", expr_tov_fn<Color>(bind(&expr_to_color, _1, _2), &config->colors)},
     {"labels", bind(&expr_to_strings, _1, &config->labels)},

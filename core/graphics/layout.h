@@ -12,9 +12,7 @@
  * limitations under the License.
  */
 #pragma once
-#include <assert.h>
-#include <stdlib.h>
-#include <stdint.h>
+#include <unordered_map>
 #include "geometry.h"
 
 namespace fviz {

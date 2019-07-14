@@ -231,7 +231,13 @@ ReturnCode build(
     {"ymax", bind(&expr_to_float64_opt, _1, &config->scale_y.max)},
     {"yscale", bind(&scale_configure_kind, _1, &config->scale_y)},
     {"yscale-padding", bind(&expr_to_float64, _1, &config->scale_y.padding)},
-    //{"direction", bind(&expr_to_direction, _1, &config->direction)},
+    {
+      "direction",
+      expr_to_enum_fn<Direction>(&config->direction, {
+        { "horizontal", Direction::HORIZONTAL },
+        { "vertical", Direction::VERTICAL },
+      })
+    },
     {"color", expr_tov_fn<Color>(bind(&expr_to_color, _1, _2), &config->colors)},
     {"colors", expr_tov_fn<Color>(bind(&expr_to_color, _1, _2), &config->colors)},
   });

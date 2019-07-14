@@ -60,6 +60,17 @@ ReturnCode expr_to_color_opt(
     std::optional<Color>* var);
 
 template <typename T>
+ReturnCode expr_to_enum(
+    const Expr* expr,
+    const std::unordered_map<std::string, T> value_defs,
+    T* value);
+
+template <typename T>
+ExprConv expr_to_enum_fn(
+    T* value,
+    const std::unordered_map<std::string, T> value_defs);
+
+template <typename T>
 ReturnCode expr_tov(
     const Expr* expr,
     ExprConvTo<T> conv,
