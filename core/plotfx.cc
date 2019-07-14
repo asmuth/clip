@@ -36,6 +36,7 @@
 #include "graphics/layer_pixmap.h"
 #include "utils/fileutil.h"
 #include "core/environment.h"
+#include "elements/fill.h"
 #include "elements/text.h"
 #include "elements/chart/axis.h"
 
@@ -55,6 +56,7 @@ struct plotfx_s {
 plotfx_t* plotfx_init() {
   auto ctx = std::make_unique<plotfx_t>();
   auto elems = &ctx->env.element_map;
+  element_bind(elems, "fill", bind(elements::fill::build, _1, _2, _3));
   element_bind(elems, "text", bind(elements::text::build, _1, _2, _3));
   element_bind(elems, "chart/axis-top", bind(elements::chart::axis::build, _1, _2, _3));
   element_bind(elems, "chart/axis-right", bind(elements::chart::axis::build, _1, _2, _3));
