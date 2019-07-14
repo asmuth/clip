@@ -1,0 +1,7 @@
+(chart/points
+    xdata (100px 500px 700px 900px 300px)
+    ydata (200px 300px 200px 300px 100px)
+    labels (A B A B A)
+    label-font-size 18pt
+    colors (#00c #c00)
+    sizes (8px))

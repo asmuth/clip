@@ -12,44 +12,14 @@
  * limitations under the License.
  */
 #pragma once
-#include <stdlib.h>
-#include <sexpr.h>
-#include <graphics/layer.h>
-#include <source/core/scale.h>
-#include <source/element.h>
-#include <source/config_helpers.h>
-#include "core/format.h"
+#include "element.h"
 
-namespace fviz {
-namespace plot {
-namespace points {
+namespace fviz::elements::chart::points {
 
-struct PlotPointsConfig {
-  std::vector<Measure> x;
-  std::vector<Measure> y;
-  DomainConfig scale_x;
-  DomainConfig scale_y;
-  std::vector<Color> colors;
-  std::vector<Measure> sizes;
-  std::vector<std::string> labels;
-  FontInfo label_font;
-  Measure label_padding;
-  Measure label_font_size;
-  Color label_color;
-  LayoutSettings layout;
-};
-
-ReturnCode draw(
-    PlotPointsConfig config,
-    const LayoutInfo& layout,
-    Layer* layer);
-
-ReturnCode configure(
-    const plist::PropertyList& plist,
+ReturnCode build(
     const Environment& env,
-    PlotPointsConfig* config);
+    const Expr* expr,
+    ElementRef* elem);
 
-} // namespace points
-} // namespace plot
-} // namespace fviz
+} // namespace fviz::elements::chart::points
 

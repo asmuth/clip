@@ -14,28 +14,43 @@
 #include "points.h"
 #include <numeric>
 #include "fviz.h"
+#include "sexpr.h"
+#include "sexpr_conv.h"
+#include "sexpr_util.h"
 #include "core/environment.h"
 #include "core/layout.h"
+#include "core/scale.h"
 #include "graphics/path.h"
 #include "graphics/brush.h"
 #include "graphics/text.h"
 #include "graphics/layout.h"
-#include "source/utils/algo.h"
-#include "source/config_helpers.h"
 
 using namespace std::placeholders;
 
-namespace fviz {
-namespace plot {
-namespace points {
+namespace fviz::elements::chart::points {
 
 static const double kDefaultPointSizePT = 3;
 static const double kDefaultPointSizeMinPT = 1;
 static const double kDefaultPointSizeMaxPT = 24;
 static const double kDefaultLabelPaddingEM = 0.4;
 
+struct PlotPointsConfig {
+  std::vector<Measure> x;
+  std::vector<Measure> y;
+  DomainConfig scale_x;
+  DomainConfig scale_y;
+  std::vector<Color> colors;
+  std::vector<Measure> sizes;
+  std::vector<std::string> labels;
+  FontInfo label_font;
+  Measure label_padding;
+  Measure label_font_size;
+  Color label_color;
+  LayoutSettings layout;
+};
+
 ReturnCode draw(
-    PlotPointsConfig config,
+    std::shared_ptr<PlotPointsConfig> config,
     const LayoutInfo& layout,
     Layer* layer) {
   const auto& clip = layout.content_box;
@@ -44,40 +59,40 @@ ReturnCode draw(
   convert_units(
       {
         bind(&convert_unit_typographic, layer->dpi, layer->font_size.value, _1),
-        bind(&convert_unit_user, domain_translate_fn(config.scale_x), _1),
+        bind(&convert_unit_user, domain_translate_fn(config->scale_x), _1),
         bind(&convert_unit_relative, clip.w, _1)
       },
-      &*config.x.begin(),
-      &*config.x.end());
+      &*config->x.begin(),
+      &*config->x.end());
 
   convert_units(
       {
         bind(&convert_unit_typographic, layer->dpi, layer->font_size.value, _1),
-        bind(&convert_unit_user, domain_translate_fn(config.scale_y), _1),
+        bind(&convert_unit_user, domain_translate_fn(config->scale_y), _1),
         bind(&convert_unit_relative, clip.h, _1)
       },
-      &*config.y.begin(),
-      &*config.y.end());
+      &*config->y.begin(),
+      &*config->y.end());
 
   convert_units(
       {
         bind(&convert_unit_typographic, layer->dpi, layer->font_size.value, _1)
       },
-      &*config.sizes.begin(),
-      &*config.sizes.end());
+      &*config->sizes.begin(),
+      &*config->sizes.end());
 
   /* draw points */
-  for (size_t i = 0; i < config.x.size(); ++i) {
-    auto sx = clip.x + config.x[i];
-    auto sy = clip.y + clip.h - config.y[i];
+  for (size_t i = 0; i < config->x.size(); ++i) {
+    auto sx = clip.x + config->x[i];
+    auto sy = clip.y + clip.h - config->y[i];
 
-    const auto& color = config.colors.empty()
+    const auto& color = config->colors.empty()
         ? Color{}
-        : config.colors[i % config.colors.size()];
+        : config->colors[i % config->colors.size()];
 
-    auto size = config.sizes.empty()
+    auto size = config->sizes.empty()
         ? from_pt(kDefaultPointSizePT, layer->dpi)
-        : config.sizes[i % config.sizes.size()];
+        : config->sizes[i % config->sizes.size()];
 
     FillStyle style;
     style.color = color;
@@ -90,25 +105,25 @@ ReturnCode draw(
   }
 
   /* draw labels */
-  for (size_t i = 0; i < config.labels.size(); ++i) {
-    const auto& label_text = config.labels[i];
+  for (size_t i = 0; i < config->labels.size(); ++i) {
+    const auto& label_text = config->labels[i];
 
-    auto size = config.sizes.empty()
+    auto size = config->sizes.empty()
         ? 0
-        : config.sizes[i % config.sizes.size()].value;
+        : config->sizes[i % config->sizes.size()].value;
 
     auto label_padding = size + measure_or(
-        config.label_padding,
-        from_em(kDefaultLabelPaddingEM, config.label_font_size));
+        config->label_padding,
+        from_em(kDefaultLabelPaddingEM, config->label_font_size));
 
     Point p(
-        clip.x + config.x[i],
-        clip.y + clip.h - config.y[i] - label_padding);
+        clip.x + config->x[i],
+        clip.y + clip.h - config->y[i] - label_padding);
 
     TextStyle style;
-    style.font = config.label_font;
-    style.color = config.label_color;
-    style.font_size = config.label_font_size;
+    style.font = config->label_font;
+    style.color = config->label_color;
+    style.font_size = config->label_font_size;
 
     auto ax = HAlign::CENTER;
     auto ay = VAlign::BOTTOM;
@@ -120,37 +135,37 @@ ReturnCode draw(
   return OK;
 }
 
-ReturnCode configure(
-    const plist::PropertyList& plist,
+ReturnCode build(
     const Environment& env,
-    PlotPointsConfig* config) {
+    const Expr* expr,
+    ElementRef* elem) {
   /* set defaults from environment */
-  config->scale_x = env.scale_x;
-  config->scale_y = env.scale_y;
+  auto config = std::make_shared<PlotPointsConfig>();
   config->label_font = env.font;
   config->label_font_size = env.font_size;
 
   /* parse properties */
-  ParserDefinitions pdefs = {
-    {"xs", bind(&configure_measures, _1, &config->x)},
-    {"ys", bind(&configure_measures, _1, &config->y)},
-    {"scale-x", bind(&domain_configure, _1, &config->scale_x)},
-    {"scale-x-min", bind(&configure_float_opt, _1, &config->scale_x.min)},
-    {"scale-x-max", bind(&configure_float_opt, _1, &config->scale_x.max)},
-    {"scale-x-padding", bind(&configure_float, _1, &config->scale_x.padding)},
-    {"scale-y", bind(&domain_configure, _1, &config->scale_y)},
-    {"scale-y-min", bind(&configure_float_opt, _1, &config->scale_y.min)},
-    {"scale-y-max", bind(&configure_float_opt, _1, &config->scale_y.max)},
-    {"scale-y-padding", bind(&configure_float, _1, &config->scale_y.padding)},
-    {"size", bind(&configure_measures, _1, &config->sizes)},
-    {"sizes", bind(&configure_measures, _1, &config->sizes)},
-    {"color", configure_vec<Color>(bind(&configure_color, _1, _2), &config->colors)},
-    {"colors", configure_vec<Color>(bind(&configure_color, _1, _2), &config->colors)},
-    {"labels", bind(&configure_strings, _1, &config->labels)},
-  };
+  auto config_rc = expr_walk_map(expr_next(expr), {
+    {"xdata", bind(&expr_to_measures, _1, &config->x)},
+    {"ydata", bind(&expr_to_measures, _1, &config->y)},
+    //{"scale-x", bind(&domain_configure, _1, &config->scale_x)},
+    //{"scale-x-min", bind(&expr_to_float_opt, _1, &config->scale_x.min)},
+    //{"scale-x-max", bind(&expr_to_float_opt, _1, &config->scale_x.max)},
+    //{"scale-x-padding", bind(&expr_to_float, _1, &config->scale_x.padding)},
+    //{"scale-y", bind(&domain_configure, _1, &config->scale_y)},
+    //{"scale-y-min", bind(&expr_to_float_opt, _1, &config->scale_y.min)},
+    //{"scale-y-max", bind(&expr_to_float_opt, _1, &config->scale_y.max)},
+    //{"scale-y-padding", bind(&expr_to_float, _1, &config->scale_y.padding)},
+    {"size", bind(&expr_to_measures, _1, &config->sizes)},
+    {"sizes", bind(&expr_to_measures, _1, &config->sizes)},
+    {"color", expr_tov_fn<Color>(bind(&expr_to_color, _1, _2), &config->colors)},
+    {"colors", expr_tov_fn<Color>(bind(&expr_to_color, _1, _2), &config->colors)},
+    {"labels", bind(&expr_to_strings, _1, &config->labels)},
+    {"label-font-size", bind(&expr_to_measure, _1, &config->label_font_size)},
+  });
 
-  if (auto rc = parseAll(plist, pdefs); !rc) {
-    return rc;
+  if (!config_rc) {
+    return config_rc;
   }
 
   /* check configuraton */
@@ -173,10 +188,10 @@ ReturnCode configure(
     }
   }
 
+  *elem = std::make_shared<Element>();
+  (*elem)->draw = bind(&draw, config, _1, _2);
   return OK;
 }
 
-} // namespace points
-} // namespace plot
-} // namespace fviz
+} // namespace fviz::elements::chart::points
 
