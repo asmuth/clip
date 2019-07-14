@@ -71,6 +71,17 @@ ReturnCode element_build_all(
   return OK;
 }
 
+ReturnCode element_build_list(
+    const Environment& env,
+    const Expr* expr,
+    std::vector<ElementRef>* elems) {
+  if (!expr_is_list(expr)) {
+    return ReturnCode::error("EARG", "expected an element list");
+  }
+
+  return element_build_all(env, expr_get_list(expr), elems);
+}
+
 void element_bind(
     ElementMap* factory,
     const std::string& name,
