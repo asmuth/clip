@@ -41,13 +41,11 @@ struct ElementMap {
 
 ReturnCode element_build(
     const Environment& env,
-    const ElementMap& factory,
     const Expr* expr,
     ElementRef* elem);
 
 ReturnCode element_build_all(
     const Environment& env,
-    const ElementMap& factory,
     const Expr* expr,
     std::vector<ElementRef>* elems);
 

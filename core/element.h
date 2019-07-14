@@ -32,12 +32,12 @@
 #include <memory>
 #include <string>
 #include <functional>
-#include "environment.h"
 #include "graphics/layer.h"
 #include "sexpr.h"
 #include "utils/return_code.h"
 
 namespace plotfx {
+struct Environment;
 struct LayoutInfo;
 
 struct Element;

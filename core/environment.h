@@ -35,6 +35,7 @@
 #include "graphics/color.h"
 #include "graphics/text.h"
 #include "sexpr.h"
+#include "element_factory.h"
 
 namespace plotfx {
 class Layer;
@@ -50,6 +51,7 @@ struct Environment {
   Color background_color;
   Color text_color;
   Color border_color;
+  ElementMap element_map;
 };
 
 ReturnCode environment_setup_defaults(Environment* env);

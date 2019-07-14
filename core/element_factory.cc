@@ -28,6 +28,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 #include "element_factory.h"
+#include "environment.h"
 
 #include <unordered_map>
 
@@ -35,7 +36,6 @@ namespace plotfx {
 
 ReturnCode element_build(
     const Environment& env,
-    const ElementMap& factory,
     const Expr* expr,
     ElementRef* elem) {
   if (!expr || !expr_is_value(expr)) {
@@ -43,8 +43,8 @@ ReturnCode element_build(
   }
 
   auto elem_name = expr_get_value(expr);
-  auto elem_iter = factory.elements.find(elem_name);
-  if (elem_iter == factory.elements.end()) {
+  auto elem_iter = env.element_map.elements.find(elem_name);
+  if (elem_iter == env.element_map.elements.end()) {
     return ReturnCode::errorf("EARG", "no such element: $0", elem_name);
   }
 
@@ -53,7 +53,6 @@ ReturnCode element_build(
 
 ReturnCode element_build_all(
     const Environment& env,
-    const ElementMap& factory,
     const Expr* expr,
     std::vector<ElementRef>* elems) {
   for (; expr; expr = expr_next(expr)) {
@@ -62,7 +61,7 @@ ReturnCode element_build_all(
     }
 
     ElementRef elem;
-    if (auto rc = element_build(env, factory, expr_get_list(expr), &elem); !rc) {
+    if (auto rc = element_build(env, expr_get_list(expr), &elem); !rc) {
       return rc;
     }
 

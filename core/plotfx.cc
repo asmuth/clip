@@ -54,11 +54,12 @@ struct plotfx_s {
 
 plotfx_t* plotfx_init() {
   auto ctx = std::make_unique<plotfx_t>();
-  element_bind(&ctx->elements, "text", bind(elements::text::build, _1, _2, _3));
-  element_bind(&ctx->elements, "chart/axis-top", bind(elements::chart::axis::build, _1, _2, _3));
-  element_bind(&ctx->elements, "chart/axis-right", bind(elements::chart::axis::build, _1, _2, _3));
-  element_bind(&ctx->elements, "chart/axis-bottom", bind(elements::chart::axis::build, _1, _2, _3));
-  element_bind(&ctx->elements, "chart/axis-left", bind(elements::chart::axis::build, _1, _2, _3));
+  auto elems = &ctx->env.element_map;
+  element_bind(elems, "text", bind(elements::text::build, _1, _2, _3));
+  element_bind(elems, "chart/axis-top", bind(elements::chart::axis::build, _1, _2, _3));
+  element_bind(elems, "chart/axis-right", bind(elements::chart::axis::build, _1, _2, _3));
+  element_bind(elems, "chart/axis-bottom", bind(elements::chart::axis::build, _1, _2, _3));
+  element_bind(elems, "chart/axis-left", bind(elements::chart::axis::build, _1, _2, _3));
   return ctx.release();
 }
 
@@ -120,7 +121,7 @@ int plotfx_render_to(plotfx_t* ctx, void* backend) {
 
   std::vector<ElementRef> roots;
   auto rc = try_chain({
-    [&] { return element_build_all(ctx->env, ctx->elements, ctx->expr.get(), &roots); },
+    [&] { return element_build_all(ctx->env, ctx->expr.get(), &roots); },
     [&] () -> ReturnCode {
       for (const auto& e : roots) {
         if (auto rc = e->draw(layout, layer); !rc) {

@@ -28,6 +28,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 #include "config_helpers.h"
+#include "environment.h"
 #include "sexpr_conv.h"
 #include "sexpr_util.h"
 #include "text.h"

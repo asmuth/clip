@@ -28,6 +28,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 #include "axis.h"
+#include "environment.h"
 #include "graphics/text.h"
 #include "graphics/layout.h"
 #include "graphics/brush.h"
