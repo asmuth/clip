@@ -38,31 +38,6 @@ using namespace std::placeholders;
 namespace plotfx {
 
 /*
-ReturnCode configure_measure(
-    const Expr* prop,
-    Measure* value) {
-  if (!plist::is_value(prop)) {
-    return ReturnCode::errorf(
-        "EARG",
-        "incorrect number of arguments; expected: 1, got: $0",
-        prop.size());
-  }
-
-  return parse_measure(prop, value);
-}
-
-ReturnCode configure_measure_opt(
-    const Expr* prop,
-    std::optional<Measure>* value) {
-  Measure v;
-  if (auto rc = configure_measure(prop, &v); !rc) {
-    return rc;
-  }
-
-  *value = v;
-  return OK;
-}
-
 ParserFn configure_multiprop(const std::vector<ParserFn>& parsers) {
   return [parsers] (const Expr* prop) -> ReturnCode {
     for (const auto& p : parsers) {
@@ -84,41 +59,6 @@ ParserFn configure_alt(const ParserDefinitions& parsers) {
 
     return parsers.at(parser_key)(prop);
   };
-}
-
-ReturnCode configure_color(
-    const Expr* prop,
-    Color* value) {
-  if (!plist::is_value(prop)) {
-    return ReturnCode::errorf(
-        "EARG",
-        "incorrect number of arguments; expected: 1, got: $0",
-        prop.size());
-  }
-
-  if (StringUtil::beginsWith(prop, "#")) {
-    if (value->parse(prop)) {
-      return OK;
-    }
-  }
-
-  return ReturnCode::error("EARG", "invalid color");
-}
-
-ParserFn configure_color_opt(std::optional<Color>* var) {
-  return [=] (const Expr* prop) -> ReturnCode {
-    Color c;
-    if (auto rc = configure_color(prop, &c); !rc) {
-      return rc;
-    }
-
-    *var = c;
-    return OK;
-  };
-}
-
-ParserFn configure_color_fn(Color* var) {
-  return bind(&configure_color, _1, var);
 }
 
 ReturnCode configure_float(

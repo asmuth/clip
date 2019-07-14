@@ -28,13 +28,33 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 #pragma once
-#include <sexpr.h>
+#include "sexpr.h"
+#include "graphics/color.h"
+#include "graphics/measure.h"
 
 namespace plotfx {
+
+using ExprConv = std::function<ReturnCode (const Expr*)>;
 
 ReturnCode expr_to_string(
     const Expr* prop,
     std::string* value);
+
+ReturnCode expr_to_measure(
+    const Expr* expr,
+    Measure* value);
+
+ReturnCode expr_to_measure_opt(
+    const Expr* expr,
+    std::optional<Measure>* value);
+
+ReturnCode expr_to_color(
+    const Expr* prop,
+    Color* value);
+
+ReturnCode expr_to_color_opt(
+    const Expr* expr,
+    std::optional<Color>* var);
 
 } // namespace plotfx
 
