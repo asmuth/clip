@@ -29,7 +29,7 @@ include_directories(${CAIRO_INCLUDE_DIRS} ${FREETYPE_INCLUDE_DIRS} ${HARFBUZZ_IN
 
 # Build: fviz Library
 # -----------------------------------------------------------------------------
-file(GLOB source_files "core/**/*.cc" "core/*.cc" "elements/*.cc"  "elements/layout/*.cc" "elements/chart/axis.cc" "elements/chart/layout.cc" "elements/chart/points.cc" "elements/chart/lines.cc" "elements/chart/areas.cc" "elements/chart/labels.cc")
+file(GLOB source_files "core/**/*.cc" "core/*.cc" "elements/*.cc"  "elements/layout/*.cc" "elements/chart/axis.cc" "elements/chart/layout.cc" "elements/chart/points.cc" "elements/chart/lines.cc" "elements/chart/areas.cc" "elements/chart/labels.cc" "elements/chart/bars.cc")
 list(REMOVE_ITEM source_files "core/cli.cc")
 add_library(fviz STATIC ${source_files})
 set_target_properties(fviz PROPERTIES PUBLIC_HEADER "source/fviz.h;source/fviz_sdl.h")
