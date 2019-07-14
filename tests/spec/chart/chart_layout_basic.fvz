@@ -1,5 +1,5 @@
 (chart/layout
-    body ((fill color #cccccc))
+    body ((layout/box background-color #cccccc))
     top ((chart/axis-top))
     left ((chart/axis-left))
     bottom ((chart/axis-bottom))

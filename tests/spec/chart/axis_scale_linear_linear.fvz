@@ -1,5 +1,5 @@
-(layout/padding
-  padding 1em
+(layout/box
+  margin 1em
   body (
     (chart/axis-bottom
       layout (linear 1)

@@ -20,7 +20,6 @@
 #include "graphics/layer_pixmap.h"
 #include "utils/fileutil.h"
 #include "core/environment.h"
-#include "elements/fill.h"
 #include "elements/text.h"
 #include "elements/chart/axis.h"
 #include "elements/chart/layout.h"
@@ -28,7 +27,7 @@
 #include "elements/chart/labels.h"
 #include "elements/chart/lines.h"
 #include "elements/chart/points.h"
-#include "elements/layout/padding.h"
+#include "elements/layout/box.h"
 
 #include <iostream>
 #include <string.h>
@@ -46,7 +45,6 @@ struct fviz_s {
 fviz_t* fviz_init() {
   auto ctx = std::make_unique<fviz_t>();
   auto elems = &ctx->env.element_map;
-  element_bind(elems, "fill", bind(elements::fill::build, _1, _2, _3));
   element_bind(elems, "text", bind(elements::text::build, _1, _2, _3));
   element_bind(elems, "chart/axis-top", bind(elements::chart::axis::build, _1, _2, _3));
   element_bind(elems, "chart/axis-right", bind(elements::chart::axis::build, _1, _2, _3));
@@ -57,7 +55,7 @@ fviz_t* fviz_init() {
   element_bind(elems, "chart/labels", bind(elements::chart::labels::build, _1, _2, _3));
   element_bind(elems, "chart/lines", bind(elements::chart::lines::build, _1, _2, _3));
   element_bind(elems, "chart/points", bind(elements::chart::points::build, _1, _2, _3));
-  element_bind(elems, "layout/padding", bind(elements::layout::padding::build, _1, _2, _3));
+  element_bind(elems, "layout/box", bind(elements::layout::box::build, _1, _2, _3));
   return ctx.release();
 }
 
