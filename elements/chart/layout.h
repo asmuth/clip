@@ -33,49 +33,12 @@
 #include "element.h"
 #include "core/layout.h"
 
-namespace plotfx {
-namespace plot {
+namespace plotfx::elements::chart::layout {
 
-struct PlotBorderConfig {
-  Color color;
-  Measure width;
-};
-
-struct PlotConfig {
-  std::vector<ElementRef> children;
-  FontInfo font;
-  Measure font_size;
-  ColorScheme color_scheme;
-  std::optional<Color> background;
-  Color text_color;
-  Color border_color;
-  DomainConfig scale_x;
-  DomainConfig scale_y;
-  ScaleLayoutFn scale_layout_x;
-  ScaleLayoutFn scale_layout_y;
-  std::array<Measure, 4> margins;
-  std::array<PlotBorderConfig, 4> borders;
-  LayoutSettings layout;
-};
-
-ReturnCode draw(
-    const PlotConfig& config,
-    const LayoutInfo& layout,
-    Layer* layer);
-
-ReturnCode reflow(
-    const PlotConfig& config,
-    const Layer& layer,
-    const std::optional<double> max_width,
-    const std::optional<double> max_height,
-    double* min_width,
-    double* min_height);
-
-ReturnCode configure(
-    const plist::PropertyList& plist,
+ReturnCode build(
     const Environment& env,
-    PlotConfig* config);
+    const Expr* expr,
+    ElementRef* elem);
 
-} // namespace plot
-} // namespace plotfx
+} // namespace plotfx::elements::chart::layout
 

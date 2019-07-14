@@ -29,7 +29,7 @@ include_directories(${CAIRO_INCLUDE_DIRS} ${FREETYPE_INCLUDE_DIRS} ${HARFBUZZ_IN
 
 # Build: PlotFX Library
 # -----------------------------------------------------------------------------
-file(GLOB source_files "core/graphics/*.cc" "core/utils/**.cc" "core/sexpr*.cc" "core/plotfx.cc" "core/scale.cc" "core/environment.cc" "elements/text.cc" "core/element_factory.cc" "core/config_helpers.cc" "elements/chart/axis.cc" "core/format.cc" "core/layout.cc" "core/data_model.cc")
+file(GLOB source_files "core/graphics/*.cc" "core/utils/**.cc" "core/sexpr*.cc" "core/plotfx.cc" "core/scale.cc" "core/environment.cc" "elements/text.cc" "core/element_factory.cc" "core/config_helpers.cc" "elements/chart/axis.cc" "core/format.cc" "core/layout.cc" "core/data_model.cc" "elements/chart/layout.cc" "elements/fill.cc")
 list(REMOVE_ITEM source_files "core/plotfx_cli.cc")
 add_library(plotfx STATIC ${source_files})
 set_target_properties(plotfx PROPERTIES PUBLIC_HEADER "source/plotfx.h;source/plotfx_sdl.h")

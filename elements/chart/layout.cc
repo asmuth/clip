@@ -27,56 +27,88 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-#include "elements/plot.h"
+#include "layout.h"
 #include "element_factory.h"
-#include "config_helpers.h"
 #include "graphics/layer.h"
+#include "scale.h"
+#include "sexpr_conv.h"
+#include "sexpr_util.h"
 
 #include <functional>
 
 using namespace std::placeholders;
 
-namespace plotfx {
-namespace plot {
+namespace plotfx::elements::chart::layout {
+
+struct PlotBorderConfig {
+  Color color;
+  Measure width;
+};
+
+struct PlotConfig {
+  FontInfo font;
+  Measure font_size;
+  Color text_color;
+  Color border_color;
+  std::array<Measure, 4> margins;
+  std::optional<Color> background;
+  std::array<PlotBorderConfig, 4> borders;
+  std::vector<ElementRef> body_elements;
+  std::vector<ElementRef> top_elements;
+  std::vector<ElementRef> right_elements;
+  std::vector<ElementRef> bottom_elements;
+  std::vector<ElementRef> left_elements;
+};
 
 ReturnCode draw(
-    const PlotConfig& config,
+    std::shared_ptr<PlotConfig> config,
     const LayoutInfo& layout,
     Layer* layer) {
-  const auto bbox = layout.content_box;
-
   /* convert units  */
-  auto margins = config.margins;
+  auto margins = config->margins;
   for (auto& m : margins) {
-    convert_unit_typographic(layer->dpi, config.font_size, &m);
+    convert_unit_typographic(layer->dpi, config->font_size, &m);
   }
 
-  /* calculate margin box */
-  auto margin_box = layout_margin_box(
-      bbox,
+  /* calculate boxes */
+  const auto& content_box = layout.content_box;
+
+  auto body_box = layout_margin_box(
+      content_box,
       margins[0],
       margins[1],
       margins[2],
       margins[3]);
 
-  /* layout children */
-  std::vector<ElementPlacement> children;
-  for (const auto& c : config.children) {
-    ElementPlacement e;
-    e.element = c;
-    children.emplace_back(e);
-  }
+  auto top_box = Rectangle(
+      body_box.x,
+      content_box.y,
+      body_box.w,
+      margins[0]);
 
-  Rectangle content_box;
-  if (auto rc = layout_elements(*layer, margin_box, &children, &content_box); !rc) {
-    return rc;
-  }
+  auto bottom_box = Rectangle(
+      body_box.x,
+      content_box.y + content_box.h - margins[2],
+      body_box.w,
+      margins[2]);
+
+  auto right_box = Rectangle(
+      content_box.x + content_box.w - margins[1],
+      body_box.y,
+      margins[1],
+      body_box.h);
+
+  auto left_box = Rectangle(
+      content_box.x,
+      body_box.y,
+      margins[3],
+      body_box.h);
 
   /* draw background */
-  if (config.background) {
-    const auto& bg_box = content_box;
+  if (config->background) {
+    const auto& bg_box = layout.content_box;
     FillStyle bg_fill;
-    bg_fill.color = *config.background;
+    bg_fill.color = *config->background;
 
     fillRectangle(
         layer,
@@ -86,18 +118,61 @@ ReturnCode draw(
         bg_fill);
   }
 
-  /* draw children */
-  for (const auto& c : children) {
-    if (auto rc = c.element->draw(c.layout, layer); !rc.isSuccess()) {
+  /* draw content elements  */
+  for (const auto& e : config->body_elements) {
+    LayoutInfo layout;
+    layout.content_box = body_box;
+
+    if (auto rc = e->draw(layout, layer); !rc.isSuccess()) {
+      return rc;
+    }
+  }
+
+  /* draw top elements  */
+  for (const auto& e : config->top_elements) {
+    LayoutInfo layout;
+    layout.content_box = top_box;
+
+    if (auto rc = e->draw(layout, layer); !rc.isSuccess()) {
+      return rc;
+    }
+  }
+
+  /* draw right elements  */
+  for (const auto& e : config->right_elements) {
+    LayoutInfo layout;
+    layout.content_box = right_box;
+
+    if (auto rc = e->draw(layout, layer); !rc.isSuccess()) {
+      return rc;
+    }
+  }
+
+  /* draw bottom elements  */
+  for (const auto& e : config->bottom_elements) {
+    LayoutInfo layout;
+    layout.content_box = bottom_box;
+
+    if (auto rc = e->draw(layout, layer); !rc.isSuccess()) {
+      return rc;
+    }
+  }
+
+  /* draw left elements  */
+  for (const auto& e : config->left_elements) {
+    LayoutInfo layout;
+    layout.content_box = left_box;
+
+    if (auto rc = e->draw(layout, layer); !rc.isSuccess()) {
       return rc;
     }
   }
 
   /* draw top border  */
-  if (config.borders[0].width > 0) {
+  if (config->borders[0].width > 0) {
     StrokeStyle border_style;
-    border_style.line_width = config.borders[0].width;
-    border_style.color = config.borders[0].color;
+    border_style.line_width = config->borders[0].width;
+    border_style.color = config->borders[0].color;
 
     strokeLine(
         layer,
@@ -107,10 +182,10 @@ ReturnCode draw(
   }
 
   /* draw right border  */
-  if (config.borders[1].width > 0) {
+  if (config->borders[1].width > 0) {
     StrokeStyle border_style;
-    border_style.line_width = config.borders[1].width;
-    border_style.color = config.borders[1].color;
+    border_style.line_width = config->borders[1].width;
+    border_style.color = config->borders[1].color;
 
     strokeLine(
         layer,
@@ -120,10 +195,10 @@ ReturnCode draw(
   }
 
   /* draw top border  */
-  if (config.borders[2].width > 0) {
+  if (config->borders[2].width > 0) {
     StrokeStyle border_style;
-    border_style.line_width = config.borders[2].width;
-    border_style.color = config.borders[2].color;
+    border_style.line_width = config->borders[2].width;
+    border_style.color = config->borders[2].color;
 
     strokeLine(
         layer,
@@ -133,10 +208,10 @@ ReturnCode draw(
   }
 
   /* draw left border  */
-  if (config.borders[3].width > 0) {
+  if (config->borders[3].width > 0) {
     StrokeStyle border_style;
-    border_style.line_width = config.borders[3].width;
-    border_style.color = config.borders[3].color;
+    border_style.line_width = config->borders[3].width;
+    border_style.color = config->borders[3].color;
 
     strokeLine(
         layer,
@@ -148,119 +223,64 @@ ReturnCode draw(
   return OK;
 }
 
-ReturnCode reflow(
-    const PlotConfig& config,
-    const Layer& layer,
-    const std::optional<double> max_width,
-    const std::optional<double> max_height,
-    double* min_width,
-    double* min_height) {
-  return OK; // TODO
-}
-
-ReturnCode configure(
-    const plist::PropertyList& plist,
+ReturnCode build(
     const Environment& env,
-    PlotConfig* config) {
+    const Expr* expr,
+    ElementRef* elem) {
+  auto config = std::make_shared<PlotConfig>();
   config->font = env.font;
   config->font_size = env.font_size;
-  config->color_scheme = env.color_scheme;
   config->text_color = env.text_color;
   config->border_color = env.border_color;
-  config->scale_layout_x = env.scale_layout_x;
-  config->scale_layout_y = env.scale_layout_y;
+  config->margins = {from_em(2), from_em(2), from_em(2), from_em(2)};
 
-  ParserDefinitions pdefs = {
-    {"position", bind(&configure_position, _1, &config->layout.position)},
-    {"width", bind(&configure_measure_opt, _1, &config->layout.width)},
-    {"height", bind(&configure_measure_opt, _1, &config->layout.height)},
+  auto config_rc = expr_walk_map(expr_next(expr), {
     {
       "margin",
-      configure_multiprop({
-        bind(&configure_measure, _1, &config->margins[0]),
-        bind(&configure_measure, _1, &config->margins[1]),
-        bind(&configure_measure, _1, &config->margins[2]),
-        bind(&configure_measure, _1, &config->margins[3]),
+      expr_calln_fn({
+        bind(&expr_to_measure, _1, &config->margins[0]),
+        bind(&expr_to_measure, _1, &config->margins[1]),
+        bind(&expr_to_measure, _1, &config->margins[2]),
+        bind(&expr_to_measure, _1, &config->margins[3]),
       })
     },
-    {"margin-top", bind(&configure_measure, _1, &config->margins[0])},
-    {"margin-right", bind(&configure_measure, _1, &config->margins[1])},
-    {"margin-bottom", bind(&configure_measure, _1, &config->margins[2])},
-    {"margin-left", bind(&configure_measure, _1, &config->margins[3])},
-    {"border-top-color", bind(&configure_color, _1, &config->borders[0].color)},
-    {"border-right-color", bind(&configure_color, _1, &config->borders[1].color)},
-    {"border-bottom-color", bind(&configure_color, _1, &config->borders[2].color)},
-    {"border-left-color", bind(&configure_color, _1, &config->borders[3].color)},
-    {"border-top-width", bind(&configure_measure, _1, &config->borders[0].width)},
-    {"border-right-width", bind(&configure_measure, _1, &config->borders[1].width)},
-    {"border-bottom-width", bind(&configure_measure, _1, &config->borders[2].width)},
-    {"border-left-width", bind(&configure_measure, _1, &config->borders[3].width)},
-    {"scale-x", bind(&domain_configure, _1, &config->scale_x)},
-    {"scale-x-min", bind(&configure_float_opt, _1, &config->scale_x.min)},
-    {"scale-x-max", bind(&configure_float_opt, _1, &config->scale_x.max)},
-    {"scale-x-padding", bind(&configure_float, _1, &config->scale_x.padding)},
-    {"scale-x-layout", bind(&configure_scale_layout, _1, &config->scale_layout_x)},
-    {"scale-y", bind(&domain_configure, _1, &config->scale_y)},
-    {"scale-y-min", bind(&configure_float_opt, _1, &config->scale_y.min)},
-    {"scale-y-max", bind(&configure_float_opt, _1, &config->scale_y.max)},
-    {"scale-y-padding", bind(&configure_float, _1, &config->scale_y.padding)},
-    {"scale-y-layout", bind(&configure_scale_layout, _1, &config->scale_layout_y)},
-    {"background-color", configure_color_opt(&config->background)},
+    {"margin-top", bind(&expr_to_measure, _1, &config->margins[0])},
+    {"margin-right", bind(&expr_to_measure, _1, &config->margins[1])},
+    {"margin-bottom", bind(&expr_to_measure, _1, &config->margins[2])},
+    {"margin-left", bind(&expr_to_measure, _1, &config->margins[3])},
+    {"border-top-color", bind(&expr_to_color, _1, &config->borders[0].color)},
+    {"border-right-color", bind(&expr_to_color, _1, &config->borders[1].color)},
+    {"border-bottom-color", bind(&expr_to_color, _1, &config->borders[2].color)},
+    {"border-left-color", bind(&expr_to_color, _1, &config->borders[3].color)},
+    {"border-top-width", bind(&expr_to_measure, _1, &config->borders[0].width)},
+    {"border-right-width", bind(&expr_to_measure, _1, &config->borders[1].width)},
+    {"border-bottom-width", bind(&expr_to_measure, _1, &config->borders[2].width)},
+    {"border-left-width", bind(&expr_to_measure, _1, &config->borders[3].width)},
+    {"background-color", bind(&expr_to_color_opt, _1, &config->background)},
     {
       "foreground-color",
-      configure_multiprop({
-          bind(&configure_color, _1, &config->text_color),
-          bind(&configure_color, _1, &config->border_color),
+      expr_calln_fn({
+        bind(&expr_to_color, _1, &config->text_color),
+        bind(&expr_to_color, _1, &config->border_color),
       })
     },
-    {"text-color", bind(&configure_color, _1, &config->text_color)},
-    {"border-color", bind(&configure_color, _1, &config->border_color)},
-  };
+    {"text-color", bind(&expr_to_color, _1, &config->text_color)},
+    {"border-color", bind(&expr_to_color, _1, &config->border_color)},
+    {"body", bind(&element_build_list, env, _1, &config->body_elements)},
+    {"top", bind(&element_build_list, env, _1, &config->top_elements)},
+    {"right", bind(&element_build_list, env, _1, &config->right_elements)},
+    {"bottom", bind(&element_build_list, env, _1, &config->bottom_elements)},
+    {"left", bind(&element_build_list, env, _1, &config->left_elements)},
+  });
 
-  if (auto rc = parseAll(plist, pdefs); !rc) {
-    return rc;
+  if (!config_rc) {
+    return config_rc;
   }
 
-  Environment child_env;
-  child_env.screen_width = env.screen_width;
-  child_env.screen_height = env.screen_height;
-  child_env.dpi = env.dpi;
-  child_env.font = config->font;
-  child_env.font_size = config->font_size;
-  child_env.color_scheme = config->color_scheme;
-  child_env.text_color = config->text_color;
-  child_env.border_color = config->border_color;
-  child_env.background_color = config->background.value_or(env.background_color);
-  child_env.scale_x = config->scale_x;
-  child_env.scale_y = config->scale_y;
-  child_env.scale_layout_x = config->scale_layout_x;
-  child_env.scale_layout_y = config->scale_layout_y;
-
-  for (size_t i = 0; i < plist.size(); ++i) {
-    if (!plist::is_map(plist[i])) {
-      continue;
-    }
-
-    const auto& elem_name = plist[i].name;
-    const auto& elem_config = plist[i].next.get();
-
-    ElementRef elem;
-    auto rc = buildElement(
-        elem_name,
-        *elem_config,
-        child_env,
-        &elem);
-
-    if (!rc) {
-      return rc;
-    }
-
-    config->children.emplace_back(std::move(elem));
-  }
-
+  *elem = std::make_shared<Element>();
+  (*elem)->draw = bind(&draw, config, _1, _2);
   return OK;
 }
 
-} // namespace plot
-} // namespace plotfx
+} // namespace plotfx::elements::chart::layout
 
