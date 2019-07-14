@@ -204,24 +204,6 @@ ReturnCode parse_data_series_csv(
   }
 }
 
-ReturnCode configure_strings(
-    const Expr* prop,
-    std::vector<std::string>* data) {
-  if (plist::is_enum(prop, "csv")) {
-    SeriesRef d;
-    if (auto rc = parse_data_series_csv(prop, &d); !rc) {
-      return rc;
-    }
-
-    for (auto v : *d) {
-      data->emplace_back(v);
-    }
-
-    return OK;
-  }
-
-  return configure_vec<std::string>(bind(&configure_string, _1, _2), data)(prop);
-}
 */
 } // namespace fviz
 

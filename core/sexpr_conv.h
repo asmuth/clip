@@ -27,6 +27,10 @@ ReturnCode expr_to_string(
     const Expr* prop,
     std::string* value);
 
+ReturnCode expr_to_strings(
+    const Expr* prop,
+    std::vector<std::string>* values);
+
 ReturnCode expr_to_measure(
     const Expr* expr,
     Measure* value);

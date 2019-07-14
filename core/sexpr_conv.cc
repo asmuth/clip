@@ -32,6 +32,12 @@ ReturnCode expr_to_string(
   return OK;
 }
 
+ReturnCode expr_to_strings(
+    const Expr* expr,
+    std::vector<std::string>* values) {
+  return expr_tov<std::string>(expr, bind(&expr_to_string, _1, _2), values);
+}
+
 ReturnCode expr_to_measure(
     const Expr* expr,
     Measure* value) {
