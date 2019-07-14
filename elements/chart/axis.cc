@@ -19,6 +19,7 @@
 #include "core/scale.h"
 #include "core/format.h"
 #include "core/layout.h"
+#include "sexpr_conv.h"
 #include "sexpr_util.h"
 
 #include <assert.h>
@@ -105,7 +106,7 @@ static Status renderAxisVertical(
     Layer* target) {
   /* compute layout */
   ScaleLayout slayout;
-  axis_config.scale_layout(&slayout);
+  axis_config.scale_layout(axis_config.scale, &slayout);
 
   /* draw axis line */
   {
@@ -192,7 +193,7 @@ static Status renderAxisHorizontal(
     Layer* target) {
   /* compute layout */
   ScaleLayout slayout;
-  axis_config.scale_layout(&slayout);
+  axis_config.scale_layout(axis_config.scale, &slayout);
 
   /* draw axis line */
   {
@@ -278,7 +279,7 @@ ReturnCode axis_layout_labels(
     double* margin) {
   /* compute scale layout */
   ScaleLayout slayout;
-  axis.scale_layout(&slayout);
+  axis.scale_layout(axis.scale, &slayout);
 
   /* compute label size */
   double max = 0;
@@ -494,7 +495,7 @@ ReturnCode build(const Environment& env, const Expr* expr, ElementRef* elem) {
   config->label_font_size = env.font_size;
   config->border_color = env.border_color;
   config->text_color = env.text_color;
-  config->scale_layout = bind(&scale_layout_subdivide, _1, 6);
+  config->scale_layout = bind(&scale_layout_subdivide, _1, _2, 6);
 
   if (elem_name == "chart/axis-top") {
     config->position = AxisPosition::TOP;
@@ -529,15 +530,12 @@ ReturnCode build(const Environment& env, const Expr* expr, ElementRef* elem) {
 
   {
     auto rc = expr_walk_map(expr_next(expr), {
-      //{"width", bind(&configure_measure_opt, _1, &config->layout.width)},
-      //{"height", bind(&configure_measure_opt, _1, &config->layout.height)},
-      //{"format", bind(&confgure_format, _1, &config->label_formatter)},
-      //{"labels", bind(&configure_strings, _1, &config->label_override)},
-      //{"layout", bind(&configure_scale_layout, _1, &config->scale_layout)},
-      //{"scale", bind(&domain_configure, _1, &config->scale)},
-      //{"scale-min", bind(&configure_float_opt, _1, &config->scale.min)},
-      //{"scale-max", bind(&configure_float_opt, _1, &config->scale.max)},
-      //{"scale-padding", bind(&configure_float, _1, &config->scale.padding)},
+      {"layout", bind(&scale_configure_layout, _1, &config->scale_layout)},
+      {"min", bind(&expr_to_float64_opt, _1, &config->scale.min)},
+      {"max", bind(&expr_to_float64_opt, _1, &config->scale.max)},
+      {"scale", bind(&domain_configure_kind, _1, &config->scale)},
+      {"scale-padding", bind(&expr_to_float64, _1, &config->scale.padding)},
+      {"labels", bind(&expr_to_strings, _1, &config->label_override)},
     });
 
     if (!rc) {

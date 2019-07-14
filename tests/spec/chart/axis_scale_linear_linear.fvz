@@ -1,0 +1,7 @@
+(layout/padding
+  padding 1em
+  body (
+    (chart/axis-bottom
+      layout (linear 1)
+      min 0
+      max 16)))

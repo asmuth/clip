@@ -101,5 +101,9 @@ const std::string& expr_get_value(const Expr* expr) {
   return expr->value;
 }
 
+std::string expr_inspect(const Expr* expr) {
+  return expr->value; // FIXME
+}
+
 } // namespace fviz
 

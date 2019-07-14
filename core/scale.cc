@@ -12,7 +12,8 @@
  * limitations under the License.
  */
 #include "core/scale.h"
-#include "utils/algo.h"
+#include "core/sexpr_conv.h"
+#include "core/sexpr_util.h"
 
 #include <assert.h>
 #include <iostream>
@@ -164,31 +165,28 @@ std::vector<double> domain_untranslate(
   return s;
 }
 
-/*
-
-ReturnCode domain_configure(
-    const plist::Property& prop,
+ReturnCode domain_configure_kind(
+    const Expr* expr,
     DomainConfig* domain) {
-  auto args = plist::flatten(prop);
-  for (const auto& prop : args) {
-    if (prop == "linear") {
+  for (; expr; expr = expr_next(expr)) {
+    if (expr_is_value(expr, "linear")) {
       domain->kind = DomainKind::LINEAR;
       continue;
     }
 
-    if (prop == "log" ||
-        prop == "logarithmic") {
+    if (expr_is_value(expr, "log") ||
+        expr_is_value(expr, "logarithmic")) {
       domain->kind = DomainKind::LOGARITHMIC;
       continue;
     }
 
-    if (prop == "invert" ||
-        prop == "inverted") {
+    if (expr_is_value(expr, "invert") ||
+        expr_is_value(expr, "inverted")) {
       domain->inverted = true;
       continue;
     }
 
-    return err_invalid_value(prop, {
+    return err_invalid_value(expr_inspect(expr), {
       "linear",
       "log",
       "logarithmic",
@@ -199,8 +197,6 @@ ReturnCode domain_configure(
 
   return OK;
 }
-
-*/
 
 ReturnCode scale_layout_linear(
     const DomainConfig& domain,
@@ -228,6 +224,7 @@ ReturnCode scale_layout_linear(
 }
 
 ReturnCode scale_layout_subdivide(
+    const DomainConfig& domain,
     ScaleLayout* layout,
     uint32_t divisions) {
   layout->ticks.clear();
@@ -274,40 +271,30 @@ ReturnCode scale_layout_discrete(
   return OK;
 }
 
-/*
-
-ReturnCode configure_scale_layout_linear(
-    const plist::Property& prop,
+ReturnCode scale_configure_layout_linear(
+    const Expr* expr,
     ScaleLayoutFn* layout) {
+  auto args = expr_collect(expr);
+
   double step = 0;
   std::optional<double> align;
-  switch (prop.size()) {
+  switch (args.size()) {
+    case 2:
+      if (auto rc = expr_to_float64_opt(args[1], &align); !rc) {
+        return rc;
+      }
+    case 1:
+      if (auto rc = expr_to_float64(args[0], &step); !rc) {
+        return rc;
+      }
+      break;
     case 0:
       step = 1; // TODO: automatically choose a good value
       break;
-    case 1:
     default:
-      try {
-        step = std::stod(prop[0]);
-        break;
-      } catch (... ) {
-        return ERROR;
-      }
-  }
-
-  for (size_t i = 1; i < prop.size(); ++i) {
-    if (plist::is_tuple(prop[i]) &&
-        prop[i].size() == 2 &&
-        prop[i][0].value == "align") {
-      try {
-        align = std::stod(prop[i][1].value);
-        break;
-      } catch (... ) {
-        return ERROR;
-      }
-
-      continue;
-    }
+      return ReturnCode::error(
+          "EARG",
+          "invalid number of arguments for 'linear'; expected zero, one or two");
   }
 
   *layout = bind(
@@ -320,23 +307,25 @@ ReturnCode configure_scale_layout_linear(
   return OK;
 }
 
-ReturnCode configure_scale_layout_subdivide(
-    const plist::Property& prop,
+ReturnCode scale_configure_layout_subdivide(
+    const Expr* expr,
     ScaleLayoutFn* layout) {
+  auto args = expr_collect(expr);
+
   double subdivisions = 0;
-  switch (prop.size()) {
+  switch (args.size()) {
     case 0:
       subdivisions = 8; // TODO: automatically choose a good value
       break;
     case 1:
-      try {
-        subdivisions = std::stod(prop[0]);
-        break;
-      } catch (... ) {
-        return ERROR;
+      if (auto rc = expr_to_float64(args[0], &subdivisions); !rc) {
+        return rc;
       }
+      break;
     default:
-      return ERROR;
+      return ReturnCode::error(
+          "EARG",
+          "invalid number of arguments for 'subdivide'; expected one or two");
   }
 
   *layout = bind(
@@ -348,35 +337,39 @@ ReturnCode configure_scale_layout_subdivide(
   return OK;
 }
 
-ReturnCode configure_scale_layout(
-    const plist::Property& prop,
+ReturnCode scale_configure_layout(
+    const Expr* expr,
     ScaleLayoutFn* layout) {
-  if (plist::is_value(prop, "linear") ||
-      plist::is_enum(prop, "linear")) {
-    return configure_scale_layout_linear(prop, layout);
+  if (!expr || !expr_is_list(expr)) {
+    return ReturnCode::errorf(
+        "EARG",
+        "invalid argument; expected a list but got: $0",
+        "..."); // FIXME
   }
 
-  if (plist::is_value(prop, "subdivide") ||
-      plist::is_enum(prop, "subdivide")) {
-    return configure_scale_layout_subdivide(prop, layout);
+  expr = expr_get_list(expr);
+
+  if (expr_is_value(expr, "linear")) {
+    return scale_configure_layout_linear(expr_next(expr), layout);
   }
 
-  if (plist::is_value(prop, "discrete") ||
-      plist::is_enum(prop, "discrete")) {
+  if (expr_is_value(expr, "subdivide")) {
+    return scale_configure_layout_subdivide(expr_next(expr), layout);
+  }
+
+  if (expr_is_value(expr, "discrete")) {
     *layout = bind(&scale_layout_discrete, _1, _2);
     return OK;
   }
 
-  return ReturnCode::errorf(
+  return ReturnCode::error(
       "EARG",
-      "invalid value '$0', expected one of: \n"
+      "invalid argument; expected one of: \n"
       "  - linear\n"
       "  - subdivide\n"
-      "  - discrete\n",
-      prop.value);
+      "  - discrete\n");
 }
 
-*/
 
 } // namespace fviz
 

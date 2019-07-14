@@ -51,7 +51,7 @@ struct ScaleLayout {
   std::vector<double> labels;
 };
 
-using ScaleLayoutFn = std::function<void (ScaleLayout*)>;
+using ScaleLayoutFn = std::function<void (const DomainConfig&, ScaleLayout*)>;
 
 void domain_fit(double value, DomainConfig* domain);
 
@@ -72,9 +72,9 @@ std::vector<double> domain_untranslate(
     const DomainConfig& domain,
     const std::vector<double>& data);
 
-//ReturnCode domain_configure(
-//    const plist::Property& prop,
-//    DomainConfig* domain);
+ReturnCode domain_configure_kind(
+    const Expr* expr,
+    DomainConfig* domain);
 
 ReturnCode scale_layout_linear(
     const DomainConfig& domain,
@@ -83,6 +83,7 @@ ReturnCode scale_layout_linear(
     std::optional<double> align);
 
 ReturnCode scale_layout_subdivide(
+    const DomainConfig& domain,
     ScaleLayout* layout,
     uint32_t divisions);
 
@@ -90,9 +91,9 @@ ReturnCode scale_layout_discrete(
     const DomainConfig& domain,
     ScaleLayout* layout);
 
-//ReturnCode configure_scale_layout(
-//    const plist::Property& prop,
-//    ScaleLayoutFn* layout);
+ReturnCode scale_configure_layout(
+    const Expr* expr,
+    ScaleLayoutFn* layout);
 
 } // namespace fviz
 

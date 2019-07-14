@@ -40,5 +40,7 @@ bool expr_is_value_quoted(const Expr* expr);
 bool expr_is_value_quoted(const Expr* expr, const std::string& cmp);
 const std::string& expr_get_value(const Expr* expr);
 
+std::string expr_inspect(const Expr* expr);
+
 } // namespace fviz
 

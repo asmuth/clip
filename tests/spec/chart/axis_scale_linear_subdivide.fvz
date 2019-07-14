@@ -1,0 +1,7 @@
+(layout/padding
+  padding 1em
+  body (
+    (chart/axis-bottom
+      layout (subdivide 21)
+      min -100
+      max 100)))
