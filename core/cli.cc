@@ -22,7 +22,7 @@
 using namespace fviz;
 
 void printError(const ReturnCode& rc) {
-  std::cerr << fmt::format("ERROR: {}", rc.getMessage()) << std::endl;
+  std::cerr << fmt::format("ERROR: {}", rc.message) << std::endl;
 }
 
 int main(int argc, const char** argv) {
@@ -48,8 +48,8 @@ int main(int argc, const char** argv) {
 
   {
     auto rc = flag_parser.parseArgv(argc - 1, argv + 1);
-    if (!rc.isSuccess()) {
-      std::cerr << "ERROR: " << rc.getMessage() << std::endl;
+    if (!rc) {
+      std::cerr << "ERROR: " << rc.message << std::endl;
       return -1;
     }
   }

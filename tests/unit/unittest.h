@@ -75,10 +75,10 @@ void CHECK_RC(fviz::Status rc) {
 }
 
 void CHECK_RC(fviz::ReturnCode rc) {
-  if (!rc.isSuccess()) {
+  if (!rc) {
     RAISE(
         kExpectationFailed,
-        rc.getMessage());
+        rc.message);
   }
 }
 

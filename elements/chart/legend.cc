@@ -271,8 +271,8 @@ ReturnCode legend_configure_position(
     HAlign* position_horiz,
     VAlign* position_vert) {
   if (!expr || !expr_is_list(expr)) {
-    return ReturnCode::errorf(
-        "EARG",
+    return errorf(
+        ERROR,
         "invalid argument; expected a list but got: {}",
         "..."); // FIXME
   }

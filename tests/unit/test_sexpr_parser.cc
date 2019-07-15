@@ -33,7 +33,7 @@ using namespace fviz;
     do { \
       auto rc = (X); \
       if (!rc) { \
-        std::cerr << "ERROR: " << rc.getMessage() << " on line " << __LINE__ <<  std::endl; \
+        std::cerr << "ERROR: " << rc.message << " on line " << __LINE__ <<  std::endl; \
         std::exit(1); \
       } \
     } while(0)

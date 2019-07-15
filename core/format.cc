@@ -156,8 +156,8 @@ ReturnCode confgure_format(
     return confgure_format_string(prop, formatter);
   }
 
-  return ReturnCode::errorf(
-      "EARG",
+  return errorf(
+      ERROR,
       "invalid value '{}', expected one of: \n"
       "  - fixed\n"
       "  - scientific\n",

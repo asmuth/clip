@@ -53,7 +53,7 @@ ReturnCode expr_parse_string_escape(
     const char* end,
     std::string* str) {
   if (*cur == end || *cur + 1 == end) {
-    return ReturnCode::error("EARG", "short escape code");
+    return error(ERROR, "short escape code");
   }
 
   auto code = (*cur)[1];
@@ -66,7 +66,7 @@ ReturnCode expr_parse_string_escape(
       return OK;
   }
 
-  return ReturnCode::error("EARG", "invalid escape code");
+  return error(ERROR, "invalid escape code");
 }
 
 ReturnCode expr_parse_string(
@@ -91,7 +91,7 @@ ReturnCode expr_parse_string(
   }
 
   if (*cur == end) {
-    return ReturnCode::error("EARG", "unterminated string");
+    return error(ERROR, "unterminated string");
   } else {
     ++(*cur);
   }
@@ -135,7 +135,7 @@ ReturnCode expr_parse(
 
       case ')': {
         if (stack.empty()) {
-          return ReturnCode::error("EARG", "unbalanced parens");
+          return error(ERROR, "unbalanced parens");
         }
 
         stack.pop();
@@ -169,7 +169,7 @@ ReturnCode expr_parse(
   stack.pop();
 
   if (!stack.empty()) {
-    return ReturnCode::error("EARG", "unbalanced parens");
+    return error(ERROR, "unbalanced parens");
   }
 
   return OK;

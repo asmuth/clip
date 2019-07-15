@@ -23,13 +23,13 @@ ReturnCode element_build(
     const Expr* expr,
     ElementRef* elem) {
   if (!expr || !expr_is_value(expr)) {
-    return ReturnCode::error("EARG", "expected an element name");
+    return error(ERROR, "expected an element name");
   }
 
   auto elem_name = expr_get_value(expr);
   auto elem_iter = env.element_map.elements.find(elem_name);
   if (elem_iter == env.element_map.elements.end()) {
-    return ReturnCode::errorf("EARG", "no such element: {}", elem_name);
+    return errorf(ERROR, "no such element: {}", elem_name);
   }
 
   return elem_iter->second(env, expr, elem);
@@ -41,7 +41,7 @@ ReturnCode element_build_all(
     std::vector<ElementRef>* elems) {
   for (; expr; expr = expr_next(expr)) {
     if (!expr_is_list(expr)) {
-      return ReturnCode::error("EARG", "expected an element list");
+      return error(ERROR, "expected an element list");
     }
 
     ElementRef elem;
@@ -60,7 +60,7 @@ ReturnCode element_build_list(
     const Expr* expr,
     std::vector<ElementRef>* elems) {
   if (!expr_is_list(expr)) {
-    return ReturnCode::error("EARG", "expected an element list");
+    return error(ERROR, "expected an element list");
   }
 
   return element_build_all(env, expr_get_list(expr), elems);

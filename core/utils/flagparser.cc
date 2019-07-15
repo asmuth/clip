@@ -96,8 +96,8 @@ ReturnCode parseValue(FlagState* flag, const std::string& value) {
       } else if (value == "off") {
         *static_cast<bool*>(flag->value) = false;
       } else {
-        return ReturnCode::errorf(
-            "FLAG_ERROR",
+        return errorf(
+            ERROR,
             "flag --{}=... invalid value",
             flag->longopt);
       }
@@ -107,8 +107,8 @@ ReturnCode parseValue(FlagState* flag, const std::string& value) {
       try {
         *static_cast<int64_t*>(flag->value) = std::stoll(value);
       } catch (std::exception e) {
-        return ReturnCode::errorf(
-            "FLAG_ERROR",
+        return errorf(
+            ERROR,
             "flag --{}=... invalid value",
             flag->longopt);
       }
@@ -118,8 +118,8 @@ ReturnCode parseValue(FlagState* flag, const std::string& value) {
       try {
         *static_cast<uint64_t*>(flag->value) = std::stoull(value);
       } catch (std::exception e) {
-        return ReturnCode::errorf(
-            "FLAG_ERROR",
+        return errorf(
+            ERROR,
             "flag --{}=... invalid value",
             flag->longopt);
       }
@@ -129,22 +129,22 @@ ReturnCode parseValue(FlagState* flag, const std::string& value) {
       try {
         *static_cast<double*>(flag->value) = std::stod(value);
       } catch (std::exception e) {
-        return ReturnCode::errorf(
-            "FLAG_ERROR",
+        return errorf(
+            ERROR,
             "flag --{}=... invalid value",
             flag->longopt);
       }
       break;
 
     default:
-      return ReturnCode::errorf(
-          "FLAG_ERROR",
+      return errorf(
+          ERROR,
           "flag --{}=... invalid type",
           flag->longopt);
   }
 
   flag->has_value = true;
-  return ReturnCode::success();
+  return OK;
 }
 
 ReturnCode FlagParser::parseArgv(int argc, const char** argv) {
@@ -186,36 +186,36 @@ ReturnCode FlagParser::parseArgv(const std::vector<std::string>& argv) {
     }
 
     if (flag_ptr == nullptr) {
-      return ReturnCode::errorf(
-          "FLAG_ERROR",
+      return errorf(
+          ERROR,
           "invalid flag: {}",
           arg);
     } else if (flag_ptr->type == T_SWITCH) {
       auto rc = parseValue(flag_ptr, "on");
-      if (!rc.isSuccess()) {
+      if (!rc) {
         return rc;
       }
     } else if (eq_len > 0) {
       if (arg.size() == eq_len) {
-        return ReturnCode::errorf(
-            "FLAG_ERROR",
+        return errorf(
+            ERROR,
             "flag --{}=... has no value",
             flag_ptr->longopt);
       }
 
       auto rc = parseValue(flag_ptr, arg.substr(eq_len));
-      if (!rc.isSuccess()) {
+      if (!rc) {
         return rc;
       }
     } else {
       if (i + 1 < argv.size()) {
         auto rc = parseValue(flag_ptr, argv[++i]);
-        if (!rc.isSuccess()) {
+        if (!rc) {
           return rc;
         }
       } else if (flag_ptr->required) {
-        return ReturnCode::errorf(
-            "FLAG_ERROR",
+        return errorf(
+            ERROR,
             "flag --{} has no value",
             flag_ptr->longopt);
       }
@@ -224,14 +224,14 @@ ReturnCode FlagParser::parseArgv(const std::vector<std::string>& argv) {
 
   for (const auto& flag : flags_) {
     if (flag.required == true && !flag.has_value) {
-      return ReturnCode::errorf(
-          "FLAG_ERROR",
+      return errorf(
+          ERROR,
           "flag --{} is required",
           flag.longopt);
     }
   }
 
-  return ReturnCode::success();
+  return OK;
 }
 
 } // namespace fviz

@@ -21,22 +21,22 @@ ReturnCode expr_to_enum(
     const std::unordered_map<std::string, T> value_defs,
     T* value) {
   if (!expr || !expr_is_value(expr)) {
-    return ReturnCode::errorf(
-        "EARG",
+    return errorf(
+        ERROR,
         "argument error; expected a list, got: {}",
         "..."); // FIXME
   }
 
   const auto& value_def = value_defs.find(expr_get_value(expr));
   if (value_def == value_defs.end()) {
-    return ReturnCode::errorf(
-        "EPARSE",
+    return errorf(
+        ERROR,
         "invalid value '{}'",
         expr_get_value(expr));
   }
 
   *value = value_def->second;
-  return ReturnCode::success();
+  return OK;
 }
 
 template <typename T>
@@ -56,8 +56,8 @@ ReturnCode expr_tov(
     ExprConvTo<T> conv,
     std::vector<T>* values) {
   if (!expr || !expr_is_list(expr)) {
-    return ReturnCode::errorf(
-        "EARG",
+    return errorf(
+        ERROR,
         "argument error; expected a list, got: {}",
         "..."); // FIXME
   }

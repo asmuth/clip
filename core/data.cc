@@ -110,8 +110,8 @@ ReturnCode data_load_strings_csv(
   if (args.size() != 2 ||
       !expr_is_value(args[0]) ||
       !expr_is_value(args[1])) {
-    return ReturnCode::errorf(
-        "EARG",
+    return errorf(
+        ERROR,
         "invalid number of arguments to 'csv'; expected: 2, got: {}",
         "..."); // FIXME
   }
@@ -138,8 +138,8 @@ ReturnCode data_load_strings_csv(
   const auto& headers = data_csv.front();
   const auto& header = std::find(headers.begin(), headers.end(), column_name);
   if (header == headers.end()) {
-    return ReturnCode::errorf(
-        "EARG",
+    return errorf(
+        ERROR,
         "CSV column not found: {}",
         column_name);
   }
@@ -147,8 +147,8 @@ ReturnCode data_load_strings_csv(
   auto column_idx = std::distance(headers.begin(), header);
   for (auto row = ++data_csv.begin(); row != data_csv.end(); ++row) {
     if (row->size() < column_idx) {
-      return ReturnCode::errorf(
-          "EARG",
+      return errorf(
+          ERROR,
           "CSV invalid number of columns for row #{}",
           std::distance(data_csv.begin(), row));
     }
@@ -171,8 +171,8 @@ ReturnCode data_load_csv(
     try {
       values->push_back(from_user(std::stod(*v)));
     } catch (... ) {
-      return ReturnCode::errorf(
-          "EARG",
+      return errorf(
+          ERROR,
           "CSV invalid column in row #{}: '{}' is not a number",
           std::distance(values_str.begin(), v) + 1,
           *v);
@@ -186,8 +186,8 @@ ReturnCode data_load_strings(
     const Expr* expr,
     std::vector<std::string>* values) {
   if (!expr || !expr_is_list(expr)) {
-    return ReturnCode::errorf(
-        "EARG",
+    return errorf(
+        ERROR,
         "argument error; expected a value, got: {}",
         "..."); // FIXME
   }
@@ -205,8 +205,8 @@ ReturnCode data_load(
     const Expr* expr,
     std::vector<Measure>* values) {
   if (!expr || !expr_is_list(expr)) {
-    return ReturnCode::errorf(
-        "EARG",
+    return errorf(
+        ERROR,
         "argument error; expected a value, got: {}",
         "..."); // FIXME
   }

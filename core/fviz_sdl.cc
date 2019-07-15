@@ -60,11 +60,11 @@ int fviz_render_sdl2(fviz_t* ctx, SDL_Surface* surface) {
       },
       &layer);
 
-  if (!rc.isSuccess()) {
+  if (!rc) {
     return rc;
   }
 
-  if (auto rc = document_render_to(*doc, layer.get()); !rc.isSuccess()) {
+  if (auto rc = document_render_to(*doc, layer.get()); !rc) {
     return rc;
   }
 

@@ -25,7 +25,7 @@ ReturnCode expr_to_string(
     const Expr* expr,
     std::string* value) {
   if (!expr_is_value(expr)) {
-    return ReturnCode::error("EARG", "expected value");
+    return error(ERROR, "expected value");
   }
 
   *value = expr_get_value(expr);
@@ -42,13 +42,13 @@ ReturnCode expr_to_float64(
     const Expr* expr,
     double* value) {
   if (!expr_is_value(expr)) {
-    return ReturnCode::error("EARG", "expected value");
+    return error(ERROR, "expected value");
   }
 
   try {
     *value = std::stod(expr_get_value(expr));
   } catch (... ) {
-    return ReturnCode::errorf("EARG", "invalid number: {}", expr_get_value(expr));
+    return errorf(ERROR, "invalid number: {}", expr_get_value(expr));
   }
 
   return OK;
@@ -70,8 +70,8 @@ ReturnCode expr_to_measure(
     const Expr* expr,
     Measure* value) {
   if (!expr_is_value(expr)) {
-    return ReturnCode::errorf(
-        "EARG",
+    return errorf(
+        ERROR,
         "argument error; expected a value, got: {}",
         "..."); // FIXME
   }
@@ -101,8 +101,8 @@ ReturnCode expr_to_color(
     const Expr* expr,
     Color* value) {
   if (!expr_is_value(expr)) {
-    return ReturnCode::errorf(
-        "EARG",
+    return errorf(
+        ERROR,
         "argument error; expected a value, got: {}",
         "..."); // FIXME
   }
@@ -114,7 +114,7 @@ ReturnCode expr_to_color(
     }
   }
 
-  return ReturnCode::error("EARG", "invalid color");
+  return error(ERROR, "invalid color");
 }
 
 ReturnCode expr_to_color_opt(

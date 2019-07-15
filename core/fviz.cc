@@ -79,7 +79,7 @@ void fviz_seterrf(fviz_t* ctx, const std::string& err, T... args) {
 }
 
 void fviz_seterr(fviz_t* ctx, const ReturnCode& err) {
-  ctx->error = err.getMessage();
+  ctx->error = err.message;
 }
 
 int fviz_configure(
@@ -89,12 +89,12 @@ int fviz_configure(
     fviz_seterrf(
         ctx,
         "invalid element specification: {}",
-        rc.getMessage());
+        rc.message);
 
     return ERROR;
   }
 
-  if (auto rc = environment_setup_defaults(&ctx->env); !rc.isSuccess()) {
+  if (auto rc = environment_setup_defaults(&ctx->env); !rc) {
     return rc;
   }
 
@@ -169,7 +169,7 @@ int fviz_render_svg_file(fviz_t* ctx, const char* path) {
       },
       &layer);
 
-  if (!rc.isSuccess()) {
+  if (!rc) {
     fviz_seterr(ctx, rc);
     return rc;
   }
@@ -193,7 +193,7 @@ int fviz_render_png_file(fviz_t* ctx, const char* path) {
       },
       &layer);
 
-  if (!rc.isSuccess()) {
+  if (!rc) {
     fviz_seterr(ctx, rc);
     return rc;
   }

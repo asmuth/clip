@@ -77,7 +77,7 @@ ReturnCode draw(
     LayoutInfo layout;
     layout.content_box = bbox;
 
-    if (auto rc = e->draw(layout, layer); !rc.isSuccess()) {
+    if (auto rc = e->draw(layout, layer); !rc) {
       return rc;
     }
   }

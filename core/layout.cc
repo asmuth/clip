@@ -128,7 +128,7 @@ ReturnCode layout_element(
 //                layout_state.content_box.h,
 //                &bbox_w,
 //                &bbox_h);
-//            !rc.isSuccess()) {
+//            !rc) {
 //        return rc;
 //      }
 //    }
@@ -140,7 +140,7 @@ ReturnCode layout_element(
 //              bbox_h,
 //              &layout_state,
 //              &e.layout.content_box);
-//          !rc.isSuccess()) {
+//          !rc) {
 //      return rc;
 //    }
 //  }

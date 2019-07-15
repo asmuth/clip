@@ -124,8 +124,8 @@ ReturnCode build(
 
   /* check configuraton */
   if (config->x.size() != config->y.size()) {
-    return ReturnCode::error(
-        "EARG",
+    return error(
+        ERROR,
         "the length of the 'xs' and 'ys' properties must be equal");
   }
 

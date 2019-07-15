@@ -29,74 +29,29 @@ enum Status : int {
   OK = 1,
 };
 
-class ReturnCode {
-public:
+struct ReturnCode {
+  ReturnCode(Status c) : code(c) {}
+  ReturnCode(Status c, const std::string& m) : code(c), message(m) {}
 
-  inline static ReturnCode success() {
-    return ReturnCode(true);
-  }
+  operator bool() const { return code == OK; }
 
-  inline static ReturnCode error(
-      const std::string& code,
-      const std::string& message) {
-    ReturnCode rc(false);
-    rc.message_ = message;
-    return rc;
-  }
-
-  inline static ReturnCode errorp(
-      const std::string& code,
-      const char* message,
-      ...) {
-    ReturnCode rc(false);
-    va_list args;
-    va_start(args, message);
-    int bufsize = 1024;//vsnprintf(nullptr, 0, message, args);
-    rc.message_.resize(bufsize + 1);
-    bufsize = vsnprintf(&rc.message_[0], rc.message_.size(), message, args);
-    rc.message_.resize(bufsize);
-    va_end(args);
-
-    return rc;
-  }
-
-  template <typename... T>
-  inline static ReturnCode errorf(
-      const std::string& code,
-      const std::string& message,
-      T... args) {
-    return ReturnCode::error(code, fmt::format(message, args...));
-  }
-
-  inline ReturnCode(Status status) :
-      success_(status == OK),
-      message_("runtime error") {}
-
-  inline ReturnCode(Status status, std::string message) :
-      success_(status != ERROR),
-      message_(message) {}
-
-  inline bool isError() const {
-    return !success_;
-  }
-
-  inline bool isSuccess() const {
-    return success_;
-  }
-
-  inline operator bool() const {
-    return success_;
-  }
-
-  inline const std::string& getMessage() const {
-    return message_;
-  }
-
-protected:
-  ReturnCode(bool success) : success_(success) {}
-  bool success_;
-  std::string message_;
+  Status code;
+  std::string message;
 };
+
+inline ReturnCode error(
+    const Status code,
+    const std::string& message) {
+  return ReturnCode(code, message);
+}
+
+template <typename... T>
+inline static ReturnCode errorf(
+    const Status code,
+    const std::string& message,
+    T... args) {
+  return ReturnCode(code, fmt::format(message, args...));
+}
 
 inline ReturnCode try_chain(
     const std::initializer_list<std::function<ReturnCode ()>>& op) {

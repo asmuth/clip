@@ -354,22 +354,22 @@ ReturnCode build(
 
   /* check configuraton */
   if (config->x.size() != config->y.size()) {
-    return ReturnCode::error(
-        "EARG",
+    return error(
+        ERROR,
         "the length of the 'xs' and 'ys' properties must be equal");
   }
 
   if (!config->xoffset.empty() &&
       config->xoffset.size() != config->x.size()) {
-    return ReturnCode::error(
-        "EARG",
+    return error(
+        ERROR,
         "the length of the 'xs' and 'x-offsets' properties must be equal");
   }
 
   if (!config->yoffset.empty() &&
       config->yoffset.size() != config->y.size()) {
-    return ReturnCode::error(
-        "EARG",
+    return error(
+        ERROR,
         "the length of the 'ys' and 'y-offsets' properties must be equal");
   }
 

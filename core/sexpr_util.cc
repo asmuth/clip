@@ -22,25 +22,25 @@ ReturnCode expr_walk_map(
     const std::unordered_map<std::string, ExprVisitor>& fns) {
   for (; expr; expr = expr_next(expr)) {
     if (!expr_is_value_literal(expr)) {
-      return ReturnCode::error("EARG", "expected a literal");
+      return error(ERROR, "expected a literal");
     }
 
     auto param = expr_get_value(expr);
     const auto& fn = fns.find(param);
     if (fn == fns.end()) {
-      return ReturnCode::errorf("EARG", "invalid paramter: '{}'", param);
+      return errorf(ERROR, "invalid paramter: '{}'", param);
     }
 
     if (expr = expr_next(expr); !expr) {
-      return ReturnCode::errorf("EARG", "expected an argument for '{}'", param);
+      return errorf(ERROR, "expected an argument for '{}'", param);
     }
 
-    if (auto rc = fn->second(expr); !rc.isSuccess()) {
-      return ReturnCode::errorf(
-          "EPARSE",
+    if (auto rc = fn->second(expr); !rc) {
+      return errorf(
+          ERROR,
           "error while parsing property '{}': {}",
           param,
-          rc.getMessage());
+          rc.message);
 
       return rc;
     }

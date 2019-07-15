@@ -73,10 +73,10 @@ ReturnCode parseCSV(
   }
 
   if (quoted || buffer.size() > 0) {
-    return ReturnCode::error("EIO", "invalid csv line");
+    return error(ERROR, "invalid csv line");
   }
 
-  return ReturnCode::success();
+  return OK;
 }
 
 } // namespace fviz

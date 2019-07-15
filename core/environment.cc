@@ -30,8 +30,8 @@ Environment::Environment() :
 
 ReturnCode environment_setup_defaults(Environment* env) {
   if (!font_load(DefaultFont::HELVETICA_REGULAR, &env->font)) {
-    return ReturnCode::error(
-        "EARG",
+    return error(
+        ERROR,
         "unable to find default sans-sans font (Helvetica/Arial)");
   }
 

@@ -141,7 +141,7 @@ ReturnCode draw(
     LayoutInfo layout;
     layout.content_box = body_box;
 
-    if (auto rc = e->draw(layout, layer); !rc.isSuccess()) {
+    if (auto rc = e->draw(layout, layer); !rc) {
       return rc;
     }
   }
@@ -152,7 +152,7 @@ ReturnCode draw(
       LayoutInfo layout;
       layout.content_box = margin_boxes[i];
 
-      if (auto rc = e->draw(layout, layer); !rc.isSuccess()) {
+      if (auto rc = e->draw(layout, layer); !rc) {
         return rc;
       }
     }

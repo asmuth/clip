@@ -292,8 +292,8 @@ ReturnCode scale_configure_layout_linear(
       step = 1; // TODO: automatically choose a good value
       break;
     default:
-      return ReturnCode::error(
-          "EARG",
+      return error(
+          ERROR,
           "invalid number of arguments for 'linear'; expected zero, one or two");
   }
 
@@ -323,8 +323,8 @@ ReturnCode scale_configure_layout_subdivide(
       }
       break;
     default:
-      return ReturnCode::error(
-          "EARG",
+      return error(
+          ERROR,
           "invalid number of arguments for 'subdivide'; expected one or two");
   }
 
@@ -341,8 +341,8 @@ ReturnCode scale_configure_layout(
     const Expr* expr,
     ScaleLayoutFn* layout) {
   if (!expr || !expr_is_list(expr)) {
-    return ReturnCode::errorf(
-        "EARG",
+    return errorf(
+        ERROR,
         "invalid argument; expected a list but got: {}",
         "..."); // FIXME
   }
@@ -362,8 +362,8 @@ ReturnCode scale_configure_layout(
     return OK;
   }
 
-  return ReturnCode::error(
-      "EARG",
+  return error(
+      ERROR,
       "invalid argument; expected one of: \n"
       "  - linear\n"
       "  - subdivide\n"
