@@ -401,21 +401,6 @@ std::string StringUtil::hexPrint(
   return BufferUtil::hexPrint(&buf, sep, reverse);
 }
 
-std::string StringUtil::formatv(
-    const char* fmt,
-    std::vector<std::string> values) {
-  std::string str = fmt;
-
-  for (size_t i = 0; i < values.size(); ++i) {
-    StringUtil::replaceAll(
-        &str,
-        "$" + std::to_string(i),
-        StringUtil::toString(values[i]));
-  }
-
-  return str;
-}
-
 std::basic_string<char32_t> StringUtil::convertUTF8To32(
     const std::basic_string<char>& str) {
   std::basic_string<char32_t> out;

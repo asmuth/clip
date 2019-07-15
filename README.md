@@ -86,8 +86,8 @@ If you have any questions please don't hesitate to reach out via [GitHub issues]
 Building
 --------
 
-To build fviz, you need an up-to-date C++ compiler, cmake, libharfbuzz and
-libfreetype. Run:
+To build fviz, you need an up-to-date C++ compiler, cmake, fmtlib, libharfbuzz,
+libfreetype and cairo. Run:
 
     $ cmake .
     $ make -j

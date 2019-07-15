@@ -59,7 +59,7 @@ const char kFutureError[] = "FutureError";
 #define RAISEF(E, ...) \
     RAISE_EXCEPTION( \
         fviz::Exception( \
-            fviz::StringUtil::format(__VA_ARGS__)).setTypeName(E)); \
+            fviz::fmt::format(__VA_ARGS__)).setTypeName(E)); \
         while(0) {}
 
 #define RAISE_ERRNO(E, ...) \

@@ -158,7 +158,7 @@ ReturnCode confgure_format(
 
   return ReturnCode::errorf(
       "EARG",
-      "invalid value '$0', expected one of: \n"
+      "invalid value '{}', expected one of: \n"
       "  - fixed\n"
       "  - scientific\n",
       "  - datetime\n",

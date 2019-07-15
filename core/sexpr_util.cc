@@ -28,17 +28,17 @@ ReturnCode expr_walk_map(
     auto param = expr_get_value(expr);
     const auto& fn = fns.find(param);
     if (fn == fns.end()) {
-      return ReturnCode::errorf("EARG", "invalid paramter: '$0'", param);
+      return ReturnCode::errorf("EARG", "invalid paramter: '{}'", param);
     }
 
     if (expr = expr_next(expr); !expr) {
-      return ReturnCode::errorf("EARG", "expected an argument for '$0'", param);
+      return ReturnCode::errorf("EARG", "expected an argument for '{}'", param);
     }
 
     if (auto rc = fn->second(expr); !rc.isSuccess()) {
       return ReturnCode::errorf(
           "EPARSE",
-          "error while parsing property '$0': $1",
+          "error while parsing property '{}': {}",
           param,
           rc.getMessage());
 

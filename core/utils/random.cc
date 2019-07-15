@@ -12,7 +12,6 @@
  * limitations under the License.
  */
 #include <assert.h>
-#include "inspect.h"
 #include "random.h"
 #include "stringutil.h"
 

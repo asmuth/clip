@@ -101,8 +101,8 @@ ReturnCode parse_measure(
 
   return {
     ERROR,
-    StringUtil::format(
-        "invalid unit: '$0', expected one of 'px', 'pt', 'em', 'rem', 'rel' or '%'",
+    fmt::format(
+        "invalid unit: '{}', expected one of 'px', 'pt', 'em', 'rem', 'rel' or '%'",
         unit)
   };
 }

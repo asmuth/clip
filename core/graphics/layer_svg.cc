@@ -99,16 +99,16 @@ std::string svg_path_data(const Path& path) {
   for (const auto& cmd : path) {
     switch (cmd.command) {
       case PathCommand::MOVE_TO:
-        path_data << StringUtil::format("M$0 $1 ", cmd[0], cmd[1]);
+        path_data << fmt::format("M{} {} ", cmd[0], cmd[1]);
         break;
       case PathCommand::LINE_TO:
-        path_data << StringUtil::format("L$0 $1 ", cmd[0], cmd[1]);
+        path_data << fmt::format("L{} {} ", cmd[0], cmd[1]);
         break;
       case PathCommand::ARC_TO:
         // FIXME: respect angle1/2 arguments
-        path_data << StringUtil::format("M$0 $1 ", cmd[0] - cmd[2], cmd[1]);
-        path_data << StringUtil::format("a$0 $0 0 1 0 $1 0 ", cmd[2], cmd[2] * 2);
-        path_data << StringUtil::format("a$0 $0 0 1 0 $1 0 ", cmd[2], -cmd[2] * 2);
+        path_data << fmt::format("M{} {} ", cmd[0] - cmd[2], cmd[1]);
+        path_data << fmt::format("a{} {} 0 1 0 {} 0 ", cmd[2], cmd[2] * 2, 0);
+        path_data << fmt::format("a{} {} 0 1 0 {} 0 ", cmd[2], -cmd[2] * 2, 0);
         break;
       default:
         break; // not yet implemented
@@ -163,7 +163,7 @@ std::string SVGData::to_svg() const {
     << svg_attr("xmlns", "http://www.w3.org/2000/svg")
     << svg_attr("width", width)
     << svg_attr("height", height)
-    << svg_attr("viewBox", StringUtil::format("0 0 $0 $1", width, height))
+    << svg_attr("viewBox", fmt::format("0 0 {} {}", width, height))
     << ">"
     << "\n"
     << buffer.str()

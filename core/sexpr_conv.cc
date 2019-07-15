@@ -48,7 +48,7 @@ ReturnCode expr_to_float64(
   try {
     *value = std::stod(expr_get_value(expr));
   } catch (... ) {
-    return ReturnCode::errorf("EARG", "invalid number: $0", expr_get_value(expr));
+    return ReturnCode::errorf("EARG", "invalid number: {}", expr_get_value(expr));
   }
 
   return OK;
@@ -72,7 +72,7 @@ ReturnCode expr_to_measure(
   if (!expr_is_value(expr)) {
     return ReturnCode::errorf(
         "EARG",
-        "argument error; expected a value, got: $0",
+        "argument error; expected a value, got: {}",
         "..."); // FIXME
   }
 
@@ -103,7 +103,7 @@ ReturnCode expr_to_color(
   if (!expr_is_value(expr)) {
     return ReturnCode::errorf(
         "EARG",
-        "argument error; expected a value, got: $0",
+        "argument error; expected a value, got: {}",
         "..."); // FIXME
   }
 

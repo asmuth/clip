@@ -216,7 +216,7 @@ ReturnCode read_file(const std::string& path, std::string* data) {
     if (!file.is_open()) {
       return ReturnCode::errorf(
           "EIO",
-          "error while reading file: '$0': $1",
+          "error while reading file: '{}': {}",
           path,
           strerror(errno));
     }

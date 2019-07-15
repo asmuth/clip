@@ -12,7 +12,6 @@
  * limitations under the License.
  */
 #include "bufferutil.h"
-#include "inspect.h"
 
 namespace fviz {
 

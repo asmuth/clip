@@ -114,14 +114,5 @@ Option<T> None() {
   return Option<T>();
 }
 
-template <typename T>
-std::string inspect(const Option<T> value) {
-  if (value.isEmpty()) {
-    return "<None>";
-  } else {
-    return StringUtil::format("<Some($0)>", inspect(value.get()));
-  }
-}
-
 } // namespace fviz
 #endif

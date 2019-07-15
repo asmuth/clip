@@ -18,6 +18,7 @@
 #include <string>
 #include <stdarg.h>
 #include <initializer_list>
+#include <fmt/format.h>
 #include "stringutil.h"
 #include "fviz.h"
 
@@ -64,7 +65,7 @@ public:
       const std::string& code,
       const std::string& message,
       T... args) {
-    return ReturnCode::error(code, StringUtil::format(message, args...));
+    return ReturnCode::error(code, fmt::format(message, args...));
   }
 
   inline ReturnCode(Status status) :

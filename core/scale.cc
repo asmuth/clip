@@ -343,7 +343,7 @@ ReturnCode scale_configure_layout(
   if (!expr || !expr_is_list(expr)) {
     return ReturnCode::errorf(
         "EARG",
-        "invalid argument; expected a list but got: $0",
+        "invalid argument; expected a list but got: {}",
         "..."); // FIXME
   }
 

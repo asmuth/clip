@@ -98,7 +98,7 @@ ReturnCode parseValue(FlagState* flag, const std::string& value) {
       } else {
         return ReturnCode::errorf(
             "FLAG_ERROR",
-            "flag --$0=... invalid value",
+            "flag --{}=... invalid value",
             flag->longopt);
       }
       break;
@@ -109,7 +109,7 @@ ReturnCode parseValue(FlagState* flag, const std::string& value) {
       } catch (std::exception e) {
         return ReturnCode::errorf(
             "FLAG_ERROR",
-            "flag --$0=... invalid value",
+            "flag --{}=... invalid value",
             flag->longopt);
       }
       break;
@@ -120,7 +120,7 @@ ReturnCode parseValue(FlagState* flag, const std::string& value) {
       } catch (std::exception e) {
         return ReturnCode::errorf(
             "FLAG_ERROR",
-            "flag --$0=... invalid value",
+            "flag --{}=... invalid value",
             flag->longopt);
       }
       break;
@@ -131,7 +131,7 @@ ReturnCode parseValue(FlagState* flag, const std::string& value) {
       } catch (std::exception e) {
         return ReturnCode::errorf(
             "FLAG_ERROR",
-            "flag --$0=... invalid value",
+            "flag --{}=... invalid value",
             flag->longopt);
       }
       break;
@@ -139,7 +139,7 @@ ReturnCode parseValue(FlagState* flag, const std::string& value) {
     default:
       return ReturnCode::errorf(
           "FLAG_ERROR",
-          "flag --$0=... invalid type",
+          "flag --{}=... invalid type",
           flag->longopt);
   }
 
@@ -188,7 +188,7 @@ ReturnCode FlagParser::parseArgv(const std::vector<std::string>& argv) {
     if (flag_ptr == nullptr) {
       return ReturnCode::errorf(
           "FLAG_ERROR",
-          "invalid flag: $0",
+          "invalid flag: {}",
           arg);
     } else if (flag_ptr->type == T_SWITCH) {
       auto rc = parseValue(flag_ptr, "on");
@@ -199,7 +199,7 @@ ReturnCode FlagParser::parseArgv(const std::vector<std::string>& argv) {
       if (arg.size() == eq_len) {
         return ReturnCode::errorf(
             "FLAG_ERROR",
-            "flag --$0=... has no value",
+            "flag --{}=... has no value",
             flag_ptr->longopt);
       }
 
@@ -216,7 +216,7 @@ ReturnCode FlagParser::parseArgv(const std::vector<std::string>& argv) {
       } else if (flag_ptr->required) {
         return ReturnCode::errorf(
             "FLAG_ERROR",
-            "flag --$0 has no value",
+            "flag --{} has no value",
             flag_ptr->longopt);
       }
     }
@@ -226,7 +226,7 @@ ReturnCode FlagParser::parseArgv(const std::vector<std::string>& argv) {
     if (flag.required == true && !flag.has_value) {
       return ReturnCode::errorf(
           "FLAG_ERROR",
-          "flag --$0 is required",
+          "flag --{} is required",
           flag.longopt);
     }
   }

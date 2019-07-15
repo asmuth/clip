@@ -75,7 +75,7 @@ void fviz_seterrf(fviz_t* ctx, const std::string& err) {
 
 template <typename... T>
 void fviz_seterrf(fviz_t* ctx, const std::string& err, T... args) {
-  ctx->error = StringUtil::format(err, args...);
+  ctx->error = fmt::format(err, args...);
 }
 
 void fviz_seterr(fviz_t* ctx, const ReturnCode& err) {
@@ -88,7 +88,7 @@ int fviz_configure(
   if (auto rc = expr_parse(config, strlen(config), &ctx->expr); !rc) {
     fviz_seterrf(
         ctx,
-        "invalid element specification: $0",
+        "invalid element specification: {}",
         rc.getMessage());
 
     return ERROR;
@@ -149,7 +149,7 @@ int fviz_render_file(fviz_t* ctx, const char* path, const char* fmt) {
   if (format == "png")
     return fviz_render_png_file(ctx, path);
 
-  fviz_seterrf(ctx, "invalid output format: $0", format);
+  fviz_seterrf(ctx, "invalid output format: {}", format);
   return ERROR;
 }
 

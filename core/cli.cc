@@ -22,7 +22,7 @@
 using namespace fviz;
 
 void printError(const ReturnCode& rc) {
-  std::cerr << StringUtil::format("ERROR: $0", rc.getMessage()) << std::endl;
+  std::cerr << fmt::format("ERROR: {}", rc.getMessage()) << std::endl;
 }
 
 int main(int argc, const char** argv) {
@@ -56,8 +56,8 @@ int main(int argc, const char** argv) {
 
   if (flag_version) {
     std::cerr <<
-        StringUtil::format(
-            "fviz $0\n"
+        fmt::format(
+            "fviz {}\n"
             "Part of the fviz project (https://fviz.org)\n"
             "Copyright (c) 2019, Paul Asmuth, Laura Schlimmer.\n"
             "All rights reserved.\n\n",

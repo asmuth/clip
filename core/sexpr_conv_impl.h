@@ -23,7 +23,7 @@ ReturnCode expr_to_enum(
   if (!expr || !expr_is_value(expr)) {
     return ReturnCode::errorf(
         "EARG",
-        "argument error; expected a list, got: $0",
+        "argument error; expected a list, got: {}",
         "..."); // FIXME
   }
 
@@ -31,7 +31,7 @@ ReturnCode expr_to_enum(
   if (value_def == value_defs.end()) {
     return ReturnCode::errorf(
         "EPARSE",
-        "invalid value '$0'",
+        "invalid value '{}'",
         expr_get_value(expr));
   }
 
@@ -58,7 +58,7 @@ ReturnCode expr_tov(
   if (!expr || !expr_is_list(expr)) {
     return ReturnCode::errorf(
         "EARG",
-        "argument error; expected a list, got: $0",
+        "argument error; expected a list, got: {}",
         "..."); // FIXME
   }
 

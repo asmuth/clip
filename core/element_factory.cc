@@ -29,7 +29,7 @@ ReturnCode element_build(
   auto elem_name = expr_get_value(expr);
   auto elem_iter = env.element_map.elements.find(elem_name);
   if (elem_iter == env.element_map.elements.end()) {
-    return ReturnCode::errorf("EARG", "no such element: $0", elem_name);
+    return ReturnCode::errorf("EARG", "no such element: {}", elem_name);
   }
 
   return elem_iter->second(env, expr, elem);

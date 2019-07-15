@@ -112,7 +112,7 @@ ReturnCode data_load_strings_csv(
       !expr_is_value(args[1])) {
     return ReturnCode::errorf(
         "EARG",
-        "invalid number of arguments to 'csv'; expected: 2, got: $0",
+        "invalid number of arguments to 'csv'; expected: 2, got: {}",
         "..."); // FIXME
   }
 
@@ -140,7 +140,7 @@ ReturnCode data_load_strings_csv(
   if (header == headers.end()) {
     return ReturnCode::errorf(
         "EARG",
-        "CSV column not found: $0",
+        "CSV column not found: {}",
         column_name);
   }
 
@@ -149,7 +149,7 @@ ReturnCode data_load_strings_csv(
     if (row->size() < column_idx) {
       return ReturnCode::errorf(
           "EARG",
-          "CSV invalid number of columns for row #$0",
+          "CSV invalid number of columns for row #{}",
           std::distance(data_csv.begin(), row));
     }
 
@@ -173,7 +173,7 @@ ReturnCode data_load_csv(
     } catch (... ) {
       return ReturnCode::errorf(
           "EARG",
-          "CSV invalid column in row #$0: '$1' is not a number",
+          "CSV invalid column in row #{}: '{}' is not a number",
           std::distance(values_str.begin(), v) + 1,
           *v);
     }
@@ -188,7 +188,7 @@ ReturnCode data_load_strings(
   if (!expr || !expr_is_list(expr)) {
     return ReturnCode::errorf(
         "EARG",
-        "argument error; expected a value, got: $0",
+        "argument error; expected a value, got: {}",
         "..."); // FIXME
   }
 
@@ -207,7 +207,7 @@ ReturnCode data_load(
   if (!expr || !expr_is_list(expr)) {
     return ReturnCode::errorf(
         "EARG",
-        "argument error; expected a value, got: $0",
+        "argument error; expected a value, got: {}",
         "..."); // FIXME
   }
 

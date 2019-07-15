@@ -24,8 +24,8 @@ ReturnCode err_invalid_value(
 
   return {
     ERROR,
-    StringUtil::format(
-        "invalid value: '$0'; expected one of: $1",
+    fmt::format(
+        "invalid value: '{}'; expected one of: {}",
         value,
         StringUtil::join(expected_values, ", "))
   };

@@ -14,7 +14,6 @@
 #include <string>
 #include <ctime>
 #include "UnixTime.h"
-#include "inspect.h"
 #include "wallclock.h"
 #include "stringutil.h"
 #include "ISO8601.h"
