@@ -1,8 +1,8 @@
 fviz
 ====
 
-fviz is a command line tool and library for plotting data. The appearance of
-plots can be customized using a lightweight syntax that is very similar to CSS.
+fviz is a text-based drawing program. It generates custom charts, figures and other
+visualizations from simple expressions.
 
 You can run fviz from the command line, where it generates SVG, PNG and PDF
 output files. Additionally, you can embed it into your own application using the
@@ -90,7 +90,7 @@ To build fviz, you need an up-to-date C++ compiler, cmake, libharfbuzz and
 libfreetype. Run:
 
     $ cmake .
-    $ make
+    $ make -j
 
 To install the `fviz` binary into your system, run `make install`:
 
