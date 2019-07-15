@@ -16,7 +16,7 @@
 #include <iostream>
 #include "fviz.h"
 #include "utils/flagparser.h"
-#include "utils/return_code.h"
+#include "return_code.h"
 #include "utils/stringutil.h"
 
 using namespace fviz;

@@ -14,7 +14,7 @@
 #pragma once
 #include <unordered_map>
 
-#include "utils/return_code.h"
+#include "return_code.h"
 #include "element.h"
 
 namespace fviz {

@@ -24,7 +24,7 @@
 #pragma once
 #include <string>
 #include <vector>
-#include "utils/return_code.h"
+#include "return_code.h"
 
 namespace fviz {
 

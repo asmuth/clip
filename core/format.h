@@ -15,7 +15,7 @@
 #include <unordered_map>
 #include <optional>
 #include <sexpr.h>
-#include "utils/return_code.h"
+#include "return_code.h"
 
 namespace fviz {
 

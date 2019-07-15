@@ -18,7 +18,7 @@
 #include <functional>
 #include "graphics/layer.h"
 #include "sexpr.h"
-#include "utils/return_code.h"
+#include "return_code.h"
 
 namespace fviz {
 struct Environment;

@@ -26,7 +26,7 @@
 #include "utils/outputstream.h"
 #include "utils/inspect.h"
 #include "utils/random.h"
-#include "utils/return_code.h"
+#include "return_code.h"
 
 const char kExpectationFailed[] = "ExpectationFailed";
 

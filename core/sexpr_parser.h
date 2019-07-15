@@ -16,7 +16,7 @@
 #include <memory>
 #include <string>
 #include "sexpr.h"
-#include "utils/return_code.h"
+#include "return_code.h"
 
 namespace fviz {
 

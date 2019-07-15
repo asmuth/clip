@@ -12,7 +12,7 @@
  * limitations under the License.
  */
 #include "fviz_sdl.h"
-#include "utils/return_code.h"
+#include "return_code.h"
 #include "graphics/layer.h"
 #include "graphics/layer_pixmap.h"
 #include "SDL2/SDL.h"

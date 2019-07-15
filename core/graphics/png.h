@@ -17,7 +17,7 @@
 #include <vector>
 #include "fviz.h"
 #include <graphics/image.h>
-#include <utils/return_code.h>
+#include <return_code.h>
 
 namespace fviz {
 

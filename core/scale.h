@@ -19,7 +19,7 @@
 #include <string>
 #include <optional>
 #include <unordered_map>
-#include "utils/return_code.h"
+#include "return_code.h"
 #include "sexpr.h"
 #include "color_scheme.h"
 

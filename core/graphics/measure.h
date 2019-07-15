@@ -15,7 +15,7 @@
 #include <stdlib.h>
 #include <vector>
 #include <string>
-#include <utils/return_code.h>
+#include <return_code.h>
 
 namespace fviz {
 struct Rectangle;

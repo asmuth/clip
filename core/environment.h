@@ -13,7 +13,7 @@
  */
 #pragma once
 #include <memory>
-#include "utils/return_code.h"
+#include "return_code.h"
 #include "color_scheme.h"
 #include "graphics/measure.h"
 #include "graphics/color.h"
