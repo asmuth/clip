@@ -13,6 +13,7 @@
  */
 #include "bars.h"
 
+#include "data.h"
 #include "environment.h"
 #include "layout.h"
 #include "graphics/path.h"
@@ -321,10 +322,10 @@ ReturnCode build(
 
   /* parse properties */
   auto config_rc = expr_walk_map(expr_next(expr), {
-    {"xdata", bind(&expr_to_measures, _1, &config->x)},
-    {"ydata", bind(&expr_to_measures, _1, &config->y)},
-    {"xoffsetdata", bind(&expr_to_measures, _1, &config->xoffset)},
-    {"yoffsetdata", bind(&expr_to_measures, _1, &config->yoffset)},
+    {"xdata", bind(&data_load, _1, &config->x)},
+    {"ydata", bind(&data_load, _1, &config->y)},
+    {"xoffsetdata", bind(&data_load, _1, &config->xoffset)},
+    {"yoffsetdata", bind(&data_load, _1, &config->yoffset)},
     {"xmin", bind(&expr_to_float64_opt, _1, &config->scale_x.min)},
     {"xmax", bind(&expr_to_float64_opt, _1, &config->scale_x.max)},
     {"xscale", bind(&scale_configure_kind, _1, &config->scale_x)},
@@ -333,8 +334,8 @@ ReturnCode build(
     {"ymax", bind(&expr_to_float64_opt, _1, &config->scale_y.max)},
     {"yscale", bind(&scale_configure_kind, _1, &config->scale_y)},
     {"yscale-padding", bind(&expr_to_float64, _1, &config->scale_y.padding)},
-    {"size", bind(&expr_to_measures, _1, &config->sizes)},
-    {"sizes", bind(&expr_to_measures, _1, &config->sizes)},
+    {"size", bind(&data_load, _1, &config->sizes)},
+    {"sizes", bind(&data_load, _1, &config->sizes)},
     {
       "direction",
       expr_to_enum_fn<Direction>(&config->direction, {
@@ -344,7 +345,7 @@ ReturnCode build(
     },
     {"color", expr_tov_fn<Color>(bind(&expr_to_color, _1, _2), &config->colors)},
     {"colors", expr_tov_fn<Color>(bind(&expr_to_color, _1, _2), &config->colors)},
-    {"labels", bind(&expr_to_strings, _1, &config->labels)},
+    {"labels", bind(&data_load_strings, _1, &config->labels)},
   });
 
   if (!config_rc) {

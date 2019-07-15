@@ -13,6 +13,7 @@
  */
 #include "labels.h"
 
+#include "data.h"
 #include "layout.h"
 #include "scale.h"
 #include "sexpr.h"
@@ -103,8 +104,8 @@ ReturnCode build(
 
   /* parse properties */
   auto config_rc = expr_walk_map(expr_next(expr), {
-    {"xdata", bind(&expr_to_measures, _1, &config->x)},
-    {"ydata", bind(&expr_to_measures, _1, &config->y)},
+    {"xdata", bind(&data_load, _1, &config->x)},
+    {"ydata", bind(&data_load, _1, &config->y)},
     {"xmin", bind(&expr_to_float64_opt, _1, &config->scale_x.min)},
     {"xmax", bind(&expr_to_float64_opt, _1, &config->scale_x.max)},
     {"xscale", bind(&scale_configure_kind, _1, &config->scale_x)},
@@ -113,7 +114,7 @@ ReturnCode build(
     {"ymax", bind(&expr_to_float64_opt, _1, &config->scale_y.max)},
     {"yscale", bind(&scale_configure_kind, _1, &config->scale_y)},
     {"yscale-padding", bind(&expr_to_float64, _1, &config->scale_y.padding)},
-    {"labels", bind(&expr_to_strings, _1, &config->labels)},
+    {"labels", bind(&data_load_strings, _1, &config->labels)},
     {"label-font-size", bind(&expr_to_measure, _1, &config->label_font_size)},
   });
 

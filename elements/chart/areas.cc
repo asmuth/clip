@@ -13,6 +13,7 @@
  */
 #include "areas.h"
 
+#include "data.h"
 #include "environment.h"
 #include "layout.h"
 #include "scale.h"
@@ -219,10 +220,10 @@ ReturnCode build(
 
   /* parse properties */
   auto config_rc = expr_walk_map(expr_next(expr), {
-    {"xdata", bind(&expr_to_measures, _1, &config->x)},
-    {"ydata", bind(&expr_to_measures, _1, &config->y)},
-    {"xoffsetdata", bind(&expr_to_measures, _1, &config->xoffset)},
-    {"yoffsetdata", bind(&expr_to_measures, _1, &config->yoffset)},
+    {"xdata", bind(&data_load, _1, &config->x)},
+    {"ydata", bind(&data_load, _1, &config->y)},
+    {"xoffsetdata", bind(&data_load, _1, &config->xoffset)},
+    {"yoffsetdata", bind(&data_load, _1, &config->yoffset)},
     {"xmin", bind(&expr_to_float64_opt, _1, &config->scale_x.min)},
     {"xmax", bind(&expr_to_float64_opt, _1, &config->scale_x.max)},
     {"xscale", bind(&scale_configure_kind, _1, &config->scale_x)},

@@ -12,6 +12,8 @@
  * limitations under the License.
  */
 #include "axis.h"
+
+#include "data.h"
 #include "environment.h"
 #include "graphics/text.h"
 #include "graphics/layout.h"
@@ -535,7 +537,7 @@ ReturnCode build(const Environment& env, const Expr* expr, ElementRef* elem) {
       {"max", bind(&expr_to_float64_opt, _1, &config->scale.max)},
       {"scale", bind(&scale_configure_kind, _1, &config->scale)},
       {"scale-padding", bind(&expr_to_float64, _1, &config->scale.padding)},
-      {"labels", bind(&expr_to_strings, _1, &config->label_override)},
+      {"labels", bind(&data_load_strings, _1, &config->label_override)},
     });
 
     if (!rc) {

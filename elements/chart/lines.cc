@@ -67,6 +67,10 @@ ReturnCode draw(
 
   /* draw lines */
   for (const auto& group : config->groups) {
+    if (group.index.empty()) {
+      continue;
+    }
+
     Path path;
     for (auto i : group.index) {
       auto sx = clip.x + config->x[i];
@@ -101,8 +105,8 @@ ReturnCode build(
 
   /* parse properties */
   auto config_rc = expr_walk_map(expr_next(expr), {
-    {"xdata", bind(&expr_to_measures, _1, &config->x)},
-    {"ydata", bind(&expr_to_measures, _1, &config->y)},
+    {"xdata", bind(&data_load, _1, &config->x)},
+    {"ydata", bind(&data_load, _1, &config->y)},
     {"xmin", bind(&expr_to_float64_opt, _1, &config->scale_x.min)},
     {"xmax", bind(&expr_to_float64_opt, _1, &config->scale_x.max)},
     {"xscale", bind(&scale_configure_kind, _1, &config->scale_x)},
@@ -124,7 +128,7 @@ ReturnCode build(
   if (config->x.size() != config->y.size()) {
     return ReturnCode::error(
         "EARG",
-        "the length of the 'xs' and 'ys' properties must be equal");
+        "the length of the 'xdata' and 'ydata' properties must be equal");
   }
 
   /* group data */

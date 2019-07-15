@@ -57,5 +57,13 @@ std::vector<Measure> series_to_sizes(
     const Measure& low,
     const Measure& high);
 
+ReturnCode data_load_strings(
+    const Expr* expr,
+    std::vector<std::string>* values);
+
+ReturnCode data_load(
+    const Expr* expr,
+    std::vector<Measure>* values);
+
 } // namespace fviz
 

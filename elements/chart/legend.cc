@@ -13,6 +13,7 @@
  */
 #include "legend.h"
 
+#include "data.h"
 #include "layout.h"
 #include "scale.h"
 #include "sexpr.h"
@@ -370,12 +371,13 @@ ReturnCode build(
     {"item-margin-left", bind(&expr_to_measure, _1, &config->item_margins[3])},
     {"color", expr_tov_fn<Color>(bind(&expr_to_color, _1, _2), &config->colors)},
     {"colors", expr_tov_fn<Color>(bind(&expr_to_color, _1, _2), &config->colors)},
-    {"items", bind(&expr_to_strings, _1, &config->items)},
+    {"items", bind(&data_load_strings, _1, &config->items)},
   });
 
   if (!config_rc) {
     return config_rc;
   }
+
   *elem = std::make_shared<Element>();
   (*elem)->draw = bind(&legend_draw, config, _1, _2);
   return OK;
