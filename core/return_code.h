@@ -23,6 +23,7 @@
 #include "fviz.h"
 
 namespace fviz {
+struct Expr;
 
 enum Status : int {
   ERROR = 0,
@@ -30,6 +31,7 @@ enum Status : int {
 };
 
 struct ReturnCode {
+  ReturnCode() : code(OK) {}
   ReturnCode(Status c) : code(c) {}
   ReturnCode(Status c, const std::string& m) : code(c), message(m) {}
 
@@ -37,6 +39,7 @@ struct ReturnCode {
 
   Status code;
   std::string message;
+  std::list<const Expr*> trace;
 };
 
 inline ReturnCode error(
@@ -67,6 +70,8 @@ inline ReturnCode try_chain(
 ReturnCode err_invalid_value(
     const std::string& value,
     std::vector<std::string> expected_values);
+
+void error_print(const ReturnCode& rc, std::ostream& os);
 
 } // namespace fviz
 

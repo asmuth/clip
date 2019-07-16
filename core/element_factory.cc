@@ -22,17 +22,27 @@ ReturnCode element_build(
     const Environment& env,
     const Expr* expr,
     ElementRef* elem) {
-  if (!expr || !expr_is_value(expr)) {
+  if (!expr || !expr_is_list(expr)) {
+    return error(ERROR, "expected an element list");
+  }
+
+  auto args = expr_get_list(expr);
+  if (!args || !expr_is_value(args)) {
     return error(ERROR, "expected an element name");
   }
 
-  auto elem_name = expr_get_value(expr);
+  auto elem_name = expr_get_value(args);
   auto elem_iter = env.element_map.elements.find(elem_name);
   if (elem_iter == env.element_map.elements.end()) {
     return errorf(ERROR, "no such element: {}", elem_name);
   }
 
-  return elem_iter->second(env, expr, elem);
+  auto rc = elem_iter->second(env, args, elem);
+  if (!rc) {
+    rc.trace.push_back(expr);
+  }
+
+  return rc;
 }
 
 ReturnCode element_build_all(
@@ -40,12 +50,8 @@ ReturnCode element_build_all(
     const Expr* expr,
     std::vector<ElementRef>* elems) {
   for (; expr; expr = expr_next(expr)) {
-    if (!expr_is_list(expr)) {
-      return error(ERROR, "expected an element list");
-    }
-
     ElementRef elem;
-    if (auto rc = element_build(env, expr_get_list(expr), &elem); !rc) {
+    if (auto rc = element_build(env, expr, &elem); !rc) {
       return rc;
     }
 

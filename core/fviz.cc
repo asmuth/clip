@@ -42,7 +42,7 @@ struct fviz_s {
   Environment env;
   ElementMap elements;
   ExprStorage expr;
-  std::string error;
+  ReturnCode error;
 };
 
 fviz_t* fviz_init() {
@@ -66,31 +66,22 @@ fviz_t* fviz_init() {
 }
 
 const char* fviz_geterror(const fviz_t* ctx) {
-  return ctx->error.c_str();
+  return ctx->error.message.c_str();
 }
 
-void fviz_seterrf(fviz_t* ctx, const std::string& err) {
-  ctx->error = err;
-}
-
-template <typename... T>
-void fviz_seterrf(fviz_t* ctx, const std::string& err, T... args) {
-  ctx->error = fmt::format(err, args...);
+void fviz_printerror(const fviz_t* ctx) {
+  error_print(ctx->error, std::cerr);
 }
 
 void fviz_seterr(fviz_t* ctx, const ReturnCode& err) {
-  ctx->error = err.message;
+  ctx->error = err;
 }
 
 int fviz_configure(
     fviz_t* ctx,
     const char* config) {
   if (auto rc = expr_parse(config, strlen(config), &ctx->expr); !rc) {
-    fviz_seterrf(
-        ctx,
-        "invalid element specification: {}",
-        rc.message);
-
+    fviz_seterr(ctx, rc);
     return ERROR;
   }
 
@@ -149,7 +140,7 @@ int fviz_render_file(fviz_t* ctx, const char* path, const char* fmt) {
   if (format == "png")
     return fviz_render_png_file(ctx, path);
 
-  fviz_seterrf(ctx, "invalid output format: {}", format);
+  fviz_seterr(ctx, errorf(ERROR, "invalid output format: {}", format));
   return ERROR;
 }
 

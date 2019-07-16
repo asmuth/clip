@@ -71,7 +71,7 @@ foreach(spec_test_path ${spec_test_files})
   add_test(
       NAME ${spec_test_name}_svg
       WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-      COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/tests/spec/test_runner.sh ${CMAKE_CURRENT_BINARY_DIR}/fviz ${spec_test_path} ${CMAKE_CURRENT_BINARY_DIR}/${spec_test_name}.svg ${spec_test_srcdir}/${spec_test_name}.svg)
+      COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/tests/spec/test_runner.sh ${CMAKE_CURRENT_BINARY_DIR}/fviz ${spec_test_name} ${spec_test_srcdir} ${CMAKE_CURRENT_BINARY_DIR})
 endforeach()
 
 file(GLOB example_test_files "examples/**/*.fvz")

@@ -102,6 +102,11 @@ int fviz_render_to(fviz_t* ctx, void* backend);
 const char* fviz_geterror(const fviz_t* ctx);
 
 /**
+ * Print the last error message to std::cerr
+ */
+void fviz_printerror(const fviz_t* ctx);
+
+/**
  * Set a user-defined parameter
  */
 void fviz_setparam_f64(

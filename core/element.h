@@ -51,6 +51,5 @@ struct Element {
   ElementSizeHintFn size_hint;
 };
 
-
 } // namespace fviz
 

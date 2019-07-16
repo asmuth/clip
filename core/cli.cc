@@ -102,18 +102,12 @@ int main(int argc, const char** argv) {
   }
 
   if (!fviz_configure_file(ctx, flag_in.c_str())) {
-    std::cerr
-        << "ERROR: error while parsing configuration: "
-        << fviz_geterror(ctx)
-        << std::endl;
+    fviz_printerror(ctx);
     return EXIT_FAILURE;
   }
 
   if (!fviz_render_file(ctx, flag_out.c_str(), fmt.c_str())) {
-    std::cerr
-        << "ERROR: error while rendering: "
-        << fviz_geterror(ctx)
-        << std::endl;
+    fviz_printerror(ctx);
     return EXIT_FAILURE;
   }
 

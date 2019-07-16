@@ -11,8 +11,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#include <assert.h>
 #include "sexpr.h"
+
+#include <assert.h>
+#include <sstream>
 
 using namespace std::placeholders;
 
@@ -102,7 +104,31 @@ const std::string& expr_get_value(const Expr* expr) {
 }
 
 std::string expr_inspect(const Expr* expr) {
-  return expr->value; // FIXME
+  if (!expr) {
+    return "()";
+  }
+
+  switch (expr->type) {
+    case ExprType::VALUE:
+    case ExprType::VALUE_LITERAL:
+      return expr->value;
+    case ExprType::LIST:
+      expr = expr_get_list(expr);
+      break;
+  }
+
+  std::stringstream str;
+  str << "(";
+  while (expr) {
+    str << expr_inspect(expr);
+    expr = expr_next(expr);
+    if (expr) {
+      str << " ";
+    }
+  }
+  str << ")";
+
+  return str.str();
 }
 
 } // namespace fviz

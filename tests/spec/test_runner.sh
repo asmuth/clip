@@ -1,32 +1,65 @@
 #!/bin/bash
 set -e
 
-print_error () {
-  printf "\033[1;31m"
-  echo -e "$1"
-  printf "\033[0m\n"
-}
-
 binfile="$1"
-specfile="$2"
-outfile="$3"
-masterfile="$4"
+testname="$2"
+srcdir="$3"
+tmpdir="$4"
+format="svg"
 
-rm -rf ${outfile}
-echo ${binfile} --in ${specfile} --out ${outfile}
-${binfile} --in ${specfile} --out ${outfile} || exit 1
+infile="${srcdir}/${testname}.fvz"
+reffile="${srcdir}/${testname}.${format}"
+errfile="${srcdir}/${testname}.err"
+outfile="${tmpdir}/${testname}.${format}"
+logfile="${tmpdir}/${testname}.log"
 
-if [[ ! -e ${masterfile} || ! -z "${fviz_TEST_FORCE}" ]]; then
-  cp ${outfile} ${masterfile}
+# clean up old files
+rm -rf "${outfile}" "${logfile}"
+
+# run fviz
+echo "-------------------------------------------------------------------------------"
+echo "${binfile}" --in "${infile}" --out "${outfile}"
+echo "-------------------------------------------------------------------------------"
+
+result=""
+if "${binfile}" --in "${infile}" --out "${outfile}" 2> "${logfile}"; then
+  result="ok"
+else
+  result="fail"
 fi
 
-echo
+# check error messages
+if [[ -e "${errfile}" ]]; then
+  if [[ ${result} != "fail" ]]; then
+    echo "ERROR: expected failure but got success"
+    cat ${logfile}
+    exit 1
+  fi
 
-# FIXME image diff
-if !(diff ${outfile} ${masterfile} &>/dev/null); then
-  echo
-  print_error "ERROR: output files do not match"
-  echo "Diff:"
-  diff ${outfile} ${masterfile} || true
+  if (diff ${logfile} ${errfile} &>/dev/null); then
+    exit 0
+  else
+    echo "ERROR: error messages do not match"
+    diff ${logfile} ${errfile} || true
+    exit 1
+  fi
+fi
+
+# check result
+if [[ ${result} != "ok" ]]; then
+  echo "ERROR: execution failed"
+  cat ${logfile}
+  exit 1
+fi
+
+if [[ ! -e ${reffile} || ! -z "${FVIZ_TEST_FORCE}" ]]; then
+  cp ${outfile} ${reffile}
+fi
+
+if (diff ${outfile} ${reffile} &>/dev/null); then
+  exit 0
+else
+  echo "ERROR: output files do not match"
+  diff ${outfile} ${reffile} || true
   exit 1
 fi

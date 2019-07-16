@@ -36,12 +36,7 @@ ReturnCode expr_walk_map(
     }
 
     if (auto rc = fn->second(expr); !rc) {
-      return errorf(
-          ERROR,
-          "error while parsing property '{}': {}",
-          param,
-          rc.message);
-
+      rc.trace.push_back(expr);
       return rc;
     }
   }

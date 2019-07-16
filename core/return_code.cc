@@ -12,6 +12,9 @@
  * limitations under the License.
  */
 #include "return_code.h"
+#include "sexpr.h"
+
+#include <iostream>
 
 namespace fviz {
 
@@ -29,6 +32,32 @@ ReturnCode err_invalid_value(
         value,
         StringUtil::join(expected_values, ", "))
   };
+}
+
+void error_print(const ReturnCode& rc, std::ostream& os) {
+  switch (rc.code) {
+    case OK:
+      os << "OK" << std::endl;
+      break;
+    case ERROR:
+      os << "ERROR" << std::endl;
+      break;
+  }
+
+  if (rc) {
+    return;
+  }
+
+  os
+    << "  | " << rc.message
+    << std::endl
+    << std::endl
+    << "TRACEBACK"
+    << std::endl;
+
+  for (const auto& t : rc.trace) {
+    os << "  |> " << expr_inspect(t) << std::endl;
+  }
 }
 
 } // namespace fviz
