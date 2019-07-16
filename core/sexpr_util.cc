@@ -21,7 +21,7 @@ ReturnCode expr_walk_map(
     const Expr* expr,
     const std::unordered_map<std::string, ExprVisitor>& fns) {
   for (; expr; expr = expr_next(expr)) {
-    if (!expr_is_value_literal(expr)) {
+    if (!expr_is_value(expr)) {
       return error(ERROR, "expected a literal");
     }
 
