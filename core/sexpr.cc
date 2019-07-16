@@ -115,31 +115,27 @@ const std::string& expr_get_value(const Expr* expr) {
 }
 
 std::string expr_inspect(const Expr* expr) {
-  if (!expr) {
-    return "()";
-  }
+  std::stringstream s;
 
-  switch (expr->type) {
-    case ExprType::VALUE:
-    case ExprType::VALUE_LITERAL:
-      return expr->value;
-    case ExprType::LIST:
-      expr = expr_get_list(expr);
-      break;
-  }
+  for (; expr; expr = expr_next(expr)) {
+    switch (expr->type) {
+      case ExprType::VALUE:
+      case ExprType::VALUE_LITERAL:
+        s << expr->value;
+        break;
+      case ExprType::LIST:
+        s << "(";
+        s << expr_inspect(expr_get_list(expr));
+        s << ")";
+        break;
+    }
 
-  std::stringstream str;
-  str << "(";
-  while (expr) {
-    str << expr_inspect(expr);
-    expr = expr_next(expr);
-    if (expr) {
-      str << " ";
+    if (expr_next(expr)) {
+      s << " ";
     }
   }
-  str << ")";
 
-  return str.str();
+  return s.str();
 }
 
 } // namespace fviz
