@@ -59,6 +59,10 @@ ReturnCode expr_to_color_opt(
     const Expr* expr,
     std::optional<Color>* var);
 
+ReturnCode expr_to_copy(
+    const Expr* expr,
+    ExprStorage* copy);
+
 template <typename T>
 ReturnCode expr_to_enum(
     const Expr* expr,

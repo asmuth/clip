@@ -60,6 +60,7 @@ if (diff ${outfile} ${reffile} &>/dev/null); then
   exit 0
 else
   echo "ERROR: output files do not match"
+  cat ${logfile}
   diff ${outfile} ${reffile} || true
   exit 1
 fi

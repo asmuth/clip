@@ -129,5 +129,10 @@ ReturnCode expr_to_color_opt(
   return OK;
 }
 
+ReturnCode expr_to_copy(const Expr* e, ExprStorage* c) {
+  *c = expr_clone(e);
+  return OK;
+}
+
 } // namespace fviz
 
