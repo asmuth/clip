@@ -33,5 +33,10 @@ ExprVisitor expr_calln_fn(const std::initializer_list<ExprVisitor>& fns);
 
 std::vector<const Expr*> expr_collect(const Expr* expr);
 
+template <typename... T>
+ExprStorage expr_build(T&&... items);
+
 } // namespace fviz
+
+#include "sexpr_util_impl.h"
 

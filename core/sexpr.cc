@@ -41,6 +41,13 @@ ExprStorage expr_create_list() {
   return e;
 }
 
+ExprStorage expr_create_list(ExprStorage items) {
+  auto e = ExprStorage(new Expr, bind(&expr_destroy, _1));
+  e->type = ExprType::LIST;
+  e->list = std::move(items);
+  return e;
+}
+
 ExprStorage expr_create_value(const std::string& str) {
   auto e = ExprStorage(new Expr, bind(&expr_destroy, _1));
   e->type = ExprType::VALUE;
@@ -57,6 +64,10 @@ ExprStorage expr_create_value_literal(const std::string& str) {
 
 const Expr* expr_next(const Expr* expr) {
   return expr->next.get();
+}
+
+void expr_set_next(Expr* expr, ExprStorage next) {
+  expr->next = std::move(next);
 }
 
 ExprStorage* expr_get_next_storage(Expr* expr) {

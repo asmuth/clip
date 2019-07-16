@@ -22,10 +22,12 @@ struct Expr;
 using ExprStorage = std::unique_ptr<Expr, std::function<void (Expr*)>>;
 
 ExprStorage expr_create_list();
+ExprStorage expr_create_list(ExprStorage items);
 ExprStorage expr_create_value(const std::string& str);
 ExprStorage expr_create_value_literal(const std::string& str);
 
 const Expr* expr_next(const Expr* expr);
+void expr_set_next(Expr* expr, ExprStorage next);
 ExprStorage* expr_get_next_storage(Expr* expr);
 
 bool expr_is_list(const Expr* expr);
