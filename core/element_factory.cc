@@ -72,6 +72,36 @@ ReturnCode element_build_list(
   return element_build_all(env, expr_get_list(expr), elems);
 }
 
+struct MacroElement {
+  ExprStorage expr;
+  ElementRef elem;
+};
+
+ReturnCode element_build_macro(
+    const Environment& env,
+    ExprStorage expr,
+    ElementRef* elem) {
+  auto macro = std::make_shared<MacroElement>();
+  macro->expr = std::move(expr);
+
+  auto macro_rc = element_build(
+      env,
+      macro->expr.get(),
+      &macro->elem);
+
+  if (!macro_rc) {
+    return macro_rc;
+  }
+
+  *elem = std::make_shared<Element>();
+
+  (*elem)->draw = [macro] (const LayoutInfo& layout, Layer* layer) -> ReturnCode {
+    return macro->elem->draw(layout, layer);
+  };
+
+  return OK;
+}
+
 void element_bind(
     ElementMap* factory,
     const std::string& name,

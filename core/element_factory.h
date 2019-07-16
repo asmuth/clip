@@ -38,6 +38,11 @@ ReturnCode element_build_list(
     const Expr* expr,
     std::vector<ElementRef>* elems);
 
+ReturnCode element_build_macro(
+    const Environment& env,
+    ExprStorage expr,
+    ElementRef* elem);
+
 void element_bind(
     ElementMap* factory,
     const std::string& name,
