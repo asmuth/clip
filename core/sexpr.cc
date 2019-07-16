@@ -114,6 +114,26 @@ const std::string& expr_get_value(const Expr* expr) {
   return expr->value;
 }
 
+ExprStorage expr_clone(const Expr* e) {
+  ExprStorage copy;
+  ExprStorage* c = &copy;
+
+  while (e) {
+    *c = ExprStorage(new Expr, bind(&expr_destroy, _1));
+    (*c)->type = e->type;
+    (*c)->value = e->value;
+
+    if (e->list) {
+      (*c)->list = expr_clone(e->list.get());
+    }
+
+    c = expr_get_next_storage(&**c);
+    e = e->next.get();
+  }
+
+  return copy;
+}
+
 std::string expr_inspect(const Expr* expr) {
   std::stringstream s;
 
