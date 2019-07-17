@@ -31,6 +31,7 @@
 #include "elements/chart/lines.h"
 #include "elements/chart/linechart.h"
 #include "elements/chart/points.h"
+#include "elements/chart/scatterplot.h"
 #include "elements/layout/box.h"
 
 #include <iostream>
@@ -63,6 +64,7 @@ fviz_t* fviz_init() {
   element_bind(elems, "chart/lines", bind(elements::chart::lines::build, _1, _2, _3));
   element_bind(elems, "chart/linechart", bind(elements::chart::linechart::build, _1, _2, _3));
   element_bind(elems, "chart/points", bind(elements::chart::points::build, _1, _2, _3));
+  element_bind(elems, "chart/scatterplot", bind(elements::chart::scatterplot::build, _1, _2, _3));
   element_bind(elems, "layout/box", bind(elements::layout::box::build, _1, _2, _3));
   return ctx.release();
 }

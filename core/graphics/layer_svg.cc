@@ -107,8 +107,8 @@ std::string svg_path_data(const Path& path) {
       case PathCommand::ARC_TO:
         // FIXME: respect angle1/2 arguments
         path_data << fmt::format("M{} {} ", cmd[0] - cmd[2], cmd[1]);
-        path_data << fmt::format("a{} {} 0 1 0 {} 0 ", cmd[2], cmd[2] * 2, 0);
-        path_data << fmt::format("a{} {} 0 1 0 {} 0 ", cmd[2], -cmd[2] * 2, 0);
+        path_data << fmt::format("a{} {} 0 1 0 {} 0 ", cmd[2], cmd[2], cmd[2] * 2);
+        path_data << fmt::format("a{} {} 0 1 0 {} 0 ", cmd[2], cmd[2], -cmd[2] * 2);
         break;
       default:
         break; // not yet implemented
