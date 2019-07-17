@@ -141,7 +141,7 @@ ReturnCode expr_to_stroke_style(
 }
 
 ReturnCode expr_to_copy(const Expr* e, ExprStorage* c) {
-  *c = expr_clone(e);
+  *c = expr_clone(e, 1);
   return OK;
 }
 

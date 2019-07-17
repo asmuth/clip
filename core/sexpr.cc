@@ -118,11 +118,11 @@ const std::string& expr_get_value(const Expr* expr) {
   return expr->value;
 }
 
-ExprStorage expr_clone(const Expr* e) {
+ExprStorage expr_clone(const Expr* e, int count /* =-1 */) {
   ExprStorage copy;
   ExprStorage* c = &copy;
 
-  while (e) {
+  for (; e && count != 0; --count) {
     *c = ExprStorage(new Expr, bind(&expr_destroy, _1));
     (*c)->type = e->type;
     (*c)->value = e->value;
