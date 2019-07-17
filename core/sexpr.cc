@@ -62,6 +62,10 @@ ExprStorage expr_create_value_literal(const std::string& str) {
   return e;
 }
 
+Expr* expr_next(Expr* expr) {
+  return expr->next.get();
+}
+
 const Expr* expr_next(const Expr* expr) {
   return expr->next.get();
 }

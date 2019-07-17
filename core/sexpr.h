@@ -26,6 +26,7 @@ ExprStorage expr_create_list(ExprStorage items);
 ExprStorage expr_create_value(const std::string& str);
 ExprStorage expr_create_value_literal(const std::string& str);
 
+Expr* expr_next(Expr* expr);
 const Expr* expr_next(const Expr* expr);
 void expr_set_next(Expr* expr, ExprStorage next);
 ExprStorage* expr_get_next_storage(Expr* expr);
