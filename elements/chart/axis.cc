@@ -69,7 +69,7 @@ struct AxisDefinition {
   AxisLabelPosition label_position;
   Formatter label_formatter;
   Color text_color;
-  Color border_color;
+  StrokeStyle border_style;
   FontInfo font;
   Measure label_padding;
   Measure label_font_size;
@@ -111,12 +111,7 @@ static Status renderAxisVertical(
   axis_config.scale_layout(axis_config.scale, &slayout);
 
   /* draw axis line */
-  {
-    StrokeStyle style;
-    style.color = axis_config.border_color;
-    style.line_width =  from_pt(kDefaultLineWidthPT, target->dpi);
-    strokeLine(target, {x, y0}, {x, y1}, style);
-  }
+  strokeLine(target, {x, y0}, {x, y1}, axis_config.border_style);
 
   /* draw ticks */
   double tick_position = 0;
@@ -137,14 +132,11 @@ static Status renderAxisVertical(
 
   for (const auto& tick : slayout.ticks) {
     auto y = y0 + (y1 - y0) * (1.0 - tick);
-    StrokeStyle style;
-    style.color = axis_config.border_color;
-    style.line_width =  from_pt(kDefaultLineWidthPT, target->dpi);
     strokeLine(
         target,
         {x, y},
         {x + tick_length * tick_position, y},
-        style);
+        axis_config.border_style);
   }
 
   /* draw labels */
@@ -198,12 +190,7 @@ static Status renderAxisHorizontal(
   axis_config.scale_layout(axis_config.scale, &slayout);
 
   /* draw axis line */
-  {
-    StrokeStyle style;
-    style.color = axis_config.border_color;
-    style.line_width =  from_pt(kDefaultLineWidthPT, target->dpi);
-    strokeLine(target, {x0, y}, {x1, y}, style);
-  }
+  strokeLine(target, {x0, y}, {x1, y}, axis_config.border_style);
 
   /* draw ticks */
   double tick_position = 0;
@@ -224,14 +211,11 @@ static Status renderAxisHorizontal(
 
   for (const auto& tick : slayout.ticks) {
     auto x = x0 + (x1 - x0) * tick;
-    StrokeStyle style;
-    style.color = axis_config.border_color;
-    style.line_width =  from_pt(kDefaultLineWidthPT, target->dpi);
     strokeLine(
         target,
         {x, y},
         {x, y + tick_length * tick_position},
-        style);
+        axis_config.border_style);
   }
 
   /* draw labels */
@@ -445,6 +429,11 @@ ReturnCode axis_draw(
     std::shared_ptr<AxisDefinition> config,
     const LayoutInfo& layout,
     Layer* layer) {
+  convert_unit_typographic(
+      layer->dpi,
+      layer->font_size,
+      &config->border_style.line_width);
+
   const auto& axis = *config;
 
   Status rc;
@@ -495,7 +484,8 @@ ReturnCode build(const Environment& env, const Expr* expr, ElementRef* elem) {
   auto config = std::make_shared<AxisDefinition>();
   config->font = env.font;
   config->label_font_size = env.font_size;
-  config->border_color = env.border_color;
+  config->border_style.line_width = from_pt(1);
+  config->border_style.color = env.border_color;
   config->text_color = env.text_color;
   config->scale_layout = bind(&scale_layout_subdivide, _1, _2, 6);
 
@@ -538,6 +528,9 @@ ReturnCode build(const Environment& env, const Expr* expr, ElementRef* elem) {
       {"scale", bind(&scale_configure_kind, _1, &config->scale)},
       {"scale-padding", bind(&expr_to_float64, _1, &config->scale.padding)},
       {"labels", bind(&data_load_strings, _1, &config->label_override)},
+      {"border", bind(&expr_to_stroke_style, _1, &config->border_style)},
+      {"border-color", bind(&expr_to_color, _1, &config->border_style.color)},
+      {"border-width", bind(&expr_to_measure, _1, &config->border_style.line_width)},
     });
 
     if (!rc) {
