@@ -67,7 +67,7 @@ struct LegendConfig {
 LegendConfig::LegendConfig() :
     key(LEGEND_DEFAULT),
     placement(LegendPlacement::INSIDE),
-    position_horiz(HAlign::LEFT),
+    position_horiz(HAlign::RIGHT),
     position_vert(VAlign::TOP) {}
 
 ReturnCode legend_layout_items(
