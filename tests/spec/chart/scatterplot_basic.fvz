@@ -1,9 +1,10 @@
 (chart/scatterplot
     xdata (csv tests/testdata/gauss2d.csv x)
     ydata (csv tests/testdata/gauss2d.csv y)
-    colors (#000)
-    marker-size (2pt)
+    axes (bottom left)
     grid (color #fff)
+    legend (items ("Random Data"))
+    ylayout (subdivide 5)
     background #eee
     border none
     xmin 0

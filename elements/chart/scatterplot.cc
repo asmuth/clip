@@ -38,12 +38,18 @@ ReturnCode build(
   ExprStorage xdata;
   ExprStorage ydata;
 
+  std::set<std::string> axes;
   std::vector<ExprStorage> layout_opts;
   std::vector<ExprStorage> point_opts;
   std::vector<ExprStorage> axis_opts;
+  std::vector<ExprStorage> axis_x_opts;
+  std::vector<ExprStorage> axis_y_opts;
   ExprStorage grid_opts;
+  std::vector<ExprStorage> grid_extra_opts;
+  ExprStorage legend_opts;
 
   auto config_rc = expr_walk_map(expr_next(expr), {
+    {"axes", bind(&expr_to_stringset, _1, &axes)},
     {
       "xdata",
       expr_calln_fn({
@@ -62,8 +68,22 @@ ReturnCode build(
     {"xmax", bind(&expr_to_float64_opt, _1, &xscale.max)},
     {"ymin", bind(&expr_to_float64_opt, _1, &yscale.min)},
     {"ymax", bind(&expr_to_float64_opt, _1, &yscale.max)},
-    {"yscale", bind(&scale_configure_kind, _1, &yscale)},
     {"xscale", bind(&scale_configure_kind, _1, &xscale)},
+    {"yscale", bind(&scale_configure_kind, _1, &yscale)},
+    {
+      "xlayout",
+      expr_calln_fn({
+        bind(&expr_rewritev, _1, "layout", &axis_x_opts),
+        bind(&expr_rewritev, _1, "xlayout", &grid_extra_opts),
+      })
+    },
+    {
+      "ylayout",
+      expr_calln_fn({
+        bind(&expr_rewritev, _1, "layout", &axis_y_opts),
+        bind(&expr_rewritev, _1, "ylayout", &grid_extra_opts),
+      })
+    },
     {"marker-size", bind(&expr_rewritev, _1, "size", &point_opts)},
     {"color", bind(&expr_rewritev, _1, "color", &point_opts)},
     {"colors", bind(&expr_rewritev, _1, "colors", &point_opts)},
@@ -72,6 +92,7 @@ ReturnCode build(
     {"border-color", bind(&expr_rewritev, _1, "border-color", &axis_opts)},
     {"border-width", bind(&expr_rewritev, _1, "border-width", &axis_opts)},
     {"grid", bind(&expr_to_copy, _1, &grid_opts)},
+    {"legend", bind(&expr_to_copy, _1, &legend_opts)},
   });
 
   if (!config_rc) {
@@ -123,57 +144,91 @@ ReturnCode build(
 
   ExprStorage chart_gridlines;
   if (grid_opts) {
-    chart_gridlines = expr_build("chart/gridlines");
-    expr_set_next(chart_gridlines.get(), std::move(grid_opts));
+    chart_gridlines = expr_build(
+        "chart/gridlines",
+        "xmin",
+        expr_clone(xmin.get()),
+        "xmax",
+        expr_clone(xmax.get()),
+        "ymin",
+        expr_clone(ymin.get()),
+        "ymax",
+        expr_clone(ymax.get()),
+        expr_unwrap(std::move(grid_opts)),
+        expr_clonev(grid_extra_opts));
   }
 
-  auto chart_axis_top = expr_build(
-      "chart/axis-top",
-      "min",
-      expr_clone(xmin.get()),
-      "max",
-      expr_clone(xmax.get()),
-      expr_clonev(axis_opts));
+  ExprStorage chart_legend;
+  if (legend_opts) {
+    chart_legend = expr_build(
+        "chart/legend",
+        expr_unwrap(std::move(legend_opts)));
+  }
 
-  auto chart_axis_right = expr_build(
-      "chart/axis-right",
-      "min",
-      expr_clone(ymin.get()),
-      "max",
-      expr_clone(ymax.get()),
-      expr_clonev(axis_opts));
+  ExprStorage chart_axis_top;
+  if (axes.empty() || axes.count("top")) {
+    chart_axis_top = expr_build(
+        "chart/axis-top",
+        "min",
+        expr_clone(xmin.get()),
+        "max",
+        expr_clone(xmax.get()),
+        expr_clonev(axis_opts),
+        expr_clonev(axis_x_opts));
+  }
 
-  auto chart_axis_bottom = expr_build(
-      "chart/axis-bottom",
-      "min",
-      expr_clone(xmin.get()),
-      "max",
-      expr_clone(xmax.get()),
-      expr_clonev(axis_opts));
+  ExprStorage chart_axis_right;
+  if (axes.empty() || axes.count("right")) {
+    chart_axis_right = expr_build(
+        "chart/axis-right",
+        "min",
+        expr_clone(ymin.get()),
+        "max",
+        expr_clone(ymax.get()),
+        expr_clonev(axis_opts),
+        expr_clonev(axis_y_opts));
+  }
 
-  auto chart_axis_left = expr_build(
-      "chart/axis-left",
-      "min",
-      expr_clone(ymin.get()),
-      "max",
-      expr_clone(ymax.get()),
-      expr_clonev(axis_opts));
+  ExprStorage chart_axis_bottom;
+  if (axes.empty() || axes.count("bottom")) {
+    chart_axis_bottom = expr_build(
+        "chart/axis-bottom",
+        "min",
+        expr_clone(xmin.get()),
+        "max",
+        expr_clone(xmax.get()),
+        expr_clonev(axis_opts),
+        expr_clonev(axis_x_opts));
+  }
+
+  ExprStorage chart_axis_left;
+  if (axes.empty() || axes.count("left")) {
+    chart_axis_left = expr_build(
+        "chart/axis-left",
+        "min",
+        expr_clone(ymin.get()),
+        "max",
+        expr_clone(ymax.get()),
+        expr_clonev(axis_opts),
+        expr_clonev(axis_y_opts));
+  }
 
   auto chart = expr_build(
       "chart/layout",
+      std::move(layout_opts),
       "top",
-      expr_create_list(std::move(chart_axis_top)),
+      expr_build(std::move(chart_axis_top)),
       "right",
-      expr_create_list(std::move(chart_axis_right)),
+      expr_build(std::move(chart_axis_right)),
       "bottom",
-      expr_create_list(std::move(chart_axis_bottom)),
+      expr_build(std::move(chart_axis_bottom)),
       "left",
-      expr_create_list(std::move(chart_axis_left)),
+      expr_build(std::move(chart_axis_left)),
       "body",
       expr_build(
           std::move(chart_gridlines),
-          std::move(chart_points)),
-      std::move(layout_opts));
+          std::move(chart_points),
+          std::move(chart_legend)));
 
   std::cerr << expr_inspect(chart.get());
   return element_build_macro(env, std::move(chart), elem);
