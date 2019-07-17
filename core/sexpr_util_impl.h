@@ -23,13 +23,18 @@ ExprStorage expr_build_next() {
 template <typename... T>
 ExprStorage expr_build_next(ExprStorage head, T&&... tail) {
   auto n = expr_build_next(std::forward<T>(tail)...);
-  if (!head) {
-    return n;
+
+  auto e = head.get();
+  while (e && expr_next(e)) {
+    e = expr_next(e);
   }
 
-  auto e = std::move(head);
-  expr_set_next(e.get(), std::move(n));
-  return e;
+  if (e) {
+    expr_set_next(e, std::move(n));
+    return head;
+  } else {
+    return n;
+  }
 }
 
 template <typename... T>
