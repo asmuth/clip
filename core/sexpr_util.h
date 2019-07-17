@@ -33,6 +33,11 @@ ExprVisitor expr_calln_fn(const std::initializer_list<ExprVisitor>& fns);
 
 std::vector<const Expr*> expr_collect(const Expr* expr);
 
+ReturnCode expr_rewritev(
+    const Expr* expr,
+    const std::string& prefix,
+    std::vector<ExprStorage>* destination);
+
 template <typename... T>
 ExprStorage expr_build(T&&... items);
 

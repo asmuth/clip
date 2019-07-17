@@ -29,6 +29,28 @@ ExprStorage expr_build_next(ExprStorage head, T&&... tail) {
 }
 
 template <typename... T>
+ExprStorage expr_build_next(std::vector<ExprStorage> head, T&&... tail) {
+  auto n = expr_build_next(std::forward<T>(tail)...);
+
+  ExprStorage e;
+  for (auto iter = head.rbegin(); iter != head.rend(); ++iter) {
+    if (e) {
+      expr_set_next(iter->get(), std::move(e));
+    } else {
+      expr_set_next(iter->get(), std::move(n));
+    }
+
+    e = std::move(*iter);
+  }
+
+  if (e) {
+    return e;
+  } else {
+    return n;
+  }
+}
+
+template <typename... T>
 ExprStorage expr_build_next(std::string head, T&&... tail) {
   auto e = expr_create_value(head);
   auto n = expr_build_next(std::forward<T>(tail)...);

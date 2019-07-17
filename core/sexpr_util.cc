@@ -71,6 +71,15 @@ std::vector<const Expr*> expr_collect(const Expr* expr) {
   return exprs;
 }
 
+ReturnCode expr_rewritev(
+    const Expr* expr,
+    const std::string& prefix,
+    std::vector<ExprStorage>* destination) {
+  destination->emplace_back(expr_create_value(prefix));
+  destination->emplace_back(expr_clone(expr));
+  return OK;
+}
+
 } // namespace fviz
 
 
