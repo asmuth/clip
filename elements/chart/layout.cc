@@ -124,7 +124,7 @@ ReturnCode draw(
 
   /* draw the background */
   if (config->background) {
-    const auto& bg_box = layout.content_box;
+    const auto& bg_box = body_box;
     FillStyle bg_fill;
     bg_fill.color = *config->background;
 
