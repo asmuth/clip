@@ -28,7 +28,7 @@ ReturnCode expr_walk_map(
     auto param = expr_get_value(expr);
     const auto& fn = fns.find(param);
     if (fn == fns.end()) {
-      return errorf(ERROR, "invalid paramter: '{}'", param);
+      return errorf(ERROR, "invalid parameter: '{}'", param);
     }
 
     if (expr = expr_next(expr); !expr) {
@@ -78,6 +78,15 @@ ReturnCode expr_rewritev(
   destination->emplace_back(expr_create_value(prefix));
   destination->emplace_back(expr_clone(expr));
   return OK;
+}
+
+std::vector<ExprStorage> expr_clonev(const std::vector<ExprStorage>& exprs) {
+  std::vector<ExprStorage> out;
+  for (const auto& e : exprs) {
+    out.emplace_back(expr_clone(e.get()));
+  }
+
+  return out;
 }
 
 } // namespace fviz

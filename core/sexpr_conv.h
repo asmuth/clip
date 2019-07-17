@@ -13,6 +13,7 @@
  */
 #pragma once
 #include "sexpr.h"
+#include "graphics/brush.h"
 #include "graphics/color.h"
 #include "graphics/measure.h"
 
@@ -24,19 +25,19 @@ template <typename T>
 using ExprConvTo = std::function<ReturnCode (const Expr*, T* to)>;
 
 ReturnCode expr_to_string(
-    const Expr* prop,
+    const Expr* expr,
     std::string* value);
 
 ReturnCode expr_to_strings(
-    const Expr* prop,
+    const Expr* expr,
     std::vector<std::string>* values);
 
 ReturnCode expr_to_float64(
-    const Expr* prop,
+    const Expr* expr,
     double* value);
 
 ReturnCode expr_to_float64_opt(
-    const Expr* prop,
+    const Expr* expr,
     std::optional<double>* value);
 
 ReturnCode expr_to_measure(
@@ -52,12 +53,16 @@ ReturnCode expr_to_measures(
     std::vector<Measure>* measures);
 
 ReturnCode expr_to_color(
-    const Expr* prop,
+    const Expr* expr,
     Color* value);
 
 ReturnCode expr_to_color_opt(
     const Expr* expr,
     std::optional<Color>* var);
+
+ReturnCode expr_to_stroke_style(
+    const Expr* expr,
+    StrokeStyle* style);
 
 ReturnCode expr_to_copy(
     const Expr* expr,

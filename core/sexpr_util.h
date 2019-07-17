@@ -41,6 +41,8 @@ ReturnCode expr_rewritev(
 template <typename... T>
 ExprStorage expr_build(T&&... items);
 
+std::vector<ExprStorage> expr_clonev(const std::vector<ExprStorage>& exprs);
+
 } // namespace fviz
 
 #include "sexpr_util_impl.h"
