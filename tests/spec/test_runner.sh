@@ -57,6 +57,7 @@ if [[ ! -e ${reffile} || ! -z "${FVIZ_TEST_FORCE}" ]]; then
 fi
 
 if (diff ${outfile} ${reffile} &>/dev/null); then
+  cat ${logfile}
   exit 0
 else
   echo "ERROR: output files do not match"

@@ -20,7 +20,7 @@ using namespace std::placeholders;
 namespace fviz {
 
 Environment::Environment() :
-    screen_width(Unit::UNIT, 1200),
+    screen_width(Unit::UNIT, 900),
     screen_height(Unit::UNIT, 480),
     dpi(96),
     background_color(Color::fromRGB(1,1,1)),

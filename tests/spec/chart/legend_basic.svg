@@ -1,11 +1,11 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1200.000000" height="480.000000" viewBox="0 0 1200 480">
-  <rect width="1200.000000" height="480.000000" fill="#ffffff"/>
-  <path fill="#4572a7" d="M33.9 27.8667 M23.9 27.8667 a5 10 0 1 0 0 0 a5 -10 0 1 0 0 0 "/>
+<svg xmlns="http://www.w3.org/2000/svg" width="900.000000" height="480.000000" viewBox="0 0 900 480">
+  <rect width="900.000000" height="480.000000" fill="#ffffff"/>
+  <path fill="#4572a7" d="M33.9 27.8667 M23.9 27.8667 a5 5 0 1 0 10 0 a5 5 0 1 0 -10 0 "/>
   <text x="40.400000" y="32.866667" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif">New York</text>
-  <path fill="#aa4643" d="M145.084 27.8667 M135.084 27.8667 a5 10 0 1 0 0 0 a5 -10 0 1 0 0 0 "/>
+  <path fill="#aa4643" d="M145.084 27.8667 M135.084 27.8667 a5 5 0 1 0 10 0 a5 5 0 1 0 -10 0 "/>
   <text x="151.584375" y="32.866667" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif">Beijing</text>
-  <path fill="#89a54e" d="M238.331 27.8667 M228.331 27.8667 a5 10 0 1 0 0 0 a5 -10 0 1 0 0 0 "/>
+  <path fill="#89a54e" d="M238.331 27.8667 M228.331 27.8667 a5 5 0 1 0 10 0 a5 5 0 1 0 -10 0 "/>
   <text x="244.831250" y="32.866667" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif">Moscow</text>
-  <path fill="#3d96ae" d="M341.344 27.8667 M331.344 27.8667 a5 10 0 1 0 0 0 a5 -10 0 1 0 0 0 "/>
+  <path fill="#3d96ae" d="M341.344 27.8667 M331.344 27.8667 a5 5 0 1 0 10 0 a5 5 0 1 0 -10 0 "/>
   <text x="347.843750" y="32.866667" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif">London</text>
 </svg>
