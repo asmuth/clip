@@ -30,7 +30,7 @@ using namespace std::placeholders;
 
 namespace fviz::elements::chart::points {
 
-static const double kDefaultPointSizePT = 3;
+static const double kDefaultPointSizePT = 2;
 static const double kDefaultPointSizeMinPT = 1;
 static const double kDefaultPointSizeMaxPT = 24;
 static const double kDefaultLabelPaddingEM = 0.4;
