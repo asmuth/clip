@@ -38,7 +38,10 @@ ReturnCode build(
   ExprStorage xdata;
   ExprStorage ydata;
 
+  std::vector<ExprStorage> layout_opts;
   std::vector<ExprStorage> point_opts;
+  std::vector<ExprStorage> axis_opts;
+  ExprStorage grid_opts;
 
   auto config_rc = expr_walk_map(expr_next(expr), {
     {
@@ -64,6 +67,11 @@ ReturnCode build(
     {"marker-size", bind(&expr_rewritev, _1, "size", &point_opts)},
     {"color", bind(&expr_rewritev, _1, "color", &point_opts)},
     {"colors", bind(&expr_rewritev, _1, "colors", &point_opts)},
+    {"background", bind(&expr_rewritev, _1, "background-color", &layout_opts)},
+    {"border", bind(&expr_rewritev, _1, "border", &axis_opts)},
+    {"border-color", bind(&expr_rewritev, _1, "border-color", &axis_opts)},
+    {"border-width", bind(&expr_rewritev, _1, "border-width", &axis_opts)},
+    {"grid", bind(&expr_to_copy, _1, &grid_opts)},
   });
 
   if (!config_rc) {
@@ -97,7 +105,7 @@ ReturnCode build(
   auto ymin = expr_create_value(std::to_string(scale_min(yscale)));
   auto ymax = expr_create_value(std::to_string(scale_max(yscale)));
 
-  auto chart_body = expr_build(
+  auto chart_points = expr_build(
       "chart/points",
       "xdata",
       std::move(xdata),
@@ -113,33 +121,43 @@ ReturnCode build(
       expr_clone(ymax.get()),
       std::move(point_opts));
 
+  ExprStorage chart_gridlines;
+  if (grid_opts) {
+    chart_gridlines = expr_build("chart/gridlines");
+    expr_set_next(chart_gridlines.get(), std::move(grid_opts));
+  }
+
   auto chart_axis_top = expr_build(
       "chart/axis-top",
       "min",
       expr_clone(xmin.get()),
       "max",
-      expr_clone(xmax.get()));
+      expr_clone(xmax.get()),
+      expr_clonev(axis_opts));
 
   auto chart_axis_right = expr_build(
       "chart/axis-right",
       "min",
       expr_clone(ymin.get()),
       "max",
-      expr_clone(ymax.get()));
+      expr_clone(ymax.get()),
+      expr_clonev(axis_opts));
 
   auto chart_axis_bottom = expr_build(
       "chart/axis-bottom",
       "min",
       expr_clone(xmin.get()),
       "max",
-      expr_clone(xmax.get()));
+      expr_clone(xmax.get()),
+      expr_clonev(axis_opts));
 
   auto chart_axis_left = expr_build(
       "chart/axis-left",
       "min",
       expr_clone(ymin.get()),
       "max",
-      expr_clone(ymax.get()));
+      expr_clone(ymax.get()),
+      expr_clonev(axis_opts));
 
   auto chart = expr_build(
       "chart/layout",
@@ -152,7 +170,10 @@ ReturnCode build(
       "left",
       expr_create_list(std::move(chart_axis_left)),
       "body",
-      expr_create_list(std::move(chart_body)));
+      expr_build(
+          std::move(chart_gridlines),
+          std::move(chart_points)),
+      std::move(layout_opts));
 
   std::cerr << expr_inspect(chart.get());
   return element_build_macro(env, std::move(chart), elem);

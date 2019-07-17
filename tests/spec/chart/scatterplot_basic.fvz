@@ -1,8 +1,11 @@
 (chart/scatterplot
     xdata (csv tests/testdata/gauss2d.csv x)
     ydata (csv tests/testdata/gauss2d.csv y)
-    colors (#00c #c00)
-    marker-size (8pt)
+    colors (#000)
+    marker-size (2pt)
+    grid (color #fff)
+    background #eee
+    border none
     xmin 0
     xmax 400
     ymin 0
