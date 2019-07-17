@@ -230,8 +230,8 @@ ReturnCode scale_layout_subdivide(
   layout->ticks.clear();
   layout->labels.clear();
 
-  for (size_t i = 0; i < divisions; ++i) {
-    auto o = (1.0f / (divisions - 1)) * i;
+  for (size_t i = 0; i <= divisions; ++i) {
+    auto o = (1.0f / divisions) * i;
     layout->ticks.emplace_back(o);
     layout->labels.emplace_back(o);
   }
