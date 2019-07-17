@@ -85,8 +85,8 @@ ReturnCode build(const Environment& env, const Expr* expr, ElementRef* elem) {
   auto config = std::make_shared<GridlineDefinition>();
   config->line_width = from_pt(1);
   config->line_color = Color::fromRGB(.9, .9, .9); // TODO
-  config->layout_x = bind(&scale_layout_subdivide, _1, _2, 6);
-  config->layout_y = bind(&scale_layout_subdivide, _1, _2, 6);
+  config->layout_x = bind(&scale_layout_subdivide, _1, _2, 10);
+  config->layout_y = bind(&scale_layout_subdivide, _1, _2, 10);
 
   /* parse properties */
   auto config_rc = expr_walk_map(expr_next(expr), {

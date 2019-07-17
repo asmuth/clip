@@ -487,7 +487,7 @@ ReturnCode build(const Environment& env, const Expr* expr, ElementRef* elem) {
   config->border_style.line_width = from_pt(1);
   config->border_style.color = env.border_color;
   config->text_color = env.text_color;
-  config->scale_layout = bind(&scale_layout_subdivide, _1, _2, 6);
+  config->scale_layout = bind(&scale_layout_subdivide, _1, _2, 10);
 
   if (elem_name == "chart/axis-top") {
     config->position = AxisPosition::TOP;
