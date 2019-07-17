@@ -89,6 +89,14 @@ std::vector<ExprStorage> expr_clonev(const std::vector<ExprStorage>& exprs) {
   return out;
 }
 
+ExprStorage expr_unwrap(ExprStorage expr) {
+  if (expr && expr_is_list(expr.get())) {
+    return std::move(*expr_get_list_storage(expr.get()));
+  }
+
+  return expr;
+}
+
 } // namespace fviz
 
 

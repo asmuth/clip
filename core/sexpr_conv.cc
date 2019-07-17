@@ -38,6 +38,28 @@ ReturnCode expr_to_strings(
   return expr_tov<std::string>(expr, bind(&expr_to_string, _1, _2), values);
 }
 
+ReturnCode expr_to_stringset(
+    const Expr* expr,
+    std::set<std::string>* values) {
+  if (!expr || !expr_is_list(expr)) {
+    return errorf(
+        ERROR,
+        "argument error; expected a list, got: {}",
+        expr_inspect(expr)); // FIXME
+  }
+
+  for (expr = expr_get_list(expr); expr; expr = expr_next(expr)) {
+    std::string v;
+    if (auto rc = expr_to_string(expr, &v); !rc) {
+      return rc;
+    }
+
+    values->insert(std::move(v));
+  }
+
+  return OK;
+}
+
 ReturnCode expr_to_float64(
     const Expr* expr,
     double* value) {

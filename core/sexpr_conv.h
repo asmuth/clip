@@ -32,6 +32,10 @@ ReturnCode expr_to_strings(
     const Expr* expr,
     std::vector<std::string>* values);
 
+ReturnCode expr_to_stringset(
+    const Expr* expr,
+    std::set<std::string>* values);
+
 ReturnCode expr_to_float64(
     const Expr* expr,
     double* value);
