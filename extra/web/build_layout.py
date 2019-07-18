@@ -18,7 +18,7 @@ tpl = """
   </head>
   <body>
     <div id="navigation">
-      <a href="/" style="display: block; margin-bottom: -.4em; "><img src="/logo.png" alt="fviz" class="logo"/></a>
+      <a href="/" class="logo">fviz 0.4.0</a>
 
       {{#toc}}
         <a class="nav_title">{{title}}</a>

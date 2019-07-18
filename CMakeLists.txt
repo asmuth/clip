@@ -81,7 +81,7 @@ foreach(example_test_path ${example_test_files})
   add_test(
       NAME test_example_${example_test_name}_svg
       WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-      COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/tests/spec/test_runner.sh ${CMAKE_CURRENT_BINARY_DIR}/fviz ${example_test_path} ${CMAKE_CURRENT_BINARY_DIR}/example_${example_test_name}.svg ${example_test_srcdir}/${example_test_name}.svg)
+      COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/tests/spec/test_runner.sh ${CMAKE_CURRENT_BINARY_DIR}/fviz ${example_test_name} ${example_test_srcdir} ${CMAKE_CURRENT_BINARY_DIR})
 endforeach()
 
 file(GLOB doc_test_files "manual/figures/*.fvz")
@@ -91,5 +91,5 @@ foreach(doc_test_path ${doc_test_files})
   add_test(
       NAME test_doc_${doc_test_name}_svg
       WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-      COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/tests/spec/test_runner.sh ${CMAKE_CURRENT_BINARY_DIR}/fviz ${doc_test_path} ${CMAKE_CURRENT_BINARY_DIR}/figure_${doc_test_name}.svg ${doc_test_srcdir}/${doc_test_name}.svg)
+      COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/tests/spec/test_runner.sh ${CMAKE_CURRENT_BINARY_DIR}/fviz ${doc_test_name} ${doc_test_srcdir} ${CMAKE_CURRENT_BINARY_DIR})
 endforeach()

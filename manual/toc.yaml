@@ -93,29 +93,29 @@ documentation:
     file: "elements"
     pages:
       -
-        title: "areas"
-        url: "/documentation/elements/areas"
+        title: "chart/areas"
+        url: "/documentation/elements/chart/areas"
       -
-        title: "axis"
-        url: "/documentation/elements/axis"
+        title: "chart/axis"
+        url: "/documentation/elements/chart/axis"
       -
-        title: "bars"
-        url: "/documentation/elements/bars"
+        title: "chart/bars"
+        url: "/documentation/elements/chart/bars"
       -
-        title: "box"
-        url: "/documentation/elements/box"
+        title: "chart/gridlines"
+        url: "/documentation/elements/chart/gridlines"
       -
-        title: "gridlines"
-        url: "/documentation/elements/gridlines"
+        title: "chart/legend"
+        url: "/documentation/elements/chart/legend"
       -
-        title: "legend"
-        url: "/documentation/elements/legend"
+        title: "chart/lines"
+        url: "/documentation/elements/chart/lines"
       -
-        title: "lines"
-        url: "/documentation/elements/lines"
+        title: "chart/points"
+        url: "/documentation/elements/chart/points"
       -
-        title: "points"
-        url: "/documentation/elements/points"
+        title: "chart/scatterplot"
+        url: "/documentation/elements/chart/scatterplot"
 
 
   -

@@ -50,6 +50,16 @@ h2 {
   font-weight: 600;
 }
 
+h4 em {
+  border-top: 2px solid #04f;
+  background: #f0f4ff;
+  font-style: normal;
+  padding: .3em .2em;
+  display: inline-block;
+  font-weight: bold;
+}
+
+
 h3.section {
   font-size: 19px;
   margin-top: 2em;
@@ -90,9 +100,17 @@ ul li p {
   max-width: 1100px;
 }
 
-.logo, #documentation .logo {
-  height: 24px;
-  width: 87.5px;
+.logo {
+  border-top: 2px solid #04f;
+  background: #f0f4ff;
+  font-style: normal;
+  padding: .3em .4em;
+  display: inline-block;
+  font-weight: bold;
+  font-family: "Monaco", monospace;
+  color: #000;
+  text-decoration: none;
+  font-size: .9em;
 }
 
 .header {

@@ -1,36 +1,38 @@
 <h1>Element: <code>{{name}}</code></h1>
-
 {{{desc}}}
 
-<pre><code>{{demo}}</code></pre>
+<h4>Syntax</h4>
+<pre><code>{{reference}}</code></pre>
 
-<h2>Properties</h2>
-<div class="plist">
-  {{#properties}}
-    <a href="/reference/{{scope}}/{{name}}" class="prop">
-      <span><code><strong>{{name}}</strong></code></span>
-      <span>{{desc_short}}</span>
-    </a>
-  {{/properties}}
-</div>
+{{#example}}
+<h4>Example</h4>
+<section class="info_box">
+  <img src="{{example_img}}" />
+</section>
+{{/example}}
 
+<h2>Options</h2>
 {{#properties}}
   <section style="border-top: none; padding-bottom: 1em;">
-    <h2>Property: <code>{{name}}</code></h2>
-    {{desc_short}}
+    <h4><em><code>{{name}}</code></em></h4>
 
-    <pre><code>{{syntax_formal}}</code></pre>
+    <div style="margin-top: 1.4em;">
+      {{desc}}
+    <div>
 
-    <h4>Values</h4>
-    <dl>
-      {{#values}}
-        <dt><code>{{value}}</code></dt>
-        <dd>{{desc}}</dd>
-      {{/values}}
-    </dl>
+    <pre><code>{{desc_code}}</code></pre>
 
-    <h4>Examples</h4>
-    <pre><code>{{syntax_example}}</code></pre>
+    {{#desc_detail}}
+      <div style="margin-top: 1.4em;">
+        {{{desc_detail}}}
+      <div>
+    {{/desc_detail}}
+
+    {{#examples}}
+      <h5>Examples:</h5>
+      <pre><code>{{examples}}</code></pre>
+    {{/examples}}
+
   </section>
 {{/properties}}
 
