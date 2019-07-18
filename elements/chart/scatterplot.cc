@@ -32,11 +32,11 @@ ReturnCode build(
     ElementRef* elem) {
   std::vector<Measure> x;
   std::vector<Measure> y;
-  ScaleConfig xscale;
-  ScaleConfig yscale;
+  ScaleConfig scale_x;
+  ScaleConfig scale_y;
 
-  ExprStorage xdata;
-  ExprStorage ydata;
+  ExprStorage data_x;
+  ExprStorage data_y;
 
   std::set<std::string> axes;
   std::vector<ExprStorage> layout_opts;
@@ -51,37 +51,37 @@ ReturnCode build(
   auto config_rc = expr_walk_map(expr_next(expr), {
     {"axes", bind(&expr_to_stringset, _1, &axes)},
     {
-      "xdata",
+      "data-x",
       expr_calln_fn({
         bind(&data_load, _1, &x),
-        bind(&expr_to_copy, _1, &xdata),
+        bind(&expr_to_copy, _1, &data_x),
       }),
     },
     {
-      "ydata",
+      "data-y",
       expr_calln_fn({
         bind(&data_load, _1, &y),
-        bind(&expr_to_copy, _1, &ydata),
+        bind(&expr_to_copy, _1, &data_y),
       }),
     },
-    {"xmin", bind(&expr_to_float64_opt, _1, &xscale.min)},
-    {"xmax", bind(&expr_to_float64_opt, _1, &xscale.max)},
-    {"ymin", bind(&expr_to_float64_opt, _1, &yscale.min)},
-    {"ymax", bind(&expr_to_float64_opt, _1, &yscale.max)},
-    {"xscale", bind(&scale_configure_kind, _1, &xscale)},
-    {"yscale", bind(&scale_configure_kind, _1, &yscale)},
+    {"range-x-min", bind(&expr_to_float64_opt, _1, &scale_x.min)},
+    {"range-x-max", bind(&expr_to_float64_opt, _1, &scale_x.max)},
+    {"range-y-min", bind(&expr_to_float64_opt, _1, &scale_y.min)},
+    {"range-y-max", bind(&expr_to_float64_opt, _1, &scale_y.max)},
+    {"scale-x", bind(&scale_configure_kind, _1, &scale_x)},
+    {"scale-y", bind(&scale_configure_kind, _1, &scale_y)},
     {
-      "xlayout",
+      "ticks-x",
       expr_calln_fn({
         bind(&expr_rewritev, _1, "layout", &axis_x_opts),
-        bind(&expr_rewritev, _1, "xlayout", &grid_extra_opts),
+        bind(&expr_rewritev, _1, "ticks-x", &grid_extra_opts),
       })
     },
     {
-      "ylayout",
+      "ticks-y",
       expr_calln_fn({
         bind(&expr_rewritev, _1, "layout", &axis_y_opts),
-        bind(&expr_rewritev, _1, "ylayout", &grid_extra_opts),
+        bind(&expr_rewritev, _1, "ticks-y", &grid_extra_opts),
       })
     },
     {"marker-size", bind(&expr_rewritev, _1, "size", &point_opts)},
@@ -100,45 +100,45 @@ ReturnCode build(
   }
 
   /* check configuraton */
-  if (!xdata) {
-    return error(ERROR, "the 'xdata' argument is mandatory");
+  if (!data_x) {
+    return error(ERROR, "the 'data-x' argument is mandatory");
   }
 
-  if (!ydata) {
-    return error(ERROR, "the 'ydata' argument is mandatory");
+  if (!data_y) {
+    return error(ERROR, "the 'data-y' argument is mandatory");
   }
 
   /* scale autoconfig */
   for (const auto& v : x) {
     if (v.unit == Unit::USER) {
-      scale_fit(v.value, &xscale);
+      scale_fit(v.value, &scale_x);
     }
   }
 
   for (const auto& v : y) {
     if (v.unit == Unit::USER) {
-      scale_fit(v.value, &yscale);
+      scale_fit(v.value, &scale_y);
     }
   }
 
-  auto xmin = expr_create_value(std::to_string(scale_min(xscale)));
-  auto xmax = expr_create_value(std::to_string(scale_max(xscale)));
-  auto ymin = expr_create_value(std::to_string(scale_min(yscale)));
-  auto ymax = expr_create_value(std::to_string(scale_max(yscale)));
+  auto xmin = expr_create_value(std::to_string(scale_min(scale_x)));
+  auto xmax = expr_create_value(std::to_string(scale_max(scale_x)));
+  auto ymin = expr_create_value(std::to_string(scale_min(scale_y)));
+  auto ymax = expr_create_value(std::to_string(scale_max(scale_y)));
 
   auto chart_points = expr_build(
       "chart/points",
-      "xdata",
-      std::move(xdata),
-      "ydata",
-      std::move(ydata),
-      "xmin",
+      "data-x",
+      std::move(data_x),
+      "data-y",
+      std::move(data_y),
+      "range-x-min",
       expr_clone(xmin.get()),
-      "xmax",
+      "range-x-max",
       expr_clone(xmax.get()),
-      "ymin",
+      "range-y-min",
       expr_clone(ymin.get()),
-      "ymax",
+      "range-y-max",
       expr_clone(ymax.get()),
       std::move(point_opts));
 
@@ -146,13 +146,13 @@ ReturnCode build(
   if (grid_opts) {
     chart_gridlines = expr_build(
         "chart/gridlines",
-        "xmin",
+        "range-x-min",
         expr_clone(xmin.get()),
-        "xmax",
+        "range-x-max",
         expr_clone(xmax.get()),
-        "ymin",
+        "range-y-min",
         expr_clone(ymin.get()),
-        "ymax",
+        "range-y-max",
         expr_clone(ymax.get()),
         expr_unwrap(std::move(grid_opts)),
         expr_clonev(grid_extra_opts));

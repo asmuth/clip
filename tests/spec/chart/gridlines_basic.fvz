@@ -2,6 +2,6 @@
   margin 1em
   body (
     (chart/gridlines
-      xlayout (linear 1)
-      xmin 0
-      xmax 16)))
+      ticks-x (linear 1)
+      range-x-min 0
+      range-x-max 16)))

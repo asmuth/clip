@@ -3,7 +3,7 @@
     ((chart/axis-bottom min 0 max 100))
   body
     ((chart/lines
-        xdata (csv "tests/testdata/measurement.csv" time)
-        ydata (csv "tests/testdata/measurement.csv" value2)
+        data-x (csv "tests/testdata/measurement.csv" time)
+        data-y (csv "tests/testdata/measurement.csv" value2)
         colors (#000)
         stroke 2pt)))

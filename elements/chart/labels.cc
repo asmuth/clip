@@ -104,16 +104,16 @@ ReturnCode build(
 
   /* parse properties */
   auto config_rc = expr_walk_map(expr_next(expr), {
-    {"xdata", bind(&data_load, _1, &config->x)},
-    {"ydata", bind(&data_load, _1, &config->y)},
-    {"xmin", bind(&expr_to_float64_opt, _1, &config->scale_x.min)},
-    {"xmax", bind(&expr_to_float64_opt, _1, &config->scale_x.max)},
-    {"xscale", bind(&scale_configure_kind, _1, &config->scale_x)},
-    {"xscale-padding", bind(&expr_to_float64, _1, &config->scale_x.padding)},
-    {"ymin", bind(&expr_to_float64_opt, _1, &config->scale_y.min)},
-    {"ymax", bind(&expr_to_float64_opt, _1, &config->scale_y.max)},
-    {"yscale", bind(&scale_configure_kind, _1, &config->scale_y)},
-    {"yscale-padding", bind(&expr_to_float64, _1, &config->scale_y.padding)},
+    {"data-x", bind(&data_load, _1, &config->x)},
+    {"data-y", bind(&data_load, _1, &config->y)},
+    {"range-x-min", bind(&expr_to_float64_opt, _1, &config->scale_x.min)},
+    {"range-x-max", bind(&expr_to_float64_opt, _1, &config->scale_x.max)},
+    {"scale-x", bind(&scale_configure_kind, _1, &config->scale_x)},
+    {"scale_x-padding", bind(&expr_to_float64, _1, &config->scale_x.padding)},
+    {"range-y-min", bind(&expr_to_float64_opt, _1, &config->scale_y.min)},
+    {"range-y-max", bind(&expr_to_float64_opt, _1, &config->scale_y.max)},
+    {"scale-y", bind(&scale_configure_kind, _1, &config->scale_y)},
+    {"scale_y-padding", bind(&expr_to_float64, _1, &config->scale_y.padding)},
     {"labels", bind(&data_load_strings, _1, &config->labels)},
     {"label-font-size", bind(&expr_to_measure, _1, &config->label_font_size)},
   });

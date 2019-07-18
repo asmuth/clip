@@ -1,7 +1,7 @@
 ERROR
-  | the length of the 'xdata' and 'ydata' properties must be equal
+  | the length of the 'data-x' and 'data-y' properties must be equal
 
 TRACEBACK
-  |> (chart/lines xdata (100px 300px 500px 700px 900px) ydata (200px 300px 200px 300px) colors (#06c) stroke 2pt)
-  |> ((chart/lines xdata (100px 300px 500px 700px 900px) ydata (200px 300px 200px 300px) colors (#06c) stroke 2pt))
-  |> (chart/layout body ((chart/lines xdata (100px 300px 500px 700px 900px) ydata (200px 300px 200px 300px) colors (#06c) stroke 2pt)))
+  |> (chart/lines data-x (100px 300px 500px 700px 900px) data-y (200px 300px 200px 300px) colors (#06c) stroke 2pt)
+  |> ((chart/lines data-x (100px 300px 500px 700px 900px) data-y (200px 300px 200px 300px) colors (#06c) stroke 2pt))
+  |> (chart/layout body ((chart/lines data-x (100px 300px 500px 700px 900px) data-y (200px 300px 200px 300px) colors (#06c) stroke 2pt)))

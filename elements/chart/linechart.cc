@@ -32,33 +32,33 @@ ReturnCode build(
     ElementRef* elem) {
   std::vector<Measure> x;
   std::vector<Measure> y;
-  ScaleConfig xscale;
-  ScaleConfig yscale;
+  ScaleConfig scale_x;
+  ScaleConfig scale_y;
 
-  ExprStorage xdata;
-  ExprStorage ydata;
+  ExprStorage data_x;
+  ExprStorage data_y;
 
   auto config_rc = expr_walk_map(expr_next(expr), {
     {
-      "xdata",
+      "data-x",
       expr_calln_fn({
         bind(&data_load, _1, &x),
-        bind(&expr_to_copy, _1, &xdata),
+        bind(&expr_to_copy, _1, &data_x),
       }),
     },
     {
-      "ydata",
+      "data-y",
       expr_calln_fn({
         bind(&data_load, _1, &y),
-        bind(&expr_to_copy, _1, &ydata),
+        bind(&expr_to_copy, _1, &data_y),
       }),
     },
-    {"xmin", bind(&expr_to_float64_opt, _1, &xscale.min)},
-    {"xmax", bind(&expr_to_float64_opt, _1, &xscale.max)},
-    {"ymin", bind(&expr_to_float64_opt, _1, &yscale.min)},
-    {"ymax", bind(&expr_to_float64_opt, _1, &yscale.max)},
-    {"yscale", bind(&scale_configure_kind, _1, &yscale)},
-    {"xscale", bind(&scale_configure_kind, _1, &xscale)},
+    {"range-x-min", bind(&expr_to_float64_opt, _1, &scale_x.min)},
+    {"range-x-max", bind(&expr_to_float64_opt, _1, &scale_x.max)},
+    {"range-y-min", bind(&expr_to_float64_opt, _1, &scale_y.min)},
+    {"range-y-max", bind(&expr_to_float64_opt, _1, &scale_y.max)},
+    {"scale-y", bind(&scale_configure_kind, _1, &scale_y)},
+    {"scale-x", bind(&scale_configure_kind, _1, &scale_x)},
   });
 
   if (!config_rc) {
@@ -68,34 +68,34 @@ ReturnCode build(
   /* scale autoconfig */
   for (const auto& v : x) {
     if (v.unit == Unit::USER) {
-      scale_fit(v.value, &xscale);
+      scale_fit(v.value, &scale_x);
     }
   }
 
   for (const auto& v : y) {
     if (v.unit == Unit::USER) {
-      scale_fit(v.value, &yscale);
+      scale_fit(v.value, &scale_y);
     }
   }
 
-  auto xmin = expr_create_value(std::to_string(scale_min(xscale)));
-  auto xmax = expr_create_value(std::to_string(scale_max(xscale)));
-  auto ymin = expr_create_value(std::to_string(scale_min(yscale)));
-  auto ymax = expr_create_value(std::to_string(scale_max(yscale)));
+  auto xmin = expr_create_value(std::to_string(scale_min(scale_x)));
+  auto xmax = expr_create_value(std::to_string(scale_max(scale_x)));
+  auto ymin = expr_create_value(std::to_string(scale_min(scale_y)));
+  auto ymax = expr_create_value(std::to_string(scale_max(scale_y)));
 
   auto chart_body = expr_build(
       "chart/lines",
-      "xdata",
-      std::move(xdata),
-      "ydata",
-      std::move(ydata),
-      "xmin",
+      "data-x",
+      std::move(data_x),
+      "data-y",
+      std::move(data_y),
+      "range-x-min",
       expr_clone(xmin.get()),
-      "xmax",
+      "range-x-max",
       expr_clone(xmax.get()),
-      "ymin",
+      "range-y-min",
       expr_clone(ymin.get()),
-      "ymax",
+      "range-y-max",
       expr_clone(ymax.get()));
 
   auto chart_axis_top = expr_build(

@@ -1,3 +1,3 @@
 (chart/linechart
-    xdata (csv "tests/testdata/measurement.csv" time)
-    ydata (csv "tests/testdata/measurement.csv" value2))
+    data-x (csv "tests/testdata/measurement.csv" time)
+    data-y (csv "tests/testdata/measurement.csv" value2))
