@@ -23,7 +23,8 @@ using ExprVisitor = std::function<ReturnCode (const Expr*)>;
 
 ReturnCode expr_walk_map(
     const Expr* expr,
-    const std::unordered_map<std::string, ExprVisitor>& fns);
+    const std::unordered_map<std::string, ExprVisitor>& fns,
+    bool strict = true);
 
 ReturnCode expr_calln(
     const Expr* expr,

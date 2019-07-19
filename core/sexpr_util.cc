@@ -19,7 +19,8 @@ namespace fviz {
 
 ReturnCode expr_walk_map(
     const Expr* expr,
-    const std::unordered_map<std::string, ExprVisitor>& fns) {
+    const std::unordered_map<std::string, ExprVisitor>& fns,
+    bool strict /* = true */) {
   for (; expr; expr = expr_next(expr)) {
     if (!expr_is_value(expr)) {
       return error(ERROR, "expected a literal");
@@ -27,17 +28,20 @@ ReturnCode expr_walk_map(
 
     auto param = expr_get_value(expr);
     const auto& fn = fns.find(param);
-    if (fn == fns.end()) {
-      return errorf(ERROR, "invalid parameter: '{}'", param);
-    }
 
     if (expr = expr_next(expr); !expr) {
       return errorf(ERROR, "expected an argument for '{}'", param);
     }
 
-    if (auto rc = fn->second(expr); !rc) {
-      rc.trace.push_back(expr);
-      return rc;
+    if (fn == fns.end()) {
+      if (strict) {
+        return errorf(ERROR, "invalid parameter: '{}'", param);
+      }
+    } else {
+      if (auto rc = fn->second(expr); !rc) {
+        rc.trace.push_back(expr);
+        return rc;
+      }
     }
   }
 

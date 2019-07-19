@@ -22,6 +22,7 @@
 #include "core/environment.h"
 #include "elements/text.h"
 #include "elements/chart/layout.h"
+#include "elements/chart/combochart.h"
 #include "elements/chart/areas.h"
 #include "elements/chart/axis.h"
 #include "elements/chart/bars.h"
@@ -56,6 +57,7 @@ fviz_t* fviz_init() {
   element_bind(elems, "chart/axis-bottom", bind(elements::chart::axis::build, _1, _2, _3));
   element_bind(elems, "chart/axis-left", bind(elements::chart::axis::build, _1, _2, _3));
   element_bind(elems, "chart/layout", bind(elements::chart::layout::build, _1, _2, _3));
+  element_bind(elems, "chart/combochart", bind(elements::chart::combochart::build, _1, _2, _3));
   element_bind(elems, "chart/areas", bind(elements::chart::areas::build, _1, _2, _3));
   element_bind(elems, "chart/bars", bind(elements::chart::bars::build, _1, _2, _3));
   element_bind(elems, "chart/gridlines", bind(elements::chart::gridlines::build, _1, _2, _3));

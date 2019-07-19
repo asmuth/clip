@@ -1,0 +1,34 @@
+(set height 480px)
+(set width 1200px)
+
+(chart/combochart
+    scale-x-padding 0.6
+    ticks-x (linear 1 1)
+    axis-x-format (custom "Jan" "Feb" "Mar" "Apr" "May" "Jun" "Jul" "Aug" "Sep" "Oct" "Nov" "Dec")
+    limit-y (-20 35)
+    ticks-y (linear 5 -20)
+    axes (bottom left)
+    lines (
+        data-x (csv "tests/testdata/city_temperatures_pivot.csv" month)
+        data-y (csv "tests/testdata/city_temperatures_pivot.csv" temp_nyc)
+        color (#4572a7)
+        marker-size (3pt))
+    lines (
+        data-x (csv "tests/testdata/city_temperatures_pivot.csv" month)
+        data-y (csv "tests/testdata/city_temperatures_pivot.csv" temp_beijing)
+        color (#aa4643)
+        marker-size (3pt))
+    lines (
+        data-x (csv "tests/testdata/city_temperatures_pivot.csv" month)
+        data-y (csv "tests/testdata/city_temperatures_pivot.csv" temp_moscow)
+        color (#89a54e)
+        marker-size (3pt))
+    lines (
+        data-x (csv "tests/testdata/city_temperatures_pivot.csv" month)
+        data-y (csv "tests/testdata/city_temperatures_pivot.csv" temp_berlin)
+        color (#80699b)
+        marker-size (3pt))
+    legend (
+        items ("New York" "北京市   " "Москва" "Berlin")
+        colors (#4572a7 #aa4643 #89a54e #80699b)
+        position (bottom left)))

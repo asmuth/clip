@@ -289,7 +289,6 @@ ReturnCode build(
           std::move(chart_points),
           std::move(chart_legend)));
 
-  std::cerr << expr_inspect(chart.get());
   return element_build_macro(env, std::move(chart), elem);
 }
 

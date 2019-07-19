@@ -1,49 +1,49 @@
 city,month,temperature
-New York,Jan,-0.2
-New York,Feb,0.8
-New York,Mar,5.7
-New York,Apr,11.3
-New York,May,17.0
-New York,Jun,22.0
-New York,Jul,24.8
-New York,Aug,24.1
-New York,Sep,20.1
-New York,Oct,14.1
-New York,Nov,8.6
-New York,Dec,2.5
-北京市   ,Jan,-4
-北京市   ,Feb,-1.4
-北京市   ,Mar,5.4
-北京市   ,Apr,13.5
-北京市   ,May,19.9
-北京市   ,Jun,24.3
-北京市   ,Jul,26.3
-北京市   ,Aug,24.9
-北京市   ,Sep,19.9
-北京市   ,Oct,13.1
-北京市   ,Nov,4.7
-北京市   ,Dec,-1.8
-Москва,Jan,-7.4
-Москва,Feb,-5.8
-Москва,Mar,-0.1
-Москва,Apr,7.1
-Москва,May,14.7
-Москва,Jun,17.7
-Москва,Jul,20.6
-Москва,Aug,18.8
-Москва,Sep,12.6
-Москва,Oct,6.1
-Москва,Nov,1.1
-Москва,Dec,-3.6
-Berlin,Jan,-0.9
-Berlin,Feb,0.6
-Berlin,Mar,3.5
-Berlin,Apr,8.4
-Berlin,May,13.5
-Berlin,Jun,17.0
-Berlin,Jul,18.6
-Berlin,Aug,17.9
-Berlin,Sep,14.3
-Berlin,Oct,9.0
-Berlin,Nov,3.9
-Berlin,Dec,1.0
+New York,1,-0.2
+New York,2,0.8
+New York,3,5.7
+New York,4,11.3
+New York,5,17.0
+New York,6,22.0
+New York,7,24.8
+New York,8,24.1
+New York,9,20.1
+New York,10,14.1
+New York,11,8.6
+New York,12,2.5
+北京市   ,1,-4
+北京市   ,2,-1.4
+北京市   ,3,5.4
+北京市   ,4,13.5
+北京市   ,5,19.9
+北京市   ,6,24.3
+北京市   ,7,26.3
+北京市   ,8,24.9
+北京市   ,9,19.9
+北京市   ,10,13.1
+北京市   ,11,4.7
+北京市   ,12,-1.8
+Москва,1,-7.4
+Москва,2,-5.8
+Москва,3,-0.1
+Москва,4,7.1
+Москва,5,14.7
+Москва,6,17.7
+Москва,7,20.6
+Москва,8,18.8
+Москва,9,12.6
+Москва,10,6.1
+Москва,11,1.1
+Москва,12,-3.6
+Berlin,1,-0.9
+Berlin,2,0.6
+Berlin,3,3.5
+Berlin,4,8.4
+Berlin,5,13.5
+Berlin,6,17.0
+Berlin,7,18.6
+Berlin,8,17.9
+Berlin,9,14.3
+Berlin,10,9.0
+Berlin,11,3.9
+Berlin,12,1.0
