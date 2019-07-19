@@ -74,22 +74,44 @@ foreach(spec_test_path ${spec_test_files})
       COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/tests/spec/test_runner.sh ${CMAKE_CURRENT_BINARY_DIR}/fviz ${spec_test_name} ${spec_test_srcdir} ${CMAKE_CURRENT_BINARY_DIR})
 endforeach()
 
-file(GLOB example_test_files "examples/**/*.fvz")
-foreach(example_test_path ${example_test_files})
-  get_filename_component(example_test_name ${example_test_path} NAME_WE)
-  get_filename_component(example_test_srcdir ${example_test_path} DIRECTORY)
+
+# Examples
+# -----------------------------------------------------------------------------
+add_custom_target(examples)
+file(GLOB example_files "examples/**/*.fvz")
+foreach(example_path ${example_files})
+  get_filename_component(example_name ${example_path} NAME_WE)
+  get_filename_component(example_srcdir ${example_path} DIRECTORY)
   add_test(
-      NAME test_example_${example_test_name}_svg
+      NAME test_example_${example_name}_svg
       WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-      COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/tests/spec/test_runner.sh ${CMAKE_CURRENT_BINARY_DIR}/fviz ${example_test_name} ${example_test_srcdir} ${CMAKE_CURRENT_BINARY_DIR})
+      COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/tests/spec/test_runner.sh ${CMAKE_CURRENT_BINARY_DIR}/fviz ${example_name} ${example_srcdir} ${CMAKE_CURRENT_BINARY_DIR})
+  add_custom_target(
+      example_${example_name}
+      WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+      COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/tests/spec/test_runner.sh ${CMAKE_CURRENT_BINARY_DIR}/fviz ${example_name} ${example_srcdir} ${CMAKE_CURRENT_BINARY_DIR})
+  add_dependencies(examples example_${example_name})
 endforeach()
 
-file(GLOB doc_test_files "manual/figures/*.fvz")
-foreach(doc_test_path ${doc_test_files})
-  get_filename_component(doc_test_name ${doc_test_path} NAME_WE)
-  get_filename_component(doc_test_srcdir ${doc_test_path} DIRECTORY)
+
+# Documentation
+# -----------------------------------------------------------------------------
+add_custom_target(docs
+    COMMAND mkdir -p ${CMAKE_CURRENT_BINARY_DIR}/wwwdocs
+    COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/extra/web/build.sh ${CMAKE_CURRENT_BINARY_DIR}/wwwdocs)
+
+file(GLOB figure_files "manual/figures/*.fvz")
+foreach(figure_path ${figure_files})
+  get_filename_component(figure_name ${figure_path} NAME_WE)
+  get_filename_component(figure_srcdir ${figure_path} DIRECTORY)
   add_test(
-      NAME test_doc_${doc_test_name}_svg
+      NAME test_figure_${figure_name}_svg
       WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-      COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/tests/spec/test_runner.sh ${CMAKE_CURRENT_BINARY_DIR}/fviz ${doc_test_name} ${doc_test_srcdir} ${CMAKE_CURRENT_BINARY_DIR})
+      COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/tests/spec/test_runner.sh ${CMAKE_CURRENT_BINARY_DIR}/fviz ${figure_name} ${figure_srcdir} ${CMAKE_CURRENT_BINARY_DIR})
+  add_test(
+      figure_${figure_name}
+      WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+      COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/tests/spec/test_runner.sh ${CMAKE_CURRENT_BINARY_DIR}/fviz ${figure_name} ${figure_srcdir} ${CMAKE_CURRENT_BINARY_DIR})
+  add_dependencies(docs figure_${figure_name})
 endforeach()
+
