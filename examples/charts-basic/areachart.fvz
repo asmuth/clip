@@ -1,6 +1,3 @@
-(set height 480px)
-(set width 1200px)
-
 (chart/combochart
     axes (bottom left)
     axis-y-format (scientific)

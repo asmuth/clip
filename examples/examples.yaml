@@ -1,59 +1,26 @@
-##- section: Basic Charts
-##  files:
-##    - file: pointcharts/simple_scatter
-##      desc: A simple scatter plot.
-##
-##- section: Line Charts
-##  files:
-##
-##    - file: linecharts/lines_with_points
-##      desc: A simple line chart with points and a legend.
-##
-##    - file: linecharts/lines_with_labels
-##      desc: A line chart with labels.
-##
-##    - file: linecharts/irregular_data
-##      desc: Plotting two series with unaligned data points.
-##
-##
-##- section: Bar Charts
-##  files:
-##    - file: barcharts/bars_with_labels
-##      desc: A vertical bar chart with labels.
-##
-##    - file: barcharts/horizontal_bars
-##      desc: A simple horizontal bar chart.
-##
-##    - file: barcharts/horizontal_ranges
-##      desc: A grouped, "floating" horizontal bar chart
-##
-##    - file: barcharts/vertical_ranges
-##      desc: A grouped, "floating" vertical bar chart
-##
-##    - file: barcharts/barsandlines
-##      desc: A bar chart and a line element.
-##
 - section: Standard Charts
   files:
     - file: charts-basic/scatterplot
       desc: A simple scatter plot of random data.
     - file: charts-basic/linechart_timeseries
       desc: A simple time series line chart.
+    - file: charts-basic/scatterplot_with_labels
+      desc: A simple scatter plot of random data.
+    - file: charts-basic/areachart
+      desc: A simple area chart.
 
-##    - file: pointcharts/pointchart_with_labels
-##      desc: A scatter plot with labelled data points.
-##
-##- section: Area Charts
-##  files:
-##    - file: areacharts/simple_area
-##      desc: A simple area chart.
-##
-##    - file: areacharts/area_ranges
-##      desc: A "range" area chart
-##
-##- section: Other
-##  files:
-##    - file: other/demo
-##      desc: A collection of examples generated with fviz
-##    - file: other/demo2
-##      desc: A collection of examples generated with fviz
+- section: Bar and Column Charts
+  files:
+    - file: charts-basic/barchart_horizontal
+    - file: charts-basic/barchart_ranges
+    - file: charts-basic/barchart_with_labels
+    - file: charts-basic/histogram
+
+- section: Line and Area Charts
+  files:
+    - file: charts-basic/linechart_multiple_groups
+    - file: charts-basic/linechart_with_labels
+    - file: charts-basic/streamgraph
+    - file: charts-basic/areas_and_lines
+    - file: charts-basic/areas_vertical
+

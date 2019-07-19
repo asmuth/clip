@@ -39,7 +39,7 @@ tpl = """
       {{/toc}}
     </div>
 
-    <article>
+    <article class="{{article_class}}">
       <div class="header">
         <a style="display: block; text-decoration: none; color: #666; float: right; margin-top: 2em;" href="http://github.com/fviz/fviz" target="_blank">
           View on <img src="https://github.githubassets.com/images/modules/logos_page/GitHub-Logo.png" style="height: 12px; position: relative; top: 1px; margin-left: 2px;">
@@ -78,7 +78,7 @@ def extend_toc(entry):
 
   return entry
 
-def build_layout(url, content, title=""):
+def build_layout(url, content, title="", article_class=""):
   toc = yaml.load(Path("manual/toc.yaml").read_text())["documentation"]
   toc = map(lambda x: extend_toc(x), toc)
 
@@ -92,14 +92,15 @@ def build_layout(url, content, title=""):
     "toc": toc,
     "title": title,
     "title_seo": title_seo,
+    "article_class": article_class,
     "menu_active_documentation": "active" if (url.startswith("/documentation") or url == "/") else "",
     "menu_active_download": "active" if url.startswith("/download") else "",
     "menu_active_examples": "active" if url.startswith("/examples") else "",
     "menu_active_reference": "active" if url.startswith("/reference") else "",
   })
 
-def write_page(url, content, title=""):
-  write_file(url + "/index.html", build_layout(url, content, title=title))
+def write_page(url, content, **opts):
+  write_file(url + "/index.html", build_layout(url, content, **opts))
 
 def write_file(path, content):
   output_path = os.environ["output_dir"] + path

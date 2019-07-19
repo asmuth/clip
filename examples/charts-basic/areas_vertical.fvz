@@ -1,5 +1,5 @@
-(set width 600px)
-(set height 900px)
+(set width 800px)
+(set height 600px)
 
 (chart/combochart
     axes (left bottom)
@@ -9,4 +9,4 @@
         data-x (csv "tests/testdata/measurement.csv" value2)
         data-y (csv "tests/testdata/measurement.csv" time)
         direction horizontal
-        color (#ccc)))
+        color (#999)))

@@ -256,6 +256,10 @@ article {
   flex-direction: column;
 }
 
+article.wide {
+  max-width: 1200px;
+}
+
 #documentation {
   color: #000;
   background: #fff;
@@ -479,7 +483,8 @@ table.invisible tr, table.invisible td {
   font-size: 110%;
 }
 
-#documentation .info_box h2 {
+#documentation .info_box h2,
+#documentation .info_box a:hover h2 {
   border-bottom: none;
   margin-top: .6em;
   margin-bottom: 0;
@@ -491,6 +496,13 @@ table.invisible tr, table.invisible td {
   font-weight: 400;
   color: #888;
   border-bottom: 2px solid #ddd;
+}
+
+#documentation .info_box h2 em,
+#documentation .info_box a:hover h2 em {
+  color: #000;
+  font-style: normal;
+  font-weight: 500;
 }
 
 #documentation .info_box h2.sub {
@@ -526,4 +538,15 @@ table.invisible tr, table.invisible td {
   text-align: left;
   vertical-align: top;
   border-bottom: 1px solid #eee;
+}
+
+#documentation .example_grid {
+  padding-top: 1em;
+  display:grid;
+  grid-template-columns: 1fr 1fr;
+  grid-column-gap: 4em;
+}
+
+#documentation .example_grid img {
+  max-height: 20em;
 }

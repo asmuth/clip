@@ -43,7 +43,7 @@ can download the example CSV file [from here](/tests/testdata/gauss2d.csv).
 If everything works, you should get an output file similar to the one below
 (`example_chart.svg`):
 
-[![A simple scatterplot](/examples/charts-basic/scatterplot.svg)](./examples/charts-basic/scatterplot.fvz)
+[![A simple scatterplot](/examples/charts-basic/scatterplot.svg)](https://fviz.org/examples/charts-basic/scatterplot)
 
 More examples can be found on [the examples page](https://fviz.org/examples).
 For a more detailed introduction to fviz, see the [Getting Started](https://fviz.org/documentation/getting-started) page.
