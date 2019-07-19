@@ -14,58 +14,26 @@ C API.
   <a href="https://fviz.org">Documentation</a>
 </h4>
 
----
 
-<p align="center">
-  <br>
-  <img src="/examples/other/demo2.svg">
-</p>
-
-<p align="center">
-  <i>A collection of examples generated with fviz.</i>
-  <br><br>
-</p>
-
-
-Project Status
---------------
-
-**WARNING**: The current project status is "beta", i.e. the software works, but
-it's still rough around the edges. It is also severely underdocumented. I'm working
-on polishing everything up and filling in the blanks in the documentation, but we're
-not quite there yet...
-
-
-Example / Demo
---------------
+Example
+-------
 
 Being a highly visual tool, fviz is best explained by example. So here is a fviz
-file that defines a simple timeseries chart (`example_chart.fvz`). Note that this
+file that defines a simple scatterplot (`example_chart.fvz`). Note that this
 example is only intended to give you an idea of what the syntax looks like and to
 get you started quickly; for an in-depth description of all parameters, please refer
 to the documentation.
 
-    width: 1200px;
-    height: 280px;
-
-    scale-y-min: 0;
-    scale-y-max: 140;
-
-    lines {
-      xs: csv('measurement.csv', time);
-      ys: csv('measurement.csv', value2);
-      colors: #06c;
-    }
-
-    axis {
-      position: bottom;
-      format: datetime("%H:%M:%S");
-    }
-
-    axis {
-      position: left;
-      layout: linear(20);
-    }
+    (chart/scatterplot
+        data-x (csv tests/testdata/gauss2d.csv x)
+        data-y (csv tests/testdata/gauss2d.csv y)
+        limit-x (0 400)
+        limit-y (0 200)
+        ticks-y (subdivide 5)
+        axes (bottom left)
+        grid (color #fff)
+        background #eee
+        border none)
 
 Here is how you can run the above example file through fviz:
 
@@ -73,10 +41,10 @@ Here is how you can run the above example file through fviz:
 
 When running the example locally, you can use your own input CSV file, or you
 can download the example CSV file [from here](/tests/testdata/measurement.csv).
-If everything works, you should get an output file similar to  the one below
+If everything works, you should get an output file similar to the one below
 (`example_chart.svg`):
 
-[![A simple line chart](/examples/linecharts/simple_timeseries.svg)](./examples/linecharts/simple_timeseries.fvz)
+[![A simple scatterplot](/examples/charts/scatterplot.svg)](./examples/charts/scatterplot.fvz)
 
 More examples can be found on [the examples page](https://fviz.org/examples).
 For a more detailed introduction to fviz, see the [Getting Started](https://fviz.org/documentation/getting-started) page.
@@ -106,8 +74,8 @@ Acknowledgements
 
 fviz is the successor of the FnordMetric ChartSQL project by the same authors.
 
-Parts of the new chart specification syntax and semantics were inspired by ideas
-from the "Grammar of Graphics" [0] and the ggplot2 project.
+Parts of the new chart specification semantics were inspired by ideas from the
+"Grammar of Graphics" [0] and the ggplot2 project.
 
 [0] Wilkinson, L. (1999). The Grammar of Graphics (Springer)
 
