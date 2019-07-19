@@ -168,6 +168,15 @@ std::vector<double> scale_untranslate(
 ReturnCode scale_configure_kind(
     const Expr* expr,
     ScaleConfig* domain) {
+  if (expr && expr_is_list(expr)) {
+    expr = expr_get_list(expr);
+  } else {
+    return errorf(
+        ERROR,
+        "invalid argument; expected a list but got: {}",
+        expr_inspect(expr)); // FIXME
+  }
+
   for (; expr; expr = expr_next(expr)) {
     if (expr_is_value(expr, "linear")) {
       domain->kind = ScaleKind::LINEAR;

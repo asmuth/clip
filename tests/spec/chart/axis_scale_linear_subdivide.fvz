@@ -2,6 +2,5 @@
   margin 1em
   body (
     (chart/axis-bottom
-      layout (subdivide 21)
-      min -100
-      max 100)))
+      ticks (subdivide 21)
+      range (-100 100))))

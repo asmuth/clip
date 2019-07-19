@@ -49,7 +49,6 @@ ReturnCode build(
   ExprStorage legend_opts;
 
   auto config_rc = expr_walk_map(expr_next(expr), {
-    {"axes", bind(&expr_to_stringset, _1, &axes)},
     {
       "data-x",
       expr_calln_fn({
@@ -72,29 +71,70 @@ ReturnCode build(
     {"range-y-max", bind(&expr_to_float64_opt, _1, &scale_y.max)},
     {"scale-x", bind(&scale_configure_kind, _1, &scale_x)},
     {"scale-y", bind(&scale_configure_kind, _1, &scale_y)},
+    {"scale-x-padding", bind(&expr_to_float64, _1, &scale_x.padding)},
+    {"scale-y-padding", bind(&expr_to_float64, _1, &scale_y.padding)},
     {
       "ticks-x",
       expr_calln_fn({
-        bind(&expr_rewritev, _1, "layout", &axis_x_opts),
+        bind(&expr_rewritev, _1, "ticks", &axis_x_opts),
         bind(&expr_rewritev, _1, "ticks-x", &grid_extra_opts),
       })
     },
     {
       "ticks-y",
       expr_calln_fn({
-        bind(&expr_rewritev, _1, "layout", &axis_y_opts),
+        bind(&expr_rewritev, _1, "ticks", &axis_y_opts),
         bind(&expr_rewritev, _1, "ticks-y", &grid_extra_opts),
       })
     },
-    {"marker-size", bind(&expr_rewritev, _1, "size", &point_opts)},
+    {"size", bind(&expr_rewritev, _1, "size", &point_opts)},
+    {"sizes", bind(&expr_rewritev, _1, "sizes", &point_opts)},
     {"color", bind(&expr_rewritev, _1, "color", &point_opts)},
     {"colors", bind(&expr_rewritev, _1, "colors", &point_opts)},
-    {"background", bind(&expr_rewritev, _1, "background-color", &layout_opts)},
-    {"border", bind(&expr_rewritev, _1, "border", &axis_opts)},
-    {"border-color", bind(&expr_rewritev, _1, "border-color", &axis_opts)},
-    {"border-width", bind(&expr_rewritev, _1, "border-width", &axis_opts)},
+    {"labels", bind(&expr_rewritev, _1, "labels", &point_opts)},
+    {"label-font-size", bind(&expr_rewritev, _1, "label-font-size", &point_opts)},
+    {"axes", bind(&expr_to_stringset, _1, &axes)},
     {"grid", bind(&expr_to_copy, _1, &grid_opts)},
     {"legend", bind(&expr_to_copy, _1, &legend_opts)},
+    {"margin", bind(&expr_rewritev, _1, "margin", &layout_opts)},
+    {"margin-top", bind(&expr_rewritev, _1, "margin-top", &layout_opts)},
+    {"margin-right", bind(&expr_rewritev, _1, "margin-right", &layout_opts)},
+    {"margin-bottom", bind(&expr_rewritev, _1, "margin-bottom", &layout_opts)},
+    {"margin-left", bind(&expr_rewritev, _1, "margin-left", &layout_opts)},
+    {"background", bind(&expr_rewritev, _1, "background", &layout_opts)},
+    {
+      "border",
+      expr_calln_fn({
+        bind(&expr_rewritev, _1, "border", &axis_opts),
+        bind(&expr_rewritev, _1, "border", &layout_opts)
+      })
+    },
+    {"border-top", bind(&expr_rewritev, _1, "border-top", &layout_opts)},
+    {"border-right", bind(&expr_rewritev, _1, "border-right", &layout_opts)},
+    {"border-bottom", bind(&expr_rewritev, _1, "border-bottom", &layout_opts)},
+    {"border-left", bind(&expr_rewritev, _1, "border-left", &layout_opts)},
+    {
+      "border-color",
+      expr_calln_fn({
+        bind(&expr_rewritev, _1, "border-color", &axis_opts),
+        bind(&expr_rewritev, _1, "border-color", &layout_opts)
+      })
+    },
+    {"border-top-color", bind(&expr_rewritev, _1, "border-top-color", &layout_opts)},
+    {"border-right-color", bind(&expr_rewritev, _1, "border-right-color", &layout_opts)},
+    {"border-bottom-color", bind(&expr_rewritev, _1, "border-bottom-color", &layout_opts)},
+    {"border-left-color", bind(&expr_rewritev, _1, "border-left-color", &layout_opts)},
+    {
+      "border-width",
+      expr_calln_fn({
+        bind(&expr_rewritev, _1, "border-width", &axis_opts),
+        bind(&expr_rewritev, _1, "border-width", &layout_opts)
+      })
+    },
+    {"border-top-width", bind(&expr_rewritev, _1, "border-top-width", &layout_opts)},
+    {"border-right-width", bind(&expr_rewritev, _1, "border-right-width", &layout_opts)},
+    {"border-bottom-width", bind(&expr_rewritev, _1, "border-bottom-width", &layout_opts)},
+    {"border-left-width", bind(&expr_rewritev, _1, "border-left-width", &layout_opts)},
   });
 
   if (!config_rc) {
@@ -171,9 +211,9 @@ ReturnCode build(
   if (axes.empty() || axes.count("top")) {
     chart_axis_top = expr_build(
         "chart/axis-top",
-        "min",
+        "range-min",
         expr_clone(xmin.get()),
-        "max",
+        "range-max",
         expr_clone(xmax.get()),
         expr_clonev(axis_opts),
         expr_clonev(axis_x_opts));
@@ -183,9 +223,9 @@ ReturnCode build(
   if (axes.empty() || axes.count("right")) {
     chart_axis_right = expr_build(
         "chart/axis-right",
-        "min",
+        "range-min",
         expr_clone(ymin.get()),
-        "max",
+        "range-max",
         expr_clone(ymax.get()),
         expr_clonev(axis_opts),
         expr_clonev(axis_y_opts));
@@ -195,9 +235,9 @@ ReturnCode build(
   if (axes.empty() || axes.count("bottom")) {
     chart_axis_bottom = expr_build(
         "chart/axis-bottom",
-        "min",
+        "range-min",
         expr_clone(xmin.get()),
-        "max",
+        "range-max",
         expr_clone(xmax.get()),
         expr_clonev(axis_opts),
         expr_clonev(axis_x_opts));
@@ -207,9 +247,9 @@ ReturnCode build(
   if (axes.empty() || axes.count("left")) {
     chart_axis_left = expr_build(
         "chart/axis-left",
-        "min",
+        "range-min",
         expr_clone(ymin.get()),
-        "max",
+        "range-max",
         expr_clone(ymax.get()),
         expr_clonev(axis_opts),
         expr_clonev(axis_y_opts));

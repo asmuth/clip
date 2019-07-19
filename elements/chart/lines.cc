@@ -100,24 +100,26 @@ ReturnCode build(
     const Expr* expr,
     ElementRef* elem) {
   /* set defaults from environment */
-  auto config = std::make_shared<PlotLinesConfig>();
-  config->line_width = from_pt(kDefaultLineWidthPT);
+  auto c = std::make_shared<PlotLinesConfig>();
+  c->line_width = from_pt(kDefaultLineWidthPT);
 
   /* parse properties */
   auto config_rc = expr_walk_map(expr_next(expr), {
-    {"data-x", bind(&data_load, _1, &config->x)},
-    {"data-y", bind(&data_load, _1, &config->y)},
-    {"range-x-min", bind(&expr_to_float64_opt, _1, &config->scale_x.min)},
-    {"range-x-max", bind(&expr_to_float64_opt, _1, &config->scale_x.max)},
-    {"scale-x", bind(&scale_configure_kind, _1, &config->scale_x)},
-    {"scale_x-padding", bind(&expr_to_float64, _1, &config->scale_x.padding)},
-    {"range-y-min", bind(&expr_to_float64_opt, _1, &config->scale_y.min)},
-    {"range-y-max", bind(&expr_to_float64_opt, _1, &config->scale_y.max)},
-    {"scale-y", bind(&scale_configure_kind, _1, &config->scale_y)},
-    {"scale_y-padding", bind(&expr_to_float64, _1, &config->scale_y.padding)},
-    {"color", expr_tov_fn<Color>(bind(&expr_to_color, _1, _2), &config->colors)},
-    {"colors", expr_tov_fn<Color>(bind(&expr_to_color, _1, _2), &config->colors)},
-    {"stroke", bind(&expr_to_measure, _1, &config->line_width)},
+    {"data-x", bind(&data_load, _1, &c->x)},
+    {"data-y", bind(&data_load, _1, &c->y)},
+    {"range-x", bind(&expr_to_float64_opt_pair, _1, &c->scale_x.min, &c->scale_x.max)},
+    {"range-x-min", bind(&expr_to_float64_opt, _1, &c->scale_x.min)},
+    {"range-x-max", bind(&expr_to_float64_opt, _1, &c->scale_x.max)},
+    {"range-y", bind(&expr_to_float64_opt_pair, _1, &c->scale_y.min, &c->scale_y.max)},
+    {"range-y-min", bind(&expr_to_float64_opt, _1, &c->scale_y.min)},
+    {"range-y-max", bind(&expr_to_float64_opt, _1, &c->scale_y.max)},
+    {"scale-x", bind(&scale_configure_kind, _1, &c->scale_x)},
+    {"scale-y", bind(&scale_configure_kind, _1, &c->scale_y)},
+    {"scale-x-padding", bind(&expr_to_float64, _1, &c->scale_x.padding)},
+    {"scale-y-padding", bind(&expr_to_float64, _1, &c->scale_y.padding)},
+    {"color", expr_tov_fn<Color>(bind(&expr_to_color, _1, _2), &c->colors)},
+    {"colors", expr_tov_fn<Color>(bind(&expr_to_color, _1, _2), &c->colors)},
+    {"stroke", bind(&expr_to_measure, _1, &c->line_width)},
   });
 
   if (!config_rc) {
@@ -125,7 +127,7 @@ ReturnCode build(
   }
 
   /* check configuraton */
-  if (config->x.size() != config->y.size()) {
+  if (c->x.size() != c->y.size()) {
     return error(
         ERROR,
         "the length of the 'data-x' and 'data-y' properties must be equal");
@@ -134,26 +136,26 @@ ReturnCode build(
   /* group data */
   {
     DataGroup g;
-    g.index = std::vector<size_t>(config->x.size());
+    g.index = std::vector<size_t>(c->x.size());
     std::iota(g.index.begin(), g.index.end(), 0);
-    config->groups.emplace_back(g);
+    c->groups.emplace_back(g);
   }
 
   /* scale autoconfig */
-  for (const auto& v : config->x) {
+  for (const auto& v : c->x) {
     if (v.unit == Unit::USER) {
-      scale_fit(v.value, &config->scale_x);
+      scale_fit(v.value, &c->scale_x);
     }
   }
 
-  for (const auto& v : config->y) {
+  for (const auto& v : c->y) {
     if (v.unit == Unit::USER) {
-      scale_fit(v.value, &config->scale_y);
+      scale_fit(v.value, &c->scale_y);
     }
   }
 
   *elem = std::make_shared<Element>();
-  (*elem)->draw = bind(&draw, config, _1, _2);
+  (*elem)->draw = bind(&draw, c, _1, _2);
   return OK;
 }
 

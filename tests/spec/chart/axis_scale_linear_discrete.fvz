@@ -2,6 +2,5 @@
   margin 1em
   body (
     (chart/axis-bottom
-      layout (discrete)
-      min 0
-      max 16)))
+      ticks (discrete)
+      range (0 16))))

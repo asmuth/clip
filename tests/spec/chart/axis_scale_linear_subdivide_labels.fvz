@@ -2,7 +2,6 @@
   margin 1em
   body (
     (chart/axis-bottom
-      layout (subdivide 5)
+      ticks (subdivide 5)
       labels ("-2σ" "-1σ" "0" "1σ" "2σ")
-      min -10
-      max 10)))
+      range (-10 10))))

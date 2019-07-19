@@ -25,11 +25,6 @@ using namespace std::placeholders;
 
 namespace fviz::elements::chart::layout {
 
-struct PlotBorderConfig {
-  Color color;
-  Measure width;
-};
-
 struct PlotConfig {
   FontInfo font;
   Measure font_size;
@@ -37,7 +32,7 @@ struct PlotConfig {
   Color border_color;
   std::array<Measure, 4> margins;
   std::optional<Color> background;
-  std::array<PlotBorderConfig, 4> borders;
+  std::array<StrokeStyle, 4> borders;
   std::vector<ElementRef> body_elements;
   std::array<std::vector<ElementRef>, 4> margin_elements;
 };
@@ -159,9 +154,9 @@ ReturnCode draw(
   }
 
   /* draw the top border  */
-  if (config->borders[0].width > 0) {
+  if (config->borders[0].line_width > 0) {
     StrokeStyle border_style;
-    border_style.line_width = config->borders[0].width;
+    border_style.line_width = config->borders[0].line_width;
     border_style.color = config->borders[0].color;
 
     strokeLine(
@@ -172,9 +167,9 @@ ReturnCode draw(
   }
 
   /* draw the right border  */
-  if (config->borders[1].width > 0) {
+  if (config->borders[1].line_width > 0) {
     StrokeStyle border_style;
-    border_style.line_width = config->borders[1].width;
+    border_style.line_width = config->borders[1].line_width;
     border_style.color = config->borders[1].color;
 
     strokeLine(
@@ -185,9 +180,9 @@ ReturnCode draw(
   }
 
   /* draw the bottom border  */
-  if (config->borders[2].width > 0) {
+  if (config->borders[2].line_width > 0) {
     StrokeStyle border_style;
-    border_style.line_width = config->borders[2].width;
+    border_style.line_width = config->borders[2].line_width;
     border_style.color = config->borders[2].color;
 
     strokeLine(
@@ -198,9 +193,9 @@ ReturnCode draw(
   }
 
   /* draw the left border  */
-  if (config->borders[3].width > 0) {
+  if (config->borders[3].line_width > 0) {
     StrokeStyle border_style;
-    border_style.line_width = config->borders[3].width;
+    border_style.line_width = config->borders[3].line_width;
     border_style.color = config->borders[3].color;
 
     strokeLine(
@@ -238,24 +233,34 @@ ReturnCode build(
     {"margin-right", bind(&expr_to_measure, _1, &config->margins[1])},
     {"margin-bottom", bind(&expr_to_measure, _1, &config->margins[2])},
     {"margin-left", bind(&expr_to_measure, _1, &config->margins[3])},
+    {"background", bind(&expr_to_color_opt, _1, &config->background)},
+    {
+      "border",
+      expr_calln_fn({
+        bind(&expr_to_stroke_style, _1, &config->borders[0]),
+        bind(&expr_to_stroke_style, _1, &config->borders[1]),
+        bind(&expr_to_stroke_style, _1, &config->borders[2]),
+        bind(&expr_to_stroke_style, _1, &config->borders[3])
+      })
+    },
+    {"border-color", bind(&expr_to_color, _1, &config->border_color)},
     {"border-top-color", bind(&expr_to_color, _1, &config->borders[0].color)},
     {"border-right-color", bind(&expr_to_color, _1, &config->borders[1].color)},
     {"border-bottom-color", bind(&expr_to_color, _1, &config->borders[2].color)},
     {"border-left-color", bind(&expr_to_color, _1, &config->borders[3].color)},
-    {"border-top-width", bind(&expr_to_measure, _1, &config->borders[0].width)},
-    {"border-right-width", bind(&expr_to_measure, _1, &config->borders[1].width)},
-    {"border-bottom-width", bind(&expr_to_measure, _1, &config->borders[2].width)},
-    {"border-left-width", bind(&expr_to_measure, _1, &config->borders[3].width)},
-    {"background-color", bind(&expr_to_color_opt, _1, &config->background)},
     {
-      "foreground-color",
+      "border-width",
       expr_calln_fn({
-        bind(&expr_to_color, _1, &config->text_color),
-        bind(&expr_to_color, _1, &config->border_color),
+        bind(&expr_to_measure, _1, &config->borders[0].line_width),
+        bind(&expr_to_measure, _1, &config->borders[1].line_width),
+        bind(&expr_to_measure, _1, &config->borders[2].line_width),
+        bind(&expr_to_measure, _1, &config->borders[3].line_width)
       })
     },
-    {"text-color", bind(&expr_to_color, _1, &config->text_color)},
-    {"border-color", bind(&expr_to_color, _1, &config->border_color)},
+    {"border-top-width", bind(&expr_to_measure, _1, &config->borders[0].line_width)},
+    {"border-right-width", bind(&expr_to_measure, _1, &config->borders[1].line_width)},
+    {"border-bottom-width", bind(&expr_to_measure, _1, &config->borders[2].line_width)},
+    {"border-left-width", bind(&expr_to_measure, _1, &config->borders[3].line_width)},
     {"body", bind(&element_build_list, env, _1, &config->body_elements)},
     {"top", bind(&element_build_list, env, _1, &config->margin_elements[0])},
     {"right", bind(&element_build_list, env, _1, &config->margin_elements[1])},

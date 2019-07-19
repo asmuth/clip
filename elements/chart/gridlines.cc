@@ -82,26 +82,28 @@ ReturnCode draw(
 
 ReturnCode build(const Environment& env, const Expr* expr, ElementRef* elem) {
   /* set defaults from environment */
-  auto config = std::make_shared<GridlineDefinition>();
-  config->line_width = from_pt(1);
-  config->line_color = Color::fromRGB(.9, .9, .9); // TODO
-  config->layout_x = bind(&scale_layout_subdivide, _1, _2, 10);
-  config->layout_y = bind(&scale_layout_subdivide, _1, _2, 10);
+  auto c = std::make_shared<GridlineDefinition>();
+  c->line_width = from_pt(1);
+  c->line_color = Color::fromRGB(.9, .9, .9); // TODO
+  c->layout_x = bind(&scale_layout_subdivide, _1, _2, 10);
+  c->layout_y = bind(&scale_layout_subdivide, _1, _2, 10);
 
   /* parse properties */
   auto config_rc = expr_walk_map(expr_next(expr), {
-    {"range-x-min", bind(&expr_to_float64_opt, _1, &config->scale_x.min)},
-    {"range-x-max", bind(&expr_to_float64_opt, _1, &config->scale_x.max)},
-    {"ticks-x", bind(&scale_configure_layout, _1, &config->layout_x)},
-    {"scale-x", bind(&scale_configure_kind, _1, &config->scale_x)},
-    {"scale_x-padding", bind(&expr_to_float64, _1, &config->scale_x.padding)},
-    {"range-y-min", bind(&expr_to_float64_opt, _1, &config->scale_y.min)},
-    {"range-y-max", bind(&expr_to_float64_opt, _1, &config->scale_y.max)},
-    {"ticks-y", bind(&scale_configure_layout, _1, &config->layout_y)},
-    {"scale-y", bind(&scale_configure_kind, _1, &config->scale_y)},
-    {"scale_y-padding", bind(&expr_to_float64, _1, &config->scale_y.padding)},
-    {"color", bind(&expr_to_color, _1, &config->line_color)},
-    {"stroke", bind(&expr_to_measure, _1, &config->line_width)},
+    {"range-x", bind(&expr_to_float64_opt_pair, _1, &c->scale_x.min, &c->scale_x.max)},
+    {"range-x-min", bind(&expr_to_float64_opt, _1, &c->scale_x.min)},
+    {"range-x-max", bind(&expr_to_float64_opt, _1, &c->scale_x.max)},
+    {"range-y", bind(&expr_to_float64_opt_pair, _1, &c->scale_y.min, &c->scale_y.max)},
+    {"range-y-min", bind(&expr_to_float64_opt, _1, &c->scale_y.min)},
+    {"range-y-max", bind(&expr_to_float64_opt, _1, &c->scale_y.max)},
+    {"ticks-x", bind(&scale_configure_layout, _1, &c->layout_x)},
+    {"ticks-y", bind(&scale_configure_layout, _1, &c->layout_y)},
+    {"scale-x", bind(&scale_configure_kind, _1, &c->scale_x)},
+    {"scale-y", bind(&scale_configure_kind, _1, &c->scale_y)},
+    {"scale-x-padding", bind(&expr_to_float64, _1, &c->scale_x.padding)},
+    {"scale-y-padding", bind(&expr_to_float64, _1, &c->scale_y.padding)},
+    {"color", bind(&expr_to_color, _1, &c->line_color)},
+    {"stroke", bind(&expr_to_measure, _1, &c->line_width)},
   });
 
   if (!config_rc) {
@@ -109,7 +111,7 @@ ReturnCode build(const Environment& env, const Expr* expr, ElementRef* elem) {
   }
 
   *elem = std::make_shared<Element>();
-  (*elem)->draw = bind(&draw, config, _1, _2);
+  (*elem)->draw = bind(&draw, c, _1, _2);
   return OK;
 }
 
