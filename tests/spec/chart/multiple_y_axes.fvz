@@ -1,0 +1,17 @@
+(chart/layout
+    left (
+      (chart/axis-left
+          limit (0 100)
+          ticks (linear 20 10)))
+    right (
+      (chart/axis-right
+          limit (0 1)
+          ticks (linear 0.1)))
+    body (
+      (chart/points
+          data-x (100px 500px 700px 900px 300px)
+          data-y (200px 300px 200px 300px 100px)
+          labels (A B A B A)
+          label-font-size 18pt
+          colors (#00c #c00)
+          marker-size (8px))))
