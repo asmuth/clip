@@ -1,13 +1,11 @@
 (chart/scatterplot
     data-x (csv tests/testdata/gauss2d.csv x)
     data-y (csv tests/testdata/gauss2d.csv y)
+    range-x (0 400)
+    range-y (0 200)
+    ticks-y (subdivide 5)
     axes (bottom left)
     grid (color #fff)
     legend (items ("Random Data"))
-    ticks-y (subdivide 5)
     background #eee
-    border none
-    range-x-min 0
-    range-x-max 400
-    range-y-min 0
-    range-y-max 200)
+    border none)

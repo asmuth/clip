@@ -44,6 +44,11 @@ ReturnCode expr_to_float64_opt(
     const Expr* expr,
     std::optional<double>* value);
 
+ReturnCode expr_to_float64_opt_pair(
+    const Expr* expr,
+    std::optional<double>* v1,
+    std::optional<double>* v2);
+
 ReturnCode expr_to_measure(
     const Expr* expr,
     Measure* value);

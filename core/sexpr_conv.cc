@@ -88,6 +88,37 @@ ReturnCode expr_to_float64_opt(
   return OK;
 }
 
+ReturnCode expr_to_float64_opt_pair(
+    const Expr* expr,
+    std::optional<double>* v1,
+    std::optional<double>* v2) {
+  if (expr  && expr_is_list(expr)) {
+    expr = expr_get_list(expr);
+  } else {
+    return errorf(
+        ERROR,
+        "argument error; expected a list, got: {}",
+        expr_inspect(expr));
+  }
+
+  for (size_t i = 0; i < 2; ++i) {
+    if (!expr || !expr_is_value(expr)) {
+      return errorf(
+          ERROR,
+          "argument error; expected a value, got: {}",
+          expr_inspect(expr));
+    }
+
+    if (auto rc = expr_to_float64_opt(expr, i == 0 ? v1 : v2); !rc) {
+      return rc;
+    }
+
+    expr = expr_next(expr);
+  }
+
+  return OK;
+}
+
 ReturnCode expr_to_measure(
     const Expr* expr,
     Measure* value) {
