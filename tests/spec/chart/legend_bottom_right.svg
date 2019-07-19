@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900.000000" height="480.000000" viewBox="0 0 900 480">
+  <rect width="900.000000" height="480.000000" fill="#ffffff"/>
+  <path fill="#4572a7" d="M524.672 452.133 M514.672 452.133 a5 5 0 1 0 10 0 a5 5 0 1 0 -10 0 "/>
+  <text x="531.171875" y="457.133333" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif">New York</text>
+  <path fill="#aa4643" d="M635.856 452.133 M625.856 452.133 a5 5 0 1 0 10 0 a5 5 0 1 0 -10 0 "/>
+  <text x="642.356250" y="457.133333" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif">北京市   </text>
+  <path fill="#89a54e" d="M730.291 452.133 M720.291 452.133 a5 5 0 1 0 10 0 a5 5 0 1 0 -10 0 "/>
+  <text x="736.790625" y="457.133333" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif">Москва</text>
+  <path fill="#80699b" d="M829.584 452.133 M819.584 452.133 a5 5 0 1 0 10 0 a5 5 0 1 0 -10 0 "/>
+  <text x="836.084375" y="457.133333" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif">Berlin</text>
+</svg>
