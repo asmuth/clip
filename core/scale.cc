@@ -211,12 +211,13 @@ ReturnCode scale_layout_linear(
     const ScaleConfig& domain,
     ScaleLayout* layout,
     double step,
-    std::optional<double> align) {
+    std::optional<double> o_begin,
+    std::optional<double> o_end) {
   layout->ticks.clear();
   layout->labels.clear();
 
-  auto begin = std::max(align.value_or(scale_min(domain)), scale_min(domain));
-  auto end = scale_max(domain);
+  auto begin = std::max(o_begin.value_or(scale_min(domain)), scale_min(domain));
+  auto end = std::min(o_end.value_or(scale_max(domain)), scale_max(domain));
 
   if (((end - begin) / step) > kMaxTicks) {
     return {ERROR, "too many ticks"};
@@ -286,12 +287,19 @@ ReturnCode scale_configure_layout_linear(
   auto args = expr_collect(expr);
 
   double step = 0;
-  std::optional<double> align;
+  std::optional<double> begin;
+  std::optional<double> end;
   switch (args.size()) {
-    case 2:
-      if (auto rc = expr_to_float64_opt(args[1], &align); !rc) {
+    case 3:
+      if (auto rc = expr_to_float64_opt(args[2], &end); !rc) {
         return rc;
       }
+      /* fallthrough */
+    case 2:
+      if (auto rc = expr_to_float64_opt(args[1], &begin); !rc) {
+        return rc;
+      }
+      /* fallthrough */
     case 1:
       if (auto rc = expr_to_float64(args[0], &step); !rc) {
         return rc;
@@ -303,7 +311,7 @@ ReturnCode scale_configure_layout_linear(
     default:
       return error(
           ERROR,
-          "invalid number of arguments for 'linear'; expected zero, one or two");
+          "invalid number of arguments for 'linear'; expected 0-3");
   }
 
   *layout = bind(
@@ -311,7 +319,8 @@ ReturnCode scale_configure_layout_linear(
       _1,
       _2,
       step,
-      align);
+      begin,
+      end);
 
   return OK;
 }

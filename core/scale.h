@@ -79,7 +79,8 @@ ReturnCode scale_layout_linear(
     const ScaleConfig& domain,
     ScaleLayout* layout,
     double step,
-    std::optional<double> align);
+    std::optional<double> begin,
+    std::optional<double> end);
 
 ReturnCode scale_layout_subdivide(
     const ScaleConfig& domain,
