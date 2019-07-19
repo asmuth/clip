@@ -69,8 +69,22 @@ ReturnCode build(
     {"limit-y", bind(&expr_to_float64_opt_pair, _1, &scale_y.min, &scale_y.max)},
     {"limit-y-min", bind(&expr_to_float64_opt, _1, &scale_y.min)},
     {"limit-y-max", bind(&expr_to_float64_opt, _1, &scale_y.max)},
-    {"scale-x", bind(&scale_configure_kind, _1, &scale_x)},
-    {"scale-y", bind(&scale_configure_kind, _1, &scale_y)},
+    {
+      "scale-x",
+      expr_calln_fn({
+        bind(&scale_configure_kind, _1, &scale_x),
+        bind(&expr_rewritev, _1, "scale-x", &point_opts),
+        bind(&expr_rewritev, _1, "scale", &axis_x_opts)
+      })
+    },
+    {
+      "scale-y",
+      expr_calln_fn({
+        bind(&scale_configure_kind, _1, &scale_y),
+        bind(&expr_rewritev, _1, "scale-y", &point_opts),
+        bind(&expr_rewritev, _1, "scale", &axis_y_opts)
+      })
+    },
     {"scale-x-padding", bind(&expr_to_float64, _1, &scale_x.padding)},
     {"scale-y-padding", bind(&expr_to_float64, _1, &scale_y.padding)},
     {
