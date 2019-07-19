@@ -22,7 +22,7 @@
 namespace fviz {
 
 Formatter format_decimal_scientific(size_t precision) {
-  return [precision] (const std::string& v) -> std::string {
+  return [precision] (size_t idx, const std::string& v) -> std::string {
     std::stringstream s;
     s << std::scientific << std::setprecision(precision) << value_to_float(v);
     return s.str();
@@ -54,7 +54,7 @@ ReturnCode format_configure_decimal_scientific(
 }
 
 Formatter format_decimal_fixed(size_t precision) {
-  return [precision] (const std::string& v) -> std::string {
+  return [precision] (size_t idx, const std::string& v) -> std::string {
     std::stringstream s;
     s << std::fixed << std::setprecision(precision) << value_to_float(v);
     return s.str();
@@ -86,7 +86,7 @@ ReturnCode format_configure_decimal_fixed(
 }
 
 Formatter format_datetime(const std::string& fmt) {
-  return [fmt] (const std::string& v) -> std::string {
+  return [fmt] (size_t idx, const std::string& v) -> std::string {
     UnixTime v_t(value_to_float(v) * 1000000);
     return v_t.toString(fmt.c_str());
   };
@@ -113,7 +113,7 @@ ReturnCode format_configure_datetime(
 }
 
 Formatter format_string() {
-  return [] (const std::string& v) -> std::string {
+  return [] (size_t idx, const std::string& v) -> std::string {
     return v;
   };
 }
@@ -122,6 +122,28 @@ ReturnCode format_configure_string(
     const Expr* expr,
     Formatter* formatter) {
   *formatter = format_string();
+  return OK;
+}
+
+Formatter format_custom(const std::vector<std::string>& values) {
+  return [values] (size_t idx, const std::string& v) -> std::string {
+    if (values.empty()) {
+      return "";
+    } else {
+      return values.at(idx % values.size());
+    }
+  };
+}
+
+ReturnCode format_configure_custom(
+    const Expr* expr,
+    Formatter* formatter) {
+  std::vector<std::string> values;
+  for (; expr; expr = expr_next(expr)) {
+    values.emplace_back(expr_get_value(expr));
+  }
+
+  *formatter = format_custom(values);
   return OK;
 }
 
@@ -153,6 +175,10 @@ ReturnCode format_configure(
     return format_configure_string(expr_next(expr), formatter);
   }
 
+  if (expr_is_value(expr, "custom")) {
+    return format_configure_custom(expr_next(expr), formatter);
+  }
+
   return errorf(
       ERROR,
       "invalid value '{}', expected one of: \n"
@@ -160,6 +186,7 @@ ReturnCode format_configure(
       "  - scientific\n",
       "  - datetime\n",
       "  - string\n",
+      "  - custom\n",
       expr_inspect(expr));
 }
 

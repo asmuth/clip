@@ -64,7 +64,6 @@ struct AxisDefinition {
   ScaleConfig scale;
   ScaleLayoutFn scale_layout;
   std::string title;
-  std::vector<std::string> label_override;
   AxisLabelPosition tick_position;
   AxisLabelPosition label_position;
   Formatter label_formatter;
@@ -88,16 +87,7 @@ std::string axis_get_label(
     double offset) {
   const auto& domain = axis.scale;
   auto value = scale_untranslate(domain, offset);
-
-  if (axis.label_override.size()) {
-    if (idx < axis.label_override.size()) {
-      return axis.label_override[idx];
-    } else {
-      return "";
-    }
-  }
-
-  return axis.label_formatter(std::to_string(value));
+  return axis.label_formatter(idx, std::to_string(value));
 }
 
 static Status renderAxisVertical(
@@ -529,7 +519,6 @@ ReturnCode build(const Environment& env, const Expr* expr, ElementRef* elem) {
       {"limit-max", bind(&expr_to_float64_opt, _1, &config->scale.max)},
       {"scale", bind(&scale_configure_kind, _1, &config->scale)},
       {"scale-padding", bind(&expr_to_float64, _1, &config->scale.padding)},
-      {"labels", bind(&data_load_strings, _1, &config->label_override)},
       {"border", bind(&expr_to_stroke_style, _1, &config->border_style)},
       {"border-color", bind(&expr_to_color, _1, &config->border_style.color)},
       {"border-width", bind(&expr_to_measure, _1, &config->border_style.line_width)},

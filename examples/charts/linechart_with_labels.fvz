@@ -1,0 +1,13 @@
+(set height 480px)
+(set width 1200px)
+
+(chart/linechart
+    data-x (csv "tests/testdata/city_temperatures_london.csv" month)
+    data-y (csv "tests/testdata/city_temperatures_london.csv" temperature)
+    scale-x-padding 0.6
+    ticks-x (linear 1 1)
+    axis-x-format (custom "Jan" "Feb" "Mar" "Apr" "May" "Jun" "Jul" "Aug" "Sep" "Oct" "Nov" "Dec")
+    limit-y (-10 32)
+    ticks-y (linear 5 -10)
+    color (#06c)
+    axes (bottom left))
