@@ -65,7 +65,7 @@ ReturnCode parse_measure(
   try {
     value = std::stod(s, &unit_pos);
   } catch (... ) {
-    return ERROR;
+    return errorf(ERROR, "invalid number: '{}'", s);
   }
 
   if (unit_pos == s.size()) {
@@ -99,12 +99,10 @@ ReturnCode parse_measure(
     return OK;
   }
 
-  return {
-    ERROR,
-    fmt::format(
-        "invalid unit: '{}', expected one of 'px', 'pt', 'em', 'rem', 'rel' or '%'",
-        unit)
-  };
+  return errorf(
+      ERROR,
+      "invalid unit: '{}', expected one of 'px', 'pt', 'em', 'rem', 'rel' or '%'",
+      unit);
 }
 
 Measure measure_or(const Measure& primary, const Measure& fallback) {

@@ -90,6 +90,12 @@ int fviz_configure(
   }
 
   if (auto rc = environment_setup_defaults(&ctx->env); !rc) {
+    fviz_seterr(ctx, rc);
+    return rc;
+  }
+
+  if (auto rc = environment_configure(&ctx->env, ctx->expr.get()); !rc) {
+    fviz_seterr(ctx, rc);
     return rc;
   }
 

@@ -1,3 +1,6 @@
+(set height 480px)
+(set width 1200px)
+
 (chart/linechart
     data-x (csv "tests/testdata/measurement.csv" time)
     data-y (csv "tests/testdata/measurement.csv" value2)

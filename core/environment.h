@@ -40,6 +40,8 @@ struct Environment {
 
 ReturnCode environment_setup_defaults(Environment* env);
 
+ReturnCode environment_configure(Environment* env, const Expr* e);
+
 } // namespace fviz
 
 

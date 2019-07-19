@@ -50,6 +50,20 @@ ReturnCode element_build_all(
     const Expr* expr,
     std::vector<ElementRef>* elems) {
   for (; expr; expr = expr_next(expr)) {
+    if (!expr || !expr_is_list(expr)) {
+      return error(ERROR, "expected an element list");
+    }
+
+    auto args = expr_get_list(expr);
+    if (!args || !expr_is_value(args)) {
+      return error(ERROR, "expected an element name");
+    }
+
+    auto arg0 = expr_get_value(args);
+    if (arg0 == "set" || arg0 == "define") {
+      continue;
+    }
+
     ElementRef elem;
     if (auto rc = element_build(env, expr, &elem); !rc) {
       return rc;

@@ -13,6 +13,8 @@
  */
 #include "environment.h"
 #include "core/format.h"
+#include "sexpr_conv.h"
+#include "sexpr_util.h"
 #include "graphics/font_lookup.h"
 
 using namespace std::placeholders;
@@ -33,6 +35,51 @@ ReturnCode environment_setup_defaults(Environment* env) {
     return error(
         ERROR,
         "unable to find default sans-sans font (Helvetica/Arial)");
+  }
+
+  return OK;
+}
+
+ReturnCode environment_set(Environment* env, const Expr* expr) {
+  auto args = expr_collect(expr);
+  if (args.size() < 2) {
+    return error(ERROR, "'set' expects two arguments");
+  }
+
+  if (expr_is_value(args[0], "width")) {
+    return expr_to_measure(args[1], &env->screen_width);
+  }
+
+  if (expr_is_value(args[0], "height")) {
+    return OK;
+    return expr_to_measure(args[1], &env->screen_height);
+  }
+
+  if (expr_is_value(args[0], "dpi")) {
+    return OK;
+    return expr_to_float64(args[1], &env->dpi);
+  }
+
+  return errorf(ERROR, "invalid property: {}", expr_get_value(args[0]));
+}
+
+ReturnCode environment_configure(Environment* env, const Expr* expr) {
+  for (; expr; expr = expr_next(expr)) {
+    if (!expr || !expr_is_list(expr)) {
+      return errorf(ERROR, "expected a list but got: {}", expr_inspect(expr));
+    }
+
+    auto args = expr_get_list(expr);
+    if (!args || !expr_is_value(args)) {
+      return error(ERROR, "expected an element name");
+    }
+
+    auto arg0 = expr_get_value(args);
+    if (arg0 == "set" ) {
+      if (auto rc = environment_set(env, expr_next(args)); !rc) {
+        return rc;
+      }
+    }
   }
 
   return OK;
