@@ -1,0 +1,6 @@
+(chart/linechart
+    data-x (csv "tests/testdata/measurement.csv" time)
+    data-y (csv "tests/testdata/measurement.csv" value1)
+    grid (color #fff)
+    background #eee
+    border none)
