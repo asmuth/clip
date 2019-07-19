@@ -13,6 +13,7 @@
  */
 #include "format.h"
 #include "data.h"
+#include "sexpr_util.h"
 #include "utils/UnixTime.h"
 
 #include <sstream>
@@ -28,17 +29,18 @@ Formatter format_decimal_scientific(size_t precision) {
   };
 }
 
-/*
-ReturnCode confgure_format_decimal_scientific(
-    const plist::Property& prop,
+ReturnCode format_configure_decimal_scientific(
+    const Expr* expr,
     Formatter* formatter) {
+  auto args = expr_collect(expr);
+
   uint32_t precision = 1;
-  switch (prop.size()) {
+  switch (args.size()) {
     case 0:
       break;
     case 1:
       try {
-        precision = std::stod(prop[0]);
+        precision = std::stod(expr_get_value(args[0]));
         break;
       } catch (... ) {
         return ERROR;
@@ -50,7 +52,6 @@ ReturnCode confgure_format_decimal_scientific(
   *formatter = format_decimal_scientific(precision);
   return OK;
 }
-*/
 
 Formatter format_decimal_fixed(size_t precision) {
   return [precision] (const std::string& v) -> std::string {
@@ -60,21 +61,18 @@ Formatter format_decimal_fixed(size_t precision) {
   };
 }
 
-/*
-ReturnCode confgure_format_decimal_fixed(
-    const plist::Property& prop,
+ReturnCode format_configure_decimal_fixed(
+    const Expr* expr,
     Formatter* formatter) {
-  if (!plist::is_enum(prop, "fixed")) {
-    return ERROR;
-  }
+  auto args = expr_collect(expr);
 
   uint32_t precision = 1;
-  switch (prop.size()) {
+  switch (args.size()) {
     case 0:
       break;
     case 1:
       try {
-        precision = std::stod(prop[0]);
+        precision = std::stod(expr_get_value(args[0]));
         break;
       } catch (... ) {
         return ERROR;
@@ -86,7 +84,6 @@ ReturnCode confgure_format_decimal_fixed(
   *formatter = format_decimal_fixed(precision);
   return OK;
 }
-*/
 
 Formatter format_datetime(const std::string& fmt) {
   return [fmt] (const std::string& v) -> std::string {
@@ -95,20 +92,17 @@ Formatter format_datetime(const std::string& fmt) {
   };
 }
 
-/*
-ReturnCode confgure_format_datetime(
-    const plist::Property& prop,
+ReturnCode format_configure_datetime(
+    const Expr* expr,
     Formatter* formatter) {
-  if (!plist::is_enum(prop, "datetime")) {
-    return ERROR;
-  }
+  auto args = expr_collect(expr);
 
   std::string fmtspec = "%Y-%m-%d %H:%M:%S"; // FIXME improved auto format
-  switch (prop.size()) {
+  switch (args.size()) {
     case 0:
       break;
     case 1:
-      fmtspec = prop[0];
+      fmtspec = expr_get_value(args[0]);
       break;
     default:
       return ERROR;
@@ -117,7 +111,6 @@ ReturnCode confgure_format_datetime(
   *formatter = format_datetime(fmtspec);
   return OK;
 }
-*/
 
 Formatter format_string() {
   return [] (const std::string& v) -> std::string {
@@ -125,35 +118,39 @@ Formatter format_string() {
   };
 }
 
-/*
-ReturnCode confgure_format_string(
-    const plist::Property& prop,
+ReturnCode format_configure_string(
+    const Expr* expr,
     Formatter* formatter) {
   *formatter = format_string();
   return OK;
 }
 
-ReturnCode confgure_format(
-    const plist::Property& prop,
+ReturnCode format_configure(
+    const Expr* expr,
     Formatter* formatter) {
-  if (plist::is_value(prop, "fixed") ||
-      plist::is_enum(prop, "fixed")) {
-    return confgure_format_decimal_fixed(prop, formatter);
+  if (!expr || !expr_is_list(expr)) {
+    return errorf(
+        ERROR,
+        "invalid argument; expected a list but got: {}",
+        "..."); // FIXME
   }
 
-  if (plist::is_value(prop, "scientific") ||
-      plist::is_enum(prop, "scientific")) {
-    return confgure_format_decimal_scientific(prop, formatter);
+  expr = expr_get_list(expr);
+
+  if (expr_is_value(expr, "fixed")) {
+    return format_configure_decimal_fixed(expr_next(expr), formatter);
   }
 
-  if (plist::is_value(prop, "datetime") ||
-      plist::is_enum(prop, "datetime")) {
-    return confgure_format_datetime(prop, formatter);
+  if (expr_is_value(expr, "scientific")) {
+    return format_configure_decimal_scientific(expr_next(expr), formatter);
   }
 
-  if (plist::is_value(prop, "string") ||
-      plist::is_enum(prop, "string")) {
-    return confgure_format_string(prop, formatter);
+  if (expr_is_value(expr, "datetime")) {
+    return format_configure_datetime(expr_next(expr), formatter);
+  }
+
+  if (expr_is_value(expr, "string")) {
+    return format_configure_string(expr_next(expr), formatter);
   }
 
   return errorf(
@@ -163,9 +160,8 @@ ReturnCode confgure_format(
       "  - scientific\n",
       "  - datetime\n",
       "  - string\n",
-      prop.value);
+      expr_inspect(expr));
 }
-*/
 
 } // namespace fviz
 

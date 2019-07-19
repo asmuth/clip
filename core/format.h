@@ -26,7 +26,7 @@ Formatter format_decimal_scientific(size_t precision);
 Formatter format_datetime(const std::string& fmt);
 Formatter format_string();
 
-ReturnCode confgure_format(
+ReturnCode format_configure(
     const Expr* expr,
     Formatter* formatter);
 

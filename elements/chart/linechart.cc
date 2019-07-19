@@ -87,6 +87,8 @@ ReturnCode build(
         bind(&expr_rewritev, _1, "ticks-y", &grid_extra_opts),
       })
     },
+    {"axis-x-format", bind(&expr_rewritev, _1, "format", &axis_x_opts)},
+    {"axis-y-format", bind(&expr_rewritev, _1, "format", &axis_y_opts)},
     {"color", bind(&expr_rewritev, _1, "color", &line_opts)},
     {"colors", bind(&expr_rewritev, _1, "colors", &line_opts)},
     {"stroke", bind(&expr_rewritev, _1, "stroke", &line_opts)},
