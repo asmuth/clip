@@ -15,7 +15,7 @@ libfreetype. Run:
     $ git clone git@github.com:asmuth/fviz.git
     $ cd fviz
     $ cmake .
-    $ make
+    $ make -j
 
 To install the `fviz` binary into your system, run `make install`:
 

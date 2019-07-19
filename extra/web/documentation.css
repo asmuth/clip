@@ -45,7 +45,7 @@ h3 {
 h2 {
   border-bottom: 2px solid #eee;
   margin-top: 2em;
-  margin-bottom: .4em;
+  margin-bottom: .8em;
   padding-bottom: .2em;
   font-weight: 600;
 }
@@ -541,7 +541,6 @@ table.invisible tr, table.invisible td {
 }
 
 #documentation .example_grid {
-  padding-top: 1em;
   display:grid;
   grid-template-columns: 1fr 1fr;
   grid-column-gap: 4em;
