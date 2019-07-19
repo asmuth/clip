@@ -1,6 +1,6 @@
 name: chart/scatterplot
 desc: The scatterplot element is used to create scatterplots.
-example: charts/scatterplot_basic
+example: charts-basic/scatterplot
 
 reference: |
   (chart/scatterplot

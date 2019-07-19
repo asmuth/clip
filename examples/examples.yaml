@@ -33,11 +33,11 @@
 ##    - file: barcharts/barsandlines
 ##      desc: A bar chart and a line element.
 ##
-- section: Scatter Plots
+- section: Standard Charts
   files:
-    - file: charts/scatterplot_basic
+    - file: charts-basic/scatterplot
       desc: A simple scatter plot of random data.
-    - file: charts/linechart_timeseries
+    - file: charts-basic/linechart_timeseries
       desc: A simple time series line chart.
 
 ##    - file: pointcharts/pointchart_with_labels

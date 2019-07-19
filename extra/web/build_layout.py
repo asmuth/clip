@@ -63,7 +63,7 @@ tpl = """
 
       <div id="footer">
         Copyright &copy; 2011-2018 Paul Asmuth, Laura Schlimmer et al. &mdash;
-        fviz is free software licensed under a 3-Clause BSD License
+        fviz is free software licensed under the Apache 2.0 license.
       </div>
     </article>
   </body>

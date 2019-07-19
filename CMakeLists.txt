@@ -32,7 +32,7 @@ include_directories(${CAIRO_INCLUDE_DIRS} ${FREETYPE_INCLUDE_DIRS} ${HARFBUZZ_IN
 file(GLOB source_files "core/*.cc" "core/**/*.cc" "elements/*.cc" "elements/**/*.cc")
 list(REMOVE_ITEM source_files "core/cli.cc")
 add_library(fviz STATIC ${source_files})
-set_target_properties(fviz PROPERTIES PUBLIC_HEADER "source/fviz.h;source/fviz_sdl.h")
+set_target_properties(fviz PROPERTIES PUBLIC_HEADER "core/fviz.h")
 set(fviz_LDFLAGS fviz ${CAIRO_LIBRARIES} ${FREETYPE_LIBRARIES} ${HARFBUZZ_LIBRARIES} ${HARFBUZZ_ICU_LIBRARIES} ${PNG_LIBRARIES} ${FONTCONFIG_LIBRARIES} fmt)
 
 

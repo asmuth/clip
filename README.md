@@ -9,7 +9,6 @@ output files. Additionally, you can embed it into your own application using the
 C API.
 
 <h4>
-  <a href="https://fviz.org/documentation/getting-started">Getting Started</a> &middot;
   <a href="https://fviz.org/examples">Examples</a> &middot;
   <a href="https://fviz.org">Documentation</a>
 </h4>
@@ -40,11 +39,11 @@ Here is how you can run the above example file through fviz:
     $ fviz --in example_chart.fvz --out example_chart.svg
 
 When running the example locally, you can use your own input CSV file, or you
-can download the example CSV file [from here](/tests/testdata/measurement.csv).
+can download the example CSV file [from here](/tests/testdata/gauss2d.csv).
 If everything works, you should get an output file similar to the one below
 (`example_chart.svg`):
 
-[![A simple scatterplot](/examples/charts/scatterplot.svg)](./examples/charts/scatterplot.fvz)
+[![A simple scatterplot](/examples/charts-basic/scatterplot.svg)](./examples/charts-basic/scatterplot.fvz)
 
 More examples can be found on [the examples page](https://fviz.org/examples).
 For a more detailed introduction to fviz, see the [Getting Started](https://fviz.org/documentation/getting-started) page.
