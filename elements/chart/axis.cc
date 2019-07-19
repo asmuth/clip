@@ -524,9 +524,9 @@ ReturnCode build(const Environment& env, const Expr* expr, ElementRef* elem) {
     auto rc = expr_walk_map(expr_next(expr), {
       {"ticks", bind(&scale_configure_layout, _1, &config->scale_layout)},
       {"format", bind(&format_configure, _1, &config->label_formatter)},
-      {"range", bind(&expr_to_float64_opt_pair, _1, &config->scale.min, &config->scale.max)},
-      {"range-min", bind(&expr_to_float64_opt, _1, &config->scale.min)},
-      {"range-max", bind(&expr_to_float64_opt, _1, &config->scale.max)},
+      {"limit", bind(&expr_to_float64_opt_pair, _1, &config->scale.min, &config->scale.max)},
+      {"limit-min", bind(&expr_to_float64_opt, _1, &config->scale.min)},
+      {"limit-max", bind(&expr_to_float64_opt, _1, &config->scale.max)},
       {"scale", bind(&scale_configure_kind, _1, &config->scale)},
       {"scale-padding", bind(&expr_to_float64, _1, &config->scale.padding)},
       {"labels", bind(&data_load_strings, _1, &config->label_override)},

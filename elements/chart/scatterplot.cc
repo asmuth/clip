@@ -63,12 +63,12 @@ ReturnCode build(
         bind(&expr_to_copy, _1, &data_y),
       }),
     },
-    {"range-x", bind(&expr_to_float64_opt_pair, _1, &scale_x.min, &scale_x.max)},
-    {"range-x-min", bind(&expr_to_float64_opt, _1, &scale_x.min)},
-    {"range-x-max", bind(&expr_to_float64_opt, _1, &scale_x.max)},
-    {"range-y", bind(&expr_to_float64_opt_pair, _1, &scale_y.min, &scale_y.max)},
-    {"range-y-min", bind(&expr_to_float64_opt, _1, &scale_y.min)},
-    {"range-y-max", bind(&expr_to_float64_opt, _1, &scale_y.max)},
+    {"limit-x", bind(&expr_to_float64_opt_pair, _1, &scale_x.min, &scale_x.max)},
+    {"limit-x-min", bind(&expr_to_float64_opt, _1, &scale_x.min)},
+    {"limit-x-max", bind(&expr_to_float64_opt, _1, &scale_x.max)},
+    {"limit-y", bind(&expr_to_float64_opt_pair, _1, &scale_y.min, &scale_y.max)},
+    {"limit-y-min", bind(&expr_to_float64_opt, _1, &scale_y.min)},
+    {"limit-y-max", bind(&expr_to_float64_opt, _1, &scale_y.max)},
     {"scale-x", bind(&scale_configure_kind, _1, &scale_x)},
     {"scale-y", bind(&scale_configure_kind, _1, &scale_y)},
     {"scale-x-padding", bind(&expr_to_float64, _1, &scale_x.padding)},
@@ -174,13 +174,13 @@ ReturnCode build(
       std::move(data_x),
       "data-y",
       std::move(data_y),
-      "range-x-min",
+      "limit-x-min",
       expr_clone(xmin.get()),
-      "range-x-max",
+      "limit-x-max",
       expr_clone(xmax.get()),
-      "range-y-min",
+      "limit-y-min",
       expr_clone(ymin.get()),
-      "range-y-max",
+      "limit-y-max",
       expr_clone(ymax.get()),
       std::move(point_opts));
 
@@ -188,13 +188,13 @@ ReturnCode build(
   if (grid_opts) {
     chart_gridlines = expr_build(
         "chart/gridlines",
-        "range-x-min",
+        "limit-x-min",
         expr_clone(xmin.get()),
-        "range-x-max",
+        "limit-x-max",
         expr_clone(xmax.get()),
-        "range-y-min",
+        "limit-y-min",
         expr_clone(ymin.get()),
-        "range-y-max",
+        "limit-y-max",
         expr_clone(ymax.get()),
         expr_unwrap(std::move(grid_opts)),
         expr_clonev(grid_extra_opts));
@@ -211,9 +211,9 @@ ReturnCode build(
   if (axes.empty() || axes.count("top")) {
     chart_axis_top = expr_build(
         "chart/axis-top",
-        "range-min",
+        "limit-min",
         expr_clone(xmin.get()),
-        "range-max",
+        "limit-max",
         expr_clone(xmax.get()),
         expr_clonev(axis_opts),
         expr_clonev(axis_x_opts));
@@ -223,9 +223,9 @@ ReturnCode build(
   if (axes.empty() || axes.count("right")) {
     chart_axis_right = expr_build(
         "chart/axis-right",
-        "range-min",
+        "limit-min",
         expr_clone(ymin.get()),
-        "range-max",
+        "limit-max",
         expr_clone(ymax.get()),
         expr_clonev(axis_opts),
         expr_clonev(axis_y_opts));
@@ -235,9 +235,9 @@ ReturnCode build(
   if (axes.empty() || axes.count("bottom")) {
     chart_axis_bottom = expr_build(
         "chart/axis-bottom",
-        "range-min",
+        "limit-min",
         expr_clone(xmin.get()),
-        "range-max",
+        "limit-max",
         expr_clone(xmax.get()),
         expr_clonev(axis_opts),
         expr_clonev(axis_x_opts));
@@ -247,9 +247,9 @@ ReturnCode build(
   if (axes.empty() || axes.count("left")) {
     chart_axis_left = expr_build(
         "chart/axis-left",
-        "range-min",
+        "limit-min",
         expr_clone(ymin.get()),
-        "range-max",
+        "limit-max",
         expr_clone(ymax.get()),
         expr_clonev(axis_opts),
         expr_clonev(axis_y_opts));

@@ -4,4 +4,4 @@
     (chart/axis-bottom
       ticks (subdivide 5)
       labels ("-2σ" "-1σ" "0" "1σ" "2σ")
-      range (-10 10))))
+      limit (-10 10))))

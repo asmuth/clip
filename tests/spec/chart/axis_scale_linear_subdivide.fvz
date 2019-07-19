@@ -3,4 +3,4 @@
   body (
     (chart/axis-bottom
       ticks (subdivide 21)
-      range (-100 100))))
+      limit (-100 100))))

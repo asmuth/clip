@@ -1,6 +1,6 @@
 (chart/layout
   bottom
-    ((chart/axis-bottom range (0 100)))
+    ((chart/axis-bottom limit (0 100)))
   body
     ((chart/lines
         data-x (csv "tests/testdata/measurement.csv" time)

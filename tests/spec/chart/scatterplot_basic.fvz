@@ -7,7 +7,7 @@
     ticks-y (subdivide 5)
     background #eee
     border none
-    range-x-min 0
-    range-x-max 400
-    range-y-min 0
-    range-y-max 200)
+    limit-x-min 0
+    limit-x-max 400
+    limit-y-min 0
+    limit-y-max 200)

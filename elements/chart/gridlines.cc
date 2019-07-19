@@ -90,12 +90,12 @@ ReturnCode build(const Environment& env, const Expr* expr, ElementRef* elem) {
 
   /* parse properties */
   auto config_rc = expr_walk_map(expr_next(expr), {
-    {"range-x", bind(&expr_to_float64_opt_pair, _1, &c->scale_x.min, &c->scale_x.max)},
-    {"range-x-min", bind(&expr_to_float64_opt, _1, &c->scale_x.min)},
-    {"range-x-max", bind(&expr_to_float64_opt, _1, &c->scale_x.max)},
-    {"range-y", bind(&expr_to_float64_opt_pair, _1, &c->scale_y.min, &c->scale_y.max)},
-    {"range-y-min", bind(&expr_to_float64_opt, _1, &c->scale_y.min)},
-    {"range-y-max", bind(&expr_to_float64_opt, _1, &c->scale_y.max)},
+    {"limit-x", bind(&expr_to_float64_opt_pair, _1, &c->scale_x.min, &c->scale_x.max)},
+    {"limit-x-min", bind(&expr_to_float64_opt, _1, &c->scale_x.min)},
+    {"limit-x-max", bind(&expr_to_float64_opt, _1, &c->scale_x.max)},
+    {"limit-y", bind(&expr_to_float64_opt_pair, _1, &c->scale_y.min, &c->scale_y.max)},
+    {"limit-y-min", bind(&expr_to_float64_opt, _1, &c->scale_y.min)},
+    {"limit-y-max", bind(&expr_to_float64_opt, _1, &c->scale_y.max)},
     {"ticks-x", bind(&scale_configure_layout, _1, &c->layout_x)},
     {"ticks-y", bind(&scale_configure_layout, _1, &c->layout_y)},
     {"scale-x", bind(&scale_configure_kind, _1, &c->scale_x)},

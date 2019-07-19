@@ -3,5 +3,5 @@
   body (
     (chart/gridlines
       ticks-x (linear 1)
-      range-x-min 0
-      range-x-max 16)))
+      limit-x-min 0
+      limit-x-max 16)))

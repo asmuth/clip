@@ -3,4 +3,4 @@
   body (
     (chart/axis-bottom
       ticks (discrete)
-      range (0 16))))
+      limit (0 16))))
