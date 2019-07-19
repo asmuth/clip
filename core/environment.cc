@@ -51,12 +51,10 @@ ReturnCode environment_set(Environment* env, const Expr* expr) {
   }
 
   if (expr_is_value(args[0], "height")) {
-    return OK;
     return expr_to_measure(args[1], &env->screen_height);
   }
 
   if (expr_is_value(args[0], "dpi")) {
-    return OK;
     return expr_to_float64(args[1], &env->dpi);
   }
 

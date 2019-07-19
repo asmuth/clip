@@ -1,0 +1,14 @@
+(set height 480px)
+(set width 1200px)
+
+(chart/combochart
+    axes (bottom left)
+    axis-y-format (scientific)
+    axis-x-format (datetime "%H:%M:%S")
+    areas (
+      data-x (csv "tests/testdata/measurement.csv" time)
+      data-y (csv "tests/testdata/measurement.csv" value1)
+      color (#888))
+    grid (color #fff)
+    background #eee
+    border none)

@@ -1,0 +1,12 @@
+(set width 600px)
+(set height 900px)
+
+(chart/combochart
+    axes (left bottom)
+    limit-x (0 150)
+    axis-y-format (datetime "%H:%M:%S")
+    areas (
+        data-x (csv "tests/testdata/measurement.csv" value2)
+        data-y (csv "tests/testdata/measurement.csv" time)
+        direction horizontal
+        color (#ccc)))

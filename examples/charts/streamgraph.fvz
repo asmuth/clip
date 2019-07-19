@@ -1,0 +1,19 @@
+(set height 480px)
+(set width 1200px)
+
+(chart/combochart
+    limit-y (-50 50)
+    areas (
+        data-x (csv "tests/testdata/areadata2.csv" x)
+        data-y (csv "tests/testdata/areadata2.csv" z)
+        data-y-offset (csv "tests/testdata/areadata2.csv" y)
+        color (#ccc))
+    areas (
+        data-x (csv "tests/testdata/areadata2.csv" x)
+        data-y (csv "tests/testdata/areadata2.csv" z2)
+        data-y-offset (csv "tests/testdata/areadata2.csv" y2)
+        color (#888))
+    legend (
+        items ("Series A" "Series B")
+        colors (#ccc #888)
+        position (bottom left)))
