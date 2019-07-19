@@ -5,14 +5,14 @@ fviz is written in C++. You can either install a binary release or compile
 from source. Once the installation is complete, you will have a `fviz` binary
 on your system.
 
-You can find the complete [source code on Github](http://github.com/fviz/fviz)
+You can find the complete [source code on Github](http://github.com/asmuth/fviz)
 
 ### Compile from source
 
 To build fviz, you need an up-to-date C++ compiler, cmake, libharfbuzz and
 libfreetype. Run:
 
-    $ git clone git@github.com:fviz/fviz.git
+    $ git clone git@github.com:asmuth/fviz.git
     $ cd fviz
     $ cmake .
     $ make

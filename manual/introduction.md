@@ -1,7 +1,7 @@
 # fviz v0.4.0
 
-fviz is a text-based drawing program. It generates custom charts, figures and other
-visualizations from simple expressions.
+fviz is a text-based data visualization program. It generates custom charts,
+dashboards and other illustrations from simple expressions.
 
 You can run fviz from the command line, where it generates SVG, PNG and PDF
 output files. Additionally, you can embed it into your own application using the

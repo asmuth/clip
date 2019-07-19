@@ -1,8 +1,8 @@
 fviz
 ====
 
-fviz is a text-based drawing program. It generates custom charts, figures and other
-visualizations from simple expressions.
+fviz is a text-based data visualization program. It generates custom charts,
+dashboards and other illustrations from simple expressions.
 
 You can run fviz from the command line, where it generates SVG, PNG and PDF
 output files. Additionally, you can embed it into your own application using the
@@ -47,7 +47,7 @@ If everything works, you should get an output file similar to the one below
 
 More examples can be found on [the examples page](https://fviz.org/examples).
 For a more detailed introduction to fviz, see the [Getting Started](https://fviz.org/documentation/getting-started) page.
-If you have any questions please don't hesitate to reach out via [GitHub issues](https://github.com/fviz/fviz).
+If you have any questions please don't hesitate to reach out via [GitHub issues](https://github.com/asmuth/fviz).
 
 
 Building

@@ -15,6 +15,6 @@ Here are some ways to contribute to fviz:
 
 ## Individual Contributors to fviz
 
-[View the list of individual contributors on Github](http://github.com/fviz/fviz/graphs/contributors)
+[View the list of individual contributors on Github](http://github.com/asmuth/fviz/graphs/contributors)
 
 

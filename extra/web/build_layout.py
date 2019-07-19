@@ -41,7 +41,7 @@ tpl = """
 
     <article class="{{article_class}}">
       <div class="header">
-        <a style="display: block; text-decoration: none; color: #666; float: right; margin-top: 2em;" href="http://github.com/fviz/fviz" target="_blank">
+        <a style="display: block; text-decoration: none; color: #666; float: right; margin-top: 2em;" href="http://github.com/asmuth/fviz" target="_blank">
           View on <img src="https://github.githubassets.com/images/modules/logos_page/GitHub-Logo.png" style="height: 12px; position: relative; top: 1px; margin-left: 2px;">
         </a>
 
@@ -56,7 +56,7 @@ tpl = """
       </div>
 
       <div style="text-align: right; margin-top: 10em; font-size: 80%;">
-        <a class="link" target="_blank" href="https://github.com/fviz/fviz/blob/master/manual">
+        <a class="link" target="_blank" href="https://github.com/asmuth/fviz/blob/master/manual">
           Edit this page on GitHub
         </a>
       </div>
