@@ -4,4 +4,4 @@
     labels (A B A B A)
     label-font-size 18pt
     colors (#00c #c00)
-    sizes (8px))
+    marker-size (8px))

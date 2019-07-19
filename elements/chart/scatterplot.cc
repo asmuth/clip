@@ -105,6 +105,8 @@ ReturnCode build(
     {"sizes", bind(&expr_rewritev, _1, "sizes", &point_opts)},
     {"color", bind(&expr_rewritev, _1, "color", &point_opts)},
     {"colors", bind(&expr_rewritev, _1, "colors", &point_opts)},
+    {"marker-size", bind(&expr_rewritev, _1, "marker-size", &point_opts)},
+    {"marker-sizes", bind(&expr_rewritev, _1, "marker-sizes", &point_opts)},
     {"labels", bind(&expr_rewritev, _1, "labels", &point_opts)},
     {"label-font-size", bind(&expr_rewritev, _1, "label-font-size", &point_opts)},
     {"axes", bind(&expr_to_stringset, _1, &axes)},

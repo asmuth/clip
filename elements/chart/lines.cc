@@ -29,6 +29,7 @@ using namespace std::placeholders;
 namespace fviz::elements::chart::lines {
 
 static const double kDefaultLineWidthPT = 2;
+static const double kDefaultLabelPaddingEM = 0.4;
 
 struct PlotLinesConfig {
   std::vector<Measure> x;
@@ -37,7 +38,13 @@ struct PlotLinesConfig {
   ScaleConfig scale_y;
   std::vector<DataGroup> groups;
   std::vector<Color> colors;
+  std::vector<Measure> marker_sizes;
   Measure line_width;
+  std::vector<std::string> labels;
+  FontInfo label_font;
+  Color label_color;
+  Measure label_padding;
+  Measure label_font_size;
 };
 
 ReturnCode draw(
@@ -64,6 +71,13 @@ ReturnCode draw(
       },
       &*config->y.begin(),
       &*config->y.end());
+
+  convert_units(
+      {
+        bind(&convert_unit_typographic, layer->dpi, layer->font_size.value, _1),
+      },
+      &*config->marker_sizes.begin(),
+      &*config->marker_sizes.end());
 
   /* draw lines */
   for (const auto& group : config->groups) {
@@ -92,6 +106,57 @@ ReturnCode draw(
     strokePath(layer, clip, path, style);
   }
 
+  /* draw points */
+  if (!config->marker_sizes.empty()) {
+    for (size_t i = 0; i < config->x.size(); ++i) {
+      auto sx = clip.x + config->x[i];
+      auto sy = clip.y + clip.h - config->y[i];
+
+      const auto& color = config->colors.empty()
+          ? Color{}
+          : config->colors[i % config->colors.size()];
+
+      auto size = config->marker_sizes[i % config->marker_sizes.size()];
+
+      FillStyle style;
+      style.color = color;
+
+      // TODO point style
+      Path path;
+      path.moveTo(sx + size, sy);
+      path.arcTo(sx, sy, size, 0, M_PI * 2);
+      fillPath(layer, clip, path, style);
+    }
+  }
+
+  /* draw labels */
+  for (size_t i = 0; i < config->labels.size(); ++i) {
+    const auto& label_text = config->labels[i];
+
+    auto label_offset  = config->marker_sizes.empty()
+        ? 0
+        : config->marker_sizes[i % config->marker_sizes.size()];
+
+    auto label_padding = label_offset + measure_or(
+        config->label_padding,
+        from_em(kDefaultLabelPaddingEM, config->label_font_size));
+
+    Point p(
+        clip.x + config->x[i],
+        clip.y + clip.h - config->y[i] - label_padding);
+
+    TextStyle style;
+    style.font = config->label_font;
+    style.color = config->label_color;
+    style.font_size = config->label_font_size;
+
+    auto ax = HAlign::CENTER;
+    auto ay = VAlign::BOTTOM;
+    if (auto rc = drawTextLabel(label_text, p, ax, ay, style, layer); rc != OK) {
+      return rc;
+    }
+  }
+
   return OK;
 }
 
@@ -101,6 +166,8 @@ ReturnCode build(
     ElementRef* elem) {
   /* set defaults from environment */
   auto c = std::make_shared<PlotLinesConfig>();
+  c->label_font = env.font;
+  c->label_font_size = env.font_size;
   c->line_width = from_pt(kDefaultLineWidthPT);
 
   /* parse properties */
@@ -120,6 +187,9 @@ ReturnCode build(
     {"color", expr_tov_fn<Color>(bind(&expr_to_color, _1, _2), &c->colors)},
     {"colors", expr_tov_fn<Color>(bind(&expr_to_color, _1, _2), &c->colors)},
     {"stroke", bind(&expr_to_measure, _1, &c->line_width)},
+    {"marker-size", bind(&data_load, _1, &c->marker_sizes)},
+    {"labels", bind(&data_load_strings, _1, &c->labels)},
+    {"label-font-size", bind(&expr_to_measure, _1, &c->label_font_size)},
   });
 
   if (!config_rc) {
