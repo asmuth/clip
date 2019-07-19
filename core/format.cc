@@ -139,8 +139,14 @@ ReturnCode format_configure_custom(
     const Expr* expr,
     Formatter* formatter) {
   std::vector<std::string> values;
-  for (; expr; expr = expr_next(expr)) {
-    values.emplace_back(expr_get_value(expr));
+  if (expr && expr_is_list(expr)) {
+    if (auto rc = data_load_strings(expr, &values); !rc) {
+      return rc;
+    }
+  } else {
+    for (; expr; expr = expr_next(expr)) {
+      values.emplace_back(expr_get_value(expr));
+    }
   }
 
   *formatter = format_custom(values);
