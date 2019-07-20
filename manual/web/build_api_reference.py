@@ -38,7 +38,7 @@ def build_elem_page(elem_file):
 
   print("> Building page: %s" % url)
   title = elem["name"]
-  tpl = Path("extra/web/reference_detail.tpl.html").read_text()
+  tpl = Path("manual/web/reference_detail.tpl.html").read_text()
   html = TPL.render(tpl, elem)
   write_page(url, html, title=title)
 

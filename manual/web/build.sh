@@ -15,11 +15,11 @@ fi
 
 cd "$(dirname "$0")/../.."
 
-cp extra/web/documentation.css "${output_dir}"
-cp extra/web/redirects.txt "${output_dir}/_redirects"
-cp extra/web/favicon.ico "${output_dir}"
+cp manual/web/documentation.css "${output_dir}"
+cp manual/web/redirects.txt "${output_dir}/_redirects"
+cp manual/web/favicon.ico "${output_dir}"
 mkdir -p "${output_dir}/documentation/figures"
 cp manual/figures/*.svg "${output_dir}/documentation/figures/"
-./extra/web/build_api_reference.py
-./extra/web/build_examples.py
-./extra/web/build_pages.py
+./manual/web/build_api_reference.py
+./manual/web/build_examples.py
+./manual/web/build_pages.py
