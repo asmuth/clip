@@ -4,7 +4,7 @@
     axes (bottom left)
     grid (color #fff)
     legend (items ("Random Data"))
-    ticks-y (subdivide 5)
+    axis-y-ticks (subdivide 5)
     background #eee
     border none
     limit-x-min 0

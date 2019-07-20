@@ -88,17 +88,17 @@ ReturnCode build(
     {"scale-x-padding", bind(&expr_to_float64, _1, &scale_x.padding)},
     {"scale-y-padding", bind(&expr_to_float64, _1, &scale_y.padding)},
     {
-      "ticks-x",
+      "axis-x-ticks",
       expr_calln_fn({
         bind(&expr_rewritev, _1, "ticks", &axis_x_opts),
-        bind(&expr_rewritev, _1, "ticks-x", &grid_extra_opts),
+        bind(&expr_rewritev, _1, "axis-x-ticks", &grid_extra_opts),
       })
     },
     {
-      "ticks-y",
+      "axis-y-ticks",
       expr_calln_fn({
         bind(&expr_rewritev, _1, "ticks", &axis_y_opts),
-        bind(&expr_rewritev, _1, "ticks-y", &grid_extra_opts),
+        bind(&expr_rewritev, _1, "axis-y-ticks", &grid_extra_opts),
       })
     },
     {"axis-x-labels", bind(&expr_rewritev, _1, "labels", &axis_x_opts)},

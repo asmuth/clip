@@ -2,8 +2,8 @@
     axes (top right bottom left)
     limit-x (0.5 6.5)
     limit-y (-20 70)
-    ticks-x (discrete)
-    ticks-y (linear 10 -20)
+    axis-x-ticks (discrete)
+    axis-y-ticks (linear 10 -20)
     bars (
       data-x (csv "tests/testdata/bardata.csv" var0)
       data-y (csv "tests/testdata/bardata.csv" var1)
