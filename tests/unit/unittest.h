@@ -21,6 +21,8 @@
 
 #include "return_code.h"
 
+const double EPSILON = 0.0001;
+
 #define EXPECT(X) \
     if (!(X)) { \
       std::cerr << "ERROR: expectation failed: " << #X << " on line " << __LINE__ <<  std::endl; \
@@ -28,6 +30,8 @@
     }
 
 #define EXPECT_EQ(A, B) EXPECT((A) == (B))
+
+#define EXPECT_FEQ(A, B) EXPECT(std::abs((A) - (B)) < EPSILON)
 
 #define EXPECT_STREQ(A, B) EXPECT(std::string(A) == std::string(B))
 

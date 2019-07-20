@@ -58,5 +58,13 @@ Point layout_align(
     VAlign valign);
 
 
+/**
+ * Return the smallest bounding box that can contain the input box after it
+ * was rotated `angle_deg` around it's center point
+ */
+Rectangle box_rotate_bounds(
+    const Rectangle& bbox,
+    double angle_deg);
+
 } // namespace fviz
 

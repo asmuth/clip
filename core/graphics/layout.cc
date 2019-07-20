@@ -13,6 +13,7 @@
  */
 #include <algorithm>
 #include <iostream>
+#include <math.h>
 #include "layout.h"
 
 namespace fviz {
@@ -68,6 +69,38 @@ Point layout_align(
   }
 
   return layout_align(bbox, target);
+}
+
+Rectangle box_rotate_bounds(
+    const Rectangle& b,
+    double angle_deg) {
+  auto i = sin(-angle_deg * M_PI / 180);
+  auto q = cos(-angle_deg * M_PI / 180);
+
+  auto xrange = std::minmax({
+    q * (b.w * 0.5)  - i * (b.h * 0.5),
+    q * (b.w * 0.5)  - i * (b.h * -0.5),
+    q * (b.w * -0.5) - i * (b.h * -0.5),
+    q * (b.w * -0.5) - i * (b.h * 0.5),
+  });
+
+  auto yrange = std::minmax({
+    q * (b.h * 0.5)  + i * (b.w * 0.5),
+    q * (b.h * -0.5) + i * (b.w * 0.5),
+    q * (b.h * -0.5) + i * (b.w * -0.5),
+    q * (b.h * 0.5)  + i * (b.w * -0.5),
+  });
+
+  auto rw = xrange.second - xrange.first;
+  auto rh = yrange.second - yrange.first;
+
+  Rectangle bbox_rot;
+  bbox_rot.x = (b.x + b.w * 0.5) - rw * 0.5;
+  bbox_rot.y = (b.y + b.h * 0.5) - rh * 0.5;
+  bbox_rot.w = rw;
+  bbox_rot.h = rh;
+
+  return bbox_rot;
 }
 
 } // namespace fviz
