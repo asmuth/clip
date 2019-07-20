@@ -196,6 +196,10 @@ ReturnCode axis_layout_title(
     return rc;
   }
 
+  if (axis.title_rotate) {
+    title_bbox = box_rotate_bounds(title_bbox, axis.title_rotate);
+  }
+
   switch (axis_position) {
     case AxisPosition::TOP:
     case AxisPosition::BOTTOM:
