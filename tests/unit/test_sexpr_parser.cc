@@ -16,27 +16,9 @@
 #include <unistd.h>
 #include <iostream>
 #include <sexpr_parser.h>
+#include "unittest.h"
 
 using namespace fviz;
-
-#define EXPECT(X) \
-    if (!(X)) { \
-      std::cerr << "ERROR: expectation failed: " << #X << " on line " << __LINE__ <<  std::endl; \
-      std::exit(1); \
-    }
-
-#define EXPECT_EQ(A, B) EXPECT((A) == (B))
-
-#define EXPECT_STREQ(A, B) EXPECT(std::string(A) == std::string(B))
-
-#define EXPECT_OK(X) \
-    do { \
-      auto rc = (X); \
-      if (!rc) { \
-        std::cerr << "ERROR: " << rc.message << " on line " << __LINE__ <<  std::endl; \
-        std::exit(1); \
-      } \
-    } while(0)
 
 void test_parse_literals() {
   std::string confstr =

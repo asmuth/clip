@@ -11,8 +11,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#ifndef _fviz_UTIL_UNITTEST_H
-#define _fviz_UTIL_UNITTEST_H
+#pragma once
 
 #include <functional>
 #include <unordered_map>
@@ -20,230 +19,24 @@
 #include <string>
 #include <string.h>
 
-#include "utils/exception.h"
-#include "utils/fileutil.h"
-#include "utils/inputstream.h"
-#include "utils/outputstream.h"
-#include "utils/inspect.h"
-#include "utils/random.h"
 #include "return_code.h"
-
-const char kExpectationFailed[] = "ExpectationFailed";
-
-#define UNIT_TEST(T) \
-    static fviz::test::UnitTest T(#T); \
-    int main() { \
-      auto& t = T; \
-      return t.run(); \
-    }
-
-#define TEST_CASE(T, N, L) \
-    static fviz::test::UnitTest::TestCase __##T##__case__##N(&T, #N, (L));
-
-#define TEST_INITIALIZER(T, N, L) \
-    static fviz::test::UnitTest::TestInitializer __##T##__case__##N( \
-        &T, (L));
 
 #define EXPECT(X) \
     if (!(X)) { \
-      RAISE( \
-          kExpectationFailed, \
-          "expectation failed: %s", #X); \
+      std::cerr << "ERROR: expectation failed: " << #X << " on line " << __LINE__ <<  std::endl; \
+      std::exit(1); \
     }
 
+#define EXPECT_EQ(A, B) EXPECT((A) == (B))
 
-void EXPECT_TRUE(bool val) {
-  if (!val) {
-    RAISE(
-        kExpectationFailed,
-        "expectation failed: expected TRUE, got FALSE");
-  }
-}
+#define EXPECT_STREQ(A, B) EXPECT(std::string(A) == std::string(B))
 
-void EXPECT_FALSE(bool val) {
-  if (val) {
-    RAISE(
-        kExpectationFailed,
-        "expectation failed: expected FALSE, got TRUE");
-  }
-}
-
-void CHECK_RC(fviz::Status rc) {
-  if (rc != fviz::OK) {
-    std::exit(1);
-  }
-}
-
-void CHECK_RC(fviz::ReturnCode rc) {
-  if (!rc) {
-    RAISE(
-        kExpectationFailed,
-        rc.message);
-  }
-}
-
-template <typename T1, typename T2>
-void EXPECT_EQ(T1 left, T2 right) {
-  if (!(left == right)) {
-    RAISE(
-        kExpectationFailed,
-        "expectation failed: %s == %s",
-        fviz::inspect<T1>(left).c_str(),
-        fviz::inspect<T2>(right).c_str());
-  }
-}
-
-#define EXPECT_EXCEPTION(E, L) \
-    { \
-      bool raised = false; \
-      try { \
-        L(); \
-      } catch (fviz::Exception e) { \
-        raised = true; \
-        auto msg = e.getMessage().c_str(); \
-        if (strcmp(msg, E) != 0) { \
-          RAISE( \
-              kExpectationFailed, \
-              "excepted exception '%s' but got '%s'", E, msg); \
-        } \
+#define EXPECT_OK(X) \
+    do { \
+      auto rc = (X); \
+      if (!rc) { \
+        std::cerr << "ERROR: " << rc.message << " on line " << __LINE__ <<  std::endl; \
+        std::exit(1); \
       } \
-      if (!raised) { \
-        RAISE( \
-            kExpectationFailed, \
-            "excepted exception '%s' but got no exception", E); \
-      } \
-    }
+    } while(0)
 
-#define EXPECT_FILES_EQ(F1, F2) \
-  { \
-    auto one = fviz::FileInputStream::openFile(F1); \
-    auto two = fviz::FileInputStream::openFile(F2); \
-    std::string one_str; \
-    std::string two_str; \
-    one->readUntilEOF(&one_str); \
-    two->readUntilEOF(&two_str); \
-    if (one_str != two_str) { \
-      std::string filename1(F1); \
-      std::string filename2(F2); \
-      RAISE( \
-          kExpectationFailed, \
-          "expected files '%s' and '%s' to be equal, but the differ", \
-          filename1.c_str(), filename2.c_str()); \
-    } \
-  }
-
-
-namespace fviz {
-namespace test {
-
-class UnitTest {
-public:
-
-  static std::string tempFilePath() {
-    return "/tmp/_libfnord_test_tmp/";
-  }
-
-  static std::string testDataPath() {
-    return "./";
-  }
-
-  class TestCase {
-  public:
-    TestCase(
-        UnitTest* test,
-        const char* name,
-        std::function<void ()> lambda) :
-        name_(name),
-        lambda_(lambda) {
-      test->addTestCase(this);
-    }
-
-    const char* name_;
-    std::function<void ()> lambda_;
-  };
-
-  class TestInitializer {
-  public:
-    TestInitializer(
-        UnitTest* test,
-        std::function<void ()> lambda) :
-        lambda_(lambda) {
-      test->addInitializer(this);
-    }
-
-    std::function<void ()> lambda_;
-  };
-
-  UnitTest(const char* name) : name_(name) {}
-
-  void addTestCase(const TestCase* test_case) {
-    cases_.push_back(test_case);
-  }
-
-  void addInitializer(const TestInitializer* init) {
-    initializers_.push_back(init);
-  }
-
-  int run() {
-    fviz::FileUtil::mkdir_p(UnitTest::tempFilePath());
-
-    for (auto initializer : initializers_) {
-      initializer->lambda_();
-    }
-
-    fprintf(stderr, "%s\n", name_);
-
-    const TestCase* current_test_case = nullptr;
-    int num_tests_passed = 0;
-    std::unordered_map<const TestCase*, fviz::Exception> errors;
-
-    for (auto test_case : cases_) {
-      fprintf(stderr, "    %s::%s", name_, test_case->name_);
-      fflush(stderr);
-      current_test_case = test_case;
-
-      try {
-        test_case->lambda_();
-      } catch (fviz::Exception e) {
-        fprintf(stderr, " \033[1;31m[FAIL]\e[0m\n");
-        errors.emplace(test_case, e);
-        continue;
-      }
-
-      num_tests_passed++;
-      fprintf(stderr, " \033[1;32m[PASS]\e[0m\n");
-    }
-
-    if (num_tests_passed != cases_.size()) {
-      for (auto test_case : cases_) {
-        const auto& err = errors.find(test_case);
-
-        if (err != errors.end()) {
-          fprintf(
-              stderr,
-              "\n\033[1;31m[FAIL] %s::%s\e[0m\n",
-              name_,
-              test_case->name_);
-          err->second.debugPrint();
-        }
-      }
-
-      fprintf(stderr, 
-          "\n\033[1;31m[FAIL] %i/%i tests failed :(\e[0m\n",
-          (int) cases_.size() - num_tests_passed,
-          (int) cases_.size());
-      return 1;
-    }
-
-    return 0;
-  }
-
-protected:
-  const char* name_;
-  std::vector<const TestCase*> cases_;
-  std::vector<const TestInitializer*> initializers_;
-};
-
-}
-}
-#endif
