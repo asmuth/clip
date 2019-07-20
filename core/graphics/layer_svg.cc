@@ -78,6 +78,16 @@ Status svg_text_span(
     SVGDataRef svg) {
   const auto& style = op.style;
 
+  std::string transform;
+  if (op.rotate) {
+    transform = svg_attr(
+        "transform",
+        fmt::format("rotate({} {} {})",
+        op.rotate,
+        op.rotate_pivot.x,
+        op.rotate_pivot.y));
+  }
+
   svg->buffer
     << "  "
     << "<text"
@@ -86,6 +96,7 @@ Status svg_text_span(
     << svg_attr("fill", style.color.to_hex_str())
     << svg_attr("font-size", style.font_size)
     << svg_attr("font-family", style.font.font_family_css)
+    << transform
     << ">"
     << svg_body(op.text)
     << "</text>"

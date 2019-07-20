@@ -26,6 +26,7 @@ Status drawTextLabel(
     const Point& position,
     HAlign align_x,
     VAlign align_y,
+    double rotate,
     const TextStyle& style,
     Layer* layer) {
   Rectangle bbox;
@@ -50,9 +51,21 @@ Status drawTextLabel(
   layer_ops::TextSpanOp op;
   op.text = text;
   op.position = offset;
+  op.rotate = rotate;
+  op.rotate_pivot = position;
   op.style = style;
 
   return layer->apply(op);
+}
+
+Status drawTextLabel(
+    const std::string& text,
+    const Point& position,
+    HAlign align_x,
+    VAlign align_y,
+    const TextStyle& style,
+    Layer* layer) {
+  return drawTextLabel(text, position, align_x, align_y, 0, style, layer);
 }
 
 } // namespace fviz

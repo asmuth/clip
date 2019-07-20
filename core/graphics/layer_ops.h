@@ -42,6 +42,8 @@ struct BrushFillOp {
 struct TextSpanOp {
   std::string text;
   Point position;
+  double rotate;
+  Point rotate_pivot;
   TextStyle style;
 };
 
