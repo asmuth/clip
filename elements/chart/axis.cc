@@ -30,7 +30,8 @@ using namespace std::placeholders;
 
 namespace fviz::elements::chart::axis {
 
-static const double kDefaultTitlePaddingEM = 0.8;
+static const double kDefaultTitlePaddingHorizEM = 1.4;
+static const double kDefaultTitlePaddingVertEM = 1;
 static const double kDefaultLabelPaddingEM = 0.8;
 static const double kDefaultLineWidthPT = 1;
 static const double kDefaultTickLengthPT = 4;
@@ -287,9 +288,22 @@ ReturnCode axis_layout(
 
   /* add margin for the title */
   if (!axis.title.empty()) {
-    *margin += measure_or(
-            axis.title_padding,
-            from_em(kDefaultTitlePaddingEM, axis.title_font_size));
+    switch (axis_position) {
+      case AxisPosition::TOP:
+      case AxisPosition::BOTTOM:
+      case AxisPosition::CENTER_HORIZ:
+        *margin += measure_or(
+                axis.title_padding,
+                from_em(kDefaultTitlePaddingVertEM, axis.title_font_size));
+        break;
+      case AxisPosition::LEFT:
+      case AxisPosition::RIGHT:
+      case AxisPosition::CENTER_VERT:
+        *margin += measure_or(
+                axis.title_padding,
+                from_em(kDefaultTitlePaddingHorizEM, axis.title_font_size));
+        break;
+    }
 
     if (auto rc = axis_layout_title(
           axis,
@@ -432,7 +446,7 @@ static ReturnCode axis_draw_vertical(
 
     double title_padding = measure_or(
         axis_config.title_padding,
-        from_em(kDefaultTitlePaddingEM, axis_config.title_font_size));
+        from_em(kDefaultTitlePaddingHorizEM, axis_config.title_font_size));
 
     if (title_position == label_position) {
       title_padding += label_size;
@@ -579,7 +593,7 @@ static ReturnCode axis_draw_horizontal(
 
     double title_padding = measure_or(
         axis_config.title_padding,
-        from_em(kDefaultTitlePaddingEM, axis_config.title_font_size));
+        from_em(kDefaultTitlePaddingVertEM, axis_config.title_font_size));
 
     if (title_position == label_position) {
       title_padding += label_size;
@@ -710,9 +724,11 @@ ReturnCode build(const Environment& env, const Expr* expr, ElementRef* elem) {
       break;
     case AxisPosition::LEFT:
       config->layout.position = Position::LEFT;
+      config->title_rotate = -90;
       break;
     case AxisPosition::RIGHT:
       config->layout.position = Position::RIGHT;
+      config->title_rotate = -90;
       break;
   };
 
