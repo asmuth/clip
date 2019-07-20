@@ -117,6 +117,8 @@ ReturnCode build(
     {"axis-y-title-color", bind(&expr_rewritev, _1, "title-color", &axis_y_opts)},
     {"axis-x-title-padding", bind(&expr_rewritev, _1, "title-padding", &axis_x_opts)},
     {"axis-y-title-padding", bind(&expr_rewritev, _1, "title-padding", &axis_y_opts)},
+    {"axis-x-title-rotate", bind(&expr_rewritev, _1, "title-padding", &axis_x_opts)},
+    {"axis-y-title-rotate", bind(&expr_rewritev, _1, "title-padding", &axis_y_opts)},
     {"color", bind(&expr_rewritev, _1, "color", &line_opts)},
     {"colors", bind(&expr_rewritev, _1, "colors", &line_opts)},
     {"stroke", bind(&expr_rewritev, _1, "stroke", &line_opts)},

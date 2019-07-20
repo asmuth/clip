@@ -321,6 +321,8 @@ ReturnCode build(
     {"axis-y-title-color", bind(&expr_rewritev, _1, "title-color", &axis_y_opts)},
     {"axis-x-title-padding", bind(&expr_rewritev, _1, "title-padding", &axis_x_opts)},
     {"axis-y-title-padding", bind(&expr_rewritev, _1, "title-padding", &axis_y_opts)},
+    {"axis-x-title-rotate", bind(&expr_rewritev, _1, "title-padding", &axis_x_opts)},
+    {"axis-y-title-rotate", bind(&expr_rewritev, _1, "title-padding", &axis_y_opts)},
     {"axes", bind(&expr_to_stringset, _1, &axes)},
     {"areas", bind(&build_geom, "chart/areas", _1, &geoms, &x, &y)},
     {"bars", bind(&build_geom, "chart/bars", _1, &geoms, &x, &y)},

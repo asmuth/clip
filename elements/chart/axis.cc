@@ -69,6 +69,7 @@ struct AxisDefinition {
   Measure title_font_size;
   Color title_color;
   Measure title_padding;
+  double title_rotate;
   AxisLabelPosition title_position;
   AxisLabelPosition tick_position;
   AxisLabelPosition label_position;
@@ -84,6 +85,7 @@ struct AxisDefinition {
 
 AxisDefinition::AxisDefinition() :
     position(AxisPosition::BOTTOM),
+    title_rotate(0.0),
     label_position(AxisLabelPosition::OUTSIDE),
     tick_position(AxisLabelPosition::INSIDE) {}
 
@@ -432,8 +434,19 @@ static ReturnCode axis_draw_vertical(
       title_padding += label_size;
     }
 
+    double title_size = 0;
+    if (auto rc =
+          axis_layout_title(
+              axis_config,
+              axis_config.position,
+              *target,
+              &title_size);
+        !rc) {
+      return rc;
+    }
+
     Point p;
-    p.x = x + title_padding * title_position;
+    p.x = x + (title_padding + title_size * 0.5) * title_position;
     p.y = y0 + (y1 - y0) * 0.5;
 
     TextStyle style;
@@ -441,10 +454,18 @@ static ReturnCode axis_draw_vertical(
     style.color = axis_config.title_color;
     style.font_size = axis_config.title_font_size;
 
-    auto ax = title_position > 0 ? HAlign::LEFT : HAlign::RIGHT;
-    auto ay = VAlign::CENTER;
-    if (auto rc = drawTextLabel(axis_config.title, p, ax, ay, style, target); !rc) {
-      return rc;
+    auto draw_rc =
+      drawTextLabel(
+          axis_config.title,
+          p,
+          HAlign::CENTER,
+          VAlign::CENTER,
+          axis_config.title_rotate,
+          style,
+          target);
+
+    if (!draw_rc) {
+      return draw_rc;
     }
   }
 
@@ -489,7 +510,6 @@ static ReturnCode axis_draw_horizontal(
         {x, y + tick_length * tick_position},
         axis_config.border_style);
   }
-
 
   /* draw labels */
   double label_position = 0;
@@ -561,19 +581,37 @@ static ReturnCode axis_draw_horizontal(
       title_padding += label_size;
     }
 
+    double title_size = 0;
+    if (auto rc =
+          axis_layout_title(
+              axis_config,
+              axis_config.position,
+              *target,
+              &title_size);
+        !rc) {
+      return rc;
+    }
+
     Point p;
     p.x = x0 + (x1 - x0) * 0.5;
-    p.y = y + title_padding * title_position;
+    p.y = y + (title_padding + title_size * 0.5) * title_position;
 
     TextStyle style;
     style.font = axis_config.title_font;
     style.color = axis_config.title_color;
     style.font_size = axis_config.title_font_size;
 
-    auto ax = HAlign::CENTER;
-    auto ay = label_position > 0 ? VAlign::TOP : VAlign::BOTTOM;
-    if (auto rc = drawTextLabel(axis_config.title, p, ax, ay, style, target); !rc) {
-      return rc;
+    auto draw_rc = drawTextLabel(
+        axis_config.title,
+        p,
+        HAlign::CENTER,
+        VAlign::CENTER,
+        axis_config.title_rotate,
+        style,
+        target);
+
+    if (!draw_rc) {
+      return draw_rc;
     }
   }
 
@@ -693,6 +731,7 @@ ReturnCode build(const Environment& env, const Expr* expr, ElementRef* elem) {
       {"title-font-size", bind(&expr_to_measure, _1, &config->title_font_size)},
       {"title-color", bind(&expr_to_color, _1, &config->title_color)},
       {"title-padding", bind(&expr_to_measure, _1, &config->title_padding)},
+      {"title-rotate", bind(&expr_to_float64, _1, &config->title_rotate)},
     });
 
     if (!rc) {
