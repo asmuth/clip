@@ -101,6 +101,8 @@ ReturnCode build(
         bind(&expr_rewritev, _1, "ticks-y", &grid_extra_opts),
       })
     },
+    {"axis-x-labels", bind(&expr_rewritev, _1, "labels", &axis_x_opts)},
+    {"axis-y-labels", bind(&expr_rewritev, _1, "labels", &axis_y_opts)},
     {"size", bind(&expr_rewritev, _1, "size", &point_opts)},
     {"sizes", bind(&expr_rewritev, _1, "sizes", &point_opts)},
     {"color", bind(&expr_rewritev, _1, "color", &point_opts)},

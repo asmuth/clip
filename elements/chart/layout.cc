@@ -305,8 +305,8 @@ ReturnCode build(
         bind(&expr_rewritev, _1, "ticks-y", &grid_extra_opts),
       })
     },
-    {"axis-x-format", bind(&expr_rewritev, _1, "format", &axis_x_opts)},
-    {"axis-y-format", bind(&expr_rewritev, _1, "format", &axis_y_opts)},
+    {"axis-x-labels", bind(&expr_rewritev, _1, "labels", &axis_x_opts)},
+    {"axis-y-labels", bind(&expr_rewritev, _1, "labels", &axis_y_opts)},
     {"axes", bind(&expr_to_stringset, _1, &axes)},
     {"areas", bind(&build_geom, "chart/areas", _1, &geoms, &x, &y)},
     {"bars", bind(&build_geom, "chart/bars", _1, &geoms, &x, &y)},

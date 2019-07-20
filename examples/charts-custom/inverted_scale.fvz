@@ -10,4 +10,4 @@
     limit-y (0 140)
     ticks-x (subdivide 6)
     ticks-y (linear 20 0)
-    axis-x-format (datetime "%H:%M:%S"))
+    axis-x-labels (datetime "%H:%M:%S"))

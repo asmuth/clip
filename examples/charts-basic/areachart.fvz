@@ -1,7 +1,7 @@
 (chart/layout
     axes (bottom left)
-    axis-y-format (scientific)
-    axis-x-format (datetime "%H:%M:%S")
+    axis-y-labels (scientific)
+    axis-x-labels (datetime "%H:%M:%S")
     areas (
       data-x (csv "tests/testdata/measurement.csv" time)
       data-y (csv "tests/testdata/measurement.csv" value1)

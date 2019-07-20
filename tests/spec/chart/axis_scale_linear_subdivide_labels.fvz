@@ -3,5 +3,5 @@
   body (
     (chart/axis-bottom
       ticks (subdivide 5)
-      format (custom "-2σ" "-1σ" "0" "1σ" "2σ")
+      labels (custom "-2σ" "-1σ" "0" "1σ" "2σ")
       limit (-10 10))))

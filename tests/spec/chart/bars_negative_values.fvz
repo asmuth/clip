@@ -4,7 +4,7 @@
     scale-y-padding 5
     ticks-x (linear 1 1 12)
     ticks-x (linear 1 1 12)
-    axis-x-format (custom "Jan" "Feb" "Mar" "Apr" "May" "Jun" "Jul" "Aug" "Sep" "Oct" "Nov" "Dec")
+    axis-x-labels (custom "Jan" "Feb" "Mar" "Apr" "May" "Jun" "Jul" "Aug" "Sep" "Oct" "Nov" "Dec")
     bars (
       data-x (csv "tests/testdata/city_temperatures.csv" month)
       data-y (csv "tests/testdata/city_temperatures.csv" temp_moscow)
