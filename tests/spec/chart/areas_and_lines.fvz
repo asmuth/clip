@@ -1,7 +1,8 @@
 (set height 480px)
 (set width 1200px)
 
-(chart/combochart
+(chart/layout
+    axes (top right bottom left)
     limit-y (-50 50)
     areas (
         data-x (csv "tests/testdata/areadata2.csv" x)

@@ -1,4 +1,4 @@
-(chart/combochart
+(chart/layout
     axes (bottom left)
     axis-y-format (scientific)
     axis-x-format (datetime "%H:%M:%S")

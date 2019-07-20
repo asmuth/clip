@@ -1,4 +1,4 @@
-(chart/combochart
+(chart/layout
     axes (left)
     limit-x (0 24)
     limit-y (0 10)

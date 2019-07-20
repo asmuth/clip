@@ -1,7 +1,7 @@
 (set height 480px)
 (set width 1200px)
 
-(chart/combochart
+(chart/layout
     scale-x-padding 0.6
     ticks-x (linear 1 1)
     axis-x-format (custom "Jan" "Feb" "Mar" "Apr" "May" "Jun" "Jul" "Aug" "Sep" "Oct" "Nov" "Dec")

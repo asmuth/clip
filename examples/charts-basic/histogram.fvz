@@ -1,7 +1,7 @@
 (set width 480px)
 (set height 380px)
 
-(chart/combochart
+(chart/layout
     limit-x (0 7)
     limit-y (0 10000)
     ticks-x (linear 1 1 6)

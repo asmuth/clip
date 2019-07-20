@@ -40,7 +40,7 @@ ReturnCode element_build_list(
 
 ReturnCode element_build_macro(
     const Environment& env,
-    ExprStorage expr,
+    const Expr* expr,
     ElementRef* elem);
 
 void element_bind(

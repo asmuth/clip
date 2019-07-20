@@ -289,7 +289,7 @@ ReturnCode build(
           std::move(chart_points),
           std::move(chart_legend)));
 
-  return element_build_macro(env, std::move(chart), elem);
+  return element_build_macro(env, chart.get(), elem);
 }
 
 } // namespace fviz::elements::chart::linechart

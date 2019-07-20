@@ -1,4 +1,5 @@
-(chart/combochart
+(chart/layout
+    axes (top right bottom left)
     limit-x (0 13)
     scale-y-padding 5
     ticks-x (linear 1 1 12)
