@@ -1,6 +1,6 @@
-(layout/box
-  margin 1em
-  body (
+(chart/layout
+  margin 2em
+  left (
     (chart/axis-left
       ticks (linear 1)
       limit (0 16)

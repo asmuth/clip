@@ -1,9 +1,9 @@
-(layout/box
-  margin 1em
-  body (
+(chart/layout
+  margin 2em
+  left (
     (chart/axis-left
       ticks (linear 1)
       limit (0 16)
       title "Fnord (f/s)"
-      title-rotate -90
+      title-rotate 45
       title-font-size 16pt)))

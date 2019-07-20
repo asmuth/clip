@@ -54,6 +54,12 @@ enum class AxisLabelPosition {
   OUTSIDE,
 };
 
+enum class AxisLabelAttach {
+  BEGIN,
+  CENTER,
+  END
+};
+
 struct AxisDefinition;
 
 using AxisLabelPlacement = std::function<ReturnCode (
@@ -74,8 +80,10 @@ struct AxisDefinition {
   AxisLabelPosition title_position;
   AxisLabelPosition tick_position;
   AxisLabelPosition label_position;
+  AxisLabelAttach label_attach;
   StrokeStyle border_style;
   Formatter label_formatter;
+  double label_rotate;
   Measure label_padding;
   FontInfo label_font;
   Measure label_font_size;
@@ -87,6 +95,7 @@ struct AxisDefinition {
 AxisDefinition::AxisDefinition() :
     position(AxisPosition::BOTTOM),
     title_rotate(0.0),
+    label_rotate(0.0),
     label_position(AxisLabelPosition::OUTSIDE),
     tick_position(AxisLabelPosition::INSIDE) {}
 
@@ -162,15 +171,16 @@ ReturnCode axis_layout_labels(
       return rc;
     }
 
-    switch (axis_position) {
-      case AxisPosition::TOP:
-      case AxisPosition::BOTTOM:
-      case AxisPosition::CENTER_HORIZ:
+    if (axis.label_rotate) {
+      label_bbox = box_rotate_bounds(label_bbox, axis.label_rotate);
+    }
+
+    switch (axis.label_attach) {
+      case AxisLabelAttach::CENTER:
         label_margin = std::max(label_margin, label_bbox.h);
         break;
-      case AxisPosition::LEFT:
-      case AxisPosition::RIGHT:
-      case AxisPosition::CENTER_VERT:
+      case AxisLabelAttach::BEGIN:
+      case AxisLabelAttach::END:
         label_margin = std::max(label_margin, label_bbox.w);
         break;
     }
@@ -201,19 +211,7 @@ ReturnCode axis_layout_title(
     title_bbox = box_rotate_bounds(title_bbox, axis.title_rotate);
   }
 
-  switch (axis_position) {
-    case AxisPosition::TOP:
-    case AxisPosition::BOTTOM:
-    case AxisPosition::CENTER_HORIZ:
-      *margin += title_bbox.h;
-      break;
-    case AxisPosition::LEFT:
-    case AxisPosition::RIGHT:
-    case AxisPosition::CENTER_VERT:
-      *margin += title_bbox.w;
-      break;
-  }
-
+  *margin += title_bbox.h;
   return OK;
 }
 
@@ -342,7 +340,6 @@ ReturnCode axis_calculate_size(
   return OK;
 }
 
-
 static ReturnCode axis_draw_vertical(
     const AxisDefinition& axis_config,
     double x,
@@ -399,7 +396,7 @@ static ReturnCode axis_draw_vertical(
       axis_config.label_padding,
       from_em(kDefaultLabelPaddingEM, axis_config.label_font_size));
 
-  double label_size = label_padding;
+  double label_size = 0;
   if (auto rc =
         axis_layout_labels(
             axis_config,
@@ -423,9 +420,43 @@ static ReturnCode axis_draw_vertical(
     style.color = axis_config.label_color;
     style.font_size = axis_config.label_font_size;
 
-    auto ax = label_position > 0 ? HAlign::LEFT : HAlign::RIGHT;
-    auto ay = VAlign::CENTER;
-    if (auto rc = drawTextLabel(label_text, p, ax, ay, style, target); rc != OK) {
+    double a;
+    HAlign ax;
+    VAlign ay;
+    switch (axis_config.label_attach) {
+      case AxisLabelAttach::BEGIN:
+        switch (axis_config.label_position) {
+          case AxisLabelPosition::RIGHT:
+            a = axis_config.label_rotate;
+            break;
+          case AxisLabelPosition::LEFT:
+            a = axis_config.label_rotate + 180;
+            break;
+        }
+        ax = HAlign::LEFT;
+        ay = VAlign::CENTER;
+        break;
+      case AxisLabelAttach::CENTER:
+        p.x += label_size * 0.5 * label_position;
+        a = axis_config.label_rotate - 90;
+        ax = HAlign::CENTER;
+        ay = VAlign::CENTER;
+        break;
+      case AxisLabelAttach::END:
+        switch (axis_config.label_position) {
+          case AxisLabelPosition::RIGHT:
+            a = axis_config.label_rotate + 180;
+            break;
+          case AxisLabelPosition::LEFT:
+            a = axis_config.label_rotate;
+            break;
+        }
+        ax = HAlign::RIGHT;
+        ay = VAlign::CENTER;
+        break;
+    }
+
+    if (auto rc = drawTextLabel(label_text, p, ax, ay, a, style, target); rc != OK) {
       return rc;
     }
   }
@@ -449,7 +480,7 @@ static ReturnCode axis_draw_vertical(
         from_em(kDefaultTitlePaddingHorizEM, axis_config.title_font_size));
 
     if (title_position == label_position) {
-      title_padding += label_size;
+      title_padding += label_size + label_padding;
     }
 
     double title_size = 0;
@@ -478,7 +509,7 @@ static ReturnCode axis_draw_vertical(
           p,
           HAlign::CENTER,
           VAlign::CENTER,
-          axis_config.title_rotate,
+          axis_config.title_rotate - 90,
           style,
           target);
 
@@ -546,7 +577,7 @@ static ReturnCode axis_draw_horizontal(
       axis_config.label_padding,
       from_em(kDefaultLabelPaddingEM, axis_config.label_font_size));
 
-  double label_size = label_padding;
+  double label_size = 0;
   if (auto rc =
         axis_layout_labels(
             axis_config,
@@ -570,9 +601,43 @@ static ReturnCode axis_draw_horizontal(
     style.color = axis_config.label_color;
     style.font_size = axis_config.label_font_size;
 
-    auto ax = HAlign::CENTER;
-    auto ay = label_position > 0 ? VAlign::TOP : VAlign::BOTTOM;
-    if (auto rc = drawTextLabel(label_text, p, ax, ay, style, target); !rc) {
+    double a;
+    HAlign ax;
+    VAlign ay;
+    switch (axis_config.label_attach) {
+      case AxisLabelAttach::BEGIN:
+        switch (axis_config.label_position) {
+          case AxisLabelPosition::BOTTOM:
+            a = axis_config.label_rotate - 270;
+            break;
+          case AxisLabelPosition::TOP:
+            a = axis_config.label_rotate - 90;
+            break;
+        }
+        ax = HAlign::LEFT;
+        ay = VAlign::CENTER;
+        break;
+      case AxisLabelAttach::CENTER:
+        p.y += label_size * 0.5 * label_position;
+        a = axis_config.label_rotate;
+        ax = HAlign::CENTER;
+        ay = VAlign::CENTER;
+        break;
+      case AxisLabelAttach::END:
+        switch (axis_config.label_position) {
+          case AxisLabelPosition::BOTTOM:
+            a = axis_config.label_rotate + 270;
+            break;
+          case AxisLabelPosition::TOP:
+            a = axis_config.label_rotate + 90;
+            break;
+        }
+        ax = HAlign::RIGHT;
+        ay = VAlign::CENTER;
+        break;
+    }
+
+    if (auto rc = drawTextLabel(label_text, p, ax, ay, a, style, target); !rc) {
       return rc;
     }
   }
@@ -596,7 +661,7 @@ static ReturnCode axis_draw_horizontal(
         from_em(kDefaultTitlePaddingVertEM, axis_config.title_font_size));
 
     if (title_position == label_position) {
-      title_padding += label_size;
+      title_padding += label_size + label_padding;
     }
 
     double title_size = 0;
@@ -718,17 +783,23 @@ ReturnCode build(const Environment& env, const Expr* expr, ElementRef* elem) {
   switch (config->position) {
     case AxisPosition::TOP:
       config->layout.position = Position::TOP;
+      config->title_position = AxisLabelPosition::TOP;
+      config->label_attach = AxisLabelAttach::CENTER;
       break;
     case AxisPosition::BOTTOM:
       config->layout.position = Position::BOTTOM;
+      config->title_position = AxisLabelPosition::BOTTOM;
+      config->label_attach = AxisLabelAttach::CENTER;
       break;
     case AxisPosition::LEFT:
       config->layout.position = Position::LEFT;
-      config->title_rotate = -90;
+      config->title_position = AxisLabelPosition::LEFT;
+      config->label_attach = AxisLabelAttach::END;
       break;
     case AxisPosition::RIGHT:
       config->layout.position = Position::RIGHT;
-      config->title_rotate = -90;
+      config->title_position = AxisLabelPosition::RIGHT;
+      config->label_attach = AxisLabelAttach::BEGIN;
       break;
   };
 
@@ -739,6 +810,15 @@ ReturnCode build(const Environment& env, const Expr* expr, ElementRef* elem) {
       {"label-font-size", bind(&expr_to_measure, _1, &config->label_font_size)},
       {"label-color", bind(&expr_to_color, _1, &config->label_color)},
       {"label-padding", bind(&expr_to_measure, _1, &config->label_padding)},
+      {"label-rotate", bind(&expr_to_float64, _1, &config->label_rotate)},
+      {
+        "label-attach",
+        expr_to_enum_fn<AxisLabelAttach>(&config->label_attach, {
+          { "begin", AxisLabelAttach::BEGIN },
+          { "center", AxisLabelAttach::CENTER },
+          { "end", AxisLabelAttach::END },
+        })
+      },
       {"limit", bind(&expr_to_float64_opt_pair, _1, &config->scale.min, &config->scale.max)},
       {"limit-min", bind(&expr_to_float64_opt, _1, &config->scale.min)},
       {"limit-max", bind(&expr_to_float64_opt, _1, &config->scale.max)},
@@ -811,19 +891,15 @@ ReturnCode build(const Environment& env, const Expr* expr, ElementRef* elem) {
       switch (config->position) {
         case AxisPosition::TOP:
           config->label_position = AxisLabelPosition::TOP;
-          config->title_position = AxisLabelPosition::TOP;
           break;
         case AxisPosition::RIGHT:
           config->label_position = AxisLabelPosition::RIGHT;
-          config->title_position = AxisLabelPosition::RIGHT;
           break;
         case AxisPosition::BOTTOM:
           config->label_position = AxisLabelPosition::BOTTOM;
-          config->title_position = AxisLabelPosition::BOTTOM;
           break;
         case AxisPosition::LEFT:
           config->label_position = AxisLabelPosition::LEFT;
-          config->title_position = AxisLabelPosition::LEFT;
           break;
         case AxisPosition::CENTER_HORIZ:
         case AxisPosition::CENTER_VERT:
@@ -834,26 +910,20 @@ ReturnCode build(const Environment& env, const Expr* expr, ElementRef* elem) {
       switch (config->position) {
         case AxisPosition::TOP:
           config->label_position = AxisLabelPosition::BOTTOM;
-          config->title_position = AxisLabelPosition::BOTTOM;
           break;
         case AxisPosition::RIGHT:
           config->label_position = AxisLabelPosition::LEFT;
-          config->title_position = AxisLabelPosition::LEFT;
           break;
         case AxisPosition::BOTTOM:
           config->label_position = AxisLabelPosition::TOP;
-          config->title_position = AxisLabelPosition::TOP;
           break;
         case AxisPosition::LEFT:
           config->label_position = AxisLabelPosition::RIGHT;
-          config->title_position = AxisLabelPosition::RIGHT;
           break;
         case AxisPosition::CENTER_HORIZ:
         case AxisPosition::CENTER_VERT:
           return ERROR;
       }
-      break;
-    default:
       break;
   };
 

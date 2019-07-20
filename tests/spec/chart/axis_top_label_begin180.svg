@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900.000000" height="480.000000" viewBox="0 0 900 480">
+  <rect width="900.000000" height="480.000000" fill="#ffffff"/>
+  <path stroke-width="1.333333" stroke="#333333" fill="none" d="M39.1111 107.938 L860.889 107.938 "/>
+  <path stroke-width="1.333333" stroke="#333333" fill="none" d="M39.1111 107.938 L39.1111 113.272 "/>
+  <path stroke-width="1.333333" stroke="#333333" fill="none" d="M244.556 107.938 L244.556 113.272 "/>
+  <path stroke-width="1.333333" stroke="#333333" fill="none" d="M450 107.938 L450 113.272 "/>
+  <path stroke-width="1.333333" stroke="#333333" fill="none" d="M655.444 107.938 L655.444 113.272 "/>
+  <path stroke-width="1.333333" stroke="#333333" fill="none" d="M860.889 107.938 L860.889 113.272 "/>
+  <text x="39.111111" y="101.204861" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" transform="rotate(-90 39.1111 96.2049)">00:00:00</text>
+  <text x="244.555556" y="101.204861" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" transform="rotate(-90 244.556 96.2049)">00:15:00</text>
+  <text x="450.000000" y="101.204861" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" transform="rotate(-90 450 96.2049)">00:30:00</text>
+  <text x="655.444444" y="101.204861" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" transform="rotate(-90 655.444 96.2049)">00:45:00</text>
+  <text x="860.888889" y="101.204861" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" transform="rotate(-90 860.889 96.2049)">01:00:00</text>
+</svg>
