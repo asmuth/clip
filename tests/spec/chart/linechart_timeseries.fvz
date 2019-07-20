@@ -2,6 +2,9 @@
     data-x (csv "tests/testdata/measurement.csv" time)
     data-y (csv "tests/testdata/measurement.csv" value1)
     axes (bottom left)
+    axis-x-title "Time"
+    axis-y-title "Variable (f/s)"
+    axis-y-title-padding 2em
     axis-y-labels (scientific)
     axis-x-labels (datetime "%H:%M:%S")
     grid (color #fff)

@@ -51,6 +51,9 @@ install(TARGETS fviz-cli DESTINATION bin)
 
 # Testing
 # -----------------------------------------------------------------------------
+add_custom_target(test_dir ALL
+    COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_CURRENT_BINARY_DIR}/test)
+
 file(GLOB unit_test_files "tests/unit/test_*.cc")
 foreach(unit_test_path ${unit_test_files})
   get_filename_component(unit_test_name ${unit_test_path} NAME_WE)
@@ -61,7 +64,8 @@ foreach(unit_test_path ${unit_test_files})
 
   add_test(
       NAME ${unit_test_name}
-      COMMAND ${CMAKE_CURRENT_BINARY_DIR}/${unit_test_name})
+      COMMAND ${CMAKE_CURRENT_BINARY_DIR}/${unit_test_name}
+      DEPENDS fviz-cli test_dir)
 endforeach()
 
 file(GLOB spec_test_files "tests/spec/**/*.fvz")
@@ -71,26 +75,28 @@ foreach(spec_test_path ${spec_test_files})
   add_test(
       NAME ${spec_test_name}_svg
       WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-      COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/tests/spec/test_runner.sh ${CMAKE_CURRENT_BINARY_DIR}/fviz ${spec_test_name} ${spec_test_srcdir} ${CMAKE_CURRENT_BINARY_DIR})
+      COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/tests/spec/test_runner.sh ${CMAKE_CURRENT_BINARY_DIR}/fviz ${spec_test_name} ${spec_test_srcdir} ${CMAKE_CURRENT_BINARY_DIR}/test
+      DEPENDS fviz-cli test_dir)
 endforeach()
 
 
 # Examples
 # -----------------------------------------------------------------------------
 add_custom_target(examples)
+add_custom_target(examples_dir ALL
+    COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_CURRENT_BINARY_DIR}/examples)
+
 file(GLOB example_files "examples/**/*.fvz")
 foreach(example_path ${example_files})
   get_filename_component(example_name ${example_path} NAME_WE)
   get_filename_component(example_srcdir ${example_path} DIRECTORY)
-  add_test(
-      NAME test_example_${example_name}_svg
-      WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-      COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/tests/spec/test_runner.sh ${CMAKE_CURRENT_BINARY_DIR}/fviz ${example_name} ${example_srcdir} ${CMAKE_CURRENT_BINARY_DIR})
   add_custom_target(
       example_${example_name}
       WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-      COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/tests/spec/test_runner.sh ${CMAKE_CURRENT_BINARY_DIR}/fviz ${example_name} ${example_srcdir} ${CMAKE_CURRENT_BINARY_DIR})
+      COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/tests/spec/test_runner.sh ${CMAKE_CURRENT_BINARY_DIR}/fviz ${example_name} ${example_srcdir} ${CMAKE_CURRENT_BINARY_DIR}/examples)
   add_dependencies(examples example_${example_name})
+  add_dependencies(example_${example_name} fviz)
+  add_dependencies(example_${example_name} examples_dir)
 endforeach()
 
 
