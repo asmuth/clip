@@ -15,6 +15,31 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/core)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/core/utils)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
+option(FVIZ_TESTING "Builds with testing flags [default: OFF]" OFF)
+option(FVIZ_TESTING "Builds with coverage flags [default: OFF]" OFF)
+
+if(FVIZ_TESTING)
+  add_compile_options(
+      -Wall
+      -Wextra
+      -Werror
+      -Wno-error=sign-compare
+      -Wno-error=reorder
+      -Wno-error=unused-parameter
+      -Wno-error=unused-variable
+      -Wno-error=unused-but-set-variable
+      -Wno-error=catch-value
+      -Wno-error=switch
+      -g
+      --coverage
+      -O0
+      -fsanitize=address
+      -DADDRESS_SANITIZER
+      -fsanitize=undefined)
+
+  set(CMAKE_EXE_LINKER_FLAGS "--coverage ${CMAKE_EXE_LINKER_FLAGS} -fsanitize=address -fsanitize=undefined")
+endif()
+
 
 # Dependencies
 # -----------------------------------------------------------------------------
@@ -64,7 +89,7 @@ foreach(unit_test_path ${unit_test_files})
   target_link_libraries(${unit_test_name} ${fviz_LDFLAGS})
 
   add_test(
-      NAME ${unit_test_name}
+      NAME test_unit_${unit_test_name}
       COMMAND ${CMAKE_CURRENT_BINARY_DIR}/${unit_test_name}
       DEPENDS fviz-cli test_dir)
 endforeach()
@@ -74,7 +99,7 @@ foreach(spec_test_path ${spec_test_files})
   get_filename_component(spec_test_name ${spec_test_path} NAME_WE)
   get_filename_component(spec_test_srcdir ${spec_test_path} DIRECTORY)
   add_test(
-      NAME ${spec_test_name}_svg
+      NAME test_spec_${spec_test_name}
       WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
       COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/tests/spec/test_runner.sh ${CMAKE_CURRENT_BINARY_DIR}/fviz ${spec_test_name} ${spec_test_srcdir} ${CMAKE_CURRENT_BINARY_DIR}/test
       DEPENDS fviz-cli test_dir)
@@ -89,7 +114,7 @@ foreach(example_path ${example_files})
   get_filename_component(example_name ${example_path} NAME_WE)
   get_filename_component(example_srcdir ${example_path} DIRECTORY)
   add_test(
-      NAME test_example_${example_name}_svg
+      NAME test_example_${example_name}
       WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
       COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/tests/spec/test_runner.sh ${CMAKE_CURRENT_BINARY_DIR}/fviz ${example_name} ${example_srcdir} ${CMAKE_CURRENT_BINARY_DIR}/test-examples
       DEPENDS fviz-cli test_dir)
@@ -98,7 +123,7 @@ foreach(example_path ${example_files})
       WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
       COMMAND ${CMAKE_CURRENT_BINARY_DIR}/fviz --in ${example_srcdir}/${example_name}.fvz --out ${example_srcdir}/${example_name}.svg)
   add_dependencies(examples example_${example_name})
-  add_dependencies(example_${example_name} fviz)
+  add_dependencies(example_${example_name} fviz-cli)
 endforeach()
 
 
@@ -106,20 +131,6 @@ endforeach()
 # -----------------------------------------------------------------------------
 add_custom_target(docs
     COMMAND mkdir -p ${CMAKE_CURRENT_BINARY_DIR}/wwwdocs
-    COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/manual/web/build.sh ${CMAKE_CURRENT_BINARY_DIR}/wwwdocs)
-
-file(GLOB figure_files "manual/figures/*.fvz")
-foreach(figure_path ${figure_files})
-  get_filename_component(figure_name ${figure_path} NAME_WE)
-  get_filename_component(figure_srcdir ${figure_path} DIRECTORY)
-  add_test(
-      NAME test_figure_${figure_name}_svg
-      WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-      COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/tests/spec/test_runner.sh ${CMAKE_CURRENT_BINARY_DIR}/fviz ${figure_name} ${figure_srcdir} ${CMAKE_CURRENT_BINARY_DIR})
-  add_test(
-      figure_${figure_name}
-      WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-      COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/tests/spec/test_runner.sh ${CMAKE_CURRENT_BINARY_DIR}/fviz ${figure_name} ${figure_srcdir} ${CMAKE_CURRENT_BINARY_DIR})
-  add_dependencies(docs figure_${figure_name})
-endforeach()
+    COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/manual/web/build.sh ${CMAKE_CURRENT_BINARY_DIR}/wwwdocs
+    DEPENDS examples)
 
