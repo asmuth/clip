@@ -184,10 +184,13 @@ properties:
         desc_code: |
           axes ([top] [right] [bottom] [left])
         examples: |
-          ;; automatic bottom and left axis
-          axes (bottom left)
+          ;; display a left and bottom axis only
+          axes (left bottom)
 
-          ;; disable automatic axes
+          ;; display all axes
+          axes (top left bottom right)
+
+          ;; display no axes
           axes ()
       - name: axis-top
         desc: |

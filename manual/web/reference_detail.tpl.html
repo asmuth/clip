@@ -42,9 +42,14 @@
 
       <div style="margin-top: 1.4em;">
         {{{desc}}}
+        {{#alias}}
+          Alias for the <a href="#option-{{alias}}">{{alias}}</a> option.
+        {{/alias}}
       <div>
 
-      <pre><code>{{desc_code}}</code></pre>
+      {{#desc_code}}
+        <pre><code>{{desc_code}}</code></pre>
+      {{/desc_code}}
 
       {{#desc_detail}}
         <div style="margin-top: 1.4em;">
