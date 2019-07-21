@@ -44,6 +44,8 @@ ReturnCode build(
     {"marker-sizes", bind(&expr_rewritev, _1, "marker-sizes", &geom_opts)},
     {"labels", bind(&expr_rewritev, _1, "labels", &geom_opts)},
     {"label-font-size", bind(&expr_rewritev, _1, "label-font-size", &geom_opts)},
+    {"label-color", bind(&expr_rewritev, _1, "label-color", &geom_opts)},
+    {"label-padding", bind(&expr_rewritev, _1, "label-padding", &geom_opts)},
 
     /* scale options */
     {"limit-x", bind(&expr_rewritev, _1, "limit-x", &layout_opts)},

@@ -94,6 +94,12 @@ documentation:
     file: "elements"
     pages:
       -
+        title: "chart/linechart"
+        url: "/documentation/elements/chart/linechart"
+      -
+        title: "chart/scatterplot"
+        url: "/documentation/elements/chart/scatterplot"
+      -
         title: "chart/layout"
         url: "/documentation/elements/chart/layout"
       -

@@ -1,0 +1,39 @@
+name: chart/scatterplot
+example: charts-basic/scatterplot
+desc: |
+  The `chart/scatterplot` element is a helper element for creating scatterplots.
+
+reference: |
+  (chart/scatterplot <options>)
+
+option_summary: true
+
+properties:
+
+  - title: "Point Options"
+    anchor: point-options
+    inherit: ["elements/chart/points", "point-options"]
+
+  - title: "Label Options"
+    anchor: label-options
+    inherit: ["elements/chart/points", "label-options"]
+
+  - title: "Scale Options"
+    anchor: scale-options
+    inherit: ["elements/chart/layout", "scale-options"]
+
+  - title: "Axis Options"
+    anchor: axis-options
+    inherit: ["elements/chart/layout", "axis-options"]
+
+  - title: "Layout Options"
+    anchor: layout-options
+    inherit: ["elements/layout/box", "layout-options"]
+
+  - title: "Background Options"
+    anchor: background-options
+    inherit: ["elements/layout/box", "background-options"]
+
+  - title: "Border Options"
+    anchor: border-options
+    inherit: ["elements/layout/box", "border-options"]
