@@ -41,7 +41,15 @@ def build_elem_page(elem_file):
       "properties": []
     }
 
-    for prop in section["properties"]:
+    section_props = section.get("properties", [])
+    if "inherit" in section:
+      section_inherit_path = section["inherit"][0] + "_ref.yaml"
+      if os.path.exists(section_inherit_path):
+        for section_inherit in yaml.load(open(section_inherit_path))["properties"]:
+          if section_inherit["anchor"] == section["inherit"][1]:
+            section_props += section_inherit["properties"]
+
+    for prop in section_props:
       section_new["properties"].append(load_prop(prop))
     props_new.append(section_new)
 

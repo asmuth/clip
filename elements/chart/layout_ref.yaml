@@ -312,65 +312,6 @@ properties:
           legend (items ("My Data"))
 
 
-  - title: "Style Options"
-    anchor: style-options
-    properties:
-      - name: background
-        desc: |
-          Set the element's background fill/color. See the [fill-style](#FIXME) page
-          for more details on valid values.
-        desc_code: |
-          background <fill-style>
-        examples: |
-          ;; set the background color to grey
-          background #eee
-      - name: margin
-        desc: |
-          Set the element's top/right/bottom/left margins. See the [measure](#FIXME) page
-          for more details on valid values.
-        desc_code: |
-          margin <measure>
-        examples: |
-          ;; set the margin to 2em
-          margin 2em
-      - name: margin-top
-        desc: |
-          set the element's top margin. see the [measure](#fixme) page
-          for more details on valid values.
-        desc_code: |
-          margin <measure>
-        examples: |
-          ;; set the top margin to 2em
-          margin 2em
-      - name: margin-right
-        desc: |
-          set the element's right margin. see the [measure](#fixme) page
-          for more details on valid values.
-        desc_code: |
-          margin <measure>
-        examples: |
-          ;; set the right margin to 2em
-          margin 2em
-      - name: margin-bottom
-        desc: |
-          set the element's bottom margin. see the [measure](#fixme) page
-          for more details on valid values.
-        desc_code: |
-          margin <measure>
-        examples: |
-          ;; set the bottom margin to 2em
-          margin 2em
-      - name: margin-left
-        desc: |
-          set the element's left margin. see the [measure](#fixme) page
-          for more details on valid values.
-        desc_code: |
-          margin <measure>
-        examples: |
-          ;; set the left margin to 2em
-          margin 2em
-
-
   - title: "Extra Elements"
     anchor: extra-options
     properties:
@@ -399,3 +340,12 @@ properties:
           Add custom elements to the 'left' viewport of the chart
         desc_code: |
           left (<elements>)
+
+
+  - title: "Layout Options"
+    anchor: layout-options
+    inherit: ["elements/layout/box", "layout-options"]
+
+  - title: "Background Options"
+    anchor: background-options
+    inherit: ["elements/layout/box", "background-options"]

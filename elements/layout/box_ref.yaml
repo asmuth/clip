@@ -1,0 +1,68 @@
+name: layout/box
+desc: |
+  The layout/box element is the basic box layout element.
+reference: |
+  (layout/box <options>)
+
+properties:
+  - title: "Layout Options"
+    anchor: layout-options
+    properties:
+      - name: margin
+        desc: |
+          Set the element's top/right/bottom/left margins. See the [measure](#FIXME) page
+          for more details on valid values.
+        desc_code: |
+          margin <measure>
+        examples: |
+          ;; set the margin to 2em
+          margin 2em
+      - name: margin-top
+        desc: |
+          Set the element's top margin. see the [measure](#fixme) page
+          for more details on valid values.
+        desc_code: |
+          margin <measure>
+        examples: |
+          ;; set the top margin to 2em
+          margin 2em
+      - name: margin-right
+        desc: |
+          Set the element's right margin. see the [measure](#fixme) page
+          for more details on valid values.
+        desc_code: |
+          margin <measure>
+        examples: |
+          ;; set the right margin to 2em
+          margin 2em
+      - name: margin-bottom
+        desc: |
+          Set the element's bottom margin. see the [measure](#fixme) page
+          for more details on valid values.
+        desc_code: |
+          margin <measure>
+        examples: |
+          ;; set the bottom margin to 2em
+          margin 2em
+      - name: margin-left
+        desc: |
+          Set the element's left margin. see the [measure](#fixme) page
+          for more details on valid values.
+        desc_code: |
+          margin <measure>
+        examples: |
+          ;; set the left margin to 2em
+          margin 2em
+
+  - title: "Background Options"
+    anchor: background-options
+    properties:
+      - name: background
+        desc: |
+          Set the element's background fill/color. See the [fill-style](#FIXME) page
+          for more details on valid values.
+        desc_code: |
+          background <fill-style>
+        examples: |
+          ;; set the background color to grey
+          background #eee
