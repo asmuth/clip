@@ -1,0 +1,158 @@
+name: chart/bars
+example: charts-basic/barchart_with_labels
+desc: |
+  The `chart/bars` element is used to create bar charts.
+
+reference: |
+  (chart/bars <options>)
+
+option_summary: true
+
+properties:
+  - title: "Bar Options"
+    anchor: bar-options
+    properties:
+      - name: data-x
+        desc: |
+          Set the 'x' dataset for the plot. The 'x' dataset will be used to
+          calculate the horizontal position of geometry.
+        desc_code: |
+          data-x (<values>...)
+          data-x (csv <file> <column>)
+        examples: |
+          ;; list of static values
+          data-x (10px 20px 30px)
+
+          ;; load a csv file
+          data-x (csv myfile.csv mycolumn)
+      - name: data-x1
+        alias: data-x
+      - name: data-x2
+        desc: |
+          Set the 'x2' dataset for the plot. The 'x2' dataset will be used to
+          calculate the horizontal position of geometry.
+        desc_code: |
+          data-x2 (<values>...)
+          data-x2 (csv <file> <column>)
+        examples: |
+          ;; list of static values
+          data-x2 (10px 20px 30px)
+
+          ;; load a csv file
+          data-x2 (csv myfile.csv mycolumn)
+      - name: data-y
+        desc: |
+          Set the 'y' dataset for the plot. The 'y' dataset will be used to
+          calculate the vertical position of geometry.
+        desc_code: |
+          data-y (<values>...)
+          data-y (csv <file> <column>)
+        examples: |
+          ;; list of static values
+          data-y (10px 20px 30px)
+
+          ;; load a csv file
+          data-y (csv myfile.csv mycolumn)
+      - name: data-y1
+        alias: data-y
+      - name: data-y2
+        desc: |
+          Set the 'y2' dataset for the plot. The 'y2' dataset will be used to
+          calculate the vertical position of geometry.
+        desc_code: |
+          data-y2 (<values>...)
+          data-y2 (csv <file> <column>)
+        examples: |
+          ;; list of static values
+          data-y2 (10px 20px 30px)
+
+          ;; load a csv file
+          data-y2 (csv myfile.csv mycolumn)
+      - name: color
+        alias: colors
+      - name: colors
+        desc: |
+          Set the bar colors.
+        desc_code: |
+          colors (<values>...)
+          colors (csv <file> <column>)
+        examples: |
+          ;; list of static values
+          colors (#0f0 #00f #f00)
+
+          ;; load a csv file
+          colors (csv myfile.csv mycolors)
+      - name: direction
+        desc: |
+          Set the bar 'direction'.
+        desc_code: |
+          direction [horizontal|vertical]
+        examples: |
+          ;; draw a vertical "bar" chart
+          direction vertical
+
+          ;; draw a horizontal "column" chart
+          direction horizontal
+      - name: bar-width
+        desc: |
+          Set the bar width. See the
+          [measure](#FIXME) page for more details on valid values.
+        desc_code: |
+          bar-width <measure>
+        examples: |
+          ;; set the bar width to 1em
+          bar-width 1em
+      - name: bar-offset
+        desc: |
+          Set the bar offset. See the
+          [measure](#FIXME) page for more details on valid values.
+        desc_code: |
+          bar-offset <measure>
+        examples: |
+          ;; set the bar offset to -.4em
+          bar-offset -.4em
+
+  - title: "Label Options"
+    anchor: label-options
+    properties:
+      - name: labels
+        desc: |
+          Set the labels for the plot. If set, a label will be drawn for each
+          bar in the dataset at the bar's (x, y) coordinate,
+        desc_code: |
+          labels (<values>...)
+          labels (csv <file> <column>)
+        examples: |
+          ;; list of static values
+          labels ("A" "B" "C")
+
+          ;; load a csv file
+          labels (csv myfile.csv mylabels)
+      - name: label-font-size
+        desc: |
+          Set the label font size. See the [measure](#FIXME) page for more details on valid values.
+        desc_code: |
+          label-font-size <measure>
+        examples: |
+          ;; set the label font size to 14pt
+          label-font-size 14pt
+      - name: label-color
+        desc: |
+          Set the label color. See the [color](#FIXME) page for more details on valid values.
+        desc_code: |
+          label-color <color>
+        examples: |
+          ;; set the label color to grey
+          label-color #eee
+      - name: label-padding
+        desc: |
+          Set the label padding/spacing. See the [measure](#FIXME) page for more details on valid values.
+        desc_code: |
+          label-padding <measure>
+        examples: |
+          ;; set the label padding to 2em
+          label-padding 2em
+
+  - title: "Scale Options"
+    anchor: scale-options
+    inherit: ["elements/chart/layout", "scale-options"]

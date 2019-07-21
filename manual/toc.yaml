@@ -115,6 +115,9 @@ documentation:
         title: "chart/areas"
         url: "/documentation/elements/chart/areas"
       -
+        title: "chart/bars"
+        url: "/documentation/elements/chart/bars"
+      -
         title: "chart/lines"
         url: "/documentation/elements/chart/lines"
       -
