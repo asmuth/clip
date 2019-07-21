@@ -289,6 +289,7 @@ ReturnCode build(
   ExprStorage legend_opts;
 
   auto config_rc = expr_walk_map(expr_next(expr), {
+    /* scale options */
     {"limit-x", bind(&expr_to_float64_opt_pair, _1, &scale_x.min, &scale_x.max)},
     {"limit-x-min", bind(&expr_to_float64_opt, _1, &scale_x.min)},
     {"limit-x-max", bind(&expr_to_float64_opt, _1, &scale_x.max)},
@@ -313,6 +314,8 @@ ReturnCode build(
     },
     {"scale-x-padding", bind(&expr_to_float64, _1, &scale_x.padding)},
     {"scale-y-padding", bind(&expr_to_float64, _1, &scale_y.padding)},
+
+    /* axis options */
     {"axes", bind(&expr_to_stringset, _1, &axes_auto)},
     {"axis-top", bind(&configure_axis, "chart/axis-top", 0, _1, &axes)},
     {"axis-right", bind(&configure_axis, "chart/axis-right", 1, _1, &axes)},
@@ -334,29 +337,29 @@ ReturnCode build(
     },
     {"axis-x-labels", bind(&expr_rewritev, _1, "labels", &axis_x_opts)},
     {"axis-y-labels", bind(&expr_rewritev, _1, "labels", &axis_y_opts)},
-    {"axis-x-label-font-size", bind(&expr_rewritev, _1, "label-font-size", &axis_x_opts)},
-    {"axis-y-label-font-size", bind(&expr_rewritev, _1, "label-font-size", &axis_y_opts)},
-    {"axis-x-label-color", bind(&expr_rewritev, _1, "label-color", &axis_x_opts)},
-    {"axis-y-label-color", bind(&expr_rewritev, _1, "label-color", &axis_y_opts)},
-    {"axis-x-label-padding", bind(&expr_rewritev, _1, "label-padding", &axis_x_opts)},
-    {"axis-y-label-padding", bind(&expr_rewritev, _1, "label-padding", &axis_y_opts)},
     {"axis-x-title", bind(&expr_rewritev, _1, "title", &axis_x_opts)},
     {"axis-y-title", bind(&expr_rewritev, _1, "title", &axis_y_opts)},
-    {"axis-x-title-font-size", bind(&expr_rewritev, _1, "title-font-size", &axis_x_opts)},
-    {"axis-y-title-font-size", bind(&expr_rewritev, _1, "title-font-size", &axis_y_opts)},
-    {"axis-x-title-color", bind(&expr_rewritev, _1, "title-color", &axis_x_opts)},
-    {"axis-y-title-color", bind(&expr_rewritev, _1, "title-color", &axis_y_opts)},
-    {"axis-x-title-padding", bind(&expr_rewritev, _1, "title-padding", &axis_x_opts)},
-    {"axis-y-title-padding", bind(&expr_rewritev, _1, "title-padding", &axis_y_opts)},
-    {"axis-x-title-rotate", bind(&expr_rewritev, _1, "title-padding", &axis_x_opts)},
-    {"axis-y-title-rotate", bind(&expr_rewritev, _1, "title-padding", &axis_y_opts)},
+
+    /* geom options */
     {"areas", bind(&configure_geom, "chart/areas", _1, &geoms, &x, &y)},
     {"bars", bind(&configure_geom, "chart/bars", _1, &geoms, &x, &y)},
     {"lines", bind(&configure_geom, "chart/lines", _1, &geoms, &x, &y)},
     {"labels", bind(&configure_geom, "chart/labels", _1, &geoms, &x, &y)},
     {"points", bind(&configure_geom, "chart/points", _1, &geoms, &x, &y)},
+
+    /* grid & legend */
     {"grid", bind(&expr_to_copy, _1, &grid_opts)},
     {"legend", bind(&expr_to_copy, _1, &legend_opts)},
+
+    /* extra elements */
+    {"body", bind(&element_build_list, env, _1, &config->body_elements)},
+    {"top", bind(&element_build_list, env, _1, &config->margin_elements[0])},
+    {"right", bind(&element_build_list, env, _1, &config->margin_elements[1])},
+    {"bottom", bind(&element_build_list, env, _1, &config->margin_elements[2])},
+    {"left", bind(&element_build_list, env, _1, &config->margin_elements[3])},
+
+    /* background, margins, borders */
+    {"background", bind(&expr_to_color_opt, _1, &config->background)},
     {
       "margin",
       expr_calln_fn({
@@ -370,7 +373,6 @@ ReturnCode build(
     {"margin-right", bind(&expr_to_measure, _1, &config->margins[1])},
     {"margin-bottom", bind(&expr_to_measure, _1, &config->margins[2])},
     {"margin-left", bind(&expr_to_measure, _1, &config->margins[3])},
-    {"background", bind(&expr_to_color_opt, _1, &config->background)},
     {
       "border",
       expr_calln_fn({
@@ -410,11 +412,6 @@ ReturnCode build(
     {"border-right-width", bind(&expr_to_measure, _1, &config->borders[1].line_width)},
     {"border-bottom-width", bind(&expr_to_measure, _1, &config->borders[2].line_width)},
     {"border-left-width", bind(&expr_to_measure, _1, &config->borders[3].line_width)},
-    {"body", bind(&element_build_list, env, _1, &config->body_elements)},
-    {"top", bind(&element_build_list, env, _1, &config->margin_elements[0])},
-    {"right", bind(&element_build_list, env, _1, &config->margin_elements[1])},
-    {"bottom", bind(&element_build_list, env, _1, &config->margin_elements[2])},
-    {"left", bind(&element_build_list, env, _1, &config->margin_elements[3])},
   });
 
   if (!config_rc) {
