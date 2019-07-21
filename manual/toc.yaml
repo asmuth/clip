@@ -112,6 +112,9 @@ documentation:
         title: "chart/axis-left"
         url: "/documentation/elements/chart/axis-left"
       -
+        title: "chart/lines"
+        url: "/documentation/elements/chart/lines"
+      -
         title: "chart/points"
         url: "/documentation/elements/chart/points"
 
