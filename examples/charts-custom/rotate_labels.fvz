@@ -1,0 +1,12 @@
+(chart/linechart
+    data-x (csv "tests/testdata/measurement.csv" time)
+    data-y (csv "tests/testdata/measurement.csv" value1)
+    margin-right 3em
+    axis-left (
+        ticks (subdivide 4)
+        labels (scientific)
+        label-attach center)
+    axis-bottom (
+        labels (datetime "%H:%M:%S")
+        label-attach begin
+        label-rotate -45))

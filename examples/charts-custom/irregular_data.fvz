@@ -1,6 +1,3 @@
-(set height 480px)
-(set width 1200px)
-
 (chart/layout
     limit-x (-12 22)
     limit-y (-35 55)

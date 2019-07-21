@@ -52,7 +52,8 @@ install(TARGETS fviz-cli DESTINATION bin)
 # Testing
 # -----------------------------------------------------------------------------
 add_custom_target(test_dir ALL
-    COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_CURRENT_BINARY_DIR}/test)
+    COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_CURRENT_BINARY_DIR}/test
+    COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_CURRENT_BINARY_DIR}/test-examples)
 
 file(GLOB unit_test_files "tests/unit/test_*.cc")
 foreach(unit_test_path ${unit_test_files})
@@ -82,21 +83,22 @@ endforeach()
 
 # Examples
 # -----------------------------------------------------------------------------
-add_custom_target(examples)
-add_custom_target(examples_dir ALL
-    COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_CURRENT_BINARY_DIR}/examples)
-
+add_custom_target(examples ALL)
 file(GLOB example_files "examples/**/*.fvz")
 foreach(example_path ${example_files})
   get_filename_component(example_name ${example_path} NAME_WE)
   get_filename_component(example_srcdir ${example_path} DIRECTORY)
+  add_test(
+      NAME test_example_${example_name}_svg
+      WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+      COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/tests/spec/test_runner.sh ${CMAKE_CURRENT_BINARY_DIR}/fviz ${example_name} ${example_srcdir} ${CMAKE_CURRENT_BINARY_DIR}/test-examples
+      DEPENDS fviz-cli test_dir)
   add_custom_target(
       example_${example_name}
       WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-      COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/tests/spec/test_runner.sh ${CMAKE_CURRENT_BINARY_DIR}/fviz ${example_name} ${example_srcdir} ${CMAKE_CURRENT_BINARY_DIR}/examples)
+      COMMAND ${CMAKE_CURRENT_BINARY_DIR}/fviz --in ${example_srcdir}/${example_name}.fvz --out ${example_srcdir}/${example_name}.svg)
   add_dependencies(examples example_${example_name})
   add_dependencies(example_${example_name} fviz)
-  add_dependencies(example_${example_name} examples_dir)
 endforeach()
 
 

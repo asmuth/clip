@@ -24,3 +24,12 @@
     - file: charts-basic/areas_and_lines
     - file: charts-basic/areas_vertical
 
+- section: Axes and Scales
+  files:
+    - file: charts-custom/axis_titles
+    - file: charts-custom/rotate_labels
+    - file: charts-custom/inverted_scale
+    - file: charts-custom/irregular_data
+    - file: charts-custom/logarithmic_scale
+    - file: charts-custom/multiple_y_axes
+
