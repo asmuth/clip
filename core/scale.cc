@@ -199,7 +199,7 @@ ReturnCode scale_configure_kind(
       "linear",
       "log",
       "logarithmic",
-      "inverted",
+      "invert",
       "inverted"
     });
   }

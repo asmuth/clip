@@ -22,6 +22,9 @@ def load_prop(p):
   if not "name" in p:
     p["name"] = p["prop"]
 
+  if "desc" in p:
+    p["desc"] = markdown.markdown(p["desc"])
+
   if "desc_detail" in p:
     p["desc_detail"] = markdown.markdown(p["desc_detail"])
 
@@ -29,7 +32,24 @@ def load_prop(p):
 
 def build_elem_page(elem_file):
   elem = yaml.load(open(elem_file))
-  elem["properties"] = list(map(lambda p: load_prop(p), elem["properties"]))
+
+  props_new = []
+  for section in elem["properties"]:
+    section_new = {
+      "title": section["title"],
+      "anchor": section.get("anchor", ""),
+      "properties": []
+    }
+
+    for prop in section["properties"]:
+      section_new["properties"].append(load_prop(prop))
+    props_new.append(section_new)
+
+  elem["properties"] = props_new
+
+  if "desc" in elem:
+    elem["desc"] = markdown.markdown(elem["desc"])
+
   url = "/documentation/elements/" + elem["name"]
 
   if "example" in elem:
@@ -43,10 +63,9 @@ def build_elem_page(elem_file):
   write_page(url, html, title=title)
 
 def main():
-  elems = glob.glob("manual/elem_*.yaml")
+  elems = glob.glob("elements/**/*_ref.yaml")
 
   for elem in elems:
-    print(elem)
     build_elem_page(elem)
 
 main()

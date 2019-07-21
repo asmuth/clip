@@ -11,28 +11,35 @@
 </section>
 {{/example}}
 
-<h2>Options</h2>
 {{#properties}}
-  <section style="border-top: none; padding-bottom: 1em;">
-    <h4><em><code>{{name}}</code></em></h4>
+  <a href="#{{anchor}}">
+    <h2 id="{{anchor}}">{{title}}</h2>
+  </a>
 
-    <div style="margin-top: 1.4em;">
-      {{desc}}
-    <div>
+  {{#properties}}
+    <section style="border-top: none; padding-bottom: 1em;">
+      <a href="#option-{{name}}">
+        <h4 id="option-{{name}}"><em><code>{{name}}</code></em></h4>
+      </a>
 
-    <pre><code>{{desc_code}}</code></pre>
-
-    {{#desc_detail}}
       <div style="margin-top: 1.4em;">
-        {{{desc_detail}}}
+        {{{desc}}}
       <div>
-    {{/desc_detail}}
 
-    {{#examples}}
-      <h5>Examples:</h5>
-      <pre><code>{{examples}}</code></pre>
-    {{/examples}}
+      <pre><code>{{desc_code}}</code></pre>
 
-  </section>
+      {{#desc_detail}}
+        <div style="margin-top: 1.4em;">
+          {{{desc_detail}}}
+        <div>
+      {{/desc_detail}}
+
+      {{#examples}}
+        <h5>Examples:</h5>
+        <pre><code>{{examples}}</code></pre>
+      {{/examples}}
+
+    </section>
+  {{/properties}}
 {{/properties}}
 

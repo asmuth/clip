@@ -1,0 +1,401 @@
+name: chart/layout
+example: charts-basic/scatterplot
+desc: |
+  The chart/layout element is the basic container object used to create charts.
+
+  Note that the chart uses a coordinate system where (0, 0) is at the bottom left
+  corner of the screen and positive values of the y axis extend upwards. This is
+  different to other elements which follow the usual computer graphics convention,
+  but is much more natural for creating plots.
+
+reference: |
+  (chart/layout <options>)
+
+properties:
+  - title: "Geometry Options"
+    anchor: geom-options
+    properties:
+      - name: areas
+        desc: |
+          Add a 'chart/areas' element to the chart. See the [chart/areas](./areas)
+          element for options.
+        desc_code: |
+          areas (<options>)
+      - name: bars
+        desc: |
+          Add a 'chart/bars' element to the chart. See the [chart/bars](./bars)
+          element for options.
+        desc_code: |
+          bars (<options>)
+      - name: lines
+        desc: |
+          Add a 'chart/lines' element to the chart. See the [chart/lines](./lines)
+          element for options.
+        desc_code: |
+          lines (<options>)
+      - name: labels
+        desc: |
+          Add a 'chart/labels' element to the chart. See the [chart/labels](./labels)
+          element for options.
+        desc_code: |
+          labels (<options>)
+      - name: points
+        desc: |
+          Add a 'chart/points' element to the chart. See the [chart/points](./points)
+          element for options.
+        desc_code: |
+          points (<options>)
+
+  - title: "Scale Options"
+    anchor: scale-options
+    properties:
+      - name: limit-x
+        desc: |
+          Set the 'x' axis value range to the closed interval [min, max].
+          If no explicit limits are specified, the limit is set to the smallest
+          interval that contains all input data points.
+        desc_code: |
+          limit-x (<min> <max)
+        examples: |
+          ;; set x axis range to [1..10]
+          limit-x (1 10)
+      - name: limit-x-min
+        desc: |
+          Set the 'x' axis minimum value.
+          If no explicit minimum is specified, the minimum is set to the smallest
+          value in the input data set.
+        desc_code: |
+          limit-x-min <min>
+        examples: |
+          ;; set x axis min value to 2
+          limit-x-min 2
+      - name: limit-x-max
+        desc: |
+          Set the 'x' axis maximum value.
+          If no explicit maximm is specified, the maximum is set to the largest
+          value in the input data set.
+        desc_code: |
+          limit-x-max <max>
+        examples: |
+          ;; set x axis max value to 20
+          limit-x-max 20
+      - name: limit-y
+        desc: |
+          Set the 'y' axis value range to the closed interval [min, max].
+          If no explicit limits are specified, the limit is set to the smallest
+          interval that contains all input data points.
+        desc_code: |
+          limit-y (<min> <max)
+        examples: |
+          ;; set y axis range to [1..10]
+          limit-y (1 10)
+      - name: limit-y-min
+        desc: |
+          Set the 'y' axis minimum value.
+          If no explicit minimum is specified, the minimum is set to the smallest
+          value in the input data set.
+        desc_code: |
+          limit-y-min <min>
+        examples: |
+          ;; set y axis min value to 2
+          limit-y-min 2
+      - name: limit-y-max
+        desc: |
+          Set the 'y' axis maximum value.
+          If no explicit maximm is specified, the maximum is set to the largest
+          value in the input data set.
+        desc_code: |
+          limit-y-max <max>
+        examples: |
+          ;; set y axis max value to 20
+          limit-y-max 20
+      - name: scale-x
+        desc: |
+          Set the 'x' scale type.
+        desc_code: |
+          scale-x ([linear] [log] [logarithmic] [invert] [inverted])
+        desc_detail: |
+          List of scale types:
+
+            - `linear` - Standard linear scale
+            - `log`, `logarithmic` - Logarithmic (log10) scale
+            - `invert`, `inverted` - Flip the scale
+
+        examples: |
+          ;; set x axis to logarithmic mode
+          scale-x (log)
+
+          ;; set x axis to inverted mode
+          scale-x (invert)
+      - name: scale-y
+        desc: |
+          Set the 'y' scale type.
+        desc_code: |
+          scale-y ([linear] [log] [logarithmic] [invert] [inverted])
+        desc_detail: |
+          List of scale types:
+
+            - `linear` - Standard linear scale
+            - `log`, `logarithmic` - Logarithmic (log10) scale
+            - `invert`, `inverted` - Flip the scale
+
+        examples: |
+          ;; set x axis to logarithmic mode
+          scale-y (log)
+
+          ;; set x axis to inverted mode
+          scale-y (invert)
+      - name: scale-x-padding
+        desc: |
+          Set the 'x' scale 'padding'. The scale padding is used to extend the
+          automatically assigned scale limits. The padding option is hence only
+          useful when no explicit limits are specified (using `limit-x`).
+          The padding is specified in the display unit system of the axis.
+        desc_code: |
+          scale-x-padding <value>
+        examples: |
+          ;; set x axis padding to 10
+          scale-x-padding 10
+      - name: scale-y-padding
+        desc: |
+          Set the 'y' scale 'padding'. The scale padding is used to extend the
+          automatically assigned scale limits. The padding option is hence only
+          useful when no explicit limits are specified (using `limit-y`).
+          The padding is specified in the display unit system of the axis.
+        desc_code: |
+          scale-y-padding <value>
+        examples: |
+          ;; set y axis padding to 10
+          scale-y-padding 10
+
+  - title: "Axis Options"
+    anchor: axis-options
+    properties:
+      - name: axes
+        desc: |
+          Specify a list of 'automatic' axes. This option is used to quickly
+          add axis with default styling to a chart. For all customization options,
+          add axes using the `axis-{top,right,bottom,left}` options.
+
+          The axes option will default to `top right bottom left` if no other
+          axes are specified. If any other axis is specified, the property will
+          default to the empty list.
+        desc_code: |
+          axes ([top] [right] [bottom] [left])
+        examples: |
+          ;; automatic bottom and left axis
+          axes (bottom left)
+
+          ;; disable automatic axes
+          axes ()
+      - name: axis-top
+        desc: |
+          Add a 'top' axis to the chart. See the [chart/axis-top](./axis-top) element for
+          options.
+        desc_code: |
+          axis-top (<options>)
+        examples: |
+          ;; add a top axis with the title "Time"
+          axis-top (
+            title "Time"
+            title-font-size 14pt))
+      - name: axis-right
+        desc: |
+          Add a 'right' axis to the chart. See the [chart/axis-right](./axis-right) element for
+          options.
+        desc_code: |
+          axis-right (<options>)
+        examples: |
+          ;; add a right axis with the title "Time"
+          axis-right (
+            title "Time"
+            title-font-size 14pt))
+      - name: axis-bottom
+        desc: |
+          Add a 'bottom' axis to the chart. See the [chart/axis-bottom](./axis-bottom) element for
+          options.
+        desc_code: |
+          axis-bottom (<options>)
+        examples: |
+          ;; add a bottom axis with the title "Time"
+          axis-bottom (
+            title "Time"
+            title-font-size 14pt))
+      - name: axis-left
+        desc: |
+          Add a 'left' axis to the chart. See the [chart/axis-left](./axis-left) element for
+          options.
+        desc_code: |
+          axis-left (<options>)
+        examples: |
+          ;; add a left axis with the title "Time"
+          axis-left (
+            title "Time"
+            title-font-size 14pt))
+      - name: axis-x-title
+        desc: |
+          Convenience option to set the axis title for all 'x' axes (top/bottom).
+        desc_code: |
+          axis-x-title <title>
+        examples: |
+          ;; set the top/bottom axis title to "Time"
+          axis-x-title "Time"
+      - name: axis-y-title
+        desc: |
+          Convenience option to set the axis title for all 'y' axes (left/right).
+        desc_code: |
+          axis-y-title <title>
+        examples: |
+          ;; set the left/right axis title to "Time"
+          axis-y-title "Time"
+      - name: axis-x-labels
+        desc: |
+          Convenience option to set the axis labels for all 'x' axes (top/bottom).
+          This option is an alias for the [chart/axis](./axis) element's
+          [`labels`](./axis#option-labels) option.
+        desc_code: |
+          axis-x-labels <labels>
+        examples: |
+          ;; use scientific labels for the top/bottom axes
+          axis-x-labels (scientific)
+      - name: axis-y-labels
+        desc: |
+          Convenience option to set the axis labels for all 'y' axes (left/right).
+          This option is an alias for the [chart/axis](./axis) element's
+          [`labels`](./axis#option-labels) option.
+        desc_code: |
+          axis-y-labels <labels>
+        examples: |
+          ;; use scientific labels for the left/right axes
+          axis-x-labels (scientific)
+      - name: axis-x-ticks
+        desc: |
+          Convenience option to set the axis ticks for all 'x' axes (top/bottom).
+          This option is an alias for the [chart/axis](./axis) element's
+          [`ticks`](./axis#option-ticks) option.
+        desc_code: |
+          axis-x-ticks <ticks>
+        examples: |
+          ;; subdivide the x axis with 10 ticks
+          axis-x-ticks (subdivide 10)
+      - name: axis-y-ticks
+        desc: |
+          Convenience option to set the axis ticks for all 'y' axes (left/right).
+          This option is an alias for the [chart/axis](./axis) element's
+          [`ticks`](./axis#option-ticks) option.
+        desc_code: |
+          axis-y-ticks <ticks>
+        examples: |
+          ;; subdivide the y axis with 10 ticks
+          axis-y-ticks (subdivide 10)
+
+  - title: "Grid & Legend Options"
+    anchor: other-options
+    properties:
+      - name: grid
+        desc: |
+          Add a 'grid' to the chart. See the [chart/gridlines](./gridlines) element for
+          options.
+        desc_code: |
+          grid (<options>)
+        examples: |
+          ;; add a white background grid
+          grid (color #fff)
+      - name: legend
+        desc: |
+          Add a 'legend' to the chart. See the [chart/legend](./legend) element for
+          options.
+        desc_code: |
+          legend (<options>)
+        examples: |
+          ;; add a legend
+          legend (items ("My Data"))
+
+
+  - title: "Style Options"
+    anchor: style-options
+    properties:
+      - name: background
+        desc: |
+          Set the element's background fill/color. See the [fill-style](#FIXME) page
+          for more details on valid values.
+        desc_code: |
+          background <fill-style>
+        examples: |
+          ;; set the background color to grey
+          background #eee
+      - name: margin
+        desc: |
+          Set the element's top/right/bottom/left margins. See the [measure](#FIXME) page
+          for more details on valid values.
+        desc_code: |
+          margin <measure>
+        examples: |
+          ;; set the margin to 2em
+          margin 2em
+      - name: margin-top
+        desc: |
+          set the element's top margin. see the [measure](#fixme) page
+          for more details on valid values.
+        desc_code: |
+          margin <measure>
+        examples: |
+          ;; set the top margin to 2em
+          margin 2em
+      - name: margin-right
+        desc: |
+          set the element's right margin. see the [measure](#fixme) page
+          for more details on valid values.
+        desc_code: |
+          margin <measure>
+        examples: |
+          ;; set the right margin to 2em
+          margin 2em
+      - name: margin-bottom
+        desc: |
+          set the element's bottom margin. see the [measure](#fixme) page
+          for more details on valid values.
+        desc_code: |
+          margin <measure>
+        examples: |
+          ;; set the bottom margin to 2em
+          margin 2em
+      - name: margin-left
+        desc: |
+          set the element's left margin. see the [measure](#fixme) page
+          for more details on valid values.
+        desc_code: |
+          margin <measure>
+        examples: |
+          ;; set the left margin to 2em
+          margin 2em
+
+
+  - title: "Extra Elements"
+    anchor: extra-options
+    properties:
+      - name: body
+        desc: |
+          Add custom elements to the 'body' viewport of the chart
+        desc_code: |
+          body (<elements>)
+      - name: top
+        desc: |
+          Add custom elements to the 'top' viewport of the chart
+        desc_code: |
+          top (<elements>)
+      - name: right
+        desc: |
+          Add custom elements to the 'right' viewport of the chart
+        desc_code: |
+          right (<elements>)
+      - name: bottom
+        desc: |
+          Add custom elements to the 'bottom' viewport of the chart
+        desc_code: |
+          bottom (<elements>)
+      - name: left
+        desc: |
+          Add custom elements to the 'left' viewport of the chart
+        desc_code: |
+          left (<elements>)

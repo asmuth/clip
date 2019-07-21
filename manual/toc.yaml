@@ -52,71 +52,50 @@ documentation:
   #      url: "/documentation/plot-bars"
   #      file: ""
 
-  -
-    title: "Reference"
-    pages:
-      #-
-      #  title: "Data Sources"
-      #  url: "/documentation/data_sources"
-      #  file: "data_sources"
-      #-
-      #  title: "Values & Units"
-      #  url: "/documentation/units"
-      #  file: "units"
-      -
-        title: "Scales"
-        url: "/documentation/plot-scales"
-        file: "scales"
-      -
-        title: "Formatters"
-        url: "/documentation/formatter"
-        file: "formatter"
-      #-
-      #  title: "Colours"
-      #  url: "/documentation/color-palette"
-      #  file: "color_palette"
-      #-
-      #  title: "Line Styles"
-      #  url: "/documentation/line-styles"
-      #  file: "line_styles"
-      #-
-      #  title: "Point Styles"
-      #  url: "/documentation/point-styles"
-      #  file: "point_styles"
-      #-
-      #  title: "Layout"
-      #  url: "/documentation/layout"
-      #  file: "layout"
+  #-
+  #  title: "Reference"
+  #  pages:
+  #    #-
+  #    #  title: "Data Sources"
+  #    #  url: "/documentation/data_sources"
+  #    #  file: "data_sources"
+  #    #-
+  #    #  title: "Values & Units"
+  #    #  url: "/documentation/units"
+  #    #  file: "units"
+  #    -
+  #      title: "Scales"
+  #      url: "/documentation/plot-scales"
+  #      file: "scales"
+  #    -
+  #      title: "Formatters"
+  #      url: "/documentation/formatter"
+  #      file: "formatter"
+  #    #-
+  #    #  title: "Colours"
+  #    #  url: "/documentation/color-palette"
+  #    #  file: "color_palette"
+  #    #-
+  #    #  title: "Line Styles"
+  #    #  url: "/documentation/line-styles"
+  #    #  file: "line_styles"
+  #    #-
+  #    #  title: "Point Styles"
+  #    #  url: "/documentation/point-styles"
+  #    #  file: "point_styles"
+  #    #-
+  #    #  title: "Layout"
+  #    #  url: "/documentation/layout"
+  #    #  file: "layout"
+
   -
     title: "Elements"
     url: "/documentation/elements"
     file: "elements"
     pages:
       -
-        title: "chart/areas"
-        url: "/documentation/elements/chart/areas"
-      -
-        title: "chart/axis"
-        url: "/documentation/elements/chart/axis"
-      -
-        title: "chart/bars"
-        url: "/documentation/elements/chart/bars"
-      -
-        title: "chart/gridlines"
-        url: "/documentation/elements/chart/gridlines"
-      -
-        title: "chart/legend"
-        url: "/documentation/elements/chart/legend"
-      -
-        title: "chart/lines"
-        url: "/documentation/elements/chart/lines"
-      -
-        title: "chart/points"
-        url: "/documentation/elements/chart/points"
-      -
-        title: "chart/scatterplot"
-        url: "/documentation/elements/chart/scatterplot"
-
+        title: "chart/layout"
+        url: "/documentation/elements/chart/layout"
 
   -
     title: "Community"
