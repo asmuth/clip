@@ -11,6 +11,22 @@
 </section>
 {{/example}}
 
+
+{{#option_summary}}
+  <h2>Options</h2>
+  <div>
+    {{#properties}}
+      <h4 style="margin-top: 1.2em; margin-bottom: .4em;">{{title}}</h4>
+      {{#properties}}
+        <a href="#option-{{name}}" class="prop">
+          <span><code><strong>{{name}}</strong></code></span>
+          <span>{{desc_short}}</span>
+        </a>
+      {{/properties}}
+    {{/properties}}
+  </div>
+{{/option_summary}}
+
 {{#properties}}
   <a href="#{{anchor}}">
     <h2 id="{{anchor}}">{{title}}</h2>

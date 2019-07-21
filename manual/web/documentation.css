@@ -42,12 +42,13 @@ h3 {
   color: #333;
 }
 
-h2 {
+h2, a h2 {
   border-bottom: 2px solid #eee;
   margin-top: 2em;
   margin-bottom: .8em;
   padding-bottom: .2em;
   font-weight: 600;
+  color: #000;
 }
 
 h4 em {

@@ -11,6 +11,7 @@ desc: |
 reference: |
   (chart/layout <options>)
 
+option_summary: true
 properties:
   - title: "Geometry Options"
     anchor: geom-options
