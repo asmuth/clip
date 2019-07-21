@@ -298,7 +298,7 @@ properties:
     properties:
       - name: grid
         desc: |
-          Add a 'grid' to the chart. See the [chart/gridlines](./gridlines) element for
+          Add a 'grid' to the chart. See the [chart/grid](./grid) element for
           options.
         desc_code: |
           grid (<options>)

@@ -1,7 +1,7 @@
 (layout/box
   margin 1em
   body (
-    (chart/gridlines
-      axis-x-ticks (linear 1)
+    (chart/grid
+      ticks-x (linear 1)
       limit-x-min 0
       limit-x-max 16)))

@@ -11,7 +11,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#include "gridlines.h"
+#include "grid.h"
 #include "environment.h"
 #include "format.h"
 #include "layout.h"
@@ -24,7 +24,7 @@
 
 using namespace std::placeholders;
 
-namespace fviz::elements::chart::gridlines {
+namespace fviz::elements::chart::grid {
 
 static const double kDefaultLineWidthPT = 1;
 
@@ -96,8 +96,8 @@ ReturnCode build(const Environment& env, const Expr* expr, ElementRef* elem) {
     {"limit-y", bind(&expr_to_float64_opt_pair, _1, &c->scale_y.min, &c->scale_y.max)},
     {"limit-y-min", bind(&expr_to_float64_opt, _1, &c->scale_y.min)},
     {"limit-y-max", bind(&expr_to_float64_opt, _1, &c->scale_y.max)},
-    {"axis-x-ticks", bind(&scale_configure_layout, _1, &c->layout_x)},
-    {"axis-y-ticks", bind(&scale_configure_layout, _1, &c->layout_y)},
+    {"ticks-x", bind(&scale_configure_layout, _1, &c->layout_x)},
+    {"ticks-y", bind(&scale_configure_layout, _1, &c->layout_y)},
     {"scale-x", bind(&scale_configure_kind, _1, &c->scale_x)},
     {"scale-y", bind(&scale_configure_kind, _1, &c->scale_y)},
     {"scale-x-padding", bind(&expr_to_float64, _1, &c->scale_x.padding)},
@@ -115,5 +115,5 @@ ReturnCode build(const Environment& env, const Expr* expr, ElementRef* elem) {
   return OK;
 }
 
-} // namespace fviz::elements::chart::gridlines
+} // namespace fviz::elements::chart::grid
 

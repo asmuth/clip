@@ -325,14 +325,14 @@ ReturnCode build(
       "axis-x-ticks",
       expr_calln_fn({
         bind(&expr_rewritev, _1, "ticks", &axis_x_opts),
-        bind(&expr_rewritev, _1, "axis-x-ticks", &grid_extra_opts),
+        bind(&expr_rewritev, _1, "ticks-x", &grid_extra_opts),
       })
     },
     {
       "axis-y-ticks",
       expr_calln_fn({
         bind(&expr_rewritev, _1, "ticks", &axis_y_opts),
-        bind(&expr_rewritev, _1, "axis-y-ticks", &grid_extra_opts),
+        bind(&expr_rewritev, _1, "ticks-y", &grid_extra_opts),
       })
     },
     {"axis-x-labels", bind(&expr_rewritev, _1, "labels", &axis_x_opts)},
@@ -475,7 +475,7 @@ ReturnCode build(
   /* build the grid element */
   if (grid_opts) {
     auto elem_config = expr_build(
-        "chart/gridlines",
+        "chart/grid",
         "limit-x-min",
         expr_clone(xmin.get()),
         "limit-x-max",

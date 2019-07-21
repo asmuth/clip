@@ -14,12 +14,12 @@
 #pragma once
 #include "element.h"
 
-namespace fviz::elements::chart::gridlines {
+namespace fviz::elements::chart::grid {
 
 ReturnCode build(
     const Environment& env,
     const Expr* expr,
     ElementRef* elem);
 
-} // namespace fviz::elements::chart::gridlines
+} // namespace fviz::elements::chart::grid
 
