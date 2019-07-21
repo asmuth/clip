@@ -96,6 +96,21 @@ documentation:
       -
         title: "chart/layout"
         url: "/documentation/elements/chart/layout"
+      -
+        title: "chart/axis"
+        url: "/documentation/elements/chart/axis"
+      -
+        title: "chart/axis-top"
+        url: "/documentation/elements/chart/axis-top"
+      -
+        title: "chart/axis-right"
+        url: "/documentation/elements/chart/axis-right"
+      -
+        title: "chart/axis-bottom"
+        url: "/documentation/elements/chart/axis-bottom"
+      -
+        title: "chart/axis-left"
+        url: "/documentation/elements/chart/axis-left"
 
   -
     title: "Community"

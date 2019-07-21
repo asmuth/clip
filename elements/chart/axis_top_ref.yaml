@@ -1,0 +1,25 @@
+name: chart/axis-top
+desc: |
+  The chart/axis-top element is used to draw a labelled 'top axis'.
+
+reference: |
+  (chart/axis-top <options>)
+
+option_summary: true
+
+properties:
+  - title: "Label Options"
+    anchor: label-options
+    inherit: ["elements/chart/axis", "label-options"]
+
+  - title: "Scale Options"
+    anchor: scale-options
+    inherit: ["elements/chart/axis", "scale-options"]
+
+  - title: "Title Options"
+    anchor: title-options
+    inherit: ["elements/chart/axis", "title-options"]
+
+  - title: "Border Options"
+    anchor: border-options
+    inherit: ["elements/chart/axis", "border-options"]

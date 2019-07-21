@@ -9,9 +9,15 @@ import os
 
 def load_prop(p):
   if "inherit" in p:
-    path = "manual/prop_%s.yaml" % p.get("inherit", "")
-    if os.path.exists(path):
-      p = {**yaml.load(open(path)), **p}
+    inherit_path = p["inherit"][0] + "_ref.yaml"
+    if os.path.exists(inherit_path):
+      for inherit_section in yaml.load(open(inherit_path))["properties"]:
+        if not "inherit" in p:
+          break
+        for inherit_property in inherit_section["properties"]:
+          if inherit_property["name"] == p["inherit"][1]:
+            p = inherit_property
+            break
 
   if not "desc_short" in p:
     p["desc_short"] = ""
@@ -24,9 +30,13 @@ def load_prop(p):
 
   if "desc" in p:
     p["desc"] = markdown.markdown(p["desc"])
+  else:
+    p["desc"] = ""
 
   if "desc_detail" in p:
     p["desc_detail"] = markdown.markdown(p["desc_detail"])
+  else:
+    p["desc_detail"] = ""
 
   return p
 
@@ -57,6 +67,9 @@ def build_elem_page(elem_file):
 
   if "desc" in elem:
     elem["desc"] = markdown.markdown(elem["desc"])
+
+  if "desc_detail" in elem:
+    elem["desc_detail"] = markdown.markdown(elem["desc_detail"])
 
   url = "/documentation/elements/" + elem["name"]
 

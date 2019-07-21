@@ -823,7 +823,6 @@ ReturnCode build(const Environment& env, const Expr* expr, ElementRef* elem) {
       {"limit-min", bind(&expr_to_float64_opt, _1, &config->scale.min)},
       {"limit-max", bind(&expr_to_float64_opt, _1, &config->scale.max)},
       {"scale", bind(&scale_configure_kind, _1, &config->scale)},
-      {"scale-padding", bind(&expr_to_float64, _1, &config->scale.padding)},
       {"border", bind(&expr_to_stroke_style, _1, &config->border_style)},
       {"border-color", bind(&expr_to_color, _1, &config->border_style.color)},
       {"border-width", bind(&expr_to_measure, _1, &config->border_style.line_width)},
