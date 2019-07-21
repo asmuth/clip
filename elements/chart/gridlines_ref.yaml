@@ -1,0 +1,49 @@
+name: chart/grid
+desc: |
+  The `chart/grid` element is used to draw a background grid.
+
+reference: |
+  (chart/grid <options>)
+
+option_summary: true
+
+properties:
+  - title: "Grid Options"
+    anchor: grid-options
+    properties:
+      - name: ticks-x
+        desc: |
+          The 'ticks-x' option controls the x grid placement.
+        desc_code: |
+          ticks <ticks>
+        examples: |
+          ;; subdivide the axis with 10 ticks
+      - name: ticks-y
+        desc: |
+          The 'ticks-y' option controls the y grid placement.
+        desc_code: |
+          ticks <ticks>
+        examples: |
+          ;; subdivide the axis with 10 ticks
+      - name: stroke
+        desc: |
+          Set the grids's stroke style. See the
+          [stroke-style](#FIXME) page for more details on valid values.
+        desc_code: |
+          stroke (<stroke-style>)
+        examples: |
+          ;; set the stroke to 2px solid
+          stroke (2px solid)
+      - name: color
+        desc: |
+          Set the grids's color. See the
+          [color](#FIXME) page for more details on valid values.
+        desc_code: |
+          color <color>
+        examples: |
+          ;; set the color to #333
+          color #333
+
+  - title: "Scale Options"
+    anchor: scale-options
+    inherit: ["elements/chart/layout", "scale-options"]

@@ -132,6 +132,9 @@ documentation:
       -
         title: "chart/points"
         url: "/documentation/elements/chart/points"
+      -
+        title: "chart/grid"
+        url: "/documentation/elements/chart/grid"
 
   -
     title: "Community"
