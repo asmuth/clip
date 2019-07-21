@@ -118,6 +118,12 @@ Formatter format_string() {
   };
 }
 
+Formatter format_noop() {
+  return [] (size_t idx, const std::string& v) -> std::string {
+    return {};
+  };
+}
+
 ReturnCode format_configure_string(
     const Expr* expr,
     Formatter* formatter) {

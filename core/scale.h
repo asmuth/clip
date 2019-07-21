@@ -22,11 +22,12 @@
 #include "return_code.h"
 #include "sexpr.h"
 #include "color_scheme.h"
+#include "format.h"
 
 namespace fviz {
 
 enum class ScaleKind {
-  LINEAR, LOGARITHMIC
+  LINEAR, LOGARITHMIC, CATEGORICAL
 };
 
 struct ScaleLimitHints {
@@ -43,14 +44,20 @@ struct ScaleConfig {
   bool inverted;
   double padding;
   std::shared_ptr<ScaleLimitHints> limit_hints;
+  std::vector<std::string> categories;
 };
 
 struct ScaleLayout {
   std::vector<double> ticks;
   std::vector<double> labels;
+  std::vector<std::string> label_text;
 };
 
-using ScaleLayoutFn = std::function<void (const ScaleConfig&, ScaleLayout*)>;
+using ScaleLayoutFn = std::function<
+    void (
+        const ScaleConfig&,
+        const Formatter&,
+        ScaleLayout*)>;
 
 void scale_fit(double value, ScaleConfig* domain);
 
@@ -77,6 +84,7 @@ ReturnCode scale_configure_kind(
 
 ReturnCode scale_layout_linear(
     const ScaleConfig& domain,
+    const Formatter& label_format,
     ScaleLayout* layout,
     double step,
     std::optional<double> begin,
@@ -84,11 +92,18 @@ ReturnCode scale_layout_linear(
 
 ReturnCode scale_layout_subdivide(
     const ScaleConfig& domain,
+    const Formatter& label_format,
     ScaleLayout* layout,
     uint32_t divisions);
 
 ReturnCode scale_layout_discrete(
     const ScaleConfig& domain,
+    const Formatter& label_format,
+    ScaleLayout* layout);
+
+ReturnCode scale_layout_categorical(
+    const ScaleConfig& domain,
+    const Formatter& label_format,
     ScaleLayout* layout);
 
 ReturnCode scale_configure_layout(

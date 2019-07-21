@@ -301,6 +301,7 @@ ReturnCode build(
       expr_calln_fn({
         bind(&scale_configure_kind, _1, &scale_x),
         bind(&expr_rewritev, _1, "scale-x", &geom_opts),
+        bind(&expr_rewritev, _1, "scale-x", &grid_extra_opts),
         bind(&expr_rewritev, _1, "scale", &axis_x_opts)
       })
     },
@@ -309,6 +310,7 @@ ReturnCode build(
       expr_calln_fn({
         bind(&scale_configure_kind, _1, &scale_y),
         bind(&expr_rewritev, _1, "scale-y", &geom_opts),
+        bind(&expr_rewritev, _1, "scale-y", &grid_extra_opts),
         bind(&expr_rewritev, _1, "scale", &axis_y_opts)
       })
     },

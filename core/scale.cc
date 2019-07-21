@@ -195,12 +195,24 @@ ReturnCode scale_configure_kind(
       continue;
     }
 
+    if (expr_is_value(expr, "categorical")) {
+      domain->kind = ScaleKind::CATEGORICAL;
+
+      expr = expr_next(expr);
+      if (auto rc = expr_to_strings(expr, &domain->categories); !rc) {
+        return rc;
+      }
+
+      continue;
+    }
+
     return err_invalid_value(expr_inspect(expr), {
       "linear",
       "log",
       "logarithmic",
       "invert",
-      "inverted"
+      "inverted",
+      "categorical"
     });
   }
 
@@ -209,12 +221,14 @@ ReturnCode scale_configure_kind(
 
 ReturnCode scale_layout_linear(
     const ScaleConfig& domain,
+    const Formatter& label_format,
     ScaleLayout* layout,
     double step,
     std::optional<double> o_begin,
     std::optional<double> o_end) {
   layout->ticks.clear();
   layout->labels.clear();
+  layout->label_text.clear();
 
   auto begin = std::max(o_begin.value_or(scale_min(domain)), scale_min(domain));
   auto end = std::min(o_end.value_or(scale_max(domain)), scale_max(domain));
@@ -223,11 +237,12 @@ ReturnCode scale_layout_linear(
     return {ERROR, "too many ticks"};
   }
 
-  size_t label_idx = 0;
+  size_t idx = 0;
   for (auto v = begin; v <= end; v += step) {
     auto vp = scale_translate(domain, v);
     layout->ticks.emplace_back(vp);
     layout->labels.emplace_back(vp);
+    layout->label_text.emplace_back(label_format(idx++, std::to_string(v))); // FIXME
   }
 
   return OK;
@@ -235,15 +250,19 @@ ReturnCode scale_layout_linear(
 
 ReturnCode scale_layout_subdivide(
     const ScaleConfig& domain,
+    const Formatter& label_format,
     ScaleLayout* layout,
     uint32_t divisions) {
   layout->ticks.clear();
   layout->labels.clear();
+  layout->label_text.clear();
 
   for (size_t i = 0; i <= divisions; ++i) {
     auto o = (1.0f / divisions) * i;
     layout->ticks.emplace_back(o);
     layout->labels.emplace_back(o);
+    layout->label_text.emplace_back(
+        label_format(i, std::to_string(scale_untranslate(domain, o)))); // FIXME
   }
 
   return OK;
@@ -251,11 +270,13 @@ ReturnCode scale_layout_subdivide(
 
 ReturnCode scale_layout_discrete(
     const ScaleConfig& domain,
+    const Formatter& label_format,
     ScaleLayout* layout) {
   uint32_t step = 1;
   uint32_t range = scale_max(domain) - scale_min(domain);
 
   layout->labels.clear();
+  layout->label_text.clear();
   layout->ticks.clear();
 
   for (size_t i = 0; i <= range; i += step) {
@@ -267,6 +288,8 @@ ReturnCode scale_layout_discrete(
 
     if (o1 >= 0 && o2 <= 1) {
       layout->labels.emplace_back(o);
+      layout->label_text.emplace_back(
+          label_format(i - 1, std::to_string(scale_untranslate(domain, o)))); // FIXME
     }
 
     if (o1 >= 0 && o1 <= 1) {
@@ -276,6 +299,25 @@ ReturnCode scale_layout_discrete(
     if (o2 >= 0 && o2 <= 1) {
       layout->ticks.push_back(o2);
     }
+  }
+
+  return OK;
+}
+
+ReturnCode scale_layout_categorical(
+    const ScaleConfig& domain,
+    const Formatter& label_format,
+    ScaleLayout* layout) {
+  layout->labels.clear();
+  layout->label_text.clear();
+  layout->ticks.clear();
+
+  auto n = domain.categories.size();
+  for (size_t i = 0; i < n; ++i) {
+    auto o =  double(i + 1) / (n + 1);
+    layout->labels.emplace_back(o);
+    layout->label_text.emplace_back(label_format(i, domain.categories[i]));
+    layout->ticks.push_back(o);
   }
 
   return OK;
@@ -318,6 +360,7 @@ ReturnCode scale_configure_layout_linear(
       &scale_layout_linear,
       _1,
       _2,
+      _3,
       step,
       begin,
       end);
@@ -350,6 +393,7 @@ ReturnCode scale_configure_layout_subdivide(
       &scale_layout_subdivide,
       _1,
       _2,
+      _3,
       subdivisions);
 
   return OK;
@@ -376,7 +420,7 @@ ReturnCode scale_configure_layout(
   }
 
   if (expr_is_value(expr, "discrete")) {
-    *layout = bind(&scale_layout_discrete, _1, _2);
+    *layout = bind(&scale_layout_discrete, _1, _2, _3);
     return OK;
   }
 

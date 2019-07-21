@@ -52,10 +52,10 @@ ReturnCode draw(
   style.color = config->line_color;
 
   ScaleLayout slayout_x;
-  config->layout_x(config->scale_x, &slayout_x);
+  config->layout_x(config->scale_x, format_noop(), &slayout_x);
 
   ScaleLayout slayout_y;
-  config->layout_y(config->scale_y, &slayout_y);
+  config->layout_y(config->scale_y, format_noop(), &slayout_y);
 
   for (const auto& tick : slayout_x.ticks) {
     auto line_x = bbox.x + bbox.w * tick;
@@ -85,8 +85,6 @@ ReturnCode build(const Environment& env, const Expr* expr, ElementRef* elem) {
   auto c = std::make_shared<GridlineDefinition>();
   c->line_width = from_pt(1);
   c->line_color = Color::fromRGB(.9, .9, .9); // TODO
-  c->layout_x = bind(&scale_layout_subdivide, _1, _2, 10);
-  c->layout_y = bind(&scale_layout_subdivide, _1, _2, 10);
 
   /* parse properties */
   auto config_rc = expr_walk_map(expr_next(expr), {
@@ -108,6 +106,22 @@ ReturnCode build(const Environment& env, const Expr* expr, ElementRef* elem) {
 
   if (!config_rc) {
     return config_rc;
+  }
+
+  if (!c->layout_x) {
+    if (c->scale_x.kind == ScaleKind::CATEGORICAL) {
+      c->layout_x = bind(&scale_layout_categorical, _1, _2, _3);
+    } else {
+      c->layout_x = bind(&scale_layout_subdivide, _1, _2, _3, 10);
+    }
+  }
+
+  if (!c->layout_y) {
+    if (c->scale_y.kind == ScaleKind::CATEGORICAL) {
+      c->layout_y = bind(&scale_layout_categorical, _1, _2, _3);
+    } else {
+      c->layout_y = bind(&scale_layout_subdivide, _1, _2, _3, 10);
+    }
   }
 
   *elem = std::make_shared<Element>();

@@ -131,15 +131,6 @@ void axis_convert_units(AxisDefinition* config, const Layer& layer) {
       &config->tick_length);
 }
 
-std::string axis_get_label(
-    const AxisDefinition& axis,
-    size_t idx,
-    double offset) {
-  const auto& domain = axis.scale;
-  auto value = scale_untranslate(domain, offset);
-  return axis.label_formatter(idx, std::to_string(value));
-}
-
 ReturnCode axis_layout_labels(
     const AxisDefinition& axis,
     const AxisPosition& axis_position,
@@ -147,13 +138,13 @@ ReturnCode axis_layout_labels(
     double* margin) {
   /* compute scale layout */
   ScaleLayout slayout;
-  axis.scale_layout(axis.scale, &slayout);
+  axis.scale_layout(axis.scale, axis.label_formatter, &slayout);
 
   /* compute label margin */
   double label_margin = 0;
   for (size_t i = 0; i < slayout.labels.size(); ++i) {
     auto tick = slayout.labels[i];
-    auto label_text = axis_get_label(axis, i, tick);
+    auto label_text = slayout.label_text[i];
 
     TextStyle style;
     style.font = axis.label_font;
@@ -348,7 +339,7 @@ static ReturnCode axis_draw_vertical(
     Layer* target) {
   /* compute layout */
   ScaleLayout slayout;
-  axis_config.scale_layout(axis_config.scale, &slayout);
+  axis_config.scale_layout(axis_config.scale, axis_config.label_formatter, &slayout);
 
   /* draw axis line */
   strokeLine(target, {x, y0}, {x, y1}, axis_config.border_style);
@@ -409,7 +400,7 @@ static ReturnCode axis_draw_vertical(
 
   for (size_t i = 0; i < slayout.labels.size(); ++i) {
     auto tick = slayout.labels[i];
-    auto label_text = axis_get_label(axis_config, i, tick);
+    auto label_text = slayout.label_text[i];
 
     Point p;
     p.x = x + label_padding * label_position;
@@ -529,7 +520,10 @@ static ReturnCode axis_draw_horizontal(
     Layer* target) {
   /* compute layout */
   ScaleLayout slayout;
-  axis_config.scale_layout(axis_config.scale, &slayout);
+  axis_config.scale_layout(
+      axis_config.scale,
+      axis_config.label_formatter,
+      &slayout);
 
   /* draw axis line */
   strokeLine(target, {x0, y}, {x1, y}, axis_config.border_style);
@@ -590,7 +584,7 @@ static ReturnCode axis_draw_horizontal(
 
   for (size_t i = 0; i < slayout.labels.size(); ++i) {
     auto tick = slayout.labels[i];
-    auto label_text = axis_get_label(axis_config, i, tick);
+    auto label_text = slayout.label_text[i];
 
     Point p;
     p.x = x0 + (x1 - x0) * tick;
@@ -760,7 +754,6 @@ ReturnCode build(const Environment& env, const Expr* expr, ElementRef* elem) {
   config->title_font = env.font;
   config->title_font_size = env.font_size;
   config->title_color = env.text_color;
-  config->scale_layout = bind(&scale_layout_subdivide, _1, _2, 10);
   config->border_style.line_width = from_pt(1);
   config->border_style.color = env.border_color;
 
@@ -838,8 +831,20 @@ ReturnCode build(const Environment& env, const Expr* expr, ElementRef* elem) {
     }
   }
 
+  if (!config->scale_layout) {
+    if (config->scale.kind == ScaleKind::CATEGORICAL) {
+      config->scale_layout = bind(&scale_layout_categorical, _1, _2, _3);
+    } else {
+      config->scale_layout = bind(&scale_layout_subdivide, _1, _2, _3, 10);
+    }
+  }
+
   if (!config->label_formatter) {
-    config->label_formatter = format_decimal_fixed(1);
+    if (config->scale.kind == ScaleKind::CATEGORICAL) {
+      config->label_formatter = format_string();
+    } else {
+      config->label_formatter = format_decimal_fixed(1);
+    }
   }
 
   switch (config->tick_position) {
