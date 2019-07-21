@@ -66,3 +66,142 @@ properties:
         examples: |
           ;; set the background color to grey
           background #eee
+
+  - title: "Border Options"
+    anchor: border-options
+    properties:
+      - name: border
+        desc: |
+          Set the element's top/right/bottom/left border stroke styles. See the
+          [stroke-style](#FIXME) page for more details on valid values.
+        desc_code: |
+          border (<stroke-style>)
+        examples: |
+          ;; set the border stroke to 2px solid
+          border (2px solid)
+      - name: border-top
+        desc: |
+          Set the element's top border stroke style. See the
+          [stroke-style](#FIXME) page for more details on valid values.
+        desc_code: |
+          border-top (<stroke-style>)
+        examples: |
+          ;; set the border stroke to 2px solid
+          border-top (2px solid)
+      - name: border-right
+        desc: |
+          Set the element's right border stroke style. See the
+          [stroke-style](#FIXME) page for more details on valid values.
+        desc_code: |
+          border-right (<stroke-style>)
+        examples: |
+          ;; set the border stroke to 2px solid
+          border-right (2px solid)
+      - name: border-bottom
+        desc: |
+          Set the element's bottom border stroke style. See the
+          [stroke-style](#FIXME) page for more details on valid values.
+        desc_code: |
+          border-bottom (<stroke-style>)
+        examples: |
+          ;; set the border stroke to 2px solid
+          border-bottom (2px solid)
+      - name: border-left
+        desc: |
+          Set the element's left border stroke style. See the
+          [stroke-style](#FIXME) page for more details on valid values.
+        desc_code: |
+          border-left (<stroke-style>)
+        examples: |
+          ;; set the border stroke to 2px solid
+          border-left (2px solid)
+      - name: border-width
+        desc: |
+          Set the element's top/right/bottom/left border widths. See the
+          [measure](#FIXME) page for more details on valid values.
+        desc_code: |
+          border-width <measure>
+        examples: |
+          ;; set the border width to 2pt
+          border-width 2pt
+      - name: border-top-width
+        desc: |
+          Set the element's top border width. See the
+          [measure](#FIXME) page for more details on valid values.
+        desc_code: |
+          border-top-width <measure>
+        examples: |
+          ;; set the border width to 2pt
+          border-top-width 2pt
+      - name: border-right-width
+        desc: |
+          Set the element's right border width. See the
+          [measure](#FIXME) page for more details on valid values.
+        desc_code: |
+          border-right-width <measure>
+        examples: |
+          ;; set the border width to 2pt
+          border-right-width 2pt
+      - name: border-bottom-width
+        desc: |
+          Set the element's bottom border width. See the
+          [measure](#FIXME) page for more details on valid values.
+        desc_code: |
+          border-bottom-width <measure>
+        examples: |
+          ;; set the border width to 2pt
+          border-bottom-width 2pt
+      - name: border-left-width
+        desc: |
+          Set the element's left border width. See the
+          [measure](#FIXME) page for more details on valid values.
+        desc_code: |
+          border-left-width <measure>
+        examples: |
+          ;; set the border width to 2pt
+          border-left-width 2pt
+      - name: border-color
+        desc: |
+          Set the element's top/right/bottom/left border colors. See the
+          [color](#FIXME) page for more details on valid values.
+        desc_code: |
+          border-color <color>
+        examples: |
+          ;; set the border color to #333
+          border-color #333
+      - name: border-top-color
+        desc: |
+          Set the element's top border color. See the
+          [color](#FIXME) page for more details on valid values.
+        desc_code: |
+          border-top-color <color>
+        examples: |
+          ;; set the border color to #333
+          border-top-color #333
+      - name: border-right-color
+        desc: |
+          Set the element's right border color. See the
+          [color](#FIXME) page for more details on valid values.
+        desc_code: |
+          border-right-color <color>
+        examples: |
+          ;; set the border color to #333
+          border-right-color #333
+      - name: border-bottom-color
+        desc: |
+          Set the element's bottom border color. See the
+          [color](#FIXME) page for more details on valid values.
+        desc_code: |
+          border-bottom-color <color>
+        examples: |
+          ;; set the border color to #333
+          border-bottom-color #333
+      - name: border-left-color
+        desc: |
+          Set the element's left border color. See the
+          [color](#FIXME) page for more details on valid values.
+        desc_code: |
+          border-left-color <color>
+        examples: |
+          ;; set the border color to #333
+          border-left-color #333

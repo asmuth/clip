@@ -349,3 +349,7 @@ properties:
   - title: "Background Options"
     anchor: background-options
     inherit: ["elements/layout/box", "background-options"]
+
+  - title: "Border Options"
+    anchor: border-options
+    inherit: ["elements/layout/box", "border-options"]
