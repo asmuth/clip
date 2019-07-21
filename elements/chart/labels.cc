@@ -118,6 +118,8 @@ ReturnCode build(
     {"scale-y-padding", bind(&expr_to_float64, _1, &c->scale_y.padding)},
     {"labels", bind(&data_load_strings, _1, &c->labels)},
     {"label-font-size", bind(&expr_to_measure, _1, &c->label_font_size)},
+    {"label-color", bind(&expr_to_color, _1, &c->label_color)},
+    {"label-padding", bind(&expr_to_measure, _1, &c->label_padding)},
   });
 
   if (!config_rc) {

@@ -124,6 +124,9 @@ documentation:
         title: "chart/bars"
         url: "/documentation/elements/chart/bars"
       -
+        title: "chart/labels"
+        url: "/documentation/elements/chart/labels"
+      -
         title: "chart/lines"
         url: "/documentation/elements/chart/lines"
       -
