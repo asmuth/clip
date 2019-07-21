@@ -1,6 +1,6 @@
 name: chart/axis-right
 desc: |
-  The chart/axis-right element is used to draw a labelled 'top axis'.
+  The chart/axis-right element is used to draw a labelled 'right axis'.
 
 reference: |
   (chart/axis-right <options>)

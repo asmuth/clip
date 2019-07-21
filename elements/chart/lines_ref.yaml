@@ -51,8 +51,7 @@ properties:
         alias: colors
       - name: colors
         desc: |
-          Set the colors for the plot. If set, a label will be drawn for each
-          point in the dataset at the points (x, y) coordinate,
+          Set the line colors.
         desc_code: |
           colors (<values>...)
           colors (csv <file> <column>)

@@ -1,6 +1,6 @@
 name: chart/axis-left
 desc: |
-  The chart/axis-left element is used to draw a labelled 'top axis'.
+  The chart/axis-left element is used to draw a labelled 'left axis'.
 
 reference: |
   (chart/axis-left <options>)

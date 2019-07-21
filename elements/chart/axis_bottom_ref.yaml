@@ -1,6 +1,6 @@
 name: chart/axis-bottom
 desc: |
-  The chart/axis-bottom element is used to draw a labelled 'top axis'.
+  The chart/axis-bottom element is used to draw a labelled 'bottom axis'.
 
 reference: |
   (chart/axis-bottom <options>)
