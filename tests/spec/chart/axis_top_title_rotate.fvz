@@ -1,9 +1,8 @@
 (chart/layout
   margin 2em
-  top (
-    (chart/axis-top
+  axis-top (
       ticks (linear 1)
       limit (0 16)
       title "Fnord (f/s)"
       title-rotate 45
-      title-font-size 16pt)))
+      title-font-size 16pt))

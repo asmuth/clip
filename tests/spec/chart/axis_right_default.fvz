@@ -1,6 +1,5 @@
 (chart/layout
   margin 2em
-  right (
-    (chart/axis-right
+  axis-right (
       limit (1451606400 1451610000)
-      labels (datetime))))
+      labels (datetime)))

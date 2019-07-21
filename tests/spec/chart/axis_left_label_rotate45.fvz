@@ -1,7 +1,6 @@
 (chart/layout
   margin 2em
-  left (
-    (chart/axis-left
+  axis-left (
       limit (1451606400 1451610000)
       labels (datetime)
-      label-rotate 45)))
+      label-rotate 45))

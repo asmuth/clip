@@ -1,8 +1,7 @@
 (chart/layout
   margin 2em
-  right (
-    (chart/axis-right
+  axis-right (
       ticks (linear 1)
       limit (0 16)
       title "Fnord (f/s)"
-      title-font-size 16pt)))
+      title-font-size 16pt))

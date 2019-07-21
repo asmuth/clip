@@ -1,9 +1,8 @@
 (chart/layout
   margin 2em
-  bottom (
-    (chart/axis-bottom
+  axis-bottom (
       limit (1451606400 1451610000)
       ticks (subdivide 4)
       labels (datetime "%H:%M:%S")
       label-rotate -45
-      label-attach end)))
+      label-attach end))

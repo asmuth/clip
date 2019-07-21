@@ -439,6 +439,10 @@ ReturnCode build(
 
 
   /* configure the auto axis elements */
+  if (axes_auto.empty() && axes.empty()) {
+    axes_auto = {"top", "right", "bottom", "left"};
+  }
+
   if (axes_auto.count("top")) {
     PlotAxis a;
     a.elem_name = "chart/axis-top";

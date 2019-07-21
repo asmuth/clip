@@ -1,8 +1,7 @@
 (chart/layout
   margin 2em
-  top (
-    (chart/axis-top
+  axis-top (
       limit (1451606400 1451610000)
       ticks (subdivide 4)
       labels (datetime "%H:%M:%S")
-      label-attach center)))
+      label-attach center))
