@@ -222,8 +222,10 @@ ReturnCode build(
   auto config_rc = expr_walk_map(expr_next(expr), {
     {"data-x", bind(&data_load, _1, &c->x)},
     {"data-y", bind(&data_load, _1, &c->y)},
-    {"data-x-offset", bind(&data_load, _1, &c->xoffset)},
-    {"data-y-offset", bind(&data_load, _1, &c->yoffset)},
+    {"data-x1", bind(&data_load, _1, &c->x)},
+    {"data-y1", bind(&data_load, _1, &c->y)},
+    {"data-x2", bind(&data_load, _1, &c->xoffset)},
+    {"data-y2", bind(&data_load, _1, &c->yoffset)},
     {"limit-x", bind(&expr_to_float64_opt_pair, _1, &c->scale_x.min, &c->scale_x.max)},
     {"limit-x-min", bind(&expr_to_float64_opt, _1, &c->scale_x.min)},
     {"limit-x-max", bind(&expr_to_float64_opt, _1, &c->scale_x.max)},
@@ -260,14 +262,14 @@ ReturnCode build(
       c->xoffset.size() != c->x.size()) {
     return error(
         ERROR,
-        "the length of the 'data-x' and 'data-x-offset' properties must be equal");
+        "the length of the 'data-x' and 'data-x2' properties must be equal");
   }
 
   if (!c->yoffset.empty() &&
       c->yoffset.size() != c->y.size()) {
     return error(
         ERROR,
-        "the length of the 'data-y' and 'data-y-offset' properties must be equal");
+        "the length of the 'data-y' and 'data-y2' properties must be equal");
   }
 
   /* scale autoconfig */

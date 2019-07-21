@@ -231,8 +231,8 @@ ReturnCode configure_geom(
   auto config_rc = expr_walk_map(opts.get(), {
     {"data-x", bind(&data_load, _1, x)},
     {"data-y", bind(&data_load, _1, y)},
-    {"data-x-offset", bind(&data_load, _1, x)},
-    {"data-y-offset", bind(&data_load, _1, y)},
+    {"data-x2", bind(&data_load, _1, x)},
+    {"data-y2", bind(&data_load, _1, y)},
   }, false);
 
   if (!config_rc) {

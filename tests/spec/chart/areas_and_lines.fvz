@@ -7,12 +7,12 @@
     areas (
         data-x (csv "tests/testdata/areadata2.csv" x)
         data-y (csv "tests/testdata/areadata2.csv" z)
-        data-y-offset (csv "tests/testdata/areadata2.csv" y)
+        data-y2 (csv "tests/testdata/areadata2.csv" y)
         color (#ccc))
     areas (
         data-x (csv "tests/testdata/areadata2.csv" x)
         data-y (csv "tests/testdata/areadata2.csv" z2)
-        data-y-offset (csv "tests/testdata/areadata2.csv" y2)
+        data-y2 (csv "tests/testdata/areadata2.csv" y2)
         color (#888))
     lines (
         data-x (10 20 30 40 50)
