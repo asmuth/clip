@@ -43,31 +43,11 @@ struct PlotGeom {
   ExprStorage opts;
 };
 
-ReturnCode build_geom(
-    const std::string& geom_elem_name,
-    const Expr* expr,
-    std::vector<PlotGeom>* geoms,
-    std::vector<Measure>* x,
-    std::vector<Measure>* y) {
-  auto opts = expr_clone(expr_get_list(expr));
-
-  auto config_rc = expr_walk_map(opts.get(), {
-    {"data-x", bind(&data_load, _1, x)},
-    {"data-y", bind(&data_load, _1, y)},
-    {"data-x-offset", bind(&data_load, _1, x)},
-    {"data-y-offset", bind(&data_load, _1, y)},
-  }, false);
-
-  if (!config_rc) {
-    return config_rc;
-  }
-
-  PlotGeom g;
-  g.elem_name = geom_elem_name;
-  g.opts = std::move(opts);
-  geoms->emplace_back(std::move(g));
-  return OK;
-}
+struct PlotAxis {
+  std::string elem_name;
+  ExprStorage opts;
+  size_t position;
+};
 
 ReturnCode draw(
     std::shared_ptr<PlotConfig> config,
@@ -240,6 +220,47 @@ ReturnCode draw(
   return OK;
 }
 
+ReturnCode configure_geom(
+    const std::string& geom_elem_name,
+    const Expr* expr,
+    std::vector<PlotGeom>* geoms,
+    std::vector<Measure>* x,
+    std::vector<Measure>* y) {
+  auto opts = expr_clone(expr_get_list(expr));
+
+  auto config_rc = expr_walk_map(opts.get(), {
+    {"data-x", bind(&data_load, _1, x)},
+    {"data-y", bind(&data_load, _1, y)},
+    {"data-x-offset", bind(&data_load, _1, x)},
+    {"data-y-offset", bind(&data_load, _1, y)},
+  }, false);
+
+  if (!config_rc) {
+    return config_rc;
+  }
+
+  PlotGeom g;
+  g.elem_name = geom_elem_name;
+  g.opts = std::move(opts);
+  geoms->emplace_back(std::move(g));
+  return OK;
+}
+
+ReturnCode configure_axis(
+    const std::string& axis_elem_name,
+    size_t axis_position,
+    const Expr* expr,
+    std::vector<PlotAxis>* axes) {
+  auto opts = expr_clone(expr_get_list(expr));
+
+  PlotAxis a;
+  a.elem_name = axis_elem_name;
+  a.opts = std::move(opts);
+  a.position = axis_position;
+  axes->emplace_back(std::move(a));
+  return OK;
+}
+
 ReturnCode build(
     const Environment& env,
     const Expr* expr,
@@ -255,10 +276,11 @@ ReturnCode build(
   std::vector<Measure> y;
   ScaleConfig scale_x;
   ScaleConfig scale_y;
-  std::set<std::string> axes;
+  std::set<std::string> axes_auto;
   std::vector<ExprStorage> layout_opts;
   std::vector<PlotGeom> geoms;
   std::vector<ExprStorage> geom_opts;
+  std::vector<PlotAxis> axes;
   std::vector<ExprStorage> axis_opts;
   std::vector<ExprStorage> axis_x_opts;
   std::vector<ExprStorage> axis_y_opts;
@@ -291,6 +313,11 @@ ReturnCode build(
     },
     {"scale-x-padding", bind(&expr_to_float64, _1, &scale_x.padding)},
     {"scale-y-padding", bind(&expr_to_float64, _1, &scale_y.padding)},
+    {"axes", bind(&expr_to_stringset, _1, &axes_auto)},
+    {"axis-top", bind(&configure_axis, "chart/axis-top", 0, _1, &axes)},
+    {"axis-right", bind(&configure_axis, "chart/axis-right", 1, _1, &axes)},
+    {"axis-bottom", bind(&configure_axis, "chart/axis-bottom", 2, _1, &axes)},
+    {"axis-left", bind(&configure_axis, "chart/axis-left", 3, _1, &axes)},
     {
       "axis-x-ticks",
       expr_calln_fn({
@@ -323,12 +350,11 @@ ReturnCode build(
     {"axis-y-title-padding", bind(&expr_rewritev, _1, "title-padding", &axis_y_opts)},
     {"axis-x-title-rotate", bind(&expr_rewritev, _1, "title-padding", &axis_x_opts)},
     {"axis-y-title-rotate", bind(&expr_rewritev, _1, "title-padding", &axis_y_opts)},
-    {"axes", bind(&expr_to_stringset, _1, &axes)},
-    {"areas", bind(&build_geom, "chart/areas", _1, &geoms, &x, &y)},
-    {"bars", bind(&build_geom, "chart/bars", _1, &geoms, &x, &y)},
-    {"lines", bind(&build_geom, "chart/lines", _1, &geoms, &x, &y)},
-    {"labels", bind(&build_geom, "chart/labels", _1, &geoms, &x, &y)},
-    {"points", bind(&build_geom, "chart/points", _1, &geoms, &x, &y)},
+    {"areas", bind(&configure_geom, "chart/areas", _1, &geoms, &x, &y)},
+    {"bars", bind(&configure_geom, "chart/bars", _1, &geoms, &x, &y)},
+    {"lines", bind(&configure_geom, "chart/lines", _1, &geoms, &x, &y)},
+    {"labels", bind(&configure_geom, "chart/labels", _1, &geoms, &x, &y)},
+    {"points", bind(&configure_geom, "chart/points", _1, &geoms, &x, &y)},
     {"grid", bind(&expr_to_copy, _1, &grid_opts)},
     {"legend", bind(&expr_to_copy, _1, &legend_opts)},
     {
@@ -395,7 +421,8 @@ ReturnCode build(
     return config_rc;
   }
 
-  /* scale autoconfig */
+
+  /* configure the scale */
   for (const auto& v : x) {
     if (v.unit == Unit::USER) {
       scale_fit(v.value, &scale_x);
@@ -413,7 +440,38 @@ ReturnCode build(
   auto ymin = expr_create_value(std::to_string(scale_min(scale_y)));
   auto ymax = expr_create_value(std::to_string(scale_max(scale_y)));
 
-  /* build the grid */
+
+  /* configure the auto axis elements */
+  if (axes_auto.count("top")) {
+    PlotAxis a;
+    a.elem_name = "chart/axis-top";
+    a.position = 0;
+    axes.emplace_back(std::move(a));
+  }
+
+  if (axes_auto.count("right")) {
+    PlotAxis a;
+    a.elem_name = "chart/axis-right";
+    a.position = 1;
+    axes.emplace_back(std::move(a));
+  }
+
+  if (axes_auto.count("bottom")) {
+    PlotAxis a;
+    a.elem_name = "chart/axis-bottom";
+    a.position = 2;
+    axes.emplace_back(std::move(a));
+  }
+
+  if (axes_auto.count("left")) {
+    PlotAxis a;
+    a.elem_name = "chart/axis-left";
+    a.position = 3;
+    axes.emplace_back(std::move(a));
+  }
+
+
+  /* build the grid element */
   if (grid_opts) {
     auto elem_config = expr_build(
         "chart/gridlines",
@@ -436,83 +494,48 @@ ReturnCode build(
     config->body_elements.emplace_back(elem);
   }
 
-  /* build the top axis */
-  if (axes.count("top")) {
+
+  /* build the axes elements */
+  for (const auto& axis : axes) {
+    ExprStorage elem_config_defaults;
+
+    switch (axis.position) {
+      case 0:
+      case 2:
+        elem_config_defaults = expr_build(
+            "limit-min",
+            expr_clone(xmin.get()),
+            "limit-max",
+            expr_clone(xmax.get()),
+            expr_clonev(axis_opts),
+            expr_clonev(axis_x_opts));
+        break;
+      case 1:
+      case 3:
+        elem_config_defaults = expr_build(
+            "limit-min",
+            expr_clone(ymin.get()),
+            "limit-max",
+            expr_clone(ymax.get()),
+            expr_clonev(axis_opts),
+            expr_clonev(axis_y_opts));
+    }
+
     auto elem_config = expr_build(
-        "chart/axis-top",
-        "limit-min",
-        expr_clone(xmin.get()),
-        "limit-max",
-        expr_clone(xmax.get()),
-        expr_clonev(axis_opts),
-        expr_clonev(axis_x_opts));
+        axis.elem_name,
+        expr_unwrap(std::move(elem_config_defaults)),
+        expr_clone(axis.opts.get()));
 
     ElementRef elem;
     if (auto rc = element_build_macro(env, elem_config.get(), &elem); !rc) {
       return rc;
     }
 
-    config->margin_elements[0].emplace_back(elem);
+    config->margin_elements[axis.position].emplace_back(elem);
   }
 
-  /* build the right axis */
-  if (axes.count("right")) {
-    auto elem_config = expr_build(
-        "chart/axis-right",
-        "limit-min",
-        expr_clone(ymin.get()),
-        "limit-max",
-        expr_clone(ymax.get()),
-        expr_clonev(axis_opts),
-        expr_clonev(axis_y_opts));
 
-    ElementRef elem;
-    if (auto rc = element_build_macro(env, elem_config.get(), &elem); !rc) {
-      return rc;
-    }
-
-    config->margin_elements[1].emplace_back(elem);
-  }
-
-  /* build the bottom axis */
-  if (axes.count("bottom")) {
-    auto elem_config = expr_build(
-        "chart/axis-bottom",
-        "limit-min",
-        expr_clone(xmin.get()),
-        "limit-max",
-        expr_clone(xmax.get()),
-        expr_clonev(axis_opts),
-        expr_clonev(axis_x_opts));
-
-    ElementRef elem;
-    if (auto rc = element_build_macro(env, elem_config.get(), &elem); !rc) {
-      return rc;
-    }
-
-    config->margin_elements[2].emplace_back(elem);
-  }
-
-  /* build the left axis */
-  if (axes.count("left")) {
-    auto elem_config = expr_build(
-        "chart/axis-left",
-        "limit-min",
-        expr_clone(ymin.get()),
-        "limit-max",
-        expr_clone(ymax.get()),
-        expr_clonev(axis_opts),
-        expr_clonev(axis_y_opts));
-
-    ElementRef elem;
-    if (auto rc = element_build_macro(env, elem_config.get(), &elem); !rc) {
-      return rc;
-    }
-
-    config->margin_elements[3].emplace_back(elem);
-  }
-
-  /* build the chart (body) geoms */
+  /* build the chart (body) geom elements */
   geom_opts.emplace_back(expr_create_value("limit-x-min"));
   geom_opts.emplace_back(expr_clone(xmin.get()));
   geom_opts.emplace_back(expr_create_value("limit-x-max"));
@@ -537,6 +560,7 @@ ReturnCode build(
     config->body_elements.emplace_back(elem);
   }
 
+
   /* build the legend */
   if (legend_opts) {
     auto elem_config = expr_build(
@@ -551,7 +575,8 @@ ReturnCode build(
     config->body_elements.emplace_back(elem);
   }
 
-  /* return the element */
+
+  /* return the layout element */
   *elem = std::make_shared<Element>();
   (*elem)->draw = bind(&draw, config, _1, _2);
   return OK;
