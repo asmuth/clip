@@ -329,10 +329,10 @@ ReturnCode build(
   auto config_rc = expr_walk_map(expr_next(expr), {
     {"data-x", bind(&data_load_strings, _1, &data_x)},
     {"data-y", bind(&data_load_strings, _1, &data_y)},
-    {"data-x1", bind(&data_load_strings, _1, &data_x)},
-    {"data-y1", bind(&data_load_strings, _1, &data_y)},
-    {"data-x2", bind(&data_load_strings, _1, &data_xoffset)},
-    {"data-y2", bind(&data_load_strings, _1, &data_yoffset)},
+    {"data-x-high", bind(&data_load_strings, _1, &data_x)},
+    {"data-y-high", bind(&data_load_strings, _1, &data_y)},
+    {"data-x-low", bind(&data_load_strings, _1, &data_xoffset)},
+    {"data-y-low", bind(&data_load_strings, _1, &data_yoffset)},
     {"bar-width", bind(&data_load, _1, &c->sizes)},
     {"bar-widths", bind(&data_load, _1, &c->sizes)},
     {"bar-offset", bind(&data_load, _1, &c->offsets)},
@@ -418,14 +418,14 @@ ReturnCode build(
       c->xoffset.size() != c->x.size()) {
     return error(
         ERROR,
-        "the length of the 'data-x' and 'data-x2' properties must be equal");
+        "the length of the 'data-x' and 'data-x-low' properties must be equal");
   }
 
   if (!c->yoffset.empty() &&
       c->yoffset.size() != c->y.size()) {
     return error(
         ERROR,
-        "the length of the 'data-y' and 'data-y2' properties must be equal");
+        "the length of the 'data-y' and 'data-y-low' properties must be equal");
   }
 
   /* return element */

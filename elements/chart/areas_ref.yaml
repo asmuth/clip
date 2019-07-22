@@ -25,21 +25,21 @@ properties:
 
           ;; load a csv file
           data-x (csv myfile.csv mycolumn)
-      - name: data-x1
+      - name: data-x-high
         alias: data-x
-      - name: data-x2
+      - name: data-x-low
         desc: |
           Set the 'x2' dataset for the plot. The 'x2' dataset will be used to
           calculate the horizontal position of geometry.
         desc_code: |
-          data-x2 (<values>...)
-          data-x2 (csv <file> <column>)
+          data-x-low (<values>...)
+          data-x-low (csv <file> <column>)
         examples: |
           ;; list of static values
-          data-x2 (10px 20px 30px)
+          data-x-low (10px 20px 30px)
 
           ;; load a csv file
-          data-x2 (csv myfile.csv mycolumn)
+          data-x-low (csv myfile.csv mycolumn)
       - name: data-y
         desc: |
           Set the 'y' dataset for the plot. The 'y' dataset will be used to
@@ -53,21 +53,21 @@ properties:
 
           ;; load a csv file
           data-y (csv myfile.csv mycolumn)
-      - name: data-y1
+      - name: data-y-high
         alias: data-y
-      - name: data-y2
+      - name: data-y-low
         desc: |
           Set the 'y2' dataset for the plot. The 'y2' dataset will be used to
           calculate the vertical position of geometry.
         desc_code: |
-          data-y2 (<values>...)
-          data-y2 (csv <file> <column>)
+          data-y-low (<values>...)
+          data-y-low (csv <file> <column>)
         examples: |
           ;; list of static values
-          data-y2 (10px 20px 30px)
+          data-y-low (10px 20px 30px)
 
           ;; load a csv file
-          data-y2 (csv myfile.csv mycolumn)
+          data-y-low (csv myfile.csv mycolumn)
       - name: direction
         desc: |
           Set the area 'direction'.
