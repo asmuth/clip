@@ -50,22 +50,19 @@ struct fviz_s {
 fviz_t* fviz_init() {
   auto ctx = std::make_unique<fviz_t>();
   auto elems = &ctx->env.element_map;
-  element_bind(elems, "text", bind(elements::text::build, _1, _2, _3));
-  element_bind(elems, "plot/axis-top", bind(elements::plot::axis::build, _1, _2, _3));
-  element_bind(elems, "plot/axis-right", bind(elements::plot::axis::build, _1, _2, _3));
-  element_bind(elems, "plot/axis-bottom", bind(elements::plot::axis::build, _1, _2, _3));
-  element_bind(elems, "plot/axis-left", bind(elements::plot::axis::build, _1, _2, _3));
+  element_bind(elems, "chart/legend", bind(elements::chart::legend::build, _1, _2, _3));
+  element_bind(elems, "chart/linechart", bind(elements::chart::linechart::build, _1, _2, _3));
+  element_bind(elems, "chart/scatterplot", bind(elements::chart::scatterplot::build, _1, _2, _3));
+  element_bind(elems, "layout/box", bind(elements::layout::box::build, _1, _2, _3));
   element_bind(elems, "plot", bind(elements::plot::build, _1, _2, _3));
   element_bind(elems, "plot/areas", bind(elements::plot::areas::build, _1, _2, _3));
+  element_bind(elems, "plot/axis", bind(elements::plot::axis::build, _1, _2, _3));
   element_bind(elems, "plot/bars", bind(elements::plot::bars::build, _1, _2, _3));
   element_bind(elems, "plot/grid", bind(elements::plot::grid::build, _1, _2, _3));
   element_bind(elems, "plot/labels", bind(elements::plot::labels::build, _1, _2, _3));
-  element_bind(elems, "chart/legend", bind(elements::chart::legend::build, _1, _2, _3));
   element_bind(elems, "plot/lines", bind(elements::plot::lines::build, _1, _2, _3));
-  element_bind(elems, "chart/linechart", bind(elements::chart::linechart::build, _1, _2, _3));
   element_bind(elems, "plot/points", bind(elements::plot::points::build, _1, _2, _3));
-  element_bind(elems, "chart/scatterplot", bind(elements::chart::scatterplot::build, _1, _2, _3));
-  element_bind(elems, "layout/box", bind(elements::layout::box::build, _1, _2, _3));
+  element_bind(elems, "text", bind(elements::text::build, _1, _2, _3));
   return ctx.release();
 }
 

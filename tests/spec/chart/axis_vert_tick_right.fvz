@@ -2,6 +2,7 @@
   margin 1em
   body (
     (plot/axis
-      align x
-      label-placement (discrete)
+      align y
+      label-placement (linear 1)
+      tick-offset 1
       limit (0 16))))

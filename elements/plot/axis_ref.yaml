@@ -1,14 +1,6 @@
 name: plot/axis
 desc: |
-  The plot/axis element is used to draw labelled 'axes'.
-
-desc_detail: |
-  Note that in most cases it's easier to use one of the convenience element instead of the `plot/axis` element:
-
-    - [plot/axis-top](./axis-top)
-    - [plot/axis-right](./axis-right)
-    - [plot/axis-bottom](./axis-bottom)
-    - [plot/axis-left](./axis-left)
+  The plot/axis element is used to draw a labelled 'axis'.
 
 reference: |
   (plot/axis <options>)

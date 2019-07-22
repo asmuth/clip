@@ -1,9 +1,8 @@
 (plot
-  bottom
-    ((plot/axis-bottom limit (0 100)))
-  body
-    ((plot/lines
+  axis-bottom (
+    limit (0 100))
+  lines (
         data-x (csv "tests/testdata/measurement.csv" time)
         data-y (csv "tests/testdata/measurement.csv" value2)
         colors (#000)
-        stroke 2pt)))
+        stroke 2pt))

@@ -117,22 +117,6 @@ documentation:
             url: "/documentation/elements/plot/axis"
             api_ref: true
           -
-            title: "plot/axis-top"
-            url: "/documentation/elements/plot/axis-top"
-            api_ref: true
-          -
-            title: "plot/axis-right"
-            url: "/documentation/elements/plot/axis-right"
-            api_ref: true
-          -
-            title: "plot/axis-bottom"
-            url: "/documentation/elements/plot/axis-bottom"
-            api_ref: true
-          -
-            title: "plot/axis-left"
-            url: "/documentation/elements/plot/axis-left"
-            api_ref: true
-          -
             title: "plot/areas"
             url: "/documentation/elements/plot/areas"
             api_ref: true

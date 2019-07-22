@@ -297,11 +297,13 @@ static ReturnCode axis_draw_vertical(
       from_pt(kDefaultTickLengthPT, target->dpi));
 
   for (const auto& tick : ticks.positions) {
-    auto y = y0 + (y1 - y0) * (1.0 - tick);
+    auto ty = y0 + (y1 - y0) * (1.0 - tick);
+    auto tx = x - tick_length + tick_length * (tick_position + 1) / 2.0;
+
     strokeLine(
         target,
-        {x, y},
-        {x + tick_length * tick_position, y},
+        {tx, ty},
+        {tx + tick_length, ty},
         axis_config.border_style);
   }
 
@@ -436,11 +438,12 @@ static ReturnCode axis_draw_horizontal(
       from_pt(kDefaultTickLengthPT, target->dpi));
 
   for (const auto& tick : ticks.positions) {
-    auto x = x0 + (x1 - x0) * tick;
+    auto ty = y - tick_length + tick_length * (tick_position + 1) / 2.0;
+    auto tx = x0 + (x1 - x0) * tick;
     strokeLine(
         target,
-        {x, y},
-        {x, y + tick_length * tick_position},
+        {tx, ty},
+        {tx, ty + tick_length},
         axis_config.border_style);
   }
 
@@ -622,23 +625,33 @@ ReturnCode build(const Environment& env, const Expr* expr, ElementRef* elem) {
   config->border_style.line_width = from_pt(1);
   config->border_style.color = env.border_color;
 
-  if (elem_name == "plot/axis-top") {
-    config->align = AxisAlign::BOTTOM;
-  }
+  {
+    auto rc = expr_walk_map(expr_next(expr), {
+      {
+        "align",
+        expr_to_enum_fn<AxisAlign>(&config->align, {
+          {"x", AxisAlign::X},
+          {"y", AxisAlign::Y},
+          {"top", AxisAlign::TOP},
+          {"right", AxisAlign::RIGHT},
+          {"bottom", AxisAlign::BOTTOM},
+          {"left", AxisAlign::LEFT},
+        })
+      }
+    }, false);
 
-  if (elem_name == "plot/axis-right") {
-    config->align = AxisAlign::LEFT;
-  }
-
-  if (elem_name == "plot/axis-bottom") {
-    config->align = AxisAlign::TOP;
-  }
-
-  if (elem_name == "plot/axis-left") {
-    config->align = AxisAlign::RIGHT;
+    if (!rc) {
+      return rc;
+    }
   }
 
   switch (config->align) {
+    case AxisAlign::X:
+      config->label_attach = AxisLabelAttach::CENTER;
+      config->title_offset = 1;
+      config->tick_offset = 0;
+      config->label_offset = 1;
+      break;
     case AxisAlign::TOP:
       config->label_attach = AxisLabelAttach::CENTER;
       config->title_offset = 1;
@@ -650,6 +663,13 @@ ReturnCode build(const Environment& env, const Expr* expr, ElementRef* elem) {
       config->title_offset = -1;
       config->tick_offset = 1;
       config->label_offset = -1;
+      break;
+    case AxisAlign::Y:
+      config->label_attach = AxisLabelAttach::BEGIN;
+      config->title_offset = 1;
+      config->title_rotate = -90;
+      config->tick_offset = 0;
+      config->label_offset = 1;
       break;
     case AxisAlign::LEFT:
       config->label_attach = AxisLabelAttach::BEGIN;
@@ -669,19 +689,6 @@ ReturnCode build(const Environment& env, const Expr* expr, ElementRef* elem) {
 
   {
     auto rc = expr_walk_map(expr_next(expr), {
-      /* layout options */
-      {
-        "align",
-        expr_to_enum_fn<AxisAlign>(&config->align, {
-          {"x", AxisAlign::X},
-          {"y", AxisAlign::X},
-          {"top", AxisAlign::TOP},
-          {"right", AxisAlign::RIGHT},
-          {"bottom", AxisAlign::BOTTOM},
-          {"left", AxisAlign::LEFT},
-        })
-      },
-
       /* label options */
       {"labels", bind(&format_configure, _1, &config->label_formatter)},
       {"label-placement", bind(&scale_configure_layout, _1, &config->label_placement)},
@@ -700,6 +707,8 @@ ReturnCode build(const Environment& env, const Expr* expr, ElementRef* elem) {
 
       /* tick options */
       {"tick-placement", bind(&scale_configure_layout, _1, &config->tick_placement)},
+      {"tick-offset", bind(&expr_to_float64, _1, &config->tick_offset)},
+      {"tick-length", bind(&expr_to_measure, _1, &config->tick_length)},
 
       /* scale options */
       {"scale", bind(&scale_configure_kind, _1, &config->scale)},
@@ -718,7 +727,7 @@ ReturnCode build(const Environment& env, const Expr* expr, ElementRef* elem) {
       {"border", bind(&expr_to_stroke_style, _1, &config->border_style)},
       {"border-color", bind(&expr_to_color, _1, &config->border_style.color)},
       {"border-width", bind(&expr_to_measure, _1, &config->border_style.line_width)},
-    });
+    }, false);
 
     if (!rc) {
       return rc;

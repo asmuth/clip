@@ -47,7 +47,7 @@ struct PlotGeom {
 };
 
 struct PlotAxis {
-  std::string elem_name;
+  std::string align;
   ExprStorage opts;
   size_t position;
 };
@@ -250,14 +250,14 @@ ReturnCode configure_geom(
 }
 
 ReturnCode configure_axis(
-    const std::string& axis_elem_name,
+    const std::string& align,
     size_t axis_position,
     const Expr* expr,
     std::vector<PlotAxis>* axes) {
   auto opts = expr_clone(expr_get_list(expr));
 
   PlotAxis a;
-  a.elem_name = axis_elem_name;
+  a.align = align;
   a.opts = std::move(opts);
   a.position = axis_position;
   axes->emplace_back(std::move(a));
@@ -322,10 +322,10 @@ ReturnCode build(
 
     /* axis options */
     {"axes", bind(&expr_to_stringset, _1, &axes_auto)},
-    {"axis-top", bind(&configure_axis, "plot/axis-top", 0, _1, &axes)},
-    {"axis-right", bind(&configure_axis, "plot/axis-right", 1, _1, &axes)},
-    {"axis-bottom", bind(&configure_axis, "plot/axis-bottom", 2, _1, &axes)},
-    {"axis-left", bind(&configure_axis, "plot/axis-left", 3, _1, &axes)},
+    {"axis-top", bind(&configure_axis, "bottom", 0, _1, &axes)},
+    {"axis-right", bind(&configure_axis, "left", 1, _1, &axes)},
+    {"axis-bottom", bind(&configure_axis, "top", 2, _1, &axes)},
+    {"axis-left", bind(&configure_axis, "right", 3, _1, &axes)},
     {"axis-x-labels", bind(&expr_rewritev, _1, "labels", &axis_x_opts)},
     {"axis-y-labels", bind(&expr_rewritev, _1, "labels", &axis_y_opts)},
     {
@@ -466,28 +466,28 @@ ReturnCode build(
 
   if (axes_auto.count("top")) {
     PlotAxis a;
-    a.elem_name = "plot/axis-top";
+    a.align= "bottom";
     a.position = 0;
     axes.emplace_back(std::move(a));
   }
 
   if (axes_auto.count("right")) {
     PlotAxis a;
-    a.elem_name = "plot/axis-right";
+    a.align = "left";
     a.position = 1;
     axes.emplace_back(std::move(a));
   }
 
   if (axes_auto.count("bottom")) {
     PlotAxis a;
-    a.elem_name = "plot/axis-bottom";
+    a.align = "top";
     a.position = 2;
     axes.emplace_back(std::move(a));
   }
 
   if (axes_auto.count("left")) {
     PlotAxis a;
-    a.elem_name = "plot/axis-left";
+    a.align = "right";
     a.position = 3;
     axes.emplace_back(std::move(a));
   }
@@ -544,7 +544,9 @@ ReturnCode build(
     }
 
     auto elem_config = expr_build(
-        axis.elem_name,
+        "plot/axis",
+        "align",
+        axis.align,
         expr_unwrap(std::move(elem_config_defaults)),
         expr_clone(axis.opts.get()));
 
@@ -596,7 +598,6 @@ ReturnCode build(
 
     config->body_elements.emplace_back(elem);
   }
-
 
   /* return the layout element */
   *elem = std::make_shared<Element>();
