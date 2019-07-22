@@ -321,13 +321,18 @@ ReturnCode build(
   c->label_font_size = env.font_size;
 
   /* parse properties */
+  std::vector<std::string> data_x;
+  std::vector<std::string> data_y;
+  std::vector<std::string> data_xoffset;
+  std::vector<std::string> data_yoffset;
+
   auto config_rc = expr_walk_map(expr_next(expr), {
-    {"data-x", bind(&data_load, _1, &c->x)},
-    {"data-y", bind(&data_load, _1, &c->y)},
-    {"data-x1", bind(&data_load, _1, &c->x)},
-    {"data-y1", bind(&data_load, _1, &c->y)},
-    {"data-x2", bind(&data_load, _1, &c->xoffset)},
-    {"data-y2", bind(&data_load, _1, &c->yoffset)},
+    {"data-x", bind(&data_load_strings, _1, &data_x)},
+    {"data-y", bind(&data_load_strings, _1, &data_y)},
+    {"data-x1", bind(&data_load_strings, _1, &data_x)},
+    {"data-y1", bind(&data_load_strings, _1, &data_y)},
+    {"data-x2", bind(&data_load_strings, _1, &data_xoffset)},
+    {"data-y2", bind(&data_load_strings, _1, &data_yoffset)},
     {"bar-width", bind(&data_load, _1, &c->sizes)},
     {"bar-widths", bind(&data_load, _1, &c->sizes)},
     {"bar-offset", bind(&data_load, _1, &c->offsets)},
@@ -361,29 +366,23 @@ ReturnCode build(
     return config_rc;
   }
 
-  /* check configuraton */
-  if (c->x.size() != c->y.size()) {
-    return error(
-        ERROR,
-        "the length of the 'data-x' and 'data-y' properties must be equal");
+  /* scale configuration */
+  if (auto rc = data_to_measures(data_x, c->scale_x, &c->x); !rc){
+    return rc;
   }
 
-  if (!c->xoffset.empty() &&
-      c->xoffset.size() != c->x.size()) {
-    return error(
-        ERROR,
-        "the length of the 'data-x' and 'data-x2' properties must be equal");
+  if (auto rc = data_to_measures(data_xoffset, c->scale_x, &c->xoffset); !rc){
+    return rc;
   }
 
-  if (!c->yoffset.empty() &&
-      c->yoffset.size() != c->y.size()) {
-    return error(
-        ERROR,
-        "the length of the 'data-y' and 'data-y2' properties must be equal");
+  if (auto rc = data_to_measures(data_y, c->scale_y, &c->y); !rc){
+    return rc;
   }
 
+  if (auto rc = data_to_measures(data_yoffset, c->scale_y, &c->yoffset); !rc){
+    return rc;
+  }
 
-  /* scale autoconfig */
   for (const auto& v : c->x) {
     if (v.unit == Unit::USER) {
       scale_fit(v.value, &c->scale_x);
@@ -408,6 +407,28 @@ ReturnCode build(
     }
   }
 
+  /* check configuraton */
+  if (c->x.size() != c->y.size()) {
+    return error(
+        ERROR,
+        "the length of the 'data-x' and 'data-y' properties must be equal");
+  }
+
+  if (!c->xoffset.empty() &&
+      c->xoffset.size() != c->x.size()) {
+    return error(
+        ERROR,
+        "the length of the 'data-x' and 'data-x2' properties must be equal");
+  }
+
+  if (!c->yoffset.empty() &&
+      c->yoffset.size() != c->y.size()) {
+    return error(
+        ERROR,
+        "the length of the 'data-y' and 'data-y2' properties must be equal");
+  }
+
+  /* return element */
   *elem = std::make_shared<Element>();
   (*elem)->draw = bind(&draw, c, _1, _2);
   return OK;

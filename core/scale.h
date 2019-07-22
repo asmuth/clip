@@ -45,6 +45,7 @@ struct ScaleConfig {
   double padding;
   std::shared_ptr<ScaleLimitHints> limit_hints;
   std::vector<std::string> categories;
+  std::unordered_map<std::string, size_t> categories_map;
 };
 
 struct ScaleLayout {

@@ -171,9 +171,12 @@ ReturnCode build(
   c->line_width = from_pt(kDefaultLineWidthPT);
 
   /* parse properties */
+  std::vector<std::string> data_x;
+  std::vector<std::string> data_y;
+
   auto config_rc = expr_walk_map(expr_next(expr), {
-    {"data-x", bind(&data_load, _1, &c->x)},
-    {"data-y", bind(&data_load, _1, &c->y)},
+    {"data-x", bind(&data_load_strings, _1, &data_x)},
+    {"data-y", bind(&data_load_strings, _1, &data_y)},
     {"limit-x", bind(&expr_to_float64_opt_pair, _1, &c->scale_x.min, &c->scale_x.max)},
     {"limit-x-min", bind(&expr_to_float64_opt, _1, &c->scale_x.min)},
     {"limit-x-max", bind(&expr_to_float64_opt, _1, &c->scale_x.max)},
@@ -198,6 +201,27 @@ ReturnCode build(
     return config_rc;
   }
 
+  /* scale configuration */
+  if (auto rc = data_to_measures(data_x, c->scale_x, &c->x); !rc){
+    return rc;
+  }
+
+  if (auto rc = data_to_measures(data_y, c->scale_y, &c->y); !rc){
+    return rc;
+  }
+
+  for (const auto& v : c->x) {
+    if (v.unit == Unit::USER) {
+      scale_fit(v.value, &c->scale_x);
+    }
+  }
+
+  for (const auto& v : c->y) {
+    if (v.unit == Unit::USER) {
+      scale_fit(v.value, &c->scale_y);
+    }
+  }
+
   /* check configuraton */
   if (c->x.size() != c->y.size()) {
     return error(
@@ -213,19 +237,7 @@ ReturnCode build(
     c->groups.emplace_back(g);
   }
 
-  /* scale autoconfig */
-  for (const auto& v : c->x) {
-    if (v.unit == Unit::USER) {
-      scale_fit(v.value, &c->scale_x);
-    }
-  }
-
-  for (const auto& v : c->y) {
-    if (v.unit == Unit::USER) {
-      scale_fit(v.value, &c->scale_y);
-    }
-  }
-
+  /* return element */
   *elem = std::make_shared<Element>();
   (*elem)->draw = bind(&draw, c, _1, _2);
   return OK;

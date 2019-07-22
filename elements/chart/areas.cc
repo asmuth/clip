@@ -219,6 +219,11 @@ ReturnCode build(
   auto c = std::make_shared<PlotAreaConfig>();
 
   /* parse properties */
+  std::vector<std::string> data_x;
+  std::vector<std::string> data_y;
+  std::vector<std::string> data_xoffset;
+  std::vector<std::string> data_yoffset;
+
   auto config_rc = expr_walk_map(expr_next(expr), {
     {"data-x", bind(&data_load, _1, &c->x)},
     {"data-y", bind(&data_load, _1, &c->y)},
@@ -251,28 +256,23 @@ ReturnCode build(
     return config_rc;
   }
 
-  /* check configuraton */
-  if (c->x.size() != c->y.size()) {
-    return error(
-        ERROR,
-        "the length of the 'data-x' and 'data-y' properties must be equal");
+  /* scale configuration */
+  if (auto rc = data_to_measures(data_x, c->scale_x, &c->x); !rc){
+    return rc;
   }
 
-  if (!c->xoffset.empty() &&
-      c->xoffset.size() != c->x.size()) {
-    return error(
-        ERROR,
-        "the length of the 'data-x' and 'data-x2' properties must be equal");
+  if (auto rc = data_to_measures(data_xoffset, c->scale_x, &c->xoffset); !rc){
+    return rc;
   }
 
-  if (!c->yoffset.empty() &&
-      c->yoffset.size() != c->y.size()) {
-    return error(
-        ERROR,
-        "the length of the 'data-y' and 'data-y2' properties must be equal");
+  if (auto rc = data_to_measures(data_y, c->scale_y, &c->y); !rc){
+    return rc;
   }
 
-  /* scale autoconfig */
+  if (auto rc = data_to_measures(data_yoffset, c->scale_y, &c->yoffset); !rc){
+    return rc;
+  }
+
   for (const auto& v : c->x) {
     if (v.unit == Unit::USER) {
       scale_fit(v.value, &c->scale_x);
@@ -297,6 +297,28 @@ ReturnCode build(
     }
   }
 
+  /* check configuraton */
+  if (c->x.size() != c->y.size()) {
+    return error(
+        ERROR,
+        "the length of the 'data-x' and 'data-y' properties must be equal");
+  }
+
+  if (!c->xoffset.empty() &&
+      c->xoffset.size() != c->x.size()) {
+    return error(
+        ERROR,
+        "the length of the 'data-x' and 'data-x2' properties must be equal");
+  }
+
+  if (!c->yoffset.empty() &&
+      c->yoffset.size() != c->y.size()) {
+    return error(
+        ERROR,
+        "the length of the 'data-y' and 'data-y2' properties must be equal");
+  }
+
+  /* return element */
   *elem = std::make_shared<Element>();
   (*elem)->draw = bind(&draw, c, _1, _2);
   return OK;

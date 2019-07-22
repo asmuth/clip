@@ -220,5 +220,44 @@ ReturnCode data_load(
   return expr_to_measures(expr, values);
 }
 
+ReturnCode data_to_measures(
+    std::vector<std::string>& src,
+    const ScaleConfig& scale,
+    std::vector<Measure>* dst) {
+  for (auto v = src.begin(); v != src.end(); ++v) {
+    Measure m;
+    switch (scale.kind) {
+      case ScaleKind::CATEGORICAL: {
+        auto v_iter = scale.categories_map.find(*v);
+        if (v_iter == scale.categories_map.end()) {
+          return errorf(
+              ERROR,
+              "error while parsing data: value '{}' is not part of the categories list",
+              *v);
+        }
+
+        auto n = scale.categories.size();
+        m = from_rel(double(v_iter->second + 1) / (n + 1));
+        break;
+      }
+      default:
+        if (auto rc = parse_measure(*v, &m); !rc) {
+          return errorf(
+              ERROR,
+              "error while parsing data: '{}': {} -- "
+              "if this is intentional, set 'scale-[x,y] to (categorical ...)'",
+              *v,
+              rc.message);
+        }
+        break;
+    }
+
+    dst->push_back(m);
+  }
+
+  return OK;
+}
+
+
 } // namespace fviz
 

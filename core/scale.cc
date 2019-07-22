@@ -11,6 +11,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+#include "data.h"
 #include "core/scale.h"
 #include "core/sexpr_conv.h"
 #include "core/sexpr_util.h"
@@ -199,8 +200,12 @@ ReturnCode scale_configure_kind(
       domain->kind = ScaleKind::CATEGORICAL;
 
       expr = expr_next(expr);
-      if (auto rc = expr_to_strings(expr, &domain->categories); !rc) {
+      if (auto rc = data_load_strings(expr, &domain->categories); !rc) {
         return rc;
+      }
+
+      for (size_t i = 0; i < domain->categories.size(); ++i) {
+        domain->categories_map[domain->categories[i]] = i;
       }
 
       continue;

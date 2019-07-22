@@ -224,15 +224,15 @@ ReturnCode configure_geom(
     const std::string& geom_elem_name,
     const Expr* expr,
     std::vector<PlotGeom>* geoms,
-    std::vector<Measure>* x,
-    std::vector<Measure>* y) {
+    std::vector<std::string>* x,
+    std::vector<std::string>* y) {
   auto opts = expr_clone(expr_get_list(expr));
 
   auto config_rc = expr_walk_map(opts.get(), {
-    {"data-x", bind(&data_load, _1, x)},
-    {"data-y", bind(&data_load, _1, y)},
-    {"data-x2", bind(&data_load, _1, x)},
-    {"data-y2", bind(&data_load, _1, y)},
+    {"data-x", bind(&data_load_strings, _1, x)},
+    {"data-y", bind(&data_load_strings, _1, y)},
+    {"data-x2", bind(&data_load_strings, _1, x)},
+    {"data-y2", bind(&data_load_strings, _1, y)},
   }, false);
 
   if (!config_rc) {
@@ -272,8 +272,8 @@ ReturnCode build(
   config->border_color = env.border_color;
   config->margins = {from_em(1), from_em(1), from_em(1), from_em(1)};
 
-  std::vector<Measure> x;
-  std::vector<Measure> y;
+  std::vector<std::string> x;
+  std::vector<std::string> y;
   ScaleConfig scale_x;
   ScaleConfig scale_y;
   std::set<std::string> axes_auto;
@@ -422,15 +422,31 @@ ReturnCode build(
 
 
   /* configure the scale */
-  for (const auto& v : x) {
-    if (v.unit == Unit::USER) {
-      scale_fit(v.value, &scale_x);
+  {
+    std::vector<Measure> xs;
+
+    if (auto rc = data_to_measures(x, scale_x, &xs); !rc) {
+      return rc;
+    }
+
+    for (const auto& v : xs) {
+      if (v.unit == Unit::USER) {
+        scale_fit(v.value, &scale_x);
+      }
     }
   }
 
-  for (const auto& v : y) {
-    if (v.unit == Unit::USER) {
-      scale_fit(v.value, &scale_y);
+  {
+    std::vector<Measure> ys;
+
+    if (auto rc = data_to_measures(y, scale_y, &ys); !rc) {
+      return rc;
+    }
+
+    for (const auto& v : ys) {
+      if (v.unit == Unit::USER) {
+        scale_fit(v.value, &scale_y);
+      }
     }
   }
 

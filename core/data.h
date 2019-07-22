@@ -65,5 +65,10 @@ ReturnCode data_load(
     const Expr* expr,
     std::vector<Measure>* values);
 
+ReturnCode data_to_measures(
+    std::vector<std::string>& src,
+    const ScaleConfig& scale,
+    std::vector<Measure>* dst);
+
 } // namespace fviz
 
