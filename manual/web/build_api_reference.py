@@ -84,7 +84,7 @@ def build_elem_page(elem_file):
   write_page(url, html, title=title)
 
 def main():
-  elems = glob.glob("elements/**/*_ref.yaml")
+  elems = glob.glob("elements/**/*_ref.yaml") + glob.glob("elements/*_ref.yaml")
 
   for elem in elems:
     build_elem_page(elem)

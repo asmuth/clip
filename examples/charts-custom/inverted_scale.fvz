@@ -7,4 +7,4 @@
     limit-y (0 140)
     axis-x-label-placement (subdivide 6)
     axis-y-label-placement (linear 20 0)
-    axis-x-labels (datetime "%H:%M:%S"))
+    axis-x-label-format (datetime "%H:%M:%S"))

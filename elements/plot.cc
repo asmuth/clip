@@ -326,8 +326,8 @@ ReturnCode build(
     {"axis-right", bind(&configure_axis, "left", 1, _1, &axes)},
     {"axis-bottom", bind(&configure_axis, "top", 2, _1, &axes)},
     {"axis-left", bind(&configure_axis, "right", 3, _1, &axes)},
-    {"axis-x-labels", bind(&expr_rewritev, _1, "labels", &axis_x_opts)},
-    {"axis-y-labels", bind(&expr_rewritev, _1, "labels", &axis_y_opts)},
+    {"axis-x-label-format", bind(&expr_rewritev, _1, "label-format", &axis_x_opts)},
+    {"axis-y-label-format", bind(&expr_rewritev, _1, "label-format", &axis_y_opts)},
     {
       "axis-x-label-placement",
       expr_calln_fn({

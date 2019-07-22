@@ -38,7 +38,7 @@ static const double kDefaultTickLengthPT = 4;
 
 enum class AxisAlign {X, Y, TOP, RIGHT, BOTTOM, LEFT};
 
-enum class AxisLabelAttach {BEGIN, CENTER, END};
+enum class AxisLabelAttach {TOP, RIGHT, BOTTOM, LEFT};
 
 struct AxisDefinition;
 
@@ -48,37 +48,49 @@ using AxisLabelPlacement = std::function<ReturnCode (
 
 struct AxisDefinition {
   AxisDefinition();
+
+  /* layout */
   AxisAlign align;
+
+  /* scale */
   ScaleConfig scale;
+
+  /* title */
   std::string title;
+  Color title_color;
+  double title_offset;
+  Measure title_padding;
   FontInfo title_font;
   Measure title_font_size;
-  Color title_color;
-  Measure title_padding;
   double title_rotate;
-  double title_offset;
+
+  /* ticks */
   double tick_offset;
+  Measure tick_length;
   ScaleLayoutFn tick_placement;
+
+  /* labels */
   ScaleLayoutFn label_placement;
-  double label_offset;
-  AxisLabelAttach label_attach;
-  StrokeStyle border_style;
   Formatter label_formatter;
-  double label_rotate;
+  AxisLabelAttach label_attach;
+  double label_offset;
   Measure label_padding;
+  double label_rotate;
   FontInfo label_font;
   Measure label_font_size;
   Color label_color;
-  Measure tick_length;
+
+  /* border */
+  StrokeStyle border_style;
 };
 
 AxisDefinition::AxisDefinition() :
     align(AxisAlign::X),
-    title_rotate(0.0),
     title_offset(0.0),
+    title_rotate(0.0),
     tick_offset(0.0),
-    label_rotate(0.0),
-    label_offset(0.0) {}
+    label_offset(0.0),
+    label_rotate(0.0) {}
 
 void axis_convert_units(AxisDefinition* config, const Layer& layer) {
   convert_unit_typographic(
@@ -340,23 +352,24 @@ static ReturnCode axis_draw_vertical(
     style.color = axis_config.label_color;
     style.font_size = axis_config.label_font_size;
 
-    double a;
+    auto a = axis_config.label_rotate;
     HAlign ax;
     VAlign ay;
     switch (axis_config.label_attach) {
-      case AxisLabelAttach::BEGIN:
+      case AxisLabelAttach::LEFT:
         a = axis_config.label_rotate;
         ax = HAlign::LEFT;
         ay = VAlign::CENTER;
         break;
-      case AxisLabelAttach::CENTER:
-        p.x += label_size * 0.5 * label_position;
-        a = axis_config.label_rotate;
+      case AxisLabelAttach::TOP:
         ax = HAlign::CENTER;
-        ay = VAlign::CENTER;
+        ay = VAlign::TOP;
         break;
-      case AxisLabelAttach::END:
-        a = axis_config.label_rotate;
+      case AxisLabelAttach::BOTTOM:
+        ax = HAlign::CENTER;
+        ay = VAlign::BOTTOM;
+        break;
+      case AxisLabelAttach::RIGHT:
         ax = HAlign::RIGHT;
         ay = VAlign::CENTER;
         break;
@@ -479,23 +492,24 @@ static ReturnCode axis_draw_horizontal(
     style.color = axis_config.label_color;
     style.font_size = axis_config.label_font_size;
 
-    double a;
+    auto a = axis_config.label_rotate;
     HAlign ax;
     VAlign ay;
     switch (axis_config.label_attach) {
-      case AxisLabelAttach::BEGIN:
+      case AxisLabelAttach::LEFT:
         a = axis_config.label_rotate;
         ax = HAlign::LEFT;
         ay = VAlign::CENTER;
         break;
-      case AxisLabelAttach::CENTER:
-        p.y += label_size * 0.5 * label_position;
-        a = axis_config.label_rotate;
+      case AxisLabelAttach::TOP:
         ax = HAlign::CENTER;
-        ay = VAlign::CENTER;
+        ay = VAlign::TOP;
         break;
-      case AxisLabelAttach::END:
-        a = axis_config.label_rotate;
+      case AxisLabelAttach::BOTTOM:
+        ax = HAlign::CENTER;
+        ay = VAlign::BOTTOM;
+        break;
+      case AxisLabelAttach::RIGHT:
         ax = HAlign::RIGHT;
         ay = VAlign::CENTER;
         break;
@@ -647,39 +661,39 @@ ReturnCode build(const Environment& env, const Expr* expr, ElementRef* elem) {
 
   switch (config->align) {
     case AxisAlign::X:
-      config->label_attach = AxisLabelAttach::CENTER;
+      config->label_attach = AxisLabelAttach::TOP;
       config->title_offset = 1;
       config->tick_offset = 0;
       config->label_offset = 1;
       break;
     case AxisAlign::TOP:
-      config->label_attach = AxisLabelAttach::CENTER;
+      config->label_attach = AxisLabelAttach::TOP;
       config->title_offset = 1;
       config->tick_offset = -1;
       config->label_offset = 1;
       break;
     case AxisAlign::BOTTOM:
-      config->label_attach = AxisLabelAttach::CENTER;
+      config->label_attach = AxisLabelAttach::BOTTOM;
       config->title_offset = -1;
       config->tick_offset = 1;
       config->label_offset = -1;
       break;
     case AxisAlign::Y:
-      config->label_attach = AxisLabelAttach::BEGIN;
+      config->label_attach = AxisLabelAttach::LEFT;
       config->title_offset = 1;
       config->title_rotate = -90;
       config->tick_offset = 0;
       config->label_offset = 1;
       break;
     case AxisAlign::LEFT:
-      config->label_attach = AxisLabelAttach::BEGIN;
+      config->label_attach = AxisLabelAttach::LEFT;
       config->title_offset = 1;
       config->title_rotate = -90;
       config->tick_offset = -1;
       config->label_offset = 1;
       break;
     case AxisAlign::RIGHT:
-      config->label_attach = AxisLabelAttach::END;
+      config->label_attach = AxisLabelAttach::RIGHT;
       config->title_offset = -1;
       config->title_rotate = -90;
       config->tick_offset = 1;
@@ -690,16 +704,18 @@ ReturnCode build(const Environment& env, const Expr* expr, ElementRef* elem) {
   {
     auto rc = expr_walk_map(expr_next(expr), {
       /* label options */
-      {"labels", bind(&format_configure, _1, &config->label_formatter)},
       {"label-placement", bind(&scale_configure_layout, _1, &config->label_placement)},
+      {"label-format", bind(&format_configure, _1, &config->label_formatter)},
       {
         "label-attach",
         expr_to_enum_fn<AxisLabelAttach>(&config->label_attach, {
-          { "begin", AxisLabelAttach::BEGIN },
-          { "center", AxisLabelAttach::CENTER },
-          { "end", AxisLabelAttach::END },
+          { "top", AxisLabelAttach::TOP },
+          { "right", AxisLabelAttach::RIGHT },
+          { "bottom", AxisLabelAttach::BOTTOM },
+          { "left", AxisLabelAttach::LEFT },
         })
       },
+      {"label-offset", bind(&expr_to_float64, _1, &config->label_offset)},
       {"label-padding", bind(&expr_to_measure, _1, &config->label_padding)},
       {"label-rotate", bind(&expr_to_float64, _1, &config->label_rotate)},
       {"label-font-size", bind(&expr_to_measure, _1, &config->label_font_size)},
@@ -720,6 +736,7 @@ ReturnCode build(const Environment& env, const Expr* expr, ElementRef* elem) {
       {"title", bind(&expr_to_string, _1, &config->title)},
       {"title-font-size", bind(&expr_to_measure, _1, &config->title_font_size)},
       {"title-color", bind(&expr_to_color, _1, &config->title_color)},
+      {"title-offset", bind(&expr_to_float64, _1, &config->title_offset)},
       {"title-padding", bind(&expr_to_measure, _1, &config->title_padding)},
       {"title-rotate", bind(&expr_to_float64, _1, &config->title_rotate)},
 

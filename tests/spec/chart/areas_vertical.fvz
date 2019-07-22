@@ -4,7 +4,7 @@
 (plot
     axes (left bottom)
     limit-x (0 150)
-    axis-y-labels (datetime "%H:%M:%S")
+    axis-y-label-format (datetime "%H:%M:%S")
     areas (
         data-x (csv "tests/testdata/measurement.csv" value2)
         data-y (csv "tests/testdata/measurement.csv" time)

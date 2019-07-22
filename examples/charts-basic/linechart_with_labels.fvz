@@ -7,7 +7,7 @@
     labels (csv "tests/testdata/city_temperatures_london.csv" temperature_str)
     scale-x-padding 0.6
     axis-x-label-placement (linear 1 1)
-    axis-x-labels (custom "Jan" "Feb" "Mar" "Apr" "May" "Jun" "Jul" "Aug" "Sep" "Oct" "Nov" "Dec")
+    axis-x-label-format (custom "Jan" "Feb" "Mar" "Apr" "May" "Jun" "Jul" "Aug" "Sep" "Oct" "Nov" "Dec")
     limit-y (-10 32)
     axis-y-label-placement (linear 5 -10)
     color (#06c)

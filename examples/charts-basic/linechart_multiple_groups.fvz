@@ -4,7 +4,7 @@
 (plot
     scale-x-padding 0.6
     axis-x-label-placement (linear 1 1)
-    axis-x-labels (custom "Jan" "Feb" "Mar" "Apr" "May" "Jun" "Jul" "Aug" "Sep" "Oct" "Nov" "Dec")
+    axis-x-label-format (custom "Jan" "Feb" "Mar" "Apr" "May" "Jun" "Jul" "Aug" "Sep" "Oct" "Nov" "Dec")
     limit-y (-20 35)
     axis-y-label-placement (linear 5 -20)
     axes (bottom left)

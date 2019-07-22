@@ -2,19 +2,19 @@
     data-x (csv "tests/testdata/measurement.csv" time)
     data-y (csv "tests/testdata/measurement.csv" value1)
     axis-left (
-        labels (scientific)
+        label-format (scientific)
         title "Value"
         title-font-size 14pt)
     axis-right (
-        labels (scientific)
+        label-format (scientific)
         title "Value"
         title-rotate 90
         title-font-size 14pt)
     axis-top (
-        labels (datetime "%H:%M:%S")
+        label-format (datetime "%H:%M:%S")
         title "Time"
         title-font-size 14pt)
     axis-bottom (
-        labels (datetime "%H:%M:%S")
+        label-format (datetime "%H:%M:%S")
         title "Time"
         title-font-size 14pt))

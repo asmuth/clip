@@ -18,31 +18,31 @@ properties:
     properties:
       - name: areas
         desc: |
-          Add a 'plot/areas' element to the chart. See the [plot/areas](./areas)
+          Add a 'plot/areas' element to the chart. See the [plot/areas](./plot/areas)
           element for options.
         desc_code: |
           areas (<options>)
       - name: bars
         desc: |
-          Add a 'plot/bars' element to the chart. See the [plot/bars](./bars)
+          Add a 'plot/bars' element to the chart. See the [plot/bars](./plot/bars)
           element for options.
         desc_code: |
           bars (<options>)
       - name: lines
         desc: |
-          Add a 'plot/lines' element to the chart. See the [plot/lines](./lines)
+          Add a 'plot/lines' element to the chart. See the [plot/lines](./plot/lines)
           element for options.
         desc_code: |
           lines (<options>)
       - name: labels
         desc: |
-          Add a 'plot/labels' element to the chart. See the [plot/labels](./labels)
+          Add a 'plot/labels' element to the chart. See the [plot/labels](./plot/labels)
           element for options.
         desc_code: |
-          labels (<options>)
+          label-format (<options>)
       - name: points
         desc: |
-          Add a 'plot/points' element to the chart. See the [plot/points](./points)
+          Add a 'plot/points' element to the chart. See the [plot/points](./plot/points)
           element for options.
         desc_code: |
           points (<options>)
@@ -194,7 +194,7 @@ properties:
           axes ()
       - name: axis-top
         desc: |
-          Add a 'top' axis to the chart. See the [plot/axis-top](./axis-top) element for
+          Add a 'top' axis to the chart. See the [plot/axis-top](./plot/axis-top) element for
           options.
         desc_code: |
           axis-top (<options>)
@@ -205,7 +205,7 @@ properties:
             title-font-size 14pt))
       - name: axis-right
         desc: |
-          Add a 'right' axis to the chart. See the [plot/axis-right](./axis-right) element for
+          Add a 'right' axis to the chart. See the [plot/axis-right](./plot/axis-right) element for
           options.
         desc_code: |
           axis-right (<options>)
@@ -216,7 +216,7 @@ properties:
             title-font-size 14pt))
       - name: axis-bottom
         desc: |
-          Add a 'bottom' axis to the chart. See the [plot/axis-bottom](./axis-bottom) element for
+          Add a 'bottom' axis to the chart. See the [plot/axis-bottom](./plot/axis-bottom) element for
           options.
         desc_code: |
           axis-bottom (<options>)
@@ -227,7 +227,7 @@ properties:
             title-font-size 14pt))
       - name: axis-left
         desc: |
-          Add a 'left' axis to the chart. See the [plot/axis-left](./axis-left) element for
+          Add a 'left' axis to the chart. See the [plot/axis-left](./plot/axis-left) element for
           options.
         desc_code: |
           axis-left (<options>)
@@ -252,31 +252,31 @@ properties:
         examples: |
           ;; set the left/right axis title to "Time"
           axis-y-title "Time"
-      - name: axis-x-labels
+      - name: axis-x-label-format
         desc: |
-          Convenience option to set the axis labels for all 'x' axes (top/bottom).
-          This option is an alias for the [plot/axis](./axis) element's
-          [`labels`](./axis#option-labels) option.
+          Convenience option to control the label format for all 'x' axes (top/bottom).
+          This option is an alias for the [plot/axis](./plot/axis) element's
+          [`label-format`](./plot/axis#option-label-format) option.
         desc_code: |
-          axis-x-labels <labels>
+          axis-x-label-format <format>
         examples: |
           ;; use scientific labels for the top/bottom axes
-          axis-x-labels (scientific)
-      - name: axis-y-labels
+          axis-x-label-format (scientific)
+      - name: axis-y-label-format
         desc: |
-          Convenience option to set the axis labels for all 'y' axes (left/right).
-          This option is an alias for the [plot/axis](./axis) element's
-          [`labels`](./axis#option-labels) option.
+          Convenience option to set the label format for all 'y' axes (left/right).
+          This option is an alias for the [plot/axis](./plot/axis) element's
+          [`label-format`](./plot/axis#option-label-format) option.
         desc_code: |
-          axis-y-labels <labels>
+          axis-y-label-format <format>
         examples: |
           ;; use scientific labels for the left/right axes
-          axis-x-labels (scientific)
+          axis-y-label-format (scientific)
       - name: axis-x-label-placement
         desc: |
           Convenience option to set the axis label-placement for all 'x' axes (top/bottom).
-          This option is an alias for the [plot/axis](./axis) element's
-          [`label-placement`](./axis#option-label-placement) option.
+          This option is an alias for the [plot/axis](./plot/axis) element's
+          [`label-placement`](./plot/axis#option-label-placement) option.
         desc_code: |
           axis-x-label-placement <label-placement>
         examples: |
@@ -285,8 +285,8 @@ properties:
       - name: axis-y-label-placement
         desc: |
           Convenience option to set the axis label-placement for all 'y' axes (left/right).
-          This option is an alias for the [plot/axis](./axis) element's
-          [`label-placement`](./axis#option-label-placement) option.
+          This option is an alias for the [plot/axis](./plot/axis) element's
+          [`label-placement`](./plot/axis#option-label-placement) option.
         desc_code: |
           axis-y-label-placement <label-placement>
         examples: |
@@ -298,7 +298,7 @@ properties:
     properties:
       - name: grid
         desc: |
-          Add a 'grid' to the chart. See the [plot/grid](./grid) element for
+          Add a 'grid' to the chart. See the [plot/grid](./plot/grid) element for
           options.
         desc_code: |
           grid (<options>)
@@ -307,7 +307,7 @@ properties:
           grid (color #fff)
       - name: legend
         desc: |
-          Add a 'legend' to the chart. See the [chart/legend](./legend) element for
+          Add a 'legend' to the chart. See the [chart/legend](./plot/legend) element for
           options.
         desc_code: |
           legend (<options>)

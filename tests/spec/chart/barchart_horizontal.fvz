@@ -3,7 +3,7 @@
     limit-y (0 10)
     axes (left)
     axis-y-label-placement (discrete)
-    axis-y-labels (custom (csv "tests/testdata/gdp_per_capita_2010.csv" country))
+    axis-y-label-format (custom (csv "tests/testdata/gdp_per_capita_2010.csv" country))
     bars (
       data-x (csv "tests/testdata/gdp_per_capita_2010.csv" gdp)
       data-y (csv "tests/testdata/gdp_per_capita_2010.csv" rank)

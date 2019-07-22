@@ -30,9 +30,9 @@
   <path stroke-width="1.333333" stroke="#333333" fill="none" d="M49.2889 207.584 L54.6222 207.584 "/>
   <path stroke-width="1.333333" stroke="#333333" fill="none" d="M49.2889 113.57 L54.6222 113.57 "/>
   <path stroke-width="1.333333" stroke="#333333" fill="none" d="M49.2889 19.5556 L54.6222 19.5556 "/>
-  <text x="1.844618" y="400.611811" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" transform="rotate(-90 28.5556 395.612)">7.3e+06</text>
-  <text x="1.844618" y="306.597747" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" transform="rotate(-90 28.5556 301.598)">7.6e+06</text>
-  <text x="1.844618" y="212.583683" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" transform="rotate(-90 28.5556 207.584)">8.0e+06</text>
-  <text x="1.844618" y="118.569619" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" transform="rotate(-90 28.5556 113.57)">8.3e+06</text>
-  <text x="1.844618" y="24.555556" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" transform="rotate(-90 28.5556 19.5556)">8.6e+06</text>
+  <text x="10.844618" y="391.611811" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" transform="rotate(-90 37.5556 395.612)">7.3e+06</text>
+  <text x="10.844618" y="297.597747" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" transform="rotate(-90 37.5556 301.598)">7.6e+06</text>
+  <text x="10.844618" y="203.583683" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" transform="rotate(-90 37.5556 207.584)">8.0e+06</text>
+  <text x="10.844618" y="109.569619" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" transform="rotate(-90 37.5556 113.57)">8.3e+06</text>
+  <text x="10.844618" y="15.555556" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" transform="rotate(-90 37.5556 19.5556)">8.6e+06</text>
 </svg>

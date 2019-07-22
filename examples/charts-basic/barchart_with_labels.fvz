@@ -4,7 +4,7 @@
     limit-y (0 25)
     axis-x-label-placement (linear 1 1 12)
     axis-x-label-placement (linear 1 1 12)
-    axis-x-labels (custom "Jan" "Feb" "Mar" "Apr" "May" "Jun" "Jul" "Aug" "Sep" "Oct" "Nov" "Dec")
+    axis-x-label-format (custom "Jan" "Feb" "Mar" "Apr" "May" "Jun" "Jul" "Aug" "Sep" "Oct" "Nov" "Dec")
     bars (
       data-x (csv "tests/testdata/city_temperatures_london.csv" month)
       data-y (csv "tests/testdata/city_temperatures_london.csv" temperature)

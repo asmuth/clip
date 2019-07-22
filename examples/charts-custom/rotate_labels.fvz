@@ -4,10 +4,10 @@
     margin-right 3em
     axis-left (
         label-placement (subdivide 4)
-        labels (scientific)
-        label-attach center
+        label-format (scientific)
+        label-attach bottom
         label-rotate -90)
     axis-bottom (
-        labels (datetime "%H:%M:%S")
-        label-attach begin
+        label-format (datetime "%H:%M:%S")
+        label-attach left
         label-rotate 45))

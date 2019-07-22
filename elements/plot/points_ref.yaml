@@ -76,11 +76,11 @@ properties:
           Set the labels for the plot. If set, a label will be drawn for each
           point in the dataset at the points (x, y) coordinate,
         desc_code: |
-          labels (<values>...)
+          label-format (<values>...)
           labels (csv <file> <column>)
         examples: |
           ;; list of static values
-          labels ("A" "B" "C")
+          label-format ("A" "B" "C")
 
           ;; load a csv file
           labels (csv myfile.csv mylabels)

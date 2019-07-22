@@ -34,30 +34,32 @@ properties:
           label-placement <label-placement>
         examples: |
           ;; subdivide the axis with 10 label-placement
-      - name: labels
+      - name: label-format
         desc: |
           The 'labels' option controls how axis labels are formatted.
         desc_code: |
           labels <labels>
         examples: |
           ;; use scientific labels for the top/bottom axes
-          labels (scientific)
-      - name: label-font-size
+          label-format (scientific)
+      - name: label-attach
         desc: |
-          Set the label font size. See the [measure](#FIXME) page for more details on valid values.
+          Controls how labels are attached to the axis. Useful in conjunction
+          with the `label-rotate` option.
         desc_code: |
-          label-font-size <measure>
+          label-attach [top|right|bottom|left]
         examples: |
-          ;; set the label font size to 14pt
-          label-font-size 14pt
-      - name: label-color
+          ;; set label attach to left
+          label-attach left
+      - name: label-offset
         desc: |
-          Set the label color. See the [color](#FIXME) page for more details on valid values.
+          Controls to which side of the axis the labels are placed. Value is
+          clamped to [-1, 1].
         desc_code: |
-          label-color <color>
+          label-offset <value>
         examples: |
-          ;; set the label color to grey
-          label-color #eee
+          ;; center the labels
+          label-offset 0
       - name: label-padding
         desc: |
           Set the label padding/spacing. See the [measure](#FIXME) page for more details on valid values.
@@ -74,26 +76,51 @@ properties:
         examples: |
           ;; rotate the label by 45deg clockwise
           label-rotate 45
-      - name: label-attach
+      - name: label-font-size
         desc: |
-          Controls how labels are attached to the axis. Useful in conjunction
-          with the `label-rotate` option.
+          Set the label font size. See the [measure](#FIXME) page for more details on valid values.
         desc_code: |
-          label-attach [begin|center|end]
+          label-font-size <measure>
         examples: |
-          ;; set label attach to center
-          label-attach center
+          ;; set the label font size to 14pt
+          label-font-size 14pt
+      - name: label-color
+        desc: |
+          Set the label color. See the [color](#FIXME) page for more details on valid values.
+        desc_code: |
+          label-color <color>
+        examples: |
+          ;; set the label color to grey
+          label-color #eee
 
   - title: "Tick Options"
     anchor: tick-options
     properties:
       - name: tick-placement
         desc: |
-          The 'label-placement' option controls the axis "tick" placement.
+          The 'tick-placement' option controls where on the axis the "ticks" are
+          placed.
         desc_code: |
-          label-placement <label-placement>
+          tick-placement <tick-placement>
         examples: |
-          ;; subdivide the axis with 10 label-placement
+          ;; subdivide the axis into 10 parts
+      - name: tick-offset
+        desc: |
+          Controls to which side of the axis the ticks are drawn. Value is
+          clamped to [-1, 1].
+        desc_code: |
+          tick-offset <value>
+        examples: |
+          ;; center the ticks
+          ticks-offset 0
+      - name: tick-length
+        desc: |
+          Controls the length of the ticks
+        desc_code: |
+          tick-length <measure>
+        examples: |
+          ;; set tick length to 1em
+          ticks-length 1em
 
   - title: "Scale Options"
     anchor: scale-options
@@ -155,22 +182,15 @@ properties:
         examples: |
           ;; set the axis title to "Time"
           title "Time"
-      - name: title-font-size
+      - name: title-offset
         desc: |
-          Set the title font size. See the [measure](#FIXME) page for more details on valid values.
+          Controls to which side of the axis the title is placed. Value is
+          clamped to [-1, 1].
         desc_code: |
-          title-font-size <measure>
+          title-offset <value>
         examples: |
-          ;; set the title font size to 14pt
-          title-font-size 14pt
-      - name: title-color
-        desc: |
-          Set the title color. See the [color](#FIXME) page for more details on valid values.
-        desc_code: |
-          title-color <color>
-        examples: |
-          ;; set the title color to grey
-          title-color #eee
+          ;; center the title
+          title-offset 0
       - name: title-padding
         desc: |
           Set the title padding/spacing. See the [measure](#FIXME) page for more details on valid values.
@@ -187,6 +207,22 @@ properties:
         examples: |
           ;; rotate the title by 45deg clockwise
           title-rotate 45
+      - name: title-font-size
+        desc: |
+          Set the title font size. See the [measure](#FIXME) page for more details on valid values.
+        desc_code: |
+          title-font-size <measure>
+        examples: |
+          ;; set the title font size to 14pt
+          title-font-size 14pt
+      - name: title-color
+        desc: |
+          Set the title color. See the [color](#FIXME) page for more details on valid values.
+        desc_code: |
+          title-color <color>
+        examples: |
+          ;; set the title color to grey
+          title-color #eee
 
 
   - title: "Border Options"

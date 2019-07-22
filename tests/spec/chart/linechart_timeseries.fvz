@@ -4,8 +4,8 @@
     axes (bottom left)
     axis-x-title "Time"
     axis-y-title "Variable (f/s)"
-    axis-y-labels (scientific)
-    axis-x-labels (datetime "%H:%M:%S")
+    axis-y-label-format (scientific)
+    axis-x-label-format (datetime "%H:%M:%S")
     grid (color #fff)
     background #eee
     border none)
