@@ -34,6 +34,8 @@ def build_toc(toc):
       build_page(page)
     if "pages" in page:
       build_toc(page["pages"])
+    if "sections" in page:
+      build_toc(page["sections"])
 
 def main():
   toc = yaml.load(Path("manual/toc.yaml").read_text())
