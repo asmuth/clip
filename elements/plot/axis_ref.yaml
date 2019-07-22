@@ -16,6 +16,22 @@ reference: |
 option_summary: true
 
 properties:
+  - title: "Layout Options"
+    anchor: layout-options
+    properties:
+      - name: align
+        desc: |
+          Controls where the axis is drawn.
+        desc_code: |
+          align [x|y|top|right|bottom|left]
+        examples: |
+          ;; align the axis to the right border
+          align right
+
+          ;; draw a horizontal axis
+          align x
+
+
   - title: "Label Options"
     anchor: label-options
     properties:

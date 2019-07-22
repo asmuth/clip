@@ -36,20 +36,9 @@ static const double kDefaultLabelPaddingEM = 0.8;
 static const double kDefaultLineWidthPT = 1;
 static const double kDefaultTickLengthPT = 4;
 
-enum class AxisPosition {
-  TOP,
-  RIGHT,
-  BOTTOM,
-  LEFT,
-  CENTER_HORIZ,
-  CENTER_VERT
-};
+enum class AxisAlign {X, Y, TOP, RIGHT, BOTTOM, LEFT};
 
-enum class AxisLabelAttach {
-  BEGIN,
-  CENTER,
-  END
-};
+enum class AxisLabelAttach {BEGIN, CENTER, END};
 
 struct AxisDefinition;
 
@@ -59,7 +48,7 @@ using AxisLabelPlacement = std::function<ReturnCode (
 
 struct AxisDefinition {
   AxisDefinition();
-  AxisPosition position;
+  AxisAlign align;
   ScaleConfig scale;
   std::string title;
   FontInfo title_font;
@@ -84,7 +73,7 @@ struct AxisDefinition {
 };
 
 AxisDefinition::AxisDefinition() :
-    position(AxisPosition::BOTTOM),
+    align(AxisAlign::X),
     title_rotate(0.0),
     title_offset(0.0),
     tick_offset(0.0),
@@ -125,7 +114,6 @@ void axis_convert_units(AxisDefinition* config, const Layer& layer) {
 
 ReturnCode axis_layout_labels(
     const AxisDefinition& axis,
-    const AxisPosition& axis_position,
     const Layer& layer,
     double* margin) {
   /* compute scale layout */
@@ -158,15 +146,17 @@ ReturnCode axis_layout_labels(
       label_bbox = box_rotate_bounds(label_bbox, axis.label_rotate);
     }
 
-    switch (axis_position) {
-      case AxisPosition::LEFT:
-      case AxisPosition::RIGHT:
-        label_margin = std::max(label_margin, label_bbox.w);
-        break;
-      case AxisPosition::TOP:
-      case AxisPosition::BOTTOM:
+    switch (axis.align) {
+      case AxisAlign::X:
+      case AxisAlign::TOP:
+      case AxisAlign::BOTTOM:
         label_margin = std::max(label_margin, label_bbox.h);
         break;
+        break;
+      case AxisAlign::Y:
+      case AxisAlign::LEFT:
+      case AxisAlign::RIGHT:
+        label_margin = std::max(label_margin, label_bbox.w);
         break;
     }
   }
@@ -177,7 +167,6 @@ ReturnCode axis_layout_labels(
 
 ReturnCode axis_layout_title(
     const AxisDefinition& axis,
-    const AxisPosition& axis_position,
     const Layer& layer,
     double* margin) {
   Rectangle title_bbox;
@@ -196,13 +185,15 @@ ReturnCode axis_layout_title(
     title_bbox = box_rotate_bounds(title_bbox, axis.title_rotate);
   }
 
-  switch (axis_position) {
-    case AxisPosition::LEFT:
-    case AxisPosition::RIGHT:
+  switch (axis.align) {
+    case AxisAlign::X:
+    case AxisAlign::LEFT:
+    case AxisAlign::RIGHT:
       *margin += title_bbox.w;
       break;
-    case AxisPosition::TOP:
-    case AxisPosition::BOTTOM:
+    case AxisAlign::Y:
+    case AxisAlign::TOP:
+    case AxisAlign::BOTTOM:
       *margin += title_bbox.h;
       break;
       break;
@@ -213,7 +204,6 @@ ReturnCode axis_layout_title(
 
 ReturnCode axis_layout(
     const AxisDefinition& axis_config,
-    const AxisPosition& axis_position,
     const Layer& layer,
     double* margin) {
   auto axis = axis_config;
@@ -225,41 +215,31 @@ ReturnCode axis_layout(
         axis.label_padding,
         from_em(kDefaultLabelPaddingEM, axis.label_font_size));
 
-    if (auto rc = axis_layout_labels(
-          axis,
-          axis_position,
-          layer,
-          margin);
-          !rc) {
+    if (auto rc = axis_layout_labels(axis, layer, margin); !rc) {
       return rc;
     }
   }
 
   /* add margin for the title */
   if (!axis.title.empty()) {
-    switch (axis_position) {
-      case AxisPosition::TOP:
-      case AxisPosition::BOTTOM:
-      case AxisPosition::CENTER_HORIZ:
+    switch (axis.align) {
+      case AxisAlign::X:
+      case AxisAlign::TOP:
+      case AxisAlign::BOTTOM:
         *margin += measure_or(
                 axis.title_padding,
                 from_em(kDefaultTitlePaddingVertEM, axis.title_font_size));
         break;
-      case AxisPosition::LEFT:
-      case AxisPosition::RIGHT:
-      case AxisPosition::CENTER_VERT:
+      case AxisAlign::Y:
+      case AxisAlign::LEFT:
+      case AxisAlign::RIGHT:
         *margin += measure_or(
                 axis.title_padding,
                 from_em(kDefaultTitlePaddingHorizEM, axis.title_font_size));
         break;
     }
 
-    if (auto rc = axis_layout_title(
-          axis,
-          axis_position,
-          layer,
-          margin);
-          !rc) {
+    if (auto rc = axis_layout_title(axis, layer, margin); !rc) {
       return rc;
     }
   }
@@ -275,15 +255,17 @@ ReturnCode axis_calculate_size(
     double* min_width,
     double* min_height) {
   double size = 0.0;
-  axis_layout(*axis, axis->position, layer, &size);
+  axis_layout(*axis, layer, &size);
 
-  switch (axis->position) {
-    case AxisPosition::TOP:
-    case AxisPosition::BOTTOM:
+  switch (axis->align) {
+    case AxisAlign::X:
+    case AxisAlign::TOP:
+    case AxisAlign::BOTTOM:
       *min_height = size;
       break;
-    case AxisPosition::RIGHT:
-    case AxisPosition::LEFT:
+    case AxisAlign::Y:
+    case AxisAlign::RIGHT:
+    case AxisAlign::LEFT:
       *min_width = size;
       break;
   }
@@ -338,12 +320,7 @@ static ReturnCode axis_draw_vertical(
       from_em(kDefaultLabelPaddingEM, axis_config.label_font_size));
 
   double label_size = 0;
-  if (auto rc =
-        axis_layout_labels(
-            axis_config,
-            axis_config.position,
-            *target,
-            &label_size);
+  if (auto rc =axis_layout_labels(axis_config, *target, &label_size);
       !rc) {
     return rc;
   }
@@ -403,11 +380,7 @@ static ReturnCode axis_draw_vertical(
 
     double title_size = 0;
     if (auto rc =
-          axis_layout_title(
-              axis_config,
-              axis_config.position,
-              *target,
-              &title_size);
+          axis_layout_title(axis_config, *target, &title_size);
         !rc) {
       return rc;
     }
@@ -486,13 +459,7 @@ static ReturnCode axis_draw_horizontal(
       from_em(kDefaultLabelPaddingEM, axis_config.label_font_size));
 
   double label_size = 0;
-  if (auto rc =
-        axis_layout_labels(
-            axis_config,
-            axis_config.position,
-            *target,
-            &label_size);
-      !rc) {
+  if (auto rc = axis_layout_labels(axis_config, *target, &label_size); !rc) {
     return rc;
   }
 
@@ -550,13 +517,7 @@ static ReturnCode axis_draw_horizontal(
     }
 
     double title_size = 0;
-    if (auto rc =
-          axis_layout_title(
-              axis_config,
-              axis_config.position,
-              *target,
-              &title_size);
-        !rc) {
+    if (auto rc = axis_layout_title(axis_config, *target, &title_size); !rc) {
       return rc;
     }
 
@@ -594,32 +555,16 @@ ReturnCode axis_draw(
   const auto& axis = *config;
 
   ReturnCode rc;
-  switch (axis.position) {
-    case AxisPosition::LEFT:
-      rc = axis_draw_vertical(
-          axis,
-          layout.content_box.x + layout.content_box.w,
-          layout.content_box.y,
-          layout.content_box.y + layout.content_box.h,
-          layer);
-      break;
-    case AxisPosition::RIGHT:
-      rc = axis_draw_vertical(
-          axis,
-          layout.content_box.x,
-          layout.content_box.y,
-          layout.content_box.y + layout.content_box.h,
-          layer);
-      break;
-    case AxisPosition::TOP:
+  switch (axis.align) {
+    case AxisAlign::X:
       rc = axis_draw_horizontal(
           axis,
-          layout.content_box.y + layout.content_box.h,
+          layout.content_box.y + layout.content_box.h * 0.5,
           layout.content_box.x,
           layout.content_box.x + layout.content_box.w,
           layer);
       break;
-    case AxisPosition::BOTTOM:
+    case AxisAlign::TOP:
       rc = axis_draw_horizontal(
           axis,
           layout.content_box.y,
@@ -627,9 +572,38 @@ ReturnCode axis_draw(
           layout.content_box.x + layout.content_box.w,
           layer);
       break;
-    case AxisPosition::CENTER_HORIZ:
-    case AxisPosition::CENTER_VERT:
-      return ERROR;
+    case AxisAlign::BOTTOM:
+      rc = axis_draw_horizontal(
+          axis,
+          layout.content_box.y + layout.content_box.h,
+          layout.content_box.x,
+          layout.content_box.x + layout.content_box.w,
+          layer);
+      break;
+    case AxisAlign::Y:
+      rc = axis_draw_vertical(
+          axis,
+          layout.content_box.x + layout.content_box.w * 0.5,
+          layout.content_box.y,
+          layout.content_box.y + layout.content_box.h,
+          layer);
+      break;
+    case AxisAlign::LEFT:
+      rc = axis_draw_vertical(
+          axis,
+          layout.content_box.x,
+          layout.content_box.y,
+          layout.content_box.y + layout.content_box.h,
+          layer);
+      break;
+    case AxisAlign::RIGHT:
+      rc = axis_draw_vertical(
+          axis,
+          layout.content_box.x + layout.content_box.w,
+          layout.content_box.y,
+          layout.content_box.y + layout.content_box.h,
+          layer);
+      break;
   }
 
   return rc;
@@ -649,52 +623,65 @@ ReturnCode build(const Environment& env, const Expr* expr, ElementRef* elem) {
   config->border_style.color = env.border_color;
 
   if (elem_name == "plot/axis-top") {
-    config->position = AxisPosition::TOP;
+    config->align = AxisAlign::BOTTOM;
   }
 
   if (elem_name == "plot/axis-right") {
-    config->position = AxisPosition::RIGHT;
+    config->align = AxisAlign::LEFT;
   }
 
   if (elem_name == "plot/axis-bottom") {
-    config->position = AxisPosition::BOTTOM;
+    config->align = AxisAlign::TOP;
   }
 
   if (elem_name == "plot/axis-left") {
-    config->position = AxisPosition::LEFT;
+    config->align = AxisAlign::RIGHT;
   }
 
-  switch (config->position) {
-    case AxisPosition::TOP:
-      config->label_attach = AxisLabelAttach::CENTER;
-      config->title_offset = -1;
-      config->tick_offset = 1;
-      config->label_offset = -1;
-      break;
-    case AxisPosition::BOTTOM:
+  switch (config->align) {
+    case AxisAlign::TOP:
       config->label_attach = AxisLabelAttach::CENTER;
       config->title_offset = 1;
       config->tick_offset = -1;
       config->label_offset = 1;
       break;
-    case AxisPosition::LEFT:
-      config->label_attach = AxisLabelAttach::END;
+    case AxisAlign::BOTTOM:
+      config->label_attach = AxisLabelAttach::CENTER;
       config->title_offset = -1;
-      config->title_rotate = -90;
       config->tick_offset = 1;
       config->label_offset = -1;
       break;
-    case AxisPosition::RIGHT:
+    case AxisAlign::LEFT:
       config->label_attach = AxisLabelAttach::BEGIN;
       config->title_offset = 1;
       config->title_rotate = -90;
       config->tick_offset = -1;
       config->label_offset = 1;
       break;
+    case AxisAlign::RIGHT:
+      config->label_attach = AxisLabelAttach::END;
+      config->title_offset = -1;
+      config->title_rotate = -90;
+      config->tick_offset = 1;
+      config->label_offset = -1;
+      break;
   };
 
   {
     auto rc = expr_walk_map(expr_next(expr), {
+      /* layout options */
+      {
+        "align",
+        expr_to_enum_fn<AxisAlign>(&config->align, {
+          {"x", AxisAlign::X},
+          {"y", AxisAlign::X},
+          {"top", AxisAlign::TOP},
+          {"right", AxisAlign::RIGHT},
+          {"bottom", AxisAlign::BOTTOM},
+          {"left", AxisAlign::LEFT},
+        })
+      },
+
       /* label options */
       {"labels", bind(&format_configure, _1, &config->label_formatter)},
       {"label-placement", bind(&scale_configure_layout, _1, &config->label_placement)},
