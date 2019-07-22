@@ -11,20 +11,20 @@ properties:
   - title: "Grid Options"
     anchor: grid-options
     properties:
-      - name: ticks-x
+      - name: tick-placement-x
         desc: |
-          The 'ticks-x' option controls the x grid placement.
+          The 'tick-placement-x' option controls the x grid placement.
         desc_code: |
-          ticks <ticks>
+          tick-placement-x <tick-placement>
         examples: |
-          ;; subdivide the axis with 10 ticks
-      - name: ticks-y
+          ;; subdivide the axis with 10 tick-placement
+      - name: tick-placement-y
         desc: |
-          The 'ticks-y' option controls the y grid placement.
+          The 'tick-placement-y' option controls the y grid placement.
         desc_code: |
-          ticks <ticks>
+          tick-placement-y <tick-placement>
         examples: |
-          ;; subdivide the axis with 10 ticks
+          ;; subdivide the axis with 10 tick-placement
       - name: stroke
         desc: |
           Set the grids's stroke style. See the

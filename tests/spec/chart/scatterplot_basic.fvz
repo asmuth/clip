@@ -2,9 +2,9 @@
     data-x (csv tests/testdata/gauss2d.csv x)
     data-y (csv tests/testdata/gauss2d.csv y)
     axes (bottom left)
+    axis-y-label-placement (subdivide 5)
     grid (color #fff)
     legend (items ("Random Data"))
-    axis-y-ticks (subdivide 5)
     background #eee
     border none
     limit-x-min 0

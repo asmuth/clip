@@ -2,5 +2,5 @@
   margin 1em
   body (
     (plot/axis-bottom
-      ticks (linear 1)
+      label-placement (linear 1)
       limit (0 16))))

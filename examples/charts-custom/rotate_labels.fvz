@@ -3,10 +3,11 @@
     data-y (csv "tests/testdata/measurement.csv" value1)
     margin-right 3em
     axis-left (
-        ticks (subdivide 4)
+        label-placement (subdivide 4)
         labels (scientific)
-        label-attach center)
+        label-attach center
+        label-rotate -90)
     axis-bottom (
         labels (datetime "%H:%M:%S")
         label-attach begin
-        label-rotate -45))
+        label-rotate 45))

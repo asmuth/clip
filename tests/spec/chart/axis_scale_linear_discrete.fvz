@@ -2,5 +2,5 @@
   margin 1em
   body (
     (plot/axis-bottom
-      ticks (discrete)
+      label-placement (discrete)
       limit (0 16))))

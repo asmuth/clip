@@ -3,7 +3,7 @@
     data-y (csv tests/testdata/gauss2d.csv y)
     limit-x (0 400)
     limit-y (0 200)
-    axis-y-ticks (subdivide 5)
+    axis-y-label-placement (subdivide 5)
     axes (bottom left)
     grid (color #fff)
     legend (items ("Random Data"))

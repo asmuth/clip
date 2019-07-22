@@ -12,15 +12,15 @@
   <path stroke-width="1.333333" stroke="#333333" fill="none" d="M159.883 119.467 L165.216 119.467 "/>
   <path stroke-width="1.333333" stroke="#333333" fill="none" d="M159.883 79.2889 L165.216 79.2889 "/>
   <path stroke-width="1.333333" stroke="#333333" fill="none" d="M159.883 39.1111 L165.216 39.1111 "/>
-  <text x="148.149186" y="445.888889" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" transform="rotate(135 148.149 440.889)">2016-01-01 00:00:00</text>
-  <text x="148.149186" y="405.711111" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" transform="rotate(135 148.149 400.711)">2016-01-01 00:06:00</text>
-  <text x="148.149186" y="365.533332" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" transform="rotate(135 148.149 360.533)">2016-01-01 00:12:00</text>
-  <text x="148.149186" y="325.355551" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" transform="rotate(135 148.149 320.356)">2016-01-01 00:18:00</text>
-  <text x="148.149186" y="285.177775" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" transform="rotate(135 148.149 280.178)">2016-01-01 00:24:00</text>
-  <text x="148.149186" y="245.000000" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" transform="rotate(135 148.149 240)">2016-01-01 00:30:00</text>
-  <text x="148.149186" y="204.822213" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" transform="rotate(135 148.149 199.822)">2016-01-01 00:36:00</text>
-  <text x="148.149186" y="164.644449" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" transform="rotate(135 148.149 159.644)">2016-01-01 00:41:59</text>
-  <text x="148.149186" y="124.466662" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" transform="rotate(135 148.149 119.467)">2016-01-01 00:48:00</text>
-  <text x="148.149186" y="84.288875" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" transform="rotate(135 148.149 79.2889)">2016-01-01 00:54:00</text>
-  <text x="148.149186" y="44.111111" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" transform="rotate(135 148.149 39.1111)">2016-01-01 01:00:00</text>
+  <text x="148.149186" y="445.888889" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" transform="rotate(-45 148.149 440.889)">2016-01-01 00:00:00</text>
+  <text x="148.149186" y="405.711111" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" transform="rotate(-45 148.149 400.711)">2016-01-01 00:06:00</text>
+  <text x="148.149186" y="365.533332" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" transform="rotate(-45 148.149 360.533)">2016-01-01 00:12:00</text>
+  <text x="148.149186" y="325.355551" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" transform="rotate(-45 148.149 320.356)">2016-01-01 00:18:00</text>
+  <text x="148.149186" y="285.177775" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" transform="rotate(-45 148.149 280.178)">2016-01-01 00:24:00</text>
+  <text x="148.149186" y="245.000000" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" transform="rotate(-45 148.149 240)">2016-01-01 00:30:00</text>
+  <text x="148.149186" y="204.822213" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" transform="rotate(-45 148.149 199.822)">2016-01-01 00:36:00</text>
+  <text x="148.149186" y="164.644449" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" transform="rotate(-45 148.149 159.644)">2016-01-01 00:41:59</text>
+  <text x="148.149186" y="124.466662" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" transform="rotate(-45 148.149 119.467)">2016-01-01 00:48:00</text>
+  <text x="148.149186" y="84.288875" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" transform="rotate(-45 148.149 79.2889)">2016-01-01 00:54:00</text>
+  <text x="148.149186" y="44.111111" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" transform="rotate(-45 148.149 39.1111)">2016-01-01 01:00:00</text>
 </svg>

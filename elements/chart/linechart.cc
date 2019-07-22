@@ -65,10 +65,10 @@ ReturnCode build(
     {"axis-right", bind(&expr_rewritev, _1, "axis-right", &layout_opts)},
     {"axis-bottom", bind(&expr_rewritev, _1, "axis-bottom", &layout_opts)},
     {"axis-left", bind(&expr_rewritev, _1, "axis-left", &layout_opts)},
-    {"axis-x-ticks", bind(&expr_rewritev, _1, "axis-x-ticks", &layout_opts)},
-    {"axis-y-ticks", bind(&expr_rewritev, _1, "axis-y-ticks", &layout_opts)},
     {"axis-x-labels", bind(&expr_rewritev, _1, "axis-x-labels", &layout_opts)},
     {"axis-y-labels", bind(&expr_rewritev, _1, "axis-y-labels", &layout_opts)},
+    {"axis-x-label-placement", bind(&expr_rewritev, _1, "axis-x-label-placement", &layout_opts)},
+    {"axis-y-label-placement", bind(&expr_rewritev, _1, "axis-y-label-placement", &layout_opts)},
     {"axis-x-title", bind(&expr_rewritev, _1, "axis-x-title", &layout_opts)},
     {"axis-y-title", bind(&expr_rewritev, _1, "axis-y-title", &layout_opts)},
 

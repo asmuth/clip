@@ -1,9 +1,9 @@
 (plot
-    axes (top right bottom left)
     limit-x (0.5 6.5)
     limit-y (-20 70)
-    axis-x-ticks (discrete)
-    axis-y-ticks (linear 10 -20)
+    axes (top right bottom left)
+    axis-x-label-placement (discrete)
+    axis-y-label-placement (linear 10 -20)
     bars (
       data-x (csv "tests/testdata/bardata.csv" var0)
       data-y (csv "tests/testdata/bardata.csv" var1)

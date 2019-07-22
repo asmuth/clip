@@ -13,17 +13,17 @@
   <path stroke-width="1.333333" stroke="#333333" fill="none" d="M682.924 395.612 L682.924 390.278 "/>
   <path stroke-width="1.333333" stroke="#333333" fill="none" d="M762.129 395.612 L762.129 390.278 "/>
   <path stroke-width="1.333333" stroke="#333333" fill="none" d="M841.333 395.612 L841.333 390.278 "/>
-  <text x="49.288889" y="412.345145" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" transform="rotate(-315 49.2889 407.345)">05:15:44</text>
-  <text x="128.493335" y="412.345145" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" transform="rotate(-315 128.493 407.345)">05:51:34</text>
-  <text x="207.697780" y="412.345145" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" transform="rotate(-315 207.698 407.345)">06:27:24</text>
-  <text x="286.902232" y="412.345145" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" transform="rotate(-315 286.902 407.345)">07:03:15</text>
-  <text x="366.106671" y="412.345145" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" transform="rotate(-315 366.107 407.345)">07:39:05</text>
-  <text x="445.311111" y="412.345145" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" transform="rotate(-315 445.311 407.345)">08:14:56</text>
-  <text x="524.515574" y="412.345145" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" transform="rotate(-315 524.516 407.345)">08:50:46</text>
-  <text x="603.719991" y="412.345145" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" transform="rotate(-315 603.72 407.345)">09:26:36</text>
-  <text x="682.924454" y="412.345145" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" transform="rotate(-315 682.924 407.345)">10:02:27</text>
-  <text x="762.128917" y="412.345145" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" transform="rotate(-315 762.129 407.345)">10:38:17</text>
-  <text x="841.333333" y="412.345145" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" transform="rotate(-315 841.333 407.345)">11:14:08</text>
+  <text x="49.288889" y="412.345145" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" transform="rotate(45 49.2889 407.345)">05:15:44</text>
+  <text x="128.493335" y="412.345145" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" transform="rotate(45 128.493 407.345)">05:51:34</text>
+  <text x="207.697780" y="412.345145" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" transform="rotate(45 207.698 407.345)">06:27:24</text>
+  <text x="286.902232" y="412.345145" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" transform="rotate(45 286.902 407.345)">07:03:15</text>
+  <text x="366.106671" y="412.345145" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" transform="rotate(45 366.107 407.345)">07:39:05</text>
+  <text x="445.311111" y="412.345145" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" transform="rotate(45 445.311 407.345)">08:14:56</text>
+  <text x="524.515574" y="412.345145" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" transform="rotate(45 524.516 407.345)">08:50:46</text>
+  <text x="603.719991" y="412.345145" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" transform="rotate(45 603.72 407.345)">09:26:36</text>
+  <text x="682.924454" y="412.345145" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" transform="rotate(45 682.924 407.345)">10:02:27</text>
+  <text x="762.128917" y="412.345145" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" transform="rotate(45 762.129 407.345)">10:38:17</text>
+  <text x="841.333333" y="412.345145" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" transform="rotate(45 841.333 407.345)">11:14:08</text>
   <path stroke-width="1.333333" stroke="#333333" fill="none" d="M49.2889 19.5556 L49.2889 395.612 "/>
   <path stroke-width="1.333333" stroke="#333333" fill="none" d="M49.2889 395.612 L54.6222 395.612 "/>
   <path stroke-width="1.333333" stroke="#333333" fill="none" d="M49.2889 301.598 L54.6222 301.598 "/>

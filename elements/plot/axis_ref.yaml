@@ -19,13 +19,13 @@ properties:
   - title: "Label Options"
     anchor: label-options
     properties:
-      - name: ticks
+      - name: label-placement
         desc: |
-          The 'ticks' option controls the axis label placement.
+          The 'label-placement' option controls the axis label placement.
         desc_code: |
-          ticks <ticks>
+          label-placement <label-placement>
         examples: |
-          ;; subdivide the axis with 10 ticks
+          ;; subdivide the axis with 10 label-placement
       - name: labels
         desc: |
           The 'labels' option controls how axis labels are formatted.
@@ -75,6 +75,17 @@ properties:
         examples: |
           ;; set label attach to center
           label-attach center
+
+  - title: "Tick Options"
+    anchor: tick-options
+    properties:
+      - name: tick-placement
+        desc: |
+          The 'label-placement' option controls the axis "tick" placement.
+        desc_code: |
+          label-placement <label-placement>
+        examples: |
+          ;; subdivide the axis with 10 label-placement
 
   - title: "Scale Options"
     anchor: scale-options

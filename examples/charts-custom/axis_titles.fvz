@@ -8,7 +8,7 @@
     axis-right (
         labels (scientific)
         title "Value"
-        title-rotate 180
+        title-rotate 90
         title-font-size 14pt)
     axis-top (
         labels (datetime "%H:%M:%S")

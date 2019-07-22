@@ -326,22 +326,22 @@ ReturnCode build(
     {"axis-right", bind(&configure_axis, "plot/axis-right", 1, _1, &axes)},
     {"axis-bottom", bind(&configure_axis, "plot/axis-bottom", 2, _1, &axes)},
     {"axis-left", bind(&configure_axis, "plot/axis-left", 3, _1, &axes)},
-    {
-      "axis-x-ticks",
-      expr_calln_fn({
-        bind(&expr_rewritev, _1, "ticks", &axis_x_opts),
-        bind(&expr_rewritev, _1, "ticks-x", &grid_extra_opts),
-      })
-    },
-    {
-      "axis-y-ticks",
-      expr_calln_fn({
-        bind(&expr_rewritev, _1, "ticks", &axis_y_opts),
-        bind(&expr_rewritev, _1, "ticks-y", &grid_extra_opts),
-      })
-    },
     {"axis-x-labels", bind(&expr_rewritev, _1, "labels", &axis_x_opts)},
     {"axis-y-labels", bind(&expr_rewritev, _1, "labels", &axis_y_opts)},
+    {
+      "axis-x-label-placement",
+      expr_calln_fn({
+        bind(&expr_rewritev, _1, "label-placement", &axis_x_opts),
+        bind(&expr_rewritev, _1, "tick-placement-x", &grid_extra_opts),
+      })
+    },
+    {
+      "axis-y-label-placement",
+      expr_calln_fn({
+        bind(&expr_rewritev, _1, "label-placement", &axis_y_opts),
+        bind(&expr_rewritev, _1, "tick-placement-y", &grid_extra_opts),
+      })
+    },
     {"axis-x-title", bind(&expr_rewritev, _1, "title", &axis_x_opts)},
     {"axis-y-title", bind(&expr_rewritev, _1, "title", &axis_y_opts)},
 

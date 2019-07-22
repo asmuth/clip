@@ -35,5 +35,5 @@
   <text x="715.236048" y="94.333333" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif">14.0</text>
   <text x="715.236048" y="69.222222" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif">15.0</text>
   <text x="715.236048" y="44.111111" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif">16.0</text>
-  <text x="768.081739" y="247.500000" fill="#333333" font-size="21.333333" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" transform="rotate(-45 817.269 240)">Fnord (f/s)</text>
+  <text x="768.081739" y="247.500000" fill="#333333" font-size="21.333333" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" transform="rotate(45 817.269 240)">Fnord (f/s)</text>
 </svg>

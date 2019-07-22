@@ -2,5 +2,5 @@
   margin 1em
   body (
     (plot/axis-bottom
-      ticks (subdivide 21)
+      label-placement (subdivide 21)
       limit (-100 100))))

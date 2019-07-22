@@ -2,6 +2,7 @@
   margin 2em
   axis-bottom (
       limit (1451606400 1451610000)
-      ticks (subdivide 4)
+      label-placement (subdivide 4)
       labels (datetime "%H:%M:%S")
-      label-attach begin))
+      label-attach begin
+      label-rotate 90))

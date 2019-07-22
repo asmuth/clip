@@ -57,7 +57,7 @@ ReturnCode draw(
   ScaleLayout slayout_y;
   config->layout_y(config->scale_y, format_noop(), &slayout_y);
 
-  for (const auto& tick : slayout_x.ticks) {
+  for (const auto& tick : slayout_x.positions) {
     auto line_x = bbox.x + bbox.w * tick;
 
     strokeLine(
@@ -67,7 +67,7 @@ ReturnCode draw(
         style);
   }
 
-  for (const auto& tick : slayout_y.ticks) {
+  for (const auto& tick : slayout_y.positions) {
     auto line_y = bbox.y + bbox.h * (1.0 - tick);
 
     strokeLine(
@@ -94,8 +94,8 @@ ReturnCode build(const Environment& env, const Expr* expr, ElementRef* elem) {
     {"limit-y", bind(&expr_to_float64_opt_pair, _1, &c->scale_y.min, &c->scale_y.max)},
     {"limit-y-min", bind(&expr_to_float64_opt, _1, &c->scale_y.min)},
     {"limit-y-max", bind(&expr_to_float64_opt, _1, &c->scale_y.max)},
-    {"ticks-x", bind(&scale_configure_layout, _1, &c->layout_x)},
-    {"ticks-y", bind(&scale_configure_layout, _1, &c->layout_y)},
+    {"tick-placement-x", bind(&scale_configure_layout, _1, &c->layout_x)},
+    {"tick-placement-y", bind(&scale_configure_layout, _1, &c->layout_y)},
     {"scale-x", bind(&scale_configure_kind, _1, &c->scale_x)},
     {"scale-y", bind(&scale_configure_kind, _1, &c->scale_y)},
     {"scale-x-padding", bind(&expr_to_float64, _1, &c->scale_x.padding)},

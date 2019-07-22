@@ -1,8 +1,8 @@
 (plot
-    axes (left)
     limit-x (0 24)
     limit-y (0 10)
-    axis-y-ticks (discrete)
+    axes (left)
+    axis-y-label-placement (discrete)
     axis-y-labels (custom (csv "tests/testdata/gdp_per_capita_2010.csv" country))
     bars (
       data-x (csv "tests/testdata/gdp_per_capita_2010.csv" gdp)

@@ -49,9 +49,8 @@ struct ScaleConfig {
 };
 
 struct ScaleLayout {
-  std::vector<double> ticks;
-  std::vector<double> labels;
-  std::vector<std::string> label_text;
+  std::vector<double> positions;
+  std::vector<std::string> labels;
 };
 
 using ScaleLayoutFn = std::function<

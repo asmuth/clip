@@ -272,26 +272,26 @@ properties:
         examples: |
           ;; use scientific labels for the left/right axes
           axis-x-labels (scientific)
-      - name: axis-x-ticks
+      - name: axis-x-label-placement
         desc: |
-          Convenience option to set the axis ticks for all 'x' axes (top/bottom).
+          Convenience option to set the axis label-placement for all 'x' axes (top/bottom).
           This option is an alias for the [plot/axis](./axis) element's
-          [`ticks`](./axis#option-ticks) option.
+          [`label-placement`](./axis#option-label-placement) option.
         desc_code: |
-          axis-x-ticks <ticks>
+          axis-x-label-placement <label-placement>
         examples: |
-          ;; subdivide the x axis with 10 ticks
-          axis-x-ticks (subdivide 10)
-      - name: axis-y-ticks
+          ;; subdivide the x axis with 10 label-placement
+          axis-x-label-placement (subdivide 10)
+      - name: axis-y-label-placement
         desc: |
-          Convenience option to set the axis ticks for all 'y' axes (left/right).
+          Convenience option to set the axis label-placement for all 'y' axes (left/right).
           This option is an alias for the [plot/axis](./axis) element's
-          [`ticks`](./axis#option-ticks) option.
+          [`label-placement`](./axis#option-label-placement) option.
         desc_code: |
-          axis-y-ticks <ticks>
+          axis-y-label-placement <label-placement>
         examples: |
-          ;; subdivide the y axis with 10 ticks
-          axis-y-ticks (subdivide 10)
+          ;; subdivide the y axis with 10 label-placement
+          axis-y-label-placement (subdivide 10)
 
   - title: "Grid & Legend Options"
     anchor: other-options

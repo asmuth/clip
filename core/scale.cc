@@ -231,9 +231,8 @@ ReturnCode scale_layout_linear(
     double step,
     std::optional<double> o_begin,
     std::optional<double> o_end) {
-  layout->ticks.clear();
+  layout->positions.clear();
   layout->labels.clear();
-  layout->label_text.clear();
 
   auto begin = std::max(o_begin.value_or(scale_min(domain)), scale_min(domain));
   auto end = std::min(o_end.value_or(scale_max(domain)), scale_max(domain));
@@ -245,9 +244,8 @@ ReturnCode scale_layout_linear(
   size_t idx = 0;
   for (auto v = begin; v <= end; v += step) {
     auto vp = scale_translate(domain, v);
-    layout->ticks.emplace_back(vp);
-    layout->labels.emplace_back(vp);
-    layout->label_text.emplace_back(label_format(idx++, std::to_string(v))); // FIXME
+    layout->positions.emplace_back(vp);
+    layout->labels.emplace_back(label_format(idx++, std::to_string(v))); // FIXME
   }
 
   return OK;
@@ -258,15 +256,13 @@ ReturnCode scale_layout_subdivide(
     const Formatter& label_format,
     ScaleLayout* layout,
     uint32_t divisions) {
-  layout->ticks.clear();
+  layout->positions.clear();
   layout->labels.clear();
-  layout->label_text.clear();
 
   for (size_t i = 0; i <= divisions; ++i) {
     auto o = (1.0f / divisions) * i;
-    layout->ticks.emplace_back(o);
-    layout->labels.emplace_back(o);
-    layout->label_text.emplace_back(
+    layout->positions.emplace_back(o);
+    layout->labels.emplace_back(
         label_format(i, std::to_string(scale_untranslate(domain, o)))); // FIXME
   }
 
@@ -280,9 +276,8 @@ ReturnCode scale_layout_discrete(
   uint32_t step = 1;
   uint32_t range = scale_max(domain) - scale_min(domain);
 
+  layout->positions.clear();
   layout->labels.clear();
-  layout->label_text.clear();
-  layout->ticks.clear();
 
   for (size_t i = 0; i <= range; i += step) {
     auto o = scale_translate(domain, i * step);
@@ -292,18 +287,18 @@ ReturnCode scale_layout_discrete(
     auto vn = uint32_t(scale_min(domain)) + (i + 1) * step;
 
     if (o1 >= 0 && o2 <= 1) {
-      layout->labels.emplace_back(o);
-      layout->label_text.emplace_back(
+      layout->positions.emplace_back(o);
+      layout->labels.emplace_back(
           label_format(i - 1, std::to_string(scale_untranslate(domain, o)))); // FIXME
     }
 
-    if (o1 >= 0 && o1 <= 1) {
-      layout->ticks.push_back(o1);
-    }
+    //if (o1 >= 0 && o1 <= 1) {
+    //  layout->ticks.push_back(o1);
+    //}
 
-    if (o2 >= 0 && o2 <= 1) {
-      layout->ticks.push_back(o2);
-    }
+    //if (o2 >= 0 && o2 <= 1) {
+    //  layout->ticks.push_back(o2);
+    //}
   }
 
   return OK;
@@ -313,16 +308,14 @@ ReturnCode scale_layout_categorical(
     const ScaleConfig& domain,
     const Formatter& label_format,
     ScaleLayout* layout) {
+  layout->positions.clear();
   layout->labels.clear();
-  layout->label_text.clear();
-  layout->ticks.clear();
 
   auto n = domain.categories.size();
   for (size_t i = 0; i < n; ++i) {
     auto o =  double(i + 1) / (n + 1);
-    layout->labels.emplace_back(o);
-    layout->label_text.emplace_back(label_format(i, domain.categories[i]));
-    layout->ticks.push_back(o);
+    layout->positions.emplace_back(o);
+    layout->labels.emplace_back(label_format(i, domain.categories[i]));
   }
 
   return OK;

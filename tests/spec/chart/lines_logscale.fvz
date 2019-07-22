@@ -4,7 +4,7 @@
     limit-x (1 5)
     limit-y (0 10000)
     scale-y (log)
-    axis-y-ticks (subdivide 10)
+    axis-y-label-placement (subdivide 10)
     grid (color #fff)
     background #eee
     border none)
