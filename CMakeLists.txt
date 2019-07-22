@@ -108,7 +108,7 @@ endforeach()
 
 # Examples
 # -----------------------------------------------------------------------------
-add_custom_target(examples ALL)
+add_custom_target(examples)
 file(GLOB example_files "examples/**/*.fvz")
 foreach(example_path ${example_files})
   get_filename_component(example_name ${example_path} NAME_WE)
