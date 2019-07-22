@@ -28,7 +28,7 @@
 
 using namespace std::placeholders;
 
-namespace fviz::elements::chart::areas {
+namespace fviz::elements::plot::areas {
 
 struct PlotAreaConfig {
   PlotAreaConfig();
@@ -324,5 +324,5 @@ ReturnCode build(
   return OK;
 }
 
-} // namespace fviz::elements::chart::areas
+} // namespace fviz::elements::plot::areas
 

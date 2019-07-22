@@ -1,0 +1,25 @@
+name: plot/axis-bottom
+desc: |
+  The plot/axis-bottom element is used to draw a labelled 'bottom axis'.
+
+reference: |
+  (plot/axis-bottom <options>)
+
+option_summary: true
+
+properties:
+  - title: "Label Options"
+    anchor: label-options
+    inherit: ["elements/plot/axis", "label-options"]
+
+  - title: "Scale Options"
+    anchor: scale-options
+    inherit: ["elements/plot/axis", "scale-options"]
+
+  - title: "Title Options"
+    anchor: title-options
+    inherit: ["elements/plot/axis", "title-options"]
+
+  - title: "Border Options"
+    anchor: border-options
+    inherit: ["elements/plot/axis", "border-options"]

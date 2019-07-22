@@ -1,16 +1,16 @@
-name: chart/points
-example: charts-basic/scatterplot
+name: plot/lines
+example: charts-basic/linechart_timeseries
 desc: |
-  The `chart/points` element is used to create point/scattercharts.
+  The `plot/lines` element is used to create line charts.
 
 reference: |
-  (chart/points <options>)
+  (plot/lines <options>)
 
 option_summary: true
 
 properties:
-  - title: "Point Options"
-    anchor: point-options
+  - title: "Line Options"
+    anchor: line-options
     properties:
       - name: data-x
         desc: |
@@ -38,11 +38,20 @@ properties:
 
           ;; load a csv file
           data-y (csv myfile.csv mycolumn)
+      - name: stroke
+        desc: |
+          Set the line's stroke style. See the
+          [stroke-style](#FIXME) page for more details on valid values.
+        desc_code: |
+          stroke (<stroke-style>)
+        examples: |
+          ;; set the stroke to 2px solid
+          stroke (2px solid)
       - name: color
         alias: colors
       - name: colors
         desc: |
-          Set the point colors.
+          Set the line colors.
         desc_code: |
           colors (<values>...)
           colors (csv <file> <column>)
@@ -57,7 +66,7 @@ properties:
       - name: marker-sizes
         desc: |
           Set the marker-sizes for the plot. If set, a marker will be drawn for each
-          point in the dataset at the points (x, y) coordinate,
+          point in the dataset at the points (x, y) coordinate.
         desc_code: |
           marker-sizes (<values>...)
           marker-sizes (csv <file> <column>)
@@ -111,4 +120,4 @@ properties:
 
   - title: "Scale Options"
     anchor: scale-options
-    inherit: ["elements/chart/layout", "scale-options"]
+    inherit: ["elements/plot", "scale-options"]

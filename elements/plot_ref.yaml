@@ -1,7 +1,7 @@
-name: chart/layout
+name: plot
 example: charts-basic/scatterplot
 desc: |
-  The chart/layout element is the basic container object used to create charts.
+  The plot element is the basic container object used to create charts.
 
   Note that the chart uses a coordinate system where (0, 0) is at the bottom left
   corner of the screen and positive values of the y axis extend upwards. This is
@@ -9,7 +9,7 @@ desc: |
   but is much more natural for creating plots.
 
 reference: |
-  (chart/layout <options>)
+  (plot <options>)
 
 option_summary: true
 properties:
@@ -18,31 +18,31 @@ properties:
     properties:
       - name: areas
         desc: |
-          Add a 'chart/areas' element to the chart. See the [chart/areas](./areas)
+          Add a 'plot/areas' element to the chart. See the [plot/areas](./areas)
           element for options.
         desc_code: |
           areas (<options>)
       - name: bars
         desc: |
-          Add a 'chart/bars' element to the chart. See the [chart/bars](./bars)
+          Add a 'plot/bars' element to the chart. See the [plot/bars](./bars)
           element for options.
         desc_code: |
           bars (<options>)
       - name: lines
         desc: |
-          Add a 'chart/lines' element to the chart. See the [chart/lines](./lines)
+          Add a 'plot/lines' element to the chart. See the [plot/lines](./lines)
           element for options.
         desc_code: |
           lines (<options>)
       - name: labels
         desc: |
-          Add a 'chart/labels' element to the chart. See the [chart/labels](./labels)
+          Add a 'plot/labels' element to the chart. See the [plot/labels](./labels)
           element for options.
         desc_code: |
           labels (<options>)
       - name: points
         desc: |
-          Add a 'chart/points' element to the chart. See the [chart/points](./points)
+          Add a 'plot/points' element to the chart. See the [plot/points](./points)
           element for options.
         desc_code: |
           points (<options>)
@@ -194,7 +194,7 @@ properties:
           axes ()
       - name: axis-top
         desc: |
-          Add a 'top' axis to the chart. See the [chart/axis-top](./axis-top) element for
+          Add a 'top' axis to the chart. See the [plot/axis-top](./axis-top) element for
           options.
         desc_code: |
           axis-top (<options>)
@@ -205,7 +205,7 @@ properties:
             title-font-size 14pt))
       - name: axis-right
         desc: |
-          Add a 'right' axis to the chart. See the [chart/axis-right](./axis-right) element for
+          Add a 'right' axis to the chart. See the [plot/axis-right](./axis-right) element for
           options.
         desc_code: |
           axis-right (<options>)
@@ -216,7 +216,7 @@ properties:
             title-font-size 14pt))
       - name: axis-bottom
         desc: |
-          Add a 'bottom' axis to the chart. See the [chart/axis-bottom](./axis-bottom) element for
+          Add a 'bottom' axis to the chart. See the [plot/axis-bottom](./axis-bottom) element for
           options.
         desc_code: |
           axis-bottom (<options>)
@@ -227,7 +227,7 @@ properties:
             title-font-size 14pt))
       - name: axis-left
         desc: |
-          Add a 'left' axis to the chart. See the [chart/axis-left](./axis-left) element for
+          Add a 'left' axis to the chart. See the [plot/axis-left](./axis-left) element for
           options.
         desc_code: |
           axis-left (<options>)
@@ -255,7 +255,7 @@ properties:
       - name: axis-x-labels
         desc: |
           Convenience option to set the axis labels for all 'x' axes (top/bottom).
-          This option is an alias for the [chart/axis](./axis) element's
+          This option is an alias for the [plot/axis](./axis) element's
           [`labels`](./axis#option-labels) option.
         desc_code: |
           axis-x-labels <labels>
@@ -265,7 +265,7 @@ properties:
       - name: axis-y-labels
         desc: |
           Convenience option to set the axis labels for all 'y' axes (left/right).
-          This option is an alias for the [chart/axis](./axis) element's
+          This option is an alias for the [plot/axis](./axis) element's
           [`labels`](./axis#option-labels) option.
         desc_code: |
           axis-y-labels <labels>
@@ -275,7 +275,7 @@ properties:
       - name: axis-x-ticks
         desc: |
           Convenience option to set the axis ticks for all 'x' axes (top/bottom).
-          This option is an alias for the [chart/axis](./axis) element's
+          This option is an alias for the [plot/axis](./axis) element's
           [`ticks`](./axis#option-ticks) option.
         desc_code: |
           axis-x-ticks <ticks>
@@ -285,7 +285,7 @@ properties:
       - name: axis-y-ticks
         desc: |
           Convenience option to set the axis ticks for all 'y' axes (left/right).
-          This option is an alias for the [chart/axis](./axis) element's
+          This option is an alias for the [plot/axis](./axis) element's
           [`ticks`](./axis#option-ticks) option.
         desc_code: |
           axis-y-ticks <ticks>
@@ -298,7 +298,7 @@ properties:
     properties:
       - name: grid
         desc: |
-          Add a 'grid' to the chart. See the [chart/grid](./grid) element for
+          Add a 'grid' to the chart. See the [plot/grid](./grid) element for
           options.
         desc_code: |
           grid (<options>)

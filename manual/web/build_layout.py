@@ -22,20 +22,23 @@ tpl = """
 
       {{#toc}}
         <a class="nav_title">{{title}}</a>
-        <ul>
-          {{#pages}}
-            <li>
-              <a href="{{url}}">{{title}}</a>
-              <ul>
-                {{#pages}}
-                  <li>
-                    <a href="{{url}}">{{title}}</a>
-                  </li>
-                {{/pages}}
-              </ul>
-            </li>
-          {{/pages}}
-        </ul>
+        {{#sections}}
+          {{#section_title}}
+            <a class="nav_subtitle">{{section_title}}</a>
+          {{/section_title}}
+          <ul>
+            {{#pages}}
+              <li>
+                {{#api_ref}}
+                  <a href="{{url}}"><code>{{title}}</code></a>
+                {{/api_ref}}
+                {{^api_ref}}
+                  <a href="{{url}}">{{title}}</a>
+                {{/api_ref}}
+              </li>
+            {{/pages}}
+          </ul>
+        {{/sections}}
       {{/toc}}
     </div>
 

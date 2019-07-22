@@ -1,4 +1,4 @@
-(chart/layout
+(plot
     axes (top right bottom left)
     limit-x (0.5 6.5)
     limit-y (-20 70)

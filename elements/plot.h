@@ -12,14 +12,17 @@
  * limitations under the License.
  */
 #pragma once
+#include "sexpr.h"
+#include "core/environment.h"
 #include "element.h"
+#include "core/layout.h"
 
-namespace fviz::elements::chart::axis {
+namespace fviz::elements::plot {
 
 ReturnCode build(
     const Environment& env,
     const Expr* expr,
     ElementRef* elem);
 
-} // namespace fviz::elements::chart::axis
+} // namespace fviz::elements::plot
 

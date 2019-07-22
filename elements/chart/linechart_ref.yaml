@@ -12,19 +12,19 @@ properties:
 
   - title: "Line Options"
     anchor: line-options
-    inherit: ["elements/chart/lines", "line-options"]
+    inherit: ["elements/plot/lines", "line-options"]
 
   - title: "Label Options"
     anchor: label-options
-    inherit: ["elements/chart/lines", "label-options"]
+    inherit: ["elements/plot/lines", "label-options"]
 
   - title: "Scale Options"
     anchor: scale-options
-    inherit: ["elements/chart/layout", "scale-options"]
+    inherit: ["elements/plot", "scale-options"]
 
   - title: "Axis Options"
     anchor: axis-options
-    inherit: ["elements/chart/layout", "axis-options"]
+    inherit: ["elements/plot", "axis-options"]
 
   - title: "Layout Options"
     anchor: layout-options

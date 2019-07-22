@@ -28,7 +28,7 @@
 
 using namespace std::placeholders;
 
-namespace fviz::elements::chart::axis {
+namespace fviz::elements::plot::axis {
 
 static const double kDefaultTitlePaddingHorizEM = 1.4;
 static const double kDefaultTitlePaddingVertEM = 1;
@@ -757,19 +757,19 @@ ReturnCode build(const Environment& env, const Expr* expr, ElementRef* elem) {
   config->border_style.line_width = from_pt(1);
   config->border_style.color = env.border_color;
 
-  if (elem_name == "chart/axis-top") {
+  if (elem_name == "plot/axis-top") {
     config->position = AxisPosition::TOP;
   }
 
-  if (elem_name == "chart/axis-right") {
+  if (elem_name == "plot/axis-right") {
     config->position = AxisPosition::RIGHT;
   }
 
-  if (elem_name == "chart/axis-bottom") {
+  if (elem_name == "plot/axis-bottom") {
     config->position = AxisPosition::BOTTOM;
   }
 
-  if (elem_name == "chart/axis-left") {
+  if (elem_name == "plot/axis-left") {
     config->position = AxisPosition::LEFT;
   }
 
@@ -938,4 +938,4 @@ ReturnCode build(const Environment& env, const Expr* expr, ElementRef* elem) {
   return OK;
 }
 
-} // namespace fviz::elements::chart::axis
+} // namespace fviz::elements::plot::axis

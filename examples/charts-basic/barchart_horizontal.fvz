@@ -1,4 +1,4 @@
-(chart/layout
+(plot
     axes (left)
     limit-x (0 24)
     scale-y (categorical (csv "tests/testdata/gdp_per_capita_2010.csv" country))

@@ -237,11 +237,23 @@ ul li p {
 }
 
 #navigation a.nav_title {
-  display:block;
+  display: block;
   font-weight: 600;
   margin: 1em 0 8px 0;
   padding: 25px 0 0 0;
-  color:#333;
+  color: #000;
+}
+
+#navigation a.nav_title + a.nav_subtitle {
+  margin-top: .8em;
+}
+
+#navigation a.nav_subtitle {
+  display:block;
+  font-weight: 500;
+  margin: 1.2em 0 4px 0;
+  color: #333;
+  font-size: 86%;
 }
 
 .doc_container {

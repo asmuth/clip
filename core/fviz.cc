@@ -21,16 +21,16 @@
 #include "utils/fileutil.h"
 #include "core/environment.h"
 #include "elements/text.h"
-#include "elements/chart/layout.h"
-#include "elements/chart/areas.h"
-#include "elements/chart/axis.h"
-#include "elements/chart/bars.h"
-#include "elements/chart/grid.h"
-#include "elements/chart/labels.h"
+#include "elements/plot.h"
+#include "elements/plot/areas.h"
+#include "elements/plot/axis.h"
+#include "elements/plot/bars.h"
+#include "elements/plot/grid.h"
+#include "elements/plot/labels.h"
 #include "elements/chart/legend.h"
-#include "elements/chart/lines.h"
+#include "elements/plot/lines.h"
 #include "elements/chart/linechart.h"
-#include "elements/chart/points.h"
+#include "elements/plot/points.h"
 #include "elements/chart/scatterplot.h"
 #include "elements/layout/box.h"
 
@@ -51,19 +51,19 @@ fviz_t* fviz_init() {
   auto ctx = std::make_unique<fviz_t>();
   auto elems = &ctx->env.element_map;
   element_bind(elems, "text", bind(elements::text::build, _1, _2, _3));
-  element_bind(elems, "chart/axis-top", bind(elements::chart::axis::build, _1, _2, _3));
-  element_bind(elems, "chart/axis-right", bind(elements::chart::axis::build, _1, _2, _3));
-  element_bind(elems, "chart/axis-bottom", bind(elements::chart::axis::build, _1, _2, _3));
-  element_bind(elems, "chart/axis-left", bind(elements::chart::axis::build, _1, _2, _3));
-  element_bind(elems, "chart/layout", bind(elements::chart::layout::build, _1, _2, _3));
-  element_bind(elems, "chart/areas", bind(elements::chart::areas::build, _1, _2, _3));
-  element_bind(elems, "chart/bars", bind(elements::chart::bars::build, _1, _2, _3));
-  element_bind(elems, "chart/grid", bind(elements::chart::grid::build, _1, _2, _3));
-  element_bind(elems, "chart/labels", bind(elements::chart::labels::build, _1, _2, _3));
+  element_bind(elems, "plot/axis-top", bind(elements::plot::axis::build, _1, _2, _3));
+  element_bind(elems, "plot/axis-right", bind(elements::plot::axis::build, _1, _2, _3));
+  element_bind(elems, "plot/axis-bottom", bind(elements::plot::axis::build, _1, _2, _3));
+  element_bind(elems, "plot/axis-left", bind(elements::plot::axis::build, _1, _2, _3));
+  element_bind(elems, "plot", bind(elements::plot::build, _1, _2, _3));
+  element_bind(elems, "plot/areas", bind(elements::plot::areas::build, _1, _2, _3));
+  element_bind(elems, "plot/bars", bind(elements::plot::bars::build, _1, _2, _3));
+  element_bind(elems, "plot/grid", bind(elements::plot::grid::build, _1, _2, _3));
+  element_bind(elems, "plot/labels", bind(elements::plot::labels::build, _1, _2, _3));
   element_bind(elems, "chart/legend", bind(elements::chart::legend::build, _1, _2, _3));
-  element_bind(elems, "chart/lines", bind(elements::chart::lines::build, _1, _2, _3));
+  element_bind(elems, "plot/lines", bind(elements::plot::lines::build, _1, _2, _3));
   element_bind(elems, "chart/linechart", bind(elements::chart::linechart::build, _1, _2, _3));
-  element_bind(elems, "chart/points", bind(elements::chart::points::build, _1, _2, _3));
+  element_bind(elems, "plot/points", bind(elements::plot::points::build, _1, _2, _3));
   element_bind(elems, "chart/scatterplot", bind(elements::chart::scatterplot::build, _1, _2, _3));
   element_bind(elems, "layout/box", bind(elements::layout::box::build, _1, _2, _3));
   return ctx.release();

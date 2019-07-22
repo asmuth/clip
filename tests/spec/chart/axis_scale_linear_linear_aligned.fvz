@@ -1,6 +1,6 @@
 (layout/box
   margin 1em
   body (
-    (chart/axis-bottom
+    (plot/axis-bottom
       ticks (linear 1 0.5)
       limit (0 16))))

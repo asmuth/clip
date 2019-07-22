@@ -1,7 +1,7 @@
 (set width 800px)
 (set height 600px)
 
-(chart/layout
+(plot
     axes (left bottom)
     limit-x (0 150)
     axis-y-labels (datetime "%H:%M:%S")

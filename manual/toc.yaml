@@ -3,35 +3,37 @@
 documentation:
   -
     title: "Getting Started"
-    pages:
-      -
-        title: "Introduction"
-        doctitle: "fviz"
-        url: "/"
-        file: "introduction"
-      -
-        title: "Getting Started"
-        url: "/documentation/getting-started"
-        file: "getting_started"
-      -
-        title: "Installation"
-        url: "/documentation/installation"
-        file: "installation"
-      -
-        title: "Download"
-        url: "/download"
-        file: "download"
-      -
-        title: "FAQ"
-        url: "/documentation/faq"
-        file: "faq"
+    sections:
+      - pages:
+        -
+          title: "Introduction"
+          doctitle: "fviz"
+          url: "/"
+          file: "introduction"
+        -
+          title: "Getting Started"
+          url: "/documentation/getting-started"
+          file: "getting_started"
+        -
+          title: "Installation"
+          url: "/documentation/installation"
+          file: "installation"
+        -
+          title: "Download"
+          url: "/download"
+          file: "download"
+        -
+          title: "FAQ"
+          url: "/documentation/faq"
+          file: "faq"
 
   -
     title: "Examples"
-    pages:
-      -
-        title: "Example Gallery"
-        url: "/examples"
+    sections:
+      - pages:
+        -
+          title: "Example Gallery"
+          url: "/examples"
   #-
   #  title: "Building Charts"
   #  pages:
@@ -92,61 +94,81 @@ documentation:
     title: "Elements"
     url: "/documentation/elements"
     file: "elements"
-    pages:
+    sections:
+      - section_title: "Standard Charts"
+        pages:
+        -
+          title: "chart/linechart"
+          url: "/documentation/elements/chart/linechart"
+          api_ref: true
+        -
+          title: "chart/scatterplot"
+          url: "/documentation/elements/chart/scatterplot"
+          api_ref: true
       -
-        title: "chart/linechart"
-        url: "/documentation/elements/chart/linechart"
-      -
-        title: "chart/scatterplot"
-        url: "/documentation/elements/chart/scatterplot"
-      -
-        title: "chart/layout"
-        url: "/documentation/elements/chart/layout"
-      -
-        title: "chart/axis"
-        url: "/documentation/elements/chart/axis"
-      -
-        title: "chart/axis-top"
-        url: "/documentation/elements/chart/axis-top"
-      -
-        title: "chart/axis-right"
-        url: "/documentation/elements/chart/axis-right"
-      -
-        title: "chart/axis-bottom"
-        url: "/documentation/elements/chart/axis-bottom"
-      -
-        title: "chart/axis-left"
-        url: "/documentation/elements/chart/axis-left"
-      -
-        title: "chart/areas"
-        url: "/documentation/elements/chart/areas"
-      -
-        title: "chart/bars"
-        url: "/documentation/elements/chart/bars"
-      -
-        title: "chart/labels"
-        url: "/documentation/elements/chart/labels"
-      -
-        title: "chart/lines"
-        url: "/documentation/elements/chart/lines"
-      -
-        title: "chart/points"
-        url: "/documentation/elements/chart/points"
-      -
-        title: "chart/grid"
-        url: "/documentation/elements/chart/grid"
+        section_title: "Custom Plots"
+        pages:
+          -
+            title: "plot"
+            url: "/documentation/elements/plot"
+            api_ref: true
+          -
+            title: "plot/axis"
+            url: "/documentation/elements/plot/axis"
+            api_ref: true
+          -
+            title: "plot/axis-top"
+            url: "/documentation/elements/plot/axis-top"
+            api_ref: true
+          -
+            title: "plot/axis-right"
+            url: "/documentation/elements/plot/axis-right"
+            api_ref: true
+          -
+            title: "plot/axis-bottom"
+            url: "/documentation/elements/plot/axis-bottom"
+            api_ref: true
+          -
+            title: "plot/axis-left"
+            url: "/documentation/elements/plot/axis-left"
+            api_ref: true
+          -
+            title: "plot/areas"
+            url: "/documentation/elements/plot/areas"
+            api_ref: true
+          -
+            title: "plot/bars"
+            url: "/documentation/elements/plot/bars"
+            api_ref: true
+          -
+            title: "plot/labels"
+            url: "/documentation/elements/plot/labels"
+            api_ref: true
+          -
+            title: "plot/lines"
+            url: "/documentation/elements/plot/lines"
+            api_ref: true
+          -
+            title: "plot/points"
+            url: "/documentation/elements/plot/points"
+            api_ref: true
+          -
+            title: "plot/grid"
+            url: "/documentation/elements/plot/grid"
+            api_ref: true
 
   -
     title: "Community"
-    pages:
-      -
-        title: "GitHub"
-        url: "https://github.com/asmuth/fviz"
-      -
-        title: "Contributing"
-        url: "/documentation/contributing"
-        file: "contributing"
-      -
-        title: "License"
-        url: "/documentation/license"
-        file: "license"
+    sections:
+      - pages:
+          -
+            title: "GitHub"
+            url: "https://github.com/asmuth/fviz"
+          -
+            title: "Contributing"
+            url: "/documentation/contributing"
+            file: "contributing"
+          -
+            title: "License"
+            url: "/documentation/license"
+            file: "license"

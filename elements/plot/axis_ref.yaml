@@ -1,17 +1,17 @@
-name: chart/axis
+name: plot/axis
 desc: |
-  The chart/axis element is used to draw labelled 'axes'.
+  The plot/axis element is used to draw labelled 'axes'.
 
 desc_detail: |
-  Note that in most cases it's easier to use one of the convenience element instead of the `chart/axis` element:
+  Note that in most cases it's easier to use one of the convenience element instead of the `plot/axis` element:
 
-    - [chart/axis-top](./axis-top)
-    - [chart/axis-right](./axis-right)
-    - [chart/axis-bottom](./axis-bottom)
-    - [chart/axis-left](./axis-left)
+    - [plot/axis-top](./axis-top)
+    - [plot/axis-right](./axis-right)
+    - [plot/axis-bottom](./axis-bottom)
+    - [plot/axis-left](./axis-left)
 
 reference: |
-  (chart/axis <options>)
+  (plot/axis <options>)
 
 option_summary: true
 

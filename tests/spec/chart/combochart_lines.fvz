@@ -1,7 +1,7 @@
 (set height 480px)
 (set width 1200px)
 
-(chart/layout
+(plot
     scale-x-padding 0.6
     axis-x-ticks (linear 1 1)
     axis-x-labels (custom "Jan" "Feb" "Mar" "Apr" "May" "Jun" "Jul" "Aug" "Sep" "Oct" "Nov" "Dec")

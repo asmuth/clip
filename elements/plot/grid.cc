@@ -24,7 +24,7 @@
 
 using namespace std::placeholders;
 
-namespace fviz::elements::chart::grid {
+namespace fviz::elements::plot::grid {
 
 static const double kDefaultLineWidthPT = 1;
 
@@ -129,5 +129,5 @@ ReturnCode build(const Environment& env, const Expr* expr, ElementRef* elem) {
   return OK;
 }
 
-} // namespace fviz::elements::chart::grid
+} // namespace fviz::elements::plot::grid
 

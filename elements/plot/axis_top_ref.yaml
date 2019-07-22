@@ -1,0 +1,25 @@
+name: plot/axis-top
+desc: |
+  The plot/axis-top element is used to draw a labelled 'top axis'.
+
+reference: |
+  (plot/axis-top <options>)
+
+option_summary: true
+
+properties:
+  - title: "Label Options"
+    anchor: label-options
+    inherit: ["elements/plot/axis", "label-options"]
+
+  - title: "Scale Options"
+    anchor: scale-options
+    inherit: ["elements/plot/axis", "scale-options"]
+
+  - title: "Title Options"
+    anchor: title-options
+    inherit: ["elements/plot/axis", "title-options"]
+
+  - title: "Border Options"
+    anchor: border-options
+    inherit: ["elements/plot/axis", "border-options"]

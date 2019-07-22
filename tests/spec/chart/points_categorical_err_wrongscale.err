@@ -2,4 +2,4 @@ ERROR
   | error while parsing data: 'a': invalid number: 'a' -- if this is intentional, set 'scale-[x,y] to (categorical ...)'
 
 TRACEBACK
-  |> (chart/layout points (data-x (a b c d e) data-y (200px 300px 200px 300px 100px)))
+  |> (plot points (data-x (a b c d e) data-y (200px 300px 200px 300px 100px)))

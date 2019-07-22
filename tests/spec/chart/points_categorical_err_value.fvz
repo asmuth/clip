@@ -1,4 +1,4 @@
-(chart/layout
+(plot
     scale-x (categorical ("blah" "fu"))
     points (
         data-x ("a" "b" "c" "d" "e")

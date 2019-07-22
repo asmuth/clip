@@ -1,4 +1,4 @@
-(chart/layout
+(plot
   margin 2em
   axis-bottom (
       ticks (linear 1)

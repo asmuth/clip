@@ -12,7 +12,9 @@
  * limitations under the License.
  */
 #include "lines.h"
+
 #include "data.h"
+#include "environment.h"
 #include "sexpr_conv.h"
 #include "sexpr_util.h"
 #include "scale.h"
@@ -26,7 +28,7 @@
 
 using namespace std::placeholders;
 
-namespace fviz::elements::chart::lines {
+namespace fviz::elements::plot::lines {
 
 static const double kDefaultLineWidthPT = 2;
 static const double kDefaultLabelPaddingEM = 0.4;
@@ -243,5 +245,5 @@ ReturnCode build(
   return OK;
 }
 
-} // namespace fviz::elements::chart::lines
+} // namespace fviz::elements::plot::lines
 

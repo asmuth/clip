@@ -11,7 +11,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+#include "plot.h"
+
 #include "data.h"
+#include "environment.h"
 #include "layout.h"
 #include "element_factory.h"
 #include "graphics/layer.h"
@@ -24,7 +27,7 @@
 
 using namespace std::placeholders;
 
-namespace fviz::elements::chart::layout {
+namespace fviz::elements::plot {
 
 struct PlotConfig {
   FontInfo font;
@@ -319,10 +322,10 @@ ReturnCode build(
 
     /* axis options */
     {"axes", bind(&expr_to_stringset, _1, &axes_auto)},
-    {"axis-top", bind(&configure_axis, "chart/axis-top", 0, _1, &axes)},
-    {"axis-right", bind(&configure_axis, "chart/axis-right", 1, _1, &axes)},
-    {"axis-bottom", bind(&configure_axis, "chart/axis-bottom", 2, _1, &axes)},
-    {"axis-left", bind(&configure_axis, "chart/axis-left", 3, _1, &axes)},
+    {"axis-top", bind(&configure_axis, "plot/axis-top", 0, _1, &axes)},
+    {"axis-right", bind(&configure_axis, "plot/axis-right", 1, _1, &axes)},
+    {"axis-bottom", bind(&configure_axis, "plot/axis-bottom", 2, _1, &axes)},
+    {"axis-left", bind(&configure_axis, "plot/axis-left", 3, _1, &axes)},
     {
       "axis-x-ticks",
       expr_calln_fn({
@@ -343,11 +346,11 @@ ReturnCode build(
     {"axis-y-title", bind(&expr_rewritev, _1, "title", &axis_y_opts)},
 
     /* geom options */
-    {"areas", bind(&configure_geom, "chart/areas", _1, &geoms, &x, &y)},
-    {"bars", bind(&configure_geom, "chart/bars", _1, &geoms, &x, &y)},
-    {"lines", bind(&configure_geom, "chart/lines", _1, &geoms, &x, &y)},
-    {"labels", bind(&configure_geom, "chart/labels", _1, &geoms, &x, &y)},
-    {"points", bind(&configure_geom, "chart/points", _1, &geoms, &x, &y)},
+    {"areas", bind(&configure_geom, "plot/areas", _1, &geoms, &x, &y)},
+    {"bars", bind(&configure_geom, "plot/bars", _1, &geoms, &x, &y)},
+    {"lines", bind(&configure_geom, "plot/lines", _1, &geoms, &x, &y)},
+    {"labels", bind(&configure_geom, "plot/labels", _1, &geoms, &x, &y)},
+    {"points", bind(&configure_geom, "plot/points", _1, &geoms, &x, &y)},
 
     /* grid & legend */
     {"grid", bind(&expr_to_copy, _1, &grid_opts)},
@@ -463,28 +466,28 @@ ReturnCode build(
 
   if (axes_auto.count("top")) {
     PlotAxis a;
-    a.elem_name = "chart/axis-top";
+    a.elem_name = "plot/axis-top";
     a.position = 0;
     axes.emplace_back(std::move(a));
   }
 
   if (axes_auto.count("right")) {
     PlotAxis a;
-    a.elem_name = "chart/axis-right";
+    a.elem_name = "plot/axis-right";
     a.position = 1;
     axes.emplace_back(std::move(a));
   }
 
   if (axes_auto.count("bottom")) {
     PlotAxis a;
-    a.elem_name = "chart/axis-bottom";
+    a.elem_name = "plot/axis-bottom";
     a.position = 2;
     axes.emplace_back(std::move(a));
   }
 
   if (axes_auto.count("left")) {
     PlotAxis a;
-    a.elem_name = "chart/axis-left";
+    a.elem_name = "plot/axis-left";
     a.position = 3;
     axes.emplace_back(std::move(a));
   }
@@ -493,7 +496,7 @@ ReturnCode build(
   /* build the grid element */
   if (grid_opts) {
     auto elem_config = expr_build(
-        "chart/grid",
+        "plot/grid",
         "limit-x-min",
         expr_clone(xmin.get()),
         "limit-x-max",
@@ -601,5 +604,5 @@ ReturnCode build(
   return OK;
 }
 
-} // namespace fviz::elements::chart::layout
+} // namespace fviz::elements::plot
 

@@ -1,16 +1,16 @@
-name: chart/labels
-example: charts-basic/scatterplot_with_labels
+name: plot/points
+example: charts-basic/scatterplot
 desc: |
-  The `chart/labels` element is used to draw labels at arbitrary positions.
+  The `plot/points` element is used to create point/scattercharts.
 
 reference: |
-  (chart/labels <options>)
+  (plot/points <options>)
 
 option_summary: true
 
 properties:
-  - title: "Label Options"
-    anchor: label-options
+  - title: "Point Options"
+    anchor: point-options
     properties:
       - name: data-x
         desc: |
@@ -38,7 +38,39 @@ properties:
 
           ;; load a csv file
           data-y (csv myfile.csv mycolumn)
+      - name: color
+        alias: colors
+      - name: colors
+        desc: |
+          Set the point colors.
+        desc_code: |
+          colors (<values>...)
+          colors (csv <file> <column>)
+        examples: |
+          ;; list of static values
+          colors (#0f0 #00f #f00)
 
+          ;; load a csv file
+          colors (csv myfile.csv mycolors)
+      - name: marker-size
+        alias: marker-sizes
+      - name: marker-sizes
+        desc: |
+          Set the marker-sizes for the plot. If set, a marker will be drawn for each
+          point in the dataset at the points (x, y) coordinate,
+        desc_code: |
+          marker-sizes (<values>...)
+          marker-sizes (csv <file> <column>)
+        examples: |
+          ;; list of static values
+          marker-sizes (2pt 4pt 2pt)
+
+          ;; load a csv file
+          marker-sizes (csv myfile.csv mysizes)
+
+  - title: "Label Options"
+    anchor: label-options
+    properties:
       - name: labels
         desc: |
           Set the labels for the plot. If set, a label will be drawn for each
@@ -79,4 +111,4 @@ properties:
 
   - title: "Scale Options"
     anchor: scale-options
-    inherit: ["elements/chart/layout", "scale-options"]
+    inherit: ["elements/plot", "scale-options"]

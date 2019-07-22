@@ -28,7 +28,7 @@
 
 using namespace std::placeholders;
 
-namespace fviz::elements::chart::bars {
+namespace fviz::elements::plot::bars {
 
 static const double kDefaultBarSizePT = 10;
 static const double kDefaultLabelPaddingHorizEM = 0.6;
@@ -434,5 +434,5 @@ ReturnCode build(
   return OK;
 }
 
-} // namespace fviz::elements::chart::bars
+} // namespace fviz::elements::plot::bars
 

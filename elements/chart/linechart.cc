@@ -105,7 +105,7 @@ ReturnCode build(
   }
 
   auto chart = expr_build(
-      "chart/layout",
+      "plot",
       std::move(layout_opts),
       "lines",
       expr_build(std::move(geom_opts)));

@@ -1,4 +1,4 @@
-(chart/layout
+(plot
     axes (bottom left)
     axis-y-labels (scientific)
     axis-x-labels (datetime "%H:%M:%S")

@@ -1,9 +1,9 @@
-name: chart/grid
+name: plot/grid
 desc: |
-  The `chart/grid` element is used to draw a background grid.
+  The `plot/grid` element is used to draw a background grid.
 
 reference: |
-  (chart/grid <options>)
+  (plot/grid <options>)
 
 option_summary: true
 
@@ -46,4 +46,4 @@ properties:
 
   - title: "Scale Options"
     anchor: scale-options
-    inherit: ["elements/chart/layout", "scale-options"]
+    inherit: ["elements/plot", "scale-options"]

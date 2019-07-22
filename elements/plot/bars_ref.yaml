@@ -1,10 +1,10 @@
-name: chart/bars
+name: plot/bars
 example: charts-basic/barchart_with_labels
 desc: |
-  The `chart/bars` element is used to create bar charts.
+  The `plot/bars` element is used to create bar charts.
 
 reference: |
-  (chart/bars <options>)
+  (plot/bars <options>)
 
 option_summary: true
 
@@ -155,4 +155,4 @@ properties:
 
   - title: "Scale Options"
     anchor: scale-options
-    inherit: ["elements/chart/layout", "scale-options"]
+    inherit: ["elements/plot", "scale-options"]

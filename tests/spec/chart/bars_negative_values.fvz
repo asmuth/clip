@@ -1,4 +1,4 @@
-(chart/layout
+(plot
     axes (top right bottom left)
     limit-x (0 13)
     scale-y-padding 5

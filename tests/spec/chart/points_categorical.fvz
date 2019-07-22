@@ -1,4 +1,4 @@
-(chart/layout
+(plot
     scale-x (categorical ("a" "b" "c" "d" "e"))
     limit-y (0 6)
     axis-y-ticks (linear 1)

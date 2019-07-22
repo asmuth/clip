@@ -28,7 +28,6 @@ to the documentation.
         data-y (csv tests/testdata/gauss2d.csv y)
         limit-x (0 400)
         limit-y (0 200)
-        ticks-y (subdivide 5)
         axes (bottom left)
         grid (color #fff)
         background #eee

@@ -1,7 +1,7 @@
 (set height 480px)
 (set width 1200px)
 
-(chart/layout
+(plot
     axes (bottom top)
     limit-y (-50 50)
     areas (

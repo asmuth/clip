@@ -1,10 +1,10 @@
-name: chart/areas
+name: plot/areas
 example: charts-basic/areachart
 desc: |
-  The `chart/areas` element is used to create area charts.
+  The `plot/areas` element is used to create area charts.
 
 reference: |
-  (chart/areas <options>)
+  (plot/areas <options>)
 
 option_summary: true
 
@@ -93,4 +93,4 @@ properties:
 
   - title: "Scale Options"
     anchor: scale-options
-    inherit: ["elements/chart/layout", "scale-options"]
+    inherit: ["elements/plot", "scale-options"]

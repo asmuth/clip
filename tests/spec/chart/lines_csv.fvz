@@ -1,8 +1,8 @@
-(chart/layout
+(plot
   bottom
-    ((chart/axis-bottom limit (0 100)))
+    ((plot/axis-bottom limit (0 100)))
   body
-    ((chart/lines
+    ((plot/lines
         data-x (csv "tests/testdata/measurement.csv" time)
         data-y (csv "tests/testdata/measurement.csv" value2)
         colors (#000)
