@@ -29,9 +29,13 @@ Example: [`charts-reference/format_fixed`](/examples/charts-reference/format_fix
 ### `scientific`
 <a id="format-scientific"></a>
 
-The `scientific` formatter will format values using scientific notation.
+The `scientific` formatter will format values using scientific notation. If a
+precision `N` is provided, the significand will be formatted to `N` decimal places
+to the right of the decimal point. If no parameter `N` is given, it defaults to
+one (1).
 
     (scientific)
+    (scientific <N>)
 
 Example: [`charts-reference/format_scientific`](/examples/charts-reference/format_scientific):
 [![format_scientific.svg](/examples/charts-reference/format_scientific.svg)](/examples/charts-reference/format_scientific)

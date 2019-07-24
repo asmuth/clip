@@ -21,11 +21,72 @@
 
 namespace fviz {
 
+std::string format_superscript(int n) {
+  std::stringstream sstream;
+
+  for (const auto& c : std::to_string(n)) {
+    switch (c) {
+      case '0':
+        sstream << "⁰";
+        break;
+      case '1':
+        sstream << "¹";
+        break;
+      case '2':
+        sstream << "²";
+        break;
+      case '3':
+        sstream << "³";
+        break;
+      case '4':
+        sstream << "⁴";
+        break;
+      case '5':
+        sstream << "⁵";
+        break;
+      case '6':
+        sstream << "⁶";
+        break;
+      case '7':
+        sstream << "⁷";
+        break;
+      case '8':
+        sstream << "⁸";
+        break;
+      case '9':
+        sstream << "⁹";
+        break;
+      case '-':
+        sstream << "⁻";
+        break;
+      default:
+        sstream << "�";
+        break;
+    }
+  }
+
+  return sstream.str();
+}
+
 Formatter format_decimal_scientific(size_t precision) {
-  return [precision] (size_t idx, const std::string& v) -> std::string {
-    std::stringstream s;
-    s << std::scientific << std::setprecision(precision) << value_to_float(v);
-    return s.str();
+  return [precision] (size_t idx, const std::string& vs) -> std::string {
+    auto v = value_to_float(vs);
+    if (v == 0) {
+      return "0";
+    }
+
+    auto e = int(log10(v));
+    auto x = v / pow(10, e);
+
+    std::stringstream sstream;
+    sstream
+        << std::fixed
+        << std::setprecision(precision)
+        << x
+        << " × 10"
+        << format_superscript(e);
+
+    return sstream.str();
   };
 }
 
