@@ -54,6 +54,16 @@ Example: [`charts-reference/scale_layout_linear_interval`](/examples/charts-refe
 [![scale_layout_linear_interval.svg](/examples/charts-reference/scale_layout_linear_interval.svg)](/examples/charts-reference/scale_layout_linear_interval)
 
 ---
+### `exponential`
+
+The `exponential` layout will place a 'tick' every `B^I` units.
+
+    (exponential <B>)
+
+Example: [`charts-reference/scale_layout_exponential`](/examples/charts-reference/scale_layout_exponential):
+[![scale_layout_exponential.svg](/examples/charts-reference/scale_layout_exponential.svg)](/examples/charts-reference/scale_layout_exponential)
+
+---
 ### `subdivide`
 
 The `subdivide` layout will divide the axis into N evenly sized divisions.

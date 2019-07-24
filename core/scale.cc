@@ -28,6 +28,7 @@ static const size_t kMaxTicks = 8192;
 
 ScaleConfig::ScaleConfig() :
     kind(ScaleKind::LINEAR),
+    log_base(kDefaultLogBase),
     inverted(false),
     padding(0),
     limit_hints(std::make_shared<ScaleLimitHints>()) {}
@@ -79,12 +80,11 @@ double scale_translate_log(
     double v) {
   auto min = scale_min(domain);
   auto max = scale_max(domain);
-  auto log_base = domain.log_base.value_or(kDefaultLogBase);
-  double range = max - min;
-  double range_log = log(range) / log(log_base);
+  auto log_base = domain.log_base;
+  double range_log = log(max - min) / log(log_base);
 
   auto vf = v - min;
-  if (vf > 1.0) {
+  if (vf >= 1.0) {
     vf = log(vf) / log(log_base);
   } else {
     vf = 0;
@@ -142,7 +142,7 @@ double  scale_untranslate_linear(const ScaleConfig& domain, double vt) {
 double scale_untranslate_log(const ScaleConfig& domain, double vt) {
   auto min = scale_min(domain);
   auto max = scale_max(domain);
-  auto log_base = domain.log_base.value_or(kDefaultLogBase);
+  auto log_base = domain.log_base;
   double range = max - min;
   double range_log = log(range) / log(log_base);
 
@@ -198,6 +198,15 @@ ReturnCode scale_configure_kind(
     if (expr_is_value(expr, "log") ||
         expr_is_value(expr, "logarithmic")) {
       domain->kind = ScaleKind::LOGARITHMIC;
+
+      if (expr_next(expr)) {
+        if (auto rc = expr_to_float64(expr_next(expr), &domain->log_base); !rc) {
+          return rc;
+        }
+
+        expr = expr_next(expr);
+      }
+
       continue;
     }
 
@@ -337,6 +346,32 @@ ReturnCode scale_layout_linear(
 
   size_t idx = 0;
   for (auto v = begin; v <= end; v += step) {
+    auto vp = scale_translate(domain, v);
+    layout->positions.emplace_back(vp);
+    layout->labels.emplace_back(label_format(idx++, std::to_string(v))); // FIXME
+  }
+
+  return OK;
+}
+
+ReturnCode scale_layout_exponential(
+    const ScaleConfig& domain,
+    const Formatter& label_format,
+    ScaleLayout* layout,
+    double base) {
+  auto begin = scale_min(domain);
+  auto end = scale_max(domain);
+
+  for (size_t idx = 0, exp = 0; ; ++idx) {
+    auto v = pow(base, exp++);
+    if (v < begin) {
+      continue;
+    }
+
+    if (v > end) {
+      break;
+    }
+
     auto vp = scale_translate(domain, v);
     layout->positions.emplace_back(vp);
     layout->labels.emplace_back(label_format(idx++, std::to_string(v))); // FIXME
@@ -526,6 +561,33 @@ ReturnCode scale_configure_layout_linear(
   return OK;
 }
 
+ReturnCode scale_configure_layout_exponential(
+    const Expr* expr,
+    ScaleLayoutFn* layout) {
+  auto args = expr_collect(expr);
+
+  if (args.size() != 1) {
+    return errorf(
+        ERROR,
+        "invalid number of arguments for 'exponential'; expected one, got: {}",
+        args.size());
+  }
+
+  double step;
+  if (auto rc = expr_to_float64(args[0], &step); !rc) {
+    return rc;
+  }
+
+  *layout = bind(
+      &scale_layout_exponential,
+      _1,
+      _2,
+      _3,
+      step);
+
+  return OK;
+}
+
 ReturnCode scale_configure_layout_subdivide(
     const Expr* expr,
     ScaleLayoutFn* layout) {
@@ -583,6 +645,10 @@ ReturnCode scale_configure_layout(
 
   if (expr_is_value(expr, "linear-interval")) {
     return scale_configure_layout_linear_interval(expr_next(expr), layout);
+  }
+
+  if (expr_is_value(expr, "exponential")) {
+    return scale_configure_layout_exponential(expr_next(expr), layout);
   }
 
   if (expr_is_value(expr, "subdivide")) {

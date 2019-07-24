@@ -40,7 +40,7 @@ struct ScaleConfig {
   ScaleKind kind;
   std::optional<double> min;
   std::optional<double> max;
-  std::optional<double> log_base;
+  double log_base;
   bool inverted;
   double padding;
   std::shared_ptr<ScaleLimitHints> limit_hints;
@@ -112,6 +112,12 @@ ReturnCode scale_layout_linear(
     const Formatter& label_format,
     ScaleLayout* layout,
     double step);
+
+ReturnCode scale_layout_exponential(
+    const ScaleConfig& domain,
+    const Formatter& label_format,
+    ScaleLayout* layout,
+    double base);
 
 ReturnCode scale_layout_subdivide(
     const ScaleConfig& domain,
