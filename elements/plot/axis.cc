@@ -728,6 +728,7 @@ ReturnCode build(const Environment& env, const Expr* expr, ElementRef* elem) {
 
       /* scale options */
       {"scale", bind(&scale_configure_kind, _1, &config->scale)},
+      {"scale-padding", bind(&expr_to_float64, _1, &config->scale.padding)},
       {"limit", bind(&expr_to_float64_opt_pair, _1, &config->scale.min, &config->scale.max)},
       {"limit-min", bind(&expr_to_float64_opt, _1, &config->scale.min)},
       {"limit-max", bind(&expr_to_float64_opt, _1, &config->scale.max)},
@@ -754,6 +755,7 @@ ReturnCode build(const Environment& env, const Expr* expr, ElementRef* elem) {
   if (!config->label_placement) {
     if (config->scale.kind == ScaleKind::CATEGORICAL) {
       config->label_placement = bind(&scale_layout_categorical, _1, _2, _3);
+      config->tick_placement = bind(&scale_layout_categorical_bounds, _1, _2, _3);
     } else {
       config->label_placement = bind(&scale_layout_subdivide, _1, _2, _3, 10);
     }

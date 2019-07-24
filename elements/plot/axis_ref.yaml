@@ -170,6 +170,15 @@ properties:
 
           ;; set the axis to inverted mode
           scale (invert)
+      - name: scale-padding
+        desc: |
+          Set the scale padding. Value is clamped to [0.0, 1.0]
+        desc_code: |
+          scale-padding <value>
+        examples: |
+          ;; set the scale padding to 0.5
+          scale-padding 0.5
+
 
   - title: "Title Options"
     anchor: title-options

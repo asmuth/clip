@@ -98,6 +98,15 @@ double scale_translate_log(
   return vt;
 }
 
+double scale_translate_categorical(
+    const ScaleConfig& scale,
+    size_t index) {
+  double n = scale.categories.size();
+  double i = std::clamp(double(index), 0.0, n - 1);
+  double p = scale.padding;
+  return (i + p) / (n - 1 + p * 2);
+}
+
 double scale_translate(
     const ScaleConfig& domain,
     double value) {
@@ -106,6 +115,8 @@ double scale_translate(
       return scale_translate_linear(domain, value);
     case ScaleKind::LOGARITHMIC:
       return scale_translate_log(domain, value);
+    case ScaleKind::CATEGORICAL:
+      return scale_translate_categorical(domain, value);
     default:
       return std::numeric_limits<double>::quiet_NaN();
   }
@@ -198,6 +209,7 @@ ReturnCode scale_configure_kind(
 
     if (expr_is_value(expr, "categorical")) {
       domain->kind = ScaleKind::CATEGORICAL;
+      domain->padding = 0.5;
 
       expr = expr_next(expr);
       if (auto rc = data_load_strings(expr, &domain->categories); !rc) {
@@ -360,7 +372,7 @@ ReturnCode scale_layout_categorical(
 
   auto n = domain.categories.size();
   for (size_t i = 0; i < n; ++i) {
-    auto o =  double(i + 1) / (n + 1);
+    auto o = scale_translate_categorical(domain, i);
     layout->positions.emplace_back(o);
     layout->labels.emplace_back(label_format(i, domain.categories[i]));
   }
@@ -376,12 +388,12 @@ ReturnCode scale_layout_categorical_bounds(
   layout->labels.clear();
 
   auto n = domain.categories.size();
-  for (size_t i = 0; i < n; ++i) {
-    auto o1 =  double(i + 0.5) / (n + 1);
-    auto o2 =  double(i + 1.5) / (n + 1);
-    layout->positions.emplace_back(o1);
-    layout->positions.emplace_back(o2);
-    layout->labels.emplace_back("");
+  double p = domain.padding;
+  auto o = 0.5 / (n - 1 + p * 2);
+
+  for (size_t i = 0; i <= n; ++i) {
+    auto v = scale_translate_categorical(domain, i);
+    layout->positions.emplace_back(i == n ? v + o : v - o);
     layout->labels.emplace_back("");
   }
 

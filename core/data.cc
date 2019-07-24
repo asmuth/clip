@@ -236,8 +236,7 @@ ReturnCode data_to_measures(
               *v);
         }
 
-        auto n = scale.categories.size();
-        m = from_rel(double(v_iter->second + 1) / (n + 1));
+        m = from_rel(scale_translate_categorical(scale, v_iter->second));
         break;
       }
       default:
