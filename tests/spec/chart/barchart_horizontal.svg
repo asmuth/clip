@@ -19,6 +19,7 @@
   <text x="202.122317" y="112.733333" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif">$1.858bln</text>
   <text x="200.167268" y="68.644444" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif">$1.795bln</text>
   <path stroke-width="1.333333" stroke="#333333" fill="none" d="M135.664 19.5556 L135.664 460.444 "/>
+  <path stroke-width="1.333333" stroke="#333333" fill="none" d="M135.664 460.444 L140.997 460.444 "/>
   <path stroke-width="1.333333" stroke="#333333" fill="none" d="M135.664 416.356 L140.997 416.356 "/>
   <path stroke-width="1.333333" stroke="#333333" fill="none" d="M135.664 372.267 L140.997 372.267 "/>
   <path stroke-width="1.333333" stroke="#333333" fill="none" d="M135.664 328.178 L140.997 328.178 "/>
@@ -28,13 +29,16 @@
   <path stroke-width="1.333333" stroke="#333333" fill="none" d="M135.664 151.822 L140.997 151.822 "/>
   <path stroke-width="1.333333" stroke="#333333" fill="none" d="M135.664 107.733 L140.997 107.733 "/>
   <path stroke-width="1.333333" stroke="#333333" fill="none" d="M135.664 63.6444 L140.997 63.6444 "/>
-  <text x="35.852431" y="421.355556" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif">United States</text>
-  <text x="85.602431" y="377.266667" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif">China</text>
-  <text x="83.961806" y="333.177778" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif">Japan</text>
-  <text x="63.602431" y="289.088889" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif">Germany</text>
-  <text x="19.555556" y="245.000000" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif">United Kingdom</text>
-  <text x="78.258681" y="200.911111" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif">France</text>
-  <text x="92.118056" y="156.822222" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif">India</text>
-  <text x="97.008681" y="112.733333" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif">Italy</text>
-  <text x="87.227431" y="68.644444" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif">Brazil</text>
+  <path stroke-width="1.333333" stroke="#333333" fill="none" d="M135.664 19.5556 L140.997 19.5556 "/>
+  <text x="35.852431" y="465.444444" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif">United States</text>
+  <text x="85.602431" y="421.355555" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif">China</text>
+  <text x="83.961806" y="377.266665" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif">Japan</text>
+  <text x="63.602431" y="333.177773" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif">Germany</text>
+  <text x="19.555556" y="289.088886" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif">United Kingdom</text>
+  <text x="78.258681" y="245.000000" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif">France</text>
+  <text x="92.118056" y="200.911101" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif">India</text>
+  <text x="97.008681" y="156.822227" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif">Italy</text>
+  <text x="87.227431" y="112.733328" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif">Brazil</text>
+  <text x="35.852431" y="68.644429" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif">United States</text>
+  <text x="85.602431" y="24.555556" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif">China</text>
 </svg>

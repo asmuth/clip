@@ -3,5 +3,5 @@
   body (
     (plot/axis
       align x
-      label-placement (linear 1 0.5)
+      label-placement (linear-alignat 1 0.5)
       limit (0 16))))

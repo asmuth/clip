@@ -1,7 +1,0 @@
-(layout/box
-  margin 1em
-  body (
-    (plot/axis
-      align x
-      label-placement (discrete)
-      limit (0 16))))

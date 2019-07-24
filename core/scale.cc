@@ -224,18 +224,100 @@ ReturnCode scale_configure_kind(
   return OK;
 }
 
-ReturnCode scale_layout_linear(
+ReturnCode scale_layout_linear_interval(
     const ScaleConfig& domain,
     const Formatter& label_format,
     ScaleLayout* layout,
     double step,
-    std::optional<double> o_begin,
-    std::optional<double> o_end) {
+    double o_begin,
+    double o_end) {
   layout->positions.clear();
   layout->labels.clear();
 
-  auto begin = std::max(o_begin.value_or(scale_min(domain)), scale_min(domain));
-  auto end = std::min(o_end.value_or(scale_max(domain)), scale_max(domain));
+  auto begin = std::max(o_begin, scale_min(domain));
+  auto end = std::min(o_end, scale_max(domain));
+
+  if (((end - begin) / step) > kMaxTicks) {
+    return {ERROR, "too many ticks"};
+  }
+
+  size_t idx = 0;
+  for (auto v = begin; v <= end; v += step) {
+    auto vp = scale_translate(domain, v);
+    layout->positions.emplace_back(vp);
+    layout->labels.emplace_back(label_format(idx++, std::to_string(v))); // FIXME
+  }
+
+  return OK;
+}
+
+ReturnCode scale_layout_linear_alignat(
+    const ScaleConfig& domain,
+    const Formatter& label_format,
+    ScaleLayout* layout,
+    double step,
+    double align) {
+  auto begin = scale_min(domain);
+  auto end = scale_max(domain);
+
+  // align
+  begin -= fmod(begin, step);
+  begin -= fmod(align, step);
+
+  if (((end - begin) / step) > kMaxTicks) {
+    return {ERROR, "too many ticks"};
+  }
+
+  size_t idx = 0;
+  for (auto v = begin; v <= end; v += step) {
+    auto vp = scale_translate(domain, v);
+    if (vp < 0.0) {
+      continue;
+    }
+
+    layout->positions.emplace_back(vp);
+    layout->labels.emplace_back(label_format(idx++, std::to_string(v))); // FIXME
+  }
+
+  return OK;
+}
+
+ReturnCode scale_layout_linear_align(
+    const ScaleConfig& domain,
+    const Formatter& label_format,
+    ScaleLayout* layout,
+    double step) {
+  auto begin = scale_min(domain);
+  auto end = scale_max(domain);
+
+  // align
+  begin -= fmod(begin, step);
+
+  if (((end - begin) / step) > kMaxTicks) {
+    return {ERROR, "too many ticks"};
+  }
+
+  size_t idx = 0;
+  for (auto v = begin; v <= end; v += step) {
+    auto vp = scale_translate(domain, v);
+    if (vp < 0.0) {
+      continue;
+    }
+
+    layout->positions.emplace_back(vp);
+    layout->labels.emplace_back(label_format(idx++, std::to_string(v))); // FIXME
+  }
+
+  return OK;
+}
+
+ReturnCode scale_layout_linear(
+    const ScaleConfig& domain,
+    const Formatter& label_format,
+    ScaleLayout* layout,
+    double step) {
+  auto begin = scale_min(domain);
+  auto end = scale_max(domain);
 
   if (((end - begin) / step) > kMaxTicks) {
     return {ERROR, "too many ticks"};
@@ -269,41 +351,6 @@ ReturnCode scale_layout_subdivide(
   return OK;
 }
 
-ReturnCode scale_layout_discrete(
-    const ScaleConfig& domain,
-    const Formatter& label_format,
-    ScaleLayout* layout) {
-  uint32_t step = 1;
-  uint32_t range = scale_max(domain) - scale_min(domain);
-
-  layout->positions.clear();
-  layout->labels.clear();
-
-  for (size_t i = 0; i <= range; i += step) {
-    auto o = scale_translate(domain, i * step);
-    auto o1 = scale_translate(domain, i * step - step * 0.5);
-    auto o2 = scale_translate(domain, i * step + step * 0.5);
-    auto v = uint32_t(scale_min(domain)) + i * step;
-    auto vn = uint32_t(scale_min(domain)) + (i + 1) * step;
-
-    if (o1 >= 0 && o2 <= 1) {
-      layout->positions.emplace_back(o);
-      layout->labels.emplace_back(
-          label_format(i - 1, std::to_string(scale_untranslate(domain, o)))); // FIXME
-    }
-
-    //if (o1 >= 0 && o1 <= 1) {
-    //  layout->ticks.push_back(o1);
-    //}
-
-    //if (o2 >= 0 && o2 <= 1) {
-    //  layout->ticks.push_back(o2);
-    //}
-  }
-
-  return OK;
-}
-
 ReturnCode scale_layout_categorical(
     const ScaleConfig& domain,
     const Formatter& label_format,
@@ -321,37 +368,140 @@ ReturnCode scale_layout_categorical(
   return OK;
 }
 
+ReturnCode scale_layout_categorical_bounds(
+    const ScaleConfig& domain,
+    const Formatter& label_format,
+    ScaleLayout* layout) {
+  layout->positions.clear();
+  layout->labels.clear();
+
+  auto n = domain.categories.size();
+  for (size_t i = 0; i < n; ++i) {
+    auto o1 =  double(i + 0.5) / (n + 1);
+    auto o2 =  double(i + 1.5) / (n + 1);
+    layout->positions.emplace_back(o1);
+    layout->positions.emplace_back(o2);
+    layout->labels.emplace_back("");
+    layout->labels.emplace_back("");
+  }
+
+  return OK;
+}
+
+ReturnCode scale_configure_layout_linear_interval(
+    const Expr* expr,
+    ScaleLayoutFn* layout) {
+  auto args = expr_collect(expr);
+
+  if (args.size() != 3) {
+    return errorf(
+        ERROR,
+        "invalid number of arguments for 'linear-interval'; expected three, got: {}",
+        args.size());
+  }
+
+  double step;
+  if (auto rc = expr_to_float64(args[0], &step); !rc) {
+    return rc;
+  }
+
+  double begin;
+  if (auto rc = expr_to_float64(args[1], &begin); !rc) {
+    return rc;
+  }
+
+  double end;
+  if (auto rc = expr_to_float64(args[2], &end); !rc) {
+    return rc;
+  }
+
+  *layout = bind(
+      &scale_layout_linear_interval,
+      _1,
+      _2,
+      _3,
+      step,
+      begin,
+      end);
+
+  return OK;
+}
+
+ReturnCode scale_configure_layout_linear_alignat(
+    const Expr* expr,
+    ScaleLayoutFn* layout) {
+  auto args = expr_collect(expr);
+
+  if (args.size() != 2) {
+    return errorf(
+        ERROR,
+        "invalid number of arguments for 'linear-alignat'; expected two, got: {}",
+        args.size());
+  }
+
+  double step;
+  if (auto rc = expr_to_float64(args[0], &step); !rc) {
+    return rc;
+  }
+
+  double align;
+  if (auto rc = expr_to_float64(args[1], &align); !rc) {
+    return rc;
+  }
+
+  *layout = bind(
+      &scale_layout_linear_alignat,
+      _1,
+      _2,
+      _3,
+      step,
+      align);
+
+  return OK;
+}
+
+ReturnCode scale_configure_layout_linear_align(
+    const Expr* expr,
+    ScaleLayoutFn* layout) {
+  auto args = expr_collect(expr);
+
+  if (args.size() != 1) {
+    return errorf(
+        ERROR,
+        "invalid number of arguments for 'linear-align'; expected one, got: {}",
+        args.size());
+  }
+
+  double step;
+  if (auto rc = expr_to_float64(args[0], &step); !rc) {
+    return rc;
+  }
+
+  *layout = bind(
+      &scale_layout_linear_align,
+      _1,
+      _2,
+      _3,
+      step);
+
+  return OK;
+}
+
 ReturnCode scale_configure_layout_linear(
     const Expr* expr,
     ScaleLayoutFn* layout) {
   auto args = expr_collect(expr);
 
-  double step = 0;
-  std::optional<double> begin;
-  std::optional<double> end;
-  switch (args.size()) {
-    case 3:
-      if (auto rc = expr_to_float64_opt(args[2], &end); !rc) {
-        return rc;
-      }
-      /* fallthrough */
-    case 2:
-      if (auto rc = expr_to_float64_opt(args[1], &begin); !rc) {
-        return rc;
-      }
-      /* fallthrough */
-    case 1:
-      if (auto rc = expr_to_float64(args[0], &step); !rc) {
-        return rc;
-      }
-      break;
-    case 0:
-      step = 1; // TODO: automatically choose a good value
-      break;
-    default:
-      return error(
-          ERROR,
-          "invalid number of arguments for 'linear'; expected 0-3");
+  if (args.size() != 1) {
+    return errorf(
+        ERROR,
+        "invalid number of arguments for 'linear'; expected one, got: {}",
+        args.size());
+  }
+
+  double step;
+  if (auto rc = expr_to_float64(args[0], &step); !rc) {
+    return rc;
   }
 
   *layout = bind(
@@ -359,9 +509,7 @@ ReturnCode scale_configure_layout_linear(
       _1,
       _2,
       _3,
-      step,
-      begin,
-      end);
+      step);
 
   return OK;
 }
@@ -413,12 +561,29 @@ ReturnCode scale_configure_layout(
     return scale_configure_layout_linear(expr_next(expr), layout);
   }
 
+  if (expr_is_value(expr, "linear-align")) {
+    return scale_configure_layout_linear_align(expr_next(expr), layout);
+  }
+
+  if (expr_is_value(expr, "linear-alignat")) {
+    return scale_configure_layout_linear_alignat(expr_next(expr), layout);
+  }
+
+  if (expr_is_value(expr, "linear-interval")) {
+    return scale_configure_layout_linear_interval(expr_next(expr), layout);
+  }
+
   if (expr_is_value(expr, "subdivide")) {
     return scale_configure_layout_subdivide(expr_next(expr), layout);
   }
 
-  if (expr_is_value(expr, "discrete")) {
-    *layout = bind(&scale_layout_discrete, _1, _2, _3);
+  if (expr_is_value(expr, "categorical")) {
+    *layout = bind(&scale_layout_categorical, _1, _2, _3);
+    return OK;
+  }
+
+  if (expr_is_value(expr, "categorical-bounds")) {
+    *layout = bind(&scale_layout_categorical_bounds, _1, _2, _3);
     return OK;
   }
 
@@ -426,8 +591,12 @@ ReturnCode scale_configure_layout(
       ERROR,
       "invalid argument; expected one of: \n"
       "  - linear\n"
+      "  - linear-align\n"
+      "  - linear-alignat\n"
+      "  - linear-interval\n"
       "  - subdivide\n"
-      "  - discrete\n");
+      "  - categorical\n"
+      "  - categorical-bounds\n");
 }
 
 

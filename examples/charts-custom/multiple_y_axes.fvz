@@ -1,7 +1,7 @@
 (plot
     axis-left (
         limit (0 100)
-        label-placement (linear 20 10))
+        label-placement (linear-alignat 20 10))
     axis-right (
         limit (0 1)
         label-placement (linear 0.1))

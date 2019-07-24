@@ -82,13 +82,32 @@ ReturnCode scale_configure_kind(
     const Expr* expr,
     ScaleConfig* domain);
 
-ReturnCode scale_layout_linear(
+ReturnCode scale_layout_linear_interval(
     const ScaleConfig& domain,
     const Formatter& label_format,
     ScaleLayout* layout,
     double step,
-    std::optional<double> begin,
-    std::optional<double> end);
+    double begin,
+    double end);
+
+ReturnCode scale_layout_linear_alignat(
+    const ScaleConfig& domain,
+    const Formatter& label_format,
+    ScaleLayout* layout,
+    double step,
+    double align);
+
+ReturnCode scale_layout_linear_align(
+    const ScaleConfig& domain,
+    const Formatter& label_format,
+    ScaleLayout* layout,
+    double step);
+
+ReturnCode scale_layout_linear(
+    const ScaleConfig& domain,
+    const Formatter& label_format,
+    ScaleLayout* layout,
+    double step);
 
 ReturnCode scale_layout_subdivide(
     const ScaleConfig& domain,
@@ -96,12 +115,12 @@ ReturnCode scale_layout_subdivide(
     ScaleLayout* layout,
     uint32_t divisions);
 
-ReturnCode scale_layout_discrete(
+ReturnCode scale_layout_categorical(
     const ScaleConfig& domain,
     const Formatter& label_format,
     ScaleLayout* layout);
 
-ReturnCode scale_layout_categorical(
+ReturnCode scale_layout_categorical_bounds(
     const ScaleConfig& domain,
     const Formatter& label_format,
     ScaleLayout* layout);

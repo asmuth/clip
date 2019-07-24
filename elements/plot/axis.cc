@@ -296,7 +296,7 @@ static ReturnCode axis_draw_vertical(
 
   /* draw ticks */
   ScaleLayout ticks;
-  axis_config.label_placement(
+  axis_config.tick_placement(
       axis_config.scale,
       axis_config.label_formatter,
       &ticks);
@@ -438,7 +438,7 @@ static ReturnCode axis_draw_horizontal(
 
   /* draw ticks */
   ScaleLayout ticks;
-  axis_config.label_placement(
+  axis_config.tick_placement(
       axis_config.scale,
       axis_config.label_formatter,
       &ticks);
