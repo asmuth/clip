@@ -354,6 +354,38 @@ ReturnCode scale_layout_linear(
   return OK;
 }
 
+ReturnCode scale_layout_exponential_steps(
+    const ScaleConfig& domain,
+    const Formatter& label_format,
+    ScaleLayout* layout,
+    double base,
+    size_t steps) {
+  auto begin = scale_min(domain);
+  auto end = scale_max(domain);
+
+  for (size_t idx = 0, exp = 0; ; ++idx) {
+    auto v = pow(base, exp++);
+    auto vn = pow(base, exp);
+
+    if (v < begin) {
+      continue;
+    }
+
+    if (v > end) {
+      break;
+    }
+
+    for (size_t s = 0; s < steps - 1; ++s) {
+      auto vs = v + (s / double(steps - 1)) * (vn - v);
+      auto vp = scale_translate(domain, vs);
+      layout->positions.emplace_back(vp);
+      layout->labels.emplace_back(label_format(idx++, std::to_string(v))); // FIXME
+    }
+  }
+
+  return OK;
+}
+
 ReturnCode scale_layout_exponential(
     const ScaleConfig& domain,
     const Formatter& label_format,
@@ -561,6 +593,39 @@ ReturnCode scale_configure_layout_linear(
   return OK;
 }
 
+ReturnCode scale_configure_layout_exponential_steps(
+    const Expr* expr,
+    ScaleLayoutFn* layout) {
+  auto args = expr_collect(expr);
+
+  if (args.size() != 2) {
+    return errorf(
+        ERROR,
+        "invalid number of arguments for 'exponential-steps'; expected two, got: {}",
+        args.size());
+  }
+
+  double base;
+  if (auto rc = expr_to_float64(args[0], &base); !rc) {
+    return rc;
+  }
+
+  double steps;
+  if (auto rc = expr_to_float64(args[1], &steps); !rc) {
+    return rc;
+  }
+
+  *layout = bind(
+      &scale_layout_exponential_steps,
+      _1,
+      _2,
+      _3,
+      base,
+      steps);
+
+  return OK;
+}
+
 ReturnCode scale_configure_layout_exponential(
     const Expr* expr,
     ScaleLayoutFn* layout) {
@@ -573,8 +638,8 @@ ReturnCode scale_configure_layout_exponential(
         args.size());
   }
 
-  double step;
-  if (auto rc = expr_to_float64(args[0], &step); !rc) {
+  double base;
+  if (auto rc = expr_to_float64(args[0], &base); !rc) {
     return rc;
   }
 
@@ -583,7 +648,7 @@ ReturnCode scale_configure_layout_exponential(
       _1,
       _2,
       _3,
-      step);
+      base);
 
   return OK;
 }
@@ -651,6 +716,10 @@ ReturnCode scale_configure_layout(
     return scale_configure_layout_exponential(expr_next(expr), layout);
   }
 
+  if (expr_is_value(expr, "exponential-steps")) {
+    return scale_configure_layout_exponential_steps(expr_next(expr), layout);
+  }
+
   if (expr_is_value(expr, "subdivide")) {
     return scale_configure_layout_subdivide(expr_next(expr), layout);
   }
@@ -672,6 +741,8 @@ ReturnCode scale_configure_layout(
       "  - linear-align\n"
       "  - linear-alignat\n"
       "  - linear-interval\n"
+      "  - exponential\n"
+      "  - exponential-steps\n"
       "  - subdivide\n"
       "  - categorical\n"
       "  - categorical-bounds\n");

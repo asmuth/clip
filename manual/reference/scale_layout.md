@@ -64,6 +64,18 @@ Example: [`charts-reference/scale_layout_exponential`](/examples/charts-referenc
 [![scale_layout_exponential.svg](/examples/charts-reference/scale_layout_exponential.svg)](/examples/charts-reference/scale_layout_exponential)
 
 ---
+### `exponential-steps`
+
+The `exponential-steps` layout will go up in `B^I` exponential steps like the
+`exponential` layout, but will subdivide each "step" linearly into `N` sub-steps.
+
+    (exponential-steps <B> <N>)
+
+Example: [`charts-reference/scale_layout_exponential_steps`](/examples/charts-reference/scale_layout_exponential_steps):
+[![scale_layout_exponential_steps.svg](/examples/charts-reference/scale_layout_exponential_steps.svg)](/examples/charts-reference/scale_layout_exponential_steps)
+
+
+---
 ### `subdivide`
 
 The `subdivide` layout will divide the axis into N evenly sized divisions.

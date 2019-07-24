@@ -113,6 +113,13 @@ ReturnCode scale_layout_linear(
     ScaleLayout* layout,
     double step);
 
+ReturnCode scale_layout_exponential_steps(
+    const ScaleConfig& domain,
+    const Formatter& label_format,
+    ScaleLayout* layout,
+    double base,
+    size_t steps);
+
 ReturnCode scale_layout_exponential(
     const ScaleConfig& domain,
     const Formatter& label_format,
