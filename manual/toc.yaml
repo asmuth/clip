@@ -54,9 +54,10 @@ documentation:
   #      url: "/documentation/plot-bars"
   #      file: ""
 
-  #-
-  #  title: "Reference"
-  #  pages:
+  -
+    title: "Reference"
+    sections:
+      - pages:
   #    #-
   #    #  title: "Data Sources"
   #    #  url: "/documentation/data_sources"
@@ -65,14 +66,18 @@ documentation:
   #    #  title: "Values & Units"
   #    #  url: "/documentation/units"
   #    #  file: "units"
-  #    -
-  #      title: "Scales"
-  #      url: "/documentation/plot-scales"
-  #      file: "scales"
-  #    -
-  #      title: "Formatters"
-  #      url: "/documentation/formatter"
-  #      file: "formatter"
+        -
+          title: "Scale Types"
+          url: "/documentation/scale-types"
+          file: "reference/scale_type"
+        -
+          title: "Scale Layout"
+          url: "/documentation/scale-layout"
+          file: "reference/scale_layout"
+        -
+          title: "Formatters"
+          url: "/documentation/format"
+          file: "reference/format"
   #    #-
   #    #  title: "Colours"
   #    #  url: "/documentation/color-palette"

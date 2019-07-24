@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 import pystache as TPL
 import itertools
-from glob import glob
+import glob
+import re
 
 from build_layout import *
 from pathlib import Path
@@ -52,9 +53,9 @@ def build_example_list(examples):
 
 def main():
   examples = yaml.load(Path("examples/examples.yaml").read_text())
-  examples_flat = list(itertools.chain(*map(lambda x: x["files"], examples)))
+  examples_all = [{ "file": re.sub("^examples\/", "", re.sub("\.fvz$", "", p)) } for p in glob.glob("examples/**/*.fvz")]
 
-  for example in examples_flat:
+  for example in examples_all:
     build_example(example)
 
   build_example_list(examples)

@@ -1,0 +1,4 @@
+(set height 60px)
+(set margin 1em)
+
+(plot/axis scale (log) limit (1 10000))

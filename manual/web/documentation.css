@@ -27,12 +27,15 @@ h1, h2, h3, h4, h5, h6 {
   font-family: "Roboto", "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
+
 h1, h2, h3 { line-height: 40px; }
 h1 { font-size: 38.5px; }
 h2 { font-size: 22px; }
 h3 { font-size: 18px; }
 h4 { font-size: 100%; font-weight: 500; }
 h5 { font-size: 100%; font-weight: 500; }
+
+h4 a { color: #000; }
 
 h3 {
   margin-bottom: 0;
@@ -346,7 +349,7 @@ article.wide {
 #documentation hr {
   margin: 24px 0 2em 0;
   border: none;
-  border-bottom: 1px solid #eee;
+  border-bottom: 2px solid #eee;
 }
 
 #documentation a, a.link {
@@ -394,12 +397,16 @@ code strong {
 }
 
 #documentation h1 code,
-#documentation h2 code,
-#documentation h3 code {
+#documentation h2 code {
   font-size: 86%;
   background: transparent;
   color: #000;
   font-weight: 500;
+}
+
+#documentation h3 code {
+  font-size: 90%;
+  color: #000;
 }
 
 pre code {
