@@ -146,5 +146,10 @@ ReturnCode scale_configure_layout(
     const Expr* expr,
     ScaleLayoutFn* layout);
 
+void scale_configure_layout_defaults(
+    const ScaleConfig& config,
+    ScaleLayoutFn* label_placement,
+    ScaleLayoutFn* tick_placement);
+
 } // namespace fviz
 

@@ -108,21 +108,8 @@ ReturnCode build(const Environment& env, const Expr* expr, ElementRef* elem) {
     return config_rc;
   }
 
-  if (!c->layout_x) {
-    if (c->scale_x.kind == ScaleKind::CATEGORICAL) {
-      c->layout_x = bind(&scale_layout_categorical, _1, _2, _3);
-    } else {
-      c->layout_x = bind(&scale_layout_subdivide, _1, _2, _3, 10);
-    }
-  }
-
-  if (!c->layout_y) {
-    if (c->scale_y.kind == ScaleKind::CATEGORICAL) {
-      c->layout_y = bind(&scale_layout_categorical, _1, _2, _3);
-    } else {
-      c->layout_y = bind(&scale_layout_subdivide, _1, _2, _3, 10);
-    }
-  }
+  scale_configure_layout_defaults(c->scale_x, nullptr, &c->layout_x);
+  scale_configure_layout_defaults(c->scale_y, nullptr, &c->layout_y);
 
   *elem = std::make_shared<Element>();
   (*elem)->draw = bind(&draw, c, _1, _2);

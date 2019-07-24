@@ -4,7 +4,6 @@
     limit-x (1 5)
     limit-y (0 10000)
     scale-y (log)
-    axis-y-label-placement (exponential 10)
     grid (color #fff)
     background #eee
     border none)

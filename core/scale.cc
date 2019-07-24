@@ -25,6 +25,7 @@ namespace fviz {
 
 static const double kDefaultLogBase = 10;
 static const size_t kMaxTicks = 8192;
+static const double EPSILON = 0.001;
 
 ScaleConfig::ScaleConfig() :
     kind(ScaleKind::LINEAR),
@@ -78,19 +79,25 @@ double scale_translate_linear(
 double scale_translate_log(
     const ScaleConfig& domain,
     double v) {
+  if (v <= 0) {
+    return  0;
+  }
+
   auto min = scale_min(domain);
   auto max = scale_max(domain);
   auto log_base = domain.log_base;
-  double range_log = log(max - min) / log(log_base);
 
-  auto vf = v - min;
-  if (vf >= 1.0) {
+  double min_log = min == 0 ? 0 : log(min) / log(log_base);
+  double max_log = max == 0 ? 0 : log(max) / log(log_base);
+
+  auto vf = v;
+  if (vf != 0.0) {
     vf = log(vf) / log(log_base);
   } else {
     vf = 0;
   }
 
-  auto vt = vf / range_log;
+  auto vt = (vf - min_log) / (max_log - min_log);
   if (domain.inverted) {
     vt = 1.0 - vt;
   }
@@ -360,24 +367,29 @@ ReturnCode scale_layout_exponential_steps(
     ScaleLayout* layout,
     double base,
     size_t steps) {
-  auto begin = scale_min(domain);
-  auto end = scale_max(domain);
+  double min = scale_min(domain);
+  double max = scale_max(domain);
+  double exp = min == 0 ? 0 : log(min) / log(domain.log_base);
 
-  for (size_t idx = 0, exp = 0; ; ++idx) {
+  for (size_t idx = 0; ; ++idx) {
     auto v = pow(base, exp++);
     auto vn = pow(base, exp);
 
-    if (v < begin) {
+    if (v < min) {
       continue;
     }
 
-    if (v > end) {
+    if (v > max + EPSILON) {
       break;
     }
 
     for (size_t s = 0; s < steps - 1; ++s) {
       auto vs = v + (s / double(steps - 1)) * (vn - v);
       auto vp = scale_translate(domain, vs);
+      if (vs > max + EPSILON) {
+        break;
+      }
+
       layout->positions.emplace_back(vp);
       layout->labels.emplace_back(label_format(idx++, std::to_string(v))); // FIXME
     }
@@ -391,20 +403,23 @@ ReturnCode scale_layout_exponential(
     const Formatter& label_format,
     ScaleLayout* layout,
     double base) {
-  auto begin = scale_min(domain);
-  auto end = scale_max(domain);
+  double min = scale_min(domain);
+  double max = scale_max(domain);
+  double exp = min == 0 ? 0 : log(min) / log(domain.log_base);
 
-  for (size_t idx = 0, exp = 0; ; ++idx) {
+  size_t idx = 0;
+  for (;;) {
     auto v = pow(base, exp++);
-    if (v < begin) {
+    auto vp = scale_translate(domain, v);
+
+    if (v < min) {
       continue;
     }
 
-    if (v > end) {
+    if (v > max + EPSILON) {
       break;
     }
 
-    auto vp = scale_translate(domain, v);
     layout->positions.emplace_back(vp);
     layout->labels.emplace_back(label_format(idx++, std::to_string(v))); // FIXME
   }
@@ -748,6 +763,64 @@ ReturnCode scale_configure_layout(
       "  - categorical-bounds\n");
 }
 
+void scale_configure_layout_defaults(
+    const ScaleConfig& config,
+    ScaleLayoutFn* label_placement,
+    ScaleLayoutFn* tick_placement) {
+  // default label placement
+  if (label_placement && !*label_placement) {
+    switch (config.kind) {
+      case ScaleKind::CATEGORICAL:
+        *label_placement = bind(&scale_layout_categorical, _1, _2, _3);
+        break;
+      case ScaleKind::LOGARITHMIC:
+        *label_placement = bind(
+            &scale_layout_exponential,
+            _1,
+            _2,
+            _3,
+            config.log_base);
+        break;
+      default:
+        *label_placement = bind(&scale_layout_subdivide, _1, _2, _3, 10);
+        break;
+    }
+  }
+
+  // default tick placement
+  if (tick_placement && !*tick_placement) {
+    switch (config.kind) {
+      case ScaleKind::CATEGORICAL:
+        *tick_placement = bind(&scale_layout_categorical_bounds, _1, _2, _3);
+        break;
+      case ScaleKind::LOGARITHMIC:
+        if (config.log_base == 10) {
+          *tick_placement = bind(
+              &scale_layout_exponential_steps,
+              _1,
+              _2,
+              _3,
+              10,
+              10);
+        } else {
+          *tick_placement =  bind(
+              &scale_layout_exponential,
+              _1,
+              _2,
+              _3,
+              config.log_base);
+        }
+        break;
+      default:
+        if (label_placement) {
+          *tick_placement = *label_placement;
+        } else {
+          *tick_placement =  bind(&scale_layout_subdivide, _1, _2, _3, 10);
+        }
+        break;
+    }
+  }
+}
 
 } // namespace fviz
 

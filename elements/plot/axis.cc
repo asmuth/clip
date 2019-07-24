@@ -752,27 +752,11 @@ ReturnCode build(const Environment& env, const Expr* expr, ElementRef* elem) {
     }
   }
 
-  if (!config->label_placement) {
-    switch (config->scale.kind) {
-      case ScaleKind::CATEGORICAL:
-        config->label_placement = bind(&scale_layout_categorical, _1, _2, _3);
-        if (!config->tick_placement) {
-          config->tick_placement = bind(&scale_layout_categorical_bounds, _1, _2, _3);
-        }
-        break;
-      case ScaleKind::LOGARITHMIC:
-        config->label_placement = bind(
-            &scale_layout_exponential,
-            _1,
-            _2,
-            _3,
-            config->scale.log_base);
-        break;
-      default:
-        config->label_placement = bind(&scale_layout_subdivide, _1, _2, _3, 10);
-        break;
-    }
-  }
+  /* setup defaults */
+  scale_configure_layout_defaults(
+      config->scale,
+      &config->label_placement,
+      &config->tick_placement);
 
   if (!config->label_formatter) {
     if (config->scale.kind == ScaleKind::CATEGORICAL) {
@@ -780,10 +764,6 @@ ReturnCode build(const Environment& env, const Expr* expr, ElementRef* elem) {
     } else {
       config->label_formatter = format_decimal_fixed(1);
     }
-  }
-
-  if (!config->tick_placement) {
-    config->tick_placement = config->label_placement;
   }
 
   *elem = std::make_shared<Element>();
