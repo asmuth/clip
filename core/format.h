@@ -24,6 +24,7 @@ using Formatter = std::function<std::string (size_t idx, const std::string&)>;
 Formatter format_decimal_fixed(size_t precision);
 Formatter format_decimal_scientific(size_t precision);
 Formatter format_datetime(const std::string& fmt);
+Formatter format_base_fixed(unsigned base, size_t precision);
 Formatter format_string();
 Formatter format_custom(const std::vector<std::string>& values);
 Formatter format_noop();

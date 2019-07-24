@@ -55,3 +55,15 @@ readable date strings. The optional `<fmt>` format string uses the standard
 Example: [`charts-reference/format_datetime`](/examples/charts-reference/format_datetime):
 [![format_datetime.svg](/examples/charts-reference/format_datetime.svg)](/examples/charts-reference/format_datetime)
 
+
+---
+### `base`
+<a id="format-base"></a>
+
+The `base` formatter will format values using an arbitrary base B and an optional
+precision N.
+
+    (base <B> <N>)
+
+Example: [`charts-reference/format_base`](/examples/charts-reference/format_base):
+[![format_base.svg](/examples/charts-reference/format_base.svg)](/examples/charts-reference/format_base)

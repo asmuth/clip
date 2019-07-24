@@ -173,6 +173,57 @@ ReturnCode format_configure_datetime(
   return OK;
 }
 
+Formatter format_base_fixed(unsigned base, size_t precision) {
+  return [base, precision] (size_t idx, const std::string& vs) -> std::string {
+    auto v = value_to_float(vs);
+    if (v == 0) {
+      return "0";
+    }
+
+    std::stringstream sstream;
+    sstream
+        << base
+        << std::fixed
+        << std::setprecision(precision)
+        << format_superscript(log(v) / log(base));
+
+    return sstream.str();
+  };
+}
+
+ReturnCode format_configure_base_fixed(
+    const Expr* expr,
+    Formatter* formatter) {
+  auto args = expr_collect(expr);
+
+  double base;
+  size_t precision = 1;
+  switch (args.size()) {
+    case 2:
+      try {
+        precision = std::stod(expr_get_value(args[1]));
+      } catch (... ) {
+        return ERROR;
+      }
+      /* fallthrough */
+    case 1:
+      try {
+        base = std::stod(expr_get_value(args[0]));
+      } catch (... ) {
+        return ERROR;
+      }
+      break;
+    default:
+      return errorf(
+          ERROR,
+          "invalid number of arguments for 'base'; expected one or two, but got: {}",
+          args.size());
+  }
+
+  *formatter = format_base_fixed(base, precision);
+  return OK;
+}
+
 Formatter format_string() {
   return [] (size_t idx, const std::string& v) -> std::string {
     return v;
@@ -244,6 +295,10 @@ ReturnCode format_configure(
     return format_configure_datetime(expr_next(expr), formatter);
   }
 
+  if (expr_is_value(expr, "base")) {
+    return format_configure_base_fixed(expr_next(expr), formatter);
+  }
+
   if (expr_is_value(expr, "string")) {
     return format_configure_string(expr_next(expr), formatter);
   }
@@ -258,6 +313,7 @@ ReturnCode format_configure(
       "  - fixed\n"
       "  - scientific\n",
       "  - datetime\n",
+      "  - base\n",
       "  - string\n",
       "  - custom\n",
       expr_inspect(expr));
