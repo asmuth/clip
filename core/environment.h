@@ -35,6 +35,7 @@ struct Environment {
   Color background_color;
   Color text_color;
   Color border_color;
+  std::array<Measure, 4> margins;
   ElementMap element_map;
 };
 

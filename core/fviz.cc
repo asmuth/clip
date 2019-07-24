@@ -117,7 +117,12 @@ int fviz_render_to(fviz_t* ctx, void* backend) {
   auto layer = static_cast<Layer*>(backend);
 
   LayoutInfo layout;
-  layout.content_box = Rectangle(0, 0, layer->width, layer->height);
+  layout.content_box = layout_margin_box(
+      Rectangle(0, 0, layer->width, layer->height),
+      ctx->env.margins[0],
+      ctx->env.margins[1],
+      ctx->env.margins[2],
+      ctx->env.margins[3]);
 
   std::vector<ElementRef> roots;
   auto rc = try_chain({

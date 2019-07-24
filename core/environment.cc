@@ -17,6 +17,8 @@
 #include "sexpr_util.h"
 #include "graphics/font_lookup.h"
 
+#include <functional>
+
 using namespace std::placeholders;
 
 namespace fviz {
@@ -58,10 +60,40 @@ ReturnCode environment_set(Environment* env, const Expr* expr) {
     return expr_to_float64(args[1], &env->dpi);
   }
 
+  if (expr_is_value(args[0], "font-size")) {
+    return expr_to_measure(args[1], &env->font_size);
+  }
+
+  if (expr_is_value(args[0], "margin-top")) {
+    return expr_to_measure(args[1], &env->margins[0]);
+  }
+
+  if (expr_is_value(args[0], "margin-right")) {
+    return expr_to_measure(args[1], &env->margins[1]);
+  }
+
+  if (expr_is_value(args[0], "margin-bottom")) {
+    return expr_to_measure(args[1], &env->margins[2]);
+  }
+
+  if (expr_is_value(args[0], "margin-left")) {
+    return expr_to_measure(args[1], &env->margins[3]);
+  }
+
+  if (expr_is_value(args[0], "margin")) {
+    return expr_calln(args[1], {
+      bind(&expr_to_measure, _1, &env->margins[0]),
+      bind(&expr_to_measure, _1, &env->margins[1]),
+      bind(&expr_to_measure, _1, &env->margins[2]),
+      bind(&expr_to_measure, _1, &env->margins[3]),
+    });
+  }
+
   return errorf(ERROR, "invalid property: {}", expr_get_value(args[0]));
 }
 
 ReturnCode environment_configure(Environment* env, const Expr* expr) {
+  /* parse options */
   for (; expr; expr = expr_next(expr)) {
     if (!expr || !expr_is_list(expr)) {
       return errorf(ERROR, "expected a list but got: {}", expr_inspect(expr));
@@ -78,6 +110,13 @@ ReturnCode environment_configure(Environment* env, const Expr* expr) {
         return rc;
       }
     }
+  }
+
+  /* convert units */
+  convert_unit_typographic(env->dpi, env->font_size, &env->font_size);
+
+  for (auto& m : env->margins) {
+    convert_unit_typographic(env->dpi, env->font_size, &m);
   }
 
   return OK;
