@@ -224,23 +224,32 @@ ReturnCode format_configure_base_fixed(
   return OK;
 }
 
-Formatter format_string() {
-  return [] (size_t idx, const std::string& v) -> std::string {
-    return v;
+Formatter format_integer() {
+  return [] (size_t idx, const std::string& vs) -> std::string {
+    auto v = value_to_float(vs);
+    return std::to_string(int(v));
   };
+}
+
+ReturnCode format_configure_integer(
+    const Expr* expr,
+    Formatter* formatter) {
+  auto args = expr_collect(expr);
+  if (args.size() != 0) {
+    return errorf(
+        ERROR,
+        "invalid number of arguments for 'integer'; expected zero, but got: {}",
+        args.size());
+  }
+
+  *formatter = format_integer();
+  return OK;
 }
 
 Formatter format_noop() {
   return [] (size_t idx, const std::string& v) -> std::string {
-    return {};
+    return v;
   };
-}
-
-ReturnCode format_configure_string(
-    const Expr* expr,
-    Formatter* formatter) {
-  *formatter = format_string();
-  return OK;
 }
 
 Formatter format_custom(const std::vector<std::string>& values) {
@@ -277,8 +286,8 @@ ReturnCode format_configure(
   if (!expr || !expr_is_list(expr)) {
     return errorf(
         ERROR,
-        "invalid argument; expected a list but got: {}",
-        "..."); // FIXME
+        "invalid argument; expected a list (<format>), but got: {}",
+        expr_inspect(expr));
   }
 
   expr = expr_get_list(expr);
@@ -299,8 +308,8 @@ ReturnCode format_configure(
     return format_configure_base_fixed(expr_next(expr), formatter);
   }
 
-  if (expr_is_value(expr, "string")) {
-    return format_configure_string(expr_next(expr), formatter);
+  if (expr_is_value(expr, "integer")) {
+    return format_configure_integer(expr_next(expr), formatter);
   }
 
   if (expr_is_value(expr, "custom")) {
@@ -314,7 +323,7 @@ ReturnCode format_configure(
       "  - scientific\n",
       "  - datetime\n",
       "  - base\n",
-      "  - string\n",
+      "  - integer\n",
       "  - custom\n",
       expr_inspect(expr));
 }

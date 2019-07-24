@@ -760,7 +760,7 @@ ReturnCode build(const Environment& env, const Expr* expr, ElementRef* elem) {
 
   if (!config->label_formatter) {
     if (config->scale.kind == ScaleKind::CATEGORICAL) {
-      config->label_formatter = format_string();
+      config->label_formatter = format_noop();
     } else {
       config->label_formatter = format_decimal_fixed(1);
     }

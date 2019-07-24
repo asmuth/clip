@@ -7,6 +7,8 @@ is the list of valid values:
   - [`fixed`](#format-fixed)
   - [`scientific`](#format-scientific)
   - [`datetime`](#format-datetime)
+  - [`base`](#format-base)
+  - [`integer`](#format-integer)
 
 
 ## List of `<format>` values
@@ -67,3 +69,15 @@ precision N.
 
 Example: [`charts-reference/format_base`](/examples/charts-reference/format_base):
 [![format_base.svg](/examples/charts-reference/format_base.svg)](/examples/charts-reference/format_base)
+
+
+---
+### `integer`
+<a id="format-integer"></a>
+
+The `integer` formatter will format values as integers.
+
+    (integer)
+
+Example: [`charts-reference/format_integer`](/examples/charts-reference/format_integer):
+[![format_integer.svg](/examples/charts-reference/format_integer.svg)](/examples/charts-reference/format_integer)
