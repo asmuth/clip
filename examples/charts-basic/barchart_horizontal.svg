@@ -9,15 +9,15 @@
   <path fill="#666666" d="M135.664 130.291 L205.766 130.291 L205.766 153.758 L135.664 153.758 "/>
   <path fill="#666666" d="M135.664 81.3037 L193.322 81.3037 L193.322 104.77 L135.664 104.77 "/>
   <path fill="#666666" d="M135.664 32.316 L191.367 32.316 L191.367 55.7827 L135.664 55.7827 "/>
-  <text x="722.413600" y="440.950617" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif">$18,624bln</text>
-  <text x="492.586734" y="391.962963" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif">$11,218bln</text>
-  <text x="297.640423" y="342.975309" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif">$11,218bln</text>
-  <text x="252.363972" y="293.987654" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif">$11,218bln</text>
-  <text x="226.606978" y="245.000000" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif">$11,218bln</text>
-  <text x="220.959058" y="196.012346" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif">$2,465bln</text>
-  <text x="214.566359" y="147.024691" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif">$2.259bln</text>
-  <text x="202.122317" y="98.037037" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif">$1.858bln</text>
-  <text x="200.167268" y="49.049383" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif">$1.795bln</text>
+  <text x="722.413600" y="440.950617" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">$18,624bln</text>
+  <text x="492.586734" y="391.962963" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">$11,218bln</text>
+  <text x="297.640423" y="342.975309" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">$11,218bln</text>
+  <text x="252.363972" y="293.987654" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">$11,218bln</text>
+  <text x="226.606978" y="245.000000" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">$11,218bln</text>
+  <text x="220.959058" y="196.012346" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">$2,465bln</text>
+  <text x="214.566359" y="147.024691" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">$2.259bln</text>
+  <text x="202.122317" y="98.037037" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">$1.858bln</text>
+  <text x="200.167268" y="49.049383" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">$1.795bln</text>
   <path stroke-width="1.333333" stroke="#333333" fill="none" d="M135.664 19.5556 L135.664 460.444 "/>
   <path stroke-width="1.333333" stroke="#333333" fill="none" d="M135.664 460.444 L140.997 460.444 "/>
   <path stroke-width="1.333333" stroke="#333333" fill="none" d="M135.664 411.457 L140.997 411.457 "/>
@@ -29,13 +29,13 @@
   <path stroke-width="1.333333" stroke="#333333" fill="none" d="M135.664 117.531 L140.997 117.531 "/>
   <path stroke-width="1.333333" stroke="#333333" fill="none" d="M135.664 68.5432 L140.997 68.5432 "/>
   <path stroke-width="1.333333" stroke="#333333" fill="none" d="M135.664 19.5556 L140.997 19.5556 "/>
-  <text x="35.852431" y="440.950617" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif">United States</text>
-  <text x="85.602431" y="391.962963" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif">China</text>
-  <text x="83.961806" y="342.975309" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif">Japan</text>
-  <text x="63.602431" y="293.987654" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif">Germany</text>
-  <text x="19.555556" y="245.000000" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif">United Kingdom</text>
-  <text x="78.258681" y="196.012346" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif">France</text>
-  <text x="92.118056" y="147.024691" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif">India</text>
-  <text x="97.008681" y="98.037037" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif">Italy</text>
-  <text x="87.227431" y="49.049383" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif">Brazil</text>
+  <text x="35.852431" y="440.950617" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">United States</text>
+  <text x="85.602431" y="391.962963" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">China</text>
+  <text x="83.961806" y="342.975309" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">Japan</text>
+  <text x="63.602431" y="293.987654" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">Germany</text>
+  <text x="19.555556" y="245.000000" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">United Kingdom</text>
+  <text x="78.258681" y="196.012346" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">France</text>
+  <text x="92.118056" y="147.024691" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">India</text>
+  <text x="97.008681" y="98.037037" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">Italy</text>
+  <text x="87.227431" y="49.049383" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">Brazil</text>
 </svg>

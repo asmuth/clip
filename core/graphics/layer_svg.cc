@@ -96,6 +96,7 @@ Status svg_text_span(
     << svg_attr("fill", style.color.to_hex_str())
     << svg_attr("font-size", style.font_size)
     << svg_attr("font-family", style.font.font_family_css)
+    << svg_attr("font-weight", style.font.font_weight_css)
     << transform
     << ">"
     << svg_body(op.text)

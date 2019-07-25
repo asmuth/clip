@@ -82,6 +82,10 @@ documentation:
           title: "Marker Shapes"
           url: "/documentation/marker-shapes"
           file: "reference/marker_shape"
+        -
+          title: "Fonts"
+          url: "/documentation/fonts"
+          file: "reference/fonts"
   #    #-
   #    #  title: "Colours"
   #    #  url: "/documentation/color-palette"

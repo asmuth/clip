@@ -6,9 +6,9 @@
   <path stroke-width="1.333333" stroke="#333333" fill="none" d="M107.938 240 L113.272 240 "/>
   <path stroke-width="1.333333" stroke="#333333" fill="none" d="M107.938 139.556 L113.272 139.556 "/>
   <path stroke-width="1.333333" stroke="#333333" fill="none" d="M107.938 39.1111 L113.272 39.1111 "/>
-  <text x="67.657986" y="454.888889" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" transform="rotate(180 96.2049 440.889)">00:00:00</text>
-  <text x="67.657986" y="354.444444" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" transform="rotate(180 96.2049 340.444)">00:15:00</text>
-  <text x="67.657986" y="254.000000" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" transform="rotate(180 96.2049 240)">00:30:00</text>
-  <text x="67.657986" y="153.555556" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" transform="rotate(180 96.2049 139.556)">00:45:00</text>
-  <text x="67.657986" y="53.111111" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" transform="rotate(180 96.2049 39.1111)">01:00:00</text>
+  <text x="67.657986" y="454.888889" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000" transform="rotate(180 96.2049 440.889)">00:00:00</text>
+  <text x="67.657986" y="354.444444" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000" transform="rotate(180 96.2049 340.444)">00:15:00</text>
+  <text x="67.657986" y="254.000000" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000" transform="rotate(180 96.2049 240)">00:30:00</text>
+  <text x="67.657986" y="153.555556" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000" transform="rotate(180 96.2049 139.556)">00:45:00</text>
+  <text x="67.657986" y="53.111111" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000" transform="rotate(180 96.2049 39.1111)">01:00:00</text>
 </svg>

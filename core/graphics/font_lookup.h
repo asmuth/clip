@@ -22,15 +22,17 @@ bool findFontSystem(
     std::string* font_file);
 
 enum DefaultFont {
-  SANS_REGULAR,
-  SANS_MEDIUM,
-  SANS_BOLD,
-  HELVETICA_REGULAR,
-  HELVETICA_MEDIUM,
-  HELVETICA_BOLD,
+  ROMAN_SANS_REGULAR,
+  ROMAN_SANS_MEDIUM,
+  ROMAN_SANS_BOLD,
+  ROMAN_SERIF_REGULAR,
+  ROMAN_SERIF_MEDIUM,
+  ROMAN_SERIF_BOLD,
 };
 
 ReturnCode font_load(DefaultFont font_name, FontInfo* font_info);
+
+ReturnCode font_configure(const Expr* expr, FontInfo* font_info);
 
 } // namespace fviz
 

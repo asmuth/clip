@@ -13,16 +13,16 @@
   <path stroke-width="1.333333" stroke="#333333" fill="none" d="M711.475 37.3333 L711.475 42.6667 "/>
   <path stroke-width="1.333333" stroke="#333333" fill="none" d="M786.182 37.3333 L786.182 42.6667 "/>
   <path stroke-width="1.333333" stroke="#333333" fill="none" d="M860.889 37.3333 L860.889 42.6667 "/>
-  <text x="10.564236" y="65.733333" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif">00:00:00</text>
-  <text x="85.271307" y="65.733333" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif">02:00:00</text>
-  <text x="159.978378" y="65.733333" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif">04:00:00</text>
-  <text x="234.685448" y="65.733333" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif">06:00:00</text>
-  <text x="309.392519" y="65.733333" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif">08:00:00</text>
-  <text x="384.099590" y="65.733333" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif">10:00:00</text>
-  <text x="458.806660" y="65.733333" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif">12:00:00</text>
-  <text x="533.513731" y="65.733333" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif">14:00:00</text>
-  <text x="608.220802" y="65.733333" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif">16:00:00</text>
-  <text x="682.927872" y="65.733333" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif">18:00:00</text>
-  <text x="757.634943" y="65.733333" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif">20:00:00</text>
-  <text x="832.342014" y="65.733333" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif">22:00:00</text>
+  <text x="10.564236" y="65.733333" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">00:00:00</text>
+  <text x="85.271307" y="65.733333" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">02:00:00</text>
+  <text x="159.978378" y="65.733333" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">04:00:00</text>
+  <text x="234.685448" y="65.733333" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">06:00:00</text>
+  <text x="309.392519" y="65.733333" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">08:00:00</text>
+  <text x="384.099590" y="65.733333" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">10:00:00</text>
+  <text x="458.806660" y="65.733333" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">12:00:00</text>
+  <text x="533.513731" y="65.733333" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">14:00:00</text>
+  <text x="608.220802" y="65.733333" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">16:00:00</text>
+  <text x="682.927872" y="65.733333" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">18:00:00</text>
+  <text x="757.634943" y="65.733333" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">20:00:00</text>
+  <text x="832.342014" y="65.733333" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">22:00:00</text>
 </svg>

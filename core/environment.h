@@ -30,6 +30,8 @@ struct Environment {
   Measure screen_height;
   double dpi;
   FontInfo font;
+  FontInfo font_em;
+  FontInfo font_symbol;
   Measure font_size;
   ColorScheme color_scheme;
   Color background_color;

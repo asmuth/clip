@@ -8,10 +8,10 @@
   <path stroke-width="1.333333" stroke="#333333" fill="none" d="M572.984 27.3333 L572.984 32.6667 "/>
   <path stroke-width="1.333333" stroke="#333333" fill="none" d="M695.968 27.3333 L695.968 32.6667 "/>
   <path stroke-width="1.333333" stroke="#333333" fill="none" d="M818.952 27.3333 L818.952 32.6667 "/>
-  <text x="137.649058" y="55.733333" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif">A</text>
-  <text x="260.633185" y="55.733333" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif">B</text>
-  <text x="383.211062" y="55.733333" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif">C</text>
-  <text x="506.195188" y="55.733333" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif">D</text>
-  <text x="629.585565" y="55.733333" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif">E</text>
-  <text x="752.975942" y="55.733333" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif">F</text>
+  <text x="137.649058" y="55.733333" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">A</text>
+  <text x="260.633185" y="55.733333" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">B</text>
+  <text x="383.211062" y="55.733333" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">C</text>
+  <text x="506.195188" y="55.733333" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">D</text>
+  <text x="629.585565" y="55.733333" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">E</text>
+  <text x="752.975942" y="55.733333" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">F</text>
 </svg>

@@ -5,9 +5,9 @@
   <path fill="#0000cc" d="M704 280 M696 280 a4 4 0 1 0 8 0 a4 4 0 1 0 -8 0 "/>
   <path fill="#cc0000" d="M904 180 M896 180 a4 4 0 1 0 8 0 a4 4 0 1 0 -8 0 "/>
   <path fill="#0000cc" d="M304 380 M296 380 a4 4 0 1 0 8 0 a4 4 0 1 0 -8 0 "/>
-  <text x="94.000000" y="264.800000" fill="#000000" font-size="18.000000" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif">A</text>
-  <text x="494.000000" y="164.800000" fill="#000000" font-size="18.000000" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif">B</text>
-  <text x="694.000000" y="264.800000" fill="#000000" font-size="18.000000" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif">A</text>
-  <text x="894.000000" y="164.800000" fill="#000000" font-size="18.000000" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif">B</text>
-  <text x="294.000000" y="364.800000" fill="#000000" font-size="18.000000" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif">A</text>
+  <text x="94.000000" y="264.800000" fill="#000000" font-size="18.000000" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">A</text>
+  <text x="494.000000" y="164.800000" fill="#000000" font-size="18.000000" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">B</text>
+  <text x="694.000000" y="264.800000" fill="#000000" font-size="18.000000" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">A</text>
+  <text x="894.000000" y="164.800000" fill="#000000" font-size="18.000000" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">B</text>
+  <text x="294.000000" y="364.800000" fill="#000000" font-size="18.000000" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">A</text>
 </svg>

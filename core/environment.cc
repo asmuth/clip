@@ -33,10 +33,22 @@ Environment::Environment() :
     font_size(from_pt(11, dpi)) {}
 
 ReturnCode environment_setup_defaults(Environment* env) {
-  if (!font_load(DefaultFont::HELVETICA_REGULAR, &env->font)) {
+  if (!font_load(DefaultFont::ROMAN_SANS_MEDIUM, &env->font)) {
     return error(
         ERROR,
-        "unable to find default sans-sans font (Helvetica/Arial)");
+        "unable to find default roman sans font (Helvetica/Arial)");
+  }
+
+  if (!font_load(DefaultFont::ROMAN_SANS_BOLD, &env->font_em)) {
+    return error(
+        ERROR,
+        "unable to find default roman sans font (Helvetica/Arial)");
+  }
+
+  if (!font_load(DefaultFont::ROMAN_SANS_REGULAR, &env->font_symbol)) {
+    return error(
+        ERROR,
+        "unable to find default roman sans font (Helvetica/Arial)");
   }
 
   return OK;
@@ -58,6 +70,18 @@ ReturnCode environment_set(Environment* env, const Expr* expr) {
 
   if (expr_is_value(args[0], "dpi")) {
     return expr_to_float64(args[1], &env->dpi);
+  }
+
+  if (expr_is_value(args[0], "font")) {
+    return font_configure(args[1], &env->font);
+  }
+
+  if (expr_is_value(args[0], "font-emphasis")) {
+    return font_configure(args[1], &env->font_em);
+  }
+
+  if (expr_is_value(args[0], "font-symbols")) {
+    return font_configure(args[1], &env->font_symbol);
   }
 
   if (expr_is_value(args[0], "font-size")) {
