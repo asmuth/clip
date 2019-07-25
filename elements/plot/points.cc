@@ -207,7 +207,7 @@ ReturnCode build(
 
   /* set late defaults */
   if (c->colors.empty()) {
-    c->colors.push_back(env.border_color);
+    c->colors.push_back(env.foreground_color);
   }
 
   /* return element */

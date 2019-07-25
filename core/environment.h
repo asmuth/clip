@@ -35,8 +35,8 @@ struct Environment {
   Measure font_size;
   ColorScheme color_scheme;
   Color background_color;
+  Color foreground_color;
   Color text_color;
-  Color border_color;
   std::array<Measure, 4> margins;
   ElementMap element_map;
 };

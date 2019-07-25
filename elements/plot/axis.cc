@@ -637,7 +637,7 @@ ReturnCode build(const Environment& env, const Expr* expr, ElementRef* elem) {
   config->title_font_size = env.font_size;
   config->title_color = env.text_color;
   config->border_style.line_width = from_pt(1);
-  config->border_style.color = env.border_color;
+  config->border_style.color = env.foreground_color;
 
   {
     auto rc = expr_walk_map(expr_next(expr), {

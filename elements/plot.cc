@@ -272,7 +272,7 @@ ReturnCode build(
   config->font = env.font;
   config->font_size = env.font_size;
   config->text_color = env.text_color;
-  config->border_color = env.border_color;
+  config->border_color = env.foreground_color;
   config->margins = {from_em(1), from_em(1), from_em(1), from_em(1)};
 
   std::vector<std::string> x;

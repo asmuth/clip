@@ -480,7 +480,7 @@ ReturnCode build(
   config->padding = std::array<Measure, 4>{from_em(.8), from_em(1), from_em(.8), from_em(1)};
   for (size_t i = 0; i < 4; ++i) {
     config->borders[i].line_width = from_pt(1);
-    config->borders[i].color = env.border_color;
+    config->borders[i].color = env.foreground_color;
   }
 
   /* parse exprerties */

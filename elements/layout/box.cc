@@ -143,7 +143,7 @@ ReturnCode build(
     ElementRef* elem) {
   auto config = std::make_shared<BoxElement>();
   config->font_size = env.font_size;
-  config->border_color = env.border_color;
+  config->border_color = env.foreground_color;
 
   auto config_rc = expr_walk_map(expr_next(expr), {
     {

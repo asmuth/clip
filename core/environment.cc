@@ -28,8 +28,8 @@ Environment::Environment() :
     screen_height(Unit::UNIT, 480),
     dpi(96),
     background_color(Color::fromRGB(1,1,1)),
-    text_color(Color::fromRGB(.2,.2,.2)),
-    border_color(Color::fromRGB(.2,.2,.2)),
+    foreground_color(Color::fromRGB(0,0,0)),
+    text_color(Color::fromRGB(0,0,0)),
     font_size(from_pt(11, dpi)) {}
 
 ReturnCode environment_setup_defaults(Environment* env) {
@@ -70,6 +70,18 @@ ReturnCode environment_set(Environment* env, const Expr* expr) {
 
   if (expr_is_value(args[0], "dpi")) {
     return expr_to_float64(args[1], &env->dpi);
+  }
+
+  if (expr_is_value(args[0], "background-color")) {
+    return expr_to_color(args[1], &env->background_color);
+  }
+
+  if (expr_is_value(args[0], "foreground-color")) {
+    return expr_to_color(args[1], &env->foreground_color);
+  }
+
+  if (expr_is_value(args[0], "text-color")) {
+    return expr_to_color(args[1], &env->text_color);
   }
 
   if (expr_is_value(args[0], "font")) {
