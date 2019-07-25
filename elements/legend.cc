@@ -253,10 +253,32 @@ ReturnCode legend_draw(
       return rc;
     }
 
-    border_box.x = parent_box.x;
-    border_box.y = parent_box.y;
     border_box.h = std::min(eh, parent_box.h);
     border_box.w = std::min(ew, parent_box.w);
+
+    switch (config->position_horiz) {
+      case HAlign::LEFT:
+        border_box.x = parent_box.x;
+        break;
+      case HAlign::CENTER:
+        border_box.x = parent_box.x + parent_box.w * 0.5 - border_box.w * 0.5;
+        break;
+      case HAlign::RIGHT:
+        border_box.x = parent_box.x + parent_box.w - border_box.w;
+        break;
+    }
+
+    switch (config->position_vert) {
+      case VAlign::TOP:
+        border_box.y = parent_box.y;
+        break;
+      case VAlign::CENTER:
+        border_box.y = parent_box.y + parent_box.h * 0.5 - border_box.h * 0.5;
+        break;
+      case VAlign::BOTTOM:
+        border_box.y = parent_box.y + parent_box.h - border_box.h;
+        break;
+    }
   }
 
   auto content_box = layout_margin_box(
