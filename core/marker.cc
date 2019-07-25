@@ -18,8 +18,56 @@
 namespace fviz {
 
 const std::unordered_map<std::string, std::string> UNICODE_MARKERS = {
+  {"circle-bullet", "◉"},
+  {"circle-left", "◐"},
+  {"circle-right", "◑"},
+  {"circle-top", "◓"},
+  {"circle-bottom", "◒"},
+  {"circle-bullet-alt", "⭗"},
+  {"circle-hatch", "◍"},
+  {"circle-dashed", "◌"},
+  {"diamond", "◆"},
+  {"diamond-o", "◇"},
+  {"diamond-bullet", "◈"},
+  {"diamond-left", "⬖"},
+  {"diamond-right", "⬗"},
+  {"diamond-top", "⬘"},
+  {"diamond-bottom", "⬙"},
+  {"square", "■"},
+  {"square-o", "□"},
+  {"square-left", "◧"},
+  {"square-right", "◨"},
+  {"square-top", "⬒"},
+  {"square-bottom", "⬓"},
+  {"square-diag-left", "◩"},
+  {"square-diag-right", "◪"},
+  {"square-dotted", "⬚"},
+  {"square-crosshair", "⯐"},
+  {"square-bullet", "▣"},
+  {"square-hatch-horiz", "▤"},
+  {"square-hatch-vert", "▥"},
+  {"square-hatch-cross", "▦"},
+  {"square-hatch-diag-left", "▧"},
+  {"square-hatch-diag-right", "▨"},
   {"hexagon", "⬢"},
   {"hexagon-o", "⬡"},
+  {"pentagon", "⬟"},
+  {"pentagon-o", "⬠"},
+  {"compass-left", "⮘"},
+  {"compass-right", "⮚"},
+  {"compass-top", "⮙"},
+  {"compass-bottom", "⮛"},
+  {"triangle-left", "⯇"},
+  {"triangle-right", "⯈"},
+  {"triangle-top", "⯅"},
+  {"triangle-bottom", "⯆"},
+  {"triangle-left-o", "△"},
+  {"triangle-right-o", "▷"},
+  {"triangle-top-o", "△"},
+  {"triangle-left-half", "◭"},
+  {"triangle-right-half", "◮"},
+  {"triangle-bottom-o", "▽"},
+  {"triangle-dot", "◬"},
 };
 
 Marker marker_create_circle(double border_width) {
@@ -58,7 +106,7 @@ Marker marker_create_unicode(const std::string& u) {
     TextStyle style;
     style.font = target->font;
     style.color = color;
-    style.font_size = size;
+    style.font_size = from_unit(double(size) * 1.2);
 
     auto ax = HAlign::CENTER;
     auto ay = VAlign::CENTER;
@@ -83,12 +131,12 @@ ReturnCode marker_configure(
 
   expr = expr_get_list(expr);
 
-  if (expr_is_value(expr, "disk")) {
+  if (expr_is_value(expr, "circle")) {
     *marker = marker_create_disk();
     return OK;
   }
 
-  if (expr_is_value(expr, "circle")) {
+  if (expr_is_value(expr, "circle-o")) {
     double border_width = 0.2;
     if (expr_next(expr)) {
       if (auto rc = expr_to_float64(expr_next(expr), &border_width); !rc) {

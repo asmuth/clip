@@ -4,4 +4,4 @@
     scale-x-padding 10
     scale-y-padding 20
     marker-sizes (csv tests/testdata/point_example.csv z)
-    marker-shape (disk))
+    marker-shape (circle))
