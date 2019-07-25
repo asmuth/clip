@@ -1,0 +1,99 @@
+name: legend/item
+desc: |
+  The `legend/item` element is used to draw a legend item.
+
+reference: |
+  (legend/item <options>)
+
+option_summary: true
+
+properties:
+  - title: "Label Options"
+    anchor: label-options
+    properties:
+      - name: label
+        desc: |
+          Set the label text.
+        desc_code: |
+          label <value>
+        examples: |
+          ;; set the label to 'Hello World'
+          label "Hello World"
+      - name: label-align
+        desc: |
+          Set the label alignment.
+        desc_code: |
+          label-align [left|right]
+        examples: |
+          ;; set the label alignment to left
+          label-align left
+      - name: label-margin
+        desc: |
+          Set the label margin/spacing. See the [measure](#FIXME) page for more details on valid values.
+        desc_code: |
+          label-margin <measure>
+        examples: |
+          ;; set the label margin to 2em
+          label-margin 2em
+      - name: label-font-size
+        desc: |
+          Set the label font size. See the [measure](#FIXME) page for more details on valid values.
+        desc_code: |
+          label-font-size <measure>
+        examples: |
+          ;; set the label font size to 14pt
+          label-font-size 14pt
+      - name: label-color
+        desc: |
+          Set the label color. See the [color](#FIXME) page for more details on valid values.
+        desc_code: |
+          label-color <color>
+        examples: |
+          ;; set the label color to grey
+          label-color #eee
+
+  - title: "Marker Options"
+    anchor: marker-options
+    properties:
+      - name: marker-shape
+        desc: |
+          Set the marker shape.
+        desc_code: |
+          marker <marker-shape>
+        examples: |
+          ;; set the marker shape to hexagon
+          marker-shape (hexagon)
+      - name: marker-align
+        desc: |
+          Set the marker alignment.
+        desc_code: |
+          marker-align [left|right]
+        examples: |
+          ;; set the marker alignment to left
+          marker-align left
+      - name: marker-margin
+        desc: |
+          Set the marker margin/spacing. See the [measure](#FIXME) page for more details on valid values.
+        desc_code: |
+          marker-margin <measure>
+        examples: |
+          ;; set the marker margin to 2em
+          marker-margin 2em
+      - name: marker-size
+        desc: |
+          Set the marker size. See the [measure](#FIXME) page for more details on valid values.
+        desc_code: |
+          marker-size <measure>
+        examples: |
+          ;; set the marker size to 14pt
+          marker-size 14pt
+      - name: marker-color
+        desc: |
+          Set the marker color. See the [color](#FIXME) page for more details on valid values.
+        desc_code: |
+          marker-color <color>
+        examples: |
+          ;; set the marker color to grey
+          marker-color #eee
+      - name: color
+        alias: marker-color

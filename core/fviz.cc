@@ -33,6 +33,7 @@
 #include "elements/plot/points.h"
 #include "elements/chart/scatterplot.h"
 #include "elements/layout/box.h"
+#include "elements/legend/item.h"
 
 #include <iostream>
 #include <string.h>
@@ -62,6 +63,7 @@ fviz_t* fviz_init() {
   element_bind(elems, "plot/labels", bind(elements::plot::labels::build, _1, _2, _3));
   element_bind(elems, "plot/lines", bind(elements::plot::lines::build, _1, _2, _3));
   element_bind(elems, "plot/points", bind(elements::plot::points::build, _1, _2, _3));
+  element_bind(elems, "legend/item", bind(elements::legend::item::build, _1, _2, _3));
   element_bind(elems, "text", bind(elements::text::build, _1, _2, _3));
   return ctx.release();
 }

@@ -149,6 +149,13 @@ documentation:
             title: "plot/grid"
             url: "/documentation/elements/plot/grid"
             api_ref: true
+      -
+        section_title: "Legends"
+        pages:
+          -
+            title: "legend/item"
+            url: "/documentation/elements/legend/item"
+            api_ref: true
 
   -
     title: "Community"
