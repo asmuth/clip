@@ -153,6 +153,10 @@ documentation:
         section_title: "Legends"
         pages:
           -
+            title: "legend"
+            url: "/documentation/elements/legend"
+            api_ref: true
+          -
             title: "legend/item"
             url: "/documentation/elements/legend/item"
             api_ref: true

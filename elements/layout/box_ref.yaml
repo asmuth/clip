@@ -53,6 +53,51 @@ properties:
         examples: |
           ;; set the left margin to 2em
           margin 2em
+      - name: padding
+        desc: |
+          Set the element's top/right/bottom/left padding. See the [measure](#FIXME) page
+          for more details on valid values.
+        desc_code: |
+          padding <measure>
+        examples: |
+          ;; set the padding to 2em
+          padding 2em
+      - name: padding-top
+        desc: |
+          Set the element's top padding. see the [measure](#fixme) page
+          for more details on valid values.
+        desc_code: |
+          padding <measure>
+        examples: |
+          ;; set the top padding to 2em
+          padding 2em
+      - name: padding-right
+        desc: |
+          Set the element's right padding. see the [measure](#fixme) page
+          for more details on valid values.
+        desc_code: |
+          padding <measure>
+        examples: |
+          ;; set the right padding to 2em
+          padding 2em
+      - name: padding-bottom
+        desc: |
+          Set the element's bottom padding. see the [measure](#fixme) page
+          for more details on valid values.
+        desc_code: |
+          padding <measure>
+        examples: |
+          ;; set the bottom padding to 2em
+          padding 2em
+      - name: padding-left
+        desc: |
+          Set the element's left padding. see the [measure](#fixme) page
+          for more details on valid values.
+        desc_code: |
+          padding <measure>
+        examples: |
+          ;; set the left padding to 2em
+          padding 2em
 
   - title: "Background Options"
     anchor: background-options
