@@ -205,6 +205,11 @@ ReturnCode build(
         "the length of the 'data-x' and 'data-y' properties must be equal");
   }
 
+  /* set late defaults */
+  if (c->colors.empty()) {
+    c->colors.push_back(env.border_color);
+  }
+
   /* return element */
   *elem = std::make_shared<Element>();
   (*elem)->draw = bind(&draw, c, _1, _2);

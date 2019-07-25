@@ -318,6 +318,11 @@ ReturnCode build(
         "the length of the 'data-y' and 'data-y-low' properties must be equal");
   }
 
+  /* set late defaults */
+  if (c->colors.empty()) {
+    c->colors.push_back(env.border_color);
+  }
+
   /* return element */
   *elem = std::make_shared<Element>();
   (*elem)->draw = bind(&draw, c, _1, _2);

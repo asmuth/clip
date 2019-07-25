@@ -231,6 +231,11 @@ ReturnCode build(
         "the length of the 'data-x' and 'data-y' properties must be equal");
   }
 
+  /* set late defaults */
+  if (c->colors.empty()) {
+    c->colors.push_back(env.border_color);
+  }
+
   /* group data */
   {
     DataGroup g;
