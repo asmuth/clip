@@ -159,10 +159,28 @@ ReturnCode build(
     {"margin-right", bind(&expr_to_measure, _1, &config->margins[1])},
     {"margin-bottom", bind(&expr_to_measure, _1, &config->margins[2])},
     {"margin-left", bind(&expr_to_measure, _1, &config->margins[3])},
+    {
+      "border-color",
+      expr_calln_fn({
+        bind(&expr_to_color, _1, &config->borders[0].color),
+        bind(&expr_to_color, _1, &config->borders[1].color),
+        bind(&expr_to_color, _1, &config->borders[2].color),
+        bind(&expr_to_color, _1, &config->borders[3].color),
+      })
+    },
     {"border-top-color", bind(&expr_to_color, _1, &config->borders[0].color)},
     {"border-right-color", bind(&expr_to_color, _1, &config->borders[1].color)},
     {"border-bottom-color", bind(&expr_to_color, _1, &config->borders[2].color)},
     {"border-left-color", bind(&expr_to_color, _1, &config->borders[3].color)},
+    {
+      "border-width",
+      expr_calln_fn({
+        bind(&expr_to_measure, _1, &config->borders[0].width),
+        bind(&expr_to_measure, _1, &config->borders[1].width),
+        bind(&expr_to_measure, _1, &config->borders[2].width),
+        bind(&expr_to_measure, _1, &config->borders[3].width),
+      })
+    },
     {"border-top-width", bind(&expr_to_measure, _1, &config->borders[0].width)},
     {"border-right-width", bind(&expr_to_measure, _1, &config->borders[1].width)},
     {"border-bottom-width", bind(&expr_to_measure, _1, &config->borders[2].width)},
@@ -187,5 +205,5 @@ ReturnCode build(
   return OK;
 }
 
-} // namespace fviz::elements::layout::margins
+} // namespace fviz::elements::layout::box
 

@@ -21,5 +21,5 @@ ReturnCode build(
     const Expr* expr,
     ElementRef* elem);
 
-} // namespace fviz::elements::layout::padding
+} // namespace fviz::elements::layout::box
 
