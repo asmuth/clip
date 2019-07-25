@@ -28,6 +28,9 @@ enum DefaultFont {
   ROMAN_SERIF_REGULAR,
   ROMAN_SERIF_MEDIUM,
   ROMAN_SERIF_BOLD,
+  ROMAN_MONOSPACE_REGULAR,
+  ROMAN_MONOSPACE_MEDIUM,
+  ROMAN_MONOSPACE_BOLD,
 };
 
 ReturnCode font_load(DefaultFont font_name, FontInfo* font_info);

@@ -75,20 +75,26 @@ ReturnCode font_load(DefaultFont font_name, FontInfo* font_info) {
       break;
 
     case ROMAN_SERIF_REGULAR:
-      font_fc = "CMU Serif,serif:style=Regular,Roman";
-      font_info->font_family_css = "'CMU Serif', serif";
+      font_fc = "Times New Romain,serif:style=Regular,Roman";
+      font_info->font_family_css = "'Times New Roman', serif";
       font_info->font_weight_css = 400;
       break;
 
-    case ROMAN_SERIF_MEDIUM:
-      font_fc = "CMU Serif,serif:style=Regular,Roman";
-      font_info->font_family_css = "'CMU Serif', serif";
-      font_info->font_weight_css = 500;
+    case ROMAN_SERIF_BOLD:
+      font_fc = "Times New Roman,serif:style=Bold,Roman";
+      font_info->font_family_css = "'Times New Roman', serif";
+      font_info->font_weight_css = 600;
       break;
 
-    case ROMAN_SERIF_BOLD:
-      font_fc = "CMU Serif,serif:style=Regular,Roman";
-      font_info->font_family_css = "'CMU Serif', serif";
+    case ROMAN_MONOSPACE_REGULAR:
+      font_fc = "Courier,serif:style=Regular,Roman";
+      font_info->font_family_css = "'Courier', monospace";
+      font_info->font_weight_css = 400;
+      break;
+
+    case ROMAN_MONOSPACE_BOLD:
+      font_fc = "Courier,serif:style=Bold,Roman";
+      font_info->font_family_css = "'Courier', monospace";
       font_info->font_weight_css = 600;
       break;
   }
@@ -118,13 +124,17 @@ ReturnCode font_configure(const Expr* expr, FontInfo* font_info) {
       expr_is_value(expr, "roman-serif-regular")) {
     return font_load(ROMAN_SERIF_REGULAR, font_info);
   }
-
-  if (expr_is_value(expr, "roman-serif-medium")) {
-    return font_load(ROMAN_SERIF_MEDIUM, font_info);
-  }
-
   if (expr_is_value(expr, "roman-serif-bold")) {
     return font_load(ROMAN_SERIF_BOLD, font_info);
+  }
+
+  if (expr_is_value(expr, "roman-monospace") ||
+      expr_is_value(expr, "roman-monospace-regular")) {
+    return font_load(ROMAN_MONOSPACE_REGULAR, font_info);
+  }
+
+  if (expr_is_value(expr, "roman-monospace-bold")) {
+    return font_load(ROMAN_MONOSPACE_BOLD, font_info);
   }
 
   std::vector<std::string> font_names;
