@@ -1,17 +1,17 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="900.000000" height="480.000000" viewBox="0 0 900 480">
   <rect width="900.000000" height="480.000000" fill="#ffffff"/>
-  <path stroke-width="2.500000" stroke="#000000" fill="none" d="M519.212 151.708 M509.212 151.708 a5 5 0 1 0 10 0 a5 5 0 1 0 -10 0 "/>
-  <path stroke-width="11.500000" stroke="#000000" fill="none" d="M569.318 335.356 M523.318 335.356 a23 23 0 1 0 46 0 a23 23 0 1 0 -46 0 "/>
-  <path stroke-width="5.500000" stroke="#000000" fill="none" d="M589.425 119.923 M567.425 119.923 a11 11 0 1 0 22 0 a11 11 0 1 0 -22 0 "/>
-  <path stroke-width="4.500000" stroke="#000000" fill="none" d="M651.637 338.887 M633.637 338.887 a9 9 0 1 0 18 0 a9 9 0 1 0 -18 0 "/>
-  <path stroke-width="7.000000" stroke="#000000" fill="none" d="M720.849 183.493 M692.849 183.493 a14 14 0 1 0 28 0 a14 14 0 1 0 -28 0 "/>
-  <path stroke-width="4.000000" stroke="#000000" fill="none" d="M779.061 155.24 M763.061 155.24 a8 8 0 1 0 16 0 a8 8 0 1 0 -16 0 "/>
-  <path stroke-width="2.500000" stroke="#000000" fill="none" d="M390.788 151.708 M380.788 151.708 a5 5 0 1 0 10 0 a5 5 0 1 0 -10 0 "/>
-  <path stroke-width="4.000000" stroke="#000000" fill="none" d="M361.682 208.215 M345.682 208.215 a8 8 0 1 0 16 0 a8 8 0 1 0 -16 0 "/>
-  <path stroke-width="11.500000" stroke="#000000" fill="none" d="M344.575 285.912 M298.575 285.912 a23 23 0 1 0 46 0 a23 23 0 1 0 -46 0 "/>
-  <path stroke-width="1.000000" stroke="#000000" fill="none" d="M259.363 204.683 M255.363 204.683 a2 2 0 1 0 4 0 a2 2 0 1 0 -4 0 "/>
-  <path stroke-width="2.000000" stroke="#000000" fill="none" d="M197.151 360.077 M189.151 360.077 a4 4 0 1 0 8 0 a4 4 0 1 0 -8 0 "/>
-  <path stroke-width="8.500000" stroke="#000000" fill="none" d="M145.939 353.014 M111.939 353.014 a17 17 0 1 0 34 0 a17 17 0 1 0 -34 0 "/>
+  <path stroke-width="1.250000" stroke="#000000" fill="none" d="M516.712 151.708 M511.712 151.708 a2.5 2.5 0 1 0 5 0 a2.5 2.5 0 1 0 -5 0 "/>
+  <path stroke-width="5.750000" stroke="#000000" fill="none" d="M557.818 335.356 M534.818 335.356 a11.5 11.5 0 1 0 23 0 a11.5 11.5 0 1 0 -23 0 "/>
+  <path stroke-width="2.750000" stroke="#000000" fill="none" d="M583.925 119.923 M572.925 119.923 a5.5 5.5 0 1 0 11 0 a5.5 5.5 0 1 0 -11 0 "/>
+  <path stroke-width="2.250000" stroke="#000000" fill="none" d="M647.137 338.887 M638.137 338.887 a4.5 4.5 0 1 0 9 0 a4.5 4.5 0 1 0 -9 0 "/>
+  <path stroke-width="3.500000" stroke="#000000" fill="none" d="M713.849 183.493 M699.849 183.493 a7 7 0 1 0 14 0 a7 7 0 1 0 -14 0 "/>
+  <path stroke-width="2.000000" stroke="#000000" fill="none" d="M775.061 155.24 M767.061 155.24 a4 4 0 1 0 8 0 a4 4 0 1 0 -8 0 "/>
+  <path stroke-width="1.250000" stroke="#000000" fill="none" d="M388.288 151.708 M383.288 151.708 a2.5 2.5 0 1 0 5 0 a2.5 2.5 0 1 0 -5 0 "/>
+  <path stroke-width="2.000000" stroke="#000000" fill="none" d="M357.682 208.215 M349.682 208.215 a4 4 0 1 0 8 0 a4 4 0 1 0 -8 0 "/>
+  <path stroke-width="5.750000" stroke="#000000" fill="none" d="M333.075 285.912 M310.075 285.912 a11.5 11.5 0 1 0 23 0 a11.5 11.5 0 1 0 -23 0 "/>
+  <path stroke-width="0.500000" stroke="#000000" fill="none" d="M258.363 204.683 M256.363 204.683 a1 1 0 1 0 2 0 a1 1 0 1 0 -2 0 "/>
+  <path stroke-width="1.000000" stroke="#000000" fill="none" d="M195.151 360.077 M191.151 360.077 a2 2 0 1 0 4 0 a2 2 0 1 0 -4 0 "/>
+  <path stroke-width="4.250000" stroke="#000000" fill="none" d="M137.439 353.014 M120.439 353.014 a8.5 8.5 0 1 0 17 0 a8.5 8.5 0 1 0 -17 0 "/>
   <path stroke-width="1.333333" stroke="#333333" fill="none" d="M64.7264 49.2889 L835.274 49.2889 "/>
   <path stroke-width="1.333333" stroke="#333333" fill="none" d="M64.7264 49.2889 L64.7264 54.6222 "/>
   <path stroke-width="1.333333" stroke="#333333" fill="none" d="M141.781 49.2889 L141.781 54.6222 "/>

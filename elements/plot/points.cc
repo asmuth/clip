@@ -31,9 +31,7 @@ using namespace std::placeholders;
 
 namespace fviz::elements::plot::points {
 
-static const double kDefaultPointSizePT = 2;
-static const double kDefaultPointSizeMinPT = 1;
-static const double kDefaultPointSizeMaxPT = 24;
+static const double kDefaultPointSizePT = 4;
 static const double kDefaultLabelPaddingEM = 0.4;
 
 struct PlotPointsConfig {
@@ -114,7 +112,7 @@ ReturnCode draw(
         ? 0
         : config->sizes[i % config->sizes.size()].value;
 
-    auto label_padding = size + measure_or(
+    auto label_padding = size * 0.5 + measure_or(
         config->label_padding,
         from_em(kDefaultLabelPaddingEM, config->label_font_size));
 
