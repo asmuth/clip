@@ -133,6 +133,7 @@ ReturnCode legend_layout_item_flow(
   double m_width = 0;
   double m_height = 0;
 
+  size_t r_begin = item_boxes->size();
   double r_width = 0;
   double r_height = 0;
   for (const auto& e : config.items) {
@@ -154,6 +155,7 @@ ReturnCode legend_layout_item_flow(
       m_height += r_height + config.item_row_padding;
       r_width = 0;
       r_height = 0;
+      r_begin = item_boxes->size();
     }
 
     Rectangle item_box;
@@ -169,6 +171,11 @@ ReturnCode legend_layout_item_flow(
     r_width += e_width;
     r_height = std::max(r_height, e_height);
     m_width = std::max(m_width, r_width);
+
+    // not a problem since rows are O(10^1)
+    for (size_t i = r_begin; i < item_boxes->size(); ++i) {
+      item_boxes->at(i).h = r_height;
+    }
   }
 
   *min_width = m_width;

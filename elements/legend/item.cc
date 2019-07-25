@@ -64,7 +64,7 @@ void normalize(
 
   convert_unit_typographic(
       layer.dpi,
-      config->label_font_size,
+      config->marker_size,
       &config->marker_margin);
 }
 
