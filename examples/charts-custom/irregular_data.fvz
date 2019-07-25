@@ -15,5 +15,5 @@
     legend-overlay (
         position (bottom left)
         background #fff
-        item (label "Series A" color #ccc)
-        item (label "Series B" color #888)))
+        item (label "Series A" color #06c)
+        item (label "Series B" color #c06)))

@@ -7,6 +7,5 @@
     scale-y-padding 15
     axes (bottom left)
     grid (color #fff)
-    legend-overlay (item (label "Random Data"))
     background #eee
     border none)

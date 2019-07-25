@@ -19,8 +19,9 @@
         data-y (1.23 10.32 -6.23 4.43 3.45)
         marker-size (3pt))
     legend-overlay (
-        position (bottom left)
-        background #fff
+        position (bottom right)
+        item-flow on
         item (label "Series A" color #ccc)
-        item (label "Series B" color #888)))
+        item (label "Series B" color #888)
+        item (label "Combined" color #000)))
 

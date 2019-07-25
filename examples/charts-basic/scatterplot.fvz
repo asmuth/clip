@@ -6,6 +6,5 @@
     axis-y-label-placement (subdivide 5)
     axes (bottom left)
     grid (color #fff)
-    legend-overlay (item (label "Random Data"))
     background #eee
     border none)
