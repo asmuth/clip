@@ -119,6 +119,25 @@ ReturnCode expr_to_float64_opt_pair(
   return OK;
 }
 
+ReturnCode expr_to_switch(
+    const Expr* expr,
+    bool* value) {
+  if (expr_is_value(expr, "on")) {
+    *value = true;
+    return OK;
+  }
+
+  if (expr_is_value(expr, "off")) {
+    *value = false;
+    return OK;
+  }
+
+  return errorf(
+      ERROR,
+      "argument error; expected 'on' or 'off', got: {}",
+      expr_inspect(expr));
+}
+
 ReturnCode expr_to_measure(
     const Expr* expr,
     Measure* value) {
@@ -126,7 +145,7 @@ ReturnCode expr_to_measure(
     return errorf(
         ERROR,
         "argument error; expected a value, got: {}",
-        "..."); // FIXME
+        expr_inspect(expr));
   }
 
   return parse_measure(expr_get_value(expr), value);

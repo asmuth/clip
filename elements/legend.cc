@@ -35,6 +35,7 @@ struct LegendConfig {
   VAlign position_vert;
   Measure item_row_padding;
   Measure item_column_padding;
+  bool item_flow;
   std::array<Measure, 4> margins;
   std::array<Measure, 4> padding;
   std::array<StrokeStyle, 4> borders;
@@ -49,7 +50,8 @@ struct LegendItemConfig {
 
 LegendConfig::LegendConfig() :
     position_horiz(HAlign::LEFT),
-    position_vert(VAlign::TOP) {}
+    position_vert(VAlign::TOP),
+    item_flow(false) {}
 
 
 void legend_normalize(
@@ -104,31 +106,95 @@ ReturnCode legend_layout_item_rows(
     m_height += config.item_row_padding * (config.items.size() - 1);
   }
 
-
   *min_width = m_width;
   *min_height = m_height;
+  return OK;
+}
+
+ReturnCode legend_layout_item_flow(
+    const LegendConfig& config,
+    const Layer& layer,
+    const std::optional<double> max_width,
+    const std::optional<double> max_height,
+    double* min_width,
+    double* min_height) {
+  /* calculate vertical size */
+  double m_width = 0;
+  double m_height = 0;
+
+  double r_width = 0;
+  double r_height = 0;
+  for (const auto& e : config.items) {
+    if (!e->size_hint) {
+      continue; // FIXME warn
+    }
+
+    double e_width = 0;
+    double e_height = 0;
+    if (auto rc = e->size_hint(layer, {}, {}, &e_width, &e_height); !rc) {
+      return rc;
+    }
+
+    if (r_width > 0) {
+      r_width += config.item_column_padding;
+    }
+
+    if (max_width && r_width + e_width > max_width) {
+      m_height += r_height + config.item_row_padding;
+      r_width = 0;
+      r_height = 0;
+    }
+
+    r_width += e_width;
+    r_height = std::max(r_height, e_height);
+    m_width = std::max(m_width, r_width);
+  }
+
+  *min_width = m_width;
+  *min_height = m_height + r_height;
   return OK;
 }
 
 ReturnCode legend_layout(
     std::shared_ptr<LegendConfig> config,
     const Layer& layer,
-    const std::optional<double> max_width,
-    const std::optional<double> max_height,
+    std::optional<double> max_width,
+    std::optional<double> max_height,
     double* min_width,
     double* min_height) {
   /* convert units  */
   legend_normalize(config, layer);
 
+  /* remove padding */
+  if (max_width) {
+    max_width = *max_width - (config->padding[1] + config->padding[3]);
+  }
+
+  if (max_height) {
+    max_height = *max_width - (config->padding[0] + config->padding[2]);
+  }
+
   /* add item extents */
-  auto layout_rc =
-      legend_layout_item_rows(
-          *config,
-          layer,
-          max_width,
-          max_height,
-          min_width,
-          min_height);
+  ReturnCode layout_rc;
+  if (config->item_flow) {
+    layout_rc =
+        legend_layout_item_flow(
+            *config,
+            layer,
+            max_width,
+            max_height,
+            min_width,
+            min_height);
+  } else {
+    layout_rc =
+        legend_layout_item_rows(
+            *config,
+            layer,
+            max_width,
+            max_height,
+            min_width,
+            min_height);
+  }
 
   if (!layout_rc) {
     return layout_rc;
@@ -201,13 +267,17 @@ ReturnCode legend_draw_borders(
   return OK;
 }
 
-ReturnCode legend_draw_items(
+ReturnCode legend_draw_items_rows(
     const LegendConfig& config,
     const Rectangle& bbox,
     Layer* layer) {
   double voffset = 0;
 
   for (const auto& e : config.items) {
+    if (!e->size_hint) {
+      continue; // FIXME warn
+    }
+
     double pw = bbox.w;
     double ph = bbox.h;
     double ew = 0;
@@ -228,6 +298,51 @@ ReturnCode legend_draw_items(
 
     voffset += eh;
     voffset += config.item_row_padding;
+  }
+
+  return OK;
+}
+
+ReturnCode legend_draw_items_flow(
+    const LegendConfig& config,
+    const Rectangle& bbox,
+    Layer* layer) {
+  double r_width = 0;
+  double r_height = 0;
+  double r_offset = 0;
+  for (const auto& e : config.items) {
+    if (!e->size_hint) {
+      continue; // FIXME warn
+    }
+
+    double e_width = 0;
+    double e_height = 0;
+    if (auto rc = e->size_hint(*layer, {}, {}, &e_width, &e_height); !rc) {
+      return rc;
+    }
+
+    if (r_width > 0) {
+      r_width += config.item_column_padding;
+    }
+
+    if (r_width + e_width > bbox.w) {
+      r_offset += r_height + config.item_row_padding;
+      r_width = 0;
+      r_height = 0;
+    }
+
+    LayoutInfo layout;
+    layout.content_box.x = bbox.x + r_width;
+    layout.content_box.y = bbox.y + r_offset;
+    layout.content_box.w = e_width;
+    layout.content_box.h = e_height;
+
+    if (auto rc = e->draw(layout, layer); !rc) {
+      return rc;
+    }
+
+    r_width += e_width;
+    r_height = std::max(r_height, e_height);
   }
 
   return OK;
@@ -313,8 +428,14 @@ ReturnCode legend_draw(
   }
 
   /* draw items */
-  if (auto rc = legend_draw_items(*config, content_box, layer); !rc) {
-    return rc;
+  if (config->item_flow) {
+    if (auto rc = legend_draw_items_flow(*config, content_box, layer); !rc) {
+      return rc;
+    }
+  } else {
+    if (auto rc = legend_draw_items_rows(*config, content_box, layer); !rc) {
+      return rc;
+    }
   }
 
   return OK;
@@ -411,6 +532,7 @@ ReturnCode build(
     },
     {"item-row-padding", bind(&expr_to_measure, _1, &config->item_row_padding)},
     {"item-column-padding", bind(&expr_to_measure, _1, &config->item_column_padding)},
+    {"item-flow", bind(&expr_to_switch, _1, &config->item_flow)},
     {"item", bind(&configure_item, "legend/item", _1, &items)},
     {"extra", bind(&element_build_list, env, _1, &config->items)},
     {

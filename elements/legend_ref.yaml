@@ -24,6 +24,11 @@ properties:
           element for options.
         desc_code: |
           item (<options>)
+      - name: item-flow
+        desc: |
+          Enable flowing/inline item layout.
+        desc_code: |
+          item-flow [on|off]
       - name: item-column-padding
         desc: |
           Set the item column padding. See the [measure](#FIXME) page
