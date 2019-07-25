@@ -569,3 +569,8 @@ table.invisible tr, table.invisible td {
 #documentation .example_grid img {
   max-height: 20em;
 }
+
+#documentation .picto {
+  width: 1.4em;
+  display: inline-block;
+}

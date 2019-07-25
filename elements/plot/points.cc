@@ -18,6 +18,7 @@
 #include "sexpr_util.h"
 #include "core/environment.h"
 #include "core/layout.h"
+#include "core/marker.h"
 #include "core/scale.h"
 #include "graphics/path.h"
 #include "graphics/brush.h"
@@ -42,6 +43,7 @@ struct PlotPointsConfig {
   ScaleConfig scale_y;
   std::vector<Color> colors;
   std::vector<Measure> sizes;
+  std::vector<Marker> shapes;
   std::vector<std::string> labels;
   FontInfo label_font;
   Measure label_padding;
@@ -82,7 +84,7 @@ ReturnCode draw(
       &*config->sizes.begin(),
       &*config->sizes.end());
 
-  /* draw points */
+  /* draw markers */
   for (size_t i = 0; i < config->x.size(); ++i) {
     auto sx = clip.x + config->x[i];
     auto sy = clip.y + clip.h - config->y[i];
@@ -95,14 +97,13 @@ ReturnCode draw(
         ? from_pt(kDefaultPointSizePT, layer->dpi)
         : config->sizes[i % config->sizes.size()];
 
-    FillStyle style;
-    style.color = color;
+    auto shape = config->shapes.empty()
+        ? marker_create_disk()
+        : config->shapes[i % config->shapes.size()];
 
-    // TODO point style
-    Path path;
-    path.moveTo(sx + size, sy);
-    path.arcTo(sx, sy, size, 0, M_PI * 2);
-    fillPath(layer, clip, path, style);
+    if (auto rc = shape(Point(sx, sy), size, color, layer); !rc) {
+      return rc;
+    }
   }
 
   /* draw labels */
@@ -164,6 +165,8 @@ ReturnCode build(
     {"scale-y-padding", bind(&expr_to_float64, _1, &c->scale_y.padding)},
     {"marker-size", bind(&data_load, _1, &c->sizes)},
     {"marker-sizes", bind(&data_load, _1, &c->sizes)},
+    {"marker-shape", bind(&marker_configure_list, _1, &c->shapes)},
+    {"marker-shapes", bind(&marker_configure_list, _1, &c->shapes)},
     {"color", expr_tov_fn<Color>(bind(&expr_to_color, _1, _2), &c->colors)},
     {"colors", expr_tov_fn<Color>(bind(&expr_to_color, _1, _2), &c->colors)},
     {"labels", bind(&data_load_strings, _1, &c->labels)},

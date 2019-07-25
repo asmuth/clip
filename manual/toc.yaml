@@ -78,6 +78,10 @@ documentation:
           title: "Formatters"
           url: "/documentation/format"
           file: "reference/format"
+        -
+          title: "Marker Shapes"
+          url: "/documentation/marker-shapes"
+          file: "reference/marker_shape"
   #    #-
   #    #  title: "Colours"
   #    #  url: "/documentation/color-palette"

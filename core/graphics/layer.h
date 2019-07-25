@@ -21,6 +21,7 @@
 #include "text_shaper.h"
 #include "measure.h"
 #include "layer_ops.h"
+#include "font_lookup.h"
 
 namespace fviz {
 
@@ -45,6 +46,7 @@ struct Layer {
   const double width;
   const double height;
   double dpi;
+  FontInfo font;
   Measure font_size;
   const std::shared_ptr<text::TextShaper> text_shaper;
   const std::function<Status (const layer_ops::Op&)> apply;

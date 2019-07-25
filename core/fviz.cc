@@ -115,6 +115,7 @@ int fviz_configure_file(
 
 int fviz_render_to(fviz_t* ctx, void* backend) {
   auto layer = static_cast<Layer*>(backend);
+  layer->font = ctx->env.font;
 
   LayoutInfo layout;
   layout.content_box = layout_margin_box(

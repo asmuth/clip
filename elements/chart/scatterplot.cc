@@ -43,6 +43,8 @@ ReturnCode build(
     {"colors", bind(&expr_rewritev, _1, "colors", &geom_opts)},
     {"marker-size", bind(&expr_rewritev, _1, "marker-size", &geom_opts)},
     {"marker-sizes", bind(&expr_rewritev, _1, "marker-sizes", &geom_opts)},
+    {"marker-shape", bind(&expr_rewritev, _1, "marker-shape", &geom_opts)},
+    {"marker-shapes", bind(&expr_rewritev, _1, "marker-shapes", &geom_opts)},
     {"labels", bind(&expr_rewritev, _1, "labels", &geom_opts)},
     {"label-font-size", bind(&expr_rewritev, _1, "label-font-size", &geom_opts)},
 

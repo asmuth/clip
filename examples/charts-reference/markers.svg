@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900.000000" height="480.000000" viewBox="0 0 900 480">
+  <rect width="900.000000" height="480.000000" fill="#ffffff"/>
+  <path stroke-width="1.600000" stroke="#000000" fill="none" d="M47.1111 39.1111 M31.1111 39.1111 a8 8 0 1 0 16 0 a8 8 0 1 0 -16 0 "/>
+  <path fill="#000000" d="M164.508 39.1111 M148.508 39.1111 a8 8 0 1 0 16 0 a8 8 0 1 0 -16 0 "/>
+  <text x="267.904762" y="44.611111" fill="#000000" font-size="16.000000" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif">⬢</text>
+  <text x="385.301587" y="44.611111" fill="#000000" font-size="16.000000" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif">⬡</text>
+  <text x="21.978299" y="13.244444" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif">circle</text>
+  <text x="143.453249" y="13.244444" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif">disk</text>
+  <text x="245.764137" y="13.244444" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif">hexagon</text>
+  <text x="356.637525" y="13.244444" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif">hexagon-o</text>
+</svg>

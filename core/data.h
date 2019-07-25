@@ -17,6 +17,7 @@
 #include "return_code.h"
 #include "graphics/measure.h"
 #include "scale.h"
+#include "sexpr_conv.h"
 
 namespace fviz {
 
@@ -65,10 +66,18 @@ ReturnCode data_load(
     const Expr* expr,
     std::vector<Measure>* values);
 
+template <typename T>
+ReturnCode data_load_as(
+    const Expr* expr,
+    ExprConvTo<T> conv,
+    std::vector<T>* dst);
+
 ReturnCode data_to_measures(
     std::vector<std::string>& src,
     const ScaleConfig& scale,
     std::vector<Measure>* dst);
 
 } // namespace fviz
+
+#include "data_impl.h"
 

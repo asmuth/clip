@@ -1,0 +1,20 @@
+(set margin 1em)
+
+(chart/scatterplot
+    axes (none)
+    limit-x (0 7)
+    limit-y (0 2)
+    data-x (0 1 2 3)
+    data-y (0 0 0 0)
+    scale-y (invert)
+    marker-shapes (
+        (circle)
+        (disk)
+        (hexagon)
+        (hexagon-o))
+    labels (
+        "circle"
+        "disk"
+        "hexagon"
+        "hexagon-o")
+    marker-size (16px))
