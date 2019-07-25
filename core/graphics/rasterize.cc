@@ -64,8 +64,6 @@ Status Rasterizer::fillPath(const layer_ops::BrushFillOp& op) {
      style.color.blue(),
      style.color.alpha());
 
-  cairo_rectangle(cr_ctx, clip.x, clip.y, clip.w, clip.h);
-  cairo_clip(cr_ctx);
   cairo_new_path(cr_ctx);
 
   for (const auto& cmd : path) {
@@ -107,8 +105,6 @@ Status Rasterizer::strokePath(const layer_ops::BrushStrokeOp& op) {
 
   cairo_set_line_width(cr_ctx, style.line_width);
 
-  cairo_rectangle(cr_ctx, clip.x, clip.y, clip.w, clip.h);
-  cairo_clip(cr_ctx);
   cairo_new_path(cr_ctx);
 
   for (const auto& cmd : path) {
