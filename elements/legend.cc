@@ -75,7 +75,8 @@ ReturnCode legend_layout_item_rows(
     const std::optional<double> max_width,
     const std::optional<double> max_height,
     double* min_width,
-    double* min_height) {
+    double* min_height,
+    std::vector<Rectangle>* item_boxes) {
   /* calculate vertical size */
   double m_width = 0;
   double m_height = 0;
@@ -97,13 +98,22 @@ ReturnCode legend_layout_item_rows(
       return rc;
     }
 
+    if (m_height > 0) {
+      m_height += config.item_row_padding;
+    }
+
+    Rectangle item_box;
+    item_box.x = 0;
+    item_box.y = m_height;
+    item_box.w = e_width;
+    item_box.h = e_height;
+
+    if (item_boxes) {
+      item_boxes->push_back(item_box);
+    }
+
     m_width = std::max(m_width, e_width);
     m_height += e_height;
-  }
-
-  /* add item padding */
-  if (config.items.size() > 1) {
-    m_height += config.item_row_padding * (config.items.size() - 1);
   }
 
   *min_width = m_width;
@@ -117,7 +127,8 @@ ReturnCode legend_layout_item_flow(
     const std::optional<double> max_width,
     const std::optional<double> max_height,
     double* min_width,
-    double* min_height) {
+    double* min_height,
+    std::vector<Rectangle>* item_boxes) {
   /* calculate vertical size */
   double m_width = 0;
   double m_height = 0;
@@ -145,6 +156,16 @@ ReturnCode legend_layout_item_flow(
       r_height = 0;
     }
 
+    Rectangle item_box;
+    item_box.x = r_width;
+    item_box.y = m_height;
+    item_box.w = e_width;
+    item_box.h = e_height;
+
+    if (item_boxes) {
+      item_boxes->push_back(item_box);
+    }
+
     r_width += e_width;
     r_height = std::max(r_height, e_height);
     m_width = std::max(m_width, r_width);
@@ -161,7 +182,8 @@ ReturnCode legend_layout(
     std::optional<double> max_width,
     std::optional<double> max_height,
     double* min_width,
-    double* min_height) {
+    double* min_height,
+    std::vector<Rectangle>* item_boxes) {
   /* convert units  */
   legend_normalize(config, layer);
 
@@ -184,7 +206,8 @@ ReturnCode legend_layout(
             max_width,
             max_height,
             min_width,
-            min_height);
+            min_height,
+            item_boxes);
   } else {
     layout_rc =
         legend_layout_item_rows(
@@ -193,7 +216,8 @@ ReturnCode legend_layout(
             max_width,
             max_height,
             min_width,
-            min_height);
+            min_height,
+            item_boxes);
   }
 
   if (!layout_rc) {
@@ -267,82 +291,21 @@ ReturnCode legend_draw_borders(
   return OK;
 }
 
-ReturnCode legend_draw_items_rows(
+ReturnCode legend_draw_items(
     const LegendConfig& config,
     const Rectangle& bbox,
+    const std::vector<Rectangle>& item_boxes,
     Layer* layer) {
-  double voffset = 0;
-
-  for (const auto& e : config.items) {
-    if (!e->size_hint) {
-      continue; // FIXME warn
-    }
-
-    double pw = bbox.w;
-    double ph = bbox.h;
-    double ew = 0;
-    double eh = 0;
-    if (auto rc = e->size_hint(*layer, pw, ph, &ew, &eh); !rc) {
-      return rc;
-    }
-
+  for (size_t i = 0; i < std::min(config.items.size(), item_boxes.size()); ++i) {
     LayoutInfo layout;
-    layout.content_box.x = bbox.x;
-    layout.content_box.y = bbox.y + voffset;
-    layout.content_box.w = bbox.w;
-    layout.content_box.h = std::max(0.0, eh);
+    layout.content_box.x = bbox.x + item_boxes[i].x;
+    layout.content_box.y = bbox.y + item_boxes[i].y;
+    layout.content_box.w = item_boxes[i].w;
+    layout.content_box.h = item_boxes[i].h;
 
-    if (auto rc = e->draw(layout, layer); !rc) {
+    if (auto rc = config.items[i]->draw(layout, layer); !rc) {
       return rc;
     }
-
-    voffset += eh;
-    voffset += config.item_row_padding;
-  }
-
-  return OK;
-}
-
-ReturnCode legend_draw_items_flow(
-    const LegendConfig& config,
-    const Rectangle& bbox,
-    Layer* layer) {
-  double r_width = 0;
-  double r_height = 0;
-  double r_offset = 0;
-  for (const auto& e : config.items) {
-    if (!e->size_hint) {
-      continue; // FIXME warn
-    }
-
-    double e_width = 0;
-    double e_height = 0;
-    if (auto rc = e->size_hint(*layer, {}, {}, &e_width, &e_height); !rc) {
-      return rc;
-    }
-
-    if (r_width > 0) {
-      r_width += config.item_column_padding;
-    }
-
-    if (r_width + e_width > bbox.w) {
-      r_offset += r_height + config.item_row_padding;
-      r_width = 0;
-      r_height = 0;
-    }
-
-    LayoutInfo layout;
-    layout.content_box.x = bbox.x + r_width;
-    layout.content_box.y = bbox.y + r_offset;
-    layout.content_box.w = e_width;
-    layout.content_box.h = e_height;
-
-    if (auto rc = e->draw(layout, layer); !rc) {
-      return rc;
-    }
-
-    r_width += e_width;
-    r_height = std::max(r_height, e_height);
   }
 
   return OK;
@@ -364,12 +327,13 @@ ReturnCode legend_draw(
       config->margins[3]);
 
   Rectangle border_box;
+  std::vector<Rectangle> item_boxes;
   {
     auto pw = parent_box.w;
     auto ph = parent_box.h;
     double ew = 0;
     double eh = 0;
-    if (auto rc = legend_layout(config, *layer, pw, ph, &ew, &eh); !rc) {
+    if (auto rc = legend_layout(config, *layer, pw, ph, &ew, &eh, &item_boxes); !rc) {
       return rc;
     }
 
@@ -428,14 +392,8 @@ ReturnCode legend_draw(
   }
 
   /* draw items */
-  if (config->item_flow) {
-    if (auto rc = legend_draw_items_flow(*config, content_box, layer); !rc) {
-      return rc;
-    }
-  } else {
-    if (auto rc = legend_draw_items_rows(*config, content_box, layer); !rc) {
-      return rc;
-    }
+  if (auto rc = legend_draw_items(*config, content_box, item_boxes, layer); !rc) {
+    return rc;
   }
 
   return OK;
@@ -619,7 +577,7 @@ ReturnCode build(
 
   *elem = std::make_shared<Element>();
   (*elem)->draw = bind(&legend_draw, config, _1, _2);
-  (*elem)->size_hint = bind(&legend_layout, config, _1, _2, _3, _4, _5);
+  (*elem)->size_hint = bind(&legend_layout, config, _1, _2, _3, _4, _5, nullptr);
   return OK;
 }
 
