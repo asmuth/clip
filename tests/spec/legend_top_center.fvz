@@ -1,4 +1,0 @@
-(chart/legend
-    items ("New York" "北京市   " "Москва" "Berlin")
-    colors (#4572a7 #aa4643 #89a54e #80699b)
-    position (top center))

@@ -13,4 +13,4 @@
     axis-y-label-placement (linear-alignat 5 -10)
     color (#06c)
     marker-size (3pt)
-    legend (items ("London") colors (#06c) position (bottom left)))
+    legend-overlay (item (label "London" color #06c) position (bottom left)))

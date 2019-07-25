@@ -2,10 +2,15 @@
   <rect width="1200.000000" height="480.000000" fill="#ffffff"/>
   <path fill="#cccccc" d="M64.7264 85.3404 L204.191 68.8942 L343.656 48.3364 L622.585 89.452 L901.515 138.791 L1180.44 89.452 L1180.44 356.703 L901.515 299.141 L622.585 323.811 L343.656 307.364 L204.191 348.48 L64.7264 364.926 "/>
   <path fill="#888888" d="M64.7264 97.6751 L204.191 89.452 L343.656 68.8942 L622.585 114.121 L901.515 171.683 L1180.44 101.787 L1180.44 299.141 L901.515 253.914 L622.585 307.364 L343.656 286.807 L204.191 307.364 L64.7264 323.811 "/>
-  <path fill="#cccccc" d="M98.6264 402.844 M88.6264 402.844 a5 5 0 1 0 10 0 a5 5 0 1 0 -10 0 "/>
-  <text x="105.126389" y="407.844444" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif">Series A</text>
-  <path fill="#888888" d="M202.467 402.844 M192.467 402.844 a5 5 0 1 0 10 0 a5 5 0 1 0 -10 0 "/>
-  <text x="208.967014" y="407.844444" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif">Series B</text>
+  <path fill="#ffffff" d="M84.2819 338 L200.357 338 L200.357 411.156 L84.2819 411.156 L84.2819 338 "/>
+  <path stroke-width="1.000000" stroke="#333333" fill="none" d="M84.2819 338 L200.357 338 "/>
+  <path stroke-width="1.000000" stroke="#333333" fill="none" d="M200.357 338 L200.357 411.156 "/>
+  <path stroke-width="1.000000" stroke="#333333" fill="none" d="M84.2819 411.156 L200.357 411.156 "/>
+  <path stroke-width="1.000000" stroke="#333333" fill="none" d="M84.2819 338 L84.2819 411.156 "/>
+  <text x="125.348611" y="367.644444" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif">Series A</text>
+  <path fill="#cccccc" d="M113.249 362.644 M102.249 362.644 a5.5 5.5 0 1 0 11 0 a5.5 5.5 0 1 0 -11 0 "/>
+  <text x="125.348611" y="391.511111" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif">Series B</text>
+  <path fill="#888888" d="M113.249 386.511 M102.249 386.511 a5.5 5.5 0 1 0 11 0 a5.5 5.5 0 1 0 -11 0 "/>
   <path stroke-width="1.333333" stroke="#333333" fill="none" d="M64.7264 430.711 L1180.44 430.711 "/>
   <path stroke-width="1.333333" stroke="#333333" fill="none" d="M64.7264 425.378 L64.7264 430.711 "/>
   <path stroke-width="1.333333" stroke="#333333" fill="none" d="M176.298 425.378 L176.298 430.711 "/>

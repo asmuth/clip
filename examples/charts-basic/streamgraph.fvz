@@ -14,7 +14,8 @@
         data-y (csv "tests/testdata/areadata2.csv" z2)
         data-y-low (csv "tests/testdata/areadata2.csv" y2)
         color (#888))
-    legend (
-        items ("Series A" "Series B")
-        colors (#ccc #888)
-        position (bottom left)))
+    legend-overlay (
+        position (bottom left)
+        background #fff
+        item (label "Series A" color #ccc)
+        item (label "Series B" color #888)))

@@ -15,7 +15,8 @@
         data-y (csv "tests/testdata/irregular_data2.csv" y)
         color (#c06)
         marker-size (3pt))
-    legend (
-        items ("Series A" "Series B")
-        colors (#06c #c06)
-        position (bottom left)))
+    legend-overlay (
+        position (bottom left)
+        background #fff
+        item (label "Series A" color #ccc)
+        item (label "Series B" color #888)))

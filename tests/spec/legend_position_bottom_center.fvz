@@ -4,7 +4,7 @@
 
 (legend
   position (bottom center)
-  items (
+  extra (
     (legend/item label "Fnord Test 1" color #06c)
     (legend/item label "Fnord Test 2" color #c06)
     (legend/item label "Fnord Test 3" color #c06)

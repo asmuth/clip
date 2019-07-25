@@ -47,8 +47,12 @@
   <text x="280.264663" y="172.312018" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif">2</text>
   <text x="217.517121" y="355.912472" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif">4</text>
   <text x="150.691453" y="341.021542" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif">17</text>
-  <path fill="#000000" d="M757.044 47.4222 M747.044 47.4222 a5 5 0 1 0 10 0 a5 5 0 1 0 -10 0 "/>
-  <text x="763.544444" y="52.422222" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif">Random Data</text>
+  <path stroke-width="1.000000" stroke="#333333" fill="none" d="M84.2819 39.1111 L235.404 39.1111 "/>
+  <path stroke-width="1.000000" stroke="#333333" fill="none" d="M235.404 39.1111 L235.404 88.4 "/>
+  <path stroke-width="1.000000" stroke="#333333" fill="none" d="M84.2819 88.4 L235.404 88.4 "/>
+  <path stroke-width="1.000000" stroke="#333333" fill="none" d="M84.2819 39.1111 L84.2819 88.4 "/>
+  <text x="125.348611" y="68.755556" fill="#333333" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif">Random Data</text>
+  <path fill="#333333" d="M113.249 63.7556 M102.249 63.7556 a5.5 5.5 0 1 0 11 0 a5.5 5.5 0 1 0 -11 0 "/>
   <path stroke-width="0.000000" stroke="#333333" fill="none" d="M64.7264 430.711 L880.444 430.711 "/>
   <path stroke-width="0.000000" stroke="#333333" fill="none" d="M64.7264 425.378 L64.7264 430.711 "/>
   <path stroke-width="0.000000" stroke="#333333" fill="none" d="M146.298 425.378 L146.298 430.711 "/>

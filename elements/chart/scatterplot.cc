@@ -75,7 +75,7 @@ ReturnCode build(
 
     /* grid & legend */
     {"grid", bind(&expr_rewritev, _1, "grid", &layout_opts)},
-    {"legend", bind(&expr_rewritev, _1, "legend", &layout_opts)},
+    {"legend-overlay", bind(&expr_rewritev, _1, "legend-overlay", &layout_opts)},
 
     /* background, margins, borders */
     {"background", bind(&expr_rewritev, _1, "background", &layout_opts)},

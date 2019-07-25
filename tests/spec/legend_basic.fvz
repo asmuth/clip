@@ -1,4 +1,0 @@
-(chart/legend
-  position (top left inside)
-  items ("New York" "Beijing" "Moscow" "London")
-  colors (#4572a7 #aa4643 #89a54e #3d96ae))

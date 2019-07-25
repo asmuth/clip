@@ -42,6 +42,11 @@ struct LegendConfig {
   std::vector<ElementRef> items;
 };
 
+struct LegendItemConfig {
+  std::string elem_name;
+  ExprStorage opts;
+};
+
 LegendConfig::LegendConfig() :
     position_horiz(HAlign::LEFT),
     position_vert(VAlign::TOP) {}
@@ -366,6 +371,17 @@ ReturnCode legend_configure_position(
   return OK;
 }
 
+ReturnCode configure_item(
+    const std::string& item_elem_name,
+    const Expr* expr,
+    std::vector<LegendItemConfig>* items) {
+  LegendItemConfig item;
+  item.elem_name = item_elem_name;
+  item.opts = expr_clone(expr_get_list(expr));
+  items->emplace_back(std::move(item));
+  return OK;
+}
+
 ReturnCode build(
     const Environment& env,
     const Expr* expr,
@@ -382,6 +398,8 @@ ReturnCode build(
   }
 
   /* parse exprerties */
+  std::vector<LegendItemConfig> items;
+
   auto config_rc = expr_walk_map(expr_next(expr), {
     {
       "position",
@@ -393,7 +411,8 @@ ReturnCode build(
     },
     {"item-row-padding", bind(&expr_to_measure, _1, &config->item_row_padding)},
     {"item-column-padding", bind(&expr_to_measure, _1, &config->item_column_padding)},
-    {"items", bind(&element_build_list, env, _1, &config->items)},
+    {"item", bind(&configure_item, "legend/item", _1, &items)},
+    {"extra", bind(&element_build_list, env, _1, &config->items)},
     {
       "padding",
       expr_calln_fn({
@@ -460,6 +479,20 @@ ReturnCode build(
 
   if (!config_rc) {
     return config_rc;
+  }
+
+  /* build the items */
+  for (const auto& item : items) {
+    auto elem_config = expr_build(
+        item.elem_name,
+        expr_clone(item.opts.get()));
+
+    ElementRef elem;
+    if (auto rc = element_build_macro(env, elem_config.get(), &elem); !rc) {
+      return rc;
+    }
+
+    config->items.emplace_back(elem);
   }
 
   *elem = std::make_shared<Element>();

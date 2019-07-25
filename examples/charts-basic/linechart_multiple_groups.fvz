@@ -28,7 +28,9 @@
         data-y (csv "tests/testdata/city_temperatures.csv" temp_berlin)
         color (#80699b)
         marker-size (3pt))
-    legend (
-        items ("New York" "北京市   " "Москва" "Berlin")
-        colors (#4572a7 #aa4643 #89a54e #80699b)
-        position (bottom left)))
+    legend-overlay (
+        position (bottom left)
+        item (label "New York" color #4572a7)
+        item (label "北京市   " color #aa4643)
+        item (label "Москва" color #89a54e)
+        item (label "Berlin" color #80699b)))

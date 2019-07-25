@@ -289,7 +289,7 @@ ReturnCode build(
   std::vector<ExprStorage> axis_y_opts;
   ExprStorage grid_opts;
   std::vector<ExprStorage> grid_extra_opts;
-  ExprStorage legend_opts;
+  ExprStorage legend_overlay;
 
   auto config_rc = expr_walk_map(expr_next(expr), {
     /* scale options */
@@ -354,7 +354,7 @@ ReturnCode build(
 
     /* grid & legend */
     {"grid", bind(&expr_to_copy, _1, &grid_opts)},
-    {"legend", bind(&expr_to_copy, _1, &legend_opts)},
+    {"legend-overlay", bind(&expr_to_copy, _1, &legend_overlay)},
 
     /* extra elements */
     {"body", bind(&element_build_list, env, _1, &config->body_elements)},
@@ -584,12 +584,11 @@ ReturnCode build(
     config->body_elements.emplace_back(elem);
   }
 
-
-  /* build the legend */
-  if (legend_opts) {
+  /* build the legend overlay */
+  if (legend_overlay) {
     auto elem_config = expr_build(
-        "chart/legend",
-        expr_unwrap(std::move(legend_opts)));
+        "legend",
+        expr_unwrap(std::move(legend_overlay)));
 
     ElementRef elem;
     if (auto rc = element_build_macro(env, elem_config.get(), &elem); !rc) {
