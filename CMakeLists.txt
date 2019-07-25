@@ -94,14 +94,14 @@ foreach(unit_test_path ${unit_test_files})
       DEPENDS fviz-cli test_dir)
 endforeach()
 
-file(GLOB spec_test_files "tests/spec/**/*.fvz")
+file(GLOB spec_test_files "tests/spec/*.fvz")
 foreach(spec_test_path ${spec_test_files})
   get_filename_component(spec_test_name ${spec_test_path} NAME_WE)
   get_filename_component(spec_test_srcdir ${spec_test_path} DIRECTORY)
   add_test(
       NAME test_spec_${spec_test_name}
       WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-      COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/tests/spec/test_runner.sh ${CMAKE_CURRENT_BINARY_DIR}/fviz ${spec_test_name} ${spec_test_srcdir} ${CMAKE_CURRENT_BINARY_DIR}/test
+      COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_runner.sh ${CMAKE_CURRENT_BINARY_DIR}/fviz ${spec_test_name} ${spec_test_srcdir} ${CMAKE_CURRENT_BINARY_DIR}/test
       DEPENDS fviz-cli test_dir)
 endforeach()
 
@@ -116,7 +116,7 @@ foreach(example_path ${example_files})
   add_test(
       NAME test_example_${example_name}
       WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-      COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/tests/spec/test_runner.sh ${CMAKE_CURRENT_BINARY_DIR}/fviz ${example_name} ${example_srcdir} ${CMAKE_CURRENT_BINARY_DIR}/test-examples
+      COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_runner.sh ${CMAKE_CURRENT_BINARY_DIR}/fviz ${example_name} ${example_srcdir} ${CMAKE_CURRENT_BINARY_DIR}/test-examples
       DEPENDS fviz-cli test_dir)
   add_custom_target(
       example_${example_name}

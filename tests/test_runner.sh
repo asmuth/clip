@@ -61,6 +61,9 @@ if (diff ${outfile} ${reffile} &>/dev/null); then
   exit 0
 else
   echo "ERROR: output files do not match"
+  echo "OUTPUT:" ${outfile}
+  echo "EXPECT:" ${reffile}
+  echo "-------------------------------------------------------------------------------"
   cat ${logfile}
   diff ${outfile} ${reffile} || true
   exit 1
