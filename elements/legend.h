@@ -14,12 +14,12 @@
 #pragma once
 #include "element.h"
 
-namespace fviz::elements::chart::legend {
+namespace fviz::elements::legend {
 
 ReturnCode build(
     const Environment& env,
     const Expr* expr,
     ElementRef* elem);
 
-} // namespace fviz::elements::chart::legend
+} // namespace fviz::elements::legend
 

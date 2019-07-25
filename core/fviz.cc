@@ -27,12 +27,12 @@
 #include "elements/plot/bars.h"
 #include "elements/plot/grid.h"
 #include "elements/plot/labels.h"
-#include "elements/chart/legend.h"
 #include "elements/plot/lines.h"
 #include "elements/chart/linechart.h"
 #include "elements/plot/points.h"
 #include "elements/chart/scatterplot.h"
 #include "elements/layout/box.h"
+#include "elements/legend.h"
 #include "elements/legend/item.h"
 
 #include <iostream>
@@ -51,10 +51,8 @@ struct fviz_s {
 fviz_t* fviz_init() {
   auto ctx = std::make_unique<fviz_t>();
   auto elems = &ctx->env.element_map;
-  element_bind(elems, "chart/legend", bind(elements::chart::legend::build, _1, _2, _3));
   element_bind(elems, "chart/linechart", bind(elements::chart::linechart::build, _1, _2, _3));
   element_bind(elems, "chart/scatterplot", bind(elements::chart::scatterplot::build, _1, _2, _3));
-  element_bind(elems, "layout/box", bind(elements::layout::box::build, _1, _2, _3));
   element_bind(elems, "plot", bind(elements::plot::build, _1, _2, _3));
   element_bind(elems, "plot/areas", bind(elements::plot::areas::build, _1, _2, _3));
   element_bind(elems, "plot/axis", bind(elements::plot::axis::build, _1, _2, _3));
@@ -63,7 +61,9 @@ fviz_t* fviz_init() {
   element_bind(elems, "plot/labels", bind(elements::plot::labels::build, _1, _2, _3));
   element_bind(elems, "plot/lines", bind(elements::plot::lines::build, _1, _2, _3));
   element_bind(elems, "plot/points", bind(elements::plot::points::build, _1, _2, _3));
+  element_bind(elems, "legend", bind(elements::legend::build, _1, _2, _3));
   element_bind(elems, "legend/item", bind(elements::legend::item::build, _1, _2, _3));
+  element_bind(elems, "layout/box", bind(elements::layout::box::build, _1, _2, _3));
   element_bind(elems, "text", bind(elements::text::build, _1, _2, _3));
   return ctx.release();
 }

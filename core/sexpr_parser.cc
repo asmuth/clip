@@ -134,7 +134,7 @@ ReturnCode expr_parse(
       }
 
       case ')': {
-        if (stack.empty()) {
+        if (stack.size() < 2) {
           return error(ERROR, "unbalanced parens");
         }
 

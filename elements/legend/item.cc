@@ -44,6 +44,65 @@ struct LegendItemElem {
   Measure marker_size;
 };
 
+void normalize(
+    std::shared_ptr<LegendItemElem> config,
+    const Layer& layer) {
+  convert_unit_typographic(
+      layer.dpi,
+      layer.font_size,
+      &config->label_font_size);
+
+  convert_unit_typographic(
+      layer.dpi,
+      config->label_font_size,
+      &config->label_margin);
+
+  convert_unit_typographic(
+      layer.dpi,
+      layer.font_size,
+      &config->marker_size);
+
+  convert_unit_typographic(
+      layer.dpi,
+      config->label_font_size,
+      &config->marker_margin);
+}
+
+ReturnCode layout(
+    std::shared_ptr<LegendItemElem> config,
+    const Layer& layer,
+    const std::optional<double> max_width,
+    const std::optional<double> max_height,
+    double* min_width,
+    double* min_height) {
+  normalize(config, layer);
+
+  /* add label extents */
+  TextStyle style;
+  style.font = config->label_font;
+  style.font_size = config->label_font_size;
+
+  Rectangle label_bbox;
+  if (auto rc = text::text_measure_span(
+        config->label,
+        config->label_font,
+        config->label_font_size,
+        layer.dpi,
+        layer.text_shaper.get(),
+        &label_bbox);
+       rc != Status::OK) {
+    return rc;
+  }
+
+  *min_height += label_bbox.h;
+  *min_width += label_bbox.w;
+
+  /* add label margin */
+  *min_width += config->label_margin;
+
+  return OK;
+}
+
 ReturnCode draw_label(
     const LegendItemElem& config,
     const LayoutInfo& layout,
@@ -112,25 +171,7 @@ ReturnCode draw(
     const LayoutInfo& layout,
     Layer* layer) {
   /* convert units */
-  convert_unit_typographic(
-      layer->dpi,
-      layer->font_size,
-      &config->label_font_size);
-
-  convert_unit_typographic(
-      layer->dpi,
-      config->label_font_size,
-      &config->label_margin);
-
-  convert_unit_typographic(
-      layer->dpi,
-      layer->font_size,
-      &config->marker_size);
-
-  convert_unit_typographic(
-      layer->dpi,
-      config->label_font_size,
-      &config->marker_margin);
+  normalize(config, *layer);
 
   /* draw label */
   if (auto rc = draw_label(*config, layout, layer); !rc) {
@@ -152,12 +193,13 @@ ReturnCode build(
   /* inherit defaults */
   auto config = std::make_shared<LegendItemElem>();
   config->label_align = HAlign::LEFT;
-  config->label_margin = from_em(2);
+  config->label_margin = from_em(1.1);
   config->label_font = env.font;
   config->label_font_size = env.font_size;
   config->label_color = env.text_color;
+  config->marker = marker_create_disk();
   config->marker_align = HAlign::LEFT;
-  config->marker_margin = from_em(1);
+  config->marker_margin = from_em(0.2);
   config->marker_size = env.font_size;
   config->marker_size.value *= 0.75;
   config->marker_color = env.text_color;
@@ -193,12 +235,9 @@ ReturnCode build(
     return config_rc;
   }
 
-  if (!config->marker) {
-    config->marker = marker_create_disk();
-  }
-
   *elem = std::make_shared<Element>();
   (*elem)->draw = bind(&draw, config, _1, _2);
+  (*elem)->size_hint = bind(&layout, config, _1, _2, _3, _4, _5);
   return OK;
 }
 
