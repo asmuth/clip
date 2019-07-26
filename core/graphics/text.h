@@ -17,18 +17,13 @@
 #include "color.h"
 #include "measure.h"
 #include "layout.h"
+#include "font_lookup.h"
 
 namespace fviz {
 class Layer;
 
 enum class TextDirection {
   LTR, RTL
-};
-
-struct FontInfo {
-  std::string font_file;
-  std::string font_family_css;
-  double font_weight_css;
 };
 
 struct TextStyle {

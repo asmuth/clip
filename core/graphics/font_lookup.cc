@@ -11,16 +11,55 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#include <iostream>
-#include <fontconfig/fontconfig.h>
 #include "font_lookup.h"
 #include "sexpr.h"
 #include "utils/fileutil.h"
 
+#include <iostream>
+#include <functional>
+
+#include <fontconfig/fontconfig.h>
+#include <ft2build.h>
+#include FT_FREETYPE_H
+
+using namespace std::placeholders;
+
 namespace fviz {
 
+struct FontStorage {
+  FontStorage() : ft(nullptr), ft_font(nullptr) {}
+  FT_Library ft;
+  FT_Face ft_font;
+};
 
-bool findFontSystem(
+void font_close(FontStorage* font) {
+  if (font->ft_font) {
+    FT_Done_Face(font->ft_font);
+  }
+
+  if (font->ft) {
+    FT_Done_FreeType(font->ft);
+  }
+
+  delete font;
+}
+
+ReturnCode font_load(const std::string& font_file, FontRef* font_ref) {
+  auto font = FontRef(new FontStorage, bind(&font_close, _1));
+
+  if (FT_Init_FreeType(&font->ft) != 0) {
+    return ERROR;
+  }
+
+  if (FT_New_Face(font->ft, font_file.c_str(), 0, &font->ft_font) != 0) {
+    return ERROR;
+  }
+
+  *font_ref = std::move(font);
+  return OK;
+}
+
+bool font_find_fc(
     const std::string& font_pattern,
     std::string* font_file) {
   std::string file;
@@ -51,7 +90,7 @@ bool findFontSystem(
   return true;
 }
 
-ReturnCode font_load(DefaultFont font_name, FontInfo* font_info) {
+ReturnCode font_find(DefaultFont font_name, FontInfo* font_info) {
   std::string font_fc;
 
   switch (font_name) {
@@ -99,42 +138,50 @@ ReturnCode font_load(DefaultFont font_name, FontInfo* font_info) {
       break;
   }
 
-  if (!findFontSystem(font_fc, &font_info->font_file)) {
+  if (!font_find_fc(font_fc, &font_info->font_file)) {
     return ERROR;
+  }
+
+  if (auto rc = font_load(font_info->font_file, &font_info->font); !rc) {
+    return errorf(
+        ERROR,
+        "unble to load font '{}': {}",
+        font_info->font_file,
+        rc.message);
   }
 
   return OK;
 }
 
-ReturnCode font_configure(const Expr* expr, FontInfo* font_info) {
+ReturnCode font_find_expr(const Expr* expr, FontInfo* font_info) {
   if (expr_is_value(expr, "roman-sans") ||
       expr_is_value(expr, "roman-sans-regular")) {
-    return font_load(ROMAN_SANS_REGULAR, font_info);
+    return font_find(ROMAN_SANS_REGULAR, font_info);
   }
 
   if (expr_is_value(expr, "roman-sans-medium")) {
-    return font_load(ROMAN_SANS_MEDIUM, font_info);
+    return font_find(ROMAN_SANS_MEDIUM, font_info);
   }
 
   if (expr_is_value(expr, "roman-sans-bold")) {
-    return font_load(ROMAN_SANS_BOLD, font_info);
+    return font_find(ROMAN_SANS_BOLD, font_info);
   }
 
   if (expr_is_value(expr, "roman-serif") ||
       expr_is_value(expr, "roman-serif-regular")) {
-    return font_load(ROMAN_SERIF_REGULAR, font_info);
+    return font_find(ROMAN_SERIF_REGULAR, font_info);
   }
   if (expr_is_value(expr, "roman-serif-bold")) {
-    return font_load(ROMAN_SERIF_BOLD, font_info);
+    return font_find(ROMAN_SERIF_BOLD, font_info);
   }
 
   if (expr_is_value(expr, "roman-monospace") ||
       expr_is_value(expr, "roman-monospace-regular")) {
-    return font_load(ROMAN_MONOSPACE_REGULAR, font_info);
+    return font_find(ROMAN_MONOSPACE_REGULAR, font_info);
   }
 
   if (expr_is_value(expr, "roman-monospace-bold")) {
-    return font_load(ROMAN_MONOSPACE_BOLD, font_info);
+    return font_find(ROMAN_MONOSPACE_BOLD, font_info);
   }
 
   std::vector<std::string> font_names;
@@ -197,12 +244,21 @@ ReturnCode font_configure(const Expr* expr, FontInfo* font_info) {
     font_fc += ":style=" + font_style_fc;
   }
 
-  if (!findFontSystem(font_fc, &font_info->font_file)) {
+  if (!font_find_fc(font_fc, &font_info->font_file)) {
     return errorf(ERROR, "unble to find font: {}", expr_inspect(expr));
+  }
+
+  if (auto rc = font_load(font_info->font_file, &font_info->font); !rc) {
+    return errorf(
+        ERROR,
+        "unble to load font '{}': {}",
+        font_info->font_file,
+        rc.message);
   }
 
   font_info->font_family_css = font_css;
   font_info->font_weight_css = font_style_css;
+
   return OK;
 }
 

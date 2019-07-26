@@ -12,14 +12,20 @@
  * limitations under the License.
  */
 #pragma once
-#include "fviz.h"
-#include "text.h"
+#include <memory>
+#include "return_code.h"
 
 namespace fviz {
 
-bool findFontSystem(
-    const std::string& font_pattern,
-    std::string* font_file);
+struct FontStorage;
+using FontRef = std::shared_ptr<FontStorage>;
+
+struct FontInfo {
+  FontRef font;
+  std::string font_file;
+  std::string font_family_css;
+  double font_weight_css;
+};
 
 enum DefaultFont {
   ROMAN_SANS_REGULAR,
@@ -33,9 +39,11 @@ enum DefaultFont {
   ROMAN_MONOSPACE_BOLD,
 };
 
-ReturnCode font_load(DefaultFont font_name, FontInfo* font_info);
+ReturnCode font_load(const std::string& font_file, FontRef* font);
 
-ReturnCode font_configure(const Expr* expr, FontInfo* font_info);
+ReturnCode font_find(DefaultFont font_name, FontInfo* font_info);
+
+ReturnCode font_find_expr(const Expr* expr, FontInfo* font_info);
 
 } // namespace fviz
 
