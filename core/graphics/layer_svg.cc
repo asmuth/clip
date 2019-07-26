@@ -91,8 +91,8 @@ Status svg_text_span(
   svg->buffer
     << "  "
     << "<text"
-    << svg_attr("x", op.position.x)
-    << svg_attr("y", op.position.y)
+    << svg_attr("x", op.origin.x)
+    << svg_attr("y", op.origin.y)
     << svg_attr("fill", style.color.to_hex_str())
     << svg_attr("font-size", style.font_size)
     << svg_attr("font-family", style.font.font_family_css)

@@ -129,43 +129,17 @@ Status Rasterizer::strokePath(const layer_ops::BrushStrokeOp& op) {
 }
 
 Status Rasterizer::drawText(const layer_ops::TextSpanOp& op) {
-  std::vector<text::GlyphPlacement> glyphs;
-  auto rc = text::layoutText(
-      op.text,
-      op.position.x,
-      op.position.y,
-      op.style.font,
-      op.style.font_size,
-      96, // FIXME
-      op.style.direction,
-      text_shaper.get(),
-      [&glyphs] (const text::GlyphPlacement& g) { glyphs.emplace_back(g); });
-
-  if (rc != OK) {
-    return rc;
-  }
-
-  return drawTextGlyphs(
-      glyphs.data(),
-      glyphs.size(),
-      op.style);
-}
-
-Status Rasterizer::drawTextGlyphs(
-    const text::GlyphPlacement* glyphs,
-    size_t glyph_count,
-    const TextStyle& style) {
   if (!ft_ready) {
     return ERROR;
   }
 
   // FIXME cache
   FT_Face ft_font;
-  if (FT_New_Face(ft, style.font.font_file.c_str(), 0, &ft_font)) {
+  if (FT_New_Face(ft, op.style.font.font_file.c_str(), 0, &ft_font)) {
     return ERROR;
   }
 
-  auto font_size_ft = style.font_size * (72.0 / dpi) * 64;
+  auto font_size_ft = op.style.font_size * (72.0 / dpi) * 64;
   if (FT_Set_Char_Size(ft_font, 0, font_size_ft, dpi, dpi)) {
     FT_Done_Face(ft_font);
     return ERROR;
@@ -173,18 +147,19 @@ Status Rasterizer::drawTextGlyphs(
 
   cairo_set_source_rgba(
      cr_ctx,
-     style.color.red(),
-     style.color.green(),
-     style.color.blue(),
-     style.color.alpha());
+     op.style.color.red(),
+     op.style.color.green(),
+     op.style.color.blue(),
+     op.style.color.alpha());
 
   auto cairo_face = cairo_ft_font_face_create_for_ft_face(ft_font, 0);
   cairo_set_font_face(cr_ctx, cairo_face);
-  cairo_set_font_size(cr_ctx, style.font_size);
+  cairo_set_font_size(cr_ctx, op.style.font_size);
 
+  auto glyph_count = op.glyphs.size();
   auto cairo_glyphs = cairo_glyph_allocate(glyph_count);
   for (int i = 0; i < glyph_count; ++i) {
-    const auto& g = glyphs[i];
+    const auto& g = op.glyphs[i];
     //FT_Load_Glyph(ft_font, g.codepoint, FT_LOAD_DEFAULT);
 
     cairo_glyphs[i].index = g.codepoint;

@@ -46,18 +46,17 @@ Status text_measure_span(
     Rectangle* rect);
 
 /**
- * Layout a single line of text
+ * Layout a single line of text -- currently only LTR layout is supported
  */
-Status layoutText(
+Status text_layout(
     const std::string& text,
-    double x,
-    double y,
     const FontInfo& font,
     double font_size,
     double dpi,
     TextDirection direction,
     const TextShaper* shaper,
-    std::function<void (const GlyphPlacement&)> glyph_cb);
+    std::vector<GlyphPlacement>* glyphs,
+    Rectangle* bbox);
 
 } // namespace text
 } // namespace fviz
