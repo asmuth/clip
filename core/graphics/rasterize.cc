@@ -130,7 +130,7 @@ Status Rasterizer::strokePath(const layer_ops::BrushStrokeOp& op) {
 
 Status Rasterizer::drawText(const layer_ops::TextSpanOp& op) {
   for (const auto& span : op.spans) {
-    auto ft_font = static_cast<FT_Face>(font_get_freetype(span.font.font));
+    auto ft_font = static_cast<FT_Face>(font_get_freetype(span.font));
 
     auto font_size_ft = op.style.font_size * (72.0 / dpi) * 64;
     if (FT_Set_Char_Size(ft_font, 0, font_size_ft, dpi, dpi)) {

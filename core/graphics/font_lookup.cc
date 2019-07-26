@@ -219,6 +219,7 @@ bool font_find_fc(
 
 ReturnCode font_find(DefaultFont font_name, FontInfo* font_info) {
   std::string font_fc;
+  std::string font_file;
 
   switch (font_name) {
     default:
@@ -265,18 +266,20 @@ ReturnCode font_find(DefaultFont font_name, FontInfo* font_info) {
       break;
   }
 
-  if (!font_find_fc(font_fc, &font_info->font_file)) {
+  if (!font_find_fc(font_fc, &font_file)) {
     return ERROR;
   }
 
-  if (auto rc = font_load(font_info->font_file, &font_info->font); !rc) {
+  FontRef font_ref;
+  if (auto rc = font_load(font_file, &font_ref); !rc) {
     return errorf(
         ERROR,
         "unble to load font '{}': {}",
-        font_info->font_file,
+        font_file,
         rc.message);
   }
 
+  font_info->fonts.insert(font_info->fonts.begin(), font_ref);
   return OK;
 }
 
@@ -312,8 +315,6 @@ ReturnCode font_find_expr(const Expr* expr, FontInfo* font_info) {
   }
 
   // custom font
-  *font_info = FontInfo{};
-
   std::vector<std::string> font_names;
   std::string font_fc;
   std::string font_style_fc;
@@ -367,17 +368,22 @@ ReturnCode font_find_expr(const Expr* expr, FontInfo* font_info) {
     font_fc += ":style=" + font_style_fc;
   }
 
-  if (!font_find_fc(font_fc, &font_info->font_file)) {
+  std::string font_file;
+  if (!font_find_fc(font_fc, &font_file)) {
     return errorf(ERROR, "unble to find font: {}", expr_inspect(expr));
   }
 
-  if (auto rc = font_load(font_info->font_file, &font_info->font); !rc) {
+  FontRef font_ref;
+  if (auto rc = font_load(font_file, &font_ref); !rc) {
     return errorf(
         ERROR,
         "unble to load font '{}': {}",
-        font_info->font_file,
+        font_file,
         rc.message);
   }
+
+  font_info->fonts.insert(font_info->fonts.begin(), font_ref);
+  font_info->font_family_css.clear();
 
   return OK;
 }

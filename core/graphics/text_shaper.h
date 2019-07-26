@@ -38,15 +38,13 @@ public:
 
   Status shapeText(
       const std::string& text,
-      const FontInfo& font,
+      FontRef font,
       double font_size,
       double dpi,
       std::vector<GlyphInfo>* glyphs) const;
 
 protected:
   double dpi;
-  mutable FT_Library ft;
-  mutable bool ft_ready;
   mutable hb_buffer_t* hb_buf;
 };
 

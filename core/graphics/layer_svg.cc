@@ -185,7 +185,7 @@ Status svg_text_span_embed(
       Path gp;
 
       auto rc = font_get_glyph_path(
-          s.font.font,
+          s.font,
           op.style.font_size,
           dpi,
           g.codepoint,

@@ -57,10 +57,12 @@ void draw_test(Layer* layer, const FontInfo& font) {
 }
 
 int main(int argc, char** argv) {
+  FontRef font_ref;
+  EXPECT_OK(font_load("/usr/share/fonts/msttcore/comic.ttf", &font_ref));
+
   FontInfo font;
-  font.font_file = "/usr/share/fonts/msttcore/comic.ttf";
   font.font_family_css = "'Comic Sans MS'";
-  EXPECT_OK(font_load(font.font_file, &font.font));
+  font.fonts = {font_ref};
 
   {
     LayerRef layer;

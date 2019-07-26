@@ -34,7 +34,7 @@ struct GlyphPlacement {
 };
 
 struct GlyphSpan {
-  FontInfo font;
+  FontRef font;
   std::vector<GlyphPlacement> glyphs;
 };
 

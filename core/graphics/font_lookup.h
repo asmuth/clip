@@ -22,8 +22,7 @@ struct FontStorage;
 using FontRef = std::shared_ptr<FontStorage>;
 
 struct FontInfo {
-  FontRef font;
-  std::string font_file;
+  std::vector<FontRef> fonts;
   std::string font_family_css;
   double font_weight_css;
 };

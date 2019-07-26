@@ -18,38 +18,20 @@ namespace fviz {
 namespace text {
 
 TextShaper::TextShaper() :
-    ft_ready(false),
     hb_buf(hb_buffer_create()) {}
 
-TextShaper::~TextShaper() {
-  if (ft_ready) {
-    FT_Done_FreeType(ft);
-  }
-}
+TextShaper::~TextShaper() {}
 
 Status TextShaper::shapeText(
     const std::string& text,
-    const FontInfo& font,
+    FontRef font,
     double font_size,
     double dpi,
     std::vector<GlyphInfo>* glyphs) const {
-  if (!ft_ready) {
-    if (FT_Init_FreeType(&ft)) {
-      return ERROR;
-    }
-
-    ft_ready = true;
-  }
-
-  // FIXME cache
-  FT_Face ft_font;
-  if (FT_New_Face(ft, font.font_file.c_str(), 0, &ft_font)) {
-    return ERROR;
-  }
+  auto ft_font = static_cast<FT_Face>(font_get_freetype(font));
 
   auto font_size_ft = font_size * (72.0 / dpi) * 64;
   if (FT_Set_Char_Size(ft_font, 0, font_size_ft, dpi, dpi)) {
-    FT_Done_Face(ft_font);
     return ERROR;
   }
 
@@ -76,7 +58,6 @@ Status TextShaper::shapeText(
   }
 
   hb_font_destroy(hb_font);
-  FT_Done_Face(ft_font);
 
   return OK;
 }

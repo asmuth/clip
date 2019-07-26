@@ -21,7 +21,7 @@ namespace fviz {
 namespace text {
 
 struct GlyphGroup {
-  FontInfo font;
+  FontRef font;
   std::vector<GlyphInfo> glyphs;
 };
 
@@ -40,34 +40,38 @@ Status text_layout_with_font_fallback(
         text.end(),
         locale_gen("en_US.UTF-8"));
 
-  for (const auto& grapheme_str : grapheme_iter) {
-    GlyphGroup grapheme;
-    grapheme.font = font_info;
+  for (const auto& grapheme : grapheme_iter) {
+    GlyphGroup group;
 
-    auto rc = shaper->shapeText(
-        grapheme_str,
-        font_info,
-        font_size,
-        dpi,
-        &grapheme.glyphs);
+    for (const auto& font : font_info.fonts) {
+      group.font = font;
+      group.glyphs.clear();
 
-    if (rc != OK) {
-      return rc;
-    }
+      auto rc = shaper->shapeText(
+          grapheme,
+          font,
+          font_size,
+          dpi,
+          &group.glyphs);
 
-    bool font_ok = true;
-    for (const auto& g : grapheme.glyphs) {
-      if (g.codepoint == 0) {
-        font_ok = false;
+      if (rc != OK) {
+        return rc;
+      }
+
+      bool font_ok = true;
+      for (const auto& g : group.glyphs) {
+        if (g.codepoint == 0) {
+          font_ok = false;
+          break;
+        }
+      }
+
+      if (font_ok) {
         break;
       }
     }
 
-    if (!font_ok) {
-      continue;
-    }
-
-    glyph_groups->emplace_back(grapheme);
+    glyph_groups->emplace_back(group);
   }
 
   return OK;
