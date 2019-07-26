@@ -49,6 +49,8 @@ ReturnCode font_get_glyph_path(
     uint32_t codepoint,
     Path* path);
 
+void* font_get_freetype(FontRef font);
+
 ReturnCode font_find(DefaultFont font_name, FontInfo* font_info);
 
 ReturnCode font_find_expr(const Expr* expr, FontInfo* font_info);

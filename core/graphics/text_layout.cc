@@ -20,7 +20,7 @@
 namespace fviz {
 namespace text {
 
-struct TextRun {
+struct GlyphGroup {
   FontInfo font;
   std::vector<GlyphInfo> glyphs;
 };
@@ -31,7 +31,7 @@ Status text_layout_with_font_fallback(
     double font_size,
     double dpi,
     const TextShaper* shaper,
-    std::vector<TextRun>* text_runs) {
+    std::vector<GlyphGroup>* glyph_groups) {
 
   boost::locale::generator locale_gen;
   boost::locale::boundary::ssegment_index grapheme_iter(
@@ -41,7 +41,7 @@ Status text_layout_with_font_fallback(
         locale_gen("en_US.UTF-8"));
 
   for (const auto& grapheme_str : grapheme_iter) {
-    TextRun grapheme;
+    GlyphGroup grapheme;
     grapheme.font = font_info;
 
     auto rc = shaper->shapeText(
@@ -55,7 +55,19 @@ Status text_layout_with_font_fallback(
       return rc;
     }
 
-    text_runs->emplace_back(grapheme);
+    bool font_ok = true;
+    for (const auto& g : grapheme.glyphs) {
+      if (g.codepoint == 0) {
+        font_ok = false;
+        break;
+      }
+    }
+
+    if (!font_ok) {
+      continue;
+    }
+
+    glyph_groups->emplace_back(grapheme);
   }
 
   return OK;
@@ -67,9 +79,9 @@ Status text_layout_ltr(
     double font_size,
     double dpi,
     const TextShaper* shaper,
-    std::vector<GlyphPlacement>* glyphs,
+    std::vector<GlyphSpan>* glyph_spans,
     Rectangle* bbox) {
-  std::vector<TextRun> text_runs;
+  std::vector<GlyphGroup> glyph_groups;
 
   auto shaping_rc = text_layout_with_font_fallback(
       text,
@@ -77,7 +89,7 @@ Status text_layout_ltr(
       font_size,
       dpi,
       shaper,
-      &text_runs);
+      &glyph_groups);
 
   if (!shaping_rc) {
     return shaping_rc;
@@ -86,21 +98,26 @@ Status text_layout_ltr(
   double line_length = 0.0f;
   double line_top = 0.0f;
   double line_bottom = 0.0f;
-  for (const auto& r : text_runs) {
-    for (const auto& gi : r.glyphs) {
+  for (const auto& group : glyph_groups) {
+    GlyphSpan span;
+    span.font = group.font;
+
+    for (const auto& gi : group.glyphs) {
       GlyphPlacement gp = {
         .codepoint = gi.codepoint,
         .x = line_length,
         .y = 0
       };
 
-      if (glyphs) {
-        glyphs->emplace_back(gp);
-      }
+      span.glyphs.push_back(gp);
 
       line_length += gi.advance_x;
       line_top = std::min(-gi.metrics_ascender, line_top);
       line_bottom = std::max(-gi.metrics_descender, line_bottom);
+    }
+
+    if (glyph_spans) {
+      glyph_spans->emplace_back(span);
     }
   }
 
@@ -120,11 +137,11 @@ Status text_layout(
     double dpi,
     TextDirection direction,
     const TextShaper* shaper,
-    std::vector<GlyphPlacement>* glyphs,
+    std::vector<GlyphSpan>* spans,
     Rectangle* bbox) {
   switch (direction) {
     case TextDirection::LTR:
-      return text_layout_ltr(text, font, font_size, dpi, shaper, glyphs, bbox);
+      return text_layout_ltr(text, font, font_size, dpi, shaper, spans, bbox);
     default:
       return ERROR;
   }

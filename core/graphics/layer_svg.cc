@@ -180,30 +180,32 @@ Status svg_text_span_embed(
     SVGDataRef svg) {
   const auto& style = op.style;
 
-  for (const auto& g : op.glyphs) {
-    Path gp;
+  for (const auto& s : op.spans) {
+    for (const auto& g : s.glyphs) {
+      Path gp;
 
-    auto rc = font_get_glyph_path(
-        op.style.font.font,
-        op.style.font_size,
-        dpi,
-        g.codepoint,
-        &gp);
+      auto rc = font_get_glyph_path(
+          s.font.font,
+          op.style.font_size,
+          dpi,
+          g.codepoint,
+          &gp);
 
-    if (!rc) {
-      return ERROR;
+      if (!rc) {
+        return ERROR;
+      }
+
+      auto gt = fmt::format("translate({} {})", g.x, g.y);
+
+      svg->buffer
+          << "  "
+          << "<path"
+          << svg_attr("fill", style.color.to_hex_str())
+          << svg_attr("d", svg_path_data(gp))
+          << svg_attr("transform", gt)
+          << "/>"
+          << "\n";
     }
-
-    auto gt = fmt::format("translate({} {})", g.x, g.y);
-
-    svg->buffer
-        << "  "
-        << "<path"
-        << svg_attr("fill", style.color.to_hex_str())
-        << svg_attr("d", svg_path_data(gp))
-        << svg_attr("transform", gt)
-        << "/>"
-        << "\n";
   }
 
   return OK;

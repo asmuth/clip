@@ -30,7 +30,7 @@ Status drawTextLabel(
     const TextStyle& style,
     Layer* layer) {
   Rectangle bbox;
-  std::vector<text::GlyphPlacement> glyphs;
+  std::vector<text::GlyphSpan> spans;
   auto rc = text::text_layout(
       text,
       style.font,
@@ -38,7 +38,7 @@ Status drawTextLabel(
       layer->dpi,
       style.direction,
       layer->text_shaper.get(),
-      &glyphs,
+      &spans,
       &bbox);
 
   auto offset = layout_align(bbox, position, align_x, align_y);
@@ -47,9 +47,11 @@ Status drawTextLabel(
     return rc;
   }
 
-  for (auto& g : glyphs) {
-    g.x += offset.x;
-    g.y += offset.y;
+  for (auto& span : spans) {
+    for (auto& g : span.glyphs) {
+      g.x += offset.x;
+      g.y += offset.y;
+    }
   }
 
   StrokeStyle ss;
@@ -61,7 +63,7 @@ Status drawTextLabel(
   op.rotate = rotate;
   op.rotate_pivot = position;
   op.style = style;
-  op.glyphs = std::move(glyphs);
+  op.spans = std::move(spans);
   op.origin = offset;
 
   return layer->apply(op);

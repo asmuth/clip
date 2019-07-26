@@ -33,6 +33,11 @@ struct GlyphPlacement {
   double y;
 };
 
+struct GlyphSpan {
+  FontInfo font;
+  std::vector<GlyphPlacement> glyphs;
+};
+
 /**
  * Measure the size of a span of text where (0, 0) is the baseline of the first
  * glyph
@@ -55,7 +60,7 @@ Status text_layout(
     double dpi,
     TextDirection direction,
     const TextShaper* shaper,
-    std::vector<GlyphPlacement>* glyphs,
+    std::vector<GlyphSpan>* spans,
     Rectangle* bbox);
 
 } // namespace text

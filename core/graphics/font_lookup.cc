@@ -61,6 +61,10 @@ ReturnCode font_load(const std::string& font_file, FontRef* font_ref) {
   return OK;
 }
 
+void* font_get_freetype(FontRef font) {
+  return font->ft_font;
+}
+
 ReturnCode font_get_glyph_path(
     FontRef font,
     double font_size,

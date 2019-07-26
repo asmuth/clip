@@ -129,64 +129,57 @@ Status Rasterizer::strokePath(const layer_ops::BrushStrokeOp& op) {
 }
 
 Status Rasterizer::drawText(const layer_ops::TextSpanOp& op) {
-  if (!ft_ready) {
-    return ERROR;
+  for (const auto& span : op.spans) {
+    auto ft_font = static_cast<FT_Face>(font_get_freetype(span.font.font));
+
+    auto font_size_ft = op.style.font_size * (72.0 / dpi) * 64;
+    if (FT_Set_Char_Size(ft_font, 0, font_size_ft, dpi, dpi)) {
+      FT_Done_Face(ft_font);
+      return ERROR;
+    }
+
+    cairo_set_source_rgba(
+       cr_ctx,
+       op.style.color.red(),
+       op.style.color.green(),
+       op.style.color.blue(),
+       op.style.color.alpha());
+
+    auto cairo_face = cairo_ft_font_face_create_for_ft_face(ft_font, 0);
+    cairo_set_font_face(cr_ctx, cairo_face);
+    cairo_set_font_size(cr_ctx, op.style.font_size);
+
+    auto glyph_count = span.glyphs.size();
+    auto cairo_glyphs = cairo_glyph_allocate(glyph_count);
+    for (int i = 0; i < glyph_count; ++i) {
+      const auto& g = span.glyphs[i];
+      //FT_Load_Glyph(ft_font, g.codepoint, FT_LOAD_DEFAULT);
+
+      cairo_glyphs[i].index = g.codepoint;
+      cairo_glyphs[i].x = g.x;
+      cairo_glyphs[i].y = g.y;
+
+      //// render with freetype
+      // FT_Render_Glyph(ft_font->glyph, FT_RENDER_MODE_NORMAL);
+      // const auto& ft_bitmap = ft_font->glyph->bitmap;
+      // for (uint32_t y = 0; y < ft_bitmap.rows; ++y) {
+      //   for (uint32_t x = 0; x < ft_bitmap.width; ++x) {
+      //     auto v = 1.0 - (ft_bitmap.buffer[y * ft_bitmap.width + x] / 255.0);
+      //     auto ox = x + g.x + ft_font->glyph->bitmap_left;
+      //     auto oy = y + g.y - ft_font->glyph->bitmap_top;
+      //     if (ox >= pixmap->getWidth() || oy >= pixmap->getHeight()) {
+      //       continue;
+      //     }
+      //     pixmap->setPixel(ox, oy, Color::fromRGBA(v, v, v, 1));
+      //   }
+      // }
+    }
+
+    cairo_show_glyphs(cr_ctx, cairo_glyphs, glyph_count);
+    cairo_glyph_free(cairo_glyphs);
+    cairo_font_face_destroy(cairo_face);
   }
 
-  // FIXME cache
-  FT_Face ft_font;
-  if (FT_New_Face(ft, op.style.font.font_file.c_str(), 0, &ft_font)) {
-    return ERROR;
-  }
-
-  auto font_size_ft = op.style.font_size * (72.0 / dpi) * 64;
-  if (FT_Set_Char_Size(ft_font, 0, font_size_ft, dpi, dpi)) {
-    FT_Done_Face(ft_font);
-    return ERROR;
-  }
-
-  cairo_set_source_rgba(
-     cr_ctx,
-     op.style.color.red(),
-     op.style.color.green(),
-     op.style.color.blue(),
-     op.style.color.alpha());
-
-  auto cairo_face = cairo_ft_font_face_create_for_ft_face(ft_font, 0);
-  cairo_set_font_face(cr_ctx, cairo_face);
-  cairo_set_font_size(cr_ctx, op.style.font_size);
-
-  auto glyph_count = op.glyphs.size();
-  auto cairo_glyphs = cairo_glyph_allocate(glyph_count);
-  for (int i = 0; i < glyph_count; ++i) {
-    const auto& g = op.glyphs[i];
-    //FT_Load_Glyph(ft_font, g.codepoint, FT_LOAD_DEFAULT);
-
-    cairo_glyphs[i].index = g.codepoint;
-    cairo_glyphs[i].x = g.x;
-    cairo_glyphs[i].y = g.y;
-
-    //// render with freetype
-    // FT_Render_Glyph(ft_font->glyph, FT_RENDER_MODE_NORMAL);
-    // const auto& ft_bitmap = ft_font->glyph->bitmap;
-    // for (uint32_t y = 0; y < ft_bitmap.rows; ++y) {
-    //   for (uint32_t x = 0; x < ft_bitmap.width; ++x) {
-    //     auto v = 1.0 - (ft_bitmap.buffer[y * ft_bitmap.width + x] / 255.0);
-    //     auto ox = x + g.x + ft_font->glyph->bitmap_left;
-    //     auto oy = y + g.y - ft_font->glyph->bitmap_top;
-    //     if (ox >= pixmap->getWidth() || oy >= pixmap->getHeight()) {
-    //       continue;
-    //     }
-    //     pixmap->setPixel(ox, oy, Color::fromRGBA(v, v, v, 1));
-    //   }
-    // }
-  }
-
-  cairo_show_glyphs(cr_ctx, cairo_glyphs, glyph_count);
-  cairo_glyph_free(cairo_glyphs);
-  cairo_font_face_destroy(cairo_face);
-
-  FT_Done_Face(ft_font);
   return OK;
 }
 
