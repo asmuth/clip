@@ -67,7 +67,7 @@ ReturnCode font_get_glyph_path(
     double dpi,
     uint32_t codepoint,
     Path* path) {
-  /* load the glyph using freetype */
+  // load the glyph using freetype
   auto font_size_ft = font_size * (72.0 / dpi) * 64;
   if (FT_Set_Char_Size(font->ft_font, 0, font_size_ft, dpi, dpi)) {
     return ERROR;
@@ -88,30 +88,95 @@ ReturnCode font_get_glyph_path(
 
   auto glyph_outline = &((FT_OutlineGlyph) glyph)->outline;
 
-  /* retrieve the glyph outline data from freetype */
+
+  // retrieve the glyph outline data from freetype
+  enum class GlyphPointType { MOVE, SIMPLE, CONTROL };
+
   std::vector<Point> glyph_points;
+  std::vector<GlyphPointType> glyph_point_tags;
+
+  auto glyph_outline_tags = glyph_outline->tags;
   for (size_t n = 0; n < glyph_outline->n_contours; n++) {
     auto glyph_outline_idx = n == 0 ? 0 : glyph_outline->contours[n - 1] + 1;
     auto glyph_outline_end = glyph_outline->contours[n];
 
+    // read contour points
     for (size_t i = glyph_outline_idx; i <= glyph_outline_end; ++i) {
       Point p;
-      p.x = glyph_outline->points[i].x / 64;
-      p.y = -glyph_outline->points[i].y / 64;
+      p.x = glyph_outline->points[i].x / 64.0;
+      p.y = -glyph_outline->points[i].y / 64.0;
+
+      GlyphPointType pt;
+      if (i == glyph_outline_idx) {
+        pt = GlyphPointType::MOVE;
+      } else if (int(glyph_outline->tags[i]) & 1) {
+        pt = GlyphPointType::SIMPLE;
+      } else {
+        pt = GlyphPointType::CONTROL;
+      }
 
       glyph_points.push_back(p);
+      glyph_point_tags.push_back(pt);
+    }
+
+    // close the path
+    {
+      Point p;
+      p.x = glyph_outline->points[glyph_outline_idx].x / 64.0;
+      p.y = -glyph_outline->points[glyph_outline_idx].y / 64.0;
+      glyph_points.push_back(p);
+      glyph_point_tags.push_back(GlyphPointType::SIMPLE);
     }
   }
 
-  /* convert the glyph outline to a path object */
+  // convert the glyph outline to a path object
   *path = Path{};
 
   for (size_t i = 0; i < glyph_points.size(); ++i) {
-    if (i == 0) {
+    const auto& p = glyph_points[i];
+    const auto& pt = glyph_point_tags[i];
+
+    // move at begin of contour
+    if (pt == GlyphPointType::MOVE) {
       path->moveTo(glyph_points[i].x, glyph_points[i].y);
-    } else {
-      path->lineTo(glyph_points[i].x, glyph_points[i].y);
+      continue;
     }
+
+    // third order bezier
+    if (i + 2 < glyph_points.size() &&
+        glyph_point_tags[i + 0] == GlyphPointType::CONTROL &&
+        glyph_point_tags[i + 1] == GlyphPointType::CONTROL) {
+      assert(glyph_point_tags[i + 2] != GlyphPointType::CONTROL);
+
+      path->cubicCurveTo(
+          glyph_points[i + 0].x,
+          glyph_points[i + 0].y,
+          glyph_points[i + 1].x,
+          glyph_points[i + 1].y,
+          glyph_points[i + 2].x,
+          glyph_points[i + 2].y);
+
+      i += 2;
+      continue;
+    }
+
+    // second order bezier
+    if (i + 1 < glyph_points.size() &&
+        glyph_point_tags[i] == GlyphPointType::CONTROL) {
+      assert(glyph_point_tags[i + 1] != GlyphPointType::CONTROL);
+
+      path->quadraticCurveTo(
+          glyph_points[i + 0].x,
+          glyph_points[i + 0].y,
+          glyph_points[i + 1].x,
+          glyph_points[i + 1].y);
+
+      i += 1;
+      continue;
+    }
+
+    // simple line segments
+    path->lineTo(glyph_points[i].x, glyph_points[i].y);
   }
 
   return OK;

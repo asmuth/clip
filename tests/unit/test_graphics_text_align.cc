@@ -38,12 +38,13 @@ void draw_test(
 
   strokeLine(l, Point(x - 10, y), Point(x + 10, y), ss);
   strokeLine(l, Point(x, y - 10), Point(x, y + 10), ss);
-  drawTextLabel("Ijsselmeerdijk", Point(x, y), ax, ay, ts, l);
+  drawTextLabel("Fnord!", Point(x, y), ax, ay, ts, l);
 }
 
 int main(int argc, char** argv) {
   Environment env;
   EXPECT_OK(environment_setup_defaults(&env));
+  EXPECT_OK(font_load("/usr/share/fonts/msttcore/comic.ttf", &env.font.font));
 
   LayerRef layer;
   auto rc = layer_bind_svg(
