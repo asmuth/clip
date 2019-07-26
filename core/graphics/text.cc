@@ -35,7 +35,7 @@ Status drawTextLabel(
       text,
       style.font,
       style.font_size,
-      96, // FIXME
+      layer->dpi,
       style.direction,
       layer->text_shaper.get(),
       &glyphs,

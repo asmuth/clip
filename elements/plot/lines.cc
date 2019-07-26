@@ -30,7 +30,7 @@ using namespace std::placeholders;
 
 namespace fviz::elements::plot::lines {
 
-static const double kDefaultLineWidthPT = 2;
+static const double kDefaultLineWidthPT = 1.5;
 static const double kDefaultLabelPaddingEM = 0.4;
 
 struct PlotLinesConfig {
@@ -58,7 +58,7 @@ ReturnCode draw(
   /* convert units */
   convert_units(
       {
-        bind(&convert_unit_typographic, layer->dpi, layer->font_size.value, _1),
+        bind(&convert_unit_typographic, layer->dpi, layer->font_size, _1),
         bind(&convert_unit_user, scale_translate_fn(config->scale_x), _1),
         bind(&convert_unit_relative, clip.w, _1)
       },
@@ -67,17 +67,24 @@ ReturnCode draw(
 
   convert_units(
       {
-        bind(&convert_unit_typographic, layer->dpi, layer->font_size.value, _1),
+        bind(&convert_unit_typographic, layer->dpi, layer->font_size, _1),
         bind(&convert_unit_user, scale_translate_fn(config->scale_y), _1),
         bind(&convert_unit_relative, clip.h, _1)
       },
       &*config->y.begin(),
       &*config->y.end());
 
-  convert_units(
-      {
-        bind(&convert_unit_typographic, layer->dpi, layer->font_size.value, _1),
-      },
+  MeasureConv conv;
+  conv.dpi = layer->dpi;
+  conv.font_size = layer->font_size;
+  conv.parent_size = layer->font_size;
+
+  measure_normalize(conv, &config->line_width);
+  measure_normalize(conv, &config->label_padding);
+  measure_normalize(conv, &config->label_font_size);
+
+  measure_normalizev(
+      conv,
       &*config->marker_sizes.begin(),
       &*config->marker_sizes.end());
 

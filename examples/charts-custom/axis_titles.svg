@@ -1,100 +1,100 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="900.000000" height="480.000000" viewBox="0 0 900 480">
   <rect width="900.000000" height="480.000000" fill="#ffffff"/>
-  <path stroke-width="2.000000" stroke="#000000" fill="none" d="M140.563 88.9556 L147.93 153.287 L156.564 192.905 L165.198 189.737 L173.832 221.728 L182.466 241.884 L191.1 255.322 L199.733 263.554 L208.367 284.629 L217.001 247.242 L225.635 259.013 L234.269 295.095 L242.903 249.011 L251.537 254.638 L260.17 290.241 L268.804 285.438 L277.438 309.182 L286.072 325.434 L294.706 350.252 L303.34 359.463 L311.974 372.288 L320.607 272.465 L329.241 198.063 L337.875 177.919 L346.509 195.72 L355.143 236.866 L363.777 293.918 L372.41 289.375 L381.044 323.817 L389.678 335.46 L398.312 351.83 L406.946 336.99 L415.58 355.093 L424.214 320.406 L432.847 292.028 L441.481 351.036 L450.115 358.54 L458.749 367.996 L467.383 391.044 L476.017 343.257 L484.651 322.19 L493.284 324.391 L501.918 336.064 L510.552 304.744 L519.186 353.835 L527.82 320.508 L536.454 306.968 L545.087 308.454 L553.721 326.328 L562.355 289.471 L570.989 283.377 L579.623 259.546 L588.257 289.446 L596.891 319.472 L605.524 343.302 L614.158 297.394 L622.792 319.014 L631.426 314.393 L640.06 355.498 L648.694 367.342 L657.327 354.769 L665.961 364.312 L674.595 354.497 L683.229 338.181 L691.863 343.506 L700.497 332.657 L709.131 316.293 L717.764 325.37 L726.398 340.15 L735.032 286.407 L743.666 279.213 L752.3 250.047 L759.437 253.07 "/>
-  <path stroke-width="1.333333" stroke="#000000" fill="none" d="M140.563 88.9556 L759.437 88.9556 "/>
-  <path stroke-width="1.333333" stroke="#000000" fill="none" d="M140.563 88.9556 L140.563 94.2889 "/>
-  <path stroke-width="1.333333" stroke="#000000" fill="none" d="M202.45 88.9556 L202.45 94.2889 "/>
-  <path stroke-width="1.333333" stroke="#000000" fill="none" d="M264.338 88.9556 L264.338 94.2889 "/>
-  <path stroke-width="1.333333" stroke="#000000" fill="none" d="M326.225 88.9556 L326.225 94.2889 "/>
-  <path stroke-width="1.333333" stroke="#000000" fill="none" d="M388.113 88.9556 L388.113 94.2889 "/>
-  <path stroke-width="1.333333" stroke="#000000" fill="none" d="M450 88.9556 L450 94.2889 "/>
-  <path stroke-width="1.333333" stroke="#000000" fill="none" d="M511.887 88.9556 L511.887 94.2889 "/>
-  <path stroke-width="1.333333" stroke="#000000" fill="none" d="M573.775 88.9556 L573.775 94.2889 "/>
-  <path stroke-width="1.333333" stroke="#000000" fill="none" d="M635.662 88.9556 L635.662 94.2889 "/>
-  <path stroke-width="1.333333" stroke="#000000" fill="none" d="M697.55 88.9556 L697.55 94.2889 "/>
-  <path stroke-width="1.333333" stroke="#000000" fill="none" d="M759.437 88.9556 L759.437 94.2889 "/>
-  <text x="112.015972" y="73.222222" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">05:15:44</text>
-  <text x="173.903404" y="73.222222" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">05:51:34</text>
-  <text x="235.790835" y="73.222222" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">06:27:24</text>
-  <text x="297.678271" y="73.222222" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">07:03:15</text>
-  <text x="359.565698" y="73.222222" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">07:39:05</text>
-  <text x="421.453125" y="73.222222" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">08:14:56</text>
-  <text x="483.340570" y="73.222222" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">08:50:46</text>
-  <text x="545.227979" y="73.222222" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">09:26:36</text>
-  <text x="607.115424" y="73.222222" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">10:02:27</text>
-  <text x="669.002869" y="73.222222" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">10:38:17</text>
-  <text x="731.437153" y="73.222222" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">11:14:08</text>
-  <text x="429.601562" y="36.555556" fill="#000000" font-size="18.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">Time</text>
-  <path stroke-width="1.333333" stroke="#000000" fill="none" d="M759.437 88.9556 L759.437 391.044 "/>
-  <path stroke-width="1.333333" stroke="#000000" fill="none" d="M754.104 391.044 L759.437 391.044 "/>
-  <path stroke-width="1.333333" stroke="#000000" fill="none" d="M754.104 360.836 L759.437 360.836 "/>
-  <path stroke-width="1.333333" stroke="#000000" fill="none" d="M754.104 330.627 L759.437 330.627 "/>
-  <path stroke-width="1.333333" stroke="#000000" fill="none" d="M754.104 300.418 L759.437 300.418 "/>
-  <path stroke-width="1.333333" stroke="#000000" fill="none" d="M754.104 270.209 L759.437 270.209 "/>
-  <path stroke-width="1.333333" stroke="#000000" fill="none" d="M754.104 240 L759.437 240 "/>
-  <path stroke-width="1.333333" stroke="#000000" fill="none" d="M754.104 209.791 L759.437 209.791 "/>
-  <path stroke-width="1.333333" stroke="#000000" fill="none" d="M754.104 179.582 L759.437 179.582 "/>
-  <path stroke-width="1.333333" stroke="#000000" fill="none" d="M754.104 149.373 L759.437 149.373 "/>
-  <path stroke-width="1.333333" stroke="#000000" fill="none" d="M754.104 119.164 L759.437 119.164 "/>
-  <path stroke-width="1.333333" stroke="#000000" fill="none" d="M754.104 88.9556 L759.437 88.9556 "/>
-  <text x="771.170486" y="396.044444" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">7.3 × 10⁶</text>
-  <text x="771.170486" y="365.835555" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">7.4 × 10⁶</text>
-  <text x="771.170486" y="335.626666" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">7.6 × 10⁶</text>
-  <text x="771.170486" y="305.417774" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">7.7 × 10⁶</text>
-  <text x="771.170486" y="275.208887" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">7.8 × 10⁶</text>
-  <text x="771.170486" y="245.000000" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">8.0 × 10⁶</text>
-  <text x="771.170486" y="214.791104" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">8.1 × 10⁶</text>
-  <text x="771.170486" y="184.582226" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">8.2 × 10⁶</text>
-  <text x="771.170486" y="154.373330" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">8.4 × 10⁶</text>
-  <text x="771.170486" y="124.164434" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">8.5 × 10⁶</text>
-  <text x="771.170486" y="93.955556" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">8.6 × 10⁶</text>
-  <text x="846.756944" y="246.500000" fill="#000000" font-size="18.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000" transform="rotate(90 869.944 240)">Value</text>
-  <path stroke-width="1.333333" stroke="#000000" fill="none" d="M140.563 391.044 L759.437 391.044 "/>
-  <path stroke-width="1.333333" stroke="#000000" fill="none" d="M140.563 385.711 L140.563 391.044 "/>
-  <path stroke-width="1.333333" stroke="#000000" fill="none" d="M202.45 385.711 L202.45 391.044 "/>
-  <path stroke-width="1.333333" stroke="#000000" fill="none" d="M264.338 385.711 L264.338 391.044 "/>
-  <path stroke-width="1.333333" stroke="#000000" fill="none" d="M326.225 385.711 L326.225 391.044 "/>
-  <path stroke-width="1.333333" stroke="#000000" fill="none" d="M388.113 385.711 L388.113 391.044 "/>
-  <path stroke-width="1.333333" stroke="#000000" fill="none" d="M450 385.711 L450 391.044 "/>
-  <path stroke-width="1.333333" stroke="#000000" fill="none" d="M511.887 385.711 L511.887 391.044 "/>
-  <path stroke-width="1.333333" stroke="#000000" fill="none" d="M573.775 385.711 L573.775 391.044 "/>
-  <path stroke-width="1.333333" stroke="#000000" fill="none" d="M635.662 385.711 L635.662 391.044 "/>
-  <path stroke-width="1.333333" stroke="#000000" fill="none" d="M697.55 385.711 L697.55 391.044 "/>
-  <path stroke-width="1.333333" stroke="#000000" fill="none" d="M759.437 385.711 L759.437 391.044 "/>
-  <text x="112.015972" y="416.777778" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">05:15:44</text>
-  <text x="173.903404" y="416.777778" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">05:51:34</text>
-  <text x="235.790835" y="416.777778" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">06:27:24</text>
-  <text x="297.678271" y="416.777778" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">07:03:15</text>
-  <text x="359.565698" y="416.777778" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">07:39:05</text>
-  <text x="421.453125" y="416.777778" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">08:14:56</text>
-  <text x="483.340570" y="416.777778" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">08:50:46</text>
-  <text x="545.227979" y="416.777778" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">09:26:36</text>
-  <text x="607.115424" y="416.777778" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">10:02:27</text>
-  <text x="669.002869" y="416.777778" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">10:38:17</text>
-  <text x="731.437153" y="416.777778" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">11:14:08</text>
-  <text x="429.601562" y="456.444444" fill="#000000" font-size="18.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">Time</text>
-  <path stroke-width="1.333333" stroke="#000000" fill="none" d="M140.563 88.9556 L140.563 391.044 "/>
-  <path stroke-width="1.333333" stroke="#000000" fill="none" d="M140.563 391.044 L145.896 391.044 "/>
-  <path stroke-width="1.333333" stroke="#000000" fill="none" d="M140.563 360.836 L145.896 360.836 "/>
-  <path stroke-width="1.333333" stroke="#000000" fill="none" d="M140.563 330.627 L145.896 330.627 "/>
-  <path stroke-width="1.333333" stroke="#000000" fill="none" d="M140.563 300.418 L145.896 300.418 "/>
-  <path stroke-width="1.333333" stroke="#000000" fill="none" d="M140.563 270.209 L145.896 270.209 "/>
-  <path stroke-width="1.333333" stroke="#000000" fill="none" d="M140.563 240 L145.896 240 "/>
-  <path stroke-width="1.333333" stroke="#000000" fill="none" d="M140.563 209.791 L145.896 209.791 "/>
-  <path stroke-width="1.333333" stroke="#000000" fill="none" d="M140.563 179.582 L145.896 179.582 "/>
-  <path stroke-width="1.333333" stroke="#000000" fill="none" d="M140.563 149.373 L145.896 149.373 "/>
-  <path stroke-width="1.333333" stroke="#000000" fill="none" d="M140.563 119.164 L145.896 119.164 "/>
-  <path stroke-width="1.333333" stroke="#000000" fill="none" d="M140.563 88.9556 L145.896 88.9556 "/>
-  <text x="66.688889" y="396.044444" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">7.3 × 10⁶</text>
-  <text x="66.688889" y="365.835555" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">7.4 × 10⁶</text>
-  <text x="66.688889" y="335.626666" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">7.6 × 10⁶</text>
-  <text x="66.688889" y="305.417774" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">7.7 × 10⁶</text>
-  <text x="66.688889" y="275.208887" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">7.8 × 10⁶</text>
-  <text x="66.688889" y="245.000000" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">8.0 × 10⁶</text>
-  <text x="66.688889" y="214.791104" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">8.1 × 10⁶</text>
-  <text x="66.688889" y="184.582226" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">8.2 × 10⁶</text>
-  <text x="66.688889" y="154.373330" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">8.4 × 10⁶</text>
-  <text x="66.688889" y="124.164434" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">8.5 × 10⁶</text>
-  <text x="66.688889" y="93.955556" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">8.6 × 10⁶</text>
-  <text x="6.868056" y="246.500000" fill="#000000" font-size="18.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000" transform="rotate(-90 30.0556 240)">Value</text>
+  <path stroke-width="2.000000" stroke="#000000" fill="none" d="M135.674 84.0667 L143.158 150.48 L151.928 191.38 L160.698 188.11 L169.469 221.136 L178.239 241.945 L187.009 255.818 L195.779 264.317 L204.55 286.073 L213.32 247.477 L222.09 259.629 L230.86 296.878 L239.631 249.303 L248.401 255.111 L257.171 291.867 L265.942 286.909 L274.712 311.421 L283.482 328.2 L292.252 353.821 L301.023 363.329 L309.793 376.57 L318.563 273.515 L327.333 196.706 L336.104 175.91 L344.874 194.286 L353.644 236.765 L362.414 295.663 L371.185 290.973 L379.955 326.53 L388.725 338.55 L397.495 355.449 L406.266 340.129 L415.036 358.818 L423.806 323.008 L432.576 293.712 L441.347 354.63 L450.117 362.377 L458.887 372.139 L467.657 395.933 L476.428 346.599 L485.198 324.85 L493.968 327.123 L502.738 339.173 L511.509 306.84 L520.279 357.52 L529.049 323.114 L537.82 309.136 L546.59 310.669 L555.36 329.122 L564.13 291.072 L572.901 284.781 L581.671 260.178 L590.441 291.046 L599.211 322.045 L607.982 346.646 L616.752 299.252 L625.522 321.572 L634.292 316.8 L643.063 359.236 L651.833 371.464 L660.603 358.484 L669.373 368.336 L678.144 358.203 L686.914 341.359 L695.684 346.856 L704.454 335.656 L713.225 318.762 L721.995 328.133 L730.765 343.392 L739.535 287.909 L748.306 280.483 L757.076 250.372 L764.326 253.493 "/>
+  <path stroke-width="1.333333" stroke="#000000" fill="none" d="M135.674 84.0667 L764.326 84.0667 "/>
+  <path stroke-width="1.333333" stroke="#000000" fill="none" d="M135.674 84.0667 L135.674 89.4 "/>
+  <path stroke-width="1.333333" stroke="#000000" fill="none" d="M198.539 84.0667 L198.539 89.4 "/>
+  <path stroke-width="1.333333" stroke="#000000" fill="none" d="M261.404 84.0667 L261.404 89.4 "/>
+  <path stroke-width="1.333333" stroke="#000000" fill="none" d="M324.27 84.0667 L324.27 89.4 "/>
+  <path stroke-width="1.333333" stroke="#000000" fill="none" d="M387.135 84.0667 L387.135 89.4 "/>
+  <path stroke-width="1.333333" stroke="#000000" fill="none" d="M450 84.0667 L450 89.4 "/>
+  <path stroke-width="1.333333" stroke="#000000" fill="none" d="M512.865 84.0667 L512.865 89.4 "/>
+  <path stroke-width="1.333333" stroke="#000000" fill="none" d="M575.73 84.0667 L575.73 89.4 "/>
+  <path stroke-width="1.333333" stroke="#000000" fill="none" d="M638.596 84.0667 L638.596 89.4 "/>
+  <path stroke-width="1.333333" stroke="#000000" fill="none" d="M701.461 84.0667 L701.461 89.4 "/>
+  <path stroke-width="1.333333" stroke="#000000" fill="none" d="M764.326 84.0667 L764.326 89.4 "/>
+  <text x="107.127083" y="68.333333" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">05:15:44</text>
+  <text x="169.992293" y="68.333333" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">05:51:34</text>
+  <text x="232.857502" y="68.333333" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">06:27:24</text>
+  <text x="295.722716" y="68.333333" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">07:03:15</text>
+  <text x="358.587920" y="68.333333" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">07:39:05</text>
+  <text x="421.453125" y="68.333333" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">08:14:56</text>
+  <text x="484.318348" y="68.333333" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">08:50:46</text>
+  <text x="547.183534" y="68.333333" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">09:26:36</text>
+  <text x="610.048757" y="68.333333" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">10:02:27</text>
+  <text x="672.913981" y="68.333333" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">10:38:17</text>
+  <text x="736.326042" y="68.333333" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">11:14:08</text>
+  <text x="429.601562" y="31.666667" fill="#000000" font-size="18.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">Time</text>
+  <path stroke-width="1.333333" stroke="#000000" fill="none" d="M764.326 84.0667 L764.326 395.933 "/>
+  <path stroke-width="1.333333" stroke="#000000" fill="none" d="M758.993 395.933 L764.326 395.933 "/>
+  <path stroke-width="1.333333" stroke="#000000" fill="none" d="M758.993 364.747 L764.326 364.747 "/>
+  <path stroke-width="1.333333" stroke="#000000" fill="none" d="M758.993 333.56 L764.326 333.56 "/>
+  <path stroke-width="1.333333" stroke="#000000" fill="none" d="M758.993 302.373 L764.326 302.373 "/>
+  <path stroke-width="1.333333" stroke="#000000" fill="none" d="M758.993 271.187 L764.326 271.187 "/>
+  <path stroke-width="1.333333" stroke="#000000" fill="none" d="M758.993 240 L764.326 240 "/>
+  <path stroke-width="1.333333" stroke="#000000" fill="none" d="M758.993 208.813 L764.326 208.813 "/>
+  <path stroke-width="1.333333" stroke="#000000" fill="none" d="M758.993 177.627 L764.326 177.627 "/>
+  <path stroke-width="1.333333" stroke="#000000" fill="none" d="M758.993 146.44 L764.326 146.44 "/>
+  <path stroke-width="1.333333" stroke="#000000" fill="none" d="M758.993 115.253 L764.326 115.253 "/>
+  <path stroke-width="1.333333" stroke="#000000" fill="none" d="M758.993 84.0667 L764.326 84.0667 "/>
+  <text x="776.059375" y="400.933333" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">7.3 × 10⁶</text>
+  <text x="776.059375" y="369.746666" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">7.4 × 10⁶</text>
+  <text x="776.059375" y="338.559999" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">7.6 × 10⁶</text>
+  <text x="776.059375" y="307.373330" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">7.7 × 10⁶</text>
+  <text x="776.059375" y="276.186665" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">7.8 × 10⁶</text>
+  <text x="776.059375" y="245.000000" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">8.0 × 10⁶</text>
+  <text x="776.059375" y="213.813326" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">8.1 × 10⁶</text>
+  <text x="776.059375" y="182.626670" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">8.2 × 10⁶</text>
+  <text x="776.059375" y="151.439996" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">8.4 × 10⁶</text>
+  <text x="776.059375" y="120.253322" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">8.5 × 10⁶</text>
+  <text x="776.059375" y="89.066667" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">8.6 × 10⁶</text>
+  <text x="851.645833" y="246.500000" fill="#000000" font-size="18.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000" transform="rotate(90 874.833 240)">Value</text>
+  <path stroke-width="1.333333" stroke="#000000" fill="none" d="M135.674 395.933 L764.326 395.933 "/>
+  <path stroke-width="1.333333" stroke="#000000" fill="none" d="M135.674 390.6 L135.674 395.933 "/>
+  <path stroke-width="1.333333" stroke="#000000" fill="none" d="M198.539 390.6 L198.539 395.933 "/>
+  <path stroke-width="1.333333" stroke="#000000" fill="none" d="M261.404 390.6 L261.404 395.933 "/>
+  <path stroke-width="1.333333" stroke="#000000" fill="none" d="M324.27 390.6 L324.27 395.933 "/>
+  <path stroke-width="1.333333" stroke="#000000" fill="none" d="M387.135 390.6 L387.135 395.933 "/>
+  <path stroke-width="1.333333" stroke="#000000" fill="none" d="M450 390.6 L450 395.933 "/>
+  <path stroke-width="1.333333" stroke="#000000" fill="none" d="M512.865 390.6 L512.865 395.933 "/>
+  <path stroke-width="1.333333" stroke="#000000" fill="none" d="M575.73 390.6 L575.73 395.933 "/>
+  <path stroke-width="1.333333" stroke="#000000" fill="none" d="M638.596 390.6 L638.596 395.933 "/>
+  <path stroke-width="1.333333" stroke="#000000" fill="none" d="M701.461 390.6 L701.461 395.933 "/>
+  <path stroke-width="1.333333" stroke="#000000" fill="none" d="M764.326 390.6 L764.326 395.933 "/>
+  <text x="107.127083" y="421.666667" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">05:15:44</text>
+  <text x="169.992293" y="421.666667" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">05:51:34</text>
+  <text x="232.857502" y="421.666667" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">06:27:24</text>
+  <text x="295.722716" y="421.666667" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">07:03:15</text>
+  <text x="358.587920" y="421.666667" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">07:39:05</text>
+  <text x="421.453125" y="421.666667" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">08:14:56</text>
+  <text x="484.318348" y="421.666667" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">08:50:46</text>
+  <text x="547.183534" y="421.666667" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">09:26:36</text>
+  <text x="610.048757" y="421.666667" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">10:02:27</text>
+  <text x="672.913981" y="421.666667" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">10:38:17</text>
+  <text x="736.326042" y="421.666667" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">11:14:08</text>
+  <text x="429.601562" y="461.333333" fill="#000000" font-size="18.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">Time</text>
+  <path stroke-width="1.333333" stroke="#000000" fill="none" d="M135.674 84.0667 L135.674 395.933 "/>
+  <path stroke-width="1.333333" stroke="#000000" fill="none" d="M135.674 395.933 L141.007 395.933 "/>
+  <path stroke-width="1.333333" stroke="#000000" fill="none" d="M135.674 364.747 L141.007 364.747 "/>
+  <path stroke-width="1.333333" stroke="#000000" fill="none" d="M135.674 333.56 L141.007 333.56 "/>
+  <path stroke-width="1.333333" stroke="#000000" fill="none" d="M135.674 302.373 L141.007 302.373 "/>
+  <path stroke-width="1.333333" stroke="#000000" fill="none" d="M135.674 271.187 L141.007 271.187 "/>
+  <path stroke-width="1.333333" stroke="#000000" fill="none" d="M135.674 240 L141.007 240 "/>
+  <path stroke-width="1.333333" stroke="#000000" fill="none" d="M135.674 208.813 L141.007 208.813 "/>
+  <path stroke-width="1.333333" stroke="#000000" fill="none" d="M135.674 177.627 L141.007 177.627 "/>
+  <path stroke-width="1.333333" stroke="#000000" fill="none" d="M135.674 146.44 L141.007 146.44 "/>
+  <path stroke-width="1.333333" stroke="#000000" fill="none" d="M135.674 115.253 L141.007 115.253 "/>
+  <path stroke-width="1.333333" stroke="#000000" fill="none" d="M135.674 84.0667 L141.007 84.0667 "/>
+  <text x="61.800000" y="400.933333" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">7.3 × 10⁶</text>
+  <text x="61.800000" y="369.746666" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">7.4 × 10⁶</text>
+  <text x="61.800000" y="338.559999" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">7.6 × 10⁶</text>
+  <text x="61.800000" y="307.373330" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">7.7 × 10⁶</text>
+  <text x="61.800000" y="276.186665" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">7.8 × 10⁶</text>
+  <text x="61.800000" y="245.000000" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">8.0 × 10⁶</text>
+  <text x="61.800000" y="213.813326" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">8.1 × 10⁶</text>
+  <text x="61.800000" y="182.626670" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">8.2 × 10⁶</text>
+  <text x="61.800000" y="151.439996" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">8.4 × 10⁶</text>
+  <text x="61.800000" y="120.253322" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">8.5 × 10⁶</text>
+  <text x="61.800000" y="89.066667" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">8.6 × 10⁶</text>
+  <text x="1.979167" y="246.500000" fill="#000000" font-size="18.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000" transform="rotate(-90 25.1667 240)">Value</text>
 </svg>

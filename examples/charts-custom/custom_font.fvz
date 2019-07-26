@@ -1,3 +1,7 @@
+(set dpi 384)
+(set width 3600px)
+(set height 1920px)
+
 (set font "Comic Sans MS" Regular)
 (set font-emphasis "Comic Sans MS" Bold)
 

@@ -37,6 +37,12 @@ struct Measure {
   operator double() const;
 };
 
+struct MeasureConv {
+  double dpi;
+  Measure font_size;
+  Measure parent_size;
+};
+
 Measure from_unit(double v);
 Measure from_px(double v);
 Measure from_pt(double v, double dpi);
@@ -61,7 +67,7 @@ void convert_units(
 
 void convert_unit_typographic(
     double dpi,
-    double font_size_pt,
+    Measure font_size,
     Measure* measure);
 
 void convert_unit_relative(
@@ -71,6 +77,13 @@ void convert_unit_relative(
 void convert_unit_user(
     std::function<double (double)> converter,
     Measure* measure);
+
+void measure_normalize(const MeasureConv& conv, Measure* measure);
+
+void measure_normalizev(
+    const MeasureConv& conv,
+    Measure* begin,
+    Measure* end);
 
 } // namespace fviz
 

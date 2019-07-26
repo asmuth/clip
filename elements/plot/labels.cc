@@ -52,7 +52,7 @@ ReturnCode draw(
   /* convert units */
   convert_units(
       {
-        bind(&convert_unit_typographic, layer->dpi, layer->font_size.value, _1),
+        bind(&convert_unit_typographic, layer->dpi, layer->font_size, _1),
         bind(&convert_unit_user, scale_translate_fn(config->scale_x), _1),
         bind(&convert_unit_relative, clip.w, _1)
       },
@@ -61,7 +61,7 @@ ReturnCode draw(
 
   convert_units(
       {
-        bind(&convert_unit_typographic, layer->dpi, layer->font_size.value, _1),
+        bind(&convert_unit_typographic, layer->dpi, layer->font_size, _1),
         bind(&convert_unit_user, scale_translate_fn(config->scale_y), _1),
         bind(&convert_unit_relative, clip.h, _1)
       },

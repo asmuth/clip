@@ -176,6 +176,7 @@ Status svg_text_span_native(
 
 Status svg_text_span_embed(
     const layer_ops::TextSpanOp& op,
+    double dpi,
     SVGDataRef svg) {
   const auto& style = op.style;
 
@@ -185,7 +186,7 @@ Status svg_text_span_embed(
     auto rc = font_get_glyph_path(
         op.style.font.font,
         op.style.font_size,
-        96, // FIXME
+        dpi,
         g.codepoint,
         &gp);
 
@@ -210,9 +211,10 @@ Status svg_text_span_embed(
 
 Status svg_text_span(
     const layer_ops::TextSpanOp& op,
+    double dpi,
     SVGDataRef svg) {
   if (op.style.font.font_family_css.empty()) {
-    return svg_text_span_embed(op, svg);
+    return svg_text_span_embed(op, dpi, svg);
   } else {
     return svg_text_span_native(op, svg);
   }
@@ -259,15 +261,15 @@ ReturnCode layer_bind_svg(
     .dpi = dpi,
     .font_size = font_size,
     .text_shaper = std::make_shared<text::TextShaper>(),
-    .apply = [svg, submit] (const auto& op) {
-      return std::visit([svg, submit] (auto&& op) {
+    .apply = [dpi, svg, submit] (const auto& op) {
+      return std::visit([dpi, svg, submit] (auto&& op) {
         using T = std::decay_t<decltype(op)>;
         if constexpr (std::is_same_v<T, layer_ops::BrushStrokeOp>)
           return svg_stroke_path(op, svg);
         if constexpr (std::is_same_v<T, layer_ops::BrushFillOp>)
           return svg_fill_path(op, svg);
         if constexpr (std::is_same_v<T, layer_ops::TextSpanOp>)
-          return svg_text_span(op, svg);
+          return svg_text_span(op, dpi, svg);
         if constexpr (std::is_same_v<T, layer_ops::SubmitOp>)
           return submit(svg->to_svg());
         else

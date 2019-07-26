@@ -45,6 +45,13 @@ ReturnCode draw(
     std::shared_ptr<GridlineDefinition> config,
     const LayoutInfo& layout,
     Layer* layer) {
+  MeasureConv conv;
+  conv.dpi = layer->dpi;
+  conv.font_size = layer->font_size;
+  conv.parent_size = layer->font_size;
+
+  measure_normalize(conv, &config->line_width);
+
   const auto& bbox = layout.content_box;
 
   StrokeStyle style;

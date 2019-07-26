@@ -30,7 +30,7 @@ Environment::Environment() :
     background_color(Color::fromRGB(1,1,1)),
     foreground_color(Color::fromRGB(0,0,0)),
     text_color(Color::fromRGB(0,0,0)),
-    font_size(from_pt(11, dpi)) {}
+    font_size(from_pt(11)) {}
 
 ReturnCode environment_setup_defaults(Environment* env) {
   return try_chain({

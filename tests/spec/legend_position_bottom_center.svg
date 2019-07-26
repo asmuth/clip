@@ -1,17 +1,17 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="900.000000" height="600.000000" viewBox="0 0 900 600">
   <rect width="900.000000" height="600.000000" fill="#ffffff"/>
-  <path stroke-width="1.000000" stroke="#000000" fill="none" d="M359.68 400.422 L540.32 400.422 "/>
-  <path stroke-width="1.000000" stroke="#000000" fill="none" d="M540.32 400.422 L540.32 575.111 "/>
-  <path stroke-width="1.000000" stroke="#000000" fill="none" d="M359.68 575.111 L540.32 575.111 "/>
-  <path stroke-width="1.000000" stroke="#000000" fill="none" d="M359.68 400.422 L359.68 575.111 "/>
-  <text x="411.946701" y="437.333333" fill="#000000" font-size="18.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">Fnord Test 1</text>
-  <path fill="#0066cc" d="M395.302 430.833 M381.302 430.833 a7 7 0 1 0 14 0 a7 7 0 1 0 -14 0 "/>
-  <text x="411.946701" y="465.800000" fill="#000000" font-size="18.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">Fnord Test 2</text>
-  <path fill="#cc0066" d="M395.302 459.3 M381.302 459.3 a7 7 0 1 0 14 0 a7 7 0 1 0 -14 0 "/>
-  <text x="411.946701" y="494.266667" fill="#000000" font-size="18.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">Fnord Test 3</text>
-  <path fill="#cc0066" d="M395.302 487.767 M381.302 487.767 a7 7 0 1 0 14 0 a7 7 0 1 0 -14 0 "/>
-  <text x="411.946701" y="522.733333" fill="#000000" font-size="18.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">Fnord Test 4</text>
-  <path fill="#cc0066" d="M395.302 516.233 M381.302 516.233 a7 7 0 1 0 14 0 a7 7 0 1 0 -14 0 "/>
-  <text x="411.946701" y="551.200000" fill="#000000" font-size="18.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">Fnord Test 5</text>
-  <path fill="#66cc00" d="M395.302 544.7 M381.302 544.7 a7 7 0 1 0 14 0 a7 7 0 1 0 -14 0 "/>
+  <path stroke-width="1.000000" stroke="#000000" fill="none" d="M369.324 424.067 L530.676 424.067 "/>
+  <path stroke-width="1.000000" stroke="#000000" fill="none" d="M530.676 424.067 L530.676 581.333 "/>
+  <path stroke-width="1.000000" stroke="#000000" fill="none" d="M369.324 581.333 L530.676 581.333 "/>
+  <path stroke-width="1.000000" stroke="#000000" fill="none" d="M369.324 424.067 L369.324 581.333 "/>
+  <text x="408.524479" y="456.000000" fill="#000000" font-size="18.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">Fnord Test 1</text>
+  <path fill="#0066cc" d="M397.791 449.5 M383.791 449.5 a7 7 0 1 0 14 0 a7 7 0 1 0 -14 0 "/>
+  <text x="408.524479" y="482.600000" fill="#000000" font-size="18.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">Fnord Test 2</text>
+  <path fill="#cc0066" d="M397.791 476.1 M383.791 476.1 a7 7 0 1 0 14 0 a7 7 0 1 0 -14 0 "/>
+  <text x="408.524479" y="509.200000" fill="#000000" font-size="18.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">Fnord Test 3</text>
+  <path fill="#cc0066" d="M397.791 502.7 M383.791 502.7 a7 7 0 1 0 14 0 a7 7 0 1 0 -14 0 "/>
+  <text x="408.524479" y="535.800000" fill="#000000" font-size="18.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">Fnord Test 4</text>
+  <path fill="#cc0066" d="M397.791 529.3 M383.791 529.3 a7 7 0 1 0 14 0 a7 7 0 1 0 -14 0 "/>
+  <text x="408.524479" y="562.400000" fill="#000000" font-size="18.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">Fnord Test 5</text>
+  <path fill="#66cc00" d="M397.791 555.9 M383.791 555.9 a7 7 0 1 0 14 0 a7 7 0 1 0 -14 0 "/>
 </svg>

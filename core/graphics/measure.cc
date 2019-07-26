@@ -128,15 +128,23 @@ void convert_units(
 
 void convert_unit_typographic(
     double dpi,
-    double font_size,
+    Measure font_size,
     Measure* measure) {
+  switch (font_size.unit) {
+    case Unit::PT:
+      font_size.value = (double(font_size) / 72.0) * dpi;
+      break;
+    case Unit::UNIT:
+      break;
+  }
+
   switch (measure->unit) {
     case Unit::PT:
       measure->value = (measure->value / 72.0) * dpi;
       measure->unit = Unit::UNIT;
       break;
     case Unit::REM:
-      measure->value = (measure->value / 72.0) * dpi * font_size;
+      measure->value = measure->value * font_size;
       measure->unit = Unit::UNIT;
       break;
   }
@@ -161,6 +169,71 @@ void convert_unit_user(
       measure->unit = Unit::REL;
       measure->value = std::clamp(converter(measure->value), 0.0, 1.0);
       break;
+  }
+}
+
+void measure_normalize(const MeasureConv& conv, Measure* measure) {
+  double parent_size = 0;
+  switch (conv.parent_size.unit) {
+    case Unit::PT:
+      parent_size = (double(conv.parent_size) / 72.0) * conv.dpi;
+      break;
+    case Unit::REM:
+    case Unit::REL:
+      parent_size = 0;
+      break;
+    case Unit::UNIT:
+    case Unit::PX:
+    case Unit::USER:
+      parent_size = double(conv.parent_size);
+      break;
+  }
+
+  double font_size = 0;
+  switch (conv.font_size.unit) {
+    case Unit::PT:
+      font_size = (double(conv.font_size) / 72.0) * conv.dpi;
+      break;
+    case Unit::REM:
+      font_size = 0;
+      break;
+    case Unit::REL:
+      font_size = parent_size * double(conv.font_size);
+      break;
+    case Unit::UNIT:
+    case Unit::PX:
+    case Unit::USER:
+      font_size = double(conv.font_size);
+      break;
+  }
+
+  switch (measure->unit) {
+    case Unit::PT:
+      measure->value = (measure->value / 72.0) * conv.dpi;
+      measure->unit = Unit::UNIT;
+      break;
+    case Unit::REM:
+      measure->value = measure->value * font_size;
+      measure->unit = Unit::UNIT;
+      break;
+    case Unit::REL:
+      measure->value = measure->value * parent_size;
+      measure->unit = Unit::UNIT;
+      break;
+    case Unit::UNIT:
+    case Unit::PX:
+    case Unit::USER:
+      measure->unit = Unit::UNIT;
+      break;
+  }
+}
+
+void measure_normalizev(
+    const MeasureConv& conv,
+    Measure* begin,
+    Measure* end) {
+  for (; begin != end; ++begin) {
+    measure_normalize(conv, begin);
   }
 }
 

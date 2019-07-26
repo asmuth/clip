@@ -65,7 +65,7 @@ ReturnCode draw_horizontal(
   /* convert units */
   convert_units(
       {
-        bind(&convert_unit_typographic, layer->dpi, layer->font_size.value, _1),
+        bind(&convert_unit_typographic, layer->dpi, layer->font_size, _1),
         bind(&convert_unit_user, scale_translate_fn(config.scale_x), _1),
         bind(&convert_unit_relative, clip.w, _1)
       },
@@ -74,7 +74,7 @@ ReturnCode draw_horizontal(
 
   convert_units(
       {
-        bind(&convert_unit_typographic, layer->dpi, layer->font_size.value, _1),
+        bind(&convert_unit_typographic, layer->dpi, layer->font_size, _1),
         bind(&convert_unit_user, scale_translate_fn(config.scale_x), _1),
         bind(&convert_unit_relative, clip.w, _1)
       },
@@ -83,7 +83,7 @@ ReturnCode draw_horizontal(
 
   convert_units(
       {
-        bind(&convert_unit_typographic, layer->dpi, layer->font_size.value, _1),
+        bind(&convert_unit_typographic, layer->dpi, layer->font_size, _1),
         bind(&convert_unit_user, scale_translate_fn(config.scale_y), _1),
         bind(&convert_unit_relative, clip.h, _1)
       },
@@ -92,7 +92,7 @@ ReturnCode draw_horizontal(
 
   convert_units(
       {
-        bind(&convert_unit_typographic, layer->dpi, layer->font_size.value, _1),
+        bind(&convert_unit_typographic, layer->dpi, layer->font_size, _1),
         bind(&convert_unit_user, scale_translate_fn(config.scale_y), _1),
         bind(&convert_unit_relative, clip.h, _1)
       },
@@ -101,14 +101,14 @@ ReturnCode draw_horizontal(
 
   convert_units(
       {
-        bind(&convert_unit_typographic, layer->dpi, layer->font_size.value, _1)
+        bind(&convert_unit_typographic, layer->dpi, layer->font_size, _1)
       },
       &*config.sizes.begin(),
       &*config.sizes.end());
 
   convert_units(
       {
-        bind(&convert_unit_typographic, layer->dpi, layer->font_size.value, _1)
+        bind(&convert_unit_typographic, layer->dpi, layer->font_size, _1)
       },
       &*config.offsets.begin(),
       &*config.offsets.end());
@@ -186,7 +186,7 @@ ReturnCode draw_vertical(
   /* convert units */
   convert_units(
       {
-        bind(&convert_unit_typographic, layer->dpi, layer->font_size.value, _1),
+        bind(&convert_unit_typographic, layer->dpi, layer->font_size, _1),
         bind(&convert_unit_user, scale_translate_fn(config.scale_x), _1),
         bind(&convert_unit_relative, clip.w, _1)
       },
@@ -195,7 +195,7 @@ ReturnCode draw_vertical(
 
   convert_units(
       {
-        bind(&convert_unit_typographic, layer->dpi, layer->font_size.value, _1),
+        bind(&convert_unit_typographic, layer->dpi, layer->font_size, _1),
         bind(&convert_unit_user, scale_translate_fn(config.scale_x), _1),
         bind(&convert_unit_relative, clip.w, _1)
       },
@@ -204,7 +204,7 @@ ReturnCode draw_vertical(
 
   convert_units(
       {
-        bind(&convert_unit_typographic, layer->dpi, layer->font_size.value, _1),
+        bind(&convert_unit_typographic, layer->dpi, layer->font_size, _1),
         bind(&convert_unit_user, scale_translate_fn(config.scale_y), _1),
         bind(&convert_unit_relative, clip.h, _1)
       },
@@ -213,7 +213,7 @@ ReturnCode draw_vertical(
 
   convert_units(
       {
-        bind(&convert_unit_typographic, layer->dpi, layer->font_size.value, _1),
+        bind(&convert_unit_typographic, layer->dpi, layer->font_size, _1),
         bind(&convert_unit_user, scale_translate_fn(config.scale_y), _1),
         bind(&convert_unit_relative, clip.h, _1)
       },
@@ -222,14 +222,14 @@ ReturnCode draw_vertical(
 
   convert_units(
       {
-        bind(&convert_unit_typographic, layer->dpi, layer->font_size.value, _1)
+        bind(&convert_unit_typographic, layer->dpi, layer->font_size, _1)
       },
       &*config.sizes.begin(),
       &*config.sizes.end());
 
   convert_units(
       {
-        bind(&convert_unit_typographic, layer->dpi, layer->font_size.value, _1)
+        bind(&convert_unit_typographic, layer->dpi, layer->font_size, _1)
       },
       &*config.offsets.begin(),
       &*config.offsets.end());
