@@ -83,6 +83,12 @@ std::string svg_path_data(const Path& path) {
       case PathCommand::LINE_TO:
         path_data << fmt::format("L{} {} ", cmd[0], cmd[1]);
         break;
+      case PathCommand::QUADRATIC_CURVE_TO:
+        path_data << fmt::format("Q{} {} {} {} ", cmd[0], cmd[1], cmd[2], cmd[3]);
+        break;
+      case PathCommand::CUBIC_CURVE_TO:
+        path_data << fmt::format("C{} {} {} {} {} {} ", cmd[0], cmd[1], cmd[2], cmd[3], cmd[4], cmd[5]);
+        break;
       case PathCommand::ARC_TO:
         // FIXME: respect angle1/2 arguments
         path_data << fmt::format("M{} {} ", cmd[0] - cmd[2], cmd[1]);
