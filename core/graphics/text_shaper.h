@@ -38,6 +38,7 @@ struct GlyphInfo {
 
 Status text_shape(
     const std::string& text,
+    TextDirection text_direction,
     FontRef font,
     double font_size,
     double dpi,
@@ -45,6 +46,7 @@ Status text_shape(
 
 Status text_shape_with_font_fallback(
     const std::string& text,
+    TextDirection text_direction,
     const FontInfo& font_info,
     double font_size,
     double dpi,

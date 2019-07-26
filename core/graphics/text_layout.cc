@@ -29,6 +29,7 @@ Status text_layout_hspan(
   std::vector<GlyphInfo> glyph_list;
   auto shaping_rc = text_shape_with_font_fallback(
       text,
+      text_direction,
       font_info,
       font_size,
       dpi,
@@ -38,15 +39,22 @@ Status text_layout_hspan(
     return shaping_rc;
   }
 
-  double line_length = 0.0f;
-  double line_top = 0.0f;
-  double line_bottom = 0.0f;
+  double span_length = 0.0;
+  double span_top = 0.0;
+  double span_bottom = 0.0;
   for (const auto& gi : glyph_list) {
-    GlyphPlacement gp = {
-      .codepoint = gi.codepoint,
-      .x = line_length,
-      .y = 0
-    };
+    GlyphPlacement gp;
+    gp.codepoint = gi.codepoint;
+    gp.y = 0;
+
+    switch (text_direction) {
+      case TextDirection::LTR:
+        gp.x = span_length;
+        break;
+      case TextDirection::RTL:
+        gp.x = -span_length - gi.advance_x;
+        break;
+    }
 
     GlyphSpan span;
     span.font = gi.font;
@@ -57,16 +65,27 @@ Status text_layout_hspan(
       glyph_spans->emplace_back(span);
     }
 
-    line_length += gi.advance_x;
-    line_top = std::min(-gi.metrics_ascender, line_top);
-    line_bottom = std::max(-gi.metrics_descender, line_bottom);
+    span_length += gi.advance_x;
+    span_top = std::min(-gi.metrics_ascender, span_top);
+    span_bottom = std::max(-gi.metrics_descender, span_bottom);
+  }
+
+
+  double span_left = 0.0;
+  switch (text_direction) {
+    case TextDirection::LTR:
+      span_left = 0;
+      break;
+    case TextDirection::RTL:
+      span_left = -span_length;
+      break;
   }
 
   *bbox = Rectangle(
-      0,
-      line_top,
-      line_length,
-      line_bottom - line_top);
+      span_left,
+      span_top,
+      span_length,
+      span_bottom - span_top);
 
   return OK;
 }

@@ -23,6 +23,7 @@ namespace text {
 
 Status text_shape(
     const std::string& text,
+    TextDirection text_direction,
     FontRef font,
     double font_size,
     double dpi,
@@ -40,8 +41,14 @@ Status text_shape(
   auto hb_font = hb_ft_font_create_referenced(ft_font);
 
   hb_buffer_reset(hb_buf);
-  hb_buffer_set_direction(hb_buf, HB_DIRECTION_LTR);
-  hb_buffer_set_script(hb_buf, HB_SCRIPT_LATIN);
+  switch (text_direction) {
+    case TextDirection::LTR:
+      hb_buffer_set_direction(hb_buf, HB_DIRECTION_LTR);
+      break;
+    case TextDirection::RTL:
+      hb_buffer_set_direction(hb_buf, HB_DIRECTION_RTL);
+      break;
+  }
 
   hb_buffer_add_utf8(hb_buf, text.data(), text.size(), 0, text.size());
   hb_shape(hb_font, hb_buf, NULL, 0);
@@ -67,6 +74,7 @@ Status text_shape(
 
 Status text_shape_with_font_fallback(
     const std::string& text,
+    TextDirection dir,
     const FontInfo& font_info,
     double font_size,
     double dpi,
@@ -87,7 +95,7 @@ Status text_shape_with_font_fallback(
     for (const auto& font : font_info.fonts) {
       grapheme_glyphs.clear();
 
-      auto rc = text_shape(grapheme, font, font_size, dpi, &grapheme_glyphs);
+      auto rc = text_shape(grapheme, dir, font, font_size, dpi, &grapheme_glyphs);
       if (rc != OK) {
         return rc;
       }

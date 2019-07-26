@@ -48,6 +48,15 @@ Status drawTextLabel(
     const Point& position,
     HAlign align_x,
     VAlign align_y,
+    double rotate,
+    const TextStyle& text_style,
+    Layer* layer);
+
+Status drawTextLabel(
+    const std::string& text,
+    const Point& position,
+    HAlign align_x,
+    VAlign align_y,
     const TextStyle& text_style,
     Layer* layer);
 
