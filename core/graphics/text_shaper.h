@@ -41,7 +41,7 @@ public:
       const FontInfo& font,
       double font_size,
       double dpi,
-      std::function<void (const GlyphInfo&)> glyph_cb) const;
+      std::vector<GlyphInfo>* glyphs) const;
 
 protected:
   double dpi;

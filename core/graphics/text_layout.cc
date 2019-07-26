@@ -26,44 +26,45 @@ Status text_layout_ltr(
     const TextShaper* shaper,
     std::vector<GlyphPlacement>* glyphs,
     Rectangle* bbox) {
-  double line_length = 0.0f;
-  double top = 0.0f;
-  double bottom = 0.0f;
-
+  std::vector<GlyphInfo> glyphs_raw;
   auto rc = shaper->shapeText(
       text,
       font_info,
       font_size,
       dpi,
-      [&] (const GlyphInfo& gi) {
-        GlyphPlacement gp = {
-          .codepoint = gi.codepoint,
-          .x = line_length,
-          .y = 0
-        };
-
-        if (glyphs) {
-          glyphs->emplace_back(gp);
-        }
-
-        line_length += gi.advance_x;
-        top = std::min(-gi.metrics_ascender, top);
-        bottom = std::max(-gi.metrics_descender, bottom);
-      });
+      &glyphs_raw);
 
   if (rc != OK) {
     return rc;
   }
 
+  double line_length = 0.0f;
+  double line_top = 0.0f;
+  double line_bottom = 0.0f;
+  for (const auto& gi : glyphs_raw) {
+    GlyphPlacement gp = {
+      .codepoint = gi.codepoint,
+      .x = line_length,
+      .y = 0
+    };
+
+    if (glyphs) {
+      glyphs->emplace_back(gp);
+    }
+
+    line_length += gi.advance_x;
+    line_top = std::min(-gi.metrics_ascender, line_top);
+    line_bottom = std::max(-gi.metrics_descender, line_bottom);
+  }
+
   *bbox = Rectangle(
       0,
-      top,
+      line_top,
       line_length,
-      bottom - top);
+      line_bottom - line_top);
 
   return OK;
 }
-
 
 Status text_layout(
     const std::string& text,

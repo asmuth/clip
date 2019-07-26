@@ -32,7 +32,7 @@ Status TextShaper::shapeText(
     const FontInfo& font,
     double font_size,
     double dpi,
-    std::function<void (const GlyphInfo&)> glyph_cb) const {
+    std::vector<GlyphInfo>* glyphs) const {
   if (!ft_ready) {
     if (FT_Init_FreeType(&ft)) {
       return ERROR;
@@ -72,7 +72,7 @@ Status TextShaper::shapeText(
     g.advance_y = glyph_positions[i].y_advance / 64.0;
     g.metrics_ascender = ft_font->size->metrics.ascender / 64.0; // FIXME this is constant for all glyphs
     g.metrics_descender = ft_font->size->metrics.descender / 64.0; // FIXME this is constant for all glyphs
-    glyph_cb(g);
+    glyphs->emplace_back(g);
   }
 
   hb_font_destroy(hb_font);
