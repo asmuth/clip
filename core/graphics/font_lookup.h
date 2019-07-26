@@ -14,6 +14,7 @@
 #pragma once
 #include <memory>
 #include "return_code.h"
+#include "path.h"
 
 namespace fviz {
 
@@ -41,9 +42,17 @@ enum DefaultFont {
 
 ReturnCode font_load(const std::string& font_file, FontRef* font);
 
+ReturnCode font_get_glyph_path(
+    FontRef font,
+    double font_size,
+    double dpi,
+    uint32_t codepoint,
+    Path* path);
+
 ReturnCode font_find(DefaultFont font_name, FontInfo* font_info);
 
 ReturnCode font_find_expr(const Expr* expr, FontInfo* font_info);
+
 
 } // namespace fviz
 

@@ -13,6 +13,7 @@
  */
 #include "font_lookup.h"
 #include "sexpr.h"
+#include "graphics/geometry.h"
 #include "utils/fileutil.h"
 
 #include <iostream>
@@ -21,6 +22,7 @@
 #include <fontconfig/fontconfig.h>
 #include <ft2build.h>
 #include FT_FREETYPE_H
+#include FT_GLYPH_H
 
 using namespace std::placeholders;
 
@@ -56,6 +58,62 @@ ReturnCode font_load(const std::string& font_file, FontRef* font_ref) {
   }
 
   *font_ref = std::move(font);
+  return OK;
+}
+
+ReturnCode font_get_glyph_path(
+    FontRef font,
+    double font_size,
+    double dpi,
+    uint32_t codepoint,
+    Path* path) {
+  /* load the glyph using freetype */
+  auto font_size_ft = font_size * (72.0 / dpi) * 64;
+  if (FT_Set_Char_Size(font->ft_font, 0, font_size_ft, dpi, dpi)) {
+    return ERROR;
+  }
+
+  if (FT_Load_Glyph(font->ft_font, codepoint, FT_LOAD_DEFAULT)) {
+    return ERROR;
+  }
+
+  FT_Glyph glyph;
+  if (FT_Get_Glyph(font->ft_font->glyph, &glyph)) {
+    return ERROR;
+  }
+
+  if (glyph->format != FT_GLYPH_FORMAT_OUTLINE) {
+    return ERROR;
+  }
+
+  auto glyph_outline = &((FT_OutlineGlyph) glyph)->outline;
+
+  /* retrieve the glyph outline data from freetype */
+  std::vector<Point> glyph_points;
+  for (size_t n = 0; n < glyph_outline->n_contours; n++) {
+    auto glyph_outline_idx = n == 0 ? 0 : glyph_outline->contours[n - 1] + 1;
+    auto glyph_outline_end = glyph_outline->contours[n];
+
+    for (size_t i = glyph_outline_idx; i <= glyph_outline_end; ++i) {
+      Point p;
+      p.x = glyph_outline->points[i].x / 64;
+      p.y = -glyph_outline->points[i].y / 64;
+
+      glyph_points.push_back(p);
+    }
+  }
+
+  /* convert the glyph outline to a path object */
+  *path = Path{};
+
+  for (size_t i = 0; i < glyph_points.size(); ++i) {
+    if (i == 0) {
+      path->moveTo(glyph_points[i].x, glyph_points[i].y);
+    } else {
+      path->lineTo(glyph_points[i].x, glyph_points[i].y);
+    }
+  }
+
   return OK;
 }
 

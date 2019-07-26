@@ -73,39 +73,6 @@ std::string svg_body(const std::string& in) {
   return out;
 }
 
-Status svg_text_span(
-    const layer_ops::TextSpanOp& op,
-    SVGDataRef svg) {
-  const auto& style = op.style;
-
-  std::string transform;
-  if (op.rotate) {
-    transform = svg_attr(
-        "transform",
-        fmt::format("rotate({} {} {})",
-        op.rotate,
-        op.rotate_pivot.x,
-        op.rotate_pivot.y));
-  }
-
-  svg->buffer
-    << "  "
-    << "<text"
-    << svg_attr("x", op.origin.x)
-    << svg_attr("y", op.origin.y)
-    << svg_attr("fill", style.color.to_hex_str())
-    << svg_attr("font-size", style.font_size)
-    << svg_attr("font-family", style.font.font_family_css)
-    << svg_attr("font-weight", style.font.font_weight_css)
-    << transform
-    << ">"
-    << svg_body(op.text)
-    << "</text>"
-    << "\n";
-
-  return OK;
-}
-
 std::string svg_path_data(const Path& path) {
   std::stringstream path_data;
   for (const auto& cmd : path) {
@@ -166,6 +133,79 @@ Status svg_fill_path(
       << "\n";
 
   return OK;
+}
+
+Status svg_text_span_native(
+    const layer_ops::TextSpanOp& op,
+    SVGDataRef svg) {
+  const auto& style = op.style;
+
+  std::string transform;
+  if (op.rotate) {
+    transform = svg_attr(
+        "transform",
+        fmt::format("rotate({} {} {})",
+        op.rotate,
+        op.rotate_pivot.x,
+        op.rotate_pivot.y));
+  }
+
+  svg->buffer
+    << "  "
+    << "<text"
+    << svg_attr("x", op.origin.x)
+    << svg_attr("y", op.origin.y)
+    << svg_attr("fill", style.color.to_hex_str())
+    << svg_attr("font-size", style.font_size)
+    << svg_attr("font-family", style.font.font_family_css)
+    << svg_attr("font-weight", style.font.font_weight_css)
+    << transform
+    << ">"
+    << svg_body(op.text)
+    << "</text>"
+    << "\n";
+
+  return OK;
+}
+
+Status svg_text_span_embed(
+    const layer_ops::TextSpanOp& op,
+    SVGDataRef svg) {
+  const auto& style = op.style;
+
+  for (const auto& g : op.glyphs) {
+    Path gp;
+
+    auto rc = font_get_glyph_path(
+        op.style.font.font,
+        op.style.font_size,
+        96, // FIXME
+        g.codepoint,
+        &gp);
+
+    if (!rc) {
+      return ERROR;
+    }
+
+    auto gt = fmt::format("translate({} {})", g.x, g.y);
+
+    svg->buffer
+        << "  "
+        << "<path"
+        << svg_attr("fill", style.color.to_hex_str())
+        << svg_attr("d", svg_path_data(gp))
+        << svg_attr("transform", gt)
+        << "/>"
+        << "\n";
+  }
+
+  return OK;
+}
+
+Status svg_text_span(
+    const layer_ops::TextSpanOp& op,
+    SVGDataRef svg) {
+  return svg_text_span_embed(op, svg);
 }
 
 std::string SVGData::to_svg() const {
