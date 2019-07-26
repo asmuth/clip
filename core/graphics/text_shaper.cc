@@ -14,20 +14,22 @@
 #include <graphics/text_shaper.h>
 #include <iostream>
 
+#include <boost/locale.hpp>
+
+using std::placeholders::_1;
+
 namespace fviz {
 namespace text {
 
-TextShaper::TextShaper() :
-    hb_buf(hb_buffer_create()) {}
-
-TextShaper::~TextShaper() {}
-
-Status TextShaper::shapeText(
+Status text_shape(
     const std::string& text,
     FontRef font,
     double font_size,
     double dpi,
-    std::vector<GlyphInfo>* glyphs) const {
+    std::vector<GlyphInfo>* glyphs) {
+  std::unique_ptr<hb_buffer_t, std::function<void (hb_buffer_t*)>> hb_buf_ref(hb_buffer_create(), bind(&hb_buffer_destroy, _1));
+
+  auto hb_buf = hb_buf_ref.get();
   auto ft_font = static_cast<FT_Face>(font_get_freetype(font));
 
   auto font_size_ft = font_size * (72.0 / dpi) * 64;
@@ -49,6 +51,7 @@ Status TextShaper::shapeText(
   auto glyph_positions = hb_buffer_get_glyph_positions(hb_buf, &glyph_count);
   for (size_t i = 0; i < glyph_count; ++i) {
     GlyphInfo g;
+    g.font = font;
     g.codepoint = glyph_infos[i].codepoint;
     g.advance_x = glyph_positions[i].x_advance / 64.0;
     g.advance_y = glyph_positions[i].y_advance / 64.0;
@@ -58,6 +61,52 @@ Status TextShaper::shapeText(
   }
 
   hb_font_destroy(hb_font);
+
+  return OK;
+}
+
+Status text_shape_with_font_fallback(
+    const std::string& text,
+    const FontInfo& font_info,
+    double font_size,
+    double dpi,
+    std::vector<GlyphInfo>* glyphs) {
+
+  boost::locale::generator locale_gen;
+  boost::locale::boundary::ssegment_index grapheme_iter(
+        boost::locale::boundary::character,
+        text.begin(),
+        text.end(),
+        locale_gen("en_US.UTF-8"));
+
+  // TODO: try to create the longest runs possible with the same font by
+  // backgracking
+  for (const auto& grapheme : grapheme_iter) {
+    std::vector<GlyphInfo> grapheme_glyphs;
+
+    for (const auto& font : font_info.fonts) {
+      grapheme_glyphs.clear();
+
+      auto rc = text_shape(grapheme, font, font_size, dpi, &grapheme_glyphs);
+      if (rc != OK) {
+        return rc;
+      }
+
+      bool font_ok = true;
+      for (const auto& g : grapheme_glyphs) {
+        if (g.codepoint == 0) {
+          font_ok = false;
+          break;
+        }
+      }
+
+      if (font_ok) {
+        break;
+      }
+    }
+
+    glyphs->insert(glyphs->end(), grapheme_glyphs.begin(), grapheme_glyphs.end());
+  }
 
   return OK;
 }

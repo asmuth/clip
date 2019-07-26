@@ -19,14 +19,6 @@ namespace fviz {
 namespace text {
 class TextShaper;
 
-struct GlyphInfo {
-  uint32_t codepoint;
-  double advance_y;
-  double advance_x;
-  double metrics_ascender;
-  double metrics_descender;
-};
-
 struct GlyphPlacement {
   uint32_t codepoint;
   double x;
@@ -39,27 +31,25 @@ struct GlyphSpan {
 };
 
 /**
- * Measure the size of a span of text where (0, 0) is the baseline of the first
- * glyph
+ * Measure the size of a horizontal span of text where (0, 0) is the baseline of
+ * the first glyph
  */
 Status text_measure_span(
     const std::string& text,
     const FontInfo& font_info,
     double font_size,
     double dpi,
-    const TextShaper* shaper,
     Rectangle* rect);
 
 /**
- * Layout a single line of text -- currently only LTR layout is supported
+ * Layout a horizontal span of text -- currently only LTR layout is supported
  */
-Status text_layout(
+Status text_layout_hspan(
     const std::string& text,
+    TextDirection direction,
     const FontInfo& font,
     double font_size,
     double dpi,
-    TextDirection direction,
-    const TextShaper* shaper,
     std::vector<GlyphSpan>* spans,
     Rectangle* bbox);
 

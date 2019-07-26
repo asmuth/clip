@@ -262,7 +262,6 @@ ReturnCode layer_bind_svg(
     .height = svg->height = height,
     .dpi = dpi,
     .font_size = font_size,
-    .text_shaper = std::make_shared<text::TextShaper>(),
     .apply = [dpi, svg, submit] (const auto& op) {
       return std::visit([dpi, svg, submit] (auto&& op) {
         using T = std::decay_t<decltype(op)>;

@@ -1,0 +1,15 @@
+(set dpi 400)
+(set width 1800px)
+(set height 2000px)
+(set font-size 14pt)
+
+(set font "Comic Sans MS" Regular)
+
+(legend
+  item-flow on
+  item (label "i北京市 (Beijing)" color #06c)
+  item (label "תל אביב (Tel Aviv)" color #c06)
+  item (label "القاهرة‎ (Cairo)" color #c06)
+  item (label "Москва" color #60c)
+  item (label "Universe ∞ⁱ" color #6c0))
+

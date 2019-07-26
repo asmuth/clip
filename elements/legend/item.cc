@@ -88,7 +88,6 @@ ReturnCode layout(
         config->label_font,
         config->label_font_size,
         layer.dpi,
-        layer.text_shaper.get(),
         &label_bbox);
        rc != Status::OK) {
     return rc;

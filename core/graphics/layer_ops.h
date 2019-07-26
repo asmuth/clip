@@ -21,6 +21,7 @@
 #include "measure.h"
 #include "brush.h"
 #include "text.h"
+#include "text_layout.h"
 
 namespace fviz {
 namespace layer_ops {

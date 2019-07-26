@@ -22,31 +22,33 @@
 #include <harfbuzz/hb-ft.h>
 #include <harfbuzz/hb-icu.h>
 
-#include "graphics/text_layout.h"
 #include "text.h"
 
 namespace fviz {
 namespace text {
 
-class TextShaper {
-public:
-
-  TextShaper();
-  ~TextShaper();
-  TextShaper(const TextShaper&) = delete;
-  TextShaper& operator=(const TextShaper&) = delete;
-
-  Status shapeText(
-      const std::string& text,
-      FontRef font,
-      double font_size,
-      double dpi,
-      std::vector<GlyphInfo>* glyphs) const;
-
-protected:
-  double dpi;
-  mutable hb_buffer_t* hb_buf;
+struct GlyphInfo {
+  FontRef font;
+  uint32_t codepoint;
+  double advance_y;
+  double advance_x;
+  double metrics_ascender;
+  double metrics_descender;
 };
+
+Status text_shape(
+    const std::string& text,
+    FontRef font,
+    double font_size,
+    double dpi,
+    std::vector<GlyphInfo>* glyphs);
+
+Status text_shape_with_font_fallback(
+    const std::string& text,
+    const FontInfo& font_info,
+    double font_size,
+    double dpi,
+    std::vector<GlyphInfo>* glyphs);
 
 } // namespace text
 } // namespace fviz

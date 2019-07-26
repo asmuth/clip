@@ -24,8 +24,7 @@ ReturnCode layer_bind_img(
     const Color& background_color,
     std::function<Status (const unsigned char* data, size_t len)> submit,
     LayerRef* layer) {
-  auto text_shaper = std::make_shared<text::TextShaper>();
-  auto raster = std::make_shared<Rasterizer>(width, height, dpi, text_shaper);
+  auto raster = std::make_shared<Rasterizer>(width, height, dpi);
   raster->clear(background_color);
 
   layer->reset(new Layer {
@@ -33,7 +32,6 @@ ReturnCode layer_bind_img(
     .height = height,
     .dpi = dpi,
     .font_size = font_size,
-    .text_shaper = text_shaper,
     .apply = [submit, raster] (auto op) {
       return std::visit([submit, raster] (auto&& op) {
         using T = std::decay_t<decltype(op)>;
@@ -62,8 +60,7 @@ ReturnCode layer_bind_png(
     const Color& background_color,
     std::function<Status (const std::string&)> submit,
     LayerRef* layer) {
-  auto text_shaper = std::make_shared<text::TextShaper>();
-  auto raster = std::make_shared<Rasterizer>(width, height, dpi, text_shaper);
+  auto raster = std::make_shared<Rasterizer>(width, height, dpi);
   raster->clear(background_color);
 
   layer->reset(new Layer {
@@ -71,7 +68,6 @@ ReturnCode layer_bind_png(
     .height = height,
     .dpi = dpi,
     .font_size = font_size,
-    .text_shaper = text_shaper,
     .apply = [submit, raster] (auto op) {
       return std::visit([submit, raster] (auto&& op) {
         using T = std::decay_t<decltype(op)>;

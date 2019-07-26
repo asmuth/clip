@@ -148,7 +148,6 @@ ReturnCode axis_layout_labels(
           axis.label_font,
           axis.label_font_size,
           layer.dpi,
-          layer.text_shaper.get(),
           &label_bbox);
          rc != Status::OK) {
       return rc;
@@ -187,7 +186,6 @@ ReturnCode axis_layout_title(
         axis.title_font,
         axis.title_font_size,
         layer.dpi,
-        layer.text_shaper.get(),
         &title_bbox);
        rc != Status::OK) {
     return rc;

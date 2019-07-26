@@ -31,13 +31,12 @@ Status drawTextLabel(
     Layer* layer) {
   Rectangle bbox;
   std::vector<text::GlyphSpan> spans;
-  auto rc = text::text_layout(
+  auto rc = text::text_layout_hspan(
       text,
+      style.direction,
       style.font,
       style.font_size,
       layer->dpi,
-      style.direction,
-      layer->text_shaper.get(),
       &spans,
       &bbox);
 

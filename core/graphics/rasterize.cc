@@ -21,17 +21,10 @@ namespace fviz {
 Rasterizer::Rasterizer(
     uint32_t width_,
     uint32_t height_,
-    double dpi_,
-    std::shared_ptr<text::TextShaper> text_shaper_) :
+    double dpi_) :
     width(width_),
     height(height_),
-    dpi(dpi_),
-    text_shaper(text_shaper_),
-    ft_ready(false) {
-  if (!FT_Init_FreeType(&ft)) {
-    ft_ready = true;
-  }
-
+    dpi(dpi_) {
   cr_surface = cairo_image_surface_create(
       CAIRO_FORMAT_ARGB32,
       width,
@@ -41,10 +34,6 @@ Rasterizer::Rasterizer(
 }
 
 Rasterizer::~Rasterizer() {
-  if (ft_ready) {
-    FT_Done_FreeType(ft);
-  }
-
   cairo_destroy(cr_ctx);
   cairo_surface_destroy(cr_surface);
 }
