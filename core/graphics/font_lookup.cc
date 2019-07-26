@@ -146,7 +146,7 @@ ReturnCode font_get_glyph_path(
     if (i + 2 < glyph_points.size() &&
         glyph_point_tags[i + 0] == GlyphPointType::CONTROL &&
         glyph_point_tags[i + 1] == GlyphPointType::CONTROL) {
-      assert(glyph_point_tags[i + 2] != GlyphPointType::CONTROL);
+      //assert(glyph_point_tags[i + 2] != GlyphPointType::CONTROL);
 
       path->cubicCurveTo(
           glyph_points[i + 0].x,
@@ -163,7 +163,7 @@ ReturnCode font_get_glyph_path(
     // second order bezier
     if (i + 1 < glyph_points.size() &&
         glyph_point_tags[i] == GlyphPointType::CONTROL) {
-      assert(glyph_point_tags[i + 1] != GlyphPointType::CONTROL);
+      //assert(glyph_point_tags[i + 1] != GlyphPointType::CONTROL);
 
       path->quadraticCurveTo(
           glyph_points[i + 0].x,
@@ -307,10 +307,12 @@ ReturnCode font_find_expr(const Expr* expr, FontInfo* font_info) {
     return font_find(ROMAN_MONOSPACE_BOLD, font_info);
   }
 
+  // custom font
+  *font_info = FontInfo{};
+
   std::vector<std::string> font_names;
   std::string font_fc;
   std::string font_style_fc;
-  std::string font_css;
   double font_style_css = 400;
   for (auto arg = expr; arg; arg = expr_next(arg)) {
     if (!expr_is_value(arg)) {
@@ -355,12 +357,6 @@ ReturnCode font_find_expr(const Expr* expr, FontInfo* font_info) {
     }
 
     font_fc += font_name;
-
-    if (!font_css.empty()) {
-      font_css += ",";
-    }
-
-    font_css += "'" + font_name + "'"; // FIXME
   }
 
   if (!font_style_fc.empty()) {
@@ -378,9 +374,6 @@ ReturnCode font_find_expr(const Expr* expr, FontInfo* font_info) {
         font_info->font_file,
         rc.message);
   }
-
-  font_info->font_family_css = font_css;
-  font_info->font_weight_css = font_style_css;
 
   return OK;
 }

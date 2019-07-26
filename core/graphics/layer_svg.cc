@@ -211,7 +211,11 @@ Status svg_text_span_embed(
 Status svg_text_span(
     const layer_ops::TextSpanOp& op,
     SVGDataRef svg) {
-  return svg_text_span_embed(op, svg);
+  if (op.style.font.font_family_css.empty()) {
+    return svg_text_span_embed(op, svg);
+  } else {
+    return svg_text_span_native(op, svg);
+  }
 }
 
 std::string SVGData::to_svg() const {
