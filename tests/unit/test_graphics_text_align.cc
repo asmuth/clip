@@ -15,23 +15,24 @@
 #include "graphics/color.h"
 #include "graphics/layer.h"
 #include "graphics/layer_svg.h"
+#include "graphics/layer_pixmap.h"
 #include "graphics/text.h"
-#include "environment.h"
 #include "utils/fileutil.h"
 #include "unittest.h"
 
 using namespace fviz;
 
 void draw_test(
-    const Environment& env,
     Layer* l,
+    const FontInfo& font,
     uint32_t x,
     uint32_t y,
     HAlign ax,
     VAlign ay) {
   TextStyle ts;
-  ts.font = env.font;
-  ts.font_size = from_unit(12);
+  ts.font = font;
+  ts.font_size = from_unit(64);
+  ts.color = Color::fromRGB(0,0,0);
 
   StrokeStyle ss;
   ss.line_width = from_unit(1);
@@ -41,36 +42,60 @@ void draw_test(
   drawTextLabel("Fnord!", Point(x, y), ax, ay, ts, l);
 }
 
+void draw_test(Layer* layer, const FontInfo& font) {
+  draw_test(layer, font, 100 * 2,  100 * 2, HAlign::LEFT, VAlign::TOP);
+  draw_test(layer, font, 400 * 2,  100 * 2, HAlign::CENTER, VAlign::TOP);
+  draw_test(layer, font, 700 * 2,  100 * 2, HAlign::RIGHT, VAlign::TOP);
+
+  draw_test(layer, font, 100 * 2,  200 * 2, HAlign::LEFT, VAlign::CENTER);
+  draw_test(layer, font, 400 * 2,  200 * 2, HAlign::CENTER, VAlign::CENTER);
+  draw_test(layer, font, 700 * 2,  200 * 2, HAlign::RIGHT, VAlign::CENTER);
+
+  draw_test(layer, font, 100 * 2,  300 * 2, HAlign::LEFT, VAlign::BOTTOM);
+  draw_test(layer, font, 400 * 2,  300 * 2, HAlign::CENTER, VAlign::BOTTOM);
+  draw_test(layer, font, 700 * 2,  300 * 2, HAlign::RIGHT, VAlign::BOTTOM);
+}
+
 int main(int argc, char** argv) {
-  Environment env;
-  EXPECT_OK(environment_setup_defaults(&env));
-  EXPECT_OK(font_load("/usr/share/fonts/msttcore/comic.ttf", &env.font.font));
+  FontInfo font;
+  font.font_file = "/usr/share/fonts/msttcore/comic.ttf";
+  font.font_family_css = "'Comic Sans MS'";
+  EXPECT_OK(font_load(font.font_file, &font.font));
 
-  LayerRef layer;
-  auto rc = layer_bind_svg(
-      800,
-      500,
-      96,
-      from_unit(12),
-      Color::fromRGB(1.0, 1.0, 1.0),
-      [&] (auto svg) {
-        FileUtil::write(std::string(argv[0]) + ".svg", Buffer(svg.data(), svg.size()));
-        return OK;
-      },
-      &layer);
+  {
+    LayerRef layer;
+    auto rc = layer_bind_svg(
+        1600,
+        1000,
+        96,
+        from_unit(12),
+        Color::fromRGB(1.0, 1.0, 1.0),
+        [&] (auto svg) {
+          FileUtil::write(std::string(argv[0]) + ".svg", Buffer(svg.data(), svg.size()));
+          return OK;
+        },
+        &layer);
 
-  draw_test(env, layer.get(), 100,  100, HAlign::LEFT, VAlign::TOP);
-  draw_test(env, layer.get(), 400,  100, HAlign::CENTER, VAlign::TOP);
-  draw_test(env, layer.get(), 700,  100, HAlign::RIGHT, VAlign::TOP);
+    draw_test(layer.get(), font);
+    layer_submit(layer.get());
+  }
 
-  draw_test(env, layer.get(), 100,  200, HAlign::LEFT, VAlign::CENTER);
-  draw_test(env, layer.get(), 400,  200, HAlign::CENTER, VAlign::CENTER);
-  draw_test(env, layer.get(), 700,  200, HAlign::RIGHT, VAlign::CENTER);
+  {
+    LayerRef layer;
+    auto rc = layer_bind_png(
+        1600,
+        1000,
+        96,
+        from_unit(12),
+        Color::fromRGB(1.0, 1.0, 1.0),
+        [&] (auto svg) {
+          FileUtil::write(std::string(argv[0]) + ".png", Buffer(svg.data(), svg.size()));
+          return OK;
+        },
+        &layer);
 
-  draw_test(env, layer.get(), 100,  300, HAlign::LEFT, VAlign::BOTTOM);
-  draw_test(env, layer.get(), 400,  300, HAlign::CENTER, VAlign::BOTTOM);
-  draw_test(env, layer.get(), 700,  300, HAlign::RIGHT, VAlign::BOTTOM);
-
-  layer_submit(layer.get());
+    draw_test(layer.get(), font);
+    layer_submit(layer.get());
+  }
 }
 
