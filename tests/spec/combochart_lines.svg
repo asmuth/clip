@@ -52,9 +52,9 @@
   <path fill="#80699b" d="M949.474 213.653 M941.474 213.653 a4 4 0 1 0 8 0 a4 4 0 1 0 -8 0 "/>
   <path fill="#80699b" d="M1041.73 252.685 M1033.73 252.685 a4 4 0 1 0 8 0 a4 4 0 1 0 -8 0 "/>
   <path fill="#80699b" d="M1133.98 274.88 M1125.98 274.88 a4 4 0 1 0 8 0 a4 4 0 1 0 -8 0 "/>
-  <path stroke-width="1.000000" stroke="#000000" fill="none" d="M74.5042 312.267 L181.955 312.267 "/>
-  <path stroke-width="1.000000" stroke="#000000" fill="none" d="M181.955 312.267 L181.955 420.933 "/>
-  <path stroke-width="1.000000" stroke="#000000" fill="none" d="M74.5042 420.933 L181.955 420.933 "/>
+  <path stroke-width="1.000000" stroke="#000000" fill="none" d="M74.5042 312.267 L183.565 312.267 "/>
+  <path stroke-width="1.000000" stroke="#000000" fill="none" d="M183.565 312.267 L183.565 420.933 "/>
+  <path stroke-width="1.000000" stroke="#000000" fill="none" d="M74.5042 420.933 L183.565 420.933 "/>
   <path stroke-width="1.000000" stroke="#000000" fill="none" d="M74.5042 312.267 L74.5042 420.933 "/>
   <text x="105.304167" y="338.000000" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">New York</text>
   <path fill="#4572a7" d="M96.8708 333 M85.8708 333 a5.5 5.5 0 1 0 11 0 a5.5 5.5 0 1 0 -11 0 "/>

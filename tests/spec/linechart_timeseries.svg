@@ -46,8 +46,8 @@
   <text x="629.308637" y="428.666667" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">09:26:36</text>
   <text x="705.134592" y="428.666667" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">10:02:27</text>
   <text x="780.960548" y="428.666667" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">10:38:17</text>
-  <text x="857.333333" y="428.666667" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">11:14:08</text>
-  <text x="490.172396" y="461.333333" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">Time</text>
+  <text x="856.786458" y="428.666667" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">11:14:08</text>
+  <text x="489.898958" y="461.333333" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">Time</text>
   <path stroke-width="0.000000" stroke="#000000" fill="none" d="M127.074 14.6667 L127.074 402.933 "/>
   <path stroke-width="0.000000" stroke="#000000" fill="none" d="M127.074 402.933 L132.407 402.933 "/>
   <path stroke-width="0.000000" stroke="#000000" fill="none" d="M127.074 364.107 L132.407 364.107 "/>
@@ -71,5 +71,5 @@
   <text x="53.200000" y="97.319995" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">8.4 × 10⁶</text>
   <text x="53.200000" y="58.493319" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">8.5 × 10⁶</text>
   <text x="53.200000" y="19.666667" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">8.6 × 10⁶</text>
-  <text x="-17.380208" y="213.800000" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000" transform="rotate(-90 23.6667 208.8)">Variable (f/s)</text>
+  <text x="-17.927083" y="213.800000" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000" transform="rotate(-90 23.6667 208.8)">Variable (f/s)</text>
 </svg>

@@ -23,8 +23,8 @@
   <text x="547.183534" y="68.333333" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">09:26:36</text>
   <text x="610.048757" y="68.333333" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">10:02:27</text>
   <text x="672.913981" y="68.333333" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">10:38:17</text>
-  <text x="736.326042" y="68.333333" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">11:14:08</text>
-  <text x="429.601562" y="31.666667" fill="#000000" font-size="18.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">Time</text>
+  <text x="735.779167" y="68.333333" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">11:14:08</text>
+  <text x="429.257812" y="31.666667" fill="#000000" font-size="18.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">Time</text>
   <path stroke-width="1.333333" stroke="#000000" fill="none" d="M764.326 84.0667 L764.326 395.933 "/>
   <path stroke-width="1.333333" stroke="#000000" fill="none" d="M758.993 395.933 L764.326 395.933 "/>
   <path stroke-width="1.333333" stroke="#000000" fill="none" d="M758.993 364.747 L764.326 364.747 "/>
@@ -48,7 +48,7 @@
   <text x="776.059375" y="151.439996" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">8.4 × 10⁶</text>
   <text x="776.059375" y="120.253322" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">8.5 × 10⁶</text>
   <text x="776.059375" y="89.066667" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">8.6 × 10⁶</text>
-  <text x="851.645833" y="246.500000" fill="#000000" font-size="18.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000" transform="rotate(90 874.833 240)">Value</text>
+  <text x="850.950521" y="246.500000" fill="#000000" font-size="18.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000" transform="rotate(90 874.833 240)">Value</text>
   <path stroke-width="1.333333" stroke="#000000" fill="none" d="M135.674 395.933 L764.326 395.933 "/>
   <path stroke-width="1.333333" stroke="#000000" fill="none" d="M135.674 390.6 L135.674 395.933 "/>
   <path stroke-width="1.333333" stroke="#000000" fill="none" d="M198.539 390.6 L198.539 395.933 "/>
@@ -71,8 +71,8 @@
   <text x="547.183534" y="421.666667" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">09:26:36</text>
   <text x="610.048757" y="421.666667" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">10:02:27</text>
   <text x="672.913981" y="421.666667" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">10:38:17</text>
-  <text x="736.326042" y="421.666667" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">11:14:08</text>
-  <text x="429.601562" y="461.333333" fill="#000000" font-size="18.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">Time</text>
+  <text x="735.779167" y="421.666667" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">11:14:08</text>
+  <text x="429.257812" y="461.333333" fill="#000000" font-size="18.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">Time</text>
   <path stroke-width="1.333333" stroke="#000000" fill="none" d="M135.674 84.0667 L135.674 395.933 "/>
   <path stroke-width="1.333333" stroke="#000000" fill="none" d="M135.674 395.933 L141.007 395.933 "/>
   <path stroke-width="1.333333" stroke="#000000" fill="none" d="M135.674 364.747 L141.007 364.747 "/>
@@ -96,5 +96,5 @@
   <text x="61.800000" y="151.439996" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">8.4 × 10⁶</text>
   <text x="61.800000" y="120.253322" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">8.5 × 10⁶</text>
   <text x="61.800000" y="89.066667" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">8.6 × 10⁶</text>
-  <text x="1.979167" y="246.500000" fill="#000000" font-size="18.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000" transform="rotate(-90 25.1667 240)">Value</text>
+  <text x="1.283854" y="246.500000" fill="#000000" font-size="18.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000" transform="rotate(-90 25.1667 240)">Value</text>
 </svg>
