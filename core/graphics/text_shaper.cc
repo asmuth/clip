@@ -14,6 +14,11 @@
 #include <graphics/text_shaper.h>
 #include <iostream>
 
+#include <ft2build.h>
+#include FT_FREETYPE_H
+#include <harfbuzz/hb.h>
+#include <harfbuzz/hb-ft.h>
+#include <harfbuzz/hb-icu.h>
 #include <boost/locale.hpp>
 
 using std::placeholders::_1;
@@ -21,7 +26,7 @@ using std::placeholders::_1;
 namespace fviz {
 namespace text {
 
-Status text_shape(
+Status text_shape_run(
     const std::string& text,
     TextDirection text_direction,
     FontRef font,
@@ -72,7 +77,7 @@ Status text_shape(
   return OK;
 }
 
-Status text_shape_with_font_fallback(
+Status text_shape_run_with_font_fallback(
     const std::string& text,
     TextDirection dir,
     const FontInfo& font_info,
@@ -95,7 +100,7 @@ Status text_shape_with_font_fallback(
     for (const auto& font : font_info.fonts) {
       grapheme_glyphs.clear();
 
-      auto rc = text_shape(grapheme, dir, font, font_size, dpi, &grapheme_glyphs);
+      auto rc = text_shape_run(grapheme, dir, font, font_size, dpi, &grapheme_glyphs);
       if (rc != OK) {
         return rc;
       }

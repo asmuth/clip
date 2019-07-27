@@ -12,6 +12,7 @@
  * limitations under the License.
  */
 #include "fviz.h"
+#include "graphics/text_backend.h"
 #include "graphics/text_layout.h"
 #include "graphics/text_shaper.h"
 
@@ -19,16 +20,37 @@ namespace fviz {
 namespace text {
 
 Status text_layout_hspan(
-    const std::string& text,
+    const std::string& text_logical,
     const TextDirection text_direction,
     const FontInfo& font_info,
     double font_size,
     double dpi,
     std::vector<GlyphSpan>* glyph_spans,
     Rectangle* bbox) {
+  TextSpan text_span;
+  text_analyze_bidi_span(text_logical, text_direction, &text_span);
+
+  for (size_t i = 0; i < text_span.text_runs.size(); ++i) {
+    std::string text_run_dir;
+    switch (text_span.text_directions[i]) {
+      case TextDirection::LTR:
+        text_run_dir = "ltr";
+        break;
+      case TextDirection::RTL:
+        text_run_dir = "rtl";
+        break;
+    }
+
+    std::cerr
+        << "t=" << text_span.text_runs[i]
+        << " "
+        << "d=" << text_run_dir
+        << std::endl;
+  }
+
   std::vector<GlyphInfo> glyph_list;
-  auto shaping_rc = text_shape_with_font_fallback(
-      text,
+  auto shaping_rc = text_shape_run_with_font_fallback(
+      text_logical,
       text_direction,
       font_info,
       font_size,

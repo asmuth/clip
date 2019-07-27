@@ -42,7 +42,7 @@ Status text_measure_span(
     Rectangle* rect);
 
 /**
- * Layout a horizontal span of text -- currently only LTR layout is supported
+ * Layout a horizontal span of text
  */
 Status text_layout_hspan(
     const std::string& text,

@@ -15,12 +15,6 @@
 #include <string>
 #include <unordered_map>
 #include <functional>
-#include <ft2build.h>
-#include FT_FREETYPE_H
-
-#include <harfbuzz/hb.h>
-#include <harfbuzz/hb-ft.h>
-#include <harfbuzz/hb-icu.h>
 
 #include "text.h"
 
@@ -36,7 +30,12 @@ struct GlyphInfo {
   double metrics_descender;
 };
 
-Status text_shape(
+using GlyphRun = std::vector<GlyphInfo>;
+
+/**
+ * Shape a "run" of text with a given font
+ */
+Status text_shape_run(
     const std::string& text,
     TextDirection text_direction,
     FontRef font,
@@ -44,10 +43,30 @@ Status text_shape(
     double dpi,
     std::vector<GlyphInfo>* glyphs);
 
-Status text_shape_with_font_fallback(
+/**
+ * Shape a "run" of text with font fallback. 
+ */
+Status text_shape_run_with_font_fallback(
     const std::string& text,
     TextDirection text_direction,
     const FontInfo& font_info,
+    double font_size,
+    double dpi,
+    std::vector<GlyphInfo>* glyphs);
+
+/**
+ * "Shape" a non-breakable span of text. Input is a UTF8 string in logical order
+ * and the intended text rendering direction. Output is a "glyph run", i.e. a
+ * list of glyphs in the order in which they should be displayed. Note that this
+ * method performs bidi reordering to 'visual' order, so the output of this
+ * method is not suitable for line breaking. If line breaking is desired, it
+ * must be handled by a mechanism higher up in the stack that only calls `text_shape`
+ * for non-breakable spans of text (i.e. words).
+ */
+Status text_shape(
+    const std::string& text,
+    TextDirection text_direction,
+    FontRef font,
     double font_size,
     double dpi,
     std::vector<GlyphInfo>* glyphs);
