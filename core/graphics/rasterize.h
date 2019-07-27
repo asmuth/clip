@@ -62,7 +62,6 @@ public:
   uint32_t width;
   uint32_t height;
   double dpi;
-  std::shared_ptr<text::TextShaper> text_shaper;
   cairo_surface_t* cr_surface;
   cairo_t* cr_ctx;
 };

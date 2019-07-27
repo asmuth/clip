@@ -15,33 +15,64 @@
 #include <graphics/text.h>
 #include <graphics/layout.h>
 
-namespace fviz {
-namespace text {
-class TextShaper;
+namespace fviz::text {
+
+
+/**
+ * A text span represents a discrete, non-breakable piece of text. Text spans are
+ * the smallest unit of text for layout.
+ *
+ * If any kind of line wrapping is desired, the input text must be split into
+ * text spans so that line breaking can be performed on a per-span basis.
+ *
+ * One important caveat of this is that text shaping will also be performed on a
+ * per-span basis, so the spans should be as large as possible for the best text
+ * shaping results. Note that font fallback selection is also performed per-span,
+ * so ideally any span should be renderable with a single font from the font
+ * stack.
+ *
+ * In latin scripts, text spans should probably correspond to word boundaries.
+ * In other scripts, text spans should correspond to whatever unit of text is
+ * small enough to allow for text breaking on span-level but large enough so that
+ * per-span shaping of text is sufficient.
+ *
+ * It is allowed to break the line after or before each text span, i.e. spans
+ * must be given so that it is legal to place each text span at the beginning of
+ * a new line. However it is *not* allowed to break a span itself into smaller
+ * pieces; all text in the span must be put onto the same line.
+ *
+ * This interface should enable us to have a high degree of decoupling between
+ * the text shaping and layout parts. However, one tradeoff is that it does not
+ * allow users to implement line breaking at  character boundaries (i.e breaking
+ * and hyphenization of words).
+ *
+ * The text data of this span as a UTF-8 encoded string in logical character
+ * order
+ */
+struct TextSpan {
+  std::string text;
+};
+
 
 /**
  * A line of text
+ *
+ * The `text_runs` member contains the line's text runs as a UTF-8 strings.
+ * Note that the runs are given in logical order and the characters within
+ * the runs are also stored in logical order.
+ *
+ * Non-bidirectional text spans should usually have exactly one text run while
+ * bidirectional text should have N + 1 runs where N is the number of writing
+ * direction boundaries in the text span.
  */
 struct TextLine {
-  /**
-   * The `text_runs` member contains the line's text runs as a UTF-8 strings.
-   * Note that the runs are given in logical order and the characters within
-   * the runs are also stored in logical order.
-   *
-   * Non-bidirectional text spans should usually have exactly one text run while
-   * bidirectional text should have N + 1 runs where N is the number of writing
-   * direction boundaries in the text span.
-   */
   std::vector<std::string> text_runs;
-
-  /**
-   * Stores the bidi text direction for each run
-   */
   std::vector<TextDirection> text_directions;
 };
 
+
 /**
- * The output of the text layout stack is a list of glyph placements. The
+ * The output of the text layouting process is a list of glyph placements. The
  * coordinates are absolute screen positions
  */
 struct GlyphPlacement {
@@ -55,6 +86,7 @@ struct GlyphSpan {
   FontRef font;
   std::vector<GlyphPlacement> glyphs;
 };
+
 
 /**
  * Layout a horizontal line of text. The input text must be provided in UTF-8
@@ -70,6 +102,7 @@ Status text_layout_hline(
     std::vector<GlyphSpan>* spans,
     Rectangle* bbox);
 
+
 /**
  * Layout a horizontal line of text. The input text must be provided in UTF-8
  * encoding and in logical character order. The `text_direction_base` argument
@@ -84,6 +117,7 @@ Status text_layout_hline(
     std::vector<GlyphSpan>* spans,
     Rectangle* bbox);
 
+
 /**
  * Measure the size of a horizontal span of text where (0, 0) is the baseline of
  * the first glyph
@@ -95,6 +129,6 @@ Status text_measure_span(
     double dpi,
     Rectangle* rect);
 
-} // namespace text
-} // namespace fviz
+
+} // namespace fviz::text
 
