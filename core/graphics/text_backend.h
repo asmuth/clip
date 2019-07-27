@@ -30,9 +30,8 @@ ReturnCode text_analyze_bidi_line(
     const TextSpan* text_begin,
     const TextSpan* text_end,
     TextDirection text_direction_base,
-    std::vector<std::string>* runs,
-    std::vector<int>* run_bidi_levels,
-    std::vector<const TextSpan*>* run_span_map);
+    std::vector<TextSpan>* runs,
+    std::vector<int>* run_bidi_levels);
 
 } // namespace fviz::text
 

@@ -22,9 +22,8 @@ ReturnCode text_analyze_bidi_line(
     const TextSpan* text_begin,
     const TextSpan* text_end,
     TextDirection text_direction_base,
-    std::vector<std::string>* runs,
-    std::vector<int>* run_bidi_levels,
-    std::vector<const TextSpan*>* run_span_map) {
+    std::vector<TextSpan>* runs,
+    std::vector<int>* run_bidi_levels) {
   FriBidiParType fb_basedir;
   switch (text_direction_base) {
     case TextDirection::LTR:
@@ -92,22 +91,27 @@ ReturnCode text_analyze_bidi_line(
     }
   }
 
-  std::vector<int> levels;
   for (size_t i = 0; i < run_bounds.size() + 1; ++i) {
     auto run_begin = i == 0 ? 0 : run_bounds[i - 1];
     auto run_end = i == run_bounds.size() ? fb_str_len : run_bounds[i];
     auto run_len = run_end - run_begin;
 
-    std::string run(run_len * 4 + 1, 0);
-    run.resize(fribidi_unicode_to_charset(
+    std::string run_text(run_len * 4 + 1, 0);
+    run_text.resize(fribidi_unicode_to_charset(
         FRIBIDI_CHAR_SET_UTF8,
         fb_str.data() + run_begin,
         run_len,
-        run.data()));
+        run_text.data()));
+
+    TextSpan run = *fb_to_span_map[run_begin];
+    run.text = run_text;
+    run.text_direction =
+        int(fb_levels[run_begin]) & 1 ?
+            TextDirection::RTL :
+            TextDirection::LTR;
 
     runs->emplace_back(run);
     run_bidi_levels->emplace_back(int(fb_levels[run_begin]));
-    run_span_map->emplace_back(fb_to_span_map[run_begin]);
   }
 
   return OK;

@@ -24,7 +24,7 @@ namespace text {
 /**
  * A line of text that has been prepared for final layout (placement).
  *
- * The `text_runs` member contains the line's text runs as a UTF-8 strings.
+ * The `spans` member contains the line's text runs as a UTF-8 strings.
  * Note that the runs are given in logical order and the characters within
  * the runs are also stored in logical order.
  *
@@ -35,19 +35,13 @@ namespace text {
  * The `base_direction` contains the inteded display writing direction for this
  * line.
  *
- * The `span_map` contains a pointer to the source span for each of the text run
- * and the `bidi_levels` property contains the Unicode BiDi embedding levels for
- * each text run in the line.
- *
  * The visual order contains the order in which the runs should be displayed so
  * that the first element in the visual_order list is placed at the "beginning"
  * of the line in the corresponding base_direction.
  */
 struct TextLine {
-  std::vector<std::string> runs;
   TextDirection base_direction;
-  std::vector<const TextSpan*> span_map;
-  std::vector<int> bidi_levels;
+  std::vector<TextSpan> spans;
   std::vector<size_t> visual_order;
 };
 
@@ -105,18 +99,13 @@ Status text_place_hline(
   double line_bottom = 0.0;
   double line_length = 0;
   for (auto i : text_line.visual_order) {
-    TextDirection text_direction_run =
-        text_line.bidi_levels[i] & 1 ?
-            TextDirection::RTL :
-            TextDirection::LTR;
-
     double span_length = 0.0;
     std::vector<GlyphPlacement> span_glyphs;
     auto rc = text_place_hrun(
-        text_line.runs[i],
-        text_direction_run,
-        text_line.span_map[i]->language,
-        text_line.span_map[i]->script,
+        text_line.spans[i].text,
+        text_line.spans[i].text_direction,
+        text_line.spans[i].language,
+        text_line.spans[i].script,
         font_info,
         font_size,
         dpi,
@@ -184,8 +173,8 @@ Status text_place_hline(
  * Source: https://unicode.org/reports/tr9/#Reordering_Resolved_Levels
  *
  */
-std::vector<size_t> text_reorder_line(const TextLine& line) {
-  std::vector<size_t> visual_order(line.runs.size(), 0);
+std::vector<size_t> text_reorder_line(const std::vector<int>& bidi_levels) {
+  std::vector<size_t> visual_order(bidi_levels.size(), 0);
 
   std::iota(
       visual_order.begin(),
@@ -193,17 +182,17 @@ std::vector<size_t> text_reorder_line(const TextLine& line) {
       0);
 
   size_t level_max = *std::max_element(
-      line.bidi_levels.begin(),
-      line.bidi_levels.end());
+      bidi_levels.begin(),
+      bidi_levels.end());
 
   for (size_t level_cur = level_max; level_cur >= 1; --level_cur) {
-    for (size_t range_begin = 0; range_begin < line.runs.size(); ) {
+    for (size_t range_begin = 0; range_begin < bidi_levels.size(); ) {
       // find the next contiguous range where level >= level_cur starting at
       // begin
       auto range_end = range_begin;
       for (;
-          line.bidi_levels[range_end] >= level_cur &&
-          range_end != line.runs.size();
+          bidi_levels[range_end] >= level_cur &&
+          range_end != bidi_levels.size();
           ++range_end);
 
       // if no such sequence starts at begin, try searching from the next index
@@ -222,18 +211,6 @@ std::vector<size_t> text_reorder_line(const TextLine& line) {
     }
   }
 
-  // if the base direction is RTL, reverse the direction of all runs so that
-  // the "first" element in the visual order array is the one at the begining
-  // of the line in our base writing direction
-  switch (line.base_direction) {
-    case TextDirection::LTR:
-      break;
-    case TextDirection::RTL:
-      std::reverse(
-          visual_order.begin(),
-          visual_order.end());
-  }
-
   return visual_order;
 }
 
@@ -246,19 +223,34 @@ Status text_layout_line(
     double dpi,
     std::vector<GlyphPlacementGroup>* glyphs,
     Rectangle* bbox) {
+  // prepare a new text line for layout
   TextLine text_line;
+  text_line.base_direction = text_direction_base;
 
+  // split spans using the unicode bidi algorithm and compute visual span order
+  std::vector<int> bidi_levels;
   text_analyze_bidi_line(
       text_begin,
       text_end,
       text_direction_base,
-      &text_line.runs,
-      &text_line.bidi_levels,
-      &text_line.span_map);
+      &text_line.spans,
+      &bidi_levels);
 
-  text_line.base_direction = text_direction_base;
-  text_line.visual_order = text_reorder_line(text_line);
+  text_line.visual_order = text_reorder_line(bidi_levels);
 
+  // if the base direction is RTL, reverse the direction of all runs so that
+  // the "first" element in the visual order array is the one at the begining
+  // of the line in our base writing direction
+  switch (text_direction_base) {
+    case TextDirection::LTR:
+      break;
+    case TextDirection::RTL:
+      std::reverse(
+          text_line.visual_order.begin(),
+          text_line.visual_order.end());
+  }
+
+  // place the text glyphs on the screen
   return text_place_hline(
       text_line,
       font_info,
