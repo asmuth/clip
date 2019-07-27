@@ -19,10 +19,10 @@ namespace fviz::text {
 
 ReturnCode text_analyze_bidi_line(
     const std::string& text,
-    TextDirection text_direction,
+    TextDirection base_text_direction,
     TextLine* text_line) {
   FriBidiParType fb_basedir;
-  switch (text_direction) {
+  switch (base_text_direction) {
     case TextDirection::LTR:
       fb_basedir = FRIBIDI_PAR_LTR;
       break;

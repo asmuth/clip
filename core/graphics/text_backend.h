@@ -32,7 +32,7 @@ namespace fviz::text {
  */
 ReturnCode text_analyze_bidi_line(
     const std::string& text,
-    TextDirection text_direction,
+    TextDirection base_text_direction,
     TextLine* text_span);
 
 } // namespace fviz::text

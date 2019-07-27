@@ -41,6 +41,7 @@ struct TextLine {
 };
 
 struct GlyphPlacement {
+  FontRef font;
   uint32_t codepoint;
   double x;
   double y;
@@ -63,9 +64,9 @@ Status text_measure_span(
     Rectangle* rect);
 
 /**
- * Layout a horizontal span of text
+ * Layout a horizontal line of text
  */
-Status text_layout_hspan(
+Status text_layout_hline(
     const std::string& text,
     TextDirection direction,
     const FontInfo& font,
