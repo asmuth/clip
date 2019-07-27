@@ -40,6 +40,10 @@ struct TextLine {
   std::vector<TextDirection> text_directions;
 };
 
+/**
+ * The output of the text layout stack is a list of glyph placements. The
+ * coordinates are absolute screen positions
+ */
 struct GlyphPlacement {
   FontRef font;
   uint32_t codepoint;
@@ -53,6 +57,34 @@ struct GlyphSpan {
 };
 
 /**
+ * Layout a horizontal line of text. The input text must be provided in UTF-8
+ * encoding and in logical character order. The `text_direction_base` argument
+ * controls the base writing direction of the line
+ */
+Status text_layout_hline(
+    const TextLine& line,
+    TextDirection base_direction,
+    const FontInfo& font,
+    double font_size,
+    double dpi,
+    std::vector<GlyphSpan>* spans,
+    Rectangle* bbox);
+
+/**
+ * Layout a horizontal line of text. The input text must be provided in UTF-8
+ * encoding and in logical character order. The `text_direction_base` argument
+ * controls the base writing direction of the line
+ */
+Status text_layout_hline(
+    const std::string& text_logical,
+    TextDirection base_direction,
+    const FontInfo& font,
+    double font_size,
+    double dpi,
+    std::vector<GlyphSpan>* spans,
+    Rectangle* bbox);
+
+/**
  * Measure the size of a horizontal span of text where (0, 0) is the baseline of
  * the first glyph
  */
@@ -62,18 +94,6 @@ Status text_measure_span(
     double font_size,
     double dpi,
     Rectangle* rect);
-
-/**
- * Layout a horizontal line of text
- */
-Status text_layout_hline(
-    const std::string& text,
-    TextDirection direction,
-    const FontInfo& font,
-    double font_size,
-    double dpi,
-    std::vector<GlyphSpan>* spans,
-    Rectangle* bbox);
 
 } // namespace text
 } // namespace fviz

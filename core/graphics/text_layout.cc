@@ -59,16 +59,13 @@ Status text_layout_hrun(
 }
 
 Status text_layout_hline(
-    const std::string& text_logical,
-    const TextDirection base_text_direction,
+    const TextLine& text_line,
+    const TextDirection text_direction_base,
     const FontInfo& font_info,
     double font_size,
     double dpi,
     std::vector<GlyphSpan>* glyph_spans,
     Rectangle* bbox) {
-  TextLine text_line;
-  text_analyze_bidi_line(text_logical, base_text_direction, &text_line);
-
   double line_top = 0.0;
   double line_bottom = 0.0;
   double line_length = 0;
@@ -92,7 +89,7 @@ Status text_layout_hline(
     }
 
     for (auto& gi : span_glyphs) {
-      switch (base_text_direction) {
+      switch (text_direction_base) {
         case TextDirection::LTR:
           gi.x += line_length;
           break;
@@ -116,7 +113,7 @@ Status text_layout_hline(
   }
 
   double line_left = 0.0;
-  switch (base_text_direction) {
+  switch (text_direction_base) {
     case TextDirection::LTR:
       line_left = 0;
       break;
@@ -134,6 +131,26 @@ Status text_layout_hline(
   return OK;
 }
 
+Status text_layout_hline(
+    const std::string& text_logical,
+    const TextDirection base_text_direction,
+    const FontInfo& font_info,
+    double font_size,
+    double dpi,
+    std::vector<GlyphSpan>* glyph_spans,
+    Rectangle* bbox) {
+  TextLine text_line;
+  text_analyze_bidi_line(text_logical, base_text_direction, &text_line);
+
+  return text_layout_hline(
+      text_line,
+      base_text_direction,
+      font_info,
+      font_size,
+      dpi,
+      glyph_spans,
+      bbox);
+}
 
 Status text_measure_span(
     const std::string& text,
