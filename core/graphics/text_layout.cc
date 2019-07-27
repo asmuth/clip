@@ -64,7 +64,6 @@ Status text_layout_hrun(
 
 Status text_layout_hline(
     const TextLine& text_line,
-    const TextDirection text_direction_base,
     const FontInfo& font_info,
     double font_size,
     double dpi,
@@ -73,7 +72,7 @@ Status text_layout_hline(
   double line_top = 0.0;
   double line_bottom = 0.0;
   double line_length = 0;
-  for (size_t i = 0; i < text_line.text_runs.size(); ++i) {
+  for (auto i : text_line.visual_order) {
     double span_length = 0.0;
     std::vector<GlyphPlacement> span_glyphs;
 
@@ -95,7 +94,7 @@ Status text_layout_hline(
     }
 
     for (auto& gi : span_glyphs) {
-      switch (text_direction_base) {
+      switch (text_line.text_direction_base) {
         case TextDirection::LTR:
           gi.x += line_length;
           break;
@@ -109,7 +108,7 @@ Status text_layout_hline(
       gs.font = gi.font;
       gs.glyphs.emplace_back(gi);
 
-      // TODO merge glyph spans witht the same font
+      // TODO merge glyph spans with the same font
       if (glyph_spans) {
         glyph_spans->emplace_back(gs);
       }
@@ -119,7 +118,7 @@ Status text_layout_hline(
   }
 
   double line_left = 0.0;
-  switch (text_direction_base) {
+  switch (text_line.text_direction_base) {
     case TextDirection::LTR:
       line_left = 0;
       break;
@@ -151,7 +150,6 @@ Status text_layout_hline(
 
   return text_layout_hline(
       text_line,
-      text_direction_base,
       font_info,
       font_size,
       dpi,

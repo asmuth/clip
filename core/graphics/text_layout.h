@@ -69,8 +69,10 @@ struct TextSpan {
  */
 struct TextLine {
   std::vector<std::string> text_runs;
+  TextDirection text_direction_base;
   std::vector<TextDirection> text_directions;
   std::vector<const TextSpan*> text_spans;
+  std::vector<size_t> visual_order;
 };
 
 
@@ -98,7 +100,6 @@ struct GlyphSpan {
  */
 Status text_layout_hline(
     const TextLine& line,
-    TextDirection base_direction,
     const FontInfo& font,
     double font_size,
     double dpi,

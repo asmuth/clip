@@ -13,6 +13,7 @@
  */
 #include "text_backend.h"
 
+#include <numeric>
 #include <fribidi/fribidi.h>
 
 namespace fviz::text {
@@ -107,6 +108,15 @@ ReturnCode text_analyze_bidi_line(
     text_line->text_directions.emplace_back(run_direction);
     text_line->text_spans.emplace_back(fb_to_span_map[run_begin]);
   }
+
+  text_line->text_direction_base = text_direction_base;
+  text_line->visual_order.resize(text_line->text_runs.size());
+  std::iota(
+      text_line->visual_order.begin(),
+      text_line->visual_order.end(),
+      0);
+
+  // TODO: reorder ranges according to unicode algorithm
 
   return OK;
 }
