@@ -19,7 +19,6 @@
 #include <harfbuzz/hb.h>
 #include <harfbuzz/hb-ft.h>
 #include <harfbuzz/hb-icu.h>
-#include <boost/locale.hpp>
 
 using std::placeholders::_1;
 
@@ -33,7 +32,12 @@ Status text_shape_run(
     double font_size,
     double dpi,
     std::vector<GlyphInfo>* glyphs) {
-  std::unique_ptr<hb_buffer_t, std::function<void (hb_buffer_t*)>> hb_buf_ref(hb_buffer_create(), bind(&hb_buffer_destroy, _1));
+  std::unique_ptr<
+      hb_buffer_t,
+      std::function<void (hb_buffer_t*)>>
+      hb_buf_ref(
+          hb_buffer_create(),
+          bind(&hb_buffer_destroy, _1));
 
   auto hb_buf = hb_buf_ref.get();
   auto ft_font = static_cast<FT_Face>(font_get_freetype(font));
@@ -67,8 +71,8 @@ Status text_shape_run(
     g.codepoint = glyph_infos[i].codepoint;
     g.advance_x = glyph_positions[i].x_advance / 64.0;
     g.advance_y = glyph_positions[i].y_advance / 64.0;
-    g.metrics_ascender = ft_font->size->metrics.ascender / 64.0; // FIXME this is constant for all glyphs
-    g.metrics_descender = ft_font->size->metrics.descender / 64.0; // FIXME this is constant for all glyphs
+    g.metrics_ascender = ft_font->size->metrics.ascender / 64.0;
+    g.metrics_descender = ft_font->size->metrics.descender / 64.0;
     glyphs->emplace_back(g);
   }
 
@@ -85,41 +89,29 @@ Status text_shape_run_with_font_fallback(
     double dpi,
     std::vector<GlyphInfo>* glyphs) {
 
-  boost::locale::generator locale_gen;
-  boost::locale::boundary::ssegment_index grapheme_iter(
-        boost::locale::boundary::character,
-        text.begin(),
-        text.end(),
-        locale_gen("en_US.UTF-8"));
+  std::vector<GlyphInfo> font_glyphs;
+  for (const auto& font : font_info.fonts) {
+    font_glyphs.clear();
 
-  // TODO: try to create the longest runs possible with the same font by
-  // backgracking
-  for (const auto& grapheme : grapheme_iter) {
-    std::vector<GlyphInfo> grapheme_glyphs;
+    auto rc = text_shape_run(text, dir, font, font_size, dpi, &font_glyphs);
+    if (rc != OK) {
+      return rc;
+    }
 
-    for (const auto& font : font_info.fonts) {
-      grapheme_glyphs.clear();
-
-      auto rc = text_shape_run(grapheme, dir, font, font_size, dpi, &grapheme_glyphs);
-      if (rc != OK) {
-        return rc;
-      }
-
-      bool font_ok = true;
-      for (const auto& g : grapheme_glyphs) {
-        if (g.codepoint == 0) {
-          font_ok = false;
-          break;
-        }
-      }
-
-      if (font_ok) {
+    bool font_ok = true;
+    for (const auto& g : font_glyphs) {
+      if (g.codepoint == 0) {
+        font_ok = false;
         break;
       }
     }
 
-    glyphs->insert(glyphs->end(), grapheme_glyphs.begin(), grapheme_glyphs.end());
+    if (font_ok) {
+      break;
+    }
   }
+
+  glyphs->insert(glyphs->end(), font_glyphs.begin(), font_glyphs.end());
 
   return OK;
 }
