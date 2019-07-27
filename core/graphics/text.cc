@@ -22,21 +22,24 @@ TextStyle::TextStyle() :
     direction(TextDirection::LTR) {}
 
 Status drawTextLabel(
-    const std::string& text,
+    const text::TextSpan* text_begin,
+    const text::TextSpan* text_end,
     const Point& position,
     HAlign align_x,
     VAlign align_y,
     double rotate,
     const TextStyle& style,
     Layer* layer) {
-  text::TextSpan span;
-  span.text = text;
+  std::string text;
+  for (auto text_iter = text_begin; text_iter != text_end; ++text_iter) {
+    text += text_iter->text;
+  }
 
   Rectangle bbox;
   std::vector<text::GlyphSpan> glyphs;
   auto rc = text::text_layout_hline(
-      &span,
-      &span + 1,
+      text_begin,
+      text_end,
       style.direction,
       style.font,
       style.font_size,
@@ -70,6 +73,19 @@ Status drawTextLabel(
   op.origin = offset;
 
   return layer->apply(op);
+}
+
+Status drawTextLabel(
+    const std::string& text,
+    const Point& position,
+    HAlign align_x,
+    VAlign align_y,
+    double rotate,
+    const TextStyle& style,
+    Layer* layer) {
+  text::TextSpan span;
+  span.text = text;
+  return drawTextLabel(&span, &span + 1, position, align_x, align_y, 0, style, layer);
 }
 
 Status drawTextLabel(

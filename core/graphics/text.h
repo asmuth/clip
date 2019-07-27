@@ -21,6 +21,9 @@
 
 namespace fviz {
 class Layer;
+namespace text {
+struct TextSpan;
+}
 
 enum class TextDirection {
   LTR, RTL
@@ -35,7 +38,8 @@ struct TextStyle {
 };
 
 Status drawTextLabel(
-    const std::string& text,
+    const text::TextSpan* text_begin,
+    const text::TextSpan* text_end,
     const Point& position,
     HAlign align_x,
     VAlign align_y,
