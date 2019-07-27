@@ -23,7 +23,7 @@ ReturnCode text_analyze_bidi_line(
     const TextSpan* text_end,
     TextDirection text_direction_base,
     TextLine* text_line) {
-  text_line->text_direction_base = text_direction_base;
+  text_line->base_direction = text_direction_base;
 
   FriBidiParType fb_basedir;
   switch (text_direction_base) {
@@ -105,9 +105,9 @@ ReturnCode text_analyze_bidi_line(
         run_len,
         run.data()));
 
-    text_line->text_runs.emplace_back(run);
-    text_line->text_spans.emplace_back(fb_to_span_map[run_begin]);
-    text_line->text_bidi_levels.emplace_back(int(fb_levels[run_begin]));
+    text_line->runs.emplace_back(run);
+    text_line->span_map.emplace_back(fb_to_span_map[run_begin]);
+    text_line->bidi_levels.emplace_back(int(fb_levels[run_begin]));
   }
 
   return OK;

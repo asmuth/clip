@@ -78,17 +78,17 @@ Status text_layout_hline(
   double line_length = 0;
   for (auto i : visual_order) {
     TextDirection text_direction_run =
-        text_line.text_bidi_levels[i] & 1 ?
+        text_line.bidi_levels[i] & 1 ?
             TextDirection::RTL :
             TextDirection::LTR;
 
     double span_length = 0.0;
     std::vector<GlyphPlacement> span_glyphs;
     auto rc = text_layout_hrun(
-        text_line.text_runs[i],
+        text_line.runs[i],
         text_direction_run,
-        text_line.text_spans[i]->language,
-        text_line.text_spans[i]->script,
+        text_line.span_map[i]->language,
+        text_line.span_map[i]->script,
         font_info,
         font_size,
         dpi,
@@ -102,7 +102,7 @@ Status text_layout_hline(
     }
 
     for (auto& gi : span_glyphs) {
-      switch (text_line.text_direction_base) {
+      switch (text_line.base_direction) {
         case TextDirection::LTR:
           gi.x += line_length;
           break;
@@ -126,7 +126,7 @@ Status text_layout_hline(
   }
 
   double line_left = 0.0;
-  switch (text_line.text_direction_base) {
+  switch (text_line.base_direction) {
     case TextDirection::LTR:
       line_left = 0;
       break;
@@ -193,7 +193,7 @@ Status text_measure_span(
 //    higher."
 //
 std::vector<size_t> text_get_visual_order(const TextLine& line) {
-  std::vector<size_t> visual_order(line.text_runs.size(), 0);
+  std::vector<size_t> visual_order(line.runs.size(), 0);
 
   std::iota(
       visual_order.begin(),
@@ -201,17 +201,17 @@ std::vector<size_t> text_get_visual_order(const TextLine& line) {
       0);
 
   size_t level_max = *std::max_element(
-      line.text_bidi_levels.begin(),
-      line.text_bidi_levels.end());
+      line.bidi_levels.begin(),
+      line.bidi_levels.end());
 
   for (size_t level_cur = level_max; level_cur >= 1; --level_cur) {
-    for (size_t range_begin = 0; range_begin < line.text_runs.size(); ) {
+    for (size_t range_begin = 0; range_begin < line.runs.size(); ) {
       // find the next contiguous range where level >= level_cur starting at
       // begin
       auto range_end = range_begin;
       for (;
-          line.text_bidi_levels[range_end] >= level_cur &&
-          range_end != line.text_runs.size();
+          line.bidi_levels[range_end] >= level_cur &&
+          range_end != line.runs.size();
           ++range_end);
 
       // if no such sequence starts at begin, try searching from the next index
@@ -233,7 +233,7 @@ std::vector<size_t> text_get_visual_order(const TextLine& line) {
   // if the base direction is RTL, reverse the direction of all runs so that
   // the "first" element in the visual order array is the one at the begining
   // of the line in our base writing direction
-  switch (line.text_direction_base) {
+  switch (line.base_direction) {
     case TextDirection::LTR:
       break;
     case TextDirection::RTL:

@@ -20,7 +20,8 @@ namespace fviz::text {
 
 /**
  * A text span represents a discrete, non-breakable piece of text. Text spans are
- * the smallest unit of text for layout.
+ * the smallest unit of text for layout. Text spans are the input to the text
+ * layout process.
  *
  * If any kind of line wrapping is desired, the input text must be split into
  * text spans so that line breaking can be performed on a per-span basis.
@@ -57,7 +58,7 @@ struct TextSpan {
 
 
 /**
- * A line of text
+ * A line of text that has been prepared for final layout.
  *
  * The `text_runs` member contains the line's text runs as a UTF-8 strings.
  * Note that the runs are given in logical order and the characters within
@@ -66,17 +67,24 @@ struct TextSpan {
  * Non-bidirectional text spans should usually have exactly one text run while
  * bidirectional text should have N + 1 runs where N is the number of writing
  * direction boundaries in the text span.
+ *
+ * The `base_direction` contains the inteded display writing direction for this
+ * line.
+ *
+ * The `span_map` contains a pointer to the source span for each of the text run
+ * and the `bidi_levels` property contains the Unicode BiDi embedding levels for
+ * each text run in the line.
  */
 struct TextLine {
-  std::vector<std::string> text_runs;
-  TextDirection text_direction_base;
-  std::vector<const TextSpan*> text_spans;
-  std::vector<int> text_bidi_levels;
+  std::vector<std::string> runs;
+  TextDirection base_direction;
+  std::vector<const TextSpan*> span_map;
+  std::vector<int> bidi_levels;
 };
 
 
 /**
- * The output of the text layouting process is a list of glyph placements. The
+ * The output of the text layout process is a list of glyph placements. The
  * coordinates are absolute screen positions
  */
 struct GlyphPlacement {
