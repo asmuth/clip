@@ -32,21 +32,28 @@ ReturnCode text_analyze_bidi_line(
       break;
   }
 
-  // combine all spans into a single string
-  // TODO: ensure that each span ends up as it's own text run for font fallback
-  // and shaping
-  std::string text;
+  // convert to fribidi string
+  size_t fb_str_maxlen = 0;
   for (auto text_iter = text_begin; text_iter != text_end; ++text_iter) {
-    text += text_iter->text;
+    fb_str_maxlen += text_iter->text.size() * 4; // FIXME
   }
 
-  // convert to fribidi string
-  std::vector<FriBidiChar> fb_str(text.size(), 0);
-  auto fb_str_len = fribidi_charset_to_unicode(
-      FRIBIDI_CHAR_SET_UTF8,
-      text.data(),
-      text.size(),
-      fb_str.data());
+  std::vector<FriBidiChar> fb_str(fb_str_maxlen, 0);
+  std::vector<const TextSpan*> fb_to_span_map;
+  auto fb_str_len = 0;
+  for (auto text_iter = text_begin; text_iter != text_end; ++text_iter) {
+    auto len = fribidi_charset_to_unicode(
+        FRIBIDI_CHAR_SET_UTF8,
+        text_iter->text.data(),
+        text_iter->text.size(),
+        fb_str.data() + fb_str_len);
+
+    for (size_t i = 0; i < len; ++i) {
+      fb_to_span_map.push_back(text_iter);
+    }
+
+    fb_str_len += len;
+  }
 
   // find character directionalities and embedding levels using fribidi
   std::vector<FriBidiCharType> fb_types(fb_str_len, 0);
@@ -66,8 +73,16 @@ ReturnCode text_analyze_bidi_line(
   // find the bidi runs in the output
   std::vector<size_t> run_bounds;
   for (size_t i = 0; i < fb_str_len; ++i) {
+    // split on level change
     if (i > 0 && fb_levels[i] != fb_levels[i - 1]) {
       run_bounds.emplace_back(i);
+      continue;
+    }
+
+    // split on span id change
+    if (i > 0 && fb_to_span_map[i] != fb_to_span_map[i - 1]) {
+      run_bounds.emplace_back(i);
+      continue;
     }
   }
 
