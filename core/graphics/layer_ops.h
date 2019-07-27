@@ -42,7 +42,7 @@ struct BrushFillOp {
 
 struct TextSpanOp {
   std::string text;
-  std::vector<text::GlyphSpan> spans;
+  std::vector<text::GlyphPlacementGroup> glyphs;
   Point origin;
   double rotate;
   Point rotate_pivot;

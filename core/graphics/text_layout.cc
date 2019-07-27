@@ -22,7 +22,7 @@ namespace fviz {
 namespace text {
 
 /**
- * A line of text that has been prepared for final layout.
+ * A line of text that has been prepared for final layout (placement).
  *
  * The `text_runs` member contains the line's text runs as a UTF-8 strings.
  * Note that the runs are given in logical order and the characters within
@@ -51,7 +51,7 @@ struct TextLine {
   std::vector<size_t> visual_order;
 };
 
-Status text_layout_hrun(
+Status text_place_hrun(
     const std::string& text_logical,
     const TextDirection text_direction,
     const std::string& text_language,
@@ -94,12 +94,12 @@ Status text_layout_hrun(
   return OK;
 }
 
-Status text_layout_hline(
+Status text_place_hline(
     const TextLine& text_line,
     const FontInfo& font_info,
     double font_size,
     double dpi,
-    std::vector<GlyphSpan>* glyph_spans,
+    std::vector<GlyphPlacementGroup>* glyphs,
     Rectangle* bbox) {
   double line_top = 0.0;
   double line_bottom = 0.0;
@@ -112,7 +112,7 @@ Status text_layout_hline(
 
     double span_length = 0.0;
     std::vector<GlyphPlacement> span_glyphs;
-    auto rc = text_layout_hrun(
+    auto rc = text_place_hrun(
         text_line.runs[i],
         text_direction_run,
         text_line.span_map[i]->language,
@@ -140,13 +140,13 @@ Status text_layout_hline(
           break;
       }
 
-      GlyphSpan gs;
-      gs.font = gi.font;
-      gs.glyphs.emplace_back(gi);
-
       // TODO merge glyph spans with the same font
-      if (glyph_spans) {
-        glyph_spans->emplace_back(gs);
+      GlyphPlacementGroup gg;
+      gg.font = gi.font;
+      gg.glyphs.emplace_back(gi);
+
+      if (glyphs) {
+        glyphs->emplace_back(gg);
       }
     }
 
@@ -170,28 +170,6 @@ Status text_layout_hline(
       line_bottom - line_top);
 
   return OK;
-}
-
-
-
-Status text_measure_span(
-    const std::string& text,
-    const FontInfo& font_info,
-    double font_size,
-    double dpi,
-    Rectangle* bbox) {
-  TextSpan span;
-  span.text = text;
-
-  return text_layout_hline(
-      &span,
-      &span + 1,
-      TextDirection::LTR,
-      font_info,
-      font_size,
-      dpi,
-      nullptr,
-      bbox);
 }
 
 /**
@@ -259,14 +237,14 @@ std::vector<size_t> text_reorder_line(const TextLine& line) {
   return visual_order;
 }
 
-Status text_layout_hline(
+Status text_layout_line(
     const TextSpan* text_begin,
     const TextSpan* text_end,
     const TextDirection text_direction_base,
     const FontInfo& font_info,
     double font_size,
     double dpi,
-    std::vector<GlyphSpan>* glyph_spans,
+    std::vector<GlyphPlacementGroup>* glyphs,
     Rectangle* bbox) {
   TextLine text_line;
 
@@ -281,14 +259,54 @@ Status text_layout_hline(
   text_line.base_direction = text_direction_base;
   text_line.visual_order = text_reorder_line(text_line);
 
-  return text_layout_hline(
+  return text_place_hline(
       text_line,
       font_info,
       font_size,
       dpi,
-      glyph_spans,
+      glyphs,
       bbox);
 }
+
+Status text_layout_line(
+    const std::string& text,
+    const TextDirection text_direction_base,
+    const FontInfo& font_info,
+    double font_size,
+    double dpi,
+    std::vector<GlyphPlacementGroup>* glyphs,
+    Rectangle* bbox) {
+  TextSpan span;
+  span.text = text;
+
+  return text_layout_line(
+      &span,
+      &span + 1,
+      text_direction_base,
+      font_info,
+      font_size,
+      dpi,
+      glyphs,
+      bbox);
+}
+
+Status text_measure_line(
+    const std::string& text,
+    TextDirection text_direction_base,
+    const FontInfo& font,
+    double font_size,
+    double dpi,
+    Rectangle* bbox) {
+  return text_layout_line(
+      text,
+      text_direction_base,
+      font,
+      font_size,
+      dpi,
+      nullptr,
+      bbox);
+}
+
 
 } // namespace text
 } // namespace fviz

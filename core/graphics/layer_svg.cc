@@ -180,8 +180,8 @@ Status svg_text_span_embed(
     SVGDataRef svg) {
   const auto& style = op.style;
 
-  for (const auto& s : op.spans) {
-    for (const auto& g : s.glyphs) {
+  for (const auto& gg : op.glyphs) {
+    for (const auto& g : gg.glyphs) {
       Path gp;
 
       auto rc = font_get_glyph_path(

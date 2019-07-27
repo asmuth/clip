@@ -68,38 +68,62 @@ struct GlyphPlacement {
   double y;
 };
 
-struct GlyphSpan {
+
+/**
+ * A glyph placement group contains a list of placed glyphs where each glyph
+ * has the same font
+ */
+struct GlyphPlacementGroup {
   FontRef font;
   std::vector<GlyphPlacement> glyphs;
 };
 
 
 /**
- * Layout a horizontal line of text. The input text must be provided in UTF-8
- * encoding and in logical character order. The `text_direction_base` argument
- * controls the base writing direction of the line
+ * Layout a line of text. The text should already be itemized into spans.
+ *
+ * Note that at this point only LTR and RTL text as well as bidirectional LTR/RTL
+ * text is supported. Vertical (TTB) line layout is not yet implemented.
  */
-Status text_layout_hline(
+Status text_layout_line(
     const TextSpan* text_begin,
     const TextSpan* text_end,
     TextDirection text_direction_base,
     const FontInfo& font,
     double font_size,
     double dpi,
-    std::vector<GlyphSpan>* spans,
+    std::vector<GlyphPlacementGroup>* glyphs,
     Rectangle* bbox);
 
 
 /**
- * Measure the size of a horizontal span of text where (0, 0) is the baseline of
- * the first glyph
+ * Layout a single line of text. The input text must be provided in UTF-8
+ * encoding and in logical character order. The `text_direction_base` argument
+ * controls the base writing direction of the line
+ *
+ * Note that at this point only LTR and RTL text as well as bidirectional LTR/RTL
+ * text is supported. Vertical (TTB) line layout is not yet implemented.
  */
-Status text_measure_span(
+Status text_layout_line(
     const std::string& text,
-    const FontInfo& font_info,
+    TextDirection text_direction_base,
+    const FontInfo& font,
     double font_size,
     double dpi,
-    Rectangle* rect);
+    std::vector<GlyphPlacementGroup>* glyphs,
+    Rectangle* bbox);
+
+
+/**
+ * Measure the size of a single line of text.
+ */
+Status text_measure_line(
+    const std::string& text,
+    TextDirection text_direction_base,
+    const FontInfo& font,
+    double font_size,
+    double dpi,
+    Rectangle* bbox);
 
 
 } // namespace fviz::text

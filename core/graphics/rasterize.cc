@@ -118,8 +118,8 @@ Status Rasterizer::strokePath(const layer_ops::BrushStrokeOp& op) {
 }
 
 Status Rasterizer::drawText(const layer_ops::TextSpanOp& op) {
-  for (const auto& span : op.spans) {
-    auto ft_font = static_cast<FT_Face>(font_get_freetype(span.font));
+  for (const auto& gg : op.glyphs) {
+    auto ft_font = static_cast<FT_Face>(font_get_freetype(gg.font));
 
     auto font_size_ft = op.style.font_size * (72.0 / dpi) * 64;
     if (FT_Set_Char_Size(ft_font, 0, font_size_ft, dpi, dpi)) {
@@ -138,10 +138,10 @@ Status Rasterizer::drawText(const layer_ops::TextSpanOp& op) {
     cairo_set_font_face(cr_ctx, cairo_face);
     cairo_set_font_size(cr_ctx, op.style.font_size);
 
-    auto glyph_count = span.glyphs.size();
+    auto glyph_count = gg.glyphs.size();
     auto cairo_glyphs = cairo_glyph_allocate(glyph_count);
     for (int i = 0; i < glyph_count; ++i) {
-      const auto& g = span.glyphs[i];
+      const auto& g = gg.glyphs[i];
       //FT_Load_Glyph(ft_font, g.codepoint, FT_LOAD_DEFAULT);
 
       cairo_glyphs[i].index = g.codepoint;

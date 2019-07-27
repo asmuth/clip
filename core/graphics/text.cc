@@ -36,8 +36,8 @@ Status drawTextLabel(
   }
 
   Rectangle bbox;
-  std::vector<text::GlyphSpan> glyphs;
-  auto rc = text::text_layout_hline(
+  std::vector<text::GlyphPlacementGroup> glyphs;
+  auto rc = text::text_layout_line(
       text_begin,
       text_end,
       style.direction,
@@ -66,10 +66,10 @@ Status drawTextLabel(
 
   layer_ops::TextSpanOp op;
   op.text = text;
+  op.glyphs = std::move(glyphs);
   op.rotate = rotate;
   op.rotate_pivot = position;
   op.style = style;
-  op.spans = std::move(glyphs);
   op.origin = offset;
 
   return layer->apply(op);

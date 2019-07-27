@@ -83,8 +83,9 @@ ReturnCode layout(
   style.font_size = config->label_font_size;
 
   Rectangle label_bbox;
-  if (auto rc = text::text_measure_span(
+  if (auto rc = text::text_measure_line(
         config->label,
+        TextDirection::LTR,
         config->label_font,
         config->label_font_size,
         layer.dpi,
