@@ -17,22 +17,23 @@
 #include <functional>
 
 #include "text.h"
+#include "text_layout.h"
 
 namespace fviz::text {
 
 /**
  * Analyze a UTF-8 input string in logical character order and produce a text
- * span. The output text span will contain all text runs within the span in
+ * line. The output text span will contain all text runs within the span in
  * logical order together with their corresponding directionality information.
  *
- * Note that this method returns a single text span, i.e. a non-breakable unit
+ * Note that this method returns a single text line, i.e. a non-breakable unit
  * of text. If line breaking is desired, identification of possible breakpoints
  * (spans) must be handled by a mechanism higher up in the stack.
  */
-ReturnCode text_analyze_bidi_span(
+ReturnCode text_analyze_bidi_line(
     const std::string& text,
     TextDirection text_direction,
-    TextSpan* text_span);
+    TextLine* text_span);
 
 } // namespace fviz::text
 

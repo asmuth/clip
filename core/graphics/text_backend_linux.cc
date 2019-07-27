@@ -17,10 +17,10 @@
 
 namespace fviz::text {
 
-ReturnCode text_analyze_bidi_span(
+ReturnCode text_analyze_bidi_line(
     const std::string& text,
     TextDirection text_direction,
-    TextSpan* text_span) {
+    TextLine* text_line) {
   FriBidiParType fb_basedir;
   switch (text_direction) {
     case TextDirection::LTR:
@@ -79,8 +79,8 @@ ReturnCode text_analyze_bidi_span(
             TextDirection::RTL :
             TextDirection::LTR;
 
-    text_span->text_runs.emplace_back(run);
-    text_span->text_directions.emplace_back(run_direction);
+    text_line->text_runs.emplace_back(run);
+    text_line->text_directions.emplace_back(run_direction);
   }
 
   return OK;

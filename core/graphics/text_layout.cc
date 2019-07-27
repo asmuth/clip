@@ -27,26 +27,8 @@ Status text_layout_hspan(
     double dpi,
     std::vector<GlyphSpan>* glyph_spans,
     Rectangle* bbox) {
-  TextSpan text_span;
-  text_analyze_bidi_span(text_logical, text_direction, &text_span);
-
-  for (size_t i = 0; i < text_span.text_runs.size(); ++i) {
-    std::string text_run_dir;
-    switch (text_span.text_directions[i]) {
-      case TextDirection::LTR:
-        text_run_dir = "ltr";
-        break;
-      case TextDirection::RTL:
-        text_run_dir = "rtl";
-        break;
-    }
-
-    std::cerr
-        << "t=" << text_span.text_runs[i]
-        << " "
-        << "d=" << text_run_dir
-        << std::endl;
-  }
+  TextLine text_line;
+  text_analyze_bidi_line(text_logical, text_direction, &text_line);
 
   std::vector<GlyphInfo> glyph_list;
   auto shaping_rc = text_shape_run_with_font_fallback(

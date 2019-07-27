@@ -19,6 +19,27 @@ namespace fviz {
 namespace text {
 class TextShaper;
 
+/**
+ * A line of text
+ */
+struct TextLine {
+  /**
+   * The `text_runs` member contains the line's text runs as a UTF-8 strings.
+   * Note that the runs are given in logical order and the characters within
+   * the runs are also stored in logical order.
+   *
+   * Non-bidirectional text spans should usually have exactly one text run while
+   * bidirectional text should have N + 1 runs where N is the number of writing
+   * direction boundaries in the text span.
+   */
+  std::vector<std::string> text_runs;
+
+  /**
+   * Stores the bidi text direction for each run
+   */
+  std::vector<TextDirection> text_directions;
+};
+
 struct GlyphPlacement {
   uint32_t codepoint;
   double x;
