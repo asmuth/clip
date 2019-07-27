@@ -47,16 +47,7 @@ Status text_layout_hrun(
     gp.font = gi.font;
     gp.codepoint = gi.codepoint;
     gp.y = 0;
-
-    switch (text_direction) {
-      case TextDirection::LTR:
-        gp.x = *span_length;
-        break;
-      case TextDirection::RTL:
-        gp.x = -*span_length - gi.advance_x;
-        break;
-    }
-
+    gp.x = *span_length;
     glyphs->emplace_back(gp);
 
     *span_length += gi.advance_x;
@@ -101,23 +92,13 @@ Status text_layout_hline(
     }
 
     for (auto& gi : span_glyphs) {
-      if (base_text_direction != text_line.text_directions[i]) {
-        switch (base_text_direction) {
-          case TextDirection::LTR:
-            gi.x += span_length;
-            break;
-          case TextDirection::RTL:
-            gi.x -= span_length;
-            break;
-        }
-      }
-
       switch (base_text_direction) {
         case TextDirection::LTR:
           gi.x += line_length;
           break;
         case TextDirection::RTL:
           gi.x -= line_length;
+          gi.x -= span_length;
           break;
       }
 
