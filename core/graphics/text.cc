@@ -29,15 +29,19 @@ Status drawTextLabel(
     double rotate,
     const TextStyle& style,
     Layer* layer) {
+  text::TextSpan span;
+  span.text = text;
+
   Rectangle bbox;
-  std::vector<text::GlyphSpan> spans;
+  std::vector<text::GlyphSpan> glyphs;
   auto rc = text::text_layout_hline(
-      text,
+      &span,
+      &span + 1,
       style.direction,
       style.font,
       style.font_size,
       layer->dpi,
-      &spans,
+      &glyphs,
       &bbox);
 
   auto offset = layout_align(bbox, position, align_x, align_y);
@@ -46,8 +50,8 @@ Status drawTextLabel(
     return rc;
   }
 
-  for (auto& span : spans) {
-    for (auto& g : span.glyphs) {
+  for (auto& gg : glyphs) {
+    for (auto& g : gg.glyphs) {
       g.x += offset.x;
       g.y += offset.y;
     }
@@ -62,7 +66,7 @@ Status drawTextLabel(
   op.rotate = rotate;
   op.rotate_pivot = position;
   op.style = style;
-  op.spans = std::move(spans);
+  op.spans = std::move(glyphs);
   op.origin = offset;
 
   return layer->apply(op);

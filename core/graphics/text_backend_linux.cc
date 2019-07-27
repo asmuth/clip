@@ -18,17 +18,26 @@
 namespace fviz::text {
 
 ReturnCode text_analyze_bidi_line(
-    const std::string& text,
-    TextDirection base_text_direction,
+    const TextSpan* text_begin,
+    const TextSpan* text_end,
+    TextDirection text_direction_base,
     TextLine* text_line) {
   FriBidiParType fb_basedir;
-  switch (base_text_direction) {
+  switch (text_direction_base) {
     case TextDirection::LTR:
       fb_basedir = FRIBIDI_PAR_LTR;
       break;
     case TextDirection::RTL:
       fb_basedir = FRIBIDI_PAR_RTL;
       break;
+  }
+
+  // combine all spans into a single string
+  // TODO: ensure that each span ends up as it's own text run for font fallback
+  // and shaping
+  std::string text;
+  for (auto text_iter = text_begin; text_iter != text_end; ++text_iter) {
+    text += text_iter->text;
   }
 
   // convert to fribidi string

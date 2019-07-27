@@ -31,9 +31,10 @@ namespace fviz::text {
  * (spans) must be handled by a mechanism higher up in the stack.
  */
 ReturnCode text_analyze_bidi_line(
-    const std::string& text,
-    TextDirection base_text_direction,
-    TextLine* text_span);
+    const TextSpan* text_begin,
+    const TextSpan* text_end,
+    TextDirection text_direction_base,
+    TextLine* text_line);
 
 } // namespace fviz::text
 

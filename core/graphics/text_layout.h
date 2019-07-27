@@ -109,8 +109,9 @@ Status text_layout_hline(
  * controls the base writing direction of the line
  */
 Status text_layout_hline(
-    const std::string& text_logical,
-    TextDirection base_direction,
+    const TextSpan* text_begin,
+    const TextSpan* text_end,
+    TextDirection text_direction_base,
     const FontInfo& font,
     double font_size,
     double dpi,
