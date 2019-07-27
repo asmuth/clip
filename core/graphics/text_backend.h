@@ -22,19 +22,17 @@
 namespace fviz::text {
 
 /**
- * Analyze a UTF-8 input string in logical character order and produce a text
- * line. The output text span will contain all text runs within the span in
- * logical order together with their corresponding directionality information.
- *
- * Note that this method returns a single text line, i.e. a non-breakable unit
- * of text. If line breaking is desired, identification of possible breakpoints
- * (spans) must be handled by a mechanism higher up in the stack.
+ * Analyze a UTF-8 input string in logical character order and produce a list
+ * of text runs where each run has the same writing order as well as the bidi
+ * embedding levels of each text run as defined by unicode.
  */
 ReturnCode text_analyze_bidi_line(
     const TextSpan* text_begin,
     const TextSpan* text_end,
     TextDirection text_direction_base,
-    TextLine* text_line);
+    std::vector<std::string>* runs,
+    std::vector<int>* run_bidi_levels,
+    std::vector<const TextSpan*>* run_span_map);
 
 } // namespace fviz::text
 

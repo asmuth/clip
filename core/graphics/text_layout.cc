@@ -21,6 +21,36 @@
 namespace fviz {
 namespace text {
 
+/**
+ * A line of text that has been prepared for final layout.
+ *
+ * The `text_runs` member contains the line's text runs as a UTF-8 strings.
+ * Note that the runs are given in logical order and the characters within
+ * the runs are also stored in logical order.
+ *
+ * Non-bidirectional text spans should usually have exactly one text run while
+ * bidirectional text should have N + 1 runs where N is the number of writing
+ * direction boundaries in the text span.
+ *
+ * The `base_direction` contains the inteded display writing direction for this
+ * line.
+ *
+ * The `span_map` contains a pointer to the source span for each of the text run
+ * and the `bidi_levels` property contains the Unicode BiDi embedding levels for
+ * each text run in the line.
+ *
+ * The visual order contains the order in which the runs should be displayed so
+ * that the first element in the visual_order list is placed at the "beginning"
+ * of the line in the corresponding base_direction.
+ */
+struct TextLine {
+  std::vector<std::string> runs;
+  TextDirection base_direction;
+  std::vector<const TextSpan*> span_map;
+  std::vector<int> bidi_levels;
+  std::vector<size_t> visual_order;
+};
+
 Status text_layout_hrun(
     const std::string& text_logical,
     const TextDirection text_direction,
@@ -71,12 +101,10 @@ Status text_layout_hline(
     double dpi,
     std::vector<GlyphSpan>* glyph_spans,
     Rectangle* bbox) {
-  auto visual_order = text_get_visual_order(text_line);
-
   double line_top = 0.0;
   double line_bottom = 0.0;
   double line_length = 0;
-  for (auto i : visual_order) {
+  for (auto i : text_line.visual_order) {
     TextDirection text_direction_run =
         text_line.bidi_levels[i] & 1 ?
             TextDirection::RTL :
@@ -144,26 +172,7 @@ Status text_layout_hline(
   return OK;
 }
 
-Status text_layout_hline(
-    const TextSpan* text_begin,
-    const TextSpan* text_end,
-    const TextDirection text_direction_base,
-    const FontInfo& font_info,
-    double font_size,
-    double dpi,
-    std::vector<GlyphSpan>* glyph_spans,
-    Rectangle* bbox) {
-  TextLine text_line;
-  text_analyze_bidi_line(text_begin, text_end, text_direction_base, &text_line);
 
-  return text_layout_hline(
-      text_line,
-      font_info,
-      font_size,
-      dpi,
-      glyph_spans,
-      bbox);
-}
 
 Status text_measure_span(
     const std::string& text,
@@ -185,14 +194,19 @@ Status text_measure_span(
       bbox);
 }
 
-// source: https://unicode.org/reports/tr9/#Reordering_Resolved_Levels
-//
-//   "From the highest level found in the text to the lowest odd level on each
-//    line, including intermediate levels not actually present in the text,
-//    reverse any contiguous sequence of characters that are at that level or
-//    higher."
-//
-std::vector<size_t> text_get_visual_order(const TextLine& line) {
+/**
+ * Determine the visual order of text runs in a line according to the unicode
+ * bidi algorithm
+ *
+ *   "From the highest level found in the text to the lowest odd level on each
+ *    line, including intermediate levels not actually present in the text,
+ *    reverse any contiguous sequence of characters that are at that level or
+ *    higher."
+ *
+ * Source: https://unicode.org/reports/tr9/#Reordering_Resolved_Levels
+ *
+ */
+std::vector<size_t> text_reorder_line(const TextLine& line) {
   std::vector<size_t> visual_order(line.runs.size(), 0);
 
   std::iota(
@@ -243,6 +257,37 @@ std::vector<size_t> text_get_visual_order(const TextLine& line) {
   }
 
   return visual_order;
+}
+
+Status text_layout_hline(
+    const TextSpan* text_begin,
+    const TextSpan* text_end,
+    const TextDirection text_direction_base,
+    const FontInfo& font_info,
+    double font_size,
+    double dpi,
+    std::vector<GlyphSpan>* glyph_spans,
+    Rectangle* bbox) {
+  TextLine text_line;
+
+  text_analyze_bidi_line(
+      text_begin,
+      text_end,
+      text_direction_base,
+      &text_line.runs,
+      &text_line.bidi_levels,
+      &text_line.span_map);
+
+  text_line.base_direction = text_direction_base;
+  text_line.visual_order = text_reorder_line(text_line);
+
+  return text_layout_hline(
+      text_line,
+      font_info,
+      font_size,
+      dpi,
+      glyph_spans,
+      bbox);
 }
 
 } // namespace text

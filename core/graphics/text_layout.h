@@ -58,32 +58,6 @@ struct TextSpan {
 
 
 /**
- * A line of text that has been prepared for final layout.
- *
- * The `text_runs` member contains the line's text runs as a UTF-8 strings.
- * Note that the runs are given in logical order and the characters within
- * the runs are also stored in logical order.
- *
- * Non-bidirectional text spans should usually have exactly one text run while
- * bidirectional text should have N + 1 runs where N is the number of writing
- * direction boundaries in the text span.
- *
- * The `base_direction` contains the inteded display writing direction for this
- * line.
- *
- * The `span_map` contains a pointer to the source span for each of the text run
- * and the `bidi_levels` property contains the Unicode BiDi embedding levels for
- * each text run in the line.
- */
-struct TextLine {
-  std::vector<std::string> runs;
-  TextDirection base_direction;
-  std::vector<const TextSpan*> span_map;
-  std::vector<int> bidi_levels;
-};
-
-
-/**
  * The output of the text layout process is a list of glyph placements. The
  * coordinates are absolute screen positions
  */
@@ -98,20 +72,6 @@ struct GlyphSpan {
   FontRef font;
   std::vector<GlyphPlacement> glyphs;
 };
-
-
-/**
- * Layout a horizontal line of text. The input text must be provided in UTF-8
- * encoding and in logical character order. The `text_direction_base` argument
- * controls the base writing direction of the line
- */
-Status text_layout_hline(
-    const TextLine& line,
-    const FontInfo& font,
-    double font_size,
-    double dpi,
-    std::vector<GlyphSpan>* spans,
-    Rectangle* bbox);
 
 
 /**
@@ -141,11 +101,6 @@ Status text_measure_span(
     double dpi,
     Rectangle* rect);
 
-
-/**
- * Determine the visual order of text runs in a line
- */
-std::vector<size_t> text_get_visual_order(const TextLine& line);
 
 } // namespace fviz::text
 
