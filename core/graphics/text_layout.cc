@@ -22,6 +22,8 @@ namespace text {
 Status text_layout_hrun(
     const std::string& text_logical,
     const TextDirection text_direction,
+    const std::string& text_language,
+    const std::string& text_script,
     const FontInfo& font_info,
     double font_size,
     double dpi,
@@ -33,6 +35,8 @@ Status text_layout_hrun(
   auto shaping_rc = text_shape_run_with_font_fallback(
       text_logical,
       text_direction,
+      text_language,
+      text_script,
       font_info,
       font_size,
       dpi,
@@ -76,6 +80,8 @@ Status text_layout_hline(
     auto rc = text_layout_hrun(
         text_line.text_runs[i],
         text_line.text_directions[i],
+        text_line.text_spans[i]->language,
+        text_line.text_spans[i]->script,
         font_info,
         font_size,
         dpi,

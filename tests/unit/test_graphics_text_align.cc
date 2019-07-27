@@ -46,6 +46,8 @@ void draw_test(
   {
     text::TextSpan ts;
     ts.text += "∞ⁱ Ω תל אביב , 北京市, القاهرة‎ = testend";
+    ts.script = "Arabic";
+    ts.language = "Arabic";
     text.push_back(ts);
   }
 

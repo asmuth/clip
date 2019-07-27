@@ -51,6 +51,8 @@ namespace fviz::text {
  */
 struct TextSpan {
   std::string text;
+  std::string language;
+  std::string script;
 };
 
 
@@ -68,6 +70,7 @@ struct TextSpan {
 struct TextLine {
   std::vector<std::string> text_runs;
   std::vector<TextDirection> text_directions;
+  std::vector<const TextSpan*> text_spans;
 };
 
 

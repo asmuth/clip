@@ -105,6 +105,7 @@ ReturnCode text_analyze_bidi_line(
 
     text_line->text_runs.emplace_back(run);
     text_line->text_directions.emplace_back(run_direction);
+    text_line->text_spans.emplace_back(fb_to_span_map[run_begin]);
   }
 
   return OK;

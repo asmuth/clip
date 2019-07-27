@@ -28,43 +28,64 @@ namespace text {
 Status text_shape_run(
     const std::string& text,
     TextDirection text_direction,
+    const std::string& language,
+    const std::string& script,
     FontRef font,
     double font_size,
     double dpi,
     std::vector<GlyphInfo>* glyphs) {
-  std::unique_ptr<
-      hb_buffer_t,
-      std::function<void (hb_buffer_t*)>>
-      hb_buf_ref(
-          hb_buffer_create(),
-          bind(&hb_buffer_destroy, _1));
+  std::cerr << "shape: " << text << std::endl;
 
-  auto hb_buf = hb_buf_ref.get();
+  /* get freetype font */
   auto ft_font = static_cast<FT_Face>(font_get_freetype(font));
-
   auto font_size_ft = font_size * (72.0 / dpi) * 64;
   if (FT_Set_Char_Size(ft_font, 0, font_size_ft, dpi, dpi)) {
     return ERROR;
   }
 
-  auto hb_font = hb_ft_font_create_referenced(ft_font);
+  std::unique_ptr<
+      hb_font_t,
+      std::function<void (hb_font_t*)>>
+      hb_font(
+          hb_ft_font_create_referenced(ft_font),
+          bind(&hb_font_destroy, _1));
 
-  hb_buffer_reset(hb_buf);
+  /* prepare buffer */
+  std::unique_ptr<
+      hb_buffer_t,
+      std::function<void (hb_buffer_t*)>>
+      hb_buf(
+          hb_buffer_create(),
+          bind(&hb_buffer_destroy, _1));
+
+  hb_buffer_reset(hb_buf.get());
+
+  hb_buffer_set_language(
+      hb_buf.get(),
+      hb_language_from_string(language.c_str(), language.length()));
+
+  hb_buffer_set_script(
+      hb_buf.get(),
+      hb_script_from_string(script.c_str(), script.length()));
+
   switch (text_direction) {
     case TextDirection::LTR:
-      hb_buffer_set_direction(hb_buf, HB_DIRECTION_LTR);
+      hb_buffer_set_direction(hb_buf.get(), HB_DIRECTION_LTR);
       break;
     case TextDirection::RTL:
-      hb_buffer_set_direction(hb_buf, HB_DIRECTION_RTL);
+      hb_buffer_set_direction(hb_buf.get(), HB_DIRECTION_RTL);
       break;
   }
 
-  hb_buffer_add_utf8(hb_buf, text.data(), text.size(), 0, text.size());
-  hb_shape(hb_font, hb_buf, NULL, 0);
+  hb_buffer_add_utf8(hb_buf.get(), text.data(), text.size(), 0, text.size());
 
+  /* shape */
+  hb_shape(hb_font.get(), hb_buf.get(), NULL, 0);
+
+  /* output glyph info */
   uint32_t glyph_count;
-  auto glyph_infos = hb_buffer_get_glyph_infos(hb_buf, &glyph_count);
-  auto glyph_positions = hb_buffer_get_glyph_positions(hb_buf, &glyph_count);
+  auto glyph_infos = hb_buffer_get_glyph_infos(hb_buf.get(), &glyph_count);
+  auto glyph_positions = hb_buffer_get_glyph_positions(hb_buf.get(), &glyph_count);
   for (size_t i = 0; i < glyph_count; ++i) {
     GlyphInfo g;
     g.font = font;
@@ -76,14 +97,14 @@ Status text_shape_run(
     glyphs->emplace_back(g);
   }
 
-  hb_font_destroy(hb_font);
-
   return OK;
 }
 
 Status text_shape_run_with_font_fallback(
     const std::string& text,
-    TextDirection dir,
+    TextDirection text_direction,
+    const std::string& text_language,
+    const std::string& text_script,
     const FontInfo& font_info,
     double font_size,
     double dpi,
@@ -93,7 +114,16 @@ Status text_shape_run_with_font_fallback(
   for (const auto& font : font_info.fonts) {
     font_glyphs.clear();
 
-    auto rc = text_shape_run(text, dir, font, font_size, dpi, &font_glyphs);
+    auto rc = text_shape_run(
+        text,
+        text_direction,
+        text_language,
+        text_script,
+        font,
+        font_size,
+        dpi,
+        &font_glyphs);
+
     if (rc != OK) {
       return rc;
     }
