@@ -39,17 +39,17 @@ void draw_test(
   std::vector<text::TextSpan> text;
   {
     text::TextSpan ts;
-    ts.text = "test";
+    ts.text = "helllo תל אביב 123 ";
     text.push_back(ts);
   }
 
-  {
-    text::TextSpan ts;
-    ts.text += "∞ⁱ Ω תל אביב , 北京市, القاهرة‎ = testend";
-    ts.script = "Arabic";
-    ts.language = "Arabic";
-    text.push_back(ts);
-  }
+  //{
+  //  text::TextSpan ts;
+  //  ts.text += "∞ⁱ Ω תל אביב , 北京市, القاهرة‎ = testend";
+  //  ts.script = "Arabic";
+  //  ts.language = "Arabic";
+  //  text.push_back(ts);
+  //}
 
   StrokeStyle ss;
   ss.line_width = from_unit(1);

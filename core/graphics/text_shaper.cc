@@ -34,8 +34,6 @@ Status text_shape_run(
     double font_size,
     double dpi,
     std::vector<GlyphInfo>* glyphs) {
-  std::cerr << "shape: " << text << std::endl;
-
   /* get freetype font */
   auto ft_font = static_cast<FT_Face>(font_get_freetype(font));
   auto font_size_ft = font_size * (72.0 / dpi) * 64;

@@ -23,6 +23,8 @@ ReturnCode text_analyze_bidi_line(
     const TextSpan* text_end,
     TextDirection text_direction_base,
     TextLine* text_line) {
+  text_line->text_direction_base = text_direction_base;
+
   FriBidiParType fb_basedir;
   switch (text_direction_base) {
     case TextDirection::LTR:
@@ -73,7 +75,10 @@ ReturnCode text_analyze_bidi_line(
 
   // find the bidi runs in the output
   std::vector<size_t> run_bounds;
+  int level_max = 0;
   for (size_t i = 0; i < fb_str_len; ++i) {
+    level_max = std::max(level_max, int(fb_levels[i]));
+
     // split on level change
     if (i > 0 && fb_levels[i] != fb_levels[i - 1]) {
       run_bounds.emplace_back(i);
@@ -87,6 +92,7 @@ ReturnCode text_analyze_bidi_line(
     }
   }
 
+  std::vector<int> levels;
   for (size_t i = 0; i < run_bounds.size() + 1; ++i) {
     auto run_begin = i == 0 ? 0 : run_bounds[i - 1];
     auto run_end = i == run_bounds.size() ? fb_str_len : run_bounds[i];
@@ -99,24 +105,10 @@ ReturnCode text_analyze_bidi_line(
         run_len,
         run.data()));
 
-    auto run_direction =
-        int(fb_levels[run_begin]) & 1 ?
-            TextDirection::RTL :
-            TextDirection::LTR;
-
     text_line->text_runs.emplace_back(run);
-    text_line->text_directions.emplace_back(run_direction);
     text_line->text_spans.emplace_back(fb_to_span_map[run_begin]);
+    text_line->text_bidi_levels.emplace_back(int(fb_levels[run_begin]));
   }
-
-  text_line->text_direction_base = text_direction_base;
-  text_line->visual_order.resize(text_line->text_runs.size());
-  std::iota(
-      text_line->visual_order.begin(),
-      text_line->visual_order.end(),
-      0);
-
-  // TODO: reorder ranges according to unicode algorithm
 
   return OK;
 }

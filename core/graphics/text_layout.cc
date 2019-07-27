@@ -16,6 +16,8 @@
 #include "graphics/text_layout.h"
 #include "graphics/text_shaper.h"
 
+#include <numeric>
+
 namespace fviz {
 namespace text {
 
@@ -69,16 +71,22 @@ Status text_layout_hline(
     double dpi,
     std::vector<GlyphSpan>* glyph_spans,
     Rectangle* bbox) {
+  auto visual_order = text_get_visual_order(text_line);
+
   double line_top = 0.0;
   double line_bottom = 0.0;
   double line_length = 0;
-  for (auto i : text_line.visual_order) {
+  for (auto i : visual_order) {
+    TextDirection text_direction_run =
+        text_line.text_bidi_levels[i] & 1 ?
+            TextDirection::RTL :
+            TextDirection::LTR;
+
     double span_length = 0.0;
     std::vector<GlyphPlacement> span_glyphs;
-
     auto rc = text_layout_hrun(
         text_line.text_runs[i],
-        text_line.text_directions[i],
+        text_direction_run,
         text_line.text_spans[i]->language,
         text_line.text_spans[i]->script,
         font_info,
@@ -175,6 +183,66 @@ Status text_measure_span(
       dpi,
       nullptr,
       bbox);
+}
+
+// source: https://unicode.org/reports/tr9/#Reordering_Resolved_Levels
+//
+//   "From the highest level found in the text to the lowest odd level on each
+//    line, including intermediate levels not actually present in the text,
+//    reverse any contiguous sequence of characters that are at that level or
+//    higher."
+//
+std::vector<size_t> text_get_visual_order(const TextLine& line) {
+  std::vector<size_t> visual_order(line.text_runs.size(), 0);
+
+  std::iota(
+      visual_order.begin(),
+      visual_order.end(),
+      0);
+
+  size_t level_max = *std::max_element(
+      line.text_bidi_levels.begin(),
+      line.text_bidi_levels.end());
+
+  for (size_t level_cur = level_max; level_cur >= 1; --level_cur) {
+    for (size_t range_begin = 0; range_begin < line.text_runs.size(); ) {
+      // find the next contiguous range where level >= level_cur starting at
+      // begin
+      auto range_end = range_begin;
+      for (;
+          line.text_bidi_levels[range_end] >= level_cur &&
+          range_end != line.text_runs.size();
+          ++range_end);
+
+      // if no such sequence starts at begin, try searching from the next index
+      if (range_end == range_begin) {
+        ++range_begin;
+        continue;
+      }
+
+      // reverse runs in the range
+      std::reverse(
+          visual_order.begin() + range_begin,
+          visual_order.begin() + range_end);
+
+      // continue searching from the end of the swapped range
+      range_begin = range_end;
+    }
+  }
+
+  // if the base direction is RTL, reverse the direction of all runs so that
+  // the "first" element in the visual order array is the one at the begining
+  // of the line in our base writing direction
+  switch (line.text_direction_base) {
+    case TextDirection::LTR:
+      break;
+    case TextDirection::RTL:
+      std::reverse(
+          visual_order.begin(),
+          visual_order.end());
+  }
+
+  return visual_order;
 }
 
 } // namespace text

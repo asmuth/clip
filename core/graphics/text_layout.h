@@ -70,9 +70,8 @@ struct TextSpan {
 struct TextLine {
   std::vector<std::string> text_runs;
   TextDirection text_direction_base;
-  std::vector<TextDirection> text_directions;
   std::vector<const TextSpan*> text_spans;
-  std::vector<size_t> visual_order;
+  std::vector<int> text_bidi_levels;
 };
 
 
@@ -134,6 +133,11 @@ Status text_measure_span(
     double dpi,
     Rectangle* rect);
 
+
+/**
+ * Determine the visual order of text runs in a line
+ */
+std::vector<size_t> text_get_visual_order(const TextLine& line);
 
 } // namespace fviz::text
 
