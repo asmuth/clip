@@ -85,6 +85,8 @@ Status drawTextLabel(
   span.text = text;
   span.font = style.font;
   span.font_size = style.font_size;
+  span.span_id = 0;
+
   return drawTextLabel(&span, &span + 1, position, align_x, align_y, 0, style, layer);
 }
 
@@ -109,6 +111,7 @@ Status text_measure_label(
   span.text = text;
   span.font = font;
   span.font_size = font_size;
+  span.span_id = 0;
 
   return text_layout_line(
       &span,

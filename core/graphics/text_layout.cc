@@ -73,6 +73,7 @@ Status text_place_hrun(
     gp.codepoint = gi.codepoint;
     gp.y = 0;
     gp.x = *span_length;
+    gp.span_id = span.span_id;
     glyphs->emplace_back(gp);
 
     *span_length += gi.advance_x;
@@ -239,28 +240,6 @@ Status text_layout_line(
   // place the text glyphs on the screen
   return text_place_hline(
       text_line,
-      dpi,
-      glyphs,
-      bbox);
-}
-
-Status text_layout_line(
-    const std::string& text,
-    const TextDirection text_direction_base,
-    const FontInfo& font_info,
-    double font_size,
-    double dpi,
-    std::vector<GlyphPlacementGroup>* glyphs,
-    Rectangle* bbox) {
-  TextSpan span;
-  span.text = text;
-  span.font = font_info;
-  span.font_size = font_size;
-
-  return text_layout_line(
-      &span,
-      &span + 1,
-      text_direction_base,
       dpi,
       glyphs,
       bbox);

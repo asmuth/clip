@@ -31,7 +31,8 @@ namespace fviz::text {
  * in a text span must have the same font, font size and script.
  *
  * The text data of this span is a UTF-8 encoded string in logical character
- * order.
+ * order. The span id may be used to map glyphs in the output to the span
+ * that produced them.
  */
 struct TextSpan {
   std::string text;
@@ -40,6 +41,7 @@ struct TextSpan {
   std::string script;
   FontInfo font;
   double font_size;
+  uint32_t span_id;
 };
 
 
@@ -52,6 +54,7 @@ struct GlyphPlacement {
   uint32_t codepoint;
   double x;
   double y;
+  uint32_t span_id;
 };
 
 
@@ -76,24 +79,6 @@ Status text_layout_line(
     const TextSpan* text_begin,
     const TextSpan* text_end,
     TextDirection text_direction_base,
-    double dpi,
-    std::vector<GlyphPlacementGroup>* glyphs,
-    Rectangle* bbox);
-
-
-/**
- * Layout a single line of text. The input text must be provided in UTF-8
- * encoding and in logical character order. The `text_direction_base` argument
- * controls the base writing direction of the line
- *
- * Note that at this point only LTR and RTL text as well as bidirectional LTR/RTL
- * text is supported. Vertical (TTB) line layout is not yet implemented.
- */
-Status text_layout_line(
-    const std::string& text,
-    TextDirection text_direction_base,
-    const FontInfo& font,
-    double font_size,
     double dpi,
     std::vector<GlyphPlacementGroup>* glyphs,
     Rectangle* bbox);
