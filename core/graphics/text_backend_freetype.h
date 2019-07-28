@@ -19,7 +19,7 @@
 #include "text.h"
 #include "text_layout.h"
 
-namespace fviz::text::backend_linux {
+namespace fviz::text::backend_freetype {
 
 /**
  * Analyze a UTF-8 input string in logical character order and produce a list
@@ -33,5 +33,5 @@ ReturnCode text_analyze_bidi_line(
     std::vector<TextSpan>* runs,
     std::vector<int>* run_bidi_levels);
 
-} // namespace fviz::text::backend_linux
+} // namespace fviz::text::backend_freetype
 

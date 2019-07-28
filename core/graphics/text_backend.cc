@@ -13,7 +13,7 @@
  */
 #include "fviz_config.h"
 #include "text_backend.h"
-#include "text_backend_linux.h"
+#include "text_backend_freetype.h"
 
 namespace fviz::text {
 
@@ -38,8 +38,8 @@ ReturnCode text_analyze_bidi_line(
   }
 
   // linux/freetype backend
-  if constexpr (TEXT_BACKEND == "linux") {
-    return backend_linux::text_analyze_bidi_line(
+  if constexpr (TEXT_BACKEND == "freetype") {
+    return backend_freetype::text_analyze_bidi_line(
         text_begin,
         text_end,
         text_direction_base,

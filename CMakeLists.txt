@@ -7,7 +7,7 @@ enable_testing()
 # Options
 # -----------------------------------------------------------------------------
 option(FVIZ_TEXT_ENABLE_BIDI "Enable bi-directional text support" ON)
-set(FVIZ_TEXT_BACKEND "linux" CACHE STRING "Set the text backend")
+set(FVIZ_TEXT_BACKEND "freetype" CACHE STRING "Set the text backend")
 option(FVIZ_TESTING "Builds with testing flags [default: OFF]" OFF)
 
 

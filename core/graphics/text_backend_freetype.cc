@@ -16,7 +16,7 @@
 #include <numeric>
 #include <fribidi/fribidi.h>
 
-namespace fviz::text::backend_linux {
+namespace fviz::text::backend_freetype {
 
 ReturnCode text_analyze_bidi_line(
     const TextSpan* text_begin,
@@ -117,5 +117,5 @@ ReturnCode text_analyze_bidi_line(
   return OK;
 }
 
-} // namespace fviz::text::backend_linux
+} // namespace fviz::text::backend_freetype
 
