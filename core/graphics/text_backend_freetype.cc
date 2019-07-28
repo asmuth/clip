@@ -11,10 +11,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+#include "fviz_config.h"
 #include "text_backend.h"
 
 #include <numeric>
+
+#if FVIZ_TEXT_ENABLE_BIDI == 1
 #include <fribidi/fribidi.h>
+#endif
+
+const constexpr bool TEXT_ENABLE_BIDI = FVIZ_TEXT_ENABLE_BIDI;
 
 namespace fviz::text::backend_freetype {
 
@@ -24,6 +30,9 @@ ReturnCode text_analyze_bidi_line(
     TextDirection text_direction_base,
     std::vector<TextSpan>* runs,
     std::vector<int>* run_bidi_levels) {
+#if FVIZ_TEXT_ENABLE_BIDI == 0
+  return error(ERROR, "compiled without fribidi");
+#else
   FriBidiParType fb_basedir;
   switch (text_direction_base) {
     case TextDirection::LTR:
@@ -115,7 +124,9 @@ ReturnCode text_analyze_bidi_line(
   }
 
   return OK;
+#endif
 }
+
 
 } // namespace fviz::text::backend_freetype
 

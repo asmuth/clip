@@ -19,7 +19,17 @@ find_package(Freetype)
 find_package(HarfBuzz)
 find_package(Fontconfig)
 find_package(PNG)
-include_directories(${CAIRO_INCLUDE_DIRS} ${FREETYPE_INCLUDE_DIRS} ${HARFBUZZ_INCLUDE_DIRS} ${PNG_INCLUDE_DIRS}})
+
+#if(FVIZ_TEXT_BACKEND EQUAL "freetype")
+  pkg_check_modules(FRIBIDI QUIET fribidi)
+  find_path(FRIBIDI_INCLUDE_DIR NAMES fribidi/fribidi.h)
+  find_library(FRIBIDI_LIBRARY NAMES fribidi)
+
+  if(NOT FRIBIDI_FOUND)
+    message(WARNING "libfribidi not found; disabling BiDI support")
+    set(FVIZ_TEXT_ENABLE_BIDI OFF)
+  endif()
+#endif()
 
 
 # Compile Flags
@@ -27,6 +37,7 @@ include_directories(${CAIRO_INCLUDE_DIRS} ${FREETYPE_INCLUDE_DIRS} ${HARFBUZZ_IN
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Werror")
 
+include_directories(${CAIRO_INCLUDE_DIRS} ${FREETYPE_INCLUDE_DIRS} ${HARFBUZZ_INCLUDE_DIRS} ${PNG_INCLUDE_DIRS}})
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/core)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/core/utils)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
@@ -67,7 +78,7 @@ file(GLOB source_files "core/*.cc" "core/**/*.cc" "elements/*.cc" "elements/**/*
 list(REMOVE_ITEM source_files "core/cli.cc")
 add_library(fviz STATIC ${source_files})
 set_target_properties(fviz PROPERTIES PUBLIC_HEADER "core/fviz.h")
-set(fviz_LDFLAGS fviz ${CAIRO_LIBRARIES} ${FREETYPE_LIBRARIES} ${HARFBUZZ_LIBRARIES} ${HARFBUZZ_ICU_LIBRARIES} ${PNG_LIBRARIES} ${FONTCONFIG_LIBRARIES} fmt fribidi)
+set(fviz_LDFLAGS fviz ${CAIRO_LIBRARIES} ${FREETYPE_LIBRARIES} ${HARFBUZZ_LIBRARIES} ${HARFBUZZ_ICU_LIBRARIES} ${PNG_LIBRARIES} ${FONTCONFIG_LIBRARIES} ${FRIBIDI_LIBRARIES} fmt)
 
 
 # Build: CLI
