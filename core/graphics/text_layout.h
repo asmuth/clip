@@ -38,6 +38,8 @@ struct TextSpan {
   TextDirection text_direction;
   std::string language;
   std::string script;
+  FontInfo font;
+  double font_size;
 };
 
 
@@ -74,8 +76,6 @@ Status text_layout_line(
     const TextSpan* text_begin,
     const TextSpan* text_end,
     TextDirection text_direction_base,
-    const FontInfo& font,
-    double font_size,
     double dpi,
     std::vector<GlyphPlacementGroup>* glyphs,
     Rectangle* bbox);
@@ -96,18 +96,6 @@ Status text_layout_line(
     double font_size,
     double dpi,
     std::vector<GlyphPlacementGroup>* glyphs,
-    Rectangle* bbox);
-
-
-/**
- * Measure the size of a single line of text.
- */
-Status text_measure_line(
-    const std::string& text,
-    TextDirection text_direction_base,
-    const FontInfo& font,
-    double font_size,
-    double dpi,
     Rectangle* bbox);
 
 

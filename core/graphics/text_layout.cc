@@ -46,12 +46,7 @@ struct TextLine {
 };
 
 Status text_place_hrun(
-    const std::string& text_logical,
-    const TextDirection text_direction,
-    const std::string& text_language,
-    const std::string& text_script,
-    const FontInfo& font_info,
-    double font_size,
+    const TextSpan& span,
     double dpi,
     std::vector<GlyphPlacement>* glyphs,
     double* span_length,
@@ -59,12 +54,12 @@ Status text_place_hrun(
     double* span_bottom) {
   std::vector<GlyphInfo> glyph_list;
   auto shaping_rc = text_shape_run_with_font_fallback(
-      text_logical,
-      text_direction,
-      text_language,
-      text_script,
-      font_info,
-      font_size,
+      span.text,
+      span.text_direction,
+      span.language,
+      span.script,
+      span.font,
+      span.font_size,
       dpi,
       &glyph_list);
 
@@ -90,8 +85,6 @@ Status text_place_hrun(
 
 Status text_place_hline(
     const TextLine& text_line,
-    const FontInfo& font_info,
-    double font_size,
     double dpi,
     std::vector<GlyphPlacementGroup>* glyphs,
     Rectangle* bbox) {
@@ -102,12 +95,7 @@ Status text_place_hline(
     double span_length = 0.0;
     std::vector<GlyphPlacement> span_glyphs;
     auto rc = text_place_hrun(
-        text_line.spans[i].text,
-        text_line.spans[i].text_direction,
-        text_line.spans[i].language,
-        text_line.spans[i].script,
-        font_info,
-        font_size,
+        text_line.spans[i],
         dpi,
         &span_glyphs,
         &span_length,
@@ -218,8 +206,6 @@ Status text_layout_line(
     const TextSpan* text_begin,
     const TextSpan* text_end,
     const TextDirection text_direction_base,
-    const FontInfo& font_info,
-    double font_size,
     double dpi,
     std::vector<GlyphPlacementGroup>* glyphs,
     Rectangle* bbox) {
@@ -253,8 +239,6 @@ Status text_layout_line(
   // place the text glyphs on the screen
   return text_place_hline(
       text_line,
-      font_info,
-      font_size,
       dpi,
       glyphs,
       bbox);
@@ -270,35 +254,17 @@ Status text_layout_line(
     Rectangle* bbox) {
   TextSpan span;
   span.text = text;
+  span.font = font_info;
+  span.font_size = font_size;
 
   return text_layout_line(
       &span,
       &span + 1,
       text_direction_base,
-      font_info,
-      font_size,
       dpi,
       glyphs,
       bbox);
 }
-
-Status text_measure_line(
-    const std::string& text,
-    TextDirection text_direction_base,
-    const FontInfo& font,
-    double font_size,
-    double dpi,
-    Rectangle* bbox) {
-  return text_layout_line(
-      text,
-      text_direction_base,
-      font,
-      font_size,
-      dpi,
-      nullptr,
-      bbox);
-}
-
 
 } // namespace text
 } // namespace fviz

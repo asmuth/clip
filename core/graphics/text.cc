@@ -41,8 +41,6 @@ Status drawTextLabel(
       text_begin,
       text_end,
       style.direction,
-      style.font,
-      style.font_size,
       layer->dpi,
       &glyphs,
       &bbox);
@@ -85,6 +83,8 @@ Status drawTextLabel(
     Layer* layer) {
   text::TextSpan span;
   span.text = text;
+  span.font = style.font;
+  span.font_size = style.font_size;
   return drawTextLabel(&span, &span + 1, position, align_x, align_y, 0, style, layer);
 }
 
@@ -96,6 +96,27 @@ Status drawTextLabel(
     const TextStyle& style,
     Layer* layer) {
   return drawTextLabel(text, position, align_x, align_y, 0, style, layer);
+}
+
+Status text_measure_label(
+    const std::string& text,
+    TextDirection text_direction_base,
+    const FontInfo& font,
+    double font_size,
+    double dpi,
+    Rectangle* bbox) {
+  text::TextSpan span;
+  span.text = text;
+  span.font = font;
+  span.font_size = font_size;
+
+  return text_layout_line(
+      &span,
+      &span + 1,
+      text_direction_base,
+      dpi,
+      nullptr,
+      bbox);
 }
 
 } // namespace fviz

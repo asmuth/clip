@@ -143,7 +143,7 @@ ReturnCode axis_layout_labels(
     style.font_size = axis.label_font_size;
 
     Rectangle label_bbox;
-    if (auto rc = text::text_measure_line(
+    if (auto rc = text_measure_label(
           label_text,
           TextDirection::LTR,
           axis.label_font,
@@ -182,7 +182,7 @@ ReturnCode axis_layout_title(
     const Layer& layer,
     double* margin) {
   Rectangle title_bbox;
-  if (auto rc = text::text_measure_line(
+  if (auto rc = text_measure_label(
         axis.title,
         TextDirection::LTR,
         axis.title_font,

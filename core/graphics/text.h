@@ -64,5 +64,17 @@ Status drawTextLabel(
     const TextStyle& text_style,
     Layer* layer);
 
+/**
+ * Convenience function to measure the size of a simple piece of text.
+ */
+Status text_measure_label(
+    const std::string& text,
+    TextDirection text_direction_base,
+    const FontInfo& font,
+    double font_size,
+    double dpi,
+    Rectangle* bbox);
+
+
 } // namespace fviz
 
