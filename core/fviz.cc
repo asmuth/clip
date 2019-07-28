@@ -118,6 +118,8 @@ int fviz_configure_file(
 int fviz_render_to(fviz_t* ctx, void* backend) {
   auto layer = static_cast<Layer*>(backend);
   layer->font = ctx->env.font;
+  layer->text_default_script = ctx->env.text_default_script;
+  layer->text_default_language = ctx->env.text_default_language;
 
   LayoutInfo layout;
   layout.content_box = layout_margin_box(

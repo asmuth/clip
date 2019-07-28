@@ -36,6 +36,16 @@ Status drawTextLabel(
   span.font = style.font;
   span.font_size = style.font_size;
   span.span_id = 0;
+  span.script = style.default_script;
+  span.language = style.default_language;
+
+  if (span.script.empty()) {
+    span.script = layer->text_default_script;
+  }
+
+  if (span.language.empty()) {
+    span.language = layer->text_default_language;
+  }
 
   text::TextLine line;
   line.spans.push_back(span);

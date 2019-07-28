@@ -2,6 +2,7 @@
 (set width 2000px)
 (set height 1000px)
 (set font-size 14pt)
+(set text-script "Arabic")
 
 (set font "Comic Sans MS" Regular)
 

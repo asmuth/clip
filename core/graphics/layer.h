@@ -48,6 +48,8 @@ struct Layer {
   double dpi;
   FontInfo font;
   Measure font_size;
+  std::string text_default_script;
+  std::string text_default_language;
   const std::function<Status (const layer_ops::Op&)> apply;
 };
 

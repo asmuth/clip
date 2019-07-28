@@ -37,6 +37,8 @@ struct Environment {
   Color background_color;
   Color foreground_color;
   Color text_color;
+  std::string text_default_script;
+  std::string text_default_language;
   std::array<Measure, 4> margins;
   ElementMap element_map;
 };

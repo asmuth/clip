@@ -35,6 +35,8 @@ struct TextStyle {
   FontInfo font;
   Measure font_size;
   Color color;
+  std::string default_script;
+  std::string default_language;
 };
 
 Status drawTextLabel(

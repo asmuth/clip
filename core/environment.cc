@@ -102,6 +102,14 @@ ReturnCode environment_set(Environment* env, const Expr* expr) {
     return expr_to_measure(args[1], &env->margins[3]);
   }
 
+  if (expr_is_value(args[0], "text-script")) {
+    return expr_to_string(args[1], &env->text_default_script);
+  }
+
+  if (expr_is_value(args[0], "text-language")) {
+    return expr_to_string(args[1], &env->text_default_language);
+  }
+
   if (expr_is_value(args[0], "margin")) {
     return expr_calln(args[1], {
       bind(&expr_to_measure, _1, &env->margins[0]),
