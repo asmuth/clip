@@ -25,6 +25,10 @@ using std::placeholders::_1;
 namespace fviz {
 namespace text {
 
+std::string text_detect_script(const std::string& text) {
+  return "Arabic";
+}
+
 Status text_shape_run(
     const std::string& text,
     TextDirection text_direction,
@@ -34,6 +38,12 @@ Status text_shape_run(
     double font_size,
     double dpi,
     std::vector<GlyphInfo>* glyphs) {
+  /* try to detect the script */
+  auto script_detected = script;
+  if (script_detected.empty()) {
+    script_detected = text_detect_script(text);
+  }
+
   /* get freetype font */
   auto ft_font = static_cast<FT_Face>(font_get_freetype(font));
   auto font_size_ft = font_size * (72.0 / dpi) * 64;
@@ -58,13 +68,17 @@ Status text_shape_run(
 
   hb_buffer_reset(hb_buf.get());
 
-  hb_buffer_set_language(
-      hb_buf.get(),
-      hb_language_from_string(language.c_str(), language.length()));
+  if (!language.empty()) {
+    hb_buffer_set_language(
+        hb_buf.get(),
+        hb_language_from_string(language.c_str(), language.length()));
+  }
 
-  hb_buffer_set_script(
-      hb_buf.get(),
-      hb_script_from_string(script.c_str(), script.length()));
+  if (!script_detected.empty()) {
+    hb_buffer_set_script(
+        hb_buf.get(),
+        hb_script_from_string(script_detected.c_str(), script_detected.length()));
+  }
 
   switch (text_direction) {
     case TextDirection::LTR:
