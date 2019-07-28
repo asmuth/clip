@@ -38,16 +38,6 @@ struct TextStyle {
 };
 
 Status drawTextLabel(
-    const text::TextSpan* text_begin,
-    const text::TextSpan* text_end,
-    const Point& position,
-    HAlign align_x,
-    VAlign align_y,
-    double rotate,
-    const TextStyle& text_style,
-    Layer* layer);
-
-Status drawTextLabel(
     const std::string& text,
     const Point& position,
     HAlign align_x,

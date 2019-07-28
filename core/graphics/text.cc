@@ -14,6 +14,7 @@
 #include <graphics/text.h>
 #include <graphics/text_shaper.h>
 #include "graphics/text_layout.h"
+#include "graphics/text_support.h"
 #include <graphics/layer.h>
 
 namespace fviz {
@@ -22,34 +23,35 @@ TextStyle::TextStyle() :
     direction(TextDirection::LTR) {}
 
 Status drawTextLabel(
-    const text::TextSpan* text_begin,
-    const text::TextSpan* text_end,
+    const std::string& text,
     const Point& position,
     HAlign align_x,
     VAlign align_y,
     double rotate,
     const TextStyle& style,
     Layer* layer) {
-  std::string text;
-  for (auto text_iter = text_begin; text_iter != text_end; ++text_iter) {
-    text += text_iter->text;
+  text::TextSpan span;
+  span.text_direction = style.direction;
+  span.text = text;
+  span.font = style.font;
+  span.font_size = style.font_size;
+  span.span_id = 0;
+
+  text::TextLine line;
+  line.spans.push_back(span);
+  line.base_direction = style.direction;
+
+  if (auto rc = text_reorder_bidi_line(&line); !rc) {
+    return ERROR;
   }
 
   Rectangle bbox;
   std::vector<text::GlyphPlacementGroup> glyphs;
-  auto rc = text::text_layout_line(
-      text_begin,
-      text_end,
-      style.direction,
-      layer->dpi,
-      &glyphs,
-      &bbox);
-
-  auto offset = layout_align(bbox, position, align_x, align_y);
-
-  if (rc != OK) {
+  if (auto rc = text::text_layout_line(line, layer->dpi, &glyphs, &bbox); !rc) {
     return rc;
   }
+
+  auto offset = layout_align(bbox, position, align_x, align_y);
 
   for (auto& gg : glyphs) {
     for (auto& g : gg.glyphs) {
@@ -78,24 +80,6 @@ Status drawTextLabel(
     const Point& position,
     HAlign align_x,
     VAlign align_y,
-    double rotate,
-    const TextStyle& style,
-    Layer* layer) {
-  text::TextSpan span;
-  span.text_direction = style.direction;
-  span.text = text;
-  span.font = style.font;
-  span.font_size = style.font_size;
-  span.span_id = 0;
-
-  return drawTextLabel(&span, &span + 1, position, align_x, align_y, 0, style, layer);
-}
-
-Status drawTextLabel(
-    const std::string& text,
-    const Point& position,
-    HAlign align_x,
-    VAlign align_y,
     const TextStyle& style,
     Layer* layer) {
   return drawTextLabel(text, position, align_x, align_y, 0, style, layer);
@@ -115,13 +99,11 @@ Status text_measure_label(
   span.font_size = font_size;
   span.span_id = 0;
 
-  return text_layout_line(
-      &span,
-      &span + 1,
-      text_direction_base,
-      dpi,
-      nullptr,
-      bbox);
+  text::TextLine line;
+  line.spans.push_back(span);
+  line.base_direction = text_direction_base;
+
+  return text_layout_line(line, dpi, nullptr, bbox);
 }
 
 } // namespace fviz

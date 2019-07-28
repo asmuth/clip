@@ -21,7 +21,7 @@
 namespace fviz {
 namespace text {
 
-Status text_place_hrun(
+Status text_layout_span(
     const TextSpan& span,
     double dpi,
     std::vector<GlyphPlacement>* glyphs,
@@ -60,7 +60,7 @@ Status text_place_hrun(
   return OK;
 }
 
-Status text_place_hline(
+Status text_layout_line(
     const TextLine& text_line,
     double dpi,
     std::vector<GlyphPlacementGroup>* glyphs,
@@ -68,11 +68,11 @@ Status text_place_hline(
   double line_top = 0.0;
   double line_bottom = 0.0;
   double line_length = 0;
-  for (auto i : text_line.visual_order) {
+  for (const auto& span : text_line.spans) {
     double span_length = 0.0;
     std::vector<GlyphPlacement> span_glyphs;
-    auto rc = text_place_hrun(
-        text_line.spans[i],
+    auto rc = text_layout_span(
+        span,
         dpi,
         &span_glyphs,
         &span_length,
@@ -124,105 +124,6 @@ Status text_place_hline(
       line_bottom - line_top);
 
   return OK;
-}
-
-/**
- * Determine the visual order of text runs in a line according to the unicode
- * bidi algorithm
- *
- *   "From the highest level found in the text to the lowest odd level on each
- *    line, including intermediate levels not actually present in the text,
- *    reverse any contiguous sequence of characters that are at that level or
- *    higher."
- *
- * Source: https://unicode.org/reports/tr9/#Reordering_Resolved_Levels
- *
- */
-std::vector<size_t> text_reorder_line(const std::vector<int>& bidi_levels) {
-  std::vector<size_t> visual_order(bidi_levels.size(), 0);
-
-  std::iota(
-      visual_order.begin(),
-      visual_order.end(),
-      0);
-
-  size_t level_max = *std::max_element(
-      bidi_levels.begin(),
-      bidi_levels.end());
-
-  for (size_t level_cur = level_max; level_cur >= 1; --level_cur) {
-    for (size_t range_begin = 0; range_begin < bidi_levels.size(); ) {
-      // find the next contiguous range where level >= level_cur starting at
-      // begin
-      auto range_end = range_begin;
-      for (;
-          bidi_levels[range_end] >= level_cur &&
-          range_end != bidi_levels.size();
-          ++range_end);
-
-      // if no such sequence starts at begin, try searching from the next index
-      if (range_end == range_begin) {
-        ++range_begin;
-        continue;
-      }
-
-      // reverse runs in the range
-      std::reverse(
-          visual_order.begin() + range_begin,
-          visual_order.begin() + range_end);
-
-      // continue searching from the end of the swapped range
-      range_begin = range_end;
-    }
-  }
-
-  return visual_order;
-}
-
-Status text_layout_line(
-    const TextSpan* text_begin,
-    const TextSpan* text_end,
-    const TextDirection text_direction_base,
-    double dpi,
-    std::vector<GlyphPlacementGroup>* glyphs,
-    Rectangle* bbox) {
-  // prepare a new text line for layout
-  TextLine text_line;
-  text_line.base_direction = text_direction_base;
-
-  // split spans using the unicode bidi algorithm and compute visual span order
-  std::vector<int> bidi_levels;
-  if (auto rc =
-        text_analyze_bidi_line(
-            text_begin,
-            text_end,
-            text_direction_base,
-            &text_line.spans,
-            &bidi_levels);
-      !rc) {
-    return ERROR;
-  }
-
-  text_line.visual_order = text_reorder_line(bidi_levels);
-
-  // if the base direction is RTL, reverse the direction of all runs so that
-  // the "first" element in the visual order array is the one at the begining
-  // of the line in our base writing direction
-  switch (text_direction_base) {
-    case TextDirection::LTR:
-      break;
-    case TextDirection::RTL:
-      std::reverse(
-          text_line.visual_order.begin(),
-          text_line.visual_order.end());
-  }
-
-  // place the text glyphs on the screen
-  return text_place_hline(
-      text_line,
-      dpi,
-      glyphs,
-      bbox);
 }
 
 } // namespace text

@@ -103,9 +103,7 @@ struct GlyphPlacementGroup {
  * writing direction is not yet implemented.
  */
 Status text_layout_line(
-    const TextSpan* text_begin,
-    const TextSpan* text_end,
-    TextDirection text_direction_base,
+    const TextLine& text_line,
     double dpi,
     std::vector<GlyphPlacementGroup>* glyphs,
     Rectangle* bbox);

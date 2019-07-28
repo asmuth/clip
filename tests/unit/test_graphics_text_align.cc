@@ -36,27 +36,14 @@ void draw_test(
   ts.color = Color::fromRGB(0,0,0);
   ts.direction = dir;
 
-  std::vector<text::TextSpan> text;
-  {
-    text::TextSpan ts;
-    ts.text = "helllo תל אביב 123 ";
-    text.push_back(ts);
-  }
-
-  //{
-  //  text::TextSpan ts;
-  //  ts.text += "∞ⁱ Ω תל אביב , 北京市, القاهرة‎ = testend";
-  //  ts.script = "Arabic";
-  //  ts.language = "Arabic";
-  //  text.push_back(ts);
-  //}
+  auto text = "helllo תל אביב 123 ";
 
   StrokeStyle ss;
   ss.line_width = from_unit(1);
 
   strokeLine(l, Point(x - 10, y), Point(x + 10, y), ss);
   strokeLine(l, Point(x, y - 10), Point(x, y + 10), ss);
-  drawTextLabel(text.data(), text.data() + text.size(), Point(x, y), ax, ay, 0, ts, l);
+  drawTextLabel(text, Point(x, y), ax, ay, 0, ts, l);
 }
 
 void draw_test(Layer* layer, const FontInfo& font) {
