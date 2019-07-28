@@ -15,40 +15,23 @@
 #include <graphics/text.h>
 #include <graphics/layout.h>
 
+/**
+ * A simplistic text layout engine with basic support for internationalization.
+ *
+ * Note that the text layout code is slow and performs duplicate work in some
+ * places. Whenever there is a tradeoff between simplicity and performance the
+ * most simple approach is used. Accordingly, the layout engine is only suitable
+ * for offline rendering.
+ */
 namespace fviz::text {
-
 
 /**
  * A text span represents a discrete, non-breakable piece of text. Text spans are
- * the smallest unit of text for layout. Text spans are the input to the text
- * layout process.
+ * the smallest unit of text as far as the layout code is concerned. All text
+ * in a text span must have the same font, font size and script.
  *
- * If any kind of line wrapping is desired, the input text must be split into
- * text spans so that line breaking can be performed on a per-span basis.
- *
- * One important caveat of this is that text shaping will also be performed on a
- * per-span basis, so the spans should be as large as possible for the best text
- * shaping results. Note that font fallback selection is also performed per-span,
- * so ideally any span should be renderable with a single font from the font
- * stack.
- *
- * In latin scripts, text spans should probably correspond to word boundaries.
- * In other scripts, text spans should correspond to whatever unit of text is
- * small enough to allow for text breaking on span-level but large enough so that
- * per-span shaping of text is sufficient.
- *
- * It is allowed to break the line after or before each text span, i.e. spans
- * must be given so that it is legal to place each text span at the beginning of
- * a new line. However it is *not* allowed to break a span itself into smaller
- * pieces; all text in the span must be put onto the same line.
- *
- * This interface should enable us to have a high degree of decoupling between
- * the text shaping and layout parts. However, one tradeoff is that it does not
- * allow users to implement line breaking at  character boundaries (i.e breaking
- * and hyphenization of words).
- *
- * The text data of this span as a UTF-8 encoded string in logical character
- * order
+ * The text data of this span is a UTF-8 encoded string in logical character
+ * order.
  */
 struct TextSpan {
   std::string text;
@@ -81,7 +64,8 @@ struct GlyphPlacementGroup {
 
 
 /**
- * Layout a line of text. The text should already be itemized into spans.
+ * Layout a line of text. The text must already be itemized into spans so that
+ * all text in any span has the same font, font size and script.
  *
  * Note that at this point only LTR and RTL text as well as bidirectional LTR/RTL
  * text is supported. Vertical (TTB) line layout is not yet implemented.
