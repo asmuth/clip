@@ -216,12 +216,16 @@ Status text_layout_line(
 
   // split spans using the unicode bidi algorithm and compute visual span order
   std::vector<int> bidi_levels;
-  text_analyze_bidi_line(
-      text_begin,
-      text_end,
-      text_direction_base,
-      &text_line.spans,
-      &bidi_levels);
+  if (auto rc =
+        text_analyze_bidi_line(
+            text_begin,
+            text_end,
+            text_direction_base,
+            &text_line.spans,
+            &bidi_levels);
+      !rc) {
+    return ERROR;
+  }
 
   text_line.visual_order = text_reorder_line(bidi_levels);
 

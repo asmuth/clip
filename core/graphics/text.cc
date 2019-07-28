@@ -82,6 +82,7 @@ Status drawTextLabel(
     const TextStyle& style,
     Layer* layer) {
   text::TextSpan span;
+  span.text_direction = style.direction;
   span.text = text;
   span.font = style.font;
   span.font_size = style.font_size;
@@ -109,6 +110,7 @@ Status text_measure_label(
     Rectangle* bbox) {
   text::TextSpan span;
   span.text = text;
+  span.text_direction = text_direction_base;
   span.font = font;
   span.font_size = font_size;
   span.span_id = 0;

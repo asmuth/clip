@@ -9,6 +9,7 @@ cmake_install.cmake
 *.dll
 *.dylib
 /fviz
+/fviz_config.h
 /.ninja_deps
 /.ninja_log
 /*.ninja

@@ -1,22 +1,35 @@
-project(fviz)
-add_definitions("-Dfviz_VERSION='\"v0.4.0\"'")
-
-
-# CMake Setup
-# -----------------------------------------------------------------------------
-cmake_minimum_required(VERSION 2.8.8)
+cmake_minimum_required(VERSION 3.6)
+project(fviz VERSION "0.4.0")
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/platform/cmake")
 enable_testing()
 
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/platform/cmake")
+
+# Options
+# -----------------------------------------------------------------------------
+option(FVIZ_TEXT_ENABLE_BIDI "Enable bi-directional text support" ON)
+set(FVIZ_TEXT_BACKEND "linux" CACHE STRING "Set the text backend")
+option(FVIZ_TESTING "Builds with testing flags [default: OFF]" OFF)
+
+
+# Dependencies
+# -----------------------------------------------------------------------------
+find_package(Threads)
+find_package(Cairo)
+find_package(Freetype)
+find_package(HarfBuzz)
+find_package(Fontconfig)
+find_package(PNG)
+include_directories(${CAIRO_INCLUDE_DIRS} ${FREETYPE_INCLUDE_DIRS} ${HARFBUZZ_INCLUDE_DIRS} ${PNG_INCLUDE_DIRS}})
+
+
+# Compile Flags
+# -----------------------------------------------------------------------------
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Werror")
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/core)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/core/utils)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
-
-option(FVIZ_TESTING "Builds with testing flags [default: OFF]" OFF)
-option(FVIZ_TESTING "Builds with coverage flags [default: OFF]" OFF)
 
 if(FVIZ_TESTING)
   add_compile_options(
@@ -41,15 +54,11 @@ if(FVIZ_TESTING)
 endif()
 
 
-# Dependencies
+# Build: Config
 # -----------------------------------------------------------------------------
-find_package(Threads)
-find_package(Cairo)
-find_package(Freetype)
-find_package(HarfBuzz)
-find_package(Fontconfig)
-find_package(PNG)
-include_directories(${CAIRO_INCLUDE_DIRS} ${FREETYPE_INCLUDE_DIRS} ${HARFBUZZ_INCLUDE_DIRS} ${PNG_INCLUDE_DIRS}})
+configure_file(core/config.h.in fviz_config.h)
+message(STATUS "Config Options: text_backend=${FVIZ_TEXT_BACKEND}")
+message(STATUS "Config Options: text_enable_bidi=${FVIZ_TEXT_ENABLE_BIDI}")
 
 
 # Build: fviz Library

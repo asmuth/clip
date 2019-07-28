@@ -15,6 +15,7 @@
 #include <unistd.h>
 #include <iostream>
 #include "fviz.h"
+#include "fviz_config.h"
 #include "utils/flagparser.h"
 #include "return_code.h"
 #include "utils/stringutil.h"
@@ -61,7 +62,7 @@ int main(int argc, const char** argv) {
             "Part of the fviz project (https://fviz.org)\n"
             "Copyright (c) 2019, Paul Asmuth, Laura Schlimmer.\n"
             "All rights reserved.\n\n",
-            fviz_VERSION);
+            FVIZ_VERSION);
 
     return 0;
   }
