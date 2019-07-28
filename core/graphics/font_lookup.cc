@@ -186,35 +186,91 @@ ReturnCode font_get_glyph_path(
   return OK;
 }
 
-bool font_find_fc(
+ReturnCode font_find_best(
     const std::string& font_pattern,
     std::string* font_file) {
   std::string file;
 
-  {
-    auto fc_config = FcInitLoadConfigAndFonts();
-    auto fc_pattern = FcNameParse((FcChar8*) font_pattern.c_str());
-    FcDefaultSubstitute(fc_pattern);
-    FcConfigSubstitute(fc_config, fc_pattern, FcMatchPattern);
-    FcResult fc_res;
-    auto fc_font = FcFontMatch(fc_config, fc_pattern, &fc_res);
-    if (fc_font && fc_res == FcResultMatch) {
-      char* fc_file;
-      if (FcPatternGetString(fc_font, FC_FILE, 0, (FcChar8**) &fc_file) == FcResultMatch) {
-        file = std::string(fc_file);
-      }
-      FcPatternDestroy(fc_font);
+  auto fc_config = FcInitLoadConfigAndFonts();
+  auto fc_pattern = FcNameParse((FcChar8*) font_pattern.c_str());
+
+  FcDefaultSubstitute(fc_pattern);
+  FcConfigSubstitute(fc_config, fc_pattern, FcMatchPattern);
+
+  FcResult fc_res;
+  auto fc_font = FcFontMatch(fc_config, fc_pattern, &fc_res);
+  if (fc_font && fc_res == FcResultMatch) {
+    char* fc_file;
+    if (FcPatternGetString(fc_font, FC_FILE, 0, (FcChar8**) &fc_file) == FcResultMatch) {
+      file = std::string(fc_file);
     }
-    FcPatternDestroy(fc_pattern);
-    FcConfigDestroy(fc_config);
+
+    FcPatternDestroy(fc_font);
   }
+
+  FcPatternDestroy(fc_pattern);
+  FcConfigDestroy(fc_config);
 
   if (file.empty()) {
-    return false;
+    return errorf(ERROR, "unable to find font: ${}", font_pattern);
+  } else {
+    *font_file = file;
+    return OK;
+  }
+}
+
+ReturnCode font_find_stack(
+    const std::string& font_pattern,
+    FontInfo* font_info) {
+  std::vector<std::string> font_files;
+
+  auto fc_config = FcInitLoadConfigAndFonts();
+  auto fc_objs = FcObjectSetBuild(FC_FILE, nullptr);
+  auto fc_pattern = FcNameParse((FcChar8*) font_pattern.c_str());
+
+  FcDefaultSubstitute(fc_pattern);
+  FcConfigSubstitute(fc_config, fc_pattern, FcMatchPattern);
+
+  FcResult fc_res;
+  FcFontSet* fc_fontset = FcFontSort(0, fc_pattern, FcTrue, 0, &fc_res);
+
+  if (fc_fontset) {
+    for (size_t i=0; i < fc_fontset->nfont; ++i) {
+      char* fc_file = nullptr;
+      auto fc_file_rc = FcPatternGetString(
+          fc_fontset->fonts[i],
+          FC_FILE,
+          0,
+          reinterpret_cast<FcChar8**>(&fc_file));
+
+      if (fc_file_rc != FcResultMatch) {
+        continue;
+      }
+
+      font_files.emplace_back(fc_file);
+    }
+
+    FcFontSetDestroy(fc_fontset);
   }
 
-  *font_file = file;
-  return true;
+  FcPatternDestroy(fc_pattern);
+  FcConfigDestroy(fc_config);
+
+
+  for (const auto& font_file : font_files) {
+    FontRef font_ref;
+    if (auto rc = font_load(font_file, &font_ref); !rc) {
+      return errorf(
+          ERROR,
+          "unble to load font '{}': {}",
+          font_file,
+          rc.message);
+    }
+
+    font_info->fonts.push_back(font_ref);
+  }
+
+  return OK;
 }
 
 ReturnCode font_find(DefaultFont font_name, FontInfo* font_info) {
@@ -266,21 +322,7 @@ ReturnCode font_find(DefaultFont font_name, FontInfo* font_info) {
       break;
   }
 
-  if (!font_find_fc(font_fc, &font_file)) {
-    return ERROR;
-  }
-
-  FontRef font_ref;
-  if (auto rc = font_load(font_file, &font_ref); !rc) {
-    return errorf(
-        ERROR,
-        "unble to load font '{}': {}",
-        font_file,
-        rc.message);
-  }
-
-  font_info->fonts.insert(font_info->fonts.begin(), font_ref);
-  return OK;
+  return font_find_stack(font_fc, font_info);
 }
 
 ReturnCode font_find_expr(const Expr* expr, FontInfo* font_info) {
@@ -369,8 +411,8 @@ ReturnCode font_find_expr(const Expr* expr, FontInfo* font_info) {
   }
 
   std::string font_file;
-  if (!font_find_fc(font_fc, &font_file)) {
-    return errorf(ERROR, "unble to find font: {}", expr_inspect(expr));
+  if (auto rc = font_find_best(font_fc, &font_file); !rc) {
+    return rc;
   }
 
   FontRef font_ref;
