@@ -25,12 +25,12 @@
  */
 namespace fviz::text {
 
+
 /**
  * A text span represents a discrete, non-breakable piece of text. Text spans are
- * the smallest unit of text as far as the layout code is concerned. All text
- * in a text span must have the same font, font size and script.
+ * the smallest unit of text as far as the layout code is concerned.
  *
- * The text data of this span is a UTF-8 encoded string in logical character
+ * The text data of a span is a UTF-8 encoded string in logical character
  * order. The span id may be used to map glyphs in the output to the span
  * that produced them.
  */
@@ -46,8 +46,34 @@ struct TextSpan {
 
 
 /**
+ * A line of text that has been prepared for final layout (placement).
+ *
+ * The `spans` member contains the line's "text spans". The `base_direction`
+ * contains the inteded base writing direction for the line.
+ *
+ * While characters within a span are always stored in logical order, the layout
+ * engine will place the spans in the order in which they are stored in the
+ * `spans` list; the first element in the spans list will always be placed at the
+ * "beginning" of the line in the corresponding base_direction, which is the left
+ * edge for LTR text or the right edge for RTL text.
+ *
+ * For correct display of bi-directional text, there should be at least N + 1
+ * spans where N is the number of writing direction boundaries in the line. The
+ * spans within the line must be re-ordered into visual order before the layout
+ * of the line is performed. The text within each span must be given in logical
+ * order and each span must have a correct `text_direction` attribute. 
+ */
+struct TextLine {
+  TextDirection base_direction;
+  std::vector<TextSpan> spans;
+  std::vector<size_t> visual_order;
+};
+
+
+/**
  * The output of the text layout process is a list of glyph placements. The
- * coordinates are absolute screen positions
+ * coordinates are returned in "text layout space" so that the begin of the
+ * baseline of the (first) line of text is placed at (0, 0)
  */
 struct GlyphPlacement {
   FontRef font;
@@ -70,10 +96,11 @@ struct GlyphPlacementGroup {
 
 /**
  * Layout a line of text. The text must already be itemized into spans so that
- * all text in any span has the same font, font size and script.
+ * all text in each span has the same font, font size, script and writing
+ * direction and so that spans are ordered "visually" (see above).
  *
- * Note that at this point only LTR and RTL text as well as bidirectional LTR/RTL
- * text is supported. Vertical (TTB) line layout is not yet implemented.
+ * Note that at this point only horizontal text lines are supported, vertical
+ * writing direction is not yet implemented.
  */
 Status text_layout_line(
     const TextSpan* text_begin,

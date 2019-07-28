@@ -21,30 +21,6 @@
 namespace fviz {
 namespace text {
 
-/**
- * A line of text that has been prepared for final layout (placement).
- *
- * The `spans` member contains the line's text runs as a UTF-8 strings.
- * Note that the runs are given in logical order and the characters within
- * the runs are also stored in logical order.
- *
- * Non-bidirectional text spans should usually have exactly one text run while
- * bidirectional text should have N + 1 runs where N is the number of writing
- * direction boundaries in the text span.
- *
- * The `base_direction` contains the inteded display writing direction for this
- * line.
- *
- * The visual order contains the order in which the runs should be displayed so
- * that the first element in the visual_order list is placed at the "beginning"
- * of the line in the corresponding base_direction.
- */
-struct TextLine {
-  TextDirection base_direction;
-  std::vector<TextSpan> spans;
-  std::vector<size_t> visual_order;
-};
-
 Status text_place_hrun(
     const TextSpan& span,
     double dpi,
