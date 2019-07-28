@@ -33,3 +33,8 @@
     - file: charts-custom/logarithmic_scale
     - file: charts-custom/multiple_y_axes
 
+- section: Customization
+  files:
+    - file: charts-custom/text_i18n
+    - file: charts-custom/custom_font
+

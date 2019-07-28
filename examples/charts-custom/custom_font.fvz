@@ -7,10 +7,18 @@
 
 (chart/linechart
     data-x (csv "tests/testdata/measurement.csv" time)
-    data-y (csv "tests/testdata/measurement.csv" value1)
+    data-y (csv "tests/testdata/measurement.csv" value2)
+    limit-y (0 120)
     axes (bottom left)
-    axis-y-label-format (scientific)
+    axis-y-label-format (fixed 2)
     axis-x-label-format (datetime "%H:%M:%S")
     grid (color #fff)
     background #eee
-    border none)
+    border none
+    legend-overlay (
+        position (top right)
+        border none
+        margin 0.5em
+        item-flow on
+        item (
+            label "A very serious measurement")))
