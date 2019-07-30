@@ -76,6 +76,10 @@ documentation:
           url: "/documentation/color-maps"
           file: "reference/color_maps"
         -
+          title: "Typographic Units"
+          url: "/documentation/typographic"
+          file: "reference/typographic"
+        -
           title: "Scale Types"
           url: "/documentation/scale-types"
           file: "reference/scale_type"
