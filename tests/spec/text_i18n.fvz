@@ -4,8 +4,6 @@
 (set font-size 16pt)
 (set text-script "Arabic")
 
-(set font "Comic Sans MS" Regular)
-
 (legend
   item (label "i北京市 (Beijing)" color #06c)
   item (label "תל אביב (Tel Aviv)" color #c06)

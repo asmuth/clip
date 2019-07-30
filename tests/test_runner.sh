@@ -22,7 +22,12 @@ echo "${binfile}" --in "${infile}" --out "${outfile}"
 echo "-------------------------------------------------------------------------------"
 
 result=""
-if "${binfile}" --in "${infile}" --out "${outfile}" 2> "${logfile}"; then
+if "${binfile}" \
+      --font-defaults off \
+      --font-load /usr/share/fonts/msttcore/arial.ttf \
+      --in "${infile}" \
+      --out "${outfile}" \
+      2> "${logfile}"; then
   result="ok"
 else
   result="fail"

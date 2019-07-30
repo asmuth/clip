@@ -106,6 +106,8 @@ const char* fviz_geterror(const fviz_t* ctx);
  */
 void fviz_printerror(const fviz_t* ctx);
 
+void* fviz_env(fviz_t* ctx);
+
 /**
  * Set a user-defined parameter
  */

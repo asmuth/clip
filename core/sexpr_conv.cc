@@ -38,6 +38,12 @@ ReturnCode expr_to_strings(
   return expr_tov<std::string>(expr, bind(&expr_to_string, _1, _2), values);
 }
 
+ReturnCode expr_to_strings_flat(
+    const Expr* expr,
+    std::vector<std::string>* values) {
+  return expr_tov_flat<std::string>(expr, bind(&expr_to_string, _1, _2), values);
+}
+
 ReturnCode expr_to_stringset(
     const Expr* expr,
     std::set<std::string>* values) {

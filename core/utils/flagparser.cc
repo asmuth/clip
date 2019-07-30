@@ -33,6 +33,18 @@ void FlagParser::defineString(
   flags_.emplace_back(flag_state);
 }
 
+void FlagParser::defineStringV(
+    const char* longopt,
+    std::vector<std::string>* value) {
+  FlagState flag_state;
+  flag_state.type = T_STRING_V;
+  flag_state.required = false;
+  flag_state.longopt = longopt;
+  flag_state.value = static_cast<void*>(value);
+  flag_state.has_value = false;
+  flags_.emplace_back(flag_state);
+}
+
 void FlagParser::defineSwitch(
     const char* longopt,
     bool* value) {
@@ -88,6 +100,10 @@ ReturnCode parseValue(FlagState* flag, const std::string& value) {
   switch (flag->type) {
     case T_STRING:
       *static_cast<std::string*>(flag->value) = value;
+      break;
+
+    case T_STRING_V:
+      static_cast<std::vector<std::string>*>(flag->value)->push_back(value);
       break;
 
     case T_SWITCH:
@@ -190,11 +206,6 @@ ReturnCode FlagParser::parseArgv(const std::vector<std::string>& argv) {
           ERROR,
           "invalid flag: {}",
           arg);
-    } else if (flag_ptr->type == T_SWITCH) {
-      auto rc = parseValue(flag_ptr, "on");
-      if (!rc) {
-        return rc;
-      }
     } else if (eq_len > 0) {
       if (arg.size() == eq_len) {
         return errorf(

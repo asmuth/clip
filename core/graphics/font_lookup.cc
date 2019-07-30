@@ -28,6 +28,12 @@ using namespace std::placeholders;
 
 namespace fviz {
 
+const std::string_view DEFAULT_FONT_PATTERN_CSS =
+    "Arial,Helvetica,'Helvetica Neue',sans-serif";
+
+const char* const DEFAULT_FONT_PATTERN_FC =
+    "Arial,Helvetica,Helvetica Neue:style=Regular,Roman";
+
 struct FontStorage {
   FontStorage() : ft(nullptr), ft_font(nullptr) {}
   FT_Library ft;
@@ -44,21 +50,6 @@ void font_close(FontStorage* font) {
   }
 
   delete font;
-}
-
-ReturnCode font_load(const std::string& font_file, FontRef* font_ref) {
-  auto font = FontRef(new FontStorage, bind(&font_close, _1));
-
-  if (FT_Init_FreeType(&font->ft) != 0) {
-    return ERROR;
-  }
-
-  if (FT_New_Face(font->ft, font_file.c_str(), 0, &font->ft_font) != 0) {
-    return ERROR;
-  }
-
-  *font_ref = std::move(font);
-  return OK;
 }
 
 void* font_get_freetype(FontRef font) {
@@ -186,47 +177,81 @@ ReturnCode font_get_glyph_path(
   return OK;
 }
 
-ReturnCode font_find_best(
-    const std::string& font_pattern,
-    std::string* font_file) {
-  std::string file;
+ReturnCode font_load(const std::string& font_file, FontRef* font_ref) {
+  auto font = FontRef(new FontStorage, bind(&font_close, _1));
 
-  auto fc_config = FcInitLoadConfigAndFonts();
-  auto fc_pattern = FcNameParse((FcChar8*) font_pattern.c_str());
-
-  FcDefaultSubstitute(fc_pattern);
-  FcConfigSubstitute(fc_config, fc_pattern, FcMatchPattern);
-
-  FcResult fc_res;
-  auto fc_font = FcFontMatch(fc_config, fc_pattern, &fc_res);
-  if (fc_font && fc_res == FcResultMatch) {
-    char* fc_file;
-    if (FcPatternGetString(fc_font, FC_FILE, 0, (FcChar8**) &fc_file) == FcResultMatch) {
-      file = std::string(fc_file);
-    }
-
-    FcPatternDestroy(fc_font);
+  if (FT_Init_FreeType(&font->ft) != 0) {
+    return ERROR;
   }
 
-  FcPatternDestroy(fc_pattern);
-  FcConfigDestroy(fc_config);
-
-  if (file.empty()) {
-    return errorf(ERROR, "unable to find font: ${}", font_pattern);
-  } else {
-    *font_file = file;
-    return OK;
+  if (FT_New_Face(font->ft, font_file.c_str(), 0, &font->ft_font) != 0) {
+    return ERROR;
   }
+
+  *font_ref = std::move(font);
+  return OK;
 }
 
-ReturnCode font_find_stack(
+ReturnCode font_load_best(
     const std::string& font_pattern,
     FontInfo* font_info) {
+  std::string font_file;
+
+  if (font_pattern.empty()) {
+    return error(ERROR, "unable to load font: empty font pattern");
+  }
+
+  if (font_pattern[0] == '/') { // TODO improved filename detection
+    font_file = font_pattern;
+  }
+
+  // lookup using fontconfig
+  if (font_file.empty()) {
+    auto fc_config = FcInitLoadConfigAndFonts();
+    auto fc_pattern = FcNameParse((FcChar8*) font_pattern.c_str());
+
+    FcDefaultSubstitute(fc_pattern);
+    FcConfigSubstitute(fc_config, fc_pattern, FcMatchPattern);
+
+    FcResult fc_res;
+    auto fc_font = FcFontMatch(fc_config, fc_pattern, &fc_res);
+    if (fc_font && fc_res == FcResultMatch) {
+      char* fc_file;
+      if (FcPatternGetString(fc_font, FC_FILE, 0, (FcChar8**) &fc_file) == FcResultMatch) {
+        font_file = std::string(fc_file);
+      }
+
+      FcPatternDestroy(fc_font);
+    }
+
+    FcPatternDestroy(fc_pattern);
+    FcConfigDestroy(fc_config);
+  }
+
+  if (font_file.empty()) {
+    return errorf(ERROR, "unable to find font: ${}", font_pattern);
+  }
+
+  FontRef font_ref;
+  if (auto rc = font_load(font_file, &font_ref); !rc) {
+    return errorf(
+        ERROR,
+        "unble to load font '{}': {}",
+        font_file,
+        rc.message);
+  }
+
+  font_info->fonts.insert(font_info->fonts.begin(), font_ref);
+  font_info->font_family_css.clear();
+  return OK;
+}
+
+ReturnCode font_load_defaults(FontInfo* font_info) {
   std::vector<std::string> font_files;
 
   auto fc_config = FcInitLoadConfigAndFonts();
   auto fc_objs = FcObjectSetBuild(FC_FILE, nullptr);
-  auto fc_pattern = FcNameParse((FcChar8*) font_pattern.c_str());
+  auto fc_pattern = FcNameParse((FcChar8*) DEFAULT_FONT_PATTERN_FC);
 
   FcDefaultSubstitute(fc_pattern);
   FcConfigSubstitute(fc_config, fc_pattern, FcMatchPattern);
@@ -256,7 +281,6 @@ ReturnCode font_find_stack(
   FcPatternDestroy(fc_pattern);
   FcConfigDestroy(fc_config);
 
-
   for (const auto& font_file : font_files) {
     FontRef font_ref;
     if (auto rc = font_load(font_file, &font_ref); !rc) {
@@ -270,163 +294,8 @@ ReturnCode font_find_stack(
     font_info->fonts.push_back(font_ref);
   }
 
-  return OK;
-}
-
-ReturnCode font_find(DefaultFont font_name, FontInfo* font_info) {
-  std::string font_fc;
-  std::string font_file;
-
-  switch (font_name) {
-    default:
-    case ROMAN_SANS_REGULAR:
-      font_fc = "Arial,Helvetica,Helvetica Neue:style=Regular,Roman";
-      font_info->font_family_css = "Arial,Helvetica,'Helvetica Neue',sans-serif";
-      font_info->font_weight_css = 400;
-      break;
-
-    case ROMAN_SANS_MEDIUM:
-      font_fc = "Arial,Helvetica,Helvetica Neue:style=Medium,Roman";
-      font_info->font_family_css = "Arial,Helvetica,'Helvetica Neue',sans-serif";
-      font_info->font_weight_css = 500;
-      break;
-
-    case ROMAN_SANS_BOLD:
-      font_fc = "Arial,Helvetica,Helvetica Neue:style=Bold,Roman";
-      font_info->font_family_css = "Arial,Helvetica,'Helvetica Neue',sans-serif";
-      font_info->font_weight_css = 600;
-      break;
-
-    case ROMAN_SERIF_REGULAR:
-      font_fc = "Times New Romain,serif:style=Regular,Roman";
-      font_info->font_family_css = "'Times New Roman', serif";
-      font_info->font_weight_css = 400;
-      break;
-
-    case ROMAN_SERIF_BOLD:
-      font_fc = "Times New Roman,serif:style=Bold,Roman";
-      font_info->font_family_css = "'Times New Roman', serif";
-      font_info->font_weight_css = 600;
-      break;
-
-    case ROMAN_MONOSPACE_REGULAR:
-      font_fc = "Courier,serif:style=Regular,Roman";
-      font_info->font_family_css = "'Courier', monospace";
-      font_info->font_weight_css = 400;
-      break;
-
-    case ROMAN_MONOSPACE_BOLD:
-      font_fc = "Courier,serif:style=Bold,Roman";
-      font_info->font_family_css = "'Courier', monospace";
-      font_info->font_weight_css = 600;
-      break;
-  }
-
-  return font_find_stack(font_fc, font_info);
-}
-
-ReturnCode font_find_expr(const Expr* expr, FontInfo* font_info) {
-  if (expr_is_value(expr, "roman-sans") ||
-      expr_is_value(expr, "roman-sans-regular")) {
-    return font_find(ROMAN_SANS_REGULAR, font_info);
-  }
-
-  if (expr_is_value(expr, "roman-sans-medium")) {
-    return font_find(ROMAN_SANS_MEDIUM, font_info);
-  }
-
-  if (expr_is_value(expr, "roman-sans-bold")) {
-    return font_find(ROMAN_SANS_BOLD, font_info);
-  }
-
-  if (expr_is_value(expr, "roman-serif") ||
-      expr_is_value(expr, "roman-serif-regular")) {
-    return font_find(ROMAN_SERIF_REGULAR, font_info);
-  }
-  if (expr_is_value(expr, "roman-serif-bold")) {
-    return font_find(ROMAN_SERIF_BOLD, font_info);
-  }
-
-  if (expr_is_value(expr, "roman-monospace") ||
-      expr_is_value(expr, "roman-monospace-regular")) {
-    return font_find(ROMAN_MONOSPACE_REGULAR, font_info);
-  }
-
-  if (expr_is_value(expr, "roman-monospace-bold")) {
-    return font_find(ROMAN_MONOSPACE_BOLD, font_info);
-  }
-
-  // custom font
-  std::vector<std::string> font_names;
-  std::string font_fc;
-  std::string font_style_fc;
-  double font_style_css = 400;
-  for (auto arg = expr; arg; arg = expr_next(arg)) {
-    if (!expr_is_value(arg)) {
-      return errorf(
-          ERROR,
-          "argument error; expected a value, got: {}",
-          expr_inspect(expr));
-    }
-
-    auto font_name = expr_get_value(arg);
-    if (font_name == "Regular" || font_name == "regular") {
-      font_style_css = 400;
-      font_style_fc = "Regular";
-      continue;
-    }
-
-    if (font_name == "Medium" || font_name == "medium" ||
-        font_name == "Semibold" || font_name == "semibold" ||
-        font_name == "Demibold" || font_name == "demibold") {
-      font_style_css = 500;
-      font_style_fc = "Medium";
-      continue;
-    }
-
-    if (font_name == "Bold" || font_name == "bold") {
-      font_style_css = 600;
-      font_style_fc = "Bold";
-      continue;
-    }
-
-    if (font_name == "Thin" || font_name == "thin" ||
-        font_name == "Light" || font_name == "light") {
-      font_style_css = 300;
-      font_style_fc = "Light";
-      continue;
-    }
-
-    font_names.emplace_back(font_name);
-
-    if (!font_fc.empty()) {
-      font_fc += ",";
-    }
-
-    font_fc += font_name;
-  }
-
-  if (!font_style_fc.empty()) {
-    font_fc += ":style=" + font_style_fc;
-  }
-
-  std::string font_file;
-  if (auto rc = font_find_best(font_fc, &font_file); !rc) {
-    return rc;
-  }
-
-  FontRef font_ref;
-  if (auto rc = font_load(font_file, &font_ref); !rc) {
-    return errorf(
-        ERROR,
-        "unble to load font '{}': {}",
-        font_file,
-        rc.message);
-  }
-
-  font_info->fonts.insert(font_info->fonts.begin(), font_ref);
-  font_info->font_family_css.clear();
-
+  font_info->font_family_css = DEFAULT_FONT_PATTERN_CSS;
+  font_info->font_weight_css = 500;
   return OK;
 }
 

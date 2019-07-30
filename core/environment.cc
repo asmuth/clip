@@ -27,17 +27,26 @@ Environment::Environment() :
     screen_width(Unit::UNIT, 900),
     screen_height(Unit::UNIT, 480),
     dpi(96),
+    font_defaults(true),
     background_color(Color::fromRGB(1,1,1)),
     foreground_color(Color::fromRGB(0,0,0)),
     text_color(Color::fromRGB(0,0,0)),
     font_size(from_pt(11)) {}
 
 ReturnCode environment_setup_defaults(Environment* env) {
-  return try_chain({
-    std::bind(&font_find, DefaultFont::ROMAN_SANS_MEDIUM, &env->font),
-    std::bind(&font_find, DefaultFont::ROMAN_SANS_BOLD, &env->font_em),
-    std::bind(&font_find, DefaultFont::ROMAN_SANS_BOLD, &env->font_symbol),
-  });
+  if (env->font_defaults) {
+    if (auto rc = font_load_defaults(&env->font); !rc) {
+      return rc;
+    }
+  }
+
+  for (const auto& f : env->font_load) {
+    if (auto rc = font_load_best(f, &env->font); !rc) {
+      return rc;
+    }
+  }
+
+  return OK;
 }
 
 ReturnCode environment_set(Environment* env, const Expr* expr) {
@@ -71,15 +80,11 @@ ReturnCode environment_set(Environment* env, const Expr* expr) {
   }
 
   if (expr_is_value(args[0], "font")) {
-    return font_find_expr(args[1], &env->font);
+    return expr_to_strings_flat(args[1], &env->font_load);
   }
 
-  if (expr_is_value(args[0], "font-emphasis")) {
-    return font_find_expr(args[1], &env->font_em);
-  }
-
-  if (expr_is_value(args[0], "font-symbols")) {
-    return font_find_expr(args[1], &env->font_symbol);
+  if (expr_is_value(args[0], "font-defaults")) {
+    return expr_to_switch(args[1], &env->font_defaults);
   }
 
   if (expr_is_value(args[0], "font-size")) {

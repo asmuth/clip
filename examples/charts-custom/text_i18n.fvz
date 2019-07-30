@@ -4,12 +4,10 @@
 (set font-size 14pt)
 (set text-script "Arabic")
 
-(set font "Comic Sans MS" Regular)
-
 (legend
   border none
   margin 0
-  item (label "i北京市 (Beijing)" color #06c)
+  item (label "北京市 (Beijing)" color #06c)
   item (label "תל אביב (Tel Aviv)" color #c06)
   item (label "القاهرة‎ (Cairo)" color #c06)
   item (label "Москва" color #60c)

@@ -27,19 +27,15 @@ struct FontInfo {
   double font_weight_css;
 };
 
-enum DefaultFont {
-  ROMAN_SANS_REGULAR,
-  ROMAN_SANS_MEDIUM,
-  ROMAN_SANS_BOLD,
-  ROMAN_SERIF_REGULAR,
-  ROMAN_SERIF_MEDIUM,
-  ROMAN_SERIF_BOLD,
-  ROMAN_MONOSPACE_REGULAR,
-  ROMAN_MONOSPACE_MEDIUM,
-  ROMAN_MONOSPACE_BOLD,
-};
+ReturnCode font_load(
+    const std::string& font_file,
+    FontRef* font);
 
-ReturnCode font_load(const std::string& font_file, FontRef* font);
+ReturnCode font_load_defaults(FontInfo* font_info);
+
+ReturnCode font_load_best(
+    const std::string& font_pattern,
+    FontInfo* font_info);
 
 ReturnCode font_get_glyph_path(
     FontRef font,
@@ -49,11 +45,6 @@ ReturnCode font_get_glyph_path(
     Path* path);
 
 void* font_get_freetype(FontRef font);
-
-ReturnCode font_find(DefaultFont font_name, FontInfo* font_info);
-
-ReturnCode font_find_expr(const Expr* expr, FontInfo* font_info);
-
 
 } // namespace fviz
 

@@ -19,6 +19,7 @@
 #include "utils/flagparser.h"
 #include "return_code.h"
 #include "utils/stringutil.h"
+#include "core/environment.h"
 
 using namespace fviz;
 
@@ -46,6 +47,12 @@ int main(int argc, const char** argv) {
 
   bool flag_debug = true;
   flag_parser.defineSwitch("debug", &flag_debug);
+
+  bool flag_font_defaults = true;
+  flag_parser.defineSwitch("font-defaults", &flag_font_defaults);
+
+  std::vector<std::string> flag_font_load;
+  flag_parser.defineStringV("font-load", &flag_font_load);
 
   {
     auto rc = flag_parser.parseArgv(argc - 1, argv + 1);
@@ -101,6 +108,10 @@ int main(int argc, const char** argv) {
     std::cerr << "ERROR: error while initializing fviz" << std::endl;
     return EXIT_FAILURE;
   }
+
+  Environment* env = static_cast<Environment*>(fviz_env(ctx));
+  env->font_defaults = flag_font_defaults;
+  env->font_load = flag_font_load;
 
   if (!fviz_configure_file(ctx, flag_in.c_str())) {
     fviz_printerror(ctx);

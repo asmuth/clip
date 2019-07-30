@@ -32,6 +32,10 @@ ReturnCode expr_to_strings(
     const Expr* expr,
     std::vector<std::string>* values);
 
+ReturnCode expr_to_strings_flat(
+    const Expr* expr,
+    std::vector<std::string>* values);
+
 ReturnCode expr_to_stringset(
     const Expr* expr,
     std::set<std::string>* values);
@@ -100,6 +104,12 @@ ReturnCode expr_tov(
 
 template <typename T>
 ExprConv expr_tov_fn(
+    ExprConvTo<T> conv,
+    std::vector<T>* values);
+
+template <typename T>
+ReturnCode expr_tov_flat(
+    const Expr* expr,
     ExprConvTo<T> conv,
     std::vector<T>* values);
 

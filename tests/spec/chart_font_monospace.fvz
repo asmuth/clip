@@ -1,5 +1,4 @@
-(set font roman-monospace)
-(set font-emphasis roman-monospace-bold)
+(set font "monospace")
 
 (chart/linechart
     data-x (csv "tests/testdata/measurement.csv" time)

@@ -80,6 +80,10 @@ void fviz_seterr(fviz_t* ctx, const ReturnCode& err) {
   ctx->error = err;
 }
 
+void* fviz_env(fviz_t* ctx) {
+  return &ctx->env;
+}
+
 int fviz_configure(
     fviz_t* ctx,
     const char* config) {
@@ -88,12 +92,12 @@ int fviz_configure(
     return ERROR;
   }
 
-  if (auto rc = environment_setup_defaults(&ctx->env); !rc) {
+  if (auto rc = environment_configure(&ctx->env, ctx->expr.get()); !rc) {
     fviz_seterr(ctx, rc);
     return rc;
   }
 
-  if (auto rc = environment_configure(&ctx->env, ctx->expr.get()); !rc) {
+  if (auto rc = environment_setup_defaults(&ctx->env); !rc) {
     fviz_seterr(ctx, rc);
     return rc;
   }

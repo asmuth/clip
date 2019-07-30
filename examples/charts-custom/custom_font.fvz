@@ -3,7 +3,6 @@
 (set height 1920px)
 
 (set font "Comic Sans MS" Regular)
-(set font-emphasis "Comic Sans MS" Bold)
 
 (chart/linechart
     data-x (csv "tests/testdata/measurement.csv" time)

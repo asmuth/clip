@@ -1,5 +1,4 @@
-(set font roman-serif)
-(set font-emphasis roman-serif-bold)
+(set font "serif")
 
 (chart/linechart
     data-x (csv "tests/testdata/measurement.csv" time)

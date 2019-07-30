@@ -29,9 +29,9 @@ struct Environment {
   Measure screen_width;
   Measure screen_height;
   double dpi;
+  bool font_defaults;
+  std::vector<std::string> font_load;
   FontInfo font;
-  FontInfo font_em;
-  FontInfo font_symbol;
   Measure font_size;
   ColorScheme color_scheme;
   Color background_color;

@@ -62,16 +62,7 @@ ReturnCode expr_tov(
         "..."); // FIXME
   }
 
-  for (expr = expr_get_list(expr); expr; expr = expr_next(expr)) {
-    T v;
-    if (auto rc = conv(expr, &v); !rc) {
-      return rc;
-    }
-
-    values->emplace_back(std::move(v));
-  }
-
-  return OK;
+  return expr_tov_flat<T>(expr_get_list(expr), conv, values);
 }
 
 template <typename T>
@@ -83,6 +74,23 @@ ExprConv expr_tov_fn(
       std::placeholders::_1,
       conv,
       values);
+}
+
+template <typename T>
+ReturnCode expr_tov_flat(
+    const Expr* expr,
+    ExprConvTo<T> conv,
+    std::vector<T>* values) {
+  for (; expr; expr = expr_next(expr)) {
+    T v;
+    if (auto rc = conv(expr, &v); !rc) {
+      return rc;
+    }
+
+    values->emplace_back(std::move(v));
+  }
+
+  return OK;
 }
 
 } // namespace fviz
