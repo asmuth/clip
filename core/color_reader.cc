@@ -13,6 +13,7 @@
  */
 #include "data.h"
 #include "color_reader.h"
+#include "sexpr_util.h"
 
 using namespace std::placeholders;
 
@@ -22,23 +23,56 @@ ReturnCode color_read(
     const Environment& env,
     const Expr* expr,
     Color* color) {
-  if (!expr_is_value(expr)) {
-    return errorf(
-        ERROR,
-        "argument error to <color>; expected a value, got: {}",
-        expr_inspect(expr));
+  if (expr_is_value(expr)) {
+    const auto value = expr_get_value(expr);
+
+    // hex codes
+    if (StringUtil::beginsWith(value, "#")) {
+      if (color->parse(value)) {
+        return OK;
+      }
+    }
   }
 
-  const auto expr_value = expr_get_value(expr);
-  if (StringUtil::beginsWith(expr_value, "#")) {
-    if (color->parse(expr_value)) {
+  if (expr_is_list(expr)) {
+    auto args = expr_collect(expr_get_list(expr));
+
+    // rgb
+    if (args.size() == 4 && expr_is_value(args[0], "rgb")) {
+      std::array<double, 3> components;
+      for (size_t i = 0; i < components.size(); ++i) {
+        if (auto rc = expr_to_float64(args[i + 1], &components[i]); !rc) {
+          return rc;
+        }
+      }
+
+      *color = Color::fromRGB(components[0], components[1], components[2]);
+      return OK;
+    }
+
+    // rgba
+    if (args.size() == 5 && expr_is_value(args[0], "rgba")) {
+      std::array<double, 4> components;
+      for (size_t i = 0; i < components.size(); ++i) {
+        if (auto rc = expr_to_float64(args[i + 1], &components[i]); !rc) {
+          return rc;
+        }
+      }
+
+      *color = Color::fromRGBA(
+          components[0],
+          components[1],
+          components[2],
+          components[3]);
+
       return OK;
     }
   }
 
   return errorf(
       ERROR,
-      "invalid color; expected hex color code, rgb(a) or palette index, got: '{}'",
+      "invalid color; expected hex color code, rgb, rgba or palette index, "
+      "got: '{}'",
       expr_inspect(expr));
 }
 
