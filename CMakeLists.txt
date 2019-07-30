@@ -97,9 +97,11 @@ install(TARGETS fviz-cli DESTINATION bin)
 
 # Testing
 # -----------------------------------------------------------------------------
-add_custom_target(test_dir ALL
-    COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_CURRENT_BINARY_DIR}/test
-    COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_CURRENT_BINARY_DIR}/test-examples)
+add_test(test-prepare-dir ${CMAKE_COMMAND} -E make_directory ${CMAKE_CURRENT_BINARY_DIR}/test)
+set_tests_properties(test-prepare-dir PROPERTIES FIXTURES_SETUP text-fixtures)
+
+add_test(test-prepare-examples ${CMAKE_CURRENT_SOURCE_DIR}/examples/update_tests.sh)
+set_tests_properties(test-prepare-examples PROPERTIES FIXTURES_SETUP text-fixtures)
 
 file(GLOB unit_test_files "tests/unit/test_*.cc")
 foreach(unit_test_path ${unit_test_files})
@@ -110,20 +112,29 @@ foreach(unit_test_path ${unit_test_files})
   target_link_libraries(${unit_test_name} ${fviz_LDFLAGS})
 
   add_test(
-      NAME test_unit_${unit_test_name}
+      NAME test-unit-${unit_test_name}
       COMMAND ${CMAKE_CURRENT_BINARY_DIR}/${unit_test_name}
-      DEPENDS fviz-cli test_dir)
+      DEPENDS fviz-cli test-prepare)
+
+  set_tests_properties(
+      test-unit-${unit_test_name}
+      PROPERTIES FIXTURES_REQUIRED text-fixtures)
 endforeach()
 
 file(GLOB spec_test_files "tests/spec/*.fvz")
 foreach(spec_test_path ${spec_test_files})
   get_filename_component(spec_test_name ${spec_test_path} NAME_WE)
   get_filename_component(spec_test_srcdir ${spec_test_path} DIRECTORY)
+
   add_test(
-      NAME test_spec_${spec_test_name}
+      NAME test-spec-${spec_test_name}
       WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
       COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_runner.sh ${CMAKE_CURRENT_BINARY_DIR}/fviz ${spec_test_name} ${spec_test_srcdir} ${CMAKE_CURRENT_BINARY_DIR}/test
-      DEPENDS fviz-cli test_dir)
+      DEPENDS fviz-cli test-prepare)
+
+  set_tests_properties(
+      test-spec-${spec_test_name}
+      PROPERTIES FIXTURES_REQUIRED text-fixtures)
 endforeach()
 
 
@@ -134,11 +145,6 @@ file(GLOB example_files "examples/**/*.fvz")
 foreach(example_path ${example_files})
   get_filename_component(example_name ${example_path} NAME_WE)
   get_filename_component(example_srcdir ${example_path} DIRECTORY)
-  add_test(
-      NAME test_example_${example_name}
-      WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-      COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_runner.sh ${CMAKE_CURRENT_BINARY_DIR}/fviz ${example_name} ${example_srcdir} ${CMAKE_CURRENT_BINARY_DIR}/test-examples
-      DEPENDS fviz-cli test_dir)
   add_custom_target(
       example_${example_name}
       WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
