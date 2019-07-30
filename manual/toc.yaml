@@ -34,9 +34,6 @@ documentation:
         -
           title: "Example Gallery"
           url: "/examples"
-  #-
-  #  title: "Building Charts"
-  #  pages:
   #    -
   #      title: "Linecharts"
   #      url: "/documentation/plot-lines"
@@ -58,14 +55,26 @@ documentation:
     title: "Reference"
     sections:
       - pages:
-  #    #-
-  #    #  title: "Data Sources"
-  #    #  url: "/documentation/data_sources"
-  #    #  file: "data_sources"
-  #    #-
-  #    #  title: "Values & Units"
-  #    #  url: "/documentation/units"
-  #    #  file: "units"
+      #-
+      #  title: "Data Sources"
+      #  url: "/documentation/data_sources"
+      #  file: "data_sources"
+      #-
+      #  title: "Syntax"
+      #  url: "/documentation/syntax"
+      #  file: "data_sources"
+      #-
+      #  title: "Values & Units"
+      #  url: "/documentation/units"
+      #  file: "units"
+        -
+          title: "Colors"
+          url: "/documentation/colors"
+          file: "reference/colors"
+        -
+          title: "Color Maps"
+          url: "/documentation/color-maps"
+          file: "reference/color_maps"
         -
           title: "Scale Types"
           url: "/documentation/scale-types"
@@ -86,38 +95,16 @@ documentation:
           title: "Fonts"
           url: "/documentation/fonts"
           file: "reference/fonts"
-  #    #-
-  #    #  title: "Colours"
-  #    #  url: "/documentation/color-palette"
-  #    #  file: "color_palette"
-  #    #-
-  #    #  title: "Line Styles"
-  #    #  url: "/documentation/line-styles"
-  #    #  file: "line_styles"
-  #    #-
-  #    #  title: "Point Styles"
-  #    #  url: "/documentation/point-styles"
-  #    #  file: "point_styles"
-  #    #-
-  #    #  title: "Layout"
-  #    #  url: "/documentation/layout"
-  #    #  file: "layout"
+      #-
+      #  title: "Stroke & Fill Styles"
+      #  url: "/documentation/line-styles"
+      #  file: "line_styles"
 
   -
     title: "Elements"
     url: "/documentation/elements"
     file: "elements"
     sections:
-      - section_title: "Standard Charts"
-        pages:
-        -
-          title: "chart/linechart"
-          url: "/documentation/elements/chart/linechart"
-          api_ref: true
-        -
-          title: "chart/scatterplot"
-          url: "/documentation/elements/chart/scatterplot"
-          api_ref: true
       -
         section_title: "Custom Plots"
         pages:
@@ -164,6 +151,16 @@ documentation:
             title: "legend/item"
             url: "/documentation/elements/legend/item"
             api_ref: true
+      - section_title: "Standard Charts"
+        pages:
+        -
+          title: "chart/linechart"
+          url: "/documentation/elements/chart/linechart"
+          api_ref: true
+        -
+          title: "chart/scatterplot"
+          url: "/documentation/elements/chart/scatterplot"
+          api_ref: true
 
   -
     title: "Community"
