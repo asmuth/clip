@@ -574,3 +574,7 @@ table.invisible tr, table.invisible td {
   width: 1.4em;
   display: inline-block;
 }
+
+#documentation .color_legend {
+  margin-right: .4em;
+}
