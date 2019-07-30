@@ -40,7 +40,7 @@ struct PlotLinesConfig {
   ScaleConfig scale_x;
   ScaleConfig scale_y;
   std::vector<DataGroup> groups;
-  std::vector<Color> colors;
+  Color color;
   std::vector<Measure> marker_sizes;
   Measure line_width;
   std::vector<std::string> labels;
@@ -109,10 +109,7 @@ ReturnCode draw(
 
     StrokeStyle style;
     style.line_width = config->line_width;
-    style.color = config->colors.empty()
-        ? Color{}
-        : config->colors[group.index[0] % config->colors.size()];
-
+    style.color = config->color;
     strokePath(layer, clip, path, style);
   }
 
@@ -122,10 +119,7 @@ ReturnCode draw(
       auto sx = clip.x + config->x[i];
       auto sy = clip.y + clip.h - config->y[i];
 
-      const auto& color = config->colors.empty()
-          ? Color{}
-          : config->colors[i % config->colors.size()];
-
+      const auto& color = config->color;
       auto size = config->marker_sizes[i % config->marker_sizes.size()];
 
       FillStyle style;
@@ -176,6 +170,7 @@ ReturnCode build(
     ElementRef* elem) {
   /* set defaults from environment */
   auto c = std::make_shared<PlotLinesConfig>();
+  c->color = env.foreground_color;
   c->label_font = env.font;
   c->label_font_size = env.font_size;
   c->line_width = from_pt(kDefaultLineWidthPT);
@@ -197,8 +192,7 @@ ReturnCode build(
     {"scale-y", bind(&scale_configure_kind, _1, &c->scale_y)},
     {"scale-x-padding", bind(&expr_to_float64, _1, &c->scale_x.padding)},
     {"scale-y-padding", bind(&expr_to_float64, _1, &c->scale_y.padding)},
-    {"color", expr_tov_fn<Color>(bind(&color_read, env, _1, _2), &c->colors)},
-    {"colors", expr_tov_fn<Color>(bind(&color_read, env, _1, _2), &c->colors)},
+    {"color", bind(&color_read, env, _1, &c->color)},
     {"stroke", bind(&expr_to_measure, _1, &c->line_width)},
     {"marker-size", bind(&data_load, _1, &c->marker_sizes)},
     {"labels", bind(&data_load_strings, _1, &c->labels)},
@@ -237,11 +231,6 @@ ReturnCode build(
     return error(
         ERROR,
         "the length of the 'data-x' and 'data-y' properties must be equal");
-  }
-
-  /* set late defaults */
-  if (c->colors.empty()) {
-    c->colors.push_back(env.foreground_color);
   }
 
   /* group data */

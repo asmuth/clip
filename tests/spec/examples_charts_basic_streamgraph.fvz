@@ -8,12 +8,12 @@
         data-x (csv "tests/testdata/areadata2.csv" x)
         data-y (csv "tests/testdata/areadata2.csv" z)
         data-y-low (csv "tests/testdata/areadata2.csv" y)
-        color (#ccc))
+        color #ccc)
     areas (
         data-x (csv "tests/testdata/areadata2.csv" x)
         data-y (csv "tests/testdata/areadata2.csv" z2)
         data-y-low (csv "tests/testdata/areadata2.csv" y2)
-        color (#888))
+        color #888)
     legend-overlay (
         position (bottom left)
         background #fff

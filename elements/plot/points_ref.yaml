@@ -38,20 +38,32 @@ properties:
 
           ;; load a csv file
           data-y (csv myfile.csv mycolumn)
-      - name: color
-        alias: colors
-      - name: colors
+      - name: data-color
         desc: |
-          Set the point colors.
+          Set the 'color' dataset for the plot. The 'color' dataset will be used to
+          calculate the color of points. The mapping of input values to colors
+          is controlled by the `color-map` option.
         desc_code: |
-          colors (<values>...)
-          colors (csv <file> <column>)
+          data-color (<values>...)
+          data-color (csv <file> <column>)
         examples: |
           ;; list of static values
-          colors (#0f0 #00f #f00)
+          data-color (#06c #c06 #06c)
 
           ;; load a csv file
-          colors (csv myfile.csv mycolors)
+          data-color (csv myfile.csv mycolors)
+      - name: color
+        desc: |
+          Set the point color. Note that this value is only used if no data-colors
+          option is specified.
+        desc_code: |
+          color <color>
+      - name: color-map
+        desc: |
+          Set the point color map. If no map is specified, the values in `data-color`
+          will be interpreted as hex color values.
+        desc_code: |
+          color-map <color-map>
       - name: marker-size
         alias: marker-sizes
       - name: marker-sizes

@@ -8,12 +8,12 @@
     lines (
         data-x (csv "tests/testdata/irregular_data1.csv" x)
         data-y (csv "tests/testdata/irregular_data1.csv" y)
-        color (#06c)
+        color #06c
         marker-size (3pt))
     lines (
         data-x (csv "tests/testdata/irregular_data2.csv" x)
         data-y (csv "tests/testdata/irregular_data2.csv" y)
-        color (#c06)
+        color #c06
         marker-size (3pt))
     legend-overlay (
         position (bottom left)

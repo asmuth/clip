@@ -87,22 +87,6 @@ std::vector<DataGroup> series_group(const Series& data) {
   return groups;
 }
 
-std::vector<Color> groups_to_colors(
-    size_t count,
-    const std::vector<DataGroup>& groups,
-    const ColorScheme& palette) {
-  std::vector<Color> colors(count);
-  for (size_t gi = 0; gi < groups.size(); ++gi) {
-    for (auto i : groups[gi].index) {
-      if (i < colors.size()) {
-        colors[i] = palette.get(gi);
-      }
-    }
-  }
-
-  return colors;
-}
-
 ReturnCode data_load_strings_csv(
     const Expr* expr,
     std::vector<std::string>* values) {

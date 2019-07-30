@@ -14,6 +14,7 @@
 #pragma once
 #include "environment.h"
 #include "graphics/color.h"
+#include "color_map.h"
 #include "return_code.h"
 #include "sexpr.h"
 
@@ -22,12 +23,22 @@ namespace fviz {
 ReturnCode color_read(
     const Environment& env,
     const Expr* expr,
-    Color* value);
+    Color* color);
+
+ReturnCode color_read_string(
+    const Environment& env,
+    const std::string& value,
+    Color* color);
 
 ReturnCode color_read_opt(
     const Environment& env,
     const Expr* expr,
-    std::optional<Color>* var);
+    std::optional<Color>* color);
+
+ReturnCode color_map_read(
+    const Environment& env,
+    const Expr* expr,
+    ColorMap* color_map);
 
 } // namespace fviz
 

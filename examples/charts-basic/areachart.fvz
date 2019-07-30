@@ -5,7 +5,7 @@
     areas (
       data-x (csv "tests/testdata/measurement.csv" time)
       data-y (csv "tests/testdata/measurement.csv" value1)
-      color (#888))
+      color #888)
     grid (color #fff)
     background #eee
     border none)

@@ -69,19 +69,10 @@ properties:
           ;; load a csv file
           data-y-low (csv myfile.csv mycolumn)
       - name: color
-        alias: colors
-      - name: colors
         desc: |
-          Set the bar colors.
+          Set the bar color.
         desc_code: |
-          colors (<values>...)
-          colors (csv <file> <column>)
-        examples: |
-          ;; list of static values
-          colors (#0f0 #00f #f00)
-
-          ;; load a csv file
-          colors (csv myfile.csv mycolors)
+          color <color>
       - name: direction
         desc: |
           Set the bar 'direction'.

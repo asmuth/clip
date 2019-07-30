@@ -9,11 +9,11 @@
       data-y-low (csv "tests/testdata/bardata.csv" var2)
       bar-width (1em)
       bar-offset (-.8em)
-      color (#ccc))
+      color #ccc)
     bars (
       data-x (csv "tests/testdata/bardata.csv" var0)
       data-y (csv "tests/testdata/bardata.csv" var4)
       data-y-low (csv "tests/testdata/bardata.csv" var5)
       bar-width (1em)
       bar-offset (.8em)
-      color (#666)))
+      color #666))

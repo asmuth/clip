@@ -42,16 +42,6 @@ std::vector<double> series_to_float(const Series& s);
 double value_to_float(const Value&);
 Value value_from_float(double);
 
-std::vector<Color> series_to_colors(
-    SeriesRef series,
-    const ScaleConfig& domain_config,
-    const ColorScheme& palette);
-
-std::vector<Color> groups_to_colors(
-    size_t count,
-    const std::vector<DataGroup>& groups,
-    const ColorScheme& palette);
-
 std::vector<Measure> series_to_sizes(
     SeriesRef series,
     const ScaleConfig& domain_config,
@@ -69,7 +59,7 @@ ReturnCode data_load(
 template <typename T>
 ReturnCode data_load_as(
     const Expr* expr,
-    ExprConvTo<T> conv,
+    std::function<ReturnCode (const std::string&, T*)> conv,
     std::vector<T>* dst);
 
 ReturnCode data_to_measures(

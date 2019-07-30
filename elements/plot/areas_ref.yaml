@@ -77,19 +77,10 @@ properties:
           ;; draw a vertical area chart
           direction vertical
       - name: color
-        alias: colors
-      - name: colors
         desc: |
-          Set the area colors.
+          Set the area color.
         desc_code: |
-          colors (<values>...)
-          colors (csv <file> <column>)
-        examples: |
-          ;; list of static values
-          colors (#0f0 #00f #f00)
-
-          ;; load a csv file
-          colors (csv myfile.csv mycolors)
+          color <color>
 
   - title: "Scale Options"
     anchor: scale-options

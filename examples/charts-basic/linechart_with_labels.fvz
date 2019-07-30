@@ -10,7 +10,7 @@
     axis-x-label-format (custom "Jan" "Feb" "Mar" "Apr" "May" "Jun" "Jul" "Aug" "Sep" "Oct" "Nov" "Dec")
     limit-y (-5 35)
     axis-y-label-placement (linear-alignat 5 -10)
-    color (#06c)
+    color #06c
     marker-size (3pt)
     axes (bottom left)
     legend-overlay (

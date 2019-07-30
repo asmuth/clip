@@ -48,19 +48,10 @@ properties:
           ;; set the stroke to 2px solid
           stroke (2px solid)
       - name: color
-        alias: colors
-      - name: colors
         desc: |
-          Set the line colors.
+          Set the line color.
         desc_code: |
-          colors (<values>...)
-          colors (csv <file> <column>)
-        examples: |
-          ;; list of static values
-          colors (#0f0 #00f #f00)
-
-          ;; load a csv file
-          colors (csv myfile.csv mycolors)
+          color <color>
       - name: marker-size
         alias: marker-sizes
       - name: marker-sizes

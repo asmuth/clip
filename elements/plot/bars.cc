@@ -44,7 +44,7 @@ struct PlotBarsConfig {
   std::vector<Measure> yoffset;
   ScaleConfig scale_x;
   ScaleConfig scale_y;
-  std::vector<Color> colors;
+  Color color;
   std::vector<Measure> sizes;
   std::vector<Measure> offsets;
   std::vector<std::string> labels;
@@ -129,9 +129,7 @@ ReturnCode draw_horizontal(
         ? 0
         : config.offsets[i % config.offsets.size()];
 
-    const auto& color = config.colors.empty()
-        ? Color{}
-        : config.colors[i % config.colors.size()];
+    const auto& color = config.color;
 
     FillStyle style;
     style.color = color;
@@ -250,9 +248,7 @@ ReturnCode draw_vertical(
         ? 0
         : config.offsets[i % config.offsets.size()];
 
-    const auto& color = config.colors.empty()
-        ? Color{}
-        : config.colors[i % config.colors.size()];
+    const auto& color = config.color;
 
     FillStyle style;
     style.color = color;
@@ -318,6 +314,7 @@ ReturnCode build(
     ElementRef* elem) {
   /* set defaults from environment */
   auto c = std::make_shared<PlotBarsConfig>();
+  c->color = env.foreground_color;
   c->label_font = env.font;
   c->label_font_size = env.font_size;
 
@@ -348,8 +345,7 @@ ReturnCode build(
     {"scale-y", bind(&scale_configure_kind, _1, &c->scale_y)},
     {"scale-x-padding", bind(&expr_to_float64, _1, &c->scale_x.padding)},
     {"scale-y-padding", bind(&expr_to_float64, _1, &c->scale_y.padding)},
-    {"color", expr_tov_fn<Color>(bind(&color_read, env, _1, _2), &c->colors)},
-    {"colors", expr_tov_fn<Color>(bind(&color_read, env, _1, _2), &c->colors)},
+    {"color", bind(&color_read, env, _1, &c->color)},
     {
       "direction",
       expr_to_enum_fn<Direction>(&c->direction, {
@@ -427,11 +423,6 @@ ReturnCode build(
     return error(
         ERROR,
         "the length of the 'data-y' and 'data-y-low' properties must be equal");
-  }
-
-  /* set late defaults */
-  if (c->colors.empty()) {
-    c->colors.push_back(env.foreground_color);
   }
 
   /* return element */

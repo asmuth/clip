@@ -1,7 +1,7 @@
 (chart/linechart
     data-x (csv "tests/testdata/measurement.csv" time)
     data-y (csv "tests/testdata/measurement.csv" value2)
-    color (#06c)
+    color #06c
     axes (bottom left)
     scale-y (inverted)
     limit-y (0 140)

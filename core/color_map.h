@@ -12,30 +12,14 @@
  * limitations under the License.
  */
 #pragma once
+#include "graphics/color.h"
+#include "return_code.h"
 
 namespace fviz {
 
-template <typename T>
-ReturnCode data_load_as(
-    const Expr* expr,
-    std::function<ReturnCode (const std::string&, T*)> conv,
-    std::vector<T>* dst) {
-  std::vector<std::string> data;
-  if (auto rc = data_load_strings(expr, &data); !rc) {
-    return rc;
-  }
+using ColorMap = std::function<ReturnCode (double v, Color* c)>;
 
-  for (const auto& d : data) {
-    T v;
-    if (auto rc = conv(d, &v); !rc) {
-      return rc;
-    }
-
-    dst->emplace_back(std::move(v));
-  }
-
-  return OK;
-}
+ColorMap color_map_raw(std::vector<Color> colors);
 
 } // namespace fviz
 

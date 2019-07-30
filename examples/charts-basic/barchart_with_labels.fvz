@@ -10,4 +10,4 @@
       data-y (csv "tests/testdata/city_temperatures_london.csv" temperature)
       labels (csv "tests/testdata/city_temperatures_london.csv" temperature_str)
       bar-width (2em)
-      color (#666)))
+      color #666))

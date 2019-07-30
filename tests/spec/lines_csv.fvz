@@ -4,5 +4,5 @@
   lines (
         data-x (csv "tests/testdata/measurement.csv" time)
         data-y (csv "tests/testdata/measurement.csv" value2)
-        colors (#000)
+        color #000
         stroke 2pt))

@@ -40,6 +40,7 @@ struct PlotPointsConfig {
   std::vector<Measure> y;
   ScaleConfig scale_x;
   ScaleConfig scale_y;
+  Color color;
   std::vector<Color> colors;
   std::vector<Measure> sizes;
   std::vector<Marker> shapes;
@@ -89,7 +90,7 @@ ReturnCode draw(
     auto sy = clip.y + clip.h - config->y[i];
 
     const auto& color = config->colors.empty()
-        ? Color{}
+        ? config->color
         : config->colors[i % config->colors.size()];
 
     auto size = config->sizes.empty()
@@ -142,16 +143,20 @@ ReturnCode build(
     ElementRef* elem) {
   /* set defaults from environment */
   auto c = std::make_shared<PlotPointsConfig>();
+  c->color = env.foreground_color;
   c->label_font = env.font;
   c->label_font_size = env.font_size;
 
   /* parse properties */
   std::vector<std::string> data_x;
   std::vector<std::string> data_y;
+  std::vector<std::string> data_colors;
+  ColorMap color_map;
 
   auto config_rc = expr_walk_map(expr_next(expr), {
     {"data-x", bind(&data_load_strings, _1, &data_x)},
     {"data-y", bind(&data_load_strings, _1, &data_y)},
+    {"data-colors", bind(&data_load_strings, _1, &data_colors)},
     {"limit-x", bind(&expr_to_float64_opt_pair, _1, &c->scale_x.min, &c->scale_x.max)},
     {"limit-x-min", bind(&expr_to_float64_opt, _1, &c->scale_x.min)},
     {"limit-x-max", bind(&expr_to_float64_opt, _1, &c->scale_x.max)},
@@ -166,8 +171,8 @@ ReturnCode build(
     {"marker-sizes", bind(&data_load, _1, &c->sizes)},
     {"marker-shape", bind(&marker_configure_list, _1, &c->shapes)},
     {"marker-shapes", bind(&marker_configure_list, _1, &c->shapes)},
-    {"color", expr_tov_fn<Color>(bind(&color_read, env, _1, _2), &c->colors)},
-    {"colors", expr_tov_fn<Color>(bind(&color_read, env, _1, _2), &c->colors)},
+    {"color", bind(&color_read, env, _1, &c->color)},
+    {"color-map", bind(&color_map_read, env, _1, &color_map)},
     {"labels", bind(&data_load_strings, _1, &c->labels)},
     {"label-font-size", bind(&expr_to_measure, _1, &c->label_font_size)},
     {"label-color", bind(&color_read, env, _1, &c->label_color)},
@@ -206,9 +211,30 @@ ReturnCode build(
         "the length of the 'data-x' and 'data-y' properties must be equal");
   }
 
-  /* set late defaults */
-  if (c->colors.empty()) {
-    c->colors.push_back(env.foreground_color);
+  /* convert color data */
+  for (const auto& value : data_colors) {
+    Color color;
+    if (color_map) {
+      try {
+        if (auto rc = color_map(std::stod(value), &color); !rc) {
+          return rc;
+        }
+      } catch (...) {
+        return errorf(
+            ERROR,
+            "invalid data; can't map '{}' to a color",
+            value);
+      }
+    } else {
+      if (auto rc = color.parse(value); !rc) {
+        return errorf(
+            ERROR,
+            "invalid data; can't parse '{}' as a color hex code",
+            value);
+      }
+    }
+
+    c->colors.push_back(color);
   }
 
   /* return element */

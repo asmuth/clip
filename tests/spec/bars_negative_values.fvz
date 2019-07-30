@@ -9,4 +9,4 @@
       data-x (csv "tests/testdata/city_temperatures.csv" month)
       data-y (csv "tests/testdata/city_temperatures.csv" temp_moscow)
       bar-width (2em)
-      color (#666)))
+      color #666))

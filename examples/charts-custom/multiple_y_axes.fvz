@@ -7,9 +7,9 @@
         label-placement (linear 0.1))
     body (
       (plot/points
-          data-x (100px 500px 700px 900px 300px)
-          data-y (200px 300px 200px 300px 100px)
+          data-x (100px 500px 700px 400px 300px)
+          data-y (200px 300px 200px 380px 100px)
+          data-colors (#00c #c00)
           labels (A B A B A)
           label-font-size 18pt
-          colors (#00c #c00)
           marker-size (8px))))

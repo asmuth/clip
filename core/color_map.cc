@@ -11,31 +11,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#pragma once
+#include "color_map.h"
 
 namespace fviz {
-
-template <typename T>
-ReturnCode data_load_as(
-    const Expr* expr,
-    std::function<ReturnCode (const std::string&, T*)> conv,
-    std::vector<T>* dst) {
-  std::vector<std::string> data;
-  if (auto rc = data_load_strings(expr, &data); !rc) {
-    return rc;
-  }
-
-  for (const auto& d : data) {
-    T v;
-    if (auto rc = conv(d, &v); !rc) {
-      return rc;
-    }
-
-    dst->emplace_back(std::move(v));
-  }
-
-  return OK;
-}
 
 } // namespace fviz
 

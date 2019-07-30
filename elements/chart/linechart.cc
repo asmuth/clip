@@ -38,7 +38,6 @@ ReturnCode build(
     {"data-x", bind(&expr_rewritev, _1, "data-x", &geom_opts)},
     {"data-y", bind(&expr_rewritev, _1, "data-y", &geom_opts)},
     {"color", bind(&expr_rewritev, _1, "color", &geom_opts)},
-    {"colors", bind(&expr_rewritev, _1, "colors", &geom_opts)},
     {"stroke", bind(&expr_rewritev, _1, "stroke", &geom_opts)},
     {"marker-size", bind(&expr_rewritev, _1, "marker-size", &geom_opts)},
     {"marker-sizes", bind(&expr_rewritev, _1, "marker-sizes", &geom_opts)},

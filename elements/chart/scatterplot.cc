@@ -40,7 +40,7 @@ ReturnCode build(
     {"size", bind(&expr_rewritev, _1, "size", &geom_opts)},
     {"sizes", bind(&expr_rewritev, _1, "sizes", &geom_opts)},
     {"color", bind(&expr_rewritev, _1, "color", &geom_opts)},
-    {"colors", bind(&expr_rewritev, _1, "colors", &geom_opts)},
+    {"color-map", bind(&expr_rewritev, _1, "color-map", &geom_opts)},
     {"marker-size", bind(&expr_rewritev, _1, "marker-size", &geom_opts)},
     {"marker-sizes", bind(&expr_rewritev, _1, "marker-sizes", &geom_opts)},
     {"marker-shape", bind(&expr_rewritev, _1, "marker-shape", &geom_opts)},
