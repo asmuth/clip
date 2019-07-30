@@ -81,6 +81,12 @@ properties:
 
           ;; load a csv file
           data-size (csv myfile.csv myshapes)
+      - name: size-map
+        desc: |
+          Set the point size map. If no map is specified, the values in `data-size`
+          will be interpreted as unit values.
+        desc_code: |
+          size-map <measure-map>
       - name: color
         desc: |
           Set the point color. Note that this value is only used if no data-colors

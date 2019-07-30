@@ -11,31 +11,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#pragma once
-#include "environment.h"
-#include "graphics/measure.h"
 #include "typographic_map.h"
-#include "return_code.h"
-#include "sexpr.h"
 
 namespace fviz {
 
-ReturnCode measure_read(
-    const Expr* expr,
-    Measure* value);
+MeasureMap measure_map_linear(const Measure& min, const Measure& max) {
+  return [min, max] (const std::string& value, Measure* measure) -> ReturnCode {
+    double value_num  = 0.0;
+    try {
+      value_num = std::clamp(std::stod(value), 0.0, 1.0);
+    } catch (...) {
+      return errorf(
+          ERROR,
+          "invalid data; can't map '{}' to a typographic unit",
+          value);
+    }
 
-ReturnCode measure_read_opt(
-    const Expr* expr,
-    std::optional<Measure>* value);
-
-ReturnCode measure_read_list(
-    const Expr* expr,
-    std::vector<Measure>* measures);
-
-ReturnCode measure_map_read(
-    const Environment& e,
-    const Expr* expr,
-    MeasureMap* measure_map);
+    *measure = from_unit(double(min) + (double(max) - double(min)) * value_num);
+    return OK;
+  };
+}
 
 } // namespace fviz
 

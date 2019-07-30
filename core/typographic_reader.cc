@@ -13,6 +13,7 @@
  */
 #include "typographic_reader.h"
 #include "sexpr_conv.h"
+#include "sexpr_util.h"
 
 using namespace std::placeholders;
 
@@ -48,6 +49,61 @@ ReturnCode measure_read_list(
     std::vector<Measure>* measures) {
   return expr_tov<Measure>(expr, bind(&measure_read, _1, _2), measures);
 }
+
+ReturnCode measure_map_read_linear(
+    const Environment& env,
+    const Expr* expr,
+    MeasureMap* measure_map) {
+  auto args = expr_collect(expr);
+  if (args.size() != 2) {
+    return errorf(
+        ERROR,
+        "invalid number of arguments for 'linear'; expected two, got: {}",
+        args.size());
+  }
+
+  Measure begin;
+  if (auto rc = measure_read(args[0], &begin); !rc) {
+    return rc;
+  }
+
+  Measure end;
+  if (auto rc = measure_read(args[1], &end); !rc) {
+    return rc;
+  }
+
+  *measure_map = measure_map_linear(begin, end);
+  return OK;
+}
+
+ReturnCode measure_map_read(
+    const Environment& env,
+    const Expr* expr,
+    MeasureMap* measure_map) {
+  if (!expr || !expr_is_list(expr)) {
+    return errorf(
+        ERROR,
+        "invalid argument to <measure-map>; expected a list, but got: '{}'",
+        expr_inspect(expr));
+  }
+
+  expr = expr_get_list(expr);
+
+  if (expr_is_value(expr, "linear")) {
+    return measure_map_read_linear(env, expr_next(expr), measure_map);
+  }
+
+  return errorf(
+      ERROR,
+      "invalid value to <measure-map>; got '{}', but expected one of: \n"
+      "  - linear\n",
+      expr_inspect(expr));
+}
+
+ReturnCode measure_map_read(
+    const Environment& e,
+    const Expr* expr,
+    MeasureMap* measure_map);
 
 } // namespace fviz
 

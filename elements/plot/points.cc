@@ -18,6 +18,8 @@
 #include "sexpr_util.h"
 #include "core/environment.h"
 #include "core/color_reader.h"
+#include "core/typographic_map.h"
+#include "core/typographic_reader.h"
 #include "core/layout.h"
 #include "core/marker.h"
 #include "core/scale.h"
@@ -162,6 +164,7 @@ ReturnCode build(
   std::vector<std::string> data_colors;
   std::vector<std::string> data_sizes;
   ColorMap color_map;
+  MeasureMap size_map;
 
   auto config_rc = expr_walk_map(expr_next(expr), {
     {"data-x", bind(&data_load_strings, _1, &data_x)},
@@ -181,6 +184,7 @@ ReturnCode build(
     {"scale-y-padding", bind(&expr_to_float64, _1, &c->scale_y.padding)},
     {"marker-size", bind(&measure_read, _1, &c->size)},
     {"marker-shape", bind(&marker_configure, _1, &c->shape)},
+    {"size-map", bind(&measure_map_read, env, _1, &size_map)},
     {"color", bind(&color_read, env, _1, &c->color)},
     {"color-map", bind(&color_map_read, env, _1, &color_map)},
     {"labels", bind(&data_load_strings, _1, &c->labels)},
@@ -244,8 +248,14 @@ ReturnCode build(
   /* convert size data */
   for (const auto& value : data_sizes) {
     Measure m;
-    if (auto rc = parse_measure(value, &m); !rc) {
-      return rc;
+    if (size_map) {
+      if (auto rc = size_map(value, &m); !rc) {
+        return rc;
+      }
+    } else {
+      if (auto rc = parse_measure(value, &m); !rc) {
+        return rc;
+      }
     }
 
     c->sizes.push_back(m);

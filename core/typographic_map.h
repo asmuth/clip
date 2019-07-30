@@ -12,30 +12,15 @@
  * limitations under the License.
  */
 #pragma once
-#include "environment.h"
 #include "graphics/measure.h"
-#include "typographic_map.h"
+#include "graphics/color.h"
 #include "return_code.h"
-#include "sexpr.h"
 
 namespace fviz {
 
-ReturnCode measure_read(
-    const Expr* expr,
-    Measure* value);
+using MeasureMap = std::function<ReturnCode (const std::string& v, Measure* m)>;
 
-ReturnCode measure_read_opt(
-    const Expr* expr,
-    std::optional<Measure>* value);
-
-ReturnCode measure_read_list(
-    const Expr* expr,
-    std::vector<Measure>* measures);
-
-ReturnCode measure_map_read(
-    const Environment& e,
-    const Expr* expr,
-    MeasureMap* measure_map);
+MeasureMap measure_map_linear(const Measure& min, const Measure& max);
 
 } // namespace fviz
 
