@@ -13,6 +13,7 @@
  */
 #include "environment.h"
 #include "core/format.h"
+#include "color_reader.h"
 #include "sexpr_conv.h"
 #include "sexpr_util.h"
 #include "graphics/font_lookup.h"
@@ -68,15 +69,15 @@ ReturnCode environment_set(Environment* env, const Expr* expr) {
   }
 
   if (expr_is_value(args[0], "background-color")) {
-    return expr_to_color(args[1], &env->background_color);
+    return color_read(*env, args[1], &env->background_color);
   }
 
   if (expr_is_value(args[0], "foreground-color")) {
-    return expr_to_color(args[1], &env->foreground_color);
+    return color_read(*env, args[1], &env->foreground_color);
   }
 
   if (expr_is_value(args[0], "text-color")) {
-    return expr_to_color(args[1], &env->text_color);
+    return color_read(*env, args[1], &env->text_color);
   }
 
   if (expr_is_value(args[0], "font")) {

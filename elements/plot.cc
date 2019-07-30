@@ -16,6 +16,7 @@
 #include "data.h"
 #include "environment.h"
 #include "layout.h"
+#include "color_reader.h"
 #include "element_factory.h"
 #include "graphics/layer.h"
 #include "scale.h"
@@ -364,7 +365,7 @@ ReturnCode build(
     {"left", bind(&element_build_list, env, _1, &config->margin_elements[3])},
 
     /* background, margins, borders */
-    {"background", bind(&expr_to_color_opt, _1, &config->background)},
+    {"background", bind(&color_read_opt, env, _1, &config->background)},
     {
       "margin",
       expr_calln_fn({
@@ -396,13 +397,13 @@ ReturnCode build(
       "border-color",
       expr_calln_fn({
         bind(&expr_rewritev, _1, "border-color", &axis_opts),
-        bind(&expr_to_color, _1, &config->border_color)
+        bind(&color_read, env, _1, &config->border_color)
       })
     },
-    {"border-top-color", bind(&expr_to_color, _1, &config->borders[0].color)},
-    {"border-right-color", bind(&expr_to_color, _1, &config->borders[1].color)},
-    {"border-bottom-color", bind(&expr_to_color, _1, &config->borders[2].color)},
-    {"border-left-color", bind(&expr_to_color, _1, &config->borders[3].color)},
+    {"border-top-color", bind(&color_read, env, _1, &config->borders[0].color)},
+    {"border-right-color", bind(&color_read, env, _1, &config->borders[1].color)},
+    {"border-bottom-color", bind(&color_read, env, _1, &config->borders[2].color)},
+    {"border-left-color", bind(&color_read, env, _1, &config->borders[3].color)},
     {
       "border-width",
       expr_calln_fn({

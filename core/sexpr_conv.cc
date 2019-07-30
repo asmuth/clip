@@ -175,38 +175,6 @@ ReturnCode expr_to_measures(
   return expr_tov<Measure>(expr, bind(&expr_to_measure, _1, _2), measures);
 }
 
-ReturnCode expr_to_color(
-    const Expr* expr,
-    Color* value) {
-  if (!expr_is_value(expr)) {
-    return errorf(
-        ERROR,
-        "argument error; expected a value, got: {}",
-        "..."); // FIXME
-  }
-
-  const auto expr_value = expr_get_value(expr);
-  if (StringUtil::beginsWith(expr_value, "#")) {
-    if (value->parse(expr_value)) {
-      return OK;
-    }
-  }
-
-  return error(ERROR, "invalid color");
-}
-
-ReturnCode expr_to_color_opt(
-    const Expr* expr,
-    std::optional<Color>* var) {
-  Color c;
-  if (auto rc = expr_to_color(expr, &c); !rc) {
-    return rc;
-  }
-
-  *var = c;
-  return OK;
-}
-
 ReturnCode expr_to_stroke_style(
     const Expr* expr,
     StrokeStyle* style) {

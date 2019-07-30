@@ -15,6 +15,7 @@
 
 #include "environment.h"
 #include "layout.h"
+#include "color_reader.h"
 #include "sexpr_conv.h"
 #include "sexpr_util.h"
 #include "graphics/color.h"
@@ -162,16 +163,16 @@ ReturnCode build(
     {
       "border-color",
       expr_calln_fn({
-        bind(&expr_to_color, _1, &config->borders[0].color),
-        bind(&expr_to_color, _1, &config->borders[1].color),
-        bind(&expr_to_color, _1, &config->borders[2].color),
-        bind(&expr_to_color, _1, &config->borders[3].color),
+        bind(&color_read, env, _1, &config->borders[0].color),
+        bind(&color_read, env, _1, &config->borders[1].color),
+        bind(&color_read, env, _1, &config->borders[2].color),
+        bind(&color_read, env, _1, &config->borders[3].color),
       })
     },
-    {"border-top-color", bind(&expr_to_color, _1, &config->borders[0].color)},
-    {"border-right-color", bind(&expr_to_color, _1, &config->borders[1].color)},
-    {"border-bottom-color", bind(&expr_to_color, _1, &config->borders[2].color)},
-    {"border-left-color", bind(&expr_to_color, _1, &config->borders[3].color)},
+    {"border-top-color", bind(&color_read, env, _1, &config->borders[0].color)},
+    {"border-right-color", bind(&color_read, env, _1, &config->borders[1].color)},
+    {"border-bottom-color", bind(&color_read, env, _1, &config->borders[2].color)},
+    {"border-left-color", bind(&color_read, env, _1, &config->borders[3].color)},
     {
       "border-width",
       expr_calln_fn({
@@ -185,14 +186,14 @@ ReturnCode build(
     {"border-right-width", bind(&expr_to_measure, _1, &config->borders[1].width)},
     {"border-bottom-width", bind(&expr_to_measure, _1, &config->borders[2].width)},
     {"border-left-width", bind(&expr_to_measure, _1, &config->borders[3].width)},
-    {"background-color", bind(&expr_to_color_opt, _1, &config->background)},
+    {"background-color", bind(&color_read_opt, env, _1, &config->background)},
     {
       "foreground-color",
       expr_calln_fn({
-        bind(&expr_to_color, _1, &config->border_color),
+        bind(&color_read, env, _1, &config->border_color),
       })
     },
-    {"border-color", bind(&expr_to_color, _1, &config->border_color)},
+    {"border-color", bind(&color_read, env, _1, &config->border_color)},
     {"body", bind(&element_build_list, env, _1, &config->elements)},
   });
 

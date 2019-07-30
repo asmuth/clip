@@ -19,6 +19,7 @@
 #include "graphics/layout.h"
 #include "graphics/brush.h"
 #include "scale.h"
+#include "color_reader.h"
 #include "sexpr_conv.h"
 #include "sexpr_util.h"
 
@@ -107,7 +108,7 @@ ReturnCode build(const Environment& env, const Expr* expr, ElementRef* elem) {
     {"scale-y", bind(&scale_configure_kind, _1, &c->scale_y)},
     {"scale-x-padding", bind(&expr_to_float64, _1, &c->scale_x.padding)},
     {"scale-y-padding", bind(&expr_to_float64, _1, &c->scale_y.padding)},
-    {"color", bind(&expr_to_color, _1, &c->line_color)},
+    {"color", bind(&color_read, env, _1, &c->line_color)},
     {"stroke", bind(&expr_to_measure, _1, &c->line_width)},
   });
 

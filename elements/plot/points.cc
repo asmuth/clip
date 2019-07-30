@@ -17,6 +17,7 @@
 #include "sexpr_conv.h"
 #include "sexpr_util.h"
 #include "core/environment.h"
+#include "core/color_reader.h"
 #include "core/layout.h"
 #include "core/marker.h"
 #include "core/scale.h"
@@ -165,11 +166,11 @@ ReturnCode build(
     {"marker-sizes", bind(&data_load, _1, &c->sizes)},
     {"marker-shape", bind(&marker_configure_list, _1, &c->shapes)},
     {"marker-shapes", bind(&marker_configure_list, _1, &c->shapes)},
-    {"color", expr_tov_fn<Color>(bind(&expr_to_color, _1, _2), &c->colors)},
-    {"colors", expr_tov_fn<Color>(bind(&expr_to_color, _1, _2), &c->colors)},
+    {"color", expr_tov_fn<Color>(bind(&color_read, env, _1, _2), &c->colors)},
+    {"colors", expr_tov_fn<Color>(bind(&color_read, env, _1, _2), &c->colors)},
     {"labels", bind(&data_load_strings, _1, &c->labels)},
     {"label-font-size", bind(&expr_to_measure, _1, &c->label_font_size)},
-    {"label-color", bind(&expr_to_color, _1, &c->label_color)},
+    {"label-color", bind(&color_read, env, _1, &c->label_color)},
     {"label-padding", bind(&expr_to_measure, _1, &c->label_padding)},
   });
 

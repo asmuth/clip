@@ -19,6 +19,7 @@
 #include "sexpr_util.h"
 #include "scale.h"
 #include "layout.h"
+#include "color_reader.h"
 #include "graphics/path.h"
 #include "graphics/brush.h"
 #include "graphics/text.h"
@@ -196,13 +197,13 @@ ReturnCode build(
     {"scale-y", bind(&scale_configure_kind, _1, &c->scale_y)},
     {"scale-x-padding", bind(&expr_to_float64, _1, &c->scale_x.padding)},
     {"scale-y-padding", bind(&expr_to_float64, _1, &c->scale_y.padding)},
-    {"color", expr_tov_fn<Color>(bind(&expr_to_color, _1, _2), &c->colors)},
-    {"colors", expr_tov_fn<Color>(bind(&expr_to_color, _1, _2), &c->colors)},
+    {"color", expr_tov_fn<Color>(bind(&color_read, env, _1, _2), &c->colors)},
+    {"colors", expr_tov_fn<Color>(bind(&color_read, env, _1, _2), &c->colors)},
     {"stroke", bind(&expr_to_measure, _1, &c->line_width)},
     {"marker-size", bind(&data_load, _1, &c->marker_sizes)},
     {"labels", bind(&data_load_strings, _1, &c->labels)},
     {"label-font-size", bind(&expr_to_measure, _1, &c->label_font_size)},
-    {"label-color", bind(&expr_to_color, _1, &c->label_color)},
+    {"label-color", bind(&color_read, env, _1, &c->label_color)},
     {"label-padding", bind(&expr_to_measure, _1, &c->label_padding)},
   });
 

@@ -20,6 +20,7 @@
 #include "sexpr.h"
 #include "sexpr_conv.h"
 #include "sexpr_util.h"
+#include "color_reader.h"
 #include "graphics/path.h"
 #include "graphics/brush.h"
 #include "graphics/text.h"
@@ -122,7 +123,7 @@ ReturnCode build(
     {"scale-y-padding", bind(&expr_to_float64, _1, &c->scale_y.padding)},
     {"labels", bind(&data_load_strings, _1, &c->labels)},
     {"label-font-size", bind(&expr_to_measure, _1, &c->label_font_size)},
-    {"label-color", bind(&expr_to_color, _1, &c->label_color)},
+    {"label-color", bind(&color_read, env, _1, &c->label_color)},
     {"label-padding", bind(&expr_to_measure, _1, &c->label_padding)},
   });
 

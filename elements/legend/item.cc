@@ -19,6 +19,7 @@
 #include "layout.h"
 #include "scale.h"
 #include "sexpr.h"
+#include "color_reader.h"
 #include "sexpr_conv.h"
 #include "sexpr_util.h"
 #include "graphics/path.h"
@@ -215,7 +216,7 @@ ReturnCode build(
       })
     },
     {"label-margin", bind(&expr_to_measure, _1, &config->label_margin)},
-    {"label-color", bind(&expr_to_color, _1, &config->label_color)},
+    {"label-color", bind(&color_read, env, _1, &config->label_color)},
     {"label-font-size", bind(&expr_to_measure, _1, &config->label_font_size)},
     {"marker-shape", bind(&marker_configure, _1, &config->marker)},
     {
@@ -226,9 +227,9 @@ ReturnCode build(
       })
     },
     {"marker-margin", bind(&expr_to_measure, _1, &config->marker_margin)},
-    {"marker-color", bind(&expr_to_color, _1, &config->marker_color)},
+    {"marker-color", bind(&color_read, env, _1, &config->marker_color)},
     {"marker-size", bind(&expr_to_measure, _1, &config->marker_size)},
-    {"color", bind(&expr_to_color, _1, &config->marker_color)},
+    {"color", bind(&color_read, env, _1, &config->marker_color)},
   });
 
   if (!config_rc) {

@@ -21,6 +21,7 @@
 #include "core/scale.h"
 #include "core/format.h"
 #include "core/layout.h"
+#include "color_reader.h"
 #include "sexpr_conv.h"
 #include "sexpr_util.h"
 
@@ -719,7 +720,7 @@ ReturnCode build(const Environment& env, const Expr* expr, ElementRef* elem) {
       {"label-padding", bind(&expr_to_measure, _1, &config->label_padding)},
       {"label-rotate", bind(&expr_to_float64, _1, &config->label_rotate)},
       {"label-font-size", bind(&expr_to_measure, _1, &config->label_font_size)},
-      {"label-color", bind(&expr_to_color, _1, &config->label_color)},
+      {"label-color", bind(&color_read, env, _1, &config->label_color)},
 
       /* tick options */
       {"tick-placement", bind(&scale_configure_layout, _1, &config->tick_placement)},
@@ -736,14 +737,14 @@ ReturnCode build(const Environment& env, const Expr* expr, ElementRef* elem) {
       /* title options */
       {"title", bind(&expr_to_string, _1, &config->title)},
       {"title-font-size", bind(&expr_to_measure, _1, &config->title_font_size)},
-      {"title-color", bind(&expr_to_color, _1, &config->title_color)},
+      {"title-color", bind(&color_read, env, _1, &config->title_color)},
       {"title-offset", bind(&expr_to_float64, _1, &config->title_offset)},
       {"title-padding", bind(&expr_to_measure, _1, &config->title_padding)},
       {"title-rotate", bind(&expr_to_float64, _1, &config->title_rotate)},
 
       /* border options */
       {"border", bind(&expr_to_stroke_style, _1, &config->border_style)},
-      {"border-color", bind(&expr_to_color, _1, &config->border_style.color)},
+      {"border-color", bind(&color_read, env, _1, &config->border_style.color)},
       {"border-width", bind(&expr_to_measure, _1, &config->border_style.line_width)},
     }, false);
 

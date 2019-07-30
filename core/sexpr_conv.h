@@ -14,7 +14,6 @@
 #pragma once
 #include "sexpr.h"
 #include "graphics/brush.h"
-#include "graphics/color.h"
 #include "graphics/measure.h"
 
 namespace fviz {
@@ -68,14 +67,6 @@ ReturnCode expr_to_measure_opt(
 ReturnCode expr_to_measures(
     const Expr* expr,
     std::vector<Measure>* measures);
-
-ReturnCode expr_to_color(
-    const Expr* expr,
-    Color* value);
-
-ReturnCode expr_to_color_opt(
-    const Expr* expr,
-    std::optional<Color>* var);
 
 ReturnCode expr_to_stroke_style(
     const Expr* expr,

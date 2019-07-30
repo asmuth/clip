@@ -16,6 +16,7 @@
 #include "data.h"
 #include "environment.h"
 #include "layout.h"
+#include "color_reader.h"
 #include "scale.h"
 #include "sexpr.h"
 #include "sexpr_conv.h"
@@ -538,16 +539,16 @@ ReturnCode build(
     {
       "border-color",
       expr_calln_fn({
-        bind(&expr_to_color, _1, &config->borders[0].color),
-        bind(&expr_to_color, _1, &config->borders[1].color),
-        bind(&expr_to_color, _1, &config->borders[2].color),
-        bind(&expr_to_color, _1, &config->borders[3].color),
+        bind(&color_read, env, _1, &config->borders[0].color),
+        bind(&color_read, env, _1, &config->borders[1].color),
+        bind(&color_read, env, _1, &config->borders[2].color),
+        bind(&color_read, env, _1, &config->borders[3].color),
       })
     },
-    {"border-top-color", bind(&expr_to_color, _1, &config->borders[0].color)},
-    {"border-right-color", bind(&expr_to_color, _1, &config->borders[1].color)},
-    {"border-bottom-color", bind(&expr_to_color, _1, &config->borders[2].color)},
-    {"border-left-color", bind(&expr_to_color, _1, &config->borders[3].color)},
+    {"border-top-color", bind(&color_read, env, _1, &config->borders[0].color)},
+    {"border-right-color", bind(&color_read, env, _1, &config->borders[1].color)},
+    {"border-bottom-color", bind(&color_read, env, _1, &config->borders[2].color)},
+    {"border-left-color", bind(&color_read, env, _1, &config->borders[3].color)},
     {
       "border-width",
       expr_calln_fn({
@@ -561,7 +562,7 @@ ReturnCode build(
     {"border-right-width", bind(&expr_to_measure, _1, &config->borders[1].line_width)},
     {"border-bottom-width", bind(&expr_to_measure, _1, &config->borders[2].line_width)},
     {"border-left-width", bind(&expr_to_measure, _1, &config->borders[3].line_width)},
-    {"background", bind(&expr_to_color_opt, _1, &config->background)},
+    {"background", bind(&color_read_opt, env, _1, &config->background)},
   });
 
   if (!config_rc) {
