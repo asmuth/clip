@@ -39,7 +39,7 @@ Color Palettes
 --------------
 
 The color palette allows you to easily reference colors that are frequently used
-in the chart. Colors from the color palette are referenced by one-base index
+in the chart. Colors from the color palette are referenced by one-based index
 (see above).
 
 You can use one of the built-in color palettes (see below) or define your own

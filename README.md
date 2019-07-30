@@ -70,10 +70,8 @@ To run the test suite, run `make test`:
 Acknowledgements
 ----------------
 
-fviz is the successor of the FnordMetric ChartSQL project by the same authors.
-
-Parts of the new chart specification semantics were inspired by ideas from the
-"Grammar of Graphics" [0] and the ggplot2 project.
+Parts of fviz were inspired by ideas from the "Grammar of Graphics" [0] and the
+ggplot2 project.
 
 [0] Wilkinson, L. (1999). The Grammar of Graphics (Springer)
 
