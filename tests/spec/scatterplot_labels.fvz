@@ -1,7 +1,7 @@
 (chart/scatterplot
     data-x (csv tests/testdata/point_example.csv x)
     data-y (csv tests/testdata/point_example.csv y)
-    marker-sizes (csv tests/testdata/point_example.csv z)
+    data-size (csv tests/testdata/point_example.csv z)
     labels (csv tests/testdata/point_example.csv z)
     scale-x-padding 15
     scale-y-padding 15

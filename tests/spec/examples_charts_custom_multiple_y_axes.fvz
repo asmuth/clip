@@ -12,4 +12,4 @@
           data-color (#00c #c00)
           labels (A B A B A)
           label-font-size 18pt
-          marker-size (8px))))
+          marker-size 8px)))

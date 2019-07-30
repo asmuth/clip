@@ -5,11 +5,11 @@
   <path fill="#0000cc" d="M758.947 265.333 M750.947 265.333 a4 4 0 1 0 8 0 a4 4 0 1 0 -8 0 "/>
   <path fill="#cc0000" d="M458.947 85.3333 M450.947 85.3333 a4 4 0 1 0 8 0 a4 4 0 1 0 -8 0 "/>
   <path fill="#0000cc" d="M358.947 365.333 M350.947 365.333 a4 4 0 1 0 8 0 a4 4 0 1 0 -8 0 "/>
-  <text x="148.946875" y="250.133333" fill="#000000" font-size="18.000000" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">A</text>
-  <text x="548.946875" y="150.133333" fill="#000000" font-size="18.000000" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">B</text>
-  <text x="748.946875" y="250.133333" fill="#000000" font-size="18.000000" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">A</text>
-  <text x="448.946875" y="70.133333" fill="#000000" font-size="18.000000" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">B</text>
-  <text x="348.946875" y="350.133333" fill="#000000" font-size="18.000000" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">A</text>
+  <text x="148.946875" y="254.133333" fill="#000000" font-size="18.000000" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">A</text>
+  <text x="548.946875" y="154.133333" fill="#000000" font-size="18.000000" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">B</text>
+  <text x="748.946875" y="254.133333" fill="#000000" font-size="18.000000" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">A</text>
+  <text x="448.946875" y="74.133333" fill="#000000" font-size="18.000000" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">B</text>
+  <text x="348.946875" y="354.133333" fill="#000000" font-size="18.000000" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">A</text>
   <path stroke-width="1.333333" stroke="#000000" fill="none" d="M853.209 14.6667 L853.209 465.333 "/>
   <path stroke-width="1.333333" stroke="#000000" fill="none" d="M847.876 465.333 L853.209 465.333 "/>
   <path stroke-width="1.333333" stroke="#000000" fill="none" d="M847.876 420.267 L853.209 420.267 "/>

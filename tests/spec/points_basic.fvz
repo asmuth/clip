@@ -3,4 +3,4 @@
     data-y (200px 300px 200px 300px 100px)
     labels (A B A B A)
     label-font-size 18pt
-    marker-size (8px))
+    marker-size 8px)

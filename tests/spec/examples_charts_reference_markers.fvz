@@ -4,10 +4,10 @@
     axes (none)
     limit-x (0 7)
     limit-y (0 2)
+    scale-y (invert)
     data-x (0 1 2 3 4 5 6 7)
     data-y (0 0 0 0 0 0 0 0)
-    scale-y (invert)
-    marker-shapes (
+    data-shape (
         (circle)
         (circle-o)
         (square)
@@ -25,4 +25,4 @@
         "square-right"
         "hexagon"
         "hexagon-o")
-    marker-size (16px))
+    marker-size 16px)

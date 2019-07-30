@@ -60,13 +60,13 @@ properties:
           point in the dataset at the points (x, y) coordinate.
         desc_code: |
           marker-sizes (<values>...)
-          marker-sizes (csv <file> <column>)
+          data-size (csv <file> <column>)
         examples: |
           ;; list of static values
           marker-sizes (2pt 4pt 2pt)
 
           ;; load a csv file
-          marker-sizes (csv myfile.csv mysizes)
+          data-size (csv myfile.csv mysizes)
 
   - title: "Label Options"
     anchor: label-options

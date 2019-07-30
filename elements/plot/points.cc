@@ -42,7 +42,9 @@ struct PlotPointsConfig {
   ScaleConfig scale_y;
   Color color;
   std::vector<Color> colors;
+  Measure size;
   std::vector<Measure> sizes;
+  Marker shape;
   std::vector<Marker> shapes;
   std::vector<std::string> labels;
   FontInfo label_font;
@@ -84,6 +86,11 @@ ReturnCode draw(
       &*config->sizes.begin(),
       &*config->sizes.end());
 
+  convert_unit_typographic(
+      layer->dpi,
+      layer->font_size,
+      &config->size);
+
   /* draw markers */
   for (size_t i = 0; i < config->x.size(); ++i) {
     auto sx = clip.x + config->x[i];
@@ -94,11 +101,11 @@ ReturnCode draw(
         : config->colors[i % config->colors.size()];
 
     auto size = config->sizes.empty()
-        ? from_pt(kDefaultPointSizePT, layer->dpi)
+        ? config->size
         : config->sizes[i % config->sizes.size()];
 
     auto shape = config->shapes.empty()
-        ? marker_create_disk()
+        ? config->shape
         : config->shapes[i % config->shapes.size()];
 
     if (auto rc = shape(Point(sx, sy), size, color, layer); !rc) {
@@ -144,6 +151,8 @@ ReturnCode build(
   /* set defaults from environment */
   auto c = std::make_shared<PlotPointsConfig>();
   c->color = env.foreground_color;
+  c->size = from_pt(kDefaultPointSizePT);
+  c->shape = marker_create_disk();
   c->label_font = env.font;
   c->label_font_size = env.font_size;
 
@@ -151,12 +160,15 @@ ReturnCode build(
   std::vector<std::string> data_x;
   std::vector<std::string> data_y;
   std::vector<std::string> data_colors;
+  std::vector<std::string> data_sizes;
   ColorMap color_map;
 
   auto config_rc = expr_walk_map(expr_next(expr), {
     {"data-x", bind(&data_load_strings, _1, &data_x)},
     {"data-y", bind(&data_load_strings, _1, &data_y)},
     {"data-color", bind(&data_load_strings, _1, &data_colors)},
+    {"data-size", bind(&data_load_strings, _1, &data_sizes)},
+    {"data-shape", bind(&marker_configure_list, _1, &c->shapes)},
     {"limit-x", bind(&expr_to_float64_opt_pair, _1, &c->scale_x.min, &c->scale_x.max)},
     {"limit-x-min", bind(&expr_to_float64_opt, _1, &c->scale_x.min)},
     {"limit-x-max", bind(&expr_to_float64_opt, _1, &c->scale_x.max)},
@@ -167,10 +179,8 @@ ReturnCode build(
     {"scale-y", bind(&scale_configure_kind, _1, &c->scale_y)},
     {"scale-x-padding", bind(&expr_to_float64, _1, &c->scale_x.padding)},
     {"scale-y-padding", bind(&expr_to_float64, _1, &c->scale_y.padding)},
-    {"marker-size", bind(&data_load, _1, &c->sizes)},
-    {"marker-sizes", bind(&data_load, _1, &c->sizes)},
-    {"marker-shape", bind(&marker_configure_list, _1, &c->shapes)},
-    {"marker-shapes", bind(&marker_configure_list, _1, &c->shapes)},
+    {"marker-size", bind(&measure_read, _1, &c->size)},
+    {"marker-shape", bind(&marker_configure, _1, &c->shape)},
     {"color", bind(&color_read, env, _1, &c->color)},
     {"color-map", bind(&color_map_read, env, _1, &color_map)},
     {"labels", bind(&data_load_strings, _1, &c->labels)},
@@ -229,6 +239,16 @@ ReturnCode build(
     }
 
     c->colors.push_back(color);
+  }
+
+  /* convert size data */
+  for (const auto& value : data_sizes) {
+    Measure m;
+    if (auto rc = parse_measure(value, &m); !rc) {
+      return rc;
+    }
+
+    c->sizes.push_back(m);
   }
 
   /* return element */
