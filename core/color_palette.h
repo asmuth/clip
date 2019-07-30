@@ -12,34 +12,17 @@
  * limitations under the License.
  */
 #pragma once
-#include <stdlib.h>
 #include "graphics/color.h"
+#include "return_code.h"
+
+#include <vector>
 
 namespace fviz {
 
-class ColorScheme {
-public:
+using ColorPalette = std::vector<Color>;
 
-  ColorScheme(
-      const std::vector<std::string>& colors = std::vector<std::string>{
-          "#4572a7",
-          "#aa4643",
-          "#89a54e",
-          "#80699b",
-          "#3d96ae",
-          "#db843d",
-          }) :
-          colors_(colors) {}
+ColorPalette color_palette_default();
 
-  Color get(size_t seq) const {
-    Color c;
-    c.parse(colors_[seq % colors_.size()]);
-    return c;
-  }
-
-protected:
-  std::vector<std::string> colors_;
-};
+ReturnCode color_palette_default(const std::string& name, ColorPalette* colors);
 
 } // namespace fviz
-

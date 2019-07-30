@@ -46,10 +46,15 @@ You can use one of the built-in color palettes (see below) or define your own
 color palette using the `set` directive:
 
     (set color-palette (<color>...))
+    (set color-palette <color-palette-name>)
 
 For example:
 
+    ;; set a custom color palette
     (set color-palette (#06c #c06 #60c))
+
+    ;; use the default 'fnord' color palette
+    (set color-palette fnord)
 
 
 List of default color palettes

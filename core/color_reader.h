@@ -40,5 +40,10 @@ ReturnCode color_map_read(
     const Expr* expr,
     ColorMap* color_map);
 
+ReturnCode color_palette_read(
+    const Environment& env,
+    const Expr* expr,
+    ColorPalette* color_palette);
+
 } // namespace fviz
 

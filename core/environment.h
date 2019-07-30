@@ -14,7 +14,7 @@
 #pragma once
 #include <memory>
 #include "return_code.h"
-#include "color_scheme.h"
+#include "color_palette.h"
 #include "graphics/measure.h"
 #include "graphics/color.h"
 #include "graphics/text.h"
@@ -33,7 +33,7 @@ struct Environment {
   std::vector<std::string> font_load;
   FontInfo font;
   Measure font_size;
-  ColorScheme color_scheme;
+  ColorPalette color_palette;
   Color background_color;
   Color foreground_color;
   Color text_color;

@@ -21,7 +21,6 @@
 #include <unordered_map>
 #include "return_code.h"
 #include "sexpr.h"
-#include "color_scheme.h"
 #include "format.h"
 
 namespace fviz {

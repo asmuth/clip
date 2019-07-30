@@ -32,6 +32,15 @@ ReturnCode color_read(
         return OK;
       }
     }
+
+    // color palette index
+    if (StringUtil::isDigitString(value)) {
+      if (!env.color_palette.empty()) {
+        *color = env.color_palette[std::stoul(value) % env.color_palette.size()];
+      }
+
+      return OK;
+    }
   }
 
   if (expr_is_list(expr)) {
@@ -80,10 +89,21 @@ ReturnCode color_read_string(
     const Environment& env,
     const std::string& value,
     Color* color) {
+
+  // hex code
   if (StringUtil::beginsWith(value, "#")) {
     if (color->parse(value)) {
       return OK;
     }
+  }
+
+  // color palette index
+  if (StringUtil::isDigitString(value)) {
+    if (!env.color_palette.empty()) {
+      *color = env.color_palette[std::stoul(value) % env.color_palette.size()];
+    }
+
+    return OK;
   }
 
   return errorf(
@@ -123,6 +143,36 @@ ReturnCode color_map_read(
       "invalid value to <color-map>; got '{}', but expected one of: \n"
       "  - steps\n"
       "  - gradient\n",
+      expr_inspect(expr));
+}
+
+ReturnCode color_palette_read(
+    const Environment& env,
+    const Expr* expr,
+    ColorPalette* color_palette) {
+  color_palette->clear();
+
+  if (expr_is_value(expr)) {
+    return color_palette_default(expr_get_value(expr), color_palette);
+  }
+
+  if (expr_is_list(expr)) {
+    Color c;
+    for (auto arg = expr_get_list(expr); arg; arg = expr_next(arg)) {
+      if (auto rc = color_read(env, arg, &c); !rc) {
+        return rc;
+      }
+
+      color_palette->push_back(c);
+    }
+
+    return OK;
+  }
+
+  return errorf(
+      ERROR,
+      "invalid color palette; expected color palette name or color list, "
+      "got: '{}'",
       expr_inspect(expr));
 }
 

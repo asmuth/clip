@@ -32,7 +32,8 @@ Environment::Environment() :
     background_color(Color::fromRGB(1,1,1)),
     foreground_color(Color::fromRGB(0,0,0)),
     text_color(Color::fromRGB(0,0,0)),
-    font_size(from_pt(11)) {}
+    font_size(from_pt(11)),
+    color_palette(color_palette_default()) {}
 
 ReturnCode environment_setup_defaults(Environment* env) {
   if (env->font_defaults) {
@@ -90,6 +91,10 @@ ReturnCode environment_set(Environment* env, const Expr* expr) {
 
   if (expr_is_value(args[0], "font-size")) {
     return expr_to_measure(args[1], &env->font_size);
+  }
+
+  if (expr_is_value(args[0], "color-palette")) {
+    return color_palette_read(*env, args[1], &env->color_palette);
   }
 
   if (expr_is_value(args[0], "margin-top")) {
