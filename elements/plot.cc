@@ -369,16 +369,16 @@ ReturnCode build(
     {
       "margin",
       expr_calln_fn({
-        bind(&expr_to_measure, _1, &config->margins[0]),
-        bind(&expr_to_measure, _1, &config->margins[1]),
-        bind(&expr_to_measure, _1, &config->margins[2]),
-        bind(&expr_to_measure, _1, &config->margins[3]),
+        bind(&measure_read, _1, &config->margins[0]),
+        bind(&measure_read, _1, &config->margins[1]),
+        bind(&measure_read, _1, &config->margins[2]),
+        bind(&measure_read, _1, &config->margins[3]),
       })
     },
-    {"margin-top", bind(&expr_to_measure, _1, &config->margins[0])},
-    {"margin-right", bind(&expr_to_measure, _1, &config->margins[1])},
-    {"margin-bottom", bind(&expr_to_measure, _1, &config->margins[2])},
-    {"margin-left", bind(&expr_to_measure, _1, &config->margins[3])},
+    {"margin-top", bind(&measure_read, _1, &config->margins[0])},
+    {"margin-right", bind(&measure_read, _1, &config->margins[1])},
+    {"margin-bottom", bind(&measure_read, _1, &config->margins[2])},
+    {"margin-left", bind(&measure_read, _1, &config->margins[3])},
     {
       "border",
       expr_calln_fn({
@@ -408,16 +408,16 @@ ReturnCode build(
       "border-width",
       expr_calln_fn({
         bind(&expr_rewritev, _1, "border-width", &axis_opts),
-        bind(&expr_to_measure, _1, &config->borders[0].line_width),
-        bind(&expr_to_measure, _1, &config->borders[1].line_width),
-        bind(&expr_to_measure, _1, &config->borders[2].line_width),
-        bind(&expr_to_measure, _1, &config->borders[3].line_width)
+        bind(&measure_read, _1, &config->borders[0].line_width),
+        bind(&measure_read, _1, &config->borders[1].line_width),
+        bind(&measure_read, _1, &config->borders[2].line_width),
+        bind(&measure_read, _1, &config->borders[3].line_width)
       })
     },
-    {"border-top-width", bind(&expr_to_measure, _1, &config->borders[0].line_width)},
-    {"border-right-width", bind(&expr_to_measure, _1, &config->borders[1].line_width)},
-    {"border-bottom-width", bind(&expr_to_measure, _1, &config->borders[2].line_width)},
-    {"border-left-width", bind(&expr_to_measure, _1, &config->borders[3].line_width)},
+    {"border-top-width", bind(&measure_read, _1, &config->borders[0].line_width)},
+    {"border-right-width", bind(&measure_read, _1, &config->borders[1].line_width)},
+    {"border-bottom-width", bind(&measure_read, _1, &config->borders[2].line_width)},
+    {"border-left-width", bind(&measure_read, _1, &config->borders[3].line_width)},
   });
 
   if (!config_rc) {

@@ -193,12 +193,12 @@ ReturnCode build(
     {"scale-x-padding", bind(&expr_to_float64, _1, &c->scale_x.padding)},
     {"scale-y-padding", bind(&expr_to_float64, _1, &c->scale_y.padding)},
     {"color", bind(&color_read, env, _1, &c->color)},
-    {"stroke", bind(&expr_to_measure, _1, &c->line_width)},
+    {"stroke", bind(&measure_read, _1, &c->line_width)},
     {"marker-size", bind(&data_load, _1, &c->marker_sizes)},
     {"labels", bind(&data_load_strings, _1, &c->labels)},
-    {"label-font-size", bind(&expr_to_measure, _1, &c->label_font_size)},
+    {"label-font-size", bind(&measure_read, _1, &c->label_font_size)},
     {"label-color", bind(&color_read, env, _1, &c->label_color)},
-    {"label-padding", bind(&expr_to_measure, _1, &c->label_padding)},
+    {"label-padding", bind(&measure_read, _1, &c->label_padding)},
   });
 
   if (!config_rc) {

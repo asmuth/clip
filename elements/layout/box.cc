@@ -150,16 +150,16 @@ ReturnCode build(
     {
       "margin",
       expr_calln_fn({
-        bind(&expr_to_measure, _1, &config->margins[0]),
-        bind(&expr_to_measure, _1, &config->margins[1]),
-        bind(&expr_to_measure, _1, &config->margins[2]),
-        bind(&expr_to_measure, _1, &config->margins[3]),
+        bind(&measure_read, _1, &config->margins[0]),
+        bind(&measure_read, _1, &config->margins[1]),
+        bind(&measure_read, _1, &config->margins[2]),
+        bind(&measure_read, _1, &config->margins[3]),
       })
     },
-    {"margin-top", bind(&expr_to_measure, _1, &config->margins[0])},
-    {"margin-right", bind(&expr_to_measure, _1, &config->margins[1])},
-    {"margin-bottom", bind(&expr_to_measure, _1, &config->margins[2])},
-    {"margin-left", bind(&expr_to_measure, _1, &config->margins[3])},
+    {"margin-top", bind(&measure_read, _1, &config->margins[0])},
+    {"margin-right", bind(&measure_read, _1, &config->margins[1])},
+    {"margin-bottom", bind(&measure_read, _1, &config->margins[2])},
+    {"margin-left", bind(&measure_read, _1, &config->margins[3])},
     {
       "border-color",
       expr_calln_fn({
@@ -176,16 +176,16 @@ ReturnCode build(
     {
       "border-width",
       expr_calln_fn({
-        bind(&expr_to_measure, _1, &config->borders[0].width),
-        bind(&expr_to_measure, _1, &config->borders[1].width),
-        bind(&expr_to_measure, _1, &config->borders[2].width),
-        bind(&expr_to_measure, _1, &config->borders[3].width),
+        bind(&measure_read, _1, &config->borders[0].width),
+        bind(&measure_read, _1, &config->borders[1].width),
+        bind(&measure_read, _1, &config->borders[2].width),
+        bind(&measure_read, _1, &config->borders[3].width),
       })
     },
-    {"border-top-width", bind(&expr_to_measure, _1, &config->borders[0].width)},
-    {"border-right-width", bind(&expr_to_measure, _1, &config->borders[1].width)},
-    {"border-bottom-width", bind(&expr_to_measure, _1, &config->borders[2].width)},
-    {"border-left-width", bind(&expr_to_measure, _1, &config->borders[3].width)},
+    {"border-top-width", bind(&measure_read, _1, &config->borders[0].width)},
+    {"border-right-width", bind(&measure_read, _1, &config->borders[1].width)},
+    {"border-bottom-width", bind(&measure_read, _1, &config->borders[2].width)},
+    {"border-left-width", bind(&measure_read, _1, &config->borders[3].width)},
     {"background-color", bind(&color_read_opt, env, _1, &config->background)},
     {
       "foreground-color",

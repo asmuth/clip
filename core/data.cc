@@ -201,7 +201,7 @@ ReturnCode data_load(
     return data_load_csv(expr_next(args), values);
   }
 
-  return expr_to_measures(expr, values);
+  return measure_read_list(expr, values);
 }
 
 ReturnCode data_to_measures(

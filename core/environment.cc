@@ -58,11 +58,11 @@ ReturnCode environment_set(Environment* env, const Expr* expr) {
   }
 
   if (expr_is_value(args[0], "width")) {
-    return expr_to_measure(args[1], &env->screen_width);
+    return measure_read(args[1], &env->screen_width);
   }
 
   if (expr_is_value(args[0], "height")) {
-    return expr_to_measure(args[1], &env->screen_height);
+    return measure_read(args[1], &env->screen_height);
   }
 
   if (expr_is_value(args[0], "dpi")) {
@@ -90,7 +90,7 @@ ReturnCode environment_set(Environment* env, const Expr* expr) {
   }
 
   if (expr_is_value(args[0], "font-size")) {
-    return expr_to_measure(args[1], &env->font_size);
+    return measure_read(args[1], &env->font_size);
   }
 
   if (expr_is_value(args[0], "color-palette")) {
@@ -98,19 +98,19 @@ ReturnCode environment_set(Environment* env, const Expr* expr) {
   }
 
   if (expr_is_value(args[0], "margin-top")) {
-    return expr_to_measure(args[1], &env->margins[0]);
+    return measure_read(args[1], &env->margins[0]);
   }
 
   if (expr_is_value(args[0], "margin-right")) {
-    return expr_to_measure(args[1], &env->margins[1]);
+    return measure_read(args[1], &env->margins[1]);
   }
 
   if (expr_is_value(args[0], "margin-bottom")) {
-    return expr_to_measure(args[1], &env->margins[2]);
+    return measure_read(args[1], &env->margins[2]);
   }
 
   if (expr_is_value(args[0], "margin-left")) {
-    return expr_to_measure(args[1], &env->margins[3]);
+    return measure_read(args[1], &env->margins[3]);
   }
 
   if (expr_is_value(args[0], "text-script")) {
@@ -123,10 +123,10 @@ ReturnCode environment_set(Environment* env, const Expr* expr) {
 
   if (expr_is_value(args[0], "margin")) {
     return expr_calln(args[1], {
-      bind(&expr_to_measure, _1, &env->margins[0]),
-      bind(&expr_to_measure, _1, &env->margins[1]),
-      bind(&expr_to_measure, _1, &env->margins[2]),
-      bind(&expr_to_measure, _1, &env->margins[3]),
+      bind(&measure_read, _1, &env->margins[0]),
+      bind(&measure_read, _1, &env->margins[1]),
+      bind(&measure_read, _1, &env->margins[2]),
+      bind(&measure_read, _1, &env->margins[3]),
     });
   }
 

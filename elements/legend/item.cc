@@ -215,9 +215,9 @@ ReturnCode build(
         {"right", HAlign::RIGHT},
       })
     },
-    {"label-margin", bind(&expr_to_measure, _1, &config->label_margin)},
+    {"label-margin", bind(&measure_read, _1, &config->label_margin)},
     {"label-color", bind(&color_read, env, _1, &config->label_color)},
-    {"label-font-size", bind(&expr_to_measure, _1, &config->label_font_size)},
+    {"label-font-size", bind(&measure_read, _1, &config->label_font_size)},
     {"marker-shape", bind(&marker_configure, _1, &config->marker)},
     {
       "marker-align",
@@ -226,9 +226,9 @@ ReturnCode build(
         {"right", HAlign::RIGHT},
       })
     },
-    {"marker-margin", bind(&expr_to_measure, _1, &config->marker_margin)},
+    {"marker-margin", bind(&measure_read, _1, &config->marker_margin)},
     {"marker-color", bind(&color_read, env, _1, &config->marker_color)},
-    {"marker-size", bind(&expr_to_measure, _1, &config->marker_size)},
+    {"marker-size", bind(&measure_read, _1, &config->marker_size)},
     {"color", bind(&color_read, env, _1, &config->marker_color)},
   });
 

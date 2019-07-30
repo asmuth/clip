@@ -15,6 +15,7 @@
 #include "sexpr.h"
 #include "graphics/brush.h"
 #include "graphics/measure.h"
+#include "typographic_reader.h"
 
 namespace fviz {
 
@@ -59,18 +60,6 @@ ReturnCode expr_to_ratio(
 ReturnCode expr_to_switch(
     const Expr* expr,
     bool* value);
-
-ReturnCode expr_to_measure(
-    const Expr* expr,
-    Measure* value);
-
-ReturnCode expr_to_measure_opt(
-    const Expr* expr,
-    std::optional<Measure>* value);
-
-ReturnCode expr_to_measures(
-    const Expr* expr,
-    std::vector<Measure>* measures);
 
 ReturnCode expr_to_stroke_style(
     const Expr* expr,

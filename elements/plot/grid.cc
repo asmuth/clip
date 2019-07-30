@@ -109,7 +109,7 @@ ReturnCode build(const Environment& env, const Expr* expr, ElementRef* elem) {
     {"scale-x-padding", bind(&expr_to_float64, _1, &c->scale_x.padding)},
     {"scale-y-padding", bind(&expr_to_float64, _1, &c->scale_y.padding)},
     {"color", bind(&color_read, env, _1, &c->line_color)},
-    {"stroke", bind(&expr_to_measure, _1, &c->line_width)},
+    {"stroke", bind(&measure_read, _1, &c->line_width)},
   });
 
   if (!config_rc) {

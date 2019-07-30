@@ -717,15 +717,15 @@ ReturnCode build(const Environment& env, const Expr* expr, ElementRef* elem) {
         })
       },
       {"label-offset", bind(&expr_to_float64, _1, &config->label_offset)},
-      {"label-padding", bind(&expr_to_measure, _1, &config->label_padding)},
+      {"label-padding", bind(&measure_read, _1, &config->label_padding)},
       {"label-rotate", bind(&expr_to_float64, _1, &config->label_rotate)},
-      {"label-font-size", bind(&expr_to_measure, _1, &config->label_font_size)},
+      {"label-font-size", bind(&measure_read, _1, &config->label_font_size)},
       {"label-color", bind(&color_read, env, _1, &config->label_color)},
 
       /* tick options */
       {"tick-placement", bind(&scale_configure_layout, _1, &config->tick_placement)},
       {"tick-offset", bind(&expr_to_float64, _1, &config->tick_offset)},
-      {"tick-length", bind(&expr_to_measure, _1, &config->tick_length)},
+      {"tick-length", bind(&measure_read, _1, &config->tick_length)},
 
       /* scale options */
       {"scale", bind(&scale_configure_kind, _1, &config->scale)},
@@ -736,16 +736,16 @@ ReturnCode build(const Environment& env, const Expr* expr, ElementRef* elem) {
 
       /* title options */
       {"title", bind(&expr_to_string, _1, &config->title)},
-      {"title-font-size", bind(&expr_to_measure, _1, &config->title_font_size)},
+      {"title-font-size", bind(&measure_read, _1, &config->title_font_size)},
       {"title-color", bind(&color_read, env, _1, &config->title_color)},
       {"title-offset", bind(&expr_to_float64, _1, &config->title_offset)},
-      {"title-padding", bind(&expr_to_measure, _1, &config->title_padding)},
+      {"title-padding", bind(&measure_read, _1, &config->title_padding)},
       {"title-rotate", bind(&expr_to_float64, _1, &config->title_rotate)},
 
       /* border options */
       {"border", bind(&expr_to_stroke_style, _1, &config->border_style)},
       {"border-color", bind(&color_read, env, _1, &config->border_style.color)},
-      {"border-width", bind(&expr_to_measure, _1, &config->border_style.line_width)},
+      {"border-width", bind(&measure_read, _1, &config->border_style.line_width)},
     }, false);
 
     if (!rc) {

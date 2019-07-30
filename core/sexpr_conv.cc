@@ -150,37 +150,6 @@ ReturnCode expr_to_switch(
       expr_inspect(expr));
 }
 
-ReturnCode expr_to_measure(
-    const Expr* expr,
-    Measure* value) {
-  if (!expr_is_value(expr)) {
-    return errorf(
-        ERROR,
-        "argument error; expected a value, got: {}",
-        expr_inspect(expr));
-  }
-
-  return parse_measure(expr_get_value(expr), value);
-}
-
-ReturnCode expr_to_measure_opt(
-    const Expr* expr,
-    std::optional<Measure>* value) {
-  Measure v;
-  if (auto rc = expr_to_measure(expr, &v); !rc) {
-    return rc;
-  }
-
-  *value = v;
-  return OK;
-}
-
-ReturnCode expr_to_measures(
-    const Expr* expr,
-    std::vector<Measure>* measures) {
-  return expr_tov<Measure>(expr, bind(&expr_to_measure, _1, _2), measures);
-}
-
 ReturnCode expr_to_stroke_style(
     const Expr* expr,
     StrokeStyle* style) {

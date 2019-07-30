@@ -174,9 +174,9 @@ ReturnCode build(
     {"color", bind(&color_read, env, _1, &c->color)},
     {"color-map", bind(&color_map_read, env, _1, &color_map)},
     {"labels", bind(&data_load_strings, _1, &c->labels)},
-    {"label-font-size", bind(&expr_to_measure, _1, &c->label_font_size)},
+    {"label-font-size", bind(&measure_read, _1, &c->label_font_size)},
     {"label-color", bind(&color_read, env, _1, &c->label_color)},
-    {"label-padding", bind(&expr_to_measure, _1, &c->label_padding)},
+    {"label-padding", bind(&measure_read, _1, &c->label_padding)},
   });
 
   if (!config_rc) {
