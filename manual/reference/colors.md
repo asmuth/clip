@@ -58,7 +58,7 @@ For example:
 
 
 For another example, see:
-[`examples/charts-custom/custom_color_palette.svg`](/examples/charts-custom/custom_color_palette)
+[`/examples/charts-custom/custom_color_palette`](/examples/charts-custom/custom_color_palette)
 
 
 List of default color palettes

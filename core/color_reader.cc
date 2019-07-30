@@ -125,6 +125,84 @@ ReturnCode color_read_opt(
   return OK;
 }
 
+ReturnCode color_map_read_gradient(
+    const Environment& env,
+    const Expr* expr,
+    ColorMap* color_map) {
+  std::vector<std::pair<double, Color>> gradient;
+
+  for (; expr; expr = expr_next(expr)) {
+    if (!expr_is_list(expr)) {
+      return errorf(
+          ERROR,
+          "invalid argument to 'gradient'; expected a 2-tuple, but got: '{}'",
+          expr_inspect(expr));
+    }
+
+    auto args = expr_collect(expr_get_list(expr));
+    if (args.size() != 2) {
+      return errorf(
+          ERROR,
+          "invalid argument to 'gradient'; expected a 2-tuple, but got: '{}'",
+          expr_inspect(expr));
+    }
+
+    double step;
+    if (auto rc = expr_to_ratio(args[0], &step); !rc) {
+      return rc;
+    }
+
+    Color color;
+    if (auto rc = color_read(env, args[1], &color); !rc) {
+      return rc;
+    }
+
+    gradient.emplace_back(step, color);
+  }
+
+  *color_map = color_map_gradient(gradient);
+  return OK;
+}
+
+ReturnCode color_map_read_steps(
+    const Environment& env,
+    const Expr* expr,
+    ColorMap* color_map) {
+  std::vector<std::pair<double, Color>> steps;
+
+  for (; expr; expr = expr_next(expr)) {
+    if (!expr_is_list(expr)) {
+      return errorf(
+          ERROR,
+          "invalid argument to 'steps'; expected a 2-tuple, but got: '{}'",
+          expr_inspect(expr));
+    }
+
+    auto args = expr_collect(expr_get_list(expr));
+    if (args.size() != 2) {
+      return errorf(
+          ERROR,
+          "invalid argument to 'steps'; expected a 2-tuple, but got: '{}'",
+          expr_inspect(expr));
+    }
+
+    double step;
+    if (auto rc = expr_to_ratio(args[0], &step); !rc) {
+      return rc;
+    }
+
+    Color color;
+    if (auto rc = color_read(env, args[1], &color); !rc) {
+      return rc;
+    }
+
+    steps.emplace_back(step, color);
+  }
+
+  *color_map = color_map_steps(steps);
+  return OK;
+}
+
 ReturnCode color_map_read(
     const Environment& env,
     const Expr* expr,
@@ -137,6 +215,14 @@ ReturnCode color_map_read(
   }
 
   expr = expr_get_list(expr);
+
+  if (expr_is_value(expr, "gradient")) {
+    return color_map_read_gradient(env, expr_next(expr), color_map);
+  }
+
+  if (expr_is_value(expr, "steps")) {
+    return color_map_read_steps(env, expr_next(expr), color_map);
+  }
 
   return errorf(
       ERROR,

@@ -16,6 +16,15 @@ currently implemented mapping methods:
     (gradient (<step> <color>)...)
 
 
-List of built-in color maps
----------------------------
+#### Examples:
+
+    ;; gradient from red to blue
+    color-map (gradient (0 #f00) (1.0 #00f))
+
+    ;; step from red to green, blue, red, green to blue
+    color-map (steps (0 #f00) (0.2 #0f0) (0.4 #00f) (0.6 #0f0) (0.8 #f00) (1.0 #00f))
+
+For another example, see:
+[`examples/charts-basic/scatterplot_colors`](/examples/charts-basic/scatterplot_colors)
+
 

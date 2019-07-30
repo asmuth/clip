@@ -37,6 +37,7 @@ ReturnCode build(
     /* scatterplot options */
     {"data-x", bind(&expr_rewritev, _1, "data-x", &geom_opts)},
     {"data-y", bind(&expr_rewritev, _1, "data-y", &geom_opts)},
+    {"data-color", bind(&expr_rewritev, _1, "data-color", &geom_opts)},
     {"size", bind(&expr_rewritev, _1, "size", &geom_opts)},
     {"sizes", bind(&expr_rewritev, _1, "sizes", &geom_opts)},
     {"color", bind(&expr_rewritev, _1, "color", &geom_opts)},

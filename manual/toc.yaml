@@ -71,10 +71,10 @@ documentation:
           title: "Colors"
           url: "/documentation/colors"
           file: "reference/colors"
-        #-
-        #  title: "Color Maps"
-        #  url: "/documentation/color-maps"
-        #  file: "reference/color_maps"
+        -
+          title: "Color Maps"
+          url: "/documentation/color-maps"
+          file: "reference/color_maps"
         -
           title: "Scale Types"
           url: "/documentation/scale-types"

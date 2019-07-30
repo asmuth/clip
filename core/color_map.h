@@ -17,9 +17,11 @@
 
 namespace fviz {
 
-using ColorMap = std::function<ReturnCode (double v, Color* c)>;
+using ColorMap = std::function<ReturnCode (const std::string& v, Color* c)>;
 
-ColorMap color_map_raw(std::vector<Color> colors);
+ColorMap color_map_gradient(std::vector<std::pair<double, Color>> gradient);
+
+ColorMap color_map_steps(std::vector<std::pair<double, Color>> steps);
 
 } // namespace fviz
 

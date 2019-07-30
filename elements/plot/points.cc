@@ -156,7 +156,7 @@ ReturnCode build(
   auto config_rc = expr_walk_map(expr_next(expr), {
     {"data-x", bind(&data_load_strings, _1, &data_x)},
     {"data-y", bind(&data_load_strings, _1, &data_y)},
-    {"data-colors", bind(&data_load_strings, _1, &data_colors)},
+    {"data-color", bind(&data_load_strings, _1, &data_colors)},
     {"limit-x", bind(&expr_to_float64_opt_pair, _1, &c->scale_x.min, &c->scale_x.max)},
     {"limit-x-min", bind(&expr_to_float64_opt, _1, &c->scale_x.min)},
     {"limit-x-max", bind(&expr_to_float64_opt, _1, &c->scale_x.max)},
@@ -215,21 +215,15 @@ ReturnCode build(
   for (const auto& value : data_colors) {
     Color color;
     if (color_map) {
-      try {
-        if (auto rc = color_map(std::stod(value), &color); !rc) {
-          return rc;
-        }
-      } catch (...) {
-        return errorf(
-            ERROR,
-            "invalid data; can't map '{}' to a color",
-            value);
+      if (auto rc = color_map(value, &color); !rc) {
+        return rc;
       }
     } else {
       if (auto rc = color.parse(value); !rc) {
         return errorf(
             ERROR,
-            "invalid data; can't parse '{}' as a color hex code",
+            "invalid data; can't parse '{}' as a color hex code; maybe you "
+            "forgot to set the 'color-map' option?",
             value);
       }
     }

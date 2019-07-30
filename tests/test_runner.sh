@@ -69,7 +69,7 @@ else
   echo "OUTPUT:" ${outfile}
   echo "EXPECT:" ${reffile}
   echo "-------------------------------------------------------------------------------"
-  cat ${logfile}
-  diff ${outfile} ${reffile} || true
+  #cat ${logfile}
+  #diff ${outfile} ${reffile} || true
   exit 1
 fi
