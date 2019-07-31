@@ -67,6 +67,10 @@ To run the test suite, run `make test`:
     $ make test
 
 
+For detailed installation instructions, have a look at the [Installation](https://fviz.org/documentation/installation/)
+page.
+
+
 Acknowledgements
 ----------------
 
@@ -74,6 +78,70 @@ Parts of fviz were inspired by ideas from the "Grammar of Graphics" [0] and the
 ggplot2 project.
 
 [0] Wilkinson, L. (1999). The Grammar of Graphics (Springer)
+
+
+Example Gallery
+---------------
+
+Below are more examples to show you what's possible. Each examples links to the
+source code that generated it. Even more examples can be found on the
+[Examples](https://fviz.org/examples) page.
+
+
+---
+
+#### Example: [`charts-basic/linechart_timeseries`](https://fviz.org/examples/charts-basic/linechart_timeseries)
+[![linechart_timeseries.svg](/examples/charts-basic/linechart_timeseries.svg)](https://fviz.org/examples/charts-basic/linechart_timeseries)
+
+---
+
+#### Example: [`charts-basic/barchart_groups`](https://fviz.org/examples/charts-basic/barchart_groups)
+[![barchart_groups.svg](/examples/charts-basic/barchart_groups.svg)](https://fviz.org/examples/charts-basic/barchart_groups)
+
+---
+
+#### Example: [`charts-basic/scatterplot_with_labels`](https://fviz.org/examples/charts-basic/scatterplot_with_labels)
+[![scatterplot_with_labels.svg](/examples/charts-basic/scatterplot_with_labels.svg)](https://fviz.org/examples/charts-basic/scatterplot_with_labels)
+
+---
+
+#### Example: [`charts-basic/linechart_with_labels`](https://fviz.org/examples/charts-basic/linechart_with_labels)
+[![linechart_with_labels.svg](/examples/charts-basic/linechart_with_labels.svg)](https://fviz.org/examples/charts-basic/linechart_with_labels)
+
+---
+
+#### Example: [`charts-basic/chart_i18n`](https://fviz.org/examples/charts-basic/chart_i18n)
+[![chart_i18n.svg](/examples/charts-basic/chart_i18n.svg)](https://fviz.org/examples/charts-basic/chart_i18n)
+
+---
+
+#### Example: [`charts-basic/barchart_horizontal`](https://fviz.org/examples/charts-basic/barchart_horizontal)
+[![barchart_horizontal.svg](/examples/charts-basic/barchart_horizontal.svg)](https://fviz.org/examples/charts-basic/barchart_horizontal)
+
+---
+
+#### Example: [`charts-basic/barchart_with_labels`](https://fviz.org/examples/charts-basic/barchart_with_labels)
+[![barchart_with_labels.svg](/examples/charts-basic/barchart_with_labels.svg)](https://fviz.org/examples/charts-basic/barchart_with_labels)
+
+---
+
+#### Example: [`charts-custom/multiple_y_axes`](https://fviz.org/examples/charts-custom/multiple_y_axes)
+[![multiple_y_axes.svg](/examples/charts-custom/multiple_y_axes.svg)](https://fviz.org/examples/charts-custom/multiple_y_axes)
+
+--
+
+#### Example: [`charts-basic/scatterplot_colors`](https://fviz.org/examples/charts-basic/scatterplot_colors)
+[![scatterplot_colors.svg](/examples/charts-basic/scatterplot_colors.svg)](https://fviz.org/examples/charts-basic/scatterplot_colors)
+
+--
+
+#### Example: [`charts-basic/barchart_ranges`](https://fviz.org/examples/charts-basic/barchart_ranges)
+[![barchart_ranges.svg](/examples/charts-basic/barchart_ranges.svg)](https://fviz.org/examples/charts-basic/barchart_ranges)
+
+---
+
+#### Example: [`charts-custom/custom_font`](https://fviz.org/examples/charts-custom/custom_font)
+[![custom_font.svg](/examples/charts-custom/custom_font.svg)](https://fviz.org/examples/charts-custom/custom_font)
 
 
 License
