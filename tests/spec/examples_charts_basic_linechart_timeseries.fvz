@@ -7,4 +7,11 @@
     limit-y (-5 5)
     axes (bottom left)
     axis-x-label-format (datetime "%H:%M:%S")
-    color 1)
+    grid (color #fff)
+    background #eee
+    border none
+    legend-overlay (
+        position (top right)
+        border none
+        margin .4em
+        item (label "Random Data")))

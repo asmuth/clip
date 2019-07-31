@@ -7,9 +7,6 @@
     data-color (csv tests/testdata/gauss3d.csv z)
     limit-x (0 400)
     limit-y (0 200)
-    color-map (gradient (0 #4572a7) (1.0 #aa4643))
+    color-map (gradient (0 #DC526A) (1.0 #D6B207))
     axis-y-label-placement (subdivide 5)
-    axes (bottom left)
-    grid (color #fff)
-    background #eee
-    border none)
+    axes (bottom left))

@@ -1,22 +1,19 @@
 - section: Standard Charts
   files:
-    - file: charts-basic/scatterplot_colors
-    - file: charts-basic/scatterplot_with_labels
-
-- section: Line Charts
-  files:
+    - file: charts-basic/scatterplot
     - file: charts-basic/linechart_timeseries
+    - file: charts-basic/barchart_groups
+
+- section: Editorial Charts
+  files:
+    - file: charts-basic/linechart_with_labels
     - file: charts-basic/chart_i18n
-
-- section: Bar and Column Charts
-  files:
+    - file: charts-basic/scatterplot_with_labels
+    - file: charts-basic/scatterplot_colors
     - file: charts-basic/barchart_horizontal
-    - file: charts-basic/barchart_ranges
     - file: charts-basic/barchart_with_labels
-
-- section:  Area Charts
-  files:
     - file: charts-basic/streamgraph
+    - file: charts-basic/barchart_ranges
 #    - file: charts-basic/areas_and_lines
 #    - file: charts-basic/areas_vertical
 

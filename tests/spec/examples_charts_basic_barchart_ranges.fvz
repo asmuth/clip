@@ -5,6 +5,7 @@
     axes (top right bottom left)
     limit-x (0.5 6.5)
     limit-y (-20 70)
+    axis-x-label-placement (linear-interval 1 1 6)
     axis-y-label-placement (linear-interval 10 -20 70)
     bars (
       data-x (csv "tests/testdata/bardata.csv" var0)
@@ -19,4 +20,8 @@
       data-y-low (csv "tests/testdata/bardata.csv" var5)
       bar-width (1em)
       bar-offset (.8em)
-      color 2))
+      color 2)
+    grid (
+      color #ccc
+      tick-placement-x (linear-interval 1 1.5 5.5)
+      tick-placement-y (none)))
