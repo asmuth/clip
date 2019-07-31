@@ -1,5 +1,5 @@
-(set width 800px)
-(set height 600px)
+(set width 1000px)
+(set height 400px)
 
 (plot
     axes (left bottom)

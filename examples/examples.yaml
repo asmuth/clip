@@ -3,15 +3,18 @@
     - file: charts-basic/scatterplot
     - file: charts-basic/linechart_timeseries
     - file: charts-basic/barchart_groups
+    - file: charts-basic/scatterplot_with_labels
 
 - section: Editorial Charts
   files:
     - file: charts-basic/linechart_with_labels
     - file: charts-basic/chart_i18n
-    - file: charts-basic/scatterplot_with_labels
-    - file: charts-basic/scatterplot_colors
     - file: charts-basic/barchart_horizontal
     - file: charts-basic/barchart_with_labels
+
+- section: Other Charts
+  files:
+    - file: charts-basic/scatterplot_colors
     - file: charts-basic/streamgraph
     - file: charts-basic/barchart_ranges
 #    - file: charts-basic/areas_and_lines
@@ -23,9 +26,9 @@
 #    - file: charts-custom/rotate_labels
 #    - file: charts-custom/inverted_scale
 #    - file: charts-custom/irregular_data
-#    - file: charts-custom/logarithmic_scale
 #    - file: charts-custom/multiple_y_axes
 #
 - section: Customization
   files:
+    - file: charts-custom/logarithmic_scale
     - file: charts-custom/custom_font

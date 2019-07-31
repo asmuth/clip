@@ -1,13 +1,14 @@
-(set height 240px)
+(set height 200px)
 (set width 900px)
 
 (plot
     scale-x-padding 0.6
+    limit-y (-15 30)
+    axes (bottom left)
     axis-x-label-placement (linear-alignat 1 1)
     axis-x-label-format (custom "Jan" "Feb" "Mar" "Apr" "May" "Jun" "Jul" "Aug" "Sep" "Oct" "Nov" "Dec")
-    limit-y (-15 30)
     axis-y-label-placement (linear-interval 5 -10 30)
-    axes (bottom left)
+    axis-y-title "Temperature (°C)"
     lines (
         data-x (csv "tests/testdata/city_temperatures.csv" month)
         data-y (csv "tests/testdata/city_temperatures.csv" temp_beijing)

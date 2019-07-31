@@ -7,7 +7,10 @@
     data-size (csv tests/testdata/point_example.csv z)
     labels (csv tests/testdata/point_example.csv z)
     limit-y (-40 60)
+    marker-shape (circle-bullet)
     scale-x-padding 15
     scale-y-padding 15
     axes (bottom left)
-    color 3)
+    background #eee
+    border none
+    grid (color #fff))

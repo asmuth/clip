@@ -31,7 +31,7 @@ using namespace std::placeholders;
 
 namespace fviz::elements::plot::axis {
 
-static const double kDefaultTitlePaddingHorizEM = 1.4;
+static const double kDefaultTitlePaddingHorizEM = .6;
 static const double kDefaultTitlePaddingVertEM = 1;
 static const double kDefaultLabelPaddingEM = 0.8;
 static const double kDefaultLineWidthPT = 1;
