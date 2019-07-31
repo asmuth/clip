@@ -33,6 +33,7 @@ ReturnCode expr_parse_literal(
       case '\\':
       case '\'':
       case '\"':
+      case ';':
       case '(':
       case ')':
         match = false;
@@ -117,6 +118,12 @@ ReturnCode expr_parse(
       case '\t':
       case '\r':
         ++cur;
+        continue;
+
+      case ';':
+        while (cur != end && *cur != '\n') {
+          ++cur;
+        }
         continue;
 
       case '(': {

@@ -96,10 +96,35 @@ void test_parse_string_escapes() {
   EXPECT((e = expr_next(e)) == nullptr);
 }
 
+void test_parse_comments() {
+  std::string confstr =
+      R"(
+        ;; hello
+        (a ; world
+            b
+            ; comments
+            c) ; end
+      )";
+
+  ExprStorage es;
+  EXPECT_OK(expr_parse(confstr.data(), confstr.size(), &es));
+
+  const Expr* e = es.get();
+  EXPECT(expr_is_list(e));
+  e = expr_get_list(e);
+  EXPECT(expr_is_value(e, "a"));
+  EXPECT((e = expr_next(e)) != nullptr);
+  EXPECT(expr_is_value(e, "b"));
+  EXPECT((e = expr_next(e)) != nullptr);
+  EXPECT(expr_is_value(e, "c"));
+  EXPECT((e = expr_next(e)) == nullptr);
+}
+
 int main() {
   test_parse_literals();
   test_parse_lists();
   test_parse_strings();
   test_parse_string_escapes();
+  test_parse_comments();
   return EXIT_SUCCESS;
 }
