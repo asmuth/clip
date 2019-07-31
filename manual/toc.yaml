@@ -19,9 +19,9 @@ documentation:
           url: "/documentation/installation"
           file: "installation"
         -
-          title: "Download"
-          url: "/download"
-          file: "download"
+          title: "Command Line"
+          url: "/documentation/command-line"
+          file: "reference/command_line"
         -
           title: "FAQ"
           url: "/documentation/faq"
@@ -68,9 +68,9 @@ documentation:
       #  url: "/documentation/units"
       #  file: "units"
         -
-          title: "Command Line"
-          url: "/documentation/command-line"
-          file: "reference/command_line"
+          title: "Document Setup"
+          url: "/documentation/document-setup"
+          file: "reference/document_setup"
         -
           title: "Colors"
           url: "/documentation/colors"
