@@ -49,7 +49,7 @@ int main(int argc, const char** argv) {
   flag_parser.defineSwitch("debug", &flag_debug);
 
   bool flag_font_defaults = true;
-  flag_parser.defineSwitch("font-defaults", &flag_font_defaults);
+  flag_parser.defineBool("font-defaults", &flag_font_defaults);
 
   std::vector<std::string> flag_font_load;
   flag_parser.defineStringV("font-load", &flag_font_load);
@@ -77,13 +77,20 @@ int main(int argc, const char** argv) {
   if (flag_help) {
     std::cerr <<
         "Usage: $ fviz [OPTIONS]\n"
-        "   --help                Display this help text and exit\n"
-        "   --version             Display the version of this binary and exit\n"
+        "  --in <path>               Path to the input file\n"
+        "  --out <path>              Path to the output file\n"
+        "  --outfmt <format>         Output format. If no format is given, it is inferred from the\n"
+        "                            filename. Valid values: 'png', 'svg'\n"
+        "  --font-defaults <bool>    Enable or disable default font loading. Default is enabled.\n"
+        "                            Valid values: 'on' and 'off'\n"
+        "  --font-load <path>        Add a font file to the default font list\n"
+        "  --debug                   Run in debug mode\n"
+        "  --help                    Display this help text and exit\n"
+        "  --version                 Display the version of this binary and exit\n"
         "\n"
-        "Commands:\n";
+        "Examples:\n"
+        "  $ fviz --in my_chart.fvz --out my_chart.svg\n";
 
-
-    std::cerr << "\nSee 'fviz help <command>' for information about a specific subcommand.\n";
     return 0;
   }
 

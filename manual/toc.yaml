@@ -68,6 +68,10 @@ documentation:
       #  url: "/documentation/units"
       #  file: "units"
         -
+          title: "Command Line"
+          url: "/documentation/command-line"
+          file: "reference/command_line"
+        -
           title: "Colors"
           url: "/documentation/colors"
           file: "reference/colors"

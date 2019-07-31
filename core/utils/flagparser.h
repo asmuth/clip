@@ -19,6 +19,7 @@
 namespace fviz {
 
 enum kFlagType {
+  T_BOOL,
   T_SWITCH,
   T_STRING,
   T_STRING_V,
@@ -55,6 +56,13 @@ public:
   void defineStringV(
       const char* longopt,
       std::vector<std::string>* value);
+
+  /**
+   * Define a boolean flag
+   */
+  void defineBool(
+      const char* longopt,
+      bool* value);
 
   /**
    * Define a boolean flag
