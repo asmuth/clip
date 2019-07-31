@@ -1,6 +1,6 @@
 (set dpi 384)
 (set width 3600px)
-(set height 1920px)
+(set height 900px)
 
 (set font "Comic Sans MS")
 
@@ -11,6 +11,7 @@
     axes (bottom left)
     axis-y-label-format (fixed 2)
     axis-x-label-format (datetime "%H:%M:%S")
+    axis-y-label-placement (linear 20)
     grid (color #fff)
     background #eee
     border none

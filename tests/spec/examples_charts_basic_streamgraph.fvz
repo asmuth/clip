@@ -1,5 +1,5 @@
-(set height 480px)
-(set width 1200px)
+(set height 300px)
+(set width 960px)
 
 (plot
     axes (bottom left)
@@ -8,14 +8,15 @@
         data-x (csv "tests/testdata/areadata2.csv" x)
         data-y (csv "tests/testdata/areadata2.csv" z)
         data-y-low (csv "tests/testdata/areadata2.csv" y)
-        color #ccc)
+        color 1)
     areas (
         data-x (csv "tests/testdata/areadata2.csv" x)
         data-y (csv "tests/testdata/areadata2.csv" z2)
         data-y-low (csv "tests/testdata/areadata2.csv" y2)
-        color #888)
+        color 3)
     legend-overlay (
         position (bottom left)
         background #fff
-        item (label "Series A" color #ccc)
-        item (label "Series B" color #888)))
+        item-flow on
+        item (label "Series A" color 1)
+        item (label "Series B" color 3)))

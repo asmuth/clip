@@ -1,11 +1,13 @@
+(set height 240px)
+(set width 900px)
+
 (chart/scatterplot
     data-x (csv tests/testdata/point_example.csv x)
     data-y (csv tests/testdata/point_example.csv y)
     data-size (csv tests/testdata/point_example.csv z)
     labels (csv tests/testdata/point_example.csv z)
+    limit-y (-40 60)
     scale-x-padding 15
     scale-y-padding 15
     axes (bottom left)
-    grid (color #fff)
-    background #eee
-    border none)
+    color 3)

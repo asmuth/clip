@@ -1,3 +1,6 @@
+(set height 300px)
+(set width 960px)
+
 (plot
     axes (left)
     limit-x (0 24)
@@ -7,5 +10,5 @@
       data-y (csv "tests/testdata/gdp_per_capita_2010.csv" country)
       labels (csv "tests/testdata/gdp_per_capita_2010.csv" gdp_label)
       direction horizontal
-      bar-width (1.2em)
-      color #666))
+      bar-width (1.4em)
+      color 1))

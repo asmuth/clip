@@ -1,40 +1,34 @@
 - section: Standard Charts
   files:
-    - file: charts-basic/scatterplot
-      desc: A simple scatter plot of random data.
-    - file: charts-basic/linechart_timeseries
-      desc: A simple time series line chart.
+    - file: charts-basic/scatterplot_colors
     - file: charts-basic/scatterplot_with_labels
-      desc: A simple scatter plot of random data.
-    - file: charts-basic/areachart
-      desc: A simple area chart.
+
+- section: Line Charts
+  files:
+    - file: charts-basic/linechart_timeseries
+    - file: charts-basic/chart_i18n
 
 - section: Bar and Column Charts
   files:
     - file: charts-basic/barchart_horizontal
     - file: charts-basic/barchart_ranges
     - file: charts-basic/barchart_with_labels
-    - file: charts-basic/histogram
 
-- section: Line and Area Charts
+- section:  Area Charts
   files:
-    - file: charts-basic/linechart_multiple_groups
-    - file: charts-basic/linechart_with_labels
     - file: charts-basic/streamgraph
-    - file: charts-basic/areas_and_lines
-    - file: charts-basic/areas_vertical
+#    - file: charts-basic/areas_and_lines
+#    - file: charts-basic/areas_vertical
 
-- section: Axes and Scales
-  files:
-    - file: charts-custom/axis_titles
-    - file: charts-custom/rotate_labels
-    - file: charts-custom/inverted_scale
-    - file: charts-custom/irregular_data
-    - file: charts-custom/logarithmic_scale
-    - file: charts-custom/multiple_y_axes
-
+#- section: Axes and Scales
+#  files:
+#    - file: charts-custom/axis_titles
+#    - file: charts-custom/rotate_labels
+#    - file: charts-custom/inverted_scale
+#    - file: charts-custom/irregular_data
+#    - file: charts-custom/logarithmic_scale
+#    - file: charts-custom/multiple_y_axes
+#
 - section: Customization
   files:
-    - file: charts-custom/text_i18n
     - file: charts-custom/custom_font
-

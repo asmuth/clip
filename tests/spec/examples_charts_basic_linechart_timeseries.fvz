@@ -1,9 +1,10 @@
+(set height 240px)
+(set width 900px)
+
 (chart/linechart
-    data-x (csv "tests/testdata/measurement.csv" time)
-    data-y (csv "tests/testdata/measurement.csv" value1)
+    data-x (csv "tests/testdata/measurement2.csv" time)
+    data-y (csv "tests/testdata/measurement2.csv" value3)
+    limit-y (-5 5)
     axes (bottom left)
-    axis-y-label-format (scientific)
     axis-x-label-format (datetime "%H:%M:%S")
-    grid (color #fff)
-    background #eee
-    border none)
+    color 1)

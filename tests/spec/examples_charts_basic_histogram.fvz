@@ -1,5 +1,5 @@
-(set width 480px)
-(set height 380px)
+(set width 900px)
+(set height 300px)
 
 (plot
     limit-x (0 7)
