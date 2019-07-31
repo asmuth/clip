@@ -8,15 +8,19 @@
         data-x (csv "tests/testdata/areadata2.csv" x)
         data-y (csv "tests/testdata/areadata2.csv" z)
         data-y-low (csv "tests/testdata/areadata2.csv" y)
-        color 1)
+        color 2)
     areas (
         data-x (csv "tests/testdata/areadata2.csv" x)
         data-y (csv "tests/testdata/areadata2.csv" z2)
         data-y-low (csv "tests/testdata/areadata2.csv" y2)
         color 3)
     legend-overlay (
-        position (bottom left)
+        position (top right)
         background #fff
+        border none
+        margin 0
+        padding 0
+        item-column-padding 1.4em
         item-flow on
-        item (label "Series A" color 1)
+        item (label "Series A" color 2)
         item (label "Series B" color 3)))

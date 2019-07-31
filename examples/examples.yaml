@@ -12,23 +12,15 @@
     - file: charts-basic/barchart_horizontal
     - file: charts-basic/barchart_with_labels
 
+- section: Customization
+  files:
+    - file: charts-custom/multiple_y_axes
+    - file: charts-custom/logarithmic_scale
+    - file: charts-custom/custom_font
+
 - section: Other Charts
   files:
     - file: charts-basic/scatterplot_colors
     - file: charts-basic/streamgraph
     - file: charts-basic/barchart_ranges
-#    - file: charts-basic/areas_and_lines
-#    - file: charts-basic/areas_vertical
-
-#- section: Axes and Scales
-#  files:
-#    - file: charts-custom/axis_titles
-#    - file: charts-custom/rotate_labels
-#    - file: charts-custom/inverted_scale
-#    - file: charts-custom/irregular_data
-#    - file: charts-custom/multiple_y_axes
-#
-- section: Customization
-  files:
-    - file: charts-custom/logarithmic_scale
-    - file: charts-custom/custom_font
+    - file: charts-custom/irregular_data

@@ -32,7 +32,7 @@ def build_example_list(examples):
       <h2>{{section}}</h2>
       {{#files}}
         <section>
-          <h3>Example: <a href="#" class="link"><code>{{file}}</code></a></h3>
+          <h3>Example: <a href="/examples/{{file}}" class="link"><code>{{file}}</code></a></h3>
           <div class="example">
             <a href="/examples/{{file}}"><img src="/examples/{{file}}.svg"></a>
           </div>

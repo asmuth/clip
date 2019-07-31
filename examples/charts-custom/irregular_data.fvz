@@ -1,3 +1,5 @@
+(set height 260px)
+
 (plot
     limit-x (-12 22)
     limit-y (-35 55)

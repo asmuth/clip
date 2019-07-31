@@ -1,4 +1,4 @@
-(set height 240px)
+(set height 280px)
 (set width 900px)
 
 (chart/scatterplot
