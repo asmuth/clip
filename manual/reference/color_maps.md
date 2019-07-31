@@ -7,7 +7,7 @@ currently implemented mapping methods:
   - `steps` -- Map values in [0..1] to a set of discrete colors
   - `gradient` -- Map values in [0..1] to a linear color gradient
 
-#### Syntax:
+### Syntax:
 
     ;; a 'step' color map
     (steps (<step> <color>)...)
@@ -16,15 +16,18 @@ currently implemented mapping methods:
     (gradient (<step> <color>)...)
 
 
-#### Examples:
+### Example
+
+Below you can see simple scatter plot that uses a red to blue color map to display a third
+data dimension. The full source for this example is at:
+[`examples/charts-basic/scatterplot_colors`](/examples/charts-basic/scatterplot_colors)
+
+[![scatterplot_colors.svg](/examples/charts-basic/scatterplot_colors.svg)](/examples/charts-basic/scatterplot_colors)
+
+The color map specification used in the example is:
 
     ;; gradient from red to blue
     color-map (gradient (0 #f00) (1.0 #00f))
 
-    ;; step from red to green, blue, red, green to blue
-    color-map (steps (0 #f00) (0.2 #0f0) (0.4 #00f) (0.6 #0f0) (0.8 #f00) (1.0 #00f))
-
-For another example, see:
-[`examples/charts-basic/scatterplot_colors`](/examples/charts-basic/scatterplot_colors)
 
 
