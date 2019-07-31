@@ -482,6 +482,13 @@ ReturnCode scale_layout_categorical_bounds(
   return OK;
 }
 
+ReturnCode scale_layout_none(
+    const ScaleConfig& domain,
+    const Formatter& label_format,
+    ScaleLayout* layout) {
+  return OK;
+}
+
 ReturnCode scale_configure_layout_linear_interval(
     const Expr* expr,
     ScaleLayoutFn* layout) {
@@ -749,6 +756,11 @@ ReturnCode scale_configure_layout(
     return OK;
   }
 
+  if (expr_is_value(expr, "none")) {
+    *layout = bind(&scale_layout_none, _1, _2, _3);
+    return OK;
+  }
+
   return error(
       ERROR,
       "invalid argument; expected one of: \n"
@@ -760,7 +772,8 @@ ReturnCode scale_configure_layout(
       "  - exponential-steps\n"
       "  - subdivide\n"
       "  - categorical\n"
-      "  - categorical-bounds\n");
+      "  - categorical-bounds\n"
+      "  - none\n");
 }
 
 void scale_configure_layout_defaults(

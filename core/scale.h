@@ -141,6 +141,11 @@ ReturnCode scale_layout_categorical_bounds(
     const Formatter& label_format,
     ScaleLayout* layout);
 
+ReturnCode scale_layout_none(
+    const ScaleConfig& domain,
+    const Formatter& label_format,
+    ScaleLayout* layout);
+
 ReturnCode scale_configure_layout(
     const Expr* expr,
     ScaleLayoutFn* layout);

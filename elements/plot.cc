@@ -506,8 +506,8 @@ ReturnCode build(
         expr_clone(ymin.get()),
         "limit-y-max",
         expr_clone(ymax.get()),
-        expr_unwrap(std::move(grid_opts)),
-        expr_clonev(grid_extra_opts));
+        expr_clonev(grid_extra_opts),
+        expr_unwrap(std::move(grid_opts)));
 
     ElementRef elem;
     if (auto rc = element_build_macro(env, elem_config.get(), &elem); !rc) {
