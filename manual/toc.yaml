@@ -145,6 +145,10 @@ documentation:
             url: "/documentation/elements/plot/points"
             api_ref: true
           -
+            title: "plot/vectors"
+            url: "/documentation/elements/plot/vectors"
+            api_ref: true
+          -
             title: "plot/grid"
             url: "/documentation/elements/plot/grid"
             api_ref: true
