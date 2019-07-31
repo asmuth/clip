@@ -30,18 +30,14 @@ def build_example_list(examples):
   {{#list}}
     <div style="margin-bottom: 6em; margin-top: -1em;">
       <h2>{{section}}</h2>
-      <div class="example_grid">
       {{#files}}
-        <div>
-          <section class="info_box">
-            <a href="/examples/{{file}}"><h2>Example: <em>{{file}}</em></h2></a>
-            <div class="example">
-              <a href="/examples/{{file}}"><img src="/examples/{{file}}.svg"></a>
-            </div>
-          </section>
-        </div>
+        <section>
+          <h3>Example: <a href="#" class="link"><code>{{file}}</code></a></h3>
+          <div class="example">
+            <a href="/examples/{{file}}"><img src="/examples/{{file}}.svg"></a>
+          </div>
+        </section>
       {{/files}}
-      </div>
     </div>
   {{/list}}
   """
@@ -49,7 +45,7 @@ def build_example_list(examples):
     "list": examples,
   }
 
-  write_page("/examples", TPL.render(tpl, env), title="Example Gallery", article_class="wide")
+  write_page("/examples", TPL.render(tpl, env), title="Example Gallery")
 
 def main():
   examples = yaml.load(Path("examples/examples.yaml").read_text())

@@ -81,6 +81,10 @@ section {
   margin-bottom: 2em;
 }
 
+h2 + section {
+  border-top: none;
+}
+
 hr {
   border:none;
   border-top: 1px solid #222;
@@ -272,10 +276,6 @@ article {
   flex-direction: column;
 }
 
-article.wide {
-  max-width: 1200px;
-}
-
 #documentation {
   color: #000;
   background: #fff;
@@ -409,6 +409,10 @@ code strong {
   color: #000;
 }
 
+#documentation h3 a.link code {
+  color: #04f;
+}
+
 pre code {
   padding: 10px 15px;
   display: block;
@@ -490,15 +494,6 @@ table.invisible tr, table.invisible td {
   box-shadow: 0 0 2px rgba(0, 0, 0, .2);
 }
 
-#documentation .info_box > .example {
-  border: 1px solid #f6f6f6;
-  padding: .3em;
-}
-
-#documentation .info_box > .example img {
-  display: block;
-}
-
 #documentation .info_box code strong {
   font-size: 110%;
 }
@@ -560,16 +555,6 @@ table.invisible tr, table.invisible td {
   border-bottom: 1px solid #eee;
 }
 
-#documentation .example_grid {
-  display:grid;
-  grid-template-columns: 1fr 1fr;
-  grid-column-gap: 4em;
-}
-
-#documentation .example_grid img {
-  max-height: 20em;
-}
-
 #documentation .picto {
   width: 1.4em;
   display: inline-block;
@@ -577,4 +562,8 @@ table.invisible tr, table.invisible td {
 
 #documentation .color_legend {
   margin-right: .4em;
+}
+
+#documentation .example {
+  margin-top: 1em;
 }
