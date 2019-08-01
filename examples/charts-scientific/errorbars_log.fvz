@@ -1,0 +1,16 @@
+(set width 2000px)
+(set height 600px)
+(set dpi 200)
+(set font "Latin Modern Roman")
+
+(plot
+  limit-y (0 1000)
+  limit-x (0 1000)
+  scale-y (logarithmic)
+  errorbars (
+      data-x (csv "tests/testdata/errorbars.csv" "x")
+      data-y-low (csv "tests/testdata/errorbars.csv" "y_min")
+      data-y-high (csv "tests/testdata/errorbars.csv" "y_max"))
+  points (
+      data-x (csv "tests/testdata/errorbars.csv" "x")
+      data-y (csv "tests/testdata/errorbars.csv" "y")))

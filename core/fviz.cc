@@ -25,6 +25,7 @@
 #include "elements/plot/areas.h"
 #include "elements/plot/axis.h"
 #include "elements/plot/bars.h"
+#include "elements/plot/errorbars.h"
 #include "elements/plot/grid.h"
 #include "elements/plot/labels.h"
 #include "elements/plot/lines.h"
@@ -58,6 +59,7 @@ fviz_t* fviz_init() {
   element_bind(elems, "plot/areas", bind(elements::plot::areas::build, _1, _2, _3));
   element_bind(elems, "plot/axis", bind(elements::plot::axis::build, _1, _2, _3));
   element_bind(elems, "plot/bars", bind(elements::plot::bars::build, _1, _2, _3));
+  element_bind(elems, "plot/errorbars", bind(elements::plot::errorbars::build, _1, _2, _3));
   element_bind(elems, "plot/grid", bind(elements::plot::grid::build, _1, _2, _3));
   element_bind(elems, "plot/labels", bind(elements::plot::labels::build, _1, _2, _3));
   element_bind(elems, "plot/lines", bind(elements::plot::lines::build, _1, _2, _3));

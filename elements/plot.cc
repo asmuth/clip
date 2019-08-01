@@ -349,6 +349,7 @@ ReturnCode build(
     /* geom options */
     {"areas", bind(&configure_geom, "plot/areas", _1, &geoms, &x, &y)},
     {"bars", bind(&configure_geom, "plot/bars", _1, &geoms, &x, &y)},
+    {"errorbars", bind(&configure_geom, "plot/errorbars", _1, &geoms, &x, &y)},
     {"lines", bind(&configure_geom, "plot/lines", _1, &geoms, &x, &y)},
     {"labels", bind(&configure_geom, "plot/labels", _1, &geoms, &x, &y)},
     {"points", bind(&configure_geom, "plot/points", _1, &geoms, &x, &y)},

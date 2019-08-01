@@ -9,6 +9,7 @@
   files:
     - file: charts-scientific/vectorfield
     - file: charts-scientific/line_markers
+    - file: charts-scientific/errorbars_log
 
 - section: Editorial Charts
   files:
