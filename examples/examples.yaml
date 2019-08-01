@@ -15,6 +15,7 @@
   files:
     - file: charts-basic/linechart_with_labels
     - file: charts-basic/chart_i18n
+    - file: charts-editorial/stacked_areas
     - file: charts-basic/barchart_horizontal
     - file: charts-basic/barchart_with_labels
 
