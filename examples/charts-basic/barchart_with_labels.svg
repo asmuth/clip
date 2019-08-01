@@ -24,8 +24,8 @@
   <text x="708.056290" y="123.860290" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">10.3°C</text>
   <text x="783.724159" y="159.401739" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">6.6°C</text>
   <text x="855.313902" y="176.692174" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">4.8°C</text>
-  <text x="60.133333" y="55.066667" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">London - Average Monthly Temperature</text>
-  <path fill="#aa4643" d="M51.7 50.0667 M40.7 50.0667 a5.5 5.5 0 1 0 11 0 a5.5 5.5 0 1 0 -11 0 "/>
+  <text x="54.266667" y="46.266667" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">London - Average Monthly Temperature</text>
+  <path fill="#aa4643" d="M45.8333 41.2667 M34.8333 41.2667 a5.5 5.5 0 1 0 11 0 a5.5 5.5 0 1 0 -11 0 "/>
   <path stroke-width="1.333333" stroke="#000000" fill="none" d="M14.6667 235.6 L945.333 235.6 "/>
   <path stroke-width="1.333333" stroke="#000000" fill="none" d="M86.2564 230.267 L86.2564 235.6 "/>
   <path stroke-width="1.333333" stroke="#000000" fill="none" d="M157.846 230.267 L157.846 235.6 "/>

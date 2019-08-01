@@ -8,16 +8,12 @@
   <path fill="#000000" d="M604 264.372 M596 264.372 a4 4 0 1 0 8 0 a4 4 0 1 0 -8 0 "/>
   <path fill="#000000" d="M896.667 222.67 M888.667 222.67 a4 4 0 1 0 8 0 a4 4 0 1 0 -8 0 "/>
   <path fill="#000000" d="M1189.33 226.504 M1181.33 226.504 a4 4 0 1 0 8 0 a4 4 0 1 0 -8 0 "/>
-  <path stroke-width="1.000000" stroke="#000000" fill="none" d="M880.78 379.467 L1170.67 379.467 "/>
-  <path stroke-width="1.000000" stroke="#000000" fill="none" d="M1170.67 379.467 L1170.67 420.933 "/>
-  <path stroke-width="1.000000" stroke="#000000" fill="none" d="M880.78 420.933 L1170.67 420.933 "/>
-  <path stroke-width="1.000000" stroke="#000000" fill="none" d="M880.78 379.467 L880.78 420.933 "/>
-  <text x="911.580208" y="405.200000" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">Series A</text>
-  <path fill="#cccccc" d="M903.147 400.2 M892.147 400.2 a5.5 5.5 0 1 0 11 0 a5.5 5.5 0 1 0 -11 0 "/>
-  <text x="999.954167" y="405.200000" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">Series B</text>
-  <path fill="#888888" d="M991.521 400.2 M980.521 400.2 a5.5 5.5 0 1 0 11 0 a5.5 5.5 0 1 0 -11 0 "/>
-  <text x="1089.140625" y="405.200000" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">Combined</text>
-  <path fill="#000000" d="M1080.71 400.2 M1069.71 400.2 a5.5 5.5 0 1 0 11 0 a5.5 5.5 0 1 0 -11 0 "/>
+  <text x="911.580208" y="414.000000" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">Series A</text>
+  <path fill="#cccccc" d="M903.147 409 M892.147 409 a5.5 5.5 0 1 0 11 0 a5.5 5.5 0 1 0 -11 0 "/>
+  <text x="1002.887500" y="414.000000" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">Series B</text>
+  <path fill="#888888" d="M994.454 409 M983.454 409 a5.5 5.5 0 1 0 11 0 a5.5 5.5 0 1 0 -11 0 "/>
+  <text x="1095.007292" y="414.000000" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">Combined</text>
+  <path fill="#000000" d="M1086.57 409 M1075.57 409 a5.5 5.5 0 1 0 11 0 a5.5 5.5 0 1 0 -11 0 "/>
   <path stroke-width="1.333333" stroke="#000000" fill="none" d="M14.6667 44.4 L1185.33 44.4 "/>
   <path stroke-width="1.333333" stroke="#000000" fill="none" d="M14.6667 44.4 L14.6667 49.7333 "/>
   <path stroke-width="1.333333" stroke="#000000" fill="none" d="M131.733 44.4 L131.733 49.7333 "/>

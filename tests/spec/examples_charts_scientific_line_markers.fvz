@@ -30,9 +30,6 @@
     color #eee
     tick-placement-y (none))
   legend-overlay (
-      border none
-      margin-top .5em
-      margin-left 1em
       item-flow on
       item (label "Series A" marker-shape (pentagon))
       item (label "Series B" marker-shape (square-bullet))))

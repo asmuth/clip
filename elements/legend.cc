@@ -476,11 +476,10 @@ ReturnCode build(
   /* inherit defaults */
   auto config = std::make_shared<LegendConfig>();
   config->item_row_padding = from_em(.3);
-  config->item_column_padding = from_em(1.2);
-  config->margins = std::array<Measure, 4>{from_em(1), from_em(1), from_em(1), from_em(1)};
-  config->padding = std::array<Measure, 4>{from_em(.8), from_em(1), from_em(.8), from_em(1)};
+  config->item_column_padding = from_em(1.4);
+  config->margins = std::array<Measure, 4>{from_em(.6), from_em(.6), from_em(.6), from_em(.6)};
+  config->padding = std::array<Measure, 4>{from_em(.6), from_em(1), from_em(.6), from_em(1)};
   for (size_t i = 0; i < 4; ++i) {
-    config->borders[i].line_width = from_pt(1);
     config->borders[i].color = env.foreground_color;
   }
 
