@@ -83,7 +83,7 @@ ggplot2 project.
 Example Gallery
 ---------------
 
-Below are more examples to show you what's possible. Each examples links to the
+Below are more examples to show you what's possible. Each example links to the
 source code that generated it. Even more examples can be found on the
 [Examples](https://fviz.org/examples) page.
 
