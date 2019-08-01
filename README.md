@@ -1,17 +1,31 @@
 fviz
 ====
 
-fviz is a text-based data visualization program. It generates custom charts,
-dashboards and other illustrations from simple expressions.
-
-You can run fviz from the command line, where it generates SVG, PNG and PDF
-output files. Additionally, you can embed it into your own application using the
-C API.
+fviz is a text-based data visualization program. It generates custom charts
+and other data-driven illustrations from simple expressions.
 
 <h4>
   <a href="https://fviz.org/examples">Examples</a> &middot;
   <a href="https://fviz.org">Documentation</a>
 </h4>
+
+
+Features
+--------
+
+**BETA:** Please note that fviz is pre-1.0 software under active development;
+It is usable, but things might generally still be a bit rough around the edges.
+To see what already works, have a look at the [Examples](...) page.
+
+- Supports most common chart types through a library of composable elements
+- All elements are highly customizable
+- High quality SVG output; suitable for web and print
+- Supports custom fonts and complex text shaping
+- Very simple command line interface and input syntax
+- Available as a standalone library that can be embedded into any application
+- Output files can be edited in vector graphic editors like inkscape
+- Supports the CSV, TSV and JSON input data formats
+- Licensed unter the Apache 2.0 license
 
 
 Example
@@ -87,24 +101,19 @@ Below are more examples to show you what's possible. Each example links to the
 source code that generated it. Even more examples can be found on the
 [Examples](https://fviz.org/examples) page.
 
-
 ---
-
 #### Example: [`examples/charts-basic/linechart_timeseries`](https://fviz.org/examples/charts-basic/linechart_timeseries)
 [![linechart_timeseries.svg](/examples/charts-basic/linechart_timeseries.svg)](https://fviz.org/examples/charts-basic/linechart_timeseries)
 
 ---
-
 #### Example: [`examples/charts-basic/barchart_groups`](https://fviz.org/examples/charts-basic/barchart_groups)
 [![barchart_groups.svg](/examples/charts-basic/barchart_groups.svg)](https://fviz.org/examples/charts-basic/barchart_groups)
 
 ---
-
 #### Example: [`examples/charts-basic/scatterplot_with_labels`](https://fviz.org/examples/charts-basic/scatterplot_with_labels)
 [![scatterplot_with_labels.svg](/examples/charts-basic/scatterplot_with_labels.svg)](https://fviz.org/examples/charts-basic/scatterplot_with_labels)
 
 ---
-
 #### Example: [`examples/charts-scientific/vectorfield`](https://fviz.org/examples/charts-scientific/vectorfield)
 [![vectorfield.svg](/examples/charts-scientific/vectorfield.svg)](https://fviz.org/examples/charts-scientific/vectorfield)
 
