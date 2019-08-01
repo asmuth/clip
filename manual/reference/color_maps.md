@@ -20,14 +20,14 @@ currently implemented mapping methods:
 
 Below you can see simple scatter plot that uses a red to blue color map to display a third
 data dimension. The full source for this example is at:
-[`examples/charts-basic/scatterplot_colors`](/examples/charts-basic/scatterplot_colors)
+[`examples/charts-scientific/scatterplot_colors`](/examples/charts-scientific/scatterplot_colors)
 
-[![scatterplot_colors.svg](/examples/charts-basic/scatterplot_colors.svg)](/examples/charts-basic/scatterplot_colors)
+[![scatterplot_colors.svg](/examples/charts-scientific/scatterplot_colors.svg)](/examples/charts-scientific/scatterplot_colors)
 
 The color map specification used in the example is:
 
-    ;; gradient from red to blue
-    color-map (gradient (0 #f00) (1.0 #00f))
+    ;; gradient from gray to black
+    color-map (gradient (0 #aaa) (1.0 #000))
 
 
 
