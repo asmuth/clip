@@ -67,11 +67,17 @@ double scale_translate(
     const ScaleConfig& domain,
     double value);
 
+double scale_translate_magnitude(
+    const ScaleConfig& domain,
+    double value);
+
 double scale_translate_categorical(
     const ScaleConfig& domain,
     size_t index);
 
 std::function<double (double)> scale_translate_fn(const ScaleConfig& domain);
+
+std::function<double (double)> scale_translate_magnitude_fn(const ScaleConfig& domain);
 
 double scale_untranslate(
     const ScaleConfig& domain,

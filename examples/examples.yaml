@@ -12,6 +12,10 @@
     - file: charts-basic/barchart_horizontal
     - file: charts-basic/barchart_with_labels
 
+- section: Scientific Charts
+  files:
+    - file: charts-scientific/vectorfield
+
 - section: Customization
   files:
     - file: charts-custom/multiple_y_axes

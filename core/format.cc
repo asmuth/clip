@@ -75,7 +75,8 @@ Formatter format_decimal_scientific(size_t precision) {
       return "0";
     }
 
-    auto e = int(log10(v));
+    auto s = v >= 0 ? 1 : -1;
+    auto e = int(log10(v / s));
     auto x = v / pow(10, e);
 
     std::stringstream sstream;

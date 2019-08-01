@@ -131,8 +131,31 @@ double scale_translate(
   return 0.0f;
 }
 
+double scale_translate_magnitude(
+    const ScaleConfig& domain,
+    double value) {
+  switch (domain.kind) {
+    case ScaleKind::LINEAR:
+    case ScaleKind::LOGARITHMIC: {
+      double min = scale_min(domain);
+      double max = scale_max(domain);
+      return value / (max - min);
+    }
+    case ScaleKind::CATEGORICAL:
+      return 1;
+    default:
+      return std::numeric_limits<double>::quiet_NaN();
+  }
+
+  return 0.0f;
+}
+
 std::function<double (double)> scale_translate_fn(const ScaleConfig& domain) {
   return bind(&scale_translate, domain, std::placeholders::_1);
+}
+
+std::function<double (double)> scale_translate_magnitude_fn(const ScaleConfig& domain) {
+  return bind(&scale_translate_magnitude, domain, std::placeholders::_1);
 }
 
 double  scale_untranslate_linear(const ScaleConfig& domain, double vt) {
