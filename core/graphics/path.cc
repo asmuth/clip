@@ -38,11 +38,27 @@ void Path::moveTo(double x, double y) {
   data_.emplace_back(std::move(d));
 }
 
+void Path::moveTo(const Point& p) {
+  PathData d;
+  d.command = PathCommand::MOVE_TO;
+  d.coefficients[0] = p.x;
+  d.coefficients[1] = p.y;
+  data_.emplace_back(std::move(d));
+}
+
 void Path::lineTo(double x, double y) {
   PathData d;
   d.command = PathCommand::LINE_TO;
   d.coefficients[0] = x;
   d.coefficients[1] = y;
+  data_.emplace_back(std::move(d));
+}
+
+void Path::lineTo(const Point& p) {
+  PathData d;
+  d.command = PathCommand::LINE_TO;
+  d.coefficients[0] = p.x;
+  d.coefficients[1] = p.y;
   data_.emplace_back(std::move(d));
 }
 

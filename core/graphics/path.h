@@ -16,6 +16,7 @@
 #include <stdlib.h>
 #include <stdint.h>
 #include <vector>
+#include "geometry.h"
 
 namespace fviz {
 
@@ -43,7 +44,9 @@ public:
   Path(const PathData* data, size_t size);
 
   void moveTo(double x, double y);
+  void moveTo(const Point& p);
   void lineTo(double x, double y);
+  void lineTo(const Point& p);
   void quadraticCurveTo(double cx, double cy, double x, double y);
   void cubicCurveTo(double c1x, double c1y, double c2x, double c2y, double x, double y);
   void arcTo(double cx, double cy, double r, double a1, double a2);

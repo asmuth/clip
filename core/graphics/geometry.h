@@ -26,6 +26,8 @@ struct Point {
   double y;
 };
 
+using vec2 = Point;
+
 struct Rectangle {
   Rectangle();
   Rectangle(double x, double y, double w, double h);
@@ -34,6 +36,12 @@ struct Rectangle {
   double w;
   double h;
 };
+
+double vec2_magnitude(const vec2& v);
+vec2 vec2_normalize(const vec2& v);
+vec2 vec2_add(const vec2& a, const vec2& b);
+vec2 vec2_sub(const vec2& a, const vec2& b);
+vec2 vec2_mul(const vec2& v, double s);
 
 std::ostream& operator <<(std::ostream& os, const Point& c);
 std::ostream& operator <<(std::ostream& os, const Rectangle& c);
