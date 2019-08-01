@@ -4,34 +4,24 @@ fviz
 fviz is a text-based data visualization program. It generates custom charts
 and other data-driven illustrations from simple expressions.
 
+You can run fviz from the command line, where it reads CSV input and produces SVG
+or PNG output files. Additionally, it is available as a standalone library that
+can be embedded into any application.
+
+**BETA:** Please note that fviz is pre-1.0 software under active development;
+It is usable, but things might generally still be a bit rough around the edges.
+To see what already works, have a look at the [Examples](https://fviz.org/examples) page.
+
 <h4>
   <a href="https://fviz.org/examples">Examples</a> &middot;
   <a href="https://fviz.org">Documentation</a>
 </h4>
 
 
-Features
---------
-
-**BETA:** Please note that fviz is pre-1.0 software under active development;
-It is usable, but things might generally still be a bit rough around the edges.
-To see what already works, have a look at the [Examples](...) page.
-
-- Supports most common chart types through a library of composable elements
-- All elements are highly customizable
-- High quality SVG output; suitable for web and print
-- Supports custom fonts and complex text shaping
-- Very simple command line interface and input syntax
-- Available as a standalone library that can be embedded into any application
-- Output files can be edited in vector graphic editors like inkscape
-- Supports the CSV, TSV and JSON input data formats
-- Licensed unter the Apache 2.0 license
-
-
 Example
 -------
 
-Being a highly visual tool, fviz is best explained by example. So here is a fviz
+Being a highly visual tool, fviz is best explained by example. So here is an input
 file that defines a simple scatterplot (`example_chart.fvz`). Note that this
 example is only intended to give you an idea of what the syntax looks like and to
 get you started quickly; for an in-depth description of all parameters, please refer
