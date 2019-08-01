@@ -291,6 +291,7 @@ ReturnCode build(
   ExprStorage grid_opts;
   std::vector<ExprStorage> grid_extra_opts;
   ExprStorage legend_overlay;
+  std::array<ExprStorage, 4> legend_margins;
 
   auto config_rc = expr_walk_map(expr_next(expr), {
     /* scale options */
@@ -358,6 +359,10 @@ ReturnCode build(
     /* grid & legend */
     {"grid", bind(&expr_to_copy, _1, &grid_opts)},
     {"legend-overlay", bind(&expr_to_copy, _1, &legend_overlay)},
+    {"legend-top", bind(&expr_to_copy, _1, &legend_margins[0])},
+    {"legend-right", bind(&expr_to_copy, _1, &legend_margins[1])},
+    {"legend-bottom", bind(&expr_to_copy, _1, &legend_margins[2])},
+    {"legend-left", bind(&expr_to_copy, _1, &legend_margins[3])},
 
     /* extra elements */
     {"body", bind(&element_build_list, env, _1, &config->body_elements)},
@@ -561,7 +566,6 @@ ReturnCode build(
     config->margin_elements[axis.position].emplace_back(elem);
   }
 
-
   /* build the chart (body) geom elements */
   geom_opts.emplace_back(expr_create_value("limit-x-min"));
   geom_opts.emplace_back(expr_clone(xmin.get()));
@@ -599,6 +603,23 @@ ReturnCode build(
     }
 
     config->body_elements.emplace_back(elem);
+  }
+
+  for (size_t i = 0; i < legend_margins.size(); ++i) {
+    if (!legend_margins[i]) {
+      continue;
+    }
+
+    auto elem_config = expr_build(
+        "legend",
+        expr_unwrap(std::move(legend_margins[i])));
+
+    ElementRef elem;
+    if (auto rc = element_build_macro(env, elem_config.get(), &elem); !rc) {
+      return rc;
+    }
+
+    config->margin_elements[i].emplace_back(elem);
   }
 
   /* return the layout element */
