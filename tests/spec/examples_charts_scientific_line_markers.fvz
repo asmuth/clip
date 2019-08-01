@@ -1,0 +1,38 @@
+(set width 2000px)
+(set height 600px)
+(set dpi 200)
+(set font "Latin Modern Roman")
+
+(plot
+  limit-y (-4 5)
+  limit-x (0 1000)
+  axis-x-label-format (scientific)
+  axis-x-label-placement (linear-interval 100 100 900)
+  lines (
+      data-x (100 200 300 400 500 600 700 800 900)
+      data-y (-1.2   -1.8   -1.3   -1.6   -1.5   -1.3   -1.8   -1.9   -2.0)
+      stroke 1pt)
+  points (
+      data-x (100 200 300 400 500 600 700 800 900)
+      data-y (-1.2   -1.8   -1.3   -1.6   -1.5   -1.3   -1.8   -1.9   -2.0)
+      marker-shape (pentagon)
+      marker-size 8pt)
+  lines (
+      data-x (100 200 300 400 500 600 700 800 900)
+      data-y (1.2   1.8   1.3   0.6   1.5   1.3   1.8   1.7   1.9)
+      stroke 1pt)
+  points (
+      data-x (100 200 300 400 500 600 700 800 900)
+      data-y (1.2   1.8   1.3   0.6   1.5   1.3   1.8   1.7   1.9)
+      marker-shape (square-bullet)
+      marker-size 8pt)
+  grid (
+    color #eee
+    tick-placement-y (none))
+  legend-overlay (
+      border none
+      margin-top .5em
+      margin-left 1em
+      item-flow on
+      item (label "Series A" marker-shape (pentagon))
+      item (label "Series B" marker-shape (square-bullet))))

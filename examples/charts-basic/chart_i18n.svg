@@ -39,12 +39,12 @@
   <path fill="#4572a7" d="M717.786 36.5896 M712.453 36.5896 a2.66667 2.66667 0 1 0 5.33333 0 a2.66667 2.66667 0 1 0 -5.33333 0 "/>
   <path fill="#4572a7" d="M783.253 52.2489 M777.92 52.2489 a2.66667 2.66667 0 1 0 5.33333 0 a2.66667 2.66667 0 1 0 -5.33333 0 "/>
   <path fill="#4572a7" d="M848.72 64.7763 M843.387 64.7763 a2.66667 2.66667 0 1 0 5.33333 0 a2.66667 2.66667 0 1 0 -5.33333 0 "/>
-  <text x="392.150521" y="131.533333" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">Москва</text>
-  <path fill="#89a54e" d="M383.717 126.533 M372.717 126.533 a5.5 5.5 0 1 0 11 0 a5.5 5.5 0 1 0 -11 0 "/>
+  <text x="389.217187" y="131.533333" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">Москва</text>
+  <path fill="#89a54e" d="M380.784 126.533 M369.784 126.533 a5.5 5.5 0 1 0 11 0 a5.5 5.5 0 1 0 -11 0 "/>
   <text x="473.044271" y="131.533333" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">תל אביב</text>
   <path fill="#4572a7" d="M464.611 126.533 M453.611 126.533 a5.5 5.5 0 1 0 11 0 a5.5 5.5 0 1 0 -11 0 "/>
-  <text x="551.938021" y="132.533333" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">北京市</text>
-  <path fill="#aa4643" d="M543.505 126.533 M532.505 126.533 a5.5 5.5 0 1 0 11 0 a5.5 5.5 0 1 0 -11 0 "/>
+  <text x="554.871354" y="132.533333" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">北京市</text>
+  <path fill="#aa4643" d="M546.438 126.533 M535.438 126.533 a5.5 5.5 0 1 0 11 0 a5.5 5.5 0 1 0 -11 0 "/>
   <path stroke-width="1.333333" stroke="#000000" fill="none" d="M86.6375 155.6 L885.333 155.6 "/>
   <path stroke-width="1.333333" stroke="#000000" fill="none" d="M125.918 150.267 L125.918 155.6 "/>
   <path stroke-width="1.333333" stroke="#000000" fill="none" d="M191.384 150.267 L191.384 155.6 "/>
