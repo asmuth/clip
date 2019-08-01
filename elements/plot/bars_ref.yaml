@@ -1,5 +1,5 @@
 name: plot/bars
-example: charts-basic/barchart_with_labels
+example: charts-editorial/barchart_with_labels
 desc: |
   The `plot/bars` element is used to create bar charts.
 

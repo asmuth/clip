@@ -129,18 +129,23 @@ source code that generated it. Even more examples can be found on the
 
 ---
 
-#### Example: [`examples/charts-basic/linechart_with_labels`](https://fviz.org/examples/charts-basic/linechart_with_labels)
-[![linechart_with_labels.svg](/examples/charts-basic/linechart_with_labels.svg)](https://fviz.org/examples/charts-basic/linechart_with_labels)
+#### Example: [`examples/charts-editorial/linechart_with_labels`](https://fviz.org/examples/charts-editorial/linechart_with_labels)
+[![linechart_with_labels.svg](/examples/charts-editorial/linechart_with_labels.svg)](https://fviz.org/examples/charts-editorial/linechart_with_labels)
 
 ---
 
-#### Example: [`examples/charts-basic/chart_i18n`](https://fviz.org/examples/charts-basic/chart_i18n)
-[![chart_i18n.svg](/examples/charts-basic/chart_i18n.svg)](https://fviz.org/examples/charts-basic/chart_i18n)
+#### Example: [`examples/charts-editorial/chart_i18n`](https://fviz.org/examples/charts-editorial/chart_i18n)
+[![chart_i18n.svg](/examples/charts-editorial/chart_i18n.svg)](https://fviz.org/examples/charts-editorial/chart_i18n)
 
 ---
 
-#### Example: [`examples/charts-basic/barchart_horizontal`](https://fviz.org/examples/charts-basic/barchart_horizontal)
-[![barchart_horizontal.svg](/examples/charts-basic/barchart_horizontal.svg)](https://fviz.org/examples/charts-basic/barchart_horizontal)
+#### Example: [`examples/charts-editorial/stacked_areas`](https://fviz.org/examples/charts-editorial/stacked_areas)
+[![stacked_areas.svg](/examples/charts-editorial/stacked_areas.svg)](https://fviz.org/examples/charts-editorial/stacked_areas)
+
+---
+
+#### Example: [`examples/charts-editorial/barchart_horizontal`](https://fviz.org/examples/charts-editorial/barchart_horizontal)
+[![barchart_horizontal.svg](/examples/charts-editorial/barchart_horizontal.svg)](https://fviz.org/examples/charts-editorial/barchart_horizontal)
 
 ---
 
