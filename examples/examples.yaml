@@ -4,12 +4,16 @@
     - file: charts-basic/linechart_timeseries
     - file: charts-basic/barchart_groups
     - file: charts-basic/scatterplot_with_labels
+    - file: charts-basic/custom_font
 
 - section: Scientific Charts
   files:
     - file: charts-scientific/vectorfield
     - file: charts-scientific/line_markers
     - file: charts-scientific/errorbars_log
+    - file: charts-scientific/multiple_y_axes
+    - file: charts-scientific/scatterplot_colors
+    - file: charts-scientific/barchart_ranges
 
 - section: Editorial Charts
   files:
@@ -18,16 +22,4 @@
     - file: charts-editorial/stacked_areas
     - file: charts-editorial/barchart_horizontal
     - file: charts-editorial/barchart_with_labels
-
-- section: Customization
-  files:
-    - file: charts-custom/multiple_y_axes
-    - file: charts-custom/logarithmic_scale
-    - file: charts-custom/custom_font
-
-- section: Other Charts
-  files:
-    - file: charts-basic/scatterplot_colors
-    - file: charts-basic/streamgraph
-    - file: charts-basic/barchart_ranges
-    - file: charts-custom/irregular_data
+    - file: charts-editorial/streamgraph

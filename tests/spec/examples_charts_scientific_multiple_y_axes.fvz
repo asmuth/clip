@@ -1,6 +1,10 @@
-(set height 240px)
+(set width 2000px)
+(set height 500px)
+(set dpi 200)
+(set font "Latin Modern Roman")
 
 (plot
+    axes (top bottom)
     axis-left (
         limit (0 100)
         label-placement (linear-interval 10 10 50))
@@ -8,13 +12,16 @@
         limit (0 1)
         label-placement (linear-interval 0.1 0.5 1.0))
     body (
+      (plot/grid
+          color #eee
+          tick-placement-x (none))
       (plot/lines
           data-x (csv "tests/testdata/measurement2.csv" time)
           data-y (csv "tests/testdata/measurement2.csv" value3)
-          limit-y (-2 5)
-          color 1)
+          limit-y (-4 10)
+          stroke 1pt)
       (plot/lines
           data-x (csv "tests/testdata/measurement2.csv" time)
           data-y (csv "tests/testdata/measurement2.csv" value3)
-          limit-y (-7 3)
-          color 2)))
+          limit-y (-16 6)
+          stroke 1pt)))

@@ -114,43 +114,48 @@ source code that generated it. Even more examples can be found on the
 [![scatterplot_with_labels.svg](/examples/charts-basic/scatterplot_with_labels.svg)](https://fviz.org/examples/charts-basic/scatterplot_with_labels)
 
 ---
+#### Example: [`examples/charts-basic/custom_font`](https://fviz.org/examples/charts-basic/custom_font)
+[![custom_font.svg](/examples/charts-basic/custom_font.svg)](https://fviz.org/examples/charts-basic/custom_font)
+
+---
 #### Example: [`examples/charts-scientific/vectorfield`](https://fviz.org/examples/charts-scientific/vectorfield)
 [![vectorfield.svg](/examples/charts-scientific/vectorfield.svg)](https://fviz.org/examples/charts-scientific/vectorfield)
 
 ---
-
 #### Example: [`examples/charts-scientific/line_markers`](https://fviz.org/examples/charts-scientific/line_markers)
 [![line_markers.svg](/examples/charts-scientific/line_markers.svg)](https://fviz.org/examples/charts-scientific/line_markers)
 
 ---
-
 #### Example: [`examples/charts-scientific/errorbars_log`](https://fviz.org/examples/charts-scientific/errorbars_log)
 [![errorbars_log.svg](/examples/charts-scientific/errorbars_log.svg)](https://fviz.org/examples/charts-scientific/errorbars_log)
 
 ---
+#### Example: [`examples/charts-scientific/multiple_y_axes`](https://fviz.org/examples/charts-scientific/multiple_y_axes)
+[![multiple_y_axes.svg](/examples/charts-scientific/multiple_y_axes.svg)](https://fviz.org/examples/charts-scientific/multiple_y_axes)
 
+---
+#### Example: [`examples/charts-scientific/scatterplot_colors`](https://fviz.org/examples/charts-scientific/scatterplot_colors)
+[![scatterplot_colors.svg](/examples/charts-scientific/scatterplot_colors.svg)](https://fviz.org/examples/charts-scientific/scatterplot_colors)
+
+---
+#### Example: [`examples/charts-scientific/barchart_ranges`](https://fviz.org/examples/charts-scientific/barchart_ranges)
+[![barchart_ranges.svg](/examples/charts-scientific/barchart_ranges.svg)](https://fviz.org/examples/charts-scientific/barchart_ranges)
+
+---
 #### Example: [`examples/charts-editorial/linechart_with_labels`](https://fviz.org/examples/charts-editorial/linechart_with_labels)
 [![linechart_with_labels.svg](/examples/charts-editorial/linechart_with_labels.svg)](https://fviz.org/examples/charts-editorial/linechart_with_labels)
 
 ---
-
 #### Example: [`examples/charts-editorial/chart_i18n`](https://fviz.org/examples/charts-editorial/chart_i18n)
 [![chart_i18n.svg](/examples/charts-editorial/chart_i18n.svg)](https://fviz.org/examples/charts-editorial/chart_i18n)
 
 ---
-
 #### Example: [`examples/charts-editorial/stacked_areas`](https://fviz.org/examples/charts-editorial/stacked_areas)
 [![stacked_areas.svg](/examples/charts-editorial/stacked_areas.svg)](https://fviz.org/examples/charts-editorial/stacked_areas)
 
 ---
-
 #### Example: [`examples/charts-editorial/barchart_horizontal`](https://fviz.org/examples/charts-editorial/barchart_horizontal)
 [![barchart_horizontal.svg](/examples/charts-editorial/barchart_horizontal.svg)](https://fviz.org/examples/charts-editorial/barchart_horizontal)
-
----
-
-#### Example: [`examples/charts-custom/custom_font`](https://fviz.org/examples/charts-custom/custom_font)
-[![custom_font.svg](/examples/charts-custom/custom_font.svg)](https://fviz.org/examples/charts-custom/custom_font)
 
 
 License

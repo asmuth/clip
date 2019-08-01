@@ -1,26 +1,23 @@
-(set height 300px)
+(set height 240px)
 (set width 960px)
 
 (plot
-    axes (top right bottom left)
-    limit-x (0.5 6.5)
+    axes (right bottom left)
+    scale-x (categorical (A B C D E F))
     limit-y (0 80)
-    axis-x-label-placement (linear-interval 1 1 6)
-    axis-y-label-placement (linear-interval 10 -20 70)
+    axis-y-label-placement (linear-interval 10 10 70)
     bars (
-      data-x (csv "tests/testdata/bardata.csv" var0)
+      data-x (csv "tests/testdata/bardata.csv" var3)
       data-y (csv "tests/testdata/bardata.csv" var1)
       bar-width (1em)
       bar-offset (-.8em)
       color #444)
     bars (
-      data-x (csv "tests/testdata/bardata.csv" var0)
+      data-x (csv "tests/testdata/bardata.csv" var3)
       data-y (csv "tests/testdata/bardata.csv" var2)
       bar-width (1em)
       bar-offset (.8em)
       color #999)
     border none
     background #eee
-    grid (
-      color #fff
-      tick-placement-x (linear-interval 1 1.5 5.5)))
+    grid (color #fff))

@@ -1,0 +1,38 @@
+(set width 2000px)
+(set height 540px)
+(set dpi 200)
+(set font "Latin Modern Roman")
+
+(plot
+    axes (right bottom left)
+    scale-x (categorical (A B C D E F))
+    limit-y (-10 70)
+    axis-y-label-placement (linear-interval 10 0 60)
+    bars (
+      data-x (csv "tests/testdata/bardata.csv" var3)
+      data-y (csv "tests/testdata/bardata.csv" var1)
+      data-y-low (csv "tests/testdata/bardata.csv" var2)
+      bar-width (1em)
+      bar-offset (-.8em)
+      color #999)
+    bars (
+      data-x (csv "tests/testdata/bardata.csv" var3)
+      data-y (csv "tests/testdata/bardata.csv" var4)
+      data-y-low (csv "tests/testdata/bardata.csv" var5)
+      bar-width (1em)
+      bar-offset (.8em)
+      color #ccc)
+    grid (
+      color #ccc
+      tick-placement-x (categorical-bounds)
+      tick-placement-y (none))
+    legend-top (
+      position (top center)
+      item-flow on
+      margin 0
+      padding-bottom 1em
+      item (label "Series A" color #999)
+      item (label "Series B" color #ccc))
+    axis-top (
+      label-placement (none))
+    margin-top 0)
