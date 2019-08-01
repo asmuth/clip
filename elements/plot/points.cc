@@ -35,7 +35,7 @@ using namespace std::placeholders;
 namespace fviz::elements::plot::points {
 
 static const double kDefaultPointSizePT = 4;
-static const double kDefaultLabelPaddingEM = 0.4;
+static const double kDefaultLabelPaddingEM = 0.2;
 
 struct PlotPointsConfig {
   std::vector<Measure> x;
