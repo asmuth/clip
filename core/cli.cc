@@ -14,6 +14,9 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <iostream>
+#include <iterator>
+#include <string>
+
 #include "config.h"
 #include "utils/flagparser.h"
 #include "return_code.h"
@@ -150,19 +153,25 @@ int main(int argc, const char** argv) {
     return EXIT_FAILURE;
   }
 
+  /* read the input file */
+  std::string input;
+  if (flag_stdin) {
+    std::istreambuf_iterator<char> begin(std::cin), end;
+    input = std::string(begin, end);
+  } else {
+    if (auto rc = read_file(flag_in, &input); !rc) {
+      fmt::print(
+          stderr,
+          "ERROR: unable to read input file ({}): {}\n",
+          flag_in,
+          rc.message);
+    }
+  }
+
   /* run fviz */
   Environment env;
   env.font_defaults = flag_font_defaults;
   env.font_load = flag_font_load;
-
-  std::string input;
-  if (auto rc = read_file(flag_in, &input); !rc) {
-    fmt::print(
-        stderr,
-        "ERROR: unable to read input file ({}): {}\n",
-        flag_in,
-        rc.message);
-  }
 
   std::string output_buffer;
   if (auto rc = fviz::eval(env, input, output_format, &output_buffer); !rc) {
