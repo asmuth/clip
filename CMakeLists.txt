@@ -113,7 +113,9 @@ foreach(unit_test_path ${unit_test_files})
 
   add_test(
       NAME test-unit-${unit_test_name}
-      COMMAND ${CMAKE_CURRENT_BINARY_DIR}/${unit_test_name}
+      COMMAND ${CMAKE_COMMAND} -E env
+          FVIZ_TEST_SRCDIR=${CMAKE_SOURCE_DIR}
+          ${CMAKE_CURRENT_BINARY_DIR}/${unit_test_name}
       DEPENDS fviz-cli test-prepare)
 
   set_tests_properties(

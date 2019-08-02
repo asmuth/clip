@@ -110,8 +110,7 @@ ReturnCode data_load_strings_csv(
   }
 
   auto data_csv = CSVData{};
-  CSVParserConfig parser_opts;
-  if (auto rc = parseCSV(data_str, parser_opts, &data_csv); !rc) {
+  if (auto rc = csv_parse(data_str, &data_csv); !rc) {
     return rc;
   }
 
