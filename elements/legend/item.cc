@@ -28,6 +28,7 @@
 #include "graphics/layout.h"
 
 using namespace std::placeholders;
+using std::bind;
 
 namespace fviz::elements::legend::item {
 

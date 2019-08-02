@@ -25,6 +25,7 @@
 #include FT_GLYPH_H
 
 using namespace std::placeholders;
+using std::bind;
 
 namespace fviz {
 
@@ -83,7 +84,6 @@ ReturnCode font_get_glyph_path(
 
   auto glyph_outline = &((FT_OutlineGlyph) glyph)->outline;
 
-
   // retrieve the glyph outline data from freetype
   enum class GlyphPointType { MOVE, SIMPLE, CONTROL };
 
@@ -123,6 +123,8 @@ ReturnCode font_get_glyph_path(
       glyph_point_tags.push_back(GlyphPointType::SIMPLE);
     }
   }
+
+  FT_Done_Glyph(glyph);
 
   // convert the glyph outline to a path object
   *path = Path{};

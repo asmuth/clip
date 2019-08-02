@@ -25,7 +25,9 @@ find_package(PNG)
   find_path(FRIBIDI_INCLUDE_DIR NAMES fribidi/fribidi.h)
   find_library(FRIBIDI_LIBRARY NAMES fribidi)
 
-  if(NOT FRIBIDI_FOUND)
+  if(FRIBIDI_FOUND)
+    set(FRIBIDI_LIBRARIES "${FRIBIDI_LIBRARY}")
+  else()
     message(WARNING "libfribidi not found; disabling BiDI support")
     set(FVIZ_TEXT_ENABLE_BIDI OFF)
   endif()
@@ -35,8 +37,6 @@ find_package(PNG)
 # Compile Flags
 # -----------------------------------------------------------------------------
 set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Werror")
-
 include_directories(${CAIRO_INCLUDE_DIRS} ${FREETYPE_INCLUDE_DIRS} ${HARFBUZZ_INCLUDE_DIRS} ${PNG_INCLUDE_DIRS}})
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/core)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/core/utils)
@@ -79,10 +79,11 @@ file(GLOB source_files "core/*.cc" "core/**/*.cc" "elements/*.cc" "elements/**/*
 list(REMOVE_ITEM source_files "${CMAKE_SOURCE_DIR}/core/cli.cc")
 add_library(fviz OBJECT ${source_files})
 set_property(TARGET fviz PROPERTY POSITION_INDEPENDENT_CODE 1)
-set(fviz_LDFLAGS ${CAIRO_LIBRARIES} ${FREETYPE_LIBRARIES} ${HARFBUZZ_LIBRARIES} ${HARFBUZZ_ICU_LIBRARIES} ${PNG_LIBRARIES} ${FONTCONFIG_LIBRARIES} ${FRIBIDI_LIBRARIES} fmt)
+set(fviz_LDFLAGS ${CAIRO_LIBRARIES} ${FREETYPE_LIBRARIES} ${HARFBUZZ_LIBRARIES} ${HARFBUZZ_ICU_LIBRARIES} ${PNG_LIBRARIES} ${FONTCONFIG_LIBRARIES} ${FRIBIDI_LIBRARIES} m)
 add_library(fviz-lib-a STATIC $<TARGET_OBJECTS:fviz>)
 set_target_properties(fviz-lib-a PROPERTIES OUTPUT_NAME fviz)
 add_library(fviz-lib-so SHARED $<TARGET_OBJECTS:fviz>)
+target_link_libraries(fviz-lib-so ${fviz_LDFLAGS})
 set_target_properties(fviz-lib-so PROPERTIES OUTPUT_NAME fviz)
 set_target_properties(fviz-lib-so PROPERTIES PUBLIC_HEADER "core/api.h")
 

@@ -24,6 +24,7 @@
 #include "sexpr_util.h"
 
 using namespace std::placeholders;
+using std::bind;
 
 namespace fviz::elements::plot::grid {
 

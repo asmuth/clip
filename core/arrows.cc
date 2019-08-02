@@ -12,8 +12,10 @@
  * limitations under the License.
  */
 #include "arrows.h"
+#include <functional>
 
 using namespace std::placeholders;
+using std::bind;
 
 namespace fviz {
 

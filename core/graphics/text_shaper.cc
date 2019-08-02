@@ -11,16 +11,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#include <graphics/text_shaper.h>
-#include <iostream>
+#include "graphics/text_shaper.h"
 
+#include <iostream>
+#include <functional>
 #include <ft2build.h>
 #include FT_FREETYPE_H
 #include <harfbuzz/hb.h>
 #include <harfbuzz/hb-ft.h>
-#include <harfbuzz/hb-icu.h>
 
-using std::placeholders::_1;
+using namespace std::placeholders;
+using std::bind;
 
 namespace fviz {
 namespace text {

@@ -27,6 +27,7 @@
 #include <functional>
 
 using namespace std::placeholders;
+using std::bind;
 
 namespace fviz::elements::plot {
 

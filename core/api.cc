@@ -61,12 +61,12 @@ int fviz_set_output_format(fviz_t* ctx, const char* path, const char* fmt) {
   std::string format = fmt;
 
   if (format == "svg") {
-    ctx->format == OutputFormat::SVG;
+    ctx->format = OutputFormat::SVG;
     return OK;
   }
 
   if (format == "png") {
-    ctx->format == OutputFormat::PNG;
+    ctx->format = OutputFormat::PNG;
     return OK;
   }
 

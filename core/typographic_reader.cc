@@ -15,7 +15,10 @@
 #include "sexpr_conv.h"
 #include "sexpr_util.h"
 
+#include <functional>
+
 using namespace std::placeholders;
+using std::bind;
 
 namespace fviz {
 

@@ -27,28 +27,28 @@ ReturnCode layer_bind_img(
   auto raster = std::make_shared<Rasterizer>(width, height, dpi);
   raster->clear(background_color);
 
-  layer->reset(new Layer {
-    .width = width,
-    .height = height,
-    .dpi = dpi,
-    .font_size = font_size,
-    .apply = [submit, raster] (auto op) {
-      return std::visit([submit, raster] (auto&& op) {
-        using T = std::decay_t<decltype(op)>;
-        if constexpr (std::is_same_v<T, layer_ops::BrushStrokeOp>)
-          return raster->strokePath(op);
-        if constexpr (std::is_same_v<T, layer_ops::BrushFillOp>)
-          return raster->fillPath(op);
-        if constexpr (std::is_same_v<T, layer_ops::TextSpanOp>)
-          return raster->drawText(op);
-        if constexpr (std::is_same_v<T, layer_ops::SubmitOp>)
-          return submit(raster->data(), raster->size());
-        else
-          return ERROR;
-      }, op);
-    },
-  });
+  LayerRef l(new Layer());
+  l->width = width,
+  l->height = height,
+  l->dpi = dpi,
+  l->font_size = font_size,
+  l->apply = [submit, raster] (auto op) {
+    return std::visit([submit, raster] (auto&& op) {
+      using T = std::decay_t<decltype(op)>;
+      if constexpr (std::is_same_v<T, layer_ops::BrushStrokeOp>)
+        return raster->strokePath(op);
+      if constexpr (std::is_same_v<T, layer_ops::BrushFillOp>)
+        return raster->fillPath(op);
+      if constexpr (std::is_same_v<T, layer_ops::TextSpanOp>)
+        return raster->drawText(op);
+      if constexpr (std::is_same_v<T, layer_ops::SubmitOp>)
+        return submit(raster->data(), raster->size());
+      else
+        return ERROR;
+    }, op);
+  };
 
+  *layer = std::move(l);
   return OK;
 }
 
@@ -63,28 +63,28 @@ ReturnCode layer_bind_png(
   auto raster = std::make_shared<Rasterizer>(width, height, dpi);
   raster->clear(background_color);
 
-  layer->reset(new Layer {
-    .width = width,
-    .height = height,
-    .dpi = dpi,
-    .font_size = font_size,
-    .apply = [submit, raster] (auto op) {
-      return std::visit([submit, raster] (auto&& op) {
-        using T = std::decay_t<decltype(op)>;
-        if constexpr (std::is_same_v<T, layer_ops::BrushStrokeOp>)
-          return raster->strokePath(op);
-        if constexpr (std::is_same_v<T, layer_ops::BrushFillOp>)
-          return raster->fillPath(op);
-        if constexpr (std::is_same_v<T, layer_ops::TextSpanOp>)
-          return raster->drawText(op);
-        if constexpr (std::is_same_v<T, layer_ops::SubmitOp>)
-          return submit(raster->to_png());
-        else
-          return ERROR;
-      }, op);
-    },
-  });
+  LayerRef l(new Layer());
+  l->width = width,
+  l->height = height,
+  l->dpi = dpi,
+  l->font_size = font_size,
+  l->apply = [submit, raster] (auto op) {
+    return std::visit([submit, raster] (auto&& op) {
+      using T = std::decay_t<decltype(op)>;
+      if constexpr (std::is_same_v<T, layer_ops::BrushStrokeOp>)
+        return raster->strokePath(op);
+      if constexpr (std::is_same_v<T, layer_ops::BrushFillOp>)
+        return raster->fillPath(op);
+      if constexpr (std::is_same_v<T, layer_ops::TextSpanOp>)
+        return raster->drawText(op);
+      if constexpr (std::is_same_v<T, layer_ops::SubmitOp>)
+        return submit(raster->to_png());
+      else
+        return ERROR;
+    }, op);
+  };
 
+  *layer = std::move(l);
   return OK;
 }
 

@@ -14,9 +14,11 @@
 #include "sexpr.h"
 
 #include <assert.h>
+#include <functional>
 #include <sstream>
 
 using namespace std::placeholders;
+using std::bind;
 
 namespace fviz {
 

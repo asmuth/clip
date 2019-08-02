@@ -23,7 +23,6 @@
 
 #include <harfbuzz/hb.h>
 #include <harfbuzz/hb-ft.h>
-#include <harfbuzz/hb-icu.h>
 
 #include "text.h"
 #include "brush.h"

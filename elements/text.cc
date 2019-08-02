@@ -17,6 +17,7 @@
 #include "text.h"
 
 using namespace std::placeholders;
+using std::bind;
 
 namespace fviz::elements::text {
 

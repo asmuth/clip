@@ -257,28 +257,29 @@ ReturnCode layer_bind_svg(
       << "/>"
       << "\n";
 
-  layer->reset(new Layer{
-    .width = svg->width = width,
-    .height = svg->height = height,
-    .dpi = dpi,
-    .font_size = font_size,
-    .apply = [dpi, svg, submit] (const auto& op) {
-      return std::visit([dpi, svg, submit] (auto&& op) {
-        using T = std::decay_t<decltype(op)>;
-        if constexpr (std::is_same_v<T, layer_ops::BrushStrokeOp>)
-          return svg_stroke_path(op, svg);
-        if constexpr (std::is_same_v<T, layer_ops::BrushFillOp>)
-          return svg_fill_path(op, svg);
-        if constexpr (std::is_same_v<T, layer_ops::TextSpanOp>)
-          return svg_text_span(op, dpi, svg);
-        if constexpr (std::is_same_v<T, layer_ops::SubmitOp>)
-          return submit(svg->to_svg());
-        else
-          return ERROR;
-      }, op);
-    },
-  });
 
+  LayerRef l(new Layer());
+  l->width = svg->width = width,
+  l->height = svg->height = height,
+  l->dpi = dpi,
+  l->font_size = font_size,
+  l->apply = [dpi, svg, submit] (const auto& op) {
+    return std::visit([dpi, svg, submit] (auto&& op) {
+      using T = std::decay_t<decltype(op)>;
+      if constexpr (std::is_same_v<T, layer_ops::BrushStrokeOp>)
+        return svg_stroke_path(op, svg);
+      if constexpr (std::is_same_v<T, layer_ops::BrushFillOp>)
+        return svg_fill_path(op, svg);
+      if constexpr (std::is_same_v<T, layer_ops::TextSpanOp>)
+        return svg_text_span(op, dpi, svg);
+      if constexpr (std::is_same_v<T, layer_ops::SubmitOp>)
+        return submit(svg->to_svg());
+      else
+        return ERROR;
+    }, op);
+  };
+
+  *layer = std::move(l);
   return OK;
 }
 

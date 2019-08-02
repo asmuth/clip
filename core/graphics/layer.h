@@ -42,14 +42,14 @@ namespace fviz {
  * `layer_submit` to make the results visible.
  */
 struct Layer {
-  const double width;
-  const double height;
+  double width;
+  double height;
   double dpi;
   FontInfo font;
   Measure font_size;
   std::string text_default_script;
   std::string text_default_language;
-  const std::function<Status (const layer_ops::Op&)> apply;
+  std::function<Status (const layer_ops::Op&)> apply;
 };
 
 using LayerRef = std::unique_ptr<Layer>;
