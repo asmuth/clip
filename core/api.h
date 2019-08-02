@@ -21,6 +21,8 @@
 extern "C" {
 #endif
 
+#define FVIZ_API __attribute__((visibility ("default")))
+
 typedef struct fviz_s fviz_t;
 
 /**
@@ -28,17 +30,20 @@ typedef struct fviz_s fviz_t;
  *
  * @returns: A fviz context that must be free'd using `fviz_destroy`
  */
+FVIZ_API
 fviz_t* fviz_init();
 
 /**
  * Free a fviz context
  */
+FVIZ_API
 void fviz_destroy(fviz_t* ctx);
 
 /**
  * Retrieve the last error message. The returned pointer is valid until the next
  * `fviz_*` method is called on the context.
  */
+FVIZ_API
 const char* fviz_get_error(const fviz_t* ctx);
 
 /**
@@ -46,16 +51,19 @@ const char* fviz_get_error(const fviz_t* ctx);
  *
  * @returns: One (1) on success and zero (0) if an error has occured
  */
+FVIZ_API
 int fviz_eval(fviz_t* ctx, const char* expr);
 
 /**
  * Retrieve the result. Pointer is valid until the next call to fviz_eval
  */
+FVIZ_API
 void fviz_get_result(fviz_t* ctx, const void** data, size_t* data_len);
 
 /**
  * Set the output format
  */
+FVIZ_API
 void fviz_set_output_format(fviz_t* ctx, const char* format);
 
 

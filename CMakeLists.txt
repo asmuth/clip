@@ -79,19 +79,19 @@ file(GLOB source_files "core/*.cc" "core/**/*.cc" "elements/*.cc" "elements/**/*
 list(REMOVE_ITEM source_files "${CMAKE_SOURCE_DIR}/core/cli.cc")
 add_library(fviz OBJECT ${source_files})
 set_property(TARGET fviz PROPERTY POSITION_INDEPENDENT_CODE 1)
-set(fviz_LDFLAGS ${CAIRO_LIBRARIES} ${FREETYPE_LIBRARIES} ${HARFBUZZ_LIBRARIES} ${HARFBUZZ_ICU_LIBRARIES} ${PNG_LIBRARIES} ${FONTCONFIG_LIBRARIES} ${FRIBIDI_LIBRARIES} m)
+set(FVIZ_LIB_LDFLAGS ${CAIRO_LIBRARIES} ${FREETYPE_LIBRARIES} ${HARFBUZZ_LIBRARIES} ${HARFBUZZ_ICU_LIBRARIES} ${PNG_LIBRARIES} ${FONTCONFIG_LIBRARIES} ${FRIBIDI_LIBRARIES} m)
 add_library(fviz-lib-a STATIC $<TARGET_OBJECTS:fviz>)
 set_target_properties(fviz-lib-a PROPERTIES OUTPUT_NAME fviz)
 add_library(fviz-lib-so SHARED $<TARGET_OBJECTS:fviz>)
-target_link_libraries(fviz-lib-so ${fviz_LDFLAGS})
+target_link_libraries(fviz-lib-so ${FVIZ_LIB_LDFLAGS})
 set_target_properties(fviz-lib-so PROPERTIES OUTPUT_NAME fviz)
 set_target_properties(fviz-lib-so PROPERTIES PUBLIC_HEADER "core/api.h")
-
+set_target_properties(fviz-lib-so PROPERTIES CXX_VISIBILITY_PRESET hidden)
 
 # Build: CLI
 # -----------------------------------------------------------------------------
 add_executable(fviz-cli "core/cli.cc" $<TARGET_OBJECTS:fviz>)
-target_link_libraries(fviz-cli ${fviz_LDFLAGS})
+target_link_libraries(fviz-cli ${FVIZ_LIB_LDFLAGS})
 set_target_properties(fviz-cli PROPERTIES OUTPUT_NAME fviz)
 
 
@@ -116,7 +116,7 @@ foreach(unit_test_path ${unit_test_files})
   get_filename_component(unit_test_srcdir ${unit_test_path} DIRECTORY)
 
   add_executable(${unit_test_name} ${unit_test_path} $<TARGET_OBJECTS:fviz>)
-  target_link_libraries(${unit_test_name} ${fviz_LDFLAGS})
+  target_link_libraries(${unit_test_name} ${FVIZ_LIB_LDFLAGS})
 
   add_test(
       NAME test-unit-${unit_test_name}
