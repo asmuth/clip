@@ -19,7 +19,9 @@ Below you can find a list of all currently supported command line arguments.
     Usage: $ fviz [OPTIONS]
       --in <path>               Path to the input file
       --out <path>              Path to the output file
-      --outfmt <format>         Output format. If no format is given, it is inferred from the
+      --stdin                   Read the input file from stdin
+      --stdout                  Write the output file from sdout
+      --format <format>         Output format. If no format is given, it is inferred from the
                                 filename. Valid values: 'png', 'svg'
       --font-defaults <bool>    Enable or disable default font loading. Default is enabled.
                                 Valid values: 'on' and 'off'
@@ -30,3 +32,4 @@ Below you can find a list of all currently supported command line arguments.
 
     Examples:
       $ fviz --in my_chart.fvz --out my_chart.svg
+
