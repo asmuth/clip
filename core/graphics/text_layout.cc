@@ -11,7 +11,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#include "fviz.h"
 #include "graphics/text_backend.h"
 #include "graphics/text_layout.h"
 #include "graphics/text_shaper.h"

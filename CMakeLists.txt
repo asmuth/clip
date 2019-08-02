@@ -68,7 +68,7 @@ endif()
 
 # Build: Config
 # -----------------------------------------------------------------------------
-configure_file(core/config.h.in fviz_config.h)
+configure_file(core/config.h.in config.h)
 message(STATUS "Config Options: text_backend=${FVIZ_TEXT_BACKEND}")
 message(STATUS "Config Options: text_enable_bidi=${FVIZ_TEXT_ENABLE_BIDI}")
 
@@ -84,7 +84,7 @@ add_library(fviz-lib-a STATIC $<TARGET_OBJECTS:fviz>)
 set_target_properties(fviz-lib-a PROPERTIES OUTPUT_NAME fviz)
 add_library(fviz-lib-so SHARED $<TARGET_OBJECTS:fviz>)
 set_target_properties(fviz-lib-so PROPERTIES OUTPUT_NAME fviz)
-set_target_properties(fviz-lib-so PROPERTIES PUBLIC_HEADER "core/fviz.h")
+set_target_properties(fviz-lib-so PROPERTIES PUBLIC_HEADER "core/api.h")
 
 
 # Build: CLI

@@ -15,9 +15,9 @@
 #include <stdlib.h>
 #include <string>
 #include <vector>
-#include "fviz.h"
-#include <graphics/image.h>
-#include <return_code.h>
+
+#include "graphics/image.h"
+#include "return_code.h"
 
 namespace fviz {
 

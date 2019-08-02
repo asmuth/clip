@@ -14,12 +14,13 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <iostream>
-#include "fviz.h"
-#include "fviz_config.h"
+#include "config.h"
 #include "utils/flagparser.h"
 #include "return_code.h"
 #include "utils/stringutil.h"
 #include "core/environment.h"
+#include "core/eval.h"
+#include "fileutil.h"
 
 using namespace fviz;
 
@@ -36,8 +37,14 @@ int main(int argc, const char** argv) {
   std::string flag_out;
   flag_parser.defineString("out", false, &flag_out);
 
-  std::string flag_out_fmt;
-  flag_parser.defineString("outfmt", false, &flag_out_fmt);
+  bool flag_stdin = false;
+  flag_parser.defineSwitch("stdin", &flag_stdin);
+
+  bool flag_stdout = false;
+  flag_parser.defineSwitch("stdout", &flag_stdout);
+
+  std::string flag_format;
+  flag_parser.defineString("format", false, &flag_format);
 
   bool flag_help = false;
   flag_parser.defineSwitch("help", &flag_help);
@@ -79,7 +86,9 @@ int main(int argc, const char** argv) {
         "Usage: $ fviz [OPTIONS]\n"
         "  --in <path>               Path to the input file\n"
         "  --out <path>              Path to the output file\n"
-        "  --outfmt <format>         Output format. If no format is given, it is inferred from the\n"
+        "  --stdin                   Read the input file from stdin\n"
+        "  --stdout                  Write the output file from sdout\n"
+        "  --format <format>         Output format. If no format is given, it is inferred from the\n"
         "                            filename. Valid values: 'png', 'svg'\n"
         "  --font-defaults <bool>    Enable or disable default font loading. Default is enabled.\n"
         "                            Valid values: 'on' and 'off'\n"
@@ -94,40 +103,80 @@ int main(int argc, const char** argv) {
     return 0;
   }
 
-  if (flag_in.empty()) {
+  /* check if the input flags are valid */
+  if (flag_in.empty() && !flag_stdin) {
     std::cerr << "Need an input file (--in)\n";
     return 1;
   }
 
-  if (flag_out.empty()) {
+  if (!flag_in.empty() && flag_stdin) {
+    std::cerr
+        << "Can't read from an input file (--in) and stdin (--stdin) at the "
+        << "same time\n";
+
+    return 1;
+  }
+
+  if (flag_out.empty() && !flag_stdout) {
     std::cerr << "Need an output file (--out)\n";
     return 1;
   }
 
-  std::string fmt = flag_out_fmt;
-  if (fmt.empty()) {
-    if (StringUtil::endsWith(flag_out, ".svg")) { fmt = "svg"; }
-    if (StringUtil::endsWith(flag_out, ".png")) { fmt = "png"; }
+  if (!flag_out.empty() && flag_stdout) {
+    std::cerr
+        << "Can't write to an output file (--out) and stdout (--stdout) at the "
+        << "same time\n";
+
+    return 1;
   }
 
-  fviz_t* ctx = fviz_init();
-  if (!ctx) {
-    std::cerr << "ERROR: error while initializing fviz" << std::endl;
+  /* figure out which output format the user wants */
+  auto output_format = fviz::OutputFormat::SVG;
+  if (flag_format.empty()) {
+    if (StringUtil::endsWith(flag_out, ".svg"))
+      output_format = OutputFormat::SVG;
+    if (StringUtil::endsWith(flag_out, ".png"))
+      output_format = OutputFormat::PNG;
+  } else if (flag_format == "svg") {
+    output_format = OutputFormat::SVG;
+  } else if (flag_format == "png") {
+    output_format = OutputFormat::PNG;
+  } else {
+    std::cerr
+        << "ERROR: invalid output format (--format). valid values are "
+        << "'svg' and 'png'"
+        << std::endl;
+
     return EXIT_FAILURE;
   }
 
-  Environment* env = static_cast<Environment*>(fviz_env(ctx));
-  env->font_defaults = flag_font_defaults;
-  env->font_load = flag_font_load;
+  /* run fviz */
+  Environment env;
+  env.font_defaults = flag_font_defaults;
+  env.font_load = flag_font_load;
 
-  if (!fviz_configure_file(ctx, flag_in.c_str())) {
-    fviz_printerror(ctx);
+  std::string input;
+  if (auto rc = read_file(flag_in, &input); !rc) {
+    fmt::print(
+        stderr,
+        "ERROR: unable to read input file ({}): {}\n",
+        flag_in,
+        rc.message);
+  }
+
+  std::string output_buffer;
+  if (auto rc = fviz::eval(env, input, output_format, &output_buffer); !rc) {
+    error_print(rc, std::cerr);
     return EXIT_FAILURE;
   }
 
-  if (!fviz_render_file(ctx, flag_out.c_str(), fmt.c_str())) {
-    fviz_printerror(ctx);
-    return EXIT_FAILURE;
+  /* write the output file */
+  if (flag_stdout) {
+    std::cout << output_buffer;
+  } else {
+    FileUtil::write(
+        flag_out,
+        Buffer(output_buffer.data(), output_buffer.size()));
   }
 
   return EXIT_SUCCESS;

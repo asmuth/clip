@@ -17,7 +17,6 @@
 #include <string>
 
 #include "color.h"
-#include "fviz.h"
 #include "text_shaper.h"
 #include "measure.h"
 #include "layer_ops.h"

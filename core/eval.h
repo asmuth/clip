@@ -11,39 +11,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#include "return_code.h"
+#pragma once
+#include "environment.h"
 #include "sexpr.h"
-
-#include <iostream>
+#include "return_code.h"
 
 namespace fviz {
 
-ReturnCode err_invalid_value(
-    const std::string& value,
-    std::vector<std::string> expected_values) {
-  for (auto& v : expected_values) {
-    v = "'" + v + "'";
-  }
+enum class OutputFormat { SVG, PNG };
 
-  return {
-    ERROR,
-    fmt::format(
-        "invalid value: '{}'; expected one of: {}",
-        value,
-        StringUtil::join(expected_values, ", "))
-  };
-}
+ReturnCode eval(
+    Environment env,
+    const Expr* expr,
+    const OutputFormat& output_format,
+    std::string* output_buffer);
 
-void error_print(const ReturnCode& rc, std::ostream& os) {
-  switch (rc.code) {
-    case OK:
-      os << "OK" << std::endl;
-      break;
-    case ERROR:
-      os << "ERROR: " << rc.message << std::endl;
-      break;
-  }
-}
+ReturnCode eval(
+    Environment env,
+    const std::string& input,
+    const OutputFormat& output_format,
+    std::string* output_buffer);
 
 } // namespace fviz
 

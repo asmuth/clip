@@ -18,6 +18,23 @@
 #include "sexpr_util.h"
 #include "graphics/font_lookup.h"
 
+#include "elements/text.h"
+#include "elements/plot.h"
+#include "elements/plot/areas.h"
+#include "elements/plot/axis.h"
+#include "elements/plot/bars.h"
+#include "elements/plot/errorbars.h"
+#include "elements/plot/grid.h"
+#include "elements/plot/labels.h"
+#include "elements/plot/lines.h"
+#include "elements/plot/points.h"
+#include "elements/plot/vectors.h"
+#include "elements/chart/linechart.h"
+#include "elements/chart/scatterplot.h"
+#include "elements/layout/box.h"
+#include "elements/legend.h"
+#include "elements/legend/item.h"
+
 #include <functional>
 
 using namespace std::placeholders;
@@ -36,6 +53,24 @@ Environment::Environment() :
     color_palette(color_palette_default()) {}
 
 ReturnCode environment_setup_defaults(Environment* env) {
+  auto elems = &env->element_map;
+  element_bind(elems, "chart/linechart", bind(elements::chart::linechart::build, _1, _2, _3));
+  element_bind(elems, "chart/scatterplot", bind(elements::chart::scatterplot::build, _1, _2, _3));
+  element_bind(elems, "plot", bind(elements::plot::build, _1, _2, _3));
+  element_bind(elems, "plot/areas", bind(elements::plot::areas::build, _1, _2, _3));
+  element_bind(elems, "plot/axis", bind(elements::plot::axis::build, _1, _2, _3));
+  element_bind(elems, "plot/bars", bind(elements::plot::bars::build, _1, _2, _3));
+  element_bind(elems, "plot/errorbars", bind(elements::plot::errorbars::build, _1, _2, _3));
+  element_bind(elems, "plot/grid", bind(elements::plot::grid::build, _1, _2, _3));
+  element_bind(elems, "plot/labels", bind(elements::plot::labels::build, _1, _2, _3));
+  element_bind(elems, "plot/lines", bind(elements::plot::lines::build, _1, _2, _3));
+  element_bind(elems, "plot/points", bind(elements::plot::points::build, _1, _2, _3));
+  element_bind(elems, "plot/vectors", bind(elements::plot::vectors::build, _1, _2, _3));
+  element_bind(elems, "legend", bind(elements::legend::build, _1, _2, _3));
+  element_bind(elems, "legend/item", bind(elements::legend::item::build, _1, _2, _3));
+  element_bind(elems, "layout/box", bind(elements::layout::box::build, _1, _2, _3));
+  element_bind(elems, "text", bind(elements::text::build, _1, _2, _3));
+
   if (env->font_defaults) {
     if (auto rc = font_load_defaults(&env->font); !rc) {
       return rc;
