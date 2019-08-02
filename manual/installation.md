@@ -10,7 +10,18 @@ You can find the complete [source code on Github](http://github.com/asmuth/fviz)
 ### Compile from source
 
 To build fviz, you need an up-to-date C++ compiler, cmake, libharfbuzz and
-libfreetype. Run:
+libfreetype. To install these dependencies, run the following command:
+
+    # Ubuntu
+    $ apt-get install cmake libfreetype6-dev libharfbuzz-dev libfribidi-dev libcairo2-dev libfmt-dev
+
+    # Fedora
+    $ dnf install cmake freetype-devel harfbuzz-devel fribidi-devel cairo-devel fmt-devel
+
+    # OSX
+    $ brew install cmake freetype harfbuzz fribidi cairo cppformat
+
+To compile `fviz`, Run:
 
     $ git clone git@github.com:asmuth/fviz.git
     $ cd fviz
