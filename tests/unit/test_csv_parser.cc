@@ -24,10 +24,7 @@ using namespace fviz;
 
 void test_parse_unquoted() {
   std::string testfile;
-  EXPECT_OK(
-      read_file(
-          fmt::format("{}/tests/testdata/bardata.csv", getenv("FVIZ_TEST_SRCDIR")),
-          &testfile));
+  EXPECT_OK(read_file(test_data_path("bardata.csv"), &testfile));
 
   CSVData data;
   EXPECT_OK(csv_parse(testfile, &data));
@@ -86,10 +83,7 @@ void test_parse_unquoted() {
 
 void test_parse_quoted() {
   std::string testfile;
-  EXPECT_OK(
-      read_file(
-          fmt::format("{}/tests/testdata/bardata_quoted.csv", getenv("FVIZ_TEST_SRCDIR")),
-          &testfile));
+  EXPECT_OK(read_file(test_data_path("bardata_quoted.csv"), &testfile));
 
   CSVData data;
   EXPECT_OK(csv_parse(testfile, &data));

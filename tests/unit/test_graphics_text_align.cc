@@ -73,17 +73,11 @@ void draw_test(Layer* layer, const FontInfo& font) {
 }
 
 int main(int argc, char** argv) {
-  FontRef font_ref0;
-  EXPECT_OK(font_load("/usr/share/fonts/dejavu/DejaVuSans.ttf", &font_ref0));
-
-  FontRef font_ref1;
-  EXPECT_OK(font_load("/usr/share/fonts/msttcore/arial.ttf", &font_ref1));
-
-  FontRef font_ref2;
-  EXPECT_OK(font_load("/usr/share/fonts/msttcore/comic.ttf", &font_ref2));
+  FontRef font_ref;
+  EXPECT_OK(font_load(test_data_path("fonts/LiberationSans-Regular.ttf"), &font_ref));
 
   FontInfo font;
-  font.fonts = {font_ref2, font_ref1, font_ref0};
+  font.fonts = {font_ref};
 
   {
     LayerRef layer;

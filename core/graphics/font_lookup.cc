@@ -57,12 +57,21 @@ void* font_get_freetype(FontRef font) {
   return font->ft_font;
 }
 
+enum class GlyphPointType : char { ON = 'x', OFF2 = '2', OFF3 = '3' };
+
+struct GlyphContour {
+  std::vector<Point> points;
+  std::vector<GlyphPointType> tags;
+};
+
 ReturnCode font_get_glyph_path(
     FontRef font,
     double font_size,
     double dpi,
     uint32_t codepoint,
     Path* path) {
+  *path = Path{};
+
   // load the glyph using freetype
   auto font_size_ft = font_size * (72.0 / dpi) * 64;
   if (FT_Set_Char_Size(font->ft_font, 0, font_size_ft, dpi, dpi)) {
@@ -85,95 +94,144 @@ ReturnCode font_get_glyph_path(
   auto glyph_outline = &((FT_OutlineGlyph) glyph)->outline;
 
   // retrieve the glyph outline data from freetype
-  enum class GlyphPointType { MOVE, SIMPLE, CONTROL };
-
-  std::vector<Point> glyph_points;
-  std::vector<GlyphPointType> glyph_point_tags;
+  std::vector<GlyphContour> contours;
 
   auto glyph_outline_tags = glyph_outline->tags;
   for (size_t n = 0; n < glyph_outline->n_contours; n++) {
     auto glyph_outline_idx = n == 0 ? 0 : glyph_outline->contours[n - 1] + 1;
     auto glyph_outline_end = glyph_outline->contours[n];
 
-    // read contour points
+    GlyphContour contour;
     for (size_t i = glyph_outline_idx; i <= glyph_outline_end; ++i) {
       Point p;
       p.x = glyph_outline->points[i].x / 64.0;
       p.y = -glyph_outline->points[i].y / 64.0;
 
       GlyphPointType pt;
-      if (i == glyph_outline_idx) {
-        pt = GlyphPointType::MOVE;
-      } else if (int(glyph_outline->tags[i]) & 1) {
-        pt = GlyphPointType::SIMPLE;
-      } else {
-        pt = GlyphPointType::CONTROL;
+      switch (FT_CURVE_TAG(glyph_outline->tags[i])) {
+        case FT_CURVE_TAG_ON:
+          pt = GlyphPointType::ON;
+          break;
+        case FT_CURVE_TAG_CONIC:
+          pt = GlyphPointType::OFF2;
+          break;
+        case FT_CURVE_TAG_CUBIC:
+          pt = GlyphPointType::OFF3;
+          break;
+        default:
+          return ERROR;
       }
 
-      glyph_points.push_back(p);
-      glyph_point_tags.push_back(pt);
+      contour.points.push_back(p);
+      contour.tags.push_back(pt);
     }
 
-    // close the path
-    {
-      Point p;
-      p.x = glyph_outline->points[glyph_outline_idx].x / 64.0;
-      p.y = -glyph_outline->points[glyph_outline_idx].y / 64.0;
-      glyph_points.push_back(p);
-      glyph_point_tags.push_back(GlyphPointType::SIMPLE);
-    }
+    contours.push_back(contour);
   }
 
   FT_Done_Glyph(glyph);
 
-  // convert the glyph outline to a path object
-  *path = Path{};
-
-  for (size_t i = 0; i < glyph_points.size(); ++i) {
-    const auto& p = glyph_points[i];
-    const auto& pt = glyph_point_tags[i];
-
-    // move at begin of contour
-    if (pt == GlyphPointType::MOVE) {
-      path->moveTo(glyph_points[i].x, glyph_points[i].y);
-      continue;
+  // convert the contours to the output path object
+  for (auto& c : contours) {
+    if (c.points.empty()) {
+      return ERROR;
     }
 
-    // third order bezier
-    if (i + 2 < glyph_points.size() &&
-        glyph_point_tags[i + 0] == GlyphPointType::CONTROL &&
-        glyph_point_tags[i + 1] == GlyphPointType::CONTROL) {
-      //assert(glyph_point_tags[i + 2] != GlyphPointType::CONTROL);
+    // insert virtual "on" points for each pair of successive OFF2 points
+    for (size_t i = 0; i + 1 < c.points.size(); ++i) {
+      if (c.tags[i + 0] == GlyphPointType::OFF2 &&
+          c.tags[i + 1] == GlyphPointType::OFF2) {
+        c.tags.insert(
+            c.tags.begin() + i + 1,
+            GlyphPointType::ON);
 
-      path->cubicCurveTo(
-          glyph_points[i + 0].x,
-          glyph_points[i + 0].y,
-          glyph_points[i + 1].x,
-          glyph_points[i + 1].y,
-          glyph_points[i + 2].x,
-          glyph_points[i + 2].y);
-
-      i += 2;
-      continue;
+        c.points.insert(
+            c.points.begin() + i + 1,
+            vec2_mul(vec2_add(c.points[i + 0], c.points[i + 1]), 0.5));
+      }
     }
 
-    // second order bezier
-    if (i + 1 < glyph_points.size() &&
-        glyph_point_tags[i] == GlyphPointType::CONTROL) {
-      //assert(glyph_point_tags[i + 1] != GlyphPointType::CONTROL);
-
-      path->quadraticCurveTo(
-          glyph_points[i + 0].x,
-          glyph_points[i + 0].y,
-          glyph_points[i + 1].x,
-          glyph_points[i + 1].y);
-
-      i += 1;
-      continue;
+    // edge case: first point can be OFF2 -> start with last point
+    if (c.tags.front() == GlyphPointType::OFF2 &&
+        c.tags.back() == GlyphPointType::ON) {
+      c.points.insert(c.points.begin(), c.points.back());
+      c.tags.insert(c.tags.begin(), c.tags.back());
     }
 
-    // simple line segments
-    path->lineTo(glyph_points[i].x, glyph_points[i].y);
+    // edge case: first and last point can be OFF2 -> start with virtual point
+    if (c.tags.front() == GlyphPointType::OFF2 &&
+        c.tags.back() == GlyphPointType::OFF2) {
+      c.points.insert(
+          c.points.begin(),
+          vec2_mul(vec2_add(c.points.front(), c.points.back()), 0.5));
+
+      c.tags.insert(c.tags.begin(), GlyphPointType::ON);
+    }
+
+    // the last point in the contour uses the first as its end point
+    c.points.push_back(c.points[0]);
+    c.tags.push_back(c.tags[0]);
+
+    // now every contour should end and begin with an "on" point
+    assert(c.tags.front() == GlyphPointType::ON);
+    assert(c.tags.back() == GlyphPointType::ON);
+    assert(c.points.size() == c.tags.size());
+
+    // translate the resolved contour to the path object representation
+    path->moveTo(c.points[0].x, c.points[0].y);
+
+    for (size_t i = 0; i < c.points.size() - 1; ) {
+      const auto& p = c.points[i];
+      const auto& pt = c.tags[i];
+
+      // line segment
+      if (i + 1 < c.points.size() &&
+          c.tags[i + 0] == GlyphPointType::ON &&
+          c.tags[i + 1] == GlyphPointType::ON) {
+        path->lineTo(c.points[i + 1].x, c.points[i + 1].y);
+        i += 1;
+        continue;
+      }
+
+      // third order bezier
+      if (i + 3 < c.points.size() &&
+          c.tags[i + 0] == GlyphPointType::ON &&
+          c.tags[i + 1] == GlyphPointType::OFF3 &&
+          c.tags[i + 2] == GlyphPointType::OFF3 &&
+          c.tags[i + 3] == GlyphPointType::ON) {
+        path->cubicCurveTo(
+            c.points[i + 1].x,
+            c.points[i + 1].y,
+            c.points[i + 2].x,
+            c.points[i + 2].y,
+            c.points[i + 3].x,
+            c.points[i + 3].y);
+
+        i += 3;
+        continue;
+      }
+
+      // second order bezier
+      if (i + 2 < c.points.size() &&
+          c.tags[i + 0] == GlyphPointType::ON &&
+          c.tags[i + 1] == GlyphPointType::OFF2 &&
+          c.tags[i + 2] == GlyphPointType::ON) {
+        path->quadraticCurveTo(
+            c.points[i + 1].x,
+            c.points[i + 1].y,
+            c.points[i + 2].x,
+            c.points[i + 2].y);
+
+        i += 2;
+        continue;
+      }
+
+      // invalid contour
+      break;
+    }
+
+    // close the path
+    path->closePath();
   }
 
   return OK;

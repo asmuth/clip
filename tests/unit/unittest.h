@@ -44,3 +44,12 @@ const double EPSILON = 0.0001;
       } \
     } while(0)
 
+inline std::string test_data_path(std::string p) {
+  p = "tests/testdata/" + p;
+
+  if (auto srcdir = getenv("FVIZ_TEST_SRCDIR"); srcdir) {
+    return std::string(srcdir) + "/" + p;
+  } else {
+    return p;
+  }
+}

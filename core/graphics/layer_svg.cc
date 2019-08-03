@@ -95,6 +95,8 @@ std::string svg_path_data(const Path& path) {
         path_data << fmt::format("a{} {} 0 1 0 {} 0 ", cmd[2], cmd[2], cmd[2] * 2);
         path_data << fmt::format("a{} {} 0 1 0 {} 0 ", cmd[2], cmd[2], -cmd[2] * 2);
         break;
+      case PathCommand::CLOSE:
+        path_data << "Z";
       default:
         break; // not yet implemented
     }

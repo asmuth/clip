@@ -1,0 +1,53 @@
+/**
+ * This file is part of the "fviz" project
+ *   Copyright (c) 2018 Paul Asmuth
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+#include "graphics/brush.h"
+#include "graphics/color.h"
+#include "graphics/layer.h"
+#include "graphics/layer_svg.h"
+#include "graphics/layer_pixmap.h"
+#include "graphics/text.h"
+#include "utils/fileutil.h"
+#include "unittest.h"
+
+using namespace fviz;
+
+int main(int argc, char** argv) {
+  FontRef font_ref;
+  EXPECT_OK(font_load(test_data_path("fonts/Roboto-Medium.ttf"), &font_ref));
+
+  FontInfo font;
+  font.fonts = {font_ref};
+
+  LayerRef layer;
+  auto rc = layer_bind_svg(
+      200,
+      200,
+      240,
+      from_unit(12),
+      Color::fromRGB(1.0, 1.0, 1.0),
+      [&] (auto svg) {
+        FileUtil::write(std::string(argv[0]) + ".svg", Buffer(svg.data(), svg.size()));
+        return OK;
+      },
+      &layer);
+
+  TextStyle ts;
+  ts.font = font;
+  ts.font_size = from_unit(120);
+  ts.color = Color::fromRGB(0,0,0);
+  ts.direction = TextDirection::LTR;
+
+  drawTextLabel("6", Point(100, 100), HAlign::CENTER, VAlign::CENTER, 0, ts, layer.get());
+  layer_submit(layer.get());
+}
