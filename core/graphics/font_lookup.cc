@@ -203,7 +203,9 @@ ReturnCode font_load_best(
     return error(ERROR, "unable to load font: empty font pattern");
   }
 
-  if (font_pattern[0] == '/') { // TODO improved filename detection
+  if (font_pattern[0] == '/' ||
+      StringUtil::endsWith(font_pattern, ".otf") ||
+      StringUtil::endsWith(font_pattern, ".ttf")) { // TODO improved filename detection
     font_file = font_pattern;
   }
 

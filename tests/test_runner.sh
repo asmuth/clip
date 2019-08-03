@@ -24,7 +24,7 @@ echo "--------------------------------------------------------------------------
 result=""
 if "${binfile}" \
       --font-defaults off \
-      --font-load /usr/share/fonts/msttcore/arial.ttf \
+      --font-load "tests/testdata/fonts/LiberationSans-Regular.ttf" \
       --in "${infile}" \
       --out "${outfile}" \
       2> "${logfile}"; then
