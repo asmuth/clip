@@ -146,7 +146,24 @@ void test_intersect_parallel() {
       true);
 }
 
+void test_intersect_point() {
+  Point p;
+
+  EXPECT_EQ(
+      intersect_line_line(
+          {0, 0},
+          {1, 2},
+          {0, 2},
+          {1, 1},
+          &p),
+      true);
+
+  EXPECT_EQ(p.x, 2);
+  EXPECT_EQ(p.y, 4);
+}
+
 int main(int argc, char** argv) {
   test_intersect_parallel();
+  test_intersect_point();
 }
 

@@ -24,16 +24,16 @@
 namespace fviz {
 
 /**
- * Given two (infinite) lines defined by a point on each of the the lines o0, o1
- * (their 'origins') and their normal direction vectors v0, v1, compute the point
- * of intersection. Returns false if the two lines are parallel.
+ * Given two (infinite) lines defined by a point on each of the the lines p0, p1
+ * and their normal direction vectors v0, v1, compute the point of intersection.
+ * Returns false if the two lines are parallel.
  */
 bool intersect_line_line(
-    vec2 o0,
+    vec2 p0,
     vec2 v0,
-    vec2 o1,
+    vec2 p1,
     vec2 v1,
-    vec2* x = nullptr);
+    vec2* p = nullptr);
 
 } // namespace fviz
 
