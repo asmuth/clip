@@ -88,5 +88,84 @@ bool intersect_line_line(
   return true;
 }
 
+bool intersect_line_lineseg(
+    vec2 p0,
+    vec2 v0,
+    vec2 s1,
+    vec2 e1,
+    vec2* p /* = nullptr */) {
+  // find the intersection between the infinite lines given by {p0, v1} and the
+  // infinite line that passes through {s0, e0}
+  vec2 pt;
+  auto pt_exists = intersect_line_line(
+      p0,
+      v0,
+      s1,
+      vec2_normalize(vec2_sub(e1, s1)),
+      &pt);
+
+  if (!pt_exists) {
+    return false;
+  }
+
+  // check if the intersection point is outside of the line segment
+  if (pt.x < std::min(s1.x, e1.x) ||
+      pt.x > std::max(s1.x, e1.x) ||
+      pt.y < std::min(s1.y, e1.y) ||
+      pt.y > std::max(s1.y, e1.y)) {
+    return false;
+  }
+
+  // we found a point of intersection that is located on the line segment,
+  // return it
+  if (p) {
+    *p = pt;
+  }
+
+  return true;
+}
+
+bool intersect_lineseg_lineseg(
+    vec2 s0,
+    vec2 e0,
+    vec2 s1,
+    vec2 e1,
+    vec2* p /* = nullptr */) {
+  // find the intersection between the infinite lines that pass through {s0, e0}
+  // and {s1, e1} respectively
+  vec2 pt;
+  auto pt_exists = intersect_line_line(
+      s0,
+      vec2_sub(e0, s0),
+      s1,
+      vec2_normalize(vec2_sub(e1, s1)),
+      &pt);
+
+  if (!pt_exists) {
+    return false;
+  }
+
+  // check if the intersection point is outside of one of the lines segments
+  if (pt.x < std::min(s0.x, e0.x) ||
+      pt.x > std::max(s0.x, e0.x) ||
+      pt.y < std::min(s0.y, e0.y) ||
+      pt.y > std::max(s0.y, e0.y) ||
+      pt.x < std::min(s1.x, e1.x) ||
+      pt.x > std::max(s1.x, e1.x) ||
+      pt.y < std::min(s1.y, e1.y) ||
+      pt.y > std::max(s1.y, e1.y)) {
+    return false;
+  }
+
+  // we found a point of intersection that is located on both line segments,
+  // return it
+  if (p) {
+    *p = pt;
+  }
+
+  return true;
+}
+
+
 } // namespace fviz
 

@@ -35,5 +35,29 @@ bool intersect_line_line(
     vec2 v1,
     vec2* p = nullptr);
 
+/**
+ * Given an infinite line defined by a point on the line and a direction vector
+ * and a line segment defined by its start and end point, compute their point of
+ * intersection if any. Returns false if the two lines are parallel.
+ */
+bool intersect_line_lineseg(
+    vec2 p0,
+    vec2 v0,
+    vec2 s1,
+    vec2 e1,
+    vec2* p = nullptr);
+
+/**
+ * Given two line sgements defined by the two start and end points of the two
+ * line segments s0, s1 and e1, e2, compute their point of intersection if any.
+ * Returns false if the two line segements are parallel or coincident.
+ */
+bool intersect_lineseg_lineseg(
+    vec2 s0,
+    vec2 e0,
+    vec2 s1,
+    vec2 e1,
+    vec2* p = nullptr);
+
 } // namespace fviz
 

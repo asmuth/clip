@@ -162,8 +162,50 @@ void test_intersect_point() {
   EXPECT_EQ(p.y, 4);
 }
 
+
+void test_intersect_linesegs() {
+  {
+    Point p;
+    EXPECT_EQ(
+        intersect_lineseg_lineseg(
+            {1, 1},
+            {3, 1},
+            {1, 4},
+            {3, 4},
+            &p),
+        false);
+  }
+
+  {
+    Point p;
+    EXPECT_EQ(
+        intersect_lineseg_lineseg(
+            {1, 1},
+            {4, 4},
+            {1, 4},
+            {4, 1},
+            &p),
+        true);
+    EXPECT_EQ(p.x, 2.5);
+    EXPECT_EQ(p.y, 2.5);
+  }
+
+  {
+    Point p;
+    EXPECT_EQ(
+        intersect_lineseg_lineseg(
+            {1, 1},
+            {4, 2},
+            {1, 4},
+            {4, 3},
+            &p),
+        false);
+  }
+}
+
 int main(int argc, char** argv) {
   test_intersect_parallel();
   test_intersect_point();
+  test_intersect_linesegs();
 }
 
