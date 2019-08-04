@@ -109,10 +109,11 @@ bool intersect_line_lineseg(
   }
 
   // check if the intersection point is outside of the line segment
-  if (pt.x < std::min(s1.x, e1.x) ||
-      pt.x > std::max(s1.x, e1.x) ||
-      pt.y < std::min(s1.y, e1.y) ||
-      pt.y > std::max(s1.y, e1.y)) {
+  const double epsilon = 0.001;
+  if (pt.x + epsilon < std::min(s1.x, e1.x) ||
+      pt.x - epsilon > std::max(s1.x, e1.x) ||
+      pt.y + epsilon < std::min(s1.y, e1.y) ||
+      pt.y - epsilon > std::max(s1.y, e1.y)) {
     return false;
   }
 
@@ -146,14 +147,15 @@ bool intersect_lineseg_lineseg(
   }
 
   // check if the intersection point is outside of one of the lines segments
-  if (pt.x < std::min(s0.x, e0.x) ||
-      pt.x > std::max(s0.x, e0.x) ||
-      pt.y < std::min(s0.y, e0.y) ||
-      pt.y > std::max(s0.y, e0.y) ||
-      pt.x < std::min(s1.x, e1.x) ||
-      pt.x > std::max(s1.x, e1.x) ||
-      pt.y < std::min(s1.y, e1.y) ||
-      pt.y > std::max(s1.y, e1.y)) {
+  const double epsilon = 0.001;
+  if (pt.x + epsilon < std::min(s0.x, e0.x) ||
+      pt.x - epsilon > std::max(s0.x, e0.x) ||
+      pt.y + epsilon < std::min(s0.y, e0.y) ||
+      pt.y - epsilon > std::max(s0.y, e0.y) ||
+      pt.x + epsilon < std::min(s1.x, e1.x) ||
+      pt.x - epsilon > std::max(s1.x, e1.x) ||
+      pt.y + epsilon < std::min(s1.y, e1.y) ||
+      pt.y - epsilon > std::max(s1.y, e1.y)) {
     return false;
   }
 
