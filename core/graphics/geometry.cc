@@ -50,6 +50,15 @@ vec2 vec2_mul(const vec2& v, double s) {
   return {v.x * s, v.y * s};
 }
 
+double vec2_dot(const vec2& a, const vec2& b) {
+  return a.x * b.x + a.y * b.y;
+}
+
+vec2 vec2_from_deg(double deg) {
+  double a = (deg - 180.0) / 180.0 * M_PI;
+  return {cos(a), sin(a)};
+}
+
 std::ostream& operator <<(std::ostream& os, const Point& p) {
   os << "Point(";
   os << p.x;

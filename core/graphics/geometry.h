@@ -42,6 +42,8 @@ vec2 vec2_normalize(const vec2& v);
 vec2 vec2_add(const vec2& a, const vec2& b);
 vec2 vec2_sub(const vec2& a, const vec2& b);
 vec2 vec2_mul(const vec2& v, double s);
+double vec2_dot(const vec2& a, const vec2& b);
+vec2 vec2_from_deg(double deg);
 
 std::ostream& operator <<(std::ostream& os, const Point& c);
 std::ostream& operator <<(std::ostream& os, const Rectangle& c);
