@@ -30,7 +30,6 @@ namespace fviz {
  */
 Path shape_hatch(
     const Rectangle& clip,
-    vec2 origin,
     double angle_deg,
     double offset,
     double stride,

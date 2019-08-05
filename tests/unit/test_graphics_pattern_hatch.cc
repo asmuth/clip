@@ -36,16 +36,14 @@ int main(int argc, char** argv) {
       &layer);
 
   auto p = shape_hatch(
-      Rectangle(0, 0, 1200, 800),
-      vec2(600, 400),
+      Rectangle(100, 100, 1000, 600),
       45,
       0,
-      150,
-      70);
+      40,
+      20);
 
-  StrokeStyle ss;
-  ss.line_width = from_unit(70);
-  strokePath(layer.get(), p, ss);
+  FillStyle fs;
+  fillPath(layer.get(), p, fs);
 
   layer_submit(layer.get());
 }

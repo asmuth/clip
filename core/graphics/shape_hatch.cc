@@ -18,14 +18,10 @@ namespace fviz {
 
 Path shape_hatch(
     const Rectangle& clip,
-    vec2 origin,
     double angle_deg,
     double offset,
     double stride,
     double width) {
-  auto direction = vec2_from_deg(angle_deg);
-  auto ortho = vec2_from_deg(angle_deg + 90);
-
   Polygon2 clip_poly;
   clip_poly.vertices = {
     {clip.x,          clip.y + clip.h},
@@ -34,28 +30,61 @@ Path shape_hatch(
     {clip.x,          clip.y},
   };
 
+  auto origin = vec2_mean(clip_poly.vertices.data(), clip_poly.vertices.size());
+  auto direction = vec2_from_deg(angle_deg);
+  auto ortho = vec2_from_deg(angle_deg + 90);
+
   Path p;
-  for (size_t i = 0; i < 100; ++i) {
+  for (size_t i = 0; ; ++i) {
+    bool edge_reached = true;
+
     // symmetry around the origin
     for (double s = (i == 0 ? 0 : -1); s <= 1; s += 2) {
+      std::vector<Point> vertices;
 
-      // offset lines perpendicularly
-      auto o = vec2_add(origin, vec2_mul(ortho, i * s * stride + offset));
-
-      // find the intersections with the four borders of the clipping rectangle
-      std::vector<Point> intersections;
+      // find the intersections of two lines with the clipping rectangle
+      //   - a "top" line that is offset by half the width in one direction
+      //   - a "bottom" line that is offset by half the width in the other direction
+      intersect_poly_line(
+          clip_poly,
+          vec2_add(origin, vec2_mul(ortho, i * s * stride + offset + width * 0.5)),
+          direction,
+          &vertices);
 
       intersect_poly_line(
           clip_poly,
-          o,
+          vec2_add(origin, vec2_mul(ortho, i * s * stride + offset + width * -0.5)),
           direction,
-          &intersections);
+          &vertices);
 
-      // stroke line between edge points
-      if (intersections.size() >= 2) {
-        p.moveTo(intersections[0].x, clip.h - intersections[0].y);
-        p.lineTo(intersections[1].x, clip.h - intersections[1].y);
+      // TODO: find all vertices of the bounding polygon the lie between the
+      // two lines and add them to the vertex list
+
+      if (vertices.size() >= 3) {
+        // we still had something to draw, so we're not ready yet
+        edge_reached = false;
+      } else {
+        // if we end up with less than three vertices we are outside of the
+        // clipping polygon
+        continue;
       }
+
+      // build a simple polygon from the resulting points by connecting them
+      // in clockwise order
+      vec2_sort_cw(vertices.data(), vertices.size());
+
+      for (size_t i = 0; i < vertices.size(); ++i) {
+        if (i == 0) {
+          p.moveTo(vertices[i].x, vertices[i].y);
+        } else {
+          p.lineTo(vertices[i].x, vertices[i].y);
+        }
+      }
+
+    }
+
+    if (edge_reached) {
+      break;
     }
   }
 
