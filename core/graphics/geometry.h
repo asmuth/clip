@@ -45,6 +45,21 @@ vec2 vec2_mul(const vec2& v, double s);
 double vec2_dot(const vec2& a, const vec2& b);
 vec2 vec2_from_deg(double deg);
 
+/**
+ * Find the mean value of a list of vectors
+ */
+vec2 vec2_mean(const vec2* v, size_t v_len);
+
+/**
+ * Sort an array of vec2 objects in clockwise order
+ */
+void vec2_sort_cw(vec2* v, size_t v_len);
+
+/**
+ * Sort an array of vec2 objects in counter-clockwise order
+ */
+void vec2_sort_ccw(vec2* v, size_t v_len);
+
 std::ostream& operator <<(std::ostream& os, const Point& c);
 std::ostream& operator <<(std::ostream& os, const Rectangle& c);
 

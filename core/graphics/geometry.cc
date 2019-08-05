@@ -59,6 +59,36 @@ vec2 vec2_from_deg(double deg) {
   return {cos(a), sin(a)};
 }
 
+vec2 vec2_mean(const vec2* v, size_t v_len) {
+  vec2 m;
+
+  for (size_t i = 0; i < v_len; ++i) {
+    m = vec2_add(m, v[i]);
+  }
+
+  return vec2_mul(m, 1.0 / v_len);
+}
+
+void vec2_sort_cw(vec2* v, size_t v_len) {
+  auto m = vec2_mean(v, v_len);
+
+  std::sort(v, v + v_len, [&m] (const auto& a, const auto& b) {
+    auto da = vec2_sub(a, m);
+    auto db = vec2_sub(b, m);
+    return atan2(db.y, db.x) < atan2(da.y, da.x);
+  });
+}
+
+void vec2_sort_ccw(vec2* v, size_t v_len) {
+  auto m = vec2_mean(v, v_len);
+
+  std::sort(v, v + v_len, [&m] (const auto& a, const auto& b) {
+    auto da = vec2_sub(a, m);
+    auto db = vec2_sub(b, m);
+    return atan2(da.y, da.x) < atan2(db.y, db.x);
+  });
+}
+
 std::ostream& operator <<(std::ostream& os, const Point& p) {
   os << "Point(";
   os << p.x;
