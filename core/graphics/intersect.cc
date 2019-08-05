@@ -168,6 +168,47 @@ bool intersect_lineseg_lineseg(
   return true;
 }
 
+void intersect_poly_line(
+    const Polygon2& p0,
+    const vec2& p1,
+    const vec2& v1,
+    std::vector<vec2>* x) {
+  // intersect with each edge of the polygon
+  for (size_t i = 0; i < p0.vertices.size(); ++i) {
+    Point p;
+    auto p_found = intersect_line_lineseg(
+        p1,
+        v1,
+        p0.vertices[i],
+        p0.vertices[(i + 1) % p0.vertices.size()],
+        &p);
+
+    if (p_found) {
+      x->push_back(p);
+    }
+  }
+}
+
+void intersect_poly_lineseg(
+    const Polygon2& p0,
+    const vec2& s1,
+    const vec2& e1,
+    std::vector<vec2>* x) {
+  // intersect with each edge of the polygon
+  for (size_t i = 0; i < p0.vertices.size(); ++i) {
+    Point p;
+    auto p_found = intersect_lineseg_lineseg(
+        p0.vertices[i],
+        p0.vertices[(i + 1) % p0.vertices.size()],
+        s1,
+        e1,
+        &p);
+
+    if (p_found) {
+      x->push_back(p);
+    }
+  }
+}
 
 } // namespace fviz
 

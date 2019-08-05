@@ -26,6 +26,14 @@ Path shape_hatch(
   auto direction = vec2_from_deg(angle_deg);
   auto ortho = vec2_from_deg(angle_deg + 90);
 
+  Polygon2 clip_poly;
+  clip_poly.vertices = {
+    {clip.x,          clip.y + clip.h},
+    {clip.x + clip.w, clip.y + clip.h},
+    {clip.x + clip.w, clip.y},
+    {clip.x,          clip.y},
+  };
+
   Path p;
   for (size_t i = 0; i < 100; ++i) {
     // symmetry around the origin
@@ -37,76 +45,14 @@ Path shape_hatch(
       // find the intersections with the four borders of the clipping rectangle
       std::vector<Point> intersections;
 
-      // top border
-      {
-        Point p;
-        auto p_found = intersect_line_lineseg(
-            o,
-            direction,
-            {clip.x         , clip.y},
-            {clip.x + clip.w, clip.y},
-            &p);
-
-        if (p_found) {
-          intersections.push_back(p);
-        }
-      }
-
-      // bottom border
-      {
-        Point p;
-        auto p_found = intersect_line_lineseg(
-            o,
-            direction,
-            {clip.x         , clip.y + clip.h},
-            {clip.x + clip.w, clip.y + clip.h},
-            &p);
-
-        if (p_found) {
-          intersections.push_back(p);
-        }
-      }
-
-      // right border
-      {
-        Point p;
-        auto p_found = intersect_line_lineseg(
-            o,
-            direction,
-            {clip.x + clip.w, clip.y},
-            {clip.x + clip.w, clip.y + clip.h},
-            &p);
-
-        if (p_found) {
-          intersections.push_back(p);
-        }
-      }
-
-      // left border
-      {
-        Point p;
-        auto p_found = intersect_line_lineseg(
-            o,
-            direction,
-            {clip.x, clip.y},
-            {clip.x, clip.y + clip.h},
-            &p);
-
-        if (p_found) {
-          intersections.push_back(p);
-        }
-      }
+      intersect_poly_line(
+          clip_poly,
+          o,
+          direction,
+          &intersections);
 
       // stroke line between edge points
       if (intersections.size() >= 2) {
-        auto line_max = vec2_mul(
-            vec2_normalize(vec2_sub(intersections[0], intersections[1])),
-            vec2_magnitude({clip.w, clip.h}));
-
-        // double the line length to make sure there are no gaps
-        intersections[0] = vec2_add(intersections[0], line_max);
-        intersections[1] = vec2_sub(intersections[1], line_max);
-
         p.moveTo(intersections[0].x, clip.h - intersections[0].y);
         p.lineTo(intersections[1].x, clip.h - intersections[1].y);
       }

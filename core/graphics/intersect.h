@@ -18,6 +18,7 @@
 #include "graphics/color.h"
 #include "graphics/layer.h"
 #include "graphics/geometry.h"
+#include "graphics/polygon.h"
 #include "return_code.h"
 #include "sexpr.h"
 
@@ -58,6 +59,26 @@ bool intersect_lineseg_lineseg(
     vec2 s1,
     vec2 e1,
     vec2* p = nullptr);
+
+/**
+ * Given a polygon and an (infinite) line defined by a point on the line p1 and
+ * the lines direction v1, compute their points of intersection if any.
+ */
+void intersect_poly_line(
+    const Polygon2& p0,
+    const vec2& p1,
+    const vec2& v1,
+    std::vector<vec2>* x);
+
+/**
+ * Given a polygon and a line segement defined by its start and end points of the
+ * two line segments s1, e1, compute their points of intersection if any.
+ */
+void intersect_poly_lineseg(
+    const Polygon2& p0,
+    const vec2& s1,
+    const vec2& e1,
+    std::vector<vec2>* x);
 
 } // namespace fviz
 
