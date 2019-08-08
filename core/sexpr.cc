@@ -143,18 +143,26 @@ ExprStorage expr_clone(const Expr* e, int count /* =-1 */) {
 std::string expr_inspect(const Expr* expr) {
   std::stringstream s;
 
+  switch (expr->type) {
+    case ExprType::VALUE:
+    case ExprType::VALUE_LITERAL:
+      s << expr->value;
+      break;
+    case ExprType::LIST:
+      s << "(";
+      s << expr_inspect_list(expr_get_list(expr));
+      s << ")";
+      break;
+  }
+
+  return s.str();
+}
+
+std::string expr_inspect_list(const Expr* expr) {
+  std::stringstream s;
+
   for (; expr; expr = expr_next(expr)) {
-    switch (expr->type) {
-      case ExprType::VALUE:
-      case ExprType::VALUE_LITERAL:
-        s << expr->value;
-        break;
-      case ExprType::LIST:
-        s << "(";
-        s << expr_inspect(expr_get_list(expr));
-        s << ")";
-        break;
-    }
+    s << expr_inspect(expr);
 
     if (expr_next(expr)) {
       s << " ";

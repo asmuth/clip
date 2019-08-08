@@ -46,6 +46,7 @@ const std::string& expr_get_value(const Expr* expr);
 ExprStorage expr_clone(const Expr* e, int count=-1);
 
 std::string expr_inspect(const Expr* expr);
+std::string expr_inspect_list(const Expr* expr);
 
 } // namespace fviz
 
