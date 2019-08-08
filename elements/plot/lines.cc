@@ -111,19 +111,19 @@ ReturnCode draw(
     strokePath(layer, clip, path, config->stroke_style);
   }
 
-  /* draw points */
+  /* draw markers */
   if (config->marker_size > 0) {
     for (size_t i = 0; i < config->x.size(); ++i) {
       auto sx = clip.x + config->x[i];
       auto sy = clip.y + clip.h - config->y[i];
 
+      const auto& shape = config->marker_shape;
       const auto& color = config->marker_color;
       auto size = config->marker_size;
 
-      Path path;
-      path.moveTo(sx + size, sy);
-      path.arcTo(sx, sy, size, 0, M_PI * 2);
-      fillPath(layer, clip, path, color);
+      if (auto rc = shape(Point(sx, sy), size, color, layer); !rc) {
+        return rc;
+      }
     }
   }
 
