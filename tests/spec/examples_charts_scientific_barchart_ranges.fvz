@@ -25,7 +25,8 @@
       bar-stroke-width .8pt
       bar-fill hatch)
     grid (
-      color #ccc
+      stroke-color #000
+      stroke-style dashed
       tick-placement-x (categorical-bounds)
       tick-placement-y (none))
     legend-top (

@@ -52,6 +52,15 @@ properties:
         examples: |
           ;; set the stroke to dashed
           stroke-style dashed
+      - name: stroke-width
+        desc: |
+          Set the line's stroke width. See the
+          [Typographic Units](#FIXME) page for more details on valid values.
+        desc_code: |
+          stroke-width <measure>
+        examples: |
+          ;; set the stroke width to 2pt
+          stroke-width 2pt
       - name: stroke-color
         desc: |
           Set the stroke color.

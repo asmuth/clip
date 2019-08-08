@@ -1,12 +1,12 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="2000.000000" height="540.000000" viewBox="0 0 2000 540">
   <rect width="2000.000000" height="540.000000" fill="#ffffff"/>
-  <path stroke-width="2.777778" stroke="#cccccc" fill="none" d="M109.344 92.8889 L109.344 441 "/>
-  <path stroke-width="2.777778" stroke="#cccccc" fill="none" d="M406.229 92.8889 L406.229 441 "/>
-  <path stroke-width="2.777778" stroke="#cccccc" fill="none" d="M703.115 92.8889 L703.115 441 "/>
-  <path stroke-width="2.777778" stroke="#cccccc" fill="none" d="M1000 92.8889 L1000 441 "/>
-  <path stroke-width="2.777778" stroke="#cccccc" fill="none" d="M1296.89 92.8889 L1296.89 441 "/>
-  <path stroke-width="2.777778" stroke="#cccccc" fill="none" d="M1593.77 92.8889 L1593.77 441 "/>
-  <path stroke-width="2.777778" stroke="#cccccc" fill="none" d="M1890.66 92.8889 L1890.66 441 "/>
+  <path stroke-width="2.777778" stroke="#000000" fill="none" d="M109.344 92.8889 L109.344 441 " stroke-dasharray="5.55556 5.55556 " stroke-dashoffset="0.000000"/>
+  <path stroke-width="2.777778" stroke="#000000" fill="none" d="M406.229 92.8889 L406.229 441 " stroke-dasharray="5.55556 5.55556 " stroke-dashoffset="0.000000"/>
+  <path stroke-width="2.777778" stroke="#000000" fill="none" d="M703.115 92.8889 L703.115 441 " stroke-dasharray="5.55556 5.55556 " stroke-dashoffset="0.000000"/>
+  <path stroke-width="2.777778" stroke="#000000" fill="none" d="M1000 92.8889 L1000 441 " stroke-dasharray="5.55556 5.55556 " stroke-dashoffset="0.000000"/>
+  <path stroke-width="2.777778" stroke="#000000" fill="none" d="M1296.89 92.8889 L1296.89 441 " stroke-dasharray="5.55556 5.55556 " stroke-dashoffset="0.000000"/>
+  <path stroke-width="2.777778" stroke="#000000" fill="none" d="M1593.77 92.8889 L1593.77 441 " stroke-dasharray="5.55556 5.55556 " stroke-dashoffset="0.000000"/>
+  <path stroke-width="2.777778" stroke="#000000" fill="none" d="M1890.66 92.8889 L1890.66 441 " stroke-dasharray="5.55556 5.55556 " stroke-dashoffset="0.000000"/>
   <path stroke-width="2.222222" stroke="#000000" fill="none" d="M218.509 210.376 L218.509 249.539 L249.064 249.539 L249.064 210.376 Z"/>
   <path stroke-width="2.222222" stroke="#000000" fill="none" d="M515.394 114.646 L515.394 232.133 L545.95 232.133 L545.95 114.646 Z"/>
   <path stroke-width="2.222222" stroke="#000000" fill="none" d="M812.28 197.322 L812.28 210.376 L842.835 210.376 L842.835 197.322 Z"/>

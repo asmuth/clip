@@ -20,6 +20,8 @@
 #include "graphics/brush.h"
 #include "scale.h"
 #include "color_reader.h"
+#include "style.h"
+#include "style_reader.h"
 #include "sexpr_conv.h"
 #include "sexpr_util.h"
 
@@ -39,8 +41,7 @@ struct GridlineDefinition {
   ScaleConfig scale_y;
   ScaleLayoutFn layout_x;
   ScaleLayoutFn layout_y;
-  Measure line_width;
-  Color line_color;
+  StrokeStyle stroke_style;
 };
 
 ReturnCode draw(
@@ -52,13 +53,9 @@ ReturnCode draw(
   conv.font_size = layer->font_size;
   conv.parent_size = layer->font_size;
 
-  measure_normalize(conv, &config->line_width);
+  measure_normalize(conv, &config->stroke_style.line_width);
 
   const auto& bbox = layout.content_box;
-
-  StrokeStyle style;
-  style.line_width = config->line_width;
-  style.color = config->line_color;
 
   ScaleLayout slayout_x;
   config->layout_x(config->scale_x, format_noop(), &slayout_x);
@@ -73,7 +70,7 @@ ReturnCode draw(
         layer,
         Point(line_x, bbox.y),
         Point(line_x, bbox.y + bbox.h),
-        style);
+        config->stroke_style);
   }
 
   for (const auto& tick : slayout_y.positions) {
@@ -83,7 +80,7 @@ ReturnCode draw(
         layer,
         Point(bbox.x, line_y),
         Point(bbox.x + bbox.w, line_y),
-        style);
+        config->stroke_style);
   }
 
   return OK;
@@ -92,8 +89,8 @@ ReturnCode draw(
 ReturnCode build(const Environment& env, const Expr* expr, ElementRef* elem) {
   /* set defaults from environment */
   auto c = std::make_shared<GridlineDefinition>();
-  c->line_width = from_pt(1);
-  c->line_color = Color::fromRGB(.9, .9, .9); // TODO
+  c->stroke_style.line_width = from_pt(1, env.dpi);
+  c->stroke_style.color = Color::fromRGB(.9, .9, .9);
 
   /* parse properties */
   auto config_rc = expr_walk_map(expr_next(expr), {
@@ -109,8 +106,10 @@ ReturnCode build(const Environment& env, const Expr* expr, ElementRef* elem) {
     {"scale-y", bind(&scale_configure_kind, _1, &c->scale_y)},
     {"scale-x-padding", bind(&expr_to_float64, _1, &c->scale_x.padding)},
     {"scale-y-padding", bind(&expr_to_float64, _1, &c->scale_y.padding)},
-    {"color", bind(&color_read, env, _1, &c->line_color)},
-    {"stroke", bind(&measure_read, _1, &c->line_width)},
+    {"color", bind(&color_read, env, _1, &c->stroke_style.color)},
+    {"stroke-color", bind(&color_read, env, _1, &c->stroke_style.color)},
+    {"stroke-width", bind(&measure_read, _1, &c->stroke_style.line_width)},
+    {"stroke-style", bind(&stroke_style_read, env, _1, &c->stroke_style)},
   });
 
   if (!config_rc) {
