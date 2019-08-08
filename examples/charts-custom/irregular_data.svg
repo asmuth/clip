@@ -14,7 +14,7 @@
   <path fill="#3d96ae" d="M695.099 130.545 M687.099 130.545 a4 4 0 1 0 8 0 a4 4 0 1 0 -8 0 "/>
   <path fill="#3d96ae" d="M767.937 61.6444 M759.937 61.6444 a4 4 0 1 0 8 0 a4 4 0 1 0 -8 0 "/>
   <path fill="#3d96ae" d="M840.775 49.117 M832.775 49.117 a4 4 0 1 0 8 0 a4 4 0 1 0 -8 0 "/>
-  <path fill="#ffffff" d="M68.6375 88.8 L169.557 88.8 L169.557 146.8 L68.6375 146.8 L68.6375 88.8 "/>
+  <path fill="#ffffff" d="M68.6375 88.8 L169.557 88.8 L169.557 146.8 L68.6375 146.8 Z"/>
   <text x="99.437500" y="111.600000" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">Series A</text>
   <path fill="#89a54e" d="M91.0042 106.6 M80.0042 106.6 a5.5 5.5 0 1 0 11 0 a5.5 5.5 0 1 0 -11 0 "/>
   <text x="99.437500" y="134.000000" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">Series B</text>

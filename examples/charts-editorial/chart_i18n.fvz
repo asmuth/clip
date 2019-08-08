@@ -13,17 +13,17 @@
         data-x (csv "tests/testdata/city_temperatures.csv" month)
         data-y (csv "tests/testdata/city_temperatures.csv" temp_beijing)
         color #aa4643
-        marker-size (2pt))
+        marker-size 2pt)
     lines (
         data-x (csv "tests/testdata/city_temperatures.csv" month)
         data-y (csv "tests/testdata/city_temperatures.csv" temp_moscow)
         color #89a54e
-        marker-size (2pt))
+        marker-size 2pt)
     lines (
         data-x (csv "tests/testdata/city_temperatures.csv" month)
         data-y (csv "tests/testdata/city_temperatures.csv" temp_telaviv)
         color #4572a7
-        marker-size (2pt))
+        marker-size 2pt)
     legend-overlay (
         position (bottom center)
         border none

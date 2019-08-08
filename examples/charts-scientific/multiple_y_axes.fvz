@@ -18,10 +18,8 @@
       (plot/lines
           data-x (csv "tests/testdata/measurement2.csv" time)
           data-y (csv "tests/testdata/measurement2.csv" value3)
-          limit-y (-4 10)
-          stroke 1pt)
+          limit-y (-4 10))
       (plot/lines
           data-x (csv "tests/testdata/measurement2.csv" time)
           data-y (csv "tests/testdata/measurement2.csv" value3)
-          limit-y (-16 6)
-          stroke 1pt)))
+          limit-y (-16 6))))

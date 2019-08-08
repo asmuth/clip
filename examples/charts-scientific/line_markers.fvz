@@ -11,17 +11,9 @@
   lines (
       data-x (100 200 300 400 500 600 700 800 900)
       data-y (-1.2   -1.8   -1.3   -1.6   -1.5   -1.3   -1.8   -1.9   -2.0)
-      stroke 1pt)
-  points (
-      data-x (100 200 300 400 500 600 700 800 900)
-      data-y (-1.2   -1.8   -1.3   -1.6   -1.5   -1.3   -1.8   -1.9   -2.0)
       marker-shape (pentagon)
       marker-size 8pt)
   lines (
-      data-x (100 200 300 400 500 600 700 800 900)
-      data-y (1.2   1.8   1.3   0.6   1.5   1.3   1.8   1.7   1.9)
-      stroke 1pt)
-  points (
       data-x (100 200 300 400 500 600 700 800 900)
       data-y (1.2   1.8   1.3   0.6   1.5   1.3   1.8   1.7   1.9)
       marker-shape (square-bullet)

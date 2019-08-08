@@ -20,6 +20,9 @@
 #include "scale.h"
 #include "layout.h"
 #include "color_reader.h"
+#include "marker.h"
+#include "style.h"
+#include "style_reader.h"
 #include "graphics/path.h"
 #include "graphics/brush.h"
 #include "graphics/text.h"
@@ -41,9 +44,10 @@ struct PlotLinesConfig {
   ScaleConfig scale_x;
   ScaleConfig scale_y;
   std::vector<DataGroup> groups;
-  Color color;
-  std::vector<Measure> marker_sizes;
-  Measure line_width;
+  StrokeStyle stroke_style;
+  Measure marker_size;
+  Marker marker_shape;
+  Color marker_color;
   std::vector<std::string> labels;
   FontInfo label_font;
   Color label_color;
@@ -81,14 +85,10 @@ ReturnCode draw(
   conv.font_size = layer->font_size;
   conv.parent_size = layer->font_size;
 
-  measure_normalize(conv, &config->line_width);
+  measure_normalize(conv, &config->stroke_style.line_width);
   measure_normalize(conv, &config->label_padding);
   measure_normalize(conv, &config->label_font_size);
-
-  measure_normalizev(
-      conv,
-      &*config->marker_sizes.begin(),
-      &*config->marker_sizes.end());
+  measure_normalize(conv, &config->marker_size);
 
   /* draw lines */
   for (const auto& group : config->groups) {
@@ -108,20 +108,17 @@ ReturnCode draw(
       }
     }
 
-    StrokeStyle style;
-    style.line_width = config->line_width;
-    style.color = config->color;
-    strokePath(layer, clip, path, style);
+    strokePath(layer, clip, path, config->stroke_style);
   }
 
   /* draw points */
-  if (!config->marker_sizes.empty()) {
+  if (config->marker_size > 0) {
     for (size_t i = 0; i < config->x.size(); ++i) {
       auto sx = clip.x + config->x[i];
       auto sy = clip.y + clip.h - config->y[i];
 
-      const auto& color = config->color;
-      auto size = config->marker_sizes[i % config->marker_sizes.size()];
+      const auto& color = config->marker_color;
+      auto size = config->marker_size;
 
       Path path;
       path.moveTo(sx + size, sy);
@@ -134,10 +131,7 @@ ReturnCode draw(
   for (size_t i = 0; i < config->labels.size(); ++i) {
     const auto& label_text = config->labels[i];
 
-    auto label_offset  = config->marker_sizes.empty()
-        ? 0
-        : config->marker_sizes[i % config->marker_sizes.size()];
-
+    auto label_offset  = config->marker_size;
     auto label_padding = label_offset + measure_or(
         config->label_padding,
         from_em(kDefaultLabelPaddingEM, config->label_font_size));
@@ -167,10 +161,12 @@ ReturnCode build(
     ElementRef* elem) {
   /* set defaults from environment */
   auto c = std::make_shared<PlotLinesConfig>();
-  c->color = env.foreground_color;
   c->label_font = env.font;
   c->label_font_size = env.font_size;
-  c->line_width = from_pt(kDefaultLineWidthPT);
+  c->stroke_style.color = env.foreground_color;
+  c->stroke_style.line_width = from_pt(kDefaultLineWidthPT);
+  c->marker_shape = marker_create_disk();
+  c->marker_color = env.foreground_color;
 
   /* parse properties */
   std::vector<std::string> data_x;
@@ -189,9 +185,19 @@ ReturnCode build(
     {"scale-y", bind(&scale_configure_kind, _1, &c->scale_y)},
     {"scale-x-padding", bind(&expr_to_float64, _1, &c->scale_x.padding)},
     {"scale-y-padding", bind(&expr_to_float64, _1, &c->scale_y.padding)},
-    {"color", bind(&color_read, env, _1, &c->color)},
-    {"stroke", bind(&measure_read, _1, &c->line_width)},
-    {"marker-size", bind(&data_load, _1, &c->marker_sizes)},
+    {
+      "color",
+      expr_calln_fn({
+        bind(&color_read, env, _1, &c->stroke_style.color),
+        bind(&color_read, env, _1, &c->marker_color),
+      })
+    },
+    {"stroke-width", bind(&measure_read, _1, &c->stroke_style.line_width)},
+    {"stroke-style", bind(&stroke_style_read, env, _1, &c->stroke_style)},
+    {"stroke-color", bind(&color_read, env, _1, &c->stroke_style.color)},
+    {"marker-size", bind(&measure_read, _1, &c->marker_size)},
+    {"marker-shape", bind(&marker_configure, _1, &c->marker_shape)},
+    {"marker-color", bind(&color_read, env, _1, &c->marker_color)},
     {"labels", bind(&data_load_strings, _1, &c->labels)},
     {"label-font-size", bind(&measure_read, _1, &c->label_font_size)},
     {"label-color", bind(&color_read, env, _1, &c->label_color)},
