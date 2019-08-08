@@ -30,8 +30,8 @@ int main(int argc, char** argv) {
       from_unit(12),
       Color::fromRGB(1.0, 1.0, 1.0),
       [&] (auto svg) {
-      FileUtil::write(std::string(argv[0]) + ".svg", Buffer(svg.data(), svg.size()));
-      return OK;
+        FileUtil::write(std::string(argv[0]) + ".svg", Buffer(svg.data(), svg.size()));
+        return OK;
       },
       &layer);
 
@@ -44,8 +44,7 @@ int main(int argc, char** argv) {
 
   auto p = shape_hatch(path_to_polygon_simple(clip), 45, 0, 40, 20);
 
-  FillStyle fs;
-  fillPath(layer.get(), p, fs);
+  fillPath(layer.get(), p, Color{});
 
   layer_submit(layer.get());
 }

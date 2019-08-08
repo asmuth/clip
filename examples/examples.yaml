@@ -12,8 +12,8 @@
     - file: charts-scientific/line_markers
     - file: charts-scientific/errorbars_log
     - file: charts-scientific/multiple_y_axes
-    - file: charts-scientific/scatterplot_colors
     - file: charts-scientific/barchart_ranges
+    - file: charts-scientific/scatterplot_colors
 
 - section: Editorial Charts
   files:
