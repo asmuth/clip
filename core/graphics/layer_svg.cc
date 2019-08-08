@@ -130,12 +130,12 @@ Status svg_fill_path(
     SVGDataRef svg) {
   const auto& clip = op.clip;
   const auto& path = op.path;
-  const auto& style = op.style;
+  const auto& color = op.color;
 
   svg->buffer
       << "  "
       << "<path"
-      << svg_attr("fill", style.color.to_hex_str())
+      << svg_attr("fill", color.to_hex_str())
       << svg_attr("d", svg_path_data(path))
       << "/>"
       << "\n";

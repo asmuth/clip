@@ -20,35 +20,40 @@ namespace fviz {
 void fillPath(
     Layer* layer,
     const Path& path,
-    const FillStyle& style) {
+    const Color& color) {
   fillPath(
       layer,
       Rectangle(0, 0, layer->width, layer->height),
-      path.data(),
-      path.size(),
-      style);
+      path,
+      color);
 }
 
 void fillPath(
     Layer* layer,
     const Rectangle& clip,
     const Path& path,
-    const FillStyle& style) {
+    const Color& color) {
   layer_ops::BrushFillOp op;
   op.clip = clip;
   op.path = path;
-  op.style = style;
+  op.color = color;
 
   layer->apply(op);
 }
 
-void fillPath(
+ReturnCode fillPath(
+    Layer* layer,
+    const Path& path,
+    const FillStyle& style) {
+  return style(path, layer);
+}
+
+ReturnCode fillPath(
     Layer* layer,
     const Rectangle& clip,
-    const PathData* point_data,
-    size_t point_count,
+    const Path& path,
     const FillStyle& style) {
-  return fillPath(layer, clip, Path(point_data, point_count), style);
+  return style(path, layer);
 }
 
 void strokePath(
@@ -68,6 +73,10 @@ void strokePath(
     const Rectangle& clip,
     const Path& path,
     const StrokeStyle& style) {
+  if (style.line_width == 0) {
+    return;
+  }
+
   layer_ops::BrushStrokeOp op;
   op.clip = clip;
   op.path = path;
@@ -131,6 +140,22 @@ void fillRectangle(
   fillPath(layer, clip, p, style);
 }
 
+void fillRectangle(
+    Layer* layer,
+    const Point& origin,
+    double width,
+    double height,
+    const Color& color) {
+  Path p;
+  p.moveTo(origin.x, origin.y);
+  p.lineTo(origin.x + width, origin.y);
+  p.lineTo(origin.x + width, origin.y + height);
+  p.lineTo(origin.x, origin.y + height);
+  p.lineTo(origin.x, origin.y);
+
+  Rectangle clip(0, 0, layer->width, layer->height);
+  fillPath(layer, clip, p, color);
+}
 
 } // namespace fviz
 

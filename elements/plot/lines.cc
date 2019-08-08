@@ -123,14 +123,10 @@ ReturnCode draw(
       const auto& color = config->color;
       auto size = config->marker_sizes[i % config->marker_sizes.size()];
 
-      FillStyle style;
-      style.color = color;
-
-      // TODO point style
       Path path;
       path.moveTo(sx + size, sy);
       path.arcTo(sx, sy, size, 0, M_PI * 2);
-      fillPath(layer, clip, path, style);
+      fillPath(layer, clip, path, color);
     }
   }
 

@@ -14,7 +14,8 @@
       data-y-low (csv "tests/testdata/bardata.csv" var2)
       bar-width (1em)
       bar-offset (-.8em)
-      color #999)
+      bar-stroke-width .8pt
+      bar-fill none)
     bars (
       data-x (csv "tests/testdata/bardata.csv" var3)
       data-y (csv "tests/testdata/bardata.csv" var4)

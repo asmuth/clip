@@ -41,9 +41,7 @@ ReturnCode arrow_draw_default(
   line_style.line_width = size;
   strokeLine(layer, from, to, line_style);
 
-  FillStyle head_style;
-  head_style.color = color;
-  fillPath(layer, head_path, head_style);
+  fillPath(layer, head_path, color);
 
   return OK;
 }

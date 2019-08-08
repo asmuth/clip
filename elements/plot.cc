@@ -137,15 +137,13 @@ ReturnCode draw(
   /* draw the background */
   if (config->background) {
     const auto& bg_box = body_box;
-    FillStyle bg_fill;
-    bg_fill.color = *config->background;
 
     fillRectangle(
         layer,
         Point(bg_box.x, bg_box.y),
         bg_box.w,
         bg_box.h,
-        bg_fill);
+        *config->background);
   }
 
   /* draw the body elements  */

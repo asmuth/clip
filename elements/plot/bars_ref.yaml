@@ -102,6 +102,41 @@ properties:
         examples: |
           ;; set the bar offset to -.4em
           bar-offset -.4em
+      - name: bar-stroke-color
+        desc: |
+          Set the bar's stroke color. See the [color](#FIXME) page for more details on valid values.
+        desc_code: |
+          bar-stroke-color <color>
+        examples: |
+          ;; set the stroke color to grey
+          bar-stroke-color #eee
+      - name: bar-stroke-width
+        desc: |
+          Set the bar stroke width. See the
+          [measure](#FIXME) page for more details on valid values.
+        desc_code: |
+          bar-stroke-width <measure>
+        examples: |
+          ;; set the bar stroke width to 2pt
+          bar-stroke-width 2pt
+      - name: bar-stroke-style
+        desc: |
+          Set the bar stroke style. See the
+          [Fill & Stroke Styles](#FIXME) page for more details on valid values.
+        desc_code: |
+          bar-stroke-style <stroke-style>
+        examples: |
+          ;; set the bar stroke style to none
+          bar-stroke-style solid
+      - name: bar-fill
+        desc: |
+          Set the bar fill. See the
+          [Fill & Stroke Styles](#FIXME) page for more details on valid values.
+        desc_code: |
+          bar-fill <fil-style>
+        examples: |
+          ;; set the bar fill to blue
+          bar-fill #00f
 
   - title: "Label Options"
     anchor: label-options

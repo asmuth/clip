@@ -22,6 +22,7 @@
 #include "brush.h"
 #include "text.h"
 #include "text_layout.h"
+#include "style.h"
 
 namespace fviz {
 namespace layer_ops {
@@ -37,7 +38,7 @@ struct BrushStrokeOp {
 struct BrushFillOp {
   Rectangle clip;
   Path path;
-  FillStyle style;
+  Color color;
 };
 
 struct TextSpanOp {

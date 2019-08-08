@@ -21,6 +21,8 @@
 #include "graphics/text.h"
 #include "graphics/layout.h"
 #include "scale.h"
+#include "style.h"
+#include "style_reader.h"
 #include "color_reader.h"
 #include "sexpr_conv.h"
 #include "sexpr_util.h"
@@ -45,7 +47,8 @@ struct PlotBarsConfig {
   std::vector<Measure> yoffset;
   ScaleConfig scale_x;
   ScaleConfig scale_y;
-  Color color;
+  StrokeStyle stroke_style;
+  FillStyle fill_style;
   std::vector<Measure> sizes;
   std::vector<Measure> offsets;
   std::vector<std::string> labels;
@@ -130,11 +133,6 @@ ReturnCode draw_horizontal(
         ? 0
         : config.offsets[i % config.offsets.size()];
 
-    const auto& color = config.color;
-
-    FillStyle style;
-    style.color = color;
-
     Path path;
     path.moveTo(sx1, sy + -offset - size * 0.5);
     path.lineTo(sx2, sy + -offset - size * 0.5);
@@ -142,8 +140,8 @@ ReturnCode draw_horizontal(
     path.lineTo(sx1, sy + -offset + size * 0.5);
     path.closePath();
 
-
-    fillPath(layer, clip, path, style);
+    strokePath(layer, clip, path, config.stroke_style);
+    fillPath(layer, clip, path, config.fill_style);
   }
 
   /* draw labels */
@@ -234,6 +232,8 @@ ReturnCode draw_vertical(
       &*config.offsets.begin(),
       &*config.offsets.end());
 
+  convert_unit_typographic(layer->dpi, layer->font_size, &config.stroke_style.line_width);
+
   /* draw bars */
   auto y0 = clip.h * std::clamp(scale_translate(config.scale_y, 0), 0.0, 1.0);
   for (size_t i = 0; i < config.x.size(); ++i) {
@@ -249,11 +249,6 @@ ReturnCode draw_vertical(
         ? 0
         : config.offsets[i % config.offsets.size()];
 
-    const auto& color = config.color;
-
-    FillStyle style;
-    style.color = color;
-
     Path path;
     path.moveTo(sx + offset - size * 0.5, sy1);
     path.lineTo(sx + offset - size * 0.5, sy2);
@@ -261,7 +256,8 @@ ReturnCode draw_vertical(
     path.lineTo(sx + offset + size * 0.5, sy1);
     path.closePath();
 
-    fillPath(layer, clip, path, style);
+    strokePath(layer, clip, path, config.stroke_style);
+    fillPath(layer, clip, path, config.fill_style);
   }
 
   /* draw labels */
@@ -315,7 +311,9 @@ ReturnCode build(
     ElementRef* elem) {
   /* set defaults from environment */
   auto c = std::make_shared<PlotBarsConfig>();
-  c->color = env.foreground_color;
+  c->stroke_style.color = env.foreground_color;
+  c->stroke_style.line_width = from_unit(0);
+  c->fill_style = fill_style_solid(env.foreground_color);
   c->label_font = env.font;
   c->label_font_size = env.font_size;
 
@@ -336,6 +334,10 @@ ReturnCode build(
     {"bar-widths", bind(&data_load, _1, &c->sizes)},
     {"bar-offset", bind(&data_load, _1, &c->offsets)},
     {"bar-offsets", bind(&data_load, _1, &c->offsets)},
+    {"bar-stroke-color", bind(&color_read, env, _1, &c->stroke_style.color)},
+    {"bar-stroke-width", bind(&measure_read, _1, &c->stroke_style.line_width)},
+    {"bar-stroke-style", bind(&stroke_style_read, _1, &c->stroke_style)},
+    {"bar-fill", bind(&fill_style_read, env, _1, &c->fill_style)},
     {"limit-x", bind(&expr_to_float64_opt_pair, _1, &c->scale_x.min, &c->scale_x.max)},
     {"limit-x-min", bind(&expr_to_float64_opt, _1, &c->scale_x.min)},
     {"limit-x-max", bind(&expr_to_float64_opt, _1, &c->scale_x.max)},
@@ -346,7 +348,13 @@ ReturnCode build(
     {"scale-y", bind(&scale_configure_kind, _1, &c->scale_y)},
     {"scale-x-padding", bind(&expr_to_float64, _1, &c->scale_x.padding)},
     {"scale-y-padding", bind(&expr_to_float64, _1, &c->scale_y.padding)},
-    {"color", bind(&color_read, env, _1, &c->color)},
+    {
+      "color",
+      expr_calln_fn({
+        bind(&color_read, env, _1, &c->stroke_style.color),
+        bind(&fill_style_read_solid, env, _1, &c->fill_style),
+      })
+    },
     {
       "direction",
       expr_to_enum_fn<Direction>(&c->direction, {

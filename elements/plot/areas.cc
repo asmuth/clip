@@ -113,9 +113,7 @@ ReturnCode draw_horizontal(
 
   path.closePath();
 
-  FillStyle style;
-  style.color = config.color;
-  fillPath(layer, clip, path, style);
+  fillPath(layer, clip, path, config.color);
 
   return OK;
 }
@@ -186,10 +184,7 @@ ReturnCode draw_vertical(
 
   path.closePath();
 
-  FillStyle style;
-  style.color = config.color;
-
-  fillPath(layer, clip, path, style);
+  fillPath(layer, clip, path, config.color);
 
   return OK;
 }

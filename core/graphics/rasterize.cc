@@ -41,17 +41,17 @@ Rasterizer::~Rasterizer() {
 Status Rasterizer::fillPath(const layer_ops::BrushFillOp& op) {
   const auto& clip = op.clip;
   const auto& path = op.path;
-  const auto& style = op.style;
+  const auto& color = op.color;
   if (path.size() < 2) {
     return ERROR;
   }
 
   cairo_set_source_rgba(
      cr_ctx,
-     style.color.red(),
-     style.color.green(),
-     style.color.blue(),
-     style.color.alpha());
+     color.red(),
+     color.green(),
+     color.blue(),
+     color.alpha());
 
   cairo_new_path(cr_ctx);
 

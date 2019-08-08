@@ -89,13 +89,10 @@ Marker marker_create_circle(double border_width) {
 
 Marker marker_create_disk() {
   return [] (const auto& pos, const auto& size, const auto& color, auto target) {
-    FillStyle style;
-    style.color = color;
-
     Path path;
     path.moveTo(pos.x + size * 0.5, pos.y);
     path.arcTo(pos.x, pos.y, size * 0.5, 0, M_PI * 2);
-    fillPath(target, path, style);
+    fillPath(target, path, color);
 
     return OK;
   };

@@ -19,34 +19,24 @@
 #include "path.h"
 #include "measure.h"
 #include "layout.h"
+#include "style.h"
 
 namespace fviz {
 class Layer;
 
-enum class StrokeLineJoin { MITER, ROUND, BEVEL };
-enum class StrokeLineCap { BUTT, SQUARE, ROUND};
-
-struct StrokeStyle {
-  StrokeStyle() :
-    line_join(StrokeLineJoin::MITER),
-    line_cap(StrokeLineCap::SQUARE),
-    color(Color::fromRGB(0, 0, 0)) {}
-
-  Measure line_width;
-  StrokeLineJoin line_join;
-  StrokeLineCap line_cap;
-  Color color;
-};
-
-struct FillStyle {
-  FillStyle() :
-    color(Color::fromRGB(0, 0, 0)) {}
-
-  Color color;
-};
+ReturnCode fillPath(
+    Layer* layer,
+    const Path& path,
+    const FillStyle& style);
 
 void fillPath(
     Layer* layer,
+    const Path& path,
+    const Color& color);
+
+ReturnCode fillPath(
+    Layer* layer,
+    const Rectangle& clip,
     const Path& path,
     const FillStyle& style);
 
@@ -54,7 +44,7 @@ void fillPath(
     Layer* layer,
     const Rectangle& clip,
     const Path& path,
-    const FillStyle& style);
+    const Color& color);
 
 void fillPath(
     Layer* layer,
@@ -99,7 +89,7 @@ void fillRectangle(
     const Point& origin,
     double width,
     double height,
-    const FillStyle& style);
+    const Color& color);
 
 } // namespace fviz
 
