@@ -117,7 +117,7 @@ void strokeRectangle(
   p.lineTo(origin.x + width, origin.y);
   p.lineTo(origin.x + width, origin.y + height);
   p.lineTo(origin.x, origin.y + height);
-  p.lineTo(origin.x, origin.y);
+  p.closePath();
 
   Rectangle clip(0, 0, layer->width, layer->height);
   strokePath(layer, clip, p, style);
@@ -134,7 +134,7 @@ void fillRectangle(
   p.lineTo(origin.x + width, origin.y);
   p.lineTo(origin.x + width, origin.y + height);
   p.lineTo(origin.x, origin.y + height);
-  p.lineTo(origin.x, origin.y);
+  p.closePath();
 
   Rectangle clip(0, 0, layer->width, layer->height);
   fillPath(layer, clip, p, style);
@@ -151,7 +151,7 @@ void fillRectangle(
   p.lineTo(origin.x + width, origin.y);
   p.lineTo(origin.x + width, origin.y + height);
   p.lineTo(origin.x, origin.y + height);
-  p.lineTo(origin.x, origin.y);
+  p.closePath();
 
   Rectangle clip(0, 0, layer->width, layer->height);
   fillPath(layer, clip, p, color);

@@ -112,6 +112,21 @@ Status svg_stroke_path(
   const auto& path = op.path;
   const auto& style = op.style;
 
+  std::string dash_opts;
+  switch (style.dash_type) {
+    case StrokeStyle::SOLID:
+      break;
+    case StrokeStyle::DASH: {
+      std::string dash_pattern;
+      for (const auto& v : style.dash_pattern) {
+        dash_pattern += fmt::format("{} ", v);
+      }
+
+      dash_opts = svg_attr("stroke-dasharray", dash_pattern);
+      break;
+    }
+  }
+
   svg->buffer
       << "  "
       << "<path"
@@ -119,6 +134,7 @@ Status svg_stroke_path(
       << svg_attr("stroke", style.color.to_hex_str())
       << svg_attr("fill", "none")
       << svg_attr("d", svg_path_data(path))
+      << dash_opts
       << "/>"
       << "\n";
 
@@ -258,7 +274,6 @@ ReturnCode layer_bind_svg(
       << svg_attr("fill", background_color.to_hex_str())
       << "/>"
       << "\n";
-
 
   LayerRef l(new Layer());
   l->width = svg->width = width,

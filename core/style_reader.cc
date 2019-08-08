@@ -21,8 +21,13 @@ using namespace std::placeholders;
 namespace fviz {
 
 ReturnCode stroke_style_read(
+    const Environment& env,
     const Expr* expr,
     StrokeStyle* style) {
+  if (expr_is_list(expr)) {
+    expr = expr_get_list(expr);
+  }
+
   if (expr_is_value(expr, "none")) {
     style->line_width = from_unit(0);
     return OK;
@@ -30,6 +35,12 @@ ReturnCode stroke_style_read(
 
   if (expr_is_value(expr, "solid")) {
     style->dash_type = StrokeStyle::SOLID;
+    return OK;
+  }
+
+  if (expr_is_value(expr, "dash") || expr_is_value(expr, "dashed")) {
+    style->dash_type = StrokeStyle::DASH;
+    style->dash_pattern = {from_pt(2, env.dpi), from_pt(2, env.dpi)};
     return OK;
   }
 

@@ -20,6 +20,7 @@
 namespace fviz {
 
 ReturnCode stroke_style_read(
+    const Environment& env,
     const Expr* expr,
     StrokeStyle* style);
 

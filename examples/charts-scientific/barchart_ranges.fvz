@@ -15,6 +15,7 @@
       bar-width (1em)
       bar-offset (-.8em)
       bar-stroke-width .8pt
+      bar-stroke-style dashed
       bar-fill none)
     bars (
       data-x (csv "tests/testdata/bardata.csv" var3)

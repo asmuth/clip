@@ -66,6 +66,9 @@ Status Rasterizer::fillPath(const layer_ops::BrushFillOp& op) {
       case PathCommand::ARC_TO:
         cairo_arc(cr_ctx, cmd[0], cmd[1], cmd[2], cmd[3], cmd[4]);
         break;
+      case PathCommand::CLOSE:
+        cairo_close_path(cr_ctx);
+        break;
       default:
         break; // not yet implemented
     }
@@ -94,6 +97,21 @@ Status Rasterizer::strokePath(const layer_ops::BrushStrokeOp& op) {
 
   cairo_set_line_width(cr_ctx, style.line_width);
 
+  switch (style.dash_type) {
+    case StrokeStyle::SOLID:
+      cairo_set_dash(cr_ctx, nullptr, 0, 0);
+      break;
+    case StrokeStyle::DASH: {
+      std::vector<double> dash_pattern;
+      for (const auto& v : style.dash_pattern) {
+        dash_pattern.push_back(v);
+      }
+
+      cairo_set_dash(cr_ctx, dash_pattern.data(), dash_pattern.size(), 0);
+      break;
+    }
+  }
+
   cairo_new_path(cr_ctx);
 
   for (const auto& cmd : path) {
@@ -106,6 +124,9 @@ Status Rasterizer::strokePath(const layer_ops::BrushStrokeOp& op) {
         break;
       case PathCommand::ARC_TO:
         cairo_arc(cr_ctx, cmd[0], cmd[1], cmd[2], cmd[3], cmd[4]);
+        break;
+      case PathCommand::CLOSE:
+        cairo_close_path(cr_ctx);
         break;
       default:
         break; // not yet implemented

@@ -46,6 +46,7 @@ FillStyle fill_style_none();
 struct StrokeStyle {
   enum DashType {
     SOLID,
+    DASH
   };
 
   StrokeStyle() :
@@ -55,6 +56,7 @@ struct StrokeStyle {
   Measure line_width;
   Color color;
   DashType dash_type;
+  std::vector<Measure> dash_pattern;
 };
 
 

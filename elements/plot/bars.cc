@@ -336,7 +336,7 @@ ReturnCode build(
     {"bar-offsets", bind(&data_load, _1, &c->offsets)},
     {"bar-stroke-color", bind(&color_read, env, _1, &c->stroke_style.color)},
     {"bar-stroke-width", bind(&measure_read, _1, &c->stroke_style.line_width)},
-    {"bar-stroke-style", bind(&stroke_style_read, _1, &c->stroke_style)},
+    {"bar-stroke-style", bind(&stroke_style_read, env, _1, &c->stroke_style)},
     {"bar-fill", bind(&fill_style_read, env, _1, &c->fill_style)},
     {"limit-x", bind(&expr_to_float64_opt_pair, _1, &c->scale_x.min, &c->scale_x.max)},
     {"limit-x-min", bind(&expr_to_float64_opt, _1, &c->scale_x.min)},

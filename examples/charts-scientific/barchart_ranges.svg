@@ -7,12 +7,12 @@
   <path stroke-width="2.777778" stroke="#cccccc" fill="none" d="M1296.89 92.8889 L1296.89 441 "/>
   <path stroke-width="2.777778" stroke="#cccccc" fill="none" d="M1593.77 92.8889 L1593.77 441 "/>
   <path stroke-width="2.777778" stroke="#cccccc" fill="none" d="M1890.66 92.8889 L1890.66 441 "/>
-  <path stroke-width="2.222222" stroke="#000000" fill="none" d="M218.509 210.376 L218.509 249.539 L249.064 249.539 L249.064 210.376 Z"/>
-  <path stroke-width="2.222222" stroke="#000000" fill="none" d="M515.394 114.646 L515.394 232.133 L545.95 232.133 L545.95 114.646 Z"/>
-  <path stroke-width="2.222222" stroke="#000000" fill="none" d="M812.28 197.322 L812.28 210.376 L842.835 210.376 L842.835 197.322 Z"/>
-  <path stroke-width="2.222222" stroke="#000000" fill="none" d="M1109.16 232.133 L1109.16 253.89 L1139.72 253.89 L1139.72 232.133 Z"/>
-  <path stroke-width="2.222222" stroke="#000000" fill="none" d="M1406.05 232.133 L1406.05 306.107 L1436.61 306.107 L1436.61 232.133 Z"/>
-  <path stroke-width="2.222222" stroke="#000000" fill="none" d="M1702.94 158.16 L1702.94 253.89 L1733.49 253.89 L1733.49 158.16 Z"/>
+  <path stroke-width="2.222222" stroke="#000000" fill="none" d="M218.509 210.376 L218.509 249.539 L249.064 249.539 L249.064 210.376 Z" stroke-dasharray="5.55556 5.55556 "/>
+  <path stroke-width="2.222222" stroke="#000000" fill="none" d="M515.394 114.646 L515.394 232.133 L545.95 232.133 L545.95 114.646 Z" stroke-dasharray="5.55556 5.55556 "/>
+  <path stroke-width="2.222222" stroke="#000000" fill="none" d="M812.28 197.322 L812.28 210.376 L842.835 210.376 L842.835 197.322 Z" stroke-dasharray="5.55556 5.55556 "/>
+  <path stroke-width="2.222222" stroke="#000000" fill="none" d="M1109.16 232.133 L1109.16 253.89 L1139.72 253.89 L1139.72 232.133 Z" stroke-dasharray="5.55556 5.55556 "/>
+  <path stroke-width="2.222222" stroke="#000000" fill="none" d="M1406.05 232.133 L1406.05 306.107 L1436.61 306.107 L1436.61 232.133 Z" stroke-dasharray="5.55556 5.55556 "/>
+  <path stroke-width="2.222222" stroke="#000000" fill="none" d="M1702.94 158.16 L1702.94 253.89 L1733.49 253.89 L1733.49 158.16 Z" stroke-dasharray="5.55556 5.55556 "/>
   <path fill="#cccccc" d="M266.509 162.511 L266.509 375.729 L297.064 375.729 L297.064 162.511 Z"/>
   <path fill="#cccccc" d="M563.394 158.16 L563.394 345.269 L593.95 345.269 L593.95 158.16 Z"/>
   <path fill="#cccccc" d="M860.28 123.349 L860.28 397.486 L890.835 397.486 L890.835 123.349 Z"/>
