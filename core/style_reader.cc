@@ -20,28 +20,44 @@ using namespace std::placeholders;
 
 namespace fviz {
 
+ReturnCode stroke_style_read_dash(
+    const Environment& env,
+    const Expr* expr,
+    StrokeStyle* style) {
+  style->dash_type = StrokeStyle::DASH;
+  style->dash_pattern = {from_pt(2, env.dpi), from_pt(2, env.dpi)};
+
+  if (!expr) {
+    return OK;
+  }
+
+  return expr_walk_map(expr_next(expr), {
+    {"pattern", expr_tov_fn<Measure>(bind(&measure_readn, env, _1, _2), &style->dash_pattern)},
+    {"offset", bind(&measure_readn, env, _1, &style->dash_offset)},
+  });
+}
+
 ReturnCode stroke_style_read(
     const Environment& env,
     const Expr* expr,
     StrokeStyle* style) {
-  if (expr_is_list(expr)) {
-    expr = expr_get_list(expr);
-  }
-
-  if (expr_is_value(expr, "none")) {
+  if (expr_is_value(expr, "none") ||
+      expr_is_list(expr, "none")) {
     style->line_width = from_unit(0);
     return OK;
   }
 
-  if (expr_is_value(expr, "solid")) {
+  if (expr_is_value(expr, "solid") ||
+      expr_is_list(expr, "solid")) {
     style->dash_type = StrokeStyle::SOLID;
     return OK;
   }
 
-  if (expr_is_value(expr, "dash") || expr_is_value(expr, "dashed")) {
-    style->dash_type = StrokeStyle::DASH;
-    style->dash_pattern = {from_pt(2, env.dpi), from_pt(2, env.dpi)};
-    return OK;
+  if (expr_is_value(expr, "dash") ||
+      expr_is_value(expr, "dashed") ||
+      expr_is_list(expr, "dash") ||
+      expr_is_list(expr, "dashed")) {
+    return stroke_style_read_dash(env, expr_get_list(expr), style);
   }
 
   return errorf(

@@ -107,7 +107,11 @@ Status Rasterizer::strokePath(const layer_ops::BrushStrokeOp& op) {
         dash_pattern.push_back(v);
       }
 
-      cairo_set_dash(cr_ctx, dash_pattern.data(), dash_pattern.size(), 0);
+      cairo_set_dash(
+          cr_ctx,
+          dash_pattern.data(),
+          dash_pattern.size(),
+          style.dash_offset);
       break;
     }
   }

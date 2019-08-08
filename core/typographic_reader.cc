@@ -35,6 +35,29 @@ ReturnCode measure_read(
   return parse_measure(expr_get_value(expr), value);
 }
 
+ReturnCode measure_readn(
+    const Environment& env,
+    const Expr* expr,
+    Measure* value) {
+  if (!expr_is_value(expr)) {
+    return errorf(
+        ERROR,
+        "argument error; expected a value, got: {}",
+        expr_inspect(expr));
+  }
+
+  if (auto rc = parse_measure(expr_get_value(expr), value); !rc) {
+    return rc;
+  }
+
+  MeasureConv conv;
+  conv.dpi = env.dpi;
+  conv.font_size = env.font_size;
+  measure_normalize(conv, value);
+
+  return OK;
+}
+
 ReturnCode measure_read_opt(
     const Expr* expr,
     std::optional<Measure>* value) {

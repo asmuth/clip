@@ -122,7 +122,8 @@ Status svg_stroke_path(
         dash_pattern += fmt::format("{} ", v);
       }
 
-      dash_opts = svg_attr("stroke-dasharray", dash_pattern);
+      dash_opts += svg_attr("stroke-dasharray", dash_pattern);
+      dash_opts += svg_attr("stroke-dashoffset", style.dash_offset);
       break;
     }
   }

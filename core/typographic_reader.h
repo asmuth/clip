@@ -24,6 +24,11 @@ ReturnCode measure_read(
     const Expr* expr,
     Measure* value);
 
+ReturnCode measure_readn(
+    const Environment& env,
+    const Expr* expr,
+    Measure* value);
+
 ReturnCode measure_read_opt(
     const Expr* expr,
     std::optional<Measure>* value);

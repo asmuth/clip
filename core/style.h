@@ -56,6 +56,7 @@ struct StrokeStyle {
   Measure line_width;
   Color color;
   DashType dash_type;
+  Measure dash_offset;
   std::vector<Measure> dash_pattern;
 };
 

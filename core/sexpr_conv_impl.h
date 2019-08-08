@@ -59,7 +59,7 @@ ReturnCode expr_tov(
     return errorf(
         ERROR,
         "argument error; expected a list, got: {}",
-        "..."); // FIXME
+        expr_inspect(expr));
   }
 
   return expr_tov_flat<T>(expr_get_list(expr), conv, values);
@@ -81,6 +81,8 @@ ReturnCode expr_tov_flat(
     const Expr* expr,
     ExprConvTo<T> conv,
     std::vector<T>* values) {
+  values->clear();
+
   for (; expr; expr = expr_next(expr)) {
     T v;
     if (auto rc = conv(expr, &v); !rc) {
