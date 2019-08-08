@@ -81,7 +81,11 @@ ExprStorage* expr_get_next_storage(Expr* expr) {
 }
 
 bool expr_is_list(const Expr* expr) {
-  return expr->type == ExprType::LIST;
+  return expr && expr->type == ExprType::LIST;
+}
+
+bool expr_is_list(const Expr* expr, const std::string& head) {
+  return expr_is_list(expr) && expr_is_value(expr_get_list(expr), head);
 }
 
 const Expr* expr_get_list(const Expr* expr) {
@@ -93,27 +97,27 @@ ExprStorage* expr_get_list_storage(Expr* expr) {
 }
 
 bool expr_is_value(const Expr* expr) {
-  return expr->type == ExprType::VALUE || expr->type == ExprType::VALUE_LITERAL;
+  return expr && expr->type == ExprType::VALUE || expr->type == ExprType::VALUE_LITERAL;
 }
 
 bool expr_is_value(const Expr* expr, const std::string& cmp) {
-  return expr_is_value(expr) && expr->value == cmp;
+  return expr && expr_is_value(expr) && expr->value == cmp;
 }
 
 bool expr_is_value_literal(const Expr* expr) {
-  return expr->type == ExprType::VALUE_LITERAL;
+  return expr && expr->type == ExprType::VALUE_LITERAL;
 }
 
 bool expr_is_value_literal(const Expr* expr, const std::string& cmp) {
-  return expr->type == ExprType::VALUE_LITERAL && expr->value == cmp;
+  return expr && expr->type == ExprType::VALUE_LITERAL && expr->value == cmp;
 }
 
 bool expr_is_value_quoted(const Expr* expr) {
-  return expr->type == ExprType::VALUE;
+  return expr && expr->type == ExprType::VALUE;
 }
 
 bool expr_is_value_quoted(const Expr* expr, const std::string& cmp) {
-  return expr->type == ExprType::VALUE && expr->value == cmp;
+  return expr && expr->type == ExprType::VALUE && expr->value == cmp;
 }
 
 const std::string& expr_get_value(const Expr* expr) {

@@ -32,6 +32,7 @@ void expr_set_next(Expr* expr, ExprStorage next);
 ExprStorage* expr_get_next_storage(Expr* expr);
 
 bool expr_is_list(const Expr* expr);
+bool expr_is_list(const Expr* expr, const std::string& head);
 const Expr* expr_get_list(const Expr* expr);
 ExprStorage* expr_get_list_storage(Expr* expr);
 
