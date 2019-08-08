@@ -13,12 +13,32 @@
  */
 #include "style.h"
 #include "graphics/brush.h"
+#include "graphics/shape_hatch.h"
 
 namespace fviz {
 
-FillStyle fill_style_solid(const Color& c) {
-  return [c] (const auto& p, auto l) -> ReturnCode {
-    fillPath(l, p, c);
+FillStyle fill_style_solid(const Color& color) {
+  return [color] (const auto& poly, auto layer) -> ReturnCode {
+    fillPath(layer, poly, color);
+    return OK;
+  };
+}
+
+FillStyle fill_style_hatch(
+    const Color& color,
+    double angle_deg,
+    double offset,
+    double stride,
+    double width) {
+  return [=] (const auto& poly, auto layer) -> ReturnCode {
+    auto hatched = shape_hatch(
+        poly,
+        angle_deg,
+        offset,
+        stride,
+        width);
+
+    fillPath(layer, hatched, color);
     return OK;
   };
 }

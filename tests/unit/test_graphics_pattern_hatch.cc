@@ -35,12 +35,14 @@ int main(int argc, char** argv) {
       },
       &layer);
 
-  auto p = shape_hatch(
-      Rectangle(100, 100, 1000, 600),
-      45,
-      0,
-      40,
-      20);
+  Path clip;
+  clip.moveTo(100,        100 + 600);
+  clip.lineTo(100 + 1000, 100 + 600);
+  clip.lineTo(100 + 1000, 100);
+  clip.lineTo(100,        100);
+  clip.closePath();
+
+  auto p = shape_hatch(path_to_polygon_simple(clip), 45, 0, 40, 20);
 
   FillStyle fs;
   fillPath(layer.get(), p, fs);

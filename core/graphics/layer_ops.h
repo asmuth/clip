@@ -23,6 +23,7 @@
 #include "text.h"
 #include "text_layout.h"
 #include "style.h"
+#include "polygon.h"
 
 namespace fviz {
 namespace layer_ops {

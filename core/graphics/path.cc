@@ -141,4 +141,43 @@ bool Path::empty() const {
   return data_.size() == 0;
 }
 
+Polygon2 path_to_polygon_simple(const Path& path) {
+  Polygon2 poly;
+
+  for (size_t i = 0; i < path.size(); ++i) {
+    const auto& cmd = path[i];
+
+    switch (cmd.command) {
+      case PathCommand::MOVE_TO:
+      case PathCommand::LINE_TO:
+        poly.vertices.emplace_back(cmd[0], cmd[1]);
+        break;
+      case PathCommand::QUADRATIC_CURVE_TO:
+      case PathCommand::CUBIC_CURVE_TO:
+      case PathCommand::ARC_TO:
+      case PathCommand::CLOSE:
+        continue;
+    }
+  }
+
+  return poly;
+}
+
+Path path_from_polygon(const Polygon2& poly) {
+  Path p;
+
+  if (poly.vertices.empty()) {
+    return p;
+  }
+
+  p.moveTo(poly.vertices[0].x, poly.vertices[0].y);
+
+  for (size_t i = 1; i < poly.vertices.size(); ++i) {
+    p.lineTo(poly.vertices[i].x, poly.vertices[i].y);
+  }
+
+  p.closePath();
+  return p;
+}
+
 } // namespace fviz

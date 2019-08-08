@@ -92,6 +92,14 @@ const Expr* expr_get_list(const Expr* expr) {
   return expr->list.get();
 }
 
+const Expr* expr_get_list_tail(const Expr* expr) {
+  if (auto l = expr->list.get(); l) {
+    return expr_next(l);
+  } else {
+    return nullptr;
+  }
+}
+
 ExprStorage* expr_get_list_storage(Expr* expr) {
   return &expr->list;
 }

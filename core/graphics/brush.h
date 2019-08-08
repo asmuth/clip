@@ -48,6 +48,11 @@ void fillPath(
 
 void fillPath(
     Layer* layer,
+    const Polygon2& poly,
+    const Color& color);
+
+void fillPath(
+    Layer* layer,
     const Rectangle& clip,
     const PathData* path_data,
     size_t path_data_count,

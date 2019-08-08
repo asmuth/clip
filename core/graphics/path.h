@@ -17,6 +17,7 @@
 #include <stdint.h>
 #include <vector>
 #include "geometry.h"
+#include "polygon.h"
 
 namespace fviz {
 
@@ -67,6 +68,17 @@ public:
 protected:
   std::vector<PathData> data_;
 };
+
+/**
+ * Convert a simple path that consists only of straight line segments and is free
+ * of self-intersections to a polygon
+ */
+Polygon2 path_to_polygon_simple(const Path& path);
+
+/**
+ * Convert a polygon to a path
+ */
+Path path_from_polygon(const Polygon2& poly);
 
 } // namespace fviz
 

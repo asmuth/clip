@@ -105,6 +105,19 @@ std::string svg_path_data(const Path& path) {
   return path_data.str();
 }
 
+std::string svg_poly_data(const Polygon2& poly) {
+  if (poly.vertices.empty()) {
+    return "";
+  }
+
+  std::stringstream poly_data;
+  for (const auto& v : poly.vertices) {
+    poly_data << fmt::format("{} {} ", v.x, v.y);
+  }
+
+  return poly_data.str();
+}
+
 Status svg_stroke_path(
     const layer_ops::BrushStrokeOp& op,
     SVGDataRef svg) {
@@ -146,14 +159,13 @@ Status svg_fill_path(
     const layer_ops::BrushFillOp& op,
     SVGDataRef svg) {
   const auto& clip = op.clip;
-  const auto& path = op.path;
   const auto& color = op.color;
 
   svg->buffer
       << "  "
       << "<path"
       << svg_attr("fill", color.to_hex_str())
-      << svg_attr("d", svg_path_data(path))
+      << svg_attr("d", svg_path_data(op.path))
       << "/>"
       << "\n";
 

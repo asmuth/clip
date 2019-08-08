@@ -17,20 +17,12 @@
 namespace fviz {
 
 Path shape_hatch(
-    const Rectangle& clip,
+    const Polygon2& clip,
     double angle_deg,
     double offset,
     double stride,
     double width) {
-  Polygon2 clip_poly;
-  clip_poly.vertices = {
-    {clip.x,          clip.y + clip.h},
-    {clip.x + clip.w, clip.y + clip.h},
-    {clip.x + clip.w, clip.y},
-    {clip.x,          clip.y},
-  };
-
-  auto origin = vec2_mean(clip_poly.vertices.data(), clip_poly.vertices.size());
+  auto origin = vec2_mean(clip.vertices.data(), clip.vertices.size());
   auto direction = vec2_from_deg(angle_deg);
   auto ortho = vec2_from_deg(angle_deg + 90);
 
@@ -46,13 +38,13 @@ Path shape_hatch(
       //   - a "top" line that is offset by half the width in one direction
       //   - a "bottom" line that is offset by half the width in the other direction
       intersect_poly_line(
-          clip_poly,
+          clip,
           vec2_add(origin, vec2_mul(ortho, i * s * stride + offset + width * 0.5)),
           direction,
           &vertices);
 
       intersect_poly_line(
-          clip_poly,
+          clip,
           vec2_add(origin, vec2_mul(ortho, i * s * stride + offset + width * -0.5)),
           direction,
           &vertices);

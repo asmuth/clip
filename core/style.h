@@ -26,13 +26,23 @@ struct Layer;
  */
 using FillStyle = std::function<
     ReturnCode (
-        const Path& path,
+        const Polygon2& poly,
         Layer* layer)>;
 
 /**
  * Solid color fill
  */
-FillStyle fill_style_solid(const Color& c);
+FillStyle fill_style_solid(const Color& color);
+
+/**
+ * 'Hatched' fill
+ */
+FillStyle fill_style_hatch(
+    const Color& color,
+    double angle_deg,
+    double offset,
+    double stride,
+    double width);
 
 /**
  * No fill

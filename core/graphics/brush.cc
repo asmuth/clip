@@ -41,11 +41,22 @@ void fillPath(
   layer->apply(op);
 }
 
+void fillPath(
+    Layer* layer,
+    const Polygon2& poly,
+    const Color& color) {
+  layer_ops::BrushFillOp op;
+  op.path = path_from_polygon(poly);
+  op.color = color;
+
+  layer->apply(op);
+}
+
 ReturnCode fillPath(
     Layer* layer,
     const Path& path,
     const FillStyle& style) {
-  return style(path, layer);
+  return style(path_to_polygon_simple(path), layer);
 }
 
 ReturnCode fillPath(
@@ -53,7 +64,7 @@ ReturnCode fillPath(
     const Rectangle& clip,
     const Path& path,
     const FillStyle& style) {
-  return style(path, layer);
+  return style(path_to_polygon_simple(path), layer);
 }
 
 void strokePath(
@@ -113,10 +124,10 @@ void strokeRectangle(
     double height,
     const StrokeStyle& style) {
   Path p;
-  p.moveTo(origin.x, origin.y);
-  p.lineTo(origin.x + width, origin.y);
+  p.moveTo(origin.x,         origin.y + height);
   p.lineTo(origin.x + width, origin.y + height);
-  p.lineTo(origin.x, origin.y + height);
+  p.lineTo(origin.x + width, origin.y);
+  p.lineTo(origin.x,         origin.y);
   p.closePath();
 
   Rectangle clip(0, 0, layer->width, layer->height);
@@ -130,10 +141,10 @@ void fillRectangle(
     double height,
     const FillStyle& style) {
   Path p;
-  p.moveTo(origin.x, origin.y);
-  p.lineTo(origin.x + width, origin.y);
+  p.moveTo(origin.x,         origin.y + height);
   p.lineTo(origin.x + width, origin.y + height);
-  p.lineTo(origin.x, origin.y + height);
+  p.lineTo(origin.x + width, origin.y);
+  p.lineTo(origin.x,         origin.y);
   p.closePath();
 
   Rectangle clip(0, 0, layer->width, layer->height);

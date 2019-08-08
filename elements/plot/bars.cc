@@ -140,8 +140,8 @@ ReturnCode draw_horizontal(
     path.lineTo(sx1, sy + -offset + size * 0.5);
     path.closePath();
 
-    strokePath(layer, clip, path, config.stroke_style);
     fillPath(layer, clip, path, config.fill_style);
+    strokePath(layer, clip, path, config.stroke_style);
   }
 
   /* draw labels */
@@ -256,8 +256,8 @@ ReturnCode draw_vertical(
     path.lineTo(sx + offset + size * 0.5, sy1);
     path.closePath();
 
-    strokePath(layer, clip, path, config.stroke_style);
     fillPath(layer, clip, path, config.fill_style);
+    strokePath(layer, clip, path, config.stroke_style);
   }
 
   /* draw labels */

@@ -29,7 +29,7 @@ namespace fviz {
  * `angle_deg`.
  */
 Path shape_hatch(
-    const Rectangle& clip,
+    const Polygon2& clip,
     double angle_deg,
     double offset,
     double stride,
