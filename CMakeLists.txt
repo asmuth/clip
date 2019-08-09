@@ -79,7 +79,7 @@ file(GLOB source_files "core/*.cc" "core/**/*.cc" "elements/*.cc" "elements/**/*
 list(REMOVE_ITEM source_files "${CMAKE_SOURCE_DIR}/core/cli.cc")
 add_library(fviz OBJECT ${source_files})
 set_property(TARGET fviz PROPERTY POSITION_INDEPENDENT_CODE 1)
-set(FVIZ_LIB_LDFLAGS ${CAIRO_LIBRARIES} ${FREETYPE_LIBRARIES} ${HARFBUZZ_LIBRARIES} ${HARFBUZZ_ICU_LIBRARIES} ${PNG_LIBRARIES} ${FONTCONFIG_LIBRARIES} ${FRIBIDI_LIBRARIES} m)
+set(FVIZ_LIB_LDFLAGS ${CAIRO_LIBRARIES} ${FREETYPE_LIBRARIES} ${HARFBUZZ_LIBRARIES} ${HARFBUZZ_ICU_LIBRARIES} ${PNG_LIBRARIES} ${FONTCONFIG_LIBRARIES} ${FRIBIDI_LIBRARIES} m fmt)
 add_library(fviz-lib-a STATIC $<TARGET_OBJECTS:fviz>)
 set_target_properties(fviz-lib-a PROPERTIES OUTPUT_NAME fviz)
 add_library(fviz-lib-so SHARED $<TARGET_OBJECTS:fviz>)

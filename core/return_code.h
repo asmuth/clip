@@ -18,7 +18,6 @@
 #include <string>
 #include <stdarg.h>
 #include <initializer_list>
-#define FMT_HEADER_ONLY
 #include <fmt/format.h>
 #include "stringutil.h"
 
