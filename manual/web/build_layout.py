@@ -17,7 +17,7 @@ tpl = """
   </head>
   <body>
     <div id="navigation">
-      <a href="/" class="logo">fviz 0.4.0</a>
+      <a href="/" class="logo">fviz 0.5.0</a>
 
       {{#toc}}
         <a class="nav_title">{{title}}</a>

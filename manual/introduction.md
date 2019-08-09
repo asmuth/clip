@@ -1,4 +1,4 @@
-# fviz v0.4.0
+# fviz v0.5.0
 
 fviz is a command line program for creating charts and other data-driven
 illustrations.
