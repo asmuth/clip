@@ -1,12 +1,19 @@
 fviz
 ====
 
-fviz is a text-based data visualization program. It generates custom charts
-and other data-driven illustrations from simple expressions.
+[![Build Status](https://travis-ci.org/asmuth/fviz.svg?branch=master)](https://travis-ci.org/asmuth/fviz)
+[![License](https://img.shields.io/badge/license-Apache%202.0-green)](https://github.com/asmuth/fviz/blob/master/LICENSE)
 
-You can run fviz from the command line, where it reads CSV input and produces SVG
-or PNG output files. Additionally, it is available as a standalone library that
-can be embedded into any application.
+fviz is a command line program for creating charts and other data-driven
+illustrations.
+
+It reads input data from text and CSV files and produces the output graphic as
+a SVG or PNG file. All charts are highly customizable using a simple s-expression
+based syntax.
+
+In addition to the command line program, fviz is available as the libfviz
+software library which can be embedded into any application that can link to C
+libraries.
 
 **BETA:** Please note that fviz is pre-1.0 software under active development;
 It is usable, but things might generally still be a bit rough around the edges.
