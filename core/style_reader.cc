@@ -16,6 +16,9 @@
 #include "sexpr_util.h"
 #include "color_reader.h"
 
+#include <functional>
+
+using std::bind;
 using namespace std::placeholders;
 
 namespace fviz {
