@@ -1,7 +1,7 @@
 language: cpp
-
 dist: bionic
 sudo: required
+osx_image: xcode11
 
 os:
   - linux
