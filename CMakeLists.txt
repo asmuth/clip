@@ -14,11 +14,14 @@ option(FVIZ_TESTING "Builds with testing flags [default: OFF]" OFF)
 # Dependencies
 # -----------------------------------------------------------------------------
 find_package(Threads)
-find_package(Cairo)
-find_package(Freetype)
-find_package(HarfBuzz)
-find_package(Fontconfig)
-find_package(PNG)
+find_package(Cairo REQUIRED)
+find_package(Freetype REQUIRED)
+find_package(HarfBuzz REQUIRED)
+find_package(Fontconfig REQUIRED)
+find_package(PNG REQUIRED)
+
+find_package(fmt REQUIRED)
+find_library(fmt_LIBRARY NAMES fmt)
 
 #if(FVIZ_TEXT_BACKEND EQUAL "freetype")
   pkg_check_modules(FRIBIDI QUIET fribidi)
@@ -79,7 +82,7 @@ file(GLOB source_files "core/*.cc" "core/**/*.cc" "elements/*.cc" "elements/**/*
 list(REMOVE_ITEM source_files "${CMAKE_SOURCE_DIR}/core/cli.cc")
 add_library(fviz OBJECT ${source_files})
 set_property(TARGET fviz PROPERTY POSITION_INDEPENDENT_CODE 1)
-set(FVIZ_LIB_LDFLAGS ${CAIRO_LIBRARIES} ${FREETYPE_LIBRARIES} ${HARFBUZZ_LIBRARIES} ${HARFBUZZ_ICU_LIBRARIES} ${PNG_LIBRARIES} ${FONTCONFIG_LIBRARIES} ${FRIBIDI_LIBRARIES} m fmt)
+set(FVIZ_LIB_LDFLAGS ${CAIRO_LIBRARIES} ${FREETYPE_LIBRARIES} ${HARFBUZZ_LIBRARIES} ${HARFBUZZ_ICU_LIBRARIES} ${PNG_LIBRARIES} ${FONTCONFIG_LIBRARIES} ${FRIBIDI_LIBRARIES} ${fmt_LIBRARY})
 add_library(fviz-lib-a STATIC $<TARGET_OBJECTS:fviz>)
 set_target_properties(fviz-lib-a PROPERTIES OUTPUT_NAME fviz)
 add_library(fviz-lib-so SHARED $<TARGET_OBJECTS:fviz>)
