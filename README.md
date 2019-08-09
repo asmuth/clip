@@ -7,13 +7,12 @@ fviz
 fviz is a command line program for creating charts and other data-driven
 illustrations.
 
-It reads input data from text and CSV files and produces the output graphic as
-a SVG or PNG file. All charts are highly customizable using a simple s-expression
-based syntax.
+It reads input data and styling information from text and CSV files and produces
+the output graphic as a SVG or PNG file. All charts are highly customizable using
+a simple s-expression based syntax.
 
-In addition to the command line program, fviz is available as the libfviz
-software library which can be embedded into any application that can link to C
-libraries.
+In addition to the command line program, fviz is available as a software library
+which can be embedded into any application that can link to C libraries.
 
 **BETA:** Please note that fviz is pre-1.0 software under active development;
 It is usable, but things might generally still be a bit rough around the edges.
@@ -98,21 +97,8 @@ Below are more examples to show you what's possible. Each example links to the
 source code that generated it. Even more examples can be found on the
 [Examples](https://fviz.org/examples) page.
 
----
-#### Example: [`examples/charts-basic/linechart_timeseries`](https://fviz.org/examples/charts-basic/linechart_timeseries)
-[![linechart_timeseries.svg](/examples/charts-basic/linechart_timeseries.svg)](https://fviz.org/examples/charts-basic/linechart_timeseries)
 
----
-#### Example: [`examples/charts-basic/barchart_groups`](https://fviz.org/examples/charts-basic/barchart_groups)
-[![barchart_groups.svg](/examples/charts-basic/barchart_groups.svg)](https://fviz.org/examples/charts-basic/barchart_groups)
-
----
-#### Example: [`examples/charts-basic/scatterplot_with_labels`](https://fviz.org/examples/charts-basic/scatterplot_with_labels)
-[![scatterplot_with_labels.svg](/examples/charts-basic/scatterplot_with_labels.svg)](https://fviz.org/examples/charts-basic/scatterplot_with_labels)
-
----
-#### Example: [`examples/charts-basic/custom_font`](https://fviz.org/examples/charts-basic/custom_font)
-[![custom_font.svg](/examples/charts-basic/custom_font.svg)](https://fviz.org/examples/charts-basic/custom_font)
+### Examples: Scientific Charts
 
 ---
 #### Example: [`examples/charts-scientific/vectorfield`](https://fviz.org/examples/charts-scientific/vectorfield)
@@ -127,6 +113,10 @@ source code that generated it. Even more examples can be found on the
 [![errorbars_log.svg](/examples/charts-scientific/errorbars_log.svg)](https://fviz.org/examples/charts-scientific/errorbars_log)
 
 ---
+#### Example: [`examples/charts-scientific/barchart_ranges`](https://fviz.org/examples/charts-scientific/barchart_ranges)
+[![barchart_ranges.svg](/examples/charts-scientific/barchart_ranges.svg)](https://fviz.org/examples/charts-scientific/barchart_ranges)
+
+---
 #### Example: [`examples/charts-scientific/multiple_y_axes`](https://fviz.org/examples/charts-scientific/multiple_y_axes)
 [![multiple_y_axes.svg](/examples/charts-scientific/multiple_y_axes.svg)](https://fviz.org/examples/charts-scientific/multiple_y_axes)
 
@@ -134,9 +124,8 @@ source code that generated it. Even more examples can be found on the
 #### Example: [`examples/charts-scientific/scatterplot_colors`](https://fviz.org/examples/charts-scientific/scatterplot_colors)
 [![scatterplot_colors.svg](/examples/charts-scientific/scatterplot_colors.svg)](https://fviz.org/examples/charts-scientific/scatterplot_colors)
 
----
-#### Example: [`examples/charts-scientific/barchart_ranges`](https://fviz.org/examples/charts-scientific/barchart_ranges)
-[![barchart_ranges.svg](/examples/charts-scientific/barchart_ranges.svg)](https://fviz.org/examples/charts-scientific/barchart_ranges)
+
+### Examples: Editorial Charts
 
 ---
 #### Example: [`examples/charts-editorial/linechart_with_labels`](https://fviz.org/examples/charts-editorial/linechart_with_labels)
@@ -153,6 +142,25 @@ source code that generated it. Even more examples can be found on the
 ---
 #### Example: [`examples/charts-editorial/barchart_horizontal`](https://fviz.org/examples/charts-editorial/barchart_horizontal)
 [![barchart_horizontal.svg](/examples/charts-editorial/barchart_horizontal.svg)](https://fviz.org/examples/charts-editorial/barchart_horizontal)
+
+
+### Examples: Basic Charts
+
+---
+#### Example: [`examples/charts-basic/linechart_timeseries`](https://fviz.org/examples/charts-basic/linechart_timeseries)
+[![linechart_timeseries.svg](/examples/charts-basic/linechart_timeseries.svg)](https://fviz.org/examples/charts-basic/linechart_timeseries)
+
+---
+#### Example: [`examples/charts-basic/barchart_groups`](https://fviz.org/examples/charts-basic/barchart_groups)
+[![barchart_groups.svg](/examples/charts-basic/barchart_groups.svg)](https://fviz.org/examples/charts-basic/barchart_groups)
+
+---
+#### Example: [`examples/charts-basic/scatterplot_with_labels`](https://fviz.org/examples/charts-basic/scatterplot_with_labels)
+[![scatterplot_with_labels.svg](/examples/charts-basic/scatterplot_with_labels.svg)](https://fviz.org/examples/charts-basic/scatterplot_with_labels)
+
+---
+#### Example: [`examples/charts-basic/custom_font`](https://fviz.org/examples/charts-basic/custom_font)
+[![custom_font.svg](/examples/charts-basic/custom_font.svg)](https://fviz.org/examples/charts-basic/custom_font)
 
 
 License

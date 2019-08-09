@@ -19,7 +19,8 @@
       marker-shape (square-bullet)
       marker-size 8pt)
   grid (
-    color #eee
+    stroke-color #ddd
+    stroke-style dashed
     tick-placement-y (none))
   legend-overlay (
       item-flow on

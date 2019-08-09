@@ -1,30 +1,30 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="960.000000" height="240.000000" viewBox="0 0 960 240">
   <rect width="960.000000" height="240.000000" fill="#ffffff"/>
   <path stroke-width="2.000000" stroke="#4572a7" fill="none" d="M60.4372 167.374 L136.721 165.203 L213.005 154.347 L289.29 134.083 L365.574 109.476 L441.858 85.5925 L518.142 72.5653 L594.426 75.4603 L670.71 92.8299 L746.995 121.055 L823.279 147.834 L899.563 160.861 "/>
-  <path fill="#4572a7" d="M62.4372 167.374 M58.4372 167.374 a2 2 0 1 0 4 0 a2 2 0 1 0 -4 0 "/>
-  <path fill="#4572a7" d="M138.721 165.203 M134.721 165.203 a2 2 0 1 0 4 0 a2 2 0 1 0 -4 0 "/>
-  <path fill="#4572a7" d="M215.005 154.347 M211.005 154.347 a2 2 0 1 0 4 0 a2 2 0 1 0 -4 0 "/>
-  <path fill="#4572a7" d="M291.29 134.083 M287.29 134.083 a2 2 0 1 0 4 0 a2 2 0 1 0 -4 0 "/>
-  <path fill="#4572a7" d="M367.574 109.476 M363.574 109.476 a2 2 0 1 0 4 0 a2 2 0 1 0 -4 0 "/>
-  <path fill="#4572a7" d="M443.858 85.5925 M439.858 85.5925 a2 2 0 1 0 4 0 a2 2 0 1 0 -4 0 "/>
-  <path fill="#4572a7" d="M520.142 72.5653 M516.142 72.5653 a2 2 0 1 0 4 0 a2 2 0 1 0 -4 0 "/>
-  <path fill="#4572a7" d="M596.426 75.4603 M592.426 75.4603 a2 2 0 1 0 4 0 a2 2 0 1 0 -4 0 "/>
-  <path fill="#4572a7" d="M672.71 92.8299 M668.71 92.8299 a2 2 0 1 0 4 0 a2 2 0 1 0 -4 0 "/>
-  <path fill="#4572a7" d="M748.995 121.055 M744.995 121.055 a2 2 0 1 0 4 0 a2 2 0 1 0 -4 0 "/>
-  <path fill="#4572a7" d="M825.279 147.834 M821.279 147.834 a2 2 0 1 0 4 0 a2 2 0 1 0 -4 0 "/>
-  <path fill="#4572a7" d="M901.563 160.861 M897.563 160.861 a2 2 0 1 0 4 0 a2 2 0 1 0 -4 0 "/>
-  <text x="42.007471" y="153.507733" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">3.9°C</text>
-  <text x="118.291624" y="151.336533" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">4.2°C</text>
-  <text x="194.575777" y="140.480533" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">5.7°C</text>
-  <text x="270.859930" y="120.216000" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">8.5°C</text>
-  <text x="343.612833" y="95.609067" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">11.9°C</text>
-  <text x="419.350111" y="71.725867" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">15.2°C</text>
-  <text x="495.634264" y="58.698667" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">17.0°C</text>
-  <text x="571.918417" y="61.593600" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">16.6°C</text>
-  <text x="648.202570" y="78.963200" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">14.2°C</text>
-  <text x="724.486723" y="107.188800" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">10.3°C</text>
-  <text x="804.849001" y="133.966933" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">6.6°C</text>
-  <text x="881.133154" y="146.994133" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">4.8°C</text>
+  <path fill="#4572a7" d="M63.7705 167.374 M57.1038 167.374 a3.33333 3.33333 0 1 0 6.66667 0 a3.33333 3.33333 0 1 0 -6.66667 0 "/>
+  <path fill="#4572a7" d="M140.055 165.203 M133.388 165.203 a3.33333 3.33333 0 1 0 6.66667 0 a3.33333 3.33333 0 1 0 -6.66667 0 "/>
+  <path fill="#4572a7" d="M216.339 154.347 M209.672 154.347 a3.33333 3.33333 0 1 0 6.66667 0 a3.33333 3.33333 0 1 0 -6.66667 0 "/>
+  <path fill="#4572a7" d="M292.623 134.083 M285.956 134.083 a3.33333 3.33333 0 1 0 6.66667 0 a3.33333 3.33333 0 1 0 -6.66667 0 "/>
+  <path fill="#4572a7" d="M368.907 109.476 M362.24 109.476 a3.33333 3.33333 0 1 0 6.66667 0 a3.33333 3.33333 0 1 0 -6.66667 0 "/>
+  <path fill="#4572a7" d="M445.191 85.5925 M438.525 85.5925 a3.33333 3.33333 0 1 0 6.66667 0 a3.33333 3.33333 0 1 0 -6.66667 0 "/>
+  <path fill="#4572a7" d="M521.475 72.5653 M514.809 72.5653 a3.33333 3.33333 0 1 0 6.66667 0 a3.33333 3.33333 0 1 0 -6.66667 0 "/>
+  <path fill="#4572a7" d="M597.76 75.4603 M591.093 75.4603 a3.33333 3.33333 0 1 0 6.66667 0 a3.33333 3.33333 0 1 0 -6.66667 0 "/>
+  <path fill="#4572a7" d="M674.044 92.8299 M667.377 92.8299 a3.33333 3.33333 0 1 0 6.66667 0 a3.33333 3.33333 0 1 0 -6.66667 0 "/>
+  <path fill="#4572a7" d="M750.328 121.055 M743.661 121.055 a3.33333 3.33333 0 1 0 6.66667 0 a3.33333 3.33333 0 1 0 -6.66667 0 "/>
+  <path fill="#4572a7" d="M826.612 147.834 M819.945 147.834 a3.33333 3.33333 0 1 0 6.66667 0 a3.33333 3.33333 0 1 0 -6.66667 0 "/>
+  <path fill="#4572a7" d="M902.896 160.861 M896.23 160.861 a3.33333 3.33333 0 1 0 6.66667 0 a3.33333 3.33333 0 1 0 -6.66667 0 "/>
+  <text x="42.007471" y="150.841067" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">3.9°C</text>
+  <text x="118.291624" y="148.669867" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">4.2°C</text>
+  <text x="194.575777" y="137.813867" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">5.7°C</text>
+  <text x="270.859930" y="117.549333" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">8.5°C</text>
+  <text x="343.612833" y="92.942400" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">11.9°C</text>
+  <text x="419.350111" y="69.059200" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">15.2°C</text>
+  <text x="495.634264" y="56.032000" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">17.0°C</text>
+  <text x="571.918417" y="58.926933" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">16.6°C</text>
+  <text x="648.202570" y="76.296533" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">14.2°C</text>
+  <text x="724.486723" y="104.522133" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">10.3°C</text>
+  <text x="804.849001" y="131.300267" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">6.6°C</text>
+  <text x="881.133154" y="144.327467" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">4.8°C</text>
   <text x="54.266667" y="46.266667" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">London - Average Temperature</text>
   <path fill="#4572a7" d="M45.8333 41.2667 M34.8333 41.2667 a5.5 5.5 0 1 0 11 0 a5.5 5.5 0 1 0 -11 0 "/>
   <path stroke-width="1.333333" stroke="#000000" fill="none" d="M14.6667 195.6 L945.333 195.6 "/>

@@ -1,14 +1,14 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="2000.000000" height="600.000000" viewBox="0 0 2000 600">
   <rect width="2000.000000" height="600.000000" fill="#ffffff"/>
-  <path stroke-width="2.777778" stroke="#eeeeee" fill="none" d="M283.388 99 L283.388 501 "/>
-  <path stroke-width="2.777778" stroke="#eeeeee" fill="none" d="M462.541 99 L462.541 501 "/>
-  <path stroke-width="2.777778" stroke="#eeeeee" fill="none" d="M641.694 99 L641.694 501 "/>
-  <path stroke-width="2.777778" stroke="#eeeeee" fill="none" d="M820.847 99 L820.847 501 "/>
-  <path stroke-width="2.777778" stroke="#eeeeee" fill="none" d="M1000 99 L1000 501 "/>
-  <path stroke-width="2.777778" stroke="#eeeeee" fill="none" d="M1179.15 99 L1179.15 501 "/>
-  <path stroke-width="2.777778" stroke="#eeeeee" fill="none" d="M1358.31 99 L1358.31 501 "/>
-  <path stroke-width="2.777778" stroke="#eeeeee" fill="none" d="M1537.46 99 L1537.46 501 "/>
-  <path stroke-width="2.777778" stroke="#eeeeee" fill="none" d="M1716.61 99 L1716.61 501 "/>
+  <path stroke-width="2.777778" stroke="#dddddd" fill="none" d="M283.388 99 L283.388 501 " stroke-dasharray="5.55556 5.55556 " stroke-dashoffset="0.000000"/>
+  <path stroke-width="2.777778" stroke="#dddddd" fill="none" d="M462.541 99 L462.541 501 " stroke-dasharray="5.55556 5.55556 " stroke-dashoffset="0.000000"/>
+  <path stroke-width="2.777778" stroke="#dddddd" fill="none" d="M641.694 99 L641.694 501 " stroke-dasharray="5.55556 5.55556 " stroke-dashoffset="0.000000"/>
+  <path stroke-width="2.777778" stroke="#dddddd" fill="none" d="M820.847 99 L820.847 501 " stroke-dasharray="5.55556 5.55556 " stroke-dashoffset="0.000000"/>
+  <path stroke-width="2.777778" stroke="#dddddd" fill="none" d="M1000 99 L1000 501 " stroke-dasharray="5.55556 5.55556 " stroke-dashoffset="0.000000"/>
+  <path stroke-width="2.777778" stroke="#dddddd" fill="none" d="M1179.15 99 L1179.15 501 " stroke-dasharray="5.55556 5.55556 " stroke-dashoffset="0.000000"/>
+  <path stroke-width="2.777778" stroke="#dddddd" fill="none" d="M1358.31 99 L1358.31 501 " stroke-dasharray="5.55556 5.55556 " stroke-dashoffset="0.000000"/>
+  <path stroke-width="2.777778" stroke="#dddddd" fill="none" d="M1537.46 99 L1537.46 501 " stroke-dasharray="5.55556 5.55556 " stroke-dashoffset="0.000000"/>
+  <path stroke-width="2.777778" stroke="#dddddd" fill="none" d="M1716.61 99 L1716.61 501 " stroke-dasharray="5.55556 5.55556 " stroke-dashoffset="0.000000"/>
   <path stroke-width="4.166667" stroke="#000000" fill="none" d="M283.388 375.933 L462.541 402.733 L641.694 380.4 L820.847 393.8 L1000 389.333 L1179.15 380.4 L1358.31 402.733 L1537.46 407.2 L1716.61 411.667 "/>
   <path fill="#000000" d="" transform="translate(279.653 387.433)"/>
   <path fill="#000000" d="" transform="translate(458.806 414.233)"/>

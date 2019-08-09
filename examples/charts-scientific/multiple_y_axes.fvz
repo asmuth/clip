@@ -13,13 +13,16 @@
         label-placement (linear-interval 0.1 0.5 1.0))
     body (
       (plot/grid
-          color #eee
+          stroke-color #eee
+          stroke-style dashed
           tick-placement-x (none))
       (plot/lines
           data-x (csv "tests/testdata/measurement2.csv" time)
           data-y (csv "tests/testdata/measurement2.csv" value3)
-          limit-y (-4 10))
+          limit-y (-4 10)
+          stroke-width 0.8pt)
       (plot/lines
           data-x (csv "tests/testdata/measurement2.csv" time)
           data-y (csv "tests/testdata/measurement2.csv" value3)
-          limit-y (-16 6))))
+          limit-y (-16 6)
+          stroke-width 0.8pt)))

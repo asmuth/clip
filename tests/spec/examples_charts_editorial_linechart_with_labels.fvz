@@ -11,7 +11,7 @@
     limit-y (0 25)
     axis-y-label-placement (linear-alignat 5 -10)
     color 1
-    marker-size 3pt
+    marker-size 5pt
     axes (bottom)
     legend-overlay (
       item (label "London - Average Temperature" color 1)
