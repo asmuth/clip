@@ -124,6 +124,10 @@ source code that generated it. Even more examples can be found on the
 #### Example: [`examples/charts-scientific/scatterplot_colors`](https://fviz.org/examples/charts-scientific/scatterplot_colors)
 [![scatterplot_colors.svg](/examples/charts-scientific/scatterplot_colors.svg)](https://fviz.org/examples/charts-scientific/scatterplot_colors)
 
+---
+#### Example: [`examples/charts-scientific/streamgraph`](https://fviz.org/examples/charts-scientific/streamgraph)
+[![streamgraph.svg](/examples/charts-scientific/streamgraph.svg)](https://fviz.org/examples/charts-scientific/streamgraph)
+
 
 ### Examples: Editorial Charts
 

@@ -14,6 +14,7 @@
     - file: charts-scientific/multiple_y_axes
     - file: charts-scientific/barchart_ranges
     - file: charts-scientific/scatterplot_colors
+    - file: charts-scientific/streamgraph
 
 - section: Editorial Charts
   files:
@@ -22,4 +23,3 @@
     - file: charts-editorial/stacked_areas
     - file: charts-editorial/barchart_horizontal
     - file: charts-editorial/barchart_with_labels
-    - file: charts-editorial/streamgraph
