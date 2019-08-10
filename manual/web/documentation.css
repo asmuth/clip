@@ -446,7 +446,7 @@ table th i {
   font-size: 12px;
 }
 
-table tr:nth-child(2n+0) { background-color: #f8f8f8; }
+table:not(.plain) tr:nth-child(2n+0) { background-color: #f8f8f8; }
 
 table td p {
   margin-bottom: 0;

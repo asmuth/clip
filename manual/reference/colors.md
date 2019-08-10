@@ -66,7 +66,7 @@ List of default color palettes
 
 The following color palletes are built in and can be referenced by name:
 
-<table>
+<table class="plain">
   <tr>
     <td><code>fnord</code></td>
     <td>
@@ -76,6 +76,19 @@ The following color palletes are built in and can be referenced by name:
       <span style="color: #89a54e;" class="color_legend">● <small>4</small></span>
       <span style="color: #80699b;" class="color_legend">● <small>5</small></span>
       <span style="color: #3d96ae;" class="color_legend">● <small>6</small></span>
+    </td>
+  </tr>
+  <tr>
+    <td><code>zhang</code></td>
+    <td>
+      <span style="color: #6a88c4;" class="color_legend">● <small>1</small></span>
+      <span style="color: #75c042;" class="color_legend">● <small>2</small></span>
+      <span style="color: #efeb52;" class="color_legend">● <small>3</small></span>
+      <span style="color: #f5a325;" class="color_legend">● <small>4</small></span>
+      <span style="color: #f92d23;" class="color_legend">● <small>5</small></span>
+      <span style="color: #9551a1;" class="color_legend">● <small>6</small></span>
+      <span style="color: #323085;" class="color_legend">● <small>7</small></span>
+      <span style="color: #a2a2a2;" class="color_legend">● <small>8</small></span>
     </td>
   </tr>
 </table>

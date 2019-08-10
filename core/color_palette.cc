@@ -19,6 +19,8 @@ const std::unordered_map<
     std::string_view,
     std::vector<std::string_view>>
     COLOR_PALETTES = {
+
+  // the "fnordmetric" color palette
   {
     "fnord",
     {
@@ -29,7 +31,24 @@ const std::unordered_map<
       "#80699b",
       "#3d96ae",
     }
+  },
+
+  // the "zhang" color palette
+  // source: https://www.nature.com/articles/s41586-019-1364-3
+  {
+    "zhang",
+    {
+      "#6a88c4",
+      "#75c042",
+      "#efeb52",
+      "#f5a325",
+      "#f92d23",
+      "#9551a1",
+      "#323085",
+      "#a2a2a2",
+    }
   }
+
 };
 
 ReturnCode color_palette_default(const std::string& name, ColorPalette* colors) {
