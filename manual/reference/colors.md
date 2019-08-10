@@ -70,12 +70,12 @@ The following color palletes are built in and can be referenced by name:
   <tr>
     <td><code>fnord</code></td>
     <td>
-      <span style="color: #3d96ae;" class="color_legend">● <small>1</small></span>
-      <span style="color: #4572a7;" class="color_legend">● <small>2</small></span>
-      <span style="color: #aa4643;" class="color_legend">● <small>3</small></span>
-      <span style="color: #db843d;" class="color_legend">● <small>4</small></span>
-      <span style="color: #89a54e;" class="color_legend">● <small>5</small></span>
-      <span style="color: #80699b;" class="color_legend">● <small>6</small></span>
+      <span style="color: #4572a7;" class="color_legend">● <small>1</small></span>
+      <span style="color: #aa4643;" class="color_legend">● <small>2</small></span>
+      <span style="color: #db843d;" class="color_legend">● <small>3</small></span>
+      <span style="color: #89a54e;" class="color_legend">● <small>4</small></span>
+      <span style="color: #80699b;" class="color_legend">● <small>5</small></span>
+      <span style="color: #3d96ae;" class="color_legend">● <small>6</small></span>
     </td>
   </tr>
 </table>

@@ -22,14 +22,14 @@ const std::unordered_map<
   {
     "fnord",
     {
-      "#3d96ae",
       "#4572a7",
       "#aa4643",
       "#db843d",
       "#89a54e",
       "#80699b",
+      "#3d96ae",
     }
-  },
+  }
 };
 
 ReturnCode color_palette_default(const std::string& name, ColorPalette* colors) {

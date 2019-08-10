@@ -36,7 +36,8 @@ ReturnCode color_read(
     // color palette index
     if (StringUtil::isDigitString(value)) {
       if (!env.color_palette.empty()) {
-        *color = env.color_palette[std::stoul(value) % env.color_palette.size()];
+        *color = env.color_palette[
+            (std::stol(value) - 1) % env.color_palette.size()];
       }
 
       return OK;
