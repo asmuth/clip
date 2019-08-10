@@ -46,7 +46,7 @@ public:
   bool parseHexAlpha(const std::string& str);
   bool parseHexShort(const std::string& str);
 
-  std::string to_hex_str() const;
+  std::string to_hex_str(size_t n = 3) const;
 
 protected:
   std::array<double, kMaxComponents> components_;

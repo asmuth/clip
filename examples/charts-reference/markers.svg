@@ -1,19 +1,19 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="900.000000" height="480.000000" viewBox="0 0 900 480">
-  <rect width="900.000000" height="480.000000" fill="#ffffff"/>
-  <path fill="#000000" d="M37.3333 29.3333 M21.3333 29.3333 a8 8 0 1 0 16 0 a8 8 0 1 0 -16 0 "/>
-  <path stroke-width="1.600000" stroke="#000000" fill="none" d="M157.524 29.3333 M141.524 29.3333 a8 8 0 1 0 16 0 a8 8 0 1 0 -16 0 "/>
-  <text x="263.917411" y="35.833333" fill="#000000" font-size="19.200000" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">■</text>
-  <text x="384.107887" y="35.833333" fill="#000000" font-size="19.200000" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">□</text>
-  <text x="501.032738" y="35.833333" fill="#000000" font-size="19.200000" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">◧</text>
-  <text x="621.223214" y="35.833333" fill="#000000" font-size="19.200000" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">◨</text>
-  <text x="742.101190" y="35.833333" fill="#000000" font-size="19.200000" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">⬢</text>
-  <text x="862.291667" y="35.833333" fill="#000000" font-size="19.200000" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">⬡</text>
-  <text x="12.200521" y="22.400000" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">circle</text>
-  <text x="125.867560" y="22.400000" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">circle-o</text>
-  <text x="247.284598" y="22.400000" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">square</text>
-  <text x="360.951637" y="22.400000" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">square-o</text>
-  <text x="475.431176" y="22.400000" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">square-left</text>
-  <text x="591.137277" y="22.400000" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">square-right</text>
-  <text x="722.335565" y="22.400000" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">hexagon</text>
-  <text x="836.002604" y="22.400000" fill="#000000" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">hexagon-o</text>
+  <rect width="900.000000" height="480.000000" fill="#ffffffff"/>
+  <path fill="#000000ff" d="M37.3333 29.3333 M21.3333 29.3333 a8 8 0 1 0 16 0 a8 8 0 1 0 -16 0 "/>
+  <path stroke-width="1.600000" stroke="#000000ff" fill="none" d="M157.524 29.3333 M141.524 29.3333 a8 8 0 1 0 16 0 a8 8 0 1 0 -16 0 "/>
+  <text x="263.917411" y="35.833333" fill="#000000ff" font-size="19.200000" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">■</text>
+  <text x="384.107887" y="35.833333" fill="#000000ff" font-size="19.200000" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">□</text>
+  <text x="501.032738" y="35.833333" fill="#000000ff" font-size="19.200000" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">◧</text>
+  <text x="621.223214" y="35.833333" fill="#000000ff" font-size="19.200000" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">◨</text>
+  <text x="742.101190" y="35.833333" fill="#000000ff" font-size="19.200000" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">⬢</text>
+  <text x="862.291667" y="35.833333" fill="#000000ff" font-size="19.200000" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">⬡</text>
+  <text x="12.200521" y="22.400000" fill="#000000ff" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">circle</text>
+  <text x="125.867560" y="22.400000" fill="#000000ff" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">circle-o</text>
+  <text x="247.284598" y="22.400000" fill="#000000ff" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">square</text>
+  <text x="360.951637" y="22.400000" fill="#000000ff" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">square-o</text>
+  <text x="475.431176" y="22.400000" fill="#000000ff" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">square-left</text>
+  <text x="591.137277" y="22.400000" fill="#000000ff" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">square-right</text>
+  <text x="722.335565" y="22.400000" fill="#000000ff" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">hexagon</text>
+  <text x="836.002604" y="22.400000" fill="#000000ff" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">hexagon-o</text>
 </svg>

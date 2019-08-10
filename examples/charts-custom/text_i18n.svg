@@ -1,15 +1,15 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="3600.000000" height="1920.000000" viewBox="0 0 3600 1920">
-  <rect width="3600.000000" height="1920.000000" fill="#ffffff"/>
-  <text x="163.333333" y="128.666667" fill="#000000" font-size="77.777778" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">北京市 (Beijing)</text>
-  <path fill="#0066cc" d="M118.611 98.1667 M60.2778 98.1667 a29.1667 29.1667 0 1 0 58.3333 0 a29.1667 29.1667 0 1 0 -58.3333 0 "/>
-  <text x="163.333333" y="244.000000" fill="#000000" font-size="77.777778" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">תל אביב (Tel Aviv)</text>
-  <path fill="#cc0066" d="M118.611 217 M60.2778 217 a29.1667 29.1667 0 1 0 58.3333 0 a29.1667 29.1667 0 1 0 -58.3333 0 "/>
-  <text x="163.333333" y="355.333333" fill="#000000" font-size="77.777778" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">القاهرة‎ (Cairo)</text>
-  <path fill="#cc0066" d="M118.611 328.333 M60.2778 328.333 a29.1667 29.1667 0 1 0 58.3333 0 a29.1667 29.1667 0 1 0 -58.3333 0 "/>
-  <text x="163.333333" y="466.666667" fill="#000000" font-size="77.777778" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">Москва</text>
-  <path fill="#6600cc" d="M118.611 439.667 M60.2778 439.667 a29.1667 29.1667 0 1 0 58.3333 0 a29.1667 29.1667 0 1 0 -58.3333 0 "/>
-  <text x="163.333333" y="589.000000" fill="#000000" font-size="77.777778" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">東京都 (Tokyo)</text>
-  <path fill="#66cc00" d="M118.611 558.5 M60.2778 558.5 a29.1667 29.1667 0 1 0 58.3333 0 a29.1667 29.1667 0 1 0 -58.3333 0 "/>
-  <text x="163.333333" y="715.333333" fill="#000000" font-size="77.777778" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">서울 (Seoul)</text>
-  <path fill="#000000" d="M118.611 684.833 M60.2778 684.833 a29.1667 29.1667 0 1 0 58.3333 0 a29.1667 29.1667 0 1 0 -58.3333 0 "/>
+  <rect width="3600.000000" height="1920.000000" fill="#ffffffff"/>
+  <text x="163.333333" y="128.666667" fill="#000000ff" font-size="77.777778" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">北京市 (Beijing)</text>
+  <path fill="#0066ccff" d="M118.611 98.1667 M60.2778 98.1667 a29.1667 29.1667 0 1 0 58.3333 0 a29.1667 29.1667 0 1 0 -58.3333 0 "/>
+  <text x="163.333333" y="244.000000" fill="#000000ff" font-size="77.777778" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">תל אביב (Tel Aviv)</text>
+  <path fill="#cc0066ff" d="M118.611 217 M60.2778 217 a29.1667 29.1667 0 1 0 58.3333 0 a29.1667 29.1667 0 1 0 -58.3333 0 "/>
+  <text x="163.333333" y="355.333333" fill="#000000ff" font-size="77.777778" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">القاهرة‎ (Cairo)</text>
+  <path fill="#cc0066ff" d="M118.611 328.333 M60.2778 328.333 a29.1667 29.1667 0 1 0 58.3333 0 a29.1667 29.1667 0 1 0 -58.3333 0 "/>
+  <text x="163.333333" y="466.666667" fill="#000000ff" font-size="77.777778" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">Москва</text>
+  <path fill="#6600ccff" d="M118.611 439.667 M60.2778 439.667 a29.1667 29.1667 0 1 0 58.3333 0 a29.1667 29.1667 0 1 0 -58.3333 0 "/>
+  <text x="163.333333" y="589.000000" fill="#000000ff" font-size="77.777778" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">東京都 (Tokyo)</text>
+  <path fill="#66cc00ff" d="M118.611 558.5 M60.2778 558.5 a29.1667 29.1667 0 1 0 58.3333 0 a29.1667 29.1667 0 1 0 -58.3333 0 "/>
+  <text x="163.333333" y="715.333333" fill="#000000ff" font-size="77.777778" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">서울 (Seoul)</text>
+  <path fill="#000000ff" d="M118.611 684.833 M60.2778 684.833 a29.1667 29.1667 0 1 0 58.3333 0 a29.1667 29.1667 0 1 0 -58.3333 0 "/>
 </svg>

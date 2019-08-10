@@ -145,7 +145,7 @@ Status svg_stroke_path(
       << "  "
       << "<path"
       << svg_attr("stroke-width", style.line_width)
-      << svg_attr("stroke", style.color.to_hex_str())
+      << svg_attr("stroke", style.color.to_hex_str(4))
       << svg_attr("fill", "none")
       << svg_attr("d", svg_path_data(path))
       << dash_opts
@@ -164,7 +164,7 @@ Status svg_fill_path(
   svg->buffer
       << "  "
       << "<path"
-      << svg_attr("fill", color.to_hex_str())
+      << svg_attr("fill", color.to_hex_str(4))
       << svg_attr("d", svg_path_data(op.path))
       << "/>"
       << "\n";
@@ -192,7 +192,7 @@ Status svg_text_span_native(
     << "<text"
     << svg_attr("x", op.origin.x)
     << svg_attr("y", op.origin.y)
-    << svg_attr("fill", style.color.to_hex_str())
+    << svg_attr("fill", style.color.to_hex_str(4))
     << svg_attr("font-size", style.font_size)
     << svg_attr("font-family", style.font.font_family_css)
     << svg_attr("font-weight", style.font.font_weight_css)
@@ -231,7 +231,7 @@ Status svg_text_span_embed(
       svg->buffer
           << "  "
           << "<path"
-          << svg_attr("fill", style.color.to_hex_str())
+          << svg_attr("fill", style.color.to_hex_str(4))
           << svg_attr("d", svg_path_data(gp))
           << svg_attr("transform", gt)
           << "/>"
@@ -284,7 +284,7 @@ ReturnCode layer_bind_svg(
       << "<rect"
       << svg_attr("width", width)
       << svg_attr("height", height)
-      << svg_attr("fill", background_color.to_hex_str())
+      << svg_attr("fill", background_color.to_hex_str(4))
       << "/>"
       << "\n";
 

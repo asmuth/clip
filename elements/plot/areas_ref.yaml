@@ -1,5 +1,5 @@
 name: plot/areas
-example: charts-basic/areachart
+example: charts-editorial/stacked_areas
 desc: |
   The `plot/areas` element is used to create area charts.
 

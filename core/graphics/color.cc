@@ -28,7 +28,7 @@ Color Color::fromRGB(double red, double green, double blue) {
   return Color({ red, green, blue, 1.0 });
 }
 
-Color::Color() : components_{0, 0, 0, 0} {}
+Color::Color() : components_{0, 0, 0, 1} {}
 
 Color::Color(
     const std::initializer_list<double>& components) {
@@ -119,20 +119,16 @@ bool Color::parseHexShort(const std::string& str) {
   return true;
 }
 
-std::string Color::to_hex_str() const {
+std::string Color::to_hex_str(size_t n /* = 3 */) const {
   std::stringstream ss;
-  ss
-    << "#"
-    << std::hex
-    << std::setfill('0')
-    << std::setw(2)
-    << int(components_[0] * 255)
-    << std::setfill('0')
-    << std::setw(2)
-    << int(components_[1] * 255)
-    << std::setfill('0')
-    << std::setw(2)
-    << int(components_[2] * 255);
+  ss << "#" << std::hex;
+
+  for (size_t i = 0; i < n; ++i) {
+    ss
+      << std::setfill('0')
+      << std::setw(2)
+      << int(components_[i] * 255);
+  }
 
   return ss.str();
 }
