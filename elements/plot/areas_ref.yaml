@@ -78,9 +78,61 @@ properties:
           direction vertical
       - name: color
         desc: |
-          Set the area color.
+          Set the area's fill and stroke color.
         desc_code: |
           color <color>
+      - name: stroke-high-color
+        desc: |
+          Set the area's high ("upper") stroke color. See the [color](#FIXME) page for more details on valid values.
+        desc_code: |
+          stroke-high-color <color>
+        examples: |
+          ;; set the area's high ("upper") stroke color to grey
+          stroke-high-color #eee
+      - name: stroke-high-width
+        desc: |
+          Set the area's high ("upper") stroke width. See the
+          [measure](#FIXME) page for more details on valid values.
+        desc_code: |
+          stroke-high-width <measure>
+        examples: |
+          ;; set the area's high ("upper") stroke width to 2pt
+          stroke-high-width 2pt
+      - name: stroke-high-style
+        desc: |
+          Set the area's high ("upper") stroke style. See the
+          [Fill & Stroke Styles](#FIXME) page for more details on valid values.
+        desc_code: |
+          stroke-high-style <stroke-high-style>
+        examples: |
+          ;; set the area's high ("upper") stroke style to none
+          stroke-high-style solid
+      - name: stroke-low-color
+        desc: |
+          Set the area's low ("lower") stroke color. See the [color](#FIXME) page for more details on valid values.
+        desc_code: |
+          stroke-low-color <color>
+        examples: |
+          ;; set the area's low ("lower") stroke color to grey
+          stroke-low-color #eee
+      - name: stroke-low-width
+        desc: |
+          Set the area's low ("lower") stroke width. See the
+          [measure](#FIXME) page for more details on valid values.
+        desc_code: |
+          stroke-low-width <measure>
+        examples: |
+          ;; set the area's low ("lower") stroke width to 2pt
+          stroke-low-width 2pt
+      - name: stroke-low-style
+        desc: |
+          Set the area's low ("lower") stroke style. See the
+          [Fill & Stroke Styles](#FIXME) page for more details on valid values.
+        desc_code: |
+          stroke-low-style <stroke-low-style>
+        examples: |
+          ;; set the area's low ("lower") stroke style to none
+          stroke-low-style solid
 
   - title: "Scale Options"
     anchor: scale-options

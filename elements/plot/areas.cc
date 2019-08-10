@@ -17,6 +17,8 @@
 #include "environment.h"
 #include "layout.h"
 #include "scale.h"
+#include "style.h"
+#include "style_reader.h"
 #include "color_reader.h"
 #include "sexpr_conv.h"
 #include "sexpr_util.h"
@@ -41,7 +43,9 @@ struct PlotAreaConfig {
   std::vector<Measure> yoffset;
   ScaleConfig scale_x;
   ScaleConfig scale_y;
-  Color color;
+  StrokeStyle stroke_high_style;
+  StrokeStyle stroke_low_style;
+  FillStyle fill_style;
 };
 
 PlotAreaConfig::PlotAreaConfig() :
@@ -90,17 +94,31 @@ ReturnCode draw_horizontal(
       &*config.yoffset.begin(),
       &*config.yoffset.end());
 
+  convert_unit_typographic(
+      layer->dpi,
+      layer->font_size,
+      &config.stroke_high_style.line_width);
+
+  convert_unit_typographic(
+      layer->dpi,
+      layer->font_size,
+      &config.stroke_low_style.line_width);
+
   /* draw areas */
-  Path path;
+  Path shape;
+  Path stroke_high;
+  Path stroke_low;
 
   for (size_t i = 0; i < config.x.size(); ++i) {
     auto sx = clip.x + config.x[i];
     auto sy = clip.y + clip.h - config.y[i];
 
     if (i == 0) {
-      path.moveTo(sx, sy);
+      shape.moveTo(sx, sy);
+      stroke_high.moveTo(sx, sy);
     } else {
-      path.lineTo(sx, sy);
+      shape.lineTo(sx, sy);
+      stroke_high.lineTo(sx, sy);
     }
   }
 
@@ -108,12 +126,20 @@ ReturnCode draw_horizontal(
   for (int i = config.x.size() - 1; i >= 0; --i) {
     auto sx = clip.x + (config.xoffset.empty() ? x0 : config.xoffset[i]);
     auto sy = clip.y + clip.h - config.y[i];
-    path.lineTo(sx, sy);
+    shape.lineTo(sx, sy);
+
+    if (stroke_low.empty()) {
+      stroke_low.moveTo(sx, sy);
+    } else {
+      stroke_low.lineTo(sx, sy);
+    }
   }
 
-  path.closePath();
+  shape.closePath();
 
-  fillPath(layer, clip, path, config.color);
+  fillPath(layer, clip, shape, config.fill_style);
+  strokePath(layer, clip, stroke_high, config.stroke_high_style);
+  strokePath(layer, clip, stroke_low, config.stroke_low_style);
 
   return OK;
 }
@@ -161,17 +187,31 @@ ReturnCode draw_vertical(
       &*config.yoffset.begin(),
       &*config.yoffset.end());
 
+  convert_unit_typographic(
+      layer->dpi,
+      layer->font_size,
+      &config.stroke_high_style.line_width);
+
+  convert_unit_typographic(
+      layer->dpi,
+      layer->font_size,
+      &config.stroke_low_style.line_width);
+
   /* draw areas */
-  Path path;
+  Path shape;
+  Path stroke_high;
+  Path stroke_low;
 
   for (size_t i = 0; i < config.x.size(); ++i) {
     auto sx = clip.x + config.x[i];
     auto sy = clip.y + clip.h - config.y[i];
 
     if (i == 0) {
-      path.moveTo(sx, sy);
+      shape.moveTo(sx, sy);
+      stroke_high.moveTo(sx, sy);
     } else {
-      path.lineTo(sx, sy);
+      shape.lineTo(sx, sy);
+      stroke_high.lineTo(sx, sy);
     }
   }
 
@@ -179,12 +219,20 @@ ReturnCode draw_vertical(
   for (int i = config.x.size() - 1; i >= 0; --i) {
     auto sx = clip.x + config.x[i];
     auto sy = clip.y + clip.h - (config.yoffset.empty() ? y0 : config.yoffset[i]);
-    path.lineTo(sx, sy);
+    shape.lineTo(sx, sy);
+
+    if (stroke_low.empty()) {
+      stroke_low.moveTo(sx, sy);
+    } else {
+      stroke_low.lineTo(sx, sy);
+    }
   }
 
-  path.closePath();
+  shape.closePath();
 
-  fillPath(layer, clip, path, config.color);
+  fillPath(layer, clip, shape, config.fill_style);
+  strokePath(layer, clip, stroke_high, config.stroke_high_style);
+  strokePath(layer, clip, stroke_low, config.stroke_low_style);
 
   return OK;
 }
@@ -209,7 +257,9 @@ ReturnCode build(
     ElementRef* elem) {
   /* set defaults from environment */
   auto c = std::make_shared<PlotAreaConfig>();
-  c->color = env.foreground_color;
+  c->stroke_high_style.color = env.foreground_color;
+  c->stroke_low_style.color = env.foreground_color;
+  c->fill_style = fill_style_solid(env.foreground_color);
 
   /* parse properties */
   std::vector<std::string> data_x;
@@ -234,7 +284,42 @@ ReturnCode build(
     {"scale-y", bind(&scale_configure_kind, _1, &c->scale_y)},
     {"scale-x-padding", bind(&expr_to_float64, _1, &c->scale_x.padding)},
     {"scale-y-padding", bind(&expr_to_float64, _1, &c->scale_y.padding)},
-    {"color", bind(&color_read, env, _1, &c->color)},
+    {
+      "stroke-color",
+      expr_calln_fn({
+        bind(&color_read, env, _1, &c->stroke_high_style.color),
+        bind(&color_read, env, _1, &c->stroke_low_style.color),
+      })
+    },
+    {
+      "stroke-width",
+      expr_calln_fn({
+        bind(&measure_read, _1, &c->stroke_high_style.line_width),
+        bind(&measure_read, _1, &c->stroke_low_style.line_width),
+      })
+    },
+    {
+      "stroke-style",
+      expr_calln_fn({
+        bind(&stroke_style_read, env, _1, &c->stroke_high_style),
+        bind(&stroke_style_read, env, _1, &c->stroke_low_style),
+      })
+    },
+    {"stroke-high-color", bind(&color_read, env, _1, &c->stroke_high_style.color)},
+    {"stroke-high-width", bind(&measure_read, _1, &c->stroke_high_style.line_width)},
+    {"stroke-high-style", bind(&stroke_style_read, env, _1, &c->stroke_high_style)},
+    {"stroke-low-color", bind(&color_read, env, _1, &c->stroke_low_style.color)},
+    {"stroke-low-width", bind(&measure_read, _1, &c->stroke_low_style.line_width)},
+    {"stroke-low-style", bind(&stroke_style_read, env, _1, &c->stroke_low_style)},
+    {"fill", bind(&fill_style_read, env, _1, &c->fill_style)},
+    {
+      "color",
+      expr_calln_fn({
+        bind(&color_read, env, _1, &c->stroke_high_style.color),
+        bind(&color_read, env, _1, &c->stroke_low_style.color),
+        bind(&fill_style_read_solid, env, _1, &c->fill_style),
+      })
+    },
     {
       "direction",
       expr_to_enum_fn<Direction>(&c->direction, {
