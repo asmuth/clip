@@ -18,8 +18,8 @@
 
 - section: Editorial Charts
   files:
-    - file: charts-editorial/linechart_with_labels
     - file: charts-editorial/chart_i18n
     - file: charts-editorial/stacked_areas
+    - file: charts-editorial/linechart_with_labels
+    - file: charts-editorial/stacked_bars
     - file: charts-editorial/barchart_horizontal
-    - file: charts-editorial/barchart_with_labels
