@@ -19,7 +19,7 @@
 #include "font_lookup.h"
 
 namespace fviz {
-class Layer;
+struct Page;
 namespace text {
 struct TextSpan;
 }
@@ -45,7 +45,7 @@ Status drawTextLabel(
     VAlign align_y,
     double rotate,
     const TextStyle& text_style,
-    Layer* layer);
+    Page* layer);
 
 Status drawTextLabel(
     const std::string& text,
@@ -53,7 +53,7 @@ Status drawTextLabel(
     HAlign align_x,
     VAlign align_y,
     const TextStyle& text_style,
-    Layer* layer);
+    Page* layer);
 
 /**
  * Convenience function to measure the size of a simple piece of text.

@@ -58,7 +58,7 @@ LegendConfig::LegendConfig() :
 
 void legend_normalize(
     std::shared_ptr<LegendConfig> config,
-    const Layer& layer) {
+    const Page& layer) {
   for (auto& m : config->margins) {
     convert_unit_typographic(layer.dpi, layer.font_size, &m);
   }
@@ -73,7 +73,7 @@ void legend_normalize(
 
 ReturnCode legend_layout_item_rows(
     const LegendConfig& config,
-    const Layer& layer,
+    const Page& layer,
     const std::optional<double> max_width,
     const std::optional<double> max_height,
     double* min_width,
@@ -125,7 +125,7 @@ ReturnCode legend_layout_item_rows(
 
 ReturnCode legend_layout_item_flow(
     const LegendConfig& config,
-    const Layer& layer,
+    const Page& layer,
     const std::optional<double> max_width,
     const std::optional<double> max_height,
     double* min_width,
@@ -187,7 +187,7 @@ ReturnCode legend_layout_item_flow(
 
 ReturnCode legend_layout(
     std::shared_ptr<LegendConfig> config,
-    const Layer& layer,
+    const Page& layer,
     std::optional<double> max_width,
     std::optional<double> max_height,
     double* min_width,
@@ -245,7 +245,7 @@ ReturnCode legend_layout(
 ReturnCode legend_draw_borders(
     const StrokeStyle* borders,
     const Rectangle& bbox,
-    Layer* layer) {
+    Page* layer) {
   /* draw top border  */
   if (borders[0].line_width > 0) {
     StrokeStyle border_style;
@@ -304,7 +304,7 @@ ReturnCode legend_draw_items(
     const LegendConfig& config,
     const Rectangle& bbox,
     const std::vector<Rectangle>& item_boxes,
-    Layer* layer) {
+    Page* layer) {
   for (size_t i = 0; i < std::min(config.items.size(), item_boxes.size()); ++i) {
     LayoutInfo layout;
     layout.content_box.x = bbox.x + item_boxes[i].x;
@@ -323,7 +323,7 @@ ReturnCode legend_draw_items(
 ReturnCode legend_draw(
     std::shared_ptr<LegendConfig> config,
     const LayoutInfo& layout,
-    Layer* layer) {
+    Page* layer) {
   /* convert units  */
   legend_normalize(config, *layer);
 

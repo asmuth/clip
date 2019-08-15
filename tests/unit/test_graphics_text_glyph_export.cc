@@ -13,9 +13,8 @@
  */
 #include "graphics/brush.h"
 #include "graphics/color.h"
-#include "graphics/layer.h"
-#include "graphics/layer_svg.h"
-#include "graphics/layer_pixmap.h"
+#include "graphics/page_description.h"
+#include "graphics/page_export_svg.h"
 #include "graphics/text.h"
 #include "utils/fileutil.h"
 #include "unittest.h"
@@ -29,18 +28,12 @@ int main(int argc, char** argv) {
   FontInfo font;
   font.fonts = {font_ref};
 
-  LayerRef layer;
-  auto rc = layer_bind_svg(
-      200,
-      200,
-      240,
-      from_unit(12),
-      Color::fromRGB(1.0, 1.0, 1.0),
-      [&] (auto svg) {
-        FileUtil::write(std::string(argv[0]) + ".svg", Buffer(svg.data(), svg.size()));
-        return OK;
-      },
-      &layer);
+  Page page;
+  page.width = 1200;
+  page.height = 800;
+  page.dpi = 240;
+  page.font_size = from_unit(12);
+  page.background_color = Color::fromRGB(1.0, 1.0, 1.0);
 
   TextStyle ts;
   ts.font = font;
@@ -48,6 +41,9 @@ int main(int argc, char** argv) {
   ts.color = Color::fromRGB(0,0,0);
   ts.direction = TextDirection::LTR;
 
-  drawTextLabel("6", Point(100, 100), HAlign::CENTER, VAlign::CENTER, 0, ts, layer.get());
-  layer_submit(layer.get());
+  drawTextLabel("6", Point(100, 100), HAlign::CENTER, VAlign::CENTER, 0, ts, &page);
+
+  std::string svg;
+  EXPECT_OK(page_export_svg(page, &svg));
+  FileUtil::write(std::string(argv[0]) + ".svg", Buffer(svg.data(), svg.size()));
 }

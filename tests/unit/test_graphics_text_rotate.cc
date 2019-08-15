@@ -13,8 +13,8 @@
  */
 #include "graphics/brush.h"
 #include "graphics/color.h"
-#include "graphics/layer.h"
-#include "graphics/layer_svg.h"
+#include "graphics/page_description.h"
+#include "graphics/page_export_svg.h"
 #include "graphics/text.h"
 #include "environment.h"
 #include "utils/fileutil.h"
@@ -24,7 +24,7 @@ using namespace fviz;
 
 void draw_test(
     const Environment& env,
-    Layer* l,
+    Page* l,
     uint32_t x,
     uint32_t y,
     double a,
@@ -46,31 +46,27 @@ int main(int argc, char** argv) {
   Environment env;
   EXPECT_OK(environment_setup_defaults(&env));
 
-  LayerRef layer;
-  auto rc = layer_bind_svg(
-      800,
-      500,
-      96,
-      from_unit(12),
-      Color::fromRGB(1.0, 1.0, 1.0),
-      [&] (auto svg) {
-        FileUtil::write(std::string(argv[0]) + ".svg", Buffer(svg.data(), svg.size()));
-        return OK;
-      },
-      &layer);
+  Page page;
+  page.width = 1200;
+  page.height = 800;
+  page.dpi = 240;
+  page.font_size = from_unit(12);
+  page.background_color = Color::fromRGB(1.0, 1.0, 1.0);
 
-  draw_test(env, layer.get(), 100,  100, 45, HAlign::LEFT, VAlign::TOP);
-  draw_test(env, layer.get(), 400,  100, 45, HAlign::CENTER, VAlign::TOP);
-  draw_test(env, layer.get(), 700,  100, 45, HAlign::RIGHT, VAlign::TOP);
+  draw_test(env, &page, 100,  100, 45, HAlign::LEFT, VAlign::TOP);
+  draw_test(env, &page, 400,  100, 45, HAlign::CENTER, VAlign::TOP);
+  draw_test(env, &page, 700,  100, 45, HAlign::RIGHT, VAlign::TOP);
 
-  draw_test(env, layer.get(), 100,  200, 45, HAlign::LEFT, VAlign::CENTER);
-  draw_test(env, layer.get(), 400,  200, 45, HAlign::CENTER, VAlign::CENTER);
-  draw_test(env, layer.get(), 700,  200, 45, HAlign::RIGHT, VAlign::CENTER);
+  draw_test(env, &page, 100,  200, 45, HAlign::LEFT, VAlign::CENTER);
+  draw_test(env, &page, 400,  200, 45, HAlign::CENTER, VAlign::CENTER);
+  draw_test(env, &page, 700,  200, 45, HAlign::RIGHT, VAlign::CENTER);
 
-  draw_test(env, layer.get(), 100,  300, 45, HAlign::LEFT, VAlign::BOTTOM);
-  draw_test(env, layer.get(), 400,  300, 45, HAlign::CENTER, VAlign::BOTTOM);
-  draw_test(env, layer.get(), 700,  300, 45, HAlign::RIGHT, VAlign::BOTTOM);
+  draw_test(env, &page, 100,  300, 45, HAlign::LEFT, VAlign::BOTTOM);
+  draw_test(env, &page, 400,  300, 45, HAlign::CENTER, VAlign::BOTTOM);
+  draw_test(env, &page, 700,  300, 45, HAlign::RIGHT, VAlign::BOTTOM);
 
-  layer_submit(layer.get());
+  std::string svg;
+  EXPECT_OK(page_export_svg(page, &svg));
+  FileUtil::write(std::string(argv[0]) + ".svg", Buffer(svg.data(), svg.size()));
 }
 

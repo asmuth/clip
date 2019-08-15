@@ -19,7 +19,7 @@
 #include "graphics/measure.h"
 
 namespace fviz {
-struct Layer;
+struct Page;
 
 /**
  * The FillStyle controls how shapes are filled in
@@ -27,7 +27,7 @@ struct Layer;
 using FillStyle = std::function<
     ReturnCode (
         const Polygon2& poly,
-        Layer* layer)>;
+        Page* page)>;
 
 /**
  * Solid color fill

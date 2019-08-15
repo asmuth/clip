@@ -13,74 +13,74 @@
  */
 #include <iostream>
 #include "brush.h"
-#include "layer.h"
+#include "graphics/page_description.h"
 
 namespace fviz {
 
 void fillPath(
-    Layer* layer,
+    Page* page,
     const Path& path,
     const Color& color) {
   fillPath(
-      layer,
-      Rectangle(0, 0, layer->width, layer->height),
+      page,
+      Rectangle(0, 0, page->width, page->height),
       path,
       color);
 }
 
 void fillPath(
-    Layer* layer,
+    Page* page,
     const Rectangle& clip,
     const Path& path,
     const Color& color) {
-  layer_ops::BrushFillOp op;
-  op.clip = clip;
-  op.path = path;
-  op.color = color;
+  PageShapeElement elem;
+  elem.clip = clip;
+  elem.path = path;
+  elem.fill_color = color;
 
-  layer->apply(op);
+  page_add_shape(page, elem);
 }
 
 void fillPath(
-    Layer* layer,
+    Page* page,
     const Polygon2& poly,
     const Color& color) {
-  layer_ops::BrushFillOp op;
-  op.path = path_from_polygon(poly);
-  op.color = color;
+  PageShapeElement elem;
+  elem.path = path_from_polygon(poly);
+  elem.fill_color = color;
 
-  layer->apply(op);
+  page_add_shape(page, elem);
 }
 
 ReturnCode fillPath(
-    Layer* layer,
+    Page* page,
     const Path& path,
     const FillStyle& style) {
-  return style(path_to_polygon_simple(path), layer);
+  return style(path_to_polygon_simple(path), page);
 }
 
 ReturnCode fillPath(
-    Layer* layer,
+    Page* page,
     const Rectangle& clip,
     const Path& path,
     const FillStyle& style) {
-  return style(path_to_polygon_simple(path), layer);
+  return style(path_to_polygon_simple(path), page);
 }
 
 void strokePath(
-    Layer* layer,
+    Page* page,
     const Path& path,
     const StrokeStyle& style) {
   strokePath(
-      layer,
-      Rectangle(0, 0, layer->width, layer->height),
+      page,
+      Rectangle(0, 0, page->width, page->height),
       path.data(),
       path.size(),
       style);
 }
 
 void strokePath(
-    Layer* layer,
+    Page* page,
     const Rectangle& clip,
     const Path& path,
     const StrokeStyle& style) {
@@ -88,24 +88,25 @@ void strokePath(
     return;
   }
 
-  layer_ops::BrushStrokeOp op;
-  op.clip = clip;
-  op.path = path;
-  op.style = style;
-  layer->apply(op);
+  PageShapeElement elem;
+  elem.clip = clip;
+  elem.path = path;
+  elem.stroke_style = style;
+
+  page_add_shape(page, elem);
 }
 
 void strokePath(
-    Layer* layer,
+    Page* page,
     const Rectangle& clip,
     const PathData* point_data,
     size_t point_count,
     const StrokeStyle& style) {
-  strokePath(layer, clip, Path(point_data, point_count), style);
+  strokePath(page, clip, Path(point_data, point_count), style);
 }
 
 void strokeLine(
-    Layer* layer,
+    Page* page,
     const Point& p1,
     const Point& p2,
     const StrokeStyle& style) {
@@ -113,12 +114,12 @@ void strokeLine(
   p.moveTo(p1.x, p1.y);
   p.lineTo(p2.x, p2.y);
 
-  Rectangle clip(0, 0, layer->width, layer->height);
-  strokePath(layer, clip, p, style);
+  Rectangle clip(0, 0, page->width, page->height);
+  strokePath(page, clip, p, style);
 }
 
 void strokeRectangle(
-    Layer* layer,
+    Page* page,
     const Point& origin,
     double width,
     double height,
@@ -130,12 +131,12 @@ void strokeRectangle(
   p.lineTo(origin.x,         origin.y);
   p.closePath();
 
-  Rectangle clip(0, 0, layer->width, layer->height);
-  strokePath(layer, clip, p, style);
+  Rectangle clip(0, 0, page->width, page->height);
+  strokePath(page, clip, p, style);
 }
 
 void fillRectangle(
-    Layer* layer,
+    Page* page,
     const Point& origin,
     double width,
     double height,
@@ -147,12 +148,12 @@ void fillRectangle(
   p.lineTo(origin.x,         origin.y);
   p.closePath();
 
-  Rectangle clip(0, 0, layer->width, layer->height);
-  fillPath(layer, clip, p, style);
+  Rectangle clip(0, 0, page->width, page->height);
+  fillPath(page, clip, p, style);
 }
 
 void fillRectangle(
-    Layer* layer,
+    Page* page,
     const Point& origin,
     double width,
     double height,
@@ -164,8 +165,8 @@ void fillRectangle(
   p.lineTo(origin.x, origin.y + height);
   p.closePath();
 
-  Rectangle clip(0, 0, layer->width, layer->height);
-  fillPath(layer, clip, p, color);
+  Rectangle clip(0, 0, page->width, page->height);
+  fillPath(page, clip, p, color);
 }
 
 } // namespace fviz

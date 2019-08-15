@@ -16,7 +16,7 @@
 #include <memory>
 #include <string>
 #include <functional>
-#include "graphics/layer.h"
+#include "graphics/page_description.h"
 #include "sexpr.h"
 #include "return_code.h"
 
@@ -36,11 +36,11 @@ using ElementConfigureFn = std::function<
 using ElementDrawFn = std::function<
     ReturnCode (
         const LayoutInfo& layout,
-        Layer* layer)>;
+        Page* page)>;
 
 using ElementSizeHintFn = std::function<
     ReturnCode (
-        const Layer& layer,
+        const Page& page,
         const std::optional<double> max_width,
         const std::optional<double> max_height,
         double* min_width,

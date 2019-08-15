@@ -18,7 +18,7 @@
 #include "layout.h"
 #include "color_reader.h"
 #include "element_factory.h"
-#include "graphics/layer.h"
+#include "graphics/page_description.h"
 #include "scale.h"
 #include "sexpr_conv.h"
 #include "sexpr_util.h"
@@ -57,7 +57,7 @@ struct PlotAxis {
 ReturnCode draw(
     std::shared_ptr<PlotConfig> config,
     const LayoutInfo& layout,
-    Layer* layer) {
+    Page* layer) {
   /* convert units  */
   auto margins = config->margins;
   for (auto& m : margins) {
@@ -84,11 +84,11 @@ ReturnCode draw(
       double e_height = 0;
       if (auto rc =
             e->size_hint(
-              *layer,
-              content_box.w,
-              content_box.h,
-              &e_width,
-              &e_height);
+                *layer,
+                content_box.w,
+                content_box.h,
+                &e_width,
+                &e_height);
           !rc) {
         return rc;
       }

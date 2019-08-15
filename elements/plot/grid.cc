@@ -47,7 +47,7 @@ struct GridlineDefinition {
 ReturnCode draw(
     std::shared_ptr<GridlineDefinition> config,
     const LayoutInfo& layout,
-    Layer* layer) {
+    Page* layer) {
   MeasureConv conv;
   conv.dpi = layer->dpi;
   conv.font_size = layer->font_size;

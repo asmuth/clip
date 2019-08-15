@@ -12,35 +12,16 @@
  * limitations under the License.
  */
 #pragma once
-#include <unordered_map>
-#include <optional>
-
-#include "graphics/color.h"
+#include <iostream>
+#include <sstream>
 #include "graphics/page_description.h"
-#include "graphics/geometry.h"
-#include "return_code.h"
-#include "sexpr.h"
+#include "utils/outputstream.h"
 
 namespace fviz {
 
-using Marker = std::function<
-    ReturnCode (
-        const Point& pos,
-        const Measure& size,
-        const Color& color,
-        Page* page)>;
-
-Marker marker_create_circle(double border_width);
-Marker marker_create_disk();
-Marker marker_create_unicode(const std::string& u);
-
-ReturnCode marker_configure(
-    const Expr* expr,
-    Marker* marker);
-
-ReturnCode marker_configure_list(
-    const Expr* expr,
-    std::vector<Marker>* markers);
+ReturnCode page_export_svg(
+    const Page& page,
+    std::string* buffer);
 
 } // namespace fviz
 

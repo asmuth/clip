@@ -58,7 +58,7 @@ struct PlotLinesConfig {
 ReturnCode draw(
     std::shared_ptr<PlotLinesConfig> config,
     const LayoutInfo& layout,
-    Layer* layer) {
+    Page* layer) {
   const auto& clip = layout.content_box;
 
   /* convert units */

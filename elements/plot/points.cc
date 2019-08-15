@@ -60,7 +60,7 @@ struct PlotPointsConfig {
 ReturnCode draw(
     std::shared_ptr<PlotPointsConfig> config,
     const LayoutInfo& layout,
-    Layer* layer) {
+    Page* layer) {
   const auto& clip = layout.content_box;
 
   /* convert units */

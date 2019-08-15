@@ -29,7 +29,7 @@ struct TextElement {
 ReturnCode draw(
     std::shared_ptr<TextElement> config,
     const LayoutInfo& layout,
-    Layer* layer) {
+    Page* layer) {
   Point p(50, 50);
   auto ax = HAlign::CENTER;
   auto ay = VAlign::BOTTOM;

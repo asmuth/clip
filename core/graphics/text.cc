@@ -15,7 +15,7 @@
 #include <graphics/text_shaper.h>
 #include "graphics/text_layout.h"
 #include "graphics/text_support.h"
-#include <graphics/layer.h>
+#include <graphics/page_description.h>
 
 namespace fviz {
 
@@ -29,7 +29,7 @@ Status drawTextLabel(
     VAlign align_y,
     double rotate,
     const TextStyle& style,
-    Layer* layer) {
+    Page* page) {
   text::TextSpan span;
   span.text_direction = style.direction;
   span.text = text;
@@ -40,11 +40,11 @@ Status drawTextLabel(
   span.language = style.default_language;
 
   if (span.script.empty()) {
-    span.script = layer->text_default_script;
+    span.script = page->text_default_script;
   }
 
   if (span.language.empty()) {
-    span.language = layer->text_default_language;
+    span.language = page->text_default_language;
   }
 
   text::TextLine line;
@@ -57,7 +57,7 @@ Status drawTextLabel(
 
   Rectangle bbox;
   std::vector<text::GlyphPlacementGroup> glyphs;
-  if (auto rc = text::text_layout_line(line, layer->dpi, &glyphs, &bbox); !rc) {
+  if (auto rc = text::text_layout_line(line, page->dpi, &glyphs, &bbox); !rc) {
     return rc;
   }
 
@@ -70,11 +70,7 @@ Status drawTextLabel(
     }
   }
 
-  StrokeStyle ss;
-  ss.line_width = from_px(1.0);
-  ss.color = Color::fromRGB(0.5,0.5,0.5);
-
-  layer_ops::TextSpanOp op;
+  PageTextElement op;
   op.text = text;
   op.glyphs = std::move(glyphs);
   op.rotate = rotate;
@@ -82,7 +78,8 @@ Status drawTextLabel(
   op.style = style;
   op.origin = offset;
 
-  return layer->apply(op);
+  page_add_text(page, op);
+  return OK;
 }
 
 Status drawTextLabel(
@@ -91,8 +88,8 @@ Status drawTextLabel(
     HAlign align_x,
     VAlign align_y,
     const TextStyle& style,
-    Layer* layer) {
-  return drawTextLabel(text, position, align_x, align_y, 0, style, layer);
+    Page* page) {
+  return drawTextLabel(text, position, align_x, align_y, 0, style, page);
 }
 
 Status text_measure_label(

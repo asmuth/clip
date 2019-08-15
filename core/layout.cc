@@ -100,7 +100,7 @@ ReturnCode layout_element(
 }
 
 //ReturnCode layout_elements(
-//    const Layer& layer,
+//    const Page& layer,
 //    const Rectangle& parent_bbox,
 //    std::vector<ElementPlacement>* elements,
 //    Rectangle* content_box) {

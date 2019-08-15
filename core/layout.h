@@ -13,7 +13,7 @@
  */
 #pragma once
 #include "graphics/geometry.h"
-#include "graphics/layer.h"
+#include "graphics/page_description.h"
 #include "graphics/measure.h"
 #include "element.h"
 
@@ -77,7 +77,7 @@ ReturnCode layout_element(
     Rectangle* bbox);
 
 ReturnCode layout_elements(
-    const Layer& layer,
+    const Page& layer,
     const Rectangle& parent_bbox,
     std::vector<ElementPlacement>* elements,
     Rectangle* content_box);

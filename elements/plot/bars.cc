@@ -64,7 +64,7 @@ PlotBarsConfig::PlotBarsConfig() :
 ReturnCode draw_horizontal(
     PlotBarsConfig config,
     const LayoutInfo& layout,
-    Layer* layer) {
+    Page* layer) {
   const auto& clip = layout.content_box;
 
   /* convert units */
@@ -178,7 +178,7 @@ ReturnCode draw_horizontal(
 ReturnCode draw_vertical(
     PlotBarsConfig config,
     const LayoutInfo& layout,
-    Layer* layer) {
+    Page* layer) {
   const auto& clip = layout.content_box;
 
   /* convert units */
@@ -294,7 +294,7 @@ ReturnCode draw_vertical(
 ReturnCode draw(
     std::shared_ptr<PlotBarsConfig> config,
     const LayoutInfo& layout,
-    Layer* layer) {
+    Page* layer) {
   switch (config->direction) {
     case Direction::HORIZONTAL:
       return draw_horizontal(*config, layout, layer);

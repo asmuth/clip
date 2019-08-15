@@ -13,9 +13,9 @@
  */
 #include "graphics/brush.h"
 #include "graphics/color.h"
-#include "graphics/layer.h"
-#include "graphics/layer_svg.h"
-#include "graphics/layer_pixmap.h"
+#include "graphics/page_description.h"
+#include "graphics/page_export_image.h"
+#include "graphics/page_export_svg.h"
 #include "graphics/text.h"
 #include "utils/fileutil.h"
 #include "unittest.h"
@@ -23,7 +23,7 @@
 using namespace fviz;
 
 void draw_test(
-    Layer* l,
+    Page* l,
     const FontInfo& font,
     uint32_t x,
     uint32_t y,
@@ -46,30 +46,30 @@ void draw_test(
   drawTextLabel(text, Point(x, y), ax, ay, 0, ts, l);
 }
 
-void draw_test(Layer* layer, const FontInfo& font) {
-  draw_test(layer, font, 100 * 4,  100 * 4, TextDirection::LTR, HAlign::LEFT, VAlign::TOP);
-  draw_test(layer, font, 400 * 4,  100 * 4, TextDirection::LTR, HAlign::CENTER, VAlign::TOP);
-  draw_test(layer, font, 700 * 4,  100 * 4, TextDirection::LTR, HAlign::RIGHT, VAlign::TOP);
+void draw_test(Page* page, const FontInfo& font) {
+  draw_test(page, font, 100 * 4,  100 * 4, TextDirection::LTR, HAlign::LEFT, VAlign::TOP);
+  draw_test(page, font, 400 * 4,  100 * 4, TextDirection::LTR, HAlign::CENTER, VAlign::TOP);
+  draw_test(page, font, 700 * 4,  100 * 4, TextDirection::LTR, HAlign::RIGHT, VAlign::TOP);
 
-  draw_test(layer, font, 100 * 4,  200 * 4, TextDirection::LTR, HAlign::LEFT, VAlign::CENTER);
-  draw_test(layer, font, 400 * 4,  200 * 4, TextDirection::LTR, HAlign::CENTER, VAlign::CENTER);
-  draw_test(layer, font, 700 * 4,  200 * 4, TextDirection::LTR, HAlign::RIGHT, VAlign::CENTER);
+  draw_test(page, font, 100 * 4,  200 * 4, TextDirection::LTR, HAlign::LEFT, VAlign::CENTER);
+  draw_test(page, font, 400 * 4,  200 * 4, TextDirection::LTR, HAlign::CENTER, VAlign::CENTER);
+  draw_test(page, font, 700 * 4,  200 * 4, TextDirection::LTR, HAlign::RIGHT, VAlign::CENTER);
 
-  draw_test(layer, font, 100 * 4,  300 * 4, TextDirection::LTR, HAlign::LEFT, VAlign::BOTTOM);
-  draw_test(layer, font, 400 * 4,  300 * 4, TextDirection::LTR, HAlign::CENTER, VAlign::BOTTOM);
-  draw_test(layer, font, 700 * 4,  300 * 4, TextDirection::LTR, HAlign::RIGHT, VAlign::BOTTOM);
+  draw_test(page, font, 100 * 4,  300 * 4, TextDirection::LTR, HAlign::LEFT, VAlign::BOTTOM);
+  draw_test(page, font, 400 * 4,  300 * 4, TextDirection::LTR, HAlign::CENTER, VAlign::BOTTOM);
+  draw_test(page, font, 700 * 4,  300 * 4, TextDirection::LTR, HAlign::RIGHT, VAlign::BOTTOM);
 
-  draw_test(layer, font, 100 * 4,  400 * 4, TextDirection::RTL, HAlign::LEFT, VAlign::TOP);
-  draw_test(layer, font, 400 * 4,  400 * 4, TextDirection::RTL, HAlign::CENTER, VAlign::TOP);
-  draw_test(layer, font, 700 * 4,  400 * 4, TextDirection::RTL, HAlign::RIGHT, VAlign::TOP);
+  draw_test(page, font, 100 * 4,  400 * 4, TextDirection::RTL, HAlign::LEFT, VAlign::TOP);
+  draw_test(page, font, 400 * 4,  400 * 4, TextDirection::RTL, HAlign::CENTER, VAlign::TOP);
+  draw_test(page, font, 700 * 4,  400 * 4, TextDirection::RTL, HAlign::RIGHT, VAlign::TOP);
 
-  draw_test(layer, font, 100 * 4,  500 * 4, TextDirection::RTL, HAlign::LEFT, VAlign::CENTER);
-  draw_test(layer, font, 400 * 4,  500 * 4, TextDirection::RTL, HAlign::CENTER, VAlign::CENTER);
-  draw_test(layer, font, 700 * 4,  500 * 4, TextDirection::RTL, HAlign::RIGHT, VAlign::CENTER);
+  draw_test(page, font, 100 * 4,  500 * 4, TextDirection::RTL, HAlign::LEFT, VAlign::CENTER);
+  draw_test(page, font, 400 * 4,  500 * 4, TextDirection::RTL, HAlign::CENTER, VAlign::CENTER);
+  draw_test(page, font, 700 * 4,  500 * 4, TextDirection::RTL, HAlign::RIGHT, VAlign::CENTER);
 
-  draw_test(layer, font, 100 * 4,  600 * 4, TextDirection::RTL, HAlign::LEFT, VAlign::BOTTOM);
-  draw_test(layer, font, 400 * 4,  600 * 4, TextDirection::RTL, HAlign::CENTER, VAlign::BOTTOM);
-  draw_test(layer, font, 700 * 4,  600 * 4, TextDirection::RTL, HAlign::RIGHT, VAlign::BOTTOM);
+  draw_test(page, font, 100 * 4,  600 * 4, TextDirection::RTL, HAlign::LEFT, VAlign::BOTTOM);
+  draw_test(page, font, 400 * 4,  600 * 4, TextDirection::RTL, HAlign::CENTER, VAlign::BOTTOM);
+  draw_test(page, font, 700 * 4,  600 * 4, TextDirection::RTL, HAlign::RIGHT, VAlign::BOTTOM);
 }
 
 int main(int argc, char** argv) {
@@ -79,40 +79,25 @@ int main(int argc, char** argv) {
   FontInfo font;
   font.fonts = {font_ref};
 
-  {
-    LayerRef layer;
-    auto rc = layer_bind_svg(
-        3200,
-        2800,
-        240,
-        from_unit(12),
-        Color::fromRGB(1.0, 1.0, 1.0),
-        [&] (auto svg) {
-          FileUtil::write(std::string(argv[0]) + ".svg", Buffer(svg.data(), svg.size()));
-          return OK;
-        },
-        &layer);
+  Page page;
+  page.width = 1200;
+  page.height = 800;
+  page.dpi = 240;
+  page.font_size = from_unit(12);
+  page.background_color = Color::fromRGB(1.0, 1.0, 1.0);
 
-    draw_test(layer.get(), font);
-    layer_submit(layer.get());
+  draw_test(&page, font);
+
+  {
+    std::string svg;
+    EXPECT_OK(page_export_svg(page, &svg));
+    FileUtil::write(std::string(argv[0]) + ".svg", Buffer(svg.data(), svg.size()));
   }
 
   {
-    LayerRef layer;
-    auto rc = layer_bind_png(
-        3200,
-        2800,
-        240,
-        from_unit(12),
-        Color::fromRGB(1.0, 1.0, 1.0),
-        [&] (auto svg) {
-          FileUtil::write(std::string(argv[0]) + ".png", Buffer(svg.data(), svg.size()));
-          return OK;
-        },
-        &layer);
-
-    draw_test(layer.get(), font);
-    layer_submit(layer.get());
+    std::string svg;
+    EXPECT_OK(page_export_svg(page, &svg));
+    FileUtil::write(std::string(argv[0]) + ".svg", Buffer(svg.data(), svg.size()));
   }
 }
 

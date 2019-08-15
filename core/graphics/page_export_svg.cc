@@ -11,9 +11,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#include "layer_svg.h"
-#include "utils/fileutil.h"
-#include "utils/exception.h"
+#include "page_export_svg.h"
+
+using std::bind;
+using namespace std::placeholders;
 
 namespace fviz {
 
@@ -21,7 +22,6 @@ struct SVGData {
   std::stringstream buffer;
   double width;
   double height;
-  std::string to_svg() const;
 };
 
 using SVGDataRef = std::shared_ptr<SVGData>;
@@ -118,54 +118,44 @@ std::string svg_poly_data(const Polygon2& poly) {
   return poly_data.str();
 }
 
-Status svg_stroke_path(
-    const layer_ops::BrushStrokeOp& op,
+Status svg_shape(
+    const PageShapeElement& elem,
     SVGDataRef svg) {
-  const auto& clip = op.clip;
-  const auto& path = op.path;
-  const auto& style = op.style;
+  std::string fill_opts;
+  std::string stroke_opts;
 
-  std::string dash_opts;
-  switch (style.dash_type) {
-    case StrokeStyle::SOLID:
-      break;
-    case StrokeStyle::DASH: {
-      std::string dash_pattern;
-      for (const auto& v : style.dash_pattern) {
-        dash_pattern += fmt::format("{} ", v);
+  if (elem.fill_color) {
+    fill_opts = svg_attr("fill", elem.fill_color->to_hex_str(4));
+  } else {
+    fill_opts = svg_attr("fill", "none");
+  }
+
+  if (elem.stroke_style.line_width) {
+    stroke_opts += svg_attr("stroke-width", elem.stroke_style.line_width);
+    stroke_opts += svg_attr("stroke", elem.stroke_style.color.to_hex_str(4));
+
+    switch (elem.stroke_style.dash_type) {
+      case StrokeStyle::SOLID:
+        break;
+      case StrokeStyle::DASH: {
+        std::string dash_pattern;
+        for (const auto& v : elem.stroke_style.dash_pattern) {
+          dash_pattern += fmt::format("{} ", v);
+        }
+
+        stroke_opts += svg_attr("stroke-dasharray", dash_pattern);
+        stroke_opts += svg_attr("stroke-dashoffset", elem.stroke_style.dash_offset);
+        break;
       }
-
-      dash_opts += svg_attr("stroke-dasharray", dash_pattern);
-      dash_opts += svg_attr("stroke-dashoffset", style.dash_offset);
-      break;
     }
   }
 
   svg->buffer
       << "  "
       << "<path"
-      << svg_attr("stroke-width", style.line_width)
-      << svg_attr("stroke", style.color.to_hex_str(4))
-      << svg_attr("fill", "none")
-      << svg_attr("d", svg_path_data(path))
-      << dash_opts
-      << "/>"
-      << "\n";
-
-  return OK;
-}
-
-Status svg_fill_path(
-    const layer_ops::BrushFillOp& op,
-    SVGDataRef svg) {
-  const auto& clip = op.clip;
-  const auto& color = op.color;
-
-  svg->buffer
-      << "  "
-      << "<path"
-      << svg_attr("fill", color.to_hex_str(4))
-      << svg_attr("d", svg_path_data(op.path))
+      << svg_attr("d", svg_path_data(elem.path))
+      << fill_opts
+      << stroke_opts
       << "/>"
       << "\n";
 
@@ -173,32 +163,32 @@ Status svg_fill_path(
 }
 
 Status svg_text_span_native(
-    const layer_ops::TextSpanOp& op,
+    const PageTextElement& elem,
     SVGDataRef svg) {
-  const auto& style = op.style;
+  const auto& style = elem.style;
 
   std::string transform;
-  if (op.rotate) {
+  if (elem.rotate) {
     transform = svg_attr(
         "transform",
         fmt::format("rotate({} {} {})",
-        op.rotate,
-        op.rotate_pivot.x,
-        op.rotate_pivot.y));
+        elem.rotate,
+        elem.rotate_pivot.x,
+        elem.rotate_pivot.y));
   }
 
   svg->buffer
     << "  "
     << "<text"
-    << svg_attr("x", op.origin.x)
-    << svg_attr("y", op.origin.y)
+    << svg_attr("x", elem.origin.x)
+    << svg_attr("y", elem.origin.y)
     << svg_attr("fill", style.color.to_hex_str(4))
     << svg_attr("font-size", style.font_size)
     << svg_attr("font-family", style.font.font_family_css)
     << svg_attr("font-weight", style.font.font_weight_css)
     << transform
     << ">"
-    << svg_body(op.text)
+    << svg_body(elem.text)
     << "</text>"
     << "\n";
 
@@ -206,18 +196,18 @@ Status svg_text_span_native(
 }
 
 Status svg_text_span_embed(
-    const layer_ops::TextSpanOp& op,
+    const PageTextElement& elem,
     double dpi,
     SVGDataRef svg) {
-  const auto& style = op.style;
+  const auto& style = elem.style;
 
-  for (const auto& gg : op.glyphs) {
+  for (const auto& gg : elem.glyphs) {
     for (const auto& g : gg.glyphs) {
       Path gp;
 
       auto rc = font_get_glyph_path(
           g.font,
-          op.style.font_size,
+          elem.style.font_size,
           dpi,
           g.codepoint,
           &gp);
@@ -243,73 +233,74 @@ Status svg_text_span_embed(
 }
 
 Status svg_text_span(
-    const layer_ops::TextSpanOp& op,
+    const PageTextElement& elem,
     double dpi,
     SVGDataRef svg) {
-  if (op.style.font.font_family_css.empty()) {
-    return svg_text_span_embed(op, dpi, svg);
+  if (elem.style.font.font_family_css.empty()) {
+    return svg_text_span_embed(elem, dpi, svg);
   } else {
-    return svg_text_span_native(op, svg);
+    return svg_text_span_native(elem, svg);
   }
 }
 
-std::string SVGData::to_svg() const {
-  std::stringstream svg;
-  svg
+struct SVGDrawOp {
+  std::function<ReturnCode (SVGDataRef svg)> draw_fn;
+  uint32_t draw_idx;
+};
+
+ReturnCode page_export_svg(
+    const Page& page,
+    std::string* buffer) {
+  // create a list of drawing operations
+  std::vector<SVGDrawOp> svg_ops;
+  for (const auto& e : page.text_elements) {
+    SVGDrawOp svg_op;
+    svg_op.draw_fn = bind(&svg_text_span, e, page.dpi, _1);
+    svg_op.draw_idx = e.zindex.value_or(0);
+    svg_ops.push_back(svg_op);
+  }
+
+  for (const auto& e : page.shape_elements) {
+    SVGDrawOp svg_op;
+    svg_op.draw_fn = bind(&svg_shape, e, _1);
+    svg_op.draw_idx = e.zindex.value_or(0);
+    svg_ops.push_back(svg_op);
+  }
+
+  // sort and execute operations
+  std::sort(
+      svg_ops.begin(),
+      svg_ops.end(),
+      [] (const auto& a, const auto& b) {
+        return a.draw_idx < b.draw_idx;
+      });
+
+  auto svg = std::make_shared<SVGData>();
+  for (const auto& op : svg_ops) {
+    if (auto rc = op.draw_fn(svg); !rc) {
+      return rc;
+    }
+  }
+
+  // return the svg document
+  std::stringstream svg_doc;
+  svg_doc
     << "<svg"
-    << svg_attr("xmlns", "http://www.w3.org/2000/svg")
-    << svg_attr("width", width)
-    << svg_attr("height", height)
-    << svg_attr("viewBox", fmt::format("0 0 {} {}", width, height))
-    << ">"
-    << "\n"
-    << buffer.str()
+      << svg_attr("xmlns", "http://www.w3.org/2000/svg")
+      << svg_attr("width", page.width)
+      << svg_attr("height", page.height)
+      << svg_attr("viewBox", fmt::format("0 0 {} {}", page.width, page.height))
+      << ">\n"
+    << "  "
+    << "<rect"
+      << svg_attr("width", page.width)
+      << svg_attr("height", page.height)
+      << svg_attr("fill", page.background_color.to_hex_str(4))
+      << "/>\n"
+    << svg->buffer.str()
     << "</svg>";
 
-  return svg.str();
-}
-
-ReturnCode layer_bind_svg(
-    double width,
-    double height,
-    double dpi,
-    Measure font_size,
-    const Color& background_color,
-    std::function<Status (const std::string&)> submit,
-    LayerRef* layer) {
-  auto svg = std::make_shared<SVGData>();
-
-  svg->buffer
-      << "  "
-      << "<rect"
-      << svg_attr("width", width)
-      << svg_attr("height", height)
-      << svg_attr("fill", background_color.to_hex_str(4))
-      << "/>"
-      << "\n";
-
-  LayerRef l(new Layer());
-  l->width = svg->width = width,
-  l->height = svg->height = height,
-  l->dpi = dpi,
-  l->font_size = font_size,
-  l->apply = [dpi, svg, submit] (const auto& op) {
-    return std::visit([dpi, svg, submit] (auto&& op) {
-      using T = std::decay_t<decltype(op)>;
-      if constexpr (std::is_same_v<T, layer_ops::BrushStrokeOp>)
-        return svg_stroke_path(op, svg);
-      if constexpr (std::is_same_v<T, layer_ops::BrushFillOp>)
-        return svg_fill_path(op, svg);
-      if constexpr (std::is_same_v<T, layer_ops::TextSpanOp>)
-        return svg_text_span(op, dpi, svg);
-      if constexpr (std::is_same_v<T, layer_ops::SubmitOp>)
-        return submit(svg->to_svg());
-      else
-        return ERROR;
-    }, op);
-  };
-
-  *layer = std::move(l);
+  *buffer = svg_doc.str();
   return OK;
 }
 

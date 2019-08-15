@@ -11,22 +11,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#pragma once
-#include <iostream>
-#include <sstream>
-#include "layer.h"
-#include "utils/outputstream.h"
+#include "page_description.h"
 
 namespace fviz {
 
-ReturnCode layer_bind_svg(
-    double width,
-    double height,
-    double dpi,
-    Measure font_size,
-    const Color& background_color,
-    std::function<Status (const std::string&)> submit,
-    LayerRef* layer);
+void page_add_text(Page* page, PageTextElement elem) {
+  if (!elem.zindex) {
+    elem.zindex = page->zindex.value_or(0) + 1;
+  }
+
+  page->zindex = std::max(*elem.zindex, page->zindex.value_or(0));
+  page->text_elements.emplace_back(std::move(elem));
+}
+
+void page_add_shape(Page* page, PageShapeElement elem) {
+  if (!elem.zindex) {
+    elem.zindex = page->zindex.value_or(0) + 1;
+  }
+
+  page->zindex = std::max(*elem.zindex, page->zindex.value_or(0));
+  page->shape_elements.emplace_back(std::move(elem));
+}
 
 } // namespace fviz
 

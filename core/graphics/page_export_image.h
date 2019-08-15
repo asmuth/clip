@@ -11,13 +11,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#include "layer.h"
+#pragma once
+#include <iostream>
+#include <sstream>
+#include "graphics/page_description.h"
+#include "utils/outputstream.h"
 
 namespace fviz {
 
-ReturnCode layer_submit(Layer* layer) {
-  return layer->apply(layer_ops::SubmitOp{});
-}
+ReturnCode page_export_png(
+    const Page& page,
+    std::string* buffer);
 
 } // namespace fviz
 

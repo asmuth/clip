@@ -55,7 +55,7 @@ ReturnCode draw_errorbar(
     const Point& from,
     const Point& to,
     const Color& color,
-    Layer* layer) {
+    Page* layer) {
   auto direction = vec2_normalize(vec2_sub(to, from));
   auto ortho = vec2{direction.y, direction.x * -1};
 
@@ -81,7 +81,7 @@ ReturnCode draw_errorbar(
 ReturnCode draw(
     std::shared_ptr<ErrorbarsElement> config,
     const LayoutInfo& layout,
-    Layer* layer) {
+    Page* layer) {
   const auto& clip = layout.content_box;
 
   /* convert units */

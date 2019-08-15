@@ -94,7 +94,7 @@ AxisDefinition::AxisDefinition() :
     label_offset(0.0),
     label_rotate(0.0) {}
 
-void axis_convert_units(AxisDefinition* config, const Layer& layer) {
+void axis_convert_units(AxisDefinition* config, const Page& layer) {
   convert_unit_typographic(
       layer.dpi,
       layer.font_size,
@@ -128,7 +128,7 @@ void axis_convert_units(AxisDefinition* config, const Layer& layer) {
 
 ReturnCode axis_layout_labels(
     const AxisDefinition& axis,
-    const Layer& layer,
+    const Page& layer,
     double* margin) {
   /* compute scale layout */
   ScaleLayout labels;
@@ -181,7 +181,7 @@ ReturnCode axis_layout_labels(
 
 ReturnCode axis_layout_title(
     const AxisDefinition& axis,
-    const Layer& layer,
+    const Page& layer,
     double* margin) {
   Rectangle title_bbox;
   if (auto rc = text_measure_label(
@@ -218,7 +218,7 @@ ReturnCode axis_layout_title(
 
 ReturnCode axis_layout(
     const AxisDefinition& axis_config,
-    const Layer& layer,
+    const Page& layer,
     double* margin) {
   auto axis = axis_config;
   axis_convert_units(&axis, layer);
@@ -263,7 +263,7 @@ ReturnCode axis_layout(
 
 ReturnCode axis_calculate_size(
     std::shared_ptr<AxisDefinition> axis,
-    const Layer& layer,
+    const Page& layer,
     const std::optional<double> max_width,
     const std::optional<double> max_height,
     double* min_width,
@@ -292,7 +292,7 @@ static ReturnCode axis_draw_vertical(
     double x,
     double y0,
     double y1,
-    Layer* target) {
+    Page* target) {
   /* draw axis line */
   strokeLine(target, {x, y0}, {x, y1}, axis_config.border_style);
 
@@ -434,7 +434,7 @@ static ReturnCode axis_draw_horizontal(
     double y,
     double x0,
     double x1,
-    Layer* target) {
+    Page* target) {
   /* draw axis line */
   strokeLine(target, {x0, y}, {x1, y}, axis_config.border_style);
 
@@ -569,7 +569,7 @@ static ReturnCode axis_draw_horizontal(
 ReturnCode axis_draw(
     std::shared_ptr<AxisDefinition> config,
     const LayoutInfo& layout,
-    Layer* layer) {
+    Page* layer) {
   axis_convert_units(config.get(), *layer);
   const auto& axis = *config;
 

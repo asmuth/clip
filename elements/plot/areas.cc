@@ -54,7 +54,7 @@ PlotAreaConfig::PlotAreaConfig() :
 ReturnCode draw_horizontal(
     PlotAreaConfig config,
     const LayoutInfo& layout,
-    Layer* layer) {
+    Page* layer) {
   const auto& clip = layout.content_box;
 
   /* convert units */
@@ -147,7 +147,7 @@ ReturnCode draw_horizontal(
 ReturnCode draw_vertical(
     PlotAreaConfig config,
     const LayoutInfo& layout,
-    Layer* layer) {
+    Page* layer) {
   const auto& clip = layout.content_box;
 
   /* convert units */
@@ -240,7 +240,7 @@ ReturnCode draw_vertical(
 ReturnCode draw(
     std::shared_ptr<PlotAreaConfig> config,
     const LayoutInfo& layout,
-    Layer* layer) {
+    Page* layer) {
   switch (config->direction) {
     case Direction::HORIZONTAL:
       return draw_horizontal(*config, layout, layer);

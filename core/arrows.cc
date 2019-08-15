@@ -12,6 +12,7 @@
  * limitations under the License.
  */
 #include "arrows.h"
+#include "graphics/brush.h"
 #include <functional>
 
 using namespace std::placeholders;
@@ -24,7 +25,7 @@ ReturnCode arrow_draw_default(
     const Point& to,
     const Measure& size,
     const Color& color,
-    Layer* layer) {
+    Page* layer) {
   auto direction = vec2_normalize(vec2_sub(to, from));
   auto ortho = vec2{direction.y, direction.x * -1};
 
@@ -39,8 +40,8 @@ ReturnCode arrow_draw_default(
   StrokeStyle line_style;
   line_style.color = color;
   line_style.line_width = size;
-  strokeLine(layer, from, to, line_style);
 
+  strokeLine(layer, from, to, line_style);
   fillPath(layer, head_path, color);
 
   return OK;

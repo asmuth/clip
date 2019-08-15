@@ -15,6 +15,7 @@
 #include <memory>
 #include "return_code.h"
 #include "color_palette.h"
+#include "graphics/page_description.h"
 #include "graphics/measure.h"
 #include "graphics/color.h"
 #include "graphics/text.h"
@@ -22,7 +23,6 @@
 #include "element_factory.h"
 
 namespace fviz {
-class Layer;
 
 struct Environment {
   Environment();

@@ -20,77 +20,77 @@
 #include "measure.h"
 #include "layout.h"
 #include "style.h"
+#include "page_description.h"
 
 namespace fviz {
-class Layer;
 
 ReturnCode fillPath(
-    Layer* layer,
+    Page* page,
     const Path& path,
     const FillStyle& style);
 
 void fillPath(
-    Layer* layer,
+    Page* page,
     const Path& path,
     const Color& color);
 
 ReturnCode fillPath(
-    Layer* layer,
+    Page* page,
     const Rectangle& clip,
     const Path& path,
     const FillStyle& style);
 
 void fillPath(
-    Layer* layer,
+    Page* page,
     const Rectangle& clip,
     const Path& path,
     const Color& color);
 
 void fillPath(
-    Layer* layer,
+    Page* page,
     const Polygon2& poly,
     const Color& color);
 
 void fillPath(
-    Layer* layer,
+    Page* page,
     const Rectangle& clip,
     const PathData* path_data,
     size_t path_data_count,
     const FillStyle& style);
 
 void strokePath(
-    Layer* layer,
+    Page* page,
     const Path& path,
     const StrokeStyle& style);
 
 void strokePath(
-    Layer* layer,
+    Page* page,
     const Rectangle& clip,
     const Path& path,
     const StrokeStyle& style);
 
 void strokePath(
-    Layer* layer,
+    Page* page,
     const Rectangle& clip,
     const PathData* path_data,
     size_t path_data_count,
     const StrokeStyle& style);
 
 void strokeLine(
-    Layer* layer,
+    Page* page,
     const Point& p1,
     const Point& p2,
     const StrokeStyle& style);
 
 void strokeRectangle(
-    Layer* layer,
+    Page* page,
     const Point& origin,
     double width,
     double height,
     const StrokeStyle& style);
 
 void fillRectangle(
-    Layer* layer,
+    Page* page,
     const Point& origin,
     double width,
     double height,

@@ -16,7 +16,7 @@
 #include <optional>
 
 #include "graphics/color.h"
-#include "graphics/layer.h"
+#include "graphics/page_description.h"
 #include "graphics/geometry.h"
 #include "return_code.h"
 #include "sexpr.h"
@@ -29,7 +29,7 @@ using Arrow = std::function<
         const Point& to,
         const Measure& size,
         const Color& color,
-        Layer* layer)>;
+        Page* page)>;
 
 Arrow arrow_create_default();
 

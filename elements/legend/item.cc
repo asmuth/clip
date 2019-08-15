@@ -48,7 +48,7 @@ struct LegendItemElem {
 
 void normalize(
     std::shared_ptr<LegendItemElem> config,
-    const Layer& layer) {
+    const Page& layer) {
   convert_unit_typographic(
       layer.dpi,
       layer.font_size,
@@ -72,7 +72,7 @@ void normalize(
 
 ReturnCode layout(
     std::shared_ptr<LegendItemElem> config,
-    const Layer& layer,
+    const Page& layer,
     const std::optional<double> max_width,
     const std::optional<double> max_height,
     double* min_width,
@@ -108,7 +108,7 @@ ReturnCode layout(
 ReturnCode draw_label(
     const LegendItemElem& config,
     const LayoutInfo& layout,
-    Layer* layer) {
+    Page* layer) {
   const auto& bbox = layout.content_box;
   const auto& text = config.label;
 
@@ -144,7 +144,7 @@ ReturnCode draw_label(
 ReturnCode draw_marker(
     const LegendItemElem& config,
     const LayoutInfo& layout,
-    Layer* layer) {
+    Page* layer) {
   const auto& bbox = layout.content_box;
 
   Point p;
@@ -171,7 +171,7 @@ ReturnCode draw_marker(
 ReturnCode draw(
     std::shared_ptr<LegendItemElem> config,
     const LayoutInfo& layout,
-    Layer* layer) {
+    Page* layer) {
   /* convert units */
   normalize(config, *layer);
 

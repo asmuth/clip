@@ -1,22 +1,22 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="900.000000" height="60.000000" viewBox="0 0 900 60">
   <rect width="900.000000" height="60.000000" fill="#ffffffff"/>
-  <path stroke-width="1.333333" stroke="#000000ff" fill="none" d="M14.6667 30 L885.333 30 "/>
-  <path stroke-width="1.333333" stroke="#000000ff" fill="none" d="M14.6667 27.3333 L14.6667 32.6667 "/>
-  <path stroke-width="1.333333" stroke="#000000ff" fill="none" d="M72.7111 27.3333 L72.7111 32.6667 "/>
-  <path stroke-width="1.333333" stroke="#000000ff" fill="none" d="M130.756 27.3333 L130.756 32.6667 "/>
-  <path stroke-width="1.333333" stroke="#000000ff" fill="none" d="M188.8 27.3333 L188.8 32.6667 "/>
-  <path stroke-width="1.333333" stroke="#000000ff" fill="none" d="M246.844 27.3333 L246.844 32.6667 "/>
-  <path stroke-width="1.333333" stroke="#000000ff" fill="none" d="M304.889 27.3333 L304.889 32.6667 "/>
-  <path stroke-width="1.333333" stroke="#000000ff" fill="none" d="M362.933 27.3333 L362.933 32.6667 "/>
-  <path stroke-width="1.333333" stroke="#000000ff" fill="none" d="M420.978 27.3333 L420.978 32.6667 "/>
-  <path stroke-width="1.333333" stroke="#000000ff" fill="none" d="M479.022 27.3333 L479.022 32.6667 "/>
-  <path stroke-width="1.333333" stroke="#000000ff" fill="none" d="M537.067 27.3333 L537.067 32.6667 "/>
-  <path stroke-width="1.333333" stroke="#000000ff" fill="none" d="M595.111 27.3333 L595.111 32.6667 "/>
-  <path stroke-width="1.333333" stroke="#000000ff" fill="none" d="M653.156 27.3333 L653.156 32.6667 "/>
-  <path stroke-width="1.333333" stroke="#000000ff" fill="none" d="M711.2 27.3333 L711.2 32.6667 "/>
-  <path stroke-width="1.333333" stroke="#000000ff" fill="none" d="M769.244 27.3333 L769.244 32.6667 "/>
-  <path stroke-width="1.333333" stroke="#000000ff" fill="none" d="M827.289 27.3333 L827.289 32.6667 "/>
-  <path stroke-width="1.333333" stroke="#000000ff" fill="none" d="M885.333 27.3333 L885.333 32.6667 "/>
+  <path d="M14.6667 30 L885.333 30 " fill="none" stroke-width="1.333333" stroke="#000000ff"/>
+  <path d="M14.6667 27.3333 L14.6667 32.6667 " fill="none" stroke-width="1.333333" stroke="#000000ff"/>
+  <path d="M72.7111 27.3333 L72.7111 32.6667 " fill="none" stroke-width="1.333333" stroke="#000000ff"/>
+  <path d="M130.756 27.3333 L130.756 32.6667 " fill="none" stroke-width="1.333333" stroke="#000000ff"/>
+  <path d="M188.8 27.3333 L188.8 32.6667 " fill="none" stroke-width="1.333333" stroke="#000000ff"/>
+  <path d="M246.844 27.3333 L246.844 32.6667 " fill="none" stroke-width="1.333333" stroke="#000000ff"/>
+  <path d="M304.889 27.3333 L304.889 32.6667 " fill="none" stroke-width="1.333333" stroke="#000000ff"/>
+  <path d="M362.933 27.3333 L362.933 32.6667 " fill="none" stroke-width="1.333333" stroke="#000000ff"/>
+  <path d="M420.978 27.3333 L420.978 32.6667 " fill="none" stroke-width="1.333333" stroke="#000000ff"/>
+  <path d="M479.022 27.3333 L479.022 32.6667 " fill="none" stroke-width="1.333333" stroke="#000000ff"/>
+  <path d="M537.067 27.3333 L537.067 32.6667 " fill="none" stroke-width="1.333333" stroke="#000000ff"/>
+  <path d="M595.111 27.3333 L595.111 32.6667 " fill="none" stroke-width="1.333333" stroke="#000000ff"/>
+  <path d="M653.156 27.3333 L653.156 32.6667 " fill="none" stroke-width="1.333333" stroke="#000000ff"/>
+  <path d="M711.2 27.3333 L711.2 32.6667 " fill="none" stroke-width="1.333333" stroke="#000000ff"/>
+  <path d="M769.244 27.3333 L769.244 32.6667 " fill="none" stroke-width="1.333333" stroke="#000000ff"/>
+  <path d="M827.289 27.3333 L827.289 32.6667 " fill="none" stroke-width="1.333333" stroke="#000000ff"/>
+  <path d="M885.333 27.3333 L885.333 32.6667 " fill="none" stroke-width="1.333333" stroke="#000000ff"/>
   <path fill="#000000ff" d="M1.14062 0 L1.14062 -1.125 L3.76562 -1.125 L3.76562 -9.75 L1.4375 -8 L1.4375 -9.25 L3.875 -11 L5.09375 -11 L5.09375 -1.125 L7.60938 -1.125 L7.60938 0 L1.14062 0 Z" transform="translate(4.47135 55.7333)"/>
   <path fill="#000000ff" d="M1.375 0 L1.375 -2 L2.79688 -2 L2.79688 0 L1.375 0 Z" transform="translate(12.6276 55.7333)"/>
   <path fill="#000000ff" d="M7.75 -5.5 Q7.75 -2.82812 6.84375 -1.41406 Q5.9375 0 4.15625 0 Q2.375 0 1.48438 -1.40625 Q0.59375 -2.8125 0.59375 -5.5 Q0.59375 -8.25 1.46094 -9.625 Q2.32812 -11 4.20312 -11 Q6.01562 -11 6.88281 -9.60938 Q7.75 -8.21875 7.75 -5.5 ZM6.42188 -5.5 Q6.42188 -7.84375 5.90625 -8.89062 Q5.39062 -9.9375 4.20312 -9.9375 Q2.98438 -9.9375 2.45312 -8.90625 Q1.92188 -7.875 1.92188 -5.5 Q1.92188 -3.20312 2.46094 -2.14062 Q3 -1.07812 4.17188 -1.07812 Q5.34375 -1.07812 5.88281 -2.16406 Q6.42188 -3.25 6.42188 -5.5 Z" transform="translate(16.7057 55.7333)"/>

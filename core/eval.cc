@@ -12,8 +12,8 @@
  * limitations under the License.
  */
 #include "eval.h"
-#include "graphics/layer_pixmap.h"
-#include "graphics/layer_svg.h"
+#include "graphics/page_export_image.h"
+#include "graphics/page_export_svg.h"
 #include "layout.h"
 #include "sexpr_parser.h"
 
@@ -24,6 +24,7 @@ ReturnCode eval(
     const Expr* expr,
     const OutputFormat& output_format,
     std::string* output_buffer) {
+  // prepare the environment
   if (auto rc = environment_configure(&env, expr); !rc) {
     return rc;
   }
@@ -32,69 +33,50 @@ ReturnCode eval(
     return rc;
   }
 
-  LayerRef layer;
-  ReturnCode layer_rc;
-  switch (output_format) {
-    case OutputFormat::PNG:
-      layer_rc = layer_bind_png(
-          env.screen_width,
-          env.screen_height,
-          env.dpi,
-          env.font_size,
-          env.background_color,
-          [output_buffer] (auto png) {
-            *output_buffer = png;
-            return OK;
-          },
-          &layer);
-      break;
-    case OutputFormat::SVG:
-      layer_rc = layer_bind_svg(
-          env.screen_width,
-          env.screen_height,
-          env.dpi,
-          env.font_size,
-          env.background_color,
-          [output_buffer] (auto svg) {
-            *output_buffer = svg;
-            return OK;
-          },
-          &layer);
-      break;
-  }
-
-  if (!layer_rc) {
-    return layer_rc;
-  }
-
-  layer->font = env.font;
-  layer->text_default_script = env.text_default_script;
-  layer->text_default_language = env.text_default_language;
+  // prepare the page
+  Page page;
+  page.font = env.font;
+  page.text_default_script = env.text_default_script;
+  page.text_default_language = env.text_default_language;
+  page.width = env.screen_width;
+  page.height = env.screen_height;
+  page.dpi = env.dpi;
+  page.font_size = env.font_size;
+  page.background_color = env.background_color;
 
   LayoutInfo layout;
   layout.content_box = layout_margin_box(
-      Rectangle(0, 0, layer->width, layer->height),
+      Rectangle(0, 0, page.width, page.height),
       env.margins[0],
       env.margins[1],
       env.margins[2],
       env.margins[3]);
 
+  // build all root elements
   std::vector<ElementRef> roots;
-  auto rc = try_chain({
-    [&] { return element_build_all(env, expr, &roots); },
-    [&] () -> ReturnCode {
-      for (const auto& e : roots) {
-        if (auto rc = e->draw(layout, layer.get()); !rc) {
-          return rc;
-        }
-      }
+  if (auto rc = element_build_all(env, expr, &roots); !rc) {
+    return rc;
+  }
 
-      return OK;
-    },
-    [&] { return layer_submit(layer.get()); },
-  });
+  // draw all elements
+  for (const auto& e : roots) {
+    if (auto rc = e->draw(layout, &page); !rc) {
+      return rc;
+    }
+  }
 
-  return rc;
+  // export the page
+  ReturnCode export_rc;
+  switch (output_format) {
+    case OutputFormat::SVG:
+      export_rc = page_export_svg(page, output_buffer);
+      break;
+    case OutputFormat::PNG:
+      export_rc = page_export_png(page, output_buffer);
+      break;
+  }
+
+  return export_rc;
 }
 
 ReturnCode eval(

@@ -27,7 +27,7 @@
 #include "text.h"
 #include "brush.h"
 #include "layout.h"
-#include "layer.h"
+#include "graphics/page_description.h"
 #include "text_layout.h"
 
 namespace fviz {
@@ -43,13 +43,14 @@ public:
 
   void clear(const Color& c);
 
-  Status fillPath(const layer_ops::BrushFillOp& op);
-  Status strokePath(const layer_ops::BrushStrokeOp& op);
+  Status drawShape(
+      const Path path,
+      const StrokeStyle stroke_style,
+      const std::optional<Color> fill_color,
+      const Rectangle clip);
 
-  Status drawText(const layer_ops::TextSpanOp& op);
-  Status drawTextGlyphs(
-      const text::GlyphPlacement* glyphs,
-      size_t glyph_count,
+  Status drawText(
+      const std::vector<text::GlyphPlacementGroup>& glyphs,
       const TextStyle& style);
 
   Status writeToFile(const std::string& path);

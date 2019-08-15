@@ -15,48 +15,34 @@
 #include <stdlib.h>
 #include <vector>
 #include <string>
-#include <variant>
 
 #include "color.h"
-#include "measure.h"
-#include "brush.h"
 #include "text.h"
 #include "text_layout.h"
+#include "measure.h"
+#include "font_lookup.h"
 #include "style.h"
-#include "polygon.h"
 
 namespace fviz {
-namespace layer_ops {
 
-struct SubmitOp {};
-
-struct BrushStrokeOp {
-  Rectangle clip;
-  Path path;
-  StrokeStyle style;
-};
-
-struct BrushFillOp {
-  Rectangle clip;
-  Path path;
-  Color color;
-};
-
-struct TextSpanOp {
+struct PageTextElement {
   std::string text;
   std::vector<text::GlyphPlacementGroup> glyphs;
   Point origin;
   double rotate;
   Point rotate_pivot;
   TextStyle style;
+  std::optional<uint32_t> zindex;
+  Rectangle clip;
 };
 
-using Op = std::variant<
-    SubmitOp,
-    BrushFillOp,
-    BrushStrokeOp,
-    TextSpanOp>;
+struct PageShapeElement {
+  Path path;
+  StrokeStyle stroke_style;
+  std::optional<Color> fill_color;
+  std::optional<uint32_t> zindex;
+  Rectangle clip;
+};
 
-} // namespace layer_ops
 } // namespace fviz
 

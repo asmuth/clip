@@ -19,7 +19,7 @@
 #include "sexpr_conv.h"
 #include "sexpr_util.h"
 #include "graphics/color.h"
-#include "graphics/layer.h"
+#include "graphics/page_description.h"
 
 #include <functional>
 
@@ -45,7 +45,7 @@ struct BoxElement {
 ReturnCode draw(
     std::shared_ptr<BoxElement> config,
     const LayoutInfo& layout,
-    Layer* layer) {
+    Page* layer) {
   /* convert units  */
   auto margins = config->margins;
   for (auto& m : margins) {
