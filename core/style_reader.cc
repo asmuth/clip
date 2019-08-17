@@ -89,7 +89,7 @@ ReturnCode fill_style_read_hatch(
     const Expr* expr,
     FillStyle* style) {
   Color color;
-  double angle_deg = 45;
+  double angle_deg = -45;
   Measure offset = from_unit(0);
   Measure stride = from_pt(3, env.dpi);
   Measure width = from_pt(1, env.dpi);
