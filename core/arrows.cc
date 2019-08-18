@@ -26,15 +26,15 @@ ReturnCode arrow_draw_default(
     const Measure& size,
     const Color& color,
     Page* layer) {
-  auto direction = vec2_normalize(vec2_sub(to, from));
+  auto direction = normalize(sub(to, from));
   auto ortho = vec2{direction.y, direction.x * -1};
 
   double head_width_factor = 2;
   double head_length_factor = 4;
   Path head_path;
-  head_path.moveTo(vec2_add(to, vec2_mul(ortho, size * head_width_factor)));
-  head_path.lineTo(vec2_sub(to, vec2_mul(ortho, size * head_width_factor)));
-  head_path.lineTo(vec2_add(to, vec2_mul(direction, size * head_length_factor)));
+  head_path.moveTo(add(to, mul(ortho, size * head_width_factor)));
+  head_path.lineTo(sub(to, mul(ortho, size * head_width_factor)));
+  head_path.lineTo(add(to, mul(direction, size * head_length_factor)));
   head_path.closePath();
 
   StrokeStyle line_style;

@@ -147,7 +147,7 @@ ReturnCode font_get_glyph_path(
 
         c.points.insert(
             c.points.begin() + i + 1,
-            vec2_mul(vec2_add(c.points[i + 0], c.points[i + 1]), 0.5));
+            mul(add(c.points[i + 0], c.points[i + 1]), 0.5));
       }
     }
 
@@ -163,7 +163,7 @@ ReturnCode font_get_glyph_path(
         c.tags.back() == GlyphPointType::OFF2) {
       c.points.insert(
           c.points.begin(),
-          vec2_mul(vec2_add(c.points.front(), c.points.back()), 0.5));
+          mul(add(c.points.front(), c.points.back()), 0.5));
 
       c.tags.insert(c.tags.begin(), GlyphPointType::ON);
     }

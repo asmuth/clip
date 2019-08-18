@@ -33,58 +33,58 @@ double vec2_magnitude(const vec2& v) {
   return sqrt(v.x * v.x + v.y * v.y);
 }
 
-vec2 vec2_normalize(const vec2& v) {
+vec2 normalize(const vec2& v) {
   auto m = vec2_magnitude(v);
   return {v.x / m, v.y / m};
 }
 
-vec2 vec2_add(const vec2& a, const vec2& b) {
+vec2 add(const vec2& a, const vec2& b) {
   return {a.x + b.x, a.y + b.y};
 }
 
-vec2 vec2_sub(const vec2& a, const vec2& b) {
+vec2 sub(const vec2& a, const vec2& b) {
   return {a.x - b.x, a.y - b.y};
 }
 
-vec2 vec2_mul(const vec2& v, double s) {
+vec2 mul(const vec2& v, double s) {
   return {v.x * s, v.y * s};
 }
 
-double vec2_dot(const vec2& a, const vec2& b) {
+double dot(const vec2& a, const vec2& b) {
   return a.x * b.x + a.y * b.y;
 }
 
-vec2 vec2_from_deg(double deg) {
+vec2 from_deg(double deg) {
   double a = -deg / 180.0 * M_PI;
   return {cos(a), sin(a)};
 }
 
-vec2 vec2_mean(const vec2* v, size_t v_len) {
+vec2 mean(const vec2* v, size_t v_len) {
   vec2 m;
 
   for (size_t i = 0; i < v_len; ++i) {
-    m = vec2_add(m, v[i]);
+    m = add(m, v[i]);
   }
 
-  return vec2_mul(m, 1.0 / v_len);
+  return mul(m, 1.0 / v_len);
 }
 
-void vec2_sort_cw(vec2* v, size_t v_len) {
-  auto m = vec2_mean(v, v_len);
+void sort_cw(vec2* v, size_t v_len) {
+  auto m = mean(v, v_len);
 
   std::sort(v, v + v_len, [&m] (const auto& a, const auto& b) {
-    auto da = vec2_sub(a, m);
-    auto db = vec2_sub(b, m);
+    auto da = sub(a, m);
+    auto db = sub(b, m);
     return atan2(db.y, db.x) < atan2(da.y, da.x);
   });
 }
 
-void vec2_sort_ccw(vec2* v, size_t v_len) {
-  auto m = vec2_mean(v, v_len);
+void sort_ccw(vec2* v, size_t v_len) {
+  auto m = mean(v, v_len);
 
   std::sort(v, v + v_len, [&m] (const auto& a, const auto& b) {
-    auto da = vec2_sub(a, m);
-    auto db = vec2_sub(b, m);
+    auto da = sub(a, m);
+    auto db = sub(b, m);
     return atan2(da.y, da.x) < atan2(db.y, db.x);
   });
 }

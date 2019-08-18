@@ -56,7 +56,7 @@ ReturnCode draw_errorbar(
     const Point& to,
     const Color& color,
     Page* layer) {
-  auto direction = vec2_normalize(vec2_sub(to, from));
+  auto direction = normalize(sub(to, from));
   auto ortho = vec2{direction.y, direction.x * -1};
 
   StrokeStyle line_style;
@@ -66,13 +66,13 @@ ReturnCode draw_errorbar(
   strokeLine(layer, from, to, line_style);
 
   strokeLine(layer,
-      vec2_add(from, vec2_mul(ortho, config.bar_width * -0.5)),
-      vec2_add(from, vec2_mul(ortho, config.bar_width * 0.5)),
+      add(from, mul(ortho, config.bar_width * -0.5)),
+      add(from, mul(ortho, config.bar_width * 0.5)),
       line_style);
 
   strokeLine(layer,
-      vec2_add(to, vec2_mul(ortho, config.bar_width * -0.5)),
-      vec2_add(to, vec2_mul(ortho, config.bar_width * 0.5)),
+      add(to, mul(ortho, config.bar_width * -0.5)),
+      add(to, mul(ortho, config.bar_width * 0.5)),
       line_style);
 
   return OK;

@@ -22,9 +22,9 @@ Path shape_hatch(
     double offset,
     double stride,
     double width) {
-  auto origin = vec2_mean(clip.vertices.data(), clip.vertices.size());
-  auto direction = vec2_from_deg(angle_deg);
-  auto ortho = vec2_from_deg(angle_deg + 90);
+  auto origin = mean(clip.vertices.data(), clip.vertices.size());
+  auto direction = from_deg(angle_deg);
+  auto ortho = from_deg(angle_deg + 90);
 
   Path p;
   for (size_t i = 0; ; ++i) {
@@ -39,13 +39,13 @@ Path shape_hatch(
       //   - a "bottom" line that is offset by half the width in the other direction
       intersect_poly_line(
           clip,
-          vec2_add(origin, vec2_mul(ortho, i * s * stride + offset + width * 0.5)),
+          add(origin, mul(ortho, i * s * stride + offset + width * 0.5)),
           direction,
           &vertices);
 
       intersect_poly_line(
           clip,
-          vec2_add(origin, vec2_mul(ortho, i * s * stride + offset + width * -0.5)),
+          add(origin, mul(ortho, i * s * stride + offset + width * -0.5)),
           direction,
           &vertices);
 
@@ -63,7 +63,7 @@ Path shape_hatch(
 
       // build a simple polygon from the resulting points by connecting them
       // in clockwise order
-      vec2_sort_cw(vertices.data(), vertices.size());
+      sort_cw(vertices.data(), vertices.size());
 
       for (size_t i = 0; i < vertices.size(); ++i) {
         if (i == 0) {

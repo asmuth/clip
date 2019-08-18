@@ -22,13 +22,13 @@ bool intersect_line_line(
     vec2 v1,
     vec2* p /* = nullptr */) {
   // ensure the direction vectors are normalized
-  v0 = vec2_normalize(v0);
-  v1 = vec2_normalize(v1);
+  v0 = normalize(v0);
+  v1 = normalize(v1);
 
   // consider lines as parallel if the angle between them is smaller than some
   // threshold
   const double a_epsilon = 0.001;
-  double a = acos(vec2_dot(v0, v1));
+  double a = acos(dot(v0, v1));
   double a_norm = fmod(M_PI - a, M_PI);
 
   if (a_norm < a_epsilon) {
@@ -101,7 +101,7 @@ bool intersect_line_lineseg(
       p0,
       v0,
       s1,
-      vec2_normalize(vec2_sub(e1, s1)),
+      normalize(sub(e1, s1)),
       &pt);
 
   if (!pt_exists) {
@@ -137,9 +137,9 @@ bool intersect_lineseg_lineseg(
   vec2 pt;
   auto pt_exists = intersect_line_line(
       s0,
-      vec2_sub(e0, s0),
+      sub(e0, s0),
       s1,
-      vec2_normalize(vec2_sub(e1, s1)),
+      normalize(sub(e1, s1)),
       &pt);
 
   if (!pt_exists) {

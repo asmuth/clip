@@ -21,9 +21,9 @@ void test_intersect_parallel() {
   EXPECT_EQ(
       intersect_line_line(
           {0, 0},
-          vec2_from_deg(45),
+          from_deg(45),
           {0, 1},
-          vec2_from_deg(45),
+          from_deg(45),
           nullptr),
       false);
 
@@ -31,9 +31,9 @@ void test_intersect_parallel() {
   EXPECT_EQ(
       intersect_line_line(
           {0, 1},
-          vec2_from_deg(45),
+          from_deg(45),
           {0, 0},
-          vec2_from_deg(45),
+          from_deg(45),
           nullptr),
       false);
 
@@ -41,9 +41,9 @@ void test_intersect_parallel() {
   EXPECT_EQ(
       intersect_line_line(
           {0, 0},
-          vec2_from_deg(45),
+          from_deg(45),
           {0, 0},
-          vec2_from_deg(45),
+          from_deg(45),
           nullptr),
       false);
 
@@ -51,9 +51,9 @@ void test_intersect_parallel() {
   EXPECT_EQ(
       intersect_line_line(
           {0, 0},
-          vec2_from_deg(45),
+          from_deg(45),
           {0, 0},
-          vec2_from_deg(45 + 180),
+          from_deg(45 + 180),
           nullptr),
      false);
 
@@ -61,9 +61,9 @@ void test_intersect_parallel() {
   EXPECT_EQ(
       intersect_line_line(
           {0, 0},
-          vec2_from_deg(45),
+          from_deg(45),
           {0, 0},
-          vec2_from_deg(45 - 180),
+          from_deg(45 - 180),
           nullptr),
       false);
 
@@ -71,9 +71,9 @@ void test_intersect_parallel() {
   EXPECT_EQ(
       intersect_line_line(
           {0, 0},
-          vec2_from_deg(45),
+          from_deg(45),
           {0, 0},
-          vec2_from_deg(45 + 360),
+          from_deg(45 + 360),
           nullptr),
       false);
 
@@ -81,9 +81,9 @@ void test_intersect_parallel() {
   EXPECT_EQ(
       intersect_line_line(
           {0, 0},
-          vec2_from_deg(45),
+          from_deg(45),
           {0, 0},
-          vec2_from_deg(45 + -360),
+          from_deg(45 + -360),
           nullptr),
       false);
 
@@ -91,18 +91,18 @@ void test_intersect_parallel() {
   EXPECT_EQ(
       intersect_line_line(
           {0, 0},
-          vec2_from_deg(45),
+          from_deg(45),
           {0, 0},
-          vec2_from_deg(45.0000001),
+          from_deg(45.0000001),
           nullptr),
       false);
 
   EXPECT_EQ(
       intersect_line_line(
           {0, 0},
-          vec2_from_deg(45),
+          from_deg(45),
           {0, 0},
-          vec2_from_deg(44.9999999),
+          from_deg(44.9999999),
           nullptr),
       false);
 
@@ -110,18 +110,18 @@ void test_intersect_parallel() {
   EXPECT_EQ(
       intersect_line_line(
           {0, 0},
-          vec2_from_deg(45),
+          from_deg(45),
           {0, 0},
-          vec2_from_deg(45.01),
+          from_deg(45.01),
           nullptr),
       true);
 
   EXPECT_EQ(
       intersect_line_line(
           {0, 0},
-          vec2_from_deg(45),
+          from_deg(45),
           {0, 0},
-          vec2_from_deg(44.99),
+          from_deg(44.99),
           nullptr),
       true);
 
@@ -129,9 +129,9 @@ void test_intersect_parallel() {
   EXPECT_EQ(
       intersect_line_line(
           {0, 0},
-          vec2_from_deg(45),
+          from_deg(45),
           {1, 0},
-          vec2_from_deg(45.1),
+          from_deg(45.1),
           nullptr),
       true);
 
@@ -139,9 +139,9 @@ void test_intersect_parallel() {
   EXPECT_EQ(
       intersect_line_line(
           {0, 0},
-          vec2_from_deg(45),
+          from_deg(45),
           {0, 1},
-          vec2_from_deg(45.1),
+          from_deg(45.1),
           nullptr),
       true);
 }
