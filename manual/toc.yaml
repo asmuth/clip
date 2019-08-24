@@ -9,7 +9,7 @@ documentation:
           title: "Introduction"
           doctitle: "fviz"
           url: "/"
-          file: "introduction"
+          file: "frontpage"
         -
           title: "Getting Started"
           url: "/documentation/getting-started"

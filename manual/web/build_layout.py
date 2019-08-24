@@ -16,43 +16,30 @@ tpl = """
     <meta name="google-site-verification" content="zhyGsSQu1HANExonMZDMr0LppXCCv47inMKRXiZS8aQ" />
   </head>
   <body>
-    <div id="navigation">
-      <a href="/" class="logo">fviz 0.5.0</a>
+    <nav>
+      <a style="display: block; text-decoration: none; color: #666; float: right;" href="http://github.com/asmuth/fviz" target="_blank">
+        View on <img src="https://github.githubassets.com/images/modules/logos_page/GitHub-Logo.png" style="height: 12px; position: relative; top: 1px; margin-left: 2px;">
+      </a>
 
-      {{#toc}}
-        <a class="nav_title">{{title}}</a>
-        {{#sections}}
-          {{#section_title}}
-            <a class="nav_subtitle">{{section_title}}</a>
-          {{/section_title}}
-          <ul>
-            {{#pages}}
-              <li>
-                {{#api_ref}}
-                  <a href="{{url}}"><code>{{title}}</code></a>
-                {{/api_ref}}
-                {{^api_ref}}
-                  <a href="{{url}}">{{title}}</a>
-                {{/api_ref}}
-              </li>
-            {{/pages}}
-          </ul>
-        {{/sections}}
-      {{/toc}}
-    </div>
+      <a href="/">
+        <img src="/favicon.ico" style="height: 1em; position: relative; top: 0.13em; margin-right: 0.3em;"/>
+        fviz
+      </a>
+
+      <span style="margin: 0 .3em">·</span>
+      <a class="link" href="/" style="">Documentation</a>
+      <span style="margin: 0 .3em">·</span>
+      <a class="link" href="/examples">Examples</a>
+      <span style="margin: 0 .3em">·</span>
+      <a class="link" href="/download">Download</a>
+
+      <ul class="crumbs">
+        <li><a href="/">Documentation</a></li>
+        <li><a>{{title}}</a></li>
+      </ul>
+    </nav>
 
     <article class="{{article_class}}">
-      <div class="header">
-        <a style="display: block; text-decoration: none; color: #666; float: right; margin-top: 2em;" href="http://github.com/asmuth/fviz" target="_blank">
-          View on <img src="https://github.githubassets.com/images/modules/logos_page/GitHub-Logo.png" style="height: 12px; position: relative; top: 1px; margin-left: 2px;">
-        </a>
-
-        <ul class="crumbs">
-          <li><a>Documentation</a></li>
-          <li><a>{{title}}</a></li>
-        </ul>
-      </div>
-
       <div id="documentation">
         {{{content}}}
       </div>
@@ -62,12 +49,12 @@ tpl = """
           Edit this page on GitHub
         </a>
       </div>
-
-      <div id="footer">
-        Copyright &copy; 2011-2018 Paul Asmuth, Laura Schlimmer et al. &mdash;
-        fviz is free software licensed under the Apache 2.0 license.
-      </div>
     </article>
+
+    <footer>
+      Copyright &copy; 2011-2018 Paul Asmuth, Laura Schlimmer et al. &mdash;
+      fviz is free software licensed under the Apache 2.0 license.
+    </footer>
   </body>
 </html>
 """

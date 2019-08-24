@@ -134,6 +134,5 @@ endforeach()
 # -----------------------------------------------------------------------------
 add_custom_target(docs
     COMMAND mkdir -p ${CMAKE_CURRENT_BINARY_DIR}/wwwdocs
-    COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/manual/web/build.sh ${CMAKE_CURRENT_BINARY_DIR}/wwwdocs
-    DEPENDS examples)
+    COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/manual/web/build.sh ${CMAKE_CURRENT_BINARY_DIR}/wwwdocs)
 
