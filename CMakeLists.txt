@@ -1,7 +1,6 @@
 cmake_minimum_required(VERSION 3.8)
 project(fviz VERSION "0.5.0")
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/platform/cmake")
-enable_testing()
 
 
 # Options
@@ -107,47 +106,12 @@ install(TARGETS fviz-cli DESTINATION bin)
 
 # Testing
 # -----------------------------------------------------------------------------
-add_test(test-prepare-dir ${CMAKE_COMMAND} -E make_directory ${CMAKE_CURRENT_BINARY_DIR}/test)
-set_tests_properties(test-prepare-dir PROPERTIES FIXTURES_SETUP text-fixtures)
+add_custom_target(test
+    COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_runner.sh
+    DEPENDS fviz-cli)
 
-add_test(test-prepare-examples ${CMAKE_CURRENT_SOURCE_DIR}/examples/update_tests.sh)
-set_tests_properties(test-prepare-examples PROPERTIES FIXTURES_SETUP text-fixtures)
-
-file(GLOB unit_test_files "tests/unit/test_*.cc")
-foreach(unit_test_path ${unit_test_files})
-  get_filename_component(unit_test_name ${unit_test_path} NAME_WE)
-  get_filename_component(unit_test_srcdir ${unit_test_path} DIRECTORY)
-
-  add_executable(${unit_test_name} ${unit_test_path} $<TARGET_OBJECTS:fviz>)
-  target_link_libraries(${unit_test_name} ${FVIZ_LIB_LDFLAGS})
-
-  add_test(
-      NAME test-unit-${unit_test_name}
-      COMMAND ${CMAKE_COMMAND} -E env
-          FVIZ_TEST_SRCDIR=${CMAKE_SOURCE_DIR}
-          ${CMAKE_CURRENT_BINARY_DIR}/${unit_test_name}
-      DEPENDS fviz test-prepare)
-
-  set_tests_properties(
-      test-unit-${unit_test_name}
-      PROPERTIES FIXTURES_REQUIRED text-fixtures)
-endforeach()
-
-file(GLOB spec_test_files "tests/spec/*.fvz")
-foreach(spec_test_path ${spec_test_files})
-  get_filename_component(spec_test_name ${spec_test_path} NAME_WE)
-  get_filename_component(spec_test_srcdir ${spec_test_path} DIRECTORY)
-
-  add_test(
-      NAME test-spec-${spec_test_name}
-      WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-      COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_runner.sh ${CMAKE_CURRENT_BINARY_DIR}/fviz ${spec_test_name} ${spec_test_srcdir} ${CMAKE_CURRENT_BINARY_DIR}/test
-      DEPENDS fviz-cli test-prepare)
-
-  set_tests_properties(
-      test-spec-${spec_test_name}
-      PROPERTIES FIXTURES_REQUIRED text-fixtures)
-endforeach()
+add_custom_target(test-examples ${CMAKE_CURRENT_SOURCE_DIR}/examples/update_tests.sh)
+add_dependencies(test test-examples)
 
 
 # Examples

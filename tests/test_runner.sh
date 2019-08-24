@@ -1,75 +1,218 @@
 #!/bin/bash
-set -e
+set -ue
 
-binfile="$1"
-testname="$2"
-srcdir="$3"
-tmpdir="$4"
-format="svg"
+source_path="$(realpath "$(dirname "$0")/..")"
+proc_path="$(realpath "./fviz")"
+test_path="${source_path}/tests"
+result_path="$(realpath ./test-results)"
 
-infile="${srcdir}/${testname}.fvz"
-reffile="${srcdir}/${testname}.${format}"
-errfile="${srcdir}/${testname}.err"
-outfile="${tmpdir}/${testname}.${format}"
-logfile="${tmpdir}/${testname}.log"
+run() {
+	mkdir -p "${result_path}"
+	log_init
 
-# clean up old files
-rm -rf "${outfile}" "${logfile}"
+	num_total=0
+	num_pass=0
+	num_fail=0
 
-# run fviz
-echo "-------------------------------------------------------------------------------"
-echo "${binfile}" --in "${infile}" --out "${outfile}"
-echo "-------------------------------------------------------------------------------"
+	test_cases=$((cd "${source_path}/tests/spec" && find . -name "*.fvz") | sort)
 
-result=""
-if "${binfile}" \
-      --font-defaults off \
-      --font-load "tests/testdata/fonts/LiberationSans-Regular.ttf" \
-      --in "${infile}" \
-      --out "${outfile}" \
-      2> "${logfile}"; then
-  result="ok"
-else
-  result="fail"
-fi
+	for test_id in ${test_cases[@]}; do
+		local test_file="$(basename ${test_id})"
+		local test_id="${test_file%.*}"
 
-# check error messages
-if [[ -e "${errfile}" ]]; then
-  if [[ ${result} != "fail" ]]; then
-    echo "ERROR: expected failure but got success"
-    cat ${logfile}
-    exit 1
-  fi
+		num_total=$[ $num_total + 1 ]
 
-  if (diff ${logfile} ${errfile} &>/dev/null); then
+		if run_test "${test_id}"; then
+			echo "$(printf "\033[1;32m%s\033[0m" "[PASS]") ${test_id}"
+		  num_pass=$[ $num_pass + 1 ]
+		else
+			echo "$(printf "\033[1;31m%s\033[0m" "[FAIL]") ${test_id}"
+		  num_fail=$[ $num_fail + 1 ]
+		fi
+	done
+
+	if [[ ${num_total} == ${num_pass} ]]; then
+		echo
+		echo "TEST RESULT: $(printf "\033[1;32m%s\033[0m" "PASS")"
+		echo
+		echo "${num_pass}/${num_total} test cases ok"
     exit 0
-  else
-    echo "ERROR: error messages do not match"
-    diff ${logfile} ${errfile} || true
+	else
+		echo
+		echo "Test Result: $(printf "\033[1;31m%s\033[0m" "FAIL")"
+		echo
+		echo "${num_fail}/${num_total} test cases failed"
     exit 1
-  fi
-fi
+	fi
+}
 
-# check result
-if [[ ${result} != "ok" ]]; then
-  echo "ERROR: execution failed"
-  cat ${logfile}
-  exit 1
-fi
+run_test() {
+	local test_id="$1"
+	local format="svg"
 
-if [[ ! -e ${reffile} || ! -z "${FVIZ_TEST_FORCE}" ]]; then
-  cp ${outfile} ${reffile}
-fi
+	local infile="${test_path}/spec/${test_id}.fvz"
+	local reffile="${test_path}/spec/${test_id}.${format}"
+	local errfile="${test_path}/spec/${test_id}.err"
+	local outfile="${result_path}/${test_id}.${format}"
+	local logfile="${result_path}/${test_id}.log"
 
-if (diff ${outfile} ${reffile} &>/dev/null); then
-  cat ${logfile}
-  exit 0
-else
-  echo "ERROR: output files do not match"
-  echo "OUTPUT:" ${outfile}
-  echo "EXPECT:" ${reffile}
-  echo "-------------------------------------------------------------------------------"
-  #cat ${logfile}
-  #diff ${outfile} ${reffile} || true
-  exit 1
-fi
+	# clean up old files
+	rm -rf "${outfile}" "${logfile}"
+
+	# run fviz
+	result=""
+	if (cd ${source_path} && "${proc_path}" \
+				--font-defaults off \
+				--font-load "tests/testdata/fonts/LiberationSans-Regular.ttf" \
+				--in "${infile}" \
+				--out "${outfile}" \
+				2> "${logfile}"); then
+		result="ok"
+	else
+		result="fail"
+	fi
+
+	# check error messages
+	if [[ -e "${errfile}" ]]; then
+		if [[ ${result} != "fail" ]]; then
+			echo "ERROR: expected failure but got success" >> ${logfile}
+			return 1
+		fi
+
+		if (diff ${logfile} ${errfile} &>/dev/null); then
+			return 0
+		else
+			echo "ERROR: error messages do not match" >> ${logfile}
+			return 1
+		fi
+	fi
+
+	# check result
+	if [[ ${result} != "ok" ]]; then
+		echo "ERROR: execution failed" >> ${logfile}
+		cat ${logfile}
+		return 0
+	fi
+
+	if [[ ! -e ${reffile} ]]; then
+		cp ${outfile} ${reffile}
+	fi
+
+	if (diff ${outfile} ${reffile} &>/dev/null); then
+		cat ${logfile}
+		return 0
+	else
+		log_failure "${test_id}" "${outfile}" "${reffile}" "${logfile}"
+		return 1
+	fi
+}
+
+log_append() {
+	echo "$1" >> "${result_path}/index.html"
+}
+
+log_init() {
+	(cat > "${result_path}/index.html") <<-EOF
+		<title>Test Results</title>
+		<style type='text/css'>
+		  body {
+		    max-width: 1200px;
+		    font-family: sans-serif;
+		  }
+		
+		  th {
+		    background: #eee;
+		    padding: 2pt;
+		  }
+		
+		  td, th {
+		    text-align: left;
+		  }
+		
+		  table {
+		    border: 1px solid #000;
+		  }
+		
+		  section {
+		    margin-bottom: 2em;
+		  }
+		
+		  img {
+		    max-width: 100%;
+		  }
+		
+		  h3 {
+		    margin: 4pt 0;
+		  }
+		</style>
+		
+	EOF
+}
+
+log_failure() {
+	local test_id="$1"
+	local test_result_path="$2"
+	local test_expectation_path="$3"
+	local test_logfile_path="$4"
+
+	log_append "<section>"
+	log_append "  <table width='100%'>"
+	log_append "    <tr>"
+	log_append "      <th colspan=2>"
+	log_append "        <h3>Test Failure: ${test_id}</h3>"
+	log_append "      </th>"
+	log_append "    </tr>"
+	log_append "    <tr>"
+	log_append "      <th>Result</th>"
+	log_append "      <th>Expectation</th>"
+	log_append "    </tr>"
+	log_append "    <tr>"
+	log_append "      <td><img src='${test_result_path}' /></td>"
+	log_append "      <td><img src='${test_expectation_path}' /></td>"
+	log_append "    </tr>"
+	log_append "    <tr>"
+	log_append "      <th colspan=2>Command</th>"
+	log_append "    </tr>"
+	log_append "    <tr>"
+	log_append "      <td><code>$ ${proc_path} --in tests/spec/${test_id}.fvz --out /tmp/t.svg</code></td>"
+	log_append "    </tr>"
+	log_append "    <tr>"
+	log_append "      <th colspan=2>Reference File</th>"
+	log_append "    </tr>"
+	log_append "    <tr>"
+	log_append "      <td><code>$(realpath "${test_expectation_path}")</code></td>"
+	log_append "    </tr>"
+	log_append "    <tr>"
+	log_append "      <th colspan=2>Details</th>"
+	log_append "    </tr>"
+	log_append "    <tr>"
+	log_append "      <pre>$(cat ${test_logfile_path})</pre>"
+	log_append "    </tr>"
+	log_append "    <tr>"
+	log_append "      <td>"
+	log_append "        <details>"
+	log_append "          <summary>Logfile</summary>"
+	log_append "          <pre>$(log_escape < ${test_logfile_path})</pre>"
+	log_append "        </details>"
+	log_append "      </td>"
+	log_append "    </tr>"
+	log_append "    <tr>"
+	log_append "      <td>"
+	log_append "        <details>"
+	log_append "          <summary>SVG Diff</summary>"
+	log_append "          <pre>$(diff ${test_result_path} ${test_expectation_path} | log_escape)</pre>"
+	log_append "        </details>"
+	log_append "      </td>"
+	log_append "    </tr>"
+	log_append "  </table>"
+	log_append "</section>"
+}
+
+log_escape() {
+	sed \
+		-e 's/&/\&amp;/g' \
+		-e 's/</\&lt;/g' \
+		-e 's/>/\&gt;/g'
+}
+
+run
