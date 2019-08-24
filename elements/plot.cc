@@ -110,7 +110,7 @@ ReturnCode draw(
   std::array<Rectangle, 4> margin_boxes = {
     Rectangle {
       body_box.x,
-      content_box.y,
+      content_box.y + content_box.h - padding[0],
       body_box.w,
       padding[0],
     },
@@ -122,7 +122,7 @@ ReturnCode draw(
     },
     Rectangle {
       body_box.x,
-      content_box.y + content_box.h - padding[2],
+      content_box.y,
       body_box.w,
       padding[2],
     },

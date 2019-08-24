@@ -159,6 +159,14 @@ mat3 translate2(const vec2& t) {
   return m;
 }
 
+mat3 invert_y2() {
+  mat3 m;
+  m.a = 1.0;
+  m.e = -1.0;
+  m.i = 1.0;
+  return m;
+}
+
 void sort_cw(vec2* v, size_t v_len) {
   auto m = mean(v, v_len);
 

@@ -308,7 +308,7 @@ ReturnCode legend_draw_items(
   for (size_t i = 0; i < std::min(config.items.size(), item_boxes.size()); ++i) {
     LayoutInfo layout;
     layout.content_box.x = bbox.x + item_boxes[i].x;
-    layout.content_box.y = bbox.y + item_boxes[i].y;
+    layout.content_box.y = bbox.y + bbox.h - item_boxes[i].y - item_boxes[i].h;
     layout.content_box.w = item_boxes[i].w;
     layout.content_box.h = item_boxes[i].h;
 
@@ -363,13 +363,13 @@ ReturnCode legend_draw(
 
     switch (config->position_vert) {
       case VAlign::TOP:
-        border_box.y = parent_box.y;
+        border_box.y = parent_box.y + parent_box.h - border_box.h;
         break;
       case VAlign::CENTER:
         border_box.y = parent_box.y + parent_box.h * 0.5 - border_box.h * 0.5;
         break;
       case VAlign::BOTTOM:
-        border_box.y = parent_box.y + parent_box.h - border_box.h;
+        border_box.y = parent_box.y;
         break;
     }
   }

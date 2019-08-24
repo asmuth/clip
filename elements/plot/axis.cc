@@ -311,7 +311,7 @@ static ReturnCode axis_draw_vertical(
       from_pt(kDefaultTickLengthPT, target->dpi));
 
   for (const auto& tick : ticks.positions) {
-    auto ty = y0 + (y1 - y0) * (1.0 - tick);
+    auto ty = y0 + (y1 - y0) * tick;
     auto tx = x - tick_length + tick_length * (tick_position + 1) / 2.0;
 
     strokeLine(
@@ -347,7 +347,7 @@ static ReturnCode axis_draw_vertical(
 
     Point p;
     p.x = x + label_padding * label_position;
-    p.y = y0 + (y1 - y0) * (1.0 - tick);
+    p.y = y0 + (y1 - y0) * tick;
 
     TextStyle style;
     style.font = axis_config.label_font;
@@ -586,7 +586,7 @@ ReturnCode axis_draw(
     case AxisAlign::TOP:
       rc = axis_draw_horizontal(
           axis,
-          layout.content_box.y,
+          layout.content_box.y + layout.content_box.h,
           layout.content_box.x,
           layout.content_box.x + layout.content_box.w,
           layer);
@@ -594,7 +594,7 @@ ReturnCode axis_draw(
     case AxisAlign::BOTTOM:
       rc = axis_draw_horizontal(
           axis,
-          layout.content_box.y + layout.content_box.h,
+          layout.content_box.y,
           layout.content_box.x,
           layout.content_box.x + layout.content_box.w,
           layer);
@@ -664,21 +664,21 @@ ReturnCode build(const Environment& env, const Expr* expr, ElementRef* elem) {
   switch (config->align) {
     case AxisAlign::X:
       config->label_attach = AxisLabelAttach::TOP;
-      config->title_offset = 1;
+      config->title_offset = -1;
       config->tick_offset = 0;
-      config->label_offset = 1;
+      config->label_offset = -1;
       break;
     case AxisAlign::TOP:
       config->label_attach = AxisLabelAttach::TOP;
-      config->title_offset = 1;
-      config->tick_offset = -1;
-      config->label_offset = 1;
-      break;
-    case AxisAlign::BOTTOM:
-      config->label_attach = AxisLabelAttach::BOTTOM;
       config->title_offset = -1;
       config->tick_offset = 1;
       config->label_offset = -1;
+      break;
+    case AxisAlign::BOTTOM:
+      config->label_attach = AxisLabelAttach::BOTTOM;
+      config->title_offset = 1;
+      config->tick_offset = -1;
+      config->label_offset = 1;
       break;
     case AxisAlign::Y:
       config->label_attach = AxisLabelAttach::LEFT;

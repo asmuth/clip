@@ -26,7 +26,7 @@ Rectangle layout_margin_box(
     double margin_left) {
   Rectangle box;
   box.x = parent.x + margin_left;
-  box.y = parent.y + margin_top;
+  box.y = parent.y + margin_bottom;
   box.w = std::max(parent.w - (margin_left + margin_right), 0.0);
   box.h = std::max(parent.h - (margin_top + margin_bottom), 0.0);
   return box;
@@ -59,10 +59,10 @@ Point layout_align(
 
   switch (align_y) {
     case VAlign::TOP:
-      target.y += bbox.h / 2;
+      target.y -= bbox.h / 2;
       break;
     case VAlign::BOTTOM:
-      target.y -= bbox.h / 2;
+      target.y += bbox.h / 2;
       break;
     case VAlign::CENTER:
       break;

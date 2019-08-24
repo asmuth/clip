@@ -99,7 +99,7 @@ ReturnCode draw(
     Path path;
     for (auto i : group.index) {
       auto sx = clip.x + config->x[i];
-      auto sy = clip.y + clip.h - config->y[i];
+      auto sy = clip.y + config->y[i];
 
       if (i == group.index[0]) {
         path.moveTo(sx, sy);
@@ -115,7 +115,7 @@ ReturnCode draw(
   if (config->marker_size > 0) {
     for (size_t i = 0; i < config->x.size(); ++i) {
       auto sx = clip.x + config->x[i];
-      auto sy = clip.y + clip.h - config->y[i];
+      auto sy = clip.y + config->y[i];
 
       const auto& shape = config->marker_shape;
       const auto& color = config->marker_color;
@@ -138,7 +138,7 @@ ReturnCode draw(
 
     Point p(
         clip.x + config->x[i],
-        clip.y + clip.h - config->y[i] - label_padding);
+        clip.y + config->y[i] + label_padding);
 
     TextStyle style;
     style.font = config->label_font;

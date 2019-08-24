@@ -28,12 +28,14 @@ namespace fviz {
 struct PageTextElement {
   std::string text;
   std::vector<text::GlyphPlacementGroup> glyphs;
+
+  // The `origin` refers to the start of the baseline
   Point origin;
-  double rotate;
-  Point rotate_pivot;
+
   TextStyle style;
   std::optional<uint32_t> zindex;
   Rectangle clip;
+  std::optional<mat3> transform;
 };
 
 struct PageShapeElement {

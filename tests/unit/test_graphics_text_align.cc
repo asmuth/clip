@@ -80,8 +80,8 @@ int main(int argc, char** argv) {
   font.fonts = {font_ref};
 
   Page page;
-  page.width = 1200;
-  page.height = 800;
+  page.width = 1200 * 4;
+  page.height = 800 * 4;
   page.dpi = 240;
   page.font_size = from_unit(12);
   page.background_color = Color::fromRGB(1.0, 1.0, 1.0);

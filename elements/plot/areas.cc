@@ -111,7 +111,7 @@ ReturnCode draw_horizontal(
 
   for (size_t i = 0; i < config.x.size(); ++i) {
     auto sx = clip.x + config.x[i];
-    auto sy = clip.y + clip.h - config.y[i];
+    auto sy = clip.y + config.y[i];
 
     if (i == 0) {
       shape.moveTo(sx, sy);
@@ -125,7 +125,7 @@ ReturnCode draw_horizontal(
   auto x0 = clip.h * std::clamp(scale_translate(config.scale_x, 0), 0.0, 1.0);
   for (int i = config.x.size() - 1; i >= 0; --i) {
     auto sx = clip.x + (config.xoffset.empty() ? x0 : config.xoffset[i]);
-    auto sy = clip.y + clip.h - config.y[i];
+    auto sy = clip.y + config.y[i];
     shape.lineTo(sx, sy);
 
     if (stroke_low.empty()) {
@@ -204,7 +204,7 @@ ReturnCode draw_vertical(
 
   for (size_t i = 0; i < config.x.size(); ++i) {
     auto sx = clip.x + config.x[i];
-    auto sy = clip.y + clip.h - config.y[i];
+    auto sy = clip.y + config.y[i];
 
     if (i == 0) {
       shape.moveTo(sx, sy);
@@ -218,7 +218,7 @@ ReturnCode draw_vertical(
   auto y0 = clip.h * std::clamp(scale_translate(config.scale_y, 0), 0.0, 1.0);
   for (int i = config.x.size() - 1; i >= 0; --i) {
     auto sx = clip.x + config.x[i];
-    auto sy = clip.y + clip.h - (config.yoffset.empty() ? y0 : config.yoffset[i]);
+    auto sy = clip.y + (config.yoffset.empty() ? y0 : config.yoffset[i]);
     shape.lineTo(sx, sy);
 
     if (stroke_low.empty()) {

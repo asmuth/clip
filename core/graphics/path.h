@@ -80,5 +80,10 @@ Polygon2 path_to_polygon_simple(const Path& path);
  */
 Path path_from_polygon(const Polygon2& poly);
 
+/**
+ * Transform a path
+ */
+Path path_transform(const Path& p, const mat3& t);
+
 } // namespace fviz
 

@@ -52,13 +52,10 @@ Status Rasterizer::drawShape(
   for (const auto& cmd : path) {
     switch (cmd.command) {
       case PathCommand::MOVE_TO:
-        cairo_move_to(cr_ctx, cmd[0], cmd[1]);
+        cairo_move_to(cr_ctx, cmd[0], height - cmd[1]);
         break;
       case PathCommand::LINE_TO:
-        cairo_line_to(cr_ctx, cmd[0], cmd[1]);
-        break;
-      case PathCommand::ARC_TO:
-        cairo_arc(cr_ctx, cmd[0], cmd[1], cmd[2], cmd[3], cmd[4]);
+        cairo_line_to(cr_ctx, cmd[0], height - cmd[1]);
         break;
       case PathCommand::CLOSE:
         cairo_close_path(cr_ctx);
@@ -115,7 +112,25 @@ Status Rasterizer::drawShape(
 
 Status Rasterizer::drawText(
     const std::vector<text::GlyphPlacementGroup>& glyphs,
-    const TextStyle& style) {
+    const TextStyle& style,
+    const std::optional<mat3>& transform) {
+  if (transform) {
+    auto transform_m = mul(
+        mul(scale2({1, -1}), translate2({0, -double(height)})),
+        mul(*transform, mul(translate2({0, double(height)}), scale2({1, -1}))));
+
+    cairo_matrix_t m;
+    m.xx = transform_m.a;
+    m.xy = transform_m.b;
+    m.yx = transform_m.d;
+    m.yy = transform_m.e;
+    m.x0 = transform_m.c;
+    m.y0 = transform_m.f;
+    cairo_set_matrix(cr_ctx, &m);
+  } else {
+    cairo_identity_matrix(cr_ctx);
+  }
+
   for (const auto& gg : glyphs) {
 
     auto ft_font = static_cast<FT_Face>(font_get_freetype(gg.font));
@@ -143,7 +158,7 @@ Status Rasterizer::drawText(
 
       cairo_glyphs[i].index = g.codepoint;
       cairo_glyphs[i].x = g.x;
-      cairo_glyphs[i].y = g.y;
+      cairo_glyphs[i].y = height - g.y;
     }
 
     cairo_show_glyphs(cr_ctx, cairo_glyphs, glyph_count);

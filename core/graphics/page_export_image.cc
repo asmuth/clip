@@ -31,7 +31,7 @@ ReturnCode page_export_png(
   std::vector<DrawOp> ops;
   for (const auto& e : page.text_elements) {
     DrawOp op;
-    op.draw_fn = bind(&Rasterizer::drawText, _1, e.glyphs, e.style);
+    op.draw_fn = bind(&Rasterizer::drawText, _1, e.glyphs, e.style, e.transform);
     op.draw_idx = e.zindex.value_or(0);
     ops.push_back(op);
   }

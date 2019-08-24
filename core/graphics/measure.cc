@@ -156,7 +156,7 @@ void convert_unit_relative(
   switch (measure->unit) {
     case Unit::REL:
       measure->unit = Unit::UNIT;
-      measure->value = std::clamp(measure->value, 0.0, 1.0) * range;
+      measure->value = measure->value * range;
       break;
   }
 }
@@ -167,7 +167,7 @@ void convert_unit_user(
   switch (measure->unit) {
     case Unit::USER:
       measure->unit = Unit::REL;
-      measure->value = std::clamp(converter(measure->value), 0.0, 1.0);
+      measure->value = converter(measure->value);
       break;
   }
 }

@@ -16,6 +16,7 @@
 #include "graphics/text_layout.h"
 #include "graphics/text_support.h"
 #include <graphics/page_description.h>
+#include <graphics/brush.h>
 
 namespace fviz {
 
@@ -73,8 +74,15 @@ Status drawTextLabel(
   PageTextElement op;
   op.text = text;
   op.glyphs = std::move(glyphs);
-  op.rotate = rotate;
-  op.rotate_pivot = position;
+
+  if (rotate) {
+    op.transform = mul(
+        translate2({position.x, position.y}),
+        mul(
+            rotate2(rotate),
+            translate2({-position.x, -position.y})));
+  }
+
   op.style = style;
   op.origin = offset;
 

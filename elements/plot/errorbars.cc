@@ -164,11 +164,11 @@ ReturnCode draw(
   for (size_t i = 0; i < x_len; ++i) {
     auto from = vec2(
         clip.x + config->x[i],
-        clip.y + clip.h - config->y_low[i]);
+        clip.y + config->y_low[i]);
 
     auto to = vec2(
         clip.x + config->x[i],
-        clip.y + clip.h - config->y_high[i]);
+        clip.y + config->y_high[i]);
 
     const auto& color = config->colors.empty()
         ? config->stroke_color
@@ -182,11 +182,11 @@ ReturnCode draw(
   for (size_t i = 0; i < y_len; ++i) {
     auto from = vec2(
         clip.x + config->x_low[i],
-        clip.y + clip.h - config->y[i]);
+        clip.y + config->y[i]);
 
     auto to = vec2(
         clip.x + config->x_high[i],
-        clip.x + clip.h - config->y[i]);
+        clip.x + config->y[i]);
 
     const auto& color = config->colors.empty()
         ? config->stroke_color

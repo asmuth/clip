@@ -52,8 +52,8 @@ Status text_layout_span(
     glyphs->emplace_back(gp);
 
     *span_length += gi.advance_x;
-    *span_top = std::min(-gi.metrics_ascender, *span_top);
-    *span_bottom = std::max(-gi.metrics_descender, *span_bottom);
+    *span_top = std::max(gi.metrics_ascender, *span_top);
+    *span_bottom = std::min(gi.metrics_descender, *span_bottom);
   }
 
   return OK;
@@ -118,9 +118,9 @@ Status text_layout_line(
 
   *bbox = Rectangle(
       line_left,
-      line_top,
+      line_bottom,
       line_length,
-      line_bottom - line_top);
+      line_top - line_bottom);
 
   return OK;
 }

@@ -116,7 +116,7 @@ ReturnCode draw(
   /* draw vectors */
   for (size_t i = 0; i < config->x.size(); ++i) {
     auto sx = clip.x + config->x[i];
-    auto sy = clip.y + clip.h - config->y[i];
+    auto sy = clip.y + config->y[i];
     auto dx = config->dx[i];
     auto dy = config->dy[i];
 

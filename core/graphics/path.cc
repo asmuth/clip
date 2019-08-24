@@ -180,4 +180,42 @@ Path path_from_polygon(const Polygon2& poly) {
   return p;
 }
 
+Path path_transform(const Path& path, const mat3& transform) {
+  Path path_out;
+
+  for (const auto& cmd : path) {
+    switch (cmd.command) {
+      case PathCommand::MOVE_TO: {
+        auto p0 = mul(transform, {cmd[0], cmd[1], 1.0});
+        path_out.moveTo(p0.x, p0.y);
+        break;
+      }
+      case PathCommand::LINE_TO: {
+        auto p0 = mul(transform, {cmd[0], cmd[1], 1.0});
+        path_out.lineTo(p0.x, p0.y);
+        break;
+      }
+      case PathCommand::QUADRATIC_CURVE_TO: {
+        auto p0 = mul(transform, {cmd[0], cmd[1], 1.0});
+        auto p1 = mul(transform, {cmd[2], cmd[3], 1.0});
+        path_out.quadraticCurveTo(p0.x, p0.y, p1.x, p1.y);
+        break;
+      }
+      case PathCommand::CUBIC_CURVE_TO: {
+        auto p0 = mul(transform, {cmd[0], cmd[1], 1.0});
+        auto p1 = mul(transform, {cmd[2], cmd[3], 1.0});
+        auto p2 = mul(transform, {cmd[4], cmd[5], 1.0});
+        path_out.cubicCurveTo(p0.x, p0.y, p1.x, p1.y, p2.x, p2.y);
+        break;
+      }
+      case PathCommand::CLOSE: {
+        path_out.closePath();
+        break;
+      }
+    }
+  }
+
+  return path_out;
+}
+
 } // namespace fviz

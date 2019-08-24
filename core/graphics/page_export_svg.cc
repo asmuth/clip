@@ -22,6 +22,7 @@ struct SVGData {
   std::stringstream buffer;
   double width;
   double height;
+  mat3 proj;
 };
 
 using SVGDataRef = std::shared_ptr<SVGData>;
@@ -84,21 +85,25 @@ std::string svg_path_data(const Path& path) {
         path_data << fmt::format("L{} {} ", cmd[0], cmd[1]);
         break;
       case PathCommand::QUADRATIC_CURVE_TO:
-        path_data << fmt::format("Q{} {} {} {} ", cmd[0], cmd[1], cmd[2], cmd[3]);
+        path_data << fmt::format(
+            "Q{} {} {} {} ",
+            cmd[0],
+            cmd[1],
+            cmd[2],
+            cmd[3]);
         break;
       case PathCommand::CUBIC_CURVE_TO:
-        path_data << fmt::format("C{} {} {} {} {} {} ", cmd[0], cmd[1], cmd[2], cmd[3], cmd[4], cmd[5]);
-        break;
-      case PathCommand::ARC_TO:
-        // FIXME: respect angle1/2 arguments
-        path_data << fmt::format("M{} {} ", cmd[0] - cmd[2], cmd[1]);
-        path_data << fmt::format("a{} {} 0 1 0 {} 0 ", cmd[2], cmd[2], cmd[2] * 2);
-        path_data << fmt::format("a{} {} 0 1 0 {} 0 ", cmd[2], cmd[2], -cmd[2] * 2);
+        path_data << fmt::format(
+            "C{} {} {} {} {} {} ",
+            cmd[0],
+            cmd[1],
+            cmd[2],
+            cmd[3],
+            cmd[4],
+            cmd[5]);
         break;
       case PathCommand::CLOSE:
         path_data << "Z";
-      default:
-        break; // not yet implemented
     }
   }
 
@@ -153,7 +158,7 @@ Status svg_shape(
   svg->buffer
       << "  "
       << "<path"
-      << svg_attr("d", svg_path_data(elem.path))
+      << svg_attr("d", svg_path_data(path_transform(elem.path, svg->proj)))
       << fill_opts
       << stroke_opts
       << "/>"
@@ -166,22 +171,31 @@ Status svg_text_span_native(
     const PageTextElement& elem,
     SVGDataRef svg) {
   const auto& style = elem.style;
+  auto origin = mul(svg->proj, vec3{elem.origin, 1});
 
   std::string transform;
-  if (elem.rotate) {
-    transform = svg_attr(
+  if (elem.transform) {
+    auto transform_m = mul(
+        mul(scale2({1, -1}), translate2({0, -svg->height})),
+        mul(*elem.transform, svg->proj));
+
+    transform += svg_attr(
         "transform",
-        fmt::format("rotate({} {} {})",
-        elem.rotate,
-        elem.rotate_pivot.x,
-        elem.rotate_pivot.y));
+        fmt::format(
+            "matrix({} {} {} {} {} {})",
+            transform_m.a,
+            transform_m.d,
+            transform_m.b,
+            transform_m.e,
+            transform_m.c,
+            transform_m.f));
   }
 
   svg->buffer
     << "  "
     << "<text"
-    << svg_attr("x", elem.origin.x)
-    << svg_attr("y", elem.origin.y)
+    << svg_attr("x", origin.x)
+    << svg_attr("y", origin.y)
     << svg_attr("fill", style.color.to_hex_str(4))
     << svg_attr("font-size", style.font_size)
     << svg_attr("font-family", style.font.font_family_css)
@@ -203,8 +217,14 @@ Status svg_text_span_embed(
 
   for (const auto& gg : elem.glyphs) {
     for (const auto& g : gg.glyphs) {
-      Path gp;
+      auto gt = translate2({g.x, g.y});
+      if (elem.transform) {
+        gt = mul(*elem.transform, gt);
+      }
 
+      gt = mul(svg->proj, gt);
+
+      Path gp;
       auto rc = font_get_glyph_path(
           g.font,
           elem.style.font_size,
@@ -216,14 +236,11 @@ Status svg_text_span_embed(
         return ERROR;
       }
 
-      auto gt = fmt::format("translate({} {})", g.x, g.y);
-
       svg->buffer
           << "  "
           << "<path"
           << svg_attr("fill", style.color.to_hex_str(4))
-          << svg_attr("d", svg_path_data(gp))
-          << svg_attr("transform", gt)
+          << svg_attr("d", svg_path_data(path_transform(gp, gt)))
           << "/>"
           << "\n";
     }
@@ -276,6 +293,10 @@ ReturnCode page_export_svg(
       });
 
   auto svg = std::make_shared<SVGData>();
+  svg->width = page.width;
+  svg->height = page.height;
+  svg->proj = mul(translate2({0, page.height}), scale2({1, -1}));
+
   for (const auto& op : svg_ops) {
     if (auto rc = op.draw_fn(svg); !rc) {
       return rc;
@@ -284,12 +305,12 @@ ReturnCode page_export_svg(
 
   // return the svg document
   std::stringstream svg_doc;
+
   svg_doc
     << "<svg"
       << svg_attr("xmlns", "http://www.w3.org/2000/svg")
       << svg_attr("width", page.width)
       << svg_attr("height", page.height)
-      << svg_attr("viewBox", fmt::format("0 0 {} {}", page.width, page.height))
       << ">\n"
     << "  "
     << "<rect"

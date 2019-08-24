@@ -178,7 +178,7 @@ ReturnCode font_get_glyph_path(
     assert(c.points.size() == c.tags.size());
 
     // translate the resolved contour to the path object representation
-    path->moveTo(c.points[0].x, c.points[0].y);
+    path->moveTo(c.points[0].x, -c.points[0].y);
 
     for (size_t i = 0; i < c.points.size() - 1; ) {
       const auto& p = c.points[i];
@@ -188,7 +188,7 @@ ReturnCode font_get_glyph_path(
       if (i + 1 < c.points.size() &&
           c.tags[i + 0] == GlyphPointType::ON &&
           c.tags[i + 1] == GlyphPointType::ON) {
-        path->lineTo(c.points[i + 1].x, c.points[i + 1].y);
+        path->lineTo(c.points[i + 1].x, -c.points[i + 1].y);
         i += 1;
         continue;
       }
@@ -201,11 +201,11 @@ ReturnCode font_get_glyph_path(
           c.tags[i + 3] == GlyphPointType::ON) {
         path->cubicCurveTo(
             c.points[i + 1].x,
-            c.points[i + 1].y,
+            -c.points[i + 1].y,
             c.points[i + 2].x,
-            c.points[i + 2].y,
+            -c.points[i + 2].y,
             c.points[i + 3].x,
-            c.points[i + 3].y);
+            -c.points[i + 3].y);
 
         i += 3;
         continue;
@@ -218,9 +218,9 @@ ReturnCode font_get_glyph_path(
           c.tags[i + 2] == GlyphPointType::ON) {
         path->quadraticCurveTo(
             c.points[i + 1].x,
-            c.points[i + 1].y,
+            -c.points[i + 1].y,
             c.points[i + 2].x,
-            c.points[i + 2].y);
+            -c.points[i + 2].y);
 
         i += 2;
         continue;

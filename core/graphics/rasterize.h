@@ -51,7 +51,8 @@ public:
 
   Status drawText(
       const std::vector<text::GlyphPlacementGroup>& glyphs,
-      const TextStyle& style);
+      const TextStyle& style,
+      const std::optional<mat3>& transform);
 
   Status writeToFile(const std::string& path);
 

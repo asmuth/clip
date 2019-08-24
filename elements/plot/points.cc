@@ -97,7 +97,7 @@ ReturnCode draw(
   /* draw markers */
   for (size_t i = 0; i < config->x.size(); ++i) {
     auto sx = clip.x + config->x[i];
-    auto sy = clip.y + clip.h - config->y[i];
+    auto sy = clip.y + config->y[i];
 
     const auto& color = config->colors.empty()
         ? config->color
@@ -130,7 +130,7 @@ ReturnCode draw(
 
     Point p(
         clip.x + config->x[i],
-        clip.y + clip.h - config->y[i] - label_padding);
+        clip.y + config->y[i] + label_padding);
 
     TextStyle style;
     style.font = config->label_font;

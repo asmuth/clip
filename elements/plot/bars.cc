@@ -121,7 +121,7 @@ ReturnCode draw_horizontal(
   /* draw bars */
   auto x0 = std::clamp(clip.h * scale_translate(config.scale_x, 0), 0.0, 1.0);
   for (size_t i = 0; i < config.x.size(); ++i) {
-    auto sy = clip.y + clip.h - config.y[i];
+    auto sy = clip.y + config.y[i];
     auto sx1 = clip.x + (config.xoffset.empty() ? x0 : config.xoffset[i]);
     auto sx2 = clip.x + config.x[i];
 
@@ -158,7 +158,7 @@ ReturnCode draw_horizontal(
 
     Point p(
         clip.x + config.x[i] + padding,
-        clip.y + -offset + clip.h - config.y[i]);
+        clip.y + -offset + config.y[i]);
 
     TextStyle style;
     style.font = config.label_font;
@@ -238,8 +238,8 @@ ReturnCode draw_vertical(
   auto y0 = clip.h * std::clamp(scale_translate(config.scale_y, 0), 0.0, 1.0);
   for (size_t i = 0; i < config.x.size(); ++i) {
     auto sx = clip.x + config.x[i];
-    auto sy1 = clip.y + clip.h - (config.yoffset.empty() ? y0 : config.yoffset[i]);
-    auto sy2 = clip.y + clip.h - config.y[i];
+    auto sy1 = clip.y + (config.yoffset.empty() ? y0 : config.yoffset[i]);
+    auto sy2 = clip.y + config.y[i];
 
     auto size = config.sizes.empty()
         ? from_pt(kDefaultBarSizePT, layer->dpi)
@@ -274,7 +274,7 @@ ReturnCode draw_vertical(
 
     Point p(
         clip.x + offset + config.x[i],
-        clip.y + clip.h - config.y[i] - padding);
+        clip.y + config.y[i] + padding);
 
     TextStyle style;
     style.font = config.label_font;
