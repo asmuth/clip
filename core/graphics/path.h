@@ -26,7 +26,6 @@ enum class PathCommand {
   LINE_TO,
   QUADRATIC_CURVE_TO,
   CUBIC_CURVE_TO,
-  ARC_TO,
   CLOSE
 };
 
@@ -50,7 +49,6 @@ public:
   void lineTo(const Point& p);
   void quadraticCurveTo(double cx, double cy, double x, double y);
   void cubicCurveTo(double c1x, double c1y, double c2x, double c2y, double x, double y);
-  void arcTo(double cx, double cy, double r, double a1, double a2);
   void closePath();
 
   const PathData& operator[](size_t idx) const;
@@ -84,6 +82,11 @@ Path path_from_polygon(const Polygon2& poly);
  * Transform a path
  */
 Path path_transform(const Path& p, const mat3& t);
+
+/**
+ * Add a circle to a path
+ */
+void path_add_circle(Path* path, vec2 origin, double radius);
 
 } // namespace fviz
 

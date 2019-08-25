@@ -84,17 +84,6 @@ void Path::cubicCurveTo(double c1x, double c1y, double c2x, double c2y, double x
   data_.emplace_back(std::move(d));
 }
 
-void Path::arcTo(double cx, double cy, double r, double a1, double a2) {
-  PathData d;
-  d.command = PathCommand::ARC_TO;
-  d.coefficients[0] = cx;
-  d.coefficients[1] = cy;
-  d.coefficients[2] = r;
-  d.coefficients[3] = a1;
-  d.coefficients[4] = a2;
-  data_.emplace_back(std::move(d));
-}
-
 void Path::closePath() {
   PathData d;
   d.command = PathCommand::CLOSE;
@@ -153,8 +142,11 @@ Polygon2 path_to_polygon_simple(const Path& path) {
         poly.vertices.emplace_back(cmd[0], cmd[1]);
         break;
       case PathCommand::QUADRATIC_CURVE_TO:
+        poly.vertices.emplace_back(cmd[2], cmd[3]);
+        break;
       case PathCommand::CUBIC_CURVE_TO:
-      case PathCommand::ARC_TO:
+        poly.vertices.emplace_back(cmd[4], cmd[5]);
+        break;
       case PathCommand::CLOSE:
         continue;
     }
@@ -216,6 +208,48 @@ Path path_transform(const Path& path, const mat3& transform) {
   }
 
   return path_out;
+}
+
+void path_add_circle(Path* path, vec2 origin, double radius) {
+  const double control_point_distance = 0.552284749831;
+
+  path->moveTo(
+      origin.x,
+      origin.y - radius);
+
+  path->cubicCurveTo(
+      origin.x - radius * control_point_distance,
+      origin.y - radius,
+      origin.x - radius,
+      origin.y - radius * control_point_distance,
+      origin.x - radius,
+      origin.y);
+
+  path->cubicCurveTo(
+      origin.x - radius,
+      origin.y + radius * control_point_distance,
+      origin.x - radius * control_point_distance,
+      origin.y + radius,
+      origin.x,
+      origin.y + radius);
+
+  path->cubicCurveTo(
+      origin.x + radius * control_point_distance,
+      origin.y + radius,
+      origin.x + radius,
+      origin.y + radius * control_point_distance,
+      origin.x + radius,
+      origin.y);
+
+  path->cubicCurveTo(
+      origin.x + radius,
+      origin.y - radius * control_point_distance,
+      origin.x + radius * control_point_distance,
+      origin.y - radius,
+      origin.x,
+      origin.y - radius);
+
+  path->closePath();
 }
 
 } // namespace fviz

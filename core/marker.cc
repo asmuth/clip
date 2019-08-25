@@ -79,10 +79,8 @@ Marker marker_create_circle(double border_width) {
     style.line_width = from_unit(double(size) * border_width * 0.5);
 
     Path path;
-    path.moveTo(pos.x + size * 0.5, pos.y);
-    path.arcTo(pos.x, pos.y, size * 0.5, 0, M_PI * 2);
+    path_add_circle(&path, pos, size * 0.5);
     strokePath(target, path, style);
-
     return OK;
   };
 }
@@ -90,10 +88,8 @@ Marker marker_create_circle(double border_width) {
 Marker marker_create_disk() {
   return [] (const auto& pos, const auto& size, const auto& color, auto target) {
     Path path;
-    path.moveTo(pos.x + size * 0.5, pos.y);
-    path.arcTo(pos.x, pos.y, size * 0.5, 0, M_PI * 2);
+    path_add_circle(&path, pos, size * 0.5);
     fillPath(target, path, color);
-
     return OK;
   };
 }
