@@ -1,5 +1,6 @@
-(set height 240px)
-(set width 900px)
+(set width 2048px)
+(set height 1024px)
+(set dpi 240)
 
 (chart/linechart
     data-x (csv "tests/testdata/measurement2.csv" time)

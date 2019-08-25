@@ -1,4 +1,6 @@
-(set height 400px)
+(set width 2048px)
+(set height 1024px)
+(set dpi 240)
 
 (chart/scatterplot
     data-x (csv tests/testdata/gauss2d.csv x)

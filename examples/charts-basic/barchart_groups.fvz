@@ -1,5 +1,6 @@
-(set height 240px)
-(set width 960px)
+(set width 2048px)
+(set height 1024px)
+(set dpi 240)
 
 (plot
     axes (right bottom left)

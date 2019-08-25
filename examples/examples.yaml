@@ -8,14 +8,6 @@
     - file: charts-scientific/scatterplot_colors
     - file: charts-scientific/streamgraph
 
-- section: Standard Charts
-  files:
-    - file: charts-basic/scatterplot
-    - file: charts-basic/linechart_timeseries
-    - file: charts-basic/barchart_groups
-    - file: charts-basic/scatterplot_with_labels
-    - file: charts-basic/custom_font
-
 - section: Editorial Charts
   files:
     - file: charts-editorial/chart_i18n
@@ -23,3 +15,11 @@
     - file: charts-editorial/linechart_with_labels
     - file: charts-editorial/stacked_bars
     - file: charts-editorial/barchart_horizontal
+
+- section: Standard Charts
+  files:
+    - file: charts-basic/scatterplot
+    - file: charts-basic/linechart_timeseries
+    - file: charts-basic/barchart_groups
+    - file: charts-basic/scatterplot_with_labels
+    - file: charts-basic/custom_font

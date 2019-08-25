@@ -1,6 +1,6 @@
-(set width 2000px)
-(set height 500px)
-(set dpi 200)
+(set width 2048px)
+(set height 1024px)
+(set dpi 240)
 (set font "Latin Modern Roman")
 
 (chart/scatterplot

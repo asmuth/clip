@@ -422,21 +422,37 @@ article .color_legend {
 }
 
 .examples-list {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(36em, 1fr));
   margin-bottom: 3em;
   margin-top: 1em;
-  border-left: 1pt solid #ced3e0;
-  border-top: 1pt solid #ced3e0;
+  max-width: 100%;
+  overflow: hidden;
+}
+
+@media screen and (max-width: 850px) {
+  .examples-list > div {
+    margin-bottom: 1em;
+    border-left: 1pt solid #ced3e0;
+    border-top: 1pt solid #ced3e0;
+  }
+}
+
+@media screen and (min-width: 850px) {
+  .examples-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(36em, 1fr));
+    border-left: 1pt solid #ced3e0;
+    border-top: 1pt solid #ced3e0;
+  }
 }
 
 .examples-list > div {
-  display: flex;
-  flex-direction: column;
   height: 100%;
   border-bottom: 1pt solid #ced3e0;
   border-right: 1pt solid #ced3e0;
   box-sizing: border-box;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
 }
 
 .examples-list h3 {
@@ -455,6 +471,7 @@ article .color_legend {
 
 .examples-list figure {
   margin: 1em;
+  overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -462,6 +479,6 @@ article .color_legend {
 }
 
 .examples-list figure img {
-  max-width: 100%;
+  width: 100%;
 }
 

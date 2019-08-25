@@ -1,10 +1,12 @@
-(set height 240px)
-(set width 900px)
+(set width 2048px)
+(set height 1024px)
+(set dpi 240)
 
 (chart/scatterplot
     data-x (csv tests/testdata/point_example.csv x)
     data-y (csv tests/testdata/point_example.csv y)
     data-size (csv tests/testdata/point_example.csv z)
+    size-map (linear 1em 3em)
     labels (csv tests/testdata/point_example.csv z)
     limit-y (-40 60)
     marker-shape (circle-bullet)

@@ -1,7 +1,7 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="900.000000" height="480.000000" viewBox="0 0 900 480">
+<svg xmlns="http://www.w3.org/2000/svg" width="900.000000" height="480.000000">
   <rect width="900.000000" height="480.000000" fill="#ffffffff"/>
-  <path d="M37.3333 29.3333 M21.3333 29.3333 a8 8 0 1 0 16 0 a8 8 0 1 0 -16 0 " fill="#000000ff"/>
-  <path d="M157.524 29.3333 M141.524 29.3333 a8 8 0 1 0 16 0 a8 8 0 1 0 -16 0 " fill="none" stroke-width="1.600000" stroke="#000000ff"/>
+  <path d="M29.3333 37.3333 C24.9151 37.3333 21.3333 33.7516 21.3333 29.3333 C21.3333 24.9151 24.9151 21.3333 29.3333 21.3333 C33.7516 21.3333 37.3333 24.9151 37.3333 29.3333 C37.3333 33.7516 33.7516 37.3333 29.3333 37.3333 Z" fill="#000000ff"/>
+  <path d="M149.524 37.3333 C145.106 37.3333 141.524 33.7516 141.524 29.3333 C141.524 24.9151 145.106 21.3333 149.524 21.3333 C153.942 21.3333 157.524 24.9151 157.524 29.3333 C157.524 33.7516 153.942 37.3333 149.524 37.3333 Z" fill="none" stroke-width="1.600000" stroke="#000000ff"/>
   <text x="263.917411" y="35.833333" fill="#000000ff" font-size="19.200000" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">■</text>
   <text x="384.107887" y="35.833333" fill="#000000ff" font-size="19.200000" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">□</text>
   <text x="501.032738" y="35.833333" fill="#000000ff" font-size="19.200000" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">◧</text>

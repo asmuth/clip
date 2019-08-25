@@ -1,12 +1,14 @@
-(set height 220px)
-(set width 960px)
+(set width 2048px)
+(set height 800px)
+(set dpi 240)
+
 (set color-palette zhang)
 
 (plot
   limit-x (0 100)
-  limit-y (0 70)
+  limit-y (0 90)
   axes (bottom)
-  axis-y-label-placement (linear-interval 10 10 60)
+  axis-y-label-placement (linear-interval 10 10 80)
   axis-left (
     border none
     label-offset 0
@@ -54,6 +56,7 @@
     item (label "Series B" color 2)
     item (label "Series C" color 3)
     item (label "Series D" color 4)
-    item (label "Series E" color 5)))
+    item (label "Series E" color 5))
+  margin-left 0)
 
 

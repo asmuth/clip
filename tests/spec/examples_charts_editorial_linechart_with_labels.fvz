@@ -1,5 +1,6 @@
-(set height 240px)
-(set width 960px)
+(set width 2048px)
+(set height 800px)
+(set dpi 240)
 
 (chart/linechart
     data-x (csv "tests/testdata/city_temperatures_london.csv" month)

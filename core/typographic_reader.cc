@@ -89,12 +89,12 @@ ReturnCode measure_map_read_linear(
   }
 
   Measure begin;
-  if (auto rc = measure_read(args[0], &begin); !rc) {
+  if (auto rc = measure_readn(env, args[0], &begin); !rc) {
     return rc;
   }
 
   Measure end;
-  if (auto rc = measure_read(args[1], &end); !rc) {
+  if (auto rc = measure_readn(env, args[1], &end); !rc) {
     return rc;
   }
 

@@ -1,5 +1,8 @@
-(set height 200px)
-(set width 900px)
+(set width 2048px)
+(set height 800px)
+(set dpi 240)
+
+(set margin-top 2em)
 
 (plot
     scale-x-padding 0.6

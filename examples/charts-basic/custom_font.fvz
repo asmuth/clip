@@ -1,6 +1,6 @@
-(set dpi 384)
-(set width 3600px)
-(set height 900px)
+(set width 2048px)
+(set height 1024px)
+(set dpi 240)
 
 (set font "Comic Sans MS")
 
