@@ -12,6 +12,7 @@ tpl = """
     <title>{{title_seo}}</title>
     <link href='/documentation.css' type='text/css' rel='stylesheet' />
     <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://fonts.googleapis.com/css?family=Roboto:400,400i,500,700" rel="stylesheet">
     <meta name="google-site-verification" content="zhyGsSQu1HANExonMZDMr0LppXCCv47inMKRXiZS8aQ" />
   </head>

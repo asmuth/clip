@@ -1,11 +1,3 @@
-- section: Standard Charts
-  files:
-    - file: charts-basic/scatterplot
-    - file: charts-basic/linechart_timeseries
-    - file: charts-basic/barchart_groups
-    - file: charts-basic/scatterplot_with_labels
-    - file: charts-basic/custom_font
-
 - section: Scientific Charts
   files:
     - file: charts-scientific/vectorfield
@@ -15,6 +7,14 @@
     - file: charts-scientific/barchart_ranges
     - file: charts-scientific/scatterplot_colors
     - file: charts-scientific/streamgraph
+
+- section: Standard Charts
+  files:
+    - file: charts-basic/scatterplot
+    - file: charts-basic/linechart_timeseries
+    - file: charts-basic/barchart_groups
+    - file: charts-basic/scatterplot_with_labels
+    - file: charts-basic/custom_font
 
 - section: Editorial Charts
   files:

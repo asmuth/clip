@@ -17,7 +17,7 @@ libraries.
   <a href="/download">Download</a>
 </div>
 
-<div style="margin-top: 2em; background: #f2f2f2; padding: 10pt; max-width: 900px; box-sizing: border-box;">
+<div style="margin-top: 2em; background: #f2f7ff; padding: 10pt; max-width: 900px; box-sizing: border-box;">
   <b>BETA:</b> Please note that fviz is pre-1.0 software under active development;
   It is usable, but things might generally still be a bit rough around the edges.
   To see what already works, have a look at the <a href="/examples">Examples</a> page.

@@ -27,25 +27,25 @@ def build_example_list(examples):
   tpl = """
   <h1 style="margin-bottom: 0;">Examples</h1>
 
-  {{#list}}
-    <div style="margin-bottom: 6em; margin-top: -1em;">
-      <h2>{{section}}</h2>
+    {{#list}}
+      <h3>{{section}}</h3>
+      <section class="examples-list">
       {{#files}}
-        <section>
+        <div>
           <h3>Example: <a href="/examples/{{file}}" class="link"><code>examples/{{file}}</code></a></h3>
-          <div class="example">
+          <figure>
             <a href="/examples/{{file}}"><img src="/examples/{{file}}.svg"></a>
-          </div>
-        </section>
+          </figure>
+        </div>
       {{/files}}
-    </div>
-  {{/list}}
+      </section>
+    {{/list}}
   """
   env = {
     "list": examples,
   }
 
-  write_page("/examples", TPL.render(tpl, env), title="Example Gallery")
+  write_page("/examples", TPL.render(tpl, env), title="Example Gallery", article_class="full-width")
 
 def main():
   examples = yaml.load(Path("examples/examples.yaml").read_text())
