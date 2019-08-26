@@ -1,5 +1,5 @@
 /**
- * This file is part of the "fviz" project
+ * This file is part of the "clip" project
  *   Copyright (c) 2018 Paul Asmuth
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -19,7 +19,7 @@
 #include "geometry.h"
 #include "polygon.h"
 
-namespace fviz {
+namespace clip {
 
 enum class PathCommand {
   MOVE_TO,
@@ -88,5 +88,5 @@ Path path_transform(const Path& p, const mat3& t);
  */
 void path_add_circle(Path* path, vec2 origin, double radius);
 
-} // namespace fviz
+} // namespace clip
 

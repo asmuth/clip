@@ -1,5 +1,5 @@
 /**
- * This file is part of the "fviz" project
+ * This file is part of the "clip" project
  *   Copyright (c) 2018 Paul Asmuth
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -19,45 +19,45 @@
 #include <string.h>
 
 using namespace std::placeholders;
-using namespace fviz;
+using namespace clip;
 
-struct fviz_s {
+struct clip_s {
   OutputFormat format;
   std::string buffer;
   ReturnCode error;
 };
 
-fviz_t* fviz_init() {
-  auto ctx = std::make_unique<fviz_t>();
+clip_t* clip_init() {
+  auto ctx = std::make_unique<clip_t>();
   ctx->format = OutputFormat::SVG;
   return ctx.release();
 }
 
-void fviz_destroy(fviz_t* ctx) {
+void clip_destroy(clip_t* ctx) {
   delete ctx;
 }
 
-const char* fviz_get_error(const fviz_t* ctx) {
+const char* clip_get_error(const clip_t* ctx) {
   return ctx->error.message.c_str();
 }
 
-void fviz_set_error(fviz_t* ctx, const ReturnCode& err) {
+void clip_set_error(clip_t* ctx, const ReturnCode& err) {
   ctx->error = err;
 }
 
-int fviz_eval(fviz_t* ctx, const char* expr) {
+int clip_eval(clip_t* ctx, const char* expr) {
   Environment env;
-  auto rc = fviz::eval(env, expr, ctx->format, &ctx->buffer);
-  fviz_set_error(ctx, rc);
+  auto rc = clip::eval(env, expr, ctx->format, &ctx->buffer);
+  clip_set_error(ctx, rc);
   return rc;
 }
 
-void fviz_get_result(fviz_t* ctx, const void** data, size_t* data_len) {
+void clip_get_result(clip_t* ctx, const void** data, size_t* data_len) {
   *data = ctx->buffer.data();
   *data_len = ctx->buffer.size();
 }
 
-int fviz_set_output_format(fviz_t* ctx, const char* path, const char* fmt) {
+int clip_set_output_format(clip_t* ctx, const char* path, const char* fmt) {
   std::string format = fmt;
 
   if (format == "svg") {
@@ -70,7 +70,7 @@ int fviz_set_output_format(fviz_t* ctx, const char* path, const char* fmt) {
     return OK;
   }
 
-  fviz_set_error(ctx, errorf(ERROR, "invalid output format: {}", format));
+  clip_set_error(ctx, errorf(ERROR, "invalid output format: {}", format));
   return ERROR;
 }
 

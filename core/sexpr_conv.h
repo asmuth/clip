@@ -1,5 +1,5 @@
 /**
- * This file is part of the "fviz" project
+ * This file is part of the "clip" project
  *   Copyright (c) 2018 Paul Asmuth
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,7 +17,7 @@
 #include "graphics/measure.h"
 #include "typographic_reader.h"
 
-namespace fviz {
+namespace clip {
 
 using ExprConv = std::function<ReturnCode (const Expr*)>;
 
@@ -97,6 +97,6 @@ ReturnCode expr_tov_flat(
     ExprConvTo<T> conv,
     std::vector<T>* values);
 
-} // namespace fviz
+} // namespace clip
 
 #include "sexpr_conv_impl.h"

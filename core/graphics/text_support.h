@@ -1,5 +1,5 @@
 /**
- * This file is part of the "fviz" project
+ * This file is part of the "clip" project
  *   Copyright (c) 2018 Paul Asmuth
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,7 +14,7 @@
 #pragma once
 #include <graphics/text_layout.h>
 
-namespace fviz::text {
+namespace clip::text {
 
 /**
  * Itemize the spans in a line by text directionality and reorder them into
@@ -24,5 +24,5 @@ namespace fviz::text {
  */
 ReturnCode text_reorder_bidi_line(TextLine* line);
 
-} // namespace fviz::text
+} // namespace clip::text
 

@@ -1,5 +1,5 @@
 /**
- * This file is part of the "fviz" project
+ * This file is part of the "clip" project
  *   Copyright (c) 2018 Paul Asmuth
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -19,7 +19,7 @@
 #include <sstream>
 #include <iomanip>
 
-namespace fviz {
+namespace clip {
 
 std::string format_superscript(int n) {
   std::stringstream sstream;
@@ -329,5 +329,5 @@ ReturnCode format_configure(
       expr_inspect(expr));
 }
 
-} // namespace fviz
+} // namespace clip
 

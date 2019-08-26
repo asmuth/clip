@@ -8,8 +8,8 @@ cmake_install.cmake
 *.so
 *.dll
 *.dylib
-/fviz
-/fviz_config.h
+/clip
+/clip_config.h
 /.ninja_deps
 /.ninja_log
 /*.ninja

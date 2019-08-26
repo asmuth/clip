@@ -1,5 +1,5 @@
 /**
- * This file is part of the "fviz" project
+ * This file is part of the "clip" project
  *   Copyright (c) 2018 Paul Asmuth
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,7 +17,7 @@
 #include "return_code.h"
 #include "element.h"
 
-namespace fviz {
+namespace clip {
 
 struct ElementMap {
   std::unordered_map<std::string, ElementConfigureFn> elements;
@@ -48,4 +48,4 @@ void element_bind(
     const std::string& name,
     ElementConfigureFn configure_fn);
 
-} // namespace fviz
+} // namespace clip

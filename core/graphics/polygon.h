@@ -1,5 +1,5 @@
 /**
- * This file is part of the "fviz" project
+ * This file is part of the "clip" project
  *   Copyright (c) 2018 Paul Asmuth
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,7 +18,7 @@
 #include <iostream>
 #include "geometry.h"
 
-namespace fviz {
+namespace clip {
 
 /**
  * A polygon in 2D space defined by its vertices. A polygon is always closed;
@@ -35,5 +35,5 @@ struct Polygon2 {
 
 std::ostream& operator <<(std::ostream& os, const Polygon2& p);
 
-} // namespace fviz
+} // namespace clip
 

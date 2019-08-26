@@ -1,5 +1,5 @@
 /**
- * This file is part of the "fviz" project
+ * This file is part of the "clip" project
  *   Copyright (c) 2018 Paul Asmuth
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,7 +17,7 @@
 
 #include <numeric>
 
-namespace fviz {
+namespace clip {
 namespace text {
 
 Status text_layout_span(
@@ -126,5 +126,5 @@ Status text_layout_line(
 }
 
 } // namespace text
-} // namespace fviz
+} // namespace clip
 

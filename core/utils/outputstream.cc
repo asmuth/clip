@@ -1,5 +1,5 @@
 /**
- * This file is part of the "fviz" project
+ * This file is part of the "clip" project
  *   Copyright (c) 2018 Paul Asmuth
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -21,7 +21,7 @@
 #include "exception.h"
 #include "outputstream.h"
 
-namespace fviz {
+namespace clip {
 
 std::unique_ptr<OutputStream> OutputStream::getStdout() {
   auto stdout_stream = new FileOutputStream(1, false);

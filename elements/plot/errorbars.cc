@@ -1,5 +1,5 @@
 /**
- * This file is part of the "fviz" project
+ * This file is part of the "clip" project
  *   Copyright (c) 2018 Paul Asmuth
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -30,7 +30,7 @@
 using namespace std::placeholders;
 using std::bind;
 
-namespace fviz::elements::plot::errorbars {
+namespace clip::elements::plot::errorbars {
 
 static const double kDefaultStrokeWidthPT = 1;
 static const double kDefaultBarWidthPT = 6;
@@ -376,5 +376,5 @@ ReturnCode build(
   return OK;
 }
 
-} // namespace fviz::elements::plot::errorbars
+} // namespace clip::elements::plot::errorbars
 

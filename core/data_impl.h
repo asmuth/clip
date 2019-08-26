@@ -1,5 +1,5 @@
 /**
- * This file is part of the "fviz" project
+ * This file is part of the "clip" project
  *   Copyright (c) 2018 Paul Asmuth
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,7 +13,7 @@
  */
 #pragma once
 
-namespace fviz {
+namespace clip {
 
 template <typename T>
 ReturnCode data_load_as(
@@ -37,5 +37,5 @@ ReturnCode data_load_as(
   return OK;
 }
 
-} // namespace fviz
+} // namespace clip
 

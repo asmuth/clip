@@ -1,5 +1,5 @@
 /**
- * This file is part of the "fviz" project
+ * This file is part of the "clip" project
  *   Copyright (c) 2018 Paul Asmuth
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,7 +16,7 @@
 #include <memory>
 #include <string>
 
-namespace fviz {
+namespace clip {
 
 struct Expr;
 using ExprStorage = std::unique_ptr<Expr, std::function<void (Expr*)>>;
@@ -50,5 +50,5 @@ ExprStorage expr_clone(const Expr* e, int count=-1);
 std::string expr_inspect(const Expr* expr);
 std::string expr_inspect_list(const Expr* expr);
 
-} // namespace fviz
+} // namespace clip
 

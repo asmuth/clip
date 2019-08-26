@@ -1,5 +1,5 @@
 /**
- * This file is part of the "fviz" project
+ * This file is part of the "clip" project
  *   Copyright (c) 2018 Paul Asmuth
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,7 +15,7 @@
 #include "brush.h"
 #include "graphics/page_description.h"
 
-namespace fviz {
+namespace clip {
 
 void fillPath(
     Page* page,
@@ -169,5 +169,5 @@ void fillRectangle(
   fillPath(page, clip, p, color);
 }
 
-} // namespace fviz
+} // namespace clip
 

@@ -1,5 +1,5 @@
 /**
- * This file is part of the "fviz" project
+ * This file is part of the "clip" project
  *   Copyright (c) 2018 Paul Asmuth
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,7 +17,7 @@
 #include <vector>
 #include "color.h"
 
-namespace fviz {
+namespace clip {
 
 enum class PixelFormat {
   RGB8, RGBA8
@@ -74,5 +74,5 @@ Color decodePixel(
     char* data,
     size_t size);
 
-} // namespace fviz
+} // namespace clip
 

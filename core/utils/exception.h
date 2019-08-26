@@ -1,5 +1,5 @@
 /**
- * This file is part of the "fviz" project
+ * This file is part of the "clip" project
  *   Copyright (c) 2018 Paul Asmuth
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -53,24 +53,24 @@ const char kFutureError[] = "FutureError";
 
 #define RAISE(E, ...) \
     RAISE_EXCEPTION( \
-        fviz::Exception( __VA_ARGS__).setTypeName(E)); \
+        clip::Exception( __VA_ARGS__).setTypeName(E)); \
         while(0) {}
 
 #define RAISEF(E, ...) \
     RAISE_EXCEPTION( \
-        fviz::Exception( \
-            fviz::fmt::format(__VA_ARGS__)).setTypeName(E)); \
+        clip::Exception( \
+            clip::fmt::format(__VA_ARGS__)).setTypeName(E)); \
         while(0) {}
 
 #define RAISE_ERRNO(E, ...) \
     { \
       int e = errno; \
       RAISE_EXCEPTION( \
-          fviz::Exception( \
+          clip::Exception( \
               __VA_ARGS__).setTypeName(E).setErrno(e)); \
     }
 
-namespace fviz {
+namespace clip {
 
 using StandardException = std::exception;
 
@@ -103,6 +103,6 @@ private:
   char message_[1024];
 };
 
-} // namespace fviz
+} // namespace clip
 
 #endif

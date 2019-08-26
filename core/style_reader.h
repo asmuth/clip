@@ -1,5 +1,5 @@
 /**
- * This file is part of the "fviz" project
+ * This file is part of the "clip" project
  *   Copyright (c) 2018 Paul Asmuth
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,7 +17,7 @@
 #include "return_code.h"
 #include "sexpr.h"
 
-namespace fviz {
+namespace clip {
 
 ReturnCode stroke_style_read(
     const Environment& env,
@@ -34,5 +34,5 @@ ReturnCode fill_style_read_solid(
     const Expr* expr,
     FillStyle* style);
 
-} // namespace fviz
+} // namespace clip
 

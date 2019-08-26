@@ -1,5 +1,5 @@
 /**
- * This file is part of the "fviz" project
+ * This file is part of the "clip" project
  *   Copyright (c) 2018 Paul Asmuth
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,7 +18,7 @@
 #include "layout.h"
 #include "font_lookup.h"
 
-namespace fviz {
+namespace clip {
 struct Page;
 namespace text {
 struct TextSpan;
@@ -67,5 +67,5 @@ Status text_measure_label(
     Rectangle* bbox);
 
 
-} // namespace fviz
+} // namespace clip
 

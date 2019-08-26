@@ -1,5 +1,5 @@
 /**
- * This file is part of the "fviz" project
+ * This file is part of the "clip" project
  *   Copyright (c) 2018 Paul Asmuth
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -22,7 +22,7 @@
 
 const constexpr bool TEXT_ENABLE_BIDI = FVIZ_TEXT_ENABLE_BIDI;
 
-namespace fviz::text::backend_freetype {
+namespace clip::text::backend_freetype {
 
 ReturnCode text_analyze_bidi_line(
     const TextSpan* text_begin,
@@ -128,5 +128,5 @@ ReturnCode text_analyze_bidi_line(
 }
 
 
-} // namespace fviz::text::backend_freetype
+} // namespace clip::text::backend_freetype
 

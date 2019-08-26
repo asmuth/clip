@@ -1,5 +1,5 @@
 /**
- * This file is part of the "fviz" project
+ * This file is part of the "clip" project
  *   Copyright (c) 2018 Paul Asmuth
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,7 +13,7 @@
  */
 #include "typographic_map.h"
 
-namespace fviz {
+namespace clip {
 
 MeasureMap measure_map_linear(const Measure& min, const Measure& max) {
   return [min, max] (const std::string& value, Measure* measure) -> ReturnCode {
@@ -32,5 +32,5 @@ MeasureMap measure_map_linear(const Measure& min, const Measure& max) {
   };
 }
 
-} // namespace fviz
+} // namespace clip
 

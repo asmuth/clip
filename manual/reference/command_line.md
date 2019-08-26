@@ -2,12 +2,12 @@ Command Line
 ============
 
 The primary method for translate input expressions to SVG or PNG output files is
-the `fviz` command line program. A typical invocation looks like this:
+the `clip` command line program. A typical invocation looks like this:
 
-    $ fviz --in my_chart.fvz --out my_chart.svg
+    $ clip --in my_chart.clp --out my_chart.svg
 
 See below for a full list of supported command line options. Besides the command
-line interface, fviz also offers a C API that can be used to render charts
+line interface, clip also offers a C API that can be used to render charts
 directly from your application.
 
 
@@ -16,7 +16,7 @@ List of command line flags
 
 Below you can find a list of all currently supported command line arguments.
 
-    Usage: $ fviz [OPTIONS]
+    Usage: $ clip [OPTIONS]
       --in <path>               Path to the input file
       --out <path>              Path to the output file
       --stdin                   Read the input file from stdin
@@ -31,5 +31,5 @@ Below you can find a list of all currently supported command line arguments.
       --version                 Display the version of this binary and exit
 
     Examples:
-      $ fviz --in my_chart.fvz --out my_chart.svg
+      $ clip --in my_chart.clp --out my_chart.svg
 

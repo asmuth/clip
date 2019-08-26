@@ -1,5 +1,5 @@
 /**
- * This file is part of the "fviz" project
+ * This file is part of the "clip" project
  *   Copyright (c) 2018 Paul Asmuth
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,7 +13,7 @@
  */
 #pragma once
 
-namespace fviz {
+namespace clip {
 
 template <typename T=void>
 ExprStorage expr_build_next() {
@@ -72,5 +72,5 @@ ExprStorage expr_build(T&&... items) {
   return expr_create_list(expr_build_next(std::forward<T>(items)...));
 }
 
-} // namespace fviz
+} // namespace clip
 

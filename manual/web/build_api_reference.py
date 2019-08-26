@@ -71,10 +71,10 @@ def build_elem_page(elem_file):
   if "desc_detail" in elem:
     elem["desc_detail"] = markdown.markdown(elem["desc_detail"])
 
-  url = "/documentation/elements/" + elem["name"]
+  url = "/elements/" + elem["name"]
 
   if "example" in elem:
-    elem["example_src"] = Path(os.path.join("examples", elem["example"] + ".fvz")).read_text()
+    elem["example_src"] = Path(os.path.join("examples", elem["example"] + ".clp")).read_text()
     elem["example_img"] = "/examples/" + elem["example"] + ".svg"
 
   print("> Building page: %s" % url)

@@ -1,5 +1,5 @@
 /**
- * This file is part of the "fviz" project
+ * This file is part of the "clip" project
  *   Copyright (c) 2018 Paul Asmuth
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,7 +13,7 @@
  */
 #include "intersect.h"
 
-namespace fviz {
+namespace clip {
 
 bool intersect_line_line(
     vec2 p0,
@@ -210,5 +210,5 @@ void intersect_poly_lineseg(
   }
 }
 
-} // namespace fviz
+} // namespace clip
 

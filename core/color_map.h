@@ -1,5 +1,5 @@
 /**
- * This file is part of the "fviz" project
+ * This file is part of the "clip" project
  *   Copyright (c) 2018 Paul Asmuth
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,7 +15,7 @@
 #include "graphics/color.h"
 #include "return_code.h"
 
-namespace fviz {
+namespace clip {
 
 using ColorMap = std::function<ReturnCode (const std::string& v, Color* c)>;
 
@@ -23,5 +23,5 @@ ColorMap color_map_gradient(std::vector<std::pair<double, Color>> gradient);
 
 ColorMap color_map_steps(std::vector<std::pair<double, Color>> steps);
 
-} // namespace fviz
+} // namespace clip
 

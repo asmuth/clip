@@ -1,5 +1,5 @@
 /**
- * This file is part of the "fviz" project
+ * This file is part of the "clip" project
  *   Copyright (c) 2018 Paul Asmuth
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,7 +16,7 @@
 #include <stdint.h>
 #include <string>
 
-namespace fviz {
+namespace clip {
 
 template <typename H, typename... T>
 void StringUtil::toStringVImpl(
@@ -89,4 +89,4 @@ std::string StringUtil::formatNumberMetric(T orig_value) {
 }
 
 
-} // namespace fviz
+} // namespace clip

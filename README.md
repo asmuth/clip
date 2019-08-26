@@ -1,74 +1,82 @@
-fviz
-====
+# clip
 
-[![Build Status](https://travis-ci.org/asmuth/fviz.svg?branch=master)](https://travis-ci.org/asmuth/fviz)
-[![License](https://img.shields.io/badge/license-Apache%202.0-green)](https://github.com/asmuth/fviz/blob/master/LICENSE)
-
-fviz is a command line program for creating charts and other data-driven
+clip (the _command line illustration processor_) is an open-source command line
+program and software library for creating charts and other data-driven
 illustrations.
 
-It reads input data and styling information from text and CSV files and produces
-the output graphic as a SVG or PNG file. All charts are highly customizable using
-a simple s-expression based syntax.
+In essence, clip consists of a library of composable graphical 'elements'. This
+element library includes high-level building blocks for creating common chart types
+as well as lower-level drawing primitives such as markers, arrows and lines. Users
+create custom illustrations by combining and styling these elements.
 
-In addition to the command line program, fviz is available as a software library
-which can be embedded into any application that can link to C libraries.
+When called from the command line, clip reads input data in text and CSV format
+and produces the output chart as a SVG or PNG file. Additionaly, clip is available
+as the libclip software library which can be embedded into any application that
+supports a C FFI.
 
-**BETA:** Please note that fviz is pre-1.0 software under active development;
-It is usable, but things might generally still be a bit rough around the edges.
-To see what already works, have a look at the [Examples](https://fviz.org/examples) page.
 
 <h4>
-  <a href="https://fviz.org/examples">Examples</a> &middot;
-  <a href="https://fviz.org">Documentation</a>
+  <a href="https://docs.clip-lang.org/getting-started">Getting Started</a> &middot;
+  <a href="https://docs.clip-lang.org/examples">Examples</a> &middot;
+  <a href="https://docs.clip-lang.org">Documentation</a>
 </h4>
 
 
 Example
 -------
 
-Being a highly visual tool, fviz is best explained by example. So here is an input
-file that defines a simple scatterplot (`example_chart.fvz`). Note that this
-example is only intended to give you an idea of what the syntax looks like and to
-get you started quickly; for an in-depth description of all parameters, please refer
-to the documentation.
+Being a highly visual tool, clip is best explained by example. So here is how to
+draw a simple line chart using clip:
 
-    (chart/scatterplot
-        data-x (csv tests/testdata/gauss2d.csv x)
-        data-y (csv tests/testdata/gauss2d.csv y)
-        limit-x (0 400)
-        limit-y (0 200)
-        axes (bottom left)
-        grid (color #fff)
-        background #eee
-        border none)
+    $ clip --in example_chart.clp --out example_chart.svg
 
-Here is how you can run the above example file through fviz:
+Output File (`example_chart.svg`):
+[![A simple scatterplot](/examples/charts-basic/demo_timeseries.svg)](https://docs.clip-lang.org/examples/charts-basic/demo_timeseries)
 
-    $ fviz --in example_chart.fvz --out example_chart.svg
+Input File (`example_chart.clp`):
 
-When running the example locally, you can use your own input CSV file, or you
-can download the example CSV file [from here](/tests/testdata/gauss2d.csv).
-If everything works, you should get an output file similar to the one below
-(`example_chart.svg`):
+    (plot
+      axes (bottom left)
+      axis-y-label-format (scientific)
+      axis-x-label-format (datetime "%H:%M:%S")
+      axis-x-label-placement (linear-align 1800)
+      lines (
+        data-x (csv "tests/testdata/measurement.csv" time)
+        data-y (csv "tests/testdata/measurement.csv" value1)
+        color #06c))
 
-[![A simple scatterplot](/examples/charts-basic/scatterplot.svg)](https://fviz.org/examples/charts-basic/scatterplot)
+Note that this example is only intended to give you an idea of what the syntax
+looks like and to get you started quickly; for an in-depth description of all
+parameters, please refer to [the documentation](https://docs.clip-lang.org).
 
-More examples can be found on [the examples page](https://fviz.org/examples).
-For a more detailed introduction to fviz, see the [Getting Started](https://fviz.org/documentation/getting-started) page.
-If you have any questions please don't hesitate to reach out via [GitHub issues](https://github.com/asmuth/fviz).
+More examples can be found on [the examples page](https://docs.clip-lang.org/examples).
+
+If you have any questions please don't hesitate to reach out via [GitHub issues](https://github.com/asmuth/clip).
+
+
+Documentation
+-------------
+
+You can find the full documentation at https://docs.clip-lang.org/
+
+
+Example Gallery
+---------------
+
+A list of examples can be found on the [Examples](https://docs.clip-lang.org/examples)
+page.
 
 
 Building
 --------
 
-To build fviz, you need an up-to-date C++ compiler, cmake, fmtlib, libharfbuzz,
+To build clip, you need an up-to-date C++ compiler, cmake, fmtlib, libharfbuzz,
 libfreetype and cairo. Run:
 
     $ cmake .
     $ make -j
 
-To install the `fviz` binary into your system, run `make install`:
+To install the `clip` binary into your system, run `make install`:
 
     $ make install
 
@@ -77,105 +85,32 @@ To run the test suite, run `make test`:
     $ make test
 
 
-For detailed installation instructions, have a look at the [Installation](https://fviz.org/documentation/installation/)
+For detailed installation instructions, have a look at the [Installation](https://docs.clip-lang.org/documentation/installation/)
 page.
 
 
 Acknowledgements
 ----------------
 
-Parts of fviz were inspired by ideas from the "Grammar of Graphics" [0] and the
-ggplot2 project.
+  - The structure of the plot elements is based on ideas from [The Grammar of
+    Graphics](https://www.springer.com/gp/book/9780387245447) and the
+    [ggplot2](https://ggplot2.tidyverse.org/) library.
 
-[0] Wilkinson, L. (1999). The Grammar of Graphics (Springer)
+  - A number of concepts in clip are heavily guided by the
+    [CSS specification](https://www.w3.org/TR/CSS2/)
 
+  - Text rendering is based on the libre [freetype](https://www.freetype.org/)
+    and [harfbuzz](https://harfbuzz.org) stack.
 
-Example Gallery
----------------
-
-Below are more examples to show you what's possible. Each example links to the
-source code that generated it. Even more examples can be found on the
-[Examples](https://fviz.org/examples) page.
-
-
-### Examples: Scientific Charts
-
----
-#### Example: [`examples/charts-scientific/vectorfield`](https://fviz.org/examples/charts-scientific/vectorfield)
-[![vectorfield.svg](/examples/charts-scientific/vectorfield.svg)](https://fviz.org/examples/charts-scientific/vectorfield)
-
----
-#### Example: [`examples/charts-scientific/line_markers`](https://fviz.org/examples/charts-scientific/line_markers)
-[![line_markers.svg](/examples/charts-scientific/line_markers.svg)](https://fviz.org/examples/charts-scientific/line_markers)
-
----
-#### Example: [`examples/charts-scientific/errorbars_log`](https://fviz.org/examples/charts-scientific/errorbars_log)
-[![errorbars_log.svg](/examples/charts-scientific/errorbars_log.svg)](https://fviz.org/examples/charts-scientific/errorbars_log)
-
----
-#### Example: [`examples/charts-scientific/barchart_ranges`](https://fviz.org/examples/charts-scientific/barchart_ranges)
-[![barchart_ranges.svg](/examples/charts-scientific/barchart_ranges.svg)](https://fviz.org/examples/charts-scientific/barchart_ranges)
-
----
-#### Example: [`examples/charts-scientific/multiple_y_axes`](https://fviz.org/examples/charts-scientific/multiple_y_axes)
-[![multiple_y_axes.svg](/examples/charts-scientific/multiple_y_axes.svg)](https://fviz.org/examples/charts-scientific/multiple_y_axes)
-
----
-#### Example: [`examples/charts-scientific/scatterplot_colors`](https://fviz.org/examples/charts-scientific/scatterplot_colors)
-[![scatterplot_colors.svg](/examples/charts-scientific/scatterplot_colors.svg)](https://fviz.org/examples/charts-scientific/scatterplot_colors)
-
----
-#### Example: [`examples/charts-scientific/streamgraph`](https://fviz.org/examples/charts-scientific/streamgraph)
-[![streamgraph.svg](/examples/charts-scientific/streamgraph.svg)](https://fviz.org/examples/charts-scientific/streamgraph)
-
-
-### Examples: Editorial Charts
-
----
-#### Example: [`examples/charts-editorial/chart_i18n`](https://fviz.org/examples/charts-editorial/chart_i18n)
-[![chart_i18n.svg](/examples/charts-editorial/chart_i18n.svg)](https://fviz.org/examples/charts-editorial/chart_i18n)
-
----
-#### Example: [`examples/charts-editorial/stacked_areas`](https://fviz.org/examples/charts-editorial/stacked_areas)
-[![stacked_areas.svg](/examples/charts-editorial/stacked_areas.svg)](https://fviz.org/examples/charts-editorial/stacked_areas)
-
----
-#### Example: [`examples/charts-editorial/linechart_with_labels`](https://fviz.org/examples/charts-editorial/linechart_with_labels)
-[![linechart_with_labels.svg](/examples/charts-editorial/linechart_with_labels.svg)](https://fviz.org/examples/charts-editorial/linechart_with_labels)
-
----
-#### Example: [`examples/charts-editorial/stacked_bars`](https://fviz.org/examples/charts-editorial/stacked_bars)
-[![stacked_bars.svg](/examples/charts-editorial/stacked_bars.svg)](https://fviz.org/examples/charts-editorial/stacked_bars)
-
----
-#### Example: [`examples/charts-editorial/barchart_horizontal`](https://fviz.org/examples/charts-editorial/barchart_horizontal)
-[![barchart_horizontal.svg](/examples/charts-editorial/barchart_horizontal.svg)](https://fviz.org/examples/charts-editorial/barchart_horizontal)
-
-
-### Examples: Basic Charts
-
----
-#### Example: [`examples/charts-basic/linechart_timeseries`](https://fviz.org/examples/charts-basic/linechart_timeseries)
-[![linechart_timeseries.svg](/examples/charts-basic/linechart_timeseries.svg)](https://fviz.org/examples/charts-basic/linechart_timeseries)
-
----
-#### Example: [`examples/charts-basic/barchart_groups`](https://fviz.org/examples/charts-basic/barchart_groups)
-[![barchart_groups.svg](/examples/charts-basic/barchart_groups.svg)](https://fviz.org/examples/charts-basic/barchart_groups)
-
----
-#### Example: [`examples/charts-basic/scatterplot_with_labels`](https://fviz.org/examples/charts-basic/scatterplot_with_labels)
-[![scatterplot_with_labels.svg](/examples/charts-basic/scatterplot_with_labels.svg)](https://fviz.org/examples/charts-basic/scatterplot_with_labels)
-
----
-#### Example: [`examples/charts-basic/custom_font`](https://fviz.org/examples/charts-basic/custom_font)
-[![custom_font.svg](/examples/charts-basic/custom_font.svg)](https://fviz.org/examples/charts-basic/custom_font)
+  - Some naming choices are definitely inspired by Eddie Kohler's
+    [click](https://github.com/kohler/click) software defined networking library
 
 
 License
 -------
 
-    fviz -- Open-Source Data Visualization Toolkit 
-    https://fviz.org
+    clip -- The command line illustration processor
+    https://clip-lang.org
 
     Copyright (c) 2018, Paul Asmuth, Laura Schlimmer
     All rights reserved.

@@ -1,5 +1,5 @@
 /**
- * This file is part of the "fviz" project
+ * This file is part of the "clip" project
  *   Copyright (c) 2018 Paul Asmuth
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,7 +13,7 @@
  */
 #pragma once
 
-namespace fviz {
+namespace clip {
 
 template <typename T>
 ReturnCode expr_to_enum(
@@ -95,5 +95,5 @@ ReturnCode expr_tov_flat(
   return OK;
 }
 
-} // namespace fviz
+} // namespace clip
 

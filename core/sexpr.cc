@@ -1,5 +1,5 @@
 /**
- * This file is part of the "fviz" project
+ * This file is part of the "clip" project
  *   Copyright (c) 2018 Paul Asmuth
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,7 +20,7 @@
 using namespace std::placeholders;
 using std::bind;
 
-namespace fviz {
+namespace clip {
 
 enum class ExprType {
   LIST, VALUE_LITERAL, VALUE
@@ -184,5 +184,5 @@ std::string expr_inspect_list(const Expr* expr) {
   return s.str();
 }
 
-} // namespace fviz
+} // namespace clip
 

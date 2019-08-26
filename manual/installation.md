@@ -1,15 +1,15 @@
 Installation
 ============
 
-fviz is written in C++. You can either install a binary release or compile
-from source. Once the installation is complete, you will have a `fviz` binary
+clip is written in C++. You can either install a binary release or compile
+from source. Once the installation is complete, you will have a `clip` binary
 on your system.
 
-You can find the complete [source code on Github](http://github.com/asmuth/fviz)
+You can find the complete [source code on Github](http://github.com/asmuth/clip)
 
 ### Compile from source
 
-To build fviz, you need an up-to-date C++ compiler, cmake, libharfbuzz and
+To build clip, you need an up-to-date C++ compiler, cmake, libharfbuzz and
 libfreetype. To install these dependencies, run the following command:
 
     # Ubuntu
@@ -21,14 +21,14 @@ libfreetype. To install these dependencies, run the following command:
     # OSX
     $ brew install cmake freetype harfbuzz fribidi cairo cppformat
 
-To compile `fviz`, Run:
+To compile `clip`, Run:
 
-    $ git clone git@github.com:asmuth/fviz.git
-    $ cd fviz
+    $ git clone git@github.com:asmuth/clip.git
+    $ cd clip
     $ cmake .
     $ make -j
 
-To install the `fviz` binary into your system, run `make install`:
+To install the `clip` binary into your system, run `make install`:
 
     $ make install
 

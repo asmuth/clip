@@ -1,5 +1,5 @@
 /**
- * This file is part of the "fviz" project
+ * This file is part of the "clip" project
  *   Copyright (c) 2018 Paul Asmuth
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,7 +18,7 @@
 
 #include "text.h"
 
-namespace fviz {
+namespace clip {
 namespace text {
 
 struct GlyphInfo {
@@ -58,5 +58,5 @@ Status text_shape_run_with_font_fallback(
     std::vector<GlyphInfo>* glyphs);
 
 } // namespace text
-} // namespace fviz
+} // namespace clip
 

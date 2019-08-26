@@ -1,5 +1,5 @@
 /**
- * This file is part of the "fviz" project
+ * This file is part of the "clip" project
  *   Copyright (c) 2018 Paul Asmuth
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,7 +15,7 @@
 #include "graphics/path.h"
 #include "sexpr_conv.h"
 
-namespace fviz {
+namespace clip {
 
 const std::unordered_map<std::string, std::string> UNICODE_MARKERS = {
   {"circle-bullet", "◉"},
@@ -162,7 +162,7 @@ ReturnCode marker_configure(
 
   return errorf(
       ERROR,
-      "invalid marker shape '{}'; see fviz.org/documentation/marker-shapes for "
+      "invalid marker shape '{}'; see clip.org/documentation/marker-shapes for "
       "a list of valid shapes",
       expr_inspect(expr));
 }
@@ -200,5 +200,5 @@ ReturnCode marker_configure_list(
   return OK;
 }
 
-} // namespace fviz
+} // namespace clip
 

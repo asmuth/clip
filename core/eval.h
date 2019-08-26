@@ -1,5 +1,5 @@
 /**
- * This file is part of the "fviz" project
+ * This file is part of the "clip" project
  *   Copyright (c) 2018 Paul Asmuth
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,7 +16,7 @@
 #include "sexpr.h"
 #include "return_code.h"
 
-namespace fviz {
+namespace clip {
 
 enum class OutputFormat { SVG, PNG };
 
@@ -32,5 +32,5 @@ ReturnCode eval(
     const OutputFormat& output_format,
     std::string* output_buffer);
 
-} // namespace fviz
+} // namespace clip
 

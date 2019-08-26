@@ -1,5 +1,5 @@
 /**
- * This file is part of the "fviz" project
+ * This file is part of the "clip" project
  *   Copyright (c) 2018 Paul Asmuth
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,7 +17,7 @@
 #include <numeric>
 #include "layout.h"
 
-namespace fviz {
+namespace clip {
 
 Rectangle::Rectangle() :
     x(0.0f),
@@ -48,5 +48,5 @@ std::ostream& operator <<(std::ostream& os, const Rectangle& r) {
   return os;
 }
 
-} // namespace fviz
+} // namespace clip
 

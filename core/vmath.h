@@ -1,5 +1,5 @@
 /**
- * This file is part of the "fviz" project
+ * This file is part of the "clip" project
  *   Copyright (c) 2018 Paul Asmuth
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,7 +17,7 @@
 #include <stdint.h>
 #include <iostream>
 
-namespace fviz {
+namespace clip {
 struct vec2;
 struct vec3;
 
@@ -158,4 +158,4 @@ void sort_ccw(vec2* v, size_t v_len);
  */
 std::ostream& operator <<(std::ostream& os, const vec2& c);
 
-} // namespace fviz
+} // namespace clip

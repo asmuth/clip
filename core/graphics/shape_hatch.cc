@@ -1,5 +1,5 @@
 /**
- * This file is part of the "fviz" project
+ * This file is part of the "clip" project
  *   Copyright (c) 2018 Paul Asmuth
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,7 +14,7 @@
 #include "shape_hatch.h"
 #include "intersect.h"
 
-namespace fviz {
+namespace clip {
 
 Path shape_hatch(
     const Polygon2& clip,
@@ -83,5 +83,5 @@ Path shape_hatch(
   return p;
 }
 
-} // namespace fviz
+} // namespace clip
 

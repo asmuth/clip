@@ -1,5 +1,5 @@
 /**
- * This file is part of the "fviz" project
+ * This file is part of the "clip" project
  *   Copyright (c) 2018 Paul Asmuth
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -27,7 +27,7 @@
 #include <vector>
 #include <functional>
 
-namespace fviz {
+namespace clip {
 
 using String = std::string;
 using WString = std::wstring;
@@ -65,5 +65,5 @@ using HashMap = std::unordered_map<T1, T2>;
 template <typename T>
 using Stack = std::stack<T>;
 
-} // namespace fviz
+} // namespace clip
 #endif

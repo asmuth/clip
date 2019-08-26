@@ -1,5 +1,5 @@
 /**
- * This file is part of the "fviz" project
+ * This file is part of the "clip" project
  *   Copyright (c) 2018 Paul Asmuth
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,7 +17,7 @@
 #include "stringutil.h"
 #include "UTF8.h"
 
-namespace fviz {
+namespace clip {
 
 void StringUtil::toStringVImpl(std::vector<std::string>* target) {}
 
@@ -476,4 +476,4 @@ String StringUtil::stripShell(const std::string& str) {
   return out;
 }
 
-} // namespace fviz
+} // namespace clip

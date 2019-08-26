@@ -1,5 +1,5 @@
 /**
- * This file is part of the "fviz" project
+ * This file is part of the "clip" project
  *   Copyright (c) 2018 Paul Asmuth
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -25,7 +25,7 @@
 #include "fileutil.h"
 #include "file.h"
 
-namespace fviz {
+namespace clip {
 
 void FileUtil::mkdir(const std::string& dirname) {
   if (::mkdir(dirname.c_str(), S_IRWXU) != 0) {
@@ -108,9 +108,9 @@ void FileUtil::mkdir_p(const std::string& dirname) {
 
 std::string FileUtil::joinPaths(const std::string& p1, const std::string p2) {
   String p1_stripped = p1;
-  fviz::StringUtil::stripTrailingSlashes(&p1_stripped);
+  clip::StringUtil::stripTrailingSlashes(&p1_stripped);
   String p2_stripped = p2;
-  fviz::StringUtil::stripTrailingSlashes(&p2_stripped);
+  clip::StringUtil::stripTrailingSlashes(&p2_stripped);
   return p1_stripped + "/" + p2_stripped;
 }
 

@@ -1,5 +1,5 @@
 /**
- * This file is part of the "fviz" project
+ * This file is part of the "clip" project
  *   Copyright (c) 2018 Paul Asmuth
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,7 +16,7 @@
 
 #include <iostream>
 
-namespace fviz {
+namespace clip {
 
 ReturnCode err_invalid_value(
     const std::string& value,
@@ -45,5 +45,5 @@ void error_print(const ReturnCode& rc, std::ostream& os) {
   }
 }
 
-} // namespace fviz
+} // namespace clip
 

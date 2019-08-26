@@ -1,5 +1,5 @@
 /**
- * This file is part of the "fviz" project
+ * This file is part of the "clip" project
  *   Copyright (c) 2018 Paul Asmuth
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,7 +18,7 @@
 #include <utils/stringutil.h>
 #include "color.h"
 
-namespace fviz {
+namespace clip {
 
 Color Color::fromRGBA(double red, double green, double blue, double alpha) {
   return Color({ red, green, blue, alpha });
@@ -146,5 +146,5 @@ std::ostream& operator <<(std::ostream& os, const Color& c) {
   return os;
 }
 
-} // namespace fviz
+} // namespace clip
 

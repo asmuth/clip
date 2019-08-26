@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.8)
-project(fviz VERSION "0.5.0")
+project(clip VERSION "0.5.0")
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/platform/cmake")
 
 
@@ -75,40 +75,40 @@ message(STATUS "Config Options: text_backend=${FVIZ_TEXT_BACKEND}")
 message(STATUS "Config Options: text_enable_bidi=${FVIZ_TEXT_ENABLE_BIDI}")
 
 
-# Build: fviz Library
+# Build: clip Library
 # -----------------------------------------------------------------------------
 file(GLOB source_files "core/*.cc" "core/**/*.cc" "elements/*.cc" "elements/**/*.cc")
 list(REMOVE_ITEM source_files "${CMAKE_SOURCE_DIR}/core/cli.cc")
-add_library(fviz OBJECT ${source_files})
-set_property(TARGET fviz PROPERTY POSITION_INDEPENDENT_CODE 1)
+add_library(clip OBJECT ${source_files})
+set_property(TARGET clip PROPERTY POSITION_INDEPENDENT_CODE 1)
 set(FVIZ_LIB_LDFLAGS ${CAIRO_LIBRARIES} ${FREETYPE_LIBRARIES} ${HARFBUZZ_LIBRARIES} ${HARFBUZZ_ICU_LIBRARIES} ${PNG_LIBRARIES} ${FONTCONFIG_LIBRARIES} ${FRIBIDI_LIBRARIES} ${fmt_LIBRARY})
-add_library(fviz-lib-a STATIC $<TARGET_OBJECTS:fviz>)
-set_target_properties(fviz-lib-a PROPERTIES OUTPUT_NAME fviz)
-add_library(fviz-lib-so SHARED $<TARGET_OBJECTS:fviz>)
-target_link_libraries(fviz-lib-so ${FVIZ_LIB_LDFLAGS})
-set_target_properties(fviz-lib-so PROPERTIES OUTPUT_NAME fviz)
-set_target_properties(fviz-lib-so PROPERTIES PUBLIC_HEADER "core/api.h")
-set_target_properties(fviz-lib-so PROPERTIES CXX_VISIBILITY_PRESET hidden)
+add_library(clip-lib-a STATIC $<TARGET_OBJECTS:clip>)
+set_target_properties(clip-lib-a PROPERTIES OUTPUT_NAME clip)
+add_library(clip-lib-so SHARED $<TARGET_OBJECTS:clip>)
+target_link_libraries(clip-lib-so ${FVIZ_LIB_LDFLAGS})
+set_target_properties(clip-lib-so PROPERTIES OUTPUT_NAME clip)
+set_target_properties(clip-lib-so PROPERTIES PUBLIC_HEADER "core/api.h")
+set_target_properties(clip-lib-so PROPERTIES CXX_VISIBILITY_PRESET hidden)
 
 # Build: CLI
 # -----------------------------------------------------------------------------
-add_executable(fviz-cli "core/cli.cc" $<TARGET_OBJECTS:fviz>)
-target_link_libraries(fviz-cli ${FVIZ_LIB_LDFLAGS})
-set_target_properties(fviz-cli PROPERTIES OUTPUT_NAME fviz)
+add_executable(clip-cli "core/cli.cc" $<TARGET_OBJECTS:clip>)
+target_link_libraries(clip-cli ${FVIZ_LIB_LDFLAGS})
+set_target_properties(clip-cli PROPERTIES OUTPUT_NAME clip)
 
 
 # Installation
 # -----------------------------------------------------------------------------
-install(TARGETS fviz-lib-a ARCHIVE DESTINATION lib PUBLIC_HEADER DESTINATION include/fviz)
-install(TARGETS fviz-lib-so LIBRARY DESTINATION lib PUBLIC_HEADER DESTINATION include/fviz)
-install(TARGETS fviz-cli DESTINATION bin)
+install(TARGETS clip-lib-a ARCHIVE DESTINATION lib PUBLIC_HEADER DESTINATION include/clip)
+install(TARGETS clip-lib-so LIBRARY DESTINATION lib PUBLIC_HEADER DESTINATION include/clip)
+install(TARGETS clip-cli DESTINATION bin)
 
 
 # Testing
 # -----------------------------------------------------------------------------
 add_custom_target(test
     COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_runner.sh
-    DEPENDS fviz-cli)
+    DEPENDS clip-cli)
 
 add_custom_target(test-examples ${CMAKE_CURRENT_SOURCE_DIR}/examples/update_tests.sh)
 add_dependencies(test test-examples)
@@ -117,16 +117,16 @@ add_dependencies(test test-examples)
 # Examples
 # -----------------------------------------------------------------------------
 add_custom_target(examples)
-file(GLOB example_files "examples/**/*.fvz")
+file(GLOB example_files "examples/**/*.clp")
 foreach(example_path ${example_files})
   get_filename_component(example_name ${example_path} NAME_WE)
   get_filename_component(example_srcdir ${example_path} DIRECTORY)
   add_custom_target(
       example_${example_name}
       WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-      COMMAND ${CMAKE_CURRENT_BINARY_DIR}/fviz --in ${example_srcdir}/${example_name}.fvz --out ${example_srcdir}/${example_name}.svg)
+      COMMAND ${CMAKE_CURRENT_BINARY_DIR}/clip --in ${example_srcdir}/${example_name}.clp --out ${example_srcdir}/${example_name}.svg)
   add_dependencies(examples example_${example_name})
-  add_dependencies(example_${example_name} fviz-cli)
+  add_dependencies(example_${example_name} clip-cli)
 endforeach()
 
 

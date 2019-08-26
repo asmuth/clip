@@ -1,5 +1,5 @@
 /**
- * This file is part of the "fviz" project
+ * This file is part of the "clip" project
  *   Copyright (c) 2018 Paul Asmuth
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,7 +15,7 @@
 #include <string.h>
 #include "image.h"
 
-namespace fviz {
+namespace clip {
 
 Image::Image(
     PixelFormat pixel_format,
@@ -58,7 +58,7 @@ size_t Image::getPixelCount() const {
 }
 
 size_t Image::getPixelSize() const {
-  return fviz::getPixelSize(pixel_format_);
+  return clip::getPixelSize(pixel_format_);
 }
 
 size_t Image::getWidth() const {
@@ -215,5 +215,5 @@ Image convertImage_RGB8A_RGB8(const Image& img) {
   return newimg;
 }
 
-} // namespace fviz
+} // namespace clip
 

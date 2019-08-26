@@ -1,5 +1,5 @@
 /**
- * This file is part of the "fviz" project
+ * This file is part of the "clip" project
  *   Copyright (c) 2018 Paul Asmuth
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -28,7 +28,7 @@
 using namespace std::placeholders;
 using std::bind;
 
-namespace fviz::elements::plot::grid {
+namespace clip::elements::plot::grid {
 
 static const double kDefaultLineWidthPT = 1;
 
@@ -124,5 +124,5 @@ ReturnCode build(const Environment& env, const Expr* expr, ElementRef* elem) {
   return OK;
 }
 
-} // namespace fviz::elements::plot::grid
+} // namespace clip::elements::plot::grid
 

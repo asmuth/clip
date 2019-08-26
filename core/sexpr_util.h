@@ -1,5 +1,5 @@
 /**
- * This file is part of the "fviz" project
+ * This file is part of the "clip" project
  *   Copyright (c) 2018 Paul Asmuth
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,7 +17,7 @@
 #include "sexpr.h"
 #include "return_code.h"
 
-namespace fviz {
+namespace clip {
 
 using ExprVisitor = std::function<ReturnCode (const Expr*)>;
 
@@ -46,7 +46,7 @@ std::vector<ExprStorage> expr_clonev(const std::vector<ExprStorage>& exprs);
 
 ExprStorage expr_unwrap(ExprStorage expr);
 
-} // namespace fviz
+} // namespace clip
 
 #include "sexpr_util_impl.h"
 

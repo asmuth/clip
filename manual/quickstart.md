@@ -1,17 +1,17 @@
 Getting Started
 ===============
 
-Welcome to fviz! This page will guide you through creating a simple first plot
+Welcome to clip! This page will guide you through creating a simple first plot
 and then give you pointers to more in-depth documentation. If you don't have
-fviz installed on your machine yet, please take a look at the [Installation](/documentation/installation)
+clip installed on your machine yet, please take a look at the [Installation](/documentation/installation)
 page first.
 
 
-fviz is a data plotting program; it reads an input text file containing a
+clip is a data plotting program; it reads an input text file containing a
 description of the plot and outputs an image, either in a vector graphics format
 such as SVG, or as a bitmap.
 
-A fviz input file consists of a tree of 'element' specifications which describe
+A clip input file consists of a tree of 'element' specifications which describe
 graphical elements such as charts, lines or text boxes. Each element can have a
 number of properties that control its contents and appearance.
 
@@ -35,27 +35,27 @@ that is specified in the `data-x` and `data-y` properties.
         background #eee
         border none)
 
-Save the content from above to a file called `example_chart.fvz` and run it
-through fviz using the following command:
+Save the content from above to a file called `example_chart.clp` and run it
+through clip using the following command:
 
-    $ fviz --in example_chart.fvz --out example_chart.svg
+    $ clip --in example_chart.clp --out example_chart.svg
 
 When running the example locally, you can use your own input CSV file, or you
-can download the example CSV file [from here](https://github.com/asmuth/fviz/tree/master/tests/testdata/gauss2d.csv).
+can download the example CSV file [from here](https://github.com/asmuth/clip/tree/master/tests/testdata/gauss2d.csv).
 If everything works, you should get an output file similar to the one below
 (`example_chart.svg`):
 
-[![A simple scatterplot](/examples/charts-basic/scatterplot.svg)](https://fviz.org/examples/charts-basic/scatterplot)
+[![A simple scatterplot](/examples/charts-basic/scatterplot.svg)](https://clip.org/examples/charts-basic/scatterplot)
 
 It's not the most exciting example in the world, but it illustrates the general
-working principle of fviz and shows you how to run files through it.
+working principle of clip and shows you how to run files through it.
 
 
 Further reading
 ---------------
 
 In the interest of keeping this Getting Started page short and easy to digest,
-this is it for now. You have seen how to create a simple plot using fviz -- the rest
+this is it for now. You have seen how to create a simple plot using clip -- the rest
 is just adding more elements to your file and fine-tuning the appearance of
 individual elements using the properties described in the specification.
 

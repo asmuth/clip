@@ -1,5 +1,5 @@
 /**
- * This file is part of the "fviz" project
+ * This file is part of the "clip" project
  *   Copyright (c) 2018 Paul Asmuth
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,7 +16,7 @@
 #include "return_code.h"
 #include "path.h"
 
-namespace fviz {
+namespace clip {
 
 struct FontStorage;
 using FontRef = std::shared_ptr<FontStorage>;
@@ -46,5 +46,5 @@ ReturnCode font_get_glyph_path(
 
 void* font_get_freetype(FontRef font);
 
-} // namespace fviz
+} // namespace clip
 

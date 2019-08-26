@@ -1,5 +1,5 @@
 /**
- * This file is part of the "fviz" project
+ * This file is part of the "clip" project
  *   Copyright (c) 2018 Paul Asmuth
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -19,7 +19,7 @@
 #include "page_elements.h"
 #include "text_layout.h"
 
-namespace fviz {
+namespace clip {
 
 /**
  * The page structure represents store a list of abstract 2D vector graphics
@@ -49,5 +49,5 @@ struct Page {
 void page_add_text(Page* page, PageTextElement elem);
 void page_add_shape(Page* page, PageShapeElement elem);
 
-} // namespace fviz
+} // namespace clip
 

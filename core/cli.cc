@@ -1,5 +1,5 @@
 /**
- * This file is part of the "fviz" project
+ * This file is part of the "clip" project
  *   Copyright (c) 2018 Paul Asmuth, Laura Schlimmer
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -25,7 +25,7 @@
 #include "core/eval.h"
 #include "fileutil.h"
 
-using namespace fviz;
+using namespace clip;
 
 void printError(const ReturnCode& rc) {
   std::cerr << fmt::format("ERROR: {}", rc.message) << std::endl;
@@ -75,8 +75,8 @@ int main(int argc, const char** argv) {
   if (flag_version) {
     std::cerr <<
         fmt::format(
-            "fviz {}\n"
-            "Part of the fviz project (https://fviz.org)\n"
+            "clip {}\n"
+            "Part of the clip project (https://clip.org)\n"
             "Copyright (c) 2019, Paul Asmuth, Laura Schlimmer.\n"
             "All rights reserved.\n\n",
             FVIZ_VERSION);
@@ -86,7 +86,7 @@ int main(int argc, const char** argv) {
 
   if (flag_help) {
     std::cerr <<
-        "Usage: $ fviz [OPTIONS]\n"
+        "Usage: $ clip [OPTIONS]\n"
         "  --in <path>               Path to the input file\n"
         "  --out <path>              Path to the output file\n"
         "  --stdin                   Read the input file from stdin\n"
@@ -101,7 +101,7 @@ int main(int argc, const char** argv) {
         "  --version                 Display the version of this binary and exit\n"
         "\n"
         "Examples:\n"
-        "  $ fviz --in my_chart.fvz --out my_chart.svg\n";
+        "  $ clip --in my_chart.clp --out my_chart.svg\n";
 
     return 0;
   }
@@ -134,7 +134,7 @@ int main(int argc, const char** argv) {
   }
 
   /* figure out which output format the user wants */
-  auto output_format = fviz::OutputFormat::SVG;
+  auto output_format = clip::OutputFormat::SVG;
   if (flag_format.empty()) {
     if (StringUtil::endsWith(flag_out, ".svg"))
       output_format = OutputFormat::SVG;
@@ -168,13 +168,13 @@ int main(int argc, const char** argv) {
     }
   }
 
-  /* run fviz */
+  /* run clip */
   Environment env;
   env.font_defaults = flag_font_defaults;
   env.font_load = flag_font_load;
 
   std::string output_buffer;
-  if (auto rc = fviz::eval(env, input, output_format, &output_buffer); !rc) {
+  if (auto rc = clip::eval(env, input, output_format, &output_buffer); !rc) {
     error_print(rc, std::cerr);
     return EXIT_FAILURE;
   }

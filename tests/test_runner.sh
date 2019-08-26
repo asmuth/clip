@@ -2,7 +2,7 @@
 set -ue
 
 source_path="$(realpath "$(dirname "$0")/..")"
-proc_path="$(realpath "./fviz")"
+proc_path="$(realpath "./clip")"
 test_path="${source_path}/tests"
 result_path="$(realpath ./test-results)"
 
@@ -14,7 +14,7 @@ run() {
 	num_pass=0
 	num_fail=0
 
-	test_cases=$((cd "${source_path}/tests/spec" && find . -name "*.fvz") | sort)
+	test_cases=$((cd "${source_path}/tests/spec" && find . -name "*.clp") | sort)
 
 	for test_id in ${test_cases[@]}; do
 		local test_file="$(basename ${test_id})"
@@ -50,7 +50,7 @@ run_test() {
 	local test_id="$1"
 	local format="svg"
 
-	local infile="${test_path}/spec/${test_id}.fvz"
+	local infile="${test_path}/spec/${test_id}.clp"
 	local reffile="${test_path}/spec/${test_id}.${format}"
 	local errfile="${test_path}/spec/${test_id}.err"
 	local outfile="${result_path}/${test_id}.${format}"
@@ -59,7 +59,7 @@ run_test() {
 	# clean up old files
 	rm -rf "${outfile}" "${logfile}"
 
-	# run fviz
+	# run clip
 	result=""
 	if (cd ${source_path} && "${proc_path}" \
 				--font-defaults off \
@@ -174,7 +174,7 @@ log_failure() {
 	log_append "      <th colspan=2>Command</th>"
 	log_append "    </tr>"
 	log_append "    <tr>"
-	log_append "      <td><code>$ ${proc_path} --in tests/spec/${test_id}.fvz --out /tmp/t.svg</code></td>"
+	log_append "      <td><code>$ ${proc_path} --in tests/spec/${test_id}.clp --out /tmp/t.svg</code></td>"
 	log_append "    </tr>"
 	log_append "    <tr>"
 	log_append "      <th colspan=2>Reference File</th>"

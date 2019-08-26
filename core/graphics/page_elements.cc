@@ -1,5 +1,5 @@
 /**
- * This file is part of the "fviz" project
+ * This file is part of the "clip" project
  *   Copyright (c) 2018 Paul Asmuth
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,7 +13,7 @@
  */
 #include "page_description.h"
 
-namespace fviz {
+namespace clip {
 
 void page_add_text(Page* page, PageTextElement elem) {
   if (!elem.zindex) {
@@ -33,5 +33,5 @@ void page_add_shape(Page* page, PageShapeElement elem) {
   page->shape_elements.emplace_back(std::move(elem));
 }
 
-} // namespace fviz
+} // namespace clip
 

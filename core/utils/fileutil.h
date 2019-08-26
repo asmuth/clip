@@ -1,5 +1,5 @@
 /**
- * This file is part of the "fviz" project
+ * This file is part of the "clip" project
  *   Copyright (c) 2018 Paul Asmuth
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -11,13 +11,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#ifndef _fviz_UTIL_FILEUTIL_H_
-#define _fviz_UTIL_FILEUTIL_H_
+#ifndef _clip_UTIL_FILEUTIL_H_
+#define _clip_UTIL_FILEUTIL_H_
 #include "buffer.h"
 #include "stdtypes.h"
 #include "return_code.h"
 
-namespace fviz {
+namespace clip {
 
 class FileUtil {
 public:

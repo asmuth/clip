@@ -1,5 +1,5 @@
 /**
- * This file is part of the "fviz" project
+ * This file is part of the "clip" project
  *   Copyright (c) 2018 Paul Asmuth
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -11,14 +11,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#ifndef _fviz_OUTPUTSTREAM_H
-#define _fviz_OUTPUTSTREAM_H
+#ifndef _clip_OUTPUTSTREAM_H
+#define _clip_OUTPUTSTREAM_H
 #include <fcntl.h>
 #include <memory>
 #include <mutex>
 #include "buffer.h"
 
-namespace fviz {
+namespace clip {
 
 class OutputStream {
 public:

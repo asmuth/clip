@@ -1,5 +1,5 @@
 /**
- * This file is part of the "fviz" project
+ * This file is part of the "clip" project
  *   Copyright (c) 2018 Paul Asmuth
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -19,7 +19,7 @@
 #include <assert.h>
 #include <iostream>
 
-namespace fviz {
+namespace clip {
 
 size_t series_len(const Series& s) {
   return s.size();
@@ -241,5 +241,5 @@ ReturnCode data_to_measures(
 }
 
 
-} // namespace fviz
+} // namespace clip
 

@@ -1,5 +1,5 @@
 /**
- * This file is part of the "fviz" project
+ * This file is part of the "clip" project
  *   Copyright (c) 2018 Paul Asmuth
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,7 +15,7 @@
 #include "exception.h"
 #include <string.h>
 
-namespace fviz {
+namespace clip {
 
 Buffer::Buffer() : data_(nullptr), size_(0), alloc_(0), mark_(0) {}
 

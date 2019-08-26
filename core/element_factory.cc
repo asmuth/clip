@@ -1,5 +1,5 @@
 /**
- * This file is part of the "fviz" project
+ * This file is part of the "clip" project
  *   Copyright (c) 2018 Paul Asmuth
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,7 +16,7 @@
 
 #include <unordered_map>
 
-namespace fviz {
+namespace clip {
 
 ReturnCode element_build(
     const Environment& env,
@@ -107,4 +107,4 @@ void element_bind(
   factory->elements[name] = configure_fn;
 }
 
-} // namespace fviz
+} // namespace clip

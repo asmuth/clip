@@ -1,5 +1,5 @@
 /**
- * This file is part of the "fviz" project
+ * This file is part of the "clip" project
  *   Copyright (c) 2018 Paul Asmuth
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,11 +17,11 @@
 #include "graphics/page_description.h"
 #include "utils/outputstream.h"
 
-namespace fviz {
+namespace clip {
 
 ReturnCode page_export_png(
     const Page& page,
     std::string* buffer);
 
-} // namespace fviz
+} // namespace clip
 

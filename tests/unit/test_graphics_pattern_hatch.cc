@@ -1,5 +1,5 @@
 /**
- * This file is part of the "fviz" project
+ * This file is part of the "clip" project
  *   Copyright (c) 2018 Paul Asmuth
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -19,7 +19,7 @@
 #include "utils/fileutil.h"
 #include "unittest.h"
 
-using namespace fviz;
+using namespace clip;
 
 int main(int argc, char** argv) {
   Path clip;

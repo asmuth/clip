@@ -1,5 +1,5 @@
 /**
- * This file is part of the "fviz" project
+ * This file is part of the "clip" project
  *   Copyright (c) 2018 Paul Asmuth
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,7 +15,7 @@
 #include "stdtypes.h"
 #include "option.h"
 
-using namespace fviz; // FIXME
+using namespace clip; // FIXME
 
 /**
  * Class representing an instance of time in the gregorian calendar

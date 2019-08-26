@@ -1,8 +1,8 @@
 Support
 =======
 
-There are various ways to get support for fviz:
+There are various ways to get support for clip:
 
-+ [The fviz Google Group](http://groups.google.com/group/fviz)
++ [The clip Google Group](http://groups.google.com/group/clip)
 
 

@@ -1,5 +1,5 @@
 /**
- * This file is part of the "fviz" project
+ * This file is part of the "clip" project
  *   Copyright (c) 2018 Paul Asmuth
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,7 +17,7 @@
 
 #include <numeric>
 
-namespace fviz::text {
+namespace clip::text {
 
 ReturnCode text_reorder_bidi_line(TextLine* line) {
   std::vector<TextSpan> spans;
@@ -101,5 +101,5 @@ ReturnCode text_reorder_bidi_line(TextLine* line) {
   return OK;
 }
 
-} // namespace fviz::text
+} // namespace clip::text
 

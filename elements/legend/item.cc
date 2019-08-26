@@ -1,5 +1,5 @@
 /**
- * This file is part of the "fviz" project
+ * This file is part of the "clip" project
  *   Copyright (c) 2018 Paul Asmuth
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -30,7 +30,7 @@
 using namespace std::placeholders;
 using std::bind;
 
-namespace fviz::elements::legend::item {
+namespace clip::elements::legend::item {
 
 struct LegendItemElem {
   std::string label;
@@ -243,5 +243,5 @@ ReturnCode build(
   return OK;
 }
 
-} // namespace fviz::elements::legend::item
+} // namespace clip::elements::legend::item
 

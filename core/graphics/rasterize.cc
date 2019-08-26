@@ -1,5 +1,5 @@
 /**
- * This file is part of the "fviz" project
+ * This file is part of the "clip" project
  *   Copyright (c) 2018 Paul Asmuth
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,7 +16,7 @@
 #include <graphics/image.h>
 #include <graphics/text_layout.h>
 
-namespace fviz {
+namespace clip {
 
 Rasterizer::Rasterizer(
     uint32_t width_,
@@ -215,5 +215,5 @@ Status Rasterizer::writeToFile(const std::string& path) {
   return ERROR;
 }
 
-} // namespace fviz
+} // namespace clip
 

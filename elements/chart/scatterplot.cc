@@ -1,5 +1,5 @@
 /**
- * This file is part of the "fviz" project
+ * This file is part of the "clip" project
  *   Copyright (c) 2018 Paul Asmuth
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -25,7 +25,7 @@
 using namespace std::placeholders;
 using std::bind;
 
-namespace fviz::elements::chart::scatterplot {
+namespace clip::elements::chart::scatterplot {
 
 ReturnCode build(
     const Environment& env,
@@ -116,5 +116,5 @@ ReturnCode build(
   return element_build_macro(env, chart.get(), elem);
 }
 
-} // namespace fviz::elements::chart::scatterplot
+} // namespace clip::elements::chart::scatterplot
 

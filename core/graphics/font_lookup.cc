@@ -1,5 +1,5 @@
 /**
- * This file is part of the "fviz" project
+ * This file is part of the "clip" project
  *   Copyright (c) 2018 Paul Asmuth
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -27,7 +27,7 @@
 using namespace std::placeholders;
 using std::bind;
 
-namespace fviz {
+namespace clip {
 
 const std::string_view DEFAULT_FONT_PATTERN_CSS =
     "Arial,Helvetica,'Helvetica Neue',sans-serif";
@@ -361,5 +361,5 @@ ReturnCode font_load_defaults(FontInfo* font_info) {
   return OK;
 }
 
-} // namespace fviz
+} // namespace clip
 

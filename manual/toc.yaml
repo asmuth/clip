@@ -7,25 +7,29 @@ documentation:
       - pages:
         -
           title: "Introduction"
-          doctitle: "fviz"
+          doctitle: "clip"
           url: "/"
           file: "frontpage"
         -
           title: "Getting Started"
-          url: "/documentation/getting-started"
-          file: "getting_started"
+          url: "/getting-started"
+          file: "quickstart"
         -
           title: "Installation"
-          url: "/documentation/installation"
+          url: "/installation"
           file: "installation"
         -
-          title: "Command Line"
-          url: "/documentation/command-line"
-          file: "reference/command_line"
-        -
           title: "FAQ"
-          url: "/documentation/faq"
+          url: "/faq"
           file: "faq"
+  -
+    title: "Usage"
+    sections:
+      - pages:
+        -
+          title: "Command Line"
+          url: "/usage/command-line"
+          file: "reference/command_line"
 
   -
     title: "Examples"
@@ -69,123 +73,53 @@ documentation:
       #  file: "units"
         -
           title: "Document Setup"
-          url: "/documentation/document-setup"
+          url: "/reference/document-setup"
           file: "reference/document_setup"
         -
           title: "Colors"
-          url: "/documentation/colors"
+          url: "/reference/colors"
           file: "reference/colors"
         -
           title: "Color Maps"
-          url: "/documentation/color-maps"
+          url: "/reference/color-maps"
           file: "reference/color_maps"
         -
           title: "Typographic Units"
-          url: "/documentation/typographic"
+          url: "/reference/typographic"
           file: "reference/typographic"
         -
           title: "Scale Types"
-          url: "/documentation/scale-types"
+          url: "/reference/scale-types"
           file: "reference/scale_type"
         -
           title: "Scale Layout"
-          url: "/documentation/scale-layout"
+          url: "/reference/scale-layout"
           file: "reference/scale_layout"
         -
           title: "Formatters"
-          url: "/documentation/format"
+          url: "/reference/format"
           file: "reference/format"
         -
           title: "Marker Shapes"
-          url: "/documentation/marker-shapes"
+          url: "/reference/marker-shapes"
           file: "reference/marker_shape"
         -
           title: "Fonts"
-          url: "/documentation/fonts"
+          url: "/reference/fonts"
           file: "reference/fonts"
       #-
       #  title: "Stroke & Fill Styles"
       #  url: "/documentation/line-styles"
       #  file: "line_styles"
 
-  -
-    title: "Elements"
-    url: "/documentation/elements"
-    file: "elements"
-    sections:
-      -
-        section_title: "Custom Plots"
-        pages:
-          -
-            title: "plot"
-            url: "/documentation/elements/plot"
-            api_ref: true
-          -
-            title: "plot/axis"
-            url: "/documentation/elements/plot/axis"
-            api_ref: true
-          -
-            title: "plot/areas"
-            url: "/documentation/elements/plot/areas"
-            api_ref: true
-          -
-            title: "plot/bars"
-            url: "/documentation/elements/plot/bars"
-            api_ref: true
-          -
-            title: "plot/labels"
-            url: "/documentation/elements/plot/labels"
-            api_ref: true
-          -
-            title: "plot/lines"
-            url: "/documentation/elements/plot/lines"
-            api_ref: true
-          -
-            title: "plot/points"
-            url: "/documentation/elements/plot/points"
-            api_ref: true
-          -
-            title: "plot/vectors"
-            url: "/documentation/elements/plot/vectors"
-            api_ref: true
-          -
-            title: "plot/grid"
-            url: "/documentation/elements/plot/grid"
-            api_ref: true
-      -
-        section_title: "Legends"
-        pages:
-          -
-            title: "legend"
-            url: "/documentation/elements/legend"
-            api_ref: true
-          -
-            title: "legend/item"
-            url: "/documentation/elements/legend/item"
-            api_ref: true
-      - section_title: "Standard Charts"
-        pages:
-        -
-          title: "chart/linechart"
-          url: "/documentation/elements/chart/linechart"
-          api_ref: true
-        -
-          title: "chart/scatterplot"
-          url: "/documentation/elements/chart/scatterplot"
-          api_ref: true
-
-  -
     title: "Community"
     sections:
       - pages:
           -
-            title: "GitHub"
-            url: "https://github.com/asmuth/fviz"
-          -
             title: "Contributing"
-            url: "/documentation/contributing"
+            url: "/contributing"
             file: "contributing"
           -
             title: "License"
-            url: "/documentation/license"
+            url: "/license"
             file: "license"

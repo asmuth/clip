@@ -1,5 +1,5 @@
 /**
- * This file is part of the "fviz" project
+ * This file is part of the "clip" project
  *   Copyright (c) 2018 Paul Asmuth
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -32,7 +32,7 @@
 using namespace std::placeholders;
 using std::bind;
 
-namespace fviz::elements::plot::bars {
+namespace clip::elements::plot::bars {
 
 static const double kDefaultBarSizePT = 10;
 static const double kDefaultLabelPaddingHorizEM = 0.6;
@@ -440,5 +440,5 @@ ReturnCode build(
   return OK;
 }
 
-} // namespace fviz::elements::plot::bars
+} // namespace clip::elements::plot::bars
 

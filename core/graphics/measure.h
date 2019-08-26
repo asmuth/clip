@@ -1,5 +1,5 @@
 /**
- * This file is part of the "fviz" project
+ * This file is part of the "clip" project
  *   Copyright (c) 2018 Paul Asmuth
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,7 +17,7 @@
 #include <string>
 #include <return_code.h>
 
-namespace fviz {
+namespace clip {
 struct Rectangle;
 
 enum class Unit {
@@ -85,5 +85,5 @@ void measure_normalizev(
     Measure* begin,
     Measure* end);
 
-} // namespace fviz
+} // namespace clip
 

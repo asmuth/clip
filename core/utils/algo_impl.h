@@ -1,5 +1,5 @@
 /**
- * This file is part of the "fviz" project
+ * This file is part of the "clip" project
  *   Copyright (c) 2018 Paul Asmuth
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,7 +13,7 @@
  */
 #pragma once
 
-namespace fviz {
+namespace clip {
 
 template <typename T>
 const T& at_or(const std::vector<T>& vec, size_t idx, const T& fallback) {
@@ -92,5 +92,5 @@ std::vector<H> fallback(const std::optional<H>& head, const T&... tail) {
   }
 }
 
-} // namespace fviz
+} // namespace clip
 

@@ -1,5 +1,5 @@
 /**
- * This file is part of the "fviz" project
+ * This file is part of the "clip" project
  *   Copyright (c) 2018 Paul Asmuth
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,7 +18,7 @@
 #include <graphics/page_description.h>
 #include <graphics/brush.h>
 
-namespace fviz {
+namespace clip {
 
 TextStyle::TextStyle() :
     direction(TextDirection::LTR) {}
@@ -121,5 +121,5 @@ Status text_measure_label(
   return text_layout_line(line, dpi, nullptr, bbox);
 }
 
-} // namespace fviz
+} // namespace clip
 

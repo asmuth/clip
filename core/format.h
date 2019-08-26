@@ -1,5 +1,5 @@
 /**
- * This file is part of the "fviz" project
+ * This file is part of the "clip" project
  *   Copyright (c) 2018 Paul Asmuth
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,7 +17,7 @@
 #include <sexpr.h>
 #include "return_code.h"
 
-namespace fviz {
+namespace clip {
 
 using Formatter = std::function<std::string (size_t idx, const std::string&)>;
 
@@ -33,5 +33,5 @@ ReturnCode format_configure(
     const Expr* expr,
     Formatter* formatter);
 
-} // namespace fviz
+} // namespace clip
 

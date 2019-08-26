@@ -1,5 +1,5 @@
 /**
- * This file is part of the "fviz" project
+ * This file is part of the "clip" project
  *   Copyright (c) 2018 Paul Asmuth
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,7 +20,7 @@
 using namespace std::placeholders;
 using std::bind;
 
-namespace fviz {
+namespace clip {
 
 ReturnCode measure_read(
     const Expr* expr,
@@ -131,5 +131,5 @@ ReturnCode measure_map_read(
     const Expr* expr,
     MeasureMap* measure_map);
 
-} // namespace fviz
+} // namespace clip
 

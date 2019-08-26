@@ -1,5 +1,5 @@
 /**
- * This file is part of the "fviz" project
+ * This file is part of the "clip" project
  *   Copyright (c) 2018 Paul Asmuth
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,7 +18,7 @@
 using namespace std::placeholders;
 using std::bind;
 
-namespace fviz {
+namespace clip {
 
 ReturnCode arrow_draw_default(
     const Point& from,
@@ -51,5 +51,5 @@ Arrow arrow_create_default() {
   return bind(&arrow_draw_default, _1, _2, _3, _4, _5);
 }
 
-} // namespace fviz
+} // namespace clip
 

@@ -1,5 +1,5 @@
 /**
- * This file is part of the "fviz" project
+ * This file is part of the "clip" project
  *   Copyright (c) 2018 Paul Asmuth
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,7 +14,7 @@
 #include "element.h"
 #include "core/layout.h"
 
-namespace fviz {
+namespace clip {
 
-} // namespace fviz
+} // namespace clip
 

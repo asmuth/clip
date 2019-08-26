@@ -1,5 +1,5 @@
 /**
- * This file is part of the "fviz" project
+ * This file is part of the "clip" project
  *   Copyright (c) 2018 Paul Asmuth
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,7 +16,7 @@
 #include <math.h>
 #include "layout.h"
 
-namespace fviz {
+namespace clip {
 
 Rectangle layout_margin_box(
     const Rectangle& parent,
@@ -103,5 +103,5 @@ Rectangle box_rotate_bounds(
   return bbox_rot;
 }
 
-} // namespace fviz
+} // namespace clip
 

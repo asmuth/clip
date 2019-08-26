@@ -1,5 +1,5 @@
 /**
- * This file is part of the "fviz" project
+ * This file is part of the "clip" project
  *   Copyright (c) 2018 Paul Asmuth
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,7 +14,7 @@
 #include "graphics/intersect.h"
 #include "unittest.h"
 
-using namespace fviz;
+using namespace clip;
 
 void test_intersect_parallel() {
   // some slope but offset in y -> parallel

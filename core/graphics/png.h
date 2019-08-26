@@ -1,5 +1,5 @@
 /**
- * This file is part of the "fviz" project
+ * This file is part of the "clip" project
  *   Copyright (c) 2018 Paul Asmuth
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -19,11 +19,11 @@
 #include "graphics/image.h"
 #include "return_code.h"
 
-namespace fviz {
+namespace clip {
 
 Status pngWriteImageFile(
     const Image& image,
     const std::string& filename);
 
-} // namespace fviz
+} // namespace clip
 

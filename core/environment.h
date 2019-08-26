@@ -1,5 +1,5 @@
 /**
- * This file is part of the "fviz" project
+ * This file is part of the "clip" project
  *   Copyright (c) 2018 Paul Asmuth
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -22,7 +22,7 @@
 #include "sexpr.h"
 #include "element_factory.h"
 
-namespace fviz {
+namespace clip {
 
 struct Environment {
   Environment();
@@ -47,6 +47,6 @@ ReturnCode environment_setup_defaults(Environment* env);
 
 ReturnCode environment_configure(Environment* env, const Expr* e);
 
-} // namespace fviz
+} // namespace clip
 
 

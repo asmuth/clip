@@ -1,5 +1,5 @@
 /**
- * This file is part of the "fviz" project
+ * This file is part of the "clip" project
  *   Copyright (c) 2018 Paul Asmuth
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,7 +14,7 @@
 #include "UTF8.h"
 #include "exception.h"
 
-namespace fviz {
+namespace clip {
 
 char32_t UTF8::nextCodepoint(const char** cur, const char* end_) {
   auto begin = reinterpret_cast<const uint8_t*>(*cur);
@@ -208,5 +208,5 @@ void UTF8::encodeCodepoint(char32_t codepoint, String* target) {
   }
 }
 
-} // namespace fviz
+} // namespace clip
 

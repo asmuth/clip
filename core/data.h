@@ -1,5 +1,5 @@
 /**
- * This file is part of the "fviz" project
+ * This file is part of the "clip" project
  *   Copyright (c) 2018 Paul Asmuth
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -19,7 +19,7 @@
 #include "scale.h"
 #include "sexpr_conv.h"
 
-namespace fviz {
+namespace clip {
 
 using Value = std::string;
 using Series = std::vector<Value>;
@@ -67,7 +67,7 @@ ReturnCode data_to_measures(
     const ScaleConfig& scale,
     std::vector<Measure>* dst);
 
-} // namespace fviz
+} // namespace clip
 
 #include "data_impl.h"
 

@@ -1,5 +1,5 @@
 /**
- * This file is part of the "fviz" project
+ * This file is part of the "clip" project
  *   Copyright (c) 2018 Paul Asmuth
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,10 +13,10 @@
  */
 #include "page_description.h"
 
-namespace fviz {
+namespace clip {
 
 void page_add_text(Page* page, PageTextElement elem);
 void page_add_shape(Page* page, PageShapeElement elem);
 
-} // namespace fviz
+} // namespace clip
 

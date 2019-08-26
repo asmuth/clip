@@ -1,5 +1,5 @@
 /**
- * This file is part of the "fviz" project
+ * This file is part of the "clip" project
  *   Copyright (c) 2018 Paul Asmuth
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,7 +15,7 @@
 #include "text_backend.h"
 #include "text_backend_freetype.h"
 
-namespace fviz::text {
+namespace clip::text {
 
 const constexpr std::string_view TEXT_BACKEND = FVIZ_TEXT_BACKEND;
 const constexpr bool TEXT_ENABLE_BIDI = FVIZ_TEXT_ENABLE_BIDI;
@@ -50,5 +50,5 @@ ReturnCode text_analyze_bidi_line(
   return errorf(ERROR, "no text backend found; BiDi analysis is not supported");
 }
 
-} // namespace fviz::text
+} // namespace clip::text
 

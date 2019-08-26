@@ -1,5 +1,5 @@
 /**
- * This file is part of the "fviz" project
+ * This file is part of the "clip" project
  *   Copyright (c) 2018 Paul Asmuth
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,7 +15,7 @@
 #include <stdlib.h>
 
 /**
- * The fviz C API
+ * The clip C API
  */
 #ifdef __cplusplus
 extern "C" {
@@ -23,48 +23,48 @@ extern "C" {
 
 #define FVIZ_API __attribute__((visibility ("default")))
 
-typedef struct fviz_s fviz_t;
+typedef struct clip_s clip_t;
 
 /**
- * Initialize a new fviz context.
+ * Initialize a new clip context.
  *
- * @returns: A fviz context that must be free'd using `fviz_destroy`
+ * @returns: A clip context that must be free'd using `clip_destroy`
  */
 FVIZ_API
-fviz_t* fviz_init();
+clip_t* clip_init();
 
 /**
- * Free a fviz context
+ * Free a clip context
  */
 FVIZ_API
-void fviz_destroy(fviz_t* ctx);
+void clip_destroy(clip_t* ctx);
 
 /**
  * Retrieve the last error message. The returned pointer is valid until the next
- * `fviz_*` method is called on the context.
+ * `clip_*` method is called on the context.
  */
 FVIZ_API
-const char* fviz_get_error(const fviz_t* ctx);
+const char* clip_get_error(const clip_t* ctx);
 
 /**
- * Evaluate an fviz expression
+ * Evaluate an clip expression
  *
  * @returns: One (1) on success and zero (0) if an error has occured
  */
 FVIZ_API
-int fviz_eval(fviz_t* ctx, const char* expr);
+int clip_eval(clip_t* ctx, const char* expr);
 
 /**
- * Retrieve the result. Pointer is valid until the next call to fviz_eval
+ * Retrieve the result. Pointer is valid until the next call to clip_eval
  */
 FVIZ_API
-void fviz_get_result(fviz_t* ctx, const void** data, size_t* data_len);
+void clip_get_result(clip_t* ctx, const void** data, size_t* data_len);
 
 /**
  * Set the output format
  */
 FVIZ_API
-void fviz_set_output_format(fviz_t* ctx, const char* format);
+void clip_set_output_format(clip_t* ctx, const char* format);
 
 
 #ifdef __cplusplus

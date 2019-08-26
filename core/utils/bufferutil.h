@@ -1,5 +1,5 @@
 /**
- * This file is part of the "fviz" project
+ * This file is part of the "clip" project
  *   Copyright (c) 2018 Paul Asmuth
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,7 +18,7 @@
 #include <stdint.h>
 #include "buffer.h"
 
-namespace fviz {
+namespace clip {
 
 class BufferUtil {
 public:
@@ -58,6 +58,6 @@ public:
 
 };
 
-} // namespace fviz
+} // namespace clip
 
 #endif

@@ -1,5 +1,5 @@
 /**
- * This file is part of the "fviz" project
+ * This file is part of the "clip" project
  *   Copyright (c) 2018 Paul Asmuth
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -40,7 +40,7 @@
 using namespace std::placeholders;
 using std::bind;
 
-namespace fviz {
+namespace clip {
 
 Environment::Environment() :
     screen_width(Unit::UNIT, 900),
@@ -199,5 +199,5 @@ ReturnCode environment_configure(Environment* env, const Expr* expr) {
   return OK;
 }
 
-} // namespace fviz
+} // namespace clip
 

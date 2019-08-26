@@ -1,5 +1,5 @@
 /**
- * This file is part of the "fviz" project
+ * This file is part of the "clip" project
  *   Copyright (c) 2018 Paul Asmuth
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -33,7 +33,7 @@
 using namespace std::placeholders;
 using std::bind;
 
-namespace fviz::elements::plot::lines {
+namespace clip::elements::plot::lines {
 
 static const double kDefaultLineWidthPT = 1.5;
 static const double kDefaultLabelPaddingEM = 0.4;
@@ -250,5 +250,5 @@ ReturnCode build(
   return OK;
 }
 
-} // namespace fviz::elements::plot::lines
+} // namespace clip::elements::plot::lines
 

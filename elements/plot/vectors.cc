@@ -1,5 +1,5 @@
 /**
- * This file is part of the "fviz" project
+ * This file is part of the "clip" project
  *   Copyright (c) 2018 Paul Asmuth
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -33,7 +33,7 @@
 using namespace std::placeholders;
 using std::bind;
 
-namespace fviz::elements::plot::vectors {
+namespace clip::elements::plot::vectors {
 
 static const double kDefaultArrowSizePT = 1;
 
@@ -268,5 +268,5 @@ ReturnCode build(
   return OK;
 }
 
-} // namespace fviz::elements::plot::vectors
+} // namespace clip::elements::plot::vectors
 

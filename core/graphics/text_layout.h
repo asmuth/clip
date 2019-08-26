@@ -1,5 +1,5 @@
 /**
- * This file is part of the "fviz" project
+ * This file is part of the "clip" project
  *   Copyright (c) 2018 Paul Asmuth
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -23,7 +23,7 @@
  * most simple approach is used. Accordingly, the layout engine is only suitable
  * for offline rendering.
  */
-namespace fviz::text {
+namespace clip::text {
 
 
 /**
@@ -109,5 +109,5 @@ Status text_layout_line(
     Rectangle* bbox);
 
 
-} // namespace fviz::text
+} // namespace clip::text
 

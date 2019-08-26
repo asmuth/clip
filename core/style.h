@@ -1,5 +1,5 @@
 /**
- * This file is part of the "fviz" project
+ * This file is part of the "clip" project
  *   Copyright (c) 2018 Paul Asmuth
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,7 +18,7 @@
 #include "graphics/color.h"
 #include "graphics/measure.h"
 
-namespace fviz {
+namespace clip {
 struct Page;
 
 /**
@@ -72,5 +72,5 @@ struct StrokeStyle {
 
 
 
-} // namespace fviz
+} // namespace clip
 

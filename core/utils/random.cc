@@ -1,5 +1,5 @@
 /**
- * This file is part of the "fviz" project
+ * This file is part of the "clip" project
  *   Copyright (c) 2018 Paul Asmuth
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,7 +15,7 @@
 #include "random.h"
 #include "stringutil.h"
 
-namespace fviz {
+namespace clip {
 
 Random::Random() {
   std::random_device r;

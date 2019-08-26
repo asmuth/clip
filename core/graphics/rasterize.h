@@ -1,5 +1,5 @@
 /**
- * This file is part of the "fviz" project
+ * This file is part of the "clip" project
  *   Copyright (c) 2018 Paul Asmuth
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -30,7 +30,7 @@
 #include "graphics/page_description.h"
 #include "text_layout.h"
 
-namespace fviz {
+namespace clip {
 class Image;
 
 class Rasterizer {
@@ -69,5 +69,5 @@ public:
 
 using RasterizerRef = std::shared_ptr<Rasterizer>;
 
-} // namespace fviz
+} // namespace clip
 

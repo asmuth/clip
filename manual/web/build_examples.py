@@ -15,7 +15,7 @@ def build_example(example):
   path = "/examples/" + url
   env = {
     "example_url": url,
-    "example_src": Path(os.path.join("examples", url + ".fvz")).read_text(),
+    "example_src": Path(os.path.join("examples", url + ".clp")).read_text(),
     "title": "Example: %s" % url,
   }
 
@@ -49,7 +49,7 @@ def build_example_list(examples):
 
 def main():
   examples = yaml.load(Path("examples/examples.yaml").read_text())
-  examples_all = [{ "file": re.sub("^examples\/", "", re.sub("\.fvz$", "", p)) } for p in glob.glob("examples/**/*.fvz")]
+  examples_all = [{ "file": re.sub("^examples\/", "", re.sub("\.clp$", "", p)) } for p in glob.glob("examples/**/*.clp")]
 
   for example in examples_all:
     build_example(example)

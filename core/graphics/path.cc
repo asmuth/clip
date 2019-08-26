@@ -1,5 +1,5 @@
 /**
- * This file is part of the "fviz" project
+ * This file is part of the "clip" project
  *   Copyright (c) 2018 Paul Asmuth
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,7 +14,7 @@
 #include <iostream>
 #include "path.h"
 
-namespace fviz {
+namespace clip {
 
 double PathData::operator[](size_t idx) const {
   return coefficients[idx];
@@ -252,4 +252,4 @@ void path_add_circle(Path* path, vec2 origin, double radius) {
   path->closePath();
 }
 
-} // namespace fviz
+} // namespace clip

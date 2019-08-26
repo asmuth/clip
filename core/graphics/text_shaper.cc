@@ -1,5 +1,5 @@
 /**
- * This file is part of the "fviz" project
+ * This file is part of the "clip" project
  *   Copyright (c) 2018 Paul Asmuth
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -23,7 +23,7 @@
 using namespace std::placeholders;
 using std::bind;
 
-namespace fviz {
+namespace clip {
 namespace text {
 
 Status text_shape_run(
@@ -150,5 +150,5 @@ Status text_shape_run_with_font_fallback(
 }
 
 } // namespace text
-} // namespace fviz
+} // namespace clip
 

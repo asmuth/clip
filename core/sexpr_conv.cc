@@ -1,5 +1,5 @@
 /**
- * This file is part of the "fviz" project
+ * This file is part of the "clip" project
  *   Copyright (c) 2018 Paul Asmuth
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -19,7 +19,7 @@
 
 using namespace std::placeholders;
 
-namespace fviz {
+namespace clip {
 
 ReturnCode expr_to_string(
     const Expr* expr,
@@ -166,5 +166,5 @@ ReturnCode expr_to_copy(const Expr* e, ExprStorage* c) {
   return OK;
 }
 
-} // namespace fviz
+} // namespace clip
 

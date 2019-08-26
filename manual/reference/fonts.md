@@ -57,7 +57,7 @@ For example, a default font stack will usually consist of a font for roman text,
 a font for arabic text and another set of fonts for CJK text. The text rendering
 code will then automatically select the correct font to use at runtime.
 
-By default, fviz will initialize the fonts stack using the default font stacks
+By default, clip will initialize the fonts stack using the default font stacks
 supplied by your system. In most cases this useful since specifying all list of fonts
 required to render international text by yourself would be cumbersome.
 
@@ -75,9 +75,9 @@ To disable the default font stack, set the global `font-defaults` property to
     (set font "arial.ttf" "KhmerOS.ttf" "STIX-Regular.otf" ..)
 
 
-Alternatively, add the `--font-defaults off` flag when invoking the `fviz` binary
+Alternatively, add the `--font-defaults off` flag when invoking the `clip` binary
 
-    $ fviz \
+    $ clip \
         --font-defaults off \
         --font-load arial.ttf \
         --font-load KhmerOS.ttf \

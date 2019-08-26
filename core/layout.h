@@ -1,5 +1,5 @@
 /**
- * This file is part of the "fviz" project
+ * This file is part of the "clip" project
  *   Copyright (c) 2018 Paul Asmuth
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -22,7 +22,7 @@
 #include <stdint.h>
 #include <optional>
 
-namespace fviz {
+namespace clip {
 
 struct LayoutState {
 
@@ -82,5 +82,5 @@ ReturnCode layout_elements(
     std::vector<ElementPlacement>* elements,
     Rectangle* content_box);
 
-} // namespace fviz
+} // namespace clip
 

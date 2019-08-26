@@ -1,5 +1,5 @@
 /**
- * This file is part of the "fviz" project
+ * This file is part of the "clip" project
  *   Copyright (c) 2018 Paul Asmuth
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -19,7 +19,7 @@
 #include <stdlib.h>
 #include "exception.h"
 
-namespace fviz {
+namespace clip {
 
 template <typename T>
 class Option {
@@ -49,7 +49,7 @@ Option<T> Some(const T& value);
 template <typename T>
 Option<T> None();
 
-} // namespace fviz
+} // namespace clip
 
 #include "option_impl.h"
 #endif

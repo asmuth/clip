@@ -1,5 +1,5 @@
 /**
- * This file is part of the "fviz" project
+ * This file is part of the "clip" project
  *   Copyright (c) 2018 Paul Asmuth
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,7 +17,7 @@
 #include "layout.h"
 #include "sexpr_parser.h"
 
-namespace fviz {
+namespace clip {
 
 ReturnCode eval(
     Environment env,
@@ -92,5 +92,5 @@ ReturnCode eval(
   return eval(env, expr.get(), output_format, output_buffer);
 }
 
-} // namespace fviz
+} // namespace clip
 

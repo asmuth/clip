@@ -1,5 +1,5 @@
 /**
- * This file is part of the "fviz" project
+ * This file is part of the "clip" project
  *   Copyright (c) 2018 Paul Asmuth
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,7 +16,7 @@
 #include <vector>
 #include "return_code.h"
 
-namespace fviz {
+namespace clip {
 
 using CSVData = std::vector<std::vector<std::string>>;
 
@@ -26,5 +26,5 @@ ReturnCode csv_parse(
     std::string input,
     CSVData* output);
 
-} // namespace fviz
+} // namespace clip
 

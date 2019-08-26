@@ -1,5 +1,5 @@
 /**
- * This file is part of the "fviz" project
+ * This file is part of the "clip" project
  *   Copyright (c) 2018 Paul Asmuth
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -23,7 +23,7 @@
 using namespace std::placeholders;
 using std::bind;
 
-namespace fviz {
+namespace clip {
 
 static const double kDefaultLogBase = 10;
 static const size_t kMaxTicks = 8192;
@@ -860,5 +860,5 @@ void scale_configure_layout_defaults(
   }
 }
 
-} // namespace fviz
+} // namespace clip
 

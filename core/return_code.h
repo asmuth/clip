@@ -1,5 +1,5 @@
 /**
- * This file is part of the "fviz" project
+ * This file is part of the "clip" project
  *   Copyright (c) 2018 Paul Asmuth
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -21,7 +21,7 @@
 #include <fmt/format.h>
 #include "stringutil.h"
 
-namespace fviz {
+namespace clip {
 struct Expr;
 
 enum Status : int {
@@ -72,5 +72,5 @@ ReturnCode err_invalid_value(
 
 void error_print(const ReturnCode& rc, std::ostream& os);
 
-} // namespace fviz
+} // namespace clip
 

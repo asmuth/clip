@@ -13,18 +13,17 @@ tpl = """
     <link href='/documentation.css' type='text/css' rel='stylesheet' />
     <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://fonts.googleapis.com/css?family=Roboto:400,400i,500,700" rel="stylesheet">
-    <meta name="google-site-verification" content="zhyGsSQu1HANExonMZDMr0LppXCCv47inMKRXiZS8aQ" />
+    <meta name="google-site-verification" content="w2kCLJSotDjUxYBmGi3G2vsv4SO8j5K0YD0KVHoD7rw" />
   </head>
   <body>
     <nav>
-      <a style="display: block; text-decoration: none; color: #666; float: right;" href="http://github.com/asmuth/fviz" target="_blank">
+      <a style="display: block; text-decoration: none; color: #666; float: right;" href="http://github.com/asmuth/clip" target="_blank">
         View on <img src="https://github.githubassets.com/images/modules/logos_page/GitHub-Logo.png" style="height: 12px; position: relative; top: 1px; margin-left: 2px;">
       </a>
 
       <a href="/">
         <img src="/favicon.ico" style="height: 1em; position: relative; top: 0.13em; margin-right: 0.3em;"/>
-        fviz
+        <span>clip</span>
       </a>
 
       <span style="margin: 0 .3em">·</span>
@@ -32,7 +31,7 @@ tpl = """
       <span style="margin: 0 .3em">·</span>
       <a class="link" href="/examples">Examples</a>
       <span style="margin: 0 .3em">·</span>
-      <a class="link" href="/download">Download</a>
+      <a class="link" href="/installation">Download</a>
 
       <ul class="crumbs">
         <li><a href="/">Documentation</a></li>
@@ -46,7 +45,7 @@ tpl = """
       </div>
 
       <div style="text-align: right; margin-top: 10em; font-size: 80%;">
-        <a class="link" target="_blank" href="https://github.com/asmuth/fviz/blob/master/manual">
+        <a class="link" target="_blank" href="https://github.com/asmuth/clip/blob/master/manual">
           Edit this page on GitHub
         </a>
       </div>
@@ -54,7 +53,7 @@ tpl = """
 
     <footer>
       Copyright &copy; 2011-2018 Paul Asmuth, Laura Schlimmer et al. &mdash;
-      fviz is free software licensed under the Apache 2.0 license.
+      clip is free software licensed under the Apache 2.0 license.
     </footer>
   </body>
 </html>
@@ -73,8 +72,10 @@ def build_layout(url, content, title="", article_class=""):
   toc = map(lambda x: extend_toc(x), toc)
 
   title_seo = title
-  if title_seo != "fviz":
-    title_seo += " - fviz"
+  if title_seo == "clip":
+    title_seo += " - The command line illustration processor"
+  else:
+    title_seo += " - clip"
 
   return TPL.render(tpl, {
     "content": content,

@@ -1,5 +1,5 @@
 /**
- * This file is part of the "fviz" project
+ * This file is part of the "clip" project
  *   Copyright (c) 2018 Paul Asmuth
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,7 +13,7 @@
  */
 #ifndef _STX_BASE_OPTION_IMPL_H
 #define _STX_BASE_OPTION_IMPL_H
-namespace fviz {
+namespace clip {
 
 template <typename T>
 Option<T>::Option() : value_(nullptr) {}
@@ -114,5 +114,5 @@ Option<T> None() {
   return Option<T>();
 }
 
-} // namespace fviz
+} // namespace clip
 #endif

@@ -1,5 +1,5 @@
 /**
- * This file is part of the "fviz" project
+ * This file is part of the "clip" project
  *   Copyright (c) 2018 Paul Asmuth
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,7 +15,7 @@
 #include "graphics/brush.h"
 #include "graphics/shape_hatch.h"
 
-namespace fviz {
+namespace clip {
 
 FillStyle fill_style_solid(const Color& color) {
   return [color] (const auto& poly, auto layer) -> ReturnCode {
@@ -49,5 +49,5 @@ FillStyle fill_style_none() {
   };
 }
 
-} // namespace fviz
+} // namespace clip
 

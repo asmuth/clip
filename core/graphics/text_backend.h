@@ -1,5 +1,5 @@
 /**
- * This file is part of the "fviz" project
+ * This file is part of the "clip" project
  *   Copyright (c) 2018 Paul Asmuth
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -19,7 +19,7 @@
 #include "text.h"
 #include "text_layout.h"
 
-namespace fviz::text {
+namespace clip::text {
 
 /**
  * Analyze a UTF-8 input string in logical character order and produce a list
@@ -33,5 +33,5 @@ ReturnCode text_analyze_bidi_line(
     std::vector<TextSpan>* runs,
     std::vector<int>* run_bidi_levels);
 
-} // namespace fviz::text
+} // namespace clip::text
 

@@ -1,5 +1,5 @@
 /**
- * This file is part of the "fviz" project
+ * This file is part of the "clip" project
  *   Copyright (c) 2018 Paul Asmuth
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,7 +20,7 @@
 #include <vector>
 #include "stdtypes.h"
 
-namespace fviz {
+namespace clip {
 
 class StringUtil {
 public:
@@ -338,7 +338,7 @@ protected:
 
 };
 
-} // namespace fviz
+} // namespace clip
 
 #include "stringutil_impl.h"
 #endif

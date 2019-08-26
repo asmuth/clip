@@ -1,5 +1,5 @@
 /**
- * This file is part of the "fviz" project
+ * This file is part of the "clip" project
  *   Copyright (c) 2018 Paul Asmuth
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,7 +16,7 @@
 using std::bind;
 using namespace std::placeholders;
 
-namespace fviz {
+namespace clip {
 
 struct SVGData {
   std::stringstream buffer;
@@ -325,5 +325,5 @@ ReturnCode page_export_svg(
   return OK;
 }
 
-} // namespace fviz
+} // namespace clip
 

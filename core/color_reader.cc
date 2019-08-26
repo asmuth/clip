@@ -1,5 +1,5 @@
 /**
- * This file is part of the "fviz" project
+ * This file is part of the "clip" project
  *   Copyright (c) 2018 Paul Asmuth
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,7 +17,7 @@
 
 using namespace std::placeholders;
 
-namespace fviz {
+namespace clip {
 
 ReturnCode color_read(
     const Environment& env,
@@ -263,5 +263,5 @@ ReturnCode color_palette_read(
       expr_inspect(expr));
 }
 
-} // namespace fviz
+} // namespace clip
 

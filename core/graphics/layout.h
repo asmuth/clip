@@ -1,5 +1,5 @@
 /**
- * This file is part of the "fviz" project
+ * This file is part of the "clip" project
  *   Copyright (c) 2018 Paul Asmuth
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,7 +15,7 @@
 #include <unordered_map>
 #include "geometry.h"
 
-namespace fviz {
+namespace clip {
 
 enum class HAlign {
   LEFT, CENTER, RIGHT
@@ -66,5 +66,5 @@ Rectangle box_rotate_bounds(
     const Rectangle& bbox,
     double angle_deg);
 
-} // namespace fviz
+} // namespace clip
 

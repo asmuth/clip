@@ -1,5 +1,5 @@
 /**
- * This file is part of the "fviz" project
+ * This file is part of the "clip" project
  *   Copyright (c) 2018 Paul Asmuth
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,7 +13,7 @@
  */
 #include "color_map.h"
 
-namespace fviz {
+namespace clip {
 
 ColorMap color_map_gradient(std::vector<std::pair<double, Color>> gradient) {
   std::sort(
@@ -118,5 +118,5 @@ ColorMap color_map_steps(std::vector<std::pair<double, Color>> steps) {
   };
 }
 
-} // namespace fviz
+} // namespace clip
 

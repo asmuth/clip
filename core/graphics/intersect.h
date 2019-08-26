@@ -1,5 +1,5 @@
 /**
- * This file is part of the "fviz" project
+ * This file is part of the "clip" project
  *   Copyright (c) 2018 Paul Asmuth
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -22,7 +22,7 @@
 #include "return_code.h"
 #include "sexpr.h"
 
-namespace fviz {
+namespace clip {
 
 /**
  * Given two (infinite) lines defined by a point on each of the the lines p0, p1
@@ -80,5 +80,5 @@ void intersect_poly_lineseg(
     const vec2& e1,
     std::vector<vec2>* x);
 
-} // namespace fviz
+} // namespace clip
 

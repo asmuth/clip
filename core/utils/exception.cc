@@ -1,5 +1,5 @@
 /**
- * This file is part of the "fviz" project
+ * This file is part of the "clip" project
  *   Copyright (c) 2018 Paul Asmuth
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,7 +16,7 @@
 #include <string.h>
 #include "exception.h"
 
-namespace fviz {
+namespace clip {
 
 Exception::Exception() :
     type_name_(nullptr),
@@ -122,5 +122,5 @@ int Exception::line() const {
   return line_;
 }
 
-} // namespace fviz
+} // namespace clip
 
