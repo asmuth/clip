@@ -106,6 +106,36 @@ Acknowledgements
     [click](https://github.com/kohler/click) software defined networking library
 
 
+FAQ
+---
+
+### I'm getting build errors when compiling the code
+
+clip is writte in C++17 and needs a reasonably modern C++ compiler and standard
+library. In most cases where the code doesn't build it's due to some problem with
+the local build environment. We always appreciate bug reports so that we can
+improve our build system on GitHub Issues.
+
+### The test suite fails on my machine because text placement is slightly offset
+
+The test suite requires that you have the original Microsoft Arial TTF files
+installed on your machine. To verify that this is the case, run `fc-match
+'Arial,Helvetica,Helvetica Neue:style=Regular,Roman'` and check that it returns
+the correct 'arial.ttf' file.
+
+### What happened to the project name?
+
+The project was started in 2011 and was initially called "FnordMetric". The
+first version from 8 years ago also included facilities for storing and
+transforming data in addition to the charting code. Over time, the data
+processing parts were removed, leaving only the plotting code. However, as a
+consequence, most of the search queries for the project name would return
+outdated information, resulting in a generally confusing and stale-feeling
+situation. The best solution seemed to be to rename the project and so, after
+going a few other candidates (about which people complained), we finally settled
+on 'clip', since it was short, pronounceable, easy to remember and unencumbered.
+
+
 License
 -------
 
