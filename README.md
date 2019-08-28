@@ -16,9 +16,9 @@ supports a C FFI.
 
 
 <h4>
-  <a href="https://docs.clip-lang.org/getting-started">Getting Started</a> &middot;
-  <a href="https://docs.clip-lang.org/examples">Examples</a> &middot;
-  <a href="https://docs.clip-lang.org">Documentation</a>
+  <a href="https://clip-lang.org/getting-started">Getting Started</a> &middot;
+  <a href="https://clip-lang.org/examples">Examples</a> &middot;
+  <a href="https://clip-lang.org">Documentation</a>
 </h4>
 
 
@@ -31,7 +31,7 @@ draw a simple line chart using clip:
     $ clip --in example_chart.clp --out example_chart.svg
 
 Output File (`example_chart.svg`):
-[![A simple scatterplot](/examples/charts-basic/demo_timeseries.svg)](https://docs.clip-lang.org/examples/charts-basic/demo_timeseries)
+[![A simple scatterplot](/examples/charts-basic/demo_timeseries.svg)](https://clip-lang.org/examples/charts-basic/demo_timeseries)
 
 Input File (`example_chart.clp`):
 
@@ -47,9 +47,9 @@ Input File (`example_chart.clp`):
 
 Note that this example is only intended to give you an idea of what the syntax
 looks like and to get you started quickly; for an in-depth description of all
-parameters, please refer to [the documentation](https://docs.clip-lang.org).
+parameters, please refer to [the documentation](https://clip-lang.org).
 
-More examples can be found on [the examples page](https://docs.clip-lang.org/examples).
+More examples can be found on [the examples page](https://clip-lang.org/examples).
 
 If you have any questions please don't hesitate to reach out via [GitHub issues](https://github.com/asmuth/clip).
 
@@ -57,13 +57,13 @@ If you have any questions please don't hesitate to reach out via [GitHub issues]
 Documentation
 -------------
 
-You can find the full documentation at https://docs.clip-lang.org/
+You can find the full documentation at https://clip-lang.org/
 
 
 Example Gallery
 ---------------
 
-A list of examples can be found on the [Examples](https://docs.clip-lang.org/examples)
+A list of examples can be found on the [Examples](https://clip-lang.org/examples)
 page.
 
 
@@ -85,7 +85,7 @@ To run the test suite, run `make test`:
     $ make test
 
 
-For detailed installation instructions, have a look at the [Installation](https://docs.clip-lang.org/documentation/installation/)
+For detailed installation instructions, have a look at the [Installation](https://clip-lang.org/documentation/installation/)
 page.
 
 
