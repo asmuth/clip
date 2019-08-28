@@ -112,6 +112,7 @@ documentation:
       #  url: "/documentation/line-styles"
       #  file: "line_styles"
 
+  -
     title: "Community"
     sections:
       - pages:
