@@ -210,6 +210,27 @@ Path path_transform(const Path& path, const mat3& transform) {
   return path_out;
 }
 
+void path_add_rectangle(Path* path, vec2 origin, vec2 size) {
+  path->moveTo(
+      origin.x + size.x / 2,
+      origin.y + size.y / 2);
+
+  path->lineTo(
+      origin.x + size.x / 2,
+      origin.y - size.y / 2);
+
+  path->lineTo(
+      origin.x - size.x / 2,
+      origin.y - size.y / 2);
+
+  path->lineTo(
+      origin.x - size.x / 2,
+      origin.y + size.y / 2);
+
+  path->closePath();
+}
+
+
 void path_add_circle(Path* path, vec2 origin, double radius) {
   const double control_point_distance = 0.552284749831;
 

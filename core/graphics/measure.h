@@ -60,6 +60,10 @@ Measure measure_or(const Measure& primary, const Measure& fallback);
 
 using UnitConverter = std::function<void (Measure*)>;
 
+void convert_unit(
+    const std::vector<UnitConverter>& converters,
+    Measure* measure);
+
 void convert_units(
     const std::vector<UnitConverter>& converters,
     Measure* begin,

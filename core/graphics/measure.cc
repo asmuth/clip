@@ -126,6 +126,14 @@ void convert_units(
   }
 }
 
+void convert_unit(
+    const std::vector<UnitConverter>& converters,
+    Measure* measure) {
+  for (const auto& c : converters) {
+    c(measure);
+  }
+}
+
 void convert_unit_typographic(
     double dpi,
     Measure font_size,

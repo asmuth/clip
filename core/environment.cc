@@ -28,6 +28,7 @@
 #include "elements/plot/labels.h"
 #include "elements/plot/lines.h"
 #include "elements/plot/points.h"
+#include "elements/plot/rectangles.h"
 #include "elements/plot/vectors.h"
 #include "elements/chart/linechart.h"
 #include "elements/chart/scatterplot.h"
@@ -66,6 +67,7 @@ ReturnCode environment_setup_defaults(Environment* env) {
   element_bind(elems, "plot/labels", bind(elements::plot::labels::build, _1, _2, _3));
   element_bind(elems, "plot/lines", bind(elements::plot::lines::build, _1, _2, _3));
   element_bind(elems, "plot/points", bind(elements::plot::points::build, _1, _2, _3));
+  element_bind(elems, "plot/rectangles", bind(elements::plot::rectangles::build, _1, _2, _3));
   element_bind(elems, "plot/vectors", bind(elements::plot::vectors::build, _1, _2, _3));
   element_bind(elems, "legend", bind(elements::legend::build, _1, _2, _3));
   element_bind(elems, "legend/item", bind(elements::legend::item::build, _1, _2, _3));

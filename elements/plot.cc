@@ -353,6 +353,7 @@ ReturnCode build(
     {"lines", bind(&configure_geom, "plot/lines", _1, &geoms, &x, &y)},
     {"labels", bind(&configure_geom, "plot/labels", _1, &geoms, &x, &y)},
     {"points", bind(&configure_geom, "plot/points", _1, &geoms, &x, &y)},
+    {"rectangles", bind(&configure_geom, "plot/rectangles", _1, &geoms, &x, &y)},
     {"vectors", bind(&configure_geom, "plot/vectors", _1, &geoms, &x, &y)},
 
     /* grid & legend */
