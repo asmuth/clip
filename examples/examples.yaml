@@ -7,6 +7,7 @@
     - file: charts-scientific/barchart_ranges
     - file: charts-scientific/scatterplot_colors
     - file: charts-scientific/streamgraph
+    - file: charts-scientific/scalarfield
 
 - section: Editorial Charts
   files:
