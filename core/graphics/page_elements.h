@@ -25,6 +25,10 @@
 
 namespace clip {
 
+enum class AntialiasingMode {
+  ENABLE, DISABLE
+};
+
 struct PageTextElement {
   std::string text;
   std::vector<text::GlyphPlacementGroup> glyphs;
@@ -44,6 +48,7 @@ struct PageShapeElement {
   std::optional<Color> fill_color;
   std::optional<uint32_t> zindex;
   Rectangle clip;
+  std::optional<AntialiasingMode> antialiasing_mode;
 };
 
 } // namespace clip

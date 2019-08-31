@@ -128,6 +128,7 @@ Status svg_shape(
     SVGDataRef svg) {
   std::string fill_opts;
   std::string stroke_opts;
+  std::string extra_opts;
 
   if (elem.fill_color) {
     fill_opts = svg_attr("fill", elem.fill_color->to_hex_str(4));
@@ -155,12 +156,23 @@ Status svg_shape(
     }
   }
 
+  if (elem.antialiasing_mode) {
+    switch (*elem.antialiasing_mode) {
+      case AntialiasingMode::ENABLE:
+        break;
+      case AntialiasingMode::DISABLE:
+        extra_opts += svg_attr("shape-rendering", "crispEdges");
+        break;
+    }
+  }
+
   svg->buffer
       << "  "
       << "<path"
       << svg_attr("d", svg_path_data(path_transform(elem.path, svg->proj)))
       << fill_opts
       << stroke_opts
+      << extra_opts
       << "/>"
       << "\n";
 
