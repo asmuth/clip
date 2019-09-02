@@ -63,12 +63,13 @@ Element | Description
 [`plot/areas`](elements/plot/areas) | The plot/areas element is used to create area charts.
 [`plot/axis`](elements/plot/axis) | The plot/axis element is used to draw a labelled 'axis'.
 [`plot/bars`](elements/plot/bars) | The plot/bars element is used to create bar charts.
-[`plot/errorbars`](elements/plot/errorbars) | The plot/errorbars element is used to draw errorbars.
+[`plot/errorbars`](elements/plot/errorbars) | The plot/errorbars element is used to draw error bars.
 [`plot/grid`](elements/plot/grid) | The plot/grid element is used to draw a background grid.
 [`plot/labels`](elements/plot/labels) | The plot/labels element is used to draw labels at arbitrary positions.
 [`plot/lines`](elements/plot/lines) | The plot/lines element is used to create line charts.
 [`plot/points`](elements/plot/points) | The plot/points element is used to create scatterplots.
 [`plot/vectors`](elements/plot/vectors) | The plot/vectors element is used to create vector "field" plots.
+[`plot/rectangles`](elements/plot/rectangles) | The plot/rectangles element is used to create tiled plots.
 [`legend`](elements/legend) | The legend element is a container object for legends.
 [`legend/item`](elements/legend/item) | The legend/item element is used to draw a legend item.
 [`layout/box`](elements/layout/box) | The layout/box element is the basic box layout element.
