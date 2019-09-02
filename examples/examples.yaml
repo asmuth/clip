@@ -1,4 +1,4 @@
-- section: Scientific Charts
+- section: Monochromatic Charts
   files:
     - file: charts-scientific/vectorfield
     - file: charts-scientific/line_markers
@@ -9,11 +9,11 @@
     - file: charts-scientific/streamgraph
     - file: charts-scientific/scalarfield
 
-- section: Editorial Charts
+- section: Colourful Charts
   files:
+    - file: charts-editorial/linechart_with_labels
     - file: charts-editorial/chart_i18n
     - file: charts-editorial/stacked_areas
-    - file: charts-editorial/linechart_with_labels
     - file: charts-editorial/stacked_bars
     - file: charts-editorial/barchart_horizontal
 

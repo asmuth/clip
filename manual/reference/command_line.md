@@ -1,7 +1,7 @@
 Command Line
 ============
 
-The primary method for translate input expressions to SVG or PNG output files is
+The primary method for translating input expressions to SVG or PNG output files is
 the `clip` command line program. A typical invocation looks like this:
 
     $ clip --in my_chart.clp --out my_chart.svg
