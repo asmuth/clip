@@ -20,7 +20,7 @@
 - section: Standard Charts
   files:
     - file: charts-basic/scatterplot
+    - file: charts-basic/scatterplot_with_labels
     - file: charts-basic/linechart_timeseries
     - file: charts-basic/barchart_groups
-    - file: charts-basic/scatterplot_with_labels
     - file: charts-basic/custom_font

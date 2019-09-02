@@ -1,5 +1,5 @@
 (set width 2048px)
-(set height 1024px)
+(set height 512px)
 (set dpi 240)
 
 (plot
