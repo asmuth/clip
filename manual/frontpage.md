@@ -50,29 +50,35 @@ supports a C FFI.
 - [Typographic Units](/reference/typographic)
 - [Scale Types](/reference/scale-types)
 - [Scale Layout](/reference/scale-layout)
-- [Formatters](/reference/format)
+- [Number Formatters](/reference/format)
 - [Marker Shapes](/reference/marker-shapes)
 - [Fonts](/reference/fonts)
 
 
 ## List of Elements
 
-Element | Description
-------- | -----------
-[`plot`](elements/plot) | The plot element is the basic container object used to create charts.
-[`plot/areas`](elements/plot/areas) | The plot/areas element is used to create area charts.
-[`plot/axis`](elements/plot/axis) | The plot/axis element is used to draw a labelled 'axis'.
-[`plot/bars`](elements/plot/bars) | The plot/bars element is used to create bar charts.
-[`plot/errorbars`](elements/plot/errorbars) | The plot/errorbars element is used to draw error bars.
-[`plot/grid`](elements/plot/grid) | The plot/grid element is used to draw a background grid.
-[`plot/labels`](elements/plot/labels) | The plot/labels element is used to draw labels at arbitrary positions.
-[`plot/lines`](elements/plot/lines) | The plot/lines element is used to create line charts.
-[`plot/points`](elements/plot/points) | The plot/points element is used to create scatterplots.
-[`plot/vectors`](elements/plot/vectors) | The plot/vectors element is used to create vector "field" plots.
-[`plot/rectangles`](elements/plot/rectangles) | The plot/rectangles element is used to create tiled plots.
-[`legend`](elements/legend) | The legend element is a container object for legends.
-[`legend/item`](elements/legend/item) | The legend/item element is used to draw a legend item.
-[`layout/box`](elements/layout/box) | The layout/box element is the basic box layout element.
+#### Plotting Elements
+
+- [`plot`](elements/plot) 
+- [`plot/areas`](elements/plot/areas)
+- [`plot/axis`](elements/plot/axis)
+- [`plot/bars`](elements/plot/bars)
+- [`plot/errorbars`](elements/plot/errorbars)
+- [`plot/grid`](elements/plot/grid)
+- [`plot/labels`](elements/plot/labels)
+- [`plot/lines`](elements/plot/lines)
+- [`plot/points`](elements/plot/points)
+- [`plot/vectors`](elements/plot/vectors)
+- [`plot/rectangles`](elements/plot/rectangles)
+
+#### Legend Elements
+
+- [`legend`](elements/legend)
+- [`legend/item`](elements/legend/item)
+
+#### Layout Elements
+
+- [`layout/box`](elements/layout/box)
 
 
 ## Acknowledgements

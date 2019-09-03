@@ -19,7 +19,7 @@ def build_page(page):
   else:
     source = "file not found"
 
-  html = markdown.markdown(source, extensions=["tables"])
+  html = markdown.markdown(source, extensions=["tables", "def_list"])
 
   html = re.sub(
       r'{%([^%]+)%}',
