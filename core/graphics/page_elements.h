@@ -25,6 +25,13 @@
 #include "style.h"
 
 namespace clip {
+struct PageTextElement;
+struct PageShapeElement;
+using PageElement = std::variant<
+    PageTextElement,
+    PageShapeElement>;
+
+using PageElementList = std::vector<PageElement>;
 
 enum class AntialiasingMode {
   ENABLE, DISABLE
@@ -38,21 +45,16 @@ struct PageTextElement {
   Point origin;
 
   TextStyle style;
-  Rectangle clip;
   std::optional<mat3> transform;
 };
 
 struct PageShapeElement {
   Path path;
   StrokeStyle stroke_style;
-  std::optional<Color> fill_color;
-  Rectangle clip;
+  FillStyle fill_style;
   std::optional<AntialiasingMode> antialiasing_mode;
 };
 
-using PageElement = std::variant<
-    PageTextElement,
-    PageShapeElement>;
 
 } // namespace clip
 

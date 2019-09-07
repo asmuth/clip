@@ -108,7 +108,8 @@ ReturnCode layout(
 ReturnCode draw_label(
     const LegendItemElem& config,
     const LayoutInfo& layout,
-    Page* layer) {
+    const Page& page,
+    PageElementList* page_elements) {
   const auto& bbox = layout.content_box;
   const auto& text = config.label;
 
@@ -134,7 +135,7 @@ ReturnCode draw_label(
       break;
   }
 
-  if (auto rc = drawTextLabel(text, p, ax, ay, style, layer); !rc) {
+  if (auto rc = page_add_text(page, page_elements, text, p, ax, ay, style); !rc) {
     return rc;
   }
 
@@ -144,7 +145,8 @@ ReturnCode draw_label(
 ReturnCode draw_marker(
     const LegendItemElem& config,
     const LayoutInfo& layout,
-    Page* layer) {
+    const Page& page,
+    PageElementList* page_elements) {
   const auto& bbox = layout.content_box;
 
   Point p;
@@ -161,7 +163,7 @@ ReturnCode draw_marker(
 
   const auto& s = config.marker_size;
   const auto& c = config.marker_color;
-  if (auto rc = config.marker(p, s, c, layer); !rc) {
+  if (auto rc = config.marker(p, s, c, page, page_elements); !rc) {
     return rc;
   }
 
@@ -171,17 +173,18 @@ ReturnCode draw_marker(
 ReturnCode draw(
     std::shared_ptr<LegendItemElem> config,
     const LayoutInfo& layout,
-    Page* layer) {
+    const Page& page,
+    PageElementList* page_elements) {
   /* convert units */
-  normalize(config, *layer);
+  normalize(config, page);
 
   /* draw label */
-  if (auto rc = draw_label(*config, layout, layer); !rc) {
+  if (auto rc = draw_label(*config, layout, page, page_elements); !rc) {
     return rc;
   }
 
   /* draw marker */
-  if (auto rc = draw_marker(*config, layout, layer); !rc) {
+  if (auto rc = draw_marker(*config, layout, page, page_elements); !rc) {
     return rc;
   }
 
@@ -238,7 +241,7 @@ ReturnCode build(
   }
 
   *elem = std::make_shared<Element>();
-  (*elem)->draw = bind(&draw, config, _1, _2);
+  (*elem)->draw = bind(&draw, config, _1, _2, _3);
   (*elem)->size_hint = bind(&layout, config, _1, _2, _3, _4, _5);
   return OK;
 }

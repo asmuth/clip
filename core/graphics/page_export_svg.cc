@@ -11,6 +11,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+#include "graphics/shape_hatch.h"
 #include "page_export_svg.h"
 
 using std::bind;
@@ -129,14 +130,20 @@ Status svg_shape(
   std::string fill_opts;
   std::string stroke_opts;
   std::string extra_opts;
+  auto path = elem.path;
 
-  if (elem.fill_color) {
-    fill_opts = svg_attr("fill", elem.fill_color->to_hex_str(4));
+  bool fill_present = false;
+  if (elem.fill_style.color && !elem.fill_style.hatch) {
+    fill_opts = svg_attr("fill", elem.fill_style.color->to_hex_str(4));
+    fill_present = true;
   } else {
     fill_opts = svg_attr("fill", "none");
   }
 
+  bool stroke_present = false;
   if (elem.stroke_style.line_width) {
+    stroke_present = true;
+
     stroke_opts += svg_attr("stroke-width", elem.stroke_style.line_width);
     stroke_opts += svg_attr("stroke", elem.stroke_style.color.to_hex_str(4));
 
@@ -166,15 +173,35 @@ Status svg_shape(
     }
   }
 
-  svg->buffer
-      << "  "
-      << "<path"
-      << svg_attr("d", svg_path_data(path_transform(elem.path, svg->proj)))
-      << fill_opts
-      << stroke_opts
-      << extra_opts
-      << "/>"
-      << "\n";
+  if (elem.fill_style.hatch) {
+    auto hatched = shape_hatch(
+        path_to_polygon_simple(path),
+        elem.fill_style.hatch_angle_deg,
+        elem.fill_style.hatch_offset,
+        elem.fill_style.hatch_stride,
+        elem.fill_style.hatch_width);
+
+    svg->buffer
+        << "  "
+        << "<path"
+        << svg_attr("d", svg_path_data(path_transform(hatched, svg->proj)))
+        << svg_attr("fill", elem.fill_style.color->to_hex_str(4))
+        << extra_opts
+        << "/>"
+        << "\n";
+  }
+
+  if (fill_present || stroke_present) {
+    svg->buffer
+        << "  "
+        << "<path"
+        << svg_attr("d", svg_path_data(path_transform(path, svg->proj)))
+        << fill_opts
+        << stroke_opts
+        << extra_opts
+        << "/>"
+        << "\n";
+  }
 
   return OK;
 }

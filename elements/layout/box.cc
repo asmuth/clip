@@ -45,11 +45,12 @@ struct BoxElement {
 ReturnCode draw(
     std::shared_ptr<BoxElement> config,
     const LayoutInfo& layout,
-    Page* layer) {
+    const Page& page,
+    PageElementList* page_elements) {
   /* convert units  */
   auto margins = config->margins;
   for (auto& m : margins) {
-    convert_unit_typographic(layer->dpi, config->font_size, &m);
+    convert_unit_typographic(page.dpi, config->font_size, &m);
   }
 
   /* calculate body box */
@@ -62,14 +63,15 @@ ReturnCode draw(
 
   /* draw background */
   if (config->background) {
-    const auto& bg_box = bbox;
+    PageShapeElement shape;
+    shape.fill_style.color = *config->background;
 
-    fillRectangle(
-        layer,
-        Point(bg_box.x, bg_box.y),
-        bg_box.w,
-        bg_box.h,
-        *config->background);
+    path_add_rectangle(
+        &shape.path,
+        {bbox.x, bbox.y},
+        {bbox.w, bbox.h});
+
+    page_add_shape(page_elements, shape);
   }
 
   /* draw children */
@@ -77,61 +79,65 @@ ReturnCode draw(
     LayoutInfo layout;
     layout.content_box = bbox;
 
-    if (auto rc = e->draw(layout, layer); !rc) {
+    if (auto rc = e->draw(layout, page, page_elements); !rc) {
       return rc;
     }
   }
 
   /* draw top border  */
   if (config->borders[0].width > 0) {
-    StrokeStyle border_style;
-    border_style.line_width = config->borders[0].width;
-    border_style.color = config->borders[0].color;
+    PageShapeElement line;
+    line.stroke_style.line_width = config->borders[0].width;
+    line.stroke_style.color = config->borders[0].color;
 
-    strokeLine(
-        layer,
+    path_add_line(
+        &line.path,
         Point(bbox.x, bbox.y),
-        Point(bbox.x + bbox.w, bbox.y),
-        border_style);
+        Point(bbox.x + bbox.w, bbox.y));
+
+    page_add_shape(page_elements, line);
   }
 
   /* draw right border  */
   if (config->borders[1].width > 0) {
-    StrokeStyle border_style;
-    border_style.line_width = config->borders[1].width;
-    border_style.color = config->borders[1].color;
+    PageShapeElement line;
+    line.stroke_style.line_width = config->borders[1].width;
+    line.stroke_style.color = config->borders[1].color;
 
-    strokeLine(
-        layer,
+    path_add_line(
+        &line.path,
         Point(bbox.x + bbox.w, bbox.y),
-        Point(bbox.x + bbox.w, bbox.y + bbox.h),
-        border_style);
+        Point(bbox.x + bbox.w, bbox.y + bbox.h));
+
+    page_add_shape(page_elements, line);
   }
 
   /* draw top border  */
   if (config->borders[2].width > 0) {
-    StrokeStyle border_style;
-    border_style.line_width = config->borders[2].width;
-    border_style.color = config->borders[2].color;
+    PageShapeElement line;
+    line.stroke_style.line_width = config->borders[2].width;
+    line.stroke_style.color = config->borders[2].color;
 
-    strokeLine(
-        layer,
+    path_add_line(
+        &line.path,
         Point(bbox.x, bbox.y + bbox.h),
-        Point(bbox.x + bbox.w, bbox.y + bbox.h),
-        border_style);
+        Point(bbox.x + bbox.w, bbox.y + bbox.h));
+
+    page_add_shape(page_elements, line);
   }
 
   /* draw left border  */
   if (config->borders[3].width > 0) {
-    StrokeStyle border_style;
-    border_style.line_width = config->borders[3].width;
-    border_style.color = config->borders[3].color;
+    PageShapeElement line;
+    line.stroke_style.line_width = config->borders[3].width;
+    line.stroke_style.color = config->borders[3].color;
 
-    strokeLine(
-        layer,
+    path_add_line(
+        &line.path,
         Point(bbox.x, bbox.y),
-        Point(bbox.x, bbox.y + bbox.h),
-        border_style);
+        Point(bbox.x, bbox.y + bbox.h));
+
+    page_add_shape(page_elements, line);
   }
 
   return OK;
@@ -201,7 +207,7 @@ ReturnCode build(
   }
 
   *elem = std::make_shared<Element>();
-  (*elem)->draw = bind(&draw, config, _1, _2);
+  (*elem)->draw = bind(&draw, config, _1, _2, _3);
   return OK;
 }
 

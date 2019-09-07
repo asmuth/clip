@@ -29,7 +29,8 @@ using Arrow = std::function<
         const Point& to,
         const Measure& size,
         const Color& color,
-        Page* page)>;
+        const Page& page,
+        PageElementList* page_elements)>;
 
 Arrow arrow_create_default();
 

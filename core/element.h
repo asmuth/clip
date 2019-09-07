@@ -36,7 +36,8 @@ using ElementConfigureFn = std::function<
 using ElementDrawFn = std::function<
     ReturnCode (
         const LayoutInfo& layout,
-        Page* page)>;
+        const Page& page,
+        PageElementList* page_elements)>;
 
 using ElementSizeHintFn = std::function<
     ReturnCode (

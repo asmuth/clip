@@ -28,7 +28,8 @@ using Marker = std::function<
         const Point& pos,
         const Measure& size,
         const Color& color,
-        Page* page)>;
+        const Page& page,
+        PageElementList* page_elements)>;
 
 Marker marker_create_circle(double border_width);
 Marker marker_create_disk();

@@ -64,13 +64,14 @@ PlotBarsConfig::PlotBarsConfig() :
 ReturnCode draw_horizontal(
     PlotBarsConfig config,
     const LayoutInfo& layout,
-    Page* layer) {
+    const Page& page,
+    PageElementList* page_elements) {
   const auto& clip = layout.content_box;
 
   /* convert units */
   convert_units(
       {
-        bind(&convert_unit_typographic, layer->dpi, layer->font_size, _1),
+        bind(&convert_unit_typographic, page.dpi, page.font_size, _1),
         bind(&convert_unit_user, scale_translate_fn(config.scale_x), _1),
         bind(&convert_unit_relative, clip.w, _1)
       },
@@ -79,7 +80,7 @@ ReturnCode draw_horizontal(
 
   convert_units(
       {
-        bind(&convert_unit_typographic, layer->dpi, layer->font_size, _1),
+        bind(&convert_unit_typographic, page.dpi, page.font_size, _1),
         bind(&convert_unit_user, scale_translate_fn(config.scale_x), _1),
         bind(&convert_unit_relative, clip.w, _1)
       },
@@ -88,7 +89,7 @@ ReturnCode draw_horizontal(
 
   convert_units(
       {
-        bind(&convert_unit_typographic, layer->dpi, layer->font_size, _1),
+        bind(&convert_unit_typographic, page.dpi, page.font_size, _1),
         bind(&convert_unit_user, scale_translate_fn(config.scale_y), _1),
         bind(&convert_unit_relative, clip.h, _1)
       },
@@ -97,7 +98,7 @@ ReturnCode draw_horizontal(
 
   convert_units(
       {
-        bind(&convert_unit_typographic, layer->dpi, layer->font_size, _1),
+        bind(&convert_unit_typographic, page.dpi, page.font_size, _1),
         bind(&convert_unit_user, scale_translate_fn(config.scale_y), _1),
         bind(&convert_unit_relative, clip.h, _1)
       },
@@ -106,14 +107,14 @@ ReturnCode draw_horizontal(
 
   convert_units(
       {
-        bind(&convert_unit_typographic, layer->dpi, layer->font_size, _1)
+        bind(&convert_unit_typographic, page.dpi, page.font_size, _1)
       },
       &*config.sizes.begin(),
       &*config.sizes.end());
 
   convert_units(
       {
-        bind(&convert_unit_typographic, layer->dpi, layer->font_size, _1)
+        bind(&convert_unit_typographic, page.dpi, page.font_size, _1)
       },
       &*config.offsets.begin(),
       &*config.offsets.end());
@@ -126,7 +127,7 @@ ReturnCode draw_horizontal(
     auto sx2 = clip.x + config.x[i];
 
     auto size = config.sizes.empty()
-        ? from_pt(kDefaultBarSizePT, layer->dpi)
+        ? from_pt(kDefaultBarSizePT, page.dpi)
         : config.sizes[i % config.sizes.size()];
 
     auto offset = config.offsets.empty()
@@ -140,8 +141,7 @@ ReturnCode draw_horizontal(
     path.lineTo(sx1, sy + -offset + size * 0.5);
     path.closePath();
 
-    fillPath(layer, clip, path, config.fill_style);
-    strokePath(layer, clip, path, config.stroke_style);
+    page_add_path(page_elements, path, config.stroke_style, config.fill_style);
   }
 
   /* draw labels */
@@ -167,7 +167,7 @@ ReturnCode draw_horizontal(
 
     auto ax = HAlign::LEFT;
     auto ay = VAlign::CENTER;
-    if (auto rc = drawTextLabel(text, p, ax, ay, style, layer); rc != OK) {
+    if (auto rc = page_add_text(page, page_elements, text, p, ax, ay, style); rc != OK) {
       return rc;
     }
   }
@@ -178,13 +178,14 @@ ReturnCode draw_horizontal(
 ReturnCode draw_vertical(
     PlotBarsConfig config,
     const LayoutInfo& layout,
-    Page* layer) {
+    const Page& page,
+    PageElementList* page_elements) {
   const auto& clip = layout.content_box;
 
   /* convert units */
   convert_units(
       {
-        bind(&convert_unit_typographic, layer->dpi, layer->font_size, _1),
+        bind(&convert_unit_typographic, page.dpi, page.font_size, _1),
         bind(&convert_unit_user, scale_translate_fn(config.scale_x), _1),
         bind(&convert_unit_relative, clip.w, _1)
       },
@@ -193,7 +194,7 @@ ReturnCode draw_vertical(
 
   convert_units(
       {
-        bind(&convert_unit_typographic, layer->dpi, layer->font_size, _1),
+        bind(&convert_unit_typographic, page.dpi, page.font_size, _1),
         bind(&convert_unit_user, scale_translate_fn(config.scale_x), _1),
         bind(&convert_unit_relative, clip.w, _1)
       },
@@ -202,7 +203,7 @@ ReturnCode draw_vertical(
 
   convert_units(
       {
-        bind(&convert_unit_typographic, layer->dpi, layer->font_size, _1),
+        bind(&convert_unit_typographic, page.dpi, page.font_size, _1),
         bind(&convert_unit_user, scale_translate_fn(config.scale_y), _1),
         bind(&convert_unit_relative, clip.h, _1)
       },
@@ -211,7 +212,7 @@ ReturnCode draw_vertical(
 
   convert_units(
       {
-        bind(&convert_unit_typographic, layer->dpi, layer->font_size, _1),
+        bind(&convert_unit_typographic, page.dpi, page.font_size, _1),
         bind(&convert_unit_user, scale_translate_fn(config.scale_y), _1),
         bind(&convert_unit_relative, clip.h, _1)
       },
@@ -220,19 +221,19 @@ ReturnCode draw_vertical(
 
   convert_units(
       {
-        bind(&convert_unit_typographic, layer->dpi, layer->font_size, _1)
+        bind(&convert_unit_typographic, page.dpi, page.font_size, _1)
       },
       &*config.sizes.begin(),
       &*config.sizes.end());
 
   convert_units(
       {
-        bind(&convert_unit_typographic, layer->dpi, layer->font_size, _1)
+        bind(&convert_unit_typographic, page.dpi, page.font_size, _1)
       },
       &*config.offsets.begin(),
       &*config.offsets.end());
 
-  convert_unit_typographic(layer->dpi, layer->font_size, &config.stroke_style.line_width);
+  convert_unit_typographic(page.dpi, page.font_size, &config.stroke_style.line_width);
 
   /* draw bars */
   auto y0 = clip.h * std::clamp(scale_translate(config.scale_y, 0), 0.0, 1.0);
@@ -242,7 +243,7 @@ ReturnCode draw_vertical(
     auto sy2 = clip.y + config.y[i];
 
     auto size = config.sizes.empty()
-        ? from_pt(kDefaultBarSizePT, layer->dpi)
+        ? from_pt(kDefaultBarSizePT, page.dpi)
         : config.sizes[i % config.sizes.size()];
 
     auto offset = config.offsets.empty()
@@ -256,8 +257,7 @@ ReturnCode draw_vertical(
     path.lineTo(sx + offset + size * 0.5, sy1);
     path.closePath();
 
-    fillPath(layer, clip, path, config.fill_style);
-    strokePath(layer, clip, path, config.stroke_style);
+    page_add_path(page_elements, path, config.stroke_style, config.fill_style);
   }
 
   /* draw labels */
@@ -283,7 +283,7 @@ ReturnCode draw_vertical(
 
     auto ax = HAlign::CENTER;
     auto ay = VAlign::BOTTOM;
-    if (auto rc = drawTextLabel(text, p, ax, ay, style, layer); rc != OK) {
+    if (auto rc = page_add_text(page, page_elements, text, p, ax, ay, style); rc != OK) {
       return rc;
     }
   }
@@ -294,12 +294,13 @@ ReturnCode draw_vertical(
 ReturnCode draw(
     std::shared_ptr<PlotBarsConfig> config,
     const LayoutInfo& layout,
-    Page* layer) {
+    const Page& page,
+    PageElementList* page_elements) {
   switch (config->direction) {
     case Direction::HORIZONTAL:
-      return draw_horizontal(*config, layout, layer);
+      return draw_horizontal(*config, layout, page, page_elements);
     case Direction::VERTICAL:
-      return draw_vertical(*config, layout, layer);
+      return draw_vertical(*config, layout, page, page_elements);
     default:
       return ERROR;
   }
@@ -313,7 +314,7 @@ ReturnCode build(
   auto c = std::make_shared<PlotBarsConfig>();
   c->stroke_style.color = env.foreground_color;
   c->stroke_style.line_width = from_unit(0);
-  c->fill_style = fill_style_solid(env.foreground_color);
+  c->fill_style.color = env.foreground_color;
   c->label_font = env.font;
   c->label_font_size = env.font_size;
 
@@ -436,7 +437,7 @@ ReturnCode build(
 
   /* return element */
   *elem = std::make_shared<Element>();
-  (*elem)->draw = bind(&draw, c, _1, _2);
+  (*elem)->draw = bind(&draw, c, _1, _2, _3);
   return OK;
 }
 

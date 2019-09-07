@@ -47,11 +47,12 @@ struct GridlineDefinition {
 ReturnCode draw(
     std::shared_ptr<GridlineDefinition> config,
     const LayoutInfo& layout,
-    Page* layer) {
+    const Page& page,
+    PageElementList* page_elements) {
   MeasureConv conv;
-  conv.dpi = layer->dpi;
-  conv.font_size = layer->font_size;
-  conv.parent_size = layer->font_size;
+  conv.dpi = page.dpi;
+  conv.font_size = page.font_size;
+  conv.parent_size = page.font_size;
 
   measure_normalize(conv, &config->stroke_style.line_width);
 
@@ -66,8 +67,8 @@ ReturnCode draw(
   for (const auto& tick : slayout_x.positions) {
     auto line_x = bbox.x + bbox.w * tick;
 
-    strokeLine(
-        layer,
+    page_add_line(
+        page_elements,
         Point(line_x, bbox.y),
         Point(line_x, bbox.y + bbox.h),
         config->stroke_style);
@@ -76,8 +77,8 @@ ReturnCode draw(
   for (const auto& tick : slayout_y.positions) {
     auto line_y = bbox.y + bbox.h * (1.0 - tick);
 
-    strokeLine(
-        layer,
+    page_add_line(
+        page_elements,
         Point(bbox.x, line_y),
         Point(bbox.x + bbox.w, line_y),
         config->stroke_style);
@@ -120,7 +121,7 @@ ReturnCode build(const Environment& env, const Expr* expr, ElementRef* elem) {
   scale_configure_layout_defaults(c->scale_y, nullptr, &c->layout_y);
 
   *elem = std::make_shared<Element>();
-  (*elem)->draw = bind(&draw, c, _1, _2);
+  (*elem)->draw = bind(&draw, c, _1, _2, _3);
   return OK;
 }
 

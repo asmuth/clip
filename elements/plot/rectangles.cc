@@ -56,13 +56,14 @@ struct PlotRectanglesConfig {
 ReturnCode draw(
     std::shared_ptr<PlotRectanglesConfig> config,
     const LayoutInfo& layout,
-    Page* layer) {
+    const Page& page,
+    PageElementList* page_elements) {
   const auto& clip = layout.content_box;
 
   /* convert units */
   convert_units(
       {
-        bind(&convert_unit_typographic, layer->dpi, layer->font_size, _1),
+        bind(&convert_unit_typographic, page.dpi, page.font_size, _1),
         bind(&convert_unit_user, scale_translate_fn(config->scale_x), _1),
         bind(&convert_unit_relative, clip.w, _1)
       },
@@ -71,7 +72,7 @@ ReturnCode draw(
 
   convert_units(
       {
-        bind(&convert_unit_typographic, layer->dpi, layer->font_size, _1),
+        bind(&convert_unit_typographic, page.dpi, page.font_size, _1),
         bind(&convert_unit_user, scale_translate_fn(config->scale_y), _1),
         bind(&convert_unit_relative, clip.h, _1)
       },
@@ -80,7 +81,7 @@ ReturnCode draw(
 
   convert_units(
       {
-        bind(&convert_unit_typographic, layer->dpi, layer->font_size, _1),
+        bind(&convert_unit_typographic, page.dpi, page.font_size, _1),
         bind(&convert_unit_user, scale_translate_magnitude_fn(config->scale_x), _1),
         bind(&convert_unit_relative, clip.w, _1)
       },
@@ -89,7 +90,7 @@ ReturnCode draw(
 
   convert_units(
       {
-        bind(&convert_unit_typographic, layer->dpi, layer->font_size, _1),
+        bind(&convert_unit_typographic, page.dpi, page.font_size, _1),
         bind(&convert_unit_user, scale_translate_magnitude_fn(config->scale_y), _1),
         bind(&convert_unit_relative, clip.h, _1)
       },
@@ -98,7 +99,7 @@ ReturnCode draw(
 
   convert_unit(
       {
-        bind(&convert_unit_typographic, layer->dpi, layer->font_size, _1),
+        bind(&convert_unit_typographic, page.dpi, page.font_size, _1),
         bind(&convert_unit_user, scale_translate_magnitude_fn(config->scale_x), _1),
         bind(&convert_unit_relative, clip.w, _1)
       },
@@ -106,7 +107,7 @@ ReturnCode draw(
 
   convert_unit(
       {
-        bind(&convert_unit_typographic, layer->dpi, layer->font_size, _1),
+        bind(&convert_unit_typographic, page.dpi, page.font_size, _1),
         bind(&convert_unit_user, scale_translate_magnitude_fn(config->scale_y), _1),
         bind(&convert_unit_relative, clip.h, _1)
       },
@@ -121,7 +122,7 @@ ReturnCode draw(
         ? config->color
         : config->colors[i % config->colors.size()];
 
-    double  size_x = config->size_x.empty()
+    double size_x = config->size_x.empty()
         ? config->size_x_default
         : config->size_x[i % config->size_x.size()];
 
@@ -130,10 +131,10 @@ ReturnCode draw(
         : config->size_y[i % config->size_y.size()];
 
     PageShapeElement rect;
-    rect.fill_color = color;
+    rect.fill_style.color = color;
     rect.antialiasing_mode = AntialiasingMode::DISABLE;
     path_add_rectangle(&rect.path, Point(sx, sy), {size_x, size_y});
-    page_add_shape(layer, rect);
+    page_add_shape(page_elements, rect);
   }
 
   return OK;
@@ -254,7 +255,7 @@ ReturnCode build(
 
   /* return element */
   *elem = std::make_shared<Element>();
-  (*elem)->draw = bind(&draw, c, _1, _2);
+  (*elem)->draw = bind(&draw, c, _1, _2, _3);
   return OK;
 }
 

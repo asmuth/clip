@@ -24,31 +24,16 @@ struct Page;
 /**
  * The FillStyle controls how shapes are filled in
  */
-using FillStyle = std::function<
-    ReturnCode (
-        const Polygon2& poly,
-        Page* page)>;
+struct FillStyle {
+  FillStyle();
 
-/**
- * Solid color fill
- */
-FillStyle fill_style_solid(const Color& color);
-
-/**
- * 'Hatched' fill
- */
-FillStyle fill_style_hatch(
-    const Color& color,
-    double angle_deg,
-    double offset,
-    double stride,
-    double width);
-
-/**
- * No fill
- */
-FillStyle fill_style_none();
-
+  std::optional<Color> color;
+  bool hatch;
+  double hatch_angle_deg;
+  double hatch_offset;
+  double hatch_stride;
+  double hatch_width;
+};
 
 /**
  * The StrokeStyle controls how shapes are stroked
@@ -59,9 +44,7 @@ struct StrokeStyle {
     DASH
   };
 
-  StrokeStyle() :
-    color(Color::fromRGB(0, 0, 0)),
-    dash_type(SOLID) {}
+  StrokeStyle();
 
   Measure line_width;
   Color color;
@@ -69,8 +52,6 @@ struct StrokeStyle {
   Measure dash_offset;
   std::vector<Measure> dash_pattern;
 };
-
-
 
 } // namespace clip
 

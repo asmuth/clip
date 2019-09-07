@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="900.000000" height="480.000000">
   <rect width="900.000000" height="480.000000" fill="#ffffffff"/>
-  <path d="M105.853 435.6 L885.333 435.6 L885.333 14.6667 L105.853 14.6667 Z" fill="#eeeeeeff"/>
+  <path d="M885.333 14.6667 L885.333 435.6 L105.853 435.6 L105.853 14.6667 Z" fill="#eeeeeeff"/>
   <path d="M105.853 435.6 L105.853 14.6667 " fill="none" stroke-width="1.333333" stroke="#ffffffff"/>
   <path d="M183.801 435.6 L183.801 14.6667 " fill="none" stroke-width="1.333333" stroke="#ffffffff"/>
   <path d="M261.749 435.6 L261.749 14.6667 " fill="none" stroke-width="1.333333" stroke="#ffffffff"/>

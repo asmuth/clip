@@ -48,13 +48,14 @@ struct PlotLabelsConfig {
 ReturnCode draw(
     std::shared_ptr<PlotLabelsConfig> config,
     const LayoutInfo& layout,
-    Page* layer) {
+    const Page& page,
+    PageElementList* page_elements) {
   const auto& clip = layout.content_box;
 
   /* convert units */
   convert_units(
       {
-        bind(&convert_unit_typographic, layer->dpi, layer->font_size, _1),
+        bind(&convert_unit_typographic, page.dpi, page.font_size, _1),
         bind(&convert_unit_user, scale_translate_fn(config->scale_x), _1),
         bind(&convert_unit_relative, clip.w, _1)
       },
@@ -63,7 +64,7 @@ ReturnCode draw(
 
   convert_units(
       {
-        bind(&convert_unit_typographic, layer->dpi, layer->font_size, _1),
+        bind(&convert_unit_typographic, page.dpi, page.font_size, _1),
         bind(&convert_unit_user, scale_translate_fn(config->scale_y), _1),
         bind(&convert_unit_relative, clip.h, _1)
       },
@@ -88,7 +89,7 @@ ReturnCode draw(
 
     auto ax = HAlign::CENTER;
     auto ay = VAlign::BOTTOM;
-    if (auto rc = drawTextLabel(label_text, p, ax, ay, style, layer); rc != OK) {
+    if (auto rc = page_add_text(page, page_elements, label_text, p, ax, ay, style); rc != OK) {
       return rc;
     }
   }
@@ -162,7 +163,7 @@ ReturnCode build(
 
   /* return element */
   *elem = std::make_shared<Element>();
-  (*elem)->draw = bind(&draw, c, _1, _2);
+  (*elem)->draw = bind(&draw, c, _1, _2, _3);
   return OK;
 }
 

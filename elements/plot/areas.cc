@@ -54,13 +54,14 @@ PlotAreaConfig::PlotAreaConfig() :
 ReturnCode draw_horizontal(
     PlotAreaConfig config,
     const LayoutInfo& layout,
-    Page* layer) {
+    const Page& page,
+    PageElementList* page_elements) {
   const auto& clip = layout.content_box;
 
   /* convert units */
   convert_units(
       {
-        bind(&convert_unit_typographic, layer->dpi, layer->font_size, _1),
+        bind(&convert_unit_typographic, page.dpi, page.font_size, _1),
         bind(&convert_unit_user, scale_translate_fn(config.scale_x), _1),
         bind(&convert_unit_relative, clip.w, _1)
       },
@@ -69,7 +70,7 @@ ReturnCode draw_horizontal(
 
   convert_units(
       {
-        bind(&convert_unit_typographic, layer->dpi, layer->font_size, _1),
+        bind(&convert_unit_typographic, page.dpi, page.font_size, _1),
         bind(&convert_unit_user, scale_translate_fn(config.scale_x), _1),
         bind(&convert_unit_relative, clip.w, _1)
       },
@@ -78,7 +79,7 @@ ReturnCode draw_horizontal(
 
   convert_units(
       {
-        bind(&convert_unit_typographic, layer->dpi, layer->font_size, _1),
+        bind(&convert_unit_typographic, page.dpi, page.font_size, _1),
         bind(&convert_unit_user, scale_translate_fn(config.scale_y), _1),
         bind(&convert_unit_relative, clip.h, _1)
       },
@@ -87,7 +88,7 @@ ReturnCode draw_horizontal(
 
   convert_units(
       {
-        bind(&convert_unit_typographic, layer->dpi, layer->font_size, _1),
+        bind(&convert_unit_typographic, page.dpi, page.font_size, _1),
         bind(&convert_unit_user, scale_translate_fn(config.scale_y), _1),
         bind(&convert_unit_relative, clip.h, _1)
       },
@@ -95,30 +96,35 @@ ReturnCode draw_horizontal(
       &*config.yoffset.end());
 
   convert_unit_typographic(
-      layer->dpi,
-      layer->font_size,
+      page.dpi,
+      page.font_size,
       &config.stroke_high_style.line_width);
 
   convert_unit_typographic(
-      layer->dpi,
-      layer->font_size,
+      page.dpi,
+      page.font_size,
       &config.stroke_low_style.line_width);
 
   /* draw areas */
-  Path shape;
-  Path stroke_high;
-  Path stroke_low;
+  PageShapeElement shape;
+  shape.fill_style = config.fill_style;
+
+  PageShapeElement stroke_high;
+  stroke_high.stroke_style = config.stroke_high_style;
+
+  PageShapeElement stroke_low;
+  stroke_low.stroke_style = config.stroke_low_style;
 
   for (size_t i = 0; i < config.x.size(); ++i) {
     auto sx = clip.x + config.x[i];
     auto sy = clip.y + config.y[i];
 
     if (i == 0) {
-      shape.moveTo(sx, sy);
-      stroke_high.moveTo(sx, sy);
+      shape.path.moveTo(sx, sy);
+      stroke_high.path.moveTo(sx, sy);
     } else {
-      shape.lineTo(sx, sy);
-      stroke_high.lineTo(sx, sy);
+      shape.path.lineTo(sx, sy);
+      stroke_high.path.lineTo(sx, sy);
     }
   }
 
@@ -126,20 +132,20 @@ ReturnCode draw_horizontal(
   for (int i = config.x.size() - 1; i >= 0; --i) {
     auto sx = clip.x + (config.xoffset.empty() ? x0 : config.xoffset[i]);
     auto sy = clip.y + config.y[i];
-    shape.lineTo(sx, sy);
+    shape.path.lineTo(sx, sy);
 
-    if (stroke_low.empty()) {
-      stroke_low.moveTo(sx, sy);
+    if (stroke_low.path.empty()) {
+      stroke_low.path.moveTo(sx, sy);
     } else {
-      stroke_low.lineTo(sx, sy);
+      stroke_low.path.lineTo(sx, sy);
     }
   }
 
-  shape.closePath();
+  shape.path.closePath();
 
-  fillPath(layer, clip, shape, config.fill_style);
-  strokePath(layer, clip, stroke_high, config.stroke_high_style);
-  strokePath(layer, clip, stroke_low, config.stroke_low_style);
+  page_add_shape(page_elements, shape);
+  page_add_shape(page_elements, stroke_high);
+  page_add_shape(page_elements, stroke_low);
 
   return OK;
 }
@@ -147,13 +153,14 @@ ReturnCode draw_horizontal(
 ReturnCode draw_vertical(
     PlotAreaConfig config,
     const LayoutInfo& layout,
-    Page* layer) {
+    const Page& page,
+    PageElementList* page_elements) {
   const auto& clip = layout.content_box;
 
   /* convert units */
   convert_units(
       {
-        bind(&convert_unit_typographic, layer->dpi, layer->font_size, _1),
+        bind(&convert_unit_typographic, page.dpi, page.font_size, _1),
         bind(&convert_unit_user, scale_translate_fn(config.scale_x), _1),
         bind(&convert_unit_relative, clip.w, _1)
       },
@@ -162,7 +169,7 @@ ReturnCode draw_vertical(
 
   convert_units(
       {
-        bind(&convert_unit_typographic, layer->dpi, layer->font_size, _1),
+        bind(&convert_unit_typographic, page.dpi, page.font_size, _1),
         bind(&convert_unit_user, scale_translate_fn(config.scale_x), _1),
         bind(&convert_unit_relative, clip.w, _1)
       },
@@ -171,7 +178,7 @@ ReturnCode draw_vertical(
 
   convert_units(
       {
-        bind(&convert_unit_typographic, layer->dpi, layer->font_size, _1),
+        bind(&convert_unit_typographic, page.dpi, page.font_size, _1),
         bind(&convert_unit_user, scale_translate_fn(config.scale_y), _1),
         bind(&convert_unit_relative, clip.h, _1)
       },
@@ -180,7 +187,7 @@ ReturnCode draw_vertical(
 
   convert_units(
       {
-        bind(&convert_unit_typographic, layer->dpi, layer->font_size, _1),
+        bind(&convert_unit_typographic, page.dpi, page.font_size, _1),
         bind(&convert_unit_user, scale_translate_fn(config.scale_y), _1),
         bind(&convert_unit_relative, clip.h, _1)
       },
@@ -188,30 +195,35 @@ ReturnCode draw_vertical(
       &*config.yoffset.end());
 
   convert_unit_typographic(
-      layer->dpi,
-      layer->font_size,
+      page.dpi,
+      page.font_size,
       &config.stroke_high_style.line_width);
 
   convert_unit_typographic(
-      layer->dpi,
-      layer->font_size,
+      page.dpi,
+      page.font_size,
       &config.stroke_low_style.line_width);
 
   /* draw areas */
-  Path shape;
-  Path stroke_high;
-  Path stroke_low;
+  PageShapeElement shape;
+  shape.fill_style = config.fill_style;
+
+  PageShapeElement stroke_high;
+  stroke_high.stroke_style = config.stroke_high_style;
+
+  PageShapeElement stroke_low;
+  stroke_low.stroke_style = config.stroke_low_style;
 
   for (size_t i = 0; i < config.x.size(); ++i) {
     auto sx = clip.x + config.x[i];
     auto sy = clip.y + config.y[i];
 
     if (i == 0) {
-      shape.moveTo(sx, sy);
-      stroke_high.moveTo(sx, sy);
+      shape.path.moveTo(sx, sy);
+      stroke_high.path.moveTo(sx, sy);
     } else {
-      shape.lineTo(sx, sy);
-      stroke_high.lineTo(sx, sy);
+      shape.path.lineTo(sx, sy);
+      stroke_high.path.lineTo(sx, sy);
     }
   }
 
@@ -219,20 +231,20 @@ ReturnCode draw_vertical(
   for (int i = config.x.size() - 1; i >= 0; --i) {
     auto sx = clip.x + config.x[i];
     auto sy = clip.y + (config.yoffset.empty() ? y0 : config.yoffset[i]);
-    shape.lineTo(sx, sy);
+    shape.path.lineTo(sx, sy);
 
-    if (stroke_low.empty()) {
-      stroke_low.moveTo(sx, sy);
+    if (stroke_low.path.empty()) {
+      stroke_low.path.moveTo(sx, sy);
     } else {
-      stroke_low.lineTo(sx, sy);
+      stroke_low.path.lineTo(sx, sy);
     }
   }
 
-  shape.closePath();
+  shape.path.closePath();
 
-  fillPath(layer, clip, shape, config.fill_style);
-  strokePath(layer, clip, stroke_high, config.stroke_high_style);
-  strokePath(layer, clip, stroke_low, config.stroke_low_style);
+  page_add_shape(page_elements, shape);
+  page_add_shape(page_elements, stroke_high);
+  page_add_shape(page_elements, stroke_low);
 
   return OK;
 }
@@ -240,12 +252,13 @@ ReturnCode draw_vertical(
 ReturnCode draw(
     std::shared_ptr<PlotAreaConfig> config,
     const LayoutInfo& layout,
-    Page* layer) {
+    const Page& page,
+    PageElementList* page_elements) {
   switch (config->direction) {
     case Direction::HORIZONTAL:
-      return draw_horizontal(*config, layout, layer);
+      return draw_horizontal(*config, layout, page, page_elements);
     case Direction::VERTICAL:
-      return draw_vertical(*config, layout, layer);
+      return draw_vertical(*config, layout, page, page_elements);
     default:
       return ERROR;
   }
@@ -259,7 +272,7 @@ ReturnCode build(
   auto c = std::make_shared<PlotAreaConfig>();
   c->stroke_high_style.color = env.foreground_color;
   c->stroke_low_style.color = env.foreground_color;
-  c->fill_style = fill_style_solid(env.foreground_color);
+  c->fill_style.color = env.foreground_color;
 
   /* parse properties */
   std::vector<std::string> data_x;
@@ -397,7 +410,7 @@ ReturnCode build(
 
   /* return element */
   *elem = std::make_shared<Element>();
-  (*elem)->draw = bind(&draw, c, _1, _2);
+  (*elem)->draw = bind(&draw, c, _1, _2, _3);
   return OK;
 }
 

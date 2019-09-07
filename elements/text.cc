@@ -29,18 +29,20 @@ struct TextElement {
 ReturnCode draw(
     std::shared_ptr<TextElement> config,
     const LayoutInfo& layout,
-    Page* layer) {
+    const Page& page,
+    PageElementList* page_elements) {
   Point p(50, 50);
   auto ax = HAlign::CENTER;
   auto ay = VAlign::BOTTOM;
   if (auto rc =
-        drawTextLabel(
+        page_add_text(
+            page,
+            page_elements,
             config->text,
             p,
             ax,
             ay,
-            config->text_style,
-            layer);
+            config->text_style);
       rc != OK) {
     return rc;
   }
@@ -65,7 +67,7 @@ ReturnCode build(
   }
 
   *elem = std::make_shared<Element>();
-  (*elem)->draw = bind(&draw, config, _1, _2);
+  (*elem)->draw = bind(&draw, config, _1, _2, _3);
   return OK;
 }
 

@@ -292,9 +292,10 @@ static ReturnCode axis_draw_vertical(
     double x,
     double y0,
     double y1,
-    Page* target) {
+    const Page& page,
+    PageElementList* page_elements) {
   /* draw axis line */
-  strokeLine(target, {x, y0}, {x, y1}, axis_config.border_style);
+  page_add_line(page_elements, {x, y0}, {x, y1}, axis_config.border_style);
 
   /* draw ticks */
   ScaleLayout ticks;
@@ -308,14 +309,14 @@ static ReturnCode axis_draw_vertical(
 
   auto tick_length = measure_or(
       axis_config.tick_length,
-      from_pt(kDefaultTickLengthPT, target->dpi));
+      from_pt(kDefaultTickLengthPT, page.dpi));
 
   for (const auto& tick : ticks.positions) {
     auto ty = y0 + (y1 - y0) * tick;
     auto tx = x - tick_length + tick_length * (tick_position + 1) / 2.0;
 
-    strokeLine(
-        target,
+    page_add_line(
+        page_elements,
         {tx, ty},
         {tx + tick_length, ty},
         axis_config.border_style);
@@ -336,7 +337,7 @@ static ReturnCode axis_draw_vertical(
       from_em(kDefaultLabelPaddingEM, axis_config.label_font_size));
 
   double label_size = 0;
-  if (auto rc =axis_layout_labels(axis_config, *target, &label_size);
+  if (auto rc = axis_layout_labels(axis_config, page, &label_size);
       !rc) {
     return rc;
   }
@@ -377,7 +378,7 @@ static ReturnCode axis_draw_vertical(
         break;
     }
 
-    if (auto rc = drawTextLabel(label_text, p, ax, ay, a, style, target); rc != OK) {
+    if (auto rc = page_add_text(page, page_elements, label_text, p, ax, ay, a, style); rc != OK) {
       return rc;
     }
   }
@@ -397,7 +398,7 @@ static ReturnCode axis_draw_vertical(
 
     double title_size = 0;
     if (auto rc =
-          axis_layout_title(axis_config, *target, &title_size);
+          axis_layout_title(axis_config, page, &title_size);
         !rc) {
       return rc;
     }
@@ -412,14 +413,15 @@ static ReturnCode axis_draw_vertical(
     style.font_size = axis_config.title_font_size;
 
     auto draw_rc =
-      drawTextLabel(
+      page_add_text(
+          page,
+          page_elements,
           axis_config.title,
           p,
           HAlign::CENTER,
           VAlign::CENTER,
           axis_config.title_rotate,
-          style,
-          target);
+          style);
 
     if (!draw_rc) {
       return draw_rc;
@@ -434,9 +436,10 @@ static ReturnCode axis_draw_horizontal(
     double y,
     double x0,
     double x1,
-    Page* target) {
+    const Page& page,
+    PageElementList* page_elements) {
   /* draw axis line */
-  strokeLine(target, {x0, y}, {x1, y}, axis_config.border_style);
+  page_add_line(page_elements, {x0, y}, {x1, y}, axis_config.border_style);
 
   /* draw ticks */
   ScaleLayout ticks;
@@ -450,13 +453,13 @@ static ReturnCode axis_draw_horizontal(
 
   auto tick_length = measure_or(
       axis_config.tick_length,
-      from_pt(kDefaultTickLengthPT, target->dpi));
+      from_pt(kDefaultTickLengthPT, page.dpi));
 
   for (const auto& tick : ticks.positions) {
     auto ty = y - tick_length + tick_length * (tick_position + 1) / 2.0;
     auto tx = x0 + (x1 - x0) * tick;
-    strokeLine(
-        target,
+    page_add_line(
+        page_elements,
         {tx, ty},
         {tx, ty + tick_length},
         axis_config.border_style);
@@ -477,7 +480,7 @@ static ReturnCode axis_draw_horizontal(
       from_em(kDefaultLabelPaddingEM, axis_config.label_font_size));
 
   double label_size = 0;
-  if (auto rc = axis_layout_labels(axis_config, *target, &label_size); !rc) {
+  if (auto rc = axis_layout_labels(axis_config, page, &label_size); !rc) {
     return rc;
   }
 
@@ -517,7 +520,7 @@ static ReturnCode axis_draw_horizontal(
         break;
     }
 
-    if (auto rc = drawTextLabel(label_text, p, ax, ay, a, style, target); !rc) {
+    if (auto rc = page_add_text(page, page_elements, label_text, p, ax, ay, a, style); !rc) {
       return rc;
     }
   }
@@ -536,7 +539,7 @@ static ReturnCode axis_draw_horizontal(
     }
 
     double title_size = 0;
-    if (auto rc = axis_layout_title(axis_config, *target, &title_size); !rc) {
+    if (auto rc = axis_layout_title(axis_config, page, &title_size); !rc) {
       return rc;
     }
 
@@ -549,14 +552,15 @@ static ReturnCode axis_draw_horizontal(
     style.color = axis_config.title_color;
     style.font_size = axis_config.title_font_size;
 
-    auto draw_rc = drawTextLabel(
+    auto draw_rc = page_add_text(
+        page,
+        page_elements,
         axis_config.title,
         p,
         HAlign::CENTER,
         VAlign::CENTER,
         axis_config.title_rotate,
-        style,
-        target);
+        style);
 
     if (!draw_rc) {
       return draw_rc;
@@ -569,8 +573,9 @@ static ReturnCode axis_draw_horizontal(
 ReturnCode axis_draw(
     std::shared_ptr<AxisDefinition> config,
     const LayoutInfo& layout,
-    Page* layer) {
-  axis_convert_units(config.get(), *layer);
+    const Page& page,
+    PageElementList* page_elements) {
+  axis_convert_units(config.get(), page);
   const auto& axis = *config;
 
   ReturnCode rc;
@@ -581,7 +586,8 @@ ReturnCode axis_draw(
           layout.content_box.y + layout.content_box.h * 0.5,
           layout.content_box.x,
           layout.content_box.x + layout.content_box.w,
-          layer);
+          page,
+          page_elements);
       break;
     case AxisAlign::TOP:
       rc = axis_draw_horizontal(
@@ -589,7 +595,8 @@ ReturnCode axis_draw(
           layout.content_box.y + layout.content_box.h,
           layout.content_box.x,
           layout.content_box.x + layout.content_box.w,
-          layer);
+          page,
+          page_elements);
       break;
     case AxisAlign::BOTTOM:
       rc = axis_draw_horizontal(
@@ -597,7 +604,8 @@ ReturnCode axis_draw(
           layout.content_box.y,
           layout.content_box.x,
           layout.content_box.x + layout.content_box.w,
-          layer);
+          page,
+          page_elements);
       break;
     case AxisAlign::Y:
       rc = axis_draw_vertical(
@@ -605,7 +613,8 @@ ReturnCode axis_draw(
           layout.content_box.x + layout.content_box.w * 0.5,
           layout.content_box.y,
           layout.content_box.y + layout.content_box.h,
-          layer);
+          page,
+          page_elements);
       break;
     case AxisAlign::LEFT:
       rc = axis_draw_vertical(
@@ -613,7 +622,8 @@ ReturnCode axis_draw(
           layout.content_box.x,
           layout.content_box.y,
           layout.content_box.y + layout.content_box.h,
-          layer);
+          page,
+          page_elements);
       break;
     case AxisAlign::RIGHT:
       rc = axis_draw_vertical(
@@ -621,7 +631,8 @@ ReturnCode axis_draw(
           layout.content_box.x + layout.content_box.w,
           layout.content_box.y,
           layout.content_box.y + layout.content_box.h,
-          layer);
+          page,
+          page_elements);
       break;
   }
 
@@ -769,7 +780,7 @@ ReturnCode build(const Environment& env, const Expr* expr, ElementRef* elem) {
   }
 
   *elem = std::make_shared<Element>();
-  (*elem)->draw = bind(&axis_draw, config, _1, _2);
+  (*elem)->draw = bind(&axis_draw, config, _1, _2, _3);
   (*elem)->size_hint = bind(&axis_calculate_size, config, _1, _2, _3, _4, _5);
   return OK;
 }

@@ -58,13 +58,14 @@ struct PlotLinesConfig {
 ReturnCode draw(
     std::shared_ptr<PlotLinesConfig> config,
     const LayoutInfo& layout,
-    Page* layer) {
+    const Page& page,
+    PageElementList* page_elements) {
   const auto& clip = layout.content_box;
 
   /* convert units */
   convert_units(
       {
-        bind(&convert_unit_typographic, layer->dpi, layer->font_size, _1),
+        bind(&convert_unit_typographic, page.dpi, page.font_size, _1),
         bind(&convert_unit_user, scale_translate_fn(config->scale_x), _1),
         bind(&convert_unit_relative, clip.w, _1)
       },
@@ -73,7 +74,7 @@ ReturnCode draw(
 
   convert_units(
       {
-        bind(&convert_unit_typographic, layer->dpi, layer->font_size, _1),
+        bind(&convert_unit_typographic, page.dpi, page.font_size, _1),
         bind(&convert_unit_user, scale_translate_fn(config->scale_y), _1),
         bind(&convert_unit_relative, clip.h, _1)
       },
@@ -81,9 +82,9 @@ ReturnCode draw(
       &*config->y.end());
 
   MeasureConv conv;
-  conv.dpi = layer->dpi;
-  conv.font_size = layer->font_size;
-  conv.parent_size = layer->font_size;
+  conv.dpi = page.dpi;
+  conv.font_size = page.font_size;
+  conv.parent_size = page.font_size;
 
   measure_normalize(conv, &config->stroke_style.line_width);
   measure_normalize(conv, &config->label_padding);
@@ -108,7 +109,10 @@ ReturnCode draw(
       }
     }
 
-    strokePath(layer, clip, path, config->stroke_style);
+    PageShapeElement elem;
+    elem.path = path;
+    elem.stroke_style = config->stroke_style;
+    page_add_shape(page_elements, elem);
   }
 
   /* draw markers */
@@ -121,7 +125,7 @@ ReturnCode draw(
       const auto& color = config->marker_color;
       auto size = config->marker_size;
 
-      if (auto rc = shape(Point(sx, sy), size, color, layer); !rc) {
+      if (auto rc = shape(Point(sx, sy), size, color, page, page_elements); !rc) {
         return rc;
       }
     }
@@ -147,7 +151,7 @@ ReturnCode draw(
 
     auto ax = HAlign::CENTER;
     auto ay = VAlign::BOTTOM;
-    if (auto rc = drawTextLabel(label_text, p, ax, ay, style, layer); rc != OK) {
+    if (auto rc = page_add_text(page, page_elements, label_text, p, ax, ay, style); rc != OK) {
       return rc;
     }
   }
@@ -246,7 +250,7 @@ ReturnCode build(
 
   /* return element */
   *elem = std::make_shared<Element>();
-  (*elem)->draw = bind(&draw, c, _1, _2);
+  (*elem)->draw = bind(&draw, c, _1, _2, _3);
   return OK;
 }
 

@@ -11,10 +11,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+#include "graphics/rasterize.h"
+#include "graphics/image.h"
+#include "graphics/text_layout.h"
+#include "graphics/shape_hatch.h"
+
 #include <iostream>
-#include <graphics/rasterize.h>
-#include <graphics/image.h>
-#include <graphics/text_layout.h>
 
 namespace clip {
 
@@ -38,15 +40,10 @@ Rasterizer::~Rasterizer() {
   cairo_surface_destroy(cr_surface);
 }
 
-Status Rasterizer::drawShape(
-    const Path path,
-    const StrokeStyle stroke_style,
-    const std::optional<Color> fill_color,
-    const Rectangle clip) {
-  if (path.size() < 2) {
-    return ERROR;
-  }
-
+void cairo_set_path(
+    cairo_t* cr_ctx,
+    uint32_t height,
+    const Path& path) {
   cairo_new_path(cr_ctx);
 
   for (const auto& cmd : path) {
@@ -60,19 +57,37 @@ Status Rasterizer::drawShape(
       case PathCommand::CLOSE:
         cairo_close_path(cr_ctx);
         break;
-      default:
-        break; // not yet implemented
     }
   }
+}
 
-  if (fill_color) {
+Status Rasterizer::drawShape(
+    const Path& path,
+    const StrokeStyle& stroke_style,
+    const FillStyle& fill_style) {
+  if (path.size() < 2) {
+    return ERROR;
+  }
+
+  auto fill_path = path;
+  if (fill_style.hatch) {
+    fill_path = shape_hatch(
+        path_to_polygon_simple(path),
+        fill_style.hatch_angle_deg,
+        fill_style.hatch_offset,
+        fill_style.hatch_stride,
+        fill_style.hatch_width);
+  }
+
+  if (fill_style.color) {
     cairo_set_source_rgba(
        cr_ctx,
-       fill_color->red(),
-       fill_color->green(),
-       fill_color->blue(),
-       fill_color->alpha());
+       fill_style.color->red(),
+       fill_style.color->green(),
+       fill_style.color->blue(),
+       fill_style.color->alpha());
 
+    cairo_set_path(cr_ctx, height, fill_path);
     cairo_fill(cr_ctx);
   }
 
@@ -104,6 +119,7 @@ Status Rasterizer::drawShape(
        stroke_style.color.alpha());
 
     cairo_set_line_width(cr_ctx, stroke_style.line_width);
+    cairo_set_path(cr_ctx, height, path);
     cairo_stroke(cr_ctx);
   }
 

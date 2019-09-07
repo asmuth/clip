@@ -17,37 +17,16 @@
 
 namespace clip {
 
-FillStyle fill_style_solid(const Color& color) {
-  return [color] (const auto& poly, auto layer) -> ReturnCode {
-    fillPath(layer, poly, color);
-    return OK;
-  };
-}
+FillStyle::FillStyle() :
+    hatch(false),
+    hatch_angle_deg(0),
+    hatch_offset(0),
+    hatch_stride(0),
+    hatch_width(0) {}
 
-FillStyle fill_style_hatch(
-    const Color& color,
-    double angle_deg,
-    double offset,
-    double stride,
-    double width) {
-  return [=] (const auto& poly, auto layer) -> ReturnCode {
-    auto hatched = shape_hatch(
-        poly,
-        angle_deg,
-        offset,
-        stride,
-        width);
-
-    fillPath(layer, hatched, color);
-    return OK;
-  };
-}
-
-FillStyle fill_style_none() {
-  return [] (const auto& p, auto l) -> ReturnCode {
-    return OK;
-  };
-}
+StrokeStyle::StrokeStyle() :
+    color(Color::fromRGB(0, 0, 0)),
+    dash_type(SOLID) {}
 
 } // namespace clip
 

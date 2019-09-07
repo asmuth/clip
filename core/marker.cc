@@ -73,38 +73,52 @@ const std::unordered_map<std::string, std::string> UNICODE_MARKERS = {
 Marker marker_create_circle(double border_width) {
   border_width = std::clamp(border_width, 0.0, 1.0);
 
-  return [border_width] (const auto& pos, const auto& size, const auto& color, auto target) {
-    StrokeStyle style;
-    style.color = color;
-    style.line_width = from_unit(double(size) * border_width * 0.5);
-
-    Path path;
-    path_add_circle(&path, pos, size * 0.5);
-    strokePath(target, path, style);
+  return [border_width] (
+      const auto& pos,
+      const auto& size,
+      const auto& color,
+      const auto& page,
+      auto page_elements) {
+    PageShapeElement shape;
+    shape.stroke_style.color = color;
+    shape.stroke_style.line_width = from_unit(double(size) * border_width * 0.5);
+    path_add_circle(&shape.path, pos, size * 0.5);
+    page_add_shape(page_elements, shape);
     return OK;
   };
 }
 
 Marker marker_create_disk() {
-  return [] (const auto& pos, const auto& size, const auto& color, auto target) {
-    Path path;
-    path_add_circle(&path, pos, size * 0.5);
-    fillPath(target, path, color);
+  return [] (
+      const auto& pos,
+      const auto& size,
+      const auto& color,
+      const auto& page,
+      auto page_elements) {
+    PageShapeElement shape;
+    path_add_circle(&shape.path, pos, size * 0.5);
+    shape.fill_style.color = color;
+    page_add_shape(page_elements, shape);
     return OK;
   };
 }
 
 Marker marker_create_unicode(const std::string& u) {
-  return [u] (const auto& pos, const auto& size, const auto& color, auto target) {
+  return [u] (
+      const auto& pos,
+      const auto& size,
+      const auto& color,
+      const auto& page,
+      auto page_elements) {
     TextStyle style;
-    style.font = target->font;
+    style.font = page.font;
     style.color = color;
     style.font_size = from_unit(double(size) * 1.2);
 
     auto ax = HAlign::CENTER;
     auto ay = VAlign::CENTER;
-    if (auto rc = drawTextLabel(u, pos, ax, ay, style, target); rc != OK) {
-      return rc;
+    if (auto rc = page_add_text(page, page_elements, u, pos, ax, ay, style); rc != OK) {
+      return ERROR;
     }
 
     return OK;

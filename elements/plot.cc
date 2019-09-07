@@ -57,11 +57,12 @@ struct PlotAxis {
 ReturnCode draw(
     std::shared_ptr<PlotConfig> config,
     const LayoutInfo& layout,
-    Page* layer) {
+    const Page& page,
+    PageElementList* page_elements) {
   /* convert units  */
   auto margins = config->margins;
   for (auto& m : margins) {
-    convert_unit_typographic(layer->dpi, config->font_size, &m);
+    convert_unit_typographic(page.dpi, config->font_size, &m);
   }
 
   /* calculate the outer margin box */
@@ -84,7 +85,7 @@ ReturnCode draw(
       double e_height = 0;
       if (auto rc =
             e->size_hint(
-                *layer,
+                page,
                 content_box.w,
                 content_box.h,
                 &e_width,
@@ -136,14 +137,15 @@ ReturnCode draw(
 
   /* draw the background */
   if (config->background) {
-    const auto& bg_box = body_box;
+    PageShapeElement shape;
+    shape.fill_style.color = *config->background;
 
-    fillRectangle(
-        layer,
-        Point(bg_box.x, bg_box.y),
-        bg_box.w,
-        bg_box.h,
-        *config->background);
+    path_add_rectangle(
+        &shape.path,
+        {body_box.x + body_box.w / 2, body_box.y + body_box.h / 2},
+        {body_box.w, body_box.h});
+
+    page_add_shape(page_elements, shape);
   }
 
   /* draw the body elements  */
@@ -151,7 +153,7 @@ ReturnCode draw(
     LayoutInfo layout;
     layout.content_box = body_box;
 
-    if (auto rc = e->draw(layout, layer); !rc) {
+    if (auto rc = e->draw(layout, page, page_elements); !rc) {
       return rc;
     }
   }
@@ -162,62 +164,66 @@ ReturnCode draw(
       LayoutInfo layout;
       layout.content_box = margin_boxes[i];
 
-      if (auto rc = e->draw(layout, layer); !rc) {
+      if (auto rc = e->draw(layout, page, page_elements); !rc) {
         return rc;
       }
     }
   }
 
-  /* draw the top border  */
+  /* draw top border  */
   if (config->borders[0].line_width > 0) {
-    StrokeStyle border_style;
-    border_style.line_width = config->borders[0].line_width;
-    border_style.color = config->borders[0].color;
+    PageShapeElement line;
+    line.stroke_style.line_width = config->borders[0].line_width;
+    line.stroke_style.color = config->borders[0].color;
 
-    strokeLine(
-        layer,
+    path_add_line(
+        &line.path,
         Point(content_box.x, content_box.y),
-        Point(content_box.x + content_box.w, content_box.y),
-        border_style);
+        Point(content_box.x + content_box.w, content_box.y));
+
+    page_add_shape(page_elements, line);
   }
 
-  /* draw the right border  */
+  /* draw right border  */
   if (config->borders[1].line_width > 0) {
-    StrokeStyle border_style;
-    border_style.line_width = config->borders[1].line_width;
-    border_style.color = config->borders[1].color;
+    PageShapeElement line;
+    line.stroke_style.line_width = config->borders[1].line_width;
+    line.stroke_style.color = config->borders[1].color;
 
-    strokeLine(
-        layer,
+    path_add_line(
+        &line.path,
         Point(content_box.x + content_box.w, content_box.y),
-        Point(content_box.x + content_box.w, content_box.y + content_box.h),
-        border_style);
+        Point(content_box.x + content_box.w, content_box.y + content_box.h));
+
+    page_add_shape(page_elements, line);
   }
 
-  /* draw the bottom border  */
+  /* draw top border  */
   if (config->borders[2].line_width > 0) {
-    StrokeStyle border_style;
-    border_style.line_width = config->borders[2].line_width;
-    border_style.color = config->borders[2].color;
+    PageShapeElement line;
+    line.stroke_style.line_width = config->borders[2].line_width;
+    line.stroke_style.color = config->borders[2].color;
 
-    strokeLine(
-        layer,
+    path_add_line(
+        &line.path,
         Point(content_box.x, content_box.y + content_box.h),
-        Point(content_box.x + content_box.w, content_box.y + content_box.h),
-        border_style);
+        Point(content_box.x + content_box.w, content_box.y + content_box.h));
+
+    page_add_shape(page_elements, line);
   }
 
-  /* draw the left border  */
+  /* draw left border  */
   if (config->borders[3].line_width > 0) {
-    StrokeStyle border_style;
-    border_style.line_width = config->borders[3].line_width;
-    border_style.color = config->borders[3].color;
+    PageShapeElement line;
+    line.stroke_style.line_width = config->borders[3].line_width;
+    line.stroke_style.color = config->borders[3].color;
 
-    strokeLine(
-        layer,
+    path_add_line(
+        &line.path,
         Point(content_box.x, content_box.y),
-        Point(content_box.x, content_box.y + content_box.h),
-        border_style);
+        Point(content_box.x, content_box.y + content_box.h));
+
+    page_add_shape(page_elements, line);
   }
 
   return OK;
@@ -624,7 +630,7 @@ ReturnCode build(
 
   /* return the layout element */
   *elem = std::make_shared<Element>();
-  (*elem)->draw = bind(&draw, config, _1, _2);
+  (*elem)->draw = bind(&draw, config, _1, _2, _3);
   return OK;
 }
 

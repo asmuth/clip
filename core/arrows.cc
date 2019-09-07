@@ -25,7 +25,8 @@ ReturnCode arrow_draw_default(
     const Point& to,
     const Measure& size,
     const Color& color,
-    Page* layer) {
+    const Page& page,
+    PageElementList* page_elements) {
   auto direction = normalize(sub(to, from));
   auto ortho = vec2{direction.y, direction.x * -1};
 
@@ -41,14 +42,17 @@ ReturnCode arrow_draw_default(
   line_style.color = color;
   line_style.line_width = size;
 
-  strokeLine(layer, from, to, line_style);
-  fillPath(layer, head_path, color);
+  FillStyle fill_style;
+  fill_style.color = color;
+
+  page_add_line(page_elements, from, to, line_style);
+  page_add_path(page_elements, head_path, {}, fill_style);
 
   return OK;
 }
 
 Arrow arrow_create_default() {
-  return bind(&arrow_draw_default, _1, _2, _3, _4, _5);
+  return bind(&arrow_draw_default, _1, _2, _3, _4, _5, _6);
 }
 
 } // namespace clip

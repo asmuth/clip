@@ -44,10 +44,9 @@ public:
   void clear(const Color& c);
 
   Status drawShape(
-      const Path path,
-      const StrokeStyle stroke_style,
-      const std::optional<Color> fill_color,
-      const Rectangle clip);
+      const Path& path,
+      const StrokeStyle& stroke_style,
+      const FillStyle& fill_style);
 
   Status drawText(
       const std::vector<text::GlyphPlacementGroup>& glyphs,

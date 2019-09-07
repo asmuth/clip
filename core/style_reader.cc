@@ -80,7 +80,7 @@ ReturnCode fill_style_read_solid(
     return rc;
   }
 
-  *style = fill_style_solid(c);
+  style->color = c;
   return OK;
 }
 
@@ -108,12 +108,12 @@ ReturnCode fill_style_read_hatch(
     }
   }
 
-  *style = fill_style_hatch(
-      color,
-      angle_deg,
-      offset,
-      stride,
-      width);
+  style->color = color;
+  style->hatch = true;
+  style->hatch_angle_deg = angle_deg;
+  style->hatch_offset = offset;
+  style->hatch_stride = stride;
+  style->hatch_width = width;
 
   return OK;
 }
@@ -124,7 +124,7 @@ ReturnCode fill_style_read(
     FillStyle* style) {
   if (expr_is_value(expr, "none") ||
       expr_is_list(expr, "none")) {
-    *style = fill_style_none();
+    style->color.reset();
     return OK;
   }
 

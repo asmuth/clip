@@ -245,58 +245,64 @@ ReturnCode legend_layout(
 ReturnCode legend_draw_borders(
     const StrokeStyle* borders,
     const Rectangle& bbox,
-    Page* layer) {
+    const Page& page,
+    PageElementList* page_elements) {
   /* draw top border  */
   if (borders[0].line_width > 0) {
-    StrokeStyle border_style;
-    border_style.line_width = borders[0].line_width;
-    border_style.color = borders[0].color;
+    PageShapeElement line;
+    line.stroke_style.line_width = borders[0].line_width;
+    line.stroke_style.color = borders[0].color;
 
-    strokeLine(
-        layer,
+    path_add_line(
+        &line.path,
         Point(bbox.x, bbox.y),
-        Point(bbox.x + bbox.w, bbox.y),
-        border_style);
+        Point(bbox.x + bbox.w, bbox.y));
+
+    page_add_shape(page_elements, line);
   }
 
   /* draw right border  */
   if (borders[1].line_width > 0) {
-    StrokeStyle border_style;
-    border_style.line_width = borders[1].line_width;
-    border_style.color = borders[1].color;
+    PageShapeElement line;
+    line.stroke_style.line_width = borders[1].line_width;
+    line.stroke_style.color = borders[1].color;
 
-    strokeLine(
-        layer,
+    path_add_line(
+        &line.path,
         Point(bbox.x + bbox.w, bbox.y),
-        Point(bbox.x + bbox.w, bbox.y + bbox.h),
-        border_style);
+        Point(bbox.x + bbox.w, bbox.y + bbox.h));
+
+    page_add_shape(page_elements, line);
   }
 
   /* draw top border  */
   if (borders[2].line_width > 0) {
-    StrokeStyle border_style;
-    border_style.line_width = borders[2].line_width;
-    border_style.color = borders[2].color;
+    PageShapeElement line;
+    line.stroke_style.line_width = borders[2].line_width;
+    line.stroke_style.color = borders[2].color;
 
-    strokeLine(
-        layer,
+    path_add_line(
+        &line.path,
         Point(bbox.x, bbox.y + bbox.h),
-        Point(bbox.x + bbox.w, bbox.y + bbox.h),
-        border_style);
+        Point(bbox.x + bbox.w, bbox.y + bbox.h));
+
+    page_add_shape(page_elements, line);
   }
 
   /* draw left border  */
   if (borders[3].line_width > 0) {
-    StrokeStyle border_style;
-    border_style.line_width = borders[3].line_width;
-    border_style.color = borders[3].color;
+    PageShapeElement line;
+    line.stroke_style.line_width = borders[3].line_width;
+    line.stroke_style.color = borders[3].color;
 
-    strokeLine(
-        layer,
+    path_add_line(
+        &line.path,
         Point(bbox.x, bbox.y),
-        Point(bbox.x, bbox.y + bbox.h),
-        border_style);
+        Point(bbox.x, bbox.y + bbox.h));
+
+    page_add_shape(page_elements, line);
   }
+
   return OK;
 }
 
@@ -304,7 +310,8 @@ ReturnCode legend_draw_items(
     const LegendConfig& config,
     const Rectangle& bbox,
     const std::vector<Rectangle>& item_boxes,
-    Page* layer) {
+    const Page& page,
+    PageElementList* page_elements) {
   for (size_t i = 0; i < std::min(config.items.size(), item_boxes.size()); ++i) {
     LayoutInfo layout;
     layout.content_box.x = bbox.x + item_boxes[i].x;
@@ -312,7 +319,7 @@ ReturnCode legend_draw_items(
     layout.content_box.w = item_boxes[i].w;
     layout.content_box.h = item_boxes[i].h;
 
-    if (auto rc = config.items[i]->draw(layout, layer); !rc) {
+    if (auto rc = config.items[i]->draw(layout, page, page_elements); !rc) {
       return rc;
     }
   }
@@ -323,9 +330,10 @@ ReturnCode legend_draw_items(
 ReturnCode legend_draw(
     std::shared_ptr<LegendConfig> config,
     const LayoutInfo& layout,
-    Page* layer) {
+    const Page& page,
+    PageElementList* page_elements) {
   /* convert units  */
-  legend_normalize(config, *layer);
+  legend_normalize(config, page);
 
   /* calculate boxes */
   auto parent_box = layout_margin_box(
@@ -342,7 +350,7 @@ ReturnCode legend_draw(
     auto ph = parent_box.h;
     double ew = 0;
     double eh = 0;
-    if (auto rc = legend_layout(config, *layer, pw, ph, &ew, &eh, &item_boxes); !rc) {
+    if (auto rc = legend_layout(config, page, pw, ph, &ew, &eh, &item_boxes); !rc) {
       return rc;
     }
 
@@ -383,23 +391,35 @@ ReturnCode legend_draw(
 
   /* draw background */
   if (config->background) {
-    const auto& bg_box = border_box;
+    PageShapeElement shape;
+    shape.fill_style.color = *config->background;
 
-    fillRectangle(
-        layer,
-        Point(bg_box.x, bg_box.y),
-        bg_box.w,
-        bg_box.h,
-        *config->background);
+    path_add_rectangle(
+        &shape.path,
+        {border_box.x, border_box.y},
+        {border_box.w, border_box.h});
+
+    page_add_shape(page_elements, shape);
   }
 
   /* draw borders */
-  if (auto rc = legend_draw_borders(config->borders.data(), border_box, layer); !rc) {
+  if (auto rc = legend_draw_borders(
+        config->borders.data(),
+        border_box,
+        page,
+        page_elements);
+      !rc) {
     return rc;
   }
 
   /* draw items */
-  if (auto rc = legend_draw_items(*config, content_box, item_boxes, layer); !rc) {
+  if (auto rc = legend_draw_items(
+        *config,
+        content_box,
+        item_boxes,
+        page,
+        page_elements);
+      !rc) {
     return rc;
   }
 
@@ -582,7 +602,7 @@ ReturnCode build(
   }
 
   *elem = std::make_shared<Element>();
-  (*elem)->draw = bind(&legend_draw, config, _1, _2);
+  (*elem)->draw = bind(&legend_draw, config, _1, _2, _3);
   (*elem)->size_hint = bind(&legend_layout, config, _1, _2, _3, _4, _5, nullptr);
   return OK;
 }

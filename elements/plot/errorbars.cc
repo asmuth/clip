@@ -55,7 +55,8 @@ ReturnCode draw_errorbar(
     const Point& from,
     const Point& to,
     const Color& color,
-    Page* layer) {
+    const Page& page,
+    PageElementList* page_elements) {
   auto direction = normalize(sub(to, from));
   auto ortho = vec2{direction.y, direction.x * -1};
 
@@ -63,14 +64,16 @@ ReturnCode draw_errorbar(
   line_style.color = color;
   line_style.line_width = config.stroke_width;
 
-  strokeLine(layer, from, to, line_style);
+  page_add_line(page_elements, from, to, line_style);
 
-  strokeLine(layer,
+  page_add_line(
+      page_elements,
       add(from, mul(ortho, config.bar_width * -0.5)),
       add(from, mul(ortho, config.bar_width * 0.5)),
       line_style);
 
-  strokeLine(layer,
+  page_add_line(
+      page_elements,
       add(to, mul(ortho, config.bar_width * -0.5)),
       add(to, mul(ortho, config.bar_width * 0.5)),
       line_style);
@@ -81,13 +84,14 @@ ReturnCode draw_errorbar(
 ReturnCode draw(
     std::shared_ptr<ErrorbarsElement> config,
     const LayoutInfo& layout,
-    Page* layer) {
+    const Page& page,
+    PageElementList* page_elements) {
   const auto& clip = layout.content_box;
 
   /* convert units */
   convert_units(
       {
-        bind(&convert_unit_typographic, layer->dpi, layer->font_size, _1),
+        bind(&convert_unit_typographic, page.dpi, page.font_size, _1),
         bind(&convert_unit_user, scale_translate_fn(config->scale_x), _1),
         bind(&convert_unit_relative, clip.w, _1)
       },
@@ -96,7 +100,7 @@ ReturnCode draw(
 
   convert_units(
       {
-        bind(&convert_unit_typographic, layer->dpi, layer->font_size, _1),
+        bind(&convert_unit_typographic, page.dpi, page.font_size, _1),
         bind(&convert_unit_user, scale_translate_fn(config->scale_x), _1),
         bind(&convert_unit_relative, clip.w, _1)
       },
@@ -105,7 +109,7 @@ ReturnCode draw(
 
   convert_units(
       {
-        bind(&convert_unit_typographic, layer->dpi, layer->font_size, _1),
+        bind(&convert_unit_typographic, page.dpi, page.font_size, _1),
         bind(&convert_unit_user, scale_translate_fn(config->scale_x), _1),
         bind(&convert_unit_relative, clip.w, _1)
       },
@@ -114,7 +118,7 @@ ReturnCode draw(
 
   convert_units(
       {
-        bind(&convert_unit_typographic, layer->dpi, layer->font_size, _1),
+        bind(&convert_unit_typographic, page.dpi, page.font_size, _1),
         bind(&convert_unit_user, scale_translate_fn(config->scale_y), _1),
         bind(&convert_unit_relative, clip.h, _1)
       },
@@ -123,7 +127,7 @@ ReturnCode draw(
 
   convert_units(
       {
-        bind(&convert_unit_typographic, layer->dpi, layer->font_size, _1),
+        bind(&convert_unit_typographic, page.dpi, page.font_size, _1),
         bind(&convert_unit_user, scale_translate_fn(config->scale_y), _1),
         bind(&convert_unit_relative, clip.h, _1)
       },
@@ -132,7 +136,7 @@ ReturnCode draw(
 
   convert_units(
       {
-        bind(&convert_unit_typographic, layer->dpi, layer->font_size, _1),
+        bind(&convert_unit_typographic, page.dpi, page.font_size, _1),
         bind(&convert_unit_user, scale_translate_fn(config->scale_y), _1),
         bind(&convert_unit_relative, clip.h, _1)
       },
@@ -140,13 +144,13 @@ ReturnCode draw(
       &*config->y_high.end());
 
   convert_unit_typographic(
-      layer->dpi,
-      layer->font_size,
+      page.dpi,
+      page.font_size,
       &config->stroke_width);
 
   convert_unit_typographic(
-      layer->dpi,
-      layer->font_size,
+      page.dpi,
+      page.font_size,
       &config->bar_width);
 
   auto x_len = std::min({
@@ -174,7 +178,7 @@ ReturnCode draw(
         ? config->stroke_color
         : config->colors[i % config->colors.size()];
 
-    if (auto rc = draw_errorbar(*config, from, to, color, layer); !rc) {
+    if (auto rc = draw_errorbar(*config, from, to, color, page, page_elements); !rc) {
       return rc;
     }
   }
@@ -192,7 +196,7 @@ ReturnCode draw(
         ? config->stroke_color
         : config->colors[i % config->colors.size()];
 
-    if (auto rc = draw_errorbar(*config, from, to, color, layer); !rc) {
+    if (auto rc = draw_errorbar(*config, from, to, color, page, page_elements); !rc) {
       return rc;
     }
   }
@@ -372,7 +376,7 @@ ReturnCode build(
 
   /* return element */
   *elem = std::make_shared<Element>();
-  (*elem)->draw = bind(&draw, c, _1, _2);
+  (*elem)->draw = bind(&draw, c, _1, _2, _3);
   return OK;
 }
 

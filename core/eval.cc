@@ -60,7 +60,7 @@ ReturnCode eval(
 
   // draw all elements
   for (const auto& e : roots) {
-    if (auto rc = e->draw(layout, &page); !rc) {
+    if (auto rc = e->draw(layout, page, &page.elements); !rc) {
       return rc;
     }
   }

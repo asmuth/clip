@@ -19,7 +19,6 @@
 #include "font_lookup.h"
 
 namespace clip {
-struct Page;
 namespace text {
 struct TextSpan;
 }
@@ -37,23 +36,6 @@ struct TextStyle {
   std::string default_script;
   std::string default_language;
 };
-
-Status drawTextLabel(
-    const std::string& text,
-    const Point& position,
-    HAlign align_x,
-    VAlign align_y,
-    double rotate,
-    const TextStyle& text_style,
-    Page* layer);
-
-Status drawTextLabel(
-    const std::string& text,
-    const Point& position,
-    HAlign align_x,
-    VAlign align_y,
-    const TextStyle& text_style,
-    Page* layer);
 
 /**
  * Convenience function to measure the size of a simple piece of text.

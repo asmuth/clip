@@ -36,7 +36,7 @@ ReturnCode page_export_png(
       if constexpr (std::is_same_v<T, PageTextElement>)
         return rasterizer.drawText(e.glyphs, e.style, e.transform);
       if constexpr (std::is_same_v<T, PageShapeElement>)
-        return rasterizer.drawShape(e.path, e.stroke_style, e.fill_color, e.clip);
+        return rasterizer.drawShape(e.path, e.stroke_style, e.fill_style);
 
       return ERROR;
     }, elem);

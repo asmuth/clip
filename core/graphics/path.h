@@ -84,6 +84,11 @@ Path path_from_polygon(const Polygon2& poly);
 Path path_transform(const Path& p, const mat3& t);
 
 /**
+ * Add a line to the path.
+ */
+void path_add_line(Path* path, vec2 from, vec2 to);
+
+/**
  * Add a rectangle to the path. Origin is the center of the rectangle.
  */
 void path_add_rectangle(Path* path, vec2 origin, vec2 size);

@@ -61,13 +61,14 @@ struct PlotPointsConfig {
 ReturnCode draw(
     std::shared_ptr<PlotPointsConfig> config,
     const LayoutInfo& layout,
-    Page* layer) {
+    const Page& page,
+    PageElementList* page_elements) {
   const auto& clip = layout.content_box;
 
   /* convert units */
   convert_units(
       {
-        bind(&convert_unit_typographic, layer->dpi, layer->font_size, _1),
+        bind(&convert_unit_typographic, page.dpi, page.font_size, _1),
         bind(&convert_unit_user, scale_translate_fn(config->scale_x), _1),
         bind(&convert_unit_relative, clip.w, _1)
       },
@@ -76,7 +77,7 @@ ReturnCode draw(
 
   convert_units(
       {
-        bind(&convert_unit_typographic, layer->dpi, layer->font_size, _1),
+        bind(&convert_unit_typographic, page.dpi, page.font_size, _1),
         bind(&convert_unit_user, scale_translate_fn(config->scale_y), _1),
         bind(&convert_unit_relative, clip.h, _1)
       },
@@ -85,7 +86,7 @@ ReturnCode draw(
 
   convert_units(
       {
-        bind(&convert_unit_typographic, layer->dpi, layer->font_size, _1),
+        bind(&convert_unit_typographic, page.dpi, page.font_size, _1),
         bind(&convert_unit_user, scale_translate_magnitude_fn(config->scale_x), _1),
         bind(&convert_unit_relative, clip.w, _1)
       },
@@ -94,7 +95,7 @@ ReturnCode draw(
 
   convert_units(
       {
-        bind(&convert_unit_typographic, layer->dpi, layer->font_size, _1),
+        bind(&convert_unit_typographic, page.dpi, page.font_size, _1),
         bind(&convert_unit_user, scale_translate_magnitude_fn(config->scale_y), _1),
         bind(&convert_unit_relative, clip.h, _1)
       },
@@ -103,14 +104,14 @@ ReturnCode draw(
 
   convert_units(
       {
-        bind(&convert_unit_typographic, layer->dpi, layer->font_size, _1)
+        bind(&convert_unit_typographic, page.dpi, page.font_size, _1)
       },
       &*config->sizes.begin(),
       &*config->sizes.end());
 
   convert_unit_typographic(
-      layer->dpi,
-      layer->font_size,
+      page.dpi,
+      page.font_size,
       &config->size);
 
   /* draw vectors */
@@ -132,7 +133,7 @@ ReturnCode draw(
         ? config->shape
         : config->shapes[i % config->shapes.size()];
 
-    if (auto rc = shape({sx, sy}, {sx + dx, sy + dy}, size, color, layer); !rc) {
+    if (auto rc = shape({sx, sy}, {sx + dx, sy + dy}, size, color, page, page_elements); !rc) {
       return rc;
     }
   }
@@ -264,7 +265,7 @@ ReturnCode build(
 
   /* return element */
   *elem = std::make_shared<Element>();
-  (*elem)->draw = bind(&draw, c, _1, _2);
+  (*elem)->draw = bind(&draw, c, _1, _2, _3);
   return OK;
 }
 
