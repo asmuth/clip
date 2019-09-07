@@ -16,21 +16,11 @@
 namespace clip {
 
 void page_add_text(Page* page, PageTextElement elem) {
-  if (!elem.zindex) {
-    elem.zindex = page->zindex.value_or(0) + 1;
-  }
-
-  page->zindex = std::max(*elem.zindex, page->zindex.value_or(0));
-  page->text_elements.emplace_back(std::move(elem));
+  page->elements.emplace_back(std::move(elem));
 }
 
 void page_add_shape(Page* page, PageShapeElement elem) {
-  if (!elem.zindex) {
-    elem.zindex = page->zindex.value_or(0) + 1;
-  }
-
-  page->zindex = std::max(*elem.zindex, page->zindex.value_or(0));
-  page->shape_elements.emplace_back(std::move(elem));
+  page->elements.emplace_back(std::move(elem));
 }
 
 } // namespace clip

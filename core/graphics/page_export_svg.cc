@@ -280,44 +280,28 @@ struct SVGDrawOp {
 ReturnCode page_export_svg(
     const Page& page,
     std::string* buffer) {
-  // create a list of drawing operations
-  std::vector<SVGDrawOp> svg_ops;
-  for (const auto& e : page.text_elements) {
-    SVGDrawOp svg_op;
-    svg_op.draw_fn = bind(&svg_text_span, e, page.dpi, _1);
-    svg_op.draw_idx = e.zindex.value_or(0);
-    svg_ops.push_back(svg_op);
-  }
-
-  for (const auto& e : page.shape_elements) {
-    SVGDrawOp svg_op;
-    svg_op.draw_fn = bind(&svg_shape, e, _1);
-    svg_op.draw_idx = e.zindex.value_or(0);
-    svg_ops.push_back(svg_op);
-  }
-
-  // sort and execute operations
-  std::sort(
-      svg_ops.begin(),
-      svg_ops.end(),
-      [] (const auto& a, const auto& b) {
-        return a.draw_idx < b.draw_idx;
-      });
-
   auto svg = std::make_shared<SVGData>();
   svg->width = page.width;
   svg->height = page.height;
   svg->proj = mul(translate2({0, page.height}), scale2({1, -1}));
 
-  for (const auto& op : svg_ops) {
-    if (auto rc = op.draw_fn(svg); !rc) {
+  for (const auto& elem : page.elements) {
+    auto rc = std::visit([svg, &page] (const auto& e) {
+      using T = std::decay_t<decltype(e)>;
+      if constexpr (std::is_same_v<T, PageTextElement>)
+        return svg_text_span(e, page.dpi, svg);
+      if constexpr (std::is_same_v<T, PageShapeElement>)
+        return svg_shape(e, svg);
+
+      return ERROR;
+    }, elem);
+
+    if (!rc) {
       return rc;
     }
   }
 
-  // return the svg document
   std::stringstream svg_doc;
-
   svg_doc
     << "<svg"
       << svg_attr("xmlns", "http://www.w3.org/2000/svg")

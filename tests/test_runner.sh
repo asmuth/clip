@@ -91,7 +91,7 @@ run_test() {
 	if [[ ${result} != "ok" ]]; then
 		echo "ERROR: execution failed" >> ${logfile}
 		cat ${logfile}
-		return 0
+		return 1
 	fi
 
 	if [[ ! -e ${reffile} ]]; then

@@ -13,8 +13,9 @@
  */
 #pragma once
 #include <stdlib.h>
-#include <vector>
 #include <string>
+#include <variant>
+#include <vector>
 
 #include "color.h"
 #include "text.h"
@@ -37,7 +38,6 @@ struct PageTextElement {
   Point origin;
 
   TextStyle style;
-  std::optional<uint32_t> zindex;
   Rectangle clip;
   std::optional<mat3> transform;
 };
@@ -46,10 +46,13 @@ struct PageShapeElement {
   Path path;
   StrokeStyle stroke_style;
   std::optional<Color> fill_color;
-  std::optional<uint32_t> zindex;
   Rectangle clip;
   std::optional<AntialiasingMode> antialiasing_mode;
 };
+
+using PageElement = std::variant<
+    PageTextElement,
+    PageShapeElement>;
 
 } // namespace clip
 

@@ -28,17 +28,13 @@ namespace clip {
  * Since the page is a low-level interface, it is recommended that you use one
  * of the helper functions, such as page_add_text or page_add_shape instead of
  * interacting directly with the elements lists. Nevertheless, directly
- * manipulating the element lists is safe as long as you ensure that all elements
- * list are ordered by increasing z-index and the zindex member contains the
- * maximum z index of all elements.
+ * manipulating the structure is safe.
  */
 struct Page {
   double width;
   double height;
   double dpi;
-  std::vector<PageTextElement> text_elements;
-  std::vector<PageShapeElement> shape_elements;
-  std::optional<uint32_t> zindex;
+  std::vector<PageElement> elements;
   FontInfo font;
   Measure font_size;
   Color background_color;

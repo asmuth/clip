@@ -27,48 +27,25 @@ struct DrawOp {
 ReturnCode page_export_png(
     const Page& page,
     std::string* buffer) {
-  // create a list of drawing operations
-  std::vector<DrawOp> ops;
-  for (const auto& e : page.text_elements) {
-    DrawOp op;
-    op.draw_fn = bind(&Rasterizer::drawText, _1, e.glyphs, e.style, e.transform);
-    op.draw_idx = e.zindex.value_or(0);
-    ops.push_back(op);
-  }
-
-  for (const auto& e : page.shape_elements) {
-    DrawOp op;
-    op.draw_idx = e.zindex.value_or(0);
-    op.draw_fn = bind(
-        &Rasterizer::drawShape,
-        _1,
-        e.path,
-        e.stroke_style,
-        e.fill_color,
-        e.clip);
-
-    ops.push_back(op);
-  }
-
-  // sort drawing operations
-  std::sort(
-      ops.begin(),
-      ops.end(),
-      [] (const auto& a, const auto& b) {
-        return a.draw_idx < b.draw_idx;
-      });
-
-  // execute drawing operations
   Rasterizer rasterizer(page.width, page.height, page.dpi);
   rasterizer.clear(page.background_color);
 
-  for (const auto& op : ops) {
-    if (auto rc = op.draw_fn(&rasterizer); !rc) {
+  for (const auto& elem : page.elements) {
+    auto rc = std::visit([&rasterizer] (const auto& e) {
+      using T = std::decay_t<decltype(e)>;
+      if constexpr (std::is_same_v<T, PageTextElement>)
+        return rasterizer.drawText(e.glyphs, e.style, e.transform);
+      if constexpr (std::is_same_v<T, PageShapeElement>)
+        return rasterizer.drawShape(e.path, e.stroke_style, e.fill_color, e.clip);
+
+      return ERROR;
+    }, elem);
+
+    if (!rc) {
       return rc;
     }
   }
 
-  // return the image
   *buffer = rasterizer.to_png(); // TODO
   return OK;
 }
