@@ -26,7 +26,7 @@ ReturnCode arrow_draw_default(
     const Measure& size,
     const Color& color,
     const Page& page,
-    PageElementList* page_elements) {
+    DrawCommandList* drawlist) {
   auto direction = normalize(sub(to, from));
   auto ortho = vec2{direction.y, direction.x * -1};
 
@@ -45,8 +45,8 @@ ReturnCode arrow_draw_default(
   FillStyle fill_style;
   fill_style.color = color;
 
-  page_add_line(page_elements, from, to, line_style);
-  page_add_path(page_elements, head_path, {}, fill_style);
+  draw_line(drawlist, from, to, line_style);
+  draw_path(drawlist, head_path, {}, fill_style);
 
   return OK;
 }

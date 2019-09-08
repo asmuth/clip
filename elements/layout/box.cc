@@ -19,7 +19,7 @@
 #include "sexpr_conv.h"
 #include "sexpr_util.h"
 #include "graphics/color.h"
-#include "graphics/page_description.h"
+#include "graphics/draw.h"
 
 #include <functional>
 
@@ -46,7 +46,7 @@ ReturnCode draw(
     std::shared_ptr<BoxElement> config,
     const LayoutInfo& layout,
     const Page& page,
-    PageElementList* page_elements) {
+    DrawCommandList* drawlist) {
   /* convert units  */
   auto margins = config->margins;
   for (auto& m : margins) {
@@ -63,7 +63,7 @@ ReturnCode draw(
 
   /* draw background */
   if (config->background) {
-    PageShapeElement shape;
+    draw_cmd::Shape shape;
     shape.fill_style.color = *config->background;
 
     path_add_rectangle(
@@ -71,7 +71,7 @@ ReturnCode draw(
         {bbox.x, bbox.y},
         {bbox.w, bbox.h});
 
-    page_add_shape(page_elements, shape);
+    draw_shape(drawlist, shape);
   }
 
   /* draw children */
@@ -79,14 +79,14 @@ ReturnCode draw(
     LayoutInfo layout;
     layout.content_box = bbox;
 
-    if (auto rc = e->draw(layout, page, page_elements); !rc) {
+    if (auto rc = e->draw(layout, page, drawlist); !rc) {
       return rc;
     }
   }
 
   /* draw top border  */
   if (config->borders[0].width > 0) {
-    PageShapeElement line;
+    draw_cmd::Shape line;
     line.stroke_style.line_width = config->borders[0].width;
     line.stroke_style.color = config->borders[0].color;
 
@@ -95,12 +95,12 @@ ReturnCode draw(
         Point(bbox.x, bbox.y),
         Point(bbox.x + bbox.w, bbox.y));
 
-    page_add_shape(page_elements, line);
+    draw_shape(drawlist, line);
   }
 
   /* draw right border  */
   if (config->borders[1].width > 0) {
-    PageShapeElement line;
+    draw_cmd::Shape line;
     line.stroke_style.line_width = config->borders[1].width;
     line.stroke_style.color = config->borders[1].color;
 
@@ -109,12 +109,12 @@ ReturnCode draw(
         Point(bbox.x + bbox.w, bbox.y),
         Point(bbox.x + bbox.w, bbox.y + bbox.h));
 
-    page_add_shape(page_elements, line);
+    draw_shape(drawlist, line);
   }
 
   /* draw top border  */
   if (config->borders[2].width > 0) {
-    PageShapeElement line;
+    draw_cmd::Shape line;
     line.stroke_style.line_width = config->borders[2].width;
     line.stroke_style.color = config->borders[2].color;
 
@@ -123,12 +123,12 @@ ReturnCode draw(
         Point(bbox.x, bbox.y + bbox.h),
         Point(bbox.x + bbox.w, bbox.y + bbox.h));
 
-    page_add_shape(page_elements, line);
+    draw_shape(drawlist, line);
   }
 
   /* draw left border  */
   if (config->borders[3].width > 0) {
-    PageShapeElement line;
+    draw_cmd::Shape line;
     line.stroke_style.line_width = config->borders[3].width;
     line.stroke_style.color = config->borders[3].color;
 
@@ -137,7 +137,7 @@ ReturnCode draw(
         Point(bbox.x, bbox.y),
         Point(bbox.x, bbox.y + bbox.h));
 
-    page_add_shape(page_elements, line);
+    draw_shape(drawlist, line);
   }
 
   return OK;

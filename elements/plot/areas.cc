@@ -55,7 +55,7 @@ ReturnCode draw_horizontal(
     PlotAreaConfig config,
     const LayoutInfo& layout,
     const Page& page,
-    PageElementList* page_elements) {
+    DrawCommandList* drawlist) {
   const auto& clip = layout.content_box;
 
   /* convert units */
@@ -106,13 +106,13 @@ ReturnCode draw_horizontal(
       &config.stroke_low_style.line_width);
 
   /* draw areas */
-  PageShapeElement shape;
+  draw_cmd::Shape shape;
   shape.fill_style = config.fill_style;
 
-  PageShapeElement stroke_high;
+  draw_cmd::Shape stroke_high;
   stroke_high.stroke_style = config.stroke_high_style;
 
-  PageShapeElement stroke_low;
+  draw_cmd::Shape stroke_low;
   stroke_low.stroke_style = config.stroke_low_style;
 
   for (size_t i = 0; i < config.x.size(); ++i) {
@@ -143,9 +143,9 @@ ReturnCode draw_horizontal(
 
   shape.path.closePath();
 
-  page_add_shape(page_elements, shape);
-  page_add_shape(page_elements, stroke_high);
-  page_add_shape(page_elements, stroke_low);
+  draw_shape(drawlist, shape);
+  draw_shape(drawlist, stroke_high);
+  draw_shape(drawlist, stroke_low);
 
   return OK;
 }
@@ -154,7 +154,7 @@ ReturnCode draw_vertical(
     PlotAreaConfig config,
     const LayoutInfo& layout,
     const Page& page,
-    PageElementList* page_elements) {
+    DrawCommandList* drawlist) {
   const auto& clip = layout.content_box;
 
   /* convert units */
@@ -205,13 +205,13 @@ ReturnCode draw_vertical(
       &config.stroke_low_style.line_width);
 
   /* draw areas */
-  PageShapeElement shape;
+  draw_cmd::Shape shape;
   shape.fill_style = config.fill_style;
 
-  PageShapeElement stroke_high;
+  draw_cmd::Shape stroke_high;
   stroke_high.stroke_style = config.stroke_high_style;
 
-  PageShapeElement stroke_low;
+  draw_cmd::Shape stroke_low;
   stroke_low.stroke_style = config.stroke_low_style;
 
   for (size_t i = 0; i < config.x.size(); ++i) {
@@ -242,9 +242,9 @@ ReturnCode draw_vertical(
 
   shape.path.closePath();
 
-  page_add_shape(page_elements, shape);
-  page_add_shape(page_elements, stroke_high);
-  page_add_shape(page_elements, stroke_low);
+  draw_shape(drawlist, shape);
+  draw_shape(drawlist, stroke_high);
+  draw_shape(drawlist, stroke_low);
 
   return OK;
 }
@@ -253,12 +253,12 @@ ReturnCode draw(
     std::shared_ptr<PlotAreaConfig> config,
     const LayoutInfo& layout,
     const Page& page,
-    PageElementList* page_elements) {
+    DrawCommandList* drawlist) {
   switch (config->direction) {
     case Direction::HORIZONTAL:
-      return draw_horizontal(*config, layout, page, page_elements);
+      return draw_horizontal(*config, layout, page, drawlist);
     case Direction::VERTICAL:
-      return draw_vertical(*config, layout, page, page_elements);
+      return draw_vertical(*config, layout, page, drawlist);
     default:
       return ERROR;
   }

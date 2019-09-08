@@ -49,7 +49,7 @@ ReturnCode draw(
     std::shared_ptr<PlotLabelsConfig> config,
     const LayoutInfo& layout,
     const Page& page,
-    PageElementList* page_elements) {
+    DrawCommandList* drawlist) {
   const auto& clip = layout.content_box;
 
   /* convert units */
@@ -89,7 +89,7 @@ ReturnCode draw(
 
     auto ax = HAlign::CENTER;
     auto ay = VAlign::BOTTOM;
-    if (auto rc = page_add_text(page, page_elements, label_text, p, ax, ay, style); rc != OK) {
+    if (auto rc = draw_text(page, drawlist, label_text, p, ax, ay, style); rc != OK) {
       return rc;
     }
   }

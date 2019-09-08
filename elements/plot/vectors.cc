@@ -62,7 +62,7 @@ ReturnCode draw(
     std::shared_ptr<PlotPointsConfig> config,
     const LayoutInfo& layout,
     const Page& page,
-    PageElementList* page_elements) {
+    DrawCommandList* drawlist) {
   const auto& clip = layout.content_box;
 
   /* convert units */
@@ -133,7 +133,7 @@ ReturnCode draw(
         ? config->shape
         : config->shapes[i % config->shapes.size()];
 
-    if (auto rc = shape({sx, sy}, {sx + dx, sy + dy}, size, color, page, page_elements); !rc) {
+    if (auto rc = shape({sx, sy}, {sx + dx, sy + dy}, size, color, page, drawlist); !rc) {
       return rc;
     }
   }

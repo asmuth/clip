@@ -57,7 +57,7 @@ ReturnCode draw(
     std::shared_ptr<PlotRectanglesConfig> config,
     const LayoutInfo& layout,
     const Page& page,
-    PageElementList* page_elements) {
+    DrawCommandList* drawlist) {
   const auto& clip = layout.content_box;
 
   /* convert units */
@@ -130,11 +130,11 @@ ReturnCode draw(
         ? config->size_y_default
         : config->size_y[i % config->size_y.size()];
 
-    PageShapeElement rect;
+    draw_cmd::Shape rect;
     rect.fill_style.color = color;
     rect.antialiasing_mode = AntialiasingMode::DISABLE;
     path_add_rectangle(&rect.path, Point(sx, sy), {size_x, size_y});
-    page_add_shape(page_elements, rect);
+    draw_shape(drawlist, rect);
   }
 
   return OK;

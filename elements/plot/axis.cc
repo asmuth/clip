@@ -293,9 +293,9 @@ static ReturnCode axis_draw_vertical(
     double y0,
     double y1,
     const Page& page,
-    PageElementList* page_elements) {
+    DrawCommandList* drawlist) {
   /* draw axis line */
-  page_add_line(page_elements, {x, y0}, {x, y1}, axis_config.border_style);
+  draw_line(drawlist, {x, y0}, {x, y1}, axis_config.border_style);
 
   /* draw ticks */
   ScaleLayout ticks;
@@ -315,8 +315,8 @@ static ReturnCode axis_draw_vertical(
     auto ty = y0 + (y1 - y0) * tick;
     auto tx = x - tick_length + tick_length * (tick_position + 1) / 2.0;
 
-    page_add_line(
-        page_elements,
+    draw_line(
+        drawlist,
         {tx, ty},
         {tx + tick_length, ty},
         axis_config.border_style);
@@ -378,7 +378,7 @@ static ReturnCode axis_draw_vertical(
         break;
     }
 
-    if (auto rc = page_add_text(page, page_elements, label_text, p, ax, ay, a, style); rc != OK) {
+    if (auto rc = draw_text(page, drawlist, label_text, p, ax, ay, a, style); rc != OK) {
       return rc;
     }
   }
@@ -413,9 +413,9 @@ static ReturnCode axis_draw_vertical(
     style.font_size = axis_config.title_font_size;
 
     auto draw_rc =
-      page_add_text(
+      draw_text(
           page,
-          page_elements,
+          drawlist,
           axis_config.title,
           p,
           HAlign::CENTER,
@@ -437,9 +437,9 @@ static ReturnCode axis_draw_horizontal(
     double x0,
     double x1,
     const Page& page,
-    PageElementList* page_elements) {
+    DrawCommandList* drawlist) {
   /* draw axis line */
-  page_add_line(page_elements, {x0, y}, {x1, y}, axis_config.border_style);
+  draw_line(drawlist, {x0, y}, {x1, y}, axis_config.border_style);
 
   /* draw ticks */
   ScaleLayout ticks;
@@ -458,8 +458,8 @@ static ReturnCode axis_draw_horizontal(
   for (const auto& tick : ticks.positions) {
     auto ty = y - tick_length + tick_length * (tick_position + 1) / 2.0;
     auto tx = x0 + (x1 - x0) * tick;
-    page_add_line(
-        page_elements,
+    draw_line(
+        drawlist,
         {tx, ty},
         {tx, ty + tick_length},
         axis_config.border_style);
@@ -520,7 +520,7 @@ static ReturnCode axis_draw_horizontal(
         break;
     }
 
-    if (auto rc = page_add_text(page, page_elements, label_text, p, ax, ay, a, style); !rc) {
+    if (auto rc = draw_text(page, drawlist, label_text, p, ax, ay, a, style); !rc) {
       return rc;
     }
   }
@@ -552,9 +552,9 @@ static ReturnCode axis_draw_horizontal(
     style.color = axis_config.title_color;
     style.font_size = axis_config.title_font_size;
 
-    auto draw_rc = page_add_text(
+    auto draw_rc = draw_text(
         page,
-        page_elements,
+        drawlist,
         axis_config.title,
         p,
         HAlign::CENTER,
@@ -574,7 +574,7 @@ ReturnCode axis_draw(
     std::shared_ptr<AxisDefinition> config,
     const LayoutInfo& layout,
     const Page& page,
-    PageElementList* page_elements) {
+    DrawCommandList* drawlist) {
   axis_convert_units(config.get(), page);
   const auto& axis = *config;
 
@@ -587,7 +587,7 @@ ReturnCode axis_draw(
           layout.content_box.x,
           layout.content_box.x + layout.content_box.w,
           page,
-          page_elements);
+          drawlist);
       break;
     case AxisAlign::TOP:
       rc = axis_draw_horizontal(
@@ -596,7 +596,7 @@ ReturnCode axis_draw(
           layout.content_box.x,
           layout.content_box.x + layout.content_box.w,
           page,
-          page_elements);
+          drawlist);
       break;
     case AxisAlign::BOTTOM:
       rc = axis_draw_horizontal(
@@ -605,7 +605,7 @@ ReturnCode axis_draw(
           layout.content_box.x,
           layout.content_box.x + layout.content_box.w,
           page,
-          page_elements);
+          drawlist);
       break;
     case AxisAlign::Y:
       rc = axis_draw_vertical(
@@ -614,7 +614,7 @@ ReturnCode axis_draw(
           layout.content_box.y,
           layout.content_box.y + layout.content_box.h,
           page,
-          page_elements);
+          drawlist);
       break;
     case AxisAlign::LEFT:
       rc = axis_draw_vertical(
@@ -623,7 +623,7 @@ ReturnCode axis_draw(
           layout.content_box.y,
           layout.content_box.y + layout.content_box.h,
           page,
-          page_elements);
+          drawlist);
       break;
     case AxisAlign::RIGHT:
       rc = axis_draw_vertical(
@@ -632,7 +632,7 @@ ReturnCode axis_draw(
           layout.content_box.y,
           layout.content_box.y + layout.content_box.h,
           page,
-          page_elements);
+          drawlist);
       break;
   }
 

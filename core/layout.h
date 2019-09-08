@@ -13,7 +13,7 @@
  */
 #pragma once
 #include "graphics/geometry.h"
-#include "graphics/page_description.h"
+#include "graphics/draw.h"
 #include "graphics/measure.h"
 #include "element.h"
 

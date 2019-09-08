@@ -16,25 +16,26 @@
 #include <vector>
 #include <string>
 
-#include "page_elements.h"
+#include "draw_cmd.h"
 #include "text_layout.h"
 
 namespace clip {
 
 /**
- * The page structure stores a number of global properties and a list of abstract
- * 2D vector graphics operations, such as rendering text and drawing polygons.
- *
- * Since the page is a low-level interface, it is recommended that you use one
- * of the helper functions, such as page_add_text or page_add_shape instead of
- * interacting directly with the elements lists. Nevertheless, directly
- * manipulating the structure is safe.
+ * The draw command list represents a list of abstract 2D vector graphics
+ * operations, such as rendering text and drawing polygons. Note that the "list"
+ * is not necessarily a flat list, but may be a tree.
+ */
+using DrawCommand = std::variant<draw_cmd::Text, draw_cmd::Shape>;
+using DrawCommandList = std::vector<DrawCommand>;
+
+/**
+ * The page structure stores a number of global drawing properties
  */
 struct Page {
   double width;
   double height;
   double dpi;
-  PageElementList elements;
   Color background_color;
   FontInfo font;
   Measure font_size;
@@ -42,25 +43,29 @@ struct Page {
   std::string text_default_language;
 };
 
-void page_add_shape(PageElementList* page_elements, PageShapeElement elem);
+void draw_shape(
+    DrawCommandList* drawlist,
+    draw_cmd::Shape elem);
 
-void page_add_path(
-    PageElementList* page_elements,
+void draw_path(
+    DrawCommandList* drawlist,
     const Path& path,
     StrokeStyle stroke_style,
     FillStyle fill_style);
 
-void page_add_line(
-    PageElementList* page_elements,
+void draw_line(
+    DrawCommandList* drawlist,
     vec2 from,
     vec2 to,
     StrokeStyle stroke_style);
 
-void page_add_text(PageElementList* page_elements, PageTextElement elem);
+void draw_text(
+    DrawCommandList* drawlist,
+    draw_cmd::Text elem);
 
-ReturnCode page_add_text(
+ReturnCode draw_text(
     const Page& page,
-    PageElementList* page_elements,
+    DrawCommandList* drawlist,
     const std::string& text,
     const Point& position,
     HAlign align_x,
@@ -68,9 +73,9 @@ ReturnCode page_add_text(
     double rotate,
     const TextStyle& text_style);
 
-ReturnCode page_add_text(
+ReturnCode draw_text(
     const Page& page,
-    PageElementList* page_elements,
+    DrawCommandList* drawlist,
     const std::string& text,
     const Point& position,
     HAlign align_x,

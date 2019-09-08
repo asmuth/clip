@@ -30,14 +30,14 @@ ReturnCode draw(
     std::shared_ptr<TextElement> config,
     const LayoutInfo& layout,
     const Page& page,
-    PageElementList* page_elements) {
+    DrawCommandList* drawlist) {
   Point p(50, 50);
   auto ax = HAlign::CENTER;
   auto ay = VAlign::BOTTOM;
   if (auto rc =
-        page_add_text(
+        draw_text(
             page,
-            page_elements,
+            drawlist,
             config->text,
             p,
             ax,

@@ -21,6 +21,10 @@
 namespace clip {
 struct Page;
 
+enum class AntialiasingMode {
+  ENABLE, DISABLE
+};
+
 /**
  * The FillStyle controls how shapes are filled in
  */

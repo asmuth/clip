@@ -12,8 +12,8 @@
  * limitations under the License.
  */
 #include "eval.h"
-#include "graphics/page_export_image.h"
-#include "graphics/page_export_svg.h"
+#include "graphics/export_image.h"
+#include "graphics/export_svg.h"
 #include "layout.h"
 #include "sexpr_parser.h"
 
@@ -58,9 +58,10 @@ ReturnCode eval(
     return rc;
   }
 
-  // draw all elements
+  // execute draw commands
+  DrawCommandList drawlist;
   for (const auto& e : roots) {
-    if (auto rc = e->draw(layout, page, &page.elements); !rc) {
+    if (auto rc = e->draw(layout, page, &drawlist); !rc) {
       return rc;
     }
   }
@@ -69,10 +70,10 @@ ReturnCode eval(
   ReturnCode export_rc;
   switch (output_format) {
     case OutputFormat::SVG:
-      export_rc = page_export_svg(page, output_buffer);
+      export_rc = page_export_svg(page, drawlist, output_buffer);
       break;
     case OutputFormat::PNG:
-      export_rc = page_export_png(page, output_buffer);
+      export_rc = page_export_png(page, drawlist, output_buffer);
       break;
   }
 

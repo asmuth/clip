@@ -65,7 +65,7 @@ ReturnCode draw_horizontal(
     PlotBarsConfig config,
     const LayoutInfo& layout,
     const Page& page,
-    PageElementList* page_elements) {
+    DrawCommandList* drawlist) {
   const auto& clip = layout.content_box;
 
   /* convert units */
@@ -141,7 +141,7 @@ ReturnCode draw_horizontal(
     path.lineTo(sx1, sy + -offset + size * 0.5);
     path.closePath();
 
-    page_add_path(page_elements, path, config.stroke_style, config.fill_style);
+    draw_path(drawlist, path, config.stroke_style, config.fill_style);
   }
 
   /* draw labels */
@@ -167,7 +167,7 @@ ReturnCode draw_horizontal(
 
     auto ax = HAlign::LEFT;
     auto ay = VAlign::CENTER;
-    if (auto rc = page_add_text(page, page_elements, text, p, ax, ay, style); rc != OK) {
+    if (auto rc = draw_text(page, drawlist, text, p, ax, ay, style); rc != OK) {
       return rc;
     }
   }
@@ -179,7 +179,7 @@ ReturnCode draw_vertical(
     PlotBarsConfig config,
     const LayoutInfo& layout,
     const Page& page,
-    PageElementList* page_elements) {
+    DrawCommandList* drawlist) {
   const auto& clip = layout.content_box;
 
   /* convert units */
@@ -257,7 +257,7 @@ ReturnCode draw_vertical(
     path.lineTo(sx + offset + size * 0.5, sy1);
     path.closePath();
 
-    page_add_path(page_elements, path, config.stroke_style, config.fill_style);
+    draw_path(drawlist, path, config.stroke_style, config.fill_style);
   }
 
   /* draw labels */
@@ -283,7 +283,7 @@ ReturnCode draw_vertical(
 
     auto ax = HAlign::CENTER;
     auto ay = VAlign::BOTTOM;
-    if (auto rc = page_add_text(page, page_elements, text, p, ax, ay, style); rc != OK) {
+    if (auto rc = draw_text(page, drawlist, text, p, ax, ay, style); rc != OK) {
       return rc;
     }
   }
@@ -295,12 +295,12 @@ ReturnCode draw(
     std::shared_ptr<PlotBarsConfig> config,
     const LayoutInfo& layout,
     const Page& page,
-    PageElementList* page_elements) {
+    DrawCommandList* drawlist) {
   switch (config->direction) {
     case Direction::HORIZONTAL:
-      return draw_horizontal(*config, layout, page, page_elements);
+      return draw_horizontal(*config, layout, page, drawlist);
     case Direction::VERTICAL:
-      return draw_vertical(*config, layout, page, page_elements);
+      return draw_vertical(*config, layout, page, drawlist);
     default:
       return ERROR;
   }

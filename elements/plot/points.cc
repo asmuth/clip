@@ -61,7 +61,7 @@ ReturnCode draw(
     std::shared_ptr<PlotPointsConfig> config,
     const LayoutInfo& layout,
     const Page& page,
-    PageElementList* page_elements) {
+    DrawCommandList* drawlist) {
   const auto& clip = layout.content_box;
 
   /* convert units */
@@ -112,7 +112,7 @@ ReturnCode draw(
         ? config->shape
         : config->shapes[i % config->shapes.size()];
 
-    if (auto rc = shape(Point(sx, sy), size, color, page, page_elements); !rc) {
+    if (auto rc = shape(Point(sx, sy), size, color, page, drawlist); !rc) {
       return rc;
     }
   }
@@ -140,7 +140,7 @@ ReturnCode draw(
 
     auto ax = HAlign::CENTER;
     auto ay = VAlign::BOTTOM;
-    if (auto rc = page_add_text(page, page_elements, label_text, p, ax, ay, style); rc != OK) {
+    if (auto rc = draw_text(page, drawlist, label_text, p, ax, ay, style); rc != OK) {
       return rc;
     }
   }

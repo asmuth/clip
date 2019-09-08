@@ -11,7 +11,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#include "page_description.h"
+#include "draw.h"
 #include <graphics/text.h>
 #include <graphics/text_shaper.h>
 #include "graphics/text_layout.h"
@@ -19,41 +19,41 @@
 
 namespace clip {
 
-void page_add_shape(PageElementList* page_elements, PageShapeElement elem) {
-  page_elements->emplace_back(std::move(elem));
+void draw_shape(DrawCommandList* drawlist, draw_cmd::Shape elem) {
+  drawlist->emplace_back(std::move(elem));
 }
 
-void page_add_path(
-    PageElementList* page_elements,
+void draw_path(
+    DrawCommandList* drawlist,
     const Path& path,
     StrokeStyle stroke_style,
     FillStyle fill_style) {
-  PageShapeElement shape;
+  draw_cmd::Shape shape;
   shape.path = path;
   shape.stroke_style = stroke_style;
   shape.fill_style = fill_style;
-  page_add_shape(page_elements, shape);
+  draw_shape(drawlist, shape);
 }
 
-void page_add_line(
-    PageElementList* page_elements,
+void draw_line(
+    DrawCommandList* drawlist,
     vec2 from,
     vec2 to,
     StrokeStyle stroke_style) {
-  PageShapeElement shape;
+  draw_cmd::Shape shape;
   shape.path.moveTo(from.x, from.y);
   shape.path.lineTo(to.x, to.y);
   shape.stroke_style = stroke_style;
-  page_add_shape(page_elements, shape);
+  draw_shape(drawlist, shape);
 }
 
-void page_add_text(PageElementList* page_elements, PageTextElement elem) {
-  page_elements->emplace_back(std::move(elem));
+void draw_text(DrawCommandList* drawlist, draw_cmd::Text elem) {
+  drawlist->emplace_back(std::move(elem));
 }
 
-ReturnCode page_add_text(
+ReturnCode draw_text(
     const Page& page,
-    PageElementList* page_elements,
+    DrawCommandList* drawlist,
     const std::string& text,
     const Point& position,
     HAlign align_x,
@@ -100,7 +100,7 @@ ReturnCode page_add_text(
     }
   }
 
-  PageTextElement op;
+  draw_cmd::Text op;
   op.text = text;
   op.glyphs = std::move(glyphs);
 
@@ -114,21 +114,21 @@ ReturnCode page_add_text(
 
   op.style = style;
   op.origin = offset;
-  page_add_text(page_elements, op);
+  draw_text(drawlist, op);
   return OK;
 }
 
-ReturnCode page_add_text(
+ReturnCode draw_text(
     const Page& page,
-    PageElementList* page_elements,
+    DrawCommandList* drawlist,
     const std::string& text,
     const Point& position,
     HAlign align_x,
     VAlign align_y,
     const TextStyle& text_style) {
-  return page_add_text(
+  return draw_text(
       page,
-      page_elements,
+      drawlist,
       text,
       position,
       align_x,

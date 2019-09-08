@@ -13,7 +13,7 @@
  */
 #include "graphics/brush.h"
 #include "graphics/color.h"
-#include "graphics/page_description.h"
+#include "graphics/draw.h"
 #include "graphics/page_export_svg.h"
 #include "graphics/text.h"
 #include "environment.h"

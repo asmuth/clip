@@ -14,13 +14,14 @@
 #pragma once
 #include <iostream>
 #include <sstream>
-#include "graphics/page_description.h"
+#include "graphics/draw.h"
 #include "utils/outputstream.h"
 
 namespace clip {
 
 ReturnCode page_export_svg(
     const Page& page,
+    const DrawCommandList& drawlist,
     std::string* buffer);
 
 } // namespace clip

@@ -16,7 +16,7 @@
 #include <memory>
 #include <string>
 #include <functional>
-#include "graphics/page_description.h"
+#include "graphics/draw.h"
 #include "sexpr.h"
 #include "return_code.h"
 
@@ -37,7 +37,7 @@ using ElementDrawFn = std::function<
     ReturnCode (
         const LayoutInfo& layout,
         const Page& page,
-        PageElementList* page_elements)>;
+        DrawCommandList* drawlist)>;
 
 using ElementSizeHintFn = std::function<
     ReturnCode (

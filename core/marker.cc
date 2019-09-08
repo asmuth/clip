@@ -78,12 +78,12 @@ Marker marker_create_circle(double border_width) {
       const auto& size,
       const auto& color,
       const auto& page,
-      auto page_elements) {
-    PageShapeElement shape;
+      auto drawlist) {
+    draw_cmd::Shape shape;
     shape.stroke_style.color = color;
     shape.stroke_style.line_width = from_unit(double(size) * border_width * 0.5);
     path_add_circle(&shape.path, pos, size * 0.5);
-    page_add_shape(page_elements, shape);
+    draw_shape(drawlist, shape);
     return OK;
   };
 }
@@ -94,11 +94,11 @@ Marker marker_create_disk() {
       const auto& size,
       const auto& color,
       const auto& page,
-      auto page_elements) {
-    PageShapeElement shape;
+      auto drawlist) {
+    draw_cmd::Shape shape;
     path_add_circle(&shape.path, pos, size * 0.5);
     shape.fill_style.color = color;
-    page_add_shape(page_elements, shape);
+    draw_shape(drawlist, shape);
     return OK;
   };
 }
@@ -109,7 +109,7 @@ Marker marker_create_unicode(const std::string& u) {
       const auto& size,
       const auto& color,
       const auto& page,
-      auto page_elements) {
+      auto drawlist) {
     TextStyle style;
     style.font = page.font;
     style.color = color;
@@ -117,7 +117,7 @@ Marker marker_create_unicode(const std::string& u) {
 
     auto ax = HAlign::CENTER;
     auto ay = VAlign::CENTER;
-    if (auto rc = page_add_text(page, page_elements, u, pos, ax, ay, style); rc != OK) {
+    if (auto rc = draw_text(page, drawlist, u, pos, ax, ay, style); rc != OK) {
       return ERROR;
     }
 

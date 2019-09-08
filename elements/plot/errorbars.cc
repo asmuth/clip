@@ -56,7 +56,7 @@ ReturnCode draw_errorbar(
     const Point& to,
     const Color& color,
     const Page& page,
-    PageElementList* page_elements) {
+    DrawCommandList* drawlist) {
   auto direction = normalize(sub(to, from));
   auto ortho = vec2{direction.y, direction.x * -1};
 
@@ -64,16 +64,16 @@ ReturnCode draw_errorbar(
   line_style.color = color;
   line_style.line_width = config.stroke_width;
 
-  page_add_line(page_elements, from, to, line_style);
+  draw_line(drawlist, from, to, line_style);
 
-  page_add_line(
-      page_elements,
+  draw_line(
+      drawlist,
       add(from, mul(ortho, config.bar_width * -0.5)),
       add(from, mul(ortho, config.bar_width * 0.5)),
       line_style);
 
-  page_add_line(
-      page_elements,
+  draw_line(
+      drawlist,
       add(to, mul(ortho, config.bar_width * -0.5)),
       add(to, mul(ortho, config.bar_width * 0.5)),
       line_style);
@@ -85,7 +85,7 @@ ReturnCode draw(
     std::shared_ptr<ErrorbarsElement> config,
     const LayoutInfo& layout,
     const Page& page,
-    PageElementList* page_elements) {
+    DrawCommandList* drawlist) {
   const auto& clip = layout.content_box;
 
   /* convert units */
@@ -178,7 +178,7 @@ ReturnCode draw(
         ? config->stroke_color
         : config->colors[i % config->colors.size()];
 
-    if (auto rc = draw_errorbar(*config, from, to, color, page, page_elements); !rc) {
+    if (auto rc = draw_errorbar(*config, from, to, color, page, drawlist); !rc) {
       return rc;
     }
   }
@@ -196,7 +196,7 @@ ReturnCode draw(
         ? config->stroke_color
         : config->colors[i % config->colors.size()];
 
-    if (auto rc = draw_errorbar(*config, from, to, color, page, page_elements); !rc) {
+    if (auto rc = draw_errorbar(*config, from, to, color, page, drawlist); !rc) {
       return rc;
     }
   }

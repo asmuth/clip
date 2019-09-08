@@ -11,12 +11,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#include "page_description.h"
+#include "draw.h"
 
 namespace clip {
 
-void page_add_text(Page* page, PageTextElement elem);
-void page_add_shape(Page* page, PageShapeElement elem);
+void draw_text(Page* page, draw_cmd::Text elem);
+void draw_shape(Page* page, draw_cmd::Shape elem);
 
 } // namespace clip
 

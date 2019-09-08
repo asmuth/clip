@@ -16,7 +16,7 @@
 #include <optional>
 
 #include "graphics/color.h"
-#include "graphics/page_description.h"
+#include "graphics/draw.h"
 #include "graphics/geometry.h"
 #include "graphics/polygon.h"
 #include "return_code.h"

@@ -59,7 +59,7 @@ ReturnCode draw(
     std::shared_ptr<PlotLinesConfig> config,
     const LayoutInfo& layout,
     const Page& page,
-    PageElementList* page_elements) {
+    DrawCommandList* drawlist) {
   const auto& clip = layout.content_box;
 
   /* convert units */
@@ -109,10 +109,10 @@ ReturnCode draw(
       }
     }
 
-    PageShapeElement elem;
+    draw_cmd::Shape elem;
     elem.path = path;
     elem.stroke_style = config->stroke_style;
-    page_add_shape(page_elements, elem);
+    draw_shape(drawlist, elem);
   }
 
   /* draw markers */
@@ -125,7 +125,7 @@ ReturnCode draw(
       const auto& color = config->marker_color;
       auto size = config->marker_size;
 
-      if (auto rc = shape(Point(sx, sy), size, color, page, page_elements); !rc) {
+      if (auto rc = shape(Point(sx, sy), size, color, page, drawlist); !rc) {
         return rc;
       }
     }
@@ -151,7 +151,7 @@ ReturnCode draw(
 
     auto ax = HAlign::CENTER;
     auto ay = VAlign::BOTTOM;
-    if (auto rc = page_add_text(page, page_elements, label_text, p, ax, ay, style); rc != OK) {
+    if (auto rc = draw_text(page, drawlist, label_text, p, ax, ay, style); rc != OK) {
       return rc;
     }
   }

@@ -246,10 +246,10 @@ ReturnCode legend_draw_borders(
     const StrokeStyle* borders,
     const Rectangle& bbox,
     const Page& page,
-    PageElementList* page_elements) {
+    DrawCommandList* drawlist) {
   /* draw top border  */
   if (borders[0].line_width > 0) {
-    PageShapeElement line;
+    draw_cmd::Shape line;
     line.stroke_style.line_width = borders[0].line_width;
     line.stroke_style.color = borders[0].color;
 
@@ -258,12 +258,12 @@ ReturnCode legend_draw_borders(
         Point(bbox.x, bbox.y),
         Point(bbox.x + bbox.w, bbox.y));
 
-    page_add_shape(page_elements, line);
+    draw_shape(drawlist, line);
   }
 
   /* draw right border  */
   if (borders[1].line_width > 0) {
-    PageShapeElement line;
+    draw_cmd::Shape line;
     line.stroke_style.line_width = borders[1].line_width;
     line.stroke_style.color = borders[1].color;
 
@@ -272,12 +272,12 @@ ReturnCode legend_draw_borders(
         Point(bbox.x + bbox.w, bbox.y),
         Point(bbox.x + bbox.w, bbox.y + bbox.h));
 
-    page_add_shape(page_elements, line);
+    draw_shape(drawlist, line);
   }
 
   /* draw top border  */
   if (borders[2].line_width > 0) {
-    PageShapeElement line;
+    draw_cmd::Shape line;
     line.stroke_style.line_width = borders[2].line_width;
     line.stroke_style.color = borders[2].color;
 
@@ -286,12 +286,12 @@ ReturnCode legend_draw_borders(
         Point(bbox.x, bbox.y + bbox.h),
         Point(bbox.x + bbox.w, bbox.y + bbox.h));
 
-    page_add_shape(page_elements, line);
+    draw_shape(drawlist, line);
   }
 
   /* draw left border  */
   if (borders[3].line_width > 0) {
-    PageShapeElement line;
+    draw_cmd::Shape line;
     line.stroke_style.line_width = borders[3].line_width;
     line.stroke_style.color = borders[3].color;
 
@@ -300,7 +300,7 @@ ReturnCode legend_draw_borders(
         Point(bbox.x, bbox.y),
         Point(bbox.x, bbox.y + bbox.h));
 
-    page_add_shape(page_elements, line);
+    draw_shape(drawlist, line);
   }
 
   return OK;
@@ -311,7 +311,7 @@ ReturnCode legend_draw_items(
     const Rectangle& bbox,
     const std::vector<Rectangle>& item_boxes,
     const Page& page,
-    PageElementList* page_elements) {
+    DrawCommandList* drawlist) {
   for (size_t i = 0; i < std::min(config.items.size(), item_boxes.size()); ++i) {
     LayoutInfo layout;
     layout.content_box.x = bbox.x + item_boxes[i].x;
@@ -319,7 +319,7 @@ ReturnCode legend_draw_items(
     layout.content_box.w = item_boxes[i].w;
     layout.content_box.h = item_boxes[i].h;
 
-    if (auto rc = config.items[i]->draw(layout, page, page_elements); !rc) {
+    if (auto rc = config.items[i]->draw(layout, page, drawlist); !rc) {
       return rc;
     }
   }
@@ -331,7 +331,7 @@ ReturnCode legend_draw(
     std::shared_ptr<LegendConfig> config,
     const LayoutInfo& layout,
     const Page& page,
-    PageElementList* page_elements) {
+    DrawCommandList* drawlist) {
   /* convert units  */
   legend_normalize(config, page);
 
@@ -391,7 +391,7 @@ ReturnCode legend_draw(
 
   /* draw background */
   if (config->background) {
-    PageShapeElement shape;
+    draw_cmd::Shape shape;
     shape.fill_style.color = *config->background;
 
     path_add_rectangle(
@@ -399,7 +399,7 @@ ReturnCode legend_draw(
         {border_box.x, border_box.y},
         {border_box.w, border_box.h});
 
-    page_add_shape(page_elements, shape);
+    draw_shape(drawlist, shape);
   }
 
   /* draw borders */
@@ -407,7 +407,7 @@ ReturnCode legend_draw(
         config->borders.data(),
         border_box,
         page,
-        page_elements);
+        drawlist);
       !rc) {
     return rc;
   }
@@ -418,7 +418,7 @@ ReturnCode legend_draw(
         content_box,
         item_boxes,
         page,
-        page_elements);
+        drawlist);
       !rc) {
     return rc;
   }

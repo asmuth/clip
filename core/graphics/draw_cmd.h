@@ -24,20 +24,9 @@
 #include "font_lookup.h"
 #include "style.h"
 
-namespace clip {
-struct PageTextElement;
-struct PageShapeElement;
-using PageElement = std::variant<
-    PageTextElement,
-    PageShapeElement>;
+namespace clip::draw_cmd {
 
-using PageElementList = std::vector<PageElement>;
-
-enum class AntialiasingMode {
-  ENABLE, DISABLE
-};
-
-struct PageTextElement {
+struct Text {
   std::string text;
   std::vector<text::GlyphPlacementGroup> glyphs;
 
@@ -48,13 +37,12 @@ struct PageTextElement {
   std::optional<mat3> transform;
 };
 
-struct PageShapeElement {
+struct Shape {
   Path path;
   StrokeStyle stroke_style;
   FillStyle fill_style;
   std::optional<AntialiasingMode> antialiasing_mode;
 };
 
-
-} // namespace clip
+} // namespace clip::draw_cmd
 

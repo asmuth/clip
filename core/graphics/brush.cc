@@ -13,7 +13,7 @@
  */
 #include <iostream>
 #include "brush.h"
-#include "graphics/page_description.h"
+#include "graphics/draw.h"
 
 namespace clip {
 

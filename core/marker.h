@@ -16,7 +16,7 @@
 #include <optional>
 
 #include "graphics/color.h"
-#include "graphics/page_description.h"
+#include "graphics/draw.h"
 #include "graphics/geometry.h"
 #include "return_code.h"
 #include "sexpr.h"
@@ -29,7 +29,7 @@ using Marker = std::function<
         const Measure& size,
         const Color& color,
         const Page& page,
-        PageElementList* page_elements)>;
+        DrawCommandList* drawlist)>;
 
 Marker marker_create_circle(double border_width);
 Marker marker_create_disk();

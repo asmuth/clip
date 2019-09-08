@@ -11,7 +11,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#include "page_export_image.h"
+#include "export_image.h"
 #include "rasterize.h"
 
 using std::bind;
@@ -26,20 +26,21 @@ struct DrawOp {
 
 ReturnCode page_export_png(
     const Page& page,
+    const DrawCommandList& drawlist,
     std::string* buffer) {
   Rasterizer rasterizer(page.width, page.height, page.dpi);
   rasterizer.clear(page.background_color);
 
-  for (const auto& elem : page.elements) {
-    auto rc = std::visit([&rasterizer] (const auto& e) {
-      using T = std::decay_t<decltype(e)>;
-      if constexpr (std::is_same_v<T, PageTextElement>)
-        return rasterizer.drawText(e.glyphs, e.style, e.transform);
-      if constexpr (std::is_same_v<T, PageShapeElement>)
-        return rasterizer.drawShape(e.path, e.stroke_style, e.fill_style);
+  for (const auto& cmd : drawlist) {
+    auto rc = std::visit([&rasterizer] (const auto& c) {
+      using T = std::decay_t<decltype(c)>;
+      if constexpr (std::is_same_v<T, draw_cmd::Text>)
+        return rasterizer.drawText(c.glyphs, c.style, c.transform);
+      if constexpr (std::is_same_v<T, draw_cmd::Shape>)
+        return rasterizer.drawShape(c.path, c.stroke_style, c.fill_style);
 
       return ERROR;
-    }, elem);
+    }, cmd);
 
     if (!rc) {
       return rc;

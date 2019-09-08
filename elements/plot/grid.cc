@@ -48,7 +48,7 @@ ReturnCode draw(
     std::shared_ptr<GridlineDefinition> config,
     const LayoutInfo& layout,
     const Page& page,
-    PageElementList* page_elements) {
+    DrawCommandList* drawlist) {
   MeasureConv conv;
   conv.dpi = page.dpi;
   conv.font_size = page.font_size;
@@ -67,8 +67,8 @@ ReturnCode draw(
   for (const auto& tick : slayout_x.positions) {
     auto line_x = bbox.x + bbox.w * tick;
 
-    page_add_line(
-        page_elements,
+    draw_line(
+        drawlist,
         Point(line_x, bbox.y),
         Point(line_x, bbox.y + bbox.h),
         config->stroke_style);
@@ -77,8 +77,8 @@ ReturnCode draw(
   for (const auto& tick : slayout_y.positions) {
     auto line_y = bbox.y + bbox.h * (1.0 - tick);
 
-    page_add_line(
-        page_elements,
+    draw_line(
+        drawlist,
         Point(bbox.x, line_y),
         Point(bbox.x + bbox.w, line_y),
         config->stroke_style);

@@ -16,7 +16,7 @@
 #include <optional>
 
 #include "graphics/color.h"
-#include "graphics/page_description.h"
+#include "graphics/draw.h"
 #include "graphics/geometry.h"
 #include "return_code.h"
 #include "sexpr.h"
@@ -30,7 +30,7 @@ using Arrow = std::function<
         const Measure& size,
         const Color& color,
         const Page& page,
-        PageElementList* page_elements)>;
+        DrawCommandList* drawlist)>;
 
 Arrow arrow_create_default();
 

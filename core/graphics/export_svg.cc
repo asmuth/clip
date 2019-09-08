@@ -12,7 +12,8 @@
  * limitations under the License.
  */
 #include "graphics/shape_hatch.h"
-#include "page_export_svg.h"
+#include "graphics/draw_cmd.h"
+#include "export_svg.h"
 
 using std::bind;
 using namespace std::placeholders;
@@ -125,7 +126,7 @@ std::string svg_poly_data(const Polygon2& poly) {
 }
 
 Status svg_shape(
-    const PageShapeElement& elem,
+    const draw_cmd::Shape& elem,
     SVGDataRef svg) {
   std::string fill_opts;
   std::string stroke_opts;
@@ -207,7 +208,7 @@ Status svg_shape(
 }
 
 Status svg_text_span_native(
-    const PageTextElement& elem,
+    const draw_cmd::Text& elem,
     SVGDataRef svg) {
   const auto& style = elem.style;
   auto origin = mul(svg->proj, vec3{elem.origin, 1});
@@ -249,7 +250,7 @@ Status svg_text_span_native(
 }
 
 Status svg_text_span_embed(
-    const PageTextElement& elem,
+    const draw_cmd::Text& elem,
     double dpi,
     SVGDataRef svg) {
   const auto& style = elem.style;
@@ -289,7 +290,7 @@ Status svg_text_span_embed(
 }
 
 Status svg_text_span(
-    const PageTextElement& elem,
+    const draw_cmd::Text& elem,
     double dpi,
     SVGDataRef svg) {
   if (elem.style.font.font_family_css.empty()) {
@@ -306,22 +307,23 @@ struct SVGDrawOp {
 
 ReturnCode page_export_svg(
     const Page& page,
+    const DrawCommandList& drawlist,
     std::string* buffer) {
   auto svg = std::make_shared<SVGData>();
   svg->width = page.width;
   svg->height = page.height;
   svg->proj = mul(translate2({0, page.height}), scale2({1, -1}));
 
-  for (const auto& elem : page.elements) {
-    auto rc = std::visit([svg, &page] (const auto& e) {
-      using T = std::decay_t<decltype(e)>;
-      if constexpr (std::is_same_v<T, PageTextElement>)
-        return svg_text_span(e, page.dpi, svg);
-      if constexpr (std::is_same_v<T, PageShapeElement>)
-        return svg_shape(e, svg);
+  for (const auto& cmd : drawlist) {
+    auto rc = std::visit([svg, &page] (const auto& c) {
+      using T = std::decay_t<decltype(c)>;
+      if constexpr (std::is_same_v<T, draw_cmd::Text>)
+        return svg_text_span(c, page.dpi, svg);
+      if constexpr (std::is_same_v<T, draw_cmd::Shape>)
+        return svg_shape(c, svg);
 
       return ERROR;
-    }, elem);
+    }, cmd);
 
     if (!rc) {
       return rc;

@@ -13,7 +13,7 @@
  */
 #include "graphics/brush.h"
 #include "graphics/color.h"
-#include "graphics/page_description.h"
+#include "graphics/draw.h"
 #include "graphics/page_export_svg.h"
 #include "graphics/shape_hatch.h"
 #include "utils/fileutil.h"
@@ -29,7 +29,7 @@ int main(int argc, char** argv) {
   clip.lineTo(100,        100);
   clip.closePath();
 
-  PageShapeElement elem;
+  draw_cmd::Shape elem;
   elem.path = shape_hatch(path_to_polygon_simple(clip), 45, 0, 40, 20);
   elem.fill_color = Color{};
 
@@ -39,7 +39,7 @@ int main(int argc, char** argv) {
   page.dpi = 240;
   page.font_size = from_unit(12);
   page.background_color = Color::fromRGB(1.0, 1.0, 1.0);
-  page_add_shape(&page, elem);
+  draw_shape(&page, elem);
 
   std::string svg;
   EXPECT_OK(page_export_svg(page, &svg));
