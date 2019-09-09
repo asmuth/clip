@@ -74,7 +74,8 @@ To build clip, you need an up-to-date C++ compiler, cmake, fmtlib, libharfbuzz,
 libfreetype and cairo. Run:
 
     $ cmake .
-    $ make -j
+    $ make -j $(($(nproc)/2)) # for linux users, or
+    $ make -j $(($(sysctl -n hw.ncpu)/2)) # for mac users 
 
 To install the `clip` binary into your system, run `make install`:
 
