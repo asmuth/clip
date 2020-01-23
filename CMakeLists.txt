@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.8)
 project(clip VERSION "0.5.0")
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/platform/cmake")
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/extra/cmake")
 
 
 # Options
@@ -40,8 +40,8 @@ find_library(fmt_LIBRARY NAMES fmt)
 # -----------------------------------------------------------------------------
 set(CMAKE_CXX_STANDARD 17)
 include_directories(${CAIRO_INCLUDE_DIRS} ${FREETYPE_INCLUDE_DIRS} ${HARFBUZZ_INCLUDE_DIRS} ${PNG_INCLUDE_DIRS}})
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/core)
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/core/utils)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src/utils)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
@@ -70,15 +70,15 @@ endif()
 
 # Build: Config
 # -----------------------------------------------------------------------------
-configure_file(core/config.h.in config.h)
+configure_file(src/config.h.in config.h)
 message(STATUS "Config Options: text_backend=${FVIZ_TEXT_BACKEND}")
 message(STATUS "Config Options: text_enable_bidi=${FVIZ_TEXT_ENABLE_BIDI}")
 
 
 # Build: clip Library
 # -----------------------------------------------------------------------------
-file(GLOB source_files "core/*.cc" "core/**/*.cc" "elements/*.cc" "elements/**/*.cc")
-list(REMOVE_ITEM source_files "${CMAKE_SOURCE_DIR}/core/cli.cc")
+file(GLOB source_files "src/*.cc" "src/**/*.cc" "src/elements/**/*.cc" )
+list(REMOVE_ITEM source_files "${CMAKE_SOURCE_DIR}/src/cli.cc")
 add_library(clip OBJECT ${source_files})
 set_property(TARGET clip PROPERTY POSITION_INDEPENDENT_CODE 1)
 set(FVIZ_LIB_LDFLAGS ${CAIRO_LIBRARIES} ${FREETYPE_LIBRARIES} ${HARFBUZZ_LIBRARIES} ${HARFBUZZ_ICU_LIBRARIES} ${PNG_LIBRARIES} ${FONTCONFIG_LIBRARIES} ${FRIBIDI_LIBRARIES} ${fmt_LIBRARY})
@@ -87,12 +87,12 @@ set_target_properties(clip-lib-a PROPERTIES OUTPUT_NAME clip)
 add_library(clip-lib-so SHARED $<TARGET_OBJECTS:clip>)
 target_link_libraries(clip-lib-so ${FVIZ_LIB_LDFLAGS})
 set_target_properties(clip-lib-so PROPERTIES OUTPUT_NAME clip)
-set_target_properties(clip-lib-so PROPERTIES PUBLIC_HEADER "core/api.h")
+set_target_properties(clip-lib-so PROPERTIES PUBLIC_HEADER "src/api.h")
 set_target_properties(clip-lib-so PROPERTIES CXX_VISIBILITY_PRESET hidden)
 
 # Build: CLI
 # -----------------------------------------------------------------------------
-add_executable(clip-cli "core/cli.cc" $<TARGET_OBJECTS:clip>)
+add_executable(clip-cli "src/cli.cc" $<TARGET_OBJECTS:clip>)
 target_link_libraries(clip-cli ${FVIZ_LIB_LDFLAGS})
 set_target_properties(clip-cli PROPERTIES OUTPUT_NAME clip)
 
@@ -107,17 +107,17 @@ install(TARGETS clip-cli DESTINATION bin)
 # Testing
 # -----------------------------------------------------------------------------
 add_custom_target(test
-    COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_runner.sh
+    COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/test/test_runner.sh
     DEPENDS clip-cli)
 
-add_custom_target(test-examples ${CMAKE_CURRENT_SOURCE_DIR}/examples/update_tests.sh)
+add_custom_target(test-examples ${CMAKE_CURRENT_SOURCE_DIR}/doc/examples/update_tests.sh)
 add_dependencies(test test-examples)
 
 
 # Examples
 # -----------------------------------------------------------------------------
 add_custom_target(examples)
-file(GLOB example_files "examples/**/*.clp")
+file(GLOB example_files "doc/examples/**/*.clp")
 foreach(example_path ${example_files})
   get_filename_component(example_name ${example_path} NAME_WE)
   get_filename_component(example_srcdir ${example_path} DIRECTORY)
@@ -134,5 +134,5 @@ endforeach()
 # -----------------------------------------------------------------------------
 add_custom_target(docs
     COMMAND mkdir -p ${CMAKE_CURRENT_BINARY_DIR}/wwwdocs
-    COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/manual/web/build.sh ${CMAKE_CURRENT_BINARY_DIR}/wwwdocs)
+    COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/doc/web/build.sh ${CMAKE_CURRENT_BINARY_DIR}/wwwdocs)
 

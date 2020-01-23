@@ -19,6 +19,5 @@ CTestTestfile.cmake
 Testing
 install_manifest.txt
 wwwdocs
-test
 config.h
 test-results
