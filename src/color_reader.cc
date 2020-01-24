@@ -11,6 +11,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+#include "context.h"
 #include "data.h"
 #include "color_reader.h"
 #include "sexpr_util.h"
@@ -20,7 +21,7 @@ using namespace std::placeholders;
 namespace clip {
 
 ReturnCode color_read(
-    const Environment& env,
+    const Context* ctx,
     const Expr* expr,
     Color* color) {
   if (expr_is_value(expr)) {
@@ -35,9 +36,9 @@ ReturnCode color_read(
 
     // color palette index
     if (StringUtil::isDigitString(value)) {
-      if (!env.color_palette.empty()) {
-        *color = env.color_palette[
-            (std::stol(value) - 1) % env.color_palette.size()];
+      if (!ctx->color_palette.empty()) {
+        *color = ctx->color_palette[
+            (std::stol(value) - 1) % ctx->color_palette.size()];
       }
 
       return OK;
@@ -87,7 +88,7 @@ ReturnCode color_read(
 }
 
 ReturnCode color_read_string(
-    const Environment& env,
+    const Context* ctx,
     const std::string& value,
     Color* color) {
 
@@ -100,8 +101,8 @@ ReturnCode color_read_string(
 
   // color palette index
   if (StringUtil::isDigitString(value)) {
-    if (!env.color_palette.empty()) {
-      *color = env.color_palette[std::stoul(value) % env.color_palette.size()];
+    if (!ctx->color_palette.empty()) {
+      *color = ctx->color_palette[std::stoul(value) % ctx->color_palette.size()];
     }
 
     return OK;
@@ -114,11 +115,11 @@ ReturnCode color_read_string(
 }
 
 ReturnCode color_read_opt(
-    const Environment& env,
+    const Context* ctx,
     const Expr* expr,
     std::optional<Color>* color) {
   Color c;
-  if (auto rc = color_read(env, expr, &c); !rc) {
+  if (auto rc = color_read(ctx, expr, &c); !rc) {
     return rc;
   }
 
@@ -127,7 +128,7 @@ ReturnCode color_read_opt(
 }
 
 ReturnCode color_map_read_gradient(
-    const Environment& env,
+    const Context* ctx,
     const Expr* expr,
     ColorMap* color_map) {
   std::vector<std::pair<double, Color>> gradient;
@@ -154,7 +155,7 @@ ReturnCode color_map_read_gradient(
     }
 
     Color color;
-    if (auto rc = color_read(env, args[1], &color); !rc) {
+    if (auto rc = color_read(ctx, args[1], &color); !rc) {
       return rc;
     }
 
@@ -166,7 +167,7 @@ ReturnCode color_map_read_gradient(
 }
 
 ReturnCode color_map_read_steps(
-    const Environment& env,
+    const Context* ctx,
     const Expr* expr,
     ColorMap* color_map) {
   std::vector<std::pair<double, Color>> steps;
@@ -193,7 +194,7 @@ ReturnCode color_map_read_steps(
     }
 
     Color color;
-    if (auto rc = color_read(env, args[1], &color); !rc) {
+    if (auto rc = color_read(ctx, args[1], &color); !rc) {
       return rc;
     }
 
@@ -205,7 +206,7 @@ ReturnCode color_map_read_steps(
 }
 
 ReturnCode color_map_read(
-    const Environment& env,
+    const Context* ctx,
     const Expr* expr,
     ColorMap* color_map) {
   if (!expr || !expr_is_list(expr)) {
@@ -218,11 +219,11 @@ ReturnCode color_map_read(
   expr = expr_get_list(expr);
 
   if (expr_is_value(expr, "gradient")) {
-    return color_map_read_gradient(env, expr_next(expr), color_map);
+    return color_map_read_gradient(ctx, expr_next(expr), color_map);
   }
 
   if (expr_is_value(expr, "steps")) {
-    return color_map_read_steps(env, expr_next(expr), color_map);
+    return color_map_read_steps(ctx, expr_next(expr), color_map);
   }
 
   return errorf(
@@ -234,7 +235,7 @@ ReturnCode color_map_read(
 }
 
 ReturnCode color_palette_read(
-    const Environment& env,
+    const Context* ctx,
     const Expr* expr,
     ColorPalette* color_palette) {
   color_palette->clear();
@@ -246,7 +247,7 @@ ReturnCode color_palette_read(
   if (expr_is_list(expr)) {
     Color c;
     for (auto arg = expr_get_list(expr); arg; arg = expr_next(arg)) {
-      if (auto rc = color_read(env, arg, &c); !rc) {
+      if (auto rc = color_read(ctx, arg, &c); !rc) {
         return rc;
       }
 

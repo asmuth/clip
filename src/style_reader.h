@@ -20,17 +20,17 @@
 namespace clip {
 
 ReturnCode stroke_style_read(
-    const Environment& env,
+    const Context* ctx,
     const Expr* expr,
     StrokeStyle* style);
 
 ReturnCode fill_style_read(
-    const Environment& env,
+    const Context* ctx,
     const Expr* expr,
     FillStyle* style);
 
 ReturnCode fill_style_read_solid(
-    const Environment& env,
+    const Context* ctx,
     const Expr* expr,
     FillStyle* style);
 

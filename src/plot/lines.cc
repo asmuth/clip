@@ -14,7 +14,6 @@
 #include "lines.h"
 
 #include "data.h"
-#include "environment.h"
 #include "sexpr_conv.h"
 #include "sexpr_util.h"
 #include "scale.h"
@@ -55,17 +54,14 @@ struct PlotLinesConfig {
   Measure label_font_size;
 };
 
-ReturnCode draw(
-    std::shared_ptr<PlotLinesConfig> config,
-    const LayoutInfo& layout,
-    const Page& page,
-    DrawCommandList* drawlist) {
-  const auto& clip = layout.content_box;
-
+ReturnCode draw_lines(
+    Context* ctx,
+    std::shared_ptr<PlotLinesConfig> config) {
+  const auto& clip = context_get_clip(ctx);
   /* convert units */
   convert_units(
       {
-        bind(&convert_unit_typographic, page.dpi, page.font_size, _1),
+        bind(&convert_unit_typographic, ctx->dpi, ctx->font_size, _1),
         bind(&convert_unit_user, scale_translate_fn(config->scale_x), _1),
         bind(&convert_unit_relative, clip.w, _1)
       },
@@ -74,7 +70,7 @@ ReturnCode draw(
 
   convert_units(
       {
-        bind(&convert_unit_typographic, page.dpi, page.font_size, _1),
+        bind(&convert_unit_typographic, ctx->dpi, ctx->font_size, _1),
         bind(&convert_unit_user, scale_translate_fn(config->scale_y), _1),
         bind(&convert_unit_relative, clip.h, _1)
       },
@@ -82,9 +78,9 @@ ReturnCode draw(
       &*config->y.end());
 
   MeasureConv conv;
-  conv.dpi = page.dpi;
-  conv.font_size = page.font_size;
-  conv.parent_size = page.font_size;
+  conv.dpi = ctx->dpi;
+  conv.font_size = ctx->font_size;
+  conv.parent_size = ctx->font_size;
 
   measure_normalize(conv, &config->stroke_style.line_width);
   measure_normalize(conv, &config->label_padding);
@@ -112,7 +108,7 @@ ReturnCode draw(
     draw_cmd::Shape elem;
     elem.path = path;
     elem.stroke_style = config->stroke_style;
-    draw_shape(drawlist, elem);
+    draw_shape(ctx, elem);
   }
 
   /* draw markers */
@@ -125,7 +121,7 @@ ReturnCode draw(
       const auto& color = config->marker_color;
       auto size = config->marker_size;
 
-      if (auto rc = shape(Point(sx, sy), size, color, page, drawlist); !rc) {
+      if (auto rc = shape(ctx, Point(sx, sy), size, color); !rc) {
         return rc;
       }
     }
@@ -151,7 +147,7 @@ ReturnCode draw(
 
     auto ax = HAlign::CENTER;
     auto ay = VAlign::BOTTOM;
-    if (auto rc = draw_text(page, drawlist, label_text, p, ax, ay, style); rc != OK) {
+    if (auto rc = draw_text(ctx, label_text, p, ax, ay, style); rc != OK) {
       return rc;
     }
   }
@@ -159,18 +155,17 @@ ReturnCode draw(
   return OK;
 }
 
-ReturnCode build(
-    const Environment& env,
-    const Expr* expr,
-    ElementRef* elem) {
+ReturnCode draw_lines(
+    Context* ctx,
+    const Expr* expr) {
   /* set defaults from environment */
   auto c = std::make_shared<PlotLinesConfig>();
-  c->label_font = env.font;
-  c->label_font_size = env.font_size;
-  c->stroke_style.color = env.foreground_color;
+  c->label_font = ctx->font;
+  c->label_font_size = ctx->font_size;
+  c->stroke_style.color = ctx->foreground_color;
   c->stroke_style.line_width = from_pt(kDefaultLineWidthPT);
   c->marker_shape = marker_create_disk();
-  c->marker_color = env.foreground_color;
+  c->marker_color = ctx->foreground_color;
 
   /* parse properties */
   std::vector<std::string> data_x;
@@ -192,19 +187,19 @@ ReturnCode build(
     {
       "color",
       expr_calln_fn({
-        bind(&color_read, env, _1, &c->stroke_style.color),
-        bind(&color_read, env, _1, &c->marker_color),
+        bind(&color_read, ctx, _1, &c->stroke_style.color),
+        bind(&color_read, ctx, _1, &c->marker_color),
       })
     },
     {"stroke-width", bind(&measure_read, _1, &c->stroke_style.line_width)},
-    {"stroke-style", bind(&stroke_style_read, env, _1, &c->stroke_style)},
-    {"stroke-color", bind(&color_read, env, _1, &c->stroke_style.color)},
+    {"stroke-style", bind(&stroke_style_read, ctx, _1, &c->stroke_style)},
+    {"stroke-color", bind(&color_read, ctx, _1, &c->stroke_style.color)},
     {"marker-size", bind(&measure_read, _1, &c->marker_size)},
     {"marker-shape", bind(&marker_configure, _1, &c->marker_shape)},
-    {"marker-color", bind(&color_read, env, _1, &c->marker_color)},
+    {"marker-color", bind(&color_read, ctx, _1, &c->marker_color)},
     {"labels", bind(&data_load_strings, _1, &c->labels)},
     {"label-font-size", bind(&measure_read, _1, &c->label_font_size)},
-    {"label-color", bind(&color_read, env, _1, &c->label_color)},
+    {"label-color", bind(&color_read, ctx, _1, &c->label_color)},
     {"label-padding", bind(&measure_read, _1, &c->label_padding)},
   });
 
@@ -237,7 +232,13 @@ ReturnCode build(
   if (c->x.size() != c->y.size()) {
     return error(
         ERROR,
-        "the length of the 'data-x' and 'data-y' properties must be equal");
+        "The length of the 'data-x' and 'data-y' properties must be equal");
+  }
+
+  if (c->x.empty() || c->y.empty()) {
+    return error(
+        ERROR,
+        "The dataset is empty");
   }
 
   /* group data */
@@ -248,10 +249,8 @@ ReturnCode build(
     c->groups.emplace_back(g);
   }
 
-  /* return element */
-  *elem = std::make_shared<Element>();
-  (*elem)->draw = bind(&draw, c, _1, _2, _3);
-  return OK;
+  /* draw */
+  return draw_lines(ctx, c);
 }
 
 } // namespace clip::elements::plot::lines

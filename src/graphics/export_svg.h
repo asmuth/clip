@@ -19,9 +19,8 @@
 
 namespace clip {
 
-ReturnCode page_export_svg(
-    const Page& page,
-    const DrawCommandList& drawlist,
+ReturnCode export_svg(
+    const Context* ctx,
     std::string* buffer);
 
 } // namespace clip

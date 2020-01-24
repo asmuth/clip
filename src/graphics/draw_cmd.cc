@@ -12,6 +12,7 @@
  * limitations under the License.
  */
 #include "draw.h"
+#include "context.h"
 #include <graphics/text.h>
 #include <graphics/text_shaper.h>
 #include "graphics/text_layout.h"
@@ -19,24 +20,12 @@
 
 namespace clip {
 
-void draw_shape(DrawCommandList* drawlist, draw_cmd::Shape elem) {
-  drawlist->emplace_back(std::move(elem));
-}
-
-void draw_path(
-    DrawCommandList* drawlist,
-    const Path& path,
-    StrokeStyle stroke_style,
-    FillStyle fill_style) {
-  draw_cmd::Shape shape;
-  shape.path = path;
-  shape.stroke_style = stroke_style;
-  shape.fill_style = fill_style;
-  draw_shape(drawlist, shape);
+void draw_shape(Context* ctx, draw_cmd::Shape elem) {
+  ctx->drawlist.emplace_back(std::move(elem));
 }
 
 void draw_line(
-    DrawCommandList* drawlist,
+    Context* ctx,
     vec2 from,
     vec2 to,
     StrokeStyle stroke_style) {
@@ -44,16 +33,15 @@ void draw_line(
   shape.path.moveTo(from.x, from.y);
   shape.path.lineTo(to.x, to.y);
   shape.stroke_style = stroke_style;
-  draw_shape(drawlist, shape);
+  draw_shape(ctx, shape);
 }
 
-void draw_text(DrawCommandList* drawlist, draw_cmd::Text elem) {
-  drawlist->emplace_back(std::move(elem));
+void draw_text(Context* ctx, draw_cmd::Text elem) {
+  ctx->drawlist.emplace_back(std::move(elem));
 }
 
 ReturnCode draw_text(
-    const Page& page,
-    DrawCommandList* drawlist,
+    Context* ctx,
     const std::string& text,
     const Point& position,
     HAlign align_x,
@@ -70,11 +58,11 @@ ReturnCode draw_text(
   span.language = style.default_language;
 
   if (span.script.empty()) {
-    span.script = page.text_default_script;
+    span.script = ctx->text_default_script;
   }
 
   if (span.language.empty()) {
-    span.language = page.text_default_language;
+    span.language = ctx->text_default_language;
   }
 
   text::TextLine line;
@@ -87,7 +75,7 @@ ReturnCode draw_text(
 
   Rectangle bbox;
   std::vector<text::GlyphPlacementGroup> glyphs;
-  if (auto rc = text::text_layout_line(line, page.dpi, &glyphs, &bbox); !rc) {
+  if (auto rc = text::text_layout_line(line, ctx->dpi, &glyphs, &bbox); !rc) {
     return rc;
   }
 
@@ -114,21 +102,19 @@ ReturnCode draw_text(
 
   op.style = style;
   op.origin = offset;
-  draw_text(drawlist, op);
+  draw_text(ctx, op);
   return OK;
 }
 
 ReturnCode draw_text(
-    const Page& page,
-    DrawCommandList* drawlist,
+    Context* ctx,
     const std::string& text,
     const Point& position,
     HAlign align_x,
     VAlign align_y,
     const TextStyle& text_style) {
   return draw_text(
-      page,
-      drawlist,
+      ctx,
       text,
       position,
       align_x,

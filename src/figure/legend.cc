@@ -12,6 +12,7 @@
  * limitations under the License.
  */
 #include "legend.h"
+#include "legend_item.h"
 
 #include "data.h"
 #include "environment.h"
@@ -42,12 +43,7 @@ struct LegendConfig {
   std::array<Measure, 4> padding;
   std::array<StrokeStyle, 4> borders;
   std::optional<Color> background;
-  std::vector<ElementRef> items;
-};
-
-struct LegendItemConfig {
-  std::string elem_name;
-  ExprStorage opts;
+  std::vector<LegendItem> items;
 };
 
 LegendConfig::LegendConfig() :
@@ -55,25 +51,24 @@ LegendConfig::LegendConfig() :
     position_vert(VAlign::TOP),
     item_flow(false) {}
 
-
 void legend_normalize(
-    std::shared_ptr<LegendConfig> config,
-    const Page& layer) {
+    Context* ctx,
+    LegendConfig* config) {
   for (auto& m : config->margins) {
-    convert_unit_typographic(layer.dpi, layer.font_size, &m);
+    convert_unit_typographic(ctx->dpi, ctx->font_size, &m);
   }
 
   for (auto& m : config->padding) {
-    convert_unit_typographic(layer.dpi, layer.font_size, &m);
+    convert_unit_typographic(ctx->dpi, ctx->font_size, &m);
   }
 
-  convert_unit_typographic(layer.dpi, layer.font_size, &config->item_row_padding);
-  convert_unit_typographic(layer.dpi, layer.font_size, &config->item_column_padding);
+  convert_unit_typographic(ctx->dpi, ctx->font_size, &config->item_row_padding);
+  convert_unit_typographic(ctx->dpi, ctx->font_size, &config->item_column_padding);
 }
 
 ReturnCode legend_layout_item_rows(
-    const LegendConfig& config,
-    const Page& layer,
+    Context* ctx,
+    LegendConfig* config,
     const std::optional<double> max_width,
     const std::optional<double> max_height,
     double* min_width,
@@ -83,11 +78,7 @@ ReturnCode legend_layout_item_rows(
   double m_width = 0;
   double m_height = 0;
 
-  for (const auto& e : config.items) {
-    if (!e->size_hint) {
-      continue; // FIXME warn
-    }
-
+  for (auto& e : config->items) {
     auto p_width = max_width;
     auto p_height = max_height;
     if (p_height) {
@@ -96,12 +87,12 @@ ReturnCode legend_layout_item_rows(
 
     double e_width = 0;
     double e_height = 0;
-    if (auto rc = e->size_hint(layer, p_width, p_height, &e_width, &e_height); !rc) {
+    if (auto rc = legend_item_calculate_size(ctx, &e, &e_width, &e_height); !rc) {
       return rc;
     }
 
     if (m_height > 0) {
-      m_height += config.item_row_padding;
+      m_height += config->item_row_padding;
     }
 
     Rectangle item_box;
@@ -124,8 +115,8 @@ ReturnCode legend_layout_item_rows(
 }
 
 ReturnCode legend_layout_item_flow(
-    const LegendConfig& config,
-    const Page& layer,
+    Context* ctx,
+    LegendConfig* config,
     const std::optional<double> max_width,
     const std::optional<double> max_height,
     double* min_width,
@@ -138,23 +129,19 @@ ReturnCode legend_layout_item_flow(
   size_t r_begin = item_boxes ? item_boxes->size() : 0;
   double r_width = 0;
   double r_height = 0;
-  for (const auto& e : config.items) {
-    if (!e->size_hint) {
-      continue; // FIXME warn
-    }
-
+  for (auto& e : config->items) {
     double e_width = 0;
     double e_height = 0;
-    if (auto rc = e->size_hint(layer, {}, {}, &e_width, &e_height); !rc) {
+    if (auto rc = legend_item_calculate_size(ctx, &e, &e_width, &e_height); !rc) {
       return rc;
     }
 
     if (r_width > 0) {
-      r_width += config.item_column_padding;
+      r_width += config->item_column_padding;
     }
 
     if (max_width && r_width + e_width > max_width) {
-      m_height += r_height + config.item_row_padding;
+      m_height += r_height + config->item_row_padding;
       r_width = 0;
       r_height = 0;
       r_begin = item_boxes ? item_boxes->size() : 0;
@@ -186,15 +173,15 @@ ReturnCode legend_layout_item_flow(
 }
 
 ReturnCode legend_layout(
-    std::shared_ptr<LegendConfig> config,
-    const Page& layer,
+    Context* ctx,
+    LegendConfig* config,
     std::optional<double> max_width,
     std::optional<double> max_height,
     double* min_width,
     double* min_height,
     std::vector<Rectangle>* item_boxes) {
   /* convert units  */
-  legend_normalize(config, layer);
+  legend_normalize(ctx, config);
 
   /* remove padding */
   if (max_width) {
@@ -210,8 +197,8 @@ ReturnCode legend_layout(
   if (config->item_flow) {
     layout_rc =
         legend_layout_item_flow(
-            *config,
-            layer,
+            ctx,
+            config,
             max_width,
             max_height,
             min_width,
@@ -220,8 +207,8 @@ ReturnCode legend_layout(
   } else {
     layout_rc =
         legend_layout_item_rows(
-            *config,
-            layer,
+            ctx,
+            config,
             max_width,
             max_height,
             min_width,
@@ -243,10 +230,9 @@ ReturnCode legend_layout(
 }
 
 ReturnCode legend_draw_borders(
+    Context* ctx,
     const StrokeStyle* borders,
-    const Rectangle& bbox,
-    const Page& page,
-    DrawCommandList* drawlist) {
+    const Rectangle& bbox) {
   /* draw top border  */
   if (borders[0].line_width > 0) {
     draw_cmd::Shape line;
@@ -258,7 +244,7 @@ ReturnCode legend_draw_borders(
         Point(bbox.x, bbox.y),
         Point(bbox.x + bbox.w, bbox.y));
 
-    draw_shape(drawlist, line);
+    draw_shape(ctx, line);
   }
 
   /* draw right border  */
@@ -272,7 +258,7 @@ ReturnCode legend_draw_borders(
         Point(bbox.x + bbox.w, bbox.y),
         Point(bbox.x + bbox.w, bbox.y + bbox.h));
 
-    draw_shape(drawlist, line);
+    draw_shape(ctx, line);
   }
 
   /* draw top border  */
@@ -286,7 +272,7 @@ ReturnCode legend_draw_borders(
         Point(bbox.x, bbox.y + bbox.h),
         Point(bbox.x + bbox.w, bbox.y + bbox.h));
 
-    draw_shape(drawlist, line);
+    draw_shape(ctx, line);
   }
 
   /* draw left border  */
@@ -300,26 +286,25 @@ ReturnCode legend_draw_borders(
         Point(bbox.x, bbox.y),
         Point(bbox.x, bbox.y + bbox.h));
 
-    draw_shape(drawlist, line);
+    draw_shape(ctx, line);
   }
 
   return OK;
 }
 
 ReturnCode legend_draw_items(
-    const LegendConfig& config,
+    Context* ctx,
+    LegendConfig* config,
     const Rectangle& bbox,
-    const std::vector<Rectangle>& item_boxes,
-    const Page& page,
-    DrawCommandList* drawlist) {
-  for (size_t i = 0; i < std::min(config.items.size(), item_boxes.size()); ++i) {
-    LayoutInfo layout;
-    layout.content_box.x = bbox.x + item_boxes[i].x;
-    layout.content_box.y = bbox.y + bbox.h - item_boxes[i].y - item_boxes[i].h;
-    layout.content_box.w = item_boxes[i].w;
-    layout.content_box.h = item_boxes[i].h;
+    const std::vector<Rectangle>& item_boxes) {
+  for (size_t i = 0; i < std::min(config->items.size(), item_boxes.size()); ++i) {
+    Rectangle item_bbox;
+    item_bbox.x = bbox.x + item_boxes[i].x;
+    item_bbox.y = bbox.y + bbox.h - item_boxes[i].y - item_boxes[i].h;
+    item_bbox.w = item_boxes[i].w;
+    item_bbox.h = item_boxes[i].h;
 
-    if (auto rc = config.items[i]->draw(layout, page, drawlist); !rc) {
+    if (auto rc = legend_item_draw(ctx, &config->items[i], item_bbox); !rc) {
       return rc;
     }
   }
@@ -328,16 +313,15 @@ ReturnCode legend_draw_items(
 }
 
 ReturnCode legend_draw(
-    std::shared_ptr<LegendConfig> config,
-    const LayoutInfo& layout,
-    const Page& page,
-    DrawCommandList* drawlist) {
+    Context* ctx,
+    LegendConfig* config) {
   /* convert units  */
-  legend_normalize(config, page);
+  legend_normalize(ctx, config);
 
   /* calculate boxes */
+  const auto& bbox = context_get_clip(ctx);
   auto parent_box = layout_margin_box(
-      layout.content_box,
+      bbox,
       config->margins[0],
       config->margins[1],
       config->margins[2],
@@ -350,7 +334,7 @@ ReturnCode legend_draw(
     auto ph = parent_box.h;
     double ew = 0;
     double eh = 0;
-    if (auto rc = legend_layout(config, page, pw, ph, &ew, &eh, &item_boxes); !rc) {
+    if (auto rc = legend_layout(ctx, config, pw, ph, &ew, &eh, &item_boxes); !rc) {
       return rc;
     }
 
@@ -393,32 +377,25 @@ ReturnCode legend_draw(
   if (config->background) {
     draw_cmd::Shape shape;
     shape.fill_style.color = *config->background;
-
-    path_add_rectangle(
-        &shape.path,
-        {border_box.x, border_box.y},
-        {border_box.w, border_box.h});
-
-    draw_shape(drawlist, shape);
+    path_add_rectangle(&shape.path, border_box);
+    draw_shape(ctx, shape);
   }
 
   /* draw borders */
   if (auto rc = legend_draw_borders(
+        ctx,
         config->borders.data(),
-        border_box,
-        page,
-        drawlist);
+        border_box);
       !rc) {
     return rc;
   }
 
   /* draw items */
   if (auto rc = legend_draw_items(
-        *config,
+        ctx,
+        config,
         content_box,
-        item_boxes,
-        page,
-        drawlist);
+        item_boxes);
       !rc) {
     return rc;
   }
@@ -478,20 +455,25 @@ ReturnCode legend_configure_position(
 }
 
 ReturnCode configure_item(
-    const std::string& item_elem_name,
+    Context* ctx,
     const Expr* expr,
-    std::vector<LegendItemConfig>* items) {
-  LegendItemConfig item;
-  item.elem_name = item_elem_name;
-  item.opts = expr_clone(expr_get_list(expr));
-  items->emplace_back(std::move(item));
+    std::vector<LegendItem>* items) {
+  if (!expr_is_list(expr)) {
+    return {ERROR, "expected a list"};
+  }
+
+  LegendItem item;
+  if (auto rc = legend_item_configure(ctx, expr_get_list(expr), &item); !rc) {
+    return rc;
+  }
+
+  items->push_back(std::move(item));
   return OK;
 }
 
-ReturnCode build(
-    const Environment& env,
-    const Expr* expr,
-    ElementRef* elem) {
+ReturnCode legend_draw(
+    Context* ctx,
+    const Expr* expr) {
   /* inherit defaults */
   auto config = std::make_shared<LegendConfig>();
   config->item_row_padding = from_em(.3);
@@ -499,12 +481,10 @@ ReturnCode build(
   config->margins = std::array<Measure, 4>{from_em(.6), from_em(.6), from_em(.6), from_em(.6)};
   config->padding = std::array<Measure, 4>{from_em(.6), from_em(1), from_em(.6), from_em(1)};
   for (size_t i = 0; i < 4; ++i) {
-    config->borders[i].color = env.foreground_color;
+    config->borders[i].color = ctx->foreground_color;
   }
 
   /* parse exprerties */
-  std::vector<LegendItemConfig> items;
-
   auto config_rc = expr_walk_map(expr_next(expr), {
     {
       "position",
@@ -517,8 +497,7 @@ ReturnCode build(
     {"item-row-padding", bind(&measure_read, _1, &config->item_row_padding)},
     {"item-column-padding", bind(&measure_read, _1, &config->item_column_padding)},
     {"item-flow", bind(&expr_to_switch, _1, &config->item_flow)},
-    {"item", bind(&configure_item, "legend/item", _1, &items)},
-    {"extra", bind(&element_build_list, env, _1, &config->items)},
+    {"item", bind(&configure_item, ctx, _1, &config->items)},
     {
       "padding",
       expr_calln_fn({
@@ -557,16 +536,16 @@ ReturnCode build(
     {
       "border-color",
       expr_calln_fn({
-        bind(&color_read, env, _1, &config->borders[0].color),
-        bind(&color_read, env, _1, &config->borders[1].color),
-        bind(&color_read, env, _1, &config->borders[2].color),
-        bind(&color_read, env, _1, &config->borders[3].color),
+        bind(&color_read, ctx, _1, &config->borders[0].color),
+        bind(&color_read, ctx, _1, &config->borders[1].color),
+        bind(&color_read, ctx, _1, &config->borders[2].color),
+        bind(&color_read, ctx, _1, &config->borders[3].color),
       })
     },
-    {"border-top-color", bind(&color_read, env, _1, &config->borders[0].color)},
-    {"border-right-color", bind(&color_read, env, _1, &config->borders[1].color)},
-    {"border-bottom-color", bind(&color_read, env, _1, &config->borders[2].color)},
-    {"border-left-color", bind(&color_read, env, _1, &config->borders[3].color)},
+    {"border-top-color", bind(&color_read, ctx, _1, &config->borders[0].color)},
+    {"border-right-color", bind(&color_read, ctx, _1, &config->borders[1].color)},
+    {"border-bottom-color", bind(&color_read, ctx, _1, &config->borders[2].color)},
+    {"border-left-color", bind(&color_read, ctx, _1, &config->borders[3].color)},
     {
       "border-width",
       expr_calln_fn({
@@ -580,31 +559,14 @@ ReturnCode build(
     {"border-right-width", bind(&measure_read, _1, &config->borders[1].line_width)},
     {"border-bottom-width", bind(&measure_read, _1, &config->borders[2].line_width)},
     {"border-left-width", bind(&measure_read, _1, &config->borders[3].line_width)},
-    {"background", bind(&color_read_opt, env, _1, &config->background)},
+    {"background", bind(&color_read_opt, ctx, _1, &config->background)},
   });
 
   if (!config_rc) {
     return config_rc;
   }
 
-  /* build the items */
-  for (const auto& item : items) {
-    auto elem_config = expr_build(
-        item.elem_name,
-        expr_clone(item.opts.get()));
-
-    ElementRef elem;
-    if (auto rc = element_build_macro(env, elem_config.get(), &elem); !rc) {
-      return rc;
-    }
-
-    config->items.emplace_back(elem);
-  }
-
-  *elem = std::make_shared<Element>();
-  (*elem)->draw = bind(&legend_draw, config, _1, _2, _3);
-  (*elem)->size_hint = bind(&legend_layout, config, _1, _2, _3, _4, _5, nullptr);
-  return OK;
+  return legend_draw(ctx, config.get());
 }
 
 } // namespace clip::elements::legend

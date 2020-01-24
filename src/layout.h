@@ -82,5 +82,7 @@ ReturnCode layout_elements(
     std::vector<ElementPlacement>* elements,
     Rectangle* content_box);
 
+ReturnCode layout_add_margins(Context* ctx, const Expr* e);
+
 } // namespace clip
 

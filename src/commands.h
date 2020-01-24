@@ -12,35 +12,23 @@
  * limitations under the License.
  */
 #pragma once
-#include "context.h"
-#include "graphics/measure.h"
-#include "typographic_map.h"
-#include "return_code.h"
-#include "sexpr.h"
+#include "command.h"
+#include "plot/axis.h"
+#include "plot/grid.h"
+#include "plot/lines.h"
+#include "figure/legend.h"
 
 namespace clip {
 
-ReturnCode measure_read(
-    const Expr* expr,
-    Measure* value);
-
-ReturnCode measure_readn(
-    const Context* ctx,
-    const Expr* expr,
-    Measure* value);
-
-ReturnCode measure_read_opt(
-    const Expr* expr,
-    std::optional<Measure>* value);
-
-ReturnCode measure_read_list(
-    const Expr* expr,
-    std::vector<Measure>* measures);
-
-ReturnCode measure_map_read(
-    const Context* ctx,
-    const Expr* expr,
-    MeasureMap* measure_map);
+const CommandMap COMMANDS = {
+  {"layout/add-margins", CommandFn(&layout_add_margins)},
+  {"plot/add-axes", CommandFn(&elements::plot::axis::axis_add_all)},
+  {"plot/draw-axis", CommandFn(&elements::plot::axis::axis_draw)},
+  {"plot/draw-grid", CommandFn(&elements::plot::grid::draw_grid)},
+  {"plot/draw-lines", CommandFn(&elements::plot::lines::draw_lines)},
+  {"figure/draw-legend", CommandFn(&elements::legend::legend_draw)},
+};
 
 } // namespace clip
+
 

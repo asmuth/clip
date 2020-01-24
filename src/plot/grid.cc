@@ -12,7 +12,7 @@
  * limitations under the License.
  */
 #include "grid.h"
-#include "environment.h"
+#include "context.h"
 #include "format.h"
 #include "layout.h"
 #include "graphics/text.h"
@@ -44,19 +44,17 @@ struct GridlineDefinition {
   StrokeStyle stroke_style;
 };
 
-ReturnCode draw(
-    std::shared_ptr<GridlineDefinition> config,
-    const LayoutInfo& layout,
-    const Page& page,
-    DrawCommandList* drawlist) {
+ReturnCode draw_grid(
+    Context* ctx,
+    std::shared_ptr<GridlineDefinition> config) {
   MeasureConv conv;
-  conv.dpi = page.dpi;
-  conv.font_size = page.font_size;
-  conv.parent_size = page.font_size;
+  conv.dpi = ctx->dpi;
+  conv.font_size = ctx->font_size;
+  conv.parent_size = ctx->font_size;
 
   measure_normalize(conv, &config->stroke_style.line_width);
 
-  const auto& bbox = layout.content_box;
+  const auto& bbox = context_get_clip(ctx);
 
   ScaleLayout slayout_x;
   config->layout_x(config->scale_x, format_noop(), &slayout_x);
@@ -68,7 +66,7 @@ ReturnCode draw(
     auto line_x = bbox.x + bbox.w * tick;
 
     draw_line(
-        drawlist,
+        ctx,
         Point(line_x, bbox.y),
         Point(line_x, bbox.y + bbox.h),
         config->stroke_style);
@@ -78,7 +76,7 @@ ReturnCode draw(
     auto line_y = bbox.y + bbox.h * (1.0 - tick);
 
     draw_line(
-        drawlist,
+        ctx,
         Point(bbox.x, line_y),
         Point(bbox.x + bbox.w, line_y),
         config->stroke_style);
@@ -87,10 +85,10 @@ ReturnCode draw(
   return OK;
 }
 
-ReturnCode build(const Environment& env, const Expr* expr, ElementRef* elem) {
-  /* set defaults from environment */
+ReturnCode draw_grid(Context* ctx, const Expr* expr) {
+  /* set defaults from ctxironment */
   auto c = std::make_shared<GridlineDefinition>();
-  c->stroke_style.line_width = from_pt(1, env.dpi);
+  c->stroke_style.line_width = from_pt(1, ctx->dpi);
   c->stroke_style.color = Color::fromRGB(.9, .9, .9);
 
   /* parse properties */
@@ -107,10 +105,10 @@ ReturnCode build(const Environment& env, const Expr* expr, ElementRef* elem) {
     {"scale-y", bind(&scale_configure_kind, _1, &c->scale_y)},
     {"scale-x-padding", bind(&expr_to_float64, _1, &c->scale_x.padding)},
     {"scale-y-padding", bind(&expr_to_float64, _1, &c->scale_y.padding)},
-    {"color", bind(&color_read, env, _1, &c->stroke_style.color)},
-    {"stroke-color", bind(&color_read, env, _1, &c->stroke_style.color)},
+    {"color", bind(&color_read, ctx, _1, &c->stroke_style.color)},
+    {"stroke-color", bind(&color_read, ctx, _1, &c->stroke_style.color)},
     {"stroke-width", bind(&measure_read, _1, &c->stroke_style.line_width)},
-    {"stroke-style", bind(&stroke_style_read, env, _1, &c->stroke_style)},
+    {"stroke-style", bind(&stroke_style_read, ctx, _1, &c->stroke_style)},
   });
 
   if (!config_rc) {
@@ -120,9 +118,7 @@ ReturnCode build(const Environment& env, const Expr* expr, ElementRef* elem) {
   scale_configure_layout_defaults(c->scale_x, nullptr, &c->layout_x);
   scale_configure_layout_defaults(c->scale_y, nullptr, &c->layout_y);
 
-  *elem = std::make_shared<Element>();
-  (*elem)->draw = bind(&draw, c, _1, _2, _3);
-  return OK;
+  return draw_grid(ctx, c);
 }
 
 } // namespace clip::elements::plot::grid

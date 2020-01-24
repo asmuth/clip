@@ -11,11 +11,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#include "item.h"
+#include "legend_item.h"
 
 #include "data.h"
-#include "environment.h"
-#include "marker.h"
+#include "context.h"
 #include "layout.h"
 #include "scale.h"
 #include "sexpr.h"
@@ -30,54 +29,38 @@
 using namespace std::placeholders;
 using std::bind;
 
-namespace clip::elements::legend::item {
+namespace clip::elements::legend {
 
-struct LegendItemElem {
-  std::string label;
-  HAlign label_align;
-  Measure label_margin;
-  Color label_color;
-  FontInfo label_font;
-  Measure label_font_size;
-  Marker marker;
-  HAlign marker_align;
-  Measure marker_margin;
-  Color marker_color;
-  Measure marker_size;
-};
-
-void normalize(
-    std::shared_ptr<LegendItemElem> config,
-    const Page& layer) {
+void legend_item_normalize(
+    Context* ctx,
+    LegendItem* config) {
   convert_unit_typographic(
-      layer.dpi,
-      layer.font_size,
+      ctx->dpi,
+      ctx->font_size,
       &config->label_font_size);
 
   convert_unit_typographic(
-      layer.dpi,
+      ctx->dpi,
       config->label_font_size,
       &config->label_margin);
 
   convert_unit_typographic(
-      layer.dpi,
-      layer.font_size,
+      ctx->dpi,
+      ctx->font_size,
       &config->marker_size);
 
   convert_unit_typographic(
-      layer.dpi,
+      ctx->dpi,
       config->marker_size,
       &config->marker_margin);
 }
 
-ReturnCode layout(
-    std::shared_ptr<LegendItemElem> config,
-    const Page& layer,
-    const std::optional<double> max_width,
-    const std::optional<double> max_height,
+ReturnCode legend_item_calculate_size(
+    Context* ctx,
+    LegendItem* config,
     double* min_width,
     double* min_height) {
-  normalize(config, layer);
+  legend_item_normalize(ctx, config);
 
   /* add label extents */
   TextStyle style;
@@ -90,7 +73,7 @@ ReturnCode layout(
         TextDirection::LTR,
         config->label_font,
         config->label_font_size,
-        layer.dpi,
+        ctx->dpi,
         &label_bbox);
        rc != Status::OK) {
     return rc;
@@ -106,11 +89,9 @@ ReturnCode layout(
 }
 
 ReturnCode draw_label(
-    const LegendItemElem& config,
-    const LayoutInfo& layout,
-    const Page& page,
-    DrawCommandList* drawlist) {
-  const auto& bbox = layout.content_box;
+    Context* ctx,
+    const LegendItem& config,
+    const Rectangle& bbox) {
   const auto& text = config.label;
 
   TextStyle style;
@@ -135,7 +116,7 @@ ReturnCode draw_label(
       break;
   }
 
-  if (auto rc = draw_text(page, drawlist, text, p, ax, ay, style); !rc) {
+  if (auto rc = draw_text(ctx, text, p, ax, ay, style); !rc) {
     return rc;
   }
 
@@ -143,12 +124,9 @@ ReturnCode draw_label(
 }
 
 ReturnCode draw_marker(
-    const LegendItemElem& config,
-    const LayoutInfo& layout,
-    const Page& page,
-    DrawCommandList* drawlist) {
-  const auto& bbox = layout.content_box;
-
+    Context* ctx,
+    const LegendItem& config,
+    const Rectangle& bbox) {
   Point p;
   switch (config.marker_align) {
     case HAlign::LEFT:
@@ -163,54 +141,52 @@ ReturnCode draw_marker(
 
   const auto& s = config.marker_size;
   const auto& c = config.marker_color;
-  if (auto rc = config.marker(p, s, c, page, drawlist); !rc) {
+  if (auto rc = config.marker(ctx, p, s, c); !rc) {
     return rc;
   }
 
   return OK;
 }
 
-ReturnCode draw(
-    std::shared_ptr<LegendItemElem> config,
-    const LayoutInfo& layout,
-    const Page& page,
-    DrawCommandList* drawlist) {
+ReturnCode legend_item_draw(
+    Context* ctx,
+    LegendItem* config,
+    const Rectangle& bbox) {
   /* convert units */
-  normalize(config, page);
+  legend_item_normalize(ctx, config);
 
   /* draw label */
-  if (auto rc = draw_label(*config, layout, page, drawlist); !rc) {
+  if (auto rc = draw_label(ctx, *config, bbox); !rc) {
     return rc;
   }
 
   /* draw marker */
-  if (auto rc = draw_marker(*config, layout, page, drawlist); !rc) {
+  if (auto rc = draw_marker(ctx, *config, bbox); !rc) {
     return rc;
   }
 
   return OK;
 }
 
-ReturnCode build(
-    const Environment& env,
+ReturnCode legend_item_configure(
+    Context* ctx,
     const Expr* expr,
-    ElementRef* elem) {
+    LegendItem* config) {
   /* inherit defaults */
-  auto config = std::make_shared<LegendItemElem>();
   config->label_align = HAlign::LEFT;
   config->label_margin = from_em(1.1);
-  config->label_font = env.font;
-  config->label_font_size = env.font_size;
-  config->label_color = env.text_color;
+  config->label_font = ctx->font;
+  config->label_font_size = ctx->font_size;
+  config->label_color = ctx->text_color;
   config->marker = marker_create_disk();
   config->marker_align = HAlign::LEFT;
   config->marker_margin = from_em(0.2);
-  config->marker_size = env.font_size;
+  config->marker_size = ctx->font_size;
   config->marker_size.value *= 0.75;
-  config->marker_color = env.text_color;
+  config->marker_color = ctx->text_color;
 
   /* parse exprerties */
-  auto config_rc = expr_walk_map(expr_next(expr), {
+  auto config_rc = expr_walk_map(expr, {
     {"label", bind(&expr_to_string, _1, &config->label)},
     {
       "label-align",
@@ -220,7 +196,7 @@ ReturnCode build(
       })
     },
     {"label-margin", bind(&measure_read, _1, &config->label_margin)},
-    {"label-color", bind(&color_read, env, _1, &config->label_color)},
+    {"label-color", bind(&color_read, ctx, _1, &config->label_color)},
     {"label-font-size", bind(&measure_read, _1, &config->label_font_size)},
     {"marker-shape", bind(&marker_configure, _1, &config->marker)},
     {
@@ -231,20 +207,17 @@ ReturnCode build(
       })
     },
     {"marker-margin", bind(&measure_read, _1, &config->marker_margin)},
-    {"marker-color", bind(&color_read, env, _1, &config->marker_color)},
+    {"marker-color", bind(&color_read, ctx, _1, &config->marker_color)},
     {"marker-size", bind(&measure_read, _1, &config->marker_size)},
-    {"color", bind(&color_read, env, _1, &config->marker_color)},
+    {"color", bind(&color_read, ctx, _1, &config->marker_color)},
   });
 
   if (!config_rc) {
     return config_rc;
   }
 
-  *elem = std::make_shared<Element>();
-  (*elem)->draw = bind(&draw, config, _1, _2, _3);
-  (*elem)->size_hint = bind(&layout, config, _1, _2, _3, _4, _5);
   return OK;
 }
 
-} // namespace clip::elements::legend::item
+} // namespace clip::elements::legend
 

@@ -13,13 +13,13 @@
  */
 #pragma once
 #include "element.h"
+#include "command.h"
 
 namespace clip::elements::plot::lines {
 
-ReturnCode build(
-    const Environment& env,
-    const Expr* expr,
-    ElementRef* elem);
+ReturnCode draw_lines(
+    Context* ctx,
+    const Expr* expr);
 
 } // namespace clip::elements::plot::lines
 

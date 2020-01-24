@@ -235,6 +235,14 @@ void path_add_rectangle(Path* path, vec2 origin, vec2 size) {
   path->closePath();
 }
 
+void path_add_rectangle(Path* path, const Rectangle& box) {
+  path->moveTo(box.x, box.y);
+  path->lineTo(box.x, box.y + box.h);
+  path->lineTo(box.x + box.w, box.y + box.h);
+  path->lineTo(box.x + box.w, box.y);
+  path->closePath();
+}
+
 void path_add_circle(Path* path, vec2 origin, double radius) {
   const double control_point_distance = 0.552284749831;
 

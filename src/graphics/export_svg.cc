@@ -11,6 +11,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+#include "context.h"
 #include "graphics/shape_hatch.h"
 #include "graphics/draw_cmd.h"
 #include "export_svg.h"
@@ -305,20 +306,19 @@ struct SVGDrawOp {
   uint32_t draw_idx;
 };
 
-ReturnCode page_export_svg(
-    const Page& page,
-    const DrawCommandList& drawlist,
+ReturnCode export_svg(
+    const Context* ctx,
     std::string* buffer) {
   auto svg = std::make_shared<SVGData>();
-  svg->width = page.width;
-  svg->height = page.height;
-  svg->proj = mul(translate2({0, page.height}), scale2({1, -1}));
+  svg->width = ctx->width;
+  svg->height = ctx->height;
+  svg->proj = mul(translate2({0, ctx->height}), scale2({1, -1}));
 
-  for (const auto& cmd : drawlist) {
-    auto rc = std::visit([svg, &page] (const auto& c) {
+  for (const auto& cmd : ctx->drawlist) {
+    auto rc = std::visit([svg, ctx] (const auto& c) {
       using T = std::decay_t<decltype(c)>;
       if constexpr (std::is_same_v<T, draw_cmd::Text>)
-        return svg_text_span(c, page.dpi, svg);
+        return svg_text_span(c, ctx->dpi, svg);
       if constexpr (std::is_same_v<T, draw_cmd::Shape>)
         return svg_shape(c, svg);
 
@@ -334,14 +334,14 @@ ReturnCode page_export_svg(
   svg_doc
     << "<svg"
       << svg_attr("xmlns", "http://www.w3.org/2000/svg")
-      << svg_attr("width", page.width)
-      << svg_attr("height", page.height)
+      << svg_attr("width", ctx->width)
+      << svg_attr("height", ctx->height)
       << ">\n"
     << "  "
     << "<rect"
-      << svg_attr("width", page.width)
-      << svg_attr("height", page.height)
-      << svg_attr("fill", page.background_color.to_hex_str(4))
+      << svg_attr("width", ctx->width)
+      << svg_attr("height", ctx->height)
+      << svg_attr("fill", ctx->background_color.to_hex_str(4))
       << "/>\n"
     << svg->buffer.str()
     << "</svg>";

@@ -16,10 +16,9 @@
 
 namespace clip::elements::plot::grid {
 
-ReturnCode build(
-    const Environment& env,
-    const Expr* expr,
-    ElementRef* elem);
+ReturnCode draw_grid(
+    Context* ctx,
+    const Expr* expr);
 
 } // namespace clip::elements::plot::grid
 

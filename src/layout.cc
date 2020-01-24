@@ -13,6 +13,12 @@
  */
 #include "layout.h"
 #include "graphics/layout.h"
+#include "sexpr_conv.h"
+#include "sexpr_util.h"
+#include "typographic_reader.h"
+
+using namespace std::placeholders;
+using std::bind;
 
 namespace clip {
 
@@ -153,6 +159,45 @@ ReturnCode layout_element(
 //  *content_box = layout_state.content_box;
 //  return OK;
 //}
+
+ReturnCode layout_add_margins(Context* ctx, const Expr* expr) {
+  std::array<Measure, 4> margins;
+
+  auto config_rc = expr_walk_map(expr_next(expr), {
+    {
+      "margin",
+      expr_calln_fn({
+        bind(&measure_read, _1, &margins[0]),
+        bind(&measure_read, _1, &margins[1]),
+        bind(&measure_read, _1, &margins[2]),
+        bind(&measure_read, _1, &margins[3]),
+      })
+    },
+    {"margin-top", bind(&measure_read, _1, &margins[0])},
+    {"margin-right", bind(&measure_read, _1, &margins[1])},
+    {"margin-bottom", bind(&measure_read, _1, &margins[2])},
+    {"margin-left", bind(&measure_read, _1, &margins[3])},
+  });
+
+  if (!config_rc) {
+    return config_rc;
+  }
+
+  for (auto& m : margins) {
+    convert_unit_typographic(ctx->dpi, ctx->font_size, &m);
+  }
+
+  auto bbox = context_get_clip(ctx);
+  bbox = layout_margin_box(
+      bbox,
+      margins[0],
+      margins[1],
+      margins[2],
+      margins[3]);
+
+  ctx->layout_stack.push_back(bbox);
+  return OK;
+}
 
 } // namespace clip
 

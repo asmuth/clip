@@ -12,14 +12,13 @@
  * limitations under the License.
  */
 #pragma once
-#include "element.h"
+#include "context.h"
 
-namespace clip::elements::legend::item {
+namespace clip::elements::legend {
 
-ReturnCode build(
-    const Environment& env,
-    const Expr* expr,
-    ElementRef* elem);
+ReturnCode legend_draw(
+    Context* ctx,
+    const Expr* expr);
 
-} // namespace clip::elements::legend::item
+} // namespace clip::elements::legend
 

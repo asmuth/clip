@@ -21,27 +21,27 @@
 namespace clip {
 
 ReturnCode color_read(
-    const Environment& env,
+    const Context* ctx,
     const Expr* expr,
     Color* color);
 
 ReturnCode color_read_string(
-    const Environment& env,
+    const Context* ctx,
     const std::string& value,
     Color* color);
 
 ReturnCode color_read_opt(
-    const Environment& env,
+    const Context* ctx,
     const Expr* expr,
     std::optional<Color>* color);
 
 ReturnCode color_map_read(
-    const Environment& env,
+    const Context* ctx,
     const Expr* expr,
     ColorMap* color_map);
 
 ReturnCode color_palette_read(
-    const Environment& env,
+    const Context* ctx,
     const Expr* expr,
     ColorPalette* color_palette);
 

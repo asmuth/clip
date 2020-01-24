@@ -36,7 +36,7 @@ ReturnCode measure_read(
 }
 
 ReturnCode measure_readn(
-    const Environment& env,
+    const Context* ctx,
     const Expr* expr,
     Measure* value) {
   if (!expr_is_value(expr)) {
@@ -51,8 +51,8 @@ ReturnCode measure_readn(
   }
 
   MeasureConv conv;
-  conv.dpi = env.dpi;
-  conv.font_size = env.font_size;
+  conv.dpi = ctx->dpi;
+  conv.font_size = ctx->font_size;
   measure_normalize(conv, value);
 
   return OK;
@@ -77,7 +77,7 @@ ReturnCode measure_read_list(
 }
 
 ReturnCode measure_map_read_linear(
-    const Environment& env,
+    const Context* ctx,
     const Expr* expr,
     MeasureMap* measure_map) {
   auto args = expr_collect(expr);
@@ -89,12 +89,12 @@ ReturnCode measure_map_read_linear(
   }
 
   Measure begin;
-  if (auto rc = measure_readn(env, args[0], &begin); !rc) {
+  if (auto rc = measure_readn(ctx, args[0], &begin); !rc) {
     return rc;
   }
 
   Measure end;
-  if (auto rc = measure_readn(env, args[1], &end); !rc) {
+  if (auto rc = measure_readn(ctx, args[1], &end); !rc) {
     return rc;
   }
 
@@ -103,7 +103,7 @@ ReturnCode measure_map_read_linear(
 }
 
 ReturnCode measure_map_read(
-    const Environment& env,
+    const Context* ctx,
     const Expr* expr,
     MeasureMap* measure_map) {
   if (!expr || !expr_is_list(expr)) {
@@ -116,7 +116,7 @@ ReturnCode measure_map_read(
   expr = expr_get_list(expr);
 
   if (expr_is_value(expr, "linear")) {
-    return measure_map_read_linear(env, expr_next(expr), measure_map);
+    return measure_map_read_linear(ctx, expr_next(expr), measure_map);
   }
 
   return errorf(
@@ -125,11 +125,6 @@ ReturnCode measure_map_read(
       "  - linear\n",
       expr_inspect(expr));
 }
-
-ReturnCode measure_map_read(
-    const Environment& e,
-    const Expr* expr,
-    MeasureMap* measure_map);
 
 } // namespace clip
 

@@ -20,6 +20,7 @@
 #include "text_layout.h"
 
 namespace clip {
+struct Context;
 
 /**
  * The draw command list represents a list of abstract 2D vector graphics
@@ -44,28 +45,27 @@ struct Page {
 };
 
 void draw_shape(
-    DrawCommandList* drawlist,
+    Context* ctx,
     draw_cmd::Shape elem);
 
 void draw_path(
-    DrawCommandList* drawlist,
+    Context* ctx,
     const Path& path,
     StrokeStyle stroke_style,
     FillStyle fill_style);
 
 void draw_line(
-    DrawCommandList* drawlist,
+    Context* ctx,
     vec2 from,
     vec2 to,
     StrokeStyle stroke_style);
 
 void draw_text(
-    DrawCommandList* drawlist,
+    Context* ctx,
     draw_cmd::Text elem);
 
 ReturnCode draw_text(
-    const Page& page,
-    DrawCommandList* drawlist,
+    Context* ctx,
     const std::string& text,
     const Point& position,
     HAlign align_x,
@@ -74,8 +74,7 @@ ReturnCode draw_text(
     const TextStyle& text_style);
 
 ReturnCode draw_text(
-    const Page& page,
-    DrawCommandList* drawlist,
+    Context* ctx,
     const std::string& text,
     const Point& position,
     HAlign align_x,

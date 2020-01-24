@@ -46,10 +46,11 @@ void clip_set_error(clip_t* ctx, const ReturnCode& err) {
 }
 
 int clip_eval(clip_t* ctx, const char* expr) {
-  Environment env;
-  auto rc = clip::eval(env, expr, ctx->format, &ctx->buffer);
-  clip_set_error(ctx, rc);
-  return rc;
+  //Context ctx;
+  //auto rc = clip::eval(ctx, expr);
+  //clip_set_error(ctx, rc);
+  //return rc;
+  return OK;
 }
 
 void clip_get_result(clip_t* ctx, const void** data, size_t* data_len) {

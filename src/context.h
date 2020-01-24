@@ -12,35 +12,42 @@
  * limitations under the License.
  */
 #pragma once
-#include "context.h"
-#include "graphics/measure.h"
-#include "typographic_map.h"
 #include "return_code.h"
-#include "sexpr.h"
+#include "graphics/draw.h"
+#include "graphics/geometry.h"
+#include "color_palette.h"
 
 namespace clip {
 
-ReturnCode measure_read(
-    const Expr* expr,
-    Measure* value);
+struct Context {
+  Context();
 
-ReturnCode measure_readn(
-    const Context* ctx,
-    const Expr* expr,
-    Measure* value);
+  double width;
+  double height;
+  double dpi;
 
-ReturnCode measure_read_opt(
-    const Expr* expr,
-    std::optional<Measure>* value);
+  bool font_defaults;
+  std::vector<std::string> font_load;
+  FontInfo font;
+  Measure font_size;
 
-ReturnCode measure_read_list(
-    const Expr* expr,
-    std::vector<Measure>* measures);
+  std::string text_default_script;
+  std::string text_default_language;
 
-ReturnCode measure_map_read(
-    const Context* ctx,
-    const Expr* expr,
-    MeasureMap* measure_map);
+  ColorPalette color_palette;
+  Color background_color;
+  Color foreground_color;
+  Color text_color;
+
+  DrawCommandList drawlist;
+  std::vector<Rectangle> layout_stack;
+
+};
+
+ReturnCode context_setup_defaults(Context* ctx);
+
+Rectangle context_get_clip(const Context* ctx);
 
 } // namespace clip
+
 

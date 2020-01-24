@@ -12,14 +12,17 @@
  * limitations under the License.
  */
 #pragma once
-#include "element.h"
+#include "context.h"
 
 namespace clip::elements::plot::axis {
 
-ReturnCode build(
-    const Environment& env,
-    const Expr* expr,
-    ElementRef* elem);
+ReturnCode axis_draw(
+    Context* ctx,
+    const Expr* expr);
+
+ReturnCode axis_add_all(
+    Context* ctx,
+    const Expr* expr);
 
 } // namespace clip::elements::plot::axis
 

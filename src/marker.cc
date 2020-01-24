@@ -11,6 +11,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+#include "context.h"
 #include "marker.h"
 #include "graphics/path.h"
 #include "sexpr_conv.h"
@@ -74,50 +75,47 @@ Marker marker_create_circle(double border_width) {
   border_width = std::clamp(border_width, 0.0, 1.0);
 
   return [border_width] (
+      auto ctx,
       const auto& pos,
       const auto& size,
-      const auto& color,
-      const auto& page,
-      auto drawlist) {
+      const auto& color) {
     draw_cmd::Shape shape;
     shape.stroke_style.color = color;
     shape.stroke_style.line_width = from_unit(double(size) * border_width * 0.5);
     path_add_circle(&shape.path, pos, size * 0.5);
-    draw_shape(drawlist, shape);
+    draw_shape(ctx, shape);
     return OK;
   };
 }
 
 Marker marker_create_disk() {
   return [] (
+      auto ctx,
       const auto& pos,
       const auto& size,
-      const auto& color,
-      const auto& page,
-      auto drawlist) {
+      const auto& color) {
     draw_cmd::Shape shape;
     path_add_circle(&shape.path, pos, size * 0.5);
     shape.fill_style.color = color;
-    draw_shape(drawlist, shape);
+    draw_shape(ctx, shape);
     return OK;
   };
 }
 
 Marker marker_create_unicode(const std::string& u) {
   return [u] (
+      auto ctx,
       const auto& pos,
       const auto& size,
-      const auto& color,
-      const auto& page,
-      auto drawlist) {
+      const auto& color) {
     TextStyle style;
-    style.font = page.font;
+    style.font = ctx->font;
     style.color = color;
     style.font_size = from_unit(double(size) * 1.2);
 
     auto ax = HAlign::CENTER;
     auto ay = VAlign::CENTER;
-    if (auto rc = draw_text(page, drawlist, u, pos, ax, ay, style); rc != OK) {
+    if (auto rc = draw_text(ctx, u, pos, ax, ay, style); rc != OK) {
       return ERROR;
     }
 

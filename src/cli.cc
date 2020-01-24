@@ -18,10 +18,11 @@
 #include <string>
 
 #include "config.h"
+#include "context.h"
 #include "utils/flagparser.h"
 #include "return_code.h"
 #include "utils/stringutil.h"
-#include "environment.h"
+#include "graphics/export_svg.h"
 #include "eval.h"
 #include "fileutil.h"
 
@@ -153,6 +154,17 @@ int main(int argc, const char** argv) {
     return EXIT_FAILURE;
   }
 
+  /* set up the context */
+  Context ctx;
+  ctx.font_defaults = flag_font_defaults;
+  ctx.font_load = flag_font_load;
+  ctx.layout_stack.push_back(Rectangle(0, 0, ctx.width, ctx.height));
+
+  if (auto rc = context_setup_defaults(&ctx); !rc) {
+    error_print(rc, std::cerr);
+    return EXIT_FAILURE;
+  }
+
   /* read the input file */
   std::string input;
   if (flag_stdin) {
@@ -168,18 +180,29 @@ int main(int argc, const char** argv) {
     }
   }
 
-  /* run clip */
-  Environment env;
-  env.font_defaults = flag_font_defaults;
-  env.font_load = flag_font_load;
-
-  std::string output_buffer;
-  if (auto rc = clip::eval(env, input, output_format, &output_buffer); !rc) {
+  /* evaluate the input commands */
+  if (auto rc = clip::eval(&ctx, input); !rc) {
     error_print(rc, std::cerr);
     return EXIT_FAILURE;
   }
 
   /* write the output file */
+  std::string output_buffer;
+  ReturnCode export_rc;
+  switch (output_format) {
+    case OutputFormat::SVG:
+      export_rc = export_svg(&ctx, &output_buffer);
+      break;
+    //case OutputFormat::PNG:
+    //  export_rc = page_export_png(page, drawlist, output_buffer);
+    //  break;
+  }
+
+  if (!export_rc) {
+    error_print(export_rc, std::cerr);
+    return EXIT_FAILURE;
+  }
+
   if (flag_stdout) {
     std::cout << output_buffer;
   } else {

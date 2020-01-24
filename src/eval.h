@@ -21,16 +21,12 @@ namespace clip {
 enum class OutputFormat { SVG, PNG };
 
 ReturnCode eval(
-    Environment env,
-    const Expr* expr,
-    const OutputFormat& output_format,
-    std::string* output_buffer);
+    Context* ctx,
+    const Expr* expr);
 
 ReturnCode eval(
-    Environment env,
-    const std::string& input,
-    const OutputFormat& output_format,
-    std::string* output_buffer);
+    Context* ctx,
+    const std::string& input);
 
 } // namespace clip
 

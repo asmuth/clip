@@ -12,14 +12,22 @@
  * limitations under the License.
  */
 #pragma once
-#include "element.h"
+#include <functional>
+#include "context.h"
+#include "return_code.h"
+#include "sexpr.h"
 
-namespace clip::elements::legend {
+namespace clip {
 
-ReturnCode build(
-    const Environment& env,
-    const Expr* expr,
-    ElementRef* elem);
+using CommandFn = std::function<ReturnCode (Context*, const Expr*)>;
 
-} // namespace clip::elements::legend
+struct Command {
+  Command(CommandFn f) : fn(f) {}
+  CommandFn fn;
+};
+
+using CommandMap = std::unordered_map<std::string, Command>;
+
+} // namespace clip
+
 

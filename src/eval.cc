@@ -16,81 +16,50 @@
 #include "graphics/export_svg.h"
 #include "layout.h"
 #include "sexpr_parser.h"
+#include "commands.h"
 
 namespace clip {
 
 ReturnCode eval(
-    Environment env,
-    const Expr* expr,
-    const OutputFormat& output_format,
-    std::string* output_buffer) {
-  // prepare the environment
-  if (auto rc = environment_configure(&env, expr); !rc) {
-    return rc;
-  }
+    Context* ctx,
+    const Expr* expr) {
+  // execute commands
+  for (; expr; expr = expr_next(expr)) {
+    if (!expr || !expr_is_list(expr)) {
+      return error(ERROR, "expected a command list");
+    }
 
-  if (auto rc = environment_setup_defaults(&env); !rc) {
-    return rc;
-  }
+    auto args = expr_get_list(expr);
+    if (!args || !expr_is_value(args)) {
+      return error(ERROR, "expected a command name");
+    }
 
-  // prepare the page
-  Page page;
-  page.font = env.font;
-  page.text_default_script = env.text_default_script;
-  page.text_default_language = env.text_default_language;
-  page.width = env.screen_width;
-  page.height = env.screen_height;
-  page.dpi = env.dpi;
-  page.font_size = env.font_size;
-  page.background_color = env.background_color;
+    auto arg0 = expr_get_value(args);
 
-  LayoutInfo layout;
-  layout.content_box = layout_margin_box(
-      Rectangle(0, 0, page.width, page.height),
-      env.margins[0],
-      env.margins[1],
-      env.margins[2],
-      env.margins[3]);
+    const Command* cmd;
+    if (auto cmd_iter = COMMANDS.find(arg0); cmd_iter != COMMANDS.end()) {
+      cmd = &cmd_iter->second;
+    } else {
+      return {ERROR, fmt::format("Invalid command '{}'", arg0)};
+    }
 
-  // build all root elements
-  std::vector<ElementRef> roots;
-  if (auto rc = element_build_all(env, expr, &roots); !rc) {
-    return rc;
-  }
-
-  // execute draw commands
-  DrawCommandList drawlist;
-  for (const auto& e : roots) {
-    if (auto rc = e->draw(layout, page, &drawlist); !rc) {
+    if (auto rc = cmd->fn(ctx, args); !rc) {
       return rc;
     }
   }
 
-  // export the page
-  ReturnCode export_rc;
-  switch (output_format) {
-    case OutputFormat::SVG:
-      export_rc = page_export_svg(page, drawlist, output_buffer);
-      break;
-    case OutputFormat::PNG:
-      export_rc = page_export_png(page, drawlist, output_buffer);
-      break;
-  }
-
-  return export_rc;
+  return OK;
 }
 
 ReturnCode eval(
-    Environment env,
-    const std::string& input,
-    const OutputFormat& output_format,
-    std::string* output_buffer) {
+    Context* ctx,
+    const std::string& input) {
   ExprStorage expr;
   if (auto rc = expr_parse(input.data(), input.length(), &expr); !rc) {
     return rc;
   }
 
-  return eval(env, expr.get(), output_format, output_buffer);
+  return eval(ctx, expr.get());
 }
 
 } // namespace clip

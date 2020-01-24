@@ -94,6 +94,11 @@ void path_add_line(Path* path, vec2 from, vec2 to);
 void path_add_rectangle(Path* path, vec2 origin, vec2 size);
 
 /**
+ * Add a rectangle to the path.
+ */
+void path_add_rectangle(Path* path, const Rectangle& rect);
+
+/**
  * Add a circle to a path. Origin is the center of the circle.
  */
 void path_add_circle(Path* path, vec2 origin, double radius);

@@ -27,17 +27,14 @@ struct TextElement {
 };
 
 ReturnCode draw(
-    std::shared_ptr<TextElement> config,
-    const LayoutInfo& layout,
-    const Page& page,
-    DrawCommandList* drawlist) {
+    Context* ctx,
+    std::shared_ptr<TextElement> config) {
   Point p(50, 50);
   auto ax = HAlign::CENTER;
   auto ay = VAlign::BOTTOM;
   if (auto rc =
         draw_text(
-            page,
-            drawlist,
+            ctx,
             config->text,
             p,
             ax,
@@ -66,8 +63,6 @@ ReturnCode build(
     return config_rc;
   }
 
-  *elem = std::make_shared<Element>();
-  (*elem)->draw = bind(&draw, config, _1, _2, _3);
   return OK;
 }
 

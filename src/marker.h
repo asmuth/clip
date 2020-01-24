@@ -25,11 +25,10 @@ namespace clip {
 
 using Marker = std::function<
     ReturnCode (
+        Context* ctx,
         const Point& pos,
         const Measure& size,
-        const Color& color,
-        const Page& page,
-        DrawCommandList* drawlist)>;
+        const Color& color)>;
 
 Marker marker_create_circle(double border_width);
 Marker marker_create_disk();
