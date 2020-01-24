@@ -26,6 +26,12 @@ ReturnCode expr_walk_map(
     const std::unordered_map<std::string, ExprVisitor>& fns,
     bool strict = true);
 
+ReturnCode expr_walk_map_with_defaults(
+    const Expr* expr,
+    const std::unordered_map<std::string, ExprStorage>& defaults,
+    const std::unordered_map<std::string, ExprVisitor>& fns,
+    bool strict = true);
+
 ReturnCode expr_calln(
     const Expr* expr,
     const std::initializer_list<ExprVisitor>& fns);

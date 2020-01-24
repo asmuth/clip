@@ -21,6 +21,25 @@ ReturnCode expr_walk_map(
     const Expr* expr,
     const std::unordered_map<std::string, ExprVisitor>& fns,
     bool strict /* = true */) {
+  return expr_walk_map_with_defaults(expr, {}, fns, strict);
+}
+
+ReturnCode expr_walk_map_with_defaults(
+    const Expr* expr,
+    const std::unordered_map<std::string, ExprStorage>& defaults,
+    const std::unordered_map<std::string, ExprVisitor>& fns,
+    bool strict /* = true */) {
+  for (const auto& d : defaults) {
+    const auto& fn = fns.find(d.first);
+    if (fn == fns.end()) {
+      continue;
+    }
+
+    if (auto rc = fn->second(d.second.get()); !rc) {
+      return rc;
+    }
+  }
+
   for (; expr; expr = expr_next(expr)) {
     if (!expr_is_value(expr)) {
       return error(ERROR, "expected a literal");

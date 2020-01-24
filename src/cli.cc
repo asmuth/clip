@@ -158,7 +158,6 @@ int main(int argc, const char** argv) {
   Context ctx;
   ctx.font_defaults = flag_font_defaults;
   ctx.font_load = flag_font_load;
-  ctx.layout_stack.push_back(Rectangle(0, 0, ctx.width, ctx.height));
 
   if (auto rc = context_setup_defaults(&ctx); !rc) {
     error_print(rc, std::cerr);

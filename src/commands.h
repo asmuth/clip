@@ -21,6 +21,10 @@
 namespace clip {
 
 const CommandMap COMMANDS = {
+  {"default", CommandFn(&context_set_default)},
+  {"set-width", CommandFn(&context_configure)},
+  {"set-height", CommandFn(&context_configure)},
+  {"set-dpi", CommandFn(&context_configure)},
   {"layout/add-margins", CommandFn(&layout_add_margins)},
   {"plot/add-axes", CommandFn(&elements::plot::axis::axis_add_all)},
   {"plot/draw-axis", CommandFn(&elements::plot::axis::axis_draw)},

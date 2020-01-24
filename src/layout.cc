@@ -163,7 +163,7 @@ ReturnCode layout_element(
 ReturnCode layout_add_margins(Context* ctx, const Expr* expr) {
   std::array<Measure, 4> margins;
 
-  auto config_rc = expr_walk_map(expr_next(expr), {
+  auto config_rc = expr_walk_map_with_defaults(expr_next(expr), ctx->defaults, {
     {
       "margin",
       expr_calln_fn({

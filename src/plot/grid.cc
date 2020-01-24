@@ -92,7 +92,7 @@ ReturnCode draw_grid(Context* ctx, const Expr* expr) {
   c->stroke_style.color = Color::fromRGB(.9, .9, .9);
 
   /* parse properties */
-  auto config_rc = expr_walk_map(expr_next(expr), {
+  auto config_rc = expr_walk_map_with_defaults(expr_next(expr), ctx->defaults, {
     {"limit-x", bind(&expr_to_float64_opt_pair, _1, &c->scale_x.min, &c->scale_x.max)},
     {"limit-x-min", bind(&expr_to_float64_opt, _1, &c->scale_x.min)},
     {"limit-x-max", bind(&expr_to_float64_opt, _1, &c->scale_x.max)},

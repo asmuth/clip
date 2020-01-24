@@ -22,8 +22,8 @@ namespace clip {
 struct Context {
   Context();
 
-  double width;
-  double height;
+  Measure width;
+  Measure height;
   double dpi;
 
   bool font_defaults;
@@ -42,9 +42,14 @@ struct Context {
   DrawCommandList drawlist;
   std::vector<Rectangle> layout_stack;
 
+  std::unordered_map<std::string, ExprStorage> defaults;
 };
 
 ReturnCode context_setup_defaults(Context* ctx);
+
+ReturnCode context_configure(Context* ctx, const Expr* expr);
+
+ReturnCode context_set_default(Context* ctx, const Expr* expr);
 
 Rectangle context_get_clip(const Context* ctx);
 
