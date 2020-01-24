@@ -6,23 +6,22 @@ proc_path="$(realpath "./clip")"
 test_path="${source_path}/test"
 result_path="$(realpath ./test-results)"
 
-run() {
-	mkdir -p "${result_path}"
+mkdir -p "${result_path}"
+
+run_all_tests() {
 	log_init
 
 	num_total=0
 	num_pass=0
 	num_fail=0
 
-	test_cases=$((cd "${source_path}/test/spec" && find . -name "*.clp") | sort)
+	test_cases=$(cd "${source_path}/test" && find . -name "*.clp" ! -path "./spec/*" | sort)
 
 	for test_id in ${test_cases[@]}; do
-		local test_file="$(basename ${test_id})"
-		local test_id="${test_file%.*}"
-
+		local test_id="$(echo "${test_id}" | sed -e 's/^.\///' -e 's/\.clp$//')"
 		num_total=$[ $num_total + 1 ]
 
-		if run_test "${test_id}"; then
+		if run_test "${test_id}" &>/dev/null; then
 			echo "$(printf "\033[1;32m%s\033[0m" "[PASS]") ${test_id}"
 		  num_pass=$[ $num_pass + 1 ]
 		else
@@ -50,19 +49,19 @@ run_test() {
 	local test_id="$1"
 	local format="svg"
 
-	local infile="${test_path}/spec/${test_id}.clp"
-	local reffile="${test_path}/spec/${test_id}.${format}"
-	local errfile="${test_path}/spec/${test_id}.err"
+	local infile="${test_path}/${test_id}.clp"
+	local reffile="${test_path}/${test_id}.${format}"
+	local errfile="${test_path}/${test_id}.err"
 	local outfile="${result_path}/${test_id}.${format}"
 	local logfile="${result_path}/${test_id}.log"
 
 	# clean up old files
 	rm -rf "${outfile}" "${logfile}"
+	mkdir -p "$(dirname "${outfile}")"
 
 	# run clip
 	result=""
 	if (cd ${source_path} && "${proc_path}" \
-				--font-defaults off \
 				--font-load "test/testdata/fonts/LiberationSans-Regular.ttf" \
 				--in "${infile}" \
 				--out "${outfile}" \
@@ -88,7 +87,7 @@ run_test() {
 	fi
 
 	# check result
-	if [[ ${result} != "ok" ]]; then
+	if [[ "${result}" != "ok" ]]; then
 		echo "ERROR: execution failed" >> ${logfile}
 		cat ${logfile}
 		return 1
@@ -99,10 +98,13 @@ run_test() {
 	fi
 
 	if (diff ${outfile} ${reffile} &>/dev/null); then
+		echo "OK" >&2
 		cat ${logfile}
 		return 0
 	else
+		echo "FAIL" >&2
 		log_failure "${test_id}" "${outfile}" "${reffile}" "${logfile}"
+		cat ${logfile}
 		return 1
 	fi
 }
@@ -215,4 +217,8 @@ log_escape() {
 		-e 's/>/\&gt;/g'
 }
 
-run
+if [[ $# -eq 1 ]]; then
+	run_test "$1"
+else
+	run_all_tests
+fi

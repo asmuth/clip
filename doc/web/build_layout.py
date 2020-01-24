@@ -45,7 +45,7 @@ tpl = """
       </div>
 
       <div style="text-align: right; margin-top: 10em; font-size: 80%;">
-        <a class="link" target="_blank" href="https://github.com/asmuth/clip/blob/master/manual">
+        <a class="link" target="_blank" href="https://github.com/asmuth/clip/blob/master/doc">
           Edit this page on GitHub
         </a>
       </div>
@@ -68,7 +68,7 @@ def extend_toc(entry):
   return entry
 
 def build_layout(url, content, title="", article_class=""):
-  toc = yaml.load(Path("manual/toc.yaml").read_text())["documentation"]
+  toc = yaml.load(Path("doc/toc.yaml").read_text())["documentation"]
   toc = map(lambda x: extend_toc(x), toc)
 
   title_seo = title

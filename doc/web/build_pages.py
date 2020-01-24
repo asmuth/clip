@@ -11,7 +11,7 @@ def build_page(page):
 
   print("> Building page: %s" % page["url"])
   url = page["url"]
-  path = "manual/" + page["file"] + ".md"
+  path = "doc/" + page["file"] + ".md"
   title = page.get("doctitle", page["title"])
 
   if os.path.isfile(path):
@@ -38,7 +38,7 @@ def build_toc(toc):
       build_toc(page["sections"])
 
 def main():
-  toc = yaml.load(Path("manual/toc.yaml").read_text())
+  toc = yaml.load(Path("doc/toc.yaml").read_text())
   build_toc(toc["documentation"])
 
 main()
