@@ -21,12 +21,11 @@ using std::bind;
 namespace clip {
 
 ReturnCode arrow_draw_default(
+    Context* ctx,
     const Point& from,
     const Point& to,
     const Measure& size,
-    const Color& color,
-    const Page& page,
-    DrawCommandList* drawlist) {
+    const Color& color) {
   auto direction = normalize(sub(to, from));
   auto ortho = vec2{direction.y, direction.x * -1};
 
@@ -45,14 +44,14 @@ ReturnCode arrow_draw_default(
   FillStyle fill_style;
   fill_style.color = color;
 
-  draw_line(drawlist, from, to, line_style);
-  draw_path(drawlist, head_path, {}, fill_style);
+  draw_line(ctx, from, to, line_style);
+  draw_path(ctx, head_path, {}, fill_style);
 
   return OK;
 }
 
 Arrow arrow_create_default() {
-  return bind(&arrow_draw_default, _1, _2, _3, _4, _5, _6);
+  return bind(&arrow_draw_default, _1, _2, _3, _4, _5);
 }
 
 } // namespace clip

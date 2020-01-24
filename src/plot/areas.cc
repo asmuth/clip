@@ -52,16 +52,14 @@ PlotAreaConfig::PlotAreaConfig() :
     direction(Direction::VERTICAL) {}
 
 ReturnCode draw_horizontal(
-    PlotAreaConfig config,
-    const LayoutInfo& layout,
-    const Page& page,
-    DrawCommandList* drawlist) {
-  const auto& clip = layout.content_box;
+    Context* ctx,
+    PlotAreaConfig config) {
+  const auto& clip = context_get_clip(ctx);
 
   /* convert units */
   convert_units(
       {
-        bind(&convert_unit_typographic, page.dpi, page.font_size, _1),
+        bind(&convert_unit_typographic, ctx->dpi, ctx->font_size, _1),
         bind(&convert_unit_user, scale_translate_fn(config.scale_x), _1),
         bind(&convert_unit_relative, clip.w, _1)
       },
@@ -70,7 +68,7 @@ ReturnCode draw_horizontal(
 
   convert_units(
       {
-        bind(&convert_unit_typographic, page.dpi, page.font_size, _1),
+        bind(&convert_unit_typographic, ctx->dpi, ctx->font_size, _1),
         bind(&convert_unit_user, scale_translate_fn(config.scale_x), _1),
         bind(&convert_unit_relative, clip.w, _1)
       },
@@ -79,7 +77,7 @@ ReturnCode draw_horizontal(
 
   convert_units(
       {
-        bind(&convert_unit_typographic, page.dpi, page.font_size, _1),
+        bind(&convert_unit_typographic, ctx->dpi, ctx->font_size, _1),
         bind(&convert_unit_user, scale_translate_fn(config.scale_y), _1),
         bind(&convert_unit_relative, clip.h, _1)
       },
@@ -88,7 +86,7 @@ ReturnCode draw_horizontal(
 
   convert_units(
       {
-        bind(&convert_unit_typographic, page.dpi, page.font_size, _1),
+        bind(&convert_unit_typographic, ctx->dpi, ctx->font_size, _1),
         bind(&convert_unit_user, scale_translate_fn(config.scale_y), _1),
         bind(&convert_unit_relative, clip.h, _1)
       },
@@ -96,13 +94,13 @@ ReturnCode draw_horizontal(
       &*config.yoffset.end());
 
   convert_unit_typographic(
-      page.dpi,
-      page.font_size,
+      ctx->dpi,
+      ctx->font_size,
       &config.stroke_high_style.line_width);
 
   convert_unit_typographic(
-      page.dpi,
-      page.font_size,
+      ctx->dpi,
+      ctx->font_size,
       &config.stroke_low_style.line_width);
 
   /* draw areas */
@@ -143,24 +141,22 @@ ReturnCode draw_horizontal(
 
   shape.path.closePath();
 
-  draw_shape(drawlist, shape);
-  draw_shape(drawlist, stroke_high);
-  draw_shape(drawlist, stroke_low);
+  draw_shape(ctx, shape);
+  draw_shape(ctx, stroke_high);
+  draw_shape(ctx, stroke_low);
 
   return OK;
 }
 
 ReturnCode draw_vertical(
-    PlotAreaConfig config,
-    const LayoutInfo& layout,
-    const Page& page,
-    DrawCommandList* drawlist) {
-  const auto& clip = layout.content_box;
+    Context* ctx,
+    PlotAreaConfig config) {
+  const auto& clip = context_get_clip(ctx);
 
   /* convert units */
   convert_units(
       {
-        bind(&convert_unit_typographic, page.dpi, page.font_size, _1),
+        bind(&convert_unit_typographic, ctx->dpi, ctx->font_size, _1),
         bind(&convert_unit_user, scale_translate_fn(config.scale_x), _1),
         bind(&convert_unit_relative, clip.w, _1)
       },
@@ -169,7 +165,7 @@ ReturnCode draw_vertical(
 
   convert_units(
       {
-        bind(&convert_unit_typographic, page.dpi, page.font_size, _1),
+        bind(&convert_unit_typographic, ctx->dpi, ctx->font_size, _1),
         bind(&convert_unit_user, scale_translate_fn(config.scale_x), _1),
         bind(&convert_unit_relative, clip.w, _1)
       },
@@ -178,7 +174,7 @@ ReturnCode draw_vertical(
 
   convert_units(
       {
-        bind(&convert_unit_typographic, page.dpi, page.font_size, _1),
+        bind(&convert_unit_typographic, ctx->dpi, ctx->font_size, _1),
         bind(&convert_unit_user, scale_translate_fn(config.scale_y), _1),
         bind(&convert_unit_relative, clip.h, _1)
       },
@@ -187,7 +183,7 @@ ReturnCode draw_vertical(
 
   convert_units(
       {
-        bind(&convert_unit_typographic, page.dpi, page.font_size, _1),
+        bind(&convert_unit_typographic, ctx->dpi, ctx->font_size, _1),
         bind(&convert_unit_user, scale_translate_fn(config.scale_y), _1),
         bind(&convert_unit_relative, clip.h, _1)
       },
@@ -195,13 +191,13 @@ ReturnCode draw_vertical(
       &*config.yoffset.end());
 
   convert_unit_typographic(
-      page.dpi,
-      page.font_size,
+      ctx->dpi,
+      ctx->font_size,
       &config.stroke_high_style.line_width);
 
   convert_unit_typographic(
-      page.dpi,
-      page.font_size,
+      ctx->dpi,
+      ctx->font_size,
       &config.stroke_low_style.line_width);
 
   /* draw areas */
@@ -242,37 +238,34 @@ ReturnCode draw_vertical(
 
   shape.path.closePath();
 
-  draw_shape(drawlist, shape);
-  draw_shape(drawlist, stroke_high);
-  draw_shape(drawlist, stroke_low);
+  draw_shape(ctx, shape);
+  draw_shape(ctx, stroke_high);
+  draw_shape(ctx, stroke_low);
 
   return OK;
 }
 
-ReturnCode draw(
-    std::shared_ptr<PlotAreaConfig> config,
-    const LayoutInfo& layout,
-    const Page& page,
-    DrawCommandList* drawlist) {
+ReturnCode areas_draw(
+    Context* ctx,
+    std::shared_ptr<PlotAreaConfig> config) {
   switch (config->direction) {
     case Direction::HORIZONTAL:
-      return draw_horizontal(*config, layout, page, drawlist);
+      return draw_horizontal(ctx, *config);
     case Direction::VERTICAL:
-      return draw_vertical(*config, layout, page, drawlist);
+      return draw_vertical(ctx, *config);
     default:
       return ERROR;
   }
 }
 
-ReturnCode build(
-    const Environment& env,
-    const Expr* expr,
-    ElementRef* elem) {
+ReturnCode areas_draw(
+    Context* ctx,
+    const Expr* expr) {
   /* set defaults from environment */
   auto c = std::make_shared<PlotAreaConfig>();
-  c->stroke_high_style.color = env.foreground_color;
-  c->stroke_low_style.color = env.foreground_color;
-  c->fill_style.color = env.foreground_color;
+  c->stroke_high_style.color = ctx->foreground_color;
+  c->stroke_low_style.color = ctx->foreground_color;
+  c->fill_style.color = ctx->foreground_color;
 
   /* parse properties */
   std::vector<std::string> data_x;
@@ -280,7 +273,7 @@ ReturnCode build(
   std::vector<std::string> data_xoffset;
   std::vector<std::string> data_yoffset;
 
-  auto config_rc = expr_walk_map(expr_next(expr), {
+  auto config_rc = expr_walk_map_with_defaults(expr_next(expr), ctx->defaults, {
     {"data-x", bind(&data_load, _1, &c->x)},
     {"data-y", bind(&data_load, _1, &c->y)},
     {"data-x-high", bind(&data_load, _1, &c->x)},
@@ -300,8 +293,8 @@ ReturnCode build(
     {
       "stroke-color",
       expr_calln_fn({
-        bind(&color_read, env, _1, &c->stroke_high_style.color),
-        bind(&color_read, env, _1, &c->stroke_low_style.color),
+        bind(&color_read, ctx, _1, &c->stroke_high_style.color),
+        bind(&color_read, ctx, _1, &c->stroke_low_style.color),
       })
     },
     {
@@ -314,23 +307,23 @@ ReturnCode build(
     {
       "stroke-style",
       expr_calln_fn({
-        bind(&stroke_style_read, env, _1, &c->stroke_high_style),
-        bind(&stroke_style_read, env, _1, &c->stroke_low_style),
+        bind(&stroke_style_read, ctx, _1, &c->stroke_high_style),
+        bind(&stroke_style_read, ctx, _1, &c->stroke_low_style),
       })
     },
-    {"stroke-high-color", bind(&color_read, env, _1, &c->stroke_high_style.color)},
+    {"stroke-high-color", bind(&color_read, ctx, _1, &c->stroke_high_style.color)},
     {"stroke-high-width", bind(&measure_read, _1, &c->stroke_high_style.line_width)},
-    {"stroke-high-style", bind(&stroke_style_read, env, _1, &c->stroke_high_style)},
-    {"stroke-low-color", bind(&color_read, env, _1, &c->stroke_low_style.color)},
+    {"stroke-high-style", bind(&stroke_style_read, ctx, _1, &c->stroke_high_style)},
+    {"stroke-low-color", bind(&color_read, ctx, _1, &c->stroke_low_style.color)},
     {"stroke-low-width", bind(&measure_read, _1, &c->stroke_low_style.line_width)},
-    {"stroke-low-style", bind(&stroke_style_read, env, _1, &c->stroke_low_style)},
-    {"fill", bind(&fill_style_read, env, _1, &c->fill_style)},
+    {"stroke-low-style", bind(&stroke_style_read, ctx, _1, &c->stroke_low_style)},
+    {"fill", bind(&fill_style_read, ctx, _1, &c->fill_style)},
     {
       "color",
       expr_calln_fn({
-        bind(&color_read, env, _1, &c->stroke_high_style.color),
-        bind(&color_read, env, _1, &c->stroke_low_style.color),
-        bind(&fill_style_read_solid, env, _1, &c->fill_style),
+        bind(&color_read, ctx, _1, &c->stroke_high_style.color),
+        bind(&color_read, ctx, _1, &c->stroke_low_style.color),
+        bind(&fill_style_read_solid, ctx, _1, &c->fill_style),
       })
     },
     {
@@ -408,10 +401,7 @@ ReturnCode build(
         "the length of the 'data-y' and 'data-y-low' properties must be equal");
   }
 
-  /* return element */
-  *elem = std::make_shared<Element>();
-  (*elem)->draw = bind(&draw, c, _1, _2, _3);
-  return OK;
+  return areas_draw(ctx, c);
 }
 
 } // namespace clip::elements::plot::areas

@@ -62,16 +62,14 @@ PlotBarsConfig::PlotBarsConfig() :
     direction(Direction::VERTICAL) {}
 
 ReturnCode draw_horizontal(
-    PlotBarsConfig config,
-    const LayoutInfo& layout,
-    const Page& page,
-    DrawCommandList* drawlist) {
-  const auto& clip = layout.content_box;
+    Context* ctx,
+    PlotBarsConfig config) {
+  const auto& clip = context_get_clip(ctx);
 
   /* convert units */
   convert_units(
       {
-        bind(&convert_unit_typographic, page.dpi, page.font_size, _1),
+        bind(&convert_unit_typographic, ctx->dpi, ctx->font_size, _1),
         bind(&convert_unit_user, scale_translate_fn(config.scale_x), _1),
         bind(&convert_unit_relative, clip.w, _1)
       },
@@ -80,7 +78,7 @@ ReturnCode draw_horizontal(
 
   convert_units(
       {
-        bind(&convert_unit_typographic, page.dpi, page.font_size, _1),
+        bind(&convert_unit_typographic, ctx->dpi, ctx->font_size, _1),
         bind(&convert_unit_user, scale_translate_fn(config.scale_x), _1),
         bind(&convert_unit_relative, clip.w, _1)
       },
@@ -89,7 +87,7 @@ ReturnCode draw_horizontal(
 
   convert_units(
       {
-        bind(&convert_unit_typographic, page.dpi, page.font_size, _1),
+        bind(&convert_unit_typographic, ctx->dpi, ctx->font_size, _1),
         bind(&convert_unit_user, scale_translate_fn(config.scale_y), _1),
         bind(&convert_unit_relative, clip.h, _1)
       },
@@ -98,7 +96,7 @@ ReturnCode draw_horizontal(
 
   convert_units(
       {
-        bind(&convert_unit_typographic, page.dpi, page.font_size, _1),
+        bind(&convert_unit_typographic, ctx->dpi, ctx->font_size, _1),
         bind(&convert_unit_user, scale_translate_fn(config.scale_y), _1),
         bind(&convert_unit_relative, clip.h, _1)
       },
@@ -107,14 +105,14 @@ ReturnCode draw_horizontal(
 
   convert_units(
       {
-        bind(&convert_unit_typographic, page.dpi, page.font_size, _1)
+        bind(&convert_unit_typographic, ctx->dpi, ctx->font_size, _1)
       },
       &*config.sizes.begin(),
       &*config.sizes.end());
 
   convert_units(
       {
-        bind(&convert_unit_typographic, page.dpi, page.font_size, _1)
+        bind(&convert_unit_typographic, ctx->dpi, ctx->font_size, _1)
       },
       &*config.offsets.begin(),
       &*config.offsets.end());
@@ -127,7 +125,7 @@ ReturnCode draw_horizontal(
     auto sx2 = clip.x + config.x[i];
 
     auto size = config.sizes.empty()
-        ? from_pt(kDefaultBarSizePT, page.dpi)
+        ? from_pt(kDefaultBarSizePT, ctx->dpi)
         : config.sizes[i % config.sizes.size()];
 
     auto offset = config.offsets.empty()
@@ -141,7 +139,7 @@ ReturnCode draw_horizontal(
     path.lineTo(sx1, sy + -offset + size * 0.5);
     path.closePath();
 
-    draw_path(drawlist, path, config.stroke_style, config.fill_style);
+    draw_path(ctx, path, config.stroke_style, config.fill_style);
   }
 
   /* draw labels */
@@ -167,7 +165,7 @@ ReturnCode draw_horizontal(
 
     auto ax = HAlign::LEFT;
     auto ay = VAlign::CENTER;
-    if (auto rc = draw_text(page, drawlist, text, p, ax, ay, style); rc != OK) {
+    if (auto rc = draw_text(ctx, text, p, ax, ay, style); rc != OK) {
       return rc;
     }
   }
@@ -176,16 +174,14 @@ ReturnCode draw_horizontal(
 }
 
 ReturnCode draw_vertical(
-    PlotBarsConfig config,
-    const LayoutInfo& layout,
-    const Page& page,
-    DrawCommandList* drawlist) {
-  const auto& clip = layout.content_box;
+    Context* ctx,
+    PlotBarsConfig config) {
+  const auto& clip = context_get_clip(ctx);
 
   /* convert units */
   convert_units(
       {
-        bind(&convert_unit_typographic, page.dpi, page.font_size, _1),
+        bind(&convert_unit_typographic, ctx->dpi, ctx->font_size, _1),
         bind(&convert_unit_user, scale_translate_fn(config.scale_x), _1),
         bind(&convert_unit_relative, clip.w, _1)
       },
@@ -194,7 +190,7 @@ ReturnCode draw_vertical(
 
   convert_units(
       {
-        bind(&convert_unit_typographic, page.dpi, page.font_size, _1),
+        bind(&convert_unit_typographic, ctx->dpi, ctx->font_size, _1),
         bind(&convert_unit_user, scale_translate_fn(config.scale_x), _1),
         bind(&convert_unit_relative, clip.w, _1)
       },
@@ -203,7 +199,7 @@ ReturnCode draw_vertical(
 
   convert_units(
       {
-        bind(&convert_unit_typographic, page.dpi, page.font_size, _1),
+        bind(&convert_unit_typographic, ctx->dpi, ctx->font_size, _1),
         bind(&convert_unit_user, scale_translate_fn(config.scale_y), _1),
         bind(&convert_unit_relative, clip.h, _1)
       },
@@ -212,7 +208,7 @@ ReturnCode draw_vertical(
 
   convert_units(
       {
-        bind(&convert_unit_typographic, page.dpi, page.font_size, _1),
+        bind(&convert_unit_typographic, ctx->dpi, ctx->font_size, _1),
         bind(&convert_unit_user, scale_translate_fn(config.scale_y), _1),
         bind(&convert_unit_relative, clip.h, _1)
       },
@@ -221,19 +217,19 @@ ReturnCode draw_vertical(
 
   convert_units(
       {
-        bind(&convert_unit_typographic, page.dpi, page.font_size, _1)
+        bind(&convert_unit_typographic, ctx->dpi, ctx->font_size, _1)
       },
       &*config.sizes.begin(),
       &*config.sizes.end());
 
   convert_units(
       {
-        bind(&convert_unit_typographic, page.dpi, page.font_size, _1)
+        bind(&convert_unit_typographic, ctx->dpi, ctx->font_size, _1)
       },
       &*config.offsets.begin(),
       &*config.offsets.end());
 
-  convert_unit_typographic(page.dpi, page.font_size, &config.stroke_style.line_width);
+  convert_unit_typographic(ctx->dpi, ctx->font_size, &config.stroke_style.line_width);
 
   /* draw bars */
   auto y0 = clip.h * std::clamp(scale_translate(config.scale_y, 0), 0.0, 1.0);
@@ -243,7 +239,7 @@ ReturnCode draw_vertical(
     auto sy2 = clip.y + config.y[i];
 
     auto size = config.sizes.empty()
-        ? from_pt(kDefaultBarSizePT, page.dpi)
+        ? from_pt(kDefaultBarSizePT, ctx->dpi)
         : config.sizes[i % config.sizes.size()];
 
     auto offset = config.offsets.empty()
@@ -257,7 +253,7 @@ ReturnCode draw_vertical(
     path.lineTo(sx + offset + size * 0.5, sy1);
     path.closePath();
 
-    draw_path(drawlist, path, config.stroke_style, config.fill_style);
+    draw_path(ctx, path, config.stroke_style, config.fill_style);
   }
 
   /* draw labels */
@@ -283,7 +279,7 @@ ReturnCode draw_vertical(
 
     auto ax = HAlign::CENTER;
     auto ay = VAlign::BOTTOM;
-    if (auto rc = draw_text(page, drawlist, text, p, ax, ay, style); rc != OK) {
+    if (auto rc = draw_text(ctx, text, p, ax, ay, style); rc != OK) {
       return rc;
     }
   }
@@ -292,31 +288,28 @@ ReturnCode draw_vertical(
 }
 
 ReturnCode draw(
-    std::shared_ptr<PlotBarsConfig> config,
-    const LayoutInfo& layout,
-    const Page& page,
-    DrawCommandList* drawlist) {
+    Context* ctx,
+    std::shared_ptr<PlotBarsConfig> config) {
   switch (config->direction) {
     case Direction::HORIZONTAL:
-      return draw_horizontal(*config, layout, page, drawlist);
+      return draw_horizontal(ctx, *config);
     case Direction::VERTICAL:
-      return draw_vertical(*config, layout, page, drawlist);
+      return draw_vertical(ctx, *config);
     default:
       return ERROR;
   }
 }
 
-ReturnCode build(
-    const Environment& env,
-    const Expr* expr,
-    ElementRef* elem) {
+ReturnCode bars_draw(
+    Context* ctx,
+    const Expr* expr) {
   /* set defaults from environment */
   auto c = std::make_shared<PlotBarsConfig>();
-  c->stroke_style.color = env.foreground_color;
+  c->stroke_style.color = ctx->foreground_color;
   c->stroke_style.line_width = from_unit(0);
-  c->fill_style.color = env.foreground_color;
-  c->label_font = env.font;
-  c->label_font_size = env.font_size;
+  c->fill_style.color = ctx->foreground_color;
+  c->label_font = ctx->font;
+  c->label_font_size = ctx->font_size;
 
   /* parse properties */
   std::vector<std::string> data_x;
@@ -324,7 +317,7 @@ ReturnCode build(
   std::vector<std::string> data_xoffset;
   std::vector<std::string> data_yoffset;
 
-  auto config_rc = expr_walk_map(expr_next(expr), {
+  auto config_rc = expr_walk_map_with_defaults(expr_next(expr), ctx->defaults, {
     {"data-x", bind(&data_load_strings, _1, &data_x)},
     {"data-y", bind(&data_load_strings, _1, &data_y)},
     {"data-x-high", bind(&data_load_strings, _1, &data_x)},
@@ -335,10 +328,10 @@ ReturnCode build(
     {"bar-widths", bind(&data_load, _1, &c->sizes)},
     {"bar-offset", bind(&data_load, _1, &c->offsets)},
     {"bar-offsets", bind(&data_load, _1, &c->offsets)},
-    {"bar-stroke-color", bind(&color_read, env, _1, &c->stroke_style.color)},
+    {"bar-stroke-color", bind(&color_read, ctx, _1, &c->stroke_style.color)},
     {"bar-stroke-width", bind(&measure_read, _1, &c->stroke_style.line_width)},
-    {"bar-stroke-style", bind(&stroke_style_read, env, _1, &c->stroke_style)},
-    {"bar-fill", bind(&fill_style_read, env, _1, &c->fill_style)},
+    {"bar-stroke-style", bind(&stroke_style_read, ctx, _1, &c->stroke_style)},
+    {"bar-fill", bind(&fill_style_read, ctx, _1, &c->fill_style)},
     {"limit-x", bind(&expr_to_float64_opt_pair, _1, &c->scale_x.min, &c->scale_x.max)},
     {"limit-x-min", bind(&expr_to_float64_opt, _1, &c->scale_x.min)},
     {"limit-x-max", bind(&expr_to_float64_opt, _1, &c->scale_x.max)},
@@ -352,8 +345,8 @@ ReturnCode build(
     {
       "color",
       expr_calln_fn({
-        bind(&color_read, env, _1, &c->stroke_style.color),
-        bind(&fill_style_read_solid, env, _1, &c->fill_style),
+        bind(&color_read, ctx, _1, &c->stroke_style.color),
+        bind(&fill_style_read_solid, ctx, _1, &c->fill_style),
       })
     },
     {
@@ -365,7 +358,7 @@ ReturnCode build(
     },
     {"labels", bind(&data_load_strings, _1, &c->labels)},
     {"label-font-size", bind(&measure_read, _1, &c->label_font_size)},
-    {"label-color", bind(&color_read, env, _1, &c->label_color)},
+    {"label-color", bind(&color_read, ctx, _1, &c->label_color)},
     {"label-padding", bind(&measure_read, _1, &c->label_padding)},
   });
 
@@ -435,10 +428,7 @@ ReturnCode build(
         "the length of the 'data-y' and 'data-y-low' properties must be equal");
   }
 
-  /* return element */
-  *elem = std::make_shared<Element>();
-  (*elem)->draw = bind(&draw, c, _1, _2, _3);
-  return OK;
+  return draw(ctx, c);
 }
 
 } // namespace clip::elements::plot::bars

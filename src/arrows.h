@@ -25,12 +25,11 @@ namespace clip {
 
 using Arrow = std::function<
     ReturnCode (
+        Context* ctx,
         const Point& from,
         const Point& to,
         const Measure& size,
-        const Color& color,
-        const Page& page,
-        DrawCommandList* drawlist)>;
+        const Color& color)>;
 
 Arrow arrow_create_default();
 

@@ -51,12 +51,11 @@ struct ErrorbarsElement {
 };
 
 ReturnCode draw_errorbar(
+    Context* ctx,
     const ErrorbarsElement& config,
     const Point& from,
     const Point& to,
-    const Color& color,
-    const Page& page,
-    DrawCommandList* drawlist) {
+    const Color& color) {
   auto direction = normalize(sub(to, from));
   auto ortho = vec2{direction.y, direction.x * -1};
 
@@ -64,16 +63,16 @@ ReturnCode draw_errorbar(
   line_style.color = color;
   line_style.line_width = config.stroke_width;
 
-  draw_line(drawlist, from, to, line_style);
+  draw_line(ctx, from, to, line_style);
 
   draw_line(
-      drawlist,
+      ctx,
       add(from, mul(ortho, config.bar_width * -0.5)),
       add(from, mul(ortho, config.bar_width * 0.5)),
       line_style);
 
   draw_line(
-      drawlist,
+      ctx,
       add(to, mul(ortho, config.bar_width * -0.5)),
       add(to, mul(ortho, config.bar_width * 0.5)),
       line_style);
@@ -81,17 +80,15 @@ ReturnCode draw_errorbar(
   return OK;
 }
 
-ReturnCode draw(
-    std::shared_ptr<ErrorbarsElement> config,
-    const LayoutInfo& layout,
-    const Page& page,
-    DrawCommandList* drawlist) {
-  const auto& clip = layout.content_box;
+ReturnCode errorbars_draw(
+    Context* ctx,
+    std::shared_ptr<ErrorbarsElement> config) {
+  const auto& clip = context_get_clip(ctx);
 
   /* convert units */
   convert_units(
       {
-        bind(&convert_unit_typographic, page.dpi, page.font_size, _1),
+        bind(&convert_unit_typographic, ctx->dpi, ctx->font_size, _1),
         bind(&convert_unit_user, scale_translate_fn(config->scale_x), _1),
         bind(&convert_unit_relative, clip.w, _1)
       },
@@ -100,7 +97,7 @@ ReturnCode draw(
 
   convert_units(
       {
-        bind(&convert_unit_typographic, page.dpi, page.font_size, _1),
+        bind(&convert_unit_typographic, ctx->dpi, ctx->font_size, _1),
         bind(&convert_unit_user, scale_translate_fn(config->scale_x), _1),
         bind(&convert_unit_relative, clip.w, _1)
       },
@@ -109,7 +106,7 @@ ReturnCode draw(
 
   convert_units(
       {
-        bind(&convert_unit_typographic, page.dpi, page.font_size, _1),
+        bind(&convert_unit_typographic, ctx->dpi, ctx->font_size, _1),
         bind(&convert_unit_user, scale_translate_fn(config->scale_x), _1),
         bind(&convert_unit_relative, clip.w, _1)
       },
@@ -118,7 +115,7 @@ ReturnCode draw(
 
   convert_units(
       {
-        bind(&convert_unit_typographic, page.dpi, page.font_size, _1),
+        bind(&convert_unit_typographic, ctx->dpi, ctx->font_size, _1),
         bind(&convert_unit_user, scale_translate_fn(config->scale_y), _1),
         bind(&convert_unit_relative, clip.h, _1)
       },
@@ -127,7 +124,7 @@ ReturnCode draw(
 
   convert_units(
       {
-        bind(&convert_unit_typographic, page.dpi, page.font_size, _1),
+        bind(&convert_unit_typographic, ctx->dpi, ctx->font_size, _1),
         bind(&convert_unit_user, scale_translate_fn(config->scale_y), _1),
         bind(&convert_unit_relative, clip.h, _1)
       },
@@ -136,7 +133,7 @@ ReturnCode draw(
 
   convert_units(
       {
-        bind(&convert_unit_typographic, page.dpi, page.font_size, _1),
+        bind(&convert_unit_typographic, ctx->dpi, ctx->font_size, _1),
         bind(&convert_unit_user, scale_translate_fn(config->scale_y), _1),
         bind(&convert_unit_relative, clip.h, _1)
       },
@@ -144,13 +141,13 @@ ReturnCode draw(
       &*config->y_high.end());
 
   convert_unit_typographic(
-      page.dpi,
-      page.font_size,
+      ctx->dpi,
+      ctx->font_size,
       &config->stroke_width);
 
   convert_unit_typographic(
-      page.dpi,
-      page.font_size,
+      ctx->dpi,
+      ctx->font_size,
       &config->bar_width);
 
   auto x_len = std::min({
@@ -178,7 +175,7 @@ ReturnCode draw(
         ? config->stroke_color
         : config->colors[i % config->colors.size()];
 
-    if (auto rc = draw_errorbar(*config, from, to, color, page, drawlist); !rc) {
+    if (auto rc = draw_errorbar(ctx, *config, from, to, color); !rc) {
       return rc;
     }
   }
@@ -196,7 +193,7 @@ ReturnCode draw(
         ? config->stroke_color
         : config->colors[i % config->colors.size()];
 
-    if (auto rc = draw_errorbar(*config, from, to, color, page, drawlist); !rc) {
+    if (auto rc = draw_errorbar(ctx, *config, from, to, color); !rc) {
       return rc;
     }
   }
@@ -204,15 +201,14 @@ ReturnCode draw(
   return OK;
 }
 
-ReturnCode build(
-    const Environment& env,
-    const Expr* expr,
-    ElementRef* elem) {
+ReturnCode errorbars_draw(
+    Context* ctx,
+    const Expr* expr) {
   /* set defaults from environment */
   auto c = std::make_shared<ErrorbarsElement>();
   c->stroke_width = from_pt(kDefaultStrokeWidthPT);
   c->bar_width = from_pt(kDefaultBarWidthPT);
-  c->stroke_color = env.foreground_color;
+  c->stroke_color = ctx->foreground_color;
 
   /* parse properties */
   std::vector<std::string> data_x;
@@ -224,7 +220,7 @@ ReturnCode build(
   std::vector<std::string> data_colors;
   ColorMap color_map;
 
-  auto config_rc = expr_walk_map(expr_next(expr), {
+  auto config_rc = expr_walk_map_with_defaults(expr_next(expr), ctx->defaults, {
     {"data-x", bind(&data_load_strings, _1, &data_x)},
     {"data-x-low", bind(&data_load_strings, _1, &data_x_low)},
     {"data-x-high", bind(&data_load_strings, _1, &data_x_high)},
@@ -243,9 +239,9 @@ ReturnCode build(
     {"scale-x-padding", bind(&expr_to_float64, _1, &c->scale_x.padding)},
     {"scale-y-padding", bind(&expr_to_float64, _1, &c->scale_y.padding)},
     {"errorbar-width", bind(&measure_read, _1, &c->bar_width)},
-    {"color", bind(&color_read, env, _1, &c->stroke_color)},
-    {"color-map", bind(&color_map_read, env, _1, &color_map)},
-    {"stroke-color", bind(&color_read, env, _1, &c->stroke_color)},
+    {"color", bind(&color_read, ctx, _1, &c->stroke_color)},
+    {"color-map", bind(&color_map_read, ctx, _1, &color_map)},
+    {"stroke-color", bind(&color_read, ctx, _1, &c->stroke_color)},
     {"stroke-width", bind(&measure_read, _1, &c->stroke_width)}
   });
 
@@ -375,9 +371,7 @@ ReturnCode build(
   }
 
   /* return element */
-  *elem = std::make_shared<Element>();
-  (*elem)->draw = bind(&draw, c, _1, _2, _3);
-  return OK;
+  return errorbars_draw(ctx, c);
 }
 
 } // namespace clip::elements::plot::errorbars

@@ -176,6 +176,8 @@ int main(int argc, const char** argv) {
           "ERROR: unable to read input file ({}): {}\n",
           flag_in,
           rc.message);
+
+      return EXIT_FAILURE;
     }
   }
 

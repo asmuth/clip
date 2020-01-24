@@ -58,17 +58,15 @@ struct PlotPointsConfig {
   LayoutSettings layout;
 };
 
-ReturnCode draw(
-    std::shared_ptr<PlotPointsConfig> config,
-    const LayoutInfo& layout,
-    const Page& page,
-    DrawCommandList* drawlist) {
-  const auto& clip = layout.content_box;
+ReturnCode vectors_draw(
+    Context* ctx,
+    std::shared_ptr<PlotPointsConfig> config) {
+  const auto& clip = context_get_clip(ctx);
 
   /* convert units */
   convert_units(
       {
-        bind(&convert_unit_typographic, page.dpi, page.font_size, _1),
+        bind(&convert_unit_typographic, ctx->dpi, ctx->font_size, _1),
         bind(&convert_unit_user, scale_translate_fn(config->scale_x), _1),
         bind(&convert_unit_relative, clip.w, _1)
       },
@@ -77,7 +75,7 @@ ReturnCode draw(
 
   convert_units(
       {
-        bind(&convert_unit_typographic, page.dpi, page.font_size, _1),
+        bind(&convert_unit_typographic, ctx->dpi, ctx->font_size, _1),
         bind(&convert_unit_user, scale_translate_fn(config->scale_y), _1),
         bind(&convert_unit_relative, clip.h, _1)
       },
@@ -86,7 +84,7 @@ ReturnCode draw(
 
   convert_units(
       {
-        bind(&convert_unit_typographic, page.dpi, page.font_size, _1),
+        bind(&convert_unit_typographic, ctx->dpi, ctx->font_size, _1),
         bind(&convert_unit_user, scale_translate_magnitude_fn(config->scale_x), _1),
         bind(&convert_unit_relative, clip.w, _1)
       },
@@ -95,7 +93,7 @@ ReturnCode draw(
 
   convert_units(
       {
-        bind(&convert_unit_typographic, page.dpi, page.font_size, _1),
+        bind(&convert_unit_typographic, ctx->dpi, ctx->font_size, _1),
         bind(&convert_unit_user, scale_translate_magnitude_fn(config->scale_y), _1),
         bind(&convert_unit_relative, clip.h, _1)
       },
@@ -104,14 +102,14 @@ ReturnCode draw(
 
   convert_units(
       {
-        bind(&convert_unit_typographic, page.dpi, page.font_size, _1)
+        bind(&convert_unit_typographic, ctx->dpi, ctx->font_size, _1)
       },
       &*config->sizes.begin(),
       &*config->sizes.end());
 
   convert_unit_typographic(
-      page.dpi,
-      page.font_size,
+      ctx->dpi,
+      ctx->font_size,
       &config->size);
 
   /* draw vectors */
@@ -133,7 +131,7 @@ ReturnCode draw(
         ? config->shape
         : config->shapes[i % config->shapes.size()];
 
-    if (auto rc = shape({sx, sy}, {sx + dx, sy + dy}, size, color, page, drawlist); !rc) {
+    if (auto rc = shape(ctx, {sx, sy}, {sx + dx, sy + dy}, size, color); !rc) {
       return rc;
     }
   }
@@ -141,17 +139,16 @@ ReturnCode draw(
   return OK;
 }
 
-ReturnCode build(
-    const Environment& env,
-    const Expr* expr,
-    ElementRef* elem) {
+ReturnCode vectors_draw(
+    Context* ctx,
+    const Expr* expr) {
   /* set defaults from environment */
   auto c = std::make_shared<PlotPointsConfig>();
-  c->color = env.foreground_color;
+  c->color = ctx->foreground_color;
   c->size = from_pt(kDefaultArrowSizePT);
   c->shape = arrow_create_default();
-  c->label_font = env.font;
-  c->label_font_size = env.font_size;
+  c->label_font = ctx->font;
+  c->label_font_size = ctx->font_size;
 
   /* parse properties */
   std::vector<std::string> data_x;
@@ -163,7 +160,7 @@ ReturnCode build(
   ColorMap color_map;
   MeasureMap size_map;
 
-  auto config_rc = expr_walk_map(expr_next(expr), {
+  auto config_rc = expr_walk_map_with_defaults(expr_next(expr), ctx->defaults, {
     {"data-x", bind(&data_load_strings, _1, &data_x)},
     {"data-y", bind(&data_load_strings, _1, &data_y)},
     {"data-dx", bind(&data_load_strings, _1, &data_dx)},
@@ -179,10 +176,10 @@ ReturnCode build(
     {"scale-y", bind(&scale_configure_kind, _1, &c->scale_y)},
     {"scale-x-padding", bind(&expr_to_float64, _1, &c->scale_x.padding)},
     {"scale-y-padding", bind(&expr_to_float64, _1, &c->scale_y.padding)},
-    {"color", bind(&color_read, env, _1, &c->color)},
-    {"color-map", bind(&color_map_read, env, _1, &color_map)},
+    {"color", bind(&color_read, ctx, _1, &c->color)},
+    {"color-map", bind(&color_map_read, ctx, _1, &color_map)},
     {"size", bind(&measure_read, _1, &c->size)},
-    {"size-map", bind(&measure_map_read, env, _1, &size_map)},
+    {"size-map", bind(&measure_map_read, ctx, _1, &size_map)},
   });
 
   if (!config_rc) {
@@ -263,10 +260,7 @@ ReturnCode build(
     c->sizes.push_back(m);
   }
 
-  /* return element */
-  *elem = std::make_shared<Element>();
-  (*elem)->draw = bind(&draw, c, _1, _2, _3);
-  return OK;
+  return vectors_draw(ctx, c);
 }
 
 } // namespace clip::elements::plot::vectors

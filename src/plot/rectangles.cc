@@ -53,17 +53,15 @@ struct PlotRectanglesConfig {
   LayoutSettings layout;
 };
 
-ReturnCode draw(
-    std::shared_ptr<PlotRectanglesConfig> config,
-    const LayoutInfo& layout,
-    const Page& page,
-    DrawCommandList* drawlist) {
-  const auto& clip = layout.content_box;
+ReturnCode rectangles_draw(
+    Context* ctx,
+    std::shared_ptr<PlotRectanglesConfig> config) {
+  const auto& clip = context_get_clip(ctx);
 
   /* convert units */
   convert_units(
       {
-        bind(&convert_unit_typographic, page.dpi, page.font_size, _1),
+        bind(&convert_unit_typographic, ctx->dpi, ctx->font_size, _1),
         bind(&convert_unit_user, scale_translate_fn(config->scale_x), _1),
         bind(&convert_unit_relative, clip.w, _1)
       },
@@ -72,7 +70,7 @@ ReturnCode draw(
 
   convert_units(
       {
-        bind(&convert_unit_typographic, page.dpi, page.font_size, _1),
+        bind(&convert_unit_typographic, ctx->dpi, ctx->font_size, _1),
         bind(&convert_unit_user, scale_translate_fn(config->scale_y), _1),
         bind(&convert_unit_relative, clip.h, _1)
       },
@@ -81,7 +79,7 @@ ReturnCode draw(
 
   convert_units(
       {
-        bind(&convert_unit_typographic, page.dpi, page.font_size, _1),
+        bind(&convert_unit_typographic, ctx->dpi, ctx->font_size, _1),
         bind(&convert_unit_user, scale_translate_magnitude_fn(config->scale_x), _1),
         bind(&convert_unit_relative, clip.w, _1)
       },
@@ -90,7 +88,7 @@ ReturnCode draw(
 
   convert_units(
       {
-        bind(&convert_unit_typographic, page.dpi, page.font_size, _1),
+        bind(&convert_unit_typographic, ctx->dpi, ctx->font_size, _1),
         bind(&convert_unit_user, scale_translate_magnitude_fn(config->scale_y), _1),
         bind(&convert_unit_relative, clip.h, _1)
       },
@@ -99,7 +97,7 @@ ReturnCode draw(
 
   convert_unit(
       {
-        bind(&convert_unit_typographic, page.dpi, page.font_size, _1),
+        bind(&convert_unit_typographic, ctx->dpi, ctx->font_size, _1),
         bind(&convert_unit_user, scale_translate_magnitude_fn(config->scale_x), _1),
         bind(&convert_unit_relative, clip.w, _1)
       },
@@ -107,7 +105,7 @@ ReturnCode draw(
 
   convert_unit(
       {
-        bind(&convert_unit_typographic, page.dpi, page.font_size, _1),
+        bind(&convert_unit_typographic, ctx->dpi, ctx->font_size, _1),
         bind(&convert_unit_user, scale_translate_magnitude_fn(config->scale_y), _1),
         bind(&convert_unit_relative, clip.h, _1)
       },
@@ -134,19 +132,18 @@ ReturnCode draw(
     rect.fill_style.color = color;
     rect.antialiasing_mode = AntialiasingMode::DISABLE;
     path_add_rectangle(&rect.path, Point(sx, sy), {size_x, size_y});
-    draw_shape(drawlist, rect);
+    draw_shape(ctx, rect);
   }
 
   return OK;
 }
 
-ReturnCode build(
-    const Environment& env,
-    const Expr* expr,
-    ElementRef* elem) {
+ReturnCode rectangles_draw(
+    Context* ctx,
+    const Expr* expr) {
   /* set defaults from environment */
   auto c = std::make_shared<PlotRectanglesConfig>();
-  c->color = env.foreground_color;
+  c->color = ctx->foreground_color;
   c->size = from_pt(kDefaultPointSizePT);
 
   /* parse properties */
@@ -157,7 +154,7 @@ ReturnCode build(
   std::vector<std::string> data_size_y;
   ColorMap color_map;
 
-  auto config_rc = expr_walk_map(expr_next(expr), {
+  auto config_rc = expr_walk_map_with_defaults(expr_next(expr), ctx->defaults, {
     {"data-x", bind(&data_load_strings, _1, &data_x)},
     {"data-y", bind(&data_load_strings, _1, &data_y)},
     {"data-color", bind(&data_load_strings, _1, &data_colors)},
@@ -189,8 +186,8 @@ ReturnCode build(
     {"scale-y", bind(&scale_configure_kind, _1, &c->scale_y)},
     {"scale-x-padding", bind(&expr_to_float64, _1, &c->scale_x.padding)},
     {"scale-y-padding", bind(&expr_to_float64, _1, &c->scale_y.padding)},
-    {"color", bind(&color_read, env, _1, &c->color)},
-    {"color-map", bind(&color_map_read, env, _1, &color_map)},
+    {"color", bind(&color_read, ctx, _1, &c->color)},
+    {"color-map", bind(&color_map_read, ctx, _1, &color_map)},
   });
 
   if (!config_rc) {
@@ -253,10 +250,7 @@ ReturnCode build(
     c->colors.push_back(color);
   }
 
-  /* return element */
-  *elem = std::make_shared<Element>();
-  (*elem)->draw = bind(&draw, c, _1, _2, _3);
-  return OK;
+  return rectangles_draw(ctx, c);
 }
 
 } // namespace clip::elements::plot::rectangles

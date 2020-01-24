@@ -697,7 +697,7 @@ ReturnCode axis_draw(Context* ctx, const Expr* expr) {
   };
 
   {
-    auto rc = expr_walk_map(expr_next(expr), {
+    auto rc = expr_walk_map_with_defaults(expr_next(expr), ctx->defaults, {
       /* label options */
       {"label-font", expr_call_string_fn(bind(&font_load_best, _1, &config->label_font))},
       {"label-placement", bind(&scale_configure_layout, _1, &config->label_placement)},

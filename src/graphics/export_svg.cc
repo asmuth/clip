@@ -136,7 +136,8 @@ Status svg_shape(
 
   bool fill_present = false;
   if (elem.fill_style.color && !elem.fill_style.hatch) {
-    fill_opts = svg_attr("fill", elem.fill_style.color->to_hex_str(4));
+    fill_opts += svg_attr("fill", elem.fill_style.color->to_hex_str());
+    fill_opts += svg_attr("fill-opacity", elem.fill_style.color->component(3));
     fill_present = true;
   } else {
     fill_opts = svg_attr("fill", "none");
@@ -341,7 +342,8 @@ ReturnCode export_svg(
     << "<rect"
       << svg_attr("width", ctx->width)
       << svg_attr("height", ctx->height)
-      << svg_attr("fill", ctx->background_color.to_hex_str(4))
+      << svg_attr("fill", ctx->background_color.to_hex_str())
+      << svg_attr("fill-opacity", ctx->background_color.component(3))
       << "/>\n"
     << svg->buffer.str()
     << "</svg>";

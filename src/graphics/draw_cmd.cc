@@ -24,6 +24,18 @@ void draw_shape(Context* ctx, draw_cmd::Shape elem) {
   ctx->drawlist.emplace_back(std::move(elem));
 }
 
+void draw_path(
+    Context* ctx,
+    const Path& path,
+    StrokeStyle stroke_style,
+    FillStyle fill_style) {
+  draw_cmd::Shape shape;
+  shape.path = path;
+  shape.stroke_style = stroke_style;
+  shape.fill_style = fill_style;
+  draw_shape(ctx, shape);
+}
+
 void draw_line(
     Context* ctx,
     vec2 from,

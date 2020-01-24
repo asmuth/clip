@@ -45,17 +45,15 @@ struct PlotLabelsConfig {
   Color label_color;
 };
 
-ReturnCode draw(
-    std::shared_ptr<PlotLabelsConfig> config,
-    const LayoutInfo& layout,
-    const Page& page,
-    DrawCommandList* drawlist) {
-  const auto& clip = layout.content_box;
+ReturnCode labels_draw(
+    Context* ctx,
+    std::shared_ptr<PlotLabelsConfig> config) {
+  const auto& clip = context_get_clip(ctx);
 
   /* convert units */
   convert_units(
       {
-        bind(&convert_unit_typographic, page.dpi, page.font_size, _1),
+        bind(&convert_unit_typographic, ctx->dpi, ctx->font_size, _1),
         bind(&convert_unit_user, scale_translate_fn(config->scale_x), _1),
         bind(&convert_unit_relative, clip.w, _1)
       },
@@ -64,7 +62,7 @@ ReturnCode draw(
 
   convert_units(
       {
-        bind(&convert_unit_typographic, page.dpi, page.font_size, _1),
+        bind(&convert_unit_typographic, ctx->dpi, ctx->font_size, _1),
         bind(&convert_unit_user, scale_translate_fn(config->scale_y), _1),
         bind(&convert_unit_relative, clip.h, _1)
       },
@@ -89,7 +87,7 @@ ReturnCode draw(
 
     auto ax = HAlign::CENTER;
     auto ay = VAlign::BOTTOM;
-    if (auto rc = draw_text(page, drawlist, label_text, p, ax, ay, style); rc != OK) {
+    if (auto rc = draw_text(ctx, label_text, p, ax, ay, style); rc != OK) {
       return rc;
     }
   }
@@ -97,20 +95,19 @@ ReturnCode draw(
   return OK;
 }
 
-ReturnCode build(
-    const Environment& env,
-    const Expr* expr,
-    ElementRef* elem) {
+ReturnCode labels_draw(
+    Context* ctx,
+    const Expr* expr) {
   /* set defaults from environment */
   auto c = std::make_shared<PlotLabelsConfig>();
-  c->label_font = env.font;
-  c->label_font_size = env.font_size;
+  c->label_font = ctx->font;
+  c->label_font_size = ctx->font_size;
 
   /* parse properties */
   std::vector<std::string> data_x;
   std::vector<std::string> data_y;
 
-  auto config_rc = expr_walk_map(expr_next(expr), {
+  auto config_rc = expr_walk_map_with_defaults(expr_next(expr), ctx->defaults, {
     {"data-x", bind(&data_load_strings, _1, &data_x)},
     {"data-y", bind(&data_load_strings, _1, &data_y)},
     {"limit-x", bind(&expr_to_float64_opt_pair, _1, &c->scale_x.min, &c->scale_x.max)},
@@ -124,9 +121,11 @@ ReturnCode build(
     {"scale-x-padding", bind(&expr_to_float64, _1, &c->scale_x.padding)},
     {"scale-y-padding", bind(&expr_to_float64, _1, &c->scale_y.padding)},
     {"labels", bind(&data_load_strings, _1, &c->labels)},
+    {"label-font", expr_call_string_fn(bind(&font_load_best, _1, &c->label_font))},
     {"label-font-size", bind(&measure_read, _1, &c->label_font_size)},
-    {"label-color", bind(&color_read, env, _1, &c->label_color)},
+    {"label-color", bind(&color_read, ctx, _1, &c->label_color)},
     {"label-padding", bind(&measure_read, _1, &c->label_padding)},
+    {"font", expr_call_string_fn(bind(&font_load_best, _1, &c->label_font))},
   });
 
   if (!config_rc) {
@@ -161,10 +160,7 @@ ReturnCode build(
         "the length of the 'data-x' and 'data-y' properties must be equal");
   }
 
-  /* return element */
-  *elem = std::make_shared<Element>();
-  (*elem)->draw = bind(&draw, c, _1, _2, _3);
-  return OK;
+  return labels_draw(ctx, c);
 }
 
 } // namespace clip::elements::plot::labels

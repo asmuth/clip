@@ -57,17 +57,15 @@ struct PlotPointsConfig {
   LayoutSettings layout;
 };
 
-ReturnCode draw(
-    std::shared_ptr<PlotPointsConfig> config,
-    const LayoutInfo& layout,
-    const Page& page,
-    DrawCommandList* drawlist) {
-  const auto& clip = layout.content_box;
+ReturnCode points_draw(
+    Context* ctx,
+    std::shared_ptr<PlotPointsConfig> config) {
+  const auto& clip = context_get_clip(ctx);
 
   /* convert units */
   convert_units(
       {
-        bind(&convert_unit_typographic, page.dpi, page.font_size, _1),
+        bind(&convert_unit_typographic, ctx->dpi, ctx->font_size, _1),
         bind(&convert_unit_user, scale_translate_fn(config->scale_x), _1),
         bind(&convert_unit_relative, clip.w, _1)
       },
@@ -76,7 +74,7 @@ ReturnCode draw(
 
   convert_units(
       {
-        bind(&convert_unit_typographic, page.dpi, page.font_size, _1),
+        bind(&convert_unit_typographic, ctx->dpi, ctx->font_size, _1),
         bind(&convert_unit_user, scale_translate_fn(config->scale_y), _1),
         bind(&convert_unit_relative, clip.h, _1)
       },
@@ -85,14 +83,14 @@ ReturnCode draw(
 
   convert_units(
       {
-        bind(&convert_unit_typographic, page.dpi, page.font_size, _1)
+        bind(&convert_unit_typographic, ctx->dpi, ctx->font_size, _1)
       },
       &*config->sizes.begin(),
       &*config->sizes.end());
 
   convert_unit_typographic(
-      page.dpi,
-      page.font_size,
+      ctx->dpi,
+      ctx->font_size,
       &config->size);
 
   /* draw markers */
@@ -112,7 +110,7 @@ ReturnCode draw(
         ? config->shape
         : config->shapes[i % config->shapes.size()];
 
-    if (auto rc = shape(Point(sx, sy), size, color, page, drawlist); !rc) {
+    if (auto rc = shape(ctx, Point(sx, sy), size, color); !rc) {
       return rc;
     }
   }
@@ -140,7 +138,7 @@ ReturnCode draw(
 
     auto ax = HAlign::CENTER;
     auto ay = VAlign::BOTTOM;
-    if (auto rc = draw_text(page, drawlist, label_text, p, ax, ay, style); rc != OK) {
+    if (auto rc = draw_text(ctx, label_text, p, ax, ay, style); rc != OK) {
       return rc;
     }
   }
@@ -148,17 +146,16 @@ ReturnCode draw(
   return OK;
 }
 
-ReturnCode build(
-    const Environment& env,
-    const Expr* expr,
-    ElementRef* elem) {
+ReturnCode points_draw(
+    Context* ctx,
+    const Expr* expr) {
   /* set defaults from environment */
   auto c = std::make_shared<PlotPointsConfig>();
-  c->color = env.foreground_color;
+  c->color = ctx->foreground_color;
   c->size = from_pt(kDefaultPointSizePT);
   c->shape = marker_create_disk();
-  c->label_font = env.font;
-  c->label_font_size = env.font_size;
+  c->label_font = ctx->font;
+  c->label_font_size = ctx->font_size;
 
   /* parse properties */
   std::vector<std::string> data_x;
@@ -168,7 +165,7 @@ ReturnCode build(
   ColorMap color_map;
   MeasureMap size_map;
 
-  auto config_rc = expr_walk_map(expr_next(expr), {
+  auto config_rc = expr_walk_map_with_defaults(expr_next(expr), ctx->defaults, {
     {"data-x", bind(&data_load_strings, _1, &data_x)},
     {"data-y", bind(&data_load_strings, _1, &data_y)},
     {"data-color", bind(&data_load_strings, _1, &data_colors)},
@@ -186,12 +183,12 @@ ReturnCode build(
     {"scale-y-padding", bind(&expr_to_float64, _1, &c->scale_y.padding)},
     {"marker-size", bind(&measure_read, _1, &c->size)},
     {"marker-shape", bind(&marker_configure, _1, &c->shape)},
-    {"size-map", bind(&measure_map_read, env, _1, &size_map)},
-    {"color", bind(&color_read, env, _1, &c->color)},
-    {"color-map", bind(&color_map_read, env, _1, &color_map)},
+    {"size-map", bind(&measure_map_read, ctx, _1, &size_map)},
+    {"color", bind(&color_read, ctx, _1, &c->color)},
+    {"color-map", bind(&color_map_read, ctx, _1, &color_map)},
     {"labels", bind(&data_load_strings, _1, &c->labels)},
     {"label-font-size", bind(&measure_read, _1, &c->label_font_size)},
-    {"label-color", bind(&color_read, env, _1, &c->label_color)},
+    {"label-color", bind(&color_read, ctx, _1, &c->label_color)},
     {"label-padding", bind(&measure_read, _1, &c->label_padding)},
   });
 
@@ -263,10 +260,7 @@ ReturnCode build(
     c->sizes.push_back(m);
   }
 
-  /* return element */
-  *elem = std::make_shared<Element>();
-  (*elem)->draw = bind(&draw, c, _1, _2, _3);
-  return OK;
+  return points_draw(ctx, c);
 }
 
 } // namespace clip::elements::plot::points
