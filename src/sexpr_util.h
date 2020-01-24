@@ -38,6 +38,12 @@ ReturnCode expr_calln(
 
 ExprVisitor expr_calln_fn(const std::initializer_list<ExprVisitor>& fns);
 
+ReturnCode expr_call_string(
+    const Expr* expr,
+    std::function<ReturnCode (const std::string&)>);
+
+ExprVisitor expr_call_string_fn(std::function<ReturnCode (const std::string&)>);
+
 std::vector<const Expr*> expr_collect(const Expr* expr);
 
 ReturnCode expr_rewritev(

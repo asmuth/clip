@@ -94,6 +94,20 @@ std::vector<const Expr*> expr_collect(const Expr* expr) {
   return exprs;
 }
 
+ReturnCode expr_call_string(
+    const Expr* expr,
+    std::function<ReturnCode (const std::string&)> fn) {
+  if (!expr_is_value(expr)) {
+    return {ERROR, "Expected a value"};
+  }
+
+  return fn(expr_get_value(expr));
+}
+
+ExprVisitor expr_call_string_fn(std::function<ReturnCode (const std::string&)> fn) {
+  return std::bind(&expr_call_string, _1, fn);
+}
+
 ReturnCode expr_rewritev(
     const Expr* expr,
     const std::string& prefix,

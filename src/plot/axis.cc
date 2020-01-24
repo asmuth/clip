@@ -635,7 +635,7 @@ ReturnCode axis_draw(Context* ctx, const Expr* expr) {
   config->border_style.color = ctx->foreground_color;
 
   {
-    auto rc = expr_walk_map(expr_next(expr), {
+    auto rc = expr_walk_map_with_defaults(expr_next(expr), ctx->defaults, {
       {
         "align",
         expr_to_enum_fn<AxisAlign>(&config->align, {
@@ -699,6 +699,7 @@ ReturnCode axis_draw(Context* ctx, const Expr* expr) {
   {
     auto rc = expr_walk_map(expr_next(expr), {
       /* label options */
+      {"label-font", expr_call_string_fn(bind(&font_load_best, _1, &config->label_font))},
       {"label-placement", bind(&scale_configure_layout, _1, &config->label_placement)},
       {"label-format", bind(&format_configure, _1, &config->label_formatter)},
       {
@@ -730,6 +731,7 @@ ReturnCode axis_draw(Context* ctx, const Expr* expr) {
 
       /* title options */
       {"title", bind(&expr_to_string, _1, &config->title)},
+      {"label-font", expr_call_string_fn(bind(&font_load_best, _1, &config->title_font))},
       {"title-font-size", bind(&measure_read, _1, &config->title_font_size)},
       {"title-color", bind(&color_read, ctx, _1, &config->title_color)},
       {"title-offset", bind(&expr_to_float64, _1, &config->title_offset)},
@@ -740,6 +742,15 @@ ReturnCode axis_draw(Context* ctx, const Expr* expr) {
       {"border", bind(&expr_to_stroke_style, _1, &config->border_style)},
       {"border-color", bind(&color_read, ctx, _1, &config->border_style.color)},
       {"border-width", bind(&measure_read, _1, &config->border_style.line_width)},
+
+      /* font options */
+      {
+        "font",
+        expr_calln_fn({
+          expr_call_string_fn(bind(&font_load_best, _1, &config->label_font)),
+          expr_call_string_fn(bind(&font_load_best, _1, &config->title_font)),
+        })
+      }
     }, false);
 
     if (!rc) {
@@ -816,6 +827,74 @@ ReturnCode axis_add_all(Context* ctx, const Expr* expr) {
   axes[3].border_style.color = ctx->foreground_color;
 
   auto config_rc = expr_walk_map_with_defaults(expr_next(expr), ctx->defaults, {
+    {
+      "font",
+      expr_calln_fn({
+        expr_call_string_fn(bind(&font_load_best, _1, &axes[0].label_font)),
+        expr_call_string_fn(bind(&font_load_best, _1, &axes[1].label_font)),
+        expr_call_string_fn(bind(&font_load_best, _1, &axes[2].label_font)),
+        expr_call_string_fn(bind(&font_load_best, _1, &axes[3].label_font)),
+        expr_call_string_fn(bind(&font_load_best, _1, &axes[0].title_font)),
+        expr_call_string_fn(bind(&font_load_best, _1, &axes[1].title_font)),
+        expr_call_string_fn(bind(&font_load_best, _1, &axes[2].title_font)),
+        expr_call_string_fn(bind(&font_load_best, _1, &axes[3].title_font))
+      })
+    },
+    {
+      "axis-top-font",
+      expr_calln_fn({
+        expr_call_string_fn(bind(&font_load_best, _1, &axes[0].title_font)),
+        expr_call_string_fn(bind(&font_load_best, _1, &axes[0].label_font)),
+      }),
+    },
+    {
+      "axis-right-font",
+      expr_calln_fn({
+        expr_call_string_fn(bind(&font_load_best, _1, &axes[1].title_font)),
+        expr_call_string_fn(bind(&font_load_best, _1, &axes[1].label_font)),
+      }),
+    },
+    {
+      "axis-bottom-font",
+      expr_calln_fn({
+        expr_call_string_fn(bind(&font_load_best, _1, &axes[2].title_font)),
+        expr_call_string_fn(bind(&font_load_best, _1, &axes[2].label_font)),
+      }),
+    },
+    {
+      "axis-left-font",
+      expr_calln_fn({
+        expr_call_string_fn(bind(&font_load_best, _1, &axes[3].title_font)),
+        expr_call_string_fn(bind(&font_load_best, _1, &axes[3].label_font)),
+      }),
+    },
+    {
+      "label-font",
+      expr_calln_fn({
+        expr_call_string_fn(bind(&font_load_best, _1, &axes[0].label_font)),
+        expr_call_string_fn(bind(&font_load_best, _1, &axes[1].label_font)),
+        expr_call_string_fn(bind(&font_load_best, _1, &axes[2].label_font)),
+        expr_call_string_fn(bind(&font_load_best, _1, &axes[3].label_font))
+      })
+    },
+    {"axis-top-label-font", expr_call_string_fn(bind(&font_load_best, _1, &axes[0].label_font))},
+    {"axis-right-label-font", expr_call_string_fn(bind(&font_load_best, _1, &axes[1].label_font))},
+    {"axis-bottom-label-font", expr_call_string_fn(bind(&font_load_best, _1, &axes[2].label_font))},
+    {"axis-left-label-font", expr_call_string_fn(bind(&font_load_best, _1, &axes[3].label_font))},
+    {
+      "title-font",
+      expr_calln_fn({
+        expr_call_string_fn(bind(&font_load_best, _1, &axes[0].title_font)),
+        expr_call_string_fn(bind(&font_load_best, _1, &axes[1].title_font)),
+        expr_call_string_fn(bind(&font_load_best, _1, &axes[2].title_font)),
+        expr_call_string_fn(bind(&font_load_best, _1, &axes[3].title_font))
+      })
+    },
+    {"axis-top-title-font", expr_call_string_fn(bind(&font_load_best, _1, &axes[0].title_font))},
+    {"axis-right-title-font", expr_call_string_fn(bind(&font_load_best, _1, &axes[1].title_font))},
+    {"axis-bottom-title-font", expr_call_string_fn(bind(&font_load_best, _1, &axes[2].title_font))},
+    {"axis-left-title-font", expr_call_string_fn(bind(&font_load_best, _1, &axes[3].title_font))},
+
     /* label options */
     {
       "label-format",

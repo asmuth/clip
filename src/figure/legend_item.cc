@@ -186,7 +186,8 @@ ReturnCode legend_item_configure(
   config->marker_color = ctx->text_color;
 
   /* parse exprerties */
-  auto config_rc = expr_walk_map(expr, {
+  auto config_rc = expr_walk_map_with_defaults(expr, ctx->defaults, {
+    {"font", expr_call_string_fn(bind(&font_load_best, _1, &config->label_font))},
     {"label", bind(&expr_to_string, _1, &config->label)},
     {
       "label-align",
@@ -197,6 +198,7 @@ ReturnCode legend_item_configure(
     },
     {"label-margin", bind(&measure_read, _1, &config->label_margin)},
     {"label-color", bind(&color_read, ctx, _1, &config->label_color)},
+    {"label-font", expr_call_string_fn(bind(&font_load_best, _1, &config->label_font))},
     {"label-font-size", bind(&measure_read, _1, &config->label_font_size)},
     {"marker-shape", bind(&marker_configure, _1, &config->marker)},
     {
