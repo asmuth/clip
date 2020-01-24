@@ -19,17 +19,13 @@ documentation:
           url: "/installation"
           file: "installation"
         -
+          title: "Command Line Usage"
+          url: "/usage/command-line"
+          file: "reference/command_line"
+        -
           title: "FAQ"
           url: "/faq"
           file: "faq"
-  -
-    title: "Usage"
-    sections:
-      - pages:
-        -
-          title: "Command Line"
-          url: "/usage/command-line"
-          file: "reference/command_line"
 
   -
     title: "Examples"

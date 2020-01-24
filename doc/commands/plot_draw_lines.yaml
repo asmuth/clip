@@ -1,10 +1,19 @@
-name: plot/lines
+name: plot/draw-lines
 example: charts-basic/linechart_timeseries
 desc: |
-  The `plot/lines` element is used to create line charts.
+  The `plot/draw-lines` command takes an input data table, transforms it according
+  to a user-provided scale configuration and then plots the data as one or more
+  lines.
 
 reference: |
-  (plot/lines <options>)
+  (plot/draw-lines <options>)
+
+reference_full: |
+  (plot/draw-lines
+      data-x (...)
+      data-y (...)
+      color (...)
+      stroke-style (...))
 
 option_summary: true
 

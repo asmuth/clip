@@ -43,6 +43,7 @@ def load_prop(p):
 def build_elem_page(elem_file):
   elem = yaml.load(open(elem_file))
 
+  props_all = []
   props_new = []
   for section in elem["properties"]:
     section_new = {
@@ -61,9 +62,12 @@ def build_elem_page(elem_file):
 
     for prop in section_props:
       section_new["properties"].append(load_prop(prop))
+      props_all.append(load_prop(prop))
+
     props_new.append(section_new)
 
   elem["properties"] = props_new
+  elem["properties_all"] = props_all
 
   if "desc" in elem:
     elem["desc"] = markdown.markdown(elem["desc"])
@@ -71,10 +75,10 @@ def build_elem_page(elem_file):
   if "desc_detail" in elem:
     elem["desc_detail"] = markdown.markdown(elem["desc_detail"])
 
-  url = "/elements/" + elem["name"]
+  url = "/commands/" + elem["name"]
 
   if "example" in elem:
-    elem["example_src"] = Path(os.path.join("examples", elem["example"] + ".clp")).read_text()
+    elem["example_src"] = Path(os.path.join("doc/examples", elem["example"] + ".clp")).read_text()
     elem["example_img"] = "/examples/" + elem["example"] + ".svg"
 
   print("> Building page: %s" % url)
@@ -84,7 +88,7 @@ def build_elem_page(elem_file):
   write_page(url, html, title=title)
 
 def main():
-  elems = glob.glob("elements/**/*_ref.yaml") + glob.glob("elements/*_ref.yaml")
+  elems = glob.glob("doc/commands/*.yaml")
 
   for elem in elems:
     build_elem_page(elem)

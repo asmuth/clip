@@ -1,10 +1,64 @@
-<h1>Element: <code>{{name}}</code></h1>
+<aside class="toc">
+  <b>Contents</b>
+  <ul>
+    <li><a href="#overview">Overview</a></li>
+    <li><a href="#syntax">Syntax</a></li>
+    <li>
+      <a href="#options">Options</a>
+      <ul style="padding-left: 1em;">
+        {{#properties_all}}
+          <li><a href="#option-{{name}}">{{name}}</a></li>
+        {{/properties_all}}
+      </ul>
+    </li>
+    <li><a href="#examples">Examples</a></li>
+  </ul>
+</aside>
+
+<h1 id="overview">Command: <code>{{name}}</code></h1>
 {{{desc}}}
 
-<h4>Syntax</h4>
+<h3 id="syntax">Syntax</h3>
 <pre><code>{{reference}}</code></pre>
 
+<pre><code>({{name}} {{#properties_all}}<br />    <a href="#option-{{name}}">{{name}}</a> (...){{/properties_all}})</pre></code>
+
+
 {{{desc_detail}}}
+
+<h2 id="options">Options</h2>
+{{#properties_all}}
+  <section style="border-top: none; border-bottom: 1px solid #ddd; padding-bottom: 1em; margin-bottom: 0;">
+    <a href="#option-{{name}}">
+      <h3 id="option-{{name}}">{{name}}</h3>
+    </a>
+
+    <div style="margin-top: 1.4em;">
+      {{{desc}}}
+      {{#alias}}
+        Alias for the <a href="#option-{{alias}}">{{alias}}</a> option.
+      {{/alias}}
+    <div>
+
+    {{#desc_code}}
+      <pre><code>{{desc_code}}</code></pre>
+    {{/desc_code}}
+
+    {{#desc_detail}}
+      <div style="margin-top: 1.4em;">
+        {{{desc_detail}}}
+      <div>
+    {{/desc_detail}}
+
+    {{#examples}}
+      <h5>Examples:</h5>
+      <pre><code>{{examples}}</code></pre>
+    {{/examples}}
+
+  </section>
+{{/properties_all}}
+
+<h2 id="examples">Examples</h2>
 
 {{#example}}
 <h4>Example</h4>
@@ -12,57 +66,3 @@
   <img src="{{example_img}}" />
 </a>
 {{/example}}
-
-
-{{#option_summary}}
-  <h2>Options</h2>
-  <div>
-    {{#properties}}
-      <h4 style="margin-top: 1.2em; margin-bottom: .4em;">{{title}}</h4>
-      {{#properties}}
-        <a href="#option-{{name}}" class="prop">
-          <span><code><strong>{{name}}</strong></code></span>
-          <span>{{desc_short}}</span>
-        </a>
-      {{/properties}}
-    {{/properties}}
-  </div>
-{{/option_summary}}
-
-{{#properties}}
-  <a href="#{{anchor}}">
-    <h2 id="{{anchor}}">{{title}}</h2>
-  </a>
-
-  {{#properties}}
-    <section style="border-top: none; padding-bottom: 1em;">
-      <a href="#option-{{name}}">
-        <h4 id="option-{{name}}"><em><code>{{name}}</code></em></h4>
-      </a>
-
-      <div style="margin-top: 1.4em;">
-        {{{desc}}}
-        {{#alias}}
-          Alias for the <a href="#option-{{alias}}">{{alias}}</a> option.
-        {{/alias}}
-      <div>
-
-      {{#desc_code}}
-        <pre><code>{{desc_code}}</code></pre>
-      {{/desc_code}}
-
-      {{#desc_detail}}
-        <div style="margin-top: 1.4em;">
-          {{{desc_detail}}}
-        <div>
-      {{/desc_detail}}
-
-      {{#examples}}
-        <h5>Examples:</h5>
-        <pre><code>{{examples}}</code></pre>
-      {{/examples}}
-
-    </section>
-  {{/properties}}
-{{/properties}}
-

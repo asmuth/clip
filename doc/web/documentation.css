@@ -49,6 +49,7 @@ h2, a h2 {
   box-sizing: border-box;
   border-bottom: 2px solid #e7ebf2;
   display: block;
+  font-weight: bold;
 }
 
 h4 em {
@@ -100,6 +101,8 @@ nav {
   overflow: auto;
   margin: 0 2em;
   padding: 1.6em 0 0 0;
+  max-width: 960px;
+  margin: auto;
 }
 
 nav ul.crumbs {
@@ -139,7 +142,8 @@ footer {
   font-size: 90%;
   color:#777;
   border-top: 1px solid #ddd;
-  margin: 1em 2em;
+  max-width: 960px;
+  margin: auto;
 }
 
 #ooter a {
@@ -150,12 +154,9 @@ article {
   display: flex;
   flex: 1;
   flex-direction: column;
-  margin: 0 2em;
-  padding: 2em 0;
-}
-
-article {
-  max-width: 900px;
+  padding: 1.4em 0;
+  max-width: 960px;
+  margin: auto;
 }
 
 article h1 {
@@ -313,8 +314,6 @@ table th i {
   font-size: 12px;
 }
 
-table:not(.plain) tr:nth-child(2n+0) { background-color: #f8f8f8; }
-
 table td p {
   margin-bottom: 0;
   padding-bottom: 0;
@@ -398,7 +397,7 @@ article .plist .prop {
   color: inherit;
 }
 
-article .plist .prop:nth-child(2n+0) { background-color: #f8f8f8; }
+/*article .plist .prop:nth-child(2n+0) { background-color: #f8f8f8; }*/
 
 article .plist .prop:hover {
   background: #00f;
@@ -423,3 +422,72 @@ article .color_legend {
   margin-right: .4em;
 }
 
+.toc {
+  float: right;
+  margin: 4.2em 0 0 6em;
+  padding: 0 2em;
+  border-left: 1px solid #ccc;
+}
+
+.toc ul {
+  padding: 0;
+  list-style-type: none;
+}
+
+.toc li {
+  margin-bottom: .2em;
+}
+
+.toc li a {
+  text-decoration: none;
+  color: #04f;
+}
+
+.toc ul li > ul {
+  margin-left: 1em;
+  margin-bottom: 0;
+  list-style-type: circle;
+}
+
+.toc li.section-head {
+  list-style-type: none;
+  margin-left: -1em;
+  color: #666;
+  margin-top: 1em;
+}
+
+.toc li.section-head:first-child {
+  margin-top: .6em;
+}
+
+
+ul.index {
+  padding: 0;
+  margin: 0;
+}
+
+ul.index li {
+  list-style-type: none;
+  padding: 6px 6px 5px 6px;
+  text-align: left;
+  border-bottom: 1px solid #eee;
+}
+
+ul.index li:last-child {
+  border-bottom: none;
+}
+
+ul.index li a {
+  color: #04f;
+}
+
+ul.index li:hover, ul.index li:hover a {
+  background: #00f;
+  color: #fff;
+  text-decoration: none;
+}
+
+ul.index code {
+  color: #04f;
+  font-weight: 500;
+}

@@ -32,7 +32,6 @@ tpl = """
       <a class="link" href="/examples">Examples</a>
       <span style="margin: 0 .3em">·</span>
       <a class="link" href="/installation">Download</a>
-
       <ul class="crumbs">
         <li><a href="/">Documentation</a></li>
         <li><a>{{title}}</a></li>
