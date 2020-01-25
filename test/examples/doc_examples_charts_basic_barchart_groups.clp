@@ -10,6 +10,11 @@
 (plot/add-axes
     axis-y-label-placement (linear-interval 10 10 70))
 
+(plot/draw-grid
+    color (rgba 0 0 0 .05)
+    stroke-style (dashed)
+    tick-placement-x (none))
+
 (plot/draw-bars
     data-x (csv "test/testdata/bardata.csv" var3)
     data-y (csv "test/testdata/bardata.csv" var1)

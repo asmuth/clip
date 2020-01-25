@@ -1,5 +1,5 @@
 (set-width 2048px)
-(set-height 1024px)
+(set-height 768px)
 (set-dpi 240)
 
 (default font "Latin Modern Roman")
@@ -19,6 +19,7 @@
 (layout/add-margins margin-top 3em)
 
 (plot/add-axes
+    axis-top-label-placement (none)
     axis-y-label-placement (linear-interval 10 0 60))
 
 (plot/draw-grid

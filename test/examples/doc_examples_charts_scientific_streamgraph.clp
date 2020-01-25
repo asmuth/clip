@@ -1,5 +1,5 @@
 (set-width 2048px)
-(set-height 1024px)
+(set-height 768px)
 (set-dpi 240)
 
 (default font "Latin Modern Roman")
@@ -8,6 +8,11 @@
 (layout/add-margins margin 1em)
 
 (plot/add-axes)
+
+(plot/draw-grid
+    color (rgba 0 0 0 .05)
+    stroke-style (dashed)
+    tick-placement-y (none))
 
 (plot/draw-areas
     data-x (csv "test/testdata/areadata2.csv" x)

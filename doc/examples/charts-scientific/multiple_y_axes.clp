@@ -1,13 +1,15 @@
 (set-width 2048px)
-(set-height 1024px)
+(set-height 768px)
 (set-dpi 240)
 (default font "Latin Modern Roman")
 
 (layout/add-margins margin 1em)
 
-(default limit-x (1404278100 1404299700))
+(default limit-x (0 7200))
 
 (plot/add-axes
+    axis-x-label-format (datetime "%H:%M:%S")
+    axis-x-label-placement (linear-interval 900 900 7000)
     axis-left-limit (0 100)
     axis-left-label-placement (linear-interval 10 10 50)
     axis-right-limit (0 1)

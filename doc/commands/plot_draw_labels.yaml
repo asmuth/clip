@@ -1,5 +1,5 @@
 name: plot/draw-labels
-example: charts-basic/scatterplot_with_labels
+example: charts-scientific/scatterplot_with_labels
 desc: |
   The `plot/draw-labels` command takes an input data table, transforms it according
   to a user-provided scale configuration and then plots the data as text labels.

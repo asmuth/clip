@@ -58,6 +58,17 @@
   <text x="36.666667" y="232.000000" fill="#000000ff" font-size="36.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">50.0</text>
   <text x="36.666667" y="195.000000" fill="#000000ff" font-size="36.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">60.0</text>
   <text x="36.666667" y="158.000000" fill="#000000ff" font-size="36.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">70.0</text>
+  <path d="M137.359 108 L1910.64 108 " fill="none" stroke-width="3.333333" stroke="#0000000c" stroke-dasharray="6.66667 6.66667 " stroke-dashoffset="0.000000"/>
+  <path d="M137.359 137.6 L1910.64 137.6 " fill="none" stroke-width="3.333333" stroke="#0000000c" stroke-dasharray="6.66667 6.66667 " stroke-dashoffset="0.000000"/>
+  <path d="M137.359 167.2 L1910.64 167.2 " fill="none" stroke-width="3.333333" stroke="#0000000c" stroke-dasharray="6.66667 6.66667 " stroke-dashoffset="0.000000"/>
+  <path d="M137.359 196.8 L1910.64 196.8 " fill="none" stroke-width="3.333333" stroke="#0000000c" stroke-dasharray="6.66667 6.66667 " stroke-dashoffset="0.000000"/>
+  <path d="M137.359 226.4 L1910.64 226.4 " fill="none" stroke-width="3.333333" stroke="#0000000c" stroke-dasharray="6.66667 6.66667 " stroke-dashoffset="0.000000"/>
+  <path d="M137.359 256 L1910.64 256 " fill="none" stroke-width="3.333333" stroke="#0000000c" stroke-dasharray="6.66667 6.66667 " stroke-dashoffset="0.000000"/>
+  <path d="M137.359 285.6 L1910.64 285.6 " fill="none" stroke-width="3.333333" stroke="#0000000c" stroke-dasharray="6.66667 6.66667 " stroke-dashoffset="0.000000"/>
+  <path d="M137.359 315.2 L1910.64 315.2 " fill="none" stroke-width="3.333333" stroke="#0000000c" stroke-dasharray="6.66667 6.66667 " stroke-dashoffset="0.000000"/>
+  <path d="M137.359 344.8 L1910.64 344.8 " fill="none" stroke-width="3.333333" stroke="#0000000c" stroke-dasharray="6.66667 6.66667 " stroke-dashoffset="0.000000"/>
+  <path d="M137.359 374.4 L1910.64 374.4 " fill="none" stroke-width="3.333333" stroke="#0000000c" stroke-dasharray="6.66667 6.66667 " stroke-dashoffset="0.000000"/>
+  <path d="M137.359 404 L1910.64 404 " fill="none" stroke-width="3.333333" stroke="#0000000c" stroke-dasharray="6.66667 6.66667 " stroke-dashoffset="0.000000"/>
   <path d="M237.799 404 L237.799 278.2 L274.466 278.2 L274.466 404 Z" fill="#444444" fill-opacity="1.000000"/>
   <path d="M533.346 404 L533.346 263.4 L570.013 263.4 L570.013 404 Z" fill="#444444" fill-opacity="1.000000"/>
   <path d="M828.893 404 L828.893 244.9 L865.56 244.9 L865.56 404 Z" fill="#444444" fill-opacity="1.000000"/>
