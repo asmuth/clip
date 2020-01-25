@@ -187,9 +187,11 @@ ReturnCode points_draw(
     {"color", bind(&color_read, ctx, _1, &c->color)},
     {"color-map", bind(&color_map_read, ctx, _1, &color_map)},
     {"labels", bind(&data_load_strings, _1, &c->labels)},
+    {"label-font", expr_call_string_fn(bind(&font_load_best, _1, &c->label_font))},
     {"label-font-size", bind(&measure_read, _1, &c->label_font_size)},
     {"label-color", bind(&color_read, ctx, _1, &c->label_color)},
     {"label-padding", bind(&measure_read, _1, &c->label_padding)},
+    {"font", expr_call_string_fn(bind(&font_load_best, _1, &c->label_font))},
   });
 
   if (!config_rc) {
