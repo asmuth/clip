@@ -53,6 +53,7 @@ struct AxisDefinition {
 
   /* layout */
   AxisAlign align;
+  bool enable;
 
   /* scale */
   ScaleConfig scale;
@@ -88,6 +89,7 @@ struct AxisDefinition {
 
 AxisDefinition::AxisDefinition() :
     align(AxisAlign::X),
+    enable(true),
     title_offset(0.0),
     title_rotate(0.0),
     tick_offset(0.0),
@@ -765,6 +767,49 @@ ReturnCode axis_draw(Context* ctx, const Expr* expr) {
   return axis_draw(ctx, config.get());
 }
 
+ReturnCode axis_configure_position(
+    const Expr* expr,
+    std::array<AxisDefinition, 4>* axes) {
+  if (!expr || !expr_is_list(expr)) {
+    return errorf(
+        ERROR,
+        "invalid argument; expected a list but got: {}",
+        expr_inspect(expr));
+  }
+
+
+  axes->at(0).enable = false;
+  axes->at(1).enable = false;
+  axes->at(2).enable = false;
+  axes->at(3).enable = false;
+
+  for (expr = expr_get_list(expr); expr; expr = expr_next(expr)) {
+    if (expr_is_value(expr, "top")) {
+      axes->at(0).enable = true;
+      continue;
+    }
+
+    if (expr_is_value(expr, "bottom")) {
+      axes->at(2).enable = true;
+      continue;
+    }
+
+    if (expr_is_value(expr, "left")) {
+      axes->at(3).enable = true;
+      continue;
+    }
+
+    if (expr_is_value(expr, "right")) {
+      axes->at(1).enable = true;
+      continue;
+    }
+
+    return ERROR;
+  }
+
+  return OK;
+}
+
 ReturnCode axis_add_all(Context* ctx, const Expr* expr) {
   std::array<AxisDefinition, 4> axes;
 
@@ -827,6 +872,7 @@ ReturnCode axis_add_all(Context* ctx, const Expr* expr) {
   axes[3].border_style.color = ctx->foreground_color;
 
   auto config_rc = expr_walk_map_with_defaults(expr_next(expr), ctx->defaults, {
+    {"position", bind(&axis_configure_position, _1, &axes)},
     {
       "font",
       expr_calln_fn({
@@ -1129,6 +1175,10 @@ ReturnCode axis_add_all(Context* ctx, const Expr* expr) {
 
   std::array<double, 4> margins = {0, 0, 0, 0};
   for (size_t i = 0; i < 4; ++i) {
+    if (!axes[i].enable) {
+      continue;
+    }
+
     if (auto rc = axis_prepare(ctx, &axes[i]); !rc) {
       return rc;
     }
@@ -1146,6 +1196,10 @@ ReturnCode axis_add_all(Context* ctx, const Expr* expr) {
   ctx->layout_stack.push_back(bbox);
 
   for (auto& a : axes) {
+    if (!a.enable) {
+      continue;
+    }
+
     if (auto rc = axis_draw(ctx, &a); !rc) {
       return rc;
     }
