@@ -971,6 +971,19 @@ ReturnCode axis_add_all(Context* ctx, const Expr* expr) {
     {"axis-left-label-format", bind(&format_configure, _1, &axes[3].label_formatter)},
 
     {
+      "font-size",
+      expr_calln_fn({
+        bind(&measure_read, _1, &axes[0].title_font_size),
+        bind(&measure_read, _1, &axes[1].title_font_size),
+        bind(&measure_read, _1, &axes[2].title_font_size),
+        bind(&measure_read, _1, &axes[3].title_font_size),
+        bind(&measure_read, _1, &axes[0].label_font_size),
+        bind(&measure_read, _1, &axes[1].label_font_size),
+        bind(&measure_read, _1, &axes[2].label_font_size),
+        bind(&measure_read, _1, &axes[3].label_font_size),
+      })
+    },
+    {
       "label-font-size",
       expr_calln_fn({
         bind(&measure_read, _1, &axes[0].label_font_size),
@@ -1098,6 +1111,20 @@ ReturnCode axis_add_all(Context* ctx, const Expr* expr) {
       expr_calln_fn({
         bind(&expr_to_float64_opt_pair, _1, &axes[1].scale.min, &axes[1].scale.max),
         bind(&expr_to_float64_opt_pair, _1, &axes[3].scale.min, &axes[3].scale.max),
+      })
+    },
+    {
+      "scale-x",
+      expr_calln_fn({
+        bind(&scale_configure_kind, _1, &axes[0].scale),
+        bind(&scale_configure_kind, _1, &axes[2].scale),
+      })
+    },
+    {
+      "scale-y",
+      expr_calln_fn({
+        bind(&scale_configure_kind, _1, &axes[1].scale),
+        bind(&scale_configure_kind, _1, &axes[3].scale),
       })
     },
 
