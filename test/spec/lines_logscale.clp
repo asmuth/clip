@@ -1,10 +1,18 @@
-(chart/linechart
+(set-width 2048px)
+(set-height 1200px)
+(set-dpi 240)
+
+(default limit-x (1 5))
+(default limit-y (0 10000))
+(default scale-y (log))
+
+(layout/add-margins margin 2em)
+
+(plot/add-axes
+    axis-y-label-placement (subdivide 10))
+
+(plot/draw-grid (color #fff))
+
+(plot/draw-lines
     data-x (csv "test/testdata/log_example.csv" x)
-    data-y (csv "test/testdata/log_example.csv" y)
-    limit-x (1 5)
-    limit-y (0 10000)
-    scale-y (log)
-    axis-y-label-placement (subdivide 10)
-    grid (color #fff)
-    background #eee
-    border none)
+    data-y (csv "test/testdata/log_example.csv" y))

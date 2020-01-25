@@ -1,31 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="960.000000" height="280.000000">
-  <rect width="960.000000" height="280.000000" fill="#ffffffff"/>
-  <path d="M71.5897 235.6 L71.5897 198.137 L100.923 198.137 L100.923 235.6 Z" fill="#aa4643ff"/>
-  <path d="M143.179 235.6 L143.179 195.256 L172.513 195.256 L172.513 235.6 Z" fill="#aa4643ff"/>
-  <path d="M214.769 235.6 L214.769 180.847 L244.103 180.847 L244.103 235.6 Z" fill="#aa4643ff"/>
-  <path d="M286.359 235.6 L286.359 153.951 L315.692 153.951 L315.692 235.6 Z" fill="#aa4643ff"/>
-  <path d="M357.949 235.6 L357.949 121.291 L387.282 121.291 L387.282 235.6 Z" fill="#aa4643ff"/>
-  <path d="M429.538 235.6 L429.538 89.5919 L458.872 89.5919 L458.872 235.6 Z" fill="#aa4643ff"/>
-  <path d="M501.128 235.6 L501.128 72.3014 L530.462 72.3014 L530.462 235.6 Z" fill="#aa4643ff"/>
-  <path d="M572.718 235.6 L572.718 76.1438 L602.051 76.1438 L602.051 235.6 Z" fill="#aa4643ff"/>
-  <path d="M644.308 235.6 L644.308 99.1977 L673.641 99.1977 L673.641 235.6 Z" fill="#aa4643ff"/>
-  <path d="M715.897 235.6 L715.897 136.66 L745.231 136.66 L745.231 235.6 Z" fill="#aa4643ff"/>
-  <path d="M787.487 235.6 L787.487 172.202 L816.821 172.202 L816.821 235.6 Z" fill="#aa4643ff"/>
-  <path d="M859.077 235.6 L859.077 189.492 L888.41 189.492 L888.41 235.6 Z" fill="#aa4643ff"/>
-  <text x="67.826723" y="185.337391" fill="#000000ff" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">3.9°C</text>
-  <text x="139.416466" y="182.455652" fill="#000000ff" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">4.2°C</text>
-  <text x="211.006210" y="168.046957" fill="#000000ff" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">5.7°C</text>
-  <text x="282.595954" y="141.150725" fill="#000000ff" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">8.5°C</text>
-  <text x="350.654447" y="108.491014" fill="#000000ff" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">11.9°C</text>
-  <text x="421.697316" y="76.791884" fill="#000000ff" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">15.2°C</text>
-  <text x="493.287059" y="59.501449" fill="#000000ff" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">17.0°C</text>
-  <text x="564.876803" y="63.343768" fill="#000000ff" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">16.6°C</text>
-  <text x="636.466546" y="86.397681" fill="#000000ff" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">14.2°C</text>
-  <text x="708.056290" y="123.860290" fill="#000000ff" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">10.3°C</text>
-  <text x="783.724159" y="159.401739" fill="#000000ff" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">6.6°C</text>
-  <text x="855.313902" y="176.692174" fill="#000000ff" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">4.8°C</text>
-  <text x="54.266667" y="46.266667" fill="#000000ff" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">London - Average Monthly Temperature</text>
-  <path d="M40.3333 46.7667 C37.2958 46.7667 34.8333 44.3042 34.8333 41.2667 C34.8333 38.2291 37.2958 35.7667 40.3333 35.7667 C43.3709 35.7667 45.8333 38.2291 45.8333 41.2667 C45.8333 44.3042 43.3709 46.7667 40.3333 46.7667 Z" fill="#aa4643ff"/>
+  <rect width="960.000000" height="280.000000" fill="#ffffff" fill-opacity="1.000000"/>
   <path d="M14.6667 235.6 L945.333 235.6 " fill="none" stroke-width="1.333333" stroke="#000000ff"/>
   <path d="M86.2564 235.6 L86.2564 230.267 " fill="none" stroke-width="1.333333" stroke="#000000ff"/>
   <path d="M157.846 235.6 L157.846 230.267 " fill="none" stroke-width="1.333333" stroke="#000000ff"/>
@@ -51,4 +25,30 @@
   <text x="719.150040" y="261.333333" fill="#000000ff" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">Oct</text>
   <text x="789.106971" y="261.333333" fill="#000000ff" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">Nov</text>
   <text x="860.696715" y="261.333333" fill="#000000ff" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">Dec</text>
+  <path d="M71.5897 235.6 L71.5897 198.137 L100.923 198.137 L100.923 235.6 Z" fill="#aa4643" fill-opacity="1.000000"/>
+  <path d="M143.179 235.6 L143.179 195.256 L172.513 195.256 L172.513 235.6 Z" fill="#aa4643" fill-opacity="1.000000"/>
+  <path d="M214.769 235.6 L214.769 180.847 L244.103 180.847 L244.103 235.6 Z" fill="#aa4643" fill-opacity="1.000000"/>
+  <path d="M286.359 235.6 L286.359 153.951 L315.692 153.951 L315.692 235.6 Z" fill="#aa4643" fill-opacity="1.000000"/>
+  <path d="M357.949 235.6 L357.949 121.291 L387.282 121.291 L387.282 235.6 Z" fill="#aa4643" fill-opacity="1.000000"/>
+  <path d="M429.538 235.6 L429.538 89.5919 L458.872 89.5919 L458.872 235.6 Z" fill="#aa4643" fill-opacity="1.000000"/>
+  <path d="M501.128 235.6 L501.128 72.3014 L530.462 72.3014 L530.462 235.6 Z" fill="#aa4643" fill-opacity="1.000000"/>
+  <path d="M572.718 235.6 L572.718 76.1438 L602.051 76.1438 L602.051 235.6 Z" fill="#aa4643" fill-opacity="1.000000"/>
+  <path d="M644.308 235.6 L644.308 99.1977 L673.641 99.1977 L673.641 235.6 Z" fill="#aa4643" fill-opacity="1.000000"/>
+  <path d="M715.897 235.6 L715.897 136.66 L745.231 136.66 L745.231 235.6 Z" fill="#aa4643" fill-opacity="1.000000"/>
+  <path d="M787.487 235.6 L787.487 172.202 L816.821 172.202 L816.821 235.6 Z" fill="#aa4643" fill-opacity="1.000000"/>
+  <path d="M859.077 235.6 L859.077 189.492 L888.41 189.492 L888.41 235.6 Z" fill="#aa4643" fill-opacity="1.000000"/>
+  <text x="67.826723" y="187.537391" fill="#000000ff" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">3.9°C</text>
+  <text x="139.416466" y="184.655652" fill="#000000ff" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">4.2°C</text>
+  <text x="211.006210" y="170.246957" fill="#000000ff" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">5.7°C</text>
+  <text x="282.595954" y="143.350725" fill="#000000ff" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">8.5°C</text>
+  <text x="350.654447" y="110.691014" fill="#000000ff" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">11.9°C</text>
+  <text x="421.697316" y="78.991884" fill="#000000ff" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">15.2°C</text>
+  <text x="493.287059" y="61.701449" fill="#000000ff" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">17.0°C</text>
+  <text x="564.876803" y="65.543768" fill="#000000ff" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">16.6°C</text>
+  <text x="636.466546" y="88.597681" fill="#000000ff" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">14.2°C</text>
+  <text x="708.056290" y="126.060290" fill="#000000ff" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">10.3°C</text>
+  <text x="783.724159" y="161.601739" fill="#000000ff" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">6.6°C</text>
+  <text x="855.313902" y="178.892174" fill="#000000ff" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">4.8°C</text>
+  <text x="54.266667" y="46.266667" fill="#000000ff" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">London - Average Monthly Temperature</text>
+  <path d="M40.3333 46.7667 C37.2958 46.7667 34.8333 44.3042 34.8333 41.2667 C34.8333 38.2291 37.2958 35.7667 40.3333 35.7667 C43.3709 35.7667 45.8333 38.2291 45.8333 41.2667 C45.8333 44.3042 43.3709 46.7667 40.3333 46.7667 Z" fill="#aa4643" fill-opacity="1.000000"/>
 </svg>

@@ -1,13 +1,18 @@
-(set-height 300px)
+(set-width 2048px)
+(set-height 1200px)
+(set-dpi 240)
 
-(chart/linechart
+(default limit-x (1 5))
+(default limit-y (0 10000))
+(default scale-y (log))
+
+(layout/add-margins margin 2em)
+
+(plot/add-axes
+    axis-y-label-format (base 10))
+
+(plot/draw-grid color (rgba 0 0 0 .05))
+
+(plot/draw-lines
     data-x (csv "test/testdata/log_example.csv" x)
-    data-y (csv "test/testdata/log_example.csv" y)
-    limit-x (1 5)
-    limit-y (0 1000)
-    scale-y (log)
-    axes (bottom left)
-    axis-y-label-format (base 10)
-    grid (color #fff)
-    background #eee
-    border none)
+    data-y (csv "test/testdata/log_example.csv" y))

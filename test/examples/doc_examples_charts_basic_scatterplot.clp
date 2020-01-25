@@ -2,13 +2,15 @@
 (set-height 1024px)
 (set-dpi 240)
 
-(chart/scatterplot
+(layout/add-margins margin 1em)
+
+(default limit-x (0 400))
+(default limit-y (0 200))
+
+(plot/add-axes
+    position (bottom left)
+    axis-y-label-placement (subdivide 4))
+
+(plot/draw-points
     data-x (csv test/testdata/gauss2d.csv x)
-    data-y (csv test/testdata/gauss2d.csv y)
-    limit-x (0 400)
-    limit-y (0 200)
-    axis-y-label-placement (subdivide 4)
-    axes (bottom left)
-    grid (color #fff)
-    background #eee
-    border none)
+    data-y (csv test/testdata/gauss2d.csv y))

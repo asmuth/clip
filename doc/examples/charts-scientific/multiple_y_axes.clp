@@ -5,6 +5,8 @@
 
 (layout/add-margins margin 1em)
 
+(default limit-x (1404278100 1404299700))
+
 (plot/add-axes
     axis-left-limit (0 100)
     axis-left-label-placement (linear-interval 10 10 50)
