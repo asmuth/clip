@@ -15,7 +15,7 @@
 #include "legend_item.h"
 
 #include "data.h"
-#include "environment.h"
+#include "context.h"
 #include "layout.h"
 #include "color_reader.h"
 #include "scale.h"

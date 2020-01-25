@@ -14,7 +14,7 @@
 #include "bars.h"
 
 #include "data.h"
-#include "environment.h"
+#include "context.h"
 #include "layout.h"
 #include "graphics/path.h"
 #include "graphics/brush.h"

@@ -16,7 +16,7 @@
 #include "sexpr.h"
 #include "sexpr_conv.h"
 #include "sexpr_util.h"
-#include "environment.h"
+#include "context.h"
 #include "color_reader.h"
 #include "typographic_map.h"
 #include "typographic_reader.h"
@@ -50,7 +50,6 @@ struct PlotRectanglesConfig {
   Color color;
   std::vector<Color> colors;
   Measure size;
-  LayoutSettings layout;
 };
 
 ReturnCode rectangles_draw(

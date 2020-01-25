@@ -12,7 +12,7 @@
  * limitations under the License.
  */
 #pragma once
-#include "element.h"
+#include "context.h"
 #include "command.h"
 
 namespace clip::elements::plot::lines {

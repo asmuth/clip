@@ -14,7 +14,7 @@
 #include "areas.h"
 
 #include "data.h"
-#include "environment.h"
+#include "context.h"
 #include "layout.h"
 #include "scale.h"
 #include "style.h"
