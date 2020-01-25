@@ -59,7 +59,9 @@ ReturnCode draw_text(
     HAlign align_x,
     VAlign align_y,
     double rotate,
-    const TextStyle& style) {
+    TextStyle style) {
+  convert_unit_typographic(ctx->dpi, ctx->font_size, &style.font_size);
+
   text::TextSpan span;
   span.text_direction = style.direction;
   span.text = text;
@@ -124,7 +126,7 @@ ReturnCode draw_text(
     const Point& position,
     HAlign align_x,
     VAlign align_y,
-    const TextStyle& text_style) {
+    TextStyle text_style) {
   return draw_text(
       ctx,
       text,

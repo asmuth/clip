@@ -71,7 +71,7 @@ ReturnCode draw_text(
     HAlign align_x,
     VAlign align_y,
     double rotate,
-    const TextStyle& text_style);
+    TextStyle text_style);
 
 ReturnCode draw_text(
     Context* ctx,
@@ -79,7 +79,7 @@ ReturnCode draw_text(
     const Point& position,
     HAlign align_x,
     VAlign align_y,
-    const TextStyle& text_style);
+    TextStyle text_style);
 
 } // namespace clip
 
