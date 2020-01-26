@@ -74,7 +74,8 @@ To build clip, you need an up-to-date C++ compiler, cmake, fmtlib, libharfbuzz,
 libfreetype and cairo. Run:
 
     $ cmake .
-    $ make -j
+    $ make -j $(($(nproc)/2)) # for linux users, or
+    $ make -j $(($(sysctl -n hw.ncpu)/2)) # for mac users 
 
 To install the `clip` binary into your system, run `make install`:
 
@@ -111,7 +112,7 @@ FAQ
 
 ### I'm getting build errors when compiling the code
 
-clip is writte in C++17 and needs a reasonably modern C++ compiler and standard
+clip is written in C++17 and needs a reasonably modern C++ compiler and standard
 library. In most cases where the code doesn't build it's due to some problem with
 the local build environment. We always appreciate bug reports so that we can
 improve our build system on GitHub Issues.
