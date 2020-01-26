@@ -4,10 +4,9 @@ clip (the _command line illustration processor_) is an open-source command line
 program and software library for creating charts and other data-driven
 illustrations.
 
-In essence, clip consists of a library of composable graphical 'elements'. This
-element library includes high-level building blocks for creating common chart types
-as well as lower-level drawing primitives such as markers, arrows and lines. Users
-create custom illustrations by combining and styling these elements.
+In essence, clip consists of a library of drawing commands. This command library
+includes high-level building blocks for creating common chart types as well as
+lower-level drawing primitives such as markers, arrows and lines.
 
 When called from the command line, clip reads input data in text and CSV format
 and produces the output chart as a SVG or PNG file. Additionaly, clip is available
@@ -35,15 +34,16 @@ Output File (`example_chart.svg`):
 
 Input File (`example_chart.clp`):
 
-    (plot
-      axes (bottom left)
-      label-format-y (scientific)
-      label-format-x (datetime "%H:%M:%S")
-      label-placement-x (linear-align 1800)
-      lines (
-        data-x (csv "tests/testdata/measurement.csv" time)
-        data-y (csv "tests/testdata/measurement.csv" value1)
-        color #06c))
+    (plot/add-axes
+        position (bottom left)
+        label-format-y (scientific)
+        label-format-x (datetime "%H:%M:%S")
+        label-placement-x (linear-align 1800))
+
+    (plot/draw-lines
+        data-x (csv "test/testdata/measurement.csv" time)
+        data-y (csv "test/testdata/measurement.csv" value1)
+        color #06c)
 
 Note that this example is only intended to give you an idea of what the syntax
 looks like and to get you started quickly; for an in-depth description of all
@@ -132,9 +132,8 @@ transforming data in addition to the charting code. Over time, the data
 processing parts were removed, leaving only the plotting code. However, as a
 consequence, most of the search queries for the project name would return
 outdated information, resulting in a generally confusing and stale-feeling
-situation. The best solution seemed to be to rename the project and so, after
-going a few other candidates (about which people complained), we finally settled
-on 'clip', since it was short, pronounceable, easy to remember and unencumbered.
+situation. The best solution seemed to be to rename the project and so it was
+renamed to "clip".
 
 
 License
