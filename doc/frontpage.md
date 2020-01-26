@@ -5,7 +5,7 @@ program and software library for creating charts and other data-driven
 illustrations.
 
 <div style="margin-top: 1.2em;">
-  <a href="./documentation/getting-started" style="">Getting Started</a>
+  <a href="./getting-started" style="">Getting Started</a>
   <span style="margin: 0 .3em">·</span>
   <a href="./examples">Examples</a>
   <span style="margin: 0 .3em">·</span>

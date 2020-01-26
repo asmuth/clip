@@ -101,7 +101,6 @@ nav {
   overflow: auto;
   margin: 0 2em;
   padding: 1.6em 0 0 0;
-  max-width: 960px;
   margin: auto;
 }
 
@@ -142,12 +141,15 @@ footer {
   font-size: 90%;
   color:#777;
   border-top: 1px solid #ddd;
-  max-width: 960px;
   margin: auto;
 }
 
-#ooter a {
+footer a {
   color:#777;
+}
+
+article, nav, footer {
+  max-width: 860px;
 }
 
 article {
@@ -155,7 +157,6 @@ article {
   flex: 1;
   flex-direction: column;
   padding: 1.4em 0;
-  max-width: 960px;
   margin: auto;
 }
 
@@ -212,6 +213,8 @@ article p {
   margin-bottom: .6em;
   font-weight: 400;
   color: #000;
+  line-height: 1.5;
+  margin-bottom: 1em;
 }
 
 article hr {
@@ -420,6 +423,30 @@ article .picto {
 
 article .color_legend {
   margin-right: .4em;
+}
+
+article figure img.small {
+  display: block;
+  max-height: 100%;
+  margin: auto;
+  margin-top: 2em;
+  max-width: 600px;
+  border: 1px solid #aeb3bb;
+  margin-bottom: 1.3em;
+}
+
+article figcaption {
+  text-align: center;
+  margin-bottom: 3em;
+  font-size: 90%;
+  display: block;
+  position: relative;
+  top: -.3em;
+  color: #444;
+}
+
+article figcaption code {
+  background: transparent;
 }
 
 .toc {

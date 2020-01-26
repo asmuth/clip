@@ -18,8 +18,8 @@ cd "$(dirname "$0")/../.."
 cp doc/web/documentation.css "${output_dir}"
 cp doc/web/redirects.txt "${output_dir}/_redirects"
 cp doc/web/favicon.ico "${output_dir}"
-mkdir -p "${output_dir}/documentation/figures"
-cp doc/figures/*.svg "${output_dir}/documentation/figures/"
+mkdir -p "${output_dir}/figures"
+cp doc/figures/*.svg "${output_dir}/figures/"
 ./doc/web/build_api_reference.py
 ./doc/web/build_examples.py
 ./doc/web/build_pages.py
