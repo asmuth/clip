@@ -6,9 +6,9 @@
     <li>
       <a href="#options">Options</a>
       <ul style="padding-left: 1em;">
-        {{#properties_all}}
+        {{#arguments}}
           <li><a href="#option-{{name}}">{{name}}</a></li>
-        {{/properties_all}}
+        {{/arguments}}
       </ul>
     </li>
     <li><a href="#examples">Examples</a></li>
@@ -19,15 +19,15 @@
 {{{desc}}}
 
 <h3 id="syntax">Syntax</h3>
-<pre><code>{{reference}}</code></pre>
+<pre><code>({{name}} &lt;options&gt;)</code></pre>
 
-<pre><code>({{name}} {{#properties_all}}<br />    <a href="#option-{{name}}">{{name}}</a> (...){{/properties_all}})</pre></code>
+<pre><code>({{name}} {{#arguments}}<br />    <a href="#option-{{name}}">{{name}}</a> (...){{/arguments}})</pre></code>
 
 
 {{{desc_detail}}}
 
 <h2 id="options">Options</h2>
-{{#properties_all}}
+{{#arguments}}
   <section style="border-top: none; border-bottom: 1px solid #ddd; padding-bottom: 1em; margin-bottom: 0;">
     <a href="#option-{{name}}">
       <h3 id="option-{{name}}">{{name}}</h3>
@@ -56,13 +56,14 @@
     {{/examples}}
 
   </section>
-{{/properties_all}}
+{{/arguments}}
 
 <h2 id="examples">Examples</h2>
 
-{{#example}}
-<h4>Example</h4>
-<a href="/examples/{{example}}">
-  <img src="{{example_img}}" />
-</a>
-{{/example}}
+{{#examples}}
+  <h4>Example: <a href="/examples/{{.}}" class="link"><code>examples/{{.}}</code></a></h4>
+  <figure>
+    <a href="/examples/{{.}}"><img src="/examples/{{.}}.svg"></a>
+  </figure>
+  <hr />
+{{/examples}}

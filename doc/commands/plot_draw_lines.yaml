@@ -1,145 +1,75 @@
 name: plot/draw-lines
-example: charts-basic/linechart_timeseries
 desc: |
   The `plot/draw-lines` command takes an input data table, transforms it according
   to a user-provided scale configuration and then plots the data as one or more
   lines.
 
-reference: |
-  (plot/draw-lines <options>)
+arguments:
 
-reference_full: |
-  (plot/draw-lines
-      data-x (...)
-      data-y (...)
-      color (...)
-      stroke-style (...))
+  - name: data-x
+    type: dataset
+    desc: |
+      Set the 'x' dataset for the plot. The 'x' dataset will be used to
+      calculate the horizontal position of geometry.
 
-option_summary: true
+  - name: data-y
+    type: dataset
+    desc: |
+      Set the 'y' dataset for the plot. The 'y' dataset will be used to
+      calculate the vertical position of geometry.
 
-properties:
-  - title: "Line Options"
-    anchor: line-options
-    properties:
-      - name: data-x
-        desc: |
-          Set the 'x' dataset for the plot. The 'x' dataset will be used to
-          calculate the horizontal position of geometry.
-        desc_code: |
-          data-x (<values>...)
-          data-x (csv <file> <column>)
-        examples: |
-          ;; list of static values
-          data-x (10px 20px 30px)
+  - name: color
+    type: color
+    desc: Set the stroke and marker color.
 
-          ;; load a csv file
-          data-x (csv myfile.csv mycolumn)
-      - name: data-y
-        desc: |
-          Set the 'y' dataset for the plot. The 'y' dataset will be used to
-          calculate the vertical position of geometry.
-        desc_code: |
-          data-y (<values>...)
-          data-y (csv <file> <column>)
-        examples: |
-          ;; list of static values
-          data-y (10px 20px 30px)
+  - name: stroke-style
+    type: stroke_style
+    desc: Set the line's stroke style.
 
-          ;; load a csv file
-          data-y (csv myfile.csv mycolumn)
-      - name: color
-        desc: |
-          Set the stroke and marker color.
-        desc_code: |
-          color <color>
-      - name: stroke-style
-        desc: |
-          Set the line's stroke style. See the
-          [stroke-style](#FIXME) page for more details on valid values.
-        desc_code: |
-          stroke (<stroke-style>)
-        examples: |
-          ;; set the stroke to dashed
-          stroke-style dashed
-      - name: stroke-width
-        desc: |
-          Set the line's stroke width. See the
-          [Typographic Units](#FIXME) page for more details on valid values.
-        desc_code: |
-          stroke-width <measure>
-        examples: |
-          ;; set the stroke width to 2pt
-          stroke-width 2pt
-      - name: stroke-color
-        desc: |
-          Set the stroke color.
-        desc_code: |
-          stroke-color <color>
-      - name: marker-shape
-        desc: |
-          Set the marker-shape for the plot. If set, a marker will be drawn for each
-          point in the dataset at the points (x, y) coordinate.
-        desc_code: |
-          marker-shape (<marker-shape>)
-        examples: |
-          ;; set marker size to 'hexagon'
-          marker-shape (hexagon)
-      - name: marker-size
-        desc: |
-          Set the marker-sizes for the plot. If set, a marker will be drawn for each
-          point in the dataset at the points (x, y) coordinate.
-        desc_code: |
-          marker-size <measure>
-        examples: |
-          ;; set marker size to 2pt
-          marker-size 2pt
-      - name: marker-color
-        desc: |
-          Set the marker color.
-        desc_code: |
-          marker-color <color>
+  - name: stroke-width
+    type: stroke_width
+    desc: Set the line's stroke width.
 
-  - title: "Label Options"
-    anchor: label-options
-    properties:
-      - name: labels
-        desc: |
-          Set the labels for the plot. If set, a label will be drawn for each
-          point in the dataset at the points (x, y) coordinate,
-        desc_code: |
-          label-format (<values>...)
-          labels (csv <file> <column>)
-        examples: |
-          ;; list of static values
-          label-format ("A" "B" "C")
+  - name: stroke-color
+    type: color
+    desc: Set the stroke color.
 
-          ;; load a csv file
-          labels (csv myfile.csv mylabels)
-      - name: label-font-size
-        desc: |
-          Set the label font size. See the [measure](#FIXME) page for more details on valid values.
-        desc_code: |
-          label-font-size <measure>
-        examples: |
-          ;; set the label font size to 14pt
-          label-font-size 14pt
-      - name: label-color
-        desc: |
-          Set the label color. See the [color](#FIXME) page for more details on valid values.
-        desc_code: |
-          label-color <color>
-        examples: |
-          ;; set the label color to grey
-          label-color #eee
-      - name: label-padding
-        desc: |
-          Set the label padding/spacing. See the [measure](#FIXME) page for more details on valid values.
-        desc_code: |
-          label-padding <measure>
-        examples: |
-          ;; set the label padding to 2em
-          label-padding 2em
+  - name: marker-shape
+    type: marker_shape
 
-  - title: "Scale Options"
-    anchor: scale-options
-    inherit: ["elements/plot", "scale-options"]
+  - name: marker-size
+    type: size
+    desc: |
+      Set the marker size for the plot. If set to a value greater than zero, a
+      'marker' will be drawn for each point in the dataset at the points (x, y)
+      coordinate.
+
+  - name: marker-color
+    type: color
+    desc: |
+      Set the marker color.
+
+  - name: labels
+    type: dataset_string
+    desc: |
+      Set the labels dataset. If provided, a label will be drawn for each
+      point in the dataset at the corresponding (x, y) coordinate. The number of
+      entries in the 'labels' dataset must match the number of entries in the
+      'x' and 'y' datasets exactly.
+
+  - name: label-font-size
+    type: font_size
+    desc: Set the label font size.
+
+  - name: label-color
+    type: color
+    desc: Set the label color.
+
+  - name: label-padding
+    type: padding
+    desc: Set the label padding/spacing.
+
+  - include: scale_args
+
+examples:
+  - charts-basic/linechart_timeseries

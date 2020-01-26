@@ -1,0 +1,5 @@
+desc_code: |
+  {{name}} <measure>
+examples: |
+  ;; set size to 2pt
+  {{name}} 2pt

@@ -7,17 +7,11 @@ import yaml
 import glob
 import os
 
-def load_prop(p):
-  if "inherit" in p:
-    inherit_path = p["inherit"][0] + "_ref.yaml"
-    if os.path.exists(inherit_path):
-      for inherit_section in yaml.load(open(inherit_path))["properties"]:
-        if not "inherit" in p:
-          break
-        for inherit_property in inherit_section["properties"]:
-          if inherit_property["name"] == p["inherit"][1]:
-            p = inherit_property
-            break
+def load_arg(p):
+  if "type" in p:
+    type_path = "doc/commands/arg/" + p["type"] + ".yaml"
+    if os.path.exists(type_path):
+      p = {**p, **yaml.load(open(type_path))}
 
   if not "desc_short" in p:
     p["desc_short"] = ""
@@ -26,7 +20,7 @@ def load_prop(p):
     p["desc"] = p["desc_short"]
 
   if not "name" in p:
-    p["name"] = p["prop"]
+    p["name"] = p["arg"]
 
   if "desc" in p:
     p["desc"] = markdown.markdown(p["desc"])
@@ -38,36 +32,25 @@ def load_prop(p):
   else:
     p["desc_detail"] = ""
 
+  for k in p:
+    if isinstance(p[k], str):
+      p[k] = p[k].replace("{{name}}", p["name"])
+
   return p
 
 def build_elem_page(elem_file):
   elem = yaml.load(open(elem_file))
 
-  props_all = []
-  props_new = []
-  for section in elem["properties"]:
-    section_new = {
-      "title": section["title"],
-      "anchor": section.get("anchor", ""),
-      "properties": []
-    }
+  args = []
+  for arg in elem.get("arguments", []):
+    if "include" in arg:
+      include = yaml.load(open("doc/commands/arg/" + arg["include"] + ".yaml"))
+      for arg in include["arguments"]:
+        args.append(load_arg(arg))
+    else:
+      args.append(load_arg(arg))
 
-    section_props = section.get("properties", [])
-    if "inherit" in section:
-      section_inherit_path = section["inherit"][0] + "_ref.yaml"
-      if os.path.exists(section_inherit_path):
-        for section_inherit in yaml.load(open(section_inherit_path))["properties"]:
-          if section_inherit["anchor"] == section["inherit"][1]:
-            section_props += section_inherit["properties"]
-
-    for prop in section_props:
-      section_new["properties"].append(load_prop(prop))
-      props_all.append(load_prop(prop))
-
-    props_new.append(section_new)
-
-  elem["properties"] = props_new
-  elem["properties_all"] = props_all
+  elem["arguments"] = args
 
   if "desc" in elem:
     elem["desc"] = markdown.markdown(elem["desc"])
@@ -76,10 +59,6 @@ def build_elem_page(elem_file):
     elem["desc_detail"] = markdown.markdown(elem["desc_detail"])
 
   url = "/commands/" + elem["name"]
-
-  if "example" in elem:
-    elem["example_src"] = Path(os.path.join("doc/examples", elem["example"] + ".clp")).read_text()
-    elem["example_img"] = "/examples/" + elem["example"] + ".svg"
 
   print("> Building page: %s" % url)
   title = elem["name"]

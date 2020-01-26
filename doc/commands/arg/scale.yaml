@@ -1,0 +1,15 @@
+desc_code: |
+  {{name}} ([linear] [log] [logarithmic] [invert] [inverted])
+desc_detail: |
+  List of scale types:
+
+    - `linear` - Standard linear scale
+    - `log`, `logarithmic` - Logarithmic (log10) scale
+    - `invert`, `inverted` - Flip the scale
+
+examples: |
+  ;; set the scale to logarithmic mode
+  {{name}} (log)
+
+  ;; set the scale to inverted mode
+  {{name}} (invert)

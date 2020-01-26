@@ -1,0 +1,6 @@
+desc: Set the marker shape.
+desc_code: |
+  marker-shape (<marker-shape>)
+examples: |
+  ;; set marker size to 'hexagon'
+  marker-shape (hexagon)

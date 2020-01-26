@@ -1,0 +1,7 @@
+desc_append: |
+  See the [measure](#FIXME) page for more details on valid values.
+desc_code: |
+  {{name}} <measure>
+examples: |
+  ;; set the font size to 14pt
+  {{name}} 14pt

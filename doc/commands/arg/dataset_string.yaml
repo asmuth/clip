@@ -1,0 +1,9 @@
+desc_code: |
+  {{name}} (<values>...)
+  {{name}} (csv <file> <column>)
+examples: |
+  ;; list of static values
+  {{name}} ("A" "B" "C")
+
+  ;; load a csv file
+  {{name}} (csv myfile.csv mycolumn)
