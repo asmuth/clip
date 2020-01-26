@@ -463,7 +463,7 @@ article .color_legend {
 
 ul.index {
   padding: 0;
-  margin: 0;
+  margin: 0 0 2em 0;
 }
 
 ul.index li {
@@ -478,6 +478,7 @@ ul.index li:last-child {
 }
 
 ul.index li a {
+  display: block;
   color: #04f;
 }
 
@@ -491,3 +492,4 @@ ul.index code {
   color: #04f;
   font-weight: 500;
 }
+
