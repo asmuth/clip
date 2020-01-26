@@ -1,105 +1,57 @@
-name: plot/errorbars
-example: charts-scientific/errorbars_log
+name: plot/draw-errorbars
 desc: |
-  The `plot/errorbars` element is used to draw error bars.
+  The `plot/draw-errorbars` command takes an input data table, transforms it according
+  to a user-provided scale configuration and then plots the data as one or more
+  'error bars'.
 
-reference: |
-  (plot/errorbars <options>)
+arguments:
 
-option_summary: true
+  - name: data-x
+    type: dataset
+    desc: |
+      Set the 'x' dataset for the plot. The 'x' dataset will be used to
+      calculate the horizontal position of geometry.
 
-properties:
-  - title: "Error Bar Options"
-    anchor: errorbar-options
-    properties:
-      - name: data-x
-        desc: |
-          Set the 'x' dataset for the plot. The 'x' dataset will be used to
-          calculate the horizontal position of geometry.
-        desc_code: |
-          data-x (<values>...)
-          data-x (csv <file> <column>)
-        examples: |
-          ;; list of static values
-          data-x (10px 20px 30px)
+  - name: data-x-high
+    alias: data-x
 
-          ;; load a csv file
-          data-x (csv myfile.csv mycolumn)
-      - name: data-x-high
-        alias: data-x
-      - name: data-x-low
-        desc: |
-          Set the 'x2' dataset for the plot. The 'x2' dataset will be used to
-          calculate the horizontal position of geometry.
-        desc_code: |
-          data-x-low (<values>...)
-          data-x-low (csv <file> <column>)
-        examples: |
-          ;; list of static values
-          data-x-low (10px 20px 30px)
+  - name: data-x-low
+    type: dataset
 
-          ;; load a csv file
-          data-x-low (csv myfile.csv mycolumn)
-      - name: data-y
-        desc: |
-          Set the 'y' dataset for the plot. The 'y' dataset will be used to
-          calculate the vertical position of geometry.
-        desc_code: |
-          data-y (<values>...)
-          data-y (csv <file> <column>)
-        examples: |
-          ;; list of static values
-          data-y (10px 20px 30px)
+  - name: data-y
+    type: dataset
+      Set the 'x' dataset for the plot. The 'x' dataset will be used to
+      calculate the vertical position of geometry.
 
-          ;; load a csv file
-          data-y (csv myfile.csv mycolumn)
-      - name: data-y-high
-        alias: data-y
-      - name: data-y-low
-        desc: |
-          Set the 'y2' dataset for the plot. The 'y2' dataset will be used to
-          calculate the vertical position of geometry.
-        desc_code: |
-          data-y-low (<values>...)
-          data-y-low (csv <file> <column>)
-        examples: |
-          ;; list of static values
-          data-y-low (10px 20px 30px)
+  - name: data-y-high
+    alias: data-y
 
-          ;; load a csv file
-          data-y-low (csv myfile.csv mycolumn)
-      - name: color
-        desc: |
-          Set the bar color.
-        desc_code: |
-          color <color>
-      - name: errorbar-width
-        desc: |
-          Set the error bar width. See the
-          [measure](#FIXME) page for more details on valid values.
-        desc_code: |
-          bar-width <measure>
-        examples: |
-          ;; set the bar width to 1em
-          bar-width 1em
-      - name: stroke-color
-        desc: |
-          Set the errorbar's stroke color. See the [color](#FIXME) page for more details on valid values.
-        desc_code: |
-          bar-stroke-color <color>
-        examples: |
-          ;; set the stroke color to grey
-          bar-stroke-color #eee
-      - name: stroke-width
-        desc: |
-          Set the errorbar's stroke width. See the
-          [measure](#FIXME) page for more details on valid values.
-        desc_code: |
-          bar-stroke-width <measure>
-        examples: |
-          ;; set the bar stroke width to 2pt
-          bar-stroke-width 2pt
+  - name: data-y-low
+    type: dataset
 
-  - title: "Scale Options"
-    anchor: scale-options
-    inherit: ["elements/plot", "scale-options"]
+  - name: color
+    type: color
+    desc: Set the bar color.
+
+  - name: errorbar-width
+    desc: |
+      Set the error bar width. See the
+      [measure](#FIXME) page for more details on valid values.
+    desc_code: |
+      bar-width <measure>
+    examples: |
+      ;; set the bar width to 1em
+      bar-width 1em
+
+  - name: stroke-color
+    type: color
+    desc: Set the errorbar's stroke color.
+
+  - name: stroke-width
+    type: stroke_width
+    desc: Set the errorbar's stroke width.
+
+  - include: scale_args
+
+examples:
+  - charts-scientific/errorbars_log

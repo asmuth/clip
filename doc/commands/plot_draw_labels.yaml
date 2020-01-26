@@ -1,83 +1,43 @@
 name: plot/draw-labels
-example: charts-scientific/scatterplot_with_labels
 desc: |
   The `plot/draw-labels` command takes an input data table, transforms it according
   to a user-provided scale configuration and then plots the data as text labels.
 
-reference: |
-  (plot/draw-labels <options>)
 
-option_summary: true
+arguments:
+  - name: data-x
+    type: dataset
+    desc: |
+      Set the 'x' dataset for the plot. The 'x' dataset will be used to
+      calculate the horizontal position of geometry.
 
-properties:
-  - title: "Label Options"
-    anchor: label-options
-    properties:
-      - name: data-x
-        desc: |
-          Set the 'x' dataset for the plot. The 'x' dataset will be used to
-          calculate the horizontal position of geometry.
-        desc_code: |
-          data-x (<values>...)
-          data-x (csv <file> <column>)
-        examples: |
-          ;; list of static values
-          data-x (10px 20px 30px)
+  - name: data-y
+    type: dataset
+    desc: |
+      Set the 'y' dataset for the plot. The 'y' dataset will be used to
+      calculate the vertical position of geometry.
 
-          ;; load a csv file
-          data-x (csv myfile.csv mycolumn)
-      - name: data-y
-        desc: |
-          Set the 'y' dataset for the plot. The 'y' dataset will be used to
-          calculate the vertical position of geometry.
-        desc_code: |
-          data-y (<values>...)
-          data-y (csv <file> <column>)
-        examples: |
-          ;; list of static values
-          data-y (10px 20px 30px)
+  - name: labels
+    type: dataset_string
+    desc: |
+      Set the labels dataset. A label will be drawn for each
+      point in the dataset at the corresponding (x, y) coordinate. The number of
+      entries in the 'labels' dataset must match the number of entries in the
+      'x' and 'y' datasets exactly.
 
-          ;; load a csv file
-          data-y (csv myfile.csv mycolumn)
+  - name: label-font-size
+    type: font_size
+    desc: Set the label font size.
 
-      - name: labels
-        desc: |
-          Set the labels for the plot. If set, a label will be drawn for each
-          point in the dataset at the points (x, y) coordinate,
-        desc_code: |
-          labels (<values>...)
-          labels (csv <file> <column>)
-        examples: |
-          ;; list of static values
-          labels ("A" "B" "C")
+  - name: label-color
+    type: color
+    desc: Set the label color.
 
-          ;; load a csv file
-          labels (csv myfile.csv mylabels)
-      - name: label-font-size
-        desc: |
-          Set the label font size. See the [measure](#FIXME) page for more details on valid values.
-        desc_code: |
-          label-font-size <measure>
-        examples: |
-          ;; set the label font size to 14pt
-          label-font-size 14pt
-      - name: label-color
-        desc: |
-          Set the label color. See the [color](#FIXME) page for more details on valid values.
-        desc_code: |
-          label-color <color>
-        examples: |
-          ;; set the label color to grey
-          label-color #eee
-      - name: label-padding
-        desc: |
-          Set the label padding/spacing. See the [measure](#FIXME) page for more details on valid values.
-        desc_code: |
-          label-padding <measure>
-        examples: |
-          ;; set the label padding to 2em
-          label-padding 2em
+  - name: label-padding
+    type: padding
+    desc: Set the label padding/spacing.
 
-  - title: "Scale Options"
-    anchor: scale-options
-    inherit: ["elements/plot", "scale-options"]
+  - include: scale_args
+
+examples:
+  - charts-scientific/scatterplot_with_labels

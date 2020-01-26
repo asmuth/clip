@@ -1,2 +1,8 @@
 desc_code: |
   {{name}} <color>
+examples: |
+  ;; set the color to grey
+  {{name}} #eee
+
+  ;; set the color to red, 50% transparent
+  {{name}} (rgba 1 0 0 .5)

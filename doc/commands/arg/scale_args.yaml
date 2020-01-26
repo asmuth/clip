@@ -7,14 +7,14 @@ arguments:
     examples: |
       ;; set x axis limits to [1..10]
       limit-x (1 10)
-  - name: limit-x-max
+  - name: limit-x-min
     desc: |
       Set the minimum value (lower limit) for the 'x' (horizontal) scale.
     desc_code: |
-      limit-x-max <max>
+      limit-x-min <min>
     examples: |
       ;; set x axis lower limit to 2
-      limit-x-max 2
+      limit-x-min 2
   - name: limit-x-max
     desc: |
       Set the maximum value (upper limit) for the 'x' (horizontal) scale.
@@ -31,14 +31,14 @@ arguments:
     examples: |
       ;; set y axis limits to [1..10]
       limit-y (1 10)
-  - name: limit-y-max
+  - name: limit-y-min
     desc: |
       Set the minimum value (lower limit) for the 'y' (vertical) scale.
     desc_code: |
-      limit-y-max <max>
+      limit-y-min <max>
     examples: |
       ;; set y axis lower limit to 2
-      limit-y-max 2
+      limit-y-min 2
   - name: limit-y-max
     desc: |
       Set the maximum value (upper limit) for the 'y' (vertical) scale.

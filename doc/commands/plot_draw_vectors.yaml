@@ -1,119 +1,90 @@
-name: plot/vectors
+name: plot/draw-vectors
 desc: |
-  The `plot/vectors` element is used to create vector "field" plots.
+  The `plot/draw-vectors` command takes an input data table, transforms it according
+  to a user-provided scale configuration and then plots the data as vectors/arrows.
 
-reference: |
-  (plot/vectors <options>)
+arguments:
 
-option_summary: true
+  - name: data-x
+    type: dataset
+    desc: |
+      Set the 'x' dataset for the plot. The 'x' dataset will be used to
+      calculate the horizontal position of arrows.
 
-properties:
-  - title: "Vector Options"
-    anchor: vector-options
-    properties:
-      - name: data-x
-        desc: |
-          Set the 'x' dataset for the plot. The 'x' dataset will be used to
-          calculate the horizontal position of geometry.
-        desc_code: |
-          data-x (<values>...)
-          data-x (csv <file> <column>)
-        examples: |
-          ;; list of static values
-          data-x (10px 20px 30px)
+  - name: data-y
+    type: dataset
+    desc: |
+      Set the 'y' dataset for the plot. The 'y' dataset will be used to
+      calculate the vertical position of arrows.
 
-          ;; load a csv file
-          data-x (csv myfile.csv mycolumn)
-      - name: data-y
-        desc: |
-          Set the 'y' dataset for the plot. The 'y' dataset will be used to
-          calculate the vertical position of geometry.
-        desc_code: |
-          data-y (<values>...)
-          data-y (csv <file> <column>)
-        examples: |
-          ;; list of static values
-          data-y (10px 20px 30px)
+  - name: data-x
+    type: dataset
+    desc: |
+      Set the 'dx' dataset for the plot. The 'x' dataset will be used to
+      calculate the horizontal size of arrows.
 
-          ;; load a csv file
-          data-y (csv myfile.csv mycolumn)
-      - name: data-dx
-        desc: |
-          Set the 'dx' dataset for the plot. The 'dx' dataset will be used to
-          calculate the x component of the vector.
-        desc_code: |
-          data-dx (<values>...)
-          data-dx (csv <file> <column>)
-        examples: |
-          ;; list of static values
-          data-dx (3 1 5)
+  - name: data-y
+    type: dataset
+    desc: |
+      Set the 'dy' dataset for the plot. The 'y' dataset will be used to
+      calculate the vertical size of arrows.
 
-          ;; load a csv file
-          data-dx (csv myfile.csv mycolumn)
-      - name: data-dy
-        desc: |
-          Set the 'dy' dataset for the plot. The 'dy' dataset will be used to
-          calculate the y component of the vector.
-        desc_code: |
-          data-dy (<values>...)
-          data-dy (csv <file> <column>)
-        examples: |
-          ;; list of static values
-          data-dy (1 4 2)
+  - name: data-color
+    desc: |
+      Set the 'color' dataset for the plot. The 'color' dataset will be used to
+      calculate the color of vectors. The mapping of input values to colors
+      is controlled by the `color-map` option. If no explicit `color-map`
+      option is provided, the values `data-color` will be interpreted as
+      hex color codes.
+    desc_code: |
+      data-color (<values>...)
+      data-color (csv <file> <column>)
+    examples: |
+      ;; list of static values
+      data-color (#06c #c06 #06c)
 
-          ;; load a csv file
-          data-dy (csv myfile.csv mycolumn)
-      - name: data-color
-        desc: |
-          Set the 'color' dataset for the plot. The 'color' dataset will be used to
-          calculate the color of vectors. The mapping of input values to colors
-          is controlled by the `color-map` option. If no explicit `color-map`
-          option is provided, the values `data-color` will be interpreted as
-          hex color codes.
-        desc_code: |
-          data-color (<values>...)
-          data-color (csv <file> <column>)
-        examples: |
-          ;; list of static values
-          data-color (#06c #c06 #06c)
+      ;; load a csv file
+      data-color (csv myfile.csv mycolors)
 
-          ;; load a csv file
-          data-color (csv myfile.csv mycolors)
-      - name: data-shape
-        desc: |
-          Set the 'shape' dataset for the plot. The 'shape' dataset will be used to
-          choose the marker shape of vectors.
-        desc_code: |
-          data-size (<values>...)
-          data-size (csv <file> <column>)
-        examples: |
-          ;; list of static values
-          data-size (hexagon circle square)
+  - name: color
+    type: color
+    desc: |
+      Set the point color. Note that this value is only used if no data-colors
+      option is specified.
 
-          ;; load a csv file
-          data-size (csv myfile.csv myshapes)
-      - name: color
-        desc: |
-          Set the point color. Note that this value is only used if no data-colors
-          option is specified.
-        desc_code: |
-          color <color>
-      - name: color-map
-        desc: |
-          Set the point color map. If no map is specified, the values in `data-color`
-          will be interpreted as hex color values.
-        desc_code: |
-          color-map <color-map>
-      - name: shape
-        desc: |
-          Set the marker shape for the plot. Note that this value is only used i
-          no data-shape option is specified.
-        desc_code: |
-          marker-shape (<marker-shape>)
-        examples: |
-          ;; set the marker shape to 'hexagon'
-          marker-shape (hexagon)
+  - name: color-map
+    desc: |
+      Set the point color map. If no map is specified, the values in `data-color`
+      will be interpreted as hex color values.
+    desc_code: |
+      color-map <color-map>
 
-  - title: "Scale Options"
-    anchor: scale-options
-    inherit: ["elements/plot", "scale-options"]
+  - name: data-shape
+    desc: |
+      Set the 'shape' dataset for the plot. The 'shape' dataset will be used to
+      choose the marker shape of vectors.
+    desc_code: |
+      data-shape (<values>...)
+      data-shape (csv <file> <column>)
+    examples: |
+      ;; list of static values
+      data-shape (hexagon circle square)
+
+      ;; load a csv file
+      data-shape (csv myfile.csv myshapes)
+
+  - name: shape
+    desc: |
+      Set the marker shape for the plot. Note that this value is only used i
+      no data-shape option is specified.
+    desc_code: |
+      marker-shape (<marker-shape>)
+    examples: |
+      ;; set the marker shape to 'hexagon'
+      marker-shape (hexagon)
+
+  - include: scale_args
+
+
+examples:
+  - charts-scientific/vectorfield

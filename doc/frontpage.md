@@ -15,8 +15,8 @@ illustrations.
 <div style="margin-top: 2em; margin-bottom: 3em; background: #f2f7ff; padding: 10pt; max-width: 900px; box-sizing: border-box;">
   <b>BETA:</b> Please note that clip is pre-1.0 software under active development;
   It has reached a "minumum viable product" level of quality, but users should
-  expect things to generally be a bit rough around the edges still. To see what
-  already works, have a look at the <a href="/examples">Examples</a> page.
+  expect things to generally be a bit rough around the edges and subject to change.
+  To see what already works, have a look at the <a href="/examples">Examples</a> page.
 </div>
 
 ## Documentation
@@ -68,13 +68,6 @@ List of Commands
   <li><a href="/commands/plot/draw-rectangles"><code><strong>plot/draw-rectangles</strong></code></a></li>
 </ul>
 
-<h5>Layout</h5>
-<ul class="index">
-  <li><a href="#"><code>layout/push</code></a></li>
-  <li><a href="#"><code>layout/pop</code></a></li>
-  <li><a href="#"><code>layout/add-margins</code></a></li>
-</ul>
-
 <h5>Other</h5>
 <ul class="index">
   <li><a href="/commands/figure/draw-legend"><code><strong>figure/add-legend</strong></code></a></li>
@@ -94,17 +87,14 @@ Community
 Acknowledgements
 ----------------
 
-  - The structure of the plot elements is based on ideas from [The Grammar of
-    Graphics](https://www.springer.com/gp/book/9780387245447) and the
-    [ggplot2](https://ggplot2.tidyverse.org/) library.
-
-  - A number of concepts in clip are heavily guided by the
-    [CSS specification](https://www.w3.org/TR/CSS2/)
-
   - Text rendering is based on the libre [freetype](https://www.freetype.org/)
     and [harfbuzz](https://harfbuzz.org) stack.
 
-  - Some naming choices are definitely inspired by Eddie Kohler's
-    [click](https://github.com/kohler/click) software defined networking library
+  - The structure of some of the plot elements is based on ideas from [The Grammar of
+    Graphics](https://www.springer.com/gp/book/9780387245447) and the
+    [ggplot2](https://ggplot2.tidyverse.org/) library.
+
+  - A number of concepts in clip are modelled after the
+    [CSS specification](https://www.w3.org/TR/CSS2/)
 
 

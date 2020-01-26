@@ -1,65 +1,43 @@
-name: plot/grid
-desc: |
-  The `plot/grid` element is used to draw a background grid.
-
-reference: |
-  (plot/grid <options>)
-
-option_summary: true
+name: plot/draw-grid
+desc: The `plot/draw-grid` element draws a background grid.
 
 properties:
   - title: "Grid Options"
     anchor: grid-options
     properties:
-      - name: tick-placement-x
-        desc: |
-          The 'tick-placement-x' option controls the x grid placement.
-        desc_code: |
-          tick-placement-x <tick-placement>
-        examples: |
-          ;; subdivide the axis with 10 tick-placement
-      - name: tick-placement-y
-        desc: |
-          The 'tick-placement-y' option controls the y grid placement.
-        desc_code: |
-          tick-placement-y <tick-placement>
-        examples: |
-          ;; subdivide the axis with 10 tick-placement
-      - name: stroke
-        desc: |
-          Set the grids's stroke style. See the
-          [stroke-style](#FIXME) page for more details on valid values.
-        desc_code: |
-          stroke (<stroke-style>)
-        examples: |
-          ;; set the stroke to 2px solid
-          stroke (2px solid)
-      - name: stroke-style
-        desc: |
-          Set the grid's stroke style. See the
-          [stroke-style](#FIXME) page for more details on valid values.
-        desc_code: |
-          stroke (<stroke-style>)
-        examples: |
-          ;; set the stroke to dashed
-          stroke-style dashed
-      - name: stroke-width
-        desc: |
-          Set the grid's stroke width. See the
-          [Typographic Units](#FIXME) page for more details on valid values.
-        desc_code: |
-          stroke-width <measure>
-        examples: |
-          ;; set the stroke width to 2pt
-          stroke-width 2pt
-      - name: stroke-color
-        desc: |
-          Set the grid's stroke color.
-        desc_code: |
-          stroke-color <color>
-      - name: color
-        alias: stroke-color
 
-  - title: "Scale Options"
-    anchor: scale-options
-    inherit: ["elements/plot", "scale-options"]
+
+arguments:
+
+  - name: tick-placement-x
+    desc: |
+      The 'tick-placement-x' option controls the x grid placement.
+    desc_code: |
+      tick-placement-x <tick-placement>
+    examples: |
+      ;; subdivide the axis with 10 tick-placement
+
+  - name: tick-placement-y
+    desc: |
+      The 'tick-placement-y' option controls the y grid placement.
+    desc_code: |
+      tick-placement-y <tick-placement>
+    examples: |
+      ;; subdivide the axis with 10 tick-placement
+
+  - name: stroke-style
+    type: stroke_style
+    desc: Set the grid's stroke style.
+
+  - name: stroke-width
+    type: stroke_width
+    desc: Set the grid's stroke width.
+
+  - name: stroke-color
+    type: color
+    desc: Set the grid's stroke color.
+
+  - name: color
+    alias: stroke-color
+
+  - include: scale_args

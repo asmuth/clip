@@ -1,139 +1,84 @@
-name: plot/areas
-example: charts-editorial/stacked_areas
+name: plot/draw-areas
 desc: |
-  The `plot/areas` element is used to create area charts.
+  The `plot/draw-areas` command takes an input data table, transforms it according
+  to a user-provided scale configuration and then plots the data as one or more
+  'area' shapes.
 
-reference: |
-  (plot/areas <options>)
 
-option_summary: true
+arguments:
+  - name: data-x
+    type: dataset
+    desc: |
+      Set the 'x' dataset for the plot. The 'x' dataset will be used to
+      calculate the horizontal position of geometry.
 
-properties:
-  - title: "Area Options"
-    anchor: area-options
-    properties:
-      - name: data-x
-        desc: |
-          Set the 'x' dataset for the plot. The 'x' dataset will be used to
-          calculate the horizontal position of geometry.
-        desc_code: |
-          data-x (<values>...)
-          data-x (csv <file> <column>)
-        examples: |
-          ;; list of static values
-          data-x (10px 20px 30px)
+  - name: data-x-high
+    alias: data-x
 
-          ;; load a csv file
-          data-x (csv myfile.csv mycolumn)
-      - name: data-x-high
-        alias: data-x
-      - name: data-x-low
-        desc: |
-          Set the 'x2' dataset for the plot. The 'x2' dataset will be used to
-          calculate the horizontal position of geometry.
-        desc_code: |
-          data-x-low (<values>...)
-          data-x-low (csv <file> <column>)
-        examples: |
-          ;; list of static values
-          data-x-low (10px 20px 30px)
+  - name: data-x-low
+    type: dataset
 
-          ;; load a csv file
-          data-x-low (csv myfile.csv mycolumn)
-      - name: data-y
-        desc: |
-          Set the 'y' dataset for the plot. The 'y' dataset will be used to
-          calculate the vertical position of geometry.
-        desc_code: |
-          data-y (<values>...)
-          data-y (csv <file> <column>)
-        examples: |
-          ;; list of static values
-          data-y (10px 20px 30px)
+  - name: data-y
+    type: dataset
+      Set the 'x' dataset for the plot. The 'x' dataset will be used to
+      calculate the vertical position of geometry.
 
-          ;; load a csv file
-          data-y (csv myfile.csv mycolumn)
-      - name: data-y-high
-        alias: data-y
-      - name: data-y-low
-        desc: |
-          Set the 'y2' dataset for the plot. The 'y2' dataset will be used to
-          calculate the vertical position of geometry.
-        desc_code: |
-          data-y-low (<values>...)
-          data-y-low (csv <file> <column>)
-        examples: |
-          ;; list of static values
-          data-y-low (10px 20px 30px)
+  - name: data-y-high
+    alias: data-y
 
-          ;; load a csv file
-          data-y-low (csv myfile.csv mycolumn)
-      - name: direction
-        desc: |
-          Set the area 'direction'.
-        desc_code: |
-          direction [horizontal|vertical]
-        examples: |
-          ;; draw a vertical area chart
-          direction vertical
-      - name: color
-        desc: |
-          Set the area's fill and stroke color.
-        desc_code: |
-          color <color>
-      - name: stroke-high-color
-        desc: |
-          Set the area's high ("upper") stroke color. See the [color](#FIXME) page for more details on valid values.
-        desc_code: |
-          stroke-high-color <color>
-        examples: |
-          ;; set the area's high ("upper") stroke color to grey
-          stroke-high-color #eee
-      - name: stroke-high-width
-        desc: |
-          Set the area's high ("upper") stroke width. See the
-          [measure](#FIXME) page for more details on valid values.
-        desc_code: |
-          stroke-high-width <measure>
-        examples: |
-          ;; set the area's high ("upper") stroke width to 2pt
-          stroke-high-width 2pt
-      - name: stroke-high-style
-        desc: |
-          Set the area's high ("upper") stroke style. See the
-          [Fill & Stroke Styles](#FIXME) page for more details on valid values.
-        desc_code: |
-          stroke-high-style <stroke-high-style>
-        examples: |
-          ;; set the area's high ("upper") stroke style to none
-          stroke-high-style solid
-      - name: stroke-low-color
-        desc: |
-          Set the area's low ("lower") stroke color. See the [color](#FIXME) page for more details on valid values.
-        desc_code: |
-          stroke-low-color <color>
-        examples: |
-          ;; set the area's low ("lower") stroke color to grey
-          stroke-low-color #eee
-      - name: stroke-low-width
-        desc: |
-          Set the area's low ("lower") stroke width. See the
-          [measure](#FIXME) page for more details on valid values.
-        desc_code: |
-          stroke-low-width <measure>
-        examples: |
-          ;; set the area's low ("lower") stroke width to 2pt
-          stroke-low-width 2pt
-      - name: stroke-low-style
-        desc: |
-          Set the area's low ("lower") stroke style. See the
-          [Fill & Stroke Styles](#FIXME) page for more details on valid values.
-        desc_code: |
-          stroke-low-style <stroke-low-style>
-        examples: |
-          ;; set the area's low ("lower") stroke style to none
-          stroke-low-style solid
+  - name: data-y-low
+    type: dataset
 
-  - title: "Scale Options"
-    anchor: scale-options
-    inherit: ["elements/plot", "scale-options"]
+  - name: direction
+    desc: |
+      Set the area 'direction'.
+    desc_code: |
+      direction [horizontal|vertical]
+    examples: |
+      ;; draw a vertical area chart
+      direction vertical
+
+  - name: color
+    type: color
+    desc: Set the area's fill and stroke color.
+
+  - name: stroke-color
+    type: color
+    desc: Set the area's stroke color.
+
+  - name: stroke-width
+    type: stroke_width
+    desc: Set the area's stroke width.
+
+  - name: stroke-style
+    type: stroke_style
+    desc: Set the area's stroke style.
+
+  - name: stroke-high-color
+    type: color
+    desc: Set the area's high ("upper") stroke color.
+
+  - name: stroke-high-width
+    type: stroke_width
+    desc: Set the area's high ("upper") stroke width.
+
+  - name: stroke-high-style
+    type: stroke_style
+    desc: Set the area's high ("upper") stroke style.
+
+  - name: stroke-low-color
+    type: color
+    desc: Set the area's low ("lower") stroke color.
+
+  - name: stroke-low-width
+    type: stroke_width
+    desc: Set the area's low ("lower") stroke width.
+
+  - name: stroke-low-style
+    type: stroke_style
+    desc: Set the area's low ("lower") stroke style.
+
+  - include: scale_args
+
+examples:
+  - charts-editorial/stacked_areas
