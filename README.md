@@ -30,7 +30,7 @@ draw a simple line chart using clip:
     $ clip --in example_chart.clp --out example_chart.svg
 
 Output File (`example_chart.svg`):
-[![A simple scatterplot](/examples/charts-basic/demo_timeseries.svg)](https://clip-lang.org/examples/charts-basic/demo_timeseries)
+[![A simple scatterplot](/doc/examples/charts-basic/demo_timeseries.svg)](https://clip-lang.org/examples/charts-basic/demo_timeseries)
 
 Input File (`example_chart.clp`):
 
@@ -44,6 +44,10 @@ Input File (`example_chart.clp`):
         data-x (csv "test/testdata/measurement.csv" time)
         data-y (csv "test/testdata/measurement.csv" value1)
         color #06c)
+
+    (figure/draw-legend
+        position (top right)
+        item (label "Random Data" color #06c))
 
 Note that this example is only intended to give you an idea of what the syntax
 looks like and to get you started quickly; for an in-depth description of all
