@@ -1,0 +1,7 @@
+desc: |
+  Rotate the title. Value is in degrees clockwise.
+desc_code: |
+  title-rotate <value>
+examples: |
+  ;; rotate the title by 45deg clockwise
+  title-rotate 45

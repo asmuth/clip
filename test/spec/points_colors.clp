@@ -5,7 +5,7 @@
     limit-x (0 400)
     limit-y (0 200)
     color-map (gradient (0 #f00) (1.0 #00f))
-    axis-y-label-placement (subdivide 5)
+    label-placement-y (subdivide 5)
     axes (bottom left)
     grid (color #fff)
     background #eee

@@ -9,7 +9,7 @@
 (layout/add-margins margin 2em)
 
 (plot/add-axes
-    axis-y-label-format (base 10))
+    label-format-y (base 10))
 
 (plot/draw-grid color (rgba 0 0 0 .05))
 

@@ -1,0 +1,5 @@
+desc_code: |
+  {{name}} (<min> <max)
+examples: |
+  ;; set limits to [1..10]
+  {{name}} (1 10)

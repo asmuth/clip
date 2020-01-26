@@ -9,7 +9,7 @@
 
 (plot/add-axes
     position (bottom left)
-    axis-y-label-placement (subdivide 4))
+    label-placement-y (subdivide 4))
 
 (plot/draw-points
     data-x (csv test/testdata/gauss2d.csv x)

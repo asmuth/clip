@@ -1,0 +1,8 @@
+desc_append: |
+  The label 'attachment' controls how labels are oriented when placing them on the
+  axis. Useful in conjunction with the `label-rotate` option.
+desc_code: |
+  label-attach [top|right|bottom|left]
+examples: |
+  ;; set label attach to left
+  label-attach left

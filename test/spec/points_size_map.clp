@@ -6,7 +6,7 @@
     marker-shape (circle)
     limit-x (0 400)
     limit-y (0 200)
-    axis-y-label-placement (subdivide 5)
+    label-placement-y (subdivide 5)
     axes (bottom left)
     grid (color #fff)
     background #eee

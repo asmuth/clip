@@ -1,0 +1,8 @@
+desc: |
+  Controls to which side of the axis the labels are placed. Value is
+  clamped to [-1, 1].
+desc_code: |
+  label-offset <value>
+examples: |
+  ;; center the labels
+  label-offset 0

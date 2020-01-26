@@ -9,11 +9,11 @@
 
 (plot/add-axes
     position (bottom left)
-    axis-x-label-placement (linear-alignat 1 1)
-    axis-x-label-format (custom "Jan" "Feb" "Mar" "Apr" "May" "Jun" "Jul" "Aug" "Sep" "Oct" "Nov" "Dec")
-    axis-y-label-placement (linear-interval 5 -10 30)
-    axis-left-title "Temperature (°C)"
-    axis-left-title-rotate -90)
+    label-placement-x (linear-alignat 1 1)
+    label-format-x (custom "Jan" "Feb" "Mar" "Apr" "May" "Jun" "Jul" "Aug" "Sep" "Oct" "Nov" "Dec")
+    label-placement-y (linear-interval 5 -10 30)
+    title-left "Temperature (°C)"
+    title-rotate-left -90)
 
 (plot/draw-lines
     data-x (csv "test/testdata/city_temperatures.csv" month)

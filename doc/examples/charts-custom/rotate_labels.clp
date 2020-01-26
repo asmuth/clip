@@ -8,13 +8,13 @@
 (default limit-y (0 1))
 
 (plot/add-axes
-    axis-left-label-placement (subdivide 4)
-    axis-left-label-format (scientific)
-    axis-left-label-attach bottom
-    axis-left-label-rotate -90
-    axis-bottom-label-format (datetime "%H:%M:%S")
-    axis-bottom-label-attach left
-    axis-bottom-label-rotate 45)
+    label-placement-left (subdivide 4)
+    label-format-left (scientific)
+    label-attach-left bottom
+    label-rotate-left -90
+    label-format-bottom (datetime "%H:%M:%S")
+    label-attach-bottom left
+    label-rotate-bottom 45)
 
 (plot/draw-lines
     data-x (csv "test/testdata/measurement.csv" time)

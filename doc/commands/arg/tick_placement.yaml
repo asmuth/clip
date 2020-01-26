@@ -1,0 +1,7 @@
+desc: |
+  The 'tick-placement' option controls where on the axis the "ticks" are
+  placed.
+desc_code: |
+  tick-placement <tick-placement>
+examples: |
+  ;; subdivide the axis into 10 parts

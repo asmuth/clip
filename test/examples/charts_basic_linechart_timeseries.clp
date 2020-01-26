@@ -9,9 +9,9 @@
 
 (plot/add-axes
   position (bottom left)
-  axis-y-label-format (scientific)
-  axis-x-label-format (datetime "%H:%M:%S")
-  axis-x-label-placement (linear-interval 900 900 7200))
+  label-format-y (scientific)
+  label-format-x (datetime "%H:%M:%S")
+  label-placement-x (linear-interval 900 900 7200))
 
 (plot/draw-lines
   data-x (csv "test/testdata/measurement2.csv" time)

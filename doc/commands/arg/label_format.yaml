@@ -1,0 +1,5 @@
+desc_code: |
+  labels <labels>
+examples: |
+  ;; use scientific labels for the top/bottom axes
+  label-format (scientific)

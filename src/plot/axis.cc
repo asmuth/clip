@@ -700,6 +700,12 @@ ReturnCode axis_draw(Context* ctx, const Expr* expr) {
 
   {
     auto rc = expr_walk_map_with_defaults(expr_next(expr), ctx->defaults, {
+      /* scale options */
+      {"scale", bind(&scale_configure_kind, _1, &config->scale)},
+      {"limit", bind(&expr_to_float64_opt_pair, _1, &config->scale.min, &config->scale.max)},
+      {"limit-min", bind(&expr_to_float64_opt, _1, &config->scale.min)},
+      {"limit-max", bind(&expr_to_float64_opt, _1, &config->scale.max)},
+
       /* label options */
       {"label-font", expr_call_string_fn(bind(&font_load_best, _1, &config->label_font))},
       {"label-placement", bind(&scale_configure_layout, _1, &config->label_placement)},
@@ -724,16 +730,9 @@ ReturnCode axis_draw(Context* ctx, const Expr* expr) {
       {"tick-offset", bind(&expr_to_float64, _1, &config->tick_offset)},
       {"tick-length", bind(&measure_read, _1, &config->tick_length)},
 
-      /* scale options */
-      {"scale", bind(&scale_configure_kind, _1, &config->scale)},
-      {"scale-padding", bind(&expr_to_float64, _1, &config->scale.padding)},
-      {"limit", bind(&expr_to_float64_opt_pair, _1, &config->scale.min, &config->scale.max)},
-      {"limit-min", bind(&expr_to_float64_opt, _1, &config->scale.min)},
-      {"limit-max", bind(&expr_to_float64_opt, _1, &config->scale.max)},
-
       /* title options */
       {"title", bind(&expr_to_string, _1, &config->title)},
-      {"label-font", expr_call_string_fn(bind(&font_load_best, _1, &config->title_font))},
+      {"title-font", expr_call_string_fn(bind(&font_load_best, _1, &config->title_font))},
       {"title-font-size", bind(&measure_read, _1, &config->title_font_size)},
       {"title-color", bind(&color_read, ctx, _1, &config->title_color)},
       {"title-offset", bind(&expr_to_float64, _1, &config->title_offset)},
@@ -741,16 +740,23 @@ ReturnCode axis_draw(Context* ctx, const Expr* expr) {
       {"title-rotate", bind(&expr_to_float64, _1, &config->title_rotate)},
 
       /* border options */
-      {"border", bind(&expr_to_stroke_style, _1, &config->border_style)},
-      {"border-color", bind(&color_read, ctx, _1, &config->border_style.color)},
       {"border-width", bind(&measure_read, _1, &config->border_style.line_width)},
+      {"border-color", bind(&color_read, ctx, _1, &config->border_style.color)},
+      {"border-style", bind(&expr_to_stroke_style, _1, &config->border_style)},
 
-      /* font options */
+      /* global font options */
       {
         "font",
         expr_calln_fn({
           expr_call_string_fn(bind(&font_load_best, _1, &config->label_font)),
           expr_call_string_fn(bind(&font_load_best, _1, &config->title_font)),
+        })
+      },
+      {
+        "font-size",
+        expr_calln_fn({
+          bind(&measure_read, _1, &config->label_font_size),
+          bind(&measure_read, _1, &config->title_font_size),
         })
       }
     }, false);
@@ -873,246 +879,8 @@ ReturnCode axis_add_all(Context* ctx, const Expr* expr) {
 
   auto config_rc = expr_walk_map_with_defaults(expr_next(expr), ctx->defaults, {
     {"position", bind(&axis_configure_position, _1, &axes)},
-    {
-      "font",
-      expr_calln_fn({
-        expr_call_string_fn(bind(&font_load_best, _1, &axes[0].label_font)),
-        expr_call_string_fn(bind(&font_load_best, _1, &axes[1].label_font)),
-        expr_call_string_fn(bind(&font_load_best, _1, &axes[2].label_font)),
-        expr_call_string_fn(bind(&font_load_best, _1, &axes[3].label_font)),
-        expr_call_string_fn(bind(&font_load_best, _1, &axes[0].title_font)),
-        expr_call_string_fn(bind(&font_load_best, _1, &axes[1].title_font)),
-        expr_call_string_fn(bind(&font_load_best, _1, &axes[2].title_font)),
-        expr_call_string_fn(bind(&font_load_best, _1, &axes[3].title_font))
-      })
-    },
-    {
-      "axis-top-font",
-      expr_calln_fn({
-        expr_call_string_fn(bind(&font_load_best, _1, &axes[0].title_font)),
-        expr_call_string_fn(bind(&font_load_best, _1, &axes[0].label_font)),
-      }),
-    },
-    {
-      "axis-right-font",
-      expr_calln_fn({
-        expr_call_string_fn(bind(&font_load_best, _1, &axes[1].title_font)),
-        expr_call_string_fn(bind(&font_load_best, _1, &axes[1].label_font)),
-      }),
-    },
-    {
-      "axis-bottom-font",
-      expr_calln_fn({
-        expr_call_string_fn(bind(&font_load_best, _1, &axes[2].title_font)),
-        expr_call_string_fn(bind(&font_load_best, _1, &axes[2].label_font)),
-      }),
-    },
-    {
-      "axis-left-font",
-      expr_calln_fn({
-        expr_call_string_fn(bind(&font_load_best, _1, &axes[3].title_font)),
-        expr_call_string_fn(bind(&font_load_best, _1, &axes[3].label_font)),
-      }),
-    },
-    {
-      "label-font",
-      expr_calln_fn({
-        expr_call_string_fn(bind(&font_load_best, _1, &axes[0].label_font)),
-        expr_call_string_fn(bind(&font_load_best, _1, &axes[1].label_font)),
-        expr_call_string_fn(bind(&font_load_best, _1, &axes[2].label_font)),
-        expr_call_string_fn(bind(&font_load_best, _1, &axes[3].label_font))
-      })
-    },
-    {"axis-top-label-font", expr_call_string_fn(bind(&font_load_best, _1, &axes[0].label_font))},
-    {"axis-right-label-font", expr_call_string_fn(bind(&font_load_best, _1, &axes[1].label_font))},
-    {"axis-bottom-label-font", expr_call_string_fn(bind(&font_load_best, _1, &axes[2].label_font))},
-    {"axis-left-label-font", expr_call_string_fn(bind(&font_load_best, _1, &axes[3].label_font))},
-    {
-      "title-font",
-      expr_calln_fn({
-        expr_call_string_fn(bind(&font_load_best, _1, &axes[0].title_font)),
-        expr_call_string_fn(bind(&font_load_best, _1, &axes[1].title_font)),
-        expr_call_string_fn(bind(&font_load_best, _1, &axes[2].title_font)),
-        expr_call_string_fn(bind(&font_load_best, _1, &axes[3].title_font))
-      })
-    },
-    {"axis-top-title-font", expr_call_string_fn(bind(&font_load_best, _1, &axes[0].title_font))},
-    {"axis-right-title-font", expr_call_string_fn(bind(&font_load_best, _1, &axes[1].title_font))},
-    {"axis-bottom-title-font", expr_call_string_fn(bind(&font_load_best, _1, &axes[2].title_font))},
-    {"axis-left-title-font", expr_call_string_fn(bind(&font_load_best, _1, &axes[3].title_font))},
-
-    /* label options */
-    {
-      "label-format",
-      expr_calln_fn({
-        bind(&format_configure, _1, &axes[0].label_formatter),
-        bind(&format_configure, _1, &axes[1].label_formatter),
-        bind(&format_configure, _1, &axes[2].label_formatter),
-        bind(&format_configure, _1, &axes[3].label_formatter)
-      })
-    },
-    {
-      "axis-x-label-format",
-      expr_calln_fn({
-        bind(&format_configure, _1, &axes[0].label_formatter),
-        bind(&format_configure, _1, &axes[2].label_formatter),
-      })
-    },
-    {
-      "axis-y-label-format",
-      expr_calln_fn({
-        bind(&format_configure, _1, &axes[1].label_formatter),
-        bind(&format_configure, _1, &axes[3].label_formatter),
-      })
-    },
-    {"axis-top-label-format", bind(&format_configure, _1, &axes[0].label_formatter)},
-    {"axis-right-label-format", bind(&format_configure, _1, &axes[1].label_formatter)},
-    {"axis-bottom-label-format", bind(&format_configure, _1, &axes[2].label_formatter)},
-    {"axis-left-label-format", bind(&format_configure, _1, &axes[3].label_formatter)},
-
-    {
-      "font-size",
-      expr_calln_fn({
-        bind(&measure_read, _1, &axes[0].title_font_size),
-        bind(&measure_read, _1, &axes[1].title_font_size),
-        bind(&measure_read, _1, &axes[2].title_font_size),
-        bind(&measure_read, _1, &axes[3].title_font_size),
-        bind(&measure_read, _1, &axes[0].label_font_size),
-        bind(&measure_read, _1, &axes[1].label_font_size),
-        bind(&measure_read, _1, &axes[2].label_font_size),
-        bind(&measure_read, _1, &axes[3].label_font_size),
-      })
-    },
-    {
-      "label-font-size",
-      expr_calln_fn({
-        bind(&measure_read, _1, &axes[0].label_font_size),
-        bind(&measure_read, _1, &axes[1].label_font_size),
-        bind(&measure_read, _1, &axes[2].label_font_size),
-        bind(&measure_read, _1, &axes[3].label_font_size)
-      })
-    },
-    {"axis-top-label-font-size", bind(&measure_read, _1, &axes[0].label_font_size)},
-    {"axis-right-label-font-size", bind(&measure_read, _1, &axes[1].label_font_size)},
-    {"axis-bottom-label-font-size", bind(&measure_read, _1, &axes[2].label_font_size)},
-    {"axis-left-label-font-size", bind(&measure_read, _1, &axes[3].label_font_size)},
-
-    {
-      "label-color",
-      expr_calln_fn({
-        bind(&color_read, ctx, _1, &axes[0].label_color),
-        bind(&color_read, ctx, _1, &axes[1].label_color),
-        bind(&color_read, ctx, _1, &axes[2].label_color),
-        bind(&color_read, ctx, _1, &axes[3].label_color)
-      })
-    },
-    {"axis-top-label-color", bind(&color_read, ctx, _1, &axes[0].label_color)},
-    {"axis-right-label-color", bind(&color_read, ctx, _1, &axes[1].label_color)},
-    {"axis-bottom-label-color", bind(&color_read, ctx, _1, &axes[2].label_color)},
-    {"axis-left-label-color", bind(&color_read, ctx, _1, &axes[3].label_color)},
-
-    {
-      "axis-x-label-placement",
-      expr_calln_fn({
-        bind(&scale_configure_layout, _1, &axes[0].label_placement),
-        bind(&scale_configure_layout, _1, &axes[2].label_placement)
-      })
-    },
-    {
-      "axis-y-label-placement",
-      expr_calln_fn({
-        bind(&scale_configure_layout, _1, &axes[1].label_placement),
-        bind(&scale_configure_layout, _1, &axes[3].label_placement)
-      })
-    },
-    {"axis-top-label-placement", bind(&scale_configure_layout, _1, &axes[0].label_placement)},
-    {"axis-right-label-placement", bind(&scale_configure_layout, _1, &axes[1].label_placement)},
-    {"axis-bottom-label-placement", bind(&scale_configure_layout, _1, &axes[2].label_placement)},
-    {"axis-left-label-placement", bind(&scale_configure_layout, _1, &axes[3].label_placement)},
-
-    {
-      "axis-top-label-attach",
-      expr_to_enum_fn<AxisLabelAttach>(&axes[0].label_attach, {
-        { "top", AxisLabelAttach::TOP },
-        { "right", AxisLabelAttach::RIGHT },
-        { "bottom", AxisLabelAttach::BOTTOM },
-        { "left", AxisLabelAttach::LEFT },
-      })
-    },
-    {
-      "axis-bottom-label-attach",
-      expr_to_enum_fn<AxisLabelAttach>(&axes[2].label_attach, {
-        { "top", AxisLabelAttach::TOP },
-        { "right", AxisLabelAttach::RIGHT },
-        { "bottom", AxisLabelAttach::BOTTOM },
-        { "left", AxisLabelAttach::LEFT },
-      })
-    },
-    {
-      "axis-right-label-attach",
-      expr_to_enum_fn<AxisLabelAttach>(&axes[1].label_attach, {
-        { "top", AxisLabelAttach::TOP },
-        { "right", AxisLabelAttach::RIGHT },
-        { "bottom", AxisLabelAttach::BOTTOM },
-        { "left", AxisLabelAttach::LEFT },
-      })
-    },
-    {
-      "axis-left-label-attach",
-      expr_to_enum_fn<AxisLabelAttach>(&axes[3].label_attach, {
-        { "top", AxisLabelAttach::TOP },
-        { "right", AxisLabelAttach::RIGHT },
-        { "bottom", AxisLabelAttach::BOTTOM },
-        { "left", AxisLabelAttach::LEFT },
-      })
-    },
-
-    {"axis-top-label-offset", bind(&expr_to_float64, _1, &axes[0].label_offset)},
-    {"axis-right-label-offset", bind(&expr_to_float64, _1, &axes[1].label_offset)},
-    {"axis-bottom-label-offset", bind(&expr_to_float64, _1, &axes[2].label_offset)},
-    {"axis-left-label-offset", bind(&expr_to_float64, _1, &axes[3].label_offset)},
-
-    {"axis-top-label-padding", bind(&measure_read, _1, &axes[0].label_padding)},
-    {"axis-right-label-padding", bind(&measure_read, _1, &axes[1].label_padding)},
-    {"axis-bottom-label-padding", bind(&measure_read, _1, &axes[2].label_padding)},
-    {"axis-left-label-padding", bind(&measure_read, _1, &axes[3].label_padding)},
-
-    {"axis-top-label-rotate", bind(&expr_to_float64, _1, &axes[0].label_rotate)},
-    {"axis-right-label-rotate", bind(&expr_to_float64, _1, &axes[1].label_rotate)},
-    {"axis-bottom-label-rotate", bind(&expr_to_float64, _1, &axes[2].label_rotate)},
-    {"axis-left-label-rotate", bind(&expr_to_float64, _1, &axes[3].label_rotate)},
-
-    /* tick options */
-    {"axis-top-tick-placement", bind(&scale_configure_layout, _1, &axes[0].tick_placement)},
-    {"axis-right-tick-placement", bind(&scale_configure_layout, _1, &axes[1].tick_placement)},
-    {"axis-bottom-tick-placement", bind(&scale_configure_layout, _1, &axes[2].tick_placement)},
-    {"axis-left-tick-placement", bind(&scale_configure_layout, _1, &axes[3].tick_placement)},
-
-    {"axis-top-tick-offset", bind(&expr_to_float64, _1, &axes[0].tick_offset)},
-    {"axis-right-tick-offset", bind(&expr_to_float64, _1, &axes[1].tick_offset)},
-    {"axis-bottom-tick-offset", bind(&expr_to_float64, _1, &axes[2].tick_offset)},
-    {"axis-left-tick-offset", bind(&expr_to_float64, _1, &axes[3].tick_offset)},
-
-    {"axis-top-tick-length", bind(&measure_read, _1, &axes[0].tick_length)},
-    {"axis-right-tick-length", bind(&measure_read, _1, &axes[1].tick_length)},
-    {"axis-bottom-tick-length", bind(&measure_read, _1, &axes[2].tick_length)},
-    {"axis-left-tick-length", bind(&measure_read, _1, &axes[3].tick_length)},
 
     /* scale options */
-    {
-      "limit-x",
-      expr_calln_fn({
-        bind(&expr_to_float64_opt_pair, _1, &axes[0].scale.min, &axes[0].scale.max),
-        bind(&expr_to_float64_opt_pair, _1, &axes[2].scale.min, &axes[2].scale.max),
-      })
-    },
-    {
-      "limit-y",
-      expr_calln_fn({
-        bind(&expr_to_float64_opt_pair, _1, &axes[1].scale.min, &axes[1].scale.max),
-        bind(&expr_to_float64_opt_pair, _1, &axes[3].scale.min, &axes[3].scale.max),
-      })
-    },
     {
       "scale-x",
       expr_calln_fn({
@@ -1127,73 +895,361 @@ ReturnCode axis_add_all(Context* ctx, const Expr* expr) {
         bind(&scale_configure_kind, _1, &axes[3].scale),
       })
     },
+    {"scale-top", bind(&scale_configure_kind, _1, &axes[0].scale)},
+    {"scale-right", bind(&scale_configure_kind, _1, &axes[1].scale)},
+    {"scale-bottom", bind(&scale_configure_kind, _1, &axes[2].scale)},
+    {"scale-left", bind(&scale_configure_kind, _1, &axes[3].scale)},
 
-    {"axis-top-scale", bind(&scale_configure_kind, _1, &axes[0].scale)},
-    {"axis-top-scale-padding", bind(&expr_to_float64, _1, &axes[0].scale.padding)},
-    {"axis-top-limit", bind(&expr_to_float64_opt_pair, _1, &axes[0].scale.min, &axes[0].scale.max)},
-    {"axis-top-limit-min", bind(&expr_to_float64_opt, _1, &axes[0].scale.min)},
-    {"axis-top-limit-max", bind(&expr_to_float64_opt, _1, &axes[0].scale.max)},
-    {"axis-right-scale", bind(&scale_configure_kind, _1, &axes[1].scale)},
-    {"axis-right-scale-padding", bind(&expr_to_float64, _1, &axes[1].scale.padding)},
-    {"axis-right-limit", bind(&expr_to_float64_opt_pair, _1, &axes[1].scale.min, &axes[1].scale.max)},
-    {"axis-right-limit-min", bind(&expr_to_float64_opt, _1, &axes[1].scale.min)},
-    {"axis-right-limit-max", bind(&expr_to_float64_opt, _1, &axes[1].scale.max)},
-    {"axis-bottom-scale", bind(&scale_configure_kind, _1, &axes[2].scale)},
-    {"axis-bottom-scale-padding", bind(&expr_to_float64, _1, &axes[2].scale.padding)},
-    {"axis-bottom-limit", bind(&expr_to_float64_opt_pair, _1, &axes[2].scale.min, &axes[2].scale.max)},
-    {"axis-bottom-limit-min", bind(&expr_to_float64_opt, _1, &axes[2].scale.min)},
-    {"axis-bottom-limit-max", bind(&expr_to_float64_opt, _1, &axes[2].scale.max)},
-    {"axis-left-scale", bind(&scale_configure_kind, _1, &axes[3].scale)},
-    {"axis-left-scale-padding", bind(&expr_to_float64, _1, &axes[3].scale.padding)},
-    {"axis-left-limit", bind(&expr_to_float64_opt_pair, _1, &axes[3].scale.min, &axes[3].scale.max)},
-    {"axis-left-limit-min", bind(&expr_to_float64_opt, _1, &axes[3].scale.min)},
-    {"axis-left-limit-max", bind(&expr_to_float64_opt, _1, &axes[3].scale.max)},
+    {
+      "limit-x",
+      expr_calln_fn({
+        bind(&expr_to_float64_opt_pair, _1, &axes[0].scale.min, &axes[0].scale.max),
+        bind(&expr_to_float64_opt_pair, _1, &axes[2].scale.min, &axes[2].scale.max),
+      })
+    },
+    {
+      "limit-y",
+      expr_calln_fn({
+        bind(&expr_to_float64_opt_pair, _1, &axes[1].scale.min, &axes[1].scale.max),
+        bind(&expr_to_float64_opt_pair, _1, &axes[3].scale.min, &axes[3].scale.max),
+      })
+    },
+    {"limit-top", bind(&expr_to_float64_opt_pair, _1, &axes[0].scale.min, &axes[0].scale.max)},
+    {"limit-right", bind(&expr_to_float64_opt_pair, _1, &axes[1].scale.min, &axes[1].scale.max)},
+    {"limit-bottom", bind(&expr_to_float64_opt_pair, _1, &axes[2].scale.min, &axes[2].scale.max)},
+    {"limit-left", bind(&expr_to_float64_opt_pair, _1, &axes[3].scale.min, &axes[3].scale.max)},
+
+    /* label options */
+    {
+      "label-placement-x",
+      expr_calln_fn({
+        bind(&scale_configure_layout, _1, &axes[0].label_placement),
+        bind(&scale_configure_layout, _1, &axes[2].label_placement)
+      })
+    },
+    {
+      "label-placement-y",
+      expr_calln_fn({
+        bind(&scale_configure_layout, _1, &axes[1].label_placement),
+        bind(&scale_configure_layout, _1, &axes[3].label_placement)
+      })
+    },
+    {"label-placement-top", bind(&scale_configure_layout, _1, &axes[0].label_placement)},
+    {"label-placement-right", bind(&scale_configure_layout, _1, &axes[1].label_placement)},
+    {"label-placement-bottom", bind(&scale_configure_layout, _1, &axes[2].label_placement)},
+    {"label-placement-left", bind(&scale_configure_layout, _1, &axes[3].label_placement)},
+    {
+      "label-format",
+      expr_calln_fn({
+        bind(&format_configure, _1, &axes[0].label_formatter),
+        bind(&format_configure, _1, &axes[1].label_formatter),
+        bind(&format_configure, _1, &axes[2].label_formatter),
+        bind(&format_configure, _1, &axes[3].label_formatter)
+      })
+    },
+    {
+      "label-format-x",
+      expr_calln_fn({
+        bind(&format_configure, _1, &axes[0].label_formatter),
+        bind(&format_configure, _1, &axes[2].label_formatter)
+      })
+    },
+    {
+      "label-format-y",
+      expr_calln_fn({
+        bind(&format_configure, _1, &axes[1].label_formatter),
+        bind(&format_configure, _1, &axes[3].label_formatter)
+      })
+    },
+    {
+      "label-attach-top",
+      expr_to_enum_fn<AxisLabelAttach>(&axes[0].label_attach, {
+        { "top", AxisLabelAttach::TOP },
+        { "right", AxisLabelAttach::RIGHT },
+        { "bottom", AxisLabelAttach::BOTTOM },
+        { "left", AxisLabelAttach::LEFT },
+      })
+    },
+    {
+      "label-attach-bottom",
+      expr_to_enum_fn<AxisLabelAttach>(&axes[2].label_attach, {
+        { "top", AxisLabelAttach::TOP },
+        { "right", AxisLabelAttach::RIGHT },
+        { "bottom", AxisLabelAttach::BOTTOM },
+        { "left", AxisLabelAttach::LEFT },
+      })
+    },
+    {
+      "label-attach-right",
+      expr_to_enum_fn<AxisLabelAttach>(&axes[1].label_attach, {
+        { "top", AxisLabelAttach::TOP },
+        { "right", AxisLabelAttach::RIGHT },
+        { "bottom", AxisLabelAttach::BOTTOM },
+        { "left", AxisLabelAttach::LEFT },
+      })
+    },
+    {
+      "label-attach-left",
+      expr_to_enum_fn<AxisLabelAttach>(&axes[3].label_attach, {
+        { "top", AxisLabelAttach::TOP },
+        { "right", AxisLabelAttach::RIGHT },
+        { "bottom", AxisLabelAttach::BOTTOM },
+        { "left", AxisLabelAttach::LEFT },
+      })
+    },
+    {"label-offset-top", bind(&expr_to_float64, _1, &axes[0].label_offset)},
+    {"label-offset-right", bind(&expr_to_float64, _1, &axes[1].label_offset)},
+    {"label-offset-bottom", bind(&expr_to_float64, _1, &axes[2].label_offset)},
+    {"label-offset-left", bind(&expr_to_float64, _1, &axes[3].label_offset)},
+    {"label-padding-top", bind(&measure_read, _1, &axes[0].label_padding)},
+    {"label-padding-right", bind(&measure_read, _1, &axes[1].label_padding)},
+    {"label-padding-bottom", bind(&measure_read, _1, &axes[2].label_padding)},
+    {"label-padding-left", bind(&measure_read, _1, &axes[3].label_padding)},
+    {"label-rotate-top", bind(&expr_to_float64, _1, &axes[0].label_rotate)},
+    {"label-rotate-right", bind(&expr_to_float64, _1, &axes[1].label_rotate)},
+    {"label-rotate-bottom", bind(&expr_to_float64, _1, &axes[2].label_rotate)},
+    {"label-rotate-left", bind(&expr_to_float64, _1, &axes[3].label_rotate)},
+    {"label-format-top", bind(&format_configure, _1, &axes[0].label_formatter)},
+    {"label-format-right", bind(&format_configure, _1, &axes[1].label_formatter)},
+    {"label-format-bottom", bind(&format_configure, _1, &axes[2].label_formatter)},
+    {"label-format-left", bind(&format_configure, _1, &axes[3].label_formatter)},
+    {
+      "label-font-size",
+      expr_calln_fn({
+        bind(&measure_read, _1, &axes[0].label_font_size),
+        bind(&measure_read, _1, &axes[1].label_font_size),
+        bind(&measure_read, _1, &axes[2].label_font_size),
+        bind(&measure_read, _1, &axes[3].label_font_size)
+      })
+    },
+    {
+      "label-color",
+      expr_calln_fn({
+        bind(&color_read, ctx, _1, &axes[0].label_color),
+        bind(&color_read, ctx, _1, &axes[1].label_color),
+        bind(&color_read, ctx, _1, &axes[2].label_color),
+        bind(&color_read, ctx, _1, &axes[3].label_color)
+      })
+    },
+    {
+      "label-color-x",
+      expr_calln_fn({
+        bind(&color_read, ctx, _1, &axes[0].label_color),
+        bind(&color_read, ctx, _1, &axes[2].label_color),
+      })
+    },
+    {
+      "label-color-y",
+      expr_calln_fn({
+        bind(&color_read, ctx, _1, &axes[1].label_color),
+        bind(&color_read, ctx, _1, &axes[3].label_color)
+      })
+    },
+    {"label-color-top", bind(&color_read, ctx, _1, &axes[0].label_color)},
+    {"label-color-right", bind(&color_read, ctx, _1, &axes[1].label_color)},
+    {"label-color-bottom", bind(&color_read, ctx, _1, &axes[2].label_color)},
+    {"label-color-left", bind(&color_read, ctx, _1, &axes[3].label_color)},
+    {
+      "label-font",
+      expr_calln_fn({
+        expr_call_string_fn(bind(&font_load_best, _1, &axes[0].label_font)),
+        expr_call_string_fn(bind(&font_load_best, _1, &axes[1].label_font)),
+        expr_call_string_fn(bind(&font_load_best, _1, &axes[2].label_font)),
+        expr_call_string_fn(bind(&font_load_best, _1, &axes[3].label_font))
+      })
+    },
+    {"label-font-top", expr_call_string_fn(bind(&font_load_best, _1, &axes[0].label_font))},
+    {"label-font-right", expr_call_string_fn(bind(&font_load_best, _1, &axes[1].label_font))},
+    {"label-font-bottom", expr_call_string_fn(bind(&font_load_best, _1, &axes[2].label_font))},
+    {"label-font-left", expr_call_string_fn(bind(&font_load_best, _1, &axes[3].label_font))},
+    {
+      "label-font-size-x",
+      expr_calln_fn({
+        bind(&measure_read, _1, &axes[0].label_font_size),
+        bind(&measure_read, _1, &axes[2].label_font_size)
+      })
+    },
+    {
+      "label-font-size-y",
+      expr_calln_fn({
+        bind(&measure_read, _1, &axes[1].label_font_size),
+        bind(&measure_read, _1, &axes[3].label_font_size)
+      })
+    },
+    {"label-font-size-top", bind(&measure_read, _1, &axes[0].label_font_size)},
+    {"label-font-size-right", bind(&measure_read, _1, &axes[1].label_font_size)},
+    {"label-font-size-bottom", bind(&measure_read, _1, &axes[2].label_font_size)},
+    {"label-font-size-left", bind(&measure_read, _1, &axes[3].label_font_size)},
+
+    /* tick options */
+    {
+      "label-placement-x",
+      expr_calln_fn({
+        bind(&scale_configure_layout, _1, &axes[0].tick_placement),
+        bind(&scale_configure_layout, _1, &axes[2].tick_placement)
+      })
+    },
+    {
+      "label-placement-y",
+      expr_calln_fn({
+        bind(&scale_configure_layout, _1, &axes[1].tick_placement),
+        bind(&scale_configure_layout, _1, &axes[3].tick_placement)
+      })
+    },
+    {"tick-placement-top", bind(&scale_configure_layout, _1, &axes[0].tick_placement)},
+    {"tick-placement-right", bind(&scale_configure_layout, _1, &axes[1].tick_placement)},
+    {"tick-placement-bottom", bind(&scale_configure_layout, _1, &axes[2].tick_placement)},
+    {"tick-placement-left", bind(&scale_configure_layout, _1, &axes[3].tick_placement)},
+    {"tick-offset-top", bind(&expr_to_float64, _1, &axes[0].tick_offset)},
+    {"tick-offset-right", bind(&expr_to_float64, _1, &axes[1].tick_offset)},
+    {"tick-offset-bottom", bind(&expr_to_float64, _1, &axes[2].tick_offset)},
+    {"tick-offset-left", bind(&expr_to_float64, _1, &axes[3].tick_offset)},
+    {"tick-length-top", bind(&measure_read, _1, &axes[0].tick_length)},
+    {"tick-length-right", bind(&measure_read, _1, &axes[1].tick_length)},
+    {"tick-length-bottom", bind(&measure_read, _1, &axes[2].tick_length)},
+    {"tick-length-left", bind(&measure_read, _1, &axes[3].tick_length)},
 
     /* title options */
-    {"axis-top-title", bind(&expr_to_string, _1, &axes[0].title)},
-    {"axis-top-title-font-size", bind(&measure_read, _1, &axes[0].title_font_size)},
-    {"axis-top-title-color", bind(&color_read, ctx, _1, &axes[0].title_color)},
-    {"axis-top-title-offset", bind(&expr_to_float64, _1, &axes[0].title_offset)},
-    {"axis-top-title-padding", bind(&measure_read, _1, &axes[0].title_padding)},
-    {"axis-top-title-rotate", bind(&expr_to_float64, _1, &axes[0].title_rotate)},
-
-    {"axis-right-title", bind(&expr_to_string, _1, &axes[1].title)},
-    {"axis-right-title-font-size", bind(&measure_read, _1, &axes[1].title_font_size)},
-    {"axis-right-title-color", bind(&color_read, ctx, _1, &axes[1].title_color)},
-    {"axis-right-title-offset", bind(&expr_to_float64, _1, &axes[1].title_offset)},
-    {"axis-right-title-padding", bind(&measure_read, _1, &axes[1].title_padding)},
-    {"axis-right-title-rotate", bind(&expr_to_float64, _1, &axes[1].title_rotate)},
-
-    {"axis-bottom-title", bind(&expr_to_string, _1, &axes[2].title)},
-    {"axis-bottom-title-font-size", bind(&measure_read, _1, &axes[2].title_font_size)},
-    {"axis-bottom-title-color", bind(&color_read, ctx, _1, &axes[2].title_color)},
-    {"axis-bottom-title-offset", bind(&expr_to_float64, _1, &axes[2].title_offset)},
-    {"axis-bottom-title-padding", bind(&measure_read, _1, &axes[2].title_padding)},
-    {"axis-bottom-title-rotate", bind(&expr_to_float64, _1, &axes[2].title_rotate)},
-
-    {"axis-left-title", bind(&expr_to_string, _1, &axes[3].title)},
-    {"axis-left-title-font-size", bind(&measure_read, _1, &axes[3].title_font_size)},
-    {"axis-left-title-color", bind(&color_read, ctx, _1, &axes[3].title_color)},
-    {"axis-left-title-offset", bind(&expr_to_float64, _1, &axes[3].title_offset)},
-    {"axis-left-title-padding", bind(&measure_read, _1, &axes[3].title_padding)},
-    {"axis-left-title-rotate", bind(&expr_to_float64, _1, &axes[3].title_rotate)},
+    {
+      "title-x",
+      expr_calln_fn({
+        bind(&expr_to_string, _1, &axes[0].title),
+        bind(&expr_to_string, _1, &axes[2].title)
+      })
+    },
+    {
+      "title-y",
+      expr_calln_fn({
+        bind(&expr_to_string, _1, &axes[1].title),
+        bind(&expr_to_string, _1, &axes[3].title)
+      })
+    },
+    {"title-top", bind(&expr_to_string, _1, &axes[0].title)},
+    {"title-right", bind(&expr_to_string, _1, &axes[1].title)},
+    {"title-bottom", bind(&expr_to_string, _1, &axes[2].title)},
+    {"title-left", bind(&expr_to_string, _1, &axes[3].title)},
+    {
+      "title-font",
+      expr_calln_fn({
+        expr_call_string_fn(bind(&font_load_best, _1, &axes[0].title_font)),
+        expr_call_string_fn(bind(&font_load_best, _1, &axes[1].title_font)),
+        expr_call_string_fn(bind(&font_load_best, _1, &axes[2].title_font)),
+        expr_call_string_fn(bind(&font_load_best, _1, &axes[3].title_font))
+      })
+    },
+    {"title-font-top", expr_call_string_fn(bind(&font_load_best, _1, &axes[0].title_font))},
+    {"title-font-right", expr_call_string_fn(bind(&font_load_best, _1, &axes[1].title_font))},
+    {"title-font-bottom", expr_call_string_fn(bind(&font_load_best, _1, &axes[2].title_font))},
+    {"title-font-left", expr_call_string_fn(bind(&font_load_best, _1, &axes[3].title_font))},
+    {
+      "title-font-size",
+      expr_calln_fn({
+        bind(&measure_read, _1, &axes[0].title_font_size),
+        bind(&measure_read, _1, &axes[1].title_font_size),
+        bind(&measure_read, _1, &axes[2].title_font_size),
+        bind(&measure_read, _1, &axes[3].title_font_size)
+      })
+    },
+    {"title-font-size-top", bind(&measure_read, _1, &axes[0].title_font_size)},
+    {"title-font-size-right", bind(&measure_read, _1, &axes[1].title_font_size)},
+    {"title-font-size-bottom", bind(&measure_read, _1, &axes[2].title_font_size)},
+    {"title-font-size-left", bind(&measure_read, _1, &axes[3].title_font_size)},
+    {
+      "title-color",
+      expr_calln_fn({
+        bind(&color_read, ctx, _1, &axes[0].title_color),
+        bind(&color_read, ctx, _1, &axes[1].title_color),
+        bind(&color_read, ctx, _1, &axes[2].title_color),
+        bind(&color_read, ctx, _1, &axes[3].title_color)
+      })
+    },
+    {"title-color-top", bind(&color_read, ctx, _1, &axes[0].title_color)},
+    {"title-color-right", bind(&color_read, ctx, _1, &axes[1].title_color)},
+    {"title-color-bottom", bind(&color_read, ctx, _1, &axes[2].title_color)},
+    {"title-color-left", bind(&color_read, ctx, _1, &axes[3].title_color)},
+    {"title-offset-top", bind(&expr_to_float64, _1, &axes[0].title_offset)},
+    {"title-offset-right", bind(&expr_to_float64, _1, &axes[1].title_offset)},
+    {"title-offset-bottom", bind(&expr_to_float64, _1, &axes[2].title_offset)},
+    {"title-offset-left", bind(&expr_to_float64, _1, &axes[3].title_offset)},
+    {"title-padding-top", bind(&measure_read, _1, &axes[0].title_padding)},
+    {"title-padding-right", bind(&measure_read, _1, &axes[1].title_padding)},
+    {"title-padding-bottom", bind(&measure_read, _1, &axes[2].title_padding)},
+    {"title-padding-left", bind(&measure_read, _1, &axes[3].title_padding)},
+    {"title-rotate-top", bind(&expr_to_float64, _1, &axes[0].title_rotate)},
+    {"title-rotate-right", bind(&expr_to_float64, _1, &axes[1].title_rotate)},
+    {"title-rotate-bottom", bind(&expr_to_float64, _1, &axes[2].title_rotate)},
+    {"title-rotate-left", bind(&expr_to_float64, _1, &axes[3].title_rotate)},
 
     /* border options */
-    {"axis-top-border", bind(&expr_to_stroke_style, _1, &axes[0].border_style)},
-    {"axis-top-border-color", bind(&color_read, ctx, _1, &axes[0].border_style.color)},
-    {"axis-top-border-width", bind(&measure_read, _1, &axes[0].border_style.line_width)},
+    {
+      "border-width",
+      expr_calln_fn({
+        bind(&measure_read, _1, &axes[0].border_style.line_width),
+        bind(&measure_read, _1, &axes[1].border_style.line_width),
+        bind(&measure_read, _1, &axes[2].border_style.line_width),
+        bind(&measure_read, _1, &axes[3].border_style.line_width)
+      })
+    },
+    {"border-width-top", bind(&measure_read, _1, &axes[0].border_style.line_width)},
+    {"border-width-right", bind(&measure_read, _1, &axes[1].border_style.line_width)},
+    {"border-width-bottom", bind(&measure_read, _1, &axes[2].border_style.line_width)},
+    {"border-width-left", bind(&measure_read, _1, &axes[3].border_style.line_width)},
 
-    {"axis-right-border", bind(&expr_to_stroke_style, _1, &axes[1].border_style)},
-    {"axis-right-border-color", bind(&color_read, ctx, _1, &axes[1].border_style.color)},
-    {"axis-right-border-width", bind(&measure_read, _1, &axes[1].border_style.line_width)},
+    {
+      "border-color",
+      expr_calln_fn({
+        bind(&color_read, ctx, _1, &axes[0].border_style.color),
+        bind(&color_read, ctx, _1, &axes[1].border_style.color),
+        bind(&color_read, ctx, _1, &axes[2].border_style.color),
+        bind(&color_read, ctx, _1, &axes[3].border_style.color)
+      })
+    },
+    {"border-color-top", bind(&color_read, ctx, _1, &axes[0].border_style.color)},
+    {"border-color-right", bind(&color_read, ctx, _1, &axes[1].border_style.color)},
+    {"border-color-bottom", bind(&color_read, ctx, _1, &axes[2].border_style.color)},
+    {"border-color-left", bind(&color_read, ctx, _1, &axes[3].border_style.color)},
 
-    {"axis-bottom-border", bind(&expr_to_stroke_style, _1, &axes[2].border_style)},
-    {"axis-bottom-border-color", bind(&color_read, ctx, _1, &axes[2].border_style.color)},
-    {"axis-bottom-border-width", bind(&measure_read, _1, &axes[2].border_style.line_width)},
+    {
+      "border-style",
+      expr_calln_fn({
+        bind(&expr_to_stroke_style, _1, &axes[0].border_style),
+        bind(&expr_to_stroke_style, _1, &axes[1].border_style),
+        bind(&expr_to_stroke_style, _1, &axes[2].border_style),
+        bind(&expr_to_stroke_style, _1, &axes[3].border_style)
+      })
+    },
+    {"border-style-top", bind(&expr_to_stroke_style, _1, &axes[0].border_style)},
+    {"border-style-right", bind(&expr_to_stroke_style, _1, &axes[1].border_style)},
+    {"border-style-bottom", bind(&expr_to_stroke_style, _1, &axes[2].border_style)},
+    {"border-style-left", bind(&expr_to_stroke_style, _1, &axes[3].border_style)},
 
-    {"axis-left-border", bind(&expr_to_stroke_style, _1, &axes[3].border_style)},
-    {"axis-left-border-color", bind(&color_read, ctx, _1, &axes[3].border_style.color)},
-    {"axis-left-border-width", bind(&measure_read, _1, &axes[3].border_style.line_width)},
+    /* global font options */
+    {
+      "font",
+      expr_calln_fn({
+        expr_call_string_fn(bind(&font_load_best, _1, &axes[0].label_font)),
+        expr_call_string_fn(bind(&font_load_best, _1, &axes[1].label_font)),
+        expr_call_string_fn(bind(&font_load_best, _1, &axes[2].label_font)),
+        expr_call_string_fn(bind(&font_load_best, _1, &axes[3].label_font)),
+        expr_call_string_fn(bind(&font_load_best, _1, &axes[0].title_font)),
+        expr_call_string_fn(bind(&font_load_best, _1, &axes[1].title_font)),
+        expr_call_string_fn(bind(&font_load_best, _1, &axes[2].title_font)),
+        expr_call_string_fn(bind(&font_load_best, _1, &axes[3].title_font))
+      })
+    },
+    {
+      "font-size",
+      expr_calln_fn({
+        bind(&measure_read, _1, &axes[0].title_font_size),
+        bind(&measure_read, _1, &axes[1].title_font_size),
+        bind(&measure_read, _1, &axes[2].title_font_size),
+        bind(&measure_read, _1, &axes[3].title_font_size),
+        bind(&measure_read, _1, &axes[0].label_font_size),
+        bind(&measure_read, _1, &axes[1].label_font_size),
+        bind(&measure_read, _1, &axes[2].label_font_size),
+        bind(&measure_read, _1, &axes[3].label_font_size),
+      })
+    }
   });
 
   if (!config_rc) {

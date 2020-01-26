@@ -1,0 +1,7 @@
+desc: |
+  Set the label padding/spacing. See the [measure](#FIXME) page for more details on valid values.
+desc_code: |
+  label-padding <measure>
+examples: |
+  ;; set the label padding to 2em
+  label-padding 2em

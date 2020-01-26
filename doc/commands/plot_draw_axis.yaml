@@ -1,6 +1,6 @@
 name: plot/draw-axis
 desc: |
-  The plot/draw-axis draws a labelled 'axis'.
+  The `plot/draw-axis` command draws a labelled 'axis'.
 
 arguments:
 
@@ -16,200 +16,102 @@ arguments:
       ;; draw a horizontal axis
       align x
 
-  - name: label-placement
-    desc: |
-      The 'label-placement' option controls the axis label placement.
-    desc_code: |
-      label-placement <label-placement>
-    examples: |
-      ;; subdivide the axis with 10 label-placement
-  - name: label-format
-    desc: |
-      The 'labels' option controls how axis labels are formatted.
-    desc_code: |
-      labels <labels>
-    examples: |
-      ;; use scientific labels for the top/bottom axes
-      label-format (scientific)
-  - name: label-attach
-    desc: |
-      Controls how labels are attached to the axis. Useful in conjunction
-      with the `label-rotate` option.
-    desc_code: |
-      label-attach [top|right|bottom|left]
-    examples: |
-      ;; set label attach to left
-      label-attach left
-  - name: label-offset
-    desc: |
-      Controls to which side of the axis the labels are placed. Value is
-      clamped to [-1, 1].
-    desc_code: |
-      label-offset <value>
-    examples: |
-      ;; center the labels
-      label-offset 0
-  - name: label-padding
-    desc: |
-      Set the label padding/spacing. See the [measure](#FIXME) page for more details on valid values.
-    desc_code: |
-      label-padding <measure>
-    examples: |
-      ;; set the label padding to 2em
-      label-padding 2em
-  - name: label-rotate
-    desc: |
-      Rotate the labels. Value is in degrees clockwise.
-    desc_code: |
-      label-rotate <value>
-    examples: |
-      ;; rotate the label by 45deg clockwise
-      label-rotate 45
-  - name: label-font-size
-    desc: |
-      Set the label font size. See the [measure](#FIXME) page for more details on valid values.
-    desc_code: |
-      label-font-size <measure>
-    examples: |
-      ;; set the label font size to 14pt
-      label-font-size 14pt
-  - name: label-color
-    desc: |
-      Set the label color. See the [color](#FIXME) page for more details on valid values.
-    desc_code: |
-      label-color <color>
-    examples: |
-      ;; set the label color to grey
-      label-color #eee
-
-  - name: tick-placement
-    desc: |
-      The 'tick-placement' option controls where on the axis the "ticks" are
-      placed.
-    desc_code: |
-      tick-placement <tick-placement>
-    examples: |
-      ;; subdivide the axis into 10 parts
-  - name: tick-offset
-    desc: |
-      Controls to which side of the axis the ticks are drawn. Value is
-      clamped to [-1, 1].
-    desc_code: |
-      tick-offset <value>
-    examples: |
-      ;; center the ticks
-      ticks-offset 0
-  - name: tick-length
-    desc: |
-      Controls the length of the ticks
-    desc_code: |
-      tick-length <measure>
-    examples: |
-      ;; set tick length to 1em
-      ticks-length 1em
+  - name: scale
+    type: scale
+    desc: Set the axis scale type.
 
   - name: limit
+    type: limit
     desc: |
       Set the axis value range to the closed interval [min, max].
       If no explicit maximm is specified, the default interval is [0.0, 1.0].
-    desc_code: |
-      limit (<min> <max)
-    examples: |
-      ;; set the axis range to [1..10]
-      limit (1 10)
+
   - name: limit-min
+    type: limit_min
     desc: |
       Set the axis minimum value.
       If no explicit maximm is specified, the default maximum value is '0.0'.
-    desc_code: |
-      limit-min <min>
-    examples: |
-      ;; set the axis min value to 2
-      limit-min 2
+
   - name: limit-max
+    type: limit_max
     desc: |
       Set the axis maximum value.
       If no explicit maximm is specified, the default maximum value is '1.0'.
-    desc_code: |
-      limit-max <max>
-    examples: |
-      ;; set the axis max value to 20
-      limit-max 20
-  - name: scale
-    desc: |
-      Set the scale type.
-    desc_code: |
-      scale ([linear] [log] [logarithmic] [invert] [inverted])
-    desc_detail: |
-      List of scale types:
 
-        - `linear` - Standard linear scale
-        - `log`, `logarithmic` - Logarithmic (log10) scale
-        - `invert`, `inverted` - Flip the scale
+  - name: label-placement
+    type: label_placement
+    desc: The 'label-placement' option controls the axis label placement.
 
-    examples: |
-      ;; set the axis to logarithmic mode
-      scale (log)
+  - name: label-format
+    type: label_format
+    desc: The 'label-format' option controls how axis labels are formatted.
 
-      ;; set the axis to inverted mode
-      scale (invert)
-  - name: scale-padding
-    desc: |
-      Set the scale padding. Value is clamped to [0.0, 1.0]
-    desc_code: |
-      scale-padding <value>
-    examples: |
-      ;; set the scale padding to 0.5
-      scale-padding 0.5
+  - name: label-attach
+    type: label_attach
+    desc: The 'label-attach' option controls how axis labels are oriented.
 
+  - name: label-offset
+    type: label_offset
+
+  - name: label-padding
+    type: label_padding
+
+  - name: label-rotate
+    type: label_rotate
+
+  - name: label-color
+    type: color
+    desc: Set the label color.
+
+  - name: label-font
+    type: font
+    desc: Set the label font.
+
+  - name: label-font-size
+    type: font_size
+    desc: Set the label font size.
+
+  - name: tick-placement
+    type: tick_placement
+
+  - name: tick-offset
+    type: tick_offset
+
+  - name: tick-length
+    type: tick_length
 
   - name: title
-    desc: |
-      Set the axis title
-    desc_code: |
-      title <title>
-    examples: |
-      ;; set the axis title to "Time"
-      title "Time"
-  - name: title-offset
-    desc: |
-      Controls to which side of the axis the title is placed. Value is
-      clamped to [-1, 1].
-    desc_code: |
-      title-offset <value>
-    examples: |
-      ;; center the title
-      title-offset 0
-  - name: title-padding
-    desc: |
-      Set the title padding/spacing. See the [measure](#FIXME) page for more details on valid values.
-    desc_code: |
-      title-padding <measure>
-    examples: |
-      ;; set the title padding to 2em
-      title-padding 2em
-  - name: title-rotate
-    desc: |
-      Rotate the title. Value is in degrees clockwise.
-    desc_code: |
-      title-rotate <value>
-    examples: |
-      ;; rotate the title by 45deg clockwise
-      title-rotate 45
-  - name: title-font-size
-    desc: |
-      Set the title font size. See the [measure](#FIXME) page for more details on valid values.
-    desc_code: |
-      title-font-size <measure>
-    examples: |
-      ;; set the title font size to 14pt
-      title-font-size 14pt
-  - name: title-color
-    desc: |
-      Set the title color. See the [color](#FIXME) page for more details on valid values.
-    desc_code: |
-      title-color <color>
-    examples: |
-      ;; set the title color to grey
-      title-color #eee
+    type: title
 
+  - name: title-offset
+    type: title_offset
+
+  - name: title-padding
+    type: title_padding
+
+  - name: title-rotate
+    type: title_rotate
+
+  - name: title-color
+    type: color
+    desc: Set the axis title color.
+
+  - name: title-font
+    type: font_size
+    desc: Set the axis title font.
+
+  - name: title-font-size
+    type: font_size
+    desc: Set the axis title font size.
+
+  - name: border-width
+    type: stroke_width
+    desc: Set the width of the axis border/line.
+
+  - name: border-color
+    type: color
+    desc: Set the color of the axis border/line.
+
+  - name: border-syle
+    type: stroke_style
+    desc: Set the stroke style of the axis border/line.

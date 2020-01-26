@@ -8,7 +8,7 @@
 
 (plot/add-axes
     position  (left bottom)
-    axis-y-label-format (datetime "%H:%M:%S"))
+    label-format-y (datetime "%H:%M:%S"))
 
 (plot/draw-areas
     data-x (csv "test/testdata/measurement.csv" value2)

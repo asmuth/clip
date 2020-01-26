@@ -5,9 +5,9 @@
     scale-x-padding 0.6
     limit-y (-20 35)
     axes (bottom left)
-    axis-x-label-placement (linear-align 1)
-    axis-x-label-format (custom "Jan" "Feb" "Mar" "Apr" "May" "Jun" "Jul" "Aug" "Sep" "Oct" "Nov" "Dec")
-    axis-y-label-placement (linear-align 5)
+    label-placement-x (linear-align 1)
+    label-format-x (custom "Jan" "Feb" "Mar" "Apr" "May" "Jun" "Jul" "Aug" "Sep" "Oct" "Nov" "Dec")
+    label-placement-y (linear-align 5)
     lines (
         data-x (csv "test/testdata/city_temperatures.csv" month)
         data-y (csv "test/testdata/city_temperatures.csv" temp_nyc)

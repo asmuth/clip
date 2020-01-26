@@ -8,9 +8,9 @@
 
 (plot/add-axes
     position (bottom)
-    axis-x-label-placement (linear-interval 1 1 12)
-    axis-x-label-placement (linear-interval 1 1 12)
-    axis-x-label-format (custom "Jan" "Feb" "Mar" "Apr" "May" "Jun" "Jul" "Aug" "Sep" "Oct" "Nov" "Dec"))
+    label-placement-x (linear-interval 1 1 12)
+    label-placement-x (linear-interval 1 1 12)
+    label-format-x (custom "Jan" "Feb" "Mar" "Apr" "May" "Jun" "Jul" "Aug" "Sep" "Oct" "Nov" "Dec"))
 
 (plot/draw-bars
     data-x (csv "test/testdata/city_temperatures_london.csv" month)

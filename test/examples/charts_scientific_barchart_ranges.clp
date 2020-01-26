@@ -19,8 +19,8 @@
 (layout/add-margins margin-top 3em)
 
 (plot/add-axes
-    axis-top-label-placement (none)
-    axis-y-label-placement (linear-interval 10 0 60))
+    label-placement-top (none)
+    label-placement-y (linear-interval 10 0 60))
 
 (plot/draw-grid
     stroke-color #000

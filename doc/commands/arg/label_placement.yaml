@@ -1,0 +1,4 @@
+desc_code: |
+  label-placement <label-placement>
+examples: |
+  ;; subdivide the axis with 10 label-placement

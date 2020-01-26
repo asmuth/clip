@@ -5,8 +5,8 @@
 
 (plot/add-axes
     position (bottom left)
-    axis-y-label-format (scientific)
-    axis-x-label-format (datetime "%H:%M:%S"))
+    label-format-y (scientific)
+    label-format-x (datetime "%H:%M:%S"))
 
 (plot/draw-grid
     color #fff)

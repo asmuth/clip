@@ -12,11 +12,11 @@
 
 (plot/add-axes
     position (bottom left)
-    axis-y-label-placement (linear-interval 10 10 80)
-    axis-left-border none
-    axis-left-label-offset 0
-    axis-left-label-attach left
-    axis-left-label-color #666)
+    label-placement-y (linear-interval 10 10 80)
+    border-style-left none
+    label-offset-left 0
+    label-attach-left left
+    label-color-left #666)
 
 (plot/draw-grid
     tick-placement-x (none)

@@ -11,9 +11,9 @@
 
 (plot/add-axes
     position (bottom)
-    axis-x-label-placement (linear-alignat 1 1)
-    axis-x-label-format (custom "Jan" "Feb" "Mar" "Apr" "May" "Jun" "Jul" "Aug" "Sep" "Oct" "Nov" "Dec")
-    axis-y-label-placement (linear-alignat 5 -10))
+    label-placement-x (linear-alignat 1 1)
+    label-format-x (custom "Jan" "Feb" "Mar" "Apr" "May" "Jun" "Jul" "Aug" "Sep" "Oct" "Nov" "Dec")
+    label-placement-y (linear-alignat 5 -10))
 
 (plot/draw-lines
     data-x (csv "test/testdata/city_temperatures_london.csv" month)

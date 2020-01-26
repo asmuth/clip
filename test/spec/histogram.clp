@@ -6,7 +6,7 @@
     limit-y (0 10000)
     scale-y (log)
     axes (left bottom)
-    axis-x-label-placement (linear-interval 1 1 6)
+    label-placement-x (linear-interval 1 1 6)
     bars (
       data-x (csv "test/testdata/histogram.csv" var0)
       data-y (csv "test/testdata/histogram.csv" var1)

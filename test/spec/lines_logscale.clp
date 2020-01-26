@@ -9,7 +9,7 @@
 (layout/add-margins margin 2em)
 
 (plot/add-axes
-    axis-y-label-placement (subdivide 10))
+    label-placement-y (subdivide 10))
 
 (plot/draw-grid (color #fff))
 

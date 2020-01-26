@@ -1,0 +1,7 @@
+desc: |
+  Controls the length of the ticks
+desc_code: |
+  tick-length <measure>
+examples: |
+  ;; set tick length to 1em
+  ticks-length 1em

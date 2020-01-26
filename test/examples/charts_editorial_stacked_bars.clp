@@ -10,7 +10,7 @@
 
 (plot/add-axes
     position (bottom)
-    axis-x-label-placement (linear-interval 0.2 0 2.1))
+    label-placement-x (linear-interval 0.2 0 2.1))
 
 (plot/draw-bars
     data-x (csv "test/testdata/stacked.csv" x)

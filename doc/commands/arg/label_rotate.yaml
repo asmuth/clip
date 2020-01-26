@@ -1,0 +1,7 @@
+desc: |
+  Rotate the labels. Value is in degrees clockwise.
+desc_code: |
+  label-rotate <value>
+examples: |
+  ;; rotate the label by 45deg clockwise
+  label-rotate 45

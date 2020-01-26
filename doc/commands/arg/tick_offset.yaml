@@ -1,0 +1,8 @@
+desc: |
+  Controls to which side of the axis the ticks are drawn. Value is
+  clamped to [-1, 1].
+desc_code: |
+  tick-offset <value>
+examples: |
+  ;; center the ticks
+  ticks-offset 0

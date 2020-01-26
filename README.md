@@ -37,9 +37,9 @@ Input File (`example_chart.clp`):
 
     (plot
       axes (bottom left)
-      axis-y-label-format (scientific)
-      axis-x-label-format (datetime "%H:%M:%S")
-      axis-x-label-placement (linear-align 1800)
+      label-format-y (scientific)
+      label-format-x (datetime "%H:%M:%S")
+      label-placement-x (linear-align 1800)
       lines (
         data-x (csv "tests/testdata/measurement.csv" time)
         data-y (csv "tests/testdata/measurement.csv" value1)

@@ -1,0 +1,5 @@
+desc_code: |
+  {{name}} <value>
+examples: |
+  ;; set the upper limit to 20
+  {{name}} 20

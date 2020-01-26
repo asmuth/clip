@@ -2,7 +2,7 @@
     data-x (csv test/testdata/gauss2d.csv x)
     data-y (csv test/testdata/gauss2d.csv y)
     axes (bottom left)
-    axis-y-label-placement (subdivide 5)
+    label-placement-y (subdivide 5)
     grid (color #fff)
     legend-overlay (item (label "Random Data"))
     background #eee

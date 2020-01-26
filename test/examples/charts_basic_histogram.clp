@@ -10,7 +10,7 @@
 
 (plot/add-axes
     position (left bottom)
-    axis-x-label-placement (linear-interval 1 1 6))
+    label-placement-x (linear-interval 1 1 6))
 
 (plot/draw-bars
     data-x (csv "test/testdata/histogram.csv" var0)

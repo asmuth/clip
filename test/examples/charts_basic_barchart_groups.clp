@@ -8,7 +8,7 @@
 (default limit-y (0 80))
 
 (plot/add-axes
-    axis-y-label-placement (linear-interval 10 10 70))
+    label-placement-y (linear-interval 10 10 70))
 
 (plot/draw-grid
     color (rgba 0 0 0 .05)

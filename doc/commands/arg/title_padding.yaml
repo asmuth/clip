@@ -1,0 +1,7 @@
+desc: |
+  Set the title padding/spacing. See the [measure](#FIXME) page for more details on valid values.
+desc_code: |
+  title-padding <measure>
+examples: |
+  ;; set the title padding to 2em
+  title-padding 2em

@@ -9,7 +9,7 @@
 (layout/add-margins margin 1em)
 
 (plot/add-axes
-    axis-y-label-placement (subdivide 5))
+    label-placement-y (subdivide 5))
 
 (plot/draw-points
     data-x (csv test/testdata/gauss3d.csv x)

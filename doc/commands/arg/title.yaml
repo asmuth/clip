@@ -1,0 +1,7 @@
+desc: |
+  Set the axis title
+desc_code: |
+  title <title>
+examples: |
+  ;; set the axis title to "Time"
+  title "Time"

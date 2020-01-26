@@ -2,7 +2,7 @@
 (default limit-y (-20 70))
 
 (plot/add-axes
-    axis-y-label-placement (linear-align 10))
+    label-placement-y (linear-align 10))
 
 (plot/draw-bars
     data-x (csv "test/testdata/bardata.csv" var0)

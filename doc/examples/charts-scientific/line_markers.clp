@@ -10,8 +10,8 @@
     margin 1em)
 
 (plot/add-axes
-    axis-x-label-format (scientific)
-    axis-x-label-placement (linear-interval 100 100 900))
+    label-format-x (scientific)
+    label-placement-x (linear-interval 100 100 900))
 
 (plot/draw-grid
     stroke-color (rgba 0 0 0 .2)

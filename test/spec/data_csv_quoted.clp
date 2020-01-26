@@ -2,7 +2,7 @@
     limit-x (0.5 6.5)
     limit-y (-20 70)
     axes (top right bottom left)
-    axis-y-label-placement (linear-align 10)
+    label-placement-y (linear-align 10)
     scale-x (categorical (csv "test/testdata/bardata_quoted.csv" var6))
     bars (
       data-x (csv "test/testdata/bardata_quoted.csv" var6)
