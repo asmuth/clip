@@ -97,19 +97,15 @@ page.
 Acknowledgements
 ----------------
 
+  - Text rendering is based on the libre [freetype](https://www.freetype.org/)
+    and [harfbuzz](https://harfbuzz.org) stack.
+
   - The structure of the plot elements is based on ideas from [The Grammar of
     Graphics](https://www.springer.com/gp/book/9780387245447) and the
     [ggplot2](https://ggplot2.tidyverse.org/) library.
 
-  - A number of concepts in clip are heavily guided by the
+  - A number of concepts in clip are modelled after the
     [CSS specification](https://www.w3.org/TR/CSS2/)
-
-  - Text rendering is based on the libre [freetype](https://www.freetype.org/)
-    and [harfbuzz](https://harfbuzz.org) stack.
-
-  - Some naming choices are definitely inspired by Eddie Kohler's
-    [click](https://github.com/kohler/click) software defined networking library
-
 
 FAQ
 ---

@@ -70,7 +70,7 @@ List of Commands
 
 <h5>Other</h5>
 <ul class="index">
-  <li><a href="/commands/figure/draw-legend"><code><strong>figure/add-legend</strong></code></a></li>
+  <li><a href="/commands/figure/draw-legend"><code><strong>figure/draw-legend</strong></code></a></li>
 </ul>
 
 
