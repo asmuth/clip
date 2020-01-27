@@ -10,3 +10,16 @@ https://fviz.org/* https://clip-lang.org/:splat 301!
 https://fviz.netlify.com/* https://clip-lang.org/:splat 301!
 https://docs.fviz.org/* https://clip-lang.org/:splat 301!
 /documentation/* https://clip-lang.org/:splat 301!
+/elements/plot /commands/plot/add-axes 301!
+/elements/plot/axis /commands/plot/draw-axis 301!
+/elements/plot/areas /commands/plot/draw-areas 301!
+/elements/plot/bars /commands/plot/draw-bars 301!
+/elements/plot/grid /commands/plot/draw-grid 301!
+/elements/plot/errorbars /commands/plot/draw-errorbars 301!
+/elements/plot/lines /commands/plot/draw-lines 301!
+/elements/plot/labels /commands/plot/draw-labels 301!
+/elements/plot/points /commands/plot/draw-points 301!
+/elements/plot/vectors /commands/plot/draw-vectors 301!
+/elements/plot/rectangles /commands/plot/draw-rectangles 301!
+/elements/chart/linechart /commands/plot/draw-lines 301!
+/elements/chart/scatterplot /commands/plot/draw-points 301!
