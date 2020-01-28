@@ -2,8 +2,6 @@
 (set-height 512px)
 (set-dpi 240)
 
-(layout/add-margins margin 1em)
-
 (default scale-x (categorical (A B C D E F)))
 (default limit-y (0 80))
 

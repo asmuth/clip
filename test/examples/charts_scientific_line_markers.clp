@@ -6,9 +6,6 @@
 (default limit-y (-4 5))
 (default limit-x (0 1000))
 
-(layout/add-margins
-    margin 1em)
-
 (plot/add-axes
     label-format-x (scientific)
     label-placement-x (linear-interval 100 100 900))

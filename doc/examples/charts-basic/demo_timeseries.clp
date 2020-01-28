@@ -2,8 +2,6 @@
 (set-height 512px)
 (set-dpi 180)
 
-(layout/add-margins margin 1em)
-
 (default limit-x (1404278100 1404299700))
 (default limit-y (6000000 10000000))
 

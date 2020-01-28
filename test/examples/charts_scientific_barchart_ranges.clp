@@ -6,19 +6,15 @@
 (default scale-x (categorical (A B C D E F)))
 (default limit-y (-10 70))
 
-(layout/add-margins margin 1em)
-
 (figure/draw-legend
     position (top center)
     item-flow on
-    margin 0
     padding-bottom 1em
     item (label "Series A" marker-shape (custom "▢"))
     item (label "Series B" marker-shape (square-hatch-diag-right)))
 
-(layout/add-margins margin-top 3em)
-
 (plot/add-axes
+    margin-top 3.6em
     label-placement-top (none)
     label-placement-y (linear-interval 10 0 60))
 

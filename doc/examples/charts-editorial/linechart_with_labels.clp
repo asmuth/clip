@@ -6,9 +6,6 @@
 (default limit-x (0.5 12.5))
 (default limit-y (0 25))
 
-(layout/add-margins
-    margin 1em)
-
 (plot/add-axes
     position (bottom)
     label-placement-x (linear-alignat 1 1)

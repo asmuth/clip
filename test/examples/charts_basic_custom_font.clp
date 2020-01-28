@@ -2,8 +2,6 @@
 (set-height 512px)
 (set-dpi 240)
 
-(layout/add-margins margin 1em)
-
 (default font "Comic Sans MS")
 (default limit-x (1404278100 1404299700))
 (default limit-y (0 120))

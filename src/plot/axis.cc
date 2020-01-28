@@ -817,6 +817,7 @@ ReturnCode axis_configure_position(
 }
 
 ReturnCode axis_add_all(Context* ctx, const Expr* expr) {
+  std::array<Measure, 4> margins = {from_em(1), from_em(1), from_em(1), from_em(1)};
   std::array<AxisDefinition, 4> axes;
 
   axes[0].align = AxisAlign::TOP;
@@ -1180,6 +1181,21 @@ ReturnCode axis_add_all(Context* ctx, const Expr* expr) {
     {"title-rotate-bottom", bind(&expr_to_float64, _1, &axes[2].title_rotate)},
     {"title-rotate-left", bind(&expr_to_float64, _1, &axes[3].title_rotate)},
 
+    /* margin options */
+    {
+      "margin",
+      expr_calln_fn({
+        bind(&measure_read, _1, &margins[0]),
+        bind(&measure_read, _1, &margins[1]),
+        bind(&measure_read, _1, &margins[2]),
+        bind(&measure_read, _1, &margins[3]),
+      })
+    },
+    {"margin-top", bind(&measure_read, _1, &margins[0])},
+    {"margin-right", bind(&measure_read, _1, &margins[1])},
+    {"margin-bottom", bind(&measure_read, _1, &margins[2])},
+    {"margin-left", bind(&measure_read, _1, &margins[3])},
+
     /* border options */
     {
       "border-width",
@@ -1256,7 +1272,11 @@ ReturnCode axis_add_all(Context* ctx, const Expr* expr) {
     return config_rc;
   }
 
-  std::array<double, 4> margins = {0, 0, 0, 0};
+  for (auto& m : margins) {
+    convert_unit_typographic(ctx->dpi, ctx->font_size, &m);
+  }
+
+  std::array<double, 4> padding = {0, 0, 0, 0};
   for (size_t i = 0; i < 4; ++i) {
     if (!axes[i].enable) {
       continue;
@@ -1266,15 +1286,15 @@ ReturnCode axis_add_all(Context* ctx, const Expr* expr) {
       return rc;
     }
 
-    axis_layout(axes[i], ctx, &margins[i]);
+    axis_layout(axes[i], ctx, &padding[i]);
   }
 
   auto bbox = layout_margin_box(
       context_get_clip(ctx),
-      margins[0],
-      margins[1],
-      margins[2],
-      margins[3]);
+      margins[0] + padding[0],
+      margins[1] + padding[1],
+      margins[2] + padding[2],
+      margins[3] + padding[3]);
 
   ctx->layout_stack.push_back(bbox);
 

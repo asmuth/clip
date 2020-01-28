@@ -5,8 +5,6 @@
 (default font "Latin Modern Roman")
 (default limit-y (-80 80))
 
-(layout/add-margins margin 1em)
-
 (plot/add-axes)
 
 (plot/draw-grid

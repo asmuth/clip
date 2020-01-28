@@ -1,5 +1,3 @@
-(layout/add-margins margin 2em)
-
 (default limit-y (0 20000000))
 (default limit-x (1404278100 1404299700))
 

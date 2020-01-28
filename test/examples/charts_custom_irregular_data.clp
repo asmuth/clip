@@ -5,8 +5,6 @@
 (default limit-x (-12 22))
 (default limit-y (-35 55))
 
-(layout/add-margins margin 1em)
-
 (plot/add-axes
     position (bottom left))
 

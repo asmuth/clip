@@ -1,8 +1,6 @@
 (set-height 480px)
 (set-width 1200px)
 
-(layout/add-margins margin 2em)
-
 (default limit-y (-50 50))
 
 (plot/add-axes

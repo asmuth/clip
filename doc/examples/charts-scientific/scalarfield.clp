@@ -6,8 +6,6 @@
 (default limit-x (-500 500))
 (default limit-y (-200 200))
 
-(layout/add-margins margin 1em)
-
 (plot/add-axes)
 
 (plot/draw-rectangles

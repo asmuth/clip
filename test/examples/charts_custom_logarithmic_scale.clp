@@ -6,8 +6,6 @@
 (default limit-y (0 10000))
 (default scale-y (log))
 
-(layout/add-margins margin 2em)
-
 (plot/add-axes
     label-format-y (base 10))
 

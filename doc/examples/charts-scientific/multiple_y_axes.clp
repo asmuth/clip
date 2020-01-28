@@ -3,8 +3,6 @@
 (set-dpi 240)
 (default font "Latin Modern Roman")
 
-(layout/add-margins margin 1em)
-
 (default limit-x (0 7200))
 
 (plot/add-axes

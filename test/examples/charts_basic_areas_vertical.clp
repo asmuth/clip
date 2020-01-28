@@ -1,8 +1,6 @@
 (set-height 480px)
 (set-width 1200px)
 
-(layout/add-margins margin 2em)
-
 (default limit-x (0 150))
 (default limit-y (1404278100 1404299700))
 

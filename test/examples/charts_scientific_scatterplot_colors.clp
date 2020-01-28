@@ -6,8 +6,6 @@
 (default limit-x (0 400))
 (default limit-y (0 200))
 
-(layout/add-margins margin 1em)
-
 (plot/add-axes
     label-placement-y (subdivide 5))
 

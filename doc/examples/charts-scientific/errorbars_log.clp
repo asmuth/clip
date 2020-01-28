@@ -7,8 +7,6 @@
 (default limit-x (0 1000))
 (default scale-y (logarithmic))
 
-(layout/add-margins margin 1em)
-
 (plot/add-axes)
 
 (plot/draw-errorbars

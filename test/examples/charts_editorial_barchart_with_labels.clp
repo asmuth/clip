@@ -4,8 +4,6 @@
 (default limit-x (0 13))
 (default limit-y (0 23))
 
-(layout/add-margins margin 1em)
-
 (plot/add-axes
     position (bottom)
     label-placement-x (linear-interval 1 1 12)
