@@ -12,15 +12,15 @@
   <path d="M810.4 32.6667 L810.4 27.3333 " fill="none" stroke-width="1.333333" stroke="#000000ff"/>
   <path d="M909.867 32.6667 L909.867 27.3333 " fill="none" stroke-width="1.333333" stroke="#000000ff"/>
   <path d="M1009.33 32.6667 L1009.33 27.3333 " fill="none" stroke-width="1.333333" stroke="#000000ff"/>
-  <text x="4.471354" y="32.266667" fill="#000000ff" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">1.0</text>
-  <text x="103.938021" y="32.266667" fill="#000000ff" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">2.0</text>
-  <text x="203.404687" y="32.266667" fill="#000000ff" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">4.0</text>
-  <text x="302.871354" y="32.266667" fill="#000000ff" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">8.0</text>
-  <text x="398.259896" y="32.266667" fill="#000000ff" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">16.0</text>
-  <text x="497.726562" y="32.266667" fill="#000000ff" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">32.0</text>
-  <text x="597.193229" y="32.266667" fill="#000000ff" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">64.0</text>
-  <text x="692.581771" y="32.266667" fill="#000000ff" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">128.0</text>
-  <text x="792.048437" y="32.266667" fill="#000000ff" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">256.0</text>
-  <text x="891.515104" y="32.266667" fill="#000000ff" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">512.0</text>
-  <text x="986.903646" y="32.266667" fill="#000000ff" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">1024.0</text>
+  <text x="4.471354" y="55.733333" fill="#000000ff" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">1.0</text>
+  <text x="103.938021" y="55.733333" fill="#000000ff" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">2.0</text>
+  <text x="203.404687" y="55.733333" fill="#000000ff" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">4.0</text>
+  <text x="302.871354" y="55.733333" fill="#000000ff" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">8.0</text>
+  <text x="398.259896" y="55.733333" fill="#000000ff" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">16.0</text>
+  <text x="497.726562" y="55.733333" fill="#000000ff" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">32.0</text>
+  <text x="597.193229" y="55.733333" fill="#000000ff" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">64.0</text>
+  <text x="692.581771" y="55.733333" fill="#000000ff" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">128.0</text>
+  <text x="792.048437" y="55.733333" fill="#000000ff" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">256.0</text>
+  <text x="891.515104" y="55.733333" fill="#000000ff" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">512.0</text>
+  <text x="986.903646" y="55.733333" fill="#000000ff" font-size="14.666667" font-family="Arial,Helvetica,'Helvetica Neue',sans-serif" font-weight="500.000000">1024.0</text>
 </svg>

@@ -659,9 +659,9 @@ ReturnCode axis_draw(Context* ctx, const Expr* expr) {
   switch (config->align) {
     case AxisAlign::X:
       config->label_attach = AxisLabelAttach::TOP;
-      config->title_offset = 1;
+      config->title_offset = -1;
       config->tick_offset = 0;
-      config->label_offset = 1;
+      config->label_offset = -1;
       break;
     case AxisAlign::TOP:
       config->label_attach = AxisLabelAttach::BOTTOM;
@@ -677,10 +677,10 @@ ReturnCode axis_draw(Context* ctx, const Expr* expr) {
       break;
     case AxisAlign::Y:
       config->label_attach = AxisLabelAttach::RIGHT;
-      config->title_offset = -1;
+      config->title_offset = 1;
       config->title_rotate = -90;
-      config->tick_offset = 0;
-      config->label_offset = -1;
+      config->tick_offset = -1;
+      config->label_offset = 1;
       break;
     case AxisAlign::LEFT:
       config->label_attach = AxisLabelAttach::RIGHT;
