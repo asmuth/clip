@@ -13,6 +13,6 @@
 (plot/draw-rectangles
     data-x (csv test/testdata/field2d.csv x)
     data-y (csv test/testdata/field2d.csv y)
-    data-color (csv test/testdata/field2d.csv a)
-    size 10
-    color-map (gradient (0 #fff) (1.0 #000)))
+    colors (csv test/testdata/field2d.csv a)
+    color-map (gradient (0 #fff) (1.0 #000))
+    size 10)

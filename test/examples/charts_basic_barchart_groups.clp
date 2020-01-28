@@ -18,13 +18,13 @@
 (plot/draw-bars
     data-x (csv "test/testdata/bardata.csv" var3)
     data-y (csv "test/testdata/bardata.csv" var1)
-    bar-width (1em)
-    bar-offset (-.8em)
+    width (1em)
+    offset (-.8em)
     color #444)
 
 (plot/draw-bars
     data-x (csv "test/testdata/bardata.csv" var3)
     data-y (csv "test/testdata/bardata.csv" var2)
-    bar-width (1em)
-    bar-offset (.8em)
+    width (1em)
+    offset (.8em)
     color #999)

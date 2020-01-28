@@ -14,8 +14,8 @@
 (plot/draw-points
     data-x (csv test/testdata/gauss3d.csv x)
     data-y (csv test/testdata/gauss3d.csv y)
-    data-color (csv test/testdata/gauss3d.csv z)
-    marker-shape (circle-o)
+    shape (circle-o)
+    colors (csv test/testdata/gauss3d.csv z)
     color-map (gradient (0 #aaa) (1.0 #000)))
 
 (figure/draw-legend

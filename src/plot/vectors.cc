@@ -164,7 +164,6 @@ ReturnCode vectors_draw(
     {"data-y", bind(&data_load_strings, _1, &data_y)},
     {"data-dx", bind(&data_load_strings, _1, &data_dx)},
     {"data-dy", bind(&data_load_strings, _1, &data_dy)},
-    {"data-color", bind(&data_load_strings, _1, &data_colors)},
     {"limit-x", bind(&expr_to_float64_opt_pair, _1, &c->scale_x.min, &c->scale_x.max)},
     {"limit-x-min", bind(&expr_to_float64_opt, _1, &c->scale_x.min)},
     {"limit-x-max", bind(&expr_to_float64_opt, _1, &c->scale_x.max)},
@@ -176,8 +175,10 @@ ReturnCode vectors_draw(
     {"scale-x-padding", bind(&expr_to_float64, _1, &c->scale_x.padding)},
     {"scale-y-padding", bind(&expr_to_float64, _1, &c->scale_y.padding)},
     {"color", bind(&color_read, ctx, _1, &c->color)},
+    {"colors", bind(&data_load_strings, _1, &data_colors)},
     {"color-map", bind(&color_map_read, ctx, _1, &color_map)},
     {"size", bind(&measure_read, _1, &c->size)},
+    {"sizes", bind(&data_load_strings, _1, &data_sizes)},
     {"size-map", bind(&measure_map_read, ctx, _1, &size_map)},
   });
 

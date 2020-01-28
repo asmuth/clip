@@ -15,5 +15,5 @@
 (plot/draw-bars
     data-x (csv "test/testdata/histogram.csv" var0)
     data-y (csv "test/testdata/histogram.csv" var1)
-    bar-width (1.8em)
+    width (1.8em)
     color #666)

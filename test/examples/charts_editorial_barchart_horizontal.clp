@@ -15,5 +15,5 @@
     data-y (csv "test/testdata/gdp_per_capita_2010.csv" country)
     labels (csv "test/testdata/gdp_per_capita_2010.csv" gdp_label)
     direction horizontal
-    bar-width (1.4em)
+    width (1.4em)
     color #4c7bb0)

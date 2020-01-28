@@ -227,7 +227,6 @@ ReturnCode errorbars_draw(
     {"data-y", bind(&data_load_strings, _1, &data_y)},
     {"data-y-low", bind(&data_load_strings, _1, &data_y_low)},
     {"data-y-high", bind(&data_load_strings, _1, &data_y_high)},
-    {"data-color", bind(&data_load_strings, _1, &data_colors)},
     {"limit-x", bind(&expr_to_float64_opt_pair, _1, &c->scale_x.min, &c->scale_x.max)},
     {"limit-x-min", bind(&expr_to_float64_opt, _1, &c->scale_x.min)},
     {"limit-x-max", bind(&expr_to_float64_opt, _1, &c->scale_x.max)},
@@ -238,8 +237,9 @@ ReturnCode errorbars_draw(
     {"scale-y", bind(&scale_configure_kind, _1, &c->scale_y)},
     {"scale-x-padding", bind(&expr_to_float64, _1, &c->scale_x.padding)},
     {"scale-y-padding", bind(&expr_to_float64, _1, &c->scale_y.padding)},
-    {"errorbar-width", bind(&measure_read, _1, &c->bar_width)},
+    {"width", bind(&measure_read, _1, &c->bar_width)},
     {"color", bind(&color_read, ctx, _1, &c->stroke_color)},
+    {"colors", bind(&data_load_strings, _1, &data_colors)},
     {"color-map", bind(&color_map_read, ctx, _1, &color_map)},
     {"stroke-color", bind(&color_read, ctx, _1, &c->stroke_color)},
     {"stroke-width", bind(&measure_read, _1, &c->stroke_width)}

@@ -156,25 +156,6 @@ ReturnCode rectangles_draw(
   auto config_rc = expr_walk_map_with_defaults(expr_next(expr), ctx->defaults, {
     {"data-x", bind(&data_load_strings, _1, &data_x)},
     {"data-y", bind(&data_load_strings, _1, &data_y)},
-    {"data-color", bind(&data_load_strings, _1, &data_colors)},
-    {
-      "data-size",
-      expr_calln_fn({
-        bind(&data_load_strings, _1, &data_size_x),
-        bind(&data_load_strings, _1, &data_size_y),
-      })
-    },
-    {"data-size-x", bind(&data_load_strings, _1, &data_size_x)},
-    {"data-size-y", bind(&data_load_strings, _1, &data_size_y)},
-    {
-      "size",
-      expr_calln_fn({
-        bind(&measure_read, _1, &c->size_x_default),
-        bind(&measure_read, _1, &c->size_y_default),
-      })
-    },
-    {"size-x", bind(&measure_read, _1, &c->size_x_default)},
-    {"size-y", bind(&measure_read, _1, &c->size_y_default)},
     {"limit-x", bind(&expr_to_float64_opt_pair, _1, &c->scale_x.min, &c->scale_x.max)},
     {"limit-x-min", bind(&expr_to_float64_opt, _1, &c->scale_x.min)},
     {"limit-x-max", bind(&expr_to_float64_opt, _1, &c->scale_x.max)},
@@ -185,7 +166,26 @@ ReturnCode rectangles_draw(
     {"scale-y", bind(&scale_configure_kind, _1, &c->scale_y)},
     {"scale-x-padding", bind(&expr_to_float64, _1, &c->scale_x.padding)},
     {"scale-y-padding", bind(&expr_to_float64, _1, &c->scale_y.padding)},
+    {
+      "size",
+      expr_calln_fn({
+        bind(&measure_read, _1, &c->size_x_default),
+        bind(&measure_read, _1, &c->size_y_default),
+      })
+    },
+    {"size-x", bind(&measure_read, _1, &c->size_x_default)},
+    {"size-y", bind(&measure_read, _1, &c->size_y_default)},
+    {
+      "sizes",
+      expr_calln_fn({
+        bind(&data_load_strings, _1, &data_size_x),
+        bind(&data_load_strings, _1, &data_size_y),
+      })
+    },
+    {"sizes-x", bind(&data_load_strings, _1, &data_size_x)},
+    {"sizes-y", bind(&data_load_strings, _1, &data_size_y)},
     {"color", bind(&color_read, ctx, _1, &c->color)},
+    {"colors", bind(&data_load_strings, _1, &data_colors)},
     {"color-map", bind(&color_map_read, ctx, _1, &color_map)},
   });
 

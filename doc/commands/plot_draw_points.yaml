@@ -15,85 +15,57 @@ arguments:
       Set the 'y' dataset for the plot. The 'y' dataset will be used to
       calculate the vertical position of points.
 
-  - name: data-color
+  - name: shape
+    type: shape
+
+  - name: shapes
     desc: |
-      Set the 'color' dataset for the plot. The 'color' dataset will be used to
-      calculate the color of points. The mapping of input values to colors
-      is controlled by the `color-map` option. If no explicit `color-map`
-      option is provided, the values `data-color` will be interpreted as
-      hex color codes.
+      Set an individual 'shape' for each point.
     desc_code: |
-      data-color (<values>...)
-      data-color (csv <file> <column>)
+      shapes (<values>...)
+      shapes (csv <file> <column>)
     examples: |
       ;; list of static values
-      data-color (#06c #c06 #06c)
+      shapes (hexagon circle square)
 
       ;; load a csv file
-      data-color (csv myfile.csv mycolors)
+      shapes (csv myfile.csv myshapes)
 
-  - name: data-size
+  - name: size
+    type: size
     desc: |
-      Set the 'size' dataset for the plot. The 'size' dataset will be used to
-      calculate the size of points. The mapping of input values to typographic
-      units is controlled by the `size-map` option.
-    desc_code: |
-      data-size (<values>...)
-      data-size (csv <file> <column>)
-    examples: |
-      ;; list of static values
-      data-size (2pt 8pt 5pt)
+      Set the point size.
 
-      ;; load a csv file
-      data-size (csv myfile.csv mysizes)
-
-  - name: data-shape
+  - name: sizes
+    type: dataset_size
     desc: |
-      Set the 'shape' dataset for the plot. The 'shape' dataset will be used to
-      choose the marker shape of points.
-    desc_code: |
-      data-size (<values>...)
-      data-size (csv <file> <column>)
-    examples: |
-      ;; list of static values
-      data-size (hexagon circle square)
-
-      ;; load a csv file
-      data-size (csv myfile.csv myshapes)
+      Set an individual size for each point
 
   - name: size-map
+    type: measure_map
     desc: |
-      Set the point size map. If no map is specified, the values in `data-size`
-      will be interpreted as unit values.
-    desc_code: |
-      size-map <measure-map>
+      Controls how input data in `sizes` is mapped to typographic units.
 
   - name: color
     type: color
     desc: |
-      Set the point color. Note that this value is only used if no data-colors
+      Set the point color. Note that this value is only used if no `colors`
       option is specified.
 
+  - name: colors
+    type: dataset_colors
+    desc: |
+      Set an individual color for each point. If no explicit `color-map`
+      option is provided, the values in `colors` will be interpreted as
+      hex color codes. Otherwise the mapping of input data to colors is controlled
+      by the `color-map` option.
+
   - name: color-map
+    type: color_map
     desc: |
-      Set the point color map. If no map is specified, the values in `data-color`
-      will be interpreted as hex color values.
-    desc_code: |
-      color-map <color-map>
+      Controls how input data in `colors` mapped to colors. If no map is specified, the
+      values in `colors` will be interpreted as hex color values.
 
-  - name: marker-shape
-    type: marker_shape
-
-  - name: marker-size
-    type: size
-    desc: |
-      Set the marker size for the plot. If set to a value greater than zero, a
-      'marker' will be drawn for each point in the dataset at the points (x, y)
-      coordinate.
-
-  - name: marker-color
-    type: color
-    desc: Set the marker color.
 
   - name: labels
     type: dataset_string

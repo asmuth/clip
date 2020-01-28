@@ -32,16 +32,16 @@
     data-x (csv "test/testdata/bardata.csv" var3)
     data-y (csv "test/testdata/bardata.csv" var1)
     data-y-low (csv "test/testdata/bardata.csv" var2)
-    bar-width (1em)
-    bar-offset (-.8em)
-    bar-stroke-width .8pt
-    bar-fill none)
+    width (1em)
+    offset (-.8em)
+    stroke-width .8pt
+    fill none)
 
 (plot/draw-bars
     data-x (csv "test/testdata/bardata.csv" var3)
     data-y (csv "test/testdata/bardata.csv" var4)
     data-y-low (csv "test/testdata/bardata.csv" var5)
-    bar-width (1em)
-    bar-offset (.8em)
-    bar-stroke-width .8pt
-    bar-fill hatch)
+    width (1em)
+    offset (.8em)
+    stroke-width .8pt
+    fill hatch)

@@ -29,19 +29,26 @@ arguments:
   - name: data-y-low
     type: dataset
 
+  - name: width
+    type: line_width
+
   - name: color
     type: color
-    desc: Set the bar color.
+    desc: Set the error color.
 
-  - name: errorbar-width
+  - name: colors
+    type: dataset_colors
     desc: |
-      Set the error bar width. See the
-      [measure](#FIXME) page for more details on valid values.
-    desc_code: |
-      bar-width <measure>
-    examples: |
-      ;; set the bar width to 1em
-      bar-width 1em
+      Set an individual color for each errorbar. If no explicit `color-map`
+      option is provided, the values in `colors` will be interpreted as
+      hex color codes. Otherwise the mapping of input data to colors is controlled
+      by the `color-map` option.
+
+  - name: color-map
+    type: color_map
+    desc: |
+      Controls how input data is mapped to colors. If no map is specified, the
+      values in `colors` will be interpreted as hex color values.
 
   - name: stroke-color
     type: color

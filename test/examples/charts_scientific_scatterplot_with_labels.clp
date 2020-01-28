@@ -18,7 +18,7 @@
 (plot/draw-points
     data-x (csv test/testdata/point_example.csv x)
     data-y (csv test/testdata/point_example.csv y)
-    data-size (csv test/testdata/point_example.csv z)
+    shape (circle-bullet)
+    sizes (csv test/testdata/point_example.csv z)
     size-map (linear .4em 1.4em)
-    labels (csv test/testdata/point_example.csv z)
-    marker-shape (circle-bullet))
+    labels (csv test/testdata/point_example.csv z))
