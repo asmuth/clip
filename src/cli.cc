@@ -80,7 +80,7 @@ int main(int argc, const char** argv) {
             "Part of the clip project (https://clip.org)\n"
             "Copyright (c) 2019, Paul Asmuth, Laura Schlimmer.\n"
             "All rights reserved.\n\n",
-            FVIZ_VERSION);
+            CLIP_VERSION);
 
     return 0;
   }

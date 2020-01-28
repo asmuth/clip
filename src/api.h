@@ -21,7 +21,7 @@
 extern "C" {
 #endif
 
-#define FVIZ_API __attribute__((visibility ("default")))
+#define CLIP_API __attribute__((visibility ("default")))
 
 typedef struct clip_s clip_t;
 
@@ -30,20 +30,20 @@ typedef struct clip_s clip_t;
  *
  * @returns: A clip context that must be free'd using `clip_destroy`
  */
-FVIZ_API
+CLIP_API
 clip_t* clip_init();
 
 /**
  * Free a clip context
  */
-FVIZ_API
+CLIP_API
 void clip_destroy(clip_t* ctx);
 
 /**
  * Retrieve the last error message. The returned pointer is valid until the next
  * `clip_*` method is called on the context.
  */
-FVIZ_API
+CLIP_API
 const char* clip_get_error(const clip_t* ctx);
 
 /**
@@ -51,19 +51,19 @@ const char* clip_get_error(const clip_t* ctx);
  *
  * @returns: One (1) on success and zero (0) if an error has occured
  */
-FVIZ_API
+CLIP_API
 int clip_eval(clip_t* ctx, const char* expr);
 
 /**
  * Retrieve the result. Pointer is valid until the next call to clip_eval
  */
-FVIZ_API
+CLIP_API
 void clip_get_result(clip_t* ctx, const void** data, size_t* data_len);
 
 /**
  * Set the output format
  */
-FVIZ_API
+CLIP_API
 void clip_set_output_format(clip_t* ctx, const char* format);
 
 

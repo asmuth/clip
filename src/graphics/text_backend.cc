@@ -17,8 +17,8 @@
 
 namespace clip::text {
 
-const constexpr std::string_view TEXT_BACKEND = FVIZ_TEXT_BACKEND;
-const constexpr bool TEXT_ENABLE_BIDI = FVIZ_TEXT_ENABLE_BIDI;
+const constexpr std::string_view TEXT_BACKEND = CLIP_TEXT_BACKEND;
+const constexpr bool TEXT_ENABLE_BIDI = CLIP_TEXT_ENABLE_BIDI;
 
 ReturnCode text_analyze_bidi_line(
     const TextSpan* text_begin,

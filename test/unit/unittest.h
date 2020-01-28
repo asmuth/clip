@@ -47,7 +47,7 @@ const double EPSILON = 0.0001;
 inline std::string test_data_path(std::string p) {
   p = "tests/testdata/" + p;
 
-  if (auto srcdir = getenv("FVIZ_TEST_SRCDIR"); srcdir) {
+  if (auto srcdir = getenv("CLIP_TEST_SRCDIR"); srcdir) {
     return std::string(srcdir) + "/" + p;
   } else {
     return p;

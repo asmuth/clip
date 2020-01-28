@@ -5,9 +5,9 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/extra/cm
 
 # Options
 # -----------------------------------------------------------------------------
-option(FVIZ_TEXT_ENABLE_BIDI "Enable bi-directional text support" ON)
-set(FVIZ_TEXT_BACKEND "freetype" CACHE STRING "Set the text backend")
-option(FVIZ_TESTING "Builds with testing flags [default: OFF]" OFF)
+option(CLIP_TEXT_ENABLE_BIDI "Enable bi-directional text support" ON)
+set(CLIP_TEXT_BACKEND "freetype" CACHE STRING "Set the text backend")
+option(CLIP_TESTING "Builds with testing flags [default: OFF]" OFF)
 
 
 # Dependencies
@@ -22,7 +22,7 @@ find_package(PNG REQUIRED)
 find_package(fmt REQUIRED)
 find_library(fmt_LIBRARY NAMES fmt)
 
-#if(FVIZ_TEXT_BACKEND EQUAL "freetype")
+#if(CLIP_TEXT_BACKEND EQUAL "freetype")
   pkg_check_modules(FRIBIDI QUIET fribidi)
   find_path(FRIBIDI_INCLUDE_DIR NAMES fribidi/fribidi.h)
   find_library(FRIBIDI_LIBRARY NAMES fribidi)
@@ -31,7 +31,7 @@ find_library(fmt_LIBRARY NAMES fmt)
     set(FRIBIDI_LIBRARIES "${FRIBIDI_LIBRARY}")
   else()
     message(WARNING "libfribidi not found; disabling BiDI support")
-    set(FVIZ_TEXT_ENABLE_BIDI OFF)
+    set(CLIP_TEXT_ENABLE_BIDI OFF)
   endif()
 #endif()
 
@@ -45,7 +45,7 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src/utils)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
-if(FVIZ_TESTING)
+if(CLIP_TESTING)
   add_compile_options(
       -Wall
       -Wextra
@@ -71,8 +71,8 @@ endif()
 # Build: Config
 # -----------------------------------------------------------------------------
 configure_file(src/config.h.in config.h)
-message(STATUS "Config Options: text_backend=${FVIZ_TEXT_BACKEND}")
-message(STATUS "Config Options: text_enable_bidi=${FVIZ_TEXT_ENABLE_BIDI}")
+message(STATUS "Config Options: text_backend=${CLIP_TEXT_BACKEND}")
+message(STATUS "Config Options: text_enable_bidi=${CLIP_TEXT_ENABLE_BIDI}")
 
 
 # Build: clip Library
@@ -84,11 +84,11 @@ list(REMOVE_ITEM source_files "${CMAKE_SOURCE_DIR}/src/layout/box.cc")
 list(REMOVE_ITEM source_files "${CMAKE_SOURCE_DIR}/src/plot.cc")
 add_library(clip OBJECT ${source_files})
 set_property(TARGET clip PROPERTY POSITION_INDEPENDENT_CODE 1)
-set(FVIZ_LIB_LDFLAGS ${CAIRO_LIBRARIES} ${FREETYPE_LIBRARIES} ${HARFBUZZ_LIBRARIES} ${HARFBUZZ_ICU_LIBRARIES} ${PNG_LIBRARIES} ${FONTCONFIG_LIBRARIES} ${FRIBIDI_LIBRARIES} ${fmt_LIBRARY})
+set(CLIP_LIB_LDFLAGS ${CAIRO_LIBRARIES} ${FREETYPE_LIBRARIES} ${HARFBUZZ_LIBRARIES} ${HARFBUZZ_ICU_LIBRARIES} ${PNG_LIBRARIES} ${FONTCONFIG_LIBRARIES} ${FRIBIDI_LIBRARIES} ${fmt_LIBRARY})
 add_library(clip-lib-a STATIC $<TARGET_OBJECTS:clip>)
 set_target_properties(clip-lib-a PROPERTIES OUTPUT_NAME clip)
 add_library(clip-lib-so SHARED $<TARGET_OBJECTS:clip>)
-target_link_libraries(clip-lib-so ${FVIZ_LIB_LDFLAGS})
+target_link_libraries(clip-lib-so ${CLIP_LIB_LDFLAGS})
 set_target_properties(clip-lib-so PROPERTIES OUTPUT_NAME clip)
 set_target_properties(clip-lib-so PROPERTIES PUBLIC_HEADER "src/api.h")
 set_target_properties(clip-lib-so PROPERTIES CXX_VISIBILITY_PRESET hidden)
@@ -96,7 +96,7 @@ set_target_properties(clip-lib-so PROPERTIES CXX_VISIBILITY_PRESET hidden)
 # Build: CLI
 # -----------------------------------------------------------------------------
 add_executable(clip-cli "src/cli.cc" $<TARGET_OBJECTS:clip>)
-target_link_libraries(clip-cli ${FVIZ_LIB_LDFLAGS})
+target_link_libraries(clip-cli ${CLIP_LIB_LDFLAGS})
 set_target_properties(clip-cli PROPERTIES OUTPUT_NAME clip)
 
 
