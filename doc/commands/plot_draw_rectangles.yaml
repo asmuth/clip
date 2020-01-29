@@ -1,6 +1,6 @@
-name: plot/draw-rectangles
+name: plot/rectangles
 desc: |
-  The `plot/draw-vectors` command takes an input data table, transforms it according
+  The `plot/vectors` command takes an input data table, transforms it according
   to a user-provided scale configuration and then plots the data as tiled rectangles.
 
 arguments:

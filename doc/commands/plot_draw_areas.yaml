@@ -1,6 +1,6 @@
-name: plot/draw-areas
+name: plot/areas
 desc: |
-  The `plot/draw-areas` command takes an input data table, transforms it according
+  The `plot/areas` command takes an input data table, transforms it according
   to a user-provided scale configuration and then plots the data as one or more
   'area' shapes.
 

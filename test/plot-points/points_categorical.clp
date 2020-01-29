@@ -1,4 +1,4 @@
-(plot/draw-points
+(plot/points
     scale-x (categorical ("a" "b" "c" "d" "e"))
     limit-y (0 6)
     data-x ("a" "b" "c" "d" "e")

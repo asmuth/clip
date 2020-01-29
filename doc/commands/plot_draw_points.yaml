@@ -1,6 +1,6 @@
-name: plot/draw-points
+name: plot/points
 desc: |
-  The `plot/draw-points` element is used to create point/scattercharts.
+  The `plot/points` element is used to create point/scattercharts.
 
 arguments:
   - name: data-x

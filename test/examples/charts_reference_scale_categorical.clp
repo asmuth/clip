@@ -1,4 +1,4 @@
-(set-height 60px)
-(layout/add-margins margin 1em)
+(height 60px)
+(layout/margins margin 1em)
 
-(plot/draw-axis scale (categorical (A B C D E F)))
+(plot/axis scale (categorical (A B C D E F)))

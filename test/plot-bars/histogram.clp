@@ -1,7 +1,7 @@
-(set-width 480px)
-(set-height 380px)
+(width 480px)
+(height 380px)
 
-(plot/draw-bars
+(plot/bars
     limit-x (0 7)
     limit-y (0 10000)
     scale-y (log)

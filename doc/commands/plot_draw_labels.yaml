@@ -1,6 +1,6 @@
-name: plot/draw-labels
+name: plot/labels
 desc: |
-  The `plot/draw-labels` command takes an input data table, transforms it according
+  The `plot/labels` command takes an input data table, transforms it according
   to a user-provided scale configuration and then plots the data as text labels.
 
 

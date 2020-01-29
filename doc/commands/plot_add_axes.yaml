@@ -1,6 +1,6 @@
-name: plot/add-axes
+name: plot/axes
 desc: |
-  The `plot/add-axes` command draws up to four labelled 'axis' (top/right/bottom/left) and
+  The `plot/axes` command draws up to four labelled 'axis' (top/right/bottom/left) and
   changes the document layout so that further painting takes place inside of the
   rectangle described by the axes.
 

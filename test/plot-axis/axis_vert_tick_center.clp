@@ -1,6 +1,6 @@
-(layout/add-margins margin 8em)
+(layout/margins margin 8em)
 
-(plot/draw-axis
+(plot/axis
     align y
     label-placement (linear 1)
     tick-offset 0

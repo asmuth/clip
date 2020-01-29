@@ -1,7 +1,7 @@
 
-(layout/add-margins margin 8em)
+(layout/margins margin 8em)
 
-(plot/draw-axis
+(plot/axis
     align bottom
     label-placement (linear 1)
     limit (0 16)

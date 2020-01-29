@@ -1,7 +1,7 @@
-(set-height 60px)
-(layout/add-margins margin 1em)
+(height 60px)
+(layout/margins margin 1em)
 
-(plot/draw-axis
+(plot/axis
     scale (logarithmic 10)
     tick-placement (exponential-steps 10 10)
     label-format (base 10)

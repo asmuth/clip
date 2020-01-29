@@ -1,7 +1,7 @@
-(set-width 600px)
-(set-height 900px)
+(width 600px)
+(height 900px)
 
-(plot/draw-areas
+(plot/areas
     data-x (csv "test/testdata/measurement.csv" value2)
     data-y (csv "test/testdata/measurement.csv" time)
     direction horizontal

@@ -1,7 +1,7 @@
-(set-height 480px)
-(set-width 1200px)
+(height 480px)
+(width 1200px)
 
-(plot/draw-lines
+(plot/lines
     data-x (csv "test/testdata/city_temperatures_london.csv" month)
     data-y (csv "test/testdata/city_temperatures_london.csv" temperature)
     labels (csv "test/testdata/city_temperatures_london.csv" temperature_str)

@@ -1,4 +1,4 @@
-(plot/draw-points
+(plot/points
     limit-x (0 10)
     limit-y (0 10000)
     scale-y (log 2)

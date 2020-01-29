@@ -1,6 +1,6 @@
-name: plot/draw-axis
+name: plot/axis
 desc: |
-  The `plot/draw-axis` command draws a labelled 'axis'.
+  The `plot/axis` command draws a labelled 'axis'.
 
 arguments:
 

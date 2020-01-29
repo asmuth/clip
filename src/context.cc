@@ -51,15 +51,15 @@ ReturnCode context_configure(Context* ctx, const Expr* expr) {
     return error(ERROR, "Expected at least two arguments");
   }
 
-  if (expr_is_value(args[0], "set-width")) {
+  if (expr_is_value(args[0], "width")) {
     return measure_read(args[1], &ctx->width);
   }
 
-  if (expr_is_value(args[0], "set-height")) {
+  if (expr_is_value(args[0], "height")) {
     return measure_read(args[1], &ctx->height);
   }
 
-  if (expr_is_value(args[0], "set-dpi")) {
+  if (expr_is_value(args[0], "dpi")) {
     return expr_to_float64(args[1], &ctx->dpi);
   }
 

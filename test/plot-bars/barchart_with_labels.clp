@@ -1,4 +1,4 @@
-(plot/draw-bars
+(plot/bars
     limit-x (0 13)
     limit-y (0 25)
     data-x (csv "test/testdata/city_temperatures_london.csv" month)

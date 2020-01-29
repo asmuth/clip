@@ -1,10 +1,10 @@
-(set-width 2048px)
-(set-height 1024px)
-(set-dpi 240)
+(width 2048px)
+(height 1024px)
+(dpi 240)
 
 ;;(set color-palette (#0c0 #c00 #00c))
 
-(figure/draw-legend
+(figure/legend
     item (label "Test Color 1" color 1)
     item (label "Test Color 2" color 2)
     item (label "Test Color 3" color 3)

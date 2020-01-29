@@ -25,7 +25,7 @@ Introductory Example
 The text box below contains a simple clip script. Paste the contents to a file
 called `example_chart.clp`:
 
-    (plot/draw-lines
+    (plot/lines
         data-x (100 200 300 400 500 600 700 800 900)
         data-y (1.2   1.8   1.3   1.6   1.5   1.3   1.8   1.9   2.0)
         limit-y (0 3)
@@ -35,22 +35,22 @@ called `example_chart.clp`:
 
 <figcaption style="margin-top: -.4em;"><code>example_chart.clp</code></figcaption>
 
-In the script, we call a single command called `plot/draw-lines` with a number
+In the script, we call a single command called `plot/lines` with a number
 of arguments such as `data-x` or `limit-y`. The exact meaning of each of the
 arguments doesn't matter for now. The specifics of each argument are documented
-on the [reference page of the command](/commands/plot/draw-lines) and you can
+on the [reference page of the command](/commands/plot/lines) and you can
 probably guess what most of them do anyway.
 
 What's important for now is that the syntax from above represents a call to a
-command called `plot/draw-lines` with a number of keyword arguments.
+command called `plot/lines` with a number of keyword arguments.
 
 Coming from other languages, it's probably a bit surprising to see a forward slash
 as part of the command name, but this is allowed in clip. Since, at this point,
 all commands in clip live in the same global namespace, the forward slash is
-used to group them into modules. In other words, the `plot/draw-lines` is the
-`draw-lines` command from the `plot` module.
+used to group them into modules. In other words, the `plot/lines` is the
+`lines` command from the `plot` module.
 
-But back to our example. The `plot/draw-lines` command that we're calling takes
+But back to our example. The `plot/lines` command that we're calling takes
 the input data table, transforms it for display and then plots the data as a line.
 To see what that looks like, save the content from above to a file called
 `example_chart.clp` and run it through clip using the following command:
@@ -67,10 +67,10 @@ After running the example, you should have an output file similar to the one bel
 ### Step 2: Adding axes
 
 To make this into a proper plot, we have to add some axes. For that, we extend
-the script to invoke a second command called `plot/add-axes`. Add this to the
+the script to invoke a second command called `plot/axes`. Add this to the
 `example_chart.clp` file:
 
-    (plot/add-axes
+    (plot/axes
         limit-y (0 3)
         limit-x (0 1000)
         label-format-x (scientific)
@@ -84,8 +84,8 @@ more like the kind of chart we all know and love:
   <figcaption><code>example_chart.svg</code></figcaption>
 </figure>
 
-When adding the `plot/add-axes` command to the script, make sure to add it
-_before_ the existing, `plot/draw-lines` command; the order of commands in clip
+When adding the `plot/axes` command to the script, make sure to add it
+_before_ the existing, `plot/lines` command; the order of commands in clip
 is significant! The main reason for this is that drawing in clip is performed
 using the "painters algorithm", i.e. later commands draw over the output of
 earlier commands, so changing the order of commands will generally give a different
@@ -97,10 +97,10 @@ is that commands are allowed to modify the implicit current "image" by adding
 graphical elements to it. 
 
 The other permissible side effect is that commands may modify the so called
-"transform stack". The `plot/add-axes` command in particular modifies the transform
+"transform stack". The `plot/axes` command in particular modifies the transform
 stack so that further painting takes place within the rectangular region described
 by the axes. In other words, it makes it so that lines and other shapes drawn
-after the `add-axis` command will be drawn within the axes.
+after the `axes` command will be drawn within the axes.
 
 To learn more about the transform stack and how to modify it manually, please
 refer to the [Layout](#FIXME) page.
@@ -109,10 +109,10 @@ refer to the [Layout](#FIXME) page.
 ### Step 3: Adding the legend
 
 To close things out on this example, we're going to add an explanatory legend to
-our chart. To do so, we will use the `figure/draw-legend` command. Simply add the
+our chart. To do so, we will use the `figure/legend` command. Simply add the
 snippet from below to the end of the script:
 
-    (figure/draw-legend
+    (figure/legend
         position (bottom left)
         item (label "Example Data" marker-shape (pentagon)))
 
@@ -126,17 +126,17 @@ This leaves us with this final script:
     (default limit-y (0 3))
     (default limit-x (0 1000))
 
-    (plot/add-axes
+    (plot/axes
         label-format-x (scientific)
         label-placement-x (linear-interval 100 100 900))
 
-    (plot/draw-lines
+    (plot/lines
         data-x (100 200 300 400 500 600 700 800 900)
         data-y (1.2   1.8   1.3   1.6   1.5   1.3   1.8   1.9   2.0)
         marker-shape (pentagon)
         marker-size 8pt)
 
-    (figure/draw-legend
+    (figure/legend
         position (bottom left)
         item (label "Example Data" marker-shape 
 

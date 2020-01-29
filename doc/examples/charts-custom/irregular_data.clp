@@ -1,26 +1,26 @@
-(set-width 2048px)
-(set-height 800px)
-(set-dpi 240)
+(width 2048px)
+(height 800px)
+(dpi 240)
 
 (default limit-x (-12 22))
 (default limit-y (-35 55))
 
-(plot/add-axes
+(plot/axes
     position (bottom left))
 
-(plot/draw-lines
+(plot/lines
     data-x (csv "test/testdata/irregular_data1.csv" x)
     data-y (csv "test/testdata/irregular_data1.csv" y)
     color 4
     marker-size 3pt)
 
-(plot/draw-lines
+(plot/lines
     data-x (csv "test/testdata/irregular_data2.csv" x)
     data-y (csv "test/testdata/irregular_data2.csv" y)
     color 6
     marker-size 3pt)
 
-(figure/draw-legend
+(figure/legend
     position (bottom left)
     background #fff
     item (label "Series A" color 4)

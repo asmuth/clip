@@ -48,29 +48,29 @@ List of Commands
 
 <h5>Document Setup</h5>
 <ul class="index">
-  <li><a href="#" class="prop"><code><strong>set-width</strong></code></a></li>
-  <li><a href="#" class="prop"><code><strong>set-height</strong></code></a></li>
-  <li><a href="#" class="prop"><code><strong>set-dpi</strong></code></a></li>
+  <li><a href="#" class="prop"><code><strong>width</strong></code></a></li>
+  <li><a href="#" class="prop"><code><strong>height</strong></code></a></li>
+  <li><a href="#" class="prop"><code><strong>dpi</strong></code></a></li>
 </ul>
 
 <h5>Plotting Data</h5>
 <ul class="index">
-  <li><a href="/commands/plot/add-axes"><code><strong>plot/add-axes</strong></code></a></li>
-  <li><a href="/commands/plot/draw-areas"><code><strong>plot/draw-areas</strong></code></a></li>
-  <li><a href="/commands/plot/draw-axis"><code><strong>plot/draw-axis</strong></code></a></li>
-  <li><a href="/commands/plot/draw-bars"><code><strong>plot/draw-bars</strong></code></a></li>
-  <li><a href="/commands/plot/draw-errorbars"><code><strong>plot/draw-errorbars</strong></code></a></li>
-  <li><a href="/commands/plot/draw-grid"><code><strong>plot/draw-grid</strong></code></a></li>
-  <li><a href="/commands/plot/draw-labels"><code><strong>plot/draw-labels</strong></code></a></li>
-  <li><a href="/commands/plot/draw-lines"><code><strong>plot/draw-lines</strong></code></a></li>
-  <li><a href="/commands/plot/draw-points"><code><strong>plot/draw-points</strong></code></a></li>
-  <li><a href="/commands/plot/draw-vectors"><code><strong>plot/draw-vectors</strong></code></a></li>
-  <li><a href="/commands/plot/draw-rectangles"><code><strong>plot/draw-rectangles</strong></code></a></li>
+  <li><a href="/commands/plot/axes"><code><strong>plot/axes</strong></code></a></li>
+  <li><a href="/commands/plot/areas"><code><strong>plot/areas</strong></code></a></li>
+  <li><a href="/commands/plot/axis"><code><strong>plot/axis</strong></code></a></li>
+  <li><a href="/commands/plot/bars"><code><strong>plot/bars</strong></code></a></li>
+  <li><a href="/commands/plot/errorbars"><code><strong>plot/errorbars</strong></code></a></li>
+  <li><a href="/commands/plot/grid"><code><strong>plot/grid</strong></code></a></li>
+  <li><a href="/commands/plot/labels"><code><strong>plot/labels</strong></code></a></li>
+  <li><a href="/commands/plot/lines"><code><strong>plot/lines</strong></code></a></li>
+  <li><a href="/commands/plot/points"><code><strong>plot/points</strong></code></a></li>
+  <li><a href="/commands/plot/vectors"><code><strong>plot/vectors</strong></code></a></li>
+  <li><a href="/commands/plot/rectangles"><code><strong>plot/rectangles</strong></code></a></li>
 </ul>
 
 <h5>Other</h5>
 <ul class="index">
-  <li><a href="/commands/figure/draw-legend"><code><strong>figure/draw-legend</strong></code></a></li>
+  <li><a href="/commands/figure/legend"><code><strong>figure/legend</strong></code></a></li>
 </ul>
 
 

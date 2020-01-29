@@ -1,5 +1,5 @@
-name: plot/draw-grid
-desc: The `plot/draw-grid` element draws a background grid.
+name: plot/grid
+desc: The `plot/grid` element draws a background grid.
 
 properties:
   - title: "Grid Options"

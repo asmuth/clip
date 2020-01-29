@@ -1,10 +1,10 @@
-(set-dpi 400)
-(set-width 3600px)
-(set-height 1920px)
+(dpi 400)
+(width 3600px)
+(height 1920px)
 
 ;;(set text-script "Arabic")
 
-(figure/draw-legend
+(figure/legend
   border none
   margin 0
   item (label "北京市 (Beijing)" color #06c)

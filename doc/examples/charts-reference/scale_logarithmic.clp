@@ -1,4 +1,4 @@
-(set-height 60px)
-(layout/add-margins margin 1em)
+(height 60px)
+(layout/margins margin 1em)
 
-(plot/draw-axis scale (log 2) limit (0 4096))
+(plot/axis scale (log 2) limit (0 4096))

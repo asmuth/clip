@@ -1,7 +1,7 @@
 
-(layout/add-margins margin 8em)
+(layout/margins margin 8em)
 
-(plot/draw-axis
+(plot/axis
     align x
     label-placement (linear 1)
     tick-offset 0
