@@ -1,5 +1,5 @@
-(set-height 60px)
-(layout/add-margins margin 1em)
+
+(layout/add-margins margin 8em)
 
 (plot/draw-axis
     align top
