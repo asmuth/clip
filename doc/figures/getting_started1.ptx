@@ -1,9 +1,0 @@
-width: 800px;
-height: 400px;
-
-points {
-  xs: 90px, 650px, 420px;
-  ys: 180px, 300px, 120px;
-  sizes: 3pt, 6pt, 11pt;
-  colors: #06c, #0c6, #c06;
-}

@@ -1,9 +1,0 @@
-width: 1200px;
-height: 90px;
-
-axis {
-  scale-min: 0;
-  scale-max: 79200;
-  layout: linear(7200);
-  format: datetime("%H:%M:%S");
-}
