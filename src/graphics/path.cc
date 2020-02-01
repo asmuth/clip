@@ -172,6 +172,17 @@ Path path_from_polygon(const Polygon2& poly) {
   return p;
 }
 
+Path path_from_poly2(const Poly2& poly) {
+  Path p;
+  path_add_poly_ring(&p, poly.boundary);
+
+  for (const auto& r : poly.holes) {
+    path_add_poly_ring(&p, r);
+  }
+
+  return p;
+}
+
 Path path_transform(const Path& path, const mat3& transform) {
   Path path_out;
 
@@ -281,6 +292,20 @@ void path_add_circle(Path* path, vec2 origin, double radius) {
       origin.y - radius,
       origin.x,
       origin.y - radius);
+
+  path->closePath();
+}
+
+void path_add_poly_ring(Path* path, const PolyLine2& ring) {
+  if (ring.vertices.empty()) {
+    return;
+  }
+
+  path->moveTo(ring.vertices[0].x, ring.vertices[0].y);
+
+  for (size_t i = 1; i < ring.vertices.size(); ++i) {
+    path->lineTo(ring.vertices[i].x, ring.vertices[i].y);
+  }
 
   path->closePath();
 }

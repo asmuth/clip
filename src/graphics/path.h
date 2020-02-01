@@ -79,6 +79,11 @@ Polygon2 path_to_polygon_simple(const Path& path);
 Path path_from_polygon(const Polygon2& poly);
 
 /**
+ * Convert a polygon to a path
+ */
+Path path_from_poly2(const Poly2& poly);
+
+/**
  * Transform a path
  */
 Path path_transform(const Path& p, const mat3& t);
@@ -102,6 +107,11 @@ void path_add_rectangle(Path* path, const Rectangle& rect);
  * Add a circle to a path. Origin is the center of the circle.
  */
 void path_add_circle(Path* path, vec2 origin, double radius);
+
+/**
+ * Add a polygonal ring to a path
+ */
+void path_add_poly_ring(Path* path, const PolyLine2& ring);
 
 } // namespace clip
 

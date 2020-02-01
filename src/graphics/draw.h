@@ -27,7 +27,7 @@ struct Context;
  * operations, such as rendering text and drawing polygons. Note that the "list"
  * is not necessarily a flat list, but may be a tree.
  */
-using DrawCommand = std::variant<draw_cmd::Text, draw_cmd::Shape>;
+using DrawCommand = std::variant<draw_cmd::Text, draw_cmd::Shape, draw_cmd::Polygon>;
 using DrawCommandList = std::vector<DrawCommand>;
 
 /**
@@ -51,6 +51,18 @@ void draw_shape(
 void draw_path(
     Context* ctx,
     const Path& path,
+    StrokeStyle stroke_style,
+    FillStyle fill_style);
+
+void draw_path(
+    Context* ctx,
+    const Path& path,
+    StrokeStyle stroke_style,
+    FillStyle fill_style);
+
+void draw_polygon(
+    Context* ctx,
+    const Poly2& poly,
     StrokeStyle stroke_style,
     FillStyle fill_style);
 

@@ -44,5 +44,12 @@ struct Shape {
   std::optional<AntialiasingMode> antialiasing_mode;
 };
 
+struct Polygon {
+  Poly2 poly;
+  StrokeStyle stroke_style;
+  FillStyle fill_style;
+  std::optional<AntialiasingMode> antialiasing_mode;
+};
+
 } // namespace clip::draw_cmd
 

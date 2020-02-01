@@ -127,48 +127,50 @@ std::string svg_poly_data(const Polygon2& poly) {
   return poly_data.str();
 }
 
-Status svg_shape(
-    const draw_cmd::Shape& elem,
+Status svg_add_path(
+    const Path& path,
+    const FillStyle& fill_style,
+    const StrokeStyle& stroke_style,
+    std::optional<AntialiasingMode> antialiasing_mode,
     SVGDataRef svg) {
   std::string fill_opts;
   std::string stroke_opts;
   std::string extra_opts;
-  auto path = elem.path;
 
   bool fill_present = false;
-  if (elem.fill_style.color && !elem.fill_style.hatch) {
-    fill_opts += svg_attr("fill", elem.fill_style.color->to_hex_str());
-    fill_opts += svg_attr("fill-opacity", elem.fill_style.color->component(3));
+  if (fill_style.color && !fill_style.hatch) {
+    fill_opts += svg_attr("fill", fill_style.color->to_hex_str());
+    fill_opts += svg_attr("fill-opacity", fill_style.color->component(3));
     fill_present = true;
   } else {
     fill_opts = svg_attr("fill", "none");
   }
 
   bool stroke_present = false;
-  if (elem.stroke_style.line_width) {
+  if (stroke_style.line_width) {
     stroke_present = true;
 
-    stroke_opts += svg_attr("stroke-width", elem.stroke_style.line_width);
-    stroke_opts += svg_attr("stroke", elem.stroke_style.color.to_hex_str(4));
+    stroke_opts += svg_attr("stroke-width", stroke_style.line_width);
+    stroke_opts += svg_attr("stroke", stroke_style.color.to_hex_str(4));
 
-    switch (elem.stroke_style.dash_type) {
+    switch (stroke_style.dash_type) {
       case StrokeStyle::SOLID:
         break;
       case StrokeStyle::DASH: {
         std::string dash_pattern;
-        for (const auto& v : elem.stroke_style.dash_pattern) {
+        for (const auto& v : stroke_style.dash_pattern) {
           dash_pattern += fmt::format("{} ", v);
         }
 
         stroke_opts += svg_attr("stroke-dasharray", dash_pattern);
-        stroke_opts += svg_attr("stroke-dashoffset", elem.stroke_style.dash_offset);
+        stroke_opts += svg_attr("stroke-dashoffset", stroke_style.dash_offset);
         break;
       }
     }
   }
 
-  if (elem.antialiasing_mode) {
-    switch (*elem.antialiasing_mode) {
+  if (antialiasing_mode) {
+    switch (*antialiasing_mode) {
       case AntialiasingMode::ENABLE:
         break;
       case AntialiasingMode::DISABLE:
@@ -177,19 +179,19 @@ Status svg_shape(
     }
   }
 
-  if (elem.fill_style.hatch) {
+  if (fill_style.hatch) {
     auto hatched = shape_hatch(
         path_to_polygon_simple(path),
-        elem.fill_style.hatch_angle_deg,
-        elem.fill_style.hatch_offset,
-        elem.fill_style.hatch_stride,
-        elem.fill_style.hatch_width);
+        fill_style.hatch_angle_deg,
+        fill_style.hatch_offset,
+        fill_style.hatch_stride,
+        fill_style.hatch_width);
 
     svg->buffer
         << "  "
         << "<path"
         << svg_attr("d", svg_path_data(path_transform(hatched, svg->proj)))
-        << svg_attr("fill", elem.fill_style.color->to_hex_str(4))
+        << svg_attr("fill", fill_style.color->to_hex_str(4))
         << extra_opts
         << "/>"
         << "\n";
@@ -210,7 +212,29 @@ Status svg_shape(
   return OK;
 }
 
-Status svg_text_span_native(
+Status svg_add_shape_elem(
+    const draw_cmd::Shape& elem,
+    SVGDataRef svg) {
+  return svg_add_path(
+      elem.path,
+      elem.fill_style,
+      elem.stroke_style,
+      elem.antialiasing_mode,
+      svg);
+}
+
+Status svg_add_polygon_elem(
+    const draw_cmd::Polygon& elem,
+    SVGDataRef svg) {
+  return svg_add_path(
+      path_from_poly2(elem.poly),
+      elem.fill_style,
+      elem.stroke_style,
+      elem.antialiasing_mode,
+      svg);
+}
+
+Status svg_add_text_elem_native(
     const draw_cmd::Text& elem,
     SVGDataRef svg) {
   const auto& style = elem.style;
@@ -252,7 +276,7 @@ Status svg_text_span_native(
   return OK;
 }
 
-Status svg_text_span_embed(
+Status svg_add_text_elem_embed(
     const draw_cmd::Text& elem,
     double dpi,
     SVGDataRef svg) {
@@ -292,14 +316,14 @@ Status svg_text_span_embed(
   return OK;
 }
 
-Status svg_text_span(
+Status svg_add_text_elem(
     const draw_cmd::Text& elem,
     double dpi,
     SVGDataRef svg) {
   if (elem.style.font.font_family_css.empty()) {
-    return svg_text_span_embed(elem, dpi, svg);
+    return svg_add_text_elem_embed(elem, dpi, svg);
   } else {
-    return svg_text_span_native(elem, svg);
+    return svg_add_text_elem_native(elem, svg);
   }
 }
 
@@ -317,14 +341,16 @@ ReturnCode export_svg(
   svg->proj = mul(translate2({0, ctx->height}), scale2({1, -1}));
 
   for (const auto& cmd : ctx->drawlist) {
-    auto rc = std::visit([svg, ctx] (const auto& c) {
+    auto rc = std::visit([svg, ctx] (const auto& c) -> ReturnCode {
       using T = std::decay_t<decltype(c)>;
       if constexpr (std::is_same_v<T, draw_cmd::Text>)
-        return svg_text_span(c, ctx->dpi, svg);
+        return svg_add_text_elem(c, ctx->dpi, svg);
       if constexpr (std::is_same_v<T, draw_cmd::Shape>)
-        return svg_shape(c, svg);
+        return svg_add_shape_elem(c, svg);
+      if constexpr (std::is_same_v<T, draw_cmd::Polygon>)
+        return svg_add_polygon_elem(c, svg);
 
-      return ERROR;
+      return error(ERROR, "element not supported");
     }, cmd);
 
     if (!rc) {

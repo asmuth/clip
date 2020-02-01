@@ -11,12 +11,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+#include "context.h"
 #include "draw.h"
 
 namespace clip {
 
-void draw_text(Page* page, draw_cmd::Text elem);
-void draw_shape(Page* page, draw_cmd::Shape elem);
+void draw_polygon(
+    Context* ctx,
+    const Poly2& poly,
+    StrokeStyle stroke_style,
+    FillStyle fill_style) {
+  draw_cmd::Polygon elem;
+  elem.poly = poly;
+  elem.stroke_style = stroke_style;
+  elem.fill_style = fill_style;
+  ctx->drawlist.push_back(elem);
+}
 
 } // namespace clip
 
