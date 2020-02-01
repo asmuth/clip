@@ -21,6 +21,7 @@
 #include "plot/labels.h"
 #include "plot/lines.h"
 #include "plot/points.h"
+#include "plot/polygons.h"
 #include "plot/rectangles.h"
 #include "plot/vectors.h"
 #include "figure/legend.h"
@@ -42,6 +43,7 @@ const CommandMap COMMANDS = {
   {"plot/labels", CommandFn(&elements::plot::labels::labels_draw)},
   {"plot/lines", CommandFn(&elements::plot::lines::draw_lines)},
   {"plot/points", CommandFn(&elements::plot::points::points_draw)},
+  {"plot/polygons", CommandFn(&plot::polygons_draw)},
   {"plot/rectangles", CommandFn(&elements::plot::rectangles::rectangles_draw)},
   {"plot/vectors", CommandFn(&elements::plot::vectors::vectors_draw)},
   {"figure/legend", CommandFn(&elements::legend::legend_draw)},
