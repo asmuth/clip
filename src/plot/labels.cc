@@ -154,10 +154,10 @@ ReturnCode labels_draw(
   }
 
   /* check configuration */
-  if (c->x.size() != c->y.size()) {
+  if (c->x.empty() || c->y.empty() || c->x.size() != c->y.size()) {
     return error(
         ERROR,
-        "the length of the 'data-x' and 'data-y' properties must be equal");
+        "the length of the 'data-x' and 'data-y' properties must be equal and non-empty");
   }
 
   return labels_draw(ctx, c);
