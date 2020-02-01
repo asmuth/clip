@@ -33,7 +33,7 @@ using std::bind;
 namespace clip::elements::plot::axis {
 
 static const double kDefaultTitlePaddingHorizEM = .6;
-static const double kDefaultTitlePaddingVertEM = 1;
+static const double kDefaultTitlePaddingVertEM = .8;
 static const double kDefaultLabelPaddingEM = 0.8;
 static const double kDefaultLineWidthPT = 1;
 static const double kDefaultTickLengthPT = 4;
@@ -866,7 +866,7 @@ ReturnCode axis_add_all(Context* ctx, const Expr* expr) {
   axes[3].align = AxisAlign::LEFT;
   axes[3].label_attach = AxisLabelAttach::RIGHT;
   axes[3].title_offset = -1;
-  axes[3].title_rotate = 90;
+  axes[3].title_rotate = -90;
   axes[3].tick_offset = 1;
   axes[3].label_offset = -1;
   axes[3].label_font = ctx->font;
