@@ -116,6 +116,9 @@ add_custom_target(test
 add_custom_target(test-examples ${CMAKE_CURRENT_SOURCE_DIR}/doc/examples/update_tests.sh)
 add_dependencies(test test-examples)
 
+add_custom_target(test-extract-data ${CMAKE_CURRENT_SOURCE_DIR}/test/testdata/extract_testdata.sh)
+add_dependencies(test test-extract-data)
+
 
 # Examples
 # -----------------------------------------------------------------------------
