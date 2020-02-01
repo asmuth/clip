@@ -1,6 +1,6 @@
 /**
  * This file is part of the "clip" project
- *   Copyright (c) 2018 Paul Asmuth
+ *   Copyright (c) 2020 Paul Asmuth
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -11,27 +11,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+#pragma once
 #include "context.h"
-#include "draw.h"
 
-namespace clip {
+namespace clip::draw {
 
-void draw_polygon(
+ReturnCode rectangle(
     Context* ctx,
-    const Poly2& poly,
-    StrokeStyle stroke_style,
-    FillStyle fill_style) {
-  convert_unit_typographic(
-      ctx->dpi,
-      ctx->font_size,
-      &stroke_style.line_width);
+    const Expr* expr);
 
-  draw_cmd::Polygon elem;
-  elem.poly = poly;
-  elem.stroke_style = stroke_style;
-  elem.fill_style = fill_style;
-  ctx->drawlist.push_back(elem);
-}
-
-} // namespace clip
+} // namespace clip::elements::plot::points
 

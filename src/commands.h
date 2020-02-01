@@ -24,6 +24,7 @@
 #include "plot/polygons.h"
 #include "plot/rectangles.h"
 #include "plot/vectors.h"
+#include "draw/rectangle.h"
 #include "figure/legend.h"
 
 namespace clip {
@@ -34,6 +35,7 @@ const CommandMap COMMANDS = {
   {"height", CommandFn(&context_configure)},
   {"dpi", CommandFn(&context_configure)},
   {"layout/margins", CommandFn(&layout_add_margins)},
+  {"draw/rectangle", CommandFn(&draw::rectangle)},
   {"plot/axes", CommandFn(&elements::plot::axis::axis_add_all)},
   {"plot/areas", CommandFn(&elements::plot::areas::areas_draw)},
   {"plot/axis", CommandFn(&elements::plot::axis::axis_draw)},
