@@ -16,6 +16,7 @@
 #include <stdlib.h>
 #include <stdint.h>
 #include <iostream>
+#include <vector>
 #include "vmath.h"
 
 namespace clip {
@@ -32,6 +33,34 @@ struct Rectangle {
 };
 
 std::ostream& operator <<(std::ostream& os, const Rectangle& c);
+
+struct PolyLine2 {
+  std::vector<vec2> vertices;
+};
+
+struct PolyLine3 {
+  std::vector<vec3> vertices;
+};
+
+/**
+ * - The poly lines are assumed to form closed 'rings'.
+ */
+struct Poly2 {
+  PolyLine2 boundary;
+  std::vector<PolyLine2> holes;
+};
+
+/**
+ * - The poly lines are assumed to form closed 'rings'.
+ */
+struct Poly3 {
+  PolyLine3 boundary;
+  std::vector<PolyLine3> holes;
+};
+
+PolyLine2 polyline3_to_polyline2(const PolyLine3& p);
+
+Poly2 poly3_to_poly2(const Poly3& p);
 
 } // namespace clip
 

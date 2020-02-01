@@ -14,6 +14,7 @@
 #include "data.h"
 #include "utils/fileutil.h"
 #include "utils/csv.h"
+#include "utils/geojson.h"
 #include "sexpr_conv.h"
 #include "sexpr_util.h"
 #include <assert.h>
@@ -182,6 +183,51 @@ ReturnCode data_load_strings(
   }
 
   return expr_to_strings(expr, values);
+}
+
+ReturnCode data_load_polys2_geojson(
+    const Expr* expr,
+    std::vector<Poly2>* data) {
+  if (!expr || !expr_is_value(expr)) {
+    return errorf(
+        ERROR,
+        "argument error; expected a filename, got: {}",
+        expr_inspect(expr));
+  }
+
+  const auto& path = expr_get_value(expr);
+
+  GeoJSONReader reader;
+  reader.on_polygons = [data] (const Poly3* polys, size_t poly_count) {
+    for (size_t i = 0; i < poly_count; ++i) {
+      data->emplace_back(poly3_to_poly2(polys[i]));
+    }
+
+    return OK;
+  };
+
+  return geojson_read_file(path, reader);
+}
+
+ReturnCode data_load_polys2(
+    const Expr* expr,
+    std::vector<Poly2>* data) {
+  if (!expr || !expr_is_list(expr) || !expr_get_list(expr)) {
+    return errorf(
+        ERROR,
+        "argument error; expected a list, got: {}",
+        expr_inspect(expr));
+  }
+
+  auto args = expr_get_list(expr);
+
+  if (args && expr_is_value_literal(args, "geojson")) {
+    return data_load_polys2_geojson(expr_next(args), data);
+  }
+
+  return err_invalid_value(expr_inspect(expr), {
+    "geojson"
+  });
 }
 
 ReturnCode data_load(

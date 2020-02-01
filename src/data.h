@@ -52,6 +52,10 @@ ReturnCode data_load_strings(
     const Expr* expr,
     std::vector<std::string>* values);
 
+ReturnCode data_load_polys2(
+    const Expr* expr,
+    std::vector<Poly2>* data);
+
 ReturnCode data_load(
     const Expr* expr,
     std::vector<Measure>* values);

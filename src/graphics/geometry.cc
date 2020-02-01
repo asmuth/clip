@@ -48,5 +48,26 @@ std::ostream& operator <<(std::ostream& os, const Rectangle& r) {
   return os;
 }
 
+PolyLine2 polyline3_to_polyline2(const PolyLine3& p) {
+  PolyLine2 p2;
+
+  for (const auto& x : p.vertices) {
+    p2.vertices.emplace_back(x);
+  }
+
+  return p2;
+}
+
+Poly2 poly3_to_poly2(const Poly3& p) {
+  Poly2 p2;
+  p2.boundary = polyline3_to_polyline2(p.boundary);
+
+  for (const auto& x : p.holes) {
+    p2.holes.emplace_back(polyline3_to_polyline2(x));
+  }
+
+  return p2;
+}
+
 } // namespace clip
 

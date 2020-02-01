@@ -16,13 +16,19 @@
 #include <vector>
 #include "return_code.h"
 #include "utils/json.h"
+#include "graphics/polygon.h"
 
 namespace clip {
 
+struct GeoJSONReader {
+  std::function<ReturnCode (const Poly3*, size_t)> on_polygons;
+};
+
 // Parse a RFC7946 compliant GEOJSON file
 // https://tools.ietf.org/html/rfc4180
-ReturnCode geojson_parse_file(
-    const std::string& path);
+ReturnCode geojson_read_file(
+    const std::string& path,
+    const GeoJSONReader& reader);
 
 } // namespace clip
 
