@@ -18,6 +18,10 @@
     - file: charts-editorial/stacked_bars
     - file: charts-editorial/barchart_horizontal
 
+- section: Maps
+  files:
+    - file: maps/gulf-of-mexico
+
 - section: Other Charts
   files:
     - file: charts-basic/custom_font
