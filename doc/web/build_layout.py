@@ -29,10 +29,12 @@ tpl = """
       <span style="margin: 0 .3em">·</span>
       <a class="link" href="/" style="">Documentation</a>
       <span style="margin: 0 .3em">·</span>
+      <a class="link" href="/commands" style="">API Reference</a>
+      <span style="margin: 0 .3em">·</span>
       <a class="link" href="/examples">Examples</a>
       <span style="margin: 0 .3em">·</span>
       <a class="link" href="/installation">Download</a>
-      <ul class="crumbs">
+      <ul class="crumbs" style="display: none;">
         <li><a href="/">Documentation</a></li>
         <li><a>{{title}}</a></li>
       </ul>

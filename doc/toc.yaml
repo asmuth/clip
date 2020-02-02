@@ -26,6 +26,10 @@ documentation:
           title: "FAQ"
           url: "/faq"
           file: "faq"
+        -
+          title: "Commands"
+          url: "/commands"
+          file: "commands"
 
   -
     title: "Examples"

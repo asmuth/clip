@@ -7,10 +7,9 @@ html {
 body {
   margin: 0;
   padding: 0;
-  font-family: Helvetica, Arial, sans-serif;
-  font-size: 16px;
-  line-height: 1.3;
+  font-family: "Helvetica Neue", "Helvetica", Arial, sans-serif;
   background-color: #fff;
+  line-height: 1.3;
   color: #000;
   text-rendering: optimizelegibility;
   min-height: 100vh;
@@ -22,12 +21,11 @@ h1, h2, h3, h4, h5, h6 {
   font-weight: bold;
   line-height: 20px;
   color: inherit;
-  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
 h1, h2, h3 { line-height: 1.3; }
 h1 { font-size: 38.5px; }
-h2 { font-size: 22px; font-weight: 500; }
+h2 { font-size: 20px; font-weight: 500; }
 h3 { font-size: 18px; font-weight: 600; }
 h4 { font-size: 18px; font-weight: 500; }
 h5 { font-size: 100%; font-weight: 500; }
@@ -42,14 +40,11 @@ h3, h4 {
 
 h2, a h2 {
   line-height: 1;
-  margin-top: 2em;
-  margin-bottom: .8em;
-  padding-bottom: .6em;
-  color: #1a2c58;
+  margin-top: 1em;
+  color: #000;
   box-sizing: border-box;
-  border-bottom: 2px solid #e7ebf2;
   display: block;
-  font-weight: bold;
+  font-weight: 600;
 }
 
 h4 em {
@@ -98,16 +93,15 @@ ul li p {
 }
 
 body {
-  padding-left: 4em;
-  padding-right: 4em;
+  padding-left: 2em;
+  padding-right: 2em;
 }
 
 article, nav, footer {
-  max-width: 860px;
+  /*max-width: 860px;*/
 }
 
 nav {
-  border-bottom: 1pt solid #ced3e0;
   overflow: auto;
   margin: 0 2em;
   padding: 1.6em 0 0 0;
@@ -190,7 +184,7 @@ article h1 + h2,
 article h2 + h3,
 article h2 + h4,
 article h3 + h4 {
-  margin-top: 1.4em;
+  margin-top: 0;
 }
 
 article h3 + hr {
@@ -210,17 +204,19 @@ article h3 + pre {
   margin-top: 0.2em;
 }
 
+article pre, article p, article code {
+  max-width: 50rem;
+}
+
 article pre + h3.section {
   margin-top: 1.8em;
 }
 
 article p {
   margin-top: 0;
-  margin-bottom: .6em;
+  margin-bottom: 1em;
   font-weight: 400;
   color: #000;
-  line-height: 1.5;
-  margin-bottom: 1em;
 }
 
 article hr {
@@ -250,7 +246,6 @@ article table {
 
 article img {
   max-width: 100%;
-  margin: auto;
 }
 
 code {
@@ -306,7 +301,6 @@ table {
 table td, table th {
   padding: 4px 6px;
   text-align: left;
-  border-bottom: 1px solid #ddd;
   vertical-align: top;
 }
 
@@ -314,7 +308,6 @@ table th {
   font-weight: 600;
   color: #333;
   width: 125px;
-  border-bottom: 2px solid #ddd;
 }
 
 table th i {
@@ -430,10 +423,14 @@ article .color_legend {
   margin-right: .4em;
 }
 
+article figure {
+  padding: 0;
+  margin: 0;
+}
+
 article figure img.small {
   display: block;
   max-height: 100%;
-  margin: auto;
   margin-top: 2em;
   max-width: 600px;
   border: 1px solid #aeb3bb;
@@ -441,7 +438,6 @@ article figure img.small {
 }
 
 article figcaption {
-  text-align: center;
   margin-bottom: 3em;
   font-size: 90%;
   display: block;
@@ -455,10 +451,17 @@ article figcaption code {
 }
 
 .toc {
-  float: right;
-  margin: 4.2em 0 0 6em;
   padding: 0 2em;
-  border-left: 1px solid #ccc;
+  border-left: 1px solid #ddd;
+  position: absolute;
+  margin-left: 53em;
+  margin-top: 4em;
+}
+
+@media (max-width: 70rem) {
+  .toc {
+    display: none;
+  }
 }
 
 .toc ul {
@@ -525,14 +528,11 @@ ul.index code {
   font-weight: 500;
 }
 
-.examples {
-  margin: auto;
-}
-
 .examples figure {
   margin: 0;
-  padding: 1em 10%;
-  border-bottom: 1px solid #ddd;
+  float: left;
+  max-width: 32em;
+  margin-right: 1em;
 }
 
 .examples figure:last-child {
@@ -541,4 +541,5 @@ ul.index code {
 
 .examples figcaption {
   margin-bottom: 2em;
+  text-align: center;
 }
