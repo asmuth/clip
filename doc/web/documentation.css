@@ -67,6 +67,7 @@ h4 code {
 
 section {
   margin-bottom: 3em;
+  overflow: auto;
 }
 
 h2 + section {
@@ -94,6 +95,15 @@ ul li > ul {
 ul li p {
   padding: 0;
   margin: 0;
+}
+
+body {
+  padding-left: 4em;
+  padding-right: 4em;
+}
+
+article, nav, footer {
+  max-width: 860px;
 }
 
 nav {
@@ -146,10 +156,6 @@ footer {
 
 footer a {
   color:#777;
-}
-
-article, nav, footer {
-  max-width: 860px;
 }
 
 article {
@@ -244,7 +250,6 @@ article table {
 
 article img {
   max-width: 100%;
-  max-height: 100%;
   margin: auto;
 }
 
@@ -520,3 +525,20 @@ ul.index code {
   font-weight: 500;
 }
 
+.examples {
+  margin: auto;
+}
+
+.examples figure {
+  margin: 0;
+  padding: 1em 10%;
+  border-bottom: 1px solid #ddd;
+}
+
+.examples figure:last-child {
+  border-bottom: none;
+}
+
+.examples figcaption {
+  margin-bottom: 2em;
+}

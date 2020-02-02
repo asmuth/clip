@@ -1,5 +1,5 @@
-(width 2048px)
-(height 768px)
+(width 1600px)
+(height 900px)
 (dpi 240)
 
 (default font "Latin Modern Roman")
@@ -7,15 +7,15 @@
 (default limit-y (-10 70))
 
 (figure/legend
-    position (top center)
+    position (bottom center)
+    margin-bottom 1em
     item-flow on
-    padding-bottom 1em
     item (label "Series A" marker-shape (custom "▢"))
     item (label "Series B" marker-shape (square-hatch-diag-right)))
 
 (plot/axes
-    margin-top 3.6em
-    label-placement-top (none)
+    margin-bottom 3.6em
+    label-placement-bottom (none)
     label-placement-y (linear-interval 10 0 60))
 
 (plot/grid

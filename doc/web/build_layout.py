@@ -15,7 +15,7 @@ tpl = """
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="google-site-verification" content="w2kCLJSotDjUxYBmGi3G2vsv4SO8j5K0YD0KVHoD7rw" />
   </head>
-  <body>
+  <body class="{{article_class}}">
     <nav>
       <a style="display: block; text-decoration: none; color: #666; float: right;" href="http://github.com/asmuth/clip" target="_blank">
         View on <img src="https://github.githubassets.com/images/modules/logos_page/GitHub-Logo.png" style="height: 12px; position: relative; top: 1px; margin-left: 2px;">
@@ -39,9 +39,7 @@ tpl = """
     </nav>
 
     <article class="{{article_class}}">
-      <div id="documentation">
-        {{{content}}}
-      </div>
+      {{{content}}}
 
       <div style="text-align: right; margin-top: 10em; font-size: 80%;">
         <a class="link" target="_blank" href="https://github.com/asmuth/clip/blob/master/doc">

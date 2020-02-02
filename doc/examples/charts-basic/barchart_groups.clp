@@ -1,5 +1,5 @@
-(width 2048px)
-(height 512px)
+(width 1600px)
+(height 900px)
 (dpi 240)
 
 (default scale-x (categorical (A B C D E F)))

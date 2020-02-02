@@ -1,15 +1,15 @@
-(width 2048px)
-(height 700px)
+(width 1600px)
+(height 800px)
 (dpi 240)
 
-(default limit-y (-15 30))
+(default limit-y (-15 35))
 (default limit-x (0.5 12.5))
 
 (plot/axes
     position (bottom left)
     label-placement-x (linear-alignat 1 1)
     label-format-x (custom "Jan" "Feb" "Mar" "Apr" "May" "Jun" "Jul" "Aug" "Sep" "Oct" "Nov" "Dec")
-    label-placement-y (linear-interval 5 -10 30)
+    label-placement-y (linear-interval 5 -10 35)
     title-left "Temperature (°C)"
     title-rotate-left -90)
 
