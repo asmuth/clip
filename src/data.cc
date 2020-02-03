@@ -185,6 +185,51 @@ ReturnCode data_load_strings(
   return expr_to_strings(expr, values);
 }
 
+ReturnCode data_load_polylines2_geojson(
+    const Expr* expr,
+    std::vector<PolyLine2>* data) {
+  if (!expr || !expr_is_value(expr)) {
+    return errorf(
+        ERROR,
+        "argument error; expected a filename, got: {}",
+        expr_inspect(expr));
+  }
+
+  const auto& path = expr_get_value(expr);
+
+  GeoJSONReader reader;
+  reader.on_lines = [data] (const PolyLine3* polys, size_t poly_count) {
+    for (size_t i = 0; i < poly_count; ++i) {
+      data->emplace_back(polyline3_to_polyline2(polys[i]));
+    }
+
+    return OK;
+  };
+
+  return geojson_read_file(path, reader);
+}
+
+ReturnCode data_load_polylines2(
+    const Expr* expr,
+    std::vector<PolyLine2>* data) {
+  if (!expr || !expr_is_list(expr) || !expr_get_list(expr)) {
+    return errorf(
+        ERROR,
+        "argument error; expected a list, got: {}",
+        expr_inspect(expr));
+  }
+
+  auto args = expr_get_list(expr);
+
+  if (args && expr_is_value_literal(args, "geojson")) {
+    return data_load_polylines2_geojson(expr_next(args), data);
+  }
+
+  return err_invalid_value(expr_inspect(expr), {
+    "geojson"
+  });
+}
+
 ReturnCode data_load_polys2_geojson(
     const Expr* expr,
     std::vector<Poly2>* data) {
@@ -223,6 +268,51 @@ ReturnCode data_load_polys2(
 
   if (args && expr_is_value_literal(args, "geojson")) {
     return data_load_polys2_geojson(expr_next(args), data);
+  }
+
+  return err_invalid_value(expr_inspect(expr), {
+    "geojson"
+  });
+}
+
+ReturnCode data_load_points2_geojson(
+    const Expr* expr,
+    std::vector<vec2>* data) {
+  if (!expr || !expr_is_value(expr)) {
+    return errorf(
+        ERROR,
+        "argument error; expected a filename, got: {}",
+        expr_inspect(expr));
+  }
+
+  const auto& path = expr_get_value(expr);
+
+  GeoJSONReader reader;
+  reader.on_points = [data] (const vec3* points, size_t point_count) {
+    for (size_t i = 0; i < point_count; ++i) {
+      data->emplace_back(points[i]);
+    }
+
+    return OK;
+  };
+
+  return geojson_read_file(path, reader);
+}
+
+ReturnCode data_load_points2(
+    const Expr* expr,
+    std::vector<vec2>* data) {
+  if (!expr || !expr_is_list(expr) || !expr_get_list(expr)) {
+    return errorf(
+        ERROR,
+        "argument error; expected a list, got: {}",
+        expr_inspect(expr));
+  }
+
+  auto args = expr_get_list(expr);
+
+  if (args && expr_is_value_literal(args, "geojson")) {
+    return data_load_points2_geojson(expr_next(args), data);
   }
 
   return err_invalid_value(expr_inspect(expr), {

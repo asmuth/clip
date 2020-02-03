@@ -174,6 +174,152 @@ ReturnCode geojson_read_multi_polygon(
   return OK;
 }
 
+ReturnCode geojson_read_point(
+    const GeoJSONReader& reader,
+    const std::vector<GeoJSONCoord>& coords) {
+  std::optional<vec3> point;
+
+  if (coords.size() == 2 &&
+      coords[0].rlevel == 0 &&
+      coords[1].rlevel == 0) {
+    point = vec3(
+        coords[0].value,
+        coords[1].value,
+        coords[2].value);
+  }
+
+  if (coords.size() == 3 &&
+      coords[0].rlevel == 0 &&
+      coords[1].rlevel == 0 &&
+      coords[2].rlevel == 0) {
+    point = vec3(
+        coords[0].value,
+        coords[1].value,
+        0);
+  }
+
+  if (!point) {
+    return {ERROR, "invalid coordinate format for 'Point' objects"};
+  }
+
+  if (reader.on_points) {
+    if (auto rc = reader.on_points(&*point, 1); !rc) {
+      return rc;
+    }
+  }
+
+  return OK;
+}
+
+ReturnCode geojson_read_multi_point(
+    const GeoJSONReader& reader,
+    const std::vector<GeoJSONCoord>& coords) {
+  std::vector<vec3> points;
+  for (size_t i = 0; i < coords.size(); i += 2) {
+    if (i + 2 > coords.size() || coords[i].rlevel != 0 || coords[i + 1].rlevel != 1) {
+      return {ERROR, "invalid coordinate format for 'MultiPoint' objects"};
+    }
+
+    if (i + 2 < coords.size() && coords[i + 2].rlevel == 1) {
+      points.emplace_back(
+          coords[i + 0].value,
+          coords[i + 1].value,
+          coords[i + 2].value);
+    } else {
+      points.emplace_back(
+          coords[i + 0].value,
+          coords[i + 1].value,
+          0);
+    }
+  }
+
+  if (points.empty()) {
+    return {ERROR, "invalid coordinate format for 'MultiPoint' objects"};
+  }
+
+  if (reader.on_points) {
+    if (auto rc = reader.on_points(points.data(), points.size()); !rc) {
+      return rc;
+    }
+  }
+
+  return OK;
+}
+
+ReturnCode geojson_read_line_string(
+    const GeoJSONReader& reader,
+    const std::vector<GeoJSONCoord>& coords) {
+  PolyLine3 line;
+  for (size_t i = 0; i < coords.size(); i += 2) {
+    if (i + 2 > coords.size() || coords[i].rlevel != 0 || coords[i + 1].rlevel != 1) {
+      return {ERROR, "invalid coordinate format for 'LineString' objects"};
+    }
+
+    if (i + 2 < coords.size() && coords[i + 2].rlevel == 1) {
+      line.vertices.emplace_back(
+          coords[i + 0].value,
+          coords[i + 1].value,
+          coords[i + 2].value);
+    } else {
+      line.vertices.emplace_back(
+          coords[i + 0].value,
+          coords[i + 1].value,
+          0);
+    }
+  }
+
+  if (line.vertices.empty()) {
+    return {ERROR, "invalid coordinate format for 'LineString' objects"};
+  }
+
+  if (reader.on_lines) {
+    if (auto rc = reader.on_lines(&line, 1); !rc) {
+      return rc;
+    }
+  }
+
+  return OK;
+}
+
+ReturnCode geojson_read_multi_line_string(
+    const GeoJSONReader& reader,
+    const std::vector<GeoJSONCoord>& coords) {
+  std::vector<PolyLine3> lines;
+  for (size_t i = 0; i < coords.size(); i += 2) {
+    if (coords[i].rlevel == 0) {
+      lines.emplace_back();
+    }
+
+    if (i + 2 > coords.size() || coords[i + 1].rlevel != 2 || lines.empty()) {
+      return {ERROR, "invalid coordinate format for 'MultiLineString' objects"};
+    }
+
+    if (i + 2 < coords.size() && coords[i + 2].rlevel == 2) {
+      lines.back().vertices.emplace_back(
+          coords[i + 0].value,
+          coords[i + 1].value,
+          coords[i + 2].value);
+    } else {
+      lines.back().vertices.emplace_back(
+          coords[i + 0].value,
+          coords[i + 1].value,
+          0);
+    }
+  }
+
+  if (lines.empty()) {
+    return {ERROR, "invalid coordinate format for 'MultiLineString' objects"};
+  }
+
+  if (reader.on_lines) {
+    if (auto rc = reader.on_lines(lines.data(), lines.size()); !rc) {
+      return rc;
+    }
+  }
+
+  return OK;
+}
+
 ReturnCode geojson_read_object_data(
     const GeoJSONReader& reader,
     std::istream* input) {
@@ -236,12 +382,28 @@ ReturnCode geojson_read_object_data(
     return OK;
   }
 
+  if (type == "Point") {
+    return geojson_read_point(reader, coords);
+  }
+
+  if (type == "MultiPoint") {
+    return geojson_read_multi_point(reader, coords);
+  }
+
   if (type == "Polygon") {
     return geojson_read_polygon(reader, coords);
   }
 
   if (type == "MultiPolygon") {
     return geojson_read_multi_polygon(reader, coords);
+  }
+
+  if (type == "LineString") {
+    return geojson_read_multi_line_string(reader, coords);
+  }
+
+  if (type == "MultiLineString") {
+    return geojson_read_multi_line_string(reader, coords);
   }
 
   return errorf(ERROR, "invalid object type: {}", type);

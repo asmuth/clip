@@ -296,6 +296,18 @@ void path_add_circle(Path* path, vec2 origin, double radius) {
   path->closePath();
 }
 
+void path_add_poly_line(Path* path, const PolyLine2& line) {
+  if (line.vertices.empty()) {
+    return;
+  }
+
+  path->moveTo(line.vertices[0].x, line.vertices[0].y);
+
+  for (size_t i = 1; i < line.vertices.size(); ++i) {
+    path->lineTo(line.vertices[i].x, line.vertices[i].y);
+  }
+}
+
 void path_add_poly_ring(Path* path, const PolyLine2& ring) {
   if (ring.vertices.empty()) {
     return;

@@ -109,6 +109,11 @@ void path_add_rectangle(Path* path, const Rectangle& rect);
 void path_add_circle(Path* path, vec2 origin, double radius);
 
 /**
+ * Add a polyline to a path
+ */
+void path_add_poly_line(Path* path, const PolyLine2& line);
+
+/**
  * Add a polygonal ring to a path
  */
 void path_add_poly_ring(Path* path, const PolyLine2& ring);

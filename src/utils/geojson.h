@@ -21,6 +21,8 @@
 namespace clip {
 
 struct GeoJSONReader {
+  std::function<ReturnCode (const vec3*, size_t)> on_points;
+  std::function<ReturnCode (const PolyLine3*, size_t)> on_lines;
   std::function<ReturnCode (const Poly3*, size_t)> on_polygons;
 };
 
