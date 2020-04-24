@@ -1,5 +1,5 @@
-(width 2048px)
-(height 1024px)
+(width 1600px)
+(height 900px)
 (dpi 240)
 
 (default font "Latin Modern Roman")
@@ -9,6 +9,7 @@
 (plot/axes)
 
 (plot/vectors
+    size .7pt
     data-x (csv "test/testdata/vectorfield.csv" x)
     data-y (csv "test/testdata/vectorfield.csv" y)
     data-dx (csv "test/testdata/vectorfield.csv" dx)

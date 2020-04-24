@@ -1,5 +1,5 @@
-(width 2048px)
-(height 512px)
+(width 1600px)
+(height 800px)
 (dpi 240)
 
 (default font "Comic Sans MS")
@@ -10,7 +10,14 @@
     position (bottom left)
     label-format-y (fixed 2)
     label-format-x (datetime "%H:%M:%S")
+    label-placement-x (linear 3600)
     label-placement-y (linear 20))
+
+(draw/rectangle
+    fill #f2f2f2)
+
+(plot/grid
+    color #fff)
 
 (plot/lines
     data-x (csv "test/testdata/measurement.csv" time)

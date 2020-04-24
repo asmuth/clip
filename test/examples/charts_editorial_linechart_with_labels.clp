@@ -1,4 +1,4 @@
-(width 2048px)
+(width 1600px)
 (height 800px)
 (dpi 240)
 
@@ -16,6 +16,7 @@
     data-x (csv "test/testdata/city_temperatures_london.csv" month)
     data-y (csv "test/testdata/city_temperatures_london.csv" temperature)
     labels (csv "test/testdata/city_temperatures_london.csv" temperature_str)
+    label-font-size 10pt
     color 1
     marker-size 5pt)
 

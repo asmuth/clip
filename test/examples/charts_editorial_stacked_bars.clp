@@ -1,4 +1,4 @@
-(width 2048px)
+(width 1600px)
 (height 800px)
 (dpi 240)
 
@@ -12,25 +12,25 @@
 (plot/bars
     data-x (csv "test/testdata/stacked.csv" x)
     data-y (csv "test/testdata/stacked.csv" y4)
-    width (1em)
+    width (.75em)
     color #9fc3f5)
 
 (plot/bars
     data-x (csv "test/testdata/stacked.csv" x)
     data-y (csv "test/testdata/stacked.csv" y3)
-    width (1em)
+    width (.75em)
     color #88ade0)
 
 (plot/bars
     data-x (csv "test/testdata/stacked.csv" x)
     data-y (csv "test/testdata/stacked.csv" y2)
-    width (1em)
+    width (.75em)
     color #6393c9)
 
 (plot/bars
     data-x (csv "test/testdata/stacked.csv" x)
     data-y (csv "test/testdata/stacked.csv" y1)
-    width (1em)
+    width (.75em)
     color #4c7bb0)
 
 (figure/legend

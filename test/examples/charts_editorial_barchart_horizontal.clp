@@ -1,4 +1,4 @@
-(width 2048px)
+(width 1600px)
 (height 800px)
 (dpi 240)
 
