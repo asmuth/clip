@@ -1277,7 +1277,7 @@ ReturnCode axis_add_all(Context* ctx, const Expr* expr) {
   }
 
   for (auto& m : margins) {
-    convert_unit_typographic(ctx->dpi, ctx->font_size, &m);
+    convert_unit_typographic(ctx->dpi, context_get_rem(ctx), &m);
   }
 
   std::array<double, 4> padding = {0, 0, 0, 0};

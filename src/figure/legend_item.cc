@@ -176,7 +176,7 @@ ReturnCode legend_item_configure(
   config->label_align = HAlign::LEFT;
   config->label_margin = from_em(1.1);
   config->label_font = ctx->font;
-  config->label_font_size = ctx->font_size;
+  config->label_font_size = from_em(1);
   config->label_color = ctx->text_color;
   config->marker = marker_create_disk();
   config->marker_align = HAlign::LEFT;

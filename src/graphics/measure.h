@@ -56,6 +56,8 @@ ReturnCode parse_measure(
     const std::string& s,
     Measure* value);
 
+std::string measure_to_string(const Measure& m);
+
 Measure measure_or(const Measure& primary, const Measure& fallback);
 
 using UnitConverter = std::function<void (Measure*)>;

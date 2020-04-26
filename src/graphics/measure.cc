@@ -105,6 +105,26 @@ ReturnCode parse_measure(
       unit);
 }
 
+std::string measure_to_string(const Measure& m) {
+  switch (m.unit) {
+    case Unit::UNIT:
+    case Unit::USER:
+      return fmt::format("{}", m.value);
+    case Unit::PX:
+      return fmt::format("{}px", m.value);
+    case Unit::PT:
+      return fmt::format("{}pt", m.value);
+    case Unit::REM:
+      return fmt::format("{}rem", m.value);
+    case Unit::REL:
+      return fmt::format("{}%", m.value * 100);
+    default:
+      break;
+  }
+
+  return "???";
+}
+
 Measure measure_or(const Measure& primary, const Measure& fallback) {
   if (primary == 0) {
     return fallback;

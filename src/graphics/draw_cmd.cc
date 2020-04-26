@@ -60,7 +60,7 @@ ReturnCode draw_text(
     VAlign align_y,
     double rotate,
     TextStyle style) {
-  convert_unit_typographic(ctx->dpi, ctx->font_size, &style.font_size);
+  convert_unit_typographic(ctx->dpi, context_get_rem(ctx), &style.font_size);
 
   text::TextSpan span;
   span.text_direction = style.direction;

@@ -53,7 +53,7 @@ Rectangle context_get_clip(const Context* ctx) {
   if (ctx->layout_stack.empty()) {
     auto margins = ctx->margins;
     for (auto& m : margins) {
-      convert_unit_typographic(ctx->dpi, ctx->font_size, &m);
+      convert_unit_typographic(ctx->dpi, context_get_rem(ctx), &m);
     }
 
     return layout_margin_box(
@@ -65,6 +65,13 @@ Rectangle context_get_clip(const Context* ctx) {
   } else {
     return ctx->layout_stack.back();
   }
+}
+
+Measure context_get_rem(const Context* ctx) {
+  auto rem_default = from_px(16);
+  auto rem = ctx->font_size;
+  convert_unit_typographic(ctx->dpi, rem_default, &rem);
+  return rem;
 }
 
 ReturnCode context_set_background(

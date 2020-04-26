@@ -55,15 +55,15 @@ void legend_normalize(
     Context* ctx,
     LegendConfig* config) {
   for (auto& m : config->margins) {
-    convert_unit_typographic(ctx->dpi, ctx->font_size, &m);
+    convert_unit_typographic(ctx->dpi, context_get_rem(ctx), &m);
   }
 
   for (auto& m : config->padding) {
-    convert_unit_typographic(ctx->dpi, ctx->font_size, &m);
+    convert_unit_typographic(ctx->dpi, context_get_rem(ctx), &m);
   }
 
-  convert_unit_typographic(ctx->dpi, ctx->font_size, &config->item_row_padding);
-  convert_unit_typographic(ctx->dpi, ctx->font_size, &config->item_column_padding);
+  convert_unit_typographic(ctx->dpi, context_get_rem(ctx), &config->item_row_padding);
+  convert_unit_typographic(ctx->dpi, context_get_rem(ctx), &config->item_column_padding);
 }
 
 ReturnCode legend_layout_item_rows(

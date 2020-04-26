@@ -53,6 +53,8 @@ ReturnCode context_setup_defaults(Context* ctx);
 
 Rectangle context_get_clip(const Context* ctx);
 
+Measure context_get_rem(const Context* ctx);
+
 ReturnCode context_set_background(Context* ctx, const Expr* expr);
 
 } // namespace clip

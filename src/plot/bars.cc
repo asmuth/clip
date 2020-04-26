@@ -229,7 +229,7 @@ ReturnCode draw_vertical(
       &*config.offsets.begin(),
       &*config.offsets.end());
 
-  convert_unit_typographic(ctx->dpi, ctx->font_size, &config.stroke_style.line_width);
+  convert_unit_typographic(ctx->dpi, context_get_rem(ctx), &config.stroke_style.line_width);
 
   /* draw bars */
   auto y0 = clip.h * std::clamp(scale_translate(config.scale_y, 0), 0.0, 1.0);
