@@ -12,13 +12,14 @@
  * limitations under the License.
  */
 #pragma once
-#include "context.h"
+#include "plotgen.h"
 
-namespace clip::plot {
+namespace clip::plotgen {
 
-ReturnCode polygons_draw(
+ReturnCode plot_polygons (
     Context* ctx,
+    PlotConfig* plot,
     const Expr* expr);
 
-} // namespace clip::plot
+} // namespace clip::plotgen
 

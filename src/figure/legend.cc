@@ -30,7 +30,7 @@
 using namespace std::placeholders;
 using std::bind;
 
-namespace clip::elements::legend {
+namespace clip::plotgen {
 
 struct LegendConfig {
   LegendConfig();
@@ -55,15 +55,15 @@ void legend_normalize(
     Context* ctx,
     LegendConfig* config) {
   for (auto& m : config->margins) {
-    convert_unit_typographic(ctx->dpi, context_get_rem(ctx), &m);
+    convert_unit_typographic(layer_get_dpi(ctx), layer_get_rem(ctx), &m);
   }
 
   for (auto& m : config->padding) {
-    convert_unit_typographic(ctx->dpi, context_get_rem(ctx), &m);
+    convert_unit_typographic(layer_get_dpi(ctx), layer_get_rem(ctx), &m);
   }
 
-  convert_unit_typographic(ctx->dpi, context_get_rem(ctx), &config->item_row_padding);
-  convert_unit_typographic(ctx->dpi, context_get_rem(ctx), &config->item_column_padding);
+  convert_unit_typographic(layer_get_dpi(ctx), layer_get_rem(ctx), &config->item_row_padding);
+  convert_unit_typographic(layer_get_dpi(ctx), layer_get_rem(ctx), &config->item_column_padding);
 }
 
 ReturnCode legend_layout_item_rows(
@@ -229,7 +229,7 @@ ReturnCode legend_layout(
   return OK;
 }
 
-ReturnCode legend_draw_borders(
+ReturnCode plot_legend_borders(
     Context* ctx,
     const StrokeStyle* borders,
     const Rectangle& bbox) {
@@ -292,7 +292,7 @@ ReturnCode legend_draw_borders(
   return OK;
 }
 
-ReturnCode legend_draw_items(
+ReturnCode plot_legend_items(
     Context* ctx,
     LegendConfig* config,
     const Rectangle& bbox,
@@ -312,14 +312,15 @@ ReturnCode legend_draw_items(
   return OK;
 }
 
-ReturnCode legend_draw(
+ReturnCode plot_legend(
     Context* ctx,
+    PlotConfig* plot,
     LegendConfig* config) {
   /* convert units  */
   legend_normalize(ctx, config);
 
   /* calculate boxes */
-  const auto& bbox = context_get_clip(ctx);
+  const auto& bbox = plot_get_clip(plot, layer_get(ctx));
   auto parent_box = layout_margin_box(
       bbox,
       config->margins[0],
@@ -382,7 +383,7 @@ ReturnCode legend_draw(
   }
 
   /* draw borders */
-  if (auto rc = legend_draw_borders(
+  if (auto rc = plot_legend_borders(
         ctx,
         config->borders.data(),
         border_box);
@@ -391,7 +392,7 @@ ReturnCode legend_draw(
   }
 
   /* draw items */
-  if (auto rc = legend_draw_items(
+  if (auto rc = plot_legend_items(
         ctx,
         config,
         content_box,
@@ -471,8 +472,9 @@ ReturnCode configure_item(
   return OK;
 }
 
-ReturnCode legend_draw(
+ReturnCode plot_legend(
     Context* ctx,
+    PlotConfig* plot,
     const Expr* expr) {
   /* inherit defaults */
   auto config = std::make_shared<LegendConfig>();
@@ -481,7 +483,7 @@ ReturnCode legend_draw(
   config->margins = std::array<Measure, 4>{from_em(.6), from_em(.6), from_em(.6), from_em(.6)};
   config->padding = std::array<Measure, 4>{from_em(.6), from_em(1), from_em(.6), from_em(1)};
   for (size_t i = 0; i < 4; ++i) {
-    config->borders[i].color = ctx->foreground_color;
+    config->borders[i].color = layer_get(ctx)->foreground_color;
   }
 
   /* parse exprerties */
@@ -566,8 +568,8 @@ ReturnCode legend_draw(
     return config_rc;
   }
 
-  return legend_draw(ctx, config.get());
+  return plot_legend(ctx, plot, config.get());
 }
 
-} // namespace clip::elements::legend
+} // namespace clip::plotgen
 

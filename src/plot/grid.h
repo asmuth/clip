@@ -12,13 +12,14 @@
  * limitations under the License.
  */
 #pragma once
-#include "context.h"
+#include "plotgen.h"
 
-namespace clip::elements::plot::grid {
+namespace clip::plotgen{
 
-ReturnCode draw_grid(
+ReturnCode plot_grid(
     Context* ctx,
+    PlotConfig* plot,
     const Expr* expr);
 
-} // namespace clip::elements::plot::grid
+} // namespace clip::plotgen
 

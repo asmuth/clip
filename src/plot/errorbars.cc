@@ -30,7 +30,7 @@
 using namespace std::placeholders;
 using std::bind;
 
-namespace clip::elements::plot::errorbars {
+namespace clip::plotgen {
 
 static const double kDefaultStrokeWidthPT = 1;
 static const double kDefaultBarWidthPT = 6;
@@ -50,7 +50,7 @@ struct ErrorbarsElement {
   Measure stroke_width;
 };
 
-ReturnCode draw_errorbar(
+ReturnCode plot_errorbar(
     Context* ctx,
     const ErrorbarsElement& config,
     const Point& from,
@@ -80,15 +80,16 @@ ReturnCode draw_errorbar(
   return OK;
 }
 
-ReturnCode errorbars_draw(
+ReturnCode plot_errorbars(
     Context* ctx,
+    PlotConfig* plot,
     std::shared_ptr<ErrorbarsElement> config) {
-  const auto& clip = context_get_clip(ctx);
+  const auto& clip = plot_get_clip(plot, layer_get(ctx));
 
   /* convert units */
   convert_units(
       {
-        bind(&convert_unit_typographic, ctx->dpi, ctx->font_size, _1),
+        bind(&convert_unit_typographic, layer_get_dpi(ctx), layer_get_font_size(ctx), _1),
         bind(&convert_unit_user, scale_translate_fn(config->scale_x), _1),
         bind(&convert_unit_relative, clip.w, _1)
       },
@@ -97,7 +98,7 @@ ReturnCode errorbars_draw(
 
   convert_units(
       {
-        bind(&convert_unit_typographic, ctx->dpi, ctx->font_size, _1),
+        bind(&convert_unit_typographic, layer_get_dpi(ctx), layer_get_font_size(ctx), _1),
         bind(&convert_unit_user, scale_translate_fn(config->scale_x), _1),
         bind(&convert_unit_relative, clip.w, _1)
       },
@@ -106,7 +107,7 @@ ReturnCode errorbars_draw(
 
   convert_units(
       {
-        bind(&convert_unit_typographic, ctx->dpi, ctx->font_size, _1),
+        bind(&convert_unit_typographic, layer_get_dpi(ctx), layer_get_font_size(ctx), _1),
         bind(&convert_unit_user, scale_translate_fn(config->scale_x), _1),
         bind(&convert_unit_relative, clip.w, _1)
       },
@@ -115,7 +116,7 @@ ReturnCode errorbars_draw(
 
   convert_units(
       {
-        bind(&convert_unit_typographic, ctx->dpi, ctx->font_size, _1),
+        bind(&convert_unit_typographic, layer_get_dpi(ctx), layer_get_font_size(ctx), _1),
         bind(&convert_unit_user, scale_translate_fn(config->scale_y), _1),
         bind(&convert_unit_relative, clip.h, _1)
       },
@@ -124,7 +125,7 @@ ReturnCode errorbars_draw(
 
   convert_units(
       {
-        bind(&convert_unit_typographic, ctx->dpi, ctx->font_size, _1),
+        bind(&convert_unit_typographic, layer_get_dpi(ctx), layer_get_font_size(ctx), _1),
         bind(&convert_unit_user, scale_translate_fn(config->scale_y), _1),
         bind(&convert_unit_relative, clip.h, _1)
       },
@@ -133,7 +134,7 @@ ReturnCode errorbars_draw(
 
   convert_units(
       {
-        bind(&convert_unit_typographic, ctx->dpi, ctx->font_size, _1),
+        bind(&convert_unit_typographic, layer_get_dpi(ctx), layer_get_font_size(ctx), _1),
         bind(&convert_unit_user, scale_translate_fn(config->scale_y), _1),
         bind(&convert_unit_relative, clip.h, _1)
       },
@@ -141,13 +142,13 @@ ReturnCode errorbars_draw(
       &*config->y_high.end());
 
   convert_unit_typographic(
-      ctx->dpi,
-      ctx->font_size,
+      layer_get_dpi(ctx),
+      layer_get_font_size(ctx),
       &config->stroke_width);
 
   convert_unit_typographic(
-      ctx->dpi,
-      ctx->font_size,
+      layer_get_dpi(ctx),
+      layer_get_font_size(ctx),
       &config->bar_width);
 
   auto x_len = std::min({
@@ -175,7 +176,7 @@ ReturnCode errorbars_draw(
         ? config->stroke_color
         : config->colors[i % config->colors.size()];
 
-    if (auto rc = draw_errorbar(ctx, *config, from, to, color); !rc) {
+    if (auto rc = plot_errorbar(ctx, *config, from, to, color); !rc) {
       return rc;
     }
   }
@@ -193,7 +194,7 @@ ReturnCode errorbars_draw(
         ? config->stroke_color
         : config->colors[i % config->colors.size()];
 
-    if (auto rc = draw_errorbar(ctx, *config, from, to, color); !rc) {
+    if (auto rc = plot_errorbar(ctx, *config, from, to, color); !rc) {
       return rc;
     }
   }
@@ -201,16 +202,17 @@ ReturnCode errorbars_draw(
   return OK;
 }
 
-ReturnCode errorbars_draw(
+ReturnCode plot_errorbars(
     Context* ctx,
+    PlotConfig* plot,
     const Expr* expr) {
   /* set defaults from environment */
   auto c = std::make_shared<ErrorbarsElement>();
   c->stroke_width = from_pt(kDefaultStrokeWidthPT);
   c->bar_width = from_pt(kDefaultBarWidthPT);
-  c->stroke_color = ctx->foreground_color;
-  c->scale_x = ctx->scale_x;
-  c->scale_y = ctx->scale_y;
+  c->stroke_color = layer_get(ctx)->foreground_color;
+  c->scale_x = plot->scale_x;
+  c->scale_y = plot->scale_y;
 
   /* parse properties */
   std::vector<std::string> data_x;
@@ -373,8 +375,8 @@ ReturnCode errorbars_draw(
   }
 
   /* return element */
-  return errorbars_draw(ctx, c);
+  return plot_errorbars(ctx, plot, c);
 }
 
-} // namespace clip::elements::plot::errorbars
+} // namespace clip::plotgen
 

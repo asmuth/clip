@@ -12,13 +12,14 @@
  * limitations under the License.
  */
 #pragma once
-#include "context.h"
+#include "plotgen.h"
 
-namespace clip::elements::plot::errorbars {
+namespace clip::plotgen {
 
-ReturnCode errorbars_draw(
+ReturnCode plot_errorbars(
     Context* ctx,
+    PlotConfig* plot,
     const Expr* expr);
 
-} // namespace clip::elements::plot::errorbars
+} // namespace clip::plotgen
 

@@ -21,7 +21,7 @@
 namespace clip {
 
 void draw_shape(Context* ctx, draw_cmd::Shape elem) {
-  ctx->drawlist.emplace_back(std::move(elem));
+  layer_get(ctx)->drawlist.emplace_back(std::move(elem));
 }
 
 void draw_path(
@@ -49,7 +49,7 @@ void draw_line(
 }
 
 void draw_text(Context* ctx, draw_cmd::Text elem) {
-  ctx->drawlist.emplace_back(std::move(elem));
+  layer_get(ctx)->drawlist.emplace_back(std::move(elem));
 }
 
 ReturnCode draw_text(
@@ -60,7 +60,9 @@ ReturnCode draw_text(
     VAlign align_y,
     double rotate,
     TextStyle style) {
-  convert_unit_typographic(ctx->dpi, context_get_rem(ctx), &style.font_size);
+  const auto layer = layer_get(ctx);
+
+  convert_unit_typographic(layer_get_dpi(ctx), layer_get_rem(ctx), &style.font_size);
 
   text::TextSpan span;
   span.text_direction = style.direction;
@@ -72,11 +74,11 @@ ReturnCode draw_text(
   span.language = style.default_language;
 
   if (span.script.empty()) {
-    span.script = ctx->text_default_script;
+    span.script = layer->text_default_script;
   }
 
   if (span.language.empty()) {
-    span.language = ctx->text_default_language;
+    span.language = layer->text_default_language;
   }
 
   text::TextLine line;
@@ -89,7 +91,7 @@ ReturnCode draw_text(
 
   Rectangle bbox;
   std::vector<text::GlyphPlacementGroup> glyphs;
-  if (auto rc = text::text_layout_line(line, ctx->dpi, &glyphs, &bbox); !rc) {
+  if (auto rc = text::text_layout_line(line, layer_get_dpi(ctx), &glyphs, &bbox); !rc) {
     return rc;
   }
 

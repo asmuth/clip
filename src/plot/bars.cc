@@ -32,7 +32,7 @@
 using namespace std::placeholders;
 using std::bind;
 
-namespace clip::elements::plot::bars {
+namespace clip::plotgen {
 
 static const double kDefaultBarSizePT = 10;
 static const double kDefaultLabelPaddingHorizEM = 0.6;
@@ -61,15 +61,16 @@ struct PlotBarsConfig {
 PlotBarsConfig::PlotBarsConfig() :
     direction(Direction::VERTICAL) {}
 
-ReturnCode draw_horizontal(
+ReturnCode plot_bars_horizontal(
     Context* ctx,
+    PlotConfig* plot,
     PlotBarsConfig config) {
-  const auto& clip = context_get_clip(ctx);
+  const auto& clip = plot_get_clip(plot, layer_get(ctx));
 
   /* convert units */
   convert_units(
       {
-        bind(&convert_unit_typographic, ctx->dpi, ctx->font_size, _1),
+        bind(&convert_unit_typographic, layer_get_dpi(ctx), layer_get_font_size(ctx), _1),
         bind(&convert_unit_user, scale_translate_fn(config.scale_x), _1),
         bind(&convert_unit_relative, clip.w, _1)
       },
@@ -78,7 +79,7 @@ ReturnCode draw_horizontal(
 
   convert_units(
       {
-        bind(&convert_unit_typographic, ctx->dpi, ctx->font_size, _1),
+        bind(&convert_unit_typographic, layer_get_dpi(ctx), layer_get_font_size(ctx), _1),
         bind(&convert_unit_user, scale_translate_fn(config.scale_x), _1),
         bind(&convert_unit_relative, clip.w, _1)
       },
@@ -87,7 +88,7 @@ ReturnCode draw_horizontal(
 
   convert_units(
       {
-        bind(&convert_unit_typographic, ctx->dpi, ctx->font_size, _1),
+        bind(&convert_unit_typographic, layer_get_dpi(ctx), layer_get_font_size(ctx), _1),
         bind(&convert_unit_user, scale_translate_fn(config.scale_y), _1),
         bind(&convert_unit_relative, clip.h, _1)
       },
@@ -96,7 +97,7 @@ ReturnCode draw_horizontal(
 
   convert_units(
       {
-        bind(&convert_unit_typographic, ctx->dpi, ctx->font_size, _1),
+        bind(&convert_unit_typographic, layer_get_dpi(ctx), layer_get_font_size(ctx), _1),
         bind(&convert_unit_user, scale_translate_fn(config.scale_y), _1),
         bind(&convert_unit_relative, clip.h, _1)
       },
@@ -105,14 +106,14 @@ ReturnCode draw_horizontal(
 
   convert_units(
       {
-        bind(&convert_unit_typographic, ctx->dpi, ctx->font_size, _1)
+        bind(&convert_unit_typographic, layer_get_dpi(ctx), layer_get_font_size(ctx), _1)
       },
       &*config.sizes.begin(),
       &*config.sizes.end());
 
   convert_units(
       {
-        bind(&convert_unit_typographic, ctx->dpi, ctx->font_size, _1)
+        bind(&convert_unit_typographic, layer_get_dpi(ctx), layer_get_font_size(ctx), _1)
       },
       &*config.offsets.begin(),
       &*config.offsets.end());
@@ -125,7 +126,7 @@ ReturnCode draw_horizontal(
     auto sx2 = clip.x + config.x[i];
 
     auto size = config.sizes.empty()
-        ? from_pt(kDefaultBarSizePT, ctx->dpi)
+        ? from_pt(kDefaultBarSizePT, layer_get_dpi(ctx))
         : config.sizes[i % config.sizes.size()];
 
     auto offset = config.offsets.empty()
@@ -173,15 +174,16 @@ ReturnCode draw_horizontal(
   return OK;
 }
 
-ReturnCode draw_vertical(
+ReturnCode plot_bars_vertical(
     Context* ctx,
+    PlotConfig* plot,
     PlotBarsConfig config) {
-  const auto& clip = context_get_clip(ctx);
+  const auto& clip = plot_get_clip(plot, layer_get(ctx));
 
   /* convert units */
   convert_units(
       {
-        bind(&convert_unit_typographic, ctx->dpi, ctx->font_size, _1),
+        bind(&convert_unit_typographic, layer_get_dpi(ctx), layer_get_font_size(ctx), _1),
         bind(&convert_unit_user, scale_translate_fn(config.scale_x), _1),
         bind(&convert_unit_relative, clip.w, _1)
       },
@@ -190,7 +192,7 @@ ReturnCode draw_vertical(
 
   convert_units(
       {
-        bind(&convert_unit_typographic, ctx->dpi, ctx->font_size, _1),
+        bind(&convert_unit_typographic, layer_get_dpi(ctx), layer_get_font_size(ctx), _1),
         bind(&convert_unit_user, scale_translate_fn(config.scale_x), _1),
         bind(&convert_unit_relative, clip.w, _1)
       },
@@ -199,7 +201,7 @@ ReturnCode draw_vertical(
 
   convert_units(
       {
-        bind(&convert_unit_typographic, ctx->dpi, ctx->font_size, _1),
+        bind(&convert_unit_typographic, layer_get_dpi(ctx), layer_get_font_size(ctx), _1),
         bind(&convert_unit_user, scale_translate_fn(config.scale_y), _1),
         bind(&convert_unit_relative, clip.h, _1)
       },
@@ -208,7 +210,7 @@ ReturnCode draw_vertical(
 
   convert_units(
       {
-        bind(&convert_unit_typographic, ctx->dpi, ctx->font_size, _1),
+        bind(&convert_unit_typographic, layer_get_dpi(ctx), layer_get_font_size(ctx), _1),
         bind(&convert_unit_user, scale_translate_fn(config.scale_y), _1),
         bind(&convert_unit_relative, clip.h, _1)
       },
@@ -217,19 +219,19 @@ ReturnCode draw_vertical(
 
   convert_units(
       {
-        bind(&convert_unit_typographic, ctx->dpi, ctx->font_size, _1)
+        bind(&convert_unit_typographic, layer_get_dpi(ctx), layer_get_font_size(ctx), _1)
       },
       &*config.sizes.begin(),
       &*config.sizes.end());
 
   convert_units(
       {
-        bind(&convert_unit_typographic, ctx->dpi, ctx->font_size, _1)
+        bind(&convert_unit_typographic, layer_get_dpi(ctx), layer_get_font_size(ctx), _1)
       },
       &*config.offsets.begin(),
       &*config.offsets.end());
 
-  convert_unit_typographic(ctx->dpi, context_get_rem(ctx), &config.stroke_style.line_width);
+  convert_unit_typographic(layer_get_dpi(ctx), layer_get_rem(ctx), &config.stroke_style.line_width);
 
   /* draw bars */
   auto y0 = clip.h * std::clamp(scale_translate(config.scale_y, 0), 0.0, 1.0);
@@ -239,7 +241,7 @@ ReturnCode draw_vertical(
     auto sy2 = clip.y + config.y[i];
 
     auto size = config.sizes.empty()
-        ? from_pt(kDefaultBarSizePT, ctx->dpi)
+        ? from_pt(kDefaultBarSizePT, layer_get_dpi(ctx))
         : config.sizes[i % config.sizes.size()];
 
     auto offset = config.offsets.empty()
@@ -287,31 +289,33 @@ ReturnCode draw_vertical(
   return OK;
 }
 
-ReturnCode draw(
+ReturnCode plot_bars(
     Context* ctx,
+    PlotConfig* plot,
     std::shared_ptr<PlotBarsConfig> config) {
   switch (config->direction) {
     case Direction::HORIZONTAL:
-      return draw_horizontal(ctx, *config);
+      return plot_bars_horizontal(ctx, plot, *config);
     case Direction::VERTICAL:
-      return draw_vertical(ctx, *config);
+      return plot_bars_vertical(ctx, plot, *config);
     default:
       return ERROR;
   }
 }
 
-ReturnCode bars_draw(
+ReturnCode plot_bars(
     Context* ctx,
+    PlotConfig* plot,
     const Expr* expr) {
   /* set defaults from environment */
   auto c = std::make_shared<PlotBarsConfig>();
-  c->scale_x = ctx->scale_x;
-  c->scale_y = ctx->scale_y;
-  c->stroke_style.color = ctx->foreground_color;
+  c->scale_x = plot->scale_x;
+  c->scale_y = plot->scale_y;
+  c->stroke_style.color = layer_get(ctx)->foreground_color;
   c->stroke_style.line_width = from_unit(0);
-  c->fill_style.color = ctx->foreground_color;
-  c->label_font = ctx->font;
-  c->label_font_size = ctx->font_size;
+  c->fill_style.color = layer_get(ctx)->foreground_color;
+  c->label_font = layer_get_font(ctx);
+  c->label_font_size = layer_get_font_size(ctx);
 
   /* parse properties */
   std::vector<std::string> data_x;
@@ -430,8 +434,8 @@ ReturnCode bars_draw(
         "the length of the 'data-y' and 'data-y-low' properties must be equal");
   }
 
-  return draw(ctx, c);
+  return plot_bars(ctx, plot, c);
 }
 
-} // namespace clip::elements::plot::bars
+} // namespace clip::plotgen
 

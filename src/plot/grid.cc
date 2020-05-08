@@ -28,7 +28,7 @@
 using namespace std::placeholders;
 using std::bind;
 
-namespace clip::elements::plot::grid {
+namespace clip::plotgen {
 
 static const double kDefaultLineWidthPT = 1;
 
@@ -44,17 +44,18 @@ struct GridlineDefinition {
   StrokeStyle stroke_style;
 };
 
-ReturnCode draw_grid(
+ReturnCode plot_grid(
     Context* ctx,
+    PlotConfig* plot,
     std::shared_ptr<GridlineDefinition> config) {
   MeasureConv conv;
-  conv.dpi = ctx->dpi;
-  conv.font_size = ctx->font_size;
-  conv.parent_size = ctx->font_size;
+  conv.dpi = layer_get_dpi(ctx);
+  conv.font_size = layer_get_font_size(ctx);
+  conv.parent_size = layer_get_font_size(ctx);
 
   measure_normalize(conv, &config->stroke_style.line_width);
 
-  const auto& bbox = context_get_clip(ctx);
+  const auto& bbox = plot_get_clip(plot, layer_get(ctx));
 
   ScaleLayout slayout_x;
   config->layout_x(config->scale_x, format_noop(), &slayout_x);
@@ -85,13 +86,13 @@ ReturnCode draw_grid(
   return OK;
 }
 
-ReturnCode draw_grid(Context* ctx, const Expr* expr) {
+ReturnCode plot_grid(Context* ctx, PlotConfig* plot, const Expr* expr) {
   /* set defaults from ctxironment */
   auto c = std::make_shared<GridlineDefinition>();
-  c->stroke_style.line_width = from_pt(1, ctx->dpi);
+  c->stroke_style.line_width = from_pt(1, layer_get_dpi(ctx));
   c->stroke_style.color = Color::fromRGB(.9, .9, .9);
-  c->scale_x = ctx->scale_x;
-  c->scale_y = ctx->scale_y;
+  c->scale_x = plot->scale_x;
+  c->scale_y = plot->scale_y;
 
   /* parse properties */
   auto config_rc = expr_walk_map_wrapped(expr, {
@@ -120,8 +121,8 @@ ReturnCode draw_grid(Context* ctx, const Expr* expr) {
   scale_configure_layout_defaults(c->scale_x, nullptr, &c->layout_x);
   scale_configure_layout_defaults(c->scale_y, nullptr, &c->layout_y);
 
-  return draw_grid(ctx, c);
+  return plot_grid(ctx, plot, c);
 }
 
-} // namespace clip::elements::plot::grid
+} // namespace clip::plotgen
 

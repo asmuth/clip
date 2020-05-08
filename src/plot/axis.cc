@@ -30,7 +30,7 @@
 using namespace std::placeholders;
 using std::bind;
 
-namespace clip::elements::plot::axis {
+namespace clip::plotgen {
 
 static const double kDefaultTitlePaddingHorizEM = .6;
 static const double kDefaultTitlePaddingVertEM = .8;
@@ -98,33 +98,33 @@ AxisDefinition::AxisDefinition() :
 
 void axis_convert_units(AxisDefinition* config, const Context* ctx) {
   convert_unit_typographic(
-      ctx->dpi,
-      ctx->font_size,
+      layer_get_dpi(ctx),
+      layer_get_font_size(ctx),
       &config->label_font_size);
 
   convert_unit_typographic(
-      ctx->dpi,
+      layer_get_dpi(ctx),
       config->label_font_size,
       &config->label_padding);
 
   convert_unit_typographic(
-      ctx->dpi,
-      ctx->font_size,
+      layer_get_dpi(ctx),
+      layer_get_font_size(ctx),
       &config->title_font_size);
 
   convert_unit_typographic(
-      ctx->dpi,
+      layer_get_dpi(ctx),
       config->title_font_size,
       &config->title_padding);
 
   convert_unit_typographic(
-      ctx->dpi,
-      ctx->font_size,
+      layer_get_dpi(ctx),
+      layer_get_font_size(ctx),
       &config->border_style.line_width);
 
   convert_unit_typographic(
-      ctx->dpi,
-      ctx->font_size,
+      layer_get_dpi(ctx),
+      layer_get_font_size(ctx),
       &config->tick_length);
 }
 
@@ -152,7 +152,7 @@ ReturnCode axis_layout_labels(
           TextDirection::LTR,
           axis.label_font,
           axis.label_font_size,
-          ctx->dpi,
+          layer_get_dpi(ctx),
           &label_bbox);
          rc != Status::OK) {
       return rc;
@@ -191,7 +191,7 @@ ReturnCode axis_layout_title(
         TextDirection::LTR,
         axis.title_font,
         axis.title_font_size,
-        ctx->dpi,
+        layer_get_dpi(ctx),
         &title_bbox);
        rc != Status::OK) {
     return rc;
@@ -263,8 +263,9 @@ ReturnCode axis_layout(
   return OK;
 }
 
-static ReturnCode axis_draw_vertical(
+static ReturnCode plot_axis_vertical(
     Context* ctx,
+    PlotConfig* plot,
     const AxisDefinition& axis_config,
     double x,
     double y0,
@@ -284,7 +285,7 @@ static ReturnCode axis_draw_vertical(
 
   auto tick_length = measure_or(
       axis_config.tick_length,
-      from_pt(kDefaultTickLengthPT, ctx->dpi));
+      from_pt(kDefaultTickLengthPT, layer_get_dpi(ctx)));
 
   for (const auto& tick : ticks.positions) {
     auto ty = y0 + (y1 - y0) * tick;
@@ -405,8 +406,9 @@ static ReturnCode axis_draw_vertical(
   return OK;
 }
 
-static ReturnCode axis_draw_horizontal(
+static ReturnCode plot_axis_horizontal(
     Context* ctx,
+    PlotConfig* plot,
     const AxisDefinition& axis_config,
     double y,
     double x0,
@@ -426,7 +428,7 @@ static ReturnCode axis_draw_horizontal(
 
   auto tick_length = measure_or(
       axis_config.tick_length,
-      from_pt(kDefaultTickLengthPT, ctx->dpi));
+      from_pt(kDefaultTickLengthPT, layer_get_dpi(ctx)));
 
   for (const auto& tick : ticks.positions) {
     auto ty = y - tick_length + tick_length * (tick_position + 1) / 2.0;
@@ -562,57 +564,64 @@ ReturnCode axis_prepare(
   return OK;
 }
 
-ReturnCode axis_draw(
+ReturnCode plot_axis(
     Context* ctx,
+    PlotConfig* plot,
     AxisDefinition* config) {
   const auto& axis = *config;
-  const auto& bbox = context_get_clip(ctx);
+  const auto& bbox = plot_get_clip(plot, layer_get(ctx));
 
   ReturnCode rc;
   switch (axis.align) {
     case AxisAlign::X:
-      rc = axis_draw_horizontal(
+      rc = plot_axis_horizontal(
           ctx,
+          plot,
           axis,
           bbox.y + bbox.h * 0.5,
           bbox.x,
           bbox.x + bbox.w);
       break;
     case AxisAlign::TOP:
-      rc = axis_draw_horizontal(
+      rc = plot_axis_horizontal(
           ctx,
+          plot,
           axis,
           bbox.y + bbox.h,
           bbox.x,
           bbox.x + bbox.w);
       break;
     case AxisAlign::BOTTOM:
-      rc = axis_draw_horizontal(
+      rc = plot_axis_horizontal(
           ctx,
+          plot,
           axis,
           bbox.y,
           bbox.x,
           bbox.x + bbox.w);
       break;
     case AxisAlign::Y:
-      rc = axis_draw_vertical(
+      rc = plot_axis_vertical(
           ctx,
+          plot,
           axis,
           bbox.x + bbox.w * 0.5,
           bbox.y,
           bbox.y + bbox.h);
       break;
     case AxisAlign::LEFT:
-      rc = axis_draw_vertical(
+      rc = plot_axis_vertical(
           ctx,
+          plot,
           axis,
           bbox.x,
           bbox.y,
           bbox.y + bbox.h);
       break;
     case AxisAlign::RIGHT:
-      rc = axis_draw_vertical(
+      rc = plot_axis_vertical(
           ctx,
+          plot,
           axis,
           bbox.x + bbox.w,
           bbox.y,
@@ -623,18 +632,18 @@ ReturnCode axis_draw(
   return rc;
 }
 
-ReturnCode axis_draw(Context* ctx, const Expr* expr) {
+ReturnCode plot_axis(Context* ctx, PlotConfig* plot, const Expr* expr) {
   auto elem_name = expr_get_value(expr);
 
   auto config = std::make_shared<AxisDefinition>();
-  config->label_font = ctx->font;
-  config->label_font_size = ctx->font_size;
-  config->label_color = ctx->text_color;
-  config->title_font = ctx->font;
-  config->title_font_size = ctx->font_size;
-  config->title_color = ctx->text_color;
+  config->label_font = layer_get_font(ctx);
+  config->label_font_size = layer_get_font_size(ctx);
+  config->label_color = layer_get(ctx)->text_color;
+  config->title_font = layer_get_font(ctx);
+  config->title_font_size = layer_get_font_size(ctx);
+  config->title_color = layer_get(ctx)->text_color;
   config->border_style.line_width = from_pt(1);
-  config->border_style.color = ctx->foreground_color;
+  config->border_style.color = layer_get(ctx)->foreground_color;
 
   {
     auto rc = expr_walk_map_wrapped(expr, {
@@ -770,7 +779,7 @@ ReturnCode axis_draw(Context* ctx, const Expr* expr) {
     return rc;
   }
 
-  return axis_draw(ctx, config.get());
+  return plot_axis(ctx, plot, config.get());
 }
 
 ReturnCode axis_configure_position(
@@ -816,71 +825,71 @@ ReturnCode axis_configure_position(
   return OK;
 }
 
-ReturnCode axis_add_all(Context* ctx, const Expr* expr) {
+ReturnCode plot_axes(Context* ctx, PlotConfig* plot, const Expr* expr) {
   std::array<Measure, 4> margins = {from_em(1), from_em(1), from_em(1), from_em(1)};
   std::array<AxisDefinition, 4> axes;
 
-  axes[0].scale = ctx->scale_x;
+  axes[0].scale = plot->scale_x;
   axes[0].align = AxisAlign::TOP;
   axes[0].label_attach = AxisLabelAttach::BOTTOM;
   axes[0].title_offset = 1;
   axes[0].tick_offset = -1;
   axes[0].label_offset = 1;
-  axes[0].label_font = ctx->font;
-  axes[0].label_font_size = ctx->font_size;
-  axes[0].label_color = ctx->text_color;
-  axes[0].title_font = ctx->font;
-  axes[0].title_font_size = ctx->font_size;
-  axes[0].title_color = ctx->text_color;
+  axes[0].label_font = layer_get_font(ctx);
+  axes[0].label_font_size = layer_get_font_size(ctx);
+  axes[0].label_color = layer_get(ctx)->text_color;
+  axes[0].title_font = layer_get_font(ctx);
+  axes[0].title_font_size = layer_get_font_size(ctx);
+  axes[0].title_color = layer_get(ctx)->text_color;
   axes[0].border_style.line_width = from_pt(1);
-  axes[0].border_style.color = ctx->foreground_color;
+  axes[0].border_style.color = layer_get(ctx)->foreground_color;
 
-  axes[1].scale = ctx->scale_y;
+  axes[1].scale = plot->scale_y;
   axes[1].align = AxisAlign::RIGHT;
   axes[1].label_attach = AxisLabelAttach::LEFT;
   axes[1].title_offset = 1;
   axes[1].title_rotate = -90;
   axes[1].tick_offset = -1;
   axes[1].label_offset = 1;
-  axes[1].label_font = ctx->font;
-  axes[1].label_font_size = ctx->font_size;
-  axes[1].label_color = ctx->text_color;
-  axes[1].title_font = ctx->font;
-  axes[1].title_font_size = ctx->font_size;
-  axes[1].title_color = ctx->text_color;
+  axes[1].label_font = layer_get_font(ctx);
+  axes[1].label_font_size = layer_get_font_size(ctx);
+  axes[1].label_color = layer_get(ctx)->text_color;
+  axes[1].title_font = layer_get_font(ctx);
+  axes[1].title_font_size = layer_get_font_size(ctx);
+  axes[1].title_color = layer_get(ctx)->text_color;
   axes[1].border_style.line_width = from_pt(1);
-  axes[1].border_style.color = ctx->foreground_color;
+  axes[1].border_style.color = layer_get(ctx)->foreground_color;
 
-  axes[2].scale = ctx->scale_x;
+  axes[2].scale = plot->scale_x;
   axes[2].align = AxisAlign::BOTTOM;
   axes[2].label_attach = AxisLabelAttach::TOP;
   axes[2].title_offset = -1;
   axes[2].tick_offset = 1;
   axes[2].label_offset = -1;
-  axes[2].label_font = ctx->font;
-  axes[2].label_font_size = ctx->font_size;
-  axes[2].label_color = ctx->text_color;
-  axes[2].title_font = ctx->font;
-  axes[2].title_font_size = ctx->font_size;
-  axes[2].title_color = ctx->text_color;
+  axes[2].label_font = layer_get_font(ctx);
+  axes[2].label_font_size = layer_get_font_size(ctx);
+  axes[2].label_color = layer_get(ctx)->text_color;
+  axes[2].title_font = layer_get_font(ctx);
+  axes[2].title_font_size = layer_get_font_size(ctx);
+  axes[2].title_color = layer_get(ctx)->text_color;
   axes[2].border_style.line_width = from_pt(1);
-  axes[2].border_style.color = ctx->foreground_color;
+  axes[2].border_style.color = layer_get(ctx)->foreground_color;
 
-  axes[3].scale = ctx->scale_y;
+  axes[3].scale = plot->scale_y;
   axes[3].align = AxisAlign::LEFT;
   axes[3].label_attach = AxisLabelAttach::RIGHT;
   axes[3].title_offset = -1;
   axes[3].title_rotate = -90;
   axes[3].tick_offset = 1;
   axes[3].label_offset = -1;
-  axes[3].label_font = ctx->font;
-  axes[3].label_font_size = ctx->font_size;
-  axes[3].label_color = ctx->text_color;
-  axes[3].title_font = ctx->font;
-  axes[3].title_font_size = ctx->font_size;
-  axes[3].title_color = ctx->text_color;
+  axes[3].label_font = layer_get_font(ctx);
+  axes[3].label_font_size = layer_get_font_size(ctx);
+  axes[3].label_color = layer_get(ctx)->text_color;
+  axes[3].title_font = layer_get_font(ctx);
+  axes[3].title_font_size = layer_get_font_size(ctx);
+  axes[3].title_color = layer_get(ctx)->text_color;
   axes[3].border_style.line_width = from_pt(1);
-  axes[3].border_style.color = ctx->foreground_color;
+  axes[3].border_style.color = layer_get(ctx)->foreground_color;
 
   auto config_rc = expr_walk_map_wrapped(expr, {
     {"position", bind(&axis_configure_position, _1, &axes)},
@@ -1277,7 +1286,7 @@ ReturnCode axis_add_all(Context* ctx, const Expr* expr) {
   }
 
   for (auto& m : margins) {
-    convert_unit_typographic(ctx->dpi, context_get_rem(ctx), &m);
+    convert_unit_typographic(layer_get_dpi(ctx), layer_get_rem(ctx), &m);
   }
 
   std::array<double, 4> padding = {0, 0, 0, 0};
@@ -1294,20 +1303,20 @@ ReturnCode axis_add_all(Context* ctx, const Expr* expr) {
   }
 
   auto bbox = layout_margin_box(
-      context_get_clip(ctx),
+      plot_get_clip(plot, layer_get(ctx)),
       margins[0] + padding[0],
       margins[1] + padding[1],
       margins[2] + padding[2],
       margins[3] + padding[3]);
 
-  ctx->layout_stack.push_back(bbox);
+  plot->layout_stack.push_back(bbox);
 
   for (auto& a : axes) {
     if (!a.enable) {
       continue;
     }
 
-    if (auto rc = axis_draw(ctx, &a); !rc) {
+    if (auto rc = plot_axis(ctx, plot, &a); !rc) {
       return rc;
     }
   }
@@ -1315,4 +1324,4 @@ ReturnCode axis_add_all(Context* ctx, const Expr* expr) {
   return OK;
 }
 
-} // namespace clip::elements::plot::axis
+} // namespace clip::plotgen

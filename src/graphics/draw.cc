@@ -22,15 +22,15 @@ void draw_polygon(
     StrokeStyle stroke_style,
     FillStyle fill_style) {
   convert_unit_typographic(
-      ctx->dpi,
-      ctx->font_size,
+      layer_get_dpi(ctx),
+      layer_get_font_size(ctx),
       &stroke_style.line_width);
 
   draw_cmd::Polygon elem;
   elem.poly = poly;
   elem.stroke_style = stroke_style;
   elem.fill_style = fill_style;
-  ctx->drawlist.push_back(elem);
+  layer_get(ctx)->drawlist.push_back(elem);
 }
 
 } // namespace clip

@@ -12,13 +12,14 @@
  * limitations under the License.
  */
 #pragma once
-#include "context.h"
+#include "plotgen.h"
 
-namespace clip::elements::plot::areas {
+namespace clip::plotgen {
 
-ReturnCode areas_draw(
+ReturnCode plot_areas(
     Context* ctx,
+    PlotConfig* plot,
     const Expr* expr);
 
-} // namespace clip::elements::plot::areas
+} // namespace clip::plotgen
 

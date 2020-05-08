@@ -20,7 +20,7 @@
 namespace clip {
 
 ReturnCode export_svg(
-    const Context* ctx,
+    const Layer* layer,
     std::string* buffer);
 
 } // namespace clip

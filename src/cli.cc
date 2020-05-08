@@ -192,7 +192,7 @@ int main(int argc, const char** argv) {
   ReturnCode export_rc;
   switch (output_format) {
     case OutputFormat::SVG:
-      export_rc = export_svg(&ctx, &output_buffer);
+      export_rc = export_svg(ctx.layer.get(), &output_buffer);
       break;
     //case OutputFormat::PNG:
     //  export_rc = page_export_png(page, drawlist, output_buffer);

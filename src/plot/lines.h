@@ -12,14 +12,14 @@
  * limitations under the License.
  */
 #pragma once
-#include "context.h"
-#include "command.h"
+#include "plotgen.h"
 
-namespace clip::elements::plot::lines {
+namespace clip::plotgen {
 
-ReturnCode draw_lines(
+ReturnCode plot_lines(
     Context* ctx,
+    PlotConfig* plot,
     const Expr* expr);
 
-} // namespace clip::elements::plot::lines
+} // namespace clip::plotgen
 

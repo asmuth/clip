@@ -33,7 +33,7 @@
 using namespace std::placeholders;
 using std::bind;
 
-namespace clip::elements::plot::rectangles {
+namespace clip::plotgen {
 
 static const double kDefaultPointSizePT = 4;
 static const double kDefaultLabelPaddingEM = 0.2;
@@ -52,15 +52,16 @@ struct PlotRectanglesConfig {
   Measure size;
 };
 
-ReturnCode rectangles_draw(
+ReturnCode plot_rectangles(
     Context* ctx,
+    PlotConfig* plot,
     std::shared_ptr<PlotRectanglesConfig> config) {
-  const auto& clip = context_get_clip(ctx);
+  const auto& clip = plot_get_clip(plot, layer_get(ctx));
 
   /* convert units */
   convert_units(
       {
-        bind(&convert_unit_typographic, ctx->dpi, ctx->font_size, _1),
+        bind(&convert_unit_typographic, layer_get_dpi(ctx), layer_get_font_size(ctx), _1),
         bind(&convert_unit_user, scale_translate_fn(config->scale_x), _1),
         bind(&convert_unit_relative, clip.w, _1)
       },
@@ -69,7 +70,7 @@ ReturnCode rectangles_draw(
 
   convert_units(
       {
-        bind(&convert_unit_typographic, ctx->dpi, ctx->font_size, _1),
+        bind(&convert_unit_typographic, layer_get_dpi(ctx), layer_get_font_size(ctx), _1),
         bind(&convert_unit_user, scale_translate_fn(config->scale_y), _1),
         bind(&convert_unit_relative, clip.h, _1)
       },
@@ -78,7 +79,7 @@ ReturnCode rectangles_draw(
 
   convert_units(
       {
-        bind(&convert_unit_typographic, ctx->dpi, ctx->font_size, _1),
+        bind(&convert_unit_typographic, layer_get_dpi(ctx), layer_get_font_size(ctx), _1),
         bind(&convert_unit_user, scale_translate_magnitude_fn(config->scale_x), _1),
         bind(&convert_unit_relative, clip.w, _1)
       },
@@ -87,7 +88,7 @@ ReturnCode rectangles_draw(
 
   convert_units(
       {
-        bind(&convert_unit_typographic, ctx->dpi, ctx->font_size, _1),
+        bind(&convert_unit_typographic, layer_get_dpi(ctx), layer_get_font_size(ctx), _1),
         bind(&convert_unit_user, scale_translate_magnitude_fn(config->scale_y), _1),
         bind(&convert_unit_relative, clip.h, _1)
       },
@@ -96,7 +97,7 @@ ReturnCode rectangles_draw(
 
   convert_unit(
       {
-        bind(&convert_unit_typographic, ctx->dpi, ctx->font_size, _1),
+        bind(&convert_unit_typographic, layer_get_dpi(ctx), layer_get_font_size(ctx), _1),
         bind(&convert_unit_user, scale_translate_magnitude_fn(config->scale_x), _1),
         bind(&convert_unit_relative, clip.w, _1)
       },
@@ -104,7 +105,7 @@ ReturnCode rectangles_draw(
 
   convert_unit(
       {
-        bind(&convert_unit_typographic, ctx->dpi, ctx->font_size, _1),
+        bind(&convert_unit_typographic, layer_get_dpi(ctx), layer_get_font_size(ctx), _1),
         bind(&convert_unit_user, scale_translate_magnitude_fn(config->scale_y), _1),
         bind(&convert_unit_relative, clip.h, _1)
       },
@@ -137,12 +138,15 @@ ReturnCode rectangles_draw(
   return OK;
 }
 
-ReturnCode rectangles_draw(
+ReturnCode plot_rectangles(
     Context* ctx,
+    PlotConfig* plot,
     const Expr* expr) {
   /* set defaults from environment */
   auto c = std::make_shared<PlotRectanglesConfig>();
-  c->color = ctx->foreground_color;
+  c->scale_x = plot->scale_x;
+  c->scale_y = plot->scale_y;
+  c->color = layer_get(ctx)->foreground_color;
   c->size = from_pt(kDefaultPointSizePT);
 
   /* parse properties */
@@ -249,8 +253,8 @@ ReturnCode rectangles_draw(
     c->colors.push_back(color);
   }
 
-  return rectangles_draw(ctx, c);
+  return plot_rectangles(ctx, plot, c);
 }
 
-} // namespace clip::elements::plot::rectangles
+} // namespace clip::plotgen
 

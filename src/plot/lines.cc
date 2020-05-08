@@ -32,7 +32,7 @@
 using namespace std::placeholders;
 using std::bind;
 
-namespace clip::elements::plot::lines {
+namespace clip::plotgen {
 
 static const double kDefaultLineWidthPT = 1.5;
 static const double kDefaultLabelPaddingEM = 0.4;
@@ -54,14 +54,15 @@ struct PlotLinesConfig {
   Measure label_font_size;
 };
 
-ReturnCode draw_lines(
+ReturnCode plot_lines(
     Context* ctx,
+    PlotConfig* plot,
     std::shared_ptr<PlotLinesConfig> config) {
-  const auto& clip = context_get_clip(ctx);
+  const auto& clip = plot_get_clip(plot, layer_get(ctx));
   /* convert units */
   convert_units(
       {
-        bind(&convert_unit_typographic, ctx->dpi, ctx->font_size, _1),
+        bind(&convert_unit_typographic, layer_get_dpi(ctx), layer_get_font_size(ctx), _1),
         bind(&convert_unit_user, scale_translate_fn(config->scale_x), _1),
         bind(&convert_unit_relative, clip.w, _1)
       },
@@ -70,7 +71,7 @@ ReturnCode draw_lines(
 
   convert_units(
       {
-        bind(&convert_unit_typographic, ctx->dpi, ctx->font_size, _1),
+        bind(&convert_unit_typographic, layer_get_dpi(ctx), layer_get_font_size(ctx), _1),
         bind(&convert_unit_user, scale_translate_fn(config->scale_y), _1),
         bind(&convert_unit_relative, clip.h, _1)
       },
@@ -78,9 +79,9 @@ ReturnCode draw_lines(
       &*config->y.end());
 
   MeasureConv conv;
-  conv.dpi = ctx->dpi;
-  conv.font_size = ctx->font_size;
-  conv.parent_size = ctx->font_size;
+  conv.dpi = layer_get_dpi(ctx);
+  conv.font_size = layer_get_font_size(ctx);
+  conv.parent_size = layer_get_font_size(ctx);
 
   measure_normalize(conv, &config->stroke_style.line_width);
   measure_normalize(conv, &config->label_padding);
@@ -155,19 +156,20 @@ ReturnCode draw_lines(
   return OK;
 }
 
-ReturnCode draw_lines(
+ReturnCode plot_lines(
     Context* ctx,
+    PlotConfig* plot,
     const Expr* expr) {
   /* set defaults from environment */
   auto c = std::make_shared<PlotLinesConfig>();
-  c->scale_x = ctx->scale_x;
-  c->scale_y = ctx->scale_y;
-  c->label_font = ctx->font;
-  c->label_font_size = ctx->font_size;
-  c->stroke_style.color = ctx->foreground_color;
+  c->scale_x = plot->scale_x;
+  c->scale_y = plot->scale_y;
+  c->label_font = layer_get_font(ctx);
+  c->label_font_size = layer_get_font_size(ctx);
+  c->stroke_style.color = layer_get(ctx)->foreground_color;
   c->stroke_style.line_width = from_pt(kDefaultLineWidthPT);
   c->marker_shape = marker_create_disk();
-  c->marker_color = ctx->foreground_color;
+  c->marker_color = layer_get(ctx)->foreground_color;
 
   /* parse properties */
   std::vector<std::string> data_x;
@@ -252,8 +254,8 @@ ReturnCode draw_lines(
   }
 
   /* draw */
-  return draw_lines(ctx, c);
+  return plot_lines(ctx, plot, c);
 }
 
-} // namespace clip::elements::plot::lines
+} // namespace clip::plotgen
 

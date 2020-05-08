@@ -51,8 +51,8 @@ ReturnCode measure_readn(
   }
 
   MeasureConv conv;
-  conv.dpi = ctx->dpi;
-  conv.font_size = ctx->font_size;
+  conv.dpi = layer_get_dpi(ctx);
+  conv.font_size = layer_get_font_size(ctx);
   measure_normalize(conv, value);
 
   return OK;

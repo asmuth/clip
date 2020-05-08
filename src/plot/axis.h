@@ -12,17 +12,19 @@
  * limitations under the License.
  */
 #pragma once
-#include "context.h"
+#include "plotgen.h"
 
-namespace clip::elements::plot::axis {
+namespace clip::plotgen{
 
-ReturnCode axis_draw(
+ReturnCode plot_axis(
     Context* ctx,
+    PlotConfig* plot,
     const Expr* expr);
 
-ReturnCode axis_add_all(
+ReturnCode plot_axes(
     Context* ctx,
+    PlotConfig* plot,
     const Expr* expr);
 
-} // namespace clip::elements::plot::axis
+} // namespace clip::plotgen
 

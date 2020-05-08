@@ -32,7 +32,7 @@
 using namespace std::placeholders;
 using std::bind;
 
-namespace clip::elements::plot::areas {
+namespace clip::plotgen {
 
 struct PlotAreaConfig {
   PlotAreaConfig();
@@ -51,15 +51,16 @@ struct PlotAreaConfig {
 PlotAreaConfig::PlotAreaConfig() :
     direction(Direction::VERTICAL) {}
 
-ReturnCode draw_horizontal(
+ReturnCode plot_areas_horizontal(
     Context* ctx,
+    PlotConfig* plot,
     PlotAreaConfig config) {
-  const auto& clip = context_get_clip(ctx);
+  const auto& clip = plot_get_clip(plot, layer_get(ctx));
 
   /* convert units */
   convert_units(
       {
-        bind(&convert_unit_typographic, ctx->dpi, ctx->font_size, _1),
+        bind(&convert_unit_typographic, layer_get_dpi(ctx), layer_get_font_size(ctx), _1),
         bind(&convert_unit_user, scale_translate_fn(config.scale_x), _1),
         bind(&convert_unit_relative, clip.w, _1)
       },
@@ -68,7 +69,7 @@ ReturnCode draw_horizontal(
 
   convert_units(
       {
-        bind(&convert_unit_typographic, ctx->dpi, ctx->font_size, _1),
+        bind(&convert_unit_typographic, layer_get_dpi(ctx), layer_get_font_size(ctx), _1),
         bind(&convert_unit_user, scale_translate_fn(config.scale_x), _1),
         bind(&convert_unit_relative, clip.w, _1)
       },
@@ -77,7 +78,7 @@ ReturnCode draw_horizontal(
 
   convert_units(
       {
-        bind(&convert_unit_typographic, ctx->dpi, ctx->font_size, _1),
+        bind(&convert_unit_typographic, layer_get_dpi(ctx), layer_get_font_size(ctx), _1),
         bind(&convert_unit_user, scale_translate_fn(config.scale_y), _1),
         bind(&convert_unit_relative, clip.h, _1)
       },
@@ -86,7 +87,7 @@ ReturnCode draw_horizontal(
 
   convert_units(
       {
-        bind(&convert_unit_typographic, ctx->dpi, ctx->font_size, _1),
+        bind(&convert_unit_typographic, layer_get_dpi(ctx), layer_get_font_size(ctx), _1),
         bind(&convert_unit_user, scale_translate_fn(config.scale_y), _1),
         bind(&convert_unit_relative, clip.h, _1)
       },
@@ -94,13 +95,13 @@ ReturnCode draw_horizontal(
       &*config.yoffset.end());
 
   convert_unit_typographic(
-      ctx->dpi,
-      ctx->font_size,
+      layer_get_dpi(ctx),
+      layer_get_font_size(ctx),
       &config.stroke_high_style.line_width);
 
   convert_unit_typographic(
-      ctx->dpi,
-      ctx->font_size,
+      layer_get_dpi(ctx),
+      layer_get_font_size(ctx),
       &config.stroke_low_style.line_width);
 
   /* draw areas */
@@ -148,15 +149,16 @@ ReturnCode draw_horizontal(
   return OK;
 }
 
-ReturnCode draw_vertical(
+ReturnCode plot_areas_vertical(
     Context* ctx,
+    PlotConfig* plot,
     PlotAreaConfig config) {
-  const auto& clip = context_get_clip(ctx);
+  const auto& clip = plot_get_clip(plot, layer_get(ctx));
 
   /* convert units */
   convert_units(
       {
-        bind(&convert_unit_typographic, ctx->dpi, ctx->font_size, _1),
+        bind(&convert_unit_typographic, layer_get_dpi(ctx), layer_get_font_size(ctx), _1),
         bind(&convert_unit_user, scale_translate_fn(config.scale_x), _1),
         bind(&convert_unit_relative, clip.w, _1)
       },
@@ -165,7 +167,7 @@ ReturnCode draw_vertical(
 
   convert_units(
       {
-        bind(&convert_unit_typographic, ctx->dpi, ctx->font_size, _1),
+        bind(&convert_unit_typographic, layer_get_dpi(ctx), layer_get_font_size(ctx), _1),
         bind(&convert_unit_user, scale_translate_fn(config.scale_x), _1),
         bind(&convert_unit_relative, clip.w, _1)
       },
@@ -174,7 +176,7 @@ ReturnCode draw_vertical(
 
   convert_units(
       {
-        bind(&convert_unit_typographic, ctx->dpi, ctx->font_size, _1),
+        bind(&convert_unit_typographic, layer_get_dpi(ctx), layer_get_font_size(ctx), _1),
         bind(&convert_unit_user, scale_translate_fn(config.scale_y), _1),
         bind(&convert_unit_relative, clip.h, _1)
       },
@@ -183,7 +185,7 @@ ReturnCode draw_vertical(
 
   convert_units(
       {
-        bind(&convert_unit_typographic, ctx->dpi, ctx->font_size, _1),
+        bind(&convert_unit_typographic, layer_get_dpi(ctx), layer_get_font_size(ctx), _1),
         bind(&convert_unit_user, scale_translate_fn(config.scale_y), _1),
         bind(&convert_unit_relative, clip.h, _1)
       },
@@ -191,13 +193,13 @@ ReturnCode draw_vertical(
       &*config.yoffset.end());
 
   convert_unit_typographic(
-      ctx->dpi,
-      ctx->font_size,
+      layer_get_dpi(ctx),
+      layer_get_font_size(ctx),
       &config.stroke_high_style.line_width);
 
   convert_unit_typographic(
-      ctx->dpi,
-      ctx->font_size,
+      layer_get_dpi(ctx),
+      layer_get_font_size(ctx),
       &config.stroke_low_style.line_width);
 
   /* draw areas */
@@ -245,29 +247,31 @@ ReturnCode draw_vertical(
   return OK;
 }
 
-ReturnCode areas_draw(
+ReturnCode plot_areas(
     Context* ctx,
+    PlotConfig* plot,
     std::shared_ptr<PlotAreaConfig> config) {
   switch (config->direction) {
     case Direction::HORIZONTAL:
-      return draw_horizontal(ctx, *config);
+      return plot_areas_horizontal(ctx, plot, *config);
     case Direction::VERTICAL:
-      return draw_vertical(ctx, *config);
+      return plot_areas_vertical(ctx, plot, *config);
     default:
       return ERROR;
   }
 }
 
-ReturnCode areas_draw(
+ReturnCode plot_areas(
     Context* ctx,
+    PlotConfig* plot,
     const Expr* expr) {
   /* set defaults from environment */
   auto c = std::make_shared<PlotAreaConfig>();
-  c->scale_x = ctx->scale_x;
-  c->scale_y = ctx->scale_y;
-  c->stroke_high_style.color = ctx->foreground_color;
-  c->stroke_low_style.color = ctx->foreground_color;
-  c->fill_style.color = ctx->foreground_color;
+  c->scale_x = plot->scale_x;
+  c->scale_y = plot->scale_y;
+  c->stroke_high_style.color = layer_get(ctx)->foreground_color;
+  c->stroke_low_style.color = layer_get(ctx)->foreground_color;
+  c->fill_style.color = layer_get(ctx)->foreground_color;
 
   /* parse properties */
   std::vector<std::string> data_x;
@@ -403,8 +407,8 @@ ReturnCode areas_draw(
         "the length of the 'data-y' and 'data-y-low' properties must be equal");
   }
 
-  return areas_draw(ctx, c);
+  return plot_areas(ctx, plot, c);
 }
 
-} // namespace clip::elements::plot::areas
+} // namespace clip::plotgen
 

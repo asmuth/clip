@@ -32,7 +32,5 @@ enum class Position {
   LEFT
 };
 
-ReturnCode layout_add_margins(Context* ctx, const Expr* e);
-
 } // namespace clip
 

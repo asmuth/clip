@@ -24,6 +24,8 @@ ReturnCode color_read(
     const Context* ctx,
     const Expr* expr,
     Color* color) {
+  const auto layer = layer_get(ctx);
+
   if (expr_is_value(expr)) {
     const auto value = expr_get_value(expr);
 
@@ -36,9 +38,9 @@ ReturnCode color_read(
 
     // color palette index
     if (StringUtil::isDigitString(value)) {
-      if (!ctx->color_palette.empty()) {
-        *color = ctx->color_palette[
-            (std::stol(value) - 1) % ctx->color_palette.size()];
+      if (!layer->color_palette.empty()) {
+        *color = layer->color_palette[
+            (std::stol(value) - 1) % layer->color_palette.size()];
       }
 
       return OK;
@@ -91,6 +93,7 @@ ReturnCode color_read_string(
     const Context* ctx,
     const std::string& value,
     Color* color) {
+  const auto layer = layer_get(ctx);
 
   // hex code
   if (StringUtil::beginsWith(value, "#")) {
@@ -101,8 +104,8 @@ ReturnCode color_read_string(
 
   // color palette index
   if (StringUtil::isDigitString(value)) {
-    if (!ctx->color_palette.empty()) {
-      *color = ctx->color_palette[std::stoul(value) % ctx->color_palette.size()];
+    if (!layer->color_palette.empty()) {
+      *color = layer->color_palette[std::stoul(value) % layer->color_palette.size()];
     }
 
     return OK;

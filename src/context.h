@@ -17,45 +17,18 @@
 #include "graphics/geometry.h"
 #include "color_palette.h"
 #include "scale.h"
+#include "layer.h"
 
 namespace clip {
 
 struct Context {
   Context();
-
-  Measure width;
-  Measure height;
-  double dpi;
-
+  std::unique_ptr<Layer> layer;
   bool font_defaults;
   std::vector<std::string> font_load;
-  FontInfo font;
-  Measure font_size;
-
-  std::string text_default_script;
-  std::string text_default_language;
-
-  ColorPalette color_palette;
-  Color background_color;
-  Color foreground_color;
-  Color text_color;
-
-  std::array<Measure, 4> margins;
-  std::vector<Rectangle> layout_stack;
-
-  DrawCommandList drawlist;
-
-  ScaleConfig scale_x;
-  ScaleConfig scale_y;
 };
 
 ReturnCode context_setup_defaults(Context* ctx);
-
-Rectangle context_get_clip(const Context* ctx);
-
-Measure context_get_rem(const Context* ctx);
-
-ReturnCode context_set_background(Context* ctx, const Expr* expr);
 
 } // namespace clip
 

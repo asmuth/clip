@@ -12,13 +12,14 @@
  * limitations under the License.
  */
 #pragma once
-#include "context.h"
+#include "plotgen.h"
 
-namespace clip::elements::plot::bars {
+namespace clip::plotgen {
 
-ReturnCode bars_draw(
+ReturnCode plot_bars(
     Context* ctx,
+    PlotConfig* plot,
     const Expr* expr);
 
-} // namespace clip::elements::plot::bars
+} // namespace clip::plotgen
 

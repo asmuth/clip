@@ -12,13 +12,14 @@
  * limitations under the License.
  */
 #pragma once
-#include "context.h"
+#include "plotgen.h"
 
-namespace clip::elements::plot::labels {
+namespace clip::plotgen {
 
-ReturnCode labels_draw(
+ReturnCode plot_labels(
     Context* ctx,
+    PlotConfig* plot,
     const Expr* expr);
 
-} // namespace clip::elements::plot::labels
+} // namespace clip::plotgen
 

@@ -15,7 +15,7 @@
 #include "context.h"
 #include "marker.h"
 
-namespace clip::elements::legend {
+namespace clip::plotgen {
 
 struct LegendItem {
   std::string label;
@@ -47,5 +47,5 @@ ReturnCode legend_item_draw(
     LegendItem* config,
     const Rectangle& bbox);
 
-} // namespace clip::elements::legend
+} // namespace clip::plotgen
 

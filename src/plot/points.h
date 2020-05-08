@@ -12,13 +12,14 @@
  * limitations under the License.
  */
 #pragma once
-#include "context.h"
+#include "plotgen.h"
 
-namespace clip::elements::plot::points {
+namespace clip::plotgen {
 
-ReturnCode points_draw(
+ReturnCode plot_points(
     Context* ctx,
+    PlotConfig* plot,
     const Expr* expr);
 
-} // namespace clip::elements::plot::points
+} // namespace clip::plotgen
 

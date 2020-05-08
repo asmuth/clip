@@ -109,7 +109,7 @@ Marker marker_create_unicode(const std::string& u) {
       const auto& size,
       const auto& color) {
     TextStyle style;
-    style.font = ctx->font;
+    style.font = layer_get_font(ctx);
     style.color = color;
     style.font_size = from_unit(double(size) * 1.2);
 

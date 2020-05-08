@@ -34,14 +34,15 @@
 using namespace std::placeholders;
 using std::bind;
 
-namespace clip::plot {
+namespace clip::plotgen {
 
-ReturnCode polygons_draw(
+ReturnCode plot_polygons(
     Context* ctx,
+    PlotConfig* plot,
     const Expr* expr) {
   std::vector<Poly2> polys;
-  ScaleConfig scale_x = ctx->scale_x;
-  ScaleConfig scale_y = ctx->scale_y;
+  ScaleConfig scale_x = plot->scale_x;
+  ScaleConfig scale_y = plot->scale_y;
   FillStyle fill_style;
   StrokeStyle stroke_style;
   stroke_style.line_width = from_pt(1);
@@ -84,7 +85,7 @@ ReturnCode polygons_draw(
 
 
   /* apply transformation */
-  const auto& bbox = context_get_clip(ctx);
+  const auto& bbox = plot_get_clip(plot, layer_get(ctx));
 
   for (auto& p : polys) {
     for (auto& v : p.boundary.vertices) {
@@ -101,5 +102,5 @@ ReturnCode polygons_draw(
   return OK;
 }
 
-} // namespace clip::plot
+} // namespace clip::plotgen
 

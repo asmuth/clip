@@ -18,8 +18,23 @@
 
 namespace clip {
 
-ReturnCode plotgen(
+struct PlotConfig {
+  ScaleConfig scale_x;
+  ScaleConfig scale_y;
+
+  std::array<Measure, 4> margins;
+  std::vector<Rectangle> layout_stack;
+};
+
+ReturnCode plot_eval(
     Context* ctx,
+    const Expr* expr);
+
+Rectangle plot_get_clip(const PlotConfig* plot, const Layer* layer);
+
+ReturnCode plot_set_background(
+    Context* ctx,
+    const PlotConfig* plot,
     const Expr* expr);
 
 } // namespace clip

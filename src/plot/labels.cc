@@ -29,7 +29,7 @@
 using namespace std::placeholders;
 using std::bind;
 
-namespace clip::elements::plot::labels {
+namespace clip::plotgen {
 
 static const double kDefaultLabelPaddingEM = 0.8;
 
@@ -45,15 +45,16 @@ struct PlotLabelsConfig {
   Color label_color;
 };
 
-ReturnCode labels_draw(
+ReturnCode plot_labels(
     Context* ctx,
+    PlotConfig* plot,
     std::shared_ptr<PlotLabelsConfig> config) {
-  const auto& clip = context_get_clip(ctx);
+  const auto& clip = plot_get_clip(plot, layer_get(ctx));
 
   /* convert units */
   convert_units(
       {
-        bind(&convert_unit_typographic, ctx->dpi, ctx->font_size, _1),
+        bind(&convert_unit_typographic, layer_get_dpi(ctx), layer_get_font_size(ctx), _1),
         bind(&convert_unit_user, scale_translate_fn(config->scale_x), _1),
       },
       &*config->x.begin(),
@@ -61,7 +62,7 @@ ReturnCode labels_draw(
 
   convert_units(
       {
-        bind(&convert_unit_typographic, ctx->dpi, ctx->font_size, _1),
+        bind(&convert_unit_typographic, layer_get_dpi(ctx), layer_get_font_size(ctx), _1),
         bind(&convert_unit_user, scale_translate_fn(config->scale_y), _1),
       },
       &*config->y.begin(),
@@ -93,15 +94,16 @@ ReturnCode labels_draw(
   return OK;
 }
 
-ReturnCode labels_draw(
+ReturnCode plot_labels(
     Context* ctx,
+    PlotConfig* plot,
     const Expr* expr) {
   /* set defaults from environment */
   auto c = std::make_shared<PlotLabelsConfig>();
-  c->scale_x = ctx->scale_x;
-  c->scale_y = ctx->scale_y;
-  c->label_font = ctx->font;
-  c->label_font_size = ctx->font_size;
+  c->scale_x = plot->scale_x;
+  c->scale_y = plot->scale_y;
+  c->label_font = layer_get_font(ctx);
+  c->label_font_size = layer_get_font_size(ctx);
 
   /* parse properties */
   std::vector<std::string> data_x;
@@ -160,8 +162,8 @@ ReturnCode labels_draw(
         "the length of the 'data-x' and 'data-y' properties must be equal and non-empty");
   }
 
-  return labels_draw(ctx, c);
+  return plot_labels(ctx, plot, c);
 }
 
-} // namespace clip::elements::plot::labels
+} // namespace clip::plotgen
 

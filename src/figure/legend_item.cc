@@ -29,28 +29,28 @@
 using namespace std::placeholders;
 using std::bind;
 
-namespace clip::elements::legend {
+namespace clip::plotgen {
 
 void legend_item_normalize(
     Context* ctx,
     LegendItem* config) {
   convert_unit_typographic(
-      ctx->dpi,
-      ctx->font_size,
+      layer_get_dpi(ctx),
+      layer_get_font_size(ctx),
       &config->label_font_size);
 
   convert_unit_typographic(
-      ctx->dpi,
+      layer_get_dpi(ctx),
       config->label_font_size,
       &config->label_margin);
 
   convert_unit_typographic(
-      ctx->dpi,
-      ctx->font_size,
+      layer_get_dpi(ctx),
+      layer_get_font_size(ctx),
       &config->marker_size);
 
   convert_unit_typographic(
-      ctx->dpi,
+      layer_get_dpi(ctx),
       config->marker_size,
       &config->marker_margin);
 }
@@ -73,7 +73,7 @@ ReturnCode legend_item_calculate_size(
         TextDirection::LTR,
         config->label_font,
         config->label_font_size,
-        ctx->dpi,
+        layer_get_dpi(ctx),
         &label_bbox);
        rc != Status::OK) {
     return rc;
@@ -175,15 +175,15 @@ ReturnCode legend_item_configure(
   /* inherit defaults */
   config->label_align = HAlign::LEFT;
   config->label_margin = from_em(1.1);
-  config->label_font = ctx->font;
+  config->label_font = layer_get_font(ctx);
   config->label_font_size = from_em(1);
-  config->label_color = ctx->text_color;
+  config->label_color = layer_get(ctx)->text_color;
   config->marker = marker_create_disk();
   config->marker_align = HAlign::LEFT;
   config->marker_margin = from_em(0.2);
-  config->marker_size = ctx->font_size;
+  config->marker_size = layer_get_font_size(ctx);
   config->marker_size.value *= 0.75;
-  config->marker_color = ctx->text_color;
+  config->marker_color = layer_get(ctx)->text_color;
 
   /* parse exprerties */
   auto config_rc = expr_walk_map(expr, {
@@ -221,5 +221,5 @@ ReturnCode legend_item_configure(
   return OK;
 }
 
-} // namespace clip::elements::legend
+} // namespace clip::plotgen
 

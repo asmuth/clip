@@ -29,7 +29,7 @@ ReturnCode stroke_style_read_dash(
     const Expr* expr,
     StrokeStyle* style) {
   style->dash_type = StrokeStyle::DASH;
-  style->dash_pattern = {from_pt(2, ctx->dpi), from_pt(2, ctx->dpi)};
+  style->dash_pattern = {from_pt(2, layer_get_dpi(ctx)), from_pt(2, layer_get_dpi(ctx))};
 
   if (!expr) {
     return OK;
@@ -92,8 +92,8 @@ ReturnCode fill_style_read_hatch(
   Color color;
   double angle_deg = -45;
   Measure offset = from_unit(0);
-  Measure stride = from_pt(3, ctx->dpi);
-  Measure width = from_pt(1, ctx->dpi);
+  Measure stride = from_pt(3, layer_get_dpi(ctx));
+  Measure width = from_pt(1, layer_get_dpi(ctx));
 
   if (expr) {
     auto read_rc = expr_walk_map(expr, {

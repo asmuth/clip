@@ -33,7 +33,7 @@
 using namespace std::placeholders;
 using std::bind;
 
-namespace clip::elements::plot::vectors {
+namespace clip::plotgen {
 
 static const double kDefaultArrowSizePT = 1;
 
@@ -57,15 +57,16 @@ struct PlotPointsConfig {
   Color label_color;
 };
 
-ReturnCode vectors_draw(
+ReturnCode plot_vectors(
     Context* ctx,
+    PlotConfig* plot,
     std::shared_ptr<PlotPointsConfig> config) {
-  const auto& clip = context_get_clip(ctx);
+  const auto& clip = plot_get_clip(plot, layer_get(ctx));
 
   /* convert units */
   convert_units(
       {
-        bind(&convert_unit_typographic, ctx->dpi, ctx->font_size, _1),
+        bind(&convert_unit_typographic, layer_get_dpi(ctx), layer_get_font_size(ctx), _1),
         bind(&convert_unit_user, scale_translate_fn(config->scale_x), _1),
         bind(&convert_unit_relative, clip.w, _1)
       },
@@ -74,7 +75,7 @@ ReturnCode vectors_draw(
 
   convert_units(
       {
-        bind(&convert_unit_typographic, ctx->dpi, ctx->font_size, _1),
+        bind(&convert_unit_typographic, layer_get_dpi(ctx), layer_get_font_size(ctx), _1),
         bind(&convert_unit_user, scale_translate_fn(config->scale_y), _1),
         bind(&convert_unit_relative, clip.h, _1)
       },
@@ -83,7 +84,7 @@ ReturnCode vectors_draw(
 
   convert_units(
       {
-        bind(&convert_unit_typographic, ctx->dpi, ctx->font_size, _1),
+        bind(&convert_unit_typographic, layer_get_dpi(ctx), layer_get_font_size(ctx), _1),
         bind(&convert_unit_user, scale_translate_magnitude_fn(config->scale_x), _1),
         bind(&convert_unit_relative, clip.w, _1)
       },
@@ -92,7 +93,7 @@ ReturnCode vectors_draw(
 
   convert_units(
       {
-        bind(&convert_unit_typographic, ctx->dpi, ctx->font_size, _1),
+        bind(&convert_unit_typographic, layer_get_dpi(ctx), layer_get_font_size(ctx), _1),
         bind(&convert_unit_user, scale_translate_magnitude_fn(config->scale_y), _1),
         bind(&convert_unit_relative, clip.h, _1)
       },
@@ -101,14 +102,14 @@ ReturnCode vectors_draw(
 
   convert_units(
       {
-        bind(&convert_unit_typographic, ctx->dpi, ctx->font_size, _1)
+        bind(&convert_unit_typographic, layer_get_dpi(ctx), layer_get_font_size(ctx), _1)
       },
       &*config->sizes.begin(),
       &*config->sizes.end());
 
   convert_unit_typographic(
-      ctx->dpi,
-      ctx->font_size,
+      layer_get_dpi(ctx),
+      layer_get_font_size(ctx),
       &config->size);
 
   /* draw vectors */
@@ -138,18 +139,19 @@ ReturnCode vectors_draw(
   return OK;
 }
 
-ReturnCode vectors_draw(
+ReturnCode plot_vectors(
     Context* ctx,
+    PlotConfig* plot,
     const Expr* expr) {
   /* set defaults from environment */
   auto c = std::make_shared<PlotPointsConfig>();
-  c->scale_x = ctx->scale_x;
-  c->scale_y = ctx->scale_y;
-  c->color = ctx->foreground_color;
+  c->scale_x = plot->scale_x;
+  c->scale_y = plot->scale_y;
+  c->color = layer_get(ctx)->foreground_color;
   c->size = from_pt(kDefaultArrowSizePT);
   c->shape = arrow_create_default();
-  c->label_font = ctx->font;
-  c->label_font_size = ctx->font_size;
+  c->label_font = layer_get_font(ctx);
+  c->label_font_size = layer_get_font_size(ctx);
 
   /* parse properties */
   std::vector<std::string> data_x;
@@ -262,8 +264,8 @@ ReturnCode vectors_draw(
     c->sizes.push_back(m);
   }
 
-  return vectors_draw(ctx, c);
+  return plot_vectors(ctx, plot, c);
 }
 
-} // namespace clip::elements::plot::vectors
+} // namespace clip::plotgen
 

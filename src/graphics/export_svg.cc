@@ -333,18 +333,18 @@ struct SVGDrawOp {
 };
 
 ReturnCode export_svg(
-    const Context* ctx,
+    const Layer* layer,
     std::string* buffer) {
   auto svg = std::make_shared<SVGData>();
-  svg->width = ctx->width;
-  svg->height = ctx->height;
-  svg->proj = mul(translate2({0, ctx->height}), scale2({1, -1}));
+  svg->width = layer->width;
+  svg->height = layer->height;
+  svg->proj = mul(translate2({0, layer->height}), scale2({1, -1}));
 
-  for (const auto& cmd : ctx->drawlist) {
-    auto rc = std::visit([svg, ctx] (const auto& c) -> ReturnCode {
+  for (const auto& cmd : layer->drawlist) {
+    auto rc = std::visit([svg, layer] (const auto& c) -> ReturnCode {
       using T = std::decay_t<decltype(c)>;
       if constexpr (std::is_same_v<T, draw_cmd::Text>)
-        return svg_add_text_elem(c, ctx->dpi, svg);
+        return svg_add_text_elem(c, layer->dpi, svg);
       if constexpr (std::is_same_v<T, draw_cmd::Shape>)
         return svg_add_shape_elem(c, svg);
       if constexpr (std::is_same_v<T, draw_cmd::Polygon>)
@@ -366,14 +366,14 @@ ReturnCode export_svg(
 
     << "<svg"
       << svg_attr("xmlns", "http://www.w3.org/2000/svg")
-      << svg_attr("width", ctx->width)
-      << svg_attr("height", ctx->height)
+      << svg_attr("width", layer->width)
+      << svg_attr("height", layer->height)
       << ">\n"
     << "  <rect"
-      << svg_attr("width", ctx->width)
-      << svg_attr("height", ctx->height)
-      << svg_attr("fill", ctx->background_color.to_hex_str())
-      << svg_attr("fill-opacity", ctx->background_color.component(3))
+      << svg_attr("width", layer->width)
+      << svg_attr("height", layer->height)
+      << svg_attr("fill", layer->background_color.to_hex_str())
+      << svg_attr("fill-opacity", layer->background_color.component(3))
       << "/>\n"
     << svg->buffer.str()
     << "</svg>";

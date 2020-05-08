@@ -12,13 +12,14 @@
  * limitations under the License.
  */
 #pragma once
-#include "context.h"
+#include "plot/plotgen.h"
 
-namespace clip::elements::legend {
+namespace clip::plotgen {
 
-ReturnCode legend_draw(
+ReturnCode plot_legend(
     Context* ctx,
+    PlotConfig* plot,
     const Expr* expr);
 
-} // namespace clip::elements::legend
+} // namespace clip::plotgen
 

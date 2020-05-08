@@ -24,7 +24,7 @@ const CommandMap COMMANDS = {
   //{"height", CommandFn(&context_configure)},
   //{"dpi", CommandFn(&context_configure)},
   //{"draw/rectangle", CommandFn(&draw::rectangle)},
-  {"tools/plotgen", CommandFn(&plotgen)},
+  {"tools/plotgen", CommandFn(&plot_eval)},
 };
 
 } // namespace clip
