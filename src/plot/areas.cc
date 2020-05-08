@@ -275,7 +275,7 @@ ReturnCode areas_draw(
   std::vector<std::string> data_xoffset;
   std::vector<std::string> data_yoffset;
 
-  auto config_rc = expr_walk_map(expr, {
+  auto config_rc = expr_walk_map_wrapped(expr, {
     {"data-x", bind(&data_load, _1, &c->x)},
     {"data-y", bind(&data_load, _1, &c->y)},
     {"data-x-high", bind(&data_load, _1, &c->x)},

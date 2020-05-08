@@ -637,7 +637,7 @@ ReturnCode axis_draw(Context* ctx, const Expr* expr) {
   config->border_style.color = ctx->foreground_color;
 
   {
-    auto rc = expr_walk_map(expr, {
+    auto rc = expr_walk_map_wrapped(expr, {
       {
         "align",
         expr_to_enum_fn<AxisAlign>(&config->align, {
@@ -882,7 +882,7 @@ ReturnCode axis_add_all(Context* ctx, const Expr* expr) {
   axes[3].border_style.line_width = from_pt(1);
   axes[3].border_style.color = ctx->foreground_color;
 
-  auto config_rc = expr_walk_map(expr, {
+  auto config_rc = expr_walk_map_wrapped(expr, {
     {"position", bind(&axis_configure_position, _1, &axes)},
 
     /* scale options */

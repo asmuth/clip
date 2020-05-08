@@ -94,7 +94,7 @@ ReturnCode draw_grid(Context* ctx, const Expr* expr) {
   c->scale_y = ctx->scale_y;
 
   /* parse properties */
-  auto config_rc = expr_walk_map(expr, {
+  auto config_rc = expr_walk_map_wrapped(expr, {
     {"limit-x", bind(&expr_to_float64_opt_pair, _1, &c->scale_x.min, &c->scale_x.max)},
     {"limit-x-min", bind(&expr_to_float64_opt, _1, &c->scale_x.min)},
     {"limit-x-max", bind(&expr_to_float64_opt, _1, &c->scale_x.max)},

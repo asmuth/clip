@@ -23,7 +23,7 @@ ReturnCode expr_walk_map(
     bool strict /* = true */) {
   for (; expr; expr = expr_next(expr)) {
     if (!expr_is_value(expr)) {
-      return error(ERROR, "expected a literal");
+      return errorf(ERROR, "expected a literal, but got: {}", expr_inspect(expr));
     }
 
     auto param = expr_get_value(expr);
@@ -48,13 +48,24 @@ ReturnCode expr_walk_map(
   return OK;
 }
 
+ReturnCode expr_walk_map_wrapped(
+    const Expr* expr,
+    const std::unordered_map<std::string, ExprVisitor>& fns,
+    bool strict /* = true */) {
+  if (!expr_is_list(expr)) {
+    return error(ERROR, "expected a list");
+  }
+
+  return expr_walk_map(expr_get_list(expr), fns, strict);
+}
+
 ReturnCode expr_walk_tmap(
     const Expr* iter,
     const std::unordered_map<std::string, ExprVisitor>& fns,
     bool strict /* = true */) {
   for (; iter; iter = expr_next(iter)) {
     if (!expr_is_list(iter)) {
-      return error(ERROR, "expected a literal");
+      return error(ERROR, "expected a list");
     }
 
     auto expr = expr_get_list(iter);

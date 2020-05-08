@@ -222,7 +222,7 @@ ReturnCode errorbars_draw(
   std::vector<std::string> data_colors;
   ColorMap color_map;
 
-  auto config_rc = expr_walk_map(expr, {
+  auto config_rc = expr_walk_map_wrapped(expr, {
     {"data-x", bind(&data_load_strings, _1, &data_x)},
     {"data-x-low", bind(&data_load_strings, _1, &data_x_low)},
     {"data-x-high", bind(&data_load_strings, _1, &data_x_high)},

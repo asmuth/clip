@@ -47,7 +47,7 @@ ReturnCode polygons_draw(
   stroke_style.line_width = from_pt(1);
 
   /* read arguments */
-  auto config_rc = expr_walk_map(expr, {
+  auto config_rc = expr_walk_map_wrapped(expr, {
     {"data", bind(&data_load_polys2, _1, &polys)},
     {"limit-x", bind(&expr_to_float64_opt_pair, _1, &scale_x.min, &scale_x.max)},
     {"limit-x-min", bind(&expr_to_float64_opt, _1, &scale_x.min)},

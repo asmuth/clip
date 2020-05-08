@@ -319,7 +319,7 @@ ReturnCode bars_draw(
   std::vector<std::string> data_xoffset;
   std::vector<std::string> data_yoffset;
 
-  auto config_rc = expr_walk_map(expr, {
+  auto config_rc = expr_walk_map_wrapped(expr, {
     {"data-x", bind(&data_load_strings, _1, &data_x)},
     {"data-y", bind(&data_load_strings, _1, &data_y)},
     {"data-x-high", bind(&data_load_strings, _1, &data_x)},

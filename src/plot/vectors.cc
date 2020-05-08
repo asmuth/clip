@@ -161,7 +161,7 @@ ReturnCode vectors_draw(
   ColorMap color_map;
   MeasureMap size_map;
 
-  auto config_rc = expr_walk_map(expr, {
+  auto config_rc = expr_walk_map_wrapped(expr, {
     {"data-x", bind(&data_load_strings, _1, &data_x)},
     {"data-y", bind(&data_load_strings, _1, &data_y)},
     {"data-dx", bind(&data_load_strings, _1, &data_dx)},

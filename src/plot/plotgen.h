@@ -12,21 +12,15 @@
  * limitations under the License.
  */
 #pragma once
-#include "command.h"
-#include "plot/plotgen.h"
-#include "draw/rectangle.h"
-#include "figure/legend.h"
+#include "context.h"
+#include "sexpr.h"
+#include "return_code.h"
 
 namespace clip {
 
-const CommandMap COMMANDS = {
-  //{"width", CommandFn(&context_configure)},
-  //{"height", CommandFn(&context_configure)},
-  //{"dpi", CommandFn(&context_configure)},
-  //{"draw/rectangle", CommandFn(&draw::rectangle)},
-  {"tools/plotgen", CommandFn(&plotgen)},
-};
+ReturnCode plotgen(
+    Context* ctx,
+    const Expr* expr);
 
 } // namespace clip
-
 

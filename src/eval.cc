@@ -33,6 +33,7 @@
 #include "plot/vectors.h"
 #include "draw/rectangle.h"
 #include "figure/legend.h"
+#include "commands.h"
 
 using namespace std::placeholders;
 
@@ -41,50 +42,33 @@ namespace clip {
 ReturnCode eval(
     Context* ctx,
     const Expr* expr) {
-  return expr_walk_tmap(expr, {
-    {"width", bind(&measure_read, _1, &ctx->width)},
-    {"height", bind(&measure_read, _1, &ctx->height)},
-    {"dpi", bind(&expr_to_float64, _1, &ctx->dpi)},
-    {"font", expr_call_string_fn(bind(&font_load_best, _1, &ctx->font))},
-    {"font-size", bind(&measure_read, _1, &ctx->font_size)},
-    {"background", bind(&context_set_background, ctx, _1)},
-    {"limit-x", bind(&expr_to_float64_opt_pair, _1, &ctx->scale_x.min, &ctx->scale_x.max)},
-    {"limit-x-min", bind(&expr_to_float64_opt, _1, &ctx->scale_x.min)},
-    {"limit-x-max", bind(&expr_to_float64_opt, _1, &ctx->scale_x.max)},
-    {"limit-y", bind(&expr_to_float64_opt_pair, _1, &ctx->scale_y.min, &ctx->scale_y.max)},
-    {"limit-y-min", bind(&expr_to_float64_opt, _1, &ctx->scale_y.min)},
-    {"limit-y-max", bind(&expr_to_float64_opt, _1, &ctx->scale_y.max)},
-    {"scale-x", bind(&scale_configure_kind, _1, &ctx->scale_x)},
-    {"scale-y", bind(&scale_configure_kind, _1, &ctx->scale_y)},
-    {"scale-x-padding", bind(&expr_to_float64, _1, &ctx->scale_x.padding)},
-    {"scale-y-padding", bind(&expr_to_float64, _1, &ctx->scale_y.padding)},
-    {
-      "margin",
-      expr_calln_fn({
-        bind(&measure_read, _1, &ctx->margins[0]),
-        bind(&measure_read, _1, &ctx->margins[1]),
-        bind(&measure_read, _1, &ctx->margins[2]),
-        bind(&measure_read, _1, &ctx->margins[3]),
-      })
-    },
-    {"margin-top", bind(&measure_read, _1, &ctx->margins[0])},
-    {"margin-right", bind(&measure_read, _1, &ctx->margins[1])},
-    {"margin-bottom", bind(&measure_read, _1, &ctx->margins[2])},
-    {"margin-left", bind(&measure_read, _1, &ctx->margins[3])},
-    {"axes", bind(&elements::plot::axis::axis_add_all, ctx, _1)},
-    {"areas", bind(&elements::plot::areas::areas_draw, ctx, _1)},
-    {"axis", bind(&elements::plot::axis::axis_draw, ctx, _1)},
-    {"bars", bind(&elements::plot::bars::bars_draw, ctx, _1)},
-    {"errorbars", bind(&elements::plot::errorbars::errorbars_draw, ctx, _1)},
-    {"grid", bind(&elements::plot::grid::draw_grid, ctx, _1)},
-    {"labels", bind(&elements::plot::labels::labels_draw, ctx, _1)},
-    {"lines", bind(&elements::plot::lines::draw_lines, ctx, _1)},
-    {"points", bind(&elements::plot::points::points_draw, ctx, _1)},
-    {"polygons", bind(&plot::polygons_draw, ctx, _1)},
-    {"rectangles", bind(&elements::plot::rectangles::rectangles_draw, ctx, _1)},
-    {"vectors", bind(&elements::plot::vectors::vectors_draw, ctx, _1)},
-    {"legend", bind(&elements::legend::legend_draw, ctx, _1)},
-  });
+  // execute commands
+  for (; expr; expr = expr_next(expr)) {
+    if (!expr || !expr_is_list(expr)) {
+      return error(ERROR, "expected a command list");
+    }
+
+    auto args = expr_get_list(expr);
+    if (!args || !expr_is_value(args)) {
+      return error(ERROR, "expected a command name");
+    }
+
+    auto arg0 = expr_get_value(args);
+    args = expr_next(args);
+
+    const Command* cmd;
+    if (auto cmd_iter = COMMANDS.find(arg0); cmd_iter != COMMANDS.end()) {
+      cmd = &cmd_iter->second;
+    } else {
+      return {ERROR, fmt::format("Invalid command '{}'", arg0)};
+    }
+
+    if (auto rc = cmd->fn(ctx, args); !rc) {
+      return rc;
+    }
+  }
+
+  return OK;
 }
 
 ReturnCode eval(
