@@ -1,7 +1,7 @@
 
-(layout/margins margin 8em)
+(margin 8em)
 
-(plot/axis
+(axis
     align bottom
     limit (1451606400 1451610000)
     label-placement (subdivide 4)

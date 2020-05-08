@@ -4,7 +4,7 @@
 
 ;;(set color-palette (#0c0 #c00 #00c))
 
-(figure/legend
+(legend
     item (label "Test Color 1" color 1)
     item (label "Test Color 2" color 2)
     item (label "Test Color 3" color 3)

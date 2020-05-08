@@ -2,10 +2,10 @@
 (width 2000px)
 (height 2000px)
 
-(default font-size 16pt)
-(default text-script "Arabic")
+(font-size 16pt)
+;;(default text-script "Arabic")
 
-(figure/legend
+(legend
     item (label "i北京市 (Beijing)" color #06c)
     item (label "תל אביב (Tel Aviv)" color #c06)
     item (label "القاهرة‎ (Cairo)" color #c06)

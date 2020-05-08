@@ -143,6 +143,8 @@ ReturnCode vectors_draw(
     const Expr* expr) {
   /* set defaults from environment */
   auto c = std::make_shared<PlotPointsConfig>();
+  c->scale_x = ctx->scale_x;
+  c->scale_y = ctx->scale_y;
   c->color = ctx->foreground_color;
   c->size = from_pt(kDefaultArrowSizePT);
   c->shape = arrow_create_default();
@@ -159,7 +161,7 @@ ReturnCode vectors_draw(
   ColorMap color_map;
   MeasureMap size_map;
 
-  auto config_rc = expr_walk_map_with_defaults(expr_next(expr), ctx->defaults, {
+  auto config_rc = expr_walk_map(expr, {
     {"data-x", bind(&data_load_strings, _1, &data_x)},
     {"data-y", bind(&data_load_strings, _1, &data_y)},
     {"data-dx", bind(&data_load_strings, _1, &data_dx)},

@@ -1,15 +1,15 @@
-(width 1600px)
-(height 900px)
+(width 2048px)
+(height 1024px)
 (dpi 240)
 
-(default font "Latin Modern Roman")
-(default limit-x (-4 4))
-(default limit-y (-2 2))
+(font "Latin Modern Roman")
+(limit-x (-4 4))
+(limit-y (-2 2))
 
-(plot/axes)
+(axes)
 
-(plot/vectors
-    size .7pt
+(vectors
+    size 1pt
     data-x (csv "test/testdata/vectorfield.csv" x)
     data-y (csv "test/testdata/vectorfield.csv" y)
     data-dx (csv "test/testdata/vectorfield.csv" dx)

@@ -1,7 +1,7 @@
 (width 480px)
 (height 380px)
 
-(plot/bars
+(bars
     limit-x (0 7)
     limit-y (0 10000)
     scale-y (log)

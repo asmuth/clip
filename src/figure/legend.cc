@@ -485,7 +485,7 @@ ReturnCode legend_draw(
   }
 
   /* parse exprerties */
-  auto config_rc = expr_walk_map_with_defaults(expr_next(expr), ctx->defaults, {
+  auto config_rc = expr_walk_map(expr, {
     {
       "position",
       bind(

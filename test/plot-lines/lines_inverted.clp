@@ -1,7 +1,7 @@
 (height 480px)
 (width 1200px)
 
-(plot/lines    
+(lines    
     data-x (csv "test/testdata/measurement.csv" time)
     data-y (csv "test/testdata/measurement.csv" value2)
     color #06c

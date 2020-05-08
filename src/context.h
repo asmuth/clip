@@ -16,6 +16,7 @@
 #include "graphics/draw.h"
 #include "graphics/geometry.h"
 #include "color_palette.h"
+#include "scale.h"
 
 namespace clip {
 
@@ -39,19 +40,20 @@ struct Context {
   Color foreground_color;
   Color text_color;
 
-  DrawCommandList drawlist;
+  std::array<Measure, 4> margins;
   std::vector<Rectangle> layout_stack;
 
-  std::unordered_map<std::string, ExprStorage> defaults;
+  DrawCommandList drawlist;
+
+  ScaleConfig scale_x;
+  ScaleConfig scale_y;
 };
 
 ReturnCode context_setup_defaults(Context* ctx);
 
-ReturnCode context_configure(Context* ctx, const Expr* expr);
-
-ReturnCode context_set_default(Context* ctx, const Expr* expr);
-
 Rectangle context_get_clip(const Context* ctx);
+
+ReturnCode context_set_background(Context* ctx, const Expr* expr);
 
 } // namespace clip
 

@@ -21,25 +21,6 @@ ReturnCode expr_walk_map(
     const Expr* expr,
     const std::unordered_map<std::string, ExprVisitor>& fns,
     bool strict /* = true */) {
-  return expr_walk_map_with_defaults(expr, {}, fns, strict);
-}
-
-ReturnCode expr_walk_map_with_defaults(
-    const Expr* expr,
-    const std::unordered_map<std::string, ExprStorage>& defaults,
-    const std::unordered_map<std::string, ExprVisitor>& fns,
-    bool strict /* = true */) {
-  for (const auto& d : defaults) {
-    const auto& fn = fns.find(d.first);
-    if (fn == fns.end()) {
-      continue;
-    }
-
-    if (auto rc = fn->second(d.second.get()); !rc) {
-      return rc;
-    }
-  }
-
   for (; expr; expr = expr_next(expr)) {
     if (!expr_is_value(expr)) {
       return error(ERROR, "expected a literal");
@@ -58,6 +39,38 @@ ReturnCode expr_walk_map_with_defaults(
       }
     } else {
       if (auto rc = fn->second(expr); !rc) {
+        rc.trace.push_back(expr);
+        return rc;
+      }
+    }
+  }
+
+  return OK;
+}
+
+ReturnCode expr_walk_tmap(
+    const Expr* iter,
+    const std::unordered_map<std::string, ExprVisitor>& fns,
+    bool strict /* = true */) {
+  for (; iter; iter = expr_next(iter)) {
+    if (!expr_is_list(iter)) {
+      return error(ERROR, "expected a literal");
+    }
+
+    auto expr = expr_get_list(iter);
+    if (!expr_is_value(expr)) {
+      return error(ERROR, "expected a literal");
+    }
+
+    auto param = expr_get_value(expr);
+    const auto& fn = fns.find(param);
+
+    if (fn == fns.end()) {
+      if (strict) {
+        return errorf(ERROR, "invalid parameter: '{}'", param);
+      }
+    } else {
+      if (auto rc = fn->second(expr_next(expr)); !rc) {
         rc.trace.push_back(expr);
         return rc;
       }

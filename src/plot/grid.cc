@@ -90,9 +90,11 @@ ReturnCode draw_grid(Context* ctx, const Expr* expr) {
   auto c = std::make_shared<GridlineDefinition>();
   c->stroke_style.line_width = from_pt(1, ctx->dpi);
   c->stroke_style.color = Color::fromRGB(.9, .9, .9);
+  c->scale_x = ctx->scale_x;
+  c->scale_y = ctx->scale_y;
 
   /* parse properties */
-  auto config_rc = expr_walk_map_with_defaults(expr_next(expr), ctx->defaults, {
+  auto config_rc = expr_walk_map(expr, {
     {"limit-x", bind(&expr_to_float64_opt_pair, _1, &c->scale_x.min, &c->scale_x.max)},
     {"limit-x-min", bind(&expr_to_float64_opt, _1, &c->scale_x.min)},
     {"limit-x-max", bind(&expr_to_float64_opt, _1, &c->scale_x.max)},

@@ -1,8 +1,8 @@
 (width 900px)
 (height 600px)
-(default font-size 14pt)
 
-(figure/legend
+
+(legend
     position (center right)
     item (label "Fnord Test 1" color #06c)
     item (label "Fnord Test 2" color #c06)

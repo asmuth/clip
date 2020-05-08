@@ -1,14 +1,14 @@
-(width 1600px)
+(width 2048px)
 (height 800px)
 (dpi 240)
 
-(default limit-x (0 24))
-(default scale-y (categorical (csv "test/testdata/gdp_per_capita_2010.csv" country)))
+(limit-x (0 24))
+(scale-y (categorical (csv "test/testdata/gdp_per_capita_2010.csv" country)))
 
-(plot/axes
+(axes
     position (left))
 
-(plot/bars
+(bars
     data-x (csv "test/testdata/gdp_per_capita_2010.csv" gdp)
     data-y (csv "test/testdata/gdp_per_capita_2010.csv" country)
     labels (csv "test/testdata/gdp_per_capita_2010.csv" gdp_label)

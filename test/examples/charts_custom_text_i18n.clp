@@ -4,7 +4,7 @@
 
 ;;(set text-script "Arabic")
 
-(figure/legend
+(legend
   border none
   margin 0
   item (label "北京市 (Beijing)" color #06c)

@@ -40,14 +40,14 @@ ReturnCode polygons_draw(
     Context* ctx,
     const Expr* expr) {
   std::vector<Poly2> polys;
-  ScaleConfig scale_x;
-  ScaleConfig scale_y;
+  ScaleConfig scale_x = ctx->scale_x;
+  ScaleConfig scale_y = ctx->scale_y;
   FillStyle fill_style;
   StrokeStyle stroke_style;
   stroke_style.line_width = from_pt(1);
 
   /* read arguments */
-  auto config_rc = expr_walk_map_with_defaults(expr_next(expr), ctx->defaults, {
+  auto config_rc = expr_walk_map(expr, {
     {"data", bind(&data_load_polys2, _1, &polys)},
     {"limit-x", bind(&expr_to_float64_opt_pair, _1, &scale_x.min, &scale_x.max)},
     {"limit-x-min", bind(&expr_to_float64_opt, _1, &scale_x.min)},

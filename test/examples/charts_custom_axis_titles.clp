@@ -2,9 +2,9 @@
 (height 1024px)
 (dpi 240)
 
-(default limit-x (1404278100 1404299700))
+(limit-x (1404278100 1404299700))
 
-(plot/axes
+(axes
     label-format-left (scientific)
     title-left "Value"
     title-font-size-left 14pt
@@ -19,6 +19,6 @@
     title-bottom "Time"
     title-font-size-bottom 14pt)
 
-(plot/lines
+(lines
     data-x (csv "test/testdata/measurement.csv" time)
     data-y (csv "test/testdata/measurement.csv" value1))

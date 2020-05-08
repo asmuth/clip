@@ -1,19 +1,19 @@
 (width 1600px)
 (height 900px)
 (dpi 240)
-(default font "Latin Modern Roman")
+(font "Latin Modern Roman")
 
-(default limit-x (0 60))
-(default limit-y (-40 60))
+(limit-x (0 60))
+(limit-y (-40 60))
 
-(plot/axes)
+(axes)
 
-(plot/grid
+(grid
     color (rgba 0 0 0 .05)
     stroke-style (dashed)
     tick-placement-x (none))
 
-(plot/points
+(points
     data-x (csv test/testdata/point_example.csv x)
     data-y (csv test/testdata/point_example.csv y)
     shape (circle-bullet)

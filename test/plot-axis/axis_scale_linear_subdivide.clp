@@ -1,7 +1,7 @@
 
-(layout/margins margin 8em)
+(margin 8em)
 
-(plot/axis
+(axis
     align x
     label-placement (subdivide 21)
     limit (-100 100))

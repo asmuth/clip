@@ -263,6 +263,8 @@ ReturnCode areas_draw(
     const Expr* expr) {
   /* set defaults from environment */
   auto c = std::make_shared<PlotAreaConfig>();
+  c->scale_x = ctx->scale_x;
+  c->scale_y = ctx->scale_y;
   c->stroke_high_style.color = ctx->foreground_color;
   c->stroke_low_style.color = ctx->foreground_color;
   c->fill_style.color = ctx->foreground_color;
@@ -273,7 +275,7 @@ ReturnCode areas_draw(
   std::vector<std::string> data_xoffset;
   std::vector<std::string> data_yoffset;
 
-  auto config_rc = expr_walk_map_with_defaults(expr_next(expr), ctx->defaults, {
+  auto config_rc = expr_walk_map(expr, {
     {"data-x", bind(&data_load, _1, &c->x)},
     {"data-y", bind(&data_load, _1, &c->y)},
     {"data-x-high", bind(&data_load, _1, &c->x)},

@@ -1,4 +1,4 @@
-(plot/bars
+(bars
     limit-x (0 24)
     limit-y (0 10)
     data-x (csv "test/testdata/gdp_per_capita_2010.csv" gdp)

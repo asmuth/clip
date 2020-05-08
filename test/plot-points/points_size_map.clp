@@ -1,4 +1,4 @@
-(plot/points
+(points
     data-x (csv test/testdata/gauss3d.csv x)
     data-y (csv test/testdata/gauss3d.csv y)
     sizes (csv test/testdata/gauss3d.csv z)

@@ -98,6 +98,8 @@ ReturnCode labels_draw(
     const Expr* expr) {
   /* set defaults from environment */
   auto c = std::make_shared<PlotLabelsConfig>();
+  c->scale_x = ctx->scale_x;
+  c->scale_y = ctx->scale_y;
   c->label_font = ctx->font;
   c->label_font_size = ctx->font_size;
 
@@ -105,7 +107,7 @@ ReturnCode labels_draw(
   std::vector<std::string> data_x;
   std::vector<std::string> data_y;
 
-  auto config_rc = expr_walk_map_with_defaults(expr_next(expr), ctx->defaults, {
+  auto config_rc = expr_walk_map(expr, {
     {"data-x", bind(&data_load_strings, _1, &data_x)},
     {"data-y", bind(&data_load_strings, _1, &data_y)},
     {"limit-x", bind(&expr_to_float64_opt_pair, _1, &c->scale_x.min, &c->scale_x.max)},

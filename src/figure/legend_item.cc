@@ -186,7 +186,7 @@ ReturnCode legend_item_configure(
   config->marker_color = ctx->text_color;
 
   /* parse exprerties */
-  auto config_rc = expr_walk_map_with_defaults(expr, ctx->defaults, {
+  auto config_rc = expr_walk_map(expr, {
     {"font", expr_call_string_fn(bind(&font_load_best, _1, &config->label_font))},
     {"label", bind(&expr_to_string, _1, &config->label)},
     {

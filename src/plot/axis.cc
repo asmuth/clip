@@ -637,7 +637,7 @@ ReturnCode axis_draw(Context* ctx, const Expr* expr) {
   config->border_style.color = ctx->foreground_color;
 
   {
-    auto rc = expr_walk_map_with_defaults(expr_next(expr), ctx->defaults, {
+    auto rc = expr_walk_map(expr, {
       {
         "align",
         expr_to_enum_fn<AxisAlign>(&config->align, {
@@ -699,7 +699,7 @@ ReturnCode axis_draw(Context* ctx, const Expr* expr) {
   };
 
   {
-    auto rc = expr_walk_map_with_defaults(expr_next(expr), ctx->defaults, {
+    auto rc = expr_walk_map(expr, {
       /* scale options */
       {"scale", bind(&scale_configure_kind, _1, &config->scale)},
       {"limit", bind(&expr_to_float64_opt_pair, _1, &config->scale.min, &config->scale.max)},
@@ -820,6 +820,7 @@ ReturnCode axis_add_all(Context* ctx, const Expr* expr) {
   std::array<Measure, 4> margins = {from_em(1), from_em(1), from_em(1), from_em(1)};
   std::array<AxisDefinition, 4> axes;
 
+  axes[0].scale = ctx->scale_x;
   axes[0].align = AxisAlign::TOP;
   axes[0].label_attach = AxisLabelAttach::BOTTOM;
   axes[0].title_offset = 1;
@@ -834,6 +835,7 @@ ReturnCode axis_add_all(Context* ctx, const Expr* expr) {
   axes[0].border_style.line_width = from_pt(1);
   axes[0].border_style.color = ctx->foreground_color;
 
+  axes[1].scale = ctx->scale_y;
   axes[1].align = AxisAlign::RIGHT;
   axes[1].label_attach = AxisLabelAttach::LEFT;
   axes[1].title_offset = 1;
@@ -849,6 +851,7 @@ ReturnCode axis_add_all(Context* ctx, const Expr* expr) {
   axes[1].border_style.line_width = from_pt(1);
   axes[1].border_style.color = ctx->foreground_color;
 
+  axes[2].scale = ctx->scale_x;
   axes[2].align = AxisAlign::BOTTOM;
   axes[2].label_attach = AxisLabelAttach::TOP;
   axes[2].title_offset = -1;
@@ -863,6 +866,7 @@ ReturnCode axis_add_all(Context* ctx, const Expr* expr) {
   axes[2].border_style.line_width = from_pt(1);
   axes[2].border_style.color = ctx->foreground_color;
 
+  axes[3].scale = ctx->scale_y;
   axes[3].align = AxisAlign::LEFT;
   axes[3].label_attach = AxisLabelAttach::RIGHT;
   axes[3].title_offset = -1;
@@ -878,7 +882,7 @@ ReturnCode axis_add_all(Context* ctx, const Expr* expr) {
   axes[3].border_style.line_width = from_pt(1);
   axes[3].border_style.color = ctx->foreground_color;
 
-  auto config_rc = expr_walk_map_with_defaults(expr_next(expr), ctx->defaults, {
+  auto config_rc = expr_walk_map(expr, {
     {"position", bind(&axis_configure_position, _1, &axes)},
 
     /* scale options */

@@ -25,7 +25,7 @@ namespace clip {
 ReturnCode layout_add_margins(Context* ctx, const Expr* expr) {
   std::array<Measure, 4> margins;
 
-  auto config_rc = expr_walk_map_with_defaults(expr_next(expr), ctx->defaults, {
+  auto config_rc = expr_walk_map(expr, {
     {
       "margin",
       expr_calln_fn({

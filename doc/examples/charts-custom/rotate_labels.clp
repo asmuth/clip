@@ -2,10 +2,10 @@
 (height 1200px)
 (dpi 240)
 
-(default limit-x (1404278100 1404299700))
-(default limit-y (0 1))
+(limit-x (1404278100 1404299700))
+(limit-y (0 1))
 
-(plot/axes
+(axes
     label-placement-left (subdivide 4)
     label-format-left (scientific)
     label-attach-left bottom
@@ -14,7 +14,7 @@
     label-attach-bottom left
     label-rotate-bottom 45)
 
-(plot/lines
+(lines
     data-x (csv "test/testdata/measurement.csv" time)
     data-y (csv "test/testdata/measurement.csv" value1))
 

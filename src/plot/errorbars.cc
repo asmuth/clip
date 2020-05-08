@@ -209,6 +209,8 @@ ReturnCode errorbars_draw(
   c->stroke_width = from_pt(kDefaultStrokeWidthPT);
   c->bar_width = from_pt(kDefaultBarWidthPT);
   c->stroke_color = ctx->foreground_color;
+  c->scale_x = ctx->scale_x;
+  c->scale_y = ctx->scale_y;
 
   /* parse properties */
   std::vector<std::string> data_x;
@@ -220,7 +222,7 @@ ReturnCode errorbars_draw(
   std::vector<std::string> data_colors;
   ColorMap color_map;
 
-  auto config_rc = expr_walk_map_with_defaults(expr_next(expr), ctx->defaults, {
+  auto config_rc = expr_walk_map(expr, {
     {"data-x", bind(&data_load_strings, _1, &data_x)},
     {"data-x-low", bind(&data_load_strings, _1, &data_x_low)},
     {"data-x-high", bind(&data_load_strings, _1, &data_x_high)},

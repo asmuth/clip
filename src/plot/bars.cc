@@ -305,6 +305,8 @@ ReturnCode bars_draw(
     const Expr* expr) {
   /* set defaults from environment */
   auto c = std::make_shared<PlotBarsConfig>();
+  c->scale_x = ctx->scale_x;
+  c->scale_y = ctx->scale_y;
   c->stroke_style.color = ctx->foreground_color;
   c->stroke_style.line_width = from_unit(0);
   c->fill_style.color = ctx->foreground_color;
@@ -317,7 +319,7 @@ ReturnCode bars_draw(
   std::vector<std::string> data_xoffset;
   std::vector<std::string> data_yoffset;
 
-  auto config_rc = expr_walk_map_with_defaults(expr_next(expr), ctx->defaults, {
+  auto config_rc = expr_walk_map(expr, {
     {"data-x", bind(&data_load_strings, _1, &data_x)},
     {"data-y", bind(&data_load_strings, _1, &data_y)},
     {"data-x-high", bind(&data_load_strings, _1, &data_x)},

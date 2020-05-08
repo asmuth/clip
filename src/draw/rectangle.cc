@@ -45,7 +45,7 @@ ReturnCode rectangle(
   stroke_style.line_width = from_pt(1);
 
   /* read arguments */
-  auto config_rc = expr_walk_map_with_defaults(expr_next(expr), ctx->defaults, {
+  auto config_rc = expr_walk_map(expr, {
     {
       "color",
       expr_calln_fn({
