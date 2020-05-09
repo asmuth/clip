@@ -74,8 +74,8 @@ run_test() {
 	result=""
 	if (cd ${source_path} && "${proc_path}" \
 				--font-load "test/testdata/fonts/LiberationSans-Regular.ttf" \
-				--in "${infile}" \
-				--out "${outfile}" \
+				--export "${outfile}" \
+				"${infile}" \
 				2> "${logfile}"); then
 		result="ok"
 	else
