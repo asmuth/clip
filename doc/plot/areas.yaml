@@ -1,0 +1,86 @@
+title: plot/areas
+tpl: cmdref
+name: areas
+desc: |
+  The `plot/areas` command takes an input data table, transforms it according
+  to a user-provided scale configuration and then plots the data as one or more
+  'area' shapes.
+
+
+arguments:
+  - name: data-x
+    type: dataset
+    desc: |
+      Set the 'x' dataset for the plot. The 'x' dataset will be used to
+      calculate the horizontal position of geometry.
+
+  - name: data-x-high
+    alias: data-x
+
+  - name: data-x-low
+    type: dataset
+
+  - name: data-y
+    type: dataset
+      Set the 'x' dataset for the plot. The 'x' dataset will be used to
+      calculate the vertical position of geometry.
+
+  - name: data-y-high
+    alias: data-y
+
+  - name: data-y-low
+    type: dataset
+
+  - name: direction
+    desc: |
+      Set the area 'direction'.
+    desc_code: |
+      direction [horizontal|vertical]
+    examples: |
+      ;; draw a vertical area chart
+      direction vertical
+
+  - name: color
+    type: color
+    desc: Set the area's fill and stroke color.
+
+  - name: stroke-color
+    type: color
+    desc: Set the area's stroke color.
+
+  - name: stroke-width
+    type: stroke_width
+    desc: Set the area's stroke width.
+
+  - name: stroke-style
+    type: stroke_style
+    desc: Set the area's stroke style.
+
+  - name: stroke-high-color
+    type: color
+    desc: Set the area's high ("upper") stroke color.
+
+  - name: stroke-high-width
+    type: stroke_width
+    desc: Set the area's high ("upper") stroke width.
+
+  - name: stroke-high-style
+    type: stroke_style
+    desc: Set the area's high ("upper") stroke style.
+
+  - name: stroke-low-color
+    type: color
+    desc: Set the area's low ("lower") stroke color.
+
+  - name: stroke-low-width
+    type: stroke_width
+    desc: Set the area's low ("lower") stroke width.
+
+  - name: stroke-low-style
+    type: stroke_style
+    desc: Set the area's low ("lower") stroke style.
+
+  - include: types/scale_args
+
+examples:
+  - charts-editorial/stacked_areas

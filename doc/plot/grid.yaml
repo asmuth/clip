@@ -1,0 +1,45 @@
+title: plot/grid
+tpl: cmdref
+name: grid
+desc: The `plot/grid` element draws a background grid.
+
+properties:
+  - title: "Grid Options"
+    anchor: grid-options
+    properties:
+
+
+arguments:
+
+  - name: tick-placement-x
+    desc: |
+      The 'tick-placement-x' option controls the x grid placement.
+    desc_code: |
+      tick-placement-x <tick-placement>
+    examples: |
+      ;; subdivide the axis with 10 tick-placement
+
+  - name: tick-placement-y
+    desc: |
+      The 'tick-placement-y' option controls the y grid placement.
+    desc_code: |
+      tick-placement-y <tick-placement>
+    examples: |
+      ;; subdivide the axis with 10 tick-placement
+
+  - name: stroke-style
+    type: stroke_style
+    desc: Set the grid's stroke style.
+
+  - name: stroke-width
+    type: stroke_width
+    desc: Set the grid's stroke width.
+
+  - name: stroke-color
+    type: color
+    desc: Set the grid's stroke color.
+
+  - name: color
+    alias: stroke-color
+
+  - include: types/scale_args

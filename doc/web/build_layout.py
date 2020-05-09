@@ -17,27 +17,18 @@ tpl = """
   </head>
   <body class="{{article_class}}">
     <nav>
-      <a style="display: block; text-decoration: none; color: #666; float: right;" href="http://github.com/asmuth/clip" target="_blank">
-        View on <img src="https://github.githubassets.com/images/modules/logos_page/GitHub-Logo.png" style="height: 12px; position: relative; top: 1px; margin-left: 2px;">
-      </a>
-
       <a href="/">
-        <img src="/favicon.ico" style="height: 1em; position: relative; top: 0.13em; margin-right: 0.3em;"/>
         <span>clip</span>
       </a>
 
       <span style="margin: 0 .3em">·</span>
       <a class="link" href="/" style="">Documentation</a>
       <span style="margin: 0 .3em">·</span>
-      <a class="link" href="/commands" style="">API Reference</a>
-      <span style="margin: 0 .3em">·</span>
       <a class="link" href="/examples">Examples</a>
       <span style="margin: 0 .3em">·</span>
       <a class="link" href="/installation">Download</a>
-      <ul class="crumbs" style="display: none;">
-        <li><a href="/">Documentation</a></li>
-        <li><a>{{title}}</a></li>
-      </ul>
+      <span style="margin: 0 .3em">·</span>
+      <a class="link" href="http://github.com/asmuth/clip">Github</a>
     </nav>
 
     <article class="{{article_class}}">
@@ -58,18 +49,7 @@ tpl = """
 </html>
 """
 
-def extend_toc(entry):
-  if "pages" in entry:
-    entry["pages"] = map(lambda x: extend_toc(x), entry["pages"])
-  else:
-    entry["pages"] = []
-
-  return entry
-
 def build_layout(url, content, title="", article_class=""):
-  toc = yaml.load(Path("doc/toc.yaml").read_text())["documentation"]
-  toc = map(lambda x: extend_toc(x), toc)
-
   title_seo = title
   if title_seo == "clip":
     title_seo += " - The command line illustration processor"
@@ -79,7 +59,6 @@ def build_layout(url, content, title="", article_class=""):
   return TPL.render(tpl, {
     "content": content,
     "url": url,
-    "toc": toc,
     "title": title,
     "title_seo": title_seo,
     "article_class": article_class,

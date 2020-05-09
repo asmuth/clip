@@ -1,0 +1,142 @@
+title: plot/rectangles
+tpl: cmdref
+name: rectangles
+desc: |
+  The `plot/vectors` command takes an input data table, transforms it according
+  to a user-provided scale configuration and then plots the data as tiled rectangles.
+
+arguments:
+  - name: data-x
+    desc: |
+      Set the 'x' dataset for the plot. The 'x' dataset will be used to
+      calculate the horizontal position of the rectangles.
+    desc_code: |
+      data-x (<values>...)
+      data-x (csv <file> <column>)
+    examples: |
+      ;; list of static values
+      data-x (10px 20px 30px)
+
+      ;; load a csv file
+      data-x (csv myfile.csv mycolumn)
+  - name: data-y
+    desc: |
+      Set the 'y' dataset for the plot. The 'y' dataset will be used to
+      calculate the vertical position of the rectangles.
+    desc_code: |
+      data-y (<values>...)
+      data-y (csv <file> <column>)
+    examples: |
+      ;; list of static values
+      data-y (10px 20px 30px)
+
+      ;; load a csv file
+      data-y (csv myfile.csv mycolumn)
+
+  - name: data-x
+    type: dataset
+    desc: |
+      Set the 'x' dataset for the plot. The 'x' dataset will be used to
+      calculate the horizontal position of points.
+
+  - name: data-y
+    type: dataset
+    desc: |
+      Set the 'y' dataset for the plot. The 'y' dataset will be used to
+      calculate the vertical position of points.
+
+  - name: size
+    desc: |
+      Set rectangle size in both dimensions (x and y). Note that
+      this value is only used if no sizes option is specified.
+    desc_code: |
+      size <measure>
+    examples: |
+      ;; set the rectangle size to 5pt
+      size 5pt
+
+  - name: sizes
+    desc: |
+      Load the rectangle sizes from data.
+    desc_code: |
+      sizes (<values>...)
+      sizes (csv <file> <column>)
+    examples: |
+      ;; list of static values
+      sizes (2pt 8pt 5pt)
+
+      ;; load a csv file
+      sizes (csv myfile.csv mysizes)
+
+  - name: size-x
+    desc: |
+      Set rectangle size in the x dimension. Note that
+      this value is only used if no sizes option is specified.
+    desc_code: |
+      size <measure>
+    examples: |
+      ;; set the rectangle width to 5pt
+      size-x 5pt
+
+  - name: sizes-x
+    desc: Load the rectangle widths from data
+    desc_code: |
+      sizes-x (<values>...)
+      sizes-x (csv <file> <column>)
+    examples: |
+      ;; list of static values
+      sizes-x (2pt 8pt 5pt)
+
+      ;; load a csv file
+      sizes-x (csv myfile.csv mysizes)
+
+  - name: size-y
+    desc: |
+      Set rectangle size in the y dimension. Note that
+      this value is only used if no sizes option is specified.
+    desc_code: |
+      size <measure>
+    examples: |
+      ;; set the rectangle height to 5pt
+      size-u 5pt
+
+  - name: sizes-y
+    desc: Load the rectangle heights from data
+    desc_code: |
+      sizes-y (<values>...)
+      sizes-y (csv <file> <column>)
+    examples: |
+      ;; list of static values
+      sizes-y (2pt 8pt 5pt)
+
+      ;; load a csv file
+      sizes-y (csv myfile.csv mysizes)
+
+
+  - name: color
+    type: color
+    desc: |
+      Set the rectangle color. Note that this value is only used if no data-colors
+      option is specified.
+
+  - name: colors
+    type: dataset_colors
+    desc: |
+      Set the 'colors' dataset for the plot. The 'colors' dataset will be used to
+      calculate the color of rectangles. The mapping of input values to colors
+      is controlled by the `color-map` option. If no explicit `color-map`
+      option is provided, the values `colors` will be interpreted as
+      hex color codes.
+
+  - name: color-map
+    type: color_map
+    desc: |
+      Set the color map. Controls how the values in `colors` will be mapped
+      to colors.
+    desc_code: |
+      color-map <color-map>
+
+  - include: types/scale_args
+
+examples:
+  - charts-scientific/scalarfield

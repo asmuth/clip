@@ -60,7 +60,7 @@ To see what that looks like, save the content from above to a file called
 After running the example, you should have an output file similar to the one below:
 
 <figure>
-  <img class="small" alt="Example Chart" src="/figures/quickstart1.svg">
+  <img class="small" alt="Example Chart" src="/figures/quickstart1.svg" />
   <figcaption><code>example_chart.svg</code></figcaption>
 </figure>
 
@@ -80,7 +80,7 @@ After re-running clip on the updated script, the output should now look much
 more like the kind of chart we all know and love:
 
 <figure>
-  <img class="small" alt="Example Chart" src="/figures/quickstart2.svg">
+  <img class="small" alt="Example Chart" src="/figures/quickstart2.svg" />
   <figcaption><code>example_chart.svg</code></figcaption>
 </figure>
 
@@ -143,7 +143,7 @@ This leaves us with this final script:
 Running the above file through clip again should now yield the following final result:
 
 <figure>
-  <img class="small" alt="Example Chart" src="/figures/quickstart3.svg">
+  <img class="small" alt="Example Chart" src="/figures/quickstart3.svg" />
   <figcaption><code>example_chart.svg</code></figcaption>
 </figure>
 

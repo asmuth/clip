@@ -1,0 +1,96 @@
+title: plot/points
+tpl: cmdref
+name: points
+desc: |
+  The `plot/points` element is used to create point/scattercharts.
+
+arguments:
+  - name: data-x
+    type: dataset
+    desc: |
+      Set the 'x' dataset for the plot. The 'x' dataset will be used to
+      calculate the horizontal position of points.
+
+  - name: data-y
+    type: dataset
+    desc: |
+      Set the 'y' dataset for the plot. The 'y' dataset will be used to
+      calculate the vertical position of points.
+
+  - name: shape
+    type: shape
+
+  - name: shapes
+    desc: |
+      Set an individual 'shape' for each point.
+    desc_code: |
+      shapes (<values>...)
+      shapes (csv <file> <column>)
+    examples: |
+      ;; list of static values
+      shapes (hexagon circle square)
+
+      ;; load a csv file
+      shapes (csv myfile.csv myshapes)
+
+  - name: size
+    type: size
+    desc: |
+      Set the point size.
+
+  - name: sizes
+    type: dataset_size
+    desc: |
+      Set an individual size for each point
+
+  - name: size-map
+    type: measure_map
+    desc: |
+      Controls how input data in `sizes` is mapped to typographic units.
+
+  - name: color
+    type: color
+    desc: |
+      Set the point color. Note that this value is only used if no `colors`
+      option is specified.
+
+  - name: colors
+    type: dataset_colors
+    desc: |
+      Set an individual color for each point. If no explicit `color-map`
+      option is provided, the values in `colors` will be interpreted as
+      hex color codes. Otherwise the mapping of input data to colors is controlled
+      by the `color-map` option.
+
+  - name: color-map
+    type: color_map
+    desc: |
+      Controls how input data in `colors` mapped to colors. If no map is specified, the
+      values in `colors` will be interpreted as hex color values.
+
+
+  - name: labels
+    type: dataset_string
+    desc: |
+      Set the labels dataset. If provided, a label will be drawn for each
+      point in the dataset at the corresponding (x, y) coordinate. The number of
+      entries in the 'labels' dataset must match the number of entries in the
+      'x' and 'y' datasets exactly.
+
+  - name: label-font-size
+    type: font_size
+    desc: Set the label font size.
+
+  - name: label-color
+    type: color
+    desc: Set the label color.
+
+  - name: label-padding
+    type: padding
+    desc: Set the label padding/spacing.
+
+  - include: types/scale_args
+
+
+examples:
+  - charts-basic/scatterplot

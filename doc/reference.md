@@ -6,4 +6,3 @@ in which they are defined. Please follow the respective links for more details
 on individual configuration options.
 
 
-{%_reference.gen.html%}

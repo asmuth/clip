@@ -7,21 +7,21 @@ import re
 from build_layout import *
 from pathlib import Path
 
-def build_example(example):
-  url = example["file"]
+def build_example(file_path, url):
   print("> Building page: /examples/%s" % url)
 
-  tpl = Path("doc/example.tpl.html").read_text()
+  tpl = Path("example.tpl.html").read_text()
   path = "/examples/" + url
   env = {
     "example_url": url,
-    "example_src": Path(os.path.join("doc/examples", url + ".clp")).read_text(),
+    "example_src": Path(file_path).read_text(),
+    "example_file": url + ".clp",
     "title": "Example: %s" % url,
   }
 
   html = TPL.render(tpl, env)
   write_page(path, html, title=env["title"])
-  copy_file(path + ".svg", os.path.join("doc/examples", url + ".svg"))
+  copy_file(path + ".svg", re.sub("\.clp$", ".svg", file_path))
 
 def build_example_list(examples):
   tpl = """
@@ -36,8 +36,17 @@ def build_example_list(examples):
     <section class="examples">
       {{#files}}
         <figure class="example">
-         <a href="/examples/{{file}}"><img src="/examples/{{file}}.svg"></a>
-         <figcaption>Example: <a href="/examples/{{file}}" class="link"><code>examples/{{file}}</code></a></figcaption>
+          <a href="/examples/{{file}}"><img src="/examples/{{file}}.svg"></a>
+          <figcaption>
+            <h4>Example #42</h4>
+            <h3>Linechart with multiple series</h3>
+            <p>
+              A simple linechart with multiple series and serif fonts.
+            </p>
+            <p>
+              <em>Source:</em> <a href="/examples/{{file}}">{{file}}</a>
+            </p>
+          </figcaption>
         </figure>
       {{/files}}
     </section>
@@ -50,11 +59,11 @@ def build_example_list(examples):
   write_page("/examples", TPL.render(tpl, env), title="Example Gallery", article_class="wide")
 
 def main():
-  examples = yaml.load(Path("doc/examples/examples.yaml").read_text())
-  examples_all = [{ "file": re.sub("^doc\/examples\/", "", re.sub("\.clp$", "", p)) } for p in glob.glob("doc/examples/**/*.clp")]
+  examples_path = "../../clip-examples"
+  examples = yaml.load(Path(examples_path, "examples.yaml").read_text())
 
-  for example in examples_all:
-    build_example(example)
+  for f in glob.glob(examples_path + "/**/*.clp"):
+    build_example(f, re.sub("\.clp$", "", f[(len(examples_path) + 1):]))
 
   build_example_list(examples)
 

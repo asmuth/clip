@@ -1,39 +1,22 @@
-<aside class="toc">
-  <b>Contents</b>
-  <ul>
-    <li><a href="#overview">Overview</a></li>
-    <li><a href="#syntax">Syntax</a></li>
-    <li>
-      <a href="#options">Options</a>
-      <ul style="padding-left: 1em;">
-        {{#arguments}}
-          <li><a href="#option-{{name}}">{{name}}</a></li>
-        {{/arguments}}
-      </ul>
-    </li>
-    <li><a href="#examples">Examples</a></li>
-  </ul>
-</aside>
-
-<h1 id="overview">Command: <code>{{name}}</code></h1>
+<h1 id="overview">{{title}}</h1>
 {{{desc}}}
 
 <h3 id="syntax">Syntax</h3>
-<pre><code>({{name}} &lt;options&gt;)</code></pre>
-
-<pre><code>({{name}} {{#arguments}}<br />    <a href="#option-{{name}}">{{name}}</a> (...){{/arguments}})</pre></code>
-
-
-{{{desc_detail}}}
+{{#syntax}}
+<pre><code>{{{syntax}}}</pre></code>
+{{/syntax}}
+{{^syntax}}
+<pre><code>{{name}} ({{#arguments}}<br />    <a href="#option-{{name}}">{{name}}</a> (...){{/arguments}})</pre></code>
+{{/syntax}}
 
 <h2 id="options">Options</h2>
 {{#arguments}}
-  <section style="border-top: none; border-bottom: 1px solid #ddd; padding-bottom: 1em; margin-bottom: 0;">
+  <section style="border-top: 1px dashed #ddd; padding: .4em 0; margin: 0 0 1.6em 0;">
     <a href="#option-{{name}}">
-      <h3 id="option-{{name}}">{{name}}</h3>
+      <h3 id="option-{{name}}">{{name}} <code>&lt;{{type}}&gt;</code></h3>
     </a>
 
-    <div style="margin-top: 1.4em;">
+    <div>
       {{{desc}}}
       {{#alias}}
         Alias for the <a href="#option-{{alias}}">{{alias}}</a> option.
@@ -58,8 +41,9 @@
   </section>
 {{/arguments}}
 
+{{#has_examples}}
 <h2 id="examples">Examples</h2>
-
+{{/has_examples}}
 {{#examples}}
   <h4>Example: <a href="/examples/{{.}}" class="link"><code>examples/{{.}}</code></a></h4>
   <figure>
@@ -67,3 +51,4 @@
   </figure>
   <hr />
 {{/examples}}
+

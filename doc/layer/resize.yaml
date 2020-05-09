@@ -1,0 +1,18 @@
+title: layer/resize
+tpl: cmdref
+
+desc: |
+  The `layer/resize` command is used to change the size of the current layer.
+
+syntax: |
+  (layer/resize &lt;<a href="width">width</a>&gt; &lt;<a href="width">height</a>&gt;)
+
+arguments:
+
+  - name: width
+    type: measure
+    desc: The new layer width
+
+  - name: height
+    type: measure
+    desc: The new layer height

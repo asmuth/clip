@@ -1,0 +1,104 @@
+title: plot/bars
+tpl: cmdref
+name: bars
+desc: |
+  The `plot/bars` command takes an input data table, transforms it according
+  to a user-provided scale configuration and then plots the data as one or more
+  'bars' (rectangle shapes).
+
+arguments:
+  - name: data-x
+    type: dataset
+    desc: |
+      Set the 'x' dataset for the plot. The 'x' dataset will be used to
+      calculate the horizontal position of geometry.
+
+  - name: data-x-high
+    alias: data-x
+
+  - name: data-x-low
+    type: dataset
+
+  - name: data-y
+    type: dataset
+      Set the 'x' dataset for the plot. The 'x' dataset will be used to
+      calculate the vertical position of geometry.
+
+  - name: data-y-high
+    alias: data-y
+
+  - name: data-y-low
+    type: dataset
+
+  - name: direction
+    desc: |
+      Set the bar 'direction'.
+    desc_code: |
+      direction [horizontal|vertical]
+    examples: |
+      ;; draw a vertical "bar" chart
+      direction vertical
+
+      ;; draw a horizontal "column" chart
+      direction horizontal
+
+  - name: color
+    type: color
+    desc: Set the bar color.
+
+  - name: width
+    desc: |
+      Set the bar width. See the
+      [measure](#FIXME) page for more details on valid values.
+    desc_code: |
+      width <measure>
+    examples: |
+      ;; set the bar width to 1em
+      width 1em
+
+  - name: offset
+    desc: |
+      Set the bar offset. See the
+      [measure](#FIXME) page for more details on valid values.
+    desc_code: |
+      offset <measure>
+    examples: |
+      ;; set the bar offset to -.4em
+      offset -.4em
+
+  - name: stroke-color
+    type: color
+    desc: Set the bar's stroke color.
+
+  - name: stroke-width
+    type: stroke_width
+    desc: Set the bar stroke width.
+
+  - name: stroke-style
+    type: stroke_style
+    desc: Set the bar stroke style.
+
+  - name: labels
+    type: dataset_string
+    desc: |
+      Set the labels dataset. If provided, a label will be drawn for each
+      point in the dataset next to the corresponding bar. The number of
+      entries in the 'labels' dataset must match the number of entries in the
+      'x' and 'y' datasets exactly.
+
+  - name: label-font-size
+    type: font_size
+    desc: Set the label font size.
+
+  - name: label-color
+    type: color
+    desc: Set the label color.
+
+  - name: label-padding
+    type: padding
+    desc: Set the label padding/spacing.
+
+  - include: types/scale_args
+
+examples:
+  - charts-editorial/barchart_with_labels
