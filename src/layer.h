@@ -54,28 +54,27 @@ ReturnCode layer_resize(
     Context* ctx,
     const Expr* expr);
 
-void layer_set_dpi(
-    Layer* layer,
-    double dpi);
-
-ReturnCode layer_set_dpi(
-    Context* ctx,
-    const Expr* expr);
-
 Layer* layer_get(Context* ctx);
 const Layer* layer_get(const Context* ctx);
 
-double layer_get_dpi(const Context* ctx);
 double layer_get_dpi(const Layer* layer);
+double layer_get_dpi(const Context* ctx);
+void layer_set_dpi(Layer* layer, double dpi);
+ReturnCode layer_set_dpi(Context* ctx, const Expr* expr);
 
-Measure layer_get_rem(const Context* ctx);
 Measure layer_get_rem(const Layer* layer);
+Measure layer_get_rem(const Context* ctx);
 
-const FontInfo& layer_get_font(const Context* ctx);
 const FontInfo& layer_get_font(const Layer* layer);
+const FontInfo& layer_get_font(const Context* ctx);
+FontInfo layer_set_font(const Layer* layer, FontInfo font);
+ReturnCode layer_set_font(Context* ctx, const Expr* expr);
 
-Measure layer_get_font_size(const Context* ctx);
 Measure layer_get_font_size(const Layer* layer);
+Measure layer_get_font_size(const Context* ctx);
+Measure layer_set_font_size(const Layer* layer, Measure font_size);
+ReturnCode layer_set_font_size(Context* ctx, const Expr* expr);
+
 
 } // namespace clip
 

@@ -1,6 +1,6 @@
 (layer/resize 2048px 1024px)
 (layer/set-dpi 240)
-;;(layer/set-font "Latin Modern Roman")
+(layer/set-font "Latin Modern Roman")
 
 (tools/plotgen
     limit-y (-4 5)

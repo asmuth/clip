@@ -22,6 +22,8 @@ namespace clip {
 const CommandMap COMMANDS = {
   {"layer/resize", bind_cmd(&layer_resize)},
   {"layer/set-dpi", bind_cmd(&layer_set_dpi)},
+  {"layer/set-font", bind_cmd(&layer_set_font)},
+  {"layer/set-font-size", bind_cmd(&layer_set_font_size)},
   {"tools/plotgen", bind_cmd(&plot_eval)},
 };
 

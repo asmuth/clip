@@ -1,6 +1,6 @@
 (layer/resize 1600px 900px)
 (layer/set-dpi 240)
-;;(layer/set-font "Latin Modern Roman")
+(layer/set-font "Latin Modern Roman")
 
 (tools/plotgen
     scale-x (categorical (A B C D E F))
