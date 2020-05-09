@@ -37,7 +37,7 @@ namespace clip::plotgen {
 
 static const double kDefaultArrowSizePT = 1;
 
-struct PlotPointsConfig {
+struct PlotVectorsConfig {
   std::vector<Measure> x;
   std::vector<Measure> y;
   std::vector<Measure> dx;
@@ -60,7 +60,7 @@ struct PlotPointsConfig {
 ReturnCode plot_vectors(
     Context* ctx,
     PlotConfig* plot,
-    std::shared_ptr<PlotPointsConfig> config) {
+    std::shared_ptr<PlotVectorsConfig> config) {
   const auto& clip = plot_get_clip(plot, layer_get(ctx));
 
   /* convert units */
@@ -144,7 +144,7 @@ ReturnCode plot_vectors(
     PlotConfig* plot,
     const Expr* expr) {
   /* set defaults from environment */
-  auto c = std::make_shared<PlotPointsConfig>();
+  auto c = std::make_shared<PlotVectorsConfig>();
   c->scale_x = plot->scale_x;
   c->scale_y = plot->scale_y;
   c->color = layer_get(ctx)->foreground_color;
