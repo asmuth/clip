@@ -16,6 +16,7 @@ run_all_tests() {
 	num_fail=0
 
 	test_cases=$(cd "${source_path}/test" && find . -name "*.clp" ! -path "./spec/*" | sort)
+	test_cases_failed=()
 
 	for test_id in ${test_cases[@]}; do
 		local test_id="$(echo "${test_id}" | sed -e 's/^.\///' -e 's/\.clp$//')"
@@ -23,25 +24,35 @@ run_all_tests() {
 
 		if run_test "${test_id}" &>/dev/null; then
 			echo "$(printf "\033[1;32m%s\033[0m" "[PASS]") ${test_id}"
-		  num_pass=$[ $num_pass + 1 ]
+			num_pass=$[ $num_pass + 1 ]
 		else
 			echo "$(printf "\033[1;31m%s\033[0m" "[FAIL]") ${test_id}"
-		  num_fail=$[ $num_fail + 1 ]
+			num_fail=$[ $num_fail + 1 ]
+			test_cases_failed="${test_cases_failed[@]} ${test_id}"
 		fi
 	done
 
 	if [[ ${num_total} == ${num_pass} ]]; then
 		echo
-		echo "TEST RESULT: $(printf "\033[1;32m%s\033[0m" "PASS")"
-		echo
-		echo "${num_pass}/${num_total} test cases ok"
-    exit 0
+		echo "$(printf "\033[1;32m%s\033[0m" "[PASS]") ${num_pass}/${num_total} test cases passed"
 	else
 		echo
-		echo "Test Result: $(printf "\033[1;31m%s\033[0m" "FAIL")"
+		echo "$(printf "\033[1;31m%s\033[0m" "[FAIL]") ${num_fail}/${num_total} test cases failed"
+	fi
+
+	for test_id in ${test_cases_failed[@]}; do
 		echo
-		echo "${num_fail}/${num_total} test cases failed"
-    exit 1
+		echo
+		echo "$(printf "\033[1;31m%s\033[0m" "FAILED:") test/${test_id}.clp"
+		echo "-------------------------------------------------------------------"
+		cat "${result_path}/${test_id}.log"
+		echo "-------------------------------------------------------------------"
+	done
+
+	if [[ ${num_total} == ${num_pass} ]]; then
+		exit 0
+	else
+		exit 1
 	fi
 }
 
@@ -103,6 +114,9 @@ run_test() {
 		return 0
 	else
 		echo "FAIL" >&2
+		echo "ERROR: output file does not match" >> ${logfile}
+		echo "ERROR:     output: ${outfile}" >> ${logfile}
+		echo "ERROR:     expected: ${reffile}" >> ${logfile}
 		log_failure "${test_id}" "${outfile}" "${reffile}" "${logfile}"
 		cat ${logfile}
 		return 1
