@@ -16,6 +16,7 @@
 #include <iostream>
 #include <iterator>
 #include <string>
+#include <getopt.h>
 
 #include "config.h"
 #include "context.h"
@@ -32,45 +33,40 @@ void printError(const ReturnCode& rc) {
   std::cerr << fmt::format("ERROR: {}", rc.message) << std::endl;
 }
 
-int main(int argc, const char** argv) {
-  FlagParser flag_parser;
+int main(int argc, char** argv) {
+  FlagList flags;
 
   std::string flag_in;
-  flag_parser.defineString("in", false, &flag_in);
+  flags_add_string(&flags, 'i', "in", &flag_in);
 
   std::string flag_out;
-  flag_parser.defineString("out", false, &flag_out);
+  flags_add_string(&flags, 'e', "out", &flag_out);
 
   bool flag_stdin = false;
-  flag_parser.defineSwitch("stdin", &flag_stdin);
+  flags_add_switch(&flags, 0, "stdin", &flag_stdin);
 
   bool flag_stdout = false;
-  flag_parser.defineSwitch("stdout", &flag_stdout);
+  flags_add_switch(&flags, 0, "stdout", &flag_stdout);
 
   std::string flag_format;
-  flag_parser.defineString("format", false, &flag_format);
+  flags_add_string(&flags, 'f', "format", &flag_format);
 
   bool flag_help = false;
-  flag_parser.defineSwitch("help", &flag_help);
+  flags_add_switch(&flags, 'h', "help", &flag_help);
 
   bool flag_version = false;
-  flag_parser.defineSwitch("version", &flag_version);
+  flags_add_switch(&flags, 'v', "version", &flag_version);
 
   bool flag_debug = true;
-  flag_parser.defineSwitch("debug", &flag_debug);
-
-  bool flag_font_defaults = true;
-  flag_parser.defineBool("font-defaults", &flag_font_defaults);
+  flags_add_switch(&flags, 'd', "debug", &flag_debug);
 
   std::vector<std::string> flag_font_load;
-  flag_parser.defineStringV("font-load", &flag_font_load);
+  flags_add_stringv(&flags, 0, "font-load", &flag_font_load);
 
-  {
-    auto rc = flag_parser.parseArgv(argc - 1, argv + 1);
-    if (!rc) {
-      std::cerr << "ERROR: " << rc.message << std::endl;
-      return -1;
-    }
+  std::vector<std::string> args;
+  if (auto rc = flags_parse(flags, argc, argv, &args); !rc) {
+    std::cerr << "ERROR: " << rc.message << std::endl;
+    return EXIT_FAILURE;
   }
 
   if (flag_version) {
@@ -156,7 +152,6 @@ int main(int argc, const char** argv) {
 
   /* set up the context */
   Context ctx;
-  ctx.font_defaults = flag_font_defaults;
   ctx.font_load = flag_font_load;
 
   if (auto rc = context_setup_defaults(&ctx); !rc) {

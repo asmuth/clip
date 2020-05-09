@@ -18,95 +18,37 @@
 
 namespace clip {
 
-enum kFlagType {
-  T_BOOL,
-  T_SWITCH,
-  T_STRING,
-  T_STRING_V,
-  T_INT64,
-  T_UINT64,
-  T_FLOAT64,
+struct FlagInfo {
+  char opt_short;
+  std::string opt_long;
+  bool has_arg;
+  std::function<void (const char*)> callback;
 };
 
-struct FlagState {
-  kFlagType type;
-  bool required;
-  const char* longopt;
-  std::vector<std::string> values;
-  void* value;
-  bool has_value;
-};
+using FlagList = std::vector<FlagInfo>;
 
-class FlagParser {
-public:
-
-  FlagParser();
-
-  /**
-   * Define a string flag
-   */
-  void defineString(
-      const char* longopt,
-      bool required,
+void flags_add_string(
+      FlagList* flags,
+      char shortopt,
+      const std::string& longopt,
       std::string* value);
 
-  /**
-   * Define a vec<string> flag
-   */
-  void defineStringV(
-      const char* longopt,
-      std::vector<std::string>* value);
+void flags_add_stringv(
+      FlagList* flags,
+      char shortopt,
+      const std::string& longopt,
+      std::vector<std::string>* values);
 
-  /**
-   * Define a boolean flag
-   */
-  void defineBool(
-      const char* longopt,
+void flags_add_switch(
+      FlagList* flags,
+      char shortopt,
+      const std::string& longopt,
       bool* value);
 
-  /**
-   * Define a boolean flag
-   */
-  void defineSwitch(
-      const char* longopt,
-      bool* value);
-
-  /**
-   * Define a int64 flag
-   */
-  void defineInt64(
-      const char* longopt,
-      bool required,
-      int64_t* value);
-
-  /**
-   * Define a uint64 flag
-   */
-  void defineUInt64(
-      const char* longopt,
-      bool required,
-      uint64_t* value);
-
-  /**
-   * Define a float64 flag
-   */
-  void defineFloat64(
-      const char* longopt,
-      bool required,
-      double* value);
-
-  /**
-   * Parse an argv array. This may throw an exception.
-   */
-  ReturnCode parseArgv(int argc, const char** argv);
-
-  /**
-   * Parse an argv array. This may throw an exception.
-   */
-  ReturnCode parseArgv(const std::vector<std::string>& argv);
-
-protected:
-  std::vector<FlagState> flags_;
-};
+ReturnCode flags_parse(
+    const FlagList& flags,
+    int argc,
+    char** argv,
+    std::vector<std::string>* args_out);
 
 }
