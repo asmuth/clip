@@ -1,7 +1,9 @@
-(height 80px)
-(margin 2em)
+(layer/resize 1024px 80px)
+(layer/set-dpi 96)
 
-(axis
-    scale (logarithmic 2)
-    label-format (base 2)
-    limit (0 4096))
+(tools/plotgen
+    margin 2em
+    axis (
+        scale (logarithmic 2)
+        label-format (base 2)
+        limit (0 4096)))

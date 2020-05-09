@@ -487,7 +487,7 @@ ReturnCode plot_legend(
   }
 
   /* parse exprerties */
-  auto config_rc = expr_walk_map(expr, {
+  auto config_rc = expr_walk_map_wrapped(expr, {
     {
       "position",
       bind(

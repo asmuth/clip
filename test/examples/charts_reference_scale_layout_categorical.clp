@@ -1,4 +1,8 @@
-(height 60px)
-(margin 1em)
+(layer/resize 1024px 60px)
+(layer/set-dpi 96)
 
-(axis scale (categorical (A B C D E F G H)) tick-placement (categorical))
+(tools/plotgen
+    margin 1em
+    axis (
+        scale (categorical (A B C D E F G H))
+        tick-placement (categorical)))

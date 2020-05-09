@@ -1,4 +1,9 @@
-(height 80px)
-(margin 2em)
+(layer/resize 1024px 80px)
+(layer/set-dpi 96)
 
-(axis label-format (datetime "%H:%M:%S") label-placement (linear 7200) limit (0 79200))
+(tools/plotgen
+    margin 2em
+    axis (
+        label-format (datetime "%H:%M:%S")
+        label-placement (linear 7200)
+        limit (0 79200)))

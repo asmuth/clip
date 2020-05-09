@@ -1,4 +1,8 @@
-(height 60px)
-(margin 1em)
+(layer/resize 1024px 60px)
+(layer/set-dpi 96)
 
-(axis scale (logarithmic 2) limit (0 1024))
+(tools/plotgen
+    margin 1em
+    axis (
+        scale (logarithmic 2)
+        limit (0 1024)))

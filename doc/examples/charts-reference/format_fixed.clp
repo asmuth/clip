@@ -1,4 +1,8 @@
-(height 80px)
-(margin 2em)
+(layer/resize 1024px 80px)
+(layer/set-dpi 96)
 
-(axis label-format (fixed 1) limit (1 16))
+(tools/plotgen
+    margin 2em
+    axis (
+        label-format (fixed 1)
+        limit (1 16)))

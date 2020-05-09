@@ -708,7 +708,7 @@ ReturnCode plot_axis(Context* ctx, PlotConfig* plot, const Expr* expr) {
   };
 
   {
-    auto rc = expr_walk_map(expr, {
+    auto rc = expr_walk_map_wrapped(expr, {
       /* scale options */
       {"scale", bind(&scale_configure_kind, _1, &config->scale)},
       {"limit", bind(&expr_to_float64_opt_pair, _1, &config->scale.min, &config->scale.max)},
