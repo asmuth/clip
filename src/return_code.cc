@@ -34,6 +34,16 @@ ReturnCode err_invalid_value(
   };
 }
 
+ReturnCode err_invalid_nargs(size_t nargs, size_t nargs_expect) {
+  return {
+    ERROR,
+    fmt::format(
+        "invalid number of arguments; got {} but expected {}",
+        nargs,
+        nargs_expect)
+  };
+}
+
 void error_print(const ReturnCode& rc, std::ostream& os) {
   switch (rc.code) {
     case OK:

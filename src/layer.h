@@ -45,11 +45,28 @@ ReturnCode layer_create(
     Context* ctx,
     std::unique_ptr<Layer>* layer_storage);
 
+void layer_resize(
+    Layer* layer,
+    Measure width,
+    Measure height);
+
+ReturnCode layer_resize(
+    Context* ctx,
+    const Expr* expr);
+
+void layer_set_dpi(
+    Layer* layer,
+    double dpi);
+
+ReturnCode layer_set_dpi(
+    Context* ctx,
+    const Expr* expr);
+
 Layer* layer_get(Context* ctx);
 const Layer* layer_get(const Context* ctx);
 
-float layer_get_dpi(const Context* ctx);
-float layer_get_dpi(const Layer* layer);
+double layer_get_dpi(const Context* ctx);
+double layer_get_dpi(const Layer* layer);
 
 Measure layer_get_rem(const Context* ctx);
 Measure layer_get_rem(const Layer* layer);

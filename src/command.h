@@ -19,6 +19,7 @@
 
 namespace clip {
 
+using CommandFnRef = ReturnCode (*) (Context*, const Expr*);
 using CommandFn = std::function<ReturnCode (Context*, const Expr*)>;
 
 struct Command {
@@ -27,6 +28,8 @@ struct Command {
 };
 
 using CommandMap = std::unordered_map<std::string, Command>;
+
+CommandFn bind_cmd(CommandFnRef ref);
 
 } // namespace clip
 

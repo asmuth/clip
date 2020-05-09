@@ -20,12 +20,14 @@
 namespace clip {
 
 const CommandMap COMMANDS = {
-  //{"width", CommandFn(&context_configure)},
-  //{"height", CommandFn(&context_configure)},
-  //{"dpi", CommandFn(&context_configure)},
-  //{"draw/rectangle", CommandFn(&draw::rectangle)},
-  {"tools/plotgen", CommandFn(&plot_eval)},
+  {"layer/resize", bind_cmd(&layer_resize)},
+  {"layer/set-dpi", bind_cmd(&layer_set_dpi)},
+  {"tools/plotgen", bind_cmd(&plot_eval)},
 };
+
+CommandFn bind_cmd(CommandFnRef ref) {
+  return ref;
+}
 
 } // namespace clip
 

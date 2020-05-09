@@ -70,6 +70,8 @@ ReturnCode err_invalid_value(
     const std::string& value,
     std::vector<std::string> expected_values);
 
+ReturnCode err_invalid_nargs(size_t nargs, size_t nargs_expect);
+
 void error_print(const ReturnCode& rc, std::ostream& os);
 
 } // namespace clip

@@ -53,6 +53,59 @@ ReturnCode layer_create(
   return OK;
 }
 
+void layer_resize(
+    Layer* layer,
+    Measure width,
+    Measure height) {
+  layer->width = width;
+  layer->height = height;
+}
+
+void layer_set_dpi(
+    Layer* layer,
+    double dpi) {
+  layer->dpi = dpi;
+}
+
+ReturnCode layer_resize(
+    Context* ctx,
+    const Expr* expr) {
+  auto args = expr_collect(expr);
+  if (args.size() != 2) {
+    return err_invalid_nargs(args.size(), 2);
+  }
+
+  Measure width;
+  if (auto rc = measure_read(args[0], &width); !rc) {
+    return rc;
+  }
+
+  Measure height;
+  if (auto rc = measure_read(args[1], &height); !rc) {
+    return rc;
+  }
+
+  layer_resize(layer_get(ctx), width, height);
+  return OK;
+}
+
+ReturnCode layer_set_dpi(
+    Context* ctx,
+    const Expr* expr) {
+  auto args = expr_collect(expr);
+  if (args.size() != 1) {
+    return err_invalid_nargs(args.size(), 1);
+  }
+
+  double dpi;
+  if (auto rc = expr_to_float64(args[0], &dpi); !rc) {
+    return rc;
+  }
+
+  layer_set_dpi(layer_get(ctx), dpi);
+  return OK;
+}
+
 Layer* layer_get(Context* ctx) {
   return ctx->layer.get();
 }
@@ -61,11 +114,11 @@ const Layer* layer_get(const Context* ctx) {
   return ctx->layer.get();
 }
 
-float layer_get_dpi(const Context* ctx) {
+double layer_get_dpi(const Context* ctx) {
   return layer_get_dpi(layer_get(ctx));
 }
 
-float layer_get_dpi(const Layer* layer) {
+double layer_get_dpi(const Layer* layer) {
   return layer->dpi;
 }
 
