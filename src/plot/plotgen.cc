@@ -115,7 +115,7 @@ ReturnCode plot_set_background(
   stroke_style.line_width = from_pt(1);
 
   /* read arguments */
-  auto config_rc = expr_walk_map(expr, {
+  auto config_rc = expr_walk_map_wrapped(expr, {
     {
       "color",
       expr_calln_fn({

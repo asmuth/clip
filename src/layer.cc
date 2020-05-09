@@ -151,17 +151,18 @@ void layer_set_font(
 ReturnCode layer_set_font(
     Context* ctx,
     const Expr* expr) {
+  auto layer = layer_get(ctx);
+
   auto args = expr_collect(expr);
   if (args.size() != 1) {
     return err_invalid_nargs(args.size(), 1);
   }
 
   FontInfo font;
-  if (auto rc = expr_call_string(args[0], bind(&font_load_best, _1, &font)); !rc) {
+  if (auto rc = expr_call_string(args[0], bind(&font_load_best, _1, &layer->font)); !rc) {
     return rc;
   }
 
-  layer_set_font(layer_get(ctx), std::move(font));
   return OK;
 }
 

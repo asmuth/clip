@@ -9,7 +9,7 @@
         label-placement-y (linear 1)
         title-bottom "Longitude"
         title-left "Lattitude")
-    background fill
+    background (fill #eff7fe)
     grid (
         tick-placement-x (linear 5)
         tick-placement-y (linear 5)
