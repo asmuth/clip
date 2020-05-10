@@ -16,7 +16,12 @@
 
 namespace clip::plotgen {
 
-ReturnCode plot_rectangles(
+ReturnCode rectangles_draw(
+    Context* ctx,
+    PlotConfig* plot,
+    const Expr* expr);
+
+ReturnCode rectangles_autorange(
     Context* ctx,
     PlotConfig* plot,
     const Expr* expr);

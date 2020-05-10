@@ -41,50 +41,92 @@ using namespace std::placeholders;
 
 namespace clip {
 
+ReturnCode plot_prepare(
+    Context* ctx,
+    PlotConfig* plot,
+    const Expr* expr) {
+  return expr_walk_map(expr, {
+    /* scale configuration */
+    {"limit-x", bind(&expr_to_float64_opt_pair, _1, &plot->scale_x.min, &plot->scale_x.max)},
+    {"limit-x-min", bind(&expr_to_float64_opt, _1, &plot->scale_x.min)},
+    {"limit-x-max", bind(&expr_to_float64_opt, _1, &plot->scale_x.max)},
+    {"limit-y", bind(&expr_to_float64_opt_pair, _1, &plot->scale_y.min, &plot->scale_y.max)},
+    {"limit-y-min", bind(&expr_to_float64_opt, _1, &plot->scale_y.min)},
+    {"limit-y-max", bind(&expr_to_float64_opt, _1, &plot->scale_y.max)},
+    {"scale-x", bind(&scale_configure_kind, _1, &plot->scale_x)},
+    {"scale-y", bind(&scale_configure_kind, _1, &plot->scale_y)},
+    {"scale-x-padding", bind(&expr_to_float64, _1, &plot->scale_x.padding)},
+    {"scale-y-padding", bind(&expr_to_float64, _1, &plot->scale_y.padding)},
+
+    /* geometry autoranging */
+    {"areas", bind(plotgen::areas_autorange, ctx, plot, _1)},
+    {"bars", bind(plotgen::bars_autorange, ctx, plot,_1)},
+    {"errorbars", bind(plotgen::errorbars_autorange, ctx, plot, _1)},
+    {"labels", bind(plotgen::labels_autorange, ctx, plot, _1)},
+    {"lines", bind(plotgen::lines_autorange, ctx, plot, _1)},
+    {"points", bind(plotgen::points_autorange, ctx, plot, _1)},
+    {"polygons", bind(plotgen::polygons_autorange, ctx, plot, _1)},
+    {"rectangles", bind(plotgen::rectangles_autorange, ctx, plot, _1)},
+    {"vectors", bind(plotgen::vectors_autorange, ctx, plot, _1)},
+  }, false);
+}
+
+ReturnCode plot_draw(
+    Context* ctx,
+    PlotConfig* plot,
+    const Expr* expr) {
+  return expr_walk_map(expr, {
+    /* margins */
+    {
+      "margin",
+      expr_calln_fn({
+        bind(&measure_read, _1, &plot->margins[0]),
+        bind(&measure_read, _1, &plot->margins[1]),
+        bind(&measure_read, _1, &plot->margins[2]),
+        bind(&measure_read, _1, &plot->margins[3]),
+      })
+    },
+    {"margin-top", bind(&measure_read, _1, &plot->margins[0])},
+    {"margin-right", bind(&measure_read, _1, &plot->margins[1])},
+    {"margin-bottom", bind(&measure_read, _1, &plot->margins[2])},
+    {"margin-left", bind(&measure_read, _1, &plot->margins[3])},
+
+    /* axes/grid/legend */
+    {"axes", bind(&plotgen::plot_axes, ctx, plot, _1)},
+    {"axis", bind(&plotgen::plot_axis, ctx, plot, _1)},
+    {"grid", bind(&plotgen::plot_grid, ctx, plot, _1)},
+    {"background", bind(&plot_set_background, ctx, plot, _1)},
+    {"legend", bind(&plotgen::plot_legend, ctx, plot, _1)},
+
+    /* geometry elements */
+    {"areas", bind(&plotgen::areas_draw, ctx, plot, _1)},
+    {"bars", bind(&plotgen::bars_draw, ctx, plot,_1)},
+    {"errorbars", bind(&plotgen::errorbars_draw, ctx, plot, _1)},
+    {"labels", bind(&plotgen::labels_draw, ctx, plot, _1)},
+    {"lines", bind(&plotgen::lines_draw, ctx, plot, _1)},
+    {"points", bind(&plotgen::points_draw, ctx, plot, _1)},
+    {"polygons", bind(&plotgen::polygons_draw, ctx, plot, _1)},
+    {"rectangles", bind(&plotgen::rectangles_draw, ctx, plot, _1)},
+    {"vectors", bind(&plotgen::vectors_draw, ctx, plot, _1)},
+  }, false);
+}
+
 ReturnCode plot_eval(
     Context* ctx,
     const Expr* expr) {
   PlotConfig plot;
 
-  return expr_walk_map(expr, {
-    {"limit-x", bind(&expr_to_float64_opt_pair, _1, &plot.scale_x.min, &plot.scale_x.max)},
-    {"limit-x-min", bind(&expr_to_float64_opt, _1, &plot.scale_x.min)},
-    {"limit-x-max", bind(&expr_to_float64_opt, _1, &plot.scale_x.max)},
-    {"limit-y", bind(&expr_to_float64_opt_pair, _1, &plot.scale_y.min, &plot.scale_y.max)},
-    {"limit-y-min", bind(&expr_to_float64_opt, _1, &plot.scale_y.min)},
-    {"limit-y-max", bind(&expr_to_float64_opt, _1, &plot.scale_y.max)},
-    {"scale-x", bind(&scale_configure_kind, _1, &plot.scale_x)},
-    {"scale-y", bind(&scale_configure_kind, _1, &plot.scale_y)},
-    {"scale-x-padding", bind(&expr_to_float64, _1, &plot.scale_x.padding)},
-    {"scale-y-padding", bind(&expr_to_float64, _1, &plot.scale_y.padding)},
-    {
-      "margin",
-      expr_calln_fn({
-        bind(&measure_read, _1, &plot.margins[0]),
-        bind(&measure_read, _1, &plot.margins[1]),
-        bind(&measure_read, _1, &plot.margins[2]),
-        bind(&measure_read, _1, &plot.margins[3]),
-      })
-    },
-    {"margin-top", bind(&measure_read, _1, &plot.margins[0])},
-    {"margin-right", bind(&measure_read, _1, &plot.margins[1])},
-    {"margin-bottom", bind(&measure_read, _1, &plot.margins[2])},
-    {"margin-left", bind(&measure_read, _1, &plot.margins[3])},
-    {"axes", bind(&plotgen::plot_axes, ctx, &plot, _1)},
-    {"areas", bind(&plotgen::plot_areas, ctx, &plot, _1)},
-    {"axis", bind(&plotgen::plot_axis, ctx, &plot, _1)},
-    {"bars", bind(&plotgen::plot_bars, ctx, &plot,_1)},
-    {"errorbars", bind(&plotgen::plot_errorbars, ctx, &plot, _1)},
-    {"grid", bind(&plotgen::plot_grid, ctx, &plot, _1)},
-    {"labels", bind(&plotgen::plot_labels, ctx, &plot, _1)},
-    {"lines", bind(&plotgen::plot_lines, ctx, &plot, _1)},
-    {"points", bind(&plotgen::plot_points, ctx, &plot, _1)},
-    {"polygons", bind(&plotgen::plot_polygons, ctx, &plot, _1)},
-    {"rectangles", bind(&plotgen::plot_rectangles, ctx, &plot, _1)},
-    {"vectors", bind(&plotgen::plot_vectors, ctx, &plot, _1)},
-    {"legend", bind(&plotgen::plot_legend, ctx, &plot, _1)},
-    {"background", bind(&plot_set_background, ctx, &plot, _1)},
-  });
+  /* scale setup */
+  if (auto rc = plot_prepare(ctx, &plot, expr); !rc) {
+    return rc;
+  }
+
+  /* execute drawing commands */
+  if (auto rc = plot_draw(ctx, &plot, expr); !rc) {
+    return rc;
+  }
+
+  return OK;
 }
 
 Rectangle plot_get_clip(const PlotConfig* plot, const Layer* layer) {

@@ -16,7 +16,12 @@
 
 namespace clip::plotgen {
 
-ReturnCode plot_lines(
+ReturnCode lines_draw(
+    Context* ctx,
+    PlotConfig* plot,
+    const Expr* expr);
+
+ReturnCode lines_autorange(
     Context* ctx,
     PlotConfig* plot,
     const Expr* expr);

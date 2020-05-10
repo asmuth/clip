@@ -16,7 +16,12 @@
 
 namespace clip::plotgen {
 
-ReturnCode plot_areas(
+ReturnCode areas_draw(
+    Context* ctx,
+    PlotConfig* plot,
+    const Expr* expr);
+
+ReturnCode areas_autorange(
     Context* ctx,
     PlotConfig* plot,
     const Expr* expr);

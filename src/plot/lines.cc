@@ -54,10 +54,10 @@ struct PlotLinesConfig {
   Measure label_font_size;
 };
 
-ReturnCode plot_lines(
+ReturnCode lines_draw(
     Context* ctx,
     PlotConfig* plot,
-    std::shared_ptr<PlotLinesConfig> config) {
+    PlotLinesConfig* config) {
   const auto& clip = plot_get_clip(plot, layer_get(ctx));
   /* convert units */
   convert_units(
@@ -156,12 +156,12 @@ ReturnCode plot_lines(
   return OK;
 }
 
-ReturnCode plot_lines(
+ReturnCode lines_configure(
     Context* ctx,
     PlotConfig* plot,
+    PlotLinesConfig* c,
     const Expr* expr) {
   /* set defaults from environment */
-  auto c = std::make_shared<PlotLinesConfig>();
   c->scale_x = plot->scale_x;
   c->scale_y = plot->scale_y;
   c->label_font = layer_get_font(ctx);
@@ -253,8 +253,28 @@ ReturnCode plot_lines(
     c->groups.emplace_back(g);
   }
 
-  /* draw */
-  return plot_lines(ctx, plot, c);
+  return OK;
+}
+
+ReturnCode lines_draw(
+    Context* ctx,
+    PlotConfig* plot,
+    const Expr* expr) {
+  PlotLinesConfig conf;
+
+  if (auto rc = lines_configure(ctx, plot, &conf, expr); !rc) {
+    return rc;
+  }
+
+  return lines_draw(ctx, plot, &conf);
+}
+
+ReturnCode lines_autorange(
+    Context* ctx,
+    PlotConfig* plot,
+    const Expr* expr) {
+  PlotLinesConfig conf;
+  return lines_configure(ctx, plot, &conf, expr);
 }
 
 } // namespace clip::plotgen

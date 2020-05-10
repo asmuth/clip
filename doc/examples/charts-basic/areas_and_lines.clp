@@ -4,7 +4,8 @@
 (tools/plotgen
     limit-y (-50 50)
     axes (
-        position (bottom top))
+        position (bottom top)
+        limit-x (0 1))
     areas (
         data-x (csv "test/testdata/areadata2.csv" x)
         data-y (csv "test/testdata/areadata2.csv" z)

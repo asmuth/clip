@@ -61,7 +61,7 @@ struct PlotBarsConfig {
 PlotBarsConfig::PlotBarsConfig() :
     direction(Direction::VERTICAL) {}
 
-ReturnCode plot_bars_horizontal(
+ReturnCode bars_draw_horizontal(
     Context* ctx,
     PlotConfig* plot,
     PlotBarsConfig config) {
@@ -174,7 +174,7 @@ ReturnCode plot_bars_horizontal(
   return OK;
 }
 
-ReturnCode plot_bars_vertical(
+ReturnCode bars_draw_vertical(
     Context* ctx,
     PlotConfig* plot,
     PlotBarsConfig config) {
@@ -289,26 +289,12 @@ ReturnCode plot_bars_vertical(
   return OK;
 }
 
-ReturnCode plot_bars(
+ReturnCode bars_configure(
     Context* ctx,
     PlotConfig* plot,
-    std::shared_ptr<PlotBarsConfig> config) {
-  switch (config->direction) {
-    case Direction::HORIZONTAL:
-      return plot_bars_horizontal(ctx, plot, *config);
-    case Direction::VERTICAL:
-      return plot_bars_vertical(ctx, plot, *config);
-    default:
-      return ERROR;
-  }
-}
-
-ReturnCode plot_bars(
-    Context* ctx,
-    PlotConfig* plot,
+    PlotBarsConfig* c,
     const Expr* expr) {
   /* set defaults from environment */
-  auto c = std::make_shared<PlotBarsConfig>();
   c->scale_x = plot->scale_x;
   c->scale_y = plot->scale_y;
   c->stroke_style.color = layer_get(ctx)->foreground_color;
@@ -434,7 +420,35 @@ ReturnCode plot_bars(
         "the length of the 'data-y' and 'data-y-low' properties must be equal");
   }
 
-  return plot_bars(ctx, plot, c);
+  return OK;
+}
+
+ReturnCode bars_draw(
+    Context* ctx,
+    PlotConfig* plot,
+    const Expr* expr) {
+  PlotBarsConfig conf;
+
+  if (auto rc = bars_configure(ctx, plot, &conf, expr); !rc) {
+    return rc;
+  }
+
+  switch (conf.direction) {
+    case Direction::HORIZONTAL:
+      return bars_draw_horizontal(ctx, plot, conf);
+    case Direction::VERTICAL:
+      return bars_draw_vertical(ctx, plot, conf);
+    default:
+      return ERROR;
+  }
+}
+
+ReturnCode bars_autorange(
+    Context* ctx,
+    PlotConfig* plot,
+    const Expr* expr) {
+  PlotBarsConfig conf;
+  return bars_configure(ctx, plot, &conf, expr);
 }
 
 } // namespace clip::plotgen

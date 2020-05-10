@@ -51,7 +51,7 @@ struct PlotAreaConfig {
 PlotAreaConfig::PlotAreaConfig() :
     direction(Direction::VERTICAL) {}
 
-ReturnCode plot_areas_horizontal(
+ReturnCode areas_draw_horizontal(
     Context* ctx,
     PlotConfig* plot,
     PlotAreaConfig config) {
@@ -149,7 +149,7 @@ ReturnCode plot_areas_horizontal(
   return OK;
 }
 
-ReturnCode plot_areas_vertical(
+ReturnCode areas_draw_vertical(
     Context* ctx,
     PlotConfig* plot,
     PlotAreaConfig config) {
@@ -247,26 +247,12 @@ ReturnCode plot_areas_vertical(
   return OK;
 }
 
-ReturnCode plot_areas(
+ReturnCode areas_configure(
     Context* ctx,
     PlotConfig* plot,
-    std::shared_ptr<PlotAreaConfig> config) {
-  switch (config->direction) {
-    case Direction::HORIZONTAL:
-      return plot_areas_horizontal(ctx, plot, *config);
-    case Direction::VERTICAL:
-      return plot_areas_vertical(ctx, plot, *config);
-    default:
-      return ERROR;
-  }
-}
-
-ReturnCode plot_areas(
-    Context* ctx,
-    PlotConfig* plot,
+    PlotAreaConfig* c,
     const Expr* expr) {
   /* set defaults from environment */
-  auto c = std::make_shared<PlotAreaConfig>();
   c->scale_x = plot->scale_x;
   c->scale_y = plot->scale_y;
   c->stroke_high_style.color = layer_get(ctx)->foreground_color;
@@ -407,7 +393,35 @@ ReturnCode plot_areas(
         "the length of the 'data-y' and 'data-y-low' properties must be equal");
   }
 
-  return plot_areas(ctx, plot, c);
+  return OK;
+}
+
+ReturnCode areas_draw(
+    Context* ctx,
+    PlotConfig* plot,
+    const Expr* expr) {
+  PlotAreaConfig conf;
+
+  if (auto rc = areas_configure(ctx, plot, &conf, expr); !rc) {
+    return rc;
+  }
+
+  switch (conf.direction) {
+    case Direction::HORIZONTAL:
+      return areas_draw_horizontal(ctx, plot, conf);
+    case Direction::VERTICAL:
+      return areas_draw_vertical(ctx, plot, conf);
+    default:
+      return ERROR;
+  }
+}
+
+ReturnCode areas_autorange(
+    Context* ctx,
+    PlotConfig* plot,
+    const Expr* expr) {
+  PlotAreaConfig conf;
+  return areas_configure(ctx, plot, &conf, expr);
 }
 
 } // namespace clip::plotgen

@@ -50,7 +50,7 @@ struct ErrorbarsElement {
   Measure stroke_width;
 };
 
-ReturnCode plot_errorbar(
+ReturnCode errorbars_draw_bar(
     Context* ctx,
     const ErrorbarsElement& config,
     const Point& from,
@@ -80,10 +80,10 @@ ReturnCode plot_errorbar(
   return OK;
 }
 
-ReturnCode plot_errorbars(
+ReturnCode errorbars_draw(
     Context* ctx,
     PlotConfig* plot,
-    std::shared_ptr<ErrorbarsElement> config) {
+    ErrorbarsElement* config) {
   const auto& clip = plot_get_clip(plot, layer_get(ctx));
 
   /* convert units */
@@ -176,7 +176,7 @@ ReturnCode plot_errorbars(
         ? config->stroke_color
         : config->colors[i % config->colors.size()];
 
-    if (auto rc = plot_errorbar(ctx, *config, from, to, color); !rc) {
+    if (auto rc = errorbars_draw_bar(ctx, *config, from, to, color); !rc) {
       return rc;
     }
   }
@@ -194,7 +194,7 @@ ReturnCode plot_errorbars(
         ? config->stroke_color
         : config->colors[i % config->colors.size()];
 
-    if (auto rc = plot_errorbar(ctx, *config, from, to, color); !rc) {
+    if (auto rc = errorbars_draw_bar(ctx, *config, from, to, color); !rc) {
       return rc;
     }
   }
@@ -202,12 +202,12 @@ ReturnCode plot_errorbars(
   return OK;
 }
 
-ReturnCode plot_errorbars(
+ReturnCode errorbars_configure(
     Context* ctx,
     PlotConfig* plot,
+    ErrorbarsElement* c,
     const Expr* expr) {
   /* set defaults from environment */
-  auto c = std::make_shared<ErrorbarsElement>();
   c->stroke_width = from_pt(kDefaultStrokeWidthPT);
   c->bar_width = from_pt(kDefaultBarWidthPT);
   c->stroke_color = layer_get(ctx)->foreground_color;
@@ -374,8 +374,29 @@ ReturnCode plot_errorbars(
     c->colors.push_back(color);
   }
 
-  /* return element */
-  return plot_errorbars(ctx, plot, c);
+
+  return OK;
+}
+
+ReturnCode errorbars_draw(
+    Context* ctx,
+    PlotConfig* plot,
+    const Expr* expr) {
+  ErrorbarsElement conf;
+
+  if (auto rc = errorbars_configure(ctx, plot, &conf, expr); !rc) {
+    return rc;
+  }
+
+  return errorbars_draw(ctx, plot, &conf);
+}
+
+ReturnCode errorbars_autorange(
+    Context* ctx,
+    PlotConfig* plot,
+    const Expr* expr) {
+  ErrorbarsElement conf;
+  return errorbars_configure(ctx, plot, &conf, expr);
 }
 
 } // namespace clip::plotgen

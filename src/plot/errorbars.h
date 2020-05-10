@@ -16,7 +16,12 @@
 
 namespace clip::plotgen {
 
-ReturnCode plot_errorbars(
+ReturnCode errorbars_draw(
+    Context* ctx,
+    PlotConfig* plot,
+    const Expr* expr);
+
+ReturnCode errorbars_autorange(
     Context* ctx,
     PlotConfig* plot,
     const Expr* expr);

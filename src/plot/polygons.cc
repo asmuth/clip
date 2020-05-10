@@ -36,39 +36,45 @@ using std::bind;
 
 namespace clip::plotgen {
 
-ReturnCode plot_polygons(
-    Context* ctx,
-    PlotConfig* plot,
-    const Expr* expr) {
+struct PlotPolygonsConfig {
   std::vector<Poly2> polys;
-  ScaleConfig scale_x = plot->scale_x;
-  ScaleConfig scale_y = plot->scale_y;
+  ScaleConfig scale_x;
+  ScaleConfig scale_y;
   FillStyle fill_style;
   StrokeStyle stroke_style;
-  stroke_style.line_width = from_pt(1);
+};
+
+ReturnCode polygons_configure(
+    Context* ctx,
+    PlotConfig* plot,
+    PlotPolygonsConfig* c,
+    const Expr* expr) {
+  c->scale_x = plot->scale_x;
+  c->scale_y = plot->scale_y;
+  c->stroke_style.line_width = from_pt(1);
 
   /* read arguments */
   auto config_rc = expr_walk_map_wrapped(expr, {
-    {"data", bind(&data_load_polys2, _1, &polys)},
-    {"limit-x", bind(&expr_to_float64_opt_pair, _1, &scale_x.min, &scale_x.max)},
-    {"limit-x-min", bind(&expr_to_float64_opt, _1, &scale_x.min)},
-    {"limit-x-max", bind(&expr_to_float64_opt, _1, &scale_x.max)},
-    {"limit-y", bind(&expr_to_float64_opt_pair, _1, &scale_y.min, &scale_y.max)},
-    {"limit-y-min", bind(&expr_to_float64_opt, _1, &scale_y.min)},
-    {"limit-y-max", bind(&expr_to_float64_opt, _1, &scale_y.max)},
-    {"scale-x", bind(&scale_configure_kind, _1, &scale_x)},
-    {"scale-y", bind(&scale_configure_kind, _1, &scale_y)},
+    {"data", bind(&data_load_polys2, _1, &c->polys)},
+    {"limit-x", bind(&expr_to_float64_opt_pair, _1, &c->scale_x.min, &c->scale_x.max)},
+    {"limit-x-min", bind(&expr_to_float64_opt, _1, &c->scale_x.min)},
+    {"limit-x-max", bind(&expr_to_float64_opt, _1, &c->scale_x.max)},
+    {"limit-y", bind(&expr_to_float64_opt_pair, _1, &c->scale_y.min, &c->scale_y.max)},
+    {"limit-y-min", bind(&expr_to_float64_opt, _1, &c->scale_y.min)},
+    {"limit-y-max", bind(&expr_to_float64_opt, _1, &c->scale_y.max)},
+    {"scale-x", bind(&scale_configure_kind, _1, &c->scale_x)},
+    {"scale-y", bind(&scale_configure_kind, _1, &c->scale_y)},
     {
       "color",
       expr_calln_fn({
-        bind(&color_read, ctx, _1, &stroke_style.color),
-        bind(&fill_style_read_solid, ctx, _1, &fill_style),
+        bind(&color_read, ctx, _1, &c->stroke_style.color),
+        bind(&fill_style_read_solid, ctx, _1, &c->fill_style),
       })
     },
-    {"fill", bind(&fill_style_read, ctx, _1, &fill_style)},
-    {"stroke-color", bind(&color_read, ctx, _1, &stroke_style.color)},
-    {"stroke-width", bind(&measure_read, _1, &stroke_style.line_width)},
-    {"stroke-style", bind(&stroke_style_read, ctx, _1, &stroke_style)},
+    {"fill", bind(&fill_style_read, ctx, _1, &c->fill_style)},
+    {"stroke-color", bind(&color_read, ctx, _1, &c->stroke_style.color)},
+    {"stroke-width", bind(&measure_read, _1, &c->stroke_style.line_width)},
+    {"stroke-style", bind(&stroke_style_read, ctx, _1, &c->stroke_style)},
   });
 
   if (!config_rc) {
@@ -76,31 +82,52 @@ ReturnCode plot_polygons(
   }
 
   /* auto-scaling */
-  for (const auto& p : polys) {
+  for (const auto& p : c->polys) {
     for (const auto& v : p.boundary.vertices) {
-      scale_fit(v.x, &scale_x);
-      scale_fit(v.y, &scale_y);
+      scale_fit(v.x, &c->scale_x);
+      scale_fit(v.y, &c->scale_y);
     }
-  }
-
-
-  /* apply transformation */
-  const auto& bbox = plot_get_clip(plot, layer_get(ctx));
-
-  for (auto& p : polys) {
-    for (auto& v : p.boundary.vertices) {
-      v.x = std::clamp(scale_translate(scale_x, v.x), 0.0, 1.0) * bbox.w + bbox.x;
-      v.y = std::clamp(scale_translate(scale_y, v.y), 0.0, 1.0) * bbox.h + bbox.y;
-    }
-  }
-
-  /* draw polygons */
-  for (const auto& poly : polys) {
-    draw_polygon(ctx, poly, stroke_style, fill_style);
   }
 
   return OK;
 }
+
+ReturnCode polygons_draw(
+    Context* ctx,
+    PlotConfig* plot,
+    const Expr* expr) {
+  PlotPolygonsConfig conf;
+
+  if (auto rc = polygons_configure(ctx, plot, &conf, expr); !rc) {
+    return rc;
+  }
+
+  /* apply transformation */
+  const auto& bbox = plot_get_clip(plot, layer_get(ctx));
+
+  for (auto& p : conf.polys) {
+    for (auto& v : p.boundary.vertices) {
+      v.x = std::clamp(scale_translate(conf.scale_x, v.x), 0.0, 1.0) * bbox.w + bbox.x;
+      v.y = std::clamp(scale_translate(conf.scale_y, v.y), 0.0, 1.0) * bbox.h + bbox.y;
+    }
+  }
+
+  /* draw polygons */
+  for (const auto& poly : conf.polys) {
+    draw_polygon(ctx, poly, conf.stroke_style, conf.fill_style);
+  }
+
+  return OK;
+}
+
+ReturnCode polygons_autorange(
+    Context* ctx,
+    PlotConfig* plot,
+    const Expr* expr) {
+  PlotPolygonsConfig conf;
+  return polygons_configure(ctx, plot, &conf, expr);
+}
+
 
 } // namespace clip::plotgen
 
