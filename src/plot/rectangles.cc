@@ -52,10 +52,10 @@ struct PlotRectanglesConfig {
   Measure size;
 };
 
-ReturnCode plot_rectangles(
+ReturnCode rectangles_draw(
     Context* ctx,
     PlotConfig* plot,
-    std::shared_ptr<PlotRectanglesConfig> config) {
+    PlotRectanglesConfig* config) {
   const auto& clip = plot_get_clip(plot, layer_get(ctx));
 
   /* convert units */
@@ -138,12 +138,12 @@ ReturnCode plot_rectangles(
   return OK;
 }
 
-ReturnCode plot_rectangles(
+ReturnCode rectangles_configure(
     Context* ctx,
     PlotConfig* plot,
+    PlotRectanglesConfig* c,
     const Expr* expr) {
   /* set defaults from environment */
-  auto c = std::make_shared<PlotRectanglesConfig>();
   c->scale_x = plot->scale_x;
   c->scale_y = plot->scale_y;
   c->color = layer_get(ctx)->foreground_color;
@@ -253,7 +253,28 @@ ReturnCode plot_rectangles(
     c->colors.push_back(color);
   }
 
-  return plot_rectangles(ctx, plot, c);
+  return OK;
+}
+
+ReturnCode rectangles_draw(
+    Context* ctx,
+    PlotConfig* plot,
+    const Expr* expr) {
+  PlotRectanglesConfig conf;
+
+  if (auto rc = rectangles_configure(ctx, plot, &conf, expr); !rc) {
+    return rc;
+  }
+
+  return rectangles_draw(ctx, plot, &conf);
+}
+
+ReturnCode rectangles_autorange(
+    Context* ctx,
+    PlotConfig* plot,
+    const Expr* expr) {
+  PlotRectanglesConfig conf;
+  return rectangles_configure(ctx, plot, &conf, expr);
 }
 
 } // namespace clip::plotgen

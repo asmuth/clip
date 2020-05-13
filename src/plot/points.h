@@ -16,7 +16,12 @@
 
 namespace clip::plotgen {
 
-ReturnCode plot_points(
+ReturnCode points_draw(
+    Context* ctx,
+    PlotConfig* plot,
+    const Expr* expr);
+
+ReturnCode points_autorange(
     Context* ctx,
     PlotConfig* plot,
     const Expr* expr);

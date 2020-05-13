@@ -4,7 +4,8 @@
 
 (tools/plotgen
     limit-y (-80 80)
-    axes ()
+    axes (
+        limit-x (0 1))
     grid (
         color (rgba 0 0 0 0.05)
         stroke-style (dashed)

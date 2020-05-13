@@ -16,10 +16,16 @@
 
 namespace clip::plotgen {
 
-ReturnCode plot_polygons (
+ReturnCode polygons_draw(
     Context* ctx,
     PlotConfig* plot,
     const Expr* expr);
+
+ReturnCode polygons_autorange(
+    Context* ctx,
+    PlotConfig* plot,
+    const Expr* expr);
+
 
 } // namespace clip::plotgen
 

@@ -16,7 +16,12 @@
 
 namespace clip::plotgen {
 
-ReturnCode plot_labels(
+ReturnCode labels_draw(
+    Context* ctx,
+    PlotConfig* plot,
+    const Expr* expr);
+
+ReturnCode labels_autorange(
     Context* ctx,
     PlotConfig* plot,
     const Expr* expr);

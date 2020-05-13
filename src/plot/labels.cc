@@ -45,10 +45,10 @@ struct PlotLabelsConfig {
   Color label_color;
 };
 
-ReturnCode plot_labels(
+ReturnCode labels_draw(
     Context* ctx,
     PlotConfig* plot,
-    std::shared_ptr<PlotLabelsConfig> config) {
+    PlotLabelsConfig* config) {
   const auto& clip = plot_get_clip(plot, layer_get(ctx));
 
   /* convert units */
@@ -94,12 +94,12 @@ ReturnCode plot_labels(
   return OK;
 }
 
-ReturnCode plot_labels(
+ReturnCode labels_configure(
     Context* ctx,
     PlotConfig* plot,
+    PlotLabelsConfig* c,
     const Expr* expr) {
   /* set defaults from environment */
-  auto c = std::make_shared<PlotLabelsConfig>();
   c->scale_x = plot->scale_x;
   c->scale_y = plot->scale_y;
   c->label_font = layer_get_font(ctx);
@@ -162,7 +162,28 @@ ReturnCode plot_labels(
         "the length of the 'data-x' and 'data-y' properties must be equal and non-empty");
   }
 
-  return plot_labels(ctx, plot, c);
+  return OK;
+}
+
+ReturnCode labels_draw(
+    Context* ctx,
+    PlotConfig* plot,
+    const Expr* expr) {
+  PlotLabelsConfig conf;
+
+  if (auto rc = labels_configure(ctx, plot, &conf, expr); !rc) {
+    return rc;
+  }
+
+  return labels_draw(ctx, plot, &conf);
+}
+
+ReturnCode labels_autorange(
+    Context* ctx,
+    PlotConfig* plot,
+    const Expr* expr) {
+  PlotLabelsConfig conf;
+  return labels_configure(ctx, plot, &conf, expr);
 }
 
 } // namespace clip::plotgen

@@ -11,10 +11,10 @@
         title-right "Value"
         title-rotate-right 90
         title-font-size-right 14pt
-        label-format-top (datetime "%H:%M:%S")
+        label-format-top (datetime "%H:%M")
         title-top "Time"
         title-font-size-top 14pt
-        label-format-bottom (datetime "%H:%M:%S")
+        label-format-bottom (datetime "%H:%M")
         title-bottom "Time"
         title-font-size-bottom 14pt)
     lines (

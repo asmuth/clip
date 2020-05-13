@@ -16,7 +16,12 @@
 
 namespace clip::plotgen {
 
-ReturnCode plot_vectors(
+ReturnCode vectors_draw(
+    Context* ctx,
+    PlotConfig* plot,
+    const Expr* expr);
+
+ReturnCode vectors_autorange(
     Context* ctx,
     PlotConfig* plot,
     const Expr* expr);

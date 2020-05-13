@@ -57,10 +57,10 @@ struct PlotVectorsConfig {
   Color label_color;
 };
 
-ReturnCode plot_vectors(
+ReturnCode vectors_draw(
     Context* ctx,
     PlotConfig* plot,
-    std::shared_ptr<PlotVectorsConfig> config) {
+    PlotVectorsConfig* config) {
   const auto& clip = plot_get_clip(plot, layer_get(ctx));
 
   /* convert units */
@@ -139,12 +139,12 @@ ReturnCode plot_vectors(
   return OK;
 }
 
-ReturnCode plot_vectors(
+ReturnCode vectors_configure(
     Context* ctx,
     PlotConfig* plot,
+    PlotVectorsConfig* c,
     const Expr* expr) {
   /* set defaults from environment */
-  auto c = std::make_shared<PlotVectorsConfig>();
   c->scale_x = plot->scale_x;
   c->scale_y = plot->scale_y;
   c->color = layer_get(ctx)->foreground_color;
@@ -264,7 +264,28 @@ ReturnCode plot_vectors(
     c->sizes.push_back(m);
   }
 
-  return plot_vectors(ctx, plot, c);
+  return OK;
+}
+
+ReturnCode vectors_draw(
+    Context* ctx,
+    PlotConfig* plot,
+    const Expr* expr) {
+  PlotVectorsConfig conf;
+
+  if (auto rc = vectors_configure(ctx, plot, &conf, expr); !rc) {
+    return rc;
+  }
+
+  return vectors_draw(ctx, plot, &conf);
+}
+
+ReturnCode vectors_autorange(
+    Context* ctx,
+    PlotConfig* plot,
+    const Expr* expr) {
+  PlotVectorsConfig conf;
+  return vectors_configure(ctx, plot, &conf, expr);
 }
 
 } // namespace clip::plotgen

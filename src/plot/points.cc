@@ -56,10 +56,10 @@ struct PlotPointsConfig {
   Color label_color;
 };
 
-ReturnCode plot_points(
+ReturnCode points_draw(
     Context* ctx,
     PlotConfig* plot,
-    std::shared_ptr<PlotPointsConfig> config) {
+    PlotPointsConfig* config) {
   const auto& clip = plot_get_clip(plot, layer_get(ctx));
 
   /* convert units */
@@ -146,12 +146,12 @@ ReturnCode plot_points(
   return OK;
 }
 
-ReturnCode plot_points(
+ReturnCode points_configure(
     Context* ctx,
     PlotConfig* plot,
+    PlotPointsConfig* c,
     const Expr* expr) {
   /* set defaults from environment */
-  auto c = std::make_shared<PlotPointsConfig>();
   c->scale_x = plot->scale_x;
   c->scale_y = plot->scale_y;
   c->color = layer_get(ctx)->foreground_color;
@@ -265,7 +265,28 @@ ReturnCode plot_points(
     c->sizes.push_back(m);
   }
 
-  return plot_points(ctx, plot, c);
+  return OK;
+}
+
+ReturnCode points_draw(
+    Context* ctx,
+    PlotConfig* plot,
+    const Expr* expr) {
+  PlotPointsConfig conf;
+
+  if (auto rc = points_configure(ctx, plot, &conf, expr); !rc) {
+    return rc;
+  }
+
+  return points_draw(ctx, plot, &conf);
+}
+
+ReturnCode points_autorange(
+    Context* ctx,
+    PlotConfig* plot,
+    const Expr* expr) {
+  PlotPointsConfig conf;
+  return points_configure(ctx, plot, &conf, expr);
 }
 
 } // namespace clip::plotgen

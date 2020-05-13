@@ -16,7 +16,12 @@
 
 namespace clip::plotgen {
 
-ReturnCode plot_bars(
+ReturnCode bars_draw(
+    Context* ctx,
+    PlotConfig* plot,
+    const Expr* expr);
+
+ReturnCode bars_autorange(
     Context* ctx,
     PlotConfig* plot,
     const Expr* expr);

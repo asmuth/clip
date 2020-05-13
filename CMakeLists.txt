@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.8)
-project(clip VERSION "0.6.0")
+project(clip VERSION "0.7.0")
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/extra/cmake")
 
 
@@ -130,7 +130,7 @@ foreach(example_path ${example_files})
   add_custom_target(
       example_${example_name}
       WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-      COMMAND ${CMAKE_CURRENT_BINARY_DIR}/clip --in ${example_srcdir}/${example_name}.clp --out ${example_srcdir}/${example_name}.svg)
+      COMMAND ${CMAKE_CURRENT_BINARY_DIR}/clip ${example_srcdir}/${example_name}.clp -e ${example_srcdir}/${example_name}.svg)
   add_dependencies(examples example_${example_name})
   add_dependencies(example_${example_name} clip-cli)
 endforeach()
