@@ -113,32 +113,13 @@ add_custom_target(test
     COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/test/test_runner.sh
     DEPENDS clip-cli)
 
-add_custom_target(test-examples ${CMAKE_CURRENT_SOURCE_DIR}/doc/examples/update_tests.sh)
-add_dependencies(test test-examples)
-
 add_custom_target(test-extract-data ${CMAKE_CURRENT_SOURCE_DIR}/test/testdata/extract_testdata.sh)
 add_dependencies(test test-extract-data)
 
 
-# Examples
-# -----------------------------------------------------------------------------
-add_custom_target(examples)
-file(GLOB example_files "doc/examples/**/*.clp")
-foreach(example_path ${example_files})
-  get_filename_component(example_name ${example_path} NAME_WE)
-  get_filename_component(example_srcdir ${example_path} DIRECTORY)
-  add_custom_target(
-      example_${example_name}
-      WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-      COMMAND ${CMAKE_CURRENT_BINARY_DIR}/clip ${example_srcdir}/${example_name}.clp -e ${example_srcdir}/${example_name}.svg)
-  add_dependencies(examples example_${example_name})
-  add_dependencies(example_${example_name} clip-cli)
-endforeach()
-
-
 # Documentation
 # -----------------------------------------------------------------------------
-add_custom_target(docs
+add_custom_target(doc
     COMMAND mkdir -p ${CMAKE_CURRENT_BINARY_DIR}/wwwdocs
     COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/doc/web/build.sh ${CMAKE_CURRENT_BINARY_DIR}/wwwdocs)
 
