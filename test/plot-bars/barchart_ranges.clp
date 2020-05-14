@@ -1,7 +1,7 @@
 (layer/resize 1024px 512px)
 (layer/set-dpi 96)
 
-(tools/plotgen
+(figure/plot
     limit-x (0.5 6.5)
     limit-y (-20 70)
     bars (

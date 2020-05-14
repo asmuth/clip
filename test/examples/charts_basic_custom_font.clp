@@ -2,7 +2,7 @@
 (layer/set-dpi 240)
 (layer/set-font "Comic Sans MS")
 
-(tools/plotgen
+(figure/plot
     limit-x (1404278100 1404299700)
     limit-y (0 120)
     grid (

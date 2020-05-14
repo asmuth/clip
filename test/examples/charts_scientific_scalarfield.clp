@@ -2,7 +2,7 @@
 (layer/set-dpi 240)
 (layer/set-font "Latin Modern Roman")
 
-(tools/plotgen
+(figure/plot
     limit-x (-500 500)
     limit-y (-200 200)
     axes ()

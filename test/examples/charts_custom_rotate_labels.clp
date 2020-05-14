@@ -1,7 +1,7 @@
 (layer/resize 2048px 1200px)
 (layer/set-dpi 240)
 
-(tools/plotgen
+(figure/plot
     limit-x (1404278100 1404299700)
     limit-y (0 1)
     axes (

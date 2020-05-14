@@ -1,7 +1,7 @@
 (layer/resize 1024px 512px)
 (layer/set-dpi 96)
 
-(tools/plotgen
+(figure/plot
     margin 8em
     axis (
         align top

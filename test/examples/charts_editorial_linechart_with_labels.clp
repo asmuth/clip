@@ -1,7 +1,7 @@
 (layer/resize 1600px 800px)
 (layer/set-dpi 240)
 
-(tools/plotgen
+(figure/plot
     scale-x-padding 0.6
     limit-x (0.5 12.5)
     limit-y (0 25)

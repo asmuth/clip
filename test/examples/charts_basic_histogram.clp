@@ -1,7 +1,7 @@
 (layer/resize 1024px 512px)
 (layer/set-dpi 240)
 
-(tools/plotgen
+(figure/plot
     limit-x (0 7)
     limit-y (0 10000)
     scale-y (log)

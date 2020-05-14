@@ -1,7 +1,7 @@
 (layer/resize 1200px 600px)
 (layer/set-dpi 96)
 
-(tools/plotgen
+(figure/plot
     legend (
         item-flow on
         item (label "Fnord Test 1" color #06c)

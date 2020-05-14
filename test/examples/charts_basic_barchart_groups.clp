@@ -1,7 +1,7 @@
 (layer/resize 2048px 512px)
 (layer/set-dpi 240)
 
-(tools/plotgen
+(figure/plot
     scale-x (categorical (A B C D E F))
     limit-y (0 80)
     axes (

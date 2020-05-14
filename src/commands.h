@@ -24,7 +24,7 @@ const CommandMap COMMANDS = {
   {"layer/set-dpi", bind_cmd(&layer_set_dpi)},
   {"layer/set-font", bind_cmd(&layer_set_font)},
   {"layer/set-font-size", bind_cmd(&layer_set_font_size)},
-  {"tools/plotgen", bind_cmd(&plot_eval)},
+  {"figure/plot", bind_cmd(&plot_eval)},
 };
 
 CommandFn bind_cmd(CommandFnRef ref) {

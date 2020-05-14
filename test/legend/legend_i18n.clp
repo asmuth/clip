@@ -2,7 +2,7 @@
 (layer/set-dpi 320)
 (layer/set-font-size 14pt)
 
-(tools/plotgen
+(figure/plot
     legend (
         item (label "i北京市 (Beijing)" color #06c)
         item (label "תל אביב (Tel Aviv)" color #c06)

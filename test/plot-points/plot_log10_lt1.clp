@@ -1,7 +1,7 @@
 (layer/resize 1024px 512px)
 (layer/set-dpi 96)
 
-(tools/plotgen
+(figure/plot
     points (
         limit-x (0 20)
         limit-y (0.0001 10000)

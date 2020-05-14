@@ -1,7 +1,7 @@
 (layer/resize 1024px 512px)
 (layer/set-dpi 96)
 
-(tools/plotgen
+(figure/plot
     points (
         data-x (csv test/testdata/gauss3d.csv x)
         data-y (csv test/testdata/gauss3d.csv y)

@@ -1,7 +1,7 @@
 (layer/resize 1024px 60px)
 (layer/set-dpi 96)
 
-(tools/plotgen
+(figure/plot
     margin 1em
     axis (
         scale (logarithmic 10)

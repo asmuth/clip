@@ -2,7 +2,7 @@
 (layer/set-dpi 240)
 (layer/set-font "Latin Modern Roman")
 
-(tools/plotgen
+(figure/plot
     scale-x (categorical (A B C D E F))
     limit-y (-10 70)
     legend (

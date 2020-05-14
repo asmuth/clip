@@ -2,7 +2,7 @@
 (layer/set-dpi 240)
 (layer/set-font "Latin Modern Roman")
 
-(tools/plotgen
+(figure/plot
     limit-y (0 1000)
     limit-x (0 1000)
     scale-y (logarithmic)

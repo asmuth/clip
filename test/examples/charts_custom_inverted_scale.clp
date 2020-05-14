@@ -1,7 +1,7 @@
 (layer/resize 2048px 800px)
 (layer/set-dpi 240)
 
-(tools/plotgen
+(figure/plot
     scale-y (inverted)
     limit-y (0 140)
     limit-x (1404278100 1404299700)

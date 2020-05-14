@@ -1,7 +1,7 @@
 (layer/resize 1200px 480px)
 (layer/set-dpi 96)
 
-(tools/plotgen
+(figure/plot
     limit-y (-50 50)
     axes (
         position (bottom top)

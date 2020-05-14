@@ -1,7 +1,7 @@
 (layer/resize 900px 600px)
 (layer/set-dpi 96)
 
-(tools/plotgen
+(figure/plot
     legend (
         position (top center)
         item (label "Fnord Test 1" color #06c)

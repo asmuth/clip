@@ -2,7 +2,7 @@
 (layer/set-dpi 240)
 (layer/set-font "Latin Modern Roman")
 
-(tools/plotgen
+(figure/plot
     limit-x (0 7200)
     axes (
         label-format-x (datetime "%H:%M:%S")

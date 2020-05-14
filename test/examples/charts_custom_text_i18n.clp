@@ -1,7 +1,7 @@
 (layer/resize 3600px 1920px)
 (layer/set-dpi 400)
 
-(tools/plotgen
+(figure/plot
     legend (
         border none
         margin 0

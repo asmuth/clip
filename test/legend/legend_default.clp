@@ -1,7 +1,7 @@
 (layer/resize 400px 600px)
 (layer/set-dpi 96)
 
-(tools/plotgen
+(figure/plot
     legend (
         item (label "Fnord Test 1" color #06c)
         item (label "Fnord Test 2" color #c06)

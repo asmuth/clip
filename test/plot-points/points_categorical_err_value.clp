@@ -1,7 +1,7 @@
 (layer/resize 1024px 512px)
 (layer/set-dpi 96)
 
-(tools/plotgen
+(figure/plot
     points (
         scale-x (categorical ("blah" "fu"))
         data-x ("a" "b" "c" "d" "e")

@@ -3,7 +3,7 @@
 
 ;;(set color-palette (#0c0 #c00 #00c))
 
-(tools/plotgen
+(figure/plot
     legend (
         item (label "Test Color 1" color 1)
         item (label "Test Color 2" color 2)

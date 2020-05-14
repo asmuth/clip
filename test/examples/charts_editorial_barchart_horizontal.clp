@@ -1,7 +1,7 @@
 (layer/resize 2048px 800px)
 (layer/set-dpi 240)
 
-(tools/plotgen
+(figure/plot
     limit-x (0 24)
     scale-y (categorical (csv "test/testdata/gdp_per_capita_2010.csv" country))
     axes (

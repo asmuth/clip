@@ -1,7 +1,7 @@
 (layer/resize 2048px 1024px)
 (layer/set-dpi 240)
 
-(tools/plotgen
+(figure/plot
     limit-x (1404278100 1404299700)
     axes (
         label-format-left (scientific)
