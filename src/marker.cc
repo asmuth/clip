@@ -79,7 +79,7 @@ Marker marker_create_circle(double border_width) {
       const auto& pos,
       const auto& size,
       const auto& color) {
-    draw_cmd::Shape shape;
+    DrawCommand shape;
     shape.stroke_style.color = color;
     shape.stroke_style.line_width = from_unit(double(size) * border_width * 0.5);
     path_add_circle(&shape.path, pos, size * 0.5);
@@ -94,7 +94,7 @@ Marker marker_create_disk() {
       const auto& pos,
       const auto& size,
       const auto& color) {
-    draw_cmd::Shape shape;
+    DrawCommand shape;
     path_add_circle(&shape.path, pos, size * 0.5);
     shape.fill_style.color = color;
     draw_shape(ctx, shape);

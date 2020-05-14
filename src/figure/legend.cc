@@ -235,7 +235,7 @@ ReturnCode plot_legend_borders(
     const Rectangle& bbox) {
   /* draw top border  */
   if (borders[0].line_width > 0) {
-    draw_cmd::Shape line;
+    DrawCommand line;
     line.stroke_style.line_width = borders[0].line_width;
     line.stroke_style.color = borders[0].color;
 
@@ -249,7 +249,7 @@ ReturnCode plot_legend_borders(
 
   /* draw right border  */
   if (borders[1].line_width > 0) {
-    draw_cmd::Shape line;
+    DrawCommand line;
     line.stroke_style.line_width = borders[1].line_width;
     line.stroke_style.color = borders[1].color;
 
@@ -263,7 +263,7 @@ ReturnCode plot_legend_borders(
 
   /* draw top border  */
   if (borders[2].line_width > 0) {
-    draw_cmd::Shape line;
+    DrawCommand line;
     line.stroke_style.line_width = borders[2].line_width;
     line.stroke_style.color = borders[2].color;
 
@@ -277,7 +277,7 @@ ReturnCode plot_legend_borders(
 
   /* draw left border  */
   if (borders[3].line_width > 0) {
-    draw_cmd::Shape line;
+    DrawCommand line;
     line.stroke_style.line_width = borders[3].line_width;
     line.stroke_style.color = borders[3].color;
 
@@ -376,7 +376,7 @@ ReturnCode plot_legend(
 
   /* draw background */
   if (config->background) {
-    draw_cmd::Shape shape;
+    DrawCommand shape;
     shape.fill_style.color = *config->background;
     path_add_rectangle(&shape.path, border_box);
     draw_shape(ctx, shape);

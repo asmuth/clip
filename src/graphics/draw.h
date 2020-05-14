@@ -23,14 +23,6 @@ namespace clip {
 struct Context;
 
 /**
- * The draw command list represents a list of abstract 2D vector graphics
- * operations, such as rendering text and drawing polygons. Note that the "list"
- * is not necessarily a flat list, but may be a tree.
- */
-using DrawCommand = std::variant<draw_cmd::Text, draw_cmd::Shape, draw_cmd::Polygon>;
-using DrawCommandList = std::vector<DrawCommand>;
-
-/**
  * The page structure stores a number of global drawing properties
  */
 struct Page {
@@ -46,7 +38,7 @@ struct Page {
 
 void draw_shape(
     Context* ctx,
-    draw_cmd::Shape elem);
+    DrawCommand elem);
 
 void draw_path(
     Context* ctx,
@@ -74,7 +66,7 @@ void draw_line(
 
 void draw_text(
     Context* ctx,
-    draw_cmd::Text elem);
+    const TextInfo& elem);
 
 ReturnCode draw_text(
     Context* ctx,

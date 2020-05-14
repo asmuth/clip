@@ -26,8 +26,8 @@ void draw_polygon(
       layer_get_font_size(ctx),
       &stroke_style.line_width);
 
-  draw_cmd::Polygon elem;
-  elem.poly = poly;
+  DrawCommand elem;
+  elem.path = path_from_poly2(poly);
   elem.stroke_style = stroke_style;
   elem.fill_style = fill_style;
   layer_get(ctx)->drawlist.push_back(elem);

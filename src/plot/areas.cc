@@ -105,13 +105,13 @@ ReturnCode areas_draw_horizontal(
       &config.stroke_low_style.line_width);
 
   /* draw areas */
-  draw_cmd::Shape shape;
+  DrawCommand shape;
   shape.fill_style = config.fill_style;
 
-  draw_cmd::Shape stroke_high;
+  DrawCommand stroke_high;
   stroke_high.stroke_style = config.stroke_high_style;
 
-  draw_cmd::Shape stroke_low;
+  DrawCommand stroke_low;
   stroke_low.stroke_style = config.stroke_low_style;
 
   for (size_t i = 0; i < config.x.size(); ++i) {
@@ -203,13 +203,13 @@ ReturnCode areas_draw_vertical(
       &config.stroke_low_style.line_width);
 
   /* draw areas */
-  draw_cmd::Shape shape;
+  DrawCommand shape;
   shape.fill_style = config.fill_style;
 
-  draw_cmd::Shape stroke_high;
+  DrawCommand stroke_high;
   stroke_high.stroke_style = config.stroke_high_style;
 
-  draw_cmd::Shape stroke_low;
+  DrawCommand stroke_low;
   stroke_low.stroke_style = config.stroke_low_style;
 
   for (size_t i = 0; i < config.x.size(); ++i) {

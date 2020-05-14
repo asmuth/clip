@@ -128,7 +128,7 @@ ReturnCode rectangles_draw(
         ? config->size_y_default
         : config->size_y[i % config->size_y.size()];
 
-    draw_cmd::Shape rect;
+    DrawCommand rect;
     rect.fill_style.color = color;
     rect.antialiasing_mode = AntialiasingMode::DISABLE;
     path_add_rectangle(&rect.path, Point(sx, sy), {size_x, size_y});

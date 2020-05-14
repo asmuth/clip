@@ -5,6 +5,7 @@ source_path="$(realpath "$(dirname "$0")/..")"
 proc_path="$(realpath "./clip")"
 test_path="${source_path}/test"
 result_path="$(realpath ./test-results)"
+force=${TEST_FORCE:-0}
 
 mkdir -p "${result_path}"
 
@@ -104,7 +105,7 @@ run_test() {
 		return 1
 	fi
 
-	if [[ ! -e ${reffile} ]]; then
+	if [[ ! -e ${reffile} || ${force} == 1 ]]; then
 		cp ${outfile} ${reffile}
 	fi
 

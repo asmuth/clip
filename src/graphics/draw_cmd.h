@@ -14,7 +14,6 @@
 #pragma once
 #include <stdlib.h>
 #include <string>
-#include <variant>
 #include <vector>
 
 #include "color.h"
@@ -24,9 +23,23 @@
 #include "font_lookup.h"
 #include "style.h"
 
-namespace clip::draw_cmd {
+namespace clip {
 
-struct Text {
+struct DrawCommand {
+  Path path;
+  StrokeStyle stroke_style;
+  FillStyle fill_style;
+  Option<AntialiasingMode> antialiasing_mode;
+};
+
+/**
+ * The draw command list represents a list of abstract 2D vector graphics
+ * operations, such as rendering text and drawing polygons. Note that the "list"
+ * is not necessarily a flat list, but may be a tree.
+ */
+using DrawCommandList = std::vector<DrawCommand>;
+
+struct TextInfo {
   std::string text;
   std::vector<text::GlyphPlacementGroup> glyphs;
 
@@ -37,19 +50,5 @@ struct Text {
   Option<mat3> transform;
 };
 
-struct Shape {
-  Path path;
-  StrokeStyle stroke_style;
-  FillStyle fill_style;
-  Option<AntialiasingMode> antialiasing_mode;
-};
-
-struct Polygon {
-  Poly2 poly;
-  StrokeStyle stroke_style;
-  FillStyle fill_style;
-  Option<AntialiasingMode> antialiasing_mode;
-};
-
-} // namespace clip::draw_cmd
+} // namespace clip
 

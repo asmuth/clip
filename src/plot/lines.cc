@@ -106,7 +106,7 @@ ReturnCode lines_draw(
       }
     }
 
-    draw_cmd::Shape elem;
+    DrawCommand elem;
     elem.path = path;
     elem.stroke_style = config->stroke_style;
     draw_shape(ctx, elem);

@@ -31,18 +31,8 @@ ReturnCode page_export_png(
   Rasterizer rasterizer(page.width, page.height, page.dpi);
   rasterizer.clear(page.background_color);
 
-  for (const auto& cmd : drawlist) {
-    auto rc = std::visit([&rasterizer] (const auto& c) {
-      using T = std::decay_t<decltype(c)>;
-      if constexpr (std::is_same_v<T, draw_cmd::Text>)
-        return rasterizer.drawText(c.glyphs, c.style, c.transform);
-      if constexpr (std::is_same_v<T, draw_cmd::Shape>)
-        return rasterizer.drawShape(c.path, c.stroke_style, c.fill_style);
-
-      return ERROR;
-    }, cmd);
-
-    if (!rc) {
+  for (const auto& c : drawlist) {
+    if (auto rc = rasterizer.drawShape(c.path, c.stroke_style, c.fill_style); !rc) {
       return rc;
     }
   }

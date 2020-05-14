@@ -41,6 +41,7 @@ struct Layer {
   DrawCommandList drawlist;
 };
 
+
 ReturnCode layer_create(
     Context* ctx,
     std::unique_ptr<Layer>* layer_storage);

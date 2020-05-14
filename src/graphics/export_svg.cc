@@ -213,7 +213,7 @@ Status svg_add_path(
 }
 
 Status svg_add_shape_elem(
-    const draw_cmd::Shape& elem,
+    const DrawCommand& elem,
     SVGDataRef svg) {
   return svg_add_path(
       elem.path,
@@ -223,19 +223,8 @@ Status svg_add_shape_elem(
       svg);
 }
 
-Status svg_add_polygon_elem(
-    const draw_cmd::Polygon& elem,
-    SVGDataRef svg) {
-  return svg_add_path(
-      path_from_poly2(elem.poly),
-      elem.fill_style,
-      elem.stroke_style,
-      elem.antialiasing_mode,
-      svg);
-}
-
 Status svg_add_text_elem_native(
-    const draw_cmd::Text& elem,
+    const TextInfo& elem,
     SVGDataRef svg) {
   const auto& style = elem.style;
   auto origin = mul(svg->proj, vec3{elem.origin, 1});
@@ -277,7 +266,7 @@ Status svg_add_text_elem_native(
 }
 
 Status svg_add_text_elem_embed(
-    const draw_cmd::Text& elem,
+    const TextInfo& elem,
     double dpi,
     SVGDataRef svg) {
   const auto& style = elem.style;
@@ -317,7 +306,7 @@ Status svg_add_text_elem_embed(
 }
 
 Status svg_add_text_elem(
-    const draw_cmd::Text& elem,
+    const TextInfo& elem,
     double dpi,
     SVGDataRef svg) {
   if (elem.style.font.font_family_css.empty()) {
@@ -341,19 +330,7 @@ ReturnCode export_svg(
   svg->proj = mul(translate2({0, layer->height}), scale2({1, -1}));
 
   for (const auto& cmd : layer->drawlist) {
-    auto rc = std::visit([svg, layer] (const auto& c) -> ReturnCode {
-      using T = std::decay_t<decltype(c)>;
-      if constexpr (std::is_same_v<T, draw_cmd::Text>)
-        return svg_add_text_elem(c, layer->dpi, svg);
-      if constexpr (std::is_same_v<T, draw_cmd::Shape>)
-        return svg_add_shape_elem(c, svg);
-      if constexpr (std::is_same_v<T, draw_cmd::Polygon>)
-        return svg_add_polygon_elem(c, svg);
-
-      return error(ERROR, "element not supported");
-    }, cmd);
-
-    if (!rc) {
+    if (auto rc = svg_add_shape_elem(cmd, svg); !rc) {
       return rc;
     }
   }

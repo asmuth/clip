@@ -15,7 +15,6 @@
 #include "utils/option.h"
 #include <iostream>
 #include <fstream>
-#include <variant>
 
 namespace clip {
 

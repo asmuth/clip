@@ -20,7 +20,7 @@
 
 namespace clip {
 
-void draw_shape(Context* ctx, draw_cmd::Shape elem) {
+void draw_shape(Context* ctx, DrawCommand elem) {
   layer_get(ctx)->drawlist.emplace_back(std::move(elem));
 }
 
@@ -29,7 +29,7 @@ void draw_path(
     const Path& path,
     StrokeStyle stroke_style,
     FillStyle fill_style) {
-  draw_cmd::Shape shape;
+  DrawCommand shape;
   shape.path = path;
   shape.stroke_style = stroke_style;
   shape.fill_style = fill_style;
@@ -41,15 +41,42 @@ void draw_line(
     vec2 from,
     vec2 to,
     StrokeStyle stroke_style) {
-  draw_cmd::Shape shape;
+  DrawCommand shape;
   shape.path.moveTo(from.x, from.y);
   shape.path.lineTo(to.x, to.y);
   shape.stroke_style = stroke_style;
   draw_shape(ctx, shape);
 }
 
-void draw_text(Context* ctx, draw_cmd::Text elem) {
-  layer_get(ctx)->drawlist.emplace_back(std::move(elem));
+void draw_text(Context* ctx, const TextInfo& elem) {
+  const auto& style = elem.style;
+
+  for (const auto& gg : elem.glyphs) {
+    for (const auto& g : gg.glyphs) {
+      auto gt = translate2({g.x, g.y});
+      if (elem.transform) {
+        gt = mul(*elem.transform, gt);
+      }
+
+      Path gp;
+      auto rc = font_get_glyph_path(
+          g.font,
+          elem.style.font_size,
+          layer_get_dpi(ctx),
+          g.codepoint,
+          &gp);
+
+      if (!rc) {
+        return;
+      }
+
+      DrawCommand shape;
+      shape.path = path_transform(gp, gt);
+      shape.fill_style.color = style.color;
+      draw_shape(ctx, shape);
+    }
+  }
+
 }
 
 ReturnCode draw_text(
@@ -104,7 +131,7 @@ ReturnCode draw_text(
     }
   }
 
-  draw_cmd::Text op;
+  TextInfo op;
   op.text = text;
   op.glyphs = std::move(glyphs);
 
