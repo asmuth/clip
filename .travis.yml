@@ -1,15 +1,5 @@
 language: cpp
-dist: bionic
 sudo: required
-osx_image: xcode11
-
-os:
-  - linux
-  - osx
-
-compiler:
-  - gcc
-  - clang
 
 before_install:
   - if [[ "${TRAVIS_OS_NAME}" == "linux" ]]; then sudo apt-get update -qq; fi
@@ -20,3 +10,16 @@ before_install:
 script:
   - cmake .
   - make all
+
+jobs:
+  include:
+    - os: linux
+      dist: bionic
+      compiler: gcc
+    - os: linux
+      dist: bionic
+      compiler: clang
+    - os: osx
+      osx_image: xcode9.4
+    - os: osx
+      osx_image: xcode11
