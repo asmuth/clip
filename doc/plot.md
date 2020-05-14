@@ -50,7 +50,7 @@ List of elements
 
     <tr>
       <td><a href="/plot/lines">lines</a></td>
-      <td>Read input data and render it as text lines</td>
+      <td>Read input data and render it as lines</td>
     </tr>
 
     <tr>
