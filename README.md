@@ -27,27 +27,29 @@ Example
 Being a highly visual tool, clip is best explained by example. So here is how to
 draw a simple line chart using clip:
 
-    $ clip --in example_chart.clp --out example_chart.svg
+    $ clip --export example_chart.svg example_chart.clp
 
 Output File (`example_chart.svg`):
-[![A simple scatterplot](/doc/examples/charts-basic/demo_timeseries.svg)](https://clip-lang.org/examples/charts-basic/demo_timeseries)
+[![A simple scatterplot](/doc/demo_timeseries.svg)](https://clip-lang.org/examples/charts-basic/demo_timeseries)
 
 Input File (`example_chart.clp`):
 
-    (plot/axes
-        position (bottom left)
-        label-format-y (scientific)
-        label-format-x (datetime "%H:%M:%S")
-        label-placement-x (linear-align 1800))
+    (figure/plot
+        limit-x (1404278100 1404299700)
+        limit-y (6000000 10000000)
+        axes (
+            position (bottom left)
+            label-format-y (scientific)
+            label-format-x (datetime "%H:%M:%S")
+            label-placement-x (linear-align 1800))
+        lines (
+            data-x (csv "test/testdata/measurement.csv" time)
+            data-y (csv "test/testdata/measurement.csv" value1)
+            color #06c)
+        legend (
+            position (top right)
+            item (label "Random Data" color #06c)))
 
-    (plot/lines
-        data-x (csv "test/testdata/measurement.csv" time)
-        data-y (csv "test/testdata/measurement.csv" value1)
-        color #06c)
-
-    (figure/legend
-        position (top right)
-        item (label "Random Data" color #06c))
 
 Note that this example is only intended to give you an idea of what the syntax
 looks like and to get you started quickly; for an in-depth description of all
@@ -78,8 +80,7 @@ To build clip, you need an up-to-date C++ compiler, cmake, fmtlib, libharfbuzz,
 libfreetype and cairo. Run:
 
     $ cmake .
-    $ make -j $(($(nproc)/2)) # for linux users, or
-    $ make -j $(($(sysctl -n hw.ncpu)/2)) # for mac users 
+    $ make
 
 To install the `clip` binary into your system, run `make install`:
 
