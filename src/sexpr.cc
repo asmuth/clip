@@ -105,7 +105,7 @@ ExprStorage* expr_get_list_storage(Expr* expr) {
 }
 
 bool expr_is_value(const Expr* expr) {
-  return expr && expr->type == ExprType::VALUE || expr->type == ExprType::VALUE_LITERAL;
+  return expr && (expr->type == ExprType::VALUE || expr->type == ExprType::VALUE_LITERAL);
 }
 
 bool expr_is_value(const Expr* expr, const std::string& cmp) {
