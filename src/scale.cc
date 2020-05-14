@@ -161,11 +161,11 @@ double scale_translate_magnitude(
 }
 
 std::function<double (double)> scale_translate_fn(const ScaleConfig& domain) {
-  return bind(&scale_translate, domain, std::placeholders::_1);
+  return std::bind(&scale_translate, domain, std::placeholders::_1);
 }
 
 std::function<double (double)> scale_translate_magnitude_fn(const ScaleConfig& domain) {
-  return bind(&scale_translate_magnitude, domain, std::placeholders::_1);
+  return std::bind(&scale_translate_magnitude, domain, std::placeholders::_1);
 }
 
 double  scale_untranslate_linear(const ScaleConfig& domain, double vt) {
@@ -549,7 +549,7 @@ ReturnCode scale_configure_layout_linear_interval(
     return rc;
   }
 
-  *layout = bind(
+  *layout = std::bind(
       &scale_layout_linear_interval,
       _1,
       _2,
@@ -583,7 +583,7 @@ ReturnCode scale_configure_layout_linear_alignat(
     return rc;
   }
 
-  *layout = bind(
+  *layout = std::bind(
       &scale_layout_linear_alignat,
       _1,
       _2,
@@ -611,7 +611,7 @@ ReturnCode scale_configure_layout_linear_align(
     return rc;
   }
 
-  *layout = bind(
+  *layout = std::bind(
       &scale_layout_linear_align,
       _1,
       _2,
@@ -638,7 +638,7 @@ ReturnCode scale_configure_layout_linear(
     return rc;
   }
 
-  *layout = bind(
+  *layout = std::bind(
       &scale_layout_linear,
       _1,
       _2,
@@ -670,7 +670,7 @@ ReturnCode scale_configure_layout_exponential_steps(
     return rc;
   }
 
-  *layout = bind(
+  *layout = std::bind(
       &scale_layout_exponential_steps,
       _1,
       _2,
@@ -698,7 +698,7 @@ ReturnCode scale_configure_layout_exponential(
     return rc;
   }
 
-  *layout = bind(
+  *layout = std::bind(
       &scale_layout_exponential,
       _1,
       _2,
@@ -729,7 +729,7 @@ ReturnCode scale_configure_layout_subdivide(
           "invalid number of arguments for 'subdivide'; expected one or two");
   }
 
-  *layout = bind(
+  *layout = std::bind(
       &scale_layout_subdivide,
       _1,
       _2,
@@ -780,17 +780,17 @@ ReturnCode scale_configure_layout(
   }
 
   if (expr_is_value(expr, "categorical")) {
-    *layout = bind(&scale_layout_categorical, _1, _2, _3);
+    *layout = std::bind(&scale_layout_categorical, _1, _2, _3);
     return OK;
   }
 
   if (expr_is_value(expr, "categorical-bounds")) {
-    *layout = bind(&scale_layout_categorical_bounds, _1, _2, _3);
+    *layout = std::bind(&scale_layout_categorical_bounds, _1, _2, _3);
     return OK;
   }
 
   if (expr_is_value(expr, "none")) {
-    *layout = bind(&scale_layout_none, _1, _2, _3);
+    *layout = std::bind(&scale_layout_none, _1, _2, _3);
     return OK;
   }
 
@@ -817,10 +817,10 @@ void scale_configure_layout_defaults(
   if (label_placement && !*label_placement) {
     switch (config.kind) {
       case ScaleKind::CATEGORICAL:
-        *label_placement = bind(&scale_layout_categorical, _1, _2, _3);
+        *label_placement = std::bind(&scale_layout_categorical, _1, _2, _3);
         break;
       case ScaleKind::LOGARITHMIC:
-        *label_placement = bind(
+        *label_placement = std::bind(
             &scale_layout_exponential,
             _1,
             _2,
@@ -828,7 +828,7 @@ void scale_configure_layout_defaults(
             config.log_base);
         break;
       default:
-        *label_placement = bind(&scale_layout_subdivide, _1, _2, _3, 10);
+        *label_placement = std::bind(&scale_layout_subdivide, _1, _2, _3, 10);
         break;
     }
   }
@@ -837,11 +837,11 @@ void scale_configure_layout_defaults(
   if (tick_placement && !*tick_placement) {
     switch (config.kind) {
       case ScaleKind::CATEGORICAL:
-        *tick_placement = bind(&scale_layout_categorical_bounds, _1, _2, _3);
+        *tick_placement = std::bind(&scale_layout_categorical_bounds, _1, _2, _3);
         break;
       case ScaleKind::LOGARITHMIC:
         if (config.log_base == 10) {
-          *tick_placement = bind(
+          *tick_placement = std::bind(
               &scale_layout_exponential_steps,
               _1,
               _2,
@@ -849,7 +849,7 @@ void scale_configure_layout_defaults(
               10,
               10);
         } else {
-          *tick_placement =  bind(
+          *tick_placement =  std::bind(
               &scale_layout_exponential,
               _1,
               _2,
@@ -861,7 +861,7 @@ void scale_configure_layout_defaults(
         if (label_placement) {
           *tick_placement = *label_placement;
         } else {
-          *tick_placement =  bind(&scale_layout_subdivide, _1, _2, _3, 10);
+          *tick_placement =  std::bind(&scale_layout_subdivide, _1, _2, _3, 10);
         }
         break;
     }

@@ -159,7 +159,7 @@ ReturnCode layer_set_font(
   }
 
   FontInfo font;
-  if (auto rc = expr_call_string(args[0], bind(&font_load_best, _1, &layer->font)); !rc) {
+  if (auto rc = expr_call_string(args[0], std::bind(&font_load_best, _1, &layer->font)); !rc) {
     return rc;
   }
 

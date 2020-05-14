@@ -238,7 +238,7 @@ ReturnCode font_get_glyph_path(
 }
 
 ReturnCode font_load(const std::string& font_file, FontRef* font_ref) {
-  auto font = FontRef(new FontStorage, bind(&font_close, _1));
+  auto font = FontRef(new FontStorage, std::bind(&font_close, _1));
 
   if (FT_Init_FreeType(&font->ft) != 0) {
     return ERROR;

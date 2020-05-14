@@ -70,50 +70,50 @@ ReturnCode bars_draw_horizontal(
   /* convert units */
   convert_units(
       {
-        bind(&convert_unit_typographic, layer_get_dpi(ctx), layer_get_font_size(ctx), _1),
-        bind(&convert_unit_user, scale_translate_fn(config.scale_x), _1),
-        bind(&convert_unit_relative, clip.w, _1)
+        std::bind(&convert_unit_typographic, layer_get_dpi(ctx), layer_get_font_size(ctx), _1),
+        std::bind(&convert_unit_user, scale_translate_fn(config.scale_x), _1),
+        std::bind(&convert_unit_relative, clip.w, _1)
       },
       &*config.x.begin(),
       &*config.x.end());
 
   convert_units(
       {
-        bind(&convert_unit_typographic, layer_get_dpi(ctx), layer_get_font_size(ctx), _1),
-        bind(&convert_unit_user, scale_translate_fn(config.scale_x), _1),
-        bind(&convert_unit_relative, clip.w, _1)
+        std::bind(&convert_unit_typographic, layer_get_dpi(ctx), layer_get_font_size(ctx), _1),
+        std::bind(&convert_unit_user, scale_translate_fn(config.scale_x), _1),
+        std::bind(&convert_unit_relative, clip.w, _1)
       },
       &*config.xoffset.begin(),
       &*config.xoffset.end());
 
   convert_units(
       {
-        bind(&convert_unit_typographic, layer_get_dpi(ctx), layer_get_font_size(ctx), _1),
-        bind(&convert_unit_user, scale_translate_fn(config.scale_y), _1),
-        bind(&convert_unit_relative, clip.h, _1)
+        std::bind(&convert_unit_typographic, layer_get_dpi(ctx), layer_get_font_size(ctx), _1),
+        std::bind(&convert_unit_user, scale_translate_fn(config.scale_y), _1),
+        std::bind(&convert_unit_relative, clip.h, _1)
       },
       &*config.y.begin(),
       &*config.y.end());
 
   convert_units(
       {
-        bind(&convert_unit_typographic, layer_get_dpi(ctx), layer_get_font_size(ctx), _1),
-        bind(&convert_unit_user, scale_translate_fn(config.scale_y), _1),
-        bind(&convert_unit_relative, clip.h, _1)
+        std::bind(&convert_unit_typographic, layer_get_dpi(ctx), layer_get_font_size(ctx), _1),
+        std::bind(&convert_unit_user, scale_translate_fn(config.scale_y), _1),
+        std::bind(&convert_unit_relative, clip.h, _1)
       },
       &*config.yoffset.begin(),
       &*config.yoffset.end());
 
   convert_units(
       {
-        bind(&convert_unit_typographic, layer_get_dpi(ctx), layer_get_font_size(ctx), _1)
+        std::bind(&convert_unit_typographic, layer_get_dpi(ctx), layer_get_font_size(ctx), _1)
       },
       &*config.sizes.begin(),
       &*config.sizes.end());
 
   convert_units(
       {
-        bind(&convert_unit_typographic, layer_get_dpi(ctx), layer_get_font_size(ctx), _1)
+        std::bind(&convert_unit_typographic, layer_get_dpi(ctx), layer_get_font_size(ctx), _1)
       },
       &*config.offsets.begin(),
       &*config.offsets.end());
@@ -183,50 +183,50 @@ ReturnCode bars_draw_vertical(
   /* convert units */
   convert_units(
       {
-        bind(&convert_unit_typographic, layer_get_dpi(ctx), layer_get_font_size(ctx), _1),
-        bind(&convert_unit_user, scale_translate_fn(config.scale_x), _1),
-        bind(&convert_unit_relative, clip.w, _1)
+        std::bind(&convert_unit_typographic, layer_get_dpi(ctx), layer_get_font_size(ctx), _1),
+        std::bind(&convert_unit_user, scale_translate_fn(config.scale_x), _1),
+        std::bind(&convert_unit_relative, clip.w, _1)
       },
       &*config.x.begin(),
       &*config.x.end());
 
   convert_units(
       {
-        bind(&convert_unit_typographic, layer_get_dpi(ctx), layer_get_font_size(ctx), _1),
-        bind(&convert_unit_user, scale_translate_fn(config.scale_x), _1),
-        bind(&convert_unit_relative, clip.w, _1)
+        std::bind(&convert_unit_typographic, layer_get_dpi(ctx), layer_get_font_size(ctx), _1),
+        std::bind(&convert_unit_user, scale_translate_fn(config.scale_x), _1),
+        std::bind(&convert_unit_relative, clip.w, _1)
       },
       &*config.xoffset.begin(),
       &*config.xoffset.end());
 
   convert_units(
       {
-        bind(&convert_unit_typographic, layer_get_dpi(ctx), layer_get_font_size(ctx), _1),
-        bind(&convert_unit_user, scale_translate_fn(config.scale_y), _1),
-        bind(&convert_unit_relative, clip.h, _1)
+        std::bind(&convert_unit_typographic, layer_get_dpi(ctx), layer_get_font_size(ctx), _1),
+        std::bind(&convert_unit_user, scale_translate_fn(config.scale_y), _1),
+        std::bind(&convert_unit_relative, clip.h, _1)
       },
       &*config.y.begin(),
       &*config.y.end());
 
   convert_units(
       {
-        bind(&convert_unit_typographic, layer_get_dpi(ctx), layer_get_font_size(ctx), _1),
-        bind(&convert_unit_user, scale_translate_fn(config.scale_y), _1),
-        bind(&convert_unit_relative, clip.h, _1)
+        std::bind(&convert_unit_typographic, layer_get_dpi(ctx), layer_get_font_size(ctx), _1),
+        std::bind(&convert_unit_user, scale_translate_fn(config.scale_y), _1),
+        std::bind(&convert_unit_relative, clip.h, _1)
       },
       &*config.yoffset.begin(),
       &*config.yoffset.end());
 
   convert_units(
       {
-        bind(&convert_unit_typographic, layer_get_dpi(ctx), layer_get_font_size(ctx), _1)
+        std::bind(&convert_unit_typographic, layer_get_dpi(ctx), layer_get_font_size(ctx), _1)
       },
       &*config.sizes.begin(),
       &*config.sizes.end());
 
   convert_units(
       {
-        bind(&convert_unit_typographic, layer_get_dpi(ctx), layer_get_font_size(ctx), _1)
+        std::bind(&convert_unit_typographic, layer_get_dpi(ctx), layer_get_font_size(ctx), _1)
       },
       &*config.offsets.begin(),
       &*config.offsets.end());
@@ -310,35 +310,35 @@ ReturnCode bars_configure(
   std::vector<std::string> data_yoffset;
 
   auto config_rc = expr_walk_map_wrapped(expr, {
-    {"data-x", bind(&data_load_strings, _1, &data_x)},
-    {"data-y", bind(&data_load_strings, _1, &data_y)},
-    {"data-x-high", bind(&data_load_strings, _1, &data_x)},
-    {"data-y-high", bind(&data_load_strings, _1, &data_y)},
-    {"data-x-low", bind(&data_load_strings, _1, &data_xoffset)},
-    {"data-y-low", bind(&data_load_strings, _1, &data_yoffset)},
-    {"width", bind(&data_load, _1, &c->sizes)},
-    {"widths", bind(&data_load, _1, &c->sizes)},
-    {"offset", bind(&data_load, _1, &c->offsets)},
-    {"offsets", bind(&data_load, _1, &c->offsets)},
-    {"stroke-color", bind(&color_read, ctx, _1, &c->stroke_style.color)},
-    {"stroke-width", bind(&measure_read, _1, &c->stroke_style.line_width)},
-    {"stroke-style", bind(&stroke_style_read, ctx, _1, &c->stroke_style)},
-    {"fill", bind(&fill_style_read, ctx, _1, &c->fill_style)},
-    {"limit-x", bind(&expr_to_float64_opt_pair, _1, &c->scale_x.min, &c->scale_x.max)},
-    {"limit-x-min", bind(&expr_to_float64_opt, _1, &c->scale_x.min)},
-    {"limit-x-max", bind(&expr_to_float64_opt, _1, &c->scale_x.max)},
-    {"limit-y", bind(&expr_to_float64_opt_pair, _1, &c->scale_y.min, &c->scale_y.max)},
-    {"limit-y-min", bind(&expr_to_float64_opt, _1, &c->scale_y.min)},
-    {"limit-y-max", bind(&expr_to_float64_opt, _1, &c->scale_y.max)},
-    {"scale-x", bind(&scale_configure_kind, _1, &c->scale_x)},
-    {"scale-y", bind(&scale_configure_kind, _1, &c->scale_y)},
-    {"scale-x-padding", bind(&expr_to_float64, _1, &c->scale_x.padding)},
-    {"scale-y-padding", bind(&expr_to_float64, _1, &c->scale_y.padding)},
+    {"data-x", std::bind(&data_load_strings, _1, &data_x)},
+    {"data-y", std::bind(&data_load_strings, _1, &data_y)},
+    {"data-x-high", std::bind(&data_load_strings, _1, &data_x)},
+    {"data-y-high", std::bind(&data_load_strings, _1, &data_y)},
+    {"data-x-low", std::bind(&data_load_strings, _1, &data_xoffset)},
+    {"data-y-low", std::bind(&data_load_strings, _1, &data_yoffset)},
+    {"width", std::bind(&data_load, _1, &c->sizes)},
+    {"widths", std::bind(&data_load, _1, &c->sizes)},
+    {"offset", std::bind(&data_load, _1, &c->offsets)},
+    {"offsets", std::bind(&data_load, _1, &c->offsets)},
+    {"stroke-color", std::bind(&color_read, ctx, _1, &c->stroke_style.color)},
+    {"stroke-width", std::bind(&measure_read, _1, &c->stroke_style.line_width)},
+    {"stroke-style", std::bind(&stroke_style_read, ctx, _1, &c->stroke_style)},
+    {"fill", std::bind(&fill_style_read, ctx, _1, &c->fill_style)},
+    {"limit-x", std::bind(&expr_to_float64_opt_pair, _1, &c->scale_x.min, &c->scale_x.max)},
+    {"limit-x-min", std::bind(&expr_to_float64_opt, _1, &c->scale_x.min)},
+    {"limit-x-max", std::bind(&expr_to_float64_opt, _1, &c->scale_x.max)},
+    {"limit-y", std::bind(&expr_to_float64_opt_pair, _1, &c->scale_y.min, &c->scale_y.max)},
+    {"limit-y-min", std::bind(&expr_to_float64_opt, _1, &c->scale_y.min)},
+    {"limit-y-max", std::bind(&expr_to_float64_opt, _1, &c->scale_y.max)},
+    {"scale-x", std::bind(&scale_configure_kind, _1, &c->scale_x)},
+    {"scale-y", std::bind(&scale_configure_kind, _1, &c->scale_y)},
+    {"scale-x-padding", std::bind(&expr_to_float64, _1, &c->scale_x.padding)},
+    {"scale-y-padding", std::bind(&expr_to_float64, _1, &c->scale_y.padding)},
     {
       "color",
       expr_calln_fn({
-        bind(&color_read, ctx, _1, &c->stroke_style.color),
-        bind(&fill_style_read_solid, ctx, _1, &c->fill_style),
+        std::bind(&color_read, ctx, _1, &c->stroke_style.color),
+        std::bind(&fill_style_read_solid, ctx, _1, &c->fill_style),
       })
     },
     {
@@ -348,10 +348,10 @@ ReturnCode bars_configure(
         { "vertical", Direction::VERTICAL },
       })
     },
-    {"labels", bind(&data_load_strings, _1, &c->labels)},
-    {"label-font-size", bind(&measure_read, _1, &c->label_font_size)},
-    {"label-color", bind(&color_read, ctx, _1, &c->label_color)},
-    {"label-padding", bind(&measure_read, _1, &c->label_padding)},
+    {"labels", std::bind(&data_load_strings, _1, &c->labels)},
+    {"label-font-size", std::bind(&measure_read, _1, &c->label_font_size)},
+    {"label-color", std::bind(&color_read, ctx, _1, &c->label_color)},
+    {"label-padding", std::bind(&measure_read, _1, &c->label_padding)},
   });
 
   if (!config_rc) {

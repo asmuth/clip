@@ -61,53 +61,53 @@ ReturnCode rectangles_draw(
   /* convert units */
   convert_units(
       {
-        bind(&convert_unit_typographic, layer_get_dpi(ctx), layer_get_font_size(ctx), _1),
-        bind(&convert_unit_user, scale_translate_fn(config->scale_x), _1),
-        bind(&convert_unit_relative, clip.w, _1)
+        std::bind(&convert_unit_typographic, layer_get_dpi(ctx), layer_get_font_size(ctx), _1),
+        std::bind(&convert_unit_user, scale_translate_fn(config->scale_x), _1),
+        std::bind(&convert_unit_relative, clip.w, _1)
       },
       &*config->x.begin(),
       &*config->x.end());
 
   convert_units(
       {
-        bind(&convert_unit_typographic, layer_get_dpi(ctx), layer_get_font_size(ctx), _1),
-        bind(&convert_unit_user, scale_translate_fn(config->scale_y), _1),
-        bind(&convert_unit_relative, clip.h, _1)
+        std::bind(&convert_unit_typographic, layer_get_dpi(ctx), layer_get_font_size(ctx), _1),
+        std::bind(&convert_unit_user, scale_translate_fn(config->scale_y), _1),
+        std::bind(&convert_unit_relative, clip.h, _1)
       },
       &*config->y.begin(),
       &*config->y.end());
 
   convert_units(
       {
-        bind(&convert_unit_typographic, layer_get_dpi(ctx), layer_get_font_size(ctx), _1),
-        bind(&convert_unit_user, scale_translate_magnitude_fn(config->scale_x), _1),
-        bind(&convert_unit_relative, clip.w, _1)
+        std::bind(&convert_unit_typographic, layer_get_dpi(ctx), layer_get_font_size(ctx), _1),
+        std::bind(&convert_unit_user, scale_translate_magnitude_fn(config->scale_x), _1),
+        std::bind(&convert_unit_relative, clip.w, _1)
       },
       &*config->size_x.begin(),
       &*config->size_x.end());
 
   convert_units(
       {
-        bind(&convert_unit_typographic, layer_get_dpi(ctx), layer_get_font_size(ctx), _1),
-        bind(&convert_unit_user, scale_translate_magnitude_fn(config->scale_y), _1),
-        bind(&convert_unit_relative, clip.h, _1)
+        std::bind(&convert_unit_typographic, layer_get_dpi(ctx), layer_get_font_size(ctx), _1),
+        std::bind(&convert_unit_user, scale_translate_magnitude_fn(config->scale_y), _1),
+        std::bind(&convert_unit_relative, clip.h, _1)
       },
       &*config->size_y.begin(),
       &*config->size_y.end());
 
   convert_unit(
       {
-        bind(&convert_unit_typographic, layer_get_dpi(ctx), layer_get_font_size(ctx), _1),
-        bind(&convert_unit_user, scale_translate_magnitude_fn(config->scale_x), _1),
-        bind(&convert_unit_relative, clip.w, _1)
+        std::bind(&convert_unit_typographic, layer_get_dpi(ctx), layer_get_font_size(ctx), _1),
+        std::bind(&convert_unit_user, scale_translate_magnitude_fn(config->scale_x), _1),
+        std::bind(&convert_unit_relative, clip.w, _1)
       },
       &config->size_x_default);
 
   convert_unit(
       {
-        bind(&convert_unit_typographic, layer_get_dpi(ctx), layer_get_font_size(ctx), _1),
-        bind(&convert_unit_user, scale_translate_magnitude_fn(config->scale_y), _1),
-        bind(&convert_unit_relative, clip.h, _1)
+        std::bind(&convert_unit_typographic, layer_get_dpi(ctx), layer_get_font_size(ctx), _1),
+        std::bind(&convert_unit_user, scale_translate_magnitude_fn(config->scale_y), _1),
+        std::bind(&convert_unit_relative, clip.h, _1)
       },
       &config->size_y_default);
 
@@ -158,39 +158,39 @@ ReturnCode rectangles_configure(
   ColorMap color_map;
 
   auto config_rc = expr_walk_map_wrapped(expr, {
-    {"data-x", bind(&data_load_strings, _1, &data_x)},
-    {"data-y", bind(&data_load_strings, _1, &data_y)},
-    {"limit-x", bind(&expr_to_float64_opt_pair, _1, &c->scale_x.min, &c->scale_x.max)},
-    {"limit-x-min", bind(&expr_to_float64_opt, _1, &c->scale_x.min)},
-    {"limit-x-max", bind(&expr_to_float64_opt, _1, &c->scale_x.max)},
-    {"limit-y", bind(&expr_to_float64_opt_pair, _1, &c->scale_y.min, &c->scale_y.max)},
-    {"limit-y-min", bind(&expr_to_float64_opt, _1, &c->scale_y.min)},
-    {"limit-y-max", bind(&expr_to_float64_opt, _1, &c->scale_y.max)},
-    {"scale-x", bind(&scale_configure_kind, _1, &c->scale_x)},
-    {"scale-y", bind(&scale_configure_kind, _1, &c->scale_y)},
-    {"scale-x-padding", bind(&expr_to_float64, _1, &c->scale_x.padding)},
-    {"scale-y-padding", bind(&expr_to_float64, _1, &c->scale_y.padding)},
+    {"data-x", std::bind(&data_load_strings, _1, &data_x)},
+    {"data-y", std::bind(&data_load_strings, _1, &data_y)},
+    {"limit-x", std::bind(&expr_to_float64_opt_pair, _1, &c->scale_x.min, &c->scale_x.max)},
+    {"limit-x-min", std::bind(&expr_to_float64_opt, _1, &c->scale_x.min)},
+    {"limit-x-max", std::bind(&expr_to_float64_opt, _1, &c->scale_x.max)},
+    {"limit-y", std::bind(&expr_to_float64_opt_pair, _1, &c->scale_y.min, &c->scale_y.max)},
+    {"limit-y-min", std::bind(&expr_to_float64_opt, _1, &c->scale_y.min)},
+    {"limit-y-max", std::bind(&expr_to_float64_opt, _1, &c->scale_y.max)},
+    {"scale-x", std::bind(&scale_configure_kind, _1, &c->scale_x)},
+    {"scale-y", std::bind(&scale_configure_kind, _1, &c->scale_y)},
+    {"scale-x-padding", std::bind(&expr_to_float64, _1, &c->scale_x.padding)},
+    {"scale-y-padding", std::bind(&expr_to_float64, _1, &c->scale_y.padding)},
     {
       "size",
       expr_calln_fn({
-        bind(&measure_read, _1, &c->size_x_default),
-        bind(&measure_read, _1, &c->size_y_default),
+        std::bind(&measure_read, _1, &c->size_x_default),
+        std::bind(&measure_read, _1, &c->size_y_default),
       })
     },
-    {"size-x", bind(&measure_read, _1, &c->size_x_default)},
-    {"size-y", bind(&measure_read, _1, &c->size_y_default)},
+    {"size-x", std::bind(&measure_read, _1, &c->size_x_default)},
+    {"size-y", std::bind(&measure_read, _1, &c->size_y_default)},
     {
       "sizes",
       expr_calln_fn({
-        bind(&data_load_strings, _1, &data_size_x),
-        bind(&data_load_strings, _1, &data_size_y),
+        std::bind(&data_load_strings, _1, &data_size_x),
+        std::bind(&data_load_strings, _1, &data_size_y),
       })
     },
-    {"sizes-x", bind(&data_load_strings, _1, &data_size_x)},
-    {"sizes-y", bind(&data_load_strings, _1, &data_size_y)},
-    {"color", bind(&color_read, ctx, _1, &c->color)},
-    {"colors", bind(&data_load_strings, _1, &data_colors)},
-    {"color-map", bind(&color_map_read, ctx, _1, &color_map)},
+    {"sizes-x", std::bind(&data_load_strings, _1, &data_size_x)},
+    {"sizes-y", std::bind(&data_load_strings, _1, &data_size_y)},
+    {"color", std::bind(&color_read, ctx, _1, &c->color)},
+    {"colors", std::bind(&data_load_strings, _1, &data_colors)},
+    {"color-map", std::bind(&color_map_read, ctx, _1, &color_map)},
   });
 
   if (!config_rc) {

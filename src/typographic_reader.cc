@@ -73,7 +73,7 @@ ReturnCode measure_read_opt(
 ReturnCode measure_read_list(
     const Expr* expr,
     std::vector<Measure>* measures) {
-  return expr_tov<Measure>(expr, bind(&measure_read, _1, _2), measures);
+  return expr_tov<Measure>(expr, std::bind(&measure_read, _1, _2), measures);
 }
 
 ReturnCode measure_map_read_linear(

@@ -43,7 +43,7 @@ template <typename T>
 ExprConv expr_to_enum_fn(
     T* value,
     const std::unordered_map<std::string, T> value_defs) {
-  return bind(
+  return std::bind(
       &expr_to_enum<T>,
       std::placeholders::_1,
       value_defs,
@@ -69,7 +69,7 @@ template <typename T>
 ExprConv expr_tov_fn(
     ExprConvTo<T> conv,
     std::vector<T>* values) {
-  return bind(
+  return std::bind(
       &expr_tov<T>,
       std::placeholders::_1,
       conv,

@@ -490,78 +490,78 @@ ReturnCode plot_legend(
   auto config_rc = expr_walk_map_wrapped(expr, {
     {
       "position",
-      bind(
+      std::bind(
           &legend_configure_position,
           _1,
           &config->position_horiz,
           &config->position_vert)
     },
-    {"item-row-padding", bind(&measure_read, _1, &config->item_row_padding)},
-    {"item-column-padding", bind(&measure_read, _1, &config->item_column_padding)},
-    {"item-flow", bind(&expr_to_switch, _1, &config->item_flow)},
-    {"item", bind(&configure_item, ctx, _1, &config->items)},
+    {"item-row-padding", std::bind(&measure_read, _1, &config->item_row_padding)},
+    {"item-column-padding", std::bind(&measure_read, _1, &config->item_column_padding)},
+    {"item-flow", std::bind(&expr_to_switch, _1, &config->item_flow)},
+    {"item", std::bind(&configure_item, ctx, _1, &config->items)},
     {
       "padding",
       expr_calln_fn({
-        bind(&measure_read, _1, &config->padding[0]),
-        bind(&measure_read, _1, &config->padding[1]),
-        bind(&measure_read, _1, &config->padding[2]),
-        bind(&measure_read, _1, &config->padding[3]),
+        std::bind(&measure_read, _1, &config->padding[0]),
+        std::bind(&measure_read, _1, &config->padding[1]),
+        std::bind(&measure_read, _1, &config->padding[2]),
+        std::bind(&measure_read, _1, &config->padding[3]),
       })
     },
-    {"padding-top", bind(&measure_read, _1, &config->padding[0])},
-    {"padding-right", bind(&measure_read, _1, &config->padding[1])},
-    {"padding-bottom", bind(&measure_read, _1, &config->padding[2])},
-    {"padding-left", bind(&measure_read, _1, &config->padding[3])},
+    {"padding-top", std::bind(&measure_read, _1, &config->padding[0])},
+    {"padding-right", std::bind(&measure_read, _1, &config->padding[1])},
+    {"padding-bottom", std::bind(&measure_read, _1, &config->padding[2])},
+    {"padding-left", std::bind(&measure_read, _1, &config->padding[3])},
     {
       "margin",
       expr_calln_fn({
-        bind(&measure_read, _1, &config->margins[0]),
-        bind(&measure_read, _1, &config->margins[1]),
-        bind(&measure_read, _1, &config->margins[2]),
-        bind(&measure_read, _1, &config->margins[3]),
+        std::bind(&measure_read, _1, &config->margins[0]),
+        std::bind(&measure_read, _1, &config->margins[1]),
+        std::bind(&measure_read, _1, &config->margins[2]),
+        std::bind(&measure_read, _1, &config->margins[3]),
       })
     },
-    {"margin-top", bind(&measure_read, _1, &config->margins[0])},
-    {"margin-right", bind(&measure_read, _1, &config->margins[1])},
-    {"margin-bottom", bind(&measure_read, _1, &config->margins[2])},
-    {"margin-left", bind(&measure_read, _1, &config->margins[3])},
+    {"margin-top", std::bind(&measure_read, _1, &config->margins[0])},
+    {"margin-right", std::bind(&measure_read, _1, &config->margins[1])},
+    {"margin-bottom", std::bind(&measure_read, _1, &config->margins[2])},
+    {"margin-left", std::bind(&measure_read, _1, &config->margins[3])},
     {
       "border",
       expr_calln_fn({
-        bind(&expr_to_stroke_style, _1, &config->borders[0]),
-        bind(&expr_to_stroke_style, _1, &config->borders[1]),
-        bind(&expr_to_stroke_style, _1, &config->borders[2]),
-        bind(&expr_to_stroke_style, _1, &config->borders[3])
+        std::bind(&expr_to_stroke_style, _1, &config->borders[0]),
+        std::bind(&expr_to_stroke_style, _1, &config->borders[1]),
+        std::bind(&expr_to_stroke_style, _1, &config->borders[2]),
+        std::bind(&expr_to_stroke_style, _1, &config->borders[3])
       })
     },
     {
       "border-color",
       expr_calln_fn({
-        bind(&color_read, ctx, _1, &config->borders[0].color),
-        bind(&color_read, ctx, _1, &config->borders[1].color),
-        bind(&color_read, ctx, _1, &config->borders[2].color),
-        bind(&color_read, ctx, _1, &config->borders[3].color),
+        std::bind(&color_read, ctx, _1, &config->borders[0].color),
+        std::bind(&color_read, ctx, _1, &config->borders[1].color),
+        std::bind(&color_read, ctx, _1, &config->borders[2].color),
+        std::bind(&color_read, ctx, _1, &config->borders[3].color),
       })
     },
-    {"border-top-color", bind(&color_read, ctx, _1, &config->borders[0].color)},
-    {"border-right-color", bind(&color_read, ctx, _1, &config->borders[1].color)},
-    {"border-bottom-color", bind(&color_read, ctx, _1, &config->borders[2].color)},
-    {"border-left-color", bind(&color_read, ctx, _1, &config->borders[3].color)},
+    {"border-top-color", std::bind(&color_read, ctx, _1, &config->borders[0].color)},
+    {"border-right-color", std::bind(&color_read, ctx, _1, &config->borders[1].color)},
+    {"border-bottom-color", std::bind(&color_read, ctx, _1, &config->borders[2].color)},
+    {"border-left-color", std::bind(&color_read, ctx, _1, &config->borders[3].color)},
     {
       "border-width",
       expr_calln_fn({
-        bind(&measure_read, _1, &config->borders[0].line_width),
-        bind(&measure_read, _1, &config->borders[1].line_width),
-        bind(&measure_read, _1, &config->borders[2].line_width),
-        bind(&measure_read, _1, &config->borders[3].line_width),
+        std::bind(&measure_read, _1, &config->borders[0].line_width),
+        std::bind(&measure_read, _1, &config->borders[1].line_width),
+        std::bind(&measure_read, _1, &config->borders[2].line_width),
+        std::bind(&measure_read, _1, &config->borders[3].line_width),
       })
     },
-    {"border-top-width", bind(&measure_read, _1, &config->borders[0].line_width)},
-    {"border-right-width", bind(&measure_read, _1, &config->borders[1].line_width)},
-    {"border-bottom-width", bind(&measure_read, _1, &config->borders[2].line_width)},
-    {"border-left-width", bind(&measure_read, _1, &config->borders[3].line_width)},
-    {"background", bind(&color_read_opt, ctx, _1, &config->background)},
+    {"border-top-width", std::bind(&measure_read, _1, &config->borders[0].line_width)},
+    {"border-right-width", std::bind(&measure_read, _1, &config->borders[1].line_width)},
+    {"border-bottom-width", std::bind(&measure_read, _1, &config->borders[2].line_width)},
+    {"border-left-width", std::bind(&measure_read, _1, &config->borders[3].line_width)},
+    {"background", std::bind(&color_read_opt, ctx, _1, &config->background)},
   });
 
   if (!config_rc) {

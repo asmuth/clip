@@ -55,26 +55,26 @@ ReturnCode polygons_configure(
 
   /* read arguments */
   auto config_rc = expr_walk_map_wrapped(expr, {
-    {"data", bind(&data_load_polys2, _1, &c->polys)},
-    {"limit-x", bind(&expr_to_float64_opt_pair, _1, &c->scale_x.min, &c->scale_x.max)},
-    {"limit-x-min", bind(&expr_to_float64_opt, _1, &c->scale_x.min)},
-    {"limit-x-max", bind(&expr_to_float64_opt, _1, &c->scale_x.max)},
-    {"limit-y", bind(&expr_to_float64_opt_pair, _1, &c->scale_y.min, &c->scale_y.max)},
-    {"limit-y-min", bind(&expr_to_float64_opt, _1, &c->scale_y.min)},
-    {"limit-y-max", bind(&expr_to_float64_opt, _1, &c->scale_y.max)},
-    {"scale-x", bind(&scale_configure_kind, _1, &c->scale_x)},
-    {"scale-y", bind(&scale_configure_kind, _1, &c->scale_y)},
+    {"data", std::bind(&data_load_polys2, _1, &c->polys)},
+    {"limit-x", std::bind(&expr_to_float64_opt_pair, _1, &c->scale_x.min, &c->scale_x.max)},
+    {"limit-x-min", std::bind(&expr_to_float64_opt, _1, &c->scale_x.min)},
+    {"limit-x-max", std::bind(&expr_to_float64_opt, _1, &c->scale_x.max)},
+    {"limit-y", std::bind(&expr_to_float64_opt_pair, _1, &c->scale_y.min, &c->scale_y.max)},
+    {"limit-y-min", std::bind(&expr_to_float64_opt, _1, &c->scale_y.min)},
+    {"limit-y-max", std::bind(&expr_to_float64_opt, _1, &c->scale_y.max)},
+    {"scale-x", std::bind(&scale_configure_kind, _1, &c->scale_x)},
+    {"scale-y", std::bind(&scale_configure_kind, _1, &c->scale_y)},
     {
       "color",
       expr_calln_fn({
-        bind(&color_read, ctx, _1, &c->stroke_style.color),
-        bind(&fill_style_read_solid, ctx, _1, &c->fill_style),
+        std::bind(&color_read, ctx, _1, &c->stroke_style.color),
+        std::bind(&fill_style_read_solid, ctx, _1, &c->fill_style),
       })
     },
-    {"fill", bind(&fill_style_read, ctx, _1, &c->fill_style)},
-    {"stroke-color", bind(&color_read, ctx, _1, &c->stroke_style.color)},
-    {"stroke-width", bind(&measure_read, _1, &c->stroke_style.line_width)},
-    {"stroke-style", bind(&stroke_style_read, ctx, _1, &c->stroke_style)},
+    {"fill", std::bind(&fill_style_read, ctx, _1, &c->fill_style)},
+    {"stroke-color", std::bind(&color_read, ctx, _1, &c->stroke_style.color)},
+    {"stroke-width", std::bind(&measure_read, _1, &c->stroke_style.line_width)},
+    {"stroke-style", std::bind(&stroke_style_read, ctx, _1, &c->stroke_style)},
   });
 
   if (!config_rc) {

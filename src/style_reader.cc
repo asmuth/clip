@@ -36,8 +36,8 @@ ReturnCode stroke_style_read_dash(
   }
 
   return expr_walk_map(expr, {
-    {"pattern", expr_tov_fn<Measure>(bind(&measure_readn, ctx, _1, _2), &style->dash_pattern)},
-    {"offset", bind(&measure_readn, ctx, _1, &style->dash_offset)},
+    {"pattern", expr_tov_fn<Measure>(std::bind(&measure_readn, ctx, _1, _2), &style->dash_pattern)},
+    {"offset", std::bind(&measure_readn, ctx, _1, &style->dash_offset)},
   });
 }
 
@@ -97,11 +97,11 @@ ReturnCode fill_style_read_hatch(
 
   if (expr) {
     auto read_rc = expr_walk_map(expr, {
-      {"color", bind(&color_read, ctx, _1, &color)},
-      {"angle", bind(&expr_to_float64, _1, &angle_deg)},
-      {"offset", bind(&measure_readn, ctx, _1, &offset)},
-      {"stride", bind(&measure_readn, ctx, _1, &stride)},
-      {"width", bind(&measure_readn, ctx, _1, &width)},
+      {"color", std::bind(&color_read, ctx, _1, &color)},
+      {"angle", std::bind(&expr_to_float64, _1, &angle_deg)},
+      {"offset", std::bind(&measure_readn, ctx, _1, &offset)},
+      {"stride", std::bind(&measure_readn, ctx, _1, &stride)},
+      {"width", std::bind(&measure_readn, ctx, _1, &width)},
     });
 
     if (!read_rc) {

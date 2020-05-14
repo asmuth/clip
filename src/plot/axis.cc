@@ -710,15 +710,15 @@ ReturnCode plot_axis(Context* ctx, PlotConfig* plot, const Expr* expr) {
   {
     auto rc = expr_walk_map_wrapped(expr, {
       /* scale options */
-      {"scale", bind(&scale_configure_kind, _1, &config->scale)},
-      {"limit", bind(&expr_to_float64_opt_pair, _1, &config->scale.min, &config->scale.max)},
-      {"limit-min", bind(&expr_to_float64_opt, _1, &config->scale.min)},
-      {"limit-max", bind(&expr_to_float64_opt, _1, &config->scale.max)},
+      {"scale", std::bind(&scale_configure_kind, _1, &config->scale)},
+      {"limit", std::bind(&expr_to_float64_opt_pair, _1, &config->scale.min, &config->scale.max)},
+      {"limit-min", std::bind(&expr_to_float64_opt, _1, &config->scale.min)},
+      {"limit-max", std::bind(&expr_to_float64_opt, _1, &config->scale.max)},
 
       /* label options */
-      {"label-font", expr_call_string_fn(bind(&font_load_best, _1, &config->label_font))},
-      {"label-placement", bind(&scale_configure_layout, _1, &config->label_placement)},
-      {"label-format", bind(&format_configure, _1, &config->label_formatter)},
+      {"label-font", expr_call_string_fn(std::bind(&font_load_best, _1, &config->label_font))},
+      {"label-placement", std::bind(&scale_configure_layout, _1, &config->label_placement)},
+      {"label-format", std::bind(&format_configure, _1, &config->label_formatter)},
       {
         "label-attach",
         expr_to_enum_fn<AxisLabelAttach>(&config->label_attach, {
@@ -728,44 +728,44 @@ ReturnCode plot_axis(Context* ctx, PlotConfig* plot, const Expr* expr) {
           { "left", AxisLabelAttach::LEFT },
         })
       },
-      {"label-offset", bind(&expr_to_float64, _1, &config->label_offset)},
-      {"label-padding", bind(&measure_read, _1, &config->label_padding)},
-      {"label-rotate", bind(&expr_to_float64, _1, &config->label_rotate)},
-      {"label-font-size", bind(&measure_read, _1, &config->label_font_size)},
-      {"label-color", bind(&color_read, ctx, _1, &config->label_color)},
+      {"label-offset", std::bind(&expr_to_float64, _1, &config->label_offset)},
+      {"label-padding", std::bind(&measure_read, _1, &config->label_padding)},
+      {"label-rotate", std::bind(&expr_to_float64, _1, &config->label_rotate)},
+      {"label-font-size", std::bind(&measure_read, _1, &config->label_font_size)},
+      {"label-color", std::bind(&color_read, ctx, _1, &config->label_color)},
 
       /* tick options */
-      {"tick-placement", bind(&scale_configure_layout, _1, &config->tick_placement)},
-      {"tick-offset", bind(&expr_to_float64, _1, &config->tick_offset)},
-      {"tick-length", bind(&measure_read, _1, &config->tick_length)},
+      {"tick-placement", std::bind(&scale_configure_layout, _1, &config->tick_placement)},
+      {"tick-offset", std::bind(&expr_to_float64, _1, &config->tick_offset)},
+      {"tick-length", std::bind(&measure_read, _1, &config->tick_length)},
 
       /* title options */
-      {"title", bind(&expr_to_string, _1, &config->title)},
-      {"title-font", expr_call_string_fn(bind(&font_load_best, _1, &config->title_font))},
-      {"title-font-size", bind(&measure_read, _1, &config->title_font_size)},
-      {"title-color", bind(&color_read, ctx, _1, &config->title_color)},
-      {"title-offset", bind(&expr_to_float64, _1, &config->title_offset)},
-      {"title-padding", bind(&measure_read, _1, &config->title_padding)},
-      {"title-rotate", bind(&expr_to_float64, _1, &config->title_rotate)},
+      {"title", std::bind(&expr_to_string, _1, &config->title)},
+      {"title-font", expr_call_string_fn(std::bind(&font_load_best, _1, &config->title_font))},
+      {"title-font-size", std::bind(&measure_read, _1, &config->title_font_size)},
+      {"title-color", std::bind(&color_read, ctx, _1, &config->title_color)},
+      {"title-offset", std::bind(&expr_to_float64, _1, &config->title_offset)},
+      {"title-padding", std::bind(&measure_read, _1, &config->title_padding)},
+      {"title-rotate", std::bind(&expr_to_float64, _1, &config->title_rotate)},
 
       /* border options */
-      {"border-width", bind(&measure_read, _1, &config->border_style.line_width)},
-      {"border-color", bind(&color_read, ctx, _1, &config->border_style.color)},
-      {"border-style", bind(&expr_to_stroke_style, _1, &config->border_style)},
+      {"border-width", std::bind(&measure_read, _1, &config->border_style.line_width)},
+      {"border-color", std::bind(&color_read, ctx, _1, &config->border_style.color)},
+      {"border-style", std::bind(&expr_to_stroke_style, _1, &config->border_style)},
 
       /* global font options */
       {
         "font",
         expr_calln_fn({
-          expr_call_string_fn(bind(&font_load_best, _1, &config->label_font)),
-          expr_call_string_fn(bind(&font_load_best, _1, &config->title_font)),
+          expr_call_string_fn(std::bind(&font_load_best, _1, &config->label_font)),
+          expr_call_string_fn(std::bind(&font_load_best, _1, &config->title_font)),
         })
       },
       {
         "font-size",
         expr_calln_fn({
-          bind(&measure_read, _1, &config->label_font_size),
-          bind(&measure_read, _1, &config->title_font_size),
+          std::bind(&measure_read, _1, &config->label_font_size),
+          std::bind(&measure_read, _1, &config->title_font_size),
         })
       }
     }, false);
@@ -892,87 +892,87 @@ ReturnCode plot_axes(Context* ctx, PlotConfig* plot, const Expr* expr) {
   axes[3].border_style.color = layer_get(ctx)->foreground_color;
 
   auto config_rc = expr_walk_map_wrapped(expr, {
-    {"position", bind(&axis_configure_position, _1, &axes)},
+    {"position", std::bind(&axis_configure_position, _1, &axes)},
 
     /* scale options */
     {
       "scale-x",
       expr_calln_fn({
-        bind(&scale_configure_kind, _1, &axes[0].scale),
-        bind(&scale_configure_kind, _1, &axes[2].scale),
+        std::bind(&scale_configure_kind, _1, &axes[0].scale),
+        std::bind(&scale_configure_kind, _1, &axes[2].scale),
       })
     },
     {
       "scale-y",
       expr_calln_fn({
-        bind(&scale_configure_kind, _1, &axes[1].scale),
-        bind(&scale_configure_kind, _1, &axes[3].scale),
+        std::bind(&scale_configure_kind, _1, &axes[1].scale),
+        std::bind(&scale_configure_kind, _1, &axes[3].scale),
       })
     },
-    {"scale-top", bind(&scale_configure_kind, _1, &axes[0].scale)},
-    {"scale-right", bind(&scale_configure_kind, _1, &axes[1].scale)},
-    {"scale-bottom", bind(&scale_configure_kind, _1, &axes[2].scale)},
-    {"scale-left", bind(&scale_configure_kind, _1, &axes[3].scale)},
+    {"scale-top", std::bind(&scale_configure_kind, _1, &axes[0].scale)},
+    {"scale-right", std::bind(&scale_configure_kind, _1, &axes[1].scale)},
+    {"scale-bottom", std::bind(&scale_configure_kind, _1, &axes[2].scale)},
+    {"scale-left", std::bind(&scale_configure_kind, _1, &axes[3].scale)},
 
     {
       "limit-x",
       expr_calln_fn({
-        bind(&expr_to_float64_opt_pair, _1, &axes[0].scale.min, &axes[0].scale.max),
-        bind(&expr_to_float64_opt_pair, _1, &axes[2].scale.min, &axes[2].scale.max),
+        std::bind(&expr_to_float64_opt_pair, _1, &axes[0].scale.min, &axes[0].scale.max),
+        std::bind(&expr_to_float64_opt_pair, _1, &axes[2].scale.min, &axes[2].scale.max),
       })
     },
     {
       "limit-y",
       expr_calln_fn({
-        bind(&expr_to_float64_opt_pair, _1, &axes[1].scale.min, &axes[1].scale.max),
-        bind(&expr_to_float64_opt_pair, _1, &axes[3].scale.min, &axes[3].scale.max),
+        std::bind(&expr_to_float64_opt_pair, _1, &axes[1].scale.min, &axes[1].scale.max),
+        std::bind(&expr_to_float64_opt_pair, _1, &axes[3].scale.min, &axes[3].scale.max),
       })
     },
-    {"limit-top", bind(&expr_to_float64_opt_pair, _1, &axes[0].scale.min, &axes[0].scale.max)},
-    {"limit-right", bind(&expr_to_float64_opt_pair, _1, &axes[1].scale.min, &axes[1].scale.max)},
-    {"limit-bottom", bind(&expr_to_float64_opt_pair, _1, &axes[2].scale.min, &axes[2].scale.max)},
-    {"limit-left", bind(&expr_to_float64_opt_pair, _1, &axes[3].scale.min, &axes[3].scale.max)},
+    {"limit-top", std::bind(&expr_to_float64_opt_pair, _1, &axes[0].scale.min, &axes[0].scale.max)},
+    {"limit-right", std::bind(&expr_to_float64_opt_pair, _1, &axes[1].scale.min, &axes[1].scale.max)},
+    {"limit-bottom", std::bind(&expr_to_float64_opt_pair, _1, &axes[2].scale.min, &axes[2].scale.max)},
+    {"limit-left", std::bind(&expr_to_float64_opt_pair, _1, &axes[3].scale.min, &axes[3].scale.max)},
 
     /* label options */
     {
       "label-placement-x",
       expr_calln_fn({
-        bind(&scale_configure_layout, _1, &axes[0].label_placement),
-        bind(&scale_configure_layout, _1, &axes[2].label_placement)
+        std::bind(&scale_configure_layout, _1, &axes[0].label_placement),
+        std::bind(&scale_configure_layout, _1, &axes[2].label_placement)
       })
     },
     {
       "label-placement-y",
       expr_calln_fn({
-        bind(&scale_configure_layout, _1, &axes[1].label_placement),
-        bind(&scale_configure_layout, _1, &axes[3].label_placement)
+        std::bind(&scale_configure_layout, _1, &axes[1].label_placement),
+        std::bind(&scale_configure_layout, _1, &axes[3].label_placement)
       })
     },
-    {"label-placement-top", bind(&scale_configure_layout, _1, &axes[0].label_placement)},
-    {"label-placement-right", bind(&scale_configure_layout, _1, &axes[1].label_placement)},
-    {"label-placement-bottom", bind(&scale_configure_layout, _1, &axes[2].label_placement)},
-    {"label-placement-left", bind(&scale_configure_layout, _1, &axes[3].label_placement)},
+    {"label-placement-top", std::bind(&scale_configure_layout, _1, &axes[0].label_placement)},
+    {"label-placement-right", std::bind(&scale_configure_layout, _1, &axes[1].label_placement)},
+    {"label-placement-bottom", std::bind(&scale_configure_layout, _1, &axes[2].label_placement)},
+    {"label-placement-left", std::bind(&scale_configure_layout, _1, &axes[3].label_placement)},
     {
       "label-format",
       expr_calln_fn({
-        bind(&format_configure, _1, &axes[0].label_formatter),
-        bind(&format_configure, _1, &axes[1].label_formatter),
-        bind(&format_configure, _1, &axes[2].label_formatter),
-        bind(&format_configure, _1, &axes[3].label_formatter)
+        std::bind(&format_configure, _1, &axes[0].label_formatter),
+        std::bind(&format_configure, _1, &axes[1].label_formatter),
+        std::bind(&format_configure, _1, &axes[2].label_formatter),
+        std::bind(&format_configure, _1, &axes[3].label_formatter)
       })
     },
     {
       "label-format-x",
       expr_calln_fn({
-        bind(&format_configure, _1, &axes[0].label_formatter),
-        bind(&format_configure, _1, &axes[2].label_formatter)
+        std::bind(&format_configure, _1, &axes[0].label_formatter),
+        std::bind(&format_configure, _1, &axes[2].label_formatter)
       })
     },
     {
       "label-format-y",
       expr_calln_fn({
-        bind(&format_configure, _1, &axes[1].label_formatter),
-        bind(&format_configure, _1, &axes[3].label_formatter)
+        std::bind(&format_configure, _1, &axes[1].label_formatter),
+        std::bind(&format_configure, _1, &axes[3].label_formatter)
       })
     },
     {
@@ -1011,272 +1011,272 @@ ReturnCode plot_axes(Context* ctx, PlotConfig* plot, const Expr* expr) {
         { "left", AxisLabelAttach::LEFT },
       })
     },
-    {"label-offset-top", bind(&expr_to_float64, _1, &axes[0].label_offset)},
-    {"label-offset-right", bind(&expr_to_float64, _1, &axes[1].label_offset)},
-    {"label-offset-bottom", bind(&expr_to_float64, _1, &axes[2].label_offset)},
-    {"label-offset-left", bind(&expr_to_float64, _1, &axes[3].label_offset)},
-    {"label-padding-top", bind(&measure_read, _1, &axes[0].label_padding)},
-    {"label-padding-right", bind(&measure_read, _1, &axes[1].label_padding)},
-    {"label-padding-bottom", bind(&measure_read, _1, &axes[2].label_padding)},
-    {"label-padding-left", bind(&measure_read, _1, &axes[3].label_padding)},
-    {"label-rotate-top", bind(&expr_to_float64, _1, &axes[0].label_rotate)},
-    {"label-rotate-right", bind(&expr_to_float64, _1, &axes[1].label_rotate)},
-    {"label-rotate-bottom", bind(&expr_to_float64, _1, &axes[2].label_rotate)},
-    {"label-rotate-left", bind(&expr_to_float64, _1, &axes[3].label_rotate)},
-    {"label-format-top", bind(&format_configure, _1, &axes[0].label_formatter)},
-    {"label-format-right", bind(&format_configure, _1, &axes[1].label_formatter)},
-    {"label-format-bottom", bind(&format_configure, _1, &axes[2].label_formatter)},
-    {"label-format-left", bind(&format_configure, _1, &axes[3].label_formatter)},
+    {"label-offset-top", std::bind(&expr_to_float64, _1, &axes[0].label_offset)},
+    {"label-offset-right", std::bind(&expr_to_float64, _1, &axes[1].label_offset)},
+    {"label-offset-bottom", std::bind(&expr_to_float64, _1, &axes[2].label_offset)},
+    {"label-offset-left", std::bind(&expr_to_float64, _1, &axes[3].label_offset)},
+    {"label-padding-top", std::bind(&measure_read, _1, &axes[0].label_padding)},
+    {"label-padding-right", std::bind(&measure_read, _1, &axes[1].label_padding)},
+    {"label-padding-bottom", std::bind(&measure_read, _1, &axes[2].label_padding)},
+    {"label-padding-left", std::bind(&measure_read, _1, &axes[3].label_padding)},
+    {"label-rotate-top", std::bind(&expr_to_float64, _1, &axes[0].label_rotate)},
+    {"label-rotate-right", std::bind(&expr_to_float64, _1, &axes[1].label_rotate)},
+    {"label-rotate-bottom", std::bind(&expr_to_float64, _1, &axes[2].label_rotate)},
+    {"label-rotate-left", std::bind(&expr_to_float64, _1, &axes[3].label_rotate)},
+    {"label-format-top", std::bind(&format_configure, _1, &axes[0].label_formatter)},
+    {"label-format-right", std::bind(&format_configure, _1, &axes[1].label_formatter)},
+    {"label-format-bottom", std::bind(&format_configure, _1, &axes[2].label_formatter)},
+    {"label-format-left", std::bind(&format_configure, _1, &axes[3].label_formatter)},
     {
       "label-font-size",
       expr_calln_fn({
-        bind(&measure_read, _1, &axes[0].label_font_size),
-        bind(&measure_read, _1, &axes[1].label_font_size),
-        bind(&measure_read, _1, &axes[2].label_font_size),
-        bind(&measure_read, _1, &axes[3].label_font_size)
+        std::bind(&measure_read, _1, &axes[0].label_font_size),
+        std::bind(&measure_read, _1, &axes[1].label_font_size),
+        std::bind(&measure_read, _1, &axes[2].label_font_size),
+        std::bind(&measure_read, _1, &axes[3].label_font_size)
       })
     },
     {
       "label-color",
       expr_calln_fn({
-        bind(&color_read, ctx, _1, &axes[0].label_color),
-        bind(&color_read, ctx, _1, &axes[1].label_color),
-        bind(&color_read, ctx, _1, &axes[2].label_color),
-        bind(&color_read, ctx, _1, &axes[3].label_color)
+        std::bind(&color_read, ctx, _1, &axes[0].label_color),
+        std::bind(&color_read, ctx, _1, &axes[1].label_color),
+        std::bind(&color_read, ctx, _1, &axes[2].label_color),
+        std::bind(&color_read, ctx, _1, &axes[3].label_color)
       })
     },
     {
       "label-color-x",
       expr_calln_fn({
-        bind(&color_read, ctx, _1, &axes[0].label_color),
-        bind(&color_read, ctx, _1, &axes[2].label_color),
+        std::bind(&color_read, ctx, _1, &axes[0].label_color),
+        std::bind(&color_read, ctx, _1, &axes[2].label_color),
       })
     },
     {
       "label-color-y",
       expr_calln_fn({
-        bind(&color_read, ctx, _1, &axes[1].label_color),
-        bind(&color_read, ctx, _1, &axes[3].label_color)
+        std::bind(&color_read, ctx, _1, &axes[1].label_color),
+        std::bind(&color_read, ctx, _1, &axes[3].label_color)
       })
     },
-    {"label-color-top", bind(&color_read, ctx, _1, &axes[0].label_color)},
-    {"label-color-right", bind(&color_read, ctx, _1, &axes[1].label_color)},
-    {"label-color-bottom", bind(&color_read, ctx, _1, &axes[2].label_color)},
-    {"label-color-left", bind(&color_read, ctx, _1, &axes[3].label_color)},
+    {"label-color-top", std::bind(&color_read, ctx, _1, &axes[0].label_color)},
+    {"label-color-right", std::bind(&color_read, ctx, _1, &axes[1].label_color)},
+    {"label-color-bottom", std::bind(&color_read, ctx, _1, &axes[2].label_color)},
+    {"label-color-left", std::bind(&color_read, ctx, _1, &axes[3].label_color)},
     {
       "label-font",
       expr_calln_fn({
-        expr_call_string_fn(bind(&font_load_best, _1, &axes[0].label_font)),
-        expr_call_string_fn(bind(&font_load_best, _1, &axes[1].label_font)),
-        expr_call_string_fn(bind(&font_load_best, _1, &axes[2].label_font)),
-        expr_call_string_fn(bind(&font_load_best, _1, &axes[3].label_font))
+        expr_call_string_fn(std::bind(&font_load_best, _1, &axes[0].label_font)),
+        expr_call_string_fn(std::bind(&font_load_best, _1, &axes[1].label_font)),
+        expr_call_string_fn(std::bind(&font_load_best, _1, &axes[2].label_font)),
+        expr_call_string_fn(std::bind(&font_load_best, _1, &axes[3].label_font))
       })
     },
-    {"label-font-top", expr_call_string_fn(bind(&font_load_best, _1, &axes[0].label_font))},
-    {"label-font-right", expr_call_string_fn(bind(&font_load_best, _1, &axes[1].label_font))},
-    {"label-font-bottom", expr_call_string_fn(bind(&font_load_best, _1, &axes[2].label_font))},
-    {"label-font-left", expr_call_string_fn(bind(&font_load_best, _1, &axes[3].label_font))},
+    {"label-font-top", expr_call_string_fn(std::bind(&font_load_best, _1, &axes[0].label_font))},
+    {"label-font-right", expr_call_string_fn(std::bind(&font_load_best, _1, &axes[1].label_font))},
+    {"label-font-bottom", expr_call_string_fn(std::bind(&font_load_best, _1, &axes[2].label_font))},
+    {"label-font-left", expr_call_string_fn(std::bind(&font_load_best, _1, &axes[3].label_font))},
     {
       "label-font-size-x",
       expr_calln_fn({
-        bind(&measure_read, _1, &axes[0].label_font_size),
-        bind(&measure_read, _1, &axes[2].label_font_size)
+        std::bind(&measure_read, _1, &axes[0].label_font_size),
+        std::bind(&measure_read, _1, &axes[2].label_font_size)
       })
     },
     {
       "label-font-size-y",
       expr_calln_fn({
-        bind(&measure_read, _1, &axes[1].label_font_size),
-        bind(&measure_read, _1, &axes[3].label_font_size)
+        std::bind(&measure_read, _1, &axes[1].label_font_size),
+        std::bind(&measure_read, _1, &axes[3].label_font_size)
       })
     },
-    {"label-font-size-top", bind(&measure_read, _1, &axes[0].label_font_size)},
-    {"label-font-size-right", bind(&measure_read, _1, &axes[1].label_font_size)},
-    {"label-font-size-bottom", bind(&measure_read, _1, &axes[2].label_font_size)},
-    {"label-font-size-left", bind(&measure_read, _1, &axes[3].label_font_size)},
+    {"label-font-size-top", std::bind(&measure_read, _1, &axes[0].label_font_size)},
+    {"label-font-size-right", std::bind(&measure_read, _1, &axes[1].label_font_size)},
+    {"label-font-size-bottom", std::bind(&measure_read, _1, &axes[2].label_font_size)},
+    {"label-font-size-left", std::bind(&measure_read, _1, &axes[3].label_font_size)},
 
     /* tick options */
     {
       "label-placement-x",
       expr_calln_fn({
-        bind(&scale_configure_layout, _1, &axes[0].tick_placement),
-        bind(&scale_configure_layout, _1, &axes[2].tick_placement)
+        std::bind(&scale_configure_layout, _1, &axes[0].tick_placement),
+        std::bind(&scale_configure_layout, _1, &axes[2].tick_placement)
       })
     },
     {
       "label-placement-y",
       expr_calln_fn({
-        bind(&scale_configure_layout, _1, &axes[1].tick_placement),
-        bind(&scale_configure_layout, _1, &axes[3].tick_placement)
+        std::bind(&scale_configure_layout, _1, &axes[1].tick_placement),
+        std::bind(&scale_configure_layout, _1, &axes[3].tick_placement)
       })
     },
-    {"tick-placement-top", bind(&scale_configure_layout, _1, &axes[0].tick_placement)},
-    {"tick-placement-right", bind(&scale_configure_layout, _1, &axes[1].tick_placement)},
-    {"tick-placement-bottom", bind(&scale_configure_layout, _1, &axes[2].tick_placement)},
-    {"tick-placement-left", bind(&scale_configure_layout, _1, &axes[3].tick_placement)},
-    {"tick-offset-top", bind(&expr_to_float64, _1, &axes[0].tick_offset)},
-    {"tick-offset-right", bind(&expr_to_float64, _1, &axes[1].tick_offset)},
-    {"tick-offset-bottom", bind(&expr_to_float64, _1, &axes[2].tick_offset)},
-    {"tick-offset-left", bind(&expr_to_float64, _1, &axes[3].tick_offset)},
-    {"tick-length-top", bind(&measure_read, _1, &axes[0].tick_length)},
-    {"tick-length-right", bind(&measure_read, _1, &axes[1].tick_length)},
-    {"tick-length-bottom", bind(&measure_read, _1, &axes[2].tick_length)},
-    {"tick-length-left", bind(&measure_read, _1, &axes[3].tick_length)},
+    {"tick-placement-top", std::bind(&scale_configure_layout, _1, &axes[0].tick_placement)},
+    {"tick-placement-right", std::bind(&scale_configure_layout, _1, &axes[1].tick_placement)},
+    {"tick-placement-bottom", std::bind(&scale_configure_layout, _1, &axes[2].tick_placement)},
+    {"tick-placement-left", std::bind(&scale_configure_layout, _1, &axes[3].tick_placement)},
+    {"tick-offset-top", std::bind(&expr_to_float64, _1, &axes[0].tick_offset)},
+    {"tick-offset-right", std::bind(&expr_to_float64, _1, &axes[1].tick_offset)},
+    {"tick-offset-bottom", std::bind(&expr_to_float64, _1, &axes[2].tick_offset)},
+    {"tick-offset-left", std::bind(&expr_to_float64, _1, &axes[3].tick_offset)},
+    {"tick-length-top", std::bind(&measure_read, _1, &axes[0].tick_length)},
+    {"tick-length-right", std::bind(&measure_read, _1, &axes[1].tick_length)},
+    {"tick-length-bottom", std::bind(&measure_read, _1, &axes[2].tick_length)},
+    {"tick-length-left", std::bind(&measure_read, _1, &axes[3].tick_length)},
 
     /* title options */
     {
       "title-x",
       expr_calln_fn({
-        bind(&expr_to_string, _1, &axes[0].title),
-        bind(&expr_to_string, _1, &axes[2].title)
+        std::bind(&expr_to_string, _1, &axes[0].title),
+        std::bind(&expr_to_string, _1, &axes[2].title)
       })
     },
     {
       "title-y",
       expr_calln_fn({
-        bind(&expr_to_string, _1, &axes[1].title),
-        bind(&expr_to_string, _1, &axes[3].title)
+        std::bind(&expr_to_string, _1, &axes[1].title),
+        std::bind(&expr_to_string, _1, &axes[3].title)
       })
     },
-    {"title-top", bind(&expr_to_string, _1, &axes[0].title)},
-    {"title-right", bind(&expr_to_string, _1, &axes[1].title)},
-    {"title-bottom", bind(&expr_to_string, _1, &axes[2].title)},
-    {"title-left", bind(&expr_to_string, _1, &axes[3].title)},
+    {"title-top", std::bind(&expr_to_string, _1, &axes[0].title)},
+    {"title-right", std::bind(&expr_to_string, _1, &axes[1].title)},
+    {"title-bottom", std::bind(&expr_to_string, _1, &axes[2].title)},
+    {"title-left", std::bind(&expr_to_string, _1, &axes[3].title)},
     {
       "title-font",
       expr_calln_fn({
-        expr_call_string_fn(bind(&font_load_best, _1, &axes[0].title_font)),
-        expr_call_string_fn(bind(&font_load_best, _1, &axes[1].title_font)),
-        expr_call_string_fn(bind(&font_load_best, _1, &axes[2].title_font)),
-        expr_call_string_fn(bind(&font_load_best, _1, &axes[3].title_font))
+        expr_call_string_fn(std::bind(&font_load_best, _1, &axes[0].title_font)),
+        expr_call_string_fn(std::bind(&font_load_best, _1, &axes[1].title_font)),
+        expr_call_string_fn(std::bind(&font_load_best, _1, &axes[2].title_font)),
+        expr_call_string_fn(std::bind(&font_load_best, _1, &axes[3].title_font))
       })
     },
-    {"title-font-top", expr_call_string_fn(bind(&font_load_best, _1, &axes[0].title_font))},
-    {"title-font-right", expr_call_string_fn(bind(&font_load_best, _1, &axes[1].title_font))},
-    {"title-font-bottom", expr_call_string_fn(bind(&font_load_best, _1, &axes[2].title_font))},
-    {"title-font-left", expr_call_string_fn(bind(&font_load_best, _1, &axes[3].title_font))},
+    {"title-font-top", expr_call_string_fn(std::bind(&font_load_best, _1, &axes[0].title_font))},
+    {"title-font-right", expr_call_string_fn(std::bind(&font_load_best, _1, &axes[1].title_font))},
+    {"title-font-bottom", expr_call_string_fn(std::bind(&font_load_best, _1, &axes[2].title_font))},
+    {"title-font-left", expr_call_string_fn(std::bind(&font_load_best, _1, &axes[3].title_font))},
     {
       "title-font-size",
       expr_calln_fn({
-        bind(&measure_read, _1, &axes[0].title_font_size),
-        bind(&measure_read, _1, &axes[1].title_font_size),
-        bind(&measure_read, _1, &axes[2].title_font_size),
-        bind(&measure_read, _1, &axes[3].title_font_size)
+        std::bind(&measure_read, _1, &axes[0].title_font_size),
+        std::bind(&measure_read, _1, &axes[1].title_font_size),
+        std::bind(&measure_read, _1, &axes[2].title_font_size),
+        std::bind(&measure_read, _1, &axes[3].title_font_size)
       })
     },
-    {"title-font-size-top", bind(&measure_read, _1, &axes[0].title_font_size)},
-    {"title-font-size-right", bind(&measure_read, _1, &axes[1].title_font_size)},
-    {"title-font-size-bottom", bind(&measure_read, _1, &axes[2].title_font_size)},
-    {"title-font-size-left", bind(&measure_read, _1, &axes[3].title_font_size)},
+    {"title-font-size-top", std::bind(&measure_read, _1, &axes[0].title_font_size)},
+    {"title-font-size-right", std::bind(&measure_read, _1, &axes[1].title_font_size)},
+    {"title-font-size-bottom", std::bind(&measure_read, _1, &axes[2].title_font_size)},
+    {"title-font-size-left", std::bind(&measure_read, _1, &axes[3].title_font_size)},
     {
       "title-color",
       expr_calln_fn({
-        bind(&color_read, ctx, _1, &axes[0].title_color),
-        bind(&color_read, ctx, _1, &axes[1].title_color),
-        bind(&color_read, ctx, _1, &axes[2].title_color),
-        bind(&color_read, ctx, _1, &axes[3].title_color)
+        std::bind(&color_read, ctx, _1, &axes[0].title_color),
+        std::bind(&color_read, ctx, _1, &axes[1].title_color),
+        std::bind(&color_read, ctx, _1, &axes[2].title_color),
+        std::bind(&color_read, ctx, _1, &axes[3].title_color)
       })
     },
-    {"title-color-top", bind(&color_read, ctx, _1, &axes[0].title_color)},
-    {"title-color-right", bind(&color_read, ctx, _1, &axes[1].title_color)},
-    {"title-color-bottom", bind(&color_read, ctx, _1, &axes[2].title_color)},
-    {"title-color-left", bind(&color_read, ctx, _1, &axes[3].title_color)},
-    {"title-offset-top", bind(&expr_to_float64, _1, &axes[0].title_offset)},
-    {"title-offset-right", bind(&expr_to_float64, _1, &axes[1].title_offset)},
-    {"title-offset-bottom", bind(&expr_to_float64, _1, &axes[2].title_offset)},
-    {"title-offset-left", bind(&expr_to_float64, _1, &axes[3].title_offset)},
-    {"title-padding-top", bind(&measure_read, _1, &axes[0].title_padding)},
-    {"title-padding-right", bind(&measure_read, _1, &axes[1].title_padding)},
-    {"title-padding-bottom", bind(&measure_read, _1, &axes[2].title_padding)},
-    {"title-padding-left", bind(&measure_read, _1, &axes[3].title_padding)},
-    {"title-rotate-top", bind(&expr_to_float64, _1, &axes[0].title_rotate)},
-    {"title-rotate-right", bind(&expr_to_float64, _1, &axes[1].title_rotate)},
-    {"title-rotate-bottom", bind(&expr_to_float64, _1, &axes[2].title_rotate)},
-    {"title-rotate-left", bind(&expr_to_float64, _1, &axes[3].title_rotate)},
+    {"title-color-top", std::bind(&color_read, ctx, _1, &axes[0].title_color)},
+    {"title-color-right", std::bind(&color_read, ctx, _1, &axes[1].title_color)},
+    {"title-color-bottom", std::bind(&color_read, ctx, _1, &axes[2].title_color)},
+    {"title-color-left", std::bind(&color_read, ctx, _1, &axes[3].title_color)},
+    {"title-offset-top", std::bind(&expr_to_float64, _1, &axes[0].title_offset)},
+    {"title-offset-right", std::bind(&expr_to_float64, _1, &axes[1].title_offset)},
+    {"title-offset-bottom", std::bind(&expr_to_float64, _1, &axes[2].title_offset)},
+    {"title-offset-left", std::bind(&expr_to_float64, _1, &axes[3].title_offset)},
+    {"title-padding-top", std::bind(&measure_read, _1, &axes[0].title_padding)},
+    {"title-padding-right", std::bind(&measure_read, _1, &axes[1].title_padding)},
+    {"title-padding-bottom", std::bind(&measure_read, _1, &axes[2].title_padding)},
+    {"title-padding-left", std::bind(&measure_read, _1, &axes[3].title_padding)},
+    {"title-rotate-top", std::bind(&expr_to_float64, _1, &axes[0].title_rotate)},
+    {"title-rotate-right", std::bind(&expr_to_float64, _1, &axes[1].title_rotate)},
+    {"title-rotate-bottom", std::bind(&expr_to_float64, _1, &axes[2].title_rotate)},
+    {"title-rotate-left", std::bind(&expr_to_float64, _1, &axes[3].title_rotate)},
 
     /* margin options */
     {
       "margin",
       expr_calln_fn({
-        bind(&measure_read, _1, &margins[0]),
-        bind(&measure_read, _1, &margins[1]),
-        bind(&measure_read, _1, &margins[2]),
-        bind(&measure_read, _1, &margins[3]),
+        std::bind(&measure_read, _1, &margins[0]),
+        std::bind(&measure_read, _1, &margins[1]),
+        std::bind(&measure_read, _1, &margins[2]),
+        std::bind(&measure_read, _1, &margins[3]),
       })
     },
-    {"margin-top", bind(&measure_read, _1, &margins[0])},
-    {"margin-right", bind(&measure_read, _1, &margins[1])},
-    {"margin-bottom", bind(&measure_read, _1, &margins[2])},
-    {"margin-left", bind(&measure_read, _1, &margins[3])},
+    {"margin-top", std::bind(&measure_read, _1, &margins[0])},
+    {"margin-right", std::bind(&measure_read, _1, &margins[1])},
+    {"margin-bottom", std::bind(&measure_read, _1, &margins[2])},
+    {"margin-left", std::bind(&measure_read, _1, &margins[3])},
 
     /* border options */
     {
       "border-width",
       expr_calln_fn({
-        bind(&measure_read, _1, &axes[0].border_style.line_width),
-        bind(&measure_read, _1, &axes[1].border_style.line_width),
-        bind(&measure_read, _1, &axes[2].border_style.line_width),
-        bind(&measure_read, _1, &axes[3].border_style.line_width)
+        std::bind(&measure_read, _1, &axes[0].border_style.line_width),
+        std::bind(&measure_read, _1, &axes[1].border_style.line_width),
+        std::bind(&measure_read, _1, &axes[2].border_style.line_width),
+        std::bind(&measure_read, _1, &axes[3].border_style.line_width)
       })
     },
-    {"border-width-top", bind(&measure_read, _1, &axes[0].border_style.line_width)},
-    {"border-width-right", bind(&measure_read, _1, &axes[1].border_style.line_width)},
-    {"border-width-bottom", bind(&measure_read, _1, &axes[2].border_style.line_width)},
-    {"border-width-left", bind(&measure_read, _1, &axes[3].border_style.line_width)},
+    {"border-width-top", std::bind(&measure_read, _1, &axes[0].border_style.line_width)},
+    {"border-width-right", std::bind(&measure_read, _1, &axes[1].border_style.line_width)},
+    {"border-width-bottom", std::bind(&measure_read, _1, &axes[2].border_style.line_width)},
+    {"border-width-left", std::bind(&measure_read, _1, &axes[3].border_style.line_width)},
 
     {
       "border-color",
       expr_calln_fn({
-        bind(&color_read, ctx, _1, &axes[0].border_style.color),
-        bind(&color_read, ctx, _1, &axes[1].border_style.color),
-        bind(&color_read, ctx, _1, &axes[2].border_style.color),
-        bind(&color_read, ctx, _1, &axes[3].border_style.color)
+        std::bind(&color_read, ctx, _1, &axes[0].border_style.color),
+        std::bind(&color_read, ctx, _1, &axes[1].border_style.color),
+        std::bind(&color_read, ctx, _1, &axes[2].border_style.color),
+        std::bind(&color_read, ctx, _1, &axes[3].border_style.color)
       })
     },
-    {"border-color-top", bind(&color_read, ctx, _1, &axes[0].border_style.color)},
-    {"border-color-right", bind(&color_read, ctx, _1, &axes[1].border_style.color)},
-    {"border-color-bottom", bind(&color_read, ctx, _1, &axes[2].border_style.color)},
-    {"border-color-left", bind(&color_read, ctx, _1, &axes[3].border_style.color)},
+    {"border-color-top", std::bind(&color_read, ctx, _1, &axes[0].border_style.color)},
+    {"border-color-right", std::bind(&color_read, ctx, _1, &axes[1].border_style.color)},
+    {"border-color-bottom", std::bind(&color_read, ctx, _1, &axes[2].border_style.color)},
+    {"border-color-left", std::bind(&color_read, ctx, _1, &axes[3].border_style.color)},
 
     {
       "border-style",
       expr_calln_fn({
-        bind(&expr_to_stroke_style, _1, &axes[0].border_style),
-        bind(&expr_to_stroke_style, _1, &axes[1].border_style),
-        bind(&expr_to_stroke_style, _1, &axes[2].border_style),
-        bind(&expr_to_stroke_style, _1, &axes[3].border_style)
+        std::bind(&expr_to_stroke_style, _1, &axes[0].border_style),
+        std::bind(&expr_to_stroke_style, _1, &axes[1].border_style),
+        std::bind(&expr_to_stroke_style, _1, &axes[2].border_style),
+        std::bind(&expr_to_stroke_style, _1, &axes[3].border_style)
       })
     },
-    {"border-style-top", bind(&expr_to_stroke_style, _1, &axes[0].border_style)},
-    {"border-style-right", bind(&expr_to_stroke_style, _1, &axes[1].border_style)},
-    {"border-style-bottom", bind(&expr_to_stroke_style, _1, &axes[2].border_style)},
-    {"border-style-left", bind(&expr_to_stroke_style, _1, &axes[3].border_style)},
+    {"border-style-top", std::bind(&expr_to_stroke_style, _1, &axes[0].border_style)},
+    {"border-style-right", std::bind(&expr_to_stroke_style, _1, &axes[1].border_style)},
+    {"border-style-bottom", std::bind(&expr_to_stroke_style, _1, &axes[2].border_style)},
+    {"border-style-left", std::bind(&expr_to_stroke_style, _1, &axes[3].border_style)},
 
     /* global font options */
     {
       "font",
       expr_calln_fn({
-        expr_call_string_fn(bind(&font_load_best, _1, &axes[0].label_font)),
-        expr_call_string_fn(bind(&font_load_best, _1, &axes[1].label_font)),
-        expr_call_string_fn(bind(&font_load_best, _1, &axes[2].label_font)),
-        expr_call_string_fn(bind(&font_load_best, _1, &axes[3].label_font)),
-        expr_call_string_fn(bind(&font_load_best, _1, &axes[0].title_font)),
-        expr_call_string_fn(bind(&font_load_best, _1, &axes[1].title_font)),
-        expr_call_string_fn(bind(&font_load_best, _1, &axes[2].title_font)),
-        expr_call_string_fn(bind(&font_load_best, _1, &axes[3].title_font))
+        expr_call_string_fn(std::bind(&font_load_best, _1, &axes[0].label_font)),
+        expr_call_string_fn(std::bind(&font_load_best, _1, &axes[1].label_font)),
+        expr_call_string_fn(std::bind(&font_load_best, _1, &axes[2].label_font)),
+        expr_call_string_fn(std::bind(&font_load_best, _1, &axes[3].label_font)),
+        expr_call_string_fn(std::bind(&font_load_best, _1, &axes[0].title_font)),
+        expr_call_string_fn(std::bind(&font_load_best, _1, &axes[1].title_font)),
+        expr_call_string_fn(std::bind(&font_load_best, _1, &axes[2].title_font)),
+        expr_call_string_fn(std::bind(&font_load_best, _1, &axes[3].title_font))
       })
     },
     {
       "font-size",
       expr_calln_fn({
-        bind(&measure_read, _1, &axes[0].title_font_size),
-        bind(&measure_read, _1, &axes[1].title_font_size),
-        bind(&measure_read, _1, &axes[2].title_font_size),
-        bind(&measure_read, _1, &axes[3].title_font_size),
-        bind(&measure_read, _1, &axes[0].label_font_size),
-        bind(&measure_read, _1, &axes[1].label_font_size),
-        bind(&measure_read, _1, &axes[2].label_font_size),
-        bind(&measure_read, _1, &axes[3].label_font_size),
+        std::bind(&measure_read, _1, &axes[0].title_font_size),
+        std::bind(&measure_read, _1, &axes[1].title_font_size),
+        std::bind(&measure_read, _1, &axes[2].title_font_size),
+        std::bind(&measure_read, _1, &axes[3].title_font_size),
+        std::bind(&measure_read, _1, &axes[0].label_font_size),
+        std::bind(&measure_read, _1, &axes[1].label_font_size),
+        std::bind(&measure_read, _1, &axes[2].label_font_size),
+        std::bind(&measure_read, _1, &axes[3].label_font_size),
       })
     }
   });

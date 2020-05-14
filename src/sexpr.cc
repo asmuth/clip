@@ -38,27 +38,27 @@ void expr_destroy(Expr* expr) {
 }
 
 ExprStorage expr_create_list() {
-  auto e = ExprStorage(new Expr, bind(&expr_destroy, _1));
+  auto e = ExprStorage(new Expr, std::bind(&expr_destroy, _1));
   e->type = ExprType::LIST;
   return e;
 }
 
 ExprStorage expr_create_list(ExprStorage items) {
-  auto e = ExprStorage(new Expr, bind(&expr_destroy, _1));
+  auto e = ExprStorage(new Expr, std::bind(&expr_destroy, _1));
   e->type = ExprType::LIST;
   e->list = std::move(items);
   return e;
 }
 
 ExprStorage expr_create_value(const std::string& str) {
-  auto e = ExprStorage(new Expr, bind(&expr_destroy, _1));
+  auto e = ExprStorage(new Expr, std::bind(&expr_destroy, _1));
   e->type = ExprType::VALUE;
   e->value = str;
   return e;
 }
 
 ExprStorage expr_create_value_literal(const std::string& str) {
-  auto e = ExprStorage(new Expr, bind(&expr_destroy, _1));
+  auto e = ExprStorage(new Expr, std::bind(&expr_destroy, _1));
   e->type = ExprType::VALUE_LITERAL;
   e->value = str;
   return e;
@@ -137,7 +137,7 @@ ExprStorage expr_clone(const Expr* e, int count /* =-1 */) {
   ExprStorage* c = &copy;
 
   for (; e && count != 0; --count) {
-    *c = ExprStorage(new Expr, bind(&expr_destroy, _1));
+    *c = ExprStorage(new Expr, std::bind(&expr_destroy, _1));
     (*c)->type = e->type;
     (*c)->value = e->value;
 

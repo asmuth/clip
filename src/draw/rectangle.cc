@@ -49,14 +49,14 @@ ReturnCode rectangle(
     {
       "color",
       expr_calln_fn({
-        bind(&color_read, ctx, _1, &stroke_style.color),
-        bind(&fill_style_read_solid, ctx, _1, &fill_style),
+        std::bind(&color_read, ctx, _1, &stroke_style.color),
+        std::bind(&fill_style_read_solid, ctx, _1, &fill_style),
       })
     },
-    {"fill", bind(&fill_style_read, ctx, _1, &fill_style)},
-    {"stroke-color", bind(&color_read, ctx, _1, &stroke_style.color)},
-    {"stroke-width", bind(&measure_read, _1, &stroke_style.line_width)},
-    {"stroke-style", bind(&stroke_style_read, ctx, _1, &stroke_style)},
+    {"fill", std::bind(&fill_style_read, ctx, _1, &fill_style)},
+    {"stroke-color", std::bind(&color_read, ctx, _1, &stroke_style.color)},
+    {"stroke-width", std::bind(&measure_read, _1, &stroke_style.line_width)},
+    {"stroke-style", std::bind(&stroke_style_read, ctx, _1, &stroke_style)},
   });
 
   if (!config_rc) {

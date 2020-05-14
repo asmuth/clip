@@ -104,7 +104,7 @@ ReturnCode expr_calln(
 }
 
 ExprVisitor expr_calln_fn(const std::initializer_list<ExprVisitor>& fns) {
-  return bind(&expr_calln, _1, fns);
+  return std::bind(&expr_calln, _1, fns);
 }
 
 std::vector<const Expr*> expr_collect(const Expr* expr) {

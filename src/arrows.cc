@@ -51,7 +51,7 @@ ReturnCode arrow_draw_default(
 }
 
 Arrow arrow_create_default() {
-  return bind(&arrow_draw_default, _1, _2, _3, _4, _5);
+  return std::bind(&arrow_draw_default, _1, _2, _3, _4, _5);
 }
 
 } // namespace clip

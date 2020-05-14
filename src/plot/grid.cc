@@ -96,22 +96,22 @@ ReturnCode plot_grid(Context* ctx, PlotConfig* plot, const Expr* expr) {
 
   /* parse properties */
   auto config_rc = expr_walk_map_wrapped(expr, {
-    {"limit-x", bind(&expr_to_float64_opt_pair, _1, &c->scale_x.min, &c->scale_x.max)},
-    {"limit-x-min", bind(&expr_to_float64_opt, _1, &c->scale_x.min)},
-    {"limit-x-max", bind(&expr_to_float64_opt, _1, &c->scale_x.max)},
-    {"limit-y", bind(&expr_to_float64_opt_pair, _1, &c->scale_y.min, &c->scale_y.max)},
-    {"limit-y-min", bind(&expr_to_float64_opt, _1, &c->scale_y.min)},
-    {"limit-y-max", bind(&expr_to_float64_opt, _1, &c->scale_y.max)},
-    {"tick-placement-x", bind(&scale_configure_layout, _1, &c->layout_x)},
-    {"tick-placement-y", bind(&scale_configure_layout, _1, &c->layout_y)},
-    {"scale-x", bind(&scale_configure_kind, _1, &c->scale_x)},
-    {"scale-y", bind(&scale_configure_kind, _1, &c->scale_y)},
-    {"scale-x-padding", bind(&expr_to_float64, _1, &c->scale_x.padding)},
-    {"scale-y-padding", bind(&expr_to_float64, _1, &c->scale_y.padding)},
-    {"color", bind(&color_read, ctx, _1, &c->stroke_style.color)},
-    {"stroke-color", bind(&color_read, ctx, _1, &c->stroke_style.color)},
-    {"stroke-width", bind(&measure_read, _1, &c->stroke_style.line_width)},
-    {"stroke-style", bind(&stroke_style_read, ctx, _1, &c->stroke_style)},
+    {"limit-x", std::bind(&expr_to_float64_opt_pair, _1, &c->scale_x.min, &c->scale_x.max)},
+    {"limit-x-min", std::bind(&expr_to_float64_opt, _1, &c->scale_x.min)},
+    {"limit-x-max", std::bind(&expr_to_float64_opt, _1, &c->scale_x.max)},
+    {"limit-y", std::bind(&expr_to_float64_opt_pair, _1, &c->scale_y.min, &c->scale_y.max)},
+    {"limit-y-min", std::bind(&expr_to_float64_opt, _1, &c->scale_y.min)},
+    {"limit-y-max", std::bind(&expr_to_float64_opt, _1, &c->scale_y.max)},
+    {"tick-placement-x", std::bind(&scale_configure_layout, _1, &c->layout_x)},
+    {"tick-placement-y", std::bind(&scale_configure_layout, _1, &c->layout_y)},
+    {"scale-x", std::bind(&scale_configure_kind, _1, &c->scale_x)},
+    {"scale-y", std::bind(&scale_configure_kind, _1, &c->scale_y)},
+    {"scale-x-padding", std::bind(&expr_to_float64, _1, &c->scale_x.padding)},
+    {"scale-y-padding", std::bind(&expr_to_float64, _1, &c->scale_y.padding)},
+    {"color", std::bind(&color_read, ctx, _1, &c->stroke_style.color)},
+    {"stroke-color", std::bind(&color_read, ctx, _1, &c->stroke_style.color)},
+    {"stroke-width", std::bind(&measure_read, _1, &c->stroke_style.line_width)},
+    {"stroke-style", std::bind(&stroke_style_read, ctx, _1, &c->stroke_style)},
   });
 
   if (!config_rc) {

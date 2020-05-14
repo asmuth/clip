@@ -47,7 +47,7 @@ Status text_shape_run(
       std::function<void (hb_font_t*)>>
       hb_font(
           hb_ft_font_create_referenced(ft_font),
-          bind(&hb_font_destroy, _1));
+          std::bind(&hb_font_destroy, _1));
 
   /* prepare buffer */
   std::unique_ptr<
@@ -55,7 +55,7 @@ Status text_shape_run(
       std::function<void (hb_buffer_t*)>>
       hb_buf(
           hb_buffer_create(),
-          bind(&hb_buffer_destroy, _1));
+          std::bind(&hb_buffer_destroy, _1));
 
   hb_buffer_reset(hb_buf.get());
 

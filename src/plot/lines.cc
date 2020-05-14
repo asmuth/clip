@@ -62,18 +62,18 @@ ReturnCode lines_draw(
   /* convert units */
   convert_units(
       {
-        bind(&convert_unit_typographic, layer_get_dpi(ctx), layer_get_font_size(ctx), _1),
-        bind(&convert_unit_user, scale_translate_fn(config->scale_x), _1),
-        bind(&convert_unit_relative, clip.w, _1)
+        std::bind(&convert_unit_typographic, layer_get_dpi(ctx), layer_get_font_size(ctx), _1),
+        std::bind(&convert_unit_user, scale_translate_fn(config->scale_x), _1),
+        std::bind(&convert_unit_relative, clip.w, _1)
       },
       &*config->x.begin(),
       &*config->x.end());
 
   convert_units(
       {
-        bind(&convert_unit_typographic, layer_get_dpi(ctx), layer_get_font_size(ctx), _1),
-        bind(&convert_unit_user, scale_translate_fn(config->scale_y), _1),
-        bind(&convert_unit_relative, clip.h, _1)
+        std::bind(&convert_unit_typographic, layer_get_dpi(ctx), layer_get_font_size(ctx), _1),
+        std::bind(&convert_unit_user, scale_translate_fn(config->scale_y), _1),
+        std::bind(&convert_unit_relative, clip.h, _1)
       },
       &*config->y.begin(),
       &*config->y.end());
@@ -176,35 +176,35 @@ ReturnCode lines_configure(
   std::vector<std::string> data_y;
 
   auto config_rc = expr_walk_map_wrapped(expr, {
-    {"data-x", bind(&data_load_strings, _1, &data_x)},
-    {"data-y", bind(&data_load_strings, _1, &data_y)},
-    {"limit-x", bind(&expr_to_float64_opt_pair, _1, &c->scale_x.min, &c->scale_x.max)},
-    {"limit-x-min", bind(&expr_to_float64_opt, _1, &c->scale_x.min)},
-    {"limit-x-max", bind(&expr_to_float64_opt, _1, &c->scale_x.max)},
-    {"limit-y", bind(&expr_to_float64_opt_pair, _1, &c->scale_y.min, &c->scale_y.max)},
-    {"limit-y-min", bind(&expr_to_float64_opt, _1, &c->scale_y.min)},
-    {"limit-y-max", bind(&expr_to_float64_opt, _1, &c->scale_y.max)},
-    {"scale-x", bind(&scale_configure_kind, _1, &c->scale_x)},
-    {"scale-y", bind(&scale_configure_kind, _1, &c->scale_y)},
-    {"scale-x-padding", bind(&expr_to_float64, _1, &c->scale_x.padding)},
-    {"scale-y-padding", bind(&expr_to_float64, _1, &c->scale_y.padding)},
+    {"data-x", std::bind(&data_load_strings, _1, &data_x)},
+    {"data-y", std::bind(&data_load_strings, _1, &data_y)},
+    {"limit-x", std::bind(&expr_to_float64_opt_pair, _1, &c->scale_x.min, &c->scale_x.max)},
+    {"limit-x-min", std::bind(&expr_to_float64_opt, _1, &c->scale_x.min)},
+    {"limit-x-max", std::bind(&expr_to_float64_opt, _1, &c->scale_x.max)},
+    {"limit-y", std::bind(&expr_to_float64_opt_pair, _1, &c->scale_y.min, &c->scale_y.max)},
+    {"limit-y-min", std::bind(&expr_to_float64_opt, _1, &c->scale_y.min)},
+    {"limit-y-max", std::bind(&expr_to_float64_opt, _1, &c->scale_y.max)},
+    {"scale-x", std::bind(&scale_configure_kind, _1, &c->scale_x)},
+    {"scale-y", std::bind(&scale_configure_kind, _1, &c->scale_y)},
+    {"scale-x-padding", std::bind(&expr_to_float64, _1, &c->scale_x.padding)},
+    {"scale-y-padding", std::bind(&expr_to_float64, _1, &c->scale_y.padding)},
     {
       "color",
       expr_calln_fn({
-        bind(&color_read, ctx, _1, &c->stroke_style.color),
-        bind(&color_read, ctx, _1, &c->marker_color),
+        std::bind(&color_read, ctx, _1, &c->stroke_style.color),
+        std::bind(&color_read, ctx, _1, &c->marker_color),
       })
     },
-    {"stroke-width", bind(&measure_read, _1, &c->stroke_style.line_width)},
-    {"stroke-style", bind(&stroke_style_read, ctx, _1, &c->stroke_style)},
-    {"stroke-color", bind(&color_read, ctx, _1, &c->stroke_style.color)},
-    {"marker-size", bind(&measure_read, _1, &c->marker_size)},
-    {"marker-shape", bind(&marker_configure, _1, &c->marker_shape)},
-    {"marker-color", bind(&color_read, ctx, _1, &c->marker_color)},
-    {"labels", bind(&data_load_strings, _1, &c->labels)},
-    {"label-font-size", bind(&measure_read, _1, &c->label_font_size)},
-    {"label-color", bind(&color_read, ctx, _1, &c->label_color)},
-    {"label-padding", bind(&measure_read, _1, &c->label_padding)},
+    {"stroke-width", std::bind(&measure_read, _1, &c->stroke_style.line_width)},
+    {"stroke-style", std::bind(&stroke_style_read, ctx, _1, &c->stroke_style)},
+    {"stroke-color", std::bind(&color_read, ctx, _1, &c->stroke_style.color)},
+    {"marker-size", std::bind(&measure_read, _1, &c->marker_size)},
+    {"marker-shape", std::bind(&marker_configure, _1, &c->marker_shape)},
+    {"marker-color", std::bind(&color_read, ctx, _1, &c->marker_color)},
+    {"labels", std::bind(&data_load_strings, _1, &c->labels)},
+    {"label-font-size", std::bind(&measure_read, _1, &c->label_font_size)},
+    {"label-color", std::bind(&color_read, ctx, _1, &c->label_color)},
+    {"label-padding", std::bind(&measure_read, _1, &c->label_padding)},
   });
 
   if (!config_rc) {

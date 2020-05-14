@@ -187,8 +187,8 @@ ReturnCode legend_item_configure(
 
   /* parse exprerties */
   auto config_rc = expr_walk_map(expr, {
-    {"font", expr_call_string_fn(bind(&font_load_best, _1, &config->label_font))},
-    {"label", bind(&expr_to_string, _1, &config->label)},
+    {"font", expr_call_string_fn(std::bind(&font_load_best, _1, &config->label_font))},
+    {"label", std::bind(&expr_to_string, _1, &config->label)},
     {
       "label-align",
       expr_to_enum_fn<HAlign>(&config->label_align, {
@@ -196,11 +196,11 @@ ReturnCode legend_item_configure(
         {"right", HAlign::RIGHT},
       })
     },
-    {"label-margin", bind(&measure_read, _1, &config->label_margin)},
-    {"label-color", bind(&color_read, ctx, _1, &config->label_color)},
-    {"label-font", expr_call_string_fn(bind(&font_load_best, _1, &config->label_font))},
-    {"label-font-size", bind(&measure_read, _1, &config->label_font_size)},
-    {"marker-shape", bind(&marker_configure, _1, &config->marker)},
+    {"label-margin", std::bind(&measure_read, _1, &config->label_margin)},
+    {"label-color", std::bind(&color_read, ctx, _1, &config->label_color)},
+    {"label-font", expr_call_string_fn(std::bind(&font_load_best, _1, &config->label_font))},
+    {"label-font-size", std::bind(&measure_read, _1, &config->label_font_size)},
+    {"marker-shape", std::bind(&marker_configure, _1, &config->marker)},
     {
       "marker-align",
       expr_to_enum_fn<HAlign>(&config->marker_align, {
@@ -208,10 +208,10 @@ ReturnCode legend_item_configure(
         {"right", HAlign::RIGHT},
       })
     },
-    {"marker-margin", bind(&measure_read, _1, &config->marker_margin)},
-    {"marker-color", bind(&color_read, ctx, _1, &config->marker_color)},
-    {"marker-size", bind(&measure_read, _1, &config->marker_size)},
-    {"color", bind(&color_read, ctx, _1, &config->marker_color)},
+    {"marker-margin", std::bind(&measure_read, _1, &config->marker_margin)},
+    {"marker-color", std::bind(&color_read, ctx, _1, &config->marker_color)},
+    {"marker-size", std::bind(&measure_read, _1, &config->marker_size)},
+    {"color", std::bind(&color_read, ctx, _1, &config->marker_color)},
   });
 
   if (!config_rc) {
