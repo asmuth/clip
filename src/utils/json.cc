@@ -16,6 +16,7 @@
 #include <stdio.h>
 #include <assert.h>
 #include <iostream>
+#include <array>
 #include "json.h"
 
 namespace clip {
