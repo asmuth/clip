@@ -12,6 +12,7 @@
  * limitations under the License.
  */
 #include "measure.h"
+#include "layer.h"
 #include <assert.h>
 #include <iostream>
 
@@ -27,6 +28,10 @@ Measure::operator double() const {
 
 Measure from_unit(double v) {
   return Measure(Unit::UNIT, v);
+}
+
+Measure from_mm(double v) {
+  return Measure(Unit::MM, v);
 }
 
 Measure from_px(double v) {
@@ -74,6 +79,11 @@ ReturnCode parse_measure(
   }
 
   auto unit = s.substr(unit_pos);
+  if (unit == "mm") {
+    *measure = from_mm(value);
+    return OK;
+  }
+
   if (unit == "px") {
     *measure = from_px(value);
     return OK;
@@ -101,7 +111,7 @@ ReturnCode parse_measure(
 
   return errorf(
       ERROR,
-      "invalid unit: '{}', expected one of 'px', 'pt', 'em', 'rem', 'rel' or '%'",
+      "invalid unit: '{}', expected one of 'mm', 'px', 'pt', 'em', 'rem', 'rel' or '%'",
       unit);
 }
 
@@ -110,6 +120,8 @@ std::string measure_to_string(const Measure& m) {
     case Unit::UNIT:
     case Unit::USER:
       return fmt::format("{}", m.value);
+    case Unit::MM:
+      return fmt::format("{}mm", m.value);
     case Unit::PX:
       return fmt::format("{}px", m.value);
     case Unit::PT:
@@ -131,6 +143,19 @@ Measure measure_or(const Measure& primary, const Measure& fallback) {
   } else {
     return primary;
   }
+}
+
+void convert_unit(
+    const Layer& layer,
+    Measure* measure) {
+  convert_unit_typographic(layer.dpi, layer.font_size, measure);
+}
+
+Measure convert_unit(
+    const Layer& layer,
+    Measure measure) {
+  convert_unit(layer, &measure);
+  return measure;
 }
 
 void convert_units(
@@ -167,6 +192,10 @@ void convert_unit_typographic(
   }
 
   switch (measure->unit) {
+    case Unit::MM:
+      measure->value = (measure->value / 25.4) * dpi;
+      measure->unit = Unit::UNIT;
+      break;
     case Unit::PT:
       measure->value = (measure->value / 72.0) * dpi;
       measure->unit = Unit::UNIT;

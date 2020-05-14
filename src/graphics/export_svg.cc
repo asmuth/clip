@@ -324,10 +324,13 @@ struct SVGDrawOp {
 ReturnCode export_svg(
     const Layer* layer,
     std::string* buffer) {
+  auto width = convert_unit(*layer, layer->width);
+  auto height = convert_unit(*layer, layer->height);
+
   auto svg = std::make_shared<SVGData>();
-  svg->width = layer->width;
-  svg->height = layer->height;
-  svg->proj = mul(translate2({0, layer->height}), scale2({1, -1}));
+  svg->width = width;
+  svg->height = height;
+  svg->proj = mul(translate2({0, height}), scale2({1, -1}));
 
   for (const auto& cmd : layer->drawlist) {
     if (auto rc = svg_add_shape_elem(cmd, svg); !rc) {
@@ -343,12 +346,12 @@ ReturnCode export_svg(
 
     << "<svg"
       << svg_attr("xmlns", "http://www.w3.org/2000/svg")
-      << svg_attr("width", layer->width)
-      << svg_attr("height", layer->height)
+      << svg_attr("width", width)
+      << svg_attr("height", height)
       << ">\n"
     << "  <rect"
-      << svg_attr("width", layer->width)
-      << svg_attr("height", layer->height)
+      << svg_attr("width", width)
+      << svg_attr("height", height)
       << svg_attr("fill", layer->background_color.to_hex_str())
       << svg_attr("fill-opacity", layer->background_color.component(3))
       << "/>\n"

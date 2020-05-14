@@ -137,7 +137,11 @@ Rectangle plot_get_clip(const PlotConfig* plot, const Layer* layer) {
     }
 
     return layout_margin_box(
-        Rectangle(0, 0, layer->width, layer->height),
+        Rectangle(
+            0,
+            0,
+            convert_unit(*layer, layer->width),
+            convert_unit(*layer, layer->height)),
         margins[0],
         margins[1],
         margins[2],

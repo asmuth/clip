@@ -18,10 +18,12 @@
 #include <return_code.h>
 
 namespace clip {
+struct Layer;
 struct Rectangle;
 
 enum class Unit {
   UNIT,  // Screen units
+  MM,    // Millimeters
   PX,    // Pixels
   PT,    // Typographic Points
   REM,   // Typographic "em" size
@@ -44,6 +46,7 @@ struct MeasureConv {
 };
 
 Measure from_unit(double v);
+Measure from_mm(double v);
 Measure from_px(double v);
 Measure from_pt(double v, double dpi);
 Measure from_pt(double v);
@@ -61,6 +64,14 @@ std::string measure_to_string(const Measure& m);
 Measure measure_or(const Measure& primary, const Measure& fallback);
 
 using UnitConverter = std::function<void (Measure*)>;
+
+void convert_unit(
+    const Layer& layer,
+    Measure* measure);
+
+Measure convert_unit(
+    const Layer& layer,
+    Measure measure);
 
 void convert_unit(
     const std::vector<UnitConverter>& converters,
