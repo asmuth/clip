@@ -5,14 +5,54 @@ desc: |
   The `layer/resize` command is used to change the size of the current layer.
 
 syntax: |
-  (layer/resize &lt;<a href="width">width</a>&gt; &lt;<a href="width">height</a>&gt;)
+  (layer/resize &lt;<a href="#option-width">width</a>&gt; &lt;<a href="#option-height">height</a>&gt;)
+  (layer/resize &lt;<a href="#option-paper-size">paper-size</a>&gt;)
 
 arguments:
 
   - name: width
     type: measure
     desc: The new layer width
+    examples: |
+      ;; set the layer size to 1920x1080
+      (layer/resize 1920px 1080px)
+
+      ;; set the layer size to 200mmx300mm
+      (layer/resize 200mm 300mm)
 
   - name: height
     type: measure
     desc: The new layer height
+    examples: |
+      ;; set the layer size to 1920x1080
+      (layer/resize 1920px 1080px)
+
+      ;; set the layer size to 200mmx300mm
+      (layer/resize 200mm 300mm)
+
+  - name: paper-size
+    type: paper-size
+    desc: |
+      Set the layer size to a standard paper size. Valid values are:
+
+      - `A0` – 841mm x 1189mm
+      - `A0*` – 1189mm x 841mm
+      - `A1` – 594mm x 841mm
+      - `A1*` – 841mm x 594mm
+      - `A2` – 420mm x 594mm
+      - `A2*` – 594mm x 420mm
+      - `A3` – 297mm x 420mm
+      - `A3*` – 420mm x 297mm
+      - `A4` – 210mm x 297mm
+      - `A4*` – 297mm x 210mm
+      - `A5` – 148mm x 210mm
+      - `A5*` – 210mm x 148mm
+      - `A6` – 105mm x 148mm
+      - `A6*` – 148mm x 105mm
+
+    examples: |
+      ;; set the layer size to A6
+      (layer/resize A6)
+
+      ;; set the layer size to A4 landscape
+      (layer/resize A4*)

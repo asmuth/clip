@@ -53,34 +53,78 @@ ReturnCode layer_create(
   return OK;
 }
 
-void layer_resize(
+ReturnCode layer_resize(
     Layer* layer,
     Measure width,
     Measure height) {
   layer->width = width;
   layer->height = height;
+  return OK;
+}
+
+ReturnCode layer_resize(
+    Layer* layer,
+    const std::string& size) {
+  static const std::unordered_map<std::string, std::tuple<Measure, Measure>> sizes = {
+    {"A0", {from_mm(841), from_mm(1189)}},
+    {"A0*", {from_mm(1189), from_mm(841)}},
+    {"A1", {from_mm(594), from_mm(841)}},
+    {"A1*", {from_mm(841), from_mm(594)}},
+    {"A2", {from_mm(420), from_mm(594)}},
+    {"A2*", {from_mm(594), from_mm(420)}},
+    {"A3", {from_mm(297), from_mm(420)}},
+    {"A3*", {from_mm(420), from_mm(297)}},
+    {"A4", {from_mm(210), from_mm(297)}},
+    {"A4*", {from_mm(297), from_mm(210)}},
+    {"A5", {from_mm(148), from_mm(210)}},
+    {"A5*", {from_mm(210), from_mm(148)}},
+    {"A6", {from_mm(105), from_mm(148)}},
+    {"A6*", {from_mm(148), from_mm(105)}},
+  };
+
+  const auto& size_iter = sizes.find(size);
+  if (size_iter == sizes.end()) {
+    std::vector<std::string> size_names;
+    for (const auto& s : sizes) {
+      size_names.push_back(s.first);
+    }
+
+    return err_invalid_value(size, size_names);
+  }
+
+  layer->width = std::get<0>(size_iter->second);
+  layer->height = std::get<1>(size_iter->second);
+
+  return OK;
 }
 
 ReturnCode layer_resize(
     Context* ctx,
     const Expr* expr) {
   auto args = expr_collect(expr);
-  if (args.size() != 2) {
-    return err_invalid_nargs(args.size(), 2);
-  }
 
-  Measure width;
-  if (auto rc = measure_read(args[0], &width); !rc) {
-    return rc;
-  }
+  switch (args.size()) {
+    case 1: {
+      return layer_resize(layer_get(ctx), expr_get_value(args[0]));
+    }
 
-  Measure height;
-  if (auto rc = measure_read(args[1], &height); !rc) {
-    return rc;
-  }
+    case 2: {
+      Measure width;
+      if (auto rc = measure_read(args[0], &width); !rc) {
+        return rc;
+      }
 
-  layer_resize(layer_get(ctx), width, height);
-  return OK;
+      Measure height;
+      if (auto rc = measure_read(args[1], &height); !rc) {
+        return rc;
+      }
+
+      return layer_resize(layer_get(ctx), width, height);
+    }
+
+    default:
+      return err_invalid_nargs(args.size(), 2);
+  }
 }
 
 Layer* layer_get(Context* ctx) {

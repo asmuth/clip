@@ -46,10 +46,14 @@ ReturnCode layer_create(
     Context* ctx,
     std::unique_ptr<Layer>* layer_storage);
 
-void layer_resize(
+ReturnCode layer_resize(
     Layer* layer,
     Measure width,
     Measure height);
+
+ReturnCode layer_resize(
+    Layer* layer,
+    const std::string& size);
 
 ReturnCode layer_resize(
     Context* ctx,
