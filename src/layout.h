@@ -19,7 +19,7 @@
 #include <assert.h>
 #include <stdlib.h>
 #include <stdint.h>
-#include <optional>
+
 
 namespace clip {
 

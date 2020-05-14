@@ -17,11 +17,12 @@
 #include <stdlib.h>
 #include <vector>
 #include <string>
-#include <optional>
+
 #include <unordered_map>
 #include "return_code.h"
 #include "sexpr.h"
 #include "format.h"
+#include "utils/option.h"
 
 namespace clip {
 
@@ -30,15 +31,15 @@ enum class ScaleKind {
 };
 
 struct ScaleLimitHints {
-  std::optional<double> min_value;
-  std::optional<double> max_value;
+  Option<double> min_value;
+  Option<double> max_value;
 };
 
 struct ScaleConfig {
   ScaleConfig();
   ScaleKind kind;
-  std::optional<double> min;
-  std::optional<double> max;
+  Option<double> min;
+  Option<double> max;
   double log_base;
   bool inverted;
   double padding;

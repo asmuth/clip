@@ -17,6 +17,7 @@
 #include "graphics/path.h"
 #include "graphics/color.h"
 #include "graphics/measure.h"
+#include "utils/option.h"
 
 namespace clip {
 struct Page;
@@ -31,7 +32,7 @@ enum class AntialiasingMode {
 struct FillStyle {
   FillStyle();
 
-  std::optional<Color> color;
+  Option<Color> color;
   bool hatch;
   double hatch_angle_deg;
   double hatch_offset;

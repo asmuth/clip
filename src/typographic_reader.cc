@@ -60,7 +60,7 @@ ReturnCode measure_readn(
 
 ReturnCode measure_read_opt(
     const Expr* expr,
-    std::optional<Measure>* value) {
+    Option<Measure>* value) {
   Measure v;
   if (auto rc = measure_read(expr, &v); !rc) {
     return rc;

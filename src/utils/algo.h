@@ -12,7 +12,7 @@
  * limitations under the License.
  */
 #pragma once
-#include <optional>
+
 #include <vector>
 
 namespace clip {
@@ -39,7 +39,7 @@ template <typename H, typename... T>
 std::vector<H> fallback(const std::vector<H>& head, const T&... tail);
 
 template <typename H, typename... T>
-std::vector<H> fallback(const std::optional<H>& head, const T&... tail);
+std::vector<H> fallback(const Option<H>& head, const T&... tail);
 
 } // namespace clip
 

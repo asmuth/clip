@@ -38,10 +38,10 @@ ScaleConfig::ScaleConfig() :
 
 void scale_fit(double value, ScaleConfig* domain) {
   if (!domain->limit_hints->min_value || *domain->limit_hints->min_value > value) {
-    domain->limit_hints->min_value = std::optional<double>(value);
+    domain->limit_hints->min_value = Option<double>(value);
   }
   if (!domain->limit_hints->max_value || *domain->limit_hints->max_value < value) {
-    domain->limit_hints->max_value = std::optional<double>(value);
+    domain->limit_hints->max_value = Option<double>(value);
   }
 }
 
@@ -51,7 +51,11 @@ double scale_min(const ScaleConfig& domain) {
     min_auto = *domain.limit_hints->min_value - domain.padding;
   }
 
-  return domain.min.value_or(min_auto);
+  if (domain.min) {
+    return *domain.min;
+  } else {
+    return min_auto;
+  }
 }
 
 double scale_max(const ScaleConfig& domain) {
@@ -60,7 +64,11 @@ double scale_max(const ScaleConfig& domain) {
     max_auto = *domain.limit_hints->max_value + domain.padding;
   }
 
-  return domain.max.value_or(max_auto);
+  if (domain.max) {
+    return *domain.max;
+  } else {
+    return max_auto;
+  }
 }
 
 double scale_translate_linear(

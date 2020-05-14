@@ -131,7 +131,7 @@ Status svg_add_path(
     const Path& path,
     const FillStyle& fill_style,
     const StrokeStyle& stroke_style,
-    std::optional<AntialiasingMode> antialiasing_mode,
+    Option<AntialiasingMode> antialiasing_mode,
     SVGDataRef svg) {
   std::string fill_opts;
   std::string stroke_opts;

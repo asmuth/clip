@@ -13,7 +13,7 @@
  */
 #pragma once
 #include <unordered_map>
-#include <optional>
+
 
 #include "graphics/color.h"
 #include "graphics/draw.h"

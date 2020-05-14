@@ -125,7 +125,7 @@ ReturnCode fill_style_read(
     FillStyle* style) {
   if (expr_is_value(expr, "none") ||
       expr_is_list(expr, "none")) {
-    style->color.reset();
+    style->color = Option<Color>();
     return OK;
   }
 

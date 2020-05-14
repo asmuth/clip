@@ -13,7 +13,7 @@
  */
 #pragma once
 #include <unordered_map>
-#include <optional>
+
 #include <sexpr.h>
 #include "return_code.h"
 

@@ -120,7 +120,7 @@ ReturnCode color_read_string(
 ReturnCode color_read_opt(
     const Context* ctx,
     const Expr* expr,
-    std::optional<Color>* color) {
+    Option<Color>* color) {
   Color c;
   if (auto rc = color_read(ctx, expr, &c); !rc) {
     return rc;

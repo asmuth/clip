@@ -129,7 +129,7 @@ Status Rasterizer::drawShape(
 Status Rasterizer::drawText(
     const std::vector<text::GlyphPlacementGroup>& glyphs,
     const TextStyle& style,
-    const std::optional<mat3>& transform) {
+    const Option<mat3>& transform) {
   if (transform) {
     auto transform_m = mul(
         mul(scale2({1, -1}), translate2({0, -double(height)})),

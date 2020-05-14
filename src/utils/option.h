@@ -35,6 +35,13 @@ public:
   Option& operator=(const Option<T>& other);
   Option& operator=(Option<T>&& other);
 
+  operator bool() const;
+  bool operator!() const;
+  T& operator*();
+  const T& operator*() const;
+  T* operator->();
+  const T* operator->() const;
+
   bool isEmpty() const;
   T& get() const;
 

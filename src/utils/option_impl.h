@@ -91,6 +91,36 @@ Option<T>& Option<T>::operator=(Option<T>&& other) {
 }
 
 template <typename T>
+Option<T>::operator bool() const {
+  return value_;
+}
+
+template <typename T>
+bool Option<T>::operator!() const {
+  return !value_;
+}
+
+template <typename T>
+T& Option<T>::operator*() {
+  return *value_;
+}
+
+template <typename T>
+const T& Option<T>::operator*() const {
+  return *value_;
+}
+
+template <typename T>
+T* Option<T>::operator->() {
+  return value_;
+}
+
+template <typename T>
+const T* Option<T>::operator->() const {
+  return value_;
+}
+
+template <typename T>
 T& Option<T>::get() const {
   if (value_ == nullptr) {
     RAISE(kRuntimeError, "get() called on empty option");

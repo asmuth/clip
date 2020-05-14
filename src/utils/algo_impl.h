@@ -75,7 +75,7 @@ std::vector<H> fallback(const std::vector<H>& head, const T&... tail) {
 }
 
 template <typename H>
-std::vector<H> fallback(const std::optional<H>& head) {
+std::vector<H> fallback(const Option<H>& head) {
   if (head) {
     return {*head};
   } else {
@@ -84,7 +84,7 @@ std::vector<H> fallback(const std::optional<H>& head) {
 }
 
 template <typename H, typename... T>
-std::vector<H> fallback(const std::optional<H>& head, const T&... tail) {
+std::vector<H> fallback(const Option<H>& head, const T&... tail) {
   if (head) {
     return {*head};
   } else {

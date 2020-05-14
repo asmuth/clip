@@ -46,12 +46,12 @@ ReturnCode expr_to_float64(
 
 ReturnCode expr_to_float64_opt(
     const Expr* expr,
-    std::optional<double>* value);
+    Option<double>* value);
 
 ReturnCode expr_to_float64_opt_pair(
     const Expr* expr,
-    std::optional<double>* v1,
-    std::optional<double>* v2);
+    Option<double>* v1,
+    Option<double>* v2);
 
 ReturnCode expr_to_ratio(
     const Expr* expr,

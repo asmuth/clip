@@ -33,7 +33,7 @@ ReturnCode color_read_string(
 ReturnCode color_read_opt(
     const Context* ctx,
     const Expr* expr,
-    std::optional<Color>* color);
+    Option<Color>* color);
 
 ReturnCode color_map_read(
     const Context* ctx,

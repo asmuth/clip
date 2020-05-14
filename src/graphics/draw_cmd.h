@@ -34,21 +34,21 @@ struct Text {
   Point origin;
 
   TextStyle style;
-  std::optional<mat3> transform;
+  Option<mat3> transform;
 };
 
 struct Shape {
   Path path;
   StrokeStyle stroke_style;
   FillStyle fill_style;
-  std::optional<AntialiasingMode> antialiasing_mode;
+  Option<AntialiasingMode> antialiasing_mode;
 };
 
 struct Polygon {
   Poly2 poly;
   StrokeStyle stroke_style;
   FillStyle fill_style;
-  std::optional<AntialiasingMode> antialiasing_mode;
+  Option<AntialiasingMode> antialiasing_mode;
 };
 
 } // namespace clip::draw_cmd

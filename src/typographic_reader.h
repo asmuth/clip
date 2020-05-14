@@ -31,7 +31,7 @@ ReturnCode measure_readn(
 
 ReturnCode measure_read_opt(
     const Expr* expr,
-    std::optional<Measure>* value);
+    Option<Measure>* value);
 
 ReturnCode measure_read_list(
     const Expr* expr,

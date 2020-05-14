@@ -84,7 +84,7 @@ ReturnCode expr_to_float64(
 
 ReturnCode expr_to_float64_opt(
     const Expr* expr,
-    std::optional<double>* value) {
+    Option<double>* value) {
   double v;
   if (auto rc = expr_to_float64(expr, &v); !rc) {
     return rc;
@@ -96,8 +96,8 @@ ReturnCode expr_to_float64_opt(
 
 ReturnCode expr_to_float64_opt_pair(
     const Expr* expr,
-    std::optional<double>* v1,
-    std::optional<double>* v2) {
+    Option<double>* v1,
+    Option<double>* v2) {
   if (expr  && expr_is_list(expr)) {
     expr = expr_get_list(expr);
   } else {

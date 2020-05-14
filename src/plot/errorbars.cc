@@ -254,7 +254,7 @@ ReturnCode errorbars_configure(
   }
 
   /* figure out in which direction the user wants us to plot the error bars */
-  std::optional<Direction> direction;
+  Option<Direction> direction;
   if (!data_x.empty() &&
       !data_y_low.empty() &&
       !data_y_high.empty() &&

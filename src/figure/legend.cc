@@ -42,7 +42,7 @@ struct LegendConfig {
   std::array<Measure, 4> margins;
   std::array<Measure, 4> padding;
   std::array<StrokeStyle, 4> borders;
-  std::optional<Color> background;
+  Option<Color> background;
   std::vector<LegendItem> items;
 };
 
@@ -69,8 +69,8 @@ void legend_normalize(
 ReturnCode legend_layout_item_rows(
     Context* ctx,
     LegendConfig* config,
-    const std::optional<double> max_width,
-    const std::optional<double> max_height,
+    const Option<double> max_width,
+    const Option<double> max_height,
     double* min_width,
     double* min_height,
     std::vector<Rectangle>* item_boxes) {
@@ -117,8 +117,8 @@ ReturnCode legend_layout_item_rows(
 ReturnCode legend_layout_item_flow(
     Context* ctx,
     LegendConfig* config,
-    const std::optional<double> max_width,
-    const std::optional<double> max_height,
+    const Option<double> max_width,
+    const Option<double> max_height,
     double* min_width,
     double* min_height,
     std::vector<Rectangle>* item_boxes) {
@@ -140,7 +140,7 @@ ReturnCode legend_layout_item_flow(
       r_width += config->item_column_padding;
     }
 
-    if (max_width && r_width + e_width > max_width) {
+    if (max_width && r_width + e_width > *max_width) {
       m_height += r_height + config->item_row_padding;
       r_width = 0;
       r_height = 0;
@@ -175,8 +175,8 @@ ReturnCode legend_layout_item_flow(
 ReturnCode legend_layout(
     Context* ctx,
     LegendConfig* config,
-    std::optional<double> max_width,
-    std::optional<double> max_height,
+    Option<double> max_width,
+    Option<double> max_height,
     double* min_width,
     double* min_height,
     std::vector<Rectangle>* item_boxes) {

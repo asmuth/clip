@@ -12,6 +12,7 @@
  * limitations under the License.
  */
 #include "geojson.h"
+#include "utils/option.h"
 #include <iostream>
 #include <fstream>
 #include <variant>
@@ -177,7 +178,7 @@ ReturnCode geojson_read_multi_polygon(
 ReturnCode geojson_read_point(
     const GeoJSONReader& reader,
     const std::vector<GeoJSONCoord>& coords) {
-  std::optional<vec3> point;
+  Option<vec3> point;
 
   if (coords.size() == 2 &&
       coords[0].rlevel == 0 &&
