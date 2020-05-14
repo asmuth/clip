@@ -3,6 +3,7 @@ from build_layout import *
 import yaml
 import markdown
 from pathlib import Path
+from bs4 import BeautifulSoup as HTMLP
 import re
 import glob
 
@@ -53,7 +54,7 @@ def build_page_md(page):
 
 def build_page(page):
   url = page["url"]
-  title = page.get("title", url)
+  title = page.get("title", None)
   html = None
 
   print("> Building page: %s" % url)
@@ -63,6 +64,15 @@ def build_page(page):
 
   if page.get("tpl", None) == "cmdref":
     html = build_page_cmdref(page)
+
+  htmlp = HTMLP(html)
+  if not title:
+    h1 = htmlp.find("h1")
+    if h1:
+      title = h1.text
+
+  if not title:
+    title = url
 
   if html:
     write_page(url, html, title=title)

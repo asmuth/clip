@@ -21,3 +21,6 @@ install_manifest.txt
 wwwdocs
 config.h
 test-results
+
+# Local Netlify folder
+.netlify

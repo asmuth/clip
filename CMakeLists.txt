@@ -123,3 +123,16 @@ add_custom_target(doc
     COMMAND mkdir -p ${CMAKE_CURRENT_BINARY_DIR}/wwwdocs
     COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/doc/web/build.sh ${CMAKE_CURRENT_BINARY_DIR}/wwwdocs)
 
+file(GLOB doc_figure_files "doc/**/*.clp")
+foreach(doc_figure_path ${doc_figure_files})
+  get_filename_component(doc_figure_name ${doc_figure_path} NAME_WE)
+  get_filename_component(doc_figure_srcdir ${doc_figure_path} DIRECTORY)
+  add_custom_target(
+      doc_figure_${doc_figure_name}
+      WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+      COMMAND ${CMAKE_CURRENT_BINARY_DIR}/clip ${doc_figure_srcdir}/${doc_figure_name}.clp -e ${doc_figure_srcdir}/${doc_figure_name}.svg)
+  add_dependencies(doc_figure_${doc_figure_name} clip-cli)
+  add_dependencies(doc doc_figure_${doc_figure_name})
+endforeach()
+
+

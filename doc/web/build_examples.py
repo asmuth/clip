@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import pystache as TPL
 import itertools
+import markdown
 import glob
 import re
 
@@ -38,11 +39,8 @@ def build_example_list(examples):
         <figure class="example">
           <a href="/examples/{{file}}"><img src="/examples/{{file}}.svg"></a>
           <figcaption>
-            <h4>Example #42</h4>
-            <h3>Linechart with multiple series</h3>
-            <p>
-              A simple linechart with multiple series and serif fonts.
-            </p>
+            <h3>{{title}}</h3>
+            {{{desc}}}
             <p>
               <em>Source:</em> <a href="/examples/{{file}}">{{file}}</a>
             </p>
@@ -60,7 +58,17 @@ def build_example_list(examples):
 
 def main():
   examples_path = "../../clip-examples"
+  examples_list_path = os.path.join(examples_path, "examples.yaml")
+
+  if not os.path.exists(examples_list_path):
+    print("> The clip-examples repo was not found; not building examples...")
+    return
+
   examples = yaml.load(Path(examples_path, "examples.yaml").read_text())
+  for s in examples:
+    for e in s["files"]:
+      e.setdefault("title", e["file"])
+      e["desc"] = markdown.markdown(e.get("desc", ""))
 
   for f in glob.glob(examples_path + "/**/*.clp"):
     build_example(f, re.sub("\.clp$", "", f[(len(examples_path) + 1):]))

@@ -423,12 +423,12 @@ article figure img.small {
   max-height: 100%;
   margin-top: 2em;
   max-width: 600px;
-  border: 1px solid #aeb3bb;
   margin-bottom: 1.3em;
+  margin: 0 auto 1.3em auto;
 }
 
 article figcaption {
-  margin-bottom: 3em;
+  margin-bottom: 1.4em;
   font-size: 90%;
   display: block;
   position: relative;
@@ -448,28 +448,35 @@ article figure.example {
   display: grid;
   grid-template-columns: auto 25%;
   grid-gap: 2em;
+  overflow: hidden;
 }
 
 article figure.example figcaption {
-  padding-right: 1em;
+  padding: 2em 1em 0 0;
   text-align: left;
 }
 
 article figure.example figcaption h3 {
   font-size: 16px;
-  font-weight: 500;
-  margin-top: .1em;
-}
-
-article figure.example figcaption h4 {
-  font-size: 12px;
   font-weight: 600;
-  margin-bottom: 0;
-  padding-bottom: 0;
+  margin-top: .1em;
+  word-wrap: break-word;
 }
 
-article figure.example figcaption p{
+article figure.example figcaption p {
   font-size: 90%;
+}
+
+@media only screen and (max-width: 50em) {
+  article figure.example {
+    display: block;
+    padding-bottom: 1em;
+  }
+
+  article figure.example figcaption {
+    padding-top: 1em;
+    text-align: center;
+  }
 }
 
 ul.index {

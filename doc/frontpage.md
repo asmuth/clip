@@ -19,22 +19,20 @@ lower-level drawing primitives such as markers, arrows and lines.
 
 ## 1. Introduction
 
-This chapter contains reference specifications and descriptions for concepts
-that are shared among all tools.
-
 <ul>
-  <li><a href="installation">Installation</a></li>
-  <li><a href="examples">Examples</a></li>
-  <li><a href="faq">FAQ</a></li>
-  <li><a href="contributing">Contributing</a></li>
-  <li><a href="license">License</a></li>
+  <li><a href="/installation">Installation</a></li>
+  <li><a href="/examples">Examples</a></li>
+  <li><a href="/getting-started">Getting Started</a></li>
+  <li><a href="/faq">FAQ</a></li>
+  <li><a href="/contributing">Contributing</a></li>
+  <li><a href="/license">License</a></li>
 </ul>
 
 
 ## 2. General Concepts
 
 This chapter contains reference specifications and descriptions for concepts
-that are shared among all tools.
+that are shared among all commands.
 
 <ul>
   <li><a href="/colors">Colors</a></li>
