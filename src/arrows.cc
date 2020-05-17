@@ -24,7 +24,7 @@ ReturnCode arrow_draw_default(
     Context* ctx,
     const Point& from,
     const Point& to,
-    const Measure& size,
+    const Number& size,
     const Color& color) {
   auto direction = normalize(sub(to, from));
   auto ortho = vec2{direction.y, direction.x * -1};
@@ -32,9 +32,9 @@ ReturnCode arrow_draw_default(
   double head_width_factor = 2;
   double head_length_factor = 4;
   Path head_path;
-  head_path.moveTo(add(to, mul(ortho, size * head_width_factor)));
-  head_path.lineTo(sub(to, mul(ortho, size * head_width_factor)));
-  head_path.lineTo(add(to, mul(direction, size * head_length_factor)));
+  head_path.moveTo(add(to, mul(ortho, size.value * head_width_factor)));
+  head_path.lineTo(sub(to, mul(ortho, size.value * head_width_factor)));
+  head_path.lineTo(add(to, mul(direction, size.value * head_length_factor)));
   head_path.closePath();
 
   StrokeStyle line_style;

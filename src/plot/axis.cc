@@ -614,7 +614,7 @@ ReturnCode plot_axis(Context* ctx, PlotConfig* plot, const Expr* expr) {
   config->title_font = layer_get_font(ctx);
   config->title_font_size = layer_get_font_size(ctx);
   config->title_color = layer_get(ctx)->text_color;
-  config->border_style.line_width = from_pt(1);
+  config->border_style.line_width = unit_from_pt(1, layer_get_dpi(ctx));
   config->border_style.color = layer_get(ctx)->foreground_color;
 
   {
@@ -721,7 +721,7 @@ ReturnCode plot_axis(Context* ctx, PlotConfig* plot, const Expr* expr) {
       {"title-rotate", std::bind(&expr_to_float64, _1, &config->title_rotate)},
 
       /* border options */
-      {"border-width", std::bind(&measure_read, _1, &config->border_style.line_width)},
+      {"border-width", std::bind(&expr_to_size, _1, layer, &config->border_style.line_width)},
       {"border-color", std::bind(&color_read, ctx, _1, &config->border_style.color)},
       {"border-style", std::bind(&expr_to_stroke_style, _1, &config->border_style)},
 
@@ -800,7 +800,13 @@ ReturnCode axis_configure_position(
 ReturnCode plot_axes(Context* ctx, PlotConfig* plot, const Expr* expr) {
   const auto& layer = *layer_get(ctx);
 
-  std::array<Measure, 4> margins = {from_em(1), from_em(1), from_em(1), from_em(1)};
+  std::array<Number, 4> margins = {
+    unit_from_em(1, layer_get_font_size(layer)),
+    unit_from_em(1, layer_get_font_size(layer)),
+    unit_from_em(1, layer_get_font_size(layer)),
+    unit_from_em(1, layer_get_font_size(layer))
+  };
+
   std::array<AxisDefinition, 4> axes;
 
   axes[0].scale = plot->scale_x;
@@ -815,7 +821,7 @@ ReturnCode plot_axes(Context* ctx, PlotConfig* plot, const Expr* expr) {
   axes[0].title_font = layer_get_font(ctx);
   axes[0].title_font_size = layer_get_font_size(ctx);
   axes[0].title_color = layer_get(ctx)->text_color;
-  axes[0].border_style.line_width = from_pt(1);
+  axes[0].border_style.line_width = unit_from_pt(1, layer_get_dpi(ctx));
   axes[0].border_style.color = layer_get(ctx)->foreground_color;
 
   axes[1].scale = plot->scale_y;
@@ -831,7 +837,7 @@ ReturnCode plot_axes(Context* ctx, PlotConfig* plot, const Expr* expr) {
   axes[1].title_font = layer_get_font(ctx);
   axes[1].title_font_size = layer_get_font_size(ctx);
   axes[1].title_color = layer_get(ctx)->text_color;
-  axes[1].border_style.line_width = from_pt(1);
+  axes[1].border_style.line_width = unit_from_pt(1, layer_get_dpi(ctx));
   axes[1].border_style.color = layer_get(ctx)->foreground_color;
 
   axes[2].scale = plot->scale_x;
@@ -846,7 +852,7 @@ ReturnCode plot_axes(Context* ctx, PlotConfig* plot, const Expr* expr) {
   axes[2].title_font = layer_get_font(ctx);
   axes[2].title_font_size = layer_get_font_size(ctx);
   axes[2].title_color = layer_get(ctx)->text_color;
-  axes[2].border_style.line_width = from_pt(1);
+  axes[2].border_style.line_width = unit_from_pt(1, layer_get_dpi(ctx));
   axes[2].border_style.color = layer_get(ctx)->foreground_color;
 
   axes[3].scale = plot->scale_y;
@@ -862,7 +868,7 @@ ReturnCode plot_axes(Context* ctx, PlotConfig* plot, const Expr* expr) {
   axes[3].title_font = layer_get_font(ctx);
   axes[3].title_font_size = layer_get_font_size(ctx);
   axes[3].title_color = layer_get(ctx)->text_color;
-  axes[3].border_style.line_width = from_pt(1);
+  axes[3].border_style.line_width = unit_from_pt(1, layer_get_dpi(ctx));
   axes[3].border_style.color = layer_get(ctx)->foreground_color;
 
   auto config_rc = expr_walk_map_wrapped(expr, {
@@ -1172,31 +1178,31 @@ ReturnCode plot_axes(Context* ctx, PlotConfig* plot, const Expr* expr) {
     {
       "margin",
       expr_calln_fn({
-        std::bind(&measure_read, _1, &margins[0]),
-        std::bind(&measure_read, _1, &margins[1]),
-        std::bind(&measure_read, _1, &margins[2]),
-        std::bind(&measure_read, _1, &margins[3]),
+        std::bind(&expr_to_size, _1, layer, &margins[0]),
+        std::bind(&expr_to_size, _1, layer, &margins[1]),
+        std::bind(&expr_to_size, _1, layer, &margins[2]),
+        std::bind(&expr_to_size, _1, layer, &margins[3]),
       })
     },
-    {"margin-top", std::bind(&measure_read, _1, &margins[0])},
-    {"margin-right", std::bind(&measure_read, _1, &margins[1])},
-    {"margin-bottom", std::bind(&measure_read, _1, &margins[2])},
-    {"margin-left", std::bind(&measure_read, _1, &margins[3])},
+    {"margin-top", std::bind(&expr_to_size, _1, layer, &margins[0])},
+    {"margin-right", std::bind(&expr_to_size, _1, layer, &margins[1])},
+    {"margin-bottom", std::bind(&expr_to_size, _1, layer, &margins[2])},
+    {"margin-left", std::bind(&expr_to_size, _1, layer, &margins[3])},
 
     /* border options */
     {
       "border-width",
       expr_calln_fn({
-        std::bind(&measure_read, _1, &axes[0].border_style.line_width),
-        std::bind(&measure_read, _1, &axes[1].border_style.line_width),
-        std::bind(&measure_read, _1, &axes[2].border_style.line_width),
-        std::bind(&measure_read, _1, &axes[3].border_style.line_width)
+        std::bind(&expr_to_size, _1, layer, &axes[0].border_style.line_width),
+        std::bind(&expr_to_size, _1, layer, &axes[1].border_style.line_width),
+        std::bind(&expr_to_size, _1, layer, &axes[2].border_style.line_width),
+        std::bind(&expr_to_size, _1, layer, &axes[3].border_style.line_width)
       })
     },
-    {"border-width-top", std::bind(&measure_read, _1, &axes[0].border_style.line_width)},
-    {"border-width-right", std::bind(&measure_read, _1, &axes[1].border_style.line_width)},
-    {"border-width-bottom", std::bind(&measure_read, _1, &axes[2].border_style.line_width)},
-    {"border-width-left", std::bind(&measure_read, _1, &axes[3].border_style.line_width)},
+    {"border-width-top", std::bind(&expr_to_size, _1, layer, &axes[0].border_style.line_width)},
+    {"border-width-right", std::bind(&expr_to_size, _1, layer, &axes[1].border_style.line_width)},
+    {"border-width-bottom", std::bind(&expr_to_size, _1, layer, &axes[2].border_style.line_width)},
+    {"border-width-left", std::bind(&expr_to_size, _1, layer, &axes[3].border_style.line_width)},
 
     {
       "border-color",
@@ -1274,10 +1280,10 @@ ReturnCode plot_axes(Context* ctx, PlotConfig* plot, const Expr* expr) {
 
   auto bbox = layout_margin_box(
       plot_get_clip(plot, layer_get(ctx)),
-      margins[0] + padding[0],
-      margins[1] + padding[1],
-      margins[2] + padding[2],
-      margins[3] + padding[3]);
+      margins[0].value + padding[0],
+      margins[1].value + padding[1],
+      margins[2].value + padding[2],
+      margins[3].value + padding[3]);
 
   plot->layout_stack.push_back(bbox);
 

@@ -147,10 +147,10 @@ Status svg_add_path(
   }
 
   bool stroke_present = false;
-  if (stroke_style.line_width) {
+  if (stroke_style.line_width.value) {
     stroke_present = true;
 
-    stroke_opts += svg_attr("stroke-width", stroke_style.line_width);
+    stroke_opts += svg_attr("stroke-width", stroke_style.line_width.value);
     stroke_opts += svg_attr("stroke", stroke_style.color.to_hex_str(4));
 
     switch (stroke_style.dash_type) {

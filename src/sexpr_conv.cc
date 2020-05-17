@@ -169,7 +169,12 @@ ReturnCode expr_to_number(
   }
 
   if (unit_pos == value_str.size()) {
-    return errorf(ERROR, "expected '{}' to be followed by a unit", value_str);
+    if (value == 0) {
+      *v = Number(0);
+      return OK;
+    } else {
+      return errorf(ERROR, "expected '{}' to be followed by a unit", value_str);
+    }
   }
 
   auto unit_str = value_str.substr(unit_pos);
@@ -218,7 +223,7 @@ ReturnCode expr_to_stroke_style(
     const Expr* expr,
     StrokeStyle* style) {
   if (expr_is_value(expr, "none")) {
-    style->line_width = from_unit(0);
+    style->line_width = Number(0);
     return OK;
   }
 

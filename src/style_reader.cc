@@ -47,7 +47,7 @@ ReturnCode stroke_style_read(
     StrokeStyle* style) {
   if (expr_is_value(expr, "none") ||
       expr_is_list(expr, "none")) {
-    style->line_width = from_unit(0);
+    style->line_width = Number(0);
     return OK;
   }
 

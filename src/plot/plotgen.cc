@@ -75,21 +75,23 @@ ReturnCode plot_draw(
     Context* ctx,
     PlotConfig* plot,
     const Expr* expr) {
+  const auto& layer = *layer_get(ctx);
+
   return expr_walk_map(expr, {
     /* margins */
     {
       "margin",
       expr_calln_fn({
-        std::bind(&measure_read, _1, &plot->margins[0]),
-        std::bind(&measure_read, _1, &plot->margins[1]),
-        std::bind(&measure_read, _1, &plot->margins[2]),
-        std::bind(&measure_read, _1, &plot->margins[3]),
+        std::bind(&expr_to_size, _1, layer, &plot->margins[0]),
+        std::bind(&expr_to_size, _1, layer, &plot->margins[1]),
+        std::bind(&expr_to_size, _1, layer, &plot->margins[2]),
+        std::bind(&expr_to_size, _1, layer, &plot->margins[3]),
       })
     },
-    {"margin-top", std::bind(&measure_read, _1, &plot->margins[0])},
-    {"margin-right", std::bind(&measure_read, _1, &plot->margins[1])},
-    {"margin-bottom", std::bind(&measure_read, _1, &plot->margins[2])},
-    {"margin-left", std::bind(&measure_read, _1, &plot->margins[3])},
+    {"margin-top", std::bind(&expr_to_size, _1, layer, &plot->margins[0])},
+    {"margin-right", std::bind(&expr_to_size, _1, layer, &plot->margins[1])},
+    {"margin-bottom", std::bind(&expr_to_size, _1, layer, &plot->margins[2])},
+    {"margin-left", std::bind(&expr_to_size, _1, layer, &plot->margins[3])},
 
     /* axes/grid/legend */
     {"axes", std::bind(&plotgen::plot_axes, ctx, plot, _1)},
@@ -135,12 +137,12 @@ Rectangle plot_get_clip(const PlotConfig* plot, const Layer* layer) {
         Rectangle(
             0,
             0,
-            convert_unit(*layer, layer->width),
-            convert_unit(*layer, layer->height)),
-        plot->margins[0],
-        plot->margins[1],
-        plot->margins[2],
-        plot->margins[3]);
+            layer_get_width(*layer).value,
+            layer_get_height(*layer).value),
+        plot->margins[0].value,
+        plot->margins[1].value,
+        plot->margins[2].value,
+        plot->margins[3].value);
   } else {
     return plot->layout_stack.back();
   }
@@ -150,10 +152,12 @@ ReturnCode plot_set_background(
     Context* ctx,
     const PlotConfig* plot,
     const Expr* expr) {
+  const auto& layer = *layer_get(ctx);
+
   Rectangle rect = plot_get_clip(plot, layer_get(ctx));
   FillStyle fill_style;
   StrokeStyle stroke_style;
-  stroke_style.line_width = from_pt(1);
+  stroke_style.line_width = unit_from_pt(1, layer_get_dpi(ctx));
 
   /* read arguments */
   auto config_rc = expr_walk_map_wrapped(expr, {
@@ -166,7 +170,7 @@ ReturnCode plot_set_background(
     },
     {"fill", std::bind(&fill_style_read, ctx, _1, &fill_style)},
     {"stroke-color", std::bind(&color_read, ctx, _1, &stroke_style.color)},
-    {"stroke-width", std::bind(&measure_read, _1, &stroke_style.line_width)},
+    {"stroke-width", std::bind(&expr_to_size, _1, layer, &stroke_style.line_width)},
     {"stroke-style", std::bind(&stroke_style_read, ctx, _1, &stroke_style)},
   });
 

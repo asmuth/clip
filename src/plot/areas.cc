@@ -174,16 +174,6 @@ ReturnCode areas_draw_vertical(
       &*config.yoffset.begin(),
       &*config.yoffset.end());
 
-  //convert_unit_typographic(
-  //    layer_get_dpi(ctx),
-  //    layer_get_font_size(ctx),
-  //    &config.stroke_high_style.line_width);
-
-  //convert_unit_typographic(
-  //    layer_get_dpi(ctx),
-  //    layer_get_font_size(ctx),
-  //    &config.stroke_low_style.line_width);
-
   /* draw areas */
   DrawCommand shape;
   shape.fill_style = config.fill_style;
@@ -234,6 +224,8 @@ ReturnCode areas_configure(
     PlotConfig* plot,
     PlotAreaConfig* c,
     const Expr* expr) {
+  const auto& layer = *layer_get(ctx);
+
   /* set defaults from environment */
   c->scale_x = plot->scale_x;
   c->scale_y = plot->scale_y;
@@ -274,8 +266,8 @@ ReturnCode areas_configure(
     {
       "stroke-width",
       expr_calln_fn({
-        std::bind(&measure_read, _1, &c->stroke_high_style.line_width),
-        std::bind(&measure_read, _1, &c->stroke_low_style.line_width),
+        std::bind(&expr_to_size, _1, layer, &c->stroke_high_style.line_width),
+        std::bind(&expr_to_size, _1, layer, &c->stroke_low_style.line_width),
       })
     },
     {
@@ -286,10 +278,10 @@ ReturnCode areas_configure(
       })
     },
     {"stroke-high-color", std::bind(&color_read, ctx, _1, &c->stroke_high_style.color)},
-    {"stroke-high-width", std::bind(&measure_read, _1, &c->stroke_high_style.line_width)},
+    {"stroke-high-width", std::bind(&expr_to_size, _1, layer, &c->stroke_high_style.line_width)},
     {"stroke-high-style", std::bind(&stroke_style_read, ctx, _1, &c->stroke_high_style)},
     {"stroke-low-color", std::bind(&color_read, ctx, _1, &c->stroke_low_style.color)},
-    {"stroke-low-width", std::bind(&measure_read, _1, &c->stroke_low_style.line_width)},
+    {"stroke-low-width", std::bind(&expr_to_size, _1, layer, &c->stroke_low_style.line_width)},
     {"stroke-low-style", std::bind(&stroke_style_read, ctx, _1, &c->stroke_low_style)},
     {"fill", std::bind(&fill_style_read, ctx, _1, &c->fill_style)},
     {

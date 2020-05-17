@@ -36,11 +36,11 @@ struct LegendConfig {
   LegendConfig();
   HAlign position_horiz;
   VAlign position_vert;
-  Measure item_row_padding;
-  Measure item_column_padding;
+  Number item_row_padding;
+  Number item_column_padding;
   bool item_flow;
-  std::array<Measure, 4> margins;
-  std::array<Measure, 4> padding;
+  std::array<Number, 4> margins;
+  std::array<Number, 4> padding;
   std::array<StrokeStyle, 4> borders;
   Option<Color> background;
   std::vector<LegendItem> items;
@@ -50,21 +50,6 @@ LegendConfig::LegendConfig() :
     position_horiz(HAlign::LEFT),
     position_vert(VAlign::TOP),
     item_flow(false) {}
-
-void legend_normalize(
-    Context* ctx,
-    LegendConfig* config) {
-  //for (auto& m : config->margins) {
-  //  convert_unit_typographic(layer_get_dpi(ctx), layer_get_rem(ctx), &m);
-  //}
-
-  //for (auto& m : config->padding) {
-  //  convert_unit_typographic(layer_get_dpi(ctx), layer_get_rem(ctx), &m);
-  //}
-
-  //convert_unit_typographic(layer_get_dpi(ctx), layer_get_rem(ctx), &config->item_row_padding);
-  //convert_unit_typographic(layer_get_dpi(ctx), layer_get_rem(ctx), &config->item_column_padding);
-}
 
 ReturnCode legend_layout_item_rows(
     Context* ctx,
@@ -92,7 +77,7 @@ ReturnCode legend_layout_item_rows(
     }
 
     if (m_height > 0) {
-      m_height += config->item_row_padding;
+      m_height += config->item_row_padding.value;
     }
 
     Rectangle item_box;
@@ -137,11 +122,11 @@ ReturnCode legend_layout_item_flow(
     }
 
     if (r_width > 0) {
-      r_width += config->item_column_padding;
+      r_width += config->item_column_padding.value;
     }
 
     if (max_width && r_width + e_width > *max_width) {
-      m_height += r_height + config->item_row_padding;
+      m_height += r_height + config->item_row_padding.value;
       r_width = 0;
       r_height = 0;
       r_begin = item_boxes ? item_boxes->size() : 0;
@@ -180,16 +165,13 @@ ReturnCode legend_layout(
     double* min_width,
     double* min_height,
     std::vector<Rectangle>* item_boxes) {
-  /* convert units  */
-  legend_normalize(ctx, config);
-
   /* remove padding */
   if (max_width) {
-    max_width = *max_width - (config->padding[1] + config->padding[3]);
+    max_width = *max_width - (config->padding[1].value + config->padding[3].value);
   }
 
   if (max_height) {
-    max_height = *max_width - (config->padding[0] + config->padding[2]);
+    max_height = *max_width - (config->padding[0].value + config->padding[2].value);
   }
 
   /* add item extents */
@@ -221,10 +203,10 @@ ReturnCode legend_layout(
   }
 
   /* add padding */
-  *min_width += config->padding[1];
-  *min_width += config->padding[3];
-  *min_height += config->padding[0];
-  *min_height += config->padding[2];
+  *min_width += config->padding[1].value;
+  *min_width += config->padding[3].value;
+  *min_height += config->padding[0].value;
+  *min_height += config->padding[2].value;
 
   return OK;
 }
@@ -234,7 +216,7 @@ ReturnCode plot_legend_borders(
     const StrokeStyle* borders,
     const Rectangle& bbox) {
   /* draw top border  */
-  if (borders[0].line_width > 0) {
+  if (borders[0].line_width.value > 0) {
     DrawCommand line;
     line.stroke_style.line_width = borders[0].line_width;
     line.stroke_style.color = borders[0].color;
@@ -248,7 +230,7 @@ ReturnCode plot_legend_borders(
   }
 
   /* draw right border  */
-  if (borders[1].line_width > 0) {
+  if (borders[1].line_width.value > 0) {
     DrawCommand line;
     line.stroke_style.line_width = borders[1].line_width;
     line.stroke_style.color = borders[1].color;
@@ -262,7 +244,7 @@ ReturnCode plot_legend_borders(
   }
 
   /* draw top border  */
-  if (borders[2].line_width > 0) {
+  if (borders[2].line_width.value > 0) {
     DrawCommand line;
     line.stroke_style.line_width = borders[2].line_width;
     line.stroke_style.color = borders[2].color;
@@ -276,7 +258,7 @@ ReturnCode plot_legend_borders(
   }
 
   /* draw left border  */
-  if (borders[3].line_width > 0) {
+  if (borders[3].line_width.value > 0) {
     DrawCommand line;
     line.stroke_style.line_width = borders[3].line_width;
     line.stroke_style.color = borders[3].color;
@@ -316,17 +298,14 @@ ReturnCode plot_legend(
     Context* ctx,
     PlotConfig* plot,
     LegendConfig* config) {
-  /* convert units  */
-  legend_normalize(ctx, config);
-
   /* calculate boxes */
   const auto& bbox = plot_get_clip(plot, layer_get(ctx));
   auto parent_box = layout_margin_box(
       bbox,
-      config->margins[0],
-      config->margins[1],
-      config->margins[2],
-      config->margins[3]);
+      config->margins[0].value,
+      config->margins[1].value,
+      config->margins[2].value,
+      config->margins[3].value);
 
   Rectangle border_box;
   std::vector<Rectangle> item_boxes;
@@ -369,10 +348,10 @@ ReturnCode plot_legend(
 
   auto content_box = layout_margin_box(
       border_box,
-      config->padding[0],
-      config->padding[1],
-      config->padding[2],
-      config->padding[3]);
+      config->padding[0].value,
+      config->padding[1].value,
+      config->padding[2].value,
+      config->padding[3].value);
 
   /* draw background */
   if (config->background) {
@@ -476,12 +455,26 @@ ReturnCode plot_legend(
     Context* ctx,
     PlotConfig* plot,
     const Expr* expr) {
+  const auto& layer = *layer_get(ctx);
+
   /* inherit defaults */
   auto config = std::make_shared<LegendConfig>();
-  config->item_row_padding = from_em(.3);
-  config->item_column_padding = from_em(1.4);
-  config->margins = std::array<Measure, 4>{from_em(.6), from_em(.6), from_em(.6), from_em(.6)};
-  config->padding = std::array<Measure, 4>{from_em(.6), from_em(1), from_em(.6), from_em(1)};
+  config->item_row_padding = unit_from_em(.3, layer_get_font_size(layer));
+  config->item_column_padding = unit_from_em(1.4, layer_get_font_size(layer));
+  config->margins = std::array<Number, 4>{
+    unit_from_em(.6, layer_get_font_size(layer)),
+    unit_from_em(.6, layer_get_font_size(layer)),
+    unit_from_em(.6, layer_get_font_size(layer)),
+    unit_from_em(.6, layer_get_font_size(layer))
+  };
+
+  config->padding = std::array<Number, 4>{
+    unit_from_em(.6, layer_get_font_size(layer)),
+    unit_from_em(1, layer_get_font_size(layer)),
+    unit_from_em(.6, layer_get_font_size(layer)),
+    unit_from_em(1, layer_get_font_size(layer))
+  };
+
   for (size_t i = 0; i < 4; ++i) {
     config->borders[i].color = layer_get(ctx)->foreground_color;
   }
@@ -496,36 +489,36 @@ ReturnCode plot_legend(
           &config->position_horiz,
           &config->position_vert)
     },
-    {"item-row-padding", std::bind(&measure_read, _1, &config->item_row_padding)},
-    {"item-column-padding", std::bind(&measure_read, _1, &config->item_column_padding)},
+    {"item-row-padding", std::bind(&expr_to_size, _1, layer, &config->item_row_padding)},
+    {"item-column-padding", std::bind(&expr_to_size, _1, layer, &config->item_column_padding)},
     {"item-flow", std::bind(&expr_to_switch, _1, &config->item_flow)},
     {"item", std::bind(&configure_item, ctx, _1, &config->items)},
     {
       "padding",
       expr_calln_fn({
-        std::bind(&measure_read, _1, &config->padding[0]),
-        std::bind(&measure_read, _1, &config->padding[1]),
-        std::bind(&measure_read, _1, &config->padding[2]),
-        std::bind(&measure_read, _1, &config->padding[3]),
+        std::bind(&expr_to_size, _1, layer, &config->padding[0]),
+        std::bind(&expr_to_size, _1, layer, &config->padding[1]),
+        std::bind(&expr_to_size, _1, layer, &config->padding[2]),
+        std::bind(&expr_to_size, _1, layer, &config->padding[3]),
       })
     },
-    {"padding-top", std::bind(&measure_read, _1, &config->padding[0])},
-    {"padding-right", std::bind(&measure_read, _1, &config->padding[1])},
-    {"padding-bottom", std::bind(&measure_read, _1, &config->padding[2])},
-    {"padding-left", std::bind(&measure_read, _1, &config->padding[3])},
+    {"padding-top", std::bind(&expr_to_size, _1, layer, &config->padding[0])},
+    {"padding-right", std::bind(&expr_to_size, _1, layer, &config->padding[1])},
+    {"padding-bottom", std::bind(&expr_to_size, _1, layer, &config->padding[2])},
+    {"padding-left", std::bind(&expr_to_size, _1, layer, &config->padding[3])},
     {
       "margin",
       expr_calln_fn({
-        std::bind(&measure_read, _1, &config->margins[0]),
-        std::bind(&measure_read, _1, &config->margins[1]),
-        std::bind(&measure_read, _1, &config->margins[2]),
-        std::bind(&measure_read, _1, &config->margins[3]),
+        std::bind(&expr_to_size, _1, layer, &config->margins[0]),
+        std::bind(&expr_to_size, _1, layer, &config->margins[1]),
+        std::bind(&expr_to_size, _1, layer, &config->margins[2]),
+        std::bind(&expr_to_size, _1, layer, &config->margins[3]),
       })
     },
-    {"margin-top", std::bind(&measure_read, _1, &config->margins[0])},
-    {"margin-right", std::bind(&measure_read, _1, &config->margins[1])},
-    {"margin-bottom", std::bind(&measure_read, _1, &config->margins[2])},
-    {"margin-left", std::bind(&measure_read, _1, &config->margins[3])},
+    {"margin-top", std::bind(&expr_to_size, _1, layer, &config->margins[0])},
+    {"margin-right", std::bind(&expr_to_size, _1, layer, &config->margins[1])},
+    {"margin-bottom", std::bind(&expr_to_size, _1, layer, &config->margins[2])},
+    {"margin-left", std::bind(&expr_to_size, _1, layer, &config->margins[3])},
     {
       "border",
       expr_calln_fn({
@@ -551,16 +544,16 @@ ReturnCode plot_legend(
     {
       "border-width",
       expr_calln_fn({
-        std::bind(&measure_read, _1, &config->borders[0].line_width),
-        std::bind(&measure_read, _1, &config->borders[1].line_width),
-        std::bind(&measure_read, _1, &config->borders[2].line_width),
-        std::bind(&measure_read, _1, &config->borders[3].line_width),
+        std::bind(&expr_to_size, _1, layer, &config->borders[0].line_width),
+        std::bind(&expr_to_size, _1, layer, &config->borders[1].line_width),
+        std::bind(&expr_to_size, _1, layer, &config->borders[2].line_width),
+        std::bind(&expr_to_size, _1, layer, &config->borders[3].line_width),
       })
     },
-    {"border-top-width", std::bind(&measure_read, _1, &config->borders[0].line_width)},
-    {"border-right-width", std::bind(&measure_read, _1, &config->borders[1].line_width)},
-    {"border-bottom-width", std::bind(&measure_read, _1, &config->borders[2].line_width)},
-    {"border-left-width", std::bind(&measure_read, _1, &config->borders[3].line_width)},
+    {"border-top-width", std::bind(&expr_to_size, _1, layer, &config->borders[0].line_width)},
+    {"border-right-width", std::bind(&expr_to_size, _1, layer, &config->borders[1].line_width)},
+    {"border-bottom-width", std::bind(&expr_to_size, _1, layer, &config->borders[2].line_width)},
+    {"border-left-width", std::bind(&expr_to_size, _1, layer, &config->borders[3].line_width)},
     {"background", std::bind(&color_read_opt, ctx, _1, &config->background)},
   });
 

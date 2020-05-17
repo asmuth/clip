@@ -13,12 +13,12 @@
     bars (
         data-x (csv "test/testdata/bardata.csv" var3)
         data-y (csv "test/testdata/bardata.csv" var1)
-        width (1em)
-        offset (-.8em)
+        width 1em
+        offset -.8em
         color #444)
     bars (
         data-x (csv "test/testdata/bardata.csv" var3)
         data-y (csv "test/testdata/bardata.csv" var2)
-        width (1em)
-        offset (.8em)
+        width 1em
+        offset .8em
         color #999))

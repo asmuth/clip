@@ -91,7 +91,7 @@ Status Rasterizer::drawShape(
     cairo_fill(cr_ctx);
   }
 
-  if (stroke_style.line_width) {
+  if (stroke_style.line_width.value) {
     switch (stroke_style.dash_type) {
       case StrokeStyle::SOLID:
         cairo_set_dash(cr_ctx, nullptr, 0, 0);
@@ -118,7 +118,7 @@ Status Rasterizer::drawShape(
        stroke_style.color.blue(),
        stroke_style.color.alpha());
 
-    cairo_set_line_width(cr_ctx, stroke_style.line_width);
+    cairo_set_line_width(cr_ctx, stroke_style.line_width.value);
     cairo_set_path(cr_ctx, height, path);
     cairo_stroke(cr_ctx);
   }

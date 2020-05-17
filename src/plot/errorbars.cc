@@ -44,10 +44,10 @@ struct ErrorbarsElement {
   std::vector<Measure> y_high;
   ScaleConfig scale_x;
   ScaleConfig scale_y;
-  Measure bar_width;
+  Number bar_width;
   std::vector<Color> colors;
   Color stroke_color;
-  Measure stroke_width;
+  Number stroke_width;
 };
 
 ReturnCode errorbars_draw_bar(
@@ -67,14 +67,14 @@ ReturnCode errorbars_draw_bar(
 
   draw_line(
       ctx,
-      add(from, mul(ortho, config.bar_width * -0.5)),
-      add(from, mul(ortho, config.bar_width * 0.5)),
+      add(from, mul(ortho, config.bar_width.value * -0.5)),
+      add(from, mul(ortho, config.bar_width.value * 0.5)),
       line_style);
 
   draw_line(
       ctx,
-      add(to, mul(ortho, config.bar_width * -0.5)),
-      add(to, mul(ortho, config.bar_width * 0.5)),
+      add(to, mul(ortho, config.bar_width.value * -0.5)),
+      add(to, mul(ortho, config.bar_width.value * 0.5)),
       line_style);
 
   return OK;
@@ -191,9 +191,11 @@ ReturnCode errorbars_configure(
     PlotConfig* plot,
     ErrorbarsElement* c,
     const Expr* expr) {
+  const auto& layer = *layer_get(ctx);
+
   /* set defaults from environment */
-  c->stroke_width = from_pt(kDefaultStrokeWidthPT);
-  c->bar_width = from_pt(kDefaultBarWidthPT);
+  c->stroke_width = unit_from_pt(kDefaultStrokeWidthPT, layer_get_dpi(ctx));
+  c->bar_width = unit_from_pt(kDefaultBarWidthPT, layer_get_dpi(ctx));
   c->stroke_color = layer_get(ctx)->foreground_color;
   c->scale_x = plot->scale_x;
   c->scale_y = plot->scale_y;
@@ -225,12 +227,12 @@ ReturnCode errorbars_configure(
     {"scale-y", std::bind(&scale_configure_kind, _1, &c->scale_y)},
     {"scale-x-padding", std::bind(&expr_to_float64, _1, &c->scale_x.padding)},
     {"scale-y-padding", std::bind(&expr_to_float64, _1, &c->scale_y.padding)},
-    {"width", std::bind(&measure_read, _1, &c->bar_width)},
+    {"width", std::bind(&expr_to_size, _1, layer, &c->bar_width)},
     {"color", std::bind(&color_read, ctx, _1, &c->stroke_color)},
     {"colors", std::bind(&data_load_strings, _1, &data_colors)},
     {"color-map", std::bind(&color_map_read, ctx, _1, &color_map)},
     {"stroke-color", std::bind(&color_read, ctx, _1, &c->stroke_color)},
-    {"stroke-width", std::bind(&measure_read, _1, &c->stroke_width)}
+    {"stroke-width", std::bind(&expr_to_size, _1, layer, &c->stroke_width)}
   });
 
   if (!config_rc) {

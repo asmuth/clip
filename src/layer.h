@@ -71,6 +71,7 @@ ReturnCode layer_set_dpi(Context* ctx, const Expr* expr);
 
 UnitConvMap layer_get_uconv_width(const Layer& layer);
 UnitConvMap layer_get_uconv_height(const Layer& layer);
+UnitConvMap layer_get_uconv_size(const Layer& layer);
 UnitConvMap layer_get_uconv_font_size(const Layer& layer);
 
 const FontInfo& layer_get_font(const Layer* layer);

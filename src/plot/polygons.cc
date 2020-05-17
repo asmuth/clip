@@ -49,9 +49,11 @@ ReturnCode polygons_configure(
     PlotConfig* plot,
     PlotPolygonsConfig* c,
     const Expr* expr) {
+  const auto& layer = *layer_get(ctx);
+
   c->scale_x = plot->scale_x;
   c->scale_y = plot->scale_y;
-  c->stroke_style.line_width = from_pt(1);
+  c->stroke_style.line_width = unit_from_pt(1, layer_get_dpi(ctx));
 
   /* read arguments */
   auto config_rc = expr_walk_map_wrapped(expr, {
@@ -73,7 +75,7 @@ ReturnCode polygons_configure(
     },
     {"fill", std::bind(&fill_style_read, ctx, _1, &c->fill_style)},
     {"stroke-color", std::bind(&color_read, ctx, _1, &c->stroke_style.color)},
-    {"stroke-width", std::bind(&measure_read, _1, &c->stroke_style.line_width)},
+    {"stroke-width", std::bind(&expr_to_size, _1, layer, &c->stroke_style.line_width)},
     {"stroke-style", std::bind(&stroke_style_read, ctx, _1, &c->stroke_style)},
   });
 

@@ -28,7 +28,7 @@ using Arrow = std::function<
         Context* ctx,
         const Point& from,
         const Point& to,
-        const Measure& size,
+        const Number& size,
         const Color& color)>;
 
 Arrow arrow_create_default();

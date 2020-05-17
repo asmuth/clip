@@ -80,9 +80,11 @@ ReturnCode plot_grid(
 }
 
 ReturnCode plot_grid(Context* ctx, PlotConfig* plot, const Expr* expr) {
-  /* set defaults from ctxironment */
+  const auto& layer = *layer_get(ctx);
+
+  /* set defaults from environment */
   auto c = std::make_shared<GridlineDefinition>();
-  c->stroke_style.line_width = from_pt(1, layer_get_dpi(ctx));
+  c->stroke_style.line_width = unit_from_pt(1, layer_get_dpi(ctx));
   c->stroke_style.color = Color::fromRGB(.9, .9, .9);
   c->scale_x = plot->scale_x;
   c->scale_y = plot->scale_y;
@@ -103,7 +105,7 @@ ReturnCode plot_grid(Context* ctx, PlotConfig* plot, const Expr* expr) {
     {"scale-y-padding", std::bind(&expr_to_float64, _1, &c->scale_y.padding)},
     {"color", std::bind(&color_read, ctx, _1, &c->stroke_style.color)},
     {"stroke-color", std::bind(&color_read, ctx, _1, &c->stroke_style.color)},
-    {"stroke-width", std::bind(&measure_read, _1, &c->stroke_style.line_width)},
+    {"stroke-width", std::bind(&expr_to_size, _1, layer, &c->stroke_style.line_width)},
     {"stroke-style", std::bind(&stroke_style_read, ctx, _1, &c->stroke_style)},
   });
 

@@ -35,7 +35,7 @@ using std::bind;
 namespace clip::plotgen {
 
 static const double kDefaultLineWidthPT = 1.5;
-static const double kDefaultLabelPaddingEM = 0.4;
+static const double kDefaultLabelPaddingEM = .4;
 
 struct PlotLinesConfig {
   std::vector<Measure> x;
@@ -44,13 +44,13 @@ struct PlotLinesConfig {
   ScaleConfig scale_y;
   std::vector<DataGroup> groups;
   StrokeStyle stroke_style;
-  Measure marker_size;
+  Number marker_size;
   Marker marker_shape;
   Color marker_color;
   std::vector<std::string> labels;
   FontInfo label_font;
   Color label_color;
-  Measure label_padding;
+  Number label_padding;
   Number label_font_size;
 };
 
@@ -101,7 +101,7 @@ ReturnCode lines_draw(
   }
 
   /* draw markers */
-  if (config->marker_size > 0) {
+  if (config->marker_size.value > 0) {
     for (size_t i = 0; i < config->x.size(); ++i) {
       auto sx = clip.x + config->x[i];
       auto sy = clip.y + config->y[i];
@@ -110,7 +110,7 @@ ReturnCode lines_draw(
       const auto& color = config->marker_color;
       auto size = config->marker_size;
 
-      if (auto rc = shape(ctx, Point(sx, sy), Number(size), color); !rc) {
+      if (auto rc = shape(ctx, Point(sx, sy), size, color); !rc) {
         return rc;
       }
     }
@@ -121,13 +121,13 @@ ReturnCode lines_draw(
     const auto& label_text = config->labels[i];
 
     auto label_offset  = config->marker_size;
-    auto label_padding = label_offset + measure_or(
-        config->label_padding,
-        from_em(kDefaultLabelPaddingEM, config->label_font_size.value));
+    auto label_padding = config->label_padding.value
+        ? config->label_padding
+        : unit_from_em(kDefaultLabelPaddingEM, config->label_font_size);
 
     Point p(
         clip.x + config->x[i],
-        clip.y + config->y[i] + label_padding);
+        clip.y + config->y[i] + label_offset.value + label_padding.value);
 
     TextStyle style;
     style.font = config->label_font;
@@ -157,7 +157,7 @@ ReturnCode lines_configure(
   c->label_font = layer_get_font(ctx);
   c->label_font_size = layer_get_font_size(ctx);
   c->stroke_style.color = layer_get(ctx)->foreground_color;
-  c->stroke_style.line_width = from_pt(kDefaultLineWidthPT);
+  c->stroke_style.line_width = unit_from_pt(kDefaultLineWidthPT, layer_get_dpi(ctx));
   c->marker_shape = marker_create_disk();
   c->marker_color = layer_get(ctx)->foreground_color;
 
@@ -185,16 +185,16 @@ ReturnCode lines_configure(
         std::bind(&color_read, ctx, _1, &c->marker_color),
       })
     },
-    {"stroke-width", std::bind(&measure_read, _1, &c->stroke_style.line_width)},
+    {"stroke-width", std::bind(&expr_to_size, _1, layer, &c->stroke_style.line_width)},
     {"stroke-style", std::bind(&stroke_style_read, ctx, _1, &c->stroke_style)},
     {"stroke-color", std::bind(&color_read, ctx, _1, &c->stroke_style.color)},
-    {"marker-size", std::bind(&measure_read, _1, &c->marker_size)},
+    {"marker-size", std::bind(&expr_to_size, _1, layer, &c->marker_size)},
     {"marker-shape", std::bind(&marker_configure, _1, &c->marker_shape)},
     {"marker-color", std::bind(&color_read, ctx, _1, &c->marker_color)},
     {"labels", std::bind(&data_load_strings, _1, &c->labels)},
     {"label-font-size", std::bind(&expr_to_font_size, _1, layer, &c->label_font_size)},
     {"label-color", std::bind(&color_read, ctx, _1, &c->label_color)},
-    {"label-padding", std::bind(&measure_read, _1, &c->label_padding)},
+    {"label-padding", std::bind(&expr_to_size, _1, layer, &c->label_padding)},
   });
 
   if (!config_rc) {

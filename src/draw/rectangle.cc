@@ -47,7 +47,7 @@ ReturnCode rectangle(
 
   FillStyle fill_style;
   StrokeStyle stroke_style;
-  stroke_style.line_width = from_pt(1);
+  stroke_style.line_width = unit_from_pt(1, layer_get_dpi(ctx));
 
   /* read arguments */
   auto config_rc = expr_walk_map(expr, {
@@ -60,7 +60,7 @@ ReturnCode rectangle(
     },
     {"fill", std::bind(&fill_style_read, ctx, _1, &fill_style)},
     {"stroke-color", std::bind(&color_read, ctx, _1, &stroke_style.color)},
-    {"stroke-width", std::bind(&measure_read, _1, &stroke_style.line_width)},
+    {"stroke-width", std::bind(&expr_to_size, _1, *layer, &stroke_style.line_width)},
     {"stroke-style", std::bind(&stroke_style_read, ctx, _1, &stroke_style)},
   });
 

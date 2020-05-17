@@ -23,15 +23,15 @@ struct Layer;
 struct Rectangle;
 
 enum class Unit {
-  UNIT,  // Screen units
-  MM,    // Millimeters
-  PX,    // Pixels
-  PT,    // Typographic Points
-  EM,   // Typographic "em" size
-  REM,   // Typographic root "em" size
-  REL,   // Relative to the enclosing element (0..1),
+  UNIT,    // Screen units
+  MM,      // Millimeters
+  PX,      // Pixels
+  PT,      // Typographic Points
+  EM,      // Typographic "em" size
+  REM,     // Typographic root "em" size
+  REL,     // Relative to the enclosing element (0..1),
   PERCENT, // Percent (0..100)
-  USER,  // User units on arbitrary scale
+  USER,    // User units on arbitrary scale
 };
 
 /**
@@ -63,16 +63,6 @@ struct NumberT {
 };
 
 /**
- * A wrapper that contains either an absolute number or a scalar relative to
- * another value of the same unit
- */
-template <Unit U>
-struct NumberRel {
-  Option<NumberT<U>> value;
-  Option<double> value_rel;
-};
-
-/**
  * A value expressed in typographic points. 1pt = 1/72 inch
  */
 using NumberPT = NumberT<Unit::PT>;
@@ -96,12 +86,6 @@ using UnitConv = std::function<Number (double)>;
  * A table of unit conversions
  */
 using UnitConvMap = std::unordered_map<Unit, UnitConv>;
-
-/**
- * Resolve a relative unit to an absolute value
- */
-template <Unit U>
-NumberT<U> unit_resolve(const NumberRel<U>& v, const NumberT<U>& r);
 
 bool unit_parse(const std::string& s, Unit* u);
 

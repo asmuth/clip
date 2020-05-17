@@ -47,5 +47,10 @@ ReturnCode expr_to_font_size(
     const Layer& layer,
     Number* font_size);
 
+ReturnCode expr_to_size(
+    const Expr* expr,
+    const Layer& layer,
+    Number* size);
+
 } // namespace clip
 

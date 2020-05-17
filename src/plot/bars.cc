@@ -49,7 +49,9 @@ struct PlotBarsConfig {
   ScaleConfig scale_y;
   StrokeStyle stroke_style;
   FillStyle fill_style;
+  Number size;
   std::vector<Measure> sizes;
+  Number offset;
   std::vector<Measure> offsets;
   std::vector<std::string> labels;
   FontInfo label_font;
@@ -100,18 +102,6 @@ ReturnCode bars_draw_horizontal(
       &*config.yoffset.begin(),
       &*config.yoffset.end());
 
-  convert_units(
-      {
-      },
-      &*config.sizes.begin(),
-      &*config.sizes.end());
-
-  convert_units(
-      {
-      },
-      &*config.offsets.begin(),
-      &*config.offsets.end());
-
   /* draw bars */
   auto x0 = std::clamp(clip.h * scale_translate(config.scale_x, 0), 0.0, 1.0);
   for (size_t i = 0; i < config.x.size(); ++i) {
@@ -119,12 +109,17 @@ ReturnCode bars_draw_horizontal(
     auto sx1 = clip.x + (config.xoffset.empty() ? x0 : config.xoffset[i]);
     auto sx2 = clip.x + config.x[i];
 
-    auto size = config.sizes.empty()
-        ? from_pt(kDefaultBarSizePT, layer_get_dpi(ctx))
-        : config.sizes[i % config.sizes.size()];
+    auto size =
+        config.size.value
+            ? config.size.value
+            : unit_from_pt(kDefaultBarSizePT, layer_get_dpi(ctx)).value;
+
+    if (!config.sizes.empty()) {
+      size = config.sizes[i % config.sizes.size()];
+    }
 
     auto offset = config.offsets.empty()
-        ? 0
+        ? config.offset.value
         : config.offsets[i % config.offsets.size()];
 
     Path path;
@@ -142,7 +137,7 @@ ReturnCode bars_draw_horizontal(
     const auto& text = config.labels[i];
 
     auto offset = config.offsets.empty()
-        ? 0
+        ? config.offset.value
         : config.offsets[i % config.offsets.size()];
 
     auto padding = measure_or(
@@ -207,18 +202,6 @@ ReturnCode bars_draw_vertical(
       &*config.yoffset.begin(),
       &*config.yoffset.end());
 
-  convert_units(
-      {
-      },
-      &*config.sizes.begin(),
-      &*config.sizes.end());
-
-  convert_units(
-      {
-      },
-      &*config.offsets.begin(),
-      &*config.offsets.end());
-
   /* draw bars */
   auto y0 = clip.h * std::clamp(scale_translate(config.scale_y, 0), 0.0, 1.0);
   for (size_t i = 0; i < config.x.size(); ++i) {
@@ -226,12 +209,17 @@ ReturnCode bars_draw_vertical(
     auto sy1 = clip.y + (config.yoffset.empty() ? y0 : config.yoffset[i]);
     auto sy2 = clip.y + config.y[i];
 
-    auto size = config.sizes.empty()
-        ? from_pt(kDefaultBarSizePT, layer_get_dpi(ctx))
-        : config.sizes[i % config.sizes.size()];
+    auto size =
+        config.size.value
+            ? config.size.value
+            : unit_from_pt(kDefaultBarSizePT, layer_get_dpi(ctx)).value;
+
+    if (!config.sizes.empty()) {
+      size = config.sizes[i % config.sizes.size()];
+    }
 
     auto offset = config.offsets.empty()
-        ? 0
+        ? config.offset.value
         : config.offsets[i % config.offsets.size()];
 
     Path path;
@@ -249,7 +237,7 @@ ReturnCode bars_draw_vertical(
     const auto& text = config.labels[i];
 
     auto offset = config.offsets.empty()
-        ? 0
+        ? config.offset.value
         : config.offsets[i % config.offsets.size()];
 
     auto padding = measure_or(
@@ -286,7 +274,7 @@ ReturnCode bars_configure(
   c->scale_x = plot->scale_x;
   c->scale_y = plot->scale_y;
   c->stroke_style.color = layer_get(ctx)->foreground_color;
-  c->stroke_style.line_width = from_unit(0);
+  c->stroke_style.line_width = Number(0);
   c->fill_style.color = layer_get(ctx)->foreground_color;
   c->label_font = layer_get_font(ctx);
   c->label_font_size = layer_get_font_size(ctx);
@@ -304,12 +292,12 @@ ReturnCode bars_configure(
     {"data-y-high", std::bind(&data_load_strings, _1, &data_y)},
     {"data-x-low", std::bind(&data_load_strings, _1, &data_xoffset)},
     {"data-y-low", std::bind(&data_load_strings, _1, &data_yoffset)},
-    {"width", std::bind(&data_load, _1, &c->sizes)},
+    {"width", std::bind(&expr_to_size, _1, layer, &c->size)},
     {"widths", std::bind(&data_load, _1, &c->sizes)},
-    {"offset", std::bind(&data_load, _1, &c->offsets)},
+    {"offset", std::bind(&expr_to_size, _1, layer, &c->offset)},
     {"offsets", std::bind(&data_load, _1, &c->offsets)},
     {"stroke-color", std::bind(&color_read, ctx, _1, &c->stroke_style.color)},
-    {"stroke-width", std::bind(&measure_read, _1, &c->stroke_style.line_width)},
+    {"stroke-width", std::bind(&expr_to_size, _1, layer, &c->stroke_style.line_width)},
     {"stroke-style", std::bind(&stroke_style_read, ctx, _1, &c->stroke_style)},
     {"fill", std::bind(&fill_style_read, ctx, _1, &c->fill_style)},
     {"limit-x", std::bind(&expr_to_float64_opt_pair, _1, &c->scale_x.min, &c->scale_x.max)},

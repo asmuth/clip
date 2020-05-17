@@ -46,7 +46,7 @@ struct PlotVectorsConfig {
   ScaleConfig scale_y;
   Color color;
   std::vector<Color> colors;
-  Measure size;
+  Number size;
   std::vector<Measure> sizes;
   Arrow shape;
   std::vector<Arrow> shapes;
@@ -110,7 +110,7 @@ ReturnCode vectors_draw(
 
     auto size = config->sizes.empty()
         ? config->size
-        : config->sizes[i % config->sizes.size()];
+        : Number(config->sizes[i % config->sizes.size()]);
 
     auto shape = config->shapes.empty()
         ? config->shape
@@ -129,11 +129,13 @@ ReturnCode vectors_configure(
     PlotConfig* plot,
     PlotVectorsConfig* c,
     const Expr* expr) {
+  const auto& layer = *layer_get(ctx);
+
   /* set defaults from environment */
   c->scale_x = plot->scale_x;
   c->scale_y = plot->scale_y;
   c->color = layer_get(ctx)->foreground_color;
-  c->size = from_pt(kDefaultArrowSizePT);
+  c->size = unit_from_pt(kDefaultArrowSizePT, layer_get_dpi(ctx));
   c->shape = arrow_create_default();
 
   /* parse properties */
@@ -164,7 +166,7 @@ ReturnCode vectors_configure(
     {"color", std::bind(&color_read, ctx, _1, &c->color)},
     {"colors", std::bind(&data_load_strings, _1, &data_colors)},
     {"color-map", std::bind(&color_map_read, ctx, _1, &color_map)},
-    {"size", std::bind(&measure_read, _1, &c->size)},
+    {"size", std::bind(&expr_to_size, _1, layer, &c->size)},
     {"sizes", std::bind(&data_load_strings, _1, &data_sizes)},
     {"size-map", std::bind(&measure_map_read, ctx, _1, &size_map)},
   });

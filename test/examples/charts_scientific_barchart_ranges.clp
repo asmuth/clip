@@ -24,15 +24,15 @@
         data-x (csv "test/testdata/bardata.csv" var3)
         data-y (csv "test/testdata/bardata.csv" var1)
         data-y-low (csv "test/testdata/bardata.csv" var2)
-        width (1em)
-        offset (-.8em)
+        width 1em
+        offset -.8em
         stroke-width .8pt
         fill none)
     bars (
         data-x (csv "test/testdata/bardata.csv" var3)
         data-y (csv "test/testdata/bardata.csv" var4)
         data-y-low (csv "test/testdata/bardata.csv" var5)
-        width (1em)
-        offset (.8em)
+        width 1em
+        offset .8em
         stroke-width .8pt
         fill hatch))

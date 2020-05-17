@@ -51,7 +51,7 @@ struct StrokeStyle {
 
   StrokeStyle();
 
-  Measure line_width;
+  Number line_width;
   Color color;
   DashType dash_type;
   Measure dash_offset;

@@ -20,13 +20,13 @@ namespace clip::plotgen {
 struct LegendItem {
   std::string label;
   HAlign label_align;
-  Measure label_margin;
+  Number label_margin;
   Color label_color;
   FontInfo label_font;
   Number label_font_size;
   Marker marker;
   HAlign marker_align;
-  Measure marker_margin;
+  Number marker_margin;
   Color marker_color;
   Number marker_size;
 };

@@ -81,7 +81,7 @@ Marker marker_create_circle(double border_width) {
       const auto& color) {
     DrawCommand shape;
     shape.stroke_style.color = color;
-    shape.stroke_style.line_width = from_unit((size * border_width * 0.5).value);
+    shape.stroke_style.line_width = size * border_width * 0.5;
     path_add_circle(&shape.path, pos, (size * 0.5).value);
     draw_shape(ctx, shape);
     return OK;

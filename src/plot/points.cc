@@ -45,13 +45,13 @@ struct PlotPointsConfig {
   ScaleConfig scale_y;
   Color color;
   std::vector<Color> colors;
-  Measure size;
+  Number size;
   std::vector<Measure> sizes;
   Marker shape;
   std::vector<Marker> shapes;
   std::vector<std::string> labels;
   FontInfo label_font;
-  Measure label_padding;
+  Number label_padding;
   Number label_font_size;
   Color label_color;
 };
@@ -79,12 +79,6 @@ ReturnCode points_draw(
       &*config->y.begin(),
       &*config->y.end());
 
-  convert_units(
-      {
-      },
-      &*config->sizes.begin(),
-      &*config->sizes.end());
-
   /* draw markers */
   for (size_t i = 0; i < config->x.size(); ++i) {
     auto sx = clip.x + config->x[i];
@@ -96,13 +90,13 @@ ReturnCode points_draw(
 
     auto size = config->sizes.empty()
         ? config->size
-        : config->sizes[i % config->sizes.size()];
+        : Number(config->sizes[i % config->sizes.size()]);
 
     auto shape = config->shapes.empty()
         ? config->shape
         : config->shapes[i % config->shapes.size()];
 
-    if (auto rc = shape(ctx, Point(sx, sy), Number(size), color); !rc) {
+    if (auto rc = shape(ctx, Point(sx, sy), size, color); !rc) {
       return rc;
     }
   }
@@ -115,9 +109,10 @@ ReturnCode points_draw(
         ? 0
         : config->sizes[i % config->sizes.size()].value;
 
-    auto label_padding = size * 0.5 + measure_or(
-        config->label_padding,
-        from_em(kDefaultLabelPaddingEM, config->label_font_size.value));
+    auto label_padding = size * 0.5 + (
+        config->label_padding.value
+            ? config->label_padding.value
+            : config->label_font_size.value * .2);
 
     Point p(
         clip.x + config->x[i],
@@ -149,7 +144,7 @@ ReturnCode points_configure(
   c->scale_x = plot->scale_x;
   c->scale_y = plot->scale_y;
   c->color = layer_get(ctx)->foreground_color;
-  c->size = from_pt(kDefaultPointSizePT);
+  c->size = unit_from_pt(kDefaultPointSizePT, layer_get_dpi(ctx));
   c->shape = marker_create_disk();
   c->label_font = layer_get_font(ctx);
   c->label_font_size = layer_get_font_size(ctx);
@@ -177,7 +172,7 @@ ReturnCode points_configure(
     {"scale-y-padding", std::bind(&expr_to_float64, _1, &c->scale_y.padding)},
     {"shape", std::bind(&marker_configure, _1, &c->shape)},
     {"shapes", std::bind(&marker_configure_list, _1, &c->shapes)},
-    {"size", std::bind(&measure_read, _1, &c->size)},
+    {"size", std::bind(&expr_to_size, _1, layer, &c->size)},
     {"sizes", std::bind(&data_load_strings, _1, &data_sizes)},
     {"size-map", std::bind(&measure_map_read, ctx, _1, &size_map)},
     {"color", std::bind(&color_read, ctx, _1, &c->color)},
@@ -187,7 +182,7 @@ ReturnCode points_configure(
     {"label-font", expr_call_string_fn(std::bind(&font_load_best, _1, &c->label_font))},
     {"label-font-size", std::bind(&expr_to_font_size, _1, layer, &c->label_font_size)},
     {"label-color", std::bind(&color_read, ctx, _1, &c->label_color)},
-    {"label-padding", std::bind(&measure_read, _1, &c->label_padding)},
+    {"label-padding", std::bind(&expr_to_size, _1, layer, &c->label_padding)},
     {"font", expr_call_string_fn(std::bind(&font_load_best, _1, &c->label_font))},
   });
 

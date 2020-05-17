@@ -136,5 +136,15 @@ ReturnCode expr_to_font_size(
       font_size);
 }
 
+ReturnCode expr_to_size(
+    const Expr* expr,
+    const Layer& layer,
+    Number* size) {
+  return expr_to_number(
+      expr,
+      layer_get_uconv_size(layer),
+      size);
+}
+
 } // namespace clip
 

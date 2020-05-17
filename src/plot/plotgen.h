@@ -22,7 +22,7 @@ struct PlotConfig {
   ScaleConfig scale_x;
   ScaleConfig scale_y;
 
-  std::array<Measure, 4> margins;
+  std::array<Number, 4> margins;
   std::vector<Rectangle> layout_stack;
 };
 
