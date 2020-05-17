@@ -32,13 +32,12 @@ Status text_shape_run(
     const std::string& language,
     const std::string& script,
     FontRef font,
-    double font_size,
+    NumberPT font_size,
     double dpi,
     std::vector<GlyphInfo>* glyphs) {
   /* get freetype font */
   auto ft_font = static_cast<FT_Face>(font_get_freetype(font));
-  auto font_size_ft = font_size * (72.0 / dpi) * 64;
-  if (FT_Set_Char_Size(ft_font, 0, font_size_ft, dpi, dpi)) {
+  if (FT_Set_Char_Size(ft_font, 0, font_size.value * 64, dpi, dpi)) {
     return ERROR;
   }
 
@@ -109,7 +108,7 @@ Status text_shape_run_with_font_fallback(
     const std::string& text_language,
     const std::string& text_script,
     const FontInfo& font_info,
-    double font_size,
+    NumberPT font_size,
     double dpi,
     std::vector<GlyphInfo>* glyphs) {
 

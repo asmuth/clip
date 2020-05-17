@@ -27,7 +27,7 @@ using Marker = std::function<
     ReturnCode (
         Context* ctx,
         const Point& pos,
-        const Measure& size,
+        const Number& size,
         const Color& color)>;
 
 Marker marker_create_circle(double border_width);

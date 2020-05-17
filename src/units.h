@@ -40,7 +40,7 @@ enum class Unit {
  */
 struct Number {
   Number() : value(0) {}
-  Number(double v) : value(v) {}
+  explicit Number(double v) : value(v) {}
   double value;
   Number operator*(double v) const;
 };
@@ -56,7 +56,7 @@ using Vector2 = std::array<Number, 2>;
 template <Unit U>
 struct NumberT {
   NumberT() : value(0) {}
-  NumberT(double v) : value(v) {}
+  explicit NumberT(double v) : value(v) {}
   NumberT<U> operator*(double v) const;
   static const Unit unit = U;
   double value;
@@ -109,6 +109,9 @@ Number unit_from_mm(double v, double dpi);
 Number unit_from_pt(double v, double dpi);
 Number unit_from_px(double v);
 Number unit_from_percent(double v, double base);
+Number unit_from_em(double v, Number base);
+
+NumberPT unit_to_pt(Number v, double dpi);
 
 } // namespace clip
 

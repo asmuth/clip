@@ -15,6 +15,7 @@
 #include <memory>
 #include "return_code.h"
 #include "path.h"
+#include "units.h"
 
 namespace clip {
 
@@ -39,7 +40,7 @@ ReturnCode font_load_best(
 
 ReturnCode font_get_glyph_path(
     FontRef font,
-    double font_size,
+    NumberPT font_size,
     double dpi,
     uint32_t codepoint,
     Path* path);

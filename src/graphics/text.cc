@@ -27,7 +27,7 @@ Status text_measure_label(
     const std::string& text,
     TextDirection text_direction_base,
     const FontInfo& font,
-    double font_size,
+    Number font_size,
     double dpi,
     Rectangle* bbox) {
   text::TextSpan span;
@@ -42,6 +42,22 @@ Status text_measure_label(
   line.base_direction = text_direction_base;
 
   return text_layout_line(line, dpi, nullptr, bbox);
+}
+
+Status text_measure_label(
+    const std::string& text,
+    TextDirection text_direction_base,
+    const FontInfo& font,
+    double font_size,
+    double dpi,
+    Rectangle* bbox) {
+  return text_measure_label(
+      text,
+      text_direction_base,
+      font,
+      Number(font_size),
+      dpi,
+      bbox);
 }
 
 } // namespace clip

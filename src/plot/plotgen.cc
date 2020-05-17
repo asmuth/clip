@@ -131,21 +131,16 @@ ReturnCode plot_eval(
 
 Rectangle plot_get_clip(const PlotConfig* plot, const Layer* layer) {
   if (plot->layout_stack.empty()) {
-    auto margins = plot->margins;
-    for (auto& m : margins) {
-      convert_unit_typographic(layer->dpi, layer_get_rem(layer), &m);
-    }
-
     return layout_margin_box(
         Rectangle(
             0,
             0,
             convert_unit(*layer, layer->width),
             convert_unit(*layer, layer->height)),
-        margins[0],
-        margins[1],
-        margins[2],
-        margins[3]);
+        plot->margins[0],
+        plot->margins[1],
+        plot->margins[2],
+        plot->margins[3]);
   } else {
     return plot->layout_stack.back();
   }

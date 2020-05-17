@@ -52,7 +52,7 @@ struct PlotPointsConfig {
   std::vector<std::string> labels;
   FontInfo label_font;
   Measure label_padding;
-  Measure label_font_size;
+  Number label_font_size;
   Color label_color;
 };
 
@@ -65,7 +65,6 @@ ReturnCode points_draw(
   /* convert units */
   convert_units(
       {
-        std::bind(&convert_unit_typographic, layer_get_dpi(ctx), layer_get_font_size(ctx), _1),
         std::bind(&convert_unit_user, scale_translate_fn(config->scale_x), _1),
         std::bind(&convert_unit_relative, clip.w, _1)
       },
@@ -74,7 +73,6 @@ ReturnCode points_draw(
 
   convert_units(
       {
-        std::bind(&convert_unit_typographic, layer_get_dpi(ctx), layer_get_font_size(ctx), _1),
         std::bind(&convert_unit_user, scale_translate_fn(config->scale_y), _1),
         std::bind(&convert_unit_relative, clip.h, _1)
       },
@@ -83,15 +81,9 @@ ReturnCode points_draw(
 
   convert_units(
       {
-        std::bind(&convert_unit_typographic, layer_get_dpi(ctx), layer_get_font_size(ctx), _1)
       },
       &*config->sizes.begin(),
       &*config->sizes.end());
-
-  convert_unit_typographic(
-      layer_get_dpi(ctx),
-      layer_get_font_size(ctx),
-      &config->size);
 
   /* draw markers */
   for (size_t i = 0; i < config->x.size(); ++i) {
@@ -110,7 +102,7 @@ ReturnCode points_draw(
         ? config->shape
         : config->shapes[i % config->shapes.size()];
 
-    if (auto rc = shape(ctx, Point(sx, sy), size, color); !rc) {
+    if (auto rc = shape(ctx, Point(sx, sy), Number(size), color); !rc) {
       return rc;
     }
   }
@@ -125,7 +117,7 @@ ReturnCode points_draw(
 
     auto label_padding = size * 0.5 + measure_or(
         config->label_padding,
-        from_em(kDefaultLabelPaddingEM, config->label_font_size));
+        from_em(kDefaultLabelPaddingEM, config->label_font_size.value));
 
     Point p(
         clip.x + config->x[i],
@@ -151,6 +143,8 @@ ReturnCode points_configure(
     PlotConfig* plot,
     PlotPointsConfig* c,
     const Expr* expr) {
+  const auto& layer = *layer_get(ctx);
+
   /* set defaults from environment */
   c->scale_x = plot->scale_x;
   c->scale_y = plot->scale_y;
@@ -191,7 +185,7 @@ ReturnCode points_configure(
     {"color-map", std::bind(&color_map_read, ctx, _1, &color_map)},
     {"labels", std::bind(&data_load_strings, _1, &c->labels)},
     {"label-font", expr_call_string_fn(std::bind(&font_load_best, _1, &c->label_font))},
-    {"label-font-size", std::bind(&measure_read, _1, &c->label_font_size)},
+    {"label-font-size", std::bind(&expr_to_font_size, _1, layer, &c->label_font_size)},
     {"label-color", std::bind(&color_read, ctx, _1, &c->label_color)},
     {"label-padding", std::bind(&measure_read, _1, &c->label_padding)},
     {"font", expr_call_string_fn(std::bind(&font_load_best, _1, &c->label_font))},

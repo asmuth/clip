@@ -64,7 +64,7 @@ struct AxisDefinition {
   double title_offset;
   Measure title_padding;
   FontInfo title_font;
-  Measure title_font_size;
+  Number title_font_size;
   double title_rotate;
 
   /* ticks */
@@ -80,7 +80,7 @@ struct AxisDefinition {
   Measure label_padding;
   double label_rotate;
   FontInfo label_font;
-  Measure label_font_size;
+  Number label_font_size;
   Color label_color;
 
   /* border */
@@ -97,35 +97,6 @@ AxisDefinition::AxisDefinition() :
     label_rotate(0.0) {}
 
 void axis_convert_units(AxisDefinition* config, const Context* ctx) {
-  convert_unit_typographic(
-      layer_get_dpi(ctx),
-      layer_get_font_size(ctx),
-      &config->label_font_size);
-
-  convert_unit_typographic(
-      layer_get_dpi(ctx),
-      config->label_font_size,
-      &config->label_padding);
-
-  convert_unit_typographic(
-      layer_get_dpi(ctx),
-      layer_get_font_size(ctx),
-      &config->title_font_size);
-
-  convert_unit_typographic(
-      layer_get_dpi(ctx),
-      config->title_font_size,
-      &config->title_padding);
-
-  convert_unit_typographic(
-      layer_get_dpi(ctx),
-      layer_get_font_size(ctx),
-      &config->border_style.line_width);
-
-  convert_unit_typographic(
-      layer_get_dpi(ctx),
-      layer_get_font_size(ctx),
-      &config->tick_length);
 }
 
 ReturnCode axis_layout_labels(
@@ -229,7 +200,7 @@ ReturnCode axis_layout(
   {
     *margin += measure_or(
         axis.label_padding,
-        from_em(kDefaultLabelPaddingEM, axis.label_font_size));
+        from_em(kDefaultLabelPaddingEM, axis.label_font_size.value));
 
     if (auto rc = axis_layout_labels(axis, ctx, margin); !rc) {
       return rc;
@@ -244,14 +215,14 @@ ReturnCode axis_layout(
       case AxisAlign::BOTTOM:
         *margin += measure_or(
                 axis.title_padding,
-                from_em(kDefaultTitlePaddingVertEM, axis.title_font_size));
+                from_em(kDefaultTitlePaddingVertEM, axis.title_font_size.value));
         break;
       case AxisAlign::Y:
       case AxisAlign::LEFT:
       case AxisAlign::RIGHT:
         *margin += measure_or(
                 axis.title_padding,
-                from_em(kDefaultTitlePaddingHorizEM, axis.title_font_size));
+                from_em(kDefaultTitlePaddingHorizEM, axis.title_font_size.value));
         break;
     }
 
@@ -310,7 +281,7 @@ static ReturnCode plot_axis_vertical(
 
   auto label_padding = measure_or(
       axis_config.label_padding,
-      from_em(kDefaultLabelPaddingEM, axis_config.label_font_size));
+      from_em(kDefaultLabelPaddingEM, axis_config.label_font_size.value));
 
   double label_size = 0;
   if (auto rc = axis_layout_labels(axis_config, ctx, &label_size);
@@ -366,7 +337,7 @@ static ReturnCode plot_axis_vertical(
 
     double title_padding = measure_or(
         axis_config.title_padding,
-        from_em(kDefaultTitlePaddingHorizEM, axis_config.title_font_size));
+        from_em(kDefaultTitlePaddingHorizEM, axis_config.title_font_size.value));
 
     if ((title_position < 0) == (label_position < 0)) {
       title_padding += label_size + label_padding;
@@ -452,7 +423,7 @@ static ReturnCode plot_axis_horizontal(
 
   double label_padding =  measure_or(
       axis_config.label_padding,
-      from_em(kDefaultLabelPaddingEM, axis_config.label_font_size));
+      from_em(kDefaultLabelPaddingEM, axis_config.label_font_size.value));
 
   double label_size = 0;
   if (auto rc = axis_layout_labels(axis_config, ctx, &label_size); !rc) {
@@ -507,7 +478,7 @@ static ReturnCode plot_axis_horizontal(
 
     double title_padding = measure_or(
         axis_config.title_padding,
-        from_em(kDefaultTitlePaddingVertEM, axis_config.title_font_size));
+        from_em(kDefaultTitlePaddingVertEM, axis_config.title_font_size.value));
 
     if ((title_position < 0) == (label_position < 0)) {
       title_padding += label_size + label_padding;
@@ -633,6 +604,7 @@ ReturnCode plot_axis(
 }
 
 ReturnCode plot_axis(Context* ctx, PlotConfig* plot, const Expr* expr) {
+  const auto& layer = *layer_get(ctx);
   auto elem_name = expr_get_value(expr);
 
   auto config = std::make_shared<AxisDefinition>();
@@ -731,7 +703,7 @@ ReturnCode plot_axis(Context* ctx, PlotConfig* plot, const Expr* expr) {
       {"label-offset", std::bind(&expr_to_float64, _1, &config->label_offset)},
       {"label-padding", std::bind(&measure_read, _1, &config->label_padding)},
       {"label-rotate", std::bind(&expr_to_float64, _1, &config->label_rotate)},
-      {"label-font-size", std::bind(&measure_read, _1, &config->label_font_size)},
+      {"label-font-size", std::bind(&expr_to_font_size, _1, layer, &config->label_font_size)},
       {"label-color", std::bind(&color_read, ctx, _1, &config->label_color)},
 
       /* tick options */
@@ -742,7 +714,7 @@ ReturnCode plot_axis(Context* ctx, PlotConfig* plot, const Expr* expr) {
       /* title options */
       {"title", std::bind(&expr_to_string, _1, &config->title)},
       {"title-font", expr_call_string_fn(std::bind(&font_load_best, _1, &config->title_font))},
-      {"title-font-size", std::bind(&measure_read, _1, &config->title_font_size)},
+      {"title-font-size", std::bind(&expr_to_font_size, _1, layer, &config->title_font_size)},
       {"title-color", std::bind(&color_read, ctx, _1, &config->title_color)},
       {"title-offset", std::bind(&expr_to_float64, _1, &config->title_offset)},
       {"title-padding", std::bind(&measure_read, _1, &config->title_padding)},
@@ -764,8 +736,8 @@ ReturnCode plot_axis(Context* ctx, PlotConfig* plot, const Expr* expr) {
       {
         "font-size",
         expr_calln_fn({
-          std::bind(&measure_read, _1, &config->label_font_size),
-          std::bind(&measure_read, _1, &config->title_font_size),
+          std::bind(&expr_to_font_size, _1, layer, &config->label_font_size),
+          std::bind(&expr_to_font_size, _1, layer, &config->title_font_size),
         })
       }
     }, false);
@@ -826,6 +798,8 @@ ReturnCode axis_configure_position(
 }
 
 ReturnCode plot_axes(Context* ctx, PlotConfig* plot, const Expr* expr) {
+  const auto& layer = *layer_get(ctx);
+
   std::array<Measure, 4> margins = {from_em(1), from_em(1), from_em(1), from_em(1)};
   std::array<AxisDefinition, 4> axes;
 
@@ -1030,10 +1004,10 @@ ReturnCode plot_axes(Context* ctx, PlotConfig* plot, const Expr* expr) {
     {
       "label-font-size",
       expr_calln_fn({
-        std::bind(&measure_read, _1, &axes[0].label_font_size),
-        std::bind(&measure_read, _1, &axes[1].label_font_size),
-        std::bind(&measure_read, _1, &axes[2].label_font_size),
-        std::bind(&measure_read, _1, &axes[3].label_font_size)
+        std::bind(&expr_to_font_size, _1, layer, &axes[0].label_font_size),
+        std::bind(&expr_to_font_size, _1, layer, &axes[1].label_font_size),
+        std::bind(&expr_to_font_size, _1, layer, &axes[2].label_font_size),
+        std::bind(&expr_to_font_size, _1, layer, &axes[3].label_font_size)
       })
     },
     {
@@ -1079,21 +1053,21 @@ ReturnCode plot_axes(Context* ctx, PlotConfig* plot, const Expr* expr) {
     {
       "label-font-size-x",
       expr_calln_fn({
-        std::bind(&measure_read, _1, &axes[0].label_font_size),
-        std::bind(&measure_read, _1, &axes[2].label_font_size)
+        std::bind(&expr_to_font_size, _1, layer, &axes[0].label_font_size),
+        std::bind(&expr_to_font_size, _1, layer, &axes[2].label_font_size)
       })
     },
     {
       "label-font-size-y",
       expr_calln_fn({
-        std::bind(&measure_read, _1, &axes[1].label_font_size),
-        std::bind(&measure_read, _1, &axes[3].label_font_size)
+        std::bind(&expr_to_font_size, _1, layer, &axes[1].label_font_size),
+        std::bind(&expr_to_font_size, _1, layer, &axes[3].label_font_size)
       })
     },
-    {"label-font-size-top", std::bind(&measure_read, _1, &axes[0].label_font_size)},
-    {"label-font-size-right", std::bind(&measure_read, _1, &axes[1].label_font_size)},
-    {"label-font-size-bottom", std::bind(&measure_read, _1, &axes[2].label_font_size)},
-    {"label-font-size-left", std::bind(&measure_read, _1, &axes[3].label_font_size)},
+    {"label-font-size-top", std::bind(&expr_to_font_size, _1, layer, &axes[0].label_font_size)},
+    {"label-font-size-right", std::bind(&expr_to_font_size, _1, layer, &axes[1].label_font_size)},
+    {"label-font-size-bottom", std::bind(&expr_to_font_size, _1, layer, &axes[2].label_font_size)},
+    {"label-font-size-left", std::bind(&expr_to_font_size, _1, layer, &axes[3].label_font_size)},
 
     /* tick options */
     {
@@ -1158,16 +1132,16 @@ ReturnCode plot_axes(Context* ctx, PlotConfig* plot, const Expr* expr) {
     {
       "title-font-size",
       expr_calln_fn({
-        std::bind(&measure_read, _1, &axes[0].title_font_size),
-        std::bind(&measure_read, _1, &axes[1].title_font_size),
-        std::bind(&measure_read, _1, &axes[2].title_font_size),
-        std::bind(&measure_read, _1, &axes[3].title_font_size)
+        std::bind(&expr_to_font_size, _1, layer, &axes[0].title_font_size),
+        std::bind(&expr_to_font_size, _1, layer, &axes[1].title_font_size),
+        std::bind(&expr_to_font_size, _1, layer, &axes[2].title_font_size),
+        std::bind(&expr_to_font_size, _1, layer, &axes[3].title_font_size)
       })
     },
-    {"title-font-size-top", std::bind(&measure_read, _1, &axes[0].title_font_size)},
-    {"title-font-size-right", std::bind(&measure_read, _1, &axes[1].title_font_size)},
-    {"title-font-size-bottom", std::bind(&measure_read, _1, &axes[2].title_font_size)},
-    {"title-font-size-left", std::bind(&measure_read, _1, &axes[3].title_font_size)},
+    {"title-font-size-top", std::bind(&expr_to_font_size, _1, layer, &axes[0].title_font_size)},
+    {"title-font-size-right", std::bind(&expr_to_font_size, _1, layer, &axes[1].title_font_size)},
+    {"title-font-size-bottom", std::bind(&expr_to_font_size, _1, layer, &axes[2].title_font_size)},
+    {"title-font-size-left", std::bind(&expr_to_font_size, _1, layer, &axes[3].title_font_size)},
     {
       "title-color",
       expr_calln_fn({
@@ -1269,24 +1243,20 @@ ReturnCode plot_axes(Context* ctx, PlotConfig* plot, const Expr* expr) {
     {
       "font-size",
       expr_calln_fn({
-        std::bind(&measure_read, _1, &axes[0].title_font_size),
-        std::bind(&measure_read, _1, &axes[1].title_font_size),
-        std::bind(&measure_read, _1, &axes[2].title_font_size),
-        std::bind(&measure_read, _1, &axes[3].title_font_size),
-        std::bind(&measure_read, _1, &axes[0].label_font_size),
-        std::bind(&measure_read, _1, &axes[1].label_font_size),
-        std::bind(&measure_read, _1, &axes[2].label_font_size),
-        std::bind(&measure_read, _1, &axes[3].label_font_size),
+        std::bind(&expr_to_font_size, _1, layer, &axes[0].title_font_size),
+        std::bind(&expr_to_font_size, _1, layer, &axes[1].title_font_size),
+        std::bind(&expr_to_font_size, _1, layer, &axes[2].title_font_size),
+        std::bind(&expr_to_font_size, _1, layer, &axes[3].title_font_size),
+        std::bind(&expr_to_font_size, _1, layer, &axes[0].label_font_size),
+        std::bind(&expr_to_font_size, _1, layer, &axes[1].label_font_size),
+        std::bind(&expr_to_font_size, _1, layer, &axes[2].label_font_size),
+        std::bind(&expr_to_font_size, _1, layer, &axes[3].label_font_size),
       })
     }
   });
 
   if (!config_rc) {
     return config_rc;
-  }
-
-  for (auto& m : margins) {
-    convert_unit_typographic(layer_get_dpi(ctx), layer_get_rem(ctx), &m);
   }
 
   std::array<double, 4> padding = {0, 0, 0, 0};

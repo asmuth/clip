@@ -132,7 +132,7 @@ ReturnCode text_draw(
     {"color", std::bind(&color_read, ctx, _1, &style.color)},
     {"text", std::bind(&expr_to_string, _1, &text)},
     {"font", expr_call_string_fn(std::bind(&font_load_best, _1, &style.font))},
-    {"font-size", std::bind(&measure_read, _1, &style.font_size)},
+    {"font-size", std::bind(&expr_to_font_size, _1, *layer, &style.font_size)},
   });
 
   if (!config_rc) {

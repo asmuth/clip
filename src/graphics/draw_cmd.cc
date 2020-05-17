@@ -50,6 +50,9 @@ void draw_line(
 
 void draw_text(Context* ctx, const TextInfo& elem) {
   const auto& style = elem.style;
+  const auto& layer = layer_get(ctx);
+  auto dpi = layer_get_dpi(layer);
+  auto font_size_pt = unit_to_pt(elem.style.font_size, dpi);
 
   for (const auto& gg : elem.glyphs) {
     for (const auto& g : gg.glyphs) {
@@ -61,8 +64,8 @@ void draw_text(Context* ctx, const TextInfo& elem) {
       Path gp;
       auto rc = font_get_glyph_path(
           g.font,
-          elem.style.font_size,
-          layer_get_dpi(ctx),
+          font_size_pt,
+          dpi,
           g.codepoint,
           &gp);
 
@@ -88,8 +91,6 @@ ReturnCode draw_text(
     double rotate,
     TextStyle style) {
   const auto layer = layer_get(ctx);
-
-  convert_unit_typographic(layer_get_dpi(ctx), layer_get_rem(ctx), &style.font_size);
 
   text::TextSpan span;
   span.text_direction = style.direction;

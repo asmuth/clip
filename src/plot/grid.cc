@@ -48,13 +48,6 @@ ReturnCode plot_grid(
     Context* ctx,
     PlotConfig* plot,
     std::shared_ptr<GridlineDefinition> config) {
-  MeasureConv conv;
-  conv.dpi = layer_get_dpi(ctx);
-  conv.font_size = layer_get_font_size(ctx);
-  conv.parent_size = layer_get_font_size(ctx);
-
-  measure_normalize(conv, &config->stroke_style.line_width);
-
   const auto& bbox = plot_get_clip(plot, layer_get(ctx));
 
   ScaleLayout slayout_x;

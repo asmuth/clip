@@ -42,5 +42,10 @@ ReturnCode measure_map_read(
     const Expr* expr,
     MeasureMap* measure_map);
 
+ReturnCode expr_to_font_size(
+    const Expr* expr,
+    const Layer& layer,
+    Number* font_size);
+
 } // namespace clip
 

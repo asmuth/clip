@@ -52,7 +52,7 @@ ReturnCode measure_readn(
 
   MeasureConv conv;
   conv.dpi = layer_get_dpi(ctx);
-  conv.font_size = layer_get_font_size(ctx);
+  conv.font_size = from_unit(layer_get_font_size(ctx).value);
   measure_normalize(conv, value);
 
   return OK;
@@ -124,6 +124,16 @@ ReturnCode measure_map_read(
       "invalid value to <measure-map>; got '{}', but expected one of: \n"
       "  - linear\n",
       expr_inspect(expr));
+}
+
+ReturnCode expr_to_font_size(
+    const Expr* expr,
+    const Layer& layer,
+    Number* font_size) {
+  return expr_to_number(
+      expr,
+      layer_get_uconv_font_size(layer),
+      font_size);
 }
 
 } // namespace clip

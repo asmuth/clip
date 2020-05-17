@@ -148,7 +148,6 @@ Measure measure_or(const Measure& primary, const Measure& fallback) {
 void convert_unit(
     const Layer& layer,
     Measure* measure) {
-  convert_unit_typographic(layer.dpi, layer.font_size, measure);
 }
 
 Measure convert_unit(

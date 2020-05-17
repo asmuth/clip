@@ -253,7 +253,7 @@ Status svg_add_text_elem_native(
     << svg_attr("x", origin.x)
     << svg_attr("y", origin.y)
     << svg_attr("fill", style.color.to_hex_str(4))
-    << svg_attr("font-size", style.font_size)
+    << svg_attr("font-size", style.font_size.value)
     << svg_attr("font-family", style.font.font_family_css)
     << svg_attr("font-weight", style.font.font_weight_css)
     << transform
@@ -283,7 +283,7 @@ Status svg_add_text_elem_embed(
       Path gp;
       auto rc = font_get_glyph_path(
           g.font,
-          elem.style.font_size,
+          unit_to_pt(elem.style.font_size, dpi),
           dpi,
           g.codepoint,
           &gp);
@@ -324,8 +324,8 @@ struct SVGDrawOp {
 ReturnCode export_svg(
     const Layer* layer,
     std::string* buffer) {
-  auto width = convert_unit(*layer, layer->width);
-  auto height = convert_unit(*layer, layer->height);
+  auto width = layer_get_width(*layer).value;
+  auto height = layer_get_height(*layer).value;
 
   auto svg = std::make_shared<SVGData>();
   svg->width = width;

@@ -40,7 +40,7 @@ Status text_shape_run(
     const std::string& text_language,
     const std::string& text_script,
     FontRef font,
-    double font_size,
+    NumberPT font_size,
     double dpi,
     std::vector<GlyphInfo>* glyphs);
 
@@ -53,7 +53,7 @@ Status text_shape_run_with_font_fallback(
     const std::string& text_language,
     const std::string& text_script,
     const FontInfo& font_info,
-    double font_size,
+    NumberPT font_size,
     double dpi,
     std::vector<GlyphInfo>* glyphs);
 

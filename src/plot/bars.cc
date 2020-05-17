@@ -54,7 +54,7 @@ struct PlotBarsConfig {
   std::vector<std::string> labels;
   FontInfo label_font;
   Measure label_padding;
-  Measure label_font_size;
+  Number label_font_size;
   Color label_color;
 };
 
@@ -70,7 +70,6 @@ ReturnCode bars_draw_horizontal(
   /* convert units */
   convert_units(
       {
-        std::bind(&convert_unit_typographic, layer_get_dpi(ctx), layer_get_font_size(ctx), _1),
         std::bind(&convert_unit_user, scale_translate_fn(config.scale_x), _1),
         std::bind(&convert_unit_relative, clip.w, _1)
       },
@@ -79,7 +78,6 @@ ReturnCode bars_draw_horizontal(
 
   convert_units(
       {
-        std::bind(&convert_unit_typographic, layer_get_dpi(ctx), layer_get_font_size(ctx), _1),
         std::bind(&convert_unit_user, scale_translate_fn(config.scale_x), _1),
         std::bind(&convert_unit_relative, clip.w, _1)
       },
@@ -88,7 +86,6 @@ ReturnCode bars_draw_horizontal(
 
   convert_units(
       {
-        std::bind(&convert_unit_typographic, layer_get_dpi(ctx), layer_get_font_size(ctx), _1),
         std::bind(&convert_unit_user, scale_translate_fn(config.scale_y), _1),
         std::bind(&convert_unit_relative, clip.h, _1)
       },
@@ -97,7 +94,6 @@ ReturnCode bars_draw_horizontal(
 
   convert_units(
       {
-        std::bind(&convert_unit_typographic, layer_get_dpi(ctx), layer_get_font_size(ctx), _1),
         std::bind(&convert_unit_user, scale_translate_fn(config.scale_y), _1),
         std::bind(&convert_unit_relative, clip.h, _1)
       },
@@ -106,14 +102,12 @@ ReturnCode bars_draw_horizontal(
 
   convert_units(
       {
-        std::bind(&convert_unit_typographic, layer_get_dpi(ctx), layer_get_font_size(ctx), _1)
       },
       &*config.sizes.begin(),
       &*config.sizes.end());
 
   convert_units(
       {
-        std::bind(&convert_unit_typographic, layer_get_dpi(ctx), layer_get_font_size(ctx), _1)
       },
       &*config.offsets.begin(),
       &*config.offsets.end());
@@ -153,7 +147,7 @@ ReturnCode bars_draw_horizontal(
 
     auto padding = measure_or(
         config.label_padding,
-        from_em(kDefaultLabelPaddingHorizEM, config.label_font_size));
+        from_em(kDefaultLabelPaddingHorizEM, config.label_font_size.value));
 
     Point p(
         clip.x + config.x[i] + padding,
@@ -183,7 +177,6 @@ ReturnCode bars_draw_vertical(
   /* convert units */
   convert_units(
       {
-        std::bind(&convert_unit_typographic, layer_get_dpi(ctx), layer_get_font_size(ctx), _1),
         std::bind(&convert_unit_user, scale_translate_fn(config.scale_x), _1),
         std::bind(&convert_unit_relative, clip.w, _1)
       },
@@ -192,7 +185,6 @@ ReturnCode bars_draw_vertical(
 
   convert_units(
       {
-        std::bind(&convert_unit_typographic, layer_get_dpi(ctx), layer_get_font_size(ctx), _1),
         std::bind(&convert_unit_user, scale_translate_fn(config.scale_x), _1),
         std::bind(&convert_unit_relative, clip.w, _1)
       },
@@ -201,7 +193,6 @@ ReturnCode bars_draw_vertical(
 
   convert_units(
       {
-        std::bind(&convert_unit_typographic, layer_get_dpi(ctx), layer_get_font_size(ctx), _1),
         std::bind(&convert_unit_user, scale_translate_fn(config.scale_y), _1),
         std::bind(&convert_unit_relative, clip.h, _1)
       },
@@ -210,7 +201,6 @@ ReturnCode bars_draw_vertical(
 
   convert_units(
       {
-        std::bind(&convert_unit_typographic, layer_get_dpi(ctx), layer_get_font_size(ctx), _1),
         std::bind(&convert_unit_user, scale_translate_fn(config.scale_y), _1),
         std::bind(&convert_unit_relative, clip.h, _1)
       },
@@ -219,19 +209,15 @@ ReturnCode bars_draw_vertical(
 
   convert_units(
       {
-        std::bind(&convert_unit_typographic, layer_get_dpi(ctx), layer_get_font_size(ctx), _1)
       },
       &*config.sizes.begin(),
       &*config.sizes.end());
 
   convert_units(
       {
-        std::bind(&convert_unit_typographic, layer_get_dpi(ctx), layer_get_font_size(ctx), _1)
       },
       &*config.offsets.begin(),
       &*config.offsets.end());
-
-  convert_unit_typographic(layer_get_dpi(ctx), layer_get_rem(ctx), &config.stroke_style.line_width);
 
   /* draw bars */
   auto y0 = clip.h * std::clamp(scale_translate(config.scale_y, 0), 0.0, 1.0);
@@ -268,7 +254,7 @@ ReturnCode bars_draw_vertical(
 
     auto padding = measure_or(
         config.label_padding,
-        from_em(kDefaultLabelPaddingVertEM, config.label_font_size));
+        from_em(kDefaultLabelPaddingVertEM, config.label_font_size.value));
 
     Point p(
         clip.x + offset + config.x[i],
@@ -294,6 +280,8 @@ ReturnCode bars_configure(
     PlotConfig* plot,
     PlotBarsConfig* c,
     const Expr* expr) {
+  const auto& layer = *layer_get(ctx);
+
   /* set defaults from environment */
   c->scale_x = plot->scale_x;
   c->scale_y = plot->scale_y;
@@ -349,7 +337,7 @@ ReturnCode bars_configure(
       })
     },
     {"labels", std::bind(&data_load_strings, _1, &c->labels)},
-    {"label-font-size", std::bind(&measure_read, _1, &c->label_font_size)},
+    {"label-font-size", std::bind(&expr_to_font_size, _1, layer, &c->label_font_size)},
     {"label-color", std::bind(&color_read, ctx, _1, &c->label_color)},
     {"label-padding", std::bind(&measure_read, _1, &c->label_padding)},
   });

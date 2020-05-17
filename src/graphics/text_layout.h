@@ -40,7 +40,7 @@ struct TextSpan {
   std::string language;
   std::string script;
   FontInfo font;
-  double font_size;
+  Number font_size;
   uint32_t span_id;
 };
 

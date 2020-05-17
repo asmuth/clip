@@ -23,12 +23,12 @@ struct LegendItem {
   Measure label_margin;
   Color label_color;
   FontInfo label_font;
-  Measure label_font_size;
+  Number label_font_size;
   Marker marker;
   HAlign marker_align;
   Measure marker_margin;
   Color marker_color;
-  Measure marker_size;
+  Number marker_size;
 };
 
 ReturnCode legend_item_configure(

@@ -66,15 +66,14 @@ struct GlyphContour {
 
 ReturnCode font_get_glyph_path(
     FontRef font,
-    double font_size,
+    NumberPT font_size,
     double dpi,
     uint32_t codepoint,
     Path* path) {
   *path = Path{};
 
   // load the glyph using freetype
-  auto font_size_ft = font_size * (72.0 / dpi) * 64;
-  if (FT_Set_Char_Size(font->ft_font, 0, font_size_ft, dpi, dpi)) {
+  if (FT_Set_Char_Size(font->ft_font, 0, font_size.value * 64, dpi, dpi)) {
     return ERROR;
   }
 

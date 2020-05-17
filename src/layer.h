@@ -71,18 +71,17 @@ ReturnCode layer_set_dpi(Context* ctx, const Expr* expr);
 
 UnitConvMap layer_get_uconv_width(const Layer& layer);
 UnitConvMap layer_get_uconv_height(const Layer& layer);
-
-Measure layer_get_rem(const Layer* layer);
-Measure layer_get_rem(const Context* ctx);
+UnitConvMap layer_get_uconv_font_size(const Layer& layer);
 
 const FontInfo& layer_get_font(const Layer* layer);
 const FontInfo& layer_get_font(const Context* ctx);
 FontInfo layer_set_font(const Layer* layer, FontInfo font);
 ReturnCode layer_set_font(Context* ctx, const Expr* expr);
 
-Measure layer_get_font_size(const Layer* layer);
-Measure layer_get_font_size(const Context* ctx);
-Measure layer_set_font_size(const Layer* layer, Measure font_size);
+Number layer_get_font_size(const Layer& layer);
+Number layer_get_font_size(const Layer* layer);
+Number layer_get_font_size(const Context* ctx);
+void layer_set_font_size(const Layer* layer, Measure font_size);
 ReturnCode layer_set_font_size(Context* ctx, const Expr* expr);
 
 

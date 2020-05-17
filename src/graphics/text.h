@@ -31,7 +31,7 @@ struct TextStyle {
   TextStyle();
   TextDirection direction;
   FontInfo font;
-  Measure font_size;
+  Number font_size;
   Color color;
   std::string default_script;
   std::string default_language;
@@ -45,6 +45,14 @@ Status text_measure_label(
     TextDirection text_direction_base,
     const FontInfo& font,
     double font_size,
+    double dpi,
+    Rectangle* bbox);
+
+Status text_measure_label(
+    const std::string& text,
+    TextDirection text_direction_base,
+    const FontInfo& font,
+    Number font_size,
     double dpi,
     Rectangle* bbox);
 

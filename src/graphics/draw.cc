@@ -21,11 +21,6 @@ void draw_polygon(
     const Poly2& poly,
     StrokeStyle stroke_style,
     FillStyle fill_style) {
-  convert_unit_typographic(
-      layer_get_dpi(ctx),
-      layer_get_font_size(ctx),
-      &stroke_style.line_width);
-
   DrawCommand elem;
   elem.path = path_from_poly2(poly);
   elem.stroke_style = stroke_style;

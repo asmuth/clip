@@ -51,7 +51,7 @@ struct PlotLinesConfig {
   FontInfo label_font;
   Color label_color;
   Measure label_padding;
-  Measure label_font_size;
+  Number label_font_size;
 };
 
 ReturnCode lines_draw(
@@ -62,7 +62,6 @@ ReturnCode lines_draw(
   /* convert units */
   convert_units(
       {
-        std::bind(&convert_unit_typographic, layer_get_dpi(ctx), layer_get_font_size(ctx), _1),
         std::bind(&convert_unit_user, scale_translate_fn(config->scale_x), _1),
         std::bind(&convert_unit_relative, clip.w, _1)
       },
@@ -71,22 +70,11 @@ ReturnCode lines_draw(
 
   convert_units(
       {
-        std::bind(&convert_unit_typographic, layer_get_dpi(ctx), layer_get_font_size(ctx), _1),
         std::bind(&convert_unit_user, scale_translate_fn(config->scale_y), _1),
         std::bind(&convert_unit_relative, clip.h, _1)
       },
       &*config->y.begin(),
       &*config->y.end());
-
-  MeasureConv conv;
-  conv.dpi = layer_get_dpi(ctx);
-  conv.font_size = layer_get_font_size(ctx);
-  conv.parent_size = layer_get_font_size(ctx);
-
-  measure_normalize(conv, &config->stroke_style.line_width);
-  measure_normalize(conv, &config->label_padding);
-  measure_normalize(conv, &config->label_font_size);
-  measure_normalize(conv, &config->marker_size);
 
   /* draw lines */
   for (const auto& group : config->groups) {
@@ -122,7 +110,7 @@ ReturnCode lines_draw(
       const auto& color = config->marker_color;
       auto size = config->marker_size;
 
-      if (auto rc = shape(ctx, Point(sx, sy), size, color); !rc) {
+      if (auto rc = shape(ctx, Point(sx, sy), Number(size), color); !rc) {
         return rc;
       }
     }
@@ -135,7 +123,7 @@ ReturnCode lines_draw(
     auto label_offset  = config->marker_size;
     auto label_padding = label_offset + measure_or(
         config->label_padding,
-        from_em(kDefaultLabelPaddingEM, config->label_font_size));
+        from_em(kDefaultLabelPaddingEM, config->label_font_size.value));
 
     Point p(
         clip.x + config->x[i],
@@ -161,6 +149,8 @@ ReturnCode lines_configure(
     PlotConfig* plot,
     PlotLinesConfig* c,
     const Expr* expr) {
+  const auto& layer = *layer_get(ctx);
+
   /* set defaults from environment */
   c->scale_x = plot->scale_x;
   c->scale_y = plot->scale_y;
@@ -202,7 +192,7 @@ ReturnCode lines_configure(
     {"marker-shape", std::bind(&marker_configure, _1, &c->marker_shape)},
     {"marker-color", std::bind(&color_read, ctx, _1, &c->marker_color)},
     {"labels", std::bind(&data_load_strings, _1, &c->labels)},
-    {"label-font-size", std::bind(&measure_read, _1, &c->label_font_size)},
+    {"label-font-size", std::bind(&expr_to_font_size, _1, layer, &c->label_font_size)},
     {"label-color", std::bind(&color_read, ctx, _1, &c->label_color)},
     {"label-padding", std::bind(&measure_read, _1, &c->label_padding)},
   });

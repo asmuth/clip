@@ -34,7 +34,7 @@ Status text_layout_span(
       span.language,
       span.script,
       span.font,
-      span.font_size,
+      unit_to_pt(span.font_size, dpi),
       dpi,
       &glyph_list);
 

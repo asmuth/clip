@@ -144,7 +144,7 @@ Number layer_get_width(const Layer& layer) {
     case Unit::PX:
       return unit_from_px(layer.width.value);
     default:
-      return 0;
+      return {};
   }
 }
 
@@ -157,7 +157,7 @@ Number layer_get_height(const Layer& layer) {
     case Unit::PX:
       return unit_from_px(layer.height.value);
     default:
-      return 0;
+      return {};
   }
 }
 
@@ -214,15 +214,28 @@ UnitConvMap layer_get_uconv_height(const Layer& layer) {
   return conv;
 }
 
-Measure layer_get_rem(const Layer* ctx) {
-  auto rem_default = from_px(16);
-  auto rem = ctx->font_size;
-  convert_unit_typographic(ctx->dpi, rem_default, &rem);
-  return rem;
+UnitConvMap layer_get_uconv_font_size(const Layer& layer) {
+  auto height = layer_get_height(layer).value;
+
+  UnitConvMap conv;
+  conv[Unit::MM] = std::bind(&unit_from_mm, _1, layer.dpi);
+  conv[Unit::PT] = std::bind(&unit_from_pt, _1, layer.dpi);
+  conv[Unit::PX] = std::bind(&unit_from_px, _1);
+  conv[Unit::EM] = std::bind(&unit_from_em, _1, layer_get_font_size(layer));
+  conv[Unit::REM] = std::bind(&unit_from_em, _1, layer_get_font_size(layer));
+  return conv;
 }
 
-Measure layer_get_rem(const Context* ctx) {
-  return layer_get_rem(layer_get(ctx));
+UnitConvMap layer_get_uconv_size(const Layer& layer) {
+  auto height = layer_get_height(layer).value;
+
+  UnitConvMap conv;
+  conv[Unit::MM] = std::bind(&unit_from_mm, _1, layer.dpi);
+  conv[Unit::PT] = std::bind(&unit_from_pt, _1, layer.dpi);
+  conv[Unit::PX] = std::bind(&unit_from_px, _1);
+  conv[Unit::EM] = std::bind(&unit_from_em, _1, layer_get_font_size(layer));
+  conv[Unit::REM] = std::bind(&unit_from_em, _1, layer_get_font_size(layer));
+  return conv;
 }
 
 const FontInfo& layer_get_font(const Layer* layer) {
@@ -257,17 +270,31 @@ ReturnCode layer_set_font(
   return OK;
 }
 
-Measure layer_get_font_size(const Layer* layer) {
-  return layer->font_size;
+Number layer_get_font_size(const Layer& layer) {
+  switch (layer.font_size.unit) {
+    case Unit::MM:
+      return unit_from_mm(layer.font_size.value, layer.dpi);
+    case Unit::PT:
+      return unit_from_pt(layer.font_size.value, layer.dpi);
+    case Unit::PX:
+      return unit_from_px(layer.font_size.value);
+    default:
+      return {};
+  }
 }
 
-Measure layer_get_font_size(const Context* ctx) {
+Number layer_get_font_size(const Layer* layer) {
+  return layer_get_font_size(*layer);
+}
+
+Number layer_get_font_size(const Context* ctx) {
   return layer_get_font_size(layer_get(ctx));
 }
 
 void layer_set_font_size(
     Layer* layer,
     Measure font_size) {
+  // FIXME: check if unit is valid
   layer->font_size = font_size;
 }
 

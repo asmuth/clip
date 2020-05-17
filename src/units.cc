@@ -17,7 +17,7 @@
 namespace clip {
 
 Number Number::operator*(double v) const {
-  return value * v;
+  return Number(value * v);
 }
 
 bool unit_parse(const std::string& s, Unit* u) {
@@ -40,19 +40,27 @@ bool unit_parse(const std::string& s, Unit* u) {
 }
 
 Number unit_from_mm(double v, double dpi) {
-  return (v / 25.4) * dpi;
+  return Number((v / 25.4) * dpi);
 }
 
 Number unit_from_pt(double v, double dpi) {
-  return (v / 72.0) * dpi;
+  return Number((v / 72.0) * dpi);
 }
 
 Number unit_from_px(double v) {
-  return v;
+  return Number(v);
 }
 
 Number unit_from_percent(double v, double base) {
-  return (v / 100.0) * base;
+  return Number((v / 100.0) * base);
+}
+
+NumberPT unit_to_pt(Number v, double dpi) {
+  return NumberPT((v.value / dpi) * 72.0);
+}
+
+Number unit_from_em(double v, Number base) {
+  return base * v;
 }
 
 } // namespace clip

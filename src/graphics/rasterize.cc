@@ -148,9 +148,9 @@ Status Rasterizer::drawText(
   }
 
   for (const auto& gg : glyphs) {
-
     auto ft_font = static_cast<FT_Face>(font_get_freetype(gg.font));
-    auto font_size_ft = style.font_size * (72.0 / dpi) * 64;
+    auto font_size_pt = unit_to_pt(style.font_size, dpi);
+    auto font_size_ft = font_size_pt.value * (72.0 / dpi) * 64;
     if (FT_Set_Char_Size(ft_font, 0, font_size_ft, dpi, dpi)) {
       FT_Done_Face(ft_font);
       return ERROR;
@@ -165,7 +165,7 @@ Status Rasterizer::drawText(
 
     auto cairo_face = cairo_ft_font_face_create_for_ft_face(ft_font, 0);
     cairo_set_font_face(cr_ctx, cairo_face);
-    cairo_set_font_size(cr_ctx, style.font_size);
+    cairo_set_font_size(cr_ctx, font_size_pt.value);
 
     auto glyph_count = gg.glyphs.size();
     auto cairo_glyphs = cairo_glyph_allocate(glyph_count);

@@ -81,8 +81,8 @@ Marker marker_create_circle(double border_width) {
       const auto& color) {
     DrawCommand shape;
     shape.stroke_style.color = color;
-    shape.stroke_style.line_width = from_unit(double(size) * border_width * 0.5);
-    path_add_circle(&shape.path, pos, size * 0.5);
+    shape.stroke_style.line_width = from_unit((size * border_width * 0.5).value);
+    path_add_circle(&shape.path, pos, (size * 0.5).value);
     draw_shape(ctx, shape);
     return OK;
   };
@@ -95,7 +95,7 @@ Marker marker_create_disk() {
       const auto& size,
       const auto& color) {
     DrawCommand shape;
-    path_add_circle(&shape.path, pos, size * 0.5);
+    path_add_circle(&shape.path, pos, (size * 0.5).value);
     shape.fill_style.color = color;
     draw_shape(ctx, shape);
     return OK;
@@ -111,7 +111,7 @@ Marker marker_create_unicode(const std::string& u) {
     TextStyle style;
     style.font = layer_get_font(ctx);
     style.color = color;
-    style.font_size = from_unit(double(size) * 1.2);
+    style.font_size = size * 1.2;
 
     auto ax = HAlign::CENTER;
     auto ay = VAlign::CENTER;

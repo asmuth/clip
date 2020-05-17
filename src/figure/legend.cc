@@ -54,16 +54,16 @@ LegendConfig::LegendConfig() :
 void legend_normalize(
     Context* ctx,
     LegendConfig* config) {
-  for (auto& m : config->margins) {
-    convert_unit_typographic(layer_get_dpi(ctx), layer_get_rem(ctx), &m);
-  }
+  //for (auto& m : config->margins) {
+  //  convert_unit_typographic(layer_get_dpi(ctx), layer_get_rem(ctx), &m);
+  //}
 
-  for (auto& m : config->padding) {
-    convert_unit_typographic(layer_get_dpi(ctx), layer_get_rem(ctx), &m);
-  }
+  //for (auto& m : config->padding) {
+  //  convert_unit_typographic(layer_get_dpi(ctx), layer_get_rem(ctx), &m);
+  //}
 
-  convert_unit_typographic(layer_get_dpi(ctx), layer_get_rem(ctx), &config->item_row_padding);
-  convert_unit_typographic(layer_get_dpi(ctx), layer_get_rem(ctx), &config->item_column_padding);
+  //convert_unit_typographic(layer_get_dpi(ctx), layer_get_rem(ctx), &config->item_row_padding);
+  //convert_unit_typographic(layer_get_dpi(ctx), layer_get_rem(ctx), &config->item_column_padding);
 }
 
 ReturnCode legend_layout_item_rows(

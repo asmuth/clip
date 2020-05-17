@@ -89,7 +89,6 @@ ReturnCode errorbars_draw(
   /* convert units */
   convert_units(
       {
-        std::bind(&convert_unit_typographic, layer_get_dpi(ctx), layer_get_font_size(ctx), _1),
         std::bind(&convert_unit_user, scale_translate_fn(config->scale_x), _1),
         std::bind(&convert_unit_relative, clip.w, _1)
       },
@@ -98,7 +97,6 @@ ReturnCode errorbars_draw(
 
   convert_units(
       {
-        std::bind(&convert_unit_typographic, layer_get_dpi(ctx), layer_get_font_size(ctx), _1),
         std::bind(&convert_unit_user, scale_translate_fn(config->scale_x), _1),
         std::bind(&convert_unit_relative, clip.w, _1)
       },
@@ -107,7 +105,6 @@ ReturnCode errorbars_draw(
 
   convert_units(
       {
-        std::bind(&convert_unit_typographic, layer_get_dpi(ctx), layer_get_font_size(ctx), _1),
         std::bind(&convert_unit_user, scale_translate_fn(config->scale_x), _1),
         std::bind(&convert_unit_relative, clip.w, _1)
       },
@@ -116,7 +113,6 @@ ReturnCode errorbars_draw(
 
   convert_units(
       {
-        std::bind(&convert_unit_typographic, layer_get_dpi(ctx), layer_get_font_size(ctx), _1),
         std::bind(&convert_unit_user, scale_translate_fn(config->scale_y), _1),
         std::bind(&convert_unit_relative, clip.h, _1)
       },
@@ -125,7 +121,6 @@ ReturnCode errorbars_draw(
 
   convert_units(
       {
-        std::bind(&convert_unit_typographic, layer_get_dpi(ctx), layer_get_font_size(ctx), _1),
         std::bind(&convert_unit_user, scale_translate_fn(config->scale_y), _1),
         std::bind(&convert_unit_relative, clip.h, _1)
       },
@@ -134,22 +129,11 @@ ReturnCode errorbars_draw(
 
   convert_units(
       {
-        std::bind(&convert_unit_typographic, layer_get_dpi(ctx), layer_get_font_size(ctx), _1),
         std::bind(&convert_unit_user, scale_translate_fn(config->scale_y), _1),
         std::bind(&convert_unit_relative, clip.h, _1)
       },
       &*config->y_high.begin(),
       &*config->y_high.end());
-
-  convert_unit_typographic(
-      layer_get_dpi(ctx),
-      layer_get_font_size(ctx),
-      &config->stroke_width);
-
-  convert_unit_typographic(
-      layer_get_dpi(ctx),
-      layer_get_font_size(ctx),
-      &config->bar_width);
 
   auto x_len = std::min({
     config->x.size(),

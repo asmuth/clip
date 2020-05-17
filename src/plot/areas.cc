@@ -60,7 +60,6 @@ ReturnCode areas_draw_horizontal(
   /* convert units */
   convert_units(
       {
-        std::bind(&convert_unit_typographic, layer_get_dpi(ctx), layer_get_font_size(ctx), _1),
         std::bind(&convert_unit_user, scale_translate_fn(config.scale_x), _1),
         std::bind(&convert_unit_relative, clip.w, _1)
       },
@@ -69,7 +68,6 @@ ReturnCode areas_draw_horizontal(
 
   convert_units(
       {
-        std::bind(&convert_unit_typographic, layer_get_dpi(ctx), layer_get_font_size(ctx), _1),
         std::bind(&convert_unit_user, scale_translate_fn(config.scale_x), _1),
         std::bind(&convert_unit_relative, clip.w, _1)
       },
@@ -78,7 +76,6 @@ ReturnCode areas_draw_horizontal(
 
   convert_units(
       {
-        std::bind(&convert_unit_typographic, layer_get_dpi(ctx), layer_get_font_size(ctx), _1),
         std::bind(&convert_unit_user, scale_translate_fn(config.scale_y), _1),
         std::bind(&convert_unit_relative, clip.h, _1)
       },
@@ -87,22 +84,11 @@ ReturnCode areas_draw_horizontal(
 
   convert_units(
       {
-        std::bind(&convert_unit_typographic, layer_get_dpi(ctx), layer_get_font_size(ctx), _1),
         std::bind(&convert_unit_user, scale_translate_fn(config.scale_y), _1),
         std::bind(&convert_unit_relative, clip.h, _1)
       },
       &*config.yoffset.begin(),
       &*config.yoffset.end());
-
-  convert_unit_typographic(
-      layer_get_dpi(ctx),
-      layer_get_font_size(ctx),
-      &config.stroke_high_style.line_width);
-
-  convert_unit_typographic(
-      layer_get_dpi(ctx),
-      layer_get_font_size(ctx),
-      &config.stroke_low_style.line_width);
 
   /* draw areas */
   DrawCommand shape;
@@ -158,7 +144,6 @@ ReturnCode areas_draw_vertical(
   /* convert units */
   convert_units(
       {
-        std::bind(&convert_unit_typographic, layer_get_dpi(ctx), layer_get_font_size(ctx), _1),
         std::bind(&convert_unit_user, scale_translate_fn(config.scale_x), _1),
         std::bind(&convert_unit_relative, clip.w, _1)
       },
@@ -167,7 +152,6 @@ ReturnCode areas_draw_vertical(
 
   convert_units(
       {
-        std::bind(&convert_unit_typographic, layer_get_dpi(ctx), layer_get_font_size(ctx), _1),
         std::bind(&convert_unit_user, scale_translate_fn(config.scale_x), _1),
         std::bind(&convert_unit_relative, clip.w, _1)
       },
@@ -176,7 +160,6 @@ ReturnCode areas_draw_vertical(
 
   convert_units(
       {
-        std::bind(&convert_unit_typographic, layer_get_dpi(ctx), layer_get_font_size(ctx), _1),
         std::bind(&convert_unit_user, scale_translate_fn(config.scale_y), _1),
         std::bind(&convert_unit_relative, clip.h, _1)
       },
@@ -185,22 +168,21 @@ ReturnCode areas_draw_vertical(
 
   convert_units(
       {
-        std::bind(&convert_unit_typographic, layer_get_dpi(ctx), layer_get_font_size(ctx), _1),
         std::bind(&convert_unit_user, scale_translate_fn(config.scale_y), _1),
         std::bind(&convert_unit_relative, clip.h, _1)
       },
       &*config.yoffset.begin(),
       &*config.yoffset.end());
 
-  convert_unit_typographic(
-      layer_get_dpi(ctx),
-      layer_get_font_size(ctx),
-      &config.stroke_high_style.line_width);
+  //convert_unit_typographic(
+  //    layer_get_dpi(ctx),
+  //    layer_get_font_size(ctx),
+  //    &config.stroke_high_style.line_width);
 
-  convert_unit_typographic(
-      layer_get_dpi(ctx),
-      layer_get_font_size(ctx),
-      &config.stroke_low_style.line_width);
+  //convert_unit_typographic(
+  //    layer_get_dpi(ctx),
+  //    layer_get_font_size(ctx),
+  //    &config.stroke_low_style.line_width);
 
   /* draw areas */
   DrawCommand shape;
