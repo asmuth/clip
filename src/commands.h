@@ -15,6 +15,7 @@
 #include "command.h"
 #include "plot/plotgen.h"
 #include "draw/rectangle.h"
+#include "draw/text.h"
 #include "figure/legend.h"
 
 namespace clip {
@@ -24,6 +25,8 @@ const CommandMap COMMANDS = {
   {"layer/set-dpi", bind_cmd(&layer_set_dpi)},
   {"layer/set-font", bind_cmd(&layer_set_font)},
   {"layer/set-font-size", bind_cmd(&layer_set_font_size)},
+  {"draw/text", bind_cmd(&draw::text_draw)},
+  {"draw/rectangle", bind_cmd(&draw::rectangle)},
   {"figure/plot", bind_cmd(&plot_eval)},
 };
 

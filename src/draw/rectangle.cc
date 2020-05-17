@@ -39,7 +39,12 @@ namespace clip::draw {
 ReturnCode rectangle(
     Context* ctx,
     const Expr* expr) {
+  const auto layer = layer_get(ctx);
+
   Rectangle rect;
+  rect.w = layer_get_width(*layer).value;
+  rect.h = layer_get_height(*layer).value;
+
   FillStyle fill_style;
   StrokeStyle stroke_style;
   stroke_style.line_width = from_pt(1);
