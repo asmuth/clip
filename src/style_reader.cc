@@ -136,13 +136,13 @@ ReturnCode fill_style_read(
     return fill_style_read_hatch(ctx, expr_get_list_tail(expr), style);
   }
 
-  if (expr_is_value(expr)) {
+  if (expr_is_value(expr) || expr_is_list(expr)) {
     return fill_style_read_solid(ctx, expr, style);
   }
 
   return errorf(
       ERROR,
-      "invalid <fill-style>; expected a color or one of (none), "
+      "invalid <fill-style>; expected a color, 'hatch' or 'none', "
       "but got: '{}'",
       expr_inspect(expr));
 }
