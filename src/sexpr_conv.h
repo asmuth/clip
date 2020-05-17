@@ -65,6 +65,17 @@ ReturnCode expr_to_stroke_style(
     const Expr* expr,
     StrokeStyle* style);
 
+ReturnCode expr_to_number(
+    const Expr* expr,
+    const UnitConvMap& conv,
+    Number* v);
+
+ReturnCode expr_to_vec2(
+    const Expr* expr,
+    const UnitConvMap& conv1,
+    const UnitConvMap& conv2,
+    Vector2* v);
+
 ReturnCode expr_to_copy(
     const Expr* expr,
     ExprStorage* copy);

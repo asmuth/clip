@@ -135,6 +135,32 @@ const Layer* layer_get(const Context* ctx) {
   return ctx->layer.get();
 }
 
+Number layer_get_width(const Layer& layer) {
+  switch (layer.width.unit) {
+    case Unit::MM:
+      return unit_from_mm(layer.width.value, layer.dpi);
+    case Unit::PT:
+      return unit_from_pt(layer.width.value, layer.dpi);
+    case Unit::PX:
+      return unit_from_px(layer.width.value);
+    default:
+      return 0;
+  }
+}
+
+Number layer_get_height(const Layer& layer) {
+  switch (layer.height.unit) {
+    case Unit::MM:
+      return unit_from_mm(layer.height.value, layer.dpi);
+    case Unit::PT:
+      return unit_from_pt(layer.height.value, layer.dpi);
+    case Unit::PX:
+      return unit_from_px(layer.height.value);
+    default:
+      return 0;
+  }
+}
+
 double layer_get_dpi(const Layer* layer) {
   return layer->dpi;
 }
@@ -166,6 +192,28 @@ ReturnCode layer_set_dpi(
   return OK;
 }
 
+UnitConvMap layer_get_uconv_width(const Layer& layer) {
+  auto width = layer_get_width(layer).value;
+
+  UnitConvMap conv;
+  conv[Unit::MM] = std::bind(&unit_from_mm, _1, layer.dpi);
+  conv[Unit::PT] = std::bind(&unit_from_pt, _1, layer.dpi);
+  conv[Unit::PX] = std::bind(&unit_from_px, _1);
+  conv[Unit::PERCENT] = std::bind(&unit_from_percent, _1, width);
+  return conv;
+}
+
+UnitConvMap layer_get_uconv_height(const Layer& layer) {
+  auto height = layer_get_height(layer).value;
+
+  UnitConvMap conv;
+  conv[Unit::MM] = std::bind(&unit_from_mm, _1, layer.dpi);
+  conv[Unit::PT] = std::bind(&unit_from_pt, _1, layer.dpi);
+  conv[Unit::PX] = std::bind(&unit_from_px, _1);
+  conv[Unit::PERCENT] = std::bind(&unit_from_percent, _1, height);
+  return conv;
+}
+
 Measure layer_get_rem(const Layer* ctx) {
   auto rem_default = from_px(16);
   auto rem = ctx->font_size;
@@ -176,7 +224,6 @@ Measure layer_get_rem(const Layer* ctx) {
 Measure layer_get_rem(const Context* ctx) {
   return layer_get_rem(layer_get(ctx));
 }
-
 
 const FontInfo& layer_get_font(const Layer* layer) {
   return layer->font;

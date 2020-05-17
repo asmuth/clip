@@ -16,20 +16,12 @@
 #include <vector>
 #include <string>
 #include <return_code.h>
+#include "utils/option.h"
+#include "units.h"
 
 namespace clip {
 struct Layer;
 struct Rectangle;
-
-enum class Unit {
-  UNIT,  // Screen units
-  MM,    // Millimeters
-  PX,    // Pixels
-  PT,    // Typographic Points
-  REM,   // Typographic "em" size
-  REL,   // Relative to the enclosing element (0..1),
-  USER,  // User units on arbitrary scale
-};
 
 struct Measure {
   Measure();
