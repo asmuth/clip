@@ -31,6 +31,26 @@ struct DataGroup {
   std::vector<size_t> index;
 };
 
+struct DataBuffer {
+  enum class Type { Number, Text };
+  std::vector<std::tuple<Type, size_t>> index;
+  std::vector<double> numeric;
+  std::vector<std::string> text;
+};
+
+size_t databuf_len(const DataBuffer& buf);
+
+void databuf_add(DataBuffer* buf, double v);
+void databuf_add(DataBuffer* buf, const std::string& v);
+
+void databuf_to_text(
+    const DataBuffer& buf,
+    std::vector<std::string>* values);
+
+void databuf_to_numbers(
+    const DataBuffer& buf,
+    std::vector<double>* values);
+
 std::vector<DataGroup> series_group(const Series& data);
 
 size_t series_len(const Series& s);
@@ -52,9 +72,15 @@ ReturnCode data_load_strings(
     const Expr* expr,
     std::vector<std::string>* values);
 
+ReturnCode data_load_simple(
+    const Expr* expr,
+    DataBuffer* values);
+
 ReturnCode data_load_polylines2(
     const Expr* expr,
-    std::vector<PolyLine2>* data);
+    DataBuffer* data_x,
+    DataBuffer* data_y,
+    std::vector<size_t>* index);
 
 ReturnCode data_load_polys2(
     const Expr* expr,
@@ -62,7 +88,8 @@ ReturnCode data_load_polys2(
 
 ReturnCode data_load_points2(
     const Expr* expr,
-    std::vector<vec2>* data);
+    DataBuffer* data_x,
+    DataBuffer* data_y);
 
 ReturnCode data_load(
     const Expr* expr,
@@ -78,6 +105,11 @@ ReturnCode data_to_measures(
     std::vector<std::string>& src,
     const ScaleConfig& scale,
     std::vector<Measure>* dst);
+
+ReturnCode data_parse(
+    std::vector<std::string>& src,
+    const ScaleConfig& scale,
+    std::vector<double>* dst);
 
 } // namespace clip
 

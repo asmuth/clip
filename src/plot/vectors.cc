@@ -38,10 +38,10 @@ namespace clip::plotgen {
 static const double kDefaultArrowSizePT = 1;
 
 struct PlotVectorsConfig {
-  std::vector<Measure> x;
-  std::vector<Measure> y;
-  std::vector<Measure> dx;
-  std::vector<Measure> dy;
+  DataBuffer x;
+  DataBuffer y;
+  DataBuffer dx;
+  DataBuffer dy;
   ScaleConfig scale_x;
   ScaleConfig scale_y;
   Color color;
@@ -58,51 +58,33 @@ ReturnCode vectors_draw(
     PlotVectorsConfig* config) {
   const auto& clip = plot_get_clip(plot, layer_get(ctx));
 
-  /* convert units */
-  convert_units(
-      {
-        std::bind(&convert_unit_user, scale_translate_fn(config->scale_x), _1),
-        std::bind(&convert_unit_relative, clip.w, _1)
-      },
-      &*config->x.begin(),
-      &*config->x.end());
+  /* transform data */
+  std::vector<double> x;
+  if (auto rc = scale_translatev(config->scale_x, config->x, &x); !rc) {
+    return rc;
+  }
 
-  convert_units(
-      {
-        std::bind(&convert_unit_user, scale_translate_fn(config->scale_y), _1),
-        std::bind(&convert_unit_relative, clip.h, _1)
-      },
-      &*config->y.begin(),
-      &*config->y.end());
+  std::vector<double> y;
+  if (auto rc = scale_translatev(config->scale_y, config->y, &y); !rc) {
+    return rc;
+  }
 
-  convert_units(
-      {
-        std::bind(&convert_unit_user, scale_translate_magnitude_fn(config->scale_x), _1),
-        std::bind(&convert_unit_relative, clip.w, _1)
-      },
-      &*config->dx.begin(),
-      &*config->dx.end());
+  std::vector<double> dx;
+  if (auto rc = scale_translate_magnitudev(config->scale_x, config->dx, &dx); !rc) {
+    return rc;
+  }
 
-  convert_units(
-      {
-        std::bind(&convert_unit_user, scale_translate_magnitude_fn(config->scale_y), _1),
-        std::bind(&convert_unit_relative, clip.h, _1)
-      },
-      &*config->dy.begin(),
-      &*config->dy.end());
-
-  convert_units(
-      {
-      },
-      &*config->sizes.begin(),
-      &*config->sizes.end());
+  std::vector<double> dy;
+  if (auto rc = scale_translate_magnitudev(config->scale_y, config->dy, &dy); !rc) {
+    return rc;
+  }
 
   /* draw vectors */
-  for (size_t i = 0; i < config->x.size(); ++i) {
-    auto sx = clip.x + config->x[i];
-    auto sy = clip.y + config->y[i];
-    auto dx = config->dx[i];
-    auto dy = config->dy[i];
+  for (size_t i = 0; i < x.size(); ++i) {
+    auto sx = clip.x + clip.w * x[i];
+    auto sy = clip.y + clip.h * y[i];
+    auto sdx = dx[i] * clip.w;
+    auto sdy = dy[i] * clip.h;
 
     const auto& color = config->colors.empty()
         ? config->color
@@ -116,7 +98,7 @@ ReturnCode vectors_draw(
         ? config->shape
         : config->shapes[i % config->shapes.size()];
 
-    if (auto rc = shape(ctx, {sx, sy}, {sx + dx, sy + dy}, size, color); !rc) {
+    if (auto rc = shape(ctx, {sx, sy}, {sx + sdx, sy + sdy}, size, color); !rc) {
       return rc;
     }
   }
@@ -139,20 +121,17 @@ ReturnCode vectors_configure(
   c->shape = arrow_create_default();
 
   /* parse properties */
-  std::vector<std::string> data_x;
-  std::vector<std::string> data_y;
-  std::vector<std::string> data_dx;
-  std::vector<std::string> data_dy;
   std::vector<std::string> data_colors;
   std::vector<std::string> data_sizes;
   ColorMap color_map;
   MeasureMap size_map;
 
   auto config_rc = expr_walk_map_wrapped(expr, {
-    {"data-x", std::bind(&data_load_strings, _1, &data_x)},
-    {"data-y", std::bind(&data_load_strings, _1, &data_y)},
-    {"data-dx", std::bind(&data_load_strings, _1, &data_dx)},
-    {"data-dy", std::bind(&data_load_strings, _1, &data_dy)},
+    {"data", std::bind(&data_load_points2, _1, &c->x, &c->y)},
+    {"data-x", std::bind(&data_load_simple, _1, &c->x)},
+    {"data-y", std::bind(&data_load_simple, _1, &c->y)},
+    {"data-dx", std::bind(&data_load_simple, _1, &c->dx)},
+    {"data-dy", std::bind(&data_load_simple, _1, &c->dy)},
     {"limit-x", std::bind(&expr_to_float64_opt_pair, _1, &c->scale_x.min, &c->scale_x.max)},
     {"limit-x-min", std::bind(&expr_to_float64_opt, _1, &c->scale_x.min)},
     {"limit-x-max", std::bind(&expr_to_float64_opt, _1, &c->scale_x.max)},
@@ -175,42 +154,9 @@ ReturnCode vectors_configure(
     return config_rc;
   }
 
-  /* scale configuration */
-  if (auto rc = data_to_measures(data_x, c->scale_x, &c->x); !rc){
-    return rc;
-  }
-
-  if (auto rc = data_to_measures(data_y, c->scale_y, &c->y); !rc){
-    return rc;
-  }
-
-  if (auto rc = data_to_measures(data_dx, c->scale_x, &c->dx); !rc){
-    return rc;
-  }
-
-  if (auto rc = data_to_measures(data_dy, c->scale_y, &c->dy); !rc){
-    return rc;
-  }
-
-  for (const auto& v : c->x) {
-    if (v.unit == Unit::USER) {
-      scale_fit(v.value, &c->scale_x);
-    }
-  }
-
-  for (const auto& v : c->y) {
-    if (v.unit == Unit::USER) {
-      scale_fit(v.value, &c->scale_y);
-    }
-  }
-
   /* check configuration */
-  if (c->x.size() != c->y.size() ||
-      c->x.size() != c->dx.size() ||
-      c->x.size() != c->dy.size()) {
-    return error(
-        ERROR,
-        "the length of the 'data-x' and 'data-y' properties must be equal");
+  if (databuf_len(c->x) != databuf_len(c->y)) {
+    return error(ERROR, "The length of the 'data-x' and 'data-y' lists must be equal");
   }
 
   /* convert color data */
@@ -257,7 +203,6 @@ ReturnCode vectors_draw(
     PlotConfig* plot,
     const Expr* expr) {
   PlotVectorsConfig conf;
-
   if (auto rc = vectors_configure(ctx, plot, &conf, expr); !rc) {
     return rc;
   }
@@ -270,7 +215,19 @@ ReturnCode vectors_autorange(
     PlotConfig* plot,
     const Expr* expr) {
   PlotVectorsConfig conf;
-  return vectors_configure(ctx, plot, &conf, expr);
+  if (auto rc = vectors_configure(ctx, plot, &conf, expr); !rc) {
+    return rc;
+  }
+
+  if (auto rc = scale_fit(&plot->scale_x, conf.x); !rc) {
+    return rc;
+  }
+
+  if (auto rc = scale_fit(&plot->scale_y, conf.y); !rc) {
+    return rc;
+  }
+
+  return OK;
 }
 
 } // namespace clip::plotgen

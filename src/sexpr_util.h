@@ -21,6 +21,10 @@ namespace clip {
 
 using ExprVisitor = std::function<ReturnCode (const Expr*)>;
 
+void expr_each(
+    const Expr* expr,
+    std::function<void (const Expr* e)> fn);
+
 ReturnCode expr_walk_map(
     const Expr* expr,
     const std::unordered_map<std::string, ExprVisitor>& fns,

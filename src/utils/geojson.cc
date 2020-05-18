@@ -399,7 +399,7 @@ ReturnCode geojson_read_object_data(
   }
 
   if (type == "LineString") {
-    return geojson_read_multi_line_string(reader, coords);
+    return geojson_read_line_string(reader, coords);
   }
 
   if (type == "MultiLineString") {

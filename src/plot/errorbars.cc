@@ -36,12 +36,12 @@ static const double kDefaultStrokeWidthPT = 1;
 static const double kDefaultBarWidthPT = 6;
 
 struct ErrorbarsElement {
-  std::vector<Measure> x;
-  std::vector<Measure> x_low;
-  std::vector<Measure> x_high;
-  std::vector<Measure> y;
-  std::vector<Measure> y_low;
-  std::vector<Measure> y_high;
+  DataBuffer x;
+  DataBuffer x_low;
+  DataBuffer x_high;
+  DataBuffer y;
+  DataBuffer y_low;
+  DataBuffer y_high;
   ScaleConfig scale_x;
   ScaleConfig scale_y;
   Number bar_width;
@@ -83,102 +83,76 @@ ReturnCode errorbars_draw_bar(
 ReturnCode errorbars_draw(
     Context* ctx,
     PlotConfig* plot,
-    ErrorbarsElement* config) {
+    const ErrorbarsElement& config) {
   const auto& clip = plot_get_clip(plot, layer_get(ctx));
 
-  /* convert units */
-  convert_units(
-      {
-        std::bind(&convert_unit_user, scale_translate_fn(config->scale_x), _1),
-        std::bind(&convert_unit_relative, clip.w, _1)
-      },
-      &*config->x.begin(),
-      &*config->x.end());
+  /* transform data */
+  std::vector<double> x;
+  if (auto rc = scale_translatev(config.scale_x, config.x, &x); !rc) {
+    return rc;
+  }
 
-  convert_units(
-      {
-        std::bind(&convert_unit_user, scale_translate_fn(config->scale_x), _1),
-        std::bind(&convert_unit_relative, clip.w, _1)
-      },
-      &*config->x_low.begin(),
-      &*config->x_low.end());
+  std::vector<double> x_low;
+  if (auto rc = scale_translatev(config.scale_x, config.x_low, &x_low); !rc) {
+    return rc;
+  }
 
-  convert_units(
-      {
-        std::bind(&convert_unit_user, scale_translate_fn(config->scale_x), _1),
-        std::bind(&convert_unit_relative, clip.w, _1)
-      },
-      &*config->x_high.begin(),
-      &*config->x_high.end());
+  std::vector<double> x_high;
+  if (auto rc = scale_translatev(config.scale_x, config.x_high, &x_high); !rc) {
+    return rc;
+  }
 
-  convert_units(
-      {
-        std::bind(&convert_unit_user, scale_translate_fn(config->scale_y), _1),
-        std::bind(&convert_unit_relative, clip.h, _1)
-      },
-      &*config->y.begin(),
-      &*config->y.end());
+  std::vector<double> y;
+  if (auto rc = scale_translatev(config.scale_y, config.y, &y); !rc) {
+    return rc;
+  }
 
-  convert_units(
-      {
-        std::bind(&convert_unit_user, scale_translate_fn(config->scale_y), _1),
-        std::bind(&convert_unit_relative, clip.h, _1)
-      },
-      &*config->y_low.begin(),
-      &*config->y_low.end());
+  std::vector<double> y_low;
+  if (auto rc = scale_translatev(config.scale_y, config.y_low, &y_low); !rc) {
+    return rc;
+  }
 
-  convert_units(
-      {
-        std::bind(&convert_unit_user, scale_translate_fn(config->scale_y), _1),
-        std::bind(&convert_unit_relative, clip.h, _1)
-      },
-      &*config->y_high.begin(),
-      &*config->y_high.end());
+  std::vector<double> y_high;
+  if (auto rc = scale_translatev(config.scale_y, config.y_high, &y_high); !rc) {
+    return rc;
+  }
 
-  auto x_len = std::min({
-    config->x.size(),
-    config->y_low.size(),
-    config->y_high.size(),
-  });
-
-  auto y_len = std::min({
-    config->y.size(),
-    config->x_low.size(),
-    config->x_high.size(),
-  });
+  /* draw errorbars */
+  auto x_len = std::min({x.size(), y_low.size(), y_high.size()});
+  auto y_len = std::min({y.size(), x_low.size(), x_high.size()});
 
   for (size_t i = 0; i < x_len; ++i) {
     auto from = vec2(
-        clip.x + config->x[i],
-        clip.y + config->y_low[i]);
+        clip.x + x[i] * clip.w,
+        clip.y + y_low[i] * clip.h);
 
     auto to = vec2(
-        clip.x + config->x[i],
-        clip.y + config->y_high[i]);
+        clip.x + x[i] * clip.w,
+        clip.y + y_high[i] * clip.h);
 
-    const auto& color = config->colors.empty()
-        ? config->stroke_color
-        : config->colors[i % config->colors.size()];
+    const auto& color = config.colors.empty()
+        ? config.stroke_color
+        : config.colors[i % config.colors.size()];
 
-    if (auto rc = errorbars_draw_bar(ctx, *config, from, to, color); !rc) {
+    if (auto rc = errorbars_draw_bar(ctx, config, from, to, color); !rc) {
       return rc;
     }
   }
 
   for (size_t i = 0; i < y_len; ++i) {
     auto from = vec2(
-        clip.x + config->x_low[i],
-        clip.y + config->y[i]);
+        clip.x + x_low[i] * clip.w,
+        clip.y + y[i] * clip.h);
 
     auto to = vec2(
-        clip.x + config->x_high[i],
-        clip.x + config->y[i]);
+        clip.x + x_high[i] * clip.w,
+        clip.x + y[i] * clip.h);
 
-    const auto& color = config->colors.empty()
-        ? config->stroke_color
-        : config->colors[i % config->colors.size()];
+    const auto& color = config.colors.empty()
+        ? config.stroke_color
+        : config.colors[i % config.colors.size()];
 
-    if (auto rc = errorbars_draw_bar(ctx, *config, from, to, color); !rc) {
+    if (auto rc = errorbars_draw_bar(ctx, config, from, to, color); !rc) {
       return rc;
     }
   }
@@ -201,22 +175,16 @@ ReturnCode errorbars_configure(
   c->scale_y = plot->scale_y;
 
   /* parse properties */
-  std::vector<std::string> data_x;
-  std::vector<std::string> data_x_low;
-  std::vector<std::string> data_x_high;
-  std::vector<std::string> data_y;
-  std::vector<std::string> data_y_low;
-  std::vector<std::string> data_y_high;
   std::vector<std::string> data_colors;
   ColorMap color_map;
 
   auto config_rc = expr_walk_map_wrapped(expr, {
-    {"data-x", std::bind(&data_load_strings, _1, &data_x)},
-    {"data-x-low", std::bind(&data_load_strings, _1, &data_x_low)},
-    {"data-x-high", std::bind(&data_load_strings, _1, &data_x_high)},
-    {"data-y", std::bind(&data_load_strings, _1, &data_y)},
-    {"data-y-low", std::bind(&data_load_strings, _1, &data_y_low)},
-    {"data-y-high", std::bind(&data_load_strings, _1, &data_y_high)},
+    {"data-x", std::bind(&data_load_simple, _1, &c->x)},
+    {"data-y", std::bind(&data_load_simple, _1, &c->y)},
+    {"data-x-low", std::bind(&data_load_simple, _1, &c->x_low)},
+    {"data-x-high", std::bind(&data_load_simple, _1, &c->x_high)},
+    {"data-y-low", std::bind(&data_load_simple, _1, &c->y_low)},
+    {"data-y-high", std::bind(&data_load_simple, _1, &c->y_high)},
     {"limit-x", std::bind(&expr_to_float64_opt_pair, _1, &c->scale_x.min, &c->scale_x.max)},
     {"limit-x-min", std::bind(&expr_to_float64_opt, _1, &c->scale_x.min)},
     {"limit-x-max", std::bind(&expr_to_float64_opt, _1, &c->scale_x.max)},
@@ -241,14 +209,14 @@ ReturnCode errorbars_configure(
 
   /* figure out in which direction the user wants us to plot the error bars */
   Option<Direction> direction;
-  if (!data_x.empty() &&
-      !data_y_low.empty() &&
-      !data_y_high.empty() &&
-      data_y.empty()) {
+  if (databuf_len(c->x) > 0 &&
+      databuf_len(c->y_low) > 0 &&
+      databuf_len(c->y_high) > 0 &&
+      databuf_len(c->y) == 0) {
     direction = Direction::VERTICAL;
 
-    if (data_x.size() != data_y_low.size() ||
-        data_x.size() != data_y_high.size()) {
+    if (databuf_len(c->x) != databuf_len(c->y_low) ||
+        databuf_len(c->x) != databuf_len(c->y_high)) {
       return error(
           ERROR,
           "the length of the 'data-x', 'data-y-low' and 'data-y-high' datasets "
@@ -256,14 +224,14 @@ ReturnCode errorbars_configure(
     }
   }
 
-  if (!data_y.empty() &&
-      !data_x_low.empty() &&
-      !data_x_high.empty() &&
-      data_x.empty()) {
+  if (databuf_len(c->y) > 0 &&
+      databuf_len(c->x_low) > 0 &&
+      databuf_len(c->x_high) > 0 &&
+      databuf_len(c->x) == 0) {
     direction = Direction::HORIZONTAL;
 
-    if (data_y.size() != data_x_low.size() ||
-        data_y.size() != data_x_high.size()) {
+    if (databuf_len(c->y) != databuf_len(c->x_low) ||
+        databuf_len(c->y) != databuf_len(c->x_high)) {
       return error(
           ERROR,
           "the length of the 'data-x', 'data-y-low' and 'data-y-high' datasets "
@@ -274,71 +242,11 @@ ReturnCode errorbars_configure(
   if (!direction) {
     return error(
         ERROR,
-        "the errorbars expectes exactly three data properties:\n"
+        "the errorbars element expects exactly three data properties:\n"
         "  - vertical bars: data-x, data-y-low, data-y-high\n"
         "  - horizontal bars: data-y, data-x-low, data-x-high");
   }
 
-  /* scale autoconfiguration */
-  if (auto rc = data_to_measures(data_x, c->scale_x, &c->x); !rc){
-    return rc;
-  }
-
-  if (auto rc = data_to_measures(data_x_low, c->scale_x, &c->x_low); !rc){
-    return rc;
-  }
-
-  if (auto rc = data_to_measures(data_x_high, c->scale_x, &c->x_high); !rc){
-    return rc;
-  }
-
-  if (auto rc = data_to_measures(data_y, c->scale_y, &c->y); !rc){
-    return rc;
-  }
-
-  if (auto rc = data_to_measures(data_y_low, c->scale_y, &c->y_low); !rc){
-    return rc;
-  }
-
-  if (auto rc = data_to_measures(data_y_high, c->scale_y, &c->y_high); !rc){
-    return rc;
-  }
-
-  for (const auto& v : c->x) {
-    if (v.unit == Unit::USER) {
-      scale_fit(v.value, &c->scale_x);
-    }
-  }
-
-  for (const auto& v : c->x_low) {
-    if (v.unit == Unit::USER) {
-      scale_fit(v.value, &c->scale_x);
-    }
-  }
-
-  for (const auto& v : c->x_high) {
-    if (v.unit == Unit::USER) {
-      scale_fit(v.value, &c->scale_x);
-    }
-  }
-
-  for (const auto& v : c->y) {
-    if (v.unit == Unit::USER) {
-      scale_fit(v.value, &c->scale_y);
-    }
-  }
-
-  for (const auto& v : c->y_low) {
-    if (v.unit == Unit::USER) {
-      scale_fit(v.value, &c->scale_y);
-    }
-  }
-
-  for (const auto& v : c->y_high) {
-    if (v.unit == Unit::USER) {
-      scale_fit(v.value, &c->scale_y);
-    }
-  }
 
   /* convert color data */
   for (const auto& value : data_colors) {
@@ -374,7 +282,7 @@ ReturnCode errorbars_draw(
     return rc;
   }
 
-  return errorbars_draw(ctx, plot, &conf);
+  return errorbars_draw(ctx, plot, conf);
 }
 
 ReturnCode errorbars_autorange(
@@ -382,7 +290,35 @@ ReturnCode errorbars_autorange(
     PlotConfig* plot,
     const Expr* expr) {
   ErrorbarsElement conf;
-  return errorbars_configure(ctx, plot, &conf, expr);
+  if (auto rc = errorbars_configure(ctx, plot, &conf, expr); !rc) {
+    return rc;
+  }
+
+  if (auto rc = scale_fit(&plot->scale_x, conf.x); !rc) {
+    return rc;
+  }
+
+  if (auto rc = scale_fit(&plot->scale_x, conf.x_low); !rc) {
+    return rc;
+  }
+
+  if (auto rc = scale_fit(&plot->scale_x, conf.x_high); !rc) {
+    return rc;
+  }
+
+  if (auto rc = scale_fit(&plot->scale_y, conf.y); !rc) {
+    return rc;
+  }
+
+  if (auto rc = scale_fit(&plot->scale_y, conf.y_low); !rc) {
+    return rc;
+  }
+
+  if (auto rc = scale_fit(&plot->scale_y, conf.y_high); !rc) {
+    return rc;
+  }
+
+  return OK;
 }
 
 } // namespace clip::plotgen

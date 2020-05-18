@@ -37,10 +37,10 @@ namespace clip::plotgen {
 struct PlotAreaConfig {
   PlotAreaConfig();
   Direction direction;
-  std::vector<Measure> x;
-  std::vector<Measure> xoffset;
-  std::vector<Measure> y;
-  std::vector<Measure> yoffset;
+  DataBuffer x;
+  DataBuffer xoffset;
+  DataBuffer y;
+  DataBuffer yoffset;
   ScaleConfig scale_x;
   ScaleConfig scale_y;
   StrokeStyle stroke_high_style;
@@ -54,55 +54,43 @@ PlotAreaConfig::PlotAreaConfig() :
 ReturnCode areas_draw_horizontal(
     Context* ctx,
     PlotConfig* plot,
-    PlotAreaConfig config) {
+    const PlotAreaConfig& conf) {
   const auto& clip = plot_get_clip(plot, layer_get(ctx));
 
-  /* convert units */
-  convert_units(
-      {
-        std::bind(&convert_unit_user, scale_translate_fn(config.scale_x), _1),
-        std::bind(&convert_unit_relative, clip.w, _1)
-      },
-      &*config.x.begin(),
-      &*config.x.end());
+  /* transform data */
+  std::vector<double> xs;
+  if (auto rc = scale_translatev(conf.scale_x, conf.x, &xs); !rc) {
+    return rc;
+  }
 
-  convert_units(
-      {
-        std::bind(&convert_unit_user, scale_translate_fn(config.scale_x), _1),
-        std::bind(&convert_unit_relative, clip.w, _1)
-      },
-      &*config.xoffset.begin(),
-      &*config.xoffset.end());
+  std::vector<double> xoffsets;
+  if (auto rc = scale_translatev(conf.scale_x, conf.xoffset, &xoffsets); !rc) {
+    return rc;
+  }
 
-  convert_units(
-      {
-        std::bind(&convert_unit_user, scale_translate_fn(config.scale_y), _1),
-        std::bind(&convert_unit_relative, clip.h, _1)
-      },
-      &*config.y.begin(),
-      &*config.y.end());
+  std::vector<double> ys;
+  if (auto rc = scale_translatev(conf.scale_y, conf.y, &ys); !rc) {
+    return rc;
+  }
 
-  convert_units(
-      {
-        std::bind(&convert_unit_user, scale_translate_fn(config.scale_y), _1),
-        std::bind(&convert_unit_relative, clip.h, _1)
-      },
-      &*config.yoffset.begin(),
-      &*config.yoffset.end());
+  std::vector<double> yoffsets;
+  if (auto rc = scale_translatev(conf.scale_y, conf.yoffset, &yoffsets); !rc) {
+    return rc;
+  }
 
   /* draw areas */
   DrawCommand shape;
-  shape.fill_style = config.fill_style;
+  shape.fill_style = conf.fill_style;
 
   DrawCommand stroke_high;
-  stroke_high.stroke_style = config.stroke_high_style;
+  stroke_high.stroke_style = conf.stroke_high_style;
 
   DrawCommand stroke_low;
-  stroke_low.stroke_style = config.stroke_low_style;
+  stroke_low.stroke_style = conf.stroke_low_style;
 
-  for (size_t i = 0; i < config.x.size(); ++i) {
-    auto sx = clip.x + config.x[i];
-    auto sy = clip.y + config.y[i];
+  for (size_t i = 0; i < xs.size(); ++i) {
+    auto sx = clip.x + xs[i] * clip.w;
+    auto sy = clip.y + ys[i] * clip.h;
 
     if (i == 0) {
       shape.path.moveTo(sx, sy);
@@ -113,10 +101,10 @@ ReturnCode areas_draw_horizontal(
     }
   }
 
-  auto x0 = clip.h * std::clamp(scale_translate(config.scale_x, 0), 0.0, 1.0);
-  for (int i = config.x.size() - 1; i >= 0; --i) {
-    auto sx = clip.x + (config.xoffset.empty() ? x0 : config.xoffset[i]);
-    auto sy = clip.y + config.y[i];
+  auto x0 = std::clamp(scale_translate(conf.scale_x, 0), 0.0, 1.0);
+  for (int i = xs.size() - 1; i >= 0; --i) {
+    auto sx = clip.x + (xoffsets.empty() ? x0 : xoffsets[i]) * clip.w;
+    auto sy = clip.y + ys[i] * clip.h;
     shape.path.lineTo(sx, sy);
 
     if (stroke_low.path.empty()) {
@@ -138,55 +126,43 @@ ReturnCode areas_draw_horizontal(
 ReturnCode areas_draw_vertical(
     Context* ctx,
     PlotConfig* plot,
-    PlotAreaConfig config) {
+    PlotAreaConfig conf) {
   const auto& clip = plot_get_clip(plot, layer_get(ctx));
 
-  /* convert units */
-  convert_units(
-      {
-        std::bind(&convert_unit_user, scale_translate_fn(config.scale_x), _1),
-        std::bind(&convert_unit_relative, clip.w, _1)
-      },
-      &*config.x.begin(),
-      &*config.x.end());
+  /* transform data */
+  std::vector<double> xs;
+  if (auto rc = scale_translatev(conf.scale_x, conf.x, &xs); !rc) {
+    return rc;
+  }
 
-  convert_units(
-      {
-        std::bind(&convert_unit_user, scale_translate_fn(config.scale_x), _1),
-        std::bind(&convert_unit_relative, clip.w, _1)
-      },
-      &*config.xoffset.begin(),
-      &*config.xoffset.end());
+  std::vector<double> xoffsets;
+  if (auto rc = scale_translatev(conf.scale_x, conf.xoffset, &xoffsets); !rc) {
+    return rc;
+  }
 
-  convert_units(
-      {
-        std::bind(&convert_unit_user, scale_translate_fn(config.scale_y), _1),
-        std::bind(&convert_unit_relative, clip.h, _1)
-      },
-      &*config.y.begin(),
-      &*config.y.end());
+  std::vector<double> ys;
+  if (auto rc = scale_translatev(conf.scale_y, conf.y, &ys); !rc) {
+    return rc;
+  }
 
-  convert_units(
-      {
-        std::bind(&convert_unit_user, scale_translate_fn(config.scale_y), _1),
-        std::bind(&convert_unit_relative, clip.h, _1)
-      },
-      &*config.yoffset.begin(),
-      &*config.yoffset.end());
+  std::vector<double> yoffsets;
+  if (auto rc = scale_translatev(conf.scale_y, conf.yoffset, &yoffsets); !rc) {
+    return rc;
+  }
 
   /* draw areas */
   DrawCommand shape;
-  shape.fill_style = config.fill_style;
+  shape.fill_style = conf.fill_style;
 
   DrawCommand stroke_high;
-  stroke_high.stroke_style = config.stroke_high_style;
+  stroke_high.stroke_style = conf.stroke_high_style;
 
   DrawCommand stroke_low;
-  stroke_low.stroke_style = config.stroke_low_style;
+  stroke_low.stroke_style = conf.stroke_low_style;
 
-  for (size_t i = 0; i < config.x.size(); ++i) {
-    auto sx = clip.x + config.x[i];
-    auto sy = clip.y + config.y[i];
+  for (size_t i = 0; i < xs.size(); ++i) {
+    auto sx = clip.x + xs[i] * clip.w;
+    auto sy = clip.y + ys[i] * clip.h;
 
     if (i == 0) {
       shape.path.moveTo(sx, sy);
@@ -197,10 +173,10 @@ ReturnCode areas_draw_vertical(
     }
   }
 
-  auto y0 = clip.h * std::clamp(scale_translate(config.scale_y, 0), 0.0, 1.0);
-  for (int i = config.x.size() - 1; i >= 0; --i) {
-    auto sx = clip.x + config.x[i];
-    auto sy = clip.y + (config.yoffset.empty() ? y0 : config.yoffset[i]);
+  auto y0 = std::clamp(scale_translate(conf.scale_y, 0), 0.0, 1.0);
+  for (int i = xs.size() - 1; i >= 0; --i) {
+    auto sx = clip.x + xs[i] * clip.w;
+    auto sy = clip.y + (yoffsets.empty() ? y0 : yoffsets[i]) * clip.h;
     shape.path.lineTo(sx, sy);
 
     if (stroke_low.path.empty()) {
@@ -234,18 +210,14 @@ ReturnCode areas_configure(
   c->fill_style.color = layer_get(ctx)->foreground_color;
 
   /* parse properties */
-  std::vector<std::string> data_x;
-  std::vector<std::string> data_y;
-  std::vector<std::string> data_xoffset;
-  std::vector<std::string> data_yoffset;
-
   auto config_rc = expr_walk_map_wrapped(expr, {
-    {"data-x", std::bind(&data_load, _1, &c->x)},
-    {"data-y", std::bind(&data_load, _1, &c->y)},
-    {"data-x-high", std::bind(&data_load, _1, &c->x)},
-    {"data-y-high", std::bind(&data_load, _1, &c->y)},
-    {"data-x-low", std::bind(&data_load, _1, &c->xoffset)},
-    {"data-y-low", std::bind(&data_load, _1, &c->yoffset)},
+    {"data", std::bind(&data_load_points2, _1, &c->x, &c->y)},
+    {"data-x", std::bind(&data_load_simple, _1, &c->x)},
+    {"data-y", std::bind(&data_load_simple, _1, &c->y)},
+    {"data-x-high", std::bind(&data_load_simple, _1, &c->x)},
+    {"data-y-high", std::bind(&data_load_simple, _1, &c->y)},
+    {"data-x-low", std::bind(&data_load_simple, _1, &c->xoffset)},
+    {"data-y-low", std::bind(&data_load_simple, _1, &c->yoffset)},
     {"limit-x", std::bind(&expr_to_float64_opt_pair, _1, &c->scale_x.min, &c->scale_x.max)},
     {"limit-x-min", std::bind(&expr_to_float64_opt, _1, &c->scale_x.min)},
     {"limit-x-max", std::bind(&expr_to_float64_opt, _1, &c->scale_x.max)},
@@ -305,66 +277,19 @@ ReturnCode areas_configure(
     return config_rc;
   }
 
-  /* scale configuration */
-  if (auto rc = data_to_measures(data_x, c->scale_x, &c->x); !rc){
-    return rc;
-  }
-
-  if (auto rc = data_to_measures(data_xoffset, c->scale_x, &c->xoffset); !rc){
-    return rc;
-  }
-
-  if (auto rc = data_to_measures(data_y, c->scale_y, &c->y); !rc){
-    return rc;
-  }
-
-  if (auto rc = data_to_measures(data_yoffset, c->scale_y, &c->yoffset); !rc){
-    return rc;
-  }
-
-  for (const auto& v : c->x) {
-    if (v.unit == Unit::USER) {
-      scale_fit(v.value, &c->scale_x);
-    }
-  }
-
-  for (const auto& v : c->xoffset) {
-    if (v.unit == Unit::USER) {
-      scale_fit(v.value, &c->scale_x);
-    }
-  }
-
-  for (const auto& v : c->y) {
-    if (v.unit == Unit::USER) {
-      scale_fit(v.value, &c->scale_y);
-    }
-  }
-
-  for (const auto& v : c->yoffset) {
-    if (v.unit == Unit::USER) {
-      scale_fit(v.value, &c->scale_y);
-    }
-  }
-
   /* check configuraton */
-  if (c->x.size() != c->y.size()) {
-    return error(
-        ERROR,
-        "the length of the 'data-x' and 'data-y' properties must be equal");
+  if (databuf_len(c->x) != databuf_len(c->y)) {
+    return error(ERROR, "The length of the 'data-x' and 'data-y' lists must be equal");
   }
 
-  if (!c->xoffset.empty() &&
-      c->xoffset.size() != c->x.size()) {
-    return error(
-        ERROR,
-        "the length of the 'data-x' and 'data-x-low' properties must be equal");
+  if (databuf_len(c->xoffset) != 0 &&
+      databuf_len(c->x) != databuf_len(c->xoffset)) {
+    return error(ERROR, "the length of the 'data-x' and 'data-x-low' properties must be equal");
   }
 
-  if (!c->yoffset.empty() &&
-      c->yoffset.size() != c->y.size()) {
-    return error(
-        ERROR,
-        "the length of the 'data-y' and 'data-y-low' properties must be equal");
+  if (databuf_len(c->yoffset) != 0 &&
+      databuf_len(c->y) != databuf_len(c->yoffset)) {
+    return error(ERROR, "the length of the 'data-y' and 'data-y-low' properties must be equal");
   }
 
   return OK;
@@ -395,7 +320,27 @@ ReturnCode areas_autorange(
     PlotConfig* plot,
     const Expr* expr) {
   PlotAreaConfig conf;
-  return areas_configure(ctx, plot, &conf, expr);
+  if (auto rc = areas_configure(ctx, plot, &conf, expr); !rc) {
+    return rc;
+  }
+
+  if (auto rc = scale_fit(&plot->scale_x, conf.x); !rc) {
+    return rc;
+  }
+
+  if (auto rc = scale_fit(&plot->scale_x, conf.xoffset); !rc) {
+    return rc;
+  }
+
+  if (auto rc = scale_fit(&plot->scale_y, conf.y); !rc) {
+    return rc;
+  }
+
+  if (auto rc = scale_fit(&plot->scale_y, conf.yoffset); !rc) {
+    return rc;
+  }
+
+  return OK;
 }
 
 } // namespace clip::plotgen

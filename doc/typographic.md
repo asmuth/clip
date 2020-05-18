@@ -6,16 +6,19 @@ marked with the type `<measure>`.
 
 The following typographic units are currently accepted:
 
-  - `px` -- Pixels
-  - `pt` -- Typographic points
-  - `em` -- Typographic "em" size
-  - `%`  -- Relative to the enclosing element
-  - User units on an arbitrary scale
+  - `px` – Pixels
+  - `mm` – Millimeters
+  - `pt` – Typographic points
+  - `em` – Typographic "em" size
+  - `%`  – Relative to the enclosing element
 
 #### Examples
 
     ;; 10 pixels
     10px
+
+    ;; 40mm
+    40mm
 
     ;; 16 points
     16pt

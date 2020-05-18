@@ -37,12 +37,38 @@ ScaleConfig::ScaleConfig() :
     limit_hints(std::make_shared<ScaleLimitHints>()) {}
 
 void scale_fit(double value, ScaleConfig* domain) {
-  if (!domain->limit_hints->min_value || *domain->limit_hints->min_value > value) {
-    domain->limit_hints->min_value = Option<double>(value);
+  scale_fit(domain, value);
+}
+
+void scale_fit(ScaleConfig* scale, double value) {
+  if (!scale->limit_hints->min_value || *scale->limit_hints->min_value > value) {
+    scale->limit_hints->min_value = Option<double>(value);
   }
-  if (!domain->limit_hints->max_value || *domain->limit_hints->max_value < value) {
-    domain->limit_hints->max_value = Option<double>(value);
+  if (!scale->limit_hints->max_value || *scale->limit_hints->max_value < value) {
+    scale->limit_hints->max_value = Option<double>(value);
   }
+}
+
+ReturnCode scale_fit(ScaleConfig* scale, const DataBuffer& buf) {
+  std::vector<double> values;
+
+  switch (scale->kind) {
+    case ScaleKind::CATEGORICAL:
+      if (auto rc = scale_map_categories(*scale, buf, &values); !rc) {
+        return rc;
+      } else {
+        break;
+      }
+    default:
+      databuf_to_numbers(buf, &values);
+      break;
+  }
+
+  for (auto v : values) {
+    scale_fit(scale, v);
+  }
+
+  return OK;
 }
 
 double scale_min(const ScaleConfig& domain) {
@@ -141,6 +167,97 @@ double scale_translate(
   return 0.0f;
 }
 
+std::vector<double> scale_translatev(
+    const ScaleConfig& domain,
+    const std::vector<double>& values) {
+  std::vector<double> values_out(values.size());
+
+  std::transform(
+      values.begin(),
+      values.end(),
+      values_out.begin(),
+      std::bind(&scale_translate, domain, std::placeholders::_1));
+
+  return values_out;
+}
+
+ReturnCode scale_translatev_categorical(
+    const ScaleConfig& scale,
+    const DataBuffer& buffer,
+    std::vector<double>* values) {
+  std::vector<double> values_raw;
+  if (auto rc = scale_map_categories(scale, buffer, &values_raw); !rc) {
+    return rc;
+  }
+
+  *values = scale_translatev(scale, values_raw);
+  return OK;
+}
+
+ReturnCode scale_translatev_numeric(
+    const ScaleConfig& scale,
+    const DataBuffer& buffer,
+    std::vector<double>* values) {
+  for (const auto& [type, pos] : buffer.index) {
+    switch (type) {
+      case DataBuffer::Type::Number:
+        continue;
+      case DataBuffer::Type::Text:
+        if (StringUtil::isNumber(buffer.text[pos])) {
+          continue;
+        } else {
+          return errorf(
+              ERROR,
+              "data '{}' is not a valid number; if this is intentional, set "
+              "'scale-[x,y] to (categorical ...)'",
+              buffer.text[pos]);
+        }
+    }
+  }
+
+  std::vector<double> values_raw;
+  databuf_to_numbers(buffer, &values_raw);
+
+  *values = scale_translatev(scale, values_raw);
+  return OK;
+}
+
+ReturnCode scale_translatev(
+    const ScaleConfig& scale,
+    const DataBuffer& buffer,
+    std::vector<double>* values) {
+  switch (scale.kind) {
+    case ScaleKind::CATEGORICAL:
+      return scale_translatev_categorical(scale, buffer, values);
+    default:
+      return scale_translatev_numeric(scale, buffer, values);
+  }
+}
+
+ReturnCode scale_map_categories(
+    const ScaleConfig& scale,
+    const DataBuffer& buffer,
+    std::vector<double>* values) {
+  values->reserve(databuf_len(buffer));
+
+  std::vector<std::string> values_text;
+  databuf_to_text(buffer, &values_text);
+
+  for (const auto& v : values_text) {
+    auto v_iter = scale.categories_map.find(v);
+    if (v_iter == scale.categories_map.end()) {
+      return errorf(
+          ERROR,
+          "the value '{}' is not part of the categories list",
+          v);
+    }
+
+    values->push_back(v_iter->second);
+  }
+
+  return OK;
+}
+
 double scale_translate_magnitude(
     const ScaleConfig& domain,
     double value) {
@@ -158,6 +275,24 @@ double scale_translate_magnitude(
   }
 
   return 0.0f;
+}
+
+ReturnCode scale_translate_magnitudev(
+    const ScaleConfig& scale,
+    const DataBuffer& buffer,
+    std::vector<double>* values) {
+  std::vector<double> values_raw;
+  databuf_to_numbers(buffer, &values_raw);
+
+  std::vector<double> values_out(values_raw.size());
+  std::transform(
+      values_raw.begin(),
+      values_raw.end(),
+      values_out.begin(),
+      std::bind(&scale_translate_magnitude, scale, std::placeholders::_1));
+
+  *values = values_out;
+  return OK;
 }
 
 std::function<double (double)> scale_translate_fn(const ScaleConfig& domain) {

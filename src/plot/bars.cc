@@ -41,10 +41,10 @@ static const double kDefaultLabelPaddingVertEM = 0.6;
 struct PlotBarsConfig {
   PlotBarsConfig();
   Direction direction;
-  std::vector<Measure> x;
-  std::vector<Measure> xoffset;
-  std::vector<Measure> y;
-  std::vector<Measure> yoffset;
+  DataBuffer x;
+  DataBuffer xoffset;
+  DataBuffer y;
+  DataBuffer yoffset;
   ScaleConfig scale_x;
   ScaleConfig scale_y;
   StrokeStyle stroke_style;
@@ -70,44 +70,27 @@ ReturnCode bars_draw_horizontal(
   const auto& clip = plot_get_clip(plot, layer_get(ctx));
 
   /* convert units */
-  convert_units(
-      {
-        std::bind(&convert_unit_user, scale_translate_fn(config.scale_x), _1),
-        std::bind(&convert_unit_relative, clip.w, _1)
-      },
-      &*config.x.begin(),
-      &*config.x.end());
+  std::vector<double> xs;
+  if (auto rc = scale_translatev(config.scale_x, config.x, &xs); !rc) {
+    return rc;
+  }
 
-  convert_units(
-      {
-        std::bind(&convert_unit_user, scale_translate_fn(config.scale_x), _1),
-        std::bind(&convert_unit_relative, clip.w, _1)
-      },
-      &*config.xoffset.begin(),
-      &*config.xoffset.end());
+  std::vector<double> xoffsets;
+  if (auto rc = scale_translatev(config.scale_x, config.xoffset, &xoffsets); !rc) {
+    return rc;
+  }
 
-  convert_units(
-      {
-        std::bind(&convert_unit_user, scale_translate_fn(config.scale_y), _1),
-        std::bind(&convert_unit_relative, clip.h, _1)
-      },
-      &*config.y.begin(),
-      &*config.y.end());
-
-  convert_units(
-      {
-        std::bind(&convert_unit_user, scale_translate_fn(config.scale_y), _1),
-        std::bind(&convert_unit_relative, clip.h, _1)
-      },
-      &*config.yoffset.begin(),
-      &*config.yoffset.end());
+  std::vector<double> ys;
+  if (auto rc = scale_translatev(config.scale_y, config.y, &ys); !rc) {
+    return rc;
+  }
 
   /* draw bars */
-  auto x0 = std::clamp(clip.h * scale_translate(config.scale_x, 0), 0.0, 1.0);
-  for (size_t i = 0; i < config.x.size(); ++i) {
-    auto sy = clip.y + config.y[i];
-    auto sx1 = clip.x + (config.xoffset.empty() ? x0 : config.xoffset[i]);
-    auto sx2 = clip.x + config.x[i];
+  auto x0 = std::clamp(scale_translate(config.scale_x, 0), 0.0, 1.0);
+  for (size_t i = 0; i < xs.size(); ++i) {
+    auto sy = clip.y + ys[i] * clip.h;
+    auto sx1 = clip.x + (xoffsets.empty() ? x0 : xoffsets[i]) * clip.w;
+    auto sx2 = clip.x + xs[i] * clip.w;
 
     auto size =
         config.size.value
@@ -145,8 +128,8 @@ ReturnCode bars_draw_horizontal(
         from_em(kDefaultLabelPaddingHorizEM, config.label_font_size.value));
 
     Point p(
-        clip.x + config.x[i] + padding,
-        clip.y + -offset + config.y[i]);
+        clip.x + xs[i] * clip.w + padding,
+        clip.y + -offset + ys[i] * clip.h);
 
     TextStyle style;
     style.font = config.label_font;
@@ -169,45 +152,28 @@ ReturnCode bars_draw_vertical(
     PlotBarsConfig config) {
   const auto& clip = plot_get_clip(plot, layer_get(ctx));
 
-  /* convert units */
-  convert_units(
-      {
-        std::bind(&convert_unit_user, scale_translate_fn(config.scale_x), _1),
-        std::bind(&convert_unit_relative, clip.w, _1)
-      },
-      &*config.x.begin(),
-      &*config.x.end());
+  /* transform data */
+  std::vector<double> xs;
+  if (auto rc = scale_translatev(config.scale_x, config.x, &xs); !rc) {
+    return rc;
+  }
 
-  convert_units(
-      {
-        std::bind(&convert_unit_user, scale_translate_fn(config.scale_x), _1),
-        std::bind(&convert_unit_relative, clip.w, _1)
-      },
-      &*config.xoffset.begin(),
-      &*config.xoffset.end());
+  std::vector<double> ys;
+  if (auto rc = scale_translatev(config.scale_y, config.y, &ys); !rc) {
+    return rc;
+  }
 
-  convert_units(
-      {
-        std::bind(&convert_unit_user, scale_translate_fn(config.scale_y), _1),
-        std::bind(&convert_unit_relative, clip.h, _1)
-      },
-      &*config.y.begin(),
-      &*config.y.end());
-
-  convert_units(
-      {
-        std::bind(&convert_unit_user, scale_translate_fn(config.scale_y), _1),
-        std::bind(&convert_unit_relative, clip.h, _1)
-      },
-      &*config.yoffset.begin(),
-      &*config.yoffset.end());
+  std::vector<double> yoffsets;
+  if (auto rc = scale_translatev(config.scale_y, config.yoffset, &yoffsets); !rc) {
+    return rc;
+  }
 
   /* draw bars */
-  auto y0 = clip.h * std::clamp(scale_translate(config.scale_y, 0), 0.0, 1.0);
-  for (size_t i = 0; i < config.x.size(); ++i) {
-    auto sx = clip.x + config.x[i];
-    auto sy1 = clip.y + (config.yoffset.empty() ? y0 : config.yoffset[i]);
-    auto sy2 = clip.y + config.y[i];
+  auto y0 = std::clamp(scale_translate(config.scale_y, 0), 0.0, 1.0);
+  for (size_t i = 0; i < xs.size(); ++i) {
+    auto sx = clip.x + xs[i] * clip.w;
+    auto sy1 = clip.y + (yoffsets.empty() ? y0 : yoffsets[i]) * clip.h;
+    auto sy2 = clip.y + ys[i] * clip.h;
 
     auto size =
         config.size.value
@@ -245,8 +211,8 @@ ReturnCode bars_draw_vertical(
         from_em(kDefaultLabelPaddingVertEM, config.label_font_size.value));
 
     Point p(
-        clip.x + offset + config.x[i],
-        clip.y + config.y[i] + padding);
+        clip.x + offset + xs[i] * clip.w,
+        clip.y + ys[i] * clip.h + padding);
 
     TextStyle style;
     style.font = config.label_font;
@@ -280,18 +246,13 @@ ReturnCode bars_configure(
   c->label_font_size = layer_get_font_size(ctx);
 
   /* parse properties */
-  std::vector<std::string> data_x;
-  std::vector<std::string> data_y;
-  std::vector<std::string> data_xoffset;
-  std::vector<std::string> data_yoffset;
-
   auto config_rc = expr_walk_map_wrapped(expr, {
-    {"data-x", std::bind(&data_load_strings, _1, &data_x)},
-    {"data-y", std::bind(&data_load_strings, _1, &data_y)},
-    {"data-x-high", std::bind(&data_load_strings, _1, &data_x)},
-    {"data-y-high", std::bind(&data_load_strings, _1, &data_y)},
-    {"data-x-low", std::bind(&data_load_strings, _1, &data_xoffset)},
-    {"data-y-low", std::bind(&data_load_strings, _1, &data_yoffset)},
+    {"data-x", std::bind(&data_load_simple, _1, &c->x)},
+    {"data-y", std::bind(&data_load_simple, _1, &c->y)},
+    {"data-x-high", std::bind(&data_load_simple, _1, &c->x)},
+    {"data-y-high", std::bind(&data_load_simple, _1, &c->y)},
+    {"data-x-low", std::bind(&data_load_simple, _1, &c->xoffset)},
+    {"data-y-low", std::bind(&data_load_simple, _1, &c->yoffset)},
     {"width", std::bind(&expr_to_size, _1, layer, &c->size)},
     {"widths", std::bind(&data_load, _1, &c->sizes)},
     {"offset", std::bind(&expr_to_size, _1, layer, &c->offset)},
@@ -334,66 +295,19 @@ ReturnCode bars_configure(
     return config_rc;
   }
 
-  /* scale configuration */
-  if (auto rc = data_to_measures(data_x, c->scale_x, &c->x); !rc){
-    return rc;
-  }
-
-  if (auto rc = data_to_measures(data_xoffset, c->scale_x, &c->xoffset); !rc){
-    return rc;
-  }
-
-  if (auto rc = data_to_measures(data_y, c->scale_y, &c->y); !rc){
-    return rc;
-  }
-
-  if (auto rc = data_to_measures(data_yoffset, c->scale_y, &c->yoffset); !rc){
-    return rc;
-  }
-
-  for (const auto& v : c->x) {
-    if (v.unit == Unit::USER) {
-      scale_fit(v.value, &c->scale_x);
-    }
-  }
-
-  for (const auto& v : c->xoffset) {
-    if (v.unit == Unit::USER) {
-      scale_fit(v.value, &c->scale_x);
-    }
-  }
-
-  for (const auto& v : c->y) {
-    if (v.unit == Unit::USER) {
-      scale_fit(v.value, &c->scale_y);
-    }
-  }
-
-  for (const auto& v : c->yoffset) {
-    if (v.unit == Unit::USER) {
-      scale_fit(v.value, &c->scale_y);
-    }
-  }
-
   /* check configuraton */
-  if (c->x.size() != c->y.size()) {
-    return error(
-        ERROR,
-        "the length of the 'data-x' and 'data-y' properties must be equal");
+  if (databuf_len(c->x) != databuf_len(c->y)) {
+    return error(ERROR, "The length of the 'data-x' and 'data-y' lists must be equal");
   }
 
-  if (!c->xoffset.empty() &&
-      c->xoffset.size() != c->x.size()) {
-    return error(
-        ERROR,
-        "the length of the 'data-x' and 'data-x-low' properties must be equal");
+  if (databuf_len(c->xoffset) != 0 &&
+      databuf_len(c->x) != databuf_len(c->xoffset)) {
+    return error(ERROR, "the length of the 'data-x' and 'data-x-low' properties must be equal");
   }
 
-  if (!c->yoffset.empty() &&
-      c->yoffset.size() != c->y.size()) {
-    return error(
-        ERROR,
-        "the length of the 'data-y' and 'data-y-low' properties must be equal");
+  if (databuf_len(c->yoffset) != 0 &&
+      databuf_len(c->y) != databuf_len(c->yoffset)) {
+    return error(ERROR, "the length of the 'data-y' and 'data-y-low' properties must be equal");
   }
 
   return OK;
@@ -424,7 +338,27 @@ ReturnCode bars_autorange(
     PlotConfig* plot,
     const Expr* expr) {
   PlotBarsConfig conf;
-  return bars_configure(ctx, plot, &conf, expr);
+  if (auto rc = bars_configure(ctx, plot, &conf, expr); !rc) {
+    return rc;
+  }
+
+  if (auto rc = scale_fit(&plot->scale_x, conf.x); !rc) {
+    return rc;
+  }
+
+  if (auto rc = scale_fit(&plot->scale_x, conf.xoffset); !rc) {
+    return rc;
+  }
+
+  if (auto rc = scale_fit(&plot->scale_y, conf.y); !rc) {
+    return rc;
+  }
+
+  if (auto rc = scale_fit(&plot->scale_y, conf.yoffset); !rc) {
+    return rc;
+  }
+
+  return OK;
 }
 
 } // namespace clip::plotgen

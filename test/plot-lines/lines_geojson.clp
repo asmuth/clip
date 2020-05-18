@@ -3,7 +3,6 @@
 
 (figure/plot
     lines (
-        data-x (100 300 500 700 900)
-        data-y (200 300 200 300 100)
+        data (geojson "test/plot-lines/lines_geojson_data.geojson")
         color #06c
         stroke-width 2pt))

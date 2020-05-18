@@ -38,11 +38,11 @@ static const double kDefaultLineWidthPT = 1.5;
 static const double kDefaultLabelPaddingEM = .4;
 
 struct PlotLinesConfig {
-  std::vector<Measure> x;
-  std::vector<Measure> y;
+  DataBuffer x;
+  DataBuffer y;
   ScaleConfig scale_x;
   ScaleConfig scale_y;
-  std::vector<DataGroup> groups;
+  std::vector<size_t> groups;
   StrokeStyle stroke_style;
   Number marker_size;
   Marker marker_shape;
@@ -53,96 +53,6 @@ struct PlotLinesConfig {
   Number label_padding;
   Number label_font_size;
 };
-
-ReturnCode lines_draw(
-    Context* ctx,
-    PlotConfig* plot,
-    PlotLinesConfig* config) {
-  const auto& clip = plot_get_clip(plot, layer_get(ctx));
-  /* convert units */
-  convert_units(
-      {
-        std::bind(&convert_unit_user, scale_translate_fn(config->scale_x), _1),
-        std::bind(&convert_unit_relative, clip.w, _1)
-      },
-      &*config->x.begin(),
-      &*config->x.end());
-
-  convert_units(
-      {
-        std::bind(&convert_unit_user, scale_translate_fn(config->scale_y), _1),
-        std::bind(&convert_unit_relative, clip.h, _1)
-      },
-      &*config->y.begin(),
-      &*config->y.end());
-
-  /* draw lines */
-  for (const auto& group : config->groups) {
-    if (group.index.empty()) {
-      continue;
-    }
-
-    Path path;
-    for (auto i : group.index) {
-      auto sx = clip.x + config->x[i];
-      auto sy = clip.y + config->y[i];
-
-      if (i == group.index[0]) {
-        path.moveTo(sx, sy);
-      } else {
-        path.lineTo(sx, sy);
-      }
-    }
-
-    DrawCommand elem;
-    elem.path = path;
-    elem.stroke_style = config->stroke_style;
-    draw_shape(ctx, elem);
-  }
-
-  /* draw markers */
-  if (config->marker_size.value > 0) {
-    for (size_t i = 0; i < config->x.size(); ++i) {
-      auto sx = clip.x + config->x[i];
-      auto sy = clip.y + config->y[i];
-
-      const auto& shape = config->marker_shape;
-      const auto& color = config->marker_color;
-      auto size = config->marker_size;
-
-      if (auto rc = shape(ctx, Point(sx, sy), size, color); !rc) {
-        return rc;
-      }
-    }
-  }
-
-  /* draw labels */
-  for (size_t i = 0; i < config->labels.size(); ++i) {
-    const auto& label_text = config->labels[i];
-
-    auto label_offset  = config->marker_size;
-    auto label_padding = config->label_padding.value
-        ? config->label_padding
-        : unit_from_em(kDefaultLabelPaddingEM, config->label_font_size);
-
-    Point p(
-        clip.x + config->x[i],
-        clip.y + config->y[i] + label_offset.value + label_padding.value);
-
-    TextStyle style;
-    style.font = config->label_font;
-    style.color = config->label_color;
-    style.font_size = config->label_font_size;
-
-    auto ax = HAlign::CENTER;
-    auto ay = VAlign::BOTTOM;
-    if (auto rc = draw_text(ctx, label_text, p, ax, ay, style); rc != OK) {
-      return rc;
-    }
-  }
-
-  return OK;
-}
 
 ReturnCode lines_configure(
     Context* ctx,
@@ -162,12 +72,10 @@ ReturnCode lines_configure(
   c->marker_color = layer_get(ctx)->foreground_color;
 
   /* parse properties */
-  std::vector<std::string> data_x;
-  std::vector<std::string> data_y;
-
   auto config_rc = expr_walk_map_wrapped(expr, {
-    {"data-x", std::bind(&data_load_strings, _1, &data_x)},
-    {"data-y", std::bind(&data_load_strings, _1, &data_y)},
+    {"data", std::bind(&data_load_polylines2, _1, &c->x, &c->y, &c->groups)},
+    {"data-x", std::bind(&data_load_simple, _1, &c->x)},
+    {"data-y", std::bind(&data_load_simple, _1, &c->y)},
     {"limit-x", std::bind(&expr_to_float64_opt_pair, _1, &c->scale_x.min, &c->scale_x.max)},
     {"limit-x-min", std::bind(&expr_to_float64_opt, _1, &c->scale_x.min)},
     {"limit-x-max", std::bind(&expr_to_float64_opt, _1, &c->scale_x.max)},
@@ -201,46 +109,97 @@ ReturnCode lines_configure(
     return config_rc;
   }
 
-  /* scale configuration */
-  if (auto rc = data_to_measures(data_x, c->scale_x, &c->x); !rc){
+  if (databuf_len(c->x) != databuf_len(c->y)) {
+    return error(ERROR, "The length of the 'data-x' and 'data-y' lists must be equal");
+  }
+
+  if (!databuf_len(c->x) || !databuf_len(c->y)) {
+    return error(ERROR, "The dataset is empty");
+  }
+
+  return OK;
+}
+
+ReturnCode lines_draw(
+    Context* ctx,
+    const PlotConfig* plot,
+    const PlotLinesConfig* config) {
+  const auto& groups = config->groups;
+  const auto& clip = plot_get_clip(plot, layer_get(ctx));
+
+  /* transform data */
+  std::vector<double> xs;
+  if (auto rc = scale_translatev(config->scale_x, config->x, &xs); !rc) {
     return rc;
   }
 
-  if (auto rc = data_to_measures(data_y, c->scale_y, &c->y); !rc){
+  std::vector<double> ys;
+  if (auto rc = scale_translatev(config->scale_y, config->y, &ys); !rc) {
     return rc;
   }
 
-  for (const auto& v : c->x) {
-    if (v.unit == Unit::USER) {
-      scale_fit(v.value, &c->scale_x);
+  /* draw lines */
+  for (size_t n = 0; n <= groups.size(); ++n) {
+    auto line_begin = n > 0 ? groups[n - 1] : 0;
+    auto line_end = n < groups.size() ? groups[n] : std::min(xs.size(), ys.size());
+
+    Path path;
+    for (size_t i = line_begin; i < line_end; ++i) {
+      auto sx = clip.x + xs[i] * clip.w;
+      auto sy = clip.y + ys[i] * clip.h;
+
+      if (i == line_begin) {
+        path.moveTo(sx, sy);
+      } else {
+        path.lineTo(sx, sy);
+      }
+    }
+
+    DrawCommand elem;
+    elem.path = path;
+    elem.stroke_style = config->stroke_style;
+    draw_shape(ctx, elem);
+  }
+
+  /* draw markers */
+  if (config->marker_size.value > 0) {
+    for (size_t i = 0; i < xs.size(); ++i) {
+      auto sx = clip.x + xs[i] * clip.w;
+      auto sy = clip.y + ys[i] * clip.h;
+
+      const auto& shape = config->marker_shape;
+      const auto& color = config->marker_color;
+      auto size = config->marker_size;
+
+      if (auto rc = shape(ctx, Point(sx, sy), size, color); !rc) {
+        return rc;
+      }
     }
   }
 
-  for (const auto& v : c->y) {
-    if (v.unit == Unit::USER) {
-      scale_fit(v.value, &c->scale_y);
+  /* draw labels */
+  for (size_t i = 0; i < config->labels.size(); ++i) {
+    const auto& label_text = config->labels[i];
+
+    auto label_offset  = config->marker_size;
+    auto label_padding = config->label_padding.value
+        ? config->label_padding
+        : unit_from_em(kDefaultLabelPaddingEM, config->label_font_size);
+
+    Point p(
+        clip.x + xs[i] * clip.w,
+        clip.y + ys[i] * clip.h + label_offset.value + label_padding.value);
+
+    TextStyle style;
+    style.font = config->label_font;
+    style.color = config->label_color;
+    style.font_size = config->label_font_size;
+
+    auto ax = HAlign::CENTER;
+    auto ay = VAlign::BOTTOM;
+    if (auto rc = draw_text(ctx, label_text, p, ax, ay, style); rc != OK) {
+      return rc;
     }
-  }
-
-  /* check configuraton */
-  if (c->x.size() != c->y.size()) {
-    return error(
-        ERROR,
-        "The length of the 'data-x' and 'data-y' properties must be equal");
-  }
-
-  if (c->x.empty() || c->y.empty()) {
-    return error(
-        ERROR,
-        "The dataset is empty");
-  }
-
-  /* group data */
-  {
-    DataGroup g;
-    g.index = std::vector<size_t>(c->x.size());
-    std::iota(g.index.begin(), g.index.end(), 0);
-    c->groups.emplace_back(g);
   }
 
   return OK;
@@ -264,7 +223,19 @@ ReturnCode lines_autorange(
     PlotConfig* plot,
     const Expr* expr) {
   PlotLinesConfig conf;
-  return lines_configure(ctx, plot, &conf, expr);
+  if (auto rc = lines_configure(ctx, plot, &conf, expr); !rc) {
+    return rc;
+  }
+
+  if (auto rc = scale_fit(&plot->scale_x, conf.x); !rc) {
+    return rc;
+  }
+
+  if (auto rc = scale_fit(&plot->scale_y, conf.y); !rc) {
+    return rc;
+  }
+
+  return OK;
 }
 
 } // namespace clip::plotgen

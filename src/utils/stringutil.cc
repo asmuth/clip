@@ -13,6 +13,7 @@
  */
 #include <string>
 #include <assert.h>
+#include <iostream>
 #include "bufferutil.h"
 #include "stringutil.h"
 #include "UTF8.h"
@@ -326,6 +327,10 @@ bool StringUtil::isNumber(const char* begin, const char* end) {
   }
 
   for (; cur < end; ++cur) {
+    if (*cur == '.') {
+      break;
+    }
+
     if (!isdigit(*cur)) {
       return false;
     }

@@ -17,6 +17,14 @@ using namespace std::placeholders;
 
 namespace clip {
 
+void expr_each(
+    const Expr* expr,
+    std::function<void (const Expr* e)> fn) {
+  for (; expr; expr = expr_next(expr)) {
+    fn(expr);
+  }
+}
+
 ReturnCode expr_walk_map(
     const Expr* expr,
     const std::unordered_map<std::string, ExprVisitor>& fns,

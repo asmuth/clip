@@ -1,1 +1,1 @@
-ERROR: error while parsing data: 'a': invalid number: 'a' -- if this is intentional, set 'scale-[x,y] to (categorical ...)'
+ERROR: data 'a' is not a valid number; if this is intentional, set 'scale-[x,y] to (categorical ...)'

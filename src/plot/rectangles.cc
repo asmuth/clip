@@ -39,17 +39,16 @@ static const double kDefaultPointSizePT = 4;
 static const double kDefaultLabelPaddingEM = 0.2;
 
 struct PlotRectanglesConfig {
-  std::vector<Measure> x;
-  std::vector<Measure> y;
+  DataBuffer x;
+  DataBuffer y;
   ScaleConfig scale_x;
   ScaleConfig scale_y;
-  std::vector<Measure> size_x;
-  std::vector<Measure> size_y;
-  Measure size_x_default;
-  Measure size_y_default;
+  DataBuffer size_x;
+  DataBuffer size_y;
+  Number size_x_default;
+  Number size_y_default;
   Color color;
   std::vector<Color> colors;
-  Measure size;
 };
 
 ReturnCode rectangles_draw(
@@ -57,70 +56,46 @@ ReturnCode rectangles_draw(
     PlotConfig* plot,
     PlotRectanglesConfig* config) {
   const auto& clip = plot_get_clip(plot, layer_get(ctx));
+  const auto& scale_x = config->scale_x;
+  const auto& scale_y = config->scale_y;
 
-  /* convert units */
-  convert_units(
-      {
-        std::bind(&convert_unit_user, scale_translate_fn(config->scale_x), _1),
-        std::bind(&convert_unit_relative, clip.w, _1)
-      },
-      &*config->x.begin(),
-      &*config->x.end());
+  /* transform data */
+  std::vector<double> xs;
+  if (auto rc = scale_translatev(scale_x, config->x, &xs); !rc) {
+    return rc;
+  }
 
-  convert_units(
-      {
-        std::bind(&convert_unit_user, scale_translate_fn(config->scale_y), _1),
-        std::bind(&convert_unit_relative, clip.h, _1)
-      },
-      &*config->y.begin(),
-      &*config->y.end());
+  std::vector<double> ys;
+  if (auto rc = scale_translatev(scale_y, config->y, &ys); !rc) {
+    return rc;
+  }
 
-  convert_units(
-      {
-        std::bind(&convert_unit_user, scale_translate_magnitude_fn(config->scale_x), _1),
-        std::bind(&convert_unit_relative, clip.w, _1)
-      },
-      &*config->size_x.begin(),
-      &*config->size_x.end());
+  std::vector<double> sizes_x;
+  if (auto rc = scale_translate_magnitudev(scale_x, config->size_x, &sizes_x); !rc) {
+    return rc;
+  }
 
-  convert_units(
-      {
-        std::bind(&convert_unit_user, scale_translate_magnitude_fn(config->scale_y), _1),
-        std::bind(&convert_unit_relative, clip.h, _1)
-      },
-      &*config->size_y.begin(),
-      &*config->size_y.end());
+  std::vector<double> sizes_y;
+  if (auto rc = scale_translate_magnitudev(scale_y, config->size_y, &sizes_y); !rc) {
+    return rc;
+  }
 
-  convert_unit(
-      {
-        std::bind(&convert_unit_user, scale_translate_magnitude_fn(config->scale_x), _1),
-        std::bind(&convert_unit_relative, clip.w, _1)
-      },
-      &config->size_x_default);
-
-  convert_unit(
-      {
-        std::bind(&convert_unit_user, scale_translate_magnitude_fn(config->scale_y), _1),
-        std::bind(&convert_unit_relative, clip.h, _1)
-      },
-      &config->size_y_default);
-
-  /* draw markers */
-  for (size_t i = 0; i < config->x.size(); ++i) {
-    auto sx = clip.x + config->x[i];
-    auto sy = clip.y + config->y[i];
+  /* draw rectangles */
+  for (size_t i = 0; i < xs.size(); ++i) {
+    auto sx = clip.x + clip.w * xs[i];
+    auto sy = clip.y + clip.h * ys[i];
 
     const auto& color = config->colors.empty()
         ? config->color
         : config->colors[i % config->colors.size()];
 
-    double size_x = config->size_x.empty()
-        ? config->size_x_default
-        : config->size_x[i % config->size_x.size()];
+    double size_x = sizes_x.empty()
+        ? config->size_x_default.value
+        : sizes_x[i % sizes_x.size()] * clip.w;
 
-    double size_y = config->size_y.empty()
-        ? config->size_y_default
-        : config->size_y[i % config->size_y.size()];
+    double size_y = sizes_y.empty()
+        ? config->size_y_default.value
+        : sizes_y[i % sizes_y.size()] * clip.h;
 
     DrawCommand rect;
     rect.fill_style.color = color;
@@ -137,23 +112,30 @@ ReturnCode rectangles_configure(
     PlotConfig* plot,
     PlotRectanglesConfig* c,
     const Expr* expr) {
+  const auto& layer = *layer_get(ctx);
+
   /* set defaults from environment */
   c->scale_x = plot->scale_x;
   c->scale_y = plot->scale_y;
   c->color = layer_get(ctx)->foreground_color;
-  c->size = from_pt(kDefaultPointSizePT);
 
   /* parse properties */
-  std::vector<std::string> data_x;
-  std::vector<std::string> data_y;
   std::vector<std::string> data_colors;
-  std::vector<std::string> data_size_x;
-  std::vector<std::string> data_size_y;
   ColorMap color_map;
 
   auto config_rc = expr_walk_map_wrapped(expr, {
-    {"data-x", std::bind(&data_load_strings, _1, &data_x)},
-    {"data-y", std::bind(&data_load_strings, _1, &data_y)},
+    {"data", std::bind(&data_load_points2, _1, &c->x, &c->y)},
+    {"data-x", std::bind(&data_load_simple, _1, &c->x)},
+    {"data-y", std::bind(&data_load_simple, _1, &c->y)},
+    {"data-size-x", std::bind(&data_load_simple, _1, &c->size_x)},
+    {"data-size-y", std::bind(&data_load_simple, _1, &c->size_y)},
+    {
+      "data-size",
+      expr_calln_fn({
+        std::bind(&data_load_simple, _1, &c->size_x),
+        std::bind(&data_load_simple, _1, &c->size_y),
+      })
+    },
     {"limit-x", std::bind(&expr_to_float64_opt_pair, _1, &c->scale_x.min, &c->scale_x.max)},
     {"limit-x-min", std::bind(&expr_to_float64_opt, _1, &c->scale_x.min)},
     {"limit-x-max", std::bind(&expr_to_float64_opt, _1, &c->scale_x.max)},
@@ -167,21 +149,12 @@ ReturnCode rectangles_configure(
     {
       "size",
       expr_calln_fn({
-        std::bind(&measure_read, _1, &c->size_x_default),
-        std::bind(&measure_read, _1, &c->size_y_default),
+        std::bind(&expr_to_size, _1, layer, &c->size_x_default),
+        std::bind(&expr_to_size, _1, layer, &c->size_y_default),
       })
     },
-    {"size-x", std::bind(&measure_read, _1, &c->size_x_default)},
-    {"size-y", std::bind(&measure_read, _1, &c->size_y_default)},
-    {
-      "sizes",
-      expr_calln_fn({
-        std::bind(&data_load_strings, _1, &data_size_x),
-        std::bind(&data_load_strings, _1, &data_size_y),
-      })
-    },
-    {"sizes-x", std::bind(&data_load_strings, _1, &data_size_x)},
-    {"sizes-y", std::bind(&data_load_strings, _1, &data_size_y)},
+    {"size-x", std::bind(&expr_to_size, _1, layer, &c->size_x_default)},
+    {"size-y", std::bind(&expr_to_size, _1, layer, &c->size_y_default)},
     {"color", std::bind(&color_read, ctx, _1, &c->color)},
     {"colors", std::bind(&data_load_strings, _1, &data_colors)},
     {"color-map", std::bind(&color_map_read, ctx, _1, &color_map)},
@@ -191,40 +164,8 @@ ReturnCode rectangles_configure(
     return config_rc;
   }
 
-  /* scale configuration */
-  if (auto rc = data_to_measures(data_x, c->scale_x, &c->x); !rc){
-    return rc;
-  }
-
-  if (auto rc = data_to_measures(data_y, c->scale_y, &c->y); !rc){
-    return rc;
-  }
-
-  if (auto rc = data_to_measures(data_size_x, c->scale_x, &c->size_x); !rc){
-    return rc;
-  }
-
-  if (auto rc = data_to_measures(data_size_y, c->scale_y, &c->size_y); !rc){
-    return rc;
-  }
-
-  for (const auto& v : c->x) {
-    if (v.unit == Unit::USER) {
-      scale_fit(v.value, &c->scale_x);
-    }
-  }
-
-  for (const auto& v : c->y) {
-    if (v.unit == Unit::USER) {
-      scale_fit(v.value, &c->scale_y);
-    }
-  }
-
-  /* check configuration */
-  if (c->x.size() != c->y.size()) {
-    return error(
-        ERROR,
-        "the length of the 'data-x' and 'data-y' properties must be equal");
+  if (databuf_len(c->x) != databuf_len(c->y)) {
+    return error(ERROR, "The length of the 'data-x' and 'data-y' lists must be equal");
   }
 
   /* convert color data */
@@ -268,7 +209,19 @@ ReturnCode rectangles_autorange(
     PlotConfig* plot,
     const Expr* expr) {
   PlotRectanglesConfig conf;
-  return rectangles_configure(ctx, plot, &conf, expr);
+  if (auto rc = rectangles_configure(ctx, plot, &conf, expr); !rc) {
+    return rc;
+  }
+
+  if (auto rc = scale_fit(&plot->scale_x, conf.x); !rc) {
+    return rc;
+  }
+
+  if (auto rc = scale_fit(&plot->scale_y, conf.y); !rc) {
+    return rc;
+  }
+
+  return OK;
 }
 
 } // namespace clip::plotgen

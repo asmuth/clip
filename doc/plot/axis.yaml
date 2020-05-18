@@ -26,19 +26,19 @@ arguments:
     type: limit
     desc: |
       Set the axis value range to the closed interval [min, max].
-      If no explicit maximm is specified, the default interval is [0.0, 1.0].
+      If no explicit maximum is specified, the default interval is [0.0, 1.0].
 
   - name: limit-min
     type: limit_min
     desc: |
       Set the axis minimum value.
-      If no explicit maximm is specified, the default maximum value is '0.0'.
+      If no explicit maximum is specified, the default maximum value is '0.0'.
 
   - name: limit-max
     type: limit_max
     desc: |
       Set the axis maximum value.
-      If no explicit maximm is specified, the default maximum value is '1.0'.
+      If no explicit maximum is specified, the default maximum value is '1.0'.
 
   - name: label-placement
     type: label_placement

@@ -14,6 +14,7 @@
 #pragma once
 
 #include <vector>
+#include "option.h"
 
 namespace clip {
 
@@ -40,6 +41,8 @@ std::vector<H> fallback(const std::vector<H>& head, const T&... tail);
 
 template <typename H, typename... T>
 std::vector<H> fallback(const Option<H>& head, const T&... tail);
+
+double parse_f64(const std::string& s);
 
 } // namespace clip
 

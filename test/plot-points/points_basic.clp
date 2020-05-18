@@ -2,9 +2,11 @@
 (layer/set-dpi 96)
 
 (figure/plot
+    limit-x (0 1000)
+    limit-y (0 400)
     points (
-        data-x (100px 500px 700px 900px 300px)
-        data-y (200px 300px 200px 300px 100px)
+        data-x (100 500 700 900 300)
+        data-y (200 300 200 300 100)
         labels (A B A B A)
         label-font-size 18pt
         size 8px))

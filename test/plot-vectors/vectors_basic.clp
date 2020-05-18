@@ -2,8 +2,10 @@
 (layer/set-dpi 96)
 
 (figure/plot
+    limit-x (0 1000)
+    limit-y (0 400)
     vectors (
-        data-x (100px 500px 700px 600px 300px)
-        data-y (200px 300px 200px 300px 100px)
-        data-dx (10px 5px -30px -14px 12px)
-        data-dy (10px 9px 10px 8px 5px)))
+        data-x (100 500 700 600 300)
+        data-y (200 300 200 300 100)
+        data-dx (10 5 -30 -14 12)
+        data-dy (10 9 10 8 5)))

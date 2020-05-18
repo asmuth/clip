@@ -96,9 +96,6 @@ AxisDefinition::AxisDefinition() :
     label_offset(0.0),
     label_rotate(0.0) {}
 
-void axis_convert_units(AxisDefinition* config, const Context* ctx) {
-}
-
 ReturnCode axis_layout_labels(
     const AxisDefinition& axis,
     const Context* ctx,
@@ -190,11 +187,9 @@ ReturnCode axis_layout_title(
 }
 
 ReturnCode axis_layout(
-    const AxisDefinition& axis_config,
+    const AxisDefinition& axis,
     const Context* ctx,
     double* margin) {
-  auto axis = axis_config;
-  axis_convert_units(&axis, ctx);
 
   /* add margin for the labels */
   {
@@ -515,7 +510,7 @@ static ReturnCode plot_axis_horizontal(
   return OK;
 }
 
-ReturnCode axis_prepare(
+ReturnCode axis_set_defaults(
     Context* ctx,
     AxisDefinition* config) {
   scale_configure_layout_defaults(
@@ -531,7 +526,6 @@ ReturnCode axis_prepare(
     }
   }
 
-  axis_convert_units(config, ctx);
   return OK;
 }
 
@@ -747,7 +741,7 @@ ReturnCode plot_axis(Context* ctx, PlotConfig* plot, const Expr* expr) {
     }
   }
 
-  if (auto rc = axis_prepare(ctx, config.get()); !rc) {
+  if (auto rc = axis_set_defaults(ctx, config.get()); !rc) {
     return rc;
   }
 
@@ -1271,7 +1265,7 @@ ReturnCode plot_axes(Context* ctx, PlotConfig* plot, const Expr* expr) {
       continue;
     }
 
-    if (auto rc = axis_prepare(ctx, &axes[i]); !rc) {
+    if (auto rc = axis_set_defaults(ctx, &axes[i]); !rc) {
       return rc;
     }
 

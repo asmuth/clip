@@ -25,6 +25,7 @@
 #include "utils/option.h"
 
 namespace clip {
+struct DataBuffer;
 
 enum class ScaleKind {
   LINEAR, LOGARITHMIC, CATEGORICAL
@@ -60,6 +61,8 @@ using ScaleLayoutFn = std::function<
         ScaleLayout*)>;
 
 void scale_fit(double value, ScaleConfig* domain);
+void scale_fit(ScaleConfig* scale, double value);
+ReturnCode scale_fit(ScaleConfig* scale, const DataBuffer& buf);
 
 double scale_min(const ScaleConfig& domain);
 double scale_max(const ScaleConfig& domain);
@@ -68,9 +71,28 @@ double scale_translate(
     const ScaleConfig& domain,
     double value);
 
+std::vector<double> scale_translatev(
+    const ScaleConfig& domain,
+    const std::vector<double>& values);
+
+ReturnCode scale_translatev(
+    const ScaleConfig& scale,
+    const DataBuffer& buffer,
+    std::vector<double>* values);
+
+ReturnCode scale_map_categories(
+    const ScaleConfig& scale,
+    const DataBuffer& buffer,
+    std::vector<double>* values);
+
 double scale_translate_magnitude(
     const ScaleConfig& domain,
     double value);
+
+ReturnCode scale_translate_magnitudev(
+    const ScaleConfig& scale,
+    const DataBuffer& buffer,
+    std::vector<double>* values);
 
 double scale_translate_categorical(
     const ScaleConfig& domain,

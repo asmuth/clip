@@ -34,8 +34,8 @@ namespace clip::plotgen {
 static const double kDefaultLabelPaddingEM = 0.8;
 
 struct PlotLabelsConfig {
-  std::vector<Measure> x;
-  std::vector<Measure> y;
+  DataBuffer x;
+  DataBuffer y;
   ScaleConfig scale_x;
   ScaleConfig scale_y;
   std::vector<std::string> labels;
@@ -51,20 +51,16 @@ ReturnCode labels_draw(
     PlotLabelsConfig* config) {
   const auto& clip = plot_get_clip(plot, layer_get(ctx));
 
-  /* convert units */
-  convert_units(
-      {
-        std::bind(&convert_unit_user, scale_translate_fn(config->scale_x), _1),
-      },
-      &*config->x.begin(),
-      &*config->x.end());
+  /* transform data */
+  std::vector<double> xs;
+  if (auto rc = scale_translatev(config->scale_x, config->x, &xs); !rc) {
+    return rc;
+  }
 
-  convert_units(
-      {
-        std::bind(&convert_unit_user, scale_translate_fn(config->scale_y), _1),
-      },
-      &*config->y.begin(),
-      &*config->y.end());
+  std::vector<double> ys;
+  if (auto rc = scale_translatev(config->scale_y, config->y, &ys); !rc) {
+    return rc;
+  }
 
   /* draw labels */
   for (size_t i = 0; i < config->labels.size(); ++i) {
@@ -74,8 +70,8 @@ ReturnCode labels_draw(
         from_em(kDefaultLabelPaddingEM, config->label_font_size.value));
 
     Point p(
-        clip.x + config->x[i] * clip.w,
-        clip.y + (1.0 - config->y[i]) * clip.h - label_padding);
+        clip.x + xs[i] * clip.w,
+        clip.y + (1.0 - ys[i]) * clip.h - label_padding);
 
     TextStyle style;
     style.font = config->label_font;
@@ -106,12 +102,10 @@ ReturnCode labels_configure(
   c->label_font_size = layer_get_font_size(ctx);
 
   /* parse properties */
-  std::vector<std::string> data_x;
-  std::vector<std::string> data_y;
-
   auto config_rc = expr_walk_map_wrapped(expr, {
-    {"data-x", std::bind(&data_load_strings, _1, &data_x)},
-    {"data-y", std::bind(&data_load_strings, _1, &data_y)},
+    {"data", std::bind(&data_load_points2, _1, &c->x, &c->y)},
+    {"data-x", std::bind(&data_load_simple, _1, &c->x)},
+    {"data-y", std::bind(&data_load_simple, _1, &c->y)},
     {"limit-x", std::bind(&expr_to_float64_opt_pair, _1, &c->scale_x.min, &c->scale_x.max)},
     {"limit-x-min", std::bind(&expr_to_float64_opt, _1, &c->scale_x.min)},
     {"limit-x-max", std::bind(&expr_to_float64_opt, _1, &c->scale_x.max)},
@@ -134,32 +128,9 @@ ReturnCode labels_configure(
     return config_rc;
   }
 
-  /* scale configuration */
-  if (auto rc = data_to_measures(data_x, c->scale_x, &c->x); !rc){
-    return rc;
-  }
-
-  if (auto rc = data_to_measures(data_y, c->scale_y, &c->y); !rc){
-    return rc;
-  }
-
-  for (const auto& v : c->x) {
-    if (v.unit == Unit::USER) {
-      scale_fit(v.value, &c->scale_x);
-    }
-  }
-
-  for (const auto& v : c->y) {
-    if (v.unit == Unit::USER) {
-      scale_fit(v.value, &c->scale_y);
-    }
-  }
-
   /* check configuration */
-  if (c->x.empty() || c->y.empty() || c->x.size() != c->y.size()) {
-    return error(
-        ERROR,
-        "the length of the 'data-x' and 'data-y' properties must be equal and non-empty");
+  if (databuf_len(c->x) != databuf_len(c->y)) {
+    return error(ERROR, "The length of the 'data-x' and 'data-y' lists must be equal");
   }
 
   return OK;
@@ -183,7 +154,19 @@ ReturnCode labels_autorange(
     PlotConfig* plot,
     const Expr* expr) {
   PlotLabelsConfig conf;
-  return labels_configure(ctx, plot, &conf, expr);
+  if (auto rc = labels_configure(ctx, plot, &conf, expr); !rc) {
+    return rc;
+  }
+
+  if (auto rc = scale_fit(&plot->scale_x, conf.x); !rc) {
+    return rc;
+  }
+
+  if (auto rc = scale_fit(&plot->scale_y, conf.y); !rc) {
+    return rc;
+  }
+
+  return OK;
 }
 
 } // namespace clip::plotgen
