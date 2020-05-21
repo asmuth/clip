@@ -38,6 +38,7 @@ struct Layer {
   Color text_color;
   ColorPalette color_palette;
 
+  draw_style::compound draw_default_style;
   DrawCommandList drawlist;
 };
 
@@ -64,6 +65,7 @@ const Layer* layer_get(const Context* ctx);
 Number layer_get_width(const Layer& layer);
 Number layer_get_height(const Layer& layer);
 
+double layer_get_dpi(const Layer& layer);
 double layer_get_dpi(const Layer* layer);
 double layer_get_dpi(const Context* ctx);
 void layer_set_dpi(Layer* layer, double dpi);

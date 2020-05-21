@@ -21,7 +21,6 @@ namespace clip {
 struct vec2;
 struct vec3;
 
-
 /**
  * A two-dimensional vector of the following form:
  *
@@ -33,6 +32,8 @@ struct vec2 {
   vec2();
   vec2(double x, double y);
   explicit vec2(const vec3& v);
+  double& operator[] (size_t idx);
+  double operator[] (size_t idx) const;
   double x;
   double y;
 };

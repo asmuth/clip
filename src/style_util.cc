@@ -11,10 +11,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#include "context.h"
-#include "draw.h"
+#include "style_util.h"
+
+#include <functional>
 
 namespace clip {
+
+bool style_is_visible(const draw_style::compound& style) {
+  return
+      style.fill_solid.size() > 0 ||
+      style.fill_hatch.size() > 0 ||
+      style.stroke_solid.size() > 0 ||
+      style.stroke_dash.size() > 0;
+}
 
 } // namespace clip
 

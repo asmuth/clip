@@ -27,6 +27,7 @@ namespace clip {
 
 struct DrawCommand {
   Path path;
+  draw_style::compound style;
   StrokeStyle stroke_style;
   FillStyle fill_style;
   Option<AntialiasingMode> antialiasing_mode;

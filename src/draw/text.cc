@@ -80,8 +80,8 @@ ReturnCode text_draw(
   auto offset = layout_align(
       bbox,
       {
-        placement.position[0].value,
-        placement.position[1].value,
+        placement.position.x,
+        placement.position.y,
       },
       placement.align_x,
       placement.align_y);
@@ -113,8 +113,8 @@ ReturnCode text_draw(
   style.font = layer_get_font(ctx);
   style.font_size = layer_get_font_size(ctx);
 
-  placement.position[0] = layer_get_width(*layer) * .5f;
-  placement.position[1] = layer_get_height(*layer) * .5f;
+  placement.position[0] = layer_get_width(*layer).value * .5f;
+  placement.position[1] = layer_get_height(*layer).value * .5f;
   placement.align_x = HAlign::CENTER;
   placement.align_y = VAlign::CENTER;
 

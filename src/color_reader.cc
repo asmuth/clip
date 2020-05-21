@@ -24,8 +24,13 @@ ReturnCode color_read(
     const Context* ctx,
     const Expr* expr,
     Color* color) {
-  const auto layer = layer_get(ctx);
+  return expr_to_color(expr, *layer_get(ctx), color);
+}
 
+ReturnCode expr_to_color(
+    const Expr* expr,
+    const Layer& layer,
+    Color* color) {
   if (expr_is_value(expr)) {
     const auto value = expr_get_value(expr);
 
@@ -38,9 +43,9 @@ ReturnCode color_read(
 
     // color palette index
     if (StringUtil::isDigitString(value)) {
-      if (!layer->color_palette.empty()) {
-        *color = layer->color_palette[
-            (std::stol(value) - 1) % layer->color_palette.size()];
+      if (!layer.color_palette.empty()) {
+        *color = layer.color_palette[
+            (std::stol(value) - 1) % layer.color_palette.size()];
       }
 
       return OK;

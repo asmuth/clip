@@ -36,6 +36,24 @@ vec2::vec2(
     x(v.x),
     y(v.y) {}
 
+double& vec2::operator[] (size_t idx) {
+  static double invalid = std::nan("");
+
+  switch (idx) {
+    case 0: return x;
+    case 1: return y;
+    default: return invalid;
+  }
+}
+
+double vec2::operator[] (size_t idx) const {
+  switch (idx) {
+    case 0: return x;
+    case 1: return y;
+    default: return std::nan("");
+  }
+}
+
 vec3::vec3() :
     x(0.0),
     y(0.0),

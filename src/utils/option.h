@@ -45,6 +45,8 @@ public:
   bool isEmpty() const;
   T& get() const;
 
+  const T& value_or(const T& alternative) const;
+
 protected:
   char value_data_[sizeof(T)];
   T* value_;

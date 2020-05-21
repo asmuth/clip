@@ -198,7 +198,7 @@ ReturnCode expr_to_vec2(
     const Expr* expr,
     const UnitConvMap& conv1,
     const UnitConvMap& conv2,
-    Vector2* v) {
+    vec2* v) {
   if (!expr_is_list(expr)) {
     return err_invalid_value(expr_inspect(expr), {"(<x> <y>)"});
   }
@@ -211,9 +211,12 @@ ReturnCode expr_to_vec2(
   for (size_t i = 0; i < 2; ++i) {
     const auto& conv = i == 0 ? conv1 : conv2;
 
-    if (auto rc = expr_to_number(args[i], conv, &v->at(i)); !rc) {
+    Number n;
+    if (auto rc = expr_to_number(args[i], conv, &n); !rc) {
       return rc;
     }
+
+   (*v)[i] = n.value;
   }
 
   return OK;

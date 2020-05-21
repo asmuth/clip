@@ -1,6 +1,6 @@
 /**
  * This file is part of the "clip" project
- *   Copyright (c) 2018 Paul Asmuth
+ *   Copyright (c) 2020 Paul Asmuth
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -11,10 +11,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#include "context.h"
-#include "draw.h"
+#pragma once
+#include <stdlib.h>
+#include <string>
+#include <vector>
 
-namespace clip {
+#include "layer.h"
+#include "graphics/path.h"
+#include "style.h"
 
-} // namespace clip
+namespace clip::draw {
+
+struct path_op {
+  Path path;
+  draw_style::compound style;
+  Option<AntialiasingMode> antialiasing_mode;
+};
+
+/**
+ * Draw a path
+ */
+ReturnCode path(const path_op& op, Layer* l);
+
+} // namespace clip::draw
 

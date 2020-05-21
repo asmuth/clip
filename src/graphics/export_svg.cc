@@ -127,98 +127,178 @@ std::string svg_poly_data(const Polygon2& poly) {
   return poly_data.str();
 }
 
-Status svg_add_path(
+std::string svg_antialiasing_attrs(Option<AntialiasingMode> antialiasing_mode) {
+  if (antialiasing_mode &&
+      *antialiasing_mode == AntialiasingMode::DISABLE) {
+    return svg_attr("shape-rendering", "crispEdges");
+  } else {
+    return {};
+  }
+}
+
+Status svg_add_path_compound(
     const Path& path,
-    const FillStyle& fill_style,
-    const StrokeStyle& stroke_style,
+    const draw_style::fill_solid& fill_style,
+    const draw_style::stroke_solid& stroke_style,
     Option<AntialiasingMode> antialiasing_mode,
     SVGDataRef svg) {
-  std::string fill_opts;
-  std::string stroke_opts;
-  std::string extra_opts;
+  svg->buffer
+      << "  "
+      << "<path"
+      << svg_attr("d", svg_path_data(path_transform(path, svg->proj)))
+      << svg_attr("fill", fill_style.color.to_hex_str())
+      << svg_attr("fill-opacity", fill_style.color.component(3))
+      << svg_attr("stroke-width", stroke_style.width.value)
+      << svg_attr("stroke", stroke_style.color.to_hex_str(4))
+      << svg_antialiasing_attrs(antialiasing_mode)
+      << "/>"
+      << "\n";
 
-  bool fill_present = false;
-  if (fill_style.color && !fill_style.hatch) {
-    fill_opts += svg_attr("fill", fill_style.color->to_hex_str());
-    fill_opts += svg_attr("fill-opacity", fill_style.color->component(3));
-    fill_present = true;
-  } else {
-    fill_opts = svg_attr("fill", "none");
+  return OK;
+}
+
+Status svg_add_path_fill_solid(
+    const Path& path,
+    const draw_style::fill_solid& style,
+    Option<AntialiasingMode> antialiasing_mode,
+    SVGDataRef svg) {
+  svg->buffer
+      << "  "
+      << "<path"
+      << svg_attr("d", svg_path_data(path_transform(path, svg->proj)))
+      << svg_attr("fill", style.color.to_hex_str())
+      << svg_attr("fill-opacity", style.color.component(3))
+      << svg_antialiasing_attrs(antialiasing_mode)
+      << "/>"
+      << "\n";
+
+  return OK;
+}
+
+Status svg_add_path_fill_hatch(
+    const Path& path,
+    const draw_style::fill_hatch& style,
+    Option<AntialiasingMode> antialiasing_mode,
+    SVGDataRef svg) {
+  auto hatched = shape_hatch(
+      path_to_polygon_simple(path),
+      style.angle_deg,
+      style.offset.value,
+      style.stride.value,
+      style.width.value);
+
+  svg->buffer
+      << "  "
+      << "<path"
+      << svg_attr("d", svg_path_data(path_transform(hatched, svg->proj)))
+      << svg_attr("fill", style.color.to_hex_str(4))
+      << svg_antialiasing_attrs(antialiasing_mode)
+      << "/>"
+      << "\n";
+
+  return OK;
+}
+
+Status svg_add_path_stroke_solid(
+    const Path& path,
+    const draw_style::stroke_solid& style,
+    Option<AntialiasingMode> antialiasing_mode,
+    SVGDataRef svg) {
+  svg->buffer
+      << "  "
+      << "<path"
+      << svg_attr("d", svg_path_data(path_transform(path, svg->proj)))
+      << svg_attr("fill", "none")
+      << svg_attr("stroke-width", style.width.value)
+      << svg_attr("stroke", style.color.to_hex_str(4))
+      << svg_antialiasing_attrs(antialiasing_mode)
+      << "/>"
+      << "\n";
+
+  return OK;
+}
+
+Status svg_add_path_stroke_dash(
+    const Path& path,
+    const draw_style::stroke_dash& style,
+    Option<AntialiasingMode> antialiasing_mode,
+    SVGDataRef svg) {
+  std::string svg_dash_pattern;
+  for (const auto& v : style.pattern) {
+    svg_dash_pattern += fmt::format("{} ", v.value);
   }
 
-  bool stroke_present = false;
-  if (stroke_style.line_width.value) {
-    stroke_present = true;
+  svg->buffer
+      << "  "
+      << "<path"
+      << svg_attr("d", svg_path_data(path_transform(path, svg->proj)))
+      << svg_attr("fill", "none")
+      << svg_attr("stroke-width", style.width.value)
+      << svg_attr("stroke", style.color.to_hex_str(4))
+      << svg_attr("stroke-dasharray", svg_dash_pattern)
+      << svg_attr("stroke-dashoffset", style.offset.value)
+      << svg_antialiasing_attrs(antialiasing_mode)
+      << "/>"
+      << "\n";
 
-    stroke_opts += svg_attr("stroke-width", stroke_style.line_width.value);
-    stroke_opts += svg_attr("stroke", stroke_style.color.to_hex_str(4));
+  return OK;
+}
 
-    switch (stroke_style.dash_type) {
-      case StrokeStyle::SOLID:
-        break;
-      case StrokeStyle::DASH: {
-        std::string dash_pattern;
-        for (const auto& v : stroke_style.dash_pattern) {
-          dash_pattern += fmt::format("{} ", v);
-        }
+Status svg_add_path(
+    const Path& path,
+    const draw_style::compound& style,
+    Option<AntialiasingMode> aa_mode,
+    SVGDataRef svg) {
+  // compound fill_solid + stroke_solid
+  if (style.fill_solid.size() == 1 &&
+      style.fill_hatch.empty() &&
+      style.stroke_solid.size() == 1 &&
+      style.stroke_dash.empty()) {
+    return svg_add_path_compound(
+        path,
+        style.fill_solid[0],
+        style.stroke_solid[0],
+        aa_mode,
+        svg);
+  }
 
-        stroke_opts += svg_attr("stroke-dasharray", dash_pattern);
-        stroke_opts += svg_attr("stroke-dashoffset", stroke_style.dash_offset);
-        break;
-      }
+  // fill_solid
+  for (const auto& s : style.fill_solid) {
+    if (auto rc = svg_add_path_fill_solid(path, s, aa_mode, svg); !rc) {
+      return rc;
     }
   }
 
-  if (antialiasing_mode) {
-    switch (*antialiasing_mode) {
-      case AntialiasingMode::ENABLE:
-        break;
-      case AntialiasingMode::DISABLE:
-        extra_opts += svg_attr("shape-rendering", "crispEdges");
-        break;
+  // fill_hatch
+  for (const auto& s : style.fill_hatch) {
+    if (auto rc = svg_add_path_fill_hatch(path, s, aa_mode, svg); !rc) {
+      return rc;
     }
   }
 
-  if (fill_style.hatch) {
-    auto hatched = shape_hatch(
-        path_to_polygon_simple(path),
-        fill_style.hatch_angle_deg,
-        fill_style.hatch_offset,
-        fill_style.hatch_stride,
-        fill_style.hatch_width);
-
-    svg->buffer
-        << "  "
-        << "<path"
-        << svg_attr("d", svg_path_data(path_transform(hatched, svg->proj)))
-        << svg_attr("fill", fill_style.color->to_hex_str(4))
-        << extra_opts
-        << "/>"
-        << "\n";
+  // stroke_solid
+  for (const auto& s : style.stroke_solid) {
+    if (auto rc = svg_add_path_stroke_solid(path, s, aa_mode, svg); !rc) {
+      return rc;
+    }
   }
 
-  if (fill_present || stroke_present) {
-    svg->buffer
-        << "  "
-        << "<path"
-        << svg_attr("d", svg_path_data(path_transform(path, svg->proj)))
-        << fill_opts
-        << stroke_opts
-        << extra_opts
-        << "/>"
-        << "\n";
+  // stroke_dash
+  for (const auto& s : style.stroke_dash) {
+    if (auto rc = svg_add_path_stroke_dash(path, s, aa_mode, svg); !rc) {
+      return rc;
+    }
   }
 
   return OK;
 }
 
-Status svg_add_shape_elem(
+Status svg_add_path(
     const DrawCommand& elem,
     SVGDataRef svg) {
   return svg_add_path(
       elem.path,
-      elem.fill_style,
-      elem.stroke_style,
+      elem.style,
       elem.antialiasing_mode,
       svg);
 }
@@ -305,17 +385,6 @@ Status svg_add_text_elem_embed(
   return OK;
 }
 
-Status svg_add_text_elem(
-    const TextInfo& elem,
-    double dpi,
-    SVGDataRef svg) {
-  if (elem.style.font.font_family_css.empty()) {
-    return svg_add_text_elem_embed(elem, dpi, svg);
-  } else {
-    return svg_add_text_elem_native(elem, svg);
-  }
-}
-
 struct SVGDrawOp {
   std::function<ReturnCode (SVGDataRef svg)> draw_fn;
   uint32_t draw_idx;
@@ -333,7 +402,7 @@ ReturnCode export_svg(
   svg->proj = mul(translate2({0, height}), scale2({1, -1}));
 
   for (const auto& cmd : layer->drawlist) {
-    if (auto rc = svg_add_shape_elem(cmd, svg); !rc) {
+    if (auto rc = svg_add_path(cmd, svg); !rc) {
       return rc;
     }
   }

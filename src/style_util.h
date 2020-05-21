@@ -11,10 +11,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#include "context.h"
-#include "draw.h"
+#pragma once
+#include "style.h"
 
 namespace clip {
+
+bool style_is_visible(const draw_style::compound& style);
 
 } // namespace clip
 

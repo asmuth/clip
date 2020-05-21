@@ -14,6 +14,7 @@
 #pragma once
 
 #include <graphics/brush.h>
+#include "style.h"
 #include "return_code.h"
 #include "sexpr.h"
 
@@ -33,6 +34,21 @@ ReturnCode fill_style_read_solid(
     const Context* ctx,
     const Expr* expr,
     FillStyle* style);
+
+ReturnCode style_read(
+    const Expr* expr,
+    const Layer& layer,
+    draw_style::compound* styles);
+
+ReturnCode style_read_fill(
+    const Expr* expr,
+    const Layer& layer,
+    draw_style::compound* styles);
+
+ReturnCode style_read_stroke(
+    const Expr* expr,
+    const Layer& layer,
+    draw_style::compound* styles);
 
 } // namespace clip
 

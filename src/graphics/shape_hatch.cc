@@ -26,6 +26,11 @@ Path shape_hatch(
   auto direction = from_deg(angle_deg);
   auto ortho = from_deg(angle_deg + 90);
 
+  // return an empty path for pathological inputs
+  if (stride == 0) {
+    return {};
+  }
+
   Path p;
   for (size_t i = 0; ; ++i) {
     bool edge_reached = true;

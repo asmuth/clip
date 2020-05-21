@@ -58,5 +58,62 @@ struct StrokeStyle {
   std::vector<Measure> dash_pattern;
 };
 
+namespace draw_style {
+
+/**
+ * Fill the shape with a solid color
+ */
+struct fill_solid {
+  Color color;
+};
+
+/**
+ * Fill the shape with a hatch pattern
+ */
+struct fill_hatch {
+  Color color;
+  double angle_deg;
+  Number offset;
+  Number stride;
+  Number width;
+};
+
+/**
+ * Stroke the outline of the shape with a solid line
+ */
+struct stroke_solid {
+  Color color;
+  Number width;
+};
+
+/**
+ * Stroke the outline of the shape with a dotted line
+ */
+struct stroke_dash {
+  Color color;
+  Number width;
+  std::vector<Number> pattern;
+  Number offset;
+};
+
+/**
+ * Draw the shape using multiple styles. The order in which styles are applied
+ * is as follows (first to last):
+ *
+ *   - fill_solid
+ *   - fill_hatch
+ *   - stroke_solid
+ *   - stroke_dash
+ *
+ */
+struct compound {
+  std::vector<draw_style::fill_solid> fill_solid;
+  std::vector<draw_style::fill_hatch> fill_hatch;
+  std::vector<draw_style::stroke_solid> stroke_solid;
+  std::vector<draw_style::stroke_dash> stroke_dash;
+};
+
+
+} // namespace draw_style
 } // namespace clip
 

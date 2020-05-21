@@ -147,5 +147,164 @@ ReturnCode fill_style_read(
       expr_inspect(expr));
 }
 
+ReturnCode style_read_fill_solid(
+    const Expr* expr,
+    const Layer& layer,
+    draw_style::compound* styles) {
+  Color color;
+  if (auto rc = expr_to_color(expr, layer, &color); !rc) {
+    return rc;
+  }
+
+  styles->fill_solid.push_back(draw_style::fill_solid {
+    .color = color
+  });
+
+  return OK;
+}
+
+ReturnCode style_read_fill_hatch(
+    const Expr* expr,
+    const Layer& layer,
+    draw_style::compound* styles) {
+  draw_style::fill_hatch style;
+
+  style.angle_deg = -45;
+  style.width = unit_from_pt(2, layer_get_dpi(layer));
+  style.stride = unit_from_pt(6, layer_get_dpi(layer));
+
+  auto rc = expr_walk_map(expr, {
+    {"color", std::bind(&expr_to_color, _1, layer, &style.color)},
+    {"width", std::bind(&expr_to_size, _1, layer, &style.width)},
+    {"stride", std::bind(&expr_to_size, _1, layer, &style.stride)},
+    {"angle", std::bind(&expr_to_float64, _1, &style.angle_deg)},
+    {"offset", std::bind(&expr_to_size, _1, layer, &style.offset)},
+  });
+
+  if (!rc) {
+    return rc;
+  }
+
+  styles->fill_hatch.push_back(style);
+  return OK;
+}
+
+ReturnCode style_read_fill(
+    const Expr* expr,
+    const Layer& layer,
+    draw_style::compound* styles) {
+  if (expr_is_list(expr, "solid")) {
+    return style_read_fill_solid(expr_next(expr_get_list(expr)), layer, styles);
+  }
+
+  if (expr_is_list(expr, "hatch")) {
+    return style_read_fill_hatch(expr_next(expr_get_list(expr)), layer, styles);
+  }
+
+  return style_read_fill_solid(expr, layer, styles);
+}
+
+ReturnCode style_read_stroke_solid(
+    const Expr* expr,
+    const Layer& layer,
+    draw_style::compound* styles) {
+  draw_style::stroke_solid style;
+  style.width = unit_from_pt(1, layer_get_dpi(layer));
+
+  auto rc = expr_walk_map(expr, {
+    {"color", std::bind(&expr_to_color, _1, layer, &style.color)},
+    {"width", std::bind(&expr_to_size, _1, layer, &style.width)},
+  });
+
+  if (!rc) {
+    return rc;
+  }
+
+  styles->stroke_solid.push_back(style);
+  return OK;
+}
+
+ReturnCode style_read_stroke_solid_short(
+    const Expr* expr,
+    const Layer& layer,
+    draw_style::compound* styles) {
+  auto args = expr_collect(expr);
+  if (args.size() != 2) {
+    return err_invalid_nargs(args.size(), 2);
+  }
+
+  Number width;
+  if (auto rc = expr_to_size(args[0], layer, &width); !rc) {
+    return rc;
+  }
+
+  Color color;
+  if (auto rc = expr_to_color(args[1], layer, &color); !rc) {
+    return rc;
+  }
+
+  styles->stroke_solid.push_back(draw_style::stroke_solid {
+    .color = color,
+    .width = width
+  });
+
+  return OK;
+}
+
+ReturnCode style_read_stroke_dash(
+    const Expr* expr,
+    const Layer& layer,
+    draw_style::compound* styles) {
+  draw_style::stroke_dash style;
+  style.width = unit_from_pt(1, layer_get_dpi(layer));
+  style.pattern = {
+    unit_from_pt(4, layer_get_dpi(layer)),
+    unit_from_pt(4, layer_get_dpi(layer)),
+  };
+
+  auto rc = expr_walk_map(expr, {
+    {"color", std::bind(&expr_to_color, _1, layer, &style.color)},
+    {"width", std::bind(&expr_to_size, _1, layer, &style.width)},
+    {"pattern", expr_tov_fn<Number>(std::bind(&expr_to_size, _1, layer, _2), &style.pattern)},
+    {"offset", std::bind(&expr_to_size, _1, layer, &style.offset)},
+  });
+
+  if (!rc) {
+    return rc;
+  }
+
+  styles->stroke_dash.push_back(style);
+  return OK;
+}
+
+ReturnCode style_read_stroke(
+    const Expr* expr,
+    const Layer& layer,
+    draw_style::compound* styles) {
+  if (expr_is_list(expr, "solid")) {
+    return style_read_stroke_solid(expr_next(expr_get_list(expr)), layer, styles);
+  }
+
+  if (expr_is_list(expr, "dash")) {
+    return style_read_stroke_dash(expr_next(expr_get_list(expr)), layer, styles);
+  }
+
+  if (expr_is_list(expr)) {
+    return style_read_stroke_solid_short(expr_get_list(expr), layer, styles);
+  }
+
+  return err_invalid_value(expr_inspect(expr), {"solid", "dash"});
+}
+
+ReturnCode style_read(
+    const Expr* expr,
+    const Layer& layer,
+    draw_style::compound* styles) {
+  return expr_walk_map_wrapped(expr, {
+    {"fill", std::bind(&style_read_fill, _1, layer, styles)},
+    {"stroke", std::bind(&style_read_stroke, _1, layer, styles)},
+  });
+}
+
 } // namespace clip
 

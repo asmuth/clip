@@ -130,6 +130,15 @@ T& Option<T>::get() const {
 }
 
 template <typename T>
+const T& Option<T>::value_or(const T& alternative) const {
+  if (value_) {
+    return *value_;
+  } else {
+    return alternative;
+  }
+}
+
+template <typename T>
 bool Option<T>::isEmpty() const {
   return value_ == nullptr;
 }

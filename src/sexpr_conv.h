@@ -74,7 +74,7 @@ ReturnCode expr_to_vec2(
     const Expr* expr,
     const UnitConvMap& conv1,
     const UnitConvMap& conv2,
-    Vector2* v);
+    vec2* v);
 
 ReturnCode expr_to_copy(
     const Expr* expr,

@@ -20,8 +20,56 @@
 
 namespace clip {
 
-void draw_shape(Context* ctx, DrawCommand elem) {
-  layer_get(ctx)->drawlist.emplace_back(std::move(elem));
+void draw_shape(Context* ctx, DrawCommand shape) {
+  auto layer = layer_get(ctx);
+
+  if (shape.fill_style.color) {
+    if (shape.fill_style.hatch) {
+      shape.style.fill_hatch.push_back({
+        .color = *shape.fill_style.color,
+        .angle_deg = shape.fill_style.hatch_angle_deg,
+        .offset = Number(shape.fill_style.hatch_offset),
+        .stride = Number(shape.fill_style.hatch_stride),
+        .width = Number(shape.fill_style.hatch_width),
+      });
+    } else {
+      shape.style.fill_solid.push_back({
+        .color = *shape.fill_style.color
+      });
+    }
+
+    shape.fill_style = {};
+  }
+
+  if (shape.stroke_style.line_width.value) {
+    switch (shape.stroke_style.dash_type) {
+      case StrokeStyle::SOLID:
+        shape.style.stroke_solid.push_back({
+          .color = shape.stroke_style.color,
+          .width = shape.stroke_style.line_width
+        });
+        break;
+      case StrokeStyle::DASH:
+        std::vector<Number> pattern(shape.stroke_style.dash_pattern.size());
+        std::transform(
+            shape.stroke_style.dash_pattern.begin(),
+            shape.stroke_style.dash_pattern.end(),
+            pattern.begin(),
+            [] (auto v) { return Number(v); });
+
+        shape.style.stroke_dash.push_back({
+          .color = shape.stroke_style.color,
+          .width = shape.stroke_style.line_width,
+          .pattern = pattern,
+          .offset = Number(shape.stroke_style.dash_offset),
+        });
+        break;
+    }
+
+    shape.stroke_style = {};
+  }
+
+  layer_get(ctx)->drawlist.emplace_back(std::move(shape));
 }
 
 void draw_path(
@@ -31,6 +79,18 @@ void draw_path(
     FillStyle fill_style) {
   DrawCommand shape;
   shape.path = path;
+  shape.stroke_style = stroke_style;
+  shape.fill_style = fill_style;
+  draw_shape(ctx, shape);
+}
+
+void draw_polygon(
+    Context* ctx,
+    const Poly2& poly,
+    StrokeStyle stroke_style,
+    FillStyle fill_style) {
+  DrawCommand shape;
+  shape.path = path_from_poly2(poly);
   shape.stroke_style = stroke_style;
   shape.fill_style = fill_style;
   draw_shape(ctx, shape);

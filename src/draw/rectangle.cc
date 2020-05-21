@@ -12,22 +12,10 @@
  * limitations under the License.
  */
 #include "rectangle.h"
-#include "data.h"
-#include "sexpr.h"
+#include "draw/path.h"
+#include "style_reader.h"
 #include "sexpr_conv.h"
 #include "sexpr_util.h"
-#include "context.h"
-#include "color_reader.h"
-#include "style_reader.h"
-#include "typographic_map.h"
-#include "typographic_reader.h"
-#include "layout.h"
-#include "marker.h"
-#include "scale.h"
-#include "graphics/path.h"
-#include "graphics/brush.h"
-#include "graphics/text.h"
-#include "graphics/layout.h"
 
 #include <numeric>
 
@@ -41,38 +29,52 @@ ReturnCode rectangle(
     const Expr* expr) {
   const auto layer = layer_get(ctx);
 
-  Rectangle rect;
-  rect.w = layer_get_width(*layer).value;
-  rect.h = layer_get_height(*layer).value;
-
-  FillStyle fill_style;
-  StrokeStyle stroke_style;
-  stroke_style.line_width = unit_from_pt(1, layer_get_dpi(ctx));
-
   /* read arguments */
+  draw_style::compound style;
+
+  vec2 position = {
+    layer_get_width(*layer).value * .5,
+    layer_get_height(*layer).value * .5
+  };
+
+  vec2 size = {
+    layer_get_width(*layer).value,
+    layer_get_height(*layer).value
+  };
+
   auto config_rc = expr_walk_map(expr, {
     {
-      "color",
-      expr_calln_fn({
-        std::bind(&color_read, ctx, _1, &stroke_style.color),
-        std::bind(&fill_style_read_solid, ctx, _1, &fill_style),
-      })
+      "position",
+      std::bind(
+          &expr_to_vec2,
+          _1,
+          layer_get_uconv_width(*layer),
+          layer_get_uconv_height(*layer),
+          &position)
     },
-    {"fill", std::bind(&fill_style_read, ctx, _1, &fill_style)},
-    {"stroke-color", std::bind(&color_read, ctx, _1, &stroke_style.color)},
-    {"stroke-width", std::bind(&expr_to_size, _1, *layer, &stroke_style.line_width)},
-    {"stroke-style", std::bind(&stroke_style_read, ctx, _1, &stroke_style)},
+    {
+      "size",
+      std::bind(
+          &expr_to_vec2,
+          _1,
+          layer_get_uconv_size(*layer),
+          layer_get_uconv_size(*layer),
+          &size)
+    },
+    {"fill", std::bind(&style_read_fill, _1, *layer, &style)},
+    {"stroke", std::bind(&style_read_stroke, _1, *layer, &style)},
   });
 
   if (!config_rc) {
     return config_rc;
   }
 
-  Path p;
-  path_add_rectangle(&p, rect);
-  draw_path(ctx, p, stroke_style, fill_style);
+  /* draw the rectangle */
+  draw::path_op op;
+  op.style = style;
+  path_add_rectangle(&op.path, position, size);
 
-  return OK;
+  return draw::path(op, layer);
 }
 
 } // namespace clip::draw

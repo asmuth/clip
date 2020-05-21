@@ -25,6 +25,11 @@ ReturnCode color_read(
     const Expr* expr,
     Color* color);
 
+ReturnCode expr_to_color(
+    const Expr* expr,
+    const Layer& layer,
+    Color* color);
+
 ReturnCode color_read_string(
     const Context* ctx,
     const std::string& value,

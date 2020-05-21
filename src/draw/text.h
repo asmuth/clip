@@ -17,7 +17,7 @@
 namespace clip::draw {
 
 struct TextPlacement {
-  Vector2 position;
+  vec2 position;
   HAlign align_x;
   VAlign align_y;
 };
