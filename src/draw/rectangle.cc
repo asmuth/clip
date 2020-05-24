@@ -61,6 +61,7 @@ ReturnCode rectangle(
           layer_get_uconv_size(*layer),
           &size)
     },
+    {"color", std::bind(&style_read_color, _1, *layer, &style)},
     {"fill", std::bind(&style_read_fill, _1, *layer, &style)},
     {"stroke", std::bind(&style_read_stroke, _1, *layer, &style)},
   });

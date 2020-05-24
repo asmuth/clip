@@ -19,6 +19,7 @@
 #include "context.h"
 #include "color_reader.h"
 #include "style_reader.h"
+#include "style_util.h"
 #include "typographic_map.h"
 #include "typographic_reader.h"
 #include "layout.h"
@@ -39,21 +40,21 @@ using std::bind;
 
 namespace clip::draw {
 
-ReturnCode text_draw(
-    Context* ctx,
-    const std::string& text,
-    const TextPlacement& placement,
-    TextStyle style) {
-  const auto layer = layer_get(ctx);
+ReturnCode text(Context* ctx, const text_op& op) {
+  const auto& style = op.text_style;
+  const auto& layer = layer_get(ctx);
+  auto dpi = layer_get_dpi(layer);
+  auto font_size_pt = unit_to_pt(op.text_style.font_size, dpi);
 
+  /* convert the text to glyphs placements (layout) */
   text::TextSpan span;
   span.text_direction = style.direction;
-  span.text = text;
-  span.font = style.font;
-  span.font_size = style.font_size;
+  span.text = op.text;
+  span.font = op.text_style.font;
+  span.font_size = op.text_style.font_size;
   span.span_id = 0;
-  span.script = style.default_script;
-  span.language = style.default_language;
+  span.script = op.text_style.default_script;
+  span.language = op.text_style.default_language;
 
   if (span.script.empty()) {
     span.script = layer->text_default_script;
@@ -77,46 +78,73 @@ ReturnCode text_draw(
     return rc;
   }
 
+  /* draw the glyphs */
   auto offset = layout_align(
       bbox,
       {
-        placement.position.x,
-        placement.position.y,
+        op.placement.position.x,
+        op.placement.position.y,
       },
-      placement.align_x,
-      placement.align_y);
+      op.placement.align_x,
+      op.placement.align_y);
 
-  for (auto& gg : glyphs) {
-    for (auto& g : gg.glyphs) {
-      g.x += offset.x;
-      g.y += offset.y;
+  for (const auto& gg : glyphs) {
+    for (const auto& g : gg.glyphs) {
+      // FIXME: offset here
+      auto gt = translate2({g.x + offset.x, g.y + offset.y});
+
+      if (op.transform) {
+        gt = mul(*op.transform, gt);
+      }
+
+      Path gp;
+      auto rc = font_get_glyph_path(
+          g.font,
+          font_size_pt,
+          dpi,
+          g.codepoint,
+          &gp);
+
+      if (!rc) {
+        return rc;
+      }
+
+      DrawCommand shape;
+      shape.path = path_transform(gp, gt);
+      shape.style = op.draw_style;
+      draw_shape(ctx, shape);
     }
   }
 
-  TextInfo op;
-  op.text = text;
-  op.glyphs = std::move(glyphs);
-  op.style = style;
-  op.origin = offset;
-  draw_text(ctx, op);
   return OK;
 }
 
-ReturnCode text_draw(
+ReturnCode text(
+    Context* ctx,
+    const std::string& text,
+    const TextPlacement& placement,
+    TextStyle style) {
+  text_op op;
+  op.text = text;
+  op.placement = placement;
+  op.text_style = style;
+  op.draw_style.fill_solid.push_back(draw_style::fill_solid(style.color));
+  return draw::text(ctx, op);
+}
+
+ReturnCode text(
     Context* ctx,
     const Expr* expr) {
   const auto layer = layer_get(ctx);
 
-  std::string text;
-  TextPlacement placement;
-  TextStyle style;
-  style.font = layer_get_font(ctx);
-  style.font_size = layer_get_font_size(ctx);
+  text_op op;
+  op.text_style.font = layer_get_font(ctx);
+  op.text_style.font_size = layer_get_font_size(ctx);
 
-  placement.position[0] = layer_get_width(*layer).value * .5f;
-  placement.position[1] = layer_get_height(*layer).value * .5f;
-  placement.align_x = HAlign::CENTER;
-  placement.align_y = VAlign::CENTER;
+  op.placement.position[0] = layer_get_width(*layer).value * .5f;
+  op.placement.position[1] = layer_get_height(*layer).value * .5f;
+  op.placement.align_x = HAlign::CENTER;
+  op.placement.align_y = VAlign::CENTER;
 
   /* read arguments */
   auto config_rc = expr_walk_map(expr, {
@@ -127,19 +155,25 @@ ReturnCode text_draw(
           _1,
           layer_get_uconv_width(*layer),
           layer_get_uconv_height(*layer),
-          &placement.position)
+          &op.placement.position)
     },
-    {"color", std::bind(&color_read, ctx, _1, &style.color)},
-    {"text", std::bind(&expr_to_string, _1, &text)},
-    {"font", expr_call_string_fn(std::bind(&font_load_best, _1, &style.font))},
-    {"font-size", std::bind(&expr_to_font_size, _1, *layer, &style.font_size)},
+    {"text", std::bind(&expr_to_string, _1, &op.text)},
+    {"font", expr_call_string_fn(std::bind(&font_load_best, _1, &op.text_style.font))},
+    {"font-size", std::bind(&expr_to_font_size, _1, *layer, &op.text_style.font_size)},
+    {"color", std::bind(&style_read_color, _1, *layer, &op.draw_style)},
+    {"fill", std::bind(&style_read_fill, _1, *layer, &op.draw_style)},
+    {"stroke", std::bind(&style_read_stroke, _1, *layer, &op.draw_style)},
   });
 
   if (!config_rc) {
     return config_rc;
   }
 
-  return text_draw(ctx, text, placement, style);
+  if (!style_is_visible(op.draw_style)) {
+    op.draw_style = layer->draw_default_style;
+  }
+
+  return text(ctx, op);
 }
 
 } // namespace clip::draw

@@ -22,13 +22,26 @@ struct TextPlacement {
   VAlign align_y;
 };
 
-ReturnCode text_draw(
+struct text_op {
+  std::string text;
+  TextPlacement placement;
+  TextStyle text_style;
+  draw_style::compound draw_style;
+  Option<mat3> transform;
+};
+
+ReturnCode text(
+    Context* ctx,
+    const text_op& op);
+
+// DEPRECATED
+ReturnCode text(
     Context* ctx,
     const std::string& text,
     const TextPlacement& placement,
     TextStyle style);
 
-ReturnCode text_draw(
+ReturnCode text(
     Context* ctx,
     const Expr* expr);
 

@@ -17,6 +17,7 @@
 #include <graphics/text_shaper.h>
 #include "graphics/text_layout.h"
 #include "graphics/text_support.h"
+#include "draw/text.h"
 
 namespace clip {
 
@@ -108,40 +109,6 @@ void draw_line(
   draw_shape(ctx, shape);
 }
 
-void draw_text(Context* ctx, const TextInfo& elem) {
-  const auto& style = elem.style;
-  const auto& layer = layer_get(ctx);
-  auto dpi = layer_get_dpi(layer);
-  auto font_size_pt = unit_to_pt(elem.style.font_size, dpi);
-
-  for (const auto& gg : elem.glyphs) {
-    for (const auto& g : gg.glyphs) {
-      auto gt = translate2({g.x, g.y});
-      if (elem.transform) {
-        gt = mul(*elem.transform, gt);
-      }
-
-      Path gp;
-      auto rc = font_get_glyph_path(
-          g.font,
-          font_size_pt,
-          dpi,
-          g.codepoint,
-          &gp);
-
-      if (!rc) {
-        return;
-      }
-
-      DrawCommand shape;
-      shape.path = path_transform(gp, gt);
-      shape.fill_style.color = style.color;
-      draw_shape(ctx, shape);
-    }
-  }
-
-}
-
 ReturnCode draw_text(
     Context* ctx,
     const std::string& text,
@@ -149,52 +116,14 @@ ReturnCode draw_text(
     HAlign align_x,
     VAlign align_y,
     double rotate,
-    TextStyle style) {
-  const auto layer = layer_get(ctx);
-
-  text::TextSpan span;
-  span.text_direction = style.direction;
-  span.text = text;
-  span.font = style.font;
-  span.font_size = style.font_size;
-  span.span_id = 0;
-  span.script = style.default_script;
-  span.language = style.default_language;
-
-  if (span.script.empty()) {
-    span.script = layer->text_default_script;
-  }
-
-  if (span.language.empty()) {
-    span.language = layer->text_default_language;
-  }
-
-  text::TextLine line;
-  line.spans.push_back(span);
-  line.base_direction = style.direction;
-
-  if (auto rc = text_reorder_bidi_line(&line); !rc) {
-    return ERROR;
-  }
-
-  Rectangle bbox;
-  std::vector<text::GlyphPlacementGroup> glyphs;
-  if (auto rc = text::text_layout_line(line, layer_get_dpi(ctx), &glyphs, &bbox); !rc) {
-    return rc;
-  }
-
-  auto offset = layout_align(bbox, position, align_x, align_y);
-
-  for (auto& gg : glyphs) {
-    for (auto& g : gg.glyphs) {
-      g.x += offset.x;
-      g.y += offset.y;
-    }
-  }
-
-  TextInfo op;
+    TextStyle text_style) {
+  draw::text_op op;
   op.text = text;
-  op.glyphs = std::move(glyphs);
+  op.placement.position = position;
+  op.placement.align_x = align_x;
+  op.placement.align_y = align_y;
+  op.text_style = text_style;
+  op.draw_style.fill_solid.push_back(draw_style::fill_solid(text_style.color));
 
   if (rotate) {
     op.transform = mul(
@@ -204,10 +133,7 @@ ReturnCode draw_text(
             translate2({-position.x, -position.y})));
   }
 
-  op.style = style;
-  op.origin = offset;
-  draw_text(ctx, op);
-  return OK;
+  return draw::text(ctx, op);
 }
 
 ReturnCode draw_text(

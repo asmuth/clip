@@ -25,7 +25,7 @@ const CommandMap COMMANDS = {
   {"layer/set-dpi", bind_cmd(&layer_set_dpi)},
   {"layer/set-font", bind_cmd(&layer_set_font)},
   {"layer/set-font-size", bind_cmd(&layer_set_font_size)},
-  {"draw/text", bind_cmd(&draw::text_draw)},
+  {"draw/text", bind_cmd(&draw::text)},
   {"draw/rectangle", bind_cmd(&draw::rectangle)},
   {"figure/plot", bind_cmd(&plot_eval)},
 };

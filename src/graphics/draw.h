@@ -64,10 +64,7 @@ void draw_line(
     vec2 to,
     StrokeStyle stroke_style);
 
-void draw_text(
-    Context* ctx,
-    const TextInfo& elem);
-
+// DEPRECATED
 ReturnCode draw_text(
     Context* ctx,
     const std::string& text,
@@ -77,6 +74,7 @@ ReturnCode draw_text(
     double rotate,
     TextStyle text_style);
 
+// DEPRECATED
 ReturnCode draw_text(
     Context* ctx,
     const std::string& text,

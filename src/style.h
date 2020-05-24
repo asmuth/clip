@@ -64,6 +64,7 @@ namespace draw_style {
  * Fill the shape with a solid color
  */
 struct fill_solid {
+  fill_solid(const Color& c) : color(c) {}
   Color color;
 };
 

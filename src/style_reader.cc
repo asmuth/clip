@@ -302,11 +302,19 @@ ReturnCode style_read_stroke(
   return err_invalid_value(expr_inspect(expr), {"solid", "dash"});
 }
 
+ReturnCode style_read_color(
+    const Expr* expr,
+    const Layer& layer,
+    draw_style::compound* styles) {
+  return style_read_fill_solid(expr, layer, styles);
+}
+
 ReturnCode style_read(
     const Expr* expr,
     const Layer& layer,
     draw_style::compound* styles) {
   return expr_walk_map_wrapped(expr, {
+    {"color", std::bind(&style_read_color, _1, layer, styles)},
     {"fill", std::bind(&style_read_fill, _1, layer, styles)},
     {"stroke", std::bind(&style_read_stroke, _1, layer, styles)},
   });

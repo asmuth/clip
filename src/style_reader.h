@@ -50,5 +50,10 @@ ReturnCode style_read_stroke(
     const Layer& layer,
     draw_style::compound* styles);
 
+ReturnCode style_read_color(
+    const Expr* expr,
+    const Layer& layer,
+    draw_style::compound* styles);
+
 } // namespace clip
 
