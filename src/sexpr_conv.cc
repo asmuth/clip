@@ -99,7 +99,7 @@ ReturnCode expr_to_float64_opt_pair(
     const Expr* expr,
     Option<double>* v1,
     Option<double>* v2) {
-  if (expr  && expr_is_list(expr)) {
+  if (expr && expr_is_list(expr)) {
     expr = expr_get_list(expr);
   } else {
     return errorf(
@@ -108,19 +108,18 @@ ReturnCode expr_to_float64_opt_pair(
         expr_inspect(expr));
   }
 
-  for (size_t i = 0; i < 2; ++i) {
-    if (!expr || !expr_is_value(expr)) {
-      return errorf(
-          ERROR,
-          "argument error; expected a value, got: {}",
-          expr_inspect(expr));
-    }
+  const auto& args = expr_collect(expr);
 
-    if (auto rc = expr_to_float64_opt(expr, i == 0 ? v1 : v2); !rc) {
-      return rc;
-    }
+  if (args.size() != 2) {
+    return err_invalid_nargs(args.size(), 2);
+  }
 
-    expr = expr_next(expr);
+  if (auto rc = expr_to_float64_opt(args[0], v1); !rc) {
+    return rc;
+  }
+
+  if (auto rc = expr_to_float64_opt(args[1], v2); !rc) {
+    return rc;
   }
 
   return OK;

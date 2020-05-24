@@ -58,8 +58,11 @@ ReturnCode stroke_style_read(
   }
 
   if (expr_is_value(expr, "dash") ||
-      expr_is_value(expr, "dashed") ||
-      expr_is_list(expr, "dash") ||
+      expr_is_value(expr, "dashed")) {
+    return stroke_style_read_dash(ctx, nullptr, style);
+  }
+
+  if (expr_is_list(expr, "dash") ||
       expr_is_list(expr, "dashed")) {
     return stroke_style_read_dash(ctx, expr_get_list_tail(expr), style);
   }
@@ -130,8 +133,11 @@ ReturnCode fill_style_read(
   }
 
   if (expr_is_value(expr, "hatch") ||
-      expr_is_value(expr, "hatched") ||
-      expr_is_list(expr, "hatch") ||
+      expr_is_value(expr, "hatched")) {
+    return fill_style_read_hatch(ctx, nullptr, style);
+  }
+
+  if (expr_is_list(expr, "hatch") ||
       expr_is_list(expr, "hatched")) {
     return fill_style_read_hatch(ctx, expr_get_list_tail(expr), style);
   }

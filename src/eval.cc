@@ -66,6 +66,10 @@ ReturnCode eval(
     if (auto rc = cmd->fn(ctx, args); !rc) {
       return rc;
     }
+
+    if (!expr_has_next(expr)) {
+      break;
+    }
   }
 
   return OK;

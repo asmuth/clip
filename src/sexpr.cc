@@ -34,6 +34,10 @@ struct Expr {
 };
 
 void expr_destroy(Expr* expr) {
+  if (!expr) {
+    throw std::runtime_error("invalid expression");
+  }
+
   delete expr;
 }
 
@@ -65,18 +69,42 @@ ExprStorage expr_create_value_literal(const std::string& str) {
 }
 
 Expr* expr_next(Expr* expr) {
+  if (!expr) {
+    throw std::runtime_error("invalid expression");
+  }
+
   return expr->next.get();
 }
 
 const Expr* expr_next(const Expr* expr) {
+  if (!expr) {
+    throw std::runtime_error("invalid expression");
+  }
+
   return expr->next.get();
 }
 
+bool expr_has_next(const Expr* expr) {
+  if (!expr) {
+    throw std::runtime_error("invalid expression");
+  }
+
+  return !!expr->next;
+}
+
 void expr_set_next(Expr* expr, ExprStorage next) {
+  if (!expr) {
+    throw std::runtime_error("invalid expression");
+  }
+
   expr->next = std::move(next);
 }
 
 ExprStorage* expr_get_next_storage(Expr* expr) {
+  if (!expr) {
+    throw std::runtime_error("invalid expression");
+  }
+
   return &expr->next;
 }
 
@@ -89,10 +117,18 @@ bool expr_is_list(const Expr* expr, const std::string& head) {
 }
 
 const Expr* expr_get_list(const Expr* expr) {
+  if (!expr || expr->type != ExprType::LIST) {
+    throw std::runtime_error("invalid expression (not a list)");
+  }
+
   return expr->list.get();
 }
 
 const Expr* expr_get_list_tail(const Expr* expr) {
+  if (!expr || expr->type != ExprType::LIST) {
+    throw std::runtime_error("invalid expression (not a list)");
+  }
+
   if (auto l = expr->list.get(); l) {
     return expr_next(l);
   } else {
@@ -101,6 +137,10 @@ const Expr* expr_get_list_tail(const Expr* expr) {
 }
 
 ExprStorage* expr_get_list_storage(Expr* expr) {
+  if (!expr) {
+    throw std::runtime_error("invalid expression");
+  }
+
   return &expr->list;
 }
 
@@ -129,6 +169,10 @@ bool expr_is_value_quoted(const Expr* expr, const std::string& cmp) {
 }
 
 const std::string& expr_get_value(const Expr* expr) {
+  if (!expr) {
+    throw std::runtime_error("invalid expression");
+  }
+
   return expr->value;
 }
 
@@ -153,8 +197,11 @@ ExprStorage expr_clone(const Expr* e, int count /* =-1 */) {
 }
 
 std::string expr_inspect(const Expr* expr) {
-  std::stringstream s;
+  if (!expr) {
+    return "<null>";
+  }
 
+  std::stringstream s;
   switch (expr->type) {
     case ExprType::VALUE:
     case ExprType::VALUE_LITERAL:

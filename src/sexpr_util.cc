@@ -22,6 +22,10 @@ void expr_each(
     std::function<void (const Expr* e)> fn) {
   for (; expr; expr = expr_next(expr)) {
     fn(expr);
+
+    if (!expr_has_next(expr)) {
+      break;
+    }
   }
 }
 
@@ -51,6 +55,10 @@ ReturnCode expr_walk_map(
         return rc;
       }
     }
+
+    if (!expr_has_next(expr)) {
+      break;
+    }
   }
 
   return OK;
@@ -60,7 +68,7 @@ ReturnCode expr_walk_map_wrapped(
     const Expr* expr,
     const std::unordered_map<std::string, ExprVisitor>& fns,
     bool strict /* = true */) {
-  if (!expr_is_list(expr)) {
+  if (!expr || !expr_is_list(expr)) {
     return error(ERROR, "expected a list");
   }
 
@@ -94,6 +102,10 @@ ReturnCode expr_walk_tmap(
         return rc;
       }
     }
+
+    if (!expr_has_next(expr)) {
+      break;
+    }
   }
 
   return OK;
@@ -120,6 +132,11 @@ std::vector<const Expr*> expr_collect(const Expr* expr) {
 
   while (expr) {
     exprs.push_back(expr);
+
+    if (!expr_has_next(expr)) {
+      break;
+    }
+
     expr = expr_next(expr);
   }
 

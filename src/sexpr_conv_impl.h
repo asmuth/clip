@@ -90,6 +90,10 @@ ReturnCode expr_tov_flat(
     }
 
     values->emplace_back(std::move(v));
+
+    if (!expr_has_next(expr)) {
+      break;
+    }
   }
 
   return OK;

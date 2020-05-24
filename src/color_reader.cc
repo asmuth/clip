@@ -168,6 +168,10 @@ ReturnCode color_map_read_gradient(
     }
 
     gradient.emplace_back(step, color);
+
+    if (!expr_has_next(expr)) {
+      break;
+    }
   }
 
   *color_map = color_map_gradient(gradient);
@@ -207,6 +211,10 @@ ReturnCode color_map_read_steps(
     }
 
     steps.emplace_back(step, color);
+
+    if (!expr_has_next(expr)) {
+      break;
+    }
   }
 
   *color_map = color_map_steps(steps);
