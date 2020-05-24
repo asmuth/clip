@@ -33,7 +33,27 @@ void printError(const ReturnCode& rc) {
   std::cerr << fmt::format("ERROR: {}", rc.message) << std::endl;
 }
 
+void crash() {
+  std::cerr << "ERROR: clip crashed; sorry :(" << std::endl;;
+  std::cerr << "ERROR: Please report the bug at https://github.com/asmuth/clip/issues" << std::endl;
+
+  auto ex = std::current_exception();
+  if (ex) {
+    try {
+      std::rethrow_exception(ex);
+    } catch (const std::exception& e) {
+      std::cerr << "ERROR: Exception: " << e.what() << std::endl;
+    } catch (...) {
+      std::cerr << "ERROR: Foreign exception" << std::endl;
+    }
+  }
+
+  exit(EXIT_FAILURE);
+}
+
 int main(int argc, char** argv) {
+  std::set_terminate(crash);
+
   FlagList flags;
 
   std::string flag_export;
