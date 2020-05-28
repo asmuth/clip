@@ -54,5 +54,7 @@ protected:
 
 std::ostream& operator <<(std::ostream& os, const Color& c);
 
+bool color_is_black(const Color& c);
+
 } // namespace clip
 

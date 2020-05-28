@@ -146,5 +146,9 @@ std::ostream& operator <<(std::ostream& os, const Color& c) {
   return os;
 }
 
+bool color_is_black(const Color& c) {
+  return c[0] == 0 && c[1] == 0 && c[2] == 0;
+}
+
 } // namespace clip
 

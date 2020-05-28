@@ -17,6 +17,9 @@
 #include "graphics/draw_cmd.h"
 #include "export_svg.h"
 
+#include <sstream>
+#include <iomanip>
+
 using std::bind;
 using namespace std::placeholders;
 
@@ -30,6 +33,21 @@ struct SVGData {
 };
 
 using SVGDataRef = std::shared_ptr<SVGData>;
+
+std::string svg_number(double num) {
+  double num_int;
+  if (std::modf(num, &num_int) == 0) {
+    return std::to_string(int(num_int));
+  }
+
+  std::stringstream buf;
+  buf
+    << std::fixed
+    << std::setprecision(3)
+    << num;
+
+  return buf.str();
+}
 
 std::string svg_attr(const std::string& name, const std::string& val) {
   std::string buf = " ";
@@ -52,8 +70,24 @@ std::string svg_attr(const std::string& name, const std::string& val) {
   return buf;
 }
 
+std::string svg_attr(const std::string& name, const std::string& val, double pred) {
+  if (pred) {
+    return svg_attr(name, val);
+  } else {
+    return {};
+  }
+}
+
 std::string svg_attr(const std::string& name, double val) {
-  return svg_attr(name, std::to_string(val));
+  return svg_attr(name, svg_number(val));
+}
+
+std::string svg_attr(const std::string& name, double val, bool pred) {
+  if (pred) {
+    return svg_attr(name, svg_number(val));
+  } else {
+    return {};
+  }
 }
 
 std::string svg_body(const std::string& in) {
@@ -80,31 +114,42 @@ std::string svg_body(const std::string& in) {
 
 std::string svg_path_data(const Path& path) {
   std::stringstream path_data;
-  for (const auto& cmd : path) {
+  for (size_t i = 0; i < path.size(); ++i) {
+    if (i > 0) {
+      path_data << " ";
+    }
+
+    const auto& cmd = path[i];
     switch (cmd.command) {
       case PathCommand::MOVE_TO:
-        path_data << fmt::format("M{} {} ", cmd[0], cmd[1]);
+        path_data << fmt::format(
+            "M{} {}",
+            svg_number(cmd[0]),
+            svg_number(cmd[1]));
         break;
       case PathCommand::LINE_TO:
-        path_data << fmt::format("L{} {} ", cmd[0], cmd[1]);
+        path_data << fmt::format(
+            "L{} {}",
+            svg_number(cmd[0]),
+            svg_number(cmd[1]));
         break;
       case PathCommand::QUADRATIC_CURVE_TO:
         path_data << fmt::format(
-            "Q{} {} {} {} ",
-            cmd[0],
-            cmd[1],
-            cmd[2],
-            cmd[3]);
+            "Q{} {} {} {}",
+            svg_number(cmd[0]),
+            svg_number(cmd[1]),
+            svg_number(cmd[2]),
+            svg_number(cmd[3]));
         break;
       case PathCommand::CUBIC_CURVE_TO:
         path_data << fmt::format(
-            "C{} {} {} {} {} {} ",
-            cmd[0],
-            cmd[1],
-            cmd[2],
-            cmd[3],
-            cmd[4],
-            cmd[5]);
+            "C{} {} {} {} {} {}",
+            svg_number(cmd[0]),
+            svg_number(cmd[1]),
+            svg_number(cmd[2]),
+            svg_number(cmd[3]),
+            svg_number(cmd[4]),
+            svg_number(cmd[5]));
         break;
       case PathCommand::CLOSE:
         path_data << "Z";
@@ -121,7 +166,9 @@ std::string svg_poly_data(const Polygon2& poly) {
 
   std::stringstream poly_data;
   for (const auto& v : poly.vertices) {
-    poly_data << fmt::format("{} {} ", v.x, v.y);
+    poly_data << svg_number(v.x);
+    poly_data << " ";
+    poly_data << svg_number(v.y);
   }
 
   return poly_data.str();
@@ -146,10 +193,11 @@ Status svg_add_path_compound(
       << "  "
       << "<path"
       << svg_attr("d", svg_path_data(path_transform(path, svg->proj)))
-      << svg_attr("fill", fill_style.color.to_hex_str())
-      << svg_attr("fill-opacity", fill_style.color.component(3))
+      << svg_attr("fill", fill_style.color.to_hex_str(), !color_is_black(fill_style.color))
+      << svg_attr("fill-opacity", fill_style.color.component(3), fill_style.color.component(3) != 1)
+      << svg_attr("stroke", stroke_style.color.to_hex_str())
+      << svg_attr("stroke-opacity", stroke_style.color.component(3), stroke_style.color.component(3) != 1)
       << svg_attr("stroke-width", stroke_style.width.value)
-      << svg_attr("stroke", stroke_style.color.to_hex_str(4))
       << svg_antialiasing_attrs(antialiasing_mode)
       << "/>"
       << "\n";
@@ -166,8 +214,8 @@ Status svg_add_path_fill_solid(
       << "  "
       << "<path"
       << svg_attr("d", svg_path_data(path_transform(path, svg->proj)))
-      << svg_attr("fill", style.color.to_hex_str())
-      << svg_attr("fill-opacity", style.color.component(3))
+      << svg_attr("fill", style.color.to_hex_str(), !color_is_black(style.color))
+      << svg_attr("fill-opacity", style.color.component(3), style.color.component(3) != 1)
       << svg_antialiasing_attrs(antialiasing_mode)
       << "/>"
       << "\n";
@@ -191,7 +239,8 @@ Status svg_add_path_fill_hatch(
       << "  "
       << "<path"
       << svg_attr("d", svg_path_data(path_transform(hatched, svg->proj)))
-      << svg_attr("fill", style.color.to_hex_str(4))
+      << svg_attr("fill", style.color.to_hex_str(), !color_is_black(style.color))
+      << svg_attr("fill-opacity", style.color.component(3), style.color.component(3) != 1)
       << svg_antialiasing_attrs(antialiasing_mode)
       << "/>"
       << "\n";
@@ -209,8 +258,9 @@ Status svg_add_path_stroke_solid(
       << "<path"
       << svg_attr("d", svg_path_data(path_transform(path, svg->proj)))
       << svg_attr("fill", "none")
+      << svg_attr("stroke", style.color.to_hex_str())
+      << svg_attr("stroke-opacity", style.color.component(3), style.color.component(3) != 1)
       << svg_attr("stroke-width", style.width.value)
-      << svg_attr("stroke", style.color.to_hex_str(4))
       << svg_antialiasing_attrs(antialiasing_mode)
       << "/>"
       << "\n";
@@ -225,7 +275,11 @@ Status svg_add_path_stroke_dash(
     SVGDataRef svg) {
   std::string svg_dash_pattern;
   for (const auto& v : style.pattern) {
-    svg_dash_pattern += fmt::format("{} ", v.value);
+    if (!svg_dash_pattern.empty()) {
+      svg_dash_pattern += " ";
+    }
+
+    svg_dash_pattern += svg_number(v.value);
   }
 
   svg->buffer
@@ -233,8 +287,9 @@ Status svg_add_path_stroke_dash(
       << "<path"
       << svg_attr("d", svg_path_data(path_transform(path, svg->proj)))
       << svg_attr("fill", "none")
+      << svg_attr("stroke", style.color.to_hex_str())
+      << svg_attr("stroke-opacity", style.color.component(3), style.color.component(3) != 1)
       << svg_attr("stroke-width", style.width.value)
-      << svg_attr("stroke", style.color.to_hex_str(4))
       << svg_attr("stroke-dasharray", svg_dash_pattern)
       << svg_attr("stroke-dashoffset", style.offset.value)
       << svg_antialiasing_attrs(antialiasing_mode)
@@ -332,7 +387,8 @@ Status svg_add_text_elem_native(
     << "<text"
     << svg_attr("x", origin.x)
     << svg_attr("y", origin.y)
-    << svg_attr("fill", style.color.to_hex_str(4))
+    << svg_attr("fill", style.color.to_hex_str(), !color_is_black(style.color))
+    << svg_attr("fill-opacity", style.color.component(3), style.color.component(3) != 1)
     << svg_attr("font-size", style.font_size.value)
     << svg_attr("font-family", style.font.font_family_css)
     << svg_attr("font-weight", style.font.font_weight_css)
@@ -375,7 +431,8 @@ Status svg_add_text_elem_embed(
       svg->buffer
           << "  "
           << "<path"
-          << svg_attr("fill", style.color.to_hex_str(4))
+          << svg_attr("fill", style.color.to_hex_str(), !color_is_black(style.color))
+          << svg_attr("fill-opacity", style.color.component(3), style.color.component(3) != 1)
           << svg_attr("d", svg_path_data(path_transform(gp, gt)))
           << "/>"
           << "\n";
@@ -425,7 +482,7 @@ ReturnCode export_svg(
       << svg_attr("fill-opacity", layer->background_color.component(3))
       << "/>\n"
     << svg->buffer.str()
-    << "</svg>";
+    << "</svg>\n";
 
   *buffer = svg_doc.str();
   return OK;
