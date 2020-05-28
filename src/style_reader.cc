@@ -162,9 +162,7 @@ ReturnCode style_read_fill_solid(
     return rc;
   }
 
-  styles->fill_solid.push_back(draw_style::fill_solid {
-    .color = color
-  });
+  styles->fill_solid.emplace_back(color);
 
   return OK;
 }

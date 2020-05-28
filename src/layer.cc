@@ -31,9 +31,7 @@ Layer::Layer() :
     text_color(Color::fromRGB(0, 0, 0)),
     font_size(from_pt(11)),
     color_palette(color_palette_default()) {
-  draw_default_style.fill_solid.push_back({
-    .color = Color::fromRGB(0, 0, 0),
-  });
+  draw_default_style.fill_solid.emplace_back(Color::fromRGB(0, 0, 0));
 }
 
 ReturnCode layer_create(

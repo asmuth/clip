@@ -34,9 +34,7 @@ void draw_shape(Context* ctx, DrawCommand shape) {
         .width = Number(shape.fill_style.hatch_width),
       });
     } else {
-      shape.style.fill_solid.push_back({
-        .color = *shape.fill_style.color
-      });
+      shape.style.fill_solid.emplace_back(*shape.fill_style.color);
     }
 
     shape.fill_style = {};
