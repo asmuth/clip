@@ -73,8 +73,16 @@ A list of examples can be found on the [Examples](https://clip-lang.org/examples
 page.
 
 
-Building
---------
+Installation
+------------
+
+### Using homebrew (macOS)
+
+To install clip using homebrew, run the following command:
+
+    $ brew install clip
+
+### From source
 
 To build clip, you need an up-to-date C++ compiler, cmake, fmtlib, libharfbuzz,
 libfreetype and cairo. Run:

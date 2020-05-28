@@ -7,6 +7,14 @@ on your system.
 
 You can find the complete [source code on Github](http://github.com/asmuth/clip)
 
+
+### Install using homebrew (macOS)
+
+To install clip using homebrew, run the following command:
+
+    $ brew install clip
+
+
 ### Compile from source
 
 To build clip, you need an up-to-date C++ compiler, cmake, libharfbuzz and
