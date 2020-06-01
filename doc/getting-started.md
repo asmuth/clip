@@ -17,9 +17,6 @@ command has a number of arguments that control its contents and appearance.
 However, instead of loosing too many words, here is a minimal example file that
 you can save to your machine and run to get you started:
 
-Introductory Example
---------------------
-
 ### Step 1: First lines
 
 The text box below contains a simple clip script. Paste the contents to a file

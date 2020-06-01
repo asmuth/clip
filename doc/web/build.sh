@@ -16,6 +16,7 @@ fi
 cd "$(dirname "$0")/../"
 
 cp web/documentation.css "${output_dir}"
+cp logo.svg "${output_dir}"
 cp web/redirects.txt "${output_dir}/_redirects"
 cp web/favicon.ico "${output_dir}"
 mkdir -p "${output_dir}/figures"

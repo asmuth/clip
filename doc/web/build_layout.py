@@ -17,11 +17,7 @@ tpl = """
   </head>
   <body class="{{article_class}}">
     <nav>
-      <a href="/">
-        <span>clip</span>
-      </a>
-
-      <span style="margin: 0 .3em">·</span>
+      <a href="/" class="logo"><img src="/logo.svg" alt="clip logo" /></a>
       <a class="link" href="/" style="">Documentation</a>
       <span style="margin: 0 .3em">·</span>
       <a class="link" href="/examples">Examples</a>
@@ -30,17 +26,14 @@ tpl = """
       <span style="margin: 0 .3em">·</span>
       <a class="link" href="http://github.com/asmuth/clip">Github</a>
     </nav>
-
     <article class="{{article_class}}">
       {{{content}}}
-
       <div style="text-align: right; margin-top: 10em; font-size: 80%;">
         <a class="link" target="_blank" href="https://github.com/asmuth/clip/blob/master/doc">
           Edit this page on GitHub
         </a>
       </div>
     </article>
-
     <footer>
       Copyright &copy; 2011-2018 Paul Asmuth, Laura Schlimmer et al. &mdash;
       clip is free software licensed under the Apache 2.0 license.
