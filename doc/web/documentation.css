@@ -7,7 +7,7 @@ html {
 body {
   margin: 0;
   padding: 0 2em;
-  font-family: "DejaVu Sans", Verdana, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
   background-color: #fff;
   font-size: 12pt;
   line-height: 1.42;
@@ -237,7 +237,6 @@ article img {
 code {
   font-family: "Inconsolata", "Monaco", monospace;
   overflow: auto;
-  font-size: 14pt;
 }
 
 code i {

@@ -10,7 +10,7 @@ using the options described below.
 
 <ul>
   <li><a href="/getting-started">Getting Started</a></li>
-  <li><a href="/plot/usage">Using the <code>plot</code> module</a></li>
+  <li><a href="/plot/usage">List of <code>plot</code> statements</a></li>
   <!--
   <li><a href="/plot/usage">Drawing line charts</a></li>
   <li><a href="/plot/usage">Drawing point &amp; scatter charts</a></li>
@@ -62,9 +62,13 @@ topics.
   <li><a href="/plot/number-format">Number Formatters</a></li>
   <li><a href="/plot/scale-types">Scale Types</a></li>
   <li><a href="/plot/scale-layout">Scale Layout</a></li>
-  <li><a href="/colors">Colors</a></li>
-  <li><a href="/typographic">Typographic Units</a></li>
-  <li><a href="/fonts">Fonts</a></li>
   <li><a href="/marker-shapes">Marker Shapes</a></li>
 </ul>
 
+##### General Options
+
+<ul>
+  <li><a href="/colors">Colors</a></li>
+  <li><a href="/typographic">Typographic Units</a></li>
+  <li><a href="/fonts">Fonts</a></li>
+</ul>

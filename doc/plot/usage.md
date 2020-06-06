@@ -1,4 +1,4 @@
-# Using the `plot` module
+# List of `plot` statements
 
 The `plot` module is used to create two-dimensional plots from structured input
 data, such as CSV or GeoJSON files. To use the plot module, add the following line
