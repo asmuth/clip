@@ -75,6 +75,45 @@ ReturnCode expr_walk_map_wrapped(
   return expr_walk_map(expr_get_list(expr), fns, strict);
 }
 
+ReturnCode expr_walk_commands(
+    const Expr* expr,
+    ExprStorage* unparsed,
+    const std::unordered_map<std::string, ExprVisitor>& fns) {
+
+  for (; expr; expr = expr_next(expr)) {
+    if (!expr_is_list(expr)) {
+      return errorf(ERROR, "expected a list, but got: {}", expr_inspect(expr));
+    }
+
+    auto args = expr_get_list(expr);
+    if (!expr_is_value(args)) {
+      return errorf(ERROR, "expected a literal, but got: {}", expr_inspect(args));
+    }
+
+    auto arg0 = expr_get_value(args);
+    const auto& fn = fns.find(arg0);
+    if (fn == fns.end()) {
+      if (unparsed) {
+        *unparsed = expr_clone(expr);
+        unparsed = expr_get_next_storage(&**unparsed);
+      } else {
+        return errorf(ERROR, "invalid command: '{}'", arg0);
+      }
+    } else {
+      if (auto rc = fn->second(expr_next(args)); !rc) {
+        rc.trace.push_back(expr);
+        return rc;
+      }
+    }
+
+    if (!expr_has_next(expr)) {
+      break;
+    }
+  }
+
+  return OK;
+}
+
 ReturnCode expr_walk_tmap(
     const Expr* iter,
     const std::unordered_map<std::string, ExprVisitor>& fns,

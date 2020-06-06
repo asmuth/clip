@@ -1,12 +1,13 @@
 #!/bin/bash
 set -ue
 
-if [[ ! $# -eq 1 ]]; then
-  echo "usage: $0 <output_dir>" >&2
+if [[ ! $# -eq 2 ]]; then
+  echo "usage: $0 <version> <output_dir>" >&2
   exit 1
 fi
 
-export output_dir="$(readlink -f $1)"
+export CLIP_VERSION="$1"
+export output_dir="$(readlink -f $2)"
 
 if [[ ! -d "${output_dir}" ]]; then
   echo "error: directory does not exist: ${output_dir}" >&2

@@ -132,7 +132,7 @@ ReturnCode text(
   return draw::text(ctx, op);
 }
 
-ReturnCode text(
+ReturnCode text_eval(
     Context* ctx,
     const Expr* expr) {
   const auto layer = layer_get(ctx);

@@ -100,6 +100,14 @@ void expr_set_next(Expr* expr, ExprStorage next) {
   expr->next = std::move(next);
 }
 
+void expr_set_next(ExprStorage* expr, ExprStorage next) {
+  if (expr) {
+    (*expr)->next = std::move(next);
+  } else {
+    *expr = std::move(next);
+  }
+}
+
 ExprStorage* expr_get_next_storage(Expr* expr) {
   if (!expr) {
     throw std::runtime_error("invalid expression");

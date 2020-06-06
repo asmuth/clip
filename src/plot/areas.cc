@@ -210,7 +210,7 @@ ReturnCode areas_configure(
   c->fill_style.color = layer_get(ctx)->foreground_color;
 
   /* parse properties */
-  auto config_rc = expr_walk_map_wrapped(expr, {
+  auto config_rc = expr_walk_map(expr, {
     {"data", std::bind(&data_load_points2, _1, &c->x, &c->y)},
     {"data-x", std::bind(&data_load_simple, _1, &c->x)},
     {"data-y", std::bind(&data_load_simple, _1, &c->y)},

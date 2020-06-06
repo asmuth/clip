@@ -1,9 +1,8 @@
-(layer/resize 1024px 60px)
-(layer/set-dpi 96)
+(size 1024px 60px)
+(dpi 96)
+(margin 1em)
 
-(figure/plot
-    margin 1em
-    axis (
-        label-format (integer)
-        label-placement (linear 1)
-        limit (1 16)))
+(axis
+    label-format (integer)
+    label-placement (linear 1)
+    limit (1 16))

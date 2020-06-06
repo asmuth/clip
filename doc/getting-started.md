@@ -6,108 +6,101 @@ and then give you pointers to more in-depth documentation. If you don't have
 clip installed on your machine yet, please take a look at the [Installation](/documentation/installation)
 page first.
 
-In essence, clip is a data plotting program; it reads an input text file containing
-a list of drawing instructions outputs an image, either in a vector graphics format
-such as SVG, or as a bitmap.
-
-A clip input file consists of a list of drawing commands. Most drawing commands
-produce high-level graphical elements such as charts, lines or text boxes. Each
-command has a number of arguments that control its contents and appearance.
-
-However, instead of loosing too many words, here is a minimal example file that
-you can save to your machine and run to get you started:
+In essence, clip is an automated drawing program; it reads an input text file
+containing a list of drawing instructions and then outputs a result image.
 
 ### Step 1: First lines
 
-The text box below contains a simple clip script. Paste the contents to a file
-called `example_chart.clp`:
+Being a highly visual tool, clip is best explained by example, so here is a
+minimal example file to get you started. Paste the contents to a file called
+`example_chart.clp`:
 
-    (figure/plot
-        lines (
-            data-x (100 200 300 400 500 600 700 800 900)
-            data-y (1.2   1.8   1.3   1.6   1.5   1.3   1.8   1.9   2.0)
-            limit-y (0 3)
-            limit-x (0 1000)
-            marker-shape (pentagon)
-            marker-size 8pt))
+    (class plot)
 
-In the script, we call a single command named `figure/plot` with a number of
-keyword arguments. The exact meaning of each of the arguments doesn't matter for
-now; the specifics are documented on the [reference page of the command](/plot/lines)
-and you can probably guess what most of them do anyway.
+    (lines
+        data-x (100 200 300 400 500 600 700 800 900)
+        data-y (1.2   1.8   1.3   1.6   1.5   1.3   1.8   1.9   2.0)
+        limit-y (0 3)
+        limit-x (0 1000)
+        marker-shape (pentagon)
+        marker-size 8pt))
 
-Coming from other languages, it's probably a bit surprising to see a forward slash
-as part of the command name, but this is allowed in clip. Since, at this point,
-all commands in clip live in the same global namespace, the forward slash is
-used to group them into modules. In other words, the `figure/plot` is the
-`plot` command from the `figure` module.
-
-But back to our example. In the `lines` argument, we're instructing clip to read
-the input data table, transforms it for display and then plot the data as a line.
-To see what that looks like, save the content from above to a file called
-`example_chart.clp` and run it through clip using the following invocation:
+You can then run the script through clip using the following command:
 
     $ clip --in example_chart.clp --out example_chart.svg
 
-After running the example, you should have an output file similar to the one below:
+After running the example, open the output file `example_chart.svg`. It should
+look similar to the one below:
 
 <figure>
   <img class="small" alt="Example Chart" src="/figures/quickstart1.svg" />
 </figure>
 
+Let's analyze the clip script we just ran. The first line of a clip script
+normally contains a `(class ...)` declaration. The `class` controls which module
+is used to interpret the subsequent expressions. In this example, we are using the
+`plot` module. Once the plotting module is loaded, the remainder of the script
+contains a list of plotting commands.
+
+In the next line, we call a command named `lines` with a number of keyword
+arguments. The exact meaning of each of the arguments doesn't matter for
+now; the specifics are documented on the [reference page of the command](/plot/lines)
+and you can probably guess what most of them do anyway.
+
 ### Step 2: Adding axes
 
 To make this into a proper plot, we have to add some axes. For that, we extend
-the script to add another argument `axes` to the `figure/plot` command. Add this
-to the `example_chart.clp` file above the `lines` argument:
+the script with a call to the `axes` command. Add this to the beginning of the file:
 
-    axes (
+    (axes
         limit-y (0 3)
         limit-x (0 1000)
         label-format-x (scientific)
         label-placement-x (linear-interval 100 100 900))
 
 After re-running clip on the updated script, the output should now look much
-more like the kind of chart we all know and love:
+more like the kind of chart we know and love:
 
 <figure>
   <img class="small" alt="Example Chart" src="/figures/quickstart2.svg" />
 </figure>
 
-When adding the `axes` command to the script, make sure to add it
-_before_ the existing, `lines` command; the order of statements in clip
-is significant. The main reason for this is that drawing in clip is performed
-using the "painters algorithm", i.e. later commands draw over the output of
-earlier commands, so changing the order of commands will generally give a different
-result.
+When adding the `axes` command to the script, make sure to add it _before_ the
+existing, `lines` command. The order of statements in clip is significant. Commands
+generally draw over the output of earlier commands, so changing the order of
+commands will generally give a different result.
 
 ### Step 3: Adding the legend
 
 To close things out on this example, we're going to add an explanatory legend to
-our chart. To do so, we will use the `legend` argument. Simply add the
-snippet from below to the `figure/plot` command:
+our chart using the `legend` command. Simply add the snippet from below to the
+file:
 
-    legend (
+    (legend
         position (bottom left)
         item (label "Example Data" marker-shape (pentagon)))
 
 Also, let's get rid of the duplicate `limit-x` and `limit-y` arguments. This leaves
 us with this final script:
 
-    (figure/plot
-        limit-y (0 3)
-        limit-x (0 1000)
-        axes (
-            label-format-x (scientific)
-            label-placement-x (linear-interval 100 100 900))
-        lines (
-            data-x (100 200 300 400 500 600 700 800 900)
-            data-y (1.2   1.8   1.3   1.6   1.5   1.3   1.8   1.9   2.0)
-            marker-shape (pentagon)
-            marker-size 8pt)
-        legend (
-            position (bottom left)
-            item (label "Example Data" marker-shape (pentagon))))
+    (class plot)
+
+    (limit-y (0 3))
+    (limit-x (0 1000))
+
+    (axes
+        label-format-x (scientific)
+        label-placement-x (linear-interval 100 100 900))
+
+    (lines
+        data-x (100 200 300 400 500 600 700 800 900)
+        data-y (1.2   1.8   1.3   1.6   1.5   1.3   1.8   1.9   2.0)
+        marker-shape (pentagon)
+        marker-size 8pt))
+
+    (legend
+        position (bottom left)
+        item (label "Example Data" marker-shape (pentagon)))
 
 
 Running the above file through clip again should now yield the following final result:
@@ -126,7 +119,7 @@ is just adding more elements to your file and fine-tuning the appearance of
 individual elements using the arguments described in the documentation of each
 individual command.
 
-For more information, please take a look at the remaining documentation chapters,
+For more information, please take a look at the [remaining documentation chapters](/plot),
 in particular at the [Examples](/examples) page and the documentation pages for
 the individual commands.
 

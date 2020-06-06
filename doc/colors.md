@@ -4,8 +4,10 @@ Colors
 The `<color>` setting allows you to configure colors. The following ways to
 specify colors are supported:
 
-    ;; specify a color by hex code or reference a color from the color palette
-    <color-code>
+    ;; specify a color by hex code
+    #rgb
+    #rrggbb
+    #rrggbbaa
 
     ;; specify a color by rgb. components should be in the range 0..1
     (rgb <r> <g> <b>)

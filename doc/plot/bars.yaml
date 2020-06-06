@@ -1,8 +1,8 @@
-title: plot/bars
+title: Bar Charts
 tpl: cmdref
 name: bars
 desc: |
-  The `plot/bars` command takes an input data table, transforms it according
+  The `bars` command takes an input data table, transforms it according
   to a user-provided scale configuration and then plots the data as one or more
   'bars' (rectangle shapes).
 

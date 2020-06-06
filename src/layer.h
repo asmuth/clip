@@ -55,7 +55,7 @@ ReturnCode layer_resize(
     Layer* layer,
     const std::string& size);
 
-ReturnCode layer_resize(
+ReturnCode layer_resize_cmd(
     Context* ctx,
     const Expr* expr);
 
@@ -69,7 +69,7 @@ double layer_get_dpi(const Layer& layer);
 double layer_get_dpi(const Layer* layer);
 double layer_get_dpi(const Context* ctx);
 void layer_set_dpi(Layer* layer, double dpi);
-ReturnCode layer_set_dpi(Context* ctx, const Expr* expr);
+ReturnCode layer_set_dpi_cmd(Context* ctx, const Expr* expr);
 
 UnitConvMap layer_get_uconv_width(const Layer& layer);
 UnitConvMap layer_get_uconv_height(const Layer& layer);
@@ -79,13 +79,13 @@ UnitConvMap layer_get_uconv_font_size(const Layer& layer);
 const FontInfo& layer_get_font(const Layer* layer);
 const FontInfo& layer_get_font(const Context* ctx);
 FontInfo layer_set_font(const Layer* layer, FontInfo font);
-ReturnCode layer_set_font(Context* ctx, const Expr* expr);
+ReturnCode layer_set_font_cmd(Context* ctx, const Expr* expr);
 
 Number layer_get_font_size(const Layer& layer);
 Number layer_get_font_size(const Layer* layer);
 Number layer_get_font_size(const Context* ctx);
 void layer_set_font_size(const Layer* layer, Measure font_size);
-ReturnCode layer_set_font_size(Context* ctx, const Expr* expr);
+ReturnCode layer_set_font_size_cmd(Context* ctx, const Expr* expr);
 
 
 } // namespace clip

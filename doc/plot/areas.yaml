@@ -1,8 +1,8 @@
-title: plot/areas
+title: "Area Charts"
 tpl: cmdref
 name: areas
 desc: |
-  The `plot/areas` command takes an input data table, transforms it according
+  The `areas` command takes an input data table, transforms it according
   to a user-provided scale configuration and then plots the data as one or more
   'area' shapes.
 

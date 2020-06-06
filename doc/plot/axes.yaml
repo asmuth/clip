@@ -1,8 +1,8 @@
-title: The axes element
+title: "Command: `axes`"
 tpl: cmdref
 name: axes
 desc: |
-  The `plot/axes` command draws up to four labelled 'axis' (top/right/bottom/left) and
+  The `axes` command draws up to four labelled 'axis' (top/right/bottom/left) and
   changes the document layout so that further painting takes place inside of the
   rectangle described by the axes.
 

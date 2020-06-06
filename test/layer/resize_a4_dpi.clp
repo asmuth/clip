@@ -1,2 +1,2 @@
-(layer/resize A4)
-(layer/set-dpi 240)
+(size A4)
+(dpi 240)

@@ -1,9 +1,8 @@
-(layer/resize 1024px 512px)
-(layer/set-dpi 96)
+(size 1024px 512px)
+(dpi 96)
+(margin 8em)
 
-(figure/plot
-    margin 8em
-    axis (
-        align x
-        label-placement (linear-alignat 1 0.5)
-        limit (0 16)))
+(axis
+    align x
+    label-placement (linear-alignat 1 0.5)
+    limit (0 16))

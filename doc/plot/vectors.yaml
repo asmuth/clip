@@ -1,8 +1,8 @@
-title: plot/vectors
+title: Vector Fields
 tpl: cmdref
 name: vectors
 desc: |
-  The `plot/vectors` command takes an input data table, transforms it according
+  The `vectors` command takes an input data table, transforms it according
   to a user-provided scale configuration and then plots the data as vectors/arrows.
 
 arguments:

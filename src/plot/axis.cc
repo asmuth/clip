@@ -612,7 +612,7 @@ ReturnCode plot_axis(Context* ctx, PlotConfig* plot, const Expr* expr) {
   config->border_style.color = layer_get(ctx)->foreground_color;
 
   {
-    auto rc = expr_walk_map_wrapped(expr, {
+    auto rc = expr_walk_map(expr, {
       {
         "align",
         expr_to_enum_fn<AxisAlign>(&config->align, {
@@ -674,7 +674,7 @@ ReturnCode plot_axis(Context* ctx, PlotConfig* plot, const Expr* expr) {
   };
 
   {
-    auto rc = expr_walk_map_wrapped(expr, {
+    auto rc = expr_walk_map(expr, {
       /* scale options */
       {"scale", std::bind(&scale_configure_kind, _1, &config->scale)},
       {"limit", std::bind(&expr_to_float64_opt_pair, _1, &config->scale.min, &config->scale.max)},
@@ -865,7 +865,7 @@ ReturnCode plot_axes(Context* ctx, PlotConfig* plot, const Expr* expr) {
   axes[3].border_style.line_width = unit_from_pt(1, layer_get_dpi(ctx));
   axes[3].border_style.color = layer_get(ctx)->foreground_color;
 
-  auto config_rc = expr_walk_map_wrapped(expr, {
+  auto config_rc = expr_walk_map(expr, {
     {"position", std::bind(&axis_configure_position, _1, &axes)},
 
     /* scale options */

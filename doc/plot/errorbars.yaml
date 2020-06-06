@@ -1,8 +1,8 @@
-title: plot/errorbars
+title: Error Bars
 tpl: cmdref
 name: errorbars
 desc: |
-  The `plot/errorbars` command takes an input data table, transforms it according
+  The `errorbars` command takes an input data table, transforms it according
   to a user-provided scale configuration and then plots the data as one or more
   'error bars'.
 

@@ -45,7 +45,9 @@ ReturnCode plot_prepare(
     Context* ctx,
     PlotConfig* plot,
     const Expr* expr) {
-  return expr_walk_map(expr, {
+  ExprStorage unparsed;
+
+  return expr_walk_commands(expr, &unparsed, {
     /* scale configuration */
     {"limit-x", std::bind(&expr_to_float64_opt_pair, _1, &plot->scale_x.min, &plot->scale_x.max)},
     {"limit-x-min", std::bind(&expr_to_float64_opt, _1, &plot->scale_x.min)},
@@ -68,7 +70,7 @@ ReturnCode plot_prepare(
     {"polygons", std::bind(plotgen::polygons_autorange, ctx, plot, _1)},
     {"rectangles", std::bind(plotgen::rectangles_autorange, ctx, plot, _1)},
     {"vectors", std::bind(plotgen::vectors_autorange, ctx, plot, _1)},
-  }, false);
+  });
 }
 
 ReturnCode plot_draw(
@@ -77,7 +79,8 @@ ReturnCode plot_draw(
     const Expr* expr) {
   const auto& layer = *layer_get(ctx);
 
-  return expr_walk_map(expr, {
+  ExprStorage unparsed;
+  return expr_walk_commands(expr, &unparsed, {
     /* margins */
     {
       "margin",
@@ -110,7 +113,7 @@ ReturnCode plot_draw(
     {"polygons", std::bind(&plotgen::polygons_draw, ctx, plot, _1)},
     {"rectangles", std::bind(&plotgen::rectangles_draw, ctx, plot, _1)},
     {"vectors", std::bind(&plotgen::vectors_draw, ctx, plot, _1)},
-  }, false);
+  });
 }
 
 ReturnCode plot_eval(
@@ -160,7 +163,7 @@ ReturnCode plot_set_background(
   stroke_style.line_width = unit_from_pt(1, layer_get_dpi(ctx));
 
   /* read arguments */
-  auto config_rc = expr_walk_map_wrapped(expr, {
+  auto config_rc = expr_walk_map(expr, {
     {
       "color",
       expr_calln_fn({

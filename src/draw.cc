@@ -11,26 +11,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#pragma once
-#include <functional>
-#include "context.h"
-#include "return_code.h"
-#include "sexpr.h"
+#include "draw.h"
+#include "draw/text.h"
+#include "draw/rectangle.h"
+#include "sexpr_util.h"
+
+using namespace std::placeholders;
 
 namespace clip {
 
-using CommandFnRef = ReturnCode (*) (Context*, const Expr*);
-using CommandFn = std::function<ReturnCode (Context*, const Expr*)>;
+ReturnCode draw_eval(
+    Context* ctx,
+    const Expr* expr) {
+  const auto& layer = *layer_get(ctx);
 
-struct Command {
-  Command(CommandFn f) : fn(f) {}
-  CommandFn fn;
-};
+  ExprStorage unparsed;
+  return expr_walk_commands(expr, nullptr, {
+    {"text", std::bind(&draw::text_eval, ctx, _1)},
+    {"rectangle", std::bind(&draw::rectangle, ctx, _1)},
+  });
 
-using CommandMap = std::unordered_map<std::string, Command>;
-
-CommandFn bind_cmd(CommandFnRef ref);
+  return OK;
+}
 
 } // namespace clip
-
 

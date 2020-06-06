@@ -12,28 +12,15 @@
  * limitations under the License.
  */
 #pragma once
-#include "command.h"
-#include "plot/plotgen.h"
-#include "draw/rectangle.h"
-#include "draw/text.h"
-#include "figure/legend.h"
+#include "context.h"
+#include "sexpr.h"
+#include "return_code.h"
 
 namespace clip {
 
-const CommandMap COMMANDS = {
-  {"layer/resize", bind_cmd(&layer_resize)},
-  {"layer/set-dpi", bind_cmd(&layer_set_dpi)},
-  {"layer/set-font", bind_cmd(&layer_set_font)},
-  {"layer/set-font-size", bind_cmd(&layer_set_font_size)},
-  {"draw/text", bind_cmd(&draw::text)},
-  {"draw/rectangle", bind_cmd(&draw::rectangle)},
-  {"figure/plot", bind_cmd(&plot_eval)},
-};
-
-CommandFn bind_cmd(CommandFnRef ref) {
-  return ref;
-}
+ReturnCode draw_eval(
+    Context* ctx,
+    const Expr* expr);
 
 } // namespace clip
-
 

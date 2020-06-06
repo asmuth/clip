@@ -30,6 +30,7 @@ Expr* expr_next(Expr* expr);
 const Expr* expr_next(const Expr* expr);
 bool expr_has_next(const Expr* expr);
 void expr_set_next(Expr* expr, ExprStorage next);
+void expr_set_next(ExprStorage* expr, ExprStorage next);
 ExprStorage* expr_get_next_storage(Expr* expr);
 
 bool expr_is_list(const Expr* expr);

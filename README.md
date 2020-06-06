@@ -1,11 +1,9 @@
-<div align="center"><img src="./doc/logo.svg" alt="clip" width="160" /></div>
-<h3>clip – The command line illustration processor</h3>
+clip
+====
 
 clip (the _command line illustration processor_) is an open-source command line
-program and software library for creating charts and other programmatic
-illustrations. In essence, clip consists of a library of drawing commands. This
-command library includes high-level building blocks for creating common chart
-types as well as lower-level drawing primitives such as markers, arrows and lines.
+program and software library for creating charts and other data-driven
+illustrations.
 
 <h4>
   <a href="https://clip-lang.org/getting-started">Getting Started</a> &middot;
@@ -17,29 +15,33 @@ types as well as lower-level drawing primitives such as markers, arrows and line
 Introduction
 ------------
 
-Being a highly visual tool, clip is best explained by example. So here is how to
-draw a simple line chart using clip):
+In essence, clip is an automated drawing program; it reads a text file containing
+a description of the chart or diagram and produces an image from it. This is best
+explained by example, so here is how to draw a simple line chart using clip:
 
-    $ clip --export example_chart.svg example_chart.clp
+    (class plot)
 
-The command reads an input file (`example_chart.clp`) and produces an output SVG
-file from it. This is the input file:
+    (axes
+        label-format-x (datetime "%H:%M:%S"))
 
-    (figure/plot
-        limit-x (0 7200)
-        limit-y (0 100)
-        lines (
-            data-x (csv "measurement.csv" time)
-            data-y (csv "measurement.csv" value)
-            stroke-width 0.8pt)
-        grid (
-            stroke-color #333
-            stroke-style dashed))
+    (grid
+        stroke-color #333
+        stroke-style dashed)
 
-The resulting SVG file looks like this:
+    (lines
+        data-x (csv "measurement.csv" time)
+        data-y (csv "measurement.csv" value)
+        stroke-width 0.8pt)
+
+The input file from above (`example.clp`) can be processed with clip using the
+following command:
+
+    $ clip --export output.svg example.clp
+
+This is the resulting SVG file (`output.svg`):
 
 <div align="center">
-  <a href="https://clip-lang.org/examples/charts-scientific/vectorfield">
+  <a href="https://clip-lang.org/examples/charts-scientific/multiple_y_axes">
     <img src="/doc/demo.svg" width="80%" alt="Demo Chart" />
   </a>
 </div>
@@ -58,12 +60,6 @@ You can find the full documentation and more examples at [clip-lang.org](https:/
 
 Installation
 ------------
-
-#### Using homebrew (macOS)
-
-To install clip using homebrew, run the following command:
-
-    $ brew install clip
 
 #### Compile from source
 

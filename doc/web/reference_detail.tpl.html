@@ -1,4 +1,4 @@
-<h1 id="overview">{{title}}</h1>
+<h1 id="overview">{{{title}}}</h1>
 {{{desc}}}
 
 <h3 id="syntax">Syntax</h3>
@@ -6,12 +6,12 @@
 <pre><code>{{{syntax}}}</pre></code>
 {{/syntax}}
 {{^syntax}}
-<pre><code>{{name}} ({{#arguments}}<br />    <a href="#option-{{name}}">{{name}}</a> (...){{/arguments}})</pre></code>
+<pre><code>({{name}} {{#arguments}}<br />    <a href="#option-{{name}}">{{name}}</a> (...){{/arguments}})</pre></code>
 {{/syntax}}
 
-<h2 id="options">Options</h2>
+<h2 id="options">List of Options</h2>
 {{#arguments}}
-  <section style="border-top: 1px dashed #ddd; padding: .4em 0; margin: 0 0 1.6em 0;">
+  <section style="border-top: 1px solid #ddd; padding: .4em 0; margin: 0 0 1.6em 0;">
     <a href="#option-{{name}}">
       <h3 id="option-{{name}}">{{name}} <code>&lt;{{type}}&gt;</code></h3>
     </a>

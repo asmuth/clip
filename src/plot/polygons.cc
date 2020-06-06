@@ -56,7 +56,7 @@ ReturnCode polygons_configure(
   c->stroke_style.line_width = unit_from_pt(1, layer_get_dpi(ctx));
 
   /* read arguments */
-  auto config_rc = expr_walk_map_wrapped(expr, {
+  auto config_rc = expr_walk_map(expr, {
     {"data", std::bind(&data_load_polys2, _1, &c->polys)},
     {"limit-x", std::bind(&expr_to_float64_opt_pair, _1, &c->scale_x.min, &c->scale_x.max)},
     {"limit-x-min", std::bind(&expr_to_float64_opt, _1, &c->scale_x.min)},

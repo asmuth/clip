@@ -121,7 +121,7 @@ add_dependencies(test test-extract-data)
 # -----------------------------------------------------------------------------
 add_custom_target(doc
     COMMAND mkdir -p ${CMAKE_CURRENT_BINARY_DIR}/wwwdocs
-    COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/doc/web/build.sh ${CMAKE_CURRENT_BINARY_DIR}/wwwdocs)
+    COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/doc/web/build.sh ${clip_VERSION} ${CMAKE_CURRENT_BINARY_DIR}/wwwdocs)
 
 file(GLOB doc_figure_files "doc/**/*.clp")
 foreach(doc_figure_path ${doc_figure_files})

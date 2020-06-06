@@ -35,6 +35,11 @@ ReturnCode expr_walk_map_wrapped(
     const std::unordered_map<std::string, ExprVisitor>& fns,
     bool strict = true);
 
+ReturnCode expr_walk_commands(
+    const Expr* expr,
+    ExprStorage* unparsed,
+    const std::unordered_map<std::string, ExprVisitor>& fns);
+
 ReturnCode expr_walk_tmap(
     const Expr* expr,
     const std::unordered_map<std::string, ExprVisitor>& fns,

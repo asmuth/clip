@@ -1,1 +1,1 @@
-(layer/resize A4*)
+(size A4*)

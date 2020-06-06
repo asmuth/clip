@@ -41,7 +41,7 @@ ReturnCode text(
     const TextPlacement& placement,
     TextStyle style);
 
-ReturnCode text(
+ReturnCode text_eval(
     Context* ctx,
     const Expr* expr);
 

@@ -31,45 +31,61 @@
 #include "plot/polygons.h"
 #include "plot/rectangles.h"
 #include "plot/vectors.h"
+#include "draw.h"
 #include "draw/rectangle.h"
 #include "figure/legend.h"
-#include "commands.h"
 
 using namespace std::placeholders;
 
 namespace clip {
 
+using Module = std::function<ReturnCode (Context*, const Expr*)>;
+using ModuleMap = std::unordered_map<std::string, Module>;
+
+const ModuleMap MODULES = {
+  {"draw", Module(&draw_eval)},
+  {"plot", Module(&plot_eval)},
+};
+
 ReturnCode eval(
     Context* ctx,
     const Expr* expr) {
-  // execute commands
-  for (; expr; expr = expr_next(expr)) {
-    if (!expr || !expr_is_list(expr)) {
-      return error(ERROR, "expected a command list");
-    }
+  std::string module_name = "plot";
+  ExprStorage module_args;
 
-    auto args = expr_get_list(expr);
-    if (!args || !expr_is_value(args)) {
-      return error(ERROR, "expected a command name");
-    }
+  auto rc = expr_walk_commands(expr, &module_args, {
+    {"class", std::bind(&expr_to_string, _1, &module_name)},
+    {"size", std::bind(&layer_resize_cmd, ctx, _1)},
+    {"dpi", std::bind(&layer_set_dpi_cmd, ctx, _1)},
+    {"font", std::bind(&layer_set_font_cmd, ctx, _1)},
+    {"font-size", std::bind(&layer_set_font_size_cmd, ctx, _1)},
+  });
 
-    auto arg0 = expr_get_value(args);
-    args = expr_next(args);
+  if (!rc) {
+    return rc;
+  }
 
-    const Command* cmd;
-    if (auto cmd_iter = COMMANDS.find(arg0); cmd_iter != COMMANDS.end()) {
-      cmd = &cmd_iter->second;
-    } else {
-      return {ERROR, fmt::format("Invalid command '{}'", arg0)};
-    }
+  if (module_name.empty()) {
+    return error(
+        ERROR,
+        "Please specify a module:\n"
+        "\n"
+        "    (class <module>)\n"
+        "\n"
+        "List of available modules:\n"
+        "\n"
+        "    - plot\n");
+  }
 
-    if (auto rc = cmd->fn(ctx, args); !rc) {
-      return rc;
-    }
+  const Module* module;
+  if (auto mod_iter = MODULES.find(module_name); mod_iter != MODULES.end()) {
+    module = &mod_iter->second;
+  } else {
+    return {ERROR, fmt::format("Invalid module '{}'", module_name)};
+  }
 
-    if (!expr_has_next(expr)) {
-      break;
-    }
+  if (auto rc = (*module)(ctx, &*module_args); !rc) {
+    return rc;
   }
 
   return OK;

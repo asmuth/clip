@@ -37,6 +37,7 @@ def build_page_cmdref(page):
         args[i][k] = args[i][k].replace("{{name}}", p["name"])
 
   page["arguments"] = args
+  page["title"] = re.sub("<.?p>", "", markdown.markdown(page["title"]))
   page["desc"] = markdown.markdown(page["desc"])
   page["has_examples"] = len(page.get("examples", [])) > 0
 

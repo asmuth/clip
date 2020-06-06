@@ -5,9 +5,6 @@ The `<font>` setting allows you to configure the font that should be used for
 drawing text and labels. In general, the font can be controlled for each label
 individually. If no explicit font is specified, the default font will be used.
 
-##### Example: [`charts-custom/custom_font`](/examples/charts-custom/custom_font):
-[![custom_font.svg](/examples/charts-custom/custom_font.svg)](/examples/charts-custom/custom_font)
-
 
 ## Custom Fonts
 

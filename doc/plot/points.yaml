@@ -1,8 +1,9 @@
-title: plot/points
+title: Point & Scatterplots
+
 tpl: cmdref
 name: points
 desc: |
-  The `plot/points` element is used to create point/scattercharts.
+  The `points` command is used to create point/scattercharts.
 
 arguments:
   - name: data-x

@@ -100,7 +100,7 @@ ReturnCode layer_resize(
   return OK;
 }
 
-ReturnCode layer_resize(
+ReturnCode layer_resize_cmd(
     Context* ctx,
     const Expr* expr) {
   auto args = expr_collect(expr);
@@ -181,7 +181,7 @@ void layer_set_dpi(
   layer->dpi = dpi;
 }
 
-ReturnCode layer_set_dpi(
+ReturnCode layer_set_dpi_cmd(
     Context* ctx,
     const Expr* expr) {
   auto args = expr_collect(expr);
@@ -258,7 +258,7 @@ void layer_set_font(
   layer->font = std::move(font);
 }
 
-ReturnCode layer_set_font(
+ReturnCode layer_set_font_cmd(
     Context* ctx,
     const Expr* expr) {
   auto layer = layer_get(ctx);
@@ -304,7 +304,7 @@ void layer_set_font_size(
   layer->font_size = font_size;
 }
 
-ReturnCode layer_set_font_size(
+ReturnCode layer_set_font_size_cmd(
     Context* ctx,
     const Expr* expr) {
   auto args = expr_collect(expr);

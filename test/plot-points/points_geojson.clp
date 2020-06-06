@@ -1,7 +1,6 @@
-(layer/resize 1024px 512px)
-(layer/set-dpi 96)
+(size 1024px 512px)
+(dpi 96)
 
-(figure/plot
-    points (
-        data (geojson "test/plot-points/points_geojson_data.geojson")
-        size 8px))
+(points
+    data (geojson "test/plot-points/points_geojson_data.geojson")
+    size 8px)

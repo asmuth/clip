@@ -1,5 +1,6 @@
-(layer/resize A6*)
+(class draw)
+(size A6*)
 
-(draw/text
+(text
     text "TEST"
     font-size 48pt)

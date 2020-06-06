@@ -72,7 +72,7 @@ ReturnCode lines_configure(
   c->marker_color = layer_get(ctx)->foreground_color;
 
   /* parse properties */
-  auto config_rc = expr_walk_map_wrapped(expr, {
+  auto config_rc = expr_walk_map(expr, {
     {"data", std::bind(&data_load_polylines2, _1, &c->x, &c->y, &c->groups)},
     {"data-x", std::bind(&data_load_simple, _1, &c->x)},
     {"data-y", std::bind(&data_load_simple, _1, &c->y)},
