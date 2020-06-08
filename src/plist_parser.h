@@ -31,7 +31,7 @@
 #include <atomic>
 #include <memory>
 #include <string>
-#include "plist.h"
+#include "sexpr.h"
 
 namespace clip {
 
@@ -42,7 +42,7 @@ public:
       const char* input,
       size_t input_len);
 
-  bool parse(PropertyList* plist);
+  bool parse(ExprStorage* plist);
 
   const std::string& get_error() const;
 
@@ -68,15 +68,13 @@ protected:
 
   bool consumeToken();
 
-  bool parsePropertyOrMap(PropertyList* plist);
-  bool parseProperty(const std::string& pname, PropertyList* plist);
-  bool parsePropertyListOrTuple(PropertyList* plist);
-  bool parsePropertyTupleOrValue(Property* prop);
-  bool parsePropertyTuple(PropertyList* plist);
-  bool parsePropertyValueOrEnum(Property* prop);
-  bool parsePropertyEnum(Property* prop);
-  bool parsePropertyValue(Property* prop);
-  bool parsePropertyMap(const std::string& pname, PropertyList* plist);
+  bool parsePropertyOrMap(ExprStorage* plist);
+  bool parseProperty(const std::string& pname, ExprStorage* plist);
+  bool parsePropertyValues(ExprStorage* plist);
+  bool parsePropertyValueOrEnum(ExprStorage* prop);
+  bool parsePropertyValue(ExprStorage* prop);
+  bool parsePropertyEnum(ExprStorage* prop);
+  bool parsePropertyMap(const std::string& pname, ExprStorage* plist);
 
   bool getToken(
       TokenType* type,

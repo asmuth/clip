@@ -49,11 +49,11 @@ const std::string& PropertyListParser::get_error() const {
   return error_msg_;
 }
 
-bool PropertyListParser::parse(PropertyList* plist) {
+bool PropertyListParser::parse(ExprStorage* plist) {
   TokenType ttype;
   std::string tbuf;
-  while (getToken(&ttype, &tbuf)) {
-    if (!parsePropertyOrMap(plist)) {
+  for (auto tail = plist; getToken(&ttype, &tbuf); tail = expr_get_next_storage(&**tail)) {
+    if (!parsePropertyOrMap(tail)) {
       return false;
     }
   }
@@ -61,7 +61,7 @@ bool PropertyListParser::parse(PropertyList* plist) {
   return true;
 }
 
-bool PropertyListParser::parsePropertyOrMap(PropertyList* plist) {
+bool PropertyListParser::parsePropertyOrMap(ExprStorage* plist) {
   std::string pname;
   if (!expectAndConsumeString(&pname)) {
     return false;
@@ -94,46 +94,38 @@ bool PropertyListParser::parsePropertyOrMap(PropertyList* plist) {
               printToken(ttype, tbuf)));
       return false;
   }
-}
 
-bool PropertyListParser::parseProperty(const std::string& pname, PropertyList* plist) {
-  Property prop;
-  prop.name = pname;
-
-  PropertyList args;
-  if (!parsePropertyListOrTuple(&args)) {
-    return false;
-  }
-
-  if (args.size() == 1) {
-    prop.kind = args[0].kind;
-    prop.value = args[0].value;
-    prop.next = std::move(args[0].next);
-  } else {
-    prop.kind = PropertyKind::LIST;
-    prop.next = std::make_unique<PropertyList>(std::move(args));
-  }
-
-  plist->emplace_back(std::move(prop));
   return true;
 }
 
-bool PropertyListParser::parsePropertyListOrTuple(PropertyList* plist) {
+bool PropertyListParser::parseProperty(const std::string& pname, ExprStorage* plist) {
+  auto args = expr_create_value_literal(pname);
+
+  if (!parsePropertyValues(expr_get_next_storage(args.get()))) {
+    return false;
+  }
+
+  *plist = expr_create_list(std::move(args));
+  return true;
+}
+
+bool PropertyListParser::parsePropertyValues(ExprStorage* plist) {
+  auto tail = plist;
+
   TokenType ttype;
   std::string tbuf;
   while (getToken(&ttype, &tbuf) && ttype != T_SEMICOLON) {
-    Property prop;
-    if (!parsePropertyTupleOrValue(&prop)) {
-      return false;
-    }
-
-    plist->emplace_back(std::move(prop));
-
-    if (!getToken(&ttype, &tbuf)) {
-      return false;
-    }
-
     switch (ttype) {
+      case T_STRING_QUOTED:
+      case T_STRING: {
+        if (!parsePropertyValueOrEnum(tail)) {
+          return false;
+        }
+
+        tail = expr_get_next_storage(tail->get());
+        break;
+      }
+
       case T_SEMICOLON:
         return true;
 
@@ -156,65 +148,12 @@ bool PropertyListParser::parsePropertyListOrTuple(PropertyList* plist) {
   return true;
 }
 
-bool PropertyListParser::parsePropertyTupleOrValue(Property* prop) {
-  PropertyList args;
-  if (!parsePropertyTuple(&args)) {
-    return false;
-  }
-
-  if (args.size() == 1) {
-    prop->kind = args[0].kind;
-    prop->value = args[0].value;
-    prop->next = std::move(args[0].next);
-  } else {
-    prop->kind = PropertyKind::TUPLE;
-    prop->next = std::make_unique<PropertyList>(std::move(args));
-  }
-
-  return true;
-}
-
-bool PropertyListParser::parsePropertyTuple(PropertyList* plist) {
-  TokenType ttype;
-  std::string tbuf;
-  while (getToken(&ttype, &tbuf) && ttype != T_SEMICOLON) {
-    switch (ttype) {
-      case T_STRING_QUOTED:
-      case T_STRING: {
-        Property prop;
-        if (!parsePropertyValueOrEnum(&prop)) {
-          return false;
-        }
-
-        plist->emplace_back(std::move(prop));
-        break;
-      }
-
-      case T_RPAREN:
-        return true;
-
-      case T_COMMA:
-        return true;
-
-      default:
-        setError(
-            fmt::format(
-                "unexpected token '{}'; expected STRING",
-                printToken(ttype, tbuf)));
-        return false;
-    }
-
-  }
-
-  return true;
-}
-
-bool PropertyListParser::parsePropertyValueOrEnum(Property* prop) {
+bool PropertyListParser::parsePropertyValueOrEnum(ExprStorage* prop) {
   if (!parsePropertyValue(prop)) {
     return false;
   }
 
-  if (prop->kind != PropertyKind::VALUE_LITERAL) {
+  if (!expr_is_value_literal(prop->get())) {
     return true;
   }
 
@@ -224,21 +163,19 @@ bool PropertyListParser::parsePropertyValueOrEnum(Property* prop) {
     return true;
   }
 
-  prop->kind = PropertyKind::ENUM;
-  prop->next = std::make_unique<PropertyList>();
-
   expectAndConsumeToken(T_LPAREN);
 
-  if (!parsePropertyListOrTuple(prop->next.get())) {
+  if (!parsePropertyValues(expr_get_next_storage(prop->get()))) {
     return false;
   }
 
   expectAndConsumeToken(T_RPAREN);
 
+  *prop = expr_create_list(std::move(*prop));
   return true;
 }
 
-bool PropertyListParser::parsePropertyValue(Property* prop) {
+bool PropertyListParser::parsePropertyValue(ExprStorage* prop) {
   TokenType ttype;
   std::string tbuf;
   if (!getToken(&ttype, &tbuf)) {
@@ -247,13 +184,11 @@ bool PropertyListParser::parsePropertyValue(Property* prop) {
 
   switch (ttype) {
     case T_STRING_QUOTED:
-      prop->kind = PropertyKind::VALUE;
-      prop->value = tbuf;
+      *prop = expr_create_value(tbuf);
       consumeToken();
       break;
     case T_STRING:
-      prop->kind = PropertyKind::VALUE_LITERAL;
-      prop->value = tbuf;
+      *prop = expr_create_value_literal(tbuf);
       consumeToken();
       break;
     default:
@@ -264,25 +199,24 @@ bool PropertyListParser::parsePropertyValue(Property* prop) {
       return false;
   }
 
-
   return true;
 }
 
-bool PropertyListParser::parsePropertyMap(const std::string& pname, PropertyList* plist) {
-  Property prop;
-  prop.name = pname;
-  prop.kind = PropertyKind::MAP;
-  prop.next = std::make_unique<PropertyList>();
+bool PropertyListParser::parsePropertyMap(const std::string& pname, ExprStorage* plist) {
+  auto args = expr_create_value_literal(pname);
+  auto tail = expr_get_next_storage(args.get());
 
   TokenType ttype;
   std::string tbuf;
   while (getToken(&ttype, &tbuf) && ttype != T_RCBRACE) {
-    if (!parsePropertyOrMap(prop.next.get())) {
+    if (!parsePropertyOrMap(tail)) {
       return false;
     }
+
+    tail = expr_get_next_storage(tail->get());
   }
 
-  plist->emplace_back(std::move(prop));
+  *plist = expr_create_list(std::move(args));
   return true;
 }
 

@@ -18,6 +18,7 @@
 #include "sexpr_parser.h"
 #include "sexpr_conv.h"
 #include "sexpr_util.h"
+#include "plist_parser.h"
 #include "typographic_reader.h"
 
 #include "plot/areas.h"
@@ -94,12 +95,14 @@ ReturnCode eval(
 ReturnCode eval(
     Context* ctx,
     const std::string& input) {
-  ExprStorage expr;
-  if (auto rc = expr_parse(input.data(), input.length(), &expr); !rc) {
-    return rc;
+  ExprStorage plist;
+
+  PropertyListParser parser(input.data(), input.size());
+  if (!parser.parse(&plist)) {
+    return {ERROR, parser.get_error()};
   }
 
-  return eval(ctx, expr.get());
+  return eval(ctx, plist.get());
 }
 
 } // namespace clip
