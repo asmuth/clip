@@ -1,1 +1,1 @@
-(size 1920px 1080px)
+size: 1920px 1080px;

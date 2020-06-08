@@ -47,7 +47,7 @@ ReturnCode plot_prepare(
     const Expr* expr) {
   ExprStorage unparsed;
 
-  return expr_walk_commands(expr, &unparsed, {
+  return expr_walk_map(expr, &unparsed, {
     /* scale configuration */
     {"limit-x", std::bind(&expr_to_float64_opt_pair, _1, &plot->scale_x.min, &plot->scale_x.max)},
     {"limit-x-min", std::bind(&expr_to_float64_opt, _1, &plot->scale_x.min)},
@@ -80,7 +80,7 @@ ReturnCode plot_draw(
   const auto& layer = *layer_get(ctx);
 
   ExprStorage unparsed;
-  return expr_walk_commands(expr, &unparsed, {
+  return expr_walk_map(expr, &unparsed, {
     /* margins */
     {
       "margin",

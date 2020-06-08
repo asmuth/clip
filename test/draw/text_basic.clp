@@ -1,4 +1,6 @@
-(class draw)
-(size A6*)
+class: draw;
+size: A6*;
 
-(text text "hello world")
+text {
+  text: "hello world";
+}

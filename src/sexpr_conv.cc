@@ -39,12 +39,6 @@ ReturnCode expr_to_strings(
   return expr_tov<std::string>(expr, std::bind(&expr_to_string, _1, _2), values);
 }
 
-ReturnCode expr_to_strings_flat(
-    const Expr* expr,
-    std::vector<std::string>* values) {
-  return expr_tov_flat<std::string>(expr, std::bind(&expr_to_string, _1, _2), values);
-}
-
 ReturnCode expr_to_stringset(
     const Expr* expr,
     std::set<std::string>* values) {
@@ -99,15 +93,6 @@ ReturnCode expr_to_float64_opt_pair(
     const Expr* expr,
     Option<double>* v1,
     Option<double>* v2) {
-  if (expr && expr_is_list(expr)) {
-    expr = expr_get_list(expr);
-  } else {
-    return errorf(
-        ERROR,
-        "argument error; expected a list, got: {}",
-        expr_inspect(expr));
-  }
-
   const auto& args = expr_collect(expr);
 
   if (args.size() != 2) {
@@ -198,11 +183,7 @@ ReturnCode expr_to_vec2(
     const UnitConvMap& conv1,
     const UnitConvMap& conv2,
     vec2* v) {
-  if (!expr_is_list(expr)) {
-    return err_invalid_value(expr_inspect(expr), {"(<x> <y>)"});
-  }
-
-  auto args = expr_collect(expr_get_list(expr));
+  auto args = expr_collect(expr);
   if (args.size() != 2) {
     return err_invalid_nargs(args.size(), 2);
   }

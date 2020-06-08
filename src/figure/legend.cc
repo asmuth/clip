@@ -387,17 +387,10 @@ ReturnCode legend_configure_position(
     const Expr* expr,
     HAlign* position_horiz,
     VAlign* position_vert) {
-  if (!expr || !expr_is_list(expr)) {
-    return errorf(
-        ERROR,
-        "invalid argument; expected a list but got: {}",
-        expr_inspect(expr));
-  }
-
   bool position_horiz_set = false;
   bool position_vert_set = false;
 
-  for (expr = expr_get_list(expr); expr; expr = expr_next(expr)) {
+  for (; expr; expr = expr_next(expr)) {
     if (expr_is_value(expr, "top")) {
       *position_vert = VAlign::TOP;
       position_vert_set = true;
@@ -438,12 +431,8 @@ ReturnCode configure_item(
     Context* ctx,
     const Expr* expr,
     std::vector<LegendItem>* items) {
-  if (!expr_is_list(expr)) {
-    return {ERROR, "expected a list"};
-  }
-
   LegendItem item;
-  if (auto rc = legend_item_configure(ctx, expr_get_list(expr), &item); !rc) {
+  if (auto rc = legend_item_configure(ctx, expr, &item); !rc) {
     return rc;
   }
 

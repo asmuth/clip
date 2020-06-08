@@ -139,39 +139,28 @@ ReturnCode color_map_read_gradient(
     const Context* ctx,
     const Expr* expr,
     ColorMap* color_map) {
+  auto args = expr_collect(expr);
+
+  if (args.size() % 2 != 0) {
+      return errorf(
+          ERROR,
+          "invalid argument to 'gradient'; not a list of pairs: '{}'",
+          expr_inspect(expr));
+  }
+
   std::vector<std::pair<double, Color>> gradient;
-
-  for (; expr; expr = expr_next(expr)) {
-    if (!expr_is_list(expr)) {
-      return errorf(
-          ERROR,
-          "invalid argument to 'gradient'; expected a 2-tuple, but got: '{}'",
-          expr_inspect(expr));
-    }
-
-    auto args = expr_collect(expr_get_list(expr));
-    if (args.size() != 2) {
-      return errorf(
-          ERROR,
-          "invalid argument to 'gradient'; expected a 2-tuple, but got: '{}'",
-          expr_inspect(expr));
-    }
-
+  for (size_t i = 0; i + 1 < args.size(); i += 2) {
     double step;
-    if (auto rc = expr_to_ratio(args[0], &step); !rc) {
+    if (auto rc = expr_to_ratio(args[i], &step); !rc) {
       return rc;
     }
 
     Color color;
-    if (auto rc = color_read(ctx, args[1], &color); !rc) {
+    if (auto rc = color_read(ctx, args[i + 1], &color); !rc) {
       return rc;
     }
 
     gradient.emplace_back(step, color);
-
-    if (!expr_has_next(expr)) {
-      break;
-    }
   }
 
   *color_map = color_map_gradient(gradient);
@@ -182,39 +171,28 @@ ReturnCode color_map_read_steps(
     const Context* ctx,
     const Expr* expr,
     ColorMap* color_map) {
+  auto args = expr_collect(expr);
+
+  if (args.size() % 2 != 0) {
+      return errorf(
+          ERROR,
+          "invalid argument to 'gradient'; not a list of pairs: '{}'",
+          expr_inspect(expr));
+  }
+
   std::vector<std::pair<double, Color>> steps;
-
-  for (; expr; expr = expr_next(expr)) {
-    if (!expr_is_list(expr)) {
-      return errorf(
-          ERROR,
-          "invalid argument to 'steps'; expected a 2-tuple, but got: '{}'",
-          expr_inspect(expr));
-    }
-
-    auto args = expr_collect(expr_get_list(expr));
-    if (args.size() != 2) {
-      return errorf(
-          ERROR,
-          "invalid argument to 'steps'; expected a 2-tuple, but got: '{}'",
-          expr_inspect(expr));
-    }
-
+  for (size_t i = 0; i + 1 < args.size(); i += 2) {
     double step;
-    if (auto rc = expr_to_ratio(args[0], &step); !rc) {
+    if (auto rc = expr_to_ratio(args[i], &step); !rc) {
       return rc;
     }
 
     Color color;
-    if (auto rc = color_read(ctx, args[1], &color); !rc) {
+    if (auto rc = color_read(ctx, args[i + 1], &color); !rc) {
       return rc;
     }
 
     steps.emplace_back(step, color);
-
-    if (!expr_has_next(expr)) {
-      break;
-    }
   }
 
   *color_map = color_map_steps(steps);
@@ -225,21 +203,12 @@ ReturnCode color_map_read(
     const Context* ctx,
     const Expr* expr,
     ColorMap* color_map) {
-  if (!expr || !expr_is_list(expr)) {
-    return errorf(
-        ERROR,
-        "invalid argument to <color-map>; expected a list, but got: '{}'",
-        expr_inspect(expr));
+  if (expr_is_list(expr, "gradient")) {
+    return color_map_read_gradient(ctx, expr_get_list_tail(expr), color_map);
   }
 
-  expr = expr_get_list(expr);
-
-  if (expr_is_value(expr, "gradient")) {
-    return color_map_read_gradient(ctx, expr_next(expr), color_map);
-  }
-
-  if (expr_is_value(expr, "steps")) {
-    return color_map_read_steps(ctx, expr_next(expr), color_map);
+  if (expr_is_list(expr, "steps")) {
+    return color_map_read_steps(ctx, expr_get_list_tail(expr), color_map);
   }
 
   return errorf(

@@ -126,16 +126,6 @@ Marker marker_create_unicode(const std::string& u) {
 ReturnCode marker_configure(
     const Expr* expr,
     Marker* marker) {
-
-  if (!expr || !expr_is_list(expr)) {
-    return errorf(
-        ERROR,
-        "invalid argument; expected a list (<marker-shape>), but got: {}",
-        expr_inspect(expr));
-  }
-
-  expr = expr_get_list(expr);
-
   if (expr_is_value(expr, "circle")) {
     *marker = marker_create_disk();
     return OK;

@@ -1,7 +1,8 @@
-(class draw)
-(size A6*)
+class: draw;
+size: A6*;
 
-(text
-    text "TEST"
-    font-size 48pt
-    stroke (1pt #000))
+text {
+  text: "TEST";
+  font-size: 48pt;
+  stroke: 1pt #000;
+}

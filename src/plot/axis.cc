@@ -751,20 +751,12 @@ ReturnCode plot_axis(Context* ctx, PlotConfig* plot, const Expr* expr) {
 ReturnCode axis_configure_position(
     const Expr* expr,
     std::array<AxisDefinition, 4>* axes) {
-  if (!expr || !expr_is_list(expr)) {
-    return errorf(
-        ERROR,
-        "invalid argument; expected a list but got: {}",
-        expr_inspect(expr));
-  }
-
-
   axes->at(0).enable = false;
   axes->at(1).enable = false;
   axes->at(2).enable = false;
   axes->at(3).enable = false;
 
-  for (expr = expr_get_list(expr); expr; expr = expr_next(expr)) {
+  for (; expr; expr = expr_next(expr)) {
     if (expr_is_value(expr, "top")) {
       axes->at(0).enable = true;
       continue;

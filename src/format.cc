@@ -284,47 +284,58 @@ ReturnCode format_configure_custom(
 ReturnCode format_configure(
     const Expr* expr,
     Formatter* formatter) {
-  if (!expr || !expr_is_list(expr)) {
-    return errorf(
-        ERROR,
-        "invalid argument; expected a list (<format>), but got: {}",
-        expr_inspect(expr));
+  if (expr_is_value(expr, "fixed")) {
+    return format_configure_decimal_fixed(nullptr, formatter);
   }
 
-  expr = expr_get_list(expr);
-
-  if (expr_is_value(expr, "fixed")) {
-    return format_configure_decimal_fixed(expr_next(expr), formatter);
+  if (expr_is_list(expr, "fixed")) {
+    return format_configure_decimal_fixed(expr_get_list_tail(expr), formatter);
   }
 
   if (expr_is_value(expr, "scientific")) {
-    return format_configure_decimal_scientific(expr_next(expr), formatter);
+    return format_configure_decimal_scientific(nullptr, formatter);
+  }
+
+  if (expr_is_list(expr, "scientific")) {
+    return format_configure_decimal_scientific(expr_get_list_tail(expr), formatter);
   }
 
   if (expr_is_value(expr, "datetime")) {
-    return format_configure_datetime(expr_next(expr), formatter);
+    return format_configure_datetime(nullptr, formatter);
+  }
+
+  if (expr_is_list(expr, "datetime")) {
+    return format_configure_datetime(expr_get_list_tail(expr), formatter);
   }
 
   if (expr_is_value(expr, "base")) {
-    return format_configure_base_fixed(expr_next(expr), formatter);
+    return format_configure_base_fixed(nullptr, formatter);
+  }
+
+  if (expr_is_list(expr, "base")) {
+    return format_configure_base_fixed(expr_get_list_tail(expr), formatter);
   }
 
   if (expr_is_value(expr, "integer")) {
-    return format_configure_integer(expr_next(expr), formatter);
+    return format_configure_integer(nullptr, formatter);
   }
 
-  if (expr_is_value(expr, "custom")) {
-    return format_configure_custom(expr_next(expr), formatter);
+  if (expr_is_list(expr, "integer")) {
+    return format_configure_integer(expr_get_list_tail(expr), formatter);
+  }
+
+  if (expr_is_list(expr, "custom")) {
+    return format_configure_custom(expr_get_list_tail(expr), formatter);
   }
 
   return errorf(
       ERROR,
       "invalid value '{}', expected one of: \n"
       "  - fixed\n"
-      "  - scientific\n",
-      "  - datetime\n",
-      "  - base\n",
-      "  - integer\n",
+      "  - scientific\n"
+      "  - datetime\n"
+      "  - base\n"
+      "  - integer\n"
       "  - custom\n",
       expr_inspect(expr));
 }

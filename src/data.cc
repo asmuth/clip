@@ -143,7 +143,7 @@ ReturnCode data_load_strings_csv(
     return errorf(
         ERROR,
         "invalid number of arguments to 'csv'; expected: 2, got: {}",
-        "..."); // FIXME
+        args.size());
   }
 
 
@@ -199,7 +199,7 @@ ReturnCode data_load_csv(
   for (auto v = values_str.begin(); v != values_str.end(); ++v) {
     try {
       values->push_back(from_user(std::stod(*v)));
-    } catch (... ) {
+    } catch (...) {
       return errorf(
           ERROR,
           "CSV invalid column in row #{}: '{}' is not a number",
@@ -212,22 +212,13 @@ ReturnCode data_load_csv(
 }
 
 ReturnCode data_load_strings(
-    const Expr* expr,
+    const Expr* args,
     std::vector<std::string>* values) {
-  if (!expr || !expr_is_list(expr)) {
-    return errorf(
-        ERROR,
-        "argument error; expected a value, got: {}",
-        "..."); // FIXME
+  if (args && expr_is_list(args, "csv")) {
+    return data_load_strings_csv(expr_get_list_tail(args), values);
   }
 
-  auto args = expr_get_list(expr);
-
-  if (args && expr_is_value_literal(args, "csv")) {
-    return data_load_strings_csv(expr_next(args), values);
-  }
-
-  return expr_to_strings(expr, values);
+  return expr_to_strings(args, values);
 }
 
 ReturnCode data_load_simple_inline(
@@ -295,19 +286,10 @@ ReturnCode data_load_simple_csv(
 }
 
 ReturnCode data_load_simple(
-    const Expr* expr,
+    const Expr* args,
     DataBuffer* values) {
-  if (!expr || !expr_is_list(expr)) {
-    return errorf(
-        ERROR,
-        "argument error; expected a list, got: {}",
-        expr_inspect(expr));
-  }
-
-  auto args = expr_get_list(expr);
-
-  if (args && expr_is_value_literal(args, "csv")) {
-    return data_load_simple_csv(expr_next(args), values);
+  if (args && expr_is_list(args, "csv")) {
+    return data_load_simple_csv(expr_get_list_tail(args), values);
   }
 
   return data_load_simple_inline(args, values);

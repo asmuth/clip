@@ -1,2 +1,2 @@
-(size A4)
-(dpi 240)
+size: A4;
+dpi: 240;

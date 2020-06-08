@@ -54,7 +54,7 @@ ReturnCode eval(
   std::string module_name = "plot";
   ExprStorage module_args;
 
-  auto rc = expr_walk_commands(expr, &module_args, {
+  auto rc = expr_walk_map(expr, &module_args, {
     {"class", std::bind(&expr_to_string, _1, &module_name)},
     {"size", std::bind(&layer_resize_cmd, ctx, _1)},
     {"dpi", std::bind(&layer_set_dpi_cmd, ctx, _1)},

@@ -1,1 +1,1 @@
-(size A4*)
+size: A4*;

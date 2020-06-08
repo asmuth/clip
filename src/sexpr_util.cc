@@ -33,35 +33,12 @@ ReturnCode expr_walk_map(
     const Expr* expr,
     const std::unordered_map<std::string, ExprVisitor>& fns,
     bool strict /* = true */) {
-  for (; expr; expr = expr_next(expr)) {
-    if (!expr_is_value(expr)) {
-      return errorf(ERROR, "expected a literal, but got: {}", expr_inspect(expr));
-    }
-
-    auto param = expr_get_value(expr);
-    const auto& fn = fns.find(param);
-
-    if (expr = expr_next(expr); !expr) {
-      return errorf(ERROR, "expected an argument for '{}'", param);
-    }
-
-    if (fn == fns.end()) {
-      if (strict) {
-        return errorf(ERROR, "invalid parameter: '{}'", param);
-      }
-    } else {
-      if (auto rc = fn->second(expr); !rc) {
-        rc.trace.push_back(expr);
-        return rc;
-      }
-    }
-
-    if (!expr_has_next(expr)) {
-      break;
-    }
+  if (strict) {
+    return expr_walk_map(expr, nullptr, fns);
+  } else {
+    ExprStorage unparsed;
+    return expr_walk_map(expr, &unparsed, fns);
   }
-
-  return OK;
 }
 
 ReturnCode expr_walk_map_wrapped(
@@ -75,11 +52,10 @@ ReturnCode expr_walk_map_wrapped(
   return expr_walk_map(expr_get_list(expr), fns, strict);
 }
 
-ReturnCode expr_walk_commands(
+ReturnCode expr_walk_map(
     const Expr* expr,
     ExprStorage* unparsed,
     const std::unordered_map<std::string, ExprVisitor>& fns) {
-
   for (; expr; expr = expr_next(expr)) {
     if (!expr_is_list(expr)) {
       return errorf(ERROR, "expected a list, but got: {}", expr_inspect(expr));

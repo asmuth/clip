@@ -24,7 +24,7 @@ ReturnCode expr_to_enum(
     return errorf(
         ERROR,
         "argument error; expected a list, got: {}",
-        "..."); // FIXME
+        expr_inspect(expr));
   }
 
   const auto& value_def = value_defs.find(expr_get_value(expr));
@@ -51,21 +51,6 @@ ExprConv expr_to_enum_fn(
 }
 
 template <typename T>
-ReturnCode expr_tov(
-    const Expr* expr,
-    ExprConvTo<T> conv,
-    std::vector<T>* values) {
-  if (!expr || !expr_is_list(expr)) {
-    return errorf(
-        ERROR,
-        "argument error; expected a list, got: {}",
-        expr_inspect(expr));
-  }
-
-  return expr_tov_flat<T>(expr_get_list(expr), conv, values);
-}
-
-template <typename T>
 ExprConv expr_tov_fn(
     ExprConvTo<T> conv,
     std::vector<T>* values) {
@@ -77,7 +62,7 @@ ExprConv expr_tov_fn(
 }
 
 template <typename T>
-ReturnCode expr_tov_flat(
+ReturnCode expr_tov(
     const Expr* expr,
     ExprConvTo<T> conv,
     std::vector<T>* values) {

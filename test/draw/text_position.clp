@@ -1,6 +1,7 @@
-(class draw)
-(size A6*)
+class: draw;
+size: A6*;
 
-(text
-    text "hello world"
-    position (50% 20mm))
+text {
+  text: "hello world";
+  position: 50% 20mm;
+}

@@ -355,15 +355,6 @@ std::vector<double> scale_untranslate(
 ReturnCode scale_configure_kind(
     const Expr* expr,
     ScaleConfig* domain) {
-  if (expr && expr_is_list(expr)) {
-    expr = expr_get_list(expr);
-  } else {
-    return errorf(
-        ERROR,
-        "invalid argument; expected a list but got: {}",
-        expr_inspect(expr)); // FIXME
-  }
-
   for (; expr; expr = expr_next(expr)) {
     if (expr_is_value(expr, "linear")) {
       domain->kind = ScaleKind::LINEAR;
@@ -371,15 +362,15 @@ ReturnCode scale_configure_kind(
     }
 
     if (expr_is_value(expr, "log") ||
-        expr_is_value(expr, "logarithmic")) {
+        expr_is_value(expr, "logarithmic") ||
+        expr_is_list(expr, "log") ||
+        expr_is_list(expr, "logarithmic")) {
       domain->kind = ScaleKind::LOGARITHMIC;
 
-      if (expr_next(expr)) {
-        if (auto rc = expr_to_float64(expr_next(expr), &domain->log_base); !rc) {
+      if (expr_is_list(expr)) {
+        if (auto rc = expr_to_float64(expr_get_list_tail(expr), &domain->log_base); !rc) {
           return rc;
         }
-
-        expr = expr_next(expr);
       }
 
       continue;
@@ -391,17 +382,20 @@ ReturnCode scale_configure_kind(
       continue;
     }
 
-    if (expr_is_value(expr, "categorical")) {
+    if (expr_is_value(expr, "categorical") ||
+        expr_is_list(expr, "categorical")) {
       domain->kind = ScaleKind::CATEGORICAL;
       domain->padding = 0.5;
 
-      expr = expr_next(expr);
-      if (auto rc = data_load_strings(expr, &domain->categories); !rc) {
-        return rc;
-      }
+      if (expr_is_list(expr)) {
+        auto args = expr_get_list_tail(expr);
+        if (auto rc = data_load_strings(args, &domain->categories); !rc) {
+          return rc;
+        }
 
-      for (size_t i = 0; i < domain->categories.size(); ++i) {
-        domain->categories_map[domain->categories[i]] = i;
+        for (size_t i = 0; i < domain->categories.size(); ++i) {
+          domain->categories_map[domain->categories[i]] = i;
+        }
       }
 
       continue;
@@ -877,41 +871,32 @@ ReturnCode scale_configure_layout_subdivide(
 ReturnCode scale_configure_layout(
     const Expr* expr,
     ScaleLayoutFn* layout) {
-  if (!expr || !expr_is_list(expr)) {
-    return errorf(
-        ERROR,
-        "invalid argument; expected a list but got: {}",
-        "..."); // FIXME
+  if (expr_is_list(expr, "linear")) {
+    return scale_configure_layout_linear(expr_get_list_tail(expr), layout);
   }
 
-  expr = expr_get_list(expr);
-
-  if (expr_is_value(expr, "linear")) {
-    return scale_configure_layout_linear(expr_next(expr), layout);
+  if (expr_is_list(expr, "linear-align")) {
+    return scale_configure_layout_linear_align(expr_get_list_tail(expr), layout);
   }
 
-  if (expr_is_value(expr, "linear-align")) {
-    return scale_configure_layout_linear_align(expr_next(expr), layout);
+  if (expr_is_list(expr, "linear-alignat")) {
+    return scale_configure_layout_linear_alignat(expr_get_list_tail(expr), layout);
   }
 
-  if (expr_is_value(expr, "linear-alignat")) {
-    return scale_configure_layout_linear_alignat(expr_next(expr), layout);
+  if (expr_is_list(expr, "linear-interval")) {
+    return scale_configure_layout_linear_interval(expr_get_list_tail(expr), layout);
   }
 
-  if (expr_is_value(expr, "linear-interval")) {
-    return scale_configure_layout_linear_interval(expr_next(expr), layout);
+  if (expr_is_list(expr, "exponential")) {
+    return scale_configure_layout_exponential(expr_get_list_tail(expr), layout);
   }
 
-  if (expr_is_value(expr, "exponential")) {
-    return scale_configure_layout_exponential(expr_next(expr), layout);
+  if (expr_is_list(expr, "exponential-steps")) {
+    return scale_configure_layout_exponential_steps(expr_get_list_tail(expr), layout);
   }
 
-  if (expr_is_value(expr, "exponential-steps")) {
-    return scale_configure_layout_exponential_steps(expr_next(expr), layout);
-  }
-
-  if (expr_is_value(expr, "subdivide")) {
-    return scale_configure_layout_subdivide(expr_next(expr), layout);
+  if (expr_is_list(expr, "subdivide")) {
+    return scale_configure_layout_subdivide(expr_get_list_tail(expr), layout);
   }
 
   if (expr_is_value(expr, "categorical")) {
@@ -929,9 +914,9 @@ ReturnCode scale_configure_layout(
     return OK;
   }
 
-  return error(
+  return errorf(
       ERROR,
-      "invalid argument; expected one of: \n"
+      "invalid argument: '{}'; expected one of: \n"
       "  - linear\n"
       "  - linear-align\n"
       "  - linear-alignat\n"
@@ -941,7 +926,8 @@ ReturnCode scale_configure_layout(
       "  - subdivide\n"
       "  - categorical\n"
       "  - categorical-bounds\n"
-      "  - none\n");
+      "  - none\n",
+      expr_inspect(expr));
 }
 
 void scale_configure_layout_defaults(

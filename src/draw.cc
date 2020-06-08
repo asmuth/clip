@@ -26,7 +26,7 @@ ReturnCode draw_eval(
   const auto& layer = *layer_get(ctx);
 
   ExprStorage unparsed;
-  return expr_walk_commands(expr, nullptr, {
+  return expr_walk_map(expr, nullptr, {
     {"text", std::bind(&draw::text_eval, ctx, _1)},
     {"rectangle", std::bind(&draw::rectangle, ctx, _1)},
   });

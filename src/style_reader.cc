@@ -197,12 +197,20 @@ ReturnCode style_read_fill(
     const Expr* expr,
     const Layer& layer,
     draw_style::compound* styles) {
+  if (expr_is_value(expr, "solid")) {
+    return style_read_fill_solid(nullptr, layer, styles);
+  }
+
   if (expr_is_list(expr, "solid")) {
-    return style_read_fill_solid(expr_next(expr_get_list(expr)), layer, styles);
+    return style_read_fill_solid(expr_get_list_tail(expr), layer, styles);
+  }
+
+  if (expr_is_value(expr, "hatch")) {
+    return style_read_fill_hatch(nullptr, layer, styles);
   }
 
   if (expr_is_list(expr, "hatch")) {
-    return style_read_fill_hatch(expr_next(expr_get_list(expr)), layer, styles);
+    return style_read_fill_hatch(expr_get_list_tail(expr), layer, styles);
   }
 
   return style_read_fill_solid(expr, layer, styles);
@@ -285,19 +293,23 @@ ReturnCode style_read_stroke(
     const Expr* expr,
     const Layer& layer,
     draw_style::compound* styles) {
+  if (expr_is_value(expr, "solid")) {
+    return style_read_stroke_solid(nullptr, layer, styles);
+  }
+
   if (expr_is_list(expr, "solid")) {
-    return style_read_stroke_solid(expr_next(expr_get_list(expr)), layer, styles);
+    return style_read_stroke_solid(expr_get_list_tail(expr), layer, styles);
+  }
+
+  if (expr_is_value(expr, "dash")) {
+    return style_read_stroke_dash(nullptr, layer, styles);
   }
 
   if (expr_is_list(expr, "dash")) {
-    return style_read_stroke_dash(expr_next(expr_get_list(expr)), layer, styles);
+    return style_read_stroke_dash(expr_get_list_tail(expr), layer, styles);
   }
 
-  if (expr_is_list(expr)) {
-    return style_read_stroke_solid_short(expr_get_list(expr), layer, styles);
-  }
-
-  return err_invalid_value(expr_inspect(expr), {"solid", "dash"});
+  return style_read_stroke_solid_short(expr, layer, styles);
 }
 
 ReturnCode style_read_color(
