@@ -23,9 +23,9 @@ using namespace std::placeholders;
 namespace clip {
 
 Layer::Layer() :
-    width(from_px(1024)),
-    height(from_px(512)),
-    dpi(96),
+    width(from_px(1600)),
+    height(from_px(800)),
+    dpi(192),
     background_color(Color::fromRGB(1, 1, 1)),
     foreground_color(Color::fromRGB(0, 0, 0)),
     text_color(Color::fromRGB(0, 0, 0)),

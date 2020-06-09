@@ -1,4 +1,5 @@
 class: draw;
+dpi: 96;
 size: 100px 100px;
 
 rectangle {
