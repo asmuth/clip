@@ -19,19 +19,23 @@ In essence, clip is an automated drawing program; it reads a text file containin
 a description of the chart or diagram and produces an image from it. This is best
 explained by example, so here is how to draw a simple line chart using clip:
 
-    (class plot)
+    class: plot;
 
-    (axes
-        label-format-x (datetime "%H:%M:%S"))
+    limit-x: 0 7200;
+    limit-y: 0 100;
 
-    (grid
-        stroke-color #333
-        stroke-style dashed)
+    axes {
+      font: "Latin Modern Roman";
+      font-size: 12pt;
+      label-format-x: datetime("%H:%M:%S");
+      label-placement-x: linear-interval(900 900 7000);
+    }
 
-    (lines
-        data-x (csv "measurement.csv" time)
-        data-y (csv "measurement.csv" value)
-        stroke-width 0.8pt)
+    lines {
+      data-x: csv(test/testdata/timeseries.csv time);
+      data-y: csv(test/testdata/timeseries.csv value);
+      stroke-width: 0.8pt;
+    }
 
 The input file from above (`example.clp`) can be processed with clip using the
 following command:

@@ -15,15 +15,16 @@ Being a highly visual tool, clip is best explained by example, so here is a
 minimal example file to get you started. Paste the contents to a file called
 `example_chart.clp`:
 
-    (class plot)
+    class: plot;
 
-    (lines
-        data-x (100 200 300 400 500 600 700 800 900)
-        data-y (1.2   1.8   1.3   1.6   1.5   1.3   1.8   1.9   2.0)
-        limit-y (0 3)
-        limit-x (0 1000)
-        marker-shape (pentagon)
-        marker-size 8pt))
+    lines {
+      data-x: 100 200 300 400 500 600 700 800 900;
+      data-y: 1.2 1.8 1.3 1.6 1.5 1.3 1.8 1.9 2.0;
+      limit-y: 0 3;
+      limit-x: 0 1000;
+      marker-shape: pentagon;
+      marker-size: 8pt;
+    }
 
 You can then run the script through clip using the following command:
 
@@ -52,11 +53,12 @@ and you can probably guess what most of them do anyway.
 To make this into a proper plot, we have to add some axes. For that, we extend
 the script with a call to the `axes` command. Add this to the beginning of the file:
 
-    (axes
-        limit-y (0 3)
-        limit-x (0 1000)
-        label-format-x (scientific)
-        label-placement-x (linear-interval 100 100 900))
+    axes {
+      limit-y: 0 3;
+      limit-x: 0 1000;
+      label-format-x: scientific();
+      label-placement-x: linear-interval(100 100 900);
+    }
 
 After re-running clip on the updated script, the output should now look much
 more like the kind of chart we know and love:
@@ -76,31 +78,44 @@ To close things out on this example, we're going to add an explanatory legend to
 our chart using the `legend` command. Simply add the snippet from below to the
 file:
 
-    (legend
-        position (bottom left)
-        item (label "Example Data" marker-shape (pentagon)))
+    legend {
+      position: bottom left;
+
+      item {
+        label: "Example Data";
+        marker-shape: pentagon;
+      }
+    }
 
 Also, let's get rid of the duplicate `limit-x` and `limit-y` arguments. This leaves
 us with this final script:
 
-    (class plot)
+    class: plot;
 
-    (limit-y (0 3))
-    (limit-x (0 1000))
+    axes {
+      limit-y: 0 3;
+      limit-x: 0 1000;
+      label-format-x: scientific();
+      label-placement-x: linear-interval(100 100 900);
+    }
 
-    (axes
-        label-format-x (scientific)
-        label-placement-x (linear-interval 100 100 900))
+    lines {
+      data-x: 100 200 300 400 500 600 700 800 900;
+      data-y: 1.2 1.8 1.3 1.6 1.5 1.3 1.8 1.9 2.0;
+      limit-y: 0 3;
+      limit-x: 0 1000;
+      marker-shape: pentagon;
+      marker-size: 8pt;
+    }
 
-    (lines
-        data-x (100 200 300 400 500 600 700 800 900)
-        data-y (1.2   1.8   1.3   1.6   1.5   1.3   1.8   1.9   2.0)
-        marker-shape (pentagon)
-        marker-size 8pt))
+    legend {
+      position: bottom left;
 
-    (legend
-        position (bottom left)
-        item (label "Example Data" marker-shape (pentagon)))
+      item {
+        label: "Example Data";
+        marker-shape: pentagon;
+      }
+    }
 
 
 Running the above file through clip again should now yield the following final result:
