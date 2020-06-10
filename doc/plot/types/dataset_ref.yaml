@@ -1,0 +1,8 @@
+desc_code: |
+  {{name}} <path>
+examples: |
+  ;; load a csv file
+  {{name}} "myfile.csv"
+
+  ;; load a geojson file
+  {{name}} "myfile.geojson"

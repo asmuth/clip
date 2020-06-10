@@ -292,23 +292,49 @@ ReturnCode data_load_simple(
     return data_load_simple_csv(expr_get_list_tail(args), values);
   }
 
+  if (args && expr_is_list(args, "list")) {
+    return data_load_simple_inline(expr_get_list_tail(args), values);
+  }
+
   return data_load_simple_inline(args, values);
 }
 
-ReturnCode data_load_polylines2_geojson(
-    const Expr* expr,
+ReturnCode data_load_polylines2_csv(
+    const std::string& path,
+    const Expr* ref_x,
+    const Expr* ref_y,
     DataBuffer* data_x,
     DataBuffer* data_y,
     std::vector<size_t>* index) {
-  if (!expr || !expr_is_value(expr)) {
-    return errorf(
-        ERROR,
-        "argument error; expected a filename, got: {}",
-        expr_inspect(expr));
+  std::string data_str;
+  CSVData data;
+  std::string key_x = "x";
+  std::string key_y = "y";
+
+  if (ref_x && expr_is_value(ref_x)) {
+    key_x = expr_get_value(ref_x);
   }
 
-  const auto& path = expr_get_value(expr);
+  if (ref_y && expr_is_value(ref_y)) {
+    key_y = expr_get_value(ref_y);
+  }
 
+  auto parse_x = [data_x] (const auto& v) { databuf_add(data_x, v); };
+  auto parse_y = [data_y] (const auto& v) { databuf_add(data_y, v); };
+
+  return try_chain({
+    std::bind(&read_file, path, &data_str),
+    std::bind(&csv_parse, std::ref(data_str), &data),
+    std::bind(&csv_extract_column, std::ref(data), key_x, parse_x),
+    std::bind(&csv_extract_column, std::ref(data), key_y, parse_y),
+  });
+}
+
+ReturnCode data_load_polylines2_geojson(
+    const std::string& path,
+    DataBuffer* data_x,
+    DataBuffer* data_y,
+    std::vector<size_t>* index) {
   GeoJSONReader reader;
   reader.on_lines = [data_x, data_y, index] (const PolyLine3* polys, size_t poly_count) {
     for (size_t i = 0; i < poly_count; ++i) {
@@ -330,24 +356,59 @@ ReturnCode data_load_polylines2_geojson(
 }
 
 ReturnCode data_load_polylines2(
-    const Expr* expr,
+    const std::string& path,
+    std::string format,
+    const Expr* ref_x,
+    const Expr* ref_y,
     DataBuffer* data_x,
     DataBuffer* data_y,
     std::vector<size_t>* index) {
-  if (!expr || !expr_is_list(expr) || !expr_get_list(expr)) {
+  /* load inline data */
+  if (ref_x && expr_is_list(ref_x)) {
+    if (auto rc = data_load_simple(ref_x, data_x); !rc) {
+      return rc;
+    }
+  }
+
+  if (ref_y && expr_is_list(ref_y)) {
+    if (auto rc = data_load_simple(ref_y, data_y); !rc) {
+      return rc;
+    }
+  }
+
+  /* load data files */
+  if (path.empty()) {
+    return OK;
+  }
+
+  if (format.empty()) {
+    if (StringUtil::endsWith(path, ".csv")) {
+      format = "csv";
+    }
+
+    if (StringUtil::endsWith(path, ".geojson")) {
+      format = "geojson";
+    }
+  }
+
+  if (format.empty()) {
     return errorf(
         ERROR,
-        "argument error; expected a list, got: {}",
-        expr_inspect(expr));
+        "unable to detect the encoding of {}\n"
+        "Please specify the encoding using data-type: [csv|geojson]",
+        path);
   }
 
-  auto args = expr_get_list(expr);
-
-  if (args && expr_is_value_literal(args, "geojson")) {
-    return data_load_polylines2_geojson(expr_next(args), data_x, data_y, index);
+  if (format == "csv") {
+    return data_load_polylines2_csv(path, ref_x, ref_y, data_x, data_y, index);
   }
 
-  return err_invalid_value(expr_inspect(expr), {
+  if (format == "geojson") {
+    return data_load_polylines2_geojson(path, data_x, data_y, index);
+  }
+
+  return err_invalid_value(format, {
+    "csv",
     "geojson"
   });
 }
@@ -398,18 +459,9 @@ ReturnCode data_load_polys2(
 }
 
 ReturnCode data_load_points2_geojson(
-    const Expr* expr,
+    const std::string& path,
     DataBuffer* data_x,
     DataBuffer* data_y) {
-  if (!expr || !expr_is_value(expr)) {
-    return errorf(
-        ERROR,
-        "argument error; expected a filename, got: {}",
-        expr_inspect(expr));
-  }
-
-  const auto& path = expr_get_value(expr);
-
   GeoJSONReader reader;
   reader.on_points = [data_x, data_y] (const vec3* points, size_t point_count) {
     for (size_t i = 0; i < point_count; ++i) {
@@ -424,23 +476,58 @@ ReturnCode data_load_points2_geojson(
 }
 
 ReturnCode data_load_points2(
-    const Expr* expr,
+    const std::string& path,
+    std::string format,
+    const Expr* ref_x,
+    const Expr* ref_y,
     DataBuffer* data_x,
     DataBuffer* data_y) {
-  if (!expr || !expr_is_list(expr) || !expr_get_list(expr)) {
+  /* load inline data */
+  if (ref_x && expr_is_list(ref_x)) {
+    if (auto rc = data_load_simple(ref_x, data_x); !rc) {
+      return rc;
+    }
+  }
+
+  if (ref_y && expr_is_list(ref_y)) {
+    if (auto rc = data_load_simple(ref_y, data_y); !rc) {
+      return rc;
+    }
+  }
+
+  /* load data files */
+  if (path.empty()) {
+    return OK;
+  }
+
+  if (format.empty()) {
+    if (StringUtil::endsWith(path, ".csv")) {
+      format = "csv";
+    }
+
+    if (StringUtil::endsWith(path, ".geojson")) {
+      format = "geojson";
+    }
+  }
+
+  if (format.empty()) {
     return errorf(
         ERROR,
-        "argument error; expected a list, got: {}",
-        expr_inspect(expr));
+        "unable to detect the encoding of {}\n"
+        "Please specify the encoding using data-type: [csv|geojson]",
+        path);
   }
 
-  auto args = expr_get_list(expr);
-
-  if (args && expr_is_value_literal(args, "geojson")) {
-    return data_load_points2_geojson(expr_next(args), data_x, data_y);
+  if (format == "csv") {
+    //return data_load_points2_csv(path, ref_x, ref_y, data_x, data_y);
   }
 
-  return err_invalid_value(expr_inspect(expr), {
+  if (format == "geojson") {
+    return data_load_points2_geojson(path, data_x, data_y);
+  }
+
+  return err_invalid_value(format, {
+    "csv",
     "geojson"
   });
 }

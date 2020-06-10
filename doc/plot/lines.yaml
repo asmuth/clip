@@ -1,25 +1,25 @@
-title: plot/lines
+title: lines
 name: lines
 tpl: cmdref
 
 desc: |
-  The `plot/lines` command takes an input data table, transforms it according
-  to a user-provided scale configuration and then plots the data as one or more
-  lines.
+  The `lines` statement adds an input data table, which is transformed according
+  to a user-provided scale configuration and then plotted as one or more
+  lines to the chart.
 
 arguments:
 
-  - name: data-x
+  - name: data
     type: dataset
-    desc: |
-      Set the 'x' dataset for the plot. The 'x' dataset will be used to
-      calculate the horizontal position of geometry.
+
+  - name: data-format
+    type: dataset-format
+
+  - name: data-x
+    type: dataset-x
 
   - name: data-y
-    type: dataset
-    desc: |
-      Set the 'y' dataset for the plot. The 'y' dataset will be used to
-      calculate the vertical position of geometry.
+    type: dataset-y
 
   - name: color
     type: color

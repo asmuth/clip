@@ -77,7 +77,10 @@ ReturnCode data_load_simple(
     DataBuffer* values);
 
 ReturnCode data_load_polylines2(
-    const Expr* expr,
+    const std::string& path,
+    std::string format,
+    const Expr* ref_x,
+    const Expr* ref_y,
     DataBuffer* data_x,
     DataBuffer* data_y,
     std::vector<size_t>* index);
@@ -88,6 +91,14 @@ ReturnCode data_load_polys2(
 
 ReturnCode data_load_points2(
     const Expr* expr,
+    DataBuffer* data_x,
+    DataBuffer* data_y);
+
+ReturnCode data_load_points2(
+    const std::string& path,
+    std::string format,
+    const Expr* ref_x,
+    const Expr* ref_y,
     DataBuffer* data_x,
     DataBuffer* data_y);
 

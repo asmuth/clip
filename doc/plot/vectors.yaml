@@ -7,26 +7,26 @@ desc: |
 
 arguments:
 
-  - name: data-x
+  - name: data
     type: dataset
-    desc: |
-      Set the 'x' dataset for the plot. The 'x' dataset will be used to
-      calculate the horizontal position of arrows.
+
+  - name: data-format
+    type: dataset-format
+
+  - name: data-x
+    type: dataset-x
 
   - name: data-y
-    type: dataset
-    desc: |
-      Set the 'y' dataset for the plot. The 'y' dataset will be used to
-      calculate the vertical position of arrows.
+    type: dataset-y
 
-  - name: data-x
-    type: dataset
+  - name: data-dx
+    type: dataset-ref
     desc: |
       Set the 'dx' dataset for the plot. The 'x' dataset will be used to
       calculate the horizontal size of arrows.
 
-  - name: data-y
-    type: dataset
+  - name: data-dy
+    type: dataset-ref
     desc: |
       Set the 'dy' dataset for the plot. The 'y' dataset will be used to
       calculate the vertical size of arrows.

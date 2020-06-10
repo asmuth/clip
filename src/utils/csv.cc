@@ -156,5 +156,34 @@ ReturnCode csv_parse(std::string input, CSVData* output) {
   return OK;
 }
 
+ReturnCode csv_extract_column(
+    const CSVData& data,
+    const std::string& column,
+    std::function<void (const std::string&)> fn) {
+  if (data.empty()) {
+    return OK;
+  }
+
+  const auto& headers = data.front();
+  const auto& header = std::find(headers.begin(), headers.end(), column);
+  if (header == headers.end()) {
+    return errorf(ERROR, "CSV column not found: {}", column);
+  }
+
+  auto column_idx = std::distance(headers.begin(), header);
+  for (auto row = ++data.begin(); row != data.end(); ++row) {
+    if (row->size() < column_idx) {
+      return errorf(
+          ERROR,
+          "CSV invalid number of columns for row #{}",
+          std::distance(data.begin(), row));
+    }
+
+    fn(row->at(column_idx));
+  }
+
+  return OK;
+}
+
 } // namespace clip
 

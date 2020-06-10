@@ -72,10 +72,16 @@ ReturnCode lines_configure(
   c->marker_color = layer_get(ctx)->foreground_color;
 
   /* parse properties */
+  std::string data_ref;
+  std::string data_format;
+  ExprStorage data_x;
+  ExprStorage data_y;
+
   auto config_rc = expr_walk_map(expr, nullptr, {
-    {"data", std::bind(&data_load_polylines2, _1, &c->x, &c->y, &c->groups)},
-    {"data-x", std::bind(&data_load_simple, _1, &c->x)},
-    {"data-y", std::bind(&data_load_simple, _1, &c->y)},
+    {"data", std::bind(&expr_to_string, _1, &data_ref)},
+    {"data-format", std::bind(&expr_to_string, _1, &data_format)},
+    {"data-x", std::bind(&expr_to_copy, _1, &data_x)},
+    {"data-y", std::bind(&expr_to_copy, _1, &data_y)},
     {"limit-x", std::bind(&expr_to_float64_opt_pair, _1, &c->scale_x.min, &c->scale_x.max)},
     {"limit-x-min", std::bind(&expr_to_float64_opt, _1, &c->scale_x.min)},
     {"limit-x-max", std::bind(&expr_to_float64_opt, _1, &c->scale_x.max)},
@@ -109,6 +115,21 @@ ReturnCode lines_configure(
     return config_rc;
   }
 
+  /* load data files */
+  auto data_rc = data_load_polylines2(
+      data_ref,
+      data_format,
+      data_x.get(),
+      data_y.get(),
+      &c->x,
+      &c->y,
+      &c->groups);
+
+  if (!data_rc) {
+    return data_rc;
+  }
+
+  /* check the configuration */
   if (databuf_len(c->x) != databuf_len(c->y)) {
     return error(ERROR, "The length of the 'data-x' and 'data-y' lists must be equal");
   }

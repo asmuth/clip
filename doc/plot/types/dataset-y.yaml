@@ -1,0 +1,15 @@
+name: data-y
+desc: |
+  This parameter controls how the Y position of geometry is retrieved from the
+  dataset. For CSV files, the parameter controls the name of the column that
+  is displayed on the Y axis. The default value is `"y"`.
+  You can also use this parameter to declare an "inline" data list.
+desc_code: |
+  data-y: <key>;
+  data-y: list(<value>...);
+examples: |
+  // reference the "mycolumn" column
+  data-y: mycolumn;
+
+  // list of static values
+  data-y: list(10 20 30);

@@ -6,44 +6,17 @@ desc: |
   to a user-provided scale configuration and then plots the data as tiled rectangles.
 
 arguments:
-  - name: data-x
-    desc: |
-      Set the 'x' dataset for the plot. The 'x' dataset will be used to
-      calculate the horizontal position of the rectangles.
-    desc_code: |
-      data-x (<values>...)
-      data-x (csv <file> <column>)
-    examples: |
-      ;; list of static values
-      data-x (10px 20px 30px)
+  - name: data
+    type: dataset
 
-      ;; load a csv file
-      data-x (csv myfile.csv mycolumn)
-  - name: data-y
-    desc: |
-      Set the 'y' dataset for the plot. The 'y' dataset will be used to
-      calculate the vertical position of the rectangles.
-    desc_code: |
-      data-y (<values>...)
-      data-y (csv <file> <column>)
-    examples: |
-      ;; list of static values
-      data-y (10px 20px 30px)
-
-      ;; load a csv file
-      data-y (csv myfile.csv mycolumn)
+  - name: data-format
+    type: dataset-format
 
   - name: data-x
-    type: dataset
-    desc: |
-      Set the 'x' dataset for the plot. The 'x' dataset will be used to
-      calculate the horizontal position of points.
+    type: dataset-x
 
   - name: data-y
-    type: dataset
-    desc: |
-      Set the 'y' dataset for the plot. The 'y' dataset will be used to
-      calculate the vertical position of points.
+    type: dataset-y
 
   - name: size
     desc: |

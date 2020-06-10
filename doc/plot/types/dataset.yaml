@@ -1,9 +1,11 @@
 desc_code: |
-  {{name}} (<values>...)
-  {{name}} (csv <file> <column>)
+  {{name}}: <path>;
+desc: |
+  Set the dataset for the current element. The dataset should be a valid CSV
+  (RFC4180) or GeoJSON file.
 examples: |
-  ;; list of static values
-  {{name}} (10px 20px 30px)
+  // load a csv file
+  {{name}}: "myfile.csv";
 
-  ;; load a csv file
-  {{name}} (csv myfile.csv mycolumn)
+  // load a geojson file
+  {{name}}: "myfile.geojson";

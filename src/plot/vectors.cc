@@ -121,15 +121,20 @@ ReturnCode vectors_configure(
   c->shape = arrow_create_default();
 
   /* parse properties */
+  std::string data_ref;
+  std::string data_format;
+  ExprStorage data_x;
+  ExprStorage data_y;
   std::vector<std::string> data_colors;
   std::vector<std::string> data_sizes;
   ColorMap color_map;
   MeasureMap size_map;
 
   auto config_rc = expr_walk_map(expr, {
-    {"data", std::bind(&data_load_points2, _1, &c->x, &c->y)},
-    {"data-x", std::bind(&data_load_simple, _1, &c->x)},
-    {"data-y", std::bind(&data_load_simple, _1, &c->y)},
+    {"data", std::bind(&expr_to_string, _1, &data_ref)},
+    {"data-format", std::bind(&expr_to_string, _1, &data_format)},
+    {"data-x", std::bind(&expr_to_copy, _1, &data_x)},
+    {"data-y", std::bind(&expr_to_copy, _1, &data_y)},
     {"data-dx", std::bind(&data_load_simple, _1, &c->dx)},
     {"data-dy", std::bind(&data_load_simple, _1, &c->dy)},
     {"limit-x", std::bind(&expr_to_float64_opt_pair, _1, &c->scale_x.min, &c->scale_x.max)},
@@ -152,6 +157,19 @@ ReturnCode vectors_configure(
 
   if (!config_rc) {
     return config_rc;
+  }
+
+  /* load data files */
+  auto data_rc = data_load_points2(
+      data_ref,
+      data_format,
+      data_x.get(),
+      data_y.get(),
+      &c->x,
+      &c->y);
+
+  if (!data_rc) {
+    return data_rc;
   }
 
   /* check configuration */

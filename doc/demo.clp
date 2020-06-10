@@ -1,17 +1,18 @@
 class: plot;
+size: 1750px 500px;
 
 limit-x: 0 7200;
 limit-y: 0 100;
 
 axes {
-  font: "Latin Modern Roman";
-  font-size: 12pt;
-  label-format-x: datetime("%H:%M:%S");
+  font: "Roboto";
+  position: left bottom;
   label-placement-x: linear-interval(900 900 7000);
+  label-format-x: datetime("%H:%M:%S");
 }
 
 lines {
-  data-x: csv(test/testdata/timeseries.csv time);
-  data-y: csv(test/testdata/timeseries.csv value);
+  data: "test/testdata/timeseries.csv";
   stroke-width: 0.8pt;
+  color: #06c;
 }

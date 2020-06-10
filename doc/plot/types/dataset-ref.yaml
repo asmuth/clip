@@ -1,0 +1,9 @@
+desc_code: |
+  {{name}}: <key>;
+  {{name}}: list(<values>...);
+examples: |
+  ;; reference the "mycolumn" column (CSV)
+  {{name}}: mycolumn;
+
+  ;; list of static values
+  {{name}}: list(10 20 30);

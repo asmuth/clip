@@ -1,0 +1,11 @@
+desc_code: |
+  {{name}}: <dataset-format>;
+desc: |
+  Explicitly set the dataset format. This is usually not required, since the
+  format should, in most cases, be detected automatically.
+examples: |
+  // set the format to CSV
+  {{name}}: csv;
+
+  // set the format to geojson
+  {{name}}: geojson;

@@ -26,5 +26,10 @@ ReturnCode csv_parse(
     std::string input,
     CSVData* output);
 
+ReturnCode csv_extract_column(
+    const CSVData& data,
+    const std::string& column,
+    std::function<void (const std::string&)> fn);
+
 } // namespace clip
 

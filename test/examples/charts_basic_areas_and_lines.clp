@@ -22,8 +22,8 @@ areas {
 }
 
 lines {
-  data-x: 10 20 30 40 50;
-  data-y: 1.23 10.32 -6.23 4.43 3.45;
+  data-x: list(10 20 30 40 50);
+  data-y: list(1.23 10.32 -6.23 4.43 3.45);
   marker-size: 4pt;
 }
 

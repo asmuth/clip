@@ -6,17 +6,17 @@ desc: |
   The `points` command is used to create point/scattercharts.
 
 arguments:
-  - name: data-x
+  - name: data
     type: dataset
-    desc: |
-      Set the 'x' dataset for the plot. The 'x' dataset will be used to
-      calculate the horizontal position of points.
+
+  - name: data-format
+    type: dataset-format
+
+  - name: data-x
+    type: dataset-x
 
   - name: data-y
-    type: dataset
-    desc: |
-      Set the 'y' dataset for the plot. The 'y' dataset will be used to
-      calculate the vertical position of points.
+    type: dataset-y
 
   - name: shape
     type: shape

@@ -1,0 +1,15 @@
+name: data-x
+desc:
+  This parameter controls how the X position of geometry is retrieved from the
+  dataset. For CSV files, the parameter controls the name of the column that
+  is displayed on the X axis. The default value is `"x"`.
+  You can also use this parameter to declare an "inline" data list.
+desc_code: |
+  data-x: <key>;
+  data-x: list(<value>...);
+examples: |
+  // reference the "mycolumn" column
+  data-x: mycolumn;
+
+  // list of static values
+  data-x: list(10 20 30);

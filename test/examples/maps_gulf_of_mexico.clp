@@ -26,8 +26,8 @@ polygons {
 }
 
 labels {
-  data-x: -90;
-  data-y: 23.5;
+  data-x: list(-90);
+  data-y: list(23.5);
   label-font-size: 14pt;
   label-color: rgba(0 0 0 0.6);
   labels: "Gulf of Mexico";

@@ -8,28 +8,17 @@ desc: |
 
 
 arguments:
+  - name: data
+    type: dataset
+
+  - name: data-format
+    type: dataset-format
+
   - name: data-x
-    type: dataset
-    desc: |
-      Set the 'x' dataset for the plot. The 'x' dataset will be used to
-      calculate the horizontal position of geometry.
-
-  - name: data-x-high
-    alias: data-x
-
-  - name: data-x-low
-    type: dataset
+    type: dataset-x
 
   - name: data-y
-    type: dataset
-      Set the 'x' dataset for the plot. The 'x' dataset will be used to
-      calculate the vertical position of geometry.
-
-  - name: data-y-high
-    alias: data-y
-
-  - name: data-y-low
-    type: dataset
+    type: dataset-y
 
   - name: direction
     desc: |
