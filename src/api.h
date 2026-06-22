@@ -49,7 +49,7 @@ const char* clip_get_error(const clip_t* ctx);
 /**
  * Evaluate an clip expression
  *
- * @returns: One (1) on success and zero (0) if an error has occured
+ * @returns: One (1) on success and zero (0) if an error has occurred
  */
 CLIP_API
 int clip_eval(clip_t* ctx, const char* expr);
